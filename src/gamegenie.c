@@ -1,0 +1,87 @@
+/*
+ * gamegenie.c
+ *
+ *  Created on: 16/apr/2012
+ *      Author: fhorse
+ */
+
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/stat.h>
+#include "sdltext.h"
+#include "gamegenie.h"
+
+#define GGFILE "gamegenie.rom"
+
+void gamegenie_init(void) {
+	gamegenie.enabled = FALSE;
+	gamegenie.rom_present = FALSE;
+	gamegenie_reset(FALSE);
+}
+void gamegenie_reset(BYTE print_message) {
+	BYTE i;
+
+	gamegenie.counter = 0;
+	gamegenie.phase = GG_LOAD_GAMEGENIE;
+	gamegenie.print = print_message;
+	gamegenie.value = 0x71;
+
+	for (i = 0; i < LENGTH(gamegenie.cheat); i++) {
+		_cheat *ch = &gamegenie.cheat[i];
+
+		ch->disabled = TRUE;
+		ch->address = 0xFFFF;
+		ch->compare = 0xFF;
+		ch->replace = 0xFF;
+	}
+}
+void gamegenie_check_rom_present(BYTE print_message) {
+	char gg_rom[1024];
+	struct stat status;
+
+	sprintf(gg_rom, "%s" BIOSFOLDER "/%s", info.baseFolder, GGFILE);
+
+	gamegenie.rom_present = FALSE;
+
+	if (!(access(gg_rom, 0))) {
+		stat(gg_rom, &status);
+		if (status.st_mode & S_IFREG) {
+			gamegenie.rom_present = TRUE;
+		}
+	}
+
+	if (print_message && gamegenie.rom_present == FALSE) {
+		textAddLineInfo(1, "[red]Game Genie rom not found");
+		fprintf(stderr, "Game Genie rom not found\n");
+	}
+}
+FILE *gamegenie_load_rom(FILE *fp) {
+	FILE *fp_gg, *fp_rom = fp;
+
+	gamegenie_check_rom_present(FALSE);
+
+	if ((gamegenie.phase == GG_LOAD_ROM) || !gamegenie.rom_present) {
+		return (fp_rom);
+	}
+
+	strncpy(info.loadRomFile, info.romFile, sizeof(info.loadRomFile));
+
+	sprintf(info.romFile, "%s" BIOSFOLDER "/%s", info.baseFolder, GGFILE);
+
+	if (!(fp_gg = fopen(info.romFile, "rb"))) {
+		textAddLineInfo(1, "[red]error on loading Game Genie rom");
+		fprintf(stderr, "error on loading Game Genie rom\n");
+
+		strncpy(info.romFile, info.loadRomFile, sizeof(info.romFile));
+
+		memset(info.loadRomFile, 0, sizeof(info.loadRomFile));
+		return (fp_rom);
+	}
+
+	fclose(fp_rom);
+
+	gamegenie.phase = GG_EXECUTE;
+
+	return (fp_gg);
+}

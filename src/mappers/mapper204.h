@@ -1,0 +1,16 @@
+/*
+ * mapper204.h
+ *
+ *  Created on: 21/mar/2012
+ *      Author: fhorse
+ */
+
+#ifndef MAPPER204_H_
+#define MAPPER204_H_
+
+#include "common.h"
+
+void mapInit_204(void);
+void extclCpuWrMem_204(WORD address, BYTE value);
+
+#endif /* MAPPER204_H_ */

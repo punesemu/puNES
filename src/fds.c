@@ -1,0 +1,466 @@
+/*
+ * fds.c
+ *
+ *  Created on: 25/mar/2012
+ *      Author: fhorse
+ */
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <libgen.h>
+#include "fds.h"
+#include "cpu6502.h"
+#include "mappers.h"
+#include "memmap.h"
+#include "sdltext.h"
+#include "emu.h"
+#include "clock.h"
+
+#define BIOSFILE "disksys.rom"
+#define DIFFVERSION 1
+
+typedef struct {
+	BYTE side;
+	WORD value;
+	uint32_t position;
+} _fds_diff_ele;
+
+void fdsInit(void) {
+	memset(&fds, 0x00, sizeof(fds));
+
+	fds.drive.disk_ejected = TRUE;
+	fds.drive.motor_on = TRUE;
+	fds.drive.enabled_dsk_reg = 0x01;
+	fds.drive.enabled_snd_reg = 0x02;
+}
+void fdsQuit(void) {
+	if (fds.side.data) {
+		free(fds.side.data);
+	}
+	if (fds.info.fp) {
+		fclose(fds.info.fp);
+	}
+	if (fds.info.diff) {
+		fclose(fds.info.diff);
+	}
+	fdsInit();
+}
+
+BYTE fds_load_rom(void) {
+	BYTE i;
+
+	{
+		BYTE found = TRUE;
+		char rom_ext[2][10] = { ".fds\0", ".FDS\0" };
+
+		fds.info.fp = fopen(info.romFile, "rb");
+
+		if (!fds.info.fp) {
+			found = FALSE;
+
+			for (i = 0; i < LENGTH(rom_ext); i++) {
+				char rom_file[1024];
+
+				strncpy(rom_file, info.romFile, sizeof(rom_file));
+				strcat(rom_file, rom_ext[i]);
+
+				fds.info.fp = fopen(rom_file, "rb");
+
+				if (fds.info.fp) {
+					strncpy(info.romFile, rom_file, sizeof(info.romFile));
+					found = TRUE;
+					break;
+				}
+			}
+		}
+
+		if (!found) {
+			textAddLineInfo(1, "[red]error on loading rom");
+			fprintf(stderr, "error on loading rom\n");
+			return (EXIT_ERROR);
+		}
+	}
+
+	if (fds_load_bios()) {
+		return (EXIT_ERROR);
+	}
+
+	/* misuro la dimensione del file */
+	fseek(fds.info.fp, 0, SEEK_END);
+	fds.info.total_size = ftell(fds.info.fp);
+
+	/* riposiziono il puntatore all'inizio del file */
+	rewind(fds.info.fp);
+
+	if ((fgetc(fds.info.fp) == 'F') && (fgetc(fds.info.fp) == 'D') && (fgetc(fds.info.fp) == 'S')
+			&& (fgetc(fds.info.fp) == '\32')) {
+		fds.info.type = FDS_FORMAT_FDS;
+		/* il numero di disk sides */
+		fds.info.total_sides = fgetc(fds.info.fp);
+	} else {
+		fds.info.type = FDS_FORMAT_RAW;
+		/* il numero di disk sides */
+		fds.info.total_sides = fds.info.total_size / DISK_SIDE_SIZE;
+		/* mi riposiziono all'inizio del file */
+		rewind(fds.info.fp);
+	}
+
+	/* conto le dimensioni dei vari sides */
+	for (i = 0; i < fds.info.total_sides; i++) {
+		fds_disk_op(FDS_DISK_COUNT, i);
+	}
+
+	/* inserisco il primo */
+	fds_disk_op(FDS_DISK_SELECT_AND_INSERT, 0);
+
+	fds.info.enabled = TRUE;
+
+	/* Prg Ram */
+	if ((prg.ram = malloc(0x8000))) {
+		memset(prg.ram, 0xEA, 0x8000);
+	} else {
+		fprintf(stderr, "Out of memory");
+		return (EXIT_ERROR);
+	}
+
+	info.mapper = 0x1000;
+
+	return (EXIT_OK);
+}
+
+BYTE fds_load_bios(void) {
+	char bios_file[1024], *lastSlash;
+	BYTE rc;
+	FILE *bios = NULL;
+
+	/*
+	 * ordine di ricerca:
+	 * 1) directory di lavoro
+	 * 2) directory contenente il file fds
+	 * 3) directory puNES/bios
+	 */
+	if ((bios = fopen(BIOSFILE, "rb"))) {
+		goto fds_load_bios_founded;
+	}
+
+	/* copio il nome del file nella variabile */
+	strcpy(bios_file, info.romFile);
+	/* rintraccio l'ultimo '.' nel nome */
+#if defined MINGW32 || defined MINGW64
+	if ((lastSlash = strrchr(bios_file, '\\'))) {
+		(*(lastSlash + 1)) = 0x00;
+	}
+#else
+	if ((lastSlash = strrchr(bios_file, '/'))) {
+		(*(lastSlash + 1)) = 0x00;
+	}
+#endif
+	/* aggiungo il nome del file */
+	strcat(bios_file, BIOSFILE);
+
+	if ((bios = fopen(bios_file, "rb"))) {
+		goto fds_load_bios_founded;
+	}
+
+	sprintf(bios_file, "%s" BIOSFOLDER "/%s", info.baseFolder, BIOSFILE);
+
+	if ((bios = fopen(bios_file, "rb"))) {
+		goto fds_load_bios_founded;
+	}
+
+	textAddLineInfo(1, "[red]bios rom not found");
+	fprintf(stderr, "bios rom not found\n");
+	return (EXIT_ERROR);
+
+	fds_load_bios_founded:
+	if (!(prg.rom = malloc(0x2000))) {
+		fclose(bios);
+		fprintf(stderr, "Out of memory");
+		return (EXIT_ERROR);
+	}
+
+	rc = fread(prg.rom, 0x2000, 1, bios);
+
+	fclose(bios);
+
+	return (EXIT_OK);
+}
+void fds_disk_op(WORD type, BYTE side_to_insert) {
+	BYTE buffer[DISK_SIDE_SIZE], rc;
+	uint32_t position, size = 0, length = 0;
+
+	if (side_to_insert >= fds.info.total_sides) {
+		return;
+	}
+
+	fds_disk_op_start:
+	switch (type) {
+		case FDS_DISK_COUNT:
+			fds.side.counted_files = 0xFFFF;
+			break;
+		case FDS_DISK_EJECT:
+			fds.drive.disk_ejected = TRUE;
+			textAddLineInfo(1, "Disk [cyan]%d [normal]side [cyan]%c[normal]"
+					" [yellow]ejected", (fds.drive.side_inserted / 2) + 1,
+					(fds.drive.side_inserted & 0x01) + 'A');
+			return;
+		case FDS_DISK_INSERT:
+			if (!fds.drive.disk_ejected) {
+				textAddLineInfo(1, "you must [yellow]eject[normal] disk first");
+				return;
+			}
+
+			fds.drive.disk_position = 0;
+			fds.drive.gap_ended = FALSE;
+
+			fds.drive.disk_ejected = FALSE;
+
+			textAddLineInfo(1, "Disk [cyan]%d [normal]side [cyan]%c [green]inserted",
+					(fds.drive.side_inserted / 2) + 1, (fds.drive.side_inserted & 0x01) + 'A');
+			return;
+		case FDS_DISK_SELECT:
+		case FDS_DISK_SELECT_AND_INSERT:
+		case FDS_DISK_TIMELINE_SELECT:
+			if ((type == FDS_DISK_SELECT) && !fds.drive.disk_ejected) {
+				textAddLineInfo(1, "you must [yellow]eject[normal] disk first");
+				return;
+			}
+			if (fds.side.data) {
+				free(fds.side.data);
+				fds.side.data = NULL;
+			}
+
+#ifndef RELEASE
+			fprintf(stdout, "virtual disk size : %5d\n", fds.info.sides_size[side_to_insert]);
+#endif
+
+			fds.side.data = malloc(fds.info.sides_size[side_to_insert] * sizeof(WORD));
+
+			fds.side.counted_files = 0xFFFF;
+
+			break;
+	}
+
+	if (fds.info.type == FDS_FORMAT_FDS) {
+		position = (side_to_insert * DISK_SIDE_SIZE) + 16;
+	} else {
+		position = side_to_insert * DISK_SIDE_SIZE;
+	}
+
+    fseek(fds.info.fp, position, SEEK_SET);
+	rc = fread(buffer, DISK_SIDE_SIZE, 1, fds.info.fp);
+
+	position = 0;
+
+#define add_to_image(ty, md, vl, sz)\
+	if (type >= FDS_DISK_SELECT) {\
+		if (md == FDS_DISK_MEMSET) {\
+			WORD *dst = fds.side.data + size;\
+			uint32_t i;\
+			for (i = 0; i < sz; i++) {\
+				(*dst++) = vl;\
+			}\
+		} else if (md == FDS_DISK_MEMCPY) {\
+			BYTE *src = buffer + position;\
+			WORD *dst = fds.side.data + size;\
+			uint32_t i;\
+			for (i = 0; i < sz; i++) {\
+				(*dst++) = (*src++);\
+			}\
+		}\
+	}\
+	size += sz
+
+	add_to_image(type, FDS_DISK_MEMSET, FDS_DISK_GAP, 28300 / 8);
+
+	for (position = 0; position < DISK_SIDE_SIZE;) {
+		BYTE block = buffer[position];
+		uint32_t blength = 1;
+
+		switch (block) {
+			case BL_DISK_INFO:
+				/* le info sul disco */
+				blength = 56;
+				break;
+			case BL_FILE_AMOUNT:
+				/* il numero dei file immagazzinati nel disco */
+				blength = 2;
+				break;
+			case BL_FILE_HEADER:
+				/* l'header del file */
+				length = buffer[position + 13] + (0x100 * buffer[position + 14]);
+				blength = 16;
+				break;
+			case BL_FILE_DATA:
+				/* il contenuto del file */
+				blength = length + 1;
+				break;
+		}
+
+		if (block) {
+			/* indico l'inizio del blocco */
+			add_to_image(type, FDS_DISK_MEMSET, FDS_DISK_BLOCK_MARK, 1);
+
+			if (type >= FDS_DISK_SELECT) {
+				switch (block) {
+					case 1:
+						fds.side.block_1.position = size;
+#ifndef RELEASE
+						fprintf(stdout, "block 1 : (pos  : %5d)\n", fds.side.block_1.position);
+#endif
+						break;
+					case 2:
+						fds.side.block_2.position = size;
+						fds.side.block_2.tot_files = buffer[position + 1];
+
+						/* a questo punto fds.side.counted_files e' 0xFFFF */
+						fds.side.counted_files = 0;
+
+#ifndef RELEASE
+						fprintf(stdout, "block 2 : (pos  : %5d) (fl : %5d)\n",
+								fds.side.block_2.position,
+								fds.side.block_2.tot_files);
+#endif
+						break;
+					case 3:
+						fds.side.file[fds.side.counted_files].block_3.position = size;
+						fds.side.file[fds.side.counted_files].block_3.length = length;
+						break;
+					case 4:
+						fds.side.file[fds.side.counted_files].block_4.position = size;
+#ifndef RELEASE
+						fprintf(stdout, "file %2d : (size : %5d - 0x%04X) (b3 : %5d) (b4 : %5d)\n",
+								fds.side.counted_files,
+								fds.side.file[fds.side.counted_files].block_3.length,
+								fds.side.file[fds.side.counted_files].block_3.length,
+								fds.side.file[fds.side.counted_files].block_3.position,
+								fds.side.file[fds.side.counted_files].block_4.position);
+#endif
+						fds.side.counted_files++;
+						break;
+				}
+			}
+
+			add_to_image(type, FDS_DISK_MEMCPY, 0, blength);
+			/* dummy CRC */
+			add_to_image(type, FDS_DISK_MEMSET, FDS_DISK_CRC_CHAR1, 1);
+			add_to_image(type, FDS_DISK_MEMSET, FDS_DISK_CRC_CHAR2, 1);
+			/*
+			 * 1016 bit di gap alla fine di ogni blocco.
+			 * Note : con 976 funziona correttamente la read del disco ma non e'
+			 * sufficiente per la write.
+			 */
+			add_to_image(type, FDS_DISK_MEMSET, FDS_DISK_GAP, 1016 / 8);
+		}
+		position += blength;
+
+		/* nel caso il disco sia "sporco" */
+		if ((fds.side.counted_files != 0xFFFF)
+		        && (fds.side.counted_files == fds.side.block_2.tot_files)) {
+			break;
+		}
+
+	}
+
+    if(size < DISK_SIDE_SIZE) {
+		add_to_image(type, FDS_DISK_MEMSET, 0x0000, DISK_SIDE_SIZE - size);
+    }
+
+	add_to_image(type, FDS_DISK_MEMSET, FDS_DISK_GAP, 2000);
+
+#undef add_to_image
+
+    switch (type) {
+		case FDS_DISK_COUNT:
+			fds.info.sides_size[side_to_insert] = size;
+			break;
+		case FDS_DISK_SELECT_AND_INSERT:
+			type = FDS_DISK_INSERT;
+			fds.drive.side_inserted = side_to_insert;
+			fds_diff_op(FDS_OP_READ, 0, 0);
+			goto fds_disk_op_start;
+		case FDS_DISK_SELECT:
+			fds.drive.side_inserted = side_to_insert;
+			textAddLineInfo(1, "Disk [cyan]%d [normal]side [cyan]%c [brown]selected",
+					(fds.drive.side_inserted / 2) + 1, (fds.drive.side_inserted & 0x01) + 'A');
+			fds_diff_op(FDS_OP_READ, 0, 0);
+			break;
+	}
+}
+void fds_diff_op(BYTE mode, uint32_t position, WORD value) {
+	if (!fds.info.diff) {
+		char file[1024];
+		char ext[10], *lastDot;
+
+		sprintf(file, "%s" DIFFFOLDER "/%s", info.baseFolder, basename(info.romFile));
+		sprintf(ext, ".dif");
+
+		/* rintraccio l'ultimo '.' nel nome */
+		lastDot = strrchr(file, '.');
+		/* elimino l'estensione */
+		*lastDot = 0x00;
+		/* aggiungo l'estensione */
+		strcat(file, ext);
+
+		fds.info.diff = fopen(file, "r+b");
+
+		if ((mode == FDS_OP_WRITE) && !fds.info.diff) {
+			/* creo il file */
+			if ((fds.info.diff = fopen(file, "a+b"))) {
+				/* lo chiudo */
+				fclose(fds.info.diff);
+				/* lo riapro in modalita' rb+ */
+				fds.info.diff = fopen(file, "r+b");
+			}
+		}
+	}
+
+	if (!fds.info.diff) {
+		return;
+	}
+
+	rewind(fds.info.diff);
+
+	if (mode == FDS_OP_WRITE) {
+		_fds_diff_ele in, out;
+		uint32_t version = DIFFVERSION;
+		int rc;
+
+		/* salvo la versione */
+		rc = fwrite(&version, sizeof(uint32_t), 1, fds.info.diff);
+		/* senza questo in windows non funziona correttamente */
+		fflush(fds.info.diff);
+
+		out.side = fds.drive.side_inserted;
+		out.position = position;
+		out.value = value;
+
+		while(fread(&in, sizeof(_fds_diff_ele), 1, fds.info.diff)) {
+			if ((in.position ==  out.position) && (in.side == out.side)) {
+				fseek(fds.info.diff, ftell(fds.info.diff) - sizeof(_fds_diff_ele), SEEK_SET);
+				break;
+			}
+		}
+
+		rc = fwrite(&out, sizeof(_fds_diff_ele), 1, fds.info.diff);
+		/* senza questo in windows non funziona correttamente */
+		fflush(fds.info.diff);
+	} else if (mode == FDS_OP_READ) {
+		_fds_diff_ele ele;
+		uint32_t version;
+		int rc;
+
+		/* leggo la versione del file */
+		rc = fread(&version,  sizeof(uint32_t), 1, fds.info.diff);
+
+		while(fread(&ele, sizeof(_fds_diff_ele), 1, fds.info.diff)) {
+			if (ele.side == fds.drive.side_inserted) {
+				fds.side.data[ele.position] = ele.value;
+			}
+		}
+
+		fclose(fds.info.diff);
+		fds.info.diff = NULL;
+	}
+}
