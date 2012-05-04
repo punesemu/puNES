@@ -97,21 +97,22 @@ void sdlCreateSurfaceGL(SDL_Surface *src, WORD width, WORD height, BYTE flags) {
 	}
 
 	if (!opengl.surfaceGL) {
-		/* salvo gli attributi opengl iniziali */
-		glPushAttrib(GL_ALL_ATTRIB_BITS);
+
+		opengl.surfaceGL = 1;
+
 	} else {
-		SDL_FreeSurface(opengl.surfaceGL);
+		//SDL_FreeSurface(opengl.surfaceGL);
+		glPopAttrib();
 	}
 
 	/*
 	 * ripristino gli attributi opengl ai valori
 	 * iniziali e li salvo nuovamente.
 	 */
-	glPopAttrib();
 	glPushAttrib(GL_ALL_ATTRIB_BITS);
 
-	opengl.surfaceGL = SDL_CreateRGBSurface(SDL_SWSURFACE, width, height, src->format->BitsPerPixel,
-			rmask, gmask, bmask, amask);
+	//opengl.surfaceGL = SDL_CreateRGBSurface(SDL_SWSURFACE, width, height, src->format->BitsPerPixel,
+	//		rmask, gmask, bmask, amask);
 
 	// contains an alpha channel
 	switch (src->format->BitsPerPixel) {
@@ -264,18 +265,29 @@ void sdlCreateSurfaceGL(SDL_Surface *src, WORD width, WORD height, BYTE flags) {
 	// select modulate to mix texture with color for shading
 	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
+
+
+
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+
+
 	// the texture wraps over at the edges (repeat)
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 	// when texture area is small, bilinear filter the closest mipmap
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	////glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	// when texture area is large, bilinear filter the original
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	////glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	/* setto le proprieta' di strecthing della texture */
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
 	if (opengl.glew && !GLEW_VERSION_3_1) {
 #ifndef RELEASE
@@ -286,8 +298,10 @@ void sdlCreateSurfaceGL(SDL_Surface *src, WORD width, WORD height, BYTE flags) {
 	}
 
 	/* creo una texture vuota con i parametri corretti */
-	glTexImage2D(GL_TEXTURE_2D, 0, textureIntFormat, xTexturePot, yTexturePot, 0, textureFormat,
-			textureType, NULL);
+	//glTexImage2D(GL_TEXTURE_2D, 0, textureIntFormat, xTexturePot, yTexturePot, 0, textureFormat,
+	//		textureType, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, xTexturePot, yTexturePot,
+	            0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
 
 	if (opengl.glew && GLEW_VERSION_3_1) {
 #ifndef RELEASE
@@ -299,11 +313,15 @@ void sdlCreateSurfaceGL(SDL_Surface *src, WORD width, WORD height, BYTE flags) {
 	glFinish();
 }
 int sdlFlipScreenGL(SDL_Surface *surface) {
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	glPixelStorei(GL_UNPACK_ROW_LENGTH, surface->w);
+	//glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, surface->w, surface->h, textureFormat, textureType,
-			surface->pixels);
+	glPixelStorei(GL_UNPACK_ROW_LENGTH, surface->w);
+	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, surface->w, surface->h, GL_RGBA,
+	        GL_UNSIGNED_BYTE, surface->pixels);
+
+	//glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, surface->w, surface->h, textureFormat, textureType,
+			//surface->pixels);
+	glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
 
 	/* ripulisco la scena opengl */
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
