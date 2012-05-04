@@ -72,7 +72,7 @@
 	/* ed infine utilizzo la nuova */\
 	ntscSet(gfx.ntscFormat, FALSE, 0, (BYTE *) paletteRGB,(BYTE *) paletteRGB)
 
-SDL_Surface *surfaceSDL, *surface_flip, *surface;
+SDL_Surface *surfaceSDL, *framebuffer;
 uint32_t *paletteWindow, flagsSoftware;
 static BYTE ntsc_width_pixel[5] = {0, 0, 7, 10, 14};
 
@@ -164,8 +164,6 @@ void gfxSetScreen(BYTE newScale, BYTE newFilter, BYTE newFullscreen, BYTE newPal
 	BYTE setMode = FALSE;
 	WORD width = 0, height = 0;
 	WORD wForPr = 0, hForPr = 0;
-
-	surface_flip = NULL;
 
 	/*
 	 * l'ordine dei vari controlli non deve essere cambiato:
@@ -456,8 +454,8 @@ void gfxSetScreen(BYTE newScale, BYTE newFilter, BYTE newFullscreen, BYTE newPal
 			WORD i;
 
 			for (i = 0; i < NCOLORS; i++) {
-				paletteWindow[i] = SDL_MapRGBA(surfaceSDL->format, paletteRGB[i].r, paletteRGB[i].g,
-						paletteRGB[i].b, 255);
+				paletteWindow[i] = SDL_MapRGBA(surfaceSDL->format, paletteRGB[i].r,
+						paletteRGB[i].g, paletteRGB[i].b, 255);
 			}
 		}
 	}
@@ -468,59 +466,27 @@ void gfxSetScreen(BYTE newScale, BYTE newFilter, BYTE newFullscreen, BYTE newPal
 	gfx.palette = newPalette;
 
 	/* software rendering */
-	//surface = surfaceSDL;
+	framebuffer = surfaceSDL;
 	flip = SDL_Flip;
 
 	wForPr = gfx.w[VIDEOMODE];
 	hForPr = gfx.h[VIDEOMODE];
-
-	if (surface_flip) {
-		SDL_FreeSurface(surface_flip);
-	}
-
-	SDL_Surface *pippo = SDL_CreateRGBSurface(SDL_SWSURFACE,
-			surfaceSDL->w, surfaceSDL->h,
-			surfaceSDL->format->BitsPerPixel,
-			surfaceSDL->format->Rmask,
-			surfaceSDL->format->Gmask,
-			surfaceSDL->format->Bmask,
-			surfaceSDL->format->Amask);
-
-	//surface_flip = SDL_ConvertSurface(surfaceSDL, surfaceSDL->format, surfaceSDL->flags);
-	surface_flip = SDL_DisplayFormat(pippo);
-
-	SDL_FreeSurface(pippo);
-
-	surface = surface_flip;
 
 #ifdef OPENGL
 	if (gfx.opengl) {
 		/* creo la superficie che utilizzero' come texture */
 		sdlCreateSurfaceGL(surfaceSDL, gfx.w[CURRENT], gfx.h[CURRENT], gfx.fullscreen);
 
-		SDL_FreeSurface(surface_flip);
-
-		surface_flip = SDL_CreateRGBSurface(SDL_SWSURFACE,
-				gfx.w[CURRENT], gfx.h[CURRENT],
-				surfaceSDL->format->BitsPerPixel,
-				surfaceSDL->format->Rmask,
-				surfaceSDL->format->Gmask,
-				surfaceSDL->format->Bmask,
-				surfaceSDL->format->Amask);
-
-		surface = surface_flip;
-
 		/* opengl rendering */
-		//surface = opengl.surfaceGL;
+		framebuffer = opengl.surfaceGL;
 		flip = sdlFlipScreenGL;
 
 		wForPr = opengl.xTexture2 - opengl.xTexture1;
 		hForPr = opengl.yTexture2 - opengl.yTexture1;
-	} else
+	}
 #endif
 
-
-	textReset(surface);
+	textReset(framebuffer);
 
 	/*
 	 * calcolo le proporzioni tra il disegnato a video (overscan e schermo
@@ -544,7 +510,7 @@ void gfxDrawScreen(BYTE forced) {
 			info.pause_frames_drawscreen = 0;
 			forced = TRUE;
 		} else {
-			textRendering(FALSE, surface);
+			textRendering(FALSE, framebuffer);
 			return;
 		}
 	}
@@ -552,28 +518,23 @@ void gfxDrawScreen(BYTE forced) {
 	/* se il frameskip me lo permette (o se forzato), disegno lo screen */
 	if (forced || !ppu.skipDraw) {
 		/* applico l'effetto desiderato */
-		effect(screen.data, screen.line, paletteWindow, surface, gfx.rows, gfx.lines, gfx.scale);
+		effect(screen.data, screen.line, paletteWindow, framebuffer, gfx.rows, gfx.lines,
+				gfx.scale);
 
-		textRendering(TRUE, surface);
+		textRendering(TRUE, framebuffer);
 
-		if (!gfx.opengl) {
-			SDL_BlitSurface(surface, NULL, surfaceSDL, NULL);
-			flip(surfaceSDL);
-		} else {
-			/* disegno a video */
-			flip(surface);
-		}
-
+		/* disegno a video */
+		flip(framebuffer);
 	}
 }
 void gfxResetVideo(void) {
 	SDL_FreeSurface(surfaceSDL);
-	surfaceSDL = surface = NULL;
+	surfaceSDL = framebuffer = NULL;
 
 #ifdef OPENGL
-	//if (opengl.surfaceGL) {
-	//	SDL_FreeSurface(opengl.surfaceGL);
-	//}
+	if (opengl.surfaceGL) {
+		SDL_FreeSurface(opengl.surfaceGL);
+	}
 	if (opengl.texture) {
 		glDeleteTextures(1, &opengl.texture);
 	}
@@ -589,9 +550,9 @@ void gfxQuit(void) {
 		free(paletteWindow);
 	}
 #ifdef OPENGL
-	//if (opengl.surfaceGL) {
-	//	SDL_FreeSurface(opengl.surfaceGL);
-	//}
+	if (opengl.surfaceGL) {
+		SDL_FreeSurface(opengl.surfaceGL);
+	}
 	if (opengl.texture) {
 		glDeleteTextures(1, &opengl.texture);
 	}
@@ -600,6 +561,63 @@ void gfxQuit(void) {
 	textQuit();
 	SDL_Quit();
 }
+
+SDL_Surface *gfxCreateRGBSurface(SDL_Surface *src, uint32_t width, uint32_t height) {
+	uint32_t rmask, gmask, bmask, amask;
+	SDL_Surface *new_surface;
+
+	switch (src->format->BitsPerPixel) {
+		case 16:
+#if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
+			rmask = 0x0000F800;
+			gmask = 0x000007E0;
+			bmask = 0x0000001F;
+			amask = 0x00000000;
+#else
+			rmask = 0x000000F8;
+			gmask = 0x000007E0;
+			bmask = 0x00001F00;
+			amask = 0x00000000;
+#endif
+			break;
+		case 24:
+#if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
+			rmask = 0x00FF0000;
+			gmask = 0x0000FF00;
+			bmask = 0x000000FF;
+			amask = 0x00000000;
+#else
+			rmask = 0x000000FF;
+			gmask = 0x0000FF00;
+			bmask = 0x00FF0000;
+			amask = 0x00000000;
+#endif
+			break;
+		case 32:
+		default:
+#if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
+			rmask = 0xFF000000;
+			gmask = 0x00FF0000;
+			bmask = 0x0000FF00;
+			amask = 0x000000FF;
+#else
+			rmask = 0x000000FF;
+			gmask = 0x0000FF00;
+			bmask = 0x00FF0000;
+			amask = 0xFF000000;
+#endif
+			break;
+	}
+
+	//new_surface = SDL_CreateRGBSurface(SDL_SWSURFACE, width, height, src->format->BitsPerPixel,
+	//		rmask, gmask, bmask, amask);
+	new_surface = SDL_DisplayFormatAlpha(SDL_CreateRGBSurface(src->flags, width, height,
+			src->format->BitsPerPixel, src->format->Rmask, src->format->Gmask,
+			src->format->Bmask, src->format->Amask));
+
+	return (new_surface);
+}
+
 double sdlGetMs(void) {
 	return (SDL_GetTicks());
 }
