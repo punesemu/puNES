@@ -338,7 +338,7 @@ static const _param pPalette[] = {
 };
 #ifdef OPENGL
 static const _param pRendering[] = {
-	{"Software", "sotfware"},
+	{"Software", "software"},
 	{"OpenGL",   "opengl"  }
 };
 #endif
