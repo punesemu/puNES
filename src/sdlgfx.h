@@ -71,6 +71,8 @@ void gfxDrawScreen(BYTE forced);
 void gfxResetVideo(void);
 void gfxQuit(void);
 
+SDL_Surface *gfxCreateRGBSurface(SDL_Surface *src, uint32_t width, uint32_t height);
+
 double sdlGetMs(void);
 void sdlNOP(double ms);
 

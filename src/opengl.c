@@ -33,7 +33,7 @@ void sdlInitGL(void) {
 	opengl.rotation = 0;
 	opengl.surfaceGL = NULL;
 	opengl.texture = 0;
-	opengl.flagsOpengl = SDL_OPENGL;
+	opengl.flagsOpengl = SDL_HWSURFACE | SDL_OPENGL;
 	opengl.factorDistance = 0;
 	opengl.xRotate = 0;
 	opengl.yRotate = 0;
@@ -41,8 +41,6 @@ void sdlInitGL(void) {
 	opengl.yDiff = 0;
 }
 void sdlCreateSurfaceGL(SDL_Surface *src, WORD width, WORD height, BYTE flags) {
-	Uint32 rmask, gmask, bmask, amask;
-
 	if (!opengl.glew){
 		GLenum err;
 
@@ -53,51 +51,7 @@ void sdlCreateSurfaceGL(SDL_Surface *src, WORD width, WORD height, BYTE flags) {
 		}
 	}
 
-	switch (src->format->BitsPerPixel) {
-		case 16:
-#if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
-			rmask = 0x0000F800;
-			gmask = 0x000007E0;
-			bmask = 0x0000001F;
-			amask = 0x00000000;
-#else
-			rmask = 0x000000F8;
-			gmask = 0x000007E0;
-			bmask = 0x00001F00;
-			amask = 0x00000000;
-#endif
-			break;
-		case 24:
-#if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
-			rmask = 0x00FF0000;
-			gmask = 0x0000FF00;
-			bmask = 0x000000FF;
-			amask = 0x00000000;
-#else
-			rmask = 0x000000FF;
-			gmask = 0x0000FF00;
-			bmask = 0x00FF0000;
-			amask = 0x00000000;
-#endif
-			break;
-		case 32:
-		default:
-#if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
-			rmask = 0xFF000000;
-			gmask = 0x00FF0000;
-			bmask = 0x0000FF00;
-			amask = 0x000000FF;
-#else
-			rmask = 0x000000FF;
-			gmask = 0x0000FF00;
-			bmask = 0x00FF0000;
-			amask = 0xFF000000;
-#endif
-			break;
-	}
-
 	if (!opengl.surfaceGL) {
-		/* salvo gli attributi opengl iniziali */
 		glPushAttrib(GL_ALL_ATTRIB_BITS);
 	} else {
 		SDL_FreeSurface(opengl.surfaceGL);
@@ -110,8 +64,7 @@ void sdlCreateSurfaceGL(SDL_Surface *src, WORD width, WORD height, BYTE flags) {
 	glPopAttrib();
 	glPushAttrib(GL_ALL_ATTRIB_BITS);
 
-	opengl.surfaceGL = SDL_CreateRGBSurface(SDL_SWSURFACE, width, height, src->format->BitsPerPixel,
-			rmask, gmask, bmask, amask);
+	opengl.surfaceGL = gfxCreateRGBSurface(src, width, height);
 
 	// contains an alpha channel
 	switch (src->format->BitsPerPixel) {
@@ -136,11 +89,12 @@ void sdlCreateSurfaceGL(SDL_Surface *src, WORD width, WORD height, BYTE flags) {
 			break;
 		case 32:
 		default:
-			textureIntFormat = GL_RGBA8;
 			/* vale sia per BIG_ENDIAN che per il LITTLE */
+			//textureFormat = GL_BGRA;
+			//textureType = GL_UNSIGNED_INT_8_8_8_8_REV;
+			textureIntFormat = GL_RGBA8;
 			textureFormat = GL_BGRA;
-			textureType = GL_UNSIGNED_INT_8_8_8_8_REV;
-			//textureType = GL_UNSIGNED_BYTE;
+			textureType = GL_UNSIGNED_BYTE;
 			break;
 	}
 
@@ -213,10 +167,8 @@ void sdlCreateSurfaceGL(SDL_Surface *src, WORD width, WORD height, BYTE flags) {
 
 	if (opengl.rotation) {
 		glFrustum(-1, 1, -1, 1, 1.0f + (1.0f - zVertex), 100.0f);
-		//glFrustum(-1, 1, -1, 1, 1.0f, 100.0f);
 	} else {
 		glOrtho(0.0f, src->w, src->h, 0.0f, -1.0f, 1.0f);
-		//glOrtho(0, src->w, src->h, 0, -99999, 99999);
 	}
 
 	/* Make sure we're chaning the model view and not the projection */
@@ -261,22 +213,6 @@ void sdlCreateSurfaceGL(SDL_Surface *src, WORD width, WORD height, BYTE flags) {
 	xTsh = (GLfloat) width / xTexturePot;
 	yTsh = (GLfloat) height / yTexturePot;
 
-	// select modulate to mix texture with color for shading
-	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-
-	// the texture wraps over at the edges (repeat)
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-	// when texture area is small, bilinear filter the closest mipmap
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	// when texture area is large, bilinear filter the original
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	/* setto le proprieta' di strecthing della texture */
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
 	if (opengl.glew && !GLEW_VERSION_3_1) {
 #ifndef RELEASE
 		fprintf(stderr, "\nOpenGL < 3.1\n");
@@ -286,8 +222,9 @@ void sdlCreateSurfaceGL(SDL_Surface *src, WORD width, WORD height, BYTE flags) {
 	}
 
 	/* creo una texture vuota con i parametri corretti */
-	glTexImage2D(GL_TEXTURE_2D, 0, textureIntFormat, xTexturePot, yTexturePot, 0, textureFormat,
-			textureType, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, textureIntFormat, xTexturePot, yTexturePot, 0,
+			textureFormat, textureType, NULL);
+
 
 	if (opengl.glew && GLEW_VERSION_3_1) {
 #ifndef RELEASE
@@ -296,14 +233,25 @@ void sdlCreateSurfaceGL(SDL_Surface *src, WORD width, WORD height, BYTE flags) {
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 
+	// select modulate to mix texture with color for shading
+	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+
+	// the texture wraps over at the edges (repeat)
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+	/* setto le proprieta' di strecthing della texture */
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
 	glFinish();
 }
 int sdlFlipScreenGL(SDL_Surface *surface) {
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	glPixelStorei(GL_UNPACK_ROW_LENGTH, surface->w);
-
-	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, surface->w, surface->h, textureFormat, textureType,
-			surface->pixels);
+	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, surface->w, surface->h, textureFormat,
+			textureType, surface->pixels);
+	glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
 
 	/* ripulisco la scena opengl */
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);

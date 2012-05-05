@@ -23,9 +23,7 @@
 	}\
 	tmp_rect.w = txt->factor * font_size[ch_font][0];\
 	tmp_rect.h = txt->factor * font_size[ch_font][1];\
-	tmp = SDL_DisplayFormatAlpha(SDL_CreateRGBSurface(surface->flags, tmp_rect.w, tmp_rect.h,\
-			surface->format->BitsPerPixel, surface->format->Rmask, surface->format->Gmask,\
-			surface->format->Bmask, surface->format->Amask))
+	tmp = gfxCreateRGBSurface(surface, tmp_rect.w, tmp_rect.h)
 #define port_control(prt, button, ch)\
 	if (prt.data[button] == PRESSED) {\
 		strcat(ele->text, "[yellow]");\
