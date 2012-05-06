@@ -368,6 +368,7 @@ int sdlFlipScreenGL(SDL_Surface *surface) {
 	}
 
 	SDL_GL_SwapBuffers();
+
 	return (0);
 }
 int sdlPowerOfTwoGL(int base) {
