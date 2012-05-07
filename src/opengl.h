@@ -22,6 +22,7 @@ int sdlPowerOfTwoGL(int base);
 struct _opengl {
 	BYTE aspectRatio;
 	BYTE rotation;
+	BYTE glsl_enabled;
 	SDL_Surface *surfaceGL;
 	GLuint texture;
 	GLint wTexture;

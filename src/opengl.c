@@ -8,6 +8,8 @@
 #include "opengl.h"
 #include "sdlgfx.h"
 
+char *file2string(const char *path);
+
 GLint textureIntFormat;
 GLenum textureFormat, textureType;
 GLint xTexturePot, yTexturePot;
@@ -153,6 +155,11 @@ void sdlCreateSurfaceGL(SDL_Surface *src, WORD width, WORD height, BYTE flags) {
 	yVertex = 1.0f - ((1.0f / (src->h / 2)) * opengl.yTexture1);
 	zVertex = xVertex;
 
+	xTexturePot = sdlPowerOfTwoGL(width);
+	yTexturePot = sdlPowerOfTwoGL(height);
+	xTsh = (GLfloat) width / xTexturePot;
+	yTsh = (GLfloat) height / yTexturePot;
+
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
 	/* Setup our viewport. */
@@ -208,53 +215,104 @@ void sdlCreateSurfaceGL(SDL_Surface *src, WORD width, WORD height, BYTE flags) {
 	/* indico la texture da utilizzare */
 	glBindTexture(GL_TEXTURE_2D, opengl.texture);
 
-	xTexturePot = sdlPowerOfTwoGL(width);
-	yTexturePot = sdlPowerOfTwoGL(height);
-	xTsh = (GLfloat) width / xTexturePot;
-	yTsh = (GLfloat) height / yTexturePot;
-
-	if (opengl.glew && !GLEW_VERSION_3_1) {
-#ifndef RELEASE
-		fprintf(stderr, "\nOpenGL < 3.1\n");
-#endif
-		/* creo la minimap */
-		glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
-	}
-
-	/* creo una texture vuota con i parametri corretti */
-	glTexImage2D(GL_TEXTURE_2D, 0, textureIntFormat, xTexturePot, yTexturePot, 0,
-			textureFormat, textureType, NULL);
-
-
-	if (opengl.glew && GLEW_VERSION_3_1) {
-#ifndef RELEASE
-		fprintf(stderr, "\nOpenGL >= 3.1\n");
-#endif
-		glGenerateMipmap(GL_TEXTURE_2D);
-	}
-
 	// select modulate to mix texture with color for shading
 	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-
 	// the texture wraps over at the edges (repeat)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-	/* setto le proprieta' di strecthing della texture */
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	GLfloat waveTime = 0.0,
+			waveWidth = 0.1,
+			waveHeight = 3.0,
+			waveFreq = 0.1;
+	GLint waveTimeLoc = glGetUniformLocation(sp, "waveTime");
+	GLint waveWidthLoc = glGetUniformLocation(sp, "waveWidth");
+	GLint waveHeightLoc = glGetUniformLocation(sp, "waveHeight");
+
+	/* The vertex shader */
+	const GLchar *vsSource = file2string("/home/fhorse/Scrivania/gpuPeteOGL2.slv");
+	const GLchar *fsSource = file2string("/home/fhorse/Scrivania/gpuPeteOGL2.slf");
+
+	if (opengl.glew) {
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		if (GLEW_VERSION_2_0) {
+#ifndef RELEASE
+			fprintf(stderr, "INFO: OpenGL 2.0 supported. Glsl enabled.\n");
+#endif
+			opengl.glsl_enabled = TRUE;
+
+
+			/* Compile and load the program */
+
+			GLuint vs, /* Vertex Shader */
+				   fs, /* Fragment Shader */
+				   sp; /* Shader Program */
+
+
+			vs = glCreateShader(GL_VERTEX_SHADER);
+			glShaderSource(vs, 1, &vsSource, NULL);
+			glCompileShader(vs);
+			//printLog(vs);
+
+			fs = glCreateShader(GL_FRAGMENT_SHADER);
+			glShaderSource(fs, 1, &fsSource, NULL);
+			glCompileShader(fs);
+			//printLog(fs);
+
+			free((char *) vsSource);
+			free((char *) fsSource);
+
+			sp = glCreateProgram();
+			glAttachShader(sp, vs);
+			glAttachShader(sp, fs);
+			glLinkProgram(sp);
+			//printLog(sp);
+
+			glUseProgram(sp);
+
+		}
+
+		if (!GLEW_VERSION_3_1) {
+#ifndef RELEASE
+			fprintf(stderr, "INFO: OpenGL 3.1 not supported.\n");
+#endif
+			/* creo la minimap */
+			glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
+		}
+
+		/* creo una texture vuota con i parametri corretti */
+		glTexImage2D(GL_TEXTURE_2D, 0, textureIntFormat, xTexturePot, yTexturePot, 0,
+				textureFormat, textureType, NULL);
+
+		if (GLEW_VERSION_3_1) {
+#ifndef RELEASE
+			fprintf(stderr, "INFO: OpenGL 3.1 supported.\n");
+#endif
+			glGenerateMipmap(GL_TEXTURE_2D);
+		}
+	} else {
+		/* setto le proprieta' di strecthing della texture */
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		/* creo una texture vuota con i parametri corretti */
+		glTexImage2D(GL_TEXTURE_2D, 0, textureIntFormat, xTexturePot, yTexturePot, 0,
+				textureFormat, textureType, NULL);
+	}
 
 	glFinish();
 }
 int sdlFlipScreenGL(SDL_Surface *surface) {
+	/* ripulisco la scena opengl */
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	glPixelStorei(GL_UNPACK_ROW_LENGTH, surface->w);
 	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, surface->w, surface->h, textureFormat,
 			textureType, surface->pixels);
 	glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
-
-	/* ripulisco la scena opengl */
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 	/* disegno la texture */
 	if (opengl.rotation) {
@@ -378,4 +436,44 @@ int sdlPowerOfTwoGL(int base) {
 		pot <<= 1;
 	}
 	return (pot);
+}
+
+
+
+
+
+
+char *file2string(const char *path)
+{
+	FILE *fd;
+	long len,
+		 r;
+	char *str;
+
+	if (!(fd = fopen(path, "r")))
+	{
+		fprintf(stderr, "Can't open file '%s' for reading\n", path);
+		return NULL;
+	}
+
+	fseek(fd, 0, SEEK_END);
+	len = ftell(fd);
+
+	printf("File '%s' is %ld long\n", path, len);
+
+	fseek(fd, 0, SEEK_SET);
+
+	if (!(str = malloc(len * sizeof(char))))
+	{
+		fprintf(stderr, "Can't malloc space for '%s'\n", path);
+		return NULL;
+	}
+
+	r = fread(str, sizeof(char), len, fd);
+
+	str[r - 1] = '\0'; /* Shader sources have to term with null */
+
+	fclose(fd);
+
+	return str;
 }
