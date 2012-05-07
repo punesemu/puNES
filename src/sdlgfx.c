@@ -525,6 +525,8 @@ void gfxDrawScreen(BYTE forced) {
 		/* applico l'effetto desiderato */
 		effect(screen.data, screen.line, paletteWindow, framebuffer, gfx.rows, gfx.lines,
 				gfx.scale);
+		//effect(screen.data, screen.line, paletteWindow, framebuffer, gfx.rows, gfx.lines,
+		//		1);
 
 		textRendering(TRUE, framebuffer);
 

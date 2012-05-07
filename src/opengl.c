@@ -9,6 +9,24 @@
 #include "sdlgfx.h"
 
 char *file2string(const char *path);
+void printLog(GLuint obj);
+GLfloat OGL2Size[4];
+GLfloat OGL2Param[4];
+/*struct {
+	GLfloat x;
+	GLfloat y;
+	GLfloat z;
+	GLfloat w;
+};*/
+const GLchar *vsSource;
+const GLchar *fsSource;
+GLuint vs, /* Vertex Shader */
+	   fs, /* Fragment Shader */
+	   sp; /* Shader Program */
+GLint baseImageLoc;
+GLint OGL2SizeLoc;
+GLint OGL2ParamLoc;
+GLuint texture;
 
 GLint textureIntFormat;
 GLenum textureFormat, textureType;
@@ -212,26 +230,16 @@ void sdlCreateSurfaceGL(SDL_Surface *src, WORD width, WORD height, BYTE flags) {
 	}
 	glGenTextures(1, &opengl.texture);
 
+	glActiveTexture(GL_TEXTURE0);
+
 	/* indico la texture da utilizzare */
 	glBindTexture(GL_TEXTURE_2D, opengl.texture);
 
 	// select modulate to mix texture with color for shading
-	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+	//glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	// the texture wraps over at the edges (repeat)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-	GLfloat waveTime = 0.0,
-			waveWidth = 0.1,
-			waveHeight = 3.0,
-			waveFreq = 0.1;
-	GLint waveTimeLoc = glGetUniformLocation(sp, "waveTime");
-	GLint waveWidthLoc = glGetUniformLocation(sp, "waveWidth");
-	GLint waveHeightLoc = glGetUniformLocation(sp, "waveHeight");
-
-	/* The vertex shader */
-	const GLchar *vsSource = file2string("/home/fhorse/Scrivania/gpuPeteOGL2.slv");
-	const GLchar *fsSource = file2string("/home/fhorse/Scrivania/gpuPeteOGL2.slf");
 
 	if (opengl.glew) {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -243,23 +251,21 @@ void sdlCreateSurfaceGL(SDL_Surface *src, WORD width, WORD height, BYTE flags) {
 #endif
 			opengl.glsl_enabled = TRUE;
 
-
 			/* Compile and load the program */
 
-			GLuint vs, /* Vertex Shader */
-				   fs, /* Fragment Shader */
-				   sp; /* Shader Program */
-
+			/* The vertex shader */
+			vsSource = file2string("/home/fhorse/zzz/gpuPeteOGL2.slv");
+			fsSource = file2string("/home/fhorse/zzz/gpuPeteOGL2.slf");
 
 			vs = glCreateShader(GL_VERTEX_SHADER);
 			glShaderSource(vs, 1, &vsSource, NULL);
 			glCompileShader(vs);
-			//printLog(vs);
+			printLog(vs);
 
 			fs = glCreateShader(GL_FRAGMENT_SHADER);
 			glShaderSource(fs, 1, &fsSource, NULL);
 			glCompileShader(fs);
-			//printLog(fs);
+			printLog(fs);
 
 			free((char *) vsSource);
 			free((char *) fsSource);
@@ -268,10 +274,29 @@ void sdlCreateSurfaceGL(SDL_Surface *src, WORD width, WORD height, BYTE flags) {
 			glAttachShader(sp, vs);
 			glAttachShader(sp, fs);
 			glLinkProgram(sp);
-			//printLog(sp);
 
 			glUseProgram(sp);
 
+			OGL2Size[0] = xTexturePot; //width;
+			OGL2Size[1] = yTexturePot; //height;
+			OGL2Size[2] = 256.0; //SCRLINES;
+			OGL2Size[3] = 256.0;   //SCRROWS;
+
+			OGL2Param[0] = 0.0;
+			OGL2Param[1] = 0.0;
+			OGL2Param[2] = 0.0;
+			OGL2Param[3] = 0.0;
+
+			OGL2ParamLoc = glGetUniformLocation(sp, "OGL2Param");
+			OGL2SizeLoc = glGetUniformLocation(sp, "OGL2Size");
+			baseImageLoc = glGetUniformLocation(sp, "OGL2Texture");
+
+			printf("wave parameters location: %d %d %d\n", OGL2ParamLoc, OGL2SizeLoc, baseImageLoc);
+
+			glUniform4fv(OGL2ParamLoc, 1, OGL2Param);
+			glUniform4fv(OGL2SizeLoc, 1, OGL2Size);
+			glUniform1i(baseImageLoc, 0);
+			printLog(sp);
 		}
 
 		if (!GLEW_VERSION_3_1) {
@@ -476,4 +501,25 @@ char *file2string(const char *path)
 	fclose(fd);
 
 	return str;
+}
+
+void printLog(GLuint obj)
+{
+	int infologLength = 0;
+	int maxLength;
+
+	if(glIsShader(obj))
+		glGetShaderiv(obj,GL_INFO_LOG_LENGTH,&maxLength);
+	else
+		glGetProgramiv(obj,GL_INFO_LOG_LENGTH,&maxLength);
+
+	char infoLog[maxLength];
+
+	if (glIsShader(obj))
+		glGetShaderInfoLog(obj, maxLength, &infologLength, infoLog);
+	else
+		glGetProgramInfoLog(obj, maxLength, &infologLength, infoLog);
+
+	if (infologLength > 0)
+		printf("%s\n",infoLog);
 }
