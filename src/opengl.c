@@ -230,7 +230,10 @@ void sdlCreateSurfaceGL(SDL_Surface *src, WORD width, WORD height, BYTE flags) {
 	}
 	glGenTextures(1, &opengl.texture);
 
-	glActiveTexture(GL_TEXTURE0);
+	if (texture) {
+		glDeleteTextures(1, &texture);
+	}
+	glGenTextures(1, &texture);
 
 	/* indico la texture da utilizzare */
 	glBindTexture(GL_TEXTURE_2D, opengl.texture);
@@ -245,6 +248,25 @@ void sdlCreateSurfaceGL(SDL_Surface *src, WORD width, WORD height, BYTE flags) {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
+		if (!GLEW_VERSION_3_1) {
+#ifndef RELEASE
+			fprintf(stderr, "INFO: OpenGL 3.1 not supported.\n");
+#endif
+			/* creo la minimap */
+			glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
+		}
+
+		/* creo una texture vuota con i parametri corretti */
+		glTexImage2D(GL_TEXTURE_2D, 0, textureIntFormat, xTexturePot, yTexturePot, 0,
+				textureFormat, textureType, NULL);
+
+		if (GLEW_VERSION_3_1) {
+#ifndef RELEASE
+			fprintf(stderr, "INFO: OpenGL 3.1 supported.\n");
+#endif
+			glGenerateMipmap(GL_TEXTURE_2D);
+		}
+
 		if (GLEW_VERSION_2_0) {
 #ifndef RELEASE
 			fprintf(stderr, "INFO: OpenGL 2.0 supported. Glsl enabled.\n");
@@ -254,16 +276,16 @@ void sdlCreateSurfaceGL(SDL_Surface *src, WORD width, WORD height, BYTE flags) {
 			/* Compile and load the program */
 
 			/* The vertex shader */
-			vsSource = file2string("/home/fhorse/zzz/gpuPeteOGL2.slv");
-			fsSource = file2string("/home/fhorse/zzz/gpuPeteOGL2.slf");
+			vsSource = file2string("/home/fhorse/Dropbox/gpuPeteOGL2.slv");
+			fsSource = file2string("/home/fhorse/Dropbox/gpuPeteOGL2.slf");
 
 			vs = glCreateShader(GL_VERTEX_SHADER);
-			glShaderSource(vs, 1, &vsSource, NULL);
-			glCompileShader(vs);
-			printLog(vs);
-
 			fs = glCreateShader(GL_FRAGMENT_SHADER);
+
+			glShaderSource(vs, 1, &vsSource, NULL);
 			glShaderSource(fs, 1, &fsSource, NULL);
+
+			glCompileShader(vs);
 			glCompileShader(fs);
 			printLog(fs);
 
@@ -274,6 +296,10 @@ void sdlCreateSurfaceGL(SDL_Surface *src, WORD width, WORD height, BYTE flags) {
 			glAttachShader(sp, vs);
 			glAttachShader(sp, fs);
 			glLinkProgram(sp);
+
+			/*glDeleteObject(vs);
+			glDeleteObject(fs);
+			glDeleteObject(sp);*/
 
 			glUseProgram(sp);
 
@@ -299,24 +325,7 @@ void sdlCreateSurfaceGL(SDL_Surface *src, WORD width, WORD height, BYTE flags) {
 			printLog(sp);
 		}
 
-		if (!GLEW_VERSION_3_1) {
-#ifndef RELEASE
-			fprintf(stderr, "INFO: OpenGL 3.1 not supported.\n");
-#endif
-			/* creo la minimap */
-			glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
-		}
 
-		/* creo una texture vuota con i parametri corretti */
-		glTexImage2D(GL_TEXTURE_2D, 0, textureIntFormat, xTexturePot, yTexturePot, 0,
-				textureFormat, textureType, NULL);
-
-		if (GLEW_VERSION_3_1) {
-#ifndef RELEASE
-			fprintf(stderr, "INFO: OpenGL 3.1 supported.\n");
-#endif
-			glGenerateMipmap(GL_TEXTURE_2D);
-		}
 	} else {
 		/* setto le proprieta' di strecthing della texture */
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -338,6 +347,10 @@ int sdlFlipScreenGL(SDL_Surface *surface) {
 	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, surface->w, surface->h, textureFormat,
 			textureType, surface->pixels);
 	glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, opengl.texture);
+	glEnable(GL_TEXTURE_2D);
 
 	/* disegno la texture */
 	if (opengl.rotation) {
