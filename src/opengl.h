@@ -19,8 +19,13 @@ typedef struct {
 	GLenum format;
 	GLenum type;
 	GLint format_internal;
-} _texture;
 
+	GLfloat x;
+	GLfloat y;
+} _texture;
+typedef struct {
+
+} _vertex;
 struct _opengl {
 	BYTE aspectRatio;
 	BYTE rotation;
@@ -45,13 +50,12 @@ struct _opengl {
 
 } opengl;
 
-GLfloat xTsh, yTsh;
-
 void sdlInitGL(void);
 void sdlCreateSurfaceGL(SDL_Surface *src, WORD width, WORD height, BYTE flags);
 int opengl_flip(SDL_Surface *surface);
 
-void opengl_create_texture(GLuint *texture);
+void opengl_create_texture(GLuint *texture, GLint texture_real_width, GLint texture_real_height);
+void opengl_update_texture(SDL_Surface *surface);
 int opengl_power_of_two(int base);
 
 /* funzioni virtuali */
