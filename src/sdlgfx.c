@@ -484,7 +484,7 @@ void gfxSetScreen(BYTE newScale, BYTE newFilter, BYTE newFullscreen, BYTE newPal
 
 		/* opengl rendering */
 		framebuffer = opengl.surfaceGL;
-		flip = sdlFlipScreenGL;
+		flip = opengl_flip;
 
 		wForPr = opengl.xTexture2 - opengl.xTexture1;
 		hForPr = opengl.yTexture2 - opengl.yTexture1;
@@ -525,12 +525,17 @@ void gfxDrawScreen(BYTE forced) {
 		/* applico l'effetto desiderato */
 		if (gfx.opengl) {
 			effect(screen.data, screen.line, paletteWindow, framebuffer, gfx.rows, gfx.lines, 1);
+
+			textRendering(TRUE, framebuffer);
+
+			opengl_draw_scene(framebuffer);
+
 		} else {
 			effect(screen.data, screen.line, paletteWindow, framebuffer, gfx.rows, gfx.lines,
 					gfx.scale);
-		}
 
-		textRendering(TRUE, framebuffer);
+			textRendering(TRUE, framebuffer);
+		}
 
 		/* disegno a video */
 		flip(framebuffer);
@@ -544,8 +549,8 @@ void gfxResetVideo(void) {
 	if (opengl.surfaceGL) {
 		SDL_FreeSurface(opengl.surfaceGL);
 	}
-	if (opengl.texture) {
-		glDeleteTextures(1, &opengl.texture);
+	if (opengl.texture.data) {
+		glDeleteTextures(1, &opengl.texture.data);
 	}
 	opengl.surfaceGL = NULL;
 #endif
@@ -562,8 +567,8 @@ void gfxQuit(void) {
 	if (opengl.surfaceGL) {
 		SDL_FreeSurface(opengl.surfaceGL);
 	}
-	if (opengl.texture) {
-		glDeleteTextures(1, &opengl.texture);
+	if (opengl.texture.data) {
+		glDeleteTextures(1, &opengl.texture.data);
 	}
 #endif
 	ntscQuit();

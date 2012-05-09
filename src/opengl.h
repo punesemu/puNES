@@ -14,17 +14,19 @@
 
 #define slowFactor	3
 
-void sdlInitGL(void);
-void sdlCreateSurfaceGL(SDL_Surface *src, WORD width, WORD height, BYTE flags);
-int sdlFlipScreenGL(SDL_Surface *surface);
-int sdlPowerOfTwoGL(int base);
+typedef struct {
+	GLuint data;
+	GLenum format;
+	GLenum type;
+	GLint format_internal;
+} _texture;
 
 struct _opengl {
 	BYTE aspectRatio;
 	BYTE rotation;
 	BYTE glsl_enabled;
 	SDL_Surface *surfaceGL;
-	GLuint texture;
+
 	GLint wTexture;
 	GLint hTexture;
 	GLint xTexture1;
@@ -38,6 +40,22 @@ struct _opengl {
 	float yRotate;
 	float xDiff;
 	float yDiff;
+
+	_texture texture;
+
 } opengl;
+
+GLfloat xTsh, yTsh;
+
+void sdlInitGL(void);
+void sdlCreateSurfaceGL(SDL_Surface *src, WORD width, WORD height, BYTE flags);
+int opengl_flip(SDL_Surface *surface);
+
+void opengl_create_texture(GLuint *texture);
+int opengl_power_of_two(int base);
+
+/* funzioni virtuali */
+void (*opengl_set)(SDL_Surface *src);
+void (*opengl_draw_scene)(SDL_Surface *surface);
 
 #endif /* OPENGL_H_ */

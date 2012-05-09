@@ -7,6 +7,8 @@
 
 #include "opengl.h"
 #include "sdlgfx.h"
+#include "openGL/no_effect.h"
+#include "openGL/cube3d.h"
 
 char *file2string(const char *path);
 void printLog(GLuint obj);
@@ -102,73 +104,60 @@ static ShaderData shaders[2] = {
 
 
 
-
-
-
-GLint textureIntFormat;
-GLenum textureFormat, textureType;
 GLint xTexturePot, yTexturePot;
-GLfloat xTsh, yTsh;
-float xVertex, yVertex, zVertex;
-float distance;
-float matrixDistance[60] = {
-	-2.000f, -2.020f, -2.040f, -2.060f, -2.080f,
-	-2.100f, -2.120f, -2.140f, -2.160f, -2.180f,
-	-2.200f, -2.220f, -2.240f, -2.260f, -2.280f,
-	-2.300f, -2.320f, -2.340f, -2.360f, -2.380f,
-	-2.400f, -2.420f, -2.440f, -2.460f, -2.480f,
-	-2.500f, -2.520f, -2.540f, -2.560f, -2.580f,
-	-2.600f, -2.620f, -2.640f, -2.660f, -2.680f,
-	-2.700f, -2.720f, -2.740f, -2.760f, -2.780f,
-	-2.800f, -2.820f, -2.840f, -2.860f, -2.880f,
-	-2.890f, -2.900f, -2.910f, -2.920f, -2.930f,
-	-2.940f, -2.950f, -2.965f, -2.970f, -2.975f,
-	-2.980f, -2.985f, -2.990f, -2.995f, -3.000f
-};
+
 
 void sdlInitGL(void) {
 	opengl.rotation = 0;
 	opengl.surfaceGL = NULL;
-	opengl.texture = 0;
+
 	opengl.flagsOpengl = SDL_HWSURFACE | SDL_OPENGL;
 	opengl.factorDistance = 0;
 	opengl.xRotate = 0;
 	opengl.yRotate = 0;
 	opengl.xDiff = 0;
 	opengl.yDiff = 0;
+
+	opengl.glew = 0;
+
+	memset(&opengl.texture, 0, sizeof(_texture));
 }
 void sdlCreateSurfaceGL(SDL_Surface *src, WORD width, WORD height, BYTE flags) {
-	// contains an alpha channel
-	switch (src->format->BitsPerPixel) {
-		case 16:
-			textureIntFormat = GL_RGB5;
-			if (SDL_BYTEORDER == SDL_BIG_ENDIAN) {
-				textureFormat = GL_BGR;
-				textureType = GL_UNSIGNED_SHORT_5_6_5_REV;
-			} else {
-				textureFormat = GL_RGB;
-				textureType = GL_UNSIGNED_SHORT_5_6_5;
-			}
-			break;
-		case 24:
-			textureIntFormat = GL_RGB8;
-			if (SDL_BYTEORDER == SDL_BIG_ENDIAN) {
-				textureFormat = GL_BGR;
-			} else {
-				textureFormat = GL_RGB;
-			}
-			textureType = GL_UNSIGNED_BYTE;
-			break;
-		case 32:
-		default:
-			/* vale sia per BIG_ENDIAN che per il LITTLE */
-			//textureFormat = GL_BGRA;
-			//textureType = GL_UNSIGNED_INT_8_8_8_8_REV;
-			textureIntFormat = GL_RGBA8;
-			textureFormat = GL_BGRA;
-			textureType = GL_UNSIGNED_BYTE;
-			break;
+	if (opengl.rotation) {
+		opengl_set = opengl_set_cube3d;
+		opengl_draw_scene = opengl_draw_scene_cube3d;
+	} else {
+		opengl_set = opengl_set_no_effect;
+		opengl_draw_scene = opengl_draw_scene_no_effect;
 	}
+
+	if (!opengl.glew){
+		GLenum err;
+
+		if ((err = glewInit()) != GLEW_OK) {
+			fprintf(stderr, "INFO: %s\n", glewGetErrorString(err));
+		} else {
+			opengl.glew = TRUE;
+		}
+	}
+
+	if (opengl.surfaceGL) {
+		SDL_FreeSurface(opengl.surfaceGL);
+		/*
+		 * ripristino gli attributi opengl ai valori
+		 * iniziali e li salvo nuovamente.
+		 */
+		glPopAttrib();
+	}
+
+	glPushAttrib(GL_ALL_ATTRIB_BITS);
+
+	opengl.surfaceGL = gfxCreateRGBSurface(src, opengl_power_of_two(SCRROWS),
+			opengl_power_of_two(SCRLINES));
+
+	opengl_create_texture(&opengl.texture.data);
+
+	opengl_set(src);
 
 	/* aspect ratio */
 	opengl.wTexture = src->w;
@@ -221,105 +210,10 @@ void sdlCreateSurfaceGL(SDL_Surface *src, WORD width, WORD height, BYTE flags) {
 		}
 	}
 
-	xVertex = 1.0f - ((1.0f / (src->w / 2)) * opengl.xTexture1);
-	yVertex = 1.0f - ((1.0f / (src->h / 2)) * opengl.yTexture1);
-	zVertex = xVertex;
-
-	xTexturePot = sdlPowerOfTwoGL(width);
-	yTexturePot = sdlPowerOfTwoGL(height);
+	xTexturePot = opengl_power_of_two(width);
+	yTexturePot = opengl_power_of_two(height);
 	xTsh = (GLfloat) width / xTexturePot;
 	yTsh = (GLfloat) height / yTexturePot;
-
-	/* inizializzazione opengl */
-	if (!opengl.glew){
-		GLenum err;
-
-		if ((err = glewInit()) != GLEW_OK) {
-			fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
-		} else {
-			opengl.glew = TRUE;
-		}
-	}
-
-	if (!opengl.surfaceGL) {
-		glPushAttrib(GL_ALL_ATTRIB_BITS);
-	} else {
-		SDL_FreeSurface(opengl.surfaceGL);
-		/*
-		 * ripristino gli attributi opengl ai valori
-		 * iniziali e li salvo nuovamente.
-		 */
-		glPopAttrib();
-		glPushAttrib(GL_ALL_ATTRIB_BITS);
-	}
-
-	//opengl.surfaceGL = gfxCreateRGBSurface(src, width, height);
-	opengl.surfaceGL = gfxCreateRGBSurface(src, sdlPowerOfTwoGL(SCRROWS),
-	        sdlPowerOfTwoGL(SCRLINES));
-
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-	glViewport(0, 0, (GLint) src->w, (GLint) src->h);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-
-	if (opengl.rotation) {
-		glFrustum(-1, 1, -1, 1, 1.0f + (1.0f - zVertex), 100.0f);
-	} else {
-		glOrtho(0.0f, src->w, src->h, 0.0f, -1.0f, 1.0f);
-	}
-
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-
-	if (opengl.rotation) {
-		glEnable(GL_CULL_FACE);
-		glEnable(GL_DEPTH_TEST);
-		glDepthMask(GL_TRUE);
-		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	} else {
-		glDisable(GL_DEPTH_TEST);
-		glDepthMask(GL_FALSE);
-		glClear(GL_COLOR_BUFFER_BIT);
-	}
-	glDisable(GL_TEXTURE_2D);
-
-	/* texture */
-	if (opengl.texture) {
-		glDeleteTextures(1, &opengl.texture);
-	}
-	glGenTextures(1, &opengl.texture);
-	//glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, opengl.texture);
-
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-	if (opengl.glew) {
-
-		if (!GLEW_VERSION_3_1) {
-#ifndef RELEASE
-			fprintf(stderr, "INFO: OpenGL 3.1 not supported.\n");
-#endif
-			glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
-		}
-
-		/* creo una texture vuota con i parametri corretti */
-		//glTexImage2D(GL_TEXTURE_2D, 0, textureIntFormat, xTexturePot, yTexturePot, 0,
-		//		textureFormat, textureType, NULL);
-		glTexImage2D(GL_TEXTURE_2D, 0, textureIntFormat, opengl.surfaceGL->w, opengl.surfaceGL->h,
-		        0, textureFormat, textureType, NULL);
-
-		if (GLEW_VERSION_3_1) {
-#ifndef RELEASE
-			fprintf(stderr, "INFO: OpenGL 3.1 supported.\n");
-#endif
-			glGenerateMipmap(GL_TEXTURE_2D);
-		}
 
 		/*if (GLEW_VERSION_2_0) {
 #ifndef RELEASE
@@ -379,148 +273,83 @@ void sdlCreateSurfaceGL(SDL_Surface *src, WORD width, WORD height, BYTE flags) {
 
 			glUseProgram(0);
 		}*/
-	} else {
-		/* creo una texture vuota con i parametri corretti */
-		glTexImage2D(GL_TEXTURE_2D, 0, textureIntFormat, opengl.surfaceGL->w, opengl.surfaceGL->h,
-		        0, textureFormat, textureType, NULL);
-	}
 
 	glFinish();
 }
-int sdlFlipScreenGL(SDL_Surface *surface) {
-	/* ripulisco la scena opengl */
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	glPixelStorei(GL_UNPACK_ROW_LENGTH, surface->w);
-	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, surface->w, surface->h, textureFormat,
-			textureType, surface->pixels);
-	glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
-
-	glEnable(GL_TEXTURE_2D);
-
-	//glUseProgram(shader.program);
-
-	/* disegno la texture */
-	if (opengl.rotation) {
-		/* resetto la matrice corrente (modelview) */
-		glLoadIdentity();
-
-		if (opengl.factorDistance < 60) {
-			distance = matrixDistance[opengl.factorDistance];
-			opengl.factorDistance++;
-		}
-		glTranslatef(0.0f, 0.0f, distance);
-
-		if (opengl.factorDistance > 30) {
-			glRotatef(opengl.xRotate, 1.0f, 0.0f, 0.0f);
-			glRotatef(opengl.yRotate, 0.0f, 1.0f, 0.0f);
-			/*
-			 if (!mouseLeftButton) {
-			 xRotate += 0.3f;
-			 yRotate += 0.4f;
-			 }
-			 */
-		}
-
-		glColor3f(1.0f, 1.0f, 1.0f);
-
-		/* abilito l'uso delle texture */
-		glEnable(GL_TEXTURE_2D);
-
-		/* cubo esterno */
-		glBegin(GL_QUADS);
-			/* avanti */
-			glTexCoord2f(0.0f, yTsh); glVertex3f(-xVertex, -yVertex, +zVertex);
-			glTexCoord2f(xTsh, yTsh); glVertex3f(+xVertex, -yVertex, +zVertex);
-			glTexCoord2f(xTsh, 0.0f); glVertex3f(+xVertex, +yVertex, +zVertex);
-			glTexCoord2f(0.0f, 0.0f); glVertex3f(-xVertex, +yVertex, +zVertex);
-			/* dietro */
-			glColor3f(1.0f, 0.0f, 0.0f);
-			glTexCoord2f(0.0f, yTsh); glVertex3f(+xVertex, -yVertex, -zVertex);
-			glTexCoord2f(xTsh, yTsh); glVertex3f(-xVertex, -yVertex, -zVertex);
-			glTexCoord2f(xTsh, 0.0f); glVertex3f(-xVertex, +yVertex, -zVertex);
-			glTexCoord2f(0.0f, 0.0f); glVertex3f(+xVertex, +yVertex, -zVertex);
-			/* sopra */
-			/*
-			glTexCoord2f(0.0f, yTsh); glVertex3f(-xVertex, +yVertex, +zVertex);
-			glTexCoord2f(xTsh, yTsh); glVertex3f(+xVertex, +yVertex, +zVertex);
-			glTexCoord2f(xTsh, 0.0f); glVertex3f(+xVertex, +yVertex, -zVertex);
-			glTexCoord2f(0.0f, 0.0f); glVertex3f(-xVertex, +yVertex, -zVertex);
-			*/
-			/* sotto */
-			/*
-			glTexCoord2f(0.0f, yTsh); glVertex3f(+xVertex, -yVertex, +zVertex);
-			glTexCoord2f(xTsh, yTsh); glVertex3f(-xVertex, -yVertex, +zVertex);
-			glTexCoord2f(xTsh, 0.0f); glVertex3f(-xVertex, -yVertex, -zVertex);
-			glTexCoord2f(0.0f, 0.0f); glVertex3f(+xVertex, -yVertex, -zVertex);
-			*/
-			/* destra */
-			glColor3f(0.0f, 1.0f, 0.0f);
-			glTexCoord2f(0.0f, yTsh); glVertex3f(+xVertex, -yVertex, +zVertex);
-			glTexCoord2f(xTsh, yTsh); glVertex3f(+xVertex, -yVertex, -zVertex);
-			glTexCoord2f(xTsh, 0.0f); glVertex3f(+xVertex, +yVertex, -zVertex);
-			glTexCoord2f(0.0f, 0.0f); glVertex3f(+xVertex, +yVertex, +zVertex);
-			/* sinistra */
-			glColor3f(0.0f, 0.0f, 1.0f);
-			glTexCoord2f(0.0f, yTsh); glVertex3f(-xVertex, -yVertex, -zVertex);
-			glTexCoord2f(xTsh, yTsh); glVertex3f(-xVertex, -yVertex, +zVertex);
-			glTexCoord2f(xTsh, 0.0f); glVertex3f(-xVertex, +yVertex, +zVertex);
-			glTexCoord2f(0.0f, 0.0f); glVertex3f(-xVertex, +yVertex, -zVertex);
-		glEnd();
-
-		/* disabilito l'uso delle texture */
-		glDisable(GL_TEXTURE_2D);
-
-		/* cubo interno */
-		glBegin(GL_QUADS);
-			/* avanti */
-			glColor3f(1.0f, 1.0f, 1.0f);
-			glVertex3f(+xVertex, -yVertex, +zVertex);
-			glVertex3f(-xVertex, -yVertex, +zVertex);
-			glVertex3f(-xVertex, +yVertex, +zVertex);
-			glVertex3f(+xVertex, +yVertex, +zVertex);
-			/* dietro */
-			glColor3f(1.0f, 0.0f, 0.0f);
-			glVertex3f(-xVertex, -yVertex, -zVertex);
-			glVertex3f(+xVertex, -yVertex, -zVertex);
-			glVertex3f(+xVertex, +yVertex, -zVertex);
-			glVertex3f(-xVertex, +yVertex, -zVertex);
-			/* destra */
-			glColor3f(0.0f, 1.0f, 0.0f);
-			glVertex3f(+xVertex, -yVertex, -zVertex);
-			glVertex3f(+xVertex, -yVertex, +zVertex);
-			glVertex3f(+xVertex, +yVertex, +zVertex);
-			glVertex3f(+xVertex, +yVertex, -zVertex);
-			/* sinistra */
-			glColor3f(0.0f, 0.0f, 1.0f);
-			glVertex3f(-xVertex, -yVertex, +zVertex);
-			glVertex3f(-xVertex, -yVertex, -zVertex);
-			glVertex3f(-xVertex, +yVertex, -zVertex);
-			glVertex3f(-xVertex, +yVertex, +zVertex);
-		glEnd();
-	} else {
-		glBegin(GL_QUADS);
-			/* Bottom Left Of The Texture */
-			glTexCoord2f(0.0f, 0.0f); glVertex2i(opengl.xTexture1, opengl.yTexture1);
-			/* Bottom Right Of The Texture */
-			glTexCoord2f(xTsh, 0.0f); glVertex2i(opengl.xTexture2, opengl.yTexture1);
-			/* Top Right Of The Texture */
-			glTexCoord2f(xTsh, yTsh); glVertex2i(opengl.xTexture2, opengl.yTexture2);
-			/* Top Left Of The Texture */
-			glTexCoord2f(0.0f, yTsh); glVertex2i(opengl.xTexture1, opengl.yTexture2);
-		glEnd();
-	}
-
-	glUseProgram(0);
-
-	glDisable(GL_TEXTURE_2D);
-
+int opengl_flip(SDL_Surface *surface) {
 	SDL_GL_SwapBuffers();
 
 	return (0);
 }
-int sdlPowerOfTwoGL(int base) {
+
+
+
+
+void opengl_create_texture(GLuint *texture) {
+	switch (opengl.surfaceGL->format->BitsPerPixel) {
+		case 16:
+			opengl.texture.format_internal = GL_RGB5;
+			if (SDL_BYTEORDER == SDL_BIG_ENDIAN) {
+				opengl.texture.format = GL_BGR;
+				opengl.texture.type = GL_UNSIGNED_SHORT_5_6_5_REV;
+			} else {
+				opengl.texture.format = GL_RGB;
+				opengl.texture.type = GL_UNSIGNED_SHORT_5_6_5;
+			}
+			break;
+		case 24:
+			opengl.texture.format_internal = GL_RGB8;
+			if (SDL_BYTEORDER == SDL_BIG_ENDIAN) {
+				opengl.texture.format = GL_BGR;
+			} else {
+				opengl.texture.format = GL_RGB;
+			}
+			opengl.texture.type = GL_UNSIGNED_BYTE;
+			break;
+		case 32:
+		default:
+			opengl.texture.format_internal = GL_RGBA8;
+			opengl.texture.format = GL_BGRA;
+			opengl.texture.type = GL_UNSIGNED_BYTE;
+			break;
+	}
+
+	if (texture) {
+		glDeleteTextures(1, texture);
+	}
+
+	glGenTextures(1, texture);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, (*texture));
+
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+	if (opengl.glew && !GLEW_VERSION_3_1) {
+#ifndef RELEASE
+		fprintf(stderr, "INFO: OpenGL 3.1 not supported.\n");
+#endif
+		glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
+	}
+
+	glTexImage2D(GL_TEXTURE_2D, 0, opengl.texture.format_internal, opengl.surfaceGL->w,
+	        opengl.surfaceGL->h, 0, opengl.texture.format, opengl.texture.type, NULL);
+
+	if (opengl.glew && GLEW_VERSION_3_1) {
+#ifndef RELEASE
+		fprintf(stderr, "INFO: OpenGL 3.1 supported.\n");
+#endif
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+}
+int opengl_power_of_two(int base) {
 	int pot = 1;
 
 	while (pot < base) {
@@ -528,9 +357,6 @@ int sdlPowerOfTwoGL(int base) {
 	}
 	return (pot);
 }
-
-
-
 
 
 
@@ -568,7 +394,6 @@ char *file2string(const char *path)
 
 	return str;
 }
-
 void printLog(GLuint obj)
 {
 	int infologLength = 0;
