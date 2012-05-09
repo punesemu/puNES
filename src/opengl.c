@@ -12,12 +12,6 @@ char *file2string(const char *path);
 void printLog(GLuint obj);
 GLfloat OGL2Size[4];
 GLfloat OGL2Param[4];
-/*struct {
-	GLfloat x;
-	GLfloat y;
-	GLfloat z;
-	GLfloat w;
-};*/
 const GLchar *vsSource;
 const GLchar *fsSource;
 GLuint vs, /* Vertex Shader */
@@ -26,7 +20,90 @@ GLuint vs, /* Vertex Shader */
 GLint baseImageLoc;
 GLint OGL2SizeLoc;
 GLint OGL2ParamLoc;
-GLuint texture;
+typedef struct {
+	GLuint program;
+	GLuint vert_shader;
+	GLuint frag_shader;
+	const GLchar *vert_source;
+	const GLchar *frag_source;
+} ShaderData;
+static ShaderData shaders[2] = {
+	{
+		0, 0, 0,
+		/* vertex shader */
+		"varying vec4 vTexCoord[5];\n"
+		"uniform vec4 OGL2Size;\n"
+		"uniform vec4 OGL2Param;\n"
+		"void main()\n"
+		"{\n"
+		"	vec4 offsetx;\n"
+		"	vec4 offsety;\n"
+		"	gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;\n"
+		"	offsetx.x = OGL2Param.x;	// setup one x/y texel offset\n"
+		"	offsetx.y = 0.0;			// we could also use \"1.0/OGL2Size.x (y)\"\n"
+		"								// than it wouldn't\n"
+		"	offsetx.w = 0.0;			// be dependand on the \"shader effect level\" setting...\n"
+		"	offsetx.z = 0.0;			// but more choice is usual better, eh?\n"
+		"	offsety.y = OGL2Param.y;\n"
+		"	offsety.x = 0.0;\n"
+		"	offsety.w = 0.0;\n"
+		"	offsety.z = 0.0;\n"
+		"	vTexCoord[0]    = gl_MultiTexCoord0;		// center\n"
+		"	vTexCoord[1]    = vTexCoord[0] - offsetx;	// left\n"
+		"	vTexCoord[2]    = vTexCoord[0] + offsetx;	// right\n"
+		"	vTexCoord[3]    = vTexCoord[0] - offsety;	// top\n"
+		"	vTexCoord[4]    = vTexCoord[0] + offsety;	// bottom\n"
+		"}",
+		/* fragment shader */
+		"varying vec4 vTexCoord[5];\n"
+		"uniform vec4 OGL2Size;\n"
+		"uniform vec4 OGL2Param;\n"
+		"uniform sampler2D OGL2Texture;\n"
+		"void main()\n"
+		"{\n"
+		"	vec4 colD,colF,colB,colH,col,tmp;\n"
+		"	vec2 sel;\n"
+		"	col  = texture2DProj(OGL2Texture, vTexCoord[0]);	// central (can be E0-E3)\n"
+		"	colD = texture2DProj(OGL2Texture, vTexCoord[1]);	// D (left)\n"
+		"	colF = texture2DProj(OGL2Texture, vTexCoord[2]);	// F (right)\n"
+		"	colB = texture2DProj(OGL2Texture, vTexCoord[3]);	// B (top)\n"
+		"	colH = texture2DProj(OGL2Texture, vTexCoord[4]);	// H (bottom)\n"
+		"	sel=fract(vTexCoord[0].xy * OGL2Size.xy);			// where are we (E0-E3)?\n"
+		"														// E0 is default\n"
+		"	if(sel.y >= 0.5)  {tmp=colB;colB=colH;colH=tmp;}	// E1 (or E3): swap B and H\n"
+		"	if(sel.x >= 0.5)  {tmp=colF;colF=colD;colD=tmp;}	// E2 (or E3): swap D and F\n"
+		"	if((colB == colD) && (colB != colF) && (colD != colH)) {	// do the Scale2x rule\n"
+		"		col=colD;\n"
+		"	}\n"
+		"	gl_FragColor = col;\n"
+		"}"
+	},
+	{
+		0, 0, 0,
+		/* vertex shader */
+		"varying vec4 vTexCoord;\n"
+		"void main(void)\n"
+		"{\n"
+		"	vTexCoord = gl_MultiTexCoord0;\n"
+		"	gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;\n"
+		"}",
+		/* fragment shader */
+		"uniform sampler2D OGL2Texture;\n"
+		"varying vec4 vTexCoord;\n"
+		"void main(void)\n"
+		"{\n"
+		"	gl_FragColor = texture2DProj(OGL2Texture, vTexCoord).bgra;\n"
+		"}"
+	}
+};
+#define shader shaders[0]
+
+
+
+
+
+
+
 
 GLint textureIntFormat;
 GLenum textureFormat, textureType;
@@ -61,31 +138,6 @@ void sdlInitGL(void) {
 	opengl.yDiff = 0;
 }
 void sdlCreateSurfaceGL(SDL_Surface *src, WORD width, WORD height, BYTE flags) {
-	if (!opengl.glew){
-		GLenum err;
-
-		if ((err = glewInit()) != GLEW_OK) {
-			fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
-		} else {
-			opengl.glew = TRUE;
-		}
-	}
-
-	if (!opengl.surfaceGL) {
-		glPushAttrib(GL_ALL_ATTRIB_BITS);
-	} else {
-		SDL_FreeSurface(opengl.surfaceGL);
-	}
-
-	/*
-	 * ripristino gli attributi opengl ai valori
-	 * iniziali e li salvo nuovamente.
-	 */
-	glPopAttrib();
-	glPushAttrib(GL_ALL_ATTRIB_BITS);
-
-	opengl.surfaceGL = gfxCreateRGBSurface(src, width, height);
-
 	// contains an alpha channel
 	switch (src->format->BitsPerPixel) {
 		case 16:
@@ -178,15 +230,35 @@ void sdlCreateSurfaceGL(SDL_Surface *src, WORD width, WORD height, BYTE flags) {
 	xTsh = (GLfloat) width / xTexturePot;
 	yTsh = (GLfloat) height / yTexturePot;
 
+	/* inizializzazione opengl */
+	if (!opengl.glew){
+		GLenum err;
+
+		if ((err = glewInit()) != GLEW_OK) {
+			fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
+		} else {
+			opengl.glew = TRUE;
+		}
+	}
+
+	if (!opengl.surfaceGL) {
+		glPushAttrib(GL_ALL_ATTRIB_BITS);
+	} else {
+		SDL_FreeSurface(opengl.surfaceGL);
+		/*
+		 * ripristino gli attributi opengl ai valori
+		 * iniziali e li salvo nuovamente.
+		 */
+		glPopAttrib();
+		glPushAttrib(GL_ALL_ATTRIB_BITS);
+	}
+
+	//opengl.surfaceGL = gfxCreateRGBSurface(src, width, height);
+	opengl.surfaceGL = gfxCreateRGBSurface(src, sdlPowerOfTwoGL(SCRROWS),
+	        sdlPowerOfTwoGL(SCRLINES));
+
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-
-	/* Setup our viewport. */
 	glViewport(0, 0, (GLint) src->w, (GLint) src->h);
-
-	/*
-	 * change to the projection matrix and set
-	 * our viewing volume.
-	 */
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 
@@ -196,69 +268,51 @@ void sdlCreateSurfaceGL(SDL_Surface *src, WORD width, WORD height, BYTE flags) {
 		glOrtho(0.0f, src->w, src->h, 0.0f, -1.0f, 1.0f);
 	}
 
-	/* Make sure we're chaning the model view and not the projection */
 	glMatrixMode(GL_MODELVIEW);
-	/* Reset The View */
 	glLoadIdentity();
 
 	if (opengl.rotation) {
-		// Ensure correct display of polygons
 		glEnable(GL_CULL_FACE);
 		glEnable(GL_DEPTH_TEST);
 		glDepthMask(GL_TRUE);
-		/* Really Nice Perspective Calculations */
 		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-		/* pulisco la scena */
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		/*
-		 * disabilito l'utilizzo delle textures che
-		 * utilizzero' solo quando disegnero' il cubo.
-		 */
-		glDisable(GL_TEXTURE_2D);
 	} else {
 		glDisable(GL_DEPTH_TEST);
 		glDepthMask(GL_FALSE);
-		/* pulisco la scena */
 		glClear(GL_COLOR_BUFFER_BIT);
-		/* abilito l'utilizzo delle textures */
-		glEnable(GL_TEXTURE_2D);
 	}
+	glDisable(GL_TEXTURE_2D);
 
-	/* genero una texture */
+	/* texture */
 	if (opengl.texture) {
 		glDeleteTextures(1, &opengl.texture);
 	}
 	glGenTextures(1, &opengl.texture);
-
-	if (texture) {
-		glDeleteTextures(1, &texture);
-	}
-	glGenTextures(1, &texture);
-
-	/* indico la texture da utilizzare */
+	//glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, opengl.texture);
 
-	// select modulate to mix texture with color for shading
-	//glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-	// the texture wraps over at the edges (repeat)
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
 	if (opengl.glew) {
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 		if (!GLEW_VERSION_3_1) {
 #ifndef RELEASE
 			fprintf(stderr, "INFO: OpenGL 3.1 not supported.\n");
 #endif
-			/* creo la minimap */
 			glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
 		}
 
 		/* creo una texture vuota con i parametri corretti */
-		glTexImage2D(GL_TEXTURE_2D, 0, textureIntFormat, xTexturePot, yTexturePot, 0,
-				textureFormat, textureType, NULL);
+		//glTexImage2D(GL_TEXTURE_2D, 0, textureIntFormat, xTexturePot, yTexturePot, 0,
+		//		textureFormat, textureType, NULL);
+		glTexImage2D(GL_TEXTURE_2D, 0, textureIntFormat, opengl.surfaceGL->w, opengl.surfaceGL->h,
+		        0, textureFormat, textureType, NULL);
 
 		if (GLEW_VERSION_3_1) {
 #ifndef RELEASE
@@ -267,73 +321,68 @@ void sdlCreateSurfaceGL(SDL_Surface *src, WORD width, WORD height, BYTE flags) {
 			glGenerateMipmap(GL_TEXTURE_2D);
 		}
 
-		if (GLEW_VERSION_2_0) {
+		/*if (GLEW_VERSION_2_0) {
 #ifndef RELEASE
 			fprintf(stderr, "INFO: OpenGL 2.0 supported. Glsl enabled.\n");
 #endif
 			opengl.glsl_enabled = TRUE;
 
-			/* Compile and load the program */
+			//vsSource = file2string("/home/fhorse/Dropbox/gpuPeteOGL2.slv");
+			//fsSource = file2string("/home/fhorse/Dropbox/gpuPeteOGL2.slf");
 
-			/* The vertex shader */
-			vsSource = file2string("/home/fhorse/Dropbox/gpuPeteOGL2.slv");
-			fsSource = file2string("/home/fhorse/Dropbox/gpuPeteOGL2.slf");
+			shader.vert_shader = glCreateShader(GL_VERTEX_SHADER);
+			glShaderSource(shader.vert_shader, 1, &shader.vert_source, NULL);
+			glCompileShader(shader.vert_shader);
+			printLog(shader.vert_shader);
 
-			vs = glCreateShader(GL_VERTEX_SHADER);
-			fs = glCreateShader(GL_FRAGMENT_SHADER);
+			shader.frag_shader = glCreateShader(GL_FRAGMENT_SHADER);
+			glShaderSource(shader.frag_shader, 1, &shader.frag_source, NULL);
+			glCompileShader(shader.frag_shader);
+			printLog(shader.frag_shader);
 
-			glShaderSource(vs, 1, &vsSource, NULL);
-			glShaderSource(fs, 1, &fsSource, NULL);
+			shader.program = glCreateProgram();
+			printLog(shader.program);
 
-			glCompileShader(vs);
-			glCompileShader(fs);
-			printLog(fs);
+			//free((char *) vsSource);
+			//free((char *) fsSource);
 
-			free((char *) vsSource);
-			free((char *) fsSource);
+			glAttachShader(shader.program, shader.vert_shader);
+			glAttachShader(shader.program, shader.frag_shader);
+			glLinkProgram(shader.program);
+			printLog(shader.program);
 
-			sp = glCreateProgram();
-			glAttachShader(sp, vs);
-			glAttachShader(sp, fs);
-			glLinkProgram(sp);
+			//glDeleteObject(vs);
+			//glDeleteObject(fs);
+			//glDeleteObject(sp);
 
-			/*glDeleteObject(vs);
-			glDeleteObject(fs);
-			glDeleteObject(sp);*/
-
-			glUseProgram(sp);
-
-			OGL2Size[0] = xTexturePot; //width;
-			OGL2Size[1] = yTexturePot; //height;
+			OGL2Size[0] = (GLfloat) xTexturePot; //width;
+			OGL2Size[1] = (GLfloat) yTexturePot; //height;
 			OGL2Size[2] = 256.0; //SCRLINES;
 			OGL2Size[3] = 256.0;   //SCRROWS;
 
-			OGL2Param[0] = 0.0;
-			OGL2Param[1] = 0.0;
+			OGL2Param[0] = 1.0 / (GLfloat) xTexturePot;
+			OGL2Param[1] = 1.0 / (GLfloat) yTexturePot;
 			OGL2Param[2] = 0.0;
 			OGL2Param[3] = 0.0;
 
-			OGL2ParamLoc = glGetUniformLocation(sp, "OGL2Param");
-			OGL2SizeLoc = glGetUniformLocation(sp, "OGL2Size");
-			baseImageLoc = glGetUniformLocation(sp, "OGL2Texture");
+			glUseProgram(shader.program);
+
+			OGL2ParamLoc = glGetUniformLocation(shader.program, "OGL2Param");
+			OGL2SizeLoc = glGetUniformLocation(shader.program, "OGL2Size");
+			baseImageLoc = glGetUniformLocation(shader.program, "OGL2Texture");
 
 			printf("wave parameters location: %d %d %d\n", OGL2ParamLoc, OGL2SizeLoc, baseImageLoc);
 
 			glUniform4fv(OGL2ParamLoc, 1, OGL2Param);
 			glUniform4fv(OGL2SizeLoc, 1, OGL2Size);
 			glUniform1i(baseImageLoc, 0);
-			printLog(sp);
-		}
 
-
+			glUseProgram(0);
+		}*/
 	} else {
-		/* setto le proprieta' di strecthing della texture */
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
 		/* creo una texture vuota con i parametri corretti */
-		glTexImage2D(GL_TEXTURE_2D, 0, textureIntFormat, xTexturePot, yTexturePot, 0,
-				textureFormat, textureType, NULL);
+		glTexImage2D(GL_TEXTURE_2D, 0, textureIntFormat, opengl.surfaceGL->w, opengl.surfaceGL->h,
+		        0, textureFormat, textureType, NULL);
 	}
 
 	glFinish();
@@ -348,9 +397,9 @@ int sdlFlipScreenGL(SDL_Surface *surface) {
 			textureType, surface->pixels);
 	glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
 
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, opengl.texture);
 	glEnable(GL_TEXTURE_2D);
+
+	//glUseProgram(shader.program);
 
 	/* disegno la texture */
 	if (opengl.rotation) {
@@ -462,6 +511,10 @@ int sdlFlipScreenGL(SDL_Surface *surface) {
 			glTexCoord2f(0.0f, yTsh); glVertex2i(opengl.xTexture1, opengl.yTexture2);
 		glEnd();
 	}
+
+	glUseProgram(0);
+
+	glDisable(GL_TEXTURE_2D);
 
 	SDL_GL_SwapBuffers();
 

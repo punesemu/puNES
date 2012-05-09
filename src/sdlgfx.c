@@ -523,10 +523,12 @@ void gfxDrawScreen(BYTE forced) {
 	/* se il frameskip me lo permette (o se forzato), disegno lo screen */
 	if (forced || !ppu.skipDraw) {
 		/* applico l'effetto desiderato */
-		//effect(screen.data, screen.line, paletteWindow, framebuffer, gfx.rows, gfx.lines,
-		//		gfx.scale);
-		effect(screen.data, screen.line, paletteWindow, framebuffer, gfx.rows, gfx.lines,
-				1);
+		if (gfx.opengl) {
+			effect(screen.data, screen.line, paletteWindow, framebuffer, gfx.rows, gfx.lines, 1);
+		} else {
+			effect(screen.data, screen.line, paletteWindow, framebuffer, gfx.rows, gfx.lines,
+					gfx.scale);
+		}
 
 		textRendering(TRUE, framebuffer);
 
@@ -570,54 +572,8 @@ void gfxQuit(void) {
 }
 
 SDL_Surface *gfxCreateRGBSurface(SDL_Surface *src, uint32_t width, uint32_t height) {
-	uint32_t rmask, gmask, bmask, amask;
 	SDL_Surface *new_surface;
 
-	switch (src->format->BitsPerPixel) {
-		case 16:
-#if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
-			rmask = 0x0000F800;
-			gmask = 0x000007E0;
-			bmask = 0x0000001F;
-			amask = 0x00000000;
-#else
-			rmask = 0x000000F8;
-			gmask = 0x000007E0;
-			bmask = 0x00001F00;
-			amask = 0x00000000;
-#endif
-			break;
-		case 24:
-#if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
-			rmask = 0x00FF0000;
-			gmask = 0x0000FF00;
-			bmask = 0x000000FF;
-			amask = 0x00000000;
-#else
-			rmask = 0x000000FF;
-			gmask = 0x0000FF00;
-			bmask = 0x00FF0000;
-			amask = 0x00000000;
-#endif
-			break;
-		case 32:
-		default:
-#if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
-			rmask = 0xFF000000;
-			gmask = 0x00FF0000;
-			bmask = 0x0000FF00;
-			amask = 0x000000FF;
-#else
-			rmask = 0x000000FF;
-			gmask = 0x0000FF00;
-			bmask = 0x00FF0000;
-			amask = 0xFF000000;
-#endif
-			break;
-	}
-
-	//new_surface = SDL_CreateRGBSurface(SDL_SWSURFACE, width, height, src->format->BitsPerPixel,
-	//		rmask, gmask, bmask, amask);
 	new_surface = SDL_DisplayFormatAlpha(SDL_CreateRGBSurface(src->flags, width, height,
 			src->format->BitsPerPixel, src->format->Rmask, src->format->Gmask,
 			src->format->Bmask, src->format->Amask));

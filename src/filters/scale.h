@@ -14,5 +14,9 @@
 
 void scaleSurface(WORD *screen, WORD **screenIndex, Uint32 *palette, SDL_Surface *dst, WORD rows,
 		WORD lines, BYTE factor);
+void scaleSurface1x(WORD **screenIndex, uint32_t *palette, SDL_Surface *dst);
+void scaleSurface2x(WORD **screenIndex, uint32_t *palette, SDL_Surface *dst);
+void scaleSurface3x(WORD **screenIndex, uint32_t *palette, SDL_Surface *dst);
+void scaleSurface4x(WORD **screenIndex, uint32_t *palette, SDL_Surface *dst);
 
 #endif /* SCALE_H_ */
