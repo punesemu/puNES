@@ -8,13 +8,49 @@
 #ifndef SHADERS_H_
 #define SHADERS_H_
 
-#define shader shaders[0]
-
 typedef struct {
-	const GLchar *vert_source;
-	const GLchar *frag_source;
-} ShaderData;
-static ShaderData shaders[2] = {
+	const GLchar *vert;
+	const GLchar *frag;
+} _shader_routine;
+
+struct {
+	GLuint program;
+	GLuint vert;
+	GLuint frag;
+
+	const GLchar *vs;
+	const GLchar *fs;
+} shader;
+
+GLfloat OGL2Size[4];
+GLfloat OGL2Param[4];
+GLuint vs, /* Vertex Shader */
+	   fs, /* Fragment Shader */
+	   sp; /* Shader Program */
+GLint baseImageLoc;
+GLint OGL2SizeLoc;
+GLint OGL2ParamLoc;
+
+#ifdef _SHADERS_CODE_
+static _shader_routine shader_routine[2] = {
+	/* NOFILTER */
+	{
+		// vertex shader
+		"varying vec4 vTexCoord;\n"
+		"void main(void)\n"
+		"{\n"
+		"	vTexCoord = gl_MultiTexCoord0;\n"
+		"	gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;\n"
+		"}",
+		// fragment shader
+		"uniform sampler2D OGL2Texture;\n"
+		"varying vec4 vTexCoord;\n"
+		"void main(void)\n"
+		"{\n"
+		"	gl_FragColor = texture2DProj(OGL2Texture, vTexCoord).bgra;\n"
+		"}"
+	},
+	/* SCALE2X */
 	{
 		// vertex shader
 		"varying vec4 vTexCoord[5];\n"
@@ -64,39 +100,7 @@ static ShaderData shaders[2] = {
 		"	gl_FragColor = col;\n"
 		"}"
 	},
-	{
-		// vertex shader
-		"varying vec4 vTexCoord;\n"
-		"void main(void)\n"
-		"{\n"
-		"	vTexCoord = gl_MultiTexCoord0;\n"
-		"	gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;\n"
-		"}",
-		// fragment shader
-		"uniform sampler2D OGL2Texture;\n"
-		"varying vec4 vTexCoord;\n"
-		"void main(void)\n"
-		"{\n"
-		"	gl_FragColor = texture2DProj(OGL2Texture, vTexCoord).bgra;\n"
-		"}"
-	}
 };
-
-GLuint program;
-GLuint vert_shader;
-GLuint frag_shader;
-
-GLfloat OGL2Size[4];
-GLfloat OGL2Param[4];
-const GLchar *vsSource;
-const GLchar *fsSource;
-GLuint vs, /* Vertex Shader */
-	   fs, /* Fragment Shader */
-	   sp; /* Shader Program */
-GLint baseImageLoc;
-GLint OGL2SizeLoc;
-GLint OGL2ParamLoc;
-
-ShaderData *sh;
+#endif
 
 #endif /* SHADERS_H_ */

@@ -34,7 +34,7 @@ void opengl_draw_scene_no_effect(SDL_Surface *surface) {
 
 	glEnable(GL_TEXTURE_2D);
 
-	glUseProgram(program);
+	glUseProgram(shader.program);
 
 	/* disegno la texture */
 	glBegin(GL_QUADS);

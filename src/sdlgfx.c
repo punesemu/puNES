@@ -479,6 +479,34 @@ void gfxSetScreen(BYTE newScale, BYTE newFilter, BYTE newFullscreen, BYTE newPal
 
 #ifdef OPENGL
 	if (gfx.opengl) {
+
+		switch (gfx.filter) {
+			case NOFILTER:
+				opengl.scale = X1;
+				opengl.factor = gfx.scale;
+				opengl.shader = 0;
+				opengl.effect = scaleSurface;
+				break;
+			case SCALE2X:
+				opengl.scale = X1;
+				opengl.factor = gfx.scale;
+				opengl.shader = 1;
+				opengl.effect = scaleSurface;
+				break;
+			case SCALE4X:
+				opengl.scale = X2;
+				opengl.factor = 2;
+				opengl.shader = 1;
+				opengl.effect = scaleNx;
+				break;
+			default:
+				opengl.scale = gfx.scale;
+				opengl.factor = 1;
+				opengl.shader = 0;
+				opengl.effect = effect;
+				break;
+		}
+
 		/* creo la superficie che utilizzero' come texture */
 		sdlCreateSurfaceGL(surfaceSDL, gfx.w[CURRENT], gfx.h[CURRENT], gfx.fullscreen);
 
@@ -524,12 +552,12 @@ void gfxDrawScreen(BYTE forced) {
 	if (forced || !ppu.skipDraw) {
 		/* applico l'effetto desiderato */
 		if (gfx.opengl) {
-			effect(screen.data, screen.line, paletteWindow, framebuffer, gfx.rows, gfx.lines, 1);
+			opengl.effect(screen.data, screen.line, paletteWindow, framebuffer, gfx.rows,
+					gfx.lines, opengl.scale);
 
 			textRendering(TRUE, framebuffer);
 
 			opengl_draw_scene(framebuffer);
-
 		} else {
 			effect(screen.data, screen.line, paletteWindow, framebuffer, gfx.rows, gfx.lines,
 					gfx.scale);

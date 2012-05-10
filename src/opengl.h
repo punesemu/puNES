@@ -11,6 +11,7 @@
 #include "glew/glew.h"
 #include <SDL.h>
 #include "common.h"
+#include "sdlgfx.h"
 
 #define slowFactor	3
 
@@ -23,13 +24,18 @@ typedef struct {
 	GLfloat x;
 	GLfloat y;
 } _texture;
-typedef struct {
-
-} _vertex;
 struct _opengl {
 	BYTE aspectRatio;
 	BYTE rotation;
-	BYTE glsl_enabled;
+
+	BYTE glew;
+	BYTE glsl;
+	BYTE shader;
+
+	BYTE scale;
+	BYTE factor;
+	GFX_EFFECT_ROUTINE
+
 	SDL_Surface *surfaceGL;
 
 	GLint wTexture;
@@ -38,9 +44,10 @@ struct _opengl {
 	GLint yTexture1;
 	GLint xTexture2;
 	GLint yTexture2;
+
 	Uint32 flagsOpengl;
 	BYTE factorDistance;
-	BYTE glew;
+
 	float xRotate;
 	float yRotate;
 	float xDiff;

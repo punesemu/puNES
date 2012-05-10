@@ -6,6 +6,7 @@
  */
 
 #include "cube3d.h"
+#include "shaders.h"
 
 GLfloat xVertex, yVertex, zVertex;
 GLfloat distance;
@@ -73,6 +74,8 @@ void opengl_draw_scene_cube3d(SDL_Surface *surface) {
 	/* abilito l'uso delle texture */
 	glEnable(GL_TEXTURE_2D);
 
+	glUseProgram(shader.program);
+
 	/* cubo esterno */
 	glBegin(GL_QUADS);
 		/* avanti */
@@ -137,6 +140,8 @@ void opengl_draw_scene_cube3d(SDL_Surface *surface) {
 		glTexCoord2f(0.0f, 0.0f);
 		glVertex3f(-xVertex, +yVertex, -zVertex);
 	glEnd();
+
+	glUseProgram(0);
 
 	/* disabilito l'uso delle texture */
 	glDisable(GL_TEXTURE_2D);
