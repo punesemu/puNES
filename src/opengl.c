@@ -34,10 +34,18 @@ void sdlInitGL(void) {
 	opengl.glew = 0;
 
 	memset(&opengl.texture, 0, sizeof(_texture));
+	memset(&shader, 0, sizeof(shader));
+}
+void sdlQuitGL(void) {
+	if (opengl.surfaceGL) {
+		SDL_FreeSurface(opengl.surfaceGL);
+	}
+	if (opengl.texture.data) {
+		glDeleteTextures(1, &opengl.texture.data);
+	}
+	delete_shader()
 }
 void sdlCreateSurfaceGL(SDL_Surface *src, WORD width, WORD height, BYTE flags) {
-	GLint texture_real_width, texture_real_height;
-
 	if (opengl.rotation) {
 		opengl_set = opengl_set_cube3d;
 		opengl_draw_scene = opengl_draw_scene_cube3d;
@@ -71,17 +79,16 @@ void sdlCreateSurfaceGL(SDL_Surface *src, WORD width, WORD height, BYTE flags) {
 		opengl.surfaceGL = gfxCreateRGBSurface(src, opengl_power_of_two(SCRROWS),
 				opengl_power_of_two(SCRLINES));
 	} else {
-		opengl.surfaceGL = gfxCreateRGBSurface(src, width, height);
+		opengl.surfaceGL = gfxCreateRGBSurface(src, opengl_power_of_two(width),
+				opengl_power_of_two(height));
 	}
 
 	/* FIXME: funzionera' anche con il filtro NTSC ?!? */
-	texture_real_width = opengl.surfaceGL->w * opengl.factor;
-	texture_real_height = opengl.surfaceGL->h * opengl.factor;
 
-	opengl.texture.x = (GLfloat) width / texture_real_width;
-	opengl.texture.y = (GLfloat) height / texture_real_height;
+	opengl.texture.x = (GLfloat) width /  (opengl.surfaceGL->w * opengl.factor);
+	opengl.texture.y = (GLfloat) height / (opengl.surfaceGL->h * opengl.factor);
 
-	opengl_create_texture(&opengl.texture.data, texture_real_width, texture_real_height);
+	opengl_create_texture(&opengl.texture.data);
 
 	opengl_set(src);
 
@@ -150,7 +157,7 @@ int opengl_flip(SDL_Surface *surface) {
 
 
 
-void opengl_create_texture(GLuint *texture, GLint texture_real_width, GLint texture_real_height) {
+void opengl_create_texture(GLuint *texture) {
 	switch (opengl.surfaceGL->format->BitsPerPixel) {
 		case 16:
 			opengl.texture.format_internal = GL_RGB5;
@@ -213,66 +220,66 @@ void opengl_create_texture(GLuint *texture, GLint texture_real_width, GLint text
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 
-	if (opengl.glew && GLEW_VERSION_2_0 && opengl.shader) {
+	if (opengl.glew && GLEW_VERSION_2_0) {
+		delete_shader()
+
+		if (opengl.shader) {
 #ifndef RELEASE
-		fprintf(stderr, "INFO: OpenGL 2.0 supported. Glsl enabled.\n");
+			fprintf(stderr, "INFO: OpenGL 2.0 supported. Glsl enabled.\n");
 #endif
-		opengl.glsl = TRUE;
+			opengl.glsl = TRUE;
 
-		shader.vs = shader_routine[opengl.shader].vert;
-		shader.fs = shader_routine[opengl.shader].frag;
+			shader.vs = shader_routine[opengl.shader].vert;
+			shader.fs = shader_routine[opengl.shader].frag;
 
-		//vsSource = file2string("/home/fhorse/Dropbox/gpuPeteOGL2.slv");
-		//fsSource = file2string("/home/fhorse/Dropbox/gpuPeteOGL2.slf");
+			//vsSource = file2string("/home/fhorse/Dropbox/gpuPeteOGL2.slv");
+			//fsSource = file2string("/home/fhorse/Dropbox/gpuPeteOGL2.slf");
 
-		shader.vert = glCreateShader(GL_VERTEX_SHADER);
-		printLog(shader.vert);
-		glShaderSource(shader.vert, 1, &shader.vs, NULL);
-		printLog(shader.vert);
-		glCompileShader(shader.vert);
-		printLog(shader.vert);
+			shader.vert = glCreateShader(GL_VERTEX_SHADER);
+			printLog(shader.vert);
+			glShaderSource(shader.vert, 1, &shader.vs, NULL);
+			printLog(shader.vert);
+			glCompileShader(shader.vert);
+			printLog(shader.vert);
 
-		shader.frag = glCreateShader(GL_FRAGMENT_SHADER);
-		glShaderSource(shader.frag, 1, &shader.fs, NULL);
-		glCompileShader(shader.frag);
-		printLog(shader.frag);
+			shader.frag = glCreateShader(GL_FRAGMENT_SHADER);
+			glShaderSource(shader.frag, 1, &shader.fs, NULL);
+			glCompileShader(shader.frag);
+			printLog(shader.frag);
 
-		shader.program = glCreateProgram();
-		printLog(shader.program);
+			shader.program = glCreateProgram();
+			printLog(shader.program);
 
-		//free((char *) vsSource);
-		//free((char *) fsSource);
+			//free((char *) vsSource);
+			//free((char *) fsSource);
 
-		glAttachShader(shader.program, shader.vert);
-		glAttachShader(shader.program, shader.frag);
-		glLinkProgram(shader.program);
-		printLog(shader.program);
+			glAttachShader(shader.program, shader.vert);
+			glAttachShader(shader.program, shader.frag);
+			glLinkProgram(shader.program);
+			printLog(shader.program);
 
-		//glDeleteObject(vs);
-		//glDeleteObject(fs);
-		//glDeleteObject(sp);
+			OGL2Size[0] = (GLfloat) opengl.surfaceGL->w;
+			OGL2Size[1] = (GLfloat) opengl.surfaceGL->h;
+			OGL2Size[2] = 256.0; //SCRLINES;
+			OGL2Size[3] = 256.0; //SCRROWS;
 
-		OGL2Size[0] = (GLfloat) texture_real_width; //width;
-		OGL2Size[1] = (GLfloat) texture_real_height; //height;
-		OGL2Size[2] = 256.0; //SCRLINES;
-		OGL2Size[3] = 256.0;   //SCRROWS;
+			OGL2Param[0] = 1.0 / (GLfloat) opengl.surfaceGL->w;
+			OGL2Param[1] = 1.0 / (GLfloat) opengl.surfaceGL->h;
+			OGL2Param[2] = 0.0;
+			OGL2Param[3] = 0.0;
 
-		OGL2Param[0] = 1.0 / (GLfloat) texture_real_width;
-		OGL2Param[1] = 1.0 / (GLfloat) texture_real_height;
-		OGL2Param[2] = 0.0;
-		OGL2Param[3] = 0.0;
+			glUseProgram(shader.program);
 
-		glUseProgram(shader.program);
+			OGL2ParamLoc = glGetUniformLocation(shader.program, "OGL2Param");
+			OGL2SizeLoc = glGetUniformLocation(shader.program, "OGL2Size");
+			baseImageLoc = glGetUniformLocation(shader.program, "OGL2Texture");
 
-		OGL2ParamLoc = glGetUniformLocation(shader.program, "OGL2Param");
-		OGL2SizeLoc = glGetUniformLocation(shader.program, "OGL2Size");
-		baseImageLoc = glGetUniformLocation(shader.program, "OGL2Texture");
+			printf("wave parameters location: %d %d %d\n", OGL2ParamLoc, OGL2SizeLoc, baseImageLoc);
 
-		printf("wave parameters location: %d %d %d\n", OGL2ParamLoc, OGL2SizeLoc, baseImageLoc);
-
-		glUniform4fv(OGL2ParamLoc, 1, OGL2Param);
-		glUniform4fv(OGL2SizeLoc, 1, OGL2Size);
-		glUniform1i(baseImageLoc, 0);
+			glUniform4fv(OGL2ParamLoc, 1, OGL2Param);
+			glUniform4fv(OGL2SizeLoc, 1, OGL2Size);
+			glUniform1i(baseImageLoc, 0);
+		}
 
 		glUseProgram(0);
 	} else {

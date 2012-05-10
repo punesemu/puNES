@@ -493,6 +493,12 @@ void gfxSetScreen(BYTE newScale, BYTE newFilter, BYTE newFullscreen, BYTE newPal
 				opengl.shader = 1;
 				opengl.effect = scaleSurface;
 				break;
+			case SCALE3X:
+				opengl.scale = X1;
+				opengl.factor = gfx.scale;
+				opengl.shader = 2;
+				opengl.effect = scaleSurface;
+				break;
 			case SCALE4X:
 				opengl.scale = X2;
 				opengl.factor = 2;
@@ -592,13 +598,9 @@ void gfxQuit(void) {
 		free(paletteWindow);
 	}
 #ifdef OPENGL
-	if (opengl.surfaceGL) {
-		SDL_FreeSurface(opengl.surfaceGL);
-	}
-	if (opengl.texture.data) {
-		glDeleteTextures(1, &opengl.texture.data);
-	}
+	sdlQuitGL();
 #endif
+
 	ntscQuit();
 	textQuit();
 	SDL_Quit();
