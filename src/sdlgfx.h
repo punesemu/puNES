@@ -64,6 +64,8 @@ struct _gfx {
 	float hPr;
 } gfx;
 
+SDL_Surface *surfaceSDL;
+
 BYTE gfxInit(void);
 void gfxSetScreen(BYTE newScale, BYTE newFilter, BYTE newFullscreen, BYTE newPalette,
         BYTE forceScale);

@@ -11,7 +11,6 @@
 #include "openGL/cube3d.h"
 #define _SHADERS_CODE_
 #include "openGL/shaders.h"
-#undef _SHADERS_CODE_
 
 char *file2string(const char *path);
 void printLog(GLuint obj);
@@ -42,6 +41,10 @@ void sdlQuitGL(void) {
 	}
 	if (opengl.texture.data) {
 		glDeleteTextures(1, &opengl.texture.data);
+	}
+
+	if (shader.texture_text) {
+		glDeleteTextures(1, &shader.texture_text);
 	}
 	delete_shader()
 }
@@ -74,7 +77,6 @@ void sdlCreateSurfaceGL(SDL_Surface *src, WORD width, WORD height, BYTE flags) {
 	}
 
 	/* FIXME: funzionera' anche con il filtro NTSC ?!? */
-
 	opengl.texture.x = (GLfloat) width /  (opengl.surfaceGL->w * opengl.factor);
 	opengl.texture.y = (GLfloat) height / (opengl.surfaceGL->h * opengl.factor);
 
@@ -181,7 +183,6 @@ void opengl_create_texture(GLuint *texture) {
 	}
 
 	glGenTextures(1, texture);
-	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, (*texture));
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -218,7 +219,29 @@ void opengl_create_texture(GLuint *texture) {
 
 		delete_shader()
 
-		if (opengl.shader) {
+		if (opengl.shader != SHADER_NONE) {
+
+			if (opengl.surface_text) {
+				SDL_FreeSurface(opengl.surface_text);
+			}
+			opengl.surface_text = gfxCreateRGBSurface(surfaceSDL, surfaceSDL->w, surfaceSDL->h);
+			//surfaceSDL->pixels = opengl.surface_text->pixels;
+			if (shader.texture_text) {
+				glDeleteTextures(1, &shader.texture_text);
+			}
+			glGenTextures(1, &shader.texture_text);
+			glBindTexture(GL_TEXTURE_2D, shader.texture_text);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			glTexImage2D(GL_TEXTURE_2D, 0,
+					opengl.texture.format_internal,
+					opengl_power_of_two(surfaceSDL->w),
+					opengl_power_of_two(surfaceSDL->h),
+					0, opengl.texture.format,
+					opengl.texture.type, NULL);
+
 			shader.routine = &shader_routine[opengl.shader];
 
 			//vsSource = file2string("/home/fhorse/Dropbox/gpuPeteOGL2.slv");
@@ -262,10 +285,20 @@ void opengl_create_texture(GLuint *texture) {
 			shader.param_loc = glGetUniformLocation(shader.program, "param");
 			shader.size_loc = glGetUniformLocation(shader.program, "size");
 			shader.texture_screen_loc = glGetUniformLocation(shader.program, "texture_screen");
+			shader.texture_text_loc = glGetUniformLocation(shader.program, "texture_text");
 
 			glUniform4fv(shader.param_loc, 1, shader.param);
 			glUniform4fv(shader.size_loc, 1, shader.size);
+
+			glEnable(GL_TEXTURE_2D);
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, (*texture));
 			glUniform1i(shader.texture_screen_loc, 0);
+
+			glEnable(GL_TEXTURE_2D);
+			glActiveTexture(GL_TEXTURE1);
+			glBindTexture(GL_TEXTURE_2D, shader.texture_text);
+			glUniform1i(shader.texture_text_loc, 1);
 		}
 
 		glUseProgram(0);

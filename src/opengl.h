@@ -12,6 +12,7 @@
 #include <SDL.h>
 #include "common.h"
 #include "sdlgfx.h"
+#include "openGL/shaders.h"
 
 #define slowFactor	3
 
@@ -37,6 +38,7 @@ struct _opengl {
 	GFX_EFFECT_ROUTINE
 
 	SDL_Surface *surfaceGL;
+	SDL_Surface *surface_text;
 
 	GLint wTexture;
 	GLint hTexture;

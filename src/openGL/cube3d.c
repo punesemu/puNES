@@ -6,7 +6,6 @@
  */
 
 #include "cube3d.h"
-#include "shaders.h"
 
 GLfloat xVertex, yVertex, zVertex;
 GLfloat distance;

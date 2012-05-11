@@ -8,6 +8,14 @@
 #ifndef SHADERS_H_
 #define SHADERS_H_
 
+enum {
+	SHADER_NOFILTER,
+	SHADER_SCALE2X,
+	SHADER_SCALE3X,
+	SHADER_NONE = 255
+};
+#define SHADERNONE 255
+
 #define delete_shader()\
 	if (shader.vert) {\
 		glDeleteShader(shader.vert);\
@@ -29,13 +37,18 @@ struct {
 
 	_shader_routine *routine;
 
+	GLuint texture_text;
+
 	GLfloat size[4];
 	GLfloat param[4];
 
 	GLint size_loc;
 	GLint param_loc;
 	GLint texture_screen_loc;
+	GLint texture_text_loc;
 } shader;
+
+#endif /* SHADERS_H_ */
 
 #ifdef _SHADERS_CODE_
 static _shader_routine shader_routine[3] = {
@@ -52,10 +65,13 @@ static _shader_routine shader_routine[3] = {
 		"}",
 		// fragment shader
 		"uniform sampler2D texture_screen;\n"
+		"uniform sampler2D texture_text;\n"
 		"varying vec4 vTexCoord;\n"
 		"void main(void)\n"
 		"{\n"
-		"	gl_FragColor = texture2DProj(texture_screen, vTexCoord).bgra;\n"
+		"	/*gl_FragColor = texture2DProj(texture_screen, vTexCoord).bgra;\n*/"
+		"	gl_FragColor = texture2DProj(texture_screen, vTexCoord).bgra +"
+		"		texture2D(texture_text, vTexCoord);\n"
 		"}"
 	},
 	/*****************************************************************************************/
@@ -209,6 +225,5 @@ static _shader_routine shader_routine[3] = {
 		"}"
 	}
 };
+#undef _SHADERS_CODE_
 #endif
-
-#endif /* SHADERS_H_ */

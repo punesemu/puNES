@@ -72,7 +72,7 @@
 	/* ed infine utilizzo la nuova */\
 	ntscSet(gfx.ntscFormat, FALSE, 0, (BYTE *) paletteRGB,(BYTE *) paletteRGB)
 
-SDL_Surface *surfaceSDL, *framebuffer;
+SDL_Surface *framebuffer;
 uint32_t *paletteWindow, flagsSoftware;
 static BYTE ntsc_width_pixel[5] = {0, 0, 7, 10, 14};
 
@@ -499,7 +499,7 @@ void gfxSetScreen(BYTE newScale, BYTE newFilter, BYTE newFullscreen, BYTE newPal
 
 		opengl.scale = gfx.scale;
 		opengl.factor = 1;
-		opengl.shader = 0;
+		opengl.shader = SHADER_NONE;
 		opengl.effect = effect;
 
 		if (opengl.glsl) {
@@ -507,25 +507,25 @@ void gfxSetScreen(BYTE newScale, BYTE newFilter, BYTE newFullscreen, BYTE newPal
 				case NOFILTER:
 					opengl.scale = X1;
 					opengl.factor = gfx.scale;
-					opengl.shader = 0;
+					opengl.shader = SHADER_NOFILTER;
 					opengl.effect = scaleSurface;
 					break;
 				case SCALE2X:
 					opengl.scale = X1;
 					opengl.factor = gfx.scale;
-					opengl.shader = 1;
+					opengl.shader = SHADER_SCALE2X;
 					opengl.effect = scaleSurface;
 					break;
 				case SCALE3X:
 					opengl.scale = X1;
 					opengl.factor = gfx.scale;
-					opengl.shader = 2;
+					opengl.shader = SHADER_SCALE3X;
 					opengl.effect = scaleSurface;
 					break;
 				case SCALE4X:
 					opengl.scale = X2;
 					opengl.factor = 2;
-					opengl.shader = 1;
+					opengl.shader = SHADER_SCALE2X;
 					opengl.effect = scaleNx;
 					break;
 			}
@@ -579,14 +579,15 @@ void gfxDrawScreen(BYTE forced) {
 			opengl.effect(screen.data, screen.line, paletteWindow, framebuffer, gfx.rows,
 					gfx.lines, opengl.scale);
 
-			textRendering(TRUE, framebuffer);
+			textRendering(TRUE, opengl.surface_text);
+			//textRendering(TRUE, framebuffer);
 
 			opengl_draw_scene(framebuffer);
 		} else {
 			effect(screen.data, screen.line, paletteWindow, framebuffer, gfx.rows, gfx.lines,
 					gfx.scale);
 
-			textRendering(TRUE, framebuffer);
+			textRendering(TRUE, surfaceSDL);
 		}
 
 		/* disegno a video */
