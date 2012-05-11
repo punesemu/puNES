@@ -480,37 +480,55 @@ void gfxSetScreen(BYTE newScale, BYTE newFilter, BYTE newFullscreen, BYTE newPal
 #ifdef OPENGL
 	if (gfx.opengl) {
 
-		switch (gfx.filter) {
-			case NOFILTER:
-				opengl.scale = X1;
-				opengl.factor = gfx.scale;
-				opengl.shader = 0;
-				opengl.effect = scaleSurface;
-				break;
-			case SCALE2X:
-				opengl.scale = X1;
-				opengl.factor = gfx.scale;
-				opengl.shader = 1;
-				opengl.effect = scaleSurface;
-				break;
-			case SCALE3X:
-				opengl.scale = X1;
-				opengl.factor = gfx.scale;
-				opengl.shader = 2;
-				opengl.effect = scaleSurface;
-				break;
-			case SCALE4X:
-				opengl.scale = X2;
-				opengl.factor = 2;
-				opengl.shader = 1;
-				opengl.effect = scaleNx;
-				break;
-			default:
-				opengl.scale = gfx.scale;
-				opengl.factor = 1;
-				opengl.shader = 0;
-				opengl.effect = effect;
-				break;
+		if (!opengl.glew){
+			GLenum err;
+
+			if ((err = glewInit()) != GLEW_OK) {
+				fprintf(stderr, "INFO: %s\n", glewGetErrorString(err));
+			} else {
+				opengl.glew = TRUE;
+
+				if (opengl.glew && GLEW_VERSION_2_0) {
+#ifndef RELEASE
+					fprintf(stderr, "INFO: OpenGL 2.0 supported. Glsl enabled.\n");
+#endif
+					opengl.glsl = TRUE;
+				}
+			}
+		}
+
+		opengl.scale = gfx.scale;
+		opengl.factor = 1;
+		opengl.shader = 0;
+		opengl.effect = effect;
+
+		if (opengl.glsl) {
+			switch (gfx.filter) {
+				case NOFILTER:
+					opengl.scale = X1;
+					opengl.factor = gfx.scale;
+					opengl.shader = 0;
+					opengl.effect = scaleSurface;
+					break;
+				case SCALE2X:
+					opengl.scale = X1;
+					opengl.factor = gfx.scale;
+					opengl.shader = 1;
+					opengl.effect = scaleSurface;
+					break;
+				case SCALE3X:
+					opengl.scale = X1;
+					opengl.factor = gfx.scale;
+					opengl.shader = 2;
+					opengl.effect = scaleSurface;
+					break;
+				case SCALE4X:
+					opengl.scale = X2;
+					opengl.factor = 2;
+					opengl.shader = 1;
+					opengl.effect = scaleNx;
+					break;
+			}
 		}
 
 		/* creo la superficie che utilizzero' come texture */
