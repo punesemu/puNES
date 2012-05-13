@@ -474,33 +474,25 @@ void gfxSetScreen(BYTE newScale, BYTE newFilter, BYTE newFullscreen, BYTE newPal
 	framebuffer = surfaceSDL;
 	flip = SDL_Flip;
 
+	text.surface = surfaceSDL;
+	text_blit = text_blit_sdl;
+
 	wForPr = gfx.w[VIDEOMODE];
 	hForPr = gfx.h[VIDEOMODE];
 
 #ifdef OPENGL
 	if (gfx.opengl) {
+		BYTE use_txt_texture;
 
-		if (!opengl.glew){
-			GLenum err;
+		glew_init();
 
-			if ((err = glewInit()) != GLEW_OK) {
-				fprintf(stderr, "INFO: %s\n", glewGetErrorString(err));
-			} else {
-				opengl.glew = TRUE;
-
-				if (opengl.glew && GLEW_VERSION_2_0) {
-#ifndef RELEASE
-					fprintf(stderr, "INFO: OpenGL 2.0 supported. Glsl enabled.\n");
-#endif
-					opengl.glsl = TRUE;
-				}
-			}
-		}
+		//opengl.glsl = FALSE;
 
 		opengl.scale = gfx.scale;
 		opengl.factor = 1;
 		opengl.shader = SHADER_NONE;
 		opengl.effect = effect;
+		use_txt_texture = FALSE;
 
 		if (opengl.glsl) {
 			switch (gfx.filter) {
@@ -509,24 +501,28 @@ void gfxSetScreen(BYTE newScale, BYTE newFilter, BYTE newFullscreen, BYTE newPal
 					opengl.factor = gfx.scale;
 					opengl.shader = SHADER_NOFILTER;
 					opengl.effect = scaleSurface;
+					use_txt_texture = TRUE;
 					break;
 				case SCALE2X:
 					opengl.scale = X1;
 					opengl.factor = gfx.scale;
 					opengl.shader = SHADER_SCALE2X;
 					opengl.effect = scaleSurface;
+					use_txt_texture = TRUE;
 					break;
 				case SCALE3X:
 					opengl.scale = X1;
 					opengl.factor = gfx.scale;
 					opengl.shader = SHADER_SCALE3X;
 					opengl.effect = scaleSurface;
+					use_txt_texture = TRUE;
 					break;
 				case SCALE4X:
 					opengl.scale = X2;
 					opengl.factor = 2;
 					opengl.shader = SHADER_SCALE2X;
 					opengl.effect = scaleNx;
+					use_txt_texture = TRUE;
 					break;
 			}
 		}
@@ -538,12 +534,20 @@ void gfxSetScreen(BYTE newScale, BYTE newFilter, BYTE newFullscreen, BYTE newPal
 		framebuffer = opengl.surfaceGL;
 		flip = opengl_flip;
 
+		if (use_txt_texture) {
+			text.surface = surfaceSDL;
+			text_blit = text_blit_opengl;
+		} else {
+			text.surface = opengl.surfaceGL;
+			text_blit = text_blit_sdl;
+		}
+
 		wForPr = opengl.xTexture2 - opengl.xTexture1;
 		hForPr = opengl.yTexture2 - opengl.yTexture1;
 	}
 #endif
 
-	textReset(framebuffer);
+	textReset();
 
 	/*
 	 * calcolo le proporzioni tra il disegnato a video (overscan e schermo
@@ -567,7 +571,7 @@ void gfxDrawScreen(BYTE forced) {
 			info.pause_frames_drawscreen = 0;
 			forced = TRUE;
 		} else {
-			textRendering(FALSE, framebuffer);
+			textRendering(FALSE);
 			return;
 		}
 	}
@@ -579,15 +583,14 @@ void gfxDrawScreen(BYTE forced) {
 			opengl.effect(screen.data, screen.line, paletteWindow, framebuffer, gfx.rows,
 					gfx.lines, opengl.scale);
 
-			textRendering(TRUE, opengl.surface_text);
-			//textRendering(TRUE, framebuffer);
+			textRendering(TRUE);
 
 			opengl_draw_scene(framebuffer);
 		} else {
 			effect(screen.data, screen.line, paletteWindow, framebuffer, gfx.rows, gfx.lines,
 					gfx.scale);
 
-			textRendering(TRUE, surfaceSDL);
+			textRendering(TRUE);
 		}
 
 		/* disegno a video */
@@ -631,6 +634,9 @@ SDL_Surface *gfxCreateRGBSurface(SDL_Surface *src, uint32_t width, uint32_t heig
 	new_surface = SDL_DisplayFormatAlpha(SDL_CreateRGBSurface(src->flags, width, height,
 			src->format->BitsPerPixel, src->format->Rmask, src->format->Gmask,
 			src->format->Bmask, src->format->Amask));
+
+	memset(new_surface->pixels, 0,
+	        new_surface->w * new_surface->h * new_surface->format->BytesPerPixel);
 
 	return (new_surface);
 }

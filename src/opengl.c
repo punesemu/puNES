@@ -80,7 +80,84 @@ void sdlCreateSurfaceGL(SDL_Surface *src, WORD width, WORD height, BYTE flags) {
 	opengl.texture.x = (GLfloat) width /  (opengl.surfaceGL->w * opengl.factor);
 	opengl.texture.y = (GLfloat) height / (opengl.surfaceGL->h * opengl.factor);
 
-	opengl_create_texture(&opengl.texture.data);
+	opengl_create_texture(&opengl.texture.data, opengl.surfaceGL->w, opengl.surfaceGL->h,
+	        POWER_OF_TWO);
+
+	if (opengl.glew && GLEW_VERSION_2_0) {
+		opengl.glsl = TRUE;
+
+		delete_shader()
+
+		if (opengl.shader != SHADER_NONE) {
+
+			//opengl_create_texture(&shader.texture_text, surfaceSDL->w, surfaceSDL->h,
+			//       NO_POWER_OF_TWO);
+			opengl_create_texture(&shader.texture_text, surfaceSDL->w, surfaceSDL->w,
+			        NO_POWER_OF_TWO);
+
+			shader.routine = &shader_routine[opengl.shader];
+
+			//vsSource = file2string("/home/fhorse/Dropbox/gpuPeteOGL2.slv");
+			//fsSource = file2string("/home/fhorse/Dropbox/gpuPeteOGL2.slf");
+
+			shader.vert = glCreateShader(GL_VERTEX_SHADER);
+			printLog(shader.vert);
+			glShaderSource(shader.vert, 1, &shader.routine->vert, NULL);
+			printLog(shader.vert);
+			glCompileShader(shader.vert);
+			printLog(shader.vert);
+
+			shader.frag = glCreateShader(GL_FRAGMENT_SHADER);
+			glShaderSource(shader.frag, 1, &shader.routine->frag, NULL);
+			glCompileShader(shader.frag);
+			printLog(shader.frag);
+
+			shader.program = glCreateProgram();
+			printLog(shader.program);
+
+			//free((char *) vsSource);
+			//free((char *) fsSource);
+
+			glAttachShader(shader.program, shader.vert);
+			glAttachShader(shader.program, shader.frag);
+			glLinkProgram(shader.program);
+			printLog(shader.program);
+
+			shader.size[0] = (GLfloat) opengl.surfaceGL->w;
+			shader.size[1] = (GLfloat) opengl.surfaceGL->h;
+			shader.size[2] = 256.0; //SCRLINES;
+			shader.size[3] = 256.0; //SCRROWS;
+
+			shader.param[0] = 1.0 / (GLfloat) opengl.surfaceGL->w;
+			shader.param[1] = 1.0 / (GLfloat) opengl.surfaceGL->h;
+			shader.param[2] = 0.0;
+			shader.param[3] = 0.0;
+
+			glUseProgram(shader.program);
+
+			shader.param_loc = glGetUniformLocation(shader.program, "param");
+			shader.size_loc = glGetUniformLocation(shader.program, "size");
+			shader.texture_screen_loc = glGetUniformLocation(shader.program, "texture_screen");
+			shader.texture_text_loc = glGetUniformLocation(shader.program, "texture_text");
+
+			glUniform4fv(shader.param_loc, 1, shader.param);
+			glUniform4fv(shader.size_loc, 1, shader.size);
+
+			glEnable(GL_TEXTURE_2D);
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, opengl.texture.data);
+			glUniform1i(shader.texture_screen_loc, 0);
+
+			glEnable(GL_TEXTURE_2D);
+			glActiveTexture(GL_TEXTURE1);
+			glBindTexture(GL_TEXTURE_2D, shader.texture_text);
+			glUniform1i(shader.texture_text_loc, 1);
+		}
+
+		glUseProgram(0);
+	} else {
+		shader.program = 0;
+	}
 
 	opengl_set(src);
 
@@ -147,9 +224,40 @@ int opengl_flip(SDL_Surface *surface) {
 }
 
 
+void glew_init(void) {
+	if (!opengl.glew){
+		GLenum err;
 
+		if ((err = glewInit()) != GLEW_OK) {
+			fprintf(stderr, "INFO: %s\n", glewGetErrorString(err));
+			opengl.glew = NO_GLEW;
+		} else {
+			opengl.glew = TRUE;
 
-void opengl_create_texture(GLuint *texture) {
+			if (GLEW_VERSION_2_0) {
+				fprintf(stderr, "INFO: OpenGL 2.0 supported. Glsl enabled.\n");
+				opengl.glsl = TRUE;
+			}
+			if (!GLEW_VERSION_3_1) {
+				fprintf(stderr, "INFO: OpenGL 3.1 not supported.\n");
+			} else {
+				fprintf(stderr, "INFO: OpenGL 3.1 supported.\n");
+			}
+		}
+	}
+}
+
+void opengl_create_texture(GLuint *texture, uint32_t width, uint32_t height, uint8_t pow) {
+	SDL_Surface *blank;
+
+	if (pow) {
+		width = opengl_power_of_two(width);
+		height = opengl_power_of_two(height);
+	}
+
+	blank = gfxCreateRGBSurface(opengl.surfaceGL, width, height);
+	memset(blank->pixels, 0, width * height * blank->format->BytesPerPixel);
+
 	switch (opengl.surfaceGL->format->BitsPerPixel) {
 		case 16:
 			opengl.texture.format_internal = GL_RGB5;
@@ -178,7 +286,7 @@ void opengl_create_texture(GLuint *texture) {
 			break;
 	}
 
-	if (texture) {
+	if ((*texture)) {
 		glDeleteTextures(1, texture);
 	}
 
@@ -188,126 +296,31 @@ void opengl_create_texture(GLuint *texture) {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	if (0 == 1) {
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	} else {
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	}
 
 	if (opengl.glew && !GLEW_VERSION_3_1) {
-#ifndef RELEASE
-		fprintf(stderr, "INFO: OpenGL 3.1 not supported.\n");
-#endif
 		glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
 	}
 
-	glTexImage2D(GL_TEXTURE_2D, 0, opengl.texture.format_internal, opengl.surfaceGL->w,
-	        opengl.surfaceGL->h, 0, opengl.texture.format, opengl.texture.type, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, opengl.texture.format_internal, width, height, 0,
+	        opengl.texture.format, opengl.texture.type, blank->pixels);
 
 	if (opengl.glew && GLEW_VERSION_3_1) {
-#ifndef RELEASE
-		fprintf(stderr, "INFO: OpenGL 3.1 supported.\n");
-#endif
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 
-	if (opengl.glew && GLEW_VERSION_2_0) {
-#ifndef RELEASE
-			fprintf(stderr, "INFO: OpenGL 2.0 supported. Glsl enabled.\n");
-#endif
-		opengl.glsl = TRUE;
-
-		delete_shader()
-
-		if (opengl.shader != SHADER_NONE) {
-
-			if (opengl.surface_text) {
-				SDL_FreeSurface(opengl.surface_text);
-			}
-			opengl.surface_text = gfxCreateRGBSurface(surfaceSDL, surfaceSDL->w, surfaceSDL->h);
-			//surfaceSDL->pixels = opengl.surface_text->pixels;
-			if (shader.texture_text) {
-				glDeleteTextures(1, &shader.texture_text);
-			}
-			glGenTextures(1, &shader.texture_text);
-			glBindTexture(GL_TEXTURE_2D, shader.texture_text);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-			glTexImage2D(GL_TEXTURE_2D, 0,
-					opengl.texture.format_internal,
-					opengl_power_of_two(surfaceSDL->w),
-					opengl_power_of_two(surfaceSDL->h),
-					0, opengl.texture.format,
-					opengl.texture.type, NULL);
-
-			shader.routine = &shader_routine[opengl.shader];
-
-			//vsSource = file2string("/home/fhorse/Dropbox/gpuPeteOGL2.slv");
-			//fsSource = file2string("/home/fhorse/Dropbox/gpuPeteOGL2.slf");
-
-			shader.vert = glCreateShader(GL_VERTEX_SHADER);
-			printLog(shader.vert);
-			glShaderSource(shader.vert, 1, &shader.routine->vert, NULL);
-			printLog(shader.vert);
-			glCompileShader(shader.vert);
-			printLog(shader.vert);
-
-			shader.frag = glCreateShader(GL_FRAGMENT_SHADER);
-			glShaderSource(shader.frag, 1, &shader.routine->frag, NULL);
-			glCompileShader(shader.frag);
-			printLog(shader.frag);
-
-			shader.program = glCreateProgram();
-			printLog(shader.program);
-
-			//free((char *) vsSource);
-			//free((char *) fsSource);
-
-			glAttachShader(shader.program, shader.vert);
-			glAttachShader(shader.program, shader.frag);
-			glLinkProgram(shader.program);
-			printLog(shader.program);
-
-			shader.size[0] = (GLfloat) opengl.surfaceGL->w;
-			shader.size[1] = (GLfloat) opengl.surfaceGL->h;
-			shader.size[2] = 256.0; //SCRLINES;
-			shader.size[3] = 256.0; //SCRROWS;
-
-			shader.param[0] = 1.0 / (GLfloat) opengl.surfaceGL->w;
-			shader.param[1] = 1.0 / (GLfloat) opengl.surfaceGL->h;
-			shader.param[2] = 0.0;
-			shader.param[3] = 0.0;
-
-			glUseProgram(shader.program);
-
-			shader.param_loc = glGetUniformLocation(shader.program, "param");
-			shader.size_loc = glGetUniformLocation(shader.program, "size");
-			shader.texture_screen_loc = glGetUniformLocation(shader.program, "texture_screen");
-			shader.texture_text_loc = glGetUniformLocation(shader.program, "texture_text");
-
-			glUniform4fv(shader.param_loc, 1, shader.param);
-			glUniform4fv(shader.size_loc, 1, shader.size);
-
-			glEnable(GL_TEXTURE_2D);
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, (*texture));
-			glUniform1i(shader.texture_screen_loc, 0);
-
-			glEnable(GL_TEXTURE_2D);
-			glActiveTexture(GL_TEXTURE1);
-			glBindTexture(GL_TEXTURE_2D, shader.texture_text);
-			glUniform1i(shader.texture_text_loc, 1);
-		}
-
-		glUseProgram(0);
-	} else {
-		shader.program = 0;
-	}
+	SDL_FreeSurface(blank);
 }
 void opengl_update_texture(SDL_Surface *surface) {
 	glEnable(GL_TEXTURE_2D);
+
+	glBindTexture(GL_TEXTURE_2D, opengl.texture.data);
 
 	if (opengl.glew && !GLEW_VERSION_3_1) {
 		glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
@@ -325,9 +338,28 @@ void opengl_update_texture(SDL_Surface *surface) {
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 
+	if (opengl.glsl && text.on_screen && (opengl.shader != 255)) {
+		glBindTexture(GL_TEXTURE_2D, shader.texture_text);
+	}
+
 	/* disabilito l'uso delle texture */
+	//glDisable(GL_TEXTURE_2D);
+}
+void text_blit_opengl(_txt_element *txt, SDL_Rect *dst_rect) {
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, shader.texture_text);
+
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	glPixelStorei(GL_UNPACK_ROW_LENGTH, dst_rect->w);
+
+	glTexSubImage2D(GL_TEXTURE_2D, 0, dst_rect->x, dst_rect->y, dst_rect->w, dst_rect->h,
+	        opengl.texture.format, opengl.texture.type, txt->surface->pixels);
+
+	glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+
 	glDisable(GL_TEXTURE_2D);
 }
+
 int opengl_power_of_two(int base) {
 	int pot = 1;
 

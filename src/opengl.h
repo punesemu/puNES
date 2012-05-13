@@ -16,6 +16,12 @@
 
 #define slowFactor	3
 
+enum {
+	NO_POWER_OF_TWO,
+	POWER_OF_TWO,
+	NO_GLEW
+};
+
 typedef struct {
 	GLuint data;
 	GLenum format;
@@ -38,7 +44,6 @@ struct _opengl {
 	GFX_EFFECT_ROUTINE
 
 	SDL_Surface *surfaceGL;
-	SDL_Surface *surface_text;
 
 	GLint wTexture;
 	GLint hTexture;
@@ -64,9 +69,13 @@ void sdlQuitGL(void);
 void sdlCreateSurfaceGL(SDL_Surface *src, WORD width, WORD height, BYTE flags);
 int opengl_flip(SDL_Surface *surface);
 
-void opengl_create_texture(GLuint *texture);
+void glew_init(void);
+
+void opengl_create_texture(GLuint *texture, uint32_t width, uint32_t height, uint8_t pow);
 void opengl_update_texture(SDL_Surface *surface);
 int opengl_power_of_two(int base);
+
+void text_blit_opengl(_txt_element *txt, SDL_Rect *dst_rect);
 
 /* funzioni virtuali */
 void (*opengl_set)(SDL_Surface *src);

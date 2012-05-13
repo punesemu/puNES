@@ -8,6 +8,8 @@
 #ifndef SHADERS_H_
 #define SHADERS_H_
 
+#include "sdltext.h"
+
 enum {
 	SHADER_NOFILTER,
 	SHADER_SCALE2X,
@@ -69,9 +71,11 @@ static _shader_routine shader_routine[3] = {
 		"varying vec4 vTexCoord;\n"
 		"void main(void)\n"
 		"{\n"
-		"	/*gl_FragColor = texture2DProj(texture_screen, vTexCoord).bgra;\n*/"
-		"	gl_FragColor = texture2DProj(texture_screen, vTexCoord).bgra +"
-		"		texture2D(texture_text, vTexCoord);\n"
+		"	vec4 texel0, texel1;\n"
+		"	/*gl_FragColor = texture2DProj(texture_screen, vTexCoord).bgra;*/"
+		"	texel0 = texture2DProj(texture_screen, vTexCoord).bgra;\n"
+		"	texel1 = texture2DProj(texture_text, vTexCoord);\n"
+		"	gl_FragColor = mix(texel0, texel1, texel1.a);\n"
 		"}"
 	},
 	/*****************************************************************************************/

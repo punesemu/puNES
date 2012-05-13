@@ -29,22 +29,7 @@ void opengl_draw_scene_no_effect(SDL_Surface *surface) {
 	/* ripulisco la scena opengl */
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, shader.texture_text);
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	glPixelStorei(GL_UNPACK_ROW_LENGTH, surfaceSDL->w);
-	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, opengl.surface_text->w,
-			opengl.surface_text->h, opengl.texture.format,
-	        opengl.texture.type, opengl.surface_text->pixels);
-	glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
-	glBindTexture(GL_TEXTURE_2D, opengl.texture.data);
-
 	opengl_update_texture(surface);
-
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, shader.texture_text);
-
-	glEnable(GL_TEXTURE_2D);
 
 	glUseProgram(shader.program);
 
