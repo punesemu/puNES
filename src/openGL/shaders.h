@@ -71,11 +71,11 @@ static _shader_routine shader_routine[3] = {
 		"varying vec4 vTexCoord;\n"
 		"void main(void)\n"
 		"{\n"
-		"	vec4 texel0, texel1;\n"
+		"	vec4 screen, text;\n"
 		"	/*gl_FragColor = texture2DProj(texture_screen, vTexCoord).bgra;*/"
-		"	texel0 = texture2DProj(texture_screen, vTexCoord).bgra;\n"
-		"	texel1 = texture2DProj(texture_text, vTexCoord);\n"
-		"	gl_FragColor = mix(texel0, texel1, texel1.a);\n"
+		"	screen = texture2DProj(texture_screen, vTexCoord).bgra;\n"
+		"	text = texture2DProj(texture_text, vTexCoord);\n"
+		"	gl_FragColor = mix(screen, text, text.a);\n"
 		"}"
 	},
 	/*****************************************************************************************/
@@ -100,10 +100,12 @@ static _shader_routine shader_routine[3] = {
 		// fragment shader
 		"uniform vec4 size;\n"
 		"uniform sampler2D texture_screen;\n"
+		"uniform sampler2D texture_text;\n"
 		"varying vec4 vTexCoord[5];\n"
 		"void main()\n"
 		"{\n"
 		"	vec4 colD,colF,colB,colH,col,tmp;\n"
+		"	vec4 screen, text;\n"
 		"	vec2 sel;\n"
 		"	col  = texture2DProj(texture_screen, vTexCoord[0]);	// central (can be E0-E3)\n"
 		"	colD = texture2DProj(texture_screen, vTexCoord[1]);	// D (left)\n"
@@ -117,7 +119,9 @@ static _shader_routine shader_routine[3] = {
 		"	if((colB == colD) && (colB != colF) && (colD != colH)) { // do the Scale2x rule\n"
 		"		col=colD;\n"
 		"	}\n"
-		"	gl_FragColor = col;\n"
+		"	screen = col;\n"
+		"	text = texture2DProj(texture_text, vTexCoord[0]);\n"
+		"	gl_FragColor = mix(screen, text, text.a);\n"
 		"}"
 	},
 	/*****************************************************************************************/
@@ -145,10 +149,12 @@ static _shader_routine shader_routine[3] = {
 		"}",
 		"uniform vec4 size;\n"
 		"uniform sampler2D texture_screen;\n"
+		"uniform sampler2D texture_text;\n"
 		"varying vec4 vTexCoord[5];\n"
 		"void main() {\n"
 		"	const vec2 sep = vec2(0.33333, 0.66667); // sufficient precision for HDTV (1920x1080)\n"
 		"	vec4 A, B, C, D, E, F, G, H, I, X, T;\n"
+		"	vec4 screen, text;\n"
 		"	vec2 sel;\n"
 		"	E = texture2D(texture_screen, vTexCoord[0].xy); // E\n"
 		"	A = texture2D(texture_screen, vTexCoord[0].zw); // A\n"
@@ -223,9 +229,11 @@ static _shader_routine shader_routine[3] = {
 		"		}\n"
 		"		H = T;\n"
 		"	}\n"
-		"	gl_FragColor = ((D == B && B != F && D != H && E != C) ||"
+		"	screen = ((D == B && B != F && D != H && E != C) ||"
 		"					(B == F && B != D && F != H && E != A)) ?"
 		"					 B : E; // Scale3x rule\n"
+		"	text = texture2D(texture_text, vTexCoord[0].xy);\n"
+		"	gl_FragColor = mix(screen, text, text.a);\n"
 		"}"
 	}
 };

@@ -75,7 +75,7 @@ void opengl_create_texture(GLuint *texture, uint32_t width, uint32_t height, uin
 void opengl_update_texture(SDL_Surface *surface);
 int opengl_power_of_two(int base);
 
-void text_blit_opengl(_txt_element *txt, SDL_Rect *dst_rect);
+void text_blit_opengl(_txt_element *ele, SDL_Rect *dst_rect);
 
 /* funzioni virtuali */
 void (*opengl_set)(SDL_Surface *src);

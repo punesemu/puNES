@@ -90,10 +90,8 @@ void sdlCreateSurfaceGL(SDL_Surface *src, WORD width, WORD height, BYTE flags) {
 
 		if (opengl.shader != SHADER_NONE) {
 
-			//opengl_create_texture(&shader.texture_text, surfaceSDL->w, surfaceSDL->h,
-			//       NO_POWER_OF_TWO);
-			opengl_create_texture(&shader.texture_text, surfaceSDL->w, surfaceSDL->w,
-			        NO_POWER_OF_TWO);
+			opengl_create_texture(&shader.texture_text, opengl.surfaceGL->w * opengl.factor,
+			        opengl.surfaceGL->w * opengl.factor, NO_POWER_OF_TWO);
 
 			shader.routine = &shader_routine[opengl.shader];
 
@@ -345,7 +343,7 @@ void opengl_update_texture(SDL_Surface *surface) {
 	/* disabilito l'uso delle texture */
 	//glDisable(GL_TEXTURE_2D);
 }
-void text_blit_opengl(_txt_element *txt, SDL_Rect *dst_rect) {
+void text_blit_opengl(_txt_element *ele, SDL_Rect *dst_rect) {
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, shader.texture_text);
 
@@ -353,7 +351,7 @@ void text_blit_opengl(_txt_element *txt, SDL_Rect *dst_rect) {
 	glPixelStorei(GL_UNPACK_ROW_LENGTH, dst_rect->w);
 
 	glTexSubImage2D(GL_TEXTURE_2D, 0, dst_rect->x, dst_rect->y, dst_rect->w, dst_rect->h,
-	        opengl.texture.format, opengl.texture.type, txt->surface->pixels);
+	        opengl.texture.format, opengl.texture.type, ele->surface->pixels);
 
 	glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
 

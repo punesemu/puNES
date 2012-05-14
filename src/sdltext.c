@@ -219,7 +219,7 @@ void textRendering(BYTE render) {
 	#define FADE_SPEED 4
 
 	{
-		int pos_x = 8, pos_y = surfaceSDL->h - 8;
+		int pos_x = 8, pos_y = text.h - 8;
 		uint8_t i;
 
 		for (i = 0; i < TXT_MAX_LINES; i++) {
@@ -478,63 +478,63 @@ void textQuit(void) {
 	}
 }
 
-static void INLINE rendering(_txt_element *txt) {
-	int i = 0, font_x = 0, font_y = 0, ch_font = txt->font;
-	uint32_t color[3], max_pixels = (surfaceSDL->w - 16), pixels = 0;
+static void INLINE rendering(_txt_element *ele) {
+	int i = 0, font_x = 0, font_y = 0, ch_font = ele->font;
+	uint32_t color[3], max_pixels = (text.w - 16), pixels = 0;
 	SDL_Rect surface_rect, font;
 
 	text.on_screen = TRUE;
 
 	font.x = 0;
-	font.w = txt->factor * font_size[ch_font][0];
+	font.w = ele->factor * font_size[ch_font][0];
 
-	surface_rect.x = txt->x;
-	surface_rect.y = txt->y;
-	surface_rect.w = txt->w;
-	surface_rect.h = txt->h;
+	surface_rect.x = ele->x;
+	surface_rect.y = ele->y;
+	surface_rect.w = ele->w;
+	surface_rect.h = ele->h;
 
-	if (txt->start_x >= TXTCENTER) {
-		if (txt->start_x == TXTCENTER) {
-			surface_rect.x = ((text.surface->w - txt->w) >> 1) + txt->x;
-		} else if (txt->start_x == TXTLEFT) {
-			surface_rect.x = 8 + txt->x;
-		} else if (txt->start_x == TXTRIGHT) {
-			surface_rect.x = ((text.surface->w - 8) - txt->w) + txt->x;
+	if (ele->start_x >= TXTCENTER) {
+		if (ele->start_x == TXTCENTER) {
+			surface_rect.x = ((text.w - ele->w) >> 1) + ele->x;
+		} else if (ele->start_x == TXTLEFT) {
+			surface_rect.x = 8 + ele->x;
+		} else if (ele->start_x == TXTRIGHT) {
+			surface_rect.x = ((text.w - 8) - ele->w) + ele->x;
 		}
 		if (surface_rect.x < 0) {
 			surface_rect.x = 0;
 		}
 	}
 
-	if (txt->start_y >= TXTCENTER) {
-		if (txt->start_y == TXTCENTER) {
-			surface_rect.y = ((text.surface->h - (txt->factor * font_size[ch_font][1])) >> 1)
-			        + txt->y;
-		} else if (txt->start_y == TXTUP) {
-			surface_rect.y = 8 + txt->y;
-		} else if (txt->start_y == TXTDOWN) {
-			surface_rect.y = ((text.surface->h - 8) - font_size[ch_font][1]) + txt->y;
+	if (ele->start_y >= TXTCENTER) {
+		if (ele->start_y == TXTCENTER) {
+			surface_rect.y = ((text.h - (ele->factor * font_size[ch_font][1])) >> 1)
+			        + ele->y;
+		} else if (ele->start_y == TXTUP) {
+			surface_rect.y = 8 + ele->y;
+		} else if (ele->start_y == TXTDOWN) {
+			surface_rect.y = ((text.h - 8) - font_size[ch_font][1]) + ele->y;
 		}
 		if (surface_rect.y < 0) {
 			surface_rect.y = 0;
 		}
 	}
 
-	color[0] = (txt->alpha[0] << 24) | txt_table[TXT_NORMAL];
-	color[1] = (txt->alpha[1] << 24) | txt_table[TXT_BLACK];
-	if (!txt->bck_color) {
-		color[2] = (txt->alpha[2] << 24) | txt_table[TXT_BLACK];
+	color[0] = (ele->alpha[0] << 24) | txt_table[TXT_NORMAL];
+	color[1] = (ele->alpha[1] << 24) | txt_table[TXT_BLACK];
+	if (!ele->bck_color) {
+		color[2] = (ele->alpha[2] << 24) | txt_table[TXT_BLACK];
 	} else {
-		color[2] = (txt->alpha[2] << 24) | txt_table[txt->bck_color];
+		color[2] = (ele->alpha[2] << 24) | txt_table[ele->bck_color];
 	}
 
-	txt->index = 0;
+	ele->index = 0;
 
-	for (pixels = txt->x; pixels < max_pixels;) {
+	for (pixels = ele->x; pixels < max_pixels;) {
 		char ch = ' ';
 
-		if (i < strlen(txt->text)) {
-			ch = txt->text[i];
+		if (i < strlen(ele->text)) {
+			ch = ele->text[i];
 		} else {
 			break;
 		}
@@ -545,14 +545,14 @@ static void INLINE rendering(_txt_element *txt) {
 			for (tag = 0; tag < LENGTH(txt_tags); tag++) {
 				int len = strlen(txt_tags[tag]);
 
-				if (strncmp(txt->text + i, txt_tags[tag], len) == 0) {
+				if (strncmp(ele->text + i, txt_tags[tag], len) == 0) {
 					if (tag <= TXT_BLACK) {
-						color[0] = (txt->alpha[0] << 24) | txt_table[tag];
+						color[0] = (ele->alpha[0] << 24) | txt_table[tag];
 						i += len;
 						found = TRUE;
 					} else if (tag <= TXT_FONT_12) {
 						ch_font = tag - TXT_FONT_8;
-						font.w = txt->factor * font_size[ch_font][0];
+						font.w = ele->factor * font_size[ch_font][0];
 						i += len;
 						found = TRUE;
 					} else if (tag <= TXT_FLOPPY) {
@@ -1002,8 +1002,8 @@ static void INLINE rendering(_txt_element *txt) {
 			int x, y;
 			SDL_Rect rect;
 
-			rect.w = txt->factor;
-			rect.h = txt->factor;
+			rect.w = ele->factor;
+			rect.h = ele->factor;
 
 			for (y = 0; y < font_size[ch_font][1]; y++) {
 				char *list;
@@ -1014,21 +1014,21 @@ static void INLINE rendering(_txt_element *txt) {
 					list = font_12x10[font_y] + font_x;
 				}
 
-				rect.y = y * txt->factor;
+				rect.y = y * ele->factor;
 
 				for (x = 0; x < font_size[ch_font][0]; x++) {
-					rect.x = font.x + (x * txt->factor);
+					rect.x = font.x + (x * ele->factor);
 					if (list[x] == '@') {
-						SDL_FillRect(txt->surface, &rect, color[0]);
+						SDL_FillRect(ele->surface, &rect, color[0]);
 					} else if (list[x] == '+') {
-						SDL_FillRect(txt->surface, &rect, color[1]);
+						SDL_FillRect(ele->surface, &rect, color[1]);
 					} else if (list[x] == '.') {
-						SDL_FillRect(txt->surface, &rect, color[2]);
+						SDL_FillRect(ele->surface, &rect, color[2]);
 					} else {
-						if (!txt->bck) {
-							SDL_FillRect(txt->surface, &rect, 0);
+						if (!ele->bck) {
+							SDL_FillRect(ele->surface, &rect, 0);
 						} else {
-							SDL_FillRect(txt->surface, &rect, color[2]);
+							SDL_FillRect(ele->surface, &rect, color[2]);
 						}
 					}
 				}
@@ -1037,19 +1037,19 @@ static void INLINE rendering(_txt_element *txt) {
 		}
 		font.x += font.w;
 
-		txt->index++;
+		ele->index++;
 		i++;
 	}
 
-	text_blit(txt, &surface_rect);
+	text_blit(ele, &surface_rect);
 }
-void text_blit_sdl(_txt_element *txt, SDL_Rect *dst_rect) {
+void text_blit_sdl(_txt_element *ele, SDL_Rect *dst_rect) {
 	SDL_Rect rect;
 
 	rect.x = 0;
 	rect.y = 0;
-	rect.w = txt->w;
-	rect.h = txt->h;
+	rect.w = ele->w;
+	rect.h = ele->h;
 
-	SDL_BlitSurface(txt->surface, &rect, text.surface, dst_rect);
+	SDL_BlitSurface(ele->surface, &rect, text.surface, dst_rect);
 }

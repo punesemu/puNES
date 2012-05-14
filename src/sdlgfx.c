@@ -476,6 +476,8 @@ void gfxSetScreen(BYTE newScale, BYTE newFilter, BYTE newFullscreen, BYTE newPal
 
 	text.surface = surfaceSDL;
 	text_blit = text_blit_sdl;
+	text.w = surfaceSDL->w;
+	text.h = surfaceSDL->h;
 
 	wForPr = gfx.w[VIDEOMODE];
 	hForPr = gfx.h[VIDEOMODE];
@@ -541,6 +543,8 @@ void gfxSetScreen(BYTE newScale, BYTE newFilter, BYTE newFullscreen, BYTE newPal
 			text.surface = opengl.surfaceGL;
 			text_blit = text_blit_sdl;
 		}
+		text.w = gfx.w[CURRENT];
+		text.h = gfx.h[CURRENT];
 
 		wForPr = opengl.xTexture2 - opengl.xTexture1;
 		hForPr = opengl.yTexture2 - opengl.yTexture1;
