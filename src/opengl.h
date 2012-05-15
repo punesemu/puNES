@@ -61,7 +61,6 @@ struct _opengl {
 	float yDiff;
 
 	_texture texture;
-
 } opengl;
 
 void sdlInitGL(void);
@@ -70,6 +69,7 @@ void sdlCreateSurfaceGL(SDL_Surface *src, WORD width, WORD height, BYTE flags);
 int opengl_flip(SDL_Surface *surface);
 
 void glew_init(void);
+void glsl_shaders_init(void);
 
 void opengl_create_texture(GLuint *texture, uint32_t width, uint32_t height, uint8_t pow);
 void opengl_update_texture(SDL_Surface *surface);

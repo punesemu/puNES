@@ -31,7 +31,9 @@ void opengl_draw_scene_no_effect(SDL_Surface *surface) {
 
 	opengl_update_texture(surface);
 
-	glUseProgram(shader.program);
+	if (opengl.glsl) {
+		glUseProgram(shader.program);
+	}
 
 	/* disegno la texture */
 	glBegin(GL_QUADS);
@@ -49,7 +51,9 @@ void opengl_draw_scene_no_effect(SDL_Surface *surface) {
 		glVertex2i(opengl.xTexture1, opengl.yTexture2);
 	glEnd();
 
-	glUseProgram(0);
+	if (opengl.glsl) {
+		glUseProgram(0);
+	}
 
 	glDisable(GL_TEXTURE_2D);
 }

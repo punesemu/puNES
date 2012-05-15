@@ -70,10 +70,9 @@ void opengl_draw_scene_cube3d(SDL_Surface *surface) {
 
 	glColor3f(1.0f, 1.0f, 1.0f);
 
-	/* abilito l'uso delle texture */
-	glEnable(GL_TEXTURE_2D);
-
-	glUseProgram(shader.program);
+	if (opengl.glsl) {
+		glUseProgram(shader.program);
+	}
 
 	/* cubo esterno */
 	glBegin(GL_QUADS);
@@ -140,7 +139,9 @@ void opengl_draw_scene_cube3d(SDL_Surface *surface) {
 		glVertex3f(-xVertex, +yVertex, -zVertex);
 	glEnd();
 
-	glUseProgram(0);
+	if (opengl.glsl) {
+		glUseProgram(0);
+	}
 
 	/* disabilito l'uso delle texture */
 	glDisable(GL_TEXTURE_2D);
