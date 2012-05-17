@@ -83,12 +83,6 @@ void sdlCreateSurfaceGL(SDL_Surface *src, WORD width, WORD height, BYTE flags) {
 	opengl_create_texture(&opengl.texture.data, opengl.surfaceGL->w, opengl.surfaceGL->h,
 	        POWER_OF_TWO);
 
-	glsl_shaders_init();
-
-	opengl_set(src);
-
-	glFinish();
-
 	{
 		/* aspect ratio */
 		opengl.wTexture = src->w;
@@ -141,6 +135,12 @@ void sdlCreateSurfaceGL(SDL_Surface *src, WORD width, WORD height, BYTE flags) {
 			}
 		}
 	}
+
+	glsl_shaders_init();
+
+	opengl_set(src);
+
+	glFinish();
 }
 int opengl_flip(SDL_Surface *surface) {
 	SDL_GL_SwapBuffers();
@@ -216,28 +216,19 @@ void glsl_shaders_init(void) {
 		if (!gfx.fullscreen) {
 			shader.size[0] = (GLfloat) opengl.surfaceGL->w;
 			shader.size[1] = (GLfloat) opengl.surfaceGL->h;
-			shader.size[2] = 256.0; //SCRLINES;
-			shader.size[3] = 256.0; //SCRROWS;
+			shader.size[2] = 0.0;
+			shader.size[3] = 0.0;
 
 			shader.param[0] = 1.0 / (GLfloat) opengl.surfaceGL->w;
 			shader.param[1] = 1.0 / (GLfloat) opengl.surfaceGL->h;
 		} else {
-			shader.size[0] = (GLfloat) text.w;
-			shader.size[1] = (GLfloat) text.h;
-			shader.size[2] = 256.0; //SCRLINES;
-			shader.size[3] = 256.0; //SCRROWS;
+			shader.size[0] = (GLfloat) opengl.wTexture;
+			shader.size[1] = (GLfloat) opengl.hTexture;
+			shader.size[2] = 0.0;
+			shader.size[3] = 0.0;
 
-			shader.param[0] = 1.0 / (GLfloat) text.w;
-			shader.param[1] = 1.0 / (GLfloat) text.h;
-
-			shader.size[0] = (GLfloat) opengl.surfaceGL->w;
-			shader.size[1] = (GLfloat) opengl.surfaceGL->h;
-			shader.size[2] = 256.0; //SCRLINES;
-			shader.size[3] = 256.0; //SCRROWS;
-
-			shader.param[0] = 1.0 / (GLfloat) (SCRROWS  * opengl.factor);
-			shader.param[1] = 1.0 / (GLfloat) (SCRLINES * opengl.factor);
-
+			shader.param[0] = 1.0 / (GLfloat) opengl.xTexture2;
+			shader.param[1] = 1.0 / (GLfloat) opengl.yTexture2;
 		}
 		shader.param[2] = 0.0;
 		shader.param[3] = 0.0;
