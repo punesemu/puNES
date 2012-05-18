@@ -12,6 +12,9 @@
 #define _SHADERS_CODE_
 #include "openGL/shaders.h"
 
+#define pow_srfgl_w opengl_power_of_two(opengl.surfaceGL->w)
+#define pow_srfgl_h opengl_power_of_two(opengl.surfaceGL->h)
+
 char *file2string(const char *path);
 void printLog(GLuint obj);
 
@@ -68,20 +71,26 @@ void sdlCreateSurfaceGL(SDL_Surface *src, WORD width, WORD height, BYTE flags) {
 
 	glPushAttrib(GL_ALL_ATTRIB_BITS);
 
-	if (opengl.scale == X1) {
+	/*if (opengl.scale == X1) {
 		opengl.surfaceGL = gfxCreateRGBSurface(src, opengl_power_of_two(SCRROWS),
 				opengl_power_of_two(SCRLINES));
 	} else {
 		opengl.surfaceGL = gfxCreateRGBSurface(src, opengl_power_of_two(width),
 				opengl_power_of_two(height));
+	}*/
+
+	if (opengl.scale == X1) {
+		opengl.surfaceGL = gfxCreateRGBSurface(src, SCRROWS, SCRLINES);
+	} else {
+		opengl.surfaceGL = gfxCreateRGBSurface(src, width, height);
 	}
 
 	/* FIXME: funzionera' anche con il filtro NTSC ?!? */
-	opengl.texture.x = (GLfloat) width /  (opengl.surfaceGL->w * opengl.factor);
-	opengl.texture.y = (GLfloat) height / (opengl.surfaceGL->h * opengl.factor);
+	opengl.texture.x = (GLfloat) width  / (pow_srfgl_w * opengl.factor);
+	opengl.texture.y = (GLfloat) height / (pow_srfgl_h * opengl.factor);
 
 	opengl_create_texture(&opengl.texture.data, opengl.surfaceGL->w, opengl.surfaceGL->h,
-	        POWER_OF_TWO);
+			opengl.interpolation, POWER_OF_TWO);
 
 	{
 		/* aspect ratio */
@@ -174,8 +183,8 @@ void glsl_shaders_init(void) {
 	delete_shader()
 
 	if (opengl.glsl && (opengl.shader != SHADER_NONE)) {
-		opengl_create_texture(&shader.texture_text, opengl.surfaceGL->w * opengl.factor,
-		        opengl.surfaceGL->w * opengl.factor, NO_POWER_OF_TWO);
+		opengl_create_texture(&shader.texture_text, pow_srfgl_w * opengl.factor,
+		        pow_srfgl_w * opengl.factor, FALSE, NO_POWER_OF_TWO);
 
 		shader.routine = &shader_routine[opengl.shader];
 
@@ -213,23 +222,13 @@ void glsl_shaders_init(void) {
 		printLog(shader.program);
 #endif
 
-		if (!gfx.fullscreen) {
-			shader.size[0] = (GLfloat) opengl.surfaceGL->w;
-			shader.size[1] = (GLfloat) opengl.surfaceGL->h;
-			shader.size[2] = 0.0;
-			shader.size[3] = 0.0;
+		shader.size[0] = (GLfloat) pow_srfgl_w;
+		shader.size[1] = (GLfloat) pow_srfgl_h;
+		shader.size[2] = 0.0;
+		shader.size[3] = 0.0;
 
-			shader.param[0] = 1.0 / (GLfloat) opengl.surfaceGL->w;
-			shader.param[1] = 1.0 / (GLfloat) opengl.surfaceGL->h;
-		} else {
-			shader.size[0] = (GLfloat) opengl.wTexture;
-			shader.size[1] = (GLfloat) opengl.hTexture;
-			shader.size[2] = 0.0;
-			shader.size[3] = 0.0;
-
-			shader.param[0] = 1.0 / (GLfloat) opengl.xTexture2;
-			shader.param[1] = 1.0 / (GLfloat) opengl.yTexture2;
-		}
+		shader.param[0] = 1.0 / shader.size[0];
+		shader.param[1] = 1.0 / shader.size[1];
 		shader.param[2] = 0.0;
 		shader.param[3] = 0.0;
 
@@ -257,7 +256,8 @@ void glsl_shaders_init(void) {
 	}
 }
 
-void opengl_create_texture(GLuint *texture, uint32_t width, uint32_t height, uint8_t pow) {
+void opengl_create_texture(GLuint *texture, uint32_t width, uint32_t height, uint8_t interpolation,
+        uint8_t pow) {
 	SDL_Surface *blank;
 
 	if (pow) {
@@ -306,7 +306,7 @@ void opengl_create_texture(GLuint *texture, uint32_t width, uint32_t height, uin
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-	if (0 == 1) {
+	if (interpolation) {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	} else {

@@ -488,12 +488,13 @@ void gfxSetScreen(BYTE newScale, BYTE newFilter, BYTE newFullscreen, BYTE newPal
 
 		glew_init();
 
-		//opengl.glsl = FALSE;
+		opengl.glsl = FALSE;
 
 		opengl.scale = gfx.scale;
 		opengl.factor = 1;
 		opengl.shader = SHADER_NONE;
 		opengl.effect = effect;
+		opengl.interpolation = FALSE;
 		use_txt_texture = FALSE;
 
 		if (opengl.glsl) {
@@ -526,6 +527,24 @@ void gfxSetScreen(BYTE newScale, BYTE newFilter, BYTE newFullscreen, BYTE newPal
 					opengl.effect = scaleNx;
 					use_txt_texture = TRUE;
 					break;
+				case BILINEAR:
+					opengl.scale = X1;
+					opengl.factor = gfx.scale;
+					opengl.shader = SHADER_NOFILTER;
+					opengl.effect = scaleSurface;
+					opengl.interpolation = TRUE;
+					use_txt_texture = TRUE;
+					break;
+			}
+
+			if (gfx.fullscreen) {
+				if ((gfx.filter >= SCALE2X) && (gfx.filter <= SCALE4X)) {
+					opengl.scale = X2;
+					opengl.factor = (float) gfx.scale / 2.0;
+					opengl.shader = SHADER_NOFILTER;
+					opengl.effect = scaleNx;
+					use_txt_texture = TRUE;
+				}
 			}
 		}
 
@@ -542,7 +561,7 @@ void gfxSetScreen(BYTE newScale, BYTE newFilter, BYTE newFullscreen, BYTE newPal
 		} else {
 			text.surface = opengl.surfaceGL;
 			text_blit = text_blit_sdl;
-		}
+ 		}
 		text.w = gfx.w[CURRENT];
 		text.h = gfx.h[CURRENT];
 

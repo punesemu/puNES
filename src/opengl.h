@@ -41,6 +41,7 @@ struct _opengl {
 
 	GLfloat scale;
 	GLfloat factor;
+	BYTE interpolation;
 	GFX_EFFECT_ROUTINE
 
 	SDL_Surface *surfaceGL;
@@ -71,7 +72,8 @@ int opengl_flip(SDL_Surface *surface);
 void glew_init(void);
 void glsl_shaders_init(void);
 
-void opengl_create_texture(GLuint *texture, uint32_t width, uint32_t height, uint8_t pow);
+void opengl_create_texture(GLuint *texture, uint32_t width, uint32_t height, uint8_t interpolation,
+        uint8_t pow);
 void opengl_update_texture(SDL_Surface *surface);
 int opengl_power_of_two(int base);
 
