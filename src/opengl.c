@@ -12,9 +12,6 @@
 #define _SHADERS_CODE_
 #include "openGL/shaders.h"
 
-#define pow_srfgl_w opengl_power_of_two(opengl.surfaceGL->w)
-#define pow_srfgl_h opengl_power_of_two(opengl.surfaceGL->h)
-
 char *file2string(const char *path);
 void printLog(GLuint obj);
 
@@ -42,12 +39,13 @@ void sdlQuitGL(void) {
 	if (opengl.surfaceGL) {
 		SDL_FreeSurface(opengl.surfaceGL);
 	}
+
 	if (opengl.texture.data) {
 		glDeleteTextures(1, &opengl.texture.data);
 	}
 
-	if (shader.texture_text) {
-		glDeleteTextures(1, &shader.texture_text);
+	if (shader.text.data) {
+		glDeleteTextures(1, &shader.text.data);
 	}
 	delete_shader()
 }
@@ -71,26 +69,25 @@ void sdlCreateSurfaceGL(SDL_Surface *src, WORD width, WORD height, BYTE flags) {
 
 	glPushAttrib(GL_ALL_ATTRIB_BITS);
 
-	/*if (opengl.scale == X1) {
-		opengl.surfaceGL = gfxCreateRGBSurface(src, opengl_power_of_two(SCRROWS),
-				opengl_power_of_two(SCRLINES));
-	} else {
-		opengl.surfaceGL = gfxCreateRGBSurface(src, opengl_power_of_two(width),
-				opengl_power_of_two(height));
-	}*/
-
-	if (opengl.scale == X1) {
-		opengl.surfaceGL = gfxCreateRGBSurface(src, SCRROWS, SCRLINES);
+	if (opengl.scale_force) {
+		opengl.surfaceGL = gfxCreateRGBSurface(src, SCRROWS * opengl.scale,
+		        SCRLINES * opengl.scale);
 	} else {
 		opengl.surfaceGL = gfxCreateRGBSurface(src, width, height);
 	}
 
-	/* FIXME: funzionera' anche con il filtro NTSC ?!? */
-	opengl.texture.x = (GLfloat) width  / (pow_srfgl_w * opengl.factor);
-	opengl.texture.y = (GLfloat) height / (pow_srfgl_h * opengl.factor);
-
-	opengl_create_texture(&opengl.texture.data, opengl.surfaceGL->w, opengl.surfaceGL->h,
+	opengl_create_texture(&opengl.texture, opengl.surfaceGL->w, opengl.surfaceGL->h,
 			opengl.interpolation, POWER_OF_TWO);
+
+	/* FIXME: funzionera' anche con il filtro NTSC ?!? */
+	opengl.texture.x = (GLfloat) width  / (opengl.texture.w * opengl.factor);
+	opengl.texture.y = (GLfloat) height / (opengl.texture.h * opengl.factor);
+
+	glsl_shaders_init();
+
+	opengl_set(src);
+
+	glFinish();
 
 	{
 		/* aspect ratio */
@@ -144,12 +141,6 @@ void sdlCreateSurfaceGL(SDL_Surface *src, WORD width, WORD height, BYTE flags) {
 			}
 		}
 	}
-
-	glsl_shaders_init();
-
-	opengl_set(src);
-
-	glFinish();
 }
 int opengl_flip(SDL_Surface *surface) {
 	SDL_GL_SwapBuffers();
@@ -183,8 +174,9 @@ void glsl_shaders_init(void) {
 	delete_shader()
 
 	if (opengl.glsl && (opengl.shader != SHADER_NONE)) {
-		opengl_create_texture(&shader.texture_text, pow_srfgl_w * opengl.factor,
-		        pow_srfgl_w * opengl.factor, FALSE, NO_POWER_OF_TWO);
+
+		opengl_create_texture(&shader.text, opengl.texture.w * opengl.factor,
+				opengl.texture.w * opengl.factor, FALSE, NO_POWER_OF_TWO);
 
 		shader.routine = &shader_routine[opengl.shader];
 
@@ -222,8 +214,8 @@ void glsl_shaders_init(void) {
 		printLog(shader.program);
 #endif
 
-		shader.size[0] = (GLfloat) pow_srfgl_w;
-		shader.size[1] = (GLfloat) pow_srfgl_h;
+		shader.size[0] = opengl.texture.w;
+		shader.size[1] = opengl.texture.h;
 		shader.size[2] = 0.0;
 		shader.size[3] = 0.0;
 
@@ -249,24 +241,16 @@ void glsl_shaders_init(void) {
 
 		glEnable(GL_TEXTURE_2D);
 		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, shader.texture_text);
+		glBindTexture(GL_TEXTURE_2D, shader.text.data);
 		glUniform1i(shader.loc.s_texture_txt, 1);
 
 		glUseProgram(0);
 	}
 }
 
-void opengl_create_texture(GLuint *texture, uint32_t width, uint32_t height, uint8_t interpolation,
-        uint8_t pow) {
+void opengl_create_texture(_texture *texture, uint32_t width, uint32_t height,
+        uint8_t interpolation, uint8_t pow) {
 	SDL_Surface *blank;
-
-	if (pow) {
-		width = opengl_power_of_two(width);
-		height = opengl_power_of_two(height);
-	}
-
-	blank = gfxCreateRGBSurface(opengl.surfaceGL, width, height);
-	memset(blank->pixels, 0, width * height * blank->format->BytesPerPixel);
 
 	switch (opengl.surfaceGL->format->BitsPerPixel) {
 		case 16:
@@ -296,12 +280,23 @@ void opengl_create_texture(GLuint *texture, uint32_t width, uint32_t height, uin
 			break;
 	}
 
-	if ((*texture)) {
-		glDeleteTextures(1, texture);
+	if (pow) {
+		texture->w = opengl_power_of_two(width);
+		texture->h = opengl_power_of_two(height);
+	} else {
+		texture->w = width;
+		texture->h = height;
 	}
 
-	glGenTextures(1, texture);
-	glBindTexture(GL_TEXTURE_2D, (*texture));
+	blank = gfxCreateRGBSurface(opengl.surfaceGL, texture->w, texture->h);
+	memset(blank->pixels, 0, texture->w * texture->h * blank->format->BytesPerPixel);
+
+	if (texture->data) {
+		glDeleteTextures(1, &texture->data);
+	}
+
+	glGenTextures(1, &texture->data);
+	glBindTexture(GL_TEXTURE_2D, texture->data);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -318,7 +313,7 @@ void opengl_create_texture(GLuint *texture, uint32_t width, uint32_t height, uin
 		glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
 	}
 
-	glTexImage2D(GL_TEXTURE_2D, 0, opengl.texture.format_internal, width, height, 0,
+	glTexImage2D(GL_TEXTURE_2D, 0, opengl.texture.format_internal, texture->w, texture->h, 0,
 	        opengl.texture.format, opengl.texture.type, blank->pixels);
 
 	if (opengl.glew && GLEW_VERSION_3_1) {
@@ -329,7 +324,6 @@ void opengl_create_texture(GLuint *texture, uint32_t width, uint32_t height, uin
 }
 void opengl_update_texture(SDL_Surface *surface) {
 	glEnable(GL_TEXTURE_2D);
-
 	glBindTexture(GL_TEXTURE_2D, opengl.texture.data);
 
 	if (opengl.glew && !GLEW_VERSION_3_1) {
@@ -349,7 +343,7 @@ void opengl_update_texture(SDL_Surface *surface) {
 	}
 
 	if (opengl.glsl && text.on_screen && (opengl.shader != 255)) {
-		glBindTexture(GL_TEXTURE_2D, shader.texture_text);
+		glBindTexture(GL_TEXTURE_2D, shader.text.data);
 	}
 
 	/* disabilito l'uso delle texture */
@@ -357,7 +351,7 @@ void opengl_update_texture(SDL_Surface *surface) {
 }
 void text_blit_opengl(_txt_element *ele, SDL_Rect *dst_rect) {
 	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, shader.texture_text);
+	glBindTexture(GL_TEXTURE_2D, shader.text.data);
 
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	glPixelStorei(GL_UNPACK_ROW_LENGTH, dst_rect->w);

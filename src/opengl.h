@@ -22,15 +22,6 @@ enum {
 	NO_GLEW
 };
 
-typedef struct {
-	GLuint data;
-	GLenum format;
-	GLenum type;
-	GLint format_internal;
-
-	GLfloat x;
-	GLfloat y;
-} _texture;
 struct _opengl {
 	BYTE aspectRatio;
 	BYTE rotation;
@@ -39,6 +30,7 @@ struct _opengl {
 	BYTE glsl;
 	BYTE shader;
 
+	GLint scale_force;
 	GLfloat scale;
 	GLfloat factor;
 	BYTE interpolation;
@@ -72,8 +64,8 @@ int opengl_flip(SDL_Surface *surface);
 void glew_init(void);
 void glsl_shaders_init(void);
 
-void opengl_create_texture(GLuint *texture, uint32_t width, uint32_t height, uint8_t interpolation,
-        uint8_t pow);
+void opengl_create_texture(_texture *texture, uint32_t width, uint32_t height,
+        uint8_t interpolation, uint8_t pow);
 void opengl_update_texture(SDL_Surface *surface);
 int opengl_power_of_two(int base);
 

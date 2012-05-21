@@ -68,8 +68,6 @@ void opengl_draw_scene_cube3d(SDL_Surface *surface) {
 		glRotatef(opengl.yRotate, 0.0f, 1.0f, 0.0f);
 	}
 
-	glColor3f(1.0f, 1.0f, 1.0f);
-
 	if (opengl.glsl) {
 		glUseProgram(shader.program);
 	}
@@ -77,6 +75,7 @@ void opengl_draw_scene_cube3d(SDL_Surface *surface) {
 	/* cubo esterno */
 	glBegin(GL_QUADS);
 		/* avanti */
+		glColor3f(1.0f, 1.0f, 1.0f);
 		glTexCoord2f(0.0f, opengl.texture.y);
 		glVertex3f(-xVertex, -yVertex, +zVertex);
 		glTexCoord2f(opengl.texture.x, opengl.texture.y);
