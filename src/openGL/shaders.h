@@ -21,7 +21,6 @@ enum {
 	SHADER_TOTAL,
 	SHADER_NONE = 255
 };
-#define SHADERNONE 255
 
 #define delete_shader()\
 	if (shader.vert) {\
@@ -342,7 +341,9 @@ static _shader_routine shader_routine[SHADER_TOTAL] = {
 		"	float w4 = k1; if (ko2<ko4) w4 = 0.0;\n"
 
 		"	scr = vec4((w1*o1+w2*o2+w3*o3+w4*o4+0.0001*c)/(w1+w2+w3+w4+0.0001), 1.0);\n"
+
 		"	txt = texture2D(s_texture_txt, v_texCoord[0].xy);\n"
+
 		"	gl_FragColor = mix(scr, txt, txt.a) * gl_Color;\n"
 		"}"
 	},
@@ -355,14 +356,16 @@ static _shader_routine shader_routine[SHADER_TOTAL] = {
 		"uniform vec4 param;\n"
 		"varying vec4 v_texCoord[5];\n"
 		"void main() {\n"
-		"	gl_FrontColor = gl_Color;\n"
-		"	gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;\n"
-		"	float x = 0.5 * param.x;\n"
-		"	float y = 0.5 * param.y;\n"
+		"	float x = 0.5 * (1.0 / size.x);\n"
+		"	float y = 0.5 * (1.0 / size.y);\n"
 		"	vec2 dg1 = vec2( x, y);\n"
 		"	vec2 dg2 = vec2(-x, y);\n"
 		"	vec2 dx = vec2(x, 0.0);\n"
 		"	vec2 dy = vec2(0.0, y);\n"
+
+		"	gl_FrontColor = gl_Color;\n"
+		"	gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;\n"
+
 		"	v_texCoord[0] = gl_MultiTexCoord0;\n"
 		"	v_texCoord[1].xy = v_texCoord[0].xy - dg1;\n"
 		"	v_texCoord[1].zw = v_texCoord[0].xy - dy;\n"
@@ -422,7 +425,9 @@ static _shader_routine shader_routine[SHADER_TOTAL] = {
 
 		"	scr = vec4(w1 * c10 + w2 * c21 + w3 * c12 + w4 * c01 +"
 		"			  (1.0 - w1 - w2 - w3 - w4) * c11, 1.0);\n"
+
 		"	txt = texture2D(s_texture_txt, v_texCoord[0].xy);\n"
+
 		"	gl_FragColor = mix(scr, txt, txt.a) * gl_Color;\n"
 		"}"
 	},
@@ -431,17 +436,20 @@ static _shader_routine shader_routine[SHADER_TOTAL] = {
 	/*****************************************************************************************/
 	{
 		// vertex shader
+		"uniform vec4 size;\n"
 		"uniform vec4 param;\n"
 		"varying vec4 v_texCoord[7];\n"
 		"void main() {\n"
+		"	float x = 0.001;\n"
+		"	float y = 0.001;\n"
+
+		"	vec2 dg1 = vec2(x,y);   vec2 dg2 = vec2(-x,y);\n"
+		"	vec2 sd1 = dg1 * 0.5;   vec2 sd2 = dg2 * 0.5;\n"
+		"	vec2 ddx = vec2(x,0.0); vec2 ddy = vec2(0.0,y);\n"
+
 		"	gl_FrontColor = gl_Color;\n"
 		"	gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;\n"
-		"	float x = 0.5 * param.x;\n"
-		"	float y = 0.5 * param.y;\n"
-		"	vec2 dg1 = vec2( x, y);\n"
-		"	vec2 dg2 = vec2(-x, y);\n"
-		"	vec2 sd1 = dg1 * 0.5;\n"
-		"	vec2 sd2 = dg2 * 0.5;\n"
+
 		"	v_texCoord[0] = gl_MultiTexCoord0;\n"
 		"	v_texCoord[1].xy = v_texCoord[0].xy - sd1;\n"
 		"	v_texCoord[2].xy = v_texCoord[0].xy - sd2;\n"
@@ -451,17 +459,23 @@ static _shader_routine shader_routine[SHADER_TOTAL] = {
 		"	v_texCoord[6].xy = v_texCoord[0].xy + dg1;\n"
 		"	v_texCoord[5].zw = v_texCoord[0].xy - dg2;\n"
 		"	v_texCoord[6].zw = v_texCoord[0].xy + dg2;\n"
+		"	v_texCoord[1].zw = v_texCoord[0].xy - ddy;\n"
+		"	v_texCoord[2].zw = v_texCoord[0].xy + ddx;\n"
+		"	v_texCoord[3].zw = v_texCoord[0].xy + ddy;\n"
+		"	v_texCoord[4].zw = v_texCoord[0].xy - ddx;\n"
 		"}",
 		// fragment shader
 		"uniform vec4 size;\n"
 		"uniform sampler2D s_texture_scr;\n"
 		"uniform sampler2D s_texture_txt;\n"
 		"varying vec4 v_texCoord[7];\n"
-		"const float mx = 1.000;      // start smoothing wt.\n"
-		"const float k = -1.000;      // wt. decrease factor\n"
-		"const float max_w = 1.25;    // max filter weigth\n"
-		"const float min_w =-0.03;    // min filter weigth\n"
-		"const float lum_add = 0.25;  // effects smoothing\n"
+
+		"const float mx = 1.00;      // start smoothing wt.\n"
+		"const float k = -1.10;      // wt. decrease factor\n"
+		"const float max_w = 0.75;    // max filter weigth\n"
+		"const float min_w = 0.03;    // min filter weigth\n"
+		"const float lum_add = 0.33;  // effects smoothing\n"
+
 		"void main() {\n"
 		"	vec4 scr, txt;\n"
 
@@ -474,6 +488,10 @@ static _shader_routine shader_routine[SHADER_TOTAL] = {
 		"	vec3 o3 = texture2D(s_texture_scr, v_texCoord[6].xy).xyz;\n"
 		"	vec3 o2 = texture2D(s_texture_scr, v_texCoord[5].zw).xyz;\n"
 		"	vec3 o4 = texture2D(s_texture_scr, v_texCoord[6].zw).xyz;\n"
+		"	vec3 s1 = texture2D(s_texture_scr, v_texCoord[1].zw).xyz;\n"
+		"	vec3 s2 = texture2D(s_texture_scr, v_texCoord[2].zw).xyz;\n"
+		"	vec3 s3 = texture2D(s_texture_scr, v_texCoord[3].zw).xyz;\n"
+		"	vec3 s4 = texture2D(s_texture_scr, v_texCoord[4].zw).xyz;\n"
 
 		"	vec3 dt = vec3(1.0, 1.0, 1.0);\n"
 
@@ -482,27 +500,31 @@ static _shader_routine shader_routine[SHADER_TOTAL] = {
 		"	float ko3=dot(abs(o3-c),dt);\n"
 		"	float ko4=dot(abs(o4-c),dt);\n"
 
-		"	float sd1 = dot(abs(i1-i3),dt);\n"
-		"	float sd2 = dot(abs(i2-i4),dt);\n"
+		"	float k1=min(dot(abs(i1-i3),dt),max(ko1,ko3));\n"
+		"	float k2=min(dot(abs(i2-i4),dt),max(ko2,ko4));\n"
 
-		"	float k1 = min(sd1,max(ko1,ko3));\n"
-		"	float k2 = min(sd2,max(ko2,ko4));\n"
+		"	float w1 = k2; if(ko3<ko1) w1*=ko3/ko1;\n"
+		"	float w2 = k1; if(ko4<ko2) w2*=ko4/ko2;\n"
+		"	float w3 = k2; if(ko1<ko3) w3*=ko1/ko3;\n"
+		"	float w4 = k1; if(ko2<ko4) w4*=ko2/ko4;\n"
 
-		"	float w1 = k2; if (ko3<ko1) w1 = 0.0;\n"
-		"	float w2 = k1; if (ko4<ko2) w2 = 0.0;\n"
-		"	float w3 = k2; if (ko1<ko3) w3 = 0.0;\n"
-		"	float w4 = k1; if (ko2<ko4) w4 = 0.0;\n"
+		"	c=(w1*o1+w2*o2+w3*o3+w4*o4+0.001*c)/(w1+w2+w3+w4+0.001);\n"
 
-		"	c = (w1*o1+w2*o2+w3*o3+w4*o4+0.0001*c)/(w1+w2+w3+w4+0.0001);\n"
+		"	w1 = k*dot(abs(i1-c)+abs(i3-c),dt)/(0.125*dot(i1+i3,dt)+lum_add);\n"
+		"	w2 = k*dot(abs(i2-c)+abs(i4-c),dt)/(0.125*dot(i2+i4,dt)+lum_add);\n"
+		"	w3 = k*dot(abs(s1-c)+abs(s3-c),dt)/(0.125*dot(s1+s3,dt)+lum_add);\n"
+		"	w4 = k*dot(abs(s2-c)+abs(s4-c),dt)/(0.125*dot(s2+s4,dt)+lum_add);\n"
 
-		"	w3 = k/(0.2*dot(i1+i3,dt)+lum_add);\n"
-		"	w4 = k/(0.2*dot(i2+i4,dt)+lum_add);\n"
+		"	w1 = clamp(w1+mx,min_w,max_w);\n"
+		"	w2 = clamp(w2+mx,min_w,max_w);\n"
+		"	w3 = clamp(w3+mx,min_w,max_w);\n"
+		"	w4 = clamp(w4+mx,min_w,max_w);\n"
 
-		"	w1 = clamp(w3*sd1+mx,min_w,max_w);\n"
-		"	w2 = clamp(w4*sd2+mx,min_w,max_w);\n"
+		"	scr.xyz = vec4((w1*(i1+i3)+w2*(i2+i4)+w3*(s1+s3)+w4*(s2+s4)+c)/"
+		"				   (2.0*(w1+w2+w3+w4)+1.0), 1.0);\n"
 
-		"	scr = vec4((w1*(i1+i3) + w2*(i2+i4) + c)/(2.0*(w1+w2)+1.0), 1.0);\n"
 		"	txt = texture2D(s_texture_txt, v_texCoord[0].xy);\n"
+
 		"	gl_FragColor = mix(scr, txt, txt.a) * gl_Color;\n"
 		"}"
 	},
@@ -512,39 +534,12 @@ static _shader_routine shader_routine[SHADER_TOTAL] = {
 	/*****************************************************************************************/
 	{
 			// vertex shader
-			"uniform vec4 param;\n"
-			"varying vec4 v_texCoord[5];\n"
-			"varying vec2 fp;\n"
-
-			"void main() {\n"
-			"	gl_FrontColor = gl_Color;\n"
-			"	gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;\n"
-
-			"	vec2 ps = param.xy;\n"
-			"	vec2 dx = vec2(ps.x, 0.0);\n"
-			"	vec2 dy = vec2(0.0, ps.y);\n"
-
-			"	vec2 pixcoord = gl_MultiTexCoord0.xy / ps;\n;"
-			"	fp = fract(pixcoord);\n"
-			"	vec2 d11 = gl_MultiTexCoord0.xy - fp * ps;\n"
-
-			"	v_texCoord[0].xy = d11-dx-dy;\n"
-			"	v_texCoord[0].zw = d11-dy;\n"
-			"	v_texCoord[1].xy = d11+dx-dy;\n"
-			"	v_texCoord[1].zw = d11-dx;\n"
-			"	v_texCoord[2].xy = d11;\n"
-			"	v_texCoord[2].zw = d11+dx;\n"
-			"	v_texCoord[3].xy = d11-dx+dy;\n"
-			"	v_texCoord[3].zw = d11+dy;\n"
-			"	v_texCoord[4].xy = d11+dx+dy;\n"
-
-			"}",
+			NULL,
 			// fragment shader
 			"uniform vec4 size;\n"
+			"uniform vec4 param;\n"
 			"uniform sampler2D s_texture_scr;\n"
 			"uniform sampler2D s_texture_txt;\n"
-			"varying vec4 v_texCoord[5];\n"
-			/*"varying vec2 fp;\n"*/
 
 			"const vec3 dtt = vec3(65536.0, 255.0, 1.0);\n"
 
@@ -562,17 +557,6 @@ static _shader_routine shader_routine[SHADER_TOTAL] = {
 			"	vec2 d11 = gl_TexCoord[0].xy - fp * ps;\n"
 
 			"	// Reading the texels\n"
-
-			/*"	vec3 A = texture2D(s_texture_scr, v_texCoord[0].xy).xyz;\n"
-			"	vec3 B = texture2D(s_texture_scr, v_texCoord[0].zw).xyz;\n"
-			"	vec3 C = texture2D(s_texture_scr, v_texCoord[1].xy).xyz;\n"
-			"	vec3 D = texture2D(s_texture_scr, v_texCoord[1].zw).xyz;\n"
-			"	vec3 E = texture2D(s_texture_scr, v_texCoord[2].xy).xyz;\n"
-			"	vec3 F = texture2D(s_texture_scr, v_texCoord[2].zw).xyz;\n"
-			"	vec3 G = texture2D(s_texture_scr, v_texCoord[3].xy).xyz;\n"
-			"	vec3 H = texture2D(s_texture_scr, v_texCoord[3].zw).xyz;\n"
-			"	vec3 I = texture2D(s_texture_scr, v_texCoord[4].xy).xyz;\n"*/
-
 			"	vec3 A = texture2D(s_texture_scr, d11-dx-dy).xyz;\n"
 			"	vec3 B = texture2D(s_texture_scr, d11   -dy).xyz;\n"
 			"	vec3 C = texture2D(s_texture_scr, d11+dx-dy).xyz;\n"

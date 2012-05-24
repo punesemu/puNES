@@ -183,32 +183,41 @@ void glsl_shaders_init(void) {
 		//vsSource = file2string("/home/fhorse/Dropbox/gpuPeteOGL2.slv");
 		//fsSource = file2string("/home/fhorse/Dropbox/gpuPeteOGL2.slf");
 
-		shader.vert = glCreateShader(GL_VERTEX_SHADER);
-		printLog(shader.vert);
-		glShaderSource(shader.vert, 1, &shader.routine->vert, NULL);
-		printLog(shader.vert);
-		glCompileShader(shader.vert);
-#ifndef RELEASE
-		printLog(shader.vert);
-#endif
-
-		shader.frag = glCreateShader(GL_FRAGMENT_SHADER);
-		glShaderSource(shader.frag, 1, &shader.routine->frag, NULL);
-		glCompileShader(shader.frag);
-#ifndef RELEASE
-		printLog(shader.frag);
-#endif
-
+		/* program */
 		shader.program = glCreateProgram();
 #ifndef RELEASE
 		printLog(shader.program);
 #endif
 
+		/* vertex */
+		if (shader.routine->vert != NULL) {
+			shader.vert = glCreateShader(GL_VERTEX_SHADER);
+			printLog(shader.vert);
+			glShaderSource(shader.vert, 1, &shader.routine->vert, NULL);
+			printLog(shader.vert);
+			glCompileShader(shader.vert);
+#ifndef RELEASE
+			printLog(shader.vert);
+#endif
+
+			glAttachShader(shader.program, shader.vert);
+		}
+
+		/* fragment */
+		if (shader.routine->frag != NULL) {
+			shader.frag = glCreateShader(GL_FRAGMENT_SHADER);
+			glShaderSource(shader.frag, 1, &shader.routine->frag, NULL);
+			glCompileShader(shader.frag);
+#ifndef RELEASE
+			printLog(shader.frag);
+#endif
+
+			glAttachShader(shader.program, shader.frag);
+		}
+
 		//free((char *) vsSource);
 		//free((char *) fsSource);
 
-		glAttachShader(shader.program, shader.vert);
-		glAttachShader(shader.program, shader.frag);
 		glLinkProgram(shader.program);
 #ifndef RELEASE
 		printLog(shader.program);
@@ -219,8 +228,8 @@ void glsl_shaders_init(void) {
 		shader.size[2] = 0.0;
 		shader.size[3] = 0.0;
 
-		shader.param[0] = 1.0 / shader.size[0];
-		shader.param[1] = 1.0 / shader.size[1];
+		shader.param[0] = 1.0f / shader.size[0];
+		shader.param[1] = 1.0f / shader.size[1];
 		shader.param[2] = 0.0;
 		shader.param[3] = 0.0;
 
