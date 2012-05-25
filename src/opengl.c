@@ -47,7 +47,7 @@ void sdlQuitGL(void) {
 	if (shader.text.data) {
 		glDeleteTextures(1, &shader.text.data);
 	}
-	delete_shader()
+	delete_shader();
 }
 void sdlCreateSurfaceGL(SDL_Surface *src, WORD width, WORD height, BYTE flags) {
 	if (opengl.rotation) {
@@ -171,7 +171,7 @@ void glew_init(void) {
 	}
 }
 void glsl_shaders_init(void) {
-	delete_shader()
+	delete_shader();
 
 	if (opengl.glsl && (opengl.shader != SHADER_NONE)) {
 
@@ -223,35 +223,31 @@ void glsl_shaders_init(void) {
 		printLog(shader.program);
 #endif
 
-		shader.size[0] = opengl.texture.w;
-		shader.size[1] = opengl.texture.h;
-		shader.size[2] = 0.0;
-		shader.size[3] = 0.0;
+		shader.size_texture[0] = opengl.texture.w;
+		shader.size_texture[1] = opengl.texture.h;
 
-		shader.param[0] = 1.0f / shader.size[0];
-		shader.param[1] = 1.0f / shader.size[1];
-		shader.param[2] = 0.0;
-		shader.param[3] = 0.0;
+		shader.size_output[0] = opengl.xTexture2 - opengl.xTexture1;
+		shader.size_output[1] = opengl.yTexture2 - opengl.yTexture1;
 
 		glUseProgram(shader.program);
 
-		shader.loc.param = glGetUniformLocation(shader.program, "param");
-		shader.loc.size = glGetUniformLocation(shader.program, "size");
-		shader.loc.s_texture_scr = glGetUniformLocation(shader.program, "s_texture_scr");
-		shader.loc.s_texture_txt = glGetUniformLocation(shader.program, "s_texture_txt");
+		shader.loc.size_texture = glGetUniformLocation(shader.program, "size_texture");
+		shader.loc.size_output = glGetUniformLocation(shader.program, "size_output");
+		shader.loc.texture_scr = glGetUniformLocation(shader.program, "texture_scr");
+		shader.loc.texture_txt = glGetUniformLocation(shader.program, "texture_txt");
 
-		glUniform4fv(shader.loc.param, 1, shader.param);
-		glUniform4fv(shader.loc.size, 1, shader.size);
+		glUniform2fv(shader.loc.size_texture, 1, shader.size_texture);
+		glUniform2fv(shader.loc.size_output, 1, shader.size_output);
 
 		glEnable(GL_TEXTURE_2D);
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, opengl.texture.data);
-		glUniform1i(shader.loc.s_texture_scr, 0);
+		glUniform1i(shader.loc.texture_scr, 0);
 
 		glEnable(GL_TEXTURE_2D);
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, shader.text.data);
-		glUniform1i(shader.loc.s_texture_txt, 1);
+		glUniform1i(shader.loc.texture_txt, 1);
 
 		glUseProgram(0);
 	}

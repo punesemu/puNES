@@ -507,6 +507,14 @@ void gfxSetScreen(BYTE newScale, BYTE newFilter, BYTE newFullscreen, BYTE newPal
 					opengl.shader = SHADER_NOFILTER;
 					opengl.effect = scaleSurface;
 					use_txt_texture = TRUE;
+
+					opengl.scale_force = TRUE;
+					opengl.scale = X1;
+					opengl.factor = gfx.scale;
+					opengl.shader = SHADER_SCANLINE;
+					opengl.effect = scaleSurface;
+					use_txt_texture = TRUE;
+
 					break;
 				case SCALE2X:
 					opengl.scale_force = TRUE;
@@ -525,18 +533,21 @@ void gfxSetScreen(BYTE newScale, BYTE newFilter, BYTE newFullscreen, BYTE newPal
 					use_txt_texture = TRUE;
 					break;
 				case SCALE4X:
+					/*
 					opengl.scale_force = TRUE;
 					opengl.scale = X2;
 					opengl.factor = 2;
 					opengl.shader = SHADER_SCALE2X;
 					opengl.effect = scaleNx;
 					use_txt_texture = TRUE;
-					/*opengl.scale_force = TRUE;
+					*/
+					opengl.scale_force = TRUE;
 					opengl.scale = X1;
 					opengl.factor = gfx.scale;
 					opengl.shader = SHADER_SCALE4X;
 					opengl.effect = scaleSurface;
-					use_txt_texture = TRUE;*/
+					use_txt_texture = TRUE;
+
 					break;
 				case HQ2X:
 					opengl.scale_force = TRUE;
