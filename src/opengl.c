@@ -7,6 +7,7 @@
 
 #include "opengl.h"
 #include "sdlgfx.h"
+#include "ppu.h"
 #include "openGL/no_effect.h"
 #include "openGL/cube3d.h"
 #define _SHADERS_CODE_
@@ -83,12 +84,6 @@ void sdlCreateSurfaceGL(SDL_Surface *src, WORD width, WORD height, BYTE flags) {
 	opengl.texture.x = (GLfloat) width  / (opengl.texture.w * opengl.factor);
 	opengl.texture.y = (GLfloat) height / (opengl.texture.h * opengl.factor);
 
-	glsl_shaders_init();
-
-	opengl_set(src);
-
-	glFinish();
-
 	{
 		/* aspect ratio */
 		opengl.wTexture = src->w;
@@ -141,6 +136,12 @@ void sdlCreateSurfaceGL(SDL_Surface *src, WORD width, WORD height, BYTE flags) {
 			}
 		}
 	}
+
+	glsl_shaders_init();
+
+	opengl_set(src);
+
+	glFinish();
 }
 int opengl_flip(SDL_Surface *surface) {
 	SDL_GL_SwapBuffers();
@@ -160,8 +161,11 @@ void glew_init(void) {
 
 			if (GLEW_VERSION_2_0) {
 				fprintf(stderr, "INFO: OpenGL 2.0 supported. Glsl enabled.\n");
-				opengl.glsl = TRUE;
+				opengl.glsl.compliant = TRUE;
+			} else {
+				opengl.glsl.compliant = FALSE;
 			}
+
 			if (!GLEW_VERSION_3_1) {
 				fprintf(stderr, "INFO: OpenGL 3.1 not supported.\n");
 			} else {
@@ -173,12 +177,12 @@ void glew_init(void) {
 void glsl_shaders_init(void) {
 	delete_shader();
 
-	if (opengl.glsl && (opengl.shader != SHADER_NONE)) {
+	if (opengl.glsl.enabled && (opengl.glsl.shader != SHADER_NONE)) {
 
 		opengl_create_texture(&shader.text, opengl.texture.w * opengl.factor,
 				opengl.texture.w * opengl.factor, FALSE, NO_POWER_OF_TWO);
 
-		shader.routine = &shader_routine[opengl.shader];
+		shader.routine = &shader_routine[opengl.glsl.shader];
 
 		//vsSource = file2string("/home/fhorse/Dropbox/gpuPeteOGL2.slv");
 		//fsSource = file2string("/home/fhorse/Dropbox/gpuPeteOGL2.slf");
@@ -223,31 +227,46 @@ void glsl_shaders_init(void) {
 		printLog(shader.program);
 #endif
 
-		shader.size_texture[0] = opengl.texture.w;
-		shader.size_texture[1] = opengl.texture.h;
+		shader.size.input[0] = (GLfloat) SCRROWS;
+		shader.size.input[1] = (GLfloat) SCRLINES;
 
-		shader.size_output[0] = opengl.xTexture2 - opengl.xTexture1;
-		shader.size_output[1] = opengl.yTexture2 - opengl.yTexture1;
+		shader.size.output[0] = opengl.xTexture2 - opengl.xTexture1;
+		shader.size.output[1] = opengl.yTexture2 - opengl.yTexture1;
+
+		shader.size.texture[0] = opengl.texture.w;
+		shader.size.texture[1] = opengl.texture.h;
+
+		//shader.size.output[0] = opengl.texture.w;
+		//shader.size.output[1] = opengl.texture.h;
+
+		shader.frame_counter = (GLint) ppu.frames;
 
 		glUseProgram(shader.program);
 
-		shader.loc.size_texture = glGetUniformLocation(shader.program, "size_texture");
-		shader.loc.size_output = glGetUniformLocation(shader.program, "size_output");
-		shader.loc.texture_scr = glGetUniformLocation(shader.program, "texture_scr");
-		shader.loc.texture_txt = glGetUniformLocation(shader.program, "texture_txt");
+		shader.loc.size.input = glGetUniformLocation(shader.program, "size_input");
+		shader.loc.size.output = glGetUniformLocation(shader.program, "size_output");
+		shader.loc.size.texture = glGetUniformLocation(shader.program, "size_texture");
 
-		glUniform2fv(shader.loc.size_texture, 1, shader.size_texture);
-		glUniform2fv(shader.loc.size_output, 1, shader.size_output);
+		shader.loc.texture.scr = glGetUniformLocation(shader.program, "texture_scr");
+		shader.loc.texture.txt = glGetUniformLocation(shader.program, "texture_txt");
+
+		shader.loc.frame_counter = glGetUniformLocation(shader.program, "frame_counter");
+
+		glUniform2fv(shader.loc.size.input, 1, shader.size.input);
+		glUniform2fv(shader.loc.size.output, 1, shader.size.output);
+		glUniform2fv(shader.loc.size.texture, 1, shader.size.texture);
+
+		glUniform1i(shader.frame_counter, 1);
 
 		glEnable(GL_TEXTURE_2D);
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, opengl.texture.data);
-		glUniform1i(shader.loc.texture_scr, 0);
+		glUniform1i(shader.loc.texture.scr, 0);
 
 		glEnable(GL_TEXTURE_2D);
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, shader.text.data);
-		glUniform1i(shader.loc.texture_txt, 1);
+		glUniform1i(shader.loc.texture.txt, 1);
 
 		glUseProgram(0);
 	}
@@ -347,7 +366,7 @@ void opengl_update_texture(SDL_Surface *surface) {
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 
-	if (opengl.glsl && text.on_screen && (opengl.shader != 255)) {
+	if ((opengl.glsl.shader != SHADER_NONE) && text.on_screen) {
 		glBindTexture(GL_TEXTURE_2D, shader.text.data);
 	}
 
@@ -415,21 +434,27 @@ char *file2string(const char *path)
 }
 void printLog(GLuint obj)
 {
-	int infologLength = 0;
-	int maxLength;
+	int infologLength = 0, maxLength;
 
-	if(glIsShader(obj))
+	if(glIsShader(obj)) {
 		glGetShaderiv(obj,GL_INFO_LOG_LENGTH,&maxLength);
-	else
+	} else {
 		glGetProgramiv(obj,GL_INFO_LOG_LENGTH,&maxLength);
+	}
 
-	char infoLog[maxLength];
+	{
+		char infoLog[maxLength];
 
-	if (glIsShader(obj))
-		glGetShaderInfoLog(obj, maxLength, &infologLength, infoLog);
-	else
-		glGetProgramInfoLog(obj, maxLength, &infologLength, infoLog);
+		if (glIsShader(obj)) {
+			glGetShaderInfoLog(obj, maxLength, &infologLength, infoLog);
+		} else {
+			glGetProgramInfoLog(obj, maxLength, &infologLength, infoLog);
+		}
 
-	if (infologLength > 0)
-		printf("%s\n",infoLog);
+		infoLog[infologLength] = 0;
+
+		if (infologLength > 0) {
+			printf("%s\n",infoLog);
+		}
+	}
 }

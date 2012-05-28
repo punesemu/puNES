@@ -128,6 +128,8 @@ void cfgfileParse(void) {
 #ifdef OPENGL
 			/* rendering */
 			cfgSearch(param, P_RENDER, 0, pRendering, gfx.opengl = index);
+			/* glsl */
+			cfgSearch(param, P_RENDER, 0, pNoYes, opengl.glsl.enabled = index);
 			/* vsync */
 			cfgSearch(param, P_VSYNC, 0, pOffOn, gfx.vsync = index);
 			/* fullscreen */
@@ -187,6 +189,8 @@ void cfgfileSave(void) {
 #ifdef OPENGL
 	/* rendering */
 	writeParam((_param *) param, fp, P_RENDER, pRendering[gfx.opengl].sname);
+	/* glsl */
+	writeParam((_param *) param, fp, P_GLSL, pNoYes[opengl.glsl.enabled].sname);
 	/* vsync */
 	writeParam((_param *) param, fp, P_VSYNC, pOffOn[gfx.vsync].sname);
 	/* fullscreen */
@@ -374,6 +378,7 @@ void setDefault(void) {
 	gfx.ntscFormat = COMPOSITE;
 #ifdef OPENGL
 	gfx.opengl = TRUE;
+	opengl.glsl.enabled = TRUE;
 	gfx.vsync = TRUE;
 	gfx.fullscreen = NOFULLSCR;
 	opengl.aspectRatio = FALSE;

@@ -838,6 +838,17 @@ void guiUpdate(void) {
 		change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_HQ3X);
 		change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_HQ4X);
 	}
+#ifdef OPENGL
+	if (opengl.glsl.compliant && opengl.glsl.enabled) {
+		change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_POSPHOR);
+		change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_SCANLINE);
+		change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_CRT);
+	} else {
+		change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_POSPHOR);
+		change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_SCANLINE);
+		change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_CRT);
+	}
+#endif
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_NOFILTER);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_BILINEAR);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_SCALE2X);
@@ -849,6 +860,11 @@ void guiUpdate(void) {
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_RGBNTSCCOM);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_RGBNTSCSVD);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_RGBNTSCRGB);
+#ifdef OPENGL
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_POSPHOR);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_SCANLINE);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_CRT);
+#endif
 	switch (gfx.filter) {
 		case NOFILTER:
 			id = IDM_SET_FILTER_NOFILTER;
@@ -856,6 +872,17 @@ void guiUpdate(void) {
 		case BILINEAR:
 			id = IDM_SET_FILTER_BILINEAR;
 			break;
+#ifdef OPENGL
+		case POSPHOR:
+			id = IDM_SET_FILTER_POSPHOR;
+			break;
+		case SCANLINE:
+			id = IDM_SET_FILTER_SCANLINE;
+			break;
+		case CRT:
+			id = IDM_SET_FILTER_CRT;
+			break;
+#endif
 		case SCALE2X:
 			id = IDM_SET_FILTER_SCALE2X;
 			break;
@@ -1334,6 +1361,17 @@ long __stdcall mainWinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 				case IDM_SET_FILTER_BILINEAR:
 					set_filter(BILINEAR);
 					break;
+#ifdef OPENGL
+				case IDM_SET_FILTER_POSPHOR:
+					set_filter(POSPHOR);
+					break;
+				case IDM_SET_FILTER_SCANLINE:
+					set_filter(SCANLINE);
+					break;
+				case IDM_SET_FILTER_CRT:
+					set_filter(CRT);
+					break;
+#endif
 				case IDM_SET_FILTER_SCALE2X:
 					set_filter(SCALE2X);
 					break;
@@ -1906,6 +1944,17 @@ void set_filter(BYTE newfilter) {
 		case BILINEAR:
 			gfxSetScreen(NOCHANGE, BILINEAR, NOCHANGE, NOCHANGE, FALSE);
 			break;
+#ifdef OPENGL
+		case POSPHOR:
+			gfxSetScreen(NOCHANGE, POSPHOR, NOCHANGE, NOCHANGE, FALSE);
+			break;
+		case SCANLINE:
+			gfxSetScreen(NOCHANGE, SCANLINE, NOCHANGE, NOCHANGE, FALSE);
+			break;
+		case CRT:
+			gfxSetScreen(NOCHANGE, CRT, NOCHANGE, NOCHANGE, FALSE);
+			break;
+#endif
 		case SCALE2X:
 			gfxSetScreen(X2, SCALE2X, NOCHANGE, NOCHANGE, FALSE);
 			break;
@@ -1965,7 +2014,7 @@ void set_vsync(BYTE bool) {
 	 * SDL_QuitSubSystem e del SDL_InitSubSystem
 	 * l'applicazione crasha.
 	 */
-	LockWindowUpdate(hMainWin);
+	ShowWindow(hMainWin, SW_HIDE);
 
 	/* switch vsync */
 	gfx.vsync = bool;
@@ -1973,7 +2022,7 @@ void set_vsync(BYTE bool) {
 	gfxResetVideo();
 	gfxSetScreen(NOCHANGE, NOCHANGE, NOCHANGE, NOCHANGE, TRUE);
 
-	LockWindowUpdate(NULL);
+	ShowWindow(hMainWin, SW_NORMAL);
 }
 void set_effect(void) {
 	if ((port1.type == ZAPPER) || (port2.type == ZAPPER)) {

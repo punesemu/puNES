@@ -148,6 +148,9 @@ BEGIN
 			BEGIN
 				MENUITEM "&No Filter",            IDM_SET_FILTER_NOFILTER
 				MENUITEM "&Bilinear",             IDM_SET_FILTER_BILINEAR
+				MENUITEM "&Poshpor",              IDM_SET_FILTER_POSPHOR
+				MENUITEM "S&canline",             IDM_SET_FILTER_SCANLINE
+				MENUITEM "C&RT",                  IDM_SET_FILTER_CRT
 				POPUP "&Scalex"
 				BEGIN
 					MENUITEM "Scale&2X",          IDM_SET_FILTER_SCALE2X

@@ -27,8 +27,12 @@ struct _opengl {
 	BYTE rotation;
 
 	BYTE glew;
-	BYTE glsl;
-	BYTE shader;
+
+	struct {
+		BYTE compliant;
+		BYTE enabled;
+		BYTE shader;
+	} glsl;
 
 	GLint scale_force;
 	GLfloat scale;

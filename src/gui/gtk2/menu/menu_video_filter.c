@@ -7,6 +7,9 @@
 
 #include "menu_video_filter.h"
 #include "sdlgfx.h"
+#ifdef OPENGL
+#include "opengl.h"
+#endif
 
 #ifdef __SUNPRO_C
 #pragma align 4 (filter_icon_inline)
@@ -242,6 +245,9 @@ enum {
 	MHQ4X,
 	MRGBNTSC,
 	MBILINEAR,
+	MPOSPHOR,
+	MSCANLINE,
+	MCRT,
 	MRGBNTSCCOM,
 	MRGBNTSCSVD,
 	MRGBNTSCRGB,
@@ -273,6 +279,24 @@ void menu_video_filter(GtkWidget *video, GtkAccelGroup *accel_group) {
 			G_CALLBACK(set_filter), GINT_TO_POINTER(NOFILTER));
 	g_signal_connect_swapped(G_OBJECT(check[MBILINEAR]), "activate",
 			G_CALLBACK(set_filter), GINT_TO_POINTER(BILINEAR));
+
+
+#ifdef OPENGL
+	check[MPOSPHOR] = gtk_check_menu_item_new_with_mnemonic("_Phospor");
+	check[MSCANLINE] = gtk_check_menu_item_new_with_mnemonic("S_canline");
+	check[MCRT] = gtk_check_menu_item_new_with_mnemonic("C_RT");
+
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu[0]), check[MPOSPHOR]);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu[0]), check[MSCANLINE]);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu[0]), check[MCRT]);
+
+	g_signal_connect_swapped(G_OBJECT(check[MPOSPHOR]), "activate",
+			G_CALLBACK(set_filter), GINT_TO_POINTER(POSPHOR));
+	g_signal_connect_swapped(G_OBJECT(check[MSCANLINE]), "activate",
+			G_CALLBACK(set_filter), GINT_TO_POINTER(SCANLINE));
+	g_signal_connect_swapped(G_OBJECT(check[MCRT]), "activate",
+			G_CALLBACK(set_filter), GINT_TO_POINTER(CRT));
+#endif
 
 	/* Settings/Video/Filters/Scalex */
 	menu[1] = gtk_menu_new();
@@ -360,17 +384,36 @@ void menu_video_filter_check(void) {
 		gtk_widget_set_sensitive(check[MHQ4X], TRUE);
 	}
 
+#ifdef OPENGL
+	if (opengl.glsl.compliant && opengl.glsl.enabled) {
+		gtk_widget_set_sensitive(check[MPOSPHOR], TRUE);
+		gtk_widget_set_sensitive(check[MSCANLINE], TRUE);
+		gtk_widget_set_sensitive(check[MCRT], TRUE);
+	} else {
+		gtk_widget_set_sensitive(check[MPOSPHOR], FALSE);
+		gtk_widget_set_sensitive(check[MSCANLINE], FALSE);
+		gtk_widget_set_sensitive(check[MCRT], FALSE);
+	}
+#endif
+
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MNOFILTER]), FALSE);
+	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MBILINEAR]), FALSE);
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MSCALE2X]), FALSE);
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MSCALE3X]), FALSE);
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MSCALE4X]), FALSE);
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MHQ2X]), FALSE);
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MHQ3X]), FALSE);
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MHQ4X]), FALSE);
-	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MBILINEAR]), FALSE);
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MRGBNTSCCOM]), FALSE);
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MRGBNTSCSVD]), FALSE);
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MRGBNTSCRGB]), FALSE);
+
+#ifdef OPENGL
+	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MPOSPHOR]), FALSE);
+	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MSCANLINE]), FALSE);
+	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MCRT]), FALSE);
+#endif
+
 	switch (gfx.filter) {
 		case NOFILTER:
 			index = MNOFILTER;
@@ -378,6 +421,17 @@ void menu_video_filter_check(void) {
 		case BILINEAR:
 			index = MBILINEAR;
 			break;
+#ifdef OPENGL
+		case POSPHOR:
+			index = MPOSPHOR;
+			break;
+		case SCANLINE:
+			index = MSCANLINE;
+			break;
+		case CRT:
+			index = MCRT;
+			break;
+#endif
 		case SCALE2X:
 			index = MSCALE2X;
 			break;
@@ -426,6 +480,17 @@ void set_filter(int newfilter) {
 		case BILINEAR:
 			gfxSetScreen(NOCHANGE, BILINEAR, NOCHANGE, NOCHANGE, FALSE);
 			return;
+#ifdef OPENGL
+		case POSPHOR:
+			gfxSetScreen(NOCHANGE, POSPHOR, NOCHANGE, NOCHANGE, FALSE);
+			return;
+		case SCANLINE:
+			gfxSetScreen(NOCHANGE, SCANLINE, NOCHANGE, NOCHANGE, FALSE);
+			return;
+		case CRT:
+			gfxSetScreen(NOCHANGE, CRT, NOCHANGE, NOCHANGE, FALSE);
+			return;
+#endif
 		case SCALE2X:
 			gfxSetScreen(X2, SCALE2X, NOCHANGE, NOCHANGE, FALSE);
 			return;

@@ -68,7 +68,7 @@ void opengl_draw_scene_cube3d(SDL_Surface *surface) {
 		glRotatef(opengl.yRotate, 0.0f, 1.0f, 0.0f);
 	}
 
-	if (opengl.glsl) {
+	if (opengl.glsl.shader != SHADER_NONE) {
 		glUseProgram(shader.program);
 	}
 
@@ -138,7 +138,7 @@ void opengl_draw_scene_cube3d(SDL_Surface *surface) {
 		glVertex3f(-xVertex, +yVertex, -zVertex);
 	glEnd();
 
-	if (opengl.glsl) {
+	if (opengl.glsl.shader != SHADER_NONE) {
 		glUseProgram(0);
 	}
 

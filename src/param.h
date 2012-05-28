@@ -31,6 +31,7 @@ enum {
 	P_SAVEONEXIT,
 #ifdef OPENGL
 	P_RENDER,
+	P_GLSL,
 	P_VSYNC,
 	P_FSCREEN,
 	P_STRETCH,
@@ -56,7 +57,7 @@ typedef struct {
 #ifdef __CMDLINE__
 static const char *optShort = "m:f:k:s:o:i:n:p:"
 #ifdef OPENGL
-		"r:v:u:t:"
+		"r:q:v:u:t:"
 #endif
 		"a:l:c:g:Vh?";
 
@@ -70,18 +71,19 @@ static const struct option optLong[] = {
 	{ "ntsc-format", required_argument, NULL, 'n'},
 	{ "palette",     required_argument, NULL, 'p'},
 #ifdef OPENGL
-    { "rendering",          required_argument, NULL, 'r'},
-    { "vsync",              required_argument, NULL, 'v'},
-    { "fullscreen",         required_argument, NULL, 'u'},
-    { "stretch-fullscreen", required_argument, NULL, 't'},
+	{ "rendering",          required_argument, NULL, 'r'},
+	{ "glsl",               required_argument, NULL, 'q'},
+	{ "vsync",              required_argument, NULL, 'v'},
+	{ "fullscreen",         required_argument, NULL, 'u'},
+	{ "stretch-fullscreen", required_argument, NULL, 't'},
 #endif
-    { "audio",       required_argument, NULL, 'a'},
-    { "samplerate",  required_argument, NULL, 'l'},
-    { "channels",    required_argument, NULL, 'c'},
-    { "gamegenie",   required_argument, NULL, 'g'},
-    { "help",        no_argument,       NULL, 'h'},
-    { "version",     no_argument,       NULL, 'V'},
-    { 0,             0,                 0,     0 }
+	{ "audio",       required_argument, NULL, 'a'},
+	{ "samplerate",  required_argument, NULL, 'l'},
+	{ "channels",    required_argument, NULL, 'c'},
+	{ "gamegenie",   required_argument, NULL, 'g'},
+	{ "help",        no_argument,       NULL, 'h'},
+	{ "version",     no_argument,       NULL, 'V'},
+	{ 0,             0,                 0,     0 }
 };
 #endif
 
@@ -124,11 +126,17 @@ static const _param param[] = {
 	{
 		"filter",
 		NULL,
-		"# possible values: none, bilinear, scale2x, scale3x, scale4x, hq2x, hq3x, hq4x, ntsc",
+		"# possible values: none, bilinear, scale2x, scale3x, scale4x, hq2x, hq3x, hq4x, ntsc"
+#ifdef OPENGL
+		", posphor, scanline, crt",
+#endif
 		NULL,
 		"-i, --filter              filter to apply       : nofilter, bilinear, scale2x,\n"
 		"                                                  scale3x, scale4x, hq2x, hq3x,\n"
 		"                                                  hq4x, ntsc"
+#ifdef OPENGL
+		", posphor, scanline, crt"
+#endif
 	},
 	{
 		"ntsc filter format",
@@ -158,6 +166,14 @@ static const _param param[] = {
 		"# possible values: software, opengl",
 		NULL,
 		"-r, --rendering           type of rendering     : software, opengl"
+	},
+	{
+		"glsl",
+		NULL,
+		"# possible values: yes, no",
+		NULL,
+		"-q, --glsl                if supported, enabled : yes, no\n"
+		"                          the use of glsl shaders"
 	},
 	{
 		"vsync",
@@ -323,6 +339,9 @@ static const _param pFilter[] = {
 	{"Hq4X",      "hq4x"    },
 	{"NTSC",      "ntsc"    },
 	{"Bilinear",  "bilinear"},
+	{"Poshpor",   "posphor" },
+	{"Scanline",  "scanline"},
+	{"CRT",       "crt"     },
 };
 static const _param pNtsc[] = {
 	{"Composite", "composite"},

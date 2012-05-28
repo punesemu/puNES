@@ -29,7 +29,12 @@ enum {
 	HQ3X,
 	HQ4X,
 	RGBNTSC,
-	BILINEAR
+	BILINEAR,
+	/* glsl shaders */
+	POSPHOR,
+	SCANLINE,
+	CRT,
+	/* glsl shaders end */
 };
 enum { NOFULLSCR, FULLSCR };
 enum {
