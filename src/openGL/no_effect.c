@@ -31,8 +31,8 @@ void opengl_draw_scene_no_effect(SDL_Surface *surface) {
 
 	opengl_update_texture(surface);
 
-	if (opengl.glsl.shader != SHADER_NONE) {
-		glUseProgram(shader.program);
+	if (opengl.glsl.shader_used) {
+		glsl_use_shaders();
 	}
 
 	/* disegno la texture */
@@ -51,7 +51,7 @@ void opengl_draw_scene_no_effect(SDL_Surface *surface) {
 		glVertex2i(opengl.xTexture1, opengl.yTexture2);
 	glEnd();
 
-	if (opengl.glsl.shader != SHADER_NONE) {
+	if (opengl.glsl.shader_used) {
 		glUseProgram(0);
 	}
 

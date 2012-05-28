@@ -31,7 +31,7 @@ struct _opengl {
 	struct {
 		BYTE compliant;
 		BYTE enabled;
-		BYTE shader;
+		BYTE shader_used;
 	} glsl;
 
 	GLint scale_force;
@@ -67,6 +67,8 @@ int opengl_flip(SDL_Surface *surface);
 
 void glew_init(void);
 void glsl_shaders_init(void);
+void glsl_delete_shaders(void);
+void glsl_use_shaders(void);
 
 void opengl_create_texture(_texture *texture, uint32_t width, uint32_t height,
         uint8_t interpolation, uint8_t pow);

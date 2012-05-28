@@ -507,18 +507,22 @@ void gfxSetScreen(BYTE newScale, BYTE newFilter, BYTE newFullscreen, BYTE newPal
 		opengl.scale_force = FALSE;
 		opengl.scale = gfx.scale;
 		opengl.factor = 1;
-		opengl.glsl.shader = SHADER_NONE;
+		opengl.glsl.shader_used = FALSE;
 		opengl.effect = effect;
 		opengl.interpolation = FALSE;
 		use_txt_texture = FALSE;
 
 		if (opengl.glsl.compliant && opengl.glsl.enabled) {
+
+			glsl_delete_shaders();
+
 			switch (gfx.filter) {
 				case NOFILTER:
 					opengl.scale_force = TRUE;
 					opengl.scale = X1;
 					opengl.factor = gfx.scale;
-					opengl.glsl.shader = SHADER_NOFILTER;
+					opengl.glsl.shader_used = TRUE;
+					shader.compiled[0].routine = SHADER_NOFILTER;
 					opengl.effect = scaleSurface;
 					use_txt_texture = TRUE;
 					break;
@@ -526,7 +530,8 @@ void gfxSetScreen(BYTE newScale, BYTE newFilter, BYTE newFullscreen, BYTE newPal
 					opengl.scale_force = TRUE;
 					opengl.scale = X1;
 					opengl.factor = gfx.scale;
-					opengl.glsl.shader = SHADER_NOFILTER;
+					opengl.glsl.shader_used = TRUE;
+					shader.compiled[0].routine = SHADER_NOFILTER;
 					opengl.effect = scaleSurface;
 					opengl.interpolation = TRUE;
 					use_txt_texture = TRUE;
@@ -535,7 +540,8 @@ void gfxSetScreen(BYTE newScale, BYTE newFilter, BYTE newFullscreen, BYTE newPal
 					opengl.scale_force = TRUE;
 					opengl.scale = X1;
 					opengl.factor = gfx.scale;
-					opengl.glsl.shader = SHADER_POSPHOR;
+					opengl.glsl.shader_used = TRUE;
+					shader.compiled[0].routine = SHADER_POSPHOR;
 					opengl.effect = scaleSurface;
 					use_txt_texture = TRUE;
 					break;
@@ -543,7 +549,8 @@ void gfxSetScreen(BYTE newScale, BYTE newFilter, BYTE newFullscreen, BYTE newPal
 					opengl.scale_force = TRUE;
 					opengl.scale = X1;
 					opengl.factor = gfx.scale;
-					opengl.glsl.shader = SHADER_SCANLINE;
+					opengl.glsl.shader_used = TRUE;
+					shader.compiled[0].routine = SHADER_SCANLINE;
 					opengl.effect = scaleSurface;
 					use_txt_texture = TRUE;
 					break;
@@ -551,7 +558,8 @@ void gfxSetScreen(BYTE newScale, BYTE newFilter, BYTE newFullscreen, BYTE newPal
 					opengl.scale_force = TRUE;
 					opengl.scale = X1;
 					opengl.factor = gfx.scale;
-					opengl.glsl.shader = SHADER_CRT;
+					opengl.glsl.shader_used = TRUE;
+					shader.compiled[0].routine = SHADER_CRT;
 					opengl.effect = scaleSurface;
 					use_txt_texture = TRUE;
 					break;
@@ -559,7 +567,8 @@ void gfxSetScreen(BYTE newScale, BYTE newFilter, BYTE newFullscreen, BYTE newPal
 					opengl.scale_force = TRUE;
 					opengl.scale = X1;
 					opengl.factor = gfx.scale;
-					opengl.glsl.shader = SHADER_SCALE2X;
+					opengl.glsl.shader_used = TRUE;
+					shader.compiled[0].routine = SHADER_SCALE2X;
 					opengl.effect = scaleSurface;
 					use_txt_texture = TRUE;
 					break;
@@ -567,7 +576,8 @@ void gfxSetScreen(BYTE newScale, BYTE newFilter, BYTE newFullscreen, BYTE newPal
 					opengl.scale_force = TRUE;
 					opengl.scale = X1;
 					opengl.factor = gfx.scale;
-					opengl.glsl.shader = SHADER_SCALE3X;
+					opengl.glsl.shader_used = TRUE;
+					shader.compiled[0].routine = SHADER_SCALE3X;
 					opengl.effect = scaleSurface;
 					use_txt_texture = TRUE;
 					break;
@@ -576,14 +586,16 @@ void gfxSetScreen(BYTE newScale, BYTE newFilter, BYTE newFullscreen, BYTE newPal
 					opengl.scale_force = TRUE;
 					opengl.scale = X2;
 					opengl.factor = 2;
-					opengl.shader = SHADER_SCALE2X;
+					opengl.glsl.shader_used = TRUE;
+					shader.compiled[0].routine = SHADER_SCALE2X;
 					opengl.effect = scaleNx;
 					use_txt_texture = TRUE;
 					*/
 					opengl.scale_force = TRUE;
 					opengl.scale = X1;
 					opengl.factor = gfx.scale;
-					opengl.glsl.shader = SHADER_SCALE4X;
+					opengl.glsl.shader_used = TRUE;
+					shader.compiled[0].routine = SHADER_SCALE4X;
 					opengl.effect = scaleSurface;
 					use_txt_texture = TRUE;
 					break;
@@ -591,7 +603,8 @@ void gfxSetScreen(BYTE newScale, BYTE newFilter, BYTE newFullscreen, BYTE newPal
 					opengl.scale_force = TRUE;
 					opengl.scale = X1;
 					opengl.factor = gfx.scale;
-					opengl.glsl.shader = SHADER_HQ2X;
+					opengl.glsl.shader_used = TRUE;
+					shader.compiled[0].routine = SHADER_HQ2X;
 					opengl.effect = scaleSurface;
 					use_txt_texture = TRUE;
 					break;
@@ -599,7 +612,8 @@ void gfxSetScreen(BYTE newScale, BYTE newFilter, BYTE newFullscreen, BYTE newPal
 					opengl.scale_force = TRUE;
 					opengl.scale = X2;
 					opengl.factor = 2;
-					opengl.glsl.shader = SHADER_HQ2X;
+					opengl.glsl.shader_used = TRUE;
+					shader.compiled[0].routine = SHADER_HQ2X;
 					opengl.effect = hqNx;
 					use_txt_texture = TRUE;
 					break;
@@ -610,14 +624,16 @@ void gfxSetScreen(BYTE newScale, BYTE newFilter, BYTE newFullscreen, BYTE newPal
 					opengl.scale_force = TRUE;
 					opengl.scale = X2;
 					opengl.factor = (float) gfx.scale / 2.0;
-					opengl.glsl.shader = SHADER_NOFILTER;
+					opengl.glsl.shader_used = TRUE;
+					shader.compiled[0].routine = SHADER_NOFILTER;
 					opengl.effect = scaleNx;
 					use_txt_texture = TRUE;
 				} else if ((gfx.filter >= HQ2X) && (gfx.filter <= HQ4X)) {
 					opengl.scale_force = TRUE;
 					opengl.scale = X2;
 					opengl.factor = (float) gfx.scale / 2.0;
-					opengl.glsl.shader = SHADER_NOFILTER;
+					opengl.glsl.shader_used = TRUE;
+					shader.compiled[0].routine = SHADER_NOFILTER;
 					opengl.effect = hqNx;
 					use_txt_texture = TRUE;
 				}

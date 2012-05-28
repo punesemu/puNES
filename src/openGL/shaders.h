@@ -31,19 +31,7 @@ enum {
 	SHADER_NONE = 255
 };
 
-#define delete_shader()\
-	if (shader.vert) {\
-		glDeleteShader(shader.vert);\
-	}\
-	shader.vert = 0;\
-	if (shader.frag) {\
-		glDeleteShader(shader.frag);\
-	}\
-	shader.frag = 0;\
-	if (shader.program) {\
-		glDeleteProgram(shader.program);\
-	}\
-	shader.program = 0
+#define MAX_SHADERS 10
 
 typedef struct {
 	GLuint data;
@@ -61,12 +49,15 @@ typedef struct {
 	const GLchar *vert;
 	const GLchar *frag;
 } _shader_routine;
+typedef struct {
+	GLuint prg;
+	GLuint vrt;
+	GLuint frg;
+	GLuint routine;
+	_shader_routine *code;
+} _shd;
 struct {
-	GLuint program;
-	GLuint vert;
-	GLuint frag;
-
-	_shader_routine *routine;
+	_shd compiled[MAX_SHADERS];
 
 	_texture text;
 
@@ -75,7 +66,6 @@ struct {
 		GLfloat output[2];
 		GLfloat texture[2];
 	} size;
-
 	GLint frame_counter;
 
 	struct {

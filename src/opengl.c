@@ -48,7 +48,8 @@ void sdlQuitGL(void) {
 	if (shader.text.data) {
 		glDeleteTextures(1, &shader.text.data);
 	}
-	delete_shader();
+
+	glsl_delete_shaders();
 }
 void sdlCreateSurfaceGL(SDL_Surface *src, WORD width, WORD height, BYTE flags) {
 	if (opengl.rotation) {
@@ -175,100 +176,153 @@ void glew_init(void) {
 	}
 }
 void glsl_shaders_init(void) {
-	delete_shader();
-
-	if (opengl.glsl.enabled && (opengl.glsl.shader != SHADER_NONE)) {
+	if (opengl.glsl.enabled && opengl.glsl.shader_used) {
+		BYTE i;
+		_shd *shd;
 
 		opengl_create_texture(&shader.text, opengl.texture.w * opengl.factor,
 				opengl.texture.w * opengl.factor, FALSE, NO_POWER_OF_TWO);
 
-		shader.routine = &shader_routine[opengl.glsl.shader];
+		for (i = 0; i < MAX_SHADERS; i++) {
+			shd = &shader.compiled[i];
+
+			if (shd->routine == SHADER_NONE) {
+				continue;
+			}
+
+			shd->code = &shader_routine[shd->routine];
+
+			/* program */
+			shd->prg = glCreateProgram();
+
+			/* vertex */
+			if (shd->code->vert != NULL) {
+				shd->vrt = glCreateShader(GL_VERTEX_SHADER);
+				glShaderSource(shd->vrt, 1, &shd->code->vert, NULL);
+				glCompileShader(shd->vrt);
+#ifndef RELEASE
+				printLog(shd->vrt);
+#endif
+
+				glAttachShader(shd->prg, shd->vrt);
+			}
+
+			/* fragment */
+			if (shd->code->frag != NULL) {
+				shd->frg = glCreateShader(GL_FRAGMENT_SHADER);
+				glShaderSource(shd->frg, 1, &shd->code->frag, NULL);
+				glCompileShader(shd->frg);
+#ifndef RELEASE
+				printLog(shd->frg);
+#endif
+
+				glAttachShader(shd->prg, shd->frg);
+			}
+
+			glLinkProgram(shd->prg);
+#ifndef RELEASE
+			printLog(shd->prg);
+			printf("\n");
+#endif
+
+			/* variabili */
+			shader.size.input[0] = (GLfloat) SCRROWS;
+			shader.size.input[1] = (GLfloat) SCRLINES;
+
+			if (shd->routine == SHADER_CRT) {
+				shader.size.output[0] = opengl.texture.w;
+				shader.size.output[1] = opengl.texture.h;
+			} else {
+				shader.size.output[0] = opengl.xTexture2 - opengl.xTexture1;
+				shader.size.output[1] = opengl.yTexture2 - opengl.yTexture1;
+			}
+
+			shader.size.texture[0] = opengl.texture.w;
+			shader.size.texture[1] = opengl.texture.h;
+
+			shader.frame_counter = (GLint) ppu.frames;
+
+			glUseProgram(shd->prg);
+
+			shader.loc.size.input = glGetUniformLocation(shd->prg, "size_input");
+			shader.loc.size.output = glGetUniformLocation(shd->prg, "size_output");
+			shader.loc.size.texture = glGetUniformLocation(shd->prg, "size_texture");
+
+			shader.loc.texture.scr = glGetUniformLocation(shd->prg, "texture_scr");
+			shader.loc.texture.txt = glGetUniformLocation(shd->prg, "texture_txt");
+
+			shader.loc.frame_counter = glGetUniformLocation(shd->prg, "frame_counter");
+
+			glUniform2fv(shader.loc.size.input, 1, shader.size.input);
+			glUniform2fv(shader.loc.size.output, 1, shader.size.output);
+			glUniform2fv(shader.loc.size.texture, 1, shader.size.texture);
+
+			glUniform1i(shader.frame_counter, 1);
+
+			glEnable(GL_TEXTURE_2D);
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, opengl.texture.data);
+			glUniform1i(shader.loc.texture.scr, 0);
+
+			glEnable(GL_TEXTURE_2D);
+			glActiveTexture(GL_TEXTURE1);
+			glBindTexture(GL_TEXTURE_2D, shader.text.data);
+			glUniform1i(shader.loc.texture.txt, 1);
+
+			glUseProgram(0);
+		}
+
 
 		//vsSource = file2string("/home/fhorse/Dropbox/gpuPeteOGL2.slv");
 		//fsSource = file2string("/home/fhorse/Dropbox/gpuPeteOGL2.slf");
 
-		/* program */
-		shader.program = glCreateProgram();
-#ifndef RELEASE
-		printLog(shader.program);
-#endif
-
-		/* vertex */
-		if (shader.routine->vert != NULL) {
-			shader.vert = glCreateShader(GL_VERTEX_SHADER);
-			printLog(shader.vert);
-			glShaderSource(shader.vert, 1, &shader.routine->vert, NULL);
-			printLog(shader.vert);
-			glCompileShader(shader.vert);
-#ifndef RELEASE
-			printLog(shader.vert);
-#endif
-
-			glAttachShader(shader.program, shader.vert);
-		}
-
-		/* fragment */
-		if (shader.routine->frag != NULL) {
-			shader.frag = glCreateShader(GL_FRAGMENT_SHADER);
-			glShaderSource(shader.frag, 1, &shader.routine->frag, NULL);
-			glCompileShader(shader.frag);
-#ifndef RELEASE
-			printLog(shader.frag);
-#endif
-
-			glAttachShader(shader.program, shader.frag);
-		}
-
 		//free((char *) vsSource);
 		//free((char *) fsSource);
 
-		glLinkProgram(shader.program);
-#ifndef RELEASE
-		printLog(shader.program);
-#endif
+	}
+}
+void glsl_delete_shaders(void) {
+	BYTE i;
+	_shd *shd;
 
-		shader.size.input[0] = (GLfloat) SCRROWS;
-		shader.size.input[1] = (GLfloat) SCRLINES;
+	for (i = 0; i < MAX_SHADERS; i++) {
+		shd = &shader.compiled[i];
 
-		shader.size.output[0] = opengl.xTexture2 - opengl.xTexture1;
-		shader.size.output[1] = opengl.yTexture2 - opengl.yTexture1;
+		/* routine */
+		shd->routine = SHADER_NONE;
+		shd->code = NULL;
 
-		shader.size.texture[0] = opengl.texture.w;
-		shader.size.texture[1] = opengl.texture.h;
+		/* vertex */
+		if (shd->vrt) {
+			glDeleteShader(shd->vrt);
+		}
+		shd->vrt = 0;
 
-		//shader.size.output[0] = opengl.texture.w;
-		//shader.size.output[1] = opengl.texture.h;
+		/* fragment */
+		if (shd->frg) {
+			glDeleteShader(shd->frg);
+		}
+		shd->frg = 0;
 
-		shader.frame_counter = (GLint) ppu.frames;
+		/* program */
+		if (shd->prg) {
+			glDeleteProgram(shd->prg);
+		}
+		shd->prg = 0;
+	}
+}
+void glsl_use_shaders(void) {
+	BYTE i;
+	_shd *shd;
 
-		glUseProgram(shader.program);
+	for (i = 0; i < MAX_SHADERS; i++) {
+		shd = &shader.compiled[i];
 
-		shader.loc.size.input = glGetUniformLocation(shader.program, "size_input");
-		shader.loc.size.output = glGetUniformLocation(shader.program, "size_output");
-		shader.loc.size.texture = glGetUniformLocation(shader.program, "size_texture");
+		if (shd->routine == SHADER_NONE) {
+			continue;
+		}
 
-		shader.loc.texture.scr = glGetUniformLocation(shader.program, "texture_scr");
-		shader.loc.texture.txt = glGetUniformLocation(shader.program, "texture_txt");
-
-		shader.loc.frame_counter = glGetUniformLocation(shader.program, "frame_counter");
-
-		glUniform2fv(shader.loc.size.input, 1, shader.size.input);
-		glUniform2fv(shader.loc.size.output, 1, shader.size.output);
-		glUniform2fv(shader.loc.size.texture, 1, shader.size.texture);
-
-		glUniform1i(shader.frame_counter, 1);
-
-		glEnable(GL_TEXTURE_2D);
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, opengl.texture.data);
-		glUniform1i(shader.loc.texture.scr, 0);
-
-		glEnable(GL_TEXTURE_2D);
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, shader.text.data);
-		glUniform1i(shader.loc.texture.txt, 1);
-
-		glUseProgram(0);
+		glUseProgram(shd->prg);
 	}
 }
 
@@ -366,7 +420,7 @@ void opengl_update_texture(SDL_Surface *surface) {
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 
-	if ((opengl.glsl.shader != SHADER_NONE) && text.on_screen) {
+	if (opengl.glsl.shader_used && text.on_screen) {
 		glBindTexture(GL_TEXTURE_2D, shader.text.data);
 	}
 
@@ -454,7 +508,7 @@ void printLog(GLuint obj)
 		infoLog[infologLength] = 0;
 
 		if (infologLength > 0) {
-			printf("%s\n",infoLog);
+			printf("%s",infoLog);
 		}
 	}
 }
