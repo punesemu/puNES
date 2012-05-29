@@ -27,11 +27,11 @@ enum {
 	SHADER_CRT2,
 	SHADER_CRT3,
 	SHADER_CRT4,
+	SHADER_BLOOM,
+	SHADER_DONTBLOOM,
 	SHADER_TOTAL,
 	SHADER_NONE = 255
 };
-
-#define MAX_SHADERS 10
 
 typedef struct {
 	GLuint data;
@@ -46,27 +46,18 @@ typedef struct {
 	GLfloat h;
 } _texture;
 typedef struct {
-	const GLchar *vert;
-	const GLchar *frag;
-} _shader_routine;
-typedef struct {
+	const GLchar *vertex;
+	const GLchar *fragment;
+} _shader_code;
+struct {
+	_texture text;
+
 	GLuint prg;
 	GLuint vrt;
 	GLuint frg;
-	GLuint routine;
-	_shader_routine *code;
-} _shd;
-struct {
-	_shd compiled[MAX_SHADERS];
 
-	_texture text;
-
-	struct {
-		GLfloat input[2];
-		GLfloat output[2];
-		GLfloat texture[2];
-	} size;
-	GLint frame_counter;
+	GLuint id;
+	_shader_code *code;
 
 	struct {
 		struct {
@@ -85,7 +76,7 @@ struct {
 #endif /* SHADERS_H_ */
 
 #ifdef _SHADERS_CODE_
-static _shader_routine shader_routine[SHADER_TOTAL] = {
+static _shader_code shader_code[SHADER_TOTAL] = {
 	/*****************************************************************************************/
 	/* NOFILTER                                                                              */
 	/*****************************************************************************************/
@@ -1471,16 +1462,16 @@ static _shader_routine shader_routine[SHADER_TOTAL] = {
 		// fragment shader
 		"// Comment the next line to disable interpolation in linear gamma (and\n"
 		"// gain speed).\n"
-		"#define LINEAR_PROCESSING\n"
+		"//#define LINEAR_PROCESSING\n"
 
 		"// Enable screen curvature.\n"
-		"#define CURVATURE\n"
+		"//#define CURVATURE\n"
 
 		"// Enable 3x oversampling of the beam profile\n"
-		"#define OVERSAMPLE\n"
+		"//#define OVERSAMPLE\n"
 
 		"// Use the older, purely gaussian beam profile\n"
-		"//#define USEGAUSSIAN\n"
+		"#define USEGAUSSIAN\n"
 
 		"// Macros.\n"
 		"#define FIX(c) max(abs(c), 1e-5);\n"
@@ -1698,6 +1689,146 @@ static _shader_routine shader_routine[SHADER_TOTAL] = {
 		"	gl_FragColor = mix(scr, txt, txt.a) * gl_Color;\n"
 		"}"
 	},
+	/*****************************************************************************************/
+	/* BLOOM                                                                                 */
+	/*****************************************************************************************/
+	{
+		// vertex shader
+		"varying vec4 v_texCoord;\n"
+		"void main() {\n"
+		"	gl_FrontColor = gl_Color;\n"
+		"	gl_Position = ftransform();\n"
+		"	v_texCoord = gl_MultiTexCoord0;\n"
+		"}",
+		// fragment shader
+		"uniform vec2 size_texture;\n"
+		"uniform sampler2D texture_scr;\n"
+		"uniform sampler2D texture_txt;\n"
+		"varying vec4 v_texCoord;\n"
+
+		"#define glarebasesize 0.42\n"
+		"#define power 0.65 // 0.50 is good\n"
+
+		"void main() {\n"
+		"	vec4 sum = vec4(0.0);\n"
+		"	vec4 bum = vec4(0.0);\n"
+		"	vec2 texcoord = vec2(v_texCoord);\n"
+		"	int j;\n"
+		"	int i;\n"
+
+		"	vec2 glaresize = vec2(glarebasesize) / size_texture;\n"
+
+		"	for(i = -2; i < 5; i++) {\n"
+		"		for (j = -1; j < 1; j++) {\n"
+		"			sum += texture2D(texture_scr, texcoord + vec2(-i, j)*glaresize) * power;\n"
+		"			bum += texture2D(texture_scr, texcoord + vec2(j, i)*glaresize) * power;\n"
+		"		}\n"
+		"	}\n"
+
+		"	vec4 scr;\n"
+		"	if (texture2D(texture_scr, texcoord).r < 2.0) {\n"
+		"		scr = sum*sum*sum*0.001+bum*bum*bum*0.0080 + texture2D(texture_scr, texcoord);\n"
+		"	}\n"
+
+		"	vec4 txt = texture2D(texture_txt, texcoord);\n"
+
+		"	gl_FragColor = mix(scr, txt, txt.a) * gl_Color;\n"
+		"}"
+	},
+	/*****************************************************************************************/
+	/* don't BLOOM                                                                           */
+	/*****************************************************************************************/
+	{
+		// vertex shader
+		"uniform vec2 size_texture;\n"
+
+		"varying vec2 c00;\n"
+		"varying vec2 c10;\n"
+		"varying vec2 c20;\n"
+		"varying vec2 c01;\n"
+		"varying vec2 c11;\n"
+		"varying vec2 c21;\n"
+		"varying vec2 c02;\n"
+		"varying vec2 c12;\n"
+		"varying vec2 c22;\n"
+		"varying vec2 pixel_no;\n"
+
+		"void main() {\n"
+		"	gl_FrontColor = gl_Color;\n"
+		"	gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;\n"
+		"	float dx = 1.0 / size_texture.x;\n"
+		"	float dy = 1.0 / size_texture.y;\n"
+
+		"	vec2 tex = gl_MultiTexCoord0.xy;\n"
+		"	c00 = tex + vec2(-dx, -dy);\n"
+		"	c10 = tex + vec2( 0, -dy);\n"
+		"	c20 = tex + vec2( dx, -dy);\n"
+		"	c01 = tex + vec2(-dx, 0);\n"
+		"	c11 = tex + vec2( 0, 0);\n"
+		"	c21 = tex + vec2( dx, 0);\n"
+		"	c02 = tex + vec2(-dx, dy);\n"
+		"	c12 = tex + vec2( 0, dy);\n"
+		"	c22 = tex + vec2( dx, dy);\n"
+		"	pixel_no = tex * size_texture;\n"
+		"}",
+		// fragment shader
+		"uniform sampler2D texture_scr;\n"
+		"uniform sampler2D texture_txt;\n"
+
+		"varying vec2 c00;\n"
+		"varying vec2 c10;\n"
+		"varying vec2 c20;\n"
+		"varying vec2 c01;\n"
+		"varying vec2 c11;\n"
+		"varying vec2 c21;\n"
+		"varying vec2 c02;\n"
+		"varying vec2 c12;\n"
+		"varying vec2 c22;\n"
+		"varying vec2 pixel_no;\n"
+
+		"const float gamma = 2.4;\n"
+		"const float shine = 0.05;\n"
+		"const float blend = 0.65;\n"
+
+		"float dist(vec2 coord, vec2 source) {\n"
+		"	vec2 delta = coord - source;\n"
+		"	return sqrt(dot(delta, delta));\n"
+		"}\n"
+
+		"float color_bloom(vec3 color) {\n"
+		"	const vec3 gray_coeff = vec3(0.30, 0.59, 0.11);\n"
+		"	float bright = dot(color, gray_coeff);\n"
+		"	return mix(1.0 + shine, 1.0 - shine, bright);\n"
+		"}\n"
+
+		"vec3 lookup(float offset_x, float offset_y, vec2 coord) {\n"
+		"	vec2 offset = vec2(offset_x, offset_y);\n"
+		"	vec3 color = texture2D(texture_scr, coord).rgb;\n"
+		"	float delta = dist(fract(pixel_no), offset + vec2(0.5));\n"
+		"	return color * exp(-gamma * delta * color_bloom(color));\n"
+		"}\n"
+
+		"void main() {\n"
+		"	vec3 mid_color = lookup(0.0, 0.0, c11);\n"
+		"	vec3 color = vec3(0.0);\n"
+		"	color += lookup(-1.0, -1.0, c00);\n"
+		"	color += lookup( 0.0, -1.0, c10);\n"
+		"	color += lookup( 1.0, -1.0, c20);\n"
+		"	color += lookup(-1.0, 0.0, c01);\n"
+		"	color += mid_color;\n"
+		"	color += lookup( 1.0, 0.0, c21);\n"
+		"	color += lookup(-1.0, 1.0, c02);\n"
+		"	color += lookup( 0.0, 1.0, c12);\n"
+		"	color += lookup( 1.0, 1.0, c22);\n"
+		"	vec3 out_color = mix(1.2 * mid_color, color, blend);\n"
+
+		"	vec4 scr = vec4(out_color, 1.0);\n"
+
+		"	vec4 txt = texture2D(texture_txt, c11);\n"
+
+		"	gl_FragColor = mix(scr, txt, txt.a) * gl_Color;\n"
+		"}"
+	}
 };
 #undef _SHADERS_CODE_
 #endif

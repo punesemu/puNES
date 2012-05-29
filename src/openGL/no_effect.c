@@ -29,7 +29,7 @@ void opengl_draw_scene_no_effect(SDL_Surface *surface) {
 	/* ripulisco la scena opengl */
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-	opengl_update_texture(surface);
+	opengl_update_texture(surface, FALSE);
 
 	if (opengl.glsl.shader_used) {
 		glsl_use_shaders();

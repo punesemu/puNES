@@ -72,7 +72,7 @@ void glsl_use_shaders(void);
 
 void opengl_create_texture(_texture *texture, uint32_t width, uint32_t height,
         uint8_t interpolation, uint8_t pow);
-void opengl_update_texture(SDL_Surface *surface);
+void opengl_update_texture(SDL_Surface *surface, uint8_t generate_mipmap);
 int opengl_power_of_two(int base);
 
 void text_blit_opengl(_txt_element *ele, SDL_Rect *dst_rect);
