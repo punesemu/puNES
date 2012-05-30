@@ -34,6 +34,7 @@ enum {
 	POSPHOR,
 	SCANLINE,
 	CRT,
+	DBL,
 	/* glsl shaders end */
 };
 enum { NOFULLSCR, FULLSCR };

@@ -164,13 +164,14 @@ void glew_init(void) {
 				fprintf(stderr, "INFO: OpenGL 2.0 supported. Glsl enabled.\n");
 				opengl.glsl.compliant = TRUE;
 			} else {
+				fprintf(stderr, "INFO: OpenGL 2.0 not supported. Glsl disabled.\n");
 				opengl.glsl.compliant = FALSE;
 			}
 
-			if (!GLEW_VERSION_3_1) {
-				fprintf(stderr, "INFO: OpenGL 3.1 not supported.\n");
-			} else {
+			if (GLEW_VERSION_3_1) {
 				fprintf(stderr, "INFO: OpenGL 3.1 supported.\n");
+			} else {
+				fprintf(stderr, "INFO: OpenGL 3.1 not supported.\n");
 			}
 		}
 	}
@@ -220,12 +221,12 @@ void glsl_shaders_init(void) {
 		glUniform2f(shader.loc.size.input, (GLfloat) SCRROWS, (GLfloat) SCRLINES);
 
 		shader.loc.size.output = glGetUniformLocation(shader.prg, "size_output");
-		if (shader.id == SHADER_CRT4) {
-			glUniform2f(shader.loc.size.output, opengl.texture.w, opengl.texture.h);
-		} else {
+		//if (shader.id == SHADER_CRT4) {
+		//	glUniform2f(shader.loc.size.output, opengl.texture.w, opengl.texture.h);
+		//} else {
 			glUniform2f(shader.loc.size.output, opengl.xTexture2 - opengl.xTexture1,
 			        opengl.yTexture2 - opengl.yTexture1);
-		}
+		//}
 
 		shader.loc.size.texture = glGetUniformLocation(shader.prg, "size_texture");
 		glUniform2f(shader.loc.size.texture, opengl.texture.w, opengl.texture.h);

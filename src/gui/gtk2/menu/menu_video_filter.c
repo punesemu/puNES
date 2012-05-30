@@ -248,6 +248,7 @@ enum {
 	MPOSPHOR,
 	MSCANLINE,
 	MCRT,
+	MDBL,
 	MRGBNTSCCOM,
 	MRGBNTSCSVD,
 	MRGBNTSCRGB,
@@ -280,15 +281,16 @@ void menu_video_filter(GtkWidget *video, GtkAccelGroup *accel_group) {
 	g_signal_connect_swapped(G_OBJECT(check[MBILINEAR]), "activate",
 			G_CALLBACK(set_filter), GINT_TO_POINTER(BILINEAR));
 
-
 #ifdef OPENGL
 	check[MPOSPHOR] = gtk_check_menu_item_new_with_mnemonic("_Phospor");
 	check[MSCANLINE] = gtk_check_menu_item_new_with_mnemonic("S_canline");
 	check[MCRT] = gtk_check_menu_item_new_with_mnemonic("C_RT");
+	check[MDBL] = gtk_check_menu_item_new_with_mnemonic("_DBL");
 
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu[0]), check[MPOSPHOR]);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu[0]), check[MSCANLINE]);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu[0]), check[MCRT]);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu[0]), check[MDBL]);
 
 	g_signal_connect_swapped(G_OBJECT(check[MPOSPHOR]), "activate",
 			G_CALLBACK(set_filter), GINT_TO_POINTER(POSPHOR));
@@ -296,6 +298,8 @@ void menu_video_filter(GtkWidget *video, GtkAccelGroup *accel_group) {
 			G_CALLBACK(set_filter), GINT_TO_POINTER(SCANLINE));
 	g_signal_connect_swapped(G_OBJECT(check[MCRT]), "activate",
 			G_CALLBACK(set_filter), GINT_TO_POINTER(CRT));
+	g_signal_connect_swapped(G_OBJECT(check[MDBL]), "activate",
+			G_CALLBACK(set_filter), GINT_TO_POINTER(DBL));
 #endif
 
 	/* Settings/Video/Filters/Scalex */
@@ -389,10 +393,12 @@ void menu_video_filter_check(void) {
 		gtk_widget_set_sensitive(check[MPOSPHOR], TRUE);
 		gtk_widget_set_sensitive(check[MSCANLINE], TRUE);
 		gtk_widget_set_sensitive(check[MCRT], TRUE);
+		gtk_widget_set_sensitive(check[MDBL], TRUE);
 	} else {
 		gtk_widget_set_sensitive(check[MPOSPHOR], FALSE);
 		gtk_widget_set_sensitive(check[MSCANLINE], FALSE);
 		gtk_widget_set_sensitive(check[MCRT], FALSE);
+		gtk_widget_set_sensitive(check[MDBL], FALSE);
 	}
 #endif
 
@@ -412,6 +418,7 @@ void menu_video_filter_check(void) {
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MPOSPHOR]), FALSE);
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MSCANLINE]), FALSE);
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MCRT]), FALSE);
+	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MDBL]), FALSE);
 #endif
 
 	switch (gfx.filter) {
@@ -430,6 +437,9 @@ void menu_video_filter_check(void) {
 			break;
 		case CRT:
 			index = MCRT;
+			break;
+		case DBL:
+			index = MDBL;
 			break;
 #endif
 		case SCALE2X:
@@ -489,6 +499,9 @@ void set_filter(int newfilter) {
 			return;
 		case CRT:
 			gfxSetScreen(NOCHANGE, CRT, NOCHANGE, NOCHANGE, FALSE);
+			return;
+		case DBL:
+			gfxSetScreen(NOCHANGE, DBL, NOCHANGE, NOCHANGE, FALSE);
 			return;
 #endif
 		case SCALE2X:

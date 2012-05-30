@@ -843,10 +843,12 @@ void guiUpdate(void) {
 		change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_POSPHOR);
 		change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_SCANLINE);
 		change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_CRT);
+		change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_DBL);
 	} else {
 		change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_POSPHOR);
 		change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_SCANLINE);
 		change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_CRT);
+		change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_DBL);
 	}
 #endif
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_NOFILTER);
@@ -864,6 +866,7 @@ void guiUpdate(void) {
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_POSPHOR);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_SCANLINE);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_CRT);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_DBL);
 #endif
 	switch (gfx.filter) {
 		case NOFILTER:
@@ -881,6 +884,9 @@ void guiUpdate(void) {
 			break;
 		case CRT:
 			id = IDM_SET_FILTER_CRT;
+			break;
+		case DBL:
+			id = IDM_SET_FILTER_DBL;
 			break;
 #endif
 		case SCALE2X:
@@ -1370,6 +1376,9 @@ long __stdcall mainWinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 					break;
 				case IDM_SET_FILTER_CRT:
 					set_filter(CRT);
+					break;
+				case IDM_SET_FILTER_DBL:
+					set_filter(DBL);
 					break;
 #endif
 				case IDM_SET_FILTER_SCALE2X:
@@ -1953,6 +1962,9 @@ void set_filter(BYTE newfilter) {
 			break;
 		case CRT:
 			gfxSetScreen(NOCHANGE, CRT, NOCHANGE, NOCHANGE, FALSE);
+			break;
+		case DBL:
+			gfxSetScreen(NOCHANGE, DBL, NOCHANGE, NOCHANGE, FALSE);
 			break;
 #endif
 		case SCALE2X:

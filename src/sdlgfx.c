@@ -210,6 +210,7 @@ void gfxSetScreen(BYTE newScale, BYTE newFilter, BYTE newFullscreen, BYTE newPal
 			case POSPHOR:
 			case SCANLINE:
 			case CRT:
+			case DBL:
 #endif
 			case NOFILTER:
 				effect = scaleSurface;
@@ -522,7 +523,7 @@ void gfxSetScreen(BYTE newScale, BYTE newFilter, BYTE newFullscreen, BYTE newPal
 					opengl.scale = X1;
 					opengl.factor = gfx.scale;
 					opengl.glsl.shader_used = TRUE;
-					shader.id = SHADER_DONTBLOOM;
+					shader.id = SHADER_NOFILTER;
 					opengl.effect = scaleSurface;
 					use_txt_texture = TRUE;
 					break;
@@ -560,6 +561,15 @@ void gfxSetScreen(BYTE newScale, BYTE newFilter, BYTE newFullscreen, BYTE newPal
 					opengl.factor = gfx.scale;
 					opengl.glsl.shader_used = TRUE;
 					shader.id = SHADER_CRT4;
+					opengl.effect = scaleSurface;
+					use_txt_texture = TRUE;
+					break;
+				case DBL:
+					opengl.scale_force = TRUE;
+					opengl.scale = X1;
+					opengl.factor = gfx.scale;
+					opengl.glsl.shader_used = TRUE;
+					shader.id = SHADER_DONTBLOOM;
 					opengl.effect = scaleSurface;
 					use_txt_texture = TRUE;
 					break;

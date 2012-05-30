@@ -151,6 +151,7 @@ BEGIN
 				MENUITEM "&Poshpor",              IDM_SET_FILTER_POSPHOR
 				MENUITEM "S&canline",             IDM_SET_FILTER_SCANLINE
 				MENUITEM "C&RT",                  IDM_SET_FILTER_CRT
+				MENUITEM "&DBL",                  IDM_SET_FILTER_DBL
 				POPUP "&Scalex"
 				BEGIN
 					MENUITEM "Scale&2X",          IDM_SET_FILTER_SCALE2X

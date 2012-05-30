@@ -128,14 +128,16 @@ static const _param param[] = {
 		NULL,
 		"# possible values: none, bilinear, scale2x, scale3x, scale4x, hq2x, hq3x, hq4x, ntsc"
 #ifdef OPENGL
-		", posphor, scanline, crt",
+		",\n"
+		"                   posphor, scanline, crt, dbl",
 #endif
 		NULL,
 		"-i, --filter              filter to apply       : nofilter, bilinear, scale2x,\n"
 		"                                                  scale3x, scale4x, hq2x, hq3x,\n"
 		"                                                  hq4x, ntsc"
 #ifdef OPENGL
-		", posphor, scanline, crt"
+		", posphor, scanline,\n"
+		"crt, dbl"
 #endif
 	},
 	{
@@ -342,6 +344,7 @@ static const _param pFilter[] = {
 	{"Poshpor",   "posphor" },
 	{"Scanline",  "scanline"},
 	{"CRT",       "crt"     },
+	{"DBL",       "dbl"     },
 };
 static const _param pNtsc[] = {
 	{"Composite", "composite"},
