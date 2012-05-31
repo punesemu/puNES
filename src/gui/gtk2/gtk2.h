@@ -9,13 +9,15 @@
 #define GTK2_H_
 
 #include <gtk/gtk.h>
-#include <arpa/inet.h>
 #include "common.h"
 #include "emu.h"
 #include "keyboard.h"
 #include "joystick.h"
 #include "cfginput.h"
+#ifdef __NETPLAY__
+#include <arpa/inet.h>
 #include "netplay.h"
+#endif
 
 #define g_timeout_redraw_start()\
 		redraw = TRUE;\

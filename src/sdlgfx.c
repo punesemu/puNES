@@ -493,13 +493,6 @@ void gfxSetScreen(BYTE newScale, BYTE newFilter, BYTE newFullscreen, BYTE newPal
 	hForPr = gfx.h[VIDEOMODE];
 
 #ifdef OPENGL
-	if (!opengl.glsl.compliant || !opengl.glsl.enabled) {
-		if ((newFilter >= POSPHOR) && (newFilter <= CRTNOCURVE)) {
-			newFilter = NOFILTER;
-			goto gfxSetScreen_start;
-		}
-	}
-
 	if (gfx.opengl) {
 		BYTE use_txt_texture;
 
@@ -678,6 +671,14 @@ void gfxSetScreen(BYTE newScale, BYTE newFilter, BYTE newFullscreen, BYTE newPal
 
 		wForPr = opengl.xTexture2 - opengl.xTexture1;
 		hForPr = opengl.yTexture2 - opengl.yTexture1;
+	}
+
+	/* questo controllo devo farlo necessariamente dopo il glew_init() */
+	if (!opengl.glsl.compliant || !opengl.glsl.enabled) {
+		if ((newFilter >= POSPHOR) && (newFilter <= CRTNOCURVE)) {
+			newFilter = NOFILTER;
+			goto gfxSetScreen_start;
+		}
 	}
 #endif
 
