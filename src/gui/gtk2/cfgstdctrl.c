@@ -203,7 +203,6 @@ void cfg_standard_controller_page_notebook_joystick(GtkWidget *notebook) {
 
 	line = gtk_hbox_new(FALSE, SPACING);
 	{
-		GtkWidget *label;
 		char text[30];
 
 		sprintf(text, "   %-25s", "Device");
@@ -221,8 +220,6 @@ void cfg_standard_controller_page_notebook_joystick(GtkWidget *notebook) {
 
 	line = gtk_hbox_new(FALSE, SPACING);
 	{
-		GtkWidget *label;
-
 		label = gtk_label_new("");
 		gtk_box_pack_start(GTK_BOX(line), label, FALSE, FALSE, 0);
 	}
@@ -230,8 +227,6 @@ void cfg_standard_controller_page_notebook_joystick(GtkWidget *notebook) {
 
 	line = gtk_hbox_new(FALSE, SPACING);
 	{
-		GtkWidget *label;
-
 		label = gtk_label_new("   Press ESC to erase the key");
 		gtk_box_pack_start(GTK_BOX(line), label, FALSE, FALSE, 0);
 	}

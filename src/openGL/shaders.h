@@ -11,6 +11,7 @@
 #include "sdltext.h"
 
 enum {
+	SHADER_COLOR,
 	SHADER_NOFILTER,
 	SHADER_SCALE2X,
 	SHADER_SCALE3X,
@@ -49,15 +50,15 @@ typedef struct {
 	const GLchar *vertex;
 	const GLchar *fragment;
 } _shader_code;
-struct {
-	_texture text;
-
+typedef struct {
 	GLuint prg;
 	GLuint vrt;
 	GLuint frg;
 
 	GLuint id;
 	_shader_code *code;
+
+	_texture text;
 
 	struct {
 		struct {
@@ -71,12 +72,25 @@ struct {
 		} texture;
 		GLint frame_counter;
 	} loc;
-} shader;
+} _shader;
+
+_shader shader;
 
 #endif /* SHADERS_H_ */
 
 #ifdef _SHADERS_CODE_
 static _shader_code shader_code[SHADER_TOTAL] = {
+	/*****************************************************************************************/
+	/* COLOR                                                                                 */
+	/*****************************************************************************************/
+	{
+		// vertex shader
+		NULL,
+		// fragment shader
+		"void main(void) {\n"
+		"	gl_FragColor = gl_Color;\n"
+		"}"
+	},
 	/*****************************************************************************************/
 	/* NOFILTER                                                                              */
 	/*****************************************************************************************/

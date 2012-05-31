@@ -61,6 +61,7 @@ static const guint8 icon_inline[] =
 enum {
 	MSOFTWARE,
 	MOPENGL,
+	MOPENGLSL,
 	NUMCHKS
 };
 
@@ -81,28 +82,42 @@ void menu_video_rendering(GtkWidget *video, GtkAccelGroup *accel_group) {
 
 	check[MSOFTWARE] = gtk_check_menu_item_new_with_mnemonic("_Software");
 	check[MOPENGL] = gtk_check_menu_item_new_with_mnemonic("_OpenGL");
+	check[MOPENGLSL] = gtk_check_menu_item_new_with_mnemonic("OpenGL _GLSL");
 
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), check[MSOFTWARE]);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), check[MOPENGL]);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), check[MOPENGLSL]);
 
 	g_signal_connect_swapped(G_OBJECT(check[MSOFTWARE]), "activate", G_CALLBACK(rendering_set),
 	        GINT_TO_POINTER(MSOFTWARE));
 	g_signal_connect_swapped(G_OBJECT(check[MOPENGL]), "activate", G_CALLBACK(rendering_set),
 	        GINT_TO_POINTER(MOPENGL));
+	g_signal_connect_swapped(G_OBJECT(check[MOPENGLSL]), "activate", G_CALLBACK(rendering_set),
+	        GINT_TO_POINTER(MOPENGLSL));
 }
 void menu_video_rendering_check(void) {
 	int index;
 
+	if (opengl.glsl.compliant) {
+		gtk_widget_set_sensitive(check[MOPENGLSL], TRUE);
+	} else {
+		gtk_widget_set_sensitive(check[MOPENGLSL], FALSE);
+	}
+
 	for (index = MSOFTWARE; index < NUMCHKS; index++) {
 		gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[index]), FALSE);
 	}
-	switch (gfx.opengl) {
-		case MSOFTWARE:
-			index = MSOFTWARE;
-			break;
-		case MOPENGL:
+
+	if (!gfx.opengl) {
+		index = MSOFTWARE;
+	} else {
+		if (!opengl.glsl.compliant) {
 			index = MOPENGL;
-			break;
+		} else if (!opengl.glsl.enabled) {
+			index = MOPENGL;
+		} else {
+			index = MOPENGLSL;
+		}
 	}
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[index]), TRUE);
 }
@@ -113,7 +128,7 @@ void rendering_set(int newrendering) {
 		return;
 	}
 
-	if (gfx.opengl == newrendering) {
+	if ((gfx.opengl + opengl.glsl.enabled) == newrendering) {
 		guiUpdate();
 		return;
 	}
@@ -133,7 +148,20 @@ void rendering_set(int newrendering) {
 	}
 
 	/* switch opengl/software render */
-	gfx.opengl = newrendering;
+	switch (newrendering) {
+		case MSOFTWARE:
+			gfx.opengl = FALSE;
+			opengl.glsl.enabled = FALSE;
+			break;
+		case MOPENGL:
+			gfx.opengl = TRUE;
+			opengl.glsl.enabled = FALSE;
+			break;
+		case MOPENGLSL:
+			gfx.opengl = TRUE;
+			opengl.glsl.enabled = TRUE;
+			break;
+	}
 
 	gfxResetVideo();
 	gfxSetScreen(NOCHANGE, NOCHANGE, NOCHANGE, NOCHANGE, TRUE);

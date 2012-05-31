@@ -235,6 +235,46 @@ static const guint8 ntsc_icon_inline[] =
   "\377\0\13QQQ\377;;;\377999\377777\377555\377444\377222\377000\377///"
   "\377---\377,,,\377\202+++\377\2***\377\377\377\377\0"};
 
+#ifdef __SUNPRO_C
+#pragma align 4 (crt_icon_inline)
+#endif
+#ifdef __GNUC__
+static const guint8 crt_icon_inline[] __attribute__ ((__aligned__ (4))) =
+#else
+static const guint8 crt_icon_inline[] =
+#endif
+{ ""
+  /* Pixbuf magic (0x47646b50) */
+  "GdkP"
+  /* length: header (24) + pixel_data (401) */
+  "\0\0\1\251"
+  /* pixdata_type (0x2010002) */
+  "\2\1\0\2"
+  /* rowstride (64) */
+  "\0\0\0@"
+  /* width (16) */
+  "\0\0\0\20"
+  /* height (16) */
+  "\0\0\0\20"
+  /* pixel_data: */
+  "\321\377\377\377\0\2fF':\221k>\277\212\233q:\377\2\213a0\274X3\20\15"
+  "\202\377\377\377\0\1LFC\250\211**+\377\203:::\377\1LF\77b\202\377\377"
+  "\377\0\16:::\377**+\377YZ[\377\214\214\215\377\251\251\252\377\254\255"
+  "\256\377\236\236\237\377\213\214\215\377ttu\377**+\377PQR\377UVW\377"
+  "PQR\377:::\377\202\377\377\377\0\16:::\377**+\377\207\207\207\377\312"
+  "\312\312\377\356\355\355\377\347\347\347\377\312\312\312\377\254\254"
+  "\255\377\225\225\226\377**+\377POO\377VUU\377POO\377:::\377\202\377\377"
+  "\377\0\16:::\377**+\377\212\212\212\377\312\312\312\377\355\354\354\377"
+  "\345\344\344\377\306\306\306\377\247\246\246\377\220\217\220\377**+\377"
+  "PPO\377NMM\377PPO\377:::\377\202\377\377\377\0\12:::\377**+\377\201\201"
+  "\201\377\261\261\261\377\313\312\312\377\316\314\314\377\275\274\274"
+  "\377\246\245\244\377\223\221\221\377**+\377\203\36\36\36\377\1:::\377"
+  "\202\377\377\377\0\12:::\377**+\377ttt\377\232\232\232\377\255\254\254"
+  "\377\266\265\265\377\257\257\256\377\241\240\240\377\221\220\217\377"
+  "**+\377\203\36\36\36\377\1:::\377\202\377\377\377\0\1:::\377\211**+\377"
+  "\203\24\24\24\377\1:::\377\202\377\377\377\0\1""888\235\214:::\377\1"
+  "444^\241\377\377\377\0"};
+
 enum {
 	MNOFILTER,
 	MSCALE2X,
@@ -247,8 +287,10 @@ enum {
 	MBILINEAR,
 	MPOSPHOR,
 	MSCANLINE,
-	MCRT,
 	MDBL,
+	MCRT,
+	MCRTCURVE,
+	MCRTNOCURVE,
 	MRGBNTSCCOM,
 	MRGBNTSCSVD,
 	MRGBNTSCRGB,
@@ -284,22 +326,37 @@ void menu_video_filter(GtkWidget *video, GtkAccelGroup *accel_group) {
 #ifdef OPENGL
 	check[MPOSPHOR] = gtk_check_menu_item_new_with_mnemonic("_Phospor");
 	check[MSCANLINE] = gtk_check_menu_item_new_with_mnemonic("S_canline");
-	check[MCRT] = gtk_check_menu_item_new_with_mnemonic("C_RT");
 	check[MDBL] = gtk_check_menu_item_new_with_mnemonic("_DBL");
 
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu[0]), check[MPOSPHOR]);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu[0]), check[MSCANLINE]);
-	gtk_menu_shell_append(GTK_MENU_SHELL(menu[0]), check[MCRT]);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu[0]), check[MDBL]);
 
 	g_signal_connect_swapped(G_OBJECT(check[MPOSPHOR]), "activate",
 			G_CALLBACK(set_filter), GINT_TO_POINTER(POSPHOR));
 	g_signal_connect_swapped(G_OBJECT(check[MSCANLINE]), "activate",
 			G_CALLBACK(set_filter), GINT_TO_POINTER(SCANLINE));
-	g_signal_connect_swapped(G_OBJECT(check[MCRT]), "activate",
-			G_CALLBACK(set_filter), GINT_TO_POINTER(CRT));
 	g_signal_connect_swapped(G_OBJECT(check[MDBL]), "activate",
 			G_CALLBACK(set_filter), GINT_TO_POINTER(DBL));
+
+	menu[1] = gtk_menu_new();
+	check[MCRT] = gtk_image_menu_item_new_with_mnemonic("_CRT");
+
+	gtk_menu_item_set_submenu(GTK_MENU_ITEM(check[MCRT]), menu[1]);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu[0]), check[MCRT]);
+
+	icon_inline(check[MCRT], crt_icon_inline)
+
+	check[MCRTCURVE] = gtk_check_menu_item_new_with_mnemonic("With _Curve");
+	check[MCRTNOCURVE] = gtk_check_menu_item_new_with_mnemonic("_Without Curve");
+
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu[1]), check[MCRTCURVE]);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu[1]), check[MCRTNOCURVE]);
+
+	g_signal_connect_swapped(G_OBJECT(check[MCRTCURVE]), "activate",
+			G_CALLBACK(set_filter), GINT_TO_POINTER(CRTCURVE));
+	g_signal_connect_swapped(G_OBJECT(check[MCRTNOCURVE]), "activate",
+			G_CALLBACK(set_filter), GINT_TO_POINTER(CRTNOCURVE));
 #endif
 
 	/* Settings/Video/Filters/Scalex */
@@ -392,13 +449,13 @@ void menu_video_filter_check(void) {
 	if (opengl.glsl.compliant && opengl.glsl.enabled) {
 		gtk_widget_set_sensitive(check[MPOSPHOR], TRUE);
 		gtk_widget_set_sensitive(check[MSCANLINE], TRUE);
-		gtk_widget_set_sensitive(check[MCRT], TRUE);
 		gtk_widget_set_sensitive(check[MDBL], TRUE);
+		gtk_widget_set_sensitive(check[MCRT], TRUE);
 	} else {
 		gtk_widget_set_sensitive(check[MPOSPHOR], FALSE);
 		gtk_widget_set_sensitive(check[MSCANLINE], FALSE);
-		gtk_widget_set_sensitive(check[MCRT], FALSE);
 		gtk_widget_set_sensitive(check[MDBL], FALSE);
+		gtk_widget_set_sensitive(check[MCRT], FALSE);
 	}
 #endif
 
@@ -417,8 +474,9 @@ void menu_video_filter_check(void) {
 #ifdef OPENGL
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MPOSPHOR]), FALSE);
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MSCANLINE]), FALSE);
-	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MCRT]), FALSE);
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MDBL]), FALSE);
+	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MCRTCURVE]), FALSE);
+	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MCRTNOCURVE]), FALSE);
 #endif
 
 	switch (gfx.filter) {
@@ -435,11 +493,14 @@ void menu_video_filter_check(void) {
 		case SCANLINE:
 			index = MSCANLINE;
 			break;
-		case CRT:
-			index = MCRT;
-			break;
 		case DBL:
 			index = MDBL;
+			break;
+		case CRTCURVE:
+			index = MCRTCURVE;
+			break;
+		case CRTNOCURVE:
+			index = MCRTNOCURVE;
 			break;
 #endif
 		case SCALE2X:
@@ -497,11 +558,14 @@ void set_filter(int newfilter) {
 		case SCANLINE:
 			gfxSetScreen(NOCHANGE, SCANLINE, NOCHANGE, NOCHANGE, FALSE);
 			return;
-		case CRT:
-			gfxSetScreen(NOCHANGE, CRT, NOCHANGE, NOCHANGE, FALSE);
-			return;
 		case DBL:
 			gfxSetScreen(NOCHANGE, DBL, NOCHANGE, NOCHANGE, FALSE);
+			return;
+		case CRTCURVE:
+			gfxSetScreen(NOCHANGE, CRTCURVE, NOCHANGE, NOCHANGE, FALSE);
+			return;
+		case CRTNOCURVE:
+			gfxSetScreen(NOCHANGE, CRTNOCURVE, NOCHANGE, NOCHANGE, FALSE);
 			return;
 #endif
 		case SCALE2X:

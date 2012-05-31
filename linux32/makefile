@@ -8,6 +8,7 @@ RM := rm -rf
 
 # All of the sources participating in the build are defined here
 -include sources.mk
+-include src/openGL/subdir.mk
 -include src/mappers/subdir.mk
 -include src/gui/gtk2/menu/subdir.mk
 -include src/gui/gtk2/subdir.mk
@@ -34,7 +35,7 @@ all: punes32
 punes32: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: Cross GCC Linker'
-	i686-pc-linux-gnu-gcc `pkg-config --libs --cflags gtk+-2.0` -o "punes32" $(OBJS) $(USER_OBJS) $(LIBS)
+	i686-pc-linux-gnu-gcc `i686-pc-linux-gnu-pkg-config --libs --cflags gtk+-2.0` -o "punes32" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 

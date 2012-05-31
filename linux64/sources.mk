@@ -14,6 +14,7 @@ EXECUTABLES :=
 # Every subdirectory with source files must be described here
 SUBDIRS := \
 src \
+src/openGL \
 src/mappers \
 src/gui/gtk2/menu \
 src/gui/gtk2 \

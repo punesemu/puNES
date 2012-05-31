@@ -7,6 +7,9 @@
 
 #include "no_effect.h"
 
+void opengl_init_no_effect(void) {
+	return;
+}
 void opengl_set_no_effect(SDL_Surface *src) {
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
@@ -25,15 +28,16 @@ void opengl_set_no_effect(SDL_Surface *src) {
 
 	glDisable(GL_TEXTURE_2D);
 }
+void opengl_unset_no_effect(void) {
+	return;
+}
 void opengl_draw_scene_no_effect(SDL_Surface *surface) {
 	/* ripulisco la scena opengl */
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 	opengl_update_texture(surface, FALSE);
 
-	if (opengl.glsl.shader_used) {
-		glsl_use_shaders();
-	}
+	opengl_enable_texture();
 
 	/* disegno la texture */
 	glBegin(GL_QUADS);
@@ -53,7 +57,8 @@ void opengl_draw_scene_no_effect(SDL_Surface *surface) {
 
 	if (opengl.glsl.shader_used) {
 		glUseProgram(0);
+	} else {
+		/* disabilito l'uso delle texture */
+		glDisable(GL_TEXTURE_2D);
 	}
-
-	glDisable(GL_TEXTURE_2D);
 }

@@ -10,7 +10,9 @@
 
 #include "opengl.h"
 
+void opengl_init_no_effect(void);
 void opengl_set_no_effect(SDL_Surface *src);
+void opengl_unset_no_effect(void);
 void opengl_draw_scene_no_effect(SDL_Surface *surface);
 
 #endif /* NO_EFFECT_H_ */

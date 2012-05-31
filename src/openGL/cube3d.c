@@ -23,7 +23,11 @@ GLfloat matrixDistance[60] = {
 	-2.940f, -2.950f, -2.965f, -2.970f, -2.975f,
 	-2.980f, -2.985f, -2.990f, -2.995f, -3.000f
 };
+_shader color;
 
+void opengl_init_cube3d(void) {
+	memset (&color, 0, sizeof(_shader));
+}
 void opengl_set_cube3d(SDL_Surface *src) {
 	xVertex = 1.0f - ((1.0f / (src->w / 2)) * opengl.xTexture1);
 	yVertex = 1.0f - ((1.0f / (src->h / 2)) * opengl.yTexture1);
@@ -47,6 +51,14 @@ void opengl_set_cube3d(SDL_Surface *src) {
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
 	glDisable(GL_TEXTURE_2D);
+
+	if (opengl.glsl.shader_used) {
+		color.id = SHADER_COLOR;
+		glsl_shaders_init(&color);
+	}
+}
+void opengl_unset_cube3d(void) {
+	glsl_delete_shaders(&color);
 }
 void opengl_draw_scene_cube3d(SDL_Surface *surface) {
 	/* ripulisco la scena opengl */
@@ -68,9 +80,7 @@ void opengl_draw_scene_cube3d(SDL_Surface *surface) {
 		glRotatef(opengl.yRotate, 0.0f, 1.0f, 0.0f);
 	}
 
-	if (opengl.glsl.shader_used) {
-		glsl_use_shaders();
-	}
+	opengl_enable_texture();
 
 	/* cubo esterno */
 	glBegin(GL_QUADS);
@@ -139,11 +149,11 @@ void opengl_draw_scene_cube3d(SDL_Surface *surface) {
 	glEnd();
 
 	if (opengl.glsl.shader_used) {
-		glUseProgram(0);
+		glUseProgram(color.prg);
+	} else {
+		/* disabilito l'uso delle texture */
+		glDisable(GL_TEXTURE_2D);
 	}
-
-	/* disabilito l'uso delle texture */
-	glDisable(GL_TEXTURE_2D);
 
 	/* cubo interno */
 	glBegin(GL_QUADS);
@@ -172,4 +182,8 @@ void opengl_draw_scene_cube3d(SDL_Surface *surface) {
 		glVertex3f(-xVertex, +yVertex, -zVertex);
 		glVertex3f(-xVertex, +yVertex, +zVertex);
 	glEnd();
+
+	if (opengl.glsl.shader_used) {
+		glUseProgram(0);
+	}
 }

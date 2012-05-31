@@ -81,6 +81,9 @@ void cfgfileInit(void) {
 	cfg = &cfg_from_file;
 }
 void cfgfileParse(void) {
+#ifdef OPENGL
+	BYTE render = 0;
+#endif
 	FILE *fp;
 	char tmp[MAXLEN], line[MAXLEN];
 
@@ -127,9 +130,7 @@ void cfgfileParse(void) {
 			cfgSearch(param, P_PALETTE, 0, pPalette, gfx.palette = index);
 #ifdef OPENGL
 			/* rendering */
-			cfgSearch(param, P_RENDER, 0, pRendering, gfx.opengl = index);
-			/* glsl */
-			cfgSearch(param, P_RENDER, 0, pNoYes, opengl.glsl.enabled = index);
+			cfgSearch(param, P_RENDER, 0, pRendering, render = index);
 			/* vsync */
 			cfgSearch(param, P_VSYNC, 0, pOffOn, gfx.vsync = index);
 			/* fullscreen */
@@ -152,6 +153,23 @@ void cfgfileParse(void) {
 
 	textAddLineInfo(1, "configuration [green]loaded");
 
+#ifdef OPENGL
+	switch (render) {
+		case 0:
+			gfx.opengl = FALSE;
+			opengl.glsl.enabled = FALSE;
+			break;
+		case 1:
+			gfx.opengl = TRUE;
+			opengl.glsl.enabled = FALSE;
+			break;
+		case 2:
+			gfx.opengl = TRUE;
+			opengl.glsl.enabled = TRUE;
+			break;
+	}
+#endif
+
 	if (gamegenie.enabled) {
 		gamegenie_check_rom_present(TRUE);
 	}
@@ -162,6 +180,22 @@ void cfgfileParse(void) {
 void cfgfileSave(void) {
 	FILE *fp;
 	char tmp[MAXLEN];
+
+#ifdef OPENGL
+	BYTE render;
+
+	if (!gfx.opengl) {
+		render = 0;
+	} else {
+		if (!opengl.glsl.compliant) {
+			render = 1;
+		} else if (!opengl.glsl.enabled) {
+			render = 1;
+		} else {
+			render = 2;
+		}
+	}
+#endif
 
 	/* apro il file */
 	sprintf(tmp, "%s/%s", info.baseFolder, INIFILE);
@@ -188,9 +222,7 @@ void cfgfileSave(void) {
 	writeParam((_param *) param, fp, P_PALETTE, pPalette[gfx.palette].sname);
 #ifdef OPENGL
 	/* rendering */
-	writeParam((_param *) param, fp, P_RENDER, pRendering[gfx.opengl].sname);
-	/* glsl */
-	writeParam((_param *) param, fp, P_GLSL, pNoYes[opengl.glsl.enabled].sname);
+	writeParam((_param *) param, fp, P_RENDER, pRendering[render].sname);
 	/* vsync */
 	writeParam((_param *) param, fp, P_VSYNC, pOffOn[gfx.vsync].sname);
 	/* fullscreen */

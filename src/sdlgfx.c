@@ -161,9 +161,12 @@ BYTE gfxInit(void) {
 }
 void gfxSetScreen(BYTE newScale, BYTE newFilter, BYTE newFullscreen, BYTE newPalette,
 		BYTE forceScale) {
-	BYTE setMode = FALSE;
-	WORD width = 0, height = 0;
-	WORD wForPr = 0, hForPr = 0;
+	BYTE setMode;
+	WORD width, height, wForPr, hForPr;
+
+	gfxSetScreen_start: setMode = FALSE;
+	width = 0, height = 0;
+	wForPr = 0, hForPr = 0;
 
 	/*
 	 * l'ordine dei vari controlli non deve essere cambiato:
@@ -191,15 +194,6 @@ void gfxSetScreen(BYTE newScale, BYTE newFilter, BYTE newFullscreen, BYTE newPal
 		}
 	}
 
-#ifdef OPENGL
-	/* gestione GLSL shaders */
-	/*if ((newFilter >= POSPHOR) && (newFilter <= CRT)) {
-		if (!opengl.glsl.compliant || !opengl.glsl.enabled) {
-			newFilter = NOFILTER;
-		}
-	}*/
-#endif
-
 	/* filtro */
 	if (newFilter == NOCHANGE) {
 		newFilter = gfx.filter;
@@ -209,8 +203,9 @@ void gfxSetScreen(BYTE newScale, BYTE newFilter, BYTE newFullscreen, BYTE newPal
 #ifdef OPENGL
 			case POSPHOR:
 			case SCANLINE:
-			case CRT:
 			case DBL:
+			case CRTCURVE:
+			case CRTNOCURVE:
 #endif
 			case NOFILTER:
 				effect = scaleSurface;
@@ -498,12 +493,17 @@ void gfxSetScreen(BYTE newScale, BYTE newFilter, BYTE newFullscreen, BYTE newPal
 	hForPr = gfx.h[VIDEOMODE];
 
 #ifdef OPENGL
+	if (!opengl.glsl.compliant || !opengl.glsl.enabled) {
+		if ((newFilter >= POSPHOR) && (newFilter <= CRTNOCURVE)) {
+			newFilter = NOFILTER;
+			goto gfxSetScreen_start;
+		}
+	}
+
 	if (gfx.opengl) {
 		BYTE use_txt_texture;
 
 		glew_init();
-
-		//opengl.glsl.enabled = FALSE;
 
 		opengl.scale_force = FALSE;
 		opengl.scale = gfx.scale;
@@ -515,7 +515,7 @@ void gfxSetScreen(BYTE newScale, BYTE newFilter, BYTE newFullscreen, BYTE newPal
 
 		if (opengl.glsl.compliant && opengl.glsl.enabled) {
 
-			glsl_delete_shaders();
+			glsl_delete_shaders(&shader);
 
 			switch (gfx.filter) {
 				case NOFILTER:
@@ -555,21 +555,30 @@ void gfxSetScreen(BYTE newScale, BYTE newFilter, BYTE newFullscreen, BYTE newPal
 					opengl.effect = scaleSurface;
 					use_txt_texture = TRUE;
 					break;
-				case CRT:
-					opengl.scale_force = TRUE;
-					opengl.scale = X1;
-					opengl.factor = gfx.scale;
-					opengl.glsl.shader_used = TRUE;
-					shader.id = SHADER_CRT4;
-					opengl.effect = scaleSurface;
-					use_txt_texture = TRUE;
-					break;
 				case DBL:
 					opengl.scale_force = TRUE;
 					opengl.scale = X1;
 					opengl.factor = gfx.scale;
 					opengl.glsl.shader_used = TRUE;
 					shader.id = SHADER_DONTBLOOM;
+					opengl.effect = scaleSurface;
+					use_txt_texture = TRUE;
+					break;
+				case CRTCURVE:
+					opengl.scale_force = TRUE;
+					opengl.scale = X1;
+					opengl.factor = gfx.scale;
+					opengl.glsl.shader_used = TRUE;
+					shader.id = SHADER_CRT;
+					opengl.effect = scaleSurface;
+					use_txt_texture = TRUE;
+					break;
+				case CRTNOCURVE:
+					opengl.scale_force = TRUE;
+					opengl.scale = X1;
+					opengl.factor = gfx.scale;
+					opengl.glsl.shader_used = TRUE;
+					shader.id = SHADER_CRT4;
 					opengl.effect = scaleSurface;
 					use_txt_texture = TRUE;
 					break;

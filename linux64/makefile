@@ -8,6 +8,7 @@ RM := rm -rf
 
 # All of the sources participating in the build are defined here
 -include sources.mk
+-include src/openGL/subdir.mk
 -include src/mappers/subdir.mk
 -include src/gui/gtk2/menu/subdir.mk
 -include src/gui/gtk2/subdir.mk

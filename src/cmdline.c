@@ -77,9 +77,6 @@ BYTE cmdlineParse(int argc, char **argv) {
 			case 'r':
 				paramSearch(0, optarg, pRendering, gfx.opengl = index);
 				break;
-			case 'q':
-				paramSearch(0, optarg, pNoYes, opengl.glsl.enabled = index);
-				break;
 			case 'v':
 				paramSearch(0, optarg, pOffOn, gfx.vsync = index);
 				break;
@@ -116,7 +113,6 @@ void usage(char *name) {
 			"%s\n"
 			"%s\n"
 			"%s\n"
-			"%s\n"
 #endif
 			"%s\n"
 			"%s\n"
@@ -134,7 +130,6 @@ void usage(char *name) {
 	        param[P_PALETTE].help,
 #ifdef OPENGL
 			param[P_RENDER].help,
-			param[P_GLSL].help,
 			param[P_VSYNC].help,
 			param[P_FSCREEN].help,
 			param[P_STRETCH].help,
