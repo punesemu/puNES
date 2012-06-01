@@ -90,7 +90,7 @@ void textAddLine(int type, int factor, int font, int alpha, int start_x, int sta
 void textRendering(BYTE render);
 void textQuit(void);
 
-void text_blit_sdl(_txt_element *ele, SDL_Rect *dst_rect);
+void sdl_text_blit(_txt_element *ele, SDL_Rect *dst_rect);
 void (*text_blit)(_txt_element *ele, SDL_Rect *dst_rect);
 
 #endif /* SDLTEXT_H_ */

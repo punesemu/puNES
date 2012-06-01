@@ -84,6 +84,7 @@ BEGIN
 			BEGIN
 				MENUITEM "&Software",             IDM_SET_RENDERING_SOFTWARE
 				MENUITEM "&OpenGL",               IDM_SET_RENDERING_OPENGL
+				MENUITEM "OpenGL &GLSL",          IDM_SET_RENDERING_GLSL
 			END
 #endif	
 			POPUP "&FPS"
@@ -150,8 +151,12 @@ BEGIN
 				MENUITEM "&Bilinear",             IDM_SET_FILTER_BILINEAR
 				MENUITEM "&Poshpor",              IDM_SET_FILTER_POSPHOR
 				MENUITEM "S&canline",             IDM_SET_FILTER_SCANLINE
-				MENUITEM "C&RT",                  IDM_SET_FILTER_CRT
 				MENUITEM "&DBL",                  IDM_SET_FILTER_DBL
+				POPUP "C&RT"
+				BEGIN
+					MENUITEM "With &Curve",       IDM_SET_FILTER_CRTCURVE
+					MENUITEM "&Without Curve",    IDM_SET_FILTER_CRTNOCURVE
+				END
 				POPUP "&Scalex"
 				BEGIN
 					MENUITEM "Scale&2X",          IDM_SET_FILTER_SCALE2X

@@ -485,7 +485,7 @@ void gfxSetScreen(BYTE newScale, BYTE newFilter, BYTE newFullscreen, BYTE newPal
 	flip = SDL_Flip;
 
 	text.surface = surfaceSDL;
-	text_blit = text_blit_sdl;
+	text_blit = sdl_text_blit;
 	text.w = surfaceSDL->w;
 	text.h = surfaceSDL->h;
 
@@ -661,10 +661,10 @@ void gfxSetScreen(BYTE newScale, BYTE newFilter, BYTE newFullscreen, BYTE newPal
 
 		if (use_txt_texture) {
 			text.surface = surfaceSDL;
-			text_blit = text_blit_opengl;
+			text_blit = opengl_text_blit;
 		} else {
 			text.surface = opengl.surfaceGL;
-			text_blit = text_blit_sdl;
+			text_blit = sdl_text_blit;
  		}
 		text.w = gfx.w[CURRENT];
 		text.h = gfx.h[CURRENT];

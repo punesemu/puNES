@@ -57,8 +57,7 @@ void opengl_draw_scene_no_effect(SDL_Surface *surface) {
 
 	if (opengl.glsl.shader_used) {
 		glUseProgram(0);
-	} else {
-		/* disabilito l'uso delle texture */
-		glDisable(GL_TEXTURE_2D);
 	}
+
+	glDisable(GL_TEXTURE_2D);
 }

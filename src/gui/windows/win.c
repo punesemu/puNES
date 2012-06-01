@@ -33,6 +33,8 @@
 #include "gamegenie.h"
 #ifdef OPENGL
 #include "opengl.h"
+#include "openGL/no_effect.h"
+#include "openGL/cube3d.h"
 #endif
 
 #define timer_redraw_start()\
@@ -839,16 +841,38 @@ void guiUpdate(void) {
 		change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_HQ4X);
 	}
 #ifdef OPENGL
-	if (opengl.glsl.compliant && opengl.glsl.enabled) {
-		change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_POSPHOR);
-		change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_SCANLINE);
-		change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_CRT);
-		change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_DBL);
-	} else {
-		change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_POSPHOR);
-		change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_SCANLINE);
-		change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_CRT);
-		change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_DBL);
+	{
+		HMENU menuFilter = GetSubMenu(GetSubMenu(GetSubMenu(hMainMenu, 2), 2), 7);
+		MENUITEMINFO menuitem;
+
+		menuitem.cbSize = sizeof(MENUITEMINFO);
+		menuitem.fMask = MIIM_STATE;
+
+		if (opengl.glsl.compliant && opengl.glsl.enabled) {
+			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_POSPHOR);
+			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_SCANLINE);
+			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_DBL);
+
+			menuitem.fState = MFS_ENABLED;
+
+			/* Video/Filter/CRT */
+			SetMenuItemInfo(menuFilter, 5, TRUE, &menuitem);
+
+			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_CRTCURVE);
+			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_CRTNOCURVE);
+		} else {
+			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_POSPHOR);
+			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_SCANLINE);
+			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_DBL);
+
+			menuitem.fState = MFS_DISABLED;
+
+			/* Video/Filter/CRT */
+			SetMenuItemInfo(menuFilter, 5, TRUE, &menuitem);
+
+			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_CRTCURVE);
+			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_CRTNOCURVE);
+		}
 	}
 #endif
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_NOFILTER);
@@ -865,8 +889,9 @@ void guiUpdate(void) {
 #ifdef OPENGL
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_POSPHOR);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_SCANLINE);
-	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_CRT);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_DBL);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_CRTCURVE);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_CRTNOCURVE);
 #endif
 	switch (gfx.filter) {
 		case NOFILTER:
@@ -882,11 +907,14 @@ void guiUpdate(void) {
 		case SCANLINE:
 			id = IDM_SET_FILTER_SCANLINE;
 			break;
-		case CRT:
-			id = IDM_SET_FILTER_CRT;
-			break;
 		case DBL:
 			id = IDM_SET_FILTER_DBL;
+			break;
+		case CRTCURVE:
+			id = IDM_SET_FILTER_CRTCURVE;
+			break;
+		case CRTNOCURVE:
+			id = IDM_SET_FILTER_CRTNOCURVE;
 			break;
 #endif
 		case SCALE2X:
@@ -951,6 +979,7 @@ void guiUpdate(void) {
 #ifdef OPENGL
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_RENDERING_SOFTWARE);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_RENDERING_OPENGL);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_RENDERING_GLSL);
 	if (gfx.opengl) {
 		HMENU menuSettings = GetSubMenu(hMainMenu, 2);
 		HMENU menuVideo = GetSubMenu(menuSettings, 2);
@@ -979,7 +1008,13 @@ void guiUpdate(void) {
 		change_menuitem(ENAB, MF_ENABLED, IDM_SET_VSYNC_ON);
 		change_menuitem(ENAB, MF_ENABLED, IDM_SET_VSYNC_OFF);
 
-		id = IDM_SET_RENDERING_OPENGL;
+		if (!opengl.glsl.compliant) {
+			id = IDM_SET_RENDERING_OPENGL;
+		} else if (!opengl.glsl.enabled) {
+			id = IDM_SET_RENDERING_OPENGL;
+		} else {
+			id = IDM_SET_RENDERING_GLSL;
+		}
 	} else {
 		HMENU menuSettings = GetSubMenu(hMainMenu, 2);
 		HMENU menuVideo = GetSubMenu(menuSettings, 2);
@@ -1374,11 +1409,14 @@ long __stdcall mainWinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 				case IDM_SET_FILTER_SCANLINE:
 					set_filter(SCANLINE);
 					break;
-				case IDM_SET_FILTER_CRT:
-					set_filter(CRT);
-					break;
 				case IDM_SET_FILTER_DBL:
 					set_filter(DBL);
+					break;
+				case IDM_SET_FILTER_CRTCURVE:
+					set_filter(CRTCURVE);
+					break;
+				case IDM_SET_FILTER_CRTNOCURVE:
+					set_filter(CRTNOCURVE);
 					break;
 #endif
 				case IDM_SET_FILTER_SCALE2X:
@@ -1432,6 +1470,9 @@ long __stdcall mainWinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 					break;
 				case IDM_SET_RENDERING_OPENGL:
 					set_rendering(1);
+					break;
+				case IDM_SET_RENDERING_GLSL:
+					set_rendering(2);
 					break;
 				case IDM_SET_EFFECT_CUBE:
 					set_effect();
@@ -1960,11 +2001,14 @@ void set_filter(BYTE newfilter) {
 		case SCANLINE:
 			gfxSetScreen(NOCHANGE, SCANLINE, NOCHANGE, NOCHANGE, FALSE);
 			break;
-		case CRT:
-			gfxSetScreen(NOCHANGE, CRT, NOCHANGE, NOCHANGE, FALSE);
-			break;
 		case DBL:
 			gfxSetScreen(NOCHANGE, DBL, NOCHANGE, NOCHANGE, FALSE);
+			break;
+		case CRTCURVE:
+			gfxSetScreen(NOCHANGE, CRTCURVE, NOCHANGE, NOCHANGE, FALSE);
+			break;
+		case CRTNOCURVE:
+			gfxSetScreen(NOCHANGE, CRTNOCURVE, NOCHANGE, NOCHANGE, FALSE);
 			break;
 #endif
 		case SCALE2X:
@@ -1998,7 +2042,7 @@ void set_filter(BYTE newfilter) {
 }
 #ifdef OPENGL
 void set_rendering(BYTE newrendering) {
-	if (gfx.opengl == newrendering) {
+	if ((gfx.opengl + opengl.glsl.enabled) == newrendering) {
 		return;
 	}
 
@@ -2009,7 +2053,20 @@ void set_rendering(BYTE newrendering) {
 	}
 
 	/* switch opengl/software render */
-	gfx.opengl = newrendering;
+	switch (newrendering) {
+		case 0:
+			gfx.opengl = FALSE;
+			opengl.glsl.enabled = FALSE;
+			break;
+		case 1:
+			gfx.opengl = TRUE;
+			opengl.glsl.enabled = FALSE;
+			break;
+		case 2:
+			gfx.opengl = TRUE;
+			opengl.glsl.enabled = TRUE;
+			break;
+	}
 
 	gfxResetVideo();
 	gfxSetScreen(NOCHANGE, NOCHANGE, NOCHANGE, NOCHANGE, TRUE);
@@ -2041,17 +2098,33 @@ void set_effect(void) {
 		return;
 	}
 
+	opengl_unset_effect();
+
 	opengl.rotation = !opengl.rotation;
+
 	if (opengl.rotation) {
+		opengl_init_effect = opengl_init_cube3d;
+		opengl_set_effect = opengl_set_cube3d;
+		opengl_unset_effect = opengl_unset_cube3d;
+		opengl_draw_scene = opengl_draw_scene_cube3d;
+
 		opengl.factorDistance = opengl.xRotate = opengl.yRotate = 0;
 		if (gfx.fullscreen == FULLSCR) {
 			SDL_ShowCursor(SDL_ENABLE);
 		}
 	} else {
+		opengl_init_effect = opengl_init_no_effect;
+		opengl_set_effect = opengl_set_no_effect;
+		opengl_unset_effect = opengl_unset_no_effect;
+		opengl_draw_scene = opengl_draw_scene_no_effect;
+
 		if (gfx.fullscreen == FULLSCR) {
 			SDL_ShowCursor(SDL_DISABLE);
 		}
 	}
+
+	opengl_init_effect();
+
 	gfxSetScreen(NOCHANGE, NOCHANGE, NOCHANGE, NOCHANGE, FALSE);
 }
 #endif

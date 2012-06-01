@@ -1043,7 +1043,7 @@ static void INLINE rendering(_txt_element *ele) {
 
 	text_blit(ele, &surface_rect);
 }
-void text_blit_sdl(_txt_element *ele, SDL_Rect *dst_rect) {
+void sdl_text_blit(_txt_element *ele, SDL_Rect *dst_rect) {
 	SDL_Rect rect;
 
 	rect.x = 0;

@@ -150,10 +150,9 @@ void opengl_draw_scene_cube3d(SDL_Surface *surface) {
 
 	if (opengl.glsl.shader_used) {
 		glUseProgram(color.prg);
-	} else {
-		/* disabilito l'uso delle texture */
-		glDisable(GL_TEXTURE_2D);
 	}
+
+	glDisable(GL_TEXTURE_2D);
 
 	/* cubo interno */
 	glBegin(GL_QUADS);
