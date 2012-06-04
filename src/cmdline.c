@@ -74,9 +74,27 @@ BYTE cmdlineParse(int argc, char **argv) {
 				paramSearch(1, optarg, pSize, gfx.scale = gfx.scaleBeforeFullscreen = index);
 				break;
 #ifdef OPENGL
-			case 'r':
-				paramSearch(0, optarg, pRendering, gfx.opengl = index);
+			case 'r': {
+				BYTE render = 0;
+
+				paramSearch(0, optarg, pRendering, render = index);
+
+				switch (render) {
+					case 0:
+						gfx.opengl = FALSE;
+						opengl.glsl.enabled = FALSE;
+						break;
+					case 1:
+						gfx.opengl = TRUE;
+						opengl.glsl.enabled = FALSE;
+						break;
+					case 2:
+						gfx.opengl = TRUE;
+						opengl.glsl.enabled = TRUE;
+						break;
+				}
 				break;
+			}
 			case 'v':
 				paramSearch(0, optarg, pOffOn, gfx.vsync = index);
 				break;

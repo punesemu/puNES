@@ -35,7 +35,7 @@ all: punes32
 punes32: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: Cross GCC Linker'
-	i686-pc-linux-gnu-gcc `i686-pc-linux-gnu-pkg-config --libs --cflags gtk+-2.0` -o "punes32" $(OBJS) $(USER_OBJS) $(LIBS)
+	i686-pc-linux-gnu-gcc  -o "punes32" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 

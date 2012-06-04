@@ -35,7 +35,7 @@ all: punes64
 punes64: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: Cross GCC Linker'
-	gcc `pkg-config --libs --cflags gtk+-2.0` -o "punes64" $(OBJS) $(USER_OBJS) $(LIBS)
+	gcc  -o "punes64" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 

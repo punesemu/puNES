@@ -35,6 +35,8 @@ void sdlInitGL(void) {
 	opengl_set_effect = opengl_set_no_effect;
 	opengl_unset_effect = opengl_unset_no_effect;
 	opengl_draw_scene = opengl_draw_scene_no_effect;
+
+	glew_init();
 }
 void sdlQuitGL(void) {
 	if (opengl.surfaceGL) {

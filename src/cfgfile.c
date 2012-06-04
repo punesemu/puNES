@@ -410,7 +410,7 @@ void setDefault(void) {
 	gfx.ntscFormat = COMPOSITE;
 #ifdef OPENGL
 	gfx.opengl = TRUE;
-	opengl.glsl.enabled = TRUE;
+	opengl.glsl.enabled = FALSE;
 	gfx.vsync = TRUE;
 	gfx.fullscreen = NOFULLSCR;
 	opengl.aspectRatio = FALSE;

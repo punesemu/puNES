@@ -132,10 +132,11 @@ static const _param param[] = {
 		NULL,
 		"-i, --filter              filter to apply       : nofilter, bilinear, scale2x,\n"
 		"                                                  scale3x, scale4x, hq2x, hq3x,\n"
-		"                                                  hq4x, ntsc"
 #ifdef OPENGL
-		", posphor, scanline,\n"
-		"dbl, crtcurve, crtnocurve"
+		"                                                  hq4x, ntsc, posphor, scanline,\n"
+		"                                                  dbl, crtcurve, crtnocurve"
+#else
+		"                                                  hq4x, ntsc"
 #endif
 	},
 	{

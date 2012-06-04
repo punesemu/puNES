@@ -121,6 +121,8 @@ BYTE gfxInit(void) {
 	}
 
 #ifdef OPENGL
+	/* per poter inizializzare il glew devo creare un contesto opengl prima */
+	surfaceSDL = SDL_SetVideoMode(0, 0, 0, SDL_OPENGL);
 	sdlInitGL();
 #endif
 
@@ -754,6 +756,7 @@ void gfxQuit(void) {
 	if (paletteWindow) {
 		free(paletteWindow);
 	}
+
 #ifdef OPENGL
 	sdlQuitGL();
 #endif
