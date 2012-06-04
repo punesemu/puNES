@@ -240,13 +240,10 @@ void opengl_update_texture(SDL_Surface *surface, uint8_t generate_mipmap) {
 		glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
 	}
 
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	glPixelStorei(GL_UNPACK_ROW_LENGTH, surface->w);
 
 	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, surface->w, surface->h, opengl.texture.format,
 	        opengl.texture.type, surface->pixels);
-
-	glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
 
 	if (generate_mipmap && opengl.glew && GLEW_VERSION_3_1) {
 		glGenerateMipmap(GL_TEXTURE_2D);
@@ -263,13 +260,10 @@ void opengl_text_blit(_txt_element *ele, SDL_Rect *dst_rect) {
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, shader.text.data);
 
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	glPixelStorei(GL_UNPACK_ROW_LENGTH, dst_rect->w);
 
 	glTexSubImage2D(GL_TEXTURE_2D, 0, dst_rect->x, dst_rect->y, dst_rect->w, dst_rect->h,
 	        opengl.texture.format, opengl.texture.type, ele->surface->pixels);
-
-	glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
 
 	glDisable(GL_TEXTURE_2D);
 }
