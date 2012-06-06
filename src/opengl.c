@@ -160,8 +160,6 @@ void opengl_enable_texture(void) {
 }
 void opengl_create_texture(_texture *texture, uint32_t width, uint32_t height,
         uint8_t interpolation, uint8_t pow) {
-	SDL_Surface *blank;
-
 	switch (opengl.surfaceGL->format->BitsPerPixel) {
 		case 16:
 			opengl.texture.format_internal = GL_RGB5;
@@ -198,8 +196,7 @@ void opengl_create_texture(_texture *texture, uint32_t width, uint32_t height,
 		texture->h = height;
 	}
 
-	blank = gfxCreateRGBSurface(opengl.surfaceGL, texture->w, texture->h);
-	memset(blank->pixels, 0, texture->w * texture->h * blank->format->BytesPerPixel);
+	glEnable(GL_TEXTURE_2D);
 
 	if (texture->data) {
 		glDeleteTextures(1, &texture->data);
@@ -223,14 +220,23 @@ void opengl_create_texture(_texture *texture, uint32_t width, uint32_t height,
 		glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
 	}
 
-	glTexImage2D(GL_TEXTURE_2D, 0, opengl.texture.format_internal, texture->w, texture->h, 0,
-	        opengl.texture.format, opengl.texture.type, blank->pixels);
+	{
+		/* per sicurezza creo una superficie piu' grande del necessario */
+		SDL_Surface *blank = gfxCreateRGBSurface(opengl.surfaceGL, texture->w * 2, texture->h * 2);
+
+		memset(blank->pixels, 0, blank->w * blank->h * blank->format->BytesPerPixel);
+
+		glTexImage2D(GL_TEXTURE_2D, 0, opengl.texture.format_internal, texture->w, texture->h, 0,
+		        opengl.texture.format, opengl.texture.type, blank->pixels);
+
+		SDL_FreeSurface(blank);
+	}
 
 	if (opengl.glew && GLEW_VERSION_3_1) {
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 
-	SDL_FreeSurface(blank);
+	glDisable(GL_TEXTURE_2D);
 }
 void opengl_update_texture(SDL_Surface *surface, uint8_t generate_mipmap) {
 	glEnable(GL_TEXTURE_2D);
@@ -367,19 +373,21 @@ void glsl_shaders_init(_shader *shd) {
 		glUniform1f(shd->loc.frame_counter, (GLfloat) ppu.frames);
 	}
 
+	glEnable(GL_TEXTURE_2D);
+
 	if ((shd->loc.texture.scr = glGetUniformLocation(shd->prg, "texture_scr")) >= 0) {
-		glEnable(GL_TEXTURE_2D);
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, opengl.texture.data);
 		glUniform1i(shd->loc.texture.scr, 0);
 	}
 
 	if ((shd->loc.texture.txt = glGetUniformLocation(shd->prg, "texture_txt")) >= 0) {
-		glEnable(GL_TEXTURE_2D);
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, shd->text.data);
 		glUniform1i(shd->loc.texture.txt, 1);
 	}
+
+	glDisable(GL_TEXTURE_2D);
 
 	glUseProgram(0);
 }

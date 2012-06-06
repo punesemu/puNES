@@ -23,7 +23,14 @@ void opengl_set_no_effect(SDL_Surface *src) {
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
+	glDisable(GL_ALPHA_TEST);
+	glDisable(GL_BLEND);
 	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_POLYGON_SMOOTH);
+	glDisable(GL_STENCIL_TEST);
+
+	glEnable(GL_DITHER);
+
 	glDepthMask(GL_FALSE);
 
 	glDisable(GL_TEXTURE_2D);

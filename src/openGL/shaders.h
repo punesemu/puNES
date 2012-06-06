@@ -30,6 +30,10 @@ enum {
 	SHADER_CRT4,
 	SHADER_BLOOM,
 	SHADER_DONTBLOOM,
+	SHADER_NTSC,
+	SHADER_NTSC2,
+	SHADER_NTSC3,
+	SHADER_TOON,
 	SHADER_TOTAL,
 	SHADER_NONE = 255
 };
@@ -1842,6 +1846,249 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"	vec4 txt = texture2D(texture_txt, c11);\n"
 
 		"	gl_FragColor = mix(scr, txt, txt.a) * gl_Color;\n"
+		"}"
+	},
+	/*****************************************************************************************/
+	/* NTSC                                                                                  */
+	/*****************************************************************************************/
+	{
+		// vertex shader
+		NULL,
+		// fragment shader
+		"#version 120\n"
+
+		"uniform sampler2D texture_scr;\n"
+		"uniform sampler2D texture_txt;\n"
+		"uniform vec2 size_texture;\n"
+
+		"#define TEX2D(v) texture2D(texture_scr, (v))\n"
+
+		"void main() {\n"
+		"	mat3x3 rgb2yuv = mat3x3(0.299,-0.14713, 0.615,"
+		"			0.587,-0.28886,-0.51499,"
+		"			0.114, 0.436 ,-0.10001);\n"
+		"	mat3x3 yuv2rgb = mat3x3(1.0, 1.0, 1.0,"
+		"			0.0,-0.39465,2.03211,"
+		"			1.13983,-0.58060,0.0);\n"
+
+		"	vec4 sum = vec4(0.0);\n"
+
+		"	float wid = 3.0;\n"
+		"	vec4 c1 = vec4(exp(-1.0/wid/wid));\n"
+		"	vec4 c2 = vec4(exp(-4.0/wid/wid));\n"
+		"	vec4 c3 = vec4(exp(-9.0/wid/wid));\n"
+		"	vec4 c4 = vec4(exp(-16.0/wid/wid));\n"
+		"	vec4 norm = 1.0 / (vec4(1.0) + vec4(2.0)*(c1+c2+c3+c4));\n"
+
+		"	vec2 xy = gl_TexCoord[0].st;\n"
+		"	float onex = 1.0 / size_texture.x;\n"
+
+		"	sum += TEX2D(xy + vec2(-4.0 * onex, 0.0)) * c4;\n"
+		"	sum += TEX2D(xy + vec2(-3.0 * onex, 0.0)) * c3;\n"
+		"	sum += TEX2D(xy + vec2(-2.0 * onex, 0.0)) * c2;\n"
+		"	sum += TEX2D(xy + vec2(-1.0 * onex, 0.0)) * c1;\n"
+		"	sum += TEX2D(xy);\n"
+		"	sum += TEX2D(xy + vec2(+1.0 * onex, 0.0)) * c1;\n"
+		"	sum += TEX2D(xy + vec2(+2.0 * onex, 0.0)) * c2;\n"
+		"	sum += TEX2D(xy + vec2(+3.0 * onex, 0.0)) * c3;\n"
+		"	sum += TEX2D(xy + vec2(+4.0 * onex, 0.0)) * c4;\n"
+
+		"	float y = (rgb2yuv * TEX2D(xy).rgb).x;\n"
+		"	vec2 uv = (rgb2yuv * (sum.rgb*norm.rgb)).yz;\n"
+
+		"	vec4 scr = vec4(yuv2rgb * vec3(y, uv), 0.0);\n"
+
+		"	vec4 txt = texture2D(texture_txt, xy);\n"
+
+		"	gl_FragColor = mix(scr, txt, txt.a) * gl_Color;\n"
+		"}"
+	},
+	/*****************************************************************************************/
+	/* NTSC2                                                                                 */
+	/*****************************************************************************************/
+	{
+		// vertex shader
+		NULL,
+		// fragment shader
+		"#version 120\n"
+
+		"uniform sampler2D texture_scr;\n"
+		"uniform sampler2D texture_txt;\n"
+		"uniform vec2 size_texture;\n"
+		"uniform int frame_counter;\n"
+
+		"#define TEX2D(c) texture2D(texture_scr,(c))\n"
+
+		"#define PI 3.14159265\n"
+
+		"void main() {\n"
+		"	vec2 xy = gl_TexCoord[0].st;\n"
+
+		"	vec2 xyf = fract(xy * size_texture);\n"
+		"	vec2 xyp = floor(xy * size_texture)+vec2(0.5);\n"
+		"	xy = xyp / size_texture;\n"
+		"	xyp.y = -xyp.y-1.0; // fix for inconsistent texture coordinates\n"
+		"	float offs = mod(frame_counter,2)/2.0;\n"
+		"	vec4 phases = (vec4(0.0,0.25,0.5,0.75) + vec4(xyp.x+xyp.y/2.0+offs)) *4.0*PI/3.0;\n"
+		"	vec4 phasesl = (vec4(0.0,0.25,0.5,0.75) + vec4(-1.0+xyp.x+xyp.y/2.0+offs)) *4.0*PI/3.0;\n"
+		"	vec4 phasesr = (vec4(0.0,0.25,0.5,0.75) + vec4( 1.0+xyp.x+xyp.y/2.0+offs)) *4.0*PI/3.0;\n"
+		"	vec4 phsin = sin(phases);\n"
+		"	vec4 phcos = cos(phases);\n"
+		"	vec4 phsinl= sin(phasesl);\n"
+		"	vec4 phcosl= cos(phasesl);\n"
+		"	vec4 phsinr= sin(phasesr);\n"
+		"	vec4 phcosr= cos(phasesr);\n"
+		"	vec4 phone = vec4(1.0);\n"
+
+		"	vec2 one = 1.0/size_texture;\n"
+
+		"	vec4 c = TEX2D(xy)*2.3-0.65;\n"
+		"	vec4 cl= TEX2D(xy + vec2(-one.x,0.0))*2.3-0.65;\n"
+		"	vec4 cr= TEX2D(xy + vec2( one.x,0.0))*2.3-0.65;\n"
+
+		"	vec3 yuva = vec3((dot(cl.zw,phone.zw)+dot(c.xyz,phone.xyz)+0.5*(cl.y+c.w))/6.0, (dot(cl.zw,phsinl.zw)+dot(c.xyz,phsin.xyz)+0.5*(cl.y*phsinl.y+c.w*phsin.w))/3.0, (dot(cl.zw,phcosl.zw)+dot(c.xyz,phcos.xyz)+0.5*(cl.y*phcosl.y+c.w*phcos.w))/3.0);\n"
+
+		"	vec3 yuvb = vec3((cl.w*phone.w+dot(c.xyzw,phone.xyzw)+0.5*(cl.z+cr.x))/6.0, (cl.w*phsinl.w+dot(c.xyzw,phsin.xyzw)+0.5*(cl.z*phsinl.z+cr.x*phsinr.x))/3.0, (cl.w*phcosl.w+dot(c.xyzw,phcos.xyzw)+0.5*(cl.z*phcosl.z+cr.x*phcosr.x))/3.0);\n"
+
+		"	vec3 yuvc = vec3((cr.x*phone.x+dot(c.xyzw,phone.xyzw)+0.5*(cl.w+cr.y))/6.0, (cr.x*phsinr.x+dot(c.xyzw,phsin.xyzw)+0.5*(cl.w*phsinl.w+cr.y*phsinr.y))/3.0, (cr.x*phcosr.x+dot(c.xyzw,phcos.xyzw)+0.5*(cl.w*phcosl.w+cr.y*phcosr.y))/3.0);\n"
+
+		"	vec3 yuvd = vec3((dot(cr.xy,phone.xy)+dot(c.yzw,phone.yzw)+0.5*(c.x+cr.z))/6.0, (dot(cr.xy,phsinr.xy)+dot(c.yzw,phsin.yzw)+0.5*(c.x*phsin.x+cr.z*phsinr.z))/3.0, (dot(cr.xy,phcosr.xy)+dot(c.yzw,phcos.yzw)+0.5*(c.x*phcos.x+cr.z*phcosr.z))/3.0);\n"
+
+		"	mat3x3 yuv2rgb = mat3x3(1.0, 1.0, 1.0,"
+		"			0.0,-0.39465,2.03211,"
+		"			1.13983,-0.58060,0.0);\n"
+
+		"	vec4 scr;\n"
+
+		"	if (xyf.x < 0.25)\n"
+		"		scr = vec4(yuv2rgb*yuva, 0.0);\n"
+		"	else if (xyf.x < 0.5)\n"
+		"		scr = vec4(yuv2rgb*yuvb, 0.0);\n"
+		"	else if (xyf.x < 0.75)\n"
+		"		scr = vec4(yuv2rgb*yuvc, 0.0);\n"
+		"	else\n"
+		"		scr = vec4(yuv2rgb*yuvd, 0.0);\n"
+
+		"	vec4 txt = texture2D(texture_txt, xy);\n"
+
+		"	gl_FragColor = mix(scr, txt, txt.a) * gl_Color;\n"
+		"}"
+	},
+	/*****************************************************************************************/
+	/* NTSC3                                                                                 */
+	/*****************************************************************************************/
+	{
+		// vertex shader
+		NULL,
+		// fragment shader
+		"#version 120\n"
+
+		"uniform sampler2D texture_scr;\n"
+		"uniform sampler2D texture_txt;\n"
+		"uniform vec2 size_texture;\n"
+		"uniform vec2 size_input;\n"
+		"uniform int frame_counter;\n"
+
+		"#define TEX2D(c) texture2D(texture_scr,(c))\n"
+
+		"#define PI 3.14159265\n"
+
+		"void main() {\n"
+		"	vec2 xy = gl_TexCoord[0].st;\n"
+
+		"	vec2 xyp = xy * size_texture * 4.0 * PI / 3.0;\n"
+		"	xyp.y = xyp.y / 2.0 + 2.0 * PI / 3.0 * mod(frame_counter,2);\n"
+
+		"	vec4 rgb = TEX2D(xy);\n"
+
+		"	mat3x3 rgb2yuv = mat3x3(0.299,-0.14713, 0.615,"
+		"			0.587,-0.28886,-0.51499,"
+		"			0.114, 0.436 ,-0.10001);\n"
+
+		"	vec3 yuv;\n"
+		"	yuv = rgb2yuv * rgb.rgb;\n"
+
+		"	float dx = PI/3.0;\n"
+		"	xyp.x = xyp.x * size_input.x/256.0;\n"
+		"	float c0 = yuv.x + yuv.y * sin(xyp.x+xyp.y) + yuv.z*cos(xyp.x+xyp.y);\n"
+		"	float c1 = yuv.x + yuv.y * sin(xyp.x+xyp.y+dx) + yuv.z * cos(xyp.x+xyp.y+dx);\n"
+		"	rgb = TEX2D(xy + vec2(1.0/size_texture.x * size_input.x / 512.0, 0.0));\n"
+		"	yuv = rgb2yuv * rgb.rgb;\n"
+		"	float c2 = yuv.x + yuv.y * sin(xyp.x+xyp.y+2.0*dx) + yuv.z * cos(xyp.x+xyp.y+2.0*dx);\n"
+		"	float c3 = yuv.x + yuv.y * sin(xyp.x+xyp.y+3.0*dx) + yuv.z * cos(xyp.x+xyp.y+3.0*dx);\n"
+
+		"	vec4 scr = (vec4(c0,c1,c2,c3)+0.65)/2.3;\n"
+
+		"	vec4 txt = texture2D(texture_txt, xy);\n"
+
+		"	gl_FragColor = mix(scr, txt, txt.a) * gl_Color;\n"
+
+		"}"
+	},
+	/*****************************************************************************************/
+	/* TOON (per funzionare dovrei usare una luce)                                           */
+	/*****************************************************************************************/
+	{
+		// vertex shader
+		"varying vec3 vNormal;\n"
+		"varying vec3 vVertex;\n"
+
+		"void main(void) {\n"
+		"	gl_FrontColor = gl_Color;\n"
+		"	gl_Position = ftransform();\n"
+		"	gl_TexCoord[0] = gl_MultiTexCoord0;\n"
+		"	vVertex = vec3(gl_ModelViewMatrix * gl_Vertex);\n"
+		"	vNormal = normalize(gl_NormalMatrix * gl_Normal);\n"
+		"}",
+		// fragment shader
+		"varying vec3 vNormal;\n"
+		"varying vec3 vVertex;\n"
+
+		"uniform float silhouetteThreshold;\n"
+
+		"uniform sampler2D texture_scr;\n"
+		"uniform sampler2D texture_txt;\n"
+
+		"void main (void) {\n"
+
+		"	vec4 materialColor = gl_FrontMaterial.diffuse;\n"
+
+		"	vec4 silhouetteColor = vec4(0.0, 0.0, 0.0, 1.0);\n"
+
+		"	vec4 specularColor = gl_FrontMaterial.specular;\n"
+
+		"	vec3 eyePos = normalize(-vVertex);\n"
+		"	vec3 lightPos = gl_LightSource[0].position.xyz;\n"
+
+		"	vec3 Normal = vNormal; //normalize(vNormal);\n"
+		"	vec3 EyeVert = normalize(eyePos - vVertex);\n"
+		"	vec3 LightVert = normalize(lightPos - vVertex);\n"
+		"	vec3 EyeLight = normalize(LightVert+EyeVert);\n"
+		"	vec4 texture = texture2D(texture_scr,gl_TexCoord[0].st);\n"
+
+		"	vec4 scr;\n"
+
+		"	float sil = max(dot(Normal,EyeVert), 0.0);\n"
+		"	if( sil < silhouetteThreshold )\n"
+		"		scr = silhouetteColor;\n"
+		"	else {\n"
+		"		scr = materialColor*texture;\n"
+
+		"		float spec = pow(max(dot(Normal,EyeLight),0.0), 5.0);\n"
+		"		if( spec < 0.05 )\n"
+		"			scr *= 0.9;\n"
+		"		else\n"
+		"			scr = specularColor*texture;\n"
+
+		"		float diffuse = max(dot(Normal,LightVert),0.0);\n"
+		"		if( diffuse < 0.3 )\n"
+		"			scr *=0.8;\n"
+		"	}\n"
+
+		"	vec4 txt = texture2D(texture_txt, gl_TexCoord[0].st);\n"
+
+		"	gl_FragColor = mix(scr, txt, txt.a) * gl_Color;\n"
+
 		"}"
 	}
 };

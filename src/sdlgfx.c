@@ -398,15 +398,16 @@ void gfxSetScreen(BYTE newScale, BYTE newFilter, BYTE newFullscreen, BYTE newPal
 		if (gfx.opengl) {
 			flags = opengl.flagsOpengl;
 
-			//SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 5);
-			//SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 5);
-			//SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 5);
-			//SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
+			SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 5);
+			SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 5);
+			SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 5);
+			SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
 
-			SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
-			SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
-			SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
-			SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 32);
+			//SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
+			//SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
+			//SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
+			//SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 32);
+
 			/* abilito il doublebuffering */
 			SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, TRUE);
 			/* abilito il vsync se e' necessario */
@@ -504,6 +505,7 @@ void gfxSetScreen(BYTE newScale, BYTE newFilter, BYTE newFullscreen, BYTE newPal
 		opengl.scale = gfx.scale;
 		opengl.factor = 1;
 		opengl.glsl.shader_used = FALSE;
+		shader.id = SHADER_NONE;
 		opengl.effect = effect;
 		opengl.interpolation = FALSE;
 		use_txt_texture = FALSE;
