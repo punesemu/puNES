@@ -35,7 +35,7 @@ all: punes64
 punes64: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: Cross GCC Linker'
-	gcc  -o "punes64" $(OBJS) $(USER_OBJS) $(LIBS)
+	x86_64-glibc2.12.2-linux-gnu-gcc -L/usr/x86_64-glibc2.12.2-linux-gnu/usr/lib -L/usr/x86_64-glibc2.12.2-linux-gnu/usr/lib64 -o "punes64" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 

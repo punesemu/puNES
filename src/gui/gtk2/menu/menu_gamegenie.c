@@ -16,9 +16,6 @@ enum {
 static GtkWidget *check[NUMCHKS];
 
 void menu_gamegenie(GtkWidget *mainmenu, GtkAccelGroup *accel_group) {
-	GtkWidget *menu;
-
-	menu = gtk_menu_new();
 	check[MGAMEGENIE] = gtk_check_menu_item_new_with_mnemonic("_Game Genie");
 
 	gtk_menu_shell_append(GTK_MENU_SHELL(mainmenu), check[MGAMEGENIE]);

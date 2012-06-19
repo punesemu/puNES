@@ -18,14 +18,14 @@
 
 enum {
 	NO_POWER_OF_TWO,
-	POWER_OF_TWO,
-	NO_GLEW
+	POWER_OF_TWO
 };
 
 struct _opengl {
 	BYTE aspectRatio;
 	BYTE rotation;
 
+	BYTE supported;
 	BYTE glew;
 
 	struct {
@@ -38,7 +38,7 @@ struct _opengl {
 	GLfloat scale;
 	GLfloat factor;
 	BYTE interpolation;
-	GFX_EFFECT_ROUTINE
+	GFX_EFFECT_ROUTINE;
 
 	SDL_Surface *surfaceGL;
 

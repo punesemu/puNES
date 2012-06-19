@@ -120,7 +120,7 @@ BYTE ines_load_rom(void) {
 
 		/* alloco la PRG Ram */
 		if (!(prg.ram = malloc(0x2000))) {
-			fprintf(stderr, "Out of memory");
+			fprintf(stderr, "Out of memory\n");
 			return (EXIT_ERROR);
 		}
 
@@ -128,7 +128,7 @@ BYTE ines_load_rom(void) {
 		if ((prg.rom = malloc(info.prgRom16kCount * (16 * 1024)))) {
 			tmp = fread(&prg.rom[0], 16384, info.prgRom16kCount, fp);
 		} else {
-			fprintf(stderr, "Out of memory");
+			fprintf(stderr, "Out of memory\n");
 			return (EXIT_ERROR);
 		}
 
@@ -144,7 +144,7 @@ BYTE ines_load_rom(void) {
 				tmp = fread(&chr.data[0], 8192, info.chrRom8kCount, fp);
 				chrBank1kReset();
 			} else {
-				fprintf(stderr, "Out of memory");
+				fprintf(stderr, "Out of memory\n");
 				return (EXIT_ERROR);
 			}
 		}

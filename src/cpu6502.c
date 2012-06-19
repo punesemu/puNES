@@ -876,13 +876,13 @@ void cpuExeOP(void) {
 	case 0XE2: cpu.PC++; break;                                         // DOP #IMM
 	case 0x04:                                                          // DOP $ZPG
 	case 0x44:                                                          // DOP $ZPG
-	case 0x64: ZPG(READ, adr0 = 0;) break;                              // DOP $ZPG
+	case 0x64: ZPG(READ, adr0 = adr0;) break;                           // DOP $ZPG
 	case 0x14:                                                          // DOP $ZPG,X
 	case 0x34:                                                          // DOP $ZPG,X
 	case 0x54:                                                          // DOP $ZPG,X
 	case 0x74:                                                          // DOP $ZPG,X
 	case 0xD4:                                                          // DOP $ZPG,X
-	case 0xF4: ZPX(READ, adr0 = 0;, cpu.XR) break;                      // DOP $ZPG,X
+	case 0xF4: ZPX(READ, adr0 = adr0;, cpu.XR) break;                   // DOP $ZPG,X
 
 	case 0xE7: ZPG(WRITE, ISC(_RDZPG)) break;                           // ISC $ZPG
 	case 0xF7: ZPX(WRITE, ISC(_RDZPX), cpu.XR) break;                   // ISC $ZPG,X
@@ -940,7 +940,7 @@ void cpuExeOP(void) {
 	case 0x43: IDX(WRITE, SRE(_RDIDX)) break;                           // SRE ($IND,X)
 	case 0x53: IDY(WRITE, _CY_(SRE(_RDB),)) break;                      // SRE ($IND),Y
 
-	case 0x0C: ABS(READ, adr0 = 0;) break;                              // TOP $ABS
+	case 0x0C: ABS(READ, adr0 = adr0;) break;                           // TOP $ABS
 	case 0x1C:                                                          // TOP $ABS,X
 	case 0x3C:                                                          // TOP $ABS,X
 	case 0X5C:                                                          // TOP $ABS,X

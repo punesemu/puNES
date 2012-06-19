@@ -98,6 +98,12 @@ void menu_video_rendering(GtkWidget *video, GtkAccelGroup *accel_group) {
 void menu_video_rendering_check(void) {
 	int index;
 
+	if (opengl.supported) {
+		gtk_widget_set_sensitive(check[MOPENGL], TRUE);
+	} else {
+		gtk_widget_set_sensitive(check[MOPENGL], FALSE);
+	}
+
 	if (opengl.glsl.compliant) {
 		gtk_widget_set_sensitive(check[MOPENGLSL], TRUE);
 	} else {

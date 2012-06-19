@@ -842,13 +842,34 @@ void guiUpdate(void) {
 	}
 #ifdef OPENGL
 	{
-		HMENU menuFilter = GetSubMenu(GetSubMenu(GetSubMenu(hMainMenu, 2), 2), 7);
+		HMENU menu_to_change;
 		MENUITEMINFO menuitem;
 
 		menuitem.cbSize = sizeof(MENUITEMINFO);
 		menuitem.fMask = MIIM_STATE;
 
-		if (opengl.glsl.compliant && opengl.glsl.enabled) {
+		/* Video/Rendering */
+		menu_to_change = GetSubMenu(GetSubMenu(GetSubMenu(hMainMenu, 2), 2), 0);
+
+		if (opengl.supported) {
+			menuitem.fState = MFS_ENABLED;
+		} else {
+			menuitem.fState = MFS_DISABLED;
+		}
+		/* Video/Rendering/OpenGL */
+		SetMenuItemInfo(menu_to_change, 1, TRUE, &menuitem);
+
+		if (opengl.glsl.compliant) {
+			menuitem.fState = MFS_ENABLED;
+		} else {
+			menuitem.fState = MFS_DISABLED;
+		}
+		/* Video/Rendering/OpenGL GLSL */
+		SetMenuItemInfo(menu_to_change, 2, TRUE, &menuitem);
+
+		menu_to_change = GetSubMenu(GetSubMenu(GetSubMenu(hMainMenu, 2), 2), 7);
+
+		if (opengl.glsl.enabled) {
 			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_POSPHOR);
 			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_SCANLINE);
 			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_DBL);
@@ -856,7 +877,7 @@ void guiUpdate(void) {
 			menuitem.fState = MFS_ENABLED;
 
 			/* Video/Filter/CRT */
-			SetMenuItemInfo(menuFilter, 5, TRUE, &menuitem);
+			SetMenuItemInfo(menu_to_change, 5, TRUE, &menuitem);
 
 			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_CRTCURVE);
 			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_CRTNOCURVE);
@@ -868,7 +889,7 @@ void guiUpdate(void) {
 			menuitem.fState = MFS_DISABLED;
 
 			/* Video/Filter/CRT */
-			SetMenuItemInfo(menuFilter, 5, TRUE, &menuitem);
+			SetMenuItemInfo(menu_to_change, 5, TRUE, &menuitem);
 
 			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_CRTCURVE);
 			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_CRTNOCURVE);
@@ -2179,7 +2200,7 @@ void __stdcall time_handler_redraw(void) {
 }
 HBITMAP createBitmapMask(HBITMAP hbmColour, COLORREF crTransparent) {
 	HDC hdcMem, hdcMem2;
-	HBITMAP hbmMask, hbmTrash;
+	HBITMAP hbmMask;
 	BITMAP bm;
 
 	// Create monochrome (1 bit) mask bitmap.
@@ -2190,8 +2211,12 @@ HBITMAP createBitmapMask(HBITMAP hbmColour, COLORREF crTransparent) {
 	hdcMem = CreateCompatibleDC(0);
 	hdcMem2 = CreateCompatibleDC(0);
 
-	hbmTrash = SelectBitmap(hdcMem, hbmColour);
-	hbmTrash = SelectBitmap(hdcMem2, hbmMask);
+	if (SelectBitmap(hdcMem, hbmColour) == 0) {
+		;
+	}
+	if (SelectBitmap(hdcMem2, hbmMask) == 0) {
+		;
+	}
 
 	// Set the background colour of the colour image to the colour
 	// you want to be transparent.

@@ -48,7 +48,7 @@ enum {
 };
 enum { CURRENT, NOOVERSCAN, MONITOR, VIDEOMODE };
 
-#define NOCHANGE   255
+#define NOCHANGE 255
 
 struct _gfx {
 	BYTE scale;
@@ -86,11 +86,11 @@ double sdlGetMs(void);
 void sdlNOP(double ms);
 
 /* funzioni virtuali */
-#define GFX_EFFECT_ROUTINE \
+#define GFX_EFFECT_ROUTINE\
 	void (*effect)(WORD *screen, WORD **screenIndex, Uint32 *palette, SDL_Surface *dst, WORD rows,\
-	WORD lines, BYTE factor);
+	WORD lines, BYTE factor)
 
-GFX_EFFECT_ROUTINE
+GFX_EFFECT_ROUTINE;
 int (*flip)(SDL_Surface *surface);
 
 #endif /* SDLGFX_H_ */

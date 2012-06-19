@@ -120,7 +120,7 @@ BYTE fds_load_rom(void) {
 	if ((prg.ram = malloc(0x8000))) {
 		memset(prg.ram, 0xEA, 0x8000);
 	} else {
-		fprintf(stderr, "Out of memory");
+		fprintf(stderr, "Out of memory\n");
 		return (EXIT_ERROR);
 	}
 
@@ -131,7 +131,6 @@ BYTE fds_load_rom(void) {
 
 BYTE fds_load_bios(void) {
 	char bios_file[1024], *lastSlash;
-	BYTE rc;
 	FILE *bios = NULL;
 
 	/*
@@ -176,18 +175,20 @@ BYTE fds_load_bios(void) {
 	fds_load_bios_founded:
 	if (!(prg.rom = malloc(0x2000))) {
 		fclose(bios);
-		fprintf(stderr, "Out of memory");
+		fprintf(stderr, "Out of memory\n");
 		return (EXIT_ERROR);
 	}
 
-	rc = fread(prg.rom, 0x2000, 1, bios);
+	if (fread(prg.rom, 0x2000, 1, bios) < 1) {
+		fprintf(stderr, "error on reading fds bios\n");
+	}
 
 	fclose(bios);
 
 	return (EXIT_OK);
 }
 void fds_disk_op(WORD type, BYTE side_to_insert) {
-	BYTE buffer[DISK_SIDE_SIZE], rc;
+	BYTE buffer[DISK_SIDE_SIZE];
 	uint32_t position, size = 0, length = 0;
 
 	if (side_to_insert >= fds.info.total_sides) {
@@ -249,7 +250,9 @@ void fds_disk_op(WORD type, BYTE side_to_insert) {
 	}
 
     fseek(fds.info.fp, position, SEEK_SET);
-	rc = fread(buffer, DISK_SIDE_SIZE, 1, fds.info.fp);
+	if (fread(buffer, DISK_SIDE_SIZE, 1, fds.info.fp) < 1) {
+		fprintf(stderr, "error in fds disk\n");
+	}
 
 	position = 0;
 
@@ -425,10 +428,11 @@ void fds_diff_op(BYTE mode, uint32_t position, WORD value) {
 	if (mode == FDS_OP_WRITE) {
 		_fds_diff_ele in, out;
 		uint32_t version = DIFFVERSION;
-		int rc;
 
 		/* salvo la versione */
-		rc = fwrite(&version, sizeof(uint32_t), 1, fds.info.diff);
+		if (fwrite(&version, sizeof(uint32_t), 1, fds.info.diff) < 1) {
+			fprintf(stderr, "error on write version fds diff file\n");
+		}
 		/* senza questo in windows non funziona correttamente */
 		fflush(fds.info.diff);
 
@@ -436,25 +440,28 @@ void fds_diff_op(BYTE mode, uint32_t position, WORD value) {
 		out.position = position;
 		out.value = value;
 
-		while(fread(&in, sizeof(_fds_diff_ele), 1, fds.info.diff)) {
-			if ((in.position ==  out.position) && (in.side == out.side)) {
+		while (fread(&in, sizeof(_fds_diff_ele), 1, fds.info.diff)) {
+			if ((in.position == out.position) && (in.side == out.side)) {
 				fseek(fds.info.diff, ftell(fds.info.diff) - sizeof(_fds_diff_ele), SEEK_SET);
 				break;
 			}
 		}
 
-		rc = fwrite(&out, sizeof(_fds_diff_ele), 1, fds.info.diff);
+		if (fwrite(&out, sizeof(_fds_diff_ele), 1, fds.info.diff) < 1) {
+			fprintf(stderr, "error on write fds diff file\n");
+		}
 		/* senza questo in windows non funziona correttamente */
 		fflush(fds.info.diff);
 	} else if (mode == FDS_OP_READ) {
 		_fds_diff_ele ele;
 		uint32_t version;
-		int rc;
 
 		/* leggo la versione del file */
-		rc = fread(&version,  sizeof(uint32_t), 1, fds.info.diff);
+		if (fread(&version,  sizeof(uint32_t), 1, fds.info.diff) < 1) {
+			fprintf(stderr, "error on error version fds diff file\n");
+		}
 
-		while(fread(&ele, sizeof(_fds_diff_ele), 1, fds.info.diff)) {
+		while (fread(&ele, sizeof(_fds_diff_ele), 1, fds.info.diff)) {
 			if (ele.side == fds.drive.side_inserted) {
 				fds.side.data[ele.position] = ele.value;
 			}

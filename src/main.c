@@ -76,19 +76,6 @@ int main(int argc, char **argv) {
 	cfgfileInit();
 	cfgfileParse();
 	optind = cmdlineParse(argc, argv);
-	/* casi particolari */
-	if ((gfx.scale == X1) && (gfx.filter != NOFILTER)) {
-		gfx.scale = X2;
-	}
-#ifdef OPENGL
-	if (gfx.fullscreen == FULLSCR) {
-		if (!gfx.opengl) {
-			gfx.fullscreen = NOFULLSCR;
-		} else {
-			gfx.scaleBeforeFullscreen = gfx.scale;
-		}
-	}
-#endif
 
 	if (argc == optind) {
 #ifndef DEBUG

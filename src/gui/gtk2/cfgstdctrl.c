@@ -357,8 +357,9 @@ void cfg_standard_controller_js_press_event(void) {
 		BYTE i;
 
 		for (i = 0; i < 20; i++) {
-			BYTE trash;
-			trash = read(fd, &jse, size);
+			if (read(fd, &jse, size) < 0) {
+				fprintf(stderr, "error on reading controllers configurations\n");
+			}
 		}
 	}
 

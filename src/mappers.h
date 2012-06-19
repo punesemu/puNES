@@ -147,16 +147,16 @@
 	prg.ramBattery = &prg.ramPlus[bank * 0x2000];\
 	if (fp) {\
 		/* ne leggo il contenuto */\
-		BYTE tmp;\
-		tmp = fread(&prg.ramBattery[0], info.prgRamBatBanks * 8192, 1, fp);\
+		if (fread(&prg.ramBattery[0], info.prgRamBatBanks * 8192, 1, fp) < 1) {\
+			fprintf(stderr, "error on read battery memory\n");\
+		}\
 	}\
 }
 #define mapperWrBatteryDefault()\
-{\
 	/* ci scrivo i dati */\
-	BYTE tmp;\
-	tmp = fwrite(&prg.ramBattery[0], info.prgRamBatBanks * 8192, 1, fp);\
-}
+	if (fwrite(&prg.ramBattery[0], info.prgRamBatBanks * 8192, 1, fp) < 1) {\
+		fprintf(stderr, "error on write battery memory\n");\
+	}
 
 enum { RDBAT, WRBAT };
 

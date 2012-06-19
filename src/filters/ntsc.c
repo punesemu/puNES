@@ -129,7 +129,7 @@ BYTE ntscInit(BYTE effect, BYTE color, BYTE *paletteBase, BYTE *paletteIN, BYTE 
 
 	ntsc = (nes_ntsc_t *) malloc(sizeof(nes_ntsc_t));
 	if (!ntsc) {
-		fprintf(stderr, "Out of memory");
+		fprintf(stderr, "Out of memory\n");
 		return (EXIT_ERROR);
 	}
 	ntscSet(effect, color, paletteBase, paletteIN, paletteOUT);

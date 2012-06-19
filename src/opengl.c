@@ -26,8 +26,6 @@ void sdlInitGL(void) {
 	opengl.xDiff = 0;
 	opengl.yDiff = 0;
 
-	opengl.glew = 0;
-
 	memset(&opengl.texture, 0, sizeof(_texture));
 	memset(&shader, 0, sizeof(shader));
 
@@ -51,7 +49,9 @@ void sdlQuitGL(void) {
 		glDeleteTextures(1, &shader.text.data);
 	}
 
-	opengl_unset_effect();
+	if (opengl_unset_effect) {
+		opengl_unset_effect();
+	}
 
 	glsl_delete_shaders(&shader);
 }
@@ -289,12 +289,16 @@ int opengl_power_of_two(int base) {
 }
 
 void glew_init(void) {
-	if (!opengl.glew){
+	opengl.glsl.compliant = FALSE;
+	opengl.glsl.enabled = FALSE;
+	opengl.glew = FALSE;
+
+	if (opengl.supported){
 		GLenum err;
 
 		if ((err = glewInit()) != GLEW_OK) {
 			fprintf(stderr, "INFO: %s\n", glewGetErrorString(err));
-			opengl.glew = NO_GLEW;
+			opengl.glew = FALSE;
 		} else {
 			opengl.glew = TRUE;
 

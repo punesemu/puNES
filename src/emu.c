@@ -92,8 +92,8 @@ BYTE emuLoop(void) {
 			while (info.executeCPU) {
 #ifdef DEBUG
 				if (cpu.PC == PCBREAK) {
-					BYTE pippo;
-					pippo = 5;
+					BYTE pippo = 5;
+					pippo = pippo + 1;
 				}
 #endif
 				/* eseguo CPU, PPU e APU */
@@ -205,7 +205,7 @@ BYTE emuLoadRom(void) {
 
 		/* PRG Ram */
 		if (!(prg.ram = malloc(0x2000))) {
-			fprintf(stderr, "Out of memory");
+			fprintf(stderr, "Out of memory\n");
 			return (EXIT_ERROR);
 		}
 
@@ -213,7 +213,7 @@ BYTE emuLoadRom(void) {
 		if ((prg.rom = malloc(info.prgRom16kCount * (16 * 1024)))) {
 			memset(prg.rom, 0xEA, info.prgRom16kCount * (16 * 1024));
 		} else {
-			fprintf(stderr, "Out of memory");
+			fprintf(stderr, "Out of memory\n");
 			return (EXIT_ERROR);
 		}
 
@@ -240,7 +240,7 @@ BYTE emuLoadRom(void) {
 }
 BYTE emuSearchInDatabase(FILE *fp) {
 	BYTE *sha1prg;
-	WORD tmp, i;
+	WORD i;
 
 	/* setto i default prima della ricerca */
 	info.machineDb = info.machine = 0;
@@ -256,11 +256,15 @@ BYTE emuSearchInDatabase(FILE *fp) {
 	/* mi alloco una zona di memoria dove leggere la PRG Rom */
 	sha1prg = malloc(info.prgRom16kCount * (16 * 1024));
 	if (!sha1prg) {
-		fprintf(stderr, "Out of memory");
+		fprintf(stderr, "Out of memory\n");
 		return (EXIT_ERROR);
 	}
 	/* leggo dal file la PRG Rom */
-	tmp = fread(&sha1prg[0], (16 * 1024), info.prgRom16kCount, fp);
+	if (fread(&sha1prg[0], (16 * 1024), info.prgRom16kCount, fp) < info.prgRom16kCount) {
+		fprintf(stderr, "Error on read prg\n");
+		free(sha1prg);
+		return (EXIT_ERROR);
+	}
 	/* calcolo l'sha1 della PRG Rom */
 	sha1_csum(sha1prg, info.prgRom16kCount * (16 * 1024), info.sha1sum, info.sha1sumString, LOWER);
 	/* libero la memoria */
@@ -350,16 +354,19 @@ BYTE emuSearchInDatabase(FILE *fp) {
 	/* calcolo anche l'sha1 della CHR rom */
 	if (info.chrRom8kCount) {
 		BYTE *sha1chr;
-		WORD tmp;
 
 		/* mi alloco una zona di memoria dove leggere la CHR Rom */
 		sha1chr = malloc(info.chrRom8kCount * (8 * 1024));
 		if (!sha1chr) {
-			fprintf(stderr, "Out of memory");
+			fprintf(stderr, "Out of memory\n");
 			return (EXIT_ERROR);
 		}
 		/* leggo dal file la CHR Rom */
-		tmp = fread(&sha1chr[0], (8 * 1024), info.chrRom8kCount, fp);
+		if (fread(&sha1chr[0], (8 * 1024), info.chrRom8kCount, fp) < info.chrRom8kCount) {
+			fprintf(stderr, "Error on read chr\n");
+			free(sha1chr);
+			return (EXIT_ERROR);
+		}
 		/* calcolo l'sha1 della CHR Rom */
 		sha1_csum(sha1chr, info.chrRom8kCount * (8 * 1024), info.sha1sumChr, info.sha1sumStringChr,
 				LOWER);
@@ -633,10 +640,12 @@ void emuQuit(BYTE exitCode) {
 	}
 
 	mapQuit();
+
 	fdsQuit();
 	ppuQuit();
 	gfxQuit();
 	sndQuit();
+
 	timelineQuit();
 
 	jsQuit();

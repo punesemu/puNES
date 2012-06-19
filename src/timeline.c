@@ -72,7 +72,7 @@ BYTE timelineInit(void) {
 
 	tl.start = malloc(tl.snapSize * TLSNAPSTOT);
 	if (!tl.start) {
-		fprintf(stderr, "timeline : Out of memory");
+		fprintf(stderr, "timeline : Out of memory\n");
 		return (EXIT_ERROR);
 	}
 

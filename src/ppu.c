@@ -1086,7 +1086,7 @@ BYTE ppuTurnON(void) {
 			}
 
 			if (!(screen.data = malloc(screenSize()))) {
-				fprintf(stderr, "Out of memory");
+				fprintf(stderr, "Out of memory\n");
 				return (EXIT_ERROR);
 			}
 

@@ -314,19 +314,25 @@ void extclBatteryIO_Bandai_FCGX(BYTE mode, FILE *fp) {
 
 	if (FCGX.e0.size || FCGX.e1.size) {
 		if (FCGX.e0.size) {
-			BYTE tmp;
 			if (mode == WRBAT) {
-				tmp = fwrite(&FCGX.e0.eeprom[0], LENGTH(FCGX.e0.eeprom), 1, fp);
+				if (fwrite(&FCGX.e0.eeprom[0], LENGTH(FCGX.e0.eeprom), 1, fp) < 1) {
+					fprintf(stderr, "error on write battery memory\n");
+				}
 			} else {
-				tmp = fread(&FCGX.e0.eeprom[0], LENGTH(FCGX.e0.eeprom), 1, fp);
+				if (fread(&FCGX.e0.eeprom[0], LENGTH(FCGX.e0.eeprom), 1, fp) < 1) {
+					fprintf(stderr, "error on read battery memory\n");
+				}
 			}
 		}
 		if (FCGX.e1.size) {
-			BYTE tmp;
 			if (mode == WRBAT) {
-				tmp = fwrite(&FCGX.e1.eeprom[0], LENGTH(FCGX.e1.eeprom), 1, fp);
+				if (fwrite(&FCGX.e1.eeprom[0], LENGTH(FCGX.e1.eeprom), 1, fp) < 1) {
+					fprintf(stderr, "error on write battery memory\n");
+				}
 			} else {
-				tmp = fread(&FCGX.e1.eeprom[0], LENGTH(FCGX.e1.eeprom), 1, fp);
+				if (fread(&FCGX.e1.eeprom[0], LENGTH(FCGX.e1.eeprom), 1, fp) < 1) {
+					fprintf(stderr, "error on read battery memory\n");
+				}
 			}
 		}
 	} else {

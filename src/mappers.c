@@ -732,7 +732,7 @@ BYTE mapChrRamInit(void) {
 		}
 		/* alloco la CHR Rom */
 		if (!(chr.data = malloc(chrRamSize()))) {
-			fprintf(stderr, "Out of memory");
+			fprintf(stderr, "Out of memory\n");
 			return (EXIT_ERROR);
 		}
 		chrBank1kReset()

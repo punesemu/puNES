@@ -25,7 +25,7 @@
 #define sdlWid()\
 	if (info.gui) {\
 		char SDL_windowhack[50];\
-		sprintf(SDL_windowhack,"SDL_WINDOWID=%I64u", (uint64_t) guiWindowID());\
+		sprintf(SDL_windowhack,"SDL_WINDOWID=%I64u", (uint64_t) guiWindowID);\
 		SDL_putenv(SDL_windowhack);\
 	}
 #else
@@ -79,6 +79,11 @@ static BYTE ntsc_width_pixel[5] = {0, 0, 7, 10, 14};
 BYTE gfxInit(void) {
 	const SDL_VideoInfo *vInfo;
 
+	/* casi particolari provenienti dal cfgfileParse() e cmdlineParse()*/
+	if ((gfx.scale == X1) && (gfx.filter != NOFILTER)) {
+		gfx.scale = X2;
+	}
+
 	overscan.left = 8;
 	overscan.right = 9;
 	overscan.up = 8;
@@ -123,6 +128,24 @@ BYTE gfxInit(void) {
 #ifdef OPENGL
 	/* per poter inizializzare il glew devo creare un contesto opengl prima */
 	surfaceSDL = SDL_SetVideoMode(0, 0, 0, SDL_OPENGL);
+	if (!surfaceSDL) {
+		fprintf(stderr, "INFO: OpenGL not supported.\n");
+		opengl.supported = gfx.opengl = FALSE;
+
+		if ((gfx.filter >= POSPHOR) && (gfx.filter <= CRTNOCURVE)) {
+			gfx.filter = NOFILTER;
+		}
+	} else {
+		opengl.supported = TRUE;
+	}
+	/* casi particolari provenienti dal cfgfileParse() e cmdlineParse()*/
+	if (gfx.fullscreen == FULLSCR) {
+		if (!gfx.opengl) {
+			gfx.fullscreen = NOFULLSCR;
+		} else {
+			gfx.scaleBeforeFullscreen = gfx.scale;
+		}
+	}
 	sdlInitGL();
 #endif
 
@@ -141,7 +164,7 @@ BYTE gfxInit(void) {
 	 */
 	paletteWindow = malloc(NCOLORS * sizeof(uint32_t));
 	if (!paletteWindow) {
-		fprintf(stderr, "Out of memory");
+		fprintf(stderr, "Out of memory\n");
 		return (EXIT_ERROR);
 	}
 
@@ -498,8 +521,6 @@ void gfxSetScreen(BYTE newScale, BYTE newFilter, BYTE newFullscreen, BYTE newPal
 #ifdef OPENGL
 	if (gfx.opengl) {
 		BYTE use_txt_texture;
-
-		glew_init();
 
 		opengl.scale_force = FALSE;
 		opengl.scale = gfx.scale;
