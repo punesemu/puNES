@@ -411,7 +411,7 @@ void emuSetTitle(char *title) {
 #ifdef OPENGL
 	if (gfx.scale != X1) {
 		strcat(title, ", ");
-		strcat(title, pRendering[gfx.opengl].lname);
+		strcat(title, pRendering[gfx.opengl + opengl.glsl.enabled].lname);
 	}
 #endif
 

@@ -720,7 +720,9 @@ static void INLINE ppuWrMem(WORD address, BYTE value) {
 }
 static void INLINE ppuWrReg(WORD address, BYTE value) {
 	if (address == 0x2000) {
+#ifndef RELEASE
 		BYTE old_delay = FALSE;
+#endif
 
 		/*
 		 * se l'nmi e' attivo quando scrivo nel registro r2000
@@ -733,7 +735,10 @@ static void INLINE ppuWrReg(WORD address, BYTE value) {
 		 * per il secondo nmi che avverra' 25 scanline dopo.
 		 */
 		if (nmi.high && !nmi.delay) {
-			old_delay = nmi.delay = TRUE;
+#ifndef RELEASE
+			old_delay = TRUE;
+#endif
+			nmi.delay = TRUE;
 		}
 
 		/* open bus */

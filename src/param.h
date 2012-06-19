@@ -352,9 +352,9 @@ static const _param pPalette[] = {
 };
 #ifdef OPENGL
 static const _param pRendering[] = {
-	{"Software",    "software"},
-	{"OpenGL",      "opengl"  },
-	{"OpenGL GLSL", "glsl"    }
+	{"Software", "software"},
+	{"OpenGL",   "opengl"  },
+	{"GLSL",     "glsl"    }
 };
 #endif
 static const _param pSamplerate[] = {

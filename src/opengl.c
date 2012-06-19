@@ -290,7 +290,10 @@ int opengl_power_of_two(int base) {
 
 void glew_init(void) {
 	opengl.glsl.compliant = FALSE;
-	opengl.glsl.enabled = FALSE;
+	/* opengl.glsl.enabled e' stato gia' settato dal file di configurazioen o
+	 * dalla riga di comando.
+	 * opengl.glsl.enabled = FALSE;
+	 */
 	opengl.glew = FALSE;
 
 	if (opengl.supported){
