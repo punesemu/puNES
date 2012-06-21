@@ -9,8 +9,8 @@
 #define VERSION_H_
 
 #define VER1        "0"
-#define VER2        "62"
-#define VERSION     VER1 "." VER2
+#define VER2        "63"
+#define VERSION     VER1 "." VER2 " WIP"
 #define NAME        "puNES"
 #define AUTHOR      "FHorse"
 #define COPYRIGTH   "(C) " AUTHOR " 2012"
