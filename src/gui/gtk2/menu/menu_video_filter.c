@@ -409,7 +409,7 @@ void menu_video_filter(GtkWidget *video, GtkAccelGroup *accel_group) {
 
 	/* Settings/Video/Filters/NTSC */
 	menu[1] = gtk_menu_new();
-	ntsc = gtk_image_menu_item_new_with_mnemonic("_NTSC");
+	ntsc = gtk_image_menu_item_new_with_mnemonic("N_TSC");
 
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(ntsc), menu[1]);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu[0]), ntsc);

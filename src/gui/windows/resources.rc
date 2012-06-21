@@ -169,7 +169,7 @@ BEGIN
 					MENUITEM "Hq&3x",             IDM_SET_FILTER_HQ3X
 					MENUITEM "Hq&4x",             IDM_SET_FILTER_HQ4X
 				END
-				POPUP "&NTSC"
+				POPUP "N&TSC"
 				BEGIN
 					MENUITEM "&Composite",        IDM_SET_FILTER_RGBNTSCCOM
 					MENUITEM "&S-Video",          IDM_SET_FILTER_RGBNTSCSVD

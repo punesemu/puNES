@@ -77,7 +77,6 @@ void sdlCreateSurfaceGL(SDL_Surface *src, WORD width, WORD height, BYTE flags) {
 	opengl_create_texture(&opengl.texture, opengl.surfaceGL->w, opengl.surfaceGL->h,
 			opengl.interpolation, POWER_OF_TWO);
 
-	/* FIXME: funzionera' anche con il filtro NTSC ?!? */
 	opengl.texture.x = (GLfloat) width  / (opengl.texture.w * opengl.factor);
 	opengl.texture.y = (GLfloat) height / (opengl.texture.h * opengl.factor);
 
