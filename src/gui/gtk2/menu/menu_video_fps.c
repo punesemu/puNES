@@ -136,5 +136,5 @@ void set_fps(int newfps) {
 	fpsInit();
 	sndStart();
 	guiUpdate();
-	emuPause(FALSE, 2000);
+	emuPause(FALSE, 2000.0);
 }

@@ -426,7 +426,7 @@ void cancel_clicked(GtkButton *button, gpointer user_data) {
 	/* riazzero tutto (e' importante che sia l'ultima istruzione) */
 	netplay_init();
 
-	emuPause(FALSE, 2000);
+	emuPause(FALSE, 2000.0);
 }
 
 void server_connect_clicked(GtkButton *button, gpointer user_data) {

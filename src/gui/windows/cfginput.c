@@ -58,7 +58,7 @@ void cfgInput(HWND hwnd) {
 long __stdcall cfg_input_controllers(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	switch (msg) {
 		case WM_DESTROY:
-			emuPause(FALSE, 2000);
+			emuPause(FALSE, 2000.0);
 			PostQuitMessage(0);
 			return TRUE;
 		case WM_INITDIALOG: {

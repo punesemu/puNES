@@ -187,7 +187,7 @@ void cfg_input_window_destroy(void) {
 	}
 
 	g_timeout_redraw_stop();
-	emuPause(FALSE, 2000);
+	emuPause(FALSE, 2000.0);
 }
 GtkWidget *cfg_input_std_button(const char *description) {
 	GtkWidget *button;

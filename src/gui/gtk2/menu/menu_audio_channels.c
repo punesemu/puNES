@@ -119,5 +119,5 @@ void set_channels(int newchannels) {
 
 	guiUpdate();
 
-	emuPause(FALSE, 2000);
+	emuPause(FALSE, 2000.0);
 }

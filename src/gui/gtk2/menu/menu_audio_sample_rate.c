@@ -125,5 +125,5 @@ void set_sample_rate(int newsamplerate) {
 
 	guiUpdate();
 
-	emuPause(FALSE, 2000);
+	emuPause(FALSE, 2000.0);
 }

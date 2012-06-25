@@ -593,7 +593,7 @@ BYTE emuReset(BYTE type) {
 	if (info.no_rom) {
 		info.reset = FALSE;
 
-		emuPause(FALSE, 2000);
+		emuPause(FALSE, 2000.0);
 
 		return (EXIT_OK);
 	}
@@ -630,7 +630,7 @@ BYTE emuReset(BYTE type) {
 
 	info.reset = FALSE;
 
-	emuPause(FALSE, 2000);
+	emuPause(FALSE, 2000.0);
 
 	return (EXIT_OK);
 }

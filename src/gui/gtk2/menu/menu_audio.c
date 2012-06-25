@@ -128,5 +128,5 @@ void menu_audio_set_audio_enable(void) {
 		sndStop();
 	}
 	guiUpdate();
-	emuPause(FALSE, 2000);
+	emuPause(FALSE, 2000.0);
 }

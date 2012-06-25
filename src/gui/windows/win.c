@@ -57,7 +57,7 @@
 	}\
 	SetFocus(hSDL);\
 	type = FALSE;\
-	emuPause(FALSE, 2000)
+	emuPause(FALSE, 2000.0)
 #define hideToolWidget()\
 	ShowWindow(hFrameSs, SW_HIDE)
 #define showToolWidget()\
@@ -1195,7 +1195,7 @@ void guiFullscreen(void) {
 	/* setto il focus*/
 	SetFocus(hSDL);
 
-	emuPause(FALSE, 2000);
+	emuPause(FALSE, 2000.0);
 }
 #endif
 void guiTimeline(void) {
@@ -1227,7 +1227,7 @@ long __stdcall mainWinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 			break;
 		case WM_EXITSIZEMOVE:
 		case WM_EXITMENULOOP:
-			emuPause(FALSE, 2000);
+			emuPause(FALSE, 2000.0);
 			//timer_redraw_stop();
 			SetFocus(hSDL);
 			break;
@@ -1556,7 +1556,7 @@ long __stdcall mainWinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 						sndStop();
 					}
 					guiUpdate();
-					emuPause(FALSE, 2000);
+					emuPause(FALSE, 2000.0);
 					break;
 				case IDM_SET_GAMEGENIE:
 					set_gamegenie();
@@ -1775,7 +1775,7 @@ long __stdcall saveslotProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 							savestate.slot = SendMessage(hSaveslot, CB_GETCURSEL, 0, 0);
 							guiUpdate();
 							savestate.previewStart = FALSE;
-							emuPause(FALSE, 500);
+							emuPause(FALSE, 500.0);
 							SetFocus(hSDL);
 							break;
 						case CBN_EDITUPDATE:
@@ -1897,7 +1897,7 @@ void open_event(void) {
 		guiUpdate();
 	}
 
-	emuPause(FALSE, 2000);
+	emuPause(FALSE, 2000.0);
 }
 void change_menuitem(BYTE checkORenab, UINT type, UINT bMenuItemID) {
 	if (checkORenab == CHECK) {
@@ -2191,7 +2191,7 @@ void set_fps(int newfps) {
 	fpsInit();
 	sndStart();
 	guiUpdate();
-	emuPause(FALSE, 2000);
+	emuPause(FALSE, 2000.0);
 }
 void set_frame_skip(int newframeskip) {
 	if (cfg->frameskip == newframeskip) {
@@ -2309,7 +2309,7 @@ void saveslot_action(BYTE mode) {
 
 	guiUpdate();
 
-	emuPause(FALSE, 2000);
+	emuPause(FALSE, 2000.0);
 }
 void saveslot_set(BYTE selection) {
 	SendMessage(hSaveslot, CB_SETCURSEL, selection, 0);

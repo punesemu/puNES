@@ -10,7 +10,7 @@
 
 #include "common.h"
 
-#define SNDNOSYNC 0xFFFF
+#define SNDNOSYNC 65535.0
 #define sndWmEvent(ms)\
 	snd.wmMs = ms;\
 	snd.wmStart = guiGetMs()

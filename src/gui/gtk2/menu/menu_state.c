@@ -375,7 +375,7 @@ void menu_state_saveslot_action(BYTE mode) {
 
 	guiUpdate();
 
-	emuPause(FALSE, 2000);
+	emuPause(FALSE, 2000.0);
 }
 void menu_state_saveslot_set(BYTE slot) {
 	if (guiupdate) {

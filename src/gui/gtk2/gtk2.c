@@ -49,7 +49,7 @@
 	}\
 	gtk_widget_grab_focus(GTK_WIDGET(sock));\
 	type = FALSE;\
-	emuPause(FALSE, 2000)
+	emuPause(FALSE, 2000.0)
 
 enum {
 	COLUMN_STRING, COLUMN_INT, N_COLUMNS
@@ -773,7 +773,7 @@ void file_open(void) {
 
 	g_timeout_redraw_stop();
 
-	emuPause(FALSE, 2000);
+	emuPause(FALSE, 2000.0);
 }
 void file_open_filter_add(GtkWidget *filechooser, const gchar *title, const gchar *pattern) {
 	GtkFileFilter *filter = gtk_file_filter_new();
@@ -815,7 +815,7 @@ void help_about(void) {
 
 	g_timeout_redraw_stop();
 
-	emuPause(FALSE, 2000);
+	emuPause(FALSE, 2000.0);
 }
 /* reset */
 void make_reset(int type) {
@@ -1071,7 +1071,7 @@ void saveslot_notify_popup_shown(GtkComboBox *widget) {
 		g_signal_remove_emission_hook(g_signal_lookup("key-press-event", GTK_TYPE_WINDOW),
 				trcb.hook_id);
 		savestate.previewStart = FALSE;
-		emuPause(FALSE, 500);
+		emuPause(FALSE, 500.0);
 	}
 }
 void saveslot_preview(void) {
