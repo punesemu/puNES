@@ -25,7 +25,7 @@
 #define sdlWid()\
 	if (info.gui) {\
 		char SDL_windowhack[50];\
-		sprintf(SDL_windowhack,"SDL_WINDOWID=%I64u", (uint64_t) guiWindowID);\
+		sprintf(SDL_windowhack,"SDL_WINDOWID=%I64u", (uint64_t) guiWindowID());\
 		SDL_putenv(SDL_windowhack);\
 	}
 #else
