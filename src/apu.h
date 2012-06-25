@@ -52,7 +52,7 @@
 	if (channel.envelope) {\
 		channel.envelope = FALSE;\
 		channel.envelopeCounter = 15;\
-		channel.envelopeDelay = channel.envelopeDivider;\
+		channel.envelopeDelay = channel.envelopeDivider * 2;\
 	} else if (--channel.envelopeDelay < 0) {\
 		channel.envelopeDelay = channel.envelopeDivider;\
 		if (channel.envelopeCounter | channel.lengthHalt) {\
