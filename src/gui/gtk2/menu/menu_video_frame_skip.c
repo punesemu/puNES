@@ -108,6 +108,10 @@ void menu_video_frame_skip(GtkWidget *video, GtkAccelGroup *accel_group) {
 
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), check[index]);
 
+		if (index == MFSKDEFAULT) {
+			gtk_menu_shell_append(GTK_MENU_SHELL(menu), gtk_separator_menu_item_new());
+		}
+
 		g_signal_connect_swapped(G_OBJECT(check[index]), "activate", G_CALLBACK(set_frame_skip),
 		        GINT_TO_POINTER(index));
 	}

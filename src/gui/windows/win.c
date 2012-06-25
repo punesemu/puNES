@@ -696,6 +696,8 @@ void guiUpdate(void) {
 
 	/* Fps */
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FPS_DEFAULT);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FPS_60);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FPS_59);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FPS_58);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FPS_57);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FPS_56);
@@ -714,6 +716,12 @@ void guiUpdate(void) {
 	switch (cfg->fps) {
 		case FPSDEFAULT:
 			id = IDM_SET_FPS_DEFAULT;
+			break;
+		case FPS60:
+			id = IDM_SET_FPS_60;
+			break;
+		case FPS59:
+			id = IDM_SET_FPS_59;
 			break;
 		case FPS58:
 			id = IDM_SET_FPS_58;
@@ -1331,6 +1339,15 @@ long __stdcall mainWinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 					break;
 				case IDM_SET_FPS_DEFAULT:
 					set_fps(FPSDEFAULT);
+					break;
+				case IDM_SET_FPS_60:
+					set_fps(FPS60);
+					break;
+				case IDM_SET_FPS_59:
+					set_fps(FPS59);
+					break;
+				case IDM_SET_FPS_58:
+					set_fps(FPS58);
 					break;
 				case IDM_SET_FPS_57:
 					set_fps(FPS57);

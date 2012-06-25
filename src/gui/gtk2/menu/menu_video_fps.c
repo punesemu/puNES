@@ -64,6 +64,8 @@ static const guint8 icon_inline[] =
 
 enum {
 	MFPSDEFAULT,
+	MFPS60,
+	MFPS59,
 	MFPS58,
 	MFPS57,
 	MFPS56,
@@ -102,6 +104,10 @@ void menu_video_fps(GtkWidget *video, GtkAccelGroup *accel_group) {
 		check[index] = gtk_check_menu_item_new_with_mnemonic(pFps[index].lname);
 
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), check[index]);
+
+		if (index == MFPSDEFAULT) {
+			gtk_menu_shell_append(GTK_MENU_SHELL(menu), gtk_separator_menu_item_new());
+		}
 
 		g_signal_connect_swapped(G_OBJECT(check[index]), "activate", G_CALLBACK(set_fps),
 		        GINT_TO_POINTER(index));

@@ -52,7 +52,7 @@ BYTE sndInit(void) {
 BYTE sndStart(void) {
 	SDL_AudioSpec *dev;
 	_callbackData *cache;
-	WORD samples = 1024;
+	WORD samples = 0;
 
 	if (!cfg->audio) {
 		return (EXIT_OK);
@@ -77,11 +77,11 @@ BYTE sndStart(void) {
 	switch (cfg->samplerate) {
 		case S44100:
 			dev->freq = 44100;
-			samples = 1024;
+			samples = 2048;
 			break;
 		case S22050:
 			dev->freq = 22050;
-			samples = 512;
+			samples = 1024;
 			break;
 		case S11025:
 			dev->freq = 11025;
@@ -222,19 +222,22 @@ BYTE sndCtrl(void) {
 	if (snd.position >= dev->samples) {
 		/*
 		 * incremento il contatore dei frames pieni
-		 * non ancora 'suonati'.
+		 * non ancora 'riprodotti'.
 		 */
 		SDL_LockAudio();
 		cache->filled++;
 
 		if (cache->filled <= 2) {
-			snd.factor = 0.35;
+			snd.factor = 0.55;
 			sndHz();
 		} else if (cache->filled == 3) {
 			snd.factor = 1.40;
 			sndHz();
 		} else if (cache->filled == 4) {
 			snd.factor = 1.75;
+			sndHz();
+		} else if (cache->filled == 5) {
+			snd.factor = 2.15;
 			sndHz();
 		} else {
 			snd.on_play = FALSE;

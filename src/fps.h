@@ -12,6 +12,8 @@
 
 enum {
 	FPSDEFAULT,
+	FPS60,
+	FPS59,
 	FPS58,
 	FPS57,
 	FPS56,

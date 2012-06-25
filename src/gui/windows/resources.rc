@@ -90,6 +90,9 @@ BEGIN
 			POPUP "&FPS"
 			BEGIN
 				MENUITEM "Default",               IDM_SET_FPS_DEFAULT
+				MENUITEM SEPARATOR
+				MENUITEM "60",                    IDM_SET_FPS_60
+				MENUITEM "59",                    IDM_SET_FPS_59
 				MENUITEM "58",                    IDM_SET_FPS_58
 				MENUITEM "57",                    IDM_SET_FPS_57
 				MENUITEM "56",                    IDM_SET_FPS_56
@@ -108,6 +111,7 @@ BEGIN
 			POPUP "Fra&me skip"
 			BEGIN
 				MENUITEM "Default",               IDM_SET_FSK_DEFAULT
+				MENUITEM SEPARATOR
 				MENUITEM "1",                     IDM_SET_FSK_1
 				MENUITEM "2",                     IDM_SET_FSK_2
 				MENUITEM "3",                     IDM_SET_FSK_3
@@ -136,6 +140,7 @@ BEGIN
 			POPUP "&Overscan"
 			BEGIN
 				MENUITEM "&Default",              IDM_SET_OSCAN_DEF
+				MENUITEM SEPARATOR
 				MENUITEM "&On",                   IDM_SET_OSCAN_ON
 				MENUITEM "O&ff",                  IDM_SET_OSCAN_OFF
 				MENUITEM SEPARATOR

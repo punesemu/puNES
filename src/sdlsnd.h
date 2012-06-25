@@ -23,12 +23,12 @@ struct _snd {
 	BYTE opened;
 	BYTE on_play;
 	BYTE out_of_sync;
-	WORD cycles;
 	WORD position;
 	WORD last_position;
 	SWORD last_sample;
 	SWORD *channel_buffer[2];
 	SWORD *channel_ptr[2];
+	DBWORD cycles;
 	DBWORD total_out_of_sync;
 	DBWORD too_fast_sync;
 	float frequency;

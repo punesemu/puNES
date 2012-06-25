@@ -17,10 +17,16 @@ void fpsInit(void) {
 	switch (cfg->fps) {
 		case FPSDEFAULT:
 			if (machine.type == NTSC) {
-				machine.fps = 57;
+				machine.fps = 60;
 			} else {
 				machine.fps = 50;
 			}
+			break;
+		case FPS60:
+			machine.fps = 60;
+			break;
+		case FPS59:
+			machine.fps = 59;
 			break;
 		case FPS58:
 			machine.fps = 58;
@@ -69,11 +75,11 @@ void fpsInit(void) {
 			break;
 	}
 
-	machine.msFrame = (double) 1000 / machine.fps;
+	machine.msFrame = 1000.0 / (double) machine.fps;
 
 	memset (&fps, 0, sizeof(fps));
 
-	fps.nominal = 1000 / machine.msFrame;
+	fps.nominal = 1000.0 / machine.msFrame;
 	fps.avarage = fps.nominal;
 	fpsNormalize();
 	inputTurboButtonsFrequency();
@@ -121,9 +127,9 @@ void fpsFrameskip(void) {
 		}
 	}
 
-	if ((diff = frame_end - fps.second_start) >= 1000) {
-		fps.avarage = (fps.avarage + fps.counter) / 2;
-		fps.second_start = guiGetMs();
+	if ((diff = frame_end - fps.second_start) >= 1000.0) {
+		fps.avarage = (fps.avarage + (double) fps.counter) / 2.0;
+		fps.second_start = guiGetMs() - (diff - 1000.0);
 		fps.counter = 0;
 	} else {
 		fps.counter++;

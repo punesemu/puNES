@@ -98,7 +98,7 @@ static const _param param[] = {
 		NULL,
 		"# possible values: default, 58, 57. ..., 45, 44",
 		NULL,
-		"-f, --fps                 frames per second     : default, 58, ..., 44"
+		"-f, --fps                 frames per second     : default, 60, ..., 44"
 	},
 	{
 		"frame skip",
@@ -287,6 +287,8 @@ static const _param pMode[] = {
 };
 static const _param pFps[] = {
 	{"Default", "default"},
+	{"60",      "60"     },
+	{"59",      "59"     },
 	{"58",      "58"     },
 	{"57",      "57"     },
 	{"56",      "56"     },

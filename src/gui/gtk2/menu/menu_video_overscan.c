@@ -163,6 +163,7 @@ void menu_video_overscan(GtkWidget *video, GtkAccelGroup *accel_group) {
 	check[MOSCANOFF] = gtk_check_menu_item_new_with_mnemonic("O_ff");
 
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu[0]), check[MOSCANDEF]);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu[0]), gtk_separator_menu_item_new());
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu[0]), check[MOSCANON]);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu[0]), check[MOSCANOFF]);
 
