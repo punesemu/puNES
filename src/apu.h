@@ -54,7 +54,7 @@
 		channel.envelopeCounter = 15;\
 		channel.envelopeDelay = channel.envelopeDivider * 2;\
 	} else if (--channel.envelopeDelay < 0) {\
-		channel.envelopeDelay = channel.envelopeDivider;\
+		channel.envelopeDelay = channel.envelopeDivider * 2;\
 		if (channel.envelopeCounter | channel.lengthHalt) {\
 			channel.envelopeCounter = (channel.envelopeCounter - 1) & 0x0E;\
 		}\

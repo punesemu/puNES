@@ -161,29 +161,29 @@ void opengl_create_texture(_texture *texture, uint32_t width, uint32_t height,
         uint8_t interpolation, uint8_t pow) {
 	switch (opengl.surfaceGL->format->BitsPerPixel) {
 		case 16:
-			opengl.texture.format_internal = GL_RGB5;
+			texture->format_internal = GL_RGB5;
 			if (SDL_BYTEORDER == SDL_BIG_ENDIAN) {
-				opengl.texture.format = GL_BGR;
-				opengl.texture.type = GL_UNSIGNED_SHORT_5_6_5_REV;
+				texture->format = GL_BGR;
+				texture->type = GL_UNSIGNED_SHORT_5_6_5_REV;
 			} else {
-				opengl.texture.format = GL_RGB;
-				opengl.texture.type = GL_UNSIGNED_SHORT_5_6_5;
+				texture->format = GL_RGB;
+				texture->type = GL_UNSIGNED_SHORT_5_6_5;
 			}
 			break;
 		case 24:
-			opengl.texture.format_internal = GL_RGB8;
+			texture->format_internal = GL_RGB8;
 			if (SDL_BYTEORDER == SDL_BIG_ENDIAN) {
-				opengl.texture.format = GL_BGR;
+				texture->format = GL_BGR;
 			} else {
-				opengl.texture.format = GL_RGB;
+				texture->format = GL_RGB;
 			}
-			opengl.texture.type = GL_UNSIGNED_BYTE;
+			texture->type = GL_UNSIGNED_BYTE;
 			break;
 		case 32:
 		default:
-			opengl.texture.format_internal = GL_RGBA8;
-			opengl.texture.format = GL_BGRA;
-			opengl.texture.type = GL_UNSIGNED_BYTE;
+			texture->format_internal = GL_RGBA8;
+			texture->format = GL_BGRA;
+			texture->type = GL_UNSIGNED_BYTE;
 			break;
 	}
 
@@ -225,8 +225,8 @@ void opengl_create_texture(_texture *texture, uint32_t width, uint32_t height,
 
 		memset(blank->pixels, 0, blank->w * blank->h * blank->format->BytesPerPixel);
 
-		glTexImage2D(GL_TEXTURE_2D, 0, opengl.texture.format_internal, texture->w, texture->h, 0,
-		        opengl.texture.format, opengl.texture.type, blank->pixels);
+		glTexImage2D(GL_TEXTURE_2D, 0, texture->format_internal, texture->w, texture->h, 0,
+		        texture->format, texture->type, blank->pixels);
 
 		SDL_FreeSurface(blank);
 	}
@@ -250,6 +250,8 @@ void opengl_update_texture(SDL_Surface *surface, uint8_t generate_mipmap) {
 	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, surface->w, surface->h, opengl.texture.format,
 	        opengl.texture.type, surface->pixels);
 
+	glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+
 	if (generate_mipmap && opengl.glew && GLEW_VERSION_3_1) {
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
@@ -261,6 +263,24 @@ void opengl_update_texture(SDL_Surface *surface, uint8_t generate_mipmap) {
 	/* disabilito l'uso delle texture */
 	glDisable(GL_TEXTURE_2D);
 }
+
+void opengl_text_clear(_txt_element *ele) {
+	if (!ele->blank) {
+		return;
+	}
+
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, shader.text.data);
+
+	glPixelStorei(GL_UNPACK_ROW_LENGTH, ele->w);
+
+	glTexSubImage2D(GL_TEXTURE_2D, 0, ele->x, ele->y, ele->w, ele->h,
+	        shader.text.format, shader.text.type, ele->blank->pixels);
+
+	glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+
+	glDisable(GL_TEXTURE_2D);
+}
 void opengl_text_blit(_txt_element *ele, SDL_Rect *dst_rect) {
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, shader.text.data);
@@ -269,6 +289,8 @@ void opengl_text_blit(_txt_element *ele, SDL_Rect *dst_rect) {
 
 	glTexSubImage2D(GL_TEXTURE_2D, 0, dst_rect->x, dst_rect->y, dst_rect->w, dst_rect->h,
 	        opengl.texture.format, opengl.texture.type, ele->surface->pixels);
+
+	glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
 
 	glDisable(GL_TEXTURE_2D);
 }

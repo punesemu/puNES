@@ -56,6 +56,7 @@ typedef struct {
 	int index;
 
 	SDL_Surface *surface;
+	SDL_Surface *blank;
 } _txt_element;
 
 struct _text {
@@ -90,7 +91,10 @@ void textAddLine(int type, int factor, int font, int alpha, int start_x, int sta
 void textRendering(BYTE render);
 void textQuit(void);
 
+void sdl_text_clear(_txt_element *ele);
 void sdl_text_blit(_txt_element *ele, SDL_Rect *dst_rect);
+
+void (*text_clear)(_txt_element *ele);
 void (*text_blit)(_txt_element *ele, SDL_Rect *dst_rect);
 
 #endif /* SDLTEXT_H_ */

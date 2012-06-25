@@ -59,6 +59,9 @@ static void INLINE rendering(_txt_element *txt);
 void textInit(void) {
 	uint8_t i;
 
+	text_clear = sdl_text_clear;
+	text_blit = sdl_text_blit;
+
 	memset(&text, 0, sizeof(text));
 
 	for (i = 0; i < TXT_MAX_LINES; i++) {
@@ -118,6 +121,9 @@ void textAddLine(int type, int factor, int font, int alpha, int start_x, int sta
 
 	if (type == TXTINFO) {
 		for (i = 0; i < TXT_MAX_LINES; i++) {
+			if (text.info.lines[text.info.index][i]->enabled) {
+				text_clear(text.info.lines[text.info.index][i]);
+			}
 			if (i == (TXT_MAX_LINES - 1)) {
 				text.info.lines[new][0] = text.info.lines[text.info.index][i];
 			} else {
@@ -228,6 +234,7 @@ void textRendering(BYTE render) {
 			if (ele->enabled == TRUE) {
 				if (!ele->surface) {
 					ele->surface = gfxCreateRGBSurface(text.surface, ele->w, ele->h);
+					ele->blank = gfxCreateRGBSurface(text.surface, ele->w, ele->h);
 				}
 
 				if (ele->alpha[0] == ele->alpha_start_fade) {
@@ -260,7 +267,9 @@ void textRendering(BYTE render) {
 
 				if (!ele->enabled) {
 					SDL_FreeSurface(ele->surface);
+					SDL_FreeSurface(ele->blank);
 					ele->surface = NULL;
+					ele->blank = NULL;
 				}
 			}
 		}
@@ -476,6 +485,21 @@ void textQuit(void) {
 			ele->surface = NULL;
 		}
 	}
+}
+
+
+void sdl_text_clear(_txt_element *ele) {
+	return;
+}
+void sdl_text_blit(_txt_element *ele, SDL_Rect *dst_rect) {
+	SDL_Rect rect;
+
+	rect.x = 0;
+	rect.y = 0;
+	rect.w = ele->w;
+	rect.h = ele->h;
+
+	SDL_BlitSurface(ele->surface, &rect, text.surface, dst_rect);
 }
 
 static void INLINE rendering(_txt_element *ele) {
@@ -1042,14 +1066,4 @@ static void INLINE rendering(_txt_element *ele) {
 	}
 
 	text_blit(ele, &surface_rect);
-}
-void sdl_text_blit(_txt_element *ele, SDL_Rect *dst_rect) {
-	SDL_Rect rect;
-
-	rect.x = 0;
-	rect.y = 0;
-	rect.w = ele->w;
-	rect.h = ele->h;
-
-	SDL_BlitSurface(ele->surface, &rect, text.surface, dst_rect);
 }
