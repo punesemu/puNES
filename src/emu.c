@@ -390,6 +390,10 @@ void emuSetTitle(char *title) {
 		sprintf(name, "%s", NAME);
 	}
 
+	if (info.portables && (gfx.scale != X1)) {
+		strcat(name, "_p");
+	}
+
 	if (gfx.scale == X1) {
 		sprintf(title, "%s (%s", name, pMode[machine.type].lname);
 	} else if (gfx.filter == RGBNTSC) {

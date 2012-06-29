@@ -35,6 +35,14 @@ int main(int argc, char **argv) {
 	memset(&info, 0x00, sizeof(info));
 	info.machine = info.machineDb = DEFAULT;
 
+	{
+		if (!(strcmp(argv[0] + (strlen(argv[0]) - 2), "_p"))) {
+			info.portables = TRUE;
+		} else {
+			info.portables = FALSE;
+		}
+	}
+
 	guiInit(argc, argv);
 
 #define controlDir(fld, txt)\
@@ -66,8 +74,13 @@ int main(int argc, char **argv) {
 
 	textInit();
 
-	textAddLineInfo(1,"[yellow]p[red]u[green]N[cyan]E[brown]S[normal]"
-	        " [font8](by [cyan]FHorse[normal]) [font12]%s", VERSION);
+	if (!info.portables) {
+		textAddLineInfo(1, "[yellow]p[red]u[green]N[cyan]E[brown]S[normal]"
+		" [font8](by [cyan]FHorse[normal]) [font12]%s", VERSION);
+	} else {
+		textAddLineInfo(1, "[yellow]p[red]u[green]N[cyan]E[brown]S[normal]"
+		" [font8][cyan]portable[normal] (by [cyan]FHorse[normal]) [font12]%s", VERSION);
+	}
 
 	/*
 	 * tratto il file di configurazione ed

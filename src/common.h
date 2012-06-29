@@ -62,7 +62,7 @@ enum { GRAYSCALE = 0x30, NORMAL = 0x3F };
 #endif
 
 struct _info {
-	char baseFolder[512];
+	char baseFolder[1024];
 	char romFile[1024];
 	char loadRomFile[1024];
 	BYTE machine;
@@ -71,6 +71,7 @@ struct _info {
 	BYTE mapperType;
 	BYTE mapperExtendWrite;
 	BYTE mapperExtendRead;
+	BYTE portables;
 	BYTE id;
 	BYTE trainer;
 	BYTE stop;

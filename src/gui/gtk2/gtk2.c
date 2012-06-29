@@ -10,6 +10,7 @@
 #include <sched.h>
 #include <sys/time.h>
 #include <string.h>
+#include <libgen.h>
 #include "gtk2.h"
 #include "icon.h"
 #include "overscan.h"
@@ -127,8 +128,37 @@ void guiInit(int argc, char **argv) {
 			gui.home = g_get_home_dir();
 		}
 
-		sprintf(info.baseFolder, "%s/.%s", gui.home, NAME);
-	}
+		if (info.portables) {
+			char path[sizeof(info.baseFolder)], *dname;
+			int length = readlink("/proc/self/exe", path, sizeof(path));
+
+			/* Catch some errors: */
+			if (length < 0) {
+				fprintf(stderr, "INFO: Error resolving symlink /proc/self/exe.\n");
+				info.portables = FALSE;
+			} else if (length >= sizeof(info.baseFolder)) {
+				fprintf(stderr, "INFO: Path too long. Truncated.\n");
+				info.portables = FALSE;
+			} else {
+				/*
+				 * I don't know why, but the string this readlink() function
+				 * returns is appended with a '@'.
+				 */
+				if (path[length] == '@') {
+					path[length] = 0;
+				}
+
+				dname = dirname(path);
+				strcpy(info.baseFolder, dname);
+			}
+		}
+
+		if (!info.portables) {
+			sprintf(info.baseFolder, "%s/.%s", gui.home, NAME);
+		}
+ 	}
+
+	fprintf(stderr, "INFO: path %s\n", info.baseFolder);
 
 	gettimeofday(&gui.counterStart, NULL);
 	guiGetMs = highResolutionMs;
