@@ -13,6 +13,7 @@
 #include "win.h"
 #include <windowsx.h>
 #include <shlobj.h>
+#include <libgen.h>
 #define _INPUTINLINE_
 #include "input.h"
 #undef  _INPUTINLINE_
@@ -148,7 +149,8 @@ void guiInit(int argc, char **argv) {
 		}
 
 		if (info.portable) {
-			DWORD length = GetModuleFileName(NULL, &info.baseFolder, sizeof(info.baseFolder));
+			char path[sizeof(info.baseFolder)], *dname;
+			DWORD length = GetModuleFileName(NULL, (LPSTR) &path, sizeof(path));
 
 			if (length == 0) {
 				fprintf(stderr, "INFO: Error resolving exe path.\n");
@@ -157,6 +159,9 @@ void guiInit(int argc, char **argv) {
 				fprintf(stderr, "INFO: Path too long. Truncated.\n");
 				info.portable = FALSE;
 			}
+
+			dname = dirname(path);
+			strcpy(info.baseFolder, dname);
 		}
 
 		if (!info.portable) {

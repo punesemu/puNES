@@ -829,7 +829,7 @@ void help_about(void) {
 	gtk_window_set_icon(GTK_WINDOW(dialog),
 			gdk_pixbuf_new_from_inline(-1, pin_inline, FALSE, NULL));
 	if (info.portable) {
-		gtk_about_dialog_set_name(GTK_ABOUT_DIALOG(dialog), "portable " NAME);
+		gtk_about_dialog_set_name(GTK_ABOUT_DIALOG(dialog), NAME " Portable");
 	} else {
 		gtk_about_dialog_set_name(GTK_ABOUT_DIALOG(dialog), NAME);
 	}
