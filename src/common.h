@@ -71,7 +71,7 @@ struct _info {
 	BYTE mapperType;
 	BYTE mapperExtendWrite;
 	BYTE mapperExtendRead;
-	BYTE portables;
+	BYTE portable;
 	BYTE id;
 	BYTE trainer;
 	BYTE stop;

@@ -390,7 +390,7 @@ void emuSetTitle(char *title) {
 		sprintf(name, "%s", NAME);
 	}
 
-	if (info.portables && (gfx.scale != X1)) {
+	if (info.portable && (gfx.scale != X1)) {
 		strcat(name, "_p");
 	}
 

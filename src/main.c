@@ -37,9 +37,9 @@ int main(int argc, char **argv) {
 
 	{
 		if (!(strcmp(argv[0] + (strlen(argv[0]) - 2), "_p"))) {
-			info.portables = TRUE;
+			info.portable = TRUE;
 		} else {
-			info.portables = FALSE;
+			info.portable = FALSE;
 		}
 	}
 
@@ -74,7 +74,7 @@ int main(int argc, char **argv) {
 
 	textInit();
 
-	if (!info.portables) {
+	if (!info.portable) {
 		textAddLineInfo(1, "[yellow]p[red]u[green]N[cyan]E[brown]S[normal]"
 		" [font8](by [cyan]FHorse[normal]) [font12]%s", VERSION);
 	} else {

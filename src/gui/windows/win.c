@@ -147,7 +147,21 @@ void guiInit(int argc, char **argv) {
 				break;
 		}
 
-		sprintf(info.baseFolder, "%s/%s", gui.home, NAME);
+		if (info.portable) {
+			DWORD length = GetModuleFileName(NULL, &info.baseFolder, sizeof(info.baseFolder));
+
+			if (length == 0) {
+				fprintf(stderr, "INFO: Error resolving exe path.\n");
+				info.portable = FALSE;
+			} else if (length == sizeof(info.baseFolder)) {
+				fprintf(stderr, "INFO: Path too long. Truncated.\n");
+				info.portable = FALSE;
+			}
+		}
+
+		if (!info.portable) {
+			sprintf(info.baseFolder, "%s/%s", gui.home, NAME);
+		}
 	}
 
 	/* cerco il numero dei cores */
@@ -1569,8 +1583,13 @@ long __stdcall mainWinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 					guiUpdate();
 					break;
 				case IDM_HELP_ABOUT:
-					DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_ABOUT), hwnd,
-							(DLGPROC) aboutProc);
+					if (!info.portable) {
+						DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_ABOUT), hwnd,
+								(DLGPROC) aboutProc);
+					} else {
+						DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_ABOUT_PORTABLE), hwnd,
+								(DLGPROC) aboutProc);
+					}
 					SetFocus(hSDL);
 					break;
 				case IDM_SET_INPUT_CONFIG:

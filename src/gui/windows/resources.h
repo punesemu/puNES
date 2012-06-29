@@ -12,6 +12,7 @@
 #define IDB_ABOUT                  102
 
 #define IDD_ABOUT                  150
+#define IDD_ABOUT_PORTABLE         151
 
 #define IDD_INPUT_CONTROLLERS      160
 #define IDD_STD_CTRL               161

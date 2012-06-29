@@ -128,17 +128,16 @@ void guiInit(int argc, char **argv) {
 			gui.home = g_get_home_dir();
 		}
 
-		if (info.portables) {
+		if (info.portable) {
 			char path[sizeof(info.baseFolder)], *dname;
 			int length = readlink("/proc/self/exe", path, sizeof(path));
 
-			/* Catch some errors: */
 			if (length < 0) {
 				fprintf(stderr, "INFO: Error resolving symlink /proc/self/exe.\n");
-				info.portables = FALSE;
+				info.portable = FALSE;
 			} else if (length >= sizeof(info.baseFolder)) {
 				fprintf(stderr, "INFO: Path too long. Truncated.\n");
-				info.portables = FALSE;
+				info.portable = FALSE;
 			} else {
 				/*
 				 * I don't know why, but the string this readlink() function
@@ -153,7 +152,7 @@ void guiInit(int argc, char **argv) {
 			}
 		}
 
-		if (!info.portables) {
+		if (!info.portable) {
 			sprintf(info.baseFolder, "%s/.%s", gui.home, NAME);
 		}
  	}
@@ -829,7 +828,11 @@ void help_about(void) {
 	dialog = gtk_about_dialog_new();
 	gtk_window_set_icon(GTK_WINDOW(dialog),
 			gdk_pixbuf_new_from_inline(-1, pin_inline, FALSE, NULL));
-	gtk_about_dialog_set_name(GTK_ABOUT_DIALOG(dialog), NAME);
+	if (info.portable) {
+		gtk_about_dialog_set_name(GTK_ABOUT_DIALOG(dialog), "portable " NAME);
+	} else {
+		gtk_about_dialog_set_name(GTK_ABOUT_DIALOG(dialog), NAME);
+	}
 	gtk_about_dialog_set_version(GTK_ABOUT_DIALOG(dialog), VERSION);
 	gtk_about_dialog_set_copyright(GTK_ABOUT_DIALOG(dialog), AUTHOR);
 	gtk_about_dialog_set_comments(GTK_ABOUT_DIALOG(dialog), COMMENT);
