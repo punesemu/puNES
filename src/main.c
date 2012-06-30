@@ -82,8 +82,9 @@ int main(int argc, char **argv) {
 		textAddLineInfo(1, "[yellow]p[red]u[green]N[cyan]E[brown]S[normal]"
 		" [font8](by [cyan]FHorse[normal]) [font12]%s", VERSION);
 	} else {
-		textAddLineInfo(1, "[yellow]p[red]u[green]N[cyan]E[brown]S[normal]"
-		" [font8][cyan]portable[normal] (by [cyan]FHorse[normal]) [font12]%s", VERSION);
+		textAddLineInfo(1,"[font8][cyan]Portable[normal] "
+				"[font12][yellow]p[red]u[green]N[cyan]E[brown]S[normal]"
+		        "[font8] (by [cyan]FHorse[normal]) [font12]%s", VERSION);
 	}
 
 	/*

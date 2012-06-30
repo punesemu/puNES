@@ -45,7 +45,11 @@ BYTE cmdlineParse(int argc, char **argv) {
 				usage(basename(argv[0]));
 				break;
 			case 'V': {
-				fprintf(stdout, "%s %s\n", basename(argv[0]), VERSION);
+				if (!info.portable) {
+					fprintf(stdout, "%s %s\n", NAME, VERSION);
+				} else {
+					fprintf(stdout, "Portable %s %s\n", NAME, VERSION);
+				}
 				emuQuit(EXIT_SUCCESS);
 				break;
 			}
