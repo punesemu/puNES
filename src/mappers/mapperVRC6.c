@@ -250,8 +250,6 @@ void extclApuTick_VRC6(void) {
 	vcr6SquareTick(S3)
 	vcr6SquareTick(S4)
 
-	vrc6.saw.output = 0;
-
 	if (--vrc6.saw.timer == 0) {
 		vrc6.saw.timer = vrc6.saw.frequency + 1;
 
@@ -262,7 +260,7 @@ void extclApuTick_VRC6(void) {
 			vrc6.saw.internal = vrc6.saw.step = 0;
 		}
 		if (vrc6.saw.enabled) {
-			vrc6.saw.output = vrc6.saw.internal >> 3;
+			vrc6.saw.output = vrc6.saw.internal / 5;
 		}
 	}
 }
