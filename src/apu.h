@@ -52,9 +52,9 @@
 	if (channel.envelope) {\
 		channel.envelope = FALSE;\
 		channel.envelopeCounter = 15;\
-		channel.envelopeDelay = channel.envelopeDivider * 2;\
+		channel.envelopeDelay = channel.envelopeDivider << 1;\
 	} else if (--channel.envelopeDelay < 0) {\
-		channel.envelopeDelay = channel.envelopeDivider * 2;\
+		channel.envelopeDelay = channel.envelopeDivider << 1;\
 		if (channel.envelopeCounter | channel.lengthHalt) {\
 			channel.envelopeCounter = (channel.envelopeCounter - 1) & 0x0E;\
 		}\
@@ -119,7 +119,6 @@
 #define squareOutput(square)\
 {\
 	DBWORD offset = 0;\
-	/*if (square.sweepEnabled) {*/\
 	if (!square.sweepNegate) {\
 		offset = square.timer >> square.sweepShift;\
 	}\
@@ -130,6 +129,7 @@
 		square.output = squareDuty[square.duty][square.sequencer]\
 				* square.volume;\
 	}\
+	square.avarage = (square.avarage + square.output) / 2;\
 }
 #define triangleOutput()\
 	if (TR.length && TR.linear) {\
@@ -143,13 +143,15 @@
 		} else {\
 			TR.output = triangleDuty[TR.sequencer] << 1;\
 		}\
-	}
+	}\
+	TR.avarage = (TR.avarage + TR.output) / 2;
 #define noiseOutput()\
-	if (NS.length) {\
-		NS.output = (((NS.shift & 0x0001) ? -1 : 1) * NS.volume);\
+	if (NS.length && !(NS.shift & 0x0001)) {\
+		NS.output = NS.volume;\
 	} else {\
 		NS.output = 0;\
-	}
+	}\
+	NS.avarage = (NS.avarage + NS.output) / 2.5;
 /* ticket */
 #define squareTick(square)\
 	if (!(--square.frequency)) {\
@@ -166,13 +168,10 @@
 #define noiseTick()\
 	if (!(--NS.frequency)) {\
 		NS.frequency = noiseTimer[apu.type][NS.timer];\
-		/**/\
 		if (NS.mode) {\
-			NS.shift = (NS.shift >> 1) | (((NS.shift ^ (NS.shift >> 6))\
-					& 0x0001) << 14);\
+			NS.shift = (NS.shift >> 1) | (((NS.shift ^ (NS.shift >> 6)) & 0x0001) << 14);\
 		} else {\
-			NS.shift = (NS.shift >> 1) | (((NS.shift ^ (NS.shift >> 1))\
-					& 0x0001) << 14);\
+			NS.shift = (NS.shift >> 1) | (((NS.shift ^ (NS.shift >> 1)) & 0x0001) << 14);\
 		}\
 		NS.shift &= 0x7FFF;\
 		noiseOutput()\
@@ -191,6 +190,7 @@
 			}\
 			DMC.shift >>= 1;\
 			DMC.output = DMC.counter;\
+			DMC.avarage = (DMC.avarage + DMC.output) / 2;\
 		}\
 		if (!(--DMC.counterOut)) {\
 			DMC.counterOut = 8;\
@@ -356,6 +356,8 @@ typedef struct {
 	BYTE lengthHalt;
 	/* output */
 	SWORD output;
+
+	SWORD avarage;
 } _apuSquare;
 typedef struct {
 	/* timer */
@@ -374,6 +376,8 @@ typedef struct {
 	BYTE sequencer;
 	/* output */
 	SWORD output;
+
+	SWORD avarage;
 } _apuTriangle;
 typedef struct {
 	/* timer */
@@ -391,7 +395,7 @@ typedef struct {
 	/* volume */
 	BYTE volume;
 	/* shift register */
-	DBWORD shift;
+	WORD shift;
 	/* length counter */
 	BYTE length;
 	BYTE lengthEnabled;
@@ -400,6 +404,8 @@ typedef struct {
 	BYTE sequencer;
 	/* output */
 	SWORD output;
+
+	SWORD avarage;
 } _apuNoise;
 typedef struct {
 	/* ogni quanti cicli devo generare un output */
@@ -429,6 +435,8 @@ typedef struct {
 
 	/* misc */
 	BYTE tickType;
+
+	SWORD avarage;
 }  _apuDMC;
 
 enum { DMCNORMAL, DMCCPUWRITE, DMCR4014, DMCNNLDMA };

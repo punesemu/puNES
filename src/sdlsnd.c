@@ -17,12 +17,20 @@
 #define PLAY_FRAMES  1
 #define CACHE_FRAMES 1
 #define TOTAL_FRAMES 8
-#define sndHz()\
+/*#define sndHz()\
 {\
 	float coeff_filled;\
 	coeff_filled = ((float) (cache->filled * snd.factor) -\
-			(3.25 - (machine.type == NTSC ? 1 : 2))) / 10;\
+			(3.25 - (machine.type == NTSC ? 1.0 : 2.0))) / 10.0;\
 	snd.frequency = (((fps.nominal + coeff_filled) * machine.cpuCyclesFrame) / dev->freq);\
+}*/
+
+#define sndHz()\
+{\
+	/*float coeff_filled;\
+	coeff_filled = ((float) (cache->filled * snd.factor) -\
+			(3.25 - (machine.type == NTSC ? 1.0 : 2.0))) / 10.0;*/\
+	snd.frequency = ((fps.nominal * machine.cpuCyclesFrame) / dev->freq);\
 }
 
 typedef struct {
@@ -52,7 +60,7 @@ BYTE sndInit(void) {
 BYTE sndStart(void) {
 	SDL_AudioSpec *dev;
 	_callbackData *cache;
-	WORD samples = 0;
+	WORD samples = 0, factor = 0;
 
 	if (!cfg->audio) {
 		return (EXIT_OK);
@@ -74,20 +82,27 @@ BYTE sndStart(void) {
 	sndWmEvent(1000);
 
 	/* samplarate */
+#if defined MINGW32 || defined MINGW64
+	factor = 4;
+#else
+	factor = 3;
+#endif
+
 	switch (cfg->samplerate) {
 		case S44100:
 			dev->freq = 44100;
-			samples = 2048;
+			samples = 512 * factor;
 			break;
 		case S22050:
 			dev->freq = 22050;
-			samples = 1024;
+			samples = 256 * factor;
 			break;
 		case S11025:
 			dev->freq = 11025;
-			samples = 512;
+			samples = 128 * factor;
 			break;
 	}
+
 	/* il formato dei samples (16 bit signed) */
 	dev->format = AUDIO_S16SYS;
 	/* il numero dei canali (1 = mono) */
@@ -103,35 +118,6 @@ BYTE sndStart(void) {
 		fprintf(stderr, "Unable to open audio device: %s\n", SDL_GetError());
 		sndStop();
 		return (EXIT_ERROR);
-	}
-	/*
-	 * ho notato che (sotto linux) nelle sdl 1.2.13 i samples
-	 * che passo al device vengono moltiplicati per 2 dalle
-	 * sdl stesse, mentre nelle 1.2.14 questo non avviene.
-	 * Quindi se voglio che si comportino allo stesso
-	 * modo devo controllarne quanti ne ha settanti dopo
-	 * aver aperto il device e se sono la meta' di quelli
-	 * richiesti chiudo e riapro con i samples moltiplicati
-	 * per 2 (per intenderci, se passo come parametro
-	 * sndDevice.samples = 1472, nelle sdl 1.2.13 il device
-	 * creato avra' un buffer di 2944 samples, mentre le
-	 * 1.2.14 ne avra' uno di 1472 ergo, per uno di 2944
-	 * devo passare come parametro sndDevice.samples = 2944).
-	 */
-	if (dev->samples == (samples / 2 + 56)) {
-
-		SDL_Delay(3000);
-
-		/* chiudo il device */
-		SDL_CloseAudio();
-		/* ricalcolo il numero dei samples */
-		dev->samples = samples * 2;
-		/* riapro il device */
-		if (SDL_OpenAudio(dev, NULL) < 0) {
-			fprintf(stderr, "Unable to open audio device: %s\n", SDL_GetError());
-			sndStop();
-			return (EXIT_ERROR);
-		}
 	}
 
 	if (dev->channels == STEREO) {
@@ -246,6 +232,7 @@ BYTE sndCtrl(void) {
 			cache->write = cache->start;
 			snd.too_fast_sync++;
 		}
+
 		SDL_UnlockAudio();
 		/* azzero posizione e contatore dei cicli del frame audio */
 		snd.position = snd.cycles = 0;

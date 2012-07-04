@@ -27,7 +27,7 @@
 #include "fds.h"
 #include "gamegenie.h"
 
-#define SAVEVERSION 6
+#define SAVEVERSION 7
 
 BYTE stateOperation(BYTE mode, BYTE slot, FILE *fp);
 BYTE nameStateFile(char *file, BYTE slot);
@@ -412,7 +412,24 @@ BYTE stateOperation(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, NS.envelopeDelay)
 	savestateEle(mode, slot, NS.mode)
 	savestateEle(mode, slot, NS.volume)
-	savestateEle(mode, slot, NS.shift)
+	/*
+	 * ho portato da DBWORD a WORD NS.shift e per mantenere
+	 * la compatibilita' con i vecchi salvataggi faccio questa
+	 * conversione.
+	 */
+	if (savestate.version < 7) {
+		if (mode == SSREAD) {
+			DBWORD old_nsshift;
+
+			savestateEle(mode, slot, old_nsshift)
+
+			NS.shift = old_nsshift;
+		} else if (mode == SSCOUNT) {
+			savestate.totSize[slot] += sizeof(DBWORD);
+		}
+	} else {
+		savestateEle(mode, slot, NS.shift)
+	}
 	savestateEle(mode, slot, NS.length)
 	savestateEle(mode, slot, NS.lengthEnabled)
 	savestateEle(mode, slot, NS.lengthHalt)

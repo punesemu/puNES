@@ -180,7 +180,8 @@ void apuTick(SWORD cyclesCPU, BYTE *hwtick) {
 		/* mixer */
 		SWORD mixer;
 
-		mixer = (S1.output + S2.output) + TR.output + NS.output + DMC.output;
+		//mixer = (S1.output + S2.output) + TR.output + NS.output + DMC.output;
+		mixer = ((S1.avarage + S2.avarage) + (TR.avarage + NS.avarage + DMC.avarage));
 
 		/* approsimazione lineare */
 		/*SWORD pulse_out = 0.752 * (S1.output + S2.output);
@@ -196,7 +197,14 @@ void apuTick(SWORD cyclesCPU, BYTE *hwtick) {
 			 */
 			mixer = extclApuMixer(mixer);
 		} else {
-			apuMixerCutAndHigh();
+			//apuMixerCutAndHigh();
+			if (mixer > 127) {
+				mixer = 127;
+			} else if (mixer < -127) {
+				mixer = -127;
+			}
+			/* ne aumento il volume */
+			mixer <<= 7;
 		}
 
 		/* memorizzo */
