@@ -17,7 +17,7 @@ BYTE emuLoadRom(void);
 BYTE emuSearchInDatabase(FILE *fp);
 void emuSetTitle(char *title);
 BYTE emuTurnON(void);
-void emuPause(BYTE mode, double sndWmMs);
+void emuPause(BYTE mode);
 BYTE emuReset(BYTE type);
 void emuQuit(BYTE exitCode);
 

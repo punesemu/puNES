@@ -129,7 +129,6 @@
 		square.output = squareDuty[square.duty][square.sequencer]\
 				* square.volume;\
 	}\
-	square.avarage = (square.avarage + square.output) / 2;\
 }
 #define triangleOutput()\
 	if (TR.length && TR.linear) {\
@@ -141,17 +140,18 @@
 		if (TR.timer < 2) {\
 			TR.output = 0;\
 		} else {\
-			TR.output = triangleDuty[TR.sequencer] << 1;\
+			/*TR.output = triangleDuty[TR.sequencer] << 1;*/\
+			TR.output = triangleDuty[TR.sequencer];\
 		}\
-	}\
-	TR.avarage = (TR.avarage + TR.output) / 2;
+	}
 #define noiseOutput()\
 	if (NS.length && !(NS.shift & 0x0001)) {\
 		NS.output = NS.volume;\
 	} else {\
 		NS.output = 0;\
-	}\
-	NS.avarage = (NS.avarage + NS.output) / 2.5;
+	}
+#define dmcOutput()\
+	DMC.output = DMC.counter
 /* ticket */
 #define squareTick(square)\
 	if (!(--square.frequency)) {\
@@ -189,8 +189,7 @@
 				}\
 			}\
 			DMC.shift >>= 1;\
-			DMC.output = DMC.counter;\
-			DMC.avarage = (DMC.avarage + DMC.output) / 2;\
+			dmcOutput();\
 		}\
 		if (!(--DMC.counterOut)) {\
 			DMC.counterOut = 8;\
@@ -356,8 +355,6 @@ typedef struct {
 	BYTE lengthHalt;
 	/* output */
 	SWORD output;
-
-	SWORD avarage;
 } _apuSquare;
 typedef struct {
 	/* timer */
@@ -376,8 +373,6 @@ typedef struct {
 	BYTE sequencer;
 	/* output */
 	SWORD output;
-
-	SWORD avarage;
 } _apuTriangle;
 typedef struct {
 	/* timer */
@@ -404,8 +399,6 @@ typedef struct {
 	BYTE sequencer;
 	/* output */
 	SWORD output;
-
-	SWORD avarage;
 } _apuNoise;
 typedef struct {
 	/* ogni quanti cicli devo generare un output */
@@ -435,8 +428,6 @@ typedef struct {
 
 	/* misc */
 	BYTE tickType;
-
-	SWORD avarage;
 }  _apuDMC;
 
 enum { DMCNORMAL, DMCCPUWRITE, DMCR4014, DMCNNLDMA };
@@ -499,11 +490,18 @@ static const BYTE lengthTable[32] = {
 	0xC0, 0x18, 0x48, 0x1A, 0x10, 0x1C, 0x20, 0x1E
 };
 
-static const SWORD squareDuty[4][8] = {
+/*static const SWORD squareDuty[4][8] = {
 	{-1, +1, -1, -1, -1, -1, -1, -1},
 	{-1, +1, +1, -1, -1, -1, -1, -1},
 	{-1, +1, +1, +1, +1, -1, -1, -1},
 	{+1, -1, -1, +1, +1, +1, +1, +1}
+};*/
+
+static const SWORD squareDuty[4][8] = {
+	{0, 1, 0, 0, 0, 0, 0, 0},
+	{0, 1, 1, 0, 0, 0, 0, 0},
+	{0, 1, 1, 1, 1, 0, 0, 0},
+	{1, 0, 0, 1, 1, 1, 1, 1}
 };
 
 static const SWORD triangleDuty[32] = {
@@ -544,6 +542,8 @@ static const WORD dmcRate[3][16] = {
 };
 
 void apuTick(SWORD cyclesCPU, BYTE *hwtick);
+SWORD apuMixer(void);
 void apuTurnON(void);
+
 
 #endif /* APU_H_ */

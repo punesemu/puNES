@@ -364,7 +364,7 @@ void menu_state_saveslot_incdec(BYTE mode) {
 	menu_state_saveslot_set(newslot);
 }
 void menu_state_saveslot_action(BYTE mode) {
-	emuPause(TRUE, SNDNOSYNC);
+	emuPause(TRUE);
 
 	if (mode == SAVE) {
 		savestateSave();
@@ -375,7 +375,7 @@ void menu_state_saveslot_action(BYTE mode) {
 
 	guiUpdate();
 
-	emuPause(FALSE, 2000.0);
+	emuPause(FALSE);
 }
 void menu_state_saveslot_set(BYTE slot) {
 	if (guiupdate) {

@@ -158,6 +158,7 @@ void apuTick(SWORD cyclesCPU, BYTE *hwtick) {
 				break;
 		}
 	}
+
 	/*
 	 * eseguo un ticket per ogni canale
 	 * valorizzandone l'output.
@@ -167,6 +168,7 @@ void apuTick(SWORD cyclesCPU, BYTE *hwtick) {
 	triangleTick()
 	noiseTick()
 	dmcTick()
+
 	if (extclApuTick) {
 		/*
 		 * utilizzato dalle mappers :
@@ -176,40 +178,31 @@ void apuTick(SWORD cyclesCPU, BYTE *hwtick) {
 		extclApuTick();
 	}
 
-	if (sndCtrl()) {
-		/* mixer */
-		SWORD mixer;
+	sndWrite();
+}
+SWORD apuMixer(void) {
+	SWORD mixer;
 
-		//mixer = (S1.output + S2.output) + TR.output + NS.output + DMC.output;
-		mixer = ((S1.avarage + S2.avarage) + (TR.avarage + NS.avarage + DMC.avarage));
+	mixer = (S1.output + S2.output) + (TR.output + NS.output + DMC.output);
 
-		/* approsimazione lineare */
-		/*SWORD pulse_out = 0.752 * (S1.output + S2.output);
-		SWORD tnd_out = 0.851 * TR.output + 0.494 * NS.output + 0.335 * DMC.output;
-		mixer = pulse_out + tnd_out;
-		*/
+	/* approsimazione lineare */
+	/*SWORD pulse_out = 0.752 * (S1.output + S2.output);
+	SWORD tnd_out = 0.851 * TR.output + 0.494 * NS.output + 0.335 * DMC.output;
+	mixer = pulse_out + tnd_out;
+	*/
 
-		if (extclApuMixer) {
-			/*
-			 * utilizzato dalle mappers :
-			 * MMC5
-			 * Namcot
-			 */
-			mixer = extclApuMixer(mixer);
-		} else {
-			//apuMixerCutAndHigh();
-			if (mixer > 127) {
-				mixer = 127;
-			} else if (mixer < -127) {
-				mixer = -127;
-			}
-			/* ne aumento il volume */
-			mixer <<= 7;
-		}
-
-		/* memorizzo */
-		sndWrite(mixer);
+	if (extclApuMixer) {
+		/*
+		 * utilizzato dalle mappers :
+		 * MMC5
+		 * Namcot
+		 */
+		mixer = extclApuMixer(mixer);
+	} else {
+		apuMixerCutAndHigh();
 	}
+
+	return (mixer);
 }
 void apuTurnON(void) {
 	if (info.reset >= HARD) {

@@ -50,7 +50,7 @@ void cfgInput(HWND hwnd) {
 	guiUpdate();
 #endif
 
-	emuPause(TRUE, SNDNOSYNC);
+	emuPause(TRUE);
 
 	DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_INPUT_CONTROLLERS),
 			hwnd, (DLGPROC) cfg_input_controllers);
@@ -58,7 +58,7 @@ void cfgInput(HWND hwnd) {
 long __stdcall cfg_input_controllers(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	switch (msg) {
 		case WM_DESTROY:
-			emuPause(FALSE, 2000.0);
+			emuPause(FALSE);
 			PostQuitMessage(0);
 			return TRUE;
 		case WM_INITDIALOG: {

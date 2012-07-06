@@ -58,7 +58,7 @@ void netplay_create(void) {
 		return;
 	}
 
-	emuPause(TRUE, SNDNOSYNC);
+	emuPause(TRUE);
 
 	net.widget[NETPLAY] = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 
@@ -426,7 +426,7 @@ void cancel_clicked(GtkButton *button, gpointer user_data) {
 	/* riazzero tutto (e' importante che sia l'ultima istruzione) */
 	netplay_init();
 
-	emuPause(FALSE, 2000.0);
+	emuPause(FALSE);
 }
 
 void server_connect_clicked(GtkButton *button, gpointer user_data) {

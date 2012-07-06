@@ -70,7 +70,7 @@ void guiAfterSet(void) {
 	 * bloccare il rilevamento di errori di sync
 	 * audio per un tot di millisecondi.
 	 */
-	sndWmEvent(2000);
+	//sndWmEvent(2000);
 
 }
 void guiStart(void) {
@@ -89,7 +89,7 @@ void guiEvent(void) {
 			switch (event.syswm.msg->msg) {
 			case WM_CAPTURECHANGED:
 			case WM_MOVE:
-				sndWmEvent(500);
+				//sndWmEvent(500);
 				break;
 			default:
 				break;
@@ -102,7 +102,7 @@ void guiEvent(void) {
 		 * o qualsiasi altra cosa (credo).
 		 */
 		case SDL_VIDEOEXPOSE:
-			sndWmEvent(600);
+			//sndWmEvent(600);
 			break;
 #endif
 #ifdef OPENGL

@@ -519,31 +519,21 @@ BYTE emuTurnON(void) {
 	/* The End */
 	return (EXIT_OK);
 }
-void emuPause(BYTE mode, double sndWmMs) {
+void emuPause(BYTE mode) {
 
 	if (mode == TRUE) {
 		info.pause = TRUE;
-#ifndef RELEASE
-		if (sndWmMs) {
-			snd.wmMs = sndWmMs;
-		}
-#endif
 		return;
 	}
 
 	if (mode == FALSE) {
 		info.pause = FALSE;
 		fps.next_frame = guiGetMs();
-#ifndef RELEASE
-		if (sndWmMs) {
-			sndWmEvent(sndWmMs);
-		}
-#endif
 		return;
 	}
 }
 BYTE emuReset(BYTE type) {
-	emuPause(TRUE, SNDNOSYNC);
+	emuPause(TRUE);
 
 	info.reset = type;
 
@@ -597,7 +587,7 @@ BYTE emuReset(BYTE type) {
 	if (info.no_rom) {
 		info.reset = FALSE;
 
-		emuPause(FALSE, 2000.0);
+		emuPause(FALSE);
 
 		return (EXIT_OK);
 	}
@@ -634,7 +624,7 @@ BYTE emuReset(BYTE type) {
 
 	info.reset = FALSE;
 
-	emuPause(FALSE, 2000.0);
+	emuPause(FALSE);
 
 	return (EXIT_OK);
 }

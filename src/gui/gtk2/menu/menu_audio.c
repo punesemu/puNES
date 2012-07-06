@@ -120,7 +120,7 @@ void menu_audio_set_audio_enable(void) {
 	if (guiupdate) {
 		return;
 	}
-	emuPause(TRUE, SNDNOSYNC);
+	emuPause(TRUE);
 	cfg->audio = !cfg->audio;
 	if (cfg->audio) {
 		sndStart();
@@ -128,5 +128,5 @@ void menu_audio_set_audio_enable(void) {
 		sndStop();
 	}
 	guiUpdate();
-	emuPause(FALSE, 2000.0);
+	emuPause(FALSE);
 }

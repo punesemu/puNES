@@ -117,7 +117,7 @@ void set_sample_rate(int newsamplerate) {
 		return;
 	}
 
-	emuPause(TRUE, SNDNOSYNC);
+	emuPause(TRUE);
 
 	cfg->samplerate = newsamplerate;
 
@@ -125,5 +125,5 @@ void set_sample_rate(int newsamplerate) {
 
 	guiUpdate();
 
-	emuPause(FALSE, 2000.0);
+	emuPause(FALSE);
 }

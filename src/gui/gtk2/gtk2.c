@@ -35,7 +35,7 @@
 #include "menu/menu.h"
 
 #define tlPressed(type)\
-	emuPause(TRUE, SNDNOSYNC);\
+	emuPause(TRUE);\
 	type = TRUE;\
 	if (tl.snapsFill) {\
 		/* faccio lo screenshot dello screen attuale */\
@@ -50,7 +50,7 @@
 	}\
 	gtk_widget_grab_focus(GTK_WIDGET(sock));\
 	type = FALSE;\
-	emuPause(FALSE, 2000.0)
+	emuPause(FALSE)
 
 enum {
 	COLUMN_STRING, COLUMN_INT, N_COLUMNS
@@ -174,8 +174,8 @@ BYTE guiCreate(void) {
 	g_signal_connect(G_OBJECT(mainWin), "destroy", G_CALLBACK(mainWin_destroy), NULL);
 
 	/* configure event */
-	g_signal_connect(G_OBJECT(mainWin), "configure-event", G_CALLBACK(mainWin_configure_event),
-			NULL);
+	//g_signal_connect(G_OBJECT(mainWin), "configure-event", G_CALLBACK(mainWin_configure_event),
+	//		NULL);
 
 	/* la finestra non e' ridimensionabile */
 	gtk_window_set_resizable(GTK_WINDOW(mainWin), FALSE);
@@ -575,7 +575,6 @@ void mainWin_destroy(void) {
 	info.stop = TRUE;
 }
 gboolean mainWin_configure_event(void) {
-	sndWmEvent(2000);
 	/*
 	 * devo fare un return FALSE se voglio che l'evento
 	 * sia propagato all'uscita della routine (e deve
@@ -765,7 +764,7 @@ gboolean mouse_motion_notify_event(GtkWidget *widget, GdkEventMotion *event) {
 void file_open(void) {
 	GtkWidget *dialog;
 
-	emuPause(TRUE, SNDNOSYNC);
+	emuPause(TRUE);
 
 	/* potrei essere entrato con il CTRL+O */
 	tl.key = FALSE;
@@ -802,7 +801,7 @@ void file_open(void) {
 
 	g_timeout_redraw_stop();
 
-	emuPause(FALSE, 2000.0);
+	emuPause(FALSE);
 }
 void file_open_filter_add(GtkWidget *filechooser, const gchar *title, const gchar *pattern) {
 	GtkFileFilter *filter = gtk_file_filter_new();
@@ -822,7 +821,7 @@ void help_about(void) {
 	GdkPixbuf *pixbuf;
 	GtkWidget *dialog;
 
-	emuPause(TRUE, SNDNOSYNC);
+	emuPause(TRUE);
 
 	pixbuf = gdk_pixbuf_new_from_inline(-1, pin_inline, FALSE, NULL);
 	dialog = gtk_about_dialog_new();
@@ -848,7 +847,7 @@ void help_about(void) {
 
 	g_timeout_redraw_stop();
 
-	emuPause(FALSE, 2000.0);
+	emuPause(FALSE);
 }
 /* reset */
 void make_reset(int type) {
@@ -1089,7 +1088,7 @@ void saveslot_notify_popup_shown(GtkComboBox *widget) {
 	g_object_get(GTK_OBJECT(widget), "popup-shown", &mode, NULL);
 
 	if (mode == 1) {
-		emuPause(TRUE, SNDNOSYNC);
+		emuPause(TRUE);
 		/* intercetto il "key-press-event" del combobox */
 		trcb.hook_id = g_signal_add_emission_hook(
 				g_signal_lookup("key-press-event", GTK_TYPE_WINDOW), 0, saveslot_key_press_event,
@@ -1104,7 +1103,7 @@ void saveslot_notify_popup_shown(GtkComboBox *widget) {
 		g_signal_remove_emission_hook(g_signal_lookup("key-press-event", GTK_TYPE_WINDOW),
 				trcb.hook_id);
 		savestate.previewStart = FALSE;
-		emuPause(FALSE, 500.0);
+		emuPause(FALSE);
 	}
 }
 void saveslot_preview(void) {

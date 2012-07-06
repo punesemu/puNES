@@ -10,39 +10,41 @@
 
 #include "common.h"
 
-#define SNDNOSYNC 65535.0
-#define sndWmEvent(ms)\
-	snd.wmMs = ms;\
-	snd.wmStart = guiGetMs()
-
 enum { S44100, S22050, S11025 };
 enum { MONO = 1, STEREO };
-enum { CH_LEFT, CH_RIGHT, CH_TOTAL };
+enum { CH_LEFT, CH_RIGHT };
 
 struct _snd {
 	BYTE opened;
-	BYTE on_play;
-	BYTE out_of_sync;
-	WORD position;
-	WORD last_position;
-	SWORD last_sample;
-	SWORD *channel_buffer[2];
-	SWORD *channel_ptr[2];
+	BYTE started;
+
 	DBWORD cycles;
-	DBWORD total_out_of_sync;
-	DBWORD too_fast_sync;
+	DBWORD out_of_sync;
+
 	float frequency;
-	float factor;
-	double wmMs;
-	double wmStart;
+
 	void *cache;
 	void *dev;
+
+	struct _position {
+		WORD current;
+		WORD last;
+	} pos;
+
+	struct _channel {
+		SWORD *ptr[2];
+		SWORD *buf[2];
+	} channel;
+
+	struct _buffer {
+		DBWORD size;
+		WORD count;
+	} buffer;
 } snd;
 
 BYTE sndInit(void);
 BYTE sndStart(void);
-BYTE sndCtrl(void);
-void sndWrite(SWORD data);
+BYTE sndWrite(void);
 void sndOutput(void *udata, BYTE *stream, int len);
 void sndStop(void);
 void sndQuit(void);

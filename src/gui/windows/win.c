@@ -43,7 +43,7 @@
 #define timer_redraw_stop()\
 	KillTimer(hwnd, IDT_TIMER1)
 #define tlDown(type)\
-	emuPause(TRUE, SNDNOSYNC);\
+	emuPause(TRUE);\
 	type = TRUE;\
 	if (tl.snapsFill) {\
 		/* faccio lo screenshot dello screen attuale */\
@@ -58,7 +58,7 @@
 	}\
 	SetFocus(hSDL);\
 	type = FALSE;\
-	emuPause(FALSE, 2000.0)
+	emuPause(FALSE)
 #define hideToolWidget()\
 	ShowWindow(hFrameSs, SW_HIDE)
 #define showToolWidget()\
@@ -1155,7 +1155,7 @@ void guiUpdate(void) {
 }
 #ifdef OPENGL
 void guiFullscreen(void) {
-	emuPause(TRUE, SNDNOSYNC);
+	emuPause(TRUE);
 
 	/* nascondo la finestra */
 	ShowWindow(hMainWin, SW_HIDE);
@@ -1214,7 +1214,7 @@ void guiFullscreen(void) {
 	/* setto il focus*/
 	SetFocus(hSDL);
 
-	emuPause(FALSE, 2000.0);
+	emuPause(FALSE);
 }
 #endif
 void guiTimeline(void) {
@@ -1241,12 +1241,12 @@ long __stdcall mainWinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	switch (msg) {
 		case WM_ENTERSIZEMOVE:
 		case WM_ENTERMENULOOP:
-			emuPause(TRUE, SNDNOSYNC);
+			emuPause(TRUE);
 			//timer_redraw_start();
 			break;
 		case WM_EXITSIZEMOVE:
 		case WM_EXITMENULOOP:
-			emuPause(FALSE, 2000.0);
+			emuPause(FALSE);
 			//timer_redraw_stop();
 			SetFocus(hSDL);
 			break;
@@ -1567,7 +1567,7 @@ long __stdcall mainWinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 					set_channels(STEREO);
 					break;
 				case IDM_SET_AUDIO_ENABLE:
-					emuPause(TRUE, SNDNOSYNC);
+					emuPause(TRUE);
 					cfg->audio = !cfg->audio;
 					if (cfg->audio) {
 						sndStart();
@@ -1575,7 +1575,7 @@ long __stdcall mainWinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 						sndStop();
 					}
 					guiUpdate();
-					emuPause(FALSE, 2000.0);
+					emuPause(FALSE);
 					break;
 				case IDM_SET_GAMEGENIE:
 					set_gamegenie();
@@ -1793,13 +1793,13 @@ long __stdcall saveslotProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 				case ID_SAVESLOT_CB: {
 					switch (HIWORD(wParam)) {
 						case CBN_DROPDOWN:
-							emuPause(TRUE, SNDNOSYNC);
+							emuPause(TRUE);
 							break;
 						case CBN_CLOSEUP:
 							savestate.slot = SendMessage(hSaveslot, CB_GETCURSEL, 0, 0);
 							guiUpdate();
 							savestate.previewStart = FALSE;
-							emuPause(FALSE, 500.0);
+							emuPause(FALSE);
 							SetFocus(hSDL);
 							break;
 						case CBN_EDITUPDATE:
@@ -1874,7 +1874,7 @@ void open_event(void) {
 	OPENFILENAME ofn;       // common dialog box structure
 	char szFile[1024];      // buffer for file name
 
-	emuPause(TRUE, SNDNOSYNC);
+	emuPause(TRUE);
 
 	// Initialize OPENFILENAME
 	ZeroMemory(&ofn, sizeof(ofn));
@@ -1921,7 +1921,7 @@ void open_event(void) {
 		guiUpdate();
 	}
 
-	emuPause(FALSE, 2000.0);
+	emuPause(FALSE);
 }
 void change_menuitem(BYTE checkORenab, UINT type, UINT bMenuItemID) {
 	if (checkORenab == CHECK) {
@@ -2211,11 +2211,11 @@ void set_fps(int newfps) {
 		return;
 	}
 	cfg->fps = newfps;
-	emuPause(TRUE, SNDNOSYNC);
+	emuPause(TRUE);
 	fpsInit();
 	sndStart();
 	guiUpdate();
-	emuPause(FALSE, 2000.0);
+	emuPause(FALSE);
 }
 void set_frame_skip(int newframeskip) {
 	if (cfg->frameskip == newframeskip) {
@@ -2322,7 +2322,7 @@ void saveslot_incdec(BYTE mode) {
 	saveslot_set(newslot);
 }
 void saveslot_action(BYTE mode) {
-	emuPause(TRUE, SNDNOSYNC);
+	emuPause(TRUE);
 
 	if (mode == SAVE) {
 		savestateSave();
@@ -2333,7 +2333,7 @@ void saveslot_action(BYTE mode) {
 
 	guiUpdate();
 
-	emuPause(FALSE, 2000.0);
+	emuPause(FALSE);
 }
 void saveslot_set(BYTE selection) {
 	SendMessage(hSaveslot, CB_SETCURSEL, selection, 0);

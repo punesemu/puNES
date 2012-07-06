@@ -132,9 +132,9 @@ void set_fps(int newfps) {
 		return;
 	}
 	cfg->fps = newfps;
-	emuPause(TRUE, SNDNOSYNC);
+	emuPause(TRUE);
 	fpsInit();
 	sndStart();
 	guiUpdate();
-	emuPause(FALSE, 2000.0);
+	emuPause(FALSE);
 }

@@ -63,7 +63,7 @@ void cfgInput(void) {
 	cfg_port2.id = 2;
 	memcpy(&cfg_port2.port, &port2, sizeof(port2));
 
-	emuPause(TRUE, SNDNOSYNC);
+	emuPause(TRUE);
 
 	button_controller[0] = button_controller[1] = NULL;
 
@@ -187,7 +187,7 @@ void cfg_input_window_destroy(void) {
 	}
 
 	g_timeout_redraw_stop();
-	emuPause(FALSE, 2000.0);
+	emuPause(FALSE);
 }
 GtkWidget *cfg_input_std_button(const char *description) {
 	GtkWidget *button;
