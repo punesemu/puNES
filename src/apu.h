@@ -122,12 +122,10 @@
 	if (!square.sweepNegate) {\
 		offset = square.timer >> square.sweepShift;\
 	}\
-	if (!square.volume || (square.timer <= 8)\
-				|| ((square.timer + offset) >= 0x800)) {\
+	if (!square.volume || (square.timer <= 8) || ((square.timer + offset) >= 0x800)) {\
 		square.output = 0;\
 	} else {\
-		square.output = squareDuty[square.duty][square.sequencer]\
-				* square.volume;\
+		square.output = squareDuty[square.duty][square.sequencer] * square.volume;\
 	}\
 }
 #define triangleOutput()\
@@ -140,13 +138,12 @@
 		if (TR.timer < 2) {\
 			TR.output = 0;\
 		} else {\
-			/*TR.output = triangleDuty[TR.sequencer] << 1;*/\
-			TR.output = triangleDuty[TR.sequencer];\
+			TR.output = triangleDuty[TR.sequencer] << 1;\
 		}\
 	}
 #define noiseOutput()\
-	if (NS.length && !(NS.shift & 0x0001)) {\
-		NS.output = NS.volume;\
+	if (NS.length) {\
+		NS.output = (((NS.shift & 0x0001) ? -1 : 1) * NS.volume);\
 	} else {\
 		NS.output = 0;\
 	}
@@ -490,18 +487,11 @@ static const BYTE lengthTable[32] = {
 	0xC0, 0x18, 0x48, 0x1A, 0x10, 0x1C, 0x20, 0x1E
 };
 
-/*static const SWORD squareDuty[4][8] = {
+static const SWORD squareDuty[4][8] = {
 	{-1, +1, -1, -1, -1, -1, -1, -1},
 	{-1, +1, +1, -1, -1, -1, -1, -1},
 	{-1, +1, +1, +1, +1, -1, -1, -1},
 	{+1, -1, -1, +1, +1, +1, +1, +1}
-};*/
-
-static const SWORD squareDuty[4][8] = {
-	{0, 1, 0, 0, 0, 0, 0, 0},
-	{0, 1, 1, 0, 0, 0, 0, 0},
-	{0, 1, 1, 1, 1, 0, 0, 0},
-	{1, 0, 0, 1, 1, 1, 1, 1}
 };
 
 static const SWORD triangleDuty[32] = {

@@ -16,29 +16,34 @@ enum { CH_LEFT, CH_RIGHT };
 
 struct _snd {
 	BYTE opened;
-	BYTE started;
+	BYTE brk;
+
+	SWORD last_sample;
 
 	DBWORD cycles;
 	DBWORD out_of_sync;
 
 	float frequency;
+	float factor;
 
 	void *cache;
 	void *dev;
 
 	struct _position {
-		WORD current;
-		WORD last;
+		DBWORD current;
+		DBWORD last;
 	} pos;
 
 	struct _channel {
+		DBWORD max_pos;
+		DBWORD pos;
 		SWORD *ptr[2];
 		SWORD *buf[2];
 	} channel;
 
 	struct _buffer {
 		DBWORD size;
-		WORD count;
+		DBWORD count;
 	} buffer;
 } snd;
 

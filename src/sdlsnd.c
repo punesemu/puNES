@@ -15,6 +15,8 @@
 #include "gui.h"
 #include "cfgfile.h"
 
+enum { FCNORMAL, FCNONE };
+
 typedef struct {
 	SWORD *start;
 	SBYTE *end;
@@ -26,6 +28,17 @@ typedef struct {
 
 	SDL_mutex *lock;
 } _callbackData;
+
+#define snd_frequency(a)\
+	if (snd.factor != a) {\
+		snd.factor = a;\
+		snd.frequency = ((fps.nominal * machine.cpuCyclesFrame) -\
+				((machine.cpuCyclesFrame / 100.0) * snd.factor)) / dev->freq;\
+	}
+
+static const float sndFactor[3][2] = {
+	{ 11.0, 0.0 }, { 2.5, 0.0 }, { 2.5, 0.0 }
+};
 
 BYTE sndInit(void) {
 	/* inizializzo il comparto audio dell'sdl */
@@ -66,9 +79,9 @@ BYTE sndStart(void) {
 
 	/* samplarate */
 #if defined MINGW32 || defined MINGW64
-	WORD factor = 4;
+	WORD factor = 8;
 #else
-	WORD factor = 4;
+	WORD factor = 8;
 #endif
 
 	switch (cfg->samplerate) {
@@ -122,23 +135,24 @@ BYTE sndStart(void) {
 	/* valorizzo il flag di apertura device */
 	snd.opened = TRUE;
 
+	snd.last_sample = dev->silence;
+
 	if (dev->channels == STEREO) {
 		BYTE i;
 
+		snd.channel.max_pos = dev->samples * 0.8;
+		snd.channel.pos = 0;
+
 		for (i = 0; i < 2; i++) {
-			snd.channel.buf[i] = malloc(dev->size);
-			memset(snd.channel.buf[i], 0, dev->size);
+			DBWORD size = snd.channel.max_pos * sizeof(*cache->write);
+
+			snd.channel.buf[i] = malloc(size);
+			memset(snd.channel.buf[i], 0, size);
 			snd.channel.ptr[i] = snd.channel.buf[i];
 		}
 	}
 
-	if (machine.type == NTSC) {
-		snd.frequency = ((fps.nominal * machine.cpuCyclesFrame) -
-			((machine.cpuCyclesFrame / 100.0) * 10.5)) / dev->freq;
-	} else {
-		snd.frequency = ((fps.nominal * machine.cpuCyclesFrame) -
-			((machine.cpuCyclesFrame / 100.0) * 1.9)) / dev->freq;
-	}
+	snd_frequency(sndFactor[apu.type][FCNORMAL])
 
 	{
 		DBWORD total_buffer_size;
@@ -156,7 +170,7 @@ BYTE sndStart(void) {
 		}
 
 		/* inizializzo il frame di scrittura */
-		cache->write = cache->start + dev->channels;
+		cache->write = cache->start;
 		/* inizializzo il frame di lettura */
 		cache->read = (SBYTE *) cache->start;
 		/* punto alla fine del buffer */
@@ -187,32 +201,43 @@ BYTE sndWrite(void) {
 	SDL_AudioSpec *dev = snd.dev;
 	_callbackData *cache = snd.cache;
 
-	if (!cfg->audio || ((snd.pos.current = snd.cycles++ / snd.frequency) == snd.pos.last)) {
+	if (!cfg->audio) {
 		return (FALSE);
 	}
 
-	SDL_mutexP(cache->lock);
+	if (snd.brk) {
+		if (cache->filled < 3) {
+			snd.brk = FALSE;
+		} else {
+			return (FALSE);
+		}
+	}
+
+	if ((snd.pos.current = snd.cycles++ / snd.frequency) == snd.pos.last) {
+		return (FALSE);
+	}
 
 	/*
 	 * se la posizione e' maggiore o uguale al numero
 	 * di samples che compongono il frame, vuol dire che
 	 * sono passato nel frame successivo.
 	 */
-	if (snd.pos.current == dev->samples) {
-		/* incremento il contatore dei frames pieni non ancora 'riprodotti' */
-		if (++cache->filled > snd.buffer.count) {
-			cache->filled = snd.buffer.count;
-		}
-
+	if (snd.pos.current >= dev->samples) {
 		/* azzero posizione e contatore dei cicli del frame audio */
 		snd.pos.current = snd.cycles = 0;
 
-		/* swappo i buffers dei canali */
-		if (dev->channels == STEREO) {
-			SWORD *swap = snd.channel.ptr[CH_RIGHT];
-			snd.channel.ptr[CH_RIGHT] = snd.channel.ptr[CH_LEFT];
-			snd.channel.ptr[CH_LEFT] = swap;
+		SDL_mutexP(cache->lock);
+
+		/* incremento il contatore dei frames pieni non ancora 'riprodotti' */
+		if (++cache->filled >= snd.buffer.count) {
+			snd.brk = TRUE;
+		} else if (cache->filled >= ((snd.buffer.count >> 1) + 1)) {
+			snd_frequency(sndFactor[apu.type][FCNONE])
+		} else if (cache->filled < 3) {
+			snd_frequency(sndFactor[apu.type][FCNORMAL])
 		}
+
+		SDL_mutexV(cache->lock);
 	}
 
 	{
@@ -224,9 +249,17 @@ BYTE sndWrite(void) {
 		/* stereo */
 		if (dev->channels == STEREO) {
 			/* salvo il dato nel buffer del canale sinistro */
-			snd.channel.ptr[CH_LEFT][snd.pos.current] = data;
+			snd.channel.ptr[CH_LEFT][snd.channel.pos] = data;
 			/* scrivo nel nel frame audio il canale destro ritardato di un frame */
-			(*cache->write++) = snd.channel.ptr[CH_RIGHT][snd.pos.current];
+			(*cache->write++) = snd.channel.ptr[CH_RIGHT][snd.channel.pos];
+			/* swappo i buffers dei canali */
+			if (++snd.channel.pos >= snd.channel.max_pos) {
+				SWORD *swap = snd.channel.ptr[CH_RIGHT];
+
+				snd.channel.ptr[CH_RIGHT] = snd.channel.ptr[CH_LEFT];
+				snd.channel.ptr[CH_LEFT] = swap;
+				snd.channel.pos = 0;
+			}
 		}
 
 		if (cache->write >= (SWORD *) cache->end) {
@@ -235,8 +268,6 @@ BYTE sndWrite(void) {
 
 		snd.pos.last = snd.pos.current;
 	}
-
-	SDL_mutexV(cache->lock);
 
 	return (TRUE);
 }
@@ -249,40 +280,35 @@ void sndOutput(void *udata, BYTE *stream, int len) {
 
 	SDL_mutexP(cache->lock);
 
-	if (cache->filled == 0) {
-		memset(stream, 0, len);
+	if (!cache->filled) {
+		memset(stream, snd.last_sample, len);
 
 		snd.out_of_sync++;
 	} else {
 #ifndef RELEASE
-		fprintf(stderr, "snd : %d %d %2d %d %f %4s\r", len, fps.total_frames_skipped,
-				cache->filled, snd.out_of_sync, snd.frequency, "");
+		fprintf(stderr, "snd : %d %d %d %2d %d %f %4s\r", len, snd.buffer.count,
+		        fps.total_frames_skipped, cache->filled, snd.out_of_sync, snd.frequency, "");
 #endif
+		/* invio i samples richiesti alla scheda sonora */
+		memcpy(stream, cache->read, len);
 
-		if (!snd.started && (cache->filled < 2)) {
-			memset(stream, 0, len);
+		/* salvo l'ultimo sample inviato */
+		snd.last_sample = (SWORD) cache->read[len - 1];
 
-		} else {
-			snd.started = TRUE;
+		/*
+	 	 * mi preparo per i prossimi frames da inviare, sempre
+	 	 * che non abbia raggiunto la fine del buffer, nel
+	 	 * qual caso devo puntare al suo inizio.
+	 	 */
+		if ((cache->read += len) >= cache->end) {
+			cache->read = (SBYTE *) cache->start;
+		}
 
-			/* invio i samples richiesti alla scheda sonora */
-			memcpy(stream, cache->read, len);
+		{
+			SDL_AudioSpec *dev = snd.dev;
 
-			/*
-		 	 * mi preparo per i prossimi frames da inviare, sempre
-		 	 * che non abbia raggiunto la fine del buffer, nel
-		 	 * qual caso devo puntare al suo inizio.
-		 	 */
-			if ((cache->read += len) >= cache->end) {
-				cache->read = (SBYTE *) cache->start;
-			}
-
-			{
-				SDL_AudioSpec *dev = snd.dev;
-
-				/* decremento il numero dei frames pieni */
-				cache->filled -= (((len / dev->channels) / 2) / dev->samples);
-			}
+			/* decremento il numero dei frames pieni */
+			cache->filled -= (((len / dev->channels) / 2) / dev->samples);
 		}
 	}
 
@@ -290,7 +316,7 @@ void sndOutput(void *udata, BYTE *stream, int len) {
 }
 void sndStop(void) {
 	if (snd.opened) {
-		snd.opened = snd.started = FALSE;
+		snd.opened = FALSE;
 		SDL_PauseAudio(TRUE);
 		SDL_CloseAudio();
 	}
