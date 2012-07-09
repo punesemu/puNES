@@ -140,7 +140,8 @@ BYTE sndStart(void) {
 	if (dev->channels == STEREO) {
 		BYTE i;
 
-		snd.channel.max_pos = dev->samples * 0.8;
+		//snd.channel.max_pos = dev->samples * 1.30;
+		snd.channel.max_pos = dev->samples * 0.30;
 		snd.channel.pos = 0;
 
 		for (i = 0; i < 2; i++) {
@@ -308,7 +309,7 @@ void sndOutput(void *udata, BYTE *stream, int len) {
 			SDL_AudioSpec *dev = snd.dev;
 
 			/* decremento il numero dei frames pieni */
-			cache->filled -= (((len / dev->channels) / 2) / dev->samples);
+			cache->filled -= (((len / dev->channels) / sizeof(*cache->write)) / dev->samples);
 		}
 	}
 

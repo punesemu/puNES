@@ -59,25 +59,40 @@ enum { SSSAVE, SSREAD, SSCOUNT };
 			break;\
 	}
 #define savestateSquare(square, slot)\
-	savestateEle(mode, slot, square.timer);\
+	/*\
+	 * ho portato da SDBWORD a SWORD square.timer e per mantenere\
+	 * la compatibilita' con i vecchi salvataggi faccio questa\
+	 * conversione.\
+	 */\
+	if (savestate.version < 8) {\
+		if (mode == SSREAD) {\
+			SDBWORD old_timer;\
+			savestateEle(mode, slot, old_timer)\
+			square.timer = (SWORD) old_timer;\
+		} else if (mode == SSCOUNT) {\
+			savestate.totSize[slot] += sizeof(SDBWORD);\
+		}\
+	} else {\
+		savestateEle(mode, slot, square.timer)\
+	}\
 	savestateEle(mode, slot, square.frequency);\
 	savestateEle(mode, slot, square.duty);\
-	savestateEle(mode, slot, square.envelope);\
-	savestateEle(mode, slot, square.envelopeDivider);\
-	savestateEle(mode, slot, square.envelopeCounter);\
-	savestateEle(mode, slot, square.constantVolume);\
-	savestateEle(mode, slot, square.envelopeDelay);\
+	savestateEle(mode, slot, square.envelope.enabled);\
+	savestateEle(mode, slot, square.envelope.divider);\
+	savestateEle(mode, slot, square.envelope.counter);\
+	savestateEle(mode, slot, square.envelope.constant_volume);\
+	savestateEle(mode, slot, square.envelope.delay);\
 	savestateEle(mode, slot, square.volume);\
 	savestateEle(mode, slot, square.sequencer);\
-	savestateEle(mode, slot, square.sweepEnabled);\
-	savestateEle(mode, slot, square.sweepNegate);\
-	savestateEle(mode, slot, square.sweepDivider);\
-	savestateEle(mode, slot, square.sweepShift);\
-	savestateEle(mode, slot, square.sweepReload);\
-	savestateEle(mode, slot, square.sweepDelay);\
-	savestateEle(mode, slot, square.length);\
-	savestateEle(mode, slot, square.lengthEnabled);\
-	savestateEle(mode, slot, square.lengthHalt);\
+	savestateEle(mode, slot, square.sweep.enabled);\
+	savestateEle(mode, slot, square.sweep.negate);\
+	savestateEle(mode, slot, square.sweep.divider);\
+	savestateEle(mode, slot, square.sweep.shift);\
+	savestateEle(mode, slot, square.sweep.reload);\
+	savestateEle(mode, slot, square.sweep.delay);\
+	savestateEle(mode, slot, square.length.value);\
+	savestateEle(mode, slot, square.length.enabled);\
+	savestateEle(mode, slot, square.length.halt);\
 	savestateEle(mode, slot, square.output)
 
 struct _savestate {

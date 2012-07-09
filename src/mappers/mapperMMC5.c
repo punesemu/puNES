@@ -220,10 +220,10 @@ void mapInit_MMC5(void) {
 
 		useChrS();
 	} else {
-		mmc5.S3.lengthEnabled = 0;
-		mmc5.S3.length = 0;
-		mmc5.S4.lengthEnabled = 0;
-		mmc5.S4.length = 0;
+		mmc5.S3.length.enabled = 0;
+		mmc5.S3.length.value = 0;
+		mmc5.S4.length.enabled = 0;
+		mmc5.S4.length.value = 0;
 	}
 
 	info.mapperExtendWrite = TRUE;
@@ -299,11 +299,11 @@ void extclCpuWrMem_MMC5(WORD address, BYTE value) {
 			}
 			return;
 		case 0x5015:
-			if (!(mmc5.S3.lengthEnabled = value & 0x01)) {
-				mmc5.S3.length = 0;
+			if (!(mmc5.S3.length.enabled = value & 0x01)) {
+				mmc5.S3.length.value = 0;
 			}
-			if (!(mmc5.S4.lengthEnabled = value & 0x02)) {
-				mmc5.S4.length = 0;
+			if (!(mmc5.S4.length.enabled = value & 0x02)) {
+				mmc5.S4.length.value = 0;
 			}
 			return;
 		case 0x5100:
@@ -489,10 +489,10 @@ BYTE extclCpuRdMem_MMC5(WORD address, BYTE openbus, BYTE before) {
 			 * non e' a 0 e se si setto a 1 il bit corrispondente
 			 * nel byte di ritorno.
 			 */
-			if (mmc5.S3.length) {
+			if (mmc5.S3.length.value) {
 				value |= 0x01;
 			}
-			if (mmc5.S4.length) {
+			if (mmc5.S4.length.value) {
 				value |= 0x02;
 			}
 			return (value);

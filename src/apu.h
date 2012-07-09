@@ -31,11 +31,11 @@
 	 * se non e' settato il flag halt e il length\
 	 * counter non e' 0 allora devo decrementarlo.\
 	 */\
-	if (!channel.lengthHalt && channel.length) {\
-		channel.length--;\
+	if (!channel.length.halt && channel.length.value) {\
+		channel.length.value--;\
 	}
 #define lengthClock()\
-	apu.lengthClocked = TRUE;\
+	apu.length_clocked = TRUE;\
 	lengthRun(S1)\
 	lengthRun(S2)\
 	lengthRun(TR)\
@@ -49,23 +49,23 @@
 	}
 /* envelope */
 #define envelopeRun(channel)\
-	if (channel.envelope) {\
-		channel.envelope = FALSE;\
-		channel.envelopeCounter = 15;\
-		channel.envelopeDelay = channel.envelopeDivider << 1;\
-	} else if (--channel.envelopeDelay < 0) {\
-		channel.envelopeDelay = channel.envelopeDivider << 1;\
-		if (channel.envelopeCounter | channel.lengthHalt) {\
-			channel.envelopeCounter = (channel.envelopeCounter - 1) & 0x0E;\
+	if (channel.envelope.enabled) {\
+		channel.envelope.enabled = FALSE;\
+		channel.envelope.counter = 15;\
+		channel.envelope.delay = channel.envelope.divider << 1;\
+	} else if (--channel.envelope.delay < 0) {\
+		channel.envelope.delay = channel.envelope.divider << 1;\
+		if (channel.envelope.counter | channel.length.halt) {\
+			channel.envelope.counter = (channel.envelope.counter - 1) & 0x0E;\
 		}\
 	}\
 	/* setto il volume */\
-	if (!channel.length) {\
+	if (!channel.length.value) {\
 		channel.volume = 0;\
-	} else if (channel.constantVolume) {\
-		channel.volume = channel.envelopeDivider;\
+	} else if (channel.envelope.constant_volume) {\
+		channel.volume = channel.envelope.divider;\
 	} else {\
-		channel.volume = channel.envelopeCounter;\
+		channel.volume = channel.envelope.counter;\
 	}
 #define envelopeClock()\
 	envelopeRun(S1)\
@@ -79,22 +79,21 @@
 		extclEnvelopeClock();\
 	}
 /* sweep */
-#define sweepRun(channel, negativeAdjust)\
-	if (--channel.sweepDelay < 0) {\
-		channel.sweepReload = TRUE;\
-		if (channel.sweepShift && channel.sweepEnabled\
-				&& (channel.timer >= 8)) {\
-			DBWORD offset = channel.timer >> channel.sweepShift;\
-			if (channel.sweepNegate) {\
-				channel.timer += negativeAdjust - offset;\
+#define sweepRun(channel, negative_adjust)\
+	if (--channel.sweep.delay < 0) {\
+		channel.sweep.reload = TRUE;\
+		if (channel.sweep.shift && channel.sweep.enabled && (channel.timer >= 8)) {\
+			SWORD offset = channel.timer >> channel.sweep.shift;\
+			if (channel.sweep.negate) {\
+				channel.timer += ((SWORD) negative_adjust - offset);\
 			} else if ((channel.timer + offset) <= 0x800) {\
 				channel.timer += offset;\
 			}\
 		}\
 	}\
-	if (channel.sweepReload) {\
-		channel.sweepReload = FALSE;\
-		channel.sweepDelay = channel.sweepDivider;\
+	if (channel.sweep.reload) {\
+		channel.sweep.reload = FALSE;\
+		channel.sweep.delay = channel.sweep.divider;\
 	}
 #define sweepClock()\
 	sweepRun(S1, -1)\
@@ -107,53 +106,63 @@
 	}
 /* linear counter */
 #define linearClock()\
-	if (TR.linearHalt) {\
-		TR.linear = TR.linearReload;\
-	} else if (TR.linear) {\
-		TR.linear--;\
+	if (TR.linear.halt) {\
+		TR.linear.value = TR.linear.reload;\
+	} else if (TR.linear.value) {\
+		TR.linear.value--;\
 	}\
-	if (!TR.lengthHalt) {\
-		TR.linearHalt = FALSE;\
+	if (!TR.length.halt) {\
+		TR.linear.halt = FALSE;\
 	}
 /* output */
 #define squareOutput(square)\
 {\
-	DBWORD offset = 0;\
-	if (!square.sweepNegate) {\
-		offset = square.timer >> square.sweepShift;\
+	WORD offset = 0;\
+	SBYTE output = 0;\
+	if (!square.sweep.negate) {\
+		offset = square.timer >> square.sweep.shift;\
 	}\
 	if (!square.volume || (square.timer <= 8) || ((square.timer + offset) >= 0x800)) {\
-		square.output = 0;\
+		output = 0;\
 	} else {\
-		square.output = squareDuty[square.duty][square.sequencer] * square.volume;\
+		output = squareDuty[square.duty][square.sequencer] * square.volume;\
 	}\
+	square.output = output;\
 }
 #define triangleOutput()\
-	if (TR.length && TR.linear) {\
+{\
+	SBYTE output = 0;\
+	if (TR.length.value && TR.linear.value) {\
 		/*\
 		 * ai 2 cicli piu' bassi del timer, la frequenza\
 		 * risultante e' troppo alta (oltre i 20 kHz,\
 		 * quindi non udibile), percio' la taglio.\
 		 */\
 		if (TR.timer < 2) {\
-			TR.output = 0;\
+			output = 0;\
 		} else {\
-			TR.output = triangleDuty[TR.sequencer] << 1;\
+			output = triangleDuty[TR.sequencer] << 1;\
 		}\
-	}
+		TR.output = output;\
+	}\
+}
 #define noiseOutput()\
-	if (NS.length) {\
-		NS.output = (((NS.shift & 0x0001) ? -1 : 1) * NS.volume);\
+{\
+	SBYTE output = 0;\
+	if (NS.length.value) {\
+		output = (((NS.shift & 0x0001) ? -1 : 1) * NS.volume);\
 	} else {\
-		NS.output = 0;\
-	}
+		output = 0;\
+	}\
+	NS.output = output;\
+}
 #define dmcOutput()\
 	DMC.output = DMC.counter
 /* ticket */
 #define squareTick(square)\
 	if (!(--square.frequency)) {\
 		squareOutput(square)\
-		square.frequency = (square.timer + 1) << 1;\
+		square.frequency = (square.timer << 1) + 2;\
 		square.sequencer = (square.sequencer + 1) & 0x07;\
 	}
 #define triangleTick()\
@@ -270,17 +279,17 @@
 	/* duty */\
 	square.duty = value >> 6;\
 	/* length counter */\
-	square.lengthHalt = value & 0x20;\
+	square.length.halt = value & 0x20;\
 	/* envelope */\
-	square.constantVolume = value & 0x10;\
-	square.envelopeDivider = value & 0x0F
+	square.envelope.constant_volume = value & 0x10;\
+	square.envelope.divider = value & 0x0F
 #define squareReg1(square)\
 	/* sweep */\
-	square.sweepReload = TRUE;\
-	square.sweepDivider = (value >> 4) & 0x07;\
-	square.sweepShift = value & 0x07;\
-	square.sweepEnabled = value & 0x80;\
-	square.sweepNegate = value & 0x08
+	square.sweep.reload = TRUE;\
+	square.sweep.divider = (value >> 4) & 0x07;\
+	square.sweep.shift = value & 0x07;\
+	square.sweep.enabled = value & 0x80;\
+	square.sweep.negate = value & 0x08
 #define squareReg2(square)\
 	/* timer (low 8 bits) */\
 	square.timer = (square.timer & 0x0700) | value
@@ -294,12 +303,12 @@
 	 * momento del clock di un length counter e\
 	 * con il length diverso da zero.\
 	 */\
-	if (square.lengthEnabled && !(apu.lengthClocked && square.length)) {\
-		/*square.length = lengthTable[(value & 0xF8) >> 3];*/\
-		square.length = lengthTable[value >> 3];\
+	if (square.length.enabled && !(apu.length_clocked && square.length.value)) {\
+		/*square.length.value = lengthTable[(value & 0xF8) >> 3];*/\
+		square.length.value = lengthTable[value >> 3];\
 	}\
 	/* envelope */\
-	square.envelope = TRUE;\
+	square.envelope.enabled = TRUE;\
 	/* timer (high 3 bits) */\
 	square.timer = (square.timer & 0x00FF) | ((value & 0x07) << 8);\
 	/* sequencer */\
@@ -309,7 +318,7 @@ typedef struct {
 	BYTE mode;
 	BYTE type;
 	BYTE step;
-	BYTE lengthClocked;
+	BYTE length_clocked;
 	BYTE DMC;
 	SWORD cycles;
 } _apu;
@@ -323,49 +332,59 @@ typedef struct {
 	BYTE delay;
 } _r4017;
 typedef struct {
+	BYTE enabled;
+	BYTE divider;
+	BYTE counter;
+	BYTE constant_volume;
+	SBYTE delay;
+} _envelope;
+typedef struct {
+	BYTE enabled;
+	BYTE negate;
+	BYTE divider;
+	BYTE shift;
+	BYTE reload;
+	SBYTE delay;
+} _sweep;
+typedef struct {
+	BYTE value;
+	BYTE enabled;
+	BYTE halt;
+} _length_counter;
+typedef struct {
+	BYTE value;
+	BYTE reload;
+	BYTE halt;
+} _linear_counter;
+typedef struct {
 	/* timer */
-	SDBWORD timer;
+	SWORD timer;
 	/* ogni quanti cicli devo generare un output */
 	WORD frequency;
 	/* duty */
 	BYTE duty;
 	/* envelope */
-	BYTE envelope;
-	BYTE envelopeDivider;
-	BYTE envelopeCounter;
-	BYTE constantVolume;
-	SBYTE envelopeDelay;
+	_envelope envelope;
 	/* volume */
 	BYTE volume;
 	/* sequencer */
 	BYTE sequencer;
 	/* sweep */
-	BYTE sweepEnabled;
-	BYTE sweepNegate;
-	BYTE sweepDivider;
-	BYTE sweepShift;
-	BYTE sweepReload;
-	SBYTE sweepDelay;
+	_sweep sweep;
 	/* length counter */
-	BYTE length;
-	BYTE lengthEnabled;
-	BYTE lengthHalt;
+	_length_counter length;
 	/* output */
 	SWORD output;
 } _apuSquare;
 typedef struct {
 	/* timer */
-	SDBWORD timer;
+	WORD timer;
 	/* ogni quanti cicli devo generare un output */
 	WORD frequency;
 	/* linear counter */
-	BYTE linear;
-	BYTE linearReload;
-	BYTE linearHalt;
+	_linear_counter linear;
 	/* length counter */
-	BYTE length;
-	BYTE lengthEnabled;
-	BYTE lengthHalt;
+	_length_counter length;
 	/* sequencer */
 	BYTE sequencer;
 	/* output */
@@ -377,11 +396,7 @@ typedef struct {
 	/* ogni quanti cicli devo generare un output */
 	WORD frequency;
 	/* envelope */
-	BYTE envelope;
-	BYTE envelopeDivider;
-	BYTE envelopeCounter;
-	BYTE constantVolume;
-	SBYTE envelopeDelay;
+	_envelope envelope;
 	/* specifico del noise */
 	BYTE mode;
 	/* volume */
@@ -389,9 +404,7 @@ typedef struct {
 	/* shift register */
 	WORD shift;
 	/* length counter */
-	BYTE length;
-	BYTE lengthEnabled;
-	BYTE lengthHalt;
+	_length_counter length;
 	/* sequencer */
 	BYTE sequencer;
 	/* output */
@@ -408,7 +421,7 @@ typedef struct {
 	WORD addressStart;
 	DBWORD address;
 	WORD length;
-	BYTE counter;
+	SBYTE counter;
 	BYTE empty;
 	BYTE buffer;
 
@@ -487,14 +500,14 @@ static const BYTE lengthTable[32] = {
 	0xC0, 0x18, 0x48, 0x1A, 0x10, 0x1C, 0x20, 0x1E
 };
 
-static const SWORD squareDuty[4][8] = {
+static const SBYTE squareDuty[4][8] = {
 	{-1, +1, -1, -1, -1, -1, -1, -1},
 	{-1, +1, +1, -1, -1, -1, -1, -1},
 	{-1, +1, +1, +1, +1, -1, -1, -1},
 	{+1, -1, -1, +1, +1, +1, +1, +1}
 };
 
-static const SWORD triangleDuty[32] = {
+static const SBYTE triangleDuty[32] = {
 	0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
 	0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F,
 	0x0F, 0x0E, 0x0D, 0x0C, 0x0B, 0x0A, 0x09, 0x08,

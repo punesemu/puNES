@@ -347,16 +347,16 @@ static BYTE INLINE apuRdReg(WORD address) {
 		 * non e' a 0 e se si setto a 1 il bit corrispondente
 		 * nel byte di ritorno.
 		 */
-		if (S1.length) {
+		if (S1.length.value) {
 			value |= 0x01;
 		}
-		if (S2.length) {
+		if (S2.length.value) {
 			value |= 0x02;
 		}
-		if (TR.length) {
+		if (TR.length.value) {
 			value |= 0x04;
 		}
-		if (NS.length) {
+		if (NS.length.value) {
 			value |= 0x08;
 		}
 		/* indico se ci sono bytes da processare ancora */
@@ -1160,9 +1160,9 @@ static void INLINE apuWrReg(WORD address, BYTE value) {
 				 * il triangle ha una posizione diversa per il
 				 * flag LCHalt.
 				 */
-				TR.lengthHalt = value & 0x80;
+				TR.length.halt = value & 0x80;
 				/* linear counter */
-				TR.linearReload = value & 0x7F;
+				TR.linear.reload = value & 0x7F;
 				return;
 			}
 			if (address == 0x400A) {
@@ -1180,8 +1180,8 @@ static void INLINE apuWrReg(WORD address, BYTE value) {
 				 * momento del clock di un length counter e
 				 * con il length diverso da zero.
 				 */
-				if (TR.lengthEnabled && !(apu.lengthClocked && TR.length)) {
-					TR.length = lengthTable[value >> 3];
+				if (TR.length.enabled && !(apu.length_clocked && TR.length.value)) {
+					TR.length.value = lengthTable[value >> 3];
 				}
 				/* timer (high 3 bits) */
 				TR.timer = (TR.timer & 0x00FF) | ((value & 0x07) << 8);
@@ -1189,7 +1189,7 @@ static void INLINE apuWrReg(WORD address, BYTE value) {
 				 * scrivendo in questo registro si setta
 				 * automaticamente l'halt flag del triangle.
 				 */
-				TR.linearHalt = TRUE;
+				TR.linear.halt = TRUE;
 				return;
 			}
 			return;
@@ -1197,10 +1197,10 @@ static void INLINE apuWrReg(WORD address, BYTE value) {
 		/* --------------------- noise ----------------------*/
 		if (address <= 0x400F) {
 			if (address == 0x400C) {
-				NS.lengthHalt = value & 0x20;
+				NS.length.halt = value & 0x20;
 				/* envelope */
-				NS.constantVolume = value & 0x10;
-				NS.envelopeDivider = value & 0x0F;
+				NS.envelope.constant_volume = value & 0x10;
+				NS.envelope.divider = value & 0x0F;
 				return;
 			}
 			if (address == 0x400E) {
@@ -1217,11 +1217,11 @@ static void INLINE apuWrReg(WORD address, BYTE value) {
 				 * momento del clock di un length counter e
 				 * con il length diverso da zero.
 				 */
-				if (NS.lengthEnabled && !(apu.lengthClocked && NS.length)) {
-					NS.length = lengthTable[value >> 3];
+				if (NS.length.enabled && !(apu.length_clocked && NS.length.value)) {
+					NS.length.value = lengthTable[value >> 3];
 				}
 				/* envelope */
-				NS.envelope = TRUE;
+				NS.envelope.enabled = TRUE;
 				return;
 			}
 			return;
@@ -1316,17 +1316,17 @@ static void INLINE apuWrReg(WORD address, BYTE value) {
 			 * counter di ogni canale e' a 0, il counter
 			 * dello stesso canale e' immediatamente azzerato.
 			 */
-			if (!(S1.lengthEnabled = r4015.value & 0x01)) {
-				S1.length = 0;
+			if (!(S1.length.enabled = r4015.value & 0x01)) {
+				S1.length.value = 0;
 			}
-			if (!(S2.lengthEnabled = r4015.value & 0x02)) {
-				S2.length = 0;
+			if (!(S2.length.enabled = r4015.value & 0x02)) {
+				S2.length.value = 0;
 			}
-			if (!(TR.lengthEnabled = r4015.value & 0x04)) {
-				TR.length = 0;
+			if (!(TR.length.enabled = r4015.value & 0x04)) {
+				TR.length.value = 0;
 			}
-			if (!(NS.lengthEnabled = r4015.value & 0x08)) {
-				NS.length = 0;
+			if (!(NS.length.enabled = r4015.value & 0x08)) {
+				NS.length.value = 0;
 			}
 			/*
 			 * se il bit 4 e' 0 allora devo azzerare i bytes

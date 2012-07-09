@@ -27,7 +27,7 @@
 #include "fds.h"
 #include "gamegenie.h"
 
-#define SAVEVERSION 7
+#define SAVEVERSION 8
 
 BYTE stateOperation(BYTE mode, BYTE slot, FILE *fp);
 BYTE nameStateFile(char *file, BYTE slot);
@@ -378,7 +378,7 @@ BYTE stateOperation(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, apu.mode)
 	savestateEle(mode, slot, apu.type)
 	savestateEle(mode, slot, apu.step)
-	savestateEle(mode, slot, apu.lengthClocked)
+	savestateEle(mode, slot, apu.length_clocked)
 	savestateEle(mode, slot, apu.DMC)
 	savestateEle(mode, slot, apu.cycles)
 	/* r4015 */
@@ -392,24 +392,39 @@ BYTE stateOperation(BYTE mode, BYTE slot, FILE *fp) {
 	/* S2 */
 	savestateSquare(S2, slot)
 	/* TR */
-	savestateEle(mode, slot, TR.timer)
+	/*
+	 * ho portato da SDBWORD a WORD TR.timer e per mantenere
+	 * la compatibilita' con i vecchi salvataggi faccio questa
+	 * conversione.
+	 */
+	if (savestate.version < 8) {
+		if (mode == SSREAD) {
+			SDBWORD old_timer;
+			savestateEle(mode, slot, old_timer)
+			TR.timer = (WORD) old_timer;
+		} else if (mode == SSCOUNT) {
+			savestate.totSize[slot] += sizeof(SDBWORD);
+		}
+	} else {
+		savestateEle(mode, slot, TR.timer)
+	}
 	savestateEle(mode, slot, TR.frequency)
-	savestateEle(mode, slot, TR.linear)
-	savestateEle(mode, slot, TR.linearReload)
-	savestateEle(mode, slot, TR.linearHalt)
-	savestateEle(mode, slot, TR.length)
-	savestateEle(mode, slot, TR.lengthEnabled)
-	savestateEle(mode, slot, TR.lengthHalt)
+	savestateEle(mode, slot, TR.linear.value)
+	savestateEle(mode, slot, TR.linear.reload)
+	savestateEle(mode, slot, TR.linear.halt)
+	savestateEle(mode, slot, TR.length.value)
+	savestateEle(mode, slot, TR.length.enabled)
+	savestateEle(mode, slot, TR.length.halt)
 	savestateEle(mode, slot, TR.sequencer)
 	savestateEle(mode, slot, TR.output)
 	/* NS */
 	savestateEle(mode, slot, NS.timer)
 	savestateEle(mode, slot, NS.frequency)
-	savestateEle(mode, slot, NS.envelope)
-	savestateEle(mode, slot, NS.envelopeDivider)
-	savestateEle(mode, slot, NS.envelopeCounter)
-	savestateEle(mode, slot, NS.constantVolume)
-	savestateEle(mode, slot, NS.envelopeDelay)
+	savestateEle(mode, slot, NS.envelope.enabled)
+	savestateEle(mode, slot, NS.envelope.divider)
+	savestateEle(mode, slot, NS.envelope.counter)
+	savestateEle(mode, slot, NS.envelope.constant_volume)
+	savestateEle(mode, slot, NS.envelope.delay)
 	savestateEle(mode, slot, NS.mode)
 	savestateEle(mode, slot, NS.volume)
 	/*
@@ -430,9 +445,9 @@ BYTE stateOperation(BYTE mode, BYTE slot, FILE *fp) {
 	} else {
 		savestateEle(mode, slot, NS.shift)
 	}
-	savestateEle(mode, slot, NS.length)
-	savestateEle(mode, slot, NS.lengthEnabled)
-	savestateEle(mode, slot, NS.lengthHalt)
+	savestateEle(mode, slot, NS.length.value)
+	savestateEle(mode, slot, NS.length.enabled)
+	savestateEle(mode, slot, NS.length.halt)
 	savestateEle(mode, slot, NS.sequencer)
 	savestateEle(mode, slot, NS.output)
 	/* DMC */

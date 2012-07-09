@@ -21,7 +21,7 @@ void apuTick(SWORD cyclesCPU, BYTE *hwtick) {
 	 * questo flag sara' a TRUE solo nel ciclo
 	 * in cui viene eseguito il length counter.
 	 */
-	apu.lengthClocked = FALSE;
+	apu.length_clocked = FALSE;
 	/*
 	 * se e' settato il delay del $4017, essendo
 	 * questo il ciclo successivo, valorizzo il
@@ -240,15 +240,15 @@ void apuTurnON(void) {
 		r4017.delay = FALSE;
 		r4017jitter();
 		r4015.value = 0;
-		S1.lengthEnabled = 0;
-		S1.length = 0;
-		S2.lengthEnabled = 0;
-		S2.length = 0;
-		TR.lengthEnabled = 0;
-		TR.length = 0;
+		S1.length.enabled = 0;
+		S1.length.value = 0;
+		S2.length.enabled = 0;
+		S2.length.value = 0;
+		TR.length.enabled = 0;
+		TR.length.value = 0;
 		TR.sequencer = 7;
-		NS.lengthEnabled = 0;
-		NS.length = 0;
+		NS.length.enabled = 0;
+		NS.length.value = 0;
 		DMC.remain = 0;
 		DMC.silence = TRUE;
 		DMC.frequency = 1;
