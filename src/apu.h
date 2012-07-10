@@ -118,20 +118,16 @@
 #define squareOutput(square)\
 {\
 	WORD offset = 0;\
-	SBYTE output = 0;\
 	if (!square.sweep.negate) {\
 		offset = square.timer >> square.sweep.shift;\
 	}\
 	if (!square.volume || (square.timer <= 8) || ((square.timer + offset) >= 0x800)) {\
-		output = 0;\
+		square.output = 0;\
 	} else {\
-		output = squareDuty[square.duty][square.sequencer] * square.volume;\
+		square.output = squareDuty[square.duty][square.sequencer] * square.volume;\
 	}\
-	square.output = output;\
 }
 #define triangleOutput()\
-{\
-	SBYTE output = 0;\
 	if (TR.length.value && TR.linear.value) {\
 		/*\
 		 * ai 2 cicli piu' bassi del timer, la frequenza\
@@ -139,30 +135,24 @@
 		 * quindi non udibile), percio' la taglio.\
 		 */\
 		if (TR.timer < 2) {\
-			output = 0;\
+			TR.output = 0;\
 		} else {\
-			output = triangleDuty[TR.sequencer] << 1;\
+			TR.output = triangleDuty[TR.sequencer];\
 		}\
-		TR.output = output;\
-	}\
-}
+	}
 #define noiseOutput()\
-{\
-	SBYTE output = 0;\
 	if (NS.length.value) {\
-		output = (((NS.shift & 0x0001) ? -1 : 1) * NS.volume);\
+		NS.output = (((NS.shift & 0x0001) ? 0 : 1) * NS.volume);\
 	} else {\
-		output = 0;\
-	}\
-	NS.output = output;\
-}
+		NS.output = 0;\
+	}
 #define dmcOutput()\
 	DMC.output = DMC.counter
 /* ticket */
 #define squareTick(square)\
 	if (!(--square.frequency)) {\
 		squareOutput(square)\
-		square.frequency = (square.timer << 1) + 2;\
+		square.frequency = (square.timer + 1) << 1;\
 		square.sequencer = (square.sequencer + 1) & 0x07;\
 	}
 #define triangleTick()\
@@ -358,7 +348,7 @@ typedef struct {
 } _linear_counter;
 typedef struct {
 	/* timer */
-	SWORD timer;
+	DBWORD timer;
 	/* ogni quanti cicli devo generare un output */
 	WORD frequency;
 	/* duty */
@@ -378,7 +368,7 @@ typedef struct {
 } _apuSquare;
 typedef struct {
 	/* timer */
-	WORD timer;
+	DBWORD timer;
 	/* ogni quanti cicli devo generare un output */
 	WORD frequency;
 	/* linear counter */
@@ -392,7 +382,7 @@ typedef struct {
 } _apuTriangle;
 typedef struct {
 	/* timer */
-	SDBWORD timer;
+	DBWORD timer;
 	/* ogni quanti cicli devo generare un output */
 	WORD frequency;
 	/* envelope */
@@ -421,7 +411,7 @@ typedef struct {
 	WORD addressStart;
 	DBWORD address;
 	WORD length;
-	SBYTE counter;
+	BYTE counter;
 	BYTE empty;
 	BYTE buffer;
 
@@ -500,18 +490,25 @@ static const BYTE lengthTable[32] = {
 	0xC0, 0x18, 0x48, 0x1A, 0x10, 0x1C, 0x20, 0x1E
 };
 
-static const SBYTE squareDuty[4][8] = {
+/*static const SBYTE squareDuty[4][8] = {
 	{-1, +1, -1, -1, -1, -1, -1, -1},
 	{-1, +1, +1, -1, -1, -1, -1, -1},
 	{-1, +1, +1, +1, +1, -1, -1, -1},
 	{+1, -1, -1, +1, +1, +1, +1, +1}
+};*/
+
+static const SBYTE squareDuty[4][8] = {
+	{0, 1, 0, 0, 0, 0, 0, 0},
+	{0, 1, 1, 0, 0, 0, 0, 0},
+	{0, 1, 1, 1, 1, 0, 0, 0},
+	{1, 0, 0, 1, 1, 1, 1, 1}
 };
 
 static const SBYTE triangleDuty[32] = {
-	0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
-	0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F,
 	0x0F, 0x0E, 0x0D, 0x0C, 0x0B, 0x0A, 0x09, 0x08,
-	0x07, 0x06, 0x05, 0x04, 0x03, 0x02, 0x01, 0x00
+	0x07, 0x06, 0x05, 0x04, 0x03, 0x02, 0x01, 0x00,
+	0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
+	0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F
 };
 
 static const WORD noiseTimer[3][16] = {

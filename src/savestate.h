@@ -59,22 +59,7 @@ enum { SSSAVE, SSREAD, SSCOUNT };
 			break;\
 	}
 #define savestateSquare(square, slot)\
-	/*\
-	 * ho portato da SDBWORD a SWORD square.timer e per mantenere\
-	 * la compatibilita' con i vecchi salvataggi faccio questa\
-	 * conversione.\
-	 */\
-	if (savestate.version < 8) {\
-		if (mode == SSREAD) {\
-			SDBWORD old_timer;\
-			savestateEle(mode, slot, old_timer)\
-			square.timer = (SWORD) old_timer;\
-		} else if (mode == SSCOUNT) {\
-			savestate.totSize[slot] += sizeof(SDBWORD);\
-		}\
-	} else {\
-		savestateEle(mode, slot, square.timer)\
-	}\
+	savestateEle(mode, slot, square.timer)\
 	savestateEle(mode, slot, square.frequency);\
 	savestateEle(mode, slot, square.duty);\
 	savestateEle(mode, slot, square.envelope.enabled);\

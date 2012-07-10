@@ -142,6 +142,7 @@ BYTE sndStart(void) {
 
 		//snd.channel.max_pos = dev->samples * 1.30;
 		snd.channel.max_pos = dev->samples * 0.30;
+		//snd.channel.max_pos = dev->samples * 1.10;
 		snd.channel.pos = 0;
 
 		for (i = 0; i < 2; i++) {

@@ -14,6 +14,13 @@
 #include "memmap.h"
 #include "fds.h"
 
+SWORD s1a = 0;
+SWORD s2a = 0;
+SWORD tra = 0;
+SWORD nsa = 0;
+SWORD dmca = 0;
+DBWORD divider = 0;
+
 void apuTick(SWORD cyclesCPU, BYTE *hwtick) {
 	/* sottraggo il numero di cicli eseguiti */
 	apu.cycles -= cyclesCPU;
@@ -169,6 +176,13 @@ void apuTick(SWORD cyclesCPU, BYTE *hwtick) {
 	noiseTick()
 	dmcTick()
 
+	s1a  += S1.output;
+	s2a  += S2.output;
+	tra  += TR.output;
+	nsa  += NS.output;
+	dmca += DMC.output;
+	divider++;
+
 	if (extclApuTick) {
 		/*
 		 * utilizzato dalle mappers :
@@ -182,8 +196,23 @@ void apuTick(SWORD cyclesCPU, BYTE *hwtick) {
 }
 SWORD apuMixer(void) {
 	SWORD mixer;
+	SWORD s1  = s1a  / divider;
+	SWORD s2  = s2a  / divider;
+	SWORD tr  = tra  / divider;
+	SWORD ns  = nsa  / divider;
+	SWORD dmc = dmca / divider;
 
-	mixer = (S1.output + S2.output) + (TR.output + NS.output + DMC.output);
+	s1a  = 0;
+	s2a  = 0;
+	tra  = 0;
+	nsa  = 0;
+	dmca = 0;
+	divider = 0;
+
+	//mixer = (S1.output + S2.output) + (TR.output + NS.output + DMC.output);
+	mixer = s1 + s2 + tr + ns + dmc;
+
+	//mixer = dmc;
 
 	/* approsimazione lineare */
 	/*SWORD pulse_out = 0.752 * (S1.output + S2.output);
@@ -200,6 +229,7 @@ SWORD apuMixer(void) {
 		mixer = extclApuMixer(mixer);
 	} else {
 		apuMixerCutAndHigh();
+		//mixer <<= 7;
 	}
 
 	return (mixer);

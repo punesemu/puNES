@@ -1336,6 +1336,7 @@ static void INLINE apuWrReg(WORD address, BYTE value) {
 			 */
 			if (!(r4015.value & 0x10)) {
 				DMC.remain = 0;
+				DMC.empty = TRUE;
 			} else if (!DMC.remain) {
 				DMC.remain = DMC.length;
 				DMC.address = DMC.addressStart;

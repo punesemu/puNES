@@ -27,7 +27,7 @@
 #include "fds.h"
 #include "gamegenie.h"
 
-#define SAVEVERSION 8
+#define SAVEVERSION 7
 
 BYTE stateOperation(BYTE mode, BYTE slot, FILE *fp);
 BYTE nameStateFile(char *file, BYTE slot);
@@ -392,22 +392,7 @@ BYTE stateOperation(BYTE mode, BYTE slot, FILE *fp) {
 	/* S2 */
 	savestateSquare(S2, slot)
 	/* TR */
-	/*
-	 * ho portato da SDBWORD a WORD TR.timer e per mantenere
-	 * la compatibilita' con i vecchi salvataggi faccio questa
-	 * conversione.
-	 */
-	if (savestate.version < 8) {
-		if (mode == SSREAD) {
-			SDBWORD old_timer;
-			savestateEle(mode, slot, old_timer)
-			TR.timer = (WORD) old_timer;
-		} else if (mode == SSCOUNT) {
-			savestate.totSize[slot] += sizeof(SDBWORD);
-		}
-	} else {
-		savestateEle(mode, slot, TR.timer)
-	}
+	savestateEle(mode, slot, TR.timer)
 	savestateEle(mode, slot, TR.frequency)
 	savestateEle(mode, slot, TR.linear.value)
 	savestateEle(mode, slot, TR.linear.reload)
