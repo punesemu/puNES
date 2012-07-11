@@ -30,7 +30,6 @@ void mapInit_VRC7(BYTE revision) {
 	EXTCLCPUWRMEM(VRC7);
 	EXTCLSAVEMAPPER(VRC7);
 	EXTCLCPUEVERYCYCLE(VRC7);
-	EXTCLAPUMIXER(VRC7);
 	EXTCLSNDSTART(VRC7);
 	mapper.intStruct[0] = (BYTE *) &vrc7;
 	mapper.intStructSize[0] = sizeof(vrc7);
@@ -190,11 +189,6 @@ void extclCPUEveryCycle_VRC7(void) {
 
 	vrc7.count = vrc7.reload;
 	vrc7.delay = delay;
-}
-SWORD extclApuMixer_VRC7(SWORD mixer) {
-	apuMixerCutAndHigh();
-
-	return (mixer + (opll_calc() << 2));
 }
 void extclSndStart_VRC7(WORD samplarate) {
 	opll_reset(3579545, samplarate);

@@ -13,13 +13,7 @@
 #include "sdlsnd.h"
 #include "memmap.h"
 #include "fds.h"
-
-SWORD s1a = 0;
-SWORD s2a = 0;
-SWORD tra = 0;
-SWORD nsa = 0;
-SWORD dmca = 0;
-DBWORD divider = 0;
+#include "audio_filter.h"
 
 void apuTick(SWORD cyclesCPU, BYTE *hwtick) {
 	/* sottraggo il numero di cicli eseguiti */
@@ -175,65 +169,24 @@ void apuTick(SWORD cyclesCPU, BYTE *hwtick) {
 	triangleTick()
 	noiseTick()
 	dmcTick()
-
-	s1a  += S1.output;
-	s2a  += S2.output;
-	tra  += TR.output;
-	nsa  += NS.output;
-	dmca += DMC.output;
-	divider++;
-
 	if (extclApuTick) {
 		/*
 		 * utilizzato dalle mappers :
+		 * FDS
 		 * MMC5
 		 * Namcot
+		 * Sunsoft
+		 * VRC6
 		 */
 		extclApuTick();
 	}
 
+	/* tick filtro audio */
+	audio_filter_apu_tick();
+
 	sndWrite();
 }
-SWORD apuMixer(void) {
-	SWORD mixer;
-	SWORD s1  = s1a  / divider;
-	SWORD s2  = s2a  / divider;
-	SWORD tr  = tra  / divider;
-	SWORD ns  = nsa  / divider;
-	SWORD dmc = dmca / divider;
 
-	s1a  = 0;
-	s2a  = 0;
-	tra  = 0;
-	nsa  = 0;
-	dmca = 0;
-	divider = 0;
-
-	//mixer = (S1.output + S2.output) + (TR.output + NS.output + DMC.output);
-	mixer = s1 + s2 + tr + ns + dmc;
-
-	//mixer = dmc;
-
-	/* approsimazione lineare */
-	/*SWORD pulse_out = 0.752 * (S1.output + S2.output);
-	SWORD tnd_out = 0.851 * TR.output + 0.494 * NS.output + 0.335 * DMC.output;
-	mixer = pulse_out + tnd_out;
-	*/
-
-	if (extclApuMixer) {
-		/*
-		 * utilizzato dalle mappers :
-		 * MMC5
-		 * Namcot
-		 */
-		mixer = extclApuMixer(mixer);
-	} else {
-		apuMixerCutAndHigh();
-		//mixer <<= 7;
-	}
-
-	return (mixer);
-}
 void apuTurnON(void) {
 	if (info.reset >= HARD) {
 		memset(&apu, 0x00, sizeof(apu));

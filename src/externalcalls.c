@@ -31,7 +31,6 @@ void extclInit(void) {
 	extclEnvelopeClock = NULL;
 	extclSweepClock = NULL;
 	extclApuTick = NULL;
-	extclApuMixer = NULL;
 	/* irqA12 */
 	extclIrqA12Clock = NULL;
 	/* battery */

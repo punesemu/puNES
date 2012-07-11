@@ -22,7 +22,6 @@ static const BYTE volume_wave[4] = { 39, 26, 19, 15 };
 void mapInit_FDS(void) {
 	EXTCLCPUEVERYCYCLE(FDS);
 	EXTCLAPUTICK(FDS);
-	EXTCLAPUMIXER(FDS);
 
 	info.chrRom8kCount = 1;
 	mapper.writeVRAM = TRUE;
@@ -287,9 +286,4 @@ void extclApuTick_FDS(void) {
 			}
 		}
 	}
-}
-SWORD extclApuMixer_FDS(SWORD mixer) {
-	apuMixerCutAndHigh();
-
-	return (mixer + (fds.snd.main.output + (fds.snd.main.output >> 1)));
 }

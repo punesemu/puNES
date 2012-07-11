@@ -51,7 +51,6 @@ void mapInit_VRC6(BYTE revision) {
 	EXTCLSAVEMAPPER(VRC6);
 	EXTCLCPUEVERYCYCLE(VRC6);
 	EXTCLAPUTICK(VRC6);
-	EXTCLAPUMIXER(VRC6);
 	mapper.intStruct[0] = (BYTE *) &vrc6;
 	mapper.intStructSize[0] = sizeof(vrc6);
 
@@ -263,11 +262,4 @@ void extclApuTick_VRC6(void) {
 			vrc6.saw.output = vrc6.saw.internal / 5;
 		}
 	}
-}
-SWORD extclApuMixer_VRC6(SWORD mixer) {
-	mixer += (vrc6.S3.output + vrc6.S4.output) + vrc6.saw.output;
-
-	apuMixerCutAndHigh();
-
-	return (mixer);
 }

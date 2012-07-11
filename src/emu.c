@@ -46,6 +46,7 @@
 #include "ines.h"
 #include "fds.h"
 #include "gamegenie.h"
+#include "audio_filter.h"
 
 BYTE emuLoop(void) {
 #ifdef DEBUG
@@ -497,6 +498,8 @@ BYTE emuTurnON(void) {
 	if (sndInit()) {
 		return (EXIT_ERROR);
 	}
+
+	audio_filter();
 
 	if (timelineInit()) {
 		return (EXIT_ERROR);

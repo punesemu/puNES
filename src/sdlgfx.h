@@ -9,11 +9,11 @@
 #define SDLGFX_H_
 
 #include "common.h"
-#include "filters/scale.h"
-#include "filters/scale2x.h"
-#include "filters/hqx.h"
-#include "filters/bilinear.h"
-#include "filters/ntsc.h"
+#include "filters/video/scale.h"
+#include "filters/video/scale2x.h"
+#include "filters/video/hqx.h"
+#include "filters/video/bilinear.h"
+#include "filters/video/ntsc.h"
 
 enum {
 	X1 = 1,

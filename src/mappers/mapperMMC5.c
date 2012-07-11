@@ -186,7 +186,6 @@ void mapInit_MMC5(void) {
 	EXTCLLENGTHCLOCK(MMC5);
 	EXTCLENVELOPECLOCK(MMC5);
 	EXTCLAPUTICK(MMC5);
-	EXTCLAPUMIXER(MMC5);
 	mapper.intStruct[0] = (BYTE *) &mmc5;
 	mapper.intStructSize[0] = sizeof(mmc5);
 
@@ -700,13 +699,6 @@ void extclEnvelopeClock_MMC5(void) {
 void extclApuTick_MMC5(void) {
 	squareTick(mmc5.S3)
 	squareTick(mmc5.S4)
-}
-SWORD extclApuMixer_MMC5(SWORD mixer) {
-	mixer += (mmc5.S3.output + mmc5.S4.output) + mmc5.pcmSample;
-
-	apuMixerCutAndHigh();
-
-	return (mixer);
 }
 
 void prgSwap(void) {

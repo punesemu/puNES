@@ -18,5 +18,6 @@ src/openGL \
 src/mappers \
 src/gui/windows \
 src/glew \
-src/filters \
+src/filters/video \
+src/filters/audio \
 

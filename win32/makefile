@@ -12,7 +12,8 @@ RM := rm -rf
 -include src/mappers/subdir.mk
 -include src/gui/windows/subdir.mk
 -include src/glew/subdir.mk
--include src/filters/subdir.mk
+-include src/filters/video/subdir.mk
+-include src/filters/audio/subdir.mk
 -include src/subdir.mk
 -include subdir.mk
 -include objects.mk

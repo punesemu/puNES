@@ -15,6 +15,5 @@ enum { FDS_MAPPER = 0x1000 };
 void mapInit_FDS(void);
 void extclCPUEveryCycle_FDS(void);
 void extclApuTick_FDS(void);
-SWORD extclApuMixer_FDS(SWORD mixer);
 
 #endif /* MAPPERFDS_H_ */

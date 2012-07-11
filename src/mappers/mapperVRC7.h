@@ -27,7 +27,6 @@ void mapInit_VRC7(BYTE revision);
 void extclCpuWrMem_VRC7(WORD address, BYTE value);
 BYTE extclSaveMapper_VRC7(BYTE mode, BYTE slot, FILE *fp);
 void extclCPUEveryCycle_VRC7(void);
-SWORD extclApuMixer_VRC7(SWORD mixer);
 void extclSndStart_VRC7(WORD samplarate);
 
 #endif /* MAPPERVRC7_H_ */

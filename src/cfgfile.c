@@ -19,6 +19,7 @@
 #include "savestate.h"
 #include "input.h"
 #include "gamegenie.h"
+#include "audio_filter.h"
 #ifdef OPENGL
 #include "opengl.h"
 #endif
@@ -144,6 +145,8 @@ void cfgfileParse(void) {
 			cfgSearch(param, P_SAMPLERATE, 0, pSamplerate, cfg_from_file.samplerate = index);
 			/* channels */
 			cfgSearch(param, P_CHANNELS, 0, pChannels, cfg_from_file.channels = index);
+			/* audio filter */
+			cfgSearch(param, P_CHANNELS, 0, pAudioFilter, cfg_from_file.audio_filter = index);
 			/* game genie */
 			cfgSearch(param, P_GAMEGENIE, 0, pNoYes, gamegenie.enabled = index);
 			/* save on exit */
@@ -236,6 +239,8 @@ void cfgfileSave(void) {
 	writeParam((_param *) param, fp, P_SAMPLERATE, pSamplerate[cfg_from_file.samplerate].sname);
 	/* channels */
 	writeParam((_param *) param, fp, P_CHANNELS, pChannels[cfg_from_file.channels].sname);
+	/* audio filter */
+	writeParam((_param *) param, fp, P_AUDIO_FILTER, pChannels[cfg_from_file.audio_filter].sname);
 	/* game genie */
 	writeParam((_param *) param, fp, P_GAMEGENIE, pNoYes[gamegenie.enabled].sname);
 	/* save settings on exit */
@@ -419,6 +424,7 @@ void setDefault(void) {
 	cfg_from_file.audio = TRUE;
 	cfg_from_file.samplerate = S44100;
 	cfg_from_file.channels = STEREO;
+	cfg_from_file.channels = AF_NONE;
 	gamegenie.enabled = FALSE;
 	port1.type = STDCTRL;
 	portKbDefault(port1, "S", "A", "Z", "X", "Up", "Down", "Left", "Right", "W", "Q");

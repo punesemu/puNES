@@ -36,7 +36,6 @@
 #define EXTCLENVELOPECLOCK(n) extclEnvelopeClock = extclEnvelopeClock_##n
 #define EXTCLSWEEPCLOCK(n) extclSweepClock = extclSweepClock_##n
 #define EXTCLAPUTICK(n) extclApuTick = extclApuTick_##n
-#define EXTCLAPUMIXER(n) extclApuMixer = extclApuMixer_##n
 
 /* irqA12 */
 #define EXTCLIRQA12CLOCK(n) extclIrqA12Clock = extclIrqA12Clock_##n
@@ -89,7 +88,6 @@ void (*extclLengthClock)(void);
 void (*extclEnvelopeClock)(void);
 void (*extclSweepClock)(void);
 void (*extclApuTick)(void);
-SWORD (*extclApuMixer)(SWORD mixer);
 
 /* irqA12 */
 void (*extclIrqA12Clock)(void);

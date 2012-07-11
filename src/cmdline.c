@@ -34,6 +34,9 @@ BYTE cmdlineParse(int argc, char **argv) {
 			case 'c':
 				paramSearch(0, optarg, pChannels, cfg_from_file.channels = index);
 				break;
+			case 'e':
+				paramSearch(0, optarg, pAudioFilter, cfg_from_file.audio_filter = index);
+				break;
 			case 'f':
 				paramSearch(0, optarg, pFps, cfg_from_file.fps = index);
 				break;
@@ -140,6 +143,7 @@ void usage(char *name) {
 			"%s\n"
 			"%s\n"
 			"%s\n"
+			"%s\n"
 	};
 	fprintf(stdout, istructions, name,
 			param[P_MODE].help,
@@ -159,6 +163,7 @@ void usage(char *name) {
 			param[P_AUDIO].help,
 			param[P_SAMPLERATE].help,
 			param[P_CHANNELS].help,
+			param[P_AUDIO_FILTER].help,
 			param[P_GAMEGENIE].help
 	);
 	emuQuit(EXIT_SUCCESS);

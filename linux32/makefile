@@ -13,7 +13,8 @@ RM := rm -rf
 -include src/gui/gtk2/menu/subdir.mk
 -include src/gui/gtk2/subdir.mk
 -include src/glew/subdir.mk
--include src/filters/subdir.mk
+-include src/filters/video/subdir.mk
+-include src/filters/audio/subdir.mk
 -include src/subdir.mk
 -include subdir.mk
 -include objects.mk

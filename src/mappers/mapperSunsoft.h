@@ -28,7 +28,7 @@ struct _sunsoft3 {
 	WORD count;
 	BYTE delay;
 } s3;
-struct sunsoft4 {
+struct _sunsoft4 {
 	uint32_t chrNmt[2];
 	BYTE mode;
 	BYTE mirroring;
@@ -74,6 +74,5 @@ BYTE extclCpuRdMem_Sunsoft_FM7(WORD address, BYTE openbus, BYTE before);
 BYTE extclSaveMapper_Sunsoft_FM7(BYTE mode, BYTE slot, FILE *fp);
 void extclCPUEveryCycle_Sunsoft_FM7(void);
 void extclApuTick_Sunsoft_FM7(void);
-SWORD extclApuMixer_Sunsoft_FM7(SWORD mixer);
 
 #endif /* MAPPERSUNSOFT_H_ */

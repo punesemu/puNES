@@ -19,5 +19,6 @@ src/mappers \
 src/gui/gtk2/menu \
 src/gui/gtk2 \
 src/glew \
-src/filters \
+src/filters/video \
+src/filters/audio \
 

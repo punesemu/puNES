@@ -135,14 +135,15 @@
 		 * quindi non udibile), percio' la taglio.\
 		 */\
 		if (TR.timer < 2) {\
-			TR.output = 0;\
+			TR.output = 7;\
 		} else {\
 			TR.output = triangleDuty[TR.sequencer];\
 		}\
+		TR.output <<= 1;\
 	}
 #define noiseOutput()\
 	if (NS.length.value) {\
-		NS.output = (((NS.shift & 0x0001) ? 0 : 1) * NS.volume);\
+		NS.output = (((NS.shift & 0x0001) ? 0 : 2) * NS.volume);\
 	} else {\
 		NS.output = 0;\
 	}
@@ -498,10 +499,10 @@ static const BYTE lengthTable[32] = {
 };*/
 
 static const SBYTE squareDuty[4][8] = {
-	{0, 1, 0, 0, 0, 0, 0, 0},
-	{0, 1, 1, 0, 0, 0, 0, 0},
-	{0, 1, 1, 1, 1, 0, 0, 0},
-	{1, 0, 0, 1, 1, 1, 1, 1}
+	{0, 2, 0, 0, 0, 0, 0, 0},
+	{0, 2, 2, 0, 0, 0, 0, 0},
+	{0, 2, 2, 2, 2, 0, 0, 0},
+	{2, 0, 0, 2, 2, 2, 2, 2}
 };
 
 static const SBYTE triangleDuty[32] = {
@@ -542,8 +543,6 @@ static const WORD dmcRate[3][16] = {
 };
 
 void apuTick(SWORD cyclesCPU, BYTE *hwtick);
-SWORD apuMixer(void);
 void apuTurnON(void);
-
 
 #endif /* APU_H_ */

@@ -65,6 +65,5 @@ BYTE extclRdNmt_MMC5(WORD address);
 void extclLengthClock_MMC5(void);
 void extclEnvelopeClock_MMC5(void);
 void extclApuTick_MMC5(void);
-SWORD extclApuMixer_MMC5(SWORD mixer);
 
 #endif /* MAPPERMMC5_H_ */

@@ -14,6 +14,7 @@
 #include "apu.h"
 #include "gui.h"
 #include "cfgfile.h"
+#include "audio_filter.h"
 
 enum { FCNORMAL, FCNONE };
 
@@ -243,7 +244,7 @@ BYTE sndWrite(void) {
 	}
 
 	{
-		SWORD data = apuMixer();
+		SWORD data = audio_filter_apu_mixer();
 
 		/* mono or left*/
 		(*cache->write++) = data;

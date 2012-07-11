@@ -78,7 +78,8 @@
 		fm7.square[sq].timer = fm7.square[sq].frequency + 1;\
 	}\
 	if (!fm7.square[sq].disable) {\
-		fm7.square[sq].output = -fm7.square[sq].volume * ((fm7.square[sq].step & 0x10) ? 1 : -1);\
+		/*fm7.square[sq].output = -fm7.square[sq].volume * ((fm7.square[sq].step & 0x10) ? 2 : -2);*/\
+		fm7.square[sq].output = fm7.square[sq].volume * ((fm7.square[sq].step & 0x10) ? 2 : 0);\
 	}
 
 WORD prgRom16kMax, prgRom8kMax, chrRom8kMax, chrRom4kMax, chrRom2kMax, chrRom1kMax;
@@ -135,7 +136,6 @@ void mapInit_Sunsoft(BYTE model) {
 			EXTCLSAVEMAPPER(Sunsoft_FM7);
 			EXTCLCPUEVERYCYCLE(Sunsoft_FM7);
 			EXTCLAPUTICK(Sunsoft_FM7);
-			EXTCLAPUMIXER(Sunsoft_FM7);
 			mapper.intStruct[0] = (BYTE *) &fm7;
 			mapper.intStructSize[0] = sizeof(fm7);
 
@@ -493,11 +493,4 @@ void extclApuTick_Sunsoft_FM7(void) {
 	fm7SquareTick(0)
 	fm7SquareTick(1)
 	fm7SquareTick(2)
-}
-SWORD extclApuMixer_Sunsoft_FM7(SWORD mixer) {
-	mixer += (fm7.square[0].output + fm7.square[1].output + fm7.square[2].output);
-
-	apuMixerCutAndHigh();
-
-	return (mixer);
 }

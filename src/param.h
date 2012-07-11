@@ -38,6 +38,7 @@ enum {
 	P_AUDIO,
 	P_SAMPLERATE,
 	P_CHANNELS,
+	P_AUDIO_FILTER,
 	P_GAMEGENIE
 };
 enum {
@@ -58,30 +59,31 @@ static const char *optShort = "m:f:k:s:o:i:n:p:"
 #ifdef OPENGL
 		"r:v:u:t:"
 #endif
-		"a:l:c:g:Vh?";
+		"a:l:c:e:g:Vh?";
 
 static const struct option optLong[] = {
-	{ "mode",        required_argument, NULL, 'm'},
-	{ "fps",         required_argument, NULL, 'f'},
-	{ "frameskip",   required_argument, NULL, 'k'},
-	{ "size",        required_argument, NULL, 's'},
-	{ "overscan",    required_argument, NULL, 'o'},
-	{ "filter",      required_argument, NULL, 'i'},
-	{ "ntsc-format", required_argument, NULL, 'n'},
-	{ "palette",     required_argument, NULL, 'p'},
+	{ "mode",               required_argument, NULL, 'm'},
+	{ "fps",                required_argument, NULL, 'f'},
+	{ "frameskip",          required_argument, NULL, 'k'},
+	{ "size",               required_argument, NULL, 's'},
+	{ "overscan",           required_argument, NULL, 'o'},
+	{ "filter",             required_argument, NULL, 'i'},
+	{ "ntsc-format",        required_argument, NULL, 'n'},
+	{ "palette",            required_argument, NULL, 'p'},
 #ifdef OPENGL
 	{ "rendering",          required_argument, NULL, 'r'},
 	{ "vsync",              required_argument, NULL, 'v'},
 	{ "fullscreen",         required_argument, NULL, 'u'},
 	{ "stretch-fullscreen", required_argument, NULL, 't'},
 #endif
-	{ "audio",       required_argument, NULL, 'a'},
-	{ "samplerate",  required_argument, NULL, 'l'},
-	{ "channels",    required_argument, NULL, 'c'},
-	{ "gamegenie",   required_argument, NULL, 'g'},
-	{ "help",        no_argument,       NULL, 'h'},
-	{ "version",     no_argument,       NULL, 'V'},
-	{ 0,             0,                 0,     0 }
+	{ "audio",              required_argument, NULL, 'a'},
+	{ "samplerate",         required_argument, NULL, 'l'},
+	{ "channels",           required_argument, NULL, 'c'},
+	{ "audio-filter",       required_argument, NULL, 'e'},
+	{ "gamegenie",          required_argument, NULL, 'g'},
+	{ "help",               no_argument,       NULL, 'h'},
+	{ "version",            no_argument,       NULL, 'V'},
+	{ 0,                    0,                 0,     0 }
 };
 #endif
 
@@ -209,7 +211,14 @@ static const _param param[] = {
 		NULL,
 		"# possible values: mono, stereo",
 		NULL,
-		"-c, --channels            channels audio        : mono, stereo"
+		"-c, --channels            audio channels        : mono, stereo"
+	},
+	{
+		"aufio filter",
+		NULL,
+		"# possible values: none, simple",
+		NULL,
+		"-e, --audio-filter        audio filter          : none, simple"
 	},
 	{
 		"gamegenie",
@@ -368,6 +377,10 @@ static const _param pChannels[] = {
 	{"NULL",   "NULL"  },
 	{"Mono",   "mono"  },
 	{"Stereo", "stereo"}
+};
+static const _param pAudioFilter[] = {
+	{"None",   "none"  },
+	{"Simple", "simple"}
 };
 static const _param pSlot[] = {
 	{"0", "0"},

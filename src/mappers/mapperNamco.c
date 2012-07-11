@@ -70,7 +70,6 @@ void mapInit_Namco(BYTE model) {
 			EXTCLSAVEMAPPER(Namco_163);
 			EXTCLCPUEVERYCYCLE(Namco_163);
 			EXTCLAPUTICK(Namco_163);
-			EXTCLAPUMIXER(Namco_163);
 			mapper.intStruct[0] = (BYTE *) &n163;
 			mapper.intStructSize[0] = sizeof(n163);
 
@@ -351,22 +350,6 @@ void extclApuTick_Namco_163(void) {
 			}
 		}
 	}
-}
-SWORD extclApuMixer_Namco_163(SWORD mixer) {
-	BYTE i;
-	SWORD a = 0;
-
-	for (i = n163.sndChStart; i < 8; i++) {
-		if (n163.ch[i].active) {
-			a += (n163.ch[i].output * (n163.ch[i].volume >> 2));
-		}
-	}
-
-	mixer += a;
-
-	apuMixerCutAndHigh();
-
-	return (mixer);
 }
 
 void extclCpuWrMem_Namco_3425(WORD address, BYTE value) {

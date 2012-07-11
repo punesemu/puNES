@@ -7,6 +7,7 @@ C_SRCS += \
 ../src/gui/gtk2/menu/menu.c \
 ../src/gui/gtk2/menu/menu_audio.c \
 ../src/gui/gtk2/menu/menu_audio_channels.c \
+../src/gui/gtk2/menu/menu_audio_filter.c \
 ../src/gui/gtk2/menu/menu_audio_sample_rate.c \
 ../src/gui/gtk2/menu/menu_file.c \
 ../src/gui/gtk2/menu/menu_gamegenie.c \
@@ -33,6 +34,7 @@ OBJS += \
 ./src/gui/gtk2/menu/menu.o \
 ./src/gui/gtk2/menu/menu_audio.o \
 ./src/gui/gtk2/menu/menu_audio_channels.o \
+./src/gui/gtk2/menu/menu_audio_filter.o \
 ./src/gui/gtk2/menu/menu_audio_sample_rate.o \
 ./src/gui/gtk2/menu/menu_file.o \
 ./src/gui/gtk2/menu/menu_gamegenie.o \
@@ -59,6 +61,7 @@ C_DEPS += \
 ./src/gui/gtk2/menu/menu.d \
 ./src/gui/gtk2/menu/menu_audio.d \
 ./src/gui/gtk2/menu/menu_audio_channels.d \
+./src/gui/gtk2/menu/menu_audio_filter.d \
 ./src/gui/gtk2/menu/menu_audio_sample_rate.d \
 ./src/gui/gtk2/menu/menu_file.d \
 ./src/gui/gtk2/menu/menu_gamegenie.d \

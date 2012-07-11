@@ -60,7 +60,6 @@ BYTE extclCpuRdMem_Namco_163(WORD address, BYTE openbus, BYTE before);
 BYTE extclSaveMapper_Namco_163(BYTE mode, BYTE slot, FILE *fp);
 void extclCPUEveryCycle_Namco_163(void);
 void extclApuTick_Namco_163(void);
-SWORD extclApuMixer_Namco_163(SWORD mixer);
 
 void extclCpuWrMem_Namco_3425(WORD address, BYTE value);
 BYTE extclSaveMapper_Namco_3425(BYTE mode, BYTE slot, FILE *fp);

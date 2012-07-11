@@ -16,6 +16,7 @@ typedef struct {
 	BYTE audio;
 	BYTE samplerate;
 	BYTE channels;
+	BYTE audio_filter;
 	BYTE fps;
 	BYTE frameskip;
 } _config;
