@@ -114,6 +114,7 @@ void set_sample_rate(int newsamplerate) {
 	}
 
 	if (cfg->samplerate == newsamplerate) {
+		guiUpdate();
 		return;
 	}
 

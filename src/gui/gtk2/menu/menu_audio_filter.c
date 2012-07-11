@@ -112,9 +112,9 @@ void menu_audio_filter(GtkWidget *audio, GtkAccelGroup *accel_group) {
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), check[MAFSIMPLE]);
 
 	g_signal_connect_swapped(G_OBJECT(check[MAFNONE]), "activate", G_CALLBACK(set_audio_filter),
-	        GINT_TO_POINTER(0));
+	        GINT_TO_POINTER(AF_NONE));
 	g_signal_connect_swapped(G_OBJECT(check[MAFSIMPLE]), "activate", G_CALLBACK(set_audio_filter),
-	        GINT_TO_POINTER(1));
+	        GINT_TO_POINTER(AF_SIMPLE));
 }
 void menu_audio_filter_check(void) {
 	int index;
@@ -133,6 +133,7 @@ void set_audio_filter(int newfilter) {
 	}
 
 	if (cfg->audio_filter == newfilter) {
+		guiUpdate();
 		return;
 	}
 

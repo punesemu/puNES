@@ -108,6 +108,7 @@ void set_channels(int newchannels) {
 	}
 
 	if (cfg->channels == newchannels) {
+		guiUpdate();
 		return;
 	}
 

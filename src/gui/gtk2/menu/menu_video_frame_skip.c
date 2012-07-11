@@ -132,6 +132,7 @@ void set_frame_skip(int newframeskip) {
 		return;
 	}
 	if (cfg->frameskip == newframeskip) {
+		guiUpdate();
 		return;
 	}
 	cfg->frameskip = newframeskip;

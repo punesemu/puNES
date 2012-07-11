@@ -129,6 +129,7 @@ void set_fps(int newfps) {
 		return;
 	}
 	if (cfg->fps == newfps) {
+		guiUpdate();
 		return;
 	}
 	cfg->fps = newfps;
