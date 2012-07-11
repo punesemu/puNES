@@ -19,9 +19,10 @@
 		vrc6.square.timer = vrc6.square.frequency + 1;\
 	}\
 	if (vrc6.square.enabled) {\
-		vrc6.square.output = -vrc6.square.volume;\
+		/*vrc6.square.output = -vrc6.square.volume;*/\
+		vrc6.square.output = 0;\
 		if (vrc6.square.mode || (vrc6.square.step <= vrc6.square.duty)) {\
-			vrc6.square.output = vrc6.square.volume;\
+			vrc6.square.output = vrc6.square.volume << 1;\
 		}\
 	}
 #define savestateSquareVrc6(square)\

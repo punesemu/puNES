@@ -287,14 +287,14 @@ void extclCpuWrMem_MMC5(WORD address, BYTE value) {
 			mmc5.pcmEnabled = ~value & 0x01;
 			mmc5.pcmSample = 0;
 			if (mmc5.pcmEnabled) {
-				mmc5.pcmSample = mmc5.pcmAmp;
+				mmc5.pcmSample = mmc5.pcmAmp << 1;
 			}
 			return;
 		case 0x5011:
 			mmc5.pcmAmp = value;
 			mmc5.pcmSample = 0;
 			if (mmc5.pcmEnabled) {
-				mmc5.pcmSample = mmc5.pcmAmp;
+				mmc5.pcmSample = mmc5.pcmAmp << 1;
 			}
 			return;
 		case 0x5015:
