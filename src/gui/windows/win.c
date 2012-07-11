@@ -32,6 +32,7 @@
 #include "ppu.h"
 #include "fds.h"
 #include "gamegenie.h"
+#include "audio_filter.h"
 #ifdef OPENGL
 #include "opengl.h"
 #include "openGL/no_effect.h"
@@ -96,6 +97,7 @@ void set_vsync(BYTE bool);
 #endif
 void set_samplerate(int newsamplerate);
 void set_channels(int newchannels);
+void set_audio_filter(int newfilter);
 void set_fps(int newfps);
 void set_frame_skip(int newframeskip);
 void set_gamegenie(void);
@@ -1135,6 +1137,19 @@ void guiUpdate(void) {
 	}
 	change_menuitem(CHECK, MF_CHECKED, id);
 
+	/* Audio Filter */
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_AUDIO_FILTER_NONE);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_AUDIO_FILTER_SIMPLE);
+	switch (cfg->audio_filter) {
+		case AF_NONE:
+			id = IDM_SET_AUDIO_FILTER_NONE;
+			break;
+		case AF_SIMPLE:
+			id = IDM_SET_AUDIO_FILTER_SIMPLE;
+			break;
+	}
+	change_menuitem(CHECK, MF_CHECKED, id);
+
 	/* Audio Enable */
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_AUDIO_ENABLE);
 	if (cfg->audio) {
@@ -1565,6 +1580,12 @@ long __stdcall mainWinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 					break;
 				case IDM_SET_CHANNELS_STEREO:
 					set_channels(STEREO);
+					break;
+				case IDM_SET_AUDIO_FILTER_NONE:
+					set_audio_filter(AF_NONE);
+					break;
+				case IDM_SET_AUDIO_FILTER_SIMPLE:
+					set_audio_filter(AF_SIMPLE);
 					break;
 				case IDM_SET_AUDIO_ENABLE:
 					emuPause(TRUE);
@@ -2206,6 +2227,15 @@ void set_channels(int newchannels) {
 	sndStart();
 	guiUpdate();
 }
+void set_audio_filter(int newfilter) {
+	if (cfg->audio_filter == newfilter) {
+		return;
+	}
+	cfg->audio_filter = newfilter;
+	audio_filter();
+	guiUpdate();
+}
+
 void set_fps(int newfps) {
 	if (cfg->fps == newfps) {
 		return;
