@@ -89,6 +89,7 @@ void audio_filter_init_simple(void) {
 			break;
 		case 85:
 			/* VRC7 */
+			/* il tick non lo uso perche' l'audio del VRC7 e' gia' filtrato */
 			extra_audio_mixer_simple = mixer_simple_VRC7;
 			break;
 	}
