@@ -238,3 +238,29 @@ void apuTurnON(void) {
 		DMC.counterOut = 8;
 	}
 }
+
+
+
+
+void squareOutput(_apuSquare *square) {
+	WORD offset = 0;
+	SWORD pippo = 0;
+
+	if (!square->sweep.negate) {
+		offset = square->timer >> square->sweep.shift;
+	}
+	if ((square->timer <= 8) || ((square->timer + offset) >= 0x800)) {
+		pippo = 0;
+	} else {
+		pippo = squareDuty[square->duty][square->sequencer] * square->volume;
+	}
+
+	square->output = pippo;
+
+	if (square->output > 255) {
+		printf("piu %d\n", square->output);
+	} else	if (square->output < -255) {
+		printf("meno %d\n", square->output);
+	}
+
+}

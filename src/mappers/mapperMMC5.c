@@ -697,8 +697,8 @@ void extclEnvelopeClock_MMC5(void) {
 	envelopeRun(mmc5.S4)
 }
 void extclApuTick_MMC5(void) {
-	squareTick(mmc5.S3)
-	squareTick(mmc5.S4)
+	squareTick(mmc5.S3);
+	squareTick(mmc5.S4);
 }
 
 void prgSwap(void) {

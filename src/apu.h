@@ -115,18 +115,6 @@
 		TR.linear.halt = FALSE;\
 	}
 /* output */
-#define squareOutput(square)\
-{\
-	WORD offset = 0;\
-	if (!square.sweep.negate) {\
-		offset = square.timer >> square.sweep.shift;\
-	}\
-	if (!square.volume || (square.timer <= 8) || ((square.timer + offset) >= 0x800)) {\
-		square.output = 0;\
-	} else {\
-		square.output = squareDuty[square.duty][square.sequencer] * square.volume;\
-	}\
-}
 #define triangleOutput()\
 	if (TR.length.value && TR.linear.value) {\
 		/*\
@@ -152,7 +140,7 @@
 /* ticket */
 #define squareTick(square)\
 	if (!(--square.frequency)) {\
-		squareOutput(square)\
+		squareOutput(&square);\
 		square.frequency = (square.timer + 1) << 1;\
 		square.sequencer = (square.sequencer + 1) & 0x07;\
 	}
@@ -499,11 +487,18 @@ static const BYTE lengthTable[32] = {
 };*/
 
 static const SBYTE squareDuty[4][8] = {
-	{0, 2, 0, 0, 0, 0, 0, 0},
-	{0, 2, 2, 0, 0, 0, 0, 0},
-	{0, 2, 2, 2, 2, 0, 0, 0},
-	{2, 0, 0, 2, 2, 2, 2, 2}
+	{-1,  1, -1, -1, -1, -1, -1, -1},
+	{-1,  1,  1, -1, -1, -1, -1, -1},
+	{-1,  1,  1,  1,  1, -1, -1, -1},
+	{ 1, -1, -1,  1,  1,  1,  1,  1}
 };
+
+/*static const SWORD squareDuty[4][8] = {
+	{ 0,  1,  0,  0,  0,  0,  0,  0},
+	{ 0,  1,  1,  0,  0,  0,  0,  0},
+	{ 0,  1,  1,  1,  1,  0,  0,  0},
+	{ 1,  0,  0,  1,  1,  1,  1,  1}
+};*/
 
 static const SBYTE triangleDuty[32] = {
 	0x0F, 0x0E, 0x0D, 0x0C, 0x0B, 0x0A, 0x09, 0x08,
@@ -544,5 +539,7 @@ static const WORD dmcRate[3][16] = {
 
 void apuTick(SWORD cyclesCPU, BYTE *hwtick);
 void apuTurnON(void);
+
+void squareOutput(_apuSquare *square);
 
 #endif /* APU_H_ */

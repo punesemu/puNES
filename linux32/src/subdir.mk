@@ -5,6 +5,7 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
 ../src/apu.c \
+../src/audio_filter.c \
 ../src/cfgfile.c \
 ../src/cmdline.c \
 ../src/cpu6502.c \
@@ -31,6 +32,7 @@ C_SRCS += \
 
 OBJS += \
 ./src/apu.o \
+./src/audio_filter.o \
 ./src/cfgfile.o \
 ./src/cmdline.o \
 ./src/cpu6502.o \
@@ -57,6 +59,7 @@ OBJS += \
 
 C_DEPS += \
 ./src/apu.d \
+./src/audio_filter.d \
 ./src/cfgfile.d \
 ./src/cmdline.d \
 ./src/cpu6502.d \

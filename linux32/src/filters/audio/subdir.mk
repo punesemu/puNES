@@ -4,16 +4,16 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../src/filters/audio/audio_filter_none.c \
-../src/filters/audio/audio_filter_simple.c 
+../src/filters/audio/none.c \
+../src/filters/audio/simple.c 
 
 OBJS += \
-./src/filters/audio/audio_filter_none.o \
-./src/filters/audio/audio_filter_simple.o 
+./src/filters/audio/none.o \
+./src/filters/audio/simple.o 
 
 C_DEPS += \
-./src/filters/audio/audio_filter_none.d \
-./src/filters/audio/audio_filter_simple.d 
+./src/filters/audio/none.d \
+./src/filters/audio/simple.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

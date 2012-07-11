@@ -61,7 +61,15 @@ void audio_filter_apu_tick_none(void) {
 	return;
 }
 SWORD audio_filter_apu_mixer_none(void) {
-	SWORD mixer = (S1.output + S2.output) + ((TR.output << 1) + NS.output + DMC.output);
+	/*SWORD mixer = (S1.output + S2.output) + ((TR.output << 1) + NS.output + DMC.output);*/
+
+	SWORD mixer = S1.output;
+
+	if (mixer != 0) {
+		printf("mixer %d %d\n", mixer, mixer << 2);
+	}
+
+	mixer <<= 9;
 
 	/* approsimazione lineare */
 	/*SWORD pulse_out = 0.752 * (S1.output + S2.output);
@@ -69,11 +77,11 @@ SWORD audio_filter_apu_mixer_none(void) {
 	mixer = pulse_out + tnd_out;
 	*/
 
-	if (extra_audio_mixer_none) {
+	/*if (extra_audio_mixer_none) {
 		mixer = extra_audio_mixer_none(mixer);
 	} else {
 		apuMixerCutAndHigh();
-	}
+	}*/
 
 	return (mixer);
 }
