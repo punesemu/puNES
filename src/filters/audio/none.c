@@ -20,7 +20,25 @@ SWORD audio_filters_none_Sunsoft_FM7(SWORD mixer);
 SWORD audio_filters_none_VRC6(SWORD mixer);
 SWORD audio_filters_none_VRC7(SWORD mixer);
 
+SWORD tnd[203];
+SWORD pulse[32];
+
 void audio_filter_init_none(void) {
+
+	{
+		BYTE i;
+
+		for (i = 0; i < 33; i++) {
+			float vl = 95.52 / (8128.0 / i + 100);
+			pulse[i] = (vl * 16383) - 0x2000;
+		}
+
+		for (i = 0; i < 204; i++) {
+			float vl = 163.67 / (24329.0 / i + 100);
+			//tnd[i] = (vl * 65535) - 0x8000;
+			tnd[i] = (vl * 16383) - 0x2000;
+		}
+	}
 
 	audio_filter_apu_tick = audio_filter_apu_tick_none;
 	audio_filter_apu_mixer = audio_filter_apu_mixer_none;
@@ -63,13 +81,23 @@ void audio_filter_apu_tick_none(void) {
 SWORD audio_filter_apu_mixer_none(void) {
 	/*SWORD mixer = (S1.output + S2.output) + ((TR.output << 1) + NS.output + DMC.output);*/
 
-	SWORD mixer = S1.output;
+	/*SWORD mixer = S1.output + S2.output + TR.output + NS.output + DMC.output;*/
+	SWORD mixer = pulse[S1.output + S2.output]
+	        + tnd[(3 * TR.output) + (2 * NS.output) + DMC.output];
+	/*SWORD mixer = pulse[S1.output + S2.output];*/
 
-	if (mixer != 0) {
-		printf("mixer %d %d\n", mixer, mixer << 2);
-	}
 
-	mixer <<= 9;
+	/*if (mixer > 127) {
+		mixer = 127;
+	} else if (mixer < -127) {
+		mixer = -127;
+	}*/
+
+	/*if (mixer != 0) {
+		printf("mixer %d %d\n", mixer, mixer << 7);
+	}*/
+
+	//mixer <<= 7;
 
 	/* approsimazione lineare */
 	/*SWORD pulse_out = 0.752 * (S1.output + S2.output);

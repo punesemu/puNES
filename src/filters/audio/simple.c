@@ -111,18 +111,21 @@ void audio_filter_apu_tick_simple(void) {
 	return;
 }
 SWORD audio_filter_apu_mixer_simple(void) {
-	SWORD mixer =
-			(af_simple.ch[AFS1]  / af_simple.divider) +
-	        (af_simple.ch[AFS2]  / af_simple.divider) +
-	        (af_simple.ch[AFTR]  / af_simple.divider) +
-	        (af_simple.ch[AFNS]  / af_simple.divider) +
-	        (af_simple.ch[AFDMC] / af_simple.divider);
+	//SWORD mixer =
+	//		(af_simple.ch[AFS1]  / af_simple.divider) +
+	//      (af_simple.ch[AFS2]  / af_simple.divider);// +
+	        //(af_simple.ch[AFTR]  / af_simple.divider) +
+	        //(af_simple.ch[AFNS]  / af_simple.divider) +
+	        //(af_simple.ch[AFDMC] / af_simple.divider);
 
-	if (extra_audio_mixer_simple) {
+	SDBWORD mixer = (af_simple.ch[AFS1] + af_simple.ch[AFS2]) / af_simple.divider;
+
+	SWORD pippo = mixer;
+	/*if (extra_audio_mixer_simple) {
 		mixer = extra_audio_mixer_simple(mixer);
 	} else {
 		apuMixerCutAndHigh();
-	}
+	}*/
 
 	{
 		BYTE i;
@@ -133,7 +136,7 @@ SWORD audio_filter_apu_mixer_simple(void) {
 		af_simple.divider = 0;
 	}
 
-	return (mixer);
+	return (pippo);
 }
 
 /* --------------------------------------------------------------------------------------- */

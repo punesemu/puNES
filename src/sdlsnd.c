@@ -142,7 +142,7 @@ BYTE sndStart(void) {
 		BYTE i;
 
 		//snd.channel.max_pos = dev->samples * 1.30;
-		snd.channel.max_pos = dev->samples * 0.30;
+		snd.channel.max_pos = dev->samples * 0.63;
 		//snd.channel.max_pos = dev->samples * 1.10;
 		snd.channel.pos = 0;
 
@@ -289,8 +289,8 @@ void sndOutput(void *udata, BYTE *stream, int len) {
 		snd.out_of_sync++;
 	} else {
 #ifndef RELEASE
-		fprintf(stderr, "snd : %d %d %d %2d %d %f %4s\r", len, snd.buffer.count,
-		        fps.total_frames_skipped, cache->filled, snd.out_of_sync, snd.frequency, "");
+		/*fprintf(stderr, "snd : %d %d %d %2d %d %f %4s\r", len, snd.buffer.count,
+		        fps.total_frames_skipped, cache->filled, snd.out_of_sync, snd.frequency, "");*/
 #endif
 		/* invio i samples richiesti alla scheda sonora */
 		memcpy(stream, cache->read, len);
