@@ -136,13 +136,14 @@ BYTE sndStart(void) {
 	/* valorizzo il flag di apertura device */
 	snd.opened = TRUE;
 
-	snd.last_sample = dev->silence;
+	//snd.last_sample = dev->silence;
+	snd.last_sample = -8191;
 
 	if (dev->channels == STEREO) {
 		BYTE i;
 
 		//snd.channel.max_pos = dev->samples * 1.30;
-		snd.channel.max_pos = dev->samples * 0.63;
+		snd.channel.max_pos = dev->samples * 0.3;
 		//snd.channel.max_pos = dev->samples * 1.10;
 		snd.channel.pos = 0;
 
@@ -150,7 +151,7 @@ BYTE sndStart(void) {
 			DBWORD size = snd.channel.max_pos * sizeof(*cache->write);
 
 			snd.channel.buf[i] = malloc(size);
-			memset(snd.channel.buf[i], 0, size);
+			memset(snd.channel.buf[i], -8191, size);
 			snd.channel.ptr[i] = snd.channel.buf[i];
 		}
 	}

@@ -115,6 +115,18 @@
 		TR.linear.halt = FALSE;\
 	}
 /* output */
+#define squareOutput(square)\
+{\
+	WORD offset = 0;\
+	if (!square.sweep.negate) {\
+		offset = square.timer >> square.sweep.shift;\
+	}\
+	if (!square.volume || (square.timer <= 8) || ((square.timer + offset) >= 0x800)) {\
+		square.output = 0;\
+	} else {\
+		square.output = squareDuty[square.duty][square.sequencer] * square.volume;\
+	}\
+}
 #define triangleOutput()\
 	if (TR.length.value && TR.linear.value) {\
 		/*\
@@ -123,22 +135,23 @@
 		 * quindi non udibile), percio' la taglio.\
 		 */\
 		if (TR.timer < 2) {\
-			TR.output = triangleDuty[7];\
+			TR.output = 0;/*triangleDuty[7];*/\
 		} else {\
 			TR.output = triangleDuty[TR.sequencer];\
 		}\
-		/*TR.output <<= 1;*/\
 	}
 #define noiseOutput()\
-	if (NS.length.value) {\
-		NS.output = (((NS.shift & 0x0001) ? 0 : 1) * NS.volume);\
+	if (NS.length.value && !(NS.shift & 0x0001)) {\
+		NS.output = NS.volume;\
 	} else {\
 		NS.output = 0;\
 	}
+#define dmcOutput()\
+	DMC.output = DMC.counter & 0x7F
 /* ticket */
 #define squareTick(square)\
 	if (!(--square.frequency)) {\
-		squareOutput(&square);\
+		squareOutput(square)\
 		square.frequency = (square.timer + 1) << 1;\
 		square.sequencer = (square.sequencer + 1) & 0x07;\
 	}
@@ -158,6 +171,76 @@
 		}\
 		NS.shift &= 0x7FFF;\
 		noiseOutput()\
+	}
+#define dmcTick()\
+	if (!(--DMC.frequency)) {\
+		if (!DMC.silence) {\
+			if (!(DMC.shift & 0x01)) {\
+				if (DMC.counter > 1) {\
+					DMC.counter -= 2;\
+				}\
+			} else {\
+				if (DMC.counter < 126) {\
+					DMC.counter += 2;\
+				}\
+			}\
+			DMC.shift >>= 1;\
+			dmcOutput();\
+		}\
+		if (!(--DMC.counterOut)) {\
+			DMC.counterOut = 8;\
+			if (!DMC.empty) {\
+				DMC.shift = DMC.buffer;\
+				DMC.empty = TRUE;\
+				DMC.silence = FALSE;\
+			} else {\
+				DMC.silence = TRUE;\
+			}\
+		}\
+		DMC.frequency = dmcRate[apu.type][DMC.rateIndex];\
+	}\
+	if (DMC.empty && DMC.remain) {\
+		BYTE tick = 4;\
+		switch (DMC.tickType) {\
+		case DMCCPUWRITE:\
+			tick = 3;\
+			break;\
+		case DMCR4014:\
+			tick = 2;\
+			break;\
+		case DMCNNLDMA:\
+			tick = 1;\
+			break;\
+		}\
+		if (fds.info.enabled) {\
+			if (DMC.address < 0xE000) {\
+				DMC.buffer = prg.ram[DMC.address - 0x6000];\
+			} else {\
+				DMC.buffer = prg.rom[DMC.address & 0x1FFF];\
+			}\
+		} else {\
+			DMC.buffer = prg.rom8k[(DMC.address >> 13) & 0x03][DMC.address & 0x1FFF];\
+		}\
+		/* incremento gli hwtick da compiere */\
+		if (hwtick) { hwtick[0] += tick; }\
+		/* e naturalmente incremento anche quelli eseguiti dall'opcode */\
+		cpu.cycles += tick;\
+		/* salvo a che ciclo dell'istruzione avviene il dma */\
+		DMC.dmaCycle = cpu.opCycle;\
+		/* il DMC non e' vuoto */\
+		DMC.empty = FALSE;\
+		if (++DMC.address > 0xFFFF) {\
+			DMC.address = 0x8000;\
+		}\
+		if (!(--DMC.remain)) {\
+			if (DMC.loop) {\
+				DMC.remain = DMC.length;\
+				DMC.address = DMC.addressStart;\
+			} else if (DMC.irqEnabled) {\
+				r4015.value |= 0x80;\
+				irq.high |= DMCIRQ;\
+			}\
+		}\
 	}
 
 #define apuChangeStep(index)\
@@ -407,41 +490,19 @@ static const BYTE lengthTable[32] = {
 	0xC0, 0x18, 0x48, 0x1A, 0x10, 0x1C, 0x20, 0x1E
 };
 
-/*static const SBYTE squareDuty[4][8] = {
-	{-1, +1, -1, -1, -1, -1, -1, -1},
-	{-1, +1, +1, -1, -1, -1, -1, -1},
-	{-1, +1, +1, +1, +1, -1, -1, -1},
-	{+1, -1, -1, +1, +1, +1, +1, +1}
-};*/
-
-static const SBYTE squareDuty[4][8] = {
-	{ 1,  2,  1,  1,  1,  1,  1,  1},
-	{ 1,  2,  2,  1,  1,  1,  1,  1},
-	{ 1,  2,  2,  2,  2,  1,  1,  1},
-	{ 2,  1,  1,  2,  2,  2,  2,  2}
-};
-
-/*static const SWORD squareDuty[4][8] = {
+static const BYTE squareDuty[4][8] = {
 	{ 0,  1,  0,  0,  0,  0,  0,  0},
 	{ 0,  1,  1,  0,  0,  0,  0,  0},
 	{ 0,  1,  1,  1,  1,  0,  0,  0},
 	{ 1,  0,  0,  1,  1,  1,  1,  1}
-};*/
+};
 
-static const SBYTE triangleDuty[32] = {
+static const BYTE triangleDuty[32] = {
 	0x0F, 0x0E, 0x0D, 0x0C, 0x0B, 0x0A, 0x09, 0x08,
 	0x07, 0x06, 0x05, 0x04, 0x03, 0x02, 0x01, 0x00,
 	0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
 	0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F
 };
-
-/*static const SBYTE triangleDuty[32] = {
-	 7,  6,  5,  4,  3,  2,  1,  0,
-	 0, -1, -2, -3, -4, -5, -6, -7,
-	-7, -6, -5, -4, -3, -2, -1,  0,
-	 0,  1,  2,  3,  4,  5,  6,  7
-};*/
-
 
 static const WORD noiseTimer[3][16] = {
 	{
@@ -475,8 +536,5 @@ static const WORD dmcRate[3][16] = {
 
 void apuTick(SWORD cyclesCPU, BYTE *hwtick);
 void apuTurnON(void);
-
-void squareOutput(_apuSquare *square);
-void dmcTick(BYTE *hwtick);
 
 #endif /* APU_H_ */

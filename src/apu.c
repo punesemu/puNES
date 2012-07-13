@@ -168,7 +168,7 @@ void apuTick(SWORD cyclesCPU, BYTE *hwtick) {
 	squareTick(S2)
 	triangleTick()
 	noiseTick()
-	dmcTick(hwtick);
+	dmcTick();
 	if (extclApuTick) {
 		/*
 		 * utilizzato dalle mappers :
@@ -242,98 +242,5 @@ void apuTurnON(void) {
 
 		/*DMC.counter = 0x40;
 		DMC.output = 0x40;*/
-	}
-}
-
-
-
-
-void squareOutput(_apuSquare *square) {
-	WORD offset = 0;
-	if (!square->sweep.negate) {
-		offset = square->timer >> square->sweep.shift;
-	}
-	if ((square->timer <= 8) || ((square->timer + offset) >= 0x800)) {
-		square->output = 0;
-	} else {
-		square->output = squareDuty[square->duty][square->sequencer] * square->volume;
-	}
-}
-
-
-
-
-WORD DMC_decay = 70;
-
-void dmcTick(BYTE *hwtick) {
-	if (!(--DMC.frequency)) {
-		if (!DMC.silence) {
-			if (!(DMC.shift & 0x01)) {
-				if (DMC.counter > 1) {
-					DMC.counter -= 2;
-				}
-			} else {
-				if (DMC.counter < 126) {
-					DMC.counter += 2;
-				}
-			}
-			DMC.shift >>= 1;
-			//DMC.output = ((DMC.counter & 0x7F) - 0x40);
-			DMC.output = DMC.counter & 0x7F;
-		}
-		if (!(--DMC.counterOut)) {
-			DMC.counterOut = 8;
-			if (!DMC.empty) {
-				DMC.shift = DMC.buffer;
-				DMC.empty = TRUE;
-				DMC.silence = FALSE;
-			} else {
-				DMC.silence = TRUE;
-			}
-		}
-		DMC.frequency = dmcRate[apu.type][DMC.rateIndex];
-	}
-	if (DMC.empty && DMC.remain) {
-		BYTE tick = 4;
-		switch (DMC.tickType) {
-		case DMCCPUWRITE:
-			tick = 3;
-			break;
-		case DMCR4014:
-			tick = 2;
-			break;
-		case DMCNNLDMA:
-			tick = 1;
-			break;
-		}
-		if (fds.info.enabled) {
-			if (DMC.address < 0xE000) {
-				DMC.buffer = prg.ram[DMC.address - 0x6000];
-			} else {\
-				DMC.buffer = prg.rom[DMC.address & 0x1FFF];
-			}
-		} else {
-			DMC.buffer = prg.rom8k[(DMC.address >> 13) & 0x03][DMC.address & 0x1FFF];
-		}
-		/* incremento gli hwtick da compiere */
-		if (hwtick) { hwtick[0] += tick; }
-		/* e naturalmente incremento anche quelli eseguiti dall'opcode */
-		cpu.cycles += tick;
-		/* salvo a che ciclo dell'istruzione avviene il dma */
-		DMC.dmaCycle = cpu.opCycle;
-		/* il DMC non e' vuoto */
-		DMC.empty = FALSE;
-		if (++DMC.address > 0xFFFF) {
-			DMC.address = 0x8000;
-		}
-		if (!(--DMC.remain)) {
-			if (DMC.loop) {
-				DMC.remain = DMC.length;
-				DMC.address = DMC.addressStart;
-			} else if (DMC.irqEnabled) {
-				r4015.value |= 0x80;
-				irq.high |= DMCIRQ;
-			}
-		}
 	}
 }

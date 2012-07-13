@@ -287,14 +287,14 @@ void extclCpuWrMem_MMC5(WORD address, BYTE value) {
 			mmc5.pcmEnabled = ~value & 0x01;
 			mmc5.pcmSample = 0;
 			if (mmc5.pcmEnabled) {
-				mmc5.pcmSample = mmc5.pcmAmp << 1;
+				mmc5.pcmSample = mmc5.pcmAmp;
 			}
 			return;
 		case 0x5011:
 			mmc5.pcmAmp = value;
 			mmc5.pcmSample = 0;
 			if (mmc5.pcmEnabled) {
-				mmc5.pcmSample = mmc5.pcmAmp << 1;
+				mmc5.pcmSample = mmc5.pcmAmp;
 			}
 			return;
 		case 0x5015:
@@ -697,8 +697,8 @@ void extclEnvelopeClock_MMC5(void) {
 	envelopeRun(mmc5.S4)
 }
 void extclApuTick_MMC5(void) {
-	squareTick(mmc5.S3);
-	squareTick(mmc5.S4);
+	squareTick(mmc5.S3)
+	squareTick(mmc5.S4)
 }
 
 void prgSwap(void) {

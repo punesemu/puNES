@@ -279,7 +279,9 @@ void extclApuTick_FDS(void) {
 			level = (fds.snd.volume.gain < 32 ? fds.snd.volume.gain : 32)
 			        * volume_wave[fds.snd.wave.volume];
 
-			fds.snd.main.output = (fds.snd.wave.data[fds.snd.wave.index] * level) >> 4;
+			/* valore massimo dell'output (63 * (39 * 32)) = 78624 */
+			/*fds.snd.main.output = (fds.snd.wave.data[fds.snd.wave.index] * level) >> 4;*/
+			fds.snd.main.output = (fds.snd.wave.data[fds.snd.wave.index] * level) >> 3;
 
 			if (++fds.snd.wave.index == 64) {
 				fds.snd.wave.index = 0;
