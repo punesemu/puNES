@@ -166,7 +166,26 @@ void apuTick(SWORD cyclesCPU, BYTE *hwtick) {
 	 * eseguo un ticket per ogni canale
 	 * valorizzandone l'output.
 	 */
-	squareTick(S1)
+	//squareTick(S1)
+
+	if (!(--S1.frequency)) {
+		WORD offset = 0;
+		S1.prev = S1.output;
+		if (!S1.sweep.negate) {
+			offset = S1.timer >> S1.sweep.shift;
+		}
+		if (!S1.volume || (S1.timer <= 8) || ((S1.timer + offset) >= 0x800)) {
+			S1.output = 0;
+		} else {
+			S1.output = squareDuty[S1.duty][S1.sequencer] * S1.volume;
+		}
+		S1.frequency = (S1.timer + 1) << 1;
+		S1.sequencer = (S1.sequencer + 1) & 0x07;
+
+		S1.fc = 0;
+		S1.f = S1.frequency;
+	}
+
 	squareTick(S2)
 	triangleTick()
 	noiseTick()

@@ -155,6 +155,9 @@
 		squareOutput(square)\
 		square.frequency = (square.timer + 1) << 1;\
 		square.sequencer = (square.sequencer + 1) & 0x07;\
+		\
+		square.fc = 40;\
+		square.f = square.frequency;\
 	}
 #define triangleTick()\
 	if (!(--TR.frequency)) {\
@@ -312,6 +315,8 @@ typedef struct {
 	BYTE length_clocked;
 	BYTE DMC;
 	SWORD cycles;
+
+	DBWORD cl;
 } _apu;
 typedef struct {
 	BYTE value;
@@ -367,6 +372,8 @@ typedef struct {
 	/* output */
 	SWORD output;
 
+	SDBWORD f;
+	SDBWORD fc;
 	SWORD prev;
 } _apuSquare;
 typedef struct {

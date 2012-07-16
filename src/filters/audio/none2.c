@@ -32,6 +32,7 @@ struct {
 	float count;
 	float remain_freq;
 	SWORD prev;
+	BYTE next;
 } linear[5];
 
 BYTE flgp = 0;
@@ -67,6 +68,8 @@ void audio_filter_init_none2(void) {
 
 	linear[0].remain = 0;
 	linear[0].count = -1;
+	linear[0].remain_freq = snd.frequency;
+	linear[0].next = FALSE;
 
 	audio_filter_apu_tick = audio_filter_apu_tick_none2;
 	audio_filter_apu_mixer = audio_filter_apu_mixer_none2;
@@ -104,7 +107,8 @@ void audio_filter_init_none2(void) {
 	return;
 }
 void audio_filter_apu_tick_none2(void) {
-	linear[0].count++;
+	apu.cl++;
+	S1.fc++;
 	return;
 }
 SWORD audio_filter_apu_mixer_none2(void) {
@@ -113,45 +117,27 @@ SWORD audio_filter_apu_mixer_none2(void) {
 	//SWORD mixer = pulse[p] + tnd[t];
 	SWORD mixer;
 
-	/*if (linear[0].count < snd.frequency) {
-		mixer = S1.output;
-	} else {
-		mixer = linear[0].prev;
-	}*/
-
 	if (!flgp) {
 		if (S1.output) {
 			flgp = TRUE;
 		}
 	}
 
-	if (flgp) {
-		//printf("remain: %+f %+f %+f %d %d %d\n", linear[0].remain, linear[0].count, snd.frequency, mixer, S1.output, linear[0].prev);
-	}
+	mixer = S1.output;
 
-	//linear[0].count = 0;
-	//linear[0].prev = S1.output;
-
-	linear[0].remain = linear[0].count - snd.frequency;
-
-	if (!flgp) {
-		if (S1.output) {
-			flgp = TRUE;
+	if (S1.fc < apu.cl) {
+		if ((apu.cl - S1.fc) < (apu.cl / 2)) {
+			mixer = S1.prev;
 		}
 	}
 
 	if (flgp) {
-		printf("remain: %+f %+f %+f %d %d\n", linear[0].remain, linear[0].count, snd.frequency, S1.output, linear[0].prev);
+		printf("remain: %d %d %d %d - %d %d\n", apu.cl, mixer, S1.output, S1.prev, S1.f, S1.fc);
 	}
 
-	linear[0].remain_freq = snd.frequency + linear[0].remain;
+	apu.cl = 0;
 
-	mixer = (((float) S1.output * linear[0].remain)
-			+ (float) linear[0].prev * linear[0].remain_freq) / linear[0].remain_freq;
-
-	//linear[0].count = linear[0].remain;
-	linear[0].count = 0;
-	linear[0].prev = S1.output;
+	S1.prev =  S1.output;
 
 	mixer <<= 7;
 	return(mixer);
