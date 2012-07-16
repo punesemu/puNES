@@ -118,6 +118,7 @@
 #define squareOutput(square)\
 {\
 	WORD offset = 0;\
+	square.prev = square.output;\
 	if (!square.sweep.negate) {\
 		offset = square.timer >> square.sweep.shift;\
 	}\
@@ -365,6 +366,8 @@ typedef struct {
 	_length_counter length;
 	/* output */
 	SWORD output;
+
+	SWORD prev;
 } _apuSquare;
 typedef struct {
 	/* timer */

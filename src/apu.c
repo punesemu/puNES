@@ -15,6 +15,8 @@
 #include "fds.h"
 #include "audio_filter.h"
 
+BYTE sflag = 0;
+
 void apuTick(SWORD cyclesCPU, BYTE *hwtick) {
 	/* sottraggo il numero di cicli eseguiti */
 	apu.cycles -= cyclesCPU;
