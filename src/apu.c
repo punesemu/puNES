@@ -166,11 +166,9 @@ void apuTick(SWORD cyclesCPU, BYTE *hwtick) {
 	 * eseguo un ticket per ogni canale
 	 * valorizzandone l'output.
 	 */
-	//squareTick(S1)
-
-	if (!(--S1.frequency)) {
+	squareTick(S1)
+	/*if (!(--S1.frequency)) {
 		WORD offset = 0;
-		S1.prev = S1.output;
 		if (!S1.sweep.negate) {
 			offset = S1.timer >> S1.sweep.shift;
 		}
@@ -183,12 +181,30 @@ void apuTick(SWORD cyclesCPU, BYTE *hwtick) {
 		S1.sequencer = (S1.sequencer + 1) & 0x07;
 
 		S1.fc = 0;
-		S1.f = S1.frequency;
-	}
+	}*/
+
 
 	squareTick(S2)
 	triangleTick()
+
 	noiseTick()
+	/*if (!(--NS.frequency)) {
+		NS.frequency = noiseTimer[apu.type][NS.timer];
+		if (NS.mode) {
+			NS.shift = (NS.shift >> 1) | (((NS.shift ^ (NS.shift >> 6)) & 0x0001) << 14);
+		} else {
+			NS.shift = (NS.shift >> 1) | (((NS.shift ^ (NS.shift >> 1)) & 0x0001) << 14);
+		}
+		NS.shift &= 0x7FFF;
+		if (NS.length.value && !(NS.shift & 0x0001)) {
+			NS.output = NS.volume;
+		} else {
+			NS.output = 0;
+		}
+
+		NS.fc = 0;
+	}*/
+
 	dmcTick();
 	if (extclApuTick) {
 		/*

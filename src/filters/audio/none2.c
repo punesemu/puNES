@@ -21,21 +21,34 @@ SWORD audio_filters_none2_Sunsoft_FM7(SWORD mixer);
 SWORD audio_filters_none2_VRC6(SWORD mixer);
 SWORD audio_filters_none2_VRC7(SWORD mixer);
 
-SWORD pulse[32];
-SWORD tnd[203];
-
-SWORD mmc5_pulse[32];
-SWORD mmc5_tnd[256];
+enum {
+	AFS1 = 0,
+	AFS2,
+	AFTR,
+	AFNS,
+	AFDMC,
+	AFEXT0,
+	AFEXT1,
+	AFEXT2,
+	AFEXT3,
+	AFEXT4,
+	AFEXT5,
+	AFEXT6,
+	AFEXT7,
+	AFTOTCH
+};
 
 struct {
-	float remain;
-	float count;
-	float remain_freq;
-	SWORD prev;
-	BYTE next;
-} linear[5];
+	SWORD pulse[32];
+	SWORD tnd[203];
+	SWORD mmc5_pulse[32];
+	SWORD mmc5_tnd[256];
 
-BYTE flgp = 0;
+	WORD cycles;
+	DBWORD accumulators[AFTOTCH];
+
+	BYTE flag;
+} af_none2;
 
 void audio_filter_init_none2(void) {
 
@@ -43,33 +56,35 @@ void audio_filter_init_none2(void) {
 		WORD i;
 
 		/* 0x7FFF / 2 = 0x2AAA */
-		for (i = 0; i < LENGTH(pulse); i++) {
+		for (i = 0; i < LENGTH(af_none2.pulse); i++) {
 			float vl = 95.52 / (8128.0 / i + 100);
-			pulse[i] = (vl * 0x3FFF) - 0x2000;
+			af_none2.pulse[i] = (vl * 0x3FFF) - 0x2000;
 		}
 
-		for (i = 0; i < LENGTH(tnd); i++) {
+		for (i = 0; i < LENGTH(af_none2.tnd); i++) {
 			float vl = 163.67 / (24329.0 / i + 100);
-			tnd[i] = (vl * 0x3FFF);
+			af_none2.tnd[i] = (vl * 0x3FFF);
 		}
 
-		for (i = 0; i < LENGTH(mmc5_pulse); i++) {
+		for (i = 0; i < LENGTH(af_none2.mmc5_pulse); i++) {
 			float vl = 95.52 / (8128.0 / i + 100);
-			//mmc5_pulse[i] = (vl * (0x2AAA / 2));
-			mmc5_pulse[i] = (vl * 0x3FFF) - 0x2000;
+			//af_none2.mmc5_pulse[i] = (vl * (0x2AAA / 2));
+			af_none2.mmc5_pulse[i] = (vl * 0x3FFF) - 0x2000;
 		}
 
-		for (i = 0; i < LENGTH(mmc5_tnd); i++) {
+		for (i = 0; i < LENGTH(af_none2.mmc5_tnd); i++) {
 			float vl = 163.67 / (24329.0 / i + 100);
-			//mmc5_tnd[i] = (vl * (0x2AAA / 2));
-			mmc5_tnd[i] = (vl * 0x3FFF);
+			//af_none2.mmc5_tnd[i] = (vl * (0x2AAA / 2));
+			af_none2.mmc5_tnd[i] = (vl * 0x3FFF);
 		}
 	}
 
-	linear[0].remain = 0;
-	linear[0].count = -1;
-	linear[0].remain_freq = snd.frequency;
-	linear[0].next = FALSE;
+	af_none2.cycles = 0;
+	af_none2.accumulators[AFS1] = 0;
+	af_none2.accumulators[AFS2] = 0;
+	af_none2.accumulators[AFTR] = 0;
+	af_none2.accumulators[AFNS] = 0;
+	af_none2.accumulators[AFDMC] = 0;
 
 	audio_filter_apu_tick = audio_filter_apu_tick_none2;
 	audio_filter_apu_mixer = audio_filter_apu_mixer_none2;
@@ -107,39 +122,69 @@ void audio_filter_init_none2(void) {
 	return;
 }
 void audio_filter_apu_tick_none2(void) {
-	apu.cl++;
-	S1.fc++;
+	af_none2.cycles++;
+	af_none2.accumulators[AFS1] += S1.output;
+	af_none2.accumulators[AFS2] += S2.output;
+	af_none2.accumulators[AFTR] += TR.output;
+	af_none2.accumulators[AFNS] += NS.output;
+	af_none2.accumulators[AFDMC] += DMC.output;
+
+	//S1.fc++;
+	//NS.fc++;
 	return;
 }
 SWORD audio_filter_apu_mixer_none2(void) {
-	//BYTE p = S1.output + S2.output;
-	//BYTE t = (3 * TR.output) + (2 * NS.output) + DMC.output;
-	//SWORD mixer = pulse[p] + tnd[t];
+	/*BYTE p = S1.output + S2.output;
+	BYTE t = (3 * TR.output) + (2 * NS.output) + DMC.output;
+	SWORD mixer = pulse[p] + tnd[t];
+	*/
+
 	SWORD mixer;
 
-	if (!flgp) {
+	mixer = af_none2.pulse[(af_none2.accumulators[AFS1] / af_none2.cycles)
+	        + (af_none2.accumulators[AFS2] / af_none2.cycles)];
+
+	mixer += af_none2.tnd[(3 * (af_none2.accumulators[AFTR] / af_none2.cycles))
+	        + (2 * (af_none2.accumulators[AFNS] / af_none2.cycles))
+	        + (af_none2.accumulators[AFDMC] / af_none2.cycles)];
+
+
+	af_none2.cycles = 0;
+	af_none2.accumulators[AFS1] = 0;
+	af_none2.accumulators[AFS2] = 0;
+	af_none2.accumulators[AFTR] = 0;
+	af_none2.accumulators[AFNS] = 0;
+	af_none2.accumulators[AFDMC] = 0;
+
+	/*if (!af_none2.flag) {
 		if (S1.output) {
-			flgp = TRUE;
+			af_none2.flag = TRUE;
 		}
 	}
 
 	mixer = S1.output;
 
-	if (S1.fc < apu.cl) {
-		if ((apu.cl - S1.fc) < (apu.cl / 2)) {
-			mixer = S1.prev;
-		}
+	BYTE p = S1.prev + (S1.output - S1.prev) * ((float) S1.fc / (float) af_none2.cycles);
+
+	mixer = af_none2.pulse[p];
+
+	mixer = NS.output;
+
+	BYTE t = 2 * (NS.prev + (NS.output - NS.prev) * ((float) NS.fc / (float) af_none2.cycles));
+	mixer += af_none2.tnd[t];
+
+	if (af_none2.flag) {
+		printf("remain: %d %d %d - %d %d\n", af_none2.cycles, mixer, S1.output, S1.prev, S1.fc);
 	}
 
-	if (flgp) {
-		printf("remain: %d %d %d %d - %d %d\n", apu.cl, mixer, S1.output, S1.prev, S1.f, S1.fc);
-	}
-
-	apu.cl = 0;
-
-	S1.prev =  S1.output;
+	S1.fc = 0;
+	NS.fc = 0;
+	af_none2.cycles = 0;
+	S1.prev = S1.output;
+	NS.prev = NS.output;
 
 	mixer <<= 7;
+	*/
 	return(mixer);
 
 	if (extra_audio_mixer_none2) {
@@ -157,7 +202,8 @@ SWORD audio_filters_none2_FDS(SWORD mixer) {
 	return (mixer + fds.snd.main.output);
 }
 SWORD audio_filters_none2_MMC5(SWORD mixer) {
-	return (mixer + mmc5_pulse[mmc5.S3.output + mmc5.S4.output] + mmc5_tnd[mmc5.pcmSample]);
+	return (mixer + af_none2.mmc5_pulse[mmc5.S3.output + mmc5.S4.output]
+	        + af_none2.mmc5_tnd[mmc5.pcmSample]);
 }
 SWORD audio_filters_none2_Namco_N163(SWORD mixer) {
 	BYTE i;
