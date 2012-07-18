@@ -73,7 +73,7 @@ void audio_filter_apu_tick_none(void) {
 	return;
 }
 SWORD audio_filter_apu_mixer_none(void) {
-	SWORD mixer = (S1.output + S2.output) + (TR.output + NS.output + DMC.output);
+	SWORD mixer = (S1.output + S2.output) + ((TR.output << 1) + NS.output + DMC.output);
 
 	if (extra_mixer_none) {
 		mixer = extra_mixer_none(mixer);
@@ -90,7 +90,8 @@ SWORD audio_filter_apu_mixer_none(void) {
 SWORD mixer_none_FDS(SWORD mixer) {
 	mixer_cut_and_high();
 
-	return (mixer + (fds.snd.main.output + (fds.snd.main.output >> 1)));
+	//return (mixer + (fds.snd.main.output + (fds.snd.main.output >> 1)));
+	return (mixer + fds.snd.main.output);
 }
 SWORD mixer_none_MMC5(SWORD mixer) {
 	mixer += (mmc5.S3.output + mmc5.S4.output) + mmc5.pcmSample;

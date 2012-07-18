@@ -1257,6 +1257,19 @@ static void INLINE apuWrReg(WORD address, BYTE value) {
 				value &= 0x7F;
 
 				if (r4011.frames > 1) {
+					/*
+					 * questa lo faccio perche' in alcuni giochi come Batman,
+					 * Ninja Gaiden 3, Castlevania II ed altri, producono
+					 * un popping del suono fastidioso;
+					 * from Fceu doc:
+					 * Why do some games make a popping sound (Batman, Ninja Gaiden 3,
+					 * Castlevania II etc.)? These games do a very crude drum imitation
+					 * by causing a large jump in the output level for a short period of
+					 * time via the register at $4011. The analog filters on a real
+					 * Famicom make it sound decent(better). I have not completely
+					 * emulated these filters.
+					 * (Xodnizel)
+					 */
 					DMC.output = abs(DMC.output - ((value - r4011.value) >> 3));
 				} else {
 					DMC.output = value;
