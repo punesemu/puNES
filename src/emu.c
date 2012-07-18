@@ -499,7 +499,7 @@ BYTE emuTurnON(void) {
 		return (EXIT_ERROR);
 	}
 
-	audio_filter();
+	audio_filter(cfg->audio_filter);
 
 	if (timelineInit()) {
 		return (EXIT_ERROR);

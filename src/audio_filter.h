@@ -15,7 +15,8 @@ enum {
 	AF_LINEAR
 };
 
-void audio_filter(void);
+void audio_filter(BYTE filter);
+void audio_filter_reset_output_channels(void);
 
 /* funzioni virtuali */
 void (*audio_filter_init)(void);

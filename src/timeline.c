@@ -20,6 +20,7 @@
 #include "fds.h"
 #include "sdlgfx.h"
 #include "gui.h"
+#include "audio_filter.h"
 
 enum {
 	TLSAVE,
@@ -149,6 +150,9 @@ void timelineBack(BYTE mode, BYTE snap) {
 	}
 
 	tlOperation(TLREAD, snap);
+
+	/* azzero l'ouput di tutti i canali */
+	audio_filter_reset_output_channels();
 }
 void timelineQuit(void) {
 	if (tl.start) {

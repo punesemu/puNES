@@ -2232,7 +2232,7 @@ void set_audio_filter(int newfilter) {
 		return;
 	}
 	cfg->audio_filter = newfilter;
-	audio_filter();
+	audio_filter(cfg->audio_filter);
 	guiUpdate();
 }
 

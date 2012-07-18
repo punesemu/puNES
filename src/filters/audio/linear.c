@@ -49,13 +49,15 @@ enum {
 struct _af_linear {
 	SWORD pulse[48];
 	SWORD tnd[256];
-
-	WORD divider;
+	DBWORD divider;
 	DBWORD ch[AFTOTCH];
 } af_linear;
 
 void audio_filter_init_linear(void) {
 	memset(&af_linear, 0, sizeof(af_linear));
+
+	/* azzero l'ouput di tutti i canali */
+	audio_filter_reset_output_channels();
 
 	{
 		WORD i;
@@ -123,8 +125,6 @@ void audio_filter_apu_tick_linear(void) {
 
 	af_linear.divider++;
 
-	//S1.fc++;
-	//NS.fc++;
 	return;
 }
 SWORD audio_filter_apu_mixer_linear(void) {
@@ -137,37 +137,6 @@ SWORD audio_filter_apu_mixer_linear(void) {
 	t += (af_linear.ch[AFDMC] / af_linear.divider);
 
 	mixer = af_linear.pulse[p] + af_linear.tnd[t];
-
-	/*if (!af_linear.flag) {
-	 if (S1.output) {
-	 af_linear.flag = TRUE;
-	 }
-	 }
-
-	 mixer = S1.output;
-
-	 BYTE p = S1.prev + (S1.output - S1.prev) * ((float) S1.fc / (float) af_linear.cycles);
-
-	 mixer = af_linear.pulse[p];
-
-	 mixer = NS.output;
-
-	 BYTE t = 2 * (NS.prev + (NS.output - NS.prev) * ((float) NS.fc / (float) af_linear.cycles));
-	 mixer += af_linear.tnd[t];
-
-	 if (af_linear.flag) {
-	 printf("remain: %d %d %d - %d %d\n", af_linear.cycles, mixer, S1.output, S1.prev, S1.fc);
-	 }
-
-	 S1.fc = 0;
-	 NS.fc = 0;
-	 af_linear.cycles = 0;
-	 S1.prev = S1.output;
-	 NS.prev = NS.output;
-
-	 mixer <<= 7;
-	 return(mixer);
-	 */
 
 	if (extra_mixer_linear) {
 		mixer = extra_mixer_linear(mixer);
