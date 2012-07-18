@@ -170,7 +170,7 @@ void apuTick(SWORD cyclesCPU, BYTE *hwtick) {
 	squareTick(S2)
 	triangleTick()
 	noiseTick()
-	dmcTick();
+	dmcTick()
 	if (extclApuTick) {
 		/*
 		 * utilizzato dalle mappers :
