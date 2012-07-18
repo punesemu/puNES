@@ -67,8 +67,6 @@ void audio_filter_init_linear(void) {
 
 		for (i = 0; i < LENGTH(af_linear.tnd); i++) {
 			float vl = 163.67 / (24329.0 / i + 100);
-			//af_linear.tnd[i] = -(vl * 0x3FFF);
-			//af_linear.tnd[i] = -(vl * 0x3FFF) + 0x2000;
 			af_linear.tnd[i] = (vl * 0x3FFF);
 		}
 	}
@@ -173,7 +171,7 @@ SWORD audio_filter_apu_mixer_linear(void) {
 		mixer = extra_mixer_linear(mixer);
 	}
 
-	mixer <<= 1;
+	mixer *= 1.5;
 
 	if (mixer > 0x7FFF) {
 		mixer = 0x7FFF;
@@ -231,7 +229,8 @@ SDBWORD mixer_linear_FDS(SDBWORD mixer) {
 	return (mixer + (af_linear.ch[AFEXT0] / af_linear.divider));
 }
 SDBWORD mixer_linear_MMC5(SDBWORD mixer) {
-	DBWORD p = (af_linear.ch[AFEXT0] / af_linear.divider) + (af_linear.ch[AFEXT1] / af_linear.divider);
+	DBWORD p = (af_linear.ch[AFEXT0] / af_linear.divider)
+	        + (af_linear.ch[AFEXT1] / af_linear.divider);
 	DBWORD t = (af_linear.ch[AFEXT2] / af_linear.divider);
 
 	return (mixer + af_linear.pulse[p] + af_linear.tnd[t]);
