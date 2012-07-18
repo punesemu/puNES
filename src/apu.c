@@ -167,44 +167,9 @@ void apuTick(SWORD cyclesCPU, BYTE *hwtick) {
 	 * valorizzandone l'output.
 	 */
 	squareTick(S1)
-	/*if (!(--S1.frequency)) {
-		WORD offset = 0;
-		if (!S1.sweep.negate) {
-			offset = S1.timer >> S1.sweep.shift;
-		}
-		if (!S1.volume || (S1.timer <= 8) || ((S1.timer + offset) >= 0x800)) {
-			S1.output = 0;
-		} else {
-			S1.output = squareDuty[S1.duty][S1.sequencer] * S1.volume;
-		}
-		S1.frequency = (S1.timer + 1) << 1;
-		S1.sequencer = (S1.sequencer + 1) & 0x07;
-
-		S1.fc = 0;
-	}*/
-
-
 	squareTick(S2)
 	triangleTick()
-
 	noiseTick()
-	/*if (!(--NS.frequency)) {
-		NS.frequency = noiseTimer[apu.type][NS.timer];
-		if (NS.mode) {
-			NS.shift = (NS.shift >> 1) | (((NS.shift ^ (NS.shift >> 6)) & 0x0001) << 14);
-		} else {
-			NS.shift = (NS.shift >> 1) | (((NS.shift ^ (NS.shift >> 1)) & 0x0001) << 14);
-		}
-		NS.shift &= 0x7FFF;
-		if (NS.length.value && !(NS.shift & 0x0001)) {
-			NS.output = NS.volume;
-		} else {
-			NS.output = 0;
-		}
-
-		NS.fc = 0;
-	}*/
-
 	dmcTick();
 	if (extclApuTick) {
 		/*
@@ -256,9 +221,6 @@ void apuTurnON(void) {
 		DMC.empty = TRUE;
 		DMC.silence = TRUE;
 		DMC.counterOut = 8;
-
-		/*DMC.counter = 0x40;
-		DMC.output = 0x40;*/
 	} else {
 		r4017.delay = FALSE;
 		r4017jitter();
@@ -276,8 +238,5 @@ void apuTurnON(void) {
 		DMC.silence = TRUE;
 		DMC.frequency = 1;
 		DMC.counterOut = 8;
-
-		/*DMC.counter = 0x40;
-		DMC.output = 0x40;*/
 	}
 }

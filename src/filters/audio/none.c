@@ -73,7 +73,7 @@ void audio_filter_apu_tick_none(void) {
 	return;
 }
 SWORD audio_filter_apu_mixer_none(void) {
-	SWORD mixer =(S1.output + S2.output) + (TR.output + NS.output + DMC.output);
+	SWORD mixer = (S1.output + S2.output) + (TR.output + NS.output + DMC.output);
 
 	if (extra_mixer_none) {
 		mixer = extra_mixer_none(mixer);
