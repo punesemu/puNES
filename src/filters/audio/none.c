@@ -12,6 +12,20 @@
 #include "fds.h"
 #include "none.h"
 
+/*
+ * questa viene chiamata in ogni extclApuMixer chiamata dalle mappers
+ * tranne che nel VRC7.
+ */
+#define mixer_cut_and_high()\
+	/* taglio il risultato */\
+	if (mixer > 255) {\
+		mixer = 255;\
+	} else if (mixer < -255) {\
+		mixer = -255;\
+	}\
+	/* ne aumento il volume */\
+	mixer <<= 7
+
 SWORD (*extra_audio_mixer_none)(SWORD mixer);
 SWORD audio_filters_none_FDS(SWORD mixer);
 SWORD audio_filters_none_MMC5(SWORD mixer);
@@ -20,41 +34,7 @@ SWORD audio_filters_none_Sunsoft_FM7(SWORD mixer);
 SWORD audio_filters_none_VRC6(SWORD mixer);
 SWORD audio_filters_none_VRC7(SWORD mixer);
 
-SWORD pulse[32];
-SWORD tnd[203];
-
-SWORD mmc5_pulse[32];
-SWORD mmc5_tnd[256];
-
-
 void audio_filter_init_none(void) {
-
-	{
-		WORD i;
-
-		/* 0x7FFF / 2 = 0x2AAA */
-		for (i = 0; i < LENGTH(pulse); i++) {
-			float vl = 95.52 / (8128.0 / i + 100);
-			pulse[i] = (vl * 0x3FFF) - 0x2000;
-		}
-
-		for (i = 0; i < LENGTH(tnd); i++) {
-			float vl = 163.67 / (24329.0 / i + 100);
-			tnd[i] = (vl * 0x3FFF);
-		}
-
-		for (i = 0; i < LENGTH(mmc5_pulse); i++) {
-			float vl = 95.52 / (8128.0 / i + 100);
-			//mmc5_pulse[i] = (vl * (0x2AAA / 2));
-			mmc5_pulse[i] = (vl * 0x3FFF) - 0x2000;
-		}
-
-		for (i = 0; i < LENGTH(mmc5_tnd); i++) {
-			float vl = 163.67 / (24329.0 / i + 100);
-			//mmc5_tnd[i] = (vl * (0x2AAA / 2));
-			mmc5_tnd[i] = (vl * 0x3FFF);
-		}
-	}
 
 	audio_filter_apu_tick = audio_filter_apu_tick_none;
 	audio_filter_apu_mixer = audio_filter_apu_mixer_none;
@@ -96,25 +76,27 @@ void audio_filter_apu_tick_none(void) {
 }
 SWORD audio_filter_apu_mixer_none(void) {
 	BYTE p = S1.output + S2.output;
-	BYTE t = (3 * TR.output) + (2 * NS.output) + DMC.output;
-	SWORD mixer = pulse[p] + tnd[t];
+	BYTE t = TR.output + NS.output + DMC.output;
+	SWORD mixer = p + t;
 
 	if (extra_audio_mixer_none) {
 		mixer = extra_audio_mixer_none(mixer);
+	} else {
+		mixer_cut_and_high();
 	}
 
 	return (mixer);
 }
 
 /* --------------------------------------------------------------------------------------- */
-/* Mappers                                                                                 */
+/*                                   Extra Audio Mixer                                     */
 /* --------------------------------------------------------------------------------------- */
-SWORD audio_filters_none_FDS(SWORD mixer) {
+WORD audio_filters_none_FDS(SWORD mixer) {
 	/*return (mixer + (fds.snd.main.output + (fds.snd.main.output >> 1)));*/
 	return (mixer + fds.snd.main.output);
 }
 SWORD audio_filters_none_MMC5(SWORD mixer) {
-	return (mixer + mmc5_pulse[mmc5.S3.output + mmc5.S4.output] + mmc5_tnd[mmc5.pcmSample]);
+	return (mixer + (mmc5.S3.output + mmc5.S4.output + mmc5.pcmSample));
 }
 SWORD audio_filters_none_Namco_N163(SWORD mixer) {
 	BYTE i;
@@ -122,7 +104,7 @@ SWORD audio_filters_none_Namco_N163(SWORD mixer) {
 
 	for (i = n163.sndChStart; i < 8; i++) {
 		if (n163.ch[i].active) {
-			a += (n163.ch[i].output * (n163.ch[i].volume >> 2));
+			a += ((n163.ch[i].output << 1) * (n163.ch[i].volume >> 2));
 		}
 	}
 
@@ -133,14 +115,15 @@ SWORD audio_filters_none_Namco_N163(SWORD mixer) {
 	return (mixer);
 }
 SWORD audio_filters_none_Sunsoft_FM7(SWORD mixer) {
-	mixer += (fm7.square[0].output + fm7.square[1].output + fm7.square[2].output);
+	mixer += ((fm7.square[0].output << 1) + (fm7.square[1].output << 1)
+	        + (fm7.square[2].output << 1));
 
 	apuMixerCutAndHigh();
 
 	return (mixer);
 }
 SWORD audio_filters_none_VRC6(SWORD mixer) {
-	mixer += (vrc6.S3.output + vrc6.S4.output) + vrc6.saw.output;
+	mixer += ((vrc6.S3.output << 1) + (vrc6.S4.output << 1)) + (vrc6.saw.output / 5);
 
 	apuMixerCutAndHigh();
 

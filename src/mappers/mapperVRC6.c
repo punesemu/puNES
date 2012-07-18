@@ -12,6 +12,7 @@
 #include "cpu6502.h"
 #include "savestate.h"
 
+/* vecchia versione
 #define vcr6SquareTick(square)\
 	vrc6.square.output = 0;\
 	if (--vrc6.square.timer == 0) {\
@@ -19,12 +20,27 @@
 		vrc6.square.timer = vrc6.square.frequency + 1;\
 	}\
 	if (vrc6.square.enabled) {\
-		/*vrc6.square.output = -vrc6.square.volume;*/\
 		vrc6.square.output = 0;\
 		if (vrc6.square.mode || (vrc6.square.step <= vrc6.square.duty)) {\
-			vrc6.square.output = vrc6.square.volume << 1;\
+			vrc6.square.output = vrc6.square.volume;\
 		}\
 	}
+*/
+#define vcr6SquareTick(square)\
+	if (--vrc6.square.timer == 0) {\
+		vrc6.square.step = (vrc6.square.step + 1) & 0x0F;\
+		vrc6.square.timer = vrc6.square.frequency + 1;\
+		if (vrc6.square.enabled) {\
+			vrc6.square.output = 0;\
+			if (vrc6.square.mode || (vrc6.square.step <= vrc6.square.duty)) {\
+				vrc6.square.output = vrc6.square.volume;\
+			}\
+		}\
+	}\
+	if (!vrc6.square.enabled) {\
+		vrc6.square.output = 0;\
+	}
+
 #define savestateSquareVrc6(square)\
 	savestateEle(mode, slot, square.enabled);\
 	savestateEle(mode, slot, square.duty);\
@@ -260,7 +276,7 @@ void extclApuTick_VRC6(void) {
 			vrc6.saw.internal = vrc6.saw.step = 0;
 		}
 		if (vrc6.saw.enabled) {
-			vrc6.saw.output = vrc6.saw.internal / 5;
+			vrc6.saw.output = vrc6.saw.internal;
 		}
 	}
 }

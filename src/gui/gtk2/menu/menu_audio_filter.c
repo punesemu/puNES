@@ -86,7 +86,7 @@ static const guint8 icon_inline[] =
 
 enum {
 	MAFNONE,
-	MAFSIMPLE,
+	MAFLINEAR,
 	NUMCHKS
 };
 
@@ -106,15 +106,15 @@ void menu_audio_filter(GtkWidget *audio, GtkAccelGroup *accel_group) {
 	icon_inline(filter, icon_inline)
 
 	check[MAFNONE] = gtk_check_menu_item_new_with_mnemonic("_None");
-	check[MAFSIMPLE] = gtk_check_menu_item_new_with_mnemonic("_Simple");
+	check[MAFLINEAR] = gtk_check_menu_item_new_with_mnemonic("_Linear");
 
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), check[MAFNONE]);
-	gtk_menu_shell_append(GTK_MENU_SHELL(menu), check[MAFSIMPLE]);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), check[MAFLINEAR]);
 
 	g_signal_connect_swapped(G_OBJECT(check[MAFNONE]), "activate", G_CALLBACK(set_audio_filter),
 	        GINT_TO_POINTER(AF_NONE));
-	g_signal_connect_swapped(G_OBJECT(check[MAFSIMPLE]), "activate", G_CALLBACK(set_audio_filter),
-	        GINT_TO_POINTER(AF_SIMPLE));
+	g_signal_connect_swapped(G_OBJECT(check[MAFLINEAR]), "activate", G_CALLBACK(set_audio_filter),
+	        GINT_TO_POINTER(AF_LINEAR));
 }
 void menu_audio_filter_check(void) {
 	int index;

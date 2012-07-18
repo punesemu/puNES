@@ -215,7 +215,7 @@ BEGIN
 			POPUP "&Filter"
 			BEGIN
 				MENUITEM "&None",                 IDM_SET_AUDIO_FILTER_NONE
-				MENUITEM "&Simple",               IDM_SET_AUDIO_FILTER_SIMPLE
+				MENUITEM "&Linear",               IDM_SET_AUDIO_FILTER_LINEAR
 			END
 			MENUITEM SEPARATOR
 			MENUITEM "&Enable\tCtrl+A",           IDM_SET_AUDIO_ENABLE

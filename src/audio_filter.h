@@ -12,7 +12,7 @@
 
 enum {
 	AF_NONE = 0,
-	AF_SIMPLE
+	AF_LINEAR
 };
 
 void audio_filter(void);

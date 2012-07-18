@@ -1139,13 +1139,13 @@ void guiUpdate(void) {
 
 	/* Audio Filter */
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_AUDIO_FILTER_NONE);
-	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_AUDIO_FILTER_SIMPLE);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_AUDIO_FILTER_LINEAR);
 	switch (cfg->audio_filter) {
 		case AF_NONE:
 			id = IDM_SET_AUDIO_FILTER_NONE;
 			break;
-		case AF_SIMPLE:
-			id = IDM_SET_AUDIO_FILTER_SIMPLE;
+		case AF_LINEAR:
+			id = IDM_SET_AUDIO_FILTER_LINEAR;
 			break;
 	}
 	change_menuitem(CHECK, MF_CHECKED, id);
@@ -1584,8 +1584,8 @@ long __stdcall mainWinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 				case IDM_SET_AUDIO_FILTER_NONE:
 					set_audio_filter(AF_NONE);
 					break;
-				case IDM_SET_AUDIO_FILTER_SIMPLE:
-					set_audio_filter(AF_SIMPLE);
+				case IDM_SET_AUDIO_FILTER_LINEAR:
+					set_audio_filter(AF_LINEAR);
 					break;
 				case IDM_SET_AUDIO_ENABLE:
 					emuPause(TRUE);

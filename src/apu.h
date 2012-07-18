@@ -11,20 +11,6 @@
 #include "common.h"
 #include "externalcalls.h"
 
-/*
- * questa viene chiamata in ogni extclApuMixer chiamata dalle mappers
- * tranne che nel VRC7.
- */
-#define apuMixerCutAndHigh()\
-	/* taglio il risultato */\
-	if (mixer > 255) {\
-		mixer = 255;\
-	} else if (mixer < -255) {\
-		mixer = -255;\
-	}\
-	/* ne aumento il volume */\
-	mixer <<= 7
-
 /* length counter */
 #define lengthRun(channel)\
 	/*\
