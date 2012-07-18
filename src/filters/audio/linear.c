@@ -67,7 +67,7 @@ void audio_filter_init_linear(void) {
 
 		for (i = 0; i < LENGTH(af_linear.tnd); i++) {
 			float vl = 163.67 / (24329.0 / i + 100);
-			af_linear.tnd[i] = (vl * 0x3FFF);
+			af_linear.tnd[i] = (vl * 0x37FF);
 		}
 	}
 
@@ -128,44 +128,46 @@ void audio_filter_apu_tick_linear(void) {
 	return;
 }
 SWORD audio_filter_apu_mixer_linear(void) {
+	DBWORD p, t;
 	SDBWORD mixer;
 
-	mixer = af_linear.pulse[(af_linear.ch[AFS1] / af_linear.divider)
-	       + (af_linear.ch[AFS2] / af_linear.divider)];
-	mixer += af_linear.tnd[(3 * (af_linear.ch[AFTR] / af_linear.divider))
-	        + (2 * (af_linear.ch[AFNS] / af_linear.divider))
-	        + (af_linear.ch[AFDMC] / af_linear.divider)];
+	p  = (af_linear.ch[AFS1] / af_linear.divider) + (af_linear.ch[AFS2] / af_linear.divider);
+	t  = (3 * (af_linear.ch[AFTR] / af_linear.divider));
+	t += (2 * (af_linear.ch[AFNS] / af_linear.divider));
+	t += (af_linear.ch[AFDMC] / af_linear.divider);
+
+	mixer = af_linear.pulse[p] + af_linear.tnd[t];
 
 	/*if (!af_linear.flag) {
-		if (S1.output) {
-			af_linear.flag = TRUE;
-		}
-	}
+	 if (S1.output) {
+	 af_linear.flag = TRUE;
+	 }
+	 }
 
-	mixer = S1.output;
+	 mixer = S1.output;
 
-	BYTE p = S1.prev + (S1.output - S1.prev) * ((float) S1.fc / (float) af_linear.cycles);
+	 BYTE p = S1.prev + (S1.output - S1.prev) * ((float) S1.fc / (float) af_linear.cycles);
 
-	mixer = af_linear.pulse[p];
+	 mixer = af_linear.pulse[p];
 
-	mixer = NS.output;
+	 mixer = NS.output;
 
-	BYTE t = 2 * (NS.prev + (NS.output - NS.prev) * ((float) NS.fc / (float) af_linear.cycles));
-	mixer += af_linear.tnd[t];
+	 BYTE t = 2 * (NS.prev + (NS.output - NS.prev) * ((float) NS.fc / (float) af_linear.cycles));
+	 mixer += af_linear.tnd[t];
 
-	if (af_linear.flag) {
-		printf("remain: %d %d %d - %d %d\n", af_linear.cycles, mixer, S1.output, S1.prev, S1.fc);
-	}
+	 if (af_linear.flag) {
+	 printf("remain: %d %d %d - %d %d\n", af_linear.cycles, mixer, S1.output, S1.prev, S1.fc);
+	 }
 
-	S1.fc = 0;
-	NS.fc = 0;
-	af_linear.cycles = 0;
-	S1.prev = S1.output;
-	NS.prev = NS.output;
+	 S1.fc = 0;
+	 NS.fc = 0;
+	 af_linear.cycles = 0;
+	 S1.prev = S1.output;
+	 NS.prev = NS.output;
 
-	mixer <<= 7;
-	return(mixer);
-	*/
+	 mixer <<= 7;
+	 return(mixer);
+	 */
 
 	if (extra_mixer_linear) {
 		mixer = extra_mixer_linear(mixer);
@@ -255,14 +257,15 @@ SDBWORD mixer_linear_Namco_N163(SDBWORD mixer) {
 SDBWORD mixer_linear_Sunsoft_FM7(SDBWORD mixer) {
 	DBWORD p;
 
-	p  = (af_linear.ch[AFEXT0] / af_linear.divider);
+	p = (af_linear.ch[AFEXT0] / af_linear.divider);
 	p += (af_linear.ch[AFEXT1] / af_linear.divider);
 	p += (af_linear.ch[AFEXT2] / af_linear.divider);
 
 	return (mixer + af_linear.pulse[p]);
 }
 SDBWORD mixer_linear_VRC6(SDBWORD mixer) {
-	DBWORD p = (af_linear.ch[AFEXT0] / af_linear.divider) + (af_linear.ch[AFEXT1] / af_linear.divider);
+	DBWORD p = (af_linear.ch[AFEXT0] / af_linear.divider)
+	        + (af_linear.ch[AFEXT1] / af_linear.divider);
 	DBWORD t = (af_linear.ch[AFEXT2] / af_linear.divider);
 
 	return (mixer + (af_linear.pulse[p] * 1.35) + (af_linear.tnd[t] * 0.20));
