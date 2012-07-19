@@ -11,15 +11,18 @@
 #include "mappers.h"
 #include "mappers/mapperVRC7snd.h"
 #include "fds.h"
-#include "filters/audio/none.h"
-#include "filters/audio/simple.h"
+#include "filters/audio/original.h"
+#include "filters/audio/approximation.h"
 #include "filters/audio/linear.h"
 
 void audio_filter(BYTE filter) {
 	switch (filter) {
 		default:
-		case AF_NONE:
-			audio_filter_init = audio_filter_init_none;
+		case AF_ORIGINAL:
+			audio_filter_init = audio_filter_init_original;
+			break;
+		case AF_APPROXIMATION:
+			audio_filter_init = audio_filter_init_approximation;
 			break;
 		case AF_LINEAR:
 			audio_filter_init = audio_filter_init_linear;
@@ -27,7 +30,19 @@ void audio_filter(BYTE filter) {
 	}
 	audio_filter_init();
 }
+void audio_filter_popolate_table_approx(void) {
+	WORD i;
 
+	for (i = 0; i < LENGTH(af_table_approx.pulse); i++) {
+		float vl = 95.52 / (8128.0 / i + 100);
+		af_table_approx.pulse[i] = (vl * 0x3FFF);
+	}
+
+	for (i = 0; i < LENGTH(af_table_approx.tnd); i++) {
+		float vl = 163.67 / (24329.0 / i + 100);
+		af_table_approx.tnd[i] = (vl * 0x37FF);
+	}
+}
 /*
  * con questa routine azzero tutti gli output dei possibili canali.
  * La utilizzo dopo un caricamento di un savestate (perche' alcuni

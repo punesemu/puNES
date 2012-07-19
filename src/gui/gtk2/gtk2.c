@@ -157,8 +157,6 @@ void guiInit(int argc, char **argv) {
 		}
  	}
 
-	fprintf(stderr, "INFO: path %s\n", info.baseFolder);
-
 	gettimeofday(&gui.counterStart, NULL);
 	guiGetMs = highResolutionMs;
 }

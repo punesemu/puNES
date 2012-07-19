@@ -1138,11 +1138,15 @@ void guiUpdate(void) {
 	change_menuitem(CHECK, MF_CHECKED, id);
 
 	/* Audio Filter */
-	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_AUDIO_FILTER_NONE);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_AUDIO_FILTER_ORIGINAL);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_AUDIO_FILTER_APPROXIMATION);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_AUDIO_FILTER_LINEAR);
 	switch (cfg->audio_filter) {
-		case AF_NONE:
-			id = IDM_SET_AUDIO_FILTER_NONE;
+		case AF_ORIGINAL:
+			id = IDM_SET_AUDIO_FILTER_ORIGINAL;
+			break;
+		case AF_APPROXIMATION:
+			id = IDM_SET_AUDIO_FILTER_APPROXIMATION;
 			break;
 		case AF_LINEAR:
 			id = IDM_SET_AUDIO_FILTER_LINEAR;
@@ -1581,8 +1585,11 @@ long __stdcall mainWinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 				case IDM_SET_CHANNELS_STEREO:
 					set_channels(STEREO);
 					break;
-				case IDM_SET_AUDIO_FILTER_NONE:
-					set_audio_filter(AF_NONE);
+				case IDM_SET_AUDIO_FILTER_ORIGINAL:
+					set_audio_filter(AF_ORIGINAL);
+					break;
+				case IDM_SET_AUDIO_FILTER_APPROXIMATION:
+					set_audio_filter(AF_APPROXIMATION);
 					break;
 				case IDM_SET_AUDIO_FILTER_LINEAR:
 					set_audio_filter(AF_LINEAR);

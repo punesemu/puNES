@@ -216,9 +216,10 @@ static const _param param[] = {
 	{
 		"aufio filter",
 		NULL,
-		"# possible values: none, linear",
+		"# possible values: original, approximation, linear",
 		NULL,
-		"-e, --audio-filter        audio filter          : none, linear"
+		"-e, --audio-filter        audio filter          : original, approximation,\n"
+		"                                                  linear"
 	},
 	{
 		"gamegenie",
@@ -379,8 +380,9 @@ static const _param pChannels[] = {
 	{"Stereo", "stereo"}
 };
 static const _param pAudioFilter[] = {
-	{"None",   "none"  },
-	{"Linear", "linear"}
+	{"Original",      "original"     },
+	{"Approximation", "approximation"},
+	{"Linear",        "linear"       }
 };
 static const _param pSlot[] = {
 	{"0", "0"},

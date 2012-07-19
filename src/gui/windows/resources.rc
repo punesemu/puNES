@@ -214,7 +214,8 @@ BEGIN
 			END
 			POPUP "&Filter"
 			BEGIN
-				MENUITEM "&None",                 IDM_SET_AUDIO_FILTER_NONE
+				MENUITEM "&Original",             IDM_SET_AUDIO_FILTER_ORIGINAL
+				MENUITEM "&Approximation",        IDM_SET_AUDIO_FILTER_APPROXIMATION
 				MENUITEM "&Linear",               IDM_SET_AUDIO_FILTER_LINEAR
 			END
 			MENUITEM SEPARATOR

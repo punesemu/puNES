@@ -85,7 +85,8 @@ static const guint8 icon_inline[] =
   "\0\0"};
 
 enum {
-	MAFNONE,
+	MAFORIGINAL,
+	MAFAPPROXIMATION,
 	MAFLINEAR,
 	NUMCHKS
 };
@@ -105,21 +106,25 @@ void menu_audio_filter(GtkWidget *audio, GtkAccelGroup *accel_group) {
 
 	icon_inline(filter, icon_inline)
 
-	check[MAFNONE] = gtk_check_menu_item_new_with_mnemonic("_None");
+	check[MAFORIGINAL] = gtk_check_menu_item_new_with_mnemonic("_Original");
+	check[MAFAPPROXIMATION] = gtk_check_menu_item_new_with_mnemonic("_Approximation");
 	check[MAFLINEAR] = gtk_check_menu_item_new_with_mnemonic("_Linear");
 
-	gtk_menu_shell_append(GTK_MENU_SHELL(menu), check[MAFNONE]);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), check[MAFORIGINAL]);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), check[MAFAPPROXIMATION]);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), check[MAFLINEAR]);
 
-	g_signal_connect_swapped(G_OBJECT(check[MAFNONE]), "activate", G_CALLBACK(set_audio_filter),
-	        GINT_TO_POINTER(AF_NONE));
+	g_signal_connect_swapped(G_OBJECT(check[MAFORIGINAL]), "activate", G_CALLBACK(set_audio_filter),
+	        GINT_TO_POINTER(AF_ORIGINAL));
+	g_signal_connect_swapped(G_OBJECT(check[MAFAPPROXIMATION]), "activate",
+	        G_CALLBACK(set_audio_filter), GINT_TO_POINTER(AF_APPROXIMATION));
 	g_signal_connect_swapped(G_OBJECT(check[MAFLINEAR]), "activate", G_CALLBACK(set_audio_filter),
 	        GINT_TO_POINTER(AF_LINEAR));
 }
 void menu_audio_filter_check(void) {
 	int index;
 
-	for (index = MAFNONE; index < NUMCHKS; index++) {
+	for (index = MAFORIGINAL; index < NUMCHKS; index++) {
 		if (cfg->audio_filter == index) {
 			gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[index]), TRUE);
 		} else {

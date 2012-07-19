@@ -47,8 +47,6 @@ enum {
 };
 
 struct _af_linear {
-	SWORD pulse[48];
-	SWORD tnd[256];
 	DBWORD divider;
 	DBWORD ch[AFTOTCH];
 } af_linear;
@@ -59,19 +57,8 @@ void audio_filter_init_linear(void) {
 	/* azzero l'ouput di tutti i canali */
 	audio_filter_reset_output_channels();
 
-	{
-		WORD i;
-
-		for (i = 0; i < LENGTH(af_linear.pulse); i++) {
-			float vl = 95.52 / (8128.0 / i + 100);
-			af_linear.pulse[i] = (vl * 0x3FFF);
-		}
-
-		for (i = 0; i < LENGTH(af_linear.tnd); i++) {
-			float vl = 163.67 / (24329.0 / i + 100);
-			af_linear.tnd[i] = (vl * 0x37FF);
-		}
-	}
+	/* popolo la tabella di approssimazione */
+	audio_filter_popolate_table_approx();
 
 	audio_filter_apu_tick = audio_filter_apu_tick_linear;
 	audio_filter_apu_mixer = audio_filter_apu_mixer_linear;
@@ -136,7 +123,7 @@ SWORD audio_filter_apu_mixer_linear(void) {
 	t += (2 * (af_linear.ch[AFNS] / af_linear.divider));
 	t += (af_linear.ch[AFDMC] / af_linear.divider);
 
-	mixer = af_linear.pulse[p] + af_linear.tnd[t];
+	mixer = af_table_approx.pulse[p] + af_table_approx.tnd[t];
 
 	if (extra_mixer_linear) {
 		mixer = extra_mixer_linear(mixer);
@@ -173,11 +160,6 @@ void tick_linear_MMC5(void) {
 	af_linear.ch[AFEXT1] += mmc5.S4.output;
 	af_linear.ch[AFEXT2] += mmc5.pcmSample;
 }
-void tick_linear_Sunsoft_FM7(void) {
-	af_linear.ch[AFEXT0] += fm7.square[0].output;
-	af_linear.ch[AFEXT1] += fm7.square[1].output;
-	af_linear.ch[AFEXT2] += fm7.square[2].output;
-}
 void tick_linear_Namco_N163(void) {
 	BYTE i;
 
@@ -186,6 +168,11 @@ void tick_linear_Namco_N163(void) {
 			af_linear.ch[AFEXT0 + i] += (n163.ch[i].output * n163.ch[i].volume);
 		}
 	}
+}
+void tick_linear_Sunsoft_FM7(void) {
+	af_linear.ch[AFEXT0] += fm7.square[0].output;
+	af_linear.ch[AFEXT1] += fm7.square[1].output;
+	af_linear.ch[AFEXT2] += fm7.square[2].output;
 }
 void tick_linear_VRC6(void) {
 	af_linear.ch[AFEXT0] += vrc6.S3.output;
@@ -204,7 +191,7 @@ SDBWORD mixer_linear_MMC5(SDBWORD mixer) {
 	        + (af_linear.ch[AFEXT1] / af_linear.divider);
 	DBWORD t = (af_linear.ch[AFEXT2] / af_linear.divider);
 
-	return (mixer + af_linear.pulse[p] + af_linear.tnd[t]);
+	return (mixer + af_table_approx.pulse[p] + af_table_approx.tnd[t]);
 }
 SDBWORD mixer_linear_Namco_N163(SDBWORD mixer) {
 	BYTE i;
@@ -230,14 +217,14 @@ SDBWORD mixer_linear_Sunsoft_FM7(SDBWORD mixer) {
 	p += (af_linear.ch[AFEXT1] / af_linear.divider);
 	p += (af_linear.ch[AFEXT2] / af_linear.divider);
 
-	return (mixer + af_linear.pulse[p]);
+	return (mixer + af_table_approx.pulse[p]);
 }
 SDBWORD mixer_linear_VRC6(SDBWORD mixer) {
 	DBWORD p = (af_linear.ch[AFEXT0] / af_linear.divider)
 	        + (af_linear.ch[AFEXT1] / af_linear.divider);
 	DBWORD t = (af_linear.ch[AFEXT2] / af_linear.divider);
 
-	return (mixer + (af_linear.pulse[p] * 1.35) + (af_linear.tnd[t] * 0.20));
+	return (mixer + (af_table_approx.pulse[p] * 1.35) + (af_table_approx.tnd[t] * 0.20));
 }
 SDBWORD mixer_linear_VRC7(SDBWORD mixer) {
 	return (mixer + (opll_calc() << 2));

@@ -11,11 +11,18 @@
 #include "common.h"
 
 enum {
-	AF_NONE = 0,
+	AF_ORIGINAL = 0,
+	AF_APPROXIMATION,
 	AF_LINEAR
 };
 
+struct _af_table_approx {
+	SWORD pulse[48];
+	SWORD tnd[256];
+} af_table_approx;
+
 void audio_filter(BYTE filter);
+void audio_filter_popolate_table_approx(void);
 void audio_filter_reset_output_channels(void);
 
 /* funzioni virtuali */

@@ -107,6 +107,8 @@ int main(int argc, char **argv) {
 		strcpy(info.romFile, argv[optind]);
 	}
 
+	fprintf(stderr, "INFO: path %s\n", info.baseFolder);
+
 	if (emuTurnON()) {
 		emuQuit(EXIT_FAILURE);
 	}
