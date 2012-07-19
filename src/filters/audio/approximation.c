@@ -66,7 +66,7 @@ void audio_filter_apu_tick_approximation(void) {
 }
 SWORD audio_filter_apu_mixer_approximation(void) {
 	WORD p  = S1.output + S2.output;
-	WORD t  = TR.output + NS.output + DMC.output;
+	WORD t  = (3 * TR.output) + (2 * NS.output) + DMC.output;
 	SWORD mixer = af_table_approx.pulse[p] + af_table_approx.tnd[t];
 
 	if (extra_mixer_approximation) {
