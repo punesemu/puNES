@@ -142,16 +142,14 @@ BYTE sndStart(void) {
 	if (dev->channels == STEREO) {
 		BYTE i;
 
-		//snd.channel.max_pos = dev->samples * 1.30;
-		snd.channel.max_pos = dev->samples * 0.3;
-		//snd.channel.max_pos = dev->samples * 1.10;
+		snd.channel.max_pos = dev->samples * 1.012;
 		snd.channel.pos = 0;
 
 		for (i = 0; i < 2; i++) {
 			DBWORD size = snd.channel.max_pos * sizeof(*cache->write);
 
 			snd.channel.buf[i] = malloc(size);
-			memset(snd.channel.buf[i], -8191, size);
+			memset(snd.channel.buf[i], 0, size);
 			snd.channel.ptr[i] = snd.channel.buf[i];
 		}
 	}
@@ -290,8 +288,8 @@ void sndOutput(void *udata, BYTE *stream, int len) {
 		snd.out_of_sync++;
 	} else {
 #ifndef RELEASE
-		/*fprintf(stderr, "snd : %d %d %d %2d %d %f %4s\r", len, snd.buffer.count,
-		        fps.total_frames_skipped, cache->filled, snd.out_of_sync, snd.frequency, "");*/
+		fprintf(stderr, "snd : %d %d %d %2d %d %f %4s\r", len, snd.buffer.count,
+		        fps.total_frames_skipped, cache->filled, snd.out_of_sync, snd.frequency, "");
 #endif
 		/* invio i samples richiesti alla scheda sonora */
 		memcpy(stream, cache->read, len);
