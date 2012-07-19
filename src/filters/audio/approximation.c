@@ -73,7 +73,7 @@ SWORD audio_filter_apu_mixer_approximation(void) {
 		mixer = extra_mixer_approximation(mixer);
 	}
 
-	//mixer *= 1.5;
+	mixer *= 1.6;
 
 	if (mixer > 0x7FFF) {
 		mixer = 0x7FFF;

@@ -18,6 +18,7 @@
  */
 #define mixer_cut_and_high()\
 	/* taglio il risultato */\
+	mixer *= 1.6;\
 	if (mixer > 255) {\
 		mixer = 255;\
 	} else if (mixer < -255) {\
@@ -74,6 +75,7 @@ void audio_filter_apu_tick_original(void) {
 }
 SWORD audio_filter_apu_mixer_original(void) {
 	SWORD mixer = (S1.output + S2.output) + ((TR.output << 1) + NS.output + DMC.output);
+
 
 	if (extra_mixer_original) {
 		mixer = extra_mixer_original(mixer);
