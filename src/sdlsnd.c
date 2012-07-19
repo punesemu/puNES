@@ -137,7 +137,7 @@ BYTE sndStart(void) {
 	snd.opened = TRUE;
 
 	//snd.last_sample = dev->silence;
-	snd.last_sample = -8191;
+	snd.last_sample = 0;
 
 	if (dev->channels == STEREO) {
 		BYTE i;
