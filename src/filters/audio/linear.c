@@ -29,23 +29,6 @@ SDBWORD mixer_linear_Sunsoft_FM7(SDBWORD mixer);
 SDBWORD mixer_linear_VRC6(SDBWORD mixer);
 SDBWORD mixer_linear_VRC7(SDBWORD mixer);
 
-enum {
-	AFS1 = 0,
-	AFS2,
-	AFTR,
-	AFNS,
-	AFDMC,
-	AFEXT0,
-	AFEXT1,
-	AFEXT2,
-	AFEXT3,
-	AFEXT4,
-	AFEXT5,
-	AFEXT6,
-	AFEXT7,
-	AFTOTCH
-};
-
 struct _af_linear {
 	DBWORD divider;
 	DBWORD ch[AFTOTCH];

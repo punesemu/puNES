@@ -16,6 +16,23 @@ enum {
 	AF_LINEAR
 };
 
+enum {
+	AFS1 = 0,
+	AFS2,
+	AFTR,
+	AFNS,
+	AFDMC,
+	AFEXT0,
+	AFEXT1,
+	AFEXT2,
+	AFEXT3,
+	AFEXT4,
+	AFEXT5,
+	AFEXT6,
+	AFEXT7,
+	AFTOTCH
+};
+
 struct _af_table_approx {
 	SWORD pulse[48];
 	SWORD tnd[256];

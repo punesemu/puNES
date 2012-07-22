@@ -121,7 +121,7 @@
 		 * quindi non udibile), percio' la taglio.\
 		 */\
 		if (TR.timer < 2) {\
-			TR.output = 0;/*triangleDuty[7];*/\
+			TR.output = triangleDuty[7];\
 		} else {\
 			TR.output = triangleDuty[TR.sequencer];\
 		}\
@@ -280,7 +280,6 @@
 	 * con il length diverso da zero.\
 	 */\
 	if (square.length.enabled && !(apu.length_clocked && square.length.value)) {\
-		/*square.length.value = lengthTable[(value & 0xF8) >> 3];*/\
 		square.length.value = lengthTable[value >> 3];\
 	}\
 	/* envelope */\
