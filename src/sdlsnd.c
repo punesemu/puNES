@@ -5,9 +5,6 @@
  *      Author: fhorse
  */
 
-#include <SDL.h>
-#include <SDL_audio.h>
-#include <SDL_thread.h>
 #include "sdlsnd.h"
 #include "clock.h"
 #include "fps.h"
@@ -16,30 +13,6 @@
 #include "cfgfile.h"
 #include "audio_filter.h"
 
-enum { FCNORMAL, FCNONE };
-
-typedef struct {
-	SWORD *start;
-	SBYTE *end;
-
-	SBYTE *read;
-	SWORD *write;
-
-	SWORD filled;
-
-	SDL_mutex *lock;
-} _callbackData;
-
-#define snd_frequency(a)\
-	if (snd.factor != a) {\
-		snd.factor = a;\
-		snd.frequency = ((fps.nominal * machine.cpuCyclesFrame) -\
-				((machine.cpuCyclesFrame / 100.0) * snd.factor)) / dev->freq;\
-	}
-
-static const float sndFactor[3][2] = {
-	{ 11.0, 0.0 }, { 2.5, 0.0 }, { 2.5, 0.0 }
-};
 
 BYTE sndInit(void) {
 	/* inizializzo il comparto audio dell'sdl */
@@ -155,6 +128,7 @@ BYTE sndStart(void) {
 	}
 
 	snd_frequency(sndFactor[apu.type][FCNORMAL])
+	//snd.frequency = (fps.nominal * machine.cpuCyclesFrame) / dev->freq;
 
 	{
 		DBWORD total_buffer_size;
@@ -191,7 +165,7 @@ BYTE sndStart(void) {
 	}
 
 #ifdef DEBUG
-	return (EXIT_OK);
+	//return (EXIT_OK);
 #endif
 
 	/* avvio la riproduzione */

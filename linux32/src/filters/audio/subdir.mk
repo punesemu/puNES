@@ -6,16 +6,19 @@
 C_SRCS += \
 ../src/filters/audio/approximation.c \
 ../src/filters/audio/linear.c \
+../src/filters/audio/linear2.c \
 ../src/filters/audio/original.c 
 
 OBJS += \
 ./src/filters/audio/approximation.o \
 ./src/filters/audio/linear.o \
+./src/filters/audio/linear2.o \
 ./src/filters/audio/original.o 
 
 C_DEPS += \
 ./src/filters/audio/approximation.d \
 ./src/filters/audio/linear.d \
+./src/filters/audio/linear2.d \
 ./src/filters/audio/original.d 
 
 

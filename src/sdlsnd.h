@@ -8,6 +8,9 @@
 #ifndef SDLSND_H_
 #define SDLSND_H_
 
+#include <SDL.h>
+#include <SDL_audio.h>
+#include <SDL_thread.h>
 #include "common.h"
 
 enum { S44100, S22050, S11025 };
@@ -47,11 +50,38 @@ struct _snd {
 	} buffer;
 } snd;
 
+typedef struct {
+	SWORD *start;
+	SBYTE *end;
+
+	SBYTE *read;
+	SWORD *write;
+
+	SWORD filled;
+
+	SDL_mutex *lock;
+} _callbackData;
+
+enum { FCNORMAL, FCNONE };
+
+#define snd_frequency(a)\
+	if (snd.factor != a) {\
+		snd.factor = a;\
+		snd.frequency = ((fps.nominal * machine.cpuCyclesFrame) -\
+				((machine.cpuCyclesFrame / 100.0) * snd.factor)) / dev->freq;\
+	}
+
+static const float sndFactor[3][2] = {
+	{ 11.0, 0.0 }, { 2.5, 0.0 }, { 2.5, 0.0 }
+};
+
 BYTE sndInit(void);
 BYTE sndStart(void);
-BYTE sndWrite(void);
 void sndOutput(void *udata, BYTE *stream, int len);
+BYTE sndWrite(void);
 void sndStop(void);
 void sndQuit(void);
+
+BYTE (*snd_write)(void);
 
 #endif /* SDLSND_H_ */

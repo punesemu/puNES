@@ -186,7 +186,7 @@ void apuTick(SWORD cyclesCPU, BYTE *hwtick) {
 	/* tick filtro audio */
 	audio_filter_apu_tick();
 
-	sndWrite();
+	snd_write();
 }
 
 void apuTurnON(void) {

@@ -14,8 +14,14 @@
 #include "filters/audio/original.h"
 #include "filters/audio/approximation.h"
 #include "filters/audio/linear.h"
+#include "filters/audio/linear2.h"
+
+#include "sdlsnd.h"
 
 void audio_filter(BYTE filter) {
+
+	snd_write = sndWrite;
+
 	switch (filter) {
 		default:
 		case AF_ORIGINAL:
@@ -23,6 +29,9 @@ void audio_filter(BYTE filter) {
 			break;
 		case AF_APPROXIMATION:
 			audio_filter_init = audio_filter_init_approximation;
+
+			audio_filter_init = audio_filter_init_linear2;
+			snd_write = audio_filter_snd_write_linear2;
 			break;
 		case AF_LINEAR:
 			audio_filter_init = audio_filter_init_linear;
@@ -35,12 +44,13 @@ void audio_filter_popolate_table_approx(void) {
 
 	for (i = 0; i < LENGTH(af_table_approx.pulse); i++) {
 		float vl = 95.52 / (8128.0 / i + 100);
-		af_table_approx.pulse[i] = (vl * 0x3FFF);
+		//af_table_approx.pulse[i] = (vl * 0x1C00) - 0x0E00;
+		af_table_approx.pulse[i] = (vl * 0x2FFF);
 	}
 
 	for (i = 0; i < LENGTH(af_table_approx.tnd); i++) {
 		float vl = 163.67 / (24329.0 / i + 100);
-		af_table_approx.tnd[i] = (vl * 0x37FF);
+		af_table_approx.tnd[i] = (vl * 0x2FFF);
 	}
 }
 /*
