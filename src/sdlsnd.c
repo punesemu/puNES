@@ -13,7 +13,6 @@
 #include "cfgfile.h"
 #include "audio_filter.h"
 
-
 BYTE sndInit(void) {
 	/* inizializzo il comparto audio dell'sdl */
 	if (SDL_Init(SDL_INIT_AUDIO) < 0) {
@@ -128,7 +127,6 @@ BYTE sndStart(void) {
 	}
 
 	snd_frequency(sndFactor[apu.type][FCNORMAL])
-	//snd.frequency = (fps.nominal * machine.cpuCyclesFrame) / dev->freq;
 
 	{
 		DBWORD total_buffer_size;

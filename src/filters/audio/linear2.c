@@ -18,7 +18,7 @@
 #include "clock.h"
 #include "fps.h"
 
-#define cycles_divider 10
+#define cycles_divider 5
 
 struct _af_linear2 {
 	WORD counter;
@@ -49,7 +49,7 @@ void audio_filter_init_linear2(void) {
 	audio_filter_apu_mixer = audio_filter_apu_mixer_linear2;
 }
 void audio_filter_apu_tick_linear2(void) {
-	l2.counter++;
+	return;
 }
 SWORD audio_filter_apu_mixer_linear2(void) {
 	return (0);
@@ -89,6 +89,7 @@ SWORD audio_filter_apu_mixer_linear2(void) {
 
 
 
+
 BYTE audio_filter_snd_write_linear2(void) {
 	SDL_AudioSpec *dev = snd.dev;
 	_callbackData *cache = snd.cache;
@@ -98,15 +99,7 @@ BYTE audio_filter_snd_write_linear2(void) {
 		return (FALSE);
 	}
 
-	if (snd.brk) {
-		if (cache->filled < 3) {
-			snd.brk = FALSE;
-		} else {
-			return (FALSE);
-		}
-	}
-
-	if (l2.counter == cycles_divider - 1) {
+	if (++l2.counter == cycles_divider) {
 		l2.counter = 0;
 
 		l2.samples_to_run = (float) cycles_divider / snd.frequency;
@@ -179,6 +172,14 @@ BYTE audio_filter_snd_write_linear2(void) {
 		l2.old_volume[AFDMC] = DMC.output;
 	}
 
+	if (snd.brk) {
+		if (cache->filled < 3) {
+			snd.brk = FALSE;
+		} else {
+			return (FALSE);
+		}
+	}
+
 	if (!elaborate) {
 		return(FALSE);
 	}
@@ -188,7 +189,7 @@ BYTE audio_filter_snd_write_linear2(void) {
 		SWORD data;
 
 		p = l2.volume[AFS1] + l2.volume[AFS2];
-		t = l2.volume[AFTR] + l2.volume[AFNS] + l2.volume[AFDMC];
+		t = (3 * l2.volume[AFTR]) + (2 * l2.volume[AFNS]) + l2.volume[AFDMC];
 
 		data = af_table_approx.pulse[p] + af_table_approx.tnd[t];
 
