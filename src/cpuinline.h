@@ -1256,7 +1256,7 @@ static void INLINE apuWrReg(WORD address, BYTE value) {
 
 				value &= 0x7F;
 
-				if (r4011.frames > 1) {
+				//if (r4011.frames > 1) {
 					/*
 					 * questa lo faccio perche' in alcuni giochi come Batman,
 					 * Ninja Gaiden 3, Castlevania II ed altri, producono
@@ -1270,9 +1270,14 @@ static void INLINE apuWrReg(WORD address, BYTE value) {
 					 * emulated these filters.
 					 * (Xodnizel)
 					 */
-					DMC.output = abs(DMC.output - ((value - r4011.value) >> 3));
-				} else {
-					DMC.output = value;
+				//	DMC.output = abs(DMC.output - ((value - r4011.value) >> 3));
+				//} else {
+				//	DMC.output = value;
+				//}
+
+				//printf("4011 : %d\n", value);
+				if (r4011.value != value) {
+					DMC.counter = abs(abs((value - r4011.value) ) - DMC.counter);
 				}
 
 				r4011.frames = 0;

@@ -102,7 +102,7 @@ SWORD audio_filter_apu_mixer_linear(void) {
 	SDBWORD mixer;
 
 	p  = (af_linear.ch[AFS1] / af_linear.divider) + (af_linear.ch[AFS2] / af_linear.divider);
-	t  = (3 * (af_linear.ch[AFTR] / af_linear.divider));
+	t  = (2 * (af_linear.ch[AFTR] / af_linear.divider));
 	t += (2 * (af_linear.ch[AFNS] / af_linear.divider));
 	t += (af_linear.ch[AFDMC] / af_linear.divider);
 

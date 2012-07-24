@@ -114,7 +114,7 @@
 	}\
 }
 #define triangleOutput()\
-	if (TR.length.value && TR.linear.value) {\
+	/*if (TR.length.value && TR.linear.value) {*/\
 		/*\
 		 * ai 2 cicli piu' bassi del timer, la frequenza\
 		 * risultante e' troppo alta (oltre i 20 kHz,\
@@ -124,8 +124,8 @@
 			TR.output = triangleDuty[7];\
 		} else {\
 			TR.output = triangleDuty[TR.sequencer];\
-		}\
-	}
+		}
+	/*}*/
 #define noiseOutput()\
 	if (NS.length.value && !(NS.shift & 0x0001)) {\
 		NS.output = NS.volume;\
@@ -142,10 +142,12 @@
 		square.sequencer = (square.sequencer + 1) & 0x07;\
 	}
 #define triangleTick()\
-	if (!(--TR.frequency)) {\
-		triangleOutput()\
-		TR.frequency = TR.timer + 1;\
-		TR.sequencer = (TR.sequencer + 1) & 0x1F;\
+	if (TR.length.value && TR.linear.value) {\
+		if (!(--TR.frequency)) {\
+			triangleOutput()\
+			TR.frequency = TR.timer + 1;\
+			TR.sequencer = (TR.sequencer + 1) & 0x1F;\
+		}\
 	}
 #define noiseTick()\
 	if (!(--NS.frequency)) {\
@@ -170,9 +172,11 @@
 					DMC.counter += 2;\
 				}\
 			}\
-			DMC.shift >>= 1;\
-			dmcOutput();\
+			/*DMC.shift >>= 1;\
+			dmcOutput();*/\
 		}\
+		DMC.shift >>= 1;\
+		dmcOutput();\
 		if (!(--DMC.counterOut)) {\
 			DMC.counterOut = 8;\
 			if (!DMC.empty) {\
@@ -299,8 +303,11 @@ typedef struct {
 } _apu;
 typedef struct {
 	BYTE value;
-	uint32_t frames;
-} _r4xxx;
+	DBWORD frames;
+} _r4011;
+typedef struct {
+	BYTE value;
+} _r4015;
 typedef struct {
 	BYTE value;
 	BYTE jitter;
@@ -421,7 +428,8 @@ typedef struct {
 enum { DMCNORMAL, DMCCPUWRITE, DMCR4014, DMCNNLDMA };
 
 _apu apu;
-_r4xxx r4011, r4015;
+_r4011 r4011;
+_r4015 r4015;
 _r4017 r4017;
 _apuSquare S1, S2;
 _apuTriangle TR;

@@ -18,18 +18,17 @@
 #include "clock.h"
 #include "fps.h"
 
-#define cycles_divider 5
+#define cycles_divider 2
 
 struct _af_linear2 {
 	WORD counter;
 
-	float samples_to_run;
-	float position_within_sample;
-	float remaining_within_sample;
-	float accumulated_volume[AFTOTCH];
-	float old_volume[AFTOTCH];
-
-	float volume[AFTOTCH];
+	double samples_to_run;
+	double position_within_sample;
+	double remaining_within_sample;
+	double accumulated_volume[AFTOTCH];
+	double old_volume[AFTOTCH];
+	double volume[AFTOTCH];
 
 	SWORD old_value;
 
@@ -188,12 +187,39 @@ BYTE audio_filter_snd_write_linear2(void) {
 		WORD p, t;
 		SWORD data;
 
+		/**/
 		p = l2.volume[AFS1] + l2.volume[AFS2];
-		t = (3 * l2.volume[AFTR]) + (2 * l2.volume[AFNS]) + l2.volume[AFDMC];
+		t = (1.5 * l2.volume[AFTR]) + (2 * l2.volume[AFNS]) + (l2.volume[AFDMC] * 0.89);
 
 		data = af_table_approx.pulse[p] + af_table_approx.tnd[t];
+		/**/
 
+		/*
+		p = l2.volume[AFS1] + l2.volume[AFS2];
+		t = l2.volume[AFDMC];// + (2 * l2.volume[AFNS]) + l2.volume[AFDMC];
+
+		data = af_table_approx.tnd[t];
 		data *= 2;
+		*/
+
+		/*
+		data = l2.volume[AFTR];
+		//data = TR.output;
+		data <<= 7;
+		*/
+
+#ifdef NOPASS
+		//data *= 2;
+#else
+		/* low-pass filter */
+		data = l2.old_value + (0.85 * (data - l2.old_value));
+		/* hi-pass filter */
+		data = data - (l2.old_value + 0.85 *((data - l2.old_value)));
+
+		l2.old_value = data;
+
+		data *= 16;
+#endif
 
 		if (data > 0x7FFF) {
 			data = 0x7FFF;

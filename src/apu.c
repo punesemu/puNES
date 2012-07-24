@@ -222,6 +222,12 @@ void apuTurnON(void) {
 		DMC.silence = TRUE;
 		DMC.counterOut = 8;
 	} else {
+		S1.output = 0;
+		S2.output = 0;
+		TR.output = 0;
+		NS.output = 0;
+		DMC.output = 0;
+
 		r4017.delay = FALSE;
 		r4017jitter();
 		r4015.value = 0;
