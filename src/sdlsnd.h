@@ -26,8 +26,10 @@ struct _snd {
 	DBWORD cycles;
 	DBWORD out_of_sync;
 
-	float frequency;
-	float factor;
+	WORD freq;
+
+	double frequency;
+	double factor;
 
 	void *cache;
 	void *dev;
@@ -67,12 +69,11 @@ enum { FCNORMAL, FCNONE };
 #define snd_frequency(a)\
 	if (snd.factor != a) {\
 		snd.factor = a;\
-		snd.frequency = ((fps.nominal * machine.cpuCyclesFrame) -\
-				((machine.cpuCyclesFrame / 100.0) * snd.factor)) / dev->freq;\
+		fps_machine_ms(snd.factor)\
 	}
 
-static const float sndFactor[3][2] = {
-	{ 11.0, 0.0 }, { 2.5, 0.0 }, { 2.5, 0.0 }
+static const double sndFactor[3][2] = {
+	{ 0.996, 1.0 }, { 2.5, 1.0 }, { 2.5, 1.0 }
 };
 
 BYTE sndInit(void);

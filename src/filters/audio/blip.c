@@ -148,6 +148,14 @@ void audio_quality_end_frame_blip(void) {
 
 		blip_read_samples(bl.blip, temp, count, 0);
 
+		if (snd.brk) {
+			if (cache->filled < 3) {
+				snd.brk = FALSE;
+			} else {
+				return;
+			}
+		}
+
 		for (i = 0; i < count; i++) {
 			SWORD data = temp[i];
 
@@ -178,7 +186,16 @@ void audio_quality_end_frame_blip(void) {
 				snd.pos.current = 0;
 
 				SDL_mutexP(cache->lock);
-				++cache->filled;
+
+				/* incremento il contatore dei frames pieni non ancora 'riprodotti' */
+				if (++cache->filled >= snd.buffer.count) {
+					snd.brk = TRUE;
+				} else if (cache->filled >= ((snd.buffer.count >> 1) + 1)) {
+					snd_frequency(sndFactor[apu.type][FCNONE])
+				} else if (cache->filled < 3) {
+					snd_frequency(sndFactor[apu.type][FCNORMAL])
+				}
+
 				SDL_mutexV(cache->lock);
 			}
 		}

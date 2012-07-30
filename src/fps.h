@@ -31,6 +31,12 @@ enum {
 	FPS44
 };
 
+#define fps_machine_ms(factor)\
+	if (fps.fastforward == FALSE) {\
+		machine.msFrame = (1000.0 / (double) machine.fps) * factor;\
+		fps.ms = machine.msFrame;\
+	}
+
 struct _fps {
 	uint8_t counter;
 	uint8_t frames_before_skip;
@@ -42,8 +48,8 @@ struct _fps {
 	double next_frame;
 	double second_start;
 	double second_end;
-	float avarage;
-	float nominal;
+	double avarage;
+	double nominal;
 } fps;
 
 void fpsInit(void);
