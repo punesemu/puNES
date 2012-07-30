@@ -424,7 +424,7 @@ void setDefault(void) {
 	cfg_from_file.audio = TRUE;
 	cfg_from_file.samplerate = S44100;
 	cfg_from_file.channels = STEREO;
-	cfg_from_file.audio_quality = AQ_LOW;
+	cfg_from_file.audio_quality = AQ_HIGH;
 	gamegenie.enabled = FALSE;
 	port1.type = STDCTRL;
 	portKbDefault(port1, "S", "A", "Z", "X", "Up", "Down", "Left", "Right", "W", "Q");
