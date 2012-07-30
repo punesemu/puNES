@@ -18,7 +18,7 @@
 #include "clock.h"
 #include "fps.h"
 
-#define cycles_divider 2
+#define cycles_divider 10
 
 struct _af_linear2 {
 	WORD counter;
@@ -31,6 +31,8 @@ struct _af_linear2 {
 	double volume[AFTOTCH];
 
 	SWORD old_value;
+
+	double delta;
 
 	BYTE flag;
 } l2;
@@ -46,6 +48,8 @@ void audio_filter_init_linear2(void) {
 
 	audio_filter_apu_tick = audio_filter_apu_tick_linear2;
 	audio_filter_apu_mixer = audio_filter_apu_mixer_linear2;
+
+	snd_write = audio_filter_snd_write_linear2;
 }
 void audio_filter_apu_tick_linear2(void) {
 	return;
@@ -101,7 +105,7 @@ BYTE audio_filter_snd_write_linear2(void) {
 	if (++l2.counter == cycles_divider) {
 		l2.counter = 0;
 
-		l2.samples_to_run = (float) cycles_divider / snd.frequency;
+		l2.samples_to_run = (double) cycles_divider / snd.frequency;
 
 		if (l2.position_within_sample > 0.0) {
 			if (l2.position_within_sample + l2.samples_to_run >= 1.0) {
@@ -187,38 +191,248 @@ BYTE audio_filter_snd_write_linear2(void) {
 		WORD p, t;
 		SWORD data;
 
-		/**/
+		/*
 		p = l2.volume[AFS1] + l2.volume[AFS2];
 		t = (1.5 * l2.volume[AFTR]) + (2 * l2.volume[AFNS]) + (l2.volume[AFDMC] * 0.89);
 
 		data = af_table_approx.pulse[p] + af_table_approx.tnd[t];
-		/**/
+		data *= 2;
+		*/
 
 		/*
 		p = l2.volume[AFS1] + l2.volume[AFS2];
-		t = l2.volume[AFDMC];// + (2 * l2.volume[AFNS]) + l2.volume[AFDMC];
+		t = 2 * l2.volume[AFNS];// + (2 * l2.volume[AFNS]) + l2.volume[AFDMC];
 
 		data = af_table_approx.tnd[t];
 		data *= 2;
 		*/
 
-		/*
-		data = l2.volume[AFTR];
-		//data = TR.output;
+		/**/
+		//data = l2.volume[AFNS];
+		data = NS.output;
+		//printf("NS: %d\n", data);
 		data <<= 7;
+		/**/
+
+		/*
+		p = l2.volume[AFS1] + l2.volume[AFS2];
+		t = l2.volume[AFTR] + l2.volume[AFNS] + l2.volume[AFDMC];
+
+		data = p + t;
+		data <<= 8;
 		*/
 
-#ifdef NOPASS
+#ifndef NOPASS
 		//data *= 2;
 #else
 		/* low-pass filter */
-		data = l2.old_value + (0.85 * (data - l2.old_value));
+		//SWORD dt  = l2.old_value + (0.15 * (data - l2.old_value));
 		/* hi-pass filter */
-		data = data - (l2.old_value + 0.85 *((data - l2.old_value)));
+		//SWORD dt = data - (l2.old_value + 0.25 *((data - l2.old_value)));
+
+		//double pippo = (double) l2.old_value + (0.55 * (double) (data - l2.old_value));
+		//data = pippo;
 
 		l2.old_value = data;
 
-		data *= 16;
+		data = dt * 2;
+#endif
+
+		if (data > 0x7FFF) {
+			data = 0x7FFF;
+		} else if (data < -0x7FFF) {
+			data = -0x7FFF;
+		}
+
+		//p = l2.volume[AFS1];
+		//t = l2.volume[AFTR] + l2.volume[AFNS] + l2.volume[AFDMC];
+		//data = af_table_approx.pulse[p];// + af_table_approx.tnd[t];
+
+		/* mono or left*/
+		(*cache->write++) = data;
+
+		/* stereo */
+		if (dev->channels == STEREO) {
+			/* salvo il dato nel buffer del canale sinistro */
+			snd.channel.ptr[CH_LEFT][snd.channel.pos] = data;
+			/* scrivo nel nel frame audio il canale destro ritardato di un frame */
+			(*cache->write++) = snd.channel.ptr[CH_RIGHT][snd.channel.pos];
+			/* swappo i buffers dei canali */
+			if (++snd.channel.pos >= snd.channel.max_pos) {
+				SWORD *swap = snd.channel.ptr[CH_RIGHT];
+
+				snd.channel.ptr[CH_RIGHT] = snd.channel.ptr[CH_LEFT];
+				snd.channel.ptr[CH_LEFT] = swap;
+				snd.channel.pos = 0;
+			}
+		}
+
+		if (cache->write >= (SWORD *) cache->end) {
+			cache->write = cache->start;
+		}
+
+		if (++snd.pos.current >= dev->samples) {
+			snd.pos.current = 0;
+			SDL_mutexP(cache->lock);
+			/* incremento il contatore dei frames pieni non ancora 'riprodotti' */
+			if (++cache->filled >= snd.buffer.count) {
+				snd.brk = TRUE;
+			} else if (cache->filled >= ((snd.buffer.count >> 1) + 1)) {
+				snd_frequency(sndFactor[apu.type][FCNONE])
+			} else if (cache->filled < 3) {
+				snd_frequency(sndFactor[apu.type][FCNORMAL])
+			}
+			SDL_mutexV(cache->lock);
+		}
+	}
+
+	return(TRUE);
+}
+
+
+BYTE audio_filter_snd_write2_linear2(void) {
+	SDL_AudioSpec *dev = snd.dev;
+	_callbackData *cache = snd.cache;
+	BYTE elaborate = FALSE;
+
+	if (!cfg->audio) {
+		return (FALSE);
+	}
+
+	if (++l2.counter == cycles_divider) {
+		l2.counter = 0;
+
+		l2.samples_to_run = (double) cycles_divider / snd.frequency;
+
+		if (l2.position_within_sample > 0.0) {
+			if (l2.position_within_sample + l2.samples_to_run >= 1.0) {
+				l2.remaining_within_sample = 1.0 - l2.position_within_sample;
+				l2.samples_to_run -= l2.remaining_within_sample;
+
+				l2.accumulated_volume[AFS1] += l2.remaining_within_sample * l2.old_volume[AFS1];
+				l2.accumulated_volume[AFS2] += l2.remaining_within_sample * l2.old_volume[AFS2];
+				l2.accumulated_volume[AFTR] += l2.remaining_within_sample * l2.old_volume[AFTR];
+				l2.accumulated_volume[AFNS] += l2.remaining_within_sample * l2.old_volume[AFNS];
+				l2.accumulated_volume[AFDMC] += l2.remaining_within_sample * l2.old_volume[AFDMC];
+
+				elaborate = TRUE;
+
+				l2.volume[AFS1] = l2.accumulated_volume[AFS1];
+				l2.volume[AFS2] = l2.accumulated_volume[AFS2];
+				l2.volume[AFTR] = l2.accumulated_volume[AFTR];
+				l2.volume[AFNS] = l2.accumulated_volume[AFNS];
+				l2.volume[AFDMC] = l2.accumulated_volume[AFDMC];
+			} else {
+				l2.accumulated_volume[AFS1] += l2.samples_to_run * l2.old_volume[AFS1];
+				l2.accumulated_volume[AFS2] += l2.samples_to_run * l2.old_volume[AFS2];
+				l2.accumulated_volume[AFTR] += l2.samples_to_run * l2.old_volume[AFTR];
+				l2.accumulated_volume[AFNS] += l2.samples_to_run * l2.old_volume[AFNS];
+				l2.accumulated_volume[AFDMC] += l2.samples_to_run * l2.old_volume[AFDMC];
+
+				l2.position_within_sample += l2.samples_to_run;
+
+				l2.old_volume[AFS1] = S1.output;
+				l2.old_volume[AFS2] = S2.output;
+				l2.old_volume[AFTR] = TR.output;
+				l2.old_volume[AFNS] = NS.output;
+				l2.old_volume[AFDMC] = DMC.output;
+
+				return (FALSE);
+			}
+		}
+
+		WORD whole_samples_to_run = (WORD) l2.samples_to_run;
+
+		if (whole_samples_to_run) {
+			elaborate = TRUE;
+			l2.volume[AFS1] = l2.old_volume[AFS1];
+			l2.volume[AFS2] = l2.old_volume[AFS2];
+			l2.volume[AFTR] = l2.old_volume[AFTR];
+			l2.volume[AFNS] = l2.old_volume[AFNS];
+			l2.volume[AFDMC] = l2.old_volume[AFDMC];
+		}
+		l2.samples_to_run -= whole_samples_to_run;
+
+		if (l2.samples_to_run > 0.0) {
+			l2.accumulated_volume[AFS1] = l2.samples_to_run * l2.old_volume[AFS1];
+			l2.accumulated_volume[AFS2] = l2.samples_to_run * l2.old_volume[AFS2];
+			l2.accumulated_volume[AFTR] = l2.samples_to_run * l2.old_volume[AFTR];
+			l2.accumulated_volume[AFNS] = l2.samples_to_run * l2.old_volume[AFNS];
+			l2.accumulated_volume[AFDMC] = l2.samples_to_run * l2.old_volume[AFDMC];
+
+			l2.position_within_sample = l2.samples_to_run;
+		} else {
+			l2.position_within_sample = 0.0;
+		}
+
+		l2.old_volume[AFS1] = S1.output;
+		l2.old_volume[AFS2] = S2.output;
+		l2.old_volume[AFTR] = TR.output;
+		l2.old_volume[AFNS] = NS.output;
+		l2.old_volume[AFDMC] = DMC.output;
+	}
+
+	if (snd.brk) {
+		if (cache->filled < 3) {
+			snd.brk = FALSE;
+		} else {
+			return (FALSE);
+		}
+	}
+
+	if (!elaborate) {
+		return(FALSE);
+	}
+
+	{
+		WORD p, t;
+		SWORD data;
+
+		/*
+		p = l2.volume[AFS1] + l2.volume[AFS2];
+		t = (1.5 * l2.volume[AFTR]) + (2 * l2.volume[AFNS]) + (l2.volume[AFDMC] * 0.89);
+
+		data = af_table_approx.pulse[p] + af_table_approx.tnd[t];
+		data *= 2;
+		*/
+
+		/*
+		p = l2.volume[AFS1] + l2.volume[AFS2];
+		t = 2 * l2.volume[AFNS];// + (2 * l2.volume[AFNS]) + l2.volume[AFDMC];
+
+		data = af_table_approx.tnd[t];
+		data *= 2;
+		*/
+
+		/**/
+		//data = l2.volume[AFNS];
+		data = NS.output;
+		//printf("NS: %d\n", data);
+		data <<= 7;
+		/**/
+
+		/*
+		p = l2.volume[AFS1] + l2.volume[AFS2];
+		t = l2.volume[AFTR] + l2.volume[AFNS] + l2.volume[AFDMC];
+
+		data = p + t;
+		data <<= 8;
+		*/
+
+#ifndef NOPASS
+		//data *= 2;
+#else
+		/* low-pass filter */
+		//SWORD dt  = l2.old_value + (0.15 * (data - l2.old_value));
+		/* hi-pass filter */
+		//SWORD dt = data - (l2.old_value + 0.25 *((data - l2.old_value)));
+
+		//double pippo = (double) l2.old_value + (0.55 * (double) (data - l2.old_value));
+		//data = pippo;
+
+		l2.old_value = data;
+
+		data = dt * 2;
 #endif
 
 		if (data > 0x7FFF) {

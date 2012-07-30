@@ -14,13 +14,17 @@
 #include "filters/audio/original.h"
 #include "filters/audio/approximation.h"
 #include "filters/audio/linear.h"
+
 #include "filters/audio/linear2.h"
+#include "filters/audio/blip.h"
 
 #include "sdlsnd.h"
 
 void audio_filter(BYTE filter) {
 
 	snd_write = sndWrite;
+
+	audio_filter_end_frame = audio_filter_end_frame_none;
 
 	switch (filter) {
 		default:
@@ -31,7 +35,8 @@ void audio_filter(BYTE filter) {
 			audio_filter_init = audio_filter_init_approximation;
 
 			audio_filter_init = audio_filter_init_linear2;
-			snd_write = audio_filter_snd_write_linear2;
+
+			audio_filter_init = audio_filter_init_blip;
 			break;
 		case AF_LINEAR:
 			audio_filter_init = audio_filter_init_linear;
@@ -43,13 +48,13 @@ void audio_filter_popolate_table_approx(void) {
 	WORD i;
 
 	for (i = 0; i < LENGTH(af_table_approx.pulse); i++) {
-		float vl = 95.52 / (8128.0 / i + 100);
+		double vl = 95.52 / (8128.0 / i + 100);
 		//af_table_approx.pulse[i] = (vl * 0x1C00) - 0x0E00;
 		af_table_approx.pulse[i] = (vl * 0x2FFF);
 	}
 
 	for (i = 0; i < LENGTH(af_table_approx.tnd); i++) {
-		float vl = 163.67 / (24329.0 / i + 100);
+		double vl = 163.67 / (24329.0 / i + 100);
 		af_table_approx.tnd[i] = (vl * 0x2FFF);
 	}
 }
@@ -89,4 +94,7 @@ void audio_filter_reset_output_channels(void) {
 	vrc6.S3.output = 0;
 	vrc6.S4.output = 0;
 	vrc6.saw.output = 0;
+}
+void audio_filter_end_frame_none(void) {
+	return;
 }

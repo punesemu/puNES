@@ -111,6 +111,8 @@ BYTE emuLoop(void) {
 				tas.total_lag_frames++;
 			}
 
+			audio_filter_end_frame();
+
 #ifdef DEBUG
 			gfxDrawScreen(TRUE);
 #else

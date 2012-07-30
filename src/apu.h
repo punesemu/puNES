@@ -114,20 +114,18 @@
 	}\
 }
 #define triangleOutput()\
-	/*if (TR.length.value && TR.linear.value) {*/\
-		/*\
-		 * ai 2 cicli piu' bassi del timer, la frequenza\
-		 * risultante e' troppo alta (oltre i 20 kHz,\
-		 * quindi non udibile), percio' la taglio.\
-		 */\
-		if (TR.timer < 2) {\
-			TR.output = triangleDuty[7];\
-		} else {\
-			TR.output = triangleDuty[TR.sequencer];\
-		}
-	/*}*/
+	/*\
+	 * ai 2 cicli piu' bassi del timer, la frequenza\
+	 * risultante e' troppo alta (oltre i 20 kHz,\
+	 * quindi non udibile), percio' la taglio.\
+	 */\
+	if (TR.timer < 2) {\
+		TR.output = triangleDuty[7];\
+	} else {\
+		TR.output = triangleDuty[TR.sequencer];\
+	}
 #define noiseOutput()\
-	if (NS.length.value && !(NS.shift & 0x0001)) {\
+	if (!(NS.shift & 0x0001)) {\
 		NS.output = NS.volume;\
 	} else {\
 		NS.output = 0;\
@@ -140,6 +138,8 @@
 		squareOutput(square)\
 		square.frequency = (square.timer + 1) << 1;\
 		square.sequencer = (square.sequencer + 1) & 0x07;\
+		\
+		square.clocked = TRUE;\
 	}
 #define triangleTick()\
 	if (TR.length.value && TR.linear.value) {\
@@ -147,11 +147,13 @@
 			triangleOutput()\
 			TR.frequency = TR.timer + 1;\
 			TR.sequencer = (TR.sequencer + 1) & 0x1F;\
+			\
+			TR.clocked = TRUE;\
 		}\
 	}
 #define noiseTick()\
 	if (!(--NS.frequency)) {\
-		NS.frequency = noiseTimer[apu.type][NS.timer];\
+		NS.frequency = noiseTimer[apu.type][NS.timer] << 1;\
 		if (NS.mode) {\
 			NS.shift = (NS.shift >> 1) | (((NS.shift ^ (NS.shift >> 6)) & 0x0001) << 14);\
 		} else {\
@@ -159,6 +161,8 @@
 		}\
 		NS.shift &= 0x7FFF;\
 		noiseOutput()\
+		\
+		NS.clocked = TRUE;\
 	}
 #define dmcTick()\
 	if (!(--DMC.frequency)) {\
@@ -358,8 +362,12 @@ typedef struct {
 	/* output */
 	SWORD output;
 
-	DBWORD fc;
-	SWORD prev;
+/* ------------------------------------------------- */
+/* questi non e' necessario salvarli negli savestate */
+/* ------------------------------------------------- */
+	BYTE clocked;
+	DBWORD period;
+/* ------------------------------------------------- */
 } _apuSquare;
 typedef struct {
 	/* timer */
@@ -374,6 +382,13 @@ typedef struct {
 	BYTE sequencer;
 	/* output */
 	SWORD output;
+
+/* ------------------------------------------------- */
+/* questi non e' necessario salvarli negli savestate */
+/* ------------------------------------------------- */
+/* */ BYTE clocked;                               /* */
+/* */ DBWORD period;                              /* */
+/* ------------------------------------------------- */
 } _apuTriangle;
 typedef struct {
 	/* timer */
@@ -394,6 +409,13 @@ typedef struct {
 	BYTE sequencer;
 	/* output */
 	SWORD output;
+
+/* ------------------------------------------------- */
+/* questi non e' necessario salvarli negli savestate */
+/* ------------------------------------------------- */
+/* */ BYTE clocked;                               /* */
+/* */ DBWORD period;                              /* */
+/* ------------------------------------------------- */
 } _apuNoise;
 typedef struct {
 	/* ogni quanti cicli devo generare un output */

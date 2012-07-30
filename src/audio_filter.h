@@ -41,10 +41,12 @@ struct _af_table_approx {
 void audio_filter(BYTE filter);
 void audio_filter_popolate_table_approx(void);
 void audio_filter_reset_output_channels(void);
+void audio_filter_end_frame_none(void);
 
 /* funzioni virtuali */
 void (*audio_filter_init)(void);
 void (*audio_filter_apu_tick)(void);
+void (*audio_filter_end_frame)(void);
 SWORD (*audio_filter_apu_mixer)(void);
 
 #endif /* AUDIO_FILTER_H_ */
