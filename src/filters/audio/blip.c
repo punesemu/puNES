@@ -21,16 +21,28 @@
 
 enum { min_period = 10 };
 
-#define run_tick_channel(ch, blch, run)\
+#define update_amp(blch, new_amp)\
+{\
+	int delta = new_amp * blch.gain - blch.amp;\
+	blch.amp += delta;\
+	blip_add_delta(bl.blip, blch.time, delta);\
+}
+#define update_general_channel(ch, blch, restart)\
+	blch.time += ch.period;\
+	update_amp(blch, ch.output)\
+	ch.period = restart
+#define update_tick_channel(ch, blch)\
 	if (ch.clocked && (ch.period >= blch.min_period)) {\
 		ch.clocked = FALSE;\
-		run(&ch, &blch, 1);\
+		update_general_channel(ch, blch, 1);\
 	} else {\
 		ch.period++;\
 	}
-#define run_end_frame_channel(ch, blch, run)\
-	run(&ch, &blch, 0);\
-	blch.time -= bl.counter
+#define update_end_frame_channel(ch, blch)\
+{\
+	update_general_channel(ch, blch, 0);\
+	blch.time -= bl.counter;\
+}
 
 typedef struct blip_chan _blip_chan;
 typedef struct af_blip _af_blip;
@@ -42,43 +54,11 @@ struct blip_chan {
 	int amp; /* current amplitude in delta buffer */
 	int min_period;
 };
-
 struct af_blip {
 	DBWORD counter;
 	blip_buffer_t *blip;
 	_blip_chan ch[AQ_TOT_CH];
 } bl;
-
-static void INLINE update_amp(_blip_chan *m, int new_amp);
-static void INLINE update_amp(_blip_chan *m, int new_amp) {
-	int delta = new_amp * m->gain - m->amp;
-	m->amp += delta;
-	blip_add_delta(bl.blip, m->time, delta);
-}
-
-static void INLINE run_square(_apuSquare *s, _blip_chan *m, WORD start);
-static void INLINE run_square(_apuSquare *s, _blip_chan *m, WORD start) {
-	m->time += s->period;
-	update_amp(m, s->output);
-	s->period = start;
-}
-
-static void INLINE run_noise(_apuNoise *n, _blip_chan *m, WORD start);
-static void INLINE run_noise(_apuNoise *n, _blip_chan *m, WORD start) {
-	m->time += n->period;
-	update_amp(m, n->output);
-	n->period = start;
-}
-
-static void INLINE run_triangle(_apuTriangle *t, _blip_chan *m, WORD start);
-static void INLINE run_triangle(_apuTriangle *t, _blip_chan *m, WORD start) {
-	/* phase only increments when volume is non-zero (volume is otherwise ignored)*/
-	m->time += t->period;
-	if (t->output != 0) {
-		update_amp(m, t->output);
-	}
-	t->period = start;
-}
 
 void audio_quality_init_blip(void) {
 	memset(&bl, 0, sizeof(bl));
@@ -93,41 +73,53 @@ void audio_quality_init_blip(void) {
 		SDL_AudioSpec *dev = snd.dev;
 
 		bl.blip = blip_new(dev->freq / 10);
-		if (bl.blip == NULL )
+
+		if (bl.blip == NULL ) {
 			exit(EXIT_FAILURE); /* out of memory */
+		}
 
 		blip_set_rates(bl.blip, machine.cpuHz, dev->freq);
 
 		enum { master_vol = 65536 / 15 };
+
+		/**/
 		bl.ch[AQ_S1].gain = master_vol * 26 / 100;
 		bl.ch[AQ_S2].gain = master_vol * 26 / 100;
 		bl.ch[AQ_TR].gain = master_vol * 30 / 100;
 		bl.ch[AQ_NS].gain = master_vol * 18 / 100;
+		bl.ch[AQ_DMC].gain = master_vol * 10 / 100;
+		/**/
 
 		/*
 		bl.ch[AQ_S1].gain = master_vol * 24 / 100;
 		bl.ch[AQ_S2].gain = master_vol * 24 / 100;
 		bl.ch[AQ_TR].gain = master_vol * 18 / 100;
 		bl.ch[AQ_NS].gain = master_vol * 18 / 100;
+		bl.ch[AQ_DMC].gain = master_vol * 10 / 100;
+		*/
 
+		/*
 		bl.ch[AQ_S1].gain = master_vol * 0 / 100;
 		bl.ch[AQ_S2].gain = master_vol * 0 / 100;
 		bl.ch[AQ_TR].gain = master_vol * 30 / 100;
 		bl.ch[AQ_NS].gain = master_vol * 0 / 100;
+		bl.ch[AQ_DMC].gain = master_vol * 0 / 100;
 		*/
 
 		bl.ch[AQ_S1].min_period = min_period;
 		bl.ch[AQ_S2].min_period = min_period;
 		bl.ch[AQ_TR].min_period = min_period / 2.5;
 		bl.ch[AQ_NS].min_period = min_period / 2;
+		bl.ch[AQ_DMC].min_period = min_period;
 	}
 }
 void audio_quality_apu_tick_blip(void) {
 
-	run_tick_channel(S1, bl.ch[AQ_S1], run_square)
-	run_tick_channel(S2, bl.ch[AQ_S2], run_square)
-	run_tick_channel(TR, bl.ch[AQ_TR], run_triangle)
-	run_tick_channel(NS, bl.ch[AQ_NS], run_noise)
+	update_tick_channel(S1, bl.ch[AQ_S1])
+	update_tick_channel(S2, bl.ch[AQ_S2])
+	update_tick_channel(TR, bl.ch[AQ_TR])
+	update_tick_channel(NS, bl.ch[AQ_NS])
+	update_tick_channel(DMC, bl.ch[AQ_DMC])
 
 	bl.counter++;
 }
@@ -141,10 +133,11 @@ void audio_quality_end_frame_blip(void) {
 	SDL_AudioSpec *dev = snd.dev;
 	_callbackData *cache = snd.cache;
 
-	run_end_frame_channel(S1, bl.ch[AQ_S1], run_square);
-	run_end_frame_channel(S2, bl.ch[AQ_S2], run_square);
-	run_end_frame_channel(TR, bl.ch[AQ_TR], run_triangle);
-	run_end_frame_channel(NS, bl.ch[AQ_NS], run_noise);
+	update_end_frame_channel(S1, bl.ch[AQ_S1])
+	update_end_frame_channel(S2, bl.ch[AQ_S2])
+	update_end_frame_channel(TR, bl.ch[AQ_TR])
+	update_end_frame_channel(NS, bl.ch[AQ_NS])
+	update_end_frame_channel(DMC, bl.ch[AQ_DMC])
 
 	blip_end_frame(bl.blip, bl.counter);
 	bl.counter = 0;

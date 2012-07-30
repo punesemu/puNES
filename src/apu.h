@@ -192,6 +192,8 @@
 			}\
 		}\
 		DMC.frequency = dmcRate[apu.type][DMC.rateIndex];\
+		\
+		DMC.clocked = TRUE;\
 	}\
 	if (DMC.empty && DMC.remain) {\
 		BYTE tick = 4;\
@@ -362,12 +364,12 @@ typedef struct {
 	/* output */
 	SWORD output;
 
-/* ------------------------------------------------- */
-/* questi non e' necessario salvarli negli savestate */
-/* ------------------------------------------------- */
-	BYTE clocked;
-	DBWORD period;
-/* ------------------------------------------------- */
+/* ------------------------------------------------------- */
+/* questi valori non e' necessario salvarli nei savestates */
+/* ----------------------*-------------------------------- */
+/* */ BYTE clocked;                                     /* */
+/* */ DBWORD period;                                    /* */
+/* ------------------------------------------------------- */
 } _apuSquare;
 typedef struct {
 	/* timer */
@@ -383,12 +385,12 @@ typedef struct {
 	/* output */
 	SWORD output;
 
-/* ------------------------------------------------- */
-/* questi non e' necessario salvarli negli savestate */
-/* ------------------------------------------------- */
-/* */ BYTE clocked;                               /* */
-/* */ DBWORD period;                              /* */
-/* ------------------------------------------------- */
+/* ------------------------------------------------------- */
+/* questi valori non e' necessario salvarli nei savestates */
+/* ------------------------------------------------------- */
+/* */ BYTE clocked;                                     /* */
+/* */ DBWORD period;                                    /* */
+/* ------------------------------------------------------- */
 } _apuTriangle;
 typedef struct {
 	/* timer */
@@ -410,12 +412,12 @@ typedef struct {
 	/* output */
 	SWORD output;
 
-/* ------------------------------------------------- */
-/* questi non e' necessario salvarli negli savestate */
-/* ------------------------------------------------- */
-/* */ BYTE clocked;                               /* */
-/* */ DBWORD period;                              /* */
-/* ------------------------------------------------- */
+/* ------------------------------------------------------- */
+/* questi valori non e' necessario salvarli nei savestates */
+/* ------------------------------------------------------- */
+/* */ BYTE clocked;                                     /* */
+/* */ DBWORD period;                                    /* */
+/* ------------------------------------------------------- */
 } _apuNoise;
 typedef struct {
 	/* ogni quanti cicli devo generare un output */
@@ -445,6 +447,13 @@ typedef struct {
 
 	/* misc */
 	BYTE tickType;
+
+/* ------------------------------------------------------- */
+/* questi valori non e' necessario salvarli nei savestates */
+/* ------------------------------------------------------- */
+/* */ BYTE clocked;                                     /* */
+/* */ DBWORD period;                                    /* */
+/* ------------------------------------------------------- */
 }  _apuDMC;
 
 enum { DMCNORMAL, DMCCPUWRITE, DMCR4014, DMCNNLDMA };
