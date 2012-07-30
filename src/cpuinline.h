@@ -1277,8 +1277,6 @@ static void INLINE apuWrReg(WORD address, BYTE value) {
 
 				DMC.counter = value;
 
-				//DMC.clocked = TRUE;
-
 				r4011.frames = 0;
 				r4011.value = value;
 				return;
