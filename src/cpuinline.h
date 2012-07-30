@@ -1275,10 +1275,11 @@ static void INLINE apuWrReg(WORD address, BYTE value) {
 				//	DMC.output = value;
 				//}
 
-				//printf("4011 : %d\n", value);
 				if (r4011.value != value) {
 					DMC.counter = abs(abs((value - r4011.value) ) - DMC.counter);
 				}
+
+				DMC.clocked = TRUE;
 
 				r4011.frames = 0;
 				r4011.value = value;
