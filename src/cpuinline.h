@@ -1270,14 +1270,10 @@ static void INLINE apuWrReg(WORD address, BYTE value) {
 					 * emulated these filters.
 					 * (Xodnizel)
 					 */
-				//	DMC.output = abs(DMC.output - ((value - r4011.value) >> 3));
+					DMC.output = abs(DMC.output - ((value - r4011.value) >> 3));
 				//} else {
-				//	DMC.output = value;
+					//DMC.output = value;
 				//}
-
-				if (r4011.value != value) {
-					DMC.counter = abs(abs((value - r4011.value) ) - DMC.counter);
-				}
 
 				DMC.clocked = TRUE;
 
