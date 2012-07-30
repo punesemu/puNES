@@ -1,14 +1,14 @@
 /*
- * menu_audio_filter.c
+ * menu_audio_quality.c
  *
  *  Created on: 11/lug/2012
  *      Author: fhorse
  */
 
-#include "menu_audio_filter.h"
+#include "menu_audio_quality.h"
 #include "param.h"
 #include "cfgfile.h"
-#include "audio_filter.h"
+#include "audio_quality.h"
 
 #ifdef __SUNPRO_C
 #pragma align 4 (icon_inline)
@@ -85,68 +85,63 @@ static const guint8 icon_inline[] =
   "\0\0"};
 
 enum {
-	MAFORIGINAL,
-	MAFAPPROXIMATION,
-	MAFLINEAR,
+	MAQLOW,
+	MAQHIGH,
 	NUMCHKS
 };
 
-void set_audio_filter(int newfilter);
+void set_audio_quality(int new_quality);
 
 static GtkWidget *check[NUMCHKS];
 
-void menu_audio_filter(GtkWidget *audio, GtkAccelGroup *accel_group) {
-	GtkWidget *menu, *filter;
+void menu_audio_quality(GtkWidget *audio, GtkAccelGroup *accel_group) {
+	GtkWidget *menu, *quality;
 
 	menu = gtk_menu_new();
-	filter = gtk_image_menu_item_new_with_mnemonic("_Filter");
+	quality = gtk_image_menu_item_new_with_mnemonic("_Quality");
 
-	gtk_menu_item_set_submenu(GTK_MENU_ITEM(filter), menu);
-	gtk_menu_shell_append(GTK_MENU_SHELL(audio), filter);
+	gtk_menu_item_set_submenu(GTK_MENU_ITEM(quality), menu);
+	gtk_menu_shell_append(GTK_MENU_SHELL(audio), quality);
 
-	icon_inline(filter, icon_inline)
+	icon_inline(quality, icon_inline)
 
-	check[MAFORIGINAL] = gtk_check_menu_item_new_with_mnemonic("_Original");
-	check[MAFAPPROXIMATION] = gtk_check_menu_item_new_with_mnemonic("_Approximation");
-	check[MAFLINEAR] = gtk_check_menu_item_new_with_mnemonic("_Linear");
+	check[MAQLOW] = gtk_check_menu_item_new_with_mnemonic("_Low");
+	check[MAQHIGH] = gtk_check_menu_item_new_with_mnemonic("_High");
 
-	gtk_menu_shell_append(GTK_MENU_SHELL(menu), check[MAFORIGINAL]);
-	gtk_menu_shell_append(GTK_MENU_SHELL(menu), check[MAFAPPROXIMATION]);
-	gtk_menu_shell_append(GTK_MENU_SHELL(menu), check[MAFLINEAR]);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), check[MAQLOW]);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), check[MAQHIGH]);
 
-	g_signal_connect_swapped(G_OBJECT(check[MAFORIGINAL]), "activate", G_CALLBACK(set_audio_filter),
-	        GINT_TO_POINTER(AF_ORIGINAL));
-	g_signal_connect_swapped(G_OBJECT(check[MAFAPPROXIMATION]), "activate",
-	        G_CALLBACK(set_audio_filter), GINT_TO_POINTER(AF_APPROXIMATION));
-	g_signal_connect_swapped(G_OBJECT(check[MAFLINEAR]), "activate", G_CALLBACK(set_audio_filter),
-	        GINT_TO_POINTER(AF_LINEAR));
+	g_signal_connect_swapped(G_OBJECT(check[MAQLOW]), "activate", G_CALLBACK(set_audio_quality),
+	        GINT_TO_POINTER(AQ_LOW));
+	g_signal_connect_swapped(G_OBJECT(check[MAQHIGH]), "activate", G_CALLBACK(set_audio_quality),
+	        GINT_TO_POINTER(AQ_HIGH));
 }
-void menu_audio_filter_check(void) {
+void menu_audio_quality_check(void) {
 	int index;
 
-	for (index = MAFORIGINAL; index < NUMCHKS; index++) {
-		if (cfg->audio_filter == index) {
+	for (index = MAQLOW; index < NUMCHKS; index++) {
+		if (cfg->audio_quality == index) {
 			gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[index]), TRUE);
 		} else {
 			gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[index]), FALSE);
 		}
 	}
 }
-void set_audio_filter(int newfilter) {
+void set_audio_quality(int new_quality) {
 	if (guiupdate) {
 		return;
 	}
 
-	if (cfg->audio_filter == newfilter) {
+	if (cfg->audio_quality == new_quality) {
 		guiUpdate();
 		return;
 	}
 
 	emuPause(TRUE);
 
-	cfg->audio_filter = newfilter;
+	cfg->audio_quality = new_quality;
 
-	audio_filter(cfg->audio_filter);
+	audio_quality(cfg->audio_quality);
 
 	guiUpdate();
 

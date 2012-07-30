@@ -11,7 +11,7 @@
 #include "apu.h"
 #include "gui.h"
 #include "cfgfile.h"
-#include "audio_filter.h"
+#include "audio_quality.h"
 
 BYTE sndInit(void) {
 	/* inizializzo il comparto audio dell'sdl */
@@ -165,7 +165,7 @@ BYTE sndStart(void) {
 	}
 
 #ifdef DEBUG
-	//return (EXIT_OK);
+	return (EXIT_OK);
 #endif
 
 	/* avvio la riproduzione */
@@ -217,7 +217,7 @@ BYTE sndWrite(void) {
 	}
 
 	{
-		SWORD data = audio_filter_apu_mixer();
+		SWORD data = audio_quality_apu_mixer();
 
 		/* mono or left*/
 		(*cache->write++) = data;

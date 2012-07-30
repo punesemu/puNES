@@ -46,7 +46,7 @@
 #include "ines.h"
 #include "fds.h"
 #include "gamegenie.h"
-#include "audio_filter.h"
+#include "audio_quality.h"
 
 BYTE emuLoop(void) {
 #ifdef DEBUG
@@ -111,7 +111,9 @@ BYTE emuLoop(void) {
 				tas.total_lag_frames++;
 			}
 
-			audio_filter_end_frame();
+			if (audio_quality_end_frame) {
+				audio_quality_end_frame();
+			}
 
 #ifdef DEBUG
 			gfxDrawScreen(TRUE);
@@ -501,7 +503,7 @@ BYTE emuTurnON(void) {
 		return (EXIT_ERROR);
 	}
 
-	audio_filter(cfg->audio_filter);
+	audio_quality(cfg->audio_quality);
 
 	if (timelineInit()) {
 		return (EXIT_ERROR);

@@ -5,7 +5,7 @@
  *      Author: fhorse
  */
 
-#include "audio_filter.h"
+#include "audio_quality.h"
 #include "apu.h"
 #include "mappers.h"
 #include "mappers/mapperVRC7snd.h"
@@ -35,9 +35,9 @@ SWORD mixer_original_Sunsoft_FM7(SWORD mixer);
 SWORD mixer_original_VRC6(SWORD mixer);
 SWORD mixer_original_VRC7(SWORD mixer);
 
-void audio_filter_init_original(void) {
-	audio_filter_apu_tick = audio_filter_apu_tick_original;
-	audio_filter_apu_mixer = audio_filter_apu_mixer_original;
+void audio_quality_init_original(void) {
+	audio_quality_apu_tick = audio_quality_apu_tick_original;
+	audio_quality_apu_mixer = audio_quality_apu_mixer_original;
 
 	extra_mixer_original = NULL;
 
@@ -68,14 +68,12 @@ void audio_filter_init_original(void) {
 			extra_mixer_original = mixer_original_VRC7;
 			break;
 	}
+}
+void audio_quality_apu_tick_original(void) {
 	return;
 }
-void audio_filter_apu_tick_original(void) {
-	return;
-}
-SWORD audio_filter_apu_mixer_original(void) {
+SWORD audio_quality_apu_mixer_original(void) {
 	SWORD mixer = (S1.output + S2.output) + ((TR.output << 1) + NS.output + DMC.output);
-
 
 	if (extra_mixer_original) {
 		mixer = extra_mixer_original(mixer);

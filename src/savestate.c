@@ -26,7 +26,6 @@
 #include "sdltext.h"
 #include "fds.h"
 #include "gamegenie.h"
-#include "audio_filter.h"
 
 #define SAVEVERSION 7
 
@@ -104,9 +103,6 @@ BYTE savestateLoad(void) {
 
 	/* riavvio il timeline */
 	timelineInit();
-
-	/* azzero l'ouput di tutti i canali */
-	audio_filter_reset_output_channels();
 
 	return (EXIT_OK);
 }

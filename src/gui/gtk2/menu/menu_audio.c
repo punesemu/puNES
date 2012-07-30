@@ -8,7 +8,7 @@
 #include "menu_audio.h"
 #include "menu_audio_sample_rate.h"
 #include "menu_audio_channels.h"
-#include "menu_audio_filter.h"
+#include "menu_audio_quality.h"
 #include "param.h"
 #include "cfgfile.h"
 #include "sdlsnd.h"
@@ -92,7 +92,7 @@ void menu_audio(GtkWidget *settings, GtkAccelGroup *accel_group) {
 
 	menu_audio_sample_rate(menu, NULL);
 	menu_audio_channels(menu, NULL);
-	menu_audio_filter(menu, NULL);
+	menu_audio_quality(menu, NULL);
 
 	/* Settings/Audio/Enable */
 	check[MSNDENABLE] = gtk_check_menu_item_new_with_mnemonic("_Enable");
@@ -110,7 +110,7 @@ void menu_audio(GtkWidget *settings, GtkAccelGroup *accel_group) {
 void menu_audio_check(void) {
 	menu_audio_sample_rate_check();
 	menu_audio_channels_check();
-	menu_audio_filter_check();
+	menu_audio_quality_check();
 
 	/* Audio Enable */
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MSNDENABLE]), FALSE);

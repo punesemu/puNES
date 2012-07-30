@@ -6,7 +6,7 @@
  */
 
 #include <string.h>
-#include "audio_filter.h"
+#include "audio_quality.h"
 #include "apu.h"
 #include "sdlsnd.h"
 #include "mappers.h"
@@ -46,7 +46,7 @@ struct blip_chan {
 struct af_blip {
 	DBWORD counter;
 	blip_buffer_t *blip;
-	_blip_chan ch[AFTOTCH];
+	_blip_chan ch[AQ_TOT_CH];
 } bl;
 
 static void INLINE update_amp(_blip_chan *m, int new_amp);
@@ -80,20 +80,14 @@ static void INLINE run_triangle(_apuTriangle *t, _blip_chan *m, WORD start) {
 	t->period = start;
 }
 
-void audio_filter_init_blip(void) {
+void audio_quality_init_blip(void) {
 	memset(&bl, 0, sizeof(bl));
 
-	/* azzero l'ouput di tutti i canali */
-	audio_filter_reset_output_channels();
+	audio_quality_apu_tick = audio_quality_apu_tick_blip;
+	audio_quality_apu_mixer = audio_quality_apu_mixer_blip;
+	audio_quality_end_frame = audio_quality_end_frame_blip;
 
-	/* popolo la tabella di approssimazione */
-	audio_filter_popolate_table_approx();
-
-	audio_filter_apu_tick = audio_filter_apu_tick_blip;
-	audio_filter_apu_mixer = audio_filter_apu_mixer_blip;
-	audio_filter_end_frame = audio_filter_end_frame_blip;
-
-	snd_write = audio_filter_snd_write_blip;
+	snd_write = audio_quality_snd_write_blip;
 
 	{
 		SDL_AudioSpec *dev = snd.dev;
@@ -105,52 +99,52 @@ void audio_filter_init_blip(void) {
 		blip_set_rates(bl.blip, machine.cpuHz, dev->freq);
 
 		enum { master_vol = 65536 / 15 };
-		bl.ch[AFS1].gain = master_vol * 26 / 100;
-		bl.ch[AFS2].gain = master_vol * 26 / 100;
-		bl.ch[AFTR].gain = master_vol * 30 / 100;
-		bl.ch[AFNS].gain = master_vol * 18 / 100;
+		bl.ch[AQ_S1].gain = master_vol * 26 / 100;
+		bl.ch[AQ_S2].gain = master_vol * 26 / 100;
+		bl.ch[AQ_TR].gain = master_vol * 30 / 100;
+		bl.ch[AQ_NS].gain = master_vol * 18 / 100;
 
 		/*
-		bl.ch[AFS1].gain = master_vol * 24 / 100;
-		bl.ch[AFS2].gain = master_vol * 24 / 100;
-		bl.ch[AFTR].gain = master_vol * 18 / 100;
-		bl.ch[AFNS].gain = master_vol * 18 / 100;
+		bl.ch[AQ_S1].gain = master_vol * 24 / 100;
+		bl.ch[AQ_S2].gain = master_vol * 24 / 100;
+		bl.ch[AQ_TR].gain = master_vol * 18 / 100;
+		bl.ch[AQ_NS].gain = master_vol * 18 / 100;
 
-		bl.ch[AFS1].gain = master_vol * 0 / 100;
-		bl.ch[AFS2].gain = master_vol * 0 / 100;
-		bl.ch[AFTR].gain = master_vol * 30 / 100;
-		bl.ch[AFNS].gain = master_vol * 0 / 100;
+		bl.ch[AQ_S1].gain = master_vol * 0 / 100;
+		bl.ch[AQ_S2].gain = master_vol * 0 / 100;
+		bl.ch[AQ_TR].gain = master_vol * 30 / 100;
+		bl.ch[AQ_NS].gain = master_vol * 0 / 100;
 		*/
 
-		bl.ch[AFS1].min_period = min_period;
-		bl.ch[AFS2].min_period = min_period;
-		bl.ch[AFTR].min_period = min_period / 2.5;
-		bl.ch[AFNS].min_period = min_period / 2;
+		bl.ch[AQ_S1].min_period = min_period;
+		bl.ch[AQ_S2].min_period = min_period;
+		bl.ch[AQ_TR].min_period = min_period / 2.5;
+		bl.ch[AQ_NS].min_period = min_period / 2;
 	}
 }
-void audio_filter_apu_tick_blip(void) {
+void audio_quality_apu_tick_blip(void) {
 
-	run_tick_channel(S1, bl.ch[AFS1], run_square)
-	run_tick_channel(S2, bl.ch[AFS2], run_square)
-	run_tick_channel(TR, bl.ch[AFTR], run_triangle)
-	run_tick_channel(NS, bl.ch[AFNS], run_noise)
+	run_tick_channel(S1, bl.ch[AQ_S1], run_square)
+	run_tick_channel(S2, bl.ch[AQ_S2], run_square)
+	run_tick_channel(TR, bl.ch[AQ_TR], run_triangle)
+	run_tick_channel(NS, bl.ch[AQ_NS], run_noise)
 
 	bl.counter++;
 }
-SWORD audio_filter_apu_mixer_blip(void) {
+SWORD audio_quality_apu_mixer_blip(void) {
 	return (0);
 }
-BYTE audio_filter_snd_write_blip(void) {
+BYTE audio_quality_snd_write_blip(void) {
 	return(TRUE);
 }
-void audio_filter_end_frame_blip(void) {
+void audio_quality_end_frame_blip(void) {
 	SDL_AudioSpec *dev = snd.dev;
 	_callbackData *cache = snd.cache;
 
-	run_end_frame_channel(S1, bl.ch[AFS1], run_square);
-	run_end_frame_channel(S2, bl.ch[AFS2], run_square);
-	run_end_frame_channel(TR, bl.ch[AFTR], run_triangle);
-	run_end_frame_channel(NS, bl.ch[AFNS], run_noise);
+	run_end_frame_channel(S1, bl.ch[AQ_S1], run_square);
+	run_end_frame_channel(S2, bl.ch[AQ_S2], run_square);
+	run_end_frame_channel(TR, bl.ch[AQ_TR], run_triangle);
+	run_end_frame_channel(NS, bl.ch[AQ_NS], run_noise);
 
 	blip_end_frame(bl.blip, bl.counter);
 	bl.counter = 0;

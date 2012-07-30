@@ -34,9 +34,6 @@ BYTE cmdlineParse(int argc, char **argv) {
 			case 'c':
 				paramSearch(0, optarg, pChannels, cfg_from_file.channels = index);
 				break;
-			case 'e':
-				paramSearch(0, optarg, pAudioFilter, cfg_from_file.audio_filter = index);
-				break;
 			case 'f':
 				paramSearch(0, optarg, pFps, cfg_from_file.fps = index);
 				break;
@@ -76,6 +73,9 @@ BYTE cmdlineParse(int argc, char **argv) {
 				break;
 			case 'p':
 				paramSearch(0, optarg, pNtsc, gfx.palette = index);
+				break;
+			case 'q':
+				paramSearch(0, optarg, pAudioQuality, cfg_from_file.audio_quality = index);
 				break;
 			case 's':
 				paramSearch(1, optarg, pSize, gfx.scale = gfx.scaleBeforeFullscreen = index);
@@ -163,7 +163,7 @@ void usage(char *name) {
 			param[P_AUDIO].help,
 			param[P_SAMPLERATE].help,
 			param[P_CHANNELS].help,
-			param[P_AUDIO_FILTER].help,
+			param[P_AUDIO_QUALITY].help,
 			param[P_GAMEGENIE].help
 	);
 	emuQuit(EXIT_SUCCESS);

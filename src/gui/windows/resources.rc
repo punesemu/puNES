@@ -212,11 +212,10 @@ BEGIN
 				MENUITEM "&Mono",                 IDM_SET_CHANNELS_MONO
 				MENUITEM "&Stereo",               IDM_SET_CHANNELS_STEREO
 			END
-			POPUP "&Filter"
+			POPUP "&Quality"
 			BEGIN
-				MENUITEM "&Original",             IDM_SET_AUDIO_FILTER_ORIGINAL
-				MENUITEM "&Approximation",        IDM_SET_AUDIO_FILTER_APPROXIMATION
-				MENUITEM "&Linear",               IDM_SET_AUDIO_FILTER_LINEAR
+				MENUITEM "&Low",                  IDM_SET_AUDIO_QUALITY_LOW
+				MENUITEM "&High",                 IDM_SET_AUDIO_QUALITY_HIGH
 			END
 			MENUITEM SEPARATOR
 			MENUITEM "&Enable\tCtrl+A",           IDM_SET_AUDIO_ENABLE

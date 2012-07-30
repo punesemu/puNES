@@ -38,7 +38,7 @@ enum {
 	P_AUDIO,
 	P_SAMPLERATE,
 	P_CHANNELS,
-	P_AUDIO_FILTER,
+	P_AUDIO_QUALITY,
 	P_GAMEGENIE
 };
 enum {
@@ -59,7 +59,7 @@ static const char *optShort = "m:f:k:s:o:i:n:p:"
 #ifdef OPENGL
 		"r:v:u:t:"
 #endif
-		"a:l:c:e:g:Vh?";
+		"a:l:c:q:g:Vh?";
 
 static const struct option optLong[] = {
 	{ "mode",               required_argument, NULL, 'm'},
@@ -79,7 +79,7 @@ static const struct option optLong[] = {
 	{ "audio",              required_argument, NULL, 'a'},
 	{ "samplerate",         required_argument, NULL, 'l'},
 	{ "channels",           required_argument, NULL, 'c'},
-	{ "audio-filter",       required_argument, NULL, 'e'},
+	{ "audio-quality",      required_argument, NULL, 'q'},
 	{ "gamegenie",          required_argument, NULL, 'g'},
 	{ "help",               no_argument,       NULL, 'h'},
 	{ "version",            no_argument,       NULL, 'V'},
@@ -214,12 +214,11 @@ static const _param param[] = {
 		"-c, --channels            audio channels        : mono, stereo"
 	},
 	{
-		"aufio filter",
+		"audio quality",
 		NULL,
-		"# possible values: original, approximation, linear",
+		"# possible values: low, high",
 		NULL,
-		"-e, --audio-filter        audio filter          : original, approximation,\n"
-		"                                                  linear"
+		"-q, --audio-quality       audio quality         : low, high"
 	},
 	{
 		"gamegenie",
@@ -379,10 +378,9 @@ static const _param pChannels[] = {
 	{"Mono",   "mono"  },
 	{"Stereo", "stereo"}
 };
-static const _param pAudioFilter[] = {
-	{"Original",      "original"     },
-	{"Approximation", "approximation"},
-	{"Linear",        "linear"       }
+static const _param pAudioQuality[] = {
+	{"Low",  "low" },
+	{"High", "high"}
 };
 static const _param pSlot[] = {
 	{"0", "0"},

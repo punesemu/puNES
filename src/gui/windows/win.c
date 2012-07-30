@@ -32,7 +32,7 @@
 #include "ppu.h"
 #include "fds.h"
 #include "gamegenie.h"
-#include "audio_filter.h"
+#include "audio_quality.h"
 #ifdef OPENGL
 #include "opengl.h"
 #include "openGL/no_effect.h"
@@ -97,7 +97,7 @@ void set_vsync(BYTE bool);
 #endif
 void set_samplerate(int newsamplerate);
 void set_channels(int newchannels);
-void set_audio_filter(int newfilter);
+void set_audio_quality(int newquality);
 void set_fps(int newfps);
 void set_frame_skip(int newframeskip);
 void set_gamegenie(void);
@@ -1138,18 +1138,14 @@ void guiUpdate(void) {
 	change_menuitem(CHECK, MF_CHECKED, id);
 
 	/* Audio Filter */
-	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_AUDIO_FILTER_ORIGINAL);
-	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_AUDIO_FILTER_APPROXIMATION);
-	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_AUDIO_FILTER_LINEAR);
-	switch (cfg->audio_filter) {
-		case AF_ORIGINAL:
-			id = IDM_SET_AUDIO_FILTER_ORIGINAL;
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_AUDIO_QUALITY_LOW);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_AUDIO_QUALITY_HIGH);
+	switch (cfg->audio_quality) {
+		case AQ_LOW:
+			id = IDM_SET_AUDIO_QUALITY_LOW;
 			break;
-		case AF_APPROXIMATION:
-			id = IDM_SET_AUDIO_FILTER_APPROXIMATION;
-			break;
-		case AF_LINEAR:
-			id = IDM_SET_AUDIO_FILTER_LINEAR;
+		case AQ_HIGH:
+			id = IDM_SET_AUDIO_QUALITY_HIGH;
 			break;
 	}
 	change_menuitem(CHECK, MF_CHECKED, id);
@@ -1585,14 +1581,11 @@ long __stdcall mainWinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 				case IDM_SET_CHANNELS_STEREO:
 					set_channels(STEREO);
 					break;
-				case IDM_SET_AUDIO_FILTER_ORIGINAL:
-					set_audio_filter(AF_ORIGINAL);
+				case IDM_SET_AUDIO_QUALITY_LOW:
+					set_audio_quality(AQ_LOW);
 					break;
-				case IDM_SET_AUDIO_FILTER_APPROXIMATION:
-					set_audio_filter(AF_APPROXIMATION);
-					break;
-				case IDM_SET_AUDIO_FILTER_LINEAR:
-					set_audio_filter(AF_LINEAR);
+				case IDM_SET_AUDIO_QUALITY_HIGH:
+					set_audio_quality(AQ_HIGH);
 					break;
 				case IDM_SET_AUDIO_ENABLE:
 					emuPause(TRUE);
@@ -2234,12 +2227,12 @@ void set_channels(int newchannels) {
 	sndStart();
 	guiUpdate();
 }
-void set_audio_filter(int newfilter) {
-	if (cfg->audio_filter == newfilter) {
+void set_audio_quality(int newquality) {
+	if (cfg->audio_quality == newquality) {
 		return;
 	}
-	cfg->audio_filter = newfilter;
-	audio_filter(cfg->audio_filter);
+	cfg->audio_quality = newquality;
+	audio_quality(cfg->audio_quality);
 	guiUpdate();
 }
 

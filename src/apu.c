@@ -13,7 +13,7 @@
 #include "sdlsnd.h"
 #include "memmap.h"
 #include "fds.h"
-#include "audio_filter.h"
+#include "audio_quality.h"
 
 BYTE sflag = 0;
 
@@ -184,7 +184,7 @@ void apuTick(SWORD cyclesCPU, BYTE *hwtick) {
 	}
 
 	/* tick filtro audio */
-	audio_filter_apu_tick();
+	audio_quality_apu_tick();
 
 	snd_write();
 }
