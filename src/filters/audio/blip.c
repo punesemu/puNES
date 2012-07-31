@@ -93,15 +93,15 @@ BYTE audio_quality_init_blip(void) {
 		/**/
 		bl.ch[APU_S1].gain = master_vol  * (2.6 * volume_fator) / 100;
 		bl.ch[APU_S2].gain = master_vol  * (2.6 * volume_fator) / 100;
-		bl.ch[APU_TR].gain = master_vol  * (3.0 * volume_fator) / 100;
+		bl.ch[APU_TR].gain = master_vol  * (2.2 * volume_fator) / 100;
 		bl.ch[APU_NS].gain = master_vol  * (1.8 * volume_fator) / 100;
 		bl.ch[APU_DMC].gain = master_vol * (1.0 * volume_fator) / 100;
 		/**/
 
-		bl.ch[APU_S1].min_period = min_period;
-		bl.ch[APU_S2].min_period = min_period;
-		bl.ch[APU_TR].min_period = min_period / 2.5;
-		bl.ch[APU_NS].min_period = min_period / 2;
+		bl.ch[APU_S1].min_period  = min_period;
+		bl.ch[APU_S2].min_period  = min_period;
+		bl.ch[APU_TR].min_period  = min_period / 2.5;
+		bl.ch[APU_NS].min_period  = min_period / 2;
 		bl.ch[APU_DMC].min_period = min_period;
 	}
 
