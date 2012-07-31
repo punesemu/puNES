@@ -266,6 +266,11 @@ void sndStop(void) {
 }
 void sndQuit(void) {
 	sndStop();
+
+	if (audio_quality_quit) {
+		audio_quality_quit();
+	}
+
 #ifndef RELEASE
 	fprintf(stderr, "\n");
 #endif

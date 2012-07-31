@@ -11,6 +11,17 @@
 #include "filters/audio/blip.h"
 
 void audio_quality(BYTE quality) {
+
+	if (audio_quality_quit) {
+		audio_quality_quit();
+	}
+
+	audio_quality_init = NULL;
+	audio_quality_quit = NULL;
+
+	snd_apu_tick = NULL;
+	snd_end_frame = NULL;
+
 	switch (quality) {
 		default:
 		case AQ_LOW:
@@ -21,5 +32,9 @@ void audio_quality(BYTE quality) {
 			break;
 	}
 
-	audio_quality_init();
+	if (audio_quality_init()) {
+		/* fallback */
+		audio_quality_init = audio_quality_init_original;
+		audio_quality_init();
+	}
 }

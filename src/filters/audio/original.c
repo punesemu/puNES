@@ -39,7 +39,10 @@ SWORD mixer_original_Sunsoft_FM7(SWORD mixer);
 SWORD mixer_original_VRC6(SWORD mixer);
 SWORD mixer_original_VRC7(SWORD mixer);
 
-void audio_quality_init_original(void) {
+BYTE audio_quality_init_original(void) {
+
+	audio_quality_quit = audio_quality_quit_original;
+
 	snd_apu_tick = audio_quality_apu_tick_original;
 
 	switch (info.mapper) {
@@ -72,6 +75,11 @@ void audio_quality_init_original(void) {
 			extra_mixer_original = NULL;
 			break;
 	}
+
+	return (EXIT_OK);
+}
+void audio_quality_quit_original(void) {
+	return;
 }
 void audio_quality_apu_tick_original(void) {
 	SDL_AudioSpec *dev = snd.dev;

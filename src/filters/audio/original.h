@@ -10,7 +10,8 @@
 
 #include "common.h"
 
-void audio_quality_init_original(void);
+BYTE audio_quality_init_original(void);
+void audio_quality_quit_original(void);
 void audio_quality_apu_tick_original(void);
 
 #endif /* AUDIO_QUALITY_ORIGINAL_H_ */

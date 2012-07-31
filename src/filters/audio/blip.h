@@ -10,7 +10,8 @@
 
 #include "common.h"
 
-void audio_quality_init_blip(void);
+BYTE audio_quality_init_blip(void);
+void audio_quality_quit_blip(void);
 void audio_quality_apu_tick_blip(void);
 void audio_quality_end_frame_blip(void);
 

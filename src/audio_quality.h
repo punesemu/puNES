@@ -10,29 +10,10 @@
 
 #include "common.h"
 
-enum {
-	AQ_LOW = 0,
-	AQ_HIGH
-};
-
-enum {
-	AQ_S1 = 0,
-	AQ_S2,
-	AQ_TR,
-	AQ_NS,
-	AQ_DMC,
-	AQ_EXT0,
-	AQ_EXT1,
-	AQ_EXT2,
-	AQ_EXT3,
-	AQ_EXT4,
-	AQ_EXT5,
-	AQ_EXT6,
-	AQ_EXT7,
-	AQ_TOT_CH
-};
+enum { AQ_LOW, AQ_HIGH };
 
 void audio_quality(BYTE quality);
-void (*audio_quality_init)(void);
+BYTE (*audio_quality_init)(void);
+void (*audio_quality_quit)(void);
 
 #endif /* AUDIO_QUALITY_H_ */
