@@ -38,9 +38,9 @@
 	if (channel.envelope.enabled) {\
 		channel.envelope.enabled = FALSE;\
 		channel.envelope.counter = 15;\
-		channel.envelope.delay = channel.envelope.divider << 1;\
-	} else if (--channel.envelope.delay < 0) {\
-		channel.envelope.delay = channel.envelope.divider << 1;\
+		channel.envelope.delay = (channel.envelope.divider + 1) << 1;\
+	} else if (!(--channel.envelope.delay)) {\
+		channel.envelope.delay = (channel.envelope.divider + 1) << 1;\
 		if (channel.envelope.counter | channel.length.halt) {\
 			channel.envelope.counter = (channel.envelope.counter - 1) & 0x0E;\
 		}\
@@ -66,7 +66,7 @@
 	}
 /* sweep */
 #define sweepRun(channel, negative_adjust)\
-	if (--channel.sweep.delay < 0) {\
+	if (!(--channel.sweep.delay)) {\
 		channel.sweep.reload = TRUE;\
 		if (channel.sweep.shift && channel.sweep.enabled && (channel.timer >= 8)) {\
 			SWORD offset = channel.timer >> channel.sweep.shift;\
@@ -79,7 +79,7 @@
 	}\
 	if (channel.sweep.reload) {\
 		channel.sweep.reload = FALSE;\
-		channel.sweep.delay = channel.sweep.divider;\
+		channel.sweep.delay = (channel.sweep.divider + 1) << 1;\
 	}
 #define sweepClock()\
 	sweepRun(S1, -1)\
@@ -125,7 +125,7 @@
 		TR.output = triangleDuty[TR.sequencer];\
 	}
 #define noiseOutput()\
-	if (!(NS.shift & 0x0001)) {\
+	if (NS.length.value && !(NS.shift & 0x0001)) {\
 		NS.output = NS.volume;\
 	} else {\
 		NS.output = 0;\
@@ -138,7 +138,6 @@
 		squareOutput(square)\
 		square.frequency = (square.timer + 1) << 1;\
 		square.sequencer = (square.sequencer + 1) & 0x07;\
-		\
 		square.clocked = TRUE;\
 	}
 #define triangleTick()\
@@ -147,13 +146,11 @@
 			triangleOutput()\
 			TR.frequency = TR.timer + 1;\
 			TR.sequencer = (TR.sequencer + 1) & 0x1F;\
-			\
 			TR.clocked = TRUE;\
 		}\
 	}
 #define noiseTick()\
 	if (!(--NS.frequency)) {\
-		NS.frequency = noiseTimer[apu.type][NS.timer] << 1;\
 		if (NS.mode) {\
 			NS.shift = (NS.shift >> 1) | (((NS.shift ^ (NS.shift >> 6)) & 0x0001) << 14);\
 		} else {\
@@ -161,7 +158,7 @@
 		}\
 		NS.shift &= 0x7FFF;\
 		noiseOutput()\
-		\
+		NS.frequency = noiseTimer[apu.type][NS.timer];\
 		NS.clocked = TRUE;\
 	}
 #define dmcTick()\
@@ -176,8 +173,6 @@
 					DMC.counter += 2;\
 				}\
 			}\
-			/*DMC.shift >>= 1;\
-			dmcOutput();*/\
 		}\
 		DMC.shift >>= 1;\
 		dmcOutput();\
@@ -192,7 +187,6 @@
 			}\
 		}\
 		DMC.frequency = dmcRate[apu.type][DMC.rateIndex];\
-		\
 		DMC.clocked = TRUE;\
 	}\
 	if (DMC.empty && DMC.remain) {\
@@ -268,6 +262,9 @@
 	square.length.halt = value & 0x20;\
 	/* envelope */\
 	square.envelope.constant_volume = value & 0x10;\
+	if (square.envelope.constant_volume) {\
+		square.volume = value & 0x0F;\
+	}\
 	square.envelope.divider = value & 0x0F
 #define squareReg1(square)\
 	/* sweep */\
@@ -309,7 +306,6 @@ typedef struct {
 } _apu;
 typedef struct {
 	BYTE value;
-	DBWORD frames;
 } _r4011;
 typedef struct {
 	BYTE value;

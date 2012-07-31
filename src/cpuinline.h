@@ -1200,6 +1200,9 @@ static void INLINE apuWrReg(WORD address, BYTE value) {
 				NS.length.halt = value & 0x20;
 				/* envelope */
 				NS.envelope.constant_volume = value & 0x10;
+				if (NS.envelope.constant_volume) {
+					NS.volume = value & 0x0F;
+				}
 				NS.envelope.divider = value & 0x0F;
 				return;
 			}
@@ -1244,40 +1247,28 @@ static void INLINE apuWrReg(WORD address, BYTE value) {
 				return;
 			}
 			if (address == 0x4011) {
-				/*
-				 * per non avere i pop (quando carico la rom e quando
-				 * chiudo la finestra), la scrittura nel $4011 la
-				 * permetto solo dopo qualche frames e mai quando
-				 * info.stop e' attivo.
-				 */
-				if ((ppu.frames < 16) || info.stop) {
-					return;
-				}
-
 				value &= 0x7F;
 
-				//if (r4011.frames > 1) {
-					/*
-					 * questa lo faccio perche' in alcuni giochi come Batman,
-					 * Ninja Gaiden 3, Castlevania II ed altri, producono
-					 * un popping del suono fastidioso;
-					 * from Fceu doc:
-					 * Why do some games make a popping sound (Batman, Ninja Gaiden 3,
-					 * Castlevania II etc.)? These games do a very crude drum imitation
-					 * by causing a large jump in the output level for a short period of
-					 * time via the register at $4011. The analog filters on a real
-					 * Famicom make it sound decent(better). I have not completely
-					 * emulated these filters.
-					 * (Xodnizel)
-					 */
-				//	DMC.output = abs(DMC.output - ((value - r4011.value) >> 3));
-				//} else {
-					//DMC.output = value;
-				//}
+				/*
+				 * questa lo faccio perche' in alcuni giochi come Batman,
+				 * Ninja Gaiden 3, Castlevania II ed altri, producono
+				 * un popping del suono fastidioso;
+				 * from Fceu doc:
+				 * Why do some games make a popping sound (Batman, Ninja Gaiden 3,
+				 * Castlevania II etc.)? These games do a very crude drum imitation
+				 * by causing a large jump in the output level for a short period of
+				 * time via the register at $4011. The analog filters on a real
+				 * Famicom make it sound decent(better). I have not completely
+				 * emulated these filters.
+				 * (Xodnizel)
+				 */
 
-				DMC.counter = value;
+				/* applico un low pass filter */
+				//DMC.counter = DMC.output = 0.5 * value + (1.0 - 0.5) * DMC.output;
 
-				r4011.frames = 0;
+				DMC.counter = DMC.output = value;
+				DMC.clocked = TRUE;
+
 				r4011.value = value;
 				return;
 			}
