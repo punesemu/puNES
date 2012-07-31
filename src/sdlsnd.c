@@ -22,10 +22,15 @@ BYTE sndInit(void) {
 
 	memset(&snd, 0x00, sizeof(snd));
 
+	snd_apu_tick = NULL;
+	snd_end_frame = NULL;
+
 	/* apro e avvio la riproduzione */
 	if (sndStart()) {
 		return (EXIT_ERROR);
 	}
+
+	audio_quality(cfg->audio_quality);
 
 	return (EXIT_OK);
 }
@@ -175,80 +180,6 @@ BYTE sndStart(void) {
 
 	return (EXIT_OK);
 }
-BYTE sndWrite(void) {
-	SDL_AudioSpec *dev = snd.dev;
-	_callbackData *cache = snd.cache;
-
-	if (!cfg->audio) {
-		return (FALSE);
-	}
-
-	if (snd.brk) {
-		if (cache->filled < 3) {
-			snd.brk = FALSE;
-		} else {
-			return (FALSE);
-		}
-	}
-
-	if ((snd.pos.current = snd.cycles++ / snd.frequency) == snd.pos.last) {
-		return (FALSE);
-	}
-
-	/*
-	 * se la posizione e' maggiore o uguale al numero
-	 * di samples che compongono il frame, vuol dire che
-	 * sono passato nel frame successivo.
-	 */
-	if (snd.pos.current >= dev->samples) {
-		/* azzero posizione e contatore dei cicli del frame audio */
-		snd.pos.current = snd.cycles = 0;
-
-		SDL_mutexP(cache->lock);
-
-		/* incremento il contatore dei frames pieni non ancora 'riprodotti' */
-		if (++cache->filled >= snd.buffer.count) {
-			snd.brk = TRUE;
-		} else if (cache->filled >= ((snd.buffer.count >> 1) + 1)) {
-			snd_frequency(sndFactor[apu.type][FCNONE])
-		} else if (cache->filled < 3) {
-			snd_frequency(sndFactor[apu.type][FCNORMAL])
-		}
-
-		SDL_mutexV(cache->lock);
-	}
-
-	{
-		SWORD data = audio_quality_apu_mixer();
-
-		/* mono or left*/
-		(*cache->write++) = data;
-
-		/* stereo */
-		if (dev->channels == STEREO) {
-			/* salvo il dato nel buffer del canale sinistro */
-			snd.channel.ptr[CH_LEFT][snd.channel.pos] = data;
-			/* scrivo nel nel frame audio il canale destro ritardato di un frame */
-			(*cache->write++) = snd.channel.ptr[CH_RIGHT][snd.channel.pos];
-			/* swappo i buffers dei canali */
-			if (++snd.channel.pos >= snd.channel.max_pos) {
-				SWORD *swap = snd.channel.ptr[CH_RIGHT];
-
-				snd.channel.ptr[CH_RIGHT] = snd.channel.ptr[CH_LEFT];
-				snd.channel.ptr[CH_LEFT] = swap;
-				snd.channel.pos = 0;
-			}
-		}
-
-		if (cache->write >= (SWORD *) cache->end) {
-			cache->write = cache->start;
-		}
-
-		snd.pos.last = snd.pos.current;
-	}
-
-	return (TRUE);
-}
 void sndOutput(void *udata, BYTE *stream, int len) {
 	_callbackData *cache = udata;
 
@@ -264,9 +195,9 @@ void sndOutput(void *udata, BYTE *stream, int len) {
 		snd.out_of_sync++;
 	} else {
 #ifndef RELEASE
-		fprintf(stderr, "snd : %d %d %d %2d %d %f %f %4s\r", len, snd.buffer.count,
+		/*fprintf(stderr, "snd : %d %d %d %2d %d %f %f %4s\r", len, snd.buffer.count,
 		        fps.total_frames_skipped, cache->filled, snd.out_of_sync, snd.frequency,
-		        machine.msFrame, "");
+		        machine.msFrame, "");*/
 #endif
 		/* invio i samples richiesti alla scheda sonora */
 		memcpy(stream, cache->read, len);

@@ -73,16 +73,16 @@ enum { FCNORMAL, FCNONE };
 	}
 
 static const double sndFactor[3][2] = {
-	{ 0.996, 1.0 }, { 2.5, 1.0 }, { 2.5, 1.0 }
+	{ 0.996, 1.0 }, { 1.0, 1.0 }, { 1.0, 1.0 }
 };
 
 BYTE sndInit(void);
 BYTE sndStart(void);
 void sndOutput(void *udata, BYTE *stream, int len);
-BYTE sndWrite(void);
 void sndStop(void);
 void sndQuit(void);
 
-BYTE (*snd_write)(void);
+void (*snd_apu_tick)(void);
+void (*snd_end_frame)(void);
 
 #endif /* SDLSND_H_ */

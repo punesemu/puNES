@@ -7,9 +7,13 @@
 
 #include "audio_quality.h"
 #include "apu.h"
+#include "sdlsnd.h"
 #include "mappers.h"
 #include "mappers/mapperVRC7snd.h"
 #include "fds.h"
+#include "cfgfile.h"
+#include "clock.h"
+#include "fps.h"
 #include "original.h"
 
 /*
@@ -36,10 +40,7 @@ SWORD mixer_original_VRC6(SWORD mixer);
 SWORD mixer_original_VRC7(SWORD mixer);
 
 void audio_quality_init_original(void) {
-	audio_quality_apu_tick = audio_quality_apu_tick_original;
-	audio_quality_apu_mixer = audio_quality_apu_mixer_original;
-
-	extra_mixer_original = NULL;
+	snd_apu_tick = audio_quality_apu_tick_original;
 
 	switch (info.mapper) {
 		case FDS_MAPPER:
@@ -67,21 +68,90 @@ void audio_quality_init_original(void) {
 			/* VRC7 */
 			extra_mixer_original = mixer_original_VRC7;
 			break;
+		default:
+			extra_mixer_original = NULL;
+			break;
 	}
 }
 void audio_quality_apu_tick_original(void) {
-	return;
-}
-SWORD audio_quality_apu_mixer_original(void) {
-	SWORD mixer = (S1.output + S2.output) + ((TR.output << 1) + NS.output + DMC.output);
+	SDL_AudioSpec *dev = snd.dev;
+	_callbackData *cache = snd.cache;
 
-	if (extra_mixer_original) {
-		mixer = extra_mixer_original(mixer);
-	} else {
-		mixer_cut_and_high();
+	if (!cfg->audio) {
+		return;
 	}
 
-	return (mixer);
+	if (snd.brk) {
+		if (cache->filled < 3) {
+			snd.brk = FALSE;
+		} else {
+			return;
+		}
+	}
+
+	if ((snd.pos.current = snd.cycles++ / snd.frequency) == snd.pos.last) {
+		return;
+	}
+
+	/*
+	 * se la posizione e' maggiore o uguale al numero
+	 * di samples che compongono il frame, vuol dire che
+	 * sono passato nel frame successivo.
+	 */
+	if (snd.pos.current >= dev->samples) {
+		/* azzero posizione e contatore dei cicli del frame audio */
+		snd.pos.current = snd.cycles = 0;
+
+		SDL_mutexP(cache->lock);
+
+		/* incremento il contatore dei frames pieni non ancora 'riprodotti' */
+		if (++cache->filled >= snd.buffer.count) {
+			snd.brk = TRUE;
+		} else if (cache->filled >= ((snd.buffer.count >> 1) + 1)) {
+			snd_frequency(sndFactor[apu.type][FCNONE])
+		} else if (cache->filled < 3) {
+			snd_frequency(sndFactor[apu.type][FCNORMAL])
+		}
+
+		SDL_mutexV(cache->lock);
+	}
+
+	{
+		SWORD mixer = (S1.output + S2.output) + ((TR.output << 1) + NS.output + DMC.output);
+
+		if (extra_mixer_original) {
+			mixer = extra_mixer_original(mixer);
+		} else {
+			mixer_cut_and_high();
+		}
+
+		/* mono or left*/
+		(*cache->write++) = mixer;
+
+		/* stereo */
+		if (dev->channels == STEREO) {
+			/* salvo il dato nel buffer del canale sinistro */
+			snd.channel.ptr[CH_LEFT][snd.channel.pos] = mixer;
+			/* scrivo nel nel frame audio il canale destro ritardato di un frame */
+			(*cache->write++) = snd.channel.ptr[CH_RIGHT][snd.channel.pos];
+			/* swappo i buffers dei canali */
+			if (++snd.channel.pos >= snd.channel.max_pos) {
+				SWORD *swap = snd.channel.ptr[CH_RIGHT];
+
+				snd.channel.ptr[CH_RIGHT] = snd.channel.ptr[CH_LEFT];
+				snd.channel.ptr[CH_LEFT] = swap;
+				snd.channel.pos = 0;
+			}
+		}
+
+		if (cache->write >= (SWORD *) cache->end) {
+			cache->write = cache->start;
+		}
+
+		snd.pos.last = snd.pos.current;
+	}
+
+	return;
 }
 
 /* --------------------------------------------------------------------------------------- */

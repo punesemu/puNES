@@ -46,7 +46,6 @@
 #include "ines.h"
 #include "fds.h"
 #include "gamegenie.h"
-#include "audio_quality.h"
 
 BYTE emuLoop(void) {
 #ifdef DEBUG
@@ -111,8 +110,8 @@ BYTE emuLoop(void) {
 				tas.total_lag_frames++;
 			}
 
-			if (audio_quality_end_frame) {
-				audio_quality_end_frame();
+			if (snd_end_frame) {
+				snd_end_frame();
 			}
 
 #ifdef DEBUG
@@ -124,8 +123,6 @@ BYTE emuLoop(void) {
 			if (!tas.type && (++tl.frames == tl.framesSnap)) {
 				timelineSnap(TLNORMAL);
 			}
-
-			r4011.frames++;
 		} else {
 			gfxDrawScreen(FALSE);
 		}
@@ -502,8 +499,6 @@ BYTE emuTurnON(void) {
 	if (sndInit()) {
 		return (EXIT_ERROR);
 	}
-
-	audio_quality(cfg->audio_quality);
 
 	if (timelineInit()) {
 		return (EXIT_ERROR);

@@ -33,11 +33,6 @@ enum {
 };
 
 void audio_quality(BYTE quality);
-
-/* funzioni virtuali */
-void  (*audio_quality_init)(void);
-void  (*audio_quality_apu_tick)(void);
-void  (*audio_quality_end_frame)(void);
-SWORD (*audio_quality_apu_mixer)(void);
+void (*audio_quality_init)(void);
 
 #endif /* AUDIO_QUALITY_H_ */

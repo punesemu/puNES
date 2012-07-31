@@ -11,11 +11,6 @@
 #include "filters/audio/blip.h"
 
 void audio_quality(BYTE quality) {
-
-	snd_write = sndWrite;
-
-	audio_quality_end_frame = NULL;
-
 	switch (quality) {
 		default:
 		case AQ_LOW:

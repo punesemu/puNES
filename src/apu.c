@@ -15,8 +15,6 @@
 #include "fds.h"
 #include "audio_quality.h"
 
-BYTE sflag = 0;
-
 void apuTick(SWORD cyclesCPU, BYTE *hwtick) {
 	/* sottraggo il numero di cicli eseguiti */
 	apu.cycles -= cyclesCPU;
@@ -183,12 +181,8 @@ void apuTick(SWORD cyclesCPU, BYTE *hwtick) {
 		extclApuTick();
 	}
 
-	/* tick filtro audio */
-	audio_quality_apu_tick();
-
-	snd_write();
+	snd_apu_tick();
 }
-
 void apuTurnON(void) {
 	if (info.reset >= HARD) {
 		memset(&apu, 0x00, sizeof(apu));

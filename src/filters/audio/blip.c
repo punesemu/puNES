@@ -63,11 +63,8 @@ struct af_blip {
 void audio_quality_init_blip(void) {
 	memset(&bl, 0, sizeof(bl));
 
-	audio_quality_apu_tick = audio_quality_apu_tick_blip;
-	audio_quality_apu_mixer = audio_quality_apu_mixer_blip;
-	audio_quality_end_frame = audio_quality_end_frame_blip;
-
-	snd_write = audio_quality_snd_write_blip;
+	snd_apu_tick = audio_quality_apu_tick_blip;
+	snd_end_frame = audio_quality_end_frame_blip;
 
 	{
 		SDL_AudioSpec *dev = snd.dev;
@@ -82,13 +79,13 @@ void audio_quality_init_blip(void) {
 
 		enum { master_vol = 65536 / 15 };
 
-		/**/
+		/*
 		bl.ch[AQ_S1].gain = master_vol * 26 / 100;
 		bl.ch[AQ_S2].gain = master_vol * 26 / 100;
 		bl.ch[AQ_TR].gain = master_vol * 30 / 100;
 		bl.ch[AQ_NS].gain = master_vol * 18 / 100;
 		bl.ch[AQ_DMC].gain = master_vol * 10 / 100;
-		/**/
+		*/
 
 		/*
 		bl.ch[AQ_S1].gain = master_vol * 24 / 100;
@@ -99,12 +96,20 @@ void audio_quality_init_blip(void) {
 		*/
 
 		/*
-		bl.ch[AQ_S1].gain = master_vol * 0 / 100;
-		bl.ch[AQ_S2].gain = master_vol * 0 / 100;
-		bl.ch[AQ_TR].gain = master_vol * 30 / 100;
-		bl.ch[AQ_NS].gain = master_vol * 0 / 100;
-		bl.ch[AQ_DMC].gain = master_vol * 0 / 100;
+		bl.ch[AQ_S1].gain = master_vol * 9 / 100;
+		bl.ch[AQ_S2].gain = master_vol * 9 / 100;
+		bl.ch[AQ_TR].gain = master_vol * 9 / 100;
+		bl.ch[AQ_NS].gain = master_vol * 6 / 100;
+		bl.ch[AQ_DMC].gain = master_vol * 3 / 100;
 		*/
+
+		/**/
+		bl.ch[AQ_S1].gain = master_vol  * (2.6 * 4) / 100;
+		bl.ch[AQ_S2].gain = master_vol  * (2.6 * 4) / 100;
+		bl.ch[AQ_TR].gain = master_vol  * (3.0 * 4) / 100;
+		bl.ch[AQ_NS].gain = master_vol  * (1.8 * 4) / 100;
+		bl.ch[AQ_DMC].gain = master_vol * (1.0 * 4) / 100;
+		/**/
 
 		bl.ch[AQ_S1].min_period = min_period;
 		bl.ch[AQ_S2].min_period = min_period;
@@ -122,12 +127,6 @@ void audio_quality_apu_tick_blip(void) {
 	update_tick_channel(DMC, bl.ch[AQ_DMC])
 
 	bl.counter++;
-}
-SWORD audio_quality_apu_mixer_blip(void) {
-	return (0);
-}
-BYTE audio_quality_snd_write_blip(void) {
-	return(TRUE);
 }
 void audio_quality_end_frame_blip(void) {
 	SDL_AudioSpec *dev = snd.dev;

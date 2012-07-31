@@ -12,6 +12,5 @@
 
 void audio_quality_init_original(void);
 void audio_quality_apu_tick_original(void);
-SWORD audio_quality_apu_mixer_original(void);
 
 #endif /* AUDIO_QUALITY_ORIGINAL_H_ */
