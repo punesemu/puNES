@@ -44,7 +44,8 @@
 		if (channel.envelope.counter | channel.length.halt) {\
 			channel.envelope.counter = (channel.envelope.counter - 1) & 0x0E;\
 		}\
-	}\
+	}
+#define envelopeVolume(channel)\
 	/* setto il volume */\
 	if (!channel.length.value) {\
 		channel.volume = 0;\
@@ -103,6 +104,7 @@
 /* output */
 #define squareOutput(square)\
 {\
+	envelopeVolume(square)\
 	WORD offset = 0;\
 	if (!square.sweep.negate) {\
 		offset = square.timer >> square.sweep.shift;\
@@ -125,6 +127,7 @@
 		TR.output = triangleDuty[TR.sequencer];\
 	}
 #define noiseOutput()\
+	envelopeVolume(NS)\
 	if (NS.length.value && !(NS.shift & 0x0001)) {\
 		NS.output = NS.volume;\
 	} else {\
@@ -262,9 +265,6 @@
 	square.length.halt = value & 0x20;\
 	/* envelope */\
 	square.envelope.constant_volume = value & 0x10;\
-	if (square.envelope.constant_volume) {\
-		square.volume = value & 0x0F;\
-	}\
 	square.envelope.divider = value & 0x0F
 #define squareReg1(square)\
 	/* sweep */\
@@ -453,6 +453,22 @@ typedef struct {
 }  _apuDMC;
 
 enum { DMCNORMAL, DMCCPUWRITE, DMCR4014, DMCNNLDMA };
+enum {
+	APU_S1 = 0,
+	APU_S2,
+	APU_TR,
+	APU_NS,
+	APU_DMC,
+	APU_EXT0,
+	APU_EXT1,
+	APU_EXT2,
+	APU_EXT3,
+	APU_EXT4,
+	APU_EXT5,
+	APU_EXT6,
+	APU_EXT7,
+	APU_TOT_CH
+};
 
 _apu apu;
 _r4011 r4011;

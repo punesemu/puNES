@@ -1200,9 +1200,6 @@ static void INLINE apuWrReg(WORD address, BYTE value) {
 				NS.length.halt = value & 0x20;
 				/* envelope */
 				NS.envelope.constant_volume = value & 0x10;
-				if (NS.envelope.constant_volume) {
-					NS.volume = value & 0x0F;
-				}
 				NS.envelope.divider = value & 0x0F;
 				return;
 			}
