@@ -38,11 +38,11 @@
 	if (channel.envelope.enabled) {\
 		channel.envelope.enabled = FALSE;\
 		channel.envelope.counter = 15;\
-		channel.envelope.delay = (channel.envelope.divider + 1) << 1;\
+		channel.envelope.delay = (channel.envelope.divider + 1);\
 	} else if (!(--channel.envelope.delay)) {\
-		channel.envelope.delay = (channel.envelope.divider + 1) << 1;\
+		channel.envelope.delay = (channel.envelope.divider + 1);\
 		if (channel.envelope.counter | channel.length.halt) {\
-			channel.envelope.counter = (channel.envelope.counter - 1) & 0x0E;\
+			channel.envelope.counter = (channel.envelope.counter - 1) & 0x0F;\
 		}\
 	}
 #define envelopeVolume(channel)\
@@ -80,7 +80,7 @@
 	}\
 	if (channel.sweep.reload) {\
 		channel.sweep.reload = FALSE;\
-		channel.sweep.delay = (channel.sweep.divider + 1) << 1;\
+		channel.sweep.delay = (channel.sweep.divider + 1);\
 	}
 #define sweepClock()\
 	sweepRun(S1, -1)\
