@@ -19,7 +19,7 @@
 #include "fps.h"
 #include "blip_buf.h"
 
-enum { min_period = 10 };
+enum { master_vol = 65536 / 15 , volume_fator = 4, min_period = 20 };
 
 #define update_amp(blch, new_amp)\
 {\
@@ -27,24 +27,25 @@ enum { min_period = 10 };
 	blch.amp += delta;\
 	blip_add_delta(bl.blip, blch.time, delta);\
 }
-#define update_general_channel(ch, blch, restart)\
+#define update_general_channel(ch, blch, restart, out)\
+{\
+	SWORD output = out;\
 	blch.time += ch.period;\
-	update_amp(blch, ch.output)\
-	ch.period = restart
-#define update_tick_channel(ch, blch)\
+	update_amp(blch, output)\
+	ch.period = restart;\
+}
+#define update_tick_channel(ch, blch, out)\
 	if (ch.clocked && (ch.period >= blch.min_period)) {\
 		ch.clocked = FALSE;\
-		update_general_channel(ch, blch, 1);\
+		update_general_channel(ch, blch, 1, out)\
 	} else {\
 		ch.period++;\
 	}
-#define update_end_frame_channel(ch, blch)\
+#define update_end_frame_channel(ch, blch, out)\
 {\
-	update_general_channel(ch, blch, 0);\
+	update_general_channel(ch, blch, 0, out);\
 	blch.time -= bl.counter;\
 }
-
-enum { master_vol = 65536 / 15 , volume_fator = 4};
 
 typedef struct blip_chan _blip_chan;
 typedef struct af_blip _af_blip;
@@ -55,12 +56,29 @@ struct blip_chan {
 	int phase; /* position within waveform */
 	int amp; /* current amplitude in delta buffer */
 	int min_period;
+	int counter;
 };
 struct af_blip {
 	DBWORD counter;
 	blip_buffer_t *blip;
 	_blip_chan ch[APU_TOT_CH];
 } bl;
+
+void (*extra_apu_tick_blip)(void);
+void apu_tick_blip_FDS(void);
+void apu_tick_blip_MMC5(void);
+void apu_tick_blip_Namco_N163(void);
+void apu_tick_blip_Sunsoft_FM7(void);
+void apu_tick_blip_VRC6(void);
+void apu_tick_blip_VRC7(void);
+
+void (*extra_end_frame_blip)(void);
+void end_frame_blip_FDS(void);
+void end_frame_blip_MMC5(void);
+void end_frame_blip_Namco_N163(void);
+void end_frame_blip_Sunsoft_FM7(void);
+void end_frame_blip_VRC6(void);
+void end_frame_blip_VRC7(void);
 
 BYTE audio_quality_init_blip(void) {
 	memset(&bl, 0, sizeof(bl));
@@ -82,27 +100,91 @@ BYTE audio_quality_init_blip(void) {
 
 		blip_set_rates(bl.blip, machine.cpuHz, dev->freq);
 
-		/*
-		bl.ch[AQ_S1].gain = master_vol * 0 / 100;
-		bl.ch[AQ_S2].gain = master_vol * 0 / 100;
-		bl.ch[AQ_TR].gain = master_vol * 0 / 100;
-		bl.ch[AQ_NS].gain = master_vol * 0 / 100;
-		bl.ch[AQ_DMC].gain = master_vol * 0 / 100;
-		*/
-
-		/**/
-		bl.ch[APU_S1].gain = master_vol  * (2.6 * volume_fator) / 100;
+		/*bl.ch[APU_S1].gain = master_vol  * (2.6 * volume_fator) / 100;
 		bl.ch[APU_S2].gain = master_vol  * (2.6 * volume_fator) / 100;
 		bl.ch[APU_TR].gain = master_vol  * (2.2 * volume_fator) / 100;
 		bl.ch[APU_NS].gain = master_vol  * (1.8 * volume_fator) / 100;
-		bl.ch[APU_DMC].gain = master_vol * (1.0 * volume_fator) / 100;
-		/**/
+		bl.ch[APU_DMC].gain = master_vol * (1.0 * volume_fator) / 100;*/
 
 		bl.ch[APU_S1].min_period  = min_period;
 		bl.ch[APU_S2].min_period  = min_period;
 		bl.ch[APU_TR].min_period  = min_period / 2.5;
 		bl.ch[APU_NS].min_period  = min_period / 2;
 		bl.ch[APU_DMC].min_period = min_period;
+	}
+
+	switch (info.mapper) {
+		case FDS_MAPPER:
+			/* FDS */
+			extra_apu_tick_blip = apu_tick_blip_FDS;
+			extra_end_frame_blip = end_frame_blip_FDS;
+
+			bl.ch[APU_EXT0].gain = 1;
+
+			bl.ch[APU_EXT0].min_period = min_period;
+			break;
+		case 5:
+			/* MMC5 */
+
+			extra_apu_tick_blip = apu_tick_blip_MMC5;
+			extra_end_frame_blip = end_frame_blip_MMC5;
+
+			bl.ch[APU_EXT0].gain = master_vol * (2.6 * volume_fator) / 100;
+			bl.ch[APU_EXT1].gain = master_vol * (2.6 * volume_fator) / 100;
+			bl.ch[APU_EXT2].gain = master_vol * (1.0 * volume_fator) / 100;
+
+			bl.ch[APU_EXT0].min_period = min_period;
+			bl.ch[APU_EXT1].min_period = min_period;
+			bl.ch[APU_EXT2].min_period = min_period;
+			break;
+		case 19:
+			/* Namcot N163 */
+			extra_apu_tick_blip = apu_tick_blip_Namco_N163;
+			extra_end_frame_blip = end_frame_blip_Namco_N163;
+
+			bl.ch[APU_EXT0].gain = master_vol * (1.0 * volume_fator) / 100;
+
+			bl.ch[APU_EXT0].min_period = snd.frequency;
+			break;
+		case 69:
+			/* Sunsoft FM7 */
+			extra_apu_tick_blip = apu_tick_blip_Sunsoft_FM7;
+			extra_end_frame_blip = end_frame_blip_Sunsoft_FM7;
+
+			bl.ch[APU_EXT0].gain = master_vol * (1.6 * volume_fator) / 100;
+			bl.ch[APU_EXT1].gain = master_vol * (1.6 * volume_fator) / 100;
+			bl.ch[APU_EXT2].gain = master_vol * (1.6 * volume_fator) / 100;
+
+			bl.ch[APU_EXT0].min_period = min_period;
+			bl.ch[APU_EXT1].min_period = min_period;
+			bl.ch[APU_EXT2].min_period = min_period;
+			break;
+		case 24:
+		case 26:
+			/* VRC6 */
+			extra_apu_tick_blip = apu_tick_blip_VRC6;
+			extra_end_frame_blip = end_frame_blip_VRC6;
+
+			bl.ch[APU_EXT0].gain = master_vol * (1.60 * volume_fator) / 100;
+			bl.ch[APU_EXT1].gain = master_vol * (1.60 * volume_fator) / 100;
+			bl.ch[APU_EXT2].gain = master_vol * (0.15 * volume_fator) / 100;
+
+			bl.ch[APU_EXT0].min_period = min_period;
+			bl.ch[APU_EXT1].min_period = min_period;
+			bl.ch[APU_EXT2].min_period = min_period;
+			break;
+		case 85:
+			/* VRC7 */
+			extra_apu_tick_blip = apu_tick_blip_VRC7;
+			extra_end_frame_blip = end_frame_blip_VRC7;
+
+			bl.ch[APU_EXT0].gain = 5;
+
+			bl.ch[APU_EXT0].min_period = snd.frequency;
+			break;
+		default:
+			extra_apu_tick_blip = NULL;
+			break;
 	}
 
 	return (EXIT_OK);
@@ -114,11 +196,15 @@ void audio_quality_quit_blip(void) {
 }
 void audio_quality_apu_tick_blip(void) {
 
-	update_tick_channel(S1, bl.ch[APU_S1])
-	update_tick_channel(S2, bl.ch[APU_S2])
-	update_tick_channel(TR, bl.ch[APU_TR])
-	update_tick_channel(NS, bl.ch[APU_NS])
-	update_tick_channel(DMC, bl.ch[APU_DMC])
+	update_tick_channel(S1, bl.ch[APU_S1], S1.output)
+	update_tick_channel(S2, bl.ch[APU_S2], S2.output)
+	update_tick_channel(TR, bl.ch[APU_TR], TR.output)
+	update_tick_channel(NS, bl.ch[APU_NS], NS.output)
+	update_tick_channel(DMC, bl.ch[APU_DMC], DMC.output)
+
+	if (extra_apu_tick_blip) {
+		extra_apu_tick_blip();
+	}
 
 	bl.counter++;
 }
@@ -126,11 +212,15 @@ void audio_quality_end_frame_blip(void) {
 	SDL_AudioSpec *dev = snd.dev;
 	_callbackData *cache = snd.cache;
 
-	update_end_frame_channel(S1, bl.ch[APU_S1])
-	update_end_frame_channel(S2, bl.ch[APU_S2])
-	update_end_frame_channel(TR, bl.ch[APU_TR])
-	update_end_frame_channel(NS, bl.ch[APU_NS])
-	update_end_frame_channel(DMC, bl.ch[APU_DMC])
+	update_end_frame_channel(S1, bl.ch[APU_S1], S1.output)
+	update_end_frame_channel(S2, bl.ch[APU_S2], S2.output)
+	update_end_frame_channel(TR, bl.ch[APU_TR], TR.output)
+	update_end_frame_channel(NS, bl.ch[APU_NS], NS.output)
+	update_end_frame_channel(DMC, bl.ch[APU_DMC], DMC.output)
+
+	if (extra_end_frame_blip) {
+		extra_end_frame_blip();
+	}
 
 	blip_end_frame(bl.blip, bl.counter);
 	bl.counter = 0;
@@ -193,4 +283,100 @@ void audio_quality_end_frame_blip(void) {
 			}
 		}
 	}
+}
+
+/* --------------------------------------------------------------------------------------- */
+/*                                    Extra APU Tick                                       */
+/* --------------------------------------------------------------------------------------- */
+void apu_tick_blip_FDS(void) {
+	if (fds.snd.wave.clocked && (bl.ch[APU_EXT0].counter >= bl.ch[APU_EXT0].min_period)) {
+		fds.snd.wave.clocked = FALSE;
+		bl.ch[APU_EXT0].time += bl.ch[APU_EXT0].counter;
+		update_amp(bl.ch[APU_EXT0], (fds.snd.main.output >> 3))
+		bl.ch[APU_EXT0].counter = 1;
+	} else {
+		bl.ch[APU_EXT0].counter++;
+	}
+}
+void apu_tick_blip_MMC5(void) {
+	update_tick_channel(mmc5.S3, bl.ch[APU_EXT0], mmc5.S3.output)
+	update_tick_channel(mmc5.S4, bl.ch[APU_EXT1], mmc5.S4.output)
+	update_tick_channel(mmc5.pcm, bl.ch[APU_EXT2], mmc5.pcm.output)
+}
+void apu_tick_blip_Namco_N163(void) {
+	BYTE i;
+	SWORD output = 0;
+
+	if (++bl.ch[APU_EXT0].counter == bl.ch[APU_EXT0].min_period) {
+		for (i = n163.sndChStart; i < 8; i++) {
+			if (n163.ch[i].active) {
+				output += ((n163.ch[i].output * 1.5) * (n163.ch[i].volume >> 2));
+			}
+		}
+		bl.ch[APU_EXT0].time += bl.ch[APU_EXT0].counter;
+		update_amp(bl.ch[APU_EXT0], output)
+		bl.ch[APU_EXT0].counter = 0;
+	}
+}
+void apu_tick_blip_Sunsoft_FM7(void) {
+	update_tick_channel(fm7.square[0], bl.ch[APU_EXT0], fm7.square[0].output)
+	update_tick_channel(fm7.square[1], bl.ch[APU_EXT1], fm7.square[1].output)
+	update_tick_channel(fm7.square[2], bl.ch[APU_EXT2], fm7.square[2].output)
+}
+void apu_tick_blip_VRC6(void) {
+	update_tick_channel(vrc6.S3, bl.ch[APU_EXT0], vrc6.S3.output)
+	update_tick_channel(vrc6.S4, bl.ch[APU_EXT1], vrc6.S4.output)
+	update_tick_channel(vrc6.saw, bl.ch[APU_EXT2], vrc6.saw.output)
+}
+void apu_tick_blip_VRC7(void) {
+	if (++bl.ch[APU_EXT0].counter == bl.ch[APU_EXT0].min_period) {
+		bl.ch[APU_EXT0].time += bl.ch[APU_EXT0].counter;
+		update_amp(bl.ch[APU_EXT0], opll_calc())
+		bl.ch[APU_EXT0].counter = 0;
+	}
+}
+
+/* --------------------------------------------------------------------------------------- */
+/*                                   Extra End Frame                                       */
+/* --------------------------------------------------------------------------------------- */
+void end_frame_blip_FDS(void) {
+	bl.ch[APU_EXT0].time += bl.ch[APU_EXT0].counter;
+	update_amp(bl.ch[APU_EXT0], (fds.snd.main.output >> 3))
+	bl.ch[APU_EXT0].counter = 0;
+	bl.ch[APU_EXT0].time -= bl.counter;
+}
+void end_frame_blip_MMC5(void) {
+	update_end_frame_channel(mmc5.S3, bl.ch[APU_EXT0], mmc5.S3.output)
+	update_end_frame_channel(mmc5.S4, bl.ch[APU_EXT1], mmc5.S4.output)
+	update_end_frame_channel(mmc5.pcm, bl.ch[APU_EXT2], mmc5.pcm.output)
+}
+void end_frame_blip_Namco_N163(void) {
+	BYTE i;
+	SWORD output = 0;
+
+	for (i = n163.sndChStart; i < 8; i++) {
+		if (n163.ch[i].active) {
+			output += ((n163.ch[i].output * 1.5) * (n163.ch[i].volume >> 2));
+		}
+	}
+	bl.ch[APU_EXT0].time += bl.ch[APU_EXT0].counter;
+	update_amp(bl.ch[APU_EXT0], output)
+	bl.ch[APU_EXT0].counter = 0;
+	bl.ch[APU_EXT0].time -= bl.counter;
+}
+void end_frame_blip_Sunsoft_FM7(void) {
+	update_end_frame_channel(fm7.square[0], bl.ch[APU_EXT0], fm7.square[0].output)
+	update_end_frame_channel(fm7.square[1], bl.ch[APU_EXT1], fm7.square[1].output)
+	update_end_frame_channel(fm7.square[2], bl.ch[APU_EXT2], fm7.square[2].output)
+}
+void end_frame_blip_VRC6(void) {
+	update_end_frame_channel(vrc6.S3, bl.ch[APU_EXT0], vrc6.S3.output)
+	update_end_frame_channel(vrc6.S4, bl.ch[APU_EXT1], vrc6.S4.output)
+	update_end_frame_channel(vrc6.saw, bl.ch[APU_EXT2], vrc6.saw.output)
+}
+void end_frame_blip_VRC7(void) {
+	bl.ch[APU_EXT0].time += bl.ch[APU_EXT0].counter;
+	update_amp(bl.ch[APU_EXT0], opll_calc())
+	bl.ch[APU_EXT0].counter = 0;
+	bl.ch[APU_EXT0].time -= bl.counter;
 }

@@ -47,9 +47,18 @@ struct _mmc5 {
 	BYTE factor[2];
 	WORD product;
 	_apuSquare S3, S4;
-	BYTE pcmEnabled;
-	BYTE pcmSample;
-	BYTE pcmAmp;
+	struct {
+		BYTE enabled;
+		BYTE output;
+		BYTE amp;
+
+	/* ------------------------------------------------------- */
+	/* questi valori non e' necessario salvarli nei savestates */
+	/* ------------------------------------------------------- */
+	/* */ BYTE clocked;                                     /* */
+	/* */ DBWORD period;                                    /* */
+	/* ------------------------------------------------------- */
+	} pcm;
 	BYTE filler[50];
 } mmc5;
 

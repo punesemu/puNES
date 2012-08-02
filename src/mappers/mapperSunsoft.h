@@ -41,6 +41,13 @@ typedef struct {
 	WORD timer;
 	WORD volume;
 	SWORD output;
+
+/* ------------------------------------------------------- */
+/* questi valori non e' necessario salvarli nei savestates */
+/* ------------------------------------------------------- */
+/* */ BYTE clocked;                                     /* */
+/* */ DBWORD period;                                    /* */
+/* ------------------------------------------------------- */
 } _squareFM7;
 
 struct sunsoftFm {

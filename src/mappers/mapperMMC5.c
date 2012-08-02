@@ -284,18 +284,20 @@ void extclCpuWrMem_MMC5(WORD address, BYTE value) {
 			squareReg3(mmc5.S4);
 			return;
 		case 0x5010:
-			mmc5.pcmEnabled = ~value & 0x01;
-			mmc5.pcmSample = 0;
-			if (mmc5.pcmEnabled) {
-				mmc5.pcmSample = mmc5.pcmAmp;
+			mmc5.pcm.enabled = ~value & 0x01;
+			mmc5.pcm.output = 0;
+			if (mmc5.pcm.enabled) {
+				mmc5.pcm.output = mmc5.pcm.amp;
 			}
+			mmc5.pcm.clocked = TRUE;
 			return;
 		case 0x5011:
-			mmc5.pcmAmp = value;
-			mmc5.pcmSample = 0;
-			if (mmc5.pcmEnabled) {
-				mmc5.pcmSample = mmc5.pcmAmp;
+			mmc5.pcm.amp = value;
+			mmc5.pcm.output = 0;
+			if (mmc5.pcm.enabled) {
+				mmc5.pcm.output = mmc5.pcm.amp;
 			}
+			mmc5.pcm.clocked = TRUE;
 			return;
 		case 0x5015:
 			if (!(mmc5.S3.length.enabled = value & 0x01)) {
@@ -566,9 +568,9 @@ BYTE extclSaveMapper_MMC5(BYTE mode, BYTE slot, FILE *fp) {
 	savestateSquare(mmc5.S3, slot);
 	savestateSquare(mmc5.S4, slot);
 
-	savestateEle(mode, slot, mmc5.pcmEnabled);
-	savestateEle(mode, slot, mmc5.pcmSample);
-	savestateEle(mode, slot, mmc5.pcmAmp);
+	savestateEle(mode, slot, mmc5.pcm.enabled);
+	savestateEle(mode, slot, mmc5.pcm.output);
+	savestateEle(mode, slot, mmc5.pcm.amp);
 
 	savestateEle(mode, slot, mmc5.filler);
 

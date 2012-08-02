@@ -73,7 +73,7 @@ enum { FCNORMAL, FCNONE };
 	}
 
 static const double sndFactor[3][2] = {
-	{ 0.996, 1.0 }, { 1.0, 1.0 }, { 1.0, 1.0 }
+	{ 0.997, 1.1 }, { 1.0, 1.1 }, { 1.0, 1.1 }
 };
 
 BYTE sndInit(void);

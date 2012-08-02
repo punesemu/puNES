@@ -228,7 +228,7 @@ void extclApuTick_FDS(void) {
 	if (!fds.snd.modulation.disabled && fds.snd.modulation.frequency) {
 		if ((fds.snd.modulation.counter -= fds.snd.modulation.frequency) < 0) {
 			SWORD temp, temp2, a, d;
-			SBYTE adj  = fds.snd.modulation.data[fds.snd.modulation.index];
+			SBYTE adj = fds.snd.modulation.data[fds.snd.modulation.index];
 
 			fds.snd.modulation.counter += 65536;
 
@@ -281,11 +281,13 @@ void extclApuTick_FDS(void) {
 
 			/* valore massimo dell'output (63 * (39 * 32)) = 78624 */
 			/*fds.snd.main.output = (fds.snd.wave.data[fds.snd.wave.index] * level) >> 4;*/
-			fds.snd.main.output = (fds.snd.wave.data[fds.snd.wave.index] * level) >> 3;
+			fds.snd.main.output = (fds.snd.wave.data[fds.snd.wave.index] * level);// >> 3;
 
 			if (++fds.snd.wave.index == 64) {
 				fds.snd.wave.index = 0;
 			}
+
+			fds.snd.wave.clocked = TRUE;
 		}
 	}
 }

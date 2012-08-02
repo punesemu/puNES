@@ -124,6 +124,8 @@ struct {
 
 			BYTE index;
 			int32_t counter;
+
+			BYTE clocked;
 		} wave;
 		struct {
 			BYTE speed;

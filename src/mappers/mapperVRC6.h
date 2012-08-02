@@ -21,6 +21,13 @@ typedef struct {
 	WORD timer;
 	WORD frequency;
 	SWORD output;
+
+/* ------------------------------------------------------- */
+/* questi valori non e' necessario salvarli nei savestates */
+/* ------------------------------------------------------- */
+/* */ BYTE clocked;                                     /* */
+/* */ DBWORD period;                                    /* */
+/* ------------------------------------------------------- */
 } _vrc6Square;
 typedef struct {
 	BYTE enabled;
@@ -30,6 +37,13 @@ typedef struct {
 	WORD timer;
 	WORD frequency;
 	SWORD output;
+
+/* ------------------------------------------------------- */
+/* questi valori non e' necessario salvarli nei savestates */
+/* ------------------------------------------------------- */
+/* */ BYTE clocked;                                     /* */
+/* */ DBWORD period;                                    /* */
+/* ------------------------------------------------------- */
 } _vrc6Saw;
 struct _vrc6 {
 	BYTE enabled;

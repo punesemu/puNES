@@ -176,9 +176,13 @@
 					DMC.counter += 2;\
 				}\
 			}\
+			DMC.shift >>= 1;\
+			dmcOutput();\
+			DMC.clocked= TRUE;\
 		}\
-		DMC.shift >>= 1;\
+		/*DMC.shift >>= 1;\
 		dmcOutput();\
+		DMC.clocked= TRUE;*/\
 		if (!(--DMC.counterOut)) {\
 			DMC.counterOut = 8;\
 			if (!DMC.empty) {\
@@ -190,7 +194,6 @@
 			}\
 		}\
 		DMC.frequency = dmcRate[apu.type][DMC.rateIndex];\
-		DMC.clocked = TRUE;\
 	}\
 	if (DMC.empty && DMC.remain) {\
 		BYTE tick = 4;\
@@ -362,7 +365,7 @@ typedef struct {
 
 /* ------------------------------------------------------- */
 /* questi valori non e' necessario salvarli nei savestates */
-/* ----------------------*-------------------------------- */
+/* ------------------------------------------------------- */
 /* */ BYTE clocked;                                     /* */
 /* */ DBWORD period;                                    /* */
 /* ------------------------------------------------------- */
