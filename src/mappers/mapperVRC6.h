@@ -26,7 +26,6 @@ typedef struct {
 /* questi valori non e' necessario salvarli nei savestates */
 /* ------------------------------------------------------- */
 /* */ BYTE clocked;                                     /* */
-/* */ DBWORD period;                                    /* */
 /* ------------------------------------------------------- */
 } _vrc6Square;
 typedef struct {
@@ -42,7 +41,6 @@ typedef struct {
 /* questi valori non e' necessario salvarli nei savestates */
 /* ------------------------------------------------------- */
 /* */ BYTE clocked;                                     /* */
-/* */ DBWORD period;                                    /* */
 /* ------------------------------------------------------- */
 } _vrc6Saw;
 struct _vrc6 {

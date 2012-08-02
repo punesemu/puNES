@@ -125,7 +125,11 @@ struct {
 			BYTE index;
 			int32_t counter;
 
-			BYTE clocked;
+		/* ------------------------------------------------------- */
+		/* questi valori non e' necessario salvarli nei savestates */
+		/* ------------------------------------------------------- */
+		/* */ BYTE clocked;                                     /* */
+		/* ------------------------------------------------------- */
 		} wave;
 		struct {
 			BYTE speed;

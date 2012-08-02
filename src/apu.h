@@ -367,7 +367,6 @@ typedef struct {
 /* questi valori non e' necessario salvarli nei savestates */
 /* ------------------------------------------------------- */
 /* */ BYTE clocked;                                     /* */
-/* */ DBWORD period;                                    /* */
 /* ------------------------------------------------------- */
 } _apuSquare;
 typedef struct {
@@ -388,7 +387,6 @@ typedef struct {
 /* questi valori non e' necessario salvarli nei savestates */
 /* ------------------------------------------------------- */
 /* */ BYTE clocked;                                     /* */
-/* */ DBWORD period;                                    /* */
 /* ------------------------------------------------------- */
 } _apuTriangle;
 typedef struct {
@@ -415,7 +413,6 @@ typedef struct {
 /* questi valori non e' necessario salvarli nei savestates */
 /* ------------------------------------------------------- */
 /* */ BYTE clocked;                                     /* */
-/* */ DBWORD period;                                    /* */
 /* ------------------------------------------------------- */
 } _apuNoise;
 typedef struct {
@@ -451,7 +448,6 @@ typedef struct {
 /* questi valori non e' necessario salvarli nei savestates */
 /* ------------------------------------------------------- */
 /* */ BYTE clocked;                                     /* */
-/* */ DBWORD period;                                    /* */
 /* ------------------------------------------------------- */
 }  _apuDMC;
 

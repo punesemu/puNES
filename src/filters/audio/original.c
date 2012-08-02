@@ -169,7 +169,7 @@ SWORD mixer_original_FDS(SWORD mixer) {
 	mixer_cut_and_high();
 
 	//return (mixer + (fds.snd.main.output + (fds.snd.main.output >> 1)));
-	return (mixer + (fds.snd.main.output >> 3));
+	return (mixer + fds.snd.main.output);
 }
 SWORD mixer_original_MMC5(SWORD mixer) {
 	mixer += (mmc5.S3.output + mmc5.S4.output) + mmc5.pcm.output;

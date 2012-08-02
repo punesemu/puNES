@@ -30,16 +30,16 @@ enum { master_vol = 65536 / 15 , volume_fator = 4, min_period = 20 };
 #define update_general_channel(ch, blch, restart, out)\
 {\
 	SWORD output = out;\
-	blch.time += ch.period;\
+	blch.time += blch.period;\
 	update_amp(blch, output)\
-	ch.period = restart;\
+	blch.period = restart;\
 }
 #define update_tick_channel(ch, blch, out)\
-	if (ch.clocked && (ch.period >= blch.min_period)) {\
+	if (ch.clocked && (blch.period >= blch.min_period)) {\
 		ch.clocked = FALSE;\
 		update_general_channel(ch, blch, 1, out)\
 	} else {\
-		ch.period++;\
+		blch.period++;\
 	}
 #define update_end_frame_channel(ch, blch, out)\
 {\
@@ -55,8 +55,9 @@ struct blip_chan {
 	int time; /* clock time of next delta */
 	int phase; /* position within waveform */
 	int amp; /* current amplitude in delta buffer */
+
+	int period;
 	int min_period;
-	int counter;
 };
 struct af_blip {
 	DBWORD counter;
@@ -100,11 +101,11 @@ BYTE audio_quality_init_blip(void) {
 
 		blip_set_rates(bl.blip, machine.cpuHz, dev->freq);
 
-		/*bl.ch[APU_S1].gain = master_vol  * (2.6 * volume_fator) / 100;
+		bl.ch[APU_S1].gain = master_vol  * (2.6 * volume_fator) / 100;
 		bl.ch[APU_S2].gain = master_vol  * (2.6 * volume_fator) / 100;
 		bl.ch[APU_TR].gain = master_vol  * (2.2 * volume_fator) / 100;
 		bl.ch[APU_NS].gain = master_vol  * (1.8 * volume_fator) / 100;
-		bl.ch[APU_DMC].gain = master_vol * (1.0 * volume_fator) / 100;*/
+		bl.ch[APU_DMC].gain = master_vol * (1.0 * volume_fator) / 100;
 
 		bl.ch[APU_S1].min_period  = min_period;
 		bl.ch[APU_S2].min_period  = min_period;
@@ -289,13 +290,13 @@ void audio_quality_end_frame_blip(void) {
 /*                                    Extra APU Tick                                       */
 /* --------------------------------------------------------------------------------------- */
 void apu_tick_blip_FDS(void) {
-	if (fds.snd.wave.clocked && (bl.ch[APU_EXT0].counter >= bl.ch[APU_EXT0].min_period)) {
+	if (fds.snd.wave.clocked && (bl.ch[APU_EXT0].period >= bl.ch[APU_EXT0].min_period)) {
 		fds.snd.wave.clocked = FALSE;
-		bl.ch[APU_EXT0].time += bl.ch[APU_EXT0].counter;
-		update_amp(bl.ch[APU_EXT0], (fds.snd.main.output >> 3))
-		bl.ch[APU_EXT0].counter = 1;
+		bl.ch[APU_EXT0].time += bl.ch[APU_EXT0].period;
+		update_amp(bl.ch[APU_EXT0], fds.snd.main.output)
+		bl.ch[APU_EXT0].period = 1;
 	} else {
-		bl.ch[APU_EXT0].counter++;
+		bl.ch[APU_EXT0].period++;
 	}
 }
 void apu_tick_blip_MMC5(void) {
@@ -307,15 +308,15 @@ void apu_tick_blip_Namco_N163(void) {
 	BYTE i;
 	SWORD output = 0;
 
-	if (++bl.ch[APU_EXT0].counter == bl.ch[APU_EXT0].min_period) {
+	if (++bl.ch[APU_EXT0].period == bl.ch[APU_EXT0].min_period) {
 		for (i = n163.sndChStart; i < 8; i++) {
 			if (n163.ch[i].active) {
 				output += ((n163.ch[i].output * 1.5) * (n163.ch[i].volume >> 2));
 			}
 		}
-		bl.ch[APU_EXT0].time += bl.ch[APU_EXT0].counter;
+		bl.ch[APU_EXT0].time += bl.ch[APU_EXT0].period;
 		update_amp(bl.ch[APU_EXT0], output)
-		bl.ch[APU_EXT0].counter = 0;
+		bl.ch[APU_EXT0].period = 0;
 	}
 }
 void apu_tick_blip_Sunsoft_FM7(void) {
@@ -329,10 +330,10 @@ void apu_tick_blip_VRC6(void) {
 	update_tick_channel(vrc6.saw, bl.ch[APU_EXT2], vrc6.saw.output)
 }
 void apu_tick_blip_VRC7(void) {
-	if (++bl.ch[APU_EXT0].counter == bl.ch[APU_EXT0].min_period) {
-		bl.ch[APU_EXT0].time += bl.ch[APU_EXT0].counter;
+	if (++bl.ch[APU_EXT0].period == bl.ch[APU_EXT0].min_period) {
+		bl.ch[APU_EXT0].time += bl.ch[APU_EXT0].period;
 		update_amp(bl.ch[APU_EXT0], opll_calc())
-		bl.ch[APU_EXT0].counter = 0;
+		bl.ch[APU_EXT0].period = 0;
 	}
 }
 
@@ -340,9 +341,9 @@ void apu_tick_blip_VRC7(void) {
 /*                                   Extra End Frame                                       */
 /* --------------------------------------------------------------------------------------- */
 void end_frame_blip_FDS(void) {
-	bl.ch[APU_EXT0].time += bl.ch[APU_EXT0].counter;
-	update_amp(bl.ch[APU_EXT0], (fds.snd.main.output >> 3))
-	bl.ch[APU_EXT0].counter = 0;
+	bl.ch[APU_EXT0].time += bl.ch[APU_EXT0].period;
+	update_amp(bl.ch[APU_EXT0], fds.snd.main.output)
+	bl.ch[APU_EXT0].period = 0;
 	bl.ch[APU_EXT0].time -= bl.counter;
 }
 void end_frame_blip_MMC5(void) {
@@ -359,9 +360,9 @@ void end_frame_blip_Namco_N163(void) {
 			output += ((n163.ch[i].output * 1.5) * (n163.ch[i].volume >> 2));
 		}
 	}
-	bl.ch[APU_EXT0].time += bl.ch[APU_EXT0].counter;
+	bl.ch[APU_EXT0].time += bl.ch[APU_EXT0].period;
 	update_amp(bl.ch[APU_EXT0], output)
-	bl.ch[APU_EXT0].counter = 0;
+	bl.ch[APU_EXT0].period = 0;
 	bl.ch[APU_EXT0].time -= bl.counter;
 }
 void end_frame_blip_Sunsoft_FM7(void) {
@@ -375,8 +376,8 @@ void end_frame_blip_VRC6(void) {
 	update_end_frame_channel(vrc6.saw, bl.ch[APU_EXT2], vrc6.saw.output)
 }
 void end_frame_blip_VRC7(void) {
-	bl.ch[APU_EXT0].time += bl.ch[APU_EXT0].counter;
+	bl.ch[APU_EXT0].time += bl.ch[APU_EXT0].period;
 	update_amp(bl.ch[APU_EXT0], opll_calc())
-	bl.ch[APU_EXT0].counter = 0;
+	bl.ch[APU_EXT0].period = 0;
 	bl.ch[APU_EXT0].time -= bl.counter;
 }

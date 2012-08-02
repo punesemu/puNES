@@ -56,7 +56,6 @@ struct _mmc5 {
 	/* questi valori non e' necessario salvarli nei savestates */
 	/* ------------------------------------------------------- */
 	/* */ BYTE clocked;                                     /* */
-	/* */ DBWORD period;                                    /* */
 	/* ------------------------------------------------------- */
 	} pcm;
 	BYTE filler[50];
