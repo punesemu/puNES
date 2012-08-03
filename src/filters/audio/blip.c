@@ -101,8 +101,8 @@ BYTE audio_quality_init_blip(void) {
 
 		blip_set_rates(bl.blip, machine.cpuHz, dev->freq);
 
-		bl.ch[APU_S1].gain = master_vol  * (2.6 * volume_fator) / 100;
-		bl.ch[APU_S2].gain = master_vol  * (2.6 * volume_fator) / 100;
+		bl.ch[APU_S1].gain = master_vol  * (1.7 * volume_fator) / 100;
+		bl.ch[APU_S2].gain = master_vol  * (1.7 * volume_fator) / 100;
 		bl.ch[APU_TR].gain = master_vol  * (2.2 * volume_fator) / 100;
 		bl.ch[APU_NS].gain = master_vol  * (1.8 * volume_fator) / 100;
 		bl.ch[APU_DMC].gain = master_vol * (1.0 * volume_fator) / 100;
@@ -130,8 +130,8 @@ BYTE audio_quality_init_blip(void) {
 			extra_apu_tick_blip = apu_tick_blip_MMC5;
 			extra_end_frame_blip = end_frame_blip_MMC5;
 
-			bl.ch[APU_EXT0].gain = master_vol * (2.6 * volume_fator) / 100;
-			bl.ch[APU_EXT1].gain = master_vol * (2.6 * volume_fator) / 100;
+			bl.ch[APU_EXT0].gain = master_vol * (1.7 * volume_fator) / 100;
+			bl.ch[APU_EXT1].gain = master_vol * (1.7 * volume_fator) / 100;
 			bl.ch[APU_EXT2].gain = master_vol * (1.0 * volume_fator) / 100;
 
 			bl.ch[APU_EXT0].min_period = min_period;
