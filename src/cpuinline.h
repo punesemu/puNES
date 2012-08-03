@@ -1261,11 +1261,9 @@ static void INLINE apuWrReg(WORD address, BYTE value) {
 				 */
 
 				/* applico un low pass filter */
-				//DMC.counter = DMC.output = 0.5 * value + (1.0 - 0.5) * DMC.output;
+				DMC.counter = DMC.output = 0.6 * value + (1.0 - 0.6) * DMC.output;
+				//DMC.counter = DMC.output = value;
 
-				//printf("4011 : 0x%X\n", value);
-
-				DMC.counter = DMC.output = value;
 				DMC.clocked = TRUE;
 
 				r4011.value = value;
