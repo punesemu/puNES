@@ -1244,6 +1244,8 @@ static void INLINE apuWrReg(WORD address, BYTE value) {
 				return;
 			}
 			if (address == 0x4011) {
+				BYTE save = DMC.counter;
+
 				value &= 0x7F;
 
 				/*
@@ -1259,12 +1261,19 @@ static void INLINE apuWrReg(WORD address, BYTE value) {
 				 * emulated these filters.
 				 * (Xodnizel)
 				 */
-
-				/* applico un low pass filter */
-				//DMC.counter = DMC.output = 0.6 * value + (1.0 - 0.6) * DMC.output;
-				DMC.counter = DMC.output = value;
+				if (r4011.frames > 1) {
+					r4011.output = (value - save) >> 3;
+					DMC.counter = DMC.output = save + r4011.output;
+					/*printf("1 4011 : 0x%X %d %d %d %d %d %d\n", value, save, DMC.counter,
+				        DMC.output, r4011.output, r4011.cycles, r4011.frames);*/
+				} else {
+					DMC.counter = DMC.output = value;
+					/*printf("2 4011 : 0x%X %d %d %d %d %d\n", value, save, DMC.counter,
+					        DMC.output, r4011.cycles, r4011.frames);*/
+				}
 				DMC.clocked = TRUE;
 
+				r4011.cycles = r4011.frames = 0;
 				r4011.value = value;
 				return;
 			}

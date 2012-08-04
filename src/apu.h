@@ -306,6 +306,10 @@ typedef struct {
 } _apu;
 typedef struct {
 	BYTE value;
+
+	DBWORD frames;
+	DBWORD cycles;
+	SWORD output;
 } _r4011;
 typedef struct {
 	BYTE value;

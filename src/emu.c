@@ -123,6 +123,8 @@ BYTE emuLoop(void) {
 			if (!tas.type && (++tl.frames == tl.framesSnap)) {
 				timelineSnap(TLNORMAL);
 			}
+
+			r4011.frames++;
 		} else {
 			gfxDrawScreen(FALSE);
 		}

@@ -185,6 +185,7 @@ BYTE audio_quality_init_blip(void) {
 			break;
 		default:
 			extra_apu_tick_blip = NULL;
+			extra_end_frame_blip = NULL;
 			break;
 	}
 
@@ -193,6 +194,7 @@ BYTE audio_quality_init_blip(void) {
 void audio_quality_quit_blip(void) {
 	if (bl.blip) {
 		blip_delete(bl.blip);
+		bl.blip = NULL;
 	}
 }
 void audio_quality_apu_tick_blip(void) {

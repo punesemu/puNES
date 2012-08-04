@@ -30,8 +30,6 @@ BYTE sndInit(void) {
 		return (EXIT_ERROR);
 	}
 
-	audio_quality(cfg->audio_quality);
-
 	return (EXIT_OK);
 }
 BYTE sndStart(void) {
@@ -171,6 +169,8 @@ BYTE sndStart(void) {
 		extclSndStart(dev->freq);
 	}
 
+	audio_quality(cfg->audio_quality);
+
 #ifdef DEBUG
 	return (EXIT_OK);
 #endif
@@ -263,13 +263,13 @@ void sndStop(void) {
 			snd.channel.ptr[i] =  snd.channel.buf[i] = NULL;
 		}
 	}
-}
-void sndQuit(void) {
-	sndStop();
 
 	if (audio_quality_quit) {
 		audio_quality_quit();
 	}
+}
+void sndQuit(void) {
+	sndStop();
 
 #ifndef RELEASE
 	fprintf(stderr, "\n");

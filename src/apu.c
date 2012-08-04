@@ -182,6 +182,8 @@ void apuTick(SWORD cyclesCPU, BYTE *hwtick) {
 	}
 
 	snd_apu_tick();
+
+	r4011.cycles++;
 }
 void apuTurnON(void) {
 	if (info.reset >= HARD) {
