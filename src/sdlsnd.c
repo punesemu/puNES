@@ -119,8 +119,7 @@ BYTE sndStart(void) {
 	if (dev->channels == STEREO) {
 		BYTE i;
 
-		snd.channel.max_pos = dev->samples * 1.012;
-		snd.channel.max_pos = dev->samples * 1.000;
+		snd.channel.max_pos = dev->samples * 0.300;
 
 		snd.channel.pos = 0;
 
