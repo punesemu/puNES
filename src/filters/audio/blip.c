@@ -199,6 +199,10 @@ void audio_quality_quit_blip(void) {
 }
 void audio_quality_apu_tick_blip(void) {
 
+	if (!bl.blip) {
+		return;
+	}
+
 	update_tick_channel(S1, bl.ch[APU_S1], S1.output)
 	update_tick_channel(S2, bl.ch[APU_S2], S2.output)
 	update_tick_channel(TR, bl.ch[APU_TR], TR.output)
@@ -214,6 +218,10 @@ void audio_quality_apu_tick_blip(void) {
 void audio_quality_end_frame_blip(void) {
 	SDL_AudioSpec *dev = snd.dev;
 	_callbackData *cache = snd.cache;
+
+	if (!bl.blip) {
+		return;
+	}
 
 	update_end_frame_channel(S1, bl.ch[APU_S1], S1.output)
 	update_end_frame_channel(S2, bl.ch[APU_S2], S2.output)
