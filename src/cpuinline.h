@@ -1115,7 +1115,17 @@ static void INLINE apuWrReg(WORD address, BYTE value) {
 		/* -------------------- square 1 --------------------*/
 		if (address <= 0x4003) {
 			if (address == 0x4000) {
-				squareReg0(S1);
+				//squareReg0(S1);
+
+				S1.duty = value >> 6;
+				/* length counter */
+				S1.length.halt = value & 0x20;
+				/* envelope */
+				S1.envelope.constant_volume = value & 0x10;
+				S1.envelope.divider = value & 0x0F;
+
+				printf("4000 : 0x%X\n", value);
+
 				return;
 			}
 			if (address == 0x4001) {
@@ -1136,6 +1146,9 @@ static void INLINE apuWrReg(WORD address, BYTE value) {
 		if (address <= 0x4007) {
 			if (address == 0x4004) {
 				squareReg0(S2);
+
+				printf("4004 : 0x%X\n", value);
+
 				return;
 			}
 			if (address == 0x4005) {
