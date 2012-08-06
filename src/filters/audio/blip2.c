@@ -75,6 +75,21 @@ BYTE audio_quality_init_blip2(void) {
 	snd_end_frame = audio_quality_end_frame_blip2;
 
 	{
+		WORD i;
+
+		for (i = 0; i < LENGTH(af_table_approx.pulse); i++) {
+			double vl = 95.52 / (8128.0 / i + 100);
+			//af_table_approx.pulse[i] = (vl * 0x1C00) - 0x0E00;
+			af_table_approx.pulse[i] = (vl * 0x2FFF);
+		}
+
+		for (i = 0; i < LENGTH(af_table_approx.tnd); i++) {
+			double vl = 163.67 / (24329.0 / i + 100);
+			af_table_approx.tnd[i] = (vl * 0x2FFF);
+		}
+	}
+
+	{
 		SDL_AudioSpec *dev = snd.dev;
 
 		bl2.blip = blip_new(dev->freq / 10);
