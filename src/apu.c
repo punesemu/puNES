@@ -208,7 +208,11 @@ void apuTurnON(void) {
 		apuChangeStep(apu.step);
 		/* valori iniziali dei vari canali */
 		S1.frequency = 1;
+		S1.sweep.delay = 1;
+		S1.sweep.divider = 1;
 		S2.frequency = 1;
+		S2.sweep.delay = 1;
+		S2.sweep.divider = 1;
 		TR.frequency = 1;
 		TR.sequencer = 7;
 		NS.frequency = 1;
