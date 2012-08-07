@@ -21,11 +21,11 @@
 
 enum { master_vol = 65536 / 15 , volume_fator = 4, min_period = 20 };
 
-#define update_amp_2(blch, new_amp)\
+#define update_amp_2(blt, blch, new_amp)\
 {\
 	int delta = new_amp * blch.gain - blch.amp;\
 	blch.amp += delta;\
-	blip_add_delta(bl2.blip, blch.time, delta);\
+	blip_add_delta(bl2.blt, blch.time, delta);\
 }
 #define update_general_channel_2(ch, blch, restart, out)\
 {\
@@ -61,9 +61,15 @@ struct blip2_chan {
 };
 struct af_blip2 {
 	DBWORD counter;
-	blip_buffer_t *blip;
+	blip_buffer_t *pulse;
+	blip_buffer_t *tnd;
 	_blip2_chan ch[APU_TOT_CH];
 } bl2;
+
+struct _af_table_approx {
+	SWORD pulse[32];
+	SWORD tnd[203];
+} af_table_approx;
 
 
 BYTE audio_quality_init_blip2(void) {
@@ -78,60 +84,84 @@ BYTE audio_quality_init_blip2(void) {
 		WORD i;
 
 		for (i = 0; i < LENGTH(af_table_approx.pulse); i++) {
-			double vl = 95.52 / (8128.0 / i + 100);
-			//af_table_approx.pulse[i] = (vl * 0x1C00) - 0x0E00;
-			af_table_approx.pulse[i] = (vl * 0x2FFF);
+			double vl = 95.52 / (8128.0 / (double) i + 100.0);
+			af_table_approx.pulse[i] = (vl * 32);
 		}
 
 		for (i = 0; i < LENGTH(af_table_approx.tnd); i++) {
-			double vl = 163.67 / (24329.0 / i + 100);
-			af_table_approx.tnd[i] = (vl * 0x2FFF);
+			double vl = 163.67 / (24329.0 / (double) i + 100.0);
+			af_table_approx.tnd[i] = (vl * 32);
 		}
 	}
 
 	{
 		SDL_AudioSpec *dev = snd.dev;
 
-		bl2.blip = blip_new(dev->freq / 10);
+		bl2.pulse = blip_new(dev->freq / 10);
+		bl2.tnd = blip_new(dev->freq / 10);
 
-		if (bl2.blip == NULL ) {
+		if (bl2.pulse == NULL) {
 			 /* out of memory */
 			return (EXIT_ERROR);
 		}
 
-		blip_set_rates(bl2.blip, machine.cpuHz, dev->freq);
+		blip_set_rates(bl2.pulse, machine.cpuHz, dev->freq);
+		blip_set_rates(bl2.tnd, machine.cpuHz, dev->freq);
 
-		bl2.ch[APU_S1].gain = master_vol  * (2.6 * volume_fator) / 100;
-		//bl2.ch[APU_S2].gain = master_vol  * (2.6 * volume_fator) / 100;
-		//bl2.ch[APU_TR].gain = master_vol  * (2.2 * volume_fator) / 100;
-		//bl2.ch[APU_NS].gain = master_vol  * (1.8 * volume_fator) / 100;
-		//bl2.ch[APU_DMC].gain = master_vol * (1.0 * volume_fator) / 100;
+		bl2.ch[APU_EXT0].gain = master_vol * (5.0 * volume_fator) / 100;
+		bl2.ch[APU_EXT1].gain = master_vol * (5.0 * volume_fator) / 100;
 
-		bl2.ch[APU_S1].min_period  = min_period;
-		bl2.ch[APU_S2].min_period  = min_period;
-		bl2.ch[APU_TR].min_period  = min_period / 2.5;
-		bl2.ch[APU_NS].min_period  = min_period / 2;
-		bl2.ch[APU_DMC].min_period = min_period;
+		bl2.ch[APU_EXT0].min_period = min_period;
+		bl2.ch[APU_EXT1].min_period = min_period;
 	}
 
 	return (EXIT_OK);
 }
 void audio_quality_quit_blip2(void) {
-	if (bl2.blip) {
-		blip_delete(bl2.blip);
-		bl2.blip = NULL;
+	if (bl2.pulse) {
+		blip_delete(bl2.pulse);
+		bl2.pulse = NULL;
+	}
+	if (bl2.tnd) {
+		blip_delete(bl2.tnd);
+		bl2.tnd = NULL;
 	}
 }
 void audio_quality_apu_tick_blip2(void) {
-	if (!bl2.blip) {
+	if (!bl2.pulse || !bl2.tnd) {
 		return;
 	}
 
-	update_tick_channel_2(S1, bl2.ch[APU_S1], S1.output)
-	update_tick_channel_2(S2, bl2.ch[APU_S2], S2.output)
-	update_tick_channel_2(TR, bl2.ch[APU_TR], TR.output)
-	update_tick_channel_2(NS, bl2.ch[APU_NS], NS.output)
-	update_tick_channel_2(DMC, bl2.ch[APU_DMC], DMC.output)
+	//if (S1.clocked | S2.clocked) {
+	if (S1.clocked) {
+		SWORD output = 0;
+
+		output += S1.output;// + S2.output;
+
+		S1.clocked = S2.clocked = FALSE;
+		{
+			bl2.ch[APU_EXT0].time += bl2.ch[APU_EXT0].period;
+			update_amp_2(pulse, bl2.ch[APU_EXT0], output)
+			bl2.ch[APU_EXT0].period = 1;
+		}
+	} else {
+		bl2.ch[APU_EXT0].period++;
+	}
+
+	if (DMC.clocked) {
+		SWORD output = 0;
+
+		output += (DMC.output / (127 / 32));
+
+		DMC.clocked = FALSE;
+		{
+			bl2.ch[APU_EXT1].time += bl2.ch[APU_EXT1].period;
+			update_amp_2(tnd, bl2.ch[APU_EXT1], output)
+			bl2.ch[APU_EXT1].period = 1;
+		}
+	} else {
+		bl2.ch[APU_EXT1].period++;
+	}
 
 	bl2.counter++;
 }
@@ -139,24 +169,44 @@ void audio_quality_end_frame_blip2(void) {
 	SDL_AudioSpec *dev = snd.dev;
 	_callbackData *cache = snd.cache;
 
-	if (!bl2.blip) {
+	if (!bl2.pulse || !bl2.tnd) {
 		return;
 	}
 
-	update_end_frame_channel_2(S1, bl2.ch[APU_S1], S1.output)
-	update_end_frame_channel_2(S2, bl2.ch[APU_S2], S2.output)
-	update_end_frame_channel_2(TR, bl2.ch[APU_TR], TR.output)
-	update_end_frame_channel_2(NS, bl2.ch[APU_NS], NS.output)
-	update_end_frame_channel_2(DMC, bl2.ch[APU_DMC], DMC.output)
+	{
+		SWORD output = 0;
 
-	blip_end_frame(bl2.blip, bl2.counter);
+		output += S1.output;// + S2.output;
+		{
+			bl2.ch[APU_EXT0].time += bl2.ch[APU_EXT0].period;
+			update_amp_2(pulse, bl2.ch[APU_EXT0], output)
+			bl2.ch[APU_EXT0].period = 0;
+		}
+		bl2.ch[APU_EXT0].time -= bl2.counter;
+	}
+
+	{
+		SWORD output = 0;
+
+		output += (DMC.output / (127 / 32));
+		{
+			bl2.ch[APU_EXT1].time += bl2.ch[APU_EXT1].period;
+			update_amp_2(tnd, bl2.ch[APU_EXT1], output)
+			bl2.ch[APU_EXT1].period = 0;
+		}
+		bl2.ch[APU_EXT1].time -= bl2.counter;
+	}
+
+	blip_end_frame(bl2.pulse, bl2.counter);
+	blip_end_frame(bl2.tnd, bl2.counter);
 	bl2.counter = 0;
 
 	{
-		int i, count = blip_samples_avail(bl2.blip);
-		short temp[count];
+		int i, count = blip_samples_avail(bl2.pulse);
+		short pulse[count], tnd[count];
 
-		blip_read_samples(bl2.blip, temp, count, 0);
+		blip_read_samples(bl2.pulse, pulse, count, 0);
+		blip_read_samples(bl2.tnd, tnd, count, 0);
 
 		if (snd.brk) {
 			if (cache->filled < 3) {
@@ -167,7 +217,7 @@ void audio_quality_end_frame_blip2(void) {
 		}
 
 		for (i = 0; i < count; i++) {
-			SWORD data = temp[i];
+			SWORD data = pulse[i] + tnd[i];
 
 			/* mono or left*/
 			(*cache->write++) = data;

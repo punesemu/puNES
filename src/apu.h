@@ -91,7 +91,6 @@
 		channel.sweep.silence = TRUE;\
 	}\
 }
-
 #define sweepClock()\
 	sweepRun(S1, -1)\
 	sweepRun(S2,  0)

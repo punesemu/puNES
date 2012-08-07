@@ -10,6 +10,8 @@
 #include "filters/audio/original.h"
 #include "filters/audio/blip.h"
 
+#include "filters/audio/blip2.h"
+
 void audio_quality(BYTE quality) {
 
 	if (audio_quality_quit) {
@@ -25,7 +27,8 @@ void audio_quality(BYTE quality) {
 	switch (quality) {
 		default:
 		case AQ_LOW:
-			audio_quality_init = audio_quality_init_original;
+			//audio_quality_init = audio_quality_init_original;
+			audio_quality_init = audio_quality_init_blip2;
 			break;
 		case AQ_HIGH:
 			audio_quality_init = audio_quality_init_blip;
