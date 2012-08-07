@@ -27,7 +27,7 @@
 #include "fds.h"
 #include "gamegenie.h"
 
-#define SAVEVERSION 7
+#define SAVEVERSION 8
 
 BYTE stateOperation(BYTE mode, BYTE slot, FILE *fp);
 BYTE nameStateFile(char *file, BYTE slot);

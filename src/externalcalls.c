@@ -29,7 +29,6 @@ void extclInit(void) {
 	/* APU */
 	extclLengthClock = NULL;
 	extclEnvelopeClock = NULL;
-	extclSweepClock = NULL;
 	extclApuTick = NULL;
 	/* irqA12 */
 	extclIrqA12Clock = NULL;

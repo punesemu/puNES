@@ -74,6 +74,10 @@ enum { SSSAVE, SSREAD, SSCOUNT };
 	savestateEle(mode, slot, square.sweep.divider);\
 	savestateEle(mode, slot, square.sweep.shift);\
 	savestateEle(mode, slot, square.sweep.reload);\
+	/* ho aggiunto una nuova variabile */\
+	if (savestate.version > 7) {\
+		savestateEle(mode, slot, square.sweep.silence);\
+	}\
 	savestateEle(mode, slot, square.sweep.delay);\
 	savestateEle(mode, slot, square.length.value);\
 	savestateEle(mode, slot, square.length.enabled);\

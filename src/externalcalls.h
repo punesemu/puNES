@@ -34,7 +34,6 @@
 /* APU */
 #define EXTCLLENGTHCLOCK(n) extclLengthClock = extclLengthClock_##n
 #define EXTCLENVELOPECLOCK(n) extclEnvelopeClock = extclEnvelopeClock_##n
-#define EXTCLSWEEPCLOCK(n) extclSweepClock = extclSweepClock_##n
 #define EXTCLAPUTICK(n) extclApuTick = extclApuTick_##n
 
 /* irqA12 */
@@ -86,7 +85,6 @@ void (*extclWrChr)(WORD address, BYTE value);
 /* APU */
 void (*extclLengthClock)(void);
 void (*extclEnvelopeClock)(void);
-void (*extclSweepClock)(void);
 void (*extclApuTick)(void);
 
 /* irqA12 */

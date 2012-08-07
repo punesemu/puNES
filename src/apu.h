@@ -68,8 +68,8 @@
 /* sweep */
 #define sweepRun(channel, negative_adjust)\
 	if (!(--channel.sweep.delay)) {\
-		channel.sweep.reload = TRUE;\
-		if (channel.sweep.shift && channel.sweep.enabled && (channel.timer >= 8)) {\
+		channel.sweep.delay = (channel.sweep.divider + 1);\
+		if (channel.sweep.enabled && (channel.timer >= 8)) {\
 			SWORD offset = channel.timer >> channel.sweep.shift;\
 			if (channel.sweep.negate) {\
 				channel.timer += ((SWORD) negative_adjust - offset);\
@@ -77,20 +77,24 @@
 				channel.timer += offset;\
 			}\
 		}\
+		sweepSilence(channel)\
 	}\
 	if (channel.sweep.reload) {\
 		channel.sweep.reload = FALSE;\
 		channel.sweep.delay = (channel.sweep.divider + 1);\
 	}
+#define sweepSilence(channel)\
+{\
+	WORD offset = channel.timer >> channel.sweep.shift;\
+	channel.sweep.silence = FALSE;\
+	if ((channel.timer <= 8) || (!channel.sweep.negate && ((channel.timer + offset) >= 0x800))) {\
+		channel.sweep.silence = TRUE;\
+	}\
+}
+
 #define sweepClock()\
 	sweepRun(S1, -1)\
-	sweepRun(S2,  0)\
-	if (extclSweepClock) {\
-		/*\
-		 * utilizzato dalle mappers :\
-		 */\
-		extclSweepClock();\
-	}
+	sweepRun(S2,  0)
 /* linear counter */
 #define linearClock()\
 	if (TR.linear.halt) {\
@@ -105,11 +109,7 @@
 #define squareOutput(square)\
 {\
 	envelopeVolume(square)\
-	WORD offset = 0;\
-	if (!square.sweep.negate) {\
-		offset = square.timer >> square.sweep.shift;\
-	}\
-	if (!square.volume || (square.timer <= 8) || ((square.timer + offset) >= 0x800)) {\
+	if (square.sweep.silence) {\
 		square.output = 0;\
 	} else {\
 		square.output = squareDuty[square.duty][square.sequencer] * square.volume;\
@@ -332,6 +332,7 @@ typedef struct {
 	BYTE divider;
 	BYTE shift;
 	BYTE reload;
+	BYTE silence;
 	SBYTE delay;
 } _sweep;
 typedef struct {
