@@ -19,7 +19,7 @@
 #include "fps.h"
 #include "blip_buf.h"
 
-enum { master_vol = 65536 / 15 , volume_fator = 4, min_period = 20 };
+enum { master_vol = 65536 / 15 , volume_fator = 2, min_period = 20 };
 
 #define update_amp_2(blt, blch, new_amp)\
 {\
@@ -71,6 +71,7 @@ struct _af_table_approx {
 	SWORD tnd[203];
 } af_table_approx;
 
+BYTE pippo = 0;
 
 BYTE audio_quality_init_blip2(void) {
 	memset(&bl2, 0, sizeof(bl2));
@@ -85,12 +86,12 @@ BYTE audio_quality_init_blip2(void) {
 
 		for (i = 0; i < LENGTH(af_table_approx.pulse); i++) {
 			double vl = 95.52 / (8128.0 / (double) i + 100.0);
-			af_table_approx.pulse[i] = (vl * 32);
+			af_table_approx.pulse[i] = (vl * 256);
 		}
 
 		for (i = 0; i < LENGTH(af_table_approx.tnd); i++) {
 			double vl = 163.67 / (24329.0 / (double) i + 100.0);
-			af_table_approx.tnd[i] = (vl * 32);
+			af_table_approx.tnd[i] = (vl * 256);
 		}
 	}
 
@@ -108,11 +109,11 @@ BYTE audio_quality_init_blip2(void) {
 		blip_set_rates(bl2.pulse, machine.cpuHz, dev->freq);
 		blip_set_rates(bl2.tnd, machine.cpuHz, dev->freq);
 
-		bl2.ch[APU_EXT0].gain = master_vol * (5.0 * volume_fator) / 100;
-		bl2.ch[APU_EXT1].gain = master_vol * (5.0 * volume_fator) / 100;
+		bl2.ch[APU_EXT0].gain = master_vol * (1.0 * volume_fator) / 100;
+		bl2.ch[APU_EXT1].gain = master_vol * (1.0 * volume_fator) / 100;
 
 		bl2.ch[APU_EXT0].min_period = min_period;
-		bl2.ch[APU_EXT1].min_period = min_period;
+		bl2.ch[APU_EXT1].min_period = min_period / 2.5;
 	}
 
 	return (EXIT_OK);
@@ -132,13 +133,24 @@ void audio_quality_apu_tick_blip2(void) {
 		return;
 	}
 
-	//if (S1.clocked | S2.clocked) {
-	if (S1.clocked) {
+	if ((S1.clocked | S2.clocked) && (bl2.ch[APU_EXT0].period >= bl2.ch[APU_EXT0].min_period)) {
 		SWORD output = 0;
 
-		output += S1.output;// + S2.output;
-
 		S1.clocked = S2.clocked = FALSE;
+
+		output += af_table_approx.pulse[S1.output + S2.output];
+
+		/*if (pippo == 0) {
+			if (output != 0) {
+				pippo = 1;
+			}
+		} else if (pippo == 1) {
+			if (output == 0) {
+				pippo = 2;
+				bl2.ch[APU_EXT0].gain = 0;
+			}
+		}*/
+
 		{
 			bl2.ch[APU_EXT0].time += bl2.ch[APU_EXT0].period;
 			update_amp_2(pulse, bl2.ch[APU_EXT0], output)
@@ -148,12 +160,13 @@ void audio_quality_apu_tick_blip2(void) {
 		bl2.ch[APU_EXT0].period++;
 	}
 
-	if (DMC.clocked) {
+	if ((TR.clocked | NS.clocked | DMC.clocked)
+	        && (bl2.ch[APU_EXT1].period >= bl2.ch[APU_EXT1].min_period)) {
 		SWORD output = 0;
 
-		output += (DMC.output / (127 / 32));
+		TR.clocked = NS.clocked = DMC.clocked = FALSE;
 
-		DMC.clocked = FALSE;
+		output += af_table_approx.tnd[(3 * TR.output) + (2 * NS.output) + DMC.output];
 		{
 			bl2.ch[APU_EXT1].time += bl2.ch[APU_EXT1].period;
 			update_amp_2(tnd, bl2.ch[APU_EXT1], output)
@@ -176,7 +189,7 @@ void audio_quality_end_frame_blip2(void) {
 	{
 		SWORD output = 0;
 
-		output += S1.output;// + S2.output;
+		output += af_table_approx.pulse[S1.output + S2.output];
 		{
 			bl2.ch[APU_EXT0].time += bl2.ch[APU_EXT0].period;
 			update_amp_2(pulse, bl2.ch[APU_EXT0], output)
@@ -188,7 +201,7 @@ void audio_quality_end_frame_blip2(void) {
 	{
 		SWORD output = 0;
 
-		output += (DMC.output / (127 / 32));
+		output += af_table_approx.tnd[(3 * TR.output) + (2 * NS.output) + DMC.output];
 		{
 			bl2.ch[APU_EXT1].time += bl2.ch[APU_EXT1].period;
 			update_amp_2(tnd, bl2.ch[APU_EXT1], output)
@@ -218,6 +231,8 @@ void audio_quality_end_frame_blip2(void) {
 
 		for (i = 0; i < count; i++) {
 			SWORD data = pulse[i] + tnd[i];
+
+			//printf("data : %7d %7d %7d\n", pulse[i], tnd[i], data);
 
 			/* mono or left*/
 			(*cache->write++) = data;

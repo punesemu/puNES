@@ -1115,17 +1115,7 @@ static void INLINE apuWrReg(WORD address, BYTE value) {
 		/* -------------------- square 1 --------------------*/
 		if (address <= 0x4003) {
 			if (address == 0x4000) {
-				//squareReg0(S1);
-
-				S1.duty = value >> 6;
-				/* length counter */
-				S1.length.halt = value & 0x20;
-				/* envelope */
-				S1.envelope.constant_volume = value & 0x10;
-				S1.envelope.divider = value & 0x0F;
-
-				//printf("4000 : 0x%X\n", value);
-
+				squareReg0(S1);
 				return;
 			}
 			if (address == 0x4001) {
@@ -1149,9 +1139,6 @@ static void INLINE apuWrReg(WORD address, BYTE value) {
 		if (address <= 0x4007) {
 			if (address == 0x4004) {
 				squareReg0(S2);
-
-				//printf("4004 : 0x%X\n", value);
-
 				return;
 			}
 			if (address == 0x4005) {
@@ -1292,11 +1279,14 @@ static void INLINE apuWrReg(WORD address, BYTE value) {
 				}
 				DMC.clocked = TRUE;*/
 
-				printf("2 4011 : 0x%X %d %d %d %d %d\n", value, save, DMC.counter,
-				        DMC.output, r4011.cycles, r4011.frames);
+				/*printf("2 4011 : 0x%X %d %d %d %d %d %d\n", value, save, DMC.counter,
+				        DMC.output, r4011.cycles, r4011.frames, DMC.frequency);*/
 
-				DMC.counter = value;
-				//DMC.clocked = TRUE;
+				DMC.counter = DMC.output = value;
+				DMC.clocked = TRUE;
+
+				//DMC.counter = value;
+				//DMC.frequency = 235;
 
 				r4011.cycles = r4011.frames = 0;
 				r4011.value = value;
