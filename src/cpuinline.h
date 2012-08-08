@@ -1131,6 +1131,9 @@ static void INLINE apuWrReg(WORD address, BYTE value) {
 			if (address == 0x4003) {
 				squareReg3(S1);
 				sweepSilence(S1)
+
+				S1.frequency = 1;
+
 				return;
 			}
 			return;
@@ -1154,6 +1157,9 @@ static void INLINE apuWrReg(WORD address, BYTE value) {
 			if (address == 0x4007) {
 				squareReg3(S2);
 				sweepSilence(S2)
+
+				S2.frequency = 1;
+
 				return;
 			}
 			return;
@@ -1267,7 +1273,7 @@ static void INLINE apuWrReg(WORD address, BYTE value) {
 				 * emulated these filters.
 				 * (Xodnizel)
 				 */
-				/*if (r4011.frames > 1) {
+				if (r4011.frames > 1) {
 					r4011.output = (value - save) >> 3;
 					DMC.counter = DMC.output = save + r4011.output;
 					printf("1 4011 : 0x%X %d %d %d %d %d %d\n", value, save, DMC.counter,
@@ -1277,12 +1283,6 @@ static void INLINE apuWrReg(WORD address, BYTE value) {
 					printf("2 4011 : 0x%X %d %d %d %d %d\n", value, save, DMC.counter,
 					        DMC.output, r4011.cycles, r4011.frames);
 				}
-				DMC.clocked = TRUE;*/
-
-				/*printf("2 4011 : 0x%X %d %d %d %d %d %d\n", value, save, DMC.counter,
-				        DMC.output, r4011.cycles, r4011.frames, DMC.frequency);*/
-
-				DMC.counter = DMC.output = value;
 				DMC.clocked = TRUE;
 
 				//DMC.counter = value;
