@@ -9,7 +9,6 @@
 #include "sdlsnd.h"
 #include "filters/audio/original.h"
 #include "filters/audio/blip.h"
-
 #include "filters/audio/blip2.h"
 
 void audio_quality(BYTE quality) {
@@ -27,11 +26,11 @@ void audio_quality(BYTE quality) {
 	switch (quality) {
 		default:
 		case AQ_LOW:
-			//audio_quality_init = audio_quality_init_original;
-			audio_quality_init = audio_quality_init_blip2;
+			audio_quality_init = audio_quality_init_original;
 			break;
 		case AQ_HIGH:
-			audio_quality_init = audio_quality_init_blip;
+			//audio_quality_init = audio_quality_init_blip;
+			audio_quality_init = audio_quality_init_blip2;
 			break;
 	}
 

@@ -99,20 +99,20 @@ struct _af_table_approx {
 } af_table_approx;
 
 void (*extra_apu_tick_blip2)(void);
-//void apu_tick_blip2_FDS(void);
+void apu_tick_blip2_FDS(void);
 void apu_tick_blip2_MMC5(void);
-//void apu_tick_blip2_Namco_N163(void);
-//void apu_tick_blip2_Sunsoft_FM7(void);
-//void apu_tick_blip2_VRC6(void);
-//void apu_tick_blip2_VRC7(void);
+void apu_tick_blip2_Namco_N163(void);
+void apu_tick_blip2_Sunsoft_FM7(void);
+void apu_tick_blip2_VRC6(void);
+void apu_tick_blip2_VRC7(void);
 
 void (*extra_end_frame_blip2)(void);
-//void end_frame_blip2_FDS(void);
+void end_frame_blip2_FDS(void);
 void end_frame_blip2_MMC5(void);
-//void end_frame_blip2_Namco_N163(void);
-//void end_frame_blip2_Sunsoft_FM7(void);
-//void end_frame_blip2_VRC6(void);
-//void end_frame_blip2_VRC7(void);
+void end_frame_blip2_Namco_N163(void);
+void end_frame_blip2_Sunsoft_FM7(void);
+void end_frame_blip2_VRC6(void);
+void end_frame_blip2_VRC7(void);
 
 BYTE audio_quality_init_blip2(void) {
 	memset(&bl2, 0, sizeof(bl2));
@@ -161,8 +161,12 @@ BYTE audio_quality_init_blip2(void) {
 	switch (info.mapper) {
 		case FDS_MAPPER:
 			/* FDS */
-			//extra_apu_tick_blip2 = apu_tick_blip2_FDS;
-			//extra_end_frame_blip2 = end_frame_blip2_FDS;
+			extra_apu_tick_blip2 = apu_tick_blip2_FDS;
+			extra_end_frame_blip2 = end_frame_blip2_FDS;
+
+			bl2.extra[BL2_EXT0].gain = 1;
+
+			bl2.extra[BL2_EXT0].min_period = min_period;
 			break;
 		case 5:
 			/* MMC5 */
@@ -176,28 +180,51 @@ BYTE audio_quality_init_blip2(void) {
 			bl2.extra[BL2_EXT0].min_period = min_period;
 			bl2.extra[BL2_EXT1].min_period = min_period;
 			bl2.extra[BL2_EXT2].min_period = min_period;
-
 			break;
 		case 19:
 			/* Namcot N163 */
-			//extra_apu_tick_blip2 = apu_tick_blip2_Namco_N163;
-			//extra_end_frame_blip2 = end_frame_blip2_Namco_N163;
+			extra_apu_tick_blip2 = apu_tick_blip2_Namco_N163;
+			extra_end_frame_blip2 = end_frame_blip2_Namco_N163;
+
+			bl2.extra[BL2_EXT0].gain = master_vol * (2.0 * volume_fator) / 100;
+
+			bl2.extra[BL2_EXT0].min_period = snd.frequency;
 			break;
 		case 69:
 			/* Sunsoft FM7 */
-			//extra_apu_tick_blip2 = apu_tick_blip2_Sunsoft_FM7;
-			//extra_end_frame_blip2 = end_frame_blip2_Sunsoft_FM7;
+			extra_apu_tick_blip2 = apu_tick_blip2_Sunsoft_FM7;
+			extra_end_frame_blip2 = end_frame_blip2_Sunsoft_FM7;
+
+			bl2.extra[BL2_EXT0].gain = master_vol * (5.0 * volume_fator) / 100;
+			bl2.extra[BL2_EXT1].gain = master_vol * (5.0 * volume_fator) / 100;
+			bl2.extra[BL2_EXT2].gain = master_vol * (5.0 * volume_fator) / 100;
+
+			bl2.extra[BL2_EXT0].min_period = min_period;
+			bl2.extra[BL2_EXT1].min_period = min_period;
+			bl2.extra[BL2_EXT2].min_period = min_period;
 			break;
 		case 24:
 		case 26:
 			/* VRC6 */
-			//extra_apu_tick_blip2 = apu_tick_blip2_VRC6;
-			//extra_end_frame_blip2 = end_frame_blip2_VRC6;
+			extra_apu_tick_blip2 = apu_tick_blip2_VRC6;
+			extra_end_frame_blip2 = end_frame_blip2_VRC6;
+
+			bl2.extra[BL2_EXT0].gain = master_vol * (5.0 * volume_fator) / 100;
+			bl2.extra[BL2_EXT1].gain = master_vol * (5.0 * volume_fator) / 100;
+			bl2.extra[BL2_EXT2].gain = master_vol * (0.7 * volume_fator) / 100;
+
+			bl2.extra[BL2_EXT0].min_period = min_period;
+			bl2.extra[BL2_EXT1].min_period = min_period;
+			bl2.extra[BL2_EXT2].min_period = min_period;
 			break;
 		case 85:
 			/* VRC7 */
-			//extra_apu_tick_blip2 = apu_tick_blip_VRC7;
-			//extra_end_frame_blip2 = end_frame_blip_VRC7;
+			extra_apu_tick_blip2 = apu_tick_blip2_VRC7;
+			extra_end_frame_blip2 = end_frame_blip2_VRC7;
+
+			bl2.extra[BL2_EXT0].gain = 5;
+
+			bl2.extra[BL2_EXT0].min_period = snd.frequency;
 			break;
 		default:
 			extra_apu_tick_blip2 = NULL;
@@ -346,16 +373,94 @@ void audio_quality_end_frame_blip2(void) {
 /* --------------------------------------------------------------------------------------- */
 /*                                    Extra APU Tick                                       */
 /* --------------------------------------------------------------------------------------- */
+void apu_tick_blip2_FDS(void) {
+	if (fds.snd.wave.clocked && (bl2.extra[BL2_EXT0].period >= bl2.extra[BL2_EXT0].min_period)) {
+		fds.snd.wave.clocked = FALSE;
+		bl2.extra[BL2_EXT0].time += bl2.extra[BL2_EXT0].period;
+		update_amp_bl2(extra[BL2_EXT0], fds.snd.main.output)
+		bl2.extra[BL2_EXT0].period = 1;
+	} else {
+		bl2.extra[BL2_EXT0].period++;
+	}
+}
 void apu_tick_blip2_MMC5(void) {
 	update_tick_extra_bl2(mmc5.S3, BL2_EXT0, mmc5.S3.output)
 	update_tick_extra_bl2(mmc5.S4, BL2_EXT1, mmc5.S4.output)
 	update_tick_extra_bl2(mmc5.pcm, BL2_EXT2, mmc5.pcm.output)
 }
+void apu_tick_blip2_Namco_N163(void) {
+	BYTE i;
+	SWORD output = 0;
+
+	if (++bl2.extra[BL2_EXT0].period == bl2.extra[BL2_EXT0].min_period) {
+		for (i = n163.sndChStart; i < 8; i++) {
+			if (n163.ch[i].active) {
+				output += ((n163.ch[i].output * 1.5) * (n163.ch[i].volume >> 2));
+			}
+		}
+		bl2.extra[BL2_EXT0].time += bl2.extra[BL2_EXT0].period;
+		update_amp_bl2(extra[BL2_EXT0], output)
+		bl2.extra[BL2_EXT0].period = 0;
+	}
+}
+void apu_tick_blip2_Sunsoft_FM7(void) {
+	update_tick_extra_bl2(fm7.square[0], BL2_EXT0, fm7.square[0].output)
+	update_tick_extra_bl2(fm7.square[1], BL2_EXT1, fm7.square[1].output)
+	update_tick_extra_bl2(fm7.square[2], BL2_EXT2, fm7.square[2].output)
+}
+void apu_tick_blip2_VRC6(void) {
+	update_tick_extra_bl2(vrc6.S3, BL2_EXT0, vrc6.S3.output)
+	update_tick_extra_bl2(vrc6.S4, BL2_EXT1, vrc6.S4.output)
+	update_tick_extra_bl2(vrc6.saw, BL2_EXT2, vrc6.saw.output)
+}
+void apu_tick_blip2_VRC7(void) {
+	if (++bl2.extra[BL2_EXT0].period == bl2.extra[BL2_EXT0].min_period) {
+		bl2.extra[BL2_EXT0].time += bl2.extra[BL2_EXT0].period;
+		update_amp_bl2(extra[BL2_EXT0], opll_calc())
+		bl2.extra[BL2_EXT0].period = 0;
+	}
+}
 /* --------------------------------------------------------------------------------------- */
 /*                                   Extra End Frame                                       */
 /* --------------------------------------------------------------------------------------- */
+void end_frame_blip2_FDS(void) {
+	bl2.extra[BL2_EXT0].time += bl2.extra[BL2_EXT0].period;
+	update_amp_bl2(extra[BL2_EXT0], fds.snd.main.output)
+	bl2.extra[BL2_EXT0].period = 0;
+	bl2.extra[BL2_EXT0].time -= bl2.counter;
+}
 void end_frame_blip2_MMC5(void) {
 	update_end_frame_extra_bl2(BL2_EXT0, mmc5.S3.output)
 	update_end_frame_extra_bl2(BL2_EXT1, mmc5.S4.output)
 	update_end_frame_extra_bl2(BL2_EXT2, mmc5.pcm.output)
+}
+void end_frame_blip2_Namco_N163(void) {
+	BYTE i;
+	SWORD output = 0;
+
+	for (i = n163.sndChStart; i < 8; i++) {
+		if (n163.ch[i].active) {
+			output += ((n163.ch[i].output * 1.5) * (n163.ch[i].volume >> 2));
+		}
+	}
+	bl2.extra[BL2_EXT0].time += bl2.extra[BL2_EXT0].period;
+	update_amp_bl2(extra[BL2_EXT0], output)
+	bl2.extra[BL2_EXT0].period = 0;
+	bl2.extra[BL2_EXT0].time -= bl2.counter;
+}
+void end_frame_blip2_Sunsoft_FM7(void) {
+	update_end_frame_extra_bl2(BL2_EXT0, fm7.square[0].output)
+	update_end_frame_extra_bl2(BL2_EXT1, fm7.square[1].output)
+	update_end_frame_extra_bl2(BL2_EXT2, fm7.square[2].output)
+}
+void end_frame_blip2_VRC6(void) {
+	update_end_frame_extra_bl2(BL2_EXT0, vrc6.S3.output)
+	update_end_frame_extra_bl2(BL2_EXT1, vrc6.S4.output)
+	update_end_frame_extra_bl2(BL2_EXT2, vrc6.saw.output)
+}
+void end_frame_blip2_VRC7(void) {
+	bl2.extra[BL2_EXT0].time += bl2.extra[BL2_EXT0].period;
+	update_amp_bl2(extra[BL2_EXT0], opll_calc())
+	bl2.extra[BL2_EXT0].period = 0;
+	bl2.extra[BL2_EXT0].time -= bl2.counter;
 }
