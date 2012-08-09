@@ -69,7 +69,7 @@
 #define sweepRun(channel, negative_adjust)\
 	if (!(--channel.sweep.delay)) {\
 		channel.sweep.delay = (channel.sweep.divider + 1);\
-		if (channel.sweep.enabled && (channel.timer >= 8)) {\
+		if (channel.sweep.enabled && channel.sweep.shift && (channel.timer >= 8)) {\
 			SWORD offset = channel.timer >> channel.sweep.shift;\
 			if (channel.sweep.negate) {\
 				channel.timer += ((SWORD) negative_adjust - offset);\
