@@ -143,10 +143,10 @@
 		square.clocked = TRUE;\
 	}
 #define triangleTick()\
-	if (TR.length.value && TR.linear.value) {\
-		if (!(--TR.frequency)) {\
+	if (!(--TR.frequency)) {\
+		TR.frequency = TR.timer + 1;\
+		if (TR.length.value && TR.linear.value) {\
 			triangleOutput()\
-			TR.frequency = TR.timer + 1;\
 			TR.sequencer = (TR.sequencer + 1) & 0x1F;\
 			TR.clocked = TRUE;\
 		}\
@@ -293,7 +293,8 @@
 	/* timer (high 3 bits) */\
 	square.timer = (square.timer & 0x00FF) | ((value & 0x07) << 8);\
 	/* sequencer */\
-	square.sequencer = 0
+	square.sequencer = 0;\
+	square.frequency = 1
 
 typedef struct {
 	BYTE mode;
@@ -537,10 +538,10 @@ static const BYTE squareDuty[4][8] = {
 };
 
 static const BYTE triangleDuty[32] = {
+	0x0F, 0x0E, 0x0D, 0x0C, 0x0B, 0x0A, 0x09, 0x08,
+	0x07, 0x06, 0x05, 0x04, 0x03, 0x02, 0x01, 0x00,
 	0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
 	0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F,
-	0x0F, 0x0E, 0x0D, 0x0C, 0x0B, 0x0A, 0x09, 0x08,
-	0x07, 0x06, 0x05, 0x04, 0x03, 0x02, 0x01, 0x00
 };
 
 static const WORD noiseTimer[3][16] = {
