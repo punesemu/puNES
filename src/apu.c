@@ -214,7 +214,7 @@ void apuTurnON(void) {
 		S2.sweep.delay = 1;
 		S2.sweep.divider = 1;
 		TR.frequency = 1;
-		TR.sequencer = 7;
+		TR.sequencer = 0;
 		NS.frequency = 1;
 		NS.shift = 1;
 		DMC.frequency = 1;

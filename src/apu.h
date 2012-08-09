@@ -146,8 +146,8 @@
 	if (!(--TR.frequency)) {\
 		TR.frequency = TR.timer + 1;\
 		if (TR.length.value && TR.linear.value) {\
-			triangleOutput()\
 			TR.sequencer = (TR.sequencer + 1) & 0x1F;\
+			triangleOutput()\
 			TR.clocked = TRUE;\
 		}\
 	}

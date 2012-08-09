@@ -126,7 +126,6 @@ BYTE audio_quality_init_blip(void) {
 			break;
 		case 5:
 			/* MMC5 */
-
 			extra_apu_tick_blip = apu_tick_blip_MMC5;
 			extra_end_frame_blip = end_frame_blip_MMC5;
 
