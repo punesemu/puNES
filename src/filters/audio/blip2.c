@@ -21,14 +21,10 @@
 
 enum bl2_misc { master_vol = 65536 / 15 , volume_fator = 1, min_period = 20 };
 enum bl2_group { PULSE, TND, EXTRA };
-enum bl2_extern { BL2_EXT0, BL2_EXT1, BL2_EXT2, BL2_TOT_CH };
-
-//#define pulse_output() 0
-//#define tnd_output() 0
+enum bl2_extern { BL2_EXT0, BL2_EXT1, BL2_EXT2 };
 
 #define pulse_output() af_table_approx.pulse[S1.output + S2.output]
 #define tnd_output() af_table_approx.tnd[(3 * TR.output) + (2 * NS.output) + DMC.output]
-
 #define update_amp_bl2(grp, new_amp)\
 {\
 	int delta = new_amp * bl2.grp.gain - bl2.grp.amp;\
@@ -90,8 +86,8 @@ struct af_blip2 {
 	DBWORD counter;
 	blip_buffer_t *wave;
 	_blip2_group group[2];
+	_blip2_group extra[3];
 	_blip2_chan ch[5];
-	_blip2_group extra[BL2_TOT_CH];
 } bl2;
 struct _af_table_approx {
 	SWORD pulse[32];
@@ -127,12 +123,12 @@ BYTE audio_quality_init_blip2(void) {
 
 		for (i = 0; i < LENGTH(af_table_approx.pulse); i++) {
 			double vl = 95.52 / (8128.0 / (double) i + 100.0);
-			af_table_approx.pulse[i] = (vl * 482);
+			af_table_approx.pulse[i] = (vl * 502);
 		}
 
 		for (i = 0; i < LENGTH(af_table_approx.tnd); i++) {
 			double vl = 163.67 / (24329.0 / (double) i + 100.0);
-			af_table_approx.tnd[i] = (vl * 542);
+			af_table_approx.tnd[i] = (vl * 522);
 		}
 	}
 

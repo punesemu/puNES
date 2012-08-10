@@ -121,7 +121,7 @@
 	 * quindi non udibile), percio' la taglio.\
 	 */\
 	if (TR.timer < 2) {\
-		TR.output = triangleDuty[7];\
+		TR.output = triangleDuty[8];\
 	} else {\
 		TR.output = triangleDuty[TR.sequencer];\
 	}
@@ -453,23 +453,8 @@ typedef struct {
 /* ------------------------------------------------------- */
 }  _apuDMC;
 
-enum { DMCNORMAL, DMCCPUWRITE, DMCR4014, DMCNNLDMA };
-enum {
-	APU_S1 = 0,
-	APU_S2,
-	APU_TR,
-	APU_NS,
-	APU_DMC,
-	APU_EXT0,
-	APU_EXT1,
-	APU_EXT2,
-	APU_EXT3,
-	APU_EXT4,
-	APU_EXT5,
-	APU_EXT6,
-	APU_EXT7,
-	APU_TOT_CH
-};
+enum dmc_types_of_dma { DMCNORMAL, DMCCPUWRITE, DMCR4014, DMCNNLDMA };
+enum apu_channels { APU_S1, APU_S2, APU_TR, APU_NS, APU_DMC };
 
 _apu apu;
 _r4011 r4011;

@@ -237,7 +237,7 @@ void apuTurnON(void) {
 		S2.length.value = 0;
 		TR.length.enabled = 0;
 		TR.length.value = 0;
-		TR.sequencer = 7;
+		TR.sequencer = 0;
 		NS.length.enabled = 0;
 		NS.length.value = 0;
 		DMC.remain = 0;

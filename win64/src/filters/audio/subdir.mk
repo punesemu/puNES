@@ -5,14 +5,17 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
 ../src/filters/audio/blip.c \
+../src/filters/audio/blip2.c \
 ../src/filters/audio/original.c 
 
 OBJS += \
 ./src/filters/audio/blip.o \
+./src/filters/audio/blip2.o \
 ./src/filters/audio/original.o 
 
 C_DEPS += \
 ./src/filters/audio/blip.d \
+./src/filters/audio/blip2.d \
 ./src/filters/audio/original.d 
 
 

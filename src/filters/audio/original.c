@@ -125,7 +125,7 @@ void audio_quality_apu_tick_original(void) {
 	}
 
 	{
-		SWORD mixer = (S1.output + S2.output) + (TR.output + NS.output + DMC.output);
+		SWORD mixer = (S1.output + S2.output) + ((TR.output / 3) + NS.output + DMC.output);
 
 		if (extra_mixer_original) {
 			mixer = extra_mixer_original(mixer);
