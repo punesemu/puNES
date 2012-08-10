@@ -16,20 +16,7 @@
 #include "fps.h"
 #include "original.h"
 
-/*
- * questa viene chiamata in ogni extclApuMixer chiamata dalle mappers
- * tranne che nel VRC7.
- */
-#define mixer_cut_and_high()\
-	/* taglio il risultato */\
-	mixer *= 1.6;\
-	if (mixer > 255) {\
-		mixer = 255;\
-	} else if (mixer < -255) {\
-		mixer = -255;\
-	}\
-	/* ne aumento il volume */\
-	mixer <<= 7
+#define mixer_cut_and_high() mixer *= 45
 
 SWORD (*extra_mixer_original)(SWORD mixer);
 SWORD mixer_original_FDS(SWORD mixer);
@@ -139,7 +126,6 @@ void audio_quality_apu_tick_original(void) {
 	}
 
 	{
-		//SWORD mixer = (S1.output + S2.output) + ((TR.output / 3) + NS.output + DMC.output);
 		SWORD mixer = 0;
 		mixer += nla_table.pulse[S1.output + S2.output];
 		mixer += nla_table.tnd[(TR.output * 3) + (NS.output * 2) + DMC.output];
@@ -147,15 +133,7 @@ void audio_quality_apu_tick_original(void) {
 		if (extra_mixer_original) {
 			mixer = extra_mixer_original(mixer);
 		} else {
-			//mixer_cut_and_high();
-
-			/*if (mixer > 255) {\
-				mixer = 255;\
-			} else if (mixer < -255) {\
-				mixer = -255;\
-			}*/\
-			/* ne aumento il volume */\
-			mixer *= 45;
+			mixer_cut_and_high();
 		}
 
 		/* mono or left*/
@@ -197,7 +175,7 @@ SWORD mixer_original_FDS(SWORD mixer) {
 	return (mixer + fds.snd.main.output);
 }
 SWORD mixer_original_MMC5(SWORD mixer) {
-	mixer += (mmc5.S3.output + mmc5.S4.output) + mmc5.pcm.output;
+	mixer += (((mmc5.S3.output + mmc5.S4.output) + mmc5.pcm.output) << 3);
 
 	mixer_cut_and_high();
 
@@ -213,22 +191,21 @@ SWORD mixer_original_Namco_N163(SWORD mixer) {
 		}
 	}
 
-	mixer += (a >> 2);
+	mixer += a;
 
 	mixer_cut_and_high();
 
 	return (mixer);
 }
 SWORD mixer_original_Sunsoft_FM7(SWORD mixer) {
-	mixer += ((fm7.square[0].output << 1) + (fm7.square[1].output << 1)
-	        + (fm7.square[2].output << 1));
+	mixer += ((fm7.square[0].output + fm7.square[1].output + fm7.square[2].output) << 3);
 
 	mixer_cut_and_high();
 
 	return (mixer);
 }
 SWORD mixer_original_VRC6(SWORD mixer) {
-	mixer += (vrc6.S3.output << 1) + (vrc6.S4.output << 1) + (vrc6.saw.output / 5);
+	mixer += (((vrc6.S3.output << 1) + (vrc6.S4.output << 1) + (vrc6.saw.output / 5)) << 2);
 
 	mixer_cut_and_high();
 
