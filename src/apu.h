@@ -455,6 +455,20 @@ typedef struct {
 /* */ BYTE clocked;                                     /* */
 /* ------------------------------------------------------- */
 }  _apuDMC;
+
+#define init_nla_table(p, t)\
+{\
+	WORD i;\
+	for (i = 0; i < LENGTH(nla_table.pulse); i++) {\
+		double vl = 95.52 / (8128.0 / (double) i + 100.0);\
+		nla_table.pulse[i] = (vl * p);\
+	}\
+	for (i = 0; i < LENGTH(nla_table.tnd); i++) {\
+		double vl = 163.67 / (24329.0 / (double) i + 100.0);\
+		nla_table.tnd[i] = (vl * t);\
+	}\
+}
+
 struct _nla_table {
 	SWORD pulse[32];
 	SWORD tnd[203];

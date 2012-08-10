@@ -32,19 +32,7 @@ BYTE audio_quality_init_original(void) {
 
 	snd_apu_tick = audio_quality_apu_tick_original;
 
-	{
-		WORD i;
-
-		for (i = 0; i < LENGTH(nla_table.pulse); i++) {
-			double vl = 95.52 / (8128.0 / (double) i + 100.0);
-			nla_table.pulse[i] = (vl * 502);
-		}
-
-		for (i = 0; i < LENGTH(nla_table.tnd); i++) {
-			double vl = 163.67 / (24329.0 / (double) i + 100.0);
-			nla_table.tnd[i] = (vl * 522);
-		}
-	}
+	init_nla_table(502, 522)
 
 	switch (info.mapper) {
 		case FDS_MAPPER:
