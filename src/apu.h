@@ -11,6 +11,9 @@
 #include "common.h"
 #include "externalcalls.h"
 
+enum dmc_types_of_dma { DMCNORMAL, DMCCPUWRITE, DMCR4014, DMCNNLDMA };
+enum apu_channels { APU_S1, APU_S2, APU_TR, APU_NS, APU_DMC };
+
 /* length counter */
 #define lengthRun(channel)\
 	/*\
@@ -452,9 +455,10 @@ typedef struct {
 /* */ BYTE clocked;                                     /* */
 /* ------------------------------------------------------- */
 }  _apuDMC;
-
-enum dmc_types_of_dma { DMCNORMAL, DMCCPUWRITE, DMCR4014, DMCNNLDMA };
-enum apu_channels { APU_S1, APU_S2, APU_TR, APU_NS, APU_DMC };
+struct _nla_table {
+	SWORD pulse[32];
+	SWORD tnd[203];
+} nla_table;
 
 _apu apu;
 _r4011 r4011;

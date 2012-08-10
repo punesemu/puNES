@@ -45,6 +45,20 @@ BYTE audio_quality_init_original(void) {
 
 	snd_apu_tick = audio_quality_apu_tick_original;
 
+	{
+		WORD i;
+
+		for (i = 0; i < LENGTH(nla_table.pulse); i++) {
+			double vl = 95.52 / (8128.0 / (double) i + 100.0);
+			nla_table.pulse[i] = (vl * 502);
+		}
+
+		for (i = 0; i < LENGTH(nla_table.tnd); i++) {
+			double vl = 163.67 / (24329.0 / (double) i + 100.0);
+			nla_table.tnd[i] = (vl * 522);
+		}
+	}
+
 	switch (info.mapper) {
 		case FDS_MAPPER:
 			/* FDS */
@@ -125,12 +139,23 @@ void audio_quality_apu_tick_original(void) {
 	}
 
 	{
-		SWORD mixer = (S1.output + S2.output) + ((TR.output / 3) + NS.output + DMC.output);
+		//SWORD mixer = (S1.output + S2.output) + ((TR.output / 3) + NS.output + DMC.output);
+		SWORD mixer = 0;
+		mixer += nla_table.pulse[S1.output + S2.output];
+		mixer += nla_table.tnd[(TR.output * 3) + (NS.output * 2) + DMC.output];
 
 		if (extra_mixer_original) {
 			mixer = extra_mixer_original(mixer);
 		} else {
-			mixer_cut_and_high();
+			//mixer_cut_and_high();
+
+			/*if (mixer > 255) {\
+				mixer = 255;\
+			} else if (mixer < -255) {\
+				mixer = -255;\
+			}*/\
+			/* ne aumento il volume */\
+			mixer *= 45;
 		}
 
 		/* mono or left*/
