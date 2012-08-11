@@ -1871,6 +1871,8 @@ static const _dbelement dblist[] = {
 	{"e1cc56758f02204b6ba324f88699c2522ec4e499", 3, DEFAULT, DEFAULT, PAL},
 	/* Monster Truck Rally (R) [!].nes */
 	{"6270865daa1b4a7dff2ac303ac6a4132a7f7a414", 3, DEFAULT, DEFAULT, PAL},
+	/* quantum_disco_brothers_by_wAMMA.nes */
+	{"2ab9a13a76f17546582ebe2c7ce7ed55713622bd", 3, DEFAULT, DEFAULT, PAL},
 
 /* ---------------------------------- Color Dreams ---------------------------------------- */
 	/* Free Fall (U) (Prototype) [!].nes */
@@ -2541,6 +2543,8 @@ static const _dbelement dblist[] = {
 /* ------------------------------------ Color Dreams -------------------------------------- */
 	/* King Neptune's Adventure (Color Dreams) [!].nes */
 	{"012a23b6fe872bcbcc42dfeb5835a7bfaf721fc6", 11, UNKVERTICAL, BADKINGNEPT, DEFAULT},
+	/* Kojiki_by_wAMMA.nes */
+	{"9becee07199b622408c0806d1dd1f510989b2488", 11, DEFAULT, DEFAULT, PAL},
 
 /* --------------------------------------- CPROM ------------------------------------------ */
 	/* Volshebnaya Palitra (R) [!].nes */
