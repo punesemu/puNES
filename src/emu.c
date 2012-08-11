@@ -110,6 +110,9 @@ BYTE emuLoop(void) {
 				tas.total_lag_frames++;
 			}
 
+			/* gestione frameskip e calcolo fps */
+			fpsFrameskip();
+
 			if (snd_end_frame) {
 				snd_end_frame();
 			}
@@ -127,10 +130,11 @@ BYTE emuLoop(void) {
 			r4011.frames++;
 		} else {
 			gfxDrawScreen(FALSE);
+
+			/* gestione frameskip e calcolo fps */
+			fpsFrameskip();
 		}
 
-		/* gestione frameskip e calcolo fps */
-		fpsFrameskip();
 	}
 	return (EXIT_OK);
 }

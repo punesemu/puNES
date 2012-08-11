@@ -133,8 +133,8 @@ BYTE audio_quality_init_blip2(void) {
 
 		bl2.ch[APU_S1].min_period  = min_period;
 		bl2.ch[APU_S2].min_period  = min_period;
-		bl2.ch[APU_TR].min_period  = min_period / 2.5;
-		bl2.ch[APU_NS].min_period  = min_period / 2;
+		bl2.ch[APU_TR].min_period  = min_period; // / 2.5;
+		bl2.ch[APU_NS].min_period  = min_period; // / 2;
 		bl2.ch[APU_DMC].min_period = min_period;
 	}
 
@@ -340,7 +340,7 @@ void audio_quality_end_frame_blip2(void) {
 					snd.brk = TRUE;
 				} else if (cache->filled >= ((snd.buffer.count >> 1) + 1)) {
 					snd_frequency(sndFactor[apu.type][FCNONE])
-				} else if (cache->filled < 3) {
+				} else if (cache->filled < (snd.buffer.count >> 1) - 1) {
 					snd_frequency(sndFactor[apu.type][FCNORMAL])
 				}
 

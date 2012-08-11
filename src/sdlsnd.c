@@ -194,7 +194,7 @@ void sndOutput(void *udata, BYTE *stream, int len) {
 		snd.out_of_sync++;
 	} else {
 #ifndef RELEASE
-		fprintf(stderr, "snd : %d %d %d %2d %d %f %f %4s\r", len, snd.buffer.count,
+		fprintf(stderr, "snd : %d %d %d %d %2d %d %f %f %4s\r", len, snd.buffer.count, snd.brk,
 		        fps.total_frames_skipped, cache->filled, snd.out_of_sync, snd.frequency,
 		        machine.msFrame, "");
 #endif
