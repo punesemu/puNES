@@ -169,6 +169,7 @@ void apuTick(SWORD cyclesCPU, BYTE *hwtick) {
 	triangleTick()
 	noiseTick()
 	dmcTick()
+
 	if (extclApuTick) {
 		/*
 		 * utilizzato dalle mappers :
@@ -181,7 +182,9 @@ void apuTick(SWORD cyclesCPU, BYTE *hwtick) {
 		extclApuTick();
 	}
 
-	snd_apu_tick();
+	if (snd_apu_tick) {
+		snd_apu_tick();
+	}
 
 	r4011.cycles++;
 }
