@@ -115,6 +115,7 @@ void saveslot_action(BYTE mode);
 void saveslot_set(BYTE selection);
 void fds_eject_insert_disk(void);
 void fds_select_side(int side);
+void change_rom(char *rom);
 
 static HWND hMainWin, hSDL, hTool;
 static HWND hFrameTl, hTimeline;
@@ -1300,28 +1301,7 @@ long __stdcall mainWinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 
 			if (count) {
 				emuPause(TRUE);
-
-				strcpy(info.loadRomFile, szFile);
-				/*
-				 * nascondo la finestra perche' la nuova rom potrebbe
-				 * avere una configurazione dell'overscan diversa da quella
-				 * della rom precedente e quindi potrei essere costretto
-				 * a fare un SDL_SetVideoMode con dimensioni x ed y diverse
-				 * che sotto windows, se la finestra non e' nascosta, crasha
-				 * l'emulatore.
-				 */
-				ShowWindow(hMainWin, SW_HIDE);
-				//LockWindowUpdate(hMainWin);
-
-				gamegenie_reset(FALSE);
-
-				make_reset(CHANGEROM);
-
-				/* visualizzo nuovamente la finestra */
-				ShowWindow(hMainWin, SW_NORMAL);
-				//LockWindowUpdate(NULL);
-				guiUpdate();
-
+				change_rom(szFile);
 				emuPause(FALSE);
 			}
 
@@ -1968,26 +1948,7 @@ void open_event(void) {
 
 	// Display the Open dialog box.
 	if (GetOpenFileName(&ofn) == TRUE) {
-		strcpy(info.loadRomFile, ofn.lpstrFile);
-		/*
-		 * nascondo la finestra perche' la nuova rom potrebbe
-		 * avere una configurazione dell'overscan diversa da quella
-		 * della rom precedente e quindi potrei essere costretto
-		 * a fare un SDL_SetVideoMode con dimensioni x ed y diverse
-		 * che sotto windows, se la finestra non e' nascosta, crasha
-		 * l'emulatore.
-		 */
-		ShowWindow(hMainWin, SW_HIDE);
-		//LockWindowUpdate(hMainWin);
-
-		gamegenie_reset(FALSE);
-
-		make_reset(CHANGEROM);
-
-		/* visualizzo nuovamente la finestra */
-		ShowWindow(hMainWin, SW_NORMAL);
-		//LockWindowUpdate(NULL);
-		guiUpdate();
+		change_rom(ofn.lpstrFile);
 	}
 
 	emuPause(FALSE);
@@ -2441,5 +2402,27 @@ void fds_select_side(int side) {
 
 	fds_disk_op(FDS_DISK_SELECT, side);
 
+	guiUpdate();
+}
+void change_rom(char *rom) {
+	strcpy(info.loadRomFile, rom);
+	/*
+	 * nascondo la finestra perche' la nuova rom potrebbe
+	 * avere una configurazione dell'overscan diversa da quella
+	 * della rom precedente e quindi potrei essere costretto
+	 * a fare un SDL_SetVideoMode con dimensioni x ed y diverse
+	 * che sotto windows, se la finestra non e' nascosta, crasha
+	 * l'emulatore.
+	 */
+	ShowWindow(hMainWin, SW_HIDE);
+	//LockWindowUpdate(hMainWin);
+
+	gamegenie_reset(FALSE);
+
+	make_reset(CHANGEROM);
+
+	/* visualizzo nuovamente la finestra */
+	ShowWindow(hMainWin, SW_NORMAL);
+	//LockWindowUpdate(NULL);
 	guiUpdate();
 }
