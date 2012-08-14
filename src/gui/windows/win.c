@@ -65,9 +65,15 @@
 #define showToolWidget()\
 	ShowWindow(hFrameSs, SW_SHOW)
 
-enum { INC, DEC };
-enum { SAVE, LOAD };
-enum { CHECK, ENAB };
+enum {
+	INC, DEC
+};
+enum {
+	SAVE, LOAD
+};
+enum {
+	CHECK, ENAB
+};
 
 #define TOOLBARHEIGHT  26
 #define FRAMETLHEIGHT  (TOOLBARHEIGHT - 2)
@@ -152,7 +158,7 @@ void guiInit(int argc, char **argv) {
 
 		if (info.portable) {
 			char path[sizeof(info.baseFolder)], *dname;
-			DWORD length = GetModuleFileName(NULL, (LPSTR) &path, sizeof(path));
+			DWORD length = GetModuleFileName(NULL, (LPSTR) & path, sizeof(path));
 
 			if (length == 0) {
 				fprintf(stderr, "INFO: Error resolving exe path.\n");
@@ -211,7 +217,7 @@ BYTE guiCreate(void) {
 	wc.hInstance = gui.mainhInstance;
 	wc.hIcon = LoadIcon(gui.mainhInstance, MAKEINTRESOURCE(IDI_MYICON));
 	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
-	wc.hbrBackground = (HBRUSH) (COLOR_WINDOW);
+	wc.hbrBackground = (HBRUSH)(COLOR_WINDOW);
 	wc.lpszMenuName = MAKEINTRESOURCE(IDR_MAINMENU);
 	wc.lpszClassName = className;
 	wc.hIconSm = LoadIcon(gui.mainhInstance, MAKEINTRESOURCE(IDI_MYICON));
@@ -222,15 +228,12 @@ BYTE guiCreate(void) {
 	}
 
 	/* creo la finestra principale */
-	hMainWin = CreateWindowEx(
-			WS_EX_CLIENTEDGE,
-			className,
-			"puNES MainFrame",
-			WS_OVERLAPPED | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | WS_CAPTION | WS_SYSMENU
-			| WS_MINIMIZEBOX, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
-			(HWND) NULL, (HMENU) NULL, gui.mainhInstance, NULL);
+	hMainWin = CreateWindowEx(WS_EX_CLIENTEDGE | WS_EX_ACCEPTFILES, className, "puNES MainFrame",
+	        WS_OVERLAPPED | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | WS_CAPTION | WS_SYSMENU
+	                | WS_MINIMIZEBOX, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
+	        (HWND) NULL, (HMENU) NULL, gui.mainhInstance, NULL );
 
-	if (hMainWin == NULL) {
+	if (hMainWin == NULL ) {
 		MessageBox(NULL, "Window Creation Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
@@ -239,7 +242,7 @@ BYTE guiCreate(void) {
 
 	hAccKeys = LoadAccelerators(gui.mainhInstance, "IDR_ACCKEYS");
 
-	if (hAccKeys == NULL) {
+	if (hAccKeys == NULL ) {
 		MessageBox(NULL, "Window Accelerators Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
@@ -247,9 +250,9 @@ BYTE guiCreate(void) {
 	/* ---------------------------------- SDL window ---------------------------------- */
 	/* creo la finestra a cui attacchero' lo screen sdl */
 	hSDL = CreateWindowEx(0, className, "puNES SDL Frame", WS_CHILD, CW_USEDEFAULT, CW_USEDEFAULT,
-	        CW_USEDEFAULT, CW_USEDEFAULT, hMainWin, (HMENU) NULL, gui.mainhInstance, NULL);
+	        CW_USEDEFAULT, CW_USEDEFAULT, hMainWin, (HMENU) NULL, gui.mainhInstance, NULL );
 
-	if (hSDL == NULL) {
+	if (hSDL == NULL ) {
 		MessageBox(NULL, "Window Creation Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
@@ -261,10 +264,10 @@ BYTE guiCreate(void) {
 	InitCommonControlsEx(&icex);
 
 	hTool = CreateWindowEx(0, TOOLBARCLASSNAME, NULL, WS_CHILD | WS_VISIBLE | CCS_NORESIZE,
-			CW_USEDEFAULT, CW_USEDEFAULT, 0, TOOLBARHEIGHT, hMainWin, (HMENU) NULL,
-			gui.mainhInstance, NULL);
+	        CW_USEDEFAULT, CW_USEDEFAULT, 0, TOOLBARHEIGHT, hMainWin, (HMENU) NULL,
+	        gui.mainhInstance, NULL );
 
-	if (hTool == NULL) {
+	if (hTool == NULL ) {
 		MessageBox(NULL, "Window Creation Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
@@ -273,9 +276,9 @@ BYTE guiCreate(void) {
 
 	/* Frame Timeline */
 	hFrameTl = CreateWindowEx(0, "static", "", WS_CHILD | WS_VISIBLE | SS_ETCHEDVERT, 0, 0,
-			FRAMETLWIDTH, FRAMETLHEIGHT, hTool, NULL, NULL, NULL);
+	        FRAMETLWIDTH, FRAMETLHEIGHT, hTool, NULL, NULL, NULL );
 
-	if (hFrameTl == NULL) {
+	if (hFrameTl == NULL ) {
 		MessageBox(NULL, "Window Creation Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
@@ -283,10 +286,10 @@ BYTE guiCreate(void) {
 	SetWindowLongPtr(hFrameTl, GWLP_WNDPROC, (LONG_PTR) timelineProc);
 
 	hTimeline = CreateWindowEx(0, TRACKBAR_CLASS, "Timeline",
-			WS_CHILD | WS_VISIBLE | TBS_AUTOTICKS | TBS_FIXEDLENGTH | TBS_TOOLTIPS, 2, 0,
-			FRAMETLWIDTH - 4, FRAMETLHEIGHT, hFrameTl, (HMENU) NULL, gui.mainhInstance, NULL);
+	        WS_CHILD | WS_VISIBLE | TBS_AUTOTICKS | TBS_FIXEDLENGTH | TBS_TOOLTIPS, 2, 0,
+	        FRAMETLWIDTH - 4, FRAMETLHEIGHT, hFrameTl, (HMENU) NULL, gui.mainhInstance, NULL );
 
-	if (hTimeline == NULL) {
+	if (hTimeline == NULL ) {
 		MessageBox(NULL, "Window Creation Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
@@ -299,7 +302,7 @@ BYTE guiCreate(void) {
 	/* -------------------------------- Separatore Tl -------------------------------- */
 
 	hSepTl = CreateWindowEx(0, "static", "", WS_CHILD | WS_VISIBLE, 0, 0, SEPARATORWIDTH,
-			TOOLBARHEIGHT, hTool, (HMENU) NULL, gui.mainhInstance, NULL);
+	        TOOLBARHEIGHT, hTool, (HMENU) NULL, gui.mainhInstance, NULL );
 
 	/* ---------------------------------- Save slot ---------------------------------- */
 
@@ -307,10 +310,10 @@ BYTE guiCreate(void) {
 
 	/* Frame Saveslot */
 	hFrameSs = CreateWindowEx(WS_EX_WINDOWEDGE, "static", "", WS_CHILD | WS_VISIBLE | SS_ETCHEDVERT,
-			0, 0, FRAMESSWIDTH,
-			FRAMESSHEIGHT, hTool, NULL, NULL, NULL);
+	        0, 0, FRAMESSWIDTH,
+	        FRAMESSHEIGHT, hTool, NULL, NULL, NULL );
 
-	if (hFrameSs == NULL) {
+	if (hFrameSs == NULL ) {
 		MessageBox(NULL, "Window Creation Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
@@ -318,11 +321,11 @@ BYTE guiCreate(void) {
 	SetWindowLongPtr(hFrameSs, GWLP_WNDPROC, (LONG_PTR) saveslotProc);
 
 	hSaveslot = CreateWindowEx(0, "COMBOBOX", "Saveslot",
-			WS_CHILD | WS_VISIBLE | CBS_DROPDOWNLIST | CBS_HASSTRINGS | CBS_OWNERDRAWFIXED,
-			1 + BUTTONSSWIDTH + 0, 1, COMBOSSWIDTH, 130, hFrameSs, (HMENU) ID_SAVESLOT_CB,
-			gui.mainhInstance, NULL);
+	        WS_CHILD | WS_VISIBLE | CBS_DROPDOWNLIST | CBS_HASSTRINGS | CBS_OWNERDRAWFIXED,
+	        1 + BUTTONSSWIDTH + 0, 1, COMBOSSWIDTH, 130, hFrameSs, (HMENU) ID_SAVESLOT_CB,
+	        gui.mainhInstance, NULL );
 
-	if (hSaveslot == NULL) {
+	if (hSaveslot == NULL ) {
 		MessageBox(NULL, "Window Creation Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
@@ -330,10 +333,10 @@ BYTE guiCreate(void) {
 	SendMessage(hSaveslot, WM_SETFONT, (WPARAM) hFont, MAKELPARAM(TRUE, 0));
 
 	hSaveButton = CreateWindowEx(0, "BUTTON", "Save", WS_CHILD | WS_VISIBLE | BS_OWNERDRAW, 1, 0,
-			BUTTONSSWIDTH,
-			BUTTONSSHEIGHT, hFrameSs, (HMENU) ID_SAVESLOT_BS, gui.mainhInstance, NULL);
+	        BUTTONSSWIDTH,
+	        BUTTONSSHEIGHT, hFrameSs, (HMENU) ID_SAVESLOT_BS, gui.mainhInstance, NULL );
 
-	if (hSaveButton == NULL) {
+	if (hSaveButton == NULL ) {
 		MessageBox(NULL, "Window Creation Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
@@ -341,10 +344,10 @@ BYTE guiCreate(void) {
 	SendMessage(hSaveButton, WM_SETFONT, (WPARAM) hFont, MAKELPARAM(TRUE, 0));
 
 	hLoadButton = CreateWindowEx(0, "BUTTON", "Load", WS_CHILD | WS_VISIBLE | BS_OWNERDRAW,
-			1 + BUTTONSSWIDTH + 0 + COMBOSSWIDTH + 2, 0, BUTTONSSWIDTH,
-			BUTTONSSHEIGHT, hFrameSs, (HMENU) ID_SAVESLOT_BL, gui.mainhInstance, NULL);
+	        1 + BUTTONSSWIDTH + 0 + COMBOSSWIDTH + 2, 0, BUTTONSSWIDTH,
+	        BUTTONSSHEIGHT, hFrameSs, (HMENU) ID_SAVESLOT_BL, gui.mainhInstance, NULL );
 
-	if (hLoadButton == NULL) {
+	if (hLoadButton == NULL ) {
 		MessageBox(NULL, "Window Creation Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
@@ -366,16 +369,16 @@ BYTE guiCreate(void) {
 	/* -------------------------------- Separatore Ss -------------------------------- */
 
 	hSepSs = CreateWindowEx(0, "static", "", WS_CHILD | WS_VISIBLE, 0, 0, SEPARATORWIDTH,
-			TOOLBARHEIGHT, hTool, (HMENU) NULL, gui.mainhInstance, NULL);
+	        TOOLBARHEIGHT, hTool, (HMENU) NULL, gui.mainhInstance, NULL );
 
 	/* -------------------------------- Frame vuoto -------------------------------- */
 
 	/* Frame Saveslot */
 	hFrameBl = CreateWindowEx(WS_EX_WINDOWEDGE, "static", "", WS_CHILD | WS_VISIBLE | SS_ETCHEDVERT,
-			0, 0, 0,
-			FRAMESSHEIGHT, hTool, NULL, NULL, NULL);
+	        0, 0, 0,
+	        FRAMESSHEIGHT, hTool, NULL, NULL, NULL );
 
-	if (hFrameBl == NULL) {
+	if (hFrameBl == NULL ) {
 		MessageBox(NULL, "Window Creation Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
@@ -392,7 +395,7 @@ void guiSetVideoMode(void) {
 	ptDiff.x = (rcWindMainWin.right - rcWindMainWin.left) - rcClientMainWin.right;
 	ptDiff.y = (rcWindMainWin.bottom - rcWindMainWin.top) - rcClientMainWin.bottom;
 	MoveWindow(hMainWin, rcWindMainWin.left, rcWindMainWin.top, gfx.w[VIDEOMODE] + ptDiff.x,
-			gfx.h[VIDEOMODE] + ptDiff.y + TOOLBARHEIGHT, TRUE);
+	        gfx.h[VIDEOMODE] + ptDiff.y + TOOLBARHEIGHT, TRUE);
 	/* aggiorno la finestra dell'sdl */
 	MoveWindow(hSDL, 0, 0, gfx.w[VIDEOMODE], gfx.h[VIDEOMODE], TRUE);
 	/* aggiorno la toolbar */
@@ -467,7 +470,7 @@ void guiEvent(void) {
 		//fprintf(stderr, "0: %X %X\n", Msg.message, LOWORD(Msg.wParam));
 		switch (Msg.message) {
 			case WM_KEYDOWN: {
-				switch(LOWORD(Msg.wParam)) {
+				switch (LOWORD(Msg.wParam)) {
 					case VK_CONTROL:
 						if (!tl.key) {
 							tlDown(tl.key);
@@ -481,14 +484,18 @@ void guiEvent(void) {
 					case VK_LEFT:
 						if (tl.key) {
 							BYTE snap = SendMessage(hTimeline, TBM_GETPOS, 0, 0);
-							if (snap) {wrapTlPreview(snap - 1);}
+							if (snap) {
+								wrapTlPreview(snap - 1);
+							}
 							noProcess = TRUE;
 						}
 						break;
 					case VK_RIGHT:
 						if (tl.key) {
 							BYTE snap = SendMessage(hTimeline, TBM_GETPOS, 0, 0);
-							if (snap < (TLSNAPS - 1)) {wrapTlPreview(snap + 1);}
+							if (snap < (TLSNAPS - 1)) {
+								wrapTlPreview(snap + 1);
+							}
 							noProcess = TRUE;
 						}
 						break;
@@ -514,7 +521,9 @@ void guiEvent(void) {
 			case WM_KEYUP: {
 				switch (LOWORD(Msg.wParam)) {
 					case VK_CONTROL:
-						if (tl.key) {tlUp(tl.key);}
+						if (tl.key) {
+							tlUp(tl.key);
+						}
 						noProcess = TRUE;
 						break;
 					case VK_SHIFT:
@@ -589,7 +598,7 @@ void guiEvent(void) {
 	return;
 }
 HWND guiWindowID(void) {
-	return(hSDL);
+	return (hSDL);
 }
 void guiUpdate(void) {
 	WORD id = 0;
@@ -1189,7 +1198,7 @@ void guiFullscreen(void) {
 			wpPrev.rcNormalPosition.bottom = 0;
 		}
 		/* dissocio il menu dalla finestra */
-		SetMenu(hMainWin, NULL);
+		SetMenu(hMainWin, NULL );
 		/* abilito il fullscreen */
 		gfxSetScreen(NOCHANGE, NOCHANGE, FULLSCR, NOCHANGE, FALSE);
 		/* disabilito la visualizzazione del puntatore */
@@ -1208,7 +1217,7 @@ void guiFullscreen(void) {
 	} else {
 		/* ribilito gli stili della finestra corretti */
 		SetWindowLongPtr(hMainWin, GWL_STYLE,
-			        GetWindowLong(hMainWin, GWL_STYLE) | WS_CAPTION | WS_BORDER | WS_SYSMENU);
+		        GetWindowLong(hMainWin, GWL_STYLE) | WS_CAPTION | WS_BORDER | WS_SYSMENU);
 		SetWindowLongPtr(hMainWin, GWL_EXSTYLE,
 		        (GetWindowLongPtr(hMainWin, GWL_EXSTYLE) | WS_EX_CLIENTEDGE)
 		                & ~(WS_EX_APPWINDOW | WS_EX_TOPMOST));
@@ -1278,8 +1287,48 @@ long __stdcall mainWinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 			}
 			break;
 		}
+		case WM_DROPFILES: {
+			TCHAR szFile[sizeof(info.loadRomFile)];
+			HDROP hDrop = (HDROP) wParam;
+			int i = 0, count = DragQueryFile(hDrop, 0xFFFFFFFF, szFile, sizeof(info.loadRomFile));
+
+			for (i = 0; i < count; i++) {
+				DragQueryFile(hDrop, i, szFile, sizeof(info.loadRomFile));
+			}
+
+			DragFinish(hDrop);
+
+			if (count) {
+				emuPause(TRUE);
+
+				strcpy(info.loadRomFile, szFile);
+				/*
+				 * nascondo la finestra perche' la nuova rom potrebbe
+				 * avere una configurazione dell'overscan diversa da quella
+				 * della rom precedente e quindi potrei essere costretto
+				 * a fare un SDL_SetVideoMode con dimensioni x ed y diverse
+				 * che sotto windows, se la finestra non e' nascosta, crasha
+				 * l'emulatore.
+				 */
+				ShowWindow(hMainWin, SW_HIDE);
+				//LockWindowUpdate(hMainWin);
+
+				gamegenie_reset(FALSE);
+
+				make_reset(CHANGEROM);
+
+				/* visualizzo nuovamente la finestra */
+				ShowWindow(hMainWin, SW_NORMAL);
+				//LockWindowUpdate(NULL);
+				guiUpdate();
+
+				emuPause(FALSE);
+			}
+
+			break;
+		}
 		case WM_COMMAND: {
-			switch(LOWORD(wParam)) {
+			switch (LOWORD(wParam)) {
 				case IDM_FILE_OPEN:
 					/*
 					 * nella finestra di apertura file posso esserci
@@ -1610,11 +1659,11 @@ long __stdcall mainWinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 					break;
 				case IDM_HELP_ABOUT:
 					if (!info.portable) {
-						DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_ABOUT), hwnd,
-								(DLGPROC) aboutProc);
+						DialogBox(GetModuleHandle(NULL ), MAKEINTRESOURCE(IDD_ABOUT), hwnd,
+						        (DLGPROC) aboutProc);
 					} else {
-						DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_ABOUT_PORTABLE), hwnd,
-								(DLGPROC) aboutProc);
+						DialogBox(GetModuleHandle(NULL ), MAKEINTRESOURCE(IDD_ABOUT_PORTABLE), hwnd,
+						        (DLGPROC) aboutProc);
 					}
 					SetFocus(hSDL);
 					break;
@@ -1626,17 +1675,17 @@ long __stdcall mainWinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 		}
 		case WM_PAINT:
 			time_handler_redraw();
-			ValidateRect(hwnd, NULL);
-			return(0);
+			ValidateRect(hwnd, NULL );
+			return (0);
 		case WM_CLOSE:
 			info.stop = TRUE;
 			DestroyWindow(hwnd);
 			break;
 		case WM_DESTROY:
 			PostQuitMessage(EXIT_SUCCESS);
-			return(1);
+			return (1);
 		case WM_ERASEBKGND:
-			return(1);
+			return (1);
 		default:
 			return DefWindowProc(hwnd, msg, wParam, lParam);
 	}
@@ -1664,9 +1713,9 @@ long __stdcall timelineProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 							switch (lpDraw->dwItemSpec) {
 								case TBCD_THUMB:
 									FillRect(lpDraw->hdc, &lpDraw->rc,
-											(HBRUSH) GetStockObject(LTGRAY_BRUSH));
+									        (HBRUSH) GetStockObject(LTGRAY_BRUSH));
 									DrawEdge(lpDraw->hdc, &lpDraw->rc, EDGE_ETCHED,
-											BF_RECT | BF_ADJUST);
+									        BF_RECT | BF_ADJUST);
 									return CDRF_SKIPDEFAULT;
 							}
 							break;
@@ -1713,7 +1762,7 @@ long __stdcall saveslotProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 			switch (pmis->CtlID) {
 				case ID_SAVESLOT_CB: {
 					TEXTMETRIC tm;
-					HDC hDC = GetDC(NULL);
+					HDC hDC = GetDC(NULL );
 					GetTextMetrics(hDC, &tm);
 					pmis->itemHeight = tm.tmHeight + tm.tmExternalLeading - 1;
 					ReleaseDC(NULL, hDC);
@@ -1761,7 +1810,7 @@ long __stdcall saveslotProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 						}
 					}
 					DrawText(pdis->hDC, string, strlen(string), &pdis->rcItem,
-							DT_LEFT | DT_SINGLELINE);
+					        DT_LEFT | DT_SINGLELINE);
 					break;
 				}
 				case ID_SAVESLOT_BL:
@@ -1769,7 +1818,7 @@ long __stdcall saveslotProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 						DrawEdge(pdis->hDC, &pdis->rcItem, EDGE_SUNKEN, BF_RECT | BF_ADJUST);
 					} else {
 						DrawEdge(pdis->hDC, &pdis->rcItem, EDGE_ETCHED,
-								BF_MIDDLE | BF_FLAT | BF_ADJUST);
+						        BF_MIDDLE | BF_FLAT | BF_ADJUST);
 						if (pdis->itemState & ODS_DISABLED) {
 							SetTextColor(pdis->hDC, GetSysColor(COLOR_GRAYTEXT));
 						}
@@ -1781,7 +1830,7 @@ long __stdcall saveslotProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 						DrawEdge(pdis->hDC, &pdis->rcItem, EDGE_SUNKEN, BF_RECT | BF_ADJUST);
 					} else {
 						DrawEdge(pdis->hDC, &pdis->rcItem, EDGE_ETCHED,
-								BF_MIDDLE | BF_FLAT | BF_ADJUST);
+						        BF_MIDDLE | BF_FLAT | BF_ADJUST);
 						if (pdis->itemState & ODS_DISABLED) {
 							SetTextColor(pdis->hDC, GetSysColor(COLOR_GRAYTEXT));
 						}
@@ -1792,7 +1841,7 @@ long __stdcall saveslotProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 			break;
 		}
 		case WM_COMMAND: {
-			switch(LOWORD(wParam)) {
+			switch (LOWORD(wParam)) {
 				case ID_SAVESLOT_BS: {
 					switch (HIWORD(wParam)) {
 						case BN_CLICKED:
@@ -1867,11 +1916,11 @@ long __stdcall aboutProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 			break;
 		}
 		case WM_INITDIALOG:
-			aboutImg = LoadBitmap(GetModuleHandle(NULL), MAKEINTRESOURCE(IDB_ABOUT));
+			aboutImg = LoadBitmap(GetModuleHandle(NULL ), MAKEINTRESOURCE(IDB_ABOUT));
 			aboutMask = createBitmapMask(aboutImg, RGB(255, 255, 255));
 			return TRUE;
 		case WM_COMMAND: {
-			switch(LOWORD(wParam)) {
+			switch (LOWORD(wParam)) {
 				case IDOK:
 					EndDialog(hwnd, IDOK);
 					break;
@@ -1906,8 +1955,7 @@ void open_event(void) {
 	// use the contents of szFile to initialize itself.
 	ofn.lpstrFile[0] = '\0';
 	ofn.nMaxFile = sizeof(szFile);
-	ofn.lpstrFilter =
-	        "All supported formats\0*.nes;*.NES;*.fds;*.FDS;*.fm2;*.FM2\0"
+	ofn.lpstrFilter = "All supported formats\0*.nes;*.NES;*.fds;*.FDS;*.fm2;*.FM2\0"
 			"Nes rom files\0*.nes;*.NES\0"
 			"FDS image files\0*.fds;*.FDS\0"
 			"TAS movie files\0*.fm2;*.FM2\0"
@@ -2006,8 +2054,8 @@ void set_mode(BYTE newmode) {
 			 * io sono gia' nella modalita' NTSC (appunto quella di default), allora
 			 * non devo fare nessun reset.
 			 */
-			if ((cfg->mode == info.machineDb) || ((cfg->mode == NTSC) &&
-					((info.machineDb < NTSC) || (info.machineDb > DENDY)))){
+			if ((cfg->mode == info.machineDb)
+			        || ((cfg->mode == NTSC) && ((info.machineDb < NTSC) || (info.machineDb > DENDY)))) {
 				reset = FALSE;
 			}
 			cfg->mode = AUTO;
@@ -2065,7 +2113,7 @@ void set_overscan(BYTE newoscan) {
 
 	gfxSetScreen(NOCHANGE, NOCHANGE, NOCHANGE, NOCHANGE, TRUE);
 
-	LockWindowUpdate(NULL);
+	LockWindowUpdate(NULL );
 }
 void set_filter(BYTE newfilter) {
 	LockWindowUpdate(hMainWin);
@@ -2121,7 +2169,7 @@ void set_filter(BYTE newfilter) {
 			break;
 	}
 
-	LockWindowUpdate(NULL);
+	LockWindowUpdate(NULL );
 }
 #ifdef OPENGL
 void set_rendering(BYTE newrendering) {
@@ -2276,7 +2324,7 @@ HBITMAP createBitmapMask(HBITMAP hbmColour, COLORREF crTransparent) {
 
 	// Create monochrome (1 bit) mask bitmap.
 	GetObject(hbmColour, sizeof(BITMAP), &bm);
-	hbmMask = CreateBitmap(bm.bmWidth, bm.bmHeight, 1, 1, NULL);
+	hbmMask = CreateBitmap(bm.bmWidth, bm.bmHeight, 1, 1, NULL );
 
 	// Get some HDCs that are compatible with the display driver
 	hdcMem = CreateCompatibleDC(0);
