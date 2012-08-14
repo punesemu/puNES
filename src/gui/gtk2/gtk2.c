@@ -92,6 +92,11 @@ void saveslot_notify_popup_shown(GtkComboBox *widget);
 void saveslot_preview(void);
 gboolean saveslot_key_press_event(GSignalInvocationHint *ihint, guint n_param_values,
 		const GValue *param_values, gpointer data);
+void change_rom(char *rom);
+void drag_data_received(GtkWidget *widget, GdkDragContext *context, gint x, gint y,
+		GtkSelectionData *data, guint ttype, guint time, gpointer *NA);
+gboolean drag_drop(GtkWidget *widget, GdkDragContext *context, gint x, gint y, guint time,
+		gpointer *NA);
 int __nsleep(const struct timespec *req, struct timespec *rem);
 
 _trcb trcb;
@@ -190,6 +195,16 @@ BYTE guiCreate(void) {
 
 		event_box = gtk_event_box_new();
 		gtk_box_pack_start(GTK_BOX(vbox), event_box, TRUE, FALSE, 0);
+
+		{
+			const GtkTargetEntry target = {"text/uri-list", 0, 0};
+
+			gtk_drag_dest_set(event_box, GTK_DEST_DEFAULT_ALL, &target, 1, GDK_ACTION_COPY);
+
+			/* drag'n drop events */
+			g_signal_connect(event_box, "drag-drop", G_CALLBACK(drag_drop), NULL);
+			g_signal_connect(event_box, "drag-data-received", G_CALLBACK(drag_data_received), NULL);
+		}
 
 		gtk_widget_add_events(event_box, GDK_BUTTON_PRESS_MASK);
 		gtk_widget_add_events(event_box, GDK_POINTER_MOTION_MASK);
@@ -789,10 +804,7 @@ void file_open(void) {
 	g_timeout_redraw_start();
 
 	if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
-		strcpy(info.loadRomFile, gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog)));
-		gamegenie_reset(FALSE);
-		make_reset(CHANGEROM);
-		guiUpdate();
+		change_rom(gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog)));
 		gui.last_state_path = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(dialog));
 	}
 	gtk_widget_destroy(dialog);
@@ -1120,4 +1132,49 @@ gboolean saveslot_key_press_event(GSignalInvocationHint *ihint, guint n_param_va
 	}
 	return (TRUE);
 }
+void change_rom(char *rom) {
+	strncpy(info.loadRomFile, rom, sizeof(info.loadRomFile));
+	gamegenie_reset(FALSE);
+	make_reset(CHANGEROM);
+	guiUpdate();
+}
+void drag_data_received(GtkWidget *widget, GdkDragContext *context, gint x, gint y,
+		GtkSelectionData *data, guint ttype, guint time, gpointer *NA) {
+	gchar **uri_list;
 
+	gtk_drag_finish(context, TRUE, FALSE, time);
+
+	if ((uri_list = gtk_selection_data_get_uris(data))) {
+		gchar *path;
+		gint len = 0;
+
+		while (uri_list[len]) {
+			path = g_filename_from_uri(uri_list[len], NULL, NULL);
+			len++;
+		}
+
+		emuPause(TRUE);
+		change_rom(path);
+		emuPause(FALSE);
+
+		g_strfreev(uri_list);
+		g_free(path);
+	}
+}
+gboolean drag_drop(GtkWidget *widget, GdkDragContext *context, gint x, gint y, guint time,
+		gpointer *NA) {
+	GdkAtom target_type;
+
+	if (context->targets) {
+		target_type = GDK_POINTER_TO_ATOM(g_list_nth_data(context-> targets, 0)); /* Choose the best target type */
+
+		gtk_drag_get_data(widget, /* "widget" should now receive 'drag-data-received' signal */
+				context, /* represents the current state of the DnD */
+				target_type, /* the target type we want */
+				time /* our time stamp */
+		);
+	} else {
+		return(FALSE); /* cancel */
+	}
+	return(TRUE);
+}
