@@ -16,7 +16,7 @@
 #define jsvToName(jsvl) jsToName(jsvl, jsvlist, LENGTH(jsvlist))
 #define jsnToName(jsvl) jsToName(jsvl, jsnlist, LENGTH(jsnlist))
 
-enum { X, Y, Z, R, U, V , MAXAXIS };
+enum { X, Y, Z, R, U, V, POV, MAXAXIS };
 enum {
 	JOYSTICKID3 = JOYSTICKID2 + 1,
 	JOYSTICKID4,
@@ -88,6 +88,8 @@ static const _jselement jsvlist[] = {
 	{ 0x00F, "JA7MIN" }, { 0x010, "JA7PLS" },
 	{ 0x011, "JA8MIN" }, { 0x012, "JA8PLS" },
 	{ 0x013, "JA9MIN" }, { 0x014, "JA9PLS" },
+	{ 0x100, "JPOVF"  }, { 0x101, "JPOVR"  },
+	{ 0x102, "JPOVB"  }, { 0x103, "JPOVL"  },
 	{ 0x400, "JB0"    }, { 0x401, "JB1"    },
 	{ 0x402, "JB2"    }, { 0x403, "JB3"    },
 	{ 0x404, "JB4"    }, { 0x405, "JB5"    },

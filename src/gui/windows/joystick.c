@@ -22,6 +22,26 @@
 		}\
 		joy->lastAxis[axis] = joy->joyInfo.info;\
 	}
+#define middle (JOY_POVRIGHT / 2)
+
+static const WORD POV_table[8] = {
+	/* Up           (JOY_POVFORWARD)           */
+	JOY_POVFORWARD,
+	/* Right        (JOY_POVRIGHT)             */
+	JOY_POVRIGHT,
+	/* Down         (JOY_POVBACKWARD)          */
+	JOY_POVBACKWARD,
+	/* Left         (JOY_POVLEFT)              */
+	JOY_POVLEFT,
+	/* Up + Right   (JOY_POVFORWARD + middle)  */
+	JOY_POVFORWARD + middle,
+	/* Right + Down (JOY_POVRIGHT + middle)    */
+	JOY_POVRIGHT + middle,
+	/* Down + Left  (JOY_POVBACKWARD + middle) */
+	JOY_POVBACKWARD + middle,
+	/* Left + Up    (JOY_POVLEFT + middle)     */
+	JOY_POVLEFT + middle,
+};
 
 void jsInit(void) {
 	memset(&js1, 0, sizeof(js1));
@@ -118,8 +138,100 @@ void jsControl(_js *joy, _port *port) {
 		}
 	}
 
-	/* esamino gli assi */
-	if (joy->lastAxis[X] != joy->joyInfo.dwXpos) {
+	if (joy->lastAxis[POV] != joy->joyInfo.dwPOV) {
+		if (joy->lastAxis[POV] != JOY_POVCENTERED) {
+			mode = RELEASED;
+
+			if (joy->lastAxis[POV] == POV_table[0]) {
+				/* up */
+				value = 0x100;
+			} else if (joy->lastAxis[POV] == POV_table[1]) {
+				/* right */
+				value = 0x101;
+			} else if (joy->lastAxis[POV] == POV_table[2]) {
+				/* down */
+				value = 0x102;
+			} else if (joy->lastAxis[POV] == POV_table[3]) {
+				/* left */
+				value = 0x103;
+			} else if (joy->lastAxis[POV] == POV_table[4]) {
+				/* up + right */
+				value = 0x100;
+				if (joy->inputPort) {
+					joy->inputPort(mode, value, JOYSTICK, port);
+				}
+				value = 0x101;
+			} else if (joy->lastAxis[POV] == POV_table[5]) {
+				/* right + down */
+				value = 0x101;
+				if (joy->inputPort) {
+					joy->inputPort(mode, value, JOYSTICK, port);
+				}
+				value = 0x102;
+			} else if (joy->lastAxis[POV] == POV_table[6]) {
+				/* down + left */
+				value = 0x102;
+				if (joy->inputPort) {
+					joy->inputPort(mode, value, JOYSTICK, port);
+				}
+				value = 0x103;
+			} else if (joy->lastAxis[POV] == POV_table[7]) {
+				/* left + up */
+				value = 0x103;
+				if (joy->inputPort) {
+					joy->inputPort(mode, value, JOYSTICK, port);
+				}
+				value = 0x100;
+			}
+			joy->lastAxis[POV] = JOY_POVCENTERED;
+		} else {
+			mode = PRESSED;
+
+			if (joy->joyInfo.dwPOV == JOY_POVCENTERED) {
+			} else if (joy->joyInfo.dwPOV == POV_table[0]) {
+				/* up */
+				value = 0x100;
+			} else if (joy->joyInfo.dwPOV == POV_table[1]) {
+				/* right */
+				value = 0x101;
+			} else if (joy->joyInfo.dwPOV == POV_table[2]) {
+				/* down */
+				value = 0x102;
+			} else if (joy->joyInfo.dwPOV == POV_table[3]) {
+				/* left */
+				value = 0x103;
+			} else if (joy->joyInfo.dwPOV == POV_table[4]) {
+				/* up + right */
+				value = 0x100;
+				if (joy->inputPort) {
+					joy->inputPort(mode, value, JOYSTICK, port);
+				}
+				value = 0x101;
+			} else if (joy->joyInfo.dwPOV == POV_table[5]) {
+				/* right + down */
+				value = 0x101;
+				if (joy->inputPort) {
+					joy->inputPort(mode, value, JOYSTICK, port);
+				}
+				value = 0x102;
+			} else if (joy->joyInfo.dwPOV == POV_table[6]) {
+				/* down + left */
+				value = 0x102;
+				if (joy->inputPort) {
+					joy->inputPort(mode, value, JOYSTICK, port);
+				}
+				value = 0x103;
+			} else if (joy->joyInfo.dwPOV == POV_table[7]) {
+				/* left + up */
+				value = 0x103;
+				if (joy->inputPort) {
+					joy->inputPort(mode, value, JOYSTICK, port);
+				}
+				value = 0x100;
+			}
+			joy->lastAxis[POV] = joy->joyInfo.dwPOV;
+		}
+	} else if (joy->lastAxis[X] != joy->joyInfo.dwXpos) {
 		jsElaborateAxis(X, dwXpos);
 	} else if (joy->lastAxis[Y] != joy->joyInfo.dwYpos) {
 		jsElaborateAxis(Y, dwYpos);

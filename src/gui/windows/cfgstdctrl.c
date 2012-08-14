@@ -327,7 +327,17 @@ void __stdcall cfg_standard_controller_read_joy(void) {
 	}
 
 	/* esamino gli assi */
-	if (joyInfo.dwXpos != CENTER) {
+	if (joyInfo.dwPOV != JOY_POVCENTERED) {
+		if (joyInfo.dwPOV == JOY_POVFORWARD) {
+			value = 0x100;
+		} else if (joyInfo.dwPOV == JOY_POVRIGHT) {
+			value = 0x101;
+		} else if (joyInfo.dwPOV == JOY_POVBACKWARD) {
+			value = 0x102;
+		} else if (joyInfo.dwPOV == JOY_POVLEFT) {
+			value = 0x103;
+		}
+	} else if (joyInfo.dwXpos != CENTER) {
 		read_axis_joy(X, dwXpos);
 	} else if (joyInfo.dwYpos != CENTER) {
 		read_axis_joy(Y, dwYpos);
@@ -342,7 +352,8 @@ void __stdcall cfg_standard_controller_read_joy(void) {
 		//read_axis_joy(V, dwVpos);
 	}
 
-	elaborateValue: if (value) {
+	elaborateValue:
+	if (value) {
 		if (cfg_standard_controller_input_is_not_ok(value, JOYSTICK)) {
 			SetWindowText(cfg_std_ctrl.button_pressed, cazzata[(WORD) (rand() % 8) & 0x07]);
 			return;
