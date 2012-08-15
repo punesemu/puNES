@@ -65,15 +65,9 @@
 #define showToolWidget()\
 	ShowWindow(hFrameSs, SW_SHOW)
 
-enum {
-	INC, DEC
-};
-enum {
-	SAVE, LOAD
-};
-enum {
-	CHECK, ENAB
-};
+enum { INC, DEC };
+enum { SAVE, LOAD };
+enum { CHECK, ENAB };
 
 #define TOOLBARHEIGHT  26
 #define FRAMETLHEIGHT  (TOOLBARHEIGHT - 2)
@@ -159,7 +153,7 @@ void guiInit(int argc, char **argv) {
 
 		if (info.portable) {
 			char path[sizeof(info.baseFolder)], *dname;
-			DWORD length = GetModuleFileName(NULL, (LPSTR) & path, sizeof(path));
+			DWORD length = GetModuleFileName(NULL, (LPSTR) &path, sizeof(path));
 
 			if (length == 0) {
 				fprintf(stderr, "INFO: Error resolving exe path.\n");
@@ -232,9 +226,9 @@ BYTE guiCreate(void) {
 	hMainWin = CreateWindowEx(WS_EX_CLIENTEDGE | WS_EX_ACCEPTFILES, className, "puNES MainFrame",
 	        WS_OVERLAPPED | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | WS_CAPTION | WS_SYSMENU
 	                | WS_MINIMIZEBOX, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
-	        (HWND) NULL, (HMENU) NULL, gui.mainhInstance, NULL );
+	        (HWND) NULL, (HMENU) NULL, gui.mainhInstance, NULL);
 
-	if (hMainWin == NULL ) {
+	if (hMainWin == NULL) {
 		MessageBox(NULL, "Window Creation Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
@@ -243,7 +237,7 @@ BYTE guiCreate(void) {
 
 	hAccKeys = LoadAccelerators(gui.mainhInstance, "IDR_ACCKEYS");
 
-	if (hAccKeys == NULL ) {
+	if (hAccKeys == NULL) {
 		MessageBox(NULL, "Window Accelerators Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
@@ -251,9 +245,9 @@ BYTE guiCreate(void) {
 	/* ---------------------------------- SDL window ---------------------------------- */
 	/* creo la finestra a cui attacchero' lo screen sdl */
 	hSDL = CreateWindowEx(0, className, "puNES SDL Frame", WS_CHILD, CW_USEDEFAULT, CW_USEDEFAULT,
-	        CW_USEDEFAULT, CW_USEDEFAULT, hMainWin, (HMENU) NULL, gui.mainhInstance, NULL );
+	        CW_USEDEFAULT, CW_USEDEFAULT, hMainWin, (HMENU) NULL, gui.mainhInstance, NULL);
 
-	if (hSDL == NULL ) {
+	if (hSDL == NULL) {
 		MessageBox(NULL, "Window Creation Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
@@ -266,9 +260,9 @@ BYTE guiCreate(void) {
 
 	hTool = CreateWindowEx(0, TOOLBARCLASSNAME, NULL, WS_CHILD | WS_VISIBLE | CCS_NORESIZE,
 	        CW_USEDEFAULT, CW_USEDEFAULT, 0, TOOLBARHEIGHT, hMainWin, (HMENU) NULL,
-	        gui.mainhInstance, NULL );
+	        gui.mainhInstance, NULL);
 
-	if (hTool == NULL ) {
+	if (hTool == NULL) {
 		MessageBox(NULL, "Window Creation Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
@@ -277,9 +271,9 @@ BYTE guiCreate(void) {
 
 	/* Frame Timeline */
 	hFrameTl = CreateWindowEx(0, "static", "", WS_CHILD | WS_VISIBLE | SS_ETCHEDVERT, 0, 0,
-	        FRAMETLWIDTH, FRAMETLHEIGHT, hTool, NULL, NULL, NULL );
+	        FRAMETLWIDTH, FRAMETLHEIGHT, hTool, NULL, NULL, NULL);
 
-	if (hFrameTl == NULL ) {
+	if (hFrameTl == NULL) {
 		MessageBox(NULL, "Window Creation Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
@@ -288,9 +282,9 @@ BYTE guiCreate(void) {
 
 	hTimeline = CreateWindowEx(0, TRACKBAR_CLASS, "Timeline",
 	        WS_CHILD | WS_VISIBLE | TBS_AUTOTICKS | TBS_FIXEDLENGTH | TBS_TOOLTIPS, 2, 0,
-	        FRAMETLWIDTH - 4, FRAMETLHEIGHT, hFrameTl, (HMENU) NULL, gui.mainhInstance, NULL );
+	        FRAMETLWIDTH - 4, FRAMETLHEIGHT, hFrameTl, (HMENU) NULL, gui.mainhInstance, NULL);
 
-	if (hTimeline == NULL ) {
+	if (hTimeline == NULL) {
 		MessageBox(NULL, "Window Creation Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
@@ -303,7 +297,7 @@ BYTE guiCreate(void) {
 	/* -------------------------------- Separatore Tl -------------------------------- */
 
 	hSepTl = CreateWindowEx(0, "static", "", WS_CHILD | WS_VISIBLE, 0, 0, SEPARATORWIDTH,
-	        TOOLBARHEIGHT, hTool, (HMENU) NULL, gui.mainhInstance, NULL );
+	        TOOLBARHEIGHT, hTool, (HMENU) NULL, gui.mainhInstance, NULL);
 
 	/* ---------------------------------- Save slot ---------------------------------- */
 
@@ -312,9 +306,9 @@ BYTE guiCreate(void) {
 	/* Frame Saveslot */
 	hFrameSs = CreateWindowEx(WS_EX_WINDOWEDGE, "static", "", WS_CHILD | WS_VISIBLE | SS_ETCHEDVERT,
 	        0, 0, FRAMESSWIDTH,
-	        FRAMESSHEIGHT, hTool, NULL, NULL, NULL );
+	        FRAMESSHEIGHT, hTool, NULL, NULL, NULL);
 
-	if (hFrameSs == NULL ) {
+	if (hFrameSs == NULL) {
 		MessageBox(NULL, "Window Creation Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
@@ -324,9 +318,9 @@ BYTE guiCreate(void) {
 	hSaveslot = CreateWindowEx(0, "COMBOBOX", "Saveslot",
 	        WS_CHILD | WS_VISIBLE | CBS_DROPDOWNLIST | CBS_HASSTRINGS | CBS_OWNERDRAWFIXED,
 	        1 + BUTTONSSWIDTH + 0, 1, COMBOSSWIDTH, 130, hFrameSs, (HMENU) ID_SAVESLOT_CB,
-	        gui.mainhInstance, NULL );
+	        gui.mainhInstance, NULL);
 
-	if (hSaveslot == NULL ) {
+	if (hSaveslot == NULL) {
 		MessageBox(NULL, "Window Creation Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
@@ -335,9 +329,9 @@ BYTE guiCreate(void) {
 
 	hSaveButton = CreateWindowEx(0, "BUTTON", "Save", WS_CHILD | WS_VISIBLE | BS_OWNERDRAW, 1, 0,
 	        BUTTONSSWIDTH,
-	        BUTTONSSHEIGHT, hFrameSs, (HMENU) ID_SAVESLOT_BS, gui.mainhInstance, NULL );
+	        BUTTONSSHEIGHT, hFrameSs, (HMENU) ID_SAVESLOT_BS, gui.mainhInstance, NULL);
 
-	if (hSaveButton == NULL ) {
+	if (hSaveButton == NULL) {
 		MessageBox(NULL, "Window Creation Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
@@ -346,9 +340,9 @@ BYTE guiCreate(void) {
 
 	hLoadButton = CreateWindowEx(0, "BUTTON", "Load", WS_CHILD | WS_VISIBLE | BS_OWNERDRAW,
 	        1 + BUTTONSSWIDTH + 0 + COMBOSSWIDTH + 2, 0, BUTTONSSWIDTH,
-	        BUTTONSSHEIGHT, hFrameSs, (HMENU) ID_SAVESLOT_BL, gui.mainhInstance, NULL );
+	        BUTTONSSHEIGHT, hFrameSs, (HMENU) ID_SAVESLOT_BL, gui.mainhInstance, NULL);
 
-	if (hLoadButton == NULL ) {
+	if (hLoadButton == NULL) {
 		MessageBox(NULL, "Window Creation Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
@@ -370,16 +364,15 @@ BYTE guiCreate(void) {
 	/* -------------------------------- Separatore Ss -------------------------------- */
 
 	hSepSs = CreateWindowEx(0, "static", "", WS_CHILD | WS_VISIBLE, 0, 0, SEPARATORWIDTH,
-	        TOOLBARHEIGHT, hTool, (HMENU) NULL, gui.mainhInstance, NULL );
+	        TOOLBARHEIGHT, hTool, (HMENU) NULL, gui.mainhInstance, NULL);
 
 	/* -------------------------------- Frame vuoto -------------------------------- */
 
 	/* Frame Saveslot */
 	hFrameBl = CreateWindowEx(WS_EX_WINDOWEDGE, "static", "", WS_CHILD | WS_VISIBLE | SS_ETCHEDVERT,
-	        0, 0, 0,
-	        FRAMESSHEIGHT, hTool, NULL, NULL, NULL );
+	        0, 0, 0, FRAMESSHEIGHT, hTool, NULL, NULL, NULL);
 
-	if (hFrameBl == NULL ) {
+	if (hFrameBl == NULL) {
 		MessageBox(NULL, "Window Creation Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
