@@ -10,7 +10,7 @@
 
 #define VER1        "0"
 #define VER2        "67"
-#define VERSION     VER1 "." VER2 " WIP"
+#define VERSION     VER1 "." VER2
 #define NAME        "puNES"
 #define AUTHOR      "FHorse"
 #define COPYRIGTH   "(C) " AUTHOR " 2012"
