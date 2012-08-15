@@ -1192,7 +1192,7 @@ void guiFullscreen(void) {
 			wpPrev.rcNormalPosition.bottom = 0;
 		}
 		/* dissocio il menu dalla finestra */
-		SetMenu(hMainWin, NULL );
+		SetMenu(hMainWin, NULL);
 		/* abilito il fullscreen */
 		gfxSetScreen(NOCHANGE, NOCHANGE, FULLSCR, NOCHANGE, FALSE);
 		/* disabilito la visualizzazione del puntatore */
@@ -1632,10 +1632,10 @@ long __stdcall mainWinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 					break;
 				case IDM_HELP_ABOUT:
 					if (!info.portable) {
-						DialogBox(GetModuleHandle(NULL ), MAKEINTRESOURCE(IDD_ABOUT), hwnd,
+						DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_ABOUT), hwnd,
 						        (DLGPROC) aboutProc);
 					} else {
-						DialogBox(GetModuleHandle(NULL ), MAKEINTRESOURCE(IDD_ABOUT_PORTABLE), hwnd,
+						DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_ABOUT_PORTABLE), hwnd,
 						        (DLGPROC) aboutProc);
 					}
 					SetFocus(hSDL);
@@ -1648,7 +1648,7 @@ long __stdcall mainWinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 		}
 		case WM_PAINT:
 			time_handler_redraw();
-			ValidateRect(hwnd, NULL );
+			ValidateRect(hwnd, NULL);
 			return (0);
 		case WM_CLOSE:
 			info.stop = TRUE;
@@ -1735,7 +1735,7 @@ long __stdcall saveslotProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 			switch (pmis->CtlID) {
 				case ID_SAVESLOT_CB: {
 					TEXTMETRIC tm;
-					HDC hDC = GetDC(NULL );
+					HDC hDC = GetDC(NULL);
 					GetTextMetrics(hDC, &tm);
 					pmis->itemHeight = tm.tmHeight + tm.tmExternalLeading - 1;
 					ReleaseDC(NULL, hDC);
@@ -1889,7 +1889,7 @@ long __stdcall aboutProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 			break;
 		}
 		case WM_INITDIALOG:
-			aboutImg = LoadBitmap(GetModuleHandle(NULL ), MAKEINTRESOURCE(IDB_ABOUT));
+			aboutImg = LoadBitmap(GetModuleHandle(NULL), MAKEINTRESOURCE(IDB_ABOUT));
 			aboutMask = createBitmapMask(aboutImg, RGB(255, 255, 255));
 			return TRUE;
 		case WM_COMMAND: {
@@ -2067,7 +2067,7 @@ void set_overscan(BYTE newoscan) {
 
 	gfxSetScreen(NOCHANGE, NOCHANGE, NOCHANGE, NOCHANGE, TRUE);
 
-	LockWindowUpdate(NULL );
+	LockWindowUpdate(NULL);
 }
 void set_filter(BYTE newfilter) {
 	LockWindowUpdate(hMainWin);
@@ -2123,7 +2123,7 @@ void set_filter(BYTE newfilter) {
 			break;
 	}
 
-	LockWindowUpdate(NULL );
+	LockWindowUpdate(NULL);
 }
 #ifdef OPENGL
 void set_rendering(BYTE newrendering) {
@@ -2278,7 +2278,7 @@ HBITMAP createBitmapMask(HBITMAP hbmColour, COLORREF crTransparent) {
 
 	// Create monochrome (1 bit) mask bitmap.
 	GetObject(hbmColour, sizeof(BITMAP), &bm);
-	hbmMask = CreateBitmap(bm.bmWidth, bm.bmHeight, 1, 1, NULL );
+	hbmMask = CreateBitmap(bm.bmWidth, bm.bmHeight, 1, 1, NULL);
 
 	// Get some HDCs that are compatible with the display driver
 	hdcMem = CreateCompatibleDC(0);
