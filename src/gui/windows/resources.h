@@ -172,7 +172,7 @@
 #define IDC_STD_CTRL_KEY_RIGHT      207
 #define IDC_STD_CTRL_KEY_TURBOA     208
 #define IDC_STD_CTRL_KEY_TURBOB     209
-#define IDC_STD_CTRL_KEY_UNBIND     210
+#define IDC_STD_CTRL_KEY_ERASE      210
 #define IDC_STD_CTRL_JOY_A          211
 #define IDC_STD_CTRL_JOY_B          212
 #define IDC_STD_CTRL_JOY_SELECT     213
@@ -184,6 +184,6 @@
 #define IDC_STD_CTRL_JOY_TURBOA     219
 #define IDC_STD_CTRL_JOY_TURBOB     220
 #define IDC_STD_CTRL_JOY_ID         221
-#define IDC_STD_CTRL_JOY_UNBIND     222
+#define IDC_STD_CTRL_JOY_ERASE      222
 
 #endif /* RESOURCES_H_ */

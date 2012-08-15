@@ -24,7 +24,7 @@ void cfg_standard_controller_js_press_event(void);
 void cfg_standard_controller_ok_clicked(GtkWidget *widget, _cfg_port *cfgport);
 void cfg_standard_controller_cancel_clicked(GtkWidget *widget, _cfg_port *cfgport);
 void cfg_standard_controller_destroy(void);
-void cfg_standard_controller_unbind(GtkWidget *widget, int type);
+void cfg_standard_controller_erase(GtkWidget *widget, int type);
 GtkWidget *cfg_standard_controller_line_notebook(const char *description, BYTE input);
 GtkWidget *cfg_standard_controller_combobox_select_joystick(void);
 gboolean cfg_standard_controller_key_press_event(GtkWidget *widget, GdkEventKey *event);
@@ -145,10 +145,10 @@ void cfg_standard_controller_page_notebook_keyboard(GtkWidget *notebook) {
 	gtk_box_pack_start(GTK_BOX(vbox), line, FALSE, FALSE, 0);
 
 	{
-		line = cfg_input_std_button("Unbind All");
+		line = cfg_input_std_button("Erase All");
 		gtk_box_pack_end(GTK_BOX(vbox), line, FALSE, FALSE, 0);
 
-		g_signal_connect(G_OBJECT(line), "clicked", G_CALLBACK(cfg_standard_controller_unbind),
+		g_signal_connect(G_OBJECT(line), "clicked", G_CALLBACK(cfg_standard_controller_erase),
 				GINT_TO_POINTER(KEYBOARD));
 
 		gtk_box_pack_end(GTK_BOX(vbox), gtk_hseparator_new(), FALSE, FALSE, 0);
@@ -238,10 +238,10 @@ void cfg_standard_controller_page_notebook_joystick(GtkWidget *notebook) {
 	gtk_box_pack_start(GTK_BOX(vbox), line, FALSE, FALSE, 0);
 
 	{
-		line = cfg_input_std_button("Unbind All");
+		line = cfg_input_std_button("Erase All");
 		gtk_box_pack_end(GTK_BOX(vbox), line, FALSE, FALSE, 0);
 
-		g_signal_connect(G_OBJECT(line), "clicked", G_CALLBACK(cfg_standard_controller_unbind),
+		g_signal_connect(G_OBJECT(line), "clicked", G_CALLBACK(cfg_standard_controller_erase),
 				GINT_TO_POINTER(JOYSTICK));
 
 		gtk_box_pack_end(GTK_BOX(vbox), gtk_hseparator_new(), FALSE, FALSE, 0);
@@ -447,7 +447,7 @@ void cfg_standard_controller_ok_clicked(GtkWidget *widget, _cfg_port *cfgport) {
 	/* la mamcpy deve andare necessariamente dopo il destroy */
 	memcpy(cfgport, &cfg_std_ctrl.cfg, sizeof(cfg_std_ctrl.cfg));
 }
-void cfg_standard_controller_unbind(GtkWidget *widget, int type) {
+void cfg_standard_controller_erase(GtkWidget *widget, int type) {
 	BYTE i;
 
 	if (type == KEYBOARD) {

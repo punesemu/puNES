@@ -202,7 +202,7 @@ long __stdcall cfg_standard_controller_wnd_proc(HWND hwnd, UINT msg, WPARAM wPar
 							(LONG_PTR) cfg_standard_controller_read_kbd);
 					return TRUE;
 				}
-				case IDC_STD_CTRL_KEY_UNBIND: {
+				case IDC_STD_CTRL_KEY_ERASE: {
 					int i;
 
 					for (i = IDC_STD_CTRL_KEY_A; i <= IDC_STD_CTRL_KEY_TURBOB; i++) {
@@ -258,7 +258,7 @@ long __stdcall cfg_standard_controller_wnd_proc(HWND hwnd, UINT msg, WPARAM wPar
 							(TIMERPROC) cfg_standard_controller_read_joy);
 					return TRUE;
 				}
-				case IDC_STD_CTRL_JOY_UNBIND: {
+				case IDC_STD_CTRL_JOY_ERASE: {
 					int i;
 
 					for (i = IDC_STD_CTRL_JOY_A; i <= IDC_STD_CTRL_JOY_TURBOB; i++) {
