@@ -202,6 +202,15 @@ long __stdcall cfg_standard_controller_wnd_proc(HWND hwnd, UINT msg, WPARAM wPar
 							(LONG_PTR) cfg_standard_controller_read_kbd);
 					return TRUE;
 				}
+				case IDC_STD_CTRL_KEY_UNBIND: {
+					int i;
+
+					for (i = IDC_STD_CTRL_KEY_A; i <= IDC_STD_CTRL_KEY_TURBOB; i++) {
+						cfg_std_ctrl.cfg.port.input[KEYBOARD][i - IDC_STD_CTRL_KEY_A] = 0;
+						SetDlgItemText(hwnd, i, "NULL");
+					}
+					return TRUE;
+				}
 				case IDC_STD_CTRL_JOY_A:
 				case IDC_STD_CTRL_JOY_B:
 				case IDC_STD_CTRL_JOY_SELECT:
@@ -220,8 +229,7 @@ long __stdcall cfg_standard_controller_wnd_proc(HWND hwnd, UINT msg, WPARAM wPar
 					}
 
 					/* se il joystick non e' collegato non faccio niente */
-					if (cfg_std_ctrl.joy_connected[cfg_std_ctrl.cfg.port.joyID]
-					                               == FALSE) {
+					if (cfg_std_ctrl.joy_connected[cfg_std_ctrl.cfg.port.joyID] == FALSE) {
 						return TRUE;
 					}
 					/*
@@ -248,6 +256,15 @@ long __stdcall cfg_standard_controller_wnd_proc(HWND hwnd, UINT msg, WPARAM wPar
 
 					SetTimer(hwnd, IDT_TIMER2, 150,
 							(TIMERPROC) cfg_standard_controller_read_joy);
+					return TRUE;
+				}
+				case IDC_STD_CTRL_JOY_UNBIND: {
+					int i;
+
+					for (i = IDC_STD_CTRL_JOY_A; i <= IDC_STD_CTRL_JOY_TURBOB; i++) {
+						cfg_std_ctrl.cfg.port.input[JOYSTICK][i - IDC_STD_CTRL_JOY_A] = 0;
+						SetDlgItemText(hwnd, i, "NULL");
+					}
 					return TRUE;
 				}
 			}

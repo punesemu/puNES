@@ -24,11 +24,13 @@ void cfg_standard_controller_js_press_event(void);
 void cfg_standard_controller_ok_clicked(GtkWidget *widget, _cfg_port *cfgport);
 void cfg_standard_controller_cancel_clicked(GtkWidget *widget, _cfg_port *cfgport);
 void cfg_standard_controller_destroy(void);
+void cfg_standard_controller_unbind(GtkWidget *widget, int type);
 GtkWidget *cfg_standard_controller_line_notebook(const char *description, BYTE input);
 GtkWidget *cfg_standard_controller_combobox_select_joystick(void);
 gboolean cfg_standard_controller_key_press_event(GtkWidget *widget, GdkEventKey *event);
 gboolean cfg_standard_controller_input_is_not_ok(DBWORD value);
 
+#define maxButtons LENGTH(paramInputP1K)
 #define cfg_standard_controller_change_button_label(new_label)\
 	gtk_button_set_label(cfg_std_ctrl.button_pressed, new_label);
 
@@ -39,6 +41,7 @@ enum {
 typedef struct {
 	_cfg_port cfg;
 	GtkButton *button_pressed;
+	GtkWidget *button[maxButtons * 2];
 	GtkWidget *jscombo;
 	BYTE no_other_buttons;
 	BYTE controller_input;
@@ -57,8 +60,6 @@ char cazzata[][15] = {
 	"ufffff",
 	"i don't think"
 };
-
-BYTE maxButtons = LENGTH(paramInputP1K);
 
 void cfg_standard_controller(_cfg_port *cfgport) {
 	GtkWidget *mainbox, *notebook, *okcancel;
@@ -143,10 +144,21 @@ void cfg_standard_controller_page_notebook_keyboard(GtkWidget *notebook) {
 	line = cfg_standard_controller_line_notebook("Turbo B", TRBB);
 	gtk_box_pack_start(GTK_BOX(vbox), line, FALSE, FALSE, 0);
 
-	line = gtk_hbox_new(FALSE, SPACING);
-	label = gtk_label_new("   Press ESC to erase the key");
-	gtk_box_pack_start(GTK_BOX(line), label, FALSE, FALSE, 0);
+	{
+		line = cfg_input_std_button("Unbind All");
+		gtk_box_pack_end(GTK_BOX(vbox), line, FALSE, FALSE, 0);
 
+		g_signal_connect(G_OBJECT(line), "clicked", G_CALLBACK(cfg_standard_controller_unbind),
+				GINT_TO_POINTER(KEYBOARD));
+
+		gtk_box_pack_end(GTK_BOX(vbox), gtk_hseparator_new(), FALSE, FALSE, 0);
+	}
+
+	line = gtk_hbox_new(FALSE, SPACING);
+	{
+		label = gtk_label_new("   Press ESC to erase the key");
+		gtk_box_pack_start(GTK_BOX(line), label, FALSE, FALSE, 0);
+	}
 	gtk_box_pack_end(GTK_BOX(vbox), line, FALSE, FALSE, 0);
 
 	gtk_widget_show(page);
@@ -224,6 +236,16 @@ void cfg_standard_controller_page_notebook_joystick(GtkWidget *notebook) {
 		gtk_box_pack_start(GTK_BOX(line), label, FALSE, FALSE, 0);
 	}
 	gtk_box_pack_start(GTK_BOX(vbox), line, FALSE, FALSE, 0);
+
+	{
+		line = cfg_input_std_button("Unbind All");
+		gtk_box_pack_end(GTK_BOX(vbox), line, FALSE, FALSE, 0);
+
+		g_signal_connect(G_OBJECT(line), "clicked", G_CALLBACK(cfg_standard_controller_unbind),
+				GINT_TO_POINTER(JOYSTICK));
+
+		gtk_box_pack_end(GTK_BOX(vbox), gtk_hseparator_new(), FALSE, FALSE, 0);
+	}
 
 	line = gtk_hbox_new(FALSE, SPACING);
 	{
@@ -425,6 +447,21 @@ void cfg_standard_controller_ok_clicked(GtkWidget *widget, _cfg_port *cfgport) {
 	/* la mamcpy deve andare necessariamente dopo il destroy */
 	memcpy(cfgport, &cfg_std_ctrl.cfg, sizeof(cfg_std_ctrl.cfg));
 }
+void cfg_standard_controller_unbind(GtkWidget *widget, int type) {
+	BYTE i;
+
+	if (type == KEYBOARD) {
+		for (i = 0; i < maxButtons; i++) {
+			cfg_std_ctrl.cfg.port.input[KEYBOARD][i] = 0;
+			gtk_button_set_label(GTK_BUTTON(cfg_std_ctrl.button[i]), "NULL");
+		}
+	} else {
+		for (i = maxButtons; i < maxButtons * 2; i++) {
+			cfg_std_ctrl.cfg.port.input[JOYSTICK][i] = 0;
+			gtk_button_set_label(GTK_BUTTON(cfg_std_ctrl.button[i]), "NULL");
+		}
+	}
+}
 void cfg_standard_controller_cancel_clicked(GtkWidget *widget, _cfg_port *cfgport) {
 	gtk_widget_destroy(cfg_standard_controller_toplevel);
 }
@@ -445,7 +482,7 @@ void cfg_standard_controller_destroy(void) {
 	}
 }
 GtkWidget *cfg_standard_controller_line_notebook(const char *description, BYTE input) {
-	GtkWidget *line, *label, *button;
+	GtkWidget *line, *label;
 	char text[30];
 
 	line = gtk_hbox_new(FALSE, SPACING);
@@ -464,10 +501,10 @@ GtkWidget *cfg_standard_controller_line_notebook(const char *description, BYTE i
 		strcpy(text, jsvToName(cfg_std_ctrl.cfg.port.input[JOYSTICK][input - maxButtons]));
 	}
 
-	button = cfg_input_std_button(text);
-	gtk_box_pack_end(GTK_BOX(line), button, FALSE, FALSE, 0);
+	cfg_std_ctrl.button[input] = cfg_input_std_button(text);
+	gtk_box_pack_end(GTK_BOX(line), cfg_std_ctrl.button[input], FALSE, FALSE, 0);
 
-	g_signal_connect(G_OBJECT(button), "clicked",
+	g_signal_connect(G_OBJECT(cfg_std_ctrl.button[input]), "clicked",
 			G_CALLBACK(cfg_standard_controller_input_changed_clicked),
 			GINT_TO_POINTER((gint) input));
 
@@ -489,7 +526,7 @@ GtkWidget *cfg_standard_controller_combobox_select_joystick(void) {
 	for (i = 0; i < MAX_JOYSTICK; i++) {
 		char description[30];
 
-		sprintf(description, "Joystick %d", i);
+		sprintf(description, "%d", i);
 
 		gtk_list_store_append(model, &iter);
 		gtk_list_store_set(model, &iter, NAME_JOYSTICK, description, VALUE_JOYSTICK, i, -1);
@@ -543,7 +580,7 @@ gboolean cfg_standard_controller_key_press_event(GtkWidget *widget, GdkEventKey 
 				cfg_standard_controller_change_button_label(cazzata[(WORD) (rand() % 8) & 0x07]);
 			} else {
 				cfg_std_ctrl.cfg.port.input[type][index] = event->keyval;
-				cfg_standard_controller_change_button_label( keyvalToName(event->keyval));
+				cfg_standard_controller_change_button_label(keyvalToName(event->keyval));
 			}
 		}
 	} else {

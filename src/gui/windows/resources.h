@@ -172,16 +172,18 @@
 #define IDC_STD_CTRL_KEY_RIGHT      207
 #define IDC_STD_CTRL_KEY_TURBOA     208
 #define IDC_STD_CTRL_KEY_TURBOB     209
-#define IDC_STD_CTRL_JOY_A          210
-#define IDC_STD_CTRL_JOY_B          211
-#define IDC_STD_CTRL_JOY_SELECT     212
-#define IDC_STD_CTRL_JOY_START      213
-#define IDC_STD_CTRL_JOY_UP         214
-#define IDC_STD_CTRL_JOY_DOWN       215
-#define IDC_STD_CTRL_JOY_LEFT       216
-#define IDC_STD_CTRL_JOY_RIGHT      217
-#define IDC_STD_CTRL_JOY_TURBOA     218
-#define IDC_STD_CTRL_JOY_TURBOB     219
-#define IDC_STD_CTRL_JOY_ID         220
+#define IDC_STD_CTRL_KEY_UNBIND     210
+#define IDC_STD_CTRL_JOY_A          211
+#define IDC_STD_CTRL_JOY_B          212
+#define IDC_STD_CTRL_JOY_SELECT     213
+#define IDC_STD_CTRL_JOY_START      214
+#define IDC_STD_CTRL_JOY_UP         215
+#define IDC_STD_CTRL_JOY_DOWN       216
+#define IDC_STD_CTRL_JOY_LEFT       217
+#define IDC_STD_CTRL_JOY_RIGHT      218
+#define IDC_STD_CTRL_JOY_TURBOA     219
+#define IDC_STD_CTRL_JOY_TURBOB     220
+#define IDC_STD_CTRL_JOY_ID         221
+#define IDC_STD_CTRL_JOY_UNBIND     222
 
 #endif /* RESOURCES_H_ */
