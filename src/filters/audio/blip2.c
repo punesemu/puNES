@@ -88,6 +88,9 @@ struct _bl2 {
 	_blip2_group group[2];
 	_blip2_group extra[3];
 	_blip2_chan ch[5];
+
+	BYTE min;
+	BYTE max;
 } bl2;
 
 void (*extra_apu_tick_blip2)(void);
@@ -115,6 +118,9 @@ BYTE audio_quality_init_blip2(void) {
 	snd_end_frame = audio_quality_end_frame_blip2;
 
 	init_nla_table(502, 522)
+
+	bl2.max = ((snd.buffer.count >> 1) + 1);
+	bl2.min = (((snd.buffer.count >> 1) + 1) < 3 ? 3 : ((snd.buffer.count >> 1) + 1));
 
 	{
 		SDL_AudioSpec *dev = snd.dev;
@@ -338,9 +344,9 @@ void audio_quality_end_frame_blip2(void) {
 				/* incremento il contatore dei frames pieni non ancora 'riprodotti' */
 				if (++cache->filled >= snd.buffer.count) {
 					snd.brk = TRUE;
-				} else if (cache->filled >= ((snd.buffer.count >> 1) + 1)) {
+				} else if (cache->filled >= bl2.max) {
 					snd_frequency(sndFactor[apu.type][FCNONE])
-				} else if (cache->filled < (snd.buffer.count >> 1) - 1) {
+				} else if (cache->filled < bl2.min) {
 					snd_frequency(sndFactor[apu.type][FCNORMAL])
 				}
 
