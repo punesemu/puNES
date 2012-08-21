@@ -147,6 +147,8 @@ void cfgfileParse(void) {
 			cfgSearch(param, P_CHANNELS, 0, pChannels, cfg_from_file.channels = index);
 			/* audio quality */
 			cfgSearch(param, P_AUDIO_QUALITY, 0, pAudioQuality, cfg_from_file.audio_quality = index);
+			/* swap duty cycles */
+			cfgSearch(param, P_SWAP_DUTY, 0, pNoYes, cfg_from_file.swap_duty = index);
 			/* game genie */
 			cfgSearch(param, P_GAMEGENIE, 0, pNoYes, gamegenie.enabled = index);
 			/* save on exit */
@@ -241,6 +243,8 @@ void cfgfileSave(void) {
 	writeParam((_param *) param, fp, P_CHANNELS, pChannels[cfg_from_file.channels].sname);
 	/* audio quality */
 	writeParam((_param *) param, fp, P_AUDIO_QUALITY, pAudioQuality[cfg_from_file.audio_quality].sname);
+	/* swap duty cycles */
+	writeParam((_param *) param, fp, P_SWAP_DUTY, pNoYes[cfg_from_file.swap_duty].sname);
 	/* game genie */
 	writeParam((_param *) param, fp, P_GAMEGENIE, pNoYes[gamegenie.enabled].sname);
 	/* save settings on exit */
@@ -425,6 +429,7 @@ void setDefault(void) {
 	cfg_from_file.samplerate = S44100;
 	cfg_from_file.channels = STEREO;
 	cfg_from_file.audio_quality = AQ_HIGH;
+	cfg_from_file.swap_duty = 0;
 	gamegenie.enabled = FALSE;
 	port1.type = STDCTRL;
 	portKbDefault(port1, "S", "A", "Z", "X", "Up", "Down", "Left", "Right", "W", "Q");

@@ -1153,6 +1153,12 @@ void guiUpdate(void) {
 	}
 	change_menuitem(CHECK, MF_CHECKED, id);
 
+	/* Swap Duty Cycles */
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_AUDIO_SWAP_DUTY);
+	if (cfg->swap_duty) {
+		change_menuitem(CHECK, MF_CHECKED, IDM_SET_AUDIO_SWAP_DUTY);
+	}
+
 	/* Audio Enable */
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_AUDIO_ENABLE);
 	if (cfg->audio) {
@@ -1602,6 +1608,12 @@ long __stdcall mainWinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 					break;
 				case IDM_SET_CHANNELS_STEREO:
 					set_channels(STEREO);
+					break;
+				case IDM_SET_AUDIO_SWAP_DUTY:
+					emuPause(TRUE);
+					cfg->swap_duty = !cfg->swap_duty;
+					guiUpdate();
+					emuPause(FALSE);
 					break;
 				case IDM_SET_AUDIO_QUALITY_LOW:
 					set_audio_quality(AQ_LOW);

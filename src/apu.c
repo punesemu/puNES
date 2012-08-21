@@ -14,6 +14,7 @@
 #include "memmap.h"
 #include "fds.h"
 #include "audio_quality.h"
+#include "cfgfile.h"
 
 void apuTick(SWORD cyclesCPU, BYTE *hwtick) {
 	/* sottraggo il numero di cicli eseguiti */
@@ -164,8 +165,8 @@ void apuTick(SWORD cyclesCPU, BYTE *hwtick) {
 	 * eseguo un ticket per ogni canale
 	 * valorizzandone l'output.
 	 */
-	squareTick(S1)
-	squareTick(S2)
+	squareTick(S1, cfg->swap_duty)
+	squareTick(S2, cfg->swap_duty)
 	triangleTick()
 	noiseTick()
 	dmcTick()

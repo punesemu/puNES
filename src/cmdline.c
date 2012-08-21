@@ -28,6 +28,12 @@ BYTE cmdlineParse(int argc, char **argv) {
 	opt = getopt_long(argc, argv, optShort, optLong, &longIndex);
 	while (opt != -1) {
 		switch (opt) {
+			case 0:
+				/* long options */
+				if (!(strcmp(optLong[longIndex].name, "swap-duty"))) {
+					paramSearch(0, optarg, pNoYes, cfg_from_file.swap_duty = index);
+				}
+				break;
 			case 'a':
 				paramSearch(0, optarg, pOffOn, cfg_from_file.audio = index);
 				break;
@@ -144,6 +150,7 @@ void usage(char *name) {
 			"%s\n"
 			"%s\n"
 			"%s\n"
+			"%s\n"
 	};
 	fprintf(stdout, istructions, name,
 			param[P_MODE].help,
@@ -164,6 +171,7 @@ void usage(char *name) {
 			param[P_SAMPLERATE].help,
 			param[P_CHANNELS].help,
 			param[P_AUDIO_QUALITY].help,
+			param[P_SWAP_DUTY].help,
 			param[P_GAMEGENIE].help
 	);
 	emuQuit(EXIT_SUCCESS);

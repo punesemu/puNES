@@ -39,6 +39,7 @@ enum {
 	P_SAMPLERATE,
 	P_CHANNELS,
 	P_AUDIO_QUALITY,
+	P_SWAP_DUTY,
 	P_GAMEGENIE
 };
 enum {
@@ -80,6 +81,7 @@ static const struct option optLong[] = {
 	{ "samplerate",         required_argument, NULL, 'l'},
 	{ "channels",           required_argument, NULL, 'c'},
 	{ "audio-quality",      required_argument, NULL, 'q'},
+	{ "swap-duty",          required_argument, NULL,  0 },
 	{ "gamegenie",          required_argument, NULL, 'g'},
 	{ "help",               no_argument,       NULL, 'h'},
 	{ "version",            no_argument,       NULL, 'V'},
@@ -219,6 +221,13 @@ static const _param param[] = {
 		"# possible values: low, high",
 		NULL,
 		"-q, --audio-quality       audio quality         : low, high"
+	},
+	{
+		"swap duty cycles (Famicom clone chip audio emulation)",
+		NULL,
+		"# possible values: yes, no",
+		NULL,
+		"    --swap-duty           swap duty cycles      : yes, no"
 	},
 	{
 		"gamegenie",

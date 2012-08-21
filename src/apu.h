@@ -108,13 +108,13 @@ enum apu_channels { APU_S1, APU_S2, APU_TR, APU_NS, APU_DMC };
 		TR.linear.halt = FALSE;\
 	}
 /* output */
-#define squareOutput(square)\
+#define squareOutput(square, swap)\
 {\
 	envelopeVolume(square)\
 	if (square.sweep.silence) {\
 		square.output = 0;\
 	} else {\
-		square.output = squareDuty[square.duty][square.sequencer] * square.volume;\
+		square.output = squareDuty[swap][square.duty][square.sequencer] * square.volume;\
 	}\
 }
 #define triangleOutput()\
@@ -138,9 +138,9 @@ enum apu_channels { APU_S1, APU_S2, APU_TR, APU_NS, APU_DMC };
 #define dmcOutput()\
 	DMC.output = DMC.counter & 0x7F
 /* ticket */
-#define squareTick(square)\
+#define squareTick(square, swap)\
 	if (!(--square.frequency)) {\
-		squareOutput(square)\
+		squareOutput(square, swap)\
 		square.frequency = (square.timer + 1) << 1;\
 		square.sequencer = (square.sequencer + 1) & 0x07;\
 		square.clocked = TRUE;\
@@ -532,11 +532,19 @@ static const BYTE lengthTable[32] = {
 	0xC0, 0x18, 0x48, 0x1A, 0x10, 0x1C, 0x20, 0x1E
 };
 
-static const BYTE squareDuty[4][8] = {
-	{ 0,  1,  0,  0,  0,  0,  0,  0},
-	{ 0,  1,  1,  0,  0,  0,  0,  0},
-	{ 0,  1,  1,  1,  1,  0,  0,  0},
-	{ 1,  0,  0,  1,  1,  1,  1,  1}
+static const BYTE squareDuty[2][4][8] = {
+	{
+		{ 0,  1,  0,  0,  0,  0,  0,  0},
+		{ 0,  1,  1,  0,  0,  0,  0,  0},
+		{ 0,  1,  1,  1,  1,  0,  0,  0},
+		{ 1,  0,  0,  1,  1,  1,  1,  1}
+	},
+	{
+		{ 0,  1,  0,  0,  0,  0,  0,  0},
+		{ 0,  1,  1,  1,  1,  0,  0,  0},
+		{ 0,  1,  1,  0,  0,  0,  0,  0},
+		{ 1,  0,  0,  1,  1,  1,  1,  1}
+	}
 };
 
 static const BYTE triangleDuty[32] = {

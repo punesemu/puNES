@@ -72,9 +72,12 @@ static const guint8 icon_inline[] =
   "\25%\204\377\377\377\0"};
 
 enum {
+	MSNDSWAPDUTY,
 	MSNDENABLE,
 	NUMCHKS
 };
+
+void menu_audio_set_audio_swap_duty(void);
 
 static GtkWidget *check[NUMCHKS];
 
@@ -94,15 +97,18 @@ void menu_audio(GtkWidget *settings, GtkAccelGroup *accel_group) {
 	menu_audio_channels(menu, NULL);
 	menu_audio_quality(menu, NULL);
 
-	/* Settings/Audio/Enable */
+	check[MSNDSWAPDUTY] = gtk_check_menu_item_new_with_mnemonic("S_wap Duty Cycles");
 	check[MSNDENABLE] = gtk_check_menu_item_new_with_mnemonic("_Enable");
 
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), gtk_separator_menu_item_new());
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), check[MSNDSWAPDUTY]);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), check[MSNDENABLE]);
 
 	gtk_widget_add_accelerator(check[MSNDENABLE], "activate", accel_group, GDK_a,
 	        GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
+	g_signal_connect_swapped(G_OBJECT(check[MSNDSWAPDUTY]), "activate",
+	        G_CALLBACK(menu_audio_set_audio_swap_duty), NULL);
 	g_signal_connect_swapped(G_OBJECT(check[MSNDENABLE]), "activate",
 	        G_CALLBACK(menu_audio_set_audio_enable), NULL);
 
@@ -112,11 +118,26 @@ void menu_audio_check(void) {
 	menu_audio_channels_check();
 	menu_audio_quality_check();
 
+	/* Swap Duty Cycles */
+	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MSNDSWAPDUTY]), FALSE);
+	if (cfg->swap_duty) {
+		gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MSNDSWAPDUTY]), TRUE);
+	}
+
 	/* Audio Enable */
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MSNDENABLE]), FALSE);
 	if (cfg->audio) {
 		gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MSNDENABLE]), TRUE);
 	}
+}
+void menu_audio_set_audio_swap_duty(void) {
+	if (guiupdate) {
+		return;
+	}
+	emuPause(TRUE);
+	cfg->swap_duty = !cfg->swap_duty;
+	guiUpdate();
+	emuPause(FALSE);
 }
 void menu_audio_set_audio_enable(void) {
 	if (guiupdate) {
