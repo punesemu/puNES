@@ -8,6 +8,8 @@
 #include "menu.h"
 #include "gui.h"
 
+#include "../configurations.h"
+
 GtkWidget *menu;
 
 void menu_create(GtkWidget *win, GtkWidget *mainbox) {
@@ -28,6 +30,20 @@ void menu_create(GtkWidget *win, GtkWidget *mainbox) {
 	menu_state(menu, accel_group);
 	/* Help */
 	menu_help(menu, accel_group);
+
+	{
+		GtkWidget *submenu, *config;
+
+		submenu = gtk_menu_new();
+		config = gtk_menu_item_new_with_mnemonic("_Prova");
+
+		/* append menu file to main menu */
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), config);
+		gtk_menu_item_set_submenu(GTK_MENU_ITEM(config), submenu);
+
+		/* signals */
+		g_signal_connect(G_OBJECT(config), "activate", G_CALLBACK(configurations_notebook), NULL);
+	}
 
 	gtk_box_pack_start(GTK_BOX(mainbox), menu, FALSE, FALSE, 0);
 }
