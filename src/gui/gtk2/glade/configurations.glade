@@ -41,45 +41,22 @@
                           <object class="GtkHBox" id="hbox_general">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="spacing">5</property>
+                            <property name="spacing">4</property>
                             <child>
-                              <object class="GtkVBox" id="vbox_mode">
+                              <object class="GtkVBox" id="vbox1">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="homogeneous">True</property>
                                 <child>
-                                  <object class="GtkHBox" id="hbox_mode">
+                                  <object class="GtkHBox" id="hbox_label_mode">
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
-                                    <property name="spacing">7</property>
+                                    <property name="spacing">4</property>
                                     <child>
-                                      <object class="GtkHBox" id="hbox_label_mode">
+                                      <object class="GtkImage" id="image_mode">
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
-                                        <property name="spacing">5</property>
-                                        <child>
-                                          <object class="GtkImage" id="image_label_mode">
-                                            <property name="visible">True</property>
-                                            <property name="can_focus">False</property>
-                                            <property name="stock">gtk-missing-image</property>
-                                          </object>
-                                          <packing>
-                                            <property name="expand">True</property>
-                                            <property name="fill">True</property>
-                                            <property name="position">0</property>
-                                          </packing>
-                                        </child>
-                                        <child>
-                                          <object class="GtkLabel" id="label_mode">
-                                            <property name="visible">True</property>
-                                            <property name="can_focus">False</property>
-                                            <property name="label" translatable="yes">Mode</property>
-                                          </object>
-                                          <packing>
-                                            <property name="expand">True</property>
-                                            <property name="fill">True</property>
-                                            <property name="position">1</property>
-                                          </packing>
-                                        </child>
+                                        <property name="stock">gtk-missing-image</property>
                                       </object>
                                       <packing>
                                         <property name="expand">False</property>
@@ -88,12 +65,13 @@
                                       </packing>
                                     </child>
                                     <child>
-                                      <object class="GtkComboBox" id="combobox_mode">
+                                      <object class="GtkLabel" id="label_mode">
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
+                                        <property name="label" translatable="yes">Mode</property>
                                       </object>
                                       <packing>
-                                        <property name="expand">True</property>
+                                        <property name="expand">False</property>
                                         <property name="fill">True</property>
                                         <property name="position">1</property>
                                       </packing>
@@ -101,12 +79,46 @@
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
-                                    <property name="fill">False</property>
+                                    <property name="fill">True</property>
                                     <property name="position">0</property>
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkFixed" id="fixed_mode">
+                                  <object class="GtkFixed" id="fixed_label_mode">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">True</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkVBox" id="vbox_mode">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="homogeneous">True</property>
+                                <child>
+                                  <object class="GtkComboBox" id="combobox_mode">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">True</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkFixed" id="fixed_combobox_mode">
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
                                   </object>
@@ -120,7 +132,7 @@
                               <packing>
                                 <property name="expand">True</property>
                                 <property name="fill">True</property>
-                                <property name="position">0</property>
+                                <property name="position">1</property>
                               </packing>
                             </child>
                             <child>
@@ -131,13 +143,15 @@
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">True</property>
-                                <property name="position">1</property>
+                                <property name="position">2</property>
                               </packing>
                             </child>
                             <child>
                               <object class="GtkVButtonBox" id="vbuttonbox_general">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="homogeneous">True</property>
+                                <property name="layout_style">center</property>
                                 <child>
                                   <object class="GtkCheckButton" id="checkbutton_game_genie">
                                     <property name="label" translatable="yes">Enable Game Genie</property>
@@ -171,8 +185,8 @@
                               </object>
                               <packing>
                                 <property name="expand">False</property>
-                                <property name="fill">False</property>
-                                <property name="position">2</property>
+                                <property name="fill">True</property>
+                                <property name="position">3</property>
                               </packing>
                             </child>
                           </object>
@@ -219,7 +233,7 @@
                       <object class="GtkNotebook" id="notebook_configurations">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="tab_pos">left</property>
+                        <property name="tab_pos">right</property>
                         <property name="homogeneous">True</property>
                         <child>
                           <object class="GtkAlignment" id="alignment_video_configuration">
@@ -251,22 +265,22 @@
                                           <object class="GtkHBox" id="hbox_video_options">
                                             <property name="visible">True</property>
                                             <property name="can_focus">False</property>
-                                            <property name="spacing">5</property>
+                                            <property name="spacing">4</property>
                                             <child>
-                                              <object class="GtkVBox" id="vbox_rendering_fps_frame_skip">
+                                              <object class="GtkHBox" id="hbox_combobox_video_options">
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">False</property>
-                                                <property name="spacing">3</property>
+                                                <property name="spacing">4</property>
                                                 <child>
-                                                  <object class="GtkHBox" id="hbox_rendering">
+                                                  <object class="GtkVBox" id="vbox_labels_options">
                                                     <property name="visible">True</property>
                                                     <property name="can_focus">False</property>
-                                                    <property name="spacing">14</property>
+                                                    <property name="homogeneous">True</property>
                                                     <child>
                                                       <object class="GtkHBox" id="hbox_label_rendering">
                                                         <property name="visible">True</property>
                                                         <property name="can_focus">False</property>
-                                                        <property name="spacing">5</property>
+                                                        <property name="spacing">4</property>
                                                         <child>
                                                           <object class="GtkImage" id="image_rendering">
                                                             <property name="visible">True</property>
@@ -274,8 +288,8 @@
                                                             <property name="stock">gtk-missing-image</property>
                                                           </object>
                                                           <packing>
-                                                            <property name="expand">True</property>
-                                                            <property name="fill">True</property>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">False</property>
                                                             <property name="position">0</property>
                                                           </packing>
                                                         </child>
@@ -293,39 +307,16 @@
                                                         </child>
                                                       </object>
                                                       <packing>
-                                                        <property name="expand">False</property>
+                                                        <property name="expand">True</property>
                                                         <property name="fill">True</property>
                                                         <property name="position">0</property>
                                                       </packing>
                                                     </child>
                                                     <child>
-                                                      <object class="GtkComboBox" id="combobox_rendering">
-                                                        <property name="visible">True</property>
-                                                        <property name="can_focus">False</property>
-                                                      </object>
-                                                      <packing>
-                                                        <property name="expand">True</property>
-                                                        <property name="fill">True</property>
-                                                        <property name="position">1</property>
-                                                      </packing>
-                                                    </child>
-                                                  </object>
-                                                  <packing>
-                                                    <property name="expand">True</property>
-                                                    <property name="fill">True</property>
-                                                    <property name="position">0</property>
-                                                  </packing>
-                                                </child>
-                                                <child>
-                                                  <object class="GtkHBox" id="hbox_fps">
-                                                    <property name="visible">True</property>
-                                                    <property name="can_focus">False</property>
-                                                    <property name="spacing">50</property>
-                                                    <child>
                                                       <object class="GtkHBox" id="hbox_label_fps">
                                                         <property name="visible">True</property>
                                                         <property name="can_focus">False</property>
-                                                        <property name="spacing">5</property>
+                                                        <property name="spacing">4</property>
                                                         <child>
                                                           <object class="GtkImage" id="image_fps">
                                                             <property name="visible">True</property>
@@ -333,8 +324,8 @@
                                                             <property name="stock">gtk-missing-image</property>
                                                           </object>
                                                           <packing>
-                                                            <property name="expand">True</property>
-                                                            <property name="fill">True</property>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">False</property>
                                                             <property name="position">0</property>
                                                           </packing>
                                                         </child>
@@ -352,39 +343,16 @@
                                                         </child>
                                                       </object>
                                                       <packing>
-                                                        <property name="expand">False</property>
-                                                        <property name="fill">False</property>
-                                                        <property name="position">0</property>
-                                                      </packing>
-                                                    </child>
-                                                    <child>
-                                                      <object class="GtkComboBox" id="combobox_fps">
-                                                        <property name="visible">True</property>
-                                                        <property name="can_focus">False</property>
-                                                      </object>
-                                                      <packing>
                                                         <property name="expand">True</property>
                                                         <property name="fill">True</property>
                                                         <property name="position">1</property>
                                                       </packing>
                                                     </child>
-                                                  </object>
-                                                  <packing>
-                                                    <property name="expand">True</property>
-                                                    <property name="fill">True</property>
-                                                    <property name="position">1</property>
-                                                  </packing>
-                                                </child>
-                                                <child>
-                                                  <object class="GtkHBox" id="hbox_frame_skip">
-                                                    <property name="visible">True</property>
-                                                    <property name="can_focus">False</property>
-                                                    <property name="spacing">7</property>
                                                     <child>
                                                       <object class="GtkHBox" id="hbox_label_frame_skip">
                                                         <property name="visible">True</property>
                                                         <property name="can_focus">False</property>
-                                                        <property name="spacing">5</property>
+                                                        <property name="spacing">4</property>
                                                         <child>
                                                           <object class="GtkImage" id="image_frame_skip">
                                                             <property name="visible">True</property>
@@ -392,8 +360,8 @@
                                                             <property name="stock">gtk-missing-image</property>
                                                           </object>
                                                           <packing>
-                                                            <property name="expand">True</property>
-                                                            <property name="fill">True</property>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">False</property>
                                                             <property name="position">0</property>
                                                           </packing>
                                                         </child>
@@ -411,9 +379,43 @@
                                                         </child>
                                                       </object>
                                                       <packing>
-                                                        <property name="expand">False</property>
-                                                        <property name="fill">False</property>
+                                                        <property name="expand">True</property>
+                                                        <property name="fill">True</property>
+                                                        <property name="position">2</property>
+                                                      </packing>
+                                                    </child>
+                                                  </object>
+                                                  <packing>
+                                                    <property name="expand">False</property>
+                                                    <property name="fill">True</property>
+                                                    <property name="position">0</property>
+                                                  </packing>
+                                                </child>
+                                                <child>
+                                                  <object class="GtkVBox" id="vbox_rendering_fps_frame_skip">
+                                                    <property name="visible">True</property>
+                                                    <property name="can_focus">False</property>
+                                                    <property name="homogeneous">True</property>
+                                                    <child>
+                                                      <object class="GtkComboBox" id="combobox_rendering">
+                                                        <property name="visible">True</property>
+                                                        <property name="can_focus">False</property>
+                                                      </object>
+                                                      <packing>
+                                                        <property name="expand">True</property>
+                                                        <property name="fill">True</property>
                                                         <property name="position">0</property>
+                                                      </packing>
+                                                    </child>
+                                                    <child>
+                                                      <object class="GtkComboBox" id="combobox_fps">
+                                                        <property name="visible">True</property>
+                                                        <property name="can_focus">False</property>
+                                                      </object>
+                                                      <packing>
+                                                        <property name="expand">True</property>
+                                                        <property name="fill">True</property>
+                                                        <property name="position">1</property>
                                                       </packing>
                                                     </child>
                                                     <child>
@@ -424,14 +426,14 @@
                                                       <packing>
                                                         <property name="expand">True</property>
                                                         <property name="fill">True</property>
-                                                        <property name="position">1</property>
+                                                        <property name="position">2</property>
                                                       </packing>
                                                     </child>
                                                   </object>
                                                   <packing>
                                                     <property name="expand">True</property>
                                                     <property name="fill">True</property>
-                                                    <property name="position">2</property>
+                                                    <property name="position">1</property>
                                                   </packing>
                                                 </child>
                                               </object>
@@ -453,10 +455,11 @@
                                               </packing>
                                             </child>
                                             <child>
-                                              <object class="GtkVBox" id="vbox_vsync_fullscreen_stretch">
+                                              <object class="GtkVButtonBox" id="vbuttonbox_video_options">
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">False</property>
                                                 <property name="homogeneous">True</property>
+                                                <property name="layout_style">center</property>
                                                 <child>
                                                   <object class="GtkCheckButton" id="checkbutton_vsync">
                                                     <property name="label" translatable="yes">Enable VSync</property>
@@ -505,7 +508,7 @@
                                               </object>
                                               <packing>
                                                 <property name="expand">False</property>
-                                                <property name="fill">False</property>
+                                                <property name="fill">True</property>
                                                 <property name="position">2</property>
                                               </packing>
                                             </child>
@@ -514,7 +517,7 @@
                                       </object>
                                     </child>
                                     <child type="label">
-                                      <object class="GtkLabel" id="label_video_options1">
+                                      <object class="GtkLabel" id="label_video_options">
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
                                         <property name="label" translatable="yes">&lt;b&gt;Video&lt;/b&gt;</property>
@@ -543,15 +546,15 @@
                                         <property name="left_padding">3</property>
                                         <property name="right_padding">3</property>
                                         <child>
-                                          <object class="GtkVBox" id="vbox_video_misc">
+                                          <object class="GtkHBox" id="hbox_video_misc">
                                             <property name="visible">True</property>
                                             <property name="can_focus">False</property>
-                                            <property name="spacing">3</property>
+                                            <property name="spacing">4</property>
                                             <child>
-                                              <object class="GtkHBox" id="hbox_scale_effect">
+                                              <object class="GtkVBox" id="vbox_label_misc">
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">False</property>
-                                                <property name="spacing">4</property>
+                                                <property name="homogeneous">True</property>
                                                 <child>
                                                   <object class="GtkHBox" id="hbox_label_scale">
                                                     <property name="visible">True</property>
@@ -564,8 +567,8 @@
                                                         <property name="stock">gtk-missing-image</property>
                                                       </object>
                                                       <packing>
-                                                        <property name="expand">True</property>
-                                                        <property name="fill">True</property>
+                                                        <property name="expand">False</property>
+                                                        <property name="fill">False</property>
                                                         <property name="position">0</property>
                                                       </packing>
                                                     </child>
@@ -583,92 +586,11 @@
                                                     </child>
                                                   </object>
                                                   <packing>
-                                                    <property name="expand">False</property>
-                                                    <property name="fill">False</property>
+                                                    <property name="expand">True</property>
+                                                    <property name="fill">True</property>
                                                     <property name="position">0</property>
                                                   </packing>
                                                 </child>
-                                                <child>
-                                                  <object class="GtkComboBox" id="combobox_scale">
-                                                    <property name="visible">True</property>
-                                                    <property name="can_focus">False</property>
-                                                  </object>
-                                                  <packing>
-                                                    <property name="expand">True</property>
-                                                    <property name="fill">True</property>
-                                                    <property name="position">1</property>
-                                                  </packing>
-                                                </child>
-                                                <child>
-                                                  <object class="GtkVSeparator" id="vseparator_scale_effect">
-                                                    <property name="visible">True</property>
-                                                    <property name="can_focus">False</property>
-                                                  </object>
-                                                  <packing>
-                                                    <property name="expand">False</property>
-                                                    <property name="fill">True</property>
-                                                    <property name="position">2</property>
-                                                  </packing>
-                                                </child>
-                                                <child>
-                                                  <object class="GtkHBox" id="hbox_label_effect">
-                                                    <property name="visible">True</property>
-                                                    <property name="can_focus">False</property>
-                                                    <property name="spacing">5</property>
-                                                    <child>
-                                                      <object class="GtkImage" id="image_effect">
-                                                        <property name="visible">True</property>
-                                                        <property name="can_focus">False</property>
-                                                        <property name="stock">gtk-missing-image</property>
-                                                      </object>
-                                                      <packing>
-                                                        <property name="expand">True</property>
-                                                        <property name="fill">True</property>
-                                                        <property name="position">0</property>
-                                                      </packing>
-                                                    </child>
-                                                    <child>
-                                                      <object class="GtkLabel" id="label_effect">
-                                                        <property name="visible">True</property>
-                                                        <property name="can_focus">False</property>
-                                                        <property name="label" translatable="yes">Effect</property>
-                                                      </object>
-                                                      <packing>
-                                                        <property name="expand">False</property>
-                                                        <property name="fill">False</property>
-                                                        <property name="position">1</property>
-                                                      </packing>
-                                                    </child>
-                                                  </object>
-                                                  <packing>
-                                                    <property name="expand">False</property>
-                                                    <property name="fill">False</property>
-                                                    <property name="position">3</property>
-                                                  </packing>
-                                                </child>
-                                                <child>
-                                                  <object class="GtkComboBox" id="combobox_effect">
-                                                    <property name="visible">True</property>
-                                                    <property name="can_focus">False</property>
-                                                  </object>
-                                                  <packing>
-                                                    <property name="expand">True</property>
-                                                    <property name="fill">True</property>
-                                                    <property name="position">4</property>
-                                                  </packing>
-                                                </child>
-                                              </object>
-                                              <packing>
-                                                <property name="expand">True</property>
-                                                <property name="fill">True</property>
-                                                <property name="position">0</property>
-                                              </packing>
-                                            </child>
-                                            <child>
-                                              <object class="GtkHBox" id="hbox_filter">
-                                                <property name="visible">True</property>
-                                                <property name="can_focus">False</property>
-                                                <property name="spacing">5</property>
                                                 <child>
                                                   <object class="GtkHBox" id="hbox_label_filter">
                                                     <property name="visible">True</property>
@@ -681,8 +603,8 @@
                                                         <property name="stock">gtk-missing-image</property>
                                                       </object>
                                                       <packing>
-                                                        <property name="expand">True</property>
-                                                        <property name="fill">True</property>
+                                                        <property name="expand">False</property>
+                                                        <property name="fill">False</property>
                                                         <property name="position">0</property>
                                                       </packing>
                                                     </child>
@@ -700,8 +622,101 @@
                                                     </child>
                                                   </object>
                                                   <packing>
-                                                    <property name="expand">False</property>
-                                                    <property name="fill">False</property>
+                                                    <property name="expand">True</property>
+                                                    <property name="fill">True</property>
+                                                    <property name="position">1</property>
+                                                  </packing>
+                                                </child>
+                                              </object>
+                                              <packing>
+                                                <property name="expand">False</property>
+                                                <property name="fill">True</property>
+                                                <property name="position">0</property>
+                                              </packing>
+                                            </child>
+                                            <child>
+                                              <object class="GtkVBox" id="vbox_combobox_misc">
+                                                <property name="visible">True</property>
+                                                <property name="can_focus">False</property>
+                                                <property name="homogeneous">True</property>
+                                                <child>
+                                                  <object class="GtkHBox" id="hbox_scale_effect">
+                                                    <property name="visible">True</property>
+                                                    <property name="can_focus">False</property>
+                                                    <property name="spacing">4</property>
+                                                    <child>
+                                                      <object class="GtkComboBox" id="combobox_scale">
+                                                        <property name="visible">True</property>
+                                                        <property name="can_focus">False</property>
+                                                      </object>
+                                                      <packing>
+                                                        <property name="expand">True</property>
+                                                        <property name="fill">True</property>
+                                                        <property name="position">0</property>
+                                                      </packing>
+                                                    </child>
+                                                    <child>
+                                                      <object class="GtkVSeparator" id="vseparator_scale_effect">
+                                                        <property name="visible">True</property>
+                                                        <property name="can_focus">False</property>
+                                                      </object>
+                                                      <packing>
+                                                        <property name="expand">False</property>
+                                                        <property name="fill">True</property>
+                                                        <property name="position">1</property>
+                                                      </packing>
+                                                    </child>
+                                                    <child>
+                                                      <object class="GtkHBox" id="hbox_label_effect">
+                                                        <property name="visible">True</property>
+                                                        <property name="can_focus">False</property>
+                                                        <property name="spacing">4</property>
+                                                        <child>
+                                                          <object class="GtkImage" id="image_effect">
+                                                            <property name="visible">True</property>
+                                                            <property name="can_focus">False</property>
+                                                            <property name="stock">gtk-missing-image</property>
+                                                          </object>
+                                                          <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">False</property>
+                                                            <property name="position">0</property>
+                                                          </packing>
+                                                        </child>
+                                                        <child>
+                                                          <object class="GtkLabel" id="label_effect">
+                                                            <property name="visible">True</property>
+                                                            <property name="can_focus">False</property>
+                                                            <property name="label" translatable="yes">Effect</property>
+                                                          </object>
+                                                          <packing>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">False</property>
+                                                            <property name="position">1</property>
+                                                          </packing>
+                                                        </child>
+                                                      </object>
+                                                      <packing>
+                                                        <property name="expand">False</property>
+                                                        <property name="fill">True</property>
+                                                        <property name="position">2</property>
+                                                      </packing>
+                                                    </child>
+                                                    <child>
+                                                      <object class="GtkComboBox" id="combobox_effect">
+                                                        <property name="visible">True</property>
+                                                        <property name="can_focus">False</property>
+                                                      </object>
+                                                      <packing>
+                                                        <property name="expand">True</property>
+                                                        <property name="fill">True</property>
+                                                        <property name="position">3</property>
+                                                      </packing>
+                                                    </child>
+                                                  </object>
+                                                  <packing>
+                                                    <property name="expand">True</property>
+                                                    <property name="fill">True</property>
                                                     <property name="position">0</property>
                                                   </packing>
                                                 </child>
@@ -760,12 +775,12 @@
                                           <object class="GtkHBox" id="hbox_overscan_all">
                                             <property name="visible">True</property>
                                             <property name="can_focus">False</property>
-                                            <property name="spacing">4</property>
+                                            <property name="spacing">5</property>
                                             <child>
                                               <object class="GtkHBox" id="hbox_overscan">
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">False</property>
-                                                <property name="spacing">5</property>
+                                                <property name="spacing">4</property>
                                                 <child>
                                                   <object class="GtkImage" id="image_overscan">
                                                     <property name="visible">True</property>
@@ -773,8 +788,8 @@
                                                     <property name="stock">gtk-missing-image</property>
                                                   </object>
                                                   <packing>
-                                                    <property name="expand">True</property>
-                                                    <property name="fill">True</property>
+                                                    <property name="expand">False</property>
+                                                    <property name="fill">False</property>
                                                     <property name="position">0</property>
                                                   </packing>
                                                 </child>
@@ -799,8 +814,8 @@
                                                 </child>
                                               </object>
                                               <packing>
-                                                <property name="expand">False</property>
-                                                <property name="fill">False</property>
+                                                <property name="expand">True</property>
+                                                <property name="fill">True</property>
                                                 <property name="position">0</property>
                                               </packing>
                                             </child>
@@ -819,12 +834,12 @@
                                               <object class="GtkHBox" id="hbox_overscan_default">
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">False</property>
-                                                <property name="spacing">7</property>
+                                                <property name="spacing">4</property>
                                                 <child>
                                                   <object class="GtkHBox" id="hbox_label_overcan_default">
                                                     <property name="visible">True</property>
                                                     <property name="can_focus">False</property>
-                                                    <property name="spacing">5</property>
+                                                    <property name="spacing">4</property>
                                                     <child>
                                                       <object class="GtkImage" id="image_overscan_default">
                                                         <property name="visible">True</property>
@@ -832,8 +847,8 @@
                                                         <property name="stock">gtk-missing-image</property>
                                                       </object>
                                                       <packing>
-                                                        <property name="expand">True</property>
-                                                        <property name="fill">True</property>
+                                                        <property name="expand">False</property>
+                                                        <property name="fill">False</property>
                                                         <property name="position">0</property>
                                                       </packing>
                                                     </child>
@@ -846,14 +861,13 @@
                                                       <packing>
                                                         <property name="expand">False</property>
                                                         <property name="fill">False</property>
-                                                        <property name="padding">5</property>
                                                         <property name="position">1</property>
                                                       </packing>
                                                     </child>
                                                   </object>
                                                   <packing>
-                                                    <property name="expand">False</property>
-                                                    <property name="fill">False</property>
+                                                    <property name="expand">True</property>
+                                                    <property name="fill">True</property>
                                                     <property name="position">0</property>
                                                   </packing>
                                                 </child>
@@ -861,6 +875,7 @@
                                                   <object class="GtkHButtonBox" id="hbuttonbox_overscan_default">
                                                     <property name="visible">True</property>
                                                     <property name="can_focus">False</property>
+                                                    <property name="spacing">2</property>
                                                     <property name="layout_style">end</property>
                                                     <child>
                                                       <object class="GtkToggleButton" id="togglebutton_overscan_default_on">
@@ -938,31 +953,107 @@
                                         <property name="left_padding">3</property>
                                         <property name="right_padding">3</property>
                                         <child>
-                                          <object class="GtkVBox" id="vbox_video_palette">
+                                          <object class="GtkHBox" id="hbox_video_palette">
                                             <property name="visible">True</property>
                                             <property name="can_focus">False</property>
-                                            <property name="spacing">3</property>
+                                            <property name="spacing">4</property>
                                             <child>
-                                              <object class="GtkHBox" id="hbox_palette_predefined">
+                                              <object class="GtkVBox" id="vbox_video_palette_radiobuttons">
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">False</property>
-                                                <property name="spacing">6</property>
+                                                <property name="homogeneous">True</property>
                                                 <child>
-                                                  <object class="GtkRadioButton" id="radiobutton_palette_predefined">
-                                                    <property name="label" translatable="yes">Predefined</property>
-                                                    <property name="use_action_appearance">False</property>
+                                                  <object class="GtkHBox" id="hbox_label_palette_predefined">
                                                     <property name="visible">True</property>
-                                                    <property name="can_focus">True</property>
-                                                    <property name="receives_default">False</property>
-                                                    <property name="active">True</property>
-                                                    <property name="draw_indicator">True</property>
+                                                    <property name="can_focus">False</property>
+                                                    <property name="spacing">4</property>
+                                                    <child>
+                                                      <object class="GtkImage" id="image_palette_predefined">
+                                                        <property name="visible">True</property>
+                                                        <property name="can_focus">False</property>
+                                                        <property name="stock">gtk-missing-image</property>
+                                                      </object>
+                                                      <packing>
+                                                        <property name="expand">False</property>
+                                                        <property name="fill">False</property>
+                                                        <property name="position">0</property>
+                                                      </packing>
+                                                    </child>
+                                                    <child>
+                                                      <object class="GtkRadioButton" id="radiobutton_palette_predefined">
+                                                        <property name="label" translatable="yes">Predefined</property>
+                                                        <property name="use_action_appearance">False</property>
+                                                        <property name="visible">True</property>
+                                                        <property name="can_focus">True</property>
+                                                        <property name="receives_default">False</property>
+                                                        <property name="active">True</property>
+                                                        <property name="draw_indicator">True</property>
+                                                      </object>
+                                                      <packing>
+                                                        <property name="expand">True</property>
+                                                        <property name="fill">True</property>
+                                                        <property name="position">1</property>
+                                                      </packing>
+                                                    </child>
                                                   </object>
                                                   <packing>
                                                     <property name="expand">False</property>
-                                                    <property name="fill">False</property>
+                                                    <property name="fill">True</property>
                                                     <property name="position">0</property>
                                                   </packing>
                                                 </child>
+                                                <child>
+                                                  <object class="GtkHBox" id="hbox_label_palette_custom">
+                                                    <property name="visible">True</property>
+                                                    <property name="can_focus">False</property>
+                                                    <property name="spacing">4</property>
+                                                    <child>
+                                                      <object class="GtkRadioButton" id="radiobutton_palette_custom">
+                                                        <property name="label" translatable="yes">Custom</property>
+                                                        <property name="use_action_appearance">False</property>
+                                                        <property name="visible">True</property>
+                                                        <property name="can_focus">True</property>
+                                                        <property name="receives_default">False</property>
+                                                        <property name="active">True</property>
+                                                        <property name="draw_indicator">True</property>
+                                                      </object>
+                                                      <packing>
+                                                        <property name="expand">True</property>
+                                                        <property name="fill">True</property>
+                                                        <property name="position">-1</property>
+                                                      </packing>
+                                                    </child>
+                                                    <child>
+                                                      <object class="GtkImage" id="image_palette_custom">
+                                                        <property name="visible">True</property>
+                                                        <property name="can_focus">False</property>
+                                                        <property name="stock">gtk-select-color</property>
+                                                      </object>
+                                                      <packing>
+                                                        <property name="expand">False</property>
+                                                        <property name="fill">False</property>
+                                                        <property name="position">0</property>
+                                                      </packing>
+                                                    </child>
+                                                  </object>
+                                                  <packing>
+                                                    <property name="expand">False</property>
+                                                    <property name="fill">True</property>
+                                                    <property name="position">1</property>
+                                                  </packing>
+                                                </child>
+                                              </object>
+                                              <packing>
+                                                <property name="expand">False</property>
+                                                <property name="fill">True</property>
+                                                <property name="position">0</property>
+                                              </packing>
+                                            </child>
+                                            <child>
+                                              <object class="GtkVBox" id="vbox_video_palette">
+                                                <property name="visible">True</property>
+                                                <property name="can_focus">False</property>
+                                                <property name="homogeneous">True</property>
                                                 <child>
                                                   <object class="GtkComboBox" id="combobox_palette_predefined">
                                                     <property name="visible">True</property>
@@ -971,34 +1062,6 @@
                                                   <packing>
                                                     <property name="expand">True</property>
                                                     <property name="fill">True</property>
-                                                    <property name="position">1</property>
-                                                  </packing>
-                                                </child>
-                                              </object>
-                                              <packing>
-                                                <property name="expand">True</property>
-                                                <property name="fill">True</property>
-                                                <property name="position">0</property>
-                                              </packing>
-                                            </child>
-                                            <child>
-                                              <object class="GtkHBox" id="hbox_palette_custom">
-                                                <property name="visible">True</property>
-                                                <property name="can_focus">False</property>
-                                                <property name="spacing">25</property>
-                                                <child>
-                                                  <object class="GtkRadioButton" id="radiobutton_palette_custom">
-                                                    <property name="label" translatable="yes">Custom</property>
-                                                    <property name="use_action_appearance">False</property>
-                                                    <property name="visible">True</property>
-                                                    <property name="can_focus">True</property>
-                                                    <property name="receives_default">False</property>
-                                                    <property name="active">True</property>
-                                                    <property name="draw_indicator">True</property>
-                                                  </object>
-                                                  <packing>
-                                                    <property name="expand">False</property>
-                                                    <property name="fill">False</property>
                                                     <property name="position">0</property>
                                                   </packing>
                                                 </child>
@@ -1084,23 +1147,22 @@
                                           <object class="GtkHBox" id="hbox_audio_options">
                                             <property name="visible">True</property>
                                             <property name="can_focus">False</property>
-                                            <property name="spacing">5</property>
+                                            <property name="spacing">4</property>
                                             <child>
-                                              <object class="GtkVBox" id="vbox_audio_options">
+                                              <object class="GtkHBox" id="hbox_combobox_audio_options">
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">False</property>
-                                                <property name="spacing">3</property>
-                                                <property name="homogeneous">True</property>
+                                                <property name="spacing">4</property>
                                                 <child>
-                                                  <object class="GtkHBox" id="hbox_sample_rate">
+                                                  <object class="GtkVBox" id="vbox_label_audio_options">
                                                     <property name="visible">True</property>
                                                     <property name="can_focus">False</property>
-                                                    <property name="spacing">9</property>
+                                                    <property name="homogeneous">True</property>
                                                     <child>
                                                       <object class="GtkHBox" id="hbox_label_sample_rate">
                                                         <property name="visible">True</property>
                                                         <property name="can_focus">False</property>
-                                                        <property name="spacing">5</property>
+                                                        <property name="spacing">4</property>
                                                         <child>
                                                           <object class="GtkImage" id="image_sample_rate">
                                                             <property name="visible">True</property>
@@ -1108,8 +1170,8 @@
                                                             <property name="stock">gtk-missing-image</property>
                                                           </object>
                                                           <packing>
-                                                            <property name="expand">True</property>
-                                                            <property name="fill">True</property>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">False</property>
                                                             <property name="position">0</property>
                                                           </packing>
                                                         </child>
@@ -1127,39 +1189,16 @@
                                                         </child>
                                                       </object>
                                                       <packing>
-                                                        <property name="expand">False</property>
-                                                        <property name="fill">False</property>
+                                                        <property name="expand">True</property>
+                                                        <property name="fill">True</property>
                                                         <property name="position">0</property>
                                                       </packing>
                                                     </child>
                                                     <child>
-                                                      <object class="GtkComboBox" id="combobox_sample_rate">
-                                                        <property name="visible">True</property>
-                                                        <property name="can_focus">False</property>
-                                                      </object>
-                                                      <packing>
-                                                        <property name="expand">True</property>
-                                                        <property name="fill">True</property>
-                                                        <property name="position">1</property>
-                                                      </packing>
-                                                    </child>
-                                                  </object>
-                                                  <packing>
-                                                    <property name="expand">True</property>
-                                                    <property name="fill">True</property>
-                                                    <property name="position">0</property>
-                                                  </packing>
-                                                </child>
-                                                <child>
-                                                  <object class="GtkHBox" id="hbox_channels">
-                                                    <property name="visible">True</property>
-                                                    <property name="can_focus">False</property>
-                                                    <property name="spacing">29</property>
-                                                    <child>
                                                       <object class="GtkHBox" id="hbox_label_channels">
                                                         <property name="visible">True</property>
                                                         <property name="can_focus">False</property>
-                                                        <property name="spacing">5</property>
+                                                        <property name="spacing">4</property>
                                                         <child>
                                                           <object class="GtkImage" id="image_channels">
                                                             <property name="visible">True</property>
@@ -1167,8 +1206,8 @@
                                                             <property name="stock">gtk-missing-image</property>
                                                           </object>
                                                           <packing>
-                                                            <property name="expand">True</property>
-                                                            <property name="fill">True</property>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">False</property>
                                                             <property name="position">0</property>
                                                           </packing>
                                                         </child>
@@ -1186,39 +1225,16 @@
                                                         </child>
                                                       </object>
                                                       <packing>
-                                                        <property name="expand">False</property>
-                                                        <property name="fill">False</property>
-                                                        <property name="position">0</property>
-                                                      </packing>
-                                                    </child>
-                                                    <child>
-                                                      <object class="GtkComboBox" id="combobox_channels">
-                                                        <property name="visible">True</property>
-                                                        <property name="can_focus">False</property>
-                                                      </object>
-                                                      <packing>
                                                         <property name="expand">True</property>
                                                         <property name="fill">True</property>
                                                         <property name="position">1</property>
                                                       </packing>
                                                     </child>
-                                                  </object>
-                                                  <packing>
-                                                    <property name="expand">True</property>
-                                                    <property name="fill">True</property>
-                                                    <property name="position">1</property>
-                                                  </packing>
-                                                </child>
-                                                <child>
-                                                  <object class="GtkHBox" id="hbox_quality">
-                                                    <property name="visible">True</property>
-                                                    <property name="can_focus">False</property>
-                                                    <property name="spacing">40</property>
                                                     <child>
                                                       <object class="GtkHBox" id="hbox_label_quality">
                                                         <property name="visible">True</property>
                                                         <property name="can_focus">False</property>
-                                                        <property name="spacing">5</property>
+                                                        <property name="spacing">4</property>
                                                         <child>
                                                           <object class="GtkImage" id="image_quality">
                                                             <property name="visible">True</property>
@@ -1226,8 +1242,8 @@
                                                             <property name="stock">gtk-missing-image</property>
                                                           </object>
                                                           <packing>
-                                                            <property name="expand">True</property>
-                                                            <property name="fill">True</property>
+                                                            <property name="expand">False</property>
+                                                            <property name="fill">False</property>
                                                             <property name="position">0</property>
                                                           </packing>
                                                         </child>
@@ -1245,9 +1261,43 @@
                                                         </child>
                                                       </object>
                                                       <packing>
-                                                        <property name="expand">False</property>
-                                                        <property name="fill">False</property>
+                                                        <property name="expand">True</property>
+                                                        <property name="fill">True</property>
+                                                        <property name="position">2</property>
+                                                      </packing>
+                                                    </child>
+                                                  </object>
+                                                  <packing>
+                                                    <property name="expand">False</property>
+                                                    <property name="fill">True</property>
+                                                    <property name="position">0</property>
+                                                  </packing>
+                                                </child>
+                                                <child>
+                                                  <object class="GtkVBox" id="vbox_audio_options">
+                                                    <property name="visible">True</property>
+                                                    <property name="can_focus">False</property>
+                                                    <property name="homogeneous">True</property>
+                                                    <child>
+                                                      <object class="GtkComboBox" id="combobox_sample_rate">
+                                                        <property name="visible">True</property>
+                                                        <property name="can_focus">False</property>
+                                                      </object>
+                                                      <packing>
+                                                        <property name="expand">True</property>
+                                                        <property name="fill">True</property>
                                                         <property name="position">0</property>
+                                                      </packing>
+                                                    </child>
+                                                    <child>
+                                                      <object class="GtkComboBox" id="combobox_channels">
+                                                        <property name="visible">True</property>
+                                                        <property name="can_focus">False</property>
+                                                      </object>
+                                                      <packing>
+                                                        <property name="expand">True</property>
+                                                        <property name="fill">True</property>
+                                                        <property name="position">1</property>
                                                       </packing>
                                                     </child>
                                                     <child>
@@ -1258,14 +1308,14 @@
                                                       <packing>
                                                         <property name="expand">True</property>
                                                         <property name="fill">True</property>
-                                                        <property name="position">1</property>
+                                                        <property name="position">2</property>
                                                       </packing>
                                                     </child>
                                                   </object>
                                                   <packing>
                                                     <property name="expand">True</property>
                                                     <property name="fill">True</property>
-                                                    <property name="position">2</property>
+                                                    <property name="position">1</property>
                                                   </packing>
                                                 </child>
                                               </object>
@@ -1287,10 +1337,11 @@
                                               </packing>
                                             </child>
                                             <child>
-                                              <object class="GtkVBox" id="vbox_audio_enable">
+                                              <object class="GtkVButtonBox" id="vbuttonbox_audio_options">
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">False</property>
                                                 <property name="homogeneous">True</property>
+                                                <property name="layout_style">center</property>
                                                 <child>
                                                   <object class="GtkCheckButton" id="enable_sound">
                                                     <property name="label" translatable="yes">Enable sound</property>
@@ -1307,31 +1358,31 @@
                                                   </packing>
                                                 </child>
                                                 <child>
-                                                  <object class="GtkFixed" id="fixed2">
+                                                  <object class="GtkFixed" id="fixed_audio_options_1">
                                                     <property name="visible">True</property>
                                                     <property name="can_focus">False</property>
                                                   </object>
                                                   <packing>
-                                                    <property name="expand">True</property>
-                                                    <property name="fill">True</property>
+                                                    <property name="expand">False</property>
+                                                    <property name="fill">False</property>
                                                     <property name="position">1</property>
                                                   </packing>
                                                 </child>
                                                 <child>
-                                                  <object class="GtkFixed" id="fixed3">
+                                                  <object class="GtkFixed" id="fixed_audio_options_2">
                                                     <property name="visible">True</property>
                                                     <property name="can_focus">False</property>
                                                   </object>
                                                   <packing>
-                                                    <property name="expand">True</property>
-                                                    <property name="fill">True</property>
+                                                    <property name="expand">False</property>
+                                                    <property name="fill">False</property>
                                                     <property name="position">2</property>
                                                   </packing>
                                                 </child>
                                               </object>
                                               <packing>
                                                 <property name="expand">False</property>
-                                                <property name="fill">False</property>
+                                                <property name="fill">True</property>
                                                 <property name="position">2</property>
                                               </packing>
                                             </child>
@@ -1372,6 +1423,7 @@
                                           <object class="GtkVBox" id="vbox_audio_misc">
                                             <property name="visible">True</property>
                                             <property name="can_focus">False</property>
+                                            <property name="homogeneous">True</property>
                                             <child>
                                               <object class="GtkCheckButton" id="swap_duty_cycles">
                                                 <property name="label" translatable="yes">Swap 25% and 50% duty cycles</property>
@@ -1382,8 +1434,8 @@
                                                 <property name="draw_indicator">True</property>
                                               </object>
                                               <packing>
-                                                <property name="expand">False</property>
-                                                <property name="fill">False</property>
+                                                <property name="expand">True</property>
+                                                <property name="fill">True</property>
                                                 <property name="position">0</property>
                                               </packing>
                                             </child>
@@ -1463,6 +1515,21 @@
                 <property name="spacing">3</property>
                 <property name="layout_style">end</property>
                 <child>
+                  <object class="GtkButton" id="button_configurations_save">
+                    <property name="label" translatable="yes">Save</property>
+                    <property name="use_action_appearance">False</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="image">image1</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
                   <object class="GtkButton" id="button_configurations_ok">
                     <property name="label" translatable="yes">Ok</property>
                     <property name="use_action_appearance">False</property>
@@ -1473,7 +1540,7 @@
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">False</property>
-                    <property name="position">0</property>
+                    <property name="position">1</property>
                   </packing>
                 </child>
                 <child>
@@ -1488,7 +1555,7 @@
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">False</property>
-                    <property name="position">1</property>
+                    <property name="position">2</property>
                   </packing>
                 </child>
               </object>
@@ -1502,6 +1569,11 @@
         </child>
       </object>
     </child>
+  </object>
+  <object class="GtkImage" id="image1">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="stock">gtk-missing-image</property>
   </object>
   <object class="GtkListStore" id="liststore_overscan">
     <columns>

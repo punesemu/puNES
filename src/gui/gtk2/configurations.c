@@ -9,6 +9,7 @@
 
 #include "glade/audio_configuration_glade.h"
 #include "glade/configurations_glade.h"
+#include "glade/general_icons_inline.h"
 #include "glade/video_configuration_icons_inline.h"
 #include "glade/audio_configuration_icons_inline.h"
 
@@ -36,6 +37,8 @@ void configurations_notebook(void) {
 
 	/* Get main window pointer from UI */
 	configurations_window = GTK_WIDGET(gtk_builder_get_object(builder, "configurations"));
+
+	change_image_element(mode_inline, "image_mode");
 
 	video_configurations_init();
 	audio_configurations_init();
@@ -65,6 +68,7 @@ void video_configurations_init(void) {
 	change_image_element(filter_inline, "image_filter");
 	change_image_element(overscan_inline, "image_overscan");
 	change_image_element(overscan_default_inline, "image_overscan_default");
+	change_image_element(palette_predefined_inline, "image_palette_predefined");
 }
 void audio_configurations_init(void) {
 	change_image_element(sample_rate_inline, "image_sample_rate");
