@@ -6,7 +6,9 @@
  */
 
 #include "gui.h"
+
 #include "param.h"
+#include "cfgfile.h"
 
 #include "glade/audio_configuration_glade.h"
 #include "glade/configurations_glade.h"
@@ -16,7 +18,7 @@
 
 void change_image_element(const guint8 *icon_inline, gchar *element);
 void populate_combobox_whit_parameters(const _param *param, gint length, gint start,
-        gchar *element);
+        gint active, gchar *c, gchar *ls);
 
 void general_configurations_init(void);
 void video_configurations_init(void);
@@ -65,17 +67,21 @@ void change_image_element(const guint8 *icon_inline, gchar *element) {
 	g_object_unref(pixbuf), pixbuf = ((void *)0);
 }
 void populate_combobox_whit_parameters(const _param *param, gint length, gint start,
-        gchar *element) {
+        gint active, gchar *c, gchar *ls) {
 	gint i;
+	GtkComboBox *combobox;
 	GtkListStore *liststore;
 	GtkTreeIter it;
 
-	liststore = GTK_LIST_STORE(gtk_builder_get_object(builder, element));
+	liststore = GTK_LIST_STORE(gtk_builder_get_object(builder, ls));
+	combobox = GTK_COMBO_BOX(gtk_builder_get_object(builder, c));
 
 	for (i = 0; i < length - start; i++) {
 		gint index = i + start;
 		gtk_list_store_insert_with_values(liststore, &it, i, 0, param[index].lname, 1, index, -1);
 	}
+
+	gtk_combo_box_set_active(combobox, active - start);
 }
 
 
@@ -84,27 +90,24 @@ void populate_combobox_whit_parameters(const _param *param, gint length, gint st
 void general_configurations_init(void) {
 	/* mode */
 	change_image_element(mode_inline, "image_mode");
-	populate_combobox_whit_parameters(pMode, LENGTH(pMode), 0, "liststore_mode");
-
+	populate_combobox_whit_parameters(pMode, LENGTH(pMode), 0, cfg->mode, "combobox_mode",
+	        "liststore_mode");
 	/* save now */
 	change_image_element(save_now_inline, "image_save_now");
 }
 void video_configurations_init(void) {
 	/* rendering */
 	change_image_element(rendering_inline, "image_rendering");
-	populate_combobox_whit_parameters(pRendering, LENGTH(pRendering), 0, "liststore_rendering");
-
+	//populate_combobox_whit_parameters(pRendering, LENGTH(pRendering), 0, "liststore_rendering");
 	/* fps */
 	change_image_element(fps_inline, "image_fps");
-	populate_combobox_whit_parameters(pFps, LENGTH(pFps), 0, "liststore_fps");
-
+	//populate_combobox_whit_parameters(pFps, LENGTH(pFps), 0, "liststore_fps");
 	/* frame skip */
 	change_image_element(frame_skip_inline, "image_frame_skip");
-	populate_combobox_whit_parameters(pFsk, LENGTH(pFsk), 0, "liststore_frame_skip");
-
+	//populate_combobox_whit_parameters(pFsk, LENGTH(pFsk), 0, "liststore_frame_skip");
 	/* scale */
 	change_image_element(scale_inline, "image_scale");
-	populate_combobox_whit_parameters(pSize, LENGTH(pSize), 1, "liststore_scale");
+	//populate_combobox_whit_parameters(pSize, LENGTH(pSize), 1, "liststore_scale");
 
 	change_image_element(effect_inline, "image_effect");
 	change_image_element(filter_inline, "image_filter");
