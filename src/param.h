@@ -294,8 +294,8 @@ static const _param pNoYes[] = {
 	{"Yes", "yes"}
 };
 static const _param pOffOn[] = {
-	{"Off",     "off"},
-	{"On",      "on" }
+	{"Off", "off"},
+	{"On",  "on" }
 };
 static const _param pMode[] = {
 	{"Auto",  "auto" },
@@ -337,10 +337,10 @@ static const _param pFsk[] = {
 };
 static const _param pSize[] = {
 	{"NONE", "none"},
-	{"1X",    "1x" },
-	{"2X",    "2x" },
-	{"3X",    "3x" },
-	{"4X",    "4x" }
+	{"1x",   "1x"  },
+	{"2x",   "2x"  },
+	{"3x",   "3x"  },
+	{"4x",   "4x"  }
 };
 static const _param pFilter[] = {
 	{"no filter",  "none"      },

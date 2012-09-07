@@ -6,6 +6,7 @@
  */
 
 #include "gui.h"
+#include "param.h"
 
 #include "glade/audio_configuration_glade.h"
 #include "glade/configurations_glade.h"
@@ -14,6 +15,10 @@
 #include "glade/audio_configuration_icons_inline.h"
 
 void change_image_element(const guint8 *icon_inline, gchar *element);
+void populate_combobox_whit_parameters(const _param *param, gint length, gint start,
+        gchar *element);
+
+void general_configurations_init(void);
 void video_configurations_init(void);
 void audio_configurations_init(void);
 
@@ -38,8 +43,7 @@ void configurations_notebook(void) {
 	/* Get main window pointer from UI */
 	configurations_window = GTK_WIDGET(gtk_builder_get_object(builder, "configurations"));
 
-	change_image_element(mode_inline, "image_mode");
-
+	general_configurations_init();
 	video_configurations_init();
 	audio_configurations_init();
 
@@ -49,6 +53,7 @@ void configurations_notebook(void) {
 	/* Show window. All other widgets are automatically shown by GtkBuilder */
 	gtk_widget_show(configurations_window);
 }
+
 void change_image_element(const guint8 *icon_inline, gchar *element) {
 	GdkPixbuf *pixbuf;
 	GtkImage *image;
@@ -59,16 +64,54 @@ void change_image_element(const guint8 *icon_inline, gchar *element) {
 	gtk_image_set_from_pixbuf(image, pixbuf);
 	g_object_unref(pixbuf), pixbuf = ((void *)0);
 }
+void populate_combobox_whit_parameters(const _param *param, gint length, gint start,
+        gchar *element) {
+	gint i;
+	GtkListStore *liststore;
+	GtkTreeIter it;
+
+	liststore = GTK_LIST_STORE(gtk_builder_get_object(builder, element));
+
+	for (i = 0; i < length - start; i++) {
+		gint index = i + start;
+		gtk_list_store_insert_with_values(liststore, &it, i, 0, param[index].lname, 1, index, -1);
+	}
+}
+
+
+
+
+void general_configurations_init(void) {
+	/* mode */
+	change_image_element(mode_inline, "image_mode");
+	populate_combobox_whit_parameters(pMode, LENGTH(pMode), 0, "liststore_mode");
+
+	/* save now */
+	change_image_element(save_now_inline, "image_save_now");
+}
 void video_configurations_init(void) {
+	/* rendering */
 	change_image_element(rendering_inline, "image_rendering");
+	populate_combobox_whit_parameters(pRendering, LENGTH(pRendering), 0, "liststore_rendering");
+
+	/* fps */
 	change_image_element(fps_inline, "image_fps");
+	populate_combobox_whit_parameters(pFps, LENGTH(pFps), 0, "liststore_fps");
+
+	/* frame skip */
 	change_image_element(frame_skip_inline, "image_frame_skip");
+	populate_combobox_whit_parameters(pFsk, LENGTH(pFsk), 0, "liststore_frame_skip");
+
+	/* scale */
 	change_image_element(scale_inline, "image_scale");
+	populate_combobox_whit_parameters(pSize, LENGTH(pSize), 1, "liststore_scale");
+
 	change_image_element(effect_inline, "image_effect");
 	change_image_element(filter_inline, "image_filter");
 	change_image_element(overscan_inline, "image_overscan");
 	change_image_element(overscan_default_inline, "image_overscan_default");
 	change_image_element(palette_predefined_inline, "image_palette_predefined");
+	change_image_element(palette_custom_inline, "image_palette_custom");
 }
 void audio_configurations_init(void) {
 	change_image_element(sample_rate_inline, "image_sample_rate");

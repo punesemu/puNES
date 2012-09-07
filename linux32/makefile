@@ -30,13 +30,16 @@ endif
 # Add inputs and outputs from these tool invocations to the build variables 
 
 # All Target
-all: punes32
+all: pre-build main-build
+
+# Main-build Target
+main-build: punes32
 
 # Tool invocations
 punes32: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: Cross GCC Linker'
-	i686-pc-linux-gnu-gcc -L/usr/i686-pc-linux-gnu/usr/lib -o "punes32" $(OBJS) $(USER_OBJS) $(LIBS)
+	i686-pc-linux-gnu-gcc -L/usr/i686-pc-linux-gnu/usr/lib -export-dynamic -o "punes32" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -45,7 +48,11 @@ clean:
 	-$(RM) $(OBJS)$(C_DEPS)$(EXECUTABLES) punes32
 	-@echo ' '
 
+pre-build:
+	-../src/gui/gtk2/glade/glade_to_h ../src/gui/gtk2/glade
+	-@echo ' '
+
 .PHONY: all clean dependents
-.SECONDARY:
+.SECONDARY: main-build pre-build
 
 -include ../makefile.targets
