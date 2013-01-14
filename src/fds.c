@@ -46,7 +46,6 @@ void fdsQuit(void) {
 	}
 	fdsInit();
 }
-
 BYTE fds_load_rom(void) {
 	BYTE i;
 
@@ -128,7 +127,6 @@ BYTE fds_load_rom(void) {
 
 	return (EXIT_OK);
 }
-
 BYTE fds_load_bios(void) {
 	char bios_file[1024], *lastSlash;
 	FILE *bios = NULL;
@@ -363,18 +361,17 @@ void fds_disk_op(WORD type, BYTE side_to_insert) {
 		        && (fds.side.counted_files == fds.side.block_2.tot_files)) {
 			break;
 		}
-
 	}
 
-    if(size < DISK_SIDE_SIZE) {
+	if (size < DISK_SIDE_SIZE) {
 		add_to_image(type, FDS_DISK_MEMSET, 0x0000, DISK_SIDE_SIZE - size);
-    }
+	}
 
 	add_to_image(type, FDS_DISK_MEMSET, FDS_DISK_GAP, 2000);
 
 #undef add_to_image
 
-    switch (type) {
+	switch (type) {
 		case FDS_DISK_COUNT:
 			fds.info.sides_size[side_to_insert] = size;
 			break;

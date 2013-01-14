@@ -584,7 +584,7 @@ void ppuTick(WORD cyclesCPU) {
 									 * se non ho ancora trovato il nono sprite devo
 									 * aumentare sia byteOAM che index. Questo
 									 * e' un'errore della PPU che, invece di controllare
-									 * la coordinata Y(byte 0), tratta il byte puntato
+									 * la coordinata Y (byte 0), tratta il byte puntato
 									 * da byteOAM come se fosse la coordinata Y.
 									 */
 									if (sprEv.evaluate == FALSE) {
