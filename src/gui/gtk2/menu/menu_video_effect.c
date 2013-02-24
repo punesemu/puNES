@@ -5,11 +5,11 @@
  *      Author: fhorse
  */
 
-#ifdef OPENGL
 #include "menu_video_effect.h"
 #include "opengl.h"
 #include "sdlgfx.h"
 #include "input.h"
+#include "cfgfile.h"
 #include "openGL/no_effect.h"
 #include "openGL/cube3d.h"
 
@@ -138,7 +138,7 @@ void menu_video_effect_set(void) {
 		opengl_draw_scene = opengl_draw_scene_cube3d;
 
 		opengl.factorDistance = opengl.xRotate = opengl.yRotate = 0;
-		if (gfx.fullscreen == FULLSCR) {
+		if (cfg->fullscreen == FULLSCR) {
 			SDL_ShowCursor(SDL_ENABLE);
 		}
 
@@ -148,7 +148,7 @@ void menu_video_effect_set(void) {
 		opengl_unset_effect = opengl_unset_no_effect;
 		opengl_draw_scene = opengl_draw_scene_no_effect;
 
-		if (gfx.fullscreen == FULLSCR) {
+		if (cfg->fullscreen == FULLSCR) {
 			SDL_ShowCursor(SDL_DISABLE);
 		}
 	}
@@ -157,4 +157,3 @@ void menu_video_effect_set(void) {
 
 	gfxSetScreen(NOCHANGE, NOCHANGE, NOCHANGE, NOCHANGE, FALSE);
 }
-#endif

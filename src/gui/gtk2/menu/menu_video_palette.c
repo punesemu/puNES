@@ -9,6 +9,7 @@
 #include "param.h"
 #include "palette.h"
 #include "sdlgfx.h"
+#include "cfgfile.h"
 
 #ifdef __SUNPRO_C
 #pragma align 4 (icon_inline)
@@ -132,7 +133,7 @@ void menu_video_palette_check(void) {
 	int index;
 
 	for (index = MPALETTEPAL; index < NUMCHKS; index++) {
-		if (gfx.palette == index) {
+		if (cfg->palette == index) {
 			gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[index]), TRUE);
 		} else {
 			gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[index]), FALSE);

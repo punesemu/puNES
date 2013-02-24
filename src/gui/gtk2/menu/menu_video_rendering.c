@@ -5,9 +5,9 @@
  *      Author: fhorse
  */
 
-#ifdef OPENGL
 #include "menu_video_rendering.h"
 #include "opengl.h"
+#include "cfgfile.h"
 #include "sdlgfx.h"
 
 #ifdef __SUNPRO_C
@@ -89,11 +89,11 @@ void menu_video_rendering(GtkWidget *video, GtkAccelGroup *accel_group) {
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), check[MOPENGLSL]);
 
 	g_signal_connect_swapped(G_OBJECT(check[MSOFTWARE]), "activate", G_CALLBACK(rendering_set),
-	        GINT_TO_POINTER(MSOFTWARE));
+	        GINT_TO_POINTER(RENDER_SOFTWARE));
 	g_signal_connect_swapped(G_OBJECT(check[MOPENGL]), "activate", G_CALLBACK(rendering_set),
-	        GINT_TO_POINTER(MOPENGL));
+	        GINT_TO_POINTER(RENDER_OPENGL));
 	g_signal_connect_swapped(G_OBJECT(check[MOPENGLSL]), "activate", G_CALLBACK(rendering_set),
-	        GINT_TO_POINTER(MOPENGLSL));
+	        GINT_TO_POINTER(RENDER_GLSL));
 }
 void menu_video_rendering_check(void) {
 	int index;
@@ -134,7 +134,7 @@ void rendering_set(int newrendering) {
 		return;
 	}
 
-	if ((gfx.opengl + opengl.glsl.enabled) == newrendering) {
+	if (cfg->render == newrendering) {
 		guiUpdate();
 		return;
 	}
@@ -149,25 +149,9 @@ void rendering_set(int newrendering) {
 	 */
 	gtk_widget_hide(mainWin);
 
-	if (gfx.opengl && !newrendering) {
-		opengl.rotation = FALSE;
-	}
-
 	/* switch opengl/software render */
-	switch (newrendering) {
-		case MSOFTWARE:
-			gfx.opengl = FALSE;
-			opengl.glsl.enabled = FALSE;
-			break;
-		case MOPENGL:
-			gfx.opengl = TRUE;
-			opengl.glsl.enabled = FALSE;
-			break;
-		case MOPENGLSL:
-			gfx.opengl = TRUE;
-			opengl.glsl.enabled = TRUE;
-			break;
-	}
+	gfxSetRender(newrendering);
+	cfg->render = newrendering;
 
 	gfxResetVideo();
 	gfxSetScreen(NOCHANGE, NOCHANGE, NOCHANGE, NOCHANGE, TRUE);
@@ -177,4 +161,3 @@ void rendering_set(int newrendering) {
 
 	gtk_widget_show(mainWin);
 }
-#endif

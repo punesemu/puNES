@@ -10,9 +10,7 @@
 #include "sdlsnd.h"
 #include "cfgfile.h"
 #include "sdlgfx.h"
-#ifdef OPENGL
 #include "opengl.h"
-#endif
 
 #define cfginput_enable_config(prt, idc)\
 	switch (prt.port.type) {\
@@ -45,10 +43,8 @@ void cfgInput(HWND hwnd) {
 	cfg_port2.id = 2;
 	memcpy(&cfg_port2.port, &port2, sizeof(port2));
 
-#ifdef OPENGL
 	/* Faccio l'update del menu per i casi dello zapper e degli effetti */
 	guiUpdate();
-#endif
 
 	emuPause(TRUE);
 
@@ -85,12 +81,11 @@ long __stdcall cfg_input_controllers(HWND hwnd, UINT msg, WPARAM wParam, LPARAM 
 			switch(LOWORD(wParam)) {
 				case IDOK:
 					EndDialog(hwnd, IDOK);
-#ifdef OPENGL
+
 					if (((cfg_port1.port.type == ZAPPER) || (cfg_port2.port.type == ZAPPER))
 							&& opengl.rotation) {
 						set_effect();
 					}
-#endif
 
 					if (cfg_port1.port.type != port1.type) {
 						cfg_port1.port.changed = TRUE;
@@ -107,10 +102,8 @@ long __stdcall cfg_input_controllers(HWND hwnd, UINT msg, WPARAM wParam, LPARAM 
 					memcpy(&port1, &cfg_port1.port, sizeof(port1));
 					memcpy(&port2, &cfg_port2.port, sizeof(port2));
 
-#ifdef OPENGL
 					/* Faccio l'update del menu per i casi dello zapper e degli effetti */
 					guiUpdate();
-#endif
 
 					cfgfileInputSave();
 

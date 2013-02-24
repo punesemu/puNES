@@ -7,9 +7,8 @@
 
 #include "menu_video_filter.h"
 #include "sdlgfx.h"
-#ifdef OPENGL
 #include "opengl.h"
-#endif
+#include "cfgfile.h"
 
 #ifdef __SUNPRO_C
 #pragma align 4 (filter_icon_inline)
@@ -323,7 +322,6 @@ void menu_video_filter(GtkWidget *video, GtkAccelGroup *accel_group) {
 	g_signal_connect_swapped(G_OBJECT(check[MBILINEAR]), "activate",
 			G_CALLBACK(set_filter), GINT_TO_POINTER(BILINEAR));
 
-#ifdef OPENGL
 	check[MPOSPHOR] = gtk_check_menu_item_new_with_mnemonic("_Phospor");
 	check[MSCANLINE] = gtk_check_menu_item_new_with_mnemonic("S_canline");
 	check[MDBL] = gtk_check_menu_item_new_with_mnemonic("_DBL");
@@ -357,7 +355,6 @@ void menu_video_filter(GtkWidget *video, GtkAccelGroup *accel_group) {
 			G_CALLBACK(set_filter), GINT_TO_POINTER(CRTCURVE));
 	g_signal_connect_swapped(G_OBJECT(check[MCRTNOCURVE]), "activate",
 			G_CALLBACK(set_filter), GINT_TO_POINTER(CRTNOCURVE));
-#endif
 
 	/* Settings/Video/Filters/Scalex */
 	menu[1] = gtk_menu_new();
@@ -445,7 +442,6 @@ void menu_video_filter_check(void) {
 		gtk_widget_set_sensitive(check[MHQ4X], TRUE);
 	}
 
-#ifdef OPENGL
 	if (opengl.glsl.compliant && opengl.glsl.enabled) {
 		gtk_widget_set_sensitive(check[MPOSPHOR], TRUE);
 		gtk_widget_set_sensitive(check[MSCANLINE], TRUE);
@@ -457,7 +453,6 @@ void menu_video_filter_check(void) {
 		gtk_widget_set_sensitive(check[MDBL], FALSE);
 		gtk_widget_set_sensitive(check[MCRT], FALSE);
 	}
-#endif
 
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MNOFILTER]), FALSE);
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MBILINEAR]), FALSE);
@@ -471,22 +466,19 @@ void menu_video_filter_check(void) {
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MRGBNTSCSVD]), FALSE);
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MRGBNTSCRGB]), FALSE);
 
-#ifdef OPENGL
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MPOSPHOR]), FALSE);
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MSCANLINE]), FALSE);
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MDBL]), FALSE);
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MCRTCURVE]), FALSE);
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MCRTNOCURVE]), FALSE);
-#endif
 
-	switch (gfx.filter) {
+	switch (cfg->filter) {
 		case NOFILTER:
 			index = MNOFILTER;
 			break;
 		case BILINEAR:
 			index = MBILINEAR;
 			break;
-#ifdef OPENGL
 		case POSPHOR:
 			index = MPOSPHOR;
 			break;
@@ -502,7 +494,6 @@ void menu_video_filter_check(void) {
 		case CRTNOCURVE:
 			index = MCRTNOCURVE;
 			break;
-#endif
 		case SCALE2X:
 			index = MSCALE2X;
 			break;
@@ -522,7 +513,7 @@ void menu_video_filter_check(void) {
 			index = MHQ4X;
 			break;
 		case RGBNTSC: {
-			switch (gfx.ntscFormat) {
+			switch (cfg->ntsc_format) {
 				case COMPOSITE:
 					index = MRGBNTSCCOM;
 					break;
@@ -551,7 +542,6 @@ void set_filter(int newfilter) {
 		case BILINEAR:
 			gfxSetScreen(NOCHANGE, BILINEAR, NOCHANGE, NOCHANGE, FALSE);
 			return;
-#ifdef OPENGL
 		case POSPHOR:
 			gfxSetScreen(NOCHANGE, POSPHOR, NOCHANGE, NOCHANGE, FALSE);
 			return;
@@ -567,7 +557,6 @@ void set_filter(int newfilter) {
 		case CRTNOCURVE:
 			gfxSetScreen(NOCHANGE, CRTNOCURVE, NOCHANGE, NOCHANGE, FALSE);
 			return;
-#endif
 		case SCALE2X:
 			gfxSetScreen(X2, SCALE2X, NOCHANGE, NOCHANGE, FALSE);
 			return;
@@ -594,19 +583,19 @@ void set_filter(int newfilter) {
 			 * faccio il resto solo se lo switch del nuovo effetto
 			 * e' stato effettuato con successo.
 			 */
-			if (gfx.filter == RGBNTSC) {
+			if (cfg->filter == RGBNTSC) {
 				switch (newfilter) {
 					case MRGBNTSCCOM:
-						gfx.ntscFormat = COMPOSITE;
+						cfg->ntsc_format = COMPOSITE;
 						break;
 					case MRGBNTSCSVD:
-						gfx.ntscFormat = SVIDEO;
+						cfg->ntsc_format = SVIDEO;
 						break;
 					case MRGBNTSCRGB:
-						gfx.ntscFormat = RGBMODE;
+						cfg->ntsc_format = RGBMODE;
 						break;
 				}
-				ntscSet(gfx.ntscFormat, 0, 0, (BYTE *) paletteRGB, 0);
+				ntscSet(cfg->ntsc_format, 0, 0, (BYTE *) paletteRGB, 0);
 				guiUpdate();
 			}
 			return;

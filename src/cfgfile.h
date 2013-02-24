@@ -11,7 +11,7 @@
 #include "common.h"
 
 typedef struct {
-	BYTE saveOnExit;
+	BYTE save_on_exit;
 	BYTE mode;
 	BYTE audio;
 	BYTE samplerate;
@@ -20,6 +20,18 @@ typedef struct {
 	BYTE swap_duty;
 	BYTE fps;
 	BYTE frameskip;
+
+	BYTE render;
+	BYTE scale;
+	BYTE fullscreen;
+	BYTE filter;
+	BYTE ntsc_format;
+	BYTE palette;
+	BYTE vsync;
+	BYTE aspect_ratio;
+	BYTE oscan;
+	BYTE oscan_default;
+	BYTE gamegenie;
 } _config;
 
 _config *cfg;

@@ -8,6 +8,7 @@
 #include "menu_video_size.h"
 #include "param.h"
 #include "sdlgfx.h"
+#include "cfgfile.h"
 
 #ifdef __SUNPRO_C
 #pragma align 4 (icon_inline)
@@ -120,7 +121,7 @@ void menu_video_size(GtkWidget *video, GtkAccelGroup *accel_group) {
 void menu_video_size_check(void) {
 	int index;
 
-	if (gfx.filter != NOFILTER) {
+	if (cfg->filter != NOFILTER) {
 		gtk_widget_set_sensitive(check[MX1], FALSE);
 	} else {
 		gtk_widget_set_sensitive(check[MX1], TRUE);
@@ -130,8 +131,8 @@ void menu_video_size_check(void) {
 		gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[index]), FALSE);
 	}
 
-	if (!gfx.fullscreen) {
-		switch (gfx.scale) {
+	if (cfg->fullscreen == NOFULLSCR) {
+		switch (cfg->scale) {
 			case X1:
 				index = MX1;
 				break;

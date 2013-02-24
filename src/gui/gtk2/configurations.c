@@ -9,6 +9,7 @@
 
 #include "param.h"
 #include "cfgfile.h"
+#include "opengl.h"
 
 #include "glade/audio_configuration_glade.h"
 #include "glade/configurations_glade.h"
@@ -17,8 +18,9 @@
 #include "glade/audio_configuration_icons_inline.h"
 
 void change_image_element(const guint8 *icon_inline, gchar *element);
-void populate_combobox_whit_parameters(const _param *param, gint length, gint start,
+void populate_combobox_with_parameters(const _param *param, gint length, gint start,
         gint active, gchar *c, gchar *ls);
+void populate_combobox(gchar *c, gchar *ls, gchar *text, gint index, gint value, gint active);
 
 void general_configurations_init(void);
 void video_configurations_init(void);
@@ -66,7 +68,7 @@ void change_image_element(const guint8 *icon_inline, gchar *element) {
 	gtk_image_set_from_pixbuf(image, pixbuf);
 	g_object_unref(pixbuf), pixbuf = ((void *)0);
 }
-void populate_combobox_whit_parameters(const _param *param, gint length, gint start,
+void populate_combobox_with_parameters(const _param *param, gint length, gint start,
         gint active, gchar *c, gchar *ls) {
 	gint i;
 	GtkComboBox *combobox;
@@ -83,6 +85,20 @@ void populate_combobox_whit_parameters(const _param *param, gint length, gint st
 
 	gtk_combo_box_set_active(combobox, active - start);
 }
+void populate_combobox(gchar *c, gchar *ls, gchar *text, gint index, gint value, gint active) {
+	GtkComboBox *combobox;
+	GtkListStore *liststore;
+	GtkTreeIter it;
+
+	liststore = GTK_LIST_STORE(gtk_builder_get_object(builder, ls));
+	combobox = GTK_COMBO_BOX(gtk_builder_get_object(builder, c));
+
+	gtk_list_store_insert_with_values(liststore, &it, index, 0, text, 1, value, -1);
+
+	if (value == active) {
+		gtk_combo_box_set_active(combobox, index);
+	}
+}
 
 
 
@@ -90,14 +106,28 @@ void populate_combobox_whit_parameters(const _param *param, gint length, gint st
 void general_configurations_init(void) {
 	/* mode */
 	change_image_element(mode_inline, "image_mode");
-	populate_combobox_whit_parameters(pMode, LENGTH(pMode), 0, cfg->mode, "combobox_mode",
-	        "liststore_mode");
+	populate_combobox("combobox_mode", "liststore_mode", "Auto", 0, AUTO, cfg->mode);
+	populate_combobox("combobox_mode", "liststore_mode", "PAL", 1, PAL, cfg->mode);
+	populate_combobox("combobox_mode", "liststore_mode", "NTSC", 2, NTSC, cfg->mode);
+	populate_combobox("combobox_mode", "liststore_mode", "Dendy", 3, DENDY, cfg->mode);
+
+	//populate_combobox_whit_parameters(pMode, LENGTH(pMode), 0, cfg->mode, "combobox_mode",
+	//        "liststore_mode");
+
 	/* save now */
 	change_image_element(save_now_inline, "image_save_now");
 }
 void video_configurations_init(void) {
 	/* rendering */
 	change_image_element(rendering_inline, "image_rendering");
+	populate_combobox("combobox_rendering", "liststore_rendering", "Software", 0, 0, cfg->mode);
+	if (opengl.supported) {
+		populate_combobox("combobox_rendering", "liststore_rendering", "OpenGL", 1, 1, cfg->mode);
+	}
+	if (opengl.glsl.compliant) {
+		populate_combobox("combobox_rendering", "liststore_rendering", "OpenGL GLSL", 2, 2, cfg->mode);
+	}
+
 	//populate_combobox_whit_parameters(pRendering, LENGTH(pRendering), 0, "liststore_rendering");
 	/* fps */
 	change_image_element(fps_inline, "image_fps");

@@ -7,6 +7,7 @@
 
 #include "menu_gamegenie.h"
 #include "gamegenie.h"
+#include "cfgfile.h"
 
 enum {
 	MGAMEGENIE,
@@ -27,7 +28,7 @@ void menu_gamegenie(GtkWidget *mainmenu, GtkAccelGroup *accel_group) {
 void menu_gamegenie_check(void) {
 	gtk_widget_set_sensitive(check[MGAMEGENIE], TRUE);
 
-	if (gamegenie.enabled) {
+	if (cfg->gamegenie) {
 		gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MGAMEGENIE]), TRUE);
 	} else {
 		gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MGAMEGENIE]), FALSE);
@@ -38,9 +39,9 @@ void menu_gamegenie_select(void) {
 		return;
 	}
 
-	gamegenie.enabled = !gamegenie.enabled;
+	cfg->gamegenie = !cfg->gamegenie;
 
-	if (gamegenie.enabled) {
+	if (cfg->gamegenie) {
 		gamegenie_check_rom_present(TRUE);
 	}
 

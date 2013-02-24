@@ -14,9 +14,7 @@
 #include "version.h"
 #include "emu.h"
 #include "gamegenie.h"
-#ifdef OPENGL
 #include "opengl.h"
-#endif
 #define __CMDLINE__
 #include "param.h"
 
@@ -44,7 +42,7 @@ BYTE cmdlineParse(int argc, char **argv) {
 				paramSearch(0, optarg, pFps, cfg_from_file.fps = index);
 				break;
 			case 'g':
-				paramSearch(0, optarg, pNoYes, gamegenie.enabled = index);
+				paramSearch(0, optarg, pNoYes, cfg_from_file.gamegenie = index);
 				break;
 			case 'h':
 			case '?':
@@ -63,7 +61,7 @@ BYTE cmdlineParse(int argc, char **argv) {
 				paramSearch(0, optarg, pFsk, cfg_from_file.frameskip = index);
 				break;
 			case 'i':
-				paramSearch(0, optarg, pFilter, gfx.filter = index);
+				paramSearch(0, optarg, pFilter, cfg_from_file.filter = index);
 				break;
 			case 'l':
 				paramSearch(0, optarg, pSamplerate, cfg_from_file.samplerate = index);
@@ -72,52 +70,34 @@ BYTE cmdlineParse(int argc, char **argv) {
 				paramSearch(0, optarg, pMode, cfg_from_file.mode = index);
 				break;
 			case 'n':
-				paramSearch(0, optarg, pNtsc, gfx.ntscFormat = index);
+				paramSearch(0, optarg, pNtsc, cfg_from_file.ntsc_format = index);
 				break;
 			case 'o':
-				paramSearch(0, optarg, pOverscan, gfx.overscan = index);
+				paramSearch(0, optarg, pOverscan, cfg_from_file.oscan = index);
 				break;
 			case 'p':
-				paramSearch(0, optarg, pNtsc, gfx.palette = index);
+				paramSearch(0, optarg, pNtsc, cfg_from_file.palette = index);
 				break;
 			case 'q':
 				paramSearch(0, optarg, pAudioQuality, cfg_from_file.audio_quality = index);
 				break;
 			case 's':
-				paramSearch(1, optarg, pSize, gfx.scale = gfx.scaleBeforeFullscreen = index);
+				paramSearch(1, optarg, pSize, cfg_from_file.scale = index);
+				gfx.scale_before_fscreen = cfg_from_file.scale;
 				break;
-#ifdef OPENGL
-			case 'r': {
-				BYTE render = 0;
-
-				paramSearch(0, optarg, pRendering, render = index);
-
-				switch (render) {
-					case 0:
-						gfx.opengl = FALSE;
-						opengl.glsl.enabled = FALSE;
-						break;
-					case 1:
-						gfx.opengl = TRUE;
-						opengl.glsl.enabled = FALSE;
-						break;
-					case 2:
-						gfx.opengl = TRUE;
-						opengl.glsl.enabled = TRUE;
-						break;
-				}
+			case 'r':
+				paramSearch(0, optarg, pRendering, cfg_from_file.render = index);
+				gfxSetRender(cfg_from_file.render);
 				break;
-			}
 			case 'v':
-				paramSearch(0, optarg, pOffOn, gfx.vsync = index);
+				paramSearch(0, optarg, pOffOn, cfg_from_file.vsync = index);
 				break;
 			case 't':
-				paramSearch(0, optarg, pNoYes, opengl.aspectRatio = !index);
+				paramSearch(0, optarg, pNoYes, cfg_from_file.aspect_ratio = !index);
 				break;
 			case 'u':
-				paramSearch(0, optarg, pNoYes, gfx.fullscreen = index);
+				paramSearch(0, optarg, pNoYes, cfg_from_file.fullscreen = index);
 				break;
-#endif
 			default:
 				break;
 		}
@@ -139,12 +119,10 @@ void usage(char *name) {
 			"%s\n"
 			"%s\n"
 			"%s\n"
-#ifdef OPENGL
 			"%s\n"
 			"%s\n"
 			"%s\n"
 			"%s\n"
-#endif
 			"%s\n"
 			"%s\n"
 			"%s\n"
@@ -161,12 +139,10 @@ void usage(char *name) {
 	        param[P_FILTER].help,
 	        param[P_NTSCFORMAT].help,
 	        param[P_PALETTE].help,
-#ifdef OPENGL
 			param[P_RENDER].help,
 			param[P_VSYNC].help,
 			param[P_FSCREEN].help,
 			param[P_STRETCH].help,
-#endif
 			param[P_AUDIO].help,
 			param[P_SAMPLERATE].help,
 			param[P_CHANNELS].help,

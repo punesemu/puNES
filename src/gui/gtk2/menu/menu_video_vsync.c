@@ -5,9 +5,9 @@
  *      Author: fhorse
  */
 
-#ifdef OPENGL
 #include "menu_video_vsync.h"
 #include "sdlgfx.h"
+#include "cfgfile.h"
 
 #ifdef __SUNPRO_C
 #pragma align 4 (icon_inline)
@@ -111,7 +111,7 @@ void menu_video_vsync_check(void) {
 	/* VSync */
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MVSYNCON]), FALSE);
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MVSYNCOFF]), FALSE);
-	if (gfx.vsync) {
+	if (cfg->vsync) {
 		gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MVSYNCON]), TRUE);
 	} else {
 		gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MVSYNCOFF]), TRUE);
@@ -124,7 +124,7 @@ void vsync_set(int bool) {
 		return;
 	}
 
-	if (gfx.vsync == bool) {
+	if (cfg->vsync == bool) {
 		guiUpdate();
 		return;
 	}
@@ -140,7 +140,7 @@ void vsync_set(int bool) {
 	gtk_widget_hide(mainWin);
 
 	/* switch vsync */
-	gfx.vsync = bool;
+	cfg->vsync = bool;
 
 	gfxResetVideo();
 	gfxSetScreen(NOCHANGE, NOCHANGE, NOCHANGE, NOCHANGE, TRUE);
@@ -150,4 +150,3 @@ void vsync_set(int bool) {
 
 	gtk_widget_show(mainWin);
 }
-#endif

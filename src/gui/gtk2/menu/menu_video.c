@@ -12,12 +12,10 @@
 #include "menu_video_overscan.h"
 #include "menu_video_filter.h"
 #include "menu_video_palette.h"
-#ifdef OPENGL
 #include "menu_video_rendering.h"
 #include "menu_video_vsync.h"
 #include "menu_video_effect.h"
 #include "menu_video_fullscreen.h"
-#endif
 
 #ifdef __SUNPRO_C
 #pragma align 4 (icon_inline)
@@ -85,40 +83,28 @@ void menu_video(GtkWidget *settings, GtkAccelGroup *accel_group) {
 	gtk_menu_shell_append(GTK_MENU_SHELL(settings), video);
 
 	icon_inline(video, icon_inline)
-#ifdef OPENGL
 	menu_video_rendering(menu, NULL);
-#endif
 	menu_video_fps(menu, NULL);
 	menu_video_frame_skip(menu, NULL);
-#ifdef OPENGL
 	menu_video_vsync(menu, NULL);
-#endif
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), gtk_separator_menu_item_new());
 	menu_video_size(menu, accel_group);
 	menu_video_overscan(menu, NULL);
 	menu_video_filter(menu, NULL);
 	menu_video_palette(menu, NULL);
-#ifdef OPENGL
 	menu_video_effect(menu, accel_group);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), gtk_separator_menu_item_new());
 	menu_video_fullscreen(menu, accel_group);
-#endif
 }
 void menu_video_check(void) {
-#ifdef OPENGL
 	menu_video_rendering_check();
-#endif
 	menu_video_fps_check();
 	menu_video_frame_skip_check();
-#ifdef OPENGL
 	menu_video_vsync_check();
-#endif
 	menu_video_size_check();
 	menu_video_overscan_check();
 	menu_video_filter_check();
 	menu_video_palette_check();
-#ifdef OPENGL
 	menu_video_effect_check();
 	menu_video_fullscreen_check();
-#endif
 }

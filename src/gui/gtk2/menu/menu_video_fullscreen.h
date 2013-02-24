@@ -5,7 +5,6 @@
  *      Author: fhorse
  */
 
-#ifdef OPENGL
 #ifndef MENU_VIDEO_FULLSCREEN_H_
 #define MENU_VIDEO_FULLSCREEN_H_
 
@@ -16,4 +15,3 @@ void menu_video_fullscreen_check(void);
 void menu_video_fullscreen_switch_stretch(void);
 
 #endif /* MENU_VIDEO_FULLSCREEN_H_ */
-#endif

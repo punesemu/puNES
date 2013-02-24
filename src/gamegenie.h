@@ -37,7 +37,6 @@ typedef struct {
 } _cheat;
 
 struct {
-	BYTE enabled;
 	BYTE phase;
 	BYTE rom_present;
 	BYTE counter;

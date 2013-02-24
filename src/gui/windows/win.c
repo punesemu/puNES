@@ -33,11 +33,9 @@
 #include "fds.h"
 #include "gamegenie.h"
 #include "audio_quality.h"
-#ifdef OPENGL
 #include "opengl.h"
 #include "openGL/no_effect.h"
 #include "openGL/cube3d.h"
-#endif
 
 #define timer_redraw_start()\
 	SetTimer(hwnd, IDT_TIMER1, 650, (TIMERPROC) time_handler_redraw)
@@ -91,10 +89,8 @@ void set_mode(BYTE newmode);
 void set_scale(BYTE newscale);
 void set_overscan(BYTE newoscan);
 void set_filter(BYTE newfilter);
-#ifdef OPENGL
 void set_rendering(BYTE bool);
 void set_vsync(BYTE bool);
-#endif
 void set_samplerate(int newsamplerate);
 void set_channels(int newchannels);
 void set_audio_quality(int newquality);
@@ -398,7 +394,7 @@ void guiSetVideoMode(void) {
 	{
 		WORD rows = FRAMETLWIDTH;
 
-		if (gfx.scale == X1) {
+		if (cfg->scale == X1) {
 			hideToolWidget();
 			if (overscan.enabled) {
 				rows = gfx.rows;
@@ -493,14 +489,12 @@ void guiEvent(void) {
 							noProcess = TRUE;
 						}
 						break;
-#ifdef OPENGL
 					case VK_ESCAPE:
-						if (gfx.fullscreen == FULLSCR) {
+						if (cfg->fullscreen == FULLSCR) {
 							guiFullscreen();
 						}
 						noProcess = TRUE;
 						break;
-#endif
 				}
 				if (!tas.type && !noProcess) {
 					if (inputPort1 && !inputPort1(PRESSED, LOWORD(Msg.wParam), KEYBOARD, &port1)) {
@@ -537,13 +531,11 @@ void guiEvent(void) {
 			}
 			case WM_LBUTTONDOWN:
 				gui.left_button = TRUE;
-#ifdef OPENGL
 				//opengl.xDiff = GET_X_LPARAM(Msg.lParam) - (opengl.yRotate * slowFactor);
 				//opengl.yDiff = -GET_Y_LPARAM(Msg.lParam) + (opengl.xRotate * slowFactor);
 				opengl.xDiff = gui.x - (opengl.yRotate * slowFactor);
 				opengl.yDiff = -gui.y + (opengl.xRotate * slowFactor);
 				break;
-#endif
 			case WM_RBUTTONDOWN:
 				gui.right_button = TRUE;
 				break;
@@ -552,12 +544,10 @@ void guiEvent(void) {
 					gui.x = GET_X_LPARAM(Msg.lParam);
 					gui.y = GET_Y_LPARAM(Msg.lParam);
 				}
-#ifdef OPENGL
 				if (gui.left_button && opengl.rotation) {
 					opengl.xRotate = (gui.y + opengl.yDiff) / slowFactor;
 					opengl.yRotate = (gui.x - opengl.xDiff) / slowFactor;
 				}
-#endif
 				break;
 			case WM_LBUTTONUP:
 				gui.left_button = FALSE;
@@ -805,7 +795,7 @@ void guiUpdate(void) {
 	}
 
 	/* Size */
-	if (gfx.filter != NOFILTER) {
+	if (cfg->filter != NOFILTER) {
 		change_menuitem(ENAB, MF_GRAYED, IDM_SET_SIZE_1X);
 	} else {
 		change_menuitem(ENAB, MF_HILITE, IDM_SET_SIZE_1X);
@@ -814,8 +804,8 @@ void guiUpdate(void) {
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_SIZE_2X);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_SIZE_3X);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_SIZE_4X);
-	if (!gfx.fullscreen) {
-		switch (gfx.scale) {
+	if (cfg->fullscreen == NOFULLSCR) {
+		switch (cfg->scale) {
 			case X1:
 				id = IDM_SET_SIZE_1X;
 				break;
@@ -836,14 +826,14 @@ void guiUpdate(void) {
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_OSCAN_ON);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_OSCAN_OFF);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_OSCAN_DEF);
-	switch (gfx.overscan) {
-		case OSCANON:
+	switch (cfg->oscan) {
+		case OSCAN_ON:
 			id = IDM_SET_OSCAN_ON;
 			break;
-		case OSCANOFF:
+		case OSCAN_OFF:
 			id = IDM_SET_OSCAN_OFF;
 			break;
-		case OSCANDEF:
+		case OSCAN_DEFAULT:
 			id = IDM_SET_OSCAN_DEF;
 			break;
 	}
@@ -852,11 +842,11 @@ void guiUpdate(void) {
 	/* Overscan/Default value */
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_OSCAN_DEFAULT_ON);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_OSCAN_DEFAULT_OFF);
-	switch (gfx.overscanDefault) {
-		case OSCANON:
+	switch (cfg->oscan_default) {
+		case OSCAN_ON:
 			id = IDM_SET_OSCAN_DEFAULT_ON;
 			break;
-		case OSCANOFF:
+		case OSCAN_OFF:
 			id = IDM_SET_OSCAN_DEFAULT_OFF;
 			break;
 	}
@@ -872,7 +862,6 @@ void guiUpdate(void) {
 		change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_HQ3X);
 		change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_HQ4X);
 	}
-#ifdef OPENGL
 	{
 		HMENU menu_to_change;
 		MENUITEMINFO menuitem;
@@ -927,7 +916,6 @@ void guiUpdate(void) {
 			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_CRTNOCURVE);
 		}
 	}
-#endif
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_NOFILTER);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_BILINEAR);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_SCALE2X);
@@ -939,21 +927,18 @@ void guiUpdate(void) {
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_RGBNTSCCOM);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_RGBNTSCSVD);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_RGBNTSCRGB);
-#ifdef OPENGL
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_POSPHOR);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_SCANLINE);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_DBL);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_CRTCURVE);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_CRTNOCURVE);
-#endif
-	switch (gfx.filter) {
+	switch (cfg->filter) {
 		case NOFILTER:
 			id = IDM_SET_FILTER_NOFILTER;
 			break;
 		case BILINEAR:
 			id = IDM_SET_FILTER_BILINEAR;
 			break;
-#ifdef OPENGL
 		case POSPHOR:
 			id = IDM_SET_FILTER_POSPHOR;
 			break;
@@ -969,7 +954,6 @@ void guiUpdate(void) {
 		case CRTNOCURVE:
 			id = IDM_SET_FILTER_CRTNOCURVE;
 			break;
-#endif
 		case SCALE2X:
 			id = IDM_SET_FILTER_SCALE2X;
 			break;
@@ -989,7 +973,7 @@ void guiUpdate(void) {
 			id = IDM_SET_FILTER_HQ4X;
 			break;
 		case RGBNTSC:
-			switch (gfx.ntscFormat) {
+			switch (cfg->ntsc_format) {
 				case COMPOSITE:
 					id = IDM_SET_FILTER_RGBNTSCCOM;
 					break;
@@ -1010,7 +994,7 @@ void guiUpdate(void) {
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_PALETTE_SONY);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_PALETTE_MONO);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_PALETTE_GREEN);
-	switch (gfx.palette) {
+	switch (cfg->palette) {
 		case PALETTEPAL:
 			id = IDM_SET_PALETTE_PAL;
 			break;
@@ -1029,7 +1013,6 @@ void guiUpdate(void) {
 	}
 	change_menuitem(CHECK, MF_CHECKED, id);
 
-#ifdef OPENGL
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_RENDERING_SOFTWARE);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_RENDERING_OPENGL);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_RENDERING_GLSL);
@@ -1098,17 +1081,16 @@ void guiUpdate(void) {
 
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_VSYNC_ON);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_VSYNC_OFF);
-	if (gfx.vsync) {
+	if (cfg->vsync) {
 		change_menuitem(CHECK, MF_CHECKED, IDM_SET_VSYNC_ON);
 	} else {
 		change_menuitem(CHECK, MF_CHECKED, IDM_SET_VSYNC_OFF);
 	}
 
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_STRETCHFLSCR);
-	if (!opengl.aspectRatio && gfx.opengl) {
+	if (gfx.opengl && !cfg->aspect_ratio) {
 		change_menuitem(CHECK, MF_CHECKED, IDM_SET_STRETCHFLSCR);
 	}
-#endif
 
 	/* Samplerate */
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_SAMPLERATE_44100);
@@ -1167,26 +1149,25 @@ void guiUpdate(void) {
 
 	/* Game Genie */
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_GAMEGENIE);
-	if (gamegenie.enabled) {
+	if (cfg->gamegenie) {
 		change_menuitem(CHECK, MF_CHECKED, IDM_SET_GAMEGENIE);
 	}
 
 	/* Save on exit */
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_SAVEONEXIT);
-	if (cfg->saveOnExit) {
+	if (cfg->save_on_exit) {
 		change_menuitem(CHECK, MF_CHECKED, IDM_SET_SAVEONEXIT);
 	}
 }
-#ifdef OPENGL
 void guiFullscreen(void) {
 	emuPause(TRUE);
 
 	/* nascondo la finestra */
 	ShowWindow(hMainWin, SW_HIDE);
 
-	if (gfx.fullscreen == NOFULLSCR || gfx.fullscreen == NOCHANGE) {
+	if ((cfg->fullscreen == NOFULLSCR) || (cfg->fullscreen == NOCHANGE)) {
 		/* salvo il valore scale prima del fullscreen */
-		gfx.scaleBeforeFullscreen = gfx.scale;
+		gfx.scale_before_fscreen = cfg->scale;
 		/* trovo la risoluzione del monitor in uso */
 		GetMonitorInfo(MonitorFromWindow(hMainWin, MONITOR_DEFAULTTOPRIMARY), &mi);
 		gfx.w[MONITOR] = mi.rcMonitor.right - mi.rcMonitor.left;
@@ -1224,7 +1205,7 @@ void guiFullscreen(void) {
 		/* riassocio il menu */
 		SetMenu(hMainWin, hMainMenu);
 		/* ripristino i valori di scale ed esco dal fullscreen */
-		gfxSetScreen(gfx.scaleBeforeFullscreen, NOCHANGE, NOFULLSCR, NOCHANGE, FALSE);
+		gfxSetScreen(gfx.scale_before_fscreen, NOCHANGE, NOFULLSCR, NOCHANGE, FALSE);
 		/* riabilito la visualizzazione del puntatore */
 		SDL_ShowCursor(SDL_ENABLE);
 		/* posiziono la finestra alle coordinate precedenti il fullscreen */
@@ -1240,7 +1221,6 @@ void guiFullscreen(void) {
 
 	emuPause(FALSE);
 }
-#endif
 void guiTimeline(void) {
 	SendMessage(hTimeline, TBM_SETPOS, TRUE, tl.snapsFill - 1);
 }
@@ -1482,19 +1462,19 @@ long __stdcall mainWinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 					set_scale(X4);
 					break;
 				case IDM_SET_OSCAN_ON:
-					set_overscan(OSCANON);
+					set_overscan(OSCAN_ON);
 					break;
 				case IDM_SET_OSCAN_OFF:
-					set_overscan(OSCANOFF);
+					set_overscan(OSCAN_OFF);
 					break;
 				case IDM_SET_OSCAN_DEF:
-					set_overscan(OSCANDEF);
+					set_overscan(OSCAN_DEFAULT);
 					break;
 				case IDM_SET_OSCAN_DEFAULT_ON:
-					set_overscan(OSCANDEFAULTON);
+					set_overscan(OSCAN_DEFAULT_ON);
 					break;
 				case IDM_SET_OSCAN_DEFAULT_OFF:
-					set_overscan(OSCANDEFAULTOFF);
+					set_overscan(OSCAN_DEFAULT_OFF);
 					break;
 				case IDM_SET_FILTER_NOFILTER:
 					set_filter(NOFILTER);
@@ -1502,7 +1482,6 @@ long __stdcall mainWinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 				case IDM_SET_FILTER_BILINEAR:
 					set_filter(BILINEAR);
 					break;
-#ifdef OPENGL
 				case IDM_SET_FILTER_POSPHOR:
 					set_filter(POSPHOR);
 					break;
@@ -1518,7 +1497,6 @@ long __stdcall mainWinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 				case IDM_SET_FILTER_CRTNOCURVE:
 					set_filter(CRTNOCURVE);
 					break;
-#endif
 				case IDM_SET_FILTER_SCALE2X:
 					set_filter(SCALE2X);
 					break;
@@ -1538,15 +1516,15 @@ long __stdcall mainWinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 					set_filter(HQ4X);
 					break;
 				case IDM_SET_FILTER_RGBNTSCCOM:
-					gfx.ntscFormat = COMPOSITE;
+					cfg->ntsc_format = COMPOSITE;
 					set_filter(RGBNTSC);
 					break;
 				case IDM_SET_FILTER_RGBNTSCSVD:
-					gfx.ntscFormat = SVIDEO;
+					cfg->ntsc_format = SVIDEO;
 					set_filter(RGBNTSC);
 					break;
 				case IDM_SET_FILTER_RGBNTSCRGB:
-					gfx.ntscFormat = RGBMODE;
+					cfg->ntsc_format = RGBMODE;
 					set_filter(RGBNTSC);
 					break;
 				case IDM_SET_PALETTE_PAL:
@@ -1564,7 +1542,6 @@ long __stdcall mainWinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 				case IDM_SET_PALETTE_GREEN:
 					gfxSetScreen(NOCHANGE, NOCHANGE, NOCHANGE, PALETTEGREEN, FALSE);
 					break;
-#ifdef OPENGL
 				case IDM_SET_RENDERING_SOFTWARE:
 					set_rendering(0);
 					break;
@@ -1587,13 +1564,12 @@ long __stdcall mainWinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 					guiFullscreen();
 					break;
 				case IDM_SET_STRETCHFLSCR:
-					opengl.aspectRatio = !opengl.aspectRatio;
-					if (gfx.fullscreen == FULLSCR) {
+					cfg->aspect_ratio = !cfg->aspect_ratio;
+					if (cfg->fullscreen == FULLSCR) {
 						gfxSetScreen(NOCHANGE, NOCHANGE, NOCHANGE, NOCHANGE, FALSE);
 					}
 					guiUpdate();
 					break;
-#endif
 				case IDM_SET_SAMPLERATE_44100:
 					set_samplerate(S44100);
 					break;
@@ -1639,7 +1615,7 @@ long __stdcall mainWinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 					cfgfileSave();
 					break;
 				case IDM_SET_SAVEONEXIT:
-					cfg->saveOnExit = !cfg->saveOnExit;
+					cfg->save_on_exit = !cfg->save_on_exit;
 					guiUpdate();
 					break;
 				case IDM_HELP_ABOUT:
@@ -1967,7 +1943,7 @@ void change_menuitem(BYTE checkORenab, UINT type, UINT bMenuItemID) {
 }
 void make_reset(BYTE type) {
 	if (type == HARD) {
-		if (gamegenie.enabled && gamegenie.rom_present) {
+		if (cfg->gamegenie && gamegenie.rom_present) {
 			if (info.mapper != GAMEGENIE_MAPPER) {
 				strcpy(info.loadRomFile, info.romFile);
 			}
@@ -2036,7 +2012,7 @@ void set_mode(BYTE newmode) {
 	}
 }
 void set_scale(BYTE newscale) {
-	if (gfx.scale == newscale) {
+	if (cfg->scale == newscale) {
 		return;
 	}
 
@@ -2063,17 +2039,17 @@ void set_overscan(BYTE newoscan) {
 	LockWindowUpdate(hMainWin);
 
 	switch (newoscan) {
-		case OSCANON:
-		case OSCANOFF:
-		case OSCANDEF:
-			gfx.overscan = newoscan;
+		case OSCAN_ON:
+		case OSCAN_OFF:
+		case OSCAN_DEFAULT:
+			cfg->oscan = newoscan;
 			cfgfilePgsSave();
 			break;
-		case OSCANDEFAULTOFF:
-			gfx.overscanDefault = OSCANOFF;
+		case OSCAN_DEFAULT_OFF:
+			cfg->oscan_default = OSCAN_OFF;
 			break;
-		case OSCANDEFAULTON:
-			gfx.overscanDefault = OSCANON;
+		case OSCAN_DEFAULT_ON:
+			cfg->oscan_default = OSCAN_ON;
 			break;
 	}
 
@@ -2091,7 +2067,6 @@ void set_filter(BYTE newfilter) {
 		case BILINEAR:
 			gfxSetScreen(NOCHANGE, BILINEAR, NOCHANGE, NOCHANGE, FALSE);
 			break;
-#ifdef OPENGL
 		case POSPHOR:
 			gfxSetScreen(NOCHANGE, POSPHOR, NOCHANGE, NOCHANGE, FALSE);
 			break;
@@ -2107,7 +2082,6 @@ void set_filter(BYTE newfilter) {
 		case CRTNOCURVE:
 			gfxSetScreen(NOCHANGE, CRTNOCURVE, NOCHANGE, NOCHANGE, FALSE);
 			break;
-#endif
 		case SCALE2X:
 			gfxSetScreen(X2, SCALE2X, NOCHANGE, NOCHANGE, FALSE);
 			break;
@@ -2128,8 +2102,8 @@ void set_filter(BYTE newfilter) {
 			break;
 		case RGBNTSC:
 			gfxSetScreen(NOCHANGE, RGBNTSC, NOCHANGE, NOCHANGE, FALSE);
-			if (gfx.filter == RGBNTSC) {
-				ntscSet(gfx.ntscFormat, 0, 0, (BYTE *) paletteRGB, 0);
+			if (cfg->filter == RGBNTSC) {
+				ntscSet(cfg->ntsc_format, 0, 0, (BYTE *) paletteRGB, 0);
 				guiUpdate();
 			}
 			break;
@@ -2137,33 +2111,16 @@ void set_filter(BYTE newfilter) {
 
 	LockWindowUpdate(NULL);
 }
-#ifdef OPENGL
 void set_rendering(BYTE newrendering) {
-	if ((gfx.opengl + opengl.glsl.enabled) == newrendering) {
+	if (cfg->render == newrendering) {
 		return;
 	}
 
 	ShowWindow(hMainWin, SW_HIDE);
 
-	if (gfx.opengl && !newrendering) {
-		opengl.rotation = FALSE;
-	}
-
 	/* switch opengl/software render */
-	switch (newrendering) {
-		case 0:
-			gfx.opengl = FALSE;
-			opengl.glsl.enabled = FALSE;
-			break;
-		case 1:
-			gfx.opengl = TRUE;
-			opengl.glsl.enabled = FALSE;
-			break;
-		case 2:
-			gfx.opengl = TRUE;
-			opengl.glsl.enabled = TRUE;
-			break;
-	}
+	gfxSetRender(newrendering);
+	cfg->render = newrendering;
 
 	gfxResetVideo();
 	gfxSetScreen(NOCHANGE, NOCHANGE, NOCHANGE, NOCHANGE, TRUE);
@@ -2171,7 +2128,7 @@ void set_rendering(BYTE newrendering) {
 	ShowWindow(hMainWin, SW_NORMAL);
 }
 void set_vsync(BYTE bool) {
-	if (gfx.vsync == bool) {
+	if (cfg->vsync == bool) {
 		return;
 	}
 
@@ -2183,7 +2140,7 @@ void set_vsync(BYTE bool) {
 	ShowWindow(hMainWin, SW_HIDE);
 
 	/* switch vsync */
-	gfx.vsync = bool;
+	cfg->vsync = bool;
 
 	gfxResetVideo();
 	gfxSetScreen(NOCHANGE, NOCHANGE, NOCHANGE, NOCHANGE, TRUE);
@@ -2206,7 +2163,7 @@ void set_effect(void) {
 		opengl_draw_scene = opengl_draw_scene_cube3d;
 
 		opengl.factorDistance = opengl.xRotate = opengl.yRotate = 0;
-		if (gfx.fullscreen == FULLSCR) {
+		if (cfg->fullscreen == FULLSCR) {
 			SDL_ShowCursor(SDL_ENABLE);
 		}
 	} else {
@@ -2215,7 +2172,7 @@ void set_effect(void) {
 		opengl_unset_effect = opengl_unset_no_effect;
 		opengl_draw_scene = opengl_draw_scene_no_effect;
 
-		if (gfx.fullscreen == FULLSCR) {
+		if (cfg->fullscreen == FULLSCR) {
 			SDL_ShowCursor(SDL_DISABLE);
 		}
 	}
@@ -2224,7 +2181,6 @@ void set_effect(void) {
 
 	gfxSetScreen(NOCHANGE, NOCHANGE, NOCHANGE, NOCHANGE, FALSE);
 }
-#endif
 void set_samplerate(int newsamplerate) {
 	if (cfg->samplerate == newsamplerate) {
 		return;
@@ -2272,9 +2228,9 @@ void set_frame_skip(int newframeskip) {
 	guiUpdate();
 }
 void set_gamegenie(void) {
-	gamegenie.enabled = !gamegenie.enabled;
+	cfg->gamegenie = !cfg->gamegenie;
 
-	if (gamegenie.enabled) {
+	if (cfg->gamegenie) {
 		gamegenie_check_rom_present(TRUE);
 	}
 

@@ -22,7 +22,6 @@ enum {
 };
 
 struct _opengl {
-	BYTE aspectRatio;
 	BYTE rotation;
 
 	BYTE supported;

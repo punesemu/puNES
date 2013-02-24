@@ -17,6 +17,7 @@
 #include "overscan.h"
 #include "fps.h"
 #include "tas.h"
+#include "cfgfile.h"
 
 void inputInit(void) {
 	switch (port1.type) {
@@ -205,12 +206,11 @@ BYTE inputReadRegZapper(BYTE openbus, WORD **screenIndex, _port *port) {
 	}
 
 	if (!gui.right_button) {
-#ifdef OPENGL
 		if (gfx.opengl) {
 			gx -= opengl.xTexture1;
 			gy -= opengl.yTexture1;
 		}
-#endif
+
 		x_zapper = gx / gfx.wPr;
 		y_zapper = gy / gfx.hPr;
 
@@ -221,11 +221,11 @@ BYTE inputReadRegZapper(BYTE openbus, WORD **screenIndex, _port *port) {
 			 * il filtro NTSC necessita di un'aggiustatina sia con
 			 * l'overscan abilitato che senza.
 			 */
-			if (gfx.filter == RGBNTSC) {
+			if (cfg->filter == RGBNTSC) {
 				x_zapper += 1;
 			}
 		} else {
-			if (gfx.filter == RGBNTSC) {
+			if (cfg->filter == RGBNTSC) {
 				x_zapper -= 1;
 			}
 		}

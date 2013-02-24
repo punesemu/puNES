@@ -29,9 +29,7 @@
 #include "savestate.h"
 #include "tas.h"
 #include "gamegenie.h"
-#ifdef OPENGL
 #include "opengl.h"
-#endif
 #include "menu/menu.h"
 
 #define tlPressed(type)\
@@ -368,7 +366,7 @@ BYTE guiCreate(void) {
 void guiSetVideoMode(void) {
 	WORD rows = SCRROWS;
 
-	if (gfx.scale == X1) {
+	if (cfg->scale == X1) {
 		gtk_widget_hide(hboxss);
 
 		if (overscan.enabled) {
@@ -432,7 +430,6 @@ void guiUpdate(void) {
 	guiupdate = FALSE;
 	guiFlush();
 }
-#ifdef OPENGL
 void guiFullscreen(void) {
 	if (guiupdate) {
 		return;
@@ -441,9 +438,9 @@ void guiFullscreen(void) {
 	guiFlush();
 
 	/* Fullscreen */
-	if (gfx.fullscreen == NOFULLSCR || gfx.fullscreen == NOCHANGE) {
+	if ((cfg->fullscreen == NOFULLSCR) || (cfg->fullscreen == NOCHANGE)) {
 		/* salvo il valore scale prima del fullscreen */
-		gfx.scaleBeforeFullscreen = gfx.scale;
+		gfx.scale_before_fscreen = cfg->scale;
 		/* trovo la risoluzione del monitor in uso */
 		{
 			GdkScreen *screen = gtk_window_get_screen(GTK_WINDOW(mainWin));
@@ -489,7 +486,7 @@ void guiFullscreen(void) {
 		/* esco dal fullscreen */
 		gtk_window_unfullscreen(GTK_WINDOW(mainWin));
 		/* ripristino i valori di scale ed esco dal fullscreen */
-		gfxSetScreen(gfx.scaleBeforeFullscreen, NOCHANGE, NOFULLSCR, NOCHANGE, FALSE);
+		gfxSetScreen(gfx.scale_before_fscreen, NOCHANGE, NOFULLSCR, NOCHANGE, FALSE);
 		/* riabilito la visualizzazione del puntatore */
 		SDL_ShowCursor(SDL_ENABLE);
 		/* blocco il ridimensionamento */
@@ -505,7 +502,6 @@ void guiFullscreen(void) {
 
 	guiFlush();
 }
-#endif
 void guiTimeline(void) {
 	tl.update = TRUE;
 	gtk_range_set_value(GTK_RANGE(timeline), tl.snapsFill - 1);
@@ -619,8 +615,7 @@ gboolean sock_key_press_event(GtkWidget *widget, GdkEventKey *event) {
 			}
 			break;
 	}
-#ifdef OPENGL
-	if (gfx.fullscreen == FULLSCR) {
+	if (cfg->fullscreen == FULLSCR) {
 		switch (keyval) {
 			case GDK_a:
 				if ((event->state & 0x1F0D) == GDK_CONTROL_MASK) {
@@ -700,7 +695,6 @@ gboolean sock_key_press_event(GtkWidget *widget, GdkEventKey *event) {
 				return (TRUE);
 		}
 	}
-#endif
 	if (inputPort1 && !inputPort1(PRESSED, keyval, KEYBOARD, &port1)) {
 		return (TRUE);
 	}
@@ -735,10 +729,8 @@ gboolean mouse_button_press_release_event(GtkWidget *widget, GdkEventButton *eve
 		case GDK_BUTTON_PRESS:
 			if (event->button == 1) {
 				gui.left_button = TRUE;
-#ifdef OPENGL
 				opengl.xDiff = event->x - (opengl.yRotate * slowFactor);
 				opengl.yDiff = -event->y + (opengl.xRotate * slowFactor);
-#endif
 			}
 			if (event->button == 3) {
 				gui.right_button = TRUE;
@@ -761,12 +753,11 @@ gboolean mouse_motion_notify_event(GtkWidget *widget, GdkEventMotion *event) {
 	gui.x = event->x;
 	gui.y = event->y;
 
-#ifdef OPENGL
 	if (gui.left_button && opengl.rotation) {
 		opengl.xRotate = (event->y + opengl.yDiff) / slowFactor;
 		opengl.yRotate = (event->x - opengl.xDiff) / slowFactor;
 	}
-#endif
+
 	return (FALSE);
 }
 
@@ -859,7 +850,7 @@ void help_about(void) {
 /* reset */
 void make_reset(int type) {
 	if (type == HARD) {
-		if (gamegenie.enabled && gamegenie.rom_present) {
+		if (cfg->gamegenie && gamegenie.rom_present) {
 			if (info.mapper != GAMEGENIE_MAPPER) {
 				strcpy(info.loadRomFile, info.romFile);
 			}
@@ -1141,7 +1132,7 @@ void drag_data_received(GtkWidget *widget, GdkDragContext *context, gint x, gint
     gboolean dnd_success = FALSE;
 
 	if ((uri_list = gtk_selection_data_get_uris(data))) {
-		gchar *path;
+		gchar *path = NULL;
 		gint len = 0;
 
 		while (uri_list[len]) {

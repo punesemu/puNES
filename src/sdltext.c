@@ -13,6 +13,7 @@
 #include "ppu.h"
 #include "input.h"
 #include "fds.h"
+#include "cfgfile.h"
 
 #define port_control(prt, button, ch)\
 	if (prt.data[button] == PRESSED) {\
@@ -261,7 +262,7 @@ void textRendering(BYTE render) {
 				ele->x = pos_x;
 				ele->y = pos_y;
 
-				if ((gfx.scale != X1) && render){
+				if ((cfg->scale != X1) && render){
 					rendering(ele);
 				}
 
@@ -305,7 +306,7 @@ void textRendering(BYTE render) {
 							ele->alpha[2] = ele->alpha[1];
 						}
 					}
-					if ((gfx.scale != X1) && render){
+					if ((cfg->scale != X1) && render){
 						rendering(ele);
 					}
 				} else {

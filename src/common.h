@@ -80,6 +80,7 @@ struct _info {
 	BYTE gui;
 	BYTE no_rom;
 	BYTE pause;
+	BYTE on_cfg;
 	BYTE pause_frames_drawscreen;
 	BYTE first_illegal_opcode;
 	BYTE sha1sum[20];

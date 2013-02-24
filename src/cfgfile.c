@@ -20,9 +20,7 @@
 #include "input.h"
 #include "gamegenie.h"
 #include "audio_quality.h"
-#ifdef OPENGL
 #include "opengl.h"
-#endif
 
 #define INIFILE NAME  ".cfg"
 #define INPUTFILE     "input.cfg"
@@ -82,14 +80,12 @@ void cfgfileInit(void) {
 	cfg = &cfg_from_file;
 }
 void cfgfileParse(void) {
-#ifdef OPENGL
-	BYTE render = 0;
-#endif
 	FILE *fp;
 	char tmp[MAXLEN], line[MAXLEN];
 
 	/* attivo la modalita' configurazione */
-	gfx.onCfg = TRUE;
+	info.on_cfg = TRUE;
+
 	/* default */
 	setDefault();
 	/* leggo la configurazione input */
@@ -120,25 +116,23 @@ void cfgfileParse(void) {
 			/* frame skip */
 			cfgSearch(param, P_FSK, 0, pFsk, cfg_from_file.frameskip = index);
 			/* size */
-			cfgSearch(param, P_SIZE, 1, pSize, gfx.scale = gfx.scaleBeforeFullscreen = index);
+			cfgSearch(param, P_SIZE, 1, pSize, cfg_from_file.scale = index);
 			/* overscan default */
-			cfgSearch(param, P_OVERSCAN, 0, pOverscan, gfx.overscanDefault = index);
+			cfgSearch(param, P_OVERSCAN, 0, pOverscan, cfg_from_file.oscan_default = index);
 			/* filter */
-			cfgSearch(param, P_FILTER, 0, pFilter, gfx.filter = index);
+			cfgSearch(param, P_FILTER, 0, pFilter, cfg_from_file.filter = index);
 			/* ntsc format */
-			cfgSearch(param, P_NTSCFORMAT, 0, pNtsc, gfx.ntscFormat = index);
+			cfgSearch(param, P_NTSCFORMAT, 0, pNtsc, cfg_from_file.ntsc_format = index);
 			/* palette */
-			cfgSearch(param, P_PALETTE, 0, pPalette, gfx.palette = index);
-#ifdef OPENGL
+			cfgSearch(param, P_PALETTE, 0, pPalette, cfg_from_file.palette = index);
 			/* rendering */
-			cfgSearch(param, P_RENDER, 0, pRendering, render = index);
+			cfgSearch(param, P_RENDER, 0, pRendering, cfg_from_file.render = index);
 			/* vsync */
-			cfgSearch(param, P_VSYNC, 0, pOffOn, gfx.vsync = index);
+			cfgSearch(param, P_VSYNC, 0, pOffOn, cfg_from_file.vsync = index);
 			/* fullscreen */
-			cfgSearch(param, P_FSCREEN, 0, pNoYes, gfx.fullscreen = index);
+			cfgSearch(param, P_FSCREEN, 0, pNoYes, cfg_from_file.fullscreen = index);
 			/* stretch in fullscreen */
-			cfgSearch(param, P_STRETCH, 0, pNoYes, opengl.aspectRatio = !index);
-#endif
+			cfgSearch(param, P_STRETCH, 0, pNoYes, cfg_from_file.aspect_ratio = !index);
 			/* audio */
 			cfgSearch(param, P_AUDIO, 0, pOffOn, cfg_from_file.audio = index);
 			/* sample rate */
@@ -146,36 +140,24 @@ void cfgfileParse(void) {
 			/* channels */
 			cfgSearch(param, P_CHANNELS, 0, pChannels, cfg_from_file.channels = index);
 			/* audio quality */
-			cfgSearch(param, P_AUDIO_QUALITY, 0, pAudioQuality, cfg_from_file.audio_quality = index);
+			cfgSearch(param, P_AUDIO_QUALITY, 0, pAudioQuality,
+			        cfg_from_file.audio_quality = index);
 			/* swap duty cycles */
 			cfgSearch(param, P_SWAP_DUTY, 0, pNoYes, cfg_from_file.swap_duty = index);
 			/* game genie */
-			cfgSearch(param, P_GAMEGENIE, 0, pNoYes, gamegenie.enabled = index);
+			cfgSearch(param, P_GAMEGENIE, 0, pNoYes, cfg_from_file.gamegenie = index);
 			/* save on exit */
-			cfgSearch(param, P_SAVEONEXIT, 0, pNoYes, cfg_from_file.saveOnExit = index);
+			cfgSearch(param, P_SAVEONEXIT, 0, pNoYes, cfg_from_file.save_on_exit = index);
 		}
 	}
 
 	textAddLineInfo(1, "configuration [green]loaded");
 
-#ifdef OPENGL
-	switch (render) {
-		case 0:
-			gfx.opengl = FALSE;
-			opengl.glsl.enabled = FALSE;
-			break;
-		case 1:
-			gfx.opengl = TRUE;
-			opengl.glsl.enabled = FALSE;
-			break;
-		case 2:
-			gfx.opengl = TRUE;
-			opengl.glsl.enabled = TRUE;
-			break;
-	}
-#endif
+	gfx.scale_before_fscreen = cfg_from_file.scale;
 
-	if (gamegenie.enabled) {
+	gfxSetRender(cfg_from_file.render);
+
+	if (cfg_from_file.gamegenie) {
 		gamegenie_check_rom_present(TRUE);
 	}
 
@@ -185,22 +167,6 @@ void cfgfileParse(void) {
 void cfgfileSave(void) {
 	FILE *fp;
 	char tmp[MAXLEN];
-
-#ifdef OPENGL
-	BYTE render;
-
-	if (!gfx.opengl) {
-		render = 0;
-	} else {
-		if (!opengl.glsl.compliant) {
-			render = 1;
-		} else if (!opengl.glsl.enabled) {
-			render = 1;
-		} else {
-			render = 2;
-		}
-	}
-#endif
 
 	/* apro il file */
 	sprintf(tmp, "%s/%s", info.baseFolder, INIFILE);
@@ -215,26 +181,27 @@ void cfgfileSave(void) {
 	/* fps */
 	writeParam((_param *) param, fp, P_FSK, pFsk[cfg_from_file.frameskip].sname);
 	/* size */
-	writeParam((_param *) param, fp, P_SIZE,
-			(gfx.fullscreen ? pSize[gfx.scaleBeforeFullscreen].sname : pSize[gfx.scale].sname));
+	{
+		BYTE scale = (cfg_from_file.fullscreen ? gfx.scale_before_fscreen : cfg_from_file.scale);
+
+		writeParam((_param *) param, fp, P_SIZE, pSize[scale].sname);
+	}
 	/* overscan default */
-	writeParam((_param *) param, fp, P_OVERSCAN, pOverscan[gfx.overscanDefault].sname);
+	writeParam((_param *) param, fp, P_OVERSCAN, pOverscan[cfg_from_file.oscan_default].sname);
 	/* filter */
-	writeParam((_param *) param, fp, P_FILTER, pFilter[gfx.filter].sname);
+	writeParam((_param *) param, fp, P_FILTER, pFilter[cfg_from_file.filter].sname);
 	/* ntsc format */
-	writeParam((_param *) param, fp, P_NTSCFORMAT, pNtsc[gfx.ntscFormat].sname);
+	writeParam((_param *) param, fp, P_NTSCFORMAT, pNtsc[cfg_from_file.ntsc_format].sname);
 	/* palette */
-	writeParam((_param *) param, fp, P_PALETTE, pPalette[gfx.palette].sname);
-#ifdef OPENGL
+	writeParam((_param *) param, fp, P_PALETTE, pPalette[cfg_from_file.palette].sname);
 	/* rendering */
-	writeParam((_param *) param, fp, P_RENDER, pRendering[render].sname);
+	writeParam((_param *) param, fp, P_RENDER, pRendering[cfg_from_file.render].sname);
 	/* vsync */
-	writeParam((_param *) param, fp, P_VSYNC, pOffOn[gfx.vsync].sname);
+	writeParam((_param *) param, fp, P_VSYNC, pOffOn[cfg_from_file.vsync].sname);
 	/* fullscreen */
-	writeParam((_param *) param, fp, P_FSCREEN, pNoYes[gfx.fullscreen].sname);
+	writeParam((_param *) param, fp, P_FSCREEN, pNoYes[cfg_from_file.fullscreen].sname);
 	/* stretch in fullscreen */
-	writeParam((_param *) param, fp, P_STRETCH, pNoYes[!opengl.aspectRatio].sname);
-#endif
+	writeParam((_param *) param, fp, P_STRETCH, pNoYes[!cfg_from_file.aspect_ratio].sname);
 	/* audio */
 	writeParam((_param *) param, fp, P_AUDIO, pOffOn[cfg_from_file.audio].sname);
 	/* sample rate */
@@ -242,13 +209,14 @@ void cfgfileSave(void) {
 	/* channels */
 	writeParam((_param *) param, fp, P_CHANNELS, pChannels[cfg_from_file.channels].sname);
 	/* audio quality */
-	writeParam((_param *) param, fp, P_AUDIO_QUALITY, pAudioQuality[cfg_from_file.audio_quality].sname);
+	writeParam((_param *) param, fp, P_AUDIO_QUALITY,
+	        pAudioQuality[cfg_from_file.audio_quality].sname);
 	/* swap duty cycles */
 	writeParam((_param *) param, fp, P_SWAP_DUTY, pNoYes[cfg_from_file.swap_duty].sname);
 	/* game genie */
-	writeParam((_param *) param, fp, P_GAMEGENIE, pNoYes[gamegenie.enabled].sname);
+	writeParam((_param *) param, fp, P_GAMEGENIE, pNoYes[cfg_from_file.gamegenie].sname);
 	/* save settings on exit */
-	writeParam((_param *) param, fp, P_SAVEONEXIT, pNoYes[cfg_from_file.saveOnExit].sname);
+	writeParam((_param *) param, fp, P_SAVEONEXIT, pNoYes[cfg_from_file.save_on_exit].sname);
 	/* the end */
 	fclose(fp);
 
@@ -287,7 +255,7 @@ void cfgfilePgsParse(void) {
 			/* last save slot */
 			cfgSearch(paramPgs, PGS_SLOT, 0, pSlot, savestate.slot = index);
 			/* overscan */
-			cfgSearch(paramPgs, PGS_OVERSCAN, 0, pOverscan, gfx.overscan = index);
+			cfgSearch(paramPgs, PGS_OVERSCAN, 0, pOverscan, cfg_from_file.oscan = index);
 		}
 	}
 
@@ -310,7 +278,7 @@ void cfgfilePgsSave(void) {
 	/* last save slot */
 	writeParam((_param *) paramPgs, fp, PGS_SLOT, pSlot[savestate.slot].sname);
 	/* overscan */
-	writeParam((_param *) paramPgs, fp, PGS_OVERSCAN, pOverscan[gfx.overscan].sname);
+	writeParam((_param *) paramPgs, fp, PGS_OVERSCAN, pOverscan[cfg_from_file.oscan].sname);
 
 	fclose(fp);
 }
@@ -379,9 +347,9 @@ void cfgfileInputSave(void) {
 void setDefault(void) {
 
 #define _portKbDefault(port, button, name)\
-		port.input[KEYBOARD][button] = keyvalFromName(name);
+	port.input[KEYBOARD][button] = keyvalFromName(name);
 #define _portJsDefault(port, button, name)\
-		port.input[JOYSTICK][button] = nameToJsv(name)
+	port.input[JOYSTICK][button] = nameToJsv(name)
 #define portKbDefault(port, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10)\
 	_portKbDefault(port, BUT_A,  s1);\
 	_portKbDefault(port, BUT_B,  s2);\
@@ -409,38 +377,41 @@ void setDefault(void) {
 	/* default */
 	cfg_from_file.mode = AUTO;
 	machine = machinedb[NTSC - 1];
+
 	cfg_from_file.fps = FPSDEFAULT;
 	cfg_from_file.frameskip = 0;
-	gfx.scale = X2;
-	gfx.scaleBeforeFullscreen = gfx.scale;
-	gfx.overscanDefault = OSCANOFF;
-	gfx.filter = RGBNTSC;
-	gfx.palette = PALETTENTSC;
-	gfx.ntscFormat = COMPOSITE;
-#ifdef OPENGL
-	gfx.opengl = TRUE;
-	opengl.glsl.enabled = FALSE;
-	gfx.vsync = TRUE;
-	gfx.fullscreen = NOFULLSCR;
-	opengl.aspectRatio = FALSE;
-	cfg_from_file.saveOnExit = FALSE;
-#endif
+	cfg_from_file.scale = gfx.scale_before_fscreen = X2;
+	cfg_from_file.oscan_default = OSCAN_OFF;
+	cfg_from_file.filter = RGBNTSC;
+	cfg_from_file.ntsc_format = COMPOSITE;
+	cfg_from_file.palette = PALETTENTSC;
+
+	cfg_from_file.render = RENDER_OPENGL;
+	gfxSetRender(cfg_from_file.render);
+
+	cfg_from_file.vsync = TRUE;
+	cfg_from_file.fullscreen = NOFULLSCR;
+	cfg_from_file.aspect_ratio = FALSE;
+	cfg_from_file.save_on_exit = FALSE;
+
 	cfg_from_file.audio = TRUE;
 	cfg_from_file.samplerate = S44100;
 	cfg_from_file.channels = STEREO;
 	cfg_from_file.audio_quality = AQ_HIGH;
 	cfg_from_file.swap_duty = 0;
-	gamegenie.enabled = FALSE;
+	cfg_from_file.gamegenie = FALSE;
+
 	port1.type = STDCTRL;
 	portKbDefault(port1, "S", "A", "Z", "X", "Up", "Down", "Left", "Right", "W", "Q");
 	portJsDefault(port1, "JOYSTICKID1", "JB1", "JB0", "JB8", "JB9", "JA1MIN", "JA1PLS", "JA0MIN",
 			"JA0PLS", "JB2", "JB3");
+
 	port2.type = FALSE;
 	port2.joyID = nameToJsn("JOYSTICKID2");
 
 }
 void setDefaultPgs(void) {
-	gfx.overscan = OSCANDEF;
+	cfg_from_file.oscan = OSCAN_DEFAULT;
 }
 void trimSpace(char *src) {
 	const char *current = src;

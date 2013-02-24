@@ -11,10 +11,8 @@
 #include "sdlsnd.h"
 #include "gtk2.h"
 #include "cfgstdctrl.h"
-#ifdef OPENGL
 #include "opengl.h"
 #include "menu/menu_video_effect.h"
-#endif
 
 #define cfginput_enable_config(ind)\
 	switch (cfgport->port.type) {\
@@ -141,11 +139,9 @@ void cfg_input_configure_controllers(GtkWidget *widget, _cfg_port *cfgport) {
 	}
 }
 void cfg_input_ok_clicked(GtkWidget *widget, _cfg_port *cfgport) {
-#ifdef OPENGL
 	if (((cfg_port1.port.type == ZAPPER) || (cfg_port2.port.type == ZAPPER)) && opengl.rotation) {
 		menu_video_effect_set();
 	}
-#endif
 
 	if (cfg_port1.port.type != port1.type) {
 		cfg_port1.port.changed = TRUE;
@@ -162,10 +158,8 @@ void cfg_input_ok_clicked(GtkWidget *widget, _cfg_port *cfgport) {
 	memcpy(&port1, &cfg_port1.port, sizeof(port1));
 	memcpy(&port2, &cfg_port2.port, sizeof(port2));
 
-#ifdef OPENGL
 	/* Faccio l'update del menu per i casi dello zapper e degli effetti */
 	guiUpdate();
-#endif
 
 	cfgfileInputSave();
 

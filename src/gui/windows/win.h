@@ -47,17 +47,13 @@ void guiStart(void);
 void guiEvent(void);
 HWND guiWindowID(void);
 void guiUpdate(void);
-#ifdef OPENGL
 void guiFullscreen(void);
-#endif
 void guiTimeline(void);
 void guiSavestate(BYTE slot);
 double (*guiGetMs)(void);
 int guiSleep(double ms);
 void guiSetThreadAffinity(uint8_t core);
 
-#ifdef OPENGL
 void set_effect(void);
-#endif
 
 #endif /* WIN_H_ */

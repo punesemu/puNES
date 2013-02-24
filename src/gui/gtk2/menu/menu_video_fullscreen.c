@@ -5,13 +5,13 @@
  *      Author: fhorse
  */
 
-#ifdef OPENGL
 #include "menu_video_fullscreen.h"
 #include "menu_video_rendering.h"
 #include "menu_video_vsync.h"
 #include "menu_video_effect.h"
 #include "opengl.h"
 #include "sdlgfx.h"
+#include "cfgfile.h"
 
 #ifdef __SUNPRO_C
 #pragma align 4 (icon_inline)
@@ -97,7 +97,7 @@ void menu_video_fullscreen_check(void) {
 
 	/* Stretch */
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MSTRETCHFSCR]), FALSE);
-	if (!opengl.aspectRatio && gfx.opengl) {
+	if (gfx.opengl && !cfg->aspect_ratio) {
 		gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MSTRETCHFSCR]), TRUE);
 	}
 }
@@ -106,10 +106,9 @@ void menu_video_fullscreen_switch_stretch(void) {
 		return;
 	}
 
-	opengl.aspectRatio = !opengl.aspectRatio;
+	cfg->aspect_ratio = !cfg->aspect_ratio;
 
-	if (gfx.fullscreen == FULLSCR) {
+	if (cfg->fullscreen == FULLSCR) {
 		gfxSetScreen(NOCHANGE, NOCHANGE, NOCHANGE, NOCHANGE, FALSE);
 	}
 }
-#endif

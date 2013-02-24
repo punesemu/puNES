@@ -63,7 +63,7 @@ enum {
 	NUMCHKS
 };
 
-void switch_saveOnExit(void);
+void switch_save_on_exit(void);
 
 static GtkWidget *check[NUMCHKS];
 
@@ -108,8 +108,8 @@ void menu_settings(GtkWidget *mainmenu, GtkAccelGroup *accel_group) {
 			GTK_ACCEL_VISIBLE);
 
 	g_signal_connect(G_OBJECT(savenow), "activate", G_CALLBACK(cfgfileSave), NULL);
-	g_signal_connect(G_OBJECT(check[MSAVEONEXIT]), "activate", G_CALLBACK(switch_saveOnExit), NULL);
-
+	g_signal_connect(G_OBJECT(check[MSAVEONEXIT]), "activate", G_CALLBACK(switch_save_on_exit),
+	        NULL );
 }
 void menu_settings_check(void) {
 	menu_mode_check();
@@ -119,14 +119,14 @@ void menu_settings_check(void) {
 	menu_gamegenie_check();
 	/* Save on Exit*/
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MSAVEONEXIT]), FALSE);
-	if (cfg->saveOnExit) {
+	if (cfg->save_on_exit) {
 		gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MSAVEONEXIT]), TRUE);
 	}
 }
-void switch_saveOnExit(void) {
+void switch_save_on_exit(void) {
 	if (guiupdate) {
 		return;
 	}
 
-	cfg->saveOnExit = !cfg->saveOnExit;
+	cfg->save_on_exit = !cfg->save_on_exit;
 }

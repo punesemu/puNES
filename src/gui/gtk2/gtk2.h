@@ -62,9 +62,7 @@ void guiStart(void);
 void guiEvent(void);
 GdkNativeWindow guiWindowID(void);
 void guiUpdate(void);
-#ifdef OPENGL
 void guiFullscreen(void);
-#endif
 void guiTimeline(void);
 void guiSavestate(BYTE slot);
 double (*guiGetMs)(void);

@@ -29,11 +29,9 @@ BEGIN
 	"2",        IDM_SET_SIZE_2X,         VIRTKEY
 	"3",        IDM_SET_SIZE_3X,         VIRTKEY
 	"4",        IDM_SET_SIZE_4X,         VIRTKEY
-#ifdef OPENGL
 	VK_RETURN,  IDM_SET_FULLSCREEN,      ALT,     VIRTKEY
 	"R",        IDM_SET_EFFECT_CUBE,     VIRTKEY
 	"P",        IDM_SET_STRETCHFLSCR,    VIRTKEY
-#endif
 	"W",        IDM_SET_SAVENOW,         CONTROL, VIRTKEY
 	"A",        IDM_SET_AUDIO_ENABLE,    CONTROL, VIRTKEY
 	
@@ -79,14 +77,12 @@ BEGIN
 		MENUITEM SEPARATOR
 		POPUP "&Video"
 		BEGIN
-#ifdef OPENGL
 			POPUP "&Rendering"
 			BEGIN
 				MENUITEM "&Software",             IDM_SET_RENDERING_SOFTWARE
 				MENUITEM "&OpenGL",               IDM_SET_RENDERING_OPENGL
 				MENUITEM "OpenGL &GLSL",          IDM_SET_RENDERING_GLSL
 			END
-#endif	
 			POPUP "&FPS"
 			BEGIN
 				MENUITEM "Default",               IDM_SET_FPS_DEFAULT
@@ -122,13 +118,11 @@ BEGIN
 				MENUITEM "8",                     IDM_SET_FSK_8
 				MENUITEM "9",                     IDM_SET_FSK_9
 			END
-#ifdef OPENGL
 			POPUP "&VSync"
 			BEGIN
 				MENUITEM "&On",                   IDM_SET_VSYNC_ON
 				MENUITEM "O&ff",                  IDM_SET_VSYNC_OFF
 			END
-#endif
 			MENUITEM SEPARATOR
 			POPUP "&Size"
 			BEGIN
@@ -189,7 +183,6 @@ BEGIN
 				MENUITEM "&Monochrome",           IDM_SET_PALETTE_MONO
 				MENUITEM "&Green",                IDM_SET_PALETTE_GREEN
 			END
-#ifdef OPENGL
 			POPUP "&Effect"
 			BEGIN
 				MENUITEM "&Cube\tR",              IDM_SET_EFFECT_CUBE
@@ -197,7 +190,6 @@ BEGIN
 			MENUITEM SEPARATOR
 			MENUITEM "F&ullscreen\tAlt+Enter",    IDM_SET_FULLSCREEN
 			MENUITEM "S&tretch in fullscreen\tP", IDM_SET_STRETCHFLSCR
-#endif
 		END
 		POPUP "&Audio"
 		BEGIN

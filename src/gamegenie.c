@@ -15,7 +15,6 @@
 #define GGFILE "gamegenie.rom"
 
 void gamegenie_init(void) {
-	gamegenie.enabled = FALSE;
 	gamegenie.rom_present = FALSE;
 	gamegenie_reset(FALSE);
 }

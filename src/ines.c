@@ -51,7 +51,7 @@ BYTE ines_load_rom(void) {
 		}
 	}
 
-	if (gamegenie.enabled) {
+	if (cfg->gamegenie) {
 		fp = gamegenie_load_rom(fp);
 	}
 

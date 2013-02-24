@@ -73,13 +73,11 @@
 
 #define IDM_SET_FILTER_NOFILTER     380
 #define IDM_SET_FILTER_BILINEAR     381
-#ifdef OPENGL
 #define IDM_SET_FILTER_POSPHOR      382
 #define IDM_SET_FILTER_SCANLINE     383
 #define IDM_SET_FILTER_DBL          384
 #define IDM_SET_FILTER_CRTCURVE     385
 #define IDM_SET_FILTER_CRTNOCURVE   386
-#endif
 #define IDM_SET_FILTER_SCALE2X      387
 #define IDM_SET_FILTER_SCALE3X      388
 #define IDM_SET_FILTER_SCALE4X      389
@@ -96,7 +94,6 @@
 #define IDM_SET_PALETTE_MONO        413
 #define IDM_SET_PALETTE_GREEN       414
 
-#ifdef OPENGL
 #define IDM_SET_RENDERING_SOFTWARE  420
 #define IDM_SET_RENDERING_OPENGL    421
 #define IDM_SET_RENDERING_GLSL      422
@@ -105,7 +102,6 @@
 #define IDM_SET_VSYNC_OFF           425
 #define IDM_SET_FULLSCREEN          426
 #define IDM_SET_STRETCHFLSCR        427
-#endif
 
 #define IDM_SET_SAVENOW             430
 #define IDM_SET_SAVEONEXIT          431

@@ -15,11 +15,8 @@
 #include "filters/video/bilinear.h"
 #include "filters/video/ntsc.h"
 
-enum {
-	X1 = 1,
-	X2,
-	X3,
-	X4 };
+enum { RENDER_SOFTWARE, RENDER_OPENGL, RENDER_GLSL };
+enum { X1 = 1, X2, X3, X4 };
 enum {
 	NOFILTER,
 	SCALE2X,
@@ -39,29 +36,14 @@ enum {
 	/* glsl shaders end */
 };
 enum { NOFULLSCR, FULLSCR };
-enum {
-	OSCANOFF,
-	OSCANON,
-	OSCANDEF,
-	OSCANDEFAULTOFF,
-	OSCANDEFAULTON
-};
+enum { OSCAN_OFF, OSCAN_ON, OSCAN_DEFAULT, OSCAN_DEFAULT_OFF, OSCAN_DEFAULT_ON };
 enum { CURRENT, NOOVERSCAN, MONITOR, VIDEOMODE };
 
 #define NOCHANGE 255
 
 struct _gfx {
-	BYTE scale;
-	BYTE scaleBeforeFullscreen;
-	BYTE overscan;
-	BYTE overscanDefault;
-	BYTE filter;
-	BYTE palette;
-	BYTE ntscFormat;
-	BYTE onCfg;
-	BYTE fullscreen;
+	BYTE scale_before_fscreen;
 	BYTE opengl;
-	BYTE vsync;
 	BYTE bitperpixel;
 	WORD rows;
 	WORD lines;
@@ -74,6 +56,7 @@ struct _gfx {
 SDL_Surface *surfaceSDL;
 
 BYTE gfxInit(void);
+void gfxSetRender(BYTE render);
 void gfxSetScreen(BYTE newScale, BYTE newFilter, BYTE newFullscreen, BYTE newPalette,
         BYTE forceScale);
 void gfxDrawScreen(BYTE forced);

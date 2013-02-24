@@ -5,7 +5,6 @@
  *      Author: fhorse
  */
 
-#ifdef OPENGL
 #ifndef MENU_VIDEO_EFFECT_H_
 #define MENU_VIDEO_EFFECT_H_
 
@@ -16,4 +15,3 @@ void menu_video_effect_check(void);
 void menu_video_effect_set(void);
 
 #endif /* MENU_VIDEO_EFFECT_H_ */
-#endif

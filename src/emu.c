@@ -394,34 +394,33 @@ void emuSetTitle(char *title) {
 		sprintf(name, "%s", NAME);
 	}
 
-	if (info.portable && (gfx.scale != X1)) {
+	if (info.portable && (cfg->scale != X1)) {
 		strcat(name, "_p");
 	}
 
-	if (gfx.scale == X1) {
+	if (cfg->scale == X1) {
 		sprintf(title, "%s (%s", name, pMode[machine.type].lname);
-	} else if (gfx.filter == RGBNTSC) {
+	} else if (cfg->filter == RGBNTSC) {
 		sprintf(title, "%s (%s, %s, %s, %s", name, pMode[machine.type].lname,
-				pSize[gfx.scale].lname, pNtsc[gfx.ntscFormat].lname, pPalette[gfx.palette].lname);
+		        pSize[cfg->scale].lname, pNtsc[cfg->ntsc_format].lname,
+		        pPalette[cfg->palette].lname);
 	} else {
 		sprintf(title, "%s (%s, %s, %s, %s", name, pMode[machine.type].lname,
-				pSize[gfx.scale].lname, pFilter[gfx.filter].lname, pPalette[gfx.palette].lname);
+				pSize[cfg->scale].lname, pFilter[cfg->filter].lname, pPalette[cfg->palette].lname);
 	}
 
 #ifndef RELEASE
-	if (gfx.scale != X1) {
+	if (cfg->scale != X1) {
 		char mapperType[10];
 		sprintf(mapperType, ", %d", info.mapper);
 		strcat(title, mapperType);
 	}
 #endif
 
-#ifdef OPENGL
-	if (gfx.scale != X1) {
+	if (cfg->scale != X1) {
 		strcat(title, ", ");
-		strcat(title, pRendering[gfx.opengl + opengl.glsl.enabled].lname);
+		strcat(title, pRendering[cfg->render].lname);
 	}
-#endif
 
 	strcat(title, ")");
 }
@@ -633,7 +632,7 @@ BYTE emuReset(BYTE type) {
 	return (EXIT_OK);
 }
 void emuQuit(BYTE exitCode) {
-	if (cfg->saveOnExit) {
+	if (cfg->save_on_exit) {
 		cfgfileSave();
 	}
 

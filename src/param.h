@@ -29,12 +29,10 @@ enum {
 	P_NTSCFORMAT,
 	P_PALETTE,
 	P_SAVEONEXIT,
-#ifdef OPENGL
 	P_RENDER,
 	P_VSYNC,
 	P_FSCREEN,
 	P_STRETCH,
-#endif
 	P_AUDIO,
 	P_SAMPLERATE,
 	P_CHANNELS,
@@ -56,11 +54,7 @@ typedef struct {
 } _param;
 
 #ifdef __CMDLINE__
-static const char *optShort = "m:f:k:s:o:i:n:p:"
-#ifdef OPENGL
-		"r:v:u:t:"
-#endif
-		"a:l:c:q:g:Vh?";
+static const char *optShort = "m:f:k:s:o:i:n:p:r:v:u:t:a:l:c:q:g:Vh?";
 
 static const struct option optLong[] = {
 	{ "mode",               required_argument, NULL, 'm'},
@@ -71,12 +65,10 @@ static const struct option optLong[] = {
 	{ "filter",             required_argument, NULL, 'i'},
 	{ "ntsc-format",        required_argument, NULL, 'n'},
 	{ "palette",            required_argument, NULL, 'p'},
-#ifdef OPENGL
 	{ "rendering",          required_argument, NULL, 'r'},
 	{ "vsync",              required_argument, NULL, 'v'},
 	{ "fullscreen",         required_argument, NULL, 'u'},
 	{ "stretch-fullscreen", required_argument, NULL, 't'},
-#endif
 	{ "audio",              required_argument, NULL, 'a'},
 	{ "samplerate",         required_argument, NULL, 'l'},
 	{ "channels",           required_argument, NULL, 'c'},
@@ -129,19 +121,12 @@ static const _param param[] = {
 		"filter",
 		NULL,
 		"# possible values: none, bilinear, scale2x, scale3x, scale4x, hq2x, hq3x, hq4x,\n"
-		"#                  ntsc"
-#ifdef OPENGL
-		", posphor, scanline, dbl, crtcurve, crtnocurve",
-#endif
+		"#                  ntsc, posphor, scanline, dbl, crtcurve, crtnocurve",
 		NULL,
 		"-i, --filter              filter to apply       : nofilter, bilinear, scale2x,\n"
 		"                                                  scale3x, scale4x, hq2x, hq3x,\n"
-#ifdef OPENGL
 		"                                                  hq4x, ntsc, posphor, scanline,\n"
 		"                                                  dbl, crtcurve, crtnocurve"
-#else
-		"                                                  hq4x, ntsc"
-#endif
 	},
 	{
 		"ntsc filter format",
@@ -164,7 +149,6 @@ static const _param param[] = {
 		NULL,
 		NULL
 	},
-#ifdef OPENGL
 	{
 		"rendering",
 		NULL,
@@ -193,7 +177,6 @@ static const _param param[] = {
 		NULL,
 		"-t, --stretch-fullscreen  adjust aspect ratio   : yes, no"
 	},
-#endif
 	{
 		"audio",
 		NULL,
@@ -370,13 +353,11 @@ static const _param pPalette[] = {
 	{"Monochrome",        "mono" },
 	{"Green",             "green"}
 };
-#ifdef OPENGL
 static const _param pRendering[] = {
 	{"Software", "software"},
 	{"OpenGL",   "opengl"  },
 	{"GLSL",     "glsl"    }
 };
-#endif
 static const _param pSamplerate[] = {
 	{"44100", "44100"},
 	{"22050", "22050"},

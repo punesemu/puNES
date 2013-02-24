@@ -8,6 +8,7 @@
 #include "opengl.h"
 #include "sdlgfx.h"
 #include "ppu.h"
+#include "cfgfile.h"
 #include "openGL/no_effect.h"
 #define _SHADERS_CODE_
 #include "openGL/shaders.h"
@@ -90,7 +91,7 @@ void sdlCreateSurfaceGL(SDL_Surface *src, WORD width, WORD height, BYTE flags) {
 		opengl.yTexture2 = src->h;
 
 		/* con flags intendo sia il fullscreen che il futuro resize */
-		if (flags && opengl.aspectRatio) {
+		if (flags && cfg->aspect_ratio) {
 			float ratioSurface = (float) opengl.wTexture / opengl.hTexture;
 			float ratioFrame = (float) width / height;
 

@@ -13,10 +13,8 @@
 #include "menu_settings.h"
 #include "menu_state.h"
 #include "menu_help.h"
-#ifdef OPENGL
 #include "menu_video_effect.h"
 #include "menu_video_fullscreen.h"
-#endif
 
 void menu_create(GtkWidget *win, GtkWidget *mainbox);
 void menu_hide(void);

@@ -192,9 +192,9 @@ void menu_video_overscan(GtkWidget *video, GtkAccelGroup *accel_group) {
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu[1]), check[MOSCANDOFF]);
 
 	g_signal_connect_swapped(G_OBJECT(check[MOSCANDON]), "activate",
-			G_CALLBACK(set_overscan), GINT_TO_POINTER(OSCANDEFAULTON));
+			G_CALLBACK(set_overscan), GINT_TO_POINTER(OSCAN_DEFAULT_ON));
 	g_signal_connect_swapped(G_OBJECT(check[MOSCANDOFF]), "activate",
-			G_CALLBACK(set_overscan), GINT_TO_POINTER(OSCANDEFAULTOFF));
+			G_CALLBACK(set_overscan), GINT_TO_POINTER(OSCAN_DEFAULT_OFF));
 
 }
 void menu_video_overscan_check(void) {
@@ -203,14 +203,14 @@ void menu_video_overscan_check(void) {
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MOSCANON]), FALSE);
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MOSCANOFF]), FALSE);
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MOSCANDEF]), FALSE);
-	switch (gfx.overscan) {
-		case OSCANON:
+	switch (cfg->oscan) {
+		case OSCAN_ON:
 			index = MOSCANON;
 			break;
-		case OSCANOFF:
+		case OSCAN_OFF:
 			index = MOSCANOFF;
 			break;
-		case OSCANDEF:
+		case OSCAN_DEFAULT:
 			index = MOSCANDEF;
 			break;
 	}
@@ -218,11 +218,11 @@ void menu_video_overscan_check(void) {
 
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MOSCANDON]), FALSE);
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MOSCANDOFF]), FALSE);
-	switch (gfx.overscanDefault) {
-		case OSCANON:
+	switch (cfg->oscan_default) {
+		case OSCAN_ON:
 			index = MOSCANDON;
 			break;
-		case OSCANOFF:
+		case OSCAN_OFF:
 			index = MOSCANDOFF;
 			break;
 	}
@@ -234,17 +234,17 @@ void set_overscan(int newoscan) {
 	}
 
 	switch (newoscan) {
-		case OSCANON:
-		case OSCANOFF:
-		case OSCANDEF:
-			gfx.overscan = newoscan;
+		case OSCAN_ON:
+		case OSCAN_OFF:
+		case OSCAN_DEFAULT:
+			cfg->oscan = newoscan;
 			cfgfilePgsSave();
 			break;
-		case OSCANDEFAULTOFF:
-			gfx.overscanDefault = OSCANOFF;
+		case OSCAN_DEFAULT_OFF:
+			cfg->oscan_default = OSCAN_OFF;
 			break;
-		case OSCANDEFAULTON:
-			gfx.overscanDefault = OSCANON;
+		case OSCAN_DEFAULT_ON:
+			cfg->oscan_default = OSCAN_ON;
 			break;
 	}
 
