@@ -14,11 +14,11 @@ void mapInit_176(void) {
 	prgRom32kMax = (info.prgRom16kCount >> 1) - 1;
 	chrRom8kMax = info.chrRom8kCount - 1;
 
-	EXTCLCPUWRMEM(176);
+	EXTCL_CPU_WR_MEM(176);
 
 	info.mapperExtendWrite = TRUE;
 }
-void extclCpuWrMem_176(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_176(WORD address, BYTE value) {
 	switch (address) {
 		case 0x5FF1:
 			value >>= 1;

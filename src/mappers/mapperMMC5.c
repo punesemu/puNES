@@ -175,17 +175,17 @@ void mapInit_MMC5(void) {
 	chrRom2kMax = (info.chrRom4kCount << 1) - 1;
 	chrRom1kMax = (info.chrRom4kCount << 2) - 1;
 
-	EXTCLCPUWRMEM(MMC5);
-	EXTCLCPURDMEM(MMC5);
-	EXTCLSAVEMAPPER(MMC5);
-	EXTCLPPU256TO319(MMC5);
-	EXTCLPPU320TO34X(MMC5);
-	EXTCLRDCHRAFTER(MMC5);
-	EXTCLRDNMT(MMC5);
-	EXTCLRDCHR(MMC5);
-	EXTCLLENGTHCLOCK(MMC5);
-	EXTCLENVELOPECLOCK(MMC5);
-	EXTCLAPUTICK(MMC5);
+	EXTCL_CPU_WR_MEM(MMC5);
+	EXTCL_CPU_RD_MEM(MMC5);
+	EXTCL_SAVE_MAPPER(MMC5);
+	EXTCL_PPU_256_TO_319(MMC5);
+	EXTCL_PPU_320_TO_34X(MMC5);
+	EXTCL_AFTER_RD_CHR(MMC5);
+	EXTCL_RD_NMT(MMC5);
+	EXTCL_RD_CHR(MMC5);
+	EXTCL_LENGTH_CLOCK(MMC5);
+	EXTCL_ENVELOPE_CLOCK(MMC5);
+	EXTCL_APU_TICK(MMC5);
 	mapper.intStruct[0] = (BYTE *) &mmc5;
 	mapper.intStructSize[0] = sizeof(mmc5);
 
@@ -253,7 +253,7 @@ void mapInit_MMC5(void) {
 			break;
 	}
 }
-void extclCpuWrMem_MMC5(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_MMC5(WORD address, BYTE value) {
 	if (address < 0x5000) {
 		return;
 	}
@@ -478,7 +478,7 @@ void extclCpuWrMem_MMC5(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extclCpuRdMem_MMC5(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_MMC5(WORD address, BYTE openbus, BYTE before) {
 	BYTE value;
 
 	switch (address) {
@@ -520,7 +520,7 @@ BYTE extclCpuRdMem_MMC5(WORD address, BYTE openbus, BYTE before) {
 			return (mmc5.fillTable[address & 0x03FF]);
 	}
 }
-BYTE extclSaveMapper_MMC5(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_MMC5(BYTE mode, BYTE slot, FILE *fp) {
 	BYTE i;
 
 	savestateEle(mode, slot, mmc5.prgMode);
@@ -576,7 +576,7 @@ BYTE extclSaveMapper_MMC5(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-void extclPPU256to319_MMC5(void) {
+void extcl_ppu_256_to_319_MMC5(void) {
 	if (ppu.frameX != 256) {
 		return;
 	};
@@ -587,7 +587,7 @@ void extclPPU256to319_MMC5(void) {
 		useChrB();
 	}
 }
-void extclPPU320to34x_MMC5(void) {
+void extcl_ppu_320_to_34x_MMC5(void) {
 	irql2f_tick();
 
 	if (ppu.frameX != 320) {
@@ -613,7 +613,7 @@ void extclPPU320to34x_MMC5(void) {
 		useChrS();
 	}
 }
-void extclRdChrAfter_MMC5(WORD address) {
+void extcl_after_rd_chr_MMC5(WORD address) {
 	/*
 	 * dopo ogni fetch del high byte del background
 	 * azzero il flag con cui indico se il tile era
@@ -623,7 +623,7 @@ void extclRdChrAfter_MMC5(WORD address) {
 	 */
 	mmc5.splitInReg = FALSE;
 }
-BYTE extclRdChr_MMC5(WORD address) {
+BYTE extcl_rd_chr_MMC5(WORD address) {
 	BYTE value;
 	uint32_t index;
 
@@ -647,7 +647,7 @@ BYTE extclRdChr_MMC5(WORD address) {
 	index = ((value + mmc5.chrHigh) << 12) + (address & 0x0FFF);
 	return (chr.data[index]);
 }
-BYTE extclRdNmt_MMC5(WORD address) {
+BYTE extcl_rd_nmt_MMC5(WORD address) {
 	BYTE nmt = address >> 10;
 
 	if ((ntbl.bank1k[nmt] == mmc5.extRam) && (mmc5.extMode > MODE1)) {
@@ -690,15 +690,15 @@ BYTE extclRdNmt_MMC5(WORD address) {
 	}
 	return (ntbl.bank1k[nmt][address & 0x3FF]);
 }
-void extclLengthClock_MMC5(void) {
+void extcl_length_clock_MMC5(void) {
 	length_run(mmc5.S3)
 	length_run(mmc5.S4)
 }
-void extclEnvelopeClock_MMC5(void) {
+void extcl_envelope_clock_MMC5(void) {
 	envelope_run(mmc5.S3)
 	envelope_run(mmc5.S4)
 }
-void extclApuTick_MMC5(void) {
+void extcl_apu_tick_MMC5(void) {
 	square_tick(mmc5.S3, 0)
 	square_tick(mmc5.S4, 0)
 }

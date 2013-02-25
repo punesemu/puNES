@@ -11,6 +11,6 @@
 #include "common.h"
 
 void mapInit_CPROM(void);
-void extclCpuWrMem_CPROM(WORD address, BYTE value);
+void extcl_cpu_wr_mem_CPROM(WORD address, BYTE value);
 
 #endif /* MAPPERCPROM_H_ */

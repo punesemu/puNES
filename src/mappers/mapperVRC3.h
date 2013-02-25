@@ -20,8 +20,8 @@ struct _vrc3 {
 } vrc3;
 
 void mapInit_VRC3(void);
-void extclCpuWrMem_VRC3(WORD address, BYTE value);
-BYTE extclSaveMapper_VRC3(BYTE mode, BYTE slot, FILE *fp);
-void extclCPUEveryCycle_VRC3(void);
+void extcl_cpu_wr_mem_VRC3(WORD address, BYTE value);
+BYTE extcl_save_mapper_VRC3(BYTE mode, BYTE slot, FILE *fp);
+void extcl_cpu_every_cycle_VRC3(void);
 
 #endif /* MAPPERVRC3_H_ */

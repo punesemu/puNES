@@ -11,6 +11,6 @@
 #include "common.h"
 
 void mapInit_GxROM(void);
-void extclCpuWrMem_GxROM(WORD address, BYTE value);
+void extcl_cpu_wr_mem_GxROM(WORD address, BYTE value);
 
 #endif /* MAPPERGXROM_H_ */

@@ -94,7 +94,7 @@ static BYTE cpuRdMem(WORD address, BYTE madeTick) {
 		cpu.openbus = prgRomRd(address);
 
 		if (info.mapperExtendRead) {
-			cpu.openbus = extclCpuRdMem(address, cpu.openbus, before);
+			cpu.openbus = extcl_cpu_rd_mem(address, cpu.openbus, before);
 		}
 
 		if (gamegenie.counter) {
@@ -186,7 +186,7 @@ static BYTE cpuRdMem(WORD address, BYTE madeTick) {
 				}
 			}
 		}
-		if (extclCpuRdMem) {
+		if (extcl_cpu_rd_mem) {
 			/*
 			 * utilizzato dalle mappers :
 			 * MMC5
@@ -195,7 +195,7 @@ static BYTE cpuRdMem(WORD address, BYTE madeTick) {
 			 * Sunsoft (FM7)
 			 */
 			/* Mappers */
-			cpu.openbus = extclCpuRdMem(address, cpu.openbus, before);
+			cpu.openbus = extcl_cpu_rd_mem(address, cpu.openbus, before);
 		}
 		return (cpu.openbus);
 	}
@@ -263,7 +263,7 @@ static BYTE INLINE ppuRdReg(WORD address) {
 		return (value);
 	}
 	if (address == 0x2007) {
-		WORD r2006Old = r2006.value;
+		WORD old_r2006 = r2006.value;
 		BYTE repeat = 1;
 
 		if (DMC.dma_cycle == 2) {
@@ -315,7 +315,7 @@ static BYTE INLINE ppuRdReg(WORD address) {
 			}
 			r2006duringRendering();
 			repeat--;
-			if (extcl2006Update) {
+			if (extcl_update_r2006) {
 				/*
 				 * utilizzato dalle mappers :
 				 * MMC3
@@ -323,7 +323,7 @@ static BYTE INLINE ppuRdReg(WORD address) {
 				 * Taito (TC0190FMCPAL16R4)
 				 * Tengen (Rambo)
 				 */
-				extcl2006Update(r2006Old);
+				extcl_update_r2006(old_r2006);
 			}
 		}
 		return (value);
@@ -607,12 +607,12 @@ static void cpuWrMem(WORD address, BYTE value) {
 		if (address == 0x4016) {
 			/* eseguo un tick hardware */
 			tickHW(1);
-			if (extclCPUWr4016) {
+			if (extcl_cpu_wr_r4016) {
 				/*
 				 * utilizzato dalle mappers :
 				 * Vs
 				 */
-				extclCPUWr4016(value);
+				extcl_cpu_wr_r4016(value);
 			}
 			/* in caso di strobe azzero l'indice */
 			if (r4016.value && !(value & 0x01)) {
@@ -678,13 +678,13 @@ static void cpuWrMem(WORD address, BYTE value) {
 			 * MMC5
 			 * REX (DBZ)
 			 */
-			extclCpuWrMem(address, value);
+			extcl_cpu_wr_mem(address, value);
 		}
 		return;
 	}
 
 	/* Mappers */
-	extclCpuWrMem(address, value);
+	extcl_cpu_wr_mem(address, value);
 	/* su questo devo fare qualche altro esperimento */
 	tickHW(1);
 	return;
@@ -692,12 +692,12 @@ static void cpuWrMem(WORD address, BYTE value) {
 static void INLINE ppuWrMem(WORD address, BYTE value) {
 	address &= 0x3FFF;
 	if (address < 0x2000) {
-		if (extclWrChr) {
+		if (extcl_wr_chr) {
 			/*
 			 * utilizzato dalle mappers :
 			 * Irem (LROG017)
 			 */
-			extclWrChr(address, value);
+			extcl_wr_chr(address, value);
 			return;
 		}
 		if (mapper.writeVRAM) {
@@ -931,7 +931,7 @@ static void INLINE ppuWrReg(WORD address, BYTE value) {
 		return;
 	}
 	if (address == 0x2006) {
-		WORD r2006Old = r2006.value;
+		WORD old_r2006 = r2006.value;
 
 		/* open bus */
 		ppu.openbus = value;
@@ -979,7 +979,7 @@ static void INLINE ppuWrReg(WORD address, BYTE value) {
 			 */
 			r2006.changedFromOP = ppu.frameX;
 
-			if (extcl2006Update) {
+			if (extcl_update_r2006) {
 				/*
 				 * utilizzato dalle mappers :
 				 * MMC3
@@ -987,7 +987,7 @@ static void INLINE ppuWrReg(WORD address, BYTE value) {
 				 * Taito (TC0190FMCPAL16R4)
 				 * Tengen (Rambo)
 				 */
-				extcl2006Update(r2006Old);
+				extcl_update_r2006(old_r2006);
 			}
 		}
 		r2002.toggle = !r2002.toggle;
@@ -995,7 +995,7 @@ static void INLINE ppuWrReg(WORD address, BYTE value) {
 	}
 
 	if (address == 0x2007) {
-		WORD r2006Old = r2006.value;
+		WORD old_r2006 = r2006.value;
 
 		/* open bus */
 		ppu.openbus = value;
@@ -1014,7 +1014,7 @@ static void INLINE ppuWrReg(WORD address, BYTE value) {
 		 */
 		r2006duringRendering();
 
-		 if (extcl2006Update) {
+		 if (extcl_update_r2006) {
 			 /*
 			  * utilizzato dalle mappers :
 			  * MMC3
@@ -1022,7 +1022,7 @@ static void INLINE ppuWrReg(WORD address, BYTE value) {
 			  * Taito (TC0190FMCPAL16R4)
 			  * Tengen (Rambo)
 			  */
-			 extcl2006Update(r2006Old);
+			 extcl_update_r2006(old_r2006);
 		 }
 		 return;
 	}
@@ -1651,7 +1651,7 @@ static void INLINE tickHW(BYTE value) {
 		irq.before = irq.high;
 		ppuTick(1);
 		apu_tick(1, &value);
-		if (extclCPUEveryCycle) {
+		if (extcl_cpu_every_cycle) {
 			/*
 			 * utilizzato dalle mappers :
 			 * 183
@@ -1672,7 +1672,7 @@ static void INLINE tickHW(BYTE value) {
 			 * Sunsoft (FM7)
 			 * TxROM
 			 */
-			extclCPUEveryCycle();
+			extcl_cpu_every_cycle();
 		}
 		cpu.oddCycle = !cpu.oddCycle;
 		value--;

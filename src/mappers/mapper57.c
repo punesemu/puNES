@@ -18,18 +18,18 @@ void mapInit_57(void) {
 	prgRom16kMax = info.prgRom16kCount - 1;
 	chrRom8kMax = info.chrRom8kCount - 1;
 
-	EXTCLCPUWRMEM(57);
-	EXTCLSAVEMAPPER(57);
+	EXTCL_CPU_WR_MEM(57);
+	EXTCL_SAVE_MAPPER(57);
 	mapper.intStruct[0] = (BYTE *) &m57;
 	mapper.intStructSize[0] = sizeof(m57);
 
 	if (info.reset >= HARD) {
 		memset(&m57, 0x00, sizeof(m57));
 
-		extclCpuWrMem_57(0x8800, 0x00);
+		extcl_cpu_wr_mem_57(0x8800, 0x00);
 	}
 }
-void extclCpuWrMem_57(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_57(WORD address, BYTE value) {
 	DBWORD bank;
 
 	if (address & 0x0800) {
@@ -69,7 +69,7 @@ void extclCpuWrMem_57(WORD address, BYTE value) {
 	chr.bank1k[6] = &chr.data[bank | 0x1800];
 	chr.bank1k[7] = &chr.data[bank | 0x1C00];
 }
-BYTE extclSaveMapper_57(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_57(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, m57.reg);
 
 	return (EXIT_OK);

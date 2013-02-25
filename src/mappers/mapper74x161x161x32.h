@@ -16,6 +16,6 @@ enum {
 };
 
 void mapInit_74x161x161x32(BYTE model);
-void extclCpuWrMem_74x161x161x32(WORD address, BYTE value);
+void extcl_cpu_wr_mem_74x161x161x32(WORD address, BYTE value);
 
 #endif /* MAPPER74X161X161X32_H_ */

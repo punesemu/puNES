@@ -19,9 +19,9 @@ struct _m183 {
 } m183;
 
 void mapInit_183(void);
-void extclCpuWrMem_183(WORD address, BYTE value);
-BYTE extclCpuRdMem_183(WORD address, BYTE openbus, BYTE before);
-BYTE extclSaveMapper_183(BYTE mode, BYTE slot, FILE *fp);
-void extclCPUEveryCycle_183(void);
+void extcl_cpu_wr_mem_183(WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_183(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_save_mapper_183(BYTE mode, BYTE slot, FILE *fp);
+void extcl_cpu_every_cycle_183(void);
 
 #endif /* MAPPER183_H_ */

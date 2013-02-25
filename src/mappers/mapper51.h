@@ -17,8 +17,8 @@ struct _m51 {
 } m51;
 
 void mapInit_51(void);
-void extclCpuWrMem_51(WORD address, BYTE value);
-BYTE extclCpuRdMem_51(WORD address, BYTE openbus, BYTE before);
-BYTE extclSaveMapper_51(BYTE mode, BYTE slot, FILE *fp);
+void extcl_cpu_wr_mem_51(WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_51(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_save_mapper_51(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPER51_H_ */

@@ -15,7 +15,7 @@ struct _m230 {
 } m230;
 
 void mapInit_230(void);
-void extclCpuWrMem_230(WORD address, BYTE value);
-BYTE extclSaveMapper_230(BYTE mode, BYTE slot, FILE *fp);
+void extcl_cpu_wr_mem_230(WORD address, BYTE value);
+BYTE extcl_save_mapper_230(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPER230_H_ */

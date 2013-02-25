@@ -17,8 +17,8 @@ void mapInit_46(void) {
 	prgRom32kMax = (info.prgRom16kCount >> 1) - 1;
 	chrRom8kMax = info.chrRom8kCount - 1;
 
-	EXTCLCPUWRMEM(46);
-	EXTCLSAVEMAPPER(46);
+	EXTCL_CPU_WR_MEM(46);
+	EXTCL_SAVE_MAPPER(46);
 	mapper.intStruct[0] = (BYTE *) &m46;
 	mapper.intStructSize[0] = sizeof(m46);
 
@@ -30,7 +30,7 @@ void mapInit_46(void) {
 
 	info.mapperExtendWrite = TRUE;
 }
-void extclCpuWrMem_46(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_46(WORD address, BYTE value) {
 	BYTE save = value;
 	DBWORD bank;
 
@@ -80,7 +80,7 @@ void extclCpuWrMem_46(WORD address, BYTE value) {
 		return;
 	}
 }
-BYTE extclSaveMapper_46(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_46(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, m46.prg);
 	savestateEle(mode, slot, m46.chr);
 	return (EXIT_OK);

@@ -127,13 +127,13 @@ void ppuTick(WORD cycles_cpu) {
 			}
 		}
 
-		if (extclPPU000to34x) {
+		if (extcl_ppu_000_to_34x) {
 			/*
 			 * utilizzato dalle mappers :
 			 * MMC3
 			 * Taito
 			 */
-			extclPPU000to34x();
+			extcl_ppu_000_to_34x();
 		}
 
 		/*
@@ -158,14 +158,14 @@ void ppuTick(WORD cycles_cpu) {
 			 *    scanline.
 			 */
 			if (!r2002.vblank && (ppu.screenY < SCRLINES)) {
-				if (extclPPU000to255) {
+				if (extcl_ppu_000_to_255) {
 					/*
 					 * utilizzato dalle mappers :
 					 * MMC3
 					 * Taito
 					 * Tengen
 					 */
-					extclPPU000to255();
+					extcl_ppu_000_to_255();
 				}
 				/* controllo di non essere nella dummy line */
 				if (ppu.frameY > machine.vintLines) {
@@ -222,13 +222,13 @@ void ppuTick(WORD cycles_cpu) {
 							 * rispetto ai primi).
 							 */
 							FETCHHB()
-							if (extclRdChrAfter) {
+							if (extcl_after_rd_chr) {
 								/*
 								 * utilizzato dalle mappers :
 								 * MMC5
 								 * MMC2/4
 								 */
-								extclRdChrAfter(ppu.bckAdr);
+								extcl_after_rd_chr(ppu.bckAdr);
 							}
 							/*
 							 * Fine Y e' incrementato dopo l'ultimo fetch
@@ -788,7 +788,7 @@ void ppuTick(WORD cycles_cpu) {
 		 */
 		if (ppu.frameX < 320) {
 			if (!r2002.vblank && r2001.visible && (ppu.screenY < SCRLINES)) {
-				if (extclPPU256to319) {
+				if (extcl_ppu_256_to_319) {
 					/*
 					 * utilizzato dalle mappers :
 					 * MMC3
@@ -796,7 +796,7 @@ void ppuTick(WORD cycles_cpu) {
 					 * MMC5
 					 * Tengen
 					 */
-					extclPPU256to319();
+					extcl_ppu_256_to_319();
 				}
 				if (ppu.frameX == 256) {
 					sprEv.timing = sprEv.tmpSprPlus = 0;
@@ -826,13 +826,13 @@ void ppuTick(WORD cycles_cpu) {
 									(invCHR[ppuRdMem(ppu.sprAdr | 0x08)] << 1);
 						}
 						r2004.value = oam.elementPlus[sprEv.tmpSprPlus][YC];
-						if (extclRdChrAfter) {
+						if (extcl_after_rd_chr) {
 							/*
 							 * utilizzato dalle mappers :
 							 * MMC5
 							 * MMC2/4
 							 */
-							extclRdChrAfter(ppu.sprAdr);
+							extcl_after_rd_chr(ppu.sprAdr);
 						}
 					} else if (sprEv.timing < 4) {
 						r2004.value = oam.elementPlus[sprEv.tmpSprPlus][sprEv.timing];
@@ -879,7 +879,7 @@ void ppuTick(WORD cycles_cpu) {
 		 * 		This process is repeated 2 times.
 		 */
 		if (!r2002.vblank && r2001.visible && (ppu.screenY < SCRLINES)) {
-			if (extclPPU320to34x) {
+			if (extcl_ppu_320_to_34x) {
 				/*
 				 * utilizzato dalle mappers :
 				 * MMC3
@@ -887,7 +887,7 @@ void ppuTick(WORD cycles_cpu) {
 				 * MMC5
 				 * Tengen
 				 */
-				extclPPU320to34x();
+				extcl_ppu_320_to_34x();
 			}
 			if (ppu.frameX == 323) {
 				if (ppu.frameY == machine.vintLines) {
@@ -904,13 +904,13 @@ void ppuTick(WORD cycles_cpu) {
 				FETCHLB()
 			} else if ((ppu.frameX == 327) || (ppu.frameX == 335)) {
 				FETCHHB()
-				if (extclRdChrAfter) {
+				if (extcl_after_rd_chr) {
 					/*
 					 * utilizzato dalle mappers :
 					 * MMC5
 					 * MMC2/4
 					 */
-					extclRdChrAfter(ppu.bckAdr);
+					extcl_after_rd_chr(ppu.bckAdr);
 				}
 			}
 		}

@@ -16,7 +16,7 @@ void mapInit_Caltron(void) {
 	prgRom32kMax = (info.prgRom16kCount >> 1) - 1;
 	chrRom8kMax = info.chrRom8kCount - 1;
 
-	EXTCLCPUWRMEM(Caltron);
+	EXTCL_CPU_WR_MEM(Caltron);
 
 	info.mapperExtendWrite = TRUE;
 
@@ -25,7 +25,7 @@ void mapInit_Caltron(void) {
 		mapPrgRom8k(4, 0, 0);
 	}
 }
-void extclCpuWrMem_Caltron(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Caltron(WORD address, BYTE value) {
 	DBWORD bank;
 
 	if (address < 0x6000) {
@@ -65,7 +65,7 @@ void extclCpuWrMem_Caltron(WORD address, BYTE value) {
 		chr.bank1k[7] = &chr.data[bank | 0x1C00];
 	}
 }
-BYTE extclSaveMapper_Caltron(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_Caltron(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, caltron.reg);
 
 	return (EXIT_OK);

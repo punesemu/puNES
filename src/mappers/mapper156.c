@@ -14,11 +14,11 @@ void mapInit_156(void) {
 	prgRom16kMax = info.prgRom16kCount - 1;
 	chrRom1kMax = info.chrRom1kCount - 1;
 
-	EXTCLCPUWRMEM(156);
+	EXTCL_CPU_WR_MEM(156);
 
 	mirroring_SCR0();
 }
-void extclCpuWrMem_156(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_156(WORD address, BYTE value) {
 	switch (address) {
 		case 0xC000:
 		case 0xC001:

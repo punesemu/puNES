@@ -96,17 +96,17 @@ void mapInit_Sunsoft(BYTE model) {
 
 	switch (model) {
 		case SUN1:
-			EXTCLCPUWRMEM(Sunsoft_S1);
+			EXTCL_CPU_WR_MEM(Sunsoft_S1);
 			info.mapperExtendWrite = TRUE;
 			break;
 		case SUN2A:
 		case SUN2B:
-			EXTCLCPUWRMEM(Sunsoft_S2);
+			EXTCL_CPU_WR_MEM(Sunsoft_S2);
 			break;
 		case SUN3:
-			EXTCLCPUWRMEM(Sunsoft_S3);
-			EXTCLSAVEMAPPER(Sunsoft_S3);
-			EXTCLCPUEVERYCYCLE(Sunsoft_S3);
+			EXTCL_CPU_WR_MEM(Sunsoft_S3);
+			EXTCL_SAVE_MAPPER(Sunsoft_S3);
+			EXTCL_CPU_EVERY_CYCLE(Sunsoft_S3);
 			mapper.intStruct[0] = (BYTE *) &s3;
 			mapper.intStructSize[0] = sizeof(s3);
 
@@ -115,8 +115,8 @@ void mapInit_Sunsoft(BYTE model) {
 			}
 			break;
 		case SUN4:
-			EXTCLCPUWRMEM(Sunsoft_S4);
-			EXTCLSAVEMAPPER(Sunsoft_S4);
+			EXTCL_CPU_WR_MEM(Sunsoft_S4);
+			EXTCL_SAVE_MAPPER(Sunsoft_S4);
 			mapper.intStruct[0] = (BYTE *) &s4;
 			mapper.intStructSize[0] = sizeof(s4);
 
@@ -132,11 +132,11 @@ void mapInit_Sunsoft(BYTE model) {
 			}
 			break;
 		case FM7:
-			EXTCLCPUWRMEM(Sunsoft_FM7);
-			EXTCLCPURDMEM(Sunsoft_FM7);
-			EXTCLSAVEMAPPER(Sunsoft_FM7);
-			EXTCLCPUEVERYCYCLE(Sunsoft_FM7);
-			EXTCLAPUTICK(Sunsoft_FM7);
+			EXTCL_CPU_WR_MEM(Sunsoft_FM7);
+			EXTCL_CPU_RD_MEM(Sunsoft_FM7);
+			EXTCL_SAVE_MAPPER(Sunsoft_FM7);
+			EXTCL_CPU_EVERY_CYCLE(Sunsoft_FM7);
+			EXTCL_APU_TICK(Sunsoft_FM7);
 			mapper.intStruct[0] = (BYTE *) &fm7;
 			mapper.intStructSize[0] = sizeof(fm7);
 
@@ -159,7 +159,7 @@ void mapInit_Sunsoft(BYTE model) {
 	type = model;
 }
 
-void extclCpuWrMem_Sunsoft_S1(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Sunsoft_S1(WORD address, BYTE value) {
 	if ((address < 0x6000) || (address > 0x7FFF)) {
 		return;
 	}
@@ -186,7 +186,7 @@ void extclCpuWrMem_Sunsoft_S1(WORD address, BYTE value) {
 	}
 }
 
-void extclCpuWrMem_Sunsoft_S2(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Sunsoft_S2(WORD address, BYTE value) {
 	const BYTE save = value;
 	DBWORD bank;
 
@@ -216,7 +216,7 @@ void extclCpuWrMem_Sunsoft_S2(WORD address, BYTE value) {
 	chr.bank1k[7] = &chr.data[bank | 0x1C00];
 }
 
-void extclCpuWrMem_Sunsoft_S3(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Sunsoft_S3(WORD address, BYTE value) {
 	switch (address & 0xF800) {
 		case 0x8800:
 			chrRom2kSwap(0)
@@ -253,7 +253,7 @@ void extclCpuWrMem_Sunsoft_S3(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extclSaveMapper_Sunsoft_S3(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_Sunsoft_S3(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, s3.enable);
 	savestateEle(mode, slot, s3.toggle);
 	savestateEle(mode, slot, s3.count);
@@ -261,7 +261,7 @@ BYTE extclSaveMapper_Sunsoft_S3(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-void extclCPUEveryCycle_Sunsoft_S3(void) {
+void extcl_cpu_every_cycle_Sunsoft_S3(void) {
 	if (s3.delay && !(--s3.delay)) {
 		irq.high |= EXTIRQ;
 	}
@@ -273,7 +273,7 @@ void extclCPUEveryCycle_Sunsoft_S3(void) {
 	}
 }
 
-void extclCpuWrMem_Sunsoft_S4(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Sunsoft_S4(WORD address, BYTE value) {
 	switch (address & 0xF000) {
 		case 0x8000:
 			chrRom2kSwap(0)
@@ -307,7 +307,7 @@ void extclCpuWrMem_Sunsoft_S4(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extclSaveMapper_Sunsoft_S4(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_Sunsoft_S4(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, s4.chrNmt);
 	savestateEle(mode, slot, s4.mirroring);
 	savestateEle(mode, slot, s4.mode);
@@ -318,7 +318,7 @@ BYTE extclSaveMapper_Sunsoft_S4(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void extclCpuWrMem_Sunsoft_FM7(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Sunsoft_FM7(WORD address, BYTE value) {
 	switch (address & 0xE000) {
 		case 0x4000:
 			if (cpu.prgRamWrActive) {
@@ -434,7 +434,7 @@ void extclCpuWrMem_Sunsoft_FM7(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extclCpuRdMem_Sunsoft_FM7(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_Sunsoft_FM7(WORD address, BYTE openbus, BYTE before) {
 	if (fm7.prgRamEnable) {
 		return (openbus);
 	}
@@ -445,7 +445,7 @@ BYTE extclCpuRdMem_Sunsoft_FM7(WORD address, BYTE openbus, BYTE before) {
 
 	return (openbus);
 }
-BYTE extclSaveMapper_Sunsoft_FM7(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_Sunsoft_FM7(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, fm7.address);
 	savestateEle(mode, slot, fm7.prgRamEnable);
 	savestateEle(mode, slot, fm7.prgRamMode);
@@ -477,7 +477,7 @@ BYTE extclSaveMapper_Sunsoft_FM7(BYTE mode, BYTE slot, FILE *fp) {
 	}
 	return (EXIT_OK);
 }
-void extclCPUEveryCycle_Sunsoft_FM7(void) {
+void extcl_cpu_every_cycle_Sunsoft_FM7(void) {
 	if (fm7.irqDelay && !(--fm7.irqDelay)) {
 		irq.high |= EXTIRQ;
 	}
@@ -490,7 +490,7 @@ void extclCPUEveryCycle_Sunsoft_FM7(void) {
 		fm7.irqDelay = 1;
 	}
 }
-void extclApuTick_Sunsoft_FM7(void) {
+void extcl_apu_tick_Sunsoft_FM7(void) {
 	fm7SquareTick(0)
 	fm7SquareTick(1)
 	fm7SquareTick(2)

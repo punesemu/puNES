@@ -20,19 +20,19 @@ void mapInit_BxROM(void) {
 
 	switch (info.mapperType) {
 		case BXROMUNL:
-			EXTCLCPUWRMEM(BxROM_UNL);
+			EXTCL_CPU_WR_MEM(BxROM_UNL);
 			break;
 		case AVENINA001:
 			info.mapperExtendWrite = TRUE;
-			EXTCLCPUWRMEM(AveNina001);
+			EXTCL_CPU_WR_MEM(AveNina001);
 			break;
 		default:
-			EXTCLCPUWRMEM(BxROM);
+			EXTCL_CPU_WR_MEM(BxROM);
 			break;
 	}
 }
 
-void extclCpuWrMem_BxROM(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_BxROM(WORD address, BYTE value) {
 	/* bus conflict */
 	value &= prgRomRd(address);
 
@@ -41,13 +41,13 @@ void extclCpuWrMem_BxROM(WORD address, BYTE value) {
 	mapPrgRom8kUpdate();
 }
 
-void extclCpuWrMem_BxROM_UNL(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_BxROM_UNL(WORD address, BYTE value) {
 	controlBankWithAND(0x3F, prgRom32kMax)
 	mapPrgRom8k(4, 0, value);
 	mapPrgRom8kUpdate();
 }
 
-void extclCpuWrMem_AveNina001(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_AveNina001(WORD address, BYTE value) {
 	DBWORD bank;
 
 	switch (address) {

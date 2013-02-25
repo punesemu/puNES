@@ -23,10 +23,10 @@ struct _t22211x {
 
 void mapInit_Txc(BYTE model);
 
-void extclCpuWrMem_Txc_tw(WORD address, BYTE value);
+void extcl_cpu_wr_mem_Txc_tw(WORD address, BYTE value);
 
-void extclCpuWrMem_Txc_t22211x(WORD address, BYTE value);
-BYTE extclCpuRdMem_Txc_t22211x(WORD address, BYTE openbus, BYTE before);
-BYTE extclSaveMapper_Txc_t22211x(BYTE mode, BYTE slot, FILE *fp);
+void extcl_cpu_wr_mem_Txc_t22211x(WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_Txc_t22211x(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_save_mapper_Txc_t22211x(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPERTXC_H_ */

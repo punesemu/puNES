@@ -11,7 +11,7 @@
 
 void irqA12_IO(WORD valueOld) {
 	if (!(valueOld & 0x1000) && (r2006.value & 0x1000)) {
-		if (!extclIrqA12Clock) {
+		if (!extcl_irq_A12_clock) {
 			if (!irqA12.counter) {
 				irqA12.counter = irqA12.latch;
 				if (!irqA12.counter && irqA12.reload) {
@@ -30,7 +30,7 @@ void irqA12_IO(WORD valueOld) {
 			 * utilizzato dalle mappers :
 			 * Tengen
 			 */
-			extclIrqA12Clock();
+			extcl_irq_A12_clock();
 		}
 	}
 }
@@ -54,14 +54,14 @@ void irqA12_BS(void) {
 	}
 
 	if (!(irqA12.sAdrOld & 0x1000) && (ppu.sprAdr & 0x1000)) {
-		if (!extclIrqA12Clock) {
+		if (!extcl_irq_A12_clock) {
 			irqA12Clock();
 		} else {
 			/*
 			 * utilizzato dalle mappers :
 			 * Tengen
 			 */
-			extclIrqA12Clock();
+			extcl_irq_A12_clock();
 		}
 		irqA12.a12BS = TRUE;
 	}
@@ -80,14 +80,14 @@ void irqA12_SB(void) {
 	ppuBckAdr();
 
 	if (!(irqA12.bAdrOld & 0x1000) && (ppu.bckAdr & 0x1000)) {
-		if (!extclIrqA12Clock) {
+		if (!extcl_irq_A12_clock) {
 			irqA12Clock();
 		} else {
 			/*
 			 * utilizzato dalle mappers :
 			 * Tengen
 			 */
-			extclIrqA12Clock();
+			extcl_irq_A12_clock();
 		}
 		irqA12.a12SB = TRUE;
 	}

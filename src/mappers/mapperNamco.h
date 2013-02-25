@@ -55,16 +55,16 @@ struct _n3446 {
 
 void mapInit_Namco(BYTE model);
 
-void extclCpuWrMem_Namco_163(WORD address, BYTE value);
-BYTE extclCpuRdMem_Namco_163(WORD address, BYTE openbus, BYTE before);
-BYTE extclSaveMapper_Namco_163(BYTE mode, BYTE slot, FILE *fp);
-void extclCPUEveryCycle_Namco_163(void);
-void extclApuTick_Namco_163(void);
+void extcl_cpu_wr_mem_Namco_163(WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_Namco_163(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_save_mapper_Namco_163(BYTE mode, BYTE slot, FILE *fp);
+void extcl_cpu_every_cycle_Namco_163(void);
+void extcl_apu_tick_Namco_163(void);
 
-void extclCpuWrMem_Namco_3425(WORD address, BYTE value);
-BYTE extclSaveMapper_Namco_3425(BYTE mode, BYTE slot, FILE *fp);
+void extcl_cpu_wr_mem_Namco_3425(WORD address, BYTE value);
+BYTE extcl_save_mapper_Namco_3425(BYTE mode, BYTE slot, FILE *fp);
 
-void extclCpuWrMem_Namco_3446(WORD address, BYTE value);
-BYTE extclSaveMapper_Namco_3446(BYTE mode, BYTE slot, FILE *fp);
+void extcl_cpu_wr_mem_Namco_3446(WORD address, BYTE value);
+BYTE extcl_save_mapper_Namco_3446(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPERNAMCO_H_ */

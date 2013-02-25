@@ -16,8 +16,8 @@ struct _m53 {
 } m53;
 
 void mapInit_53(void);
-void extclCpuWrMem_53(WORD address, BYTE value);
-BYTE extclCpuRdMem_53(WORD address, BYTE openbus, BYTE before);
-BYTE extclSaveMapper_53(BYTE mode, BYTE slot, FILE *fp);
+void extcl_cpu_wr_mem_53(WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_53(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_save_mapper_53(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPER53_H_ */

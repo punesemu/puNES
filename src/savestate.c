@@ -550,7 +550,7 @@ BYTE stateOperation(BYTE mode, BYTE slot, FILE *fp) {
 	}
 
 	if (mapper.intStruct[0]) {
-		extclSaveMapper(mode, slot, fp);
+		extcl_save_mapper(mode, slot, fp);
 	}
 
 	/* irqA12 */

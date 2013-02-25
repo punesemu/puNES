@@ -385,14 +385,14 @@ void mapInit_116(void) {
 	switch (info.mapperType) {
 		default:
 		case M116TYPEA:
-			EXTCLCPUWRMEM(116_TypeA);
-			EXTCLSAVEMAPPER(116_TypeA);
-			EXTCLCPUEVERYCYCLE(MMC3);
-			EXTCLPPU000TO34X(MMC3);
-			EXTCLPPU000TO255(MMC3);
-			EXTCLPPU256TO319(MMC3);
-			EXTCLPPU320TO34X(MMC3);
-			EXTCL2006UPDATE(MMC3);
+			EXTCL_CPU_WR_MEM(116_TypeA);
+			EXTCL_SAVE_MAPPER(116_TypeA);
+			EXTCL_CPU_EVERY_CYCLE(MMC3);
+			EXTCL_PPU_000_TO_34X(MMC3);
+			EXTCL_PPU_000_TO_255(MMC3);
+			EXTCL_PPU_256_TO_319(MMC3);
+			EXTCL_PPU_320_TO_34X(MMC3);
+			EXTCL_UPDATE_R2006(MMC3);
 			mapper.intStruct[0] = (BYTE *) &m116;
 			mapper.intStructSize[0] = sizeof(m116);
 
@@ -441,15 +441,15 @@ void mapInit_116(void) {
 			irqA12_delay = 1;
 			break;
 		case M116TYPEB:
-			EXTCLCPUWRMEM(116_TypeB);
-			EXTCLSAVEMAPPER(116_TypeB);
-			EXTCLWRCHR(116_TypeB);
-			EXTCLCPUEVERYCYCLE(MMC3);
-			EXTCLPPU000TO34X(MMC3);
-			EXTCLPPU000TO255(MMC3);
-			EXTCLPPU256TO319(MMC3);
-			EXTCLPPU320TO34X(MMC3);
-			EXTCL2006UPDATE(MMC3);
+			EXTCL_CPU_WR_MEM(116_TypeB);
+			EXTCL_SAVE_MAPPER(116_TypeB);
+			EXTCL_WR_CHR(116_TypeB);
+			EXTCL_CPU_EVERY_CYCLE(MMC3);
+			EXTCL_PPU_000_TO_34X(MMC3);
+			EXTCL_PPU_000_TO_255(MMC3);
+			EXTCL_PPU_256_TO_319(MMC3);
+			EXTCL_PPU_320_TO_34X(MMC3);
+			EXTCL_UPDATE_R2006(MMC3);
 			mapper.intStruct[0] = (BYTE *) &m116;
 			mapper.intStructSize[0] = sizeof(m116);
 			mapper.intStruct[1] = (BYTE *) &mmc3;
@@ -477,14 +477,14 @@ void mapInit_116(void) {
 			irqA12_delay = 1;
 			break;
 		case M116TYPEC:
-			EXTCLCPUWRMEM(116_TypeC);
-			EXTCLSAVEMAPPER(116_TypeC);
-			EXTCLCPUEVERYCYCLE(MMC3);
-			EXTCLPPU000TO34X(MMC3);
-			EXTCLPPU000TO255(MMC3);
-			EXTCLPPU256TO319(MMC3);
-			EXTCLPPU320TO34X(MMC3);
-			EXTCL2006UPDATE(MMC3);
+			EXTCL_CPU_WR_MEM(116_TypeC);
+			EXTCL_SAVE_MAPPER(116_TypeC);
+			EXTCL_CPU_EVERY_CYCLE(MMC3);
+			EXTCL_PPU_000_TO_34X(MMC3);
+			EXTCL_PPU_000_TO_255(MMC3);
+			EXTCL_PPU_256_TO_319(MMC3);
+			EXTCL_PPU_320_TO_34X(MMC3);
+			EXTCL_UPDATE_R2006(MMC3);
 			mapper.intStruct[0] = (BYTE *) &m116;
 			mapper.intStructSize[0] = sizeof(m116);
 			mapper.intStruct[1] = (BYTE *) &mmc3;
@@ -524,7 +524,7 @@ void mapInit_116(void) {
 	}
 }
 
-void extclCpuWrMem_116_TypeA(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_116_TypeA(WORD address, BYTE value) {
 	BYTE reg, mode;
 
 	if (address < 0x4100) {
@@ -689,7 +689,7 @@ void extclCpuWrMem_116_TypeA(WORD address, BYTE value) {
 		}
 	}
 }
-BYTE extclSaveMapper_116_TypeA(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_116_TypeA(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, m116.mode);
 
 	savestateEle(mode, slot, m116.mode0.chr);
@@ -709,7 +709,7 @@ BYTE extclSaveMapper_116_TypeA(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void extclCpuWrMem_116_TypeB(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_116_TypeB(WORD address, BYTE value) {
 	BYTE save = value;
 
 	if (address == 0x4100) {
@@ -750,13 +750,13 @@ void extclCpuWrMem_116_TypeB(WORD address, BYTE value) {
 			m116_B_8001()
 			break;
 	}
-	extclCpuWrMem_MMC3(address, save);
+	extcl_cpu_wr_mem_MMC3(address, save);
 }
-BYTE extclSaveMapper_116_TypeB(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_116_TypeB(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, m116.mode);
 	savestateEle(mode, slot, m116.chrmap);
 	savestateEle(mode, slot, m116.chrRam);
-	extclSaveMapper_MMC3(mode, slot, fp);
+	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	if ((mode == SSREAD) && (m116.mode & 0x02)) {
 		BYTE i;
@@ -768,7 +768,7 @@ BYTE extclSaveMapper_116_TypeB(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-void extclWrChr_116_TypeB(WORD address, BYTE value) {
+void extcl_wr_chr_116_TypeB(WORD address, BYTE value) {
 	const BYTE slot = address >> 10;
 
 	if (m116.mode & 0x02) {
@@ -776,7 +776,7 @@ void extclWrChr_116_TypeB(WORD address, BYTE value) {
 	}
 }
 
-void extclCpuWrMem_116_TypeC(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_116_TypeC(WORD address, BYTE value) {
 	if (((address & 0xA131) == 0xA131) && (m116.mode != value)) {
 		BYTE i;
 
@@ -828,7 +828,7 @@ void extclCpuWrMem_116_TypeC(WORD address, BYTE value) {
 				}
 				return;
 		}
-		extclCpuWrMem_MMC3(address, value);
+		extcl_cpu_wr_mem_MMC3(address, value);
 		return;
 	} else if ((address >= 0xB000) && (address <= 0xE003)) {
 		const BYTE offset = (address << 2) & 0x04;
@@ -872,14 +872,14 @@ void extclCpuWrMem_116_TypeC(WORD address, BYTE value) {
 		}
     }
 }
-BYTE extclSaveMapper_116_TypeC(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_116_TypeC(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, m116.mode);
 	savestateEle(mode, slot, m116.chrmap);
 	savestateEle(mode, slot, m116.prgmap);
 	savestateEle(mode, slot, m116.mode0.chr);
 	savestateEle(mode, slot, m116.mode0.prg);
 	savestateEle(mode, slot, m116.mode0.nmt);
-	extclSaveMapper_MMC3(mode, slot, fp);
+	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	return (EXIT_OK);
 }

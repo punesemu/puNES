@@ -45,15 +45,15 @@ void mapInit_Rex(BYTE model) {
 	prgRom8kBeforeLast = info.prgRom8kCount - 2;
 
 	if (model == DBZ) {
-		EXTCLCPUWRMEM(Rex_dbz);
-		EXTCLCPURDMEM(Rex_dbz);
-		EXTCLSAVEMAPPER(Rex_dbz);
-		EXTCLCPUEVERYCYCLE(MMC3);
-		EXTCLPPU000TO34X(MMC3);
-		EXTCLPPU000TO255(MMC3);
-		EXTCLPPU256TO319(MMC3);
-		EXTCLPPU320TO34X(MMC3);
-		EXTCL2006UPDATE(MMC3);
+		EXTCL_CPU_WR_MEM(Rex_dbz);
+		EXTCL_CPU_RD_MEM(Rex_dbz);
+		EXTCL_SAVE_MAPPER(Rex_dbz);
+		EXTCL_CPU_EVERY_CYCLE(MMC3);
+		EXTCL_PPU_000_TO_34X(MMC3);
+		EXTCL_PPU_000_TO_255(MMC3);
+		EXTCL_PPU_256_TO_319(MMC3);
+		EXTCL_PPU_320_TO_34X(MMC3);
+		EXTCL_UPDATE_R2006(MMC3);
 		mapper.intStruct[0] = (BYTE *) &rexDbz;
 		mapper.intStructSize[0] = sizeof(rexDbz);
 		mapper.intStruct[1] = (BYTE *) &mmc3;
@@ -79,7 +79,7 @@ void mapInit_Rex(BYTE model) {
 		irqA12_delay = 1;
 	}
 }
-void extclCpuWrMem_Rex_dbz(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Rex_dbz(WORD address, BYTE value) {
 	WORD adr = address & 0xE001;
 
 	/* intercetto cio' che mi interessa */
@@ -127,9 +127,9 @@ void extclCpuWrMem_Rex_dbz(WORD address, BYTE value) {
 			return;
 		}
 	}
-	extclCpuWrMem_MMC3(address, value);
+	extcl_cpu_wr_mem_MMC3(address, value);
 }
-BYTE extclCpuRdMem_Rex_dbz(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_Rex_dbz(WORD address, BYTE openbus, BYTE before) {
 	if ((address >= 0x4100) || (address < 0x6000)) {
 		/* TODO:
 		 * se disabilito questo return ed avvio la rom,
@@ -139,10 +139,10 @@ BYTE extclCpuRdMem_Rex_dbz(WORD address, BYTE openbus, BYTE before) {
 	}
 	return (openbus);
 }
-BYTE extclSaveMapper_Rex_dbz(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_Rex_dbz(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, rexDbz.chrRomBank);
 	savestateEle(mode, slot, rexDbz.chrHigh);
-	extclSaveMapper_MMC3(mode, slot, fp);
+	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	return (EXIT_OK);
 }

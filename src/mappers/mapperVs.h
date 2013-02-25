@@ -11,7 +11,7 @@
 #include "common.h"
 
 void mapInit_Vs(void);
-void extclCpuWrMem_Vs(WORD address, BYTE value);
-void extclCPUWr4016_Vs(BYTE value);
+void extcl_cpu_wr_mem_Vs(WORD address, BYTE value);
+void extcl_cpu_wr_r4016_Vs(BYTE value);
 
 #endif /* MAPPERVS_H_ */

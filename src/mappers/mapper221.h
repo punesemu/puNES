@@ -15,7 +15,7 @@ struct _m221 {
 } m221;
 
 void mapInit_221(void);
-void extclCpuWrMem_221(WORD address, BYTE value);
-BYTE extclSaveMapper_221(BYTE mode, BYTE slot, FILE *fp);
+void extcl_cpu_wr_mem_221(WORD address, BYTE value);
+BYTE extcl_save_mapper_221(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPER221_H_ */

@@ -22,9 +22,9 @@ struct _asder {
 
 void mapInit_Ntdec(BYTE model);
 
-void extclCpuWrMem_Ntdec_asder(WORD address, BYTE value);
-BYTE extclSaveMapper_Ntdec_asder(BYTE mode, BYTE slot, FILE *fp);
+void extcl_cpu_wr_mem_Ntdec_asder(WORD address, BYTE value);
+BYTE extcl_save_mapper_Ntdec_asder(BYTE mode, BYTE slot, FILE *fp);
 
-void extclCpuWrMem_Ntdec_fhero(WORD address, BYTE value);
+void extcl_cpu_wr_mem_Ntdec_fhero(WORD address, BYTE value);
 
 #endif /* MAPPERNTDEC_H_ */

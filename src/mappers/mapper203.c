@@ -14,13 +14,13 @@ void mapInit_203(void) {
 	prgRom16kMax = info.prgRom16kCount - 1;
 	chrRom8kMax = (info.chrRom4kCount >> 1) - 1;
 
-	EXTCLCPUWRMEM(203);
+	EXTCL_CPU_WR_MEM(203);
 
 	if (info.reset >= HARD) {
-		extclCpuWrMem_203(0x8000, 0);
+		extcl_cpu_wr_mem_203(0x8000, 0);
 	}
 }
-void extclCpuWrMem_203(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_203(WORD address, BYTE value) {
 	BYTE save = value;
 	DBWORD bank;
 

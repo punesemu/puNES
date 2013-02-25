@@ -15,8 +15,8 @@ void mapInit_60(void) {
 	prgRom16kMax = info.prgRom16kCount - 1;
 	chrRom8kMax = info.chrRom8kCount - 1;
 
-	EXTCLCPUWRMEM(60);
-	EXTCLSAVEMAPPER(60);
+	EXTCL_CPU_WR_MEM(60);
+	EXTCL_SAVE_MAPPER(60);
 	mapper.intStruct[0] = (BYTE *) &m60;
 	mapper.intStructSize[0] = sizeof(m60);
 
@@ -49,10 +49,10 @@ void mapInit_60(void) {
 		chr.bank1k[7] = &chr.data[bank | 0x1C00];
 	}
 }
-void extclCpuWrMem_60(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_60(WORD address, BYTE value) {
 	return;
 }
-BYTE extclSaveMapper_60(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_60(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, m60.index);
 
 	return (EXIT_OK);
@@ -62,13 +62,13 @@ void mapInit_60_vt5201(void) {
 	prgRom16kMax = info.prgRom16kCount - 1;
 	chrRom8kMax = info.chrRom8kCount - 1;
 
-	EXTCLCPUWRMEM(60_vt5201);
+	EXTCL_CPU_WR_MEM(60_vt5201);
 
 	if (info.reset >= HARD) {
-		extclCpuWrMem_60_vt5201(0x8000, 0);
+		extcl_cpu_wr_mem_60_vt5201(0x8000, 0);
 	}
 }
-void extclCpuWrMem_60_vt5201(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_60_vt5201(WORD address, BYTE value) {
 	DBWORD bank;
 
 	if (address & 0x0008) {

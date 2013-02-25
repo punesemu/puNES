@@ -15,8 +15,8 @@ struct _m120 {
 } m120;
 
 void mapInit_120(void);
-void extclCpuWrMem_120(WORD address, BYTE value);
-BYTE extclCpuRdMem_120(WORD address, BYTE openbus, BYTE before);
-BYTE extclSaveMapper_120(BYTE mode, BYTE slot, FILE *fp);
+void extcl_cpu_wr_mem_120(WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_120(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_save_mapper_120(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPER120_H_ */

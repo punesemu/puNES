@@ -17,8 +17,8 @@ BYTE type;
 void mapInit_178(BYTE model) {
 	prgRom32kMax = (info.prgRom16kCount >> 1) - 1;
 
-	EXTCLCPUWRMEM(178);
-	EXTCLSAVEMAPPER(178);
+	EXTCL_CPU_WR_MEM(178);
+	EXTCL_SAVE_MAPPER(178);
 	mapper.intStruct[0] = (BYTE *) &m178;
 	mapper.intStructSize[0] = sizeof(m178);
 
@@ -31,7 +31,7 @@ void mapInit_178(BYTE model) {
 
 	type = model;
 }
-void extclCpuWrMem_178(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_178(WORD address, BYTE value) {
 	switch (address) {
 		case 0x4800:
 			if (value & 0x01) {
@@ -58,7 +58,7 @@ void extclCpuWrMem_178(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extclSaveMapper_178(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_178(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, m178.reg);
 
 	return (EXIT_OK);

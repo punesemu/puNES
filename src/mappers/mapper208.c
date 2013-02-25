@@ -56,15 +56,15 @@ void mapInit_208(void) {
 	chrRom1kMax = info.chrRom1kCount - 1;
 	prgRom8kBeforeLast = info.prgRom8kCount - 2;
 
-	EXTCLCPUWRMEM(208);
-	EXTCLCPURDMEM(208);
-	EXTCLSAVEMAPPER(208);
-	EXTCLCPUEVERYCYCLE(MMC3);
-	EXTCLPPU000TO34X(MMC3);
-	EXTCLPPU000TO255(MMC3);
-	EXTCLPPU256TO319(MMC3);
-	EXTCLPPU320TO34X(MMC3);
-	EXTCL2006UPDATE(MMC3);
+	EXTCL_CPU_WR_MEM(208);
+	EXTCL_CPU_RD_MEM(208);
+	EXTCL_SAVE_MAPPER(208);
+	EXTCL_CPU_EVERY_CYCLE(MMC3);
+	EXTCL_PPU_000_TO_34X(MMC3);
+	EXTCL_PPU_000_TO_255(MMC3);
+	EXTCL_PPU_256_TO_319(MMC3);
+	EXTCL_PPU_320_TO_34X(MMC3);
+	EXTCL_UPDATE_R2006(MMC3);
 	mapper.intStruct[0] = (BYTE *) &m208;
 	mapper.intStructSize[0] = sizeof(m208);
 	mapper.intStruct[1] = (BYTE *) &mmc3;
@@ -85,9 +85,9 @@ void mapInit_208(void) {
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
 }
-void extclCpuWrMem_208(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_208(WORD address, BYTE value) {
 	if (address >= 0x8000) {
-		extclCpuWrMem_MMC3(address, value);
+		extcl_cpu_wr_mem_MMC3(address, value);
 		return;
 	}
 
@@ -110,17 +110,17 @@ void extclCpuWrMem_208(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extclCpuRdMem_208(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_208(WORD address, BYTE openbus, BYTE before) {
 	if ((address < 0x5800) || (address > 0x5FFF)) {
 		return (openbus);
 	}
 
 	return (m208.reg[address & 0x0003]);
 }
-BYTE extclSaveMapper_208(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_208(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, m208.ctrl);
 	savestateEle(mode, slot, m208.reg);
-	extclSaveMapper_MMC3(mode, slot, fp);
+	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	return (EXIT_OK);
 }

@@ -14,7 +14,7 @@ void mapInit_74x138x161(void) {
 	prgRom32kMax = (info.prgRom16kCount >> 1) - 1;
 	chrRom8kMax = info.chrRom8kCount - 1;
 
-	EXTCLCPUWRMEM(74x138x161);
+	EXTCL_CPU_WR_MEM(74x138x161);
 
 	info.mapperExtendWrite = TRUE;
 
@@ -22,7 +22,7 @@ void mapInit_74x138x161(void) {
 		mapPrgRom8k(4, 0, 0);
 	}
 }
-void extclCpuWrMem_74x138x161(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_74x138x161(WORD address, BYTE value) {
 	const BYTE save = value;
 	DBWORD bank;
 

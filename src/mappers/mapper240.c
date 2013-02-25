@@ -14,11 +14,11 @@ void mapInit_240(void) {
 	prgRom32kMax = (info.prgRom16kCount >> 1) - 1;
 	chrRom8kMax = (info.chrRom4kCount >> 1) - 1;
 
-	EXTCLCPUWRMEM(240);
+	EXTCL_CPU_WR_MEM(240);
 
 	info.mapperExtendWrite = TRUE;
 }
-void extclCpuWrMem_240(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_240(WORD address, BYTE value) {
 	if ((address >= 0x4020) && (address < 0x6000)) {
 		DBWORD bank;
 		BYTE save = value;

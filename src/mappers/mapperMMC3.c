@@ -29,14 +29,14 @@ void mapInit_MMC3(void) {
 	prgRom8kBeforeLast = info.prgRom8kCount - 2;
 	chrRom1kMax = info.chrRom1kCount - 1;
 
-	EXTCLCPUWRMEM(MMC3);
-	EXTCLSAVEMAPPER(MMC3);
-	EXTCLCPUEVERYCYCLE(MMC3);
-	EXTCLPPU000TO34X(MMC3);
-	EXTCLPPU000TO255(MMC3);
-	EXTCLPPU256TO319(MMC3);
-	EXTCLPPU320TO34X(MMC3);
-	EXTCL2006UPDATE(MMC3);
+	EXTCL_CPU_WR_MEM(MMC3);
+	EXTCL_SAVE_MAPPER(MMC3);
+	EXTCL_CPU_EVERY_CYCLE(MMC3);
+	EXTCL_PPU_000_TO_34X(MMC3);
+	EXTCL_PPU_000_TO_255(MMC3);
+	EXTCL_PPU_256_TO_319(MMC3);
+	EXTCL_PPU_320_TO_34X(MMC3);
+	EXTCL_UPDATE_R2006(MMC3);
 	mapper.intStruct[0] = (BYTE *) &mmc3;
 	mapper.intStructSize[0] = sizeof(mmc3);
 
@@ -71,7 +71,7 @@ void mapInit_MMC3(void) {
 		mirroring_FSCR();
 	}
 }
-void extclCpuWrMem_MMC3(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_MMC3(WORD address, BYTE value) {
 	switch (address & 0xE001) {
 		case 0x8000: {
 			const BYTE chrRomCfgOld = mmc3.chrRomCfg;
@@ -242,7 +242,7 @@ void extclCpuWrMem_MMC3(WORD address, BYTE value) {
 			break;
 	}
 }
-BYTE extclSaveMapper_MMC3(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_MMC3(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, mmc3.prgRamProtect);
 	savestateEle(mode, slot, mmc3.bankToUpdate);
 	savestateEle(mode, slot, mmc3.prgRomCfg);
@@ -250,25 +250,25 @@ BYTE extclSaveMapper_MMC3(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-void extclCPUEveryCycle_MMC3(void) {
+void extcl_cpu_every_cycle_MMC3(void) {
 	if (irqA12.delay && !(--irqA12.delay)) {
 		irq.high |= EXTIRQ;
 	}
 }
-void extclPPU000to34x_MMC3(void) {
+void extcl_ppu_000_to_34x_MMC3(void) {
 	irqA12_RS();
 }
-void extclPPU000to255_MMC3(void) {
+void extcl_ppu_000_to_255_MMC3(void) {
 	if (r2001.visible) {
 		irqA12_SB();
 	}
 }
-void extclPPU256to319_MMC3(void) {
+void extcl_ppu_256_to_319_MMC3(void) {
 	irqA12_BS();
 }
-void extclPPU320to34x_MMC3(void) {
+void extcl_ppu_320_to_34x_MMC3(void) {
 	irqA12_SB();
 }
-void extcl2006Update_MMC3(WORD r2006Old) {
-	irqA12_IO(r2006Old);
+void extcl_update_r2006_MMC3(WORD old_r2006) {
+	irqA12_IO(old_r2006);
 }

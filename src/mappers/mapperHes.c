@@ -14,7 +14,7 @@ void mapInit_Hes(void) {
 	prgRom32kMax = (info.prgRom16kCount >> 1) - 1;
 	chrRom8kMax = info.chrRom8kCount - 1;
 
-	EXTCLCPUWRMEM(Hes);
+	EXTCL_CPU_WR_MEM(Hes);
 
 	info.mapperExtendWrite = TRUE;
 
@@ -24,7 +24,7 @@ void mapInit_Hes(void) {
 		}
 	}
 }
-void extclCpuWrMem_Hes(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Hes(WORD address, BYTE value) {
 	if ((address < 0x4100) || (address > 0x5FFF)) {
 		return;
 	}

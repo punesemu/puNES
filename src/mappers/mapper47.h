@@ -17,7 +17,7 @@ struct _m47 {
 } m47;
 
 void mapInit_47(void);
-void extclCpuWrMem_47(WORD address, BYTE value);
-BYTE extclSaveMapper_47(BYTE mode, BYTE slot, FILE *fp);
+void extcl_cpu_wr_mem_47(WORD address, BYTE value);
+BYTE extcl_save_mapper_47(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPER47_H_ */

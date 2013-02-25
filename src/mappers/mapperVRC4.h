@@ -24,11 +24,11 @@ struct _vrc4 {
 } vrc4;
 
 void mapInit_VRC4(BYTE revision);
-void extclCpuWrMem_VRC4(WORD address, BYTE value);
-BYTE extclSaveMapper_VRC4(BYTE mode, BYTE slot, FILE *fp);
-void extclCPUEveryCycle_VRC4(void);
+void extcl_cpu_wr_mem_VRC4(WORD address, BYTE value);
+BYTE extcl_save_mapper_VRC4(BYTE mode, BYTE slot, FILE *fp);
+void extcl_cpu_every_cycle_VRC4(void);
 
 void mapInit_VRC4BMC(void);
-void extclCpuWrMem_VRC4BMC(WORD address, BYTE value);
+void extcl_cpu_wr_mem_VRC4BMC(WORD address, BYTE value);
 
 #endif /* MAPPERVRC4_H_ */

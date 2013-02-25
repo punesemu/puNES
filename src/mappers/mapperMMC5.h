@@ -62,16 +62,16 @@ struct _mmc5 {
 } mmc5;
 
 void mapInit_MMC5(void);
-void extclCpuWrMem_MMC5(WORD address, BYTE value);
-BYTE extclCpuRdMem_MMC5(WORD address, BYTE openbus, BYTE before);
-BYTE extclSaveMapper_MMC5(BYTE mode, BYTE slot, FILE *fp);
-void extclPPU256to319_MMC5(void);
-void extclPPU320to34x_MMC5(void);
-void extclRdChrAfter_MMC5(WORD address);
-BYTE extclRdChr_MMC5(WORD address);
-BYTE extclRdNmt_MMC5(WORD address);
-void extclLengthClock_MMC5(void);
-void extclEnvelopeClock_MMC5(void);
-void extclApuTick_MMC5(void);
+void extcl_cpu_wr_mem_MMC5(WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_MMC5(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_save_mapper_MMC5(BYTE mode, BYTE slot, FILE *fp);
+void extcl_ppu_256_to_319_MMC5(void);
+void extcl_ppu_320_to_34x_MMC5(void);
+void extcl_after_rd_chr_MMC5(WORD address);
+BYTE extcl_rd_chr_MMC5(WORD address);
+BYTE extcl_rd_nmt_MMC5(WORD address);
+void extcl_length_clock_MMC5(void);
+void extcl_envelope_clock_MMC5(void);
+void extcl_apu_tick_MMC5(void);
 
 #endif /* MAPPERMMC5_H_ */

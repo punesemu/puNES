@@ -435,20 +435,20 @@ void mapInit_Waixing(BYTE model) {
 
 	switch (model) {
 		case WPSX:
-			EXTCLCPUWRMEM(Waixing_PSx);
+			EXTCL_CPU_WR_MEM(Waixing_PSx);
 
 			mapPrgRom8k(4, 0, 0);
 			break;
 		case WTB:
-			EXTCLCPUWRMEM(Waixing_TypeB);
-			EXTCLSAVEMAPPER(Waixing_TypeB);
-			EXTCLWRCHR(Waixing_TypeB);
-			EXTCLCPUEVERYCYCLE(MMC3);
-			EXTCLPPU000TO34X(MMC3);
-			EXTCLPPU000TO255(MMC3);
-			EXTCLPPU256TO319(MMC3);
-			EXTCLPPU320TO34X(MMC3);
-			EXTCL2006UPDATE(MMC3);
+			EXTCL_CPU_WR_MEM(Waixing_TypeB);
+			EXTCL_SAVE_MAPPER(Waixing_TypeB);
+			EXTCL_WR_CHR(Waixing_TypeB);
+			EXTCL_CPU_EVERY_CYCLE(MMC3);
+			EXTCL_PPU_000_TO_34X(MMC3);
+			EXTCL_PPU_000_TO_255(MMC3);
+			EXTCL_PPU_256_TO_319(MMC3);
+			EXTCL_PPU_320_TO_34X(MMC3);
+			EXTCL_UPDATE_R2006(MMC3);
 			mapper.intStruct[0] = (BYTE *) &waixing;
 			mapper.intStructSize[0] = sizeof(waixing);
 			mapper.intStruct[1] = (BYTE *) &mmc3;
@@ -490,15 +490,15 @@ void mapInit_Waixing(BYTE model) {
 				min = 0x00;
 				max = 0x03;
 			}
-			EXTCLCPUWRMEM(Waixing_TypeACDE);
-			EXTCLSAVEMAPPER(Waixing_TypeACDE);
-			EXTCLWRCHR(Waixing_TypeACDE);
-			EXTCLCPUEVERYCYCLE(MMC3);
-			EXTCLPPU000TO34X(MMC3);
-			EXTCLPPU000TO255(MMC3);
-			EXTCLPPU256TO319(MMC3);
-			EXTCLPPU320TO34X(MMC3);
-			EXTCL2006UPDATE(MMC3);
+			EXTCL_CPU_WR_MEM(Waixing_TypeACDE);
+			EXTCL_SAVE_MAPPER(Waixing_TypeACDE);
+			EXTCL_WR_CHR(Waixing_TypeACDE);
+			EXTCL_CPU_EVERY_CYCLE(MMC3);
+			EXTCL_PPU_000_TO_34X(MMC3);
+			EXTCL_PPU_000_TO_255(MMC3);
+			EXTCL_PPU_256_TO_319(MMC3);
+			EXTCL_PPU_320_TO_34X(MMC3);
+			EXTCL_UPDATE_R2006(MMC3);
 			mapper.intStruct[0] = (BYTE *) &waixing;
 			mapper.intStructSize[0] = sizeof(waixing);
 			mapper.intStruct[1] = (BYTE *) &mmc3;
@@ -528,15 +528,15 @@ void mapInit_Waixing(BYTE model) {
 			irqA12_delay = 1;
 			break;
 		case WTG:
-			EXTCLCPUWRMEM(Waixing_TypeG);
-			EXTCLSAVEMAPPER(Waixing_TypeG);
-			EXTCLWRCHR(Waixing_TypeG);
-			EXTCLCPUEVERYCYCLE(MMC3);
-			EXTCLPPU000TO34X(MMC3);
-			EXTCLPPU000TO255(MMC3);
-			EXTCLPPU256TO319(MMC3);
-			EXTCLPPU320TO34X(MMC3);
-			EXTCL2006UPDATE(MMC3);
+			EXTCL_CPU_WR_MEM(Waixing_TypeG);
+			EXTCL_SAVE_MAPPER(Waixing_TypeG);
+			EXTCL_WR_CHR(Waixing_TypeG);
+			EXTCL_CPU_EVERY_CYCLE(MMC3);
+			EXTCL_PPU_000_TO_34X(MMC3);
+			EXTCL_PPU_000_TO_255(MMC3);
+			EXTCL_PPU_256_TO_319(MMC3);
+			EXTCL_PPU_320_TO_34X(MMC3);
+			EXTCL_UPDATE_R2006(MMC3);
 			mapper.intStruct[0] = (BYTE *) &waixing;
 			mapper.intStructSize[0] = sizeof(waixing);
 			mapper.intStruct[1] = (BYTE *) &mmc3;
@@ -566,14 +566,14 @@ void mapInit_Waixing(BYTE model) {
 			irqA12_delay = 1;
 			break;
 		case WTH:
-			EXTCLCPUWRMEM(Waixing_TypeH);
-			EXTCLSAVEMAPPER(Waixing_TypeH);
-			EXTCLCPUEVERYCYCLE(MMC3);
-			EXTCLPPU000TO34X(MMC3);
-			EXTCLPPU000TO255(MMC3);
-			EXTCLPPU256TO319(MMC3);
-			EXTCLPPU320TO34X(MMC3);
-			EXTCL2006UPDATE(MMC3);
+			EXTCL_CPU_WR_MEM(Waixing_TypeH);
+			EXTCL_SAVE_MAPPER(Waixing_TypeH);
+			EXTCL_CPU_EVERY_CYCLE(MMC3);
+			EXTCL_PPU_000_TO_34X(MMC3);
+			EXTCL_PPU_000_TO_255(MMC3);
+			EXTCL_PPU_256_TO_319(MMC3);
+			EXTCL_PPU_320_TO_34X(MMC3);
+			EXTCL_UPDATE_R2006(MMC3);
 			mapper.intStruct[0] = (BYTE *) &waixing;
 			mapper.intStructSize[0] = sizeof(waixing);
 			mapper.intStruct[1] = (BYTE *) &mmc3;
@@ -610,16 +610,16 @@ void mapInit_Waixing(BYTE model) {
 			irqA12_delay = 1;
 			break;
 		case SH2:
-			EXTCLCPUWRMEM(Waixing_SH2);
-			EXTCLSAVEMAPPER(Waixing_SH2);
-			EXTCLRDCHRAFTER(Waixing_SH2);
-			EXTCL2006UPDATE(Waixing_SH2);
-			EXTCLWRCHR(Waixing_SH2);
-			EXTCLCPUEVERYCYCLE(MMC3);
-			EXTCLPPU000TO34X(MMC3);
-			EXTCLPPU000TO255(MMC3);
-			EXTCLPPU256TO319(MMC3);
-			EXTCLPPU320TO34X(MMC3);
+			EXTCL_CPU_WR_MEM(Waixing_SH2);
+			EXTCL_SAVE_MAPPER(Waixing_SH2);
+			EXTCL_AFTER_RD_CHR(Waixing_SH2);
+			EXTCL_UPDATE_R2006(Waixing_SH2);
+			EXTCL_WR_CHR(Waixing_SH2);
+			EXTCL_CPU_EVERY_CYCLE(MMC3);
+			EXTCL_PPU_000_TO_34X(MMC3);
+			EXTCL_PPU_000_TO_255(MMC3);
+			EXTCL_PPU_256_TO_319(MMC3);
+			EXTCL_PPU_320_TO_34X(MMC3);
 			mapper.intStruct[0] = (BYTE *) &waixing;
 			mapper.intStructSize[0] = sizeof(waixing);
 			mapper.intStruct[1] = (BYTE *) &mmc3;
@@ -652,7 +652,7 @@ void mapInit_Waixing(BYTE model) {
 	}
 }
 
-void extclCpuWrMem_Waixing_PSx(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Waixing_PSx(WORD address, BYTE value) {
 	BYTE swap = value >> 7;
 
 	if (value & 0x40) {
@@ -693,7 +693,7 @@ void extclCpuWrMem_Waixing_PSx(WORD address, BYTE value) {
 	mapPrgRom8kUpdate();
 }
 
-void extclCpuWrMem_Waixing_TypeACDE(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Waixing_TypeACDE(WORD address, BYTE value) {
 	BYTE save = value;
 
 	switch (address & 0xE001) {
@@ -706,12 +706,12 @@ void extclCpuWrMem_Waixing_TypeACDE(WORD address, BYTE value) {
 		case 0xA001:
 			return;
 	}
-	extclCpuWrMem_MMC3(address, save);
+	extcl_cpu_wr_mem_MMC3(address, save);
 }
-BYTE extclSaveMapper_Waixing_TypeACDE(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_Waixing_TypeACDE(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, waixing.chrmap);
 	savestateEle(mode, slot, waixing.chrRam);
-	extclSaveMapper_MMC3(mode, slot, fp);
+	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	if (mode == SSREAD) {
 		BYTE i;
@@ -725,7 +725,7 @@ BYTE extclSaveMapper_Waixing_TypeACDE(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-void extclWrChr_Waixing_TypeACDE(WORD address, BYTE value) {
+void extcl_wr_chr_Waixing_TypeACDE(WORD address, BYTE value) {
 	const BYTE slot = address >> 10;
 
 	if ((waixing.chrmap[slot] >= min) && (waixing.chrmap[slot] <= max)) {
@@ -733,7 +733,7 @@ void extclWrChr_Waixing_TypeACDE(WORD address, BYTE value) {
 	}
 }
 
-void extclCpuWrMem_Waixing_TypeB(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Waixing_TypeB(WORD address, BYTE value) {
 	BYTE save = value;
 
 	switch (address & 0xE001) {
@@ -746,12 +746,12 @@ void extclCpuWrMem_Waixing_TypeB(WORD address, BYTE value) {
 		case 0xA001:
 			return;
 	}
-	extclCpuWrMem_MMC3(address, save);
+	extcl_cpu_wr_mem_MMC3(address, save);
 }
-BYTE extclSaveMapper_Waixing_TypeB(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_Waixing_TypeB(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, waixing.chrmap);
 	savestateEle(mode, slot, waixing.chrRam);
-	extclSaveMapper_MMC3(mode, slot, fp);
+	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	if (mode == SSREAD) {
 		BYTE i;
@@ -768,7 +768,7 @@ BYTE extclSaveMapper_Waixing_TypeB(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-void extclWrChr_Waixing_TypeB(WORD address, BYTE value) {
+void extcl_wr_chr_Waixing_TypeB(WORD address, BYTE value) {
 	const BYTE slot = address >> 10;
 
 	if (waixing.chrmap[slot] & 0x80) {
@@ -776,7 +776,7 @@ void extclWrChr_Waixing_TypeB(WORD address, BYTE value) {
 	}
 }
 
-void extclCpuWrMem_Waixing_TypeG(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Waixing_TypeG(WORD address, BYTE value) {
 	BYTE save = value;
 
 	switch (address & 0xE001) {
@@ -805,12 +805,12 @@ void extclCpuWrMem_Waixing_TypeG(WORD address, BYTE value) {
 		case 0xA001:
 			return;
 	}
-	extclCpuWrMem_MMC3(address, save);
+	extcl_cpu_wr_mem_MMC3(address, save);
 }
-BYTE extclSaveMapper_Waixing_TypeG(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_Waixing_TypeG(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, waixing.chrmap);
 	savestateEle(mode, slot, waixing.chrRam);
-	extclSaveMapper_MMC3(mode, slot, fp);
+	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	if (mode == SSREAD) {
 		BYTE i;
@@ -824,7 +824,7 @@ BYTE extclSaveMapper_Waixing_TypeG(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-void extclWrChr_Waixing_TypeG(WORD address, BYTE value) {
+void extcl_wr_chr_Waixing_TypeG(WORD address, BYTE value) {
 	const BYTE slot = address >> 10;
 
 	if (waixing.chrmap[slot] < 8) {
@@ -832,7 +832,7 @@ void extclWrChr_Waixing_TypeG(WORD address, BYTE value) {
 	}
 }
 
-void extclCpuWrMem_Waixing_TypeH(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Waixing_TypeH(WORD address, BYTE value) {
 	BYTE save = value;
 
 	switch (address & 0xE001) {
@@ -843,14 +843,14 @@ void extclCpuWrMem_Waixing_TypeH(WORD address, BYTE value) {
 			Waixing_TypeH_8001()
 			return;
 	}
-	extclCpuWrMem_MMC3(address, save);
+	extcl_cpu_wr_mem_MMC3(address, save);
 }
-BYTE extclSaveMapper_Waixing_TypeH(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_Waixing_TypeH(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, waixing.prgmap);
 	savestateEle(mode, slot, waixing.chrmap);
 	savestateEle(mode, slot, waixing.chrRam);
 	savestateEle(mode, slot, waixing.ctrl);
-	extclSaveMapper_MMC3(mode, slot, fp);
+	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	if ((mode == SSREAD) && mapper.writeVRAM) {
 		BYTE i;
@@ -863,7 +863,7 @@ BYTE extclSaveMapper_Waixing_TypeH(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void extclCpuWrMem_Waixing_SH2(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Waixing_SH2(WORD address, BYTE value) {
 	BYTE save = value;
 
 	switch (address & 0xE001) {
@@ -874,14 +874,14 @@ void extclCpuWrMem_Waixing_SH2(WORD address, BYTE value) {
 			Waixing_SH2_8001()
 			break;
 	}
-	extclCpuWrMem_MMC3(address, save);
+	extcl_cpu_wr_mem_MMC3(address, save);
 }
-BYTE extclSaveMapper_Waixing_SH2(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_Waixing_SH2(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, waixing.chrmap);
 	savestateEle(mode, slot, waixing.chrRam);
 	savestateEle(mode, slot, waixing.reg);
 	savestateEle(mode, slot, waixing.ctrl);
-	extclSaveMapper_MMC3(mode, slot, fp);
+	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	if (mode == SSREAD) {
 		Waixing_SH2_PPUFD()
@@ -890,12 +890,12 @@ BYTE extclSaveMapper_Waixing_SH2(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-void extclRdChrAfter_Waixing_SH2(WORD address) {
+void extcl_after_rd_chr_Waixing_SH2(WORD address) {
 	Waixing_SH2_PPU(address)
 }
-void extcl2006Update_Waixing_SH2(WORD r2006Old) {
+void extcl_update_r2006_Waixing_SH2(WORD old_r2006) {
 	/* questo e' per l'MMC3 */
-	irqA12_IO(r2006Old);
+	irqA12_IO(old_r2006);
 
 	if (r2006.value >= 0x2000) {
 		return;
@@ -903,7 +903,7 @@ void extcl2006Update_Waixing_SH2(WORD r2006Old) {
 
 	Waixing_SH2_PPU(r2006.value)
 }
-void extclWrChr_Waixing_SH2(WORD address, BYTE value) {
+void extcl_wr_chr_Waixing_SH2(WORD address, BYTE value) {
 	if (!waixing.ctrl[address >> 12]) {
 		chr.bank1k[address >> 10][address & 0x3FF] = value;
 	}

@@ -24,8 +24,8 @@ struct _cnrom2627 {
 } cnrom2627;
 
 void mapInit_CNROM(BYTE model);
-void extclCpuWrMem_CNROM(WORD address, BYTE value);
-BYTE extclSaveMapper_CNROM(BYTE mode, BYTE slot, FILE *fp);
-BYTE extclRdChr_CNROM(WORD address);
+void extcl_cpu_wr_mem_CNROM(WORD address, BYTE value);
+BYTE extcl_save_mapper_CNROM(BYTE mode, BYTE slot, FILE *fp);
+BYTE extcl_rd_chr_CNROM(WORD address);
 
 #endif /* MAPPERCNROM_H_ */

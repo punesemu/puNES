@@ -14,11 +14,11 @@ void mapInit_227(void) {
 	prgRom32kMax = (info.prgRom16kCount >> 1) - 1;
 	prgRom16kMax = info.prgRom16kCount - 1;
 
-	EXTCLCPUWRMEM(227);
+	EXTCL_CPU_WR_MEM(227);
 
-	extclCpuWrMem_227(0x8000, 0x00);
+	extcl_cpu_wr_mem_227(0x8000, 0x00);
 }
-void extclCpuWrMem_227(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_227(WORD address, BYTE value) {
 	BYTE bank = ((address >> 4) & 0x10) | ((address >> 3) & 0x0F);
 
     if (address & 0x0001) {

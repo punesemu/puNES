@@ -17,8 +17,8 @@ void mapInit_226(void) {
 	prgRom32kMax = (info.prgRom16kCount >> 1) - 1;
 	prgRom16kMax = info.prgRom16kCount - 1;
 
-	EXTCLCPUWRMEM(226);
-	EXTCLSAVEMAPPER(226);
+	EXTCL_CPU_WR_MEM(226);
+	EXTCL_SAVE_MAPPER(226);
 	mapper.intStruct[0] = (BYTE *) &m226;
 	mapper.intStructSize[0] = sizeof(m226);
 
@@ -27,7 +27,7 @@ void mapInit_226(void) {
 		memset(&m226, 0x00, sizeof(m226));
 	}
 }
-void extclCpuWrMem_226(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_226(WORD address, BYTE value) {
 	BYTE bank;
 
 	m226.reg[address & 0x0001] = value;
@@ -53,7 +53,7 @@ void extclCpuWrMem_226(WORD address, BYTE value) {
 		mirroring_H();
 	}
 }
-BYTE extclSaveMapper_226(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_226(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, m226.reg);
 
 	return (EXIT_OK);

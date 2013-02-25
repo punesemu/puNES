@@ -16,7 +16,7 @@ struct _m46 {
 } m46;
 
 void mapInit_46(void);
-void extclCpuWrMem_46(WORD address, BYTE value);
-BYTE extclSaveMapper_46(BYTE mode, BYTE slot, FILE *fp);
+void extcl_cpu_wr_mem_46(WORD address, BYTE value);
+BYTE extcl_save_mapper_46(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPER46_H_ */

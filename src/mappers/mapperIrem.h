@@ -36,17 +36,17 @@ struct _iremLROG017 {
 
 void mapInit_Irem(BYTE model);
 
-void extclCpuWrMem_Irem_G101(WORD address, BYTE value);
-BYTE extclSaveMapper_Irem_G101(BYTE mode, BYTE slot, FILE *fp);
+void extcl_cpu_wr_mem_Irem_G101(WORD address, BYTE value);
+BYTE extcl_save_mapper_Irem_G101(BYTE mode, BYTE slot, FILE *fp);
 
-void extclCpuWrMem_Irem_H3000(WORD address, BYTE value);
-BYTE extclSaveMapper_Irem_H3000(BYTE mode, BYTE slot, FILE *fp);
-void extclCPUEveryCycle_Irem_H3000(void);
+void extcl_cpu_wr_mem_Irem_H3000(WORD address, BYTE value);
+BYTE extcl_save_mapper_Irem_H3000(BYTE mode, BYTE slot, FILE *fp);
+void extcl_cpu_every_cycle_Irem_H3000(void);
 
-void extclCpuWrMem_Irem_LROG017(WORD address, BYTE value);
-BYTE extclSaveMapper_Irem_LROG017(BYTE mode, BYTE slot, FILE *fp);
-void extclWrChr_Irem_LROG017(WORD address, BYTE value);
+void extcl_cpu_wr_mem_Irem_LROG017(WORD address, BYTE value);
+BYTE extcl_save_mapper_Irem_LROG017(BYTE mode, BYTE slot, FILE *fp);
+void extcl_wr_chr_Irem_LROG017(WORD address, BYTE value);
 
-void extclCpuWrMem_Irem_TAMS1(WORD address, BYTE value);
+void extcl_cpu_wr_mem_Irem_TAMS1(WORD address, BYTE value);
 
 #endif /* MAPPERIREM_H_ */

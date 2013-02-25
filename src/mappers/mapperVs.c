@@ -14,17 +14,17 @@ void mapInit_Vs(void) {
 	prgRom8kMax = info.prgRom8kCount - 1;
 	chrRom8kMax = info.chrRom8kCount - 1;
 
-	EXTCLCPUWRMEM(Vs);
-	EXTCLCPUWR4016(Vs);
+	EXTCL_CPU_WR_MEM(Vs);
+	EXTCL_CPU_WR_R4016(Vs);
 
 	if (info.reset >= HARD) {
 		mapPrgRom8k(4, 0, 0);
 	}
 }
-void extclCpuWrMem_Vs(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Vs(WORD address, BYTE value) {
 	return;
 }
-void extclCPUWr4016_Vs(BYTE value) {
+void extcl_cpu_wr_r4016_Vs(BYTE value) {
 	const BYTE save = value;
 	DBWORD bank;
 

@@ -13,13 +13,13 @@ WORD prgRom16kMax;
 void mapInit_231(void) {
 	prgRom16kMax = info.prgRom16kCount - 1;
 
-	EXTCLCPUWRMEM(231);
+	EXTCL_CPU_WR_MEM(231);
 
 	if (info.reset >= HARD) {
 		mapPrgRom8k(4, 0, 0);
 	}
 }
-void extclCpuWrMem_231(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_231(WORD address, BYTE value) {
 	value = address & 0x1E;
 	controlBank(prgRom16kMax)
 	mapPrgRom8k(2, 0, value);

@@ -8,31 +8,31 @@
 #ifndef PPUINLINE_H_
 #define PPUINLINE_H_
 
-#include "externalcalls.h"
+#include "external_calls.h"
 
 static BYTE INLINE ppuRdMem(WORD address);
 
 static BYTE INLINE ppuRdMem(WORD address) {
 	address &= 0x3FFF;
 	if (address < 0x2000) {
-		if (extclRdChr) {
+		if (extcl_rd_chr) {
 			/*
 			 * utilizzato dalle mappers :
 			 * MMC5
 			 */
-			return (extclRdChr(address));
+			return (extcl_rd_chr(address));
 		}
 		return (chr.bank1k[address >> 10][address & 0x3FF]);
 	}
 	if (address < 0x3F00) {
 		address &= 0x0FFF;
-		if (extclRdNmt) {
+		if (extcl_rd_nmt) {
 			/*
 			 * utilizzato dalle mappers :
 			 * MMC5
 			 * Bandai (B161X02X74)
 			 */
-			return (extclRdNmt(address));
+			return (extcl_rd_nmt(address));
 		}
 		return (ntbl.bank1k[address >> 10][address & 0x3FF]);
 	}

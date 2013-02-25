@@ -14,10 +14,10 @@ enum { AVENINA001 = 2, BXROMUNL = 3 };
 
 void mapInit_BxROM(void);
 
-void extclCpuWrMem_BxROM(WORD address, BYTE value);
+void extcl_cpu_wr_mem_BxROM(WORD address, BYTE value);
 
-void extclCpuWrMem_BxROM_UNL(WORD address, BYTE value);
+void extcl_cpu_wr_mem_BxROM_UNL(WORD address, BYTE value);
 
-void extclCpuWrMem_AveNina001(WORD address, BYTE value);
+void extcl_cpu_wr_mem_AveNina001(WORD address, BYTE value);
 
 #endif /* MAPPERBXROM_H_ */

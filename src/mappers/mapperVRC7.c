@@ -27,10 +27,10 @@ void mapInit_VRC7(BYTE revision) {
 	prgRom8kMax = info.prgRom8kCount - 1;
 	chrRom1kMax = info.chrRom1kCount - 1;
 
-	EXTCLCPUWRMEM(VRC7);
-	EXTCLSAVEMAPPER(VRC7);
-	EXTCLCPUEVERYCYCLE(VRC7);
-	EXTCLSNDSTART(VRC7);
+	EXTCL_CPU_WR_MEM(VRC7);
+	EXTCL_SAVE_MAPPER(VRC7);
+	EXTCL_CPU_EVERY_CYCLE(VRC7);
+	EXTCL_SND_START(VRC7);
 	mapper.intStruct[0] = (BYTE *) &vrc7;
 	mapper.intStructSize[0] = sizeof(vrc7);
 
@@ -54,7 +54,7 @@ void mapInit_VRC7(BYTE revision) {
 
 	type = revision;
 }
-void extclCpuWrMem_VRC7(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_VRC7(WORD address, BYTE value) {
 	address = (address & mask) | tableVRC7[type][(address & 0x0018) >> 3];
 
 	switch (address) {
@@ -149,7 +149,7 @@ void extclCpuWrMem_VRC7(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extclSaveMapper_VRC7(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_VRC7(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, vrc7.reg);
 	savestateEle(mode, slot, vrc7.enabled);
 	savestateEle(mode, slot, vrc7.reload);
@@ -165,7 +165,7 @@ BYTE extclSaveMapper_VRC7(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-void extclCPUEveryCycle_VRC7(void) {
+void extcl_cpu_every_cycle_VRC7(void) {
 	if (vrc7.delay && !(--vrc7.delay)) {
 		irq.high |= EXTIRQ;
 	}
@@ -190,6 +190,6 @@ void extclCPUEveryCycle_VRC7(void) {
 	vrc7.count = vrc7.reload;
 	vrc7.delay = delay;
 }
-void extclSndStart_VRC7(WORD samplarate) {
+void extcl_snd_start_VRC7(WORD samplarate) {
 	opll_reset(3579545, samplarate);
 }

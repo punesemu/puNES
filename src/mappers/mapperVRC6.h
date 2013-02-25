@@ -56,9 +56,9 @@ struct _vrc6 {
 } vrc6;
 
 void mapInit_VRC6(BYTE revision);
-void extclCpuWrMem_VRC6(WORD address, BYTE value);
-BYTE extclSaveMapper_VRC6(BYTE mode, BYTE slot, FILE *fp);
-void extclCPUEveryCycle_VRC6(void);
-void extclApuTick_VRC6(void);
+void extcl_cpu_wr_mem_VRC6(WORD address, BYTE value);
+BYTE extcl_save_mapper_VRC6(BYTE mode, BYTE slot, FILE *fp);
+void extcl_cpu_every_cycle_VRC6(void);
+void extcl_apu_tick_VRC6(void);
 
 #endif /* MAPPERVRC6_H_ */

@@ -13,11 +13,11 @@ WORD prgRom32kMax;
 void mapInit_242(void) {
 	prgRom32kMax = (info.prgRom16kCount >> 1) - 1;
 
-	EXTCLCPUWRMEM(242);
+	EXTCL_CPU_WR_MEM(242);
 
 	mapPrgRom8k(4, 0, 0);
 }
-void extclCpuWrMem_242(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_242(WORD address, BYTE value) {
 	if (address & 0x0002) {
 		mirroring_H();
 	} else  {

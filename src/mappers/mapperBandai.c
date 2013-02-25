@@ -81,10 +81,10 @@ void mapInit_Bandai(BYTE model) {
 		case B161X02X74:
 			chrRam4kMax = info.chrRom4kCount - 1;
 
-			EXTCLCPUWRMEM(Bandai_161x02x74);
-			EXTCLSAVEMAPPER(Bandai_161x02x74);
-			EXTCL2006UPDATE(Bandai_161x02x74);
-			EXTCLRDNMT(Bandai_161x02x74);
+			EXTCL_CPU_WR_MEM(Bandai_161x02x74);
+			EXTCL_SAVE_MAPPER(Bandai_161x02x74);
+			EXTCL_UPDATE_R2006(Bandai_161x02x74);
+			EXTCL_RD_NMT(Bandai_161x02x74);
 			mapper.intStruct[0] = (BYTE *) &b161x02x74;
 			mapper.intStructSize[0] = sizeof(b161x02x74);
 
@@ -105,11 +105,11 @@ void mapInit_Bandai(BYTE model) {
 		case E24C01:
 		case E24C02:
 		case DATACH: {
-			EXTCLCPUWRMEM(Bandai_FCGX);
-			EXTCLCPURDMEM(Bandai_FCGX);
-			EXTCLSAVEMAPPER(Bandai_FCGX);
-			EXTCLBATTERYIO(Bandai_FCGX);
-			EXTCLCPUEVERYCYCLE(Bandai_FCGX);
+			EXTCL_CPU_WR_MEM(Bandai_FCGX);
+			EXTCL_CPU_RD_MEM(Bandai_FCGX);
+			EXTCL_SAVE_MAPPER(Bandai_FCGX);
+			EXTCL_BATTERY_IO(Bandai_FCGX);
+			EXTCL_CPU_EVERY_CYCLE(Bandai_FCGX);
 			mapper.intStruct[0] = (BYTE *) &FCGX;
 			mapper.intStructSize[0] = sizeof(FCGX);
 
@@ -158,7 +158,7 @@ void mapInit_Bandai(BYTE model) {
 	type = model;
 }
 
-void extclCpuWrMem_Bandai_161x02x74(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Bandai_161x02x74(WORD address, BYTE value) {
 	/* bus conflict */
 	const BYTE save = value &= prgRomRd(address);
 	DBWORD bank;
@@ -169,24 +169,24 @@ void extclCpuWrMem_Bandai_161x02x74(WORD address, BYTE value) {
 
 	b161x02x74Chr4kUpdate();
 }
-BYTE extclSaveMapper_Bandai_161x02x74(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_Bandai_161x02x74(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, b161x02x74.chrRomBank);
 
 	return (EXIT_OK);
 }
-void extcl2006Update_Bandai_161x02x74(WORD r2006Old) {
+void extcl_update_r2006_Bandai_161x02x74(WORD old_r2006) {
 	if ((r2006.value >= 0x2000) && ((r2006.value & 0x03FF) < 0x03C0)) {
 		b16x02x74r2006(r2006.value)
 	}
 }
-BYTE extclRdNmt_Bandai_161x02x74(WORD address) {
+BYTE extcl_rd_nmt_Bandai_161x02x74(WORD address) {
 	if ((address & 0x03FF) < 0x03C0) {
 		b16x02x74r2006(address);
 	}
 	return (ntbl.bank1k[address >> 10][address & 0x3FF]);
 }
 
-void extclCpuWrMem_Bandai_FCGX(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Bandai_FCGX(WORD address, BYTE value) {
 	if (address < 0x6000) {
 		return;
 	}
@@ -281,7 +281,7 @@ void extclCpuWrMem_Bandai_FCGX(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extclCpuRdMem_Bandai_FCGX(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_Bandai_FCGX(WORD address, BYTE openbus, BYTE before) {
 	if (!FCGX.e0.size || (address < 0x6000)) { return (openbus); }
 
 	if (address & 0x0100) {
@@ -292,7 +292,7 @@ BYTE extclCpuRdMem_Bandai_FCGX(WORD address, BYTE openbus, BYTE before) {
 
 	return (openbus);
 }
-BYTE extclSaveMapper_Bandai_FCGX(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_Bandai_FCGX(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, FCGX.reg);
 	savestateEle(mode, slot, FCGX.enabled);
 	savestateEle(mode, slot, FCGX.count);
@@ -307,7 +307,7 @@ BYTE extclSaveMapper_Bandai_FCGX(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-void extclBatteryIO_Bandai_FCGX(BYTE mode, FILE *fp) {
+void extcl_battery_io_Bandai_FCGX(BYTE mode, FILE *fp) {
 	if (!fp) {
 		return;
 	}
@@ -343,7 +343,7 @@ void extclBatteryIO_Bandai_FCGX(BYTE mode, FILE *fp) {
 		}
 	}
 }
-void extclCPUEveryCycle_Bandai_FCGX(void) {
+void extcl_cpu_every_cycle_Bandai_FCGX(void) {
 	if (FCGX.delay && !(--FCGX.delay)) {
 		irq.high |= EXTIRQ;
 	}

@@ -18,10 +18,10 @@ void mapInit_183(void) {
 	prgRom8kMax = info.prgRom8kCount - 1;
 	chrRom1kMax = info.chrRom1kCount - 1;
 
-	EXTCLCPUWRMEM(183);
-	EXTCLCPURDMEM(183);
-	EXTCLSAVEMAPPER(183);
-	EXTCLCPUEVERYCYCLE(183);
+	EXTCL_CPU_WR_MEM(183);
+	EXTCL_CPU_RD_MEM(183);
+	EXTCL_SAVE_MAPPER(183);
+	EXTCL_CPU_EVERY_CYCLE(183);
 	mapper.intStruct[0] = (BYTE *) &m183;
 	mapper.intStructSize[0] = sizeof(m183);
 
@@ -36,7 +36,7 @@ void mapInit_183(void) {
 		}
 	}
 }
-void extclCpuWrMem_183(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_183(WORD address, BYTE value) {
 	switch (address & 0xF80F) {
 		case 0x8800:
 		case 0x8801:
@@ -129,14 +129,14 @@ void extclCpuWrMem_183(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extclCpuRdMem_183(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_183(WORD address, BYTE openbus, BYTE before) {
 	if ((address < 0x6000) || (address > 0x7FFF)) {
 		return (openbus);
 	}
 
 	return (prg.rom[address & 0x1FFF]);
 }
-BYTE extclSaveMapper_183(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_183(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, m183.enabled);
 	savestateEle(mode, slot, m183.prescaler);
 	savestateEle(mode, slot, m183.count);
@@ -145,7 +145,7 @@ BYTE extclSaveMapper_183(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-void extclCPUEveryCycle_183(void) {
+void extcl_cpu_every_cycle_183(void) {
 	if (m183.delay && !(--m183.delay)) {
 		irq.high |= EXTIRQ;
 	}

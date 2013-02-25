@@ -44,14 +44,14 @@ struct _m166 {
 
 void mapInit_116(void);
 
-void extclCpuWrMem_116_TypeA(WORD address, BYTE value);
-BYTE extclSaveMapper_116_TypeA(BYTE mode, BYTE slot, FILE *fp);
+void extcl_cpu_wr_mem_116_TypeA(WORD address, BYTE value);
+BYTE extcl_save_mapper_116_TypeA(BYTE mode, BYTE slot, FILE *fp);
 
-void extclCpuWrMem_116_TypeB(WORD address, BYTE value);
-BYTE extclSaveMapper_116_TypeB(BYTE mode, BYTE slot, FILE *fp);
-void extclWrChr_116_TypeB(WORD address, BYTE value);
+void extcl_cpu_wr_mem_116_TypeB(WORD address, BYTE value);
+BYTE extcl_save_mapper_116_TypeB(BYTE mode, BYTE slot, FILE *fp);
+void extcl_wr_chr_116_TypeB(WORD address, BYTE value);
 
-void extclCpuWrMem_116_TypeC(WORD address, BYTE value);
-BYTE extclSaveMapper_116_TypeC(BYTE mode, BYTE slot, FILE *fp);
+void extcl_cpu_wr_mem_116_TypeC(WORD address, BYTE value);
+BYTE extcl_save_mapper_116_TypeC(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPER116_H_ */

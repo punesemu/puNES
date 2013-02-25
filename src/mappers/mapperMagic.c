@@ -14,13 +14,13 @@ void mapInit_Magic(void) {
 	prgRom32kMax = (info.prgRom16kCount >> 1) - 1;
 	chrRom8kMax = info.chrRom8kCount - 1;
 
-	EXTCLCPUWRMEM(Magic);
+	EXTCL_CPU_WR_MEM(Magic);
 
 	if (info.reset >= HARD) {
 		mapPrgRom8k(4, 0, 0);
 	}
 }
-void extclCpuWrMem_Magic(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Magic(WORD address, BYTE value) {
 	const BYTE save = value;
 	DBWORD bank;
 

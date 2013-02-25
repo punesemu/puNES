@@ -20,7 +20,7 @@ struct _m178 {
 } m178;
 
 void mapInit_178(BYTE model);
-void extclCpuWrMem_178(WORD address, BYTE value);
-BYTE extclSaveMapper_178(BYTE mode, BYTE slot, FILE *fp);
+void extcl_cpu_wr_mem_178(WORD address, BYTE value);
+BYTE extcl_save_mapper_178(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPER178_H_ */

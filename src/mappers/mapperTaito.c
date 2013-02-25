@@ -24,13 +24,13 @@ void mapInit_Taito(BYTE model) {
 		case TC0190FMC: {
 			switch (info.mapperType) {
 				case TC0190FMCPAL16R4:
-					EXTCLCPUWRMEM(Taito_TC0190FMCPAL16R4);
-					EXTCLCPUEVERYCYCLE(MMC3);
-					EXTCLPPU000TO34X(Taito_TC0190FMCPAL16R4);
-					EXTCLPPU000TO255(Taito_TC0190FMCPAL16R4);
-					EXTCLPPU256TO319(Taito_TC0190FMCPAL16R4);
-					EXTCLPPU320TO34X(Taito_TC0190FMCPAL16R4);
-					EXTCL2006UPDATE(MMC3);
+					EXTCL_CPU_WR_MEM(Taito_TC0190FMCPAL16R4);
+					EXTCL_CPU_EVERY_CYCLE(MMC3);
+					EXTCL_PPU_000_TO_34X(Taito_TC0190FMCPAL16R4);
+					EXTCL_PPU_000_TO_255(Taito_TC0190FMCPAL16R4);
+					EXTCL_PPU_256_TO_319(Taito_TC0190FMCPAL16R4);
+					EXTCL_PPU_320_TO_34X(Taito_TC0190FMCPAL16R4);
+					EXTCL_UPDATE_R2006(MMC3);
 
 					if (info.reset >= HARD) {
 						memset(&irqA12, 0x00, sizeof(irqA12));
@@ -41,17 +41,17 @@ void mapInit_Taito(BYTE model) {
 					mirroring_V();
 					break;
 				default:
-					EXTCLCPUWRMEM(Taito_TC0190FMC);
+					EXTCL_CPU_WR_MEM(Taito_TC0190FMC);
 					break;
 			}
 			break;
 		}
 		case X1005A:
 		case X1005B:
-			EXTCLCPUWRMEM(Taito_X1005);
-			EXTCLCPURDMEM(Taito_X1005);
-			EXTCLSAVEMAPPER(Taito_X1005);
-			EXTCLBATTERYIO(Taito_X1005);
+			EXTCL_CPU_WR_MEM(Taito_X1005);
+			EXTCL_CPU_RD_MEM(Taito_X1005);
+			EXTCL_SAVE_MAPPER(Taito_X1005);
+			EXTCL_BATTERY_IO(Taito_X1005);
 			mapper.intStruct[0] = (BYTE *) &taitoX1005;
 			mapper.intStructSize[0] = sizeof(taitoX1005);
 
@@ -77,8 +77,8 @@ void mapInit_Taito(BYTE model) {
 
 			break;
 		case X1017:
-			EXTCLCPUWRMEM(Taito_X1017);
-			EXTCLSAVEMAPPER(Taito_X1017);
+			EXTCL_CPU_WR_MEM(Taito_X1017);
+			EXTCL_SAVE_MAPPER(Taito_X1017);
 			mapper.intStruct[0] = (BYTE *) &taitoX1017;
 			mapper.intStructSize[0] = sizeof(taitoX1017);
 
@@ -93,7 +93,7 @@ void mapInit_Taito(BYTE model) {
 	type = model;
 }
 
-void extclCpuWrMem_Taito_TC0190FMC(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Taito_TC0190FMC(WORD address, BYTE value) {
 	DBWORD bank;
 
 	switch (address & 0xF003) {
@@ -147,7 +147,7 @@ void extclCpuWrMem_Taito_TC0190FMC(WORD address, BYTE value) {
 	}
 }
 
-void extclCpuWrMem_Taito_TC0190FMCPAL16R4(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Taito_TC0190FMCPAL16R4(WORD address, BYTE value) {
 	DBWORD bank;
 
 	switch (address & 0xF003) {
@@ -216,22 +216,22 @@ void extclCpuWrMem_Taito_TC0190FMCPAL16R4(WORD address, BYTE value) {
 			return;
 	}
 }
-void extclPPU000to34x_Taito_TC0190FMCPAL16R4(void) {
+void extcl_ppu_000_to_34x_Taito_TC0190FMCPAL16R4(void) {
 	irqA12_RS();
 }
-void extclPPU000to255_Taito_TC0190FMCPAL16R4(void) {
+void extcl_ppu_000_to_255_Taito_TC0190FMCPAL16R4(void) {
 	if (r2001.visible) {
 		irqA12_SB();
 	}
 }
-void extclPPU256to319_Taito_TC0190FMCPAL16R4(void) {
+void extcl_ppu_256_to_319_Taito_TC0190FMCPAL16R4(void) {
 	irqA12_BS();
 }
-void extclPPU320to34x_Taito_TC0190FMCPAL16R4(void) {
+void extcl_ppu_320_to_34x_Taito_TC0190FMCPAL16R4(void) {
 	irqA12_SB();
 }
 
-void extclCpuWrMem_Taito_X1005(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Taito_X1005(WORD address, BYTE value) {
 	if ((address < 0x7EF0) || (address > 0x7FFF)) {
 		return;
 	}
@@ -301,7 +301,7 @@ void extclCpuWrMem_Taito_X1005(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extclCpuRdMem_Taito_X1005(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_Taito_X1005(WORD address, BYTE openbus, BYTE before) {
 	if ((address < 0x7EF8) || (address > 0x7FFF)) {
 		return (openbus);
 	}
@@ -319,13 +319,13 @@ BYTE extclCpuRdMem_Taito_X1005(WORD address, BYTE openbus, BYTE before) {
 
 	return (openbus);
 }
-BYTE extclSaveMapper_Taito_X1005(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_Taito_X1005(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, taitoX1005.ram);
 	savestateEle(mode, slot, taitoX1005.enable);
 
 	return (EXIT_OK);
 }
-void extclBatteryIO_Taito_X1005(BYTE mode, FILE *fp) {
+void extcl_battery_io_Taito_X1005(BYTE mode, FILE *fp) {
 	if (!fp) {
 		return;
 	}
@@ -343,7 +343,7 @@ void extclBatteryIO_Taito_X1005(BYTE mode, FILE *fp) {
 	}
 }
 
-void extclCpuWrMem_Taito_X1017(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Taito_X1017(WORD address, BYTE value) {
 	if ((address < 0x7EF0) || (address > 0x7EFF)) {
 		return;
 	}
@@ -442,7 +442,7 @@ void extclCpuWrMem_Taito_X1017(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extclSaveMapper_Taito_X1017(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_Taito_X1017(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, taitoX1017.chr);
 	savestateEle(mode, slot, taitoX1017.control);
 

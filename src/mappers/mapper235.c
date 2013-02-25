@@ -39,10 +39,10 @@ void mapInit_235(void) {
 			break;
 	}
 
-	EXTCLCPUWRMEM(235);
+	EXTCL_CPU_WR_MEM(235);
 	if (type != 3) {
-		EXTCLCPURDMEM(235);
-		EXTCLSAVEMAPPER(235);
+		EXTCL_CPU_RD_MEM(235);
+		EXTCL_SAVE_MAPPER(235);
 		mapper.intStruct[0] = (BYTE *) &m235;
 		mapper.intStructSize[0] = sizeof(m235);
 
@@ -51,10 +51,10 @@ void mapInit_235(void) {
 
 	if (info.reset >= HARD) {
         m235.openbus = 0;
-        extclCpuWrMem_235(0x8000, 0x00);
+        extcl_cpu_wr_mem_235(0x8000, 0x00);
 	}
 }
-void extclCpuWrMem_235(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_235(WORD address, BYTE value) {
 	BYTE bank = slots[type][(address >> 8) & 0x03][0] | (address & 0x1F);
 	m235.openbus = slots[type][(address >> 8) & 0x03][1];
 
@@ -78,14 +78,14 @@ void extclCpuWrMem_235(WORD address, BYTE value) {
 		mirroring_V();
 	}
 }
-BYTE extclCpuRdMem_235(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_235(WORD address, BYTE openbus, BYTE before) {
 	if (!m235.openbus || (address < 0x8000)) {
 		return (openbus);
 	}
 
 	return (address >> 8);
 }
-BYTE extclSaveMapper_235(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_235(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, m235.openbus);
 
 	return (EXIT_OK);

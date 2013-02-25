@@ -24,9 +24,9 @@ void mapInit_CPROM(void) {
 		chr.bank1k[7] = &chr.data[0x0C00];
 	}
 
-	EXTCLCPUWRMEM(CPROM);
+	EXTCL_CPU_WR_MEM(CPROM);
 }
-void extclCpuWrMem_CPROM(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_CPROM(WORD address, BYTE value) {
 	DBWORD bank;
 
 	/* bus conflict */

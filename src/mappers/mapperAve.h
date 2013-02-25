@@ -18,10 +18,10 @@ struct _ave_d1012 {
 
 void mapInit_Ave(BYTE model);
 
-void extclCpuWrMem_Ave_NINA06(WORD address, BYTE value);
+void extcl_cpu_wr_mem_Ave_NINA06(WORD address, BYTE value);
 
-void extclCpuWrMem_Ave_D1012(WORD address, BYTE value);
-BYTE extclCpuRdMem_Ave_D1012(WORD address, BYTE openbus, BYTE before);
-BYTE extclSaveMapper_Ave_D1012(BYTE mode, BYTE slot, FILE *fp);
+void extcl_cpu_wr_mem_Ave_D1012(WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_Ave_D1012(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_save_mapper_Ave_D1012(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPERAVE_H_ */

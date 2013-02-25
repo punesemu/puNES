@@ -18,15 +18,15 @@ void mapInit_Futuremedia(void) {
 	prgRom8kMax = info.prgRom8kCount - 1;
 	chrRom1kMax = info.chrRom1kCount - 1;
 
-	EXTCLCPUWRMEM(Futuremedia);
-	EXTCLSAVEMAPPER(Futuremedia);
-	EXTCLPPU000TO34X(MMC3);
-	EXTCLPPU000TO255(MMC3);
-	EXTCLPPU256TO319(MMC3);
-	EXTCLPPU320TO34X(MMC3);
-	EXTCL2006UPDATE(MMC3);
-	EXTCLIRQA12CLOCK(Futuremedia);
-	EXTCLCPUEVERYCYCLE(Futuremedia);
+	EXTCL_CPU_WR_MEM(Futuremedia);
+	EXTCL_SAVE_MAPPER(Futuremedia);
+	EXTCL_PPU_000_TO_34X(MMC3);
+	EXTCL_PPU_000_TO_255(MMC3);
+	EXTCL_PPU_256_TO_319(MMC3);
+	EXTCL_PPU_320_TO_34X(MMC3);
+	EXTCL_UPDATE_R2006(MMC3);
+	EXTCL_IRQ_A12_CLOCK(Futuremedia);
+	EXTCL_CPU_EVERY_CYCLE(Futuremedia);
 	mapper.intStruct[0] = (BYTE *) &futuremedia;
 	mapper.intStructSize[0] = sizeof(futuremedia);
 
@@ -35,7 +35,7 @@ void mapInit_Futuremedia(void) {
 
 	irqA12.present = TRUE;
 }
-void extclCpuWrMem_Futuremedia(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Futuremedia(WORD address, BYTE value) {
 	switch (address) {
 		case 0x8000:
 		case 0x8001:
@@ -77,17 +77,17 @@ void extclCpuWrMem_Futuremedia(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extclSaveMapper_Futuremedia(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_Futuremedia(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, futuremedia.delay);
 
 	return (EXIT_OK);
 }
-void extclIrqA12Clock_Futuremedia(void) {
+void extcl_irq_A12_clock_Futuremedia(void) {
 	if (irqA12.enable && irqA12.counter && !(--irqA12.counter)) {
 		futuremedia.delay = 2;
 	}
 }
-void extclCPUEveryCycle_Futuremedia(void) {
+void extcl_cpu_every_cycle_Futuremedia(void) {
 	if (futuremedia.delay && !(--futuremedia.delay)) {
 		irq.high |= EXTIRQ;
 	}

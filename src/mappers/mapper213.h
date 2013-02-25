@@ -11,6 +11,6 @@
 #include "common.h"
 
 void mapInit_213(void);
-void extclCpuWrMem_213(WORD address, BYTE value);
+void extcl_cpu_wr_mem_213(WORD address, BYTE value);
 
 #endif /* MAPPER213_H_ */

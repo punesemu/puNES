@@ -11,6 +11,6 @@
 #include "common.h"
 
 void mapInit_Hes(void);
-void extclCpuWrMem_Hes(WORD address, BYTE value);
+void extcl_cpu_wr_mem_Hes(WORD address, BYTE value);
 
 #endif /* MAPPERHES_H_ */

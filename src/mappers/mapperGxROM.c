@@ -18,9 +18,9 @@ void mapInit_GxROM(void) {
 		mapPrgRom8k(4, 0, 0);
 	}
 
-	EXTCLCPUWRMEM(GxROM);
+	EXTCL_CPU_WR_MEM(GxROM);
 }
-void extclCpuWrMem_GxROM(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_GxROM(WORD address, BYTE value) {
 	/* bus conflict */
 	BYTE save = value &= prgRomRd(address);
 	DBWORD bank;

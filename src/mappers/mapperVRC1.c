@@ -14,9 +14,9 @@ void mapInit_VRC1(void) {
 	prgRom8kMax = info.prgRom8kCount - 1;
 	chrRom4kMax = info.chrRom4kCount - 1;
 
-	EXTCLCPUWRMEM(VRC1);
+	EXTCL_CPU_WR_MEM(VRC1);
 }
-void extclCpuWrMem_VRC1(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_VRC1(WORD address, BYTE value) {
 	DBWORD bank;
 
 	address &= 0xF000;

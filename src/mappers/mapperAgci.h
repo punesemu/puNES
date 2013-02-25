@@ -11,6 +11,6 @@
 #include "common.h"
 
 void mapInit_Agci(void);
-void extclCpuWrMem_Agci(WORD address, BYTE value);
+void extcl_cpu_wr_mem_Agci(WORD address, BYTE value);
 
 #endif /* MAPPERAGCI_H_ */

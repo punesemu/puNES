@@ -15,28 +15,28 @@ void mapInit_Camerica(void) {
 
 	switch (info.mapperType) {
 		case BF9096:
-			EXTCLCPUWRMEM(Camerica_BF9096);
+			EXTCL_CPU_WR_MEM(Camerica_BF9096);
 			break;
 		case BF9097:
-			EXTCLCPUWRMEM(Camerica_BF9097);
+			EXTCL_CPU_WR_MEM(Camerica_BF9097);
 			break;
 		case GOLDENFIVE:
-			EXTCLCPUWRMEM(Camerica_GoldenFive);
+			EXTCL_CPU_WR_MEM(Camerica_GoldenFive);
 			if (info.reset >= HARD) {
 				mapPrgRom8k(2, 2, 0x0F);
 			}
 			break;
 		default:
-			EXTCLCPUWRMEM(Camerica_BF9093);
+			EXTCL_CPU_WR_MEM(Camerica_BF9093);
 			break;
 	}
 }
-void extclCpuWrMem_Camerica_BF9093(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Camerica_BF9093(WORD address, BYTE value) {
 	controlBankWithAND(0x0F, prgRom16kMax)
 	mapPrgRom8k(2, 0, value);
 	mapPrgRom8kUpdate();
 }
-void extclCpuWrMem_Camerica_BF9096(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Camerica_BF9096(WORD address, BYTE value) {
 	BYTE base;
 
 	switch ((address >> 12) & 0x0C) {
@@ -51,7 +51,7 @@ void extclCpuWrMem_Camerica_BF9096(WORD address, BYTE value) {
 	}
 	mapPrgRom8kUpdate();
 }
-void extclCpuWrMem_Camerica_BF9097(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Camerica_BF9097(WORD address, BYTE value) {
 	switch ((address >> 12) & 0x0C) {
 		case 0x08:
 			if (value & 0x10) {
@@ -67,7 +67,7 @@ void extclCpuWrMem_Camerica_BF9097(WORD address, BYTE value) {
 			return;
 	}
 }
-void extclCpuWrMem_Camerica_GoldenFive(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Camerica_GoldenFive(WORD address, BYTE value) {
 	BYTE base;
 
 	switch ((address >> 12) & 0x0C) {

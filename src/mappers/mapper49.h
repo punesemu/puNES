@@ -17,7 +17,7 @@ struct _m49 {
 } m49;
 
 void mapInit_49(void);
-void extclCpuWrMem_49(WORD address, BYTE value);
-BYTE extclSaveMapper_49(BYTE mode, BYTE slot, FILE *fp);
+void extcl_cpu_wr_mem_49(WORD address, BYTE value);
+BYTE extcl_save_mapper_49(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPER49_H_ */

@@ -43,8 +43,8 @@ void mapInit_Irem(BYTE model) {
 
 	switch (model) {
 		case G101:
-			EXTCLCPUWRMEM(Irem_G101);
-			EXTCLSAVEMAPPER(Irem_G101);
+			EXTCL_CPU_WR_MEM(Irem_G101);
+			EXTCL_SAVE_MAPPER(Irem_G101);
 			mapper.intStruct[0] = (BYTE *) &iremG101;
 			mapper.intStructSize[0] = sizeof(iremG101);
 
@@ -62,9 +62,9 @@ void mapInit_Irem(BYTE model) {
 			}
 			break;
 		case H3000:
-			EXTCLCPUWRMEM(Irem_H3000);
-			EXTCLSAVEMAPPER(Irem_H3000);
-			EXTCLCPUEVERYCYCLE(Irem_H3000);
+			EXTCL_CPU_WR_MEM(Irem_H3000);
+			EXTCL_SAVE_MAPPER(Irem_H3000);
+			EXTCL_CPU_EVERY_CYCLE(Irem_H3000);
 			mapper.intStruct[0] = (BYTE *) &iremH3000;
 			mapper.intStructSize[0] = sizeof(iremH3000);
 
@@ -73,9 +73,9 @@ void mapInit_Irem(BYTE model) {
 			}
 			break;
 		case LROG017:
-			EXTCLCPUWRMEM(Irem_LROG017);
-			EXTCLSAVEMAPPER(Irem_LROG017);
-			EXTCLWRCHR(Irem_LROG017);
+			EXTCL_CPU_WR_MEM(Irem_LROG017);
+			EXTCL_SAVE_MAPPER(Irem_LROG017);
+			EXTCL_WR_CHR(Irem_LROG017);
 			mapper.intStruct[0] = (BYTE *) &iremLROG017;
 			mapper.intStructSize[0] = sizeof(iremLROG017);
 
@@ -88,7 +88,7 @@ void mapInit_Irem(BYTE model) {
 
 			break;
 		case TAMS1:
-			EXTCLCPUWRMEM(Irem_TAMS1);
+			EXTCL_CPU_WR_MEM(Irem_TAMS1);
 
 			if (info.reset >= HARD) {
 				mapPrgRom8k(2, 0, prgRom16kMax);
@@ -98,7 +98,7 @@ void mapInit_Irem(BYTE model) {
 	}
 }
 
-void extclCpuWrMem_Irem_G101(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Irem_G101(WORD address, BYTE value) {
 	if (address >= 0xC000) {
 		return;
 	}
@@ -131,14 +131,14 @@ void extclCpuWrMem_Irem_G101(WORD address, BYTE value) {
 			break;
 	}
 }
-BYTE extclSaveMapper_Irem_G101(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_Irem_G101(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, iremG101.prgMode);
 	savestateEle(mode, slot, iremG101.prgReg);
 
 	return (EXIT_OK);
 }
 
-void extclCpuWrMem_Irem_H3000(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Irem_H3000(WORD address, BYTE value) {
 	switch (address & 0xF000) {
 		case 0x8000:
 			controlBank(prgRom8kMax)
@@ -187,7 +187,7 @@ void extclCpuWrMem_Irem_H3000(WORD address, BYTE value) {
 			break;
 	}
 }
-BYTE extclSaveMapper_Irem_H3000(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_Irem_H3000(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, iremH3000.enable);
 	savestateEle(mode, slot, iremH3000.count);
 	savestateEle(mode, slot, iremH3000.reload);
@@ -195,7 +195,7 @@ BYTE extclSaveMapper_Irem_H3000(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-void extclCPUEveryCycle_Irem_H3000(void) {
+void extcl_cpu_every_cycle_Irem_H3000(void) {
 	if (iremH3000.delay && !(--iremH3000.delay)) {
 		irq.high |= EXTIRQ;
 	}
@@ -207,7 +207,7 @@ void extclCPUEveryCycle_Irem_H3000(void) {
 	}
 }
 
-void extclCpuWrMem_Irem_LROG017(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Irem_LROG017(WORD address, BYTE value) {
 	/* bus conflict */
 	const BYTE save = value &= prgRomRd(address);
 	DBWORD bank;
@@ -222,7 +222,7 @@ void extclCpuWrMem_Irem_LROG017(WORD address, BYTE value) {
 	chr.bank1k[0] = &chr.data[bank];
 	chr.bank1k[1] = &chr.data[bank | 0x0400];
 }
-BYTE extclSaveMapper_Irem_LROG017(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_Irem_LROG017(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, iremLROG017.chrRam);
 	if (mode == SSREAD) {
 		iremLROG017ChrRam();
@@ -230,7 +230,7 @@ BYTE extclSaveMapper_Irem_LROG017(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-void extclWrChr_Irem_LROG017(WORD address, BYTE value) {
+void extcl_wr_chr_Irem_LROG017(WORD address, BYTE value) {
 	const BYTE slot = address >> 10;
 
 	/*
@@ -242,7 +242,7 @@ void extclWrChr_Irem_LROG017(WORD address, BYTE value) {
 	}
 }
 
-void extclCpuWrMem_Irem_TAMS1(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Irem_TAMS1(WORD address, BYTE value) {
 	/* bus conflict */
 	value &= prgRomRd(address);
 

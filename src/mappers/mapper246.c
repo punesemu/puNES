@@ -14,8 +14,8 @@ void mapInit_246(void) {
 	prgRom8kMax = info.prgRom8kCount - 1;
 	chrRom2kMax = (info.chrRom1kCount >> 1) - 1;
 
-	EXTCLCPUWRMEM(246);
-	EXTCLCPURDMEM(246);
+	EXTCL_CPU_WR_MEM(246);
+	EXTCL_CPU_RD_MEM(246);
 
 	if (info.reset >= HARD) {
 		mapPrgRom8kReset();
@@ -23,7 +23,7 @@ void mapInit_246(void) {
 
 	info.mapperExtendWrite = TRUE;
 }
-void extclCpuWrMem_246(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_246(WORD address, BYTE value) {
 	BYTE reg, slot;
 	DBWORD bank;
 
@@ -46,7 +46,7 @@ void extclCpuWrMem_246(WORD address, BYTE value) {
 	chr.bank1k[slot] = &chr.data[bank];
 	chr.bank1k[slot + 1] = &chr.data[bank | 0x0400];
 }
-BYTE extclCpuRdMem_246(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_246(WORD address, BYTE openbus, BYTE before) {
 	if ((address < 0x6000) || (address > 0x67FF)) {
 		return (openbus);
 	}

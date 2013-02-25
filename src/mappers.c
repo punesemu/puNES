@@ -29,7 +29,7 @@ BYTE mapInit(WORD mapperType) {
 	irqA12.present = FALSE;
 	irql2f.present = FALSE;
 	/* disabilito tutte le chiamate relative alle mappers */
-	extclInit();
+	extcl_init();
 
 	switch (mapperType) {
 		case 0:
@@ -574,7 +574,7 @@ BYTE mapInit(WORD mapperType) {
 		default:
 			textAddLineInfo(1, "[yellow]Mapper %d not supported", mapperType);
 			fprintf(stderr, "Mapper not supported\n");
-			EXTCLCPUWRMEM(0);
+			EXTCL_CPU_WR_MEM(0);
 			break;
 		/* casi speciali */
 		case FDS_MAPPER:
@@ -608,8 +608,8 @@ void mapQuit(void) {
 		/* apro il file */
 		fp = fopen(prgRamFile, "wb");
 		if (fp) {
-			if (extclBatteryIO) {
-				extclBatteryIO(WRBAT, fp);
+			if (extcl_battery_io) {
+				extcl_battery_io(WRBAT, fp);
 			} else {
 				mapperWrBatteryDefault();
 			}
@@ -713,8 +713,8 @@ void mapPrgRamInit(void) {
 			/* provo ad aprire il file */
 			fp = fopen(prgRamFile, "rb");
 
-			if (extclBatteryIO) {
-				extclBatteryIO(RDBAT, fp);
+			if (extcl_battery_io) {
+				extcl_battery_io(RDBAT, fp);
 			} else {
 				mapperRdBatteryDefault();
 			}

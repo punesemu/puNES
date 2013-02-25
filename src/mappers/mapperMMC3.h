@@ -38,14 +38,14 @@ struct _mmc3 {
 } mmc3;
 
 void mapInit_MMC3(void);
-void extclCpuWrMem_MMC3(WORD address, BYTE value);
-BYTE extclSaveMapper_MMC3(BYTE mode, BYTE slot, FILE *fp);
-void extclPPU000to34x_MMC3(void);
-void extclPPU000to255_MMC3(void);
-void extclPPU256to319_MMC3(void);
-void extclPPU320to34x_MMC3(void);
-void extcl2006Update_MMC3(WORD r2006Old);
+void extcl_cpu_wr_mem_MMC3(WORD address, BYTE value);
+BYTE extcl_save_mapper_MMC3(BYTE mode, BYTE slot, FILE *fp);
+void extcl_ppu_000_to_34x_MMC3(void);
+void extcl_ppu_000_to_255_MMC3(void);
+void extcl_ppu_256_to_319_MMC3(void);
+void extcl_ppu_320_to_34x_MMC3(void);
+void extcl_update_r2006_MMC3(WORD old_r2006);
 
-void extclCPUEveryCycle_MMC3(void);
+void extcl_cpu_every_cycle_MMC3(void);
 
 #endif /* MAPPERMMC3_H_ */

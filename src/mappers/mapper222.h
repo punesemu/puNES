@@ -16,9 +16,9 @@ struct _m222 {
 } m222;
 
 void mapInit_222(void);
-void extclCpuWrMem_222(WORD address, BYTE value);
-BYTE extclSaveMapper_222(BYTE mode, BYTE slot, FILE *fp);
-void extclIrqA12Clock_222(void);
-void extclCPUEveryCycle_222(void);
+void extcl_cpu_wr_mem_222(WORD address, BYTE value);
+BYTE extcl_save_mapper_222(BYTE mode, BYTE slot, FILE *fp);
+void extcl_irq_A12_clock_222(void);
+void extcl_cpu_every_cycle_222(void);
 
 #endif /* MAPPER222_H_ */

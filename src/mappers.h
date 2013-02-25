@@ -9,7 +9,7 @@
 #define MAPPERS_H_
 
 #include "common.h"
-#include "externalcalls.h"
+#include "external_calls.h"
 #include "mappers/mapper0.h"
 #include "mappers/mapperMMC1.h"
 #include "mappers/mapperMMC2andMMC4.h"

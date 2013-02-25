@@ -16,7 +16,7 @@ void mapInit_Rcm(BYTE type) {
 
 	switch (type) {
 		case GS2015:
-			EXTCLCPUWRMEM(GS2015);
+			EXTCL_CPU_WR_MEM(GS2015);
 
 			if (info.reset >= HARD) {
 				mapPrgRom8k(4, 0, 0);
@@ -24,7 +24,7 @@ void mapInit_Rcm(BYTE type) {
 			break;
 	}
 }
-void extclCpuWrMem_GS2015(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_GS2015(WORD address, BYTE value) {
 	DBWORD bank;
 
 	value = address;

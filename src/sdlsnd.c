@@ -164,8 +164,8 @@ BYTE sndStart(void) {
 		snd.pos.current = snd.pos.last = 0;
 	}
 
-	if (extclSndStart) {
-		extclSndStart(dev->freq);
+	if (extcl_snd_start) {
+		extcl_snd_start(dev->freq);
 	}
 
 	audio_quality(cfg->audio_quality);

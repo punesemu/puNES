@@ -24,14 +24,14 @@ void mapInit_Txc(BYTE model) {
 
 	switch (model) {
 		case TXCTW:
-			EXTCLCPUWRMEM(Txc_tw);
-			EXTCLSAVEMAPPER(MMC3);
-			EXTCLCPUEVERYCYCLE(MMC3);
-			EXTCLPPU000TO34X(MMC3);
-			EXTCLPPU000TO255(MMC3);
-			EXTCLPPU256TO319(MMC3);
-			EXTCLPPU320TO34X(MMC3);
-			EXTCL2006UPDATE(MMC3);
+			EXTCL_CPU_WR_MEM(Txc_tw);
+			EXTCL_SAVE_MAPPER(MMC3);
+			EXTCL_CPU_EVERY_CYCLE(MMC3);
+			EXTCL_PPU_000_TO_34X(MMC3);
+			EXTCL_PPU_000_TO_255(MMC3);
+			EXTCL_PPU_256_TO_319(MMC3);
+			EXTCL_PPU_320_TO_34X(MMC3);
+			EXTCL_UPDATE_R2006(MMC3);
 			mapper.intStruct[0] = (BYTE *) &mmc3;
 			mapper.intStructSize[0] = sizeof(mmc3);
 
@@ -52,9 +52,9 @@ void mapInit_Txc(BYTE model) {
 		case T22211A:
 		case T22211B:
 		case T22211C:
-			EXTCLCPUWRMEM(Txc_t22211x);
-			EXTCLCPURDMEM(Txc_t22211x);
-			EXTCLSAVEMAPPER(Txc_t22211x);
+			EXTCL_CPU_WR_MEM(Txc_t22211x);
+			EXTCL_CPU_RD_MEM(Txc_t22211x);
+			EXTCL_SAVE_MAPPER(Txc_t22211x);
 			mapper.intStruct[0] = (BYTE *) &t22211x;
 			mapper.intStructSize[0] = sizeof(t22211x);
 
@@ -72,13 +72,13 @@ void mapInit_Txc(BYTE model) {
 	type = model;
 }
 
-void extclCpuWrMem_Txc_tw(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Txc_tw(WORD address, BYTE value) {
 	if (address < 0x4120) {
 		return;
 	}
 
 	if (address >= 0x8000) {
-		extclCpuWrMem_MMC3(address, value);
+		extcl_cpu_wr_mem_MMC3(address, value);
 		return;
 	}
 
@@ -88,7 +88,7 @@ void extclCpuWrMem_Txc_tw(WORD address, BYTE value) {
 	mapPrgRom8kUpdate();
 }
 
-void extclCpuWrMem_Txc_t22211x(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Txc_t22211x(WORD address, BYTE value) {
 	BYTE save = value;
 
 	if ((address >= 0x4100) && (address <= 0x4103)) {
@@ -131,7 +131,7 @@ void extclCpuWrMem_Txc_t22211x(WORD address, BYTE value) {
 
 	}
 }
-BYTE extclCpuRdMem_Txc_t22211x(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_Txc_t22211x(WORD address, BYTE openbus, BYTE before) {
 	if (address != 0x4100) {
 		return (openbus);
 	}
@@ -142,7 +142,7 @@ BYTE extclCpuRdMem_Txc_t22211x(WORD address, BYTE openbus, BYTE before) {
 		return ((t22211x.reg[1] ^ t22211x.reg[2]) | 0x40);
 	}
 }
-BYTE extclSaveMapper_Txc_t22211x(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_Txc_t22211x(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, t22211x.reg);
 
 	return (EXIT_OK);

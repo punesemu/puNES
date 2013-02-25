@@ -24,12 +24,12 @@ void mapInit_Kaiser(BYTE model) {
 	switch (model) {
 		case KS202:
 		case KS7032:
-			EXTCLCPUWRMEM(Kaiser_ks202);
+			EXTCL_CPU_WR_MEM(Kaiser_ks202);
 			if (model == KS7032) {
-				EXTCLCPURDMEM(Kaiser_ks202);
+				EXTCL_CPU_RD_MEM(Kaiser_ks202);
 			}
-			EXTCLSAVEMAPPER(Kaiser_ks202);
-			EXTCLCPUEVERYCYCLE(Kaiser_ks202);
+			EXTCL_SAVE_MAPPER(Kaiser_ks202);
+			EXTCL_CPU_EVERY_CYCLE(Kaiser_ks202);
 			mapper.intStruct[0] = (BYTE *) &ks202;
 			mapper.intStructSize[0] = sizeof(ks202);
 
@@ -48,12 +48,12 @@ void mapInit_Kaiser(BYTE model) {
 			}
 			break;
 		case KS7058:
-			EXTCLCPUWRMEM(Kaiser_ks7058);
+			EXTCL_CPU_WR_MEM(Kaiser_ks7058);
 			break;
 		case KS7022:
-			EXTCLCPUWRMEM(Kaiser_ks7022);
-			EXTCLCPURDMEM(Kaiser_ks7022);
-			EXTCLSAVEMAPPER(Kaiser_ks7022);
+			EXTCL_CPU_WR_MEM(Kaiser_ks7022);
+			EXTCL_CPU_RD_MEM(Kaiser_ks7022);
+			EXTCL_SAVE_MAPPER(Kaiser_ks7022);
 			mapper.intStruct[0] = (BYTE *) &ks7022;
 			mapper.intStructSize[0] = sizeof(ks7022);
 
@@ -69,7 +69,7 @@ void mapInit_Kaiser(BYTE model) {
 	}
 }
 
-void extclCpuWrMem_Kaiser_ks202(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Kaiser_ks202(WORD address, BYTE value) {
 	switch (address & 0xF000) {
 		case 0x8000:
 			ks202.reload = (ks202.reload & 0xFFF0) | (value & 0x0F);
@@ -143,14 +143,14 @@ void extclCpuWrMem_Kaiser_ks202(WORD address, BYTE value) {
 		}
 	}
 }
-BYTE extclCpuRdMem_Kaiser_ks202(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_Kaiser_ks202(WORD address, BYTE openbus, BYTE before) {
 	if ((address < 0x6000) || (address > 0x7FFF)) {
 		return (openbus);
 	}
 
 	return (ks202.prgRamRd[address & 0x1FFF]);
 }
-BYTE extclSaveMapper_Kaiser_ks202(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_Kaiser_ks202(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, ks202.enabled);
 	savestateEle(mode, slot, ks202.count);
 	savestateEle(mode, slot, ks202.reload);
@@ -161,7 +161,7 @@ BYTE extclSaveMapper_Kaiser_ks202(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 
 }
-void extclCPUEveryCycle_Kaiser_ks202(void) {
+void extcl_cpu_every_cycle_Kaiser_ks202(void) {
 	if (ks202.delay && !(--ks202.delay)) {
 		irq.high |= EXTIRQ;
 	}
@@ -176,7 +176,7 @@ void extclCPUEveryCycle_Kaiser_ks202(void) {
 	}
 }
 
-void extclCpuWrMem_Kaiser_ks7058(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Kaiser_ks7058(WORD address, BYTE value) {
 	DBWORD bank;
 
 	switch (address & 0xF080) {
@@ -199,7 +199,7 @@ void extclCpuWrMem_Kaiser_ks7058(WORD address, BYTE value) {
 	}
 }
 
-void extclCpuWrMem_Kaiser_ks7022(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Kaiser_ks7022(WORD address, BYTE value) {
 	switch (address) {
 		case 0x8000:
 			if (value & 0x04) {
@@ -213,7 +213,7 @@ void extclCpuWrMem_Kaiser_ks7022(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extclCpuRdMem_Kaiser_ks7022(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_Kaiser_ks7022(WORD address, BYTE openbus, BYTE before) {
 	if (address == 0xFFFC) {
 		BYTE value = ks7022.reg;
 		DBWORD bank;
@@ -240,7 +240,7 @@ BYTE extclCpuRdMem_Kaiser_ks7022(WORD address, BYTE openbus, BYTE before) {
 
 	return (openbus);
 }
-BYTE extclSaveMapper_Kaiser_ks7022(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_Kaiser_ks7022(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, ks7022.reg);
 
 	return (EXIT_OK);

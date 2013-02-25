@@ -24,9 +24,9 @@ struct _vrc7 {
 } vrc7;
 
 void mapInit_VRC7(BYTE revision);
-void extclCpuWrMem_VRC7(WORD address, BYTE value);
-BYTE extclSaveMapper_VRC7(BYTE mode, BYTE slot, FILE *fp);
-void extclCPUEveryCycle_VRC7(void);
-void extclSndStart_VRC7(WORD samplarate);
+void extcl_cpu_wr_mem_VRC7(WORD address, BYTE value);
+BYTE extcl_save_mapper_VRC7(BYTE mode, BYTE slot, FILE *fp);
+void extcl_cpu_every_cycle_VRC7(void);
+void extcl_snd_start_VRC7(WORD samplarate);
 
 #endif /* MAPPERVRC7_H_ */

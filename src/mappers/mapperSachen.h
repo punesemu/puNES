@@ -45,28 +45,28 @@ static const char pokeriiichr[2][40] = {
 
 void mapInit_Sachen(BYTE model);
 
-void extclCpuWrMem_Sachen_sa0036(WORD address, BYTE value);
+void extcl_cpu_wr_mem_Sachen_sa0036(WORD address, BYTE value);
 
-void extclCpuWrMem_Sachen_sa0037(WORD address, BYTE value);
+void extcl_cpu_wr_mem_Sachen_sa0037(WORD address, BYTE value);
 
-void extclCpuWrMem_Sachen_sa8259x(WORD address, BYTE value);
-BYTE extclSaveMapper_Sachen_sa8259x(BYTE mode, BYTE slot, FILE *fp);
+void extcl_cpu_wr_mem_Sachen_sa8259x(WORD address, BYTE value);
+BYTE extcl_save_mapper_Sachen_sa8259x(BYTE mode, BYTE slot, FILE *fp);
 
-void extclCpuWrMem_Sachen_tca01(WORD address, BYTE value);
-BYTE extclCpuRdMem_Sachen_tca01(WORD address, BYTE openbus, BYTE before);
+void extcl_cpu_wr_mem_Sachen_tca01(WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_Sachen_tca01(WORD address, BYTE openbus, BYTE before);
 
-void extclCpuWrMem_Sachen_tcu01(WORD address, BYTE value);
+void extcl_cpu_wr_mem_Sachen_tcu01(WORD address, BYTE value);
 
-void extclCpuWrMem_Sachen_tcu02(WORD address, BYTE value);
-BYTE extclCpuRdMem_Sachen_tcu02(WORD address, BYTE openbus, BYTE before);
-BYTE extclSaveMapper_Sachen_tcu02(BYTE mode, BYTE slot, FILE *fp);
+void extcl_cpu_wr_mem_Sachen_tcu02(WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_Sachen_tcu02(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_save_mapper_Sachen_tcu02(BYTE mode, BYTE slot, FILE *fp);
 
-void extclCpuWrMem_Sachen_sa72007(WORD address, BYTE value);
+void extcl_cpu_wr_mem_Sachen_sa72007(WORD address, BYTE value);
 
-void extclCpuWrMem_Sachen_sa72008(WORD address, BYTE value);
+void extcl_cpu_wr_mem_Sachen_sa72008(WORD address, BYTE value);
 
-void extclCpuWrMem_Sachen_sa74374a(WORD address, BYTE value);
-void extclCpuWrMem_Sachen_sa74374b(WORD address, BYTE value);
-BYTE extclSaveMapper_Sachen_sa74374x(BYTE mode, BYTE slot, FILE *fp);
+void extcl_cpu_wr_mem_Sachen_sa74374a(WORD address, BYTE value);
+void extcl_cpu_wr_mem_Sachen_sa74374b(WORD address, BYTE value);
+BYTE extcl_save_mapper_Sachen_sa74374x(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPERSACHEN_H_ */

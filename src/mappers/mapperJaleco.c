@@ -35,36 +35,36 @@ void mapInit_Jaleco(BYTE model) {
 
 	switch (model) {
 		case JF05:
-			EXTCLCPUWRMEM(Jaleco_JF05);
+			EXTCL_CPU_WR_MEM(Jaleco_JF05);
 			info.mapperExtendWrite = TRUE;
 			break;
 		case JF11:
-			EXTCLCPUWRMEM(Jaleco_JF11);
+			EXTCL_CPU_WR_MEM(Jaleco_JF11);
 			info.mapperExtendWrite = TRUE;
 			if (info.reset >= HARD) {
 				mapPrgRom8k(4, 0, 0);
 			}
 			break;
 		case JF13:
-			EXTCLCPUWRMEM(Jaleco_JF13);
+			EXTCL_CPU_WR_MEM(Jaleco_JF13);
 			info.mapperExtendWrite = TRUE;
 			if (info.reset >= HARD) {
 				mapPrgRom8k(4, 0, 0);
 			}
 			break;
 		case JF16:
-			EXTCLCPUWRMEM(Jaleco_JF16);
+			EXTCL_CPU_WR_MEM(Jaleco_JF16);
 			break;
 		case JF17:
-			EXTCLCPUWRMEM(Jaleco_JF17);
+			EXTCL_CPU_WR_MEM(Jaleco_JF17);
 			break;
 		case JF19:
-			EXTCLCPUWRMEM(Jaleco_JF19);
+			EXTCL_CPU_WR_MEM(Jaleco_JF19);
 			break;
 		case SS8806:
-			EXTCLCPUWRMEM(Jaleco_SS8806);
-			EXTCLSAVEMAPPER(Jaleco_SS8806);
-			EXTCLCPUEVERYCYCLE(Jaleco_SS8806);
+			EXTCL_CPU_WR_MEM(Jaleco_SS8806);
+			EXTCL_SAVE_MAPPER(Jaleco_SS8806);
+			EXTCL_CPU_EVERY_CYCLE(Jaleco_SS8806);
 			mapper.intStruct[0] = (BYTE *) &ss8806;
 			mapper.intStructSize[0] = sizeof(ss8806);
 
@@ -99,7 +99,7 @@ void mapInit_Jaleco(BYTE model) {
 
 }
 
-void extclCpuWrMem_Jaleco_JF05(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Jaleco_JF05(WORD address, BYTE value) {
 	DBWORD bank;
 
 	if ((address < 0x6000) || (address >= 0x8000)) {
@@ -119,7 +119,7 @@ void extclCpuWrMem_Jaleco_JF05(WORD address, BYTE value) {
 	chr.bank1k[7] = &chr.data[bank | 0x1C00];
 }
 
-void extclCpuWrMem_Jaleco_JF11(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Jaleco_JF11(WORD address, BYTE value) {
 	BYTE save = value;
 	DBWORD bank;
 
@@ -145,7 +145,7 @@ void extclCpuWrMem_Jaleco_JF11(WORD address, BYTE value) {
 	chr.bank1k[7] = &chr.data[bank | 0x1C00];
 }
 
-void extclCpuWrMem_Jaleco_JF13(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Jaleco_JF13(WORD address, BYTE value) {
 	BYTE save = value;
 	DBWORD bank;
 
@@ -172,7 +172,7 @@ void extclCpuWrMem_Jaleco_JF13(WORD address, BYTE value) {
 	chr.bank1k[7] = &chr.data[bank | 0x1C00];
 }
 
-void extclCpuWrMem_Jaleco_JF16(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Jaleco_JF16(WORD address, BYTE value) {
 	BYTE save = value &= prgRomRd(address);
 	DBWORD bank;
 
@@ -205,7 +205,7 @@ void extclCpuWrMem_Jaleco_JF16(WORD address, BYTE value) {
 	}
 }
 
-void extclCpuWrMem_Jaleco_JF17(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Jaleco_JF17(WORD address, BYTE value) {
 	/* bus conflict */
 	BYTE save = value &= prgRomRd(address);
 	DBWORD bank;
@@ -233,7 +233,7 @@ void extclCpuWrMem_Jaleco_JF17(WORD address, BYTE value) {
 	/* FIXME : aggiungere l'emulazione del D7756C */
 }
 
-void extclCpuWrMem_Jaleco_JF19(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Jaleco_JF19(WORD address, BYTE value) {
 	/* bus conflict */
 	BYTE save = value &= prgRomRd(address);
 	DBWORD bank;
@@ -261,7 +261,7 @@ void extclCpuWrMem_Jaleco_JF19(WORD address, BYTE value) {
 	/* FIXME : aggiungere l'emulazione del D7756C */
 }
 
-void extclCpuWrMem_Jaleco_SS8806(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Jaleco_SS8806(WORD address, BYTE value) {
 	switch (address) {
 		case 0x8000:
 			prgRom8kUpdate(0, 0xF0, 0);
@@ -380,7 +380,7 @@ void extclCpuWrMem_Jaleco_SS8806(WORD address, BYTE value) {
 			break;
 	}
 }
-BYTE extclSaveMapper_Jaleco_SS8806(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_Jaleco_SS8806(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, ss8806.chrRomBank);
 	savestateEle(mode, slot, ss8806.enabled);
 	savestateEle(mode, slot, ss8806.mask);
@@ -390,7 +390,7 @@ BYTE extclSaveMapper_Jaleco_SS8806(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-void extclCPUEveryCycle_Jaleco_SS8806(void) {
+void extcl_cpu_every_cycle_Jaleco_SS8806(void) {
 	if (!ss8806.enabled) {
 		return;
 	}

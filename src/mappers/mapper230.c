@@ -15,8 +15,8 @@ WORD prgRom16kMax;
 void mapInit_230(void) {
 	prgRom16kMax = info.prgRom16kCount - 1;
 
-	EXTCLCPUWRMEM(230);
-	EXTCLSAVEMAPPER(230);
+	EXTCL_CPU_WR_MEM(230);
+	EXTCL_SAVE_MAPPER(230);
 	mapper.intStruct[0] = (BYTE *) &m230;
 	mapper.intStructSize[0] = sizeof(m230);
 
@@ -36,7 +36,7 @@ void mapInit_230(void) {
 		mapPrgRom8k(2, 2, prgRom16kMax);
 	}
 }
-void extclCpuWrMem_230(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_230(WORD address, BYTE value) {
 	BYTE save = value;
 
 	if (!m230.mode) {
@@ -59,7 +59,7 @@ void extclCpuWrMem_230(WORD address, BYTE value) {
 	}
 	mapPrgRom8kUpdate();
 }
-BYTE extclSaveMapper_230(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_230(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, m230.mode);
 
 	return (EXIT_OK);

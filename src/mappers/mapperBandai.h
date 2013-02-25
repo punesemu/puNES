@@ -47,15 +47,15 @@ struct _FCGX {
 
 void mapInit_Bandai(BYTE model);
 
-void extclCpuWrMem_Bandai_161x02x74(WORD address, BYTE value);
-BYTE extclSaveMapper_Bandai_161x02x74(BYTE mode, BYTE slot, FILE *fp);
-void extcl2006Update_Bandai_161x02x74(WORD r2006Old);
-BYTE extclRdNmt_Bandai_161x02x74(WORD address);
+void extcl_cpu_wr_mem_Bandai_161x02x74(WORD address, BYTE value);
+BYTE extcl_save_mapper_Bandai_161x02x74(BYTE mode, BYTE slot, FILE *fp);
+void extcl_update_r2006_Bandai_161x02x74(WORD old_r2006);
+BYTE extcl_rd_nmt_Bandai_161x02x74(WORD address);
 
-void extclCpuWrMem_Bandai_FCGX(WORD address, BYTE value);
-BYTE extclCpuRdMem_Bandai_FCGX(WORD address, BYTE openbus, BYTE before);
-BYTE extclSaveMapper_Bandai_FCGX(BYTE mode, BYTE slot, FILE *fp);
-void extclBatteryIO_Bandai_FCGX(BYTE mode, FILE *fp);
-void extclCPUEveryCycle_Bandai_FCGX(void);
+void extcl_cpu_wr_mem_Bandai_FCGX(WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_Bandai_FCGX(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_save_mapper_Bandai_FCGX(BYTE mode, BYTE slot, FILE *fp);
+void extcl_battery_io_Bandai_FCGX(BYTE mode, FILE *fp);
+void extcl_cpu_every_cycle_Bandai_FCGX(void);
 
 #endif /* MAPPERBANDAI_H_ */

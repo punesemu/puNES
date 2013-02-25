@@ -13,7 +13,7 @@ WORD prgRom32kMax;
 void mapInit_AxROM(void) {
 	prgRom32kMax = (info.prgRom16kCount >> 1) - 1;
 
-	EXTCLCPUWRMEM(AxROM);
+	EXTCL_CPU_WR_MEM(AxROM);
 
 	if (info.reset >= HARD) {
 		mapPrgRom8k(4, 0, 0);
@@ -23,7 +23,7 @@ void mapInit_AxROM(void) {
 		mirroring_SCR0();
 	}
 }
-void extclCpuWrMem_AxROM(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_AxROM(WORD address, BYTE value) {
 	/* bus conflict */
 	if (info.mapperType == AMROM) {
 		value &= prgRomRd(address);

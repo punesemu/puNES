@@ -15,9 +15,9 @@ struct _futuremedia {
 } futuremedia;
 
 void mapInit_Futuremedia(void);
-void extclCpuWrMem_Futuremedia(WORD address, BYTE value);
-BYTE extclSaveMapper_Futuremedia(BYTE mode, BYTE slot, FILE *fp);
-void extclCPUEveryCycle_Futuremedia(void);
-void extclIrqA12Clock_Futuremedia(void);
+void extcl_cpu_wr_mem_Futuremedia(WORD address, BYTE value);
+BYTE extcl_save_mapper_Futuremedia(BYTE mode, BYTE slot, FILE *fp);
+void extcl_cpu_every_cycle_Futuremedia(void);
+void extcl_irq_A12_clock_Futuremedia(void);
 
 #endif /* MAPPERFUTUREMEDIA_H_ */

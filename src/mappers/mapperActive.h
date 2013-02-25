@@ -16,8 +16,8 @@ struct _active {
 } active;
 
 void mapInit_Active(void);
-void extclCpuWrMem_Active(WORD address, BYTE value);
-BYTE extclCpuRdMem_Active(WORD address, BYTE openbus, BYTE before);
-BYTE extclSaveMapper_Active(BYTE mode, BYTE slot, FILE *fp);
+void extcl_cpu_wr_mem_Active(WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_Active(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_save_mapper_Active(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPERACTIVE_H_ */

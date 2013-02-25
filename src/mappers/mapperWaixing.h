@@ -33,27 +33,27 @@ struct _waixing {
 
 void mapInit_Waixing(BYTE model);
 
-void extclCpuWrMem_Waixing_PSx(WORD address, BYTE value);
+void extcl_cpu_wr_mem_Waixing_PSx(WORD address, BYTE value);
 
-void extclCpuWrMem_Waixing_TypeACDE(WORD address, BYTE value);
-BYTE extclSaveMapper_Waixing_TypeACDE(BYTE mode, BYTE slot, FILE *fp);
-void extclWrChr_Waixing_TypeACDE(WORD address, BYTE value);
+void extcl_cpu_wr_mem_Waixing_TypeACDE(WORD address, BYTE value);
+BYTE extcl_save_mapper_Waixing_TypeACDE(BYTE mode, BYTE slot, FILE *fp);
+void extcl_wr_chr_Waixing_TypeACDE(WORD address, BYTE value);
 
-void extclCpuWrMem_Waixing_TypeB(WORD address, BYTE value);
-BYTE extclSaveMapper_Waixing_TypeB(BYTE mode, BYTE slot, FILE *fp);
-void extclWrChr_Waixing_TypeB(WORD address, BYTE value);
+void extcl_cpu_wr_mem_Waixing_TypeB(WORD address, BYTE value);
+BYTE extcl_save_mapper_Waixing_TypeB(BYTE mode, BYTE slot, FILE *fp);
+void extcl_wr_chr_Waixing_TypeB(WORD address, BYTE value);
 
-void extclCpuWrMem_Waixing_TypeG(WORD address, BYTE value);
-BYTE extclSaveMapper_Waixing_TypeG(BYTE mode, BYTE slot, FILE *fp);
-void extclWrChr_Waixing_TypeG(WORD address, BYTE value);
+void extcl_cpu_wr_mem_Waixing_TypeG(WORD address, BYTE value);
+BYTE extcl_save_mapper_Waixing_TypeG(BYTE mode, BYTE slot, FILE *fp);
+void extcl_wr_chr_Waixing_TypeG(WORD address, BYTE value);
 
-void extclCpuWrMem_Waixing_TypeH(WORD address, BYTE value);
-BYTE extclSaveMapper_Waixing_TypeH(BYTE mode, BYTE slot, FILE *fp);
+void extcl_cpu_wr_mem_Waixing_TypeH(WORD address, BYTE value);
+BYTE extcl_save_mapper_Waixing_TypeH(BYTE mode, BYTE slot, FILE *fp);
 
-void extclCpuWrMem_Waixing_SH2(WORD address, BYTE value);
-BYTE extclSaveMapper_Waixing_SH2(BYTE mode, BYTE slot, FILE *fp);
-void extcl2006Update_Waixing_SH2(WORD r2006Old);
-void extclRdChrAfter_Waixing_SH2(WORD address);
-void extclWrChr_Waixing_SH2(WORD address, BYTE value);
+void extcl_cpu_wr_mem_Waixing_SH2(WORD address, BYTE value);
+BYTE extcl_save_mapper_Waixing_SH2(BYTE mode, BYTE slot, FILE *fp);
+void extcl_update_r2006_Waixing_SH2(WORD old_r2006);
+void extcl_after_rd_chr_Waixing_SH2(WORD address);
+void extcl_wr_chr_Waixing_SH2(WORD address, BYTE value);
 
 #endif /* MAPPERWAIXING_H_ */

@@ -154,14 +154,14 @@ void mapInit_45(void) {
 	prgRom8kBeforeLast = info.prgRom8kCount - 2;
 	chrRom1kMax = info.chrRom1kCount - 1;
 
-	EXTCLCPUWRMEM(45);
-	EXTCLSAVEMAPPER(45);
-	EXTCLCPUEVERYCYCLE(MMC3);
-	EXTCLPPU000TO34X(MMC3);
-	EXTCLPPU000TO255(MMC3);
-	EXTCLPPU256TO319(MMC3);
-	EXTCLPPU320TO34X(MMC3);
-	EXTCL2006UPDATE(MMC3);
+	EXTCL_CPU_WR_MEM(45);
+	EXTCL_SAVE_MAPPER(45);
+	EXTCL_CPU_EVERY_CYCLE(MMC3);
+	EXTCL_PPU_000_TO_34X(MMC3);
+	EXTCL_PPU_000_TO_255(MMC3);
+	EXTCL_PPU_256_TO_319(MMC3);
+	EXTCL_PPU_320_TO_34X(MMC3);
+	EXTCL_UPDATE_R2006(MMC3);
 	mapper.intStruct[0] = (BYTE *) &m45;
 	mapper.intStructSize[0] = sizeof(m45);
 	mapper.intStruct[1] = (BYTE *) &mmc3;
@@ -193,7 +193,7 @@ void mapInit_45(void) {
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
 }
-void extclCpuWrMem_45(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_45(WORD address, BYTE value) {
 	if (address > 0x7FFF) {
 		switch (address & 0xE001) {
 			case 0x8000:
@@ -203,7 +203,7 @@ void extclCpuWrMem_45(WORD address, BYTE value) {
 				m45_8001()
 				return;
 		}
-		extclCpuWrMem_MMC3(address, value);
+		extcl_cpu_wr_mem_MMC3(address, value);
 		return;
 	}
 
@@ -217,12 +217,12 @@ void extclCpuWrMem_45(WORD address, BYTE value) {
 		}
 	}
 }
-BYTE extclSaveMapper_45(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_45(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, m45.reg);
 	savestateEle(mode, slot, m45.index);
 	savestateEle(mode, slot, m45.prgmap);
 	savestateEle(mode, slot, m45.chrmap);
-	extclSaveMapper_MMC3(mode, slot, fp);
+	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	return (EXIT_OK);
 }

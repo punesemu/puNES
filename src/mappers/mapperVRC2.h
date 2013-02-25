@@ -17,7 +17,7 @@ struct _vrc2 {
 } vrc2;
 
 void mapInit_VRC2(BYTE revision);
-void extclCpuWrMem_VRC2(WORD address, BYTE value);
-BYTE extclSaveMapper_VRC2(BYTE mode, BYTE slot, FILE *fp);
+void extcl_cpu_wr_mem_VRC2(WORD address, BYTE value);
+BYTE extcl_save_mapper_VRC2(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPERVRC2_H_ */

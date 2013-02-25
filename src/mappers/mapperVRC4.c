@@ -36,9 +36,9 @@ void mapInit_VRC4(BYTE revision) {
 	prgRom8kBeforeLast = prgRom8kMax - 1;
 	chrRom1kMax = info.chrRom1kCount - 1;
 
-	EXTCLCPUWRMEM(VRC4);
-	EXTCLSAVEMAPPER(VRC4);
-	EXTCLCPUEVERYCYCLE(VRC4);
+	EXTCL_CPU_WR_MEM(VRC4);
+	EXTCL_SAVE_MAPPER(VRC4);
+	EXTCL_CPU_EVERY_CYCLE(VRC4);
 	mapper.intStruct[0] = (BYTE *) &vrc4;
 	mapper.intStructSize[0] = sizeof(vrc4);
 
@@ -60,7 +60,7 @@ void mapInit_VRC4(BYTE revision) {
 
 	type = revision;
 }
-void extclCpuWrMem_VRC4(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_VRC4(WORD address, BYTE value) {
 	WORD tmp = address & 0xF000;
 
 	if ((tmp == 0x8000) || (tmp == 0xA000)) {
@@ -183,7 +183,7 @@ void extclCpuWrMem_VRC4(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extclSaveMapper_VRC4(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_VRC4(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, vrc4.chrRomBank);
 	savestateEle(mode, slot, vrc4.swapMode);
 	savestateEle(mode, slot, vrc4.irqEnabled);
@@ -195,7 +195,7 @@ BYTE extclSaveMapper_VRC4(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-void extclCPUEveryCycle_VRC4(void) {
+void extcl_cpu_every_cycle_VRC4(void) {
 	if (!vrc4.irqEnabled) {
 		return;
 	}
@@ -223,9 +223,9 @@ void mapInit_VRC4BMC(void) {
 
 	mapInit_VRC4(VRC4E);
 
-	EXTCLCPUWRMEM(VRC4BMC);
+	EXTCL_CPU_WR_MEM(VRC4BMC);
 }
-void extclCpuWrMem_VRC4BMC(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_VRC4BMC(WORD address, BYTE value) {
 	if (address < 0x6000) {
 		return;
 	}
@@ -267,5 +267,5 @@ void extclCpuWrMem_VRC4BMC(WORD address, BYTE value) {
 		return;
 	}
 
-	extclCpuWrMem_VRC4(address, value);
+	extcl_cpu_wr_mem_VRC4(address, value);
 }

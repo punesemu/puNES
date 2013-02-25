@@ -13,6 +13,6 @@
 enum { SUPER700IN1 = 2 };
 
 void mapInit_62(void);
-void extclCpuWrMem_62(WORD address, BYTE value);
+void extcl_cpu_wr_mem_62(WORD address, BYTE value);
 
 #endif /* MAPPER62_H_ */

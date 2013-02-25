@@ -57,14 +57,14 @@ void mapInit_Kasing(void) {
 	prgRom8kBeforeLast = info.prgRom8kCount - 2;
 	chrRom1kMax = info.chrRom1kCount - 1;
 
-	EXTCLCPUWRMEM(Kasing);
-	EXTCLSAVEMAPPER(Kasing);
-	EXTCLCPUEVERYCYCLE(MMC3);
-	EXTCLPPU000TO34X(MMC3);
-	EXTCLPPU000TO255(MMC3);
-	EXTCLPPU256TO319(MMC3);
-	EXTCLPPU320TO34X(MMC3);
-	EXTCL2006UPDATE(MMC3);
+	EXTCL_CPU_WR_MEM(Kasing);
+	EXTCL_SAVE_MAPPER(Kasing);
+	EXTCL_CPU_EVERY_CYCLE(MMC3);
+	EXTCL_PPU_000_TO_34X(MMC3);
+	EXTCL_PPU_000_TO_255(MMC3);
+	EXTCL_PPU_256_TO_319(MMC3);
+	EXTCL_PPU_320_TO_34X(MMC3);
+	EXTCL_UPDATE_R2006(MMC3);
 	mapper.intStruct[0] = (BYTE *) &kasing;
 	mapper.intStructSize[0] = sizeof(kasing);
 	mapper.intStruct[1] = (BYTE *) &mmc3;
@@ -90,7 +90,7 @@ void mapInit_Kasing(void) {
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
 }
-void extclCpuWrMem_Kasing(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Kasing(WORD address, BYTE value) {
 	if (address < 0x6000) {
 		return;
 	}
@@ -183,9 +183,9 @@ void extclCpuWrMem_Kasing(WORD address, BYTE value) {
 		}
 		return;
 	}
-	extclCpuWrMem_MMC3(address, value);
+	extcl_cpu_wr_mem_MMC3(address, value);
 }
-BYTE extclSaveMapper_Kasing(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_Kasing(BYTE mode, BYTE slot, FILE *fp) {
 	if (savestate.version >= 6) {
 		savestateEle(mode, slot, kasing.prgMode);
 	}
@@ -207,7 +207,7 @@ BYTE extclSaveMapper_Kasing(BYTE mode, BYTE slot, FILE *fp) {
 	}
 	savestateEle(mode, slot, kasing.chrHigh);
 	savestateEle(mode, slot, kasing.chrRomBank);
-	extclSaveMapper_MMC3(mode, slot, fp);
+	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	return (EXIT_OK);
 }

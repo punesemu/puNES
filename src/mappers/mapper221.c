@@ -25,8 +25,8 @@ WORD prgRom16kMax;
 void mapInit_221(void) {
 	prgRom16kMax = info.prgRom16kCount - 1;
 
-	EXTCLCPUWRMEM(221);
-	EXTCLSAVEMAPPER(221);
+	EXTCL_CPU_WR_MEM(221);
+	EXTCL_SAVE_MAPPER(221);
 	mapper.intStruct[0] = (BYTE *) &m221;
 	mapper.intStructSize[0] = sizeof(m221);
 
@@ -38,7 +38,7 @@ void mapInit_221(void) {
 		}
 	}
 }
-void extclCpuWrMem_221(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_221(WORD address, BYTE value) {
 	BYTE reg;
 
 	switch (address & 0xF000) {
@@ -71,7 +71,7 @@ void extclCpuWrMem_221(WORD address, BYTE value) {
 	}
 	mapPrgRom8kUpdate();
 }
-BYTE extclSaveMapper_221(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_221(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, m221.reg);
 
 	return (EXIT_OK);

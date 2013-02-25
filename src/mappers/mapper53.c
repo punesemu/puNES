@@ -18,21 +18,21 @@ void mapInit_53(void) {
 	prgRom16kMax = info.prgRom16kCount - 1;
 	prgRom8kMax = info.prgRom8kCount - 1;
 
-	EXTCLCPUWRMEM(53);
-	EXTCLCPURDMEM(53);
-	EXTCLSAVEMAPPER(53);
+	EXTCL_CPU_WR_MEM(53);
+	EXTCL_CPU_RD_MEM(53);
+	EXTCL_SAVE_MAPPER(53);
 	mapper.intStruct[0] = (BYTE *) &m53;
 	mapper.intStructSize[0] = sizeof(m53);
 
 	if (info.reset >= HARD) {
 		memset(&m53, 0x00, sizeof(m53));
 
-		extclCpuWrMem_53(0x6000, 0x00);
+		extcl_cpu_wr_mem_53(0x6000, 0x00);
 	}
 
 	info.mapperExtendWrite = TRUE;
 }
-void extclCpuWrMem_53(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_53(WORD address, BYTE value) {
 	BYTE tmp;
 
 	if (address < 0x6000) {
@@ -67,14 +67,14 @@ void extclCpuWrMem_53(WORD address, BYTE value) {
 
 	mapPrgRom8kUpdate();
 }
-BYTE extclCpuRdMem_53(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_53(WORD address, BYTE openbus, BYTE before) {
 	if ((address < 0x6000) || (address > 0x7FFF)) {
 		return (openbus);
 	}
 
 	return (prg6000[address & 0x1FFF]);
 }
-BYTE extclSaveMapper_53(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_53(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, m53.reg);
 	savestateEle(mode, slot, m53.prg6000);
 

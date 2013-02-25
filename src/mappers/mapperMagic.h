@@ -11,6 +11,6 @@
 #include "common.h"
 
 void mapInit_Magic(void);
-void extclCpuWrMem_Magic(WORD address, BYTE value);
+void extcl_cpu_wr_mem_Magic(WORD address, BYTE value);
 
 #endif /* MAPPERMAGIC_H_ */

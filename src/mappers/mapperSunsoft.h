@@ -64,21 +64,21 @@ struct sunsoftFm {
 
 void mapInit_Sunsoft(BYTE model);
 
-void extclCpuWrMem_Sunsoft_S1(WORD address, BYTE value);
+void extcl_cpu_wr_mem_Sunsoft_S1(WORD address, BYTE value);
 
-void extclCpuWrMem_Sunsoft_S2(WORD address, BYTE value);
+void extcl_cpu_wr_mem_Sunsoft_S2(WORD address, BYTE value);
 
-void extclCpuWrMem_Sunsoft_S3(WORD address, BYTE value);
-BYTE extclSaveMapper_Sunsoft_S3(BYTE mode, BYTE slot, FILE *fp);
-void extclCPUEveryCycle_Sunsoft_S3(void);
+void extcl_cpu_wr_mem_Sunsoft_S3(WORD address, BYTE value);
+BYTE extcl_save_mapper_Sunsoft_S3(BYTE mode, BYTE slot, FILE *fp);
+void extcl_cpu_every_cycle_Sunsoft_S3(void);
 
-void extclCpuWrMem_Sunsoft_S4(WORD address, BYTE value);
-BYTE extclSaveMapper_Sunsoft_S4(BYTE mode, BYTE slot, FILE *fp);
+void extcl_cpu_wr_mem_Sunsoft_S4(WORD address, BYTE value);
+BYTE extcl_save_mapper_Sunsoft_S4(BYTE mode, BYTE slot, FILE *fp);
 
-void extclCpuWrMem_Sunsoft_FM7(WORD address, BYTE value);
-BYTE extclCpuRdMem_Sunsoft_FM7(WORD address, BYTE openbus, BYTE before);
-BYTE extclSaveMapper_Sunsoft_FM7(BYTE mode, BYTE slot, FILE *fp);
-void extclCPUEveryCycle_Sunsoft_FM7(void);
-void extclApuTick_Sunsoft_FM7(void);
+void extcl_cpu_wr_mem_Sunsoft_FM7(WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_Sunsoft_FM7(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_save_mapper_Sunsoft_FM7(BYTE mode, BYTE slot, FILE *fp);
+void extcl_cpu_every_cycle_Sunsoft_FM7(void);
+void extcl_apu_tick_Sunsoft_FM7(void);
 
 #endif /* MAPPERSUNSOFT_H_ */

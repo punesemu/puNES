@@ -19,21 +19,21 @@ void mapInit_51(void) {
 	prgRom16kMax = info.prgRom16kCount - 1;
 	prgRom8kMax = info.prgRom8kCount - 1;
 
-	EXTCLCPUWRMEM(51);
-	EXTCLCPURDMEM(51);
-	EXTCLSAVEMAPPER(51);
+	EXTCL_CPU_WR_MEM(51);
+	EXTCL_CPU_RD_MEM(51);
+	EXTCL_SAVE_MAPPER(51);
 	mapper.intStruct[0] = (BYTE *) &m51;
 	mapper.intStructSize[0] = sizeof(m51);
 
 	if (info.reset >= HARD) {
 		memset(&m51, 0x00, sizeof(m51));
 
-		extclCpuWrMem_51(0x6000, 0x02);
+		extcl_cpu_wr_mem_51(0x6000, 0x02);
 	}
 
 	info.mapperExtendWrite = TRUE;
 }
-void extclCpuWrMem_51(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_51(WORD address, BYTE value) {
 	if (address < 0x6000) {
 		return;
 	}
@@ -78,14 +78,14 @@ void extclCpuWrMem_51(WORD address, BYTE value) {
 		mirroring_V();
 	}
 }
-BYTE extclCpuRdMem_51(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_51(WORD address, BYTE openbus, BYTE before) {
 	if ((address < 0x6000) || (address > 0x7FFF)) {
 		return (openbus);
 	}
 
 	return (prg6000[address & 0x1FFF]);
 }
-BYTE extclSaveMapper_51(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_51(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, m51.bank);
 	savestateEle(mode, slot, m51.mode);
 	savestateEle(mode, slot, m51.prg6000);

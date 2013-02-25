@@ -171,7 +171,7 @@ void apu_tick(SWORD cycles_cpu, BYTE *hwtick) {
 	noise_tick()
 	dmc_tick()
 
-	if (extclApuTick) {
+	if (extcl_apu_tick) {
 		/*
 		 * utilizzato dalle mappers :
 		 * FDS
@@ -180,7 +180,7 @@ void apu_tick(SWORD cycles_cpu, BYTE *hwtick) {
 		 * Sunsoft
 		 * VRC6
 		 */
-		extclApuTick();
+		extcl_apu_tick();
 	}
 
 	if (snd_apu_tick) {

@@ -18,9 +18,9 @@ void mapInit_MMC2and4(void) {
 	prgRom8kMax = info.prgRom8kCount - 1;
 	chrRom4kMax = info.chrRom4kCount - 1;
 
-	EXTCLCPUWRMEM(MMC2and4);
-	EXTCLSAVEMAPPER(MMC2and4);
-	EXTCLRDCHRAFTER(MMC2and4);
+	EXTCL_CPU_WR_MEM(MMC2and4);
+	EXTCL_SAVE_MAPPER(MMC2and4);
+	EXTCL_AFTER_RD_CHR(MMC2and4);
 	mapper.intStruct[0] = (BYTE *) &mmc2and4;
 	mapper.intStructSize[0] = sizeof(mmc2and4);
 
@@ -34,7 +34,7 @@ void mapInit_MMC2and4(void) {
 		}
 	}
 }
-void extclCpuWrMem_MMC2and4(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_MMC2and4(WORD address, BYTE value) {
 	DBWORD tmp;
 
 	address &= 0xF000;
@@ -87,13 +87,13 @@ void extclCpuWrMem_MMC2and4(WORD address, BYTE value) {
 	chr.bank1k[6] = &chr.data[tmp | 0x0800];
 	chr.bank1k[7] = &chr.data[tmp | 0x0C00];
 }
-BYTE extclSaveMapper_MMC2and4(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_MMC2and4(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, mmc2and4.regs);
 	savestateEle(mode, slot, mmc2and4.latch0);
 	savestateEle(mode, slot, mmc2and4.latch1);
 	return (EXIT_OK);
 }
-void extclRdChrAfter_MMC2and4(WORD address) {
+void extcl_after_rd_chr_MMC2and4(WORD address) {
 	WORD bank, latch = address & 0xFFF0;
 	DBWORD value;
 

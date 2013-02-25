@@ -20,8 +20,8 @@ enum {
 static const BYTE volume_wave[4] = { 39, 26, 19, 15 };
 
 void mapInit_FDS(void) {
-	EXTCLCPUEVERYCYCLE(FDS);
-	EXTCLAPUTICK(FDS);
+	EXTCL_CPU_EVERY_CYCLE(FDS);
+	EXTCL_APU_TICK(FDS);
 
 	info.chrRom8kCount = 1;
 	mapper.writeVRAM = TRUE;
@@ -36,7 +36,7 @@ void mapInit_FDS(void) {
 	/* setto il flag di disabilitazione dell'irq */
 	irq.inhibit = cpu.im;
 }
-void extclCPUEveryCycle_FDS(void) {
+void extcl_cpu_every_cycle_FDS(void) {
 	WORD data;
 
 	if (fds.drive.irq_timer_delay && !(--fds.drive.irq_timer_delay)) {
@@ -183,7 +183,7 @@ void extclCPUEveryCycle_FDS(void) {
 		fds.drive.delay = 149;
 	}
 }
-void extclApuTick_FDS(void) {
+void extcl_apu_tick_FDS(void) {
 	SWORD freq;
 
 	/* volume unit */

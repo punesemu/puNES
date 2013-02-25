@@ -9,7 +9,7 @@
 #define APU_H_
 
 #include "common.h"
-#include "externalcalls.h"
+#include "external_calls.h"
 
 enum dmc_types_of_dma { DMCNORMAL, DMCCPUWRITE, DMCR4014, DMCNNLDMA };
 enum apu_channels { APU_S1, APU_S2, APU_TR, APU_NS, APU_DMC };
@@ -29,12 +29,12 @@ enum apu_channels { APU_S1, APU_S2, APU_TR, APU_NS, APU_DMC };
 	length_run(S2)\
 	length_run(TR)\
 	length_run(NS)\
-	if (extclLengthClock) {\
+	if (extcl_length_clock) {\
 		/*\
 		 * utilizzato dalle mappers :\
 		 * MMC5\
 		 */\
-		extclLengthClock();\
+		extcl_length_clock();\
 	}
 /* envelope */
 #define envelope_run(channel)\
@@ -61,12 +61,12 @@ enum apu_channels { APU_S1, APU_S2, APU_TR, APU_NS, APU_DMC };
 	envelope_run(S1)\
 	envelope_run(S2)\
 	envelope_run(NS)\
-	if (extclEnvelopeClock) {\
+	if (extcl_envelope_clock) {\
 		/*\
 		 * utilizzato dalle mappers :\
 		 * MMC5\
 		 */\
-		extclEnvelopeClock();\
+		extcl_envelope_clock();\
 	}
 /* sweep */
 #define sweep_run(channel, negative_adjust)\

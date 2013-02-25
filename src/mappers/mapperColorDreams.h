@@ -16,6 +16,6 @@ enum {
 };
 
 void mapInit_ColorDreams(void);
-void extclCpuWrMem_ColorDreams(WORD address, BYTE value);
+void extcl_cpu_wr_mem_ColorDreams(WORD address, BYTE value);
 
 #endif /* MAPPERCOLORDREAMS_H_ */

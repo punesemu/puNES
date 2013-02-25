@@ -65,11 +65,11 @@ void mapInit_Namco(BYTE model) {
 
 	switch (model) {
 		case N163:
-			EXTCLCPUWRMEM(Namco_163);
-			EXTCLCPURDMEM(Namco_163);
-			EXTCLSAVEMAPPER(Namco_163);
-			EXTCLCPUEVERYCYCLE(Namco_163);
-			EXTCLAPUTICK(Namco_163);
+			EXTCL_CPU_WR_MEM(Namco_163);
+			EXTCL_CPU_RD_MEM(Namco_163);
+			EXTCL_SAVE_MAPPER(Namco_163);
+			EXTCL_CPU_EVERY_CYCLE(Namco_163);
+			EXTCL_APU_TICK(Namco_163);
 			mapper.intStruct[0] = (BYTE *) &n163;
 			mapper.intStructSize[0] = sizeof(n163);
 
@@ -109,8 +109,8 @@ void mapInit_Namco(BYTE model) {
 		case N3425:
 		case N3433:
 		case N3453:
-			EXTCLCPUWRMEM(Namco_3425);
-			EXTCLSAVEMAPPER(Namco_3425);
+			EXTCL_CPU_WR_MEM(Namco_3425);
+			EXTCL_SAVE_MAPPER(Namco_3425);
 			mapper.intStruct[0] = (BYTE *) &n3425;
 			mapper.intStructSize[0] = sizeof(n3425);
 
@@ -123,8 +123,8 @@ void mapInit_Namco(BYTE model) {
 			}
 			break;
 		case N3446:
-			EXTCLCPUWRMEM(Namco_3446);
-			EXTCLSAVEMAPPER(Namco_3446);
+			EXTCL_CPU_WR_MEM(Namco_3446);
+			EXTCL_SAVE_MAPPER(Namco_3446);
 			mapper.intStruct[0] = (BYTE *) &n3446;
 			mapper.intStructSize[0] = sizeof(n3446);
 
@@ -139,7 +139,7 @@ void mapInit_Namco(BYTE model) {
 	type = model;
 }
 
-void extclCpuWrMem_Namco_163(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Namco_163(WORD address, BYTE value) {
 	if (address < 0x4800) {
 		return;
 	}
@@ -275,7 +275,7 @@ void extclCpuWrMem_Namco_163(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extclCpuRdMem_Namco_163(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_Namco_163(WORD address, BYTE openbus, BYTE before) {
 	if ((address < 0x4800) || (address >= 0x6000)) {
 		return (openbus);
 	}
@@ -293,7 +293,7 @@ BYTE extclCpuRdMem_Namco_163(WORD address, BYTE openbus, BYTE before) {
 			return (openbus);
 	}
 }
-BYTE extclSaveMapper_Namco_163(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_Namco_163(BYTE mode, BYTE slot, FILE *fp) {
 	BYTE i;
 
 	for (i = 0; i < LENGTH(n163.nmtBank); i++) {
@@ -325,7 +325,7 @@ BYTE extclSaveMapper_Namco_163(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-void extclCPUEveryCycle_Namco_163(void) {
+void extcl_cpu_every_cycle_Namco_163(void) {
 	if (n163.irqDelay) {
 		n163.irqDelay = FALSE;
 		irq.high |= EXTIRQ;
@@ -335,7 +335,7 @@ void extclCPUEveryCycle_Namco_163(void) {
 		n163.irqDelay = TRUE;
 	}
 }
-void extclApuTick_Namco_163(void) {
+void extcl_apu_tick_Namco_163(void) {
 	BYTE i;
 
 	for (i = n163.sndChStart; i < 8; i++) {
@@ -352,7 +352,7 @@ void extclApuTick_Namco_163(void) {
 	}
 }
 
-void extclCpuWrMem_Namco_3425(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Namco_3425(WORD address, BYTE value) {
 	switch (address & 0x8001) {
 		case 0x8000:
 			n3425.bankToUpdate = value & 0x7;
@@ -403,13 +403,13 @@ void extclCpuWrMem_Namco_3425(WORD address, BYTE value) {
 		}
 	}
 }
-BYTE extclSaveMapper_Namco_3425(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_Namco_3425(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, n3425.bankToUpdate);
 
 	return (EXIT_OK);
 }
 
-void extclCpuWrMem_Namco_3446(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Namco_3446(WORD address, BYTE value) {
 	switch (address & 0x8001) {
 		case 0x8000:
 			n3446.bankToUpdate = value & 0x7;
@@ -445,7 +445,7 @@ void extclCpuWrMem_Namco_3446(WORD address, BYTE value) {
 		}
 	}
 }
-BYTE extclSaveMapper_Namco_3446(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_Namco_3446(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, n3446.bankToUpdate);
 	savestateEle(mode, slot, n3446.prgRomMode);
 

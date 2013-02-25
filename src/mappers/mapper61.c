@@ -14,13 +14,13 @@ void mapInit_61(void) {
 	prgRom32kMax = (info.prgRom16kCount >> 1) - 1;
 	prgRom16kMax = info.prgRom16kCount - 1;
 
-	EXTCLCPUWRMEM(61);
+	EXTCL_CPU_WR_MEM(61);
 
 	if (info.reset >= HARD) {
 		mapPrgRom8k(4, 0, 0);
 	}
 }
-void extclCpuWrMem_61(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_61(WORD address, BYTE value) {
 	if (address & 0x0080) {
 		mirroring_H();
 	} else  {

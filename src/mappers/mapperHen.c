@@ -17,10 +17,10 @@ void mapInit_Hen(BYTE model) {
 	switch (model) {
 		case HEN177:
 		case HENFANKONG:
-			EXTCLCPUWRMEM(Hen_177);
+			EXTCL_CPU_WR_MEM(Hen_177);
 			break;
 		case HENXJZB:
-			EXTCLCPUWRMEM(Hen_xjzb);
+			EXTCL_CPU_WR_MEM(Hen_xjzb);
 			info.mapperExtendWrite = TRUE;
 			break;
 	}
@@ -32,7 +32,7 @@ void mapInit_Hen(BYTE model) {
 	type = model;
 }
 
-void extclCpuWrMem_Hen_177(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Hen_177(WORD address, BYTE value) {
 	if (type != HENFANKONG) {
 		if (value & 0x20) {
 			mirroring_H();
@@ -46,7 +46,7 @@ void extclCpuWrMem_Hen_177(WORD address, BYTE value) {
 	mapPrgRom8kUpdate();
 }
 
-void extclCpuWrMem_Hen_xjzb(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Hen_xjzb(WORD address, BYTE value) {
 	if ((address < 0x5000) || (address > 0x5FFF)) {
 		return;
 	}

@@ -15,8 +15,8 @@ struct _whirlwind {
 } whirlwind;
 
 void mapInit_Whirlwind(void);
-void extclCpuWrMem_Whirlwind(WORD address, BYTE value);
-BYTE extclCpuRdMem_Whirlwind(WORD address, BYTE openbus, BYTE before);
-BYTE extclSaveMapper_Whirlwind(BYTE mode, BYTE slot, FILE *fp);
+void extcl_cpu_wr_mem_Whirlwind(WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_Whirlwind(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_save_mapper_Whirlwind(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPERWHIRLWIND_H_ */

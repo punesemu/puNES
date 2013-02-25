@@ -65,10 +65,10 @@ void mapInit_VRC6(BYTE revision) {
 	prgRom8kMax = info.prgRom8kCount - 1;
 	chrRom1kMax = info.chrRom1kCount - 1;
 
-	EXTCLCPUWRMEM(VRC6);
-	EXTCLSAVEMAPPER(VRC6);
-	EXTCLCPUEVERYCYCLE(VRC6);
-	EXTCLAPUTICK(VRC6);
+	EXTCL_CPU_WR_MEM(VRC6);
+	EXTCL_SAVE_MAPPER(VRC6);
+	EXTCL_CPU_EVERY_CYCLE(VRC6);
+	EXTCL_APU_TICK(VRC6);
 	mapper.intStruct[0] = (BYTE *) &vrc6;
 	mapper.intStructSize[0] = sizeof(vrc6);
 
@@ -92,7 +92,7 @@ void mapInit_VRC6(BYTE revision) {
 
 	type = revision;
 }
-void extclCpuWrMem_VRC6(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_VRC6(WORD address, BYTE value) {
 	address = (address & 0xF000) | tableVRC6[type][(address & 0x0003)];
 
 	switch (address) {
@@ -216,7 +216,7 @@ void extclCpuWrMem_VRC6(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extclSaveMapper_VRC6(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_VRC6(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, vrc6.enabled);
 	savestateEle(mode, slot, vrc6.reload);
 	savestateEle(mode, slot, vrc6.mode);
@@ -238,7 +238,7 @@ BYTE extclSaveMapper_VRC6(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-void extclCPUEveryCycle_VRC6(void) {
+void extcl_cpu_every_cycle_VRC6(void) {
 	if (vrc6.delay && !(--vrc6.delay)) {
 		irq.high |= EXTIRQ;
 	}
@@ -263,7 +263,7 @@ void extclCPUEveryCycle_VRC6(void) {
 	vrc6.count = vrc6.reload;
 	vrc6.delay = delay;
 }
-void extclApuTick_VRC6(void) {
+void extcl_apu_tick_VRC6(void) {
 	vcr6SquareTick(S3)
 	vcr6SquareTick(S4)
 

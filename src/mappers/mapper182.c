@@ -20,14 +20,14 @@ void mapInit_182(void) {
 	chrRom2kMax = (info.chrRom1kCount >> 1) - 1;
 	chrRom1kMax = info.chrRom1kCount - 1;
 
-	EXTCLCPUWRMEM(182);
-	EXTCLSAVEMAPPER(MMC3);
-	EXTCLCPUEVERYCYCLE(MMC3);
-	EXTCLPPU000TO34X(MMC3);
-	EXTCLPPU000TO255(MMC3);
-	EXTCLPPU256TO319(MMC3);
-	EXTCLPPU320TO34X(MMC3);
-	EXTCL2006UPDATE(MMC3);
+	EXTCL_CPU_WR_MEM(182);
+	EXTCL_SAVE_MAPPER(MMC3);
+	EXTCL_CPU_EVERY_CYCLE(MMC3);
+	EXTCL_PPU_000_TO_34X(MMC3);
+	EXTCL_PPU_000_TO_255(MMC3);
+	EXTCL_PPU_256_TO_319(MMC3);
+	EXTCL_PPU_320_TO_34X(MMC3);
+	EXTCL_UPDATE_R2006(MMC3);
 	mapper.intStruct[0] = (BYTE *) &mmc3;
 	mapper.intStructSize[0] = sizeof(mmc3);
 
@@ -39,13 +39,13 @@ void mapInit_182(void) {
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
 }
-void extclCpuWrMem_182(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_182(WORD address, BYTE value) {
 	switch (address & 0xE001) {
 		case 0x8001:
-			extclCpuWrMem_MMC3(0xA000, value);
+			extcl_cpu_wr_mem_MMC3(0xA000, value);
 			return;
 		case 0xA000:
-			extclCpuWrMem_MMC3(0x8000, value);
+			extcl_cpu_wr_mem_MMC3(0x8000, value);
 			return;
 		case 0xC000: {
 			switch (mmc3.bankToUpdate) {
@@ -105,7 +105,7 @@ void extclCpuWrMem_182(WORD address, BYTE value) {
 			return;
 		case 0xE000:
 		case 0xE001:
-			extclCpuWrMem_MMC3(address, value);
+			extcl_cpu_wr_mem_MMC3(address, value);
 			return;
 	}
 }

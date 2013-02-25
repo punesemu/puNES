@@ -18,8 +18,8 @@ struct _rexDbz {
 } rexDbz;
 
 void mapInit_Rex(BYTE model);
-void extclCpuWrMem_Rex_dbz(WORD address, BYTE value);
-BYTE extclCpuRdMem_Rex_dbz(WORD address, BYTE openbus, BYTE before);
-BYTE extclSaveMapper_Rex_dbz(BYTE mode, BYTE slot, FILE *fp);
+void extcl_cpu_wr_mem_Rex_dbz(WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_Rex_dbz(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_save_mapper_Rex_dbz(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPERREX_H_ */

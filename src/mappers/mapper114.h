@@ -17,7 +17,7 @@ struct _m114 {
 } m114;
 
 void mapInit_114(void);
-void extclCpuWrMem_114(WORD address, BYTE value);
-BYTE extclSaveMapper_114(BYTE mode, BYTE slot, FILE *fp);
+void extcl_cpu_wr_mem_114(WORD address, BYTE value);
+BYTE extcl_save_mapper_114(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPER114_H_ */

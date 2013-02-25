@@ -40,15 +40,15 @@ void mapInit_121(void) {
 	chrRom1kMax = info.chrRom1kCount - 1;
 	prgRom8kBeforeLast = info.prgRom8kCount - 2;
 
-	EXTCLCPUWRMEM(121);
-	EXTCLCPURDMEM(121);
-	EXTCLSAVEMAPPER(121);
-	EXTCLCPUEVERYCYCLE(MMC3);
-	EXTCLPPU000TO34X(MMC3);
-	EXTCLPPU000TO255(MMC3);
-	EXTCLPPU256TO319(MMC3);
-	EXTCLPPU320TO34X(MMC3);
-	EXTCL2006UPDATE(MMC3);
+	EXTCL_CPU_WR_MEM(121);
+	EXTCL_CPU_RD_MEM(121);
+	EXTCL_SAVE_MAPPER(121);
+	EXTCL_CPU_EVERY_CYCLE(MMC3);
+	EXTCL_PPU_000_TO_34X(MMC3);
+	EXTCL_PPU_000_TO_255(MMC3);
+	EXTCL_PPU_256_TO_319(MMC3);
+	EXTCL_PPU_320_TO_34X(MMC3);
+	EXTCL_UPDATE_R2006(MMC3);
 	mapper.intStruct[0] = (BYTE *) &m121;
 	mapper.intStructSize[0] = sizeof(m121);
 	mapper.intStruct[1] = (BYTE *) &mmc3;
@@ -69,11 +69,11 @@ void mapInit_121(void) {
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
 }
-void extclCpuWrMem_121(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_121(WORD address, BYTE value) {
 	if (address >= 0x8000) {
 		const BYTE prgRomCfg = (value & 0x40) >> 5;
 
-		extclCpuWrMem_MMC3(address, value);
+		extcl_cpu_wr_mem_MMC3(address, value);
 
 		switch (address & 0xE003) {
 			case 0x8000: {
@@ -139,14 +139,14 @@ void extclCpuWrMem_121(WORD address, BYTE value) {
 	m121.reg[2] = vlu121[value & 0x03];
 	return;
 }
-BYTE extclCpuRdMem_121(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_121(WORD address, BYTE openbus, BYTE before) {
 	if ((address < 0x5000) || (address > 0x5FFF)) {
 		return (openbus);
 	}
 
 	return (m121.reg[2]);
 }
-BYTE extclSaveMapper_121(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_121(BYTE mode, BYTE slot, FILE *fp) {
 	if (savestate.version < 6) {
 		if (mode == SSREAD) {
 			BYTE old_prgRomBank[2], i;
@@ -163,7 +163,7 @@ BYTE extclSaveMapper_121(BYTE mode, BYTE slot, FILE *fp) {
 		savestateEle(mode, slot, m121.bck);
 	}
 	savestateEle(mode, slot, m121.reg);
-	extclSaveMapper_MMC3(mode, slot, fp);
+	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	return (EXIT_OK);
 }

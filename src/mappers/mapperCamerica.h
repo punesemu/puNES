@@ -18,9 +18,9 @@ enum {
 };
 
 void mapInit_Camerica(void);
-void extclCpuWrMem_Camerica_BF9093(WORD address, BYTE value);
-void extclCpuWrMem_Camerica_BF9096(WORD address, BYTE value);
-void extclCpuWrMem_Camerica_BF9097(WORD address, BYTE value);
-void extclCpuWrMem_Camerica_GoldenFive(WORD address, BYTE value);
+void extcl_cpu_wr_mem_Camerica_BF9093(WORD address, BYTE value);
+void extcl_cpu_wr_mem_Camerica_BF9096(WORD address, BYTE value);
+void extcl_cpu_wr_mem_Camerica_BF9097(WORD address, BYTE value);
+void extcl_cpu_wr_mem_Camerica_GoldenFive(WORD address, BYTE value);
 
 #endif /* MAPPERCAMERICA_H_ */

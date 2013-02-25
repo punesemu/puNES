@@ -32,7 +32,7 @@ struct _mmc1 {
 } mmc1;
 
 void mapInit_MMC1(void);
-void extclCpuWrMem_MMC1(WORD address, BYTE value);
-BYTE extclSaveMapper_MMC1(BYTE mode, BYTE slot, FILE *fp);
+void extcl_cpu_wr_mem_MMC1(WORD address, BYTE value);
+BYTE extcl_save_mapper_MMC1(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPERMMC1_H_ */

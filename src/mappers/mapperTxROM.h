@@ -24,11 +24,11 @@ struct _txrom {
 
 void mapInit_TxROM(BYTE model);
 
-void extclCpuWrMem_TKSROM(WORD address, BYTE value);
+void extcl_cpu_wr_mem_TKSROM(WORD address, BYTE value);
 
-void extclCpuWrMem_TQROM(WORD address, BYTE value);
-void extclWrChr_TQROM(WORD address, BYTE value);
+void extcl_cpu_wr_mem_TQROM(WORD address, BYTE value);
+void extcl_wr_chr_TQROM(WORD address, BYTE value);
 
-BYTE extclSaveMapper_TxROM(BYTE mode, BYTE slot, FILE *fp);
+BYTE extcl_save_mapper_TxROM(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPERTXROM_H_ */

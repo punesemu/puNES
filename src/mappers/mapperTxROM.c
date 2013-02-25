@@ -65,7 +65,7 @@ void mapInit_TxROM(BYTE model) {
 	switch (model) {
 		case TLSROM:
 		case TKSROM:
-			EXTCLCPUWRMEM(TKSROM);
+			EXTCL_CPU_WR_MEM(TKSROM);
 
 			irqA12_delay = 1;
 
@@ -75,8 +75,8 @@ void mapInit_TxROM(BYTE model) {
 			}
 			break;
 		case TQROM:
-			EXTCLCPUWRMEM(TQROM);
-			EXTCLWRCHR(TQROM);
+			EXTCL_CPU_WR_MEM(TQROM);
+			EXTCL_WR_CHR(TQROM);
 
 			mapper.writeVRAM = FALSE;
 
@@ -85,13 +85,13 @@ void mapInit_TxROM(BYTE model) {
 			break;
 	}
 
-	EXTCLSAVEMAPPER(TxROM);
-	EXTCLCPUEVERYCYCLE(MMC3);
-	EXTCLPPU000TO34X(MMC3);
-	EXTCLPPU000TO255(MMC3);
-	EXTCLPPU256TO319(MMC3);
-	EXTCLPPU320TO34X(MMC3);
-	EXTCL2006UPDATE(MMC3);
+	EXTCL_SAVE_MAPPER(TxROM);
+	EXTCL_CPU_EVERY_CYCLE(MMC3);
+	EXTCL_PPU_000_TO_34X(MMC3);
+	EXTCL_PPU_000_TO_255(MMC3);
+	EXTCL_PPU_256_TO_319(MMC3);
+	EXTCL_PPU_320_TO_34X(MMC3);
+	EXTCL_UPDATE_R2006(MMC3);
 	mapper.intStruct[0] = (BYTE *) &txrom;
 	mapper.intStructSize[0] = sizeof(txrom);
 	mapper.intStruct[1] = (BYTE *) &mmc3;
@@ -111,7 +111,7 @@ void mapInit_TxROM(BYTE model) {
 	type = model;
 }
 
-void extclCpuWrMem_TKSROM(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_TKSROM(WORD address, BYTE value) {
 	switch (address & 0xE001) {
 		case 0x8001: {
 			switch (mmc3.bankToUpdate) {
@@ -138,10 +138,10 @@ void extclCpuWrMem_TKSROM(WORD address, BYTE value) {
 		case 0xA000:
 			return;
 	}
-	extclCpuWrMem_MMC3(address, value);
+	extcl_cpu_wr_mem_MMC3(address, value);
 }
 
-void extclCpuWrMem_TQROM(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_TQROM(WORD address, BYTE value) {
 	const WORD adr = address & 0xE001;
 	if (adr == 0x8000) {
 		if (mmc3.chrRomCfg != ((value & 0x80) >> 5)) {
@@ -172,9 +172,9 @@ void extclCpuWrMem_TQROM(WORD address, BYTE value) {
 				break;
 		}
 	}
-	extclCpuWrMem_MMC3(address, value);
+	extcl_cpu_wr_mem_MMC3(address, value);
 }
-void extclWrChr_TQROM(WORD address, BYTE value) {
+void extcl_wr_chr_TQROM(WORD address, BYTE value) {
 	const BYTE slot = address >> 10;
 
 	if (txrom.chr[slot]) {
@@ -182,7 +182,7 @@ void extclWrChr_TQROM(WORD address, BYTE value) {
 	}
 }
 
-BYTE extclSaveMapper_TxROM(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_TxROM(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, txrom.delay);
 	if (type == TQROM) {
 		savestateEle(mode, slot, txrom.chr);
@@ -196,7 +196,7 @@ BYTE extclSaveMapper_TxROM(BYTE mode, BYTE slot, FILE *fp) {
 		}
 		savestateEle(mode, slot, txrom.chrRam);
 	}
-	extclSaveMapper_MMC3(mode, slot, fp);
+	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	return (EXIT_OK);
 }

@@ -15,11 +15,11 @@ void mapInit_74x161x161x32(BYTE model) {
 	prgRom16kMax = info.prgRom16kCount - 1;
 	chrRom8kMax = info.chrRom8kCount - 1;
 
-	EXTCLCPUWRMEM(74x161x161x32);
+	EXTCL_CPU_WR_MEM(74x161x161x32);
 
 	type = model;
 }
-void extclCpuWrMem_74x161x161x32(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_74x161x161x32(WORD address, BYTE value) {
 	/* bus conflict */
 	const BYTE save = value &= prgRomRd(address);
 	DBWORD bank;

@@ -18,8 +18,8 @@ enum {
 
 void mapInit_Hen(BYTE model);
 
-void extclCpuWrMem_Hen_177(WORD address, BYTE value);
+void extcl_cpu_wr_mem_Hen_177(WORD address, BYTE value);
 
-void extclCpuWrMem_Hen_xjzb(WORD address, BYTE value);
+void extcl_cpu_wr_mem_Hen_xjzb(WORD address, BYTE value);
 
 #endif /* MAPPERHEN_H_ */

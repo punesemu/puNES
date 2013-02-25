@@ -40,10 +40,10 @@ void mapInit_Sachen(BYTE model) {
 
 	switch (model) {
 		case SA0036:
-			EXTCLCPUWRMEM(Sachen_sa0036);
+			EXTCL_CPU_WR_MEM(Sachen_sa0036);
 			break;
 		case SA0037:
-			EXTCLCPUWRMEM(Sachen_sa0037);
+			EXTCL_CPU_WR_MEM(Sachen_sa0037);
 
 			if (info.reset >= HARD) {
 				if (prgRom32kMax != 0xFFFF) {
@@ -55,8 +55,8 @@ void mapInit_Sachen(BYTE model) {
 		case SA8259B:
 		case SA8259C:
 		case SA8259D: {
-			EXTCLCPUWRMEM(Sachen_sa8259x);
-			EXTCLSAVEMAPPER(Sachen_sa8259x);
+			EXTCL_CPU_WR_MEM(Sachen_sa8259x);
+			EXTCL_SAVE_MAPPER(Sachen_sa8259x);
 			mapper.intStruct[0] = (BYTE *) &sa8259;
 			mapper.intStructSize[0] = sizeof(sa8259);
 
@@ -103,11 +103,11 @@ void mapInit_Sachen(BYTE model) {
 			break;
 		}
 		case TCA01:
-			EXTCLCPUWRMEM(Sachen_tca01);
-			EXTCLCPURDMEM(Sachen_tca01);
+			EXTCL_CPU_WR_MEM(Sachen_tca01);
+			EXTCL_CPU_RD_MEM(Sachen_tca01);
 			break;
 		case TCU01:
-			EXTCLCPUWRMEM(Sachen_tcu01);
+			EXTCL_CPU_WR_MEM(Sachen_tcu01);
 
 			info.mapperExtendWrite = TRUE;
 
@@ -118,9 +118,9 @@ void mapInit_Sachen(BYTE model) {
 			}
 			break;
 		case TCU02:
-			EXTCLCPUWRMEM(Sachen_tcu02);
-			EXTCLCPURDMEM(Sachen_tcu02);
-			EXTCLSAVEMAPPER(Sachen_tcu02);
+			EXTCL_CPU_WR_MEM(Sachen_tcu02);
+			EXTCL_CPU_RD_MEM(Sachen_tcu02);
+			EXTCL_SAVE_MAPPER(Sachen_tcu02);
 			mapper.intStruct[0] = (BYTE *) &tcu02;
 			mapper.intStructSize[0] = sizeof(tcu02);
 
@@ -131,12 +131,12 @@ void mapInit_Sachen(BYTE model) {
 			}
 			break;
 		case SA72007:
-			EXTCLCPUWRMEM(Sachen_sa72007);
+			EXTCL_CPU_WR_MEM(Sachen_sa72007);
 
 			info.mapperExtendWrite = TRUE;
 			break;
 		case SA72008:
-			EXTCLCPUWRMEM(Sachen_sa72008);
+			EXTCL_CPU_WR_MEM(Sachen_sa72008);
 
 			info.mapperExtendWrite = TRUE;
 			break;
@@ -158,11 +158,11 @@ void mapInit_Sachen(BYTE model) {
 			}
 
 			if (model == SA74374A) {
-				EXTCLCPUWRMEM(Sachen_sa74374a);
+				EXTCL_CPU_WR_MEM(Sachen_sa74374a);
 			} else {
-				EXTCLCPUWRMEM(Sachen_sa74374b);
+				EXTCL_CPU_WR_MEM(Sachen_sa74374b);
 			}
-			EXTCLSAVEMAPPER(Sachen_sa74374x);
+			EXTCL_SAVE_MAPPER(Sachen_sa74374x);
 			mapper.intStruct[0] = (BYTE *) &sa74374x;
 			mapper.intStructSize[0] = sizeof(sa74374x);
 
@@ -179,7 +179,7 @@ void mapInit_Sachen(BYTE model) {
 	type = model;
 }
 
-void extclCpuWrMem_Sachen_sa0036(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Sachen_sa0036(WORD address, BYTE value) {
 	DBWORD bank;
 
 	value >>= 7;
@@ -195,7 +195,7 @@ void extclCpuWrMem_Sachen_sa0036(WORD address, BYTE value) {
 	chr.bank1k[7] = &chr.data[bank | 0x1C00];
 }
 
-void extclCpuWrMem_Sachen_sa0037(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Sachen_sa0037(WORD address, BYTE value) {
 	/* bus conflict */
 	const BYTE save = value &= prgRomRd(address);
 	DBWORD bank;
@@ -220,7 +220,7 @@ void extclCpuWrMem_Sachen_sa0037(WORD address, BYTE value) {
 	chr.bank1k[7] = &chr.data[bank | 0x1C00];
 }
 
-void extclCpuWrMem_Sachen_sa8259x(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Sachen_sa8259x(WORD address, BYTE value) {
 	if ((address < 0x4100) || (address > 0x7FFF)) {
 		return;
 	}
@@ -324,17 +324,17 @@ void extclCpuWrMem_Sachen_sa8259x(WORD address, BYTE value) {
 		}
 	}
 }
-BYTE extclSaveMapper_Sachen_sa8259x(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_Sachen_sa8259x(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, sa8259.ctrl);
 	savestateEle(mode, slot, sa8259.reg);
 
 	return (EXIT_OK);
 }
 
-void extclCpuWrMem_Sachen_tca01(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Sachen_tca01(WORD address, BYTE value) {
 	return;
 }
-BYTE extclCpuRdMem_Sachen_tca01(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_Sachen_tca01(WORD address, BYTE openbus, BYTE before) {
 	if ((address < 0x4100) || (address > 0x5FFF)) {
 		return (openbus);
 	}
@@ -346,7 +346,7 @@ BYTE extclCpuRdMem_Sachen_tca01(WORD address, BYTE openbus, BYTE before) {
 	return (openbus);
 }
 
-void extclCpuWrMem_Sachen_tcu01(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Sachen_tcu01(WORD address, BYTE value) {
 	if (address < 0x4100) {
 		return;
 	}
@@ -377,7 +377,7 @@ void extclCpuWrMem_Sachen_tcu01(WORD address, BYTE value) {
 	}
 }
 
-void extclCpuWrMem_Sachen_tcu02(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Sachen_tcu02(WORD address, BYTE value) {
 	if ((address < 0x4100) || (address > 0x7FFF)) {
 		return;
 	}
@@ -399,7 +399,7 @@ void extclCpuWrMem_Sachen_tcu02(WORD address, BYTE value) {
 		chr.bank1k[7] = &chr.data[bank | 0x1C00];
 	}
 }
-BYTE extclCpuRdMem_Sachen_tcu02(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_Sachen_tcu02(WORD address, BYTE openbus, BYTE before) {
 	if ((address < 0x4100) || (address > 0x5FFF)) {
 		return (openbus);
 	}
@@ -410,13 +410,13 @@ BYTE extclCpuRdMem_Sachen_tcu02(WORD address, BYTE openbus, BYTE before) {
 
 	return (openbus);
 }
-BYTE extclSaveMapper_Sachen_tcu02(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_Sachen_tcu02(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, tcu02.reg);
 
 	return (EXIT_OK);
 }
 
-void extclCpuWrMem_Sachen_sa72007(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Sachen_sa72007(WORD address, BYTE value) {
 	if ((address < 0x4100) || (address > 0x5FFF)) {
 		return;
 	}
@@ -438,7 +438,7 @@ void extclCpuWrMem_Sachen_sa72007(WORD address, BYTE value) {
 	}
 }
 
-void extclCpuWrMem_Sachen_sa72008(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Sachen_sa72008(WORD address, BYTE value) {
 	if ((address < 0x4100) || (address > 0x5FFF)) {
 		return;
 	}
@@ -468,7 +468,7 @@ void extclCpuWrMem_Sachen_sa72008(WORD address, BYTE value) {
 	}
 }
 
-void extclCpuWrMem_Sachen_sa74374a(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Sachen_sa74374a(WORD address, BYTE value) {
 	if ((address < 0x4100) || (address > 0x5FFF)) {
 		return;
 	}
@@ -522,7 +522,7 @@ void extclCpuWrMem_Sachen_sa74374a(WORD address, BYTE value) {
 		}
 	}
 }
-void extclCpuWrMem_Sachen_sa74374b(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Sachen_sa74374b(WORD address, BYTE value) {
 	if ((address < 0x4100) || (address > 0x5FFF)) {
 		return;
 	}
@@ -577,7 +577,7 @@ void extclCpuWrMem_Sachen_sa74374b(WORD address, BYTE value) {
 		}
 	}
 }
-BYTE extclSaveMapper_Sachen_sa74374x(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_Sachen_sa74374x(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, sa74374x.reg);
 	savestateEle(mode, slot, sa74374x.chrRom8kBank);
 

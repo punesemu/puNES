@@ -19,15 +19,15 @@ void mapInit_222(void) {
 	prgRom8kMax = info.prgRom8kCount - 1;
 	chrRom1kMax = info.chrRom1kCount - 1;
 
-	EXTCLCPUWRMEM(222);
-	EXTCLSAVEMAPPER(222);
-	EXTCLCPUEVERYCYCLE(222);
-	EXTCLPPU000TO34X(MMC3);
-	EXTCLPPU000TO255(MMC3);
-	EXTCLPPU256TO319(MMC3);
-	EXTCLPPU320TO34X(MMC3);
-	EXTCL2006UPDATE(MMC3);
-	EXTCLIRQA12CLOCK(222);
+	EXTCL_CPU_WR_MEM(222);
+	EXTCL_SAVE_MAPPER(222);
+	EXTCL_CPU_EVERY_CYCLE(222);
+	EXTCL_PPU_000_TO_34X(MMC3);
+	EXTCL_PPU_000_TO_255(MMC3);
+	EXTCL_PPU_256_TO_319(MMC3);
+	EXTCL_PPU_320_TO_34X(MMC3);
+	EXTCL_UPDATE_R2006(MMC3);
+	EXTCL_IRQ_A12_CLOCK(222);
 
 	mapper.intStruct[0] = (BYTE *) &m222;
 	mapper.intStructSize[0] = sizeof(m222);
@@ -37,7 +37,7 @@ void mapInit_222(void) {
 
 	irqA12.present = TRUE;
 }
-void extclCpuWrMem_222(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_222(WORD address, BYTE value) {
 	switch (address & 0xF003) {
 		case 0x8000:
 			controlBank(prgRom8kMax)
@@ -95,13 +95,13 @@ void extclCpuWrMem_222(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extclSaveMapper_222(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_222(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, m222.count);
 	savestateEle(mode, slot, m222.delay);
 
 	return (EXIT_OK);
 }
-void extclIrqA12Clock_222(void) {
+void extcl_irq_A12_clock_222(void) {
 	if (!m222.count || (++m222.count < 240)) {
 		return;
 	}
@@ -109,7 +109,7 @@ void extclIrqA12Clock_222(void) {
 	m222.count = 0;
 	m222.delay = 16;
 }
-void extclCPUEveryCycle_222(void) {
+void extcl_cpu_every_cycle_222(void) {
 	if (m222.delay && !(--m222.delay)) {
 		irq.high |= EXTIRQ;
 	}

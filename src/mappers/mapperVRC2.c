@@ -29,8 +29,8 @@ void mapInit_VRC2(BYTE revision) {
 	prgRom8kMax = info.prgRom8kCount - 1;
 	chrRom1kMax = info.chrRom1kCount - 1;
 
-	EXTCLCPUWRMEM(VRC2);
-	EXTCLSAVEMAPPER(VRC2);
+	EXTCL_CPU_WR_MEM(VRC2);
+	EXTCL_SAVE_MAPPER(VRC2);
 	mapper.intStruct[0] = (BYTE *) &vrc2;
 	mapper.intStructSize[0] = sizeof(vrc2);
 
@@ -45,7 +45,7 @@ void mapInit_VRC2(BYTE revision) {
 
 	type = revision;
 }
-void extclCpuWrMem_VRC2(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_VRC2(WORD address, BYTE value) {
 	if (address < 0xB000) {
 		address &= 0xF000;
 	} else {
@@ -132,7 +132,7 @@ void extclCpuWrMem_VRC2(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extclSaveMapper_VRC2(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_VRC2(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, vrc2.chrRomBank);
 
 	return (EXIT_OK);

@@ -31,15 +31,15 @@ struct _ks7022 {
 
 void mapInit_Kaiser(BYTE model);
 
-void extclCpuWrMem_Kaiser_ks202(WORD address, BYTE value);
-BYTE extclSaveMapper_Kaiser_ks202(BYTE mode, BYTE slot, FILE *fp);
-BYTE extclCpuRdMem_Kaiser_ks202(WORD address, BYTE openbus, BYTE before);
-void extclCPUEveryCycle_Kaiser_ks202(void);
+void extcl_cpu_wr_mem_Kaiser_ks202(WORD address, BYTE value);
+BYTE extcl_save_mapper_Kaiser_ks202(BYTE mode, BYTE slot, FILE *fp);
+BYTE extcl_cpu_rd_mem_Kaiser_ks202(WORD address, BYTE openbus, BYTE before);
+void extcl_cpu_every_cycle_Kaiser_ks202(void);
 
-void extclCpuWrMem_Kaiser_ks7058(WORD address, BYTE value);
+void extcl_cpu_wr_mem_Kaiser_ks7058(WORD address, BYTE value);
 
-void extclCpuWrMem_Kaiser_ks7022(WORD address, BYTE value);
-BYTE extclCpuRdMem_Kaiser_ks7022(WORD address, BYTE openbus, BYTE before);
-BYTE extclSaveMapper_Kaiser_ks7022(BYTE mode, BYTE slot, FILE *fp);
+void extcl_cpu_wr_mem_Kaiser_ks7022(WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_Kaiser_ks7022(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_save_mapper_Kaiser_ks7022(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPERKAISER_H_ */

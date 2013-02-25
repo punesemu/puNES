@@ -14,13 +14,13 @@ void mapInit_Agci(void) {
 	prgRom32kMax = (info.prgRom16kCount >> 1) - 1;
 	chrRom8kMax = info.chrRom8kCount - 1;
 
-	EXTCLCPUWRMEM(Agci);
+	EXTCL_CPU_WR_MEM(Agci);
 
 	if (info.reset >= HARD) {
 		mapPrgRom8k(4, 0, 0);
 	}
 }
-void extclCpuWrMem_Agci(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Agci(WORD address, BYTE value) {
 	BYTE busConflict, save;
 	DBWORD bank;
 

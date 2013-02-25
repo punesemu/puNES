@@ -19,7 +19,7 @@ struct _kasing {
 } kasing;
 
 void mapInit_Kasing(void);
-void extclCpuWrMem_Kasing(WORD address, BYTE value);
-BYTE extclSaveMapper_Kasing(BYTE mode, BYTE slot, FILE *fp);
+void extcl_cpu_wr_mem_Kasing(WORD address, BYTE value);
+BYTE extcl_save_mapper_Kasing(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPERKASING_H_ */

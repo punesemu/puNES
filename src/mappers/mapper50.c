@@ -19,10 +19,10 @@ void mapInit_50(void) {
 	prgRom8kMax = info.prgRom8kCount - 1;
 	chrRom1kMax = info.chrRom1kCount - 1;
 
-	EXTCLCPUWRMEM(50);
-	EXTCLCPURDMEM(50);
-	EXTCLSAVEMAPPER(50);
-	EXTCLCPUEVERYCYCLE(50);
+	EXTCL_CPU_WR_MEM(50);
+	EXTCL_CPU_RD_MEM(50);
+	EXTCL_SAVE_MAPPER(50);
+	EXTCL_CPU_EVERY_CYCLE(50);
 	mapper.intStruct[0] = (BYTE *) &m50;
 	mapper.intStructSize[0] = sizeof(m50);
 
@@ -40,7 +40,7 @@ void mapInit_50(void) {
 
 	info.mapperExtendWrite = TRUE;
 }
-void extclCpuWrMem_50(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_50(WORD address, BYTE value) {
 	if ((address <= 0x5FFF) && ((address & 0x0060) == 0x0020)) {
 		if (address & 0x0100) {
 			if (!(m50.enabled = value & 0x01)) {
@@ -57,21 +57,21 @@ void extclCpuWrMem_50(WORD address, BYTE value) {
 		return;
 	}
 }
-BYTE extclCpuRdMem_50(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_50(WORD address, BYTE openbus, BYTE before) {
 	if ((address < 0x6000) || (address > 0x7FFF)) {
 		return (openbus);
 	}
 
 	return (prg6000[address & 0x1FFF]);
 }
-BYTE extclSaveMapper_50(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_50(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, m50.enabled);
 	savestateEle(mode, slot, m50.count);
 	savestateEle(mode, slot, m50.delay);
 
 	return (EXIT_OK);
 }
-void extclCPUEveryCycle_50(void) {
+void extcl_cpu_every_cycle_50(void) {
 	if (m50.delay && !(--m50.delay)) {
 		irq.high |= EXTIRQ;
 	}

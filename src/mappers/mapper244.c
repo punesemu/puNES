@@ -16,13 +16,13 @@ void mapInit_244(void) {
 	prgRom32kMax = (info.prgRom16kCount >> 1) - 1;
 	chrRom8kMax = (info.chrRom4kCount >> 1) - 1;
 
-	EXTCLCPUWRMEM(244);
+	EXTCL_CPU_WR_MEM(244);
 
 	if (info.reset >= HARD) {
 		mapPrgRom8k(4, 0, 0);
 	}
 }
-void extclCpuWrMem_244(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_244(WORD address, BYTE value) {
 	if ((address >= 0x8065) && (address <= 0x80A4)) {
 		value = (address - 0x8065) & 0x03;
 		controlBank(prgRom32kMax)

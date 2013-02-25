@@ -34,14 +34,14 @@ void mapInit_114(void) {
 	chrRom2kMax = (info.chrRom1kCount >> 1) - 1;
 	chrRom1kMax = info.chrRom1kCount - 1;
 
-	EXTCLCPUWRMEM(114);
-	EXTCLSAVEMAPPER(114);
-	EXTCLCPUEVERYCYCLE(MMC3);
-	EXTCLPPU000TO34X(MMC3);
-	EXTCLPPU000TO255(MMC3);
-	EXTCLPPU256TO319(MMC3);
-	EXTCLPPU320TO34X(MMC3);
-	EXTCL2006UPDATE(MMC3);
+	EXTCL_CPU_WR_MEM(114);
+	EXTCL_SAVE_MAPPER(114);
+	EXTCL_CPU_EVERY_CYCLE(MMC3);
+	EXTCL_PPU_000_TO_34X(MMC3);
+	EXTCL_PPU_000_TO_255(MMC3);
+	EXTCL_PPU_256_TO_319(MMC3);
+	EXTCL_PPU_320_TO_34X(MMC3);
+	EXTCL_UPDATE_R2006(MMC3);
 	mapper.intStruct[0] = (BYTE *) &m114;
 	mapper.intStructSize[0] = sizeof(m114);
 	mapper.intStruct[1] = (BYTE *) &mmc3;
@@ -66,7 +66,7 @@ void mapInit_114(void) {
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
 }
-void extclCpuWrMem_114(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_114(WORD address, BYTE value) {
 	if (address < 0x5000) {
 		return;
 	}
@@ -89,13 +89,13 @@ void extclCpuWrMem_114(WORD address, BYTE value) {
 			return;
 		case 0x8000:
 		case 0x8001:
-			extclCpuWrMem_MMC3(0xA000, value);
+			extcl_cpu_wr_mem_MMC3(0xA000, value);
 			return;
 		case 0xA000:
 		case 0xA001:
 			value = (value & 0xC0) | vlu114[value & 0x07];
 			m114.mmc3CtrlChange = TRUE;
-			extclCpuWrMem_MMC3(0x8000, value);
+			extcl_cpu_wr_mem_MMC3(0x8000, value);
 			if (m114.prgRomSwitch) {
 				const BYTE prgRomCfg = (value & 0x40) >> 5;
 
@@ -114,7 +114,7 @@ void extclCpuWrMem_114(WORD address, BYTE value) {
 		case 0xC001:
 			if (m114.mmc3CtrlChange && (!m114.prgRomSwitch || (mmc3.bankToUpdate < 6))) {
 				m114.mmc3CtrlChange = FALSE;
-				extclCpuWrMem_MMC3(0x8001, value);
+				extcl_cpu_wr_mem_MMC3(0x8001, value);
 				m114prgRomBackup();
 			}
 			return;
@@ -130,7 +130,7 @@ void extclCpuWrMem_114(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extclSaveMapper_114(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_114(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, m114.prgRomSwitch);
 	savestateEle(mode, slot, m114.mmc3CtrlChange);
 	if (savestate.version < 6) {
@@ -148,7 +148,7 @@ BYTE extclSaveMapper_114(BYTE mode, BYTE slot, FILE *fp) {
 	} else {
 		savestateEle(mode, slot, m114.prgRomBank);
 	}
-	extclSaveMapper_MMC3(mode, slot, fp);
+	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	return (EXIT_OK);
 }

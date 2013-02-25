@@ -70,8 +70,8 @@ void mapInit_MMC1(void) {
 	chrRom8kMax = info.chrRom8kCount - 1;
 	chrRom4kMax = info.chrRom4kCount - 1;
 
-	EXTCLCPUWRMEM(MMC1);
-	EXTCLSAVEMAPPER(MMC1);
+	EXTCL_CPU_WR_MEM(MMC1);
+	EXTCL_SAVE_MAPPER(MMC1);
 	mapper.intStruct[0] = (BYTE *) &mmc1;
 	mapper.intStructSize[0] = sizeof(mmc1);
 
@@ -97,7 +97,7 @@ void mapInit_MMC1(void) {
 			break;
 	}
 }
-void extclCpuWrMem_MMC1(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_MMC1(WORD address, BYTE value) {
 	/*
 	 * se nel tick precedente e' stato fatto un reset e
 	 * sono in presenza di una doppia scrittura da parte
@@ -170,7 +170,7 @@ void extclCpuWrMem_MMC1(WORD address, BYTE value) {
 		mmc1.pos = mmc1.reg = 0;
 	}
 }
-BYTE extclSaveMapper_MMC1(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_MMC1(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, mmc1.reg);
 	savestateEle(mode, slot, mmc1.pos);
 	savestateEle(mode, slot, mmc1.prgMode);

@@ -17,9 +17,9 @@ struct _m50 {
 } m50;
 
 void mapInit_50(void);
-void extclCpuWrMem_50(WORD address, BYTE value);
-BYTE extclCpuRdMem_50(WORD address, BYTE openbus, BYTE before);
-BYTE extclSaveMapper_50(BYTE mode, BYTE slot, FILE *fp);
-void extclCPUEveryCycle_50(void);
+void extcl_cpu_wr_mem_50(WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_50(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_save_mapper_50(BYTE mode, BYTE slot, FILE *fp);
+void extcl_cpu_every_cycle_50(void);
 
 #endif /* MAPPER50_H_ */

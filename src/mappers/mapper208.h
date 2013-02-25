@@ -16,8 +16,8 @@ struct _m208 {
 } m208;
 
 void mapInit_208(void);
-void extclCpuWrMem_208(WORD address, BYTE value);
-BYTE extclCpuRdMem_208(WORD address, BYTE openbus, BYTE before);
-BYTE extclSaveMapper_208(BYTE mode, BYTE slot, FILE *fp);
+void extcl_cpu_wr_mem_208(WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_208(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_save_mapper_208(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPER208_H_ */

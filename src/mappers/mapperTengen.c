@@ -99,15 +99,15 @@ void mapInit_Tengen(BYTE model) {
 	switch (model) {
 		case T800037:
 		case TRAMBO:
-			EXTCLCPUWRMEM(Tengen_Rambo);
-			EXTCLSAVEMAPPER(Tengen_Rambo);
-			EXTCLPPU000TO34X(MMC3);
-			EXTCLPPU000TO255(Tengen_Rambo);
-			EXTCLPPU256TO319(Tengen_Rambo);
-			EXTCLPPU320TO34X(Tengen_Rambo);
-			EXTCL2006UPDATE(MMC3);
-			EXTCLIRQA12CLOCK(Tengen_Rambo);
-			EXTCLCPUEVERYCYCLE(Tengen_Rambo);
+			EXTCL_CPU_WR_MEM(Tengen_Rambo);
+			EXTCL_SAVE_MAPPER(Tengen_Rambo);
+			EXTCL_PPU_000_TO_34X(MMC3);
+			EXTCL_PPU_000_TO_255(Tengen_Rambo);
+			EXTCL_PPU_256_TO_319(Tengen_Rambo);
+			EXTCL_PPU_320_TO_34X(Tengen_Rambo);
+			EXTCL_UPDATE_R2006(MMC3);
+			EXTCL_IRQ_A12_CLOCK(Tengen_Rambo);
+			EXTCL_CPU_EVERY_CYCLE(Tengen_Rambo);
 			mapper.intStruct[0] = (BYTE *) &tRambo;
 			mapper.intStructSize[0] = sizeof(tRambo);
 			mapper.intStruct[1] = (BYTE *) &irqA12;
@@ -144,7 +144,7 @@ void mapInit_Tengen(BYTE model) {
 	type = model;
 }
 
-void extclCpuWrMem_Tengen_Rambo(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Tengen_Rambo(WORD address, BYTE value) {
 	switch (address & 0xF001) {
 		case 0x8000:
 			tRambo.regIndex = value & 0x0F;
@@ -251,7 +251,7 @@ void extclCpuWrMem_Tengen_Rambo(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extclSaveMapper_Tengen_Rambo(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_Tengen_Rambo(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, tRambo.prgMode);
 	savestateEle(mode, slot, tRambo.chrMode);
 	savestateEle(mode, slot, tRambo.regIndex);
@@ -263,22 +263,22 @@ BYTE extclSaveMapper_Tengen_Rambo(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-void extclPPU000to255_Tengen_Rambo(void) {
+void extcl_ppu_000_to_255_Tengen_Rambo(void) {
 	if ((tRambo.irqMode == A12MODE) && (r2001.visible)) {
 		irqA12_SB();
 	}
 }
-void extclPPU256to319_Tengen_Rambo(void) {
+void extcl_ppu_256_to_319_Tengen_Rambo(void) {
 	if (tRambo.irqMode == A12MODE) {
 		irqA12_BS();
 	}
 }
-void extclPPU320to34x_Tengen_Rambo(void) {
+void extcl_ppu_320_to_34x_Tengen_Rambo(void) {
 	if (tRambo.irqMode == A12MODE) {
 		irqA12_SB();
 	}
 }
-void extclIrqA12Clock_Tengen_Rambo(void) {
+void extcl_irq_A12_clock_Tengen_Rambo(void) {
 	if (tRambo.irqMode != A12MODE) {
 		return;
 	}
@@ -302,7 +302,7 @@ void extclIrqA12Clock_Tengen_Rambo(void) {
 	}
 	irqA12.saveCounter = irqA12.counter;
 }
-void extclCPUEveryCycle_Tengen_Rambo(void) {
+void extcl_cpu_every_cycle_Tengen_Rambo(void) {
 	if (tRambo.irqDelay && !(--tRambo.irqDelay)) {
 		irq.high |= EXTIRQ;
 	}

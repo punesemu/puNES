@@ -17,14 +17,14 @@ BYTE type, mask, state;
 void mapInit_CNROM(BYTE model) {
 	chrRom8kMax = info.chrRom8kCount - 1;
 
-	EXTCLCPUWRMEM(CNROM);
+	EXTCL_CPU_WR_MEM(CNROM);
 
 	mask = state = 0x00;
 
 	if ((info.mapperType >= CNROM26CE27CE) && (info.mapperType <= CNROM26NCE27NCE)) {
 
-		EXTCLRDCHR(CNROM);
-		EXTCLSAVEMAPPER(CNROM);
+		EXTCL_RD_CHR(CNROM);
+		EXTCL_SAVE_MAPPER(CNROM);
 		mapper.intStruct[0] = (BYTE *) &cnrom2627;
 		mapper.intStructSize[0] = sizeof(cnrom2627);
 
@@ -49,7 +49,7 @@ void mapInit_CNROM(BYTE model) {
 
 	type = model;
 }
-void extclCpuWrMem_CNROM(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_CNROM(WORD address, BYTE value) {
 	DBWORD bank;
 
 	if (type == CNROMCNFL) {
@@ -78,12 +78,12 @@ void extclCpuWrMem_CNROM(WORD address, BYTE value) {
 	chr.bank1k[6] = &chr.data[bank | 0x1800];
 	chr.bank1k[7] = &chr.data[bank | 0x1C00];
 }
-BYTE extclSaveMapper_CNROM(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_CNROM(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, cnrom2627.chrReadEnable);
 
 	return (EXIT_OK);
 }
-BYTE extclRdChr_CNROM(WORD address) {
+BYTE extcl_rd_chr_CNROM(WORD address) {
 	if (cnrom2627.chrReadEnable == TRUE) {
 		return (0xFF);
 	}

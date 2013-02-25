@@ -19,9 +19,9 @@ void mapInit_186(void) {
 	prgRom8kMax = info.prgRom8kCount - 1;
 	chrRom1kMax = info.chrRom1kCount - 1;
 
-	EXTCLCPUWRMEM(186);
-	EXTCLCPURDMEM(186);
-	EXTCLSAVEMAPPER(186);
+	EXTCL_CPU_WR_MEM(186);
+	EXTCL_CPU_RD_MEM(186);
+	EXTCL_SAVE_MAPPER(186);
 	mapper.intStruct[0] = (BYTE *) &m186;
 	mapper.intStructSize[0] = sizeof(m186);
 
@@ -37,7 +37,7 @@ void mapInit_186(void) {
 		mapPrgRom8k(2, 2, 0);
 	}
 }
-void extclCpuWrMem_186(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_186(WORD address, BYTE value) {
 	if ((address < 0x4200) || (address > 0x4EFF)) {
 		return;
 	}
@@ -60,7 +60,7 @@ void extclCpuWrMem_186(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extclCpuRdMem_186(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_186(WORD address, BYTE openbus, BYTE before) {
 	if ((address < 0x4200) || (address > 0x7FFF)) {
 		return (openbus);
 	}
@@ -89,7 +89,7 @@ BYTE extclCpuRdMem_186(WORD address, BYTE openbus, BYTE before) {
 
 	return (openbus);
 }
-BYTE extclSaveMapper_186(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_186(BYTE mode, BYTE slot, FILE *fp) {
 	savestatePos(mode, slot, prg.rom, m186.prgRamBank2);
 
 	return (EXIT_OK);

@@ -18,9 +18,9 @@ void mapInit_Active(void) {
 	prgRom16kMax = info.prgRom16kCount - 1;
 	chrRom8kMax = info.chrRom8kCount - 1;
 
-	EXTCLCPUWRMEM(Active);
-	EXTCLCPURDMEM(Active);
-	EXTCLSAVEMAPPER(Active);
+	EXTCL_CPU_WR_MEM(Active);
+	EXTCL_CPU_RD_MEM(Active);
+	EXTCL_SAVE_MAPPER(Active);
 	mapper.intStruct[0] = (BYTE *) &active;
 	mapper.intStructSize[0] = sizeof(active);
 
@@ -33,7 +33,7 @@ void mapInit_Active(void) {
 		active.openbus = FALSE;
 	}
 }
-void extclCpuWrMem_Active(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Active(WORD address, BYTE value) {
 	BYTE save = value, prgChip = address >> 10;
 	DBWORD bank;
 
@@ -84,14 +84,14 @@ void extclCpuWrMem_Active(WORD address, BYTE value) {
 	chr.bank1k[6] = &chr.data[bank | 0x1800];
 	chr.bank1k[7] = &chr.data[bank | 0x1C00];
 }
-BYTE extclCpuRdMem_Active(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_Active(WORD address, BYTE openbus, BYTE before) {
 	if ((address >= 0x4020) && (address < 0x6000)) {
 		return (active.prgRam[address & 0x0003]);
 	}
 
 	return (openbus);
 }
-BYTE extclSaveMapper_Active(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_Active(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, active.openbus);
 	savestateEle(mode, slot, active.prgRam);
 

@@ -17,9 +17,9 @@ WORD prgRom16kMax;
 void mapInit_VRC3(void) {
 	prgRom16kMax = info.prgRom16kCount - 1;
 
-	EXTCLCPUWRMEM(VRC3);
-	EXTCLSAVEMAPPER(VRC3);
-	EXTCLCPUEVERYCYCLE(VRC3);
+	EXTCL_CPU_WR_MEM(VRC3);
+	EXTCL_SAVE_MAPPER(VRC3);
+	EXTCL_CPU_EVERY_CYCLE(VRC3);
 	mapper.intStruct[0] = (BYTE *) &vrc3;
 	mapper.intStructSize[0] = sizeof(vrc3);
 
@@ -30,7 +30,7 @@ void mapInit_VRC3(void) {
 		vrc3.mask = 0xFFFF;
 	}
 }
-void extclCpuWrMem_VRC3(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_VRC3(WORD address, BYTE value) {
 	switch (address & 0xF000) {
 		case 0x8000:
 			vrc3.reload = (vrc3.reload & 0xFFF0) | (value & 0x0F);
@@ -70,7 +70,7 @@ void extclCpuWrMem_VRC3(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extclSaveMapper_VRC3(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_VRC3(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, vrc3.enabled);
 	savestateEle(mode, slot, vrc3.reload);
 	savestateEle(mode, slot, vrc3.mode);
@@ -80,7 +80,7 @@ BYTE extclSaveMapper_VRC3(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-void extclCPUEveryCycle_VRC3(void) {
+void extcl_cpu_every_cycle_VRC3(void) {
 	if (!vrc3.enabled) {
 		return;
 	}

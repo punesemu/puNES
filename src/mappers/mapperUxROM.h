@@ -20,12 +20,12 @@ enum {
 
 void mapInit_UxROM(BYTE model);
 
-void extclCpuWrMem_UxROM(WORD address, BYTE value);
+void extcl_cpu_wr_mem_UxROM(WORD address, BYTE value);
 
-void extclCpuWrMem_Unl1xROM(WORD address, BYTE value);
+void extcl_cpu_wr_mem_Unl1xROM(WORD address, BYTE value);
 
-void extclCpuWrMem_UNROM_180(WORD address, BYTE value);
+void extcl_cpu_wr_mem_UNROM_180(WORD address, BYTE value);
 
-void extclCpuWrMem_UnlROM(WORD address, BYTE value);
+void extcl_cpu_wr_mem_UnlROM(WORD address, BYTE value);
 
 #endif /* MAPPERUXROM_H_ */

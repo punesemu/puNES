@@ -41,7 +41,7 @@ void mapInit_Ave(BYTE model) {
 
 	switch (model) {
 		case NINA06:
-			EXTCLCPUWRMEM(Ave_NINA06);
+			EXTCL_CPU_WR_MEM(Ave_NINA06);
 
 			info.mapperExtendWrite = TRUE;
 
@@ -52,9 +52,9 @@ void mapInit_Ave(BYTE model) {
 			}
 			break;
 		case D1012:
-			EXTCLCPUWRMEM(Ave_D1012);
-			EXTCLCPURDMEM(Ave_D1012);
-			EXTCLSAVEMAPPER(Ave_D1012);
+			EXTCL_CPU_WR_MEM(Ave_D1012);
+			EXTCL_CPU_RD_MEM(Ave_D1012);
+			EXTCL_SAVE_MAPPER(Ave_D1012);
 			mapper.intStruct[0] = (BYTE *) &ave_d1012;
 			mapper.intStructSize[0] = sizeof(ave_d1012);
 
@@ -71,7 +71,7 @@ void mapInit_Ave(BYTE model) {
 	}
 }
 
-void extclCpuWrMem_Ave_NINA06(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Ave_NINA06(WORD address, BYTE value) {
 	if ((address < 0x4100) || (address >= 0x6000)) {
 		if (info.id != PUZZLEUNL) {
 			return;
@@ -91,7 +91,7 @@ void extclCpuWrMem_Ave_NINA06(WORD address, BYTE value) {
 	}
 }
 
-void extclCpuWrMem_Ave_D1012(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Ave_D1012(WORD address, BYTE value) {
 	DBWORD bank;
 
 	if (address < 0xFF80) {
@@ -145,15 +145,15 @@ void extclCpuWrMem_Ave_D1012(WORD address, BYTE value) {
 	chr.bank1k[6] = &chr.data[bank | 0x1800];
 	chr.bank1k[7] = &chr.data[bank | 0x1C00];
 }
-BYTE extclCpuRdMem_Ave_D1012(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_Ave_D1012(WORD address, BYTE openbus, BYTE before) {
 	if ((address < 0xFF80) || (address > 0xFFF7)) {
 		return (openbus);
 	}
 
-	extclCpuWrMem_Ave_D1012(address, openbus);
+	extcl_cpu_wr_mem_Ave_D1012(address, openbus);
 	return (openbus);
 }
-BYTE extclSaveMapper_Ave_D1012(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_save_mapper_Ave_D1012(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, ave_d1012.reg);
 
 	return (EXIT_OK);
