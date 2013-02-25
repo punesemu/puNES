@@ -220,7 +220,7 @@ static const _param param[] = {
 		"-g, --gamegenie           active game genie     : yes, no"
 	},
 };
-static const _param paramPgs[] = {
+static const _param param_pgs[] = {
 	{
 		"last save slot",
 		NULL,
@@ -236,7 +236,7 @@ static const _param paramPgs[] = {
 		NULL
 	},
 };
-static const _param paramInputCtrl[] = {
+static const _param param_input_ctrl[] = {
 	{
 		"controller 1",
 		NULL,
@@ -252,41 +252,41 @@ static const _param paramInputCtrl[] = {
 		NULL
 	}
 };
-static const _param paramInputP1K[] = {
+static const _param param_input_p1k[] = {
 	{ "P1K A     " }, { "P1K B     " },	{ "P1K Select" }, { "P1K Start " },
 	{ "P1K Up    " }, { "P1K Down  " },	{ "P1K Left  " }, { "P1K Right " },
 	{ "P1K TurboA" }, { "P1K TurboB" }
 };
-static const _param paramInputP1J[] = {
+static const _param param_input_p1j[] = {
 	{ "P1J A     " }, { "P1J B     " }, { "P1J Select" }, { "P1J Start " },
 	{ "P1J Up    " }, { "P1J Down  " }, { "P1J Left  " }, { "P1J Right " },
 	{ "P1J TurboA" }, { "P1J TurboB" }, { "P1J Id    " }
 };
-static const _param paramInputP2K[] = {
+static const _param param_input_p2k[] = {
 	{ "P2K A     " }, { "P2K B     " },	{ "P2K Select" }, { "P2K Start " },
 	{ "P2K Up    " }, { "P2K Down  " },	{ "P2K Left  " }, { "P2K Right " },
 	{ "P2K TurboA" }, { "P2K TurboB" }
 };
-static const _param paramInputP2J[] = {
+static const _param param_input_p2j[] = {
 	{ "P2J A     " }, { "P2J B     " }, { "P2J Select" }, { "P2J Start " },
 	{ "P2J Up    " }, { "P2J Down  " }, { "P2J Left  " }, { "P2J Right " },
 	{ "P2J TurboA" }, { "P2J TurboB" }, { "P2J Id    " }
 };
-static const _param pNoYes[] = {
+static const _param param_no_yes[] = {
 	{"No",  "no" },
 	{"Yes", "yes"}
 };
-static const _param pOffOn[] = {
+static const _param param_off_on[] = {
 	{"Off", "off"},
 	{"On",  "on" }
 };
-static const _param pMode[] = {
+static const _param param_mode[] = {
 	{"Auto",  "auto" },
 	{"NTSC",  "ntsc" },
 	{"PAL",   "pal"  },
 	{"Dendy", "dendy"}
 };
-static const _param pFps[] = {
+static const _param param_fps[] = {
 	{"Default", "default"},
 	{"60",      "60"     },
 	{"59",      "59"     },
@@ -306,7 +306,7 @@ static const _param pFps[] = {
 	{"45",      "45"     },
 	{"44",      "44"     }
 };
-static const _param pFsk[] = {
+static const _param param_fsk[] = {
 	{"Default", "default"},
 	{"1",       "1"      },
 	{"2",       "2"      },
@@ -318,14 +318,14 @@ static const _param pFsk[] = {
 	{"8",       "8"      },
 	{"9",       "9"      }
 };
-static const _param pSize[] = {
+static const _param param_size[] = {
 	{"NONE", "none"},
 	{"1x",   "1x"  },
 	{"2x",   "2x"  },
 	{"3x",   "3x"  },
 	{"4x",   "4x"  }
 };
-static const _param pFilter[] = {
+static const _param param_filter[] = {
 	{"no filter",  "none"      },
 	{"Scale2X",    "scale2x"   },
 	{"Scale3X",    "scale3x"   },
@@ -341,38 +341,38 @@ static const _param pFilter[] = {
 	{"CRTCURVE",   "crtcurve"  },
 	{"CRTNOCURVE", "crtnocurve"},
 };
-static const _param pNtsc[] = {
+static const _param param_ntsc[] = {
 	{"Composite", "composite"},
 	{"S-Video",   "svideo"   },
 	{"RGB",       "rgb"      }
 };
-static const _param pPalette[] = {
+static const _param param_palette[] = {
 	{"PAL palette",       "pal"  },
 	{"NTSC palette",      "ntsc" },
 	{"Sony CXA2025AS US", "sony" },
 	{"Monochrome",        "mono" },
 	{"Green",             "green"}
 };
-static const _param pRendering[] = {
+static const _param param_render[] = {
 	{"Software", "software"},
 	{"OpenGL",   "opengl"  },
 	{"GLSL",     "glsl"    }
 };
-static const _param pSamplerate[] = {
+static const _param param_samplerate[] = {
 	{"44100", "44100"},
 	{"22050", "22050"},
 	{"11025", "11025"}
 };
-static const _param pChannels[] = {
+static const _param param_channels[] = {
 	{"NULL",   "NULL"  },
 	{"Mono",   "mono"  },
 	{"Stereo", "stereo"}
 };
-static const _param pAudioQuality[] = {
+static const _param param_audio_quality[] = {
 	{"Low",  "low" },
 	{"High", "high"}
 };
-static const _param pSlot[] = {
+static const _param param_slot[] = {
 	{"0", "0"},
 	{"1", "1"},
 	{"2", "2"},
@@ -380,12 +380,12 @@ static const _param pSlot[] = {
 	{"4", "4"},
 	{"5", "5"}
 };
-static const _param pOverscan[] = {
+static const _param param_oscan[] = {
 	{"Off",     "off"     },
 	{"On",      "on"      },
 	{"Default", "default" }
 };
-static const _param pController[] = {
+static const _param param_controller[] = {
 	{"Disable",  "disable" },
 	{"Standard", "standard"},
 	{"Zapper",   "zapper"  }

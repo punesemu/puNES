@@ -7,11 +7,11 @@ C_SRCS += \
 ../src/apu.c \
 ../src/audio_quality.c \
 ../src/blip_buf.c \
-../src/cfgfile.c \
-../src/cmdline.c \
+../src/cfg_file.c \
+../src/cmd_line.c \
 ../src/cpu6502.c \
 ../src/emu.c \
-../src/externalcalls.c \
+../src/external_calls.c \
 ../src/fds.c \
 ../src/fps.c \
 ../src/gamegenie.c \
@@ -35,11 +35,11 @@ OBJS += \
 ./src/apu.o \
 ./src/audio_quality.o \
 ./src/blip_buf.o \
-./src/cfgfile.o \
-./src/cmdline.o \
+./src/cfg_file.o \
+./src/cmd_line.o \
 ./src/cpu6502.o \
 ./src/emu.o \
-./src/externalcalls.o \
+./src/external_calls.o \
 ./src/fds.o \
 ./src/fps.o \
 ./src/gamegenie.o \
@@ -63,11 +63,11 @@ C_DEPS += \
 ./src/apu.d \
 ./src/audio_quality.d \
 ./src/blip_buf.d \
-./src/cfgfile.d \
-./src/cmdline.d \
+./src/cfg_file.d \
+./src/cmd_line.d \
 ./src/cpu6502.d \
 ./src/emu.d \
-./src/externalcalls.d \
+./src/external_calls.d \
 ./src/fds.d \
 ./src/fps.d \
 ./src/gamegenie.d \
@@ -92,7 +92,7 @@ C_DEPS += \
 src/%.o: ../src/%.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
-	i686-pc-linux-gnu-gcc -DOPENGL -DGTK -DGLEW_STATIC -I../src -I/usr/i686-pc-linux-gnu/usr/include/SDL -O3 -Wall -ffast-math -msse2 -mfpmath=sse -c -fmessage-length=0 -finline-functions -Winline `i686-pc-linux-gnu-pkg-config --libs --cflags gtk+-2.0` -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
+	i686-pc-linux-gnu-gcc -DGTK -DGLEW_STATIC -I../src -I/usr/i686-pc-linux-gnu/usr/include/SDL -O3 -Wall -ffast-math -msse2 -mfpmath=sse -c -fmessage-length=0 -finline-functions -Winline `i686-pc-linux-gnu-pkg-config --libs --cflags gtk+-2.0` -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 

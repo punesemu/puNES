@@ -6,6 +6,7 @@
 C_SRCS += \
 ../src/gui/gtk2/cfginput.c \
 ../src/gui/gtk2/cfgstdctrl.c \
+../src/gui/gtk2/configurations.c \
 ../src/gui/gtk2/gtk2.c \
 ../src/gui/gtk2/joystick.c \
 ../src/gui/gtk2/keyboard.c 
@@ -13,6 +14,7 @@ C_SRCS += \
 OBJS += \
 ./src/gui/gtk2/cfginput.o \
 ./src/gui/gtk2/cfgstdctrl.o \
+./src/gui/gtk2/configurations.o \
 ./src/gui/gtk2/gtk2.o \
 ./src/gui/gtk2/joystick.o \
 ./src/gui/gtk2/keyboard.o 
@@ -20,6 +22,7 @@ OBJS += \
 C_DEPS += \
 ./src/gui/gtk2/cfginput.d \
 ./src/gui/gtk2/cfgstdctrl.d \
+./src/gui/gtk2/configurations.d \
 ./src/gui/gtk2/gtk2.d \
 ./src/gui/gtk2/joystick.d \
 ./src/gui/gtk2/keyboard.d 
@@ -29,7 +32,7 @@ C_DEPS += \
 src/gui/gtk2/%.o: ../src/gui/gtk2/%.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
-	x86_64-glibc2.12.2-linux-gnu-gcc -DOPENGL -DGTK -DGLEW_STATIC -I../src -I/usr/x86_64-glibc2.12.2-linux-gnu/usr/include/SDL -O3 -Wall -ffast-math -msse2 -mfpmath=sse -c -fmessage-length=0 -finline-functions -Winline `x86_64-glibc2.12.2-linux-gnu-pkg-config --cflags gtk+-2.0` -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
+	x86_64-glibc2.12.2-linux-gnu-gcc -DGTK -DGLEW_STATIC -I../src -I/usr/x86_64-glibc2.12.2-linux-gnu/usr/include/SDL -O3 -Wall -ffast-math -msse2 -mfpmath=sse -c -fmessage-length=0 -finline-functions -Winline `x86_64-glibc2.12.2-linux-gnu-pkg-config --cflags gtk+-2.0` -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 

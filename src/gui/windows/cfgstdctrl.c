@@ -48,7 +48,7 @@ char cazzata[][15] = {
 	"i don't think"
 };
 
-BYTE maxButtons = LENGTH(paramInputP1K);
+BYTE maxButtons = LENGTH(param_input_p1k);
 
 void cfg_standard_controller(HWND hwnd, _cfg_port *cfgport) {
 	char title[30];

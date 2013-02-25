@@ -110,44 +110,44 @@ void cfg_file_parse(void) {
 			/* ...da quello che c'e' dopo */
 			cfgEvaluate(NULL, value, "\n");
 			/* mode */
-			cfgSearch(param, P_MODE, 0, pMode, cfg_from_file.mode = index);
+			cfgSearch(param, P_MODE, 0, param_mode, cfg_from_file.mode = index);
 			/* fps */
-			cfgSearch(param, P_FPS, 0, pFps, cfg_from_file.fps = index);
+			cfgSearch(param, P_FPS, 0, param_fps, cfg_from_file.fps = index);
 			/* frame skip */
-			cfgSearch(param, P_FSK, 0, pFsk, cfg_from_file.frameskip = index);
+			cfgSearch(param, P_FSK, 0, param_fsk, cfg_from_file.frameskip = index);
 			/* size */
-			cfgSearch(param, P_SIZE, 1, pSize, cfg_from_file.scale = index);
+			cfgSearch(param, P_SIZE, 1, param_size, cfg_from_file.scale = index);
 			/* overscan default */
-			cfgSearch(param, P_OVERSCAN, 0, pOverscan, cfg_from_file.oscan_default = index);
+			cfgSearch(param, P_OVERSCAN, 0, param_oscan, cfg_from_file.oscan_default = index);
 			/* filter */
-			cfgSearch(param, P_FILTER, 0, pFilter, cfg_from_file.filter = index);
+			cfgSearch(param, P_FILTER, 0, param_filter, cfg_from_file.filter = index);
 			/* ntsc format */
-			cfgSearch(param, P_NTSCFORMAT, 0, pNtsc, cfg_from_file.ntsc_format = index);
+			cfgSearch(param, P_NTSCFORMAT, 0, param_ntsc, cfg_from_file.ntsc_format = index);
 			/* palette */
-			cfgSearch(param, P_PALETTE, 0, pPalette, cfg_from_file.palette = index);
+			cfgSearch(param, P_PALETTE, 0, param_palette, cfg_from_file.palette = index);
 			/* rendering */
-			cfgSearch(param, P_RENDER, 0, pRendering, cfg_from_file.render = index);
+			cfgSearch(param, P_RENDER, 0, param_render, cfg_from_file.render = index);
 			/* vsync */
-			cfgSearch(param, P_VSYNC, 0, pOffOn, cfg_from_file.vsync = index);
+			cfgSearch(param, P_VSYNC, 0, param_off_on, cfg_from_file.vsync = index);
 			/* fullscreen */
-			cfgSearch(param, P_FSCREEN, 0, pNoYes, cfg_from_file.fullscreen = index);
+			cfgSearch(param, P_FSCREEN, 0, param_no_yes, cfg_from_file.fullscreen = index);
 			/* stretch in fullscreen */
-			cfgSearch(param, P_STRETCH, 0, pNoYes, cfg_from_file.aspect_ratio = !index);
+			cfgSearch(param, P_STRETCH, 0, param_no_yes, cfg_from_file.aspect_ratio = !index);
 			/* audio */
-			cfgSearch(param, P_AUDIO, 0, pOffOn, cfg_from_file.audio = index);
+			cfgSearch(param, P_AUDIO, 0, param_off_on, cfg_from_file.audio = index);
 			/* sample rate */
-			cfgSearch(param, P_SAMPLERATE, 0, pSamplerate, cfg_from_file.samplerate = index);
+			cfgSearch(param, P_SAMPLERATE, 0, param_samplerate, cfg_from_file.samplerate = index);
 			/* channels */
-			cfgSearch(param, P_CHANNELS, 0, pChannels, cfg_from_file.channels = index);
+			cfgSearch(param, P_CHANNELS, 0, param_channels, cfg_from_file.channels = index);
 			/* audio quality */
-			cfgSearch(param, P_AUDIO_QUALITY, 0, pAudioQuality,
+			cfgSearch(param, P_AUDIO_QUALITY, 0, param_audio_quality,
 			        cfg_from_file.audio_quality = index);
 			/* swap duty cycles */
-			cfgSearch(param, P_SWAP_DUTY, 0, pNoYes, cfg_from_file.swap_duty = index);
+			cfgSearch(param, P_SWAP_DUTY, 0, param_no_yes, cfg_from_file.swap_duty = index);
 			/* game genie */
-			cfgSearch(param, P_GAMEGENIE, 0, pNoYes, cfg_from_file.gamegenie = index);
+			cfgSearch(param, P_GAMEGENIE, 0, param_no_yes, cfg_from_file.gamegenie = index);
 			/* save on exit */
-			cfgSearch(param, P_SAVEONEXIT, 0, pNoYes, cfg_from_file.save_on_exit = index);
+			cfgSearch(param, P_SAVEONEXIT, 0, param_no_yes, cfg_from_file.save_on_exit = index);
 		}
 	}
 
@@ -175,48 +175,49 @@ void cfg_file_save(void) {
 		return;
 	}
 	/* mode */
-	writeParam((_param *) param, fp, P_MODE, pMode[cfg_from_file.mode].sname);
+	writeParam((_param *) param, fp, P_MODE, param_mode[cfg_from_file.mode].sname);
 	/* fps */
-	writeParam((_param *) param, fp, P_FPS, pFps[cfg_from_file.fps].sname);
+	writeParam((_param *) param, fp, P_FPS, param_fps[cfg_from_file.fps].sname);
 	/* fps */
-	writeParam((_param *) param, fp, P_FSK, pFsk[cfg_from_file.frameskip].sname);
+	writeParam((_param *) param, fp, P_FSK, param_fsk[cfg_from_file.frameskip].sname);
 	/* size */
 	{
 		BYTE scale = (cfg_from_file.fullscreen ? gfx.scale_before_fscreen : cfg_from_file.scale);
 
-		writeParam((_param *) param, fp, P_SIZE, pSize[scale].sname);
+		writeParam((_param *) param, fp, P_SIZE, param_size[scale].sname);
 	}
 	/* overscan default */
-	writeParam((_param *) param, fp, P_OVERSCAN, pOverscan[cfg_from_file.oscan_default].sname);
+	writeParam((_param *) param, fp, P_OVERSCAN, param_oscan[cfg_from_file.oscan_default].sname);
 	/* filter */
-	writeParam((_param *) param, fp, P_FILTER, pFilter[cfg_from_file.filter].sname);
+	writeParam((_param *) param, fp, P_FILTER, param_filter[cfg_from_file.filter].sname);
 	/* ntsc format */
-	writeParam((_param *) param, fp, P_NTSCFORMAT, pNtsc[cfg_from_file.ntsc_format].sname);
+	writeParam((_param *) param, fp, P_NTSCFORMAT, param_ntsc[cfg_from_file.ntsc_format].sname);
 	/* palette */
-	writeParam((_param *) param, fp, P_PALETTE, pPalette[cfg_from_file.palette].sname);
+	writeParam((_param *) param, fp, P_PALETTE, param_palette[cfg_from_file.palette].sname);
 	/* rendering */
-	writeParam((_param *) param, fp, P_RENDER, pRendering[cfg_from_file.render].sname);
+	writeParam((_param *) param, fp, P_RENDER, param_render[cfg_from_file.render].sname);
 	/* vsync */
-	writeParam((_param *) param, fp, P_VSYNC, pOffOn[cfg_from_file.vsync].sname);
+	writeParam((_param *) param, fp, P_VSYNC, param_off_on[cfg_from_file.vsync].sname);
 	/* fullscreen */
-	writeParam((_param *) param, fp, P_FSCREEN, pNoYes[cfg_from_file.fullscreen].sname);
+	writeParam((_param *) param, fp, P_FSCREEN, param_no_yes[cfg_from_file.fullscreen].sname);
 	/* stretch in fullscreen */
-	writeParam((_param *) param, fp, P_STRETCH, pNoYes[!cfg_from_file.aspect_ratio].sname);
+	writeParam((_param *) param, fp, P_STRETCH, param_no_yes[!cfg_from_file.aspect_ratio].sname);
 	/* audio */
-	writeParam((_param *) param, fp, P_AUDIO, pOffOn[cfg_from_file.audio].sname);
+	writeParam((_param *) param, fp, P_AUDIO, param_off_on[cfg_from_file.audio].sname);
 	/* sample rate */
-	writeParam((_param *) param, fp, P_SAMPLERATE, pSamplerate[cfg_from_file.samplerate].sname);
+	writeParam((_param *) param, fp, P_SAMPLERATE,
+	        param_samplerate[cfg_from_file.samplerate].sname);
 	/* channels */
-	writeParam((_param *) param, fp, P_CHANNELS, pChannels[cfg_from_file.channels].sname);
+	writeParam((_param *) param, fp, P_CHANNELS, param_channels[cfg_from_file.channels].sname);
 	/* audio quality */
 	writeParam((_param *) param, fp, P_AUDIO_QUALITY,
-	        pAudioQuality[cfg_from_file.audio_quality].sname);
+			param_audio_quality[cfg_from_file.audio_quality].sname);
 	/* swap duty cycles */
-	writeParam((_param *) param, fp, P_SWAP_DUTY, pNoYes[cfg_from_file.swap_duty].sname);
+	writeParam((_param *) param, fp, P_SWAP_DUTY, param_no_yes[cfg_from_file.swap_duty].sname);
 	/* game genie */
-	writeParam((_param *) param, fp, P_GAMEGENIE, pNoYes[cfg_from_file.gamegenie].sname);
+	writeParam((_param *) param, fp, P_GAMEGENIE, param_no_yes[cfg_from_file.gamegenie].sname);
 	/* save settings on exit */
-	writeParam((_param *) param, fp, P_SAVEONEXIT, pNoYes[cfg_from_file.save_on_exit].sname);
+	writeParam((_param *) param, fp, P_SAVEONEXIT, param_no_yes[cfg_from_file.save_on_exit].sname);
 	/* the end */
 	fclose(fp);
 
@@ -253,9 +254,9 @@ void cfg_file_pgs_parse(void) {
 			/* ...da quello che c'e' dopo */
 			cfgEvaluate(NULL, value, "\n");
 			/* last save slot */
-			cfgSearch(paramPgs, PGS_SLOT, 0, pSlot, savestate.slot = index);
+			cfgSearch(param_pgs, PGS_SLOT, 0, param_slot, savestate.slot = index);
 			/* overscan */
-			cfgSearch(paramPgs, PGS_OVERSCAN, 0, pOverscan, cfg_from_file.oscan = index);
+			cfgSearch(param_pgs, PGS_OVERSCAN, 0, param_oscan, cfg_from_file.oscan = index);
 		}
 	}
 
@@ -276,9 +277,9 @@ void cfg_file_pgs_save(void) {
 		return;
 	}
 	/* last save slot */
-	writeParam((_param *) paramPgs, fp, PGS_SLOT, pSlot[savestate.slot].sname);
+	writeParam((_param *) param_pgs, fp, PGS_SLOT, param_slot[savestate.slot].sname);
 	/* overscan */
-	writeParam((_param *) paramPgs, fp, PGS_OVERSCAN, pOverscan[cfg_from_file.oscan].sname);
+	writeParam((_param *) param_pgs, fp, PGS_OVERSCAN, param_oscan[cfg_from_file.oscan].sname);
 
 	fclose(fp);
 }
@@ -305,14 +306,14 @@ void cfg_file_input_parse(void) {
 			/* ...da quello che c'e' dopo */
 			cfgEvaluate(NULL, value, "\n");
 
-			cfgSearch(paramInputCtrl, 0, 0, pController, port1.type = index);
-			cfgSearch(paramInputCtrl, 1, 0, pController, port2.type = index);
+			cfgSearch(param_input_ctrl, 0, 0, param_controller, port1.type = index);
+			cfgSearch(param_input_ctrl, 1, 0, param_controller, port2.type = index);
 
-			cfgInputSearch(paramInputP1K, port1, KEYBOARD);
-			cfgInputSearch(paramInputP1J, port1, JOYSTICK);
+			cfgInputSearch(param_input_p1k, port1, KEYBOARD);
+			cfgInputSearch(param_input_p1j, port1, JOYSTICK);
 
-			cfgInputSearch(paramInputP2K, port2, KEYBOARD);
-			cfgInputSearch(paramInputP2J, port2, JOYSTICK);
+			cfgInputSearch(param_input_p2k, port2, KEYBOARD);
+			cfgInputSearch(param_input_p2j, port2, JOYSTICK);
 		}
 	}
 
@@ -332,14 +333,14 @@ void cfg_file_input_save(void) {
 
 	fprintf(fp, "# input configuration\n\n");
 
-	writeParam((_param *) paramInputCtrl, fp, 0, pController[port1.type].sname);
-	writeParam((_param *) paramInputCtrl, fp, 1, pController[port2.type].sname);
+	writeParam((_param *) param_input_ctrl, fp, 0, param_controller[port1.type].sname);
+	writeParam((_param *) param_input_ctrl, fp, 1, param_controller[port2.type].sname);
 
-	writeInputParam((_param *) paramInputP1K, fp, LENGTH(paramInputP1K), port1, 1, KEYBOARD);
-	writeInputParam((_param *) paramInputP1J, fp, LENGTH(paramInputP1J), port1, 1, JOYSTICK);
+	writeInputParam((_param *) param_input_p1k, fp, LENGTH(param_input_p1k), port1, 1, KEYBOARD);
+	writeInputParam((_param *) param_input_p1j, fp, LENGTH(param_input_p1j), port1, 1, JOYSTICK);
 
-	writeInputParam((_param *) paramInputP2K, fp, LENGTH(paramInputP2K), port2, 2, KEYBOARD);
-	writeInputParam((_param *) paramInputP2J, fp, LENGTH(paramInputP2J), port2, 2, JOYSTICK);
+	writeInputParam((_param *) param_input_p2k, fp, LENGTH(param_input_p2k), port2, 2, KEYBOARD);
+	writeInputParam((_param *) param_input_p2j, fp, LENGTH(param_input_p2j), port2, 2, JOYSTICK);
 
 	fclose(fp);
 }

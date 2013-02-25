@@ -2007,7 +2007,7 @@ void set_mode(BYTE newmode) {
 	guiUpdate();
 
 	if (reset) {
-		textAddLineInfo(1, "switched to [green]%s", pMode[machine.type].lname);
+		textAddLineInfo(1, "switched to [green]%s", param_fps[machine.type].lname);
 		make_reset(CHANGEMODE);
 	}
 }

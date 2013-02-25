@@ -399,14 +399,15 @@ void emuSetTitle(char *title) {
 	}
 
 	if (cfg->scale == X1) {
-		sprintf(title, "%s (%s", name, pMode[machine.type].lname);
+		sprintf(title, "%s (%s", name, param_mode[machine.type].lname);
 	} else if (cfg->filter == RGBNTSC) {
-		sprintf(title, "%s (%s, %s, %s, %s", name, pMode[machine.type].lname,
-		        pSize[cfg->scale].lname, pNtsc[cfg->ntsc_format].lname,
-		        pPalette[cfg->palette].lname);
+		sprintf(title, "%s (%s, %s, %s, %s", name, param_mode[machine.type].lname,
+		        param_size[cfg->scale].lname, param_ntsc[cfg->ntsc_format].lname,
+		        param_palette[cfg->palette].lname);
 	} else {
-		sprintf(title, "%s (%s, %s, %s, %s", name, pMode[machine.type].lname,
-				pSize[cfg->scale].lname, pFilter[cfg->filter].lname, pPalette[cfg->palette].lname);
+		sprintf(title, "%s (%s, %s, %s, %s", name, param_mode[machine.type].lname,
+		        param_size[cfg->scale].lname, param_filter[cfg->filter].lname,
+		        param_palette[cfg->palette].lname);
 	}
 
 #ifndef RELEASE
@@ -419,7 +420,7 @@ void emuSetTitle(char *title) {
 
 	if (cfg->scale != X1) {
 		strcat(title, ", ");
-		strcat(title, pRendering[cfg->render].lname);
+		strcat(title, param_render[cfg->render].lname);
 	}
 
 	strcat(title, ")");

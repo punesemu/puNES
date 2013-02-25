@@ -30,7 +30,7 @@ GtkWidget *cfg_standard_controller_combobox_select_joystick(void);
 gboolean cfg_standard_controller_key_press_event(GtkWidget *widget, GdkEventKey *event);
 gboolean cfg_standard_controller_input_is_not_ok(DBWORD value);
 
-#define maxButtons LENGTH(paramInputP1K)
+#define maxButtons LENGTH(param_input_p1k)
 #define cfg_standard_controller_change_button_label(new_label)\
 	gtk_button_set_label(cfg_std_ctrl.button_pressed, new_label);
 
