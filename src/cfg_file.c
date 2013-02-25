@@ -54,7 +54,7 @@
 		if (strcmp(key, buf) == 0) {\
 			if (type == JOYSTICK) {\
 				if (index == (LENGTH(param) - 1)) {\
-					port.joyID = nameToJsn(value);\
+					port.joy_id = nameToJsn(value);\
 				} else {\
 					port.input[JOYSTICK][index] = nameToJsv(value);\
 				}\
@@ -363,7 +363,7 @@ void setDefault(void) {
 	_portKbDefault(port, TRBA,   s9);\
 	_portKbDefault(port, TRBB,   s10)
 #define portJsDefault(port, id, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10)\
-	port.joyID = nameToJsn(id);\
+	port.joy_id = nameToJsn(id);\
 	_portJsDefault(port, BUT_A,  s1);\
 	_portJsDefault(port, BUT_B,  s2);\
 	_portJsDefault(port, SELECT, s3);\
@@ -408,7 +408,7 @@ void setDefault(void) {
 			"JA0PLS", "JB2", "JB3");
 
 	port2.type = FALSE;
-	port2.joyID = nameToJsn("JOYSTICKID2");
+	port2.joy_id = nameToJsn("JOYSTICKID2");
 
 }
 void setDefaultPgs(void) {
@@ -445,7 +445,7 @@ void writeInputParam(_param *prmtr, FILE *fp, BYTE end, _port port, BYTE numport
 		if (index == 0) {
 			if (type == JOYSTICK) {
 				fprintf(fp, "# player %d joystick\n", numport);
-				fprintf(fp, "%s = %s\n", prmtr[end - 1].lname, jsnToName(port.joyID));
+				fprintf(fp, "%s = %s\n", prmtr[end - 1].lname, jsnToName(port.joy_id));
 				end--;
 			} else {
 				fprintf(fp, "# player %d keyboard\n", numport);

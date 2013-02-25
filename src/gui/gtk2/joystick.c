@@ -19,11 +19,11 @@ void jsInit(void) {
 	memset(&js1, 0, sizeof(js1));
 	memset(&js2, 0, sizeof(js2));
 
-	sprintf(js1.dev, "%s%d", JSDEVPATH, port1.joyID);
-	js1.inputPort = inputPort1;
+	sprintf(js1.dev, "%s%d", JSDEVPATH, port1.joy_id);
+	js1.inputPort = input_port1;
 
-	sprintf(js2.dev, "%s%d", JSDEVPATH, port2.joyID);
-	js2.inputPort = inputPort2;
+	sprintf(js2.dev, "%s%d", JSDEVPATH, port2.joy_id);
+	js2.inputPort = input_port2;
 
 	jsOpen(&js1);
 	jsOpen(&js2);

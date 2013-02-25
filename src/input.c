@@ -19,36 +19,36 @@
 #include "tas.h"
 #include "cfg_file.h"
 
-void inputInit(void) {
+void input_init(void) {
 	switch (port1.type) {
 		case CTRLDISABLED:
 		default:
-			inputPort1 = NULL;
-			SETREADREG1(inputReadRegDisabled);
+			input_port1 = NULL;
+			SET_RD_REG1(input_rd_reg_disabled);
 			break;
 		case STDCTRL:
-			SETPORT1(inputPortStandard);
-			SETREADREG1(inputReadRegStandard);
+			SET_PORT1(input_port_standard);
+			SET_RD_REG1(input_rd_reg_standard);
 			break;
 		case ZAPPER:
-			inputPort1 = NULL;
-			SETREADREG1(inputReadRegZapper);
+			input_port1 = NULL;
+			SET_RD_REG1(input_rd_reg_zapper);
 			break;
 	}
 
 	switch (port2.type) {
 		case CTRLDISABLED:
 		default:
-			inputPort2 = NULL;
-			SETREADREG2(inputReadRegDisabled);
+			input_port2 = NULL;
+			SET_RD_REG2(input_rd_reg_disabled);
 			break;
 		case STDCTRL:
-			SETPORT2(inputPortStandard);
-			SETREADREG2(inputReadRegStandard);
+			SET_PORT2(input_port_standard);
+			SET_RD_REG2(input_rd_reg_standard);
 			break;
 		case ZAPPER:
-			inputPort2 = NULL;
-			SETREADREG2(inputReadRegZapper);
+			input_port2 = NULL;
+			SET_RD_REG2(input_rd_reg_zapper);
 			break;
 	}
 
@@ -60,16 +60,16 @@ void inputInit(void) {
 		port1.zapper = port2.zapper = 0;
 
 		if (port1.changed) {
-			memset(&port1.turbo, 0, sizeof(_turboButton) * LENGTH(port1.turbo));
+			memset(&port1.turbo, 0, sizeof(_turbo_button) * LENGTH(port1.turbo));
 			port1.changed = FALSE;
 		}
 
 		if (port2.changed) {
-			memset(&port2.turbo, 0, sizeof(_turboButton) * LENGTH(port2.turbo));
+			memset(&port2.turbo, 0, sizeof(_turbo_button) * LENGTH(port2.turbo));
 			port1.changed = FALSE;
 		}
 
-		inputTurboButtonsFrequency();
+		input_turbo_buttons_frequency();
 
 		for (i = 0; i < 24; i++) {
 			if (i < 8) {
@@ -80,17 +80,17 @@ void inputInit(void) {
 		}
 	}
 }
-void inputTurboButtonsFrequency(void){
+void input_turbo_buttons_frequency(void){
 	port1.turbo[TURBOA].frequency = port1.turbo[TURBOB].frequency = fps.nominal / 15;
 	port2.turbo[TURBOA].frequency = port2.turbo[TURBOB].frequency = fps.nominal / 15;
 }
 
-BYTE inputReadRegDisabled(BYTE openbus, WORD **screenIndex, _port *port) {
-	return(openbus);
+BYTE input_rd_reg_disabled(BYTE openbus, WORD **screen_index, _port *port) {
+	return (openbus);
 	/*return (0x80);*/
 }
 
-BYTE inputPortStandard(BYTE mode, DBWORD event, BYTE type, _port *port) {
+BYTE input_port_standard(BYTE mode, DBWORD event, BYTE type, _port *port) {
 	if (tas.type) {
 		return (EXIT_OK);
 	} else if (event == port->input[type][BUT_A]) {
@@ -166,7 +166,7 @@ BYTE inputPortStandard(BYTE mode, DBWORD event, BYTE type, _port *port) {
 	}
 	return (EXIT_ERROR);
 }
-BYTE inputReadRegStandard(BYTE openbus, WORD **screenIndex, _port *port) {
+BYTE input_rd_reg_standard(BYTE openbus, WORD **screen_index, _port *port) {
 	BYTE value;
 
 	/*
@@ -193,7 +193,7 @@ BYTE inputReadRegStandard(BYTE openbus, WORD **screenIndex, _port *port) {
 	return(value);
 }
 
-BYTE inputReadRegZapper(BYTE openbus, WORD **screenIndex, _port *port) {
+BYTE input_rd_reg_zapper(BYTE openbus, WORD **screen_index, _port *port) {
 	int x_zapper = -1, y_zapper = -1;
 	int x_rect, y_rect;
 	int gx = gui.x, gy = gui.y;
@@ -258,7 +258,7 @@ BYTE inputReadRegZapper(BYTE openbus, WORD **screenIndex, _port *port) {
 				}
 				{
 					int brightness;
-					_colorRGB color = paletteRGB[screenIndex[y_rect][x_rect]];
+					_colorRGB color = paletteRGB[screen_index[y_rect][x_rect]];
 
 					brightness = (color.r * 0.299) + (color.g * 0.587) + (color.b * 0.114);
 					if (brightness > 0x80) {

@@ -271,11 +271,11 @@ void cfg_standard_controller_combobox_select_joystick_control(GtkCellLayout *cel
 
 	/* il controller 1 ha priorita' sul 2 */
 	if (cfg_std_ctrl.cfg.id == 1) {
-		if (index == cfg_port2.port.joyID) {
+		if (index == cfg_port2.port.joy_id) {
 			same_port = TRUE;
 		}
 	} else if (cfg_std_ctrl.cfg.id == 2) {
-		if (index == cfg_port1.port.joyID) {
+		if (index == cfg_port1.port.joy_id) {
 			same_port = TRUE;
 		}
 	}
@@ -303,7 +303,7 @@ void cfg_standard_controller_combobox_joystick_changed(GtkComboBox *combobox) {
 	gtk_combo_box_get_active_iter(GTK_COMBO_BOX(combobox), &iter);
 
 	gtk_tree_model_get(model, &iter, VALUE_JOYSTICK,
-			&cfg_std_ctrl.cfg.port.joyID, -1);
+			&cfg_std_ctrl.cfg.port.joy_id, -1);
 }
 void cfg_standard_controller_input_changed_clicked(GtkButton *button, BYTE input) {
 	if (cfg_std_ctrl.no_other_buttons) {
@@ -328,7 +328,7 @@ void cfg_standard_controller_input_changed_clicked(GtkButton *button, BYTE input
 void cfg_standard_controller_js_press_event(void) {
 	_jsevent jse;
 	char device[30];
-	BYTE index = cfg_std_ctrl.cfg.port.joyID;
+	BYTE index = cfg_std_ctrl.cfg.port.joy_id;
 	BYTE read_ok = FALSE;
 	BYTE size = sizeof(jse);
 	DBWORD value = 0;
@@ -356,11 +356,11 @@ void cfg_standard_controller_js_press_event(void) {
 	 * utilizzare lo stesso device. ed
 	 */
 	if (cfg_std_ctrl.cfg.id == 1) {
-		if (index == cfg_port2.port.joyID) {
+		if (index == cfg_port2.port.joy_id) {
 			g_thread_exit(NULL);
 		}
 	} else if (cfg_std_ctrl.cfg.id == 2) {
-		if (index == cfg_port1.port.joyID) {
+		if (index == cfg_port1.port.joy_id) {
 			g_thread_exit(NULL);
 		}
 	}
@@ -541,10 +541,10 @@ GtkWidget *cfg_standard_controller_combobox_select_joystick(void) {
 	gtk_cell_layout_set_cell_data_func(GTK_CELL_LAYOUT(combobox), renderer,
 			cfg_standard_controller_combobox_select_joystick_control, NULL, NULL);
 
-	if (cfg_std_ctrl.cfg.port.joyID == nameToJsn("NULL")) {
+	if (cfg_std_ctrl.cfg.port.joy_id == nameToJsn("NULL")) {
 		gtk_combo_box_set_active(GTK_COMBO_BOX(combobox), 0);
 	} else {
-		gtk_combo_box_set_active(GTK_COMBO_BOX(combobox), cfg_std_ctrl.cfg.port.joyID);
+		gtk_combo_box_set_active(GTK_COMBO_BOX(combobox), cfg_std_ctrl.cfg.port.joy_id);
 	}
 
 	g_signal_connect(G_OBJECT(combobox), "changed",
@@ -634,7 +634,7 @@ gboolean cfg_standard_controller_input_is_not_ok(DBWORD input) {
 		/* joystick */
 		for (i = 0; i < maxButtons; i++) {
 			if (p2->port.input[JOYSTICK][i] == input) {
-				if (p1->port.joyID == p2->port.joyID) {
+				if (p1->port.joy_id == p2->port.joy_id) {
 					return (EXIT_ERROR);
 				}
 			}

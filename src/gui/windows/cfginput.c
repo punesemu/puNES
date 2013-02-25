@@ -107,7 +107,7 @@ long __stdcall cfg_input_controllers(HWND hwnd, UINT msg, WPARAM wParam, LPARAM 
 
 					cfg_file_input_save();
 
-					inputInit();
+					input_init();
 
 					jsQuit();
 					jsInit();

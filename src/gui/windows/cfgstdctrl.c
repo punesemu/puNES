@@ -89,12 +89,12 @@ long __stdcall cfg_standard_controller_wnd_proc(HWND hwnd, UINT msg, WPARAM wPar
 				SendDlgItemMessage(hwnd, IDC_STD_CTRL_JOY_ID, CB_ADDSTRING, i, (LPARAM) label);
 			}
 
-			if (cfg_std_ctrl.cfg.port.joyID == nameToJsn("NULL")) {
+			if (cfg_std_ctrl.cfg.port.joy_id == nameToJsn("NULL")) {
 				SendDlgItemMessage(hwnd, IDC_STD_CTRL_JOY_ID, CB_SETCURSEL, 0, 0);
-				cfg_std_ctrl.cfg.port.joyID = 0;
+				cfg_std_ctrl.cfg.port.joy_id = 0;
 			} else {
 				SendDlgItemMessage(hwnd, IDC_STD_CTRL_JOY_ID, CB_SETCURSEL,
-				        cfg_std_ctrl.cfg.port.joyID, 0);
+				        cfg_std_ctrl.cfg.port.joy_id, 0);
 			}
 			return TRUE;
 		}
@@ -136,11 +136,11 @@ long __stdcall cfg_standard_controller_wnd_proc(HWND hwnd, UINT msg, WPARAM wPar
 				joyInfo.dwSize = sizeof(joyInfo);
 
 				if (cfg_std_ctrl.cfg.id == 1) {
-					if (slot == cfg_port2.port.joyID) {
+					if (slot == cfg_port2.port.joy_id) {
 						same_port = TRUE;
 					}
 				} else if (cfg_std_ctrl.cfg.id == 2) {
-					if (slot == cfg_port1.port.joyID) {
+					if (slot == cfg_port1.port.joy_id) {
 						same_port = TRUE;
 					}
 				}
@@ -169,7 +169,7 @@ long __stdcall cfg_standard_controller_wnd_proc(HWND hwnd, UINT msg, WPARAM wPar
 				case IDC_STD_CTRL_JOY_ID:
 					if (HIWORD(wParam) == CBN_SELCHANGE) {
 
-						cfg_std_ctrl.cfg.port.joyID = SendDlgItemMessage(hwnd,
+						cfg_std_ctrl.cfg.port.joy_id = SendDlgItemMessage(hwnd,
 								IDC_STD_CTRL_JOY_ID, CB_GETCURSEL, 0, 0);
 					}
 					return TRUE;
@@ -229,7 +229,7 @@ long __stdcall cfg_standard_controller_wnd_proc(HWND hwnd, UINT msg, WPARAM wPar
 					}
 
 					/* se il joystick non e' collegato non faccio niente */
-					if (cfg_std_ctrl.joy_connected[cfg_std_ctrl.cfg.port.joyID] == FALSE) {
+					if (cfg_std_ctrl.joy_connected[cfg_std_ctrl.cfg.port.joy_id] == FALSE) {
 						return TRUE;
 					}
 					/*
@@ -238,7 +238,7 @@ long __stdcall cfg_standard_controller_wnd_proc(HWND hwnd, UINT msg, WPARAM wPar
 					 * il primo ha priorita' sul secondo.
 					 */
 					if (cfg_std_ctrl.cfg.id == 2) {
-						if (cfg_std_ctrl.cfg.port.joyID == cfg_port1.port.joyID) {
+						if (cfg_std_ctrl.cfg.port.joy_id == cfg_port1.port.joy_id) {
 							return TRUE;
 						}
 					}
@@ -310,21 +310,21 @@ void __stdcall cfg_standard_controller_read_joy(void) {
 	 * utilizzare lo stesso device. ed
 	 */
 	if (cfg_std_ctrl.cfg.id == 1) {
-		if (cfg_std_ctrl.cfg.port.joyID == cfg_port2.port.joyID) {
+		if (cfg_std_ctrl.cfg.port.joy_id == cfg_port2.port.joy_id) {
 			return;
 		}
 	} else if (cfg_std_ctrl.cfg.id == 2) {
-		if (cfg_std_ctrl.cfg.port.joyID == cfg_port1.port.joyID) {
+		if (cfg_std_ctrl.cfg.port.joy_id == cfg_port1.port.joy_id) {
 			return;
 		}
 	}
 
-	joyGetDevCaps(cfg_std_ctrl.cfg.port.joyID, &joyCaps, sizeof(joyCaps));
+	joyGetDevCaps(cfg_std_ctrl.cfg.port.joy_id, &joyCaps, sizeof(joyCaps));
 
 	joyInfo.dwFlags = JOY_RETURNALL | JOY_RETURNCENTERED | JOY_USEDEADZONE;
 	joyInfo.dwSize = sizeof(joyInfo);
 
-	if (joyGetPosEx(cfg_std_ctrl.cfg.port.joyID, &joyInfo) != JOYERR_NOERROR) {
+	if (joyGetPosEx(cfg_std_ctrl.cfg.port.joy_id, &joyInfo) != JOYERR_NOERROR) {
 		return;
 	}
 
@@ -438,7 +438,7 @@ BOOL cfg_standard_controller_input_is_not_ok(DBWORD input, BYTE type) {
 		/* joystick */
 		for (i = 0; i < maxButtons; i++) {
 			if (p2->port.input[JOYSTICK][i] == input) {
-				if (p1->port.joyID == p2->port.joyID) {
+				if (p1->port.joy_id == p2->port.joy_id) {
 					return (EXIT_ERROR);
 				}
 			}

@@ -405,11 +405,11 @@ void guiEvent(void) {
 
 	jsControl(&js1, &port1);
 	/* i due joystick non possono essere gli stessi */
-	if (port2.joyID != port1.joyID) {
+	if (port2.joy_id != port1.joy_id) {
 		jsControl(&js2, &port2);
 	}
-	inputTurboButtonsControl(&port1);
-	inputTurboButtonsControl(&port2);
+	input_turbo_buttons_control(&port1);
+	input_turbo_buttons_control(&port2);
 }
 GdkNativeWindow guiWindowID(void) {
 	return (gtk_socket_get_id(GTK_SOCKET(sock)));
@@ -695,10 +695,10 @@ gboolean sock_key_press_event(GtkWidget *widget, GdkEventKey *event) {
 				return (TRUE);
 		}
 	}
-	if (inputPort1 && !inputPort1(PRESSED, keyval, KEYBOARD, &port1)) {
+	if (input_port1 && !input_port1(PRESSED, keyval, KEYBOARD, &port1)) {
 		return (TRUE);
 	}
-	if (inputPort2 && !inputPort2(PRESSED, keyval, KEYBOARD, &port2)) {
+	if (input_port2 && !input_port2(PRESSED, keyval, KEYBOARD, &port2)) {
 		return (TRUE);
 	}
 	return (FALSE);
@@ -716,10 +716,10 @@ gboolean sock_key_release_event(GtkWidget *widget, GdkEventKey *event) {
 			fps_normalize();
 			return (TRUE);
 	}
-	if (inputPort1 && !inputPort1(RELEASED, keyval, KEYBOARD, &port1)) {
+	if (input_port1 && !input_port1(RELEASED, keyval, KEYBOARD, &port1)) {
 		return (TRUE);
 	}
-	if (inputPort2 && !inputPort2(RELEASED, keyval, KEYBOARD, &port2)) {
+	if (input_port2 && !input_port2(RELEASED, keyval, KEYBOARD, &port2)) {
 		return (TRUE);
 	}
 	return (FALSE);

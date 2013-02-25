@@ -11,7 +11,7 @@
 #include <SDL.h>
 #include "common.h"
 
-void bilinear(WORD *screen, WORD **screenIndex, Uint32 *palette, SDL_Surface *dst, WORD rows,
+void bilinear(WORD *screen, WORD **screen_index, Uint32 *palette, SDL_Surface *dst, WORD rows,
         WORD lines, BYTE factor);
 
 #endif /* BILINEAR_H_ */

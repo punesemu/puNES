@@ -75,7 +75,7 @@ int burst_phase = 0;
 
 /*
  * cio' che non utilizzo in questa funzione
- * sono i parametri WORD **screenIndex e
+ * sono i parametri WORD **screen_index e
  * Uint32 *palette.
  */
 void ntscSurface(WORD *screen, WORD **screeIndex, Uint32 *palette, SDL_Surface *dst, WORD rows,

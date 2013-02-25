@@ -163,7 +163,7 @@ void cfg_input_ok_clicked(GtkWidget *widget, _cfg_port *cfgport) {
 
 	cfg_file_input_save();
 
-	inputInit();
+	input_init();
 
 	jsQuit();
 	jsInit();

@@ -54,7 +54,7 @@ struct _scl2x {
  * cio' che non utilizzo in questa funzione
  * e' il parametro WORD *screen.
  */
-void scaleNx(WORD *screen, WORD **screenIndex, Uint32 *palette, SDL_Surface *dst, WORD rows,
+void scaleNx(WORD *screen, WORD **screen_index, Uint32 *palette, SDL_Surface *dst, WORD rows,
 		WORD lines, BYTE factor) {
 
 	scl2x.sx = 0;
@@ -74,14 +74,14 @@ void scaleNx(WORD *screen, WORD **screenIndex, Uint32 *palette, SDL_Surface *dst
 	if (factor == 1) {
 		return;
 	} else if (factor == 2) {
-		scale2x(screenIndex, palette, dst);
+		scale2x(screen_index, palette, dst);
 	} else if (factor == 3) {
-		scale3x(screenIndex, palette, dst);
+		scale3x(screen_index, palette, dst);
 	} else if (factor == 4) {
-		scale4x(screenIndex, palette, dst);
+		scale4x(screen_index, palette, dst);
 	}
 }
-void scale2x(WORD **screenIndex, Uint32 *palette, SDL_Surface *dst) {
+void scale2x(WORD **screen_index, Uint32 *palette, SDL_Surface *dst) {
 	const DBWORD dstpitch = dst->pitch;
 	WORD E0, E1, E2, E3, B, D, E, F, H;
 	Uint8 *dstpix = (Uint8 *) dst->pixels;
@@ -103,11 +103,11 @@ void scale2x(WORD **screenIndex, Uint32 *palette, SDL_Surface *dst) {
 			TW0 = MAX(0, scl2x.sx - 1);
 			TW1 = scl2x.sx;
 			TW2 = MIN(scl2x.rows - 1, scl2x.sx + 1);
-			B = screenIndex[TH0][TW1];
-			D = screenIndex[TH1][TW0];
-			E = screenIndex[TH1][TW1];
-			F = screenIndex[TH1][TW2];
-			H = screenIndex[TH2][TW1];
+			B = screen_index[TH0][TW1];
+			D = screen_index[TH1][TW0];
+			E = screen_index[TH1][TW1];
+			F = screen_index[TH1][TW2];
+			H = screen_index[TH2][TW1];
 			SCALE2X()
 			switch (dst->format->BitsPerPixel) {
 				case 15:
@@ -143,7 +143,7 @@ void scale2x(WORD **screenIndex, Uint32 *palette, SDL_Surface *dst) {
 	/* unlock della destinazione */
 	//SDL_UnlockSurface(dst);
 }
-void scale3x(WORD **screenIndex, Uint32 *palette, SDL_Surface *dst) {
+void scale3x(WORD **screen_index, Uint32 *palette, SDL_Surface *dst) {
 	const DBWORD dstpitch = dst->pitch;
 	WORD A, B, C, D, E, F, G, H, I;
 	WORD E0, E1, E2, E3, E4, E5, E6, E7, E8;
@@ -167,16 +167,16 @@ void scale3x(WORD **screenIndex, Uint32 *palette, SDL_Surface *dst) {
 			TW0 = MAX(0, scl2x.sx - 1);
 			TW1 = scl2x.sx;
 			TW2 = MIN(scl2x.rows - 1, scl2x.sx + 1);
-			B = screenIndex[TH0][TW1];
-			D = screenIndex[TH1][TW0];
-			E = screenIndex[TH1][TW1];
-			F = screenIndex[TH1][TW2];
-			H = screenIndex[TH2][TW1];
+			B = screen_index[TH0][TW1];
+			D = screen_index[TH1][TW0];
+			E = screen_index[TH1][TW1];
+			F = screen_index[TH1][TW2];
+			H = screen_index[TH2][TW1];
 			if (B != H && D != F) {
-				A = screenIndex[TH0][TW0];
-				C = screenIndex[TH0][TW2];
-				G = screenIndex[TH2][TW0];
-				I = screenIndex[TH2][TW2];
+				A = screen_index[TH0][TW0];
+				C = screen_index[TH0][TW2];
+				G = screen_index[TH2][TW0];
+				I = screen_index[TH2][TW2];
 				SCALE3X_A()
 			} else {
 				SCALE3X_B()
@@ -233,7 +233,7 @@ void scale3x(WORD **screenIndex, Uint32 *palette, SDL_Surface *dst) {
 	/* unlock della destinazione */
 	//SDL_UnlockSurface(dst);
 }
-void scale4x(WORD **screenIndex, Uint32 *palette, SDL_Surface *dst) {
+void scale4x(WORD **screen_index, Uint32 *palette, SDL_Surface *dst) {
 	SDL_Surface *buffer;
 	WORD x, y, width, height;
 	DBWORD srcpitch, dstpitch = dst->pitch;
@@ -244,7 +244,7 @@ void scale4x(WORD **screenIndex, Uint32 *palette, SDL_Surface *dst) {
 	buffer = SDL_CreateRGBSurface(dst->flags, dst->w >> 1, dst->h >> 1, dst->format->BitsPerPixel,
 			dst->format->Rmask, dst->format->Gmask, dst->format->Bmask, dst->format->Amask);
 
-	scale2x(screenIndex, palette, buffer);
+	scale2x(screen_index, palette, buffer);
 
 	srcpix = (Uint8 *) buffer->pixels;
 	srcpitch = buffer->pitch;

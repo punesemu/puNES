@@ -22,7 +22,7 @@ struct _scl {
 	WORD lines;
 } scl;
 
-void scaleSurface(WORD *screen, WORD **screenIndex, Uint32 *palette, SDL_Surface *dst, WORD rows,
+void scaleSurface(WORD *screen, WORD **screen_index, Uint32 *palette, SDL_Surface *dst, WORD rows,
 		WORD lines, BYTE factor) {
 
 	scl.sx = 0;
@@ -40,16 +40,16 @@ void scaleSurface(WORD *screen, WORD **screenIndex, Uint32 *palette, SDL_Surface
 	}
 
 	if (factor == 1) {
-		scaleSurface1x(screenIndex, palette, dst);
+		scaleSurface1x(screen_index, palette, dst);
 	} else if (factor == 2) {
-		scaleSurface2x(screenIndex, palette, dst);
+		scaleSurface2x(screen_index, palette, dst);
 	} else if (factor == 3) {
-		scaleSurface3x(screenIndex, palette, dst);
+		scaleSurface3x(screen_index, palette, dst);
 	} else if (factor == 4) {
-		scaleSurface4x(screenIndex, palette, dst);
+		scaleSurface4x(screen_index, palette, dst);
 	}
 }
-void scaleSurface1x(WORD **screenIndex, uint32_t *palette, SDL_Surface *dst) {
+void scaleSurface1x(WORD **screen_index, uint32_t *palette, SDL_Surface *dst) {
 	const uint32_t dstpitch = dst->pitch;
 	uint8_t *dstpix = (uint8_t *) dst->pixels;
 	uint32_t TH0, TW0;
@@ -60,7 +60,7 @@ void scaleSurface1x(WORD **screenIndex, uint32_t *palette, SDL_Surface *dst) {
 		scl.ox = 0;
 		/* loop per l'intera larghezza dell'immagine */
 		for (scl.sx = scl.startx; scl.sx < scl.rows; scl.sx++) {
-			pixel = palette[screenIndex[scl.sy][scl.sx]];
+			pixel = palette[screen_index[scl.sy][scl.sx]];
 			/*
 			 * converto il colore nel formato corretto di visualizzazione
 			 * e riempio un rettangolo delle dimensioni del fattore di scala
@@ -86,7 +86,7 @@ void scaleSurface1x(WORD **screenIndex, uint32_t *palette, SDL_Surface *dst) {
 		scl.oy++;
 	}
 }
-void scaleSurface2x(WORD **screenIndex, uint32_t *palette, SDL_Surface *dst) {
+void scaleSurface2x(WORD **screen_index, uint32_t *palette, SDL_Surface *dst) {
 	const uint32_t dstpitch = dst->pitch;
 	uint8_t *dstpix = (uint8_t *) dst->pixels;
 	uint32_t TH0, TH1, TW0, TW1;
@@ -98,7 +98,7 @@ void scaleSurface2x(WORD **screenIndex, uint32_t *palette, SDL_Surface *dst) {
 		scl.ox = 0;
 		/* loop per l'intera larghezza dell'immagine */
 		for (scl.sx = scl.startx; scl.sx < scl.rows; scl.sx++) {
-			pixel = palette[screenIndex[scl.sy][scl.sx]];
+			pixel = palette[screen_index[scl.sy][scl.sx]];
 
 			/*
 			 * converto il colore nel formato corretto di visualizzazione
@@ -137,7 +137,7 @@ void scaleSurface2x(WORD **screenIndex, uint32_t *palette, SDL_Surface *dst) {
 		scl.oy++;
 	}
 }
-void scaleSurface3x(WORD **screenIndex, uint32_t *palette, SDL_Surface *dst) {
+void scaleSurface3x(WORD **screen_index, uint32_t *palette, SDL_Surface *dst) {
 	const uint32_t dstpitch = dst->pitch;
 	uint8_t *dstpix = (uint8_t *) dst->pixels;
 	uint32_t TH0, TH1, TH2, TW0, TW1, TW2;
@@ -151,7 +151,7 @@ void scaleSurface3x(WORD **screenIndex, uint32_t *palette, SDL_Surface *dst) {
 		scl.ox = 0;
 		/* loop per l'intera larghezza dell'immagine */
 		for (scl.sx = scl.startx; scl.sx < scl.rows; scl.sx++) {
-			pixel = palette[screenIndex[scl.sy][scl.sx]];
+			pixel = palette[screen_index[scl.sy][scl.sx]];
 
 			/*
 			 * converto il colore nel formato corretto di visualizzazione
@@ -208,7 +208,7 @@ void scaleSurface3x(WORD **screenIndex, uint32_t *palette, SDL_Surface *dst) {
 		scl.oy++;
 	}
 }
-void scaleSurface4x(WORD **screenIndex, uint32_t *palette, SDL_Surface *dst) {
+void scaleSurface4x(WORD **screen_index, uint32_t *palette, SDL_Surface *dst) {
 	const uint32_t dstpitch = dst->pitch;
 	uint8_t *dstpix = (uint8_t *) dst->pixels;
 	uint32_t TH0, TH1, TH2, TH3, TW0, TW1, TW2, TW3;
@@ -223,7 +223,7 @@ void scaleSurface4x(WORD **screenIndex, uint32_t *palette, SDL_Surface *dst) {
 		scl.ox = 0;
 		/* loop per l'intera larghezza dell'immagine */
 		for (scl.sx = scl.startx; scl.sx < scl.rows; scl.sx++) {
-			pixel = palette[screenIndex[scl.sy][scl.sx]];
+			pixel = palette[screen_index[scl.sy][scl.sx]];
 
 			/*
 			 * converto il colore nel formato corretto di visualizzazione

@@ -149,7 +149,7 @@ static BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 			/* eseguo un tick hardware */
 			tick_hw(1);
 			/* leggo dal controller */
-			cpu.openbus = inputReadReg1(cpu.openbus, screen.line, &port1);
+			cpu.openbus = input_rd_reg1(cpu.openbus, screen.line, &port1);
 			return (cpu.openbus);
 		}
 		/* Controller port 2 */
@@ -158,7 +158,7 @@ static BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 			/* eseguo un tick hardware */
 			tick_hw(1);
 			/* leggo dal controller */
-			cpu.openbus = inputReadReg2(cpu.openbus, screen.line, &port2);
+			cpu.openbus = input_rd_reg2(cpu.openbus, screen.line, &port2);
 			return (cpu.openbus);
 		}
 	}

@@ -47,15 +47,15 @@ void jsInit(void) {
 	memset(&js1, 0, sizeof(js1));
 	memset(&js2, 0, sizeof(js2));
 
-	sprintf(js1.dev, "%s", jsnToName(port1.joyID));
+	sprintf(js1.dev, "%s", jsnToName(port1.joy_id));
 	js1.openTry = (BYTE) (rand() % 110);
 	js1.clock = 0;
-	js1.inputPort = inputPort1;
+	js1.inputPort = input_port1;
 
-	sprintf(js2.dev, "%s", jsnToName(port2.joyID));
+	sprintf(js2.dev, "%s", jsnToName(port2.joy_id));
 	js2.openTry = (BYTE) (rand() % 110);
 	js2.clock = 1;
-	js2.inputPort = inputPort2;
+	js2.inputPort = input_port2;
 
 	jsOpen(&js1);
 	jsOpen(&js2);

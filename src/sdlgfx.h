@@ -70,8 +70,8 @@ void sdlNOP(double ms);
 
 /* funzioni virtuali */
 #define GFX_EFFECT_ROUTINE\
-	void (*effect)(WORD *screen, WORD **screenIndex, Uint32 *palette, SDL_Surface *dst, WORD rows,\
-	WORD lines, BYTE factor)
+	void (*effect)(WORD *screen, WORD **screen_index, Uint32 *palette, SDL_Surface *dst, WORD rows,\
+				WORD lines, BYTE factor)
 
 GFX_EFFECT_ROUTINE;
 int (*flip)(SDL_Surface *surface);

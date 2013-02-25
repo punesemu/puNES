@@ -485,7 +485,7 @@ BYTE emu_turn_on(void) {
 	INIT_PC
 
 	/* controller */
-	inputInit();
+	input_init();
 
 	/* joystick */
 	jsInit();
@@ -598,7 +598,7 @@ BYTE emu_reset(BYTE type) {
 	}
 
 	/* controller */
-	inputInit();
+	input_init();
 
 	if (timelineInit()) {
 		return (EXIT_ERROR);

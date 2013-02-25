@@ -82,7 +82,7 @@ void fps_init(void) {
 	fps.nominal = 1000.0 / machine.ms_frame;
 	fps.avarage = fps.nominal;
 	fps_normalize();
-	inputTurboButtonsFrequency();
+	input_turbo_buttons_frequency();
 }
 void fps_fast_forward(void) {
 	fps.fast_forward = TRUE;

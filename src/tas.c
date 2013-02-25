@@ -87,7 +87,7 @@ void tasQuit(void) {
 	memcpy(&port1, &tas_port_bck1, sizeof(_port));
 	memcpy(&port2, &tas_port_bck2, sizeof(_port));
 
-	inputInit();
+	input_init();
 
 	tas.type = NOTAS;
 }

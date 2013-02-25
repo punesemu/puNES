@@ -497,11 +497,11 @@ void guiEvent(void) {
 						break;
 				}
 				if (!tas.type && !noProcess) {
-					if (inputPort1 && !inputPort1(PRESSED, LOWORD(Msg.wParam), KEYBOARD, &port1)) {
+					if (input_port1 && !input_port1(PRESSED, LOWORD(Msg.wParam), KEYBOARD, &port1)) {
 						break;
 					}
-					if (inputPort2) {
-						inputPort2(PRESSED, LOWORD(Msg.wParam), KEYBOARD, &port2);
+					if (input_port2) {
+						input_port2(PRESSED, LOWORD(Msg.wParam), KEYBOARD, &port2);
 					}
 				}
 				break;
@@ -520,11 +520,11 @@ void guiEvent(void) {
 						break;
 				}
 				if (!tas.type && !noProcess) {
-					if (inputPort1 && !inputPort1(RELEASED, LOWORD(Msg.wParam), KEYBOARD, &port1)) {
+					if (input_port1 && !input_port1(RELEASED, LOWORD(Msg.wParam), KEYBOARD, &port1)) {
 						break;
 					}
-					if (inputPort2) {
-						inputPort2(RELEASED, LOWORD(Msg.wParam), KEYBOARD, &port2);
+					if (input_port2) {
+						input_port2(RELEASED, LOWORD(Msg.wParam), KEYBOARD, &port2);
 					}
 				}
 				break;
@@ -574,11 +574,11 @@ void guiEvent(void) {
 
 	jsControl(&js1, &port1);
 	/* i due joystick non possono essere gli stessi */
-	if (port2.joyID != port1.joyID) {
+	if (port2.joy_id != port1.joy_id) {
 		jsControl(&js2, &port2);
 	}
-	inputTurboButtonsControl(&port1);
-	inputTurboButtonsControl(&port2);
+	input_turbo_buttons_control(&port1);
+	input_turbo_buttons_control(&port2);
 	return;
 }
 HWND guiWindowID(void) {

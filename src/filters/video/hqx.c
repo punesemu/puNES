@@ -26,7 +26,7 @@ void hqxInit(void) {
 	}
 
 }
-void hqNx(WORD *screen, WORD **screenIndex, Uint32 *palette, SDL_Surface *dst, WORD rows,
+void hqNx(WORD *screen, WORD **screen_index, Uint32 *palette, SDL_Surface *dst, WORD rows,
 		WORD lines, BYTE factor) {
 	hqnx.sx = 0;
 	hqnx.sy = 0;
