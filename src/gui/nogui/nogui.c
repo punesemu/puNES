@@ -74,7 +74,7 @@ void guiAfterSet(void) {
 
 }
 void guiStart(void) {
-	emuLoop();
+	emu_loop();
 }
 void guiEvent(void) {
 	SDL_Event event;
@@ -139,13 +139,13 @@ void guiEvent(void) {
 						gfxSetScreen(NOCHANGE, NOCHANGE, NOCHANGE, PALETTENTSC, FALSE);
 					}
 				}
-				if (emuReset(CHANGEMODE)) { emuQuit(EXIT_FAILURE); }
+				if (emu_reset(CHANGEMODE)) { emu_quit(EXIT_FAILURE); }
 				break;
 			case SDLK_F11:
-				if (emuReset(HARD)) { emuQuit(EXIT_FAILURE); }
+				if (emu_reset(HARD)) { emu_quit(EXIT_FAILURE); }
 				break;
 			case SDLK_F12:
-				if (emuReset(RESET)) { emuQuit(EXIT_FAILURE); }
+				if (emu_reset(RESET)) { emu_quit(EXIT_FAILURE); }
 				break;
 			case SDLK_ESCAPE:
 				info.stop = TRUE;
@@ -355,7 +355,7 @@ int guiWindowID(void) {
 void guiUpdate(void) {
 	char title[255];
 
-	emuSetTitle(title);
+	emu_set_title(title);
 	SDL_WM_SetCaption(title, NULL);
 }
 void guiSetPosition(char *buffer) {

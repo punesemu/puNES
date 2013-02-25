@@ -33,7 +33,7 @@
 #include "menu/menu.h"
 
 #define tlPressed(type)\
-	emuPause(TRUE);\
+	emu_pause(TRUE);\
 	type = TRUE;\
 	if (tl.snapsFill) {\
 		/* faccio lo screenshot dello screen attuale */\
@@ -48,7 +48,7 @@
 	}\
 	gtk_widget_grab_focus(GTK_WIDGET(sock));\
 	type = FALSE;\
-	emuPause(FALSE)
+	emu_pause(FALSE)
 
 enum {
 	COLUMN_STRING, COLUMN_INT, N_COLUMNS
@@ -385,7 +385,7 @@ void guiSetVideoMode(void) {
 	gtk_widget_set_size_request(sock, gfx.w[VIDEOMODE], gfx.h[VIDEOMODE]);
 }
 void guiStart(void) {
-	gtk_idle_add((GtkFunction) emuLoop, mainWin);
+	gtk_idle_add((GtkFunction) emu_loop, mainWin);
 	gui.start = TRUE;
 	gtk_main();
 }
@@ -420,7 +420,7 @@ void guiUpdate(void) {
 	guiupdate = TRUE;
 
 	/* aggiorno il titolo */
-	emuSetTitle(title);
+	emu_set_title(title);
 	gtk_window_set_title(GTK_WINDOW(mainWin), title);
 
 	menu_nes_check();
@@ -598,7 +598,7 @@ gboolean sock_key_press_event(GtkWidget *widget, GdkEventKey *event) {
 			}
 			return (TRUE);
 		case GDK_KEY_Shift_L:
-			fpsFastForward();
+			fps_fast_forward();
 			return (TRUE);
 		case GDK_Left:
 			if (tl.key) {
@@ -713,7 +713,7 @@ gboolean sock_key_release_event(GtkWidget *widget, GdkEventKey *event) {
 			}
 			return (TRUE);
 		case GDK_KEY_Shift_L:
-			fpsNormalize();
+			fps_normalize();
 			return (TRUE);
 	}
 	if (inputPort1 && !inputPort1(RELEASED, keyval, KEYBOARD, &port1)) {
@@ -765,7 +765,7 @@ gboolean mouse_motion_notify_event(GtkWidget *widget, GdkEventMotion *event) {
 void file_open(void) {
 	GtkWidget *dialog;
 
-	emuPause(TRUE);
+	emu_pause(TRUE);
 
 	/* potrei essere entrato con il CTRL+O */
 	tl.key = FALSE;
@@ -799,7 +799,7 @@ void file_open(void) {
 
 	g_timeout_redraw_stop();
 
-	emuPause(FALSE);
+	emu_pause(FALSE);
 }
 void file_open_filter_add(GtkWidget *filechooser, const gchar *title, const gchar *pattern) {
 	GtkFileFilter *filter = gtk_file_filter_new();
@@ -819,7 +819,7 @@ void help_about(void) {
 	GdkPixbuf *pixbuf;
 	GtkWidget *dialog;
 
-	emuPause(TRUE);
+	emu_pause(TRUE);
 
 	pixbuf = gdk_pixbuf_new_from_inline(-1, pin_inline, FALSE, NULL);
 	dialog = gtk_about_dialog_new();
@@ -845,7 +845,7 @@ void help_about(void) {
 
 	g_timeout_redraw_stop();
 
-	emuPause(FALSE);
+	emu_pause(FALSE);
 }
 /* reset */
 void make_reset(int type) {
@@ -868,7 +868,7 @@ void make_reset(int type) {
 		}
 	}
 
-	if (emuReset(type)) {
+	if (emu_reset(type)) {
 		mainWin_destroy();
 	}
 }
@@ -1086,7 +1086,7 @@ void saveslot_notify_popup_shown(GtkComboBox *widget) {
 	g_object_get(GTK_OBJECT(widget), "popup-shown", &mode, NULL);
 
 	if (mode == 1) {
-		emuPause(TRUE);
+		emu_pause(TRUE);
 		/* intercetto il "key-press-event" del combobox */
 		trcb.hook_id = g_signal_add_emission_hook(
 				g_signal_lookup("key-press-event", GTK_TYPE_WINDOW), 0, saveslot_key_press_event,
@@ -1101,7 +1101,7 @@ void saveslot_notify_popup_shown(GtkComboBox *widget) {
 		g_signal_remove_emission_hook(g_signal_lookup("key-press-event", GTK_TYPE_WINDOW),
 				trcb.hook_id);
 		savestate.previewStart = FALSE;
-		emuPause(FALSE);
+		emu_pause(FALSE);
 	}
 }
 void saveslot_preview(void) {
@@ -1142,9 +1142,9 @@ void drag_data_received(GtkWidget *widget, GdkDragContext *context, gint x, gint
 
 		dnd_success = TRUE;
 
-		emuPause(TRUE);
+		emu_pause(TRUE);
 		change_rom(path);
-		emuPause(FALSE);
+		emu_pause(FALSE);
 
 		g_strfreev(uri_list);
 		g_free(path);

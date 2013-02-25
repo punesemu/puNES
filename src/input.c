@@ -237,7 +237,7 @@ BYTE inputReadRegZapper(BYTE openbus, WORD **screenIndex, _port *port) {
 		return (port->zapper |= 0x08);
 	}
 
-	if (!r2002.vblank && r2001.visible && (ppu.frameY > machine.vintLines)
+	if (!r2002.vblank && r2001.visible && (ppu.frameY > machine.vint_lines)
 	        && (ppu.screenY < SCRLINES)) {
 		for (y_rect = (y_zapper - 8); y_rect < (y_zapper + 8); y_rect++) {
 			if (y_rect < 0) {

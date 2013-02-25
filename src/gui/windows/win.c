@@ -42,7 +42,7 @@
 #define timer_redraw_stop()\
 	KillTimer(hwnd, IDT_TIMER1)
 #define tlDown(type)\
-	emuPause(TRUE);\
+	emu_pause(TRUE);\
 	type = TRUE;\
 	if (tl.snapsFill) {\
 		/* faccio lo screenshot dello screen attuale */\
@@ -57,7 +57,7 @@
 	}\
 	SetFocus(hSDL);\
 	type = FALSE;\
-	emuPause(FALSE)
+	emu_pause(FALSE)
 #define hideToolWidget()\
 	ShowWindow(hFrameSs, SW_HIDE)
 #define showToolWidget()\
@@ -440,7 +440,7 @@ void guiStart(void) {
 
 	gui.start = TRUE;
 
-	emuLoop();
+	emu_loop();
 	return;
 }
 void guiEvent(void) {
@@ -468,7 +468,7 @@ void guiEvent(void) {
 						noProcess = TRUE;
 						break;
 					case VK_SHIFT:
-						fpsFastForward();
+						fps_fast_forward();
 						noProcess = TRUE;
 						break;
 					case VK_LEFT:
@@ -515,7 +515,7 @@ void guiEvent(void) {
 						noProcess = TRUE;
 						break;
 					case VK_SHIFT:
-						fpsNormalize();
+						fps_normalize();
 						noProcess = TRUE;
 						break;
 				}
@@ -589,7 +589,7 @@ void guiUpdate(void) {
 	char title[255];
 
 	/* aggiorno il titolo */
-	emuSetTitle(title);
+	emu_set_title(title);
 	SetWindowText(hMainWin, title);
 
 	/* checko le voci di menu corrette */
@@ -1160,7 +1160,7 @@ void guiUpdate(void) {
 	}
 }
 void guiFullscreen(void) {
-	emuPause(TRUE);
+	emu_pause(TRUE);
 
 	/* nascondo la finestra */
 	ShowWindow(hMainWin, SW_HIDE);
@@ -1219,7 +1219,7 @@ void guiFullscreen(void) {
 	/* setto il focus*/
 	SetFocus(hSDL);
 
-	emuPause(FALSE);
+	emu_pause(FALSE);
 }
 void guiTimeline(void) {
 	SendMessage(hTimeline, TBM_SETPOS, TRUE, tl.snapsFill - 1);
@@ -1245,12 +1245,12 @@ long __stdcall mainWinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	switch (msg) {
 		case WM_ENTERSIZEMOVE:
 		case WM_ENTERMENULOOP:
-			emuPause(TRUE);
+			emu_pause(TRUE);
 			//timer_redraw_start();
 			break;
 		case WM_EXITSIZEMOVE:
 		case WM_EXITMENULOOP:
-			emuPause(FALSE);
+			emu_pause(FALSE);
 			//timer_redraw_stop();
 			SetFocus(hSDL);
 			break;
@@ -1279,9 +1279,9 @@ long __stdcall mainWinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 			DragFinish(hDrop);
 
 			if (count) {
-				emuPause(TRUE);
+				emu_pause(TRUE);
 				change_rom(szFile);
-				emuPause(FALSE);
+				emu_pause(FALSE);
 			}
 
 			break;
@@ -1586,10 +1586,10 @@ long __stdcall mainWinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 					set_channels(STEREO);
 					break;
 				case IDM_SET_AUDIO_SWAP_DUTY:
-					emuPause(TRUE);
+					emu_pause(TRUE);
 					cfg->swap_duty = !cfg->swap_duty;
 					guiUpdate();
-					emuPause(FALSE);
+					emu_pause(FALSE);
 					break;
 				case IDM_SET_AUDIO_QUALITY_LOW:
 					set_audio_quality(AQ_LOW);
@@ -1598,7 +1598,7 @@ long __stdcall mainWinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 					set_audio_quality(AQ_HIGH);
 					break;
 				case IDM_SET_AUDIO_ENABLE:
-					emuPause(TRUE);
+					emu_pause(TRUE);
 					cfg->audio = !cfg->audio;
 					if (cfg->audio) {
 						sndStart();
@@ -1606,7 +1606,7 @@ long __stdcall mainWinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 						sndStop();
 					}
 					guiUpdate();
-					emuPause(FALSE);
+					emu_pause(FALSE);
 					break;
 				case IDM_SET_GAMEGENIE:
 					set_gamegenie();
@@ -1824,13 +1824,13 @@ long __stdcall saveslotProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 				case ID_SAVESLOT_CB: {
 					switch (HIWORD(wParam)) {
 						case CBN_DROPDOWN:
-							emuPause(TRUE);
+							emu_pause(TRUE);
 							break;
 						case CBN_CLOSEUP:
 							savestate.slot = SendMessage(hSaveslot, CB_GETCURSEL, 0, 0);
 							guiUpdate();
 							savestate.previewStart = FALSE;
-							emuPause(FALSE);
+							emu_pause(FALSE);
 							SetFocus(hSDL);
 							break;
 						case CBN_EDITUPDATE:
@@ -1905,7 +1905,7 @@ void open_event(void) {
 	OPENFILENAME ofn;       // common dialog box structure
 	char szFile[1024];      // buffer for file name
 
-	emuPause(TRUE);
+	emu_pause(TRUE);
 
 	// Initialize OPENFILENAME
 	ZeroMemory(&ofn, sizeof(ofn));
@@ -1932,7 +1932,7 @@ void open_event(void) {
 		change_rom(ofn.lpstrFile);
 	}
 
-	emuPause(FALSE);
+	emu_pause(FALSE);
 }
 void change_menuitem(BYTE checkORenab, UINT type, UINT bMenuItemID) {
 	if (checkORenab == CHECK) {
@@ -1961,7 +1961,7 @@ void make_reset(BYTE type) {
 		}
 	}
 
-	if (emuReset(type)) {
+	if (emu_reset(type)) {
 		PostMessage(hMainWin, WM_CLOSE, EXIT_FAILURE, 0);
 	}
 }
@@ -2211,19 +2211,19 @@ void set_fps(int newfps) {
 		return;
 	}
 	cfg->fps = newfps;
-	emuPause(TRUE);
-	fpsInit();
+	emu_pause(TRUE);
+	fps_init();
 	sndStart();
 	guiUpdate();
-	emuPause(FALSE);
+	emu_pause(FALSE);
 }
 void set_frame_skip(int newframeskip) {
 	if (cfg->frameskip == newframeskip) {
 		return;
 	}
 	cfg->frameskip = newframeskip;
-	if (!fps.fastforward) {
-		fpsNormalize();
+	if (!fps.fast_forward) {
+		fps_normalize();
 	}
 	guiUpdate();
 }
@@ -2322,7 +2322,7 @@ void saveslot_incdec(BYTE mode) {
 	saveslot_set(newslot);
 }
 void saveslot_action(BYTE mode) {
-	emuPause(TRUE);
+	emu_pause(TRUE);
 
 	if (mode == SAVE) {
 		savestateSave();
@@ -2333,7 +2333,7 @@ void saveslot_action(BYTE mode) {
 
 	guiUpdate();
 
-	emuPause(FALSE);
+	emu_pause(FALSE);
 }
 void saveslot_set(BYTE selection) {
 	SendMessage(hSaveslot, CB_SETCURSEL, selection, 0);

@@ -26,7 +26,7 @@
 #define r2006_during_rendering()\
 {\
 	if (!r2002.vblank && r2001.visible &&\
-		(ppu.frameY > machine.vintLines) &&\
+		(ppu.frameY > machine.vint_lines) &&\
 		(ppu.screenY < SCRLINES)) {\
 		if (r2000.r2006Inc == 32) {\
 			r2006inc();\
@@ -48,7 +48,7 @@
 	ppu_openbus_wr(bit6);\
 	ppu_openbus_wr(bit7)
 #define ppu_openbus_rd(bit, mask)\
-	if ((ppu.frames - ppuOpenbus.bit) > machine.ppuOpenbusFrames) {\
+	if ((ppu.frames - ppuOpenbus.bit) > machine.ppu_openbus_frames) {\
 		ppu.openbus &= mask;\
 	}
 #define ppu_openbus_rd_all()\

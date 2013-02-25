@@ -100,7 +100,7 @@ BYTE audio_quality_init_blip(void) {
 			return (EXIT_ERROR);
 		}
 
-		blip_set_rates(bl.blip, machine.cpuHz, dev->freq);
+		blip_set_rates(bl.blip, machine.cpu_hz, dev->freq);
 
 		bl.ch[APU_S1].gain = master_vol  * (1.8 * volume_fator) / 100;
 		bl.ch[APU_S2].gain = master_vol  * (1.8 * volume_fator) / 100;

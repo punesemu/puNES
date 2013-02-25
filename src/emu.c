@@ -47,7 +47,7 @@
 #include "fds.h"
 #include "gamegenie.h"
 
-BYTE emuLoop(void) {
+BYTE emu_loop(void) {
 #ifdef DEBUG
 	WORD PCBREAK = 0xDA5A;
 	PCBREAK = 0xEC06; //PCBREAK = 0xDA7A;
@@ -70,7 +70,7 @@ BYTE emuLoop(void) {
 
 	fps.second_start = guiGetMs();
 
-	fps.next_frame = guiGetMs() + machine.msFrame;
+	fps.next_frame = guiGetMs() + machine.ms_frame;
 
 	for (;;) {
 		tas.lag_frame = TRUE;
@@ -80,7 +80,7 @@ BYTE emuLoop(void) {
 
 		/* gestione uscita */
 		if (info.stop) {
-			emuQuit(EXIT_SUCCESS);
+			emu_quit(EXIT_SUCCESS);
 		}
 
 		/* eseguo un frame dell'emulatore */
@@ -101,7 +101,7 @@ BYTE emuLoop(void) {
 			}
 
 			if (gamegenie.phase == GG_LOAD_ROM) {
-				emuReset(CHANGEROM);
+				emu_reset(CHANGEROM);
 				gamegenie.phase = GG_FINISH;
 				gamegenie.print = FALSE;
 			}
@@ -130,11 +130,11 @@ BYTE emuLoop(void) {
 		}
 
 		/* gestione frameskip e calcolo fps */
-		fpsFrameskip();
+		fps_frameskip();
 	}
 	return (EXIT_OK);
 }
-BYTE emuMakeDir(char *path) {
+BYTE emu_make_dir(char *path) {
 	struct stat status;
 
 	if (!(access(path, 0))) {
@@ -158,12 +158,13 @@ BYTE emuMakeDir(char *path) {
 	}
 	return (EXIT_OK);
 }
-BYTE emuLoadRom(void) {
+BYTE emu_load_rom(void) {
 	char ext[10], name_file[255];
 
-	elaborate_rom_file: info.no_rom = FALSE;
+	elaborate_rom_file:
+	info.no_rom = FALSE;
 
-	fdsQuit();
+	fds_quit();
 	map_quit();
 
 	if (info.load_rom_file[0]) {
@@ -242,7 +243,7 @@ BYTE emuLoadRom(void) {
 
 	return (EXIT_OK);
 }
-BYTE emuSearchInDatabase(FILE *fp) {
+BYTE emu_search_in_database(FILE *fp) {
 	BYTE *sha1prg;
 	WORD i;
 
@@ -385,7 +386,7 @@ BYTE emuSearchInDatabase(FILE *fp) {
 	}
 	return (EXIT_OK);
 }
-void emuSetTitle(char *title) {
+void emu_set_title(char *title) {
 	char name[30];
 
 	if (!info.gui) {
@@ -425,7 +426,7 @@ void emuSetTitle(char *title) {
 
 	strcat(title, ")");
 }
-BYTE emuTurnON(void) {
+BYTE emu_turn_on(void) {
 	info.reset = POWERUP;
 
 	info.first_illegal_opcode = FALSE;
@@ -450,10 +451,10 @@ BYTE emuTurnON(void) {
 	info.r2002_race_condition_disabled = FALSE;
 	info.r4016_dmc_double_read_disabled = FALSE;
 
-	fdsInit();
+	fds_init();
 
 	/* carico la rom in memoria */
-	if (emuLoadRom()) {
+	if (emu_load_rom()) {
 		return (EXIT_ERROR);
 	}
 
@@ -495,7 +496,7 @@ BYTE emuTurnON(void) {
 	}
 
 	/* fps */
-	fpsInit();
+	fps_init();
 
 	/* gestione sonora */
 	if (sndInit()) {
@@ -523,7 +524,7 @@ BYTE emuTurnON(void) {
 	/* The End */
 	return (EXIT_OK);
 }
-void emuPause(BYTE mode) {
+void emu_pause(BYTE mode) {
 
 	if (mode == TRUE) {
 		info.pause = TRUE;
@@ -536,8 +537,8 @@ void emuPause(BYTE mode) {
 		return;
 	}
 }
-BYTE emuReset(BYTE type) {
-	emuPause(TRUE);
+BYTE emu_reset(BYTE type) {
+	emu_pause(TRUE);
 
 	info.reset = type;
 
@@ -556,7 +557,7 @@ BYTE emuReset(BYTE type) {
 		}
 
 		/* carico la rom in memoria */
-		if (emuLoadRom()) {
+		if (emu_load_rom()) {
 			return (EXIT_ERROR);
 		}
 
@@ -591,7 +592,7 @@ BYTE emuReset(BYTE type) {
 	if (info.no_rom) {
 		info.reset = FALSE;
 
-		emuPause(FALSE);
+		emu_pause(FALSE);
 
 		return (EXIT_OK);
 	}
@@ -608,7 +609,7 @@ BYTE emuReset(BYTE type) {
 	}
 
 
-	fpsInit();
+	fps_init();
 
 	if (info.reset >= CHANGEROM) {
 		if (sndStart()) {
@@ -628,18 +629,18 @@ BYTE emuReset(BYTE type) {
 
 	info.reset = FALSE;
 
-	emuPause(FALSE);
+	emu_pause(FALSE);
 
 	return (EXIT_OK);
 }
-void emuQuit(BYTE exitCode) {
+void emu_quit(BYTE exit_code) {
 	if (cfg->save_on_exit) {
 		cfg_file_save();
 	}
 
 	map_quit();
 
-	fdsQuit();
+	fds_quit();
 	ppuQuit();
 	gfxQuit();
 	sndQuit();
@@ -648,5 +649,5 @@ void emuQuit(BYTE exitCode) {
 
 	jsQuit();
 
-	exit(exitCode);
+	exit(exit_code);
 }

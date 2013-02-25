@@ -32,16 +32,16 @@ enum {
 };
 
 #define fps_machine_ms(factor)\
-	if (fps.fastforward == FALSE) {\
-		machine.msFrame = (1000.0 / (double) machine.fps) * factor;\
-		fps.ms = machine.msFrame;\
+	if (fps.fast_forward == FALSE) {\
+		machine.ms_frame = (1000.0 / (double) machine.fps) * factor;\
+		fps.ms = machine.ms_frame;\
 	}
 
 struct _fps {
 	uint8_t counter;
 	uint8_t frames_before_skip;
 	uint8_t max_frames_skipped;
-	uint8_t fastforward;
+	uint8_t fast_forward;
 	uint8_t frames_skipped;
 	uint32_t total_frames_skipped;
 	double ms;
@@ -52,9 +52,9 @@ struct _fps {
 	double nominal;
 } fps;
 
-void fpsInit(void);
-void fpsFastForward(void);
-void fpsNormalize(void);
-void fpsFrameskip(void);
+void fps_init(void);
+void fps_fast_forward(void);
+void fps_normalize(void);
+void fps_frameskip(void);
 
 #endif /* FPS_H_ */

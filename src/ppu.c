@@ -45,7 +45,7 @@
 }
 #define PPUTICKET()\
 {\
-	ppu.cycles -= machine.ppuDivide;\
+	ppu.cycles -= machine.ppu_divide;\
 	ppu.frameX++;\
 	r2006.changedFromOP = 0;\
 	continue;\
@@ -97,11 +97,11 @@ static const BYTE invCHR[256] = {
 
 void ppuTick(WORD cycles_cpu) {
 	/* aggiungo i cicli della cpu trascorsi */
-	ppu.cycles += (cycles_cpu * machine.cpuDivide);
+	ppu.cycles += (cycles_cpu * machine.cpu_divide);
 
-	while (ppu.cycles >= machine.ppuDivide) {
+	while (ppu.cycles >= machine.ppu_divide) {
 		/* controllo se sono all'inizio della dummy line */
-		if (ppu.frameY == machine.vintLines) {
+		if (ppu.frameY == machine.vint_lines) {
 			/*
 			 * disabilito il vblank al ciclo 0 della scanline,
 			 * a differenza dell'abilitazione del vblank che
@@ -120,7 +120,7 @@ void ppuTick(WORD cycles_cpu) {
 				 * della dummy line, ne anticipo il controllo e
 				 * l'eventuale modifica.
 				 */
-				if ((ppu.frameX == (SHORTSLCYCLES - machine.ppuFor1CPU)) && ppu.oddFrame
+				if ((ppu.frameX == (SHORTSLCYCLES - machine.ppu_for_1_cycle_cpu)) && ppu.oddFrame
 						&& r2001.bckVisible) {
 					ppu.slineCycles = SHORTSLCYCLES;
 				}
@@ -168,7 +168,7 @@ void ppuTick(WORD cycles_cpu) {
 					extcl_ppu_000_to_255();
 				}
 				/* controllo di non essere nella dummy line */
-				if (ppu.frameY > machine.vintLines) {
+				if (ppu.frameY > machine.vint_lines) {
 					/*
 					 * controllo se background o sprites (basta
 					 * solo uno dei due) siano visibili.
@@ -890,7 +890,7 @@ void ppuTick(WORD cycles_cpu) {
 				extcl_ppu_320_to_34x();
 			}
 			if (ppu.frameX == 323) {
-				if (ppu.frameY == machine.vintLines) {
+				if (ppu.frameY == machine.vint_lines) {
 					/*
 					 * all'inizio di ogni frame reinizializzo
 					 * l'indirizzo della PPU.
@@ -936,7 +936,7 @@ void ppuTick(WORD cycles_cpu) {
 			} else {
 				r2004.value = oam.element[63][YC];
 			}
-			ppu.cycles -= machine.ppuDivide;
+			ppu.cycles -= machine.ppu_divide;
 			ppu.frameX++;
 			/* deve essere azzerato alla fine di ogni ciclo PPU */
 			r2006.changedFromOP = 0;
@@ -973,10 +973,10 @@ void ppuTick(WORD cycles_cpu) {
 		 * Totale 262 scanlines            Totale 312 scanlines            Totale 312 scanlines
 		 */
 		/* controllo di essere nel range [dummy...rendering screen] */
-		if ((ppu.frameY >= machine.vintLines) && (ppu.screenY < SCRLINES)) {
+		if ((ppu.frameY >= machine.vint_lines) && (ppu.screenY < SCRLINES)) {
 			BYTE a;
 			/* verifico di non trattare la dummy line */
-			if (ppu.frameY > machine.vintLines) {
+			if (ppu.frameY > machine.vint_lines) {
 				/* incremento il contatore delle scanline renderizzate */
 				ppu.screenY++;
 			}
@@ -1016,7 +1016,7 @@ void ppuTick(WORD cycles_cpu) {
 		ppu.slineCycles = SLCYCLES;
 
 		/* controllo se ho completato il frame */
-		if (ppu.frameY == machine.totalLines) {
+		if (ppu.frameY == machine.total_lines) {
 			/* incremento il contatore dei frames */
 			ppu.frames++;
 			/* azzero frameY */
@@ -1070,7 +1070,7 @@ BYTE ppuTurnON(void) {
 		 * funziona correttamente (altrimenti avviato il gioco
 		 * la parte di sotto si sporca e non appaiono sprites).
 		 */
-		ppu.frameY = machine.vintLines + 1;
+		ppu.frameY = machine.vint_lines + 1;
 		ppu.slineCycles = SLCYCLES;
 		r2000.r2006Inc = 1;
 		r2000.sizeSPR = 8;
@@ -1132,7 +1132,7 @@ BYTE ppuTurnON(void) {
 		memset(&r2007, 0x00, sizeof(r2007));
 
 		ppu.frameX = ppu.screenY = ppu.pixelTile = 0;
-		ppu.frameY = machine.vintLines + 1;
+		ppu.frameY = machine.vint_lines + 1;
 		ppu.tmpVRAM = ppu.fineX = 0;
 		ppu.sprAdr = ppu.bckAdr = 0;
 		ppu.slineCycles = SLCYCLES;

@@ -26,7 +26,7 @@ typedef struct {
 	uint32_t position;
 } _fds_diff_ele;
 
-void fdsInit(void) {
+void fds_init(void) {
 	memset(&fds, 0x00, sizeof(fds));
 
 	fds.drive.disk_ejected = TRUE;
@@ -34,7 +34,7 @@ void fdsInit(void) {
 	fds.drive.enabled_dsk_reg = 0x01;
 	fds.drive.enabled_snd_reg = 0x02;
 }
-void fdsQuit(void) {
+void fds_quit(void) {
 	if (fds.side.data) {
 		free(fds.side.data);
 	}
@@ -44,7 +44,7 @@ void fdsQuit(void) {
 	if (fds.info.diff) {
 		fclose(fds.info.diff);
 	}
-	fdsInit();
+	fds_init();
 }
 BYTE fds_load_rom(void) {
 	BYTE i;

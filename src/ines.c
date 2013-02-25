@@ -86,11 +86,11 @@ BYTE ines_load_rom(void) {
 		 * e' l'unica mapper che utilizza 32k di CHR Ram e che
 		 * si permette anche il lusso di swappare. Quindi imposto
 		 * a FALSE qui in modo da poter cambiare impostazione nel
-		 * emuSearchInDatabase.
+		 * emu_search_in_database.
 		 */
 		mapper.write_vram = FALSE;
 
-		if (emuSearchInDatabase(fp)) {
+		if (emu_search_in_database(fp)) {
 			return (EXIT_ERROR);
 		}
 

@@ -13,7 +13,7 @@
 #include "sdlsnd.h"
 #include "cfg_file.h"
 
-void fpsInit(void) {
+void fps_init(void) {
 	switch (cfg->fps) {
 		case FPSDEFAULT:
 			if (machine.type == NTSC) {
@@ -79,28 +79,28 @@ void fpsInit(void) {
 
 	fps_machine_ms(1.0)
 
-	fps.nominal = 1000.0 / machine.msFrame;
+	fps.nominal = 1000.0 / machine.ms_frame;
 	fps.avarage = fps.nominal;
-	fpsNormalize();
+	fps_normalize();
 	inputTurboButtonsFrequency();
 }
-void fpsFastForward(void) {
-	fps.fastforward = TRUE;
+void fps_fast_forward(void) {
+	fps.fast_forward = TRUE;
 	fps.frames_before_skip = 1;
 	fps.max_frames_skipped = machine.fps / 3;
 	fps.ms = (int) (1000 / (machine.fps * 2));
 }
-void fpsNormalize(void) {
+void fps_normalize(void) {
 	fps.frames_before_skip = 1;
 	if (cfg->frameskip == 0) {
 		fps.max_frames_skipped = machine.fps;
 	} else {
 		fps.max_frames_skipped = cfg->frameskip;
 	}
-	fps.ms = machine.msFrame;
-	fps.fastforward = FALSE;
+	fps.ms = machine.ms_frame;
+	fps.fast_forward = FALSE;
 }
-void fpsFrameskip(void) {
+void fps_frameskip(void) {
 	double diff;
 	double frame_end;
 
@@ -116,7 +116,7 @@ void fpsFrameskip(void) {
 
 	fps.next_frame += fps.ms;
 
-	if (diff >= (machine.msFrame * fps.frames_before_skip)) {
+	if (diff >= (machine.ms_frame * fps.frames_before_skip)) {
 		if (fps.frames_skipped >= fps.max_frames_skipped) {
 			fps.next_frame = guiGetMs();
 			fps.frames_skipped = 0;

@@ -170,8 +170,8 @@ struct {
 	} snd;
 } fds;
 
-void fdsInit(void);
-void fdsQuit(void);
+void fds_init(void);
+void fds_quit(void);
 BYTE fds_load_rom(void);
 BYTE fds_load_bios(void);
 void fds_disk_op(WORD type, BYTE side_to_insert);

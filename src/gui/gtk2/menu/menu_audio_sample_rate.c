@@ -118,7 +118,7 @@ void set_sample_rate(int newsamplerate) {
 		return;
 	}
 
-	emuPause(TRUE);
+	emu_pause(TRUE);
 
 	cfg->samplerate = newsamplerate;
 
@@ -126,5 +126,5 @@ void set_sample_rate(int newsamplerate) {
 
 	guiUpdate();
 
-	emuPause(FALSE);
+	emu_pause(FALSE);
 }

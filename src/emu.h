@@ -11,15 +11,15 @@
 #include <stdio.h>
 #include "common.h"
 
-BYTE emuLoop(void);
-BYTE emuMakeDir(char *path);
-BYTE emuLoadRom(void);
-BYTE emuSearchInDatabase(FILE *fp);
-void emuSetTitle(char *title);
-BYTE emuTurnON(void);
-void emuPause(BYTE mode);
-BYTE emuReset(BYTE type);
-void emuQuit(BYTE exitCode);
+BYTE emu_loop(void);
+BYTE emu_make_dir(char *path);
+BYTE emu_load_rom(void);
+BYTE emu_search_in_database(FILE *fp);
+void emu_set_title(char *title);
+BYTE emu_turn_on(void);
+void emu_pause(BYTE mode);
+BYTE emu_reset(BYTE type);
+void emu_quit(BYTE exit_code);
 
 #endif /* EMU_H_ */
 

@@ -133,9 +133,9 @@ void set_fps(int newfps) {
 		return;
 	}
 	cfg->fps = newfps;
-	emuPause(TRUE);
-	fpsInit();
+	emu_pause(TRUE);
+	fps_init();
 	sndStart();
 	guiUpdate();
-	emuPause(FALSE);
+	emu_pause(FALSE);
 }

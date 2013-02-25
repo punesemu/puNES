@@ -46,7 +46,7 @@ void cfgInput(HWND hwnd) {
 	/* Faccio l'update del menu per i casi dello zapper e degli effetti */
 	guiUpdate();
 
-	emuPause(TRUE);
+	emu_pause(TRUE);
 
 	DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_INPUT_CONTROLLERS),
 			hwnd, (DLGPROC) cfg_input_controllers);
@@ -54,7 +54,7 @@ void cfgInput(HWND hwnd) {
 long __stdcall cfg_input_controllers(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	switch (msg) {
 		case WM_DESTROY:
-			emuPause(FALSE);
+			emu_pause(FALSE);
 			PostQuitMessage(0);
 			return TRUE;
 		case WM_INITDIALOG: {

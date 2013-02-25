@@ -113,7 +113,7 @@ void set_channels(int newchannels) {
 		return;
 	}
 
-	emuPause(TRUE);
+	emu_pause(TRUE);
 
 	cfg->channels = newchannels;
 
@@ -121,5 +121,5 @@ void set_channels(int newchannels) {
 
 	guiUpdate();
 
-	emuPause(FALSE);
+	emu_pause(FALSE);
 }

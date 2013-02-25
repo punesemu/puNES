@@ -74,7 +74,7 @@ BYTE savestateLoad(void) {
 	if (info.mapper == GAMEGENIE_MAPPER) {
 		gamegenie_reset(FALSE);
 		gamegenie.phase = GG_LOAD_ROM;
-		emuReset(CHANGEROM);
+		emu_reset(CHANGEROM);
 		gamegenie.phase = GG_FINISH;
 	}
 

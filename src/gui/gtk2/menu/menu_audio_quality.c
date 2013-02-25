@@ -106,7 +106,7 @@ void set_audio_quality(int new_quality) {
 		return;
 	}
 
-	emuPause(TRUE);
+	emu_pause(TRUE);
 
 	cfg->audio_quality = new_quality;
 
@@ -114,5 +114,5 @@ void set_audio_quality(int new_quality) {
 
 	guiUpdate();
 
-	emuPause(FALSE);
+	emu_pause(FALSE);
 }

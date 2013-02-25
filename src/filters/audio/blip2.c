@@ -132,7 +132,7 @@ BYTE audio_quality_init_blip2(void) {
 			return (EXIT_ERROR);
 		}
 
-		blip_set_rates(bl2.wave, machine.cpuHz, dev->freq);
+		blip_set_rates(bl2.wave, machine.cpu_hz, dev->freq);
 
 		bl2.group[PULSE].gain = master_vol * (1.2 * volume_fator) / 100;
 		bl2.group[TND].gain = master_vol * (1.2 * volume_fator) / 100;

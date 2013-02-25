@@ -136,8 +136,8 @@ void set_frame_skip(int newframeskip) {
 		return;
 	}
 	cfg->frameskip = newframeskip;
-	if (!fps.fastforward) {
-		fpsNormalize();
+	if (!fps.fast_forward) {
+		fps_normalize();
 	}
 	guiUpdate();
 }

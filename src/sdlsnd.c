@@ -108,7 +108,7 @@ BYTE sndStart(void) {
 		return (EXIT_ERROR);
 	}
 
-	snd.frequency = (fps.nominal * machine.cpuCyclesFrame) / dev->freq;
+	snd.frequency = (fps.nominal * machine.cpu_cycles_frame) / dev->freq;
 
 	/* valorizzo il flag di apertura device */
 	snd.opened = TRUE;
@@ -196,7 +196,7 @@ void sndOutput(void *udata, BYTE *stream, int len) {
 #ifndef RELEASE
 		fprintf(stderr, "snd : %d %d %d %d %2d %d %f %f %4s\r", len, snd.buffer.count, snd.brk,
 		        fps.total_frames_skipped, cache->filled, snd.out_of_sync, snd.frequency,
-		        machine.msFrame, "");
+		        machine.ms_frame, "");
 #endif
 		/* invio i samples richiesti alla scheda sonora */
 		memcpy(stream, cache->read, len);

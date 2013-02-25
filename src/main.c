@@ -53,14 +53,14 @@ int main(int argc, char **argv) {
 {\
 	char file[512];\
 	sprintf(file, fld, info.base_folder);\
-	if (emuMakeDir(file)) {\
+	if (emu_make_dir(file)) {\
 		fprintf(stderr, txt);\
 		return (EXIT_ERROR);\
 	}\
 }
 
 	/* controllo l'esistenza della directory principale */
-	if (emuMakeDir(info.base_folder)) {
+	if (emu_make_dir(info.base_folder)) {
 		fprintf(stderr, "error on create puNES folder\n");
 		return (EXIT_ERROR);
 	}
@@ -109,13 +109,13 @@ int main(int argc, char **argv) {
 
 	fprintf(stderr, "INFO: path %s\n", info.base_folder);
 
-	if (emuTurnON()) {
-		emuQuit(EXIT_FAILURE);
+	if (emu_turn_on()) {
+		emu_quit(EXIT_FAILURE);
 	}
 
 	guiStart();
 
-	emuQuit(EXIT_SUCCESS);
+	emu_quit(EXIT_SUCCESS);
 
 	return (EXIT_SUCCESS);
 }

@@ -108,9 +108,9 @@ void tasFrame_FM2(void) {
 
 	if (tas.il[tas.index].state > 0) {
 		if (tas.il[tas.index].state == 1) {
-			emuReset(RESET);
+			emu_reset(RESET);
 		} else if (tas.il[tas.index].state == 2) {
-			emuReset(HARD);
+			emu_reset(HARD);
 		}
 		tas.il[tas.index].state = 0;
 		/*

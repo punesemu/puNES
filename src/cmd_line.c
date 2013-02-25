@@ -54,7 +54,7 @@ BYTE cmd_line_parse(int argc, char **argv) {
 				} else {
 					fprintf(stdout, "Portable %s %s\n", NAME, VERSION);
 				}
-				emuQuit(EXIT_SUCCESS);
+				emu_quit(EXIT_SUCCESS);
 				break;
 			}
 			case 'k':
@@ -150,5 +150,5 @@ void usage(char *name) {
 			param[P_SWAP_DUTY].help,
 			param[P_GAMEGENIE].help
 	);
-	emuQuit(EXIT_SUCCESS);
+	emu_quit(EXIT_SUCCESS);
 }
