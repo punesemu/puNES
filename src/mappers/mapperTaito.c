@@ -331,7 +331,7 @@ void extcl_battery_io_Taito_X1005(BYTE mode, FILE *fp) {
 	}
 
 	if (info.prg_ram_bat_banks) {
-		if (mode == WRBAT) {
+		if (mode == WR_BAT) {
 			if (fwrite(&taitoX1005.ram[0], LENGTH(taitoX1005.ram), 1, fp) < 1) {
 				fprintf(stderr, "error on write battery memory\n");
 			}

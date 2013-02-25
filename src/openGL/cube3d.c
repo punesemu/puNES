@@ -29,8 +29,8 @@ void opengl_init_cube3d(void) {
 	memset (&color, 0, sizeof(_shader));
 }
 void opengl_set_cube3d(SDL_Surface *src) {
-	xVertex = 1.0f - ((1.0f / (src->w / 2)) * opengl.xTexture1);
-	yVertex = 1.0f - ((1.0f / (src->h / 2)) * opengl.yTexture1);
+	xVertex = 1.0f - ((1.0f / (src->w / 2)) * opengl.x_texture1);
+	yVertex = 1.0f - ((1.0f / (src->h / 2)) * opengl.y_texture1);
 	zVertex = xVertex;
 
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -69,15 +69,15 @@ void opengl_draw_scene_cube3d(SDL_Surface *surface) {
 	/* resetto la matrice corrente (modelview) */
 	glLoadIdentity();
 
-	if (opengl.factorDistance < 60) {
-		distance = matrixDistance[opengl.factorDistance];
-		opengl.factorDistance++;
+	if (opengl.factor_distance < 60) {
+		distance = matrixDistance[opengl.factor_distance];
+		opengl.factor_distance++;
 	}
 	glTranslatef(0.0f, 0.0f, distance);
 
-	if (opengl.factorDistance > 30) {
-		glRotatef(opengl.xRotate, 1.0f, 0.0f, 0.0f);
-		glRotatef(opengl.yRotate, 0.0f, 1.0f, 0.0f);
+	if (opengl.factor_distance > 30) {
+		glRotatef(opengl.x_rotate, 1.0f, 0.0f, 0.0f);
+		glRotatef(opengl.y_rotate, 0.0f, 1.0f, 0.0f);
 	}
 
 	opengl_enable_texture();

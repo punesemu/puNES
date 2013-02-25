@@ -288,19 +288,19 @@ void extcl_irq_A12_clock_Tengen_Rambo(void) {
 		irqA12.counter = irqA12.latch;
 		if (irqA12.reload) {
 			irqA12.counter++;
-			irqA12.saveCounter = 0;
+			irqA12.save_counter = 0;
 		}
 		if (!irqA12.counter && irqA12.reload) {
-			irqA12.saveCounter = 1;
+			irqA12.save_counter = 1;
 		}
 		irqA12.reload = FALSE;
 	} else {
 		irqA12.counter--;
 	}
-	if (!irqA12.counter && irqA12.saveCounter && irqA12.enable) {
+	if (!irqA12.counter && irqA12.save_counter && irqA12.enable) {
 		tRambo.irqDelay = tRamboDelayA12;
 	}
-	irqA12.saveCounter = irqA12.counter;
+	irqA12.save_counter = irqA12.counter;
 }
 void extcl_cpu_every_cycle_Tengen_Rambo(void) {
 	if (tRambo.irqDelay && !(--tRambo.irqDelay)) {

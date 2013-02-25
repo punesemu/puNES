@@ -16,16 +16,16 @@
 void glsl_print_log(GLuint obj);
 char *glsl_file2string(const char *path);
 
-void sdlInitGL(void) {
+void sdl_init_gl(void) {
 	opengl.rotation = 0;
-	opengl.surfaceGL = NULL;
+	opengl.surface_gl = NULL;
 
-	opengl.flagsOpengl = SDL_HWSURFACE | SDL_OPENGL;
-	opengl.factorDistance = 0;
-	opengl.xRotate = 0;
-	opengl.yRotate = 0;
-	opengl.xDiff = 0;
-	opengl.yDiff = 0;
+	opengl.flags = SDL_HWSURFACE | SDL_OPENGL;
+	opengl.factor_distance = 0;
+	opengl.x_rotate = 0;
+	opengl.y_rotate = 0;
+	opengl.x_diff = 0;
+	opengl.y_diff = 0;
 
 	memset(&opengl.texture, 0, sizeof(_texture));
 	memset(&shader, 0, sizeof(shader));
@@ -37,9 +37,9 @@ void sdlInitGL(void) {
 
 	glew_init();
 }
-void sdlQuitGL(void) {
-	if (opengl.surfaceGL) {
-		SDL_FreeSurface(opengl.surfaceGL);
+void sdl_quit_gl(void) {
+	if (opengl.surface_gl) {
+		SDL_FreeSurface(opengl.surface_gl);
 	}
 
 	if (opengl.texture.data) {
@@ -56,9 +56,9 @@ void sdlQuitGL(void) {
 
 	glsl_delete_shaders(&shader);
 }
-void sdlCreateSurfaceGL(SDL_Surface *src, WORD width, WORD height, BYTE flags) {
-	if (opengl.surfaceGL) {
-		SDL_FreeSurface(opengl.surfaceGL);
+void sdl_create_surface_gl(SDL_Surface *src, WORD width, WORD height, BYTE flags) {
+	if (opengl.surface_gl) {
+		SDL_FreeSurface(opengl.surface_gl);
 		/*
 		 * ripristino gli attributi opengl ai valori
 		 * iniziali e li salvo nuovamente.
@@ -69,13 +69,13 @@ void sdlCreateSurfaceGL(SDL_Surface *src, WORD width, WORD height, BYTE flags) {
 	glPushAttrib(GL_ALL_ATTRIB_BITS);
 
 	if (opengl.scale_force) {
-		opengl.surfaceGL = gfxCreateRGBSurface(src, SCRROWS * opengl.scale,
+		opengl.surface_gl = gfxCreateRGBSurface(src, SCRROWS * opengl.scale,
 		        SCRLINES * opengl.scale);
 	} else {
-		opengl.surfaceGL = gfxCreateRGBSurface(src, width, height);
+		opengl.surface_gl = gfxCreateRGBSurface(src, width, height);
 	}
 
-	opengl_create_texture(&opengl.texture, opengl.surfaceGL->w, opengl.surfaceGL->h,
+	opengl_create_texture(&opengl.texture, opengl.surface_gl->w, opengl.surface_gl->h,
 			opengl.interpolation, POWER_OF_TWO);
 
 	opengl.texture.x = (GLfloat) width  / (opengl.texture.w * opengl.factor);
@@ -83,53 +83,53 @@ void sdlCreateSurfaceGL(SDL_Surface *src, WORD width, WORD height, BYTE flags) {
 
 	{
 		/* aspect ratio */
-		opengl.wTexture = src->w;
-		opengl.hTexture = src->h;
-		opengl.xTexture1 = 0;
-		opengl.yTexture1 = 0;
-		opengl.xTexture2 = src->w;
-		opengl.yTexture2 = src->h;
+		opengl.w_texture = src->w;
+		opengl.h_texture = src->h;
+		opengl.x_texture1 = 0;
+		opengl.y_texture1 = 0;
+		opengl.x_texture2 = src->w;
+		opengl.y_texture2 = src->h;
 
 		/* con flags intendo sia il fullscreen che il futuro resize */
 		if (flags && cfg->aspect_ratio) {
-			float ratioSurface = (float) opengl.wTexture / opengl.hTexture;
-			float ratioFrame = (float) width / height;
+			float ratio_surface = (float) opengl.w_texture / opengl.h_texture;
+			float ratio_frame = (float) width / height;
 
-			//ratioFrame = (float) 4 / 3;
-			//ratioFrame = (float) 16 / 9;
+			//ratio_frame = (float) 4 / 3;
+			//ratio_frame = (float) 16 / 9;
 
-			//fprintf(stderr, "opengl : %f %f\n", ratioSurface, ratioFrame);
+			//fprintf(stderr, "opengl : %f %f\n", ratio_surface, ratio_frame);
 
 			/*
 			 * se l'aspect ratio del frame e' maggiore di
 			 * quello della superficie allora devo agire
 			 * sull'altezza.
 			 */
-			if (ratioFrame > ratioSurface) {
-				int centeringFactor = 0;
+			if (ratio_frame > ratio_surface) {
+				int centering_factor = 0;
 
-				opengl.hTexture = opengl.wTexture / ratioFrame;
-				centeringFactor = (src->h - opengl.hTexture) / 2;
+				opengl.h_texture = opengl.w_texture / ratio_frame;
+				centering_factor = (src->h - opengl.h_texture) / 2;
 
-				opengl.xTexture1 = 0;
-				opengl.yTexture1 = centeringFactor;
-				opengl.xTexture2 = opengl.wTexture;
-				opengl.yTexture2 = opengl.hTexture + centeringFactor;
+				opengl.x_texture1 = 0;
+				opengl.y_texture1 = centering_factor;
+				opengl.x_texture2 = opengl.w_texture;
+				opengl.y_texture2 = opengl.h_texture + centering_factor;
 				/*
 				 * se l'aspect ratio del frame e' minore di
 				 * quello della superficie allora devo agire
 				 * sulla larghezza.
 				 */
-			} else if (ratioFrame < ratioSurface) {
-				int centeringFactor = 0;
+			} else if (ratio_frame < ratio_surface) {
+				int centering_factor = 0;
 
-				opengl.wTexture = ratioFrame * opengl.hTexture;
-				centeringFactor = (src->w - opengl.wTexture) / 2;
+				opengl.w_texture = ratio_frame * opengl.h_texture;
+				centering_factor = (src->w - opengl.w_texture) / 2;
 
-				opengl.xTexture1 = centeringFactor;
-				opengl.yTexture1 = 0;
-				opengl.xTexture2 = opengl.wTexture + centeringFactor;
-				opengl.yTexture2 = opengl.hTexture;
+				opengl.x_texture1 = centering_factor;
+				opengl.y_texture1 = 0;
+				opengl.x_texture2 = opengl.w_texture + centering_factor;
+				opengl.y_texture2 = opengl.h_texture;
 			}
 		}
 	}
@@ -160,7 +160,7 @@ void opengl_enable_texture(void) {
 }
 void opengl_create_texture(_texture *texture, uint32_t width, uint32_t height,
         uint8_t interpolation, uint8_t pow) {
-	switch (opengl.surfaceGL->format->BitsPerPixel) {
+	switch (opengl.surface_gl->format->BitsPerPixel) {
 		case 16:
 			texture->format_internal = GL_RGB5;
 			if (SDL_BYTEORDER == SDL_BIG_ENDIAN) {
@@ -222,7 +222,7 @@ void opengl_create_texture(_texture *texture, uint32_t width, uint32_t height,
 
 	{
 		/* per sicurezza creo una superficie piu' grande del necessario */
-		SDL_Surface *blank = gfxCreateRGBSurface(opengl.surfaceGL, texture->w * 2, texture->h * 2);
+		SDL_Surface *blank = gfxCreateRGBSurface(opengl.surface_gl, texture->w * 2, texture->h * 2);
 
 		memset(blank->pixels, 0, blank->w * blank->h * blank->format->BytesPerPixel);
 
@@ -389,8 +389,8 @@ void glsl_shaders_init(_shader *shd) {
 		if ((shd->id == SHADER_CRT) || (shd->id == SHADER_CRT4)) {
 			glUniform2f(shd->loc.size.output, opengl.texture.w, opengl.texture.h);
 		} else {
-			glUniform2f(shd->loc.size.output, opengl.xTexture2 - opengl.xTexture1,
-					opengl.yTexture2 - opengl.yTexture1);
+			glUniform2f(shd->loc.size.output, opengl.x_texture2 - opengl.x_texture1,
+					opengl.y_texture2 - opengl.y_texture1);
 		}
 	}
 
@@ -444,27 +444,27 @@ void glsl_delete_shaders(_shader *shd) {
 	shd->prg = 0;
 }
 void glsl_print_log(GLuint obj) {
-	int infologLength = 0, maxLength;
+	int info_log_length = 0, max_length;
 
 	if (glIsShader(obj)) {
-		glGetShaderiv(obj, GL_INFO_LOG_LENGTH, &maxLength);
+		glGetShaderiv(obj, GL_INFO_LOG_LENGTH, &max_length);
 	} else {
-		glGetProgramiv(obj, GL_INFO_LOG_LENGTH, &maxLength);
+		glGetProgramiv(obj, GL_INFO_LOG_LENGTH, &max_length);
 	}
 
 	{
-		char infoLog[maxLength];
+		char info_log[max_length];
 
 		if (glIsShader(obj)) {
-			glGetShaderInfoLog(obj, maxLength, &infologLength, infoLog);
+			glGetShaderInfoLog(obj, max_length, &info_log_length, info_log);
 		} else {
-			glGetProgramInfoLog(obj, maxLength, &infologLength, infoLog);
+			glGetProgramInfoLog(obj, max_length, &info_log_length, info_log);
 		}
 
-		infoLog[infologLength] = 0;
+		info_log[info_log_length] = 0;
 
-		if (infologLength > 0) {
-			printf("INFO: %s", infoLog);
+		if (info_log_length > 0) {
+			printf("INFO: %s", info_log);
 		}
 	}
 }

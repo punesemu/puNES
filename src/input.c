@@ -207,8 +207,8 @@ BYTE input_rd_reg_zapper(BYTE openbus, WORD **screen_index, _port *port) {
 
 	if (!gui.right_button) {
 		if (gfx.opengl) {
-			gx -= opengl.xTexture1;
-			gy -= opengl.yTexture1;
+			gx -= opengl.x_texture1;
+			gy -= opengl.y_texture1;
 		}
 
 		x_zapper = gx / gfx.wPr;

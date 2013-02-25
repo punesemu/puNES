@@ -314,7 +314,7 @@ void extcl_battery_io_Bandai_FCGX(BYTE mode, FILE *fp) {
 
 	if (FCGX.e0.size || FCGX.e1.size) {
 		if (FCGX.e0.size) {
-			if (mode == WRBAT) {
+			if (mode == WR_BAT) {
 				if (fwrite(&FCGX.e0.eeprom[0], LENGTH(FCGX.e0.eeprom), 1, fp) < 1) {
 					fprintf(stderr, "error on write battery memory\n");
 				}
@@ -325,7 +325,7 @@ void extcl_battery_io_Bandai_FCGX(BYTE mode, FILE *fp) {
 			}
 		}
 		if (FCGX.e1.size) {
-			if (mode == WRBAT) {
+			if (mode == WR_BAT) {
 				if (fwrite(&FCGX.e1.eeprom[0], LENGTH(FCGX.e1.eeprom), 1, fp) < 1) {
 					fprintf(stderr, "error on write battery memory\n");
 				}
@@ -336,7 +336,7 @@ void extcl_battery_io_Bandai_FCGX(BYTE mode, FILE *fp) {
 			}
 		}
 	} else {
-		if (mode == WRBAT) {
+		if (mode == WR_BAT) {
 			mapper_wr_battery_default();
 		} else {
 			mapper_rd_battery_default();

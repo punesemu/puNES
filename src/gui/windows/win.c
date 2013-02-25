@@ -531,10 +531,10 @@ void guiEvent(void) {
 			}
 			case WM_LBUTTONDOWN:
 				gui.left_button = TRUE;
-				//opengl.xDiff = GET_X_LPARAM(Msg.lParam) - (opengl.yRotate * slowFactor);
-				//opengl.yDiff = -GET_Y_LPARAM(Msg.lParam) + (opengl.xRotate * slowFactor);
-				opengl.xDiff = gui.x - (opengl.yRotate * slowFactor);
-				opengl.yDiff = -gui.y + (opengl.xRotate * slowFactor);
+				//opengl.x_diff = GET_X_LPARAM(Msg.lParam) - (opengl.y_rotate * slow_factor);
+				//opengl.y_diff = -GET_Y_LPARAM(Msg.lParam) + (opengl.x_rotate * slow_factor);
+				opengl.x_diff = gui.x - (opengl.y_rotate * slow_factor);
+				opengl.y_diff = -gui.y + (opengl.x_rotate * slow_factor);
 				break;
 			case WM_RBUTTONDOWN:
 				gui.right_button = TRUE;
@@ -545,8 +545,8 @@ void guiEvent(void) {
 					gui.y = GET_Y_LPARAM(Msg.lParam);
 				}
 				if (gui.left_button && opengl.rotation) {
-					opengl.xRotate = (gui.y + opengl.yDiff) / slowFactor;
-					opengl.yRotate = (gui.x - opengl.xDiff) / slowFactor;
+					opengl.x_rotate = (gui.y + opengl.y_diff) / slow_factor;
+					opengl.y_rotate = (gui.x - opengl.x_diff) / slow_factor;
 				}
 				break;
 			case WM_LBUTTONUP:
@@ -2162,7 +2162,7 @@ void set_effect(void) {
 		opengl_unset_effect = opengl_unset_cube3d;
 		opengl_draw_scene = opengl_draw_scene_cube3d;
 
-		opengl.factorDistance = opengl.xRotate = opengl.yRotate = 0;
+		opengl.factor_distance = opengl.x_rotate = opengl.y_rotate = 0;
 		if (cfg->fullscreen == FULLSCR) {
 			SDL_ShowCursor(SDL_ENABLE);
 		}

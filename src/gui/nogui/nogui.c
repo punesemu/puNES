@@ -109,8 +109,8 @@ void guiEvent(void) {
 		case SDL_MOUSEBUTTONDOWN:
 			if (event.button.button == SDL_BUTTON_LEFT) {
 				opengl.mouseLeftButton = TRUE;
-				opengl.xDiff =  event.motion.x - (opengl.yRotate * slowFactor);
-				opengl.yDiff = -event.motion.y + (opengl.xRotate * slowFactor);
+				opengl.x_diff =  event.motion.x - (opengl.y_rotate * slow_factor);
+				opengl.y_diff = -event.motion.y + (opengl.x_rotate * slow_factor);
 			}
 			break;
 		case SDL_MOUSEBUTTONUP:
@@ -120,8 +120,8 @@ void guiEvent(void) {
 			break;
 		case SDL_MOUSEMOTION:
 			if (opengl.mouseLeftButton && opengl.rotation) {
-				opengl.xRotate = (event.motion.y + opengl.yDiff) / slowFactor;
-				opengl.yRotate = (event.motion.x - opengl.xDiff) / slowFactor;
+				opengl.x_rotate = (event.motion.y + opengl.y_diff) / slow_factor;
+				opengl.y_rotate = (event.motion.x - opengl.x_diff) / slow_factor;
 			}
 			break;
 #endif
@@ -246,7 +246,7 @@ void guiEvent(void) {
 				/* switch stretch ma solo in fullscreen */
 				opengl.rotation = !opengl.rotation;
 				if (opengl.rotation) {
-					opengl.factorDistance = opengl.xRotate = opengl.yRotate = 0;
+					opengl.factor_distance = opengl.x_rotate = opengl.y_rotate = 0;
 					if (gfx.fullscreen == FULLSCR) {
 						SDL_ShowCursor(SDL_ENABLE);
 					}

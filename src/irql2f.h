@@ -13,8 +13,8 @@
 #include "ppu.h"
 
 enum {
-	IRQL2FINFRAME = 0x40,
-	IRQL2FPENDING = 0x80
+	IRQL2F_INFRAME = 0x40,
+	IRQL2F_PENDING = 0x80
 };
 
 typedef struct {
@@ -22,9 +22,9 @@ typedef struct {
 	BYTE enable;
 	BYTE counter;
 	BYTE scanline;
-	WORD frameX;
+	WORD frame_x;
 	BYTE delay;
-	BYTE inFrame;
+	BYTE in_frame;
 	BYTE pending;
 } _irql2f;
 

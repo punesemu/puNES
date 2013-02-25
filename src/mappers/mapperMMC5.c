@@ -203,7 +203,7 @@ void map_init_MMC5(void) {
 		mmc5.S4.frequency = 1;
 
 		irql2f.scanline = 255;
-		irql2f.frameX = 339;
+		irql2f.frame_x = 339;
 
 		for (i = 0; i < 4; ++i) {
 			mmc5.prgBank[i] = 0xFF;
@@ -498,7 +498,7 @@ BYTE extcl_cpu_rd_mem_MMC5(WORD address, BYTE openbus, BYTE before) {
 			}
 			return (value);
 		case 0x5204:
-			value = irql2f.pending | irql2f.inFrame;
+			value = irql2f.pending | irql2f.in_frame;
 			irql2f.pending = FALSE;
 			/* disabilito l'IRQ dell'MMC5 */
 			irq.high &= ~EXTIRQ;

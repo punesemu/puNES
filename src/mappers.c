@@ -594,22 +594,22 @@ BYTE map_init(WORD mapper_type) {
 void map_quit(void) {
 	/* se c'e' della PRG Ram battery packed la salvo in un file */
 	if (info.prg_ram_bat_banks) {
-		char prgRamFile[1024], *lastDot;
+		char prg_ram_file[1024], *last_dot;
 		FILE *fp;
 
 		/* copio il nome del file nella variabile */
-		strcpy(prgRamFile, info.rom_file);
+		strcpy(prg_ram_file, info.rom_file);
 		/* rintraccio l'ultimo '.' nel nome */
-		lastDot = strrchr(prgRamFile, '.');
+		last_dot = strrchr(prg_ram_file, '.');
 		/* elimino l'estensione */
-		*lastDot = 0x00;
+		*last_dot = 0x00;
 		/* aggiungo l'estensione prb */
-		strcat(prgRamFile, ".prb");
+		strcat(prg_ram_file, ".prb");
 		/* apro il file */
-		fp = fopen(prgRamFile, "wb");
+		fp = fopen(prg_ram_file, "wb");
 		if (fp) {
 			if (extcl_battery_io) {
-				extcl_battery_io(WRBAT, fp);
+				extcl_battery_io(WR_BAT, fp);
 			} else {
 				mapper_wr_battery_default();
 			}
@@ -699,22 +699,22 @@ void map_prg_ram_init(void) {
 		prg.ram_plus_8k = &prg.ram_plus[0];
 		/* controllo se la rom ha una RAM PRG battery packed */
 		if (info.prg_ram_bat_banks && !tas.type) {
-			char prgRamFile[1024], *lastDot;
+			char prg_ram_file[1024], *last_dot;
 			FILE *fp;
 
 			/* copio il nome del file nella variabile */
-			strcpy(prgRamFile, info.rom_file);
+			strcpy(prg_ram_file, info.rom_file);
 			/* rintraccio l'ultimo '.' nel nome */
-			lastDot = strrchr(prgRamFile, '.');
+			last_dot = strrchr(prg_ram_file, '.');
 			/* elimino l'estensione */
-			*lastDot = 0x00;
+			*last_dot = 0x00;
 			/* aggiungo l'estensione prb */
-			strcat(prgRamFile, ".prb");
+			strcat(prg_ram_file, ".prb");
 			/* provo ad aprire il file */
-			fp = fopen(prgRamFile, "rb");
+			fp = fopen(prg_ram_file, "rb");
 
 			if (extcl_battery_io) {
-				extcl_battery_io(RDBAT, fp);
+				extcl_battery_io(RD_BAT, fp);
 			} else {
 				mapper_rd_battery_default();
 			}

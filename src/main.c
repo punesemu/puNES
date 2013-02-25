@@ -49,7 +49,7 @@ int main(int argc, char **argv) {
 
 	guiInit(argc, argv);
 
-#define controlDir(fld, txt)\
+#define control_dir(fld, txt)\
 {\
 	char file[512];\
 	sprintf(file, fld, info.base_folder);\
@@ -65,10 +65,10 @@ int main(int argc, char **argv) {
 		return (EXIT_ERROR);
 	}
 	/* creo le sottocartelle */
-	controlDir("%s" SAVE_FOLDER, "error on create save folder\n")
-	controlDir("%s" PERGAME_FOLDER, "error on create psg folder\n")
-	controlDir("%s" BIOS_FOLDER, "error on create bios folder\n")
-	controlDir("%s" DIFF_FOLDER, "error on create diff folder\n")
+	control_dir("%s" SAVE_FOLDER, "error on create save folder\n")
+	control_dir("%s" PERGAME_FOLDER, "error on create psg folder\n")
+	control_dir("%s" BIOS_FOLDER, "error on create bios folder\n")
+	control_dir("%s" DIFF_FOLDER, "error on create diff folder\n")
 
 #ifdef __NETPLAY__
 	netplay_init();

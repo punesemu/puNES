@@ -561,11 +561,11 @@ BYTE stateOperation(BYTE mode, BYTE slot, FILE *fp) {
 		savestateEle(mode, slot, irqA12.latch)
 		savestateEle(mode, slot, irqA12.reload)
 		savestateEle(mode, slot, irqA12.enable)
-		savestateEle(mode, slot, irqA12.saveCounter)
+		savestateEle(mode, slot, irqA12.save_counter)
 		savestateEle(mode, slot, irqA12.a12BS)
 		savestateEle(mode, slot, irqA12.a12SB)
-		savestateEle(mode, slot, irqA12.bAdrOld)
-		savestateEle(mode, slot, irqA12.sAdrOld)
+		savestateEle(mode, slot, irqA12.b_adr_old)
+		savestateEle(mode, slot, irqA12.s_adr_old)
 	}
 
 	/* irql2f */
@@ -574,9 +574,9 @@ BYTE stateOperation(BYTE mode, BYTE slot, FILE *fp) {
 		savestateEle(mode, slot, irql2f.enable)
 		savestateEle(mode, slot, irql2f.counter)
 		savestateEle(mode, slot, irql2f.scanline)
-		savestateEle(mode, slot, irql2f.frameX)
+		savestateEle(mode, slot, irql2f.frame_x)
 		savestateEle(mode, slot, irql2f.delay)
-		savestateEle(mode, slot, irql2f.inFrame)
+		savestateEle(mode, slot, irql2f.in_frame)
 		savestateEle(mode, slot, irql2f.pending)
 	}
 
@@ -674,7 +674,7 @@ BYTE stateOperation(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 BYTE nameStateFile(char *file, BYTE slot) {
-	char ext[10], *lastDot, *fl;
+	char ext[10], *last_dot, *fl;
 
 	/* game genie */
 	if (info.mapper == GAMEGENIE_MAPPER) {
@@ -691,9 +691,9 @@ BYTE nameStateFile(char *file, BYTE slot) {
 	sprintf(ext, ".p%02d", slot);
 
 	/* rintraccio l'ultimo '.' nel nome */
-	lastDot = strrchr(file, '.');
+	last_dot = strrchr(file, '.');
 	/* elimino l'estensione */
-	*lastDot = 0x00;
+	*last_dot = 0x00;
 	/* aggiungo l'estensione */
 	strcat(file, ext);
 

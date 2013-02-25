@@ -148,7 +148,7 @@ BYTE gfxInit(void) {
 			gfx.scale_before_fscreen = cfg->scale;
 		}
 	}
-	sdlInitGL();
+	sdl_init_gl();
 
 	/*
 	 * inizializzo l'ntsc che utilizzero' non solo
@@ -434,7 +434,7 @@ void gfxSetScreen(BYTE newScale, BYTE newFilter, BYTE newFullscreen, BYTE newPal
 		gfx.h[VIDEOMODE] = height;
 
 		if (gfx.opengl) {
-			flags = opengl.flagsOpengl;
+			flags = opengl.flags;
 
 			SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 5);
 			SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 5);
@@ -692,10 +692,10 @@ void gfxSetScreen(BYTE newScale, BYTE newFilter, BYTE newFullscreen, BYTE newPal
 		}
 
 		/* creo la superficie che utilizzero' come texture */
-		sdlCreateSurfaceGL(surfaceSDL, gfx.w[CURRENT], gfx.h[CURRENT], cfg->fullscreen);
+		sdl_create_surface_gl(surfaceSDL, gfx.w[CURRENT], gfx.h[CURRENT], cfg->fullscreen);
 
 		/* opengl rendering */
-		framebuffer = opengl.surfaceGL;
+		framebuffer = opengl.surface_gl;
 		flip = opengl_flip;
 
 		if (use_txt_texture) {
@@ -703,15 +703,15 @@ void gfxSetScreen(BYTE newScale, BYTE newFilter, BYTE newFullscreen, BYTE newPal
 			text_clear = opengl_text_clear;
 			text_blit = opengl_text_blit;
 		} else {
-			text.surface = opengl.surfaceGL;
+			text.surface = opengl.surface_gl;
 			text_clear = sdl_text_clear;
 			text_blit = sdl_text_blit;
  		}
 		text.w = gfx.w[CURRENT];
 		text.h = gfx.h[CURRENT];
 
-		wForPr = opengl.xTexture2 - opengl.xTexture1;
-		hForPr = opengl.yTexture2 - opengl.yTexture1;
+		wForPr = opengl.x_texture2 - opengl.x_texture1;
+		hForPr = opengl.y_texture2 - opengl.y_texture1;
 	}
 
 	/* questo controllo devo farlo necessariamente dopo il glew_init() */
@@ -776,13 +776,13 @@ void gfxResetVideo(void) {
 	SDL_FreeSurface(surfaceSDL);
 	surfaceSDL = framebuffer = NULL;
 
-	if (opengl.surfaceGL) {
-		SDL_FreeSurface(opengl.surfaceGL);
+	if (opengl.surface_gl) {
+		SDL_FreeSurface(opengl.surface_gl);
 	}
 	if (opengl.texture.data) {
 		glDeleteTextures(1, &opengl.texture.data);
 	}
-	opengl.surfaceGL = NULL;
+	opengl.surface_gl = NULL;
 
 	sdlWid();
 	SDL_QuitSubSystem(SDL_INIT_VIDEO);
@@ -793,7 +793,7 @@ void gfxQuit(void) {
 		free(paletteWindow);
 	}
 
-	sdlQuitGL();
+	sdl_quit_gl();
 	ntscQuit();
 	textQuit();
 	SDL_Quit();

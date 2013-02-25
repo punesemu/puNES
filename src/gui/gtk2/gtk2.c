@@ -729,8 +729,8 @@ gboolean mouse_button_press_release_event(GtkWidget *widget, GdkEventButton *eve
 		case GDK_BUTTON_PRESS:
 			if (event->button == 1) {
 				gui.left_button = TRUE;
-				opengl.xDiff = event->x - (opengl.yRotate * slowFactor);
-				opengl.yDiff = -event->y + (opengl.xRotate * slowFactor);
+				opengl.x_diff = event->x - (opengl.y_rotate * slow_factor);
+				opengl.y_diff = -event->y + (opengl.x_rotate * slow_factor);
 			}
 			if (event->button == 3) {
 				gui.right_button = TRUE;
@@ -754,8 +754,8 @@ gboolean mouse_motion_notify_event(GtkWidget *widget, GdkEventMotion *event) {
 	gui.y = event->y;
 
 	if (gui.left_button && opengl.rotation) {
-		opengl.xRotate = (event->y + opengl.yDiff) / slowFactor;
-		opengl.yRotate = (event->x - opengl.xDiff) / slowFactor;
+		opengl.x_rotate = (event->y + opengl.y_diff) / slow_factor;
+		opengl.y_rotate = (event->x - opengl.x_diff) / slow_factor;
 	}
 
 	return (FALSE);

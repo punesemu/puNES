@@ -391,15 +391,15 @@ void fds_disk_op(WORD type, BYTE side_to_insert) {
 void fds_diff_op(BYTE mode, uint32_t position, WORD value) {
 	if (!fds.info.diff) {
 		char file[1024];
-		char ext[10], *lastDot;
+		char ext[10], *last_dot;
 
 		sprintf(file, "%s" DIFF_FOLDER "/%s", info.base_folder, basename(info.rom_file));
 		sprintf(ext, ".dif");
 
 		/* rintraccio l'ultimo '.' nel nome */
-		lastDot = strrchr(file, '.');
+		last_dot = strrchr(file, '.');
 		/* elimino l'estensione */
-		*lastDot = 0x00;
+		*last_dot = 0x00;
 		/* aggiungo l'estensione */
 		strcat(file, ext);
 

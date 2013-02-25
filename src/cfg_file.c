@@ -459,7 +459,7 @@ void writeInputParam(_param *prmtr, FILE *fp, BYTE end, _port port, BYTE numport
 	}
 }
 BYTE namePgsFile(char *file) {
-	char ext[10], *lastDot;
+	char ext[10], *last_dot;
 
 	/* game genie */
 	if (info.mapper == GAMEGENIE_MAPPER) {
@@ -474,9 +474,9 @@ BYTE namePgsFile(char *file) {
 	sprintf(ext, ".pgs");
 
 	/* rintraccio l'ultimo '.' nel nome */
-	lastDot = strrchr(file, '.');
+	last_dot = strrchr(file, '.');
 	/* elimino l'estensione */
-	*lastDot = 0x00;
+	*last_dot = 0x00;
 	/* aggiungo l'estensione */
 	strcat(file, ext);
 

@@ -849,11 +849,11 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 		/* MMC3 and Taito*/
 		if (r2001.visible) {
 			if (irqA12.present) {
-				irqA12.sAdrOld = irqA12.bAdrOld = 0;
+				irqA12.s_adr_old = irqA12.b_adr_old = 0;
 			}
 		} else {
 			if (irql2f.present) {
-				irql2f.inFrame = FALSE;
+				irql2f.in_frame = FALSE;
 			}
 		}
 		/* clipping del background */

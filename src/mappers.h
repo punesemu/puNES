@@ -158,7 +158,7 @@
 		fprintf(stderr, "error on write battery memory\n");\
 	}
 
-enum { RDBAT, WRBAT };
+enum { RD_BAT, WR_BAT };
 
 typedef struct {
 	BYTE mirroring;

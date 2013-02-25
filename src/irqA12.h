@@ -12,21 +12,21 @@
 #include "cpu.h"
 #include "ppu.h"
 
-#define _irqA12Clock(function)\
+#define _irqA12_clock(function)\
 	if (!irqA12.counter) {\
 		irqA12.counter = irqA12.latch;\
 		if (!irqA12.counter && irqA12.reload) {\
-			irqA12.saveCounter = 1;\
+			irqA12.save_counter = 1;\
 		}\
 		irqA12.reload = FALSE;\
 	} else {\
 		irqA12.counter--;\
 	}\
-	if (!irqA12.counter && irqA12.saveCounter && irqA12.enable) {\
+	if (!irqA12.counter && irqA12.save_counter && irqA12.enable) {\
 		function;\
 	}\
-	irqA12.saveCounter = irqA12.counter
-#define irqA12IRQDefault()\
+	irqA12.save_counter = irqA12.counter
+#define irqA12_irq_default()\
 	/*\
 	 * visto che (per la sincronizzazione tra cpu e ppu)\
 	 * sono in anticipo di un clock cpu, in caso mi trovo\
@@ -39,7 +39,7 @@
 		irqA12.delay++;\
 	}
 /* modificato il 23/04/2012
-#define irqA12IRQDefault()\
+#define irqA12_irq_default()\
 	irq.high |= EXTIRQ;\
 	if (irqA12.delay) {\
 		if (cpu.cycles <= irqA12.delay) {\
@@ -49,8 +49,8 @@
 		irq.delay = TRUE;\
 	}
 */
-#define irqA12Clock() _irqA12Clock(irqA12IRQDefault())
-#define irqA12Mod(function) _irqA12Clock(function)
+#define irqA12_clock() _irqA12_clock(irqA12_irq_default())
+#define irqA12_mod(function) _irqA12_clock(function)
 
 typedef struct {
 	BYTE present;
@@ -59,18 +59,18 @@ typedef struct {
 	BYTE latch;
 	BYTE reload;
 	BYTE enable;
-	BYTE saveCounter;
+	BYTE save_counter;
 	BYTE a12BS;
 	BYTE a12SB;
-	WORD bAdrOld;
-	WORD sAdrOld;
+	WORD b_adr_old;
+	WORD s_adr_old;
 } _irqA12;
 
 _irqA12 irqA12;
 /* questo non e' necessario salvarlo */
 BYTE irqA12_delay;
 
-void irqA12_IO(WORD valueOld);
+void irqA12_IO(WORD value_old);
 void irqA12_BS(void);
 void irqA12_SB(void);
 void irqA12_RS(void);

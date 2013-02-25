@@ -137,7 +137,7 @@ void menu_video_effect_set(void) {
 		opengl_unset_effect = opengl_unset_cube3d;
 		opengl_draw_scene = opengl_draw_scene_cube3d;
 
-		opengl.factorDistance = opengl.xRotate = opengl.yRotate = 0;
+		opengl.factor_distance = opengl.x_rotate = opengl.y_rotate = 0;
 		if (cfg->fullscreen == FULLSCR) {
 			SDL_ShowCursor(SDL_ENABLE);
 		}

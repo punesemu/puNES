@@ -9,22 +9,22 @@
 #include "ppuinline.h"
 #include "irqA12.h"
 
-void irqA12_IO(WORD valueOld) {
-	if (!(valueOld & 0x1000) && (r2006.value & 0x1000)) {
+void irqA12_IO(WORD value_old) {
+	if (!(value_old & 0x1000) && (r2006.value & 0x1000)) {
 		if (!extcl_irq_A12_clock) {
 			if (!irqA12.counter) {
 				irqA12.counter = irqA12.latch;
 				if (!irqA12.counter && irqA12.reload) {
-					irqA12.saveCounter = 1;
+					irqA12.save_counter = 1;
 				}
 				irqA12.reload = 0;
 			} else {
 				irqA12.counter--;
 			}
-			if (!irqA12.counter && irqA12.saveCounter && irqA12.enable) {
+			if (!irqA12.counter && irqA12.save_counter && irqA12.enable) {
 				irq.high |= EXTIRQ;
 			}
-			irqA12.saveCounter = irqA12.counter;
+			irqA12.save_counter = irqA12.counter;
 		} else {
 			/*
 			 * utilizzato dalle mappers :
@@ -44,7 +44,7 @@ void irqA12_BS(void) {
 	nSpr = (ppu.frameX & 0x0038) >> 3;
 
 	if (!nSpr) {
-		irqA12.sAdrOld = ppu.bckAdr;
+		irqA12.s_adr_old = ppu.bckAdr;
 	}
 
 	if ((!sprEv.countPlus) && (r2000.sizeSPR == 16)) {
@@ -53,9 +53,9 @@ void irqA12_BS(void) {
 		ppuSprAdr(nSpr);
 	}
 
-	if (!(irqA12.sAdrOld & 0x1000) && (ppu.sprAdr & 0x1000)) {
+	if (!(irqA12.s_adr_old & 0x1000) && (ppu.sprAdr & 0x1000)) {
 		if (!extcl_irq_A12_clock) {
-			irqA12Clock();
+			irqA12_clock();
 		} else {
 			/*
 			 * utilizzato dalle mappers :
@@ -65,7 +65,7 @@ void irqA12_BS(void) {
 		}
 		irqA12.a12BS = TRUE;
 	}
-	irqA12.sAdrOld = ppu.sprAdr;
+	irqA12.s_adr_old = ppu.sprAdr;
 }
 void irqA12_SB(void) {
 	if (irqA12.a12SB || ((ppu.frameX & 0x0007) != 0x0003)) {
@@ -74,14 +74,14 @@ void irqA12_SB(void) {
 
 	if (ppu.frameX == 323) {
 		ppuSprAdr(7);
-		irqA12.bAdrOld = ppu.sprAdr;
+		irqA12.b_adr_old = ppu.sprAdr;
 	}
 
 	ppuBckAdr();
 
-	if (!(irqA12.bAdrOld & 0x1000) && (ppu.bckAdr & 0x1000)) {
+	if (!(irqA12.b_adr_old & 0x1000) && (ppu.bckAdr & 0x1000)) {
 		if (!extcl_irq_A12_clock) {
-			irqA12Clock();
+			irqA12_clock();
 		} else {
 			/*
 			 * utilizzato dalle mappers :
@@ -91,7 +91,7 @@ void irqA12_SB(void) {
 		}
 		irqA12.a12SB = TRUE;
 	}
-	irqA12.bAdrOld = ppu.bckAdr;
+	irqA12.b_adr_old = ppu.bckAdr;
 }
 void irqA12_RS(void) {
 	if (ppu.frameX == 256) {
