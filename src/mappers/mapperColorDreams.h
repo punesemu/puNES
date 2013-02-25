@@ -15,7 +15,7 @@ enum {
 	BADKINGNEPT = 3,
 };
 
-void mapInit_ColorDreams(void);
+void map_init_ColorDreams(void);
 void extcl_cpu_wr_mem_ColorDreams(WORD address, BYTE value);
 
 #endif /* MAPPERCOLORDREAMS_H_ */

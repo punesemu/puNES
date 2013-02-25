@@ -14,7 +14,7 @@ struct _caltron {
 	BYTE reg;
 } caltron;
 
-void mapInit_Caltron(void);
+void map_init_Caltron(void);
 void extcl_cpu_wr_mem_Caltron(WORD address, BYTE value);
 BYTE extcl_save_mapper_Caltron(BYTE mode, BYTE slot, FILE *fp);
 

@@ -113,48 +113,48 @@
 #include "mappers/mapperFDS.h"
 #include "mappers/mapperGameGenie.h"
 
-#define _controlBank(val, max)\
+#define _control_bank(val, max)\
 	if (val > max) {\
 		val &= max;\
 	}
-#define controlBank(max)\
-	_controlBank(value, max)
-#define controlBankWithAND(mask, max)\
+#define control_bank(max)\
+	_control_bank(value, max)
+#define control_bank_with_AND(mask, max)\
 {\
 	value &= mask;\
-	controlBank(max)\
+	control_bank(max)\
 }
-#define prgRomRd(address) prg.rom8k[(address >> 13) & 0x03][address & 0x1FFF]
-#define chrBank1kReset()\
+#define prg_rom_rd(address) prg.rom_8k[(address >> 13) & 0x03][address & 0x1FFF]
+#define chr_bank_1k_reset()\
 {\
 	BYTE bank1k;\
 	for (bank1k = 0; bank1k < 8; ++bank1k) {\
-		chr.bank1k[bank1k] = &chr.data[bank1k * 0x0400];\
+		chr.bank_1k[bank1k] = &chr.data[bank1k * 0x0400];\
 	}\
 }
-#define mapperRdBatteryDefault()\
+#define mapper_rd_battery_default()\
 {\
 	BYTE bank;\
 	/*\
 	 * se non e' specificato da che banco di PRG ram inizia\
 	 * la battery packed Ram, utilizzo sempre l'ultimo.\
 	 */\
-	if (info.prgRamBatStart == DEFAULT) {\
-		bank = info.prgRamPlus8kCount - info.prgRamBatBanks;\
+	if (info.prg_ram_bat_start == DEFAULT) {\
+		bank = info.prg_ram_plus_8k_count - info.prg_ram_bat_banks;\
 	} else {\
-		bank = info.prgRamBatStart;\
+		bank = info.prg_ram_bat_start;\
 	}\
-	prg.ramBattery = &prg.ramPlus[bank * 0x2000];\
+	prg.ram_battery = &prg.ram_plus[bank * 0x2000];\
 	if (fp) {\
 		/* ne leggo il contenuto */\
-		if (fread(&prg.ramBattery[0], info.prgRamBatBanks * 8192, 1, fp) < 1) {\
+		if (fread(&prg.ram_battery[0], info.prg_ram_bat_banks * 8192, 1, fp) < 1) {\
 			fprintf(stderr, "error on read battery memory\n");\
 		}\
 	}\
 }
-#define mapperWrBatteryDefault()\
+#define mapper_wr_battery_default()\
 	/* ci scrivo i dati */\
-	if (fwrite(&prg.ramBattery[0], info.prgRamBatBanks * 8192, 1, fp) < 1) {\
+	if (fwrite(&prg.ram_battery[0], info.prg_ram_bat_banks * 8192, 1, fp) < 1) {\
 		fprintf(stderr, "error on write battery memory\n");\
 	}
 
@@ -162,20 +162,20 @@ enum { RDBAT, WRBAT };
 
 typedef struct {
 	BYTE mirroring;
-	BYTE writeVRAM;
-	WORD romMapTo[4];
-	BYTE *intStruct[2];
-	WORD intStructSize[2];
+	BYTE write_vram;
+	WORD rom_map_to[4];
+	BYTE *internal_struct[2];
+	WORD internal_struct_size[2];
 } _mapper;
 
 _mapper mapper;
 
-BYTE mapInit(WORD mapperType);
-void mapQuit(void);
-void mapPrgRom8kReset(void);
-void mapPrgRom8k(BYTE banks8k, BYTE at, BYTE value);
-void mapPrgRom8kUpdate(void);
-void mapPrgRamInit(void);
-BYTE mapChrRamInit(void);
+BYTE map_init(WORD mapper_type);
+void map_quit(void);
+void map_prg_rom_8k_reset(void);
+void map_prg_rom_8k(BYTE banks_8k, BYTE at, BYTE value);
+void map_prg_rom_8k_update(void);
+void map_prg_ram_init(void);
+BYTE map_chr_ram_init(void);
 
 #endif /* MAPPERS_H_ */

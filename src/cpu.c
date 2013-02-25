@@ -979,7 +979,7 @@ void cpu_exe_op(void) {
 		}
 		cpu.cycles = 0;
 		//info.stop = TRUE;
-		//info.executeCPU = FALSE;
+		//info.execute_cpu = FALSE;
 		break;
 	case 0x100: IMP(READ, NMI) break;                                   // NMI
 	case 0x200: IMP(READ, IRQ(cpu.SR & 0xEF)) break;                    // IRQ

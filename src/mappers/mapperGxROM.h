@@ -10,7 +10,7 @@
 
 #include "common.h"
 
-void mapInit_GxROM(void);
+void map_init_GxROM(void);
 void extcl_cpu_wr_mem_GxROM(WORD address, BYTE value);
 
 #endif /* MAPPERGXROM_H_ */

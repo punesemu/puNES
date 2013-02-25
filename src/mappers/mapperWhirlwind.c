@@ -13,27 +13,27 @@
 
 WORD prgRom32kMax, prgRom8kMax;
 
-void mapInit_Whirlwind(void) {
-	prgRom32kMax = (info.prgRom16kCount >> 1) - 1;
-	prgRom8kMax = info.prgRom8kCount - 1;
+void map_init_Whirlwind(void) {
+	prgRom32kMax = (info.prg_rom_16k_count >> 1) - 1;
+	prgRom8kMax = info.prg_rom_8k_count - 1;
 
 	EXTCL_CPU_WR_MEM(Whirlwind);
 	EXTCL_CPU_RD_MEM(Whirlwind);
 	EXTCL_SAVE_MAPPER(Whirlwind);
-	mapper.intStruct[0] = (BYTE *) &whirlwind;
-	mapper.intStructSize[0] = sizeof(whirlwind);
+	mapper.internal_struct[0] = (BYTE *) &whirlwind;
+	mapper.internal_struct_size[0] = sizeof(whirlwind);
 
-	info.prgRamPlus8kCount = FALSE;
+	info.prg_ram_plus_8k_count = FALSE;
 
 	if (info.reset >= HARD) {
 		memset(&whirlwind, 0x00, sizeof(whirlwind));
 
-		mapPrgRom8k(4, 0, prgRom32kMax);
+		map_prg_rom_8k(4, 0, prgRom32kMax);
 	}
 }
 void extcl_cpu_wr_mem_Whirlwind(WORD address, BYTE value) {
 	if (address == 0x8FFF) {
-		controlBank(prgRom8kMax)
+		control_bank(prgRom8kMax)
 		whirlwind.prgRam = value << 13;
 	}
 }

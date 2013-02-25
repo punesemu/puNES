@@ -53,7 +53,7 @@ struct _n3446 {
 	BYTE prgRomMode;
 } n3446;
 
-void mapInit_Namco(BYTE model);
+void map_init_Namco(BYTE model);
 
 void extcl_cpu_wr_mem_Namco_163(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_Namco_163(WORD address, BYTE openbus, BYTE before);

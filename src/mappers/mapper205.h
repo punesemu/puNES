@@ -16,7 +16,7 @@ struct _m205 {
 	WORD chrmap[8];
 } m205;
 
-void mapInit_205(void);
+void map_init_205(void);
 void extcl_cpu_wr_mem_205(WORD address, BYTE value);
 BYTE extcl_save_mapper_205(BYTE mode, BYTE slot, FILE *fp);
 

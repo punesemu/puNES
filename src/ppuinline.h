@@ -22,7 +22,7 @@ static BYTE INLINE ppuRdMem(WORD address) {
 			 */
 			return (extcl_rd_chr(address));
 		}
-		return (chr.bank1k[address >> 10][address & 0x3FF]);
+		return (chr.bank_1k[address >> 10][address & 0x3FF]);
 	}
 	if (address < 0x3F00) {
 		address &= 0x0FFF;
@@ -34,7 +34,7 @@ static BYTE INLINE ppuRdMem(WORD address) {
 			 */
 			return (extcl_rd_nmt(address));
 		}
-		return (ntbl.bank1k[address >> 10][address & 0x3FF]);
+		return (ntbl.bank_1k[address >> 10][address & 0x3FF]);
 	}
 	return (palette.color[address & 0x1F]);
 }

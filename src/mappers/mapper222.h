@@ -15,7 +15,7 @@ struct _m222 {
 	BYTE delay;
 } m222;
 
-void mapInit_222(void);
+void map_init_222(void);
 void extcl_cpu_wr_mem_222(WORD address, BYTE value);
 BYTE extcl_save_mapper_222(BYTE mode, BYTE slot, FILE *fp);
 void extcl_irq_A12_clock_222(void);

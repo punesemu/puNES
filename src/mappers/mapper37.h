@@ -16,7 +16,7 @@ struct _m37 {
 	WORD chrmap[8];
 } m37;
 
-void mapInit_37(void);
+void map_init_37(void);
 void extcl_cpu_wr_mem_37(WORD address, BYTE value);
 BYTE extcl_save_mapper_37(BYTE mode, BYTE slot, FILE *fp);
 

@@ -25,7 +25,7 @@ BYTE ines_load_rom(void) {
 		BYTE i, found = TRUE;
 		char rom_ext[2][10] = { ".nes\0", ".NES\0" };
 
-		fp = fopen(info.romFile, "rb");
+		fp = fopen(info.rom_file, "rb");
 
 		if (!fp) {
 			found = FALSE;
@@ -33,13 +33,13 @@ BYTE ines_load_rom(void) {
 			for (i = 0; i < LENGTH(rom_ext); i++) {
 				char rom_file[1024];
 
-				strncpy(rom_file, info.romFile, sizeof(rom_file));
+				strncpy(rom_file, info.rom_file, sizeof(rom_file));
 				strcat(rom_file, rom_ext[i]);
 
 				fp = fopen(rom_file, "rb");
 
 				if (fp) {
-					strncpy(info.romFile, rom_file, sizeof(info.romFile));
+					strncpy(info.rom_file, rom_file, sizeof(info.rom_file));
 					found = TRUE;
 					break;
 				}
@@ -56,13 +56,13 @@ BYTE ines_load_rom(void) {
 	}
 
 	if ((fgetc(fp) == 'N') && (fgetc(fp) == 'E') && (fgetc(fp) == 'S') && (fgetc(fp) == '\32')) {
-		info.prgRom16kCount = fgetc(fp);
-		info.chrRom8kCount = fgetc(fp);
+		info.prg_rom_16k_count = fgetc(fp);
+		info.chr_rom_8k_count = fgetc(fp);
 
 		flags6 = fgetc(fp);
 		flags7 = fgetc(fp);
 		info.mapper = (flags7 & 0xF0) | (flags6 >> 4);
-		info.prgRamBatBanks = (flags6 & 0x02) >> 1;
+		info.prg_ram_bat_banks = (flags6 & 0x02) >> 1;
 		info.trainer = flags6 & 0x04;
 		if (flags6 & 0x08) {
 			mirroring_FSCR();
@@ -88,7 +88,7 @@ BYTE ines_load_rom(void) {
 		 * a FALSE qui in modo da poter cambiare impostazione nel
 		 * emuSearchInDatabase.
 		 */
-		mapper.writeVRAM = FALSE;
+		mapper.write_vram = FALSE;
 
 		if (emuSearchInDatabase(fp)) {
 			return (EXIT_ERROR);
@@ -100,22 +100,22 @@ BYTE ines_load_rom(void) {
 
 #ifndef RELEASE
 		fprintf(stderr, "mapper %u\n8k rom = %u\n4k vrom = %u\n", info.mapper,
-				info.prgRom16kCount * 2, info.chrRom8kCount * 2);
-		fprintf(stderr, "sha1prg = %40s\n", info.sha1sumString);
-		fprintf(stderr, "sha1chr = %40s\n", info.sha1sumStringChr);
+				info.prg_rom_16k_count * 2, info.chr_rom_8k_count * 2);
+		fprintf(stderr, "sha1prg = %40s\n", info.sha1sum_string);
+		fprintf(stderr, "sha1chr = %40s\n", info.sha1sum_string_chr);
 #endif
 
-		if (!info.chrRom8kCount) {
-			mapper.writeVRAM = TRUE;
-			info.chrRom8kCount = 1;
+		if (!info.chr_rom_8k_count) {
+			mapper.write_vram = TRUE;
+			info.chr_rom_8k_count = 1;
 		}
 
-		info.prgRom8kCount = info.prgRom16kCount * 2;
-		info.chrRom4kCount = info.chrRom8kCount * 2;
-		info.chrRom1kCount = info.chrRom4kCount * 4;
+		info.prg_rom_8k_count = info.prg_rom_16k_count * 2;
+		info.chr_rom_4k_count = info.chr_rom_8k_count * 2;
+		info.chr_rom_1k_count = info.chr_rom_4k_count * 4;
 
-		if (info.prgRamBatBanks) {
-			info.prgRamPlus8kCount = 1;
+		if (info.prg_ram_bat_banks) {
+			info.prg_ram_plus_8k_count = 1;
 		}
 
 		/* alloco la PRG Ram */
@@ -125,24 +125,24 @@ BYTE ines_load_rom(void) {
 		}
 
 		/* alloco e carico la PRG Rom */
-		if ((prg.rom = malloc(info.prgRom16kCount * (16 * 1024)))) {
-			tmp = fread(&prg.rom[0], 16384, info.prgRom16kCount, fp);
+		if ((prg.rom = malloc(info.prg_rom_16k_count * (16 * 1024)))) {
+			tmp = fread(&prg.rom[0], 16384, info.prg_rom_16k_count, fp);
 		} else {
 			fprintf(stderr, "Out of memory\n");
 			return (EXIT_ERROR);
 		}
 
 		/*
-		 * se e' settato mapper.writeVRAM, vuol dire
+		 * se e' settato mapper.write_vram, vuol dire
 		 * che la rom non ha CHR Rom e che quindi la CHR Ram
 		 * la trattero' nell'inizializzazione della mapper
 		 * (perche' alcune mapper ne hanno 16k, altre 8k).
 		 */
-		if (!mapper.writeVRAM) {
+		if (!mapper.write_vram) {
 			/* alloco la CHR Rom */
-			if ((chr.data = malloc(info.chrRom8kCount * (8 * 1024)))) {
-				tmp = fread(&chr.data[0], 8192, info.chrRom8kCount, fp);
-				chrBank1kReset();
+			if ((chr.data = malloc(info.chr_rom_8k_count * (8 * 1024)))) {
+				tmp = fread(&chr.data[0], 8192, info.chr_rom_8k_count, fp);
+				chr_bank_1k_reset();
 			} else {
 				fprintf(stderr, "Out of memory\n");
 				return (EXIT_ERROR);

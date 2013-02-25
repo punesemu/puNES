@@ -91,7 +91,7 @@ void cfg_file_parse(void) {
 	/* leggo la configurazione input */
 	cfg_file_input_parse();
 	/* apro il file di configurazione */
-	sprintf(tmp, "%s/%s", info.baseFolder, INIFILE);
+	sprintf(tmp, "%s/%s", info.base_folder, INIFILE);
 	/* se non esiste allora lo creo */
 	if ((fp = fopen(tmp, "r")) == NULL) {
 		textAddLineInfo(1, "configuration [yellow]not found, [green]created");
@@ -169,7 +169,7 @@ void cfg_file_save(void) {
 	char tmp[MAXLEN];
 
 	/* apro il file */
-	sprintf(tmp, "%s/%s", info.baseFolder, INIFILE);
+	sprintf(tmp, "%s/%s", info.base_folder, INIFILE);
 	if ((fp = fopen(tmp, "w")) == NULL) {
 		fprintf(stderr, "ERROR: File not found : %s", INIFILE);
 		return;
@@ -288,7 +288,7 @@ void cfg_file_input_parse(void) {
 	char tmp[MAXLEN], line[MAXLEN];
 
 	/* apro il file di configurazione */
-	sprintf(tmp, "%s/%s", info.baseFolder, INPUTFILE);
+	sprintf(tmp, "%s/%s", info.base_folder, INPUTFILE);
 	/* se non esiste lo creo */
 	if ((fp = fopen(tmp, "r")) == NULL) {
 		cfg_file_input_save();
@@ -326,7 +326,7 @@ void cfg_file_input_save(void) {
 	char tmp[MAXLEN];
 
 	/* apro il file */
-	sprintf(tmp, "%s/%s", info.baseFolder, INPUTFILE);
+	sprintf(tmp, "%s/%s", info.base_folder, INPUTFILE);
 	if ((fp = fopen(tmp, "w")) == NULL) {
 		return;
 	}
@@ -466,11 +466,11 @@ BYTE namePgsFile(char *file) {
 		return (EXIT_ERROR);
 	}
 
-	if (!info.romFile[0]) {
+	if (!info.rom_file[0]) {
 		return (EXIT_ERROR);
 	}
 
-	sprintf(file, "%s" PERGAMEFOLDER "/%s", info.baseFolder, basename(info.romFile));
+	sprintf(file, "%s" PERGAME_FOLDER "/%s", info.base_folder, basename(info.rom_file));
 	sprintf(ext, ".pgs");
 
 	/* rintraccio l'ultimo '.' nel nome */

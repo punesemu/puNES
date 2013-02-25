@@ -10,13 +10,13 @@
 
 WORD prgRom32kMax;
 
-void mapInit_AxROM(void) {
-	prgRom32kMax = (info.prgRom16kCount >> 1) - 1;
+void map_init_AxROM(void) {
+	prgRom32kMax = (info.prg_rom_16k_count >> 1) - 1;
 
 	EXTCL_CPU_WR_MEM(AxROM);
 
 	if (info.reset >= HARD) {
-		mapPrgRom8k(4, 0, 0);
+		map_prg_rom_8k(4, 0, 0);
 	}
 
 	if (info.id == BBCARUNL) {
@@ -25,8 +25,8 @@ void mapInit_AxROM(void) {
 }
 void extcl_cpu_wr_mem_AxROM(WORD address, BYTE value) {
 	/* bus conflict */
-	if (info.mapperType == AMROM) {
-		value &= prgRomRd(address);
+	if (info.mapper_type == AMROM) {
+		value &= prg_rom_rd(address);
 	}
 
 	if (value & 0x10) {
@@ -35,7 +35,7 @@ void extcl_cpu_wr_mem_AxROM(WORD address, BYTE value) {
 		mirroring_SCR1();
 	}
 
-	controlBankWithAND(0x0F, prgRom32kMax)
-	mapPrgRom8k(4, 0, value);
-	mapPrgRom8kUpdate();
+	control_bank_with_AND(0x0F, prgRom32kMax)
+	map_prg_rom_8k(4, 0, value);
+	map_prg_rom_8k_update();
 }

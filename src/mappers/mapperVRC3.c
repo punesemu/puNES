@@ -14,16 +14,16 @@
 
 WORD prgRom16kMax;
 
-void mapInit_VRC3(void) {
-	prgRom16kMax = info.prgRom16kCount - 1;
+void map_init_VRC3(void) {
+	prgRom16kMax = info.prg_rom_16k_count - 1;
 
 	EXTCL_CPU_WR_MEM(VRC3);
 	EXTCL_SAVE_MAPPER(VRC3);
 	EXTCL_CPU_EVERY_CYCLE(VRC3);
-	mapper.intStruct[0] = (BYTE *) &vrc3;
-	mapper.intStructSize[0] = sizeof(vrc3);
+	mapper.internal_struct[0] = (BYTE *) &vrc3;
+	mapper.internal_struct_size[0] = sizeof(vrc3);
 
-	info.prgRamPlus8kCount = 1;
+	info.prg_ram_plus_8k_count = 1;
 
 	if (info.reset) {
 		memset(&vrc3, 0x00, sizeof(vrc3));
@@ -62,9 +62,9 @@ void extcl_cpu_wr_mem_VRC3(WORD address, BYTE value) {
 			irq.high &= ~EXTIRQ;
 			return;
 		case 0xF000:
-			controlBankWithAND(0x0F, prgRom16kMax)
-			mapPrgRom8k(2, 0, value);
-			mapPrgRom8kUpdate();
+			control_bank_with_AND(0x0F, prgRom16kMax)
+			map_prg_rom_8k(2, 0, value);
+			map_prg_rom_8k_update();
 			return;
 		default:
 			return;

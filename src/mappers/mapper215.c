@@ -29,9 +29,9 @@
 	BYTE i;\
 	for (i = 0; i < 8; i++) {\
 		WORD bank;\
-		m215chr1k(((chr.bank1k[i] - chr.data) >> 10))\
-		_controlBank(bank, chrRom1kMax)\
-		chr.bank1k[i] = &chr.data[bank << 10];\
+		m215chr1k(((chr.bank_1k[i] - chr.data) >> 10))\
+		_control_bank(bank, chrRom1kMax)\
+		chr.bank_1k[i] = &chr.data[bank << 10];\
 	}\
 }
 #define m215prg8kupdate()\
@@ -39,16 +39,16 @@
 		BYTE i;\
 		for (i = 0; i < 4; i++) {\
 			m215prg8k(m215.prg8kBank[i]);\
-			controlBank(prgRom8kMax)\
-			mapPrgRom8k(1, i, value);\
+			control_bank(prgRom8kMax)\
+			map_prg_rom_8k(1, i, value);\
 		}\
 	} else {\
 		value = (m215.reg[0] & 0x0F) | (m215.reg[1] & 0x10);\
-		controlBank(prgRom16kMax)\
-		mapPrgRom8k(2, 0, value);\
-		mapPrgRom8k(2, 2, value);\
+		control_bank(prgRom16kMax)\
+		map_prg_rom_8k(2, 0, value);\
+		map_prg_rom_8k(2, 2, value);\
 	}\
-	mapPrgRom8kUpdate()
+	map_prg_rom_8k_update()
 #define m215_8000()\
 {\
 	const BYTE chrRomCfgOld = mmc3.chrRomCfg;\
@@ -69,22 +69,22 @@
 	}\
 	if (mmc3.prgRomCfg != prgRomCfgOld) {\
 		if (!(m215.reg[0] & 0x80)) {\
-			WORD p0 = mapper.romMapTo[0];\
-			WORD p2 = mapper.romMapTo[2];\
-			mapper.romMapTo[0] = p2;\
-			mapper.romMapTo[2] = p0;\
+			WORD p0 = mapper.rom_map_to[0];\
+			WORD p2 = mapper.rom_map_to[2];\
+			mapper.rom_map_to[0] = p2;\
+			mapper.rom_map_to[2] = p0;\
 			/*\
 			 * prgRomCfg 0x00 : $C000 - $DFFF fisso al penultimo banco\
 			 * prgRomCfg 0x02 : $8000 - $9FFF fisso al penultimo banco\
 			 */\
 			m215prg8k(prgRom8kBeforeLast)\
-			controlBank(prgRom8kMax)\
-			mapPrgRom8k(1, mmc3.prgRomCfg ^ 0x02, value);\
-			mapPrgRom8kUpdate();\
-			m215.prg8kBank[0] = mapper.romMapTo[0];\
-			m215.prg8kBank[1] = mapper.romMapTo[1];\
-			m215.prg8kBank[2] = mapper.romMapTo[2];\
-			m215.prg8kBank[3] = mapper.romMapTo[3];\
+			control_bank(prgRom8kMax)\
+			map_prg_rom_8k(1, mmc3.prgRomCfg ^ 0x02, value);\
+			map_prg_rom_8k_update();\
+			m215.prg8kBank[0] = mapper.rom_map_to[0];\
+			m215.prg8kBank[1] = mapper.rom_map_to[1];\
+			m215.prg8kBank[2] = mapper.rom_map_to[2];\
+			m215.prg8kBank[3] = mapper.rom_map_to[3];\
 		}\
 	}\
 }
@@ -95,53 +95,53 @@
 		case 0:\
 			m215chr1k(value)\
 			bank &= 0xFFE;\
-			_controlBank(bank, chrRom1kMax)\
-			chr.bank1k[mmc3.chrRomCfg] = &chr.data[bank << 10];\
-			chr.bank1k[mmc3.chrRomCfg | 0x01] = &chr.data[(bank + 1) << 10];\
+			_control_bank(bank, chrRom1kMax)\
+			chr.bank_1k[mmc3.chrRomCfg] = &chr.data[bank << 10];\
+			chr.bank_1k[mmc3.chrRomCfg | 0x01] = &chr.data[(bank + 1) << 10];\
 			return;\
 		case 1:\
 			m215chr1k(value)\
 			bank &= 0xFFE;\
-			_controlBank(bank, chrRom1kMax)\
-			chr.bank1k[mmc3.chrRomCfg | 0x02] = &chr.data[bank << 10];\
-			chr.bank1k[mmc3.chrRomCfg | 0x03] = &chr.data[(bank + 1) << 10];\
+			_control_bank(bank, chrRom1kMax)\
+			chr.bank_1k[mmc3.chrRomCfg | 0x02] = &chr.data[bank << 10];\
+			chr.bank_1k[mmc3.chrRomCfg | 0x03] = &chr.data[(bank + 1) << 10];\
 			return;\
 		case 2:\
 			m215chr1k(value)\
-			_controlBank(bank, chrRom1kMax)\
-			chr.bank1k[mmc3.chrRomCfg ^ 0x04] = &chr.data[bank << 10];\
+			_control_bank(bank, chrRom1kMax)\
+			chr.bank_1k[mmc3.chrRomCfg ^ 0x04] = &chr.data[bank << 10];\
 			return;\
 		case 3:\
 			m215chr1k(value)\
-			_controlBank(bank, chrRom1kMax)\
-			chr.bank1k[(mmc3.chrRomCfg ^ 0x04) | 0x01] = &chr.data[bank << 10];\
+			_control_bank(bank, chrRom1kMax)\
+			chr.bank_1k[(mmc3.chrRomCfg ^ 0x04) | 0x01] = &chr.data[bank << 10];\
 			return;\
 		case 4:\
 			m215chr1k(value)\
-			_controlBank(bank, chrRom1kMax)\
-			chr.bank1k[(mmc3.chrRomCfg ^ 0x04) | 0x02] = &chr.data[bank << 10];\
+			_control_bank(bank, chrRom1kMax)\
+			chr.bank_1k[(mmc3.chrRomCfg ^ 0x04) | 0x02] = &chr.data[bank << 10];\
 			return;\
 		case 5:\
 			m215chr1k(value)\
-			_controlBank(bank, chrRom1kMax)\
-			chr.bank1k[(mmc3.chrRomCfg ^ 0x04) | 0x03] = &chr.data[bank << 10];\
+			_control_bank(bank, chrRom1kMax)\
+			chr.bank_1k[(mmc3.chrRomCfg ^ 0x04) | 0x03] = &chr.data[bank << 10];\
 			return;\
 		case 6:\
 			if (!(m215.reg[0] & 0x80)) {\
 				m215prg8k(value)\
-				controlBank(prgRom8kMax)\
-				mapPrgRom8k(1, mmc3.prgRomCfg, value);\
-				mapPrgRom8kUpdate();\
-				m215.prg8kBank[mmc3.prgRomCfg] = mapper.romMapTo[mmc3.prgRomCfg];\
+				control_bank(prgRom8kMax)\
+				map_prg_rom_8k(1, mmc3.prgRomCfg, value);\
+				map_prg_rom_8k_update();\
+				m215.prg8kBank[mmc3.prgRomCfg] = mapper.rom_map_to[mmc3.prgRomCfg];\
 			}\
 			return;\
 		case 7:\
 			if (!(m215.reg[0] & 0x80)) {\
 				m215prg8k(value)\
-				controlBank(prgRom8kMax)\
-				mapPrgRom8k(1, 1, value);\
-				mapPrgRom8kUpdate();\
-				m215.prg8kBank[1] = mapper.romMapTo[1];\
+				control_bank(prgRom8kMax)\
+				map_prg_rom_8k(1, 1, value);\
+				map_prg_rom_8k_update();\
+				m215.prg8kBank[1] = mapper.rom_map_to[1];\
 			}\
 			return;\
 	}\
@@ -149,11 +149,11 @@
 
 WORD prgRom16kMax, prgRom8kMax, prgRom8kBeforeLast, chrRom1kMax;
 
-void mapInit_215(void) {
-	prgRom16kMax = info.prgRom16kCount - 1;
-	prgRom8kMax = info.prgRom8kCount - 1;
-	prgRom8kBeforeLast = info.prgRom8kCount - 2;
-	chrRom1kMax = info.chrRom1kCount - 1;
+void map_init_215(void) {
+	prgRom16kMax = info.prg_rom_16k_count - 1;
+	prgRom8kMax = info.prg_rom_8k_count - 1;
+	prgRom8kBeforeLast = info.prg_rom_8k_count - 2;
+	chrRom1kMax = info.chr_rom_1k_count - 1;
 
 	EXTCL_CPU_WR_MEM(215);
 	EXTCL_SAVE_MAPPER(215);
@@ -163,10 +163,10 @@ void mapInit_215(void) {
 	EXTCL_PPU_256_TO_319(MMC3);
 	EXTCL_PPU_320_TO_34X(MMC3);
 	EXTCL_UPDATE_R2006(MMC3);
-	mapper.intStruct[0] = (BYTE *) &m215;
-	mapper.intStructSize[0] = sizeof(m215);
-	mapper.intStruct[1] = (BYTE *) &mmc3;
-	mapper.intStructSize[1] = sizeof(mmc3);
+	mapper.internal_struct[0] = (BYTE *) &m215;
+	mapper.internal_struct_size[0] = sizeof(m215);
+	mapper.internal_struct[1] = (BYTE *) &mmc3;
+	mapper.internal_struct_size[1] = sizeof(mmc3);
 
 	if (info.reset >= HARD) {
 		memset(&mmc3, 0x00, sizeof(mmc3));
@@ -182,7 +182,7 @@ void mapInit_215(void) {
 	m215.prg8kBank[2] = prgRom8kBeforeLast;
 	m215.prg8kBank[3] = prgRom8kMax;
 
-	info.mapperExtendWrite = TRUE;
+	info.mapper_extend_wr = TRUE;
 
 	irqA12.present = TRUE;
 	irqA12_delay = 1;

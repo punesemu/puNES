@@ -21,7 +21,7 @@
 #define rexDbzChr1kUpdate(slot)\
 {\
 	WORD tmp = (rexDbz.chrHigh << ((slot >= 4) ? 4 : 8)) & 0x0100;\
-	chr.bank1k[slot] = &chr.data[(tmp | rexDbz.chrRomBank[slot]) << 10];\
+	chr.bank_1k[slot] = &chr.data[(tmp | rexDbz.chrRomBank[slot]) << 10];\
 }
 #define rexDbzIntercept8001(slot, val)\
 {\
@@ -39,10 +39,10 @@
 
 WORD prgRom8kMax, prgRom8kBeforeLast, chrRom1kMax;
 
-void mapInit_Rex(BYTE model) {
-	prgRom8kMax = info.prgRom8kCount - 1;
-	chrRom1kMax = info.chrRom1kCount - 1;
-	prgRom8kBeforeLast = info.prgRom8kCount - 2;
+void map_init_Rex(BYTE model) {
+	prgRom8kMax = info.prg_rom_8k_count - 1;
+	chrRom1kMax = info.chr_rom_1k_count - 1;
+	prgRom8kBeforeLast = info.prg_rom_8k_count - 2;
 
 	if (model == DBZ) {
 		EXTCL_CPU_WR_MEM(Rex_dbz);
@@ -54,10 +54,10 @@ void mapInit_Rex(BYTE model) {
 		EXTCL_PPU_256_TO_319(MMC3);
 		EXTCL_PPU_320_TO_34X(MMC3);
 		EXTCL_UPDATE_R2006(MMC3);
-		mapper.intStruct[0] = (BYTE *) &rexDbz;
-		mapper.intStructSize[0] = sizeof(rexDbz);
-		mapper.intStruct[1] = (BYTE *) &mmc3;
-		mapper.intStructSize[1] = sizeof(mmc3);
+		mapper.internal_struct[0] = (BYTE *) &rexDbz;
+		mapper.internal_struct_size[0] = sizeof(rexDbz);
+		mapper.internal_struct[1] = (BYTE *) &mmc3;
+		mapper.internal_struct_size[1] = sizeof(mmc3);
 
 		if (info.reset >= HARD) {
 			BYTE i;
@@ -73,7 +73,7 @@ void mapInit_Rex(BYTE model) {
 			memset(&irqA12, 0x00, sizeof(irqA12));
 		}
 
-		info.mapperExtendWrite = TRUE;
+		info.mapper_extend_wr = TRUE;
 
 		irqA12.present = TRUE;
 		irqA12_delay = 1;

@@ -31,7 +31,7 @@ struct _waixing {
 	WORD ctrl[8];
 } waixing;
 
-void mapInit_Waixing(BYTE model);
+void map_init_Waixing(BYTE model);
 
 void extcl_cpu_wr_mem_Waixing_PSx(WORD address, BYTE value);
 

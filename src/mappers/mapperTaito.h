@@ -29,7 +29,7 @@ struct _taitoX1017 {
 	BYTE control;
 } taitoX1017;
 
-void mapInit_Taito(BYTE model);
+void map_init_Taito(BYTE model);
 
 void extcl_cpu_wr_mem_Taito_TC0190FMC(WORD address, BYTE value);
 

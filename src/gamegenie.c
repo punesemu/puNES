@@ -39,7 +39,7 @@ void gamegenie_check_rom_present(BYTE print_message) {
 	char gg_rom[1024];
 	struct stat status;
 
-	sprintf(gg_rom, "%s" BIOSFOLDER "/%s", info.baseFolder, GGFILE);
+	sprintf(gg_rom, "%s" BIOS_FOLDER "/%s", info.base_folder, GGFILE);
 
 	gamegenie.rom_present = FALSE;
 
@@ -64,17 +64,17 @@ FILE *gamegenie_load_rom(FILE *fp) {
 		return (fp_rom);
 	}
 
-	strncpy(info.loadRomFile, info.romFile, sizeof(info.loadRomFile));
+	strncpy(info.load_rom_file, info.rom_file, sizeof(info.load_rom_file));
 
-	sprintf(info.romFile, "%s" BIOSFOLDER "/%s", info.baseFolder, GGFILE);
+	sprintf(info.rom_file, "%s" BIOS_FOLDER "/%s", info.base_folder, GGFILE);
 
-	if (!(fp_gg = fopen(info.romFile, "rb"))) {
+	if (!(fp_gg = fopen(info.rom_file, "rb"))) {
 		textAddLineInfo(1, "[red]error on loading Game Genie rom");
 		fprintf(stderr, "error on loading Game Genie rom\n");
 
-		strncpy(info.romFile, info.loadRomFile, sizeof(info.romFile));
+		strncpy(info.rom_file, info.load_rom_file, sizeof(info.rom_file));
 
-		memset(info.loadRomFile, 0, sizeof(info.loadRomFile));
+		memset(info.load_rom_file, 0, sizeof(info.load_rom_file));
 		return (fp_rom);
 	}
 

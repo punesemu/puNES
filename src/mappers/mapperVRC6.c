@@ -60,17 +60,17 @@ const WORD tableVRC6[2][4] = {
 	{0x0000, 0x0002, 0x0001, 0x0003},
 };
 
-void mapInit_VRC6(BYTE revision) {
-	prgRom16kMax = info.prgRom16kCount - 1;
-	prgRom8kMax = info.prgRom8kCount - 1;
-	chrRom1kMax = info.chrRom1kCount - 1;
+void map_init_VRC6(BYTE revision) {
+	prgRom16kMax = info.prg_rom_16k_count - 1;
+	prgRom8kMax = info.prg_rom_8k_count - 1;
+	chrRom1kMax = info.chr_rom_1k_count - 1;
 
 	EXTCL_CPU_WR_MEM(VRC6);
 	EXTCL_SAVE_MAPPER(VRC6);
 	EXTCL_CPU_EVERY_CYCLE(VRC6);
 	EXTCL_APU_TICK(VRC6);
-	mapper.intStruct[0] = (BYTE *) &vrc6;
-	mapper.intStructSize[0] = sizeof(vrc6);
+	mapper.internal_struct[0] = (BYTE *) &vrc6;
+	mapper.internal_struct_size[0] = sizeof(vrc6);
 
 	if (info.reset >= HARD) {
 		memset(&vrc6, 0x00, sizeof(vrc6));
@@ -100,9 +100,9 @@ void extcl_cpu_wr_mem_VRC6(WORD address, BYTE value) {
 		case 0x8001:
 		case 0x8002:
 		case 0x8003:
-			controlBank(prgRom16kMax)
-			mapPrgRom8k(2, 0, value);
-			mapPrgRom8kUpdate();
+			control_bank(prgRom16kMax)
+			map_prg_rom_8k(2, 0, value);
+			map_prg_rom_8k_update();
 			return;
 		case 0x9000:
 			vrc6.S3.volume = value & 0x0F;
@@ -159,41 +159,41 @@ void extcl_cpu_wr_mem_VRC6(WORD address, BYTE value) {
 		case 0xC001:
 		case 0xC002:
 		case 0xC003:
-			controlBank(prgRom8kMax)
-			mapPrgRom8k(1, 2, value);
-			mapPrgRom8kUpdate();
+			control_bank(prgRom8kMax)
+			map_prg_rom_8k(1, 2, value);
+			map_prg_rom_8k_update();
 			return;
 		case 0xD000:
-            controlBank(chrRom1kMax)
-            chr.bank1k[0] = &chr.data[value << 10];
+            control_bank(chrRom1kMax)
+            chr.bank_1k[0] = &chr.data[value << 10];
 			return;
 		case 0xD001:
-            controlBank(chrRom1kMax)
-            chr.bank1k[1] = &chr.data[value << 10];
+            control_bank(chrRom1kMax)
+            chr.bank_1k[1] = &chr.data[value << 10];
 			return;
 		case 0xD002:
-            controlBank(chrRom1kMax)
-            chr.bank1k[2] = &chr.data[value << 10];
+            control_bank(chrRom1kMax)
+            chr.bank_1k[2] = &chr.data[value << 10];
 			return;
 		case 0xD003:
-            controlBank(chrRom1kMax)
-            chr.bank1k[3] = &chr.data[value << 10];
+            control_bank(chrRom1kMax)
+            chr.bank_1k[3] = &chr.data[value << 10];
 			return;
 		case 0xE000:
-            controlBank(chrRom1kMax)
-            chr.bank1k[4] = &chr.data[value << 10];
+            control_bank(chrRom1kMax)
+            chr.bank_1k[4] = &chr.data[value << 10];
 			return;
 		case 0xE001:
-            controlBank(chrRom1kMax)
-            chr.bank1k[5] = &chr.data[value << 10];
+            control_bank(chrRom1kMax)
+            chr.bank_1k[5] = &chr.data[value << 10];
 			return;
 		case 0xE002:
-            controlBank(chrRom1kMax)
-            chr.bank1k[6] = &chr.data[value << 10];
+            control_bank(chrRom1kMax)
+            chr.bank_1k[6] = &chr.data[value << 10];
 			return;
 		case 0xE003:
-            controlBank(chrRom1kMax)
-            chr.bank1k[7] = &chr.data[value << 10];
+            control_bank(chrRom1kMax)
+            chr.bank_1k[7] = &chr.data[value << 10];
 			return;
 		case 0xF000:
 			vrc6.reload = value;

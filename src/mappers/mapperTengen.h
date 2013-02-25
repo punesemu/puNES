@@ -27,7 +27,7 @@ struct _tengenRambo {
 	BYTE irqPrescaler;
 } tRambo;
 
-void mapInit_Tengen(BYTE model);
+void map_init_Tengen(BYTE model);
 
 void extcl_cpu_wr_mem_Tengen_Rambo(WORD address, BYTE value);
 BYTE extcl_save_mapper_Tengen_Rambo(BYTE mode, BYTE slot, FILE *fp);

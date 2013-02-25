@@ -19,7 +19,7 @@ struct _mmc2and4 {
 	BYTE latch1;
 } mmc2and4;
 
-void mapInit_MMC2and4(void);
+void map_init_MMC2and4(void);
 void extcl_cpu_wr_mem_MMC2and4(WORD address, BYTE value);
 BYTE extcl_save_mapper_MMC2and4(BYTE mode, BYTE slot, FILE *fp);
 void extcl_after_rd_chr_MMC2and4(WORD address);

@@ -34,7 +34,7 @@ struct _ss8806 {
 	BYTE delay;
 } ss8806;
 
-void mapInit_Jaleco(BYTE model);
+void map_init_Jaleco(BYTE model);
 
 void extcl_cpu_wr_mem_Jaleco_JF05(WORD address, BYTE value);
 

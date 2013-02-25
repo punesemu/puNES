@@ -53,13 +53,13 @@ BYTE tasFile(char *ext, char *file) {
 				char rom_file[1024];
 				struct stat status;
 
-				strncpy(rom_file, info.romFile, sizeof(rom_file));
+				strncpy(rom_file, info.rom_file, sizeof(rom_file));
 				strcat(rom_file, rom_ext[i]);
 
 				if (!(access(rom_file, 0))) {
 					stat(rom_file, &status);
 					if (status.st_mode & S_IFREG) {
-						strncpy(info.romFile, rom_file, sizeof(info.romFile));
+						strncpy(info.rom_file, rom_file, sizeof(info.rom_file));
 						found = TRUE;
 						break;
 					}
@@ -70,7 +70,7 @@ BYTE tasFile(char *ext, char *file) {
 		if (found) {
 			tasRead();
 		} else {
-			info.romFile[0] = 0;
+			info.rom_file[0] = 0;
 			tasQuit();
 		}
 	}
@@ -214,10 +214,10 @@ void tasHeader_FM2(char *file) {
 		} else if (strcasecmp(key, "punesStartFrame") == 0) {
 			tas.start_frame = atoi(value) + 1;
 		} else if (strcasecmp(key, "romFilename") == 0) {
-			//sprintf(info.romFile, "%s/%s", dirname(file), value);
-			strcpy(info.romFile, dirname(file));
-			strcat(info.romFile, "/");
-			strcat(info.romFile, value);
+			//sprintf(info.rom_file, "%s/%s", dirname(file), value);
+			strcpy(info.rom_file, dirname(file));
+			strcat(info.rom_file, "/");
+			strcat(info.rom_file, value);
 		} else if (strcasecmp(key, "port0") == 0) {
 			port1.type = atoi(value);
 		} else if (strcasecmp(key, "port1") == 0) {

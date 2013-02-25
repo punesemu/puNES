@@ -13,22 +13,22 @@
 
 WORD prgRom32kMax, chrRom8kMax;
 
-void mapInit_46(void) {
-	prgRom32kMax = (info.prgRom16kCount >> 1) - 1;
-	chrRom8kMax = info.chrRom8kCount - 1;
+void map_init_46(void) {
+	prgRom32kMax = (info.prg_rom_16k_count >> 1) - 1;
+	chrRom8kMax = info.chr_rom_8k_count - 1;
 
 	EXTCL_CPU_WR_MEM(46);
 	EXTCL_SAVE_MAPPER(46);
-	mapper.intStruct[0] = (BYTE *) &m46;
-	mapper.intStructSize[0] = sizeof(m46);
+	mapper.internal_struct[0] = (BYTE *) &m46;
+	mapper.internal_struct_size[0] = sizeof(m46);
 
 	if (info.reset >= HARD) {
 		memset(&m46, 0x00, sizeof(m46));
 
-		mapPrgRom8k(4, 0, 0);
+		map_prg_rom_8k(4, 0, 0);
 	}
 
-	info.mapperExtendWrite = TRUE;
+	info.mapper_extend_wr = TRUE;
 }
 void extcl_cpu_wr_mem_46(WORD address, BYTE value) {
 	BYTE save = value;
@@ -36,22 +36,22 @@ void extcl_cpu_wr_mem_46(WORD address, BYTE value) {
 
 	if (address >= 0x8000) {
 		value = (m46.prg & 0x1E) | (save & 0x01);
-		controlBank(prgRom32kMax)
-		mapPrgRom8k(4, 0, value);
-		mapPrgRom8kUpdate();
+		control_bank(prgRom32kMax)
+		map_prg_rom_8k(4, 0, value);
+		map_prg_rom_8k_update();
 		m46.prg = value;
 
 		value = (m46.chr & 0x78) | ((save >> 4) & 0x07);
-		controlBank(chrRom8kMax)
+		control_bank(chrRom8kMax)
 		bank = value << 13;
-		chr.bank1k[0] = &chr.data[bank];
-		chr.bank1k[1] = &chr.data[bank | 0x0400];
-		chr.bank1k[2] = &chr.data[bank | 0x0800];
-		chr.bank1k[3] = &chr.data[bank | 0x0C00];
-		chr.bank1k[4] = &chr.data[bank | 0x1000];
-		chr.bank1k[5] = &chr.data[bank | 0x1400];
-		chr.bank1k[6] = &chr.data[bank | 0x1800];
-		chr.bank1k[7] = &chr.data[bank | 0x1C00];
+		chr.bank_1k[0] = &chr.data[bank];
+		chr.bank_1k[1] = &chr.data[bank | 0x0400];
+		chr.bank_1k[2] = &chr.data[bank | 0x0800];
+		chr.bank_1k[3] = &chr.data[bank | 0x0C00];
+		chr.bank_1k[4] = &chr.data[bank | 0x1000];
+		chr.bank_1k[5] = &chr.data[bank | 0x1400];
+		chr.bank_1k[6] = &chr.data[bank | 0x1800];
+		chr.bank_1k[7] = &chr.data[bank | 0x1C00];
 		m46.chr = value;
 
 		return;
@@ -59,22 +59,22 @@ void extcl_cpu_wr_mem_46(WORD address, BYTE value) {
 
 	if (address >= 0x6000) {
 		value = (m46.prg & 0x01) | ((save << 1) & 0x1E);
-		controlBank(prgRom32kMax)
-		mapPrgRom8k(4, 0, value);
-		mapPrgRom8kUpdate();
+		control_bank(prgRom32kMax)
+		map_prg_rom_8k(4, 0, value);
+		map_prg_rom_8k_update();
 		m46.prg = value;
 
 		value = (m46.chr & 0x07) | ((save >> 1) & 0x78);
-		controlBank(chrRom8kMax)
+		control_bank(chrRom8kMax)
 		bank = value << 13;
-		chr.bank1k[0] = &chr.data[bank];
-		chr.bank1k[1] = &chr.data[bank | 0x0400];
-		chr.bank1k[2] = &chr.data[bank | 0x0800];
-		chr.bank1k[3] = &chr.data[bank | 0x0C00];
-		chr.bank1k[4] = &chr.data[bank | 0x1000];
-		chr.bank1k[5] = &chr.data[bank | 0x1400];
-		chr.bank1k[6] = &chr.data[bank | 0x1800];
-		chr.bank1k[7] = &chr.data[bank | 0x1C00];
+		chr.bank_1k[0] = &chr.data[bank];
+		chr.bank_1k[1] = &chr.data[bank | 0x0400];
+		chr.bank_1k[2] = &chr.data[bank | 0x0800];
+		chr.bank_1k[3] = &chr.data[bank | 0x0C00];
+		chr.bank_1k[4] = &chr.data[bank | 0x1000];
+		chr.bank_1k[5] = &chr.data[bank | 0x1400];
+		chr.bank_1k[6] = &chr.data[bank | 0x1800];
+		chr.bank_1k[7] = &chr.data[bank | 0x1C00];
 		m46.chr = value;
 
 		return;

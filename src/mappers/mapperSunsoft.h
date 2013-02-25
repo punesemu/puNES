@@ -62,7 +62,7 @@ struct sunsoftFm {
 	_squareFM7 square[3];
 } fm7;
 
-void mapInit_Sunsoft(BYTE model);
+void map_init_Sunsoft(BYTE model);
 
 void extcl_cpu_wr_mem_Sunsoft_S1(WORD address, BYTE value);
 

@@ -10,7 +10,7 @@
 
 #include "common.h"
 
-void mapInit_Vs(void);
+void map_init_Vs(void);
 void extcl_cpu_wr_mem_Vs(WORD address, BYTE value);
 void extcl_cpu_wr_r4016_Vs(BYTE value);
 

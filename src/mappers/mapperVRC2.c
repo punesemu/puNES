@@ -13,8 +13,8 @@
 
 #define chrRom1kUpdate(slot, mask, shift)\
 	value = (vrc2.chrRomBank[slot] & mask) | (((value >> type) & 0x0F) << shift);\
-	controlBank(chrRom1kMax)\
-	chr.bank1k[slot] = &chr.data[value << 10];\
+	control_bank(chrRom1kMax)\
+	chr.bank_1k[slot] = &chr.data[value << 10];\
 	vrc2.chrRomBank[slot] = value
 
 WORD prgRom8kMax, chrRom1kMax;
@@ -25,14 +25,14 @@ const WORD shiftVRC2[2][4] = {
 	{0x0000, 0x0002, 0x0001, 0x0003}
 };
 
-void mapInit_VRC2(BYTE revision) {
-	prgRom8kMax = info.prgRom8kCount - 1;
-	chrRom1kMax = info.chrRom1kCount - 1;
+void map_init_VRC2(BYTE revision) {
+	prgRom8kMax = info.prg_rom_8k_count - 1;
+	chrRom1kMax = info.chr_rom_1k_count - 1;
 
 	EXTCL_CPU_WR_MEM(VRC2);
 	EXTCL_SAVE_MAPPER(VRC2);
-	mapper.intStruct[0] = (BYTE *) &vrc2;
-	mapper.intStructSize[0] = sizeof(vrc2);
+	mapper.internal_struct[0] = (BYTE *) &vrc2;
+	mapper.internal_struct_size[0] = sizeof(vrc2);
 
 	if (info.reset >= HARD) {
 		BYTE i;
@@ -54,9 +54,9 @@ void extcl_cpu_wr_mem_VRC2(WORD address, BYTE value) {
 
 	switch (address) {
 		case 0x8000:
-			controlBankWithAND(0x0F, prgRom8kMax)
-			mapPrgRom8k(1, 0, value);
-			mapPrgRom8kUpdate();
+			control_bank_with_AND(0x0F, prgRom8kMax)
+			map_prg_rom_8k(1, 0, value);
+			map_prg_rom_8k_update();
 			return;
 		case 0x9000: {
 			switch (value & 0x03) {
@@ -76,9 +76,9 @@ void extcl_cpu_wr_mem_VRC2(WORD address, BYTE value) {
 			return;
 		}
 		case 0xA000:
-			controlBankWithAND(0x0F, prgRom8kMax)
-			mapPrgRom8k(1, 1, value);
-			mapPrgRom8kUpdate();
+			control_bank_with_AND(0x0F, prgRom8kMax)
+			map_prg_rom_8k(1, 1, value);
+			map_prg_rom_8k_update();
 			return;
 		case 0xB000:
 			chrRom1kUpdate(0, 0xF0, 0);

@@ -29,11 +29,11 @@
 	if (value & 0x40) {\
 		txrom.chr[a][0] = txrom.chr[b][0] = TRUE;\
 		value >>= 1;\
-		controlBank(3)\
+		control_bank(3)\
 		txrom.chr[a][1] = value << 11;\
 		txrom.chr[b][1] = txrom.chr[a][1] | 0x400;\
-		chr.bank1k[a] = &txrom.chrRam[txrom.chr[a][1]];\
-		chr.bank1k[b] = &txrom.chrRam[txrom.chr[b][1]];\
+		chr.bank_1k[a] = &txrom.chrRam[txrom.chr[a][1]];\
+		chr.bank_1k[b] = &txrom.chrRam[txrom.chr[b][1]];\
 		return;\
 	} else {\
 		txrom.chr[a][0] = txrom.chr[b][0] = FALSE;\
@@ -45,9 +45,9 @@
 	const BYTE a = slot0;\
 	if (value & 0x40) {\
 		txrom.chr[a][0] = TRUE;\
-		controlBank(7)\
+		control_bank(7)\
 		txrom.chr[a][1] = value << 10;\
-		chr.bank1k[a] = &txrom.chrRam[txrom.chr[a][1]];\
+		chr.bank_1k[a] = &txrom.chrRam[txrom.chr[a][1]];\
 		return;\
 	} else {\
 		txrom.chr[a][0] = txrom.chr[a][1] = FALSE;\
@@ -57,10 +57,10 @@
 WORD prgRom8kMax, prgRom8kBeforeLast, chrRom1kMax;
 BYTE type;
 
-void mapInit_TxROM(BYTE model) {
-	prgRom8kMax = info.prgRom8kCount - 1;
-	chrRom1kMax = info.chrRom1kCount - 1;
-	prgRom8kBeforeLast = info.prgRom8kCount - 2;
+void map_init_TxROM(BYTE model) {
+	prgRom8kMax = info.prg_rom_8k_count - 1;
+	chrRom1kMax = info.chr_rom_1k_count - 1;
+	prgRom8kBeforeLast = info.prg_rom_8k_count - 2;
 
 	switch (model) {
 		case TLSROM:
@@ -70,15 +70,15 @@ void mapInit_TxROM(BYTE model) {
 			irqA12_delay = 1;
 
 			if (model == TKSROM) {
-				info.prgRamPlus8kCount = 1;
-				info.prgRamBatBanks = 1;
+				info.prg_ram_plus_8k_count = 1;
+				info.prg_ram_bat_banks = 1;
 			}
 			break;
 		case TQROM:
 			EXTCL_CPU_WR_MEM(TQROM);
 			EXTCL_WR_CHR(TQROM);
 
-			mapper.writeVRAM = FALSE;
+			mapper.write_vram = FALSE;
 
 			irqA12_delay = 1;
 
@@ -92,10 +92,10 @@ void mapInit_TxROM(BYTE model) {
 	EXTCL_PPU_256_TO_319(MMC3);
 	EXTCL_PPU_320_TO_34X(MMC3);
 	EXTCL_UPDATE_R2006(MMC3);
-	mapper.intStruct[0] = (BYTE *) &txrom;
-	mapper.intStructSize[0] = sizeof(txrom);
-	mapper.intStruct[1] = (BYTE *) &mmc3;
-	mapper.intStructSize[1] = sizeof(mmc3);
+	mapper.internal_struct[0] = (BYTE *) &txrom;
+	mapper.internal_struct_size[0] = sizeof(txrom);
+	mapper.internal_struct[1] = (BYTE *) &mmc3;
+	mapper.internal_struct_size[1] = sizeof(mmc3);
 
 	if (info.reset >= HARD) {
 		memset(&txrom.chr, 0x00, sizeof(txrom.chr));
@@ -119,8 +119,8 @@ void extcl_cpu_wr_mem_TKSROM(WORD address, BYTE value) {
 				case 1:
 					if (!mmc3.chrRomCfg) {
 						const BYTE slot = mmc3.bankToUpdate << 1;
-						ntbl.bank1k[slot] = &ntbl.data[((value >> 7) ^ 0x01) << 10];
-						ntbl.bank1k[slot | 0x01] = ntbl.bank1k[slot];
+						ntbl.bank_1k[slot] = &ntbl.data[((value >> 7) ^ 0x01) << 10];
+						ntbl.bank_1k[slot | 0x01] = ntbl.bank_1k[slot];
 					}
 					break;
 				case 2:
@@ -128,7 +128,7 @@ void extcl_cpu_wr_mem_TKSROM(WORD address, BYTE value) {
 				case 4:
 				case 5:
 					if (mmc3.chrRomCfg) {
-						ntbl.bank1k[mmc3.bankToUpdate - 2] =
+						ntbl.bank_1k[mmc3.bankToUpdate - 2] =
 								&ntbl.data[((value >> 7) ^ 0x01) << 10];
 					}
 					break;
@@ -178,7 +178,7 @@ void extcl_wr_chr_TQROM(WORD address, BYTE value) {
 	const BYTE slot = address >> 10;
 
 	if (txrom.chr[slot]) {
-		chr.bank1k[slot][address & 0x3FF] = value;
+		chr.bank_1k[slot][address & 0x3FF] = value;
 	}
 }
 
@@ -190,7 +190,7 @@ BYTE extcl_save_mapper_TxROM(BYTE mode, BYTE slot, FILE *fp) {
 			BYTE i;
 			for (i = 0; i < LENGTH(txrom.chr); i++) {
 				if (txrom.chr[i][0]) {
-					chr.bank1k[i] = &txrom.chrRam[txrom.chr[i][1]];
+					chr.bank_1k[i] = &txrom.chrRam[txrom.chr[i][1]];
 				}
 			}
 		}

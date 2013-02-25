@@ -8,7 +8,7 @@
 #include "mappers.h"
 #include "gamegenie.h"
 
-void mapInit_GameGenie(void) {
+void map_init_GameGenie(void) {
 	EXTCL_CPU_WR_MEM(GameGenie);
 }
 void extcl_cpu_wr_mem_GameGenie(WORD address, BYTE value) {
@@ -49,7 +49,7 @@ void extcl_cpu_wr_mem_GameGenie(WORD address, BYTE value) {
 			BYTE i;
 
 			gamegenie.phase = GG_LOAD_ROM;
-			info.executeCPU = FALSE;
+			info.execute_cpu = FALSE;
 
 			/* la rom ne supporta solo 3 */
 			for (i = 0; i < 3; i++) {

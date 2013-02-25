@@ -12,13 +12,13 @@
 
 WORD prgRom16kMax;
 
-void mapInit_230(void) {
-	prgRom16kMax = info.prgRom16kCount - 1;
+void map_init_230(void) {
+	prgRom16kMax = info.prg_rom_16k_count - 1;
 
 	EXTCL_CPU_WR_MEM(230);
 	EXTCL_SAVE_MAPPER(230);
-	mapper.intStruct[0] = (BYTE *) &m230;
-	mapper.intStructSize[0] = sizeof(m230);
+	mapper.internal_struct[0] = (BYTE *) &m230;
+	mapper.internal_struct_size[0] = sizeof(m230);
 
 	if (info.reset >= HARD) {
 		m230.mode = 0;
@@ -27,13 +27,13 @@ void mapInit_230(void) {
 	}
 
 	if (m230.mode) {
-		mapPrgRom8k(2, 0, 0);
-		mapPrgRom8k(2, 2, 7);
+		map_prg_rom_8k(2, 0, 0);
+		map_prg_rom_8k(2, 2, 7);
 
 		mirroring_V();
 	} else {
-		mapPrgRom8k(2, 0, 8);
-		mapPrgRom8k(2, 2, prgRom16kMax);
+		map_prg_rom_8k(2, 0, 8);
+		map_prg_rom_8k(2, 2, prgRom16kMax);
 	}
 }
 void extcl_cpu_wr_mem_230(WORD address, BYTE value) {
@@ -41,12 +41,12 @@ void extcl_cpu_wr_mem_230(WORD address, BYTE value) {
 
 	if (!m230.mode) {
 		value = (save & 0x1F) + 0x08;
-		controlBank(prgRom16kMax)
-		mapPrgRom8k(2, 0, value);
+		control_bank(prgRom16kMax)
+		map_prg_rom_8k(2, 0, value);
 
 		value |= ((~save >> 5) & 0x01);
-		controlBank(prgRom16kMax)
-		mapPrgRom8k(2, 2, value);
+		control_bank(prgRom16kMax)
+		map_prg_rom_8k(2, 2, value);
 
 		if (save & 0x40) {
 			mirroring_V();
@@ -54,10 +54,10 @@ void extcl_cpu_wr_mem_230(WORD address, BYTE value) {
 			mirroring_H();
 		}
 	} else {
-		controlBankWithAND(0x07, prgRom16kMax)
-		mapPrgRom8k(2, 0, value);
+		control_bank_with_AND(0x07, prgRom16kMax)
+		map_prg_rom_8k(2, 0, value);
 	}
-	mapPrgRom8kUpdate();
+	map_prg_rom_8k_update();
 }
 BYTE extcl_save_mapper_230(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, m230.mode);

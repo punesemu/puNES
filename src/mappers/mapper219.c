@@ -14,14 +14,14 @@
 
 #define m219Chr1k(a, b)\
 	value = m219.reg[2] | ((save >> 1) & a);\
-	controlBank(chrRom1kMax)\
-	chr.bank1k[b] = &chr.data[value << 10]
+	control_bank(chrRom1kMax)\
+	chr.bank_1k[b] = &chr.data[value << 10]
 
 WORD prgRom8kMax, chrRom1kMax;
 
-void mapInit_219(void) {
-	prgRom8kMax = info.prgRom8kCount - 1;
-	chrRom1kMax = info.chrRom1kCount - 1;
+void map_init_219(void) {
+	prgRom8kMax = info.prg_rom_8k_count - 1;
+	chrRom1kMax = info.chr_rom_1k_count - 1;
 
 	EXTCL_CPU_WR_MEM(219);
 	EXTCL_SAVE_MAPPER(219);
@@ -31,8 +31,8 @@ void mapInit_219(void) {
 	EXTCL_PPU_256_TO_319(MMC3);
 	EXTCL_PPU_320_TO_34X(MMC3);
 	EXTCL_UPDATE_R2006(MMC3);
-	mapper.intStruct[0] = (BYTE *) &m219;
-	mapper.intStructSize[0] = sizeof(m219);
+	mapper.internal_struct[0] = (BYTE *) &m219;
+	mapper.internal_struct_size[0] = sizeof(m219);
 
 	if (info.reset >= HARD) {
 		memset(&m219, 0x00, sizeof(m219));
@@ -62,15 +62,15 @@ void extcl_cpu_wr_mem_219(WORD address, BYTE value) {
 
 			if (value < 4) {
 				value ^= 0x03;
-				controlBank(prgRom8kMax)
-				mapPrgRom8k(2, 0, value);
+				control_bank(prgRom8kMax)
+				map_prg_rom_8k(2, 0, value);
 
 				value = ((value >> 5) & 0x01) | ((value >> 3) & 0x02) | ((value >> 1) & 0x04)
 				        		| ((value << 1) & 0x08);
-				controlBank(prgRom8kMax)
-				mapPrgRom8k(2, 2, value);
+				control_bank(prgRom8kMax)
+				map_prg_rom_8k(2, 2, value);
 
-				mapPrgRom8kUpdate();
+				map_prg_rom_8k_update();
 			}
 
 			switch (m219.reg[1]) {

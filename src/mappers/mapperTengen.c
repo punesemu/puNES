@@ -32,10 +32,10 @@ enum {
 		bank[1] = tRambo.prg[1];\
 		bank[2] = tRambo.prg[2];\
 	}\
-	mapPrgRom8k(1, 0, bank[0]);\
-	mapPrgRom8k(1, 1, bank[1]);\
-	mapPrgRom8k(1, 2, bank[2]);\
-	mapPrgRom8kUpdate();\
+	map_prg_rom_8k(1, 0, bank[0]);\
+	map_prg_rom_8k(1, 1, bank[1]);\
+	map_prg_rom_8k(1, 2, bank[2]);\
+	map_prg_rom_8k_update();\
 }
 #define tRamboChr8kUpdate()\
 {\
@@ -69,32 +69,32 @@ enum {
 			tRamboChr2kControl(1, 2);\
 		}\
 	}\
-	chr.bank1k[0] = &chr.data[bank[0] << 10];\
-	chr.bank1k[1] = &chr.data[bank[1] << 10];\
-	chr.bank1k[2] = &chr.data[bank[2] << 10];\
-	chr.bank1k[3] = &chr.data[bank[3] << 10];\
-	chr.bank1k[4] = &chr.data[bank[4] << 10];\
-	chr.bank1k[5] = &chr.data[bank[5] << 10];\
-	chr.bank1k[6] = &chr.data[bank[6] << 10];\
-	chr.bank1k[7] = &chr.data[bank[7] << 10];\
+	chr.bank_1k[0] = &chr.data[bank[0] << 10];\
+	chr.bank_1k[1] = &chr.data[bank[1] << 10];\
+	chr.bank_1k[2] = &chr.data[bank[2] << 10];\
+	chr.bank_1k[3] = &chr.data[bank[3] << 10];\
+	chr.bank_1k[4] = &chr.data[bank[4] << 10];\
+	chr.bank_1k[5] = &chr.data[bank[5] << 10];\
+	chr.bank_1k[6] = &chr.data[bank[6] << 10];\
+	chr.bank_1k[7] = &chr.data[bank[7] << 10];\
 }
 #define tRamboChr1kControl(chr1k, bank1k)\
 	value = tRambo.chr[chr1k];\
-	controlBank(chrRom1kMax)\
+	control_bank(chrRom1kMax)\
 	bank[bank1k] = value
 #define tRamboChr2kControl(chr2k, bank2k)\
 	value = tRambo.chr[chr2k] >> 1;\
-	controlBank(chrRom2kMax)\
+	control_bank(chrRom2kMax)\
 	bank[bank2k] = value << 1;\
 	bank[bank2k + 1] = bank[bank2k] | 0x01
 
 WORD prgRom8kMax, chrRom1kMax, chrRom2kMax;
 BYTE type;
 
-void mapInit_Tengen(BYTE model) {
-	prgRom8kMax = info.prgRom8kCount  - 1;
-	chrRom1kMax = info.chrRom1kCount  - 1;
-	chrRom2kMax = (info.chrRom1kCount >> 1) - 1;
+void map_init_Tengen(BYTE model) {
+	prgRom8kMax = info.prg_rom_8k_count  - 1;
+	chrRom1kMax = info.chr_rom_1k_count  - 1;
+	chrRom2kMax = (info.chr_rom_1k_count >> 1) - 1;
 
 	switch (model) {
 		case T800037:
@@ -108,10 +108,10 @@ void mapInit_Tengen(BYTE model) {
 			EXTCL_UPDATE_R2006(MMC3);
 			EXTCL_IRQ_A12_CLOCK(Tengen_Rambo);
 			EXTCL_CPU_EVERY_CYCLE(Tengen_Rambo);
-			mapper.intStruct[0] = (BYTE *) &tRambo;
-			mapper.intStructSize[0] = sizeof(tRambo);
-			mapper.intStruct[1] = (BYTE *) &irqA12;
-			mapper.intStructSize[1] = sizeof(irqA12);
+			mapper.internal_struct[0] = (BYTE *) &tRambo;
+			mapper.internal_struct_size[0] = sizeof(tRambo);
+			mapper.internal_struct[1] = (BYTE *) &irqA12;
+			mapper.internal_struct_size[1] = sizeof(irqA12);
 
 			if (info.reset >= HARD) {
 				BYTE i;
@@ -163,8 +163,8 @@ void extcl_cpu_wr_mem_Tengen_Rambo(WORD address, BYTE value) {
 				case 0x01:
 					if ((type == T800037) && !(tRambo.chrMode & 0x80)) {
 						const BYTE slot = tRambo.regIndex << 1;
-						ntbl.bank1k[slot] = &ntbl.data[((value >> 7) ^ 0x01) << 10];
-						ntbl.bank1k[slot | 0x01] = ntbl.bank1k[slot];
+						ntbl.bank_1k[slot] = &ntbl.data[((value >> 7) ^ 0x01) << 10];
+						ntbl.bank_1k[slot | 0x01] = ntbl.bank_1k[slot];
 					}
 					if (tRambo.chr[tRambo.regIndex] != value) {
 						tRambo.chr[tRambo.regIndex] = value;
@@ -176,10 +176,10 @@ void extcl_cpu_wr_mem_Tengen_Rambo(WORD address, BYTE value) {
 				case 0x04:
 				case 0x05:
 					if ((type == T800037) && (tRambo.chrMode & 0x80)) {
-						ntbl.bank1k[tRambo.regIndex - 2] = &ntbl.data[((value >> 7) ^ 0x01)
+						ntbl.bank_1k[tRambo.regIndex - 2] = &ntbl.data[((value >> 7) ^ 0x01)
 						        << 10];
 					}
-					controlBank(chrRom1kMax)
+					control_bank(chrRom1kMax)
 					if (tRambo.chr[tRambo.regIndex] != value) {
 						tRambo.chr[tRambo.regIndex] = value;
 						tRamboChr8kUpdate()
@@ -188,7 +188,7 @@ void extcl_cpu_wr_mem_Tengen_Rambo(WORD address, BYTE value) {
 				case 0x06:
 				case 0x07: {
 					const BYTE index = tRambo.regIndex & 0x01;
-					controlBank(prgRom8kMax)
+					control_bank(prgRom8kMax)
 					if (tRambo.prg[index] != value) {
 						tRambo.prg[index] = value;
 						tRamboPrg24kUpdate()
@@ -198,7 +198,7 @@ void extcl_cpu_wr_mem_Tengen_Rambo(WORD address, BYTE value) {
 				case 0x08:
 				case 0x09: {
 					const BYTE index = tRambo.regIndex - 0x02;
-					controlBank(chrRom1kMax)
+					control_bank(chrRom1kMax)
 					if (tRambo.chr[index] != value) {
 						tRambo.chr[index] = value;
 						tRamboChr8kUpdate()
@@ -206,7 +206,7 @@ void extcl_cpu_wr_mem_Tengen_Rambo(WORD address, BYTE value) {
 					break;
 				}
 				case 0x0F:
-					controlBank(prgRom8kMax)
+					control_bank(prgRom8kMax)
 					if (tRambo.prg[2] != value) {
 						tRambo.prg[2] = value;
 						tRamboPrg24kUpdate()

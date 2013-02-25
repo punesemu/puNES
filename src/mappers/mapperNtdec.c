@@ -19,29 +19,29 @@
 	newValue = ((chrHigh << shift) & 0x0080) | asder.reg[slot];\
 	asderChrCtrlBank(newValue, chrRom2kMax)\
 	bank = newValue << 11;\
-	chr.bank1k[slot1] = &chr.data[bank];\
-	chr.bank1k[slot2] = &chr.data[bank | 0x0400]
+	chr.bank_1k[slot1] = &chr.data[bank];\
+	chr.bank_1k[slot2] = &chr.data[bank | 0x0400]
 #define asderChr1kUpdate(shift, slot)\
 	newValue = ((chrHigh << shift) & 0x0100) | asder.reg[slot];\
 	asderChrCtrlBank(newValue, chrRom1kMax)\
 	bank = newValue << 10;\
-	chr.bank1k[slot] = &chr.data[bank]
+	chr.bank_1k[slot] = &chr.data[bank]
 
 WORD prgRom32kMax, prgRom8kMax, chrRom4kMax, chrRom2kMax, chrRom1kMax;
 
-void mapInit_Ntdec(BYTE model) {
-	prgRom32kMax = (info.prgRom16kCount >> 1) - 1;
-	prgRom8kMax = info.prgRom8kCount - 1;
-	chrRom4kMax = info.chrRom4kCount - 1;
-	chrRom2kMax = (info.chrRom1kCount >> 1) - 1;
-	chrRom1kMax = info.chrRom1kCount - 1;
+void map_init_Ntdec(BYTE model) {
+	prgRom32kMax = (info.prg_rom_16k_count >> 1) - 1;
+	prgRom8kMax = info.prg_rom_8k_count - 1;
+	chrRom4kMax = info.chr_rom_4k_count - 1;
+	chrRom2kMax = (info.chr_rom_1k_count >> 1) - 1;
+	chrRom1kMax = info.chr_rom_1k_count - 1;
 
 	switch (model) {
 		case ASDER:
 			EXTCL_CPU_WR_MEM(Ntdec_asder);
 			EXTCL_SAVE_MAPPER(Ntdec_asder);
-			mapper.intStruct[0] = (BYTE *) &asder;
-			mapper.intStructSize[0] = sizeof(asder);
+			mapper.internal_struct[0] = (BYTE *) &asder;
+			mapper.internal_struct_size[0] = sizeof(asder);
 
 			if (info.reset >= HARD) {
 				memset(&asder, 0x00, sizeof(asder));
@@ -51,10 +51,10 @@ void mapInit_Ntdec(BYTE model) {
 		case FHERO:
 			EXTCL_CPU_WR_MEM(Ntdec_fhero);
 
-			info.mapperExtendWrite = TRUE;
+			info.mapper_extend_wr = TRUE;
 
 			if (info.reset >= HARD) {
-				mapPrgRom8k(4, 0, prgRom32kMax);
+				map_prg_rom_8k(4, 0, prgRom32kMax);
 			}
 			break;
 	}
@@ -71,9 +71,9 @@ void extcl_cpu_wr_mem_Ntdec_asder(WORD address, BYTE value) {
 			switch (asder.address) {
 				case 0:
 				case 1:
-					controlBank(prgRom8kMax)
-					mapPrgRom8k(1, asder.address, value);
-					mapPrgRom8kUpdate();
+					control_bank(prgRom8kMax)
+					map_prg_rom_8k(1, asder.address, value);
+					map_prg_rom_8k_update();
 					return;
 				case 2:
 				case 3:
@@ -130,38 +130,38 @@ void extcl_cpu_wr_mem_Ntdec_fhero(WORD address, BYTE value) {
 			DBWORD bank;
 
 			value >>= 2;
-			controlBank(chrRom4kMax)
+			control_bank(chrRom4kMax)
 			bank = value << 12;
-			chr.bank1k[0] = &chr.data[bank];
-			chr.bank1k[1] = &chr.data[bank | 0x0400];
-			chr.bank1k[2] = &chr.data[bank | 0x0800];
-			chr.bank1k[3] = &chr.data[bank | 0x0C00];
+			chr.bank_1k[0] = &chr.data[bank];
+			chr.bank_1k[1] = &chr.data[bank | 0x0400];
+			chr.bank_1k[2] = &chr.data[bank | 0x0800];
+			chr.bank_1k[3] = &chr.data[bank | 0x0C00];
 			return;
 		}
 		case 1: {
 			DBWORD bank;
 
 			value >>= 1;
-			controlBank(chrRom2kMax)
+			control_bank(chrRom2kMax)
 			bank = value << 11;
-			chr.bank1k[4] = &chr.data[bank];
-			chr.bank1k[5] = &chr.data[bank | 0x0400];
+			chr.bank_1k[4] = &chr.data[bank];
+			chr.bank_1k[5] = &chr.data[bank | 0x0400];
 			return;
 		}
 		case 2: {
 			DBWORD bank;
 
 			value >>= 1;
-			controlBank(chrRom2kMax)
+			control_bank(chrRom2kMax)
 			bank = value << 11;
-			chr.bank1k[6] = &chr.data[bank];
-			chr.bank1k[7] = &chr.data[bank | 0x0400];
+			chr.bank_1k[6] = &chr.data[bank];
+			chr.bank_1k[7] = &chr.data[bank | 0x0400];
 			return;
 		}
 		case 3:
-			controlBank(prgRom8kMax)
-			mapPrgRom8k(1, 0, value);
-			mapPrgRom8kUpdate();
+			control_bank(prgRom8kMax)
+			map_prg_rom_8k(1, 0, value);
+			map_prg_rom_8k_update();
 			return;
 	}
 }

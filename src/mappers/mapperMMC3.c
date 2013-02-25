@@ -24,10 +24,10 @@
 
 WORD prgRom8kMax, prgRom8kBeforeLast, chrRom1kMax;
 
-void mapInit_MMC3(void) {
-	prgRom8kMax = info.prgRom8kCount - 1;
-	prgRom8kBeforeLast = info.prgRom8kCount - 2;
-	chrRom1kMax = info.chrRom1kCount - 1;
+void map_init_MMC3(void) {
+	prgRom8kMax = info.prg_rom_8k_count - 1;
+	prgRom8kBeforeLast = info.prg_rom_8k_count - 2;
+	chrRom1kMax = info.chr_rom_1k_count - 1;
 
 	EXTCL_CPU_WR_MEM(MMC3);
 	EXTCL_SAVE_MAPPER(MMC3);
@@ -37,8 +37,8 @@ void mapInit_MMC3(void) {
 	EXTCL_PPU_256_TO_319(MMC3);
 	EXTCL_PPU_320_TO_34X(MMC3);
 	EXTCL_UPDATE_R2006(MMC3);
-	mapper.intStruct[0] = (BYTE *) &mmc3;
-	mapper.intStructSize[0] = sizeof(mmc3);
+	mapper.internal_struct[0] = (BYTE *) &mmc3;
+	mapper.internal_struct_size[0] = sizeof(mmc3);
 
 	if (info.reset >= HARD) {
 		memset(&mmc3, 0x00, sizeof(mmc3));
@@ -48,7 +48,7 @@ void mapInit_MMC3(void) {
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
 
-	switch (info.mapperType) {
+	switch (info.mapper_type) {
 		case NAMCO3413:
 		case NAMCO3414:
 		case NAMCO3415:
@@ -60,11 +60,11 @@ void mapInit_MMC3(void) {
 	}
 
 	if (info.id == SMB2JSMB1) {
-		info.prgRamPlus8kCount = 1;
+		info.prg_ram_plus_8k_count = 1;
 	}
 
 	if (info.id == SMB2EREZA) {
-		info.prgRamBatBanks = FALSE;
+		info.prg_ram_bat_banks = FALSE;
 	}
 
 	if (info.id == RADRACER2) {
@@ -92,16 +92,16 @@ void extcl_cpu_wr_mem_MMC3(WORD address, BYTE value) {
 				swapChrBank1k(3, 7)
 			}
 			if (mmc3.prgRomCfg != prgRomCfgOld) {
-				WORD p0 = mapper.romMapTo[0];
-				WORD p2 = mapper.romMapTo[2];
-				mapper.romMapTo[0] = p2;
-				mapper.romMapTo[2] = p0;
+				WORD p0 = mapper.rom_map_to[0];
+				WORD p2 = mapper.rom_map_to[2];
+				mapper.rom_map_to[0] = p2;
+				mapper.rom_map_to[2] = p0;
 				/*
 				 * prgRomCfg 0x00 : $C000 - $DFFF fisso al penultimo banco
 				 * prgRomCfg 0x02 : $8000 - $9FFF fisso al penultimo banco
 				 */
-				mapPrgRom8k(1, mmc3.prgRomCfg ^ 0x02, prgRom8kBeforeLast);
-				mapPrgRom8kUpdate();
+				map_prg_rom_8k(1, mmc3.prgRomCfg ^ 0x02, prgRom8kBeforeLast);
+				map_prg_rom_8k_update();
 			}
 			break;
 		}
@@ -118,9 +118,9 @@ void extcl_cpu_wr_mem_MMC3(WORD address, BYTE value) {
 					 * Kb quello pari e come secondo il dispari.
 					 * Per questo motivo faccio l'AND con 0xFE.
 					 */
-					controlBankWithAND(0xFE, chrRom1kMax)
-					chr.bank1k[mmc3.chrRomCfg] = &chr.data[value << 10];
-					chr.bank1k[mmc3.chrRomCfg | 0x01] = &chr.data[(value + 1) << 10];
+					control_bank_with_AND(0xFE, chrRom1kMax)
+					chr.bank_1k[mmc3.chrRomCfg] = &chr.data[value << 10];
+					chr.bank_1k[mmc3.chrRomCfg | 0x01] = &chr.data[(value + 1) << 10];
 					break;
 				case 1:
 					/*
@@ -133,56 +133,56 @@ void extcl_cpu_wr_mem_MMC3(WORD address, BYTE value) {
 					 * Kb quello pari e come secondo il dispari.
 					 * Per questo motivo faccio l'AND con 0xFE.
 					 */
-					controlBankWithAND(0xFE, chrRom1kMax)
-					chr.bank1k[mmc3.chrRomCfg | 0x02] = &chr.data[value << 10];
-					chr.bank1k[mmc3.chrRomCfg | 0x03] = &chr.data[(value + 1) << 10];
+					control_bank_with_AND(0xFE, chrRom1kMax)
+					chr.bank_1k[mmc3.chrRomCfg | 0x02] = &chr.data[value << 10];
+					chr.bank_1k[mmc3.chrRomCfg | 0x03] = &chr.data[(value + 1) << 10];
 					break;
 				case 2:
 					/*
 					 * chrRomCfg 0x00 : chrBank1k 4
 					 * chrRomCfg 0x04 : chrBank1k 0
 					 */
-					controlBank(chrRom1kMax)
-					chr.bank1k[mmc3.chrRomCfg ^ 0x04] = &chr.data[value << 10];
+					control_bank(chrRom1kMax)
+					chr.bank_1k[mmc3.chrRomCfg ^ 0x04] = &chr.data[value << 10];
 					break;
 				case 3:
 					/*
 					 * chrRomCfg 0x00 : chrBank1k 5
 					 * chrRomCfg 0x04 : chrBank1k 1
 					 */
-					controlBank(chrRom1kMax)
-					chr.bank1k[(mmc3.chrRomCfg ^ 0x04) | 0x01] = &chr.data[value << 10];
+					control_bank(chrRom1kMax)
+					chr.bank_1k[(mmc3.chrRomCfg ^ 0x04) | 0x01] = &chr.data[value << 10];
 					break;
 				case 4:
 					/*
 					 * chrRomCfg 0x00 : chrBank1k 6
 					 * chrRomCfg 0x04 : chrBank1k 2
 					 */
-					controlBank(chrRom1kMax)
-					chr.bank1k[(mmc3.chrRomCfg ^ 0x04) | 0x02] = &chr.data[value << 10];
+					control_bank(chrRom1kMax)
+					chr.bank_1k[(mmc3.chrRomCfg ^ 0x04) | 0x02] = &chr.data[value << 10];
 					break;
 				case 5:
 					/*
 					 * chrRomCfg 0x00 : chrBank1k 7
 					 * chrRomCfg 0x04 : chrBank1k 3
 					 */
-					controlBank(chrRom1kMax)
-					chr.bank1k[(mmc3.chrRomCfg ^ 0x04) | 0x03] = &chr.data[value << 10];
+					control_bank(chrRom1kMax)
+					chr.bank_1k[(mmc3.chrRomCfg ^ 0x04) | 0x03] = &chr.data[value << 10];
 					break;
 				case 6:
 					/*
 					 * prgRomCfg 0x00 : $8000 - $9FFF swappable
 					 * prgRomCfg 0x02 : $C000 - $DFFF swappable
 					 */
-					controlBank(prgRom8kMax)
-					mapPrgRom8k(1, mmc3.prgRomCfg, value);
-					mapPrgRom8kUpdate();
+					control_bank(prgRom8kMax)
+					map_prg_rom_8k(1, mmc3.prgRomCfg, value);
+					map_prg_rom_8k_update();
 					break;
 				case 7:
 					/* $A000 - $BFFF swappable */
-					controlBank(prgRom8kMax)
-					mapPrgRom8k(1, 1, value);
-					mapPrgRom8kUpdate();
+					control_bank(prgRom8kMax)
+					map_prg_rom_8k(1, 1, value);
+					map_prg_rom_8k_update();
 					break;
 			}
 			break;

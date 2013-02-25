@@ -10,7 +10,7 @@
 
 #include "common.h"
 
-void mapInit_202(void);
+void map_init_202(void);
 void extcl_cpu_wr_mem_202(WORD address, BYTE value);
 
 #endif /* MAPPER202_H_ */

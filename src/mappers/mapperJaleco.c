@@ -16,40 +16,40 @@
 WORD prgRom32kMax, prgRom16kMax, prgRom8kMax, chrRom8kMax, chrRom1kMax;
 
 #define prgRom8kUpdate(slot, mask, shift)\
-	value = (mapper.romMapTo[slot] & mask) | ((value & 0x0F) << shift);\
-	controlBank(prgRom8kMax)\
-	mapPrgRom8k(1, slot, value);\
-	mapPrgRom8kUpdate()
+	value = (mapper.rom_map_to[slot] & mask) | ((value & 0x0F) << shift);\
+	control_bank(prgRom8kMax)\
+	map_prg_rom_8k(1, slot, value);\
+	map_prg_rom_8k_update()
 #define chrRom1kUpdate(slot, mask, shift)\
 	value = (ss8806.chrRomBank[slot] & mask) | ((value & 0x0F) << shift);\
-	controlBank(chrRom1kMax)\
-	chr.bank1k[slot] = &chr.data[value << 10];\
+	control_bank(chrRom1kMax)\
+	chr.bank_1k[slot] = &chr.data[value << 10];\
 	ss8806.chrRomBank[slot] = value
 
-void mapInit_Jaleco(BYTE model) {
-	prgRom32kMax = (info.prgRom16kCount >> 1) - 1;
-	prgRom16kMax = info.prgRom16kCount - 1;
-	prgRom8kMax = info.prgRom8kCount - 1;
-	chrRom8kMax = (info.chrRom4kCount >> 1) - 1;
-	chrRom1kMax = info.chrRom1kCount - 1;
+void map_init_Jaleco(BYTE model) {
+	prgRom32kMax = (info.prg_rom_16k_count >> 1) - 1;
+	prgRom16kMax = info.prg_rom_16k_count - 1;
+	prgRom8kMax = info.prg_rom_8k_count - 1;
+	chrRom8kMax = (info.chr_rom_4k_count >> 1) - 1;
+	chrRom1kMax = info.chr_rom_1k_count - 1;
 
 	switch (model) {
 		case JF05:
 			EXTCL_CPU_WR_MEM(Jaleco_JF05);
-			info.mapperExtendWrite = TRUE;
+			info.mapper_extend_wr = TRUE;
 			break;
 		case JF11:
 			EXTCL_CPU_WR_MEM(Jaleco_JF11);
-			info.mapperExtendWrite = TRUE;
+			info.mapper_extend_wr = TRUE;
 			if (info.reset >= HARD) {
-				mapPrgRom8k(4, 0, 0);
+				map_prg_rom_8k(4, 0, 0);
 			}
 			break;
 		case JF13:
 			EXTCL_CPU_WR_MEM(Jaleco_JF13);
-			info.mapperExtendWrite = TRUE;
+			info.mapper_extend_wr = TRUE;
 			if (info.reset >= HARD) {
-				mapPrgRom8k(4, 0, 0);
+				map_prg_rom_8k(4, 0, 0);
 			}
 			break;
 		case JF16:
@@ -65,8 +65,8 @@ void mapInit_Jaleco(BYTE model) {
 			EXTCL_CPU_WR_MEM(Jaleco_SS8806);
 			EXTCL_SAVE_MAPPER(Jaleco_SS8806);
 			EXTCL_CPU_EVERY_CYCLE(Jaleco_SS8806);
-			mapper.intStruct[0] = (BYTE *) &ss8806;
-			mapper.intStructSize[0] = sizeof(ss8806);
+			mapper.internal_struct[0] = (BYTE *) &ss8806;
+			mapper.internal_struct_size[0] = sizeof(ss8806);
 
 			if (info.reset >= HARD) {
 				BYTE i;
@@ -88,8 +88,8 @@ void mapInit_Jaleco(BYTE model) {
 			switch (info.id) {
 				case JAJAMARU:
 				case MEZASETOPPRO:
-					info.prgRamPlus8kCount = 1;
-					info.prgRamBatBanks = 1;
+					info.prg_ram_plus_8k_count = 1;
+					info.prg_ram_bat_banks = 1;
 					break;
 			}
 			break;
@@ -107,16 +107,16 @@ void extcl_cpu_wr_mem_Jaleco_JF05(WORD address, BYTE value) {
 	}
 
 	value = (((value >> 1) & 0x1) | ((value << 1) & 0x2));
-	controlBankWithAND(0x03, chrRom8kMax)
+	control_bank_with_AND(0x03, chrRom8kMax)
 	bank = value << 13;
-	chr.bank1k[0] = &chr.data[bank];
-	chr.bank1k[1] = &chr.data[bank | 0x0400];
-	chr.bank1k[2] = &chr.data[bank | 0x0800];
-	chr.bank1k[3] = &chr.data[bank | 0x0C00];
-	chr.bank1k[4] = &chr.data[bank | 0x1000];
-	chr.bank1k[5] = &chr.data[bank | 0x1400];
-	chr.bank1k[6] = &chr.data[bank | 0x1800];
-	chr.bank1k[7] = &chr.data[bank | 0x1C00];
+	chr.bank_1k[0] = &chr.data[bank];
+	chr.bank_1k[1] = &chr.data[bank | 0x0400];
+	chr.bank_1k[2] = &chr.data[bank | 0x0800];
+	chr.bank_1k[3] = &chr.data[bank | 0x0C00];
+	chr.bank_1k[4] = &chr.data[bank | 0x1000];
+	chr.bank_1k[5] = &chr.data[bank | 0x1400];
+	chr.bank_1k[6] = &chr.data[bank | 0x1800];
+	chr.bank_1k[7] = &chr.data[bank | 0x1C00];
 }
 
 void extcl_cpu_wr_mem_Jaleco_JF11(WORD address, BYTE value) {
@@ -128,21 +128,21 @@ void extcl_cpu_wr_mem_Jaleco_JF11(WORD address, BYTE value) {
 	}
 
 	value >>= 4;
-	controlBankWithAND(0x03, prgRom32kMax)
-	mapPrgRom8k(4, 0, value);
-	mapPrgRom8kUpdate();
+	control_bank_with_AND(0x03, prgRom32kMax)
+	map_prg_rom_8k(4, 0, value);
+	map_prg_rom_8k_update();
 
 	value = save;
-	controlBankWithAND(0x0F, chrRom8kMax)
+	control_bank_with_AND(0x0F, chrRom8kMax)
 	bank = value << 13;
-	chr.bank1k[0] = &chr.data[bank];
-	chr.bank1k[1] = &chr.data[bank | 0x0400];
-	chr.bank1k[2] = &chr.data[bank | 0x0800];
-	chr.bank1k[3] = &chr.data[bank | 0x0C00];
-	chr.bank1k[4] = &chr.data[bank | 0x1000];
-	chr.bank1k[5] = &chr.data[bank | 0x1400];
-	chr.bank1k[6] = &chr.data[bank | 0x1800];
-	chr.bank1k[7] = &chr.data[bank | 0x1C00];
+	chr.bank_1k[0] = &chr.data[bank];
+	chr.bank_1k[1] = &chr.data[bank | 0x0400];
+	chr.bank_1k[2] = &chr.data[bank | 0x0800];
+	chr.bank_1k[3] = &chr.data[bank | 0x0C00];
+	chr.bank_1k[4] = &chr.data[bank | 0x1000];
+	chr.bank_1k[5] = &chr.data[bank | 0x1400];
+	chr.bank_1k[6] = &chr.data[bank | 0x1800];
+	chr.bank_1k[7] = &chr.data[bank | 0x1C00];
 }
 
 void extcl_cpu_wr_mem_Jaleco_JF13(WORD address, BYTE value) {
@@ -155,51 +155,51 @@ void extcl_cpu_wr_mem_Jaleco_JF13(WORD address, BYTE value) {
 	}
 
 	value >>= 4;
-	controlBankWithAND(0x03, prgRom32kMax)
-	mapPrgRom8k(4, 0, value);
-	mapPrgRom8kUpdate();
+	control_bank_with_AND(0x03, prgRom32kMax)
+	map_prg_rom_8k(4, 0, value);
+	map_prg_rom_8k_update();
 
 	value = ((save & 0x40) >> 4) | (save & 0x03);
-	controlBank(chrRom8kMax)
+	control_bank(chrRom8kMax)
 	bank = value << 13;
-	chr.bank1k[0] = &chr.data[bank];
-	chr.bank1k[1] = &chr.data[bank | 0x0400];
-	chr.bank1k[2] = &chr.data[bank | 0x0800];
-	chr.bank1k[3] = &chr.data[bank | 0x0C00];
-	chr.bank1k[4] = &chr.data[bank | 0x1000];
-	chr.bank1k[5] = &chr.data[bank | 0x1400];
-	chr.bank1k[6] = &chr.data[bank | 0x1800];
-	chr.bank1k[7] = &chr.data[bank | 0x1C00];
+	chr.bank_1k[0] = &chr.data[bank];
+	chr.bank_1k[1] = &chr.data[bank | 0x0400];
+	chr.bank_1k[2] = &chr.data[bank | 0x0800];
+	chr.bank_1k[3] = &chr.data[bank | 0x0C00];
+	chr.bank_1k[4] = &chr.data[bank | 0x1000];
+	chr.bank_1k[5] = &chr.data[bank | 0x1400];
+	chr.bank_1k[6] = &chr.data[bank | 0x1800];
+	chr.bank_1k[7] = &chr.data[bank | 0x1C00];
 }
 
 void extcl_cpu_wr_mem_Jaleco_JF16(WORD address, BYTE value) {
-	BYTE save = value &= prgRomRd(address);
+	BYTE save = value &= prg_rom_rd(address);
 	DBWORD bank;
 
-	controlBankWithAND(0x07, prgRom16kMax)
-	mapPrgRom8k(2, 0, value);
-	mapPrgRom8kUpdate();
+	control_bank_with_AND(0x07, prgRom16kMax)
+	map_prg_rom_8k(2, 0, value);
+	map_prg_rom_8k_update();
 
 	value = save >> 4;
-	controlBankWithAND(0x0F, chrRom8kMax)
+	control_bank_with_AND(0x0F, chrRom8kMax)
 	bank = value << 13;
-	chr.bank1k[0] = &chr.data[bank];
-	chr.bank1k[1] = &chr.data[bank | 0x0400];
-	chr.bank1k[2] = &chr.data[bank | 0x0800];
-	chr.bank1k[3] = &chr.data[bank | 0x0C00];
-	chr.bank1k[4] = &chr.data[bank | 0x1000];
-	chr.bank1k[5] = &chr.data[bank | 0x1400];
-	chr.bank1k[6] = &chr.data[bank | 0x1800];
-	chr.bank1k[7] = &chr.data[bank | 0x1C00];
+	chr.bank_1k[0] = &chr.data[bank];
+	chr.bank_1k[1] = &chr.data[bank | 0x0400];
+	chr.bank_1k[2] = &chr.data[bank | 0x0800];
+	chr.bank_1k[3] = &chr.data[bank | 0x0C00];
+	chr.bank_1k[4] = &chr.data[bank | 0x1000];
+	chr.bank_1k[5] = &chr.data[bank | 0x1400];
+	chr.bank_1k[6] = &chr.data[bank | 0x1800];
+	chr.bank_1k[7] = &chr.data[bank | 0x1C00];
 
 	if (save & 0x08) {
 		mirroring_SCR1();
-		if (info.mapperType == HOLYDIVER) {
+		if (info.mapper_type == HOLYDIVER) {
 			mirroring_V();
 		}
 	} else {
 		mirroring_SCR0();
-		if (info.mapperType == HOLYDIVER) {
+		if (info.mapper_type == HOLYDIVER) {
 			mirroring_H();
 		}
 	}
@@ -207,27 +207,27 @@ void extcl_cpu_wr_mem_Jaleco_JF16(WORD address, BYTE value) {
 
 void extcl_cpu_wr_mem_Jaleco_JF17(WORD address, BYTE value) {
 	/* bus conflict */
-	BYTE save = value &= prgRomRd(address);
+	BYTE save = value &= prg_rom_rd(address);
 	DBWORD bank;
 
 	if (save & 0x80) {
-		controlBankWithAND(0x0F, prgRom16kMax)
-		mapPrgRom8k(2, 0, value);
-		mapPrgRom8kUpdate();
+		control_bank_with_AND(0x0F, prgRom16kMax)
+		map_prg_rom_8k(2, 0, value);
+		map_prg_rom_8k_update();
 	}
 
 	if (save & 0x40) {
 		value = save;
-		controlBankWithAND(0x0F, chrRom8kMax)
+		control_bank_with_AND(0x0F, chrRom8kMax)
 		bank = value << 13;
-		chr.bank1k[0] = &chr.data[bank];
-		chr.bank1k[1] = &chr.data[bank | 0x0400];
-		chr.bank1k[2] = &chr.data[bank | 0x0800];
-		chr.bank1k[3] = &chr.data[bank | 0x0C00];
-		chr.bank1k[4] = &chr.data[bank | 0x1000];
-		chr.bank1k[5] = &chr.data[bank | 0x1400];
-		chr.bank1k[6] = &chr.data[bank | 0x1800];
-		chr.bank1k[7] = &chr.data[bank | 0x1C00];
+		chr.bank_1k[0] = &chr.data[bank];
+		chr.bank_1k[1] = &chr.data[bank | 0x0400];
+		chr.bank_1k[2] = &chr.data[bank | 0x0800];
+		chr.bank_1k[3] = &chr.data[bank | 0x0C00];
+		chr.bank_1k[4] = &chr.data[bank | 0x1000];
+		chr.bank_1k[5] = &chr.data[bank | 0x1400];
+		chr.bank_1k[6] = &chr.data[bank | 0x1800];
+		chr.bank_1k[7] = &chr.data[bank | 0x1C00];
 	}
 
 	/* FIXME : aggiungere l'emulazione del D7756C */
@@ -235,27 +235,27 @@ void extcl_cpu_wr_mem_Jaleco_JF17(WORD address, BYTE value) {
 
 void extcl_cpu_wr_mem_Jaleco_JF19(WORD address, BYTE value) {
 	/* bus conflict */
-	BYTE save = value &= prgRomRd(address);
+	BYTE save = value &= prg_rom_rd(address);
 	DBWORD bank;
 
 	if (save & 0x80) {
-		controlBankWithAND(0x0F, prgRom16kMax)
-		mapPrgRom8k(2, 2, value);
-		mapPrgRom8kUpdate();
+		control_bank_with_AND(0x0F, prgRom16kMax)
+		map_prg_rom_8k(2, 2, value);
+		map_prg_rom_8k_update();
 	}
 
 	if (save & 0x40) {
 		value = save;
-		controlBankWithAND(0x0F, chrRom8kMax)
+		control_bank_with_AND(0x0F, chrRom8kMax)
 		bank = value << 13;
-		chr.bank1k[0] = &chr.data[bank];
-		chr.bank1k[1] = &chr.data[bank | 0x0400];
-		chr.bank1k[2] = &chr.data[bank | 0x0800];
-		chr.bank1k[3] = &chr.data[bank | 0x0C00];
-		chr.bank1k[4] = &chr.data[bank | 0x1000];
-		chr.bank1k[5] = &chr.data[bank | 0x1400];
-		chr.bank1k[6] = &chr.data[bank | 0x1800];
-		chr.bank1k[7] = &chr.data[bank | 0x1C00];
+		chr.bank_1k[0] = &chr.data[bank];
+		chr.bank_1k[1] = &chr.data[bank | 0x0400];
+		chr.bank_1k[2] = &chr.data[bank | 0x0800];
+		chr.bank_1k[3] = &chr.data[bank | 0x0C00];
+		chr.bank_1k[4] = &chr.data[bank | 0x1000];
+		chr.bank_1k[5] = &chr.data[bank | 0x1400];
+		chr.bank_1k[6] = &chr.data[bank | 0x1800];
+		chr.bank_1k[7] = &chr.data[bank | 0x1C00];
 	}
 
 	/* FIXME : aggiungere l'emulazione del D7756C */

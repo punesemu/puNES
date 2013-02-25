@@ -12,9 +12,9 @@
 
 #define swapChrBank1k(src, dst)\
 {\
-	BYTE *chrBank1k = chr.bank1k[src];\
-	chr.bank1k[src] = chr.bank1k[dst];\
-	chr.bank1k[dst] = chrBank1k;\
+	BYTE *chrBank1k = chr.bank_1k[src];\
+	chr.bank_1k[src] = chr.bank_1k[dst];\
+	chr.bank_1k[dst] = chrBank1k;\
 }
 
 enum {
@@ -37,7 +37,7 @@ struct _mmc3 {
 	BYTE chrRomCfg;
 } mmc3;
 
-void mapInit_MMC3(void);
+void map_init_MMC3(void);
 void extcl_cpu_wr_mem_MMC3(WORD address, BYTE value);
 BYTE extcl_save_mapper_MMC3(BYTE mode, BYTE slot, FILE *fp);
 void extcl_ppu_000_to_34x_MMC3(void);

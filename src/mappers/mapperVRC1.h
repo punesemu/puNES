@@ -10,7 +10,7 @@
 
 #include "common.h"
 
-void mapInit_VRC1(void);
+void map_init_VRC1(void);
 void extcl_cpu_wr_mem_VRC1(WORD address, BYTE value);
 
 #endif /* MAPPERVRC1_H_ */

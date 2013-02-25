@@ -15,30 +15,30 @@
 WORD prgRom8kMax, chrRom1kMax;
 BYTE *prg6000;
 
-void mapInit_50(void) {
-	prgRom8kMax = info.prgRom8kCount - 1;
-	chrRom1kMax = info.chrRom1kCount - 1;
+void map_init_50(void) {
+	prgRom8kMax = info.prg_rom_8k_count - 1;
+	chrRom1kMax = info.chr_rom_1k_count - 1;
 
 	EXTCL_CPU_WR_MEM(50);
 	EXTCL_CPU_RD_MEM(50);
 	EXTCL_SAVE_MAPPER(50);
 	EXTCL_CPU_EVERY_CYCLE(50);
-	mapper.intStruct[0] = (BYTE *) &m50;
-	mapper.intStructSize[0] = sizeof(m50);
+	mapper.internal_struct[0] = (BYTE *) &m50;
+	mapper.internal_struct_size[0] = sizeof(m50);
 
 	if (info.reset >= HARD) {
 		memset(&m50, 0x00, sizeof(m50));
 
-		mapper.romMapTo[2] = 0;
+		mapper.rom_map_to[2] = 0;
 	}
 
 	prg6000 = &prg.rom[prgRom8kMax << 13];
 
-	mapper.romMapTo[0] = 8;
-	mapper.romMapTo[1] = 9;
-	mapper.romMapTo[3] = 11;
+	mapper.rom_map_to[0] = 8;
+	mapper.rom_map_to[1] = 9;
+	mapper.rom_map_to[3] = 11;
 
-	info.mapperExtendWrite = TRUE;
+	info.mapper_extend_wr = TRUE;
 }
 void extcl_cpu_wr_mem_50(WORD address, BYTE value) {
 	if ((address <= 0x5FFF) && ((address & 0x0060) == 0x0020)) {
@@ -51,9 +51,9 @@ void extcl_cpu_wr_mem_50(WORD address, BYTE value) {
 		}
 
 		value = (value & 0x08) | ((value << 2) & 0x04) | ((value >> 1) & 0x03);
-		controlBank(prgRom8kMax)
-		mapPrgRom8k(1, 2, value);
-		mapPrgRom8kUpdate();
+		control_bank(prgRom8kMax)
+		map_prg_rom_8k(1, 2, value);
+		map_prg_rom_8k_update();
 		return;
 	}
 }

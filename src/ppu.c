@@ -524,7 +524,7 @@ void ppuTick(WORD cycles_cpu) {
 										 * memorizzo la prima parte delle
 										 * informazione dello sprite nel buffer.
 										 */
-										oam.elementPlus[sprEv.countPlus][YC] = r2004.value;
+										oam.ele_plus[sprEv.countPlus][YC] = r2004.value;
 										spritePlus[sprEv.countPlus].number = sprEv.index;
 										spritePlus[sprEv.countPlus].flipV = sprEv.range;
 										/* continuo a trattare questo sprite */
@@ -542,7 +542,7 @@ void ppuTick(WORD cycles_cpu) {
 								/* tratto i cicli dispari */
 								} else {
 									/* memorizzo il valore letto nel ciclo prima */
-									oam.elementPlus[sprEv.countPlus][sprEv.timing >> 1] =
+									oam.ele_plus[sprEv.countPlus][sprEv.timing >> 1] =
 											r2004.value;
 									/* l'unico ciclo diverso e' l'ultimo */
 									if (sprEv.timing == 7) {
@@ -698,7 +698,7 @@ void ppuTick(WORD cycles_cpu) {
 								/* cicli dispari */
 								} else {
 									/* leggo la coordinata Y dello sprite in esame */
-									r2004.value = oam.elementPlus[sprEv.indexPlus][YC];
+									r2004.value = oam.ele_plus[sprEv.indexPlus][YC];
 									/* se sto esaminando il nono sprite... */
 									if (sprEv.evaluate == TRUE) {
 										/* ...e sono nell'ultimo ciclo...*/
@@ -744,7 +744,7 @@ void ppuTick(WORD cycles_cpu) {
 								/* ciclo 1 */
 								} else {
 									/* leggo la coordinata Y dello sprite in esame */
-									r2004.value = oam.elementPlus[sprEv.indexPlus][YC];
+									r2004.value = oam.ele_plus[sprEv.indexPlus][YC];
 									/* passo al prossimo sprite */
 									sprEv.timing = 0;
 								}
@@ -814,7 +814,7 @@ void ppuTick(WORD cycles_cpu) {
 						 *  0 -> no flip orizzontale
 						 *  1 -> si flip orizzontale
 						 */
-						if (oam.elementPlus[sprEv.tmpSprPlus][AT] & 0x40) {
+						if (oam.ele_plus[sprEv.tmpSprPlus][AT] & 0x40) {
 							/* salvo i primi 8 bit del tile dello sprite */
 							spritePlus[sprEv.tmpSprPlus].lByte = ppuRdMem(ppu.sprAdr);
 							/* salvo i secondi 8 bit del tile dello sprite */
@@ -825,7 +825,7 @@ void ppuTick(WORD cycles_cpu) {
 							spritePlus[sprEv.tmpSprPlus].hByte =
 									(invCHR[ppuRdMem(ppu.sprAdr | 0x08)] << 1);
 						}
-						r2004.value = oam.elementPlus[sprEv.tmpSprPlus][YC];
+						r2004.value = oam.ele_plus[sprEv.tmpSprPlus][YC];
 						if (extcl_after_rd_chr) {
 							/*
 							 * utilizzato dalle mappers :
@@ -835,9 +835,9 @@ void ppuTick(WORD cycles_cpu) {
 							extcl_after_rd_chr(ppu.sprAdr);
 						}
 					} else if (sprEv.timing < 4) {
-						r2004.value = oam.elementPlus[sprEv.tmpSprPlus][sprEv.timing];
+						r2004.value = oam.ele_plus[sprEv.tmpSprPlus][sprEv.timing];
 					} else if (sprEv.timing < 8) {
-						r2004.value = oam.elementPlus[sprEv.tmpSprPlus][XC];
+						r2004.value = oam.ele_plus[sprEv.tmpSprPlus][XC];
 					}
 					/* incremento il contatore del ciclo interno */
 					if (++sprEv.timing == 8) {
@@ -932,7 +932,7 @@ void ppuTick(WORD cycles_cpu) {
 		 */
 		if (ppu.frameX < ppu.slineCycles) {
 			if (sprEv.countPlus) {
-				r2004.value = oam.elementPlus[0][YC];
+				r2004.value = oam.ele_plus[0][YC];
 			} else {
 				r2004.value = oam.element[63][YC];
 			}
@@ -994,10 +994,10 @@ void ppuTick(WORD cycles_cpu) {
 			 * che sto per trattare.
 			 */
 			for (a = 0; a < sprEv.count; a++) {
-				sprite[a].yC = oam.elementPlus[a][YC];
-				sprite[a].tile = oam.elementPlus[a][TL];
-				sprite[a].attrib = oam.elementPlus[a][AT];
-				sprite[a].xC = oam.elementPlus[a][XC];
+				sprite[a].yC = oam.ele_plus[a][YC];
+				sprite[a].tile = oam.ele_plus[a][TL];
+				sprite[a].attrib = oam.ele_plus[a][AT];
+				sprite[a].xC = oam.ele_plus[a][XC];
 				sprite[a].number = spritePlus[a].number;
 				sprite[a].flipV = spritePlus[a].flipV;
 				sprite[a].lByte = spritePlus[a].lByte;
@@ -1025,7 +1025,7 @@ void ppuTick(WORD cycles_cpu) {
 			 * setto il flag che indica che un frame
 			 * e' stato completato.
 			 */
-			info.executeCPU = FALSE;
+			info.execute_cpu = FALSE;
 			/* e' un frame dispari? */
 			ppu.oddFrame = !ppu.oddFrame;
 			/* abilito il vblank */
@@ -1118,7 +1118,7 @@ BYTE ppuTurnON(void) {
 			}
 			memset(oam.plus, 0xFF, sizeof(oam.plus));
 			for (a = 0; a < 8; ++a) {
-				oam.elementPlus[a] = &oam.plus[(a * 4)];
+				oam.ele_plus[a] = &oam.plus[(a * 4)];
 			}
 			/* inizializzo nametables */
 			memset(ntbl.data, 0x00, sizeof(ntbl.data));

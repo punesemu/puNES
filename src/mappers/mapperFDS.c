@@ -19,12 +19,12 @@ enum {
 
 static const BYTE volume_wave[4] = { 39, 26, 19, 15 };
 
-void mapInit_FDS(void) {
+void map_init_FDS(void) {
 	EXTCL_CPU_EVERY_CYCLE(FDS);
 	EXTCL_APU_TICK(FDS);
 
-	info.chrRom8kCount = 1;
-	mapper.writeVRAM = TRUE;
+	info.chr_rom_8k_count = 1;
+	mapper.write_vram = TRUE;
 
 	mirroring_H();
 

@@ -14,12 +14,12 @@
 
 WORD prgRom16kMax, prgRom8kMax, chrRom8kMax, chrRom4kMax, chrRom1kMax;
 
-void mapInit_Kaiser(BYTE model) {
-	prgRom16kMax = info.prgRom16kCount - 1;
-	prgRom8kMax = info.prgRom8kCount - 1;
-	chrRom8kMax = info.chrRom8kCount - 1;
-	chrRom4kMax = info.chrRom4kCount - 1;
-	chrRom1kMax = info.chrRom1kCount - 1;
+void map_init_Kaiser(BYTE model) {
+	prgRom16kMax = info.prg_rom_16k_count - 1;
+	prgRom8kMax = info.prg_rom_8k_count - 1;
+	chrRom8kMax = info.chr_rom_8k_count - 1;
+	chrRom4kMax = info.chr_rom_4k_count - 1;
+	chrRom1kMax = info.chr_rom_1k_count - 1;
 
 	switch (model) {
 		case KS202:
@@ -30,14 +30,14 @@ void mapInit_Kaiser(BYTE model) {
 			}
 			EXTCL_SAVE_MAPPER(Kaiser_ks202);
 			EXTCL_CPU_EVERY_CYCLE(Kaiser_ks202);
-			mapper.intStruct[0] = (BYTE *) &ks202;
-			mapper.intStructSize[0] = sizeof(ks202);
+			mapper.internal_struct[0] = (BYTE *) &ks202;
+			mapper.internal_struct_size[0] = sizeof(ks202);
 
 			if (model == KS7032) {
 				cpu.prg_ram_wr_active = FALSE;
 				cpu.prg_ram_rd_active = FALSE;
 			} else {
-				info.prgRamPlus8kCount = 1;
+				info.prg_ram_plus_8k_count = 1;
 				cpu.prg_ram_wr_active = TRUE;
 				cpu.prg_ram_rd_active = TRUE;
 			}
@@ -54,16 +54,16 @@ void mapInit_Kaiser(BYTE model) {
 			EXTCL_CPU_WR_MEM(Kaiser_ks7022);
 			EXTCL_CPU_RD_MEM(Kaiser_ks7022);
 			EXTCL_SAVE_MAPPER(Kaiser_ks7022);
-			mapper.intStruct[0] = (BYTE *) &ks7022;
-			mapper.intStructSize[0] = sizeof(ks7022);
+			mapper.internal_struct[0] = (BYTE *) &ks7022;
+			mapper.internal_struct_size[0] = sizeof(ks7022);
 
-			info.mapperExtendRead = TRUE;
+			info.mapper_extend_rd = TRUE;
 
 			memset(&ks7022, 0x00, sizeof(ks7022));
 
 			if (info.reset >= HARD) {
-				mapPrgRom8k(2, 0, 0);
-				mapPrgRom8k(2, 2, 0);
+				map_prg_rom_8k(2, 0, 0);
+				map_prg_rom_8k(2, 2, 0);
 			}
 			break;
 	}
@@ -104,14 +104,14 @@ void extcl_cpu_wr_mem_Kaiser_ks202(WORD address, BYTE value) {
 				case 0:
 				case 1:
 				case 2: {
-					value = (mapper.romMapTo[slot] & 0x10) | (value & 0x0F);
-					controlBank(prgRom8kMax)
-					mapPrgRom8k(1, slot, value);
-					mapPrgRom8kUpdate();
+					value = (mapper.rom_map_to[slot] & 0x10) | (value & 0x0F);
+					control_bank(prgRom8kMax)
+					map_prg_rom_8k(1, slot, value);
+					map_prg_rom_8k_update();
 					break;
 				}
 				case 3:
-					controlBank(prgRom8kMax)
+					control_bank(prgRom8kMax)
 					ks202.prgRamRd = &prg.rom[value << 13];
 					break;
 			}
@@ -120,10 +120,10 @@ void extcl_cpu_wr_mem_Kaiser_ks202(WORD address, BYTE value) {
 				case 0x0000:
 					address &= 0x0003;
 					if (address < 3) {
-						value = (save & 0x10) | (mapper.romMapTo[address] & 0x0F);
-						controlBank(prgRom8kMax)
-						mapPrgRom8k(1, address, value);
-						mapPrgRom8kUpdate();
+						value = (save & 0x10) | (mapper.rom_map_to[address] & 0x0F);
+						control_bank(prgRom8kMax)
+						map_prg_rom_8k(1, address, value);
+						map_prg_rom_8k_update();
 					}
 					break;
 				case 0x0800:
@@ -135,8 +135,8 @@ void extcl_cpu_wr_mem_Kaiser_ks202(WORD address, BYTE value) {
 					break;
 				case 0x0C00:
 					value = save;
-					controlBank(chrRom1kMax)
-					chr.bank1k[address & 0x0007] = &chr.data[value << 10];
+					control_bank(chrRom1kMax)
+					chr.bank_1k[address & 0x0007] = &chr.data[value << 10];
 					break;
 			}
 			return;
@@ -181,20 +181,20 @@ void extcl_cpu_wr_mem_Kaiser_ks7058(WORD address, BYTE value) {
 
 	switch (address & 0xF080) {
 		case 0xF000:
-			controlBank(chrRom4kMax)
+			control_bank(chrRom4kMax)
 			bank = value << 12;
-			chr.bank1k[0] = &chr.data[bank];
-			chr.bank1k[1] = &chr.data[bank | 0x0400];
-			chr.bank1k[2] = &chr.data[bank | 0x0800];
-			chr.bank1k[3] = &chr.data[bank | 0x0C00];
+			chr.bank_1k[0] = &chr.data[bank];
+			chr.bank_1k[1] = &chr.data[bank | 0x0400];
+			chr.bank_1k[2] = &chr.data[bank | 0x0800];
+			chr.bank_1k[3] = &chr.data[bank | 0x0C00];
 			return;
 		case 0xF080:
-			controlBank(chrRom4kMax)
+			control_bank(chrRom4kMax)
 			bank = value << 12;
-			chr.bank1k[4] = &chr.data[bank];
-			chr.bank1k[5] = &chr.data[bank | 0x0400];
-			chr.bank1k[6] = &chr.data[bank | 0x0800];
-			chr.bank1k[7] = &chr.data[bank | 0x0C00];
+			chr.bank_1k[4] = &chr.data[bank];
+			chr.bank_1k[5] = &chr.data[bank | 0x0400];
+			chr.bank_1k[6] = &chr.data[bank | 0x0800];
+			chr.bank_1k[7] = &chr.data[bank | 0x0C00];
 			return;
 	}
 }
@@ -218,24 +218,24 @@ BYTE extcl_cpu_rd_mem_Kaiser_ks7022(WORD address, BYTE openbus, BYTE before) {
 		BYTE value = ks7022.reg;
 		DBWORD bank;
 
-		controlBank(prgRom16kMax)
-		mapPrgRom8k(2, 0, value);
-		mapPrgRom8k(2, 2, value);
-		mapPrgRom8kUpdate();
+		control_bank(prgRom16kMax)
+		map_prg_rom_8k(2, 0, value);
+		map_prg_rom_8k(2, 2, value);
+		map_prg_rom_8k_update();
 
 		value = ks7022.reg;
-		controlBank(chrRom8kMax)
+		control_bank(chrRom8kMax)
 		bank = value << 13;
-		chr.bank1k[0] = &chr.data[bank];
-		chr.bank1k[1] = &chr.data[bank | 0x0400];
-		chr.bank1k[2] = &chr.data[bank | 0x0800];
-		chr.bank1k[3] = &chr.data[bank | 0x0C00];
-		chr.bank1k[4] = &chr.data[bank | 0x1000];
-		chr.bank1k[5] = &chr.data[bank | 0x1400];
-		chr.bank1k[6] = &chr.data[bank | 0x1800];
-		chr.bank1k[7] = &chr.data[bank | 0x1C00];
+		chr.bank_1k[0] = &chr.data[bank];
+		chr.bank_1k[1] = &chr.data[bank | 0x0400];
+		chr.bank_1k[2] = &chr.data[bank | 0x0800];
+		chr.bank_1k[3] = &chr.data[bank | 0x0C00];
+		chr.bank_1k[4] = &chr.data[bank | 0x1000];
+		chr.bank_1k[5] = &chr.data[bank | 0x1400];
+		chr.bank_1k[6] = &chr.data[bank | 0x1800];
+		chr.bank_1k[7] = &chr.data[bank | 0x1C00];
 
-		return (prgRomRd(address));
+		return (prg_rom_rd(address));
 	}
 
 	return (openbus);

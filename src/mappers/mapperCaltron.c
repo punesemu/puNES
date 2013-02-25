@@ -12,17 +12,17 @@
 
 WORD prgRom32kMax, chrRom8kMax;
 
-void mapInit_Caltron(void) {
-	prgRom32kMax = (info.prgRom16kCount >> 1) - 1;
-	chrRom8kMax = info.chrRom8kCount - 1;
+void map_init_Caltron(void) {
+	prgRom32kMax = (info.prg_rom_16k_count >> 1) - 1;
+	chrRom8kMax = info.chr_rom_8k_count - 1;
 
 	EXTCL_CPU_WR_MEM(Caltron);
 
-	info.mapperExtendWrite = TRUE;
+	info.mapper_extend_wr = TRUE;
 
 	if (info.reset >= HARD) {
 		caltron.reg = 0;
-		mapPrgRom8k(4, 0, 0);
+		map_prg_rom_8k(4, 0, 0);
 	}
 }
 void extcl_cpu_wr_mem_Caltron(WORD address, BYTE value) {
@@ -35,9 +35,9 @@ void extcl_cpu_wr_mem_Caltron(WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address < 0x6800)) {
 		caltron.reg = value = address & 0x00FF;
 
-		controlBankWithAND(0x07, prgRom32kMax)
-		mapPrgRom8k(4, 0, value);
-		mapPrgRom8kUpdate();
+		control_bank_with_AND(0x07, prgRom32kMax)
+		map_prg_rom_8k(4, 0, value);
+		map_prg_rom_8k_update();
 
 		if (caltron.reg & 0x10) {
 			mirroring_H();
@@ -53,16 +53,16 @@ void extcl_cpu_wr_mem_Caltron(WORD address, BYTE value) {
 
 	if (caltron.reg & 0x04) {
 		value = ((caltron.reg >> 1) & 0x0C) | (value & 0x03);
-		controlBank(chrRom8kMax)
+		control_bank(chrRom8kMax)
 		bank = value << 13;
-		chr.bank1k[0] = &chr.data[bank];
-		chr.bank1k[1] = &chr.data[bank | 0x0400];
-		chr.bank1k[2] = &chr.data[bank | 0x0800];
-		chr.bank1k[3] = &chr.data[bank | 0x0C00];
-		chr.bank1k[4] = &chr.data[bank | 0x1000];
-		chr.bank1k[5] = &chr.data[bank | 0x1400];
-		chr.bank1k[6] = &chr.data[bank | 0x1800];
-		chr.bank1k[7] = &chr.data[bank | 0x1C00];
+		chr.bank_1k[0] = &chr.data[bank];
+		chr.bank_1k[1] = &chr.data[bank | 0x0400];
+		chr.bank_1k[2] = &chr.data[bank | 0x0800];
+		chr.bank_1k[3] = &chr.data[bank | 0x0C00];
+		chr.bank_1k[4] = &chr.data[bank | 0x1000];
+		chr.bank_1k[5] = &chr.data[bank | 0x1400];
+		chr.bank_1k[6] = &chr.data[bank | 0x1800];
+		chr.bank_1k[7] = &chr.data[bank | 0x1C00];
 	}
 }
 BYTE extcl_save_mapper_Caltron(BYTE mode, BYTE slot, FILE *fp) {

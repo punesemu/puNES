@@ -10,7 +10,7 @@
 
 #include "common.h"
 
-void mapInit_Magic(void);
+void map_init_Magic(void);
 void extcl_cpu_wr_mem_Magic(WORD address, BYTE value);
 
 #endif /* MAPPERMAGIC_H_ */

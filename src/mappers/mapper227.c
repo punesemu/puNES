@@ -10,9 +10,9 @@
 
 WORD prgRom32kMax, prgRom16kMax;
 
-void mapInit_227(void) {
-	prgRom32kMax = (info.prgRom16kCount >> 1) - 1;
-	prgRom16kMax = info.prgRom16kCount - 1;
+void map_init_227(void) {
+	prgRom32kMax = (info.prg_rom_16k_count >> 1) - 1;
+	prgRom16kMax = info.prg_rom_16k_count - 1;
 
 	EXTCL_CPU_WR_MEM(227);
 
@@ -23,21 +23,21 @@ void extcl_cpu_wr_mem_227(WORD address, BYTE value) {
 
     if (address & 0x0001) {
     	value = bank;
-		controlBank(prgRom32kMax)
-		mapPrgRom8k(4, 0, value);
+		control_bank(prgRom32kMax)
+		map_prg_rom_8k(4, 0, value);
     } else {
     	value = (bank << 1) | ((address >> 2) & 0x01);
-    	controlBank(prgRom16kMax)
-    	mapPrgRom8k(2, 0, value);
-    	mapPrgRom8k(2, 2, value);
+    	control_bank(prgRom16kMax)
+    	map_prg_rom_8k(2, 0, value);
+    	map_prg_rom_8k(2, 2, value);
     }
 
 	if (!(address & 0x0080)) {
     	value = ((address & 0x0200) ? 0x07 : 0x00) | ((bank << 1) & 0x38);
-    	controlBank(prgRom16kMax)
-    	mapPrgRom8k(2, 2, value);
+    	control_bank(prgRom16kMax)
+    	map_prg_rom_8k(2, 2, value);
 	}
-	mapPrgRom8kUpdate();
+	map_prg_rom_8k_update();
 
 	if (address & 0x0002) {
 		mirroring_H();

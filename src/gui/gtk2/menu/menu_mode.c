@@ -171,9 +171,9 @@ void menu_mode_set_mode(int newmode) {
 			machine = machinedb[newmode - 1];
 			break;
 		case AUTO:
-			if (info.machineDb == PAL) {
+			if (info.machine_db == PAL) {
 				machine = machinedb[PAL - 1];
-			} else if (info.machineDb == DENDY) {
+			} else if (info.machine_db == DENDY) {
 				machine = machinedb[DENDY - 1];
 			} else {
 				machine = machinedb[NTSC - 1];
@@ -184,8 +184,8 @@ void menu_mode_set_mode(int newmode) {
 			 * io sono gia' nella modalita' NTSC (appunto quella di default), allora
 			 * non devo fare nessun reset.
 			 */
-			if ((cfg->mode == info.machineDb) || ((cfg->mode == NTSC) &&
-					((info.machineDb < NTSC) || (info.machineDb > DENDY)))){
+			if ((cfg->mode == info.machine_db) || ((cfg->mode == NTSC) &&
+					((info.machine_db < NTSC) || (info.machine_db > DENDY)))){
 				reset = FALSE;
 			}
 			cfg->mode = AUTO;

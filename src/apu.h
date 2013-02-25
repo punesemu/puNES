@@ -214,7 +214,7 @@ enum apu_channels { APU_S1, APU_S2, APU_TR, APU_NS, APU_DMC };
 				DMC.buffer = prg.rom[DMC.address & 0x1FFF];\
 			}\
 		} else {\
-			DMC.buffer = prg.rom8k[(DMC.address >> 13) & 0x03][DMC.address & 0x1FFF];\
+			DMC.buffer = prg.rom_8k[(DMC.address >> 13) & 0x03][DMC.address & 0x1FFF];\
 		}\
 		/* incremento gli hwtick da compiere */\
 		if (hwtick) { hwtick[0] += tick; }\

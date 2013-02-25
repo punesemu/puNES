@@ -14,7 +14,7 @@ struct _futuremedia {
 	BYTE delay;
 } futuremedia;
 
-void mapInit_Futuremedia(void);
+void map_init_Futuremedia(void);
 void extcl_cpu_wr_mem_Futuremedia(WORD address, BYTE value);
 BYTE extcl_save_mapper_Futuremedia(BYTE mode, BYTE slot, FILE *fp);
 void extcl_cpu_every_cycle_Futuremedia(void);

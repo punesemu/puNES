@@ -42,7 +42,7 @@ struct _m166 {
 	BYTE chrRam[0x2000];
 } m116;
 
-void mapInit_116(void);
+void map_init_116(void);
 
 void extcl_cpu_wr_mem_116_TypeA(WORD address, BYTE value);
 BYTE extcl_save_mapper_116_TypeA(BYTE mode, BYTE slot, FILE *fp);

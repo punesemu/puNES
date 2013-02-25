@@ -43,7 +43,7 @@ static const char pokeriiichr[2][40] = {
 	"c6bf926ed14c21f1a5b64fbccf3288005ff54be5"
 };
 
-void mapInit_Sachen(BYTE model);
+void map_init_Sachen(BYTE model);
 
 void extcl_cpu_wr_mem_Sachen_sa0036(WORD address, BYTE value);
 

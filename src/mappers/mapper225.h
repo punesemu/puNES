@@ -12,7 +12,7 @@
 
 enum { BMC52IN1 = 2 };
 
-void mapInit_225(void);
+void map_init_225(void);
 void extcl_cpu_wr_mem_225(WORD address, BYTE value);
 
 #endif /* MAPPER225_H_ */

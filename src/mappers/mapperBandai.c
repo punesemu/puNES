@@ -15,29 +15,29 @@
 
 #define b161x02x74Chr4kUpdate()\
 	value = (save & 0x04) | b161x02x74.chrRomBank;\
-	controlBank(chrRam4kMax)\
+	control_bank(chrRam4kMax)\
 	b161x02x74.chrRomBank = value;\
 	bank = value << 12;\
-	chr.bank1k[0] = &chr.data[bank];\
-	chr.bank1k[1] = &chr.data[bank | 0x0400];\
-	chr.bank1k[2] = &chr.data[bank | 0x0800];\
-	chr.bank1k[3] = &chr.data[bank | 0x0C00];\
+	chr.bank_1k[0] = &chr.data[bank];\
+	chr.bank_1k[1] = &chr.data[bank | 0x0400];\
+	chr.bank_1k[2] = &chr.data[bank | 0x0800];\
+	chr.bank_1k[3] = &chr.data[bank | 0x0C00];\
 	value = (save & 0x04) | 0x03;\
-	controlBank(chrRam4kMax)\
+	control_bank(chrRam4kMax)\
 	bank = value << 12;\
-	chr.bank1k[4] = &chr.data[bank];\
-	chr.bank1k[5] = &chr.data[bank | 0x0400];\
-	chr.bank1k[6] = &chr.data[bank | 0x0800];\
-	chr.bank1k[7] = &chr.data[bank | 0x0C00]
+	chr.bank_1k[4] = &chr.data[bank];\
+	chr.bank_1k[5] = &chr.data[bank | 0x0400];\
+	chr.bank_1k[6] = &chr.data[bank | 0x0800];\
+	chr.bank_1k[7] = &chr.data[bank | 0x0C00]
 #define b16x02x74r2006(adr)\
 {\
 	const BYTE value = (b161x02x74.chrRomBank & 0x04)\
 			| ((adr >> 8) & 0x03);\
 	const DBWORD bank = value << 12;\
-	chr.bank1k[0] = &chr.data[bank];\
-	chr.bank1k[1] = &chr.data[bank | 0x0400];\
-	chr.bank1k[2] = &chr.data[bank | 0x0800];\
-	chr.bank1k[3] = &chr.data[bank | 0x0C00];\
+	chr.bank_1k[0] = &chr.data[bank];\
+	chr.bank_1k[1] = &chr.data[bank | 0x0400];\
+	chr.bank_1k[2] = &chr.data[bank | 0x0800];\
+	chr.bank_1k[3] = &chr.data[bank | 0x0C00];\
 }
 
 #define datachSetScl(scl) e24C0xSet(scl, FCGX.e1.sda, &FCGX.e1)
@@ -72,26 +72,26 @@ enum {
 WORD prgRom32kMax, prgRom16kMax, chrRam4kMax, chrRom1kMax;
 BYTE type;
 
-void mapInit_Bandai(BYTE model) {
-	prgRom32kMax = (info.prgRom16kCount >> 1) - 1;
-	prgRom16kMax = info.prgRom16kCount - 1;
-	chrRom1kMax = info.chrRom1kCount - 1;
+void map_init_Bandai(BYTE model) {
+	prgRom32kMax = (info.prg_rom_16k_count >> 1) - 1;
+	prgRom16kMax = info.prg_rom_16k_count - 1;
+	chrRom1kMax = info.chr_rom_1k_count - 1;
 
 	switch (model) {
 		case B161X02X74:
-			chrRam4kMax = info.chrRom4kCount - 1;
+			chrRam4kMax = info.chr_rom_4k_count - 1;
 
 			EXTCL_CPU_WR_MEM(Bandai_161x02x74);
 			EXTCL_SAVE_MAPPER(Bandai_161x02x74);
 			EXTCL_UPDATE_R2006(Bandai_161x02x74);
 			EXTCL_RD_NMT(Bandai_161x02x74);
-			mapper.intStruct[0] = (BYTE *) &b161x02x74;
-			mapper.intStructSize[0] = sizeof(b161x02x74);
+			mapper.internal_struct[0] = (BYTE *) &b161x02x74;
+			mapper.internal_struct_size[0] = sizeof(b161x02x74);
 
 			if (info.reset >= HARD) {
 				b161x02x74.chrRomBank = 0;
 
-				mapPrgRom8k(4, 0, 0);
+				map_prg_rom_8k(4, 0, 0);
 
 				{
 					BYTE value, save = 0;
@@ -110,17 +110,17 @@ void mapInit_Bandai(BYTE model) {
 			EXTCL_SAVE_MAPPER(Bandai_FCGX);
 			EXTCL_BATTERY_IO(Bandai_FCGX);
 			EXTCL_CPU_EVERY_CYCLE(Bandai_FCGX);
-			mapper.intStruct[0] = (BYTE *) &FCGX;
-			mapper.intStructSize[0] = sizeof(FCGX);
+			mapper.internal_struct[0] = (BYTE *) &FCGX;
+			mapper.internal_struct_size[0] = sizeof(FCGX);
 
-			info.mapperExtendWrite = TRUE;
+			info.mapper_extend_wr = TRUE;
 
 			if (info.reset >= HARD) {
 				memset(&FCGX, 0x00, sizeof(FCGX));
 				FCGX.e0.output = FCGX.e1.output = 0x10;
 
-				if (info.prgRom16kCount >= 32) {
-					mapPrgRom8k(2, 2, prgRom16kMax);
+				if (info.prg_rom_16k_count >= 32) {
+					map_prg_rom_8k(2, 2, prgRom16kMax);
 				}
 			} else {
 				BYTE i;
@@ -131,15 +131,15 @@ void mapInit_Bandai(BYTE model) {
 
 			switch (model) {
 				case E24C01:
-					info.prgRamBatBanks = TRUE;
+					info.prg_ram_bat_banks = TRUE;
 					FCGX.e0.size = 128;
 					break;
 				case E24C02:
-					info.prgRamBatBanks = TRUE;
+					info.prg_ram_bat_banks = TRUE;
 					FCGX.e0.size = 256;
 					break;
 				case DATACH:
-					info.prgRamBatBanks = TRUE;
+					info.prg_ram_bat_banks = TRUE;
 					FCGX.e0.size = 256;
 					FCGX.e1.size = 128;
 					break;
@@ -150,8 +150,8 @@ void mapInit_Bandai(BYTE model) {
 
 	switch (info.id) {
 		case FAMICONJUMPII:
-			info.prgRamPlus8kCount = 1;
-			info.prgRamBatBanks = 1;
+			info.prg_ram_plus_8k_count = 1;
+			info.prg_ram_bat_banks = 1;
 			break;
 	}
 
@@ -160,12 +160,12 @@ void mapInit_Bandai(BYTE model) {
 
 void extcl_cpu_wr_mem_Bandai_161x02x74(WORD address, BYTE value) {
 	/* bus conflict */
-	const BYTE save = value &= prgRomRd(address);
+	const BYTE save = value &= prg_rom_rd(address);
 	DBWORD bank;
 
-	controlBankWithAND(0x03, prgRom32kMax)
-	mapPrgRom8k(4, 0, value);
-	mapPrgRom8kUpdate();
+	control_bank_with_AND(0x03, prgRom32kMax)
+	map_prg_rom_8k(4, 0, value);
+	map_prg_rom_8k_update();
 
 	b161x02x74Chr4kUpdate();
 }
@@ -183,7 +183,7 @@ BYTE extcl_rd_nmt_Bandai_161x02x74(WORD address) {
 	if ((address & 0x03FF) < 0x03C0) {
 		b16x02x74r2006(address);
 	}
-	return (ntbl.bank1k[address >> 10][address & 0x3FF]);
+	return (ntbl.bank_1k[address >> 10][address & 0x3FF]);
 }
 
 void extcl_cpu_wr_mem_Bandai_FCGX(WORD address, BYTE value) {
@@ -191,7 +191,7 @@ void extcl_cpu_wr_mem_Bandai_FCGX(WORD address, BYTE value) {
 		return;
 	}
 
-	if (!info.prgRamPlus8kCount) {
+	if (!info.prg_ram_plus_8k_count) {
 		address |= 0x8000;
 	}
 
@@ -206,7 +206,7 @@ void extcl_cpu_wr_mem_Bandai_FCGX(WORD address, BYTE value) {
 		case 0x8007: {
 			const BYTE slot = address & 0x000F;
 
-			if (info.prgRom16kCount >= 32) {
+			if (info.prg_rom_16k_count >= 32) {
 				BYTE i;
 
 				FCGX.reg[slot] = value;
@@ -214,34 +214,34 @@ void extcl_cpu_wr_mem_Bandai_FCGX(WORD address, BYTE value) {
 				for (i = 0; i < 8; i++) {
 					value |= (FCGX.reg[i] << 4) & 0x10;
 				}
-				value |= ((mapper.romMapTo[0] >> 1) & 0x0F);
-				controlBank(prgRom16kMax)
-				mapPrgRom8k(2, 0, value);
+				value |= ((mapper.rom_map_to[0] >> 1) & 0x0F);
+				control_bank(prgRom16kMax)
+				map_prg_rom_8k(2, 0, value);
 
 				value |= 0x0F;
-				controlBank(prgRom16kMax)
-				mapPrgRom8k(2, 2, value);
+				control_bank(prgRom16kMax)
+				map_prg_rom_8k(2, 2, value);
 
-				mapPrgRom8kUpdate();
+				map_prg_rom_8k_update();
 
 				value = FCGX.reg[slot];
 			}
 			if (type == DATACH) {
 				datachSetScl((value << 2) & 0x20);
 			}
-			if (!mapper.writeVRAM) {
-				controlBank(chrRom1kMax)
-				chr.bank1k[slot] = &chr.data[value << 10];
+			if (!mapper.write_vram) {
+				control_bank(chrRom1kMax)
+				chr.bank_1k[slot] = &chr.data[value << 10];
 			}
 			return;
 		}
 		case 0x8008:
-			if (info.prgRom16kCount >= 32) {
-				value = ((mapper.romMapTo[0] >> 1) & 0x10) | (value & 0x0F);
+			if (info.prg_rom_16k_count >= 32) {
+				value = ((mapper.rom_map_to[0] >> 1) & 0x10) | (value & 0x0F);
 			}
-			controlBank(prgRom16kMax)
-			mapPrgRom8k(2, 0, value);
-			mapPrgRom8kUpdate();
+			control_bank(prgRom16kMax)
+			map_prg_rom_8k(2, 0, value);
+			map_prg_rom_8k_update();
 			return;
 		case 0x8009: {
 			switch (value & 0x03) {
@@ -337,9 +337,9 @@ void extcl_battery_io_Bandai_FCGX(BYTE mode, FILE *fp) {
 		}
 	} else {
 		if (mode == WRBAT) {
-			mapperWrBatteryDefault();
+			mapper_wr_battery_default();
 		} else {
-			mapperRdBatteryDefault();
+			mapper_rd_battery_default();
 		}
 	}
 }

@@ -15,7 +15,7 @@ struct _m53 {
 	BYTE prg6000;
 } m53;
 
-void mapInit_53(void);
+void map_init_53(void);
 void extcl_cpu_wr_mem_53(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_53(WORD address, BYTE openbus, BYTE before);
 BYTE extcl_save_mapper_53(BYTE mode, BYTE slot, FILE *fp);

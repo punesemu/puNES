@@ -14,19 +14,19 @@
 WORD prgRom32kMax;
 BYTE type;
 
-void mapInit_178(BYTE model) {
-	prgRom32kMax = (info.prgRom16kCount >> 1) - 1;
+void map_init_178(BYTE model) {
+	prgRom32kMax = (info.prg_rom_16k_count >> 1) - 1;
 
 	EXTCL_CPU_WR_MEM(178);
 	EXTCL_SAVE_MAPPER(178);
-	mapper.intStruct[0] = (BYTE *) &m178;
-	mapper.intStructSize[0] = sizeof(m178);
+	mapper.internal_struct[0] = (BYTE *) &m178;
+	mapper.internal_struct_size[0] = sizeof(m178);
 
-	info.mapperExtendWrite = TRUE;
+	info.mapper_extend_wr = TRUE;
 
 	if (info.reset >= HARD) {
 		memset(&m178, 0x00, sizeof(m178));
-		mapPrgRom8k(4, 0, 0);
+		map_prg_rom_8k(4, 0, 0);
 	}
 
 	type = model;
@@ -42,18 +42,18 @@ void extcl_cpu_wr_mem_178(WORD address, BYTE value) {
 			return;
 		case 0x4801:
 			value = m178.reg = (m178.reg & 0x0C) | ((value >> 1) & 0x03);
-			controlBank(prgRom32kMax)
-			mapPrgRom8k(4, 0, value);
-			mapPrgRom8kUpdate();
+			control_bank(prgRom32kMax)
+			map_prg_rom_8k(4, 0, value);
+			map_prg_rom_8k_update();
 			return;
 		case 0x4802:
 			m178.reg = ((value << 2) & 0x0C) | (m178.reg & 0x03);
 			return;
 		case 0x8000:
 			if (type == XINGJI) {
-				controlBank(prgRom32kMax)
-				mapPrgRom8k(4, 0, value);
-				mapPrgRom8kUpdate();
+				control_bank(prgRom32kMax)
+				map_prg_rom_8k(4, 0, value);
+				map_prg_rom_8k_update();
 			}
 			return;
 	}

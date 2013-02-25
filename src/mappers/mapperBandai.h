@@ -45,7 +45,7 @@ struct _FCGX {
 	_FCGXeeprom e1;
 } FCGX;
 
-void mapInit_Bandai(BYTE model);
+void map_init_Bandai(BYTE model);
 
 void extcl_cpu_wr_mem_Bandai_161x02x74(WORD address, BYTE value);
 BYTE extcl_save_mapper_Bandai_161x02x74(BYTE mode, BYTE slot, FILE *fp);

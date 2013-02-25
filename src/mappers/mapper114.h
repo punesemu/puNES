@@ -16,7 +16,7 @@ struct _m114 {
 	WORD prgRomBank[4];
 } m114;
 
-void mapInit_114(void);
+void map_init_114(void);
 void extcl_cpu_wr_mem_114(WORD address, BYTE value);
 BYTE extcl_save_mapper_114(BYTE mode, BYTE slot, FILE *fp);
 

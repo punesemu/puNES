@@ -12,62 +12,62 @@
 
 #define mirroring_H()\
 	mapper.mirroring = HORIZONTAL;\
-	ntbl.bank1k[0] = ntbl.bank1k[1] = &ntbl.data[0];\
-	ntbl.bank1k[2] = ntbl.bank1k[3] = &ntbl.data[0x0400]
+	ntbl.bank_1k[0] = ntbl.bank_1k[1] = &ntbl.data[0];\
+	ntbl.bank_1k[2] = ntbl.bank_1k[3] = &ntbl.data[0x0400]
 #define mirroring_V()\
 	mapper.mirroring = VERTICAL;\
-	ntbl.bank1k[0] = ntbl.bank1k[2] = &ntbl.data[0];\
-	ntbl.bank1k[1] = ntbl.bank1k[3] = &ntbl.data[0x0400]
+	ntbl.bank_1k[0] = ntbl.bank_1k[2] = &ntbl.data[0];\
+	ntbl.bank_1k[1] = ntbl.bank_1k[3] = &ntbl.data[0x0400]
 #define mirroring_SCR0()\
 	mapper.mirroring = SINGLESCR0;\
-	ntbl.bank1k[0] = ntbl.bank1k[1] = &ntbl.data[0];\
-	ntbl.bank1k[2] = ntbl.bank1k[3] = &ntbl.data[0]
+	ntbl.bank_1k[0] = ntbl.bank_1k[1] = &ntbl.data[0];\
+	ntbl.bank_1k[2] = ntbl.bank_1k[3] = &ntbl.data[0]
 #define mirroring_SCR1()\
 	mapper.mirroring = SINGLESCR1;\
-	ntbl.bank1k[0] = ntbl.bank1k[1] = &ntbl.data[0x0400];\
-	ntbl.bank1k[2] = ntbl.bank1k[3] = &ntbl.data[0x0400]
+	ntbl.bank_1k[0] = ntbl.bank_1k[1] = &ntbl.data[0x0400];\
+	ntbl.bank_1k[2] = ntbl.bank_1k[3] = &ntbl.data[0x0400]
 #define mirroring_FSCR()\
 	mapper.mirroring = FOURSCR;\
-	ntbl.bank1k[0] = &ntbl.data[0];\
-	ntbl.bank1k[1] = &ntbl.data[0x0400];\
-	ntbl.bank1k[2] = &ntbl.data[0x0800];\
-	ntbl.bank1k[3] = &ntbl.data[0x0C00]
+	ntbl.bank_1k[0] = &ntbl.data[0];\
+	ntbl.bank_1k[1] = &ntbl.data[0x0400];\
+	ntbl.bank_1k[2] = &ntbl.data[0x0800];\
+	ntbl.bank_1k[3] = &ntbl.data[0x0C00]
 #define mirroring_SCR0x1_SCR1x3()\
 	mapper.mirroring = SCR0x1_SCR1x3;\
-	ntbl.bank1k[0] = &ntbl.data[0];\
-	ntbl.bank1k[1] = \
-	ntbl.bank1k[2] = \
-	ntbl.bank1k[3] = &ntbl.data[0x0400]
+	ntbl.bank_1k[0] = &ntbl.data[0];\
+	ntbl.bank_1k[1] = \
+	ntbl.bank_1k[2] = \
+	ntbl.bank_1k[3] = &ntbl.data[0x0400]
 #define mirroring_SCR0x3_SCR1x1()\
 	mapper.mirroring = SCR0x3_SCR1x1;\
-	ntbl.bank1k[0] = \
-	ntbl.bank1k[1] = \
-	ntbl.bank1k[2] = &ntbl.data[0];\
-	ntbl.bank1k[3] = &ntbl.data[0x0400]
+	ntbl.bank_1k[0] = \
+	ntbl.bank_1k[1] = \
+	ntbl.bank_1k[2] = &ntbl.data[0];\
+	ntbl.bank_1k[3] = &ntbl.data[0x0400]
 
-#define prgRamPlusSize() info.prgRamPlus8kCount << 13
-#define chrRamSize() info.chrRom8kCount << 13
+#define prg_ram_plus_size() info.prg_ram_plus_8k_count << 13
+#define chr_ram_size() info.chr_rom_8k_count << 13
 
 struct _mmcpu {
-	BYTE ram[0x800];  // Mirrored four times
+	BYTE ram[0x800];   // Mirrored four times
 } mmcpu;
 struct _prg {
 	BYTE *rom;
-	BYTE *rom8k[4];   // 8k pages (0x2000)
+	BYTE *rom_8k[4];   // 8k pages (0x2000)
 
-	BYTE *ram;        // Non Battery RAM
+	BYTE *ram;         // Non Battery RAM
 
-	BYTE *ramPlus;    // PRG Ram extra
-	BYTE *ramPlus8k;
-	BYTE *ramBattery; // Battery RAM
+	BYTE *ram_plus;    // PRG Ram extra
+	BYTE *ram_plus_8k;
+	BYTE *ram_battery; // Battery RAM
 } prg;
 struct _chr {
 	BYTE *data;
-	BYTE *bank1k[8];
+	BYTE *bank_1k[8];
 } chr;
 struct _nametables {
 	BYTE data[0x1000];
-	BYTE *bank1k[4];
+	BYTE *bank_1k[4];
 } ntbl;
 struct _palette {
 	BYTE color[0x20];
@@ -76,7 +76,7 @@ struct _oam {
 	BYTE data[256];
 	BYTE *element[64];
 	BYTE plus[32];
-	BYTE *elementPlus[8];
+	BYTE *ele_plus[8];
 } oam;
 
 #endif /* MEMMAP_H_ */

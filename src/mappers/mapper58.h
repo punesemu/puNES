@@ -10,7 +10,7 @@
 
 #include "common.h"
 
-void mapInit_58(void);
+void map_init_58(void);
 void extcl_cpu_wr_mem_58(WORD address, BYTE value);
 
 #endif /* MAPPER58_H_ */

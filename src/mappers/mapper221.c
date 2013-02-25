@@ -13,22 +13,22 @@
 #define m221prg16kswap()\
 	value = ((m221.reg[0] >> 1) & 0x38) | ((m221.reg[0] & 0x01) ? (m221.reg[0] & 0x80) ?\
 		m221.reg[1] : (m221.reg[1] & 0x06) : m221.reg[1]);\
-   	controlBank(prgRom16kMax)\
-	mapPrgRom8k(2, 0, value);\
+   	control_bank(prgRom16kMax)\
+	map_prg_rom_8k(2, 0, value);\
 	value = ((m221.reg[0] >> 1) & 0x38) | ((m221.reg[0] & 0x01) ? (m221.reg[0] & 0x80) ?\
 		0x07 : (m221.reg[1] & 0x06) | 0x1 : m221.reg[1]);\
-   	controlBank(prgRom16kMax)\
-	mapPrgRom8k(2, 2, value)
+   	control_bank(prgRom16kMax)\
+	map_prg_rom_8k(2, 2, value)
 
 WORD prgRom16kMax;
 
-void mapInit_221(void) {
-	prgRom16kMax = info.prgRom16kCount - 1;
+void map_init_221(void) {
+	prgRom16kMax = info.prg_rom_16k_count - 1;
 
 	EXTCL_CPU_WR_MEM(221);
 	EXTCL_SAVE_MAPPER(221);
-	mapper.intStruct[0] = (BYTE *) &m221;
-	mapper.intStructSize[0] = sizeof(m221);
+	mapper.internal_struct[0] = (BYTE *) &m221;
+	mapper.internal_struct_size[0] = sizeof(m221);
 
 	if (info.reset >= HARD) {
 		memset(&m221, 0x00, sizeof(m221));
@@ -69,7 +69,7 @@ void extcl_cpu_wr_mem_221(WORD address, BYTE value) {
 			m221prg16kswap();
 			break;
 	}
-	mapPrgRom8kUpdate();
+	map_prg_rom_8k_update();
 }
 BYTE extcl_save_mapper_221(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, m221.reg);

@@ -22,7 +22,7 @@ struct _txrom {
 	BYTE chrRam[0x2000];
 } txrom;
 
-void mapInit_TxROM(BYTE model);
+void map_init_TxROM(BYTE model);
 
 void extcl_cpu_wr_mem_TKSROM(WORD address, BYTE value);
 

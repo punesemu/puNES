@@ -10,8 +10,8 @@
 
 WORD prgRom16kMax;
 
-void mapInit_UxROM(BYTE model) {
-	prgRom16kMax = info.prgRom16kCount - 1;
+void map_init_UxROM(BYTE model) {
+	prgRom16kMax = info.prg_rom_16k_count - 1;
 
 	switch (model) {
 		case UNLROM:
@@ -31,30 +31,30 @@ void mapInit_UxROM(BYTE model) {
 
 void extcl_cpu_wr_mem_UxROM(WORD address, BYTE value) {
 	/* bus conflict */
-	value &= prgRomRd(address);
+	value &= prg_rom_rd(address);
 
-	controlBankWithAND(0x0F, prgRom16kMax)
-	mapPrgRom8k(2, 0, value);
-	mapPrgRom8kUpdate();
+	control_bank_with_AND(0x0F, prgRom16kMax)
+	map_prg_rom_8k(2, 0, value);
+	map_prg_rom_8k_update();
 }
 
 void extcl_cpu_wr_mem_Unl1xROM(WORD address, BYTE value) {
 	/* bus conflict */
-	value = (value & prgRomRd(address)) >> 2;
+	value = (value & prg_rom_rd(address)) >> 2;
 
-	controlBankWithAND(0x0F, prgRom16kMax)
-	mapPrgRom8k(2, 0, value);
-	mapPrgRom8kUpdate();
+	control_bank_with_AND(0x0F, prgRom16kMax)
+	map_prg_rom_8k(2, 0, value);
+	map_prg_rom_8k_update();
 }
 
 void extcl_cpu_wr_mem_UNROM_180(WORD address, BYTE value) {
-	controlBank(prgRom16kMax)
-	mapPrgRom8k(2, 2, value);
-	mapPrgRom8kUpdate();
+	control_bank(prgRom16kMax)
+	map_prg_rom_8k(2, 2, value);
+	map_prg_rom_8k_update();
 }
 
 void extcl_cpu_wr_mem_UnlROM(WORD address, BYTE value) {
-	controlBankWithAND(0x0F, prgRom16kMax)
-	mapPrgRom8k(2, 0, value);
-	mapPrgRom8kUpdate();
+	control_bank_with_AND(0x0F, prgRom16kMax)
+	map_prg_rom_8k(2, 0, value);
+	map_prg_rom_8k_update();
 }

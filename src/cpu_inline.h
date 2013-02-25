@@ -91,9 +91,9 @@ static BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 			tick_hw(1);
 		}
 		/* leggo */
-		cpu.openbus = prgRomRd(address);
+		cpu.openbus = prg_rom_rd(address);
 
-		if (info.mapperExtendRead) {
+		if (info.mapper_extend_rd) {
 			cpu.openbus = extcl_cpu_rd_mem(address, cpu.openbus, before);
 		}
 
@@ -179,10 +179,10 @@ static BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 				 * la utilizzo, altrimenti leggo dalla PRG
 				 * Ram normale.
 				 */
-				if (!prg.ramPlus) {
+				if (!prg.ram_plus) {
 					cpu.openbus = prg.ram[address & 0x1FFF];
 				} else {
-					cpu.openbus = prg.ramPlus8k[address & 0x1FFF];
+					cpu.openbus = prg.ram_plus_8k[address & 0x1FFF];
 				}
 			}
 		}
@@ -659,14 +659,14 @@ static void cpu_wr_mem(WORD address, BYTE value) {
 				 * la utilizzo, altrimenti uso la PRG Ram
 				 * normale.
 				 */
-				if (!prg.ramPlus) {
+				if (!prg.ram_plus) {
 					prg.ram[address & 0x1FFF] = value;
 				} else {
-					prg.ramPlus8k[address & 0x1FFF] = value;
+					prg.ram_plus_8k[address & 0x1FFF] = value;
 				}
 			}
 		}
-		if (info.mapperExtendWrite) {
+		if (info.mapper_extend_wr) {
 			/*
 			 * utilizzato dalle mappers :
 			 * Active
@@ -700,14 +700,14 @@ static void INLINE ppu_wr_mem(WORD address, BYTE value) {
 			extcl_wr_chr(address, value);
 			return;
 		}
-		if (mapper.writeVRAM) {
-			chr.bank1k[address >> 10][address & 0x3FF] = value;
+		if (mapper.write_vram) {
+			chr.bank_1k[address >> 10][address & 0x3FF] = value;
 		}
 		return;
 	}
 	if (address < 0x3F00) {
 		address &= 0x0FFF;
-		ntbl.bank1k[address >> 10][address & 0x3FF] = value;
+		ntbl.bank_1k[address >> 10][address & 0x3FF] = value;
 		return;
 	}
 	address &= 0x1F;

@@ -16,11 +16,11 @@ struct _m60 {
 	BYTE index;
 } m60;
 
-void mapInit_60(void);
+void map_init_60(void);
 void extcl_cpu_wr_mem_60(WORD address, BYTE value);
 BYTE extcl_save_mapper_60(BYTE mode, BYTE slot, FILE *fp);
 
-void mapInit_60_vt5201(void);
+void map_init_60_vt5201(void);
 void extcl_cpu_wr_mem_60_vt5201(WORD address, BYTE value);
 
 #endif /* MAPPER60_H_ */

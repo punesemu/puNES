@@ -16,7 +16,7 @@ enum {
 	HENFANKONG = 4
 };
 
-void mapInit_Hen(BYTE model);
+void map_init_Hen(BYTE model);
 
 void extcl_cpu_wr_mem_Hen_177(WORD address, BYTE value);
 

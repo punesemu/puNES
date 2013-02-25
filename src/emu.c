@@ -87,9 +87,9 @@ BYTE emuLoop(void) {
 		if (!(info.no_rom | info.pause)) {
 
 			/* riprendo a far correre la CPU */
-			info.executeCPU = TRUE;
+			info.execute_cpu = TRUE;
 
-			while (info.executeCPU) {
+			while (info.execute_cpu) {
 #ifdef DEBUG
 				if (cpu.PC == PCBREAK) {
 					BYTE pippo = 5;
@@ -164,27 +164,27 @@ BYTE emuLoadRom(void) {
 	elaborate_rom_file: info.no_rom = FALSE;
 
 	fdsQuit();
-	mapQuit();
+	map_quit();
 
-	if (info.loadRomFile[0]) {
-		strncpy(info.romFile, info.loadRomFile, sizeof(info.romFile));
-		memset(info.loadRomFile, 0, sizeof(info.loadRomFile));
+	if (info.load_rom_file[0]) {
+		strncpy(info.rom_file, info.load_rom_file, sizeof(info.rom_file));
+		memset(info.load_rom_file, 0, sizeof(info.load_rom_file));
 	}
 
-	if (info.romFile[0]) {
-		sprintf(name_file, "%s", basename(info.romFile));
+	if (info.rom_file[0]) {
+		sprintf(name_file, "%s", basename(info.rom_file));
 
 		/* salvo l'estensione del file */
 		strcpy(ext, strrchr(name_file, '.'));
 
 		if (!(strcasecmp(ext, ".fds")) || !(strcasecmp(ext, ".FDS"))) {
 			if (fds_load_rom()) {
-				info.romFile[0] = 0;
+				info.rom_file[0] = 0;
 				goto elaborate_rom_file;
 			}
 		} else if (!(strcasecmp(ext, ".fm2")) || !(strcasecmp(ext, ".FM2"))) {
-			tasFile(ext, info.romFile);
-			if (!info.romFile[0]) {
+			tasFile(ext, info.rom_file);
+			if (!info.rom_file[0]) {
 				textAddLineInfo(1, "[red]error on loading rom");
 				fprintf(stderr, "error on loading rom\n");
 			}
@@ -193,7 +193,7 @@ BYTE emuLoadRom(void) {
 		} else {
 			/* carico la rom in memoria */
 			if (ines_load_rom()) {
-				info.romFile[0] = 0;
+				info.rom_file[0] = 0;
 				textAddLineInfo(1, "[red]error on loading rom");
 				fprintf(stderr, "error on loading rom\n");
 				goto elaborate_rom_file;
@@ -201,11 +201,11 @@ BYTE emuLoadRom(void) {
 		}
 	} else if (info.gui) {
 
-		info.chrRom8kCount = info.prgRom16kCount = 1;
+		info.chr_rom_8k_count = info.prg_rom_16k_count = 1;
 
-		info.prgRom8kCount = info.prgRom16kCount * 2;
-		info.chrRom4kCount = info.chrRom8kCount * 2;
-		info.chrRom1kCount = info.chrRom4kCount * 4;
+		info.prg_rom_8k_count = info.prg_rom_16k_count * 2;
+		info.chr_rom_4k_count = info.chr_rom_8k_count * 2;
+		info.chr_rom_1k_count = info.chr_rom_4k_count * 4;
 
 		/* PRG Ram */
 		if (!(prg.ram = malloc(0x2000))) {
@@ -214,8 +214,8 @@ BYTE emuLoadRom(void) {
 		}
 
 		/* PRG Rom */
-		if ((prg.rom = malloc(info.prgRom16kCount * (16 * 1024)))) {
-			memset(prg.rom, 0xEA, info.prgRom16kCount * (16 * 1024));
+		if ((prg.rom = malloc(info.prg_rom_16k_count * (16 * 1024)))) {
+			memset(prg.rom, 0xEA, info.prg_rom_16k_count * (16 * 1024));
 		} else {
 			fprintf(stderr, "Out of memory\n");
 			return (EXIT_ERROR);
@@ -225,9 +225,9 @@ BYTE emuLoadRom(void) {
 	}
 
 	if (cfg->mode == AUTO) {
-		if (info.machineDb == PAL) {
+		if (info.machine_db == PAL) {
 			machine = machinedb[PAL - 1];
-		} else if (info.machineDb == DENDY) {
+		} else if (info.machine_db == DENDY) {
 			machine = machinedb[DENDY - 1];
 		} else {
 			machine = machinedb[NTSC - 1];
@@ -247,8 +247,8 @@ BYTE emuSearchInDatabase(FILE *fp) {
 	WORD i;
 
 	/* setto i default prima della ricerca */
-	info.machineDb = info.machine = 0;
-	info.mapperType = info.id = DEFAULT;
+	info.machine_db = info.machine = 0;
+	info.mapper_type = info.id = DEFAULT;
 
 	/* posiziono il puntatore del file */
 	if (info.trainer) {
@@ -258,30 +258,30 @@ BYTE emuSearchInDatabase(FILE *fp) {
 	}
 
 	/* mi alloco una zona di memoria dove leggere la PRG Rom */
-	sha1prg = malloc(info.prgRom16kCount * (16 * 1024));
+	sha1prg = malloc(info.prg_rom_16k_count * (16 * 1024));
 	if (!sha1prg) {
 		fprintf(stderr, "Out of memory\n");
 		return (EXIT_ERROR);
 	}
 	/* leggo dal file la PRG Rom */
-	if (fread(&sha1prg[0], (16 * 1024), info.prgRom16kCount, fp) < info.prgRom16kCount) {
+	if (fread(&sha1prg[0], (16 * 1024), info.prg_rom_16k_count, fp) < info.prg_rom_16k_count) {
 		fprintf(stderr, "Error on read prg\n");
 		free(sha1prg);
 		return (EXIT_ERROR);
 	}
 	/* calcolo l'sha1 della PRG Rom */
-	sha1_csum(sha1prg, info.prgRom16kCount * (16 * 1024), info.sha1sum, info.sha1sumString, LOWER);
+	sha1_csum(sha1prg, info.prg_rom_16k_count * (16 * 1024), info.sha1sum, info.sha1sum_string, LOWER);
 	/* libero la memoria */
 	free(sha1prg);
 	/* cerco nel database */
 	for (i = 0; i < LENGTH(dblist); i++) {
-		if (!(memcmp(dblist[i].sha1sum, info.sha1sumString, 40))) {
+		if (!(memcmp(dblist[i].sha1sum, info.sha1sum_string, 40))) {
 			info.mapper = dblist[i].mapper;
-			info.mapperType = dblist[i].type;
+			info.mapper_type = dblist[i].type;
 			info.id = dblist[i].id;
 			info.machine = dblist[i].machine;
 			if (info.machine != DEFAULT) {
-				info.machineDb = info.machine;
+				info.machine_db = info.machine;
 			}
 			switch (info.mapper) {
 				case 2:
@@ -290,8 +290,8 @@ BYTE emuSearchInDatabase(FILE *fp) {
 					 * che ha l'header INES non corretto.
 					 */
 					if (info.id == BADINESBOTBE) {
-						info.prgRom16kCount = 16;
-						info.chrRom8kCount = 0;
+						info.prg_rom_16k_count = 16;
+						info.chr_rom_8k_count = 0;
 					}
 					break;
 				case 7:
@@ -300,36 +300,36 @@ BYTE emuSearchInDatabase(FILE *fp) {
 					 * che ha l'header INES non corretto.
 					 */
 					if (info.id == BADINESWWFWE) {
-						info.prgRom16kCount = 8;
-						info.chrRom8kCount = 0;
+						info.prg_rom_16k_count = 8;
+						info.chr_rom_8k_count = 0;
 					}
 					break;
 				case 10:
 					/* Fix per Famicom Wars (J) [!] che ha l'header INES errato */
 					if (info.id == BADINESFWJ) {
-						info.chrRom8kCount = 8;
+						info.chr_rom_8k_count = 8;
 					}
 					break;
 				case 11:
 					/* Fix per King Neptune's Adventure (Color Dreams) [!]
 					 * che ha l'header INES errato */
 					if (info.id == BADKINGNEPT) {
-						info.prgRom16kCount = 4;
-						info.chrRom8kCount = 4;
+						info.prg_rom_16k_count = 4;
+						info.chr_rom_8k_count = 4;
 					}
 					break;
 				case 33:
 					if (info.id == BADINEFLINJ) {
-						info.chrRom8kCount = 32;
+						info.chr_rom_8k_count = 32;
 					}
 					break;
 				case 96:
-					info.chrRom8kCount = 4;
-					mapper.writeVRAM = TRUE;
+					info.chr_rom_8k_count = 4;
+					mapper.write_vram = TRUE;
 					break;
 				case 191:
 					if (info.id == BADSUGOROQUEST) {
-						info.chrRom8kCount = 16;
+						info.chr_rom_8k_count = 16;
 					}
 					break;
 				case 235:
@@ -341,39 +341,39 @@ BYTE emuSearchInDatabase(FILE *fp) {
 					 * 150-in-1 [a1][p1][!].nes ha lo stesso chsum del 260-in-1 [p1][b1].nes
 					 * ma ha un numero di prgRom16kCount di 127.
 					 */
-					if (!info.prgRom16kCount) {
-						info.prgRom16kCount = 256;
+					if (!info.prg_rom_16k_count) {
+						info.prg_rom_16k_count = 256;
 					}
 					break;
 			}
-			if (info.mapperType == UNKVERTICAL) {
+			if (info.mapper_type == UNKVERTICAL) {
 				mirroring_V();
 			}
-			if (info.mapperType == UNKHORIZONTAL) {
+			if (info.mapper_type == UNKHORIZONTAL) {
 				mirroring_H();
 			}
 			break;
 		}
 	}
 	/* calcolo anche l'sha1 della CHR rom */
-	if (info.chrRom8kCount) {
+	if (info.chr_rom_8k_count) {
 		BYTE *sha1chr;
 
 		/* mi alloco una zona di memoria dove leggere la CHR Rom */
-		sha1chr = malloc(info.chrRom8kCount * (8 * 1024));
+		sha1chr = malloc(info.chr_rom_8k_count * (8 * 1024));
 		if (!sha1chr) {
 			fprintf(stderr, "Out of memory\n");
 			return (EXIT_ERROR);
 		}
 		/* leggo dal file la CHR Rom */
-		if (fread(&sha1chr[0], (8 * 1024), info.chrRom8kCount, fp) < info.chrRom8kCount) {
+		if (fread(&sha1chr[0], (8 * 1024), info.chr_rom_8k_count, fp) < info.chr_rom_8k_count) {
 			fprintf(stderr, "Error on read chr\n");
 			free(sha1chr);
 			return (EXIT_ERROR);
 		}
 		/* calcolo l'sha1 della CHR Rom */
-		sha1_csum(sha1chr, info.chrRom8kCount * (8 * 1024), info.sha1sumChr, info.sha1sumStringChr,
-				LOWER);
+		sha1_csum(sha1chr, info.chr_rom_8k_count * (8 * 1024), info.sha1sum_chr,
+		        info.sha1sum_string_chr, LOWER);
 		/* libero la memoria */
 		free(sha1chr);
 	}
@@ -412,9 +412,9 @@ void emuSetTitle(char *title) {
 
 #ifndef RELEASE
 	if (cfg->scale != X1) {
-		char mapperType[10];
-		sprintf(mapperType, ", %d", info.mapper);
-		strcat(title, mapperType);
+		char mapper_type[10];
+		sprintf(mapper_type, ", %d", info.mapper);
+		strcat(title, mapper_type);
 	}
 #endif
 
@@ -458,7 +458,7 @@ BYTE emuTurnON(void) {
 	}
 
 	/* ...nonche' dei puntatori alla PRG Rom... */
-	mapPrgRom8kReset();
+	map_prg_rom_8k_reset();
 
 	cfg_file_pgs_parse();
 
@@ -477,7 +477,7 @@ BYTE emuTurnON(void) {
 	 * ...e inizializzazione della mapper (che
 	 * deve necessariamente seguire quella della PPU.
 	 */
-	if (mapInit(info.mapper)) {
+	if (map_init(info.mapper)) {
 		return (EXIT_ERROR);
 	}
 
@@ -564,10 +564,10 @@ BYTE emuReset(BYTE type) {
 		gfxSetScreen(NOCHANGE, NOCHANGE, NOCHANGE, NOCHANGE, TRUE);
 	}
 
-	chrBank1kReset();
+	chr_bank_1k_reset();
 
 	if (info.reset >= HARD) {
-		mapPrgRom8kReset();
+		map_prg_rom_8k_reset();
 	}
 
 	/* APU */
@@ -582,7 +582,7 @@ BYTE emuReset(BYTE type) {
 	cpu_turn_on();
 
 	/* mapper */
-	if (mapInit(info.mapper)) {
+	if (map_init(info.mapper)) {
 		return (EXIT_ERROR);
 	}
 
@@ -637,7 +637,7 @@ void emuQuit(BYTE exitCode) {
 		cfg_file_save();
 	}
 
-	mapQuit();
+	map_quit();
 
 	fdsQuit();
 	ppuQuit();

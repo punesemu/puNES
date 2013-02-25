@@ -148,23 +148,23 @@ void guiInit(int argc, char **argv) {
 		}
 
 		if (info.portable) {
-			char path[sizeof(info.baseFolder)], *dname;
+			char path[sizeof(info.base_folder)], *dname;
 			DWORD length = GetModuleFileName(NULL, (LPSTR) &path, sizeof(path));
 
 			if (length == 0) {
 				fprintf(stderr, "INFO: Error resolving exe path.\n");
 				info.portable = FALSE;
-			} else if (length == sizeof(info.baseFolder)) {
+			} else if (length == sizeof(info.base_folder)) {
 				fprintf(stderr, "INFO: Path too long. Truncated.\n");
 				info.portable = FALSE;
 			}
 
 			dname = dirname(path);
-			strcpy(info.baseFolder, dname);
+			strcpy(info.base_folder, dname);
 		}
 
 		if (!info.portable) {
-			sprintf(info.baseFolder, "%s/%s", gui.home, NAME);
+			sprintf(info.base_folder, "%s/%s", gui.home, NAME);
 		}
 	}
 
@@ -1268,12 +1268,12 @@ long __stdcall mainWinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 			break;
 		}
 		case WM_DROPFILES: {
-			TCHAR szFile[sizeof(info.loadRomFile)];
+			TCHAR szFile[sizeof(info.load_rom_file)];
 			HDROP hDrop = (HDROP) wParam;
-			int i = 0, count = DragQueryFile(hDrop, 0xFFFFFFFF, szFile, sizeof(info.loadRomFile));
+			int i = 0, count = DragQueryFile(hDrop, 0xFFFFFFFF, szFile, sizeof(info.load_rom_file));
 
 			for (i = 0; i < count; i++) {
-				DragQueryFile(hDrop, i, szFile, sizeof(info.loadRomFile));
+				DragQueryFile(hDrop, i, szFile, sizeof(info.load_rom_file));
 			}
 
 			DragFinish(hDrop);
@@ -1945,7 +1945,7 @@ void make_reset(BYTE type) {
 	if (type == HARD) {
 		if (cfg->gamegenie && gamegenie.rom_present) {
 			if (info.mapper != GAMEGENIE_MAPPER) {
-				strcpy(info.loadRomFile, info.romFile);
+				strcpy(info.load_rom_file, info.rom_file);
 			}
 			gamegenie_reset(TRUE);
 			type = CHANGEROM;
@@ -1983,9 +1983,9 @@ void set_mode(BYTE newmode) {
 			machine = machinedb[newmode - 1];
 			break;
 		case AUTO:
-			if (info.machineDb == PAL) {
+			if (info.machine_db == PAL) {
 				machine = machinedb[PAL - 1];
-			} else if (info.machineDb == DENDY) {
+			} else if (info.machine_db == DENDY) {
 				machine = machinedb[DENDY - 1];
 			} else {
 				machine = machinedb[NTSC - 1];
@@ -1996,8 +1996,8 @@ void set_mode(BYTE newmode) {
 			 * io sono gia' nella modalita' NTSC (appunto quella di default), allora
 			 * non devo fare nessun reset.
 			 */
-			if ((cfg->mode == info.machineDb)
-			        || ((cfg->mode == NTSC) && ((info.machineDb < NTSC) || (info.machineDb > DENDY)))) {
+			if ((cfg->mode == info.machine_db)
+			        || ((cfg->mode == NTSC) && ((info.machine_db < NTSC) || (info.machine_db > DENDY)))) {
 				reset = FALSE;
 			}
 			cfg->mode = AUTO;
@@ -2366,7 +2366,7 @@ void fds_select_side(int side) {
 	guiUpdate();
 }
 void change_rom(char *rom) {
-	strcpy(info.loadRomFile, rom);
+	strcpy(info.load_rom_file, rom);
 	/*
 	 * nascondo la finestra perche' la nuova rom potrebbe
 	 * avere una configurazione dell'overscan diversa da quella

@@ -10,7 +10,7 @@
 
 #include "common.h"
 
-void mapInit_74x138x161(void);
+void map_init_74x138x161(void);
 void extcl_cpu_wr_mem_74x138x161(WORD address, BYTE value);
 
 #endif /* MAPPER74X138X161_H_ */

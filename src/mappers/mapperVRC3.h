@@ -19,7 +19,7 @@ struct _vrc3 {
 	WORD count;
 } vrc3;
 
-void mapInit_VRC3(void);
+void map_init_VRC3(void);
 void extcl_cpu_wr_mem_VRC3(WORD address, BYTE value);
 BYTE extcl_save_mapper_VRC3(BYTE mode, BYTE slot, FILE *fp);
 void extcl_cpu_every_cycle_VRC3(void);

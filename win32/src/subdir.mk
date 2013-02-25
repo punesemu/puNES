@@ -9,7 +9,7 @@ C_SRCS += \
 ../src/blip_buf.c \
 ../src/cfg_file.c \
 ../src/cmd_line.c \
-../src/cpu6502.c \
+../src/cpu.c \
 ../src/emu.c \
 ../src/external_calls.c \
 ../src/fds.c \
@@ -37,7 +37,7 @@ OBJS += \
 ./src/blip_buf.o \
 ./src/cfg_file.o \
 ./src/cmd_line.o \
-./src/cpu6502.o \
+./src/cpu.o \
 ./src/emu.o \
 ./src/external_calls.o \
 ./src/fds.o \
@@ -65,7 +65,7 @@ C_DEPS += \
 ./src/blip_buf.d \
 ./src/cfg_file.d \
 ./src/cmd_line.d \
-./src/cpu6502.d \
+./src/cpu.d \
 ./src/emu.d \
 ./src/external_calls.d \
 ./src/fds.d \

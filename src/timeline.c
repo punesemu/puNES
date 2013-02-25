@@ -92,7 +92,7 @@ void timelineSnap(BYTE mode) {
 	BYTE snap = 0;
 
 	/* se non ci sono rom caricate, non faccio niente */
-	if (!info.romFile[0]) {
+	if (!info.rom_file[0]) {
 		return;
 	}
 
@@ -200,12 +200,12 @@ void tlOperation(BYTE mode, BYTE snap) {
 	} else {
 		onMem(mode, prg.ram, 0x2000);
 	}
-	if (prg.ramPlus) {
-		onMem(mode, prg.ramPlus, prgRamPlusSize());
+	if (prg.ram_plus) {
+		onMem(mode, prg.ram_plus, prg_ram_plus_size());
 	}
 	onStruct(mode, chr);
-	if (mapper.writeVRAM) {
-		onMem(mode, chr.data, chrRamSize());
+	if (mapper.write_vram) {
+		onMem(mode, chr.data, chr_ram_size());
 	}
 	onStruct(mode, ntbl);
 	onStruct(mode, palette);
@@ -213,9 +213,9 @@ void tlOperation(BYTE mode, BYTE snap) {
 
 	/* mapper */
 	onStruct(mode, mapper);
-	for (i = 0; i < LENGTH(mapper.intStruct); i++) {
-		if (mapper.intStruct[i]) {
-			onMem(mode, mapper.intStruct[i], mapper.intStructSize[i]);
+	for (i = 0; i < LENGTH(mapper.internal_struct); i++) {
+		if (mapper.internal_struct[i]) {
+			onMem(mode, mapper.internal_struct[i], mapper.internal_struct_size[i]);
 		}
 	}
 

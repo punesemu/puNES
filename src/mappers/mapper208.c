@@ -50,11 +50,11 @@ static const BYTE vlu208[256] = {
 
 WORD prgRom32kMax, prgRom8kMax, prgRom8kBeforeLast, chrRom1kMax;
 
-void mapInit_208(void) {
-	prgRom32kMax = (info.prgRom16kCount >> 1) - 1;
-	prgRom8kMax = info.prgRom8kCount - 1;
-	chrRom1kMax = info.chrRom1kCount - 1;
-	prgRom8kBeforeLast = info.prgRom8kCount - 2;
+void map_init_208(void) {
+	prgRom32kMax = (info.prg_rom_16k_count >> 1) - 1;
+	prgRom8kMax = info.prg_rom_8k_count - 1;
+	chrRom1kMax = info.chr_rom_1k_count - 1;
+	prgRom8kBeforeLast = info.prg_rom_8k_count - 2;
 
 	EXTCL_CPU_WR_MEM(208);
 	EXTCL_CPU_RD_MEM(208);
@@ -65,12 +65,12 @@ void mapInit_208(void) {
 	EXTCL_PPU_256_TO_319(MMC3);
 	EXTCL_PPU_320_TO_34X(MMC3);
 	EXTCL_UPDATE_R2006(MMC3);
-	mapper.intStruct[0] = (BYTE *) &m208;
-	mapper.intStructSize[0] = sizeof(m208);
-	mapper.intStruct[1] = (BYTE *) &mmc3;
-	mapper.intStructSize[1] = sizeof(mmc3);
+	mapper.internal_struct[0] = (BYTE *) &m208;
+	mapper.internal_struct_size[0] = sizeof(m208);
+	mapper.internal_struct[1] = (BYTE *) &mmc3;
+	mapper.internal_struct_size[1] = sizeof(mmc3);
 
-	info.mapperExtendWrite = TRUE;
+	info.mapper_extend_wr = TRUE;
 
 	if (info.reset >= HARD) {
 		memset(&m208, 0x00, sizeof(m208));
@@ -98,9 +98,9 @@ void extcl_cpu_wr_mem_208(WORD address, BYTE value) {
 	switch (address & 0xF800) {
 		case 0x4800:
 			value = ((value >> 3) & 0x02) | (value & 0x01);
-			controlBank(prgRom32kMax)
-			mapPrgRom8k(4, 0, value);
-			mapPrgRom8kUpdate();
+			control_bank(prgRom32kMax)
+			map_prg_rom_8k(4, 0, value);
+			map_prg_rom_8k_update();
 			return;
 		case 0x5000:
 			m208.ctrl = value;

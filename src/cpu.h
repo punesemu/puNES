@@ -36,8 +36,8 @@
 		cpu.PC = (prg.rom[(INT_RESET + 1) & 0x1FFF] << 8) |\
 				prg.rom[INT_RESET & 0x1FFF];\
 	} else {\
-		cpu.PC = (prg.rom8k[((INT_RESET + 1) >> 13) & 0x03][(INT_RESET + 1) & 0x1FFF] << 8)\
-				| prg.rom8k[(INT_RESET >> 13) & 0x03][INT_RESET & 0x1FFF];\
+		cpu.PC = (prg.rom_8k[((INT_RESET + 1) >> 13) & 0x03][(INT_RESET + 1) & 0x1FFF] << 8)\
+				| prg.rom_8k[(INT_RESET >> 13) & 0x03][INT_RESET & 0x1FFF];\
 	}
 
 typedef struct {

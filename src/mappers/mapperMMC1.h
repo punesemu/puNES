@@ -31,7 +31,7 @@ struct _mmc1 {
 	BYTE prgUpper;
 } mmc1;
 
-void mapInit_MMC1(void);
+void map_init_MMC1(void);
 void extcl_cpu_wr_mem_MMC1(WORD address, BYTE value);
 BYTE extcl_save_mapper_MMC1(BYTE mode, BYTE slot, FILE *fp);
 

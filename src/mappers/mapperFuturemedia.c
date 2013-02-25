@@ -14,9 +14,9 @@
 
 WORD prgRom8kMax, chrRom1kMax;
 
-void mapInit_Futuremedia(void) {
-	prgRom8kMax = info.prgRom8kCount - 1;
-	chrRom1kMax = info.chrRom1kCount - 1;
+void map_init_Futuremedia(void) {
+	prgRom8kMax = info.prg_rom_8k_count - 1;
+	chrRom1kMax = info.chr_rom_1k_count - 1;
 
 	EXTCL_CPU_WR_MEM(Futuremedia);
 	EXTCL_SAVE_MAPPER(Futuremedia);
@@ -27,8 +27,8 @@ void mapInit_Futuremedia(void) {
 	EXTCL_UPDATE_R2006(MMC3);
 	EXTCL_IRQ_A12_CLOCK(Futuremedia);
 	EXTCL_CPU_EVERY_CYCLE(Futuremedia);
-	mapper.intStruct[0] = (BYTE *) &futuremedia;
-	mapper.intStructSize[0] = sizeof(futuremedia);
+	mapper.internal_struct[0] = (BYTE *) &futuremedia;
+	mapper.internal_struct_size[0] = sizeof(futuremedia);
 
 	memset(&futuremedia, 0x00, sizeof(futuremedia));
 	memset(&irqA12, 0x00, sizeof(irqA12));
@@ -41,9 +41,9 @@ void extcl_cpu_wr_mem_Futuremedia(WORD address, BYTE value) {
 		case 0x8001:
 		case 0x8002:
 		case 0x8003:
-			controlBank(prgRom8kMax)
-			mapPrgRom8k(1, address & 0x0003, value);
-			mapPrgRom8kUpdate();
+			control_bank(prgRom8kMax)
+			map_prg_rom_8k(1, address & 0x0003, value);
+			map_prg_rom_8k_update();
 			return;
 		case 0xA000:
 		case 0xA001:
@@ -53,8 +53,8 @@ void extcl_cpu_wr_mem_Futuremedia(WORD address, BYTE value) {
 		case 0xA005:
 		case 0xA006:
 		case 0xA007:
-			controlBank(chrRom1kMax)
-			chr.bank1k[address & 0x0007] = &chr.data[value << 10];
+			control_bank(chrRom1kMax)
+			chr.bank_1k[address & 0x0007] = &chr.data[value << 10];
 			return;
 		case 0xC001:
 			irqA12.reload = value;

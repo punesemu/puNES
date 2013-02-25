@@ -34,7 +34,7 @@ struct _iremLROG017 {
 	BYTE chrRam[0x1800];
 } iremLROG017;
 
-void mapInit_Irem(BYTE model);
+void map_init_Irem(BYTE model);
 
 void extcl_cpu_wr_mem_Irem_G101(WORD address, BYTE value);
 BYTE extcl_save_mapper_Irem_G101(BYTE mode, BYTE slot, FILE *fp);

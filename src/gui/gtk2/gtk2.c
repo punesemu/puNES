@@ -130,13 +130,13 @@ void guiInit(int argc, char **argv) {
 		}
 
 		if (info.portable) {
-			char path[sizeof(info.baseFolder)], *dname;
+			char path[sizeof(info.base_folder)], *dname;
 			int length = readlink("/proc/self/exe", path, sizeof(path));
 
 			if (length < 0) {
 				fprintf(stderr, "INFO: Error resolving symlink /proc/self/exe.\n");
 				info.portable = FALSE;
-			} else if (length >= sizeof(info.baseFolder)) {
+			} else if (length >= sizeof(info.base_folder)) {
 				fprintf(stderr, "INFO: Path too long. Truncated.\n");
 				info.portable = FALSE;
 			} else {
@@ -149,12 +149,12 @@ void guiInit(int argc, char **argv) {
 				}
 
 				dname = dirname(path);
-				strcpy(info.baseFolder, dname);
+				strcpy(info.base_folder, dname);
 			}
 		}
 
 		if (!info.portable) {
-			sprintf(info.baseFolder, "%s/.%s", gui.home, NAME);
+			sprintf(info.base_folder, "%s/.%s", gui.home, NAME);
 		}
  	}
 
@@ -780,8 +780,8 @@ void file_open(void) {
 	file_open_filter_add(dialog, "TAS movie files", "*.fm2;*.FM2");
 	file_open_filter_add(dialog, "All files", "*.*;");
 
-	if (info.romFile[0]) {
-		gui.last_state_path = g_path_get_dirname(info.romFile);
+	if (info.rom_file[0]) {
+		gui.last_state_path = g_path_get_dirname(info.rom_file);
 	} else {
 		gui.last_state_path = gui.home;
 	}
@@ -852,7 +852,7 @@ void make_reset(int type) {
 	if (type == HARD) {
 		if (cfg->gamegenie && gamegenie.rom_present) {
 			if (info.mapper != GAMEGENIE_MAPPER) {
-				strcpy(info.loadRomFile, info.romFile);
+				strcpy(info.load_rom_file, info.rom_file);
 			}
 			gamegenie_reset(TRUE);
 			type = CHANGEROM;
@@ -1121,7 +1121,7 @@ gboolean saveslot_key_press_event(GSignalInvocationHint *ihint, guint n_param_va
 	return (TRUE);
 }
 void change_rom(char *rom) {
-	strncpy(info.loadRomFile, rom, sizeof(info.loadRomFile));
+	strncpy(info.load_rom_file, rom, sizeof(info.load_rom_file));
 	gamegenie_reset(FALSE);
 	make_reset(CHANGEROM);
 	guiUpdate();

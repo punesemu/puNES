@@ -14,8 +14,8 @@
 
 #define chrRom1kUpdate(slot, mask, shift)\
 	value = (vrc4.chrRomBank[slot] & mask) | ((value & 0x0F) << shift);\
-	controlBank(chrRom1kMax)\
-	chr.bank1k[slot] = &chr.data[value << 10];\
+	control_bank(chrRom1kMax)\
+	chr.bank_1k[slot] = &chr.data[value << 10];\
 	vrc4.chrRomBank[slot] = value
 
 WORD prgRom8kMax, prgRom8kBeforeLast, chrRom1kMax;
@@ -31,16 +31,16 @@ const WORD tableVRC4[5][4] = {
 	{0x0000, 0x0001, 0x0002, 0x0003},
 };
 
-void mapInit_VRC4(BYTE revision) {
-	prgRom8kMax = info.prgRom8kCount - 1;
+void map_init_VRC4(BYTE revision) {
+	prgRom8kMax = info.prg_rom_8k_count - 1;
 	prgRom8kBeforeLast = prgRom8kMax - 1;
-	chrRom1kMax = info.chrRom1kCount - 1;
+	chrRom1kMax = info.chr_rom_1k_count - 1;
 
 	EXTCL_CPU_WR_MEM(VRC4);
 	EXTCL_SAVE_MAPPER(VRC4);
 	EXTCL_CPU_EVERY_CYCLE(VRC4);
-	mapper.intStruct[0] = (BYTE *) &vrc4;
-	mapper.intStructSize[0] = sizeof(vrc4);
+	mapper.internal_struct[0] = (BYTE *) &vrc4;
+	mapper.internal_struct_size[0] = sizeof(vrc4);
 
 	if (info.reset >= HARD) {
 		BYTE i;
@@ -72,15 +72,15 @@ void extcl_cpu_wr_mem_VRC4(WORD address, BYTE value) {
 
 	switch (address) {
 		case 0x8000:
-			controlBankWithAND(0x1F, prgRom8kMax)
-			mapPrgRom8k(1, vrc4.swapMode, value);
-			mapPrgRom8k(1, 0x02 >> vrc4.swapMode, prgRom8kBeforeLast);
-			mapPrgRom8kUpdate();
+			control_bank_with_AND(0x1F, prgRom8kMax)
+			map_prg_rom_8k(1, vrc4.swapMode, value);
+			map_prg_rom_8k(1, 0x02 >> vrc4.swapMode, prgRom8kBeforeLast);
+			map_prg_rom_8k_update();
 			return;
 		case 0xA000:
-			controlBankWithAND(0x1F, prgRom8kMax)
-			mapPrgRom8k(1, 1, value);
-			mapPrgRom8kUpdate();
+			control_bank_with_AND(0x1F, prgRom8kMax)
+			map_prg_rom_8k(1, 1, value);
+			map_prg_rom_8k_update();
 			return;
 		case 0x9000:
 		case 0x9001: {
@@ -104,10 +104,10 @@ void extcl_cpu_wr_mem_VRC4(WORD address, BYTE value) {
 		case 0x9003:
 			value &= 0x02;
 			if (vrc4.swapMode != value) {
-				WORD swap = mapper.romMapTo[0];
-				mapper.romMapTo[0] = mapper.romMapTo[2];
-				mapper.romMapTo[2] = swap;
-				mapPrgRom8kUpdate();
+				WORD swap = mapper.rom_map_to[0];
+				mapper.rom_map_to[0] = mapper.rom_map_to[2];
+				mapper.rom_map_to[2] = swap;
+				map_prg_rom_8k_update();
 				vrc4.swapMode = value;
 			}
 			return;
@@ -218,10 +218,10 @@ void extcl_cpu_every_cycle_VRC4(void) {
 	irq.high |= EXTIRQ;
 }
 
-void mapInit_VRC4BMC(void) {
-	prgRom8kMax = info.prgRom8kCount - 1;
+void map_init_VRC4BMC(void) {
+	prgRom8kMax = info.prg_rom_8k_count - 1;
 
-	mapInit_VRC4(VRC4E);
+	map_init_VRC4(VRC4E);
 
 	EXTCL_CPU_WR_MEM(VRC4BMC);
 }
@@ -231,39 +231,39 @@ void extcl_cpu_wr_mem_VRC4BMC(WORD address, BYTE value) {
 	}
 
 	if ((address >= 0x8000) && (address <= 0x8FFF)) {
-		value = (mapper.romMapTo[0] & 0x20) | (value & 0x1F);
-		controlBank(prgRom8kMax)
-		mapPrgRom8k(1, vrc4.swapMode, value);
-		mapPrgRom8kUpdate();
+		value = (mapper.rom_map_to[0] & 0x20) | (value & 0x1F);
+		control_bank(prgRom8kMax)
+		map_prg_rom_8k(1, vrc4.swapMode, value);
+		map_prg_rom_8k_update();
 		return;
 	}
 	if ((address >= 0xA000) && (address <= 0xAFFF)) {
-		value = (mapper.romMapTo[0] & 0x20) | (value & 0x1F);
-		controlBank(prgRom8kMax)
-		mapPrgRom8k(1, 1, value);
-		mapPrgRom8kUpdate();
+		value = (mapper.rom_map_to[0] & 0x20) | (value & 0x1F);
+		control_bank(prgRom8kMax)
+		map_prg_rom_8k(1, 1, value);
+		map_prg_rom_8k_update();
 		return;
 	}
 	if ((address >= 0xB000) && (address <= 0xEFFF)) {
 		BYTE save = value << 2 & 0x20;
 
-		value = (mapper.romMapTo[0] & 0x1F) | save ;
-		controlBank(prgRom8kMax)
-		mapPrgRom8k(1, 0, value);
+		value = (mapper.rom_map_to[0] & 0x1F) | save ;
+		control_bank(prgRom8kMax)
+		map_prg_rom_8k(1, 0, value);
 
-		value = (mapper.romMapTo[1] & 0x1F) | save ;
-		controlBank(prgRom8kMax)
-		mapPrgRom8k(1, 1, value);
+		value = (mapper.rom_map_to[1] & 0x1F) | save ;
+		control_bank(prgRom8kMax)
+		map_prg_rom_8k(1, 1, value);
 
-		value = (mapper.romMapTo[2] & 0x1F) | save ;
-		controlBank(prgRom8kMax)
-		mapPrgRom8k(1, 2, value);
+		value = (mapper.rom_map_to[2] & 0x1F) | save ;
+		control_bank(prgRom8kMax)
+		map_prg_rom_8k(1, 2, value);
 
-		value = (mapper.romMapTo[3] & 0x1F) | save ;
-		controlBank(prgRom8kMax)
-		mapPrgRom8k(1, 3, value);
+		value = (mapper.rom_map_to[3] & 0x1F) | save ;
+		control_bank(prgRom8kMax)
+		map_prg_rom_8k(1, 3, value);
 
-		mapPrgRom8kUpdate();
+		map_prg_rom_8k_update();
 		return;
 	}
 

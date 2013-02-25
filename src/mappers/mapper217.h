@@ -15,7 +15,7 @@ struct _m217 {
 	WORD prg8kBank[4];
 } m217;
 
-void mapInit_217(void);
+void map_init_217(void);
 void extcl_cpu_wr_mem_217(WORD address, BYTE value);
 BYTE extcl_save_mapper_217(BYTE mode, BYTE slot, FILE *fp);
 

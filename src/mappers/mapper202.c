@@ -10,13 +10,13 @@
 
 WORD prgRom16kMax, chrRom8kMax;
 
-void mapInit_202(void) {
-	prgRom16kMax = info.prgRom16kCount - 1;
-	chrRom8kMax = (info.chrRom4kCount >> 1) - 1;
+void map_init_202(void) {
+	prgRom16kMax = info.prg_rom_16k_count - 1;
+	chrRom8kMax = (info.chr_rom_4k_count >> 1) - 1;
 
 	EXTCL_CPU_WR_MEM(202);
 
-	info.mapperExtendWrite = TRUE;
+	info.mapper_extend_wr = TRUE;
 
 	if (info.reset >= HARD) {
 		extcl_cpu_wr_mem_202(0x8000, 0);
@@ -31,26 +31,26 @@ void extcl_cpu_wr_mem_202(WORD address, BYTE value) {
 	}
 
 	value = save;
-	controlBank(prgRom16kMax)
-	mapPrgRom8k(2, 0, value);
+	control_bank(prgRom16kMax)
+	map_prg_rom_8k(2, 0, value);
 	if ((address & 0x0C) == 0x0C) {
 		value = save + 1;
-		controlBank(prgRom16kMax)
+		control_bank(prgRom16kMax)
 	}
-	mapPrgRom8k(2, 2, value);
-	mapPrgRom8kUpdate();
+	map_prg_rom_8k(2, 2, value);
+	map_prg_rom_8k_update();
 
 	value = save;
-	controlBank(chrRom8kMax)
+	control_bank(chrRom8kMax)
 	bank = value << 13;
-	chr.bank1k[0] = &chr.data[bank];
-	chr.bank1k[1] = &chr.data[bank | 0x0400];
-	chr.bank1k[2] = &chr.data[bank | 0x0800];
-	chr.bank1k[3] = &chr.data[bank | 0x0C00];
-	chr.bank1k[4] = &chr.data[bank | 0x1000];
-	chr.bank1k[5] = &chr.data[bank | 0x1400];
-	chr.bank1k[6] = &chr.data[bank | 0x1800];
-	chr.bank1k[7] = &chr.data[bank | 0x1C00];
+	chr.bank_1k[0] = &chr.data[bank];
+	chr.bank_1k[1] = &chr.data[bank | 0x0400];
+	chr.bank_1k[2] = &chr.data[bank | 0x0800];
+	chr.bank_1k[3] = &chr.data[bank | 0x0C00];
+	chr.bank_1k[4] = &chr.data[bank | 0x1000];
+	chr.bank_1k[5] = &chr.data[bank | 0x1400];
+	chr.bank_1k[6] = &chr.data[bank | 0x1800];
+	chr.bank_1k[7] = &chr.data[bank | 0x1C00];
 
 	if (address & 0x0001) {
 		mirroring_H();

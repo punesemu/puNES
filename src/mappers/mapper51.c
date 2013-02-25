@@ -14,16 +14,16 @@
 WORD prgRom32kMax, prgRom16kMax, prgRom8kMax;
 BYTE *prg6000;
 
-void mapInit_51(void) {
-	prgRom32kMax = (info.prgRom16kCount >> 1) - 1;
-	prgRom16kMax = info.prgRom16kCount - 1;
-	prgRom8kMax = info.prgRom8kCount - 1;
+void map_init_51(void) {
+	prgRom32kMax = (info.prg_rom_16k_count >> 1) - 1;
+	prgRom16kMax = info.prg_rom_16k_count - 1;
+	prgRom8kMax = info.prg_rom_8k_count - 1;
 
 	EXTCL_CPU_WR_MEM(51);
 	EXTCL_CPU_RD_MEM(51);
 	EXTCL_SAVE_MAPPER(51);
-	mapper.intStruct[0] = (BYTE *) &m51;
-	mapper.intStructSize[0] = sizeof(m51);
+	mapper.internal_struct[0] = (BYTE *) &m51;
+	mapper.internal_struct_size[0] = sizeof(m51);
 
 	if (info.reset >= HARD) {
 		memset(&m51, 0x00, sizeof(m51));
@@ -31,7 +31,7 @@ void mapInit_51(void) {
 		extcl_cpu_wr_mem_51(0x6000, 0x02);
 	}
 
-	info.mapperExtendWrite = TRUE;
+	info.mapper_extend_wr = TRUE;
 }
 void extcl_cpu_wr_mem_51(WORD address, BYTE value) {
 	if (address < 0x6000) {
@@ -53,23 +53,23 @@ void extcl_cpu_wr_mem_51(WORD address, BYTE value) {
 		m51.prg6000 = 0x23;
 
 		value = m51.bank;
-		controlBank(prgRom32kMax)
-		mapPrgRom8k(4, 0, value);
+		control_bank(prgRom32kMax)
+		map_prg_rom_8k(4, 0, value);
 	} else {
 		m51.prg6000 = 0x2F;
 
 		value = (m51.bank << 1) | (m51.mode >> 1);
-		controlBank(prgRom16kMax)
-		mapPrgRom8k(2, 0, value);
+		control_bank(prgRom16kMax)
+		map_prg_rom_8k(2, 0, value);
 
 		value = (m51.bank << 1) | 0x07;
-		controlBank(prgRom16kMax)
-		mapPrgRom8k(2, 2, value);
+		control_bank(prgRom16kMax)
+		map_prg_rom_8k(2, 2, value);
 	}
-	mapPrgRom8kUpdate();
+	map_prg_rom_8k_update();
 
 	m51.prg6000 = m51.prg6000 | (m51.bank << 2);
-	_controlBank(m51.prg6000, prgRom8kMax)
+	_control_bank(m51.prg6000, prgRom8kMax)
 	prg6000 = &prg.rom[m51.prg6000 << 13];
 
 	if (m51.mode == 0x03) {

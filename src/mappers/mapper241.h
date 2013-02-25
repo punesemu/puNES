@@ -10,7 +10,7 @@
 
 #include "common.h"
 
-void mapInit_241(void);
+void map_init_241(void);
 void extcl_cpu_wr_mem_241(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_241(WORD address, BYTE openbus, BYTE before);
 

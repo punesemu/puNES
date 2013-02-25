@@ -30,10 +30,10 @@
 #define chrRom2kSwap(slot)\
 {\
 	DBWORD bank;\
-	controlBank(chrRom2kMax)\
+	control_bank(chrRom2kMax)\
 	bank = value << 11;\
-	chr.bank1k[slot] = &chr.data[bank];\
-	chr.bank1k[slot + 1] = &chr.data[bank | 0x400];\
+	chr.bank_1k[slot] = &chr.data[bank];\
+	chr.bank_1k[slot + 1] = &chr.data[bank | 0x400];\
 }
 #define sunsoftS4mirroring()\
 	if (!s4.mode) {\
@@ -54,20 +54,20 @@
 	} else {\
 		switch (s4.mirroring & 0x03) {\
 		case 0:\
-			ntbl.bank1k[0] = ntbl.bank1k[2] = &chr.data[s4.chrNmt[0]];\
-			ntbl.bank1k[1] = ntbl.bank1k[3] = &chr.data[s4.chrNmt[1]];\
+			ntbl.bank_1k[0] = ntbl.bank_1k[2] = &chr.data[s4.chrNmt[0]];\
+			ntbl.bank_1k[1] = ntbl.bank_1k[3] = &chr.data[s4.chrNmt[1]];\
 			break;\
 		case 1:\
-			ntbl.bank1k[0] = ntbl.bank1k[1] = &chr.data[s4.chrNmt[0]];\
-			ntbl.bank1k[2] = ntbl.bank1k[3] = &chr.data[s4.chrNmt[1]];\
+			ntbl.bank_1k[0] = ntbl.bank_1k[1] = &chr.data[s4.chrNmt[0]];\
+			ntbl.bank_1k[2] = ntbl.bank_1k[3] = &chr.data[s4.chrNmt[1]];\
 			break;\
 		case 2:\
-			ntbl.bank1k[0] = ntbl.bank1k[1] = &chr.data[s4.chrNmt[0]];\
-			ntbl.bank1k[2] = ntbl.bank1k[3] = &chr.data[s4.chrNmt[0]];\
+			ntbl.bank_1k[0] = ntbl.bank_1k[1] = &chr.data[s4.chrNmt[0]];\
+			ntbl.bank_1k[2] = ntbl.bank_1k[3] = &chr.data[s4.chrNmt[0]];\
 			break;\
 		case 3:\
-			ntbl.bank1k[0] = ntbl.bank1k[1] = &chr.data[s4.chrNmt[1]];\
-			ntbl.bank1k[2] = ntbl.bank1k[3] = &chr.data[s4.chrNmt[1]];\
+			ntbl.bank_1k[0] = ntbl.bank_1k[1] = &chr.data[s4.chrNmt[1]];\
+			ntbl.bank_1k[2] = ntbl.bank_1k[3] = &chr.data[s4.chrNmt[1]];\
 			break;\
 		}\
 	}
@@ -86,18 +86,18 @@
 WORD prgRom16kMax, prgRom8kMax, chrRom8kMax, chrRom4kMax, chrRom2kMax, chrRom1kMax;
 BYTE type;
 
-void mapInit_Sunsoft(BYTE model) {
-	prgRom16kMax = info.prgRom16kCount - 1;
-	prgRom8kMax = info.prgRom8kCount - 1;
-	chrRom8kMax = info.chrRom8kCount - 1;
-	chrRom4kMax = info.chrRom4kCount - 1;
-	chrRom2kMax = (info.chrRom1kCount >> 1) - 1;
-	chrRom1kMax = info.chrRom1kCount - 1;
+void map_init_Sunsoft(BYTE model) {
+	prgRom16kMax = info.prg_rom_16k_count - 1;
+	prgRom8kMax = info.prg_rom_8k_count - 1;
+	chrRom8kMax = info.chr_rom_8k_count - 1;
+	chrRom4kMax = info.chr_rom_4k_count - 1;
+	chrRom2kMax = (info.chr_rom_1k_count >> 1) - 1;
+	chrRom1kMax = info.chr_rom_1k_count - 1;
 
 	switch (model) {
 		case SUN1:
 			EXTCL_CPU_WR_MEM(Sunsoft_S1);
-			info.mapperExtendWrite = TRUE;
+			info.mapper_extend_wr = TRUE;
 			break;
 		case SUN2A:
 		case SUN2B:
@@ -107,8 +107,8 @@ void mapInit_Sunsoft(BYTE model) {
 			EXTCL_CPU_WR_MEM(Sunsoft_S3);
 			EXTCL_SAVE_MAPPER(Sunsoft_S3);
 			EXTCL_CPU_EVERY_CYCLE(Sunsoft_S3);
-			mapper.intStruct[0] = (BYTE *) &s3;
-			mapper.intStructSize[0] = sizeof(s3);
+			mapper.internal_struct[0] = (BYTE *) &s3;
+			mapper.internal_struct_size[0] = sizeof(s3);
 
 			if (info.reset >= HARD) {
 				memset(&s3, 0x00, sizeof(s3));
@@ -117,8 +117,8 @@ void mapInit_Sunsoft(BYTE model) {
 		case SUN4:
 			EXTCL_CPU_WR_MEM(Sunsoft_S4);
 			EXTCL_SAVE_MAPPER(Sunsoft_S4);
-			mapper.intStruct[0] = (BYTE *) &s4;
-			mapper.intStructSize[0] = sizeof(s4);
+			mapper.internal_struct[0] = (BYTE *) &s4;
+			mapper.internal_struct_size[0] = sizeof(s4);
 
 			if (info.reset >= HARD) {
 				memset(&s4, 0x00, sizeof(s4));
@@ -127,8 +127,8 @@ void mapInit_Sunsoft(BYTE model) {
 			}
 
 			if (info.id == MAHARAJA) {
-				info.prgRamPlus8kCount = 1;
-				info.prgRamBatBanks = 1;
+				info.prg_ram_plus_8k_count = 1;
+				info.prg_ram_bat_banks = 1;
 			}
 			break;
 		case FM7:
@@ -137,17 +137,17 @@ void mapInit_Sunsoft(BYTE model) {
 			EXTCL_SAVE_MAPPER(Sunsoft_FM7);
 			EXTCL_CPU_EVERY_CYCLE(Sunsoft_FM7);
 			EXTCL_APU_TICK(Sunsoft_FM7);
-			mapper.intStruct[0] = (BYTE *) &fm7;
-			mapper.intStructSize[0] = sizeof(fm7);
+			mapper.internal_struct[0] = (BYTE *) &fm7;
+			mapper.internal_struct_size[0] = sizeof(fm7);
 
 			if (info.reset >= HARD) {
 				memset(&fm7, 0x00, sizeof(fm7));
 			}
 
-			info.prgRamPlus8kCount = 1;
+			info.prg_ram_plus_8k_count = 1;
 
 			if ((info.id == BARCODEWORLD) || (info.id == DODGEDANPEI2)) {
-				info.prgRamBatBanks = 1;
+				info.prg_ram_bat_banks = 1;
 			}
 
 			fm7.square[0].timer = 1;
@@ -168,20 +168,20 @@ void extcl_cpu_wr_mem_Sunsoft_S1(WORD address, BYTE value) {
 		const BYTE save = value;
 		DBWORD bank;
 
-		controlBankWithAND(0x0F, chrRom4kMax)
+		control_bank_with_AND(0x0F, chrRom4kMax)
 		bank = value << 12;
-		chr.bank1k[0] = &chr.data[bank];
-		chr.bank1k[1] = &chr.data[bank | 0x0400];
-		chr.bank1k[2] = &chr.data[bank | 0x0800];
-		chr.bank1k[3] = &chr.data[bank | 0x0C00];
+		chr.bank_1k[0] = &chr.data[bank];
+		chr.bank_1k[1] = &chr.data[bank | 0x0400];
+		chr.bank_1k[2] = &chr.data[bank | 0x0800];
+		chr.bank_1k[3] = &chr.data[bank | 0x0C00];
 
 		value = save >> 4;
-		controlBank(chrRom4kMax)
+		control_bank(chrRom4kMax)
 		bank = value << 12;
-		chr.bank1k[4] = &chr.data[bank];
-		chr.bank1k[5] = &chr.data[bank | 0x0400];
-		chr.bank1k[6] = &chr.data[bank | 0x0800];
-		chr.bank1k[7] = &chr.data[bank | 0x0C00];
+		chr.bank_1k[4] = &chr.data[bank];
+		chr.bank_1k[5] = &chr.data[bank | 0x0400];
+		chr.bank_1k[6] = &chr.data[bank | 0x0800];
+		chr.bank_1k[7] = &chr.data[bank | 0x0C00];
 
 	}
 }
@@ -199,21 +199,21 @@ void extcl_cpu_wr_mem_Sunsoft_S2(WORD address, BYTE value) {
 	}
 
 	value = (save >> 4) & 0x07;
-	controlBank(prgRom16kMax)
-	mapPrgRom8k(2, 0, value);
-	mapPrgRom8kUpdate();
+	control_bank(prgRom16kMax)
+	map_prg_rom_8k(2, 0, value);
+	map_prg_rom_8k_update();
 
 	value = ((save & 0x80) >> 4) | (save & 0x07);
-	controlBank(chrRom8kMax)
+	control_bank(chrRom8kMax)
 	bank = value << 13;
-	chr.bank1k[0] = &chr.data[bank];
-	chr.bank1k[1] = &chr.data[bank | 0x0400];
-	chr.bank1k[2] = &chr.data[bank | 0x0800];
-	chr.bank1k[3] = &chr.data[bank | 0x0C00];
-	chr.bank1k[4] = &chr.data[bank | 0x1000];
-	chr.bank1k[5] = &chr.data[bank | 0x1400];
-	chr.bank1k[6] = &chr.data[bank | 0x1800];
-	chr.bank1k[7] = &chr.data[bank | 0x1C00];
+	chr.bank_1k[0] = &chr.data[bank];
+	chr.bank_1k[1] = &chr.data[bank | 0x0400];
+	chr.bank_1k[2] = &chr.data[bank | 0x0800];
+	chr.bank_1k[3] = &chr.data[bank | 0x0C00];
+	chr.bank_1k[4] = &chr.data[bank | 0x1000];
+	chr.bank_1k[5] = &chr.data[bank | 0x1400];
+	chr.bank_1k[6] = &chr.data[bank | 0x1800];
+	chr.bank_1k[7] = &chr.data[bank | 0x1C00];
 }
 
 void extcl_cpu_wr_mem_Sunsoft_S3(WORD address, BYTE value) {
@@ -247,9 +247,9 @@ void extcl_cpu_wr_mem_Sunsoft_S3(WORD address, BYTE value) {
 			mirroring(value)
 			return;
 		case 0xF800:
-			controlBank(prgRom16kMax)
-			mapPrgRom8k(2, 0, value);
-			mapPrgRom8kUpdate();
+			control_bank(prgRom16kMax)
+			map_prg_rom_8k(2, 0, value);
+			map_prg_rom_8k_update();
 			return;
 	}
 }
@@ -301,9 +301,9 @@ void extcl_cpu_wr_mem_Sunsoft_S4(WORD address, BYTE value) {
 			sunsoftS4mirroring()
 			return;
 		case 0xF000:
-			controlBank(prgRom16kMax)
-			mapPrgRom8k(2, 0, value);
-			mapPrgRom8kUpdate();
+			control_bank(prgRom16kMax)
+			map_prg_rom_8k(2, 0, value);
+			map_prg_rom_8k_update();
 			return;
 	}
 }
@@ -343,8 +343,8 @@ void extcl_cpu_wr_mem_Sunsoft_FM7(WORD address, BYTE value) {
 				case 0x05:
 				case 0x06:
 				case 0x07:
-					controlBank(chrRom1kMax)
-					chr.bank1k[bank] = &chr.data[value << 10];
+					control_bank(chrRom1kMax)
+					chr.bank_1k[bank] = &chr.data[value << 10];
 					return;
 				case 0x08: {
 					fm7.prgRamMode = value & 0x40;
@@ -354,19 +354,19 @@ void extcl_cpu_wr_mem_Sunsoft_FM7(WORD address, BYTE value) {
 						case 0x80:
 							cpu.prg_ram_rd_active = TRUE;
 							cpu.prg_ram_wr_active = FALSE;
-							controlBankWithAND(0x3F, prgRom8kMax)
+							control_bank_with_AND(0x3F, prgRom8kMax)
 							fm7.prgRamAddress = value << 13;
-							prg.ramPlus8k = &prg.rom[fm7.prgRamAddress];
+							prg.ram_plus_8k = &prg.rom[fm7.prgRamAddress];
 							return;
 						case 0x40:
 							cpu.prg_ram_rd_active = FALSE;
 							cpu.prg_ram_wr_active = TRUE;
-							prg.ramPlus8k = &prg.ramPlus[0];
+							prg.ram_plus_8k = &prg.ram_plus[0];
 							return;
 						case 0xC0:
 							cpu.prg_ram_rd_active = TRUE;
 							cpu.prg_ram_wr_active = TRUE;
-							prg.ramPlus8k = &prg.ramPlus[0];
+							prg.ram_plus_8k = &prg.ram_plus[0];
 							return;
 					}
 					return;
@@ -374,9 +374,9 @@ void extcl_cpu_wr_mem_Sunsoft_FM7(WORD address, BYTE value) {
 				case 0x09:
 				case 0x0A:
 				case 0x0B:
-					controlBank(prgRom8kMax)
-					mapPrgRom8k(1, (bank & 0x03) - 1, value);
-					mapPrgRom8kUpdate();
+					control_bank(prgRom8kMax)
+					map_prg_rom_8k(1, (bank & 0x03) - 1, value);
+					map_prg_rom_8k_update();
 					return;
 				case 0x0C:
 					mirroring(value)
@@ -451,7 +451,7 @@ BYTE extcl_save_mapper_Sunsoft_FM7(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, fm7.prgRamMode);
 	savestateEle(mode, slot, fm7.prgRamAddress);
 	if ((mode == SSREAD) && !fm7.prgRamMode) {
-		prg.ramPlus8k = &prg.rom[fm7.prgRamAddress];
+		prg.ram_plus_8k = &prg.rom[fm7.prgRamAddress];
 	}
 	savestateEle(mode, slot, fm7.irqEnableTrig);
 	savestateEle(mode, slot, fm7.irqEnableCount);

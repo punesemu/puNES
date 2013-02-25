@@ -14,16 +14,16 @@
 
 WORD prgRom8kMax, chrRom1kMax;
 
-void mapInit_183(void) {
-	prgRom8kMax = info.prgRom8kCount - 1;
-	chrRom1kMax = info.chrRom1kCount - 1;
+void map_init_183(void) {
+	prgRom8kMax = info.prg_rom_8k_count - 1;
+	chrRom1kMax = info.chr_rom_1k_count - 1;
 
 	EXTCL_CPU_WR_MEM(183);
 	EXTCL_CPU_RD_MEM(183);
 	EXTCL_SAVE_MAPPER(183);
 	EXTCL_CPU_EVERY_CYCLE(183);
-	mapper.intStruct[0] = (BYTE *) &m183;
-	mapper.intStructSize[0] = sizeof(m183);
+	mapper.internal_struct[0] = (BYTE *) &m183;
+	mapper.internal_struct_size[0] = sizeof(m183);
 
 	if (info.reset >= HARD) {
 		memset(&m183, 0x00, sizeof(m183));
@@ -42,9 +42,9 @@ void extcl_cpu_wr_mem_183(WORD address, BYTE value) {
 		case 0x8801:
 		case 0x8802:
 		case 0x8803:
-			controlBank(prgRom8kMax)
-			mapPrgRom8k(1, 0, value);
-			mapPrgRom8kUpdate();
+			control_bank(prgRom8kMax)
+			map_prg_rom_8k(1, 0, value);
+			map_prg_rom_8k_update();
 			return;
 		case 0x9800:
 		case 0x9801:
@@ -70,17 +70,17 @@ void extcl_cpu_wr_mem_183(WORD address, BYTE value) {
 		case 0xA001:
 		case 0xA002:
 		case 0xA003:
-			controlBank(prgRom8kMax)
-			mapPrgRom8k(1, 2, value);
-			mapPrgRom8kUpdate();
+			control_bank(prgRom8kMax)
+			map_prg_rom_8k(1, 2, value);
+			map_prg_rom_8k_update();
 			return;
 		case 0xA800:
 		case 0xA801:
 		case 0xA802:
 		case 0xA803:
-			controlBank(prgRom8kMax)
-			mapPrgRom8k(1, 1, value);
-			mapPrgRom8kUpdate();
+			control_bank(prgRom8kMax)
+			map_prg_rom_8k(1, 1, value);
+			map_prg_rom_8k_update();
 			return;
 		case 0xF000:
 		case 0xF001:
@@ -122,8 +122,8 @@ void extcl_cpu_wr_mem_183(WORD address, BYTE value) {
 				const BYTE slot = (((address - 0x3000) >> 1 | (address << 7)) & 0x1C00) >> 10;
 
 				value = (m183.chrRomBank[slot] & (0xF0 >> shift)) | ((value & 0x0F) << shift);
-				controlBank(chrRom1kMax)
-				chr.bank1k[slot] = &chr.data[value << 10];
+				control_bank(chrRom1kMax)
+				chr.bank_1k[slot] = &chr.data[value << 10];
 				m183.chrRomBank[slot] = value;
 			}
 			return;

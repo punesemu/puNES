@@ -14,15 +14,15 @@
 WORD prgRom16kMax, prgRom8kMax;
 BYTE *prg6000;
 
-void mapInit_53(void) {
-	prgRom16kMax = info.prgRom16kCount - 1;
-	prgRom8kMax = info.prgRom8kCount - 1;
+void map_init_53(void) {
+	prgRom16kMax = info.prg_rom_16k_count - 1;
+	prgRom8kMax = info.prg_rom_8k_count - 1;
 
 	EXTCL_CPU_WR_MEM(53);
 	EXTCL_CPU_RD_MEM(53);
 	EXTCL_SAVE_MAPPER(53);
-	mapper.intStruct[0] = (BYTE *) &m53;
-	mapper.intStructSize[0] = sizeof(m53);
+	mapper.internal_struct[0] = (BYTE *) &m53;
+	mapper.internal_struct_size[0] = sizeof(m53);
 
 	if (info.reset >= HARD) {
 		memset(&m53, 0x00, sizeof(m53));
@@ -30,7 +30,7 @@ void mapInit_53(void) {
 		extcl_cpu_wr_mem_53(0x6000, 0x00);
 	}
 
-	info.mapperExtendWrite = TRUE;
+	info.mapper_extend_wr = TRUE;
 }
 void extcl_cpu_wr_mem_53(WORD address, BYTE value) {
 	BYTE tmp;
@@ -54,18 +54,18 @@ void extcl_cpu_wr_mem_53(WORD address, BYTE value) {
 	tmp = (m53.reg[0] << 3) & 0x78;
 
 	m53.prg6000 = ((tmp << 1) | 0x0F) + 4;
-	_controlBank(m53.prg6000, prgRom8kMax)
+	_control_bank(m53.prg6000, prgRom8kMax)
 	prg6000 = &prg.rom[m53.prg6000 << 13];
 
 	value = (m53.reg[0] & 0x10) ? (tmp | (m53.reg[1] & 0x07)) + 2 : 0;
-	controlBank(prgRom16kMax)
-	mapPrgRom8k(2, 0, value);
+	control_bank(prgRom16kMax)
+	map_prg_rom_8k(2, 0, value);
 
 	value = (m53.reg[0] & 0x10) ? (tmp | (0xFF & 0x07)) + 2 : 1;
-	controlBank(prgRom16kMax)
-	mapPrgRom8k(2, 2, value);
+	control_bank(prgRom16kMax)
+	map_prg_rom_8k(2, 2, value);
 
-	mapPrgRom8kUpdate();
+	map_prg_rom_8k_update();
 }
 BYTE extcl_cpu_rd_mem_53(WORD address, BYTE openbus, BYTE before) {
 	if ((address < 0x6000) || (address > 0x7FFF)) {

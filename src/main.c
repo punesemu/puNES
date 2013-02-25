@@ -33,7 +33,7 @@ int main(int argc, char **argv) {
 	BYTE optind;
 
 	memset(&info, 0x00, sizeof(info));
-	info.machine = info.machineDb = DEFAULT;
+	info.machine = info.machine_db = DEFAULT;
 
 	{
 #if defined MINGW32 || defined MINGW64
@@ -52,7 +52,7 @@ int main(int argc, char **argv) {
 #define controlDir(fld, txt)\
 {\
 	char file[512];\
-	sprintf(file, fld, info.baseFolder);\
+	sprintf(file, fld, info.base_folder);\
 	if (emuMakeDir(file)) {\
 		fprintf(stderr, txt);\
 		return (EXIT_ERROR);\
@@ -60,15 +60,15 @@ int main(int argc, char **argv) {
 }
 
 	/* controllo l'esistenza della directory principale */
-	if (emuMakeDir(info.baseFolder)) {
+	if (emuMakeDir(info.base_folder)) {
 		fprintf(stderr, "error on create puNES folder\n");
 		return (EXIT_ERROR);
 	}
 	/* creo le sottocartelle */
-	controlDir("%s" SAVEFOLDER, "error on create save folder\n")
-	controlDir("%s" PERGAMEFOLDER, "error on create psg folder\n")
-	controlDir("%s" BIOSFOLDER, "error on create bios folder\n")
-	controlDir("%s" DIFFFOLDER, "error on create diff folder\n")
+	controlDir("%s" SAVE_FOLDER, "error on create save folder\n")
+	controlDir("%s" PERGAME_FOLDER, "error on create psg folder\n")
+	controlDir("%s" BIOS_FOLDER, "error on create bios folder\n")
+	controlDir("%s" DIFF_FOLDER, "error on create diff folder\n")
 
 #ifdef __NETPLAY__
 	netplay_init();
@@ -98,16 +98,16 @@ int main(int argc, char **argv) {
 	if (argc == optind) {
 #ifndef DEBUG
 		//if(!info.gui) {
-		//	strcpy(info.romFile, "rom.nes");
+		//	strcpy(info.rom_file, "rom.nes");
 		//}
 #else
-		//strcpy(info.romFile, "/home/fhorse/sviluppo/personale/roms/85/Lagrange Point (J).nes");
+		//strcpy(info.rom_file, "/home/fhorse/sviluppo/personale/roms/85/Lagrange Point (J).nes");
 #endif
 	} else {
-		strcpy(info.romFile, argv[optind]);
+		strcpy(info.rom_file, argv[optind]);
 	}
 
-	fprintf(stderr, "INFO: path %s\n", info.baseFolder);
+	fprintf(stderr, "INFO: path %s\n", info.base_folder);
 
 	if (emuTurnON()) {
 		emuQuit(EXIT_FAILURE);

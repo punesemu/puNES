@@ -26,7 +26,7 @@ enum {
 
 #define chrReg(reg)\
 	value = reg;\
-	switch (info.mapperType) {\
+	switch (info.mapper_type) {\
 		case SNROM:\
 			/*\
 			 * 4bit0\
@@ -42,7 +42,7 @@ enum {
 			break;\
 		case SOROM: {\
 			BYTE bankPrgRam = (reg & 0x08) >> 3;\
-			prg.ramPlus8k = &prg.ramPlus[bankPrgRam * 0x2000];\
+			prg.ram_plus_8k = &prg.ram_plus[bankPrgRam * 0x2000];\
 			mmc1.prgUpper = reg & 0x10;\
 			value &= 0x01;\
 			break;\
@@ -53,7 +53,7 @@ enum {
 			break;\
 		case SXROM: {\
 			BYTE bankPrgRam = (reg & 0x0C) >> 2;\
-			prg.ramPlus8k = &prg.ramPlus[bankPrgRam * 0x2000];\
+			prg.ram_plus_8k = &prg.ram_plus[bankPrgRam * 0x2000];\
 			mmc1.prgUpper = reg & 0x10;\
 			value &= 0x01;\
 			break;\
@@ -65,15 +65,15 @@ enum {
 
 WORD prgRom16kMax, chrRom8kMax, chrRom4kMax;
 
-void mapInit_MMC1(void) {
-	prgRom16kMax = info.prgRom16kCount - 1;
-	chrRom8kMax = info.chrRom8kCount - 1;
-	chrRom4kMax = info.chrRom4kCount - 1;
+void map_init_MMC1(void) {
+	prgRom16kMax = info.prg_rom_16k_count - 1;
+	chrRom8kMax = info.chr_rom_8k_count - 1;
+	chrRom4kMax = info.chr_rom_4k_count - 1;
 
 	EXTCL_CPU_WR_MEM(MMC1);
 	EXTCL_SAVE_MAPPER(MMC1);
-	mapper.intStruct[0] = (BYTE *) &mmc1;
-	mapper.intStructSize[0] = sizeof(mmc1);
+	mapper.internal_struct[0] = (BYTE *) &mmc1;
+	mapper.internal_struct_size[0] = sizeof(mmc1);
 
 	if (info.reset >= HARD) {
 		memset(&mmc1, 0x00, sizeof(mmc1));
@@ -82,18 +82,18 @@ void mapInit_MMC1(void) {
 		mmc1.chr1 = 1;
 	}
 
-	switch (info.mapperType) {
+	switch (info.mapper_type) {
 		case SNROM:
 			/* SUROM usa 8k di PRG Ram */
-			info.prgRamPlus8kCount = 1;
+			info.prg_ram_plus_8k_count = 1;
 			break;
 		case SOROM:
 			/* SOROM usa 16k di PRG Ram */
-			info.prgRamPlus8kCount = 2;
+			info.prg_ram_plus_8k_count = 2;
 			break;
 		case SXROM:
 			/* SXROM usa 32k di PRG Ram */
-			info.prgRamPlus8kCount = 4;
+			info.prg_ram_plus_8k_count = 4;
 			break;
 	}
 }
@@ -136,8 +136,8 @@ void extcl_cpu_wr_mem_MMC1(WORD address, BYTE value) {
 		 * locking PRG ROM at $C000-$FFFF
 		 * to the last 16k bank.
 		 */
-		mapPrgRom8k(2, 2, mmc1.prgUpper | (prgRom16kMax & 0x0F));
-		mapPrgRom8kUpdate();
+		map_prg_rom_8k(2, 2, mmc1.prgUpper | (prgRom16kMax & 0x0F));
+		map_prg_rom_8k_update();
 		return;
 	}
 
@@ -211,27 +211,27 @@ static void INLINE swapPrgRom_MMC1(void) {
 		case 0:
 		case 1: {
 			BYTE bank;
-			controlBankWithAND(0x0E, prgRom16kMax)
+			control_bank_with_AND(0x0E, prgRom16kMax)
 			bank = mmc1.prgUpper | value;
 			/* switch 32k at $8000, ignoring low bit of bank number */
-			mapPrgRom8k(2, 0, bank);
-			mapPrgRom8k(2, 2, bank + 1);
+			map_prg_rom_8k(2, 0, bank);
+			map_prg_rom_8k(2, 2, bank + 1);
 			break;
 		}
 		case 2:
-			controlBankWithAND(0x0F, prgRom16kMax)
+			control_bank_with_AND(0x0F, prgRom16kMax)
 			/* fix first 16k bank at $8000 and switch 16 KB bank at $C000 */
-			mapPrgRom8k(2, 0, mmc1.prgUpper);
-			mapPrgRom8k(2, 2, mmc1.prgUpper | value);
+			map_prg_rom_8k(2, 0, mmc1.prgUpper);
+			map_prg_rom_8k(2, 2, mmc1.prgUpper | value);
 			break;
 		case 3:
-			controlBankWithAND(0x0F, prgRom16kMax)
+			control_bank_with_AND(0x0F, prgRom16kMax)
 			/* fix last 16k bank at $C000 and switch 16 KB bank at $8000 */
-			mapPrgRom8k(2, 0, mmc1.prgUpper | value);
-			mapPrgRom8k(2, 2, mmc1.prgUpper | (prgRom16kMax & 0x0F));
+			map_prg_rom_8k(2, 0, mmc1.prgUpper | value);
+			map_prg_rom_8k(2, 2, mmc1.prgUpper | (prgRom16kMax & 0x0F));
 			break;
 	}
-	mapPrgRom8kUpdate();
+	map_prg_rom_8k_update();
 }
 static void INLINE swapChr0_MMC1(void) {
 	DBWORD value;
@@ -240,12 +240,12 @@ static void INLINE swapChr0_MMC1(void) {
 
 	/* 4k mode */
 	if (mmc1.chrMode) {
-		controlBank(chrRom4kMax)
+		control_bank(chrRom4kMax)
 		value <<= 12;
-		chr.bank1k[0] = &chr.data[value];
-		chr.bank1k[1] = &chr.data[value | 0x0400];
-		chr.bank1k[2] = &chr.data[value | 0x0800];
-		chr.bank1k[3] = &chr.data[value | 0x0C00];
+		chr.bank_1k[0] = &chr.data[value];
+		chr.bank_1k[1] = &chr.data[value | 0x0400];
+		chr.bank_1k[2] = &chr.data[value | 0x0800];
+		chr.bank_1k[3] = &chr.data[value | 0x0C00];
 		return;
 	}
 
@@ -255,20 +255,20 @@ static void INLINE swapChr0_MMC1(void) {
 	 * se ho solo della CHR ram allora
 	 * non posso switchare niente.
 	 */
-	if (mapper.writeVRAM) {
+	if (mapper.write_vram) {
 		return;
 	}
 
-	controlBankWithAND(0x1E, chrRom4kMax)
+	control_bank_with_AND(0x1E, chrRom4kMax)
 	value <<= 12;
-	chr.bank1k[0] = &chr.data[value];
-	chr.bank1k[1] = &chr.data[value | 0x0400];
-	chr.bank1k[2] = &chr.data[value | 0x0800];
-	chr.bank1k[3] = &chr.data[value | 0x0C00];
-	chr.bank1k[4] = &chr.data[value | 0x1000];
-	chr.bank1k[5] = &chr.data[value | 0x1400];
-	chr.bank1k[6] = &chr.data[value | 0x1800];
-	chr.bank1k[7] = &chr.data[value | 0x1C00];
+	chr.bank_1k[0] = &chr.data[value];
+	chr.bank_1k[1] = &chr.data[value | 0x0400];
+	chr.bank_1k[2] = &chr.data[value | 0x0800];
+	chr.bank_1k[3] = &chr.data[value | 0x0C00];
+	chr.bank_1k[4] = &chr.data[value | 0x1000];
+	chr.bank_1k[5] = &chr.data[value | 0x1400];
+	chr.bank_1k[6] = &chr.data[value | 0x1800];
+	chr.bank_1k[7] = &chr.data[value | 0x1C00];
 }
 static void INLINE swapChr1_MMC1(void) {
 	if (mmc1.chrMode) {
@@ -276,11 +276,11 @@ static void INLINE swapChr1_MMC1(void) {
 
 		chrReg(mmc1.chr1)
 
-		controlBank(chrRom4kMax)
+		control_bank(chrRom4kMax)
 		value <<= 12;
-		chr.bank1k[4] = &chr.data[value];
-		chr.bank1k[5] = &chr.data[value | 0x0400];
-		chr.bank1k[6] = &chr.data[value | 0x0800];
-		chr.bank1k[7] = &chr.data[value | 0x0C00];
+		chr.bank_1k[4] = &chr.data[value];
+		chr.bank_1k[5] = &chr.data[value | 0x0400];
+		chr.bank_1k[6] = &chr.data[value | 0x0800];
+		chr.bank_1k[7] = &chr.data[value | 0x0C00];
 	}
 }

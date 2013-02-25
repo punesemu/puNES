@@ -12,7 +12,7 @@
 
 enum { FDS_MAPPER = 0x1000 };
 
-void mapInit_FDS(void);
+void map_init_FDS(void);
 void extcl_cpu_every_cycle_FDS(void);
 void extcl_apu_tick_FDS(void);
 

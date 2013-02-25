@@ -17,35 +17,35 @@ WORD chrRom1kMax, chrRom2kMax, chrRom4kMax;
 
 #define m116UpdatePrg8k(bnk, vl)\
 	tmp = vl;\
-	_controlBank(tmp, prgRom8kMax)\
-	mapPrgRom8k(1, bnk, tmp)
+	_control_bank(tmp, prgRom8kMax)\
+	map_prg_rom_8k(1, bnk, tmp)
 #define m116UpdatePrg16k(bnk, vl)\
 	tmp = vl;\
-	_controlBank(tmp, prgRom16kMax)\
-	mapPrgRom8k(2, bnk, tmp)
+	_control_bank(tmp, prgRom16kMax)\
+	map_prg_rom_8k(2, bnk, tmp)
 #define m116UpdatePrg32k(vl)\
 	tmp = vl;\
-	_controlBank(tmp, prgRom32kMax)\
-	mapPrgRom8k(4, 0, tmp)
+	_control_bank(tmp, prgRom32kMax)\
+	map_prg_rom_8k(4, 0, tmp)
 
 #define m116UpdateChr1k(bnk, vl)\
 	bank = vl;\
-	_controlBank(bank, chrRom1kMax)\
-	chr.bank1k[bnk] = &chr.data[bank << 10]
+	_control_bank(bank, chrRom1kMax)\
+	chr.bank_1k[bnk] = &chr.data[bank << 10]
 #define m116UpdateChr2k(bnk, vl)\
 	bank = vl;\
-	_controlBank(bank, chrRom2kMax)\
+	_control_bank(bank, chrRom2kMax)\
 	bank <<= 11;\
-	chr.bank1k[bnk       ] = &chr.data[bank         ];\
-	chr.bank1k[bnk | 0x01] = &chr.data[bank | 0x0400]
+	chr.bank_1k[bnk       ] = &chr.data[bank         ];\
+	chr.bank_1k[bnk | 0x01] = &chr.data[bank | 0x0400]
 #define m116UpdateChr4k(bnk, vl)\
 	bank = vl;\
-	_controlBank(bank, chrRom4kMax)\
+	_control_bank(bank, chrRom4kMax)\
 	bank <<= 12;\
-	chr.bank1k[bnk       ] = &chr.data[bank         ];\
-	chr.bank1k[bnk | 0x01] = &chr.data[bank | 0x0400];\
-	chr.bank1k[bnk | 0x02] = &chr.data[bank | 0x0800];\
-	chr.bank1k[bnk | 0x03] = &chr.data[bank | 0x0C00]
+	chr.bank_1k[bnk       ] = &chr.data[bank         ];\
+	chr.bank_1k[bnk | 0x01] = &chr.data[bank | 0x0400];\
+	chr.bank_1k[bnk | 0x02] = &chr.data[bank | 0x0800];\
+	chr.bank_1k[bnk | 0x03] = &chr.data[bank | 0x0C00]
 
 #define m116_A_UpdatePrgMode0()\
 {\
@@ -54,7 +54,7 @@ WORD chrRom1kMax, chrRom2kMax, chrRom4kMax;
 	m116UpdatePrg8k(1, m116.mode0.prg[1]);\
 	m116UpdatePrg8k(2, 0x1E);\
 	m116UpdatePrg8k(3, 0x1F);\
-	mapPrgRom8kUpdate();\
+	map_prg_rom_8k_update();\
 }
 #define m116_A_UpdatePrgMode1()\
 {\
@@ -63,7 +63,7 @@ WORD chrRom1kMax, chrRom2kMax, chrRom4kMax;
 	m116UpdatePrg8k(1, m116.mode1.banks[6 + 1]);\
 	m116UpdatePrg8k(2, m116.mode1.banks[6 + (i ^ 2)]);\
 	m116UpdatePrg8k(3, m116.mode1.banks[6 + 3]);\
-	mapPrgRom8kUpdate();\
+	map_prg_rom_8k_update();\
 }
 #define m116_A_UpdatePrgMode2()\
 {\
@@ -74,7 +74,7 @@ WORD chrRom1kMax, chrRom2kMax, chrRom4kMax;
 	} else {\
 		m116UpdatePrg32k(bank >> 1);\
 	}\
-	mapPrgRom8kUpdate();\
+	map_prg_rom_8k_update();\
 }
 #define m116_A_UpdatePrg()\
 	switch(m116.mode & 0x03) {\
@@ -179,13 +179,13 @@ WORD chrRom1kMax, chrRom2kMax, chrRom4kMax;
 #define m116_B_chr1k(a)\
 	m116.chrmap[a] = value;\
 	if (!(m116.mode & 0x02)) {\
-		chr.bank1k[a] = &chr.data[value << 10];\
+		chr.bank_1k[a] = &chr.data[value << 10];\
 	}
 #define m116_B_swapChrBank1k(src, dst)\
 {\
-	BYTE *chrBank1k = chr.bank1k[src];\
-	chr.bank1k[src] = chr.bank1k[dst];\
-	chr.bank1k[dst] = chrBank1k;\
+	BYTE *chrBank1k = chr.bank_1k[src];\
+	chr.bank_1k[src] = chr.bank_1k[dst];\
+	chr.bank_1k[dst] = chrBank1k;\
 	WORD map = m116.chrmap[src];\
 	m116.chrmap[src] = m116.chrmap[dst];\
 	m116.chrmap[dst] = map;\
@@ -209,47 +209,47 @@ WORD chrRom1kMax, chrRom2kMax, chrRom4kMax;
 		m116_B_swapChrBank1k(3, 7)\
 	}\
 	if (mmc3.prgRomCfg != prgRomCfgOld) {\
-		WORD p0 = mapper.romMapTo[0];\
-		WORD p2 = mapper.romMapTo[2];\
-		mapper.romMapTo[0] = p2;\
-		mapper.romMapTo[2] = p0;\
+		WORD p0 = mapper.rom_map_to[0];\
+		WORD p2 = mapper.rom_map_to[2];\
+		mapper.rom_map_to[0] = p2;\
+		mapper.rom_map_to[2] = p0;\
 		/*\
 		 * prgRomCfg 0x00 : $C000 - $DFFF fisso al penultimo banco\
 		 * prgRomCfg 0x02 : $8000 - $9FFF fisso al penultimo banco\
 		 */\
-		mapPrgRom8k(1, mmc3.prgRomCfg ^ 0x02, prgRom8kBeforeLast);\
-		mapPrgRom8kUpdate();\
+		map_prg_rom_8k(1, mmc3.prgRomCfg ^ 0x02, prgRom8kBeforeLast);\
+		map_prg_rom_8k_update();\
 	}\
 }
 #define m116_B_8001()\
 {\
 	switch (mmc3.bankToUpdate) {\
 		case 0:\
-			controlBankWithAND(0xFE, chrRom1kMax)\
+			control_bank_with_AND(0xFE, chrRom1kMax)\
 			m116_B_chr1k(mmc3.chrRomCfg)\
 			value++;\
 			m116_B_chr1k(mmc3.chrRomCfg | 0x01)\
 			return;\
 		case 1:\
-			controlBankWithAND(0xFE, chrRom1kMax)\
+			control_bank_with_AND(0xFE, chrRom1kMax)\
 			m116_B_chr1k(mmc3.chrRomCfg | 0x02)\
 			value++;\
 			m116_B_chr1k(mmc3.chrRomCfg | 0x03)\
 			return;\
 		case 2:\
-			controlBank(chrRom1kMax)\
+			control_bank(chrRom1kMax)\
 			m116_B_chr1k(mmc3.chrRomCfg ^ 0x04)\
 			return;\
 		case 3:\
-			controlBank(chrRom1kMax)\
+			control_bank(chrRom1kMax)\
 			m116_B_chr1k((mmc3.chrRomCfg ^ 0x04) | 0x01)\
 			return;\
 		case 4:\
-			controlBank(chrRom1kMax)\
+			control_bank(chrRom1kMax)\
 			m116_B_chr1k((mmc3.chrRomCfg ^ 0x04) | 0x02)\
 			return;\
 		case 5:\
-			controlBank(chrRom1kMax)\
+			control_bank(chrRom1kMax)\
 			m116_B_chr1k((mmc3.chrRomCfg ^ 0x04) | 0x03)\
 			return;\
 	}\
@@ -262,9 +262,9 @@ WORD chrRom1kMax, chrRom2kMax, chrRom4kMax;
 }
 #define m116_C_swapChrBank1k(src, dst)\
 {\
-	BYTE *chrBank1k = chr.bank1k[src];\
-	chr.bank1k[src] = chr.bank1k[dst];\
-	chr.bank1k[dst] = chrBank1k;\
+	BYTE *chrBank1k = chr.bank_1k[src];\
+	chr.bank_1k[src] = chr.bank_1k[dst];\
+	chr.bank_1k[dst] = chrBank1k;\
 	WORD map = m116.chrmap[src];\
 	m116.chrmap[src] = m116.chrmap[dst];\
 	m116.chrmap[dst] = map;\
@@ -288,10 +288,10 @@ WORD chrRom1kMax, chrRom2kMax, chrRom4kMax;
 		m116_C_swapChrBank1k(3, 7)\
 	}\
 	if (mmc3.prgRomCfg != prgRomCfgOld) {\
-		WORD p0 = mapper.romMapTo[0];\
-		WORD p2 = mapper.romMapTo[2];\
-		mapper.romMapTo[0] = p2;\
-		mapper.romMapTo[2] = p0;\
+		WORD p0 = mapper.rom_map_to[0];\
+		WORD p2 = mapper.rom_map_to[2];\
+		mapper.rom_map_to[0] = p2;\
+		mapper.rom_map_to[2] = p0;\
 		p0 = m116.prgmap[0];\
 		p2 = m116.prgmap[2];\
 		m116.prgmap[0] = p2;\
@@ -301,8 +301,8 @@ WORD chrRom1kMax, chrRom2kMax, chrRom4kMax;
 		 * prgRomCfg 0x00 : $C000 - $DFFF fisso al penultimo banco\
 		 * prgRomCfg 0x02 : $8000 - $9FFF fisso al penultimo banco\
 		 */\
-		mapPrgRom8k(1, mmc3.prgRomCfg ^ 0x02, prgRom8kBeforeLast);\
-		mapPrgRom8kUpdate();\
+		map_prg_rom_8k(1, mmc3.prgRomCfg ^ 0x02, prgRom8kBeforeLast);\
+		map_prg_rom_8k_update();\
 	}\
 }
 #define m116_C_8001()\
@@ -316,9 +316,9 @@ WORD chrRom1kMax, chrRom2kMax, chrRom4kMax;
 			m116.chrmap[slot + 1] = value + 1;\
 			m116_C_chr1k(slot, value);\
 			bank &= 0xFFE;\
-			_controlBank(bank, chrRom1kMax)\
-			chr.bank1k[slot] = &chr.data[bank << 10];\
-			chr.bank1k[slot + 1] = &chr.data[(bank + 1) << 10];\
+			_control_bank(bank, chrRom1kMax)\
+			chr.bank_1k[slot] = &chr.data[bank << 10];\
+			chr.bank_1k[slot + 1] = &chr.data[(bank + 1) << 10];\
 			return;\
 		case 1:\
 			slot = mmc3.chrRomCfg | 0x02;\
@@ -326,63 +326,63 @@ WORD chrRom1kMax, chrRom2kMax, chrRom4kMax;
 			m116.chrmap[slot + 1] = value + 1;\
 			m116_C_chr1k(slot, value);\
 			bank &= 0xFFE;\
-			_controlBank(bank, chrRom1kMax)\
-			chr.bank1k[slot] = &chr.data[bank << 10];\
-			chr.bank1k[slot + 1] = &chr.data[(bank + 1) << 10];\
+			_control_bank(bank, chrRom1kMax)\
+			chr.bank_1k[slot] = &chr.data[bank << 10];\
+			chr.bank_1k[slot + 1] = &chr.data[(bank + 1) << 10];\
 			return;\
 		case 2:\
 			slot = mmc3.chrRomCfg ^ 0x04;\
 			m116.chrmap[slot] = value;\
 			m116_C_chr1k(slot, value);\
-			_controlBank(bank, chrRom1kMax)\
-			chr.bank1k[slot] = &chr.data[bank << 10];\
+			_control_bank(bank, chrRom1kMax)\
+			chr.bank_1k[slot] = &chr.data[bank << 10];\
 			return;\
 		case 3:\
 			slot = (mmc3.chrRomCfg ^ 0x04) | 0x01;\
 			m116.chrmap[slot] = value;\
 			m116_C_chr1k(slot, value);\
-			_controlBank(bank, chrRom1kMax)\
-			chr.bank1k[slot] = &chr.data[bank << 10];\
+			_control_bank(bank, chrRom1kMax)\
+			chr.bank_1k[slot] = &chr.data[bank << 10];\
 			return;\
 		case 4:\
 			slot = (mmc3.chrRomCfg ^ 0x04) | 0x02;\
 			m116.chrmap[slot] = value;\
 			m116_C_chr1k(slot, value);\
-			_controlBank(bank, chrRom1kMax)\
-			chr.bank1k[slot] = &chr.data[bank << 10];\
+			_control_bank(bank, chrRom1kMax)\
+			chr.bank_1k[slot] = &chr.data[bank << 10];\
 			return;\
 		case 5:\
 			slot = (mmc3.chrRomCfg ^ 0x04) | 0x03;\
 			m116.chrmap[slot] = value;\
 			m116_C_chr1k(slot, value);\
-			_controlBank(bank, chrRom1kMax)\
-			chr.bank1k[slot] = &chr.data[bank << 10];\
+			_control_bank(bank, chrRom1kMax)\
+			chr.bank_1k[slot] = &chr.data[bank << 10];\
 			return;\
 		case 6:\
-			controlBank(prgRom8kMax)\
+			control_bank(prgRom8kMax)\
 			m116.prgmap[mmc3.prgRomCfg] = value;\
-			mapPrgRom8k(1, mmc3.prgRomCfg, value);\
-			mapPrgRom8kUpdate();\
+			map_prg_rom_8k(1, mmc3.prgRomCfg, value);\
+			map_prg_rom_8k_update();\
 			return;\
 		case 7:\
-			controlBank(prgRom8kMax)\
+			control_bank(prgRom8kMax)\
 			m116.prgmap[1] = value;\
-			mapPrgRom8k(1, 1, value);\
-			mapPrgRom8kUpdate();\
+			map_prg_rom_8k(1, 1, value);\
+			map_prg_rom_8k_update();\
 			return;\
 	}\
 }
 
-void mapInit_116(void) {
-	prgRom32kMax = (info.prgRom16kCount >> 1) - 1;
-	prgRom16kMax = info.prgRom16kCount - 1;
-	prgRom8kBeforeLast = info.prgRom8kCount - 2;
-	prgRom8kMax = info.prgRom8kCount - 1;
-	chrRom4kMax = info.chrRom4kCount - 1;
-	chrRom2kMax = (info.chrRom1kCount >> 1) - 1;
-	chrRom1kMax = info.chrRom1kCount - 1;
+void map_init_116(void) {
+	prgRom32kMax = (info.prg_rom_16k_count >> 1) - 1;
+	prgRom16kMax = info.prg_rom_16k_count - 1;
+	prgRom8kBeforeLast = info.prg_rom_8k_count - 2;
+	prgRom8kMax = info.prg_rom_8k_count - 1;
+	chrRom4kMax = info.chr_rom_4k_count - 1;
+	chrRom2kMax = (info.chr_rom_1k_count >> 1) - 1;
+	chrRom1kMax = info.chr_rom_1k_count - 1;
 
-	switch (info.mapperType) {
+	switch (info.mapper_type) {
 		default:
 		case M116TYPEA:
 			EXTCL_CPU_WR_MEM(116_TypeA);
@@ -393,8 +393,8 @@ void mapInit_116(void) {
 			EXTCL_PPU_256_TO_319(MMC3);
 			EXTCL_PPU_320_TO_34X(MMC3);
 			EXTCL_UPDATE_R2006(MMC3);
-			mapper.intStruct[0] = (BYTE *) &m116;
-			mapper.intStructSize[0] = sizeof(m116);
+			mapper.internal_struct[0] = (BYTE *) &m116;
+			mapper.internal_struct_size[0] = sizeof(m116);
 
 			if (info.reset >= HARD) {
 				BYTE i;
@@ -435,7 +435,7 @@ void mapInit_116(void) {
 			m116_A_UpdateChr()
 			m116_A_UpdateMirroring()
 
-			info.mapperExtendWrite = TRUE;
+			info.mapper_extend_wr = TRUE;
 
 			irqA12.present = TRUE;
 			irqA12_delay = 1;
@@ -450,10 +450,10 @@ void mapInit_116(void) {
 			EXTCL_PPU_256_TO_319(MMC3);
 			EXTCL_PPU_320_TO_34X(MMC3);
 			EXTCL_UPDATE_R2006(MMC3);
-			mapper.intStruct[0] = (BYTE *) &m116;
-			mapper.intStructSize[0] = sizeof(m116);
-			mapper.intStruct[1] = (BYTE *) &mmc3;
-			mapper.intStructSize[1] = sizeof(mmc3);
+			mapper.internal_struct[0] = (BYTE *) &m116;
+			mapper.internal_struct_size[0] = sizeof(m116);
+			mapper.internal_struct[1] = (BYTE *) &mmc3;
+			mapper.internal_struct_size[1] = sizeof(mmc3);
 
 			if (info.reset >= HARD) {
 				memset(&mmc3, 0x00, sizeof(mmc3));
@@ -463,7 +463,7 @@ void mapInit_116(void) {
 				{
 					BYTE i;
 
-					chrBank1kReset()
+					chr_bank_1k_reset()
 
 					for (i = 0; i < 8; i++) {
 						m116.chrmap[i] = i;
@@ -471,7 +471,7 @@ void mapInit_116(void) {
 				}
 			}
 
-			info.mapperExtendWrite = TRUE;
+			info.mapper_extend_wr = TRUE;
 
 			irqA12.present = TRUE;
 			irqA12_delay = 1;
@@ -485,10 +485,10 @@ void mapInit_116(void) {
 			EXTCL_PPU_256_TO_319(MMC3);
 			EXTCL_PPU_320_TO_34X(MMC3);
 			EXTCL_UPDATE_R2006(MMC3);
-			mapper.intStruct[0] = (BYTE *) &m116;
-			mapper.intStructSize[0] = sizeof(m116);
-			mapper.intStruct[1] = (BYTE *) &mmc3;
-			mapper.intStructSize[1] = sizeof(mmc3);
+			mapper.internal_struct[0] = (BYTE *) &m116;
+			mapper.internal_struct_size[0] = sizeof(m116);
+			mapper.internal_struct[1] = (BYTE *) &mmc3;
+			mapper.internal_struct_size[1] = sizeof(mmc3);
 
 			if (info.reset >= HARD) {
 				memset(&mmc3, 0x00, sizeof(mmc3));
@@ -498,15 +498,15 @@ void mapInit_116(void) {
 				{
 					BYTE i;
 
-					mapPrgRom8kReset();
-					chrBank1kReset()
+					map_prg_rom_8k_reset();
+					chr_bank_1k_reset()
 
 					for (i = 0; i < 4; i++) {
-						m116.prgmap[i] = mapper.romMapTo[i];
+						m116.prgmap[i] = mapper.rom_map_to[i];
 						if (i < 2) {
 							m116.mode0.prg[i] = 0;
 						} else {
-							m116.mode0.prg[i] = mapper.romMapTo[i];
+							m116.mode0.prg[i] = mapper.rom_map_to[i];
 						}
 					}
 
@@ -716,23 +716,23 @@ void extcl_cpu_wr_mem_116_TypeB(WORD address, BYTE value) {
 		if (m116.mode != value) {
 			m116.mode = value;
 			if (value & 0x02) {
-				chr.bank1k[0] = &m116.chrRam[0 << 10];
-				chr.bank1k[1] = &m116.chrRam[1 << 10];
-				chr.bank1k[2] = &m116.chrRam[2 << 10];
-				chr.bank1k[3] = &m116.chrRam[3 << 10];
-				chr.bank1k[4] = &m116.chrRam[4 << 10];
-				chr.bank1k[5] = &m116.chrRam[5 << 10];
-				chr.bank1k[6] = &m116.chrRam[6 << 10];
-				chr.bank1k[7] = &m116.chrRam[7 << 10];
+				chr.bank_1k[0] = &m116.chrRam[0 << 10];
+				chr.bank_1k[1] = &m116.chrRam[1 << 10];
+				chr.bank_1k[2] = &m116.chrRam[2 << 10];
+				chr.bank_1k[3] = &m116.chrRam[3 << 10];
+				chr.bank_1k[4] = &m116.chrRam[4 << 10];
+				chr.bank_1k[5] = &m116.chrRam[5 << 10];
+				chr.bank_1k[6] = &m116.chrRam[6 << 10];
+				chr.bank_1k[7] = &m116.chrRam[7 << 10];
 			} else {
-				chr.bank1k[0] = &chr.data[m116.chrmap[0] << 10];
-				chr.bank1k[1] = &chr.data[m116.chrmap[1] << 10];
-				chr.bank1k[2] = &chr.data[m116.chrmap[2] << 10];
-				chr.bank1k[3] = &chr.data[m116.chrmap[3] << 10];
-				chr.bank1k[4] = &chr.data[m116.chrmap[4] << 10];
-				chr.bank1k[5] = &chr.data[m116.chrmap[5] << 10];
-				chr.bank1k[6] = &chr.data[m116.chrmap[6] << 10];
-				chr.bank1k[7] = &chr.data[m116.chrmap[7] << 10];
+				chr.bank_1k[0] = &chr.data[m116.chrmap[0] << 10];
+				chr.bank_1k[1] = &chr.data[m116.chrmap[1] << 10];
+				chr.bank_1k[2] = &chr.data[m116.chrmap[2] << 10];
+				chr.bank_1k[3] = &chr.data[m116.chrmap[3] << 10];
+				chr.bank_1k[4] = &chr.data[m116.chrmap[4] << 10];
+				chr.bank_1k[5] = &chr.data[m116.chrmap[5] << 10];
+				chr.bank_1k[6] = &chr.data[m116.chrmap[6] << 10];
+				chr.bank_1k[7] = &chr.data[m116.chrmap[7] << 10];
 			}
 		}
 		return;
@@ -762,7 +762,7 @@ BYTE extcl_save_mapper_116_TypeB(BYTE mode, BYTE slot, FILE *fp) {
 		BYTE i;
 
 		for (i = 0; i < 8; i++) {
-			chr.bank1k[i] = &m116.chrRam[i << 10];
+			chr.bank_1k[i] = &m116.chrRam[i << 10];
 		}
 	}
 
@@ -772,7 +772,7 @@ void extcl_wr_chr_116_TypeB(WORD address, BYTE value) {
 	const BYTE slot = address >> 10;
 
 	if (m116.mode & 0x02) {
-		chr.bank1k[slot][address & 0x3FF] = value;
+		chr.bank_1k[slot][address & 0x3FF] = value;
 	}
 }
 
@@ -784,12 +784,12 @@ void extcl_cpu_wr_mem_116_TypeC(WORD address, BYTE value) {
 
 		for (i = 0; i < 4; i++) {
 			if (m116.mode & 0x02) {
-				mapPrgRom8k(1, i, m116.prgmap[i]);
+				map_prg_rom_8k(1, i, m116.prgmap[i]);
 			} else {
-				mapPrgRom8k(1, i, m116.mode0.prg[i]);
+				map_prg_rom_8k(1, i, m116.mode0.prg[i]);
 			}
 		}
-		mapPrgRom8kUpdate();
+		map_prg_rom_8k_update();
 
 		for (i = 0; i < 8; i++) {
 			if (m116.mode & 0x02) {
@@ -797,9 +797,9 @@ void extcl_cpu_wr_mem_116_TypeC(WORD address, BYTE value) {
 				BYTE value = m116.chrmap[i];
 
 				m116_C_chr1k(i, value);
-				chr.bank1k[i] = &chr.data[bank << 10];
+				chr.bank_1k[i] = &chr.data[bank << 10];
 			} else {
-				chr.bank1k[i] = &chr.data[m116.mode0.chr[i] << 10];
+				chr.bank_1k[i] = &chr.data[m116.mode0.chr[i] << 10];
 			}
 		}
 
@@ -838,17 +838,17 @@ void extcl_cpu_wr_mem_116_TypeC(WORD address, BYTE value) {
 		m116.mode0.chr[address] = (m116.mode0.chr[address] & (0xF0 >> offset))
 		        | ((value & 0x0F) << offset);
 
-		_controlBank(m116.mode0.chr[address], chrRom1kMax)
-		chr.bank1k[address] = &chr.data[m116.mode0.chr[address] << 10];
+		_control_bank(m116.mode0.chr[address], chrRom1kMax)
+		chr.bank_1k[address] = &chr.data[m116.mode0.chr[address] << 10];
 		return;
 	} else {
 		switch (address & 0xF003) {
 			case 0x8000:
-				controlBank(prgRom8kMax)
+				control_bank(prgRom8kMax)
 				if (m116.mode0.prg[0] != value) {
 					m116.mode0.prg[0] = value;
-					mapPrgRom8k(1, 0, value);
-					mapPrgRom8kUpdate();
+					map_prg_rom_8k(1, 0, value);
+					map_prg_rom_8k_update();
 				}
 				return;
 			case 0x9000:
@@ -862,11 +862,11 @@ void extcl_cpu_wr_mem_116_TypeC(WORD address, BYTE value) {
 				}
 				return;
 			case 0xA000:
-				controlBank(prgRom8kMax)
+				control_bank(prgRom8kMax)
 				if (m116.mode0.prg[1] != value) {
 					m116.mode0.prg[1] = value;
-					mapPrgRom8k(1, 1, value);
-					mapPrgRom8kUpdate();
+					map_prg_rom_8k(1, 1, value);
+					map_prg_rom_8k_update();
 				}
 				return;
 		}

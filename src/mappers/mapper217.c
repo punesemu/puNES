@@ -29,8 +29,8 @@
 	BYTE i;\
 	for (i = 0; i < 4; i++) {\
 		m217prg8k(m217.prg8kBank[i])\
-		controlBank(prgRom8kMax)\
-		mapPrgRom8k(1, i, value);\
+		control_bank(prgRom8kMax)\
+		map_prg_rom_8k(1, i, value);\
 	}\
 }
 #define m217_8000()\
@@ -52,22 +52,22 @@
 		swapChrBank1k(3, 7)\
 	}\
 	if (mmc3.prgRomCfg != prgRomCfgOld) {\
-		WORD p0 = mapper.romMapTo[0];\
-		WORD p2 = mapper.romMapTo[2];\
-		mapper.romMapTo[0] = p2;\
-		mapper.romMapTo[2] = p0;\
+		WORD p0 = mapper.rom_map_to[0];\
+		WORD p2 = mapper.rom_map_to[2];\
+		mapper.rom_map_to[0] = p2;\
+		mapper.rom_map_to[2] = p0;\
 		/*\
 		 * prgRomCfg 0x00 : $C000 - $DFFF fisso al penultimo banco\
 		 * prgRomCfg 0x02 : $8000 - $9FFF fisso al penultimo banco\
 		 */\
 		m217prg8k(prgRom8kBeforeLast)\
-		controlBank(prgRom8kMax)\
-		mapPrgRom8k(1, mmc3.prgRomCfg ^ 0x02, value);\
-		mapPrgRom8kUpdate();\
-		m217.prg8kBank[0] = mapper.romMapTo[0];\
-		m217.prg8kBank[1] = mapper.romMapTo[1];\
-		m217.prg8kBank[2] = mapper.romMapTo[2];\
-		m217.prg8kBank[3] = mapper.romMapTo[3];\
+		control_bank(prgRom8kMax)\
+		map_prg_rom_8k(1, mmc3.prgRomCfg ^ 0x02, value);\
+		map_prg_rom_8k_update();\
+		m217.prg8kBank[0] = mapper.rom_map_to[0];\
+		m217.prg8kBank[1] = mapper.rom_map_to[1];\
+		m217.prg8kBank[2] = mapper.rom_map_to[2];\
+		m217.prg8kBank[3] = mapper.rom_map_to[3];\
 	}\
 }
 #define m217_8001()\
@@ -77,61 +77,61 @@
 		case 0:\
 			m217chr1k(value)\
 			bank &= 0xFFE;\
-			_controlBank(bank, chrRom1kMax)\
-			chr.bank1k[mmc3.chrRomCfg] = &chr.data[bank << 10];\
-			chr.bank1k[mmc3.chrRomCfg | 0x01] = &chr.data[(bank + 1) << 10];\
+			_control_bank(bank, chrRom1kMax)\
+			chr.bank_1k[mmc3.chrRomCfg] = &chr.data[bank << 10];\
+			chr.bank_1k[mmc3.chrRomCfg | 0x01] = &chr.data[(bank + 1) << 10];\
 			return;\
 		case 1:\
 			m217chr1k(value)\
 			bank &= 0xFFE;\
-			_controlBank(bank, chrRom1kMax)\
-			chr.bank1k[mmc3.chrRomCfg | 0x02] = &chr.data[bank << 10];\
-			chr.bank1k[mmc3.chrRomCfg | 0x03] = &chr.data[(bank + 1) << 10];\
+			_control_bank(bank, chrRom1kMax)\
+			chr.bank_1k[mmc3.chrRomCfg | 0x02] = &chr.data[bank << 10];\
+			chr.bank_1k[mmc3.chrRomCfg | 0x03] = &chr.data[(bank + 1) << 10];\
 			return;\
 		case 2:\
 			m217chr1k(value)\
-			_controlBank(bank, chrRom1kMax)\
-			chr.bank1k[mmc3.chrRomCfg ^ 0x04] = &chr.data[bank << 10];\
+			_control_bank(bank, chrRom1kMax)\
+			chr.bank_1k[mmc3.chrRomCfg ^ 0x04] = &chr.data[bank << 10];\
 			return;\
 		case 3:\
 			m217chr1k(value)\
-			_controlBank(bank, chrRom1kMax)\
-			chr.bank1k[(mmc3.chrRomCfg ^ 0x04) | 0x01] = &chr.data[bank << 10];\
+			_control_bank(bank, chrRom1kMax)\
+			chr.bank_1k[(mmc3.chrRomCfg ^ 0x04) | 0x01] = &chr.data[bank << 10];\
 			return;\
 		case 4:\
 			m217chr1k(value)\
-			_controlBank(bank, chrRom1kMax)\
-			chr.bank1k[(mmc3.chrRomCfg ^ 0x04) | 0x02] = &chr.data[bank << 10];\
+			_control_bank(bank, chrRom1kMax)\
+			chr.bank_1k[(mmc3.chrRomCfg ^ 0x04) | 0x02] = &chr.data[bank << 10];\
 			return;\
 		case 5:\
 			m217chr1k(value)\
-			_controlBank(bank, chrRom1kMax)\
-			chr.bank1k[(mmc3.chrRomCfg ^ 0x04) | 0x03] = &chr.data[bank << 10];\
+			_control_bank(bank, chrRom1kMax)\
+			chr.bank_1k[(mmc3.chrRomCfg ^ 0x04) | 0x03] = &chr.data[bank << 10];\
 			return;\
 		case 6:\
 			m217prg8k(value)\
-			controlBank(prgRom8kMax)\
-			mapPrgRom8k(1, mmc3.prgRomCfg, value);\
-			mapPrgRom8kUpdate();\
-			m217.prg8kBank[mmc3.prgRomCfg] = mapper.romMapTo[mmc3.prgRomCfg];\
+			control_bank(prgRom8kMax)\
+			map_prg_rom_8k(1, mmc3.prgRomCfg, value);\
+			map_prg_rom_8k_update();\
+			m217.prg8kBank[mmc3.prgRomCfg] = mapper.rom_map_to[mmc3.prgRomCfg];\
 			return;\
 		case 7:\
 			m217prg8k(value)\
-			controlBank(prgRom8kMax)\
-			mapPrgRom8k(1, 1, value);\
-			mapPrgRom8kUpdate();\
-			m217.prg8kBank[1] = mapper.romMapTo[1];\
+			control_bank(prgRom8kMax)\
+			map_prg_rom_8k(1, 1, value);\
+			map_prg_rom_8k_update();\
+			m217.prg8kBank[1] = mapper.rom_map_to[1];\
 			return;\
 	}\
 }
 
 WORD prgRom16kMax, prgRom8kMax, prgRom8kBeforeLast, chrRom1kMax;
 
-void mapInit_217(void) {
-	prgRom16kMax = info.prgRom16kCount - 1;
-	prgRom8kMax = info.prgRom8kCount - 1;
-	prgRom8kBeforeLast = info.prgRom8kCount - 2;
-	chrRom1kMax = info.chrRom1kCount - 1;
+void map_init_217(void) {
+	prgRom16kMax = info.prg_rom_16k_count - 1;
+	prgRom8kMax = info.prg_rom_8k_count - 1;
+	prgRom8kBeforeLast = info.prg_rom_8k_count - 2;
+	chrRom1kMax = info.chr_rom_1k_count - 1;
 
 	EXTCL_CPU_WR_MEM(217);
 	EXTCL_SAVE_MAPPER(217);
@@ -141,10 +141,10 @@ void mapInit_217(void) {
 	EXTCL_PPU_256_TO_319(MMC3);
 	EXTCL_PPU_320_TO_34X(MMC3);
 	EXTCL_UPDATE_R2006(MMC3);
-	mapper.intStruct[0] = (BYTE *) &m217;
-	mapper.intStructSize[0] = sizeof(m217);
-	mapper.intStruct[1] = (BYTE *) &mmc3;
-	mapper.intStructSize[1] = sizeof(mmc3);
+	mapper.internal_struct[0] = (BYTE *) &m217;
+	mapper.internal_struct_size[0] = sizeof(m217);
+	mapper.internal_struct[1] = (BYTE *) &mmc3;
+	mapper.internal_struct_size[1] = sizeof(mmc3);
 
 	if (info.reset >= HARD) {
 		memset(&mmc3, 0x00, sizeof(mmc3));
@@ -160,7 +160,7 @@ void mapInit_217(void) {
 	m217.prg8kBank[2] = prgRom8kBeforeLast;
 	m217.prg8kBank[3] = prgRom8kMax;
 
-	info.mapperExtendWrite = TRUE;
+	info.mapper_extend_wr = TRUE;
 
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
@@ -227,17 +227,17 @@ void extcl_cpu_wr_mem_217(WORD address, BYTE value) {
 				m217prg8kupdate()
 			} else {
 				value = (m217.reg[0] & 0x0F) | ((m217.reg[1] << 4) & 0x30);
-				controlBank(prgRom16kMax)
-				mapPrgRom8k(2, 0, value);
-				mapPrgRom8k(2, 2, value);
+				control_bank(prgRom16kMax)
+				map_prg_rom_8k(2, 0, value);
+				map_prg_rom_8k(2, 2, value);
 			}
-			mapPrgRom8kUpdate();
+			map_prg_rom_8k_update();
 			return;
 		case 0x5001:
 			if (m217.reg[1] != value) {
 				m217.reg[1] = value;
 				m217prg8kupdate()
-				mapPrgRom8kUpdate();
+				map_prg_rom_8k_update();
 			}
 			return;
 		case 0x5007:

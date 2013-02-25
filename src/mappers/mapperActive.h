@@ -15,7 +15,7 @@ struct _active {
 	BYTE prgRam[4];
 } active;
 
-void mapInit_Active(void);
+void map_init_Active(void);
 void extcl_cpu_wr_mem_Active(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_Active(WORD address, BYTE openbus, BYTE before);
 BYTE extcl_save_mapper_Active(BYTE mode, BYTE slot, FILE *fp);

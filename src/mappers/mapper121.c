@@ -16,29 +16,29 @@
 #define m121Swap8kPrg()\
 	if (m121.reg[0]) {\
 		value = m121.reg[0];\
-		controlBank(prgRom8kMax)\
-		mapPrgRom8k(1, 2, value);\
+		control_bank(prgRom8kMax)\
+		map_prg_rom_8k(1, 2, value);\
 	} else {\
-		mapper.romMapTo[2] = m121.bck[1];\
+		mapper.rom_map_to[2] = m121.bck[1];\
 	}\
 	if (m121.reg[1]) {\
 		value = m121.reg[1];\
-		controlBank(prgRom8kMax)\
-		mapPrgRom8k(1, 3, value);\
+		control_bank(prgRom8kMax)\
+		map_prg_rom_8k(1, 3, value);\
 	} else {\
-		mapper.romMapTo[3] = prgRom8kMax;\
+		mapper.rom_map_to[3] = prgRom8kMax;\
 	}\
-	mapPrgRom8kUpdate()
+	map_prg_rom_8k_update()
 
 static const BYTE vlu121[4] = { 0x00, 0x83, 0x42, 0x00 };
 
 WORD prgRom32kMax, prgRom8kMax, prgRom8kBeforeLast, chrRom1kMax;
 
-void mapInit_121(void) {
-	prgRom32kMax = (info.prgRom16kCount >> 1) - 1;
-	prgRom8kMax = info.prgRom8kCount - 1;
-	chrRom1kMax = info.chrRom1kCount - 1;
-	prgRom8kBeforeLast = info.prgRom8kCount - 2;
+void map_init_121(void) {
+	prgRom32kMax = (info.prg_rom_16k_count >> 1) - 1;
+	prgRom8kMax = info.prg_rom_8k_count - 1;
+	chrRom1kMax = info.chr_rom_1k_count - 1;
+	prgRom8kBeforeLast = info.prg_rom_8k_count - 2;
 
 	EXTCL_CPU_WR_MEM(121);
 	EXTCL_CPU_RD_MEM(121);
@@ -49,19 +49,19 @@ void mapInit_121(void) {
 	EXTCL_PPU_256_TO_319(MMC3);
 	EXTCL_PPU_320_TO_34X(MMC3);
 	EXTCL_UPDATE_R2006(MMC3);
-	mapper.intStruct[0] = (BYTE *) &m121;
-	mapper.intStructSize[0] = sizeof(m121);
-	mapper.intStruct[1] = (BYTE *) &mmc3;
-	mapper.intStructSize[1] = sizeof(mmc3);
+	mapper.internal_struct[0] = (BYTE *) &m121;
+	mapper.internal_struct_size[0] = sizeof(m121);
+	mapper.internal_struct[1] = (BYTE *) &mmc3;
+	mapper.internal_struct_size[1] = sizeof(mmc3);
 
-	info.mapperExtendWrite = TRUE;
+	info.mapper_extend_wr = TRUE;
 
 	if (info.reset >= HARD) {
 		memset(&m121, 0x00, sizeof(m121));
 		memset(&mmc3, 0x00, sizeof(mmc3));
 
-		m121.bck[0] = mapper.romMapTo[0];
-		m121.bck[1] = mapper.romMapTo[2];
+		m121.bck[0] = mapper.rom_map_to[0];
+		m121.bck[1] = mapper.rom_map_to[2];
 	}
 
 	memset(&irqA12, 0x00, sizeof(irqA12));
@@ -78,10 +78,10 @@ void extcl_cpu_wr_mem_121(WORD address, BYTE value) {
 		switch (address & 0xE003) {
 			case 0x8000: {
 				if (mmc3.prgRomCfg != prgRomCfg) {
-					mapper.romMapTo[2] = m121.bck[0];
-					mapper.romMapTo[0] = m121.bck[1];
-					m121.bck[0] = mapper.romMapTo[0];
-					m121.bck[1] = mapper.romMapTo[2];
+					mapper.rom_map_to[2] = m121.bck[0];
+					mapper.rom_map_to[0] = m121.bck[1];
+					m121.bck[0] = mapper.rom_map_to[0];
+					m121.bck[1] = mapper.rom_map_to[2];
 				}
 				m121Swap8kPrg();
 				break;
@@ -89,10 +89,10 @@ void extcl_cpu_wr_mem_121(WORD address, BYTE value) {
 			case 0x8001:
 				if (mmc3.bankToUpdate == 6) {
 					if (mmc3.prgRomCfg) {
-						controlBank(prgRom8kMax)
+						control_bank(prgRom8kMax)
 						m121.bck[1] = value;
 					} else {
-						controlBank(prgRom8kMax)
+						control_bank(prgRom8kMax)
 						m121.bck[0] = value;
 					}
 				}

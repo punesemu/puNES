@@ -21,7 +21,7 @@ enum { YC, TL, AT, XC };
 	 *  0 -> no flip verticale\
 	 *  1 -> si flip verticale\
 	 */\
-	if (oam.elementPlus[sprite][AT] & 0x80) {\
+	if (oam.ele_plus[sprite][AT] & 0x80) {\
 		/* flip verticale */\
 		flipV = ~spritePlus[sprite].flipV;\
 	} else {\
@@ -51,16 +51,16 @@ enum { YC, TL, AT, XC };
 		 * caso di flip verticale sara' l'esatto contrario,\
 		 * dispari per i primi 8x8 e pari per i secondi 8x8.\
 		 */\
-		ppu.sprAdr = (oam.elementPlus[sprite][TL] & 0xFE) | ((flipV & 0x08) >> 3);\
+		ppu.sprAdr = (oam.ele_plus[sprite][TL] & 0xFE) | ((flipV & 0x08) >> 3);\
 		/* recupero la posizione nella vram del tile */\
-		ppu.sprAdr = ((oam.elementPlus[sprite][TL] & 0x01) << 12) | (ppu.sprAdr << 4);\
+		ppu.sprAdr = ((oam.ele_plus[sprite][TL] & 0x01) << 12) | (ppu.sprAdr << 4);\
 	} else {\
 		/* -- 8x8 --\
 		 *\
 		 * spritePlus[x].tile = numero del tile nella vram.\
 		 */\
 		/* recupero la posizione nella vram del tile */\
-		ppu.sprAdr = r2000.SPTadr | (oam.elementPlus[sprite][TL] << 4);\
+		ppu.sprAdr = r2000.SPTadr | (oam.ele_plus[sprite][TL] << 4);\
 	}\
 	/* aggiungo la cordinata Y dello sprite */\
 	ppu.sprAdr += (flipV & 0x07);\

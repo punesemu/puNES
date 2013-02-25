@@ -53,7 +53,7 @@ BYTE fds_load_rom(void) {
 		BYTE found = TRUE;
 		char rom_ext[2][10] = { ".fds\0", ".FDS\0" };
 
-		fds.info.fp = fopen(info.romFile, "rb");
+		fds.info.fp = fopen(info.rom_file, "rb");
 
 		if (!fds.info.fp) {
 			found = FALSE;
@@ -61,13 +61,13 @@ BYTE fds_load_rom(void) {
 			for (i = 0; i < LENGTH(rom_ext); i++) {
 				char rom_file[1024];
 
-				strncpy(rom_file, info.romFile, sizeof(rom_file));
+				strncpy(rom_file, info.rom_file, sizeof(rom_file));
 				strcat(rom_file, rom_ext[i]);
 
 				fds.info.fp = fopen(rom_file, "rb");
 
 				if (fds.info.fp) {
-					strncpy(info.romFile, rom_file, sizeof(info.romFile));
+					strncpy(info.rom_file, rom_file, sizeof(info.rom_file));
 					found = TRUE;
 					break;
 				}
@@ -142,7 +142,7 @@ BYTE fds_load_bios(void) {
 	}
 
 	/* copio il nome del file nella variabile */
-	strcpy(bios_file, info.romFile);
+	strcpy(bios_file, info.rom_file);
 	/* rintraccio l'ultimo '.' nel nome */
 #if defined MINGW32 || defined MINGW64
 	if ((lastSlash = strrchr(bios_file, '\\'))) {
@@ -160,7 +160,7 @@ BYTE fds_load_bios(void) {
 		goto fds_load_bios_founded;
 	}
 
-	sprintf(bios_file, "%s" BIOSFOLDER "/%s", info.baseFolder, BIOSFILE);
+	sprintf(bios_file, "%s" BIOS_FOLDER "/%s", info.base_folder, BIOSFILE);
 
 	if ((bios = fopen(bios_file, "rb"))) {
 		goto fds_load_bios_founded;
@@ -393,7 +393,7 @@ void fds_diff_op(BYTE mode, uint32_t position, WORD value) {
 		char file[1024];
 		char ext[10], *lastDot;
 
-		sprintf(file, "%s" DIFFFOLDER "/%s", info.baseFolder, basename(info.romFile));
+		sprintf(file, "%s" DIFF_FOLDER "/%s", info.base_folder, basename(info.rom_file));
 		sprintf(ext, ".dif");
 
 		/* rintraccio l'ultimo '.' nel nome */

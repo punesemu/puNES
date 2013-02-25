@@ -14,16 +14,16 @@
 
 #define kasingSwapPrgRom32k()\
 	value = kasing.prgHigh;\
-	controlBank(prgRom32kMax)\
-	mapPrgRom8k(4, 0, value)
+	control_bank(prgRom32kMax)\
+	map_prg_rom_8k(4, 0, value)
 #define kasingIntercept8001Prg(slot)\
 	if (kasing.prgMode) {\
 		kasingSwapPrgRom32k();\
 	} else {\
-		controlBank(prgRom8kMax)\
-		mapPrgRom8k(1, slot, value);\
+		control_bank(prgRom8kMax)\
+		map_prg_rom_8k(1, slot, value);\
 	}\
-	mapPrgRom8kUpdate()
+	map_prg_rom_8k_update()
 #define kasingSwapChrRomBank1k(slot1, slot2)\
 {\
 	WORD tmp = kasing.chrRomBank[slot1];\
@@ -33,7 +33,7 @@
 #define kasingChr1kUpdate(slot)\
 {\
 	WORD tmp = (kasing.chrHigh << 8) & 0x0100;\
-	chr.bank1k[slot] = &chr.data[(tmp | kasing.chrRomBank[slot]) << 10];\
+	chr.bank_1k[slot] = &chr.data[(tmp | kasing.chrRomBank[slot]) << 10];\
 }
 #define kasingIntercept8001Chr(slot, val)\
 {\
@@ -51,11 +51,11 @@
 
 WORD prgRom32kMax, prgRom8kMax, prgRom8kBeforeLast, chrRom1kMax;
 
-void mapInit_Kasing(void) {
-	prgRom32kMax = (info.prgRom16kCount >> 1) - 1;
-	prgRom8kMax = info.prgRom8kCount - 1;
-	prgRom8kBeforeLast = info.prgRom8kCount - 2;
-	chrRom1kMax = info.chrRom1kCount - 1;
+void map_init_Kasing(void) {
+	prgRom32kMax = (info.prg_rom_16k_count >> 1) - 1;
+	prgRom8kMax = info.prg_rom_8k_count - 1;
+	prgRom8kBeforeLast = info.prg_rom_8k_count - 2;
+	chrRom1kMax = info.chr_rom_1k_count - 1;
 
 	EXTCL_CPU_WR_MEM(Kasing);
 	EXTCL_SAVE_MAPPER(Kasing);
@@ -65,10 +65,10 @@ void mapInit_Kasing(void) {
 	EXTCL_PPU_256_TO_319(MMC3);
 	EXTCL_PPU_320_TO_34X(MMC3);
 	EXTCL_UPDATE_R2006(MMC3);
-	mapper.intStruct[0] = (BYTE *) &kasing;
-	mapper.intStructSize[0] = sizeof(kasing);
-	mapper.intStruct[1] = (BYTE *) &mmc3;
-	mapper.intStructSize[1] = sizeof(mmc3);
+	mapper.internal_struct[0] = (BYTE *) &kasing;
+	mapper.internal_struct_size[0] = sizeof(kasing);
+	mapper.internal_struct[1] = (BYTE *) &mmc3;
+	mapper.internal_struct_size[1] = sizeof(mmc3);
 
 	if (info.reset >= HARD) {
 		BYTE i;
@@ -85,7 +85,7 @@ void mapInit_Kasing(void) {
 		memset(&irqA12, 0x00, sizeof(irqA12));
 	}
 
-	info.mapperExtendWrite = TRUE;
+	info.mapper_extend_wr = TRUE;
 
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
@@ -105,18 +105,18 @@ void extcl_cpu_wr_mem_Kasing(WORD address, BYTE value) {
 
 		if ((kasing.prgHigh != prgHighOld) || (kasing.prgMode != prgModeOld)) {
 			if (kasing.prgMode) {
-				kasing.prgRomBank[0] = mapper.romMapTo[0];
-				kasing.prgRomBank[1] = mapper.romMapTo[1];
-				kasing.prgRomBank[2] = mapper.romMapTo[2];
-				kasing.prgRomBank[3] = mapper.romMapTo[3];
+				kasing.prgRomBank[0] = mapper.rom_map_to[0];
+				kasing.prgRomBank[1] = mapper.rom_map_to[1];
+				kasing.prgRomBank[2] = mapper.rom_map_to[2];
+				kasing.prgRomBank[3] = mapper.rom_map_to[3];
 				kasingSwapPrgRom32k();
 			} else {
-				mapper.romMapTo[0] = kasing.prgRomBank[0];
-				mapper.romMapTo[1] = kasing.prgRomBank[1];
-				mapper.romMapTo[2] = kasing.prgRomBank[2];
-				mapper.romMapTo[3] = kasing.prgRomBank[3];
+				mapper.rom_map_to[0] = kasing.prgRomBank[0];
+				mapper.rom_map_to[1] = kasing.prgRomBank[1];
+				mapper.rom_map_to[2] = kasing.prgRomBank[2];
+				mapper.rom_map_to[3] = kasing.prgRomBank[3];
 			}
-			mapPrgRom8kUpdate();
+			map_prg_rom_8k_update();
 		}
 		return;
 	} else if (address == 0x6001) {
@@ -149,7 +149,7 @@ void extcl_cpu_wr_mem_Kasing(WORD address, BYTE value) {
 			if (kasing.prgMode) {
 				mmc3.prgRomCfg = prgRomCfg;
 				kasingSwapPrgRom32k();
-				mapPrgRom8kUpdate();
+				map_prg_rom_8k_update();
 			}
 		}
 	} else if (address == 0x8001) {

@@ -18,7 +18,7 @@ enum {
 	BADINESBOTBE = 6
 };
 
-void mapInit_UxROM(BYTE model);
+void map_init_UxROM(BYTE model);
 
 void extcl_cpu_wr_mem_UxROM(WORD address, BYTE value);
 

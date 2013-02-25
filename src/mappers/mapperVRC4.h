@@ -23,12 +23,12 @@ struct _vrc4 {
 	WORD irqPrescaler;
 } vrc4;
 
-void mapInit_VRC4(BYTE revision);
+void map_init_VRC4(BYTE revision);
 void extcl_cpu_wr_mem_VRC4(WORD address, BYTE value);
 BYTE extcl_save_mapper_VRC4(BYTE mode, BYTE slot, FILE *fp);
 void extcl_cpu_every_cycle_VRC4(void);
 
-void mapInit_VRC4BMC(void);
+void map_init_VRC4BMC(void);
 void extcl_cpu_wr_mem_VRC4BMC(WORD address, BYTE value);
 
 #endif /* MAPPERVRC4_H_ */

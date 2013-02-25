@@ -29,7 +29,7 @@ struct _ks7022 {
 	BYTE reg;
 } ks7022;
 
-void mapInit_Kaiser(BYTE model);
+void map_init_Kaiser(BYTE model);
 
 void extcl_cpu_wr_mem_Kaiser_ks202(WORD address, BYTE value);
 BYTE extcl_save_mapper_Kaiser_ks202(BYTE mode, BYTE slot, FILE *fp);

@@ -13,16 +13,16 @@
 
 WORD prgRom16kMax, prgRom8kMax, chrRom4kMax;
 
-void mapInit_MMC2and4(void) {
-	prgRom16kMax = info.prgRom16kCount - 1;
-	prgRom8kMax = info.prgRom8kCount - 1;
-	chrRom4kMax = info.chrRom4kCount - 1;
+void map_init_MMC2and4(void) {
+	prgRom16kMax = info.prg_rom_16k_count - 1;
+	prgRom8kMax = info.prg_rom_8k_count - 1;
+	chrRom4kMax = info.chr_rom_4k_count - 1;
 
 	EXTCL_CPU_WR_MEM(MMC2and4);
 	EXTCL_SAVE_MAPPER(MMC2and4);
 	EXTCL_AFTER_RD_CHR(MMC2and4);
-	mapper.intStruct[0] = (BYTE *) &mmc2and4;
-	mapper.intStructSize[0] = sizeof(mmc2and4);
+	mapper.internal_struct[0] = (BYTE *) &mmc2and4;
+	mapper.internal_struct_size[0] = sizeof(mmc2and4);
 
 	if (info.reset >= HARD) {
 		memset(&mmc2and4, 0x00, sizeof(mmc2and4));
@@ -30,7 +30,7 @@ void mapInit_MMC2and4(void) {
 
 		/* MMC2 */
 		if (info.mapper == 9) {
-			mapper.romMapTo[1] = info.prgRom8kCount - 3;
+			mapper.rom_map_to[1] = info.prg_rom_8k_count - 3;
 		}
 	}
 }
@@ -43,29 +43,29 @@ void extcl_cpu_wr_mem_MMC2and4(WORD address, BYTE value) {
 		case 0xA000:
 			if (info.mapper == 9) {
 				/* MMC2 */
-				controlBankWithAND(0x0F, prgRom8kMax)
-				mapPrgRom8k(1, 0, value);
+				control_bank_with_AND(0x0F, prgRom8kMax)
+				map_prg_rom_8k(1, 0, value);
 			} else {
 				/* MMC4 */
-				controlBankWithAND(0x0F, prgRom16kMax)
-				mapPrgRom8k(2, 0, value);
+				control_bank_with_AND(0x0F, prgRom16kMax)
+				map_prg_rom_8k(2, 0, value);
 			}
-			mapPrgRom8kUpdate();
+			map_prg_rom_8k_update();
 			return;
 		case 0xB000:
-			controlBankWithAND(0x1F, chrRom4kMax)
+			control_bank_with_AND(0x1F, chrRom4kMax)
 			mmc2and4.regs[0] = value;
 			break;
 		case 0xC000:
-			controlBankWithAND(0x1F, chrRom4kMax)
+			control_bank_with_AND(0x1F, chrRom4kMax)
 			mmc2and4.regs[1] = value;
 			break;
 		case 0xD000:
-			controlBankWithAND(0x1F, chrRom4kMax)
+			control_bank_with_AND(0x1F, chrRom4kMax)
 			mmc2and4.regs[2] = value;
 			break;
 		case 0xE000:
-			controlBankWithAND(0x1F, chrRom4kMax)
+			control_bank_with_AND(0x1F, chrRom4kMax)
 			mmc2and4.regs[3] = value;
 			break;
 		case 0xF000:
@@ -77,15 +77,15 @@ void extcl_cpu_wr_mem_MMC2and4(WORD address, BYTE value) {
 			return;
 	}
 	tmp = mmc2and4.regs[mmc2and4.latch0] << 12;
-	chr.bank1k[0] = &chr.data[tmp];
-	chr.bank1k[1] = &chr.data[tmp | 0x0400];
-	chr.bank1k[2] = &chr.data[tmp | 0x0800];
-	chr.bank1k[3] = &chr.data[tmp | 0x0C00];
+	chr.bank_1k[0] = &chr.data[tmp];
+	chr.bank_1k[1] = &chr.data[tmp | 0x0400];
+	chr.bank_1k[2] = &chr.data[tmp | 0x0800];
+	chr.bank_1k[3] = &chr.data[tmp | 0x0C00];
 	tmp = mmc2and4.regs[mmc2and4.latch1] << 12;
-	chr.bank1k[4] = &chr.data[tmp];
-	chr.bank1k[5] = &chr.data[tmp | 0x0400];
-	chr.bank1k[6] = &chr.data[tmp | 0x0800];
-	chr.bank1k[7] = &chr.data[tmp | 0x0C00];
+	chr.bank_1k[4] = &chr.data[tmp];
+	chr.bank_1k[5] = &chr.data[tmp | 0x0400];
+	chr.bank_1k[6] = &chr.data[tmp | 0x0800];
+	chr.bank_1k[7] = &chr.data[tmp | 0x0C00];
 }
 BYTE extcl_save_mapper_MMC2and4(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, mmc2and4.regs);
@@ -122,8 +122,8 @@ void extcl_after_rd_chr_MMC2and4(WORD address) {
 			return;
 	}
 	value <<= 12;
-	chr.bank1k[0 | bank] = &chr.data[value];
-	chr.bank1k[1 | bank] = &chr.data[value | 0x0400];
-	chr.bank1k[2 | bank] = &chr.data[value | 0x0800];
-	chr.bank1k[3 | bank] = &chr.data[value | 0x0C00];
+	chr.bank_1k[0 | bank] = &chr.data[value];
+	chr.bank_1k[1 | bank] = &chr.data[value | 0x0400];
+	chr.bank_1k[2 | bank] = &chr.data[value | 0x0800];
+	chr.bank_1k[3 | bank] = &chr.data[value | 0x0C00];
 }

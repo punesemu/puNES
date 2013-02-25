@@ -17,7 +17,7 @@ enum {
 	GOLDENFIVE = 5
 };
 
-void mapInit_Camerica(void);
+void map_init_Camerica(void);
 void extcl_cpu_wr_mem_Camerica_BF9093(WORD address, BYTE value);
 void extcl_cpu_wr_mem_Camerica_BF9096(WORD address, BYTE value);
 void extcl_cpu_wr_mem_Camerica_BF9097(WORD address, BYTE value);

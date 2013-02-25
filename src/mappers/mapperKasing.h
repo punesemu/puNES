@@ -18,7 +18,7 @@ struct _kasing {
 	WORD chrRomBank[8];
 } kasing;
 
-void mapInit_Kasing(void);
+void map_init_Kasing(void);
 void extcl_cpu_wr_mem_Kasing(WORD address, BYTE value);
 BYTE extcl_save_mapper_Kasing(BYTE mode, BYTE slot, FILE *fp);
 

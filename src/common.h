@@ -17,10 +17,10 @@ typedef signed char SBYTE;
 typedef signed short SWORD;
 typedef signed int SDBWORD;
 
-#define BIOSFOLDER    "/bios"
-#define DIFFFOLDER    "/diff"
-#define PERGAMEFOLDER "/pgs"
-#define SAVEFOLDER    "/save"
+#define BIOS_FOLDER    "/bios"
+#define DIFF_FOLDER    "/diff"
+#define PERGAME_FOLDER "/pgs"
+#define SAVE_FOLDER    "/save"
 
 #ifndef FALSE
 enum { FALSE, TRUE };
@@ -62,21 +62,21 @@ enum { GRAYSCALE = 0x30, NORMAL = 0x3F };
 #endif
 
 struct _info {
-	char baseFolder[1024];
-	char romFile[1024];
-	char loadRomFile[1024];
+	char base_folder[1024];
+	char rom_file[1024];
+	char load_rom_file[1024];
 	BYTE machine;
-	BYTE machineDb;
+	BYTE machine_db;
 	WORD mapper;
-	BYTE mapperType;
-	BYTE mapperExtendWrite;
-	BYTE mapperExtendRead;
+	BYTE mapper_type;
+	BYTE mapper_extend_wr;
+	BYTE mapper_extend_rd;
 	BYTE portable;
 	BYTE id;
 	BYTE trainer;
 	BYTE stop;
 	BYTE reset;
-	BYTE executeCPU;
+	BYTE execute_cpu;
 	BYTE gui;
 	BYTE no_rom;
 	BYTE pause;
@@ -84,17 +84,17 @@ struct _info {
 	BYTE pause_frames_drawscreen;
 	BYTE first_illegal_opcode;
 	BYTE sha1sum[20];
-	char sha1sumString[41];
-	BYTE sha1sumChr[20];
-	char sha1sumStringChr[41];
-	WORD chrRom8kCount;
-	WORD chrRom4kCount;
-	WORD chrRom1kCount;
-	WORD prgRom16kCount;
-	WORD prgRom8kCount;
-	BYTE prgRamPlus8kCount;
-	BYTE prgRamBatBanks;
-	BYTE prgRamBatStart;
+	char sha1sum_string[41];
+	BYTE sha1sum_chr[20];
+	char sha1sum_string_chr[41];
+	WORD chr_rom_8k_count;
+	WORD chr_rom_4k_count;
+	WORD chr_rom_1k_count;
+	WORD prg_rom_16k_count;
+	WORD prg_rom_8k_count;
+	BYTE prg_ram_plus_8k_count;
+	BYTE prg_ram_bat_banks;
+	BYTE prg_ram_bat_start;
 
 	BYTE r4016_dmc_double_read_disabled;
 	BYTE r2002_race_condition_disabled;
@@ -102,4 +102,3 @@ struct _info {
 } info;
 
 #endif /* COMMON_H_ */
-

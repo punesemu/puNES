@@ -16,7 +16,7 @@ struct _m50 {
 	BYTE delay;
 } m50;
 
-void mapInit_50(void);
+void map_init_50(void);
 void extcl_cpu_wr_mem_50(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_50(WORD address, BYTE openbus, BYTE before);
 BYTE extcl_save_mapper_50(BYTE mode, BYTE slot, FILE *fp);

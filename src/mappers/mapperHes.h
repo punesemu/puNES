@@ -10,7 +10,7 @@
 
 #include "common.h"
 
-void mapInit_Hes(void);
+void map_init_Hes(void);
 void extcl_cpu_wr_mem_Hes(WORD address, BYTE value);
 
 #endif /* MAPPERHES_H_ */

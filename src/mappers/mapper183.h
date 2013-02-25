@@ -18,7 +18,7 @@ struct _m183 {
 	BYTE chrRomBank[8];
 } m183;
 
-void mapInit_183(void);
+void map_init_183(void);
 void extcl_cpu_wr_mem_183(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_183(WORD address, BYTE openbus, BYTE before);
 BYTE extcl_save_mapper_183(BYTE mode, BYTE slot, FILE *fp);

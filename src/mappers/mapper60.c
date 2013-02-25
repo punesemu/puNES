@@ -11,14 +11,14 @@
 
 WORD prgRom16kMax, chrRom8kMax;
 
-void mapInit_60(void) {
-	prgRom16kMax = info.prgRom16kCount - 1;
-	chrRom8kMax = info.chrRom8kCount - 1;
+void map_init_60(void) {
+	prgRom16kMax = info.prg_rom_16k_count - 1;
+	chrRom8kMax = info.chr_rom_8k_count - 1;
 
 	EXTCL_CPU_WR_MEM(60);
 	EXTCL_SAVE_MAPPER(60);
-	mapper.intStruct[0] = (BYTE *) &m60;
-	mapper.intStructSize[0] = sizeof(m60);
+	mapper.internal_struct[0] = (BYTE *) &m60;
+	mapper.internal_struct_size[0] = sizeof(m60);
 
 	if (info.reset >= HARD) {
 		m60.index = 0;
@@ -32,21 +32,21 @@ void mapInit_60(void) {
 		DBWORD bank;
 
 		value = m60.index;
-		controlBank(prgRom16kMax)
-		mapPrgRom8k(2, 0, value);
-		mapPrgRom8k(2, 2, value);
+		control_bank(prgRom16kMax)
+		map_prg_rom_8k(2, 0, value);
+		map_prg_rom_8k(2, 2, value);
 
 		value = m60.index;
-		controlBank(chrRom8kMax)
+		control_bank(chrRom8kMax)
 		bank = value << 13;
-		chr.bank1k[0] = &chr.data[bank];
-		chr.bank1k[1] = &chr.data[bank | 0x0400];
-		chr.bank1k[2] = &chr.data[bank | 0x0800];
-		chr.bank1k[3] = &chr.data[bank | 0x0C00];
-		chr.bank1k[4] = &chr.data[bank | 0x1000];
-		chr.bank1k[5] = &chr.data[bank | 0x1400];
-		chr.bank1k[6] = &chr.data[bank | 0x1800];
-		chr.bank1k[7] = &chr.data[bank | 0x1C00];
+		chr.bank_1k[0] = &chr.data[bank];
+		chr.bank_1k[1] = &chr.data[bank | 0x0400];
+		chr.bank_1k[2] = &chr.data[bank | 0x0800];
+		chr.bank_1k[3] = &chr.data[bank | 0x0C00];
+		chr.bank_1k[4] = &chr.data[bank | 0x1000];
+		chr.bank_1k[5] = &chr.data[bank | 0x1400];
+		chr.bank_1k[6] = &chr.data[bank | 0x1800];
+		chr.bank_1k[7] = &chr.data[bank | 0x1C00];
 	}
 }
 void extcl_cpu_wr_mem_60(WORD address, BYTE value) {
@@ -58,9 +58,9 @@ BYTE extcl_save_mapper_60(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void mapInit_60_vt5201(void) {
-	prgRom16kMax = info.prgRom16kCount - 1;
-	chrRom8kMax = info.chrRom8kCount - 1;
+void map_init_60_vt5201(void) {
+	prgRom16kMax = info.prg_rom_16k_count - 1;
+	chrRom8kMax = info.chr_rom_8k_count - 1;
 
 	EXTCL_CPU_WR_MEM(60_vt5201);
 
@@ -78,24 +78,24 @@ void extcl_cpu_wr_mem_60_vt5201(WORD address, BYTE value) {
 	}
 
 	value = (address >> 4) & ~((~address >> 7) & 0x01);
-	controlBank(prgRom16kMax)
-	mapPrgRom8k(2, 0, value);
+	control_bank(prgRom16kMax)
+	map_prg_rom_8k(2, 0, value);
 
 	value = (address >> 4) | ((~address >> 7) & 0x01);
-	controlBank(prgRom16kMax)
-	mapPrgRom8k(2, 2, value);
+	control_bank(prgRom16kMax)
+	map_prg_rom_8k(2, 2, value);
 
-	mapPrgRom8kUpdate();
+	map_prg_rom_8k_update();
 
 	value = address & 0xFF;
-	controlBank(chrRom8kMax)
+	control_bank(chrRom8kMax)
 	bank = value << 13;
-	chr.bank1k[0] = &chr.data[bank];
-	chr.bank1k[1] = &chr.data[bank | 0x0400];
-	chr.bank1k[2] = &chr.data[bank | 0x0800];
-	chr.bank1k[3] = &chr.data[bank | 0x0C00];
-	chr.bank1k[4] = &chr.data[bank | 0x1000];
-	chr.bank1k[5] = &chr.data[bank | 0x1400];
-	chr.bank1k[6] = &chr.data[bank | 0x1800];
-	chr.bank1k[7] = &chr.data[bank | 0x1C00];
+	chr.bank_1k[0] = &chr.data[bank];
+	chr.bank_1k[1] = &chr.data[bank | 0x0400];
+	chr.bank_1k[2] = &chr.data[bank | 0x0800];
+	chr.bank_1k[3] = &chr.data[bank | 0x0C00];
+	chr.bank_1k[4] = &chr.data[bank | 0x1000];
+	chr.bank_1k[5] = &chr.data[bank | 0x1400];
+	chr.bank_1k[6] = &chr.data[bank | 0x1800];
+	chr.bank_1k[7] = &chr.data[bank | 0x1C00];
 }

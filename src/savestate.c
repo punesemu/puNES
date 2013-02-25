@@ -232,15 +232,15 @@ BYTE stateOperation(BYTE mode, BYTE slot, FILE *fp) {
 
 	if (mode == SSREAD) {
 		savestateInt(mode, slot, savestate.version)
-		i += sizeof(info.romFile);
+		i += sizeof(info.rom_file);
 		i += sizeof(info.sha1sum);
-		i += sizeof(info.sha1sumString);
+		i += sizeof(info.sha1sum_string);
 		fseek(fp, i, SEEK_CUR);
 	} else {
 		savestateInt(mode, slot, savestate.version)
-		savestateEle(mode, slot, info.romFile)
+		savestateEle(mode, slot, info.rom_file)
 		savestateEle(mode, slot, info.sha1sum)
-		savestateEle(mode, slot, info.sha1sumString)
+		savestateEle(mode, slot, info.sha1sum_string)
 	}
 
 	/* cpu */
@@ -464,23 +464,23 @@ BYTE stateOperation(BYTE mode, BYTE slot, FILE *fp) {
 	if (mode == SSREAD) {
 		savestateInt(mode, slot, tmp)
 		if (tmp) {
-			savestateMem(mode, slot, prg.ramPlus, prgRamPlusSize(), FALSE)
-			savestatePos(mode, slot, prg.ramPlus, prg.ramPlus8k)
+			savestateMem(mode, slot, prg.ram_plus, prg_ram_plus_size(), FALSE)
+			savestatePos(mode, slot, prg.ram_plus, prg.ram_plus_8k)
 			savestateInt(mode, slot, tmp)
 			if (tmp) {
-				savestatePos(mode, slot, prg.ramPlus, prg.ramBattery)
+				savestatePos(mode, slot, prg.ram_plus, prg.ram_battery)
 			}
 		}
 	} else {
-		if (prg.ramPlus) {
+		if (prg.ram_plus) {
 			tmp = TRUE;
 			savestateInt(mode, slot, tmp)
-			savestateMem(mode, slot, prg.ramPlus, prgRamPlusSize(), FALSE)
-			savestatePos(mode, slot, prg.ramPlus, prg.ramPlus8k)
-			if (prg.ramBattery) {
+			savestateMem(mode, slot, prg.ram_plus, prg_ram_plus_size(), FALSE)
+			savestatePos(mode, slot, prg.ram_plus, prg.ram_plus_8k)
+			if (prg.ram_battery) {
 				tmp = TRUE;
 				savestateInt(mode, slot, tmp)
-				savestatePos(mode, slot, prg.ramPlus, prg.ramBattery)
+				savestatePos(mode, slot, prg.ram_plus, prg.ram_battery)
 			} else {
 				tmp = FALSE;
 				savestateInt(mode, slot, tmp)
@@ -490,46 +490,46 @@ BYTE stateOperation(BYTE mode, BYTE slot, FILE *fp) {
 			savestateInt(mode, slot, tmp)
 		}
 	}
-	for (i = 0; i < LENGTH(prg.rom8k); i++) {
+	for (i = 0; i < LENGTH(prg.rom_8k); i++) {
 		if (mode == SSSAVE) {
-			uint32_t bank = mapper.romMapTo[i] << 13;
+			uint32_t bank = mapper.rom_map_to[i] << 13;
 			savestateInt(mode, slot, bank)
 		} else {
-			savestatePos(mode, slot, prg.rom, prg.rom8k[i])
+			savestatePos(mode, slot, prg.rom, prg.rom_8k[i])
 		}
 	}
-	savestateInt(mode, slot, mapper.writeVRAM)
-	if (mapper.writeVRAM) {
-		savestateMem(mode, slot, chr.data, chrRamSize(), FALSE)
+	savestateInt(mode, slot, mapper.write_vram)
+	if (mapper.write_vram) {
+		savestateMem(mode, slot, chr.data, chr_ram_size(), FALSE)
 	}
-	for (i = 0; i < LENGTH(chr.bank1k); i++) {
-		savestatePos(mode, slot, chr.data, chr.bank1k[i])
+	for (i = 0; i < LENGTH(chr.bank_1k); i++) {
+		savestatePos(mode, slot, chr.data, chr.bank_1k[i])
 	}
 	savestateEle(mode, slot, ntbl.data)
-	for (i = 0; i < LENGTH(ntbl.bank1k); i++) {
+	for (i = 0; i < LENGTH(ntbl.bank_1k); i++) {
 		if (mode == SSSAVE) {
-			uint32_t diff = ntbl.bank1k[i] - ntbl.data;
+			uint32_t diff = ntbl.bank_1k[i] - ntbl.data;
 			if (diff > 0x1000) {
 				tmp = 0;
 				savestateInt(mode, slot, tmp)
 			} else {
-				savestatePos(mode, slot, ntbl.data, ntbl.bank1k[i])
+				savestatePos(mode, slot, ntbl.data, ntbl.bank_1k[i])
 			}
 		} else {
-			savestatePos(mode, slot, ntbl.data, ntbl.bank1k[i])
+			savestatePos(mode, slot, ntbl.data, ntbl.bank_1k[i])
 		}
 	}
 	savestateEle(mode, slot, palette.color)
 	savestateEle(mode, slot, oam.data)
 	savestateEle(mode, slot, oam.plus)
-	for (i = 0; i < LENGTH(oam.elementPlus); i++) {
-		savestatePos(mode, slot, oam.plus, oam.elementPlus[i])
+	for (i = 0; i < LENGTH(oam.ele_plus); i++) {
+		savestatePos(mode, slot, oam.plus, oam.ele_plus[i])
 	}
 
 	/* mapper */
 	savestateEle(mode, slot, mapper.mirroring)
 	/*
-	 * ho portato da BYTE a WORD mapper.romMapTo e per mantenere
+	 * ho portato da BYTE a WORD mapper.rom_map_to e per mantenere
 	 * la compatibilita' con i vecchi salvataggi faccio questa
 	 * conversione.
 	 */
@@ -540,16 +540,16 @@ BYTE stateOperation(BYTE mode, BYTE slot, FILE *fp) {
 			savestateEle(mode, slot, old_romMapTo)
 
 			for (i = 0; i < 4; i++) {
-				mapper.romMapTo[i] = old_romMapTo[i];
+				mapper.rom_map_to[i] = old_romMapTo[i];
 			}
 		} else if (mode == SSCOUNT) {
 			savestate.totSize[slot] += sizeof(BYTE) * 4;
 		}
 	} else {
-		savestateEle(mode, slot, mapper.romMapTo)
+		savestateEle(mode, slot, mapper.rom_map_to)
 	}
 
-	if (mapper.intStruct[0]) {
+	if (mapper.internal_struct[0]) {
 		extcl_save_mapper(mode, slot, fp);
 	}
 
@@ -678,16 +678,16 @@ BYTE nameStateFile(char *file, BYTE slot) {
 
 	/* game genie */
 	if (info.mapper == GAMEGENIE_MAPPER) {
-		fl = info.loadRomFile;
+		fl = info.load_rom_file;
 	} else {
-		fl = info.romFile;
+		fl = info.rom_file;
 	}
 
 	if (!fl[0]) {
 		return (EXIT_ERROR);
 	}
 
-	sprintf(file, "%s" SAVEFOLDER "/%s", info.baseFolder, basename(fl));
+	sprintf(file, "%s" SAVE_FOLDER "/%s", info.base_folder, basename(fl));
 	sprintf(ext, ".p%02d", slot);
 
 	/* rintraccio l'ultimo '.' nel nome */

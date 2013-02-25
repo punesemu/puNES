@@ -14,7 +14,7 @@ struct _m186 {
 	BYTE *prgRamBank2;
 } m186;
 
-void mapInit_186(void);
+void map_init_186(void);
 void extcl_cpu_wr_mem_186(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_186(WORD address, BYTE openbus, BYTE before);
 BYTE extcl_save_mapper_186(BYTE mode, BYTE slot, FILE *fp);

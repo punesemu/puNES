@@ -13,26 +13,26 @@
 #include "savestate.h"
 
 #define m114prgRomBackup()\
-	m114.prgRomBank[0] = mapper.romMapTo[0];\
-	m114.prgRomBank[1] = mapper.romMapTo[1];\
-	m114.prgRomBank[2] = mapper.romMapTo[2];\
-	m114.prgRomBank[3] = mapper.romMapTo[3]
+	m114.prgRomBank[0] = mapper.rom_map_to[0];\
+	m114.prgRomBank[1] = mapper.rom_map_to[1];\
+	m114.prgRomBank[2] = mapper.rom_map_to[2];\
+	m114.prgRomBank[3] = mapper.rom_map_to[3]
 #define m114prgRomRestore()\
-	mapper.romMapTo[0] = m114.prgRomBank[0];\
-	mapper.romMapTo[1] = m114.prgRomBank[1];\
-	mapper.romMapTo[2] = m114.prgRomBank[2];\
-	mapper.romMapTo[3] = m114.prgRomBank[3]
+	mapper.rom_map_to[0] = m114.prgRomBank[0];\
+	mapper.rom_map_to[1] = m114.prgRomBank[1];\
+	mapper.rom_map_to[2] = m114.prgRomBank[2];\
+	mapper.rom_map_to[3] = m114.prgRomBank[3]
 
 static const BYTE vlu114[8] = {0, 3, 1, 5, 6, 7, 2, 4};
 
 WORD prgRom16kMax, prgRom8kMax, prgRom8kBeforeLast, chrRom2kMax, chrRom1kMax;
 
-void mapInit_114(void) {
-	prgRom16kMax = info.prgRom16kCount - 1;
-	prgRom8kMax = info.prgRom8kCount - 1;
-	prgRom8kBeforeLast = info.prgRom8kCount - 2;
-	chrRom2kMax = (info.chrRom1kCount >> 1) - 1;
-	chrRom1kMax = info.chrRom1kCount - 1;
+void map_init_114(void) {
+	prgRom16kMax = info.prg_rom_16k_count - 1;
+	prgRom8kMax = info.prg_rom_8k_count - 1;
+	prgRom8kBeforeLast = info.prg_rom_8k_count - 2;
+	chrRom2kMax = (info.chr_rom_1k_count >> 1) - 1;
+	chrRom1kMax = info.chr_rom_1k_count - 1;
 
 	EXTCL_CPU_WR_MEM(114);
 	EXTCL_SAVE_MAPPER(114);
@@ -42,10 +42,10 @@ void mapInit_114(void) {
 	EXTCL_PPU_256_TO_319(MMC3);
 	EXTCL_PPU_320_TO_34X(MMC3);
 	EXTCL_UPDATE_R2006(MMC3);
-	mapper.intStruct[0] = (BYTE *) &m114;
-	mapper.intStructSize[0] = sizeof(m114);
-	mapper.intStruct[1] = (BYTE *) &mmc3;
-	mapper.intStructSize[1] = sizeof(mmc3);
+	mapper.internal_struct[0] = (BYTE *) &m114;
+	mapper.internal_struct_size[0] = sizeof(m114);
+	mapper.internal_struct[1] = (BYTE *) &mmc3;
+	mapper.internal_struct_size[1] = sizeof(mmc3);
 
 	if (info.reset >= HARD) {
 		memset(&m114, 0x00, sizeof(m114));
@@ -56,12 +56,12 @@ void mapInit_114(void) {
 			BYTE i;
 
 			for (i = 0; i < 4; i++) {
-				m114.prgRomBank[i] = mapper.romMapTo[i];
+				m114.prgRomBank[i] = mapper.rom_map_to[i];
 			}
 		}
 	}
 
-	info.mapperExtendWrite = TRUE;
+	info.mapper_extend_wr = TRUE;
 
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
@@ -78,13 +78,13 @@ void extcl_cpu_wr_mem_114(WORD address, BYTE value) {
 		case 0x6001:
 			m114.prgRomSwitch = value >> 7;
 			if (m114.prgRomSwitch) {
-				controlBankWithAND(0x1F, prgRom16kMax)
-				mapPrgRom8k(2, 0, value);
-				mapPrgRom8k(2, 2, value);
-				mapPrgRom8kUpdate();
+				control_bank_with_AND(0x1F, prgRom16kMax)
+				map_prg_rom_8k(2, 0, value);
+				map_prg_rom_8k(2, 2, value);
+				map_prg_rom_8k_update();
 			} else {
 				m114prgRomRestore();
-				mapPrgRom8kUpdate();
+				map_prg_rom_8k_update();
 			}
 			return;
 		case 0x8000:

@@ -10,7 +10,7 @@
 #include "mappers.h"
 #include "memmap.h"
 
-void mapInit_0(void) {
+void map_init_0(void) {
 	EXTCL_CPU_WR_MEM(0);
 	EXTCL_CPU_RD_MEM(0);
 }

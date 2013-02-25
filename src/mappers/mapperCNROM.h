@@ -23,7 +23,7 @@ struct _cnrom2627 {
 	BYTE chrReadEnable;
 } cnrom2627;
 
-void mapInit_CNROM(BYTE model);
+void map_init_CNROM(BYTE model);
 void extcl_cpu_wr_mem_CNROM(WORD address, BYTE value);
 BYTE extcl_save_mapper_CNROM(BYTE mode, BYTE slot, FILE *fp);
 BYTE extcl_rd_chr_CNROM(WORD address);

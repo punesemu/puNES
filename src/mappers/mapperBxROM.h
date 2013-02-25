@@ -12,7 +12,7 @@
 
 enum { AVENINA001 = 2, BXROMUNL = 3 };
 
-void mapInit_BxROM(void);
+void map_init_BxROM(void);
 
 void extcl_cpu_wr_mem_BxROM(WORD address, BYTE value);
 
