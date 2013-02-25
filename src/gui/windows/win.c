@@ -2103,7 +2103,7 @@ void set_filter(BYTE newfilter) {
 		case RGBNTSC:
 			gfxSetScreen(NOCHANGE, RGBNTSC, NOCHANGE, NOCHANGE, FALSE);
 			if (cfg->filter == RGBNTSC) {
-				ntscSet(cfg->ntsc_format, 0, 0, (BYTE *) paletteRGB, 0);
+				ntscSet(cfg->ntsc_format, 0, 0, (BYTE *) palette_RGB, 0);
 				guiUpdate();
 			}
 			break;

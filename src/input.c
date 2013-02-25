@@ -258,7 +258,7 @@ BYTE input_rd_reg_zapper(BYTE openbus, WORD **screen_index, _port *port) {
 				}
 				{
 					int brightness;
-					_colorRGB color = paletteRGB[screen_index[y_rect][x_rect]];
+					_color_RGB color = palette_RGB[screen_index[y_rect][x_rect]];
 
 					brightness = (color.r * 0.299) + (color.g * 0.587) + (color.b * 0.114);
 					if (brightness > 0x80) {

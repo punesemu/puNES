@@ -39,7 +39,7 @@
 #define trV   0x00000006
 
 /* RGB to YUV lookup table */
-extern uint32_t RGBtoYUV[NCOLORS];
+extern uint32_t RGBtoYUV[NUM_COLORS];
 
 static INLINE uint32_t rgb_to_yuv(WORD c) {
 	// Mask against MASK_RGB to discard the alpha channel

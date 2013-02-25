@@ -385,7 +385,7 @@ void setDefault(void) {
 	cfg_from_file.oscan_default = OSCAN_OFF;
 	cfg_from_file.filter = RGBNTSC;
 	cfg_from_file.ntsc_format = COMPOSITE;
-	cfg_from_file.palette = PALETTENTSC;
+	cfg_from_file.palette = PALETTE_NTSC;
 
 	cfg_from_file.render = RENDER_OPENGL;
 	gfxSetRender(cfg_from_file.render);

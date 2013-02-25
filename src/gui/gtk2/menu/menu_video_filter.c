@@ -595,7 +595,7 @@ void set_filter(int newfilter) {
 						cfg->ntsc_format = RGBMODE;
 						break;
 				}
-				ntscSet(cfg->ntsc_format, 0, 0, (BYTE *) paletteRGB, 0);
+				ntscSet(cfg->ntsc_format, 0, 0, (BYTE *) palette_RGB, 0);
 				guiUpdate();
 			}
 			return;

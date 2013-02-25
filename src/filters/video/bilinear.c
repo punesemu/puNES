@@ -13,7 +13,7 @@ void bilinear(WORD *screen, WORD **screen_index, Uint32 *palette, SDL_Surface *d
         WORD lines, BYTE factor) {
 	int32_t *dstpix = (int32_t *) dst->pixels;
 	WORD ox = 0, oy = 0;
-	_colorRGB A, B, C, D;
+	_color_RGB A, B, C, D;
 	unsigned int wStepFixed16b, hStepFixed16b, wCoef, hCoef, x, y;
 	unsigned int hc1, hc2;
 	unsigned int wc1[2] = {0, 0};
@@ -58,10 +58,10 @@ void bilinear(WORD *screen, WORD **screen_index, Uint32 *palette, SDL_Surface *d
 			wc1[0] = 128 - wc2[0];
 
 			if (offsetX[0] != offsetX[1]) {
-				A = paletteRGB[(screen_index[offsetY[0]][offsetX[0]])];
-				B = paletteRGB[(screen_index[offsetY[0] + 1][offsetX[0]])];
-				C = paletteRGB[(screen_index[offsetY[0]][offsetX[0] + 1])];
-				D = paletteRGB[(screen_index[offsetY[0] + 1][offsetX[0] + 1])];
+				A = palette_RGB[(screen_index[offsetY[0]][offsetX[0]])];
+				B = palette_RGB[(screen_index[offsetY[0] + 1][offsetX[0]])];
+				C = palette_RGB[(screen_index[offsetY[0]][offsetX[0] + 1])];
+				D = palette_RGB[(screen_index[offsetY[0] + 1][offsetX[0] + 1])];
 
 				ra[0] = (A.r * hc1 + B.r * hc2);
 				ra[1] = (C.r * hc1 + D.r * hc2);
@@ -130,10 +130,10 @@ void bilinear(WORD *screen, WORD **screen_index, Uint32 *palette, SDL_Surface *d
 			wc2 = (wCoef >> 9) & 127;
 			wc1 = 128 - wc2;
 
-			A = paletteRGB[(screen_index[offsetY][offsetX])];
-			B = paletteRGB[(screen_index[offsetY + 1][offsetX])];
-			C = paletteRGB[(screen_index[offsetY][offsetX + 1])];
-			D = paletteRGB[(screen_index[offsetY + 1][offsetX + 1])];
+			A = palette_RGB[(screen_index[offsetY][offsetX])];
+			B = palette_RGB[(screen_index[offsetY + 1][offsetX])];
+			C = palette_RGB[(screen_index[offsetY][offsetX + 1])];
+			D = palette_RGB[(screen_index[offsetY + 1][offsetX + 1])];
 
 			r = ((A.r * hc1 + B.r * hc2) * wc1 + (C.r * hc1 + D.r * hc2) * wc2) >> 14;
 			g = ((A.g * hc1 + B.g * hc2) * wc1 + (C.g * hc1 + D.g * hc2) * wc2) >> 14;

@@ -168,13 +168,13 @@ void ntscSet(BYTE effect, BYTE color, BYTE *paletteBase, BYTE *paletteIN, BYTE *
 	if (color) {
 		switch (color) {
 			/* Sony CXA2025AS US */
-			case PALETTESONY: {
+			case PALETTE_SONY: {
 				static float matrix[6] = { 1.630, 0.317, -0.378, -0.466, -1.089, 1.677 };
 
 				format[effect].decoder_matrix = matrix;
 				break;
 			}
-			case PALETTEMONO:
+			case PALETTE_MONO:
 				format[effect].saturation = -1;
 				break;
 		}

@@ -49,27 +49,27 @@
 		}\
 	}\
 }
-#define CHANGECOLOR(index, color, operation)\
-	tmp = paletteRGB[index].color + operation;\
-	paletteRGB[index].color = (tmp < 0 ? 0 : (tmp > 0xFF ? 0xFF : tmp))
-#define RGBMODIFIER(red, green, blue)\
+#define change_color(index, color, operation)\
+	tmp = palette_RGB[index].color + operation;\
+	palette_RGB[index].color = (tmp < 0 ? 0 : (tmp > 0xFF ? 0xFF : tmp))
+#define rgb_modifier(red, green, blue)\
 	/* prima ottengo la paletta monocromatica */\
-	ntscSet(cfg->ntsc_format, PALETTEMONO, 0, 0, (BYTE *) paletteRGB);\
+	ntscSet(cfg->ntsc_format, PALETTE_MONO, 0, 0, (BYTE *) palette_RGB);\
 	/* quindi la modifico */\
 	{\
 		WORD i;\
 		SWORD tmp;\
-		for (i = 0; i < NCOLORS; i++) {\
+		for (i = 0; i < NUM_COLORS; i++) {\
 			/* rosso */\
-			CHANGECOLOR(i, r, red);\
+			change_color(i, r, red);\
 			/* green */\
-			CHANGECOLOR(i, g, green);\
+			change_color(i, g, green);\
 			/* blue */\
-			CHANGECOLOR(i, b, blue);\
+			change_color(i, b, blue);\
 		}\
 	}\
 	/* ed infine utilizzo la nuova */\
-	ntscSet(cfg->ntsc_format, FALSE, 0, (BYTE *) paletteRGB,(BYTE *) paletteRGB)
+	ntscSet(cfg->ntsc_format, FALSE, 0, (BYTE *) palette_RGB,(BYTE *) palette_RGB)
 
 SDL_Surface *framebuffer;
 uint32_t *paletteWindow, flagsSoftware;
@@ -163,7 +163,7 @@ BYTE gfxInit(void) {
 	 * mi alloco una zona di memoria dove conservare la
 	 * paletta nel formato di visualizzazione.
 	 */
-	paletteWindow = malloc(NCOLORS * sizeof(uint32_t));
+	paletteWindow = malloc(NUM_COLORS * sizeof(uint32_t));
 	if (!paletteWindow) {
 		fprintf(stderr, "Out of memory\n");
 		return (EXIT_ERROR);
@@ -484,17 +484,17 @@ void gfxSetScreen(BYTE newScale, BYTE newFilter, BYTE newFullscreen, BYTE newPal
 	}
 	if ((newPalette != cfg->palette) || info.on_cfg) {
 		switch (newPalette) {
-			case PALETTEPAL:
-				ntscSet(cfg->ntsc_format, FALSE, (BYTE *) paletteBasePAL, 0, (BYTE *) paletteRGB);
+			case PALETTE_PAL:
+				ntscSet(cfg->ntsc_format, FALSE, (BYTE *) palette_base_pal, 0, (BYTE *) palette_RGB);
 				break;
-			case PALETTENTSC:
-				ntscSet(cfg->ntsc_format, FALSE, 0, 0, (BYTE *) paletteRGB);
+			case PALETTE_NTSC:
+				ntscSet(cfg->ntsc_format, FALSE, 0, 0, (BYTE *) palette_RGB);
 				break;
-			case PALETTEGREEN:
-				RGBMODIFIER(-0x20, 0x20, -0x20);
+			case PALETTE_GREEN:
+				rgb_modifier(-0x20, 0x20, -0x20);
 				break;
 			default:
-				ntscSet(cfg->ntsc_format, newPalette, 0, 0, (BYTE *) paletteRGB);
+				ntscSet(cfg->ntsc_format, newPalette, 0, 0, (BYTE *) palette_RGB);
 				break;
 		}
 
@@ -508,9 +508,9 @@ void gfxSetScreen(BYTE newScale, BYTE newFilter, BYTE newFullscreen, BYTE newPal
 		{
 			WORD i;
 
-			for (i = 0; i < NCOLORS; i++) {
-				paletteWindow[i] = SDL_MapRGBA(surfaceSDL->format, paletteRGB[i].r,
-						paletteRGB[i].g, paletteRGB[i].b, 255);
+			for (i = 0; i < NUM_COLORS; i++) {
+				paletteWindow[i] = SDL_MapRGBA(surfaceSDL->format, palette_RGB[i].r,
+						palette_RGB[i].g, palette_RGB[i].b, 255);
 			}
 		}
 	}

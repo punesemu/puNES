@@ -8,17 +8,17 @@
 #include "hqx.h"
 #include "overscan.h"
 
-uint32_t RGBtoYUV[NCOLORS];
+uint32_t RGBtoYUV[NUM_COLORS];
 uint32_t YUV1, YUV2;
 
 void hqxInit(void) {
 	/* Initalize RGB to YUV lookup table */
 	uint32_t i, r, g, b, y, u, v;
 
-	for (i = 0; i < NCOLORS; i++) {
-		r = paletteRGB[i].r;
-		g = paletteRGB[i].g;
-		b = paletteRGB[i].b;
+	for (i = 0; i < NUM_COLORS; i++) {
+		r = palette_RGB[i].r;
+		g = palette_RGB[i].g;
+		b = palette_RGB[i].b;
 		y = (uint32_t) (0.299 * r + 0.587 * g + 0.114 * b);
 		u = (uint32_t) (-0.169 * r - 0.331 * g + 0.5 * b) + 128;
 		v = (uint32_t) (0.5 * r - 0.419 * g - 0.081 * b) + 128;

@@ -8,28 +8,28 @@
 #ifndef PALETTE_H_
 #define PALETTE_H_
 
-#define NCOLORS      512
+#define NUM_COLORS 512
 
 enum {
-	PALETTEPAL,
-	PALETTENTSC,
-	PALETTESONY,
-	PALETTEMONO,
-	PALETTEGREEN
+	PALETTE_PAL,
+	PALETTE_NTSC,
+	PALETTE_SONY,
+	PALETTE_MONO,
+	PALETTE_GREEN
 };
 
 typedef struct {
 	BYTE r;
 	BYTE g;
 	BYTE b;
-} _colorRGB;
+} _color_RGB;
 
-_colorRGB paletteRGB[NCOLORS];
+_color_RGB palette_RGB[NUM_COLORS];
 
 #endif /* PALETTE_H_ */
 
 #ifdef __STATICPAL__
-_colorRGB paletteBasePAL[64] = {
+_color_RGB palette_base_pal[64] = {
 		{0x80,0x80,0x80}, {0x00,0x00,0xBB}, {0x37,0x00,0xBF}, {0x84,0x00,0xA6},
 		{0xBB,0x00,0x6A}, {0xB7,0x00,0x1E}, {0xB3,0x00,0x00}, {0x91,0x26,0x00},
 		{0x7B,0x2B,0x00}, {0x00,0x3E,0x00}, {0x00,0x48,0x0D}, {0x00,0x3C,0x22},
