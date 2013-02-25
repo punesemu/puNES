@@ -183,7 +183,7 @@ BYTE inputReadRegStandard(BYTE openbus, WORD **screenIndex, _port *port) {
  	 * dell'istruzione di lettura del registro,
  	 * avverrano due letture.
  	 */
-	if (!info.r4016_dmc_double_read_disabled && (DMC.dmaCycle == 2)) {
+	if (!info.r4016_dmc_double_read_disabled && (DMC.dma_cycle == 2)) {
 		value = port->data[port->index];
 		if (!r4016.value) {
 			port->index++;

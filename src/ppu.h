@@ -204,7 +204,7 @@ _sprEvaluate sprEv;
 _spr sprite[8], spritePlus[8];
 _tile tileRender, tileFetch;
 
-void ppuTick(WORD cyclesCPU);
+void ppuTick(WORD cycles_cpu);
 BYTE ppuTurnON(void);
 void ppuQuit(void);
 

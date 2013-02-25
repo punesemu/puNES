@@ -266,7 +266,7 @@ static BYTE INLINE ppuRdReg(WORD address) {
 		WORD r2006Old = r2006.value;
 		BYTE repeat = 1;
 
-		if (DMC.dmaCycle == 2) {
+		if (DMC.dma_cycle == 2) {
 			repeat = 3;
 		} else if (cpu.dblRd) {
 			WORD random = (WORD) rand() % 10;
@@ -596,7 +596,7 @@ static void cpuWrMem(WORD address, BYTE value) {
 		}
 		/* Sprite memory */
 		if (address == 0x4014) {
-			DMC.tickType = DMCR4014;
+			DMC.tick_type = DMCR4014;
 			/* eseguo un tick hardware */
 			tickHW(1);
 			/* scrivo */
@@ -1072,12 +1072,12 @@ static void INLINE ppuWrReg(WORD address, BYTE value) {
 				 */
 				if (index == 253) {
 					cpuRdMem(address++, TRUE);
-					DMC.tickType = DMCNNLDMA;
+					DMC.tick_type = DMCNNLDMA;
 				} else if (index == 254) {
 					cpuRdMem(address++, TRUE);
-					DMC.tickType = DMCR4014;
+					DMC.tick_type = DMCR4014;
 				} else if (index == 255) {
-					DMC.tickType = DMCCPUWRITE;
+					DMC.tick_type = DMCCPUWRITE;
 					cpuRdMem(address++, TRUE);
 				} else {
 					cpuRdMem(address++, TRUE);
@@ -1115,22 +1115,22 @@ static void INLINE apuWrReg(WORD address, BYTE value) {
 		/* -------------------- square 1 --------------------*/
 		if (address <= 0x4003) {
 			if (address == 0x4000) {
-				squareReg0(S1);
+				square_reg0(S1);
 				return;
 			}
 			if (address == 0x4001) {
-				squareReg1(S1);
-				sweepSilence(S1)
+				square_reg1(S1);
+				sweep_silence(S1)
 				return;
 			}
 			if (address == 0x4002) {
-				squareReg2(S1);
-				sweepSilence(S1)
+				square_reg2(S1);
+				sweep_silence(S1)
 				return;
 			}
 			if (address == 0x4003) {
-				squareReg3(S1);
-				sweepSilence(S1)
+				square_reg3(S1);
+				sweep_silence(S1)
 				return;
 			}
 			return;
@@ -1138,22 +1138,22 @@ static void INLINE apuWrReg(WORD address, BYTE value) {
 		/* -------------------- square 2 --------------------*/
 		if (address <= 0x4007) {
 			if (address == 0x4004) {
-				squareReg0(S2);
+				square_reg0(S2);
 				return;
 			}
 			if (address == 0x4005) {
-				squareReg1(S2);
-				sweepSilence(S2)
+				square_reg1(S2);
+				sweep_silence(S2)
 				return;
 			}
 			if (address == 0x4006) {
-				squareReg2(S2);
-				sweepSilence(S2)
+				square_reg2(S2);
+				sweep_silence(S2)
 				return;
 			}
 			if (address == 0x4007) {
-				squareReg3(S2);
-				sweepSilence(S2)
+				square_reg3(S2);
+				sweep_silence(S2)
 				return;
 			}
 			return;
@@ -1187,7 +1187,7 @@ static void INLINE apuWrReg(WORD address, BYTE value) {
 				 * con il length diverso da zero.
 				 */
 				if (TR.length.enabled && !(apu.length_clocked && TR.length.value)) {
-					TR.length.value = lengthTable[value >> 3];
+					TR.length.value = length_table[value >> 3];
 				}
 				/* timer (high 3 bits) */
 				TR.timer = (TR.timer & 0x00FF) | ((value & 0x07) << 8);
@@ -1224,7 +1224,7 @@ static void INLINE apuWrReg(WORD address, BYTE value) {
 				 * con il length diverso da zero.
 				 */
 				if (NS.length.enabled && !(apu.length_clocked && NS.length.value)) {
-					NS.length.value = lengthTable[value >> 3];
+					NS.length.value = length_table[value >> 3];
 				}
 				/* envelope */
 				NS.envelope.enabled = TRUE;
@@ -1237,16 +1237,16 @@ static void INLINE apuWrReg(WORD address, BYTE value) {
 		/* ---------------------- DMC -----------------------*/
 		if (address <= 0x4013) {
 			if (address == 0x4010) {
-				DMC.irqEnabled = value & 0x80;
+				DMC.irq_enabled = value & 0x80;
 				/* se l'irq viene disabilitato allora... */
-				if (!DMC.irqEnabled) {
+				if (!DMC.irq_enabled) {
 					/* ...azzero l'interrupt flag del DMC */
 					r4015.value &= 0x7F;
 					/* disabilito l'IRQ del DMC */
 					irq.high &= ~DMCIRQ;
 				}
 				DMC.loop = value & 0x40;
-				DMC.rateIndex = value & 0x0F;
+				DMC.rate_index = value & 0x0F;
 				return;
 			}
 			if (address == 0x4011) {
@@ -1284,7 +1284,7 @@ static void INLINE apuWrReg(WORD address, BYTE value) {
 				return;
 			}
 			if (address == 0x4012) {
-				DMC.addressStart = (value << 6) | 0xC000;
+				DMC.address_start = (value << 6) | 0xC000;
 				return;
 			}
 			if (address == 0x4013) {
@@ -1345,7 +1345,7 @@ static void INLINE apuWrReg(WORD address, BYTE value) {
 				DMC.empty = TRUE;
 			} else if (!DMC.remain) {
 				DMC.remain = DMC.length;
-				DMC.address = DMC.addressStart;
+				DMC.address = DMC.address_start;
 			}
 			return;
 		}
@@ -1361,7 +1361,7 @@ static void INLINE apuWrReg(WORD address, BYTE value) {
 				r4017.delay = TRUE;
 			} else {
 				r4017.delay = FALSE;
-				r4017jitter();
+				r4017_jitter();
 			}
 			return;
 		}
@@ -1650,7 +1650,7 @@ static void INLINE tickHW(BYTE value) {
 		nmi.before = nmi.high;
 		irq.before = irq.high;
 		ppuTick(1);
-		apuTick(1, &value);
+		apu_tick(1, &value);
 		if (extclCPUEveryCycle) {
 			/*
 			 * utilizzato dalle mappers :

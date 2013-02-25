@@ -95,9 +95,9 @@ static const BYTE invCHR[256] = {
 	0x1F, 0x9F, 0x5F, 0xDF, 0x3F, 0xBF, 0x7F, 0xFF
 };
 
-void ppuTick(WORD cyclesCPU) {
+void ppuTick(WORD cycles_cpu) {
 	/* aggiungo i cicli della cpu trascorsi */
-	ppu.cycles += (cyclesCPU * machine.cpuDivide);
+	ppu.cycles += (cycles_cpu * machine.cpuDivide);
 
 	while (ppu.cycles >= machine.ppuDivide) {
 		/* controllo se sono all'inizio della dummy line */

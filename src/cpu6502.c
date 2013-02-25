@@ -144,7 +144,7 @@ static const BYTE tableCyclesOP[256] = {
 	cmd;\
 }
 #define _WRX(dst, src)\
-	if (!DMC.tickType) DMC.tickType = DMCCPUWRITE;\
+	if (!DMC.tick_type) DMC.tick_type = DMCCPUWRITE;\
 	cpuWrMem(dst, src)
 */
 
@@ -412,9 +412,9 @@ static const BYTE tableCyclesOP[256] = {
 	}\
 	cmd1
 #define _DMC\
-	DMC.tickType = DMCCPUWRITE;\
+	DMC.tick_type = DMCCPUWRITE;\
 	if (adr0 == 0x4014) {\
-		DMC.tickType = DMCR4014;\
+		DMC.tick_type = DMCR4014;\
 	}\
 	tickHW(1)
 #define _LAX\
@@ -551,7 +551,7 @@ static const BYTE tableCyclesOP[256] = {
 
 void cpuExeOP(void) {
 	cpu.codeop = FALSE;
-	DMC.tickType = DMCNORMAL;
+	DMC.tick_type = DMCNORMAL;
 	cpu.codeopPC = cpu.PC;
 
 	/* ------------------------------------------------ */
@@ -609,7 +609,7 @@ void cpuExeOP(void) {
 	 * azzero le variabili che utilizzo per sapere
 	 * quando avviene il DMA del DMC durante l'istruzione.
 	 */
-	cpu.opCycle = DMC.dmaCycle = 0;
+	cpu.opCycle = DMC.dma_cycle = 0;
 	/* flag della doppia lettura di un registro */
 	cpu.dblRd = FALSE;
 

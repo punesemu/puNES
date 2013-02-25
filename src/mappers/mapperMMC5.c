@@ -260,28 +260,28 @@ void extclCpuWrMem_MMC5(WORD address, BYTE value) {
 
 	switch (address) {
 		case 0x5000:
-			squareReg0(mmc5.S3);
+			square_reg0(mmc5.S3);
 			return;
 		case 0x5001:
 			/* lo sweep non e' utilizzato */
 			return;
 		case 0x5002:
-			squareReg2(mmc5.S3);
+			square_reg2(mmc5.S3);
 			return;
 		case 0x5003:
-			squareReg3(mmc5.S3);
+			square_reg3(mmc5.S3);
 			return;
 		case 0x5004:
-			squareReg0(mmc5.S4);
+			square_reg0(mmc5.S4);
 			return;
 		case 0x5005:
 			/* lo sweep non e' utilizzato */
 			return;
 		case 0x5006:
-			squareReg2(mmc5.S4);
+			square_reg2(mmc5.S4);
 			return;
 		case 0x5007:
-			squareReg3(mmc5.S4);
+			square_reg3(mmc5.S4);
 			return;
 		case 0x5010:
 			mmc5.pcm.enabled = ~value & 0x01;
@@ -691,16 +691,16 @@ BYTE extclRdNmt_MMC5(WORD address) {
 	return (ntbl.bank1k[nmt][address & 0x3FF]);
 }
 void extclLengthClock_MMC5(void) {
-	lengthRun(mmc5.S3)
-	lengthRun(mmc5.S4)
+	length_run(mmc5.S3)
+	length_run(mmc5.S4)
 }
 void extclEnvelopeClock_MMC5(void) {
-	envelopeRun(mmc5.S3)
-	envelopeRun(mmc5.S4)
+	envelope_run(mmc5.S3)
+	envelope_run(mmc5.S4)
 }
 void extclApuTick_MMC5(void) {
-	squareTick(mmc5.S3, 0)
-	squareTick(mmc5.S4, 0)
+	square_tick(mmc5.S3, 0)
+	square_tick(mmc5.S4, 0)
 }
 
 void prgSwap(void) {

@@ -16,9 +16,9 @@
 #include "audio_quality.h"
 #include "cfgfile.h"
 
-void apuTick(SWORD cyclesCPU, BYTE *hwtick) {
+void apu_tick(SWORD cycles_cpu, BYTE *hwtick) {
 	/* sottraggo il numero di cicli eseguiti */
-	apu.cycles -= cyclesCPU;
+	apu.cycles -= cycles_cpu;
 	/*
 	 * questo flag sara' a TRUE solo nel ciclo
 	 * in cui viene eseguito il length counter.
@@ -31,7 +31,7 @@ void apuTick(SWORD cyclesCPU, BYTE *hwtick) {
 	 */
 	if (r4017.delay) {
 		r4017.delay = FALSE;
-		r4017jitter();
+		r4017_jitter();
 	}
 	/* quando apuCycles e' a 0 devo eseguire uno step */
 	if (!apu.cycles) {
@@ -42,26 +42,26 @@ void apuTick(SWORD cyclesCPU, BYTE *hwtick) {
 				 * length counter e lo sweep.
 				 */
 				if (apu.mode == APU48HZ) {
-					lengthClock()
-					sweepClock()
+					length_clock()
+					sweep_clock()
 				}
-				envelopeClock()
+				envelope_clock()
 				/* triangle's linear counter */
-				linearClock()
+				linear_clock()
 				/* passo al prossimo step */
-				apuChangeStep(++apu.step);
+				apu_change_step(++apu.step);
 				break;
 			case 1:
 				/* nel mode 0 devo eseguire il length counter */
 				if (apu.mode == APU60HZ) {
-					lengthClock()
-					sweepClock()
+					length_clock()
+					sweep_clock()
 				}
-				envelopeClock()
+				envelope_clock()
 				/* triangle's linear counter */
-				linearClock()
+				linear_clock()
 				/* passo al prossimo step */
-				apuChangeStep(++apu.step);
+				apu_change_step(++apu.step);
 				break;
 			case 2:
 				/*
@@ -69,14 +69,14 @@ void apuTick(SWORD cyclesCPU, BYTE *hwtick) {
 				 * length counter e lo sweep.
 				 */
 				if (apu.mode == APU48HZ) {
-					lengthClock()
-					sweepClock()
+					length_clock()
+					sweep_clock()
 				}
-				envelopeClock()
+				envelope_clock()
 				/* triangle's linear counter */
-				linearClock()
+				linear_clock()
 				/* passo al prossimo step */
-				apuChangeStep(++apu.step);
+				apu_change_step(++apu.step);
 				break;
 			case 3:
 				/*
@@ -94,12 +94,12 @@ void apuTick(SWORD cyclesCPU, BYTE *hwtick) {
 					}
 				} else {
 					/* nel mode 1 devo eseguire l'envelope */
-					envelopeClock()
+					envelope_clock()
 					/* triangle's linear counter */
-					linearClock()
+					linear_clock()
 				}
 				/* passo al prossimo step */
-				apuChangeStep(++apu.step);
+				apu_change_step(++apu.step);
 				break;
 			case 4:
 				/*
@@ -107,11 +107,11 @@ void apuTick(SWORD cyclesCPU, BYTE *hwtick) {
 				 * ma solo nel 4 genero un IRQ.
 				 */
 				if (apu.mode == APU60HZ) {
-					lengthClock()
-					sweepClock()
-					envelopeClock()
+					length_clock()
+					sweep_clock()
+					envelope_clock()
 					/* triangle's linear counter */
-					linearClock()
+					linear_clock()
 					/*
 					 * se e' a 0 il bit 6 del $4017 (interrupt
 					 * inhibit flag) allora devo generare un IRQ.
@@ -124,7 +124,7 @@ void apuTick(SWORD cyclesCPU, BYTE *hwtick) {
 					}
 				}
 				/* passo al prossimo step */
-				apuChangeStep(++apu.step);
+				apu_change_step(++apu.step);
 				break;
 			case 5:
 				/*
@@ -146,17 +146,17 @@ void apuTick(SWORD cyclesCPU, BYTE *hwtick) {
 					apu.step = 0;
 				}
 				/* passo al prossimo step */
-				apuChangeStep(apu.step);
+				apu_change_step(apu.step);
 				break;
 			case 6:
 				/* da qui ci passo solo nel mode 0 */
-				envelopeClock()
+				envelope_clock()
 				/* triangle's linear counter */
-				linearClock()
+				linear_clock()
 				/* questo e' il passaggio finale del mode 0 */
 				apu.step = 1;
 				/* passo al prossimo step */
-				apuChangeStep(apu.step);
+				apu_change_step(apu.step);
 				break;
 		}
 	}
@@ -165,11 +165,11 @@ void apuTick(SWORD cyclesCPU, BYTE *hwtick) {
 	 * eseguo un ticket per ogni canale
 	 * valorizzandone l'output.
 	 */
-	squareTick(S1, cfg->swap_duty)
-	squareTick(S2, cfg->swap_duty)
-	triangleTick()
-	noiseTick()
-	dmcTick()
+	square_tick(S1, cfg->swap_duty)
+	square_tick(S2, cfg->swap_duty)
+	triangle_tick()
+	noise_tick()
+	dmc_tick()
 
 	if (extclApuTick) {
 		/*
@@ -189,7 +189,7 @@ void apuTick(SWORD cyclesCPU, BYTE *hwtick) {
 
 	r4011.cycles++;
 }
-void apuTurnON(void) {
+void apu_turn_on(void) {
 	if (info.reset >= HARD) {
 		memset(&apu, 0x00, sizeof(apu));
 		memset(&r4015, 0x00, sizeof(r4015));
@@ -209,7 +209,7 @@ void apuTurnON(void) {
 		} else {
 			apu.type = 1;
 		}
-		apuChangeStep(apu.step);
+		apu_change_step(apu.step);
 		/* valori iniziali dei vari canali */
 		S1.frequency = 1;
 		S1.sweep.delay = 1;
@@ -224,7 +224,7 @@ void apuTurnON(void) {
 		DMC.frequency = 1;
 		DMC.empty = TRUE;
 		DMC.silence = TRUE;
-		DMC.counterOut = 8;
+		DMC.counter_out = 8;
 	} else {
 		S1.output = 0;
 		S2.output = 0;
@@ -233,7 +233,7 @@ void apuTurnON(void) {
 		DMC.output = 0;
 
 		r4017.delay = FALSE;
-		r4017jitter();
+		r4017_jitter();
 		r4015.value = 0;
 		S1.length.enabled = 0;
 		S1.length.value = 0;
@@ -247,6 +247,6 @@ void apuTurnON(void) {
 		DMC.remain = 0;
 		DMC.silence = TRUE;
 		DMC.frequency = 1;
-		DMC.counterOut = 8;
+		DMC.counter_out = 8;
 	}
 }

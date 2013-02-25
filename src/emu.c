@@ -462,7 +462,7 @@ BYTE emuTurnON(void) {
 	cfgfilePgsParse();
 
 	/* APU */
-	apuTurnON();
+	apu_turn_on();
 
 	/* PPU */
 	if (ppuTurnON()) {
@@ -512,7 +512,7 @@ BYTE emuTurnON(void) {
 		BYTE i;
 		for (i = 0; i < 8; i++) {
 			ppuTick(1);
-			apuTick(1, NULL);
+			apu_tick(1, NULL);
 			cpu.oddCycle = !cpu.oddCycle;
 		}
 	}
@@ -570,7 +570,7 @@ BYTE emuReset(BYTE type) {
 	}
 
 	/* APU */
-	apuTurnON();
+	apu_turn_on();
 
 	/* PPU */
 	if (ppuTurnON()) {
@@ -620,7 +620,7 @@ BYTE emuReset(BYTE type) {
 		BYTE i;
 		for (i = 0; i < 8; i++) {
 			ppuTick(1);
-			apuTick(1, NULL);
+			apu_tick(1, NULL);
 			cpu.oddCycle = !cpu.oddCycle;
 		}
 	}
