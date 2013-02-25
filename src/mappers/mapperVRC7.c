@@ -11,7 +11,7 @@
 #include <float.h>
 #include "mappers.h"
 #include "memmap.h"
-#include "cpu6502.h"
+#include "cpu.h"
 #include "savestate.h"
 #include "mapperVRC7snd.h"
 

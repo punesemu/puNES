@@ -1,17 +1,17 @@
 /*
- * cpuinline.h
+ * cpu_inline.h
  *
  *  Created on: 23/apr/2010
  *      Author: fhorse
  */
 
-#ifndef CPUINLINE_H_
-#define CPUINLINE_H_
+#ifndef CPU_INLINE_H_
+#define CPU_INLINE_H_
 
 #include <stdlib.h>
 #include <stdio.h>
 #include "clock.h"
-#include "cpu6502.h"
+#include "cpu.h"
 #include "input.h"
 #include "mappers.h"
 #include "ppuinline.h"
@@ -22,8 +22,8 @@
 #include "fds.h"
 #include "gamegenie.h"
 
-#define modCyclesOP(op, value) cpu.cycles op value
-#define r2006duringRendering()\
+#define mod_cycles_op(op, value) cpu.cycles op value
+#define r2006_during_rendering()\
 {\
 	if (!r2002.vblank && r2001.visible &&\
 		(ppu.frameY > machine.vintLines) &&\
@@ -37,49 +37,49 @@
 		r2006.value += r2000.r2006Inc;\
 	}\
 }
-#define ppuObWr(bit) ppuOpenbus.bit = ppu.frames
-#define ppuObWrAll()\
-	ppuObWr(bit0);\
-	ppuObWr(bit1);\
-	ppuObWr(bit2);\
-	ppuObWr(bit3);\
-	ppuObWr(bit4);\
-	ppuObWr(bit5);\
-	ppuObWr(bit6);\
-	ppuObWr(bit7)
-#define ppuObRd(bit, mask)\
+#define ppu_openbus_wr(bit) ppuOpenbus.bit = ppu.frames
+#define ppu_openbus_wr_all()\
+	ppu_openbus_wr(bit0);\
+	ppu_openbus_wr(bit1);\
+	ppu_openbus_wr(bit2);\
+	ppu_openbus_wr(bit3);\
+	ppu_openbus_wr(bit4);\
+	ppu_openbus_wr(bit5);\
+	ppu_openbus_wr(bit6);\
+	ppu_openbus_wr(bit7)
+#define ppu_openbus_rd(bit, mask)\
 	if ((ppu.frames - ppuOpenbus.bit) > machine.ppuOpenbusFrames) {\
 		ppu.openbus &= mask;\
 	}
-#define ppuObRdAll()\
-	ppuObRd(bit0, 0x01);\
-	ppuObRd(bit1, 0x02);\
-	ppuObRd(bit2, 0x04);\
-	ppuObRd(bit3, 0x08);\
-	ppuObRd(bit4, 0x10);\
-	ppuObRd(bit5, 0x20);\
-	ppuObRd(bit6, 0x40);\
-	ppuObRd(bit7, 0x80)
+#define ppu_openbus_rd_all()\
+	ppu_openbus_rd(bit0, 0x01);\
+	ppu_openbus_rd(bit1, 0x02);\
+	ppu_openbus_rd(bit2, 0x04);\
+	ppu_openbus_rd(bit3, 0x08);\
+	ppu_openbus_rd(bit4, 0x10);\
+	ppu_openbus_rd(bit5, 0x20);\
+	ppu_openbus_rd(bit6, 0x40);\
+	ppu_openbus_rd(bit7, 0x80)
 
-static BYTE cpuRdMem(WORD address, BYTE madeTick);
-static BYTE INLINE ppuRdReg(WORD address);
-static BYTE INLINE apuRdReg(WORD address);
-static BYTE INLINE fdsRdMem(WORD address, BYTE madeTick);
+static BYTE cpu_rd_mem(WORD address, BYTE made_tick);
+static BYTE INLINE ppu_rd_reg(WORD address);
+static BYTE INLINE apu_rd_reg(WORD address);
+static BYTE INLINE fds_rd_mem(WORD address, BYTE made_tick);
 
-static void cpuWrMem(WORD address, BYTE value);
-static void INLINE ppuWrMem(WORD address, BYTE value);
-static void INLINE ppuWrReg(WORD address, BYTE value);
-static void INLINE apuWrReg(WORD address, BYTE value);
-static BYTE INLINE fdsWrMem(WORD address, BYTE value);
+static void cpu_wr_mem(WORD address, BYTE value);
+static void INLINE ppu_wr_mem(WORD address, BYTE value);
+static void INLINE ppu_wr_reg(WORD address, BYTE value);
+static void INLINE apu_wr_reg(WORD address, BYTE value);
+static BYTE INLINE fds_wr_mem(WORD address, BYTE value);
 
-static WORD INLINE lendWord(WORD address, BYTE indirect, BYTE makeLastTickHW);
-static void INLINE tickHW(BYTE value);
+static WORD INLINE lend_word(WORD address, BYTE indirect, BYTE make_last_tick_hw);
+static void INLINE tick_hw(BYTE value);
 
 /* ------------------------------------ READ ROUTINE ------------------------------------------- */
 
-static BYTE cpuRdMem(WORD address, BYTE madeTick) {
+static BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 	if (fds.info.enabled) {
-		if (fdsRdMem(address, madeTick)) {
+		if (fds_rd_mem(address, made_tick)) {
 			return (cpu.openbus);
 		}
 	} else if (address >= 0x8000) {
@@ -87,8 +87,8 @@ static BYTE cpuRdMem(WORD address, BYTE madeTick) {
 		BYTE before = cpu.openbus;
 
 		/* eseguo un tick hardware */
-		if (madeTick) {
-			tickHW(1);
+		if (made_tick) {
+			tick_hw(1);
 		}
 		/* leggo */
 		cpu.openbus = prgRomRd(address);
@@ -119,8 +119,8 @@ static BYTE cpuRdMem(WORD address, BYTE madeTick) {
 		/* Ram */
 		if (address < 0x2000) {
 			/* eseguo un tick hardware */
-			if (madeTick) {
-				tickHW(1);
+			if (made_tick) {
+				tick_hw(1);
 			}
 			/* leggo */
 			cpu.openbus = mmcpu.ram[address & 0x7FF];
@@ -129,17 +129,17 @@ static BYTE cpuRdMem(WORD address, BYTE madeTick) {
 		/* PPU */
 		if (address < 0x4000) {
 			/* eseguo un tick hardware */
-			tickHW(1);
+			tick_hw(1);
 			/* leggo */
-			cpu.openbus = ppuRdReg(address & 0x2007);
+			cpu.openbus = ppu_rd_reg(address & 0x2007);
 			return (cpu.openbus);
 		}
 		/* APU */
 		if (address <= 0x4015) {
 			/* leggo */
-			cpu.openbus = apuRdReg(address);
+			cpu.openbus = apu_rd_reg(address);
 			/* eseguo un tick hardware ed e' importante che sia fatto dopo */
-			tickHW(1);
+			tick_hw(1);
 			return (cpu.openbus);
 		}
 		/* Controller port 1 */
@@ -147,7 +147,7 @@ static BYTE cpuRdMem(WORD address, BYTE madeTick) {
 
 			tas.lag_frame = FALSE;
 			/* eseguo un tick hardware */
-			tickHW(1);
+			tick_hw(1);
 			/* leggo dal controller */
 			cpu.openbus = inputReadReg1(cpu.openbus, screen.line, &port1);
 			return (cpu.openbus);
@@ -156,7 +156,7 @@ static BYTE cpuRdMem(WORD address, BYTE madeTick) {
 		if (address == 0x4017) {
 			tas.lag_frame = FALSE;
 			/* eseguo un tick hardware */
-			tickHW(1);
+			tick_hw(1);
 			/* leggo dal controller */
 			cpu.openbus = inputReadReg2(cpu.openbus, screen.line, &port2);
 			return (cpu.openbus);
@@ -167,9 +167,9 @@ static BYTE cpuRdMem(WORD address, BYTE madeTick) {
 		BYTE before = cpu.openbus;
 
 		/* eseguo un tick hardware */
-		tickHW(1);
+		tick_hw(1);
 		/* controllo se e' consentita la lettura dalla PRG Ram */
-		if (cpu.prgRamRdActive) {
+		if (cpu.prg_ram_rd_active) {
 			if (address < 0x6000) {
 				/* leggo */
 				cpu.openbus = prg.ram[address & 0x1FFF];
@@ -201,14 +201,14 @@ static BYTE cpuRdMem(WORD address, BYTE madeTick) {
 	}
 
 	/* eseguo un tick hardware */
-	tickHW(1);
+	tick_hw(1);
 	/* qualsiasi altra cosa */
 	return (cpu.openbus);
 }
-static BYTE INLINE ppuRdReg(WORD address) {
+static BYTE INLINE ppu_rd_reg(WORD address) {
 	BYTE value = 0;
 
-	ppuObRdAll();
+	ppu_openbus_rd_all();
 
 	if (address == 0x2002) {
 		/* Situazioni particolari */
@@ -246,9 +246,9 @@ static BYTE INLINE ppuRdReg(WORD address) {
 		r2002.toggle = 0;
 		/* open bus */
 		value = ppu.openbus = (value & 0xE0) | (ppu.openbus & 0x1F);
-		ppuObWr(bit5);
-		ppuObWr(bit6);
-		ppuObWr(bit7);
+		ppu_openbus_wr(bit5);
+		ppu_openbus_wr(bit6);
+		ppu_openbus_wr(bit7);
 		return (value);
 	}
 	if (address == 0x2004) {
@@ -259,7 +259,7 @@ static BYTE INLINE ppuRdReg(WORD address) {
 		}
 		/* ppu open bus */
 		ppu.openbus = value;
-		ppuObWrAll();
+		ppu_openbus_wr_all();
 		return (value);
 	}
 	if (address == 0x2007) {
@@ -268,16 +268,16 @@ static BYTE INLINE ppuRdReg(WORD address) {
 
 		if (DMC.dma_cycle == 2) {
 			repeat = 3;
-		} else if (cpu.dblRd) {
+		} else if (cpu.double_rd) {
 			WORD random = (WORD) rand() % 10;
 			value = ppuRdMem(r2006.value - (r2000.r2006Inc << 1));
 			if (random > 5) {
 				r2007.value = ppuRdMem(r2006.value);
-				r2006duringRendering();
+				r2006_during_rendering();
 			}
 			/* ppu open bus */
 			ppu.openbus = value;
-			ppuObWrAll();
+			ppu_openbus_wr_all();
 			return (value);
 		}
 		while (repeat > 0) {
@@ -300,20 +300,20 @@ static BYTE INLINE ppuRdReg(WORD address) {
 				r2007.value = ppuRdMem(r2006.value);
 				/* ppu open bus */
 				ppu.openbus = value;
-				ppuObWrAll();
+				ppu_openbus_wr_all();
 			} else {
 				value = ppuRdMem(r2006.value);
 				r2007.value = ppuRdMem(r2006.value & 0x2FFF);
 				/* ppu open bus */
 				value = ppu.openbus = (value & 0x3F) | (ppu.openbus & 0xC0);
-				ppuObWr(bit0);
-				ppuObWr(bit1);
-				ppuObWr(bit2);
-				ppuObWr(bit3);
-				ppuObWr(bit4);
-				ppuObWr(bit5);
+				ppu_openbus_wr(bit0);
+				ppu_openbus_wr(bit1);
+				ppu_openbus_wr(bit2);
+				ppu_openbus_wr(bit3);
+				ppu_openbus_wr(bit4);
+				ppu_openbus_wr(bit5);
 			}
-			r2006duringRendering();
+			r2006_during_rendering();
 			repeat--;
 			if (extcl_update_r2006) {
 				/*
@@ -336,7 +336,7 @@ static BYTE INLINE ppuRdReg(WORD address) {
 	/* ppu open bus */
 	return (ppu.openbus);
 }
-static BYTE INLINE apuRdReg(WORD address) {
+static BYTE INLINE apu_rd_reg(WORD address) {
 	BYTE value = cpu.openbus;
 
 	if (address == 0x4015) {
@@ -386,11 +386,11 @@ static BYTE INLINE apuRdReg(WORD address) {
 
 	return (value);
 }
-static BYTE INLINE fdsRdMem(WORD address, BYTE madeTick) {
+static BYTE INLINE fds_rd_mem(WORD address, BYTE made_tick) {
 	if (address >= 0xE000) {
 		/* eseguo un tick hardware */
-		if (madeTick) {
-			tickHW(1);
+		if (made_tick) {
+			tick_hw(1);
 		}
 		/* leggo */
 		cpu.openbus = prg.rom[address & 0x1FFF];
@@ -398,8 +398,8 @@ static BYTE INLINE fdsRdMem(WORD address, BYTE madeTick) {
 	}
 	if (address >= 0x6000) {
 		/* eseguo un tick hardware */
-		if (madeTick) {
-			tickHW(1);
+		if (made_tick) {
+			tick_hw(1);
 		}
 		/* leggo */
 		cpu.openbus = prg.ram[address - 0x6000];
@@ -407,7 +407,7 @@ static BYTE INLINE fdsRdMem(WORD address, BYTE madeTick) {
 	}
 	if (fds.drive.enabled_dsk_reg && ((address >= 0x4030) && (address <= 0x4033))) {
 		/* eseguo un tick hardware */
-		tickHW(1);
+		tick_hw(1);
 
 		if (address == 0x4030) {
 			/*
@@ -459,7 +459,7 @@ static BYTE INLINE fdsRdMem(WORD address, BYTE madeTick) {
 
 #ifndef RELEASE
 			/*fprintf(stderr, "0x%04X 0x%02X [0x%04X] 0x%04X %d %d %d\n", address, cpu.openbus,
-			        fds.side.data[fds.drive.disk_position], cpu.codeopPC, fds.drive.disk_position,
+			        fds.side.data[fds.drive.disk_position], cpu.opcode_PC, fds.drive.disk_position,
 			        fds.info.sides_size[fds.drive.side_inserted], irq.high);*/
 #endif
 
@@ -511,7 +511,7 @@ static BYTE INLINE fdsRdMem(WORD address, BYTE madeTick) {
 	if (fds.drive.enabled_snd_reg) {
 		if ((address >= 0x4040) && (address <= 0x407F)) {
 			/* eseguo un tick hardware */
-			tickHW(1);
+			tick_hw(1);
 
 			/*
 			 * 7  bit  0  (read/write)
@@ -527,7 +527,7 @@ static BYTE INLINE fdsRdMem(WORD address, BYTE madeTick) {
 		}
 		if (address == 0x4090) {
 			/* eseguo un tick hardware */
-			tickHW(1);
+			tick_hw(1);
 
 			cpu.openbus = (fds.snd.volume.gain & 0x3F) | (cpu.openbus & 0xC0);
 
@@ -535,7 +535,7 @@ static BYTE INLINE fdsRdMem(WORD address, BYTE madeTick) {
 		}
 		if (address == 0x4092) {
 			/* eseguo un tick hardware */
-			tickHW(1);
+			tick_hw(1);
 
 			cpu.openbus = (fds.snd.sweep.gain & 0x3F) | (cpu.openbus & 0xC0);
 
@@ -544,7 +544,7 @@ static BYTE INLINE fdsRdMem(WORD address, BYTE madeTick) {
 	}
 	if (address > 0x4017) {
 		/* eseguo un tick hardware */
-		tickHW(1);
+		tick_hw(1);
 		return (TRUE);
 	}
 
@@ -552,9 +552,9 @@ static BYTE INLINE fdsRdMem(WORD address, BYTE madeTick) {
 }
 /* ------------------------------------ WRITE ROUTINE ------------------------------------------ */
 
-static void cpuWrMem(WORD address, BYTE value) {
+static void cpu_wr_mem(WORD address, BYTE value) {
 	if (fds.info.enabled) {
-		if (fdsWrMem(address, value)) {
+		if (fds_wr_mem(address, value)) {
 			return;
 		}
 	}
@@ -563,7 +563,7 @@ static void cpuWrMem(WORD address, BYTE value) {
 		/* Ram */
 		if (address < 0x2000) {
 			/* eseguo un tick hardware */
-			tickHW(1);
+			tick_hw(1);
 			/* scrivo */
 			mmcpu.ram[(address & 0x7FF)] = value;
 			return;
@@ -583,30 +583,30 @@ static void cpuWrMem(WORD address, BYTE value) {
 			 */
 			if (address == 0x2005) {
 				/* scrivo */
-				ppuWrReg(address, value);
+				ppu_wr_reg(address, value);
 				/* eseguo un tick hardware */
-				tickHW(1);
+				tick_hw(1);
 				return;
 			}
 			/* eseguo un tick hardware */
-			tickHW(1);
+			tick_hw(1);
 			/* scrivo */
-			ppuWrReg(address, value);
+			ppu_wr_reg(address, value);
 			return;
 		}
 		/* Sprite memory */
 		if (address == 0x4014) {
 			DMC.tick_type = DMCR4014;
 			/* eseguo un tick hardware */
-			tickHW(1);
+			tick_hw(1);
 			/* scrivo */
-			ppuWrReg(address, value);
+			ppu_wr_reg(address, value);
 			return;
 		}
 		/* Controller */
 		if (address == 0x4016) {
 			/* eseguo un tick hardware */
-			tickHW(1);
+			tick_hw(1);
 			if (extcl_cpu_wr_r4016) {
 				/*
 				 * utilizzato dalle mappers :
@@ -631,25 +631,25 @@ static void cpuWrMem(WORD address, BYTE value) {
 			 * e poi eseguire il tick hardware.
 			 */
 			/* scrivo */
-			apuWrReg(address, value);
+			apu_wr_reg(address, value);
 			/* eseguo un tick hardware */
-			tickHW(1);
+			tick_hw(1);
 			return;
 		}
 		if (address <= 0x4017) {
 			/* eseguo un tick hardware */
-			tickHW(1);
+			tick_hw(1);
 			/* scrivo */
-			apuWrReg(address, value);
+			apu_wr_reg(address, value);
 			return;
 		}
 	}
 	/* PRG Ram (normale ed extra) */
 	if (address < 0x8000) {
 		/* eseguo un tick hardware */
-		tickHW(1);
+		tick_hw(1);
 		/* controllo se e' attiva la PRG Ram */
-		if (cpu.prgRamWrActive) {
+		if (cpu.prg_ram_wr_active) {
 			if (address < 0x6000) {
 				/* scrivo */
 				prg.ram[address & 0x1FFF] = value;
@@ -686,10 +686,10 @@ static void cpuWrMem(WORD address, BYTE value) {
 	/* Mappers */
 	extcl_cpu_wr_mem(address, value);
 	/* su questo devo fare qualche altro esperimento */
-	tickHW(1);
+	tick_hw(1);
 	return;
 }
-static void INLINE ppuWrMem(WORD address, BYTE value) {
+static void INLINE ppu_wr_mem(WORD address, BYTE value) {
 	address &= 0x3FFF;
 	if (address < 0x2000) {
 		if (extcl_wr_chr) {
@@ -718,7 +718,7 @@ static void INLINE ppuWrMem(WORD address, BYTE value) {
 	}
 	return;
 }
-static void INLINE ppuWrReg(WORD address, BYTE value) {
+static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 	if (address == 0x2000) {
 #ifndef RELEASE
 		BYTE old_delay = FALSE;
@@ -743,7 +743,7 @@ static void INLINE ppuWrReg(WORD address, BYTE value) {
 
 		/* open bus */
 		ppu.openbus = value;
-		ppuObWrAll();
+		ppu_openbus_wr_all();
 
 		/*
 		 * 76543210
@@ -768,7 +768,7 @@ static void INLINE ppuWrReg(WORD address, BYTE value) {
 		if (!r2000.NMIenable && (value & 0x80)) {
 			if (r2002.vblank) {
 				nmi.high = nmi.delay = TRUE;
-				nmi.frameX = ppu.frameX;
+				nmi.frame_x = ppu.frameX;
 			}
 			/*
 			 * se viene disabilitato l'NMI (bit 7 da 1 a 0)
@@ -802,7 +802,7 @@ static void INLINE ppuWrReg(WORD address, BYTE value) {
 		ppu.tmpVRAM = (ppu.tmpVRAM & 0xF3FF) | ((value & 0x03) << 10);
 
 		/*
-		 * per questo registro il tickHw e' gia' stato effettuato, quindi
+		 * per questo registro il tick_hw e' gia' stato effettuato, quindi
 		 * la PPU ha gia' fatto 3 cicli. Se sono nel range 253 - 255 del
 		 * ppu.frameX, il registro $2006 e' gia' stato aggiornato dalla PPU
 		 * (cosa che avviene nel ciclo 253). Questa variazione e' direttamente
@@ -831,7 +831,7 @@ static void INLINE ppuWrReg(WORD address, BYTE value) {
 	if (address == 0x2001) {
 		/* open bus */
 		ppu.openbus = value;
-		ppuObWrAll();
+		ppu_openbus_wr_all();
 		/* valorizzo $2001 */
 		r2001.value = value;
 		/*
@@ -867,14 +867,14 @@ static void INLINE ppuWrReg(WORD address, BYTE value) {
 	if (address == 0x2003) {
 		/* open bus */
 		ppu.openbus = value;
-		ppuObWrAll();
+		ppu_openbus_wr_all();
 		r2003.value = value;
 		return;
 	}
 	if (address == 0x2004) {
 		/* open bus */
 		ppu.openbus = value;
-		ppuObWrAll();
+		ppu_openbus_wr_all();
 		/*
 		 * il 3° byte dei quattro che compongono un elemento
 		 * dell'oam hai i bit 2,3 e 4 non sono implementati quindi
@@ -897,7 +897,7 @@ static void INLINE ppuWrReg(WORD address, BYTE value) {
 	if (address == 0x2005) {
 		/* open bus */
 		ppu.openbus = value;
-		ppuObWrAll();
+		ppu_openbus_wr_all();
 		/*
 		 * Bit totali manipolati con $2005:
 		 * tmpAdrVRAM  %0yyy --YY YYYX XXXX
@@ -935,7 +935,7 @@ static void INLINE ppuWrReg(WORD address, BYTE value) {
 
 		/* open bus */
 		ppu.openbus = value;
-		ppuObWrAll();
+		ppu_openbus_wr_all();
 
 		/*
 		 * Bit totali manipolati con $2006:
@@ -999,9 +999,9 @@ static void INLINE ppuWrReg(WORD address, BYTE value) {
 
 		/* open bus */
 		ppu.openbus = value;
-		ppuObWrAll();
+		ppu_openbus_wr_all();
 
-		ppuWrMem(r2006.value, value);
+		ppu_wr_mem(r2006.value, value);
 		/*
 		 * e' stato scoperto che anche se normalmente
 		 * durante il rendering scrittura e lettura del
@@ -1012,7 +1012,7 @@ static void INLINE ppuWrReg(WORD address, BYTE value) {
 		 * nel ciclo 253 della ppu se r2000.r2006Inc e'
 		 * uguale a 32.
 		 */
-		r2006duringRendering();
+		r2006_during_rendering();
 
 		 if (extcl_update_r2006) {
 			 /*
@@ -1043,46 +1043,46 @@ static void INLINE ppuWrReg(WORD address, BYTE value) {
 			BYTE saveCpuCycles = cpu.cycles;
 
 			if (info.r4014_precise_timing_disabled) {
-				modCyclesOP(+=, 512);
+				mod_cycles_op(+=, 512);
 			} else {
 				/*
 			 	 * su un 2A03 reale, questo ciclo viene
 			 	 * lasciato per completare la scrittura nel registro.
 			 	 */
-				tickHW(1);
+				tick_hw(1);
 				/* sono 513 i cicli CPU che il trasferimento si prende */
-				modCyclesOP(+=, 513);
+				mod_cycles_op(+=, 513);
 				/*
 				 * se l'avvio del trasferimento avviene
 				 * in un ciclo dispari allora c'e' un ritardo
 				 * di un altro ciclo (quindi in totale diventano
 				 * 514).
 				 */
-				if ((machine.type == NTSC) && cpu.oddCycle) {
-					tickHW(1);
-					modCyclesOP(+=, 1);
+				if ((machine.type == NTSC) && cpu.odd_cycle) {
+					tick_hw(1);
+					mod_cycles_op(+=, 1);
 				}
 			}
 			for (index = 0; index < 256; ++index) {
 				/*
 				 * ogni trasferimento prende due cicli, uno di
-				 * lettura (contenuto nel cpuRdMem e l'altro di
+				 * lettura (contenuto nel cpu_rd_mem e l'altro di
 				 * scrittura che faccio prima di valorizzare
 				 * l'oam.
 				 */
 				if (index == 253) {
-					cpuRdMem(address++, TRUE);
+					cpu_rd_mem(address++, TRUE);
 					DMC.tick_type = DMCNNLDMA;
 				} else if (index == 254) {
-					cpuRdMem(address++, TRUE);
+					cpu_rd_mem(address++, TRUE);
 					DMC.tick_type = DMCR4014;
 				} else if (index == 255) {
 					DMC.tick_type = DMCCPUWRITE;
-					cpuRdMem(address++, TRUE);
+					cpu_rd_mem(address++, TRUE);
 				} else {
-					cpuRdMem(address++, TRUE);
+					cpu_rd_mem(address++, TRUE);
 				}
-				tickHW(1);
+				tick_hw(1);
 				if ((r2003.value & 0x03) == 0x02) {
 					cpu.openbus &= 0xE3;
 				}
@@ -1107,10 +1107,10 @@ static void INLINE ppuWrReg(WORD address, BYTE value) {
 
 	/* open bus */
 	ppu.openbus = value;
-	ppuObWrAll();
+	ppu_openbus_wr_all();
 	return;
 }
-static void INLINE apuWrReg(WORD address, BYTE value) {
+static void INLINE apu_wr_reg(WORD address, BYTE value) {
 	if (!(address & 0x0010)) {
 		/* -------------------- square 1 --------------------*/
 		if (address <= 0x4003) {
@@ -1357,7 +1357,7 @@ static void INLINE apuWrReg(WORD address, BYTE value) {
 			 * in un ciclo pari, allora l'effettiva modifica
 			 * avverra' nel ciclo successivo.
 			 */
-			if (cpu.oddCycle) {
+			if (cpu.odd_cycle) {
 				r4017.delay = TRUE;
 			} else {
 				r4017.delay = FALSE;
@@ -1373,30 +1373,30 @@ static void INLINE apuWrReg(WORD address, BYTE value) {
 
 	return;
 }
-static BYTE INLINE fdsWrMem(WORD address, BYTE value) {
+static BYTE INLINE fds_wr_mem(WORD address, BYTE value) {
 	if (address >= 0xE000) {
 		/* eseguo un tick hardware */
-		tickHW(1);
+		tick_hw(1);
 		/* non faccio proprio niente */
 		return (TRUE);
 	}
 	if (address >= 0x6000) {
 		/* eseguo un tick hardware */
-		tickHW(1);
+		tick_hw(1);
 		/* scrivo */
 		prg.ram[address - 0x6000] = value;
 		return (TRUE);
 	}
 	if ((address >= 0x4020) && (address <= 0x4026)) {
 		/* eseguo un tick hardware */
-		tickHW(1);
+		tick_hw(1);
 
 #ifndef RELEASE
 		/*if (address == 0x4025) {
 			fprintf(stderr, "0x%04X 0x%02X %d\n", address, value, fds.drive.enabled_dsk_reg);
 		} else {
 			if (fds.drive.disk_position)
-			fprintf(stderr, "0x%04X 0x%02X 0x%04X %d 0x%02X %d\n", address, value, cpu.codeopPC,
+			fprintf(stderr, "0x%04X 0x%02X 0x%04X %d 0x%02X %d\n", address, value, cpu.opcode_PC,
 					fds.drive.disk_position - 1, fds.side.data[fds.drive.disk_position - 1], ppu.frames);
 		}*/
 #endif
@@ -1529,7 +1529,7 @@ static BYTE INLINE fdsWrMem(WORD address, BYTE value) {
 	}
 	if ((address >= 0x4040) && (address <= 0x408A)) {
 		/* eseguo un tick hardware */
-		tickHW(1);
+		tick_hw(1);
 
 		if (fds.drive.enabled_snd_reg) {
 			if ((address >= 0x4040) && (address <= 0x407F)) {
@@ -1614,7 +1614,7 @@ static BYTE INLINE fdsWrMem(WORD address, BYTE value) {
 	}
 	if (address > 0x4017) {
 		/* eseguo un tick hardware */
-		tickHW(1);
+		tick_hw(1);
 		return (TRUE);
 	}
 
@@ -1622,10 +1622,10 @@ static BYTE INLINE fdsWrMem(WORD address, BYTE value) {
 }
 /* ------------------------------------ MISC ROUTINE ------------------------------------------- */
 
-static WORD INLINE lendWord(WORD address, BYTE indirect, BYTE makeLastTickHW) {
+static WORD INLINE lend_word(WORD address, BYTE indirect, BYTE make_last_tick_hw) {
 	WORD newAdr;
 
-	newAdr = cpuRdMem(address++, TRUE);
+	newAdr = cpu_rd_mem(address++, TRUE);
 	/* 6502 Bugs :
 	 * Indirect addressing modes are not able to fetch an address which
 	 * crosses the page boundary
@@ -1641,12 +1641,12 @@ static WORD INLINE lendWord(WORD address, BYTE indirect, BYTE makeLastTickHW) {
 	if (indirect && !(address & 0x00FF)) {
 		address -= 0x100;
 	}
-	newAdr |= (cpuRdMem(address, makeLastTickHW) << 8);
+	newAdr |= (cpu_rd_mem(address, make_last_tick_hw) << 8);
 	return (newAdr);
 }
-static void INLINE tickHW(BYTE value) {
+static void INLINE tick_hw(BYTE value) {
 	while (value > 0) {
-		cpu.opCycle++;
+		cpu.opcode_cycle++;
 		nmi.before = nmi.high;
 		irq.before = irq.high;
 		ppuTick(1);
@@ -1674,11 +1674,11 @@ static void INLINE tickHW(BYTE value) {
 			 */
 			extcl_cpu_every_cycle();
 		}
-		cpu.oddCycle = !cpu.oddCycle;
+		cpu.odd_cycle = !cpu.odd_cycle;
 		value--;
-		modCyclesOP(-=, 1);
+		mod_cycles_op(-=, 1);
 	}
 }
 /* --------------------------------------------------------------------------------------------- */
 
-#endif /* CPUINLINE_H_ */
+#endif /* CPU_INLINE_H_ */

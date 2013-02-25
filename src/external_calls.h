@@ -72,7 +72,7 @@ void (*extcl_ppu_000_to_255)(void);
  */
 void (*extcl_ppu_256_to_319)(void);
 void (*extcl_ppu_320_to_34x)(void);
-/* viene chiamata dopo ogni cambiamento del $2006 in cpuinline.h */
+/* viene chiamata dopo ogni cambiamento del $2006 in cpu_inline.h */
 void (*extcl_update_r2006)(WORD old_r2006);
 /* vengono chiamate in ppuinline.h */
 BYTE (*extcl_rd_nmt)(WORD address);

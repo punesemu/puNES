@@ -7,7 +7,7 @@
 
 #include <string.h>
 #include <stdio.h>
-#include "cpu6502.h"
+#include "cpu.h"
 #include "clock.h"
 #include "memmap.h"
 #include "ppuinline.h"
@@ -1036,7 +1036,7 @@ void ppuTick(WORD cycles_cpu) {
 			 */
 			if (r2000.NMIenable) {
 				nmi.high = TRUE;
-				nmi.frameX = ppu.frameX;
+				nmi.frame_x = ppu.frameX;
 			}
 		}
 		/*

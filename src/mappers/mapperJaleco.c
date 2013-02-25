@@ -9,7 +9,7 @@
 #include <string.h>
 #include "memmap.h"
 #include "mappers.h"
-#include "cpu6502.h"
+#include "cpu.h"
 #include "ppu.h"
 #include "savestate.h"
 
@@ -287,9 +287,9 @@ void extcl_cpu_wr_mem_Jaleco_SS8806(WORD address, BYTE value) {
 			}
 
 			if (value & 0x03) {
-				cpu.prgRamRdActive = cpu.prgRamWrActive = TRUE;
+				cpu.prg_ram_rd_active = cpu.prg_ram_wr_active = TRUE;
 			} else {
-				cpu.prgRamRdActive = cpu.prgRamWrActive = FALSE;
+				cpu.prg_ram_rd_active = cpu.prg_ram_wr_active = FALSE;
 			}
 			break;
 		case 0xA000:

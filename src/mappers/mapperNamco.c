@@ -9,7 +9,7 @@
 #include <string.h>
 #include "mappers.h"
 #include "memmap.h"
-#include "cpu6502.h"
+#include "cpu.h"
 #include "apu.h"
 #include "savestate.h"
 

@@ -9,7 +9,7 @@
 #define IRQA12_H_
 
 #include "common.h"
-#include "cpu6502.h"
+#include "cpu.h"
 #include "ppu.h"
 
 #define _irqA12Clock(function)\

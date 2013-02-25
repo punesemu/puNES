@@ -10,7 +10,7 @@
 #include "mappers.h"
 #include "memmap.h"
 #include "fds.h"
-#include "cpu6502.h"
+#include "cpu.h"
 
 enum {
 	TRANSFERED_8BIT = 0x02,

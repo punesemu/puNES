@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include <libgen.h>
 #include "fds.h"
-#include "cpu6502.h"
+#include "cpu.h"
 #include "mappers.h"
 #include "memmap.h"
 #include "sdltext.h"

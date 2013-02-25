@@ -213,14 +213,14 @@ void extcl_cpu_wr_mem_MMC3(WORD address, BYTE value) {
 			switch ((value & 0xC0) >> 6) {
 				case 0x00:
 				case 0x01:
-					cpu.prgRamRdActive = cpu.prgRamWrActive = FALSE;
+					cpu.prg_ram_rd_active = cpu.prg_ram_wr_active = FALSE;
 					break;
 				case 0x02:
-					cpu.prgRamRdActive = cpu.prgRamWrActive = TRUE;
+					cpu.prg_ram_rd_active = cpu.prg_ram_wr_active = TRUE;
 					break;
 				case 0x03:
-					cpu.prgRamRdActive = TRUE;
-					cpu.prgRamWrActive = FALSE;
+					cpu.prg_ram_rd_active = TRUE;
+					cpu.prg_ram_wr_active = FALSE;
 					break;
 			}
 			break;

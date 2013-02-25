@@ -11,7 +11,7 @@
 #include "timeline.h"
 #include "memmap.h"
 #include "clock.h"
-#include "cpu6502.h"
+#include "cpu.h"
 #include "ppu.h"
 #include "apu.h"
 #include "mappers.h"

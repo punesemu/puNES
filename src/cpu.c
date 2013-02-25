@@ -1,5 +1,5 @@
 /*
- * cpu6502.c
+ * cpu.c
  *
  *  Created on: 14/gen/2011
  *      Author: fhorse
@@ -8,16 +8,16 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "cpu6502.h"
+#include "cpu.h"
 #include "ppu.h"
 #include "apu.h"
 #include "memmap.h"
 #include "ppuinline.h"
 #include "clock.h"
-#include "cpuinline.h"
+#include "cpu_inline.h"
 #include "sdltext.h"
 
-static const BYTE tableCyclesOP[256] = {
+static const BYTE table_opcode_cycles[256] = {
 /*    0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F     */
 /*0*/ 7, 6, 0, 8, 3, 3, 5, 5, 3, 2, 2, 2, 4, 4, 6, 6, /*0*/
 /*1*/ 2, 5, 0, 8, 4, 4, 6, 6, 2, 4, 2, 7, 4, 4, 7, 7, /*1*/
@@ -61,20 +61,20 @@ static const BYTE tableCyclesOP[256] = {
 }
 #define ABS(opTy, cmd)\
 {\
-	WORD adr0 = lendWord(cpu.PC, FALSE, TRUE);\
+	WORD adr0 = lend_word(cpu.PC, FALSE, TRUE);\
 	cpu.PC += 2;\
 	cmd\
 }
 #define ABW(opTy, cmd)\
 {\
-	WORD adr0 = lendWord(cpu.PC, FALSE, FALSE);\
+	WORD adr0 = lend_word(cpu.PC, FALSE, FALSE);\
 	_DMC;\
 	cpu.PC += 2;\
 	cmd\
 }
 #define ABX(opTy, cmd, reg)\
 {\
-	WORD adr2 = lendWord(cpu.PC, FALSE, TRUE);\
+	WORD adr2 = lend_word(cpu.PC, FALSE, TRUE);\
 	WORD adr0 = adr2 + reg;\
 	WORD adr1 = (adr2 & 0xFF00) | (BYTE) adr0;\
 	/* puo' essere la lettura corretta\
@@ -85,7 +85,7 @@ static const BYTE tableCyclesOP[256] = {
 }
 #define AXW(opTy, cmd, reg)\
 {\
-	WORD adr2 = lendWord(cpu.PC, FALSE, TRUE);\
+	WORD adr2 = lend_word(cpu.PC, FALSE, TRUE);\
 	WORD adr0 = adr2 + reg;\
 	WORD adr1 = (adr2 & 0xFF00) | (BYTE) adr0;\
 	/* puo' essere la lettura corretta\
@@ -96,20 +96,20 @@ static const BYTE tableCyclesOP[256] = {
 }
 #define IDR(opTy)\
 {\
-	WORD adr0 = lendWord(cpu.PC, FALSE, TRUE);\
-	cpu.PC = lendWord(adr0, TRUE, TRUE);\
+	WORD adr0 = lend_word(cpu.PC, FALSE, TRUE);\
+	cpu.PC = lend_word(adr0, TRUE, TRUE);\
 }
 #define IDX(opTy, cmd)\
 {\
 	WORD adr1 = _RDP;\
 	/* garbage read */\
 	_RDIDX_;\
-	WORD adr0 = lendWord((adr1 + cpu.XR) & 0x00FF, TRUE, TRUE);\
+	WORD adr0 = lend_word((adr1 + cpu.XR) & 0x00FF, TRUE, TRUE);\
 	cmd\
 }
 #define IDY(opTy, cmd)\
 {\
-	WORD adr2 = lendWord(_RDP, TRUE, TRUE);\
+	WORD adr2 = lend_word(_RDP, TRUE, TRUE);\
 	WORD adr0 = adr2 + cpu.YR;\
 	WORD adr1 = (adr2 & 0xFF00) | (BYTE) adr0;\
 	/* puo' essere la lettura corretta
@@ -123,7 +123,7 @@ static const BYTE tableCyclesOP[256] = {
 {\
 	WORD adr1 = _RDP;\
 	_RDIDX_;\
-	WORD adr0 = lendWord((adr1 + cpu.XR) & 0x00FF, TRUE, FALSE);\
+	WORD adr0 = lend_word((adr1 + cpu.XR) & 0x00FF, TRUE, FALSE);\
 	_DMC;\
 	cmd;\
 }
@@ -131,13 +131,13 @@ static const BYTE tableCyclesOP[256] = {
 {\
 	WORD adr1 = _RDP;\
 	_RDIDX_;\
-	WORD adr0 = lendWord((adr1 + cpu.XR) & 0x00FF, TRUE, FALSE);\
+	WORD adr0 = lend_word((adr1 + cpu.XR) & 0x00FF, TRUE, FALSE);\
 	_DMC;\
 	cmd;\
 }
 #define IYW(opTy, cmd)\
 {\
-	WORD adr2 = lendWord(_RDP, TRUE, TRUE);\
+	WORD adr2 = lend_word(_RDP, TRUE, TRUE);\
 	WORD adr0 = adr2 + cpu.YR;\
 	WORD adr1 = (adr2 & 0xFF00) | (BYTE) adr0;\
 	_RDIYW_;\
@@ -145,7 +145,7 @@ static const BYTE tableCyclesOP[256] = {
 }
 #define _WRX(dst, src)\
 	if (!DMC.tick_type) DMC.tick_type = DMCCPUWRITE;\
-	cpuWrMem(dst, src)
+	cpu_wr_mem(dst, src)
 */
 
 /* ----------------------------------------------------------------------
@@ -187,11 +187,11 @@ static const BYTE tableCyclesOP[256] = {
 			} else if (!(irq.inhibit & 0x04) && irq.high && !irq.before) {\
 				irq.delay = TRUE;\
 			}\
-			modCyclesOP(+=, 1);\
-			tickHW(1);\
+			mod_cycles_op(+=, 1);\
+			tick_hw(1);\
 		} else {\
-			modCyclesOP(+=, 2);\
-			tickHW(2);\
+			mod_cycles_op(+=, 2);\
+			tick_hw(2);\
 		}\
 		cpu.PC = adr0;\
 	} else {\
@@ -214,7 +214,7 @@ static const BYTE tableCyclesOP[256] = {
 	_RDP;\
 	_IRQ(cpu.SR | 0x10)
 #define PHP\
-	tickHW(1);\
+	tick_hw(1);\
 	ASS_SR;\
 	_PSH(cpu.SR | 0x10);
 /* CMP, CPX, CPY */
@@ -226,24 +226,24 @@ static const BYTE tableCyclesOP[256] = {
 #define LDX(x, reg) _RSZ(reg = x;, reg)
 /* JMP */
 #define JMP\
-	WORD adr0 = lendWord(cpu.PC, FALSE, TRUE);\
+	WORD adr0 = lend_word(cpu.PC, FALSE, TRUE);\
 	cpu.PC = adr0;
 /* JSR, RTS */
 #define JSR\
-	WORD adr0 = lendWord(cpu.PC++, FALSE, TRUE);\
+	WORD adr0 = lend_word(cpu.PC++, FALSE, TRUE);\
 	_PSP;\
 	cpu.PC = adr0;
 #define RTS\
 	/* dummy read */\
 	_RDP;\
-	tickHW(1);\
+	tick_hw(1);\
 	cpu.PC = _PUL;\
 	cpu.PC = ((_PUL << 8) | cpu.PC) + 1;
 /* RTI */
 #define RTI\
 	/* dummy read */\
 	_RDP;\
-	tickHW(1);\
+	tick_hw(1);\
 	/* il break flag (bit 4) e' sempre a 0 */\
 	cpu.SR = (_PUL & 0xEF);\
 	DIS_SR;\
@@ -259,13 +259,13 @@ static const BYTE tableCyclesOP[256] = {
 	cpu.im = 0x04;\
 	irq.inhibit |= 0x40;
 #define PHA\
-	tickHW(1);\
+	tick_hw(1);\
 	_PSH(cpu.AR);
 #define PLA\
-	tickHW(2);\
+	tick_hw(2);\
 	_RSZ(cpu.AR = _PUL;, cpu.AR)
 #define PLP\
-	tickHW(2);\
+	tick_hw(2);\
 	/* il break flag (bit 4) e' sempre a 0 */\
 	cpu.SR = (_PUL & 0xEF);\
 	DIS_SR;\
@@ -403,10 +403,10 @@ static const BYTE tableCyclesOP[256] = {
 #define _CMP(x, reg)\
 	WORD cmp = reg - x;\
 	cpu.cf = (cmp < 0x100 ? 1 : 0)
-#define _CYW(cmd) _CY_(cmd, modCyclesOP(+=, 1);)
+#define _CYW(cmd) _CY_(cmd, mod_cycles_op(+=, 1);)
 #define _CY_(cmd1, cmd2)\
 	if (adr1 != adr0) {\
-		cpu.dblRd = TRUE;\
+		cpu.double_rd = TRUE;\
 		cmd2\
 		_RD0;\
 	}\
@@ -416,7 +416,7 @@ static const BYTE tableCyclesOP[256] = {
 	if (adr0 == 0x4014) {\
 		DMC.tick_type = DMCR4014;\
 	}\
-	tickHW(1)
+	tick_hw(1)
 #define _LAX\
 	cpu.AR = _RDB;\
 	_RSZ(cpu.XR = cpu.AR;, cpu.XR)
@@ -425,9 +425,9 @@ static const BYTE tableCyclesOP[256] = {
 	_MSX(result2)
 #define _MSX(result)\
 	_ASLWR1(_RDB)\
-	cpu.dblWr = TRUE;\
+	cpu.double_wr = TRUE;\
 	_ASLWR2(result)\
-	cpu.dblWr = FALSE
+	cpu.double_wr = FALSE
 #define _PUL _RDX(((++cpu.SP) + STACK), TRUE)
 #define _PSH(src) _WRX((cpu.SP--) + STACK, src)
 #define _PSP\
@@ -440,7 +440,7 @@ static const BYTE tableCyclesOP[256] = {
 	_DMC
 #define _RDB cpu.openbus
 #define _RDP _RDX(cpu.PC++, TRUE)
-#define _RDX(src, LASTTICKHW) cpuRdMem(src, LASTTICKHW)
+#define _RDX(src, LASTTICKHW) cpu_rd_mem(src, LASTTICKHW)
 #define _RLA(dst, bitmask, opr)\
 	_ROX(dst, bitmask, opr, oldCF);\
 	cpu.AR &= shift
@@ -491,7 +491,7 @@ static const BYTE tableCyclesOP[256] = {
 	cpu.AR = (BYTE) A;\
 	}
 #define _WR0(reg) _WRX(adr0, reg);
-#define _WRX(dst, reg) cpuWrMem(dst, reg)
+#define _WRX(dst, reg) cpu_wr_mem(dst, reg)
 
 /* IRQ */
 #define _IRQ(flags)\
@@ -505,24 +505,24 @@ static const BYTE tableCyclesOP[256] = {
 	cpu.im = irq.inhibit = 0x04;\
 	if (flagNMI) {\
 		nmi.high = nmi.delay = FALSE;\
-		cpu.PC = lendWord(INT_NMI, FALSE, TRUE);\
+		cpu.PC = lend_word(INT_NMI, FALSE, TRUE);\
 	} else {\
-		cpu.PC = lendWord(INT_IRQ, FALSE, TRUE);\
+		cpu.PC = lend_word(INT_IRQ, FALSE, TRUE);\
 		if (nmi.high) {\
 			nmi.delay = TRUE;\
 		}\
 	}
 #define IRQ(flags)\
-	tickHW(1);\
+	tick_hw(1);\
 	_IRQ(flags)
 #define NMI\
 	nmi.high = nmi.delay = FALSE;\
-	tickHW(1);\
+	tick_hw(1);\
 	_PSP;\
 	ASS_SR;\
 	_PSH(cpu.SR & 0xEF);\
 	cpu.im = irq.inhibit = 0x04;\
-	cpu.PC = lendWord(INT_NMI, FALSE, TRUE);
+	cpu.PC = lend_word(INT_NMI, FALSE, TRUE);
 
 #define _RDZPG  _RD0
 #define _RDZPX_ _RD1
@@ -549,10 +549,10 @@ static const BYTE tableCyclesOP[256] = {
 #define _AXAIDY(reg) _WR0(reg)
 #define _XASABX(reg) _WR0(reg)
 
-void cpuExeOP(void) {
-	cpu.codeop = FALSE;
+void cpu_exe_op(void) {
+	cpu.opcode = FALSE;
 	DMC.tick_type = DMCNORMAL;
-	cpu.codeopPC = cpu.PC;
+	cpu.opcode_PC = cpu.PC;
 
 	/* ------------------------------------------------ */
 	/*                   IRQ handler                    */
@@ -575,11 +575,11 @@ void cpuExeOP(void) {
 		if (!irq.before || irq.delay) {
 			irq.delay = FALSE;
 		} else {
-			cpu.codeop = 0x200;
+			cpu.opcode = 0x200;
 		}
 	}
 	if (nmi.high) {
-		cpu.codeop = 0;
+		cpu.opcode = 0;
 		/*
 		 * se l'NMI viene raggiunto nell'ultimo ciclo
 		 * dell'istruzione precedente (nmi.before = 0)
@@ -590,7 +590,7 @@ void cpuExeOP(void) {
 		if (!nmi.before || nmi.delay) {
 			nmi.delay = FALSE;
 		} else {
-			cpu.codeop = 0x100;
+			cpu.opcode = 0x100;
 		}
 	}
 	/*
@@ -598,20 +598,20 @@ void cpuExeOP(void) {
 	 * un tick hardware altrimenti devo leggere la
 	 * prossima istruzione.
 	 */
-	if (cpu.codeop & 0x300) {
-		tickHW(1);
+	if (cpu.opcode & 0x300) {
+		tick_hw(1);
 	} else {
 		/* memorizzo il codeop attuale */
-		cpu.codeop = _RDP;
+		cpu.opcode = _RDP;
 	}
 
 	/*
 	 * azzero le variabili che utilizzo per sapere
 	 * quando avviene il DMA del DMC durante l'istruzione.
 	 */
-	cpu.opCycle = DMC.dma_cycle = 0;
+	cpu.opcode_cycle = DMC.dma_cycle = 0;
 	/* flag della doppia lettura di un registro */
-	cpu.dblRd = FALSE;
+	cpu.double_rd = FALSE;
 
 	/*
 	 * End of vertical blanking, sometime in pre-render
@@ -625,7 +625,7 @@ void cpuExeOP(void) {
 	 * 07-nmi_on_timing.nes. Non ho trovato informazioni su quando
 	 * effettivamente questa situazione avvenga.
 	 */
-	if (nmi.high && !nmi.frameX && (ppu.frameY == machine.vintLines)) {
+	if (nmi.high && !nmi.frame_x && (ppu.frameY == machine.vintLines)) {
 		nmi.high = nmi.delay = FALSE;
 	}
 	/*
@@ -649,10 +649,10 @@ void cpuExeOP(void) {
 	/* ------------------------------------------------ */
 
 	/* salvo i cicli presi dall'istruzione... */
-	modCyclesOP(+=, tableCyclesOP[(BYTE) cpu.codeop]);
+	mod_cycles_op(+=, table_opcode_cycles[(BYTE) cpu.opcode]);
 
 	/* ... e la eseguo */
-	switch (cpu.codeop) {
+	switch (cpu.opcode) {
 
 	case 0x69: IMP(READ, ADC(_RDP)) break;                              // ADC #IMM
 	case 0x65: ZPG(READ, ADC(_RDZPG)) break;                            // ADC $ZPG
@@ -973,8 +973,8 @@ void cpuExeOP(void) {
 	case 0xF2: // JAM
 	default:
 		if (!info.no_rom && !info.first_illegal_opcode) {
-			fprintf(stderr, "Alert: PC = %04X, CODEOP = %02X \n", (cpu.PC - 1), cpu.codeop);
-			textAddLineInfo(1, "[red]Illegal Opcode 0x%02X at 0x%04X", cpu.codeop, (cpu.PC - 1));
+			fprintf(stderr, "Alert: PC = %04X, CODEOP = %02X \n", (cpu.PC - 1), cpu.opcode);
+			textAddLineInfo(1, "[red]Illegal Opcode 0x%02X at 0x%04X", cpu.opcode, (cpu.PC - 1));
 			info.first_illegal_opcode = TRUE;
 		}
 		cpu.cycles = 0;
@@ -987,10 +987,10 @@ void cpuExeOP(void) {
 
 	/* se presenti eseguo i restanti cicli di PPU e APU */
 	if (cpu.cycles > 0) {
-		tickHW(cpu.cycles);
+		tick_hw(cpu.cycles);
 	}
 }
-void cpuTurnON(void) {
+void cpu_turn_on(void) {
 	if (info.reset >= HARD) {
 		memset(&cpu, 0x00, sizeof(cpu));
 		/* inizializzo lo Stack Pointer */
@@ -1044,14 +1044,14 @@ void cpuTurnON(void) {
 	} else {
 		cpu.SP -= 0x03;
 		cpu.SR |= 0x04;
-		cpu.oddCycle = 0;
-		cpu.cycles = cpu.opCycle = 0;
-		cpu.dblRd = cpu.dblWr = 0;
+		cpu.odd_cycle = 0;
+		cpu.cycles = cpu.opcode_cycle = 0;
+		cpu.double_rd = cpu.double_wr = 0;
 	}
 	memset(&nmi, 0x00, sizeof(nmi));
 	memset(&irq, 0x00, sizeof(irq));
 	/* di default attivo la lettura e la scrittura dalla PRG Ram */
-	cpu.prgRamRdActive = cpu.prgRamWrActive = TRUE;
+	cpu.prg_ram_rd_active = cpu.prg_ram_wr_active = TRUE;
 	/* assemblo il Processor Status Register */
 	DIS_SR;
 	/* setto il flag di disabilitazione dell'irq */

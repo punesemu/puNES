@@ -9,7 +9,7 @@
 #include <string.h>
 #include "mappers.h"
 #include "memmap.h"
-#include "cpu6502.h"
+#include "cpu.h"
 #include "savestate.h"
 
 WORD prgRom16kMax, prgRom8kMax, chrRom1kMax;
@@ -27,8 +27,8 @@ void mapInit_186(void) {
 
 	info.mapperExtendWrite = TRUE;
 	info.prgRamPlus8kCount = 0;
-	cpu.prgRamWrActive = TRUE;
-	cpu.prgRamRdActive = TRUE;
+	cpu.prg_ram_wr_active = TRUE;
+	cpu.prg_ram_rd_active = TRUE;
 
 	if (info.reset >= HARD) {
 		memset(&m186, 0x00, sizeof(m186));

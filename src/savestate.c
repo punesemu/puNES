@@ -13,7 +13,7 @@
 #include "savestate.h"
 #include "cfg_file.h"
 #include "memmap.h"
-#include "cpu6502.h"
+#include "cpu.h"
 #include "ppu.h"
 #include "apu.h"
 #include "mappers.h"
@@ -257,16 +257,16 @@ BYTE stateOperation(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, cpu.bf)
 	savestateEle(mode, slot, cpu.of)
 	savestateEle(mode, slot, cpu.sf)
-	savestateEle(mode, slot, cpu.codeop)
-	savestateEle(mode, slot, cpu.codeopPC)
-	savestateEle(mode, slot, cpu.oddCycle)
+	savestateEle(mode, slot, cpu.opcode)
+	savestateEle(mode, slot, cpu.opcode_PC)
+	savestateEle(mode, slot, cpu.odd_cycle)
 	savestateEle(mode, slot, cpu.openbus)
 	savestateEle(mode, slot, cpu.cycles)
-	savestateEle(mode, slot, cpu.opCycle)
-	savestateEle(mode, slot, cpu.dblRd)
-	savestateEle(mode, slot, cpu.dblWr)
-	savestateEle(mode, slot, cpu.prgRamRdActive)
-	savestateEle(mode, slot, cpu.prgRamWrActive)
+	savestateEle(mode, slot, cpu.opcode_cycle)
+	savestateEle(mode, slot, cpu.double_rd)
+	savestateEle(mode, slot, cpu.double_wr)
+	savestateEle(mode, slot, cpu.prg_ram_rd_active)
+	savestateEle(mode, slot, cpu.prg_ram_wr_active)
 	/* irq */
 	savestateEle(mode, slot, irq.high)
 	savestateEle(mode, slot, irq.delay)
@@ -277,7 +277,7 @@ BYTE stateOperation(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, nmi.delay)
 	savestateEle(mode, slot, nmi.before)
 	savestateEle(mode, slot, nmi.inhibit)
-	savestateEle(mode, slot, nmi.frameX)
+	savestateEle(mode, slot, nmi.frame_x)
 
 	/* ppu */
 	savestateEle(mode, slot, ppu.frameX)

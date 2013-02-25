@@ -9,7 +9,7 @@
 #include <string.h>
 #include "mappers.h"
 #include "memmap.h"
-#include "cpu6502.h"
+#include "cpu.h"
 #include "savestate.h"
 
 #define mirroring(data)\
@@ -321,7 +321,7 @@ BYTE extcl_save_mapper_Sunsoft_S4(BYTE mode, BYTE slot, FILE *fp) {
 void extcl_cpu_wr_mem_Sunsoft_FM7(WORD address, BYTE value) {
 	switch (address & 0xE000) {
 		case 0x4000:
-			if (cpu.prgRamWrActive) {
+			if (cpu.prg_ram_wr_active) {
 				return;
 			}
 			prg.ram[address & 0x1FFF] = value;
@@ -352,20 +352,20 @@ void extcl_cpu_wr_mem_Sunsoft_FM7(WORD address, BYTE value) {
 					switch (value & 0xC0) {
 						case 0x00:
 						case 0x80:
-							cpu.prgRamRdActive = TRUE;
-							cpu.prgRamWrActive = FALSE;
+							cpu.prg_ram_rd_active = TRUE;
+							cpu.prg_ram_wr_active = FALSE;
 							controlBankWithAND(0x3F, prgRom8kMax)
 							fm7.prgRamAddress = value << 13;
 							prg.ramPlus8k = &prg.rom[fm7.prgRamAddress];
 							return;
 						case 0x40:
-							cpu.prgRamRdActive = FALSE;
-							cpu.prgRamWrActive = TRUE;
+							cpu.prg_ram_rd_active = FALSE;
+							cpu.prg_ram_wr_active = TRUE;
 							prg.ramPlus8k = &prg.ramPlus[0];
 							return;
 						case 0xC0:
-							cpu.prgRamRdActive = TRUE;
-							cpu.prgRamWrActive = TRUE;
+							cpu.prg_ram_rd_active = TRUE;
+							cpu.prg_ram_wr_active = TRUE;
 							prg.ramPlus8k = &prg.ramPlus[0];
 							return;
 					}

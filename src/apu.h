@@ -221,7 +221,7 @@ enum apu_channels { APU_S1, APU_S2, APU_TR, APU_NS, APU_DMC };
 		/* e naturalmente incremento anche quelli eseguiti dall'opcode */\
 		cpu.cycles += tick;\
 		/* salvo a che ciclo dell'istruzione avviene il dma */\
-		DMC.dma_cycle = cpu.opCycle;\
+		DMC.dma_cycle = cpu.opcode_cycle;\
 		/* il DMC non e' vuoto */\
 		DMC.empty = FALSE;\
 		if (++DMC.address > 0xFFFF) {\

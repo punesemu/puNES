@@ -8,7 +8,7 @@
 #include <string.h>
 #include "apu.h"
 #include "ppu.h"
-#include "cpu6502.h"
+#include "cpu.h"
 #include "clock.h"
 #include "sdlsnd.h"
 #include "memmap.h"

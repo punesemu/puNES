@@ -24,7 +24,7 @@
 #include "emu.h"
 #include "gui.h"
 #include "clock.h"
-#include "cpu6502.h"
+#include "cpu.h"
 #include "memmap.h"
 #include "mappers.h"
 #include "fps.h"
@@ -97,7 +97,7 @@ BYTE emuLoop(void) {
 				}
 #endif
 				/* eseguo CPU, PPU e APU */
-				cpuExeOP();
+				cpu_exe_op();
 			}
 
 			if (gamegenie.phase == GG_LOAD_ROM) {
@@ -471,7 +471,7 @@ BYTE emuTurnON(void) {
 	}
 
 	/* CPU */
-	cpuTurnON();
+	cpu_turn_on();
 
 	/*
 	 * ...e inizializzazione della mapper (che
@@ -514,7 +514,7 @@ BYTE emuTurnON(void) {
 		for (i = 0; i < 8; i++) {
 			ppuTick(1);
 			apu_tick(1, NULL);
-			cpu.oddCycle = !cpu.oddCycle;
+			cpu.odd_cycle = !cpu.odd_cycle;
 		}
 	}
 
@@ -579,7 +579,7 @@ BYTE emuReset(BYTE type) {
 	}
 
 	/* CPU */
-	cpuTurnON();
+	cpu_turn_on();
 
 	/* mapper */
 	if (mapInit(info.mapper)) {
@@ -622,7 +622,7 @@ BYTE emuReset(BYTE type) {
 		for (i = 0; i < 8; i++) {
 			ppuTick(1);
 			apu_tick(1, NULL);
-			cpu.oddCycle = !cpu.oddCycle;
+			cpu.odd_cycle = !cpu.odd_cycle;
 		}
 	}
 

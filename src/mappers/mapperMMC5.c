@@ -11,7 +11,7 @@
 #include "memmap.h"
 #include "apu.h"
 #include "ppu.h"
-#include "cpu6502.h"
+#include "cpu.h"
 #include "irql2f.h"
 #include "savestate.h"
 
@@ -331,9 +331,9 @@ void extcl_cpu_wr_mem_MMC5(WORD address, BYTE value) {
 		case 0x5103:
 			mmc5.prgRamWrite[address & 0x0001] = value & 0x03;
 			if ((mmc5.prgRamWrite[0] == 0x02) && (mmc5.prgRamWrite[1] == 0x01)) {
-				cpu.prgRamWrActive = TRUE;
+				cpu.prg_ram_wr_active = TRUE;
 			} else {
-				cpu.prgRamWrActive = FALSE;
+				cpu.prg_ram_wr_active = FALSE;
 			}
 			return;
 		case 0x5104:
@@ -471,7 +471,7 @@ void extcl_cpu_wr_mem_MMC5(WORD address, BYTE value) {
 			 */
 			if (address >= 0x8000) {
 				BYTE index = ((address >> 13) & 0x03);
-				if (mmc5.prgRamBank[index][0] && cpu.prgRamWrActive) {
+				if (mmc5.prgRamBank[index][0] && cpu.prg_ram_wr_active) {
 					prg.rom8k[index][address & 0x1FFF] = value;
 				}
 			}

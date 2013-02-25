@@ -9,7 +9,7 @@
 #include <string.h>
 #include "mappers.h"
 #include "memmap.h"
-#include "cpu6502.h"
+#include "cpu.h"
 #include "savestate.h"
 
 static void INLINE ctrlReg_MMC1(void);
@@ -36,8 +36,8 @@ enum {
 			 * |   +- Select 4 KB CHR RAM bank at PPU $0000 (ignored in 8 KB mode)\
 			 * +----- PRG RAM disable (0: enable, 1: open bus)\
 			 */\
-			cpu.prgRamRdActive = (reg & 0x10 ? FALSE : TRUE);\
-			cpu.prgRamWrActive = cpu.prgRamRdActive;\
+			cpu.prg_ram_rd_active = (reg & 0x10 ? FALSE : TRUE);\
+			cpu.prg_ram_wr_active = cpu.prg_ram_rd_active;\
 			value &= 0x01;\
 			break;\
 		case SOROM: {\
@@ -111,7 +111,7 @@ void extcl_cpu_wr_mem_MMC1(WORD address, BYTE value) {
 		/* azzero il flag */
 		mmc1.reset = FALSE;
 		/* esco se necessario */
-		if (cpu.dblWr) {
+		if (cpu.double_wr) {
 			return;
 		}
 	}
@@ -161,8 +161,8 @@ void extcl_cpu_wr_mem_MMC1(WORD address, BYTE value) {
 				break;
 			case PRG0:
 				mmc1.prg0 = mmc1.reg;
-				cpu.prgRamRdActive = (reg & 0x10 ? FALSE : TRUE);
-				cpu.prgRamWrActive = cpu.prgRamRdActive;
+				cpu.prg_ram_rd_active = (reg & 0x10 ? FALSE : TRUE);
+				cpu.prg_ram_wr_active = cpu.prg_ram_rd_active;
 				break;
 		}
 		swapPrgRom_MMC1();

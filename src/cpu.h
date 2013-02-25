@@ -1,12 +1,12 @@
 /*
- * cpu6502.h
+ * cpu.h
  *
  *  Created on: 14/gen/2011
  *      Author: fhorse
  */
 
-#ifndef CPU6502_H_
-#define CPU6502_H_
+#ifndef CPU_H_
+#define CPU_H_
 
 #include "common.h"
 
@@ -58,10 +58,10 @@ typedef struct {
 	BYTE of; // O (bit 6) - Overflow flag
 	BYTE sf; // S (bit 7) - Sign flag or N - Negative flag
 	/* il codice che identifica l'istruzione */
-	WORD codeop;
-	WORD codeopPC;
+	WORD opcode;
+	WORD opcode_PC;
 	/* il flag che indica se il ciclo della cpu e' dispari */
-	BYTE oddCycle;
+	BYTE odd_cycle;
 	/* buffer di lettura */
 	BYTE openbus;
 	/*
@@ -70,15 +70,15 @@ typedef struct {
 	 */
 	SWORD cycles;
 	/* DMC */
-	WORD opCycle;
+	WORD opcode_cycle;
 	/* doppia lettura */
-	BYTE dblRd;
+	BYTE double_rd;
 	/* doppia scrittura */
-	BYTE dblWr;
+	BYTE double_wr;
 	/* lettura PRG Ram attiva/disattiva */
-	BYTE prgRamRdActive;
+	BYTE prg_ram_rd_active;
 	/* scrittura PRG Ram attiva/disattiva */
-	BYTE prgRamWrActive;
+	BYTE prg_ram_wr_active;
 } _cpu;
 typedef struct {
 	BYTE high;
@@ -91,15 +91,14 @@ typedef struct {
 	BYTE delay;
 	BYTE before;
 	BYTE inhibit;
-	WORD frameX;
+	WORD frame_x;
 } _nmi;
 
 _cpu cpu;
 _irq irq;
 _nmi nmi;
 
-void cpuExeOP(void);
-void cpuInterrupt(void);
-void cpuTurnON(void);
+void cpu_exe_op(void);
+void cpu_turn_on(void);
 
-#endif /* CPU6502_H_ */
+#endif /* CPU_H_ */

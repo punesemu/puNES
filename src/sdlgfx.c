@@ -6,7 +6,7 @@
  */
 
 #include "emu.h"
-#include "cpu6502.h"
+#include "cpu.h"
 #include "sdlgfx.h"
 #include "overscan.h"
 #include "clock.h"

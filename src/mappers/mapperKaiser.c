@@ -9,7 +9,7 @@
 #include <string.h>
 #include "mappers.h"
 #include "memmap.h"
-#include "cpu6502.h"
+#include "cpu.h"
 #include "savestate.h"
 
 WORD prgRom16kMax, prgRom8kMax, chrRom8kMax, chrRom4kMax, chrRom1kMax;
@@ -34,12 +34,12 @@ void mapInit_Kaiser(BYTE model) {
 			mapper.intStructSize[0] = sizeof(ks202);
 
 			if (model == KS7032) {
-				cpu.prgRamWrActive = FALSE;
-				cpu.prgRamRdActive = FALSE;
+				cpu.prg_ram_wr_active = FALSE;
+				cpu.prg_ram_rd_active = FALSE;
 			} else {
 				info.prgRamPlus8kCount = 1;
-				cpu.prgRamWrActive = TRUE;
-				cpu.prgRamRdActive = TRUE;
+				cpu.prg_ram_wr_active = TRUE;
+				cpu.prg_ram_rd_active = TRUE;
 			}
 
 			if (info.reset >= HARD) {

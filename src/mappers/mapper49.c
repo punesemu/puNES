@@ -209,7 +209,7 @@ void extcl_cpu_wr_mem_49(WORD address, BYTE value) {
 		return;
 	}
 
-	if (cpu.prgRamWrActive && (address >= 0x6000)) {
+	if (cpu.prg_ram_wr_active && (address >= 0x6000)) {
 		if (m49.reg != value) {
 			m49.reg = value;
 
