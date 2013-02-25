@@ -1,12 +1,12 @@
 /*
- * cfgfile.h
+ * cfg_file.h
  *
  *  Created on: 31/lug/2011
  *      Author: fhorse
  */
 
-#ifndef CFGFILE_H_
-#define CFGFILE_H_
+#ifndef CFG_FILE_H_
+#define CFG_FILE_H_
 
 #include "common.h"
 
@@ -34,15 +34,14 @@ typedef struct {
 	BYTE gamegenie;
 } _config;
 
-_config *cfg;
-_config cfg_from_file;
+_config cfg_from_file, *cfg;
 
-void cfgfileInit(void);
-void cfgfileParse(void);
-void cfgfileSave(void);
-void cfgfilePgsParse(void);
-void cfgfilePgsSave(void);
-void cfgfileInputParse(void);
-void cfgfileInputSave(void);
+void cfg_file_init(void);
+void cfg_file_parse(void);
+void cfg_file_save(void);
+void cfg_file_pgs_parse(void);
+void cfg_file_pgs_save(void);
+void cfg_file_input_parse(void);
+void cfg_file_input_save(void);
 
-#endif /* CFGFILE_H_ */
+#endif /* CFG_FILE_H_ */

@@ -11,7 +11,7 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include "savestate.h"
-#include "cfgfile.h"
+#include "cfg_file.h"
 #include "memmap.h"
 #include "cpu6502.h"
 #include "ppu.h"

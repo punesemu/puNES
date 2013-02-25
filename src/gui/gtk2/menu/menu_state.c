@@ -8,7 +8,7 @@
 #include "menu_state.h"
 #include "sdlsnd.h"
 #include "savestate.h"
-#include "cfgfile.h"
+#include "cfg_file.h"
 
 #ifdef __SUNPRO_C
 #pragma align 4 (savestate_icon_inline)
@@ -368,7 +368,7 @@ void menu_state_saveslot_action(BYTE mode) {
 
 	if (mode == SAVE) {
 		savestateSave();
-		cfgfilePgsSave();
+		cfg_file_pgs_save();
 	} else {
 		savestateLoad();
 	}

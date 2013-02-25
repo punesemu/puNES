@@ -6,7 +6,7 @@
  */
 
 #include "menu_settings.h"
-#include "cfgfile.h"
+#include "cfg_file.h"
 
 #ifdef __SUNPRO_C
 #pragma align 4 (icon_inline)
@@ -107,7 +107,7 @@ void menu_settings(GtkWidget *mainmenu, GtkAccelGroup *accel_group) {
 	gtk_widget_add_accelerator(savenow, "activate", accel_group, GDK_w, GDK_CONTROL_MASK,
 			GTK_ACCEL_VISIBLE);
 
-	g_signal_connect(G_OBJECT(savenow), "activate", G_CALLBACK(cfgfileSave), NULL);
+	g_signal_connect(G_OBJECT(savenow), "activate", G_CALLBACK(cfg_file_save), NULL);
 	g_signal_connect(G_OBJECT(check[MSAVEONEXIT]), "activate", G_CALLBACK(switch_save_on_exit),
 	        NULL );
 }

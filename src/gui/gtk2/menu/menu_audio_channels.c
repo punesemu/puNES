@@ -7,7 +7,7 @@
 
 #include "menu_audio_channels.h"
 #include "param.h"
-#include "cfgfile.h"
+#include "cfg_file.h"
 #include "sdlsnd.h"
 
 #ifdef __SUNPRO_C

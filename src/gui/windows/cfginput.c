@@ -8,7 +8,7 @@
 #include "win.h"
 #include "cfgstdctrl.h"
 #include "sdlsnd.h"
-#include "cfgfile.h"
+#include "cfg_file.h"
 #include "sdlgfx.h"
 #include "opengl.h"
 
@@ -105,7 +105,7 @@ long __stdcall cfg_input_controllers(HWND hwnd, UINT msg, WPARAM wParam, LPARAM 
 					/* Faccio l'update del menu per i casi dello zapper e degli effetti */
 					guiUpdate();
 
-					cfgfileInputSave();
+					cfg_file_input_save();
 
 					inputInit();
 

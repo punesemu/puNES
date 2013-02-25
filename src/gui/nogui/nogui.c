@@ -12,7 +12,7 @@
 #include "palette.h"
 #include "clock.h"
 #include "controller.h"
-#include "cfgfile.h"
+#include "cfg_file.h"
 #include "icon.h"
 
 SDBWORD guiPosX, guiPosY;
@@ -203,7 +203,7 @@ void guiEvent(void) {
 				controller.dev1[START] = 0x41;
 				break;
 			case SDLK_w:
-				cfgfileSave();
+				cfg_file_save();
 				break;
 #ifdef OPENGL
 			case SDLK_f:

@@ -14,7 +14,7 @@
 #include "fds.h"
 #include "blip2.h"
 
-#include "cfgfile.h"
+#include "cfg_file.h"
 #include "clock.h"
 #include "fps.h"
 #include "blip_buf.h"

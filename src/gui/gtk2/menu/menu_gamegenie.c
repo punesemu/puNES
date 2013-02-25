@@ -7,7 +7,7 @@
 
 #include "menu_gamegenie.h"
 #include "gamegenie.h"
-#include "cfgfile.h"
+#include "cfg_file.h"
 
 enum {
 	MGAMEGENIE,

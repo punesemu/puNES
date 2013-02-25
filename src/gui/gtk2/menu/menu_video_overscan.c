@@ -8,7 +8,7 @@
 #include "menu_video_overscan.h"
 #include "param.h"
 #include "sdlgfx.h"
-#include "cfgfile.h"
+#include "cfg_file.h"
 
 #ifdef __SUNPRO_C
 #pragma align 4 (icon_inline)
@@ -238,7 +238,7 @@ void set_overscan(int newoscan) {
 		case OSCAN_OFF:
 		case OSCAN_DEFAULT:
 			cfg->oscan = newoscan;
-			cfgfilePgsSave();
+			cfg_file_pgs_save();
 			break;
 		case OSCAN_DEFAULT_OFF:
 			cfg->oscan_default = OSCAN_OFF;

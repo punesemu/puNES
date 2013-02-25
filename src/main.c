@@ -11,8 +11,8 @@
 #include "memmap.h"
 #include "sdlgfx.h"
 #include "sdltext.h"
-#include "cfgfile.h"
-#include "cmdline.h"
+#include "cfg_file.h"
+#include "cmd_line.h"
 #include "timeline.h"
 #include "version.h"
 #include "gui.h"
@@ -91,9 +91,9 @@ int main(int argc, char **argv) {
 	 * tratto il file di configurazione ed
 	 * i parametri passati dalla riga di comando.
 	 */
-	cfgfileInit();
-	cfgfileParse();
-	optind = cmdlineParse(argc, argv);
+	cfg_file_init();
+	cfg_file_parse();
+	optind = cmd_line_parse(argc, argv);
 
 	if (argc == optind) {
 #ifndef DEBUG

@@ -9,7 +9,7 @@
 #include "opengl.h"
 #include "sdlgfx.h"
 #include "input.h"
-#include "cfgfile.h"
+#include "cfg_file.h"
 #include "openGL/no_effect.h"
 #include "openGL/cube3d.h"
 

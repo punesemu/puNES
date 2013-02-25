@@ -13,7 +13,7 @@
 #include "ppu.h"
 #include "input.h"
 #include "fds.h"
-#include "cfgfile.h"
+#include "cfg_file.h"
 
 #define port_control(prt, button, ch)\
 	if (prt.data[button] == PRESSED) {\
@@ -487,7 +487,6 @@ void textQuit(void) {
 		}
 	}
 }
-
 
 void sdl_text_clear(_txt_element *ele) {
 	return;

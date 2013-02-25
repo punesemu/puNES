@@ -10,7 +10,7 @@
 #include "fps.h"
 #include "apu.h"
 #include "gui.h"
-#include "cfgfile.h"
+#include "cfg_file.h"
 #include "audio_quality.h"
 
 BYTE sndInit(void) {

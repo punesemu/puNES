@@ -1,5 +1,5 @@
 /*
- * cfgfile.c
+ * cfg_file.c
  *
  *  Created on: 31/lug/2011
  *      Author: fhorse
@@ -7,7 +7,7 @@
 
 #include <libgen.h>
 #include <stdlib.h>
-#include "cfgfile.h"
+#include "cfg_file.h"
 #include "gui.h"
 #include "version.h"
 #include "clock.h"
@@ -40,7 +40,7 @@
 	strcpy(buf,  structp[prm].lname);\
 	trimSpace(buf);\
 	if (strcmp(key, buf) == 0) {\
-		paramSearch(start, value, desc, cmd);\
+		param_search(start, value, desc, cmd);\
 		continue;\
 	}\
 }
@@ -76,10 +76,10 @@ void writeParam(_param *prmtr, FILE *fp, BYTE prm, char *value);
 void writeInputParam(_param *prmtr, FILE *fp, BYTE end, _port port, BYTE numport, BYTE type);
 BYTE namePgsFile(char *file);
 
-void cfgfileInit(void) {
+void cfg_file_init(void) {
 	cfg = &cfg_from_file;
 }
-void cfgfileParse(void) {
+void cfg_file_parse(void) {
 	FILE *fp;
 	char tmp[MAXLEN], line[MAXLEN];
 
@@ -89,13 +89,13 @@ void cfgfileParse(void) {
 	/* default */
 	setDefault();
 	/* leggo la configurazione input */
-	cfgfileInputParse();
+	cfg_file_input_parse();
 	/* apro il file di configurazione */
 	sprintf(tmp, "%s/%s", info.baseFolder, INIFILE);
 	/* se non esiste allora lo creo */
 	if ((fp = fopen(tmp, "r")) == NULL) {
 		textAddLineInfo(1, "configuration [yellow]not found, [green]created");
-		cfgfileSave();
+		cfg_file_save();
 		return;
 	}
 	/* leggo il file di configurazione */
@@ -164,7 +164,7 @@ void cfgfileParse(void) {
 	/* the end */
 	fclose(fp);
 }
-void cfgfileSave(void) {
+void cfg_file_save(void) {
 	FILE *fp;
 	char tmp[MAXLEN];
 
@@ -220,10 +220,10 @@ void cfgfileSave(void) {
 	/* the end */
 	fclose(fp);
 
-	cfgfileInputSave();
+	cfg_file_input_save();
 
 }
-void cfgfilePgsParse(void) {
+void cfg_file_pgs_parse(void) {
 	FILE *fp;
 	char tmp[MAXLEN], line[MAXLEN];
 
@@ -265,7 +265,7 @@ void cfgfilePgsParse(void) {
 
 	fclose(fp);
 }
-void cfgfilePgsSave(void) {
+void cfg_file_pgs_save(void) {
 	FILE *fp;
 	char tmp[MAXLEN];
 
@@ -282,7 +282,7 @@ void cfgfilePgsSave(void) {
 
 	fclose(fp);
 }
-void cfgfileInputParse(void) {
+void cfg_file_input_parse(void) {
 	FILE *fp;
 	char tmp[MAXLEN], line[MAXLEN];
 
@@ -290,7 +290,7 @@ void cfgfileInputParse(void) {
 	sprintf(tmp, "%s/%s", info.baseFolder, INPUTFILE);
 	/* se non esiste lo creo */
 	if ((fp = fopen(tmp, "r")) == NULL) {
-		cfgfileInputSave();
+		cfg_file_input_save();
 		return;
 	}
 	/* leggo il file di configurazione */
@@ -320,7 +320,7 @@ void cfgfileInputParse(void) {
 
 	fclose(fp);
 }
-void cfgfileInputSave(void) {
+void cfg_file_input_save(void) {
 	FILE *fp;
 	char tmp[MAXLEN];
 

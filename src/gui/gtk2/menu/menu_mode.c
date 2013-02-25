@@ -6,7 +6,7 @@
  */
 
 #include "menu_mode.h"
-#include "cfgfile.h"
+#include "cfg_file.h"
 #include "clock.h"
 #include "sdltext.h"
 #include "param.h"

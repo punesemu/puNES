@@ -8,7 +8,7 @@
 #include "opengl.h"
 #include "sdlgfx.h"
 #include "ppu.h"
-#include "cfgfile.h"
+#include "cfg_file.h"
 #include "openGL/no_effect.h"
 #define _SHADERS_CODE_
 #include "openGL/shaders.h"

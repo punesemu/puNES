@@ -17,7 +17,7 @@
 #include "overscan.h"
 #include "fps.h"
 #include "tas.h"
-#include "cfgfile.h"
+#include "cfg_file.h"
 
 void inputInit(void) {
 	switch (port1.type) {

@@ -22,7 +22,7 @@
 #undef  _INPUTINLINE_
 #include "palette.h"
 #include "version.h"
-#include "cfgfile.h"
+#include "cfg_file.h"
 #include "timeline.h"
 #include "ppu.h"
 #include "fps.h"
@@ -635,7 +635,7 @@ gboolean sock_key_press_event(GtkWidget *widget, GdkEventKey *event) {
 				return (TRUE);
 			case GDK_w:
 				if ((event->state & 0x1F0D) == GDK_CONTROL_MASK) {
-					cfgfileSave();
+					cfg_file_save();
 					return (TRUE);
 				}
 				break;

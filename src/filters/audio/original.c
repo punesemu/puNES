@@ -11,7 +11,7 @@
 #include "mappers.h"
 #include "mappers/mapperVRC7snd.h"
 #include "fds.h"
-#include "cfgfile.h"
+#include "cfg_file.h"
 #include "clock.h"
 #include "fps.h"
 #include "original.h"

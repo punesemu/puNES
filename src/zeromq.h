@@ -9,7 +9,7 @@
 #define ZEROMQ_H_
 
 #include "common.h"
-#include "cfgfile.h"
+#include "cfg_file.h"
 
 typedef uint8_t net_req;
 

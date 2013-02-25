@@ -7,7 +7,7 @@
 
 #include "menu_audio_quality.h"
 #include "param.h"
-#include "cfgfile.h"
+#include "cfg_file.h"
 #include "audio_quality.h"
 
 #ifdef __SUNPRO_C

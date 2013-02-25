@@ -1,5 +1,5 @@
 /*
- * cmdline.c
+ * cmd_line.c
  *
  *  Created on: 03/ago/2011
  *      Author: fhorse
@@ -8,8 +8,8 @@
 #include <getopt.h>
 #include <string.h>
 #include <libgen.h>
-#include "cmdline.h"
-#include "cfgfile.h"
+#include "cmd_line.h"
+#include "cfg_file.h"
 #include "sdlgfx.h"
 #include "version.h"
 #include "emu.h"
@@ -20,7 +20,7 @@
 
 void usage(char *name);
 
-BYTE cmdlineParse(int argc, char **argv) {
+BYTE cmd_line_parse(int argc, char **argv) {
 	int longIndex = 0, opt = 0;
 
 	opt = getopt_long(argc, argv, optShort, optLong, &longIndex);
@@ -29,20 +29,20 @@ BYTE cmdlineParse(int argc, char **argv) {
 			case 0:
 				/* long options */
 				if (!(strcmp(optLong[longIndex].name, "swap-duty"))) {
-					paramSearch(0, optarg, pNoYes, cfg_from_file.swap_duty = index);
+					param_search(0, optarg, pNoYes, cfg_from_file.swap_duty = index);
 				}
 				break;
 			case 'a':
-				paramSearch(0, optarg, pOffOn, cfg_from_file.audio = index);
+				param_search(0, optarg, pOffOn, cfg_from_file.audio = index);
 				break;
 			case 'c':
-				paramSearch(0, optarg, pChannels, cfg_from_file.channels = index);
+				param_search(0, optarg, pChannels, cfg_from_file.channels = index);
 				break;
 			case 'f':
-				paramSearch(0, optarg, pFps, cfg_from_file.fps = index);
+				param_search(0, optarg, pFps, cfg_from_file.fps = index);
 				break;
 			case 'g':
-				paramSearch(0, optarg, pNoYes, cfg_from_file.gamegenie = index);
+				param_search(0, optarg, pNoYes, cfg_from_file.gamegenie = index);
 				break;
 			case 'h':
 			case '?':
@@ -58,45 +58,45 @@ BYTE cmdlineParse(int argc, char **argv) {
 				break;
 			}
 			case 'k':
-				paramSearch(0, optarg, pFsk, cfg_from_file.frameskip = index);
+				param_search(0, optarg, pFsk, cfg_from_file.frameskip = index);
 				break;
 			case 'i':
-				paramSearch(0, optarg, pFilter, cfg_from_file.filter = index);
+				param_search(0, optarg, pFilter, cfg_from_file.filter = index);
 				break;
 			case 'l':
-				paramSearch(0, optarg, pSamplerate, cfg_from_file.samplerate = index);
+				param_search(0, optarg, pSamplerate, cfg_from_file.samplerate = index);
 				break;
 			case 'm':
-				paramSearch(0, optarg, pMode, cfg_from_file.mode = index);
+				param_search(0, optarg, pMode, cfg_from_file.mode = index);
 				break;
 			case 'n':
-				paramSearch(0, optarg, pNtsc, cfg_from_file.ntsc_format = index);
+				param_search(0, optarg, pNtsc, cfg_from_file.ntsc_format = index);
 				break;
 			case 'o':
-				paramSearch(0, optarg, pOverscan, cfg_from_file.oscan = index);
+				param_search(0, optarg, pOverscan, cfg_from_file.oscan = index);
 				break;
 			case 'p':
-				paramSearch(0, optarg, pNtsc, cfg_from_file.palette = index);
+				param_search(0, optarg, pNtsc, cfg_from_file.palette = index);
 				break;
 			case 'q':
-				paramSearch(0, optarg, pAudioQuality, cfg_from_file.audio_quality = index);
+				param_search(0, optarg, pAudioQuality, cfg_from_file.audio_quality = index);
 				break;
 			case 's':
-				paramSearch(1, optarg, pSize, cfg_from_file.scale = index);
+				param_search(1, optarg, pSize, cfg_from_file.scale = index);
 				gfx.scale_before_fscreen = cfg_from_file.scale;
 				break;
 			case 'r':
-				paramSearch(0, optarg, pRendering, cfg_from_file.render = index);
+				param_search(0, optarg, pRendering, cfg_from_file.render = index);
 				gfxSetRender(cfg_from_file.render);
 				break;
 			case 'v':
-				paramSearch(0, optarg, pOffOn, cfg_from_file.vsync = index);
+				param_search(0, optarg, pOffOn, cfg_from_file.vsync = index);
 				break;
 			case 't':
-				paramSearch(0, optarg, pNoYes, cfg_from_file.aspect_ratio = !index);
+				param_search(0, optarg, pNoYes, cfg_from_file.aspect_ratio = !index);
 				break;
 			case 'u':
-				paramSearch(0, optarg, pNoYes, cfg_from_file.fullscreen = index);
+				param_search(0, optarg, pNoYes, cfg_from_file.fullscreen = index);
 				break;
 			default:
 				break;

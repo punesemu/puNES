@@ -6,7 +6,7 @@
  */
 
 #include <string.h>
-#include "cfgfile.h"
+#include "cfg_file.h"
 #include "sdlgfx.h"
 #include "sdlsnd.h"
 #include "gtk2.h"
@@ -161,7 +161,7 @@ void cfg_input_ok_clicked(GtkWidget *widget, _cfg_port *cfgport) {
 	/* Faccio l'update del menu per i casi dello zapper e degli effetti */
 	guiUpdate();
 
-	cfgfileInputSave();
+	cfg_file_input_save();
 
 	inputInit();
 

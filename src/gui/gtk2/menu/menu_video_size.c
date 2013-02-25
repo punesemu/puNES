@@ -8,7 +8,7 @@
 #include "menu_video_size.h"
 #include "param.h"
 #include "sdlgfx.h"
-#include "cfgfile.h"
+#include "cfg_file.h"
 
 #ifdef __SUNPRO_C
 #pragma align 4 (icon_inline)

@@ -21,7 +21,7 @@
 #include "sdlgfx.h"
 #include "sdlsnd.h"
 #include "clock.h"
-#include "cfgfile.h"
+#include "cfg_file.h"
 #include "timeline.h"
 #include "savestate.h"
 #include "version.h"
@@ -1612,7 +1612,7 @@ long __stdcall mainWinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 					set_gamegenie();
 					break;
 				case IDM_SET_SAVENOW:
-					cfgfileSave();
+					cfg_file_save();
 					break;
 				case IDM_SET_SAVEONEXIT:
 					cfg->save_on_exit = !cfg->save_on_exit;
@@ -2043,7 +2043,7 @@ void set_overscan(BYTE newoscan) {
 		case OSCAN_OFF:
 		case OSCAN_DEFAULT:
 			cfg->oscan = newoscan;
-			cfgfilePgsSave();
+			cfg_file_pgs_save();
 			break;
 		case OSCAN_DEFAULT_OFF:
 			cfg->oscan_default = OSCAN_OFF;
@@ -2326,7 +2326,7 @@ void saveslot_action(BYTE mode) {
 
 	if (mode == SAVE) {
 		savestateSave();
-		cfgfilePgsSave();
+		cfg_file_pgs_save();
 	} else {
 		savestateLoad();
 	}

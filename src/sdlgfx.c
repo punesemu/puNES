@@ -18,7 +18,7 @@
 #define __STATICPAL__
 #include "palette.h"
 #include "opengl.h"
-#include "cfgfile.h"
+#include "cfg_file.h"
 
 #if defined MINGW64
 #define sdlWid()\
@@ -78,7 +78,7 @@ static BYTE ntsc_width_pixel[5] = {0, 0, 7, 10, 14};
 BYTE gfxInit(void) {
 	const SDL_VideoInfo *vInfo;
 
-	/* casi particolari provenienti dal cfgfileParse() e cmdlineParse()*/
+	/* casi particolari provenienti dal cfg_file_parse() e cmd_line_parse() */
 	if ((cfg->scale == X1) && (cfg->filter != NOFILTER)) {
 		cfg->scale = X2;
 	}
@@ -140,7 +140,7 @@ BYTE gfxInit(void) {
 	} else {
 		opengl.supported = TRUE;
 	}
-	/* casi particolari provenienti dal cfgfileParse() e cmdlineParse()*/
+	/* casi particolari provenienti dal cfg_file_parse() e cmd_line_parse()*/
 	if (cfg->fullscreen == FULLSCR) {
 		if (!gfx.opengl) {
 			cfg->fullscreen = NOFULLSCR;

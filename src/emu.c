@@ -39,7 +39,7 @@
 #include "version.h"
 #include "opengl.h"
 #include "param.h"
-#include "cfgfile.h"
+#include "cfg_file.h"
 #include "savestate.h"
 #include "timeline.h"
 #include "tas.h"
@@ -459,7 +459,7 @@ BYTE emuTurnON(void) {
 	/* ...nonche' dei puntatori alla PRG Rom... */
 	mapPrgRom8kReset();
 
-	cfgfilePgsParse();
+	cfg_file_pgs_parse();
 
 	/* APU */
 	apu_turn_on();
@@ -559,7 +559,7 @@ BYTE emuReset(BYTE type) {
 			return (EXIT_ERROR);
 		}
 
-		cfgfilePgsParse();
+		cfg_file_pgs_parse();
 		gfxSetScreen(NOCHANGE, NOCHANGE, NOCHANGE, NOCHANGE, TRUE);
 	}
 
@@ -633,7 +633,7 @@ BYTE emuReset(BYTE type) {
 }
 void emuQuit(BYTE exitCode) {
 	if (cfg->save_on_exit) {
-		cfgfileSave();
+		cfg_file_save();
 	}
 
 	mapQuit();

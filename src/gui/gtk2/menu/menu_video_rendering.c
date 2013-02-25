@@ -7,7 +7,7 @@
 
 #include "menu_video_rendering.h"
 #include "opengl.h"
-#include "cfgfile.h"
+#include "cfg_file.h"
 #include "sdlgfx.h"
 
 #ifdef __SUNPRO_C

@@ -7,7 +7,7 @@
 
 #include "menu_video_frame_skip.h"
 #include "param.h"
-#include "cfgfile.h"
+#include "cfg_file.h"
 #include "fps.h"
 
 #ifdef __SUNPRO_C

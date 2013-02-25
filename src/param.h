@@ -8,7 +8,7 @@
 #ifndef PARAM_H_
 #define PARAM_H_
 
-#define paramSearch(start, buffer, param, cmd)\
+#define param_search(start, buffer, param, cmd)\
 {\
 	BYTE index;\
 	for(index = start; index < LENGTH(param); index++) {\

@@ -11,7 +11,7 @@
 #include "gui.h"
 #include "ppu.h"
 #include "sdlsnd.h"
-#include "cfgfile.h"
+#include "cfg_file.h"
 
 void fpsInit(void) {
 	switch (cfg->fps) {
