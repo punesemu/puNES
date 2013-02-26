@@ -45,7 +45,7 @@
 		}\
 		if (flag) {\
 			gfx.w[CURRENT] = wdt;\
-			gfx.w[NOOVERSCAN] = (NES_NTSC_OUT_WIDTH(SCRROWS, a));\
+			gfx.w[NOOVERSCAN] = (NES_NTSC_OUT_WIDTH(SCR_ROWS, a));\
 		}\
 	}\
 }
@@ -226,8 +226,8 @@ void gfxSetScreen(BYTE newScale, BYTE newFilter, BYTE newFullscreen, BYTE newPal
 	{
 		overscan.enabled = cfg->oscan;
 
-		gfx.rows = SCRROWS;
-		gfx.lines = SCRLINES;
+		gfx.rows = SCR_ROWS;
+		gfx.lines = SCR_LINES;
 
 		if (overscan.enabled == OSCAN_DEFAULT) {
 			overscan.enabled = cfg->oscan_default;
@@ -395,11 +395,11 @@ void gfxSetScreen(BYTE newScale, BYTE newFilter, BYTE newFullscreen, BYTE newPal
 		if (!width) {
 			width = gfx.rows * newScale;
 			gfx.w[CURRENT] = width;
-			gfx.w[NOOVERSCAN] = SCRROWS * newScale;
+			gfx.w[NOOVERSCAN] = SCR_ROWS * newScale;
 		}
 		height = gfx.lines * newScale;
 		gfx.h[CURRENT] = height;
-		gfx.h[NOOVERSCAN] = SCRLINES * newScale;
+		gfx.h[NOOVERSCAN] = SCR_LINES * newScale;
 	}
 
 	/*
@@ -730,8 +730,8 @@ void gfxSetScreen(BYTE newScale, BYTE newFilter, BYTE newFullscreen, BYTE newPal
 	 * essere (256 x 240). Mi serve per calcolarmi la posizione del puntatore
 	 * dello zapper.
 	 */
-	gfx.wPr = ((float) wForPr / gfx.w[CURRENT]) * ((float) gfx.w[NOOVERSCAN] / SCRROWS);
-	gfx.hPr = ((float) hForPr / gfx.h[CURRENT]) * ((float) gfx.h[NOOVERSCAN] / SCRLINES);
+	gfx.wPr = ((float) wForPr / gfx.w[CURRENT]) * ((float) gfx.w[NOOVERSCAN] / SCR_ROWS);
+	gfx.hPr = ((float) hForPr / gfx.h[CURRENT]) * ((float) gfx.h[NOOVERSCAN] / SCR_LINES);
 
 	/* setto il titolo della finestra */
 	guiUpdate();
@@ -752,7 +752,7 @@ void gfxDrawScreen(BYTE forced) {
 	}
 
 	/* se il frameskip me lo permette (o se forzato), disegno lo screen */
-	if (forced || !ppu.skipDraw) {
+	if (forced || !ppu.skip_draw) {
 		/* applico l'effetto desiderato */
 		if (gfx.opengl) {
 			opengl.effect(screen.data, screen.line, paletteWindow, framebuffer, gfx.rows,

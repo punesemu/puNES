@@ -12,7 +12,7 @@
 #include "ppu.h"
 #include "apu.h"
 #include "memmap.h"
-#include "ppuinline.h"
+#include "ppu_inline.h"
 #include "clock.h"
 #include "cpu_inline.h"
 #include "sdltext.h"
@@ -625,7 +625,7 @@ void cpu_exe_op(void) {
 	 * 07-nmi_on_timing.nes. Non ho trovato informazioni su quando
 	 * effettivamente questa situazione avvenga.
 	 */
-	if (nmi.high && !nmi.frame_x && (ppu.frameY == machine.vint_lines)) {
+	if (nmi.high && !nmi.frame_x && (ppu.frame_y == machine.vint_lines)) {
 		nmi.high = nmi.delay = FALSE;
 	}
 	/*

@@ -61,20 +61,20 @@ void (*extcl_cpu_wr_r4016)(BYTE value);
 /* viene chiamata sempre, ad ogni ciclo della PPU */
 void (*extcl_ppu_000_to_34x)(void);
 /*
- * viene chiamata se (!r2002.vblank && (ppu.screenY < SCRLINES))
+ * viene chiamata se (!r2002.vblank && (ppu.screen_y < SCR_LINES))
  * quindi per essere sicuri di essere durante il rendering della PPU
  * nella funzione devo controllare anche se r2001.visible non e' a zero.
  */
 void (*extcl_ppu_000_to_255)(void);
 /*
  * vengono chiamate solo se la PPU e' in fase di rendering
- * (!r2002.vblank && r2001.visible && (ppu.screenY < SCRLINES))
+ * (!r2002.vblank && r2001.visible && (ppu.screen_y < SCR_LINES))
  */
 void (*extcl_ppu_256_to_319)(void);
 void (*extcl_ppu_320_to_34x)(void);
 /* viene chiamata dopo ogni cambiamento del $2006 in cpu_inline.h */
 void (*extcl_update_r2006)(WORD old_r2006);
-/* vengono chiamate in ppuinline.h */
+/* vengono chiamate in ppu_inline.h */
 BYTE (*extcl_rd_nmt)(WORD address);
 BYTE (*extcl_rd_chr)(WORD address);
 /* viene chiamata dopo il FETCHB e dopo il fetch dello sprite */

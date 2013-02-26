@@ -37,7 +37,7 @@
     E8 = H == F ? F : E;
 #define SCALE3X_B()\
     E0 = E1 = E2 = E3 = E4 = E5 = E6 = E7 = E8 = E;
-#define PUTPIXEL(type, pixel, p0, p1)\
+#define put_pixel(type, pixel, p0, p1)\
     *(type *) (dstpix + p0 + p1) = (type) palette[pixel]
 
 struct _scl2x {
@@ -114,26 +114,26 @@ void scale2x(WORD **screen_index, Uint32 *palette, SDL_Surface *dst) {
 				case 16:
 					TW0 = (scl2x.ox << 2);
 					TW1 = TW0 + 2;
-					PUTPIXEL(Uint16, E0, TH3, TW0);
-					PUTPIXEL(Uint16, E1, TH3, TW1);
-					PUTPIXEL(Uint16, E2, TH4, TW0);
-					PUTPIXEL(Uint16, E3, TH4, TW1);
+					put_pixel(Uint16, E0, TH3, TW0);
+					put_pixel(Uint16, E1, TH3, TW1);
+					put_pixel(Uint16, E2, TH4, TW0);
+					put_pixel(Uint16, E3, TH4, TW1);
 					break;
 				case 24:
 					TW0 = X3((scl2x.ox << 1));
 					TW1 = TW0 + 3;
-					PUTPIXEL(int, E0, TH3, TW0);
-					PUTPIXEL(int, E1, TH3, TW1);
-					PUTPIXEL(int, E2, TH4, TW0);
-					PUTPIXEL(int, E3, TH4, TW1);
+					put_pixel(int, E0, TH3, TW0);
+					put_pixel(int, E1, TH3, TW1);
+					put_pixel(int, E2, TH4, TW0);
+					put_pixel(int, E3, TH4, TW1);
 					break;
 				default:
 					TW0 = (scl2x.ox << 3);
 					TW1 = TW0 + 4;
-					PUTPIXEL(Uint32, E0, TH3, TW0);
-					PUTPIXEL(Uint32, E1, TH3, TW1);
-					PUTPIXEL(Uint32, E2, TH4, TW0);
-					PUTPIXEL(Uint32, E3, TH4, TW1);
+					put_pixel(Uint32, E0, TH3, TW0);
+					put_pixel(Uint32, E1, TH3, TW1);
+					put_pixel(Uint32, E2, TH4, TW0);
+					put_pixel(Uint32, E3, TH4, TW1);
 					break;
 			}
 			scl2x.ox++;
@@ -187,43 +187,43 @@ void scale3x(WORD **screen_index, Uint32 *palette, SDL_Surface *dst) {
 					TW0 = (X3(scl2x.ox) << 1);
 					TW1 = TW0 + 2;
 					TW2 = TW0 + 4;
-					PUTPIXEL(Uint16, E0, TH3, TW0);
-					PUTPIXEL(Uint16, E1, TH3, TW1);
-					PUTPIXEL(Uint16, E2, TH3, TW2);
-					PUTPIXEL(Uint16, E3, TH4, TW0);
-					PUTPIXEL(Uint16, E4, TH4, TW1);
-					PUTPIXEL(Uint16, E5, TH4, TW2);
-					PUTPIXEL(Uint16, E6, TH5, TW0);
-					PUTPIXEL(Uint16, E7, TH5, TW1);
-					PUTPIXEL(Uint16, E8, TH5, TW2);
+					put_pixel(Uint16, E0, TH3, TW0);
+					put_pixel(Uint16, E1, TH3, TW1);
+					put_pixel(Uint16, E2, TH3, TW2);
+					put_pixel(Uint16, E3, TH4, TW0);
+					put_pixel(Uint16, E4, TH4, TW1);
+					put_pixel(Uint16, E5, TH4, TW2);
+					put_pixel(Uint16, E6, TH5, TW0);
+					put_pixel(Uint16, E7, TH5, TW1);
+					put_pixel(Uint16, E8, TH5, TW2);
 					break;
 				case 24:
 					TW0 = X3((X3(scl2x.ox)));
 					TW1 = TW0 + 3;
 					TW2 = TW0 + 6;
-					PUTPIXEL(int, E0, TH3, TW0);
-					PUTPIXEL(int, E1, TH3, TW1);
-					PUTPIXEL(int, E2, TH3, TW2);
-					PUTPIXEL(int, E3, TH4, TW0);
-					PUTPIXEL(int, E4, TH4, TW1);
-					PUTPIXEL(int, E5, TH4, TW2);
-					PUTPIXEL(int, E6, TH5, TW0);
-					PUTPIXEL(int, E7, TH5, TW1);
-					PUTPIXEL(int, E8, TH5, TW2);
+					put_pixel(int, E0, TH3, TW0);
+					put_pixel(int, E1, TH3, TW1);
+					put_pixel(int, E2, TH3, TW2);
+					put_pixel(int, E3, TH4, TW0);
+					put_pixel(int, E4, TH4, TW1);
+					put_pixel(int, E5, TH4, TW2);
+					put_pixel(int, E6, TH5, TW0);
+					put_pixel(int, E7, TH5, TW1);
+					put_pixel(int, E8, TH5, TW2);
 					break;
 				default:
 					TW0 = (X3(scl2x.ox) << 2);
 					TW1 = TW0 + 4;
 					TW2 = TW0 + 8;
-					PUTPIXEL(Uint32, E0, TH3, TW0);
-					PUTPIXEL(Uint32, E1, TH3, TW1);
-					PUTPIXEL(Uint32, E2, TH3, TW2);
-					PUTPIXEL(Uint32, E3, TH4, TW0);
-					PUTPIXEL(Uint32, E4, TH4, TW1);
-					PUTPIXEL(Uint32, E5, TH4, TW2);
-					PUTPIXEL(Uint32, E6, TH5, TW0);
-					PUTPIXEL(Uint32, E7, TH5, TW1);
-					PUTPIXEL(Uint32, E8, TH5, TW2);
+					put_pixel(Uint32, E0, TH3, TW0);
+					put_pixel(Uint32, E1, TH3, TW1);
+					put_pixel(Uint32, E2, TH3, TW2);
+					put_pixel(Uint32, E3, TH4, TW0);
+					put_pixel(Uint32, E4, TH4, TW1);
+					put_pixel(Uint32, E5, TH4, TW2);
+					put_pixel(Uint32, E6, TH5, TW0);
+					put_pixel(Uint32, E7, TH5, TW1);
+					put_pixel(Uint32, E8, TH5, TW2);
 					break;
 			}
 			scl2x.ox++;

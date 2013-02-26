@@ -9,7 +9,7 @@
 #include "overscan.h"
 
 #define X3(a) ((a << 1) + a)
-#define PUTPIXEL(type, p0, p1)\
+#define put_pixel(type, p0, p1)\
     *(type *) (dstpix + p0 + p1) = (type) pixel
 
 struct _scl {
@@ -70,15 +70,15 @@ void scaleSurface1x(WORD **screen_index, uint32_t *palette, SDL_Surface *dst) {
 				case 15:
 				case 16:
 					TW0 = (scl.ox << 1);
-					PUTPIXEL(uint16_t, TH0, TW0);
+					put_pixel(uint16_t, TH0, TW0);
 					break;
 				case 24:
 					TW0 = (scl.ox << 1) + 1;
-					PUTPIXEL(int, TH0, TW0);
+					put_pixel(int, TH0, TW0);
 					break;
 				case 32:
 					TW0 = (scl.ox << 2);
-					PUTPIXEL(uint32_t, TH0, TW0);
+					put_pixel(uint32_t, TH0, TW0);
 					break;
 			}
 			scl.ox++;
@@ -110,26 +110,26 @@ void scaleSurface2x(WORD **screen_index, uint32_t *palette, SDL_Surface *dst) {
 				case 16:
 					TW0 = (scl.ox << 2);
 					TW1 = TW0 + 2;
-					PUTPIXEL(uint16_t, TH0, TW0);
-					PUTPIXEL(uint16_t, TH0, TW1);
-					PUTPIXEL(uint16_t, TH1, TW0);
-					PUTPIXEL(uint16_t, TH1, TW1);
+					put_pixel(uint16_t, TH0, TW0);
+					put_pixel(uint16_t, TH0, TW1);
+					put_pixel(uint16_t, TH1, TW0);
+					put_pixel(uint16_t, TH1, TW1);
 					break;
 				case 24:
 					TW0 = X3((scl.ox << 1));
 					TW1 = TW0 + 3;
-					PUTPIXEL(int, TH0, TW0);
-					PUTPIXEL(int, TH0, TW1);
-					PUTPIXEL(int, TH1, TW0);
-					PUTPIXEL(int, TH1, TW1);
+					put_pixel(int, TH0, TW0);
+					put_pixel(int, TH0, TW1);
+					put_pixel(int, TH1, TW0);
+					put_pixel(int, TH1, TW1);
 					break;
 				case 32:
 					TW0 = (scl.ox << 3);
 					TW1 = TW0 + 4;
-					PUTPIXEL(uint32_t, TH0, TW0);
-					PUTPIXEL(uint32_t, TH0, TW1);
-					PUTPIXEL(uint32_t, TH1, TW0);
-					PUTPIXEL(uint32_t, TH1, TW1);
+					put_pixel(uint32_t, TH0, TW0);
+					put_pixel(uint32_t, TH0, TW1);
+					put_pixel(uint32_t, TH1, TW0);
+					put_pixel(uint32_t, TH1, TW1);
 					break;
 			}
 			scl.ox++;
@@ -164,43 +164,43 @@ void scaleSurface3x(WORD **screen_index, uint32_t *palette, SDL_Surface *dst) {
 					TW0 = (X3(scl.ox) << 1);
 					TW1 = TW0 + 2;
 					TW2 = TW0 + 4;
-					PUTPIXEL(uint16_t, TH0, TW0);
-					PUTPIXEL(uint16_t, TH0, TW1);
-					PUTPIXEL(uint16_t, TH0, TW2);
-					PUTPIXEL(uint16_t, TH1, TW0);
-					PUTPIXEL(uint16_t, TH1, TW1);
-					PUTPIXEL(uint16_t, TH1, TW2);
-					PUTPIXEL(uint16_t, TH2, TW0);
-					PUTPIXEL(uint16_t, TH2, TW1);
-					PUTPIXEL(uint16_t, TH2, TW2);
+					put_pixel(uint16_t, TH0, TW0);
+					put_pixel(uint16_t, TH0, TW1);
+					put_pixel(uint16_t, TH0, TW2);
+					put_pixel(uint16_t, TH1, TW0);
+					put_pixel(uint16_t, TH1, TW1);
+					put_pixel(uint16_t, TH1, TW2);
+					put_pixel(uint16_t, TH2, TW0);
+					put_pixel(uint16_t, TH2, TW1);
+					put_pixel(uint16_t, TH2, TW2);
 					break;
 				case 24:
 					TW0 = X3((X3(scl.ox)));
 					TW1 = TW0 + 3;
 					TW2 = TW0 + 6;
-					PUTPIXEL(int, TH0, TW0);
-					PUTPIXEL(int, TH0, TW1);
-					PUTPIXEL(int, TH0, TW2);
-					PUTPIXEL(int, TH1, TW0);
-					PUTPIXEL(int, TH1, TW1);
-					PUTPIXEL(int, TH1, TW2);
-					PUTPIXEL(int, TH2, TW0);
-					PUTPIXEL(int, TH2, TW1);
-					PUTPIXEL(int, TH2, TW2);
+					put_pixel(int, TH0, TW0);
+					put_pixel(int, TH0, TW1);
+					put_pixel(int, TH0, TW2);
+					put_pixel(int, TH1, TW0);
+					put_pixel(int, TH1, TW1);
+					put_pixel(int, TH1, TW2);
+					put_pixel(int, TH2, TW0);
+					put_pixel(int, TH2, TW1);
+					put_pixel(int, TH2, TW2);
 					break;
 				case 32:
 					TW0 = (X3(scl.ox) << 2);
 					TW1 = TW0 + 4;
 					TW2 = TW0 + 8;
-					PUTPIXEL(uint32_t, TH0, TW0);
-					PUTPIXEL(uint32_t, TH0, TW1);
-					PUTPIXEL(uint32_t, TH0, TW2);
-					PUTPIXEL(uint32_t, TH1, TW0);
-					PUTPIXEL(uint32_t, TH1, TW1);
-					PUTPIXEL(uint32_t, TH1, TW2);
-					PUTPIXEL(uint32_t, TH2, TW0);
-					PUTPIXEL(uint32_t, TH2, TW1);
-					PUTPIXEL(uint32_t, TH2, TW2);
+					put_pixel(uint32_t, TH0, TW0);
+					put_pixel(uint32_t, TH0, TW1);
+					put_pixel(uint32_t, TH0, TW2);
+					put_pixel(uint32_t, TH1, TW0);
+					put_pixel(uint32_t, TH1, TW1);
+					put_pixel(uint32_t, TH1, TW2);
+					put_pixel(uint32_t, TH2, TW0);
+					put_pixel(uint32_t, TH2, TW1);
+					put_pixel(uint32_t, TH2, TW2);
 					break;
 			}
 			scl.ox++;
@@ -237,66 +237,66 @@ void scaleSurface4x(WORD **screen_index, uint32_t *palette, SDL_Surface *dst) {
 					TW1 = TW0 + 2;
 					TW2 = TW0 + 4;
 					TW3 = TW0 + 6;
-					PUTPIXEL(uint16_t, TH0, TW0);
-					PUTPIXEL(uint16_t, TH0, TW1);
-					PUTPIXEL(uint16_t, TH0, TW2);
-					PUTPIXEL(uint16_t, TH0, TW3);
-					PUTPIXEL(uint16_t, TH1, TW0);
-					PUTPIXEL(uint16_t, TH1, TW1);
-					PUTPIXEL(uint16_t, TH1, TW2);
-					PUTPIXEL(uint16_t, TH1, TW3);
-					PUTPIXEL(uint16_t, TH2, TW0);
-					PUTPIXEL(uint16_t, TH2, TW1);
-					PUTPIXEL(uint16_t, TH2, TW2);
-					PUTPIXEL(uint16_t, TH2, TW3);
-					PUTPIXEL(uint16_t, TH3, TW0);
-					PUTPIXEL(uint16_t, TH3, TW1);
-					PUTPIXEL(uint16_t, TH3, TW2);
-					PUTPIXEL(uint16_t, TH3, TW3);
+					put_pixel(uint16_t, TH0, TW0);
+					put_pixel(uint16_t, TH0, TW1);
+					put_pixel(uint16_t, TH0, TW2);
+					put_pixel(uint16_t, TH0, TW3);
+					put_pixel(uint16_t, TH1, TW0);
+					put_pixel(uint16_t, TH1, TW1);
+					put_pixel(uint16_t, TH1, TW2);
+					put_pixel(uint16_t, TH1, TW3);
+					put_pixel(uint16_t, TH2, TW0);
+					put_pixel(uint16_t, TH2, TW1);
+					put_pixel(uint16_t, TH2, TW2);
+					put_pixel(uint16_t, TH2, TW3);
+					put_pixel(uint16_t, TH3, TW0);
+					put_pixel(uint16_t, TH3, TW1);
+					put_pixel(uint16_t, TH3, TW2);
+					put_pixel(uint16_t, TH3, TW3);
 					break;
 				case 24:
 					TW0 = X3((scl.ox << 2));
 					TW1 = TW0 + 3;
 					TW2 = TW0 + 6;
 					TW3 = TW0 + 9;
-					PUTPIXEL(int, TH0, TW0);
-					PUTPIXEL(int, TH0, TW1);
-					PUTPIXEL(int, TH0, TW2);
-					PUTPIXEL(int, TH0, TW3);
-					PUTPIXEL(int, TH1, TW0);
-					PUTPIXEL(int, TH1, TW1);
-					PUTPIXEL(int, TH1, TW2);
-					PUTPIXEL(int, TH1, TW3);
-					PUTPIXEL(int, TH2, TW0);
-					PUTPIXEL(int, TH2, TW1);
-					PUTPIXEL(int, TH2, TW2);
-					PUTPIXEL(int, TH2, TW3);
-					PUTPIXEL(int, TH3, TW0);
-					PUTPIXEL(int, TH3, TW1);
-					PUTPIXEL(int, TH3, TW2);
-					PUTPIXEL(int, TH3, TW3);
+					put_pixel(int, TH0, TW0);
+					put_pixel(int, TH0, TW1);
+					put_pixel(int, TH0, TW2);
+					put_pixel(int, TH0, TW3);
+					put_pixel(int, TH1, TW0);
+					put_pixel(int, TH1, TW1);
+					put_pixel(int, TH1, TW2);
+					put_pixel(int, TH1, TW3);
+					put_pixel(int, TH2, TW0);
+					put_pixel(int, TH2, TW1);
+					put_pixel(int, TH2, TW2);
+					put_pixel(int, TH2, TW3);
+					put_pixel(int, TH3, TW0);
+					put_pixel(int, TH3, TW1);
+					put_pixel(int, TH3, TW2);
+					put_pixel(int, TH3, TW3);
 					break;
 				case 32:
 					TW0 = (scl.ox << 4);
 					TW1 = TW0 + 4;
 					TW2 = TW0 + 8;
 					TW3 = TW0 + 12;
-					PUTPIXEL(uint32_t, TH0, TW0);
-					PUTPIXEL(uint32_t, TH0, TW1);
-					PUTPIXEL(uint32_t, TH0, TW2);
-					PUTPIXEL(uint32_t, TH0, TW3);
-					PUTPIXEL(uint32_t, TH1, TW0);
-					PUTPIXEL(uint32_t, TH1, TW1);
-					PUTPIXEL(uint32_t, TH1, TW2);
-					PUTPIXEL(uint32_t, TH1, TW3);
-					PUTPIXEL(uint32_t, TH2, TW0);
-					PUTPIXEL(uint32_t, TH2, TW1);
-					PUTPIXEL(uint32_t, TH2, TW2);
-					PUTPIXEL(uint32_t, TH2, TW3);
-					PUTPIXEL(uint32_t, TH3, TW0);
-					PUTPIXEL(uint32_t, TH3, TW1);
-					PUTPIXEL(uint32_t, TH3, TW2);
-					PUTPIXEL(uint32_t, TH3, TW3);
+					put_pixel(uint32_t, TH0, TW0);
+					put_pixel(uint32_t, TH0, TW1);
+					put_pixel(uint32_t, TH0, TW2);
+					put_pixel(uint32_t, TH0, TW3);
+					put_pixel(uint32_t, TH1, TW0);
+					put_pixel(uint32_t, TH1, TW1);
+					put_pixel(uint32_t, TH1, TW2);
+					put_pixel(uint32_t, TH1, TW3);
+					put_pixel(uint32_t, TH2, TW0);
+					put_pixel(uint32_t, TH2, TW1);
+					put_pixel(uint32_t, TH2, TW2);
+					put_pixel(uint32_t, TH2, TW3);
+					put_pixel(uint32_t, TH3, TW0);
+					put_pixel(uint32_t, TH3, TW1);
+					put_pixel(uint32_t, TH3, TW2);
+					put_pixel(uint32_t, TH3, TW3);
 					break;
 			}
 			scl.ox++;

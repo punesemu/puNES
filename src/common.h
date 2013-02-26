@@ -49,7 +49,7 @@ enum {
 	POWERUP    = 0x50
 };
 /* le dimesioni dello screen da renderizzare */
-enum { SCRLINES = 240, SCRROWS = 256 };
+enum { SCR_LINES = 240, SCR_ROWS = 256 };
 /* le modalita' del colore possibili con la PPU */
 enum { GRAYSCALE = 0x30, NORMAL = 0x3F };
 

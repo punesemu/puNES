@@ -37,7 +37,7 @@
 	type = TRUE;\
 	if (tl.snapsFill) {\
 		/* faccio lo screenshot dello screen attuale */\
-		memcpy(tl.snaps[TLSNAPFREE] + tl.preview, screen.data, screenSize());\
+		memcpy(tl.snaps[TLSNAPFREE] + tl.preview, screen.data, screen_size());\
 	}
 #define tlRelease(type)\
 	if (tl.snapsFill) {\
@@ -238,7 +238,7 @@ BYTE guiCreate(void) {
 
 		hboxtl = gtk_hbox_new(FALSE, SPACING);
 
-		gtk_widget_set_size_request(GTK_WIDGET(hboxtl), SCRROWS, -1);
+		gtk_widget_set_size_request(GTK_WIDGET(hboxtl), SCR_ROWS, -1);
 
 		gtk_box_pack_end(GTK_BOX(hbox), hboxtl, FALSE, FALSE, 0);
 
@@ -248,7 +248,7 @@ BYTE guiCreate(void) {
 		gtk_widget_set_can_focus(GTK_WIDGET(timeline), FALSE);
 
 		gtk_widget_set_size_request(GTK_WIDGET(timeline),
-				SCRROWS - (alSeparator.width * 2) - (SPACING * 2), -1);
+				SCR_ROWS - (alSeparator.width * 2) - (SPACING * 2), -1);
 
 		gtk_scale_set_digits(GTK_SCALE(timeline), 0);
 		gtk_scale_set_value_pos(GTK_SCALE(timeline), GTK_POS_LEFT);
@@ -364,7 +364,7 @@ BYTE guiCreate(void) {
 	return (EXIT_OK);
 }
 void guiSetVideoMode(void) {
-	WORD rows = SCRROWS;
+	WORD rows = SCR_ROWS;
 
 	if (cfg->scale == X1) {
 		gtk_widget_hide(hboxss);
@@ -891,7 +891,7 @@ gboolean timeline_value_changed(GtkRange *range) {
 		snap = (tl.snapsFill - 1);
 	}
 	if (snap == (tl.snapsFill - 1)) {
-		memcpy(screen.data, tl.snaps[TLSNAPFREE] + tl.preview, screenSize());
+		memcpy(screen.data, tl.snaps[TLSNAPFREE] + tl.preview, screen_size());
 		gfxDrawScreen(TRUE);
 		return (FALSE);
 	}

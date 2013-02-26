@@ -46,7 +46,7 @@
 	type = TRUE;\
 	if (tl.snapsFill) {\
 		/* faccio lo screenshot dello screen attuale */\
-		memcpy(tl.snaps[TLSNAPFREE] + tl.preview, screen.data, screenSize());\
+		memcpy(tl.snaps[TLSNAPFREE] + tl.preview, screen.data, screen_size());\
 	}
 #define tlUp(type)\
 	if (tl.snapsFill) {\
@@ -69,7 +69,7 @@ enum { CHECK, ENAB };
 
 #define TOOLBARHEIGHT  26
 #define FRAMETLHEIGHT  (TOOLBARHEIGHT - 2)
-#define FRAMETLWIDTH   SCRROWS
+#define FRAMETLWIDTH   SCR_ROWS
 #define FRAMESSHEIGHT  TOOLBARHEIGHT - 2
 #define FRAMESSWIDTH   1 + BUTTONSSWIDTH + 0 + COMBOSSWIDTH + 2 + BUTTONSSWIDTH + 1
 #define BUTTONSSHEIGHT FRAMESSHEIGHT - 1
@@ -2298,7 +2298,7 @@ void wrapTlPreview(BYTE snap) {
 	SendMessage(hTimeline, TBM_SETPOS, TRUE, snap);
 
 	if (snap == (tl.snapsFill - 1)) {
-		memcpy(screen.data, tl.snaps[TLSNAPFREE] + tl.preview, screenSize());
+		memcpy(screen.data, tl.snaps[TLSNAPFREE] + tl.preview, screen_size());
 		time_handler_redraw();
 		return;
 	}

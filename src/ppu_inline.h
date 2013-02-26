@@ -1,18 +1,18 @@
 /*
- * ppuinline.h
+ * ppu_inline.h
  *
  *  Created on: 23/apr/2010
  *      Author: fhorse
  */
 
-#ifndef PPUINLINE_H_
-#define PPUINLINE_H_
+#ifndef PPU_INLINE_H_
+#define PPU_INLINE_H_
 
 #include "external_calls.h"
 
-static BYTE INLINE ppuRdMem(WORD address);
+static BYTE INLINE ppu_rd_mem(WORD address);
 
-static BYTE INLINE ppuRdMem(WORD address) {
+static BYTE INLINE ppu_rd_mem(WORD address) {
 	address &= 0x3FFF;
 	if (address < 0x2000) {
 		if (extcl_rd_chr) {
@@ -39,4 +39,4 @@ static BYTE INLINE ppuRdMem(WORD address) {
 	return (palette.color[address & 0x1F]);
 }
 
-#endif /* PPUINLINE_H_ */
+#endif /* PPU_INLINE_H_ */

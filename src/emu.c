@@ -467,7 +467,7 @@ BYTE emu_turn_on(void) {
 	apu_turn_on();
 
 	/* PPU */
-	if (ppuTurnON()) {
+	if (ppu_turn_on()) {
 		return (EXIT_ERROR);
 	}
 
@@ -513,7 +513,7 @@ BYTE emu_turn_on(void) {
 	{
 		BYTE i;
 		for (i = 0; i < 8; i++) {
-			ppuTick(1);
+			ppu_tick(1);
 			apu_tick(1, NULL);
 			cpu.odd_cycle = !cpu.odd_cycle;
 		}
@@ -575,7 +575,7 @@ BYTE emu_reset(BYTE type) {
 	apu_turn_on();
 
 	/* PPU */
-	if (ppuTurnON()) {
+	if (ppu_turn_on()) {
 		return (EXIT_ERROR);
 	}
 
@@ -621,7 +621,7 @@ BYTE emu_reset(BYTE type) {
 	{
 		BYTE i;
 		for (i = 0; i < 8; i++) {
-			ppuTick(1);
+			ppu_tick(1);
 			apu_tick(1, NULL);
 			cpu.odd_cycle = !cpu.odd_cycle;
 		}
@@ -641,7 +641,7 @@ void emu_quit(BYTE exit_code) {
 	map_quit();
 
 	fds_quit();
-	ppuQuit();
+	ppu_quit();
 	gfxQuit();
 	sndQuit();
 

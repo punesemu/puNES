@@ -8,11 +8,11 @@
 #include "irql2f.h"
 
 void irql2f_tick(void) {
-	if (irql2f.frame_x != ppu.frameX) {
+	if (irql2f.frame_x != ppu.frame_x) {
 		return;
 	}
 
-	if (ppu.screenY == (SCRLINES - 1)) {
+	if (ppu.screen_y == (SCR_LINES - 1)) {
 		irql2f.in_frame = FALSE;
 		return;
 	}

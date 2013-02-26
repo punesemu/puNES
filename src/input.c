@@ -233,20 +233,20 @@ BYTE input_rd_reg_zapper(BYTE openbus, WORD **screen_index, _port *port) {
 
 	//fprintf(stderr, "x : %d (%d)    %d (%d)   \r", x_zapper, gui.x, y_zapper, gui.y);
 
-	if ((x_zapper <= 0) || (x_zapper >= SCRROWS) || (y_zapper <= 0) || (y_zapper >= SCRLINES)) {
+	if ((x_zapper <= 0) || (x_zapper >= SCR_ROWS) || (y_zapper <= 0) || (y_zapper >= SCR_LINES)) {
 		return (port->zapper |= 0x08);
 	}
 
-	if (!r2002.vblank && r2001.visible && (ppu.frameY > machine.vint_lines)
-	        && (ppu.screenY < SCRLINES)) {
+	if (!r2002.vblank && r2001.visible && (ppu.frame_y > machine.vint_lines)
+	        && (ppu.screen_y < SCR_LINES)) {
 		for (y_rect = (y_zapper - 8); y_rect < (y_zapper + 8); y_rect++) {
 			if (y_rect < 0) {
 				continue;
 			}
-			if (y_rect <= (ppu.screenY - 18)) {
+			if (y_rect <= (ppu.screen_y - 18)) {
 				continue;
 			}
-			if (y_rect >= ppu.screenY) {
+			if (y_rect >= ppu.screen_y) {
 				break;
 			}
 			for (x_rect = (x_zapper - 8); x_rect < (x_zapper + 8); x_rect++) {

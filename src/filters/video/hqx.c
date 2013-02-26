@@ -39,7 +39,7 @@ void hqNx(WORD *screen, WORD **screen_index, Uint32 *palette, SDL_Surface *dst, 
 		hqnx.lines += overscan.up;
 		hqnx.rows += overscan.left;
 		hqnx.startx = overscan.left;
-		screen += (SCRROWS * overscan.up);
+		screen += (SCR_ROWS * overscan.up);
 	}
 
 	if (factor == 1) {

@@ -126,7 +126,7 @@ void timelinePreview(BYTE snap) {
 		snapPrw += TLSNAPS;
 	}
 
-	memcpy(screen.data, tl.snaps[snapPrw] + tl.preview, screenSize());
+	memcpy(screen.data, tl.snaps[snapPrw] + tl.preview, screen_size());
 	gfxDrawScreen(TRUE);
 }
 void timelineBack(BYTE mode, BYTE snap) {
@@ -167,7 +167,7 @@ void tlOperation(BYTE mode, BYTE snap) {
 
 	/* PPU */
 	onStruct(mode, ppu);
-	onStruct(mode, ppuOpenbus);
+	onStruct(mode, ppu_openbus);
 	onStruct(mode, r2000);
 	onStruct(mode, r2001);
 	onStruct(mode, r2002);
@@ -175,11 +175,11 @@ void tlOperation(BYTE mode, BYTE snap) {
 	onStruct(mode, r2004);
 	onStruct(mode, r2006);
 	onStruct(mode, r2007);
-	onStruct(mode, sprEv);
+	onStruct(mode, spr_ev);
 	onStruct(mode, sprite);
-	onStruct(mode, spritePlus);
-	onStruct(mode, tileRender);
-	onStruct(mode, tileFetch);
+	onStruct(mode, sprite_plus);
+	onStruct(mode, tile_render);
+	onStruct(mode, tile_fetch);
 
 	/* APU */
 	onStruct(mode, apu);
@@ -249,5 +249,5 @@ void tlOperation(BYTE mode, BYTE snap) {
 	if (mode == TLCOUNT) {
 		tl.preview = tl.snapSize;
 	}
-	onMem(mode, screen.data, screenSize());
+	onMem(mode, screen.data, screen_size());
 }

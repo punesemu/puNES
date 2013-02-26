@@ -111,24 +111,24 @@ void savestatePreview(BYTE slot) {
 	FILE *fp;
 
 	if (!savestate.previewStart) {
-		memcpy(tl.snaps[TLSNAPFREE] + tl.preview, screen.data, screenSize());
+		memcpy(tl.snaps[TLSNAPFREE] + tl.preview, screen.data, screen_size());
 		savestate.previewStart = TRUE;
 	}
 
 	if (!savestate.slotState[slot]) {
-		memcpy(screen.data, tl.snaps[TLSNAPFREE] + tl.preview, screenSize());
+		memcpy(screen.data, tl.snaps[TLSNAPFREE] + tl.preview, screen_size());
 		gfxDrawScreen(TRUE);
 		return;
 	}
 
 	if (nameStateFile(file, slot)) {
-		memcpy(screen.data, tl.snaps[TLSNAPFREE] + tl.preview, screenSize());
+		memcpy(screen.data, tl.snaps[TLSNAPFREE] + tl.preview, screen_size());
 		gfxDrawScreen(TRUE);
 		return;
 	}
 
 	if ((fp = fopen(file, "rb")) == NULL) {
-		memcpy(screen.data, tl.snaps[TLSNAPFREE] + tl.preview, screenSize());
+		memcpy(screen.data, tl.snaps[TLSNAPFREE] + tl.preview, screen_size());
 		gfxDrawScreen(TRUE);
 		fprintf(stderr, "error on load preview\n");
 		return;
@@ -139,10 +139,10 @@ void savestatePreview(BYTE slot) {
 	{
 		DBWORD bytes;
 
-		bytes = fread(screen.data, screenSize(), 1, fp);
+		bytes = fread(screen.data, screen_size(), 1, fp);
 
 		if (bytes != 1) {
-			memcpy(screen.data, tl.snaps[TLSNAPFREE] + tl.preview, screenSize());
+			memcpy(screen.data, tl.snaps[TLSNAPFREE] + tl.preview, screen_size());
 		}
 	}
 
@@ -280,48 +280,48 @@ BYTE stateOperation(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, nmi.frame_x)
 
 	/* ppu */
-	savestateEle(mode, slot, ppu.frameX)
-	savestateEle(mode, slot, ppu.frameY)
-	savestateEle(mode, slot, ppu.fineX)
-	savestateEle(mode, slot, ppu.screenY)
-	savestateEle(mode, slot, ppu.pixelTile)
-	savestateEle(mode, slot, ppu.slineCycles)
-	savestateEle(mode, slot, ppu.tmpVRAM)
-	savestateEle(mode, slot, ppu.sprAdr)
-	savestateEle(mode, slot, ppu.bckAdr)
+	savestateEle(mode, slot, ppu.frame_x)
+	savestateEle(mode, slot, ppu.frame_y)
+	savestateEle(mode, slot, ppu.fine_x)
+	savestateEle(mode, slot, ppu.screen_y)
+	savestateEle(mode, slot, ppu.pixel_tile)
+	savestateEle(mode, slot, ppu.sline_cycles)
+	savestateEle(mode, slot, ppu.tmp_vram)
+	savestateEle(mode, slot, ppu.spr_adr)
+	savestateEle(mode, slot, ppu.bck_adr)
 	savestateEle(mode, slot, ppu.openbus)
-	savestateEle(mode, slot, ppu.oddFrame)
+	savestateEle(mode, slot, ppu.odd_frame)
 	savestateEle(mode, slot, ppu.cycles)
 	savestateEle(mode, slot, ppu.frames)
-	/* ppuOpenbus */
-	savestateEle(mode, slot, ppuOpenbus.bit0)
-	savestateEle(mode, slot, ppuOpenbus.bit1)
-	savestateEle(mode, slot, ppuOpenbus.bit2)
-	savestateEle(mode, slot, ppuOpenbus.bit3)
-	savestateEle(mode, slot, ppuOpenbus.bit4)
-	savestateEle(mode, slot, ppuOpenbus.bit5)
-	savestateEle(mode, slot, ppuOpenbus.bit6)
-	savestateEle(mode, slot, ppuOpenbus.bit7)
+	/* ppu_openbus */
+	savestateEle(mode, slot, ppu_openbus.bit0)
+	savestateEle(mode, slot, ppu_openbus.bit1)
+	savestateEle(mode, slot, ppu_openbus.bit2)
+	savestateEle(mode, slot, ppu_openbus.bit3)
+	savestateEle(mode, slot, ppu_openbus.bit4)
+	savestateEle(mode, slot, ppu_openbus.bit5)
+	savestateEle(mode, slot, ppu_openbus.bit6)
+	savestateEle(mode, slot, ppu_openbus.bit7)
 	/* r2000 */
 	savestateEle(mode, slot, r2000.value)
-	savestateEle(mode, slot, r2000.NMIenable)
-	savestateEle(mode, slot, r2000.sizeSPR)
-	savestateEle(mode, slot, r2000.r2006Inc)
-	savestateEle(mode, slot, r2000.SPTadr)
-	savestateEle(mode, slot, r2000.BPTadr)
+	savestateEle(mode, slot, r2000.nmi_enable)
+	savestateEle(mode, slot, r2000.size_spr)
+	savestateEle(mode, slot, r2000.r2006_inc)
+	savestateEle(mode, slot, r2000.spt_adr)
+	savestateEle(mode, slot, r2000.bpt_adr)
 	/* r2001 */
 	savestateEle(mode, slot, r2001.value)
 	savestateEle(mode, slot, r2001.emphasis)
 	savestateEle(mode, slot, r2001.visible)
-	savestateEle(mode, slot, r2001.bckVisible)
-	savestateEle(mode, slot, r2001.sprVisible)
-	savestateEle(mode, slot, r2001.bckClipping)
-	savestateEle(mode, slot, r2001.sprClipping)
-	savestateEle(mode, slot, r2001.colorMode)
+	savestateEle(mode, slot, r2001.bck_visible)
+	savestateEle(mode, slot, r2001.spr_visible)
+	savestateEle(mode, slot, r2001.bck_clipping)
+	savestateEle(mode, slot, r2001.spr_clipping)
+	savestateEle(mode, slot, r2001.color_mode)
 	/* r2002 */
 	savestateEle(mode, slot, r2002.vblank)
-	savestateEle(mode, slot, r2002.sprite0Hit)
-	savestateEle(mode, slot, r2002.spriteOverflow)
+	savestateEle(mode, slot, r2002.sprite0_hit)
+	savestateEle(mode, slot, r2002.sprite_overflow)
 	savestateEle(mode, slot, r2002.toggle)
 	/* r2003 */
 	savestateEle(mode, slot, r2003.value)
@@ -329,50 +329,50 @@ BYTE stateOperation(BYTE mode, BYTE slot, FILE *fp) {
 	savestateEle(mode, slot, r2004.value)
 	/* r2006 */
 	savestateEle(mode, slot, r2006.value)
-	savestateEle(mode, slot, r2006.changedFromOP)
+	savestateEle(mode, slot, r2006.changed_from_op)
 	/* r2007 */
 	savestateEle(mode, slot, r2007.value)
-	/* sprEv */
-	savestateEle(mode, slot, sprEv.range)
-	savestateEle(mode, slot, sprEv.count)
-	savestateEle(mode, slot, sprEv.countPlus)
-	savestateEle(mode, slot, sprEv.tmpSprPlus)
-	savestateEle(mode, slot, sprEv.evaluate)
-	savestateEle(mode, slot, sprEv.byteOAM)
-	savestateEle(mode, slot, sprEv.indexPlus)
-	savestateEle(mode, slot, sprEv.index)
-	savestateEle(mode, slot, sprEv.timing)
-	savestateEle(mode, slot, sprEv.phase)
+	/* spr_ev */
+	savestateEle(mode, slot, spr_ev.range)
+	savestateEle(mode, slot, spr_ev.count)
+	savestateEle(mode, slot, spr_ev.count_plus)
+	savestateEle(mode, slot, spr_ev.tmp_spr_plus)
+	savestateEle(mode, slot, spr_ev.evaluate)
+	savestateEle(mode, slot, spr_ev.byte_OAM)
+	savestateEle(mode, slot, spr_ev.index_plus)
+	savestateEle(mode, slot, spr_ev.index)
+	savestateEle(mode, slot, spr_ev.timing)
+	savestateEle(mode, slot, spr_ev.phase)
 	/* sprite */
 	for (i = 0; i < LENGTH(sprite); i++) {
-		savestateEle(mode, slot, sprite[i].yC)
+		savestateEle(mode, slot, sprite[i].y_C)
 		savestateEle(mode, slot, sprite[i].tile)
 		savestateEle(mode, slot, sprite[i].attrib)
-		savestateEle(mode, slot, sprite[i].xC)
+		savestateEle(mode, slot, sprite[i].x_C)
 		savestateEle(mode, slot, sprite[i].number)
-		savestateEle(mode, slot, sprite[i].flipV)
-		savestateEle(mode, slot, sprite[i].lByte)
-		savestateEle(mode, slot, sprite[i].hByte)
+		savestateEle(mode, slot, sprite[i].flip_v)
+		savestateEle(mode, slot, sprite[i].l_byte)
+		savestateEle(mode, slot, sprite[i].h_byte)
 	}
-	/* spritePlus */
-	for (i = 0; i < LENGTH(spritePlus); i++) {
-		savestateEle(mode, slot, spritePlus[i].yC)
-		savestateEle(mode, slot, spritePlus[i].tile)
-		savestateEle(mode, slot, spritePlus[i].attrib)
-		savestateEle(mode, slot, spritePlus[i].xC)
-		savestateEle(mode, slot, spritePlus[i].number)
-		savestateEle(mode, slot, spritePlus[i].flipV)
-		savestateEle(mode, slot, spritePlus[i].lByte)
-		savestateEle(mode, slot, spritePlus[i].hByte)
+	/* sprite_plus */
+	for (i = 0; i < LENGTH(sprite_plus); i++) {
+		savestateEle(mode, slot, sprite_plus[i].y_C)
+		savestateEle(mode, slot, sprite_plus[i].tile)
+		savestateEle(mode, slot, sprite_plus[i].attrib)
+		savestateEle(mode, slot, sprite_plus[i].x_C)
+		savestateEle(mode, slot, sprite_plus[i].number)
+		savestateEle(mode, slot, sprite_plus[i].flip_v)
+		savestateEle(mode, slot, sprite_plus[i].l_byte)
+		savestateEle(mode, slot, sprite_plus[i].h_byte)
 	}
-	/* tileRender */
-	savestateEle(mode, slot, tileRender.attrib)
-	savestateEle(mode, slot, tileRender.lByte)
-	savestateEle(mode, slot, tileRender.hByte)
-	/* tileFetch */
-	savestateEle(mode, slot, tileFetch.attrib)
-	savestateEle(mode, slot, tileFetch.lByte)
-	savestateEle(mode, slot, tileFetch.hByte)
+	/* tile_render */
+	savestateEle(mode, slot, tile_render.attrib)
+	savestateEle(mode, slot, tile_render.l_byte)
+	savestateEle(mode, slot, tile_render.h_byte)
+	/* tile_fetch */
+	savestateEle(mode, slot, tile_fetch.attrib)
+	savestateEle(mode, slot, tile_fetch.l_byte)
+	savestateEle(mode, slot, tile_fetch.h_byte)
 
 	/* apu */
 	savestateEle(mode, slot, apu.mode)
@@ -669,7 +669,7 @@ BYTE stateOperation(BYTE mode, BYTE slot, FILE *fp) {
 		savestate.preview[slot] = savestate.totSize[slot];
 	}
 
-	savestateMem(mode, slot, screen.data, screenSize(), TRUE)
+	savestateMem(mode, slot, screen.data, screen_size(), TRUE)
 
 	return (EXIT_OK);
 }

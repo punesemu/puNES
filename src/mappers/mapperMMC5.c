@@ -318,7 +318,7 @@ void extcl_cpu_wr_mem_MMC5(WORD address, BYTE value) {
 			value &= 0x03;
 			if (value != mmc5.chrMode) {
 				mmc5.chrMode = value;
-				if ((r2000.sizeSPR != 16) || !r2001.visible || r2002.vblank) {
+				if ((r2000.size_spr != 16) || !r2001.visible || r2002.vblank) {
 					if (mmc5.chrLast == CHRS) {
 						useChrS();
 					} else {
@@ -388,7 +388,7 @@ void extcl_cpu_wr_mem_MMC5(WORD address, BYTE value) {
 			if ((mmc5.chrLast != CHRS) || (mmc5.chrS[address] != bank)) {
 				mmc5.chrS[address] = bank;
 				mmc5.chrLast = CHRS;
-				if ((r2000.sizeSPR != 16) || !r2001.visible || r2002.vblank) {
+				if ((r2000.size_spr != 16) || !r2001.visible || r2002.vblank) {
 					useChrS();
 				}
 			}
@@ -404,7 +404,7 @@ void extcl_cpu_wr_mem_MMC5(WORD address, BYTE value) {
 			if ((mmc5.chrLast != CHRB) || (mmc5.chrB[address] != bank)) {
 				mmc5.chrB[address] = bank;
 				mmc5.chrLast = CHRB;
-				if ((r2000.sizeSPR != 16) || !r2001.visible || r2002.vblank) {
+				if ((r2000.size_spr != 16) || !r2001.visible || r2002.vblank) {
 					useChrB();
 				}
 			}
@@ -452,7 +452,7 @@ void extcl_cpu_wr_mem_MMC5(WORD address, BYTE value) {
 			if ((address >= 0x5C00) && (address < 0x6000)) {
 				address &= 0x03FF;
 				if (mmc5.extMode < MODE2) {
-					if (!r2002.vblank && r2001.visible && (ppu.screenY < SCRLINES)) {
+					if (!r2002.vblank && r2001.visible && (ppu.screen_y < SCR_LINES)) {
 						mmc5.extRam[address] = value;
 					} else {
 						mmc5.extRam[address] = 0;
@@ -577,11 +577,11 @@ BYTE extcl_save_mapper_MMC5(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 void extcl_ppu_256_to_319_MMC5(void) {
-	if (ppu.frameX != 256) {
+	if (ppu.frame_x != 256) {
 		return;
 	};
 
-	if ((mmc5.chrLast == CHRS) || (r2000.sizeSPR == 16)) {
+	if ((mmc5.chrLast == CHRS) || (r2000.size_spr == 16)) {
 		useChrS();
 	} else {
 		useChrB();
@@ -590,13 +590,13 @@ void extcl_ppu_256_to_319_MMC5(void) {
 void extcl_ppu_320_to_34x_MMC5(void) {
 	irql2f_tick();
 
-	if (ppu.frameX != 320) {
+	if (ppu.frame_x != 320) {
 		return;
 	};
 
 	if (mmc5.split) {
 		mmc5.splitX = 0x1F;
-		if (ppu.screenY == SCRLINES - 1) {
+		if (ppu.screen_y == SCR_LINES - 1) {
 			mmc5.splitY = mmc5.splitScrl - 1;
 		} else {
 			if (mmc5.splitY < 239) {
@@ -607,7 +607,7 @@ void extcl_ppu_320_to_34x_MMC5(void) {
 		}
 	}
 
-	if ((mmc5.chrLast == CHRB) || (r2000.sizeSPR == 16)) {
+	if ((mmc5.chrLast == CHRB) || (r2000.size_spr == 16)) {
 		useChrB();
 	} else {
 		useChrS();
@@ -628,7 +628,7 @@ BYTE extcl_rd_chr_MMC5(WORD address) {
 	uint32_t index;
 
 	/* se non sto trattando il background esco */
-	if ((address & 0xFFF7) != ppu.bckAdr) {
+	if ((address & 0xFFF7) != ppu.bck_adr) {
 		return (chr.bank_1k[address >> 10][address & 0x3FF]);
 	}
 
@@ -685,8 +685,8 @@ BYTE extcl_rd_nmt_MMC5(WORD address) {
 	}
 
 	if ((address & 0x03FF) >= 0x03C0) {
-		BYTE shiftAT = (((r2006.value & 0x40) >> 4) | (r2006.value & 0x02));
-		return (((mmc5.extRam[r2006.value & 0x03FF] & 0xC0) >> 6) << shiftAT);
+		BYTE shift_at = (((r2006.value & 0x40) >> 4) | (r2006.value & 0x02));
+		return (((mmc5.extRam[r2006.value & 0x03FF] & 0xC0) >> 6) << shift_at);
 	}
 	return (ntbl.bank_1k[nmt][address & 0x3FF]);
 }

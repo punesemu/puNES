@@ -14,7 +14,7 @@
 #include "cpu.h"
 #include "input.h"
 #include "mappers.h"
-#include "ppuinline.h"
+#include "ppu_inline.h"
 #include "apu.h"
 #include "irqA12.h"
 #include "irql2f.h"
@@ -26,18 +26,18 @@
 #define r2006_during_rendering()\
 {\
 	if (!r2002.vblank && r2001.visible &&\
-		(ppu.frameY > machine.vint_lines) &&\
-		(ppu.screenY < SCRLINES)) {\
-		if (r2000.r2006Inc == 32) {\
-			r2006inc();\
+		(ppu.frame_y > machine.vint_lines) &&\
+		(ppu.screen_y < SCR_LINES)) {\
+		if (r2000.r2006_inc == 32) {\
+			r2006_inc();\
 		} else {\
 			r2006.value++;\
 		}\
 	} else {\
-		r2006.value += r2000.r2006Inc;\
+		r2006.value += r2000.r2006_inc;\
 	}\
 }
-#define ppu_openbus_wr(bit) ppuOpenbus.bit = ppu.frames
+#define ppu_openbus_wr(bit) ppu_openbus.bit = ppu.frames
 #define ppu_openbus_wr_all()\
 	ppu_openbus_wr(bit0);\
 	ppu_openbus_wr(bit1);\
@@ -48,7 +48,7 @@
 	ppu_openbus_wr(bit6);\
 	ppu_openbus_wr(bit7)
 #define ppu_openbus_rd(bit, mask)\
-	if ((ppu.frames - ppuOpenbus.bit) > machine.ppu_openbus_frames) {\
+	if ((ppu.frames - ppu_openbus.bit) > machine.ppu_openbus_frames) {\
 		ppu.openbus &= mask;\
 	}
 #define ppu_openbus_rd_all()\
@@ -212,14 +212,14 @@ static BYTE INLINE ppu_rd_reg(WORD address) {
 
 	if (address == 0x2002) {
 		/* Situazioni particolari */
-		if (!info.r2002_race_condition_disabled && !(ppu.frameY | nmi.before)) {
+		if (!info.r2002_race_condition_disabled && !(ppu.frame_y | nmi.before)) {
 			/* situazione di contesa (race condition)
 			 *
 			 * se la lettura avviene esattamente all'inizio
 			 * del vblank allora il bit 7 verra' restituito
 			 * a 0.
 			 */
-			if (!ppu.frameX) {
+			if (!ppu.frame_x) {
 				/*
 				 * Nota: quando e' abilitato questo controllo
 				 * la demo cuter.nes (Who's Cuter?) ha un problema
@@ -236,7 +236,7 @@ static BYTE INLINE ppu_rd_reg(WORD address) {
 			 */
 			nmi.high = nmi.delay = FALSE;
 		}
-		value = r2002.vblank | r2002.sprite0Hit | r2002.spriteOverflow;
+		value = r2002.vblank | r2002.sprite0_hit | r2002.sprite_overflow;
 		/* azzero il VBlank */
 		r2002.vblank = FALSE;
 		/*
@@ -252,7 +252,7 @@ static BYTE INLINE ppu_rd_reg(WORD address) {
 		return (value);
 	}
 	if (address == 0x2004) {
-		if ((!r2002.vblank && r2001.visible && (ppu.screenY < SCRLINES))) {
+		if ((!r2002.vblank && r2001.visible && (ppu.screen_y < SCR_LINES))) {
 			value = r2004.value;
 		} else {
 			value = oam.data[r2003.value];
@@ -270,9 +270,9 @@ static BYTE INLINE ppu_rd_reg(WORD address) {
 			repeat = 3;
 		} else if (cpu.double_rd) {
 			WORD random = (WORD) rand() % 10;
-			value = ppuRdMem(r2006.value - (r2000.r2006Inc << 1));
+			value = ppu_rd_mem(r2006.value - (r2000.r2006_inc << 1));
 			if (random > 5) {
-				r2007.value = ppuRdMem(r2006.value);
+				r2007.value = ppu_rd_mem(r2006.value);
 				r2006_during_rendering();
 			}
 			/* ppu open bus */
@@ -297,13 +297,13 @@ static BYTE INLINE ppu_rd_reg(WORD address) {
 			 */
 			if ((r2006.value & 0x3FFF) < 0x3F00) {
 				value = r2007.value;
-				r2007.value = ppuRdMem(r2006.value);
+				r2007.value = ppu_rd_mem(r2006.value);
 				/* ppu open bus */
 				ppu.openbus = value;
 				ppu_openbus_wr_all();
 			} else {
-				value = ppuRdMem(r2006.value);
-				r2007.value = ppuRdMem(r2006.value & 0x2FFF);
+				value = ppu_rd_mem(r2006.value);
+				r2007.value = ppu_rd_mem(r2006.value & 0x2FFF);
 				/* ppu open bus */
 				value = ppu.openbus = (value & 0x3F) | (ppu.openbus & 0xC0);
 				ppu_openbus_wr(bit0);
@@ -765,48 +765,48 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 		 * del $2002 e' a 1 devo generare un NMI
 		 * ma dopo l'istruzione successiva.
 		 */
-		if (!r2000.NMIenable && (value & 0x80)) {
+		if (!r2000.nmi_enable && (value & 0x80)) {
 			if (r2002.vblank) {
 				nmi.high = nmi.delay = TRUE;
-				nmi.frame_x = ppu.frameX;
+				nmi.frame_x = ppu.frame_x;
 			}
 			/*
 			 * se viene disabilitato l'NMI (bit 7 da 1 a 0)
 			 * all'inizio del vblank, l'NMI generato deve
 			 * essere disabilitato.
 			 */
-		} else if (r2000.NMIenable && !(value & 0x80)) {
-			if (!(ppu.frameY | nmi.before)) {
+		} else if (r2000.nmi_enable && !(value & 0x80)) {
+			if (!(ppu.frame_y | nmi.before)) {
 				nmi.high = nmi.delay = FALSE;
 			}
 		}
 		/* valorizzo $2000 */
 		r2000.value = value;
 		/* NMI abilitato */
-		r2000.NMIenable = value & 0x80;
+		r2000.nmi_enable = value & 0x80;
 		/* VRAM address increment */
-		(value & 0x04) ? (r2000.r2006Inc = 32) : (r2000.r2006Inc = 1);
+		(value & 0x04) ? (r2000.r2006_inc = 32) : (r2000.r2006_inc = 1);
 		/* memorizzo la dimensione degli sprites */
-		(value & 0x20) ? (r2000.sizeSPR = 16) : (r2000.sizeSPR = 8);
+		(value & 0x20) ? (r2000.size_spr = 16) : (r2000.size_spr = 8);
 		/* Sprite pattern table address */
-		r2000.SPTadr = (value & 0x08) << 9;
+		r2000.spt_adr = (value & 0x08) << 9;
 		/* Background pattern table address */
-		r2000.BPTadr = (value & 0x10) << 8;
+		r2000.bpt_adr = (value & 0x10) << 8;
 		/*
 		 * NN -> Name-table Bits. Vertical bit e Horizontal bit
 		 *
 		 * $2000      W %---- --NN
 		 * bitsNT       %0000 00NN
-		 * tmpAdrVRAM   %---- NN-- ---- ----
+		 * tmp_vram      %---- NN-- ---- ----
 		 */
-		ppu.tmpVRAM = (ppu.tmpVRAM & 0xF3FF) | ((value & 0x03) << 10);
+		ppu.tmp_vram = (ppu.tmp_vram & 0xF3FF) | ((value & 0x03) << 10);
 
 		/*
 		 * per questo registro il tick_hw e' gia' stato effettuato, quindi
 		 * la PPU ha gia' fatto 3 cicli. Se sono nel range 253 - 255 del
-		 * ppu.frameX, il registro $2006 e' gia' stato aggiornato dalla PPU
+		 * ppu.frame_x, il registro $2006 e' gia' stato aggiornato dalla PPU
 		 * (cosa che avviene nel ciclo 253). Questa variazione e' direttamente
-		 * controllata anche dal valore di ppu.tmpVRAM, quindi una scrittura
+		 * controllata anche dal valore di ppu.tmp_vram, quindi una scrittura
 		 * in questo registro nella PPU che ha gia' fatto il ciclo 253, non
 		 * influenzerebbe il $2006 e questo e' sbagliato. Quindi lo ricalcolo io,
 		 * ma solo so sono in fase di rendering.
@@ -815,9 +815,9 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 		 * (premuto il tasto start due volte ed avviato il gioco, una riga
 		 * piu' scura sfarfalla nello schermo).
 		 */
-		if (!r2002.vblank && r2001.visible && (ppu.screenY < SCRLINES)) {
-			if ((ppu.frameX >= 253) && (ppu.frameX <= 255)) {
-				r2006EndScanline();
+		if (!r2002.vblank && r2001.visible && (ppu.screen_y < SCR_LINES)) {
+			if ((ppu.frame_x >= 253) && (ppu.frame_x <= 255)) {
+				r2006_end_scanline();
 			}
 		}
 
@@ -838,13 +838,13 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 		 * con il bit 0 settato viene indicata
 		 * la modalita' scale di grigio per l'output.
 		 */
-		(value & 0x01) ? (r2001.colorMode = GRAYSCALE) : (r2001.colorMode = NORMAL);
+		(value & 0x01) ? (r2001.color_mode = GRAYSCALE) : (r2001.color_mode = NORMAL);
 		/* visibilita' del background */
-		r2001.bckVisible = value & 0x08;
+		r2001.bck_visible = value & 0x08;
 		/* visibilita' degli sprites */
-		r2001.sprVisible = value & 0x10;
+		r2001.spr_visible = value & 0x10;
 		/* basta che uno dei due sia visibile */
-		r2001.visible = r2001.bckVisible | r2001.sprVisible;
+		r2001.visible = r2001.bck_visible | r2001.spr_visible;
 		/* questo per ora mi serve solo per l'A12 */
 		/* MMC3 and Taito*/
 		if (r2001.visible) {
@@ -857,9 +857,9 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 			}
 		}
 		/* clipping del background */
-		r2001.bckClipping = value & 0x02;
+		r2001.bck_clipping = value & 0x02;
 		/* clipping degli sprites */
-		r2001.sprClipping = value & 0x04;
+		r2001.spr_clipping = value & 0x04;
 		/* salvo la maschera di enfatizzazione del colore */
 		r2001.emphasis = (value << 1) & 0x1C0;
 		return;
@@ -908,13 +908,13 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 			 * xxx   -> Fine X
 			 *
 			 * $2005       W %XXXX Xxxx (toggle e' 0)
-			 * fineX         %0000 0xxx
-			 * tmpAdrVRAM    %0--- ---- ---X XXXX
+			 * fine_x        %0000 0xxx
+			 * tmp_vram      %0--- ---- ---X XXXX
 			 * toggle = 1
 			 */
-			ppu.fineX = (value & 0x07);
-			//ppu.tmpVRAM = (ppu.tmpVRAM & 0x7FE0) | ((value & 0xF8) >> 3);
-			ppu.tmpVRAM = (ppu.tmpVRAM & 0x7FE0) | (value >> 3);
+			ppu.fine_x = (value & 0x07);
+			//ppu.tmp_vram = (ppu.tmp_vram & 0x7FE0) | ((value & 0xF8) >> 3);
+			ppu.tmp_vram = (ppu.tmp_vram & 0x7FE0) | (value >> 3);
 		} else {
 			/*
 			 * YYYYY -> Tile Y
@@ -924,7 +924,7 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 			 * tmpAdrVRAM    %0yyy --YY YYY- ----
 			 * toggle = 0
 			 */
-			ppu.tmpVRAM = (ppu.tmpVRAM & 0x0C1F) | ((value & 0xF8) << 2)
+			ppu.tmp_vram = (ppu.tmp_vram & 0x0C1F) | ((value & 0xF8) << 2)
 			        		| ((value & 0x07) << 12);
 		}
 		r2002.toggle = !r2002.toggle;
@@ -951,7 +951,7 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 			 * tmpAdrVRAM    %00yy NNYY ---- ----
 			 * toggle = 1
 			 */
-			ppu.tmpVRAM = (ppu.tmpVRAM & 0x00FF) | ((value & 0x3F) << 8);
+			ppu.tmp_vram = (ppu.tmp_vram & 0x00FF) | ((value & 0x3F) << 8);
 		} else {
 			/*
 			 * YYYYY -> Tile Y
@@ -962,9 +962,9 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 			 * toggle = 0
 			 * addressVRAM = tmpAdrVRAM
 			 */
-			ppu.tmpVRAM = (ppu.tmpVRAM & 0x7F00) | value;
+			ppu.tmp_vram = (ppu.tmp_vram & 0x7F00) | value;
 			/* aggiorno l'r2006 */
-			r2006.value = ppu.tmpVRAM;
+			r2006.value = ppu.tmp_vram;
 			/*
 			 * se l'$2006 viene aggiornato proprio al
 			 * ciclo 253 della PPU, l'incremento che viene
@@ -977,7 +977,7 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 			 * schermata con la parte centrale che saltella senza
 			 * questo controllo)
 			 */
-			r2006.changedFromOP = ppu.frameX;
+			r2006.changed_from_op = ppu.frame_x;
 
 			if (extcl_update_r2006) {
 				/*
@@ -1009,7 +1009,7 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 		 * il $2006, un gioco lo fa (Young Indiana Jones
 		 * Chronicles, The (U) [!].nes) e quando avviene,
 		 * l'incremento del $2006 avviene proprio come
-		 * nel ciclo 253 della ppu se r2000.r2006Inc e'
+		 * nel ciclo 253 della ppu se r2000.r2006_inc e'
 		 * uguale a 32.
 		 */
 		r2006_during_rendering();
@@ -1649,7 +1649,7 @@ static void INLINE tick_hw(BYTE value) {
 		cpu.opcode_cycle++;
 		nmi.before = nmi.high;
 		irq.before = irq.high;
-		ppuTick(1);
+		ppu_tick(1);
 		apu_tick(1, &value);
 		if (extcl_cpu_every_cycle) {
 			/*

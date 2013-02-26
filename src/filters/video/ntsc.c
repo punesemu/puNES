@@ -70,7 +70,7 @@ int burst_phase = 0;
 				(mixed >> 1) - (mixed >> 4 & maskDarken);\
 	}
 #define NESNTSC(factor) nes_ntscx##factor(ntsc,\
-		screen, SCRROWS, burst_phase, rows,\
+		screen, SCR_ROWS, burst_phase, rows,\
 		lines, dst->pixels, dst->pitch, dst->format->BitsPerPixel)
 
 /*
@@ -83,7 +83,7 @@ void ntscSurface(WORD *screen, WORD **screeIndex, Uint32 *palette, SDL_Surface *
 	int y;
 
 	if (overscan.enabled) {
-		screen += (SCRROWS * overscan.up);
+		screen += (SCR_ROWS * overscan.up);
 	}
 
 	/* lock della destinazione */

@@ -106,7 +106,7 @@ void fps_frameskip(void) {
 
 	frame_end = guiGetMs();
 
-	ppu.skipDraw = FALSE;
+	ppu.skip_draw = FALSE;
 
 	diff = (frame_end - fps.next_frame);
 
@@ -123,7 +123,7 @@ void fps_frameskip(void) {
 		} else {
 			fps.frames_skipped++;
 			fps.total_frames_skipped++;
-			ppu.skipDraw = TRUE;
+			ppu.skip_draw = TRUE;
 		}
 	}
 

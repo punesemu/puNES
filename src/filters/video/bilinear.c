@@ -112,8 +112,8 @@ void bilinear(WORD *screen, WORD **screen_index, Uint32 *palette, SDL_Surface *d
 	return;
 
 	/*
-	wStepFixed16b = ((SCRROWS - 1) << 16) / (dst->w - 1);
-	hStepFixed16b = ((SCRLINES - 1) << 16) / (dst->h - 1);
+	wStepFixed16b = ((SCR_ROWS - 1) << 16) / (dst->w - 1);
+	hStepFixed16b = ((SCR_LINES - 1) << 16) / (dst->h - 1);
 
 	hCoef = 0;
 

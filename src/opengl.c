@@ -69,8 +69,8 @@ void sdl_create_surface_gl(SDL_Surface *src, WORD width, WORD height, BYTE flags
 	glPushAttrib(GL_ALL_ATTRIB_BITS);
 
 	if (opengl.scale_force) {
-		opengl.surface_gl = gfxCreateRGBSurface(src, SCRROWS * opengl.scale,
-		        SCRLINES * opengl.scale);
+		opengl.surface_gl = gfxCreateRGBSurface(src, SCR_ROWS * opengl.scale,
+		        SCR_LINES * opengl.scale);
 	} else {
 		opengl.surface_gl = gfxCreateRGBSurface(src, width, height);
 	}
@@ -382,7 +382,7 @@ void glsl_shaders_init(_shader *shd) {
 	glUseProgram(shd->prg);
 
 	if ((shd->loc.size.input = glGetUniformLocation(shd->prg, "size_input")) >= 0) {
-		glUniform2f(shd->loc.size.input, (GLfloat) SCRROWS, (GLfloat) SCRLINES);
+		glUniform2f(shd->loc.size.input, (GLfloat) SCR_ROWS, (GLfloat) SCR_LINES);
 	}
 
 	if ((shd->loc.size.output = glGetUniformLocation(shd->prg, "size_output")) >= 0) {

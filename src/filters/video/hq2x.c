@@ -75,7 +75,7 @@ void hq2x_32_rb(WORD *screen, SDL_Surface *dst, uint32_t *palette) {
 	BYTE k;
 	SWORD prevline, nextline;
 	WORD w[10];
-	WORD spL = SCRROWS;
+	WORD spL = SCR_ROWS;
 	WORD srb = spL * sizeof(WORD);
 	WORD dpL = hqnx.dst_rows * 2;
 	WORD drb = dpL * sizeof(uint32_t);

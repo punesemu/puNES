@@ -6,7 +6,7 @@
  */
 
 #include "memmap.h"
-#include "ppuinline.h"
+#include "ppu_inline.h"
 #include "irqA12.h"
 
 void irqA12_IO(WORD value_old) {
@@ -35,25 +35,25 @@ void irqA12_IO(WORD value_old) {
 	}
 }
 void irqA12_BS(void) {
-	BYTE nSpr;
+	BYTE n_spr;
 
-	if (irqA12.a12BS || ((ppu.frameX & 0x0007) != 0x0003)) {
+	if (irqA12.a12BS || ((ppu.frame_x & 0x0007) != 0x0003)) {
 		return;
 	}
 
-	nSpr = (ppu.frameX & 0x0038) >> 3;
+	n_spr = (ppu.frame_x & 0x0038) >> 3;
 
-	if (!nSpr) {
-		irqA12.s_adr_old = ppu.bckAdr;
+	if (!n_spr) {
+		irqA12.s_adr_old = ppu.bck_adr;
 	}
 
-	if ((!sprEv.countPlus) && (r2000.sizeSPR == 16)) {
-		ppu.sprAdr = 0x1000;
+	if ((!spr_ev.count_plus) && (r2000.size_spr == 16)) {
+		ppu.spr_adr = 0x1000;
 	} else {
-		ppuSprAdr(nSpr);
+		ppu_spr_adr(n_spr);
 	}
 
-	if (!(irqA12.s_adr_old & 0x1000) && (ppu.sprAdr & 0x1000)) {
+	if (!(irqA12.s_adr_old & 0x1000) && (ppu.spr_adr & 0x1000)) {
 		if (!extcl_irq_A12_clock) {
 			irqA12_clock();
 		} else {
@@ -65,21 +65,21 @@ void irqA12_BS(void) {
 		}
 		irqA12.a12BS = TRUE;
 	}
-	irqA12.s_adr_old = ppu.sprAdr;
+	irqA12.s_adr_old = ppu.spr_adr;
 }
 void irqA12_SB(void) {
-	if (irqA12.a12SB || ((ppu.frameX & 0x0007) != 0x0003)) {
+	if (irqA12.a12SB || ((ppu.frame_x & 0x0007) != 0x0003)) {
 		return;
 	}
 
-	if (ppu.frameX == 323) {
-		ppuSprAdr(7);
-		irqA12.b_adr_old = ppu.sprAdr;
+	if (ppu.frame_x == 323) {
+		ppu_spr_adr(7);
+		irqA12.b_adr_old = ppu.spr_adr;
 	}
 
-	ppuBckAdr();
+	ppu_bck_adr();
 
-	if (!(irqA12.b_adr_old & 0x1000) && (ppu.bckAdr & 0x1000)) {
+	if (!(irqA12.b_adr_old & 0x1000) && (ppu.bck_adr & 0x1000)) {
 		if (!extcl_irq_A12_clock) {
 			irqA12_clock();
 		} else {
@@ -91,14 +91,14 @@ void irqA12_SB(void) {
 		}
 		irqA12.a12SB = TRUE;
 	}
-	irqA12.b_adr_old = ppu.bckAdr;
+	irqA12.b_adr_old = ppu.bck_adr;
 }
 void irqA12_RS(void) {
-	if (ppu.frameX == 256) {
+	if (ppu.frame_x == 256) {
 		irqA12.a12BS = FALSE;
 		return;
 	}
-	if (ppu.frameX == 323) {
+	if (ppu.frame_x == 323) {
 		irqA12.a12SB = FALSE;
 		return;
 	}
