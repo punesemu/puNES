@@ -354,7 +354,7 @@ void extcl_cpu_wr_mem_Jaleco_SS8806(WORD address, BYTE value) {
 			break;
 		case 0xF000:
 			ss8806.count = ss8806.reload;
-			irq.high &= ~EXTIRQ;
+			irq.high &= ~EXT_IRQ;
 			break;
 		case 0xF001:
 			ss8806.enabled = value & 0x01;
@@ -367,7 +367,7 @@ void extcl_cpu_wr_mem_Jaleco_SS8806(WORD address, BYTE value) {
 			} else {
 				ss8806.mask = 0xFFFF;
 			}
-			irq.high &= ~EXTIRQ;
+			irq.high &= ~EXT_IRQ;
 			break;
 		case 0xF002:
 			if (value & 0x02) {
@@ -399,7 +399,7 @@ void extcl_cpu_every_cycle_Jaleco_SS8806(void) {
 	if (ss8806.delay != 255) {
 		if (!(--ss8806.delay)) {
 			irq.delay = TRUE;
-			irq.high |= EXTIRQ;
+			irq.high |= EXT_IRQ;
 			ss8806.delay = 255;
 		}
 	}

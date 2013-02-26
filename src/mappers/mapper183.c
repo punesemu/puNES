@@ -113,7 +113,7 @@ void extcl_cpu_wr_mem_183(WORD address, BYTE value) {
 			m183.enabled = value;
 			if (!m183.enabled) {
 				m183.prescaler = 0;
-				irq.high &= ~EXTIRQ;
+				irq.high &= ~EXT_IRQ;
 			}
 			return;
 		default:
@@ -147,7 +147,7 @@ BYTE extcl_save_mapper_183(BYTE mode, BYTE slot, FILE *fp) {
 }
 void extcl_cpu_every_cycle_183(void) {
 	if (m183.delay && !(--m183.delay)) {
-		irq.high |= EXTIRQ;
+		irq.high |= EXT_IRQ;
 	}
 
 	if (++m183.prescaler < 114) {

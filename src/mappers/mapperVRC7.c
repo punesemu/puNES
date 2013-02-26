@@ -139,11 +139,11 @@ void extcl_cpu_wr_mem_VRC7(WORD address, BYTE value) {
 				vrc7.prescaler = 0;
 				vrc7.count = vrc7.reload;
 			}
-			irq.high &= ~EXTIRQ;
+			irq.high &= ~EXT_IRQ;
 			return;
 		case 0xF001:
 			vrc7.enabled = vrc7.acknowledge;
-			irq.high &= ~EXTIRQ;
+			irq.high &= ~EXT_IRQ;
 			return;
 		default:
 			return;
@@ -167,7 +167,7 @@ BYTE extcl_save_mapper_VRC7(BYTE mode, BYTE slot, FILE *fp) {
 }
 void extcl_cpu_every_cycle_VRC7(void) {
 	if (vrc7.delay && !(--vrc7.delay)) {
-		irq.high |= EXTIRQ;
+		irq.high |= EXT_IRQ;
 	}
 
 	if (!vrc7.enabled) {

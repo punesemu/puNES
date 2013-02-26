@@ -10,25 +10,25 @@
 
 #include "common.h"
 
-enum {
-	FPSDEFAULT,
-	FPS60,
-	FPS59,
-	FPS58,
-	FPS57,
-	FPS56,
-	FPS55,
-	FPS54,
-	FPS53,
-	FPS52,
-	FPS51,
-	FPS50,
-	FPS49,
-	FPS48,
-	FPS47,
-	FPS46,
-	FPS45,
-	FPS44
+enum fps_values {
+	FPS_DEFAULT,
+	FPS_60,
+	FPS_59,
+	FPS_58,
+	FPS_57,
+	FPS_56,
+	FPS_55,
+	FPS_54,
+	FPS_53,
+	FPS_52,
+	FPS_51,
+	FPS_50,
+	FPS_49,
+	FPS_48,
+	FPS_47,
+	FPS_46,
+	FPS_45,
+	FPS_44
 };
 
 #define fps_machine_ms(factor)\

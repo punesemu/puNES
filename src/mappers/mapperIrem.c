@@ -156,11 +156,11 @@ void extcl_cpu_wr_mem_Irem_H3000(WORD address, BYTE value) {
 					break;
 				case 3:
 					iremH3000.enable = value & 0x80;
-					irq.high &= ~EXTIRQ;
+					irq.high &= ~EXT_IRQ;
 					break;
 				case 4:
 					iremH3000.count = iremH3000.reload;
-					irq.high &= ~EXTIRQ;
+					irq.high &= ~EXT_IRQ;
 					break;
 				case 5:
 					iremH3000.reload = (iremH3000.reload & 0x00FF) | (value << 8);
@@ -197,7 +197,7 @@ BYTE extcl_save_mapper_Irem_H3000(BYTE mode, BYTE slot, FILE *fp) {
 }
 void extcl_cpu_every_cycle_Irem_H3000(void) {
 	if (iremH3000.delay && !(--iremH3000.delay)) {
-		irq.high |= EXTIRQ;
+		irq.high |= EXT_IRQ;
 	}
 
 	if (iremH3000.enable && iremH3000.count && !(--iremH3000.count)) {

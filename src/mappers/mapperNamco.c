@@ -263,11 +263,11 @@ void extcl_cpu_wr_mem_Namco_163(WORD address, BYTE value) {
 			return;
 		case 0x5000:
 			n163.irqCount = (n163.irqCount & 0xFF00) | value;
-			irq.high &= ~EXTIRQ;
+			irq.high &= ~EXT_IRQ;
 			return;
 		case 0x5800:
 			n163.irqCount = (value << 8) | (n163.irqCount & 0x00FF);
-			irq.high &= ~EXTIRQ;
+			irq.high &= ~EXT_IRQ;
 			return;
 		case 0xF800:
 			n163.sndAutoInc = (value & 0x80) >> 7;
@@ -328,7 +328,7 @@ BYTE extcl_save_mapper_Namco_163(BYTE mode, BYTE slot, FILE *fp) {
 void extcl_cpu_every_cycle_Namco_163(void) {
 	if (n163.irqDelay) {
 		n163.irqDelay = FALSE;
-		irq.high |= EXTIRQ;
+		irq.high |= EXT_IRQ;
 	}
 	if (((n163.irqCount - 0x8000) < 0x7FFF) && (++n163.irqCount == 0xFFFF)) {
 		/* vale sempre il solito discorso di un ciclo di delay */

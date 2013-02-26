@@ -40,7 +40,7 @@
 	}
 /* modificato il 23/04/2012
 #define irqA12_irq_default()\
-	irq.high |= EXTIRQ;\
+	irq.high |= EXT_IRQ;\
 	if (irqA12.delay) {\
 		if (cpu.cycles <= irqA12.delay) {\
 			irq.delay = TRUE;\

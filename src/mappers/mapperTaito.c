@@ -205,7 +205,7 @@ void extcl_cpu_wr_mem_Taito_TC0190FMCPAL16R4(WORD address, BYTE value) {
 			return;
 		case 0xC003:
 			irqA12.enable = FALSE;
-			irq.high &= ~EXTIRQ;
+			irq.high &= ~EXT_IRQ;
 			return;
 		case 0xE000:
 			if (value & 0x40) {

@@ -91,7 +91,7 @@ void extcl_cpu_wr_mem_222(WORD address, BYTE value) {
 		case 0xF000:
 			//irqA12.latch = value;
 			m222.count = value;
-			irq.high &= ~EXTIRQ;
+			irq.high &= ~EXT_IRQ;
 			return;
 	}
 }
@@ -111,6 +111,6 @@ void extcl_irq_A12_clock_222(void) {
 }
 void extcl_cpu_every_cycle_222(void) {
 	if (m222.delay && !(--m222.delay)) {
-		irq.high |= EXTIRQ;
+		irq.high |= EXT_IRQ;
 	}
 }

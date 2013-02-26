@@ -120,7 +120,7 @@ void apu_tick(SWORD cycles_cpu, BYTE *hwtick) {
 						/* setto il bit 6 del $4015 */
 						r4015.value |= 0x40;
 						/* abilito l'IRQ del frame counter */
-						irq.high |= APUIRQ;
+						irq.high |= APU_IRQ;
 					}
 				}
 				/* passo al prossimo step */

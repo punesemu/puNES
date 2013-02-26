@@ -12,10 +12,7 @@
 #include "fds.h"
 #include "cpu.h"
 
-enum {
-	TRANSFERED_8BIT = 0x02,
-	END_OF_HEAD = 0x40
-};
+enum { TRANSFERED_8BIT = 0x02, END_OF_HEAD = 0x40 };
 
 static const BYTE volume_wave[4] = { 39, 26, 19, 15 };
 
@@ -31,8 +28,8 @@ void map_init_FDS(void) {
 	cpu.SP = 0xFF;
 
 	cpu.SR = 0x30;
-	/* assemblo il Processor Status Register */
-	DIS_SR;
+	/* disassemblo il Processor Status Register */
+	disassemble_SR();
 	/* setto il flag di disabilitazione dell'irq */
 	irq.inhibit = cpu.im;
 }
@@ -41,7 +38,7 @@ void extcl_cpu_every_cycle_FDS(void) {
 
 	if (fds.drive.irq_timer_delay && !(--fds.drive.irq_timer_delay)) {
 		fds.drive.irq_timer_high = 0x01;
-		irq.high |= FDSTIMERIRQ;
+		irq.high |= FDS_TIMER_IRQ;
 	}
 
 	/* IRQ handler */
@@ -115,7 +112,7 @@ void extcl_cpu_every_cycle_FDS(void) {
 			//fprintf(stderr, "qui ed ora\n");
 #endif
 			fds.drive.irq_disk_high = 0x01;
-			irq.high |= FDSDISKIRQ;
+			irq.high |= FDS_DISK_IRQ;
 		}
 
 		fds.drive.transfer_flag = TRUE;

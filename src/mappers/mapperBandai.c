@@ -263,7 +263,7 @@ void extcl_cpu_wr_mem_Bandai_FCGX(WORD address, BYTE value) {
 		case 0x800A:
 			FCGX.enabled = value & 0x01;
 			FCGX.count = FCGX.reload;
-			irq.high &= ~EXTIRQ;
+			irq.high &= ~EXT_IRQ;
 			return;
 		case 0x800B:
 			FCGX.reload = (FCGX.reload & 0xFF00) | value;
@@ -345,7 +345,7 @@ void extcl_battery_io_Bandai_FCGX(BYTE mode, FILE *fp) {
 }
 void extcl_cpu_every_cycle_Bandai_FCGX(void) {
 	if (FCGX.delay && !(--FCGX.delay)) {
-		irq.high |= EXTIRQ;
+		irq.high |= EXT_IRQ;
 	}
 
 	if (!FCGX.enabled) {

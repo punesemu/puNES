@@ -241,7 +241,7 @@ void extcl_cpu_wr_mem_Sunsoft_S3(WORD address, BYTE value) {
 		case 0xD800:
 			s3.toggle = 0;
 			s3.enable = value & 0x10;
-			irq.high &= ~EXTIRQ;
+			irq.high &= ~EXT_IRQ;
 			return;
 		case 0xE800:
 			mirroring(value)
@@ -263,7 +263,7 @@ BYTE extcl_save_mapper_Sunsoft_S3(BYTE mode, BYTE slot, FILE *fp) {
 }
 void extcl_cpu_every_cycle_Sunsoft_S3(void) {
 	if (s3.delay && !(--s3.delay)) {
-		irq.high |= EXTIRQ;
+		irq.high |= EXT_IRQ;
 	}
 
 	if (s3.enable && s3.count && !(--s3.count)) {
@@ -385,7 +385,7 @@ void extcl_cpu_wr_mem_Sunsoft_FM7(WORD address, BYTE value) {
 					fm7.irqEnableTrig = value & 0x01;
 					fm7.irqEnableCount = value & 0x80;
 					if (!fm7.irqEnableCount) {
-						irq.high &= ~EXTIRQ;
+						irq.high &= ~EXT_IRQ;
 					}
 					return;
 				case 0x0E:
@@ -479,7 +479,7 @@ BYTE extcl_save_mapper_Sunsoft_FM7(BYTE mode, BYTE slot, FILE *fp) {
 }
 void extcl_cpu_every_cycle_Sunsoft_FM7(void) {
 	if (fm7.irqDelay && !(--fm7.irqDelay)) {
-		irq.high |= EXTIRQ;
+		irq.high |= EXT_IRQ;
 	}
 
 	if (!fm7.irqEnableCount) {

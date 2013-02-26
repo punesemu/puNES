@@ -242,7 +242,7 @@ void extcl_cpu_wr_mem_Tengen_Rambo(WORD address, BYTE value) {
 			return;
 		case 0xE000:
 			irqA12.enable = FALSE;
-			irq.high &= ~EXTIRQ;
+			irq.high &= ~EXT_IRQ;
 			return;
 		case 0xE001:
 			irqA12.enable = TRUE;
@@ -304,7 +304,7 @@ void extcl_irq_A12_clock_Tengen_Rambo(void) {
 }
 void extcl_cpu_every_cycle_Tengen_Rambo(void) {
 	if (tRambo.irqDelay && !(--tRambo.irqDelay)) {
-		irq.high |= EXTIRQ;
+		irq.high |= EXT_IRQ;
 	}
 
 	if (tRambo.irqMode != CPUMODE) {

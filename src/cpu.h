@@ -10,19 +10,19 @@
 
 #include "common.h"
 
-#define INT_NMI					0xFFFA
-#define INT_RESET				0xFFFC
-#define INT_IRQ					0xFFFE
+enum cpu_misc { STACK = 0x0100 };
+enum interrupt_types {
+	INT_NMI = 0xFFFA,
+	INT_RESET = 0xFFFC,
+	INT_IRQ = 0xFFFE,
+	APU_IRQ = 0x01,
+	DMC_IRQ =  0x02,
+	EXT_IRQ = 0x04,
+	FDS_TIMER_IRQ = 0x08,
+	FDS_DISK_IRQ = 0x10
+};
 
-#define STACK					0x0100
-
-#define APUIRQ					0x01
-#define DMCIRQ					0x02
-#define EXTIRQ					0x04
-#define FDSTIMERIRQ				0x08
-#define FDSDISKIRQ				0x10
-
-#define DIS_SR\
+#define disassemble_SR()\
 	cpu.cf = cpu.SR & 0x01;\
 	cpu.zf = cpu.SR & 0x02;\
 	cpu.im = cpu.SR & 0x04;\
@@ -30,7 +30,7 @@
 	cpu.bf = cpu.SR & 0x10;\
 	cpu.of = cpu.SR & 0x40;\
 	cpu.sf = cpu.SR & 0x80
-#define INIT_PC\
+#define init_PC()\
 	/* valorizzo il PC con l'indirizzo iniziale */\
 	if (fds.info.enabled) {\
 		cpu.PC = (prg.rom[(INT_RESET + 1) & 0x1FFF] << 8) |\

@@ -227,7 +227,7 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 	tick_hw(1);\
 	/* il break flag (bit 4) e' sempre a 0 */\
 	cpu.SR = (_PUL & 0xEF);\
-	DIS_SR;\
+	disassemble_SR();\
 	/*\
 	 * nell'RTI non c'e' nessun delay nel\
 	 * settaggio dell'inibizione dell'IRQ.\
@@ -249,7 +249,7 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 	tick_hw(2);\
 	/* il break flag (bit 4) e' sempre a 0 */\
 	cpu.SR = (_PUL & 0xEF);\
-	DIS_SR;\
+	disassemble_SR();\
 	if (cpu.im) {\
 		irq.inhibit |= 0x40;\
 	}
@@ -1054,8 +1054,8 @@ void cpu_turn_on(void) {
 	memset(&irq, 0x00, sizeof(irq));
 	/* di default attivo la lettura e la scrittura dalla PRG Ram */
 	cpu.prg_ram_rd_active = cpu.prg_ram_wr_active = TRUE;
-	/* assemblo il Processor Status Register */
-	DIS_SR;
+	/* disassemblo il Processor Status Register */
+	disassemble_SR();
 	/* setto il flag di disabilitazione dell'irq */
 	irq.inhibit = cpu.im;
 }

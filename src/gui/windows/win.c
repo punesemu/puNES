@@ -728,58 +728,58 @@ void guiUpdate(void) {
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FPS_45);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FPS_44);
 	switch (cfg->fps) {
-		case FPSDEFAULT:
+		case FPS_DEFAULT:
 			id = IDM_SET_FPS_DEFAULT;
 			break;
-		case FPS60:
+		case FPS_60:
 			id = IDM_SET_FPS_60;
 			break;
-		case FPS59:
+		case FPS_59:
 			id = IDM_SET_FPS_59;
 			break;
-		case FPS58:
+		case FPS_58:
 			id = IDM_SET_FPS_58;
 			break;
-		case FPS57:
+		case FPS_57:
 			id = IDM_SET_FPS_57;
 			break;
-		case FPS56:
+		case FPS_56:
 			id = IDM_SET_FPS_56;
 			break;
-		case FPS55:
+		case FPS_55:
 			id = IDM_SET_FPS_55;
 			break;
-		case FPS54:
+		case FPS_54:
 			id = IDM_SET_FPS_54;
 			break;
-		case FPS53:
+		case FPS_53:
 			id = IDM_SET_FPS_53;
 			break;
-		case FPS52:
+		case FPS_52:
 			id = IDM_SET_FPS_52;
 			break;
-		case FPS51:
+		case FPS_51:
 			id = IDM_SET_FPS_51;
 			break;
-		case FPS50:
+		case FPS_50:
 			id = IDM_SET_FPS_50;
 			break;
-		case FPS49:
+		case FPS_49:
 			id = IDM_SET_FPS_49;
 			break;
-		case FPS48:
+		case FPS_48:
 			id = IDM_SET_FPS_48;
 			break;
-		case FPS47:
+		case FPS_47:
 			id = IDM_SET_FPS_47;
 			break;
-		case FPS46:
+		case FPS_46:
 			id = IDM_SET_FPS_46;
 			break;
-		case FPS45:
+		case FPS_45:
 			id = IDM_SET_FPS_45;
 			break;
-		case FPS44:
+		case FPS_44:
 			id = IDM_SET_FPS_44;
 			break;
 	}
@@ -1380,58 +1380,58 @@ long __stdcall mainWinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 					set_mode(AUTO);
 					break;
 				case IDM_SET_FPS_DEFAULT:
-					set_fps(FPSDEFAULT);
+					set_fps(FPS_DEFAULT);
 					break;
 				case IDM_SET_FPS_60:
-					set_fps(FPS60);
+					set_fps(FPS_60);
 					break;
 				case IDM_SET_FPS_59:
-					set_fps(FPS59);
+					set_fps(FPS_59);
 					break;
 				case IDM_SET_FPS_58:
-					set_fps(FPS58);
+					set_fps(FPS_58);
 					break;
 				case IDM_SET_FPS_57:
-					set_fps(FPS57);
+					set_fps(FPS_57);
 					break;
 				case IDM_SET_FPS_56:
-					set_fps(FPS56);
+					set_fps(FPS_56);
 					break;
 				case IDM_SET_FPS_55:
-					set_fps(FPS55);
+					set_fps(FPS_55);
 					break;
 				case IDM_SET_FPS_54:
-					set_fps(FPS54);
+					set_fps(FPS_54);
 					break;
 				case IDM_SET_FPS_53:
-					set_fps(FPS53);
+					set_fps(FPS_53);
 					break;
 				case IDM_SET_FPS_52:
-					set_fps(FPS52);
+					set_fps(FPS_52);
 					break;
 				case IDM_SET_FPS_51:
-					set_fps(FPS51);
+					set_fps(FPS_51);
 					break;
 				case IDM_SET_FPS_50:
-					set_fps(FPS50);
+					set_fps(FPS_50);
 					break;
 				case IDM_SET_FPS_49:
-					set_fps(FPS49);
+					set_fps(FPS_49);
 					break;
 				case IDM_SET_FPS_48:
-					set_fps(FPS48);
+					set_fps(FPS_48);
 					break;
 				case IDM_SET_FPS_47:
-					set_fps(FPS47);
+					set_fps(FPS_47);
 					break;
 				case IDM_SET_FPS_46:
-					set_fps(FPS46);
+					set_fps(FPS_46);
 					break;
 				case IDM_SET_FPS_45:
-					set_fps(FPS45);
+					set_fps(FPS_45);
 					break;
 				case IDM_SET_FPS_44:
-					set_fps(FPS44);
+					set_fps(FPS_44);
 					break;
 				case IDM_SET_FSK_DEFAULT:
 				case IDM_SET_FSK_1:

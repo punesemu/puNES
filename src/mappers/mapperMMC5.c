@@ -438,7 +438,7 @@ void extcl_cpu_wr_mem_MMC5(WORD address, BYTE value) {
 			}
 			irql2f.enable = FALSE;
 			/* disabilito l'IRQ dell'MMC5 */
-			irq.high &= ~EXTIRQ;
+			irq.high &= ~EXT_IRQ;
 			return;
 		case 0x5205:
 			mmc5.factor[0] = value;
@@ -501,7 +501,7 @@ BYTE extcl_cpu_rd_mem_MMC5(WORD address, BYTE openbus, BYTE before) {
 			value = irql2f.pending | irql2f.in_frame;
 			irql2f.pending = FALSE;
 			/* disabilito l'IRQ dell'MMC5 */
-			irq.high &= ~EXTIRQ;
+			irq.high &= ~EXT_IRQ;
 			return (value);
 		case 0x5205:
 			return (mmc5.product & 0x00FF);

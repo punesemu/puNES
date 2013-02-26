@@ -55,11 +55,11 @@ void extcl_cpu_wr_mem_VRC3(WORD address, BYTE value) {
 			if (vrc3.enabled) {
 				vrc3.count = vrc3.reload;
 			}
-			irq.high &= ~EXTIRQ;
+			irq.high &= ~EXT_IRQ;
 			return;
 		case 0xD000:
 			vrc3.enabled = vrc3.acknowledge;
-			irq.high &= ~EXTIRQ;
+			irq.high &= ~EXT_IRQ;
 			return;
 		case 0xF000:
 			control_bank_with_AND(0x0F, prgRom16kMax)
@@ -88,6 +88,6 @@ void extcl_cpu_every_cycle_VRC3(void) {
 	if (!(++vrc3.count & vrc3.mask)) {
 		vrc3.count = vrc3.reload;
 		irq.delay = TRUE;
-		irq.high |= EXTIRQ;
+		irq.high |= EXT_IRQ;
 	}
 }

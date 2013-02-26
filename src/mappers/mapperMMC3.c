@@ -235,7 +235,7 @@ void extcl_cpu_wr_mem_MMC3(WORD address, BYTE value) {
 		case 0xE000:
 			irqA12.enable = FALSE;
 			/* disabilito l'IRQ dell'MMC3 */
-			irq.high &= ~EXTIRQ;
+			irq.high &= ~EXT_IRQ;
 			break;
 		case 0xE001:
 			irqA12.enable = TRUE;
@@ -252,7 +252,7 @@ BYTE extcl_save_mapper_MMC3(BYTE mode, BYTE slot, FILE *fp) {
 }
 void extcl_cpu_every_cycle_MMC3(void) {
 	if (irqA12.delay && !(--irqA12.delay)) {
-		irq.high |= EXTIRQ;
+		irq.high |= EXT_IRQ;
 	}
 }
 void extcl_ppu_000_to_34x_MMC3(void) {

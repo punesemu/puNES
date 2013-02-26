@@ -234,7 +234,7 @@ enum apu_mode { APU_60HZ, APU_48HZ };
 				DMC.address = DMC.address_start;\
 			} else if (DMC.irq_enabled) {\
 				r4015.value |= 0x80;\
-				irq.high |= DMCIRQ;\
+				irq.high |= DMC_IRQ;\
 			}\
 		}\
 	}
@@ -256,7 +256,7 @@ enum apu_mode { APU_60HZ, APU_48HZ };
 		/* azzero il bit 6 del $4015 */\
 		r4015.value &= 0xBF;\
 		/* disabilito l'IRQ del frame counter */\
-		irq.high &= ~APUIRQ;\
+		irq.high &= ~APU_IRQ;\
 	}\
 	/* riavvio il frame audio */\
 	apu.step = apu.cycles = 0;\

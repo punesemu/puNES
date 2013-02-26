@@ -120,7 +120,7 @@ void extcl_cpu_wr_mem_114(WORD address, BYTE value) {
 			return;
 		case 0xE000:
 			irqA12.enable = FALSE;
-			irq.high &= ~EXTIRQ;
+			irq.high &= ~EXT_IRQ;
 			return;
 		case 0xE001:
 			irqA12.enable = TRUE;

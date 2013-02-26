@@ -379,7 +379,7 @@ void set_default(void) {
 	cfg_from_file.mode = AUTO;
 	machine = machinedb[NTSC - 1];
 
-	cfg_from_file.fps = FPSDEFAULT;
+	cfg_from_file.fps = FPS_DEFAULT;
 	cfg_from_file.frameskip = 0;
 	cfg_from_file.scale = gfx.scale_before_fscreen = X2;
 	cfg_from_file.oscan_default = OSCAN_OFF;

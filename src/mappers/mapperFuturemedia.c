@@ -60,7 +60,7 @@ void extcl_cpu_wr_mem_Futuremedia(WORD address, BYTE value) {
 			irqA12.reload = value;
 			return;
 		case 0xC002:
-			irq.high &= ~EXTIRQ;
+			irq.high &= ~EXT_IRQ;
 			return;
 		case 0xC003:
 			irqA12.counter = irqA12.reload;
@@ -89,6 +89,6 @@ void extcl_irq_A12_clock_Futuremedia(void) {
 }
 void extcl_cpu_every_cycle_Futuremedia(void) {
 	if (futuremedia.delay && !(--futuremedia.delay)) {
-		irq.high |= EXTIRQ;
+		irq.high |= EXT_IRQ;
 	}
 }

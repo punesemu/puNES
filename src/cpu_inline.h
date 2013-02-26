@@ -376,8 +376,8 @@ static BYTE INLINE apu_rd_reg(WORD address) {
 		 * rom interessate :
 		 * test_cpu_flag_concurrency.nes (by Bisqwit)
 		 */
-		if ((irq.high & APUIRQ) && irq.before) {
-			irq.high &= ~APUIRQ;
+		if ((irq.high & APU_IRQ) && irq.before) {
+			irq.high &= ~APU_IRQ;
 		}
 #ifdef DEBUG
 	} else {
@@ -442,10 +442,10 @@ static BYTE INLINE fds_rd_mem(WORD address, BYTE made_tick) {
 			fds.drive.transfer_flag = FALSE;
 			/* devo disabilitare sia il timer IRQ ... */
 			fds.drive.irq_timer_high = FALSE;
-			irq.high &= ~FDSTIMERIRQ;
+			irq.high &= ~FDS_TIMER_IRQ;
 			/* che il disk IRQ */
 			fds.drive.irq_disk_high = FALSE;
-			irq.high &= ~FDSDISKIRQ;
+			irq.high &= ~FDS_DISK_IRQ;
 
 #ifndef RELEASE
 			//fprintf(stderr, "0x%04X 0x%02X %d\n", address, cpu.openbus, irq.high);
@@ -466,7 +466,7 @@ static BYTE INLINE fds_rd_mem(WORD address, BYTE made_tick) {
 
 			/* devo disabilitare il disk IRQ */
 			fds.drive.irq_disk_high = FALSE;
-			irq.high &= ~FDSDISKIRQ;
+			irq.high &= ~FDS_DISK_IRQ;
 
 			return (TRUE);
 		}
@@ -1244,7 +1244,7 @@ static void INLINE apu_wr_reg(WORD address, BYTE value) {
 					/* ...azzero l'interrupt flag del DMC */
 					r4015.value &= 0x7F;
 					/* disabilito l'IRQ del DMC */
-					irq.high &= ~DMCIRQ;
+					irq.high &= ~DMC_IRQ;
 				}
 				DMC.loop = value & 0x40;
 				DMC.rate_index = value & 0x0F;
@@ -1317,7 +1317,7 @@ static void INLINE apu_wr_reg(WORD address, BYTE value) {
 			 */
 			r4015.value = (r4015.value & 0x60) | (value & 0x1F);
 			/* disabilito l'IRQ del DMC */
-			irq.high &= ~DMCIRQ;
+			irq.high &= ~DMC_IRQ;
 			/*
 			 * quando il flag di abilitazione del length
 			 * counter di ogni canale e' a 0, il counter
@@ -1412,7 +1412,7 @@ static BYTE INLINE fds_wr_mem(WORD address, BYTE value) {
 			 */
 			fds.drive.irq_timer_reload = (fds.drive.irq_timer_reload & 0xFF00) | value;
 			fds.drive.irq_timer_high = FALSE;
-			irq.high &= ~FDSTIMERIRQ;
+			irq.high &= ~FDS_TIMER_IRQ;
 			return (TRUE);
 		}
 		if (address == 0x4021) {
@@ -1425,7 +1425,7 @@ static BYTE INLINE fds_wr_mem(WORD address, BYTE value) {
 			 */
 			fds.drive.irq_timer_reload = (value << 8) | (fds.drive.irq_timer_reload & 0x00FF);
 			fds.drive.irq_timer_high = FALSE;
-			irq.high &= ~FDSTIMERIRQ;
+			irq.high &= ~FDS_TIMER_IRQ;
 			return (TRUE);
 		}
 		if (address == 0x4022) {
@@ -1442,7 +1442,7 @@ static BYTE INLINE fds_wr_mem(WORD address, BYTE value) {
 			fds.drive.irq_timer_enabled = value & 0x02;
 			fds.drive.irq_timer_counter = fds.drive.irq_timer_reload;
 			fds.drive.irq_timer_high = FALSE;
-			irq.high &= ~FDSTIMERIRQ;
+			irq.high &= ~FDS_TIMER_IRQ;
 			return (TRUE);
 		}
 		if (address == 0x4023) {
@@ -1464,7 +1464,7 @@ static BYTE INLINE fds_wr_mem(WORD address, BYTE value) {
 			fds.drive.transfer_flag = FALSE;
 
 			fds.drive.irq_disk_high = FALSE;
-			irq.high &= ~FDSDISKIRQ;
+			irq.high &= ~FDS_DISK_IRQ;
 			return (TRUE);
 		}
 		if (address == 0x4025) {
@@ -1514,7 +1514,7 @@ static BYTE INLINE fds_wr_mem(WORD address, BYTE value) {
 			fds.drive.irq_disk_enabled = value & 0x80;
 
 			fds.drive.irq_disk_high = FALSE;
-			irq.high &= ~FDSDISKIRQ;
+			irq.high &= ~FDS_DISK_IRQ;
 
 			return (TRUE);
 		}

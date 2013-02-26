@@ -536,7 +536,7 @@ void extcl_cpu_wr_mem_116_TypeA(WORD address, BYTE value) {
 			m116.mode = value;
 			if ((value & 0x01) != 1) {
 				irqA12.enable = FALSE;
-				irq.high &= ~EXTIRQ;
+				irq.high &= ~EXT_IRQ;
 			}
 			m116_A_UpdatePrg()
 			m116_A_UpdateChr()
@@ -639,7 +639,7 @@ void extcl_cpu_wr_mem_116_TypeA(WORD address, BYTE value) {
 					irqA12.enable = TRUE;
 				} else {
 					irqA12.enable = FALSE;
-					irq.high &= ~EXTIRQ;
+					irq.high &= ~EXT_IRQ;
 				}
 				return;
 		}

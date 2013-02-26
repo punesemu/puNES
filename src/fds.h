@@ -10,16 +10,10 @@
 
 #include "common.h"
 
-enum {
-	FDS_FORMAT_RAW,
-	FDS_FORMAT_FDS
-};
-enum {
-	FDS_OP_NONE,
-	FDS_OP_READ,
-	FDS_OP_WRITE
-};
-enum {
+enum fds_formats { FDS_FORMAT_RAW, FDS_FORMAT_FDS };
+enum fds_operations { FDS_OP_NONE, FDS_OP_READ, FDS_OP_WRITE };
+enum fds_disk_memory_operations { FDS_DISK_MEMSET, FDS_DISK_MEMCPY };
+enum fds_disk_operations {
 	FDS_DISK_COUNT,
 	FDS_DISK_INSERT,
 	FDS_DISK_EJECT,
@@ -31,18 +25,14 @@ enum {
 	FDS_DISK_SELECT_AND_INSERT,
 	FDS_DISK_TIMELINE_SELECT
 };
-enum {
-	FDS_DISK_MEMSET,
-	FDS_DISK_MEMCPY
-};
-enum {
+enum fds_block_type {
 	BL_DISK_INFO = 1,
 	BL_FILE_AMOUNT,
 	BL_FILE_HEADER,
 	BL_FILE_DATA,
 	DISK_SIDE_SIZE = 65500
 };
-enum {
+enum fds_misc {
 	FDS_DISK_GAP = 0x0100,
 	FDS_DISK_BLOCK_MARK = 0x0180,
 	FDS_DISK_CRC_CHAR1 = 0x0155,

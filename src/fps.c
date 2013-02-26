@@ -15,62 +15,62 @@
 
 void fps_init(void) {
 	switch (cfg->fps) {
-		case FPSDEFAULT:
+		case FPS_DEFAULT:
 			if (machine.type == NTSC) {
 				machine.fps = 60;
 			} else {
 				machine.fps = 50;
 			}
 			break;
-		case FPS60:
+		case FPS_60:
 			machine.fps = 60;
 			break;
-		case FPS59:
+		case FPS_59:
 			machine.fps = 59;
 			break;
-		case FPS58:
+		case FPS_58:
 			machine.fps = 58;
 			break;
-		case FPS57:
+		case FPS_57:
 			machine.fps = 57;
 			break;
-		case FPS56:
+		case FPS_56:
 			machine.fps = 56;
 			break;
-		case FPS55:
+		case FPS_55:
 			machine.fps = 55;
 			break;
-		case FPS54:
+		case FPS_54:
 			machine.fps = 54;
 			break;
-		case FPS53:
+		case FPS_53:
 			machine.fps = 53;
 			break;
-		case FPS52:
+		case FPS_52:
 			machine.fps = 52;
 			break;
-		case FPS51:
+		case FPS_51:
 			machine.fps = 51;
 			break;
-		case FPS50:
+		case FPS_50:
 			machine.fps = 50;
 			break;
-		case FPS49:
+		case FPS_49:
 			machine.fps = 49;
 			break;
-		case FPS48:
+		case FPS_48:
 			machine.fps = 48;
 			break;
-		case FPS47:
+		case FPS_47:
 			machine.fps = 47;
 			break;
-		case FPS46:
+		case FPS_46:
 			machine.fps = 46;
 			break;
-		case FPS45:
+		case FPS_45:
 			machine.fps = 45;
 			break;
-		case FPS44:
+		case FPS_44:
 			machine.fps = 44;
 			break;
 	}

@@ -173,11 +173,11 @@ void extcl_cpu_wr_mem_VRC4(WORD address, BYTE value) {
 				vrc4.irqPrescaler = 0;
 				vrc4.irqCount = vrc4.irqReload;
 			}
-			irq.high &= ~EXTIRQ;
+			irq.high &= ~EXT_IRQ;
 			return;
 		case 0xF003:
 			vrc4.irqEnabled = vrc4.irqAcknowledge;
-			irq.high &= ~EXTIRQ;
+			irq.high &= ~EXT_IRQ;
 			return;
 		default:
 			return;
@@ -215,7 +215,7 @@ void extcl_cpu_every_cycle_VRC4(void) {
 
 	vrc4.irqCount = vrc4.irqReload;
 	irq.delay = TRUE;
-	irq.high |= EXTIRQ;
+	irq.high |= EXT_IRQ;
 }
 
 void map_init_VRC4BMC(void) {

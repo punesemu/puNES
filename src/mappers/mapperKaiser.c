@@ -88,10 +88,10 @@ void extcl_cpu_wr_mem_Kaiser_ks202(WORD address, BYTE value) {
 			if (ks202.enabled) {
 				ks202.count = ks202.reload;
 			}
-			irq.high &= ~EXTIRQ;
+			irq.high &= ~EXT_IRQ;
 			return;
 		case 0xD000:
-			irq.high &= ~EXTIRQ;
+			irq.high &= ~EXT_IRQ;
 			return;
 		case 0xE000:
 			ks202.reg = value;
@@ -163,7 +163,7 @@ BYTE extcl_save_mapper_Kaiser_ks202(BYTE mode, BYTE slot, FILE *fp) {
 }
 void extcl_cpu_every_cycle_Kaiser_ks202(void) {
 	if (ks202.delay && !(--ks202.delay)) {
-		irq.high |= EXTIRQ;
+		irq.high |= EXT_IRQ;
 	}
 
 	if (!ks202.enabled) {

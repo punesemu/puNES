@@ -45,7 +45,7 @@ void extcl_cpu_wr_mem_50(WORD address, BYTE value) {
 		if (address & 0x0100) {
 			if (!(m50.enabled = value & 0x01)) {
 				m50.count = 0;
-				irq.high &= ~EXTIRQ;
+				irq.high &= ~EXT_IRQ;
 			}
 			return;
 		}
@@ -73,7 +73,7 @@ BYTE extcl_save_mapper_50(BYTE mode, BYTE slot, FILE *fp) {
 }
 void extcl_cpu_every_cycle_50(void) {
 	if (m50.delay && !(--m50.delay)) {
-		irq.high |= EXTIRQ;
+		irq.high |= EXT_IRQ;
 	}
 
 	if (m50.enabled && (++m50.count == 0x1000)) {
