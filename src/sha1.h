@@ -12,11 +12,9 @@
 
 #ifndef _STD_TYPES
 #define _STD_TYPES
-
-#define uchar   unsigned char
-#define uint    unsigned int
-#define ulong   unsigned long int
-
+#define uchar unsigned char
+#define uint  unsigned int
+#define ulong unsigned long int
 #endif
 
 typedef struct {

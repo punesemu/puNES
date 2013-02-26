@@ -8,7 +8,7 @@
 #include "menu_mode.h"
 #include "cfg_file.h"
 #include "clock.h"
-#include "sdltext.h"
+#include "sdl_text.h"
 #include "param.h"
 
 #ifdef __SUNPRO_C

@@ -7,7 +7,7 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include "memmap.h"
+#include "mem_map.h"
 #include "mappers.h"
 #include "cpu.h"
 #include "ppu.h"

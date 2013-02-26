@@ -106,7 +106,7 @@ void menu_video_effect(GtkWidget *video, GtkAccelGroup *accel_group) {
 	        G_CALLBACK(menu_video_effect_set), GINT_TO_POINTER(FALSE));
 }
 void menu_video_effect_check(void) {
-	if (gfx.opengl && (port1.type != ZAPPER) && (port2.type != ZAPPER)) {
+	if (gfx.opengl && (port1.type != CTRL_ZAPPER) && (port2.type != CTRL_ZAPPER)) {
 		gtk_widget_set_sensitive(check[MEFFECT], TRUE);
 	} else {
 		gtk_widget_set_sensitive(check[MEFFECT], FALSE);
@@ -123,7 +123,7 @@ void menu_video_effect_set(void) {
 		return;
 	}
 
-	if ((port1.type == ZAPPER) || (port2.type == ZAPPER)) {
+	if ((port1.type == CTRL_ZAPPER) || (port2.type == CTRL_ZAPPER)) {
 		return;
 	}
 

@@ -14,7 +14,7 @@
 #include "ppu.h"
 #include "version.h"
 #include "gui.h"
-#include "sdltext.h"
+#include "sdl_text.h"
 #define __STATICPAL__
 #include "palette.h"
 #include "opengl.h"

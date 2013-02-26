@@ -11,11 +11,11 @@
 #include "cpu.h"
 #include "ppu.h"
 #include "apu.h"
-#include "memmap.h"
+#include "mem_map.h"
 #include "ppu_inline.h"
 #include "clock.h"
 #include "cpu_inline.h"
-#include "sdltext.h"
+#include "sdl_text.h"
 
 enum cpu_opcode_type { RD_OP, WR_OP };
 

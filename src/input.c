@@ -21,32 +21,32 @@
 
 void input_init(void) {
 	switch (port1.type) {
-		case CTRLDISABLED:
+		case CTRL_DISABLED:
 		default:
 			input_port1 = NULL;
 			SET_RD_REG1(input_rd_reg_disabled);
 			break;
-		case STDCTRL:
+		case CTRL_STANDARD:
 			SET_PORT1(input_port_standard);
 			SET_RD_REG1(input_rd_reg_standard);
 			break;
-		case ZAPPER:
+		case CTRL_ZAPPER:
 			input_port1 = NULL;
 			SET_RD_REG1(input_rd_reg_zapper);
 			break;
 	}
 
 	switch (port2.type) {
-		case CTRLDISABLED:
+		case CTRL_DISABLED:
 		default:
 			input_port2 = NULL;
 			SET_RD_REG2(input_rd_reg_disabled);
 			break;
-		case STDCTRL:
+		case CTRL_STANDARD:
 			SET_PORT2(input_port_standard);
 			SET_RD_REG2(input_rd_reg_standard);
 			break;
-		case ZAPPER:
+		case CTRL_ZAPPER:
 			input_port2 = NULL;
 			SET_RD_REG2(input_rd_reg_zapper);
 			break;

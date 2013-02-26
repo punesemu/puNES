@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "mappers.h"
-#include "memmap.h"
+#include "mem_map.h"
 #include "fds.h"
 #include "cpu.h"
 

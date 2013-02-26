@@ -7,7 +7,7 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include "memmap.h"
+#include "mem_map.h"
 #include "mappers.h"
 #include "irqA12.h"
 #include "save_slot.h"

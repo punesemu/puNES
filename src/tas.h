@@ -10,17 +10,10 @@
 
 #include "common.h"
 
+enum tas_types { NOTAS, FM2 };
+enum tas_emulators { FCEUX, PUNES };
 /* NTSC : 960 / 60 = 16 secondi */
-#define TAS_CACHE 960
-
-enum tas_types {
-	NOTAS,
-	FM2
-};
-enum tas_emulators {
-	FCEUX,
-	PUNES
-};
+enum tas_misc { TAS_CACHE = 960 };
 
 typedef struct {
 	BYTE state;
@@ -44,15 +37,15 @@ struct _tas {
 	_tas_input_log il[TAS_CACHE];
 } tas;
 
-BYTE tasFile(char *ext, char *file);
-void tasQuit(void);
+BYTE tas_file(char *ext, char *file);
+void tas_quit(void);
 
-void tasHeader_FM2(char *file);
-void tasRead_FM2(void);
-void tasFrame_FM2(void);
+void tas_header_FM2(char *file);
+void tas_read_FM2(void);
+void tas_frame_FM2(void);
 
-void (*tasHeader)(char *file);
-void (*tasRead)(void);
-void (*tasFrame)(void);
+void (*tas_header)(char *file);
+void (*tas_read)(void);
+void (*tas_frame)(void);
 
 #endif /* TAS_H_ */

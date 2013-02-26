@@ -26,7 +26,7 @@ C_SRCS += \
 ../src/save_slot.c \
 ../src/sdl_gfx.c \
 ../src/sdl_snd.c \
-../src/sdltext.c \
+../src/sdl_text.c \
 ../src/sha1.c \
 ../src/tas.c \
 ../src/timeline.c 
@@ -54,7 +54,7 @@ OBJS += \
 ./src/save_slot.o \
 ./src/sdl_gfx.o \
 ./src/sdl_snd.o \
-./src/sdltext.o \
+./src/sdl_text.o \
 ./src/sha1.o \
 ./src/tas.o \
 ./src/timeline.o 
@@ -82,7 +82,7 @@ C_DEPS += \
 ./src/save_slot.d \
 ./src/sdl_gfx.d \
 ./src/sdl_snd.d \
-./src/sdltext.d \
+./src/sdl_text.d \
 ./src/sha1.d \
 ./src/tas.d \
 ./src/timeline.d 

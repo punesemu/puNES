@@ -15,12 +15,8 @@
 #define SET_RD_REG1(funct) input_rd_reg1 = funct
 #define SET_RD_REG2(funct) input_rd_reg2 = funct
 
-enum {
-	CTRLDISABLED,
-	STDCTRL,
-	ZAPPER
-};
-enum {
+enum controller_types { CTRL_DISABLED, CTRL_STANDARD, CTRL_ZAPPER };
+enum controller_buttons {
 	BUT_A,
 	BUT_B,
 	SELECT,
@@ -32,18 +28,9 @@ enum {
 	TRBA,
 	TRBB
 };
-enum {
-	TURBOA,
-	TURBOB
-};
-enum {
-	KEYBOARD,
-	JOYSTICK,
-};
-enum {
-	RELEASED = 0x40,
-	PRESSED = 0x41
-};
+enum turbo_buttons { TURBOA, TURBOB };
+enum input_types { KEYBOARD, JOYSTICK };
+enum button_states { RELEASED = 0x40, PRESSED = 0x41 };
 
 typedef struct {
 	BYTE value;

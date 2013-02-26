@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include "ines.h"
 #include "fds.h"
-#include "memmap.h"
+#include "mem_map.h"
 #include "mappers.h"
 #include "emu.h"
 #include "cfg_file.h"

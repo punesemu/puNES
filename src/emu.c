@@ -25,14 +25,14 @@
 #include "gui.h"
 #include "clock.h"
 #include "cpu.h"
-#include "memmap.h"
+#include "mem_map.h"
 #include "mappers.h"
 #include "fps.h"
 #include "apu.h"
 #include "ppu.h"
 #include "sdl_gfx.h"
 #include "sdl_snd.h"
-#include "sdltext.h"
+#include "sdl_text.h"
 #include "sha1.h"
 #include "database.h"
 #include "input.h"
@@ -184,7 +184,7 @@ BYTE emu_load_rom(void) {
 				goto elaborate_rom_file;
 			}
 		} else if (!(strcasecmp(ext, ".fm2")) || !(strcasecmp(ext, ".FM2"))) {
-			tasFile(ext, info.rom_file);
+			tas_file(ext, info.rom_file);
 			if (!info.rom_file[0]) {
 				text_add_line_info(1, "[red]error on loading rom");
 				fprintf(stderr, "error on loading rom\n");
@@ -553,7 +553,7 @@ BYTE emu_reset(BYTE type) {
 
 		/* se carico una rom durante un tas faccio un bel quit dal tas */
 		if (tas.type != NOTAS) {
-			tasQuit();
+			tas_quit();
 		}
 
 		/* carico la rom in memoria */

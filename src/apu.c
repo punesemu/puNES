@@ -11,7 +11,7 @@
 #include "cpu.h"
 #include "clock.h"
 #include "sdl_snd.h"
-#include "memmap.h"
+#include "mem_map.h"
 #include "fds.h"
 #include "audio_quality.h"
 #include "cfg_file.h"

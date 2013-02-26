@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "timeline.h"
-#include "memmap.h"
+#include "mem_map.h"
 #include "clock.h"
 #include "cpu.h"
 #include "ppu.h"

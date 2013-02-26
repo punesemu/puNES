@@ -6,7 +6,7 @@
  */
 
 #include "mappers.h"
-#include "memmap.h"
+#include "mem_map.h"
 #include "save_slot.h"
 
 static const BYTE slots[4][4][2] = {

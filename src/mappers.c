@@ -9,11 +9,11 @@
 #include <stdio.h>
 #include <string.h>
 #include "mappers.h"
-#include "memmap.h"
+#include "mem_map.h"
 #include "irqA12.h"
 #include "irql2f.h"
 #include "tas.h"
-#include "sdltext.h"
+#include "sdl_text.h"
 
 BYTE map_init(WORD mapper_type) {
 	BYTE i;

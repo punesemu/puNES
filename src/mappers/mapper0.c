@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "mappers.h"
-#include "memmap.h"
+#include "mem_map.h"
 
 void map_init_0(void) {
 	EXTCL_CPU_WR_MEM(0);

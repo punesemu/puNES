@@ -12,8 +12,8 @@
 #include "fds.h"
 #include "cpu.h"
 #include "mappers.h"
-#include "memmap.h"
-#include "sdltext.h"
+#include "mem_map.h"
+#include "sdl_text.h"
 #include "emu.h"
 #include "clock.h"
 

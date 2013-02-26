@@ -6,7 +6,7 @@
  */
 
 #include "mappers.h"
-#include "memmap.h"
+#include "mem_map.h"
 
 WORD prgRom32kMax, prgRom16kMax;
 

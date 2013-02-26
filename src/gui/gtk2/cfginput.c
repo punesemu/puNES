@@ -16,11 +16,11 @@
 
 #define cfginput_enable_config(ind)\
 	switch (cfgport->port.type) {\
-		case CTRLDISABLED:\
-		case ZAPPER:\
+		case CTRL_DISABLED:\
+		case CTRL_ZAPPER:\
 			gtk_widget_set_sensitive(GTK_WIDGET(button_controller[ind]), FALSE);\
 			break;\
-		case STDCTRL:\
+		case CTRL_STANDARD:\
 			gtk_widget_set_sensitive(GTK_WIDGET(button_controller[ind]), TRUE);\
 			break;\
 	}
@@ -39,9 +39,9 @@ struct typesElement {
 };
 
 static const struct typesElement ctrlList[] = {
-	{ 0, CTRLDISABLED, "Disabled"     },
-	{ 0, STDCTRL,      "Standard Pad" },
-	{ 0, ZAPPER,       "Zapper"       }
+	{ 0, CTRL_DISABLED, "Disabled"     },
+	{ 0, CTRL_STANDARD, "Standard Pad" },
+	{ 0, CTRL_ZAPPER,   "Zapper"       }
 };
 
 void cfg_input_controllers(void);
@@ -129,17 +129,18 @@ void cfg_input_combobox_controller_changed(GtkComboBox *combobox, _cfg_port *cfg
 }
 void cfg_input_configure_controllers(GtkWidget *widget, _cfg_port *cfgport) {
 	switch (cfgport->port.type) {
-		case CTRLDISABLED:
+		case CTRL_DISABLED:
 			break;
-		case STDCTRL:
+		case CTRL_STANDARD:
 			cfg_standard_controller(cfgport);
 			break;
-		case ZAPPER:
+		case CTRL_ZAPPER:
 			break;
 	}
 }
 void cfg_input_ok_clicked(GtkWidget *widget, _cfg_port *cfgport) {
-	if (((cfg_port1.port.type == ZAPPER) || (cfg_port2.port.type == ZAPPER)) && opengl.rotation) {
+	if (((cfg_port1.port.type == CTRL_ZAPPER) || (cfg_port2.port.type == CTRL_ZAPPER))
+	        && opengl.rotation) {
 		menu_video_effect_set();
 	}
 

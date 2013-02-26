@@ -5,7 +5,7 @@
  *      Author: fhorse
  */
 
-#include "memmap.h"
+#include "mem_map.h"
 #include "mappers.h"
 
 WORD prgRom16kMax;

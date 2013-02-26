@@ -13,7 +13,7 @@
 #include "clock.h"
 #include "sdl_gfx.h"
 #include "sdl_snd.h"
-#include "sdltext.h"
+#include "sdl_text.h"
 #include "fps.h"
 #include "param.h"
 #include "save_slot.h"
@@ -402,7 +402,7 @@ void set_default(void) {
 	cfg_from_file.swap_duty = 0;
 	cfg_from_file.gamegenie = FALSE;
 
-	port1.type = STDCTRL;
+	port1.type = CTRL_STANDARD;
 	port_kb_default(port1, "S", "A", "Z", "X", "Up", "Down", "Left", "Right", "W", "Q");
 	port_js_default(port1, "JOYSTICKID1", "JB1", "JB0", "JB8", "JB9", "JA1MIN", "JA1PLS", "JA0MIN",
 	        "JA0PLS", "JB2", "JB3");

@@ -8,9 +8,9 @@
 #include <string.h>
 #include "main.h"
 #include "emu.h"
-#include "memmap.h"
+#include "mem_map.h"
 #include "sdl_gfx.h"
-#include "sdltext.h"
+#include "sdl_text.h"
 #include "cfg_file.h"
 #include "cmd_line.h"
 #include "timeline.h"

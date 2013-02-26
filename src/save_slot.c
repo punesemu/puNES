@@ -12,7 +12,7 @@
 #include <sys/stat.h>
 #include "save_slot.h"
 #include "cfg_file.h"
-#include "memmap.h"
+#include "mem_map.h"
 #include "cpu.h"
 #include "ppu.h"
 #include "apu.h"
@@ -23,7 +23,7 @@
 #include "sdl_gfx.h"
 #include "gui.h"
 #include "tas.h"
-#include "sdltext.h"
+#include "sdl_text.h"
 #include "fds.h"
 #include "gamegenie.h"
 
@@ -67,7 +67,7 @@ BYTE save_slot_load(void) {
 
 	if (tas.type) {
 		text_add_line_info(1, "[yellow]movie playback interrupted[normal]");
-		tasQuit();
+		tas_quit();
 	}
 
 	/* game genie */

@@ -7,7 +7,7 @@
 
 #include "menu_nes_fds.h"
 #include "fds.h"
-#include "sdltext.h"
+#include "sdl_text.h"
 
 #ifdef __SUNPRO_C
 #pragma align 4 (my_pixbuf)

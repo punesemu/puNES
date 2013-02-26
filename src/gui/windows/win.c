@@ -27,7 +27,7 @@
 #include "version.h"
 #include "fps.h"
 #include "tas.h"
-#include "sdltext.h"
+#include "sdl_text.h"
 #include "param.h"
 #include "ppu.h"
 #include "fds.h"
@@ -568,7 +568,7 @@ void guiEvent(void) {
 	}
 
 	if (tas.type) {
-		tasFrame();
+		tas_frame();
 		return;
 	}
 
@@ -1028,7 +1028,7 @@ void guiUpdate(void) {
 		SetMenuItemInfo(menuVideo, 3, TRUE, &menuitem);
 
 		/* questi li abilito solo se non c'e' come input lo zapper */
-		if ((port1.type != ZAPPER) && (port2.type != ZAPPER)) {
+		if ((port1.type != CTRL_ZAPPER) && (port2.type != CTRL_ZAPPER)) {
 			menuitem.fState = MFS_ENABLED;
 			change_menuitem(ENAB, MF_ENABLED, IDM_SET_EFFECT_CUBE);
 		} else {
@@ -1183,7 +1183,7 @@ void guiFullscreen(void) {
 		/* abilito il fullscreen */
 		gfx_set_screen(NO_CHANGE, NO_CHANGE, FULLSCR, NO_CHANGE, FALSE);
 		/* disabilito la visualizzazione del puntatore */
-		if (!opengl.rotation && (port1.type != ZAPPER) && (port2.type != ZAPPER)) {
+		if (!opengl.rotation && (port1.type != CTRL_ZAPPER) && (port2.type != CTRL_ZAPPER)) {
 			SDL_ShowCursor(SDL_DISABLE);
 		}
 		/* queste sono le cose che devo disabilitare per il fullscreen */
@@ -2148,7 +2148,7 @@ void set_vsync(BYTE bool) {
 	ShowWindow(hMainWin, SW_NORMAL);
 }
 void set_effect(void) {
-	if ((port1.type == ZAPPER) || (port2.type == ZAPPER)) {
+	if ((port1.type == CTRL_ZAPPER) || (port2.type == CTRL_ZAPPER)) {
 		return;
 	}
 

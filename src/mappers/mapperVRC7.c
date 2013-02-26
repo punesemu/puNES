@@ -10,7 +10,7 @@
 #include <math.h>
 #include <float.h>
 #include "mappers.h"
-#include "memmap.h"
+#include "mem_map.h"
 #include "cpu.h"
 #include "save_slot.h"
 #include "mapperVRC7snd.h"

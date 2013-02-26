@@ -6,7 +6,7 @@
  */
 
 #include "mappers.h"
-#include "memmap.h"
+#include "mem_map.h"
 
 WORD prgRom16kMax, chrRom8kMax;
 BYTE type;

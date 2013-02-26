@@ -1,12 +1,12 @@
 /*
- * memmap.h
+ * mem_map.h
  *
  *  Created on: 10/mag/2010
  *      Author: fhorse
  */
 
-#ifndef MEMMAP_H_
-#define MEMMAP_H_
+#ifndef MEM_MAP_H_
+#define MEM_MAP_H_
 
 #include "common.h"
 
@@ -90,4 +90,4 @@ struct _oam {
 	BYTE *ele_plus[8];
 } oam;
 
-#endif /* MEMMAP_H_ */
+#endif /* MEM_MAP_H_ */

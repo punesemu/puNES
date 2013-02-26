@@ -399,7 +399,7 @@ void guiEvent(void) {
 	}
 
 	if (tas.type) {
-		tasFrame();
+		tas_frame();
 		return;
 	}
 
@@ -467,7 +467,7 @@ void guiFullscreen(void) {
 		/* abilito il fullscreen */
 		gfx_set_screen(NO_CHANGE, NO_CHANGE, FULLSCR, NO_CHANGE, FALSE);
 		/* nascondo il cursore, se serve */
-		if (!opengl.rotation && (port1.type != ZAPPER) && (port2.type != ZAPPER)) {
+		if (!opengl.rotation && (port1.type != CTRL_ZAPPER) && (port2.type != CTRL_ZAPPER)) {
 			SDL_ShowCursor(SDL_DISABLE);
 		}
 		/* indico alle gtk che sono in fullscreen */

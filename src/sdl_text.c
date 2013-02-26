@@ -6,7 +6,7 @@
  */
 
 #include <time.h>
-#include "sdltext.h"
+#include "sdl_text.h"
 #include "sdl_gfx.h"
 #include "font.h"
 #include "tas.h"

@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "mappers.h"
-#include "memmap.h"
+#include "mem_map.h"
 #include "save_slot.h"
 
 #define chrRom1kUpdate(slot, mask, shift)\

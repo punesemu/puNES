@@ -13,24 +13,24 @@
 #include <sys/stat.h>
 #include "tas.h"
 #include "input.h"
-#include "sdltext.h"
+#include "sdl_text.h"
 #include "emu.h"
 
 #define tas_set_data_port_ctrlstd(prt, dt)\
 		prt.data[dt] = tas.il[tas.index].prt[dt]
 #define tas_increment_index()\
 	if (++tas.index == tas.count) {\
-		tasRead();\
+		tas_read();\
 	}
 
 _port tas_port_bck1, tas_port_bck2;
 
-BYTE tasFile(char *ext, char *file) {
+BYTE tas_file(char *ext, char *file) {
 	if (!(strcasecmp(ext, ".fm2")) || !(strcasecmp(ext, ".FM2"))) {
 		tas.type = FM2;
-		tasHeader = tasHeader_FM2;
-		tasRead = tasRead_FM2;
-		tasFrame = tasFrame_FM2;
+		tas_header = tas_header_FM2;
+		tas_read = tas_read_FM2;
+		tas_frame = tas_frame_FM2;
 	}
 
 	if (tas.type) {
@@ -43,7 +43,7 @@ BYTE tasFile(char *ext, char *file) {
 
 		tas.fp = fopen(tas.file, "r");
 
-		tasHeader(file);
+		tas_header(file);
 
 		{
 			BYTE i;
@@ -68,21 +68,21 @@ BYTE tasFile(char *ext, char *file) {
 		}
 
 		if (found) {
-			tasRead();
+			tas_read();
 		} else {
 			info.rom_file[0] = 0;
-			tasQuit();
+			tas_quit();
 		}
 	}
 	return (EXIT_OK);
 }
-void tasQuit(void) {
+void tas_quit(void) {
 	if (tas.fp) {
 		fclose(tas.fp);
 	}
 
-	tasHeader = NULL;
-	tasRead = NULL;
+	tas_header = NULL;
+	tas_read = NULL;
 
 	memcpy(&port1, &tas_port_bck1, sizeof(_port));
 	memcpy(&port2, &tas_port_bck2, sizeof(_port));
@@ -92,7 +92,7 @@ void tasQuit(void) {
 	tas.type = NOTAS;
 }
 
-void tasFrame_FM2(void) {
+void tas_frame_FM2(void) {
 	/* il primo frame */
 	if (!tas.frame) {
 		/*
@@ -140,12 +140,12 @@ void tasFrame_FM2(void) {
 			 */
 			return;
 		} else {
-			tasQuit();
+			tas_quit();
 			return;
 		}
 	}
 
-	if (port1.type == STDCTRL) {
+	if (port1.type == CTRL_STANDARD) {
 		tas_set_data_port_ctrlstd(port1, BUT_A);
 		tas_set_data_port_ctrlstd(port1, BUT_B);
 		tas_set_data_port_ctrlstd(port1, SELECT);
@@ -156,7 +156,7 @@ void tasFrame_FM2(void) {
 		tas_set_data_port_ctrlstd(port1, RIGHT);
 	}
 
-	if (port2.type == STDCTRL) {
+	if (port2.type == CTRL_STANDARD) {
 		tas_set_data_port_ctrlstd(port2, BUT_A);
 		tas_set_data_port_ctrlstd(port2, BUT_B);
 		tas_set_data_port_ctrlstd(port2, SELECT);
@@ -169,7 +169,7 @@ void tasFrame_FM2(void) {
 
 	tas_increment_index()
 }
-void tasHeader_FM2(char *file) {
+void tas_header_FM2(char *file) {
 	char line[256];
 	int start;
 
@@ -235,7 +235,7 @@ void tasHeader_FM2(char *file) {
 
 	fseek(tas.fp, 0, SEEK_SET);
 }
-void tasRead_FM2(void) {
+void tas_read_FM2(void) {
 	int i, start;
 	char line[256], *sep;
 
@@ -261,7 +261,7 @@ void tasRead_FM2(void) {
 		/* port1 */
 		sep = strtok(NULL, "|");
 
-		if (port1.type == STDCTRL) {
+		if (port1.type == CTRL_STANDARD) {
 			for (i = 0; i < 8; i++) {
 				tas.il[tas.count].port1[RIGHT - i] = PRESSED;
 
@@ -274,7 +274,7 @@ void tasRead_FM2(void) {
 		/* port2 */
 		sep = strtok(NULL, "|");
 
-		if (port2.type == STDCTRL) {
+		if (port2.type == CTRL_STANDARD) {
 			for (i = 0; i < 8; i++) {
 				tas.il[tas.count].port2[RIGHT - i] = PRESSED;
 

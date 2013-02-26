@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include "cpu.h"
 #include "clock.h"
-#include "memmap.h"
+#include "mem_map.h"
 #include "ppu_inline.h"
 #include "sdl_gfx.h"
 #include "mappers.h"

@@ -8,7 +8,7 @@
 #ifndef SHADERS_H_
 #define SHADERS_H_
 
-#include "sdltext.h"
+#include "sdl_text.h"
 
 enum {
 	SHADER_COLOR,
