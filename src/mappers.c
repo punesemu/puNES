@@ -689,7 +689,7 @@ void map_prg_ram_init(void) {
 	 * se non ci sono stati settaggi particolari della mapper
 	 * e devono esserci banchi di PRG Ram extra allora li assegno.
 	 */
-	if (((info.reset == CHANGEROM) || (info.reset == POWERUP)) && info.prg_ram_plus_8k_count
+	if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) && info.prg_ram_plus_8k_count
 	        && !prg.ram_plus) {
 		/* alloco la memoria necessaria */
 		prg.ram_plus = malloc(prg_ram_plus_size());
@@ -726,7 +726,7 @@ void map_prg_ram_init(void) {
 	}
 }
 BYTE map_chr_ram_init(void) {
-	if (((info.reset == CHANGEROM) || (info.reset == POWERUP)) && mapper.write_vram) {
+	if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) && mapper.write_vram) {
 		if (chr.data) {
 			free(chr.data);
 		}

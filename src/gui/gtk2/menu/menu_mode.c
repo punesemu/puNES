@@ -196,6 +196,6 @@ void menu_mode_set_mode(int newmode) {
 
 	if (reset) {
 		textAddLineInfo(1, "switched to [green]%s", param_mode[machine.type].lname);
-		make_reset(CHANGEMODE);
+		make_reset(CHANGE_MODE);
 	}
 }

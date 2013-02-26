@@ -96,8 +96,8 @@ void extcl_cpu_wr_mem_222(WORD address, BYTE value) {
 	}
 }
 BYTE extcl_save_mapper_222(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, m222.count);
-	savestateEle(mode, slot, m222.delay);
+	save_slot_ele(mode, slot, m222.count);
+	save_slot_ele(mode, slot, m222.delay);
 
 	return (EXIT_OK);
 }

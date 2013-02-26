@@ -71,12 +71,12 @@ void extcl_cpu_wr_mem_VRC3(WORD address, BYTE value) {
 	}
 }
 BYTE extcl_save_mapper_VRC3(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, vrc3.enabled);
-	savestateEle(mode, slot, vrc3.reload);
-	savestateEle(mode, slot, vrc3.mode);
-	savestateEle(mode, slot, vrc3.acknowledge);
-	savestateEle(mode, slot, vrc3.mask);
-	savestateEle(mode, slot, vrc3.count);
+	save_slot_ele(mode, slot, vrc3.enabled);
+	save_slot_ele(mode, slot, vrc3.reload);
+	save_slot_ele(mode, slot, vrc3.mode);
+	save_slot_ele(mode, slot, vrc3.acknowledge);
+	save_slot_ele(mode, slot, vrc3.mask);
+	save_slot_ele(mode, slot, vrc3.count);
 
 	return (EXIT_OK);
 }

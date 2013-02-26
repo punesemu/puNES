@@ -43,17 +43,17 @@
 #define datachSetScl(scl) e24C0xSet(scl, FCGX.e1.sda, &FCGX.e1)
 #define datachSetSda(sda) e24C0xSet(FCGX.e1.scl, sda, &FCGX.e1)
 #define e24C0xSave(epr)\
-	savestateEle(mode, slot, epr.eeprom);\
-	savestateEle(mode, slot, epr.size);\
-	savestateEle(mode, slot, epr.mode);\
-	savestateEle(mode, slot, epr.next);\
-	savestateEle(mode, slot, epr.bit);\
-	savestateEle(mode, slot, epr.address);\
-	savestateEle(mode, slot, epr.data);\
-	savestateEle(mode, slot, epr.scl);\
-	savestateEle(mode, slot, epr.sda);\
-	savestateEle(mode, slot, epr.rw);\
-	savestateEle(mode, slot, epr.output)
+	save_slot_ele(mode, slot, epr.eeprom);\
+	save_slot_ele(mode, slot, epr.size);\
+	save_slot_ele(mode, slot, epr.mode);\
+	save_slot_ele(mode, slot, epr.next);\
+	save_slot_ele(mode, slot, epr.bit);\
+	save_slot_ele(mode, slot, epr.address);\
+	save_slot_ele(mode, slot, epr.data);\
+	save_slot_ele(mode, slot, epr.scl);\
+	save_slot_ele(mode, slot, epr.sda);\
+	save_slot_ele(mode, slot, epr.rw);\
+	save_slot_ele(mode, slot, epr.output)
 
 void e24C0xSet(BYTE scl, BYTE sda, _FCGXeeprom *eeprom);
 
@@ -170,7 +170,7 @@ void extcl_cpu_wr_mem_Bandai_161x02x74(WORD address, BYTE value) {
 	b161x02x74Chr4kUpdate();
 }
 BYTE extcl_save_mapper_Bandai_161x02x74(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, b161x02x74.chrRomBank);
+	save_slot_ele(mode, slot, b161x02x74.chrRomBank);
 
 	return (EXIT_OK);
 }
@@ -293,11 +293,11 @@ BYTE extcl_cpu_rd_mem_Bandai_FCGX(WORD address, BYTE openbus, BYTE before) {
 	return (openbus);
 }
 BYTE extcl_save_mapper_Bandai_FCGX(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, FCGX.reg);
-	savestateEle(mode, slot, FCGX.enabled);
-	savestateEle(mode, slot, FCGX.count);
-	savestateEle(mode, slot, FCGX.reload);
-	savestateEle(mode, slot, FCGX.delay);
+	save_slot_ele(mode, slot, FCGX.reg);
+	save_slot_ele(mode, slot, FCGX.enabled);
+	save_slot_ele(mode, slot, FCGX.count);
+	save_slot_ele(mode, slot, FCGX.reload);
+	save_slot_ele(mode, slot, FCGX.delay);
 	if (FCGX.e0.size) {
 		e24C0xSave(FCGX.e0);
 	}

@@ -143,7 +143,7 @@ BYTE extcl_cpu_rd_mem_Txc_t22211x(WORD address, BYTE openbus, BYTE before) {
 	}
 }
 BYTE extcl_save_mapper_Txc_t22211x(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, t22211x.reg);
+	save_slot_ele(mode, slot, t22211x.reg);
 
 	return (EXIT_OK);
 }

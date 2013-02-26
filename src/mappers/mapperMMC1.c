@@ -171,16 +171,16 @@ void extcl_cpu_wr_mem_MMC1(WORD address, BYTE value) {
 	}
 }
 BYTE extcl_save_mapper_MMC1(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, mmc1.reg);
-	savestateEle(mode, slot, mmc1.pos);
-	savestateEle(mode, slot, mmc1.prgMode);
-	savestateEle(mode, slot, mmc1.chrMode);
-	savestateEle(mode, slot, mmc1.ctrl);
-	savestateEle(mode, slot, mmc1.chr0);
-	savestateEle(mode, slot, mmc1.chr1);
-	savestateEle(mode, slot, mmc1.prg0);
-	savestateEle(mode, slot, mmc1.reset);
-	savestateEle(mode, slot, mmc1.prgUpper);
+	save_slot_ele(mode, slot, mmc1.reg);
+	save_slot_ele(mode, slot, mmc1.pos);
+	save_slot_ele(mode, slot, mmc1.prgMode);
+	save_slot_ele(mode, slot, mmc1.chrMode);
+	save_slot_ele(mode, slot, mmc1.ctrl);
+	save_slot_ele(mode, slot, mmc1.chr0);
+	save_slot_ele(mode, slot, mmc1.chr1);
+	save_slot_ele(mode, slot, mmc1.prg0);
+	save_slot_ele(mode, slot, mmc1.reset);
+	save_slot_ele(mode, slot, mmc1.prgUpper);
 	return (EXIT_OK);
 }
 

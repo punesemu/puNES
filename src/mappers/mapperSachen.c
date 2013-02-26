@@ -325,8 +325,8 @@ void extcl_cpu_wr_mem_Sachen_sa8259x(WORD address, BYTE value) {
 	}
 }
 BYTE extcl_save_mapper_Sachen_sa8259x(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, sa8259.ctrl);
-	savestateEle(mode, slot, sa8259.reg);
+	save_slot_ele(mode, slot, sa8259.ctrl);
+	save_slot_ele(mode, slot, sa8259.reg);
 
 	return (EXIT_OK);
 }
@@ -411,7 +411,7 @@ BYTE extcl_cpu_rd_mem_Sachen_tcu02(WORD address, BYTE openbus, BYTE before) {
 	return (openbus);
 }
 BYTE extcl_save_mapper_Sachen_tcu02(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, tcu02.reg);
+	save_slot_ele(mode, slot, tcu02.reg);
 
 	return (EXIT_OK);
 }
@@ -578,8 +578,8 @@ void extcl_cpu_wr_mem_Sachen_sa74374b(WORD address, BYTE value) {
 	}
 }
 BYTE extcl_save_mapper_Sachen_sa74374x(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, sa74374x.reg);
-	savestateEle(mode, slot, sa74374x.chrRom8kBank);
+	save_slot_ele(mode, slot, sa74374x.reg);
+	save_slot_ele(mode, slot, sa74374x.chrRom8kBank);
 
 	return (EXIT_OK);
 }

@@ -81,7 +81,7 @@ void extcl_cpu_wr_mem_46(WORD address, BYTE value) {
 	}
 }
 BYTE extcl_save_mapper_46(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, m46.prg);
-	savestateEle(mode, slot, m46.chr);
+	save_slot_ele(mode, slot, m46.prg);
+	save_slot_ele(mode, slot, m46.chr);
 	return (EXIT_OK);
 }

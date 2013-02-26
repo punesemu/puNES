@@ -252,14 +252,14 @@ void extcl_cpu_wr_mem_Tengen_Rambo(WORD address, BYTE value) {
 	}
 }
 BYTE extcl_save_mapper_Tengen_Rambo(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, tRambo.prgMode);
-	savestateEle(mode, slot, tRambo.chrMode);
-	savestateEle(mode, slot, tRambo.regIndex);
-	savestateEle(mode, slot, tRambo.chr);
-	savestateEle(mode, slot, tRambo.prg);
-	savestateEle(mode, slot, tRambo.irqMode);
-	savestateEle(mode, slot, tRambo.irqDelay);
-	savestateEle(mode, slot, tRambo.irqPrescaler);
+	save_slot_ele(mode, slot, tRambo.prgMode);
+	save_slot_ele(mode, slot, tRambo.chrMode);
+	save_slot_ele(mode, slot, tRambo.regIndex);
+	save_slot_ele(mode, slot, tRambo.chr);
+	save_slot_ele(mode, slot, tRambo.prg);
+	save_slot_ele(mode, slot, tRambo.irqMode);
+	save_slot_ele(mode, slot, tRambo.irqDelay);
+	save_slot_ele(mode, slot, tRambo.irqPrescaler);
 
 	return (EXIT_OK);
 }

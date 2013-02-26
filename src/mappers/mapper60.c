@@ -53,7 +53,7 @@ void extcl_cpu_wr_mem_60(WORD address, BYTE value) {
 	return;
 }
 BYTE extcl_save_mapper_60(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, m60.index);
+	save_slot_ele(mode, slot, m60.index);
 
 	return (EXIT_OK);
 }

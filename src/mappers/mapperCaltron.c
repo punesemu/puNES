@@ -66,7 +66,7 @@ void extcl_cpu_wr_mem_Caltron(WORD address, BYTE value) {
 	}
 }
 BYTE extcl_save_mapper_Caltron(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, caltron.reg);
+	save_slot_ele(mode, slot, caltron.reg);
 
 	return (EXIT_OK);
 }

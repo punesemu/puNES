@@ -137,11 +137,11 @@ BYTE extcl_cpu_rd_mem_183(WORD address, BYTE openbus, BYTE before) {
 	return (prg.rom[address & 0x1FFF]);
 }
 BYTE extcl_save_mapper_183(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, m183.enabled);
-	savestateEle(mode, slot, m183.prescaler);
-	savestateEle(mode, slot, m183.count);
-	savestateEle(mode, slot, m183.delay);
-	savestateEle(mode, slot, m183.chrRomBank);
+	save_slot_ele(mode, slot, m183.enabled);
+	save_slot_ele(mode, slot, m183.prescaler);
+	save_slot_ele(mode, slot, m183.count);
+	save_slot_ele(mode, slot, m183.delay);
+	save_slot_ele(mode, slot, m183.chrRomBank);
 
 	return (EXIT_OK);
 }

@@ -65,9 +65,9 @@ BYTE extcl_cpu_rd_mem_50(WORD address, BYTE openbus, BYTE before) {
 	return (prg6000[address & 0x1FFF]);
 }
 BYTE extcl_save_mapper_50(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, m50.enabled);
-	savestateEle(mode, slot, m50.count);
-	savestateEle(mode, slot, m50.delay);
+	save_slot_ele(mode, slot, m50.enabled);
+	save_slot_ele(mode, slot, m50.count);
+	save_slot_ele(mode, slot, m50.delay);
 
 	return (EXIT_OK);
 }

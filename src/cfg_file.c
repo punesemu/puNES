@@ -254,7 +254,7 @@ void cfg_file_pgs_parse(void) {
 			/* ...da quello che c'e' dopo */
 			cfgEvaluate(NULL, value, "\n");
 			/* last save slot */
-			cfgSearch(param_pgs, PGS_SLOT, 0, param_slot, savestate.slot = index);
+			cfgSearch(param_pgs, PGS_SLOT, 0, param_slot, save_slot.slot = index);
 			/* overscan */
 			cfgSearch(param_pgs, PGS_OVERSCAN, 0, param_oscan, cfg_from_file.oscan = index);
 		}
@@ -277,7 +277,7 @@ void cfg_file_pgs_save(void) {
 		return;
 	}
 	/* last save slot */
-	writeParam((_param *) param_pgs, fp, PGS_SLOT, param_slot[savestate.slot].sname);
+	writeParam((_param *) param_pgs, fp, PGS_SLOT, param_slot[save_slot.slot].sname);
 	/* overscan */
 	writeParam((_param *) param_pgs, fp, PGS_OVERSCAN, param_oscan[cfg_from_file.oscan].sname);
 

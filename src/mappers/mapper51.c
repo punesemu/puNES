@@ -86,11 +86,11 @@ BYTE extcl_cpu_rd_mem_51(WORD address, BYTE openbus, BYTE before) {
 	return (prg6000[address & 0x1FFF]);
 }
 BYTE extcl_save_mapper_51(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, m51.bank);
-	savestateEle(mode, slot, m51.mode);
-	savestateEle(mode, slot, m51.prg6000);
+	save_slot_ele(mode, slot, m51.bank);
+	save_slot_ele(mode, slot, m51.mode);
+	save_slot_ele(mode, slot, m51.prg6000);
 
-	if (mode == SSREAD) {
+	if (mode == SAVE_SLOT_READ) {
 		prg6000 = &prg.rom[m51.prg6000 << 13];
 	}
 

@@ -523,56 +523,56 @@ BYTE extcl_cpu_rd_mem_MMC5(WORD address, BYTE openbus, BYTE before) {
 BYTE extcl_save_mapper_MMC5(BYTE mode, BYTE slot, FILE *fp) {
 	BYTE i;
 
-	savestateEle(mode, slot, mmc5.prgMode);
-	savestateEle(mode, slot, mmc5.chrMode);
-	savestateEle(mode, slot, mmc5.extMode);
-	savestateEle(mode, slot, mmc5.nmtMode);
-	if (mode == SSREAD) {
+	save_slot_ele(mode, slot, mmc5.prgMode);
+	save_slot_ele(mode, slot, mmc5.chrMode);
+	save_slot_ele(mode, slot, mmc5.extMode);
+	save_slot_ele(mode, slot, mmc5.nmtMode);
+	if (mode == SAVE_SLOT_READ) {
 		for (i = 0; i < LENGTH(mmc5.nmtMode); i++) {
 			BYTE mode = mmc5.nmtMode[i];
 			_nmtUpdate(i)
 		}
 	}
-	savestateEle(mode, slot, mmc5.prgRamWrite);
-	savestateEle(mode, slot, mmc5.prgBank);
+	save_slot_ele(mode, slot, mmc5.prgRamWrite);
+	save_slot_ele(mode, slot, mmc5.prgBank);
 	for (i = 0; i < LENGTH(mmc5.prgRamBank); i++) {
-		savestateInt(mode, slot, mmc5.prgRamBank[i][0]);
-		savestateInt(mode, slot, mmc5.prgRamBank[i][1]);
-		if ((mode == SSREAD) && (mmc5.prgRamBank[i][0])) {
+		save_slot_int(mode, slot, mmc5.prgRamBank[i][0]);
+		save_slot_int(mode, slot, mmc5.prgRamBank[i][1]);
+		if ((mode == SAVE_SLOT_READ) && (mmc5.prgRamBank[i][0])) {
 			prgRamUseBank(i);
 		}
 	}
-	savestateEle(mode, slot, mmc5.chrLast);
-	savestateEle(mode, slot, mmc5.chrHigh);
-	savestateEle(mode, slot, mmc5.chrS);
-	savestateEle(mode, slot, mmc5.chrB);
-	savestateEle(mode, slot, mmc5.extRam);
-	savestateEle(mode, slot, mmc5.fillTile);
-	savestateEle(mode, slot, mmc5.fillAttr);
-	if (mode == SSREAD) {
+	save_slot_ele(mode, slot, mmc5.chrLast);
+	save_slot_ele(mode, slot, mmc5.chrHigh);
+	save_slot_ele(mode, slot, mmc5.chrS);
+	save_slot_ele(mode, slot, mmc5.chrB);
+	save_slot_ele(mode, slot, mmc5.extRam);
+	save_slot_ele(mode, slot, mmc5.fillTile);
+	save_slot_ele(mode, slot, mmc5.fillAttr);
+	if (mode == SAVE_SLOT_READ) {
 		memset(&mmc5.fillTable[0], mmc5.fillTile, 0x3C0);
 		memset(&mmc5.fillTable[0x3C0], fillerAttrib[mmc5.fillAttr], 0x40);
 	}
-	savestateEle(mode, slot, mmc5.split);
-	savestateEle(mode, slot, mmc5.splitStTile);
-	savestateEle(mode, slot, mmc5.splitSide);
-	savestateEle(mode, slot, mmc5.splitScrl);
-	savestateEle(mode, slot, mmc5.splitInReg);
-	savestateEle(mode, slot, mmc5.splitX);
-	savestateEle(mode, slot, mmc5.splitY);
-	savestateEle(mode, slot, mmc5.splitTile);
-	savestateEle(mode, slot, mmc5.splitBank);
-	savestateEle(mode, slot, mmc5.factor);
-	savestateEle(mode, slot, mmc5.product);
+	save_slot_ele(mode, slot, mmc5.split);
+	save_slot_ele(mode, slot, mmc5.splitStTile);
+	save_slot_ele(mode, slot, mmc5.splitSide);
+	save_slot_ele(mode, slot, mmc5.splitScrl);
+	save_slot_ele(mode, slot, mmc5.splitInReg);
+	save_slot_ele(mode, slot, mmc5.splitX);
+	save_slot_ele(mode, slot, mmc5.splitY);
+	save_slot_ele(mode, slot, mmc5.splitTile);
+	save_slot_ele(mode, slot, mmc5.splitBank);
+	save_slot_ele(mode, slot, mmc5.factor);
+	save_slot_ele(mode, slot, mmc5.product);
 
-	savestateSquare(mmc5.S3, slot);
-	savestateSquare(mmc5.S4, slot);
+	save_slot_square(mmc5.S3, slot);
+	save_slot_square(mmc5.S4, slot);
 
-	savestateEle(mode, slot, mmc5.pcm.enabled);
-	savestateEle(mode, slot, mmc5.pcm.output);
-	savestateEle(mode, slot, mmc5.pcm.amp);
+	save_slot_ele(mode, slot, mmc5.pcm.enabled);
+	save_slot_ele(mode, slot, mmc5.pcm.output);
+	save_slot_ele(mode, slot, mmc5.pcm.amp);
 
-	savestateEle(mode, slot, mmc5.filler);
+	save_slot_ele(mode, slot, mmc5.filler);
 
 	return (EXIT_OK);
 }

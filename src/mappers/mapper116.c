@@ -690,21 +690,21 @@ void extcl_cpu_wr_mem_116_TypeA(WORD address, BYTE value) {
 	}
 }
 BYTE extcl_save_mapper_116_TypeA(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, m116.mode);
+	save_slot_ele(mode, slot, m116.mode);
 
-	savestateEle(mode, slot, m116.mode0.chr);
-	savestateEle(mode, slot, m116.mode0.prg);
-	savestateEle(mode, slot, m116.mode0.nmt);
-	savestateEle(mode, slot, m116.mode0.padding);
+	save_slot_ele(mode, slot, m116.mode0.chr);
+	save_slot_ele(mode, slot, m116.mode0.prg);
+	save_slot_ele(mode, slot, m116.mode0.nmt);
+	save_slot_ele(mode, slot, m116.mode0.padding);
 
-	savestateEle(mode, slot, m116.mode1.banks);
-	savestateEle(mode, slot, m116.mode1.ctrl);
-	savestateEle(mode, slot, m116.mode1.nmt);
+	save_slot_ele(mode, slot, m116.mode1.banks);
+	save_slot_ele(mode, slot, m116.mode1.ctrl);
+	save_slot_ele(mode, slot, m116.mode1.nmt);
 
-	savestateEle(mode, slot, m116.mode2.reg);
-	savestateEle(mode, slot, m116.mode2.buffer);
-	savestateEle(mode, slot, m116.mode2.shifter);
-	savestateEle(mode, slot, m116.mode2.padding);
+	save_slot_ele(mode, slot, m116.mode2.reg);
+	save_slot_ele(mode, slot, m116.mode2.buffer);
+	save_slot_ele(mode, slot, m116.mode2.shifter);
+	save_slot_ele(mode, slot, m116.mode2.padding);
 
 	return (EXIT_OK);
 }
@@ -753,12 +753,12 @@ void extcl_cpu_wr_mem_116_TypeB(WORD address, BYTE value) {
 	extcl_cpu_wr_mem_MMC3(address, save);
 }
 BYTE extcl_save_mapper_116_TypeB(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, m116.mode);
-	savestateEle(mode, slot, m116.chrmap);
-	savestateEle(mode, slot, m116.chrRam);
+	save_slot_ele(mode, slot, m116.mode);
+	save_slot_ele(mode, slot, m116.chrmap);
+	save_slot_ele(mode, slot, m116.chrRam);
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
-	if ((mode == SSREAD) && (m116.mode & 0x02)) {
+	if ((mode == SAVE_SLOT_READ) && (m116.mode & 0x02)) {
 		BYTE i;
 
 		for (i = 0; i < 8; i++) {
@@ -873,12 +873,12 @@ void extcl_cpu_wr_mem_116_TypeC(WORD address, BYTE value) {
     }
 }
 BYTE extcl_save_mapper_116_TypeC(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, m116.mode);
-	savestateEle(mode, slot, m116.chrmap);
-	savestateEle(mode, slot, m116.prgmap);
-	savestateEle(mode, slot, m116.mode0.chr);
-	savestateEle(mode, slot, m116.mode0.prg);
-	savestateEle(mode, slot, m116.mode0.nmt);
+	save_slot_ele(mode, slot, m116.mode);
+	save_slot_ele(mode, slot, m116.chrmap);
+	save_slot_ele(mode, slot, m116.prgmap);
+	save_slot_ele(mode, slot, m116.mode0.chr);
+	save_slot_ele(mode, slot, m116.mode0.prg);
+	save_slot_ele(mode, slot, m116.mode0.nmt);
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	return (EXIT_OK);

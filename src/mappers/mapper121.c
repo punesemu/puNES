@@ -147,22 +147,22 @@ BYTE extcl_cpu_rd_mem_121(WORD address, BYTE openbus, BYTE before) {
 	return (m121.reg[2]);
 }
 BYTE extcl_save_mapper_121(BYTE mode, BYTE slot, FILE *fp) {
-	if (savestate.version < 6) {
-		if (mode == SSREAD) {
+	if (save_slot.version < 6) {
+		if (mode == SAVE_SLOT_READ) {
 			BYTE old_prgRomBank[2], i;
 
-			savestateEle(mode, slot, old_prgRomBank)
+			save_slot_ele(mode, slot, old_prgRomBank)
 
 			for (i = 0; i < 2; i++) {
 				m121.bck[i] = old_prgRomBank[i];
 			}
-		} else if (mode == SSCOUNT) {
-			savestate.totSize[slot] += sizeof(BYTE) * 2;
+		} else if (mode == SAVE_SLOT_COUNT) {
+			save_slot.tot_size[slot] += sizeof(BYTE) * 2;
 		}
 	} else {
-		savestateEle(mode, slot, m121.bck);
+		save_slot_ele(mode, slot, m121.bck);
 	}
-	savestateEle(mode, slot, m121.reg);
+	save_slot_ele(mode, slot, m121.reg);
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	return (EXIT_OK);

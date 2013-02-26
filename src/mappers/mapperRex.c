@@ -140,8 +140,8 @@ BYTE extcl_cpu_rd_mem_Rex_dbz(WORD address, BYTE openbus, BYTE before) {
 	return (openbus);
 }
 BYTE extcl_save_mapper_Rex_dbz(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, rexDbz.chrRomBank);
-	savestateEle(mode, slot, rexDbz.chrHigh);
+	save_slot_ele(mode, slot, rexDbz.chrRomBank);
+	save_slot_ele(mode, slot, rexDbz.chrHigh);
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	return (EXIT_OK);

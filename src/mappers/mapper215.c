@@ -287,8 +287,8 @@ void extcl_cpu_wr_mem_215(WORD address, BYTE value) {
 	}
 }
 BYTE extcl_save_mapper_215(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, m215.reg);
-	savestateEle(mode, slot, m215.prg8kBank);
+	save_slot_ele(mode, slot, m215.reg);
+	save_slot_ele(mode, slot, m215.prg8kBank);
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	return (EXIT_OK);

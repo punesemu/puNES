@@ -186,27 +186,27 @@ void extcl_cpu_wr_mem_Kasing(WORD address, BYTE value) {
 	extcl_cpu_wr_mem_MMC3(address, value);
 }
 BYTE extcl_save_mapper_Kasing(BYTE mode, BYTE slot, FILE *fp) {
-	if (savestate.version >= 6) {
-		savestateEle(mode, slot, kasing.prgMode);
+	if (save_slot.version >= 6) {
+		save_slot_ele(mode, slot, kasing.prgMode);
 	}
-	savestateEle(mode, slot, kasing.prgHigh);
-	if (savestate.version < 6) {
-		if (mode == SSREAD) {
+	save_slot_ele(mode, slot, kasing.prgHigh);
+	if (save_slot.version < 6) {
+		if (mode == SAVE_SLOT_READ) {
 			BYTE old_prgRomBank[4], i;
 
-			savestateEle(mode, slot, old_prgRomBank)
+			save_slot_ele(mode, slot, old_prgRomBank)
 
 			for (i = 0; i < 4; i++) {
 				kasing.prgRomBank[i] = old_prgRomBank[i];
 			}
-		} else if (mode == SSCOUNT) {
-			savestate.totSize[slot] += sizeof(BYTE) * 4;
+		} else if (mode == SAVE_SLOT_COUNT) {
+			save_slot.tot_size[slot] += sizeof(BYTE) * 4;
 		}
 	} else {
-		savestateEle(mode, slot, kasing.prgRomBank);
+		save_slot_ele(mode, slot, kasing.prgRomBank);
 	}
-	savestateEle(mode, slot, kasing.chrHigh);
-	savestateEle(mode, slot, kasing.chrRomBank);
+	save_slot_ele(mode, slot, kasing.chrHigh);
+	save_slot_ele(mode, slot, kasing.chrRomBank);
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	return (EXIT_OK);

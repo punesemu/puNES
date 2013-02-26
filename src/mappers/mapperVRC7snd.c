@@ -483,59 +483,59 @@ void opll_write_reg(uint32_t reg, uint8_t value) {
 	}
 }
 BYTE opll_save(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, opll.out);
-	savestateEle(mode, slot, opll.adr);
-	savestateEle(mode, slot, opll.mask);
-	savestateEle(mode, slot, opll.real_step);
-	savestateEle(mode, slot, opll.opll_time);
-	savestateEle(mode, slot, opll.opll_step);
-	savestateEle(mode, slot, opll.prev);
-	savestateEle(mode, slot, opll.next);
-	savestateEle(mode, slot, opll.low_freq);
-	savestateEle(mode, slot, opll.hi_freq);
-	savestateEle(mode, slot, opll.inst_vol);
-	savestateEle(mode, slot, opll.pm_phase);
-	savestateEle(mode, slot, opll.lfo_pm);
-	savestateEle(mode, slot, opll.am_phase);
-	savestateEle(mode, slot, opll.lfo_am);
-	savestateEle(mode, slot, opll.patch_number);
-	savestateEle(mode, slot, opll.key_status);
-	savestateEle(mode, slot, opll.slot_on_flag);
-	savestateEle(mode, slot, opll.custom_inst);
+	save_slot_ele(mode, slot, opll.out);
+	save_slot_ele(mode, slot, opll.adr);
+	save_slot_ele(mode, slot, opll.mask);
+	save_slot_ele(mode, slot, opll.real_step);
+	save_slot_ele(mode, slot, opll.opll_time);
+	save_slot_ele(mode, slot, opll.opll_step);
+	save_slot_ele(mode, slot, opll.prev);
+	save_slot_ele(mode, slot, opll.next);
+	save_slot_ele(mode, slot, opll.low_freq);
+	save_slot_ele(mode, slot, opll.hi_freq);
+	save_slot_ele(mode, slot, opll.inst_vol);
+	save_slot_ele(mode, slot, opll.pm_phase);
+	save_slot_ele(mode, slot, opll.lfo_pm);
+	save_slot_ele(mode, slot, opll.am_phase);
+	save_slot_ele(mode, slot, opll.lfo_am);
+	save_slot_ele(mode, slot, opll.patch_number);
+	save_slot_ele(mode, slot, opll.key_status);
+	save_slot_ele(mode, slot, opll.slot_on_flag);
+	save_slot_ele(mode, slot, opll.custom_inst);
 	{
 		BYTE i;
 
 		for (i = 0; i < LENGTH(opll.slot); i++) {
-			savestateEle(mode, slot, opll.slot[i].type);
-			savestateEle(mode, slot, opll.slot[i].feedback);
-			savestateEle(mode, slot, opll.slot[i].output);
-			savestatePos(mode, slot, waveform[0], opll.slot[i].sintbl);
-			savestateEle(mode, slot, opll.slot[i].phase);
-			savestateEle(mode, slot, opll.slot[i].dphase);
-			savestateEle(mode, slot, opll.slot[i].pgout);
-			savestateEle(mode, slot, opll.slot[i].fnum);
-			savestateEle(mode, slot, opll.slot[i].block);
-			savestateEle(mode, slot, opll.slot[i].volume);
-			savestateEle(mode, slot, opll.slot[i].sustine);
-			savestateEle(mode, slot, opll.slot[i].tll);
-			savestateEle(mode, slot, opll.slot[i].rks);
-			savestateEle(mode, slot, opll.slot[i].eg_mode);
-			savestateEle(mode, slot, opll.slot[i].eg_phase);
-			savestateEle(mode, slot, opll.slot[i].eg_dphase);
-			savestateEle(mode, slot, opll.slot[i].egout);
-			savestateEle(mode, slot, opll.slot[i].patch.TL);
-			savestateEle(mode, slot, opll.slot[i].patch.FB);
-			savestateEle(mode, slot, opll.slot[i].patch.EG);
-			savestateEle(mode, slot, opll.slot[i].patch.ML);
-			savestateEle(mode, slot, opll.slot[i].patch.AR);
-			savestateEle(mode, slot, opll.slot[i].patch.DR);
-			savestateEle(mode, slot, opll.slot[i].patch.SL);
-			savestateEle(mode, slot, opll.slot[i].patch.RR);
-			savestateEle(mode, slot, opll.slot[i].patch.KR);
-			savestateEle(mode, slot, opll.slot[i].patch.KL);
-			savestateEle(mode, slot, opll.slot[i].patch.AM);
-			savestateEle(mode, slot, opll.slot[i].patch.PM);
-			savestateEle(mode, slot, opll.slot[i].patch.WF);
+			save_slot_ele(mode, slot, opll.slot[i].type);
+			save_slot_ele(mode, slot, opll.slot[i].feedback);
+			save_slot_ele(mode, slot, opll.slot[i].output);
+			save_slot_pos(mode, slot, waveform[0], opll.slot[i].sintbl);
+			save_slot_ele(mode, slot, opll.slot[i].phase);
+			save_slot_ele(mode, slot, opll.slot[i].dphase);
+			save_slot_ele(mode, slot, opll.slot[i].pgout);
+			save_slot_ele(mode, slot, opll.slot[i].fnum);
+			save_slot_ele(mode, slot, opll.slot[i].block);
+			save_slot_ele(mode, slot, opll.slot[i].volume);
+			save_slot_ele(mode, slot, opll.slot[i].sustine);
+			save_slot_ele(mode, slot, opll.slot[i].tll);
+			save_slot_ele(mode, slot, opll.slot[i].rks);
+			save_slot_ele(mode, slot, opll.slot[i].eg_mode);
+			save_slot_ele(mode, slot, opll.slot[i].eg_phase);
+			save_slot_ele(mode, slot, opll.slot[i].eg_dphase);
+			save_slot_ele(mode, slot, opll.slot[i].egout);
+			save_slot_ele(mode, slot, opll.slot[i].patch.TL);
+			save_slot_ele(mode, slot, opll.slot[i].patch.FB);
+			save_slot_ele(mode, slot, opll.slot[i].patch.EG);
+			save_slot_ele(mode, slot, opll.slot[i].patch.ML);
+			save_slot_ele(mode, slot, opll.slot[i].patch.AR);
+			save_slot_ele(mode, slot, opll.slot[i].patch.DR);
+			save_slot_ele(mode, slot, opll.slot[i].patch.SL);
+			save_slot_ele(mode, slot, opll.slot[i].patch.RR);
+			save_slot_ele(mode, slot, opll.slot[i].patch.KR);
+			save_slot_ele(mode, slot, opll.slot[i].patch.KL);
+			save_slot_ele(mode, slot, opll.slot[i].patch.AM);
+			save_slot_ele(mode, slot, opll.slot[i].patch.PM);
+			save_slot_ele(mode, slot, opll.slot[i].patch.WF);
 		}
 	}
 

@@ -43,14 +43,14 @@
 	}
 
 #define savestateSquareVrc6(square)\
-	savestateEle(mode, slot, square.enabled);\
-	savestateEle(mode, slot, square.duty);\
-	savestateEle(mode, slot, square.step);\
-	savestateEle(mode, slot, square.volume);\
-	savestateEle(mode, slot, square.mode);\
-	savestateEle(mode, slot, square.timer);\
-	savestateEle(mode, slot, square.frequency);\
-	savestateEle(mode, slot, square.output)
+	save_slot_ele(mode, slot, square.enabled);\
+	save_slot_ele(mode, slot, square.duty);\
+	save_slot_ele(mode, slot, square.step);\
+	save_slot_ele(mode, slot, square.volume);\
+	save_slot_ele(mode, slot, square.mode);\
+	save_slot_ele(mode, slot, square.timer);\
+	save_slot_ele(mode, slot, square.frequency);\
+	save_slot_ele(mode, slot, square.output)
 
 WORD prgRom16kMax, prgRom8kMax, chrRom1kMax;
 BYTE type, delay;
@@ -217,24 +217,24 @@ void extcl_cpu_wr_mem_VRC6(WORD address, BYTE value) {
 	}
 }
 BYTE extcl_save_mapper_VRC6(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, vrc6.enabled);
-	savestateEle(mode, slot, vrc6.reload);
-	savestateEle(mode, slot, vrc6.mode);
-	savestateEle(mode, slot, vrc6.acknowledge);
-	savestateEle(mode, slot, vrc6.count);
-	savestateEle(mode, slot, vrc6.prescaler);
-	savestateEle(mode, slot, vrc6.delay);
+	save_slot_ele(mode, slot, vrc6.enabled);
+	save_slot_ele(mode, slot, vrc6.reload);
+	save_slot_ele(mode, slot, vrc6.mode);
+	save_slot_ele(mode, slot, vrc6.acknowledge);
+	save_slot_ele(mode, slot, vrc6.count);
+	save_slot_ele(mode, slot, vrc6.prescaler);
+	save_slot_ele(mode, slot, vrc6.delay);
 
 	savestateSquareVrc6(vrc6.S3)
 	savestateSquareVrc6(vrc6.S4)
 
-	savestateEle(mode, slot, vrc6.saw.enabled);
-	savestateEle(mode, slot, vrc6.saw.accumulator);
-	savestateEle(mode, slot, vrc6.saw.step);
-	savestateEle(mode, slot, vrc6.saw.internal);
-	savestateEle(mode, slot, vrc6.saw.timer);
-	savestateEle(mode, slot, vrc6.saw.frequency);
-	savestateEle(mode, slot, vrc6.saw.output);
+	save_slot_ele(mode, slot, vrc6.saw.enabled);
+	save_slot_ele(mode, slot, vrc6.saw.accumulator);
+	save_slot_ele(mode, slot, vrc6.saw.step);
+	save_slot_ele(mode, slot, vrc6.saw.internal);
+	save_slot_ele(mode, slot, vrc6.saw.timer);
+	save_slot_ele(mode, slot, vrc6.saw.frequency);
+	save_slot_ele(mode, slot, vrc6.saw.output);
 
 	return (EXIT_OK);
 }

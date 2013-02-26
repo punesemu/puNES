@@ -79,7 +79,7 @@ void extcl_cpu_wr_mem_CNROM(WORD address, BYTE value) {
 	chr.bank_1k[7] = &chr.data[bank | 0x1C00];
 }
 BYTE extcl_save_mapper_CNROM(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, cnrom2627.chrReadEnable);
+	save_slot_ele(mode, slot, cnrom2627.chrReadEnable);
 
 	return (EXIT_OK);
 }

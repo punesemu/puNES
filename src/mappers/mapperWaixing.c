@@ -709,11 +709,11 @@ void extcl_cpu_wr_mem_Waixing_TypeACDE(WORD address, BYTE value) {
 	extcl_cpu_wr_mem_MMC3(address, save);
 }
 BYTE extcl_save_mapper_Waixing_TypeACDE(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, waixing.chrmap);
-	savestateEle(mode, slot, waixing.chrRam);
+	save_slot_ele(mode, slot, waixing.chrmap);
+	save_slot_ele(mode, slot, waixing.chrRam);
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
-	if (mode == SSREAD) {
+	if (mode == SAVE_SLOT_READ) {
 		BYTE i;
 
 		for (i = 0; i < 8; i++) {
@@ -749,11 +749,11 @@ void extcl_cpu_wr_mem_Waixing_TypeB(WORD address, BYTE value) {
 	extcl_cpu_wr_mem_MMC3(address, save);
 }
 BYTE extcl_save_mapper_Waixing_TypeB(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, waixing.chrmap);
-	savestateEle(mode, slot, waixing.chrRam);
+	save_slot_ele(mode, slot, waixing.chrmap);
+	save_slot_ele(mode, slot, waixing.chrRam);
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
-	if (mode == SSREAD) {
+	if (mode == SAVE_SLOT_READ) {
 		BYTE i;
 
 		for (i = 0; i < 8; i++) {
@@ -808,11 +808,11 @@ void extcl_cpu_wr_mem_Waixing_TypeG(WORD address, BYTE value) {
 	extcl_cpu_wr_mem_MMC3(address, save);
 }
 BYTE extcl_save_mapper_Waixing_TypeG(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, waixing.chrmap);
-	savestateEle(mode, slot, waixing.chrRam);
+	save_slot_ele(mode, slot, waixing.chrmap);
+	save_slot_ele(mode, slot, waixing.chrRam);
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
-	if (mode == SSREAD) {
+	if (mode == SAVE_SLOT_READ) {
 		BYTE i;
 
 		for (i = 0; i < 8; i++) {
@@ -846,13 +846,13 @@ void extcl_cpu_wr_mem_Waixing_TypeH(WORD address, BYTE value) {
 	extcl_cpu_wr_mem_MMC3(address, save);
 }
 BYTE extcl_save_mapper_Waixing_TypeH(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, waixing.prgmap);
-	savestateEle(mode, slot, waixing.chrmap);
-	savestateEle(mode, slot, waixing.chrRam);
-	savestateEle(mode, slot, waixing.ctrl);
+	save_slot_ele(mode, slot, waixing.prgmap);
+	save_slot_ele(mode, slot, waixing.chrmap);
+	save_slot_ele(mode, slot, waixing.chrRam);
+	save_slot_ele(mode, slot, waixing.ctrl);
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
-	if ((mode == SSREAD) && mapper.write_vram) {
+	if ((mode == SAVE_SLOT_READ) && mapper.write_vram) {
 		BYTE i;
 
 		for (i = 0; i < 8; i++) {
@@ -877,13 +877,13 @@ void extcl_cpu_wr_mem_Waixing_SH2(WORD address, BYTE value) {
 	extcl_cpu_wr_mem_MMC3(address, save);
 }
 BYTE extcl_save_mapper_Waixing_SH2(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, waixing.chrmap);
-	savestateEle(mode, slot, waixing.chrRam);
-	savestateEle(mode, slot, waixing.reg);
-	savestateEle(mode, slot, waixing.ctrl);
+	save_slot_ele(mode, slot, waixing.chrmap);
+	save_slot_ele(mode, slot, waixing.chrRam);
+	save_slot_ele(mode, slot, waixing.reg);
+	save_slot_ele(mode, slot, waixing.ctrl);
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
-	if (mode == SSREAD) {
+	if (mode == SAVE_SLOT_READ) {
 		Waixing_SH2_PPUFD()
 		Waixing_SH2_PPUFE()
 	}

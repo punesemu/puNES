@@ -72,7 +72,7 @@ void extcl_cpu_wr_mem_221(WORD address, BYTE value) {
 	map_prg_rom_8k_update();
 }
 BYTE extcl_save_mapper_221(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, m221.reg);
+	save_slot_ele(mode, slot, m221.reg);
 
 	return (EXIT_OK);
 }

@@ -78,7 +78,7 @@ void extcl_cpu_wr_mem_Futuremedia(WORD address, BYTE value) {
 	}
 }
 BYTE extcl_save_mapper_Futuremedia(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, futuremedia.delay);
+	save_slot_ele(mode, slot, futuremedia.delay);
 
 	return (EXIT_OK);
 }

@@ -348,7 +348,7 @@ BYTE guiCreate(void) {
 	{
 		BYTE i;
 
-		for (i = 0; i < SSAVAILABLE; i++) {
+		for (i = 0; i < SAVE_SLOTS; i++) {
 			char item[10];
 			sprintf(item, "Slot %d", i);
 			SendMessage(hSaveslot, CB_ADDSTRING, 0, (LPARAM) item);
@@ -662,7 +662,7 @@ void guiUpdate(void) {
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_SAVE_3);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_SAVE_4);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_SAVE_5);
-	switch (savestate.slot) {
+	switch (save_slot.slot) {
 		case 0:
 			id = IDM_SET_SAVE_0;
 			break;
@@ -683,7 +683,7 @@ void guiUpdate(void) {
 			break;
 	}
 	change_menuitem(CHECK, MF_CHECKED, id);
-	if (savestate.slotState[savestate.slot]) {
+	if (save_slot.state[save_slot.slot]) {
 		change_menuitem(ENAB, MF_HILITE, IDM_SET_SAVE_LOAD);
 		EnableWindow(hLoadButton, TRUE);
 	} else {
@@ -1225,8 +1225,8 @@ void guiTimeline(void) {
 	SendMessage(hTimeline, TBM_SETPOS, TRUE, tl.snapsFill - 1);
 }
 void guiSavestate(BYTE slot) {
-	if (slot >= SSAVAILABLE) {
-		slot = SSAVAILABLE - 1;
+	if (slot >= SAVE_SLOTS) {
+		slot = SAVE_SLOTS - 1;
 	}
 	saveslot_set(slot);
 }
@@ -1757,14 +1757,14 @@ long __stdcall saveslotProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 						DeleteObject(back_brush);
 						SetBkColor(pdis->hDC, back_colour);
 						SetTextColor(pdis->hDC, RGB(255, 255, 255));
-						savestatePreview(slot);
+						save_slot_preview(slot);
 					} else {
 						back_colour = RGB(255, 255, 255);
 						back_brush = CreateSolidBrush(back_colour);
 						FillRect(pdis->hDC, &pdis->rcItem, back_brush);
 						DeleteObject(back_brush);
 						SetBkColor(pdis->hDC, back_colour);
-						if (savestate.slotState[slot]) {
+						if (save_slot.state[slot]) {
 							SetTextColor(pdis->hDC, RGB(0, 0, 0));
 						} else {
 							SetTextColor(pdis->hDC, RGB(200, 200, 200));
@@ -1827,9 +1827,9 @@ long __stdcall saveslotProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 							emu_pause(TRUE);
 							break;
 						case CBN_CLOSEUP:
-							savestate.slot = SendMessage(hSaveslot, CB_GETCURSEL, 0, 0);
+							save_slot.slot = SendMessage(hSaveslot, CB_GETCURSEL, 0, 0);
 							guiUpdate();
-							savestate.previewStart = FALSE;
+							save_slot.preview_start = FALSE;
 							emu_pause(FALSE);
 							SetFocus(hSDL);
 							break;
@@ -1948,7 +1948,7 @@ void make_reset(BYTE type) {
 				strcpy(info.load_rom_file, info.rom_file);
 			}
 			gamegenie_reset(TRUE);
-			type = CHANGEROM;
+			type = CHANGE_ROM;
 		} else {
 			/*
 			 * se e' stato disabilitato il game genie quando ormai
@@ -1956,7 +1956,7 @@ void make_reset(BYTE type) {
 			 */
 			if (info.mapper == GAMEGENIE_MAPPER) {
 				gamegenie_reset(TRUE);
-				type = CHANGEROM;
+				type = CHANGE_ROM;
 			}
 		}
 	}
@@ -2008,7 +2008,7 @@ void set_mode(BYTE newmode) {
 
 	if (reset) {
 		textAddLineInfo(1, "switched to [green]%s", param_fps[machine.type].lname);
-		make_reset(CHANGEMODE);
+		make_reset(CHANGE_MODE);
 	}
 }
 void set_scale(BYTE newscale) {
@@ -2309,14 +2309,14 @@ void saveslot_incdec(BYTE mode) {
 	BYTE newslot;
 
 	if (mode == INC) {
-		newslot = savestate.slot + 1;
-		if (newslot >= SSAVAILABLE) {
+		newslot = save_slot.slot + 1;
+		if (newslot >= SAVE_SLOTS) {
 			newslot = 0;
 		}
 	} else {
-		newslot = savestate.slot - 1;
-		if (newslot >= SSAVAILABLE) {
-			newslot = SSAVAILABLE - 1;
+		newslot = save_slot.slot - 1;
+		if (newslot >= SAVE_SLOTS) {
+			newslot = SAVE_SLOTS - 1;
 		}
 	}
 	saveslot_set(newslot);
@@ -2325,10 +2325,10 @@ void saveslot_action(BYTE mode) {
 	emu_pause(TRUE);
 
 	if (mode == SAVE) {
-		savestateSave();
+		save_slot_save();
 		cfg_file_pgs_save();
 	} else {
-		savestateLoad();
+		save_slot_load();
 	}
 
 	guiUpdate();
@@ -2337,7 +2337,7 @@ void saveslot_action(BYTE mode) {
 }
 void saveslot_set(BYTE selection) {
 	SendMessage(hSaveslot, CB_SETCURSEL, selection, 0);
-	savestate.slot = selection;
+	save_slot.slot = selection;
 	guiUpdate();
 }
 void fds_eject_insert_disk(void) {
@@ -2380,7 +2380,7 @@ void change_rom(char *rom) {
 
 	gamegenie_reset(FALSE);
 
-	make_reset(CHANGEROM);
+	make_reset(CHANGE_ROM);
 
 	/* visualizzo nuovamente la finestra */
 	ShowWindow(hMainWin, SW_NORMAL);

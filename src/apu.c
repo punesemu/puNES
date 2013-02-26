@@ -41,7 +41,7 @@ void apu_tick(SWORD cycles_cpu, BYTE *hwtick) {
 				 * nel mode 1 devo eseguire il
 				 * length counter e lo sweep.
 				 */
-				if (apu.mode == APU48HZ) {
+				if (apu.mode == APU_48HZ) {
 					length_clock()
 					sweep_clock()
 				}
@@ -53,7 +53,7 @@ void apu_tick(SWORD cycles_cpu, BYTE *hwtick) {
 				break;
 			case 1:
 				/* nel mode 0 devo eseguire il length counter */
-				if (apu.mode == APU60HZ) {
+				if (apu.mode == APU_60HZ) {
 					length_clock()
 					sweep_clock()
 				}
@@ -68,7 +68,7 @@ void apu_tick(SWORD cycles_cpu, BYTE *hwtick) {
 				 * nel mode 1 devo eseguire il
 				 * length counter e lo sweep.
 				 */
-				if (apu.mode == APU48HZ) {
+				if (apu.mode == APU_48HZ) {
 					length_clock()
 					sweep_clock()
 				}
@@ -83,7 +83,7 @@ void apu_tick(SWORD cycles_cpu, BYTE *hwtick) {
 				 * gli step 3, 4 e 5 settano il bit 6 del $4015
 				 * ma solo nel 4 genero un IRQ.
 				 */
-				if (apu.mode == APU60HZ) {
+				if (apu.mode == APU_60HZ) {
 					/*
 					 * se e' a 0 il bit 6 del $4017 (interrupt
 					 * inhibit flag) allora devo generare un IRQ.
@@ -106,7 +106,7 @@ void apu_tick(SWORD cycles_cpu, BYTE *hwtick) {
 				 * gli step 3, 4 e 5 settano il bit 6 del $4015
 				 * ma solo nel 4 genero un IRQ.
 				 */
-				if (apu.mode == APU60HZ) {
+				if (apu.mode == APU_60HZ) {
 					length_clock()
 					sweep_clock()
 					envelope_clock()
@@ -131,7 +131,7 @@ void apu_tick(SWORD cycles_cpu, BYTE *hwtick) {
 				 * gli step 3, 4 e 5 settano il bit 6 del $4015
 				 * ma solo nel 4 genero un IRQ.
 				 */
-				if (apu.mode == APU60HZ) {
+				if (apu.mode == APU_60HZ) {
 					/*
 					 * se e' a 0 il bit 6 del $4017 (interrupt
 					 * inhibit flag) allora devo generare un IRQ.
@@ -201,7 +201,7 @@ void apu_turn_on(void) {
 		memset(&NS, 0x00, sizeof(NS));
 		memset(&DMC, 0x00, sizeof(DMC));
 		/* al reset e' sempre settato a 60Hz */
-		apu.mode = APU60HZ;
+		apu.mode = APU_60HZ;
 		if (machine.type == NTSC) {
 			apu.type = 0;
 		} else if (machine.type == DENDY) {

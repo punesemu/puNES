@@ -320,8 +320,8 @@ BYTE extcl_cpu_rd_mem_Taito_X1005(WORD address, BYTE openbus, BYTE before) {
 	return (openbus);
 }
 BYTE extcl_save_mapper_Taito_X1005(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, taitoX1005.ram);
-	savestateEle(mode, slot, taitoX1005.enable);
+	save_slot_ele(mode, slot, taitoX1005.ram);
+	save_slot_ele(mode, slot, taitoX1005.enable);
 
 	return (EXIT_OK);
 }
@@ -443,8 +443,8 @@ void extcl_cpu_wr_mem_Taito_X1017(WORD address, BYTE value) {
 	}
 }
 BYTE extcl_save_mapper_Taito_X1017(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, taitoX1017.chr);
-	savestateEle(mode, slot, taitoX1017.control);
+	save_slot_ele(mode, slot, taitoX1017.chr);
+	save_slot_ele(mode, slot, taitoX1017.control);
 
 	return (EXIT_OK);
 }

@@ -220,10 +220,10 @@ void extcl_cpu_wr_mem_52(WORD address, BYTE value) {
 	}
 }
 BYTE extcl_save_mapper_52(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, m52.disabled);
-	savestateEle(mode, slot, m52.reg);
-	savestateEle(mode, slot, m52.prgmap);
-	savestateEle(mode, slot, m52.chrmap);
+	save_slot_ele(mode, slot, m52.disabled);
+	save_slot_ele(mode, slot, m52.reg);
+	save_slot_ele(mode, slot, m52.prgmap);
+	save_slot_ele(mode, slot, m52.chrmap);
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	return (EXIT_OK);

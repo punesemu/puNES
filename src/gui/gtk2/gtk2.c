@@ -312,7 +312,7 @@ BYTE guiCreate(void) {
 		{
 			BYTE i;
 
-			for (i = 0; i < SSAVAILABLE; i++) {
+			for (i = 0; i < SAVE_SLOTS; i++) {
 				char item[10];
 				GtkTreeIter iter;
 
@@ -508,8 +508,8 @@ void guiTimeline(void) {
 	tl.update = FALSE;
 }
 void guiSavestate(BYTE slot) {
-	if (slot >= SSAVAILABLE) {
-		slot = SSAVAILABLE - 1;
+	if (slot >= SAVE_SLOTS) {
+		slot = SAVE_SLOTS - 1;
 	}
 	menu_state_saveslot_set(slot);
 }
@@ -855,7 +855,7 @@ void make_reset(int type) {
 				strcpy(info.load_rom_file, info.rom_file);
 			}
 			gamegenie_reset(TRUE);
-			type = CHANGEROM;
+			type = CHANGE_ROM;
 		} else {
 			/*
 			 * se e' stato disabilitato il game genie quando ormai
@@ -863,7 +863,7 @@ void make_reset(int type) {
 			 */
 			if (info.mapper == GAMEGENIE_MAPPER) {
 				gamegenie_reset(TRUE);
-				type = CHANGEROM;
+				type = CHANGE_ROM;
 			}
 		}
 	}
@@ -950,7 +950,7 @@ void saveslot_changed(GtkComboBox *widget) {
 
 	gtk_combo_box_get_active_iter(GTK_COMBO_BOX(widget), &iter);
 
-	gtk_tree_model_get(model, &iter, COLUMN_INT, &savestate.slot, -1);
+	gtk_tree_model_get(model, &iter, COLUMN_INT, &save_slot.slot, -1);
 
 	guiUpdate();
 
@@ -975,7 +975,7 @@ void saveslot_control(GtkCellLayout *cell_layout, GtkCellRenderer *cell, GtkTree
 
 		if (trcb.popup) {
 			if (index == trcb.counter) {
-				if (++trcb.counter == SSAVAILABLE) {
+				if (++trcb.counter == SAVE_SLOTS) {
 					GtkTreeIter active_iter;
 					GtkTreeModel *model;
 
@@ -1040,7 +1040,7 @@ void saveslot_control(GtkCellLayout *cell_layout, GtkCellRenderer *cell, GtkTree
 						case GDK_Down:
 						case GDK_KP_Down:
 							trcb.last_key = KEY_DOWN;
-							if (trcb.selected == (SSAVAILABLE - 1)) {
+							if (trcb.selected == (SAVE_SLOTS - 1)) {
 								trcb.mode = DEC_POINTER;
 							} else {
 								trcb.mode = INC_POINTER;
@@ -1049,7 +1049,7 @@ void saveslot_control(GtkCellLayout *cell_layout, GtkCellRenderer *cell, GtkTree
 						case GDK_End:
 						case GDK_Page_Down:
 							trcb.mode = RESET_MODE;
-							trcb.selected = SSAVAILABLE - 1;
+							trcb.selected = SAVE_SLOTS - 1;
 							break;
 					}
 				}
@@ -1073,7 +1073,7 @@ void saveslot_control(GtkCellLayout *cell_layout, GtkCellRenderer *cell, GtkTree
 		}
 	}
 
-	if (!savestate.slotState[index]) {
+	if (!save_slot.state[index]) {
 		g_object_set(cell, "foreground", "Gray", "foreground-set", TRUE, NULL);
 	} else {
 		/* imposto il colore di default */
@@ -1100,12 +1100,12 @@ void saveslot_notify_popup_shown(GtkComboBox *widget) {
 		trcb.window = NULL;
 		g_signal_remove_emission_hook(g_signal_lookup("key-press-event", GTK_TYPE_WINDOW),
 				trcb.hook_id);
-		savestate.previewStart = FALSE;
+		save_slot.preview_start = FALSE;
 		emu_pause(FALSE);
 	}
 }
 void saveslot_preview(void) {
-	savestatePreview(trcb.selected);
+	save_slot_preview(trcb.selected);
 }
 gboolean saveslot_key_press_event(GSignalInvocationHint *ihint, guint n_param_values,
 		const GValue *param_values, gpointer data) {
@@ -1123,7 +1123,7 @@ gboolean saveslot_key_press_event(GSignalInvocationHint *ihint, guint n_param_va
 void change_rom(char *rom) {
 	strncpy(info.load_rom_file, rom, sizeof(info.load_rom_file));
 	gamegenie_reset(FALSE);
-	make_reset(CHANGEROM);
+	make_reset(CHANGE_ROM);
 	guiUpdate();
 }
 void drag_data_received(GtkWidget *widget, GdkDragContext *context, gint x, gint y,

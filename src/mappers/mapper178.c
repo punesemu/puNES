@@ -59,7 +59,7 @@ void extcl_cpu_wr_mem_178(WORD address, BYTE value) {
 	}
 }
 BYTE extcl_save_mapper_178(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, m178.reg);
+	save_slot_ele(mode, slot, m178.reg);
 
 	return (EXIT_OK);
 }

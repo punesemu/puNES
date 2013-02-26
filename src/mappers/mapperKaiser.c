@@ -151,12 +151,12 @@ BYTE extcl_cpu_rd_mem_Kaiser_ks202(WORD address, BYTE openbus, BYTE before) {
 	return (ks202.prgRamRd[address & 0x1FFF]);
 }
 BYTE extcl_save_mapper_Kaiser_ks202(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, ks202.enabled);
-	savestateEle(mode, slot, ks202.count);
-	savestateEle(mode, slot, ks202.reload);
-	savestateEle(mode, slot, ks202.delay);
-	savestateEle(mode, slot, ks202.reg);
-	savestatePos(mode, slot, prg.rom, ks202.prgRamRd);
+	save_slot_ele(mode, slot, ks202.enabled);
+	save_slot_ele(mode, slot, ks202.count);
+	save_slot_ele(mode, slot, ks202.reload);
+	save_slot_ele(mode, slot, ks202.delay);
+	save_slot_ele(mode, slot, ks202.reg);
+	save_slot_pos(mode, slot, prg.rom, ks202.prgRamRd);
 
 	return (EXIT_OK);
 
@@ -241,7 +241,7 @@ BYTE extcl_cpu_rd_mem_Kaiser_ks7022(WORD address, BYTE openbus, BYTE before) {
 	return (openbus);
 }
 BYTE extcl_save_mapper_Kaiser_ks7022(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, ks7022.reg);
+	save_slot_ele(mode, slot, ks7022.reg);
 
 	return (EXIT_OK);
 

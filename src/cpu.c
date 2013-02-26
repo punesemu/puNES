@@ -17,26 +17,7 @@
 #include "cpu_inline.h"
 #include "sdltext.h"
 
-static const BYTE table_opcode_cycles[256] = {
-/*    0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F     */
-/*0*/ 7, 6, 0, 8, 3, 3, 5, 5, 3, 2, 2, 2, 4, 4, 6, 6, /*0*/
-/*1*/ 2, 5, 0, 8, 4, 4, 6, 6, 2, 4, 2, 7, 4, 4, 7, 7, /*1*/
-/*2*/ 6, 6, 0, 8, 3, 3, 5, 5, 4, 2, 2, 2, 4, 4, 6, 6, /*2*/
-/*3*/ 2, 5, 0, 8, 4, 4, 6, 6, 2, 4, 2, 7, 4, 4, 7, 7, /*3*/
-/*4*/ 6, 6, 0, 8, 3, 3, 5, 5, 3, 2, 2, 2, 3, 4, 6, 6, /*4*/
-/*5*/ 2, 5, 0, 8, 4, 4, 6, 6, 2, 4, 2, 7, 4, 4, 7, 7, /*5*/
-/*6*/ 6, 6, 0, 8, 3, 3, 5, 5, 4, 2, 2, 2, 5, 4, 6, 6, /*6*/
-/*7*/ 2, 5, 0, 8, 4, 4, 6, 6, 2, 4, 2, 7, 4, 4, 7, 7, /*7*/
-/*8*/ 2, 6, 2, 6, 3, 3, 3, 3, 2, 2, 2, 2, 4, 4, 4, 4, /*8*/
-/*9*/ 2, 6, 0, 6, 4, 4, 4, 4, 2, 5, 2, 5, 5, 5, 5, 5, /*9*/
-/*A*/ 2, 6, 2, 6, 3, 3, 3, 3, 2, 2, 2, 2, 4, 4, 4, 4, /*A*/
-/*B*/ 2, 5, 0, 5, 4, 4, 4, 4, 2, 4, 2, 4, 4, 4, 4, 4, /*B*/
-/*C*/ 2, 6, 2, 8, 3, 3, 5, 5, 2, 2, 2, 2, 4, 4, 6, 6, /*C*/
-/*D*/ 2, 5, 0, 8, 4, 4, 6, 6, 2, 4, 2, 7, 4, 4, 7, 7, /*D*/
-/*E*/ 2, 6, 2, 8, 3, 3, 5, 5, 2, 2, 2, 2, 4, 4, 6, 6, /*E*/
-/*F*/ 2, 5, 0, 8, 4, 4, 6, 6, 2, 4, 2, 7, 4, 4, 7, 7  /*F*/
-/*    0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F     */
-};
+enum cpu_opcode_type { RD_OP, WR_OP };
 
 /* ----------------------------------------------------------------------
  *  metodi di indirizzamento
@@ -144,7 +125,7 @@ static const BYTE table_opcode_cycles[256] = {
 	cmd;\
 }
 #define _WRX(dst, src)\
-	if (!DMC.tick_type) DMC.tick_type = DMCCPUWRITE;\
+	if (!DMC.tick_type) DMC.tick_type = DMC_CPU_WRITE;\
 	cpu_wr_mem(dst, src)
 */
 
@@ -412,9 +393,9 @@ static const BYTE table_opcode_cycles[256] = {
 	}\
 	cmd1
 #define _DMC\
-	DMC.tick_type = DMCCPUWRITE;\
+	DMC.tick_type = DMC_CPU_WRITE;\
 	if (adr0 == 0x4014) {\
-		DMC.tick_type = DMCR4014;\
+		DMC.tick_type = DMC_R4014;\
 	}\
 	tick_hw(1)
 #define _LAX\
@@ -549,9 +530,30 @@ static const BYTE table_opcode_cycles[256] = {
 #define _AXAIDY(reg) _WR0(reg)
 #define _XASABX(reg) _WR0(reg)
 
+static const BYTE table_opcode_cycles[256] = {
+/*    0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F     */
+/*0*/ 7, 6, 0, 8, 3, 3, 5, 5, 3, 2, 2, 2, 4, 4, 6, 6, /*0*/
+/*1*/ 2, 5, 0, 8, 4, 4, 6, 6, 2, 4, 2, 7, 4, 4, 7, 7, /*1*/
+/*2*/ 6, 6, 0, 8, 3, 3, 5, 5, 4, 2, 2, 2, 4, 4, 6, 6, /*2*/
+/*3*/ 2, 5, 0, 8, 4, 4, 6, 6, 2, 4, 2, 7, 4, 4, 7, 7, /*3*/
+/*4*/ 6, 6, 0, 8, 3, 3, 5, 5, 3, 2, 2, 2, 3, 4, 6, 6, /*4*/
+/*5*/ 2, 5, 0, 8, 4, 4, 6, 6, 2, 4, 2, 7, 4, 4, 7, 7, /*5*/
+/*6*/ 6, 6, 0, 8, 3, 3, 5, 5, 4, 2, 2, 2, 5, 4, 6, 6, /*6*/
+/*7*/ 2, 5, 0, 8, 4, 4, 6, 6, 2, 4, 2, 7, 4, 4, 7, 7, /*7*/
+/*8*/ 2, 6, 2, 6, 3, 3, 3, 3, 2, 2, 2, 2, 4, 4, 4, 4, /*8*/
+/*9*/ 2, 6, 0, 6, 4, 4, 4, 4, 2, 5, 2, 5, 5, 5, 5, 5, /*9*/
+/*A*/ 2, 6, 2, 6, 3, 3, 3, 3, 2, 2, 2, 2, 4, 4, 4, 4, /*A*/
+/*B*/ 2, 5, 0, 5, 4, 4, 4, 4, 2, 4, 2, 4, 4, 4, 4, 4, /*B*/
+/*C*/ 2, 6, 2, 8, 3, 3, 5, 5, 2, 2, 2, 2, 4, 4, 6, 6, /*C*/
+/*D*/ 2, 5, 0, 8, 4, 4, 6, 6, 2, 4, 2, 7, 4, 4, 7, 7, /*D*/
+/*E*/ 2, 6, 2, 8, 3, 3, 5, 5, 2, 2, 2, 2, 4, 4, 6, 6, /*E*/
+/*F*/ 2, 5, 0, 8, 4, 4, 6, 6, 2, 4, 2, 7, 4, 4, 7, 7  /*F*/
+/*    0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F     */
+};
+
 void cpu_exe_op(void) {
 	cpu.opcode = FALSE;
-	DMC.tick_type = DMCNORMAL;
+	DMC.tick_type = DMC_NORMAL;
 	cpu.opcode_PC = cpu.PC;
 
 	/* ------------------------------------------------ */
@@ -654,309 +656,309 @@ void cpu_exe_op(void) {
 	/* ... e la eseguo */
 	switch (cpu.opcode) {
 
-	case 0x69: IMP(READ, ADC(_RDP)) break;                              // ADC #IMM
-	case 0x65: ZPG(READ, ADC(_RDZPG)) break;                            // ADC $ZPG
-	case 0x75: ZPX(READ, ADC(_RDZPX), cpu.XR) break;                    // ADC $ZPG,X
-	case 0x6D: ABS(READ, ADC(_RDABS)) break;                            // ADC $ABS
-	case 0x7D: ABX(READ, _CYW(_ADC), cpu.XR) break;                     // ADC $ABS,X
-	case 0x79: ABX(READ, _CYW(_ADC), cpu.YR) break;                     // ADC $ABS,Y
-	case 0x61: IDX(READ, ADC(_RDIDX)) break;                            // ADC ($IND,X)
-	case 0x71: IDY(READ, _CYW(_ADC)) break;                             // ADC ($IND),Y
+	case 0x69: IMP(RD_OP, ADC(_RDP)) break;                              // ADC #IMM
+	case 0x65: ZPG(RD_OP, ADC(_RDZPG)) break;                            // ADC $ZPG
+	case 0x75: ZPX(RD_OP, ADC(_RDZPX), cpu.XR) break;                    // ADC $ZPG,X
+	case 0x6D: ABS(RD_OP, ADC(_RDABS)) break;                            // ADC $ABS
+	case 0x7D: ABX(RD_OP, _CYW(_ADC), cpu.XR) break;                     // ADC $ABS,X
+	case 0x79: ABX(RD_OP, _CYW(_ADC), cpu.YR) break;                     // ADC $ABS,Y
+	case 0x61: IDX(RD_OP, ADC(_RDIDX)) break;                            // ADC ($IND,X)
+	case 0x71: IDY(RD_OP, _CYW(_ADC)) break;                             // ADC ($IND),Y
 
-	case 0x29: IMP(READ, AND(_RDP, &=)) break;                          // AND #IMM
-	case 0x25: ZPG(READ, AND(_RDZPG, &=)) break;                        // AND $ZPG
-	case 0x35: ZPX(READ, AND(_RDZPX, &=), cpu.XR) break;                // AND $ZPG,X
-	case 0x2D: ABS(READ, AND(_RDABS, &=)) break;                        // AND $ABS
-	case 0x3D: ABX(READ, _CYW(AND(_RDB, &=)), cpu.XR) break;            // AND $ABS,X
-	case 0x39: ABX(READ, _CYW(AND(_RDB, &=)), cpu.YR) break;            // AND $ABS,Y
-	case 0x21: IDX(READ, AND(_RDIDX, &=)) break;                        // AND ($IND,X)
-	case 0x31: IDY(READ, _CYW(AND(_RDB, &=))) break;                    // AND ($IND),Y
+	case 0x29: IMP(RD_OP, AND(_RDP, &=)) break;                          // AND #IMM
+	case 0x25: ZPG(RD_OP, AND(_RDZPG, &=)) break;                        // AND $ZPG
+	case 0x35: ZPX(RD_OP, AND(_RDZPX, &=), cpu.XR) break;                // AND $ZPG,X
+	case 0x2D: ABS(RD_OP, AND(_RDABS, &=)) break;                        // AND $ABS
+	case 0x3D: ABX(RD_OP, _CYW(AND(_RDB, &=)), cpu.XR) break;            // AND $ABS,X
+	case 0x39: ABX(RD_OP, _CYW(AND(_RDB, &=)), cpu.YR) break;            // AND $ABS,Y
+	case 0x21: IDX(RD_OP, AND(_RDIDX, &=)) break;                        // AND ($IND,X)
+	case 0x31: IDY(RD_OP, _CYW(AND(_RDB, &=))) break;                    // AND ($IND),Y
 
-	case 0x0A: IMP(READ, _RSZ(_BSH(cpu.AR, 0x80, <<=);, cpu.AR)) break; // ASL [AR]
-	case 0x06: ZPG(WRITE, ASL(_RDZPG)) break;                           // ASL $ZPG
-	case 0x16: ZPX(WRITE, ASL(_RDZPX), cpu.XR) break;                   // ASL $ZPG,X
-	case 0x0E: ABS(WRITE, ASL(_RDABS)) break;                           // ASL $ABS
-	case 0x1E: ABX(WRITE, ASL(_RDABX), cpu.XR) break;                   // ASL $ABS,X
+	case 0x0A: IMP(RD_OP, _RSZ(_BSH(cpu.AR, 0x80, <<=);, cpu.AR)) break; // ASL [AR]
+	case 0x06: ZPG(WR_OP, ASL(_RDZPG)) break;                            // ASL $ZPG
+	case 0x16: ZPX(WR_OP, ASL(_RDZPX), cpu.XR) break;                    // ASL $ZPG,X
+	case 0x0E: ABS(WR_OP, ASL(_RDABS)) break;                            // ASL $ABS
+	case 0x1E: ABX(WR_OP, ASL(_RDABX), cpu.XR) break;                    // ASL $ABS,X
 
-	case 0x90: IMP(READ, BRC(cpu.cf, FALSE)) break;                     // BCC [C = 0]
-	case 0xB0: IMP(READ, BRC(cpu.cf, TRUE)) break;                      // BCS [C = 1]
-	case 0xF0: IMP(READ, BRC(cpu.zf, TRUE)) break;                      // BEQ [Z = 1]
-	case 0x30: IMP(READ, BRC(cpu.sf, TRUE)) break;                      // BMI [S = 1]
-	case 0xD0: IMP(READ, BRC(cpu.zf, FALSE)) break;                     // BNE [Z = 0]
-	case 0x10: IMP(READ, BRC(cpu.sf, FALSE)) break;                     // BPL [S = 0]
-	case 0x50: IMP(READ, BRC(cpu.of, FALSE)) break;                     // BVC [O = 0]
-	case 0x70: IMP(READ, BRC(cpu.of, TRUE)) break;                      // BVS [O = 1]
+	case 0x90: IMP(RD_OP, BRC(cpu.cf, FALSE)) break;                     // BCC [C = 0]
+	case 0xB0: IMP(RD_OP, BRC(cpu.cf, TRUE)) break;                      // BCS [C = 1]
+	case 0xF0: IMP(RD_OP, BRC(cpu.zf, TRUE)) break;                      // BEQ [Z = 1]
+	case 0x30: IMP(RD_OP, BRC(cpu.sf, TRUE)) break;                      // BMI [S = 1]
+	case 0xD0: IMP(RD_OP, BRC(cpu.zf, FALSE)) break;                     // BNE [Z = 0]
+	case 0x10: IMP(RD_OP, BRC(cpu.sf, FALSE)) break;                     // BPL [S = 0]
+	case 0x50: IMP(RD_OP, BRC(cpu.of, FALSE)) break;                     // BVC [O = 0]
+	case 0x70: IMP(RD_OP, BRC(cpu.of, TRUE)) break;                      // BVS [O = 1]
 
-	case 0x24: ZPG(READ, BIT(_RDZPG)) break;                            // BIT $ZPG
-	case 0x2C: ABS(READ, BIT(_RDABS)) break;                            // BIT $ABS
+	case 0x24: ZPG(RD_OP, BIT(_RDZPG)) break;                            // BIT $ZPG
+	case 0x2C: ABS(RD_OP, BIT(_RDABS)) break;                            // BIT $ABS
 
-	case 0x00: IMP(READ, BRK) break;                                    // BRK
+	case 0x00: IMP(RD_OP, BRK) break;                                    // BRK
 
-	case 0x18: IMP(READ, cpu.cf = FALSE;) break;                        // CLC [C -> 0]
-	case 0xD8: IMP(READ, cpu.df = FALSE;) break;                        // CLD [D -> 0]
-	case 0x58: IMP(READ, cpu.im = FALSE;) break;                        // CLI [I -> 0]
-	case 0xB8: IMP(READ, cpu.of = FALSE;) break;                        // CLV [O -> 0]
+	case 0x18: IMP(RD_OP, cpu.cf = FALSE;) break;                        // CLC [C -> 0]
+	case 0xD8: IMP(RD_OP, cpu.df = FALSE;) break;                        // CLD [D -> 0]
+	case 0x58: IMP(RD_OP, cpu.im = FALSE;) break;                        // CLI [I -> 0]
+	case 0xB8: IMP(RD_OP, cpu.of = FALSE;) break;                        // CLV [O -> 0]
 
-	case 0xC9: IMP(READ, CMP(_RDP, cpu.AR)) break;                      // CMP #IMM
-	case 0xC5: ZPG(READ, CMP(_RDZPG, cpu.AR)) break;                    // CMP $ZPG
-	case 0xD5: ZPX(READ, CMP(_RDZPX, cpu.AR), cpu.XR) break;            // CMP $ZPG,X
-	case 0xCD: ABS(READ, CMP(_RDABS, cpu.AR)) break;                    // CMP $ABS
-	case 0xDD: ABX(READ, _CYW(CMP(_RDB, cpu.AR)), cpu.XR) break;        // CMP $ABS,X
-	case 0xD9: ABX(READ, _CYW(CMP(_RDB, cpu.AR)), cpu.YR) break;        // CMP $ABS,Y
-	case 0xC1: IDX(READ, CMP(_RDIDX, cpu.AR)) break;                    // CMP ($IND,X)
-	case 0xD1: IDY(READ, _CYW(CMP(_RDB, cpu.AR))) break;                // CMP ($IND),Y
+	case 0xC9: IMP(RD_OP, CMP(_RDP, cpu.AR)) break;                      // CMP #IMM
+	case 0xC5: ZPG(RD_OP, CMP(_RDZPG, cpu.AR)) break;                    // CMP $ZPG
+	case 0xD5: ZPX(RD_OP, CMP(_RDZPX, cpu.AR), cpu.XR) break;            // CMP $ZPG,X
+	case 0xCD: ABS(RD_OP, CMP(_RDABS, cpu.AR)) break;                    // CMP $ABS
+	case 0xDD: ABX(RD_OP, _CYW(CMP(_RDB, cpu.AR)), cpu.XR) break;        // CMP $ABS,X
+	case 0xD9: ABX(RD_OP, _CYW(CMP(_RDB, cpu.AR)), cpu.YR) break;        // CMP $ABS,Y
+	case 0xC1: IDX(RD_OP, CMP(_RDIDX, cpu.AR)) break;                    // CMP ($IND,X)
+	case 0xD1: IDY(RD_OP, _CYW(CMP(_RDB, cpu.AR))) break;                // CMP ($IND),Y
 
-	case 0xE0: IMP(READ, CMP(_RDP, cpu.XR)) break;                      // CPX #IMM
-	case 0xE4: ZPG(READ, CMP(_RDZPG, cpu.XR)) break;                    // CPX $ZPG
-	case 0xEC: ABS(READ, CMP(_RDABS, cpu.XR)) break;                    // CPX $ABS
+	case 0xE0: IMP(RD_OP, CMP(_RDP, cpu.XR)) break;                      // CPX #IMM
+	case 0xE4: ZPG(RD_OP, CMP(_RDZPG, cpu.XR)) break;                    // CPX $ZPG
+	case 0xEC: ABS(RD_OP, CMP(_RDABS, cpu.XR)) break;                    // CPX $ABS
 
-	case 0xC0: IMP(READ, CMP(_RDP, cpu.YR)) break;                      // CPY #IMM
-	case 0xC4: ZPG(READ, CMP(_RDZPG, cpu.YR)) break;                    // CPY $ZPG
-	case 0xCC: ABS(READ, CMP(_RDABS, cpu.YR)) break;                    // CPY $ABS
+	case 0xC0: IMP(RD_OP, CMP(_RDP, cpu.YR)) break;                      // CPY #IMM
+	case 0xC4: ZPG(RD_OP, CMP(_RDZPG, cpu.YR)) break;                    // CPY $ZPG
+	case 0xCC: ABS(RD_OP, CMP(_RDABS, cpu.YR)) break;                    // CPY $ABS
 
-	case 0xC6: ZPG(WRITE, INC(_RDZPG, -)) break;                        // DEC $ZPG
-	case 0xD6: ZPX(WRITE, INC(_RDZPX, -), cpu.XR) break;                // DEC $ZPG,X
-	case 0xCE: ABS(WRITE, INC(_RDABS, -)) break;                        // DEC $ABS
-	case 0xDE: ABX(WRITE, INC(_RDABX, -), cpu.XR) break;                // DEC $ABS,X
+	case 0xC6: ZPG(WR_OP, INC(_RDZPG, -)) break;                         // DEC $ZPG
+	case 0xD6: ZPX(WR_OP, INC(_RDZPX, -), cpu.XR) break;                 // DEC $ZPG,X
+	case 0xCE: ABS(WR_OP, INC(_RDABS, -)) break;                         // DEC $ABS
+	case 0xDE: ABX(WR_OP, INC(_RDABX, -), cpu.XR) break;                 // DEC $ABS,X
 
-	case 0xCA: IMP(READ, _RSZ(cpu.XR--;, cpu.XR)) break;                // DEX [XR]
+	case 0xCA: IMP(RD_OP, _RSZ(cpu.XR--;, cpu.XR)) break;                // DEX [XR]
 
-	case 0x88: IMP(READ, _RSZ(cpu.YR--;, cpu.YR)) break;                // DEY [YR]
+	case 0x88: IMP(RD_OP, _RSZ(cpu.YR--;, cpu.YR)) break;                // DEY [YR]
 
-	case 0x49: IMP(READ, AND(_RDP, ^=)) break;                          // EOR #IMM
-	case 0x45: ZPG(READ, AND(_RDZPG, ^=)) break;                        // EOR $ZPG
-	case 0x55: ZPX(READ, AND(_RDZPX, ^=), cpu.XR) break;                // EOR $ZPG,X
-	case 0x4D: ABS(READ, AND(_RDABS, ^=)) break;                        // EOR $ABS
-	case 0x5D: ABX(READ, _CYW(AND(_RDB, ^=)), cpu.XR) break;            // EOR $ABS,X
-	case 0x59: ABX(READ, _CYW(AND(_RDB, ^=)), cpu.YR) break;            // EOR $ABS,Y
-	case 0x41: IDX(READ, AND(_RDIDX, ^=)) break;                        // EOR ($IND,X)
-	case 0x51: IDY(READ, _CYW(AND(_RDB, ^=))) break;                    // EOR ($IND),Y
+	case 0x49: IMP(RD_OP, AND(_RDP, ^=)) break;                          // EOR #IMM
+	case 0x45: ZPG(RD_OP, AND(_RDZPG, ^=)) break;                        // EOR $ZPG
+	case 0x55: ZPX(RD_OP, AND(_RDZPX, ^=), cpu.XR) break;                // EOR $ZPG,X
+	case 0x4D: ABS(RD_OP, AND(_RDABS, ^=)) break;                        // EOR $ABS
+	case 0x5D: ABX(RD_OP, _CYW(AND(_RDB, ^=)), cpu.XR) break;            // EOR $ABS,X
+	case 0x59: ABX(RD_OP, _CYW(AND(_RDB, ^=)), cpu.YR) break;            // EOR $ABS,Y
+	case 0x41: IDX(RD_OP, AND(_RDIDX, ^=)) break;                        // EOR ($IND,X)
+	case 0x51: IDY(RD_OP, _CYW(AND(_RDB, ^=))) break;                    // EOR ($IND),Y
 
-	case 0xE6: ZPG(WRITE, INC(_RDZPG, +)) break;                        // INC $ZPG
-	case 0xF6: ZPX(WRITE, INC(_RDZPX, +), cpu.XR) break;                // INC $ZPG,X
-	case 0xEE: ABS(WRITE, INC(_RDABS, +)) break;                        // INC $ABS
-	case 0xFE: ABX(WRITE, INC(_RDABX, +), cpu.XR) break;                // INC $ABS,X
+	case 0xE6: ZPG(WR_OP, INC(_RDZPG, +)) break;                         // INC $ZPG
+	case 0xF6: ZPX(WR_OP, INC(_RDZPX, +), cpu.XR) break;                 // INC $ZPG,X
+	case 0xEE: ABS(WR_OP, INC(_RDABS, +)) break;                         // INC $ABS
+	case 0xFE: ABX(WR_OP, INC(_RDABX, +), cpu.XR) break;                 // INC $ABS,X
 
-	case 0xE8: IMP(READ, _RSZ(cpu.XR++;, cpu.XR)) break;                // INX [XR]
+	case 0xE8: IMP(RD_OP, _RSZ(cpu.XR++;, cpu.XR)) break;                // INX [XR]
 
-	case 0xC8: IMP(READ, _RSZ(cpu.YR++;, cpu.YR)) break;                // INY [YR]
+	case 0xC8: IMP(RD_OP, _RSZ(cpu.YR++;, cpu.YR)) break;                // INY [YR]
 
-	case 0x4C: IMP(READ, JMP) break;                                    // JMP $ABS
-	case 0x6C: IDR(READ) break;                                         // JMP ($IND)
+	case 0x4C: IMP(RD_OP, JMP) break;                                    // JMP $ABS
+	case 0x6C: IDR(RD_OP) break;                                         // JMP ($IND)
 
-	case 0x20: IMP(READ, JSR) break;                                    // JSR $ABS
+	case 0x20: IMP(RD_OP, JSR) break;                                    // JSR $ABS
 
-	case 0xA9: IMP(READ, LDX(_RDP, cpu.AR)) break;                      // LDA #IMM
-	case 0xA5: ZPG(READ, LDX(_RDZPG, cpu.AR)) break;                    // LDA $ZPG
-	case 0xB5: ZPX(READ, LDX(_RDZPX, cpu.AR), cpu.XR) break;            // LDA $ZPG,X
-	case 0xAD: ABS(READ, LDX(_RDABS, cpu.AR)) break;                    // LDA $ABS
-	case 0xBD: ABX(READ, _CYW(LDX(_RDB, cpu.AR)), cpu.XR) break;        // LDA $ABS,X
-	case 0xB9: ABX(READ, _CYW(LDX(_RDB, cpu.AR)), cpu.YR) break;        // LDA $ABS,Y
-	case 0xA1: IDX(READ, LDX(_RDIDX, cpu.AR)) break;                    // LDA ($IND,X)
-	case 0xB1: IDY(READ, _CYW(LDX(_RDB, cpu.AR))) break;                // LDA ($IND),Y
+	case 0xA9: IMP(RD_OP, LDX(_RDP, cpu.AR)) break;                      // LDA #IMM
+	case 0xA5: ZPG(RD_OP, LDX(_RDZPG, cpu.AR)) break;                    // LDA $ZPG
+	case 0xB5: ZPX(RD_OP, LDX(_RDZPX, cpu.AR), cpu.XR) break;            // LDA $ZPG,X
+	case 0xAD: ABS(RD_OP, LDX(_RDABS, cpu.AR)) break;                    // LDA $ABS
+	case 0xBD: ABX(RD_OP, _CYW(LDX(_RDB, cpu.AR)), cpu.XR) break;        // LDA $ABS,X
+	case 0xB9: ABX(RD_OP, _CYW(LDX(_RDB, cpu.AR)), cpu.YR) break;        // LDA $ABS,Y
+	case 0xA1: IDX(RD_OP, LDX(_RDIDX, cpu.AR)) break;                    // LDA ($IND,X)
+	case 0xB1: IDY(RD_OP, _CYW(LDX(_RDB, cpu.AR))) break;                // LDA ($IND),Y
 
-	case 0xA2: IMP(READ, LDX(_RDP, cpu.XR)) break;                      // LDX #IMM
-	case 0xA6: ZPG(READ, LDX(_RDZPG,cpu.XR)) break;                     // LDX $ZPG
-	case 0xB6: ZPX(READ, LDX(_RDZPX,cpu.XR), cpu.YR) break;             // LDX $ZPG,Y
-	case 0xAE: ABS(READ, LDX(_RDABS,cpu.XR)) break;                     // LDX $ABS
-	case 0xBE: ABX(READ, _CYW(LDX(_RDB, cpu.XR)), cpu.YR) break;        // LDX $ABS,Y
+	case 0xA2: IMP(RD_OP, LDX(_RDP, cpu.XR)) break;                      // LDX #IMM
+	case 0xA6: ZPG(RD_OP, LDX(_RDZPG,cpu.XR)) break;                     // LDX $ZPG
+	case 0xB6: ZPX(RD_OP, LDX(_RDZPX,cpu.XR), cpu.YR) break;             // LDX $ZPG,Y
+	case 0xAE: ABS(RD_OP, LDX(_RDABS,cpu.XR)) break;                     // LDX $ABS
+	case 0xBE: ABX(RD_OP, _CYW(LDX(_RDB, cpu.XR)), cpu.YR) break;        // LDX $ABS,Y
 
-	case 0xA0: IMP(READ, LDX(_RDP, cpu.YR)) break;                      // LDY #IMM
-	case 0xA4: ZPG(READ, LDX(_RDZPG, cpu.YR)) break;                    // LDY $ZPG
-	case 0xB4: ZPX(READ, LDX(_RDZPX, cpu.YR), cpu.XR) break;            // LDY $ZPG,X
-	case 0xAC: ABS(READ, LDX(_RDABS, cpu.YR)) break;                    // LDY $ABS
-	case 0xBC: ABX(READ, _CYW(LDX(_RDB, cpu.YR)), cpu.XR) break;        // LDY $ABS,X
+	case 0xA0: IMP(RD_OP, LDX(_RDP, cpu.YR)) break;                      // LDY #IMM
+	case 0xA4: ZPG(RD_OP, LDX(_RDZPG, cpu.YR)) break;                    // LDY $ZPG
+	case 0xB4: ZPX(RD_OP, LDX(_RDZPX, cpu.YR), cpu.XR) break;            // LDY $ZPG,X
+	case 0xAC: ABS(RD_OP, LDX(_RDABS, cpu.YR)) break;                    // LDY $ABS
+	case 0xBC: ABX(RD_OP, _CYW(LDX(_RDB, cpu.YR)), cpu.XR) break;        // LDY $ABS,X
 
-	case 0x4A: IMP(READ, _RSZ(_BSH(cpu.AR, 0x01, >>=);, cpu.AR)) break; // LSR [AR]
-	case 0x46: ZPG(WRITE, LSR(_RDZPG)) break;                           // LSR $ZPG
-	case 0x56: ZPX(WRITE, LSR(_RDZPX), cpu.XR) break;                   // LSR $ZPG,X
-	case 0x4E: ABS(WRITE, LSR(_RDABS)) break;                           // LSR $ABS
-	case 0x5E: ABX(WRITE, LSR(_RDABX), cpu.XR) break;                   // LSR $ABS,X
+	case 0x4A: IMP(RD_OP, _RSZ(_BSH(cpu.AR, 0x01, >>=);, cpu.AR)) break; // LSR [AR]
+	case 0x46: ZPG(WR_OP, LSR(_RDZPG)) break;                            // LSR $ZPG
+	case 0x56: ZPX(WR_OP, LSR(_RDZPX), cpu.XR) break;                    // LSR $ZPG,X
+	case 0x4E: ABS(WR_OP, LSR(_RDABS)) break;                            // LSR $ABS
+	case 0x5E: ABX(WR_OP, LSR(_RDABX), cpu.XR) break;                    // LSR $ABS,X
 
-	case 0xEA: break;                                                   // NOP
+	case 0xEA: break;                                                    // NOP
 
-	case 0x09: IMP(READ, AND(_RDP, |=)) break;                          // ORA #IMM
-	case 0x05: ZPG(READ, AND(_RDZPG, |=)) break;                        // ORA $ZPG
-	case 0x15: ZPX(READ, AND(_RDZPX, |=), cpu.XR) break;                // ORA $ZPG,X
-	case 0x0D: ABS(READ, AND(_RDABS, |=)) break;                        // ORA $ABS
-	case 0x1D: ABX(READ, _CYW(AND(_RDB, |=)), cpu.XR) break;            // ORA $ABS,X
-	case 0x19: ABX(READ, _CYW(AND(_RDB, |=)), cpu.YR) break;            // ORA $ABS,Y
-	case 0x01: IDX(READ, AND(_RDIDX, |=)) break;                        // ORA ($IND,X)
-	case 0x11: IDY(READ, _CYW(AND(_RDB, |=))) break;                    // ORA ($IND),Y
+	case 0x09: IMP(RD_OP, AND(_RDP, |=)) break;                          // ORA #IMM
+	case 0x05: ZPG(RD_OP, AND(_RDZPG, |=)) break;                        // ORA $ZPG
+	case 0x15: ZPX(RD_OP, AND(_RDZPX, |=), cpu.XR) break;                // ORA $ZPG,X
+	case 0x0D: ABS(RD_OP, AND(_RDABS, |=)) break;                        // ORA $ABS
+	case 0x1D: ABX(RD_OP, _CYW(AND(_RDB, |=)), cpu.XR) break;            // ORA $ABS,X
+	case 0x19: ABX(RD_OP, _CYW(AND(_RDB, |=)), cpu.YR) break;            // ORA $ABS,Y
+	case 0x01: IDX(RD_OP, AND(_RDIDX, |=)) break;                        // ORA ($IND,X)
+	case 0x11: IDY(RD_OP, _CYW(AND(_RDB, |=))) break;                    // ORA ($IND),Y
 
-	case 0x48: IMP(WRITE, PHA) break;                                   // PHA
-	case 0x08: IMP(WRITE, PHP) break;                                   // PHP
+	case 0x48: IMP(WR_OP, PHA) break;                                    // PHA
+	case 0x08: IMP(WR_OP, PHP) break;                                    // PHP
 
-	case 0x68: IMP(WRITE, PLA) break;                                   // PLA
-	case 0x28: IMP(WRITE, PLP) break;                                   // PLP
+	case 0x68: IMP(WR_OP, PLA) break;                                    // PLA
+	case 0x28: IMP(WR_OP, PLP) break;                                    // PLP
 
-	case 0x2A: IMP(READ, _RSZ(_ROL(cpu.AR, 0x80, <<=), cpu.AR)) break;  // ROL [AR]
-	case 0x26: ZPG(WRITE, ROL(_RDZPG)) break;                           // ROL $ZPG
-	case 0x36: ZPX(WRITE, ROL(_RDZPX), cpu.XR) break;                   // ROL $ZPG,X
-	case 0x2E: ABS(WRITE, ROL(_RDABS)) break;                           // ROL $ABS
-	case 0x3E: ABX(WRITE, ROL(_RDABX), cpu.XR) break;                   // ROL $ABS,X
+	case 0x2A: IMP(RD_OP, _RSZ(_ROL(cpu.AR, 0x80, <<=), cpu.AR)) break;  // ROL [AR]
+	case 0x26: ZPG(WR_OP, ROL(_RDZPG)) break;                            // ROL $ZPG
+	case 0x36: ZPX(WR_OP, ROL(_RDZPX), cpu.XR) break;                    // ROL $ZPG,X
+	case 0x2E: ABS(WR_OP, ROL(_RDABS)) break;                            // ROL $ABS
+	case 0x3E: ABX(WR_OP, ROL(_RDABX), cpu.XR) break;                    // ROL $ABS,X
 
-	case 0x6A: IMP(READ, _RSZ(_ROR(cpu.AR, 0x01, >>=), cpu.AR)) break;  // ROR [AR]
-	case 0x66: ZPG(WRITE, ROR(_RDZPG)) break;                           // ROR $ZPG
-	case 0x76: ZPX(WRITE, ROR(_RDZPX), cpu.XR) break;                   // ROR $ZPG,X
-	case 0x6E: ABS(WRITE, ROR(_RDABS)) break;                           // ROR $ABS
-	case 0x7E: ABX(WRITE, ROR(_RDABX), cpu.XR) break;                   // ROR $ABS,X
+	case 0x6A: IMP(RD_OP, _RSZ(_ROR(cpu.AR, 0x01, >>=), cpu.AR)) break;  // ROR [AR]
+	case 0x66: ZPG(WR_OP, ROR(_RDZPG)) break;                            // ROR $ZPG
+	case 0x76: ZPX(WR_OP, ROR(_RDZPX), cpu.XR) break;                    // ROR $ZPG,X
+	case 0x6E: ABS(WR_OP, ROR(_RDABS)) break;                            // ROR $ABS
+	case 0x7E: ABX(WR_OP, ROR(_RDABX), cpu.XR) break;                    // ROR $ABS,X
 
-	case 0x40: IMP(READ, RTI) break;                                    // RTI
+	case 0x40: IMP(RD_OP, RTI) break;                                    // RTI
 
-	case 0x60: IMP(READ, RTS) break;                                    // RTS
+	case 0x60: IMP(RD_OP, RTS) break;                                    // RTS
 
-	case 0xE9: IMP(READ, SBC(_RDP)) break;                              // SBC #IMM
-	case 0xE5: ZPG(READ, SBC(_RDZPG)) break;                            // SBC $ZPG
-	case 0xF5: ZPX(READ, SBC(_RDZPX), cpu.XR) break;                    // SBC $ZPG,X
-	case 0xED: ABS(READ, SBC(_RDABS)) break;                            // SBC $ABS
-	case 0xFD: ABX(READ, _CYW(_SBC), cpu.XR) break;                     // SBC $ABS,X
-	case 0xF9: ABX(READ, _CYW(_SBC), cpu.YR) break;                     // SBC $ABS,Y
-	case 0xE1: IDX(READ, SBC(_RDIDX)) break;                            // SBC ($IND,X)
-	case 0xF1: IDY(READ, _CYW(_SBC)) break;                             // SBC ($IND),Y
+	case 0xE9: IMP(RD_OP, SBC(_RDP)) break;                              // SBC #IMM
+	case 0xE5: ZPG(RD_OP, SBC(_RDZPG)) break;                            // SBC $ZPG
+	case 0xF5: ZPX(RD_OP, SBC(_RDZPX), cpu.XR) break;                    // SBC $ZPG,X
+	case 0xED: ABS(RD_OP, SBC(_RDABS)) break;                            // SBC $ABS
+	case 0xFD: ABX(RD_OP, _CYW(_SBC), cpu.XR) break;                     // SBC $ABS,X
+	case 0xF9: ABX(RD_OP, _CYW(_SBC), cpu.YR) break;                     // SBC $ABS,Y
+	case 0xE1: IDX(RD_OP, SBC(_RDIDX)) break;                            // SBC ($IND,X)
+	case 0xF1: IDY(RD_OP, _CYW(_SBC)) break;                             // SBC ($IND),Y
 
-	case 0x38: IMP(READ, cpu.cf = 0x01;) break;                         // SEC [C -> 1]
-	case 0xF8: IMP(READ, cpu.df = 0x08;) break;                         // SED [D -> 1]
-	case 0x78: IMP(READ, SEI) break;                                    // SEI [I -> 1]
+	case 0x38: IMP(RD_OP, cpu.cf = 0x01;) break;                         // SEC [C -> 1]
+	case 0xF8: IMP(RD_OP, cpu.df = 0x08;) break;                         // SED [D -> 1]
+	case 0x78: IMP(RD_OP, SEI) break;                                    // SEI [I -> 1]
 
-	case 0x85: ZPG(WRITE, _STXZPG(cpu.AR)) break;                       // STA $ZPG
-	case 0x95: ZPX(WRITE, _STXZPX(cpu.AR), cpu.XR) break;               // STA $ZPG,X
-	case 0x8D: ABW(WRITE, _STXABS(cpu.AR)) break;                       // STA $ABS
-	case 0x9D: ABX(WRITE, _STXABX(cpu.AR), cpu.XR) break;               // STA $ABS,X
-	case 0x99: ABX(WRITE, _STXABX(cpu.AR), cpu.YR) break;               // STA $ABS,Y
-	case 0x81: IDX(WRITE, _STXIDX(cpu.AR)) break;                       // STA ($IND,X)
-	case 0x91: IDY(WRITE, _STXIDY(cpu.AR)) break;                       // STA ($IND),Y
+	case 0x85: ZPG(WR_OP, _STXZPG(cpu.AR)) break;                        // STA $ZPG
+	case 0x95: ZPX(WR_OP, _STXZPX(cpu.AR), cpu.XR) break;                // STA $ZPG,X
+	case 0x8D: ABW(WR_OP, _STXABS(cpu.AR)) break;                        // STA $ABS
+	case 0x9D: ABX(WR_OP, _STXABX(cpu.AR), cpu.XR) break;                // STA $ABS,X
+	case 0x99: ABX(WR_OP, _STXABX(cpu.AR), cpu.YR) break;                // STA $ABS,Y
+	case 0x81: IDX(WR_OP, _STXIDX(cpu.AR)) break;                        // STA ($IND,X)
+	case 0x91: IDY(WR_OP, _STXIDY(cpu.AR)) break;                        // STA ($IND),Y
 
-	case 0x86: ZPG(WRITE, _STXZPG(cpu.XR)) break;                       // STX $ZPG
-	case 0x96: ZPX(WRITE, _STXZPX(cpu.XR), cpu.YR) break;               // STX $ZPG,Y
-	case 0x8E: ABW(WRITE, _STXABS(cpu.XR)) break;                       // STX $ABS
+	case 0x86: ZPG(WR_OP, _STXZPG(cpu.XR)) break;                        // STX $ZPG
+	case 0x96: ZPX(WR_OP, _STXZPX(cpu.XR), cpu.YR) break;                // STX $ZPG,Y
+	case 0x8E: ABW(WR_OP, _STXABS(cpu.XR)) break;                        // STX $ABS
 
-	case 0x84: ZPG(WRITE, _STXZPG(cpu.YR)) break;                       // STY $ZPG
-	case 0x94: ZPX(WRITE, _STXZPX(cpu.YR), cpu.XR) break;               // STY $ZPG,X
-	case 0x8C: ABW(WRITE, _STXABS(cpu.YR)) break;                       // STY $ABS
+	case 0x84: ZPG(WR_OP, _STXZPG(cpu.YR)) break;                        // STY $ZPG
+	case 0x94: ZPX(WR_OP, _STXZPX(cpu.YR), cpu.XR) break;                // STY $ZPG,X
+	case 0x8C: ABW(WR_OP, _STXABS(cpu.YR)) break;                        // STY $ABS
 
-	case 0xAA: IMP(READ, _RSZ(cpu.XR = cpu.AR;, cpu.XR)) break;         // TAX
-	case 0xA8: IMP(READ, _RSZ(cpu.YR = cpu.AR;, cpu.YR)) break;         // TAY
-	case 0xBA: IMP(READ, _RSZ(cpu.XR = cpu.SP;, cpu.XR)) break;         // TSX
-	case 0x8A: IMP(READ, _RSZ(cpu.AR = cpu.XR;, cpu.AR)) break;         // TXA
-	case 0x9A: IMP(READ, cpu.SP = cpu.XR;) break;                       // TXS
-	case 0x98: IMP(READ, _RSZ(cpu.AR = cpu.YR;, cpu.AR)) break;         // TYA
+	case 0xAA: IMP(RD_OP, _RSZ(cpu.XR = cpu.AR;, cpu.XR)) break;         // TAX
+	case 0xA8: IMP(RD_OP, _RSZ(cpu.YR = cpu.AR;, cpu.YR)) break;         // TAY
+	case 0xBA: IMP(RD_OP, _RSZ(cpu.XR = cpu.SP;, cpu.XR)) break;         // TSX
+	case 0x8A: IMP(RD_OP, _RSZ(cpu.AR = cpu.XR;, cpu.AR)) break;         // TXA
+	case 0x9A: IMP(RD_OP, cpu.SP = cpu.XR;) break;                       // TXS
+	case 0x98: IMP(RD_OP, _RSZ(cpu.AR = cpu.YR;, cpu.AR)) break;         // TYA
 
 	/* illegal opcodes */
 
 #ifndef ILLEGAL
-	case 0x0B:                                                          // AAC #IMM
-	case 0x2B: IMP(READ, AAC) break;                                    // AAC #IMM
+	case 0x0B:                                                           // AAC #IMM
+	case 0x2B: IMP(RD_OP, AAC) break;                                    // AAC #IMM
 
-	case 0x87: ZPG(WRITE, AAX) break;                                   // AAX $ZPG
-	case 0x97: ZPX(WRITE, AAX, cpu.YR) break;                           // AAX $ZPG,Y
-	case 0x8F: ABS(WRITE, AAX) break;                                   // AAX $ABS
-	case 0x83: IDX(WRITE, AAX) break;                                   // AAX ($IND,X)
+	case 0x87: ZPG(WR_OP, AAX) break;                                    // AAX $ZPG
+	case 0x97: ZPX(WR_OP, AAX, cpu.YR) break;                            // AAX $ZPG,Y
+	case 0x8F: ABS(WR_OP, AAX) break;                                    // AAX $ABS
+	case 0x83: IDX(WR_OP, AAX) break;                                    // AAX ($IND,X)
 
-	case 0x6B: IMP(READ, ARR) break;                                    // ARR #IMM
+	case 0x6B: IMP(RD_OP, ARR) break;                                    // ARR #IMM
 
-	case 0x4B: IMP(READ, ASR) break;                                    // ASR #IMM
+	case 0x4B: IMP(RD_OP, ASR) break;                                    // ASR #IMM
 
-	case 0xAB: IMP(READ, ATX) break;                                    // ATX #IMM
+	case 0xAB: IMP(RD_OP, ATX) break;                                    // ATX #IMM
 
-	case 0xCB: IMP(READ, AXS) break;                                    // AXS #IMM
+	case 0xCB: IMP(RD_OP, AXS) break;                                    // AXS #IMM
 
-	case 0xC7: ZPG(WRITE, DCP(_RDZPG)) break;                           // DCP $ZPG
-	case 0xD7: ZPX(WRITE, DCP(_RDZPX), cpu.XR) break;                   // DCP $ZPG,X
-	case 0xCF: ABS(WRITE, DCP(_RDABS)) break;                           // DCP $ABS
-	case 0xDF: ABX(WRITE, DCP(_RDABX), cpu.XR) break;                   // DCP $ABS,X
-	case 0xDB: ABX(WRITE, DCP(_RDABX), cpu.YR) break;                   // DCP $ABS,Y
-	case 0xC3: IDX(WRITE, DCP(_RDIDX)) break;                           // DCP ($IND,X)
-	case 0xD3: IDY(WRITE, DCP(_RDABX)) break;                           // DCP ($IND),Y
+	case 0xC7: ZPG(WR_OP, DCP(_RDZPG)) break;                            // DCP $ZPG
+	case 0xD7: ZPX(WR_OP, DCP(_RDZPX), cpu.XR) break;                    // DCP $ZPG,X
+	case 0xCF: ABS(WR_OP, DCP(_RDABS)) break;                            // DCP $ABS
+	case 0xDF: ABX(WR_OP, DCP(_RDABX), cpu.XR) break;                    // DCP $ABS,X
+	case 0xDB: ABX(WR_OP, DCP(_RDABX), cpu.YR) break;                    // DCP $ABS,Y
+	case 0xC3: IDX(WR_OP, DCP(_RDIDX)) break;                            // DCP ($IND,X)
+	case 0xD3: IDY(WR_OP, DCP(_RDABX)) break;                            // DCP ($IND),Y
 
-	case 0x80:                                                          // DOP #IMM
-	case 0x82:                                                          // DOP #IMM
-	case 0x89:                                                          // DOP #IMM
-	case 0XC2:                                                          // DOP #IMM
-	case 0XE2: cpu.PC++; break;                                         // DOP #IMM
-	case 0x04:                                                          // DOP $ZPG
-	case 0x44:                                                          // DOP $ZPG
-	case 0x64: ZPG(READ, adr0 = adr0;) break;                           // DOP $ZPG
-	case 0x14:                                                          // DOP $ZPG,X
-	case 0x34:                                                          // DOP $ZPG,X
-	case 0x54:                                                          // DOP $ZPG,X
-	case 0x74:                                                          // DOP $ZPG,X
-	case 0xD4:                                                          // DOP $ZPG,X
-	case 0xF4: ZPX(READ, adr0 = adr0;, cpu.XR) break;                   // DOP $ZPG,X
+	case 0x80:                                                           // DOP #IMM
+	case 0x82:                                                           // DOP #IMM
+	case 0x89:                                                           // DOP #IMM
+	case 0XC2:                                                           // DOP #IMM
+	case 0XE2: cpu.PC++; break;                                          // DOP #IMM
+	case 0x04:                                                           // DOP $ZPG
+	case 0x44:                                                           // DOP $ZPG
+	case 0x64: ZPG(RD_OP, adr0 = adr0;) break;                           // DOP $ZPG
+	case 0x14:                                                           // DOP $ZPG,X
+	case 0x34:                                                           // DOP $ZPG,X
+	case 0x54:                                                           // DOP $ZPG,X
+	case 0x74:                                                           // DOP $ZPG,X
+	case 0xD4:                                                           // DOP $ZPG,X
+	case 0xF4: ZPX(RD_OP, adr0 = adr0;, cpu.XR) break;                   // DOP $ZPG,X
 
-	case 0xE7: ZPG(WRITE, ISC(_RDZPG)) break;                           // ISC $ZPG
-	case 0xF7: ZPX(WRITE, ISC(_RDZPX), cpu.XR) break;                   // ISC $ZPG,X
-	case 0xEF: ABS(WRITE, ISC(_RDABS)) break;                           // ISC $ABS
-	case 0xFF: ABX(WRITE, ISC(_RDABX), cpu.XR) break;                   // ISC $ABS,X
-	case 0xFB: ABX(WRITE, ISC(_RDABX), cpu.YR) break;                   // ISC $ABS,Y
-	case 0xE3: IDX(WRITE, ISC(_RDIDX)) break;                           // ISC ($IND,X)
-	case 0xF3: IDY(WRITE, _CY_(ISC(_RDB),)) break;                      // ISC ($IND),Y
+	case 0xE7: ZPG(WR_OP, ISC(_RDZPG)) break;                            // ISC $ZPG
+	case 0xF7: ZPX(WR_OP, ISC(_RDZPX), cpu.XR) break;                    // ISC $ZPG,X
+	case 0xEF: ABS(WR_OP, ISC(_RDABS)) break;                            // ISC $ABS
+	case 0xFF: ABX(WR_OP, ISC(_RDABX), cpu.XR) break;                    // ISC $ABS,X
+	case 0xFB: ABX(WR_OP, ISC(_RDABX), cpu.YR) break;                    // ISC $ABS,Y
+	case 0xE3: IDX(WR_OP, ISC(_RDIDX)) break;                            // ISC ($IND,X)
+	case 0xF3: IDY(WR_OP, _CY_(ISC(_RDB),)) break;                       // ISC ($IND),Y
 
-	case 0xA7: ZPG(READ, LAX(_RDZPG)) break;                            // LAX $ZPG
-	case 0xB7: ZPX(READ, LAX(_RDABX), cpu.YR) break;                    // LAX $ZPG,Y
-	case 0xAF: ABS(READ, LAX(_RDABS)) break;                            // LAX $ABS
-	case 0xBF: ABX(READ, _CYW(_LAX), cpu.YR) break;                     // LAX $ABS,Y
-	case 0xA3: IDX(READ, LAX(_RDIDX)) break;                            // LAX ($IND,X)
-	case 0xB3: IDY(READ, _CYW(_LAX)) break;                             // LAX ($IND),Y
+	case 0xA7: ZPG(RD_OP, LAX(_RDZPG)) break;                            // LAX $ZPG
+	case 0xB7: ZPX(RD_OP, LAX(_RDABX), cpu.YR) break;                    // LAX $ZPG,Y
+	case 0xAF: ABS(RD_OP, LAX(_RDABS)) break;                            // LAX $ABS
+	case 0xBF: ABX(RD_OP, _CYW(_LAX), cpu.YR) break;                     // LAX $ABS,Y
+	case 0xA3: IDX(RD_OP, LAX(_RDIDX)) break;                            // LAX ($IND,X)
+	case 0xB3: IDY(RD_OP, _CYW(_LAX)) break;                             // LAX ($IND),Y
 
-	case 0x1A:                                                          // NOP
-	case 0x3A:                                                          // NOP
-	case 0x5A:                                                          // NOP
-	case 0x7A:                                                          // NOP
-	case 0xDA:                                                          // NOP
-	case 0xFA: break;                                                   // NOP
+	case 0x1A:                                                           // NOP
+	case 0x3A:                                                           // NOP
+	case 0x5A:                                                           // NOP
+	case 0x7A:                                                           // NOP
+	case 0xDA:                                                           // NOP
+	case 0xFA: break;                                                    // NOP
 
-	case 0x27: ZPG(WRITE, RLA(_RDZPG)) break;                           // RLA $ZPG
-	case 0x37: ZPX(WRITE, RLA(_RDZPX), cpu.XR) break;                   // RLA $ZPG,X
-	case 0x2F: ABS(WRITE, RLA(_RDABS)) break;                           // RLA $ABS
-	case 0x3F: ABX(WRITE, RLA(_RDABX), cpu.XR) break;                   // RLA $ABS,X
-	case 0x3B: ABX(WRITE, RLA(_RDABX), cpu.YR) break;                   // RLA $ABS,Y
-	case 0x23: IDX(WRITE, RLA(_RDIDX)) break;                           // RLA ($IND,X)
-	case 0x33: IDY(WRITE, _CY_(RLA(_RDB),)) break;                      // RLA ($IND),Y
+	case 0x27: ZPG(WR_OP, RLA(_RDZPG)) break;                            // RLA $ZPG
+	case 0x37: ZPX(WR_OP, RLA(_RDZPX), cpu.XR) break;                    // RLA $ZPG,X
+	case 0x2F: ABS(WR_OP, RLA(_RDABS)) break;                            // RLA $ABS
+	case 0x3F: ABX(WR_OP, RLA(_RDABX), cpu.XR) break;                    // RLA $ABS,X
+	case 0x3B: ABX(WR_OP, RLA(_RDABX), cpu.YR) break;                    // RLA $ABS,Y
+	case 0x23: IDX(WR_OP, RLA(_RDIDX)) break;                            // RLA ($IND,X)
+	case 0x33: IDY(WR_OP, _CY_(RLA(_RDB),)) break;                       // RLA ($IND),Y
 
-	case 0x67: ZPG(WRITE, RRA(_RDZPG)) break;                           // RRA $ZPG
-	case 0x77: ZPX(WRITE, RRA(_RDZPX), cpu.XR) break;                   // RRA $ZPG,X
-	case 0x6F: ABS(WRITE, RRA(_RDABS)) break;                           // RRA $ABS
-	case 0x7F: ABX(WRITE, RRA(_RDABX), cpu.XR) break;                   // RRA $ABS,X
-	case 0x7B: ABX(WRITE, RRA(_RDABX), cpu.YR) break;                   // RRA $ABS,Y
-	case 0x63: IDX(WRITE, RRA(_RDIDX)) break;                           // RRA ($IND,X)
-	case 0x73: IDY(WRITE, _CY_(RRA(_RDB),)) break;                      // RRA ($IND),Y
+	case 0x67: ZPG(WR_OP, RRA(_RDZPG)) break;                            // RRA $ZPG
+	case 0x77: ZPX(WR_OP, RRA(_RDZPX), cpu.XR) break;                    // RRA $ZPG,X
+	case 0x6F: ABS(WR_OP, RRA(_RDABS)) break;                            // RRA $ABS
+	case 0x7F: ABX(WR_OP, RRA(_RDABX), cpu.XR) break;                    // RRA $ABS,X
+	case 0x7B: ABX(WR_OP, RRA(_RDABX), cpu.YR) break;                    // RRA $ABS,Y
+	case 0x63: IDX(WR_OP, RRA(_RDIDX)) break;                            // RRA ($IND,X)
+	case 0x73: IDY(WR_OP, _CY_(RRA(_RDB),)) break;                       // RRA ($IND),Y
 
-	case 0xEB: IMP(READ, SBC(_RDP)) break;                              // SBC #IMM
+	case 0xEB: IMP(RD_OP, SBC(_RDP)) break;                              // SBC #IMM
 
-	case 0x07: ZPG(WRITE, SLO(_RDZPG)) break;                           // SLO $ZPG
-	case 0x17: ZPX(WRITE, SLO(_RDZPX), cpu.XR) break;                   // SLO $ZPG,X
-	case 0x0F: ABS(WRITE, SLO(_RDABS)) break;                           // SLO $ABS
-	case 0x1F: ABX(WRITE, SLO(_RDABX), cpu.XR) break;                   // SLO $ABS,X
-	case 0x1B: ABX(WRITE, SLO(_RDABX), cpu.YR) break;                   // SLO $ABS,Y
-	case 0x03: IDX(WRITE, SLO(_RDIDX)) break;                           // SLO ($IND,X)
-	case 0x13: IDY(WRITE, _CY_(SLO(_RDB),)) break;                      // SLO ($IND),Y
+	case 0x07: ZPG(WR_OP, SLO(_RDZPG)) break;                            // SLO $ZPG
+	case 0x17: ZPX(WR_OP, SLO(_RDZPX), cpu.XR) break;                    // SLO $ZPG,X
+	case 0x0F: ABS(WR_OP, SLO(_RDABS)) break;                            // SLO $ABS
+	case 0x1F: ABX(WR_OP, SLO(_RDABX), cpu.XR) break;                    // SLO $ABS,X
+	case 0x1B: ABX(WR_OP, SLO(_RDABX), cpu.YR) break;                    // SLO $ABS,Y
+	case 0x03: IDX(WR_OP, SLO(_RDIDX)) break;                            // SLO ($IND,X)
+	case 0x13: IDY(WR_OP, _CY_(SLO(_RDB),)) break;                       // SLO ($IND),Y
 
-	case 0x47: ZPG(WRITE, SRE(_RDZPG)) break;                           // SRE $ZPG
-	case 0x57: ZPX(WRITE, SRE(_RDZPX), cpu.XR) break;                   // SRE $ZPG,X
-	case 0x4F: ABS(WRITE, SRE(_RDABS)) break;                           // SRE $ABS
-	case 0x5F: ABX(WRITE, SRE(_RDABX), cpu.XR) break;                   // SRE $ABS,X
-	case 0x5B: ABX(WRITE, SRE(_RDABX), cpu.YR) break;                   // SRE $ABS,Y
-	case 0x43: IDX(WRITE, SRE(_RDIDX)) break;                           // SRE ($IND,X)
-	case 0x53: IDY(WRITE, _CY_(SRE(_RDB),)) break;                      // SRE ($IND),Y
+	case 0x47: ZPG(WR_OP, SRE(_RDZPG)) break;                            // SRE $ZPG
+	case 0x57: ZPX(WR_OP, SRE(_RDZPX), cpu.XR) break;                    // SRE $ZPG,X
+	case 0x4F: ABS(WR_OP, SRE(_RDABS)) break;                            // SRE $ABS
+	case 0x5F: ABX(WR_OP, SRE(_RDABX), cpu.XR) break;                    // SRE $ABS,X
+	case 0x5B: ABX(WR_OP, SRE(_RDABX), cpu.YR) break;                    // SRE $ABS,Y
+	case 0x43: IDX(WR_OP, SRE(_RDIDX)) break;                            // SRE ($IND,X)
+	case 0x53: IDY(WR_OP, _CY_(SRE(_RDB),)) break;                       // SRE ($IND),Y
 
-	case 0x0C: ABS(READ, adr0 = adr0;) break;                           // TOP $ABS
-	case 0x1C:                                                          // TOP $ABS,X
-	case 0x3C:                                                          // TOP $ABS,X
-	case 0X5C:                                                          // TOP $ABS,X
-	case 0X7C:                                                          // TOP $ABS,X
-	case 0XDC:                                                          // TOP $ABS,X
-	case 0XFC: ABX(READ, _CYW(adr0 = 0;), cpu.XR) break;                // TOP $ABS,X
+	case 0x0C: ABS(RD_OP, adr0 = adr0;) break;                           // TOP $ABS
+	case 0x1C:                                                           // TOP $ABS,X
+	case 0x3C:                                                           // TOP $ABS,X
+	case 0X5C:                                                           // TOP $ABS,X
+	case 0X7C:                                                           // TOP $ABS,X
+	case 0XDC:                                                           // TOP $ABS,X
+	case 0XFC: ABX(RD_OP, _CYW(adr0 = 0;), cpu.XR) break;                // TOP $ABS,X
 
-	case 0x9C: ABX(WRITE, SXX(cpu.YR), cpu.XR) break;                   // SYA $ABS,X
-	case 0x9E: ABX(WRITE, SXX(cpu.XR), cpu.YR) break;                   // SXA $ABS,Y
+	case 0x9C: ABX(WR_OP, SXX(cpu.YR), cpu.XR) break;                    // SYA $ABS,X
+	case 0x9E: ABX(WR_OP, SXX(cpu.XR), cpu.YR) break;                    // SXA $ABS,Y
 
 	/* casi incerti */
-	case 0x8B: IMP(READ, XAA) break;                                    // XAA #IMM
-	case 0x9F: ABX(WRITE, AXA(_AXAABX(tmp)), cpu.YR) break;             // AXA $ABS,Y
-	case 0x93: IDY(WRITE, AXA(_AXAIDY(tmp))) break;                     // AXA ($IND),Y
-	case 0xBB: ABX(READ, _CYW(LAS), cpu.YR) break;                      // LAS $ABS,Y
-	case 0x9B: ABX(WRITE, XAS, cpu.YR) break;                           // XAS $ABS,Y
+	case 0x8B: IMP(RD_OP, XAA) break;                                    // XAA #IMM
+	case 0x9F: ABX(WR_OP, AXA(_AXAABX(tmp)), cpu.YR) break;              // AXA $ABS,Y
+	case 0x93: IDY(WR_OP, AXA(_AXAIDY(tmp))) break;                      // AXA ($IND),Y
+	case 0xBB: ABX(RD_OP, _CYW(LAS), cpu.YR) break;                      // LAS $ABS,Y
+	case 0x9B: ABX(WR_OP, XAS, cpu.YR) break;                            // XAS $ABS,Y
 #endif
 
 	case 0x02: // JAM
@@ -981,8 +983,8 @@ void cpu_exe_op(void) {
 		//info.stop = TRUE;
 		//info.execute_cpu = FALSE;
 		break;
-	case 0x100: IMP(READ, NMI) break;                                   // NMI
-	case 0x200: IMP(READ, IRQ(cpu.SR & 0xEF)) break;                    // IRQ
+	case 0x100: IMP(RD_OP, NMI) break;                                   // NMI
+	case 0x200: IMP(RD_OP, IRQ(cpu.SR & 0xEF)) break;                    // IRQ
 	}
 
 	/* se presenti eseguo i restanti cicli di PPU e APU */

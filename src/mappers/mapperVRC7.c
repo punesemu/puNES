@@ -150,14 +150,14 @@ void extcl_cpu_wr_mem_VRC7(WORD address, BYTE value) {
 	}
 }
 BYTE extcl_save_mapper_VRC7(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, vrc7.reg);
-	savestateEle(mode, slot, vrc7.enabled);
-	savestateEle(mode, slot, vrc7.reload);
-	savestateEle(mode, slot, vrc7.mode);
-	savestateEle(mode, slot, vrc7.acknowledge);
-	savestateEle(mode, slot, vrc7.count);
-	savestateEle(mode, slot, vrc7.prescaler);
-	savestateEle(mode, slot, vrc7.delay);
+	save_slot_ele(mode, slot, vrc7.reg);
+	save_slot_ele(mode, slot, vrc7.enabled);
+	save_slot_ele(mode, slot, vrc7.reload);
+	save_slot_ele(mode, slot, vrc7.mode);
+	save_slot_ele(mode, slot, vrc7.acknowledge);
+	save_slot_ele(mode, slot, vrc7.count);
+	save_slot_ele(mode, slot, vrc7.prescaler);
+	save_slot_ele(mode, slot, vrc7.delay);
 
 	if (opll_save(mode, slot, fp) == EXIT_ERROR) {
 		return (EXIT_ERROR);

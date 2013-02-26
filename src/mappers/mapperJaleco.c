@@ -381,12 +381,12 @@ void extcl_cpu_wr_mem_Jaleco_SS8806(WORD address, BYTE value) {
 	}
 }
 BYTE extcl_save_mapper_Jaleco_SS8806(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, ss8806.chrRomBank);
-	savestateEle(mode, slot, ss8806.enabled);
-	savestateEle(mode, slot, ss8806.mask);
-	savestateEle(mode, slot, ss8806.reload);
-	savestateEle(mode, slot, ss8806.count);
-	savestateEle(mode, slot, ss8806.delay);
+	save_slot_ele(mode, slot, ss8806.chrRomBank);
+	save_slot_ele(mode, slot, ss8806.enabled);
+	save_slot_ele(mode, slot, ss8806.mask);
+	save_slot_ele(mode, slot, ss8806.reload);
+	save_slot_ele(mode, slot, ss8806.count);
+	save_slot_ele(mode, slot, ss8806.delay);
 
 	return (EXIT_OK);
 }

@@ -88,9 +88,9 @@ void extcl_cpu_wr_mem_MMC2and4(WORD address, BYTE value) {
 	chr.bank_1k[7] = &chr.data[tmp | 0x0C00];
 }
 BYTE extcl_save_mapper_MMC2and4(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, mmc2and4.regs);
-	savestateEle(mode, slot, mmc2and4.latch0);
-	savestateEle(mode, slot, mmc2and4.latch1);
+	save_slot_ele(mode, slot, mmc2and4.regs);
+	save_slot_ele(mode, slot, mmc2and4.latch0);
+	save_slot_ele(mode, slot, mmc2and4.latch1);
 	return (EXIT_OK);
 }
 void extcl_after_rd_chr_MMC2and4(WORD address) {

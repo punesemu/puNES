@@ -183,10 +183,10 @@ void extcl_wr_chr_TQROM(WORD address, BYTE value) {
 }
 
 BYTE extcl_save_mapper_TxROM(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, txrom.delay);
+	save_slot_ele(mode, slot, txrom.delay);
 	if (type == TQROM) {
-		savestateEle(mode, slot, txrom.chr);
-		if (mode == SSREAD) {
+		save_slot_ele(mode, slot, txrom.chr);
+		if (mode == SAVE_SLOT_READ) {
 			BYTE i;
 			for (i = 0; i < LENGTH(txrom.chr); i++) {
 				if (txrom.chr[i][0]) {
@@ -194,7 +194,7 @@ BYTE extcl_save_mapper_TxROM(BYTE mode, BYTE slot, FILE *fp) {
 				}
 			}
 		}
-		savestateEle(mode, slot, txrom.chrRam);
+		save_slot_ele(mode, slot, txrom.chrRam);
 	}
 	extcl_save_mapper_MMC3(mode, slot, fp);
 

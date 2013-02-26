@@ -90,7 +90,7 @@ BYTE extcl_cpu_rd_mem_186(WORD address, BYTE openbus, BYTE before) {
 	return (openbus);
 }
 BYTE extcl_save_mapper_186(BYTE mode, BYTE slot, FILE *fp) {
-	savestatePos(mode, slot, prg.rom, m186.prgRamBank2);
+	save_slot_pos(mode, slot, prg.rom, m186.prgRamBank2);
 
 	return (EXIT_OK);
 }

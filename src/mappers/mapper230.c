@@ -60,7 +60,7 @@ void extcl_cpu_wr_mem_230(WORD address, BYTE value) {
 	map_prg_rom_8k_update();
 }
 BYTE extcl_save_mapper_230(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, m230.mode);
+	save_slot_ele(mode, slot, m230.mode);
 
 	return (EXIT_OK);
 }

@@ -131,22 +131,22 @@ void extcl_cpu_wr_mem_114(WORD address, BYTE value) {
 	}
 }
 BYTE extcl_save_mapper_114(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, m114.prgRomSwitch);
-	savestateEle(mode, slot, m114.mmc3CtrlChange);
-	if (savestate.version < 6) {
-		if (mode == SSREAD) {
+	save_slot_ele(mode, slot, m114.prgRomSwitch);
+	save_slot_ele(mode, slot, m114.mmc3CtrlChange);
+	if (save_slot.version < 6) {
+		if (mode == SAVE_SLOT_READ) {
 			BYTE old_prgRomBank[4], i;
 
-			savestateEle(mode, slot, old_prgRomBank)
+			save_slot_ele(mode, slot, old_prgRomBank)
 
 			for (i = 0; i < 4; i++) {
 				m114.prgRomBank[i] = old_prgRomBank[i];
 			}
-		} else if (mode == SSCOUNT) {
-			savestate.totSize[slot] += sizeof(BYTE) * 4;
+		} else if (mode == SAVE_SLOT_COUNT) {
+			save_slot.tot_size[slot] += sizeof(BYTE) * 4;
 		}
 	} else {
-		savestateEle(mode, slot, m114.prgRomBank);
+		save_slot_ele(mode, slot, m114.prgRomBank);
 	}
 	extcl_save_mapper_MMC3(mode, slot, fp);
 

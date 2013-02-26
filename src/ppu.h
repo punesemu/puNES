@@ -10,7 +10,8 @@
 
 #include "common.h"
 
-enum { YC, TL, AT, XC };
+enum ppu_sprite_byte { YC, TL, AT, XC };
+enum ppu_color_mode { PPU_CM_GRAYSCALE = 0x30, PPU_CM_NORMAL = 0x3F };
 
 #define screen_size() (SCR_LINES * SCR_ROWS) * sizeof(WORD)
 #define ppu_spr_adr(sprite)\

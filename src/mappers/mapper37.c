@@ -218,10 +218,10 @@ void extcl_cpu_wr_mem_37(WORD address, BYTE value) {
 	}
 }
 BYTE extcl_save_mapper_37(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, m37.reg);
-	if (savestate.version >= 5) {
-		savestateEle(mode, slot, m37.prgmap);
-		savestateEle(mode, slot, m37.chrmap);
+	save_slot_ele(mode, slot, m37.reg);
+	if (save_slot.version >= 5) {
+		save_slot_ele(mode, slot, m37.prgmap);
+		save_slot_ele(mode, slot, m37.chrmap);
 	}
 	extcl_save_mapper_MMC3(mode, slot, fp);
 

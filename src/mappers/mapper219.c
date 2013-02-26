@@ -123,7 +123,7 @@ void extcl_cpu_wr_mem_219(WORD address, BYTE value) {
 	}
 }
 BYTE extcl_save_mapper_219(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, m219.reg);
+	save_slot_ele(mode, slot, m219.reg);
 
 	return (EXIT_OK);
 }

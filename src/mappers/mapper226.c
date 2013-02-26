@@ -54,7 +54,7 @@ void extcl_cpu_wr_mem_226(WORD address, BYTE value) {
 	}
 }
 BYTE extcl_save_mapper_226(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, m226.reg);
+	save_slot_ele(mode, slot, m226.reg);
 
 	return (EXIT_OK);
 }

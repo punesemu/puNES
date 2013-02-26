@@ -297,30 +297,30 @@ BYTE extcl_save_mapper_Namco_163(BYTE mode, BYTE slot, FILE *fp) {
 	BYTE i;
 
 	for (i = 0; i < LENGTH(n163.nmtBank); i++) {
-		savestateInt(mode, slot, n163.nmtBank[i][0]);
-		savestateInt(mode, slot, n163.nmtBank[i][1]);
-		if ((mode == SSREAD) && (n163.nmtBank[i][0])) {
+		save_slot_int(mode, slot, n163.nmtBank[i][0]);
+		save_slot_int(mode, slot, n163.nmtBank[i][1]);
+		if ((mode == SAVE_SLOT_READ) && (n163.nmtBank[i][0])) {
 			_namco163NmtUpdate(i);
 		}
 	}
-	savestateEle(mode, slot, n163.irqDelay);
-	savestateEle(mode, slot, n163.irqCount);
-	savestateEle(mode, slot, n163.sndRam);
-	savestateEle(mode, slot, n163.sndAdr);
-	savestateEle(mode, slot, n163.sndAutoInc);
-	savestateEle(mode, slot, n163.sndChStart);
-	savestateEle(mode, slot, n163.sndWave);
+	save_slot_ele(mode, slot, n163.irqDelay);
+	save_slot_ele(mode, slot, n163.irqCount);
+	save_slot_ele(mode, slot, n163.sndRam);
+	save_slot_ele(mode, slot, n163.sndAdr);
+	save_slot_ele(mode, slot, n163.sndAutoInc);
+	save_slot_ele(mode, slot, n163.sndChStart);
+	save_slot_ele(mode, slot, n163.sndWave);
 	for (i = 0; i < LENGTH(n163.ch); i++) {
-		savestateEle(mode, slot, n163.ch[i].enabled);
-		savestateEle(mode, slot, n163.ch[i].active);
-		savestateEle(mode, slot, n163.ch[i].address);
-		savestateEle(mode, slot, n163.ch[i].freq);
-		savestateEle(mode, slot, n163.ch[i].cyclesReload);
-		savestateEle(mode, slot, n163.ch[i].cycles);
-		savestateEle(mode, slot, n163.ch[i].length);
-		savestateEle(mode, slot, n163.ch[i].step);
-		savestateEle(mode, slot, n163.ch[i].volume);
-		savestateEle(mode, slot, n163.ch[i].output);
+		save_slot_ele(mode, slot, n163.ch[i].enabled);
+		save_slot_ele(mode, slot, n163.ch[i].active);
+		save_slot_ele(mode, slot, n163.ch[i].address);
+		save_slot_ele(mode, slot, n163.ch[i].freq);
+		save_slot_ele(mode, slot, n163.ch[i].cyclesReload);
+		save_slot_ele(mode, slot, n163.ch[i].cycles);
+		save_slot_ele(mode, slot, n163.ch[i].length);
+		save_slot_ele(mode, slot, n163.ch[i].step);
+		save_slot_ele(mode, slot, n163.ch[i].volume);
+		save_slot_ele(mode, slot, n163.ch[i].output);
 	}
 
 	return (EXIT_OK);
@@ -404,7 +404,7 @@ void extcl_cpu_wr_mem_Namco_3425(WORD address, BYTE value) {
 	}
 }
 BYTE extcl_save_mapper_Namco_3425(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, n3425.bankToUpdate);
+	save_slot_ele(mode, slot, n3425.bankToUpdate);
 
 	return (EXIT_OK);
 }
@@ -446,8 +446,8 @@ void extcl_cpu_wr_mem_Namco_3446(WORD address, BYTE value) {
 	}
 }
 BYTE extcl_save_mapper_Namco_3446(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, n3446.bankToUpdate);
-	savestateEle(mode, slot, n3446.prgRomMode);
+	save_slot_ele(mode, slot, n3446.bankToUpdate);
+	save_slot_ele(mode, slot, n3446.prgRomMode);
 
 	return (EXIT_OK);
 }

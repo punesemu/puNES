@@ -132,8 +132,8 @@ void extcl_cpu_wr_mem_Irem_G101(WORD address, BYTE value) {
 	}
 }
 BYTE extcl_save_mapper_Irem_G101(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, iremG101.prgMode);
-	savestateEle(mode, slot, iremG101.prgReg);
+	save_slot_ele(mode, slot, iremG101.prgMode);
+	save_slot_ele(mode, slot, iremG101.prgReg);
 
 	return (EXIT_OK);
 }
@@ -188,10 +188,10 @@ void extcl_cpu_wr_mem_Irem_H3000(WORD address, BYTE value) {
 	}
 }
 BYTE extcl_save_mapper_Irem_H3000(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, iremH3000.enable);
-	savestateEle(mode, slot, iremH3000.count);
-	savestateEle(mode, slot, iremH3000.reload);
-	savestateEle(mode, slot, iremH3000.delay);
+	save_slot_ele(mode, slot, iremH3000.enable);
+	save_slot_ele(mode, slot, iremH3000.count);
+	save_slot_ele(mode, slot, iremH3000.reload);
+	save_slot_ele(mode, slot, iremH3000.delay);
 
 	return (EXIT_OK);
 }
@@ -223,8 +223,8 @@ void extcl_cpu_wr_mem_Irem_LROG017(WORD address, BYTE value) {
 	chr.bank_1k[1] = &chr.data[bank | 0x0400];
 }
 BYTE extcl_save_mapper_Irem_LROG017(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, iremLROG017.chrRam);
-	if (mode == SSREAD) {
+	save_slot_ele(mode, slot, iremLROG017.chrRam);
+	if (mode == SAVE_SLOT_READ) {
 		iremLROG017ChrRam();
 	}
 

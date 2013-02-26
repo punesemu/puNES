@@ -101,7 +101,7 @@ BYTE emu_loop(void) {
 			}
 
 			if (gamegenie.phase == GG_LOAD_ROM) {
-				emu_reset(CHANGEROM);
+				emu_reset(CHANGE_ROM);
 				gamegenie.phase = GG_FINISH;
 				gamegenie.print = FALSE;
 			}
@@ -427,7 +427,7 @@ void emu_set_title(char *title) {
 	strcat(title, ")");
 }
 BYTE emu_turn_on(void) {
-	info.reset = POWERUP;
+	info.reset = POWER_UP;
 
 	info.first_illegal_opcode = FALSE;
 
@@ -507,7 +507,7 @@ BYTE emu_turn_on(void) {
 		return (EXIT_ERROR);
 	}
 
-	savestateCountLoad();
+	save_slot_count_load();
 
 	/* emulo i 9 cicli iniziali */
 	{
@@ -546,7 +546,7 @@ BYTE emu_reset(BYTE type) {
 
 	srand(time(0));
 
-	if (info.reset == CHANGEROM) {
+	if (info.reset == CHANGE_ROM) {
 		info.r4014_precise_timing_disabled = FALSE;
 		info.r2002_race_condition_disabled = FALSE;
 		info.r4016_dmc_double_read_disabled = FALSE;
@@ -604,14 +604,14 @@ BYTE emu_reset(BYTE type) {
 		return (EXIT_ERROR);
 	}
 
-	if (info.reset == CHANGEROM) {
-		savestateCountLoad();
+	if (info.reset == CHANGE_ROM) {
+		save_slot_count_load();
 	}
 
 
 	fps_init();
 
-	if (info.reset >= CHANGEROM) {
+	if (info.reset >= CHANGE_ROM) {
 		if (sndStart()) {
 			return (EXIT_ERROR);
 		}

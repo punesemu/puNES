@@ -139,7 +139,7 @@ void guiEvent(void) {
 						gfxSetScreen(NOCHANGE, NOCHANGE, NOCHANGE, PALETTENTSC, FALSE);
 					}
 				}
-				if (emu_reset(CHANGEMODE)) { emu_quit(EXIT_FAILURE); }
+				if (emu_reset(CHANGE_MODE)) { emu_quit(EXIT_FAILURE); }
 				break;
 			case SDLK_F11:
 				if (emu_reset(HARD)) { emu_quit(EXIT_FAILURE); }

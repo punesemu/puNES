@@ -192,7 +192,7 @@ void extcl_cpu_wr_mem_MMC3(WORD address, BYTE value) {
 			 * se e' abilitato il 4 schermi, il cambio
 			 * di mirroring deve essere ignorato.
 			 */
-			if (mapper.mirroring == FOURSCR) {
+			if (mapper.mirroring == MIRRORING_FOURSCR) {
 				break;
 			}
 			if (value & 0x01) {
@@ -243,10 +243,10 @@ void extcl_cpu_wr_mem_MMC3(WORD address, BYTE value) {
 	}
 }
 BYTE extcl_save_mapper_MMC3(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, mmc3.prgRamProtect);
-	savestateEle(mode, slot, mmc3.bankToUpdate);
-	savestateEle(mode, slot, mmc3.prgRomCfg);
-	savestateEle(mode, slot, mmc3.chrRomCfg);
+	save_slot_ele(mode, slot, mmc3.prgRamProtect);
+	save_slot_ele(mode, slot, mmc3.bankToUpdate);
+	save_slot_ele(mode, slot, mmc3.prgRomCfg);
+	save_slot_ele(mode, slot, mmc3.chrRomCfg);
 
 	return (EXIT_OK);
 }

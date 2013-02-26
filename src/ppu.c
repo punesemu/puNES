@@ -16,7 +16,8 @@
 #include "irqA12.h"
 #include "irql2f.h"
 
-enum { SLCYCLES = 341, SHORT_SLCYCLES = 340, OVERFLOW_SPR = 3 };
+enum scanline_cycles { SHORT_SLINE_CYCLES = 340, SLINE_CYCLES };
+enum overflow_sprite { OVERFLOW_SPR = 3 };
 
 #define fetch_at()\
 {\
@@ -117,9 +118,9 @@ void ppu_tick(WORD cycles_cpu) {
 				 * della dummy line, ne anticipo il controllo e
 				 * l'eventuale modifica.
 				 */
-				if ((ppu.frame_x == (SHORT_SLCYCLES - machine.ppu_for_1_cycle_cpu)) && ppu.odd_frame
-				        && r2001.bck_visible) {
-					ppu.sline_cycles = SHORT_SLCYCLES;
+				if ((ppu.frame_x == (SHORT_SLINE_CYCLES - machine.ppu_for_1_cycle_cpu))
+				        && ppu.odd_frame && r2001.bck_visible) {
+					ppu.sline_cycles = SHORT_SLINE_CYCLES;
 				}
 			}
 		}
@@ -1014,7 +1015,7 @@ void ppu_tick(WORD cycles_cpu) {
 		 * ppu.framex lo faccia dopo il settaggio dell'nmi.
 		 */
 		ppu.frame_y++;
-		ppu.sline_cycles = SLCYCLES;
+		ppu.sline_cycles = SLINE_CYCLES;
 
 		/* controllo se ho completato il frame */
 		if (ppu.frame_y == machine.total_lines) {
@@ -1072,13 +1073,13 @@ BYTE ppu_turn_on(void) {
 		 * la parte di sotto si sporca e non appaiono sprites).
 		 */
 		ppu.frame_y = machine.vint_lines + 1;
-		ppu.sline_cycles = SLCYCLES;
+		ppu.sline_cycles = SLINE_CYCLES;
 		r2000.r2006_inc = 1;
 		r2000.size_spr = 8;
-		r2001.color_mode = NORMAL;
+		r2001.color_mode = PPU_CM_NORMAL;
 
 		/* riservo una zona di memoria per lo screen */
-		if ((info.reset == CHANGEROM) || (info.reset == POWERUP)) {
+		if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 			BYTE a;
 			WORD x, y;
 
@@ -1136,12 +1137,12 @@ BYTE ppu_turn_on(void) {
 		ppu.frame_y = machine.vint_lines + 1;
 		ppu.tmp_vram = ppu.fine_x = 0;
 		ppu.spr_adr = ppu.bck_adr = 0;
-		ppu.sline_cycles = SLCYCLES;
+		ppu.sline_cycles = SLINE_CYCLES;
 		ppu.odd_frame = 0;
 		ppu.cycles = 0;
 		r2000.r2006_inc = 1;
 		r2000.size_spr = 8;
-		r2001.color_mode = NORMAL;
+		r2001.color_mode = PPU_CM_NORMAL;
 	}
 
 	return (EXIT_OK);

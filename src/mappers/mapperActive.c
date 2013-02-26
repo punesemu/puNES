@@ -92,8 +92,8 @@ BYTE extcl_cpu_rd_mem_Active(WORD address, BYTE openbus, BYTE before) {
 	return (openbus);
 }
 BYTE extcl_save_mapper_Active(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, active.openbus);
-	savestateEle(mode, slot, active.prgRam);
+	save_slot_ele(mode, slot, active.openbus);
+	save_slot_ele(mode, slot, active.prgRam);
 
 	return (EXIT_OK);
 }

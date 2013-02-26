@@ -51,7 +51,7 @@ BYTE extcl_cpu_rd_mem_120(WORD address, BYTE openbus, BYTE before) {
 	return (m120.prgRamRd[address & 0x1FFF]);
 }
 BYTE extcl_save_mapper_120(BYTE mode, BYTE slot, FILE *fp) {
-	savestatePos(mode, slot, prg.rom, m120.prgRamRd);
+	save_slot_pos(mode, slot, prg.rom, m120.prgRamRd);
 
 	return (EXIT_OK);
 }

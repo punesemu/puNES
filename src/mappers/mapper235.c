@@ -86,7 +86,7 @@ BYTE extcl_cpu_rd_mem_235(WORD address, BYTE openbus, BYTE before) {
 	return (address >> 8);
 }
 BYTE extcl_save_mapper_235(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, m235.openbus);
+	save_slot_ele(mode, slot, m235.openbus);
 
 	return (EXIT_OK);
 }

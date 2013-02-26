@@ -220,10 +220,10 @@ void extcl_cpu_wr_mem_205(WORD address, BYTE value) {
 	}
 }
 BYTE extcl_save_mapper_205(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, m205.reg);
-	if (savestate.version >= 5) {
-		savestateEle(mode, slot, m205.prgmap);
-		savestateEle(mode, slot, m205.chrmap);
+	save_slot_ele(mode, slot, m205.reg);
+	if (save_slot.version >= 5) {
+		save_slot_ele(mode, slot, m205.prgmap);
+		save_slot_ele(mode, slot, m205.chrmap);
 	}
 	extcl_save_mapper_MMC3(mode, slot, fp);
 

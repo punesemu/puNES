@@ -218,9 +218,9 @@ void extcl_cpu_wr_mem_44(WORD address, BYTE value) {
 	}
 }
 BYTE extcl_save_mapper_44(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, m44.reg);
-	savestateEle(mode, slot, m44.prgmap);
-	savestateEle(mode, slot, m44.chrmap);
+	save_slot_ele(mode, slot, m44.reg);
+	save_slot_ele(mode, slot, m44.prgmap);
+	save_slot_ele(mode, slot, m44.chrmap);
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	return (EXIT_OK);

@@ -23,35 +23,20 @@ typedef signed int SDBWORD;
 #define SAVE_FOLDER    "/save"
 
 #ifndef FALSE
-enum { FALSE, TRUE };
+enum false_value { FALSE, TRUE };
 #endif
-enum { EXIT_OK, EXIT_ERROR };
-enum { LOWER, UPPER };
-enum { READ, WRITE };
-enum { AUTO, NTSC, PAL, DENDY, DEFAULT = 255 };
-enum { APU60HZ, APU48HZ };
-/* i vari mirroring */
-enum {
-	HORIZONTAL,
-	VERTICAL,
-	SINGLESCR0,
-	SINGLESCR1,
-	FOURSCR,
-	SCR0x1_SCR1x3,
-	SCR0x3_SCR1x1
-};
-/* i tipi di reset */
-enum {
-	RESET      = 0x10,
-	HARD       = 0x20,
-	CHANGEROM  = 0x30,
-	CHANGEMODE = 0x40,
-	POWERUP    = 0x50
+enum exit_type { EXIT_OK, EXIT_ERROR };
+enum lower_value { LOWER, UPPER };
+enum machine_mode { AUTO, NTSC, PAL, DENDY, DEFAULT = 255 };
+enum reset_type {
+	RESET       = 0x10,
+	HARD        = 0x20,
+	CHANGE_ROM  = 0x30,
+	CHANGE_MODE = 0x40,
+	POWER_UP    = 0x50
 };
 /* le dimesioni dello screen da renderizzare */
-enum { SCR_LINES = 240, SCR_ROWS = 256 };
-/* le modalita' del colore possibili con la PPU */
-enum { GRAYSCALE = 0x30, NORMAL = 0x3F };
+enum screen_dimension { SCR_LINES = 240, SCR_ROWS = 256 };
 
 #define LENGTH(x) (sizeof(x)/sizeof(*(x)))
 

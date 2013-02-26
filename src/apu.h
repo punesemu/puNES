@@ -11,8 +11,9 @@
 #include "common.h"
 #include "external_calls.h"
 
-enum dmc_types_of_dma { DMCNORMAL, DMCCPUWRITE, DMCR4014, DMCNNLDMA };
+enum dmc_types_of_dma { DMC_NORMAL, DMC_CPU_WRITE, DMC_R4014, DMC_NNL_DMA };
 enum apu_channels { APU_S1, APU_S2, APU_TR, APU_NS, APU_DMC };
+enum apu_mode { APU_60HZ, APU_48HZ };
 
 /* length counter */
 #define length_run(channel)\
@@ -197,15 +198,15 @@ enum apu_channels { APU_S1, APU_S2, APU_TR, APU_NS, APU_DMC };
 	if (DMC.empty && DMC.remain) {\
 		BYTE tick = 4;\
 		switch (DMC.tick_type) {\
-		case DMCCPUWRITE:\
-			tick = 3;\
-			break;\
-		case DMCR4014:\
-			tick = 2;\
-			break;\
-		case DMCNNLDMA:\
-			tick = 1;\
-			break;\
+			case DMC_CPU_WRITE:\
+				tick = 3;\
+				break;\
+			case DMC_R4014:\
+				tick = 2;\
+				break;\
+			case DMC_NNL_DMA:\
+				tick = 1;\
+				break;\
 		}\
 		if (fds.info.enabled) {\
 			if (DMC.address < 0xE000) {\
@@ -247,9 +248,9 @@ enum apu_channels { APU_S1, APU_S2, APU_TR, APU_NS, APU_DMC };
 	 * modalita' NTSC, se a uno quella PAL.\
 	 */\
 	if (r4017.value & 0x80) {\
-		apu.mode = APU48HZ;\
+		apu.mode = APU_48HZ;\
 	} else {\
-		apu.mode = APU60HZ;\
+		apu.mode = APU_60HZ;\
 	}\
 	if (r4017.value & 0x40) {\
 		/* azzero il bit 6 del $4015 */\

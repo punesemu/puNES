@@ -184,14 +184,14 @@ void extcl_cpu_wr_mem_VRC4(WORD address, BYTE value) {
 	}
 }
 BYTE extcl_save_mapper_VRC4(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, vrc4.chrRomBank);
-	savestateEle(mode, slot, vrc4.swapMode);
-	savestateEle(mode, slot, vrc4.irqEnabled);
-	savestateEle(mode, slot, vrc4.irqReload);
-	savestateEle(mode, slot, vrc4.irqMode);
-	savestateEle(mode, slot, vrc4.irqAcknowledge);
-	savestateEle(mode, slot, vrc4.irqCount);
-	savestateEle(mode, slot, vrc4.irqPrescaler);
+	save_slot_ele(mode, slot, vrc4.chrRomBank);
+	save_slot_ele(mode, slot, vrc4.swapMode);
+	save_slot_ele(mode, slot, vrc4.irqEnabled);
+	save_slot_ele(mode, slot, vrc4.irqReload);
+	save_slot_ele(mode, slot, vrc4.irqMode);
+	save_slot_ele(mode, slot, vrc4.irqAcknowledge);
+	save_slot_ele(mode, slot, vrc4.irqCount);
+	save_slot_ele(mode, slot, vrc4.irqPrescaler);
 
 	return (EXIT_OK);
 }

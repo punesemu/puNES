@@ -254,10 +254,10 @@ void extcl_cpu_wr_mem_Sunsoft_S3(WORD address, BYTE value) {
 	}
 }
 BYTE extcl_save_mapper_Sunsoft_S3(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, s3.enable);
-	savestateEle(mode, slot, s3.toggle);
-	savestateEle(mode, slot, s3.count);
-	savestateEle(mode, slot, s3.delay);
+	save_slot_ele(mode, slot, s3.enable);
+	save_slot_ele(mode, slot, s3.toggle);
+	save_slot_ele(mode, slot, s3.count);
+	save_slot_ele(mode, slot, s3.delay);
 
 	return (EXIT_OK);
 }
@@ -308,10 +308,10 @@ void extcl_cpu_wr_mem_Sunsoft_S4(WORD address, BYTE value) {
 	}
 }
 BYTE extcl_save_mapper_Sunsoft_S4(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, s4.chrNmt);
-	savestateEle(mode, slot, s4.mirroring);
-	savestateEle(mode, slot, s4.mode);
-	if ((mode == SSREAD) && s4.mode) {
+	save_slot_ele(mode, slot, s4.chrNmt);
+	save_slot_ele(mode, slot, s4.mirroring);
+	save_slot_ele(mode, slot, s4.mode);
+	if ((mode == SAVE_SLOT_READ) && s4.mode) {
 		sunsoftS4mirroring()
 	}
 
@@ -446,33 +446,33 @@ BYTE extcl_cpu_rd_mem_Sunsoft_FM7(WORD address, BYTE openbus, BYTE before) {
 	return (openbus);
 }
 BYTE extcl_save_mapper_Sunsoft_FM7(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, fm7.address);
-	savestateEle(mode, slot, fm7.prgRamEnable);
-	savestateEle(mode, slot, fm7.prgRamMode);
-	savestateEle(mode, slot, fm7.prgRamAddress);
-	if ((mode == SSREAD) && !fm7.prgRamMode) {
+	save_slot_ele(mode, slot, fm7.address);
+	save_slot_ele(mode, slot, fm7.prgRamEnable);
+	save_slot_ele(mode, slot, fm7.prgRamMode);
+	save_slot_ele(mode, slot, fm7.prgRamAddress);
+	if ((mode == SAVE_SLOT_READ) && !fm7.prgRamMode) {
 		prg.ram_plus_8k = &prg.rom[fm7.prgRamAddress];
 	}
-	savestateEle(mode, slot, fm7.irqEnableTrig);
-	savestateEle(mode, slot, fm7.irqEnableCount);
-	savestateEle(mode, slot, fm7.irqCount);
-	savestateEle(mode, slot, fm7.irqDelay);
+	save_slot_ele(mode, slot, fm7.irqEnableTrig);
+	save_slot_ele(mode, slot, fm7.irqEnableCount);
+	save_slot_ele(mode, slot, fm7.irqCount);
+	save_slot_ele(mode, slot, fm7.irqDelay);
 
 	/*
 	 * nelle versioni 1 e 2 dei files di save non salvavo
 	 * i dati delle snd square perche' non avevo ancora
 	 * implementato la loro emulazione.
 	 */
-	if (savestate.version > 2) {
+	if (save_slot.version > 2) {
 		BYTE i;
 
 		for (i = 0; i < LENGTH(fm7.square); i++) {
-			savestateEle(mode, slot, fm7.square[i].disable);
-			savestateEle(mode, slot, fm7.square[i].step);
-			savestateEle(mode, slot, fm7.square[i].frequency);
-			savestateEle(mode, slot, fm7.square[i].timer);
-			savestateEle(mode, slot, fm7.square[i].volume);
-			savestateEle(mode, slot, fm7.square[i].output);
+			save_slot_ele(mode, slot, fm7.square[i].disable);
+			save_slot_ele(mode, slot, fm7.square[i].step);
+			save_slot_ele(mode, slot, fm7.square[i].frequency);
+			save_slot_ele(mode, slot, fm7.square[i].timer);
+			save_slot_ele(mode, slot, fm7.square[i].volume);
+			save_slot_ele(mode, slot, fm7.square[i].output);
 		}
 	}
 	return (EXIT_OK);

@@ -154,7 +154,7 @@ BYTE extcl_cpu_rd_mem_Ave_D1012(WORD address, BYTE openbus, BYTE before) {
 	return (openbus);
 }
 BYTE extcl_save_mapper_Ave_D1012(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, ave_d1012.reg);
+	save_slot_ele(mode, slot, ave_d1012.reg);
 
 	return (EXIT_OK);
 }

@@ -118,8 +118,8 @@ BYTE extcl_cpu_rd_mem_208(WORD address, BYTE openbus, BYTE before) {
 	return (m208.reg[address & 0x0003]);
 }
 BYTE extcl_save_mapper_208(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, m208.ctrl);
-	savestateEle(mode, slot, m208.reg);
+	save_slot_ele(mode, slot, m208.ctrl);
+	save_slot_ele(mode, slot, m208.reg);
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	return (EXIT_OK);

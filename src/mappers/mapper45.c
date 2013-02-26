@@ -218,10 +218,10 @@ void extcl_cpu_wr_mem_45(WORD address, BYTE value) {
 	}
 }
 BYTE extcl_save_mapper_45(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, m45.reg);
-	savestateEle(mode, slot, m45.index);
-	savestateEle(mode, slot, m45.prgmap);
-	savestateEle(mode, slot, m45.chrmap);
+	save_slot_ele(mode, slot, m45.reg);
+	save_slot_ele(mode, slot, m45.index);
+	save_slot_ele(mode, slot, m45.prgmap);
+	save_slot_ele(mode, slot, m45.chrmap);
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	return (EXIT_OK);

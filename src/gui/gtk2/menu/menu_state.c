@@ -317,7 +317,7 @@ void menu_state_check(void) {
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MSSLOT3]), FALSE);
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MSSLOT4]), FALSE);
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MSSLOT5]), FALSE);
-	switch (savestate.slot) {
+	switch (save_slot.slot) {
 		case 0:
 			index = MSSLOT0;
 			break;
@@ -338,7 +338,7 @@ void menu_state_check(void) {
 			break;
 	}
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[index]), TRUE);
-	if (savestate.slotState[savestate.slot]) {
+	if (save_slot.state[save_slot.slot]) {
 		gtk_widget_set_sensitive(GTK_WIDGET(ssload), TRUE);
 		gtk_widget_set_sensitive(check[MLOAD], TRUE);
 	} else {
@@ -351,14 +351,14 @@ void menu_state_saveslot_incdec(BYTE mode) {
 	BYTE newslot;
 
 	if (mode == INC) {
-		newslot = savestate.slot + 1;
-		if (newslot >= SSAVAILABLE) {
+		newslot = save_slot.slot + 1;
+		if (newslot >= SAVE_SLOTS) {
 			newslot = 0;
 		}
 	} else {
-		newslot = savestate.slot - 1;
-		if (newslot >= SSAVAILABLE) {
-			newslot = SSAVAILABLE - 1;
+		newslot = save_slot.slot - 1;
+		if (newslot >= SAVE_SLOTS) {
+			newslot = SAVE_SLOTS - 1;
 		}
 	}
 	menu_state_saveslot_set(newslot);
@@ -367,10 +367,10 @@ void menu_state_saveslot_action(BYTE mode) {
 	emu_pause(TRUE);
 
 	if (mode == SAVE) {
-		savestateSave();
+		save_slot_save();
 		cfg_file_pgs_save();
 	} else {
-		savestateLoad();
+		save_slot_load();
 	}
 
 	guiUpdate();
@@ -382,7 +382,7 @@ void menu_state_saveslot_set(BYTE slot) {
 		return;
 	}
 
-	savestate.slot = slot;
+	save_slot.slot = slot;
 
 	gtk_combo_box_set_active(GTK_COMBO_BOX(saveslot), slot);
 

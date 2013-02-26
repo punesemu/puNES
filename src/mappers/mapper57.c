@@ -70,7 +70,7 @@ void extcl_cpu_wr_mem_57(WORD address, BYTE value) {
 	chr.bank_1k[7] = &chr.data[bank | 0x1C00];
 }
 BYTE extcl_save_mapper_57(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, m57.reg);
+	save_slot_ele(mode, slot, m57.reg);
 
 	return (EXIT_OK);
 }

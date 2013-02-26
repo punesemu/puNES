@@ -133,7 +133,7 @@ void extcl_cpu_wr_mem_VRC2(WORD address, BYTE value) {
 	}
 }
 BYTE extcl_save_mapper_VRC2(BYTE mode, BYTE slot, FILE *fp) {
-	savestateEle(mode, slot, vrc2.chrRomBank);
+	save_slot_ele(mode, slot, vrc2.chrRomBank);
 
 	return (EXIT_OK);
 }

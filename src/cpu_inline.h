@@ -15,6 +15,7 @@
 #include "input.h"
 #include "mappers.h"
 #include "ppu_inline.h"
+#include "ppu.h"
 #include "apu.h"
 #include "irqA12.h"
 #include "irql2f.h"
@@ -596,7 +597,7 @@ static void cpu_wr_mem(WORD address, BYTE value) {
 		}
 		/* Sprite memory */
 		if (address == 0x4014) {
-			DMC.tick_type = DMCR4014;
+			DMC.tick_type = DMC_R4014;
 			/* eseguo un tick hardware */
 			tick_hw(1);
 			/* scrivo */
@@ -838,7 +839,7 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 		 * con il bit 0 settato viene indicata
 		 * la modalita' scale di grigio per l'output.
 		 */
-		(value & 0x01) ? (r2001.color_mode = GRAYSCALE) : (r2001.color_mode = NORMAL);
+		(value & 0x01) ? (r2001.color_mode = PPU_CM_GRAYSCALE) : (r2001.color_mode = PPU_CM_NORMAL);
 		/* visibilita' del background */
 		r2001.bck_visible = value & 0x08;
 		/* visibilita' degli sprites */
@@ -1072,12 +1073,12 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 				 */
 				if (index == 253) {
 					cpu_rd_mem(address++, TRUE);
-					DMC.tick_type = DMCNNLDMA;
+					DMC.tick_type = DMC_NNL_DMA;
 				} else if (index == 254) {
 					cpu_rd_mem(address++, TRUE);
-					DMC.tick_type = DMCR4014;
+					DMC.tick_type = DMC_R4014;
 				} else if (index == 255) {
-					DMC.tick_type = DMCCPUWRITE;
+					DMC.tick_type = DMC_CPU_WRITE;
 					cpu_rd_mem(address++, TRUE);
 				} else {
 					cpu_rd_mem(address++, TRUE);
