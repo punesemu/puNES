@@ -299,7 +299,8 @@ void ppu_tick(WORD cycles_cpu) {
 								/* sto trattando un pixel del background */
 								flag_bg = TRUE;
 								/* recupero i 2 bit LSB del pixel */
-								color_bg = (tile_render.l_byte & 0x01) | (tile_render.h_byte & 0x02);
+								color_bg = (tile_render.l_byte & 0x01)
+								        | (tile_render.h_byte & 0x02);
 								/*
 								 * shifto di un bit (leggi un pixel) i
 								 * due bitmap buffers
@@ -607,11 +608,10 @@ void ppu_tick(WORD cycles_cpu) {
 											r2004.value = oam.element[0][YC];
 										} else {
 											/*
-											 * leggo dall'OAM il byte byteOAM
+											 * leggo dall'OAM il byte byte_OAM
 											 * dell'elemento in esame.
 											 */
-											r2004.value =
-													oam.element[spr_ev.index][spr_ev.byte_OAM];
+											r2004.value = oam.element[spr_ev.index][spr_ev.byte_OAM];
 											/* l'unica differenza nei cicli pari e' lo 0 */
 											if (spr_ev.timing == 0) {
 												/*
@@ -817,10 +817,11 @@ void ppu_tick(WORD cycles_cpu) {
 							/* salvo i primi 8 bit del tile dello sprite */
 							sprite_plus[spr_ev.tmp_spr_plus].l_byte = ppu_rd_mem(ppu.spr_adr);
 							/* salvo i secondi 8 bit del tile dello sprite */
-							sprite_plus[spr_ev.tmp_spr_plus].h_byte = (ppu_rd_mem(ppu.spr_adr | 0x08)
-							        << 1);
+							sprite_plus[spr_ev.tmp_spr_plus].h_byte = (ppu_rd_mem(
+							        ppu.spr_adr | 0x08) << 1);
 						} else {
-							sprite_plus[spr_ev.tmp_spr_plus].l_byte = inv_chr[ppu_rd_mem(ppu.spr_adr)];
+							sprite_plus[spr_ev.tmp_spr_plus].l_byte = inv_chr[ppu_rd_mem(
+							        ppu.spr_adr)];
 							/* salvo i secondi 8 bit del tile dello sprite */
 							sprite_plus[spr_ev.tmp_spr_plus].h_byte =
 									(inv_chr[ppu_rd_mem(ppu.spr_adr | 0x08)] << 1);

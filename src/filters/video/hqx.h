@@ -35,7 +35,7 @@ struct _hqx {
 	WORD dst_rows;
 } hqnx;
 
-void hqxInit(void);
+void hqx_init(void);
 void hqNx(WORD *screen, WORD **screen_index, Uint32 *palette, SDL_Surface *dst, WORD rows,
 		WORD lines, BYTE factor);
 void hq2x_32_rb(WORD *screen, SDL_Surface *dst, uint32_t *palette);

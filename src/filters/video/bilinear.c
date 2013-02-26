@@ -14,7 +14,7 @@ void bilinear(WORD *screen, WORD **screen_index, Uint32 *palette, SDL_Surface *d
 	int32_t *dstpix = (int32_t *) dst->pixels;
 	WORD ox = 0, oy = 0;
 	_color_RGB A, B, C, D;
-	unsigned int wStepFixed16b, hStepFixed16b, wCoef, hCoef, x, y;
+	unsigned int w_step_fixed_16b, h_step_fixed_16b, w_coef, h_coef, x, y;
 	unsigned int hc1, hc2;
 	unsigned int wc1[2] = {0, 0};
 	unsigned int wc2[2] = {0, 0};
@@ -37,24 +37,24 @@ void bilinear(WORD *screen, WORD **screen_index, Uint32 *palette, SDL_Surface *d
 	/* lock della destinazione */
 	//SDL_LockSurface(dst);
 
-	wStepFixed16b = ((rows - 1) << 16) / (dst->w - 1);
-	hStepFixed16b = ((lines - 1) << 16) / (dst->h - 1);
+	w_step_fixed_16b = ((rows - 1) << 16) / (dst->w - 1);
+	h_step_fixed_16b = ((lines - 1) << 16) / (dst->h - 1);
 
-	hCoef = 0;
+	h_coef = 0;
 
 	for (y = 0; y < dst->h; y++) {
-		offsetY[0] = (hCoef >> 16) + oy;
-		hc2 = (hCoef >> 9) & 127;
+		offsetY[0] = (h_coef >> 16) + oy;
+		hc2 = (h_coef >> 9) & 127;
 		hc1 = 128 - hc2;
 
-		wCoef = 0;
+		w_coef = 0;
 		for (x = 0; x < dst->w; x++) {
 			uint8_t pippo = FALSE;
 			uint8_t pluto = FALSE;
 			uint8_t minni = FALSE;
 
-			offsetX[0] = (wCoef >> 16) + ox;
-			wc2[0] = (wCoef >> 9) & 127;
+			offsetX[0] = (w_coef >> 16) + ox;
+			wc2[0] = (w_coef >> 9) & 127;
 			wc1[0] = 128 - wc2[0];
 
 			if (offsetX[0] != offsetX[1]) {
@@ -101,9 +101,9 @@ void bilinear(WORD *screen, WORD **screen_index, Uint32 *palette, SDL_Surface *d
 
 			(*dstpix++) = ziopapero;
 
-			wCoef += wStepFixed16b;
+			w_coef += w_step_fixed_16b;
 		}
-		hCoef += hStepFixed16b;
+		h_coef += h_step_fixed_16b;
 	}
 
 	/* unlock della destinazione */
@@ -112,22 +112,22 @@ void bilinear(WORD *screen, WORD **screen_index, Uint32 *palette, SDL_Surface *d
 	return;
 
 	/*
-	wStepFixed16b = ((SCR_ROWS - 1) << 16) / (dst->w - 1);
-	hStepFixed16b = ((SCR_LINES - 1) << 16) / (dst->h - 1);
+	w_step_fixed_16b = ((SCR_ROWS - 1) << 16) / (dst->w - 1);
+	h_step_fixed_16b = ((SCR_LINES - 1) << 16) / (dst->h - 1);
 
-	hCoef = 0;
+	h_coef = 0;
 
 	SDL_LockSurface(dst);
 
 	for (y = 0; y < dst->h; y++) {
-		offsetY = (hCoef >> 16);
-		hc2 = (hCoef >> 9) & 127;
+		offsetY = (h_coef >> 16);
+		hc2 = (h_coef >> 9) & 127;
 		hc1 = 128 - hc2;
 
-		wCoef = 0;
+		w_coef = 0;
 		for (x = 0; x < dst->w; x++) {
-			offsetX = (wCoef >> 16);
-			wc2 = (wCoef >> 9) & 127;
+			offsetX = (w_coef >> 16);
+			wc2 = (w_coef >> 9) & 127;
 			wc1 = 128 - wc2;
 
 			A = palette_RGB[(screen_index[offsetY][offsetX])];
@@ -141,9 +141,9 @@ void bilinear(WORD *screen, WORD **screen_index, Uint32 *palette, SDL_Surface *d
 
 			*dstpix++ = (r << 16) | (g << 8) | b;
 
-			wCoef += wStepFixed16b;
+			w_coef += w_step_fixed_16b;
 		}
-		hCoef += hStepFixed16b;
+		h_coef += h_step_fixed_16b;
 	}
 
 	SDL_UnlockSurface(dst);

@@ -15,10 +15,10 @@
 
 enum { COMPOSITE, SVIDEO, RGBMODE };
 
-void ntscSurface(WORD *screen, WORD **screeIndex, Uint32 *palette, SDL_Surface *dst, WORD rows,
+void ntsc_surface(WORD *screen, WORD **screeIndex, Uint32 *palette, SDL_Surface *dst, WORD rows,
 		WORD lines, BYTE factor);
-BYTE ntscInit(BYTE effect, BYTE color, BYTE *paletteBase, BYTE *paletteIN, BYTE *paletteOUT);
-void ntscQuit(void);
-void ntscSet(BYTE effect, BYTE color, BYTE *paletteBase, BYTE *paletteIN, BYTE *paletteOUT);
+BYTE ntsc_init(BYTE effect, BYTE color, BYTE *palette_base, BYTE *palette_in, BYTE *palette_out);
+void ntsc_quit(void);
+void ntsc_set(BYTE effect, BYTE color, BYTE *palette_base, BYTE *palette_in, BYTE *palette_out);
 
 #endif /* NTSC_H_ */

@@ -180,7 +180,7 @@ void guiEvent(void) {
 					if (++gfx.ntscFormat > RGBMODE) {
 						gfx.ntscFormat = COMPOSITE;
 					}
-					ntscSet(gfx.ntscFormat, 0, 0, (BYTE *) palette_RGB, 0);
+					ntsc_set(gfx.ntscFormat, 0, 0, (BYTE *) palette_RGB, 0);
 					guiUpdate();
 				} else {
 					gfx_set_screen(NO_CHANGE, RGBNTSC, NO_CHANGE, NO_CHANGE, FALSE);

@@ -11,7 +11,7 @@
 uint32_t RGBtoYUV[NUM_COLORS];
 uint32_t YUV1, YUV2;
 
-void hqxInit(void) {
+void hqx_init(void) {
 	/* Initalize RGB to YUV lookup table */
 	uint32_t i, r, g, b, y, u, v;
 

@@ -22,7 +22,7 @@ struct _scl {
 	WORD lines;
 } scl;
 
-void scaleSurface(WORD *screen, WORD **screen_index, Uint32 *palette, SDL_Surface *dst, WORD rows,
+void scale_surface(WORD *screen, WORD **screen_index, Uint32 *palette, SDL_Surface *dst, WORD rows,
 		WORD lines, BYTE factor) {
 
 	scl.sx = 0;
@@ -40,16 +40,16 @@ void scaleSurface(WORD *screen, WORD **screen_index, Uint32 *palette, SDL_Surfac
 	}
 
 	if (factor == 1) {
-		scaleSurface1x(screen_index, palette, dst);
+		scale_surface1x(screen_index, palette, dst);
 	} else if (factor == 2) {
-		scaleSurface2x(screen_index, palette, dst);
+		scale_surface2x(screen_index, palette, dst);
 	} else if (factor == 3) {
-		scaleSurface3x(screen_index, palette, dst);
+		scale_surface3x(screen_index, palette, dst);
 	} else if (factor == 4) {
-		scaleSurface4x(screen_index, palette, dst);
+		scale_surface4x(screen_index, palette, dst);
 	}
 }
-void scaleSurface1x(WORD **screen_index, uint32_t *palette, SDL_Surface *dst) {
+void scale_surface1x(WORD **screen_index, uint32_t *palette, SDL_Surface *dst) {
 	const uint32_t dstpitch = dst->pitch;
 	uint8_t *dstpix = (uint8_t *) dst->pixels;
 	uint32_t TH0, TW0;
@@ -86,7 +86,7 @@ void scaleSurface1x(WORD **screen_index, uint32_t *palette, SDL_Surface *dst) {
 		scl.oy++;
 	}
 }
-void scaleSurface2x(WORD **screen_index, uint32_t *palette, SDL_Surface *dst) {
+void scale_surface2x(WORD **screen_index, uint32_t *palette, SDL_Surface *dst) {
 	const uint32_t dstpitch = dst->pitch;
 	uint8_t *dstpix = (uint8_t *) dst->pixels;
 	uint32_t TH0, TH1, TW0, TW1;
@@ -137,7 +137,7 @@ void scaleSurface2x(WORD **screen_index, uint32_t *palette, SDL_Surface *dst) {
 		scl.oy++;
 	}
 }
-void scaleSurface3x(WORD **screen_index, uint32_t *palette, SDL_Surface *dst) {
+void scale_surface3x(WORD **screen_index, uint32_t *palette, SDL_Surface *dst) {
 	const uint32_t dstpitch = dst->pitch;
 	uint8_t *dstpix = (uint8_t *) dst->pixels;
 	uint32_t TH0, TH1, TH2, TW0, TW1, TW2;
@@ -208,7 +208,7 @@ void scaleSurface3x(WORD **screen_index, uint32_t *palette, SDL_Surface *dst) {
 		scl.oy++;
 	}
 }
-void scaleSurface4x(WORD **screen_index, uint32_t *palette, SDL_Surface *dst) {
+void scale_surface4x(WORD **screen_index, uint32_t *palette, SDL_Surface *dst) {
 	const uint32_t dstpitch = dst->pitch;
 	uint8_t *dstpix = (uint8_t *) dst->pixels;
 	uint32_t TH0, TH1, TH2, TH3, TW0, TW1, TW2, TW3;

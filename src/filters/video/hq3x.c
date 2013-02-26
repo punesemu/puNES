@@ -78,15 +78,15 @@
 
 void hq3x_32_rb(WORD *screen, SDL_Surface *dst, uint32_t *palette) {
 	BYTE k;
-	SWORD prevline, nextline;
+	SWORD prev_line, next_line;
 	WORD w[10];
 	WORD spL = SCR_ROWS;
 	WORD srb = spL * sizeof(WORD);
 	WORD dpL = hqnx.dst_rows * 3;
 	WORD drb = dpL * sizeof(uint32_t);
 	uint32_t *dp = (uint32_t *) dst->pixels;
-	uint8_t *sRowP = (uint8_t *) screen;
-	uint8_t *dRowP = (uint8_t *) dp;
+	uint8_t *s_row_p = (uint8_t *) screen;
+	uint8_t *d_row_p = (uint8_t *) dp;
 	uint32_t yuv1, yuv2;
 	uint32_t wrgb[10];
 
@@ -105,37 +105,37 @@ void hq3x_32_rb(WORD *screen, SDL_Surface *dst, uint32_t *palette) {
 
 	for (; hqnx.sy < hqnx.lines; ++hqnx.sy) {
 		if (hqnx.sy > 0) {
-			prevline = -spL;
+			prev_line = -spL;
 		} else {
-			prevline = 0;
+			prev_line = 0;
 		}
 
 		if (hqnx.sy < (hqnx.lines - 1)) {
-			nextline = spL;
+			next_line = spL;
 		} else {
-			nextline = 0;
+			next_line = 0;
 		}
 
 		for (hqnx.sx = hqnx.startx; hqnx.sx < hqnx.rows; ++hqnx.sx) {
 			int pattern, flag;
 
-			w[2] = (*(screen + prevline));
+			w[2] = (*(screen + prev_line));
 			wrgb[2] = palette[w[2]];
 
 			w[5] = (*screen);
 			wrgb[5] = palette[w[5]];
 
-			w[8] = (*(screen + nextline));
+			w[8] = (*(screen + next_line));
 			wrgb[8] = palette[w[8]];
 
 			if (hqnx.sx > 0) {
-				w[1] = (*(screen + prevline - 1));
+				w[1] = (*(screen + prev_line - 1));
 				wrgb[1] = palette[w[1]];
 
 				w[4] = (*(screen - 1));
 				wrgb[4] = palette[w[4]];
 
-				w[7] = (*(screen + nextline - 1));
+				w[7] = (*(screen + next_line - 1));
 				wrgb[7] = palette[w[7]];
 			} else {
 				w[1] = w[2];
@@ -149,13 +149,13 @@ void hq3x_32_rb(WORD *screen, SDL_Surface *dst, uint32_t *palette) {
 			}
 
 			if (hqnx.sx < (hqnx.rows - 1)) {
-				w[3] = (*(screen + prevline + 1));
+				w[3] = (*(screen + prev_line + 1));
 				wrgb[3] = palette[w[3]];
 
 				w[6] = (*(screen + 1));
 				wrgb[6] = palette[w[6]];
 
-				w[9] = (*(screen + nextline + 1));
+				w[9] = (*(screen + next_line + 1));
 				wrgb[9] = palette[w[9]];
 			} else {
 				w[3] = w[2];
@@ -3116,10 +3116,10 @@ void hq3x_32_rb(WORD *screen, SDL_Surface *dst, uint32_t *palette) {
             dp += 3;
         }
 
-		sRowP += srb;
-		screen = (WORD *) sRowP + hqnx.startx;
+		s_row_p += srb;
+		screen = (WORD *) s_row_p + hqnx.startx;
 
-		dRowP += drb * 3;
-		dp = (uint32_t *) dRowP;
+		d_row_p += drb * 3;
+		dp = (uint32_t *) d_row_p;
     }
 }

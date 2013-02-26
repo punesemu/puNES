@@ -54,7 +54,7 @@
 	palette_RGB[index].color = (tmp < 0 ? 0 : (tmp > 0xFF ? 0xFF : tmp))
 #define rgb_modifier(red, green, blue)\
 	/* prima ottengo la paletta monocromatica */\
-	ntscSet(cfg->ntsc_format, PALETTE_MONO, 0, 0, (BYTE *) palette_RGB);\
+	ntsc_set(cfg->ntsc_format, PALETTE_MONO, 0, 0, (BYTE *) palette_RGB);\
 	/* quindi la modifico */\
 	{\
 		WORD i;\
@@ -69,7 +69,7 @@
 		}\
 	}\
 	/* ed infine utilizzo la nuova */\
-	ntscSet(cfg->ntsc_format, FALSE, 0, (BYTE *) palette_RGB,(BYTE *) palette_RGB)
+	ntsc_set(cfg->ntsc_format, FALSE, 0, (BYTE *) palette_RGB,(BYTE *) palette_RGB)
 
 SDL_Surface *framebuffer;
 uint32_t *palette_win, software_flags;
@@ -154,7 +154,7 @@ BYTE gfx_init(void) {
 	 * come filtro ma anche nel gfx_set_screen() per
 	 * generare la paletta dei colori.
 	 */
-	if (ntscInit(0, 0, 0, 0, 0)) {
+	if (ntsc_init(0, 0, 0, 0, 0)) {
 		return (EXIT_ERROR);
 	}
 
@@ -249,7 +249,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 			case CRT_CURVE:
 			case CRT_NO_CURVE:
 			case NO_FILTER:
-				effect = scaleSurface;
+				effect = scale_surface;
 				/*
 				 * se sto passando dal filtro ntsc ad un'altro, devo
 				 * ricalcolare la larghezza del video mode quindi
@@ -311,7 +311,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 				}
 				break;
 			case NTSC_FILTER:
-				effect = ntscSurface;
+				effect = ntsc_surface;
 				/*
 				 * il fattore di scala deve essere gia' stato
 				 * inizializzato almeno una volta.
@@ -367,9 +367,9 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 				if (filter != NO_FILTER) {
 					/*
 					 * con un fatto redi scala X1 effect deve essere
-					 * sempre impostato su scaleSurface.
+					 * sempre impostato su scale_surface.
 					 */
-					effect = scaleSurface;
+					effect = scale_surface;
 					return;
 				}
 				set_mode = TRUE;
@@ -483,22 +483,22 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 	if ((palette != cfg->palette) || info.on_cfg) {
 		switch (palette) {
 			case PALETTE_PAL:
-				ntscSet(cfg->ntsc_format, FALSE, (BYTE *) palette_base_pal, 0,
+				ntsc_set(cfg->ntsc_format, FALSE, (BYTE *) palette_base_pal, 0,
 				        (BYTE *) palette_RGB);
 				break;
 			case PALETTE_NTSC:
-				ntscSet(cfg->ntsc_format, FALSE, 0, 0, (BYTE *) palette_RGB);
+				ntsc_set(cfg->ntsc_format, FALSE, 0, 0, (BYTE *) palette_RGB);
 				break;
 			case PALETTE_GREEN:
 				rgb_modifier(-0x20, 0x20, -0x20);
 				break;
 			default:
-				ntscSet(cfg->ntsc_format, palette, 0, 0, (BYTE *) palette_RGB);
+				ntsc_set(cfg->ntsc_format, palette, 0, 0, (BYTE *) palette_RGB);
 				break;
 		}
 
 		/* inizializzo in ogni caso la tabella YUV dell'hqx */
-		hqxInit();
+		hqx_init();
 
 		/*
 		 * memorizzo i colori della paletta nel
@@ -555,7 +555,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 					opengl.factor = cfg->scale;
 					opengl.glsl.shader_used = TRUE;
 					shader.id = SHADER_NO_FILTER;
-					opengl.effect = scaleSurface;
+					opengl.effect = scale_surface;
 					use_txt_texture = TRUE;
 					break;
 				case BILINEAR:
@@ -564,7 +564,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 					opengl.factor = cfg->scale;
 					opengl.glsl.shader_used = TRUE;
 					shader.id = SHADER_NO_FILTER;
-					opengl.effect = scaleSurface;
+					opengl.effect = scale_surface;
 					opengl.interpolation = TRUE;
 					use_txt_texture = TRUE;
 					break;
@@ -574,7 +574,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 					opengl.factor = cfg->scale;
 					opengl.glsl.shader_used = TRUE;
 					shader.id = SHADER_POSPHOR;
-					opengl.effect = scaleSurface;
+					opengl.effect = scale_surface;
 					use_txt_texture = TRUE;
 					break;
 				case SCANLINE:
@@ -583,7 +583,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 					opengl.factor = cfg->scale;
 					opengl.glsl.shader_used = TRUE;
 					shader.id = SHADER_SCANLINE;
-					opengl.effect = scaleSurface;
+					opengl.effect = scale_surface;
 					use_txt_texture = TRUE;
 					break;
 				case DBL:
@@ -592,7 +592,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 					opengl.factor = cfg->scale;
 					opengl.glsl.shader_used = TRUE;
 					shader.id = SHADER_DONTBLOOM;
-					opengl.effect = scaleSurface;
+					opengl.effect = scale_surface;
 					use_txt_texture = TRUE;
 					break;
 				case CRT_CURVE:
@@ -601,7 +601,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 					opengl.factor = cfg->scale;
 					opengl.glsl.shader_used = TRUE;
 					shader.id = SHADER_CRT;
-					opengl.effect = scaleSurface;
+					opengl.effect = scale_surface;
 					use_txt_texture = TRUE;
 					break;
 				case CRT_NO_CURVE:
@@ -610,7 +610,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 					opengl.factor = cfg->scale;
 					opengl.glsl.shader_used = TRUE;
 					shader.id = SHADER_CRT4;
-					opengl.effect = scaleSurface;
+					opengl.effect = scale_surface;
 					use_txt_texture = TRUE;
 					break;
 				case SCALE2X:
@@ -619,7 +619,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 					opengl.factor = cfg->scale;
 					opengl.glsl.shader_used = TRUE;
 					shader.id = SHADER_SCALE2X;
-					opengl.effect = scaleSurface;
+					opengl.effect = scale_surface;
 					use_txt_texture = TRUE;
 					break;
 				case SCALE3X:
@@ -628,7 +628,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 					opengl.factor = cfg->scale;
 					opengl.glsl.shader_used = TRUE;
 					shader.id = SHADER_SCALE3X;
-					opengl.effect = scaleSurface;
+					opengl.effect = scale_surface;
 					use_txt_texture = TRUE;
 					break;
 				case SCALE4X:
@@ -646,7 +646,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 					opengl.factor = cfg->scale;
 					opengl.glsl.shader_used = TRUE;
 					shader.id = SHADER_SCALE4X;
-					opengl.effect = scaleSurface;
+					opengl.effect = scale_surface;
 					use_txt_texture = TRUE;
 					break;
 				case HQ2X:
@@ -655,7 +655,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 					opengl.factor = cfg->scale;
 					opengl.glsl.shader_used = TRUE;
 					shader.id = SHADER_HQ2X;
-					opengl.effect = scaleSurface;
+					opengl.effect = scale_surface;
 					use_txt_texture = TRUE;
 					break;
 				case HQ4X:
@@ -793,7 +793,7 @@ void gfx_quit(void) {
 	}
 
 	sdl_quit_gl();
-	ntscQuit();
+	ntsc_quit();
 	text_quit();
 	SDL_Quit();
 }
