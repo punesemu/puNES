@@ -10,7 +10,7 @@
 
 #include "sdl_text.h"
 
-enum {
+enum shader_type {
 	SHADER_COLOR,
 	SHADER_NO_FILTER,
 	SHADER_SCALE2X,
