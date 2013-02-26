@@ -92,17 +92,17 @@ BYTE save_slot_load(void) {
 	 * mi salvo lo stato attuale da ripristinare in caso
 	 * di un file di salvataggio corrotto.
 	 */
-	timelineSnap(TLSAVESTATE);
+	timeline_snap(TL_SAVE_SLOT);
 
 	if (slot_operation(SAVE_SLOT_READ, save_slot.slot, fp)) {
 		fprintf(stderr, "error on loading state, corrupted file.\n");
-		timelineBack(TLSAVESTATE, 0);
+		timeline_back(TL_SAVE_SLOT, 0);
 	}
 
 	fclose(fp);
 
 	/* riavvio il timeline */
-	timelineInit();
+	timeline_init();
 
 	return (EXIT_OK);
 }
@@ -111,24 +111,24 @@ void save_slot_preview(BYTE slot) {
 	FILE *fp;
 
 	if (!save_slot.preview_start) {
-		memcpy(tl.snaps[TLSNAPFREE] + tl.preview, screen.data, screen_size());
+		memcpy(tl.snaps[TL_SNAP_FREE] + tl.preview, screen.data, screen_size());
 		save_slot.preview_start = TRUE;
 	}
 
 	if (!save_slot.state[slot]) {
-		memcpy(screen.data, tl.snaps[TLSNAPFREE] + tl.preview, screen_size());
+		memcpy(screen.data, tl.snaps[TL_SNAP_FREE] + tl.preview, screen_size());
 		gfx_draw_screen(TRUE);
 		return;
 	}
 
 	if (name_slot_file(file, slot)) {
-		memcpy(screen.data, tl.snaps[TLSNAPFREE] + tl.preview, screen_size());
+		memcpy(screen.data, tl.snaps[TL_SNAP_FREE] + tl.preview, screen_size());
 		gfx_draw_screen(TRUE);
 		return;
 	}
 
 	if ((fp = fopen(file, "rb")) == NULL) {
-		memcpy(screen.data, tl.snaps[TLSNAPFREE] + tl.preview, screen_size());
+		memcpy(screen.data, tl.snaps[TL_SNAP_FREE] + tl.preview, screen_size());
 		gfx_draw_screen(TRUE);
 		fprintf(stderr, "error on load preview\n");
 		return;
@@ -142,7 +142,7 @@ void save_slot_preview(BYTE slot) {
 		bytes = fread(screen.data, screen_size(), 1, fp);
 
 		if (bytes != 1) {
-			memcpy(screen.data, tl.snaps[TLSNAPFREE] + tl.preview, screen_size());
+			memcpy(screen.data, tl.snaps[TL_SNAP_FREE] + tl.preview, screen_size());
 		}
 	}
 

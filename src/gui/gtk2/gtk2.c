@@ -35,15 +35,15 @@
 #define tlPressed(type)\
 	emu_pause(TRUE);\
 	type = TRUE;\
-	if (tl.snapsFill) {\
+	if (tl.snaps_fill) {\
 		/* faccio lo screenshot dello screen attuale */\
-		memcpy(tl.snaps[TLSNAPFREE] + tl.preview, screen.data, screen_size());\
+		memcpy(tl.snaps[TL_SNAP_FREE] + tl.preview, screen.data, screen_size());\
 	}
 #define tlRelease(type)\
-	if (tl.snapsFill) {\
+	if (tl.snaps_fill) {\
 		BYTE snap = gtk_range_get_value(GTK_RANGE(timeline));\
-		if (snap != (tl.snapsFill - 1)) {\
-			timelineBack(TLNORMAL, snap);\
+		if (snap != (tl.snaps_fill - 1)) {\
+			timeline_back(TL_NORMAL, snap);\
 		}\
 	}\
 	gtk_widget_grab_focus(GTK_WIDGET(sock));\
@@ -242,7 +242,7 @@ BYTE guiCreate(void) {
 
 		gtk_box_pack_end(GTK_BOX(hbox), hboxtl, FALSE, FALSE, 0);
 
-		timeline = gtk_hscale_new_with_range(0, TLSNAPS - 1, 1);
+		timeline = gtk_hscale_new_with_range(0, TL_SNAPS - 1, 1);
 
 		/* il timeline non puo' avere il focus */
 		gtk_widget_set_can_focus(GTK_WIDGET(timeline), FALSE);
@@ -263,7 +263,7 @@ BYTE guiCreate(void) {
 		{
 			BYTE i;
 
-			for (i = 0; i < TLSNAPS; i++) {
+			for (i = 0; i < TL_SNAPS; i++) {
 				gtk_scale_add_mark(GTK_SCALE(timeline), i, GTK_POS_RIGHT, NULL);
 			}
 		}
@@ -504,7 +504,7 @@ void guiFullscreen(void) {
 }
 void guiTimeline(void) {
 	tl.update = TRUE;
-	gtk_range_set_value(GTK_RANGE(timeline), tl.snapsFill - 1);
+	gtk_range_set_value(GTK_RANGE(timeline), tl.snaps_fill - 1);
 	tl.update = FALSE;
 }
 void guiSavestate(BYTE slot) {
@@ -881,21 +881,21 @@ gboolean timeline_value_changed(GtkRange *range) {
 	}
 
 	/* se non ci sono snap esco */
-	if (!tl.snapsFill) {
+	if (!tl.snaps_fill) {
 		gtk_range_set_value(GTK_RANGE(range), 0);
 		return (FALSE);
 	}
 	/* snap non puo' essere mai maggiore del numero di snap effettuate */
-	if (snap > (tl.snapsFill - 1)) {
-		gtk_range_set_value(GTK_RANGE(range), tl.snapsFill - 1);
-		snap = (tl.snapsFill - 1);
+	if (snap > (tl.snaps_fill - 1)) {
+		gtk_range_set_value(GTK_RANGE(range), tl.snaps_fill - 1);
+		snap = (tl.snaps_fill - 1);
 	}
-	if (snap == (tl.snapsFill - 1)) {
-		memcpy(screen.data, tl.snaps[TLSNAPFREE] + tl.preview, screen_size());
+	if (snap == (tl.snaps_fill - 1)) {
+		memcpy(screen.data, tl.snaps[TL_SNAP_FREE] + tl.preview, screen_size());
 		gfx_draw_screen(TRUE);
 		return (FALSE);
 	}
-	timelinePreview(snap);
+	timeline_preview(snap);
 	return (FALSE);
 }
 gboolean timeline_button_press_release_event(GtkWidget *widget, GdkEventButton *event) {
@@ -919,17 +919,17 @@ gchar *timeline_format_value(GtkScale *scale, gdouble value) {
 	if (tl.button) {
 		BYTE dec = 0;
 
-		if (tl.snapsFill) {
-			dec = ((tl.snapsFill - 1) - value) * TLSNAPSEC;
+		if (tl.snaps_fill) {
+			dec = ((tl.snaps_fill - 1) - value) * TL_SNAP_SEC;
 		}
 
 		if (!dec) {
 			return (g_strdup_printf("  %d s", 0));
 		} else {
-			return (g_strdup_printf("% 2d s", -abs(((tl.snapsFill - 1) - value) * TLSNAPSEC)));
+			return (g_strdup_printf("% 2d s", -abs(((tl.snaps_fill - 1) - value) * TL_SNAP_SEC)));
 		}
 	} else {
-		return (g_strdup_printf("% 2d s", (int) value * TLSNAPSEC));
+		return (g_strdup_printf("% 2d s", (int) value * TL_SNAP_SEC));
 	}
 }
 /* misc */

@@ -138,10 +138,10 @@ void cfg_standard_controller_page_notebook_keyboard(GtkWidget *notebook) {
 	line = cfg_standard_controller_line_notebook("Right", RIGHT);
 	gtk_box_pack_start(GTK_BOX(vbox), line, FALSE, FALSE, 0);
 
-	line = cfg_standard_controller_line_notebook("Turbo A", TRBA);
+	line = cfg_standard_controller_line_notebook("Turbo A", TRB_A);
 	gtk_box_pack_start(GTK_BOX(vbox), line, FALSE, FALSE, 0);
 
-	line = cfg_standard_controller_line_notebook("Turbo B", TRBB);
+	line = cfg_standard_controller_line_notebook("Turbo B", TRB_B);
 	gtk_box_pack_start(GTK_BOX(vbox), line, FALSE, FALSE, 0);
 
 	{
@@ -205,10 +205,10 @@ void cfg_standard_controller_page_notebook_joystick(GtkWidget *notebook) {
 	line = cfg_standard_controller_line_notebook("Right", RIGHT + maxButtons);
 	gtk_box_pack_start(GTK_BOX(vbox), line, FALSE, FALSE, 0);
 
-	line = cfg_standard_controller_line_notebook("Turbo A", TRBA + maxButtons);
+	line = cfg_standard_controller_line_notebook("Turbo A", TRB_A + maxButtons);
 	gtk_box_pack_start(GTK_BOX(vbox), line, FALSE, FALSE, 0);
 
-	line = cfg_standard_controller_line_notebook("Turbo B", TRBB + maxButtons);
+	line = cfg_standard_controller_line_notebook("Turbo B", TRB_B + maxButtons);
 	gtk_box_pack_start(GTK_BOX(vbox), line, FALSE, FALSE, 0);
 
 	gtk_box_pack_start(GTK_BOX(vbox), gtk_hseparator_new(), FALSE, FALSE, 0);

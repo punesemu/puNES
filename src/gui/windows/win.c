@@ -44,15 +44,15 @@
 #define tlDown(type)\
 	emu_pause(TRUE);\
 	type = TRUE;\
-	if (tl.snapsFill) {\
+	if (tl.snaps_fill) {\
 		/* faccio lo screenshot dello screen attuale */\
-		memcpy(tl.snaps[TLSNAPFREE] + tl.preview, screen.data, screen_size());\
+		memcpy(tl.snaps[TL_SNAP_FREE] + tl.preview, screen.data, screen_size());\
 	}
 #define tlUp(type)\
-	if (tl.snapsFill) {\
+	if (tl.snaps_fill) {\
 		BYTE snap = SendMessage(hTimeline, TBM_GETPOS, 0, 0);\
-		if (snap != (tl.snapsFill - 1)) {\
-			timelineBack(TLNORMAL, snap);\
+		if (snap != (tl.snaps_fill - 1)) {\
+			timeline_back(TL_NORMAL, snap);\
 		}\
 	}\
 	SetFocus(hSDL);\
@@ -285,7 +285,7 @@ BYTE guiCreate(void) {
 		return (EXIT_ERROR);
 	}
 
-	SendMessage(hTimeline, TBM_SETRANGE, TRUE, MAKELONG(0, (TLSNAPS - 1)));
+	SendMessage(hTimeline, TBM_SETRANGE, TRUE, MAKELONG(0, (TL_SNAPS - 1)));
 	SendMessage(hTimeline, TBM_SETTHUMBLENGTH, 15, 0);
 	SendMessage(hTimeline, TBM_SETPAGESIZE, 0, 0);
 	SendMessage(hTimeline, TBM_SETTIPSIDE, TBTS_BOTTOM, 0);
@@ -483,7 +483,7 @@ void guiEvent(void) {
 					case VK_RIGHT:
 						if (tl.key) {
 							BYTE snap = SendMessage(hTimeline, TBM_GETPOS, 0, 0);
-							if (snap < (TLSNAPS - 1)) {
+							if (snap < (TL_SNAPS - 1)) {
 								wrapTlPreview(snap + 1);
 							}
 							noProcess = TRUE;
@@ -1222,7 +1222,7 @@ void guiFullscreen(void) {
 	emu_pause(FALSE);
 }
 void guiTimeline(void) {
-	SendMessage(hTimeline, TBM_SETPOS, TRUE, tl.snapsFill - 1);
+	SendMessage(hTimeline, TBM_SETPOS, TRUE, tl.snaps_fill - 1);
 }
 void guiSavestate(BYTE slot) {
 	if (slot >= SAVE_SLOTS) {
@@ -1693,13 +1693,13 @@ long __stdcall timelineProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 					tlUp(tl.button);
 					break;
 				case TTN_NEEDTEXT:
-					if (tl.snapsFill) {
-						dec = ((tl.snapsFill - 1) - snap) * TLSNAPSEC;
+					if (tl.snaps_fill) {
+						dec = ((tl.snaps_fill - 1) - snap) * TL_SNAP_SEC;
 					}
 					if (!dec) {
 						sprintf(szBuf, "%d sec", 0);
 					} else {
-						sprintf(szBuf, "% 2d sec", -abs(((tl.snapsFill - 1) - snap) * TLSNAPSEC));
+						sprintf(szBuf, "% 2d sec", -abs(((tl.snaps_fill - 1) - snap) * TL_SNAP_SEC));
 					}
 					lpToolTipText->lpszText = szBuf;
 					break;
@@ -2284,26 +2284,26 @@ void wrapTlPreview(BYTE snap) {
 		return;
 	}
 
-	if (!tl.snapsFill) {
+	if (!tl.snaps_fill) {
 		SendMessage(hTimeline, TBM_SETPOS, TRUE, 0);
 		return;
 	}
 
 	/* snap non puo' essere mai maggiore del numero di snap effettuate */
-	if (snap > (tl.snapsFill - 1)) {
-		SendMessage(hTimeline, TBM_SETPOS, TRUE, tl.snapsFill - 1);
-		snap = (tl.snapsFill - 1);
+	if (snap > (tl.snaps_fill - 1)) {
+		SendMessage(hTimeline, TBM_SETPOS, TRUE, tl.snaps_fill - 1);
+		snap = (tl.snaps_fill - 1);
 	}
 
 	SendMessage(hTimeline, TBM_SETPOS, TRUE, snap);
 
-	if (snap == (tl.snapsFill - 1)) {
-		memcpy(screen.data, tl.snaps[TLSNAPFREE] + tl.preview, screen_size());
+	if (snap == (tl.snaps_fill - 1)) {
+		memcpy(screen.data, tl.snaps[TL_SNAP_FREE] + tl.preview, screen_size());
 		time_handler_redraw();
 		return;
 	}
 
-	timelinePreview(snap);
+	timeline_preview(snap);
 }
 void saveslot_incdec(BYTE mode) {
 	BYTE newslot;

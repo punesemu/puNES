@@ -120,8 +120,8 @@ BYTE emu_loop(void) {
 			gfx_draw_screen(FALSE);
 #endif
 
-			if (!tas.type && (++tl.frames == tl.framesSnap)) {
-				timelineSnap(TLNORMAL);
+			if (!tas.type && (++tl.frames == tl.frames_snap)) {
+				timeline_snap(TL_NORMAL);
 			}
 
 			r4011.frames++;
@@ -503,7 +503,7 @@ BYTE emu_turn_on(void) {
 		return (EXIT_ERROR);
 	}
 
-	if (timelineInit()) {
+	if (timeline_init()) {
 		return (EXIT_ERROR);
 	}
 
@@ -600,7 +600,7 @@ BYTE emu_reset(BYTE type) {
 	/* controller */
 	input_init();
 
-	if (timelineInit()) {
+	if (timeline_init()) {
 		return (EXIT_ERROR);
 	}
 
@@ -645,7 +645,7 @@ void emu_quit(BYTE exit_code) {
 	gfx_quit();
 	snd_quit();
 
-	timelineQuit();
+	timeline_quit();
 
 	jsQuit();
 
