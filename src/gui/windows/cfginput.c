@@ -14,11 +14,11 @@
 
 #define cfginput_enable_config(prt, idc)\
 	switch (prt.port.type) {\
-		case CTRLDISABLED:\
-		case ZAPPER:\
+		case CTRL_DISABLED:\
+		case CTRL_ZAPPER:\
 			EnableWindow(GetDlgItem(hwnd, idc), FALSE);\
 			break;\
-		case STDCTRL:\
+		case CTRL_STANDARD:\
 			EnableWindow(GetDlgItem(hwnd, idc), TRUE);\
 			break;\
 	}
@@ -30,9 +30,9 @@ typedef struct {
 } _typeselement;
 
 static const _typeselement ctrlList[] = {
-	{ 0, CTRLDISABLED, "Disabled"     },
-	{ 0, STDCTRL,      "Standard Pad" },
-	{ 0, ZAPPER,       "Zapper"       }
+	{ 0, CTRL_DISABLED, "Disabled"     },
+	{ 0, CTRL_STANDARD, "Standard Pad" },
+	{ 0, CTRL_ZAPPER,   "Zapper"       }
 };
 
 long __stdcall cfg_input_controllers(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -82,8 +82,8 @@ long __stdcall cfg_input_controllers(HWND hwnd, UINT msg, WPARAM wParam, LPARAM 
 				case IDOK:
 					EndDialog(hwnd, IDOK);
 
-					if (((cfg_port1.port.type == ZAPPER) || (cfg_port2.port.type == ZAPPER))
-							&& opengl.rotation) {
+					if (((cfg_port1.port.type == CTRL_ZAPPER)
+					        || (cfg_port2.port.type == CTRL_ZAPPER)) && opengl.rotation) {
 						set_effect();
 					}
 

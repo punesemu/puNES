@@ -12,7 +12,7 @@
 #include "common.h"
 #include "mappers/mapperGameGenie.h"
 
-#define CHEATS 3
+#define GG_CHEATS 3
 
 enum GG_DATA {
 	GG_ADDRESS_HIGH,
@@ -20,7 +20,6 @@ enum GG_DATA {
 	GG_COMPARE,
 	GG_REPLACE
 };
-
 enum GG_PHASE {
 	GG_LOAD_ROM = 1,
 	GG_EXECUTE,
@@ -42,7 +41,7 @@ struct {
 	BYTE counter;
 	BYTE print;
 	BYTE value;
-	_cheat cheat[CHEATS];
+	_cheat cheat[GG_CHEATS];
 } gamegenie;
 
 void gamegenie_init(void);

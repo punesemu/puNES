@@ -137,7 +137,7 @@ BYTE input_port_standard(BYTE mode, DBWORD event, BYTE type, _port *port) {
 			port->data[LEFT] = RELEASED;
 		}
 		return (EXIT_OK);
-	} else if (event == port->input[type][TRBA]) {
+	} else if (event == port->input[type][TRB_A]) {
 		if (mode == PRESSED) {
 			/*if (!(port->turbo[TURBOA].active = !port->turbo[TURBOA].active)) {
 				port->data[BUT_A] = RELEASED;
@@ -150,7 +150,7 @@ BYTE input_port_standard(BYTE mode, DBWORD event, BYTE type, _port *port) {
 			port->turbo[TURBOA].counter = 0;
 		}
 		return (EXIT_OK);
-	} else if (event == port->input[type][TRBB]) {
+	} else if (event == port->input[type][TRB_B]) {
 		if (mode == PRESSED) {
 			/*if (!(port->turbo[TURBOB].active = !port->turbo[TURBOB].active)) {
 				port->data[BUT_B] = RELEASED;

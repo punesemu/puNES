@@ -25,8 +25,8 @@ enum controller_buttons {
 	DOWN,
 	LEFT,
 	RIGHT,
-	TRBA,
-	TRBB
+	TRB_A,
+	TRB_B
 };
 enum turbo_buttons { TURBOA, TURBOB };
 enum input_types { KEYBOARD, JOYSTICK };

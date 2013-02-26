@@ -360,8 +360,8 @@ void set_default(void) {
 	_port_kb_default(port, DOWN,   s6);\
 	_port_kb_default(port, LEFT,   s7);\
 	_port_kb_default(port, RIGHT,  s8);\
-	_port_kb_default(port, TRBA,   s9);\
-	_port_kb_default(port, TRBB,   s10)
+	_port_kb_default(port, TRB_A,  s9);\
+	_port_kb_default(port, TRB_B,  s10)
 #define port_js_default(port, id, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10)\
 	port.joy_id = nameToJsn(id);\
 	_port_js_default(port, BUT_A,  s1);\
@@ -372,8 +372,8 @@ void set_default(void) {
 	_port_js_default(port, DOWN,   s6);\
 	_port_js_default(port, LEFT,   s7);\
 	_port_js_default(port, RIGHT,  s8);\
-	_port_js_default(port, TRBA,   s9);\
-	_port_js_default(port, TRBB,   s10)
+	_port_js_default(port, TRB_A,  s9);\
+	_port_js_default(port, TRB_B,  s10)
 
 	/* default */
 	cfg_from_file.mode = AUTO;
