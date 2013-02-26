@@ -69,10 +69,10 @@ void sdl_create_surface_gl(SDL_Surface *src, WORD width, WORD height, BYTE flags
 	glPushAttrib(GL_ALL_ATTRIB_BITS);
 
 	if (opengl.scale_force) {
-		opengl.surface_gl = gfxCreateRGBSurface(src, SCR_ROWS * opengl.scale,
+		opengl.surface_gl = gfx_create_RGB_surface(src, SCR_ROWS * opengl.scale,
 		        SCR_LINES * opengl.scale);
 	} else {
-		opengl.surface_gl = gfxCreateRGBSurface(src, width, height);
+		opengl.surface_gl = gfx_create_RGB_surface(src, width, height);
 	}
 
 	opengl_create_texture(&opengl.texture, opengl.surface_gl->w, opengl.surface_gl->h,
@@ -222,7 +222,7 @@ void opengl_create_texture(_texture *texture, uint32_t width, uint32_t height,
 
 	{
 		/* per sicurezza creo una superficie piu' grande del necessario */
-		SDL_Surface *blank = gfxCreateRGBSurface(opengl.surface_gl, texture->w * 2, texture->h * 2);
+		SDL_Surface *blank = gfx_create_RGB_surface(opengl.surface_gl, texture->w * 2, texture->h * 2);
 
 		memset(blank->pixels, 0, blank->w * blank->h * blank->format->BytesPerPixel);
 

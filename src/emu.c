@@ -115,9 +115,9 @@ BYTE emu_loop(void) {
 			}
 
 #ifdef DEBUG
-			gfxDrawScreen(TRUE);
+			gfx_draw_screen(TRUE);
 #else
-			gfxDrawScreen(FALSE);
+			gfx_draw_screen(FALSE);
 #endif
 
 			if (!tas.type && (++tl.frames == tl.framesSnap)) {
@@ -126,7 +126,7 @@ BYTE emu_loop(void) {
 
 			r4011.frames++;
 		} else {
-			gfxDrawScreen(FALSE);
+			gfx_draw_screen(FALSE);
 		}
 
 		/* gestione frameskip e calcolo fps */
@@ -401,7 +401,7 @@ void emu_set_title(char *title) {
 
 	if (cfg->scale == X1) {
 		sprintf(title, "%s (%s", name, param_mode[machine.type].lname);
-	} else if (cfg->filter == RGBNTSC) {
+	} else if (cfg->filter == NTSC_FILTER) {
 		sprintf(title, "%s (%s, %s, %s, %s", name, param_mode[machine.type].lname,
 		        param_size[cfg->scale].lname, param_ntsc[cfg->ntsc_format].lname,
 		        param_palette[cfg->palette].lname);
@@ -491,7 +491,7 @@ BYTE emu_turn_on(void) {
 	jsInit();
 
 	/* gestione grafica */
-	if (gfxInit()) {
+	if (gfx_init()) {
 		return (EXIT_ERROR);
 	}
 
@@ -562,7 +562,7 @@ BYTE emu_reset(BYTE type) {
 		}
 
 		cfg_file_pgs_parse();
-		gfxSetScreen(NOCHANGE, NOCHANGE, NOCHANGE, NOCHANGE, TRUE);
+		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE);
 	}
 
 	chr_bank_1k_reset();
@@ -642,7 +642,7 @@ void emu_quit(BYTE exit_code) {
 
 	fds_quit();
 	ppu_quit();
-	gfxQuit();
+	gfx_quit();
 	sndQuit();
 
 	timelineQuit();

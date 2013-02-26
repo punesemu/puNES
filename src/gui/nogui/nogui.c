@@ -131,12 +131,12 @@ void guiEvent(void) {
 				if (machine.type == NTSC) {
 					machine = machinePAL;
 					if (gfx.palette == PALETTENTSC) {
-						gfxSetScreen(NOCHANGE, NOCHANGE, NOCHANGE, PALETTEPAL, FALSE);
+						gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, PALETTEPAL, FALSE);
 					}
 				} else {
 					machine = machineNTSC;
 					if (gfx.palette == PALETTEPAL) {
-						gfxSetScreen(NOCHANGE, NOCHANGE, NOCHANGE, PALETTENTSC, FALSE);
+						gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, PALETTENTSC, FALSE);
 					}
 				}
 				if (emu_reset(CHANGE_MODE)) { emu_quit(EXIT_FAILURE); }
@@ -152,27 +152,27 @@ void guiEvent(void) {
 				break;
 			case SDLK_1:
 				/* 1x */
-				gfxSetScreen(X1, NOCHANGE, NOCHANGE, NOCHANGE, FALSE);
+				gfx_set_screen(X1, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE);
 				break;
 			case SDLK_2:
 				/* 2x */
-				gfxSetScreen(X2, NOCHANGE, NOCHANGE, NOCHANGE, FALSE);
+				gfx_set_screen(X2, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE);
 				break;
 			case SDLK_3:
 				/* 3x */
-				gfxSetScreen(X3, NOCHANGE, NOCHANGE, NOCHANGE, FALSE);
+				gfx_set_screen(X3, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE);
 				break;
 			case SDLK_4:
 				/* 4x */
-				gfxSetScreen(X4, NOCHANGE, NOCHANGE, NOCHANGE, FALSE);
+				gfx_set_screen(X4, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE);
 				break;
 			case SDLK_5:
 				/* no filter */
-				gfxSetScreen(NOCHANGE, NOFILTER, NOCHANGE, NOCHANGE, FALSE);
+				gfx_set_screen(NO_CHANGE, NO_FILTER, NO_CHANGE, NO_CHANGE, FALSE);
 				break;
 			case SDLK_6:
 				/* filtro scale2x */
-				gfxSetScreen(NOCHANGE, SCALE2X, NOCHANGE, NOCHANGE, FALSE);
+				gfx_set_screen(NO_CHANGE, SCALE2X, NO_CHANGE, NO_CHANGE, FALSE);
 				break;
 			case SDLK_7:
 				/* filtro ntsc */
@@ -183,7 +183,7 @@ void guiEvent(void) {
 					ntscSet(gfx.ntscFormat, 0, 0, (BYTE *) palette_RGB, 0);
 					guiUpdate();
 				} else {
-					gfxSetScreen(NOCHANGE, RGBNTSC, NOCHANGE, NOCHANGE, FALSE);
+					gfx_set_screen(NO_CHANGE, RGBNTSC, NO_CHANGE, NO_CHANGE, FALSE);
 				}
 				break;
 			case SDLK_a:
@@ -208,7 +208,7 @@ void guiEvent(void) {
 #ifdef OPENGL
 			case SDLK_f:
 				/* Fullscreen */
-				if (gfx.fullscreen == NOFULLSCR) {
+				if (gfx.fullscreen == NO_FULLSCR) {
 					if (!opengl.rotation) {
 						SDL_ShowCursor(SDL_DISABLE);
 					}
@@ -216,13 +216,13 @@ void guiEvent(void) {
 					 * imposto il fattore di scale a quello predefinito per il
 					 * fullscreen lo abilito.
 					 */
-					gfxSetScreen(SCALEFLSCR, NOCHANGE, FULLSCR, NOCHANGE, FALSE);
+					gfx_set_screen(SCALEFLSCR, NO_CHANGE, FULLSCR, NO_CHANGE, FALSE);
 				} else {
 					/* riabilito la visualizzazione del puntatore */
 					SDL_ShowCursor(SDL_ENABLE);
 					/* ripristino i valori di scale ed esco dal fullscreen */
-					gfxSetScreen(gfx.scaleBeforeFullscreen, NOCHANGE,
-							NOFULLSCR, NOCHANGE, FALSE);
+					gfx_set_screen(gfx.scaleBeforeFullscreen, NO_CHANGE,
+							NO_FULLSCR, NO_CHANGE, FALSE);
 				}
 				break;
 			case SDLK_o:
@@ -233,13 +233,13 @@ void guiEvent(void) {
 					opengl.rotation = FALSE;
 				}
 
-				gfxSetScreen(NOCHANGE, NOCHANGE, NOCHANGE, NOCHANGE, TRUE);
+				gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE);
 				break;
 			case SDLK_p:
 				/* switch stretch ma solo in fullscreen */
 				if (gfx.fullscreen) {
 					opengl.aspectRatio = !opengl.aspectRatio;
-					gfxSetScreen(NOCHANGE, NOCHANGE, NOCHANGE, NOCHANGE, FALSE);
+					gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE);
 				}
 				break;
 			case SDLK_r:
@@ -255,7 +255,7 @@ void guiEvent(void) {
 						SDL_ShowCursor(SDL_DISABLE);
 					}
 				}
-				gfxSetScreen(NOCHANGE, NOCHANGE, NOCHANGE, NOCHANGE, FALSE);
+				gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE);
 				break;
 #endif
 			case SDLK_UP:
@@ -290,7 +290,7 @@ void guiEvent(void) {
 				if (--i > PALETTEGREEN) {
 					i = PALETTEGREEN;
 				}
-				gfxSetScreen(NOCHANGE, NOCHANGE, NOCHANGE, i, FALSE);
+				gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, i, FALSE);
 			}
 				break;
 			case SDLK_PERIOD:
@@ -301,7 +301,7 @@ void guiEvent(void) {
 				if (++i > PALETTEGREEN) {
 					i = PALETTEPAL;
 				}
-				gfxSetScreen(NOCHANGE, NOCHANGE, NOCHANGE, i, FALSE);
+				gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, i, FALSE);
 			}
 				break;
 			default:

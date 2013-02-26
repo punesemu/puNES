@@ -87,7 +87,7 @@ BYTE cmd_line_parse(int argc, char **argv) {
 				break;
 			case 'r':
 				param_search(0, optarg, param_render, cfg_from_file.render = index);
-				gfxSetRender(cfg_from_file.render);
+				gfx_set_render(cfg_from_file.render);
 				break;
 			case 'v':
 				param_search(0, optarg, param_off_on, cfg_from_file.vsync = index);

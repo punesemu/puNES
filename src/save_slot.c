@@ -117,19 +117,19 @@ void save_slot_preview(BYTE slot) {
 
 	if (!save_slot.state[slot]) {
 		memcpy(screen.data, tl.snaps[TLSNAPFREE] + tl.preview, screen_size());
-		gfxDrawScreen(TRUE);
+		gfx_draw_screen(TRUE);
 		return;
 	}
 
 	if (name_slot_file(file, slot)) {
 		memcpy(screen.data, tl.snaps[TLSNAPFREE] + tl.preview, screen_size());
-		gfxDrawScreen(TRUE);
+		gfx_draw_screen(TRUE);
 		return;
 	}
 
 	if ((fp = fopen(file, "rb")) == NULL) {
 		memcpy(screen.data, tl.snaps[TLSNAPFREE] + tl.preview, screen_size());
-		gfxDrawScreen(TRUE);
+		gfx_draw_screen(TRUE);
 		fprintf(stderr, "error on load preview\n");
 		return;
 	}
@@ -147,7 +147,7 @@ void save_slot_preview(BYTE slot) {
 	}
 
 	fclose(fp);
-	gfxDrawScreen(TRUE);
+	gfx_draw_screen(TRUE);
 }
 void save_slot_count_load(void) {
 	BYTE i;

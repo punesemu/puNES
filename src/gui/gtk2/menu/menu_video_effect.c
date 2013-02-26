@@ -155,5 +155,5 @@ void menu_video_effect_set(void) {
 
 	opengl_init_effect();
 
-	gfxSetScreen(NOCHANGE, NOCHANGE, NOCHANGE, NOCHANGE, FALSE);
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE);
 }

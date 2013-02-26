@@ -211,8 +211,8 @@ BYTE input_rd_reg_zapper(BYTE openbus, WORD **screen_index, _port *port) {
 			gy -= opengl.y_texture1;
 		}
 
-		x_zapper = gx / gfx.wPr;
-		y_zapper = gy / gfx.hPr;
+		x_zapper = gx / gfx.w_pr;
+		y_zapper = gy / gfx.h_pr;
 
 		if (overscan.enabled) {
 			x_zapper += overscan.left;
@@ -221,11 +221,11 @@ BYTE input_rd_reg_zapper(BYTE openbus, WORD **screen_index, _port *port) {
 			 * il filtro NTSC necessita di un'aggiustatina sia con
 			 * l'overscan abilitato che senza.
 			 */
-			if (cfg->filter == RGBNTSC) {
+			if (cfg->filter == NTSC_FILTER) {
 				x_zapper += 1;
 			}
 		} else {
-			if (cfg->filter == RGBNTSC) {
+			if (cfg->filter == NTSC_FILTER) {
 				x_zapper -= 1;
 			}
 		}

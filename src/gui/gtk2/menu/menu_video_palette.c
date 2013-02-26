@@ -146,5 +146,5 @@ void set_palette(int newpalette) {
 		return;
 	}
 
-	gfxSetScreen(NOCHANGE, NOCHANGE, NOCHANGE, newpalette, FALSE);
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, newpalette, FALSE);
 }

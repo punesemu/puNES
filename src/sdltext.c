@@ -234,8 +234,8 @@ void textRendering(BYTE render) {
 
 			if (ele->enabled == TRUE) {
 				if (!ele->surface) {
-					ele->surface = gfxCreateRGBSurface(text.surface, ele->w, ele->h);
-					ele->blank = gfxCreateRGBSurface(text.surface, ele->w, ele->h);
+					ele->surface = gfx_create_RGB_surface(text.surface, ele->w, ele->h);
+					ele->blank = gfx_create_RGB_surface(text.surface, ele->w, ele->h);
 				}
 
 				if (ele->alpha[0] == ele->alpha_start_fade) {
@@ -285,7 +285,7 @@ void textRendering(BYTE render) {
 			if (ele != NULL) {
 				if (ele->enabled == TRUE) {
 					if (!ele->surface) {
-						ele->surface = gfxCreateRGBSurface(text.surface, ele->w, ele->h);
+						ele->surface = gfx_create_RGB_surface(text.surface, ele->w, ele->h);
 					}
 
 					if (ele->alpha[0] == ele->alpha_start_fade) {
@@ -349,7 +349,7 @@ void textRendering(BYTE render) {
 			}
 
 			if (!ele->surface) {
-				ele->surface = gfxCreateRGBSurface(text.surface, ele->w, ele->h);
+				ele->surface = gfx_create_RGB_surface(text.surface, ele->w, ele->h);
 			}
 
 			if (render){
@@ -371,7 +371,7 @@ void textRendering(BYTE render) {
 			port_control(port1, BUT_B, "[b]");
 
 			if (!ele->surface) {
-				ele->surface = gfxCreateRGBSurface(text.surface, ele->w, ele->h);
+				ele->surface = gfx_create_RGB_surface(text.surface, ele->w, ele->h);
 			}
 
 			if (render){
@@ -416,7 +416,7 @@ void textRendering(BYTE render) {
 			strcat(ele->text, "[floppy]");
 
 			if (!ele->surface) {
-				ele->surface = gfxCreateRGBSurface(text.surface, ele->w, ele->h);
+				ele->surface = gfx_create_RGB_surface(text.surface, ele->w, ele->h);
 			}
 
 			if (render){

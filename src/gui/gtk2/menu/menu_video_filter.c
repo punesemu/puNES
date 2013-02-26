@@ -275,7 +275,7 @@ static const guint8 crt_icon_inline[] =
   "444^\241\377\377\377\0"};
 
 enum {
-	MNOFILTER,
+	MNO_FILTER,
 	MSCALE2X,
 	MSCALE3X,
 	MSCALE4X,
@@ -311,14 +311,14 @@ void menu_video_filter(GtkWidget *video, GtkAccelGroup *accel_group) {
 
 	icon_inline(filter, filter_icon_inline)
 
-	check[MNOFILTER] = gtk_check_menu_item_new_with_mnemonic("_No Filter");
+	check[MNO_FILTER] = gtk_check_menu_item_new_with_mnemonic("_No Filter");
 	check[MBILINEAR] = gtk_check_menu_item_new_with_mnemonic("_Bilinear");
 
-	gtk_menu_shell_append(GTK_MENU_SHELL(menu[0]), check[MNOFILTER]);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu[0]), check[MNO_FILTER]);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu[0]), check[MBILINEAR]);
 
-	g_signal_connect_swapped(G_OBJECT(check[MNOFILTER]), "activate",
-			G_CALLBACK(set_filter), GINT_TO_POINTER(NOFILTER));
+	g_signal_connect_swapped(G_OBJECT(check[MNO_FILTER]), "activate",
+			G_CALLBACK(set_filter), GINT_TO_POINTER(NO_FILTER));
 	g_signal_connect_swapped(G_OBJECT(check[MBILINEAR]), "activate",
 			G_CALLBACK(set_filter), GINT_TO_POINTER(BILINEAR));
 
@@ -352,9 +352,9 @@ void menu_video_filter(GtkWidget *video, GtkAccelGroup *accel_group) {
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu[1]), check[MCRTNOCURVE]);
 
 	g_signal_connect_swapped(G_OBJECT(check[MCRTCURVE]), "activate",
-			G_CALLBACK(set_filter), GINT_TO_POINTER(CRTCURVE));
+			G_CALLBACK(set_filter), GINT_TO_POINTER(CRT_CURVE));
 	g_signal_connect_swapped(G_OBJECT(check[MCRTNOCURVE]), "activate",
-			G_CALLBACK(set_filter), GINT_TO_POINTER(CRTNOCURVE));
+			G_CALLBACK(set_filter), GINT_TO_POINTER(CRT_NO_CURVE));
 
 	/* Settings/Video/Filters/Scalex */
 	menu[1] = gtk_menu_new();
@@ -432,7 +432,7 @@ void menu_video_filter(GtkWidget *video, GtkAccelGroup *accel_group) {
 void menu_video_filter_check(void) {
 	int index = 0;
 
-	if (gfx.bitperpixel < 32) {
+	if (gfx.bit_per_pixel < 32) {
 		gtk_widget_set_sensitive(check[MHQ2X], FALSE);
 		gtk_widget_set_sensitive(check[MHQ3X], FALSE);
 		gtk_widget_set_sensitive(check[MHQ4X], FALSE);
@@ -454,7 +454,7 @@ void menu_video_filter_check(void) {
 		gtk_widget_set_sensitive(check[MCRT], FALSE);
 	}
 
-	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MNOFILTER]), FALSE);
+	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MNO_FILTER]), FALSE);
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MBILINEAR]), FALSE);
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MSCALE2X]), FALSE);
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MSCALE3X]), FALSE);
@@ -473,8 +473,8 @@ void menu_video_filter_check(void) {
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MCRTNOCURVE]), FALSE);
 
 	switch (cfg->filter) {
-		case NOFILTER:
-			index = MNOFILTER;
+		case NO_FILTER:
+			index = MNO_FILTER;
 			break;
 		case BILINEAR:
 			index = MBILINEAR;
@@ -488,10 +488,10 @@ void menu_video_filter_check(void) {
 		case DBL:
 			index = MDBL;
 			break;
-		case CRTCURVE:
+		case CRT_CURVE:
 			index = MCRTCURVE;
 			break;
-		case CRTNOCURVE:
+		case CRT_NO_CURVE:
 			index = MCRTNOCURVE;
 			break;
 		case SCALE2X:
@@ -512,7 +512,7 @@ void menu_video_filter_check(void) {
 		case HQ4X:
 			index = MHQ4X;
 			break;
-		case RGBNTSC: {
+		case NTSC_FILTER: {
 			switch (cfg->ntsc_format) {
 				case COMPOSITE:
 					index = MRGBNTSCCOM;
@@ -536,54 +536,54 @@ void set_filter(int newfilter) {
 	}
 
 	switch (newfilter) {
-		case NOFILTER:
-			gfxSetScreen(NOCHANGE, NOFILTER, NOCHANGE, NOCHANGE, FALSE);
+		case NO_FILTER:
+			gfx_set_screen(NO_CHANGE, NO_FILTER, NO_CHANGE, NO_CHANGE, FALSE);
 			return;
 		case BILINEAR:
-			gfxSetScreen(NOCHANGE, BILINEAR, NOCHANGE, NOCHANGE, FALSE);
+			gfx_set_screen(NO_CHANGE, BILINEAR, NO_CHANGE, NO_CHANGE, FALSE);
 			return;
 		case POSPHOR:
-			gfxSetScreen(NOCHANGE, POSPHOR, NOCHANGE, NOCHANGE, FALSE);
+			gfx_set_screen(NO_CHANGE, POSPHOR, NO_CHANGE, NO_CHANGE, FALSE);
 			return;
 		case SCANLINE:
-			gfxSetScreen(NOCHANGE, SCANLINE, NOCHANGE, NOCHANGE, FALSE);
+			gfx_set_screen(NO_CHANGE, SCANLINE, NO_CHANGE, NO_CHANGE, FALSE);
 			return;
 		case DBL:
-			gfxSetScreen(NOCHANGE, DBL, NOCHANGE, NOCHANGE, FALSE);
+			gfx_set_screen(NO_CHANGE, DBL, NO_CHANGE, NO_CHANGE, FALSE);
 			return;
-		case CRTCURVE:
-			gfxSetScreen(NOCHANGE, CRTCURVE, NOCHANGE, NOCHANGE, FALSE);
+		case CRT_CURVE:
+			gfx_set_screen(NO_CHANGE, CRT_CURVE, NO_CHANGE, NO_CHANGE, FALSE);
 			return;
-		case CRTNOCURVE:
-			gfxSetScreen(NOCHANGE, CRTNOCURVE, NOCHANGE, NOCHANGE, FALSE);
+		case CRT_NO_CURVE:
+			gfx_set_screen(NO_CHANGE, CRT_NO_CURVE, NO_CHANGE, NO_CHANGE, FALSE);
 			return;
 		case SCALE2X:
-			gfxSetScreen(X2, SCALE2X, NOCHANGE, NOCHANGE, FALSE);
+			gfx_set_screen(X2, SCALE2X, NO_CHANGE, NO_CHANGE, FALSE);
 			return;
 		case SCALE3X:
-			gfxSetScreen(X3, SCALE3X, NOCHANGE, NOCHANGE, FALSE);
+			gfx_set_screen(X3, SCALE3X, NO_CHANGE, NO_CHANGE, FALSE);
 			return;
 		case SCALE4X:
-			gfxSetScreen(X4, SCALE4X, NOCHANGE, NOCHANGE, FALSE);
+			gfx_set_screen(X4, SCALE4X, NO_CHANGE, NO_CHANGE, FALSE);
 			return;
 		case HQ2X:
-			gfxSetScreen(X2, HQ2X, NOCHANGE, NOCHANGE, FALSE);
+			gfx_set_screen(X2, HQ2X, NO_CHANGE, NO_CHANGE, FALSE);
 			return;
 		case HQ3X:
-			gfxSetScreen(X3, HQ3X, NOCHANGE, NOCHANGE, FALSE);
+			gfx_set_screen(X3, HQ3X, NO_CHANGE, NO_CHANGE, FALSE);
 			return;
 		case HQ4X:
-			gfxSetScreen(X4, HQ4X, NOCHANGE, NOCHANGE, FALSE);
+			gfx_set_screen(X4, HQ4X, NO_CHANGE, NO_CHANGE, FALSE);
 			return;
 		case MRGBNTSCCOM:
 		case MRGBNTSCSVD:
 		case MRGBNTSCRGB:
-			gfxSetScreen(NOCHANGE, RGBNTSC, NOCHANGE, NOCHANGE, FALSE);
+			gfx_set_screen(NO_CHANGE, NTSC_FILTER, NO_CHANGE, NO_CHANGE, FALSE);
 			/*
 			 * faccio il resto solo se lo switch del nuovo effetto
 			 * e' stato effettuato con successo.
 			 */
-			if (cfg->filter == RGBNTSC) {
+			if (cfg->filter == NTSC_FILTER) {
 				switch (newfilter) {
 					case MRGBNTSCCOM:
 						cfg->ntsc_format = COMPOSITE;

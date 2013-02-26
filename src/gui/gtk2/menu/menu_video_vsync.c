@@ -142,8 +142,8 @@ void vsync_set(int bool) {
 	/* switch vsync */
 	cfg->vsync = bool;
 
-	gfxResetVideo();
-	gfxSetScreen(NOCHANGE, NOCHANGE, NOCHANGE, NOCHANGE, TRUE);
+	gfx_reset_video();
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE);
 
 	/* rispristino la posizione */
 	gtk_window_move(GTK_WINDOW(mainWin), x, y);

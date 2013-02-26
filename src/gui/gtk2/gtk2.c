@@ -382,7 +382,7 @@ void guiSetVideoMode(void) {
 	gtk_widget_set_size_request(GTK_WIDGET(hboxtl), rows, -1);
 	gtk_widget_set_size_request(GTK_WIDGET(timeline),
 			rows - (alSeparator.width * 2) - (SPACING * 2), -1);
-	gtk_widget_set_size_request(sock, gfx.w[VIDEOMODE], gfx.h[VIDEOMODE]);
+	gtk_widget_set_size_request(sock, gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE]);
 }
 void guiStart(void) {
 	gtk_idle_add((GtkFunction) emu_loop, mainWin);
@@ -438,7 +438,7 @@ void guiFullscreen(void) {
 	guiFlush();
 
 	/* Fullscreen */
-	if ((cfg->fullscreen == NOFULLSCR) || (cfg->fullscreen == NOCHANGE)) {
+	if ((cfg->fullscreen == NO_FULLSCR) || (cfg->fullscreen == NO_CHANGE)) {
 		/* salvo il valore scale prima del fullscreen */
 		gfx.scale_before_fscreen = cfg->scale;
 		/* trovo la risoluzione del monitor in uso */
@@ -465,7 +465,7 @@ void guiFullscreen(void) {
 		/* disabilito le decorazioni */
 		gtk_window_set_decorated(GTK_WINDOW(mainWin), FALSE);
 		/* abilito il fullscreen */
-		gfxSetScreen(NOCHANGE, NOCHANGE, FULLSCR, NOCHANGE, FALSE);
+		gfx_set_screen(NO_CHANGE, NO_CHANGE, FULLSCR, NO_CHANGE, FALSE);
 		/* nascondo il cursore, se serve */
 		if (!opengl.rotation && (port1.type != ZAPPER) && (port2.type != ZAPPER)) {
 			SDL_ShowCursor(SDL_DISABLE);
@@ -486,7 +486,7 @@ void guiFullscreen(void) {
 		/* esco dal fullscreen */
 		gtk_window_unfullscreen(GTK_WINDOW(mainWin));
 		/* ripristino i valori di scale ed esco dal fullscreen */
-		gfxSetScreen(gfx.scale_before_fscreen, NOCHANGE, NOFULLSCR, NOCHANGE, FALSE);
+		gfx_set_screen(gfx.scale_before_fscreen, NO_CHANGE, NO_FULLSCR, NO_CHANGE, FALSE);
 		/* riabilito la visualizzazione del puntatore */
 		SDL_ShowCursor(SDL_ENABLE);
 		/* blocco il ridimensionamento */
@@ -892,7 +892,7 @@ gboolean timeline_value_changed(GtkRange *range) {
 	}
 	if (snap == (tl.snapsFill - 1)) {
 		memcpy(screen.data, tl.snaps[TLSNAPFREE] + tl.preview, screen_size());
-		gfxDrawScreen(TRUE);
+		gfx_draw_screen(TRUE);
 		return (FALSE);
 	}
 	timelinePreview(snap);
@@ -934,7 +934,7 @@ gchar *timeline_format_value(GtkScale *scale, gdouble value) {
 }
 /* misc */
 gboolean time_handler_redraw(void) {
-	gfxDrawScreen(TRUE);
+	gfx_draw_screen(TRUE);
 	return (redraw);
 }
 

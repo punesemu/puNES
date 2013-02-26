@@ -185,7 +185,7 @@ void guiInit(int argc, char **argv) {
 		 * counter allora utilizzo il contatore dell'sdl.
 		 */
 		if (!QueryPerformanceFrequency((LARGE_INTEGER *) &pf)) {
-			guiGetMs = sdlGetMs;
+			guiGetMs = sdl_get_ms;
 		} else {
 			gui.frequency = (double) pf;
 			QueryPerformanceCounter((LARGE_INTEGER *) &pf);
@@ -384,12 +384,12 @@ void guiSetVideoMode(void) {
 	GetWindowRect(hMainWin, &rcWindMainWin);
 	ptDiff.x = (rcWindMainWin.right - rcWindMainWin.left) - rcClientMainWin.right;
 	ptDiff.y = (rcWindMainWin.bottom - rcWindMainWin.top) - rcClientMainWin.bottom;
-	MoveWindow(hMainWin, rcWindMainWin.left, rcWindMainWin.top, gfx.w[VIDEOMODE] + ptDiff.x,
-	        gfx.h[VIDEOMODE] + ptDiff.y + TOOLBARHEIGHT, TRUE);
+	MoveWindow(hMainWin, rcWindMainWin.left, rcWindMainWin.top, gfx.w[VIDEO_MODE] + ptDiff.x,
+	        gfx.h[VIDEO_MODE] + ptDiff.y + TOOLBARHEIGHT, TRUE);
 	/* aggiorno la finestra dell'sdl */
-	MoveWindow(hSDL, 0, 0, gfx.w[VIDEOMODE], gfx.h[VIDEOMODE], TRUE);
+	MoveWindow(hSDL, 0, 0, gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE], TRUE);
 	/* aggiorno la toolbar */
-	MoveWindow(hTool, 0, gfx.h[VIDEOMODE], gfx.w[VIDEOMODE], TOOLBARHEIGHT, TRUE);
+	MoveWindow(hTool, 0, gfx.h[VIDEO_MODE], gfx.w[VIDEO_MODE], TOOLBARHEIGHT, TRUE);
 	/* aggiorno il frame della timeline */
 	{
 		WORD rows = FRAMETLWIDTH;
@@ -402,7 +402,7 @@ void guiSetVideoMode(void) {
 		} else {
 			showToolWidget();
 		}
-		ptDiff.x = gfx.w[VIDEOMODE] - rows;
+		ptDiff.x = gfx.w[VIDEO_MODE] - rows;
 		MoveWindow(hFrameTl, ptDiff.x, 0, rows, FRAMETLHEIGHT, TRUE);
 		MoveWindow(hTimeline, 0, 0, rows - 4, FRAMETLHEIGHT, TRUE);
 	}
@@ -414,8 +414,8 @@ void guiSetVideoMode(void) {
 	ptDiff.x -= SEPARATORWIDTH;
 	MoveWindow(hSepSs, ptDiff.x, 0, SEPARATORWIDTH, FRAMETLHEIGHT, TRUE);
 	/* frame vuoto */
-	ptDiff.y = gfx.w[VIDEOMODE] - ptDiff.x;
-	MoveWindow(hFrameBl, 0, 0, gfx.w[VIDEOMODE] - ptDiff.y, FRAMETLHEIGHT, TRUE);
+	ptDiff.y = gfx.w[VIDEO_MODE] - ptDiff.x;
+	MoveWindow(hFrameBl, 0, 0, gfx.w[VIDEO_MODE] - ptDiff.y, FRAMETLHEIGHT, TRUE);
 }
 void guiStart(void) {
 	/* visualizzo il frame principale */
@@ -795,7 +795,7 @@ void guiUpdate(void) {
 	}
 
 	/* Size */
-	if (cfg->filter != NOFILTER) {
+	if (cfg->filter != NO_FILTER) {
 		change_menuitem(ENAB, MF_GRAYED, IDM_SET_SIZE_1X);
 	} else {
 		change_menuitem(ENAB, MF_HILITE, IDM_SET_SIZE_1X);
@@ -804,7 +804,7 @@ void guiUpdate(void) {
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_SIZE_2X);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_SIZE_3X);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_SIZE_4X);
-	if (cfg->fullscreen == NOFULLSCR) {
+	if (cfg->fullscreen == NO_FULLSCR) {
 		switch (cfg->scale) {
 			case X1:
 				id = IDM_SET_SIZE_1X;
@@ -853,7 +853,7 @@ void guiUpdate(void) {
 	change_menuitem(CHECK, MF_CHECKED, id);
 
 	/* Filter */
-	if (gfx.bitperpixel < 32) {
+	if (gfx.bit_per_pixel < 32) {
 		change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_HQ2X);
 		change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_HQ3X);
 		change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_HQ4X);
@@ -916,7 +916,7 @@ void guiUpdate(void) {
 			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_CRTNOCURVE);
 		}
 	}
-	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_NOFILTER);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_NO_FILTER);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_BILINEAR);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_SCALE2X);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_SCALE3X);
@@ -933,8 +933,8 @@ void guiUpdate(void) {
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_CRTCURVE);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_CRTNOCURVE);
 	switch (cfg->filter) {
-		case NOFILTER:
-			id = IDM_SET_FILTER_NOFILTER;
+		case NO_FILTER:
+			id = IDM_SET_FILTER_NO_FILTER;
 			break;
 		case BILINEAR:
 			id = IDM_SET_FILTER_BILINEAR;
@@ -948,10 +948,10 @@ void guiUpdate(void) {
 		case DBL:
 			id = IDM_SET_FILTER_DBL;
 			break;
-		case CRTCURVE:
+		case CRT_CURVE:
 			id = IDM_SET_FILTER_CRTCURVE;
 			break;
-		case CRTNOCURVE:
+		case CRT_NO_CURVE:
 			id = IDM_SET_FILTER_CRTNOCURVE;
 			break;
 		case SCALE2X:
@@ -972,7 +972,7 @@ void guiUpdate(void) {
 		case HQ4X:
 			id = IDM_SET_FILTER_HQ4X;
 			break;
-		case RGBNTSC:
+		case NTSC_FILTER:
 			switch (cfg->ntsc_format) {
 				case COMPOSITE:
 					id = IDM_SET_FILTER_RGBNTSCCOM;
@@ -1165,7 +1165,7 @@ void guiFullscreen(void) {
 	/* nascondo la finestra */
 	ShowWindow(hMainWin, SW_HIDE);
 
-	if ((cfg->fullscreen == NOFULLSCR) || (cfg->fullscreen == NOCHANGE)) {
+	if ((cfg->fullscreen == NO_FULLSCR) || (cfg->fullscreen == NO_CHANGE)) {
 		/* salvo il valore scale prima del fullscreen */
 		gfx.scale_before_fscreen = cfg->scale;
 		/* trovo la risoluzione del monitor in uso */
@@ -1181,7 +1181,7 @@ void guiFullscreen(void) {
 		/* dissocio il menu dalla finestra */
 		SetMenu(hMainWin, NULL);
 		/* abilito il fullscreen */
-		gfxSetScreen(NOCHANGE, NOCHANGE, FULLSCR, NOCHANGE, FALSE);
+		gfx_set_screen(NO_CHANGE, NO_CHANGE, FULLSCR, NO_CHANGE, FALSE);
 		/* disabilito la visualizzazione del puntatore */
 		if (!opengl.rotation && (port1.type != ZAPPER) && (port2.type != ZAPPER)) {
 			SDL_ShowCursor(SDL_DISABLE);
@@ -1193,8 +1193,8 @@ void guiFullscreen(void) {
 		        (GetWindowLongPtr(hMainWin, GWL_EXSTYLE) | WS_EX_APPWINDOW | WS_EX_TOPMOST)
 		                & ~WS_EX_CLIENTEDGE);
 		/* muovo la finestra al margine superiore destro del monitor */
-		MoveWindow(hMainWin, mi.rcMonitor.left, mi.rcMonitor.top, gfx.w[VIDEOMODE],
-		        gfx.h[VIDEOMODE], TRUE);
+		MoveWindow(hMainWin, mi.rcMonitor.left, mi.rcMonitor.top, gfx.w[VIDEO_MODE],
+		        gfx.h[VIDEO_MODE], TRUE);
 	} else {
 		/* ribilito gli stili della finestra corretti */
 		SetWindowLongPtr(hMainWin, GWL_STYLE,
@@ -1205,7 +1205,7 @@ void guiFullscreen(void) {
 		/* riassocio il menu */
 		SetMenu(hMainWin, hMainMenu);
 		/* ripristino i valori di scale ed esco dal fullscreen */
-		gfxSetScreen(gfx.scale_before_fscreen, NOCHANGE, NOFULLSCR, NOCHANGE, FALSE);
+		gfx_set_screen(gfx.scale_before_fscreen, NO_CHANGE, NO_FULLSCR, NO_CHANGE, FALSE);
 		/* riabilito la visualizzazione del puntatore */
 		SDL_ShowCursor(SDL_ENABLE);
 		/* posiziono la finestra alle coordinate precedenti il fullscreen */
@@ -1476,8 +1476,8 @@ long __stdcall mainWinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 				case IDM_SET_OSCAN_DEFAULT_OFF:
 					set_overscan(OSCAN_DEFAULT_OFF);
 					break;
-				case IDM_SET_FILTER_NOFILTER:
-					set_filter(NOFILTER);
+				case IDM_SET_FILTER_NO_FILTER:
+					set_filter(NO_FILTER);
 					break;
 				case IDM_SET_FILTER_BILINEAR:
 					set_filter(BILINEAR);
@@ -1492,10 +1492,10 @@ long __stdcall mainWinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 					set_filter(DBL);
 					break;
 				case IDM_SET_FILTER_CRTCURVE:
-					set_filter(CRTCURVE);
+					set_filter(CRT_CURVE);
 					break;
 				case IDM_SET_FILTER_CRTNOCURVE:
-					set_filter(CRTNOCURVE);
+					set_filter(CRT_NO_CURVE);
 					break;
 				case IDM_SET_FILTER_SCALE2X:
 					set_filter(SCALE2X);
@@ -1517,30 +1517,30 @@ long __stdcall mainWinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 					break;
 				case IDM_SET_FILTER_RGBNTSCCOM:
 					cfg->ntsc_format = COMPOSITE;
-					set_filter(RGBNTSC);
+					set_filter(NTSC_FILTER);
 					break;
 				case IDM_SET_FILTER_RGBNTSCSVD:
 					cfg->ntsc_format = SVIDEO;
-					set_filter(RGBNTSC);
+					set_filter(NTSC_FILTER);
 					break;
 				case IDM_SET_FILTER_RGBNTSCRGB:
 					cfg->ntsc_format = RGBMODE;
-					set_filter(RGBNTSC);
+					set_filter(NTSC_FILTER);
 					break;
 				case IDM_SET_PALETTE_PAL:
-					gfxSetScreen(NOCHANGE, NOCHANGE, NOCHANGE, PALETTE_PAL, FALSE);
+					gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, PALETTE_PAL, FALSE);
 					break;
 				case IDM_SET_PALETTE_NTSC:
-					gfxSetScreen(NOCHANGE, NOCHANGE, NOCHANGE, PALETTE_NTSC, FALSE);
+					gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, PALETTE_NTSC, FALSE);
 					break;
 				case IDM_SET_PALETTE_SONY:
-					gfxSetScreen(NOCHANGE, NOCHANGE, NOCHANGE, PALETTE_SONY, FALSE);
+					gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, PALETTE_SONY, FALSE);
 					break;
 				case IDM_SET_PALETTE_MONO:
-					gfxSetScreen(NOCHANGE, NOCHANGE, NOCHANGE, PALETTE_MONO, FALSE);
+					gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, PALETTE_MONO, FALSE);
 					break;
 				case IDM_SET_PALETTE_GREEN:
-					gfxSetScreen(NOCHANGE, NOCHANGE, NOCHANGE, PALETTE_GREEN, FALSE);
+					gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, PALETTE_GREEN, FALSE);
 					break;
 				case IDM_SET_RENDERING_SOFTWARE:
 					set_rendering(0);
@@ -1566,7 +1566,7 @@ long __stdcall mainWinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 				case IDM_SET_STRETCHFLSCR:
 					cfg->aspect_ratio = !cfg->aspect_ratio;
 					if (cfg->fullscreen == FULLSCR) {
-						gfxSetScreen(NOCHANGE, NOCHANGE, NOCHANGE, NOCHANGE, FALSE);
+						gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE);
 					}
 					guiUpdate();
 					break;
@@ -2020,16 +2020,16 @@ void set_scale(BYTE newscale) {
 
 	switch (newscale) {
 		case X1:
-			gfxSetScreen(X1, NOCHANGE, NOCHANGE, NOCHANGE, FALSE);
+			gfx_set_screen(X1, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE);
 			break;
 		case X2:
-			gfxSetScreen(X2, NOCHANGE, NOCHANGE, NOCHANGE, FALSE);
+			gfx_set_screen(X2, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE);
 			break;
 		case X3:
-			gfxSetScreen(X3, NOCHANGE, NOCHANGE, NOCHANGE, FALSE);
+			gfx_set_screen(X3, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE);
 			break;
 		case X4:
-			gfxSetScreen(X4, NOCHANGE, NOCHANGE, NOCHANGE, FALSE);
+			gfx_set_screen(X4, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE);
 			break;
 	}
 
@@ -2053,7 +2053,7 @@ void set_overscan(BYTE newoscan) {
 			break;
 	}
 
-	gfxSetScreen(NOCHANGE, NOCHANGE, NOCHANGE, NOCHANGE, TRUE);
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE);
 
 	LockWindowUpdate(NULL);
 }
@@ -2061,48 +2061,48 @@ void set_filter(BYTE newfilter) {
 	LockWindowUpdate(hMainWin);
 
 	switch (newfilter) {
-		case NOFILTER:
-			gfxSetScreen(NOCHANGE, NOFILTER, NOCHANGE, NOCHANGE, FALSE);
+		case NO_FILTER:
+			gfx_set_screen(NO_CHANGE, NO_FILTER, NO_CHANGE, NO_CHANGE, FALSE);
 			break;
 		case BILINEAR:
-			gfxSetScreen(NOCHANGE, BILINEAR, NOCHANGE, NOCHANGE, FALSE);
+			gfx_set_screen(NO_CHANGE, BILINEAR, NO_CHANGE, NO_CHANGE, FALSE);
 			break;
 		case POSPHOR:
-			gfxSetScreen(NOCHANGE, POSPHOR, NOCHANGE, NOCHANGE, FALSE);
+			gfx_set_screen(NO_CHANGE, POSPHOR, NO_CHANGE, NO_CHANGE, FALSE);
 			break;
 		case SCANLINE:
-			gfxSetScreen(NOCHANGE, SCANLINE, NOCHANGE, NOCHANGE, FALSE);
+			gfx_set_screen(NO_CHANGE, SCANLINE, NO_CHANGE, NO_CHANGE, FALSE);
 			break;
 		case DBL:
-			gfxSetScreen(NOCHANGE, DBL, NOCHANGE, NOCHANGE, FALSE);
+			gfx_set_screen(NO_CHANGE, DBL, NO_CHANGE, NO_CHANGE, FALSE);
 			break;
-		case CRTCURVE:
-			gfxSetScreen(NOCHANGE, CRTCURVE, NOCHANGE, NOCHANGE, FALSE);
+		case CRT_CURVE:
+			gfx_set_screen(NO_CHANGE, CRT_CURVE, NO_CHANGE, NO_CHANGE, FALSE);
 			break;
-		case CRTNOCURVE:
-			gfxSetScreen(NOCHANGE, CRTNOCURVE, NOCHANGE, NOCHANGE, FALSE);
+		case CRT_NO_CURVE:
+			gfx_set_screen(NO_CHANGE, CRT_NO_CURVE, NO_CHANGE, NO_CHANGE, FALSE);
 			break;
 		case SCALE2X:
-			gfxSetScreen(X2, SCALE2X, NOCHANGE, NOCHANGE, FALSE);
+			gfx_set_screen(X2, SCALE2X, NO_CHANGE, NO_CHANGE, FALSE);
 			break;
 		case SCALE3X:
-			gfxSetScreen(X3, SCALE3X, NOCHANGE, NOCHANGE, FALSE);
+			gfx_set_screen(X3, SCALE3X, NO_CHANGE, NO_CHANGE, FALSE);
 			break;
 		case SCALE4X:
-			gfxSetScreen(X4, SCALE4X, NOCHANGE, NOCHANGE, FALSE);
+			gfx_set_screen(X4, SCALE4X, NO_CHANGE, NO_CHANGE, FALSE);
 			break;
 		case HQ2X:
-			gfxSetScreen(X2, HQ2X, NOCHANGE, NOCHANGE, FALSE);
+			gfx_set_screen(X2, HQ2X, NO_CHANGE, NO_CHANGE, FALSE);
 			break;
 		case HQ3X:
-			gfxSetScreen(X3, HQ3X, NOCHANGE, NOCHANGE, FALSE);
+			gfx_set_screen(X3, HQ3X, NO_CHANGE, NO_CHANGE, FALSE);
 			break;
 		case HQ4X:
-			gfxSetScreen(X4, HQ4X, NOCHANGE, NOCHANGE, FALSE);
+			gfx_set_screen(X4, HQ4X, NO_CHANGE, NO_CHANGE, FALSE);
 			break;
-		case RGBNTSC:
-			gfxSetScreen(NOCHANGE, RGBNTSC, NOCHANGE, NOCHANGE, FALSE);
-			if (cfg->filter == RGBNTSC) {
+		case NTSC_FILTER:
+			gfx_set_screen(NO_CHANGE, NTSC_FILTER, NO_CHANGE, NO_CHANGE, FALSE);
+			if (cfg->filter == NTSC_FILTER) {
 				ntscSet(cfg->ntsc_format, 0, 0, (BYTE *) palette_RGB, 0);
 				guiUpdate();
 			}
@@ -2119,11 +2119,11 @@ void set_rendering(BYTE newrendering) {
 	ShowWindow(hMainWin, SW_HIDE);
 
 	/* switch opengl/software render */
-	gfxSetRender(newrendering);
+	gfx_set_render(newrendering);
 	cfg->render = newrendering;
 
-	gfxResetVideo();
-	gfxSetScreen(NOCHANGE, NOCHANGE, NOCHANGE, NOCHANGE, TRUE);
+	gfx_reset_video();
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE);
 
 	ShowWindow(hMainWin, SW_NORMAL);
 }
@@ -2142,8 +2142,8 @@ void set_vsync(BYTE bool) {
 	/* switch vsync */
 	cfg->vsync = bool;
 
-	gfxResetVideo();
-	gfxSetScreen(NOCHANGE, NOCHANGE, NOCHANGE, NOCHANGE, TRUE);
+	gfx_reset_video();
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE);
 
 	ShowWindow(hMainWin, SW_NORMAL);
 }
@@ -2179,7 +2179,7 @@ void set_effect(void) {
 
 	opengl_init_effect();
 
-	gfxSetScreen(NOCHANGE, NOCHANGE, NOCHANGE, NOCHANGE, FALSE);
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE);
 }
 void set_samplerate(int newsamplerate) {
 	if (cfg->samplerate == newsamplerate) {
@@ -2237,7 +2237,7 @@ void set_gamegenie(void) {
 	guiUpdate();
 }
 void __stdcall time_handler_redraw(void) {
-	gfxDrawScreen(TRUE);
+	gfx_draw_screen(TRUE);
 }
 HBITMAP createBitmapMask(HBITMAP hbmColour, COLORREF crTransparent) {
 	HDC hdcMem, hdcMem2;

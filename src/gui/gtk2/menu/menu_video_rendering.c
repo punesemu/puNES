@@ -150,11 +150,11 @@ void rendering_set(int newrendering) {
 	gtk_widget_hide(mainWin);
 
 	/* switch opengl/software render */
-	gfxSetRender(newrendering);
+	gfx_set_render(newrendering);
 	cfg->render = newrendering;
 
-	gfxResetVideo();
-	gfxSetScreen(NOCHANGE, NOCHANGE, NOCHANGE, NOCHANGE, TRUE);
+	gfx_reset_video();
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE);
 
 	/* rispristino la posizione */
 	gtk_window_move(GTK_WINDOW(mainWin), x, y);

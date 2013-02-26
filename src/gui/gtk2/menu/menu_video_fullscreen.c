@@ -109,6 +109,6 @@ void menu_video_fullscreen_switch_stretch(void) {
 	cfg->aspect_ratio = !cfg->aspect_ratio;
 
 	if (cfg->fullscreen == FULLSCR) {
-		gfxSetScreen(NOCHANGE, NOCHANGE, NOCHANGE, NOCHANGE, FALSE);
+		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE);
 	}
 }

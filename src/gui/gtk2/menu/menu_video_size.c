@@ -121,7 +121,7 @@ void menu_video_size(GtkWidget *video, GtkAccelGroup *accel_group) {
 void menu_video_size_check(void) {
 	int index;
 
-	if (cfg->filter != NOFILTER) {
+	if (cfg->filter != NO_FILTER) {
 		gtk_widget_set_sensitive(check[MX1], FALSE);
 	} else {
 		gtk_widget_set_sensitive(check[MX1], TRUE);
@@ -131,7 +131,7 @@ void menu_video_size_check(void) {
 		gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[index]), FALSE);
 	}
 
-	if (cfg->fullscreen == NOFULLSCR) {
+	if (cfg->fullscreen == NO_FULLSCR) {
 		switch (cfg->scale) {
 			case X1:
 				index = MX1;
@@ -156,16 +156,16 @@ void set_scale(int newscale) {
 
 	switch (newscale) {
 		case X1:
-			gfxSetScreen(X1, NOCHANGE, NOCHANGE, NOCHANGE, FALSE);
+			gfx_set_screen(X1, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE);
 			return;
 		case X2:
-			gfxSetScreen(X2, NOCHANGE, NOCHANGE, NOCHANGE, FALSE);
+			gfx_set_screen(X2, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE);
 			return;
 		case X3:
-			gfxSetScreen(X3, NOCHANGE, NOCHANGE, NOCHANGE, FALSE);
+			gfx_set_screen(X3, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE);
 			return;
 		case X4:
-			gfxSetScreen(X4, NOCHANGE, NOCHANGE, NOCHANGE, FALSE);
+			gfx_set_screen(X4, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE);
 			return;
 	}
 }
