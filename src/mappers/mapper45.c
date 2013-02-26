@@ -10,7 +10,7 @@
 #include "mappers.h"
 #include "memmap.h"
 #include "irqA12.h"
-#include "savestate.h"
+#include "save_slot.h"
 
 #define m45chr1k(vl)\
 	bank = (m45.reg[0] | ((m45.reg[2] << 4) & 0x0F00))\

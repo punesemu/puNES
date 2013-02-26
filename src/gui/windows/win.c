@@ -23,7 +23,7 @@
 #include "clock.h"
 #include "cfg_file.h"
 #include "timeline.h"
-#include "savestate.h"
+#include "save_slot.h"
 #include "version.h"
 #include "fps.h"
 #include "tas.h"
@@ -995,19 +995,19 @@ void guiUpdate(void) {
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_PALETTE_MONO);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_PALETTE_GREEN);
 	switch (cfg->palette) {
-		case PALETTEPAL:
+		case PALETTE_PAL:
 			id = IDM_SET_PALETTE_PAL;
 			break;
-		case PALETTENTSC:
+		case PALETTE_NTSC:
 			id = IDM_SET_PALETTE_NTSC;
 			break;
-		case PALETTESONY:
+		case PALETTE_SONY:
 			id = IDM_SET_PALETTE_SONY;
 			break;
-		case PALETTEMONO:
+		case PALETTE_MONO:
 			id = IDM_SET_PALETTE_MONO;
 			break;
-		case PALETTEGREEN:
+		case PALETTE_GREEN:
 			id = IDM_SET_PALETTE_GREEN;
 			break;
 	}
@@ -1528,19 +1528,19 @@ long __stdcall mainWinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 					set_filter(RGBNTSC);
 					break;
 				case IDM_SET_PALETTE_PAL:
-					gfxSetScreen(NOCHANGE, NOCHANGE, NOCHANGE, PALETTEPAL, FALSE);
+					gfxSetScreen(NOCHANGE, NOCHANGE, NOCHANGE, PALETTE_PAL, FALSE);
 					break;
 				case IDM_SET_PALETTE_NTSC:
-					gfxSetScreen(NOCHANGE, NOCHANGE, NOCHANGE, PALETTENTSC, FALSE);
+					gfxSetScreen(NOCHANGE, NOCHANGE, NOCHANGE, PALETTE_NTSC, FALSE);
 					break;
 				case IDM_SET_PALETTE_SONY:
-					gfxSetScreen(NOCHANGE, NOCHANGE, NOCHANGE, PALETTESONY, FALSE);
+					gfxSetScreen(NOCHANGE, NOCHANGE, NOCHANGE, PALETTE_SONY, FALSE);
 					break;
 				case IDM_SET_PALETTE_MONO:
-					gfxSetScreen(NOCHANGE, NOCHANGE, NOCHANGE, PALETTEMONO, FALSE);
+					gfxSetScreen(NOCHANGE, NOCHANGE, NOCHANGE, PALETTE_MONO, FALSE);
 					break;
 				case IDM_SET_PALETTE_GREEN:
-					gfxSetScreen(NOCHANGE, NOCHANGE, NOCHANGE, PALETTEGREEN, FALSE);
+					gfxSetScreen(NOCHANGE, NOCHANGE, NOCHANGE, PALETTE_GREEN, FALSE);
 					break;
 				case IDM_SET_RENDERING_SOFTWARE:
 					set_rendering(0);

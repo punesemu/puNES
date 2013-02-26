@@ -23,7 +23,7 @@ C_SRCS += \
 ../src/mappers.c \
 ../src/opengl.c \
 ../src/ppu.c \
-../src/savestate.c \
+../src/save_slot.c \
 ../src/sdlgfx.c \
 ../src/sdlsnd.c \
 ../src/sdltext.c \
@@ -51,7 +51,7 @@ OBJS += \
 ./src/mappers.o \
 ./src/opengl.o \
 ./src/ppu.o \
-./src/savestate.o \
+./src/save_slot.o \
 ./src/sdlgfx.o \
 ./src/sdlsnd.o \
 ./src/sdltext.o \
@@ -79,7 +79,7 @@ C_DEPS += \
 ./src/mappers.d \
 ./src/opengl.d \
 ./src/ppu.d \
-./src/savestate.d \
+./src/save_slot.d \
 ./src/sdlgfx.d \
 ./src/sdlsnd.d \
 ./src/sdltext.d \

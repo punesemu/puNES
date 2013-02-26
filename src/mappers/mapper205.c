@@ -10,7 +10,7 @@
 #include "mappers.h"
 #include "memmap.h"
 #include "irqA12.h"
-#include "savestate.h"
+#include "save_slot.h"
 
 #define m205chr1k(vl) bank = (m205.reg << 3) | vl
 #define m205prg8k(vl) value = m205.reg | (vl & ((m205.reg & 0x20) ? 0x0F : 0x1F))

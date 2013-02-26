@@ -10,7 +10,7 @@
 #include "mappers.h"
 #include "memmap.h"
 #include "irqA12.h"
-#include "savestate.h"
+#include "save_slot.h"
 
 #define m49chr1k(vl) bank = ((m49.reg << 1) & 0x180) | (vl & 0x7F)
 #define m49prg8k(vl) value = ((m49.reg >> 2) & 0x30) | (vl & 0x0F)

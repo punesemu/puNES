@@ -9,7 +9,7 @@
 #include <string.h>
 #include "mappers.h"
 #include "memmap.h"
-#include "savestate.h"
+#include "save_slot.h"
 
 #define sa74347xChr8kSwap(bank8k)\
 {\

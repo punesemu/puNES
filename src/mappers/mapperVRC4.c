@@ -10,7 +10,7 @@
 #include "mappers.h"
 #include "memmap.h"
 #include "cpu.h"
-#include "savestate.h"
+#include "save_slot.h"
 
 #define chrRom1kUpdate(slot, mask, shift)\
 	value = (vrc4.chrRomBank[slot] & mask) | ((value & 0x0F) << shift);\

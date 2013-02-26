@@ -16,7 +16,7 @@
 #include "sdltext.h"
 #include "fps.h"
 #include "param.h"
-#include "savestate.h"
+#include "save_slot.h"
 #include "input.h"
 #include "gamegenie.h"
 #include "audio_quality.h"

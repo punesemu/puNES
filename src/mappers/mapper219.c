@@ -10,7 +10,7 @@
 #include "mappers.h"
 #include "memmap.h"
 #include "irqA12.h"
-#include "savestate.h"
+#include "save_slot.h"
 
 #define m219Chr1k(a, b)\
 	value = m219.reg[2] | ((save >> 1) & a);\

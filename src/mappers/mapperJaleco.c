@@ -11,7 +11,7 @@
 #include "mappers.h"
 #include "cpu.h"
 #include "ppu.h"
-#include "savestate.h"
+#include "save_slot.h"
 
 WORD prgRom32kMax, prgRom16kMax, prgRom8kMax, chrRom8kMax, chrRom1kMax;
 

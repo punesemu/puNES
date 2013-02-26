@@ -8,7 +8,7 @@
 #include <string.h>
 #include "mappers.h"
 #include "memmap.h"
-#include "savestate.h"
+#include "save_slot.h"
 
 #define m221prg16kswap()\
 	value = ((m221.reg[0] >> 1) & 0x38) | ((m221.reg[0] & 0x01) ? (m221.reg[0] & 0x80) ?\

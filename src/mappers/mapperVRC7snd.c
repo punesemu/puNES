@@ -18,7 +18,7 @@
 #include <float.h>
 #include <stdio.h>
 #include "mapperVRC7snd.h"
-#include "savestate.h"
+#include "save_slot.h"
 
 /* Mask */
 #define OPLL_MASK_CH(x) (1<<(x))

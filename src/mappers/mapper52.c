@@ -10,7 +10,7 @@
 #include "mappers.h"
 #include "memmap.h"
 #include "irqA12.h"
-#include "savestate.h"
+#include "save_slot.h"
 
 #define m52chr1k(vl)\
 	bank = ((((m52.reg >> 3) & 0x04) | ((m52.reg >> 1) & 0x02) |\

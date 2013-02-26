@@ -13,7 +13,7 @@
 #include "ppu.h"
 #include "cpu.h"
 #include "irql2f.h"
-#include "savestate.h"
+#include "save_slot.h"
 
 /* PRG */
 #define prg8kUpdate(slot)\

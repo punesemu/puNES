@@ -10,7 +10,7 @@
 #include "memmap.h"
 #include "mappers.h"
 #include "irqA12.h"
-#include "savestate.h"
+#include "save_slot.h"
 
 #define reloadCounter()\
 {\

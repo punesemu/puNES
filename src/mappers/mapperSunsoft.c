@@ -10,7 +10,7 @@
 #include "mappers.h"
 #include "memmap.h"
 #include "cpu.h"
-#include "savestate.h"
+#include "save_slot.h"
 
 #define mirroring(data)\
 	switch (data & 0x03) {\

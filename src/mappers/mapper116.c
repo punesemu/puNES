@@ -10,7 +10,7 @@
 #include "mappers.h"
 #include "memmap.h"
 #include "irqA12.h"
-#include "savestate.h"
+#include "save_slot.h"
 
 WORD prgRom32kMax, prgRom16kMax, prgRom8kMax, prgRom8kBeforeLast;
 WORD chrRom1kMax, chrRom2kMax, chrRom4kMax;

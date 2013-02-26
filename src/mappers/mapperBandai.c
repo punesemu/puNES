@@ -11,7 +11,7 @@
 #include "memmap.h"
 #include "cpu.h"
 #include "ppu.h"
-#include "savestate.h"
+#include "save_slot.h"
 
 #define b161x02x74Chr4kUpdate()\
 	value = (save & 0x04) | b161x02x74.chrRomBank;\

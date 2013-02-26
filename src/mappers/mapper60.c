@@ -7,7 +7,7 @@
 
 #include "mappers.h"
 #include "memmap.h"
-#include "savestate.h"
+#include "save_slot.h"
 
 WORD prgRom16kMax, chrRom8kMax;
 

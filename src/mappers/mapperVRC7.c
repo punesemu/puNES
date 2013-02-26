@@ -12,7 +12,7 @@
 #include "mappers.h"
 #include "memmap.h"
 #include "cpu.h"
-#include "savestate.h"
+#include "save_slot.h"
 #include "mapperVRC7snd.h"
 
 const WORD tableVRC7[2][4] = {

@@ -11,7 +11,7 @@
 #include "memmap.h"
 #include "cpu.h"
 #include "apu.h"
-#include "savestate.h"
+#include "save_slot.h"
 
 #define namco163PrgRom8kUpdate(slot)\
 	control_bank_with_AND(0x3F, prgRom8kMax)\

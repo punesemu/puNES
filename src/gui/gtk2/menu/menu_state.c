@@ -7,7 +7,7 @@
 
 #include "menu_state.h"
 #include "sdlsnd.h"
-#include "savestate.h"
+#include "save_slot.h"
 #include "cfg_file.h"
 
 #ifdef __SUNPRO_C

@@ -40,7 +40,7 @@
 #include "opengl.h"
 #include "param.h"
 #include "cfg_file.h"
-#include "savestate.h"
+#include "save_slot.h"
 #include "timeline.h"
 #include "tas.h"
 #include "ines.h"

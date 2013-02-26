@@ -11,7 +11,7 @@
 #include "memmap.h"
 #include "cpu.h"
 #include "irqA12.h"
-#include "savestate.h"
+#include "save_slot.h"
 
 enum {
 	A12MODE,

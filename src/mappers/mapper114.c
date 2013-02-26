@@ -10,7 +10,7 @@
 #include "mappers.h"
 #include "memmap.h"
 #include "irqA12.h"
-#include "savestate.h"
+#include "save_slot.h"
 
 #define m114prgRomBackup()\
 	m114.prgRomBank[0] = mapper.rom_map_to[0];\

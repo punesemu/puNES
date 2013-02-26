@@ -26,7 +26,7 @@
 #include "timeline.h"
 #include "ppu.h"
 #include "fps.h"
-#include "savestate.h"
+#include "save_slot.h"
 #include "tas.h"
 #include "gamegenie.h"
 #include "opengl.h"

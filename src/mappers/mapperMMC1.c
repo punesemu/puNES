@@ -10,7 +10,7 @@
 #include "mappers.h"
 #include "memmap.h"
 #include "cpu.h"
-#include "savestate.h"
+#include "save_slot.h"
 
 static void INLINE ctrlReg_MMC1(void);
 static void INLINE swapPrgRom_MMC1(void);

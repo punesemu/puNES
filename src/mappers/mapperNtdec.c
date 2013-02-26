@@ -9,7 +9,7 @@
 #include <string.h>
 #include "mappers.h"
 #include "memmap.h"
-#include "savestate.h"
+#include "save_slot.h"
 
 #define asderChrCtrlBank(src, ctrl)\
 	if (src > ctrl) {\

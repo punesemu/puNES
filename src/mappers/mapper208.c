@@ -11,7 +11,7 @@
 #include "memmap.h"
 #include "cpu.h"
 #include "irqA12.h"
-#include "savestate.h"
+#include "save_slot.h"
 
 static const BYTE vlu208[256] = {
 		0x59, 0x59, 0x59, 0x59, 0x59, 0x59, 0x59, 0x59,

@@ -10,7 +10,7 @@
 #include "mappers.h"
 #include "memmap.h"
 #include "irqA12.h"
-#include "savestate.h"
+#include "save_slot.h"
 
 #define m44chr1k(vl) bank = (m44.reg << 7) | (vl & (m44.reg >= 6 ? 0xFF : 0x7F))
 #define m44prg8k(vl) value = (m44.reg << 4) | (vl & (m44.reg >= 6 ? 0x1F : 0x0F))
