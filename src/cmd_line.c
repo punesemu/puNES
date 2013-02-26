@@ -10,7 +10,7 @@
 #include <libgen.h>
 #include "cmd_line.h"
 #include "cfg_file.h"
-#include "sdlgfx.h"
+#include "sdl_gfx.h"
 #include "version.h"
 #include "emu.h"
 #include "gamegenie.h"

@@ -9,7 +9,7 @@
 #include "main.h"
 #include "emu.h"
 #include "memmap.h"
-#include "sdlgfx.h"
+#include "sdl_gfx.h"
 #include "sdltext.h"
 #include "cfg_file.h"
 #include "cmd_line.h"

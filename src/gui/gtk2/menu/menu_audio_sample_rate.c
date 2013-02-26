@@ -122,7 +122,7 @@ void set_sample_rate(int newsamplerate) {
 
 	cfg->samplerate = newsamplerate;
 
-	sndStart();
+	snd_start();
 
 	guiUpdate();
 

@@ -117,7 +117,7 @@ void set_channels(int newchannels) {
 
 	cfg->channels = newchannels;
 
-	sndStart();
+	snd_start();
 
 	guiUpdate();
 

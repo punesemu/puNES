@@ -9,7 +9,7 @@
 #include "cfgstdctrl.h"
 #include "sdlsnd.h"
 #include "cfg_file.h"
-#include "sdlgfx.h"
+#include "sdl_gfx.h"
 #include "opengl.h"
 
 #define cfginput_enable_config(prt, idc)\

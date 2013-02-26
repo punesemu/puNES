@@ -11,7 +11,7 @@
 #include "glew/glew.h"
 #include <SDL.h>
 #include "common.h"
-#include "sdlgfx.h"
+#include "sdl_gfx.h"
 #include "openGL/shaders.h"
 
 #define slow_factor	3

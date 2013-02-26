@@ -146,9 +146,9 @@ void menu_audio_set_audio_enable(void) {
 	emu_pause(TRUE);
 	cfg->audio = !cfg->audio;
 	if (cfg->audio) {
-		sndStart();
+		snd_start();
 	} else {
-		sndStop();
+		snd_stop();
 	}
 	guiUpdate();
 	emu_pause(FALSE);

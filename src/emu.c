@@ -30,7 +30,7 @@
 #include "fps.h"
 #include "apu.h"
 #include "ppu.h"
-#include "sdlgfx.h"
+#include "sdl_gfx.h"
 #include "sdlsnd.h"
 #include "sdltext.h"
 #include "sha1.h"
@@ -499,7 +499,7 @@ BYTE emu_turn_on(void) {
 	fps_init();
 
 	/* gestione sonora */
-	if (sndInit()) {
+	if (snd_init()) {
 		return (EXIT_ERROR);
 	}
 
@@ -612,7 +612,7 @@ BYTE emu_reset(BYTE type) {
 	fps_init();
 
 	if (info.reset >= CHANGE_ROM) {
-		if (sndStart()) {
+		if (snd_start()) {
 			return (EXIT_ERROR);
 		}
 	}
@@ -643,7 +643,7 @@ void emu_quit(BYTE exit_code) {
 	fds_quit();
 	ppu_quit();
 	gfx_quit();
-	sndQuit();
+	snd_quit();
 
 	timelineQuit();
 

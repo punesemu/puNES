@@ -11,7 +11,7 @@
 #include "netplay.h"
 #include "zeromq.h"
 #include "sdlsnd.h"
-#include "sdlgfx.h"
+#include "sdl_gfx.h"
 
 struct _net {
 	GtkWidget *widget[WINDGETS];

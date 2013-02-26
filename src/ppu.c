@@ -11,7 +11,7 @@
 #include "clock.h"
 #include "memmap.h"
 #include "ppu_inline.h"
-#include "sdlgfx.h"
+#include "sdl_gfx.h"
 #include "mappers.h"
 #include "irqA12.h"
 #include "irql2f.h"
@@ -53,8 +53,7 @@ enum overflow_sprite { OVERFLOW_SPR = 3 };
 	WORD pixel = r2001.emphasis | clr;\
 	screen.line[ppu.screen_y][ppu.frame_x] = pixel;\
 }
-#define put_emphasis(clr)\
-	put_pixel((palette.color[clr] & r2001.color_mode))
+#define put_emphasis(clr) put_pixel((palette.color[clr] & r2001.color_mode))
 #define put_bg put_emphasis(color_bg)
 #define put_sp put_emphasis(color_sp | 0x10)
 

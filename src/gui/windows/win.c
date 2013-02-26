@@ -18,7 +18,7 @@
 #include "input.h"
 #undef  _INPUTINLINE_
 #include "overscan.h"
-#include "sdlgfx.h"
+#include "sdl_gfx.h"
 #include "sdlsnd.h"
 #include "clock.h"
 #include "cfg_file.h"
@@ -1601,9 +1601,9 @@ long __stdcall mainWinProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 					emu_pause(TRUE);
 					cfg->audio = !cfg->audio;
 					if (cfg->audio) {
-						sndStart();
+						snd_start();
 					} else {
-						sndStop();
+						snd_stop();
 					}
 					guiUpdate();
 					emu_pause(FALSE);
@@ -2186,7 +2186,7 @@ void set_samplerate(int newsamplerate) {
 		return;
 	}
 	cfg->samplerate = newsamplerate;
-	sndStart();
+	snd_start();
 	guiUpdate();
 }
 void set_channels(int newchannels) {
@@ -2194,7 +2194,7 @@ void set_channels(int newchannels) {
 		return;
 	}
 	cfg->channels = newchannels;
-	sndStart();
+	snd_start();
 	guiUpdate();
 }
 void set_audio_quality(int newquality) {
@@ -2213,7 +2213,7 @@ void set_fps(int newfps) {
 	cfg->fps = newfps;
 	emu_pause(TRUE);
 	fps_init();
-	sndStart();
+	snd_start();
 	guiUpdate();
 	emu_pause(FALSE);
 }

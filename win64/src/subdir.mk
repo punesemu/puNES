@@ -24,7 +24,7 @@ C_SRCS += \
 ../src/opengl.c \
 ../src/ppu.c \
 ../src/save_slot.c \
-../src/sdlgfx.c \
+../src/sdl_gfx.c \
 ../src/sdlsnd.c \
 ../src/sdltext.c \
 ../src/sha1.c \
@@ -52,7 +52,7 @@ OBJS += \
 ./src/opengl.o \
 ./src/ppu.o \
 ./src/save_slot.o \
-./src/sdlgfx.o \
+./src/sdl_gfx.o \
 ./src/sdlsnd.o \
 ./src/sdltext.o \
 ./src/sha1.o \
@@ -80,7 +80,7 @@ C_DEPS += \
 ./src/opengl.d \
 ./src/ppu.d \
 ./src/save_slot.d \
-./src/sdlgfx.d \
+./src/sdl_gfx.d \
 ./src/sdlsnd.d \
 ./src/sdltext.d \
 ./src/sha1.d \

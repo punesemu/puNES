@@ -1,21 +1,40 @@
 /*
- * sdlsnd.h
+ * sdl_snd.h
  *
  *  Created on: 08/mar/2011
  *      Author: fhorse
  */
 
-#ifndef SDLSND_H_
-#define SDLSND_H_
+#ifndef SDL_SND_H_
+#define SDL_SND_H_
 
 #include <SDL.h>
 #include <SDL_audio.h>
 #include <SDL_thread.h>
 #include "common.h"
 
-enum { S44100, S22050, S11025 };
-enum { MONO = 1, STEREO };
-enum { CH_LEFT, CH_RIGHT };
+enum samplerate_mode { S44100, S22050, S11025 };
+enum channel_mode { MONO = 1, STEREO };
+enum channels { CH_LEFT, CH_RIGHT };
+enum snd_factor_type { SND_FACTOR_NORMAL, SND_FACTOR_NONE };
+
+#define snd_frequency(a)\
+	if (snd.factor != a) {\
+		snd.factor = a;\
+		fps_machine_ms(snd.factor)\
+	}
+
+typedef struct {
+	SWORD *start;
+	SBYTE *end;
+
+	SBYTE *read;
+	SWORD *write;
+
+	SWORD filled;
+
+	SDL_mutex *lock;
+} _callback_data;
 
 struct _snd {
 	BYTE opened;
@@ -52,37 +71,17 @@ struct _snd {
 	} buffer;
 } snd;
 
-typedef struct {
-	SWORD *start;
-	SBYTE *end;
-
-	SBYTE *read;
-	SWORD *write;
-
-	SWORD filled;
-
-	SDL_mutex *lock;
-} _callbackData;
-
-enum { FCNORMAL, FCNONE };
-
-#define snd_frequency(a)\
-	if (snd.factor != a) {\
-		snd.factor = a;\
-		fps_machine_ms(snd.factor)\
-	}
-
-static const double sndFactor[3][2] = {
+static const double snd_factor[3][2] = {
 	{ 0.997, 1.1 }, { 1.0, 1.1 }, { 1.0, 1.1 }
 };
 
-BYTE sndInit(void);
-BYTE sndStart(void);
-void sndOutput(void *udata, BYTE *stream, int len);
-void sndStop(void);
-void sndQuit(void);
+BYTE snd_init(void);
+BYTE snd_start(void);
+void snd_output(void *udata, BYTE *stream, int len);
+void snd_stop(void);
+void snd_quit(void);
 
 void (*snd_apu_tick)(void);
 void (*snd_end_frame)(void);
 
-#endif /* SDLSND_H_ */
+#endif /* SDL_SND_H_ */

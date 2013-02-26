@@ -8,7 +8,7 @@
 #include "menu_video_rendering.h"
 #include "opengl.h"
 #include "cfg_file.h"
-#include "sdlgfx.h"
+#include "sdl_gfx.h"
 
 #ifdef __SUNPRO_C
 #pragma align 4 (icon_inline)

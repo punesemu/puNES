@@ -1,5 +1,5 @@
 /*
- * sdlsnd.c
+ * sdl_snd.c
  *
  *  Created on: 08/mar/2011
  *      Author: fhorse
@@ -13,7 +13,7 @@
 #include "cfg_file.h"
 #include "audio_quality.h"
 
-BYTE sndInit(void) {
+BYTE snd_init(void) {
 	/* inizializzo il comparto audio dell'sdl */
 	if (SDL_Init(SDL_INIT_AUDIO) < 0) {
 		fprintf(stderr, "SDL sound initialization failed: %s\n", SDL_GetError());
@@ -26,22 +26,22 @@ BYTE sndInit(void) {
 	snd_end_frame = NULL;
 
 	/* apro e avvio la riproduzione */
-	if (sndStart()) {
+	if (snd_start()) {
 		return (EXIT_ERROR);
 	}
 
 	return (EXIT_OK);
 }
-BYTE sndStart(void) {
+BYTE snd_start(void) {
 	SDL_AudioSpec *dev;
-	_callbackData *cache;
+	_callback_data *cache;
 
 	if (!cfg->audio) {
 		return (EXIT_OK);
 	}
 
 	/* come prima cosa blocco eventuali riproduzioni */
-	sndStop();
+	snd_stop();
 
 	memset(&snd, 0, sizeof(snd));
 
@@ -49,8 +49,8 @@ BYTE sndStart(void) {
 	memset(dev, 0, sizeof(SDL_AudioSpec));
 	snd.dev = dev;
 
-	cache = malloc(sizeof(_callbackData));
-	memset(cache, 0, sizeof(_callbackData));
+	cache = malloc(sizeof(_callback_data));
+	memset(cache, 0, sizeof(_callback_data));
 	snd.cache = cache;
 
 	/* samplarate */
@@ -98,13 +98,13 @@ BYTE sndStart(void) {
 	/* il numero dei samples da passare al device */
 	dev->samples = snd.buffer.size / dev->channels;
 	/* la funzione di callback */
-	dev->callback = sndOutput;
+	dev->callback = snd_output;
 	/* la struttura dei dati */
 	dev->userdata = cache;
 
 	if (SDL_OpenAudio(dev, NULL) < 0) {
 		fprintf(stderr, "Unable to open audio device: %s\n", SDL_GetError());
-		sndStop();
+		snd_stop();
 		return (EXIT_ERROR);
 	}
 
@@ -132,7 +132,7 @@ BYTE sndStart(void) {
 		}
 	}
 
-	snd_frequency(sndFactor[apu.type][FCNORMAL])
+	snd_frequency(snd_factor[apu.type][SND_FACTOR_NORMAL])
 
 	{
 		DBWORD total_buffer_size;
@@ -145,7 +145,7 @@ BYTE sndStart(void) {
 
 		if (!cache->start) {
 			fprintf(stderr, "Out of memory\n");
-			sndStop();
+			snd_stop();
 			return (EXIT_ERROR);
 		}
 
@@ -179,8 +179,8 @@ BYTE sndStart(void) {
 
 	return (EXIT_OK);
 }
-void sndOutput(void *udata, BYTE *stream, int len) {
-	_callbackData *cache = udata;
+void snd_output(void *udata, BYTE *stream, int len) {
+	_callback_data *cache = udata;
 
 	if (info.no_rom) {
 		return;
@@ -223,7 +223,7 @@ void sndOutput(void *udata, BYTE *stream, int len) {
 
 	SDL_mutexV(cache->lock);
 }
-void sndStop(void) {
+void snd_stop(void) {
 	if (snd.opened) {
 		snd.opened = FALSE;
 		SDL_PauseAudio(TRUE);
@@ -236,7 +236,7 @@ void sndStop(void) {
 	}
 
 	if (snd.cache) {
-		_callbackData *cache = snd.cache;
+		_callback_data *cache = snd.cache;
 
 		if (cache->start) {
 			free(cache->start);
@@ -267,8 +267,8 @@ void sndStop(void) {
 		audio_quality_quit();
 	}
 }
-void sndQuit(void) {
-	sndStop();
+void snd_quit(void) {
+	snd_stop();
 
 #ifndef RELEASE
 	fprintf(stderr, "\n");

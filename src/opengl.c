@@ -6,7 +6,7 @@
  */
 
 #include "opengl.h"
-#include "sdlgfx.h"
+#include "sdl_gfx.h"
 #include "ppu.h"
 #include "cfg_file.h"
 #include "openGL/no_effect.h"

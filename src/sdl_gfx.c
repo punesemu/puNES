@@ -7,7 +7,7 @@
 
 #include "emu.h"
 #include "cpu.h"
-#include "sdlgfx.h"
+#include "sdl_gfx.h"
 #include "overscan.h"
 #include "clock.h"
 #include "input.h"

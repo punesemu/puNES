@@ -18,7 +18,7 @@
 #include "irqA12.h"
 #include "irql2f.h"
 #include "fds.h"
-#include "sdlgfx.h"
+#include "sdl_gfx.h"
 #include "gui.h"
 
 enum {

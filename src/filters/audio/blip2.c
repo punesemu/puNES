@@ -280,7 +280,7 @@ void audio_quality_apu_tick_blip2(void) {
 }
 void audio_quality_end_frame_blip2(void) {
 	SDL_AudioSpec *dev = snd.dev;
-	_callbackData *cache = snd.cache;
+	_callback_data *cache = snd.cache;
 
 	if (!bl2.wave) {
 		return;
@@ -345,9 +345,9 @@ void audio_quality_end_frame_blip2(void) {
 				if (++cache->filled >= snd.buffer.count) {
 					snd.brk = TRUE;
 				} else if (cache->filled >= bl2.max) {
-					snd_frequency(sndFactor[apu.type][FCNONE])
+					snd_frequency(snd_factor[apu.type][SND_FACTOR_NONE])
 				} else if (cache->filled < bl2.min) {
-					snd_frequency(sndFactor[apu.type][FCNORMAL])
+					snd_frequency(snd_factor[apu.type][SND_FACTOR_NORMAL])
 				}
 
 				SDL_mutexV(cache->lock);

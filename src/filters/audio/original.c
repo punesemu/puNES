@@ -72,7 +72,7 @@ void audio_quality_quit_original(void) {
 }
 void audio_quality_apu_tick_original(void) {
 	SDL_AudioSpec *dev = snd.dev;
-	_callbackData *cache = snd.cache;
+	_callback_data *cache = snd.cache;
 
 	if (!cfg->audio) {
 		return;
@@ -105,9 +105,9 @@ void audio_quality_apu_tick_original(void) {
 		if (++cache->filled >= snd.buffer.count) {
 			snd.brk = TRUE;
 		} else if (cache->filled >= ((snd.buffer.count >> 1) + 1)) {
-			snd_frequency(sndFactor[apu.type][FCNONE])
+			snd_frequency(snd_factor[apu.type][SND_FACTOR_NONE])
 		} else if (cache->filled < 3) {
-			snd_frequency(sndFactor[apu.type][FCNORMAL])
+			snd_frequency(snd_factor[apu.type][SND_FACTOR_NORMAL])
 		}
 
 		SDL_mutexV(cache->lock);

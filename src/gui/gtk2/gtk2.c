@@ -14,7 +14,7 @@
 #include "gtk2.h"
 #include "icon.h"
 #include "overscan.h"
-#include "sdlgfx.h"
+#include "sdl_gfx.h"
 #include "sdlsnd.h"
 #include "clock.h"
 #define _INPUTINLINE_

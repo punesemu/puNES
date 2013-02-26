@@ -7,7 +7,7 @@
 
 #include <time.h>
 #include "sdltext.h"
-#include "sdlgfx.h"
+#include "sdl_gfx.h"
 #include "font.h"
 #include "tas.h"
 #include "ppu.h"

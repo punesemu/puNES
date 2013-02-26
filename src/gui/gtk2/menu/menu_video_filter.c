@@ -6,7 +6,7 @@
  */
 
 #include "menu_video_filter.h"
-#include "sdlgfx.h"
+#include "sdl_gfx.h"
 #include "opengl.h"
 #include "cfg_file.h"
 

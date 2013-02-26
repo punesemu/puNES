@@ -6,7 +6,7 @@
  */
 
 #include "menu_video_vsync.h"
-#include "sdlgfx.h"
+#include "sdl_gfx.h"
 #include "cfg_file.h"
 
 #ifdef __SUNPRO_C

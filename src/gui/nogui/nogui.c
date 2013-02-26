@@ -6,7 +6,7 @@
  */
 
 #include "nogui.h"
-#include "sdlgfx.h"
+#include "sdl_gfx.h"
 #include "sdlsnd.h"
 #include "opengl.h"
 #include "palette.h"

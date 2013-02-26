@@ -11,7 +11,7 @@
 #include "gui.h"
 #include "version.h"
 #include "clock.h"
-#include "sdlgfx.h"
+#include "sdl_gfx.h"
 #include "sdlsnd.h"
 #include "sdltext.h"
 #include "fps.h"

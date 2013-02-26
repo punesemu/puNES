@@ -7,7 +7,7 @@
 
 #include "menu_video_effect.h"
 #include "opengl.h"
-#include "sdlgfx.h"
+#include "sdl_gfx.h"
 #include "input.h"
 #include "cfg_file.h"
 #include "openGL/no_effect.h"

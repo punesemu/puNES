@@ -20,7 +20,7 @@
 #include "irqA12.h"
 #include "irql2f.h"
 #include "timeline.h"
-#include "sdlgfx.h"
+#include "sdl_gfx.h"
 #include "gui.h"
 #include "tas.h"
 #include "sdltext.h"
