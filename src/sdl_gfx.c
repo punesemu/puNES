@@ -721,7 +721,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 		}
 	}
 
-	textReset();
+	text_reset();
 
 	/*
 	 * calcolo le proporzioni tra il disegnato a video (overscan e schermo
@@ -745,7 +745,7 @@ void gfx_draw_screen(BYTE forced) {
 			info.pause_frames_drawscreen = 0;
 			forced = TRUE;
 		} else {
-			textRendering(FALSE);
+			text_rendering(FALSE);
 			return;
 		}
 	}
@@ -757,14 +757,14 @@ void gfx_draw_screen(BYTE forced) {
 			opengl.effect(screen.data, screen.line, palette_win, framebuffer, gfx.rows,
 					gfx.lines, opengl.scale);
 
-			textRendering(TRUE);
+			text_rendering(TRUE);
 
 			opengl_draw_scene(framebuffer);
 		} else {
 			effect(screen.data, screen.line, palette_win, framebuffer, gfx.rows, gfx.lines,
 					cfg->scale);
 
-			textRendering(TRUE);
+			text_rendering(TRUE);
 		}
 
 		/* disegno a video */
@@ -794,7 +794,7 @@ void gfx_quit(void) {
 
 	sdl_quit_gl();
 	ntscQuit();
-	textQuit();
+	text_quit();
 	SDL_Quit();
 }
 

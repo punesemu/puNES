@@ -10,7 +10,7 @@
 #include "gtk2.h"
 #include "netplay.h"
 #include "zeromq.h"
-#include "sdlsnd.h"
+#include "sdl_snd.h"
 #include "sdl_gfx.h"
 
 struct _net {

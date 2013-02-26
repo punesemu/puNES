@@ -15,7 +15,7 @@
 #include "icon.h"
 #include "overscan.h"
 #include "sdl_gfx.h"
-#include "sdlsnd.h"
+#include "sdl_snd.h"
 #include "clock.h"
 #define _INPUTINLINE_
 #include "input.h"

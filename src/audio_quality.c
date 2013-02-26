@@ -6,7 +6,7 @@
  */
 
 #include "audio_quality.h"
-#include "sdlsnd.h"
+#include "sdl_snd.h"
 #include "filters/audio/original.h"
 #include "filters/audio/blip.h"
 #include "filters/audio/blip2.h"

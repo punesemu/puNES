@@ -8,7 +8,7 @@
 #include <string.h>
 #include "cfg_file.h"
 #include "sdl_gfx.h"
-#include "sdlsnd.h"
+#include "sdl_snd.h"
 #include "gtk2.h"
 #include "cfgstdctrl.h"
 #include "opengl.h"

@@ -38,7 +38,7 @@ BYTE save_slot_save(void) {
 
 	/* game genie */
 	if (info.mapper == GAMEGENIE_MAPPER) {
-		textAddLineInfo(1, "[yellow]save is impossible in Game Genie menu");
+		text_add_line_info(1, "[yellow]save is impossible in Game Genie menu");
 		return (EXIT_ERROR);
 	}
 
@@ -66,7 +66,7 @@ BYTE save_slot_load(void) {
 	FILE *fp;
 
 	if (tas.type) {
-		textAddLineInfo(1, "[yellow]movie playback interrupted[normal]");
+		text_add_line_info(1, "[yellow]movie playback interrupted[normal]");
 		tasQuit();
 	}
 
@@ -83,7 +83,7 @@ BYTE save_slot_load(void) {
 	}
 
 	if ((fp = fopen(file, "rb")) == NULL) {
-		textAddLineInfo(1, "[red]error[normal] on load state");
+		text_add_line_info(1, "[red]error[normal] on load state");
 		fprintf(stderr, "error on load state\n");
 		return (EXIT_ERROR);
 	}

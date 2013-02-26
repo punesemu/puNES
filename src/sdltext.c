@@ -1,5 +1,5 @@
 /*
- * sdltext.c
+ * sdl_text.c
  *
  *  Created on: 04/feb/2012
  *      Author: fhorse
@@ -15,14 +15,7 @@
 #include "fds.h"
 #include "cfg_file.h"
 
-#define port_control(prt, button, ch)\
-	if (prt.data[button] == PRESSED) {\
-		strcat(ele->text, "[yellow]");\
-	} else {\
-		strcat(ele->text, "[black]");\
-	}\
-	strcat(ele->text, ch)
-
+enum txt_fade { FADE_SPEED = 4 };
 enum txt_tgs {
 	TXT_NORMAL,
 	TXT_RED,
@@ -46,6 +39,14 @@ enum txt_tgs {
 	TXT_TAGS
 };
 
+#define port_control(prt, button, ch)\
+	if (prt.data[button] == PRESSED) {\
+		strcat(ele->text, "[yellow]");\
+	} else {\
+		strcat(ele->text, "[black]");\
+	}\
+	strcat(ele->text, ch)
+
 static char txt_tags[][10] = {
 	"[normal]", "[red]",	"[yellow]",	"[green]",
 	"[cyan]"  ,	"[brown]",	"[blue]"  ,	"[black]",
@@ -57,7 +58,7 @@ static uint32_t txt_table[TXT_BLACK + 1];
 
 static void INLINE rendering(_txt_element *txt);
 
-void textInit(void) {
+void text_init(void) {
 	uint8_t i;
 
 	text_clear = sdl_text_clear;
@@ -81,8 +82,8 @@ void textInit(void) {
 		ele->alpha[0] = 255;
 		ele->alpha[1] = 170;
 		ele->alpha[2] = 70;
-		ele->start_x = TXTLEFT;
-		ele->start_y = TXTUP;
+		ele->start_x = TXT_LEFT;
+		ele->start_y = TXT_UP;
 		ele->x = 0;
 		ele->y = 1 * font_size[ele->font][1];
 
@@ -95,8 +96,8 @@ void textInit(void) {
 			ele->alpha[0] = 255;
 			ele->alpha[1] = 170;
 			ele->alpha[2] = 150;
-			ele->start_x = TXTLEFT;
-			ele->start_y = TXTUP;
+			ele->start_x = TXT_LEFT;
+			ele->start_y = TXT_UP;
 			ele->x = (i * (8 + 1)) * font_size[ele->font][0];
 			ele->y = 0;
 			ele->w = 8 * font_size[ele->font][0];
@@ -104,7 +105,7 @@ void textInit(void) {
 		}
 	}
 }
-void textReset(void) {
+void text_reset(void) {
 	txt_table[TXT_NORMAL] = SDL_MapRGBA(text.surface->format, 0xFF, 0xFF, 0xFF, 0);
 	txt_table[TXT_RED]    = SDL_MapRGBA(text.surface->format, 0xFF, 0x4C, 0x3E, 0);
 	txt_table[TXT_YELLOW] = SDL_MapRGBA(text.surface->format, 0xFF, 0xFF, 0   , 0);
@@ -114,13 +115,13 @@ void textReset(void) {
 	txt_table[TXT_BLUE]   = SDL_MapRGBA(text.surface->format, 0x2D, 0x8D, 0xBD, 0);
 	txt_table[TXT_BLACK]  = SDL_MapRGBA(text.surface->format, 0   , 0   , 0   , 0);
 }
-void textAddLine(int type, int factor, int font, int alpha, int start_x, int start_y, int x, int y,
-        const char *fmt, ...) {
+void text_add_line(int type, int factor, int font, int alpha, int start_x, int start_y, int x,
+        int y, const char *fmt, ...) {
 	uint8_t i, new = !text.info.index;
 	_txt_element *ele = NULL;
 	va_list ap;
 
-	if (type == TXTINFO) {
+	if (type == TXT_INFO) {
 		for (i = 0; i < TXT_MAX_LINES; i++) {
 			if (text.info.lines[text.info.index][i]->enabled) {
 				text_clear(text.info.lines[text.info.index][i]);
@@ -150,7 +151,7 @@ void textAddLine(int type, int factor, int font, int alpha, int start_x, int sta
 		ele->alpha[2] = 40;
 	}
 
-	if (type == TXTSINGLE) {
+	if (type == TXT_SINGLE) {
 		for (i = 0; i < TXT_MAX_LINES; i++) {
 			if (text.single.lines[i] == NULL) {
 				text.single.lines[i] = malloc(sizeof(_txt_element));
@@ -220,10 +221,8 @@ void textAddLine(int type, int factor, int font, int alpha, int start_x, int sta
 		ele->surface = NULL;
 	}
 }
-void textRendering(BYTE render) {
+void text_rendering(BYTE render) {
 	text.on_screen = FALSE;
-
-	#define FADE_SPEED 4
 
 	{
 		int pos_x = 8, pos_y = text.h - 8;
@@ -327,7 +326,7 @@ void textRendering(BYTE render) {
 
 		/* counter frames */
 		{
-			int oldw = ele->w;
+			int old_w = ele->w;
 
 			int length;
 			if (tas.lag_frame) {
@@ -343,7 +342,7 @@ void textRendering(BYTE render) {
 			ele->w = length * font_size[ele->font][0];
 			ele->h = font_size[ele->font][1];
 
-			if ((oldw != ele->w) && ele->surface) {
+			if ((old_w != ele->w) && ele->surface) {
 				SDL_FreeSurface(ele->surface);
 				ele->surface = NULL;
 			}
@@ -352,7 +351,7 @@ void textRendering(BYTE render) {
 				ele->surface = gfx_create_RGB_surface(text.surface, ele->w, ele->h);
 			}
 
-			if (render){
+			if (render) {
 				rendering(ele);
 			}
 		}
@@ -374,7 +373,7 @@ void textRendering(BYTE render) {
 				ele->surface = gfx_create_RGB_surface(text.surface, ele->w, ele->h);
 			}
 
-			if (render){
+			if (render) {
 				rendering(ele);
 			}
 		}
@@ -388,8 +387,8 @@ void textRendering(BYTE render) {
 			ele->bck = FALSE;
 			ele->font = FONT_12X10;
 			ele->factor = 1;
-			ele->start_x = TXTRIGHT;
-			ele->start_y = TXTDOWN;
+			ele->start_x = TXT_RIGHT;
+			ele->start_y = TXT_DOWN;
 			ele->x = 0;
 			ele->y = 0;
 			ele->w = font_size[ele->font][0];
@@ -419,13 +418,13 @@ void textRendering(BYTE render) {
 				ele->surface = gfx_create_RGB_surface(text.surface, ele->w, ele->h);
 			}
 
-			if (render){
+			if (render) {
 				rendering(ele);
 			}
 		}
 	}
 }
-void textQuit(void) {
+void text_quit(void) {
 	if (text.info.count) {
 		uint8_t i;
 
@@ -517,12 +516,12 @@ static void INLINE rendering(_txt_element *ele) {
 	surface_rect.w = ele->w;
 	surface_rect.h = ele->h;
 
-	if (ele->start_x >= TXTCENTER) {
-		if (ele->start_x == TXTCENTER) {
+	if (ele->start_x >= TXT_CENTER) {
+		if (ele->start_x == TXT_CENTER) {
 			surface_rect.x = ((text.w - ele->w) >> 1) + ele->x;
-		} else if (ele->start_x == TXTLEFT) {
+		} else if (ele->start_x == TXT_LEFT) {
 			surface_rect.x = 8 + ele->x;
-		} else if (ele->start_x == TXTRIGHT) {
+		} else if (ele->start_x == TXT_RIGHT) {
 			surface_rect.x = ((text.w - 8) - ele->w) + ele->x;
 		}
 		if (surface_rect.x < 0) {
@@ -530,13 +529,13 @@ static void INLINE rendering(_txt_element *ele) {
 		}
 	}
 
-	if (ele->start_y >= TXTCENTER) {
-		if (ele->start_y == TXTCENTER) {
+	if (ele->start_y >= TXT_CENTER) {
+		if (ele->start_y == TXT_CENTER) {
 			surface_rect.y = ((text.h - (ele->factor * font_size[ch_font][1])) >> 1)
 			        + ele->y;
-		} else if (ele->start_y == TXTUP) {
+		} else if (ele->start_y == TXT_UP) {
 			surface_rect.y = 8 + ele->y;
-		} else if (ele->start_y == TXTDOWN) {
+		} else if (ele->start_y == TXT_DOWN) {
 			surface_rect.y = ((text.h - 8) - font_size[ch_font][1]) + ele->y;
 		}
 		if (surface_rect.y < 0) {

@@ -25,7 +25,7 @@ C_SRCS += \
 ../src/ppu.c \
 ../src/save_slot.c \
 ../src/sdl_gfx.c \
-../src/sdlsnd.c \
+../src/sdl_snd.c \
 ../src/sdltext.c \
 ../src/sha1.c \
 ../src/tas.c \
@@ -53,7 +53,7 @@ OBJS += \
 ./src/ppu.o \
 ./src/save_slot.o \
 ./src/sdl_gfx.o \
-./src/sdlsnd.o \
+./src/sdl_snd.o \
 ./src/sdltext.o \
 ./src/sha1.o \
 ./src/tas.o \
@@ -81,7 +81,7 @@ C_DEPS += \
 ./src/ppu.d \
 ./src/save_slot.d \
 ./src/sdl_gfx.d \
-./src/sdlsnd.d \
+./src/sdl_snd.d \
 ./src/sdltext.d \
 ./src/sha1.d \
 ./src/tas.d \

@@ -5,7 +5,7 @@
  *      Author: fhorse
  */
 
-#include "sdlsnd.h"
+#include "sdl_snd.h"
 #include "clock.h"
 #include "fps.h"
 #include "apu.h"

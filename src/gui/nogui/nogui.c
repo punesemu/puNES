@@ -7,7 +7,7 @@
 
 #include "nogui.h"
 #include "sdl_gfx.h"
-#include "sdlsnd.h"
+#include "sdl_snd.h"
 #include "opengl.h"
 #include "palette.h"
 #include "clock.h"

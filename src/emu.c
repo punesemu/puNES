@@ -31,7 +31,7 @@
 #include "apu.h"
 #include "ppu.h"
 #include "sdl_gfx.h"
-#include "sdlsnd.h"
+#include "sdl_snd.h"
 #include "sdltext.h"
 #include "sha1.h"
 #include "database.h"
@@ -186,7 +186,7 @@ BYTE emu_load_rom(void) {
 		} else if (!(strcasecmp(ext, ".fm2")) || !(strcasecmp(ext, ".FM2"))) {
 			tasFile(ext, info.rom_file);
 			if (!info.rom_file[0]) {
-				textAddLineInfo(1, "[red]error on loading rom");
+				text_add_line_info(1, "[red]error on loading rom");
 				fprintf(stderr, "error on loading rom\n");
 			}
 			/* rielaboro il nome del file */
@@ -195,7 +195,7 @@ BYTE emu_load_rom(void) {
 			/* carico la rom in memoria */
 			if (ines_load_rom()) {
 				info.rom_file[0] = 0;
-				textAddLineInfo(1, "[red]error on loading rom");
+				text_add_line_info(1, "[red]error on loading rom");
 				fprintf(stderr, "error on loading rom\n");
 				goto elaborate_rom_file;
 			}

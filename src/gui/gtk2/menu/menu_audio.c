@@ -11,7 +11,7 @@
 #include "menu_audio_quality.h"
 #include "param.h"
 #include "cfg_file.h"
-#include "sdlsnd.h"
+#include "sdl_snd.h"
 
 #ifdef __SUNPRO_C
 #pragma align 4 (icon_inline)

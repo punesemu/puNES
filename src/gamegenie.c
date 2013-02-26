@@ -51,7 +51,7 @@ void gamegenie_check_rom_present(BYTE print_message) {
 	}
 
 	if (print_message && gamegenie.rom_present == FALSE) {
-		textAddLineInfo(1, "[red]Game Genie rom not found");
+		text_add_line_info(1, "[red]Game Genie rom not found");
 		fprintf(stderr, "Game Genie rom not found\n");
 	}
 }
@@ -69,7 +69,7 @@ FILE *gamegenie_load_rom(FILE *fp) {
 	sprintf(info.rom_file, "%s" BIOS_FOLDER "/%s", info.base_folder, GGFILE);
 
 	if (!(fp_gg = fopen(info.rom_file, "rb"))) {
-		textAddLineInfo(1, "[red]error on loading Game Genie rom");
+		text_add_line_info(1, "[red]error on loading Game Genie rom");
 		fprintf(stderr, "error on loading Game Genie rom\n");
 
 		strncpy(info.rom_file, info.load_rom_file, sizeof(info.rom_file));

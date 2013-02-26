@@ -7,7 +7,7 @@
 
 #include "win.h"
 #include "cfgstdctrl.h"
-#include "sdlsnd.h"
+#include "sdl_snd.h"
 #include "cfg_file.h"
 #include "sdl_gfx.h"
 #include "opengl.h"

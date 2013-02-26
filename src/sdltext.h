@@ -1,39 +1,31 @@
 /*
- * sdltext.h
+ * sdl_text.h
  *
  *  Created on: 04/feb/2012
  *      Author: fhorse
  */
 
-#ifndef SDLTEXT_H_
-#define SDLTEXT_H_
+#ifndef SDL_TEXT_H_
+#define SDL_TEXT_H_
 
 #include <SDL.h>
 #include "common.h"
 
-enum txt_type {
-	TXTINFO,
-	TXTSINGLE
-};
+enum txt_type {	TXT_INFO, TXT_SINGLE };
+enum txt_fonts { FONT_8X10, FONT_12X10 };
+enum txt_misc { TXT_MAX_MSG = 256, TXT_MAX_LINES = 10 };
 enum txt_position {
-	TXTCENTER = 65000,
-	TXTLEFT,
-	TXTRIGHT,
-	TXTUP,
-	TXTDOWN
-};
-enum txt_fonts {
-	FONT_8X10,
-	FONT_12X10,
+	TXT_CENTER = 65000,
+	TXT_LEFT,
+	TXT_RIGHT,
+	TXT_UP,
+	TXT_DOWN
 };
 
-#define TXT_MAX_MSG 256
-#define TXT_MAX_LINES 10
-
-#define textAddLineInfo(factor, ...)\
-	textAddLine(TXTINFO, factor, FONT_12X10, 255, 0, 0, 0, 0, __VA_ARGS__)
-#define textAddLineSingle(factor, font, alpha, start_x, start_y, x, y, ...)\
-	textAddLine(TXTSINGLE, factor, font, alpha, start_x, start_y, x, y, __VA_ARGS__)
+#define text_add_line_info(factor, ...)\
+	text_add_line(TXT_INFO, factor, FONT_12X10, 255, 0, 0, 0, 0, __VA_ARGS__)
+#define text_add_line_single(factor, font, alpha, start_x, start_y, x, y, ...)\
+	text_add_line(TXT_SINGLE, factor, font, alpha, start_x, start_y, x, y, __VA_ARGS__)
 
 typedef struct {
 	uint8_t enabled;
@@ -84,12 +76,12 @@ struct _text {
 	} fds;
 } text;
 
-void textInit(void);
-void textReset(void);
-void textAddLine(int type, int factor, int font, int alpha, int start_x, int start_y, int x, int y,
-        const char *fmt, ...);
-void textRendering(BYTE render);
-void textQuit(void);
+void text_init(void);
+void text_reset(void);
+void text_add_line(int type, int factor, int font, int alpha, int start_x, int start_y, int x,
+        int y, const char *fmt, ...);
+void text_rendering(BYTE render);
+void text_quit(void);
 
 void sdl_text_clear(_txt_element *ele);
 void sdl_text_blit(_txt_element *ele, SDL_Rect *dst_rect);
@@ -97,4 +89,4 @@ void sdl_text_blit(_txt_element *ele, SDL_Rect *dst_rect);
 void (*text_clear)(_txt_element *ele);
 void (*text_blit)(_txt_element *ele, SDL_Rect *dst_rect);
 
-#endif /* SDLTEXT_H_ */
+#endif /* SDL_TEXT_H_ */

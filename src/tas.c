@@ -100,10 +100,10 @@ void tasFrame_FM2(void) {
 		 * duri un frame in meno rispetto all'fceux.
 		 */
 		if ((tas.emulator == FCEUX) && !tas.index) {
-			textAddLineInfo(1, "enabled FCEUX compatible mode");
+			text_add_line_info(1, "enabled FCEUX compatible mode");
 			tas.add_fake_frame = TRUE;
 		}
-		textAddLineInfo(1, "[yellow]silence, the movie has begun[normal]");
+		text_add_line_info(1, "[yellow]silence, the movie has begun[normal]");
 	}
 
 	if (tas.il[tas.index].state > 0) {
@@ -131,7 +131,7 @@ void tasFrame_FM2(void) {
 
 	if (++tas.frame >= tas.total) {
 		if (tas.frame == tas.total) {
-			textAddLineSingle(4, FONT_12X10, 200, TXTCENTER, TXTCENTER, 0, 0, "The End");
+			text_add_line_single(4, FONT_12X10, 200, TXT_CENTER, TXT_CENTER, 0, 0, "The End");
 		} else if (tas.frame == tas.total + 1) {
 			/*
 			 * finito il video l'FCEUX lascia settato il primo frame non del film

@@ -12,7 +12,7 @@
 #include "version.h"
 #include "clock.h"
 #include "sdl_gfx.h"
-#include "sdlsnd.h"
+#include "sdl_snd.h"
 #include "sdltext.h"
 #include "fps.h"
 #include "param.h"
@@ -94,7 +94,7 @@ void cfg_file_parse(void) {
 	sprintf(tmp, "%s/%s", info.base_folder, INIFILE);
 	/* se non esiste allora lo creo */
 	if ((fp = fopen(tmp, "r")) == NULL) {
-		textAddLineInfo(1, "configuration [yellow]not found, [green]created");
+		text_add_line_info(1, "configuration [yellow]not found, [green]created");
 		cfg_file_save();
 		return;
 	}
@@ -151,7 +151,7 @@ void cfg_file_parse(void) {
 		}
 	}
 
-	textAddLineInfo(1, "configuration [green]loaded");
+	text_add_line_info(1, "configuration [green]loaded");
 
 	gfx.scale_before_fscreen = cfg_from_file.scale;
 
@@ -237,7 +237,7 @@ void cfg_file_pgs_parse(void) {
 
 	if ((fp = fopen(tmp, "r")) == NULL) {
 		if (!gamegenie.print) {
-			textAddLineInfo(1, "rom configuration [yellow]not found");
+			text_add_line_info(1, "rom configuration [yellow]not found");
 		}
 		return;
 	}
@@ -261,7 +261,7 @@ void cfg_file_pgs_parse(void) {
 	}
 
 	if (!gamegenie.print) {
-		textAddLineInfo(1, "rom configuration [green]loaded");
+		text_add_line_info(1, "rom configuration [green]loaded");
 	}
 
 	fclose(fp);
@@ -317,7 +317,7 @@ void cfg_file_input_parse(void) {
 		}
 	}
 
-	textAddLineInfo(1, "input configuration [green]loaded");
+	text_add_line_info(1, "input configuration [green]loaded");
 
 	fclose(fp);
 }

@@ -75,7 +75,7 @@ BYTE fds_load_rom(void) {
 		}
 
 		if (!found) {
-			textAddLineInfo(1, "[red]error on loading rom");
+			text_add_line_info(1, "[red]error on loading rom");
 			fprintf(stderr, "error on loading rom\n");
 			return (EXIT_ERROR);
 		}
@@ -166,7 +166,7 @@ BYTE fds_load_bios(void) {
 		goto fds_load_bios_founded;
 	}
 
-	textAddLineInfo(1, "[red]bios rom not found");
+	text_add_line_info(1, "[red]bios rom not found");
 	fprintf(stderr, "bios rom not found\n");
 	return (EXIT_ERROR);
 
@@ -200,13 +200,13 @@ void fds_disk_op(WORD type, BYTE side_to_insert) {
 			break;
 		case FDS_DISK_EJECT:
 			fds.drive.disk_ejected = TRUE;
-			textAddLineInfo(1, "Disk [cyan]%d [normal]side [cyan]%c[normal]"
+			text_add_line_info(1, "Disk [cyan]%d [normal]side [cyan]%c[normal]"
 					" [yellow]ejected", (fds.drive.side_inserted / 2) + 1,
 					(fds.drive.side_inserted & 0x01) + 'A');
 			return;
 		case FDS_DISK_INSERT:
 			if (!fds.drive.disk_ejected) {
-				textAddLineInfo(1, "you must [yellow]eject[normal] disk first");
+				text_add_line_info(1, "you must [yellow]eject[normal] disk first");
 				return;
 			}
 
@@ -215,14 +215,14 @@ void fds_disk_op(WORD type, BYTE side_to_insert) {
 
 			fds.drive.disk_ejected = FALSE;
 
-			textAddLineInfo(1, "Disk [cyan]%d [normal]side [cyan]%c [green]inserted",
+			text_add_line_info(1, "Disk [cyan]%d [normal]side [cyan]%c [green]inserted",
 					(fds.drive.side_inserted / 2) + 1, (fds.drive.side_inserted & 0x01) + 'A');
 			return;
 		case FDS_DISK_SELECT:
 		case FDS_DISK_SELECT_AND_INSERT:
 		case FDS_DISK_TIMELINE_SELECT:
 			if ((type == FDS_DISK_SELECT) && !fds.drive.disk_ejected) {
-				textAddLineInfo(1, "you must [yellow]eject[normal] disk first");
+				text_add_line_info(1, "you must [yellow]eject[normal] disk first");
 				return;
 			}
 			if (fds.side.data) {
@@ -382,7 +382,7 @@ void fds_disk_op(WORD type, BYTE side_to_insert) {
 			goto fds_disk_op_start;
 		case FDS_DISK_SELECT:
 			fds.drive.side_inserted = side_to_insert;
-			textAddLineInfo(1, "Disk [cyan]%d [normal]side [cyan]%c [brown]selected",
+			text_add_line_info(1, "Disk [cyan]%d [normal]side [cyan]%c [brown]selected",
 					(fds.drive.side_inserted / 2) + 1, (fds.drive.side_inserted & 0x01) + 'A');
 			fds_diff_op(FDS_OP_READ, 0, 0);
 			break;

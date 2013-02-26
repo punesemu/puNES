@@ -76,13 +76,13 @@ int main(int argc, char **argv) {
 
 	gamegenie_init();
 
-	textInit();
+	text_init();
 
 	if (!info.portable) {
-		textAddLineInfo(1, "[yellow]p[red]u[green]N[cyan]E[brown]S[normal]"
+		text_add_line_info(1, "[yellow]p[red]u[green]N[cyan]E[brown]S[normal]"
 		" [font8](by [cyan]FHorse[normal]) [font12]%s", VERSION);
 	} else {
-		textAddLineInfo(1, "[font8][cyan]Portable[normal] "
+		text_add_line_info(1, "[font8][cyan]Portable[normal] "
 		"[font12][yellow]p[red]u[green]N[cyan]E[brown]S[normal]"
 		"[font8] (by [cyan]FHorse[normal]) [font12]%s", VERSION);
 	}

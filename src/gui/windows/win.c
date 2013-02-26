@@ -19,7 +19,7 @@
 #undef  _INPUTINLINE_
 #include "overscan.h"
 #include "sdl_gfx.h"
-#include "sdlsnd.h"
+#include "sdl_snd.h"
 #include "clock.h"
 #include "cfg_file.h"
 #include "timeline.h"
@@ -2007,7 +2007,7 @@ void set_mode(BYTE newmode) {
 	guiUpdate();
 
 	if (reset) {
-		textAddLineInfo(1, "switched to [green]%s", param_fps[machine.type].lname);
+		text_add_line_info(1, "switched to [green]%s", param_fps[machine.type].lname);
 		make_reset(CHANGE_MODE);
 	}
 }

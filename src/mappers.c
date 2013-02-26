@@ -572,7 +572,7 @@ BYTE map_init(WORD mapper_type) {
 			map_init_246();
 			break;
 		default:
-			textAddLineInfo(1, "[yellow]Mapper %d not supported", mapper_type);
+			text_add_line_info(1, "[yellow]Mapper %d not supported", mapper_type);
 			fprintf(stderr, "Mapper not supported\n");
 			EXTCL_CPU_WR_MEM(0);
 			break;
