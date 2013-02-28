@@ -11,13 +11,13 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
-WORD prgRom32kMax, prgRom16kMax, prgRom8kMax;
-BYTE *prg6000;
+WORD prg_rom_32k_max, prg_rom_16k_max, prg_rom_8k_max;
+BYTE *prg_6000;
 
 void map_init_51(void) {
-	prgRom32kMax = (info.prg_rom_16k_count >> 1) - 1;
-	prgRom16kMax = info.prg_rom_16k_count - 1;
-	prgRom8kMax = info.prg_rom_8k_count - 1;
+	prg_rom_32k_max = (info.prg_rom_16k_count >> 1) - 1;
+	prg_rom_16k_max = info.prg_rom_16k_count - 1;
+	prg_rom_8k_max = info.prg_rom_8k_count - 1;
 
 	EXTCL_CPU_WR_MEM(51);
 	EXTCL_CPU_RD_MEM(51);
@@ -50,27 +50,27 @@ void extcl_cpu_wr_mem_51(WORD address, BYTE value) {
 	}
 
 	if (m51.mode & 0x01) {
-		m51.prg6000 = 0x23;
+		m51.prg_6000 = 0x23;
 
 		value = m51.bank;
-		control_bank(prgRom32kMax)
+		control_bank(prg_rom_32k_max)
 		map_prg_rom_8k(4, 0, value);
 	} else {
-		m51.prg6000 = 0x2F;
+		m51.prg_6000 = 0x2F;
 
 		value = (m51.bank << 1) | (m51.mode >> 1);
-		control_bank(prgRom16kMax)
+		control_bank(prg_rom_16k_max)
 		map_prg_rom_8k(2, 0, value);
 
 		value = (m51.bank << 1) | 0x07;
-		control_bank(prgRom16kMax)
+		control_bank(prg_rom_16k_max)
 		map_prg_rom_8k(2, 2, value);
 	}
 	map_prg_rom_8k_update();
 
-	m51.prg6000 = m51.prg6000 | (m51.bank << 2);
-	_control_bank(m51.prg6000, prgRom8kMax)
-	prg6000 = &prg.rom[m51.prg6000 << 13];
+	m51.prg_6000 = m51.prg_6000 | (m51.bank << 2);
+	_control_bank(m51.prg_6000, prg_rom_8k_max)
+	prg_6000 = &prg.rom[m51.prg_6000 << 13];
 
 	if (m51.mode == 0x03) {
 		mirroring_H();
@@ -83,15 +83,15 @@ BYTE extcl_cpu_rd_mem_51(WORD address, BYTE openbus, BYTE before) {
 		return (openbus);
 	}
 
-	return (prg6000[address & 0x1FFF]);
+	return (prg_6000[address & 0x1FFF]);
 }
 BYTE extcl_save_mapper_51(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m51.bank);
 	save_slot_ele(mode, slot, m51.mode);
-	save_slot_ele(mode, slot, m51.prg6000);
+	save_slot_ele(mode, slot, m51.prg_6000);
 
 	if (mode == SAVE_SLOT_READ) {
-		prg6000 = &prg.rom[m51.prg6000 << 13];
+		prg_6000 = &prg.rom[m51.prg_6000 << 13];
 	}
 
 	return (EXIT_OK);

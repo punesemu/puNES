@@ -12,126 +12,126 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-#define m217chr1k(vl)\
+#define m217_chr_1k(vl)\
 	if (m217.reg[1] & 0x08) {\
 		bank = ((m217.reg[1] << 8) & 0x0300) | vl;\
 	} else {\
 		bank = ((m217.reg[1] << 8) & 0x0300) | (((m217.reg[1] << 3) & 0x80) | (vl & 0x7F));\
 	}
-#define m217prg8k(vl)\
+#define m217_prg_8k(vl)\
 	if (m217.reg[1] & 0x08) {\
 		value = ((m217.reg[1] << 5) & 0x60) | (vl & 0x1F);\
 	} else {\
 		value = ((m217.reg[1] << 5) & 0x60) | ((vl & 0x0F) | (m217.reg[1] & 0x10));\
 	}
-#define m217prg8kupdate()\
+#define m217_prg_8k_update()\
 {\
 	BYTE i;\
 	for (i = 0; i < 4; i++) {\
-		m217prg8k(m217.prg8kBank[i])\
-		control_bank(prgRom8kMax)\
+		m217_prg_8k(m217.prg_8k_bank[i])\
+		control_bank(prg_rom_8k_max)\
 		map_prg_rom_8k(1, i, value);\
 	}\
 }
 #define m217_8000()\
 {\
-	const BYTE chrRomCfgOld = mmc3.chrRomCfg;\
-	const BYTE prgRomCfgOld = mmc3.prgRomCfg;\
-	mmc3.bankToUpdate = value & 0x07;\
-	mmc3.prgRomCfg = (value & 0x40) >> 5;\
-	mmc3.chrRomCfg = (value & 0x80) >> 5;\
+	const BYTE chr_rom_cfg_old = mmc3.chr_rom_cfg;\
+	const BYTE prg_rom_cfg_old = mmc3.prg_rom_cfg;\
+	mmc3.bank_to_update = value & 0x07;\
+	mmc3.prg_rom_cfg = (value & 0x40) >> 5;\
+	mmc3.chr_rom_cfg = (value & 0x80) >> 5;\
 	/*\
 	 * se il tipo di configurazione della chr cambia,\
 	 * devo swappare i primi 4 banchi con i secondi\
 	 * quattro.\
 	 */\
-	if (mmc3.chrRomCfg != chrRomCfgOld) {\
-		swapChrBank1k(0, 4)\
-		swapChrBank1k(1, 5)\
-		swapChrBank1k(2, 6)\
-		swapChrBank1k(3, 7)\
+	if (mmc3.chr_rom_cfg != chr_rom_cfg_old) {\
+		swap_chr_bank_1k(0, 4)\
+		swap_chr_bank_1k(1, 5)\
+		swap_chr_bank_1k(2, 6)\
+		swap_chr_bank_1k(3, 7)\
 	}\
-	if (mmc3.prgRomCfg != prgRomCfgOld) {\
+	if (mmc3.prg_rom_cfg != prg_rom_cfg_old) {\
 		WORD p0 = mapper.rom_map_to[0];\
 		WORD p2 = mapper.rom_map_to[2];\
 		mapper.rom_map_to[0] = p2;\
 		mapper.rom_map_to[2] = p0;\
 		/*\
-		 * prgRomCfg 0x00 : $C000 - $DFFF fisso al penultimo banco\
-		 * prgRomCfg 0x02 : $8000 - $9FFF fisso al penultimo banco\
+		 * prg_rom_cfg 0x00 : $C000 - $DFFF fisso al penultimo banco\
+		 * prg_rom_cfg 0x02 : $8000 - $9FFF fisso al penultimo banco\
 		 */\
-		m217prg8k(prgRom8kBeforeLast)\
-		control_bank(prgRom8kMax)\
-		map_prg_rom_8k(1, mmc3.prgRomCfg ^ 0x02, value);\
+		m217_prg_8k(prg_rom_8k_before_last)\
+		control_bank(prg_rom_8k_max)\
+		map_prg_rom_8k(1, mmc3.prg_rom_cfg ^ 0x02, value);\
 		map_prg_rom_8k_update();\
-		m217.prg8kBank[0] = mapper.rom_map_to[0];\
-		m217.prg8kBank[1] = mapper.rom_map_to[1];\
-		m217.prg8kBank[2] = mapper.rom_map_to[2];\
-		m217.prg8kBank[3] = mapper.rom_map_to[3];\
+		m217.prg_8k_bank[0] = mapper.rom_map_to[0];\
+		m217.prg_8k_bank[1] = mapper.rom_map_to[1];\
+		m217.prg_8k_bank[2] = mapper.rom_map_to[2];\
+		m217.prg_8k_bank[3] = mapper.rom_map_to[3];\
 	}\
 }
 #define m217_8001()\
 {\
 	WORD bank;\
-	switch (mmc3.bankToUpdate) {\
+	switch (mmc3.bank_to_update) {\
 		case 0:\
-			m217chr1k(value)\
+			m217_chr_1k(value)\
 			bank &= 0xFFE;\
-			_control_bank(bank, chrRom1kMax)\
-			chr.bank_1k[mmc3.chrRomCfg] = &chr.data[bank << 10];\
-			chr.bank_1k[mmc3.chrRomCfg | 0x01] = &chr.data[(bank + 1) << 10];\
+			_control_bank(bank, chr_rom_1k_max)\
+			chr.bank_1k[mmc3.chr_rom_cfg] = &chr.data[bank << 10];\
+			chr.bank_1k[mmc3.chr_rom_cfg | 0x01] = &chr.data[(bank + 1) << 10];\
 			return;\
 		case 1:\
-			m217chr1k(value)\
+			m217_chr_1k(value)\
 			bank &= 0xFFE;\
-			_control_bank(bank, chrRom1kMax)\
-			chr.bank_1k[mmc3.chrRomCfg | 0x02] = &chr.data[bank << 10];\
-			chr.bank_1k[mmc3.chrRomCfg | 0x03] = &chr.data[(bank + 1) << 10];\
+			_control_bank(bank, chr_rom_1k_max)\
+			chr.bank_1k[mmc3.chr_rom_cfg | 0x02] = &chr.data[bank << 10];\
+			chr.bank_1k[mmc3.chr_rom_cfg | 0x03] = &chr.data[(bank + 1) << 10];\
 			return;\
 		case 2:\
-			m217chr1k(value)\
-			_control_bank(bank, chrRom1kMax)\
-			chr.bank_1k[mmc3.chrRomCfg ^ 0x04] = &chr.data[bank << 10];\
+			m217_chr_1k(value)\
+			_control_bank(bank, chr_rom_1k_max)\
+			chr.bank_1k[mmc3.chr_rom_cfg ^ 0x04] = &chr.data[bank << 10];\
 			return;\
 		case 3:\
-			m217chr1k(value)\
-			_control_bank(bank, chrRom1kMax)\
-			chr.bank_1k[(mmc3.chrRomCfg ^ 0x04) | 0x01] = &chr.data[bank << 10];\
+			m217_chr_1k(value)\
+			_control_bank(bank, chr_rom_1k_max)\
+			chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x01] = &chr.data[bank << 10];\
 			return;\
 		case 4:\
-			m217chr1k(value)\
-			_control_bank(bank, chrRom1kMax)\
-			chr.bank_1k[(mmc3.chrRomCfg ^ 0x04) | 0x02] = &chr.data[bank << 10];\
+			m217_chr_1k(value)\
+			_control_bank(bank, chr_rom_1k_max)\
+			chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x02] = &chr.data[bank << 10];\
 			return;\
 		case 5:\
-			m217chr1k(value)\
-			_control_bank(bank, chrRom1kMax)\
-			chr.bank_1k[(mmc3.chrRomCfg ^ 0x04) | 0x03] = &chr.data[bank << 10];\
+			m217_chr_1k(value)\
+			_control_bank(bank, chr_rom_1k_max)\
+			chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x03] = &chr.data[bank << 10];\
 			return;\
 		case 6:\
-			m217prg8k(value)\
-			control_bank(prgRom8kMax)\
-			map_prg_rom_8k(1, mmc3.prgRomCfg, value);\
+			m217_prg_8k(value)\
+			control_bank(prg_rom_8k_max)\
+			map_prg_rom_8k(1, mmc3.prg_rom_cfg, value);\
 			map_prg_rom_8k_update();\
-			m217.prg8kBank[mmc3.prgRomCfg] = mapper.rom_map_to[mmc3.prgRomCfg];\
+			m217.prg_8k_bank[mmc3.prg_rom_cfg] = mapper.rom_map_to[mmc3.prg_rom_cfg];\
 			return;\
 		case 7:\
-			m217prg8k(value)\
-			control_bank(prgRom8kMax)\
+			m217_prg_8k(value)\
+			control_bank(prg_rom_8k_max)\
 			map_prg_rom_8k(1, 1, value);\
 			map_prg_rom_8k_update();\
-			m217.prg8kBank[1] = mapper.rom_map_to[1];\
+			m217.prg_8k_bank[1] = mapper.rom_map_to[1];\
 			return;\
 	}\
 }
 
-WORD prgRom16kMax, prgRom8kMax, prgRom8kBeforeLast, chrRom1kMax;
+WORD prg_rom_16k_max, prg_rom_8k_max, prg_rom_8k_before_last, chr_rom_1k_max;
 
 void map_init_217(void) {
-	prgRom16kMax = info.prg_rom_16k_count - 1;
-	prgRom8kMax = info.prg_rom_8k_count - 1;
-	prgRom8kBeforeLast = info.prg_rom_8k_count - 2;
-	chrRom1kMax = info.chr_rom_1k_count - 1;
+	prg_rom_16k_max = info.prg_rom_16k_count - 1;
+	prg_rom_8k_max = info.prg_rom_8k_count - 1;
+	prg_rom_8k_before_last = info.prg_rom_8k_count - 2;
+	chr_rom_1k_max = info.chr_rom_1k_count - 1;
 
 	EXTCL_CPU_WR_MEM(217);
 	EXTCL_SAVE_MAPPER(217);
@@ -155,10 +155,10 @@ void map_init_217(void) {
 	}
 
 	m217.reg[3] = FALSE;
-	m217.prg8kBank[0] = 0;
-	m217.prg8kBank[1] = 1;
-	m217.prg8kBank[2] = prgRom8kBeforeLast;
-	m217.prg8kBank[3] = prgRom8kMax;
+	m217.prg_8k_bank[0] = 0;
+	m217.prg_8k_bank[1] = 1;
+	m217.prg_8k_bank[2] = prg_rom_8k_before_last;
+	m217.prg_8k_bank[3] = prg_rom_8k_max;
 
 	info.mapper_extend_wr = TRUE;
 
@@ -197,7 +197,7 @@ void extcl_cpu_wr_mem_217(WORD address, BYTE value) {
 						mirroring_V();
 					}
 				} else {
-					if (m217.reg[3] && (!(m217.reg[0] & 0x80) || (mmc3.bankToUpdate < 6))) {
+					if (m217.reg[3] && (!(m217.reg[0] & 0x80) || (mmc3.bank_to_update < 6))) {
 						m217.reg[3] = FALSE;
 						m217_8001()
 					}
@@ -224,10 +224,10 @@ void extcl_cpu_wr_mem_217(WORD address, BYTE value) {
 			m217.reg[0] = value;
 
 			if (!(m217.reg[0] & 0x80)) {
-				m217prg8kupdate()
+				m217_prg_8k_update()
 			} else {
 				value = (m217.reg[0] & 0x0F) | ((m217.reg[1] << 4) & 0x30);
-				control_bank(prgRom16kMax)
+				control_bank(prg_rom_16k_max)
 				map_prg_rom_8k(2, 0, value);
 				map_prg_rom_8k(2, 2, value);
 			}
@@ -236,7 +236,7 @@ void extcl_cpu_wr_mem_217(WORD address, BYTE value) {
 		case 0x5001:
 			if (m217.reg[1] != value) {
 				m217.reg[1] = value;
-				m217prg8kupdate()
+				m217_prg_8k_update()
 				map_prg_rom_8k_update();
 			}
 			return;
@@ -247,7 +247,7 @@ void extcl_cpu_wr_mem_217(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_217(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m217.reg);
-	save_slot_ele(mode, slot, m217.prg8kBank);
+	save_slot_ele(mode, slot, m217.prg_8k_bank);
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	return (EXIT_OK);

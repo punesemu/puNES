@@ -12,11 +12,11 @@
 #include "cpu.h"
 #include "save_slot.h"
 
-WORD prgRom8kMax, chrRom1kMax;
+WORD prg_rom_8k_max, chr_rom_1k_max;
 
 void map_init_183(void) {
-	prgRom8kMax = info.prg_rom_8k_count - 1;
-	chrRom1kMax = info.chr_rom_1k_count - 1;
+	prg_rom_8k_max = info.prg_rom_8k_count - 1;
+	chr_rom_1k_max = info.chr_rom_1k_count - 1;
 
 	EXTCL_CPU_WR_MEM(183);
 	EXTCL_CPU_RD_MEM(183);
@@ -31,8 +31,8 @@ void map_init_183(void) {
 
 	{
 		BYTE i;
-		for (i = 0; i < LENGTH(m183.chrRomBank); i++) {
-			m183.chrRomBank[i] = i;
+		for (i = 0; i < LENGTH(m183.chr_rom_bank); i++) {
+			m183.chr_rom_bank[i] = i;
 		}
 	}
 }
@@ -42,7 +42,7 @@ void extcl_cpu_wr_mem_183(WORD address, BYTE value) {
 		case 0x8801:
 		case 0x8802:
 		case 0x8803:
-			control_bank(prgRom8kMax)
+			control_bank(prg_rom_8k_max)
 			map_prg_rom_8k(1, 0, value);
 			map_prg_rom_8k_update();
 			return;
@@ -70,7 +70,7 @@ void extcl_cpu_wr_mem_183(WORD address, BYTE value) {
 		case 0xA001:
 		case 0xA002:
 		case 0xA003:
-			control_bank(prgRom8kMax)
+			control_bank(prg_rom_8k_max)
 			map_prg_rom_8k(1, 2, value);
 			map_prg_rom_8k_update();
 			return;
@@ -78,7 +78,7 @@ void extcl_cpu_wr_mem_183(WORD address, BYTE value) {
 		case 0xA801:
 		case 0xA802:
 		case 0xA803:
-			control_bank(prgRom8kMax)
+			control_bank(prg_rom_8k_max)
 			map_prg_rom_8k(1, 1, value);
 			map_prg_rom_8k_update();
 			return;
@@ -121,10 +121,10 @@ void extcl_cpu_wr_mem_183(WORD address, BYTE value) {
 				const BYTE shift = address & 0x04;
 				const BYTE slot = (((address - 0x3000) >> 1 | (address << 7)) & 0x1C00) >> 10;
 
-				value = (m183.chrRomBank[slot] & (0xF0 >> shift)) | ((value & 0x0F) << shift);
-				control_bank(chrRom1kMax)
+				value = (m183.chr_rom_bank[slot] & (0xF0 >> shift)) | ((value & 0x0F) << shift);
+				control_bank(chr_rom_1k_max)
 				chr.bank_1k[slot] = &chr.data[value << 10];
-				m183.chrRomBank[slot] = value;
+				m183.chr_rom_bank[slot] = value;
 			}
 			return;
 	}
@@ -141,7 +141,7 @@ BYTE extcl_save_mapper_183(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m183.prescaler);
 	save_slot_ele(mode, slot, m183.count);
 	save_slot_ele(mode, slot, m183.delay);
-	save_slot_ele(mode, slot, m183.chrRomBank);
+	save_slot_ele(mode, slot, m183.chr_rom_bank);
 
 	return (EXIT_OK);
 }

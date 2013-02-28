@@ -12,7 +12,7 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-#define tqrom8000SwapChrRam1k(slot0, slot1)\
+#define tqrom_8000_swap_chr_ram_1k(slot0, slot1)\
 {\
 	uint32_t save[1][2];\
 	save[0][0] = txrom.chr[slot0][0];\
@@ -22,7 +22,7 @@
 	txrom.chr[slot1][0] = save[0][0];\
 	txrom.chr[slot1][1] = save[0][1];\
 }
-#define tqrom8001SwapChr2k(slot0, slot1)\
+#define tqrom_8001_swap_chr_2k(slot0, slot1)\
 {\
 	const BYTE a = slot0;\
 	const BYTE b = slot1;\
@@ -32,35 +32,35 @@
 		control_bank(3)\
 		txrom.chr[a][1] = value << 11;\
 		txrom.chr[b][1] = txrom.chr[a][1] | 0x400;\
-		chr.bank_1k[a] = &txrom.chrRam[txrom.chr[a][1]];\
-		chr.bank_1k[b] = &txrom.chrRam[txrom.chr[b][1]];\
+		chr.bank_1k[a] = &txrom.chr_ram[txrom.chr[a][1]];\
+		chr.bank_1k[b] = &txrom.chr_ram[txrom.chr[b][1]];\
 		return;\
 	} else {\
 		txrom.chr[a][0] = txrom.chr[b][0] = FALSE;\
 		txrom.chr[a][1] = txrom.chr[b][1] = FALSE;\
 	}\
 }
-#define tqrom8001SwapChr1k(slot0)\
+#define tqrom_8001_swap_chr_1k(slot0)\
 {\
 	const BYTE a = slot0;\
 	if (value & 0x40) {\
 		txrom.chr[a][0] = TRUE;\
 		control_bank(7)\
 		txrom.chr[a][1] = value << 10;\
-		chr.bank_1k[a] = &txrom.chrRam[txrom.chr[a][1]];\
+		chr.bank_1k[a] = &txrom.chr_ram[txrom.chr[a][1]];\
 		return;\
 	} else {\
 		txrom.chr[a][0] = txrom.chr[a][1] = FALSE;\
 	}\
 }
 
-WORD prgRom8kMax, prgRom8kBeforeLast, chrRom1kMax;
+WORD prg_rom_8k_max, prg_rom_8k_before_last, chr_rom_1k_max;
 BYTE type;
 
 void map_init_TxROM(BYTE model) {
-	prgRom8kMax = info.prg_rom_8k_count - 1;
-	chrRom1kMax = info.chr_rom_1k_count - 1;
-	prgRom8kBeforeLast = info.prg_rom_8k_count - 2;
+	prg_rom_8k_max = info.prg_rom_8k_count - 1;
+	chr_rom_1k_max = info.chr_rom_1k_count - 1;
+	prg_rom_8k_before_last = info.prg_rom_8k_count - 2;
 
 	switch (model) {
 		case TLSROM:
@@ -99,7 +99,7 @@ void map_init_TxROM(BYTE model) {
 
 	if (info.reset >= HARD) {
 		memset(&txrom.chr, 0x00, sizeof(txrom.chr));
-		memset(&txrom.chrRam, 0x00, sizeof(txrom.chrRam));
+		memset(&txrom.chr_ram, 0x00, sizeof(txrom.chr_ram));
 		memset(&mmc3, 0x00, sizeof(mmc3));
 	}
 
@@ -114,11 +114,12 @@ void map_init_TxROM(BYTE model) {
 void extcl_cpu_wr_mem_TKSROM(WORD address, BYTE value) {
 	switch (address & 0xE001) {
 		case 0x8001: {
-			switch (mmc3.bankToUpdate) {
+			switch (mmc3.bank_to_update) {
 				case 0:
 				case 1:
-					if (!mmc3.chrRomCfg) {
-						const BYTE slot = mmc3.bankToUpdate << 1;
+					if (!mmc3.chr_rom_cfg) {
+						const BYTE slot = mmc3.bank_to_update << 1;
+
 						ntbl.bank_1k[slot] = &ntbl.data[((value >> 7) ^ 0x01) << 10];
 						ntbl.bank_1k[slot | 0x01] = ntbl.bank_1k[slot];
 					}
@@ -127,9 +128,9 @@ void extcl_cpu_wr_mem_TKSROM(WORD address, BYTE value) {
 				case 3:
 				case 4:
 				case 5:
-					if (mmc3.chrRomCfg) {
-						ntbl.bank_1k[mmc3.bankToUpdate - 2] =
-								&ntbl.data[((value >> 7) ^ 0x01) << 10];
+					if (mmc3.chr_rom_cfg) {
+						ntbl.bank_1k[mmc3.bank_to_update - 2] = &ntbl.data[((value >> 7) ^ 0x01)
+						        << 10];
 					}
 					break;
 			}
@@ -143,32 +144,33 @@ void extcl_cpu_wr_mem_TKSROM(WORD address, BYTE value) {
 
 void extcl_cpu_wr_mem_TQROM(WORD address, BYTE value) {
 	const WORD adr = address & 0xE001;
+
 	if (adr == 0x8000) {
-		if (mmc3.chrRomCfg != ((value & 0x80) >> 5)) {
-			tqrom8000SwapChrRam1k(0, 4)
-			tqrom8000SwapChrRam1k(1, 5)
-			tqrom8000SwapChrRam1k(2, 6)
-			tqrom8000SwapChrRam1k(3, 7)
+		if (mmc3.chr_rom_cfg != ((value & 0x80) >> 5)) {
+			tqrom_8000_swap_chr_ram_1k(0, 4)
+			tqrom_8000_swap_chr_ram_1k(1, 5)
+			tqrom_8000_swap_chr_ram_1k(2, 6)
+			tqrom_8000_swap_chr_ram_1k(3, 7)
 		}
 	} else if (adr == 0x8001) {
-		switch (mmc3.bankToUpdate) {
+		switch (mmc3.bank_to_update) {
 			case 0:
-				tqrom8001SwapChr2k(mmc3.chrRomCfg, mmc3.chrRomCfg | 0x01)
+				tqrom_8001_swap_chr_2k(mmc3.chr_rom_cfg, mmc3.chr_rom_cfg | 0x01)
 				break;
 			case 1:
-				tqrom8001SwapChr2k(mmc3.chrRomCfg | 0x02, mmc3.chrRomCfg | 0x03)
+				tqrom_8001_swap_chr_2k(mmc3.chr_rom_cfg | 0x02, mmc3.chr_rom_cfg | 0x03)
 				break;
 			case 2:
-				tqrom8001SwapChr1k(mmc3.chrRomCfg ^ 0x04)
+				tqrom_8001_swap_chr_1k(mmc3.chr_rom_cfg ^ 0x04)
 				break;
 			case 3:
-				tqrom8001SwapChr1k((mmc3.chrRomCfg ^ 0x04) | 0x01)
+				tqrom_8001_swap_chr_1k((mmc3.chr_rom_cfg ^ 0x04) | 0x01)
 				break;
 			case 4:
-				tqrom8001SwapChr1k((mmc3.chrRomCfg ^ 0x04) | 0x02)
+				tqrom_8001_swap_chr_1k((mmc3.chr_rom_cfg ^ 0x04) | 0x02)
 				break;
 			case 5:
-				tqrom8001SwapChr1k((mmc3.chrRomCfg ^ 0x04) | 0x03)
+				tqrom_8001_swap_chr_1k((mmc3.chr_rom_cfg ^ 0x04) | 0x03)
 				break;
 		}
 	}
@@ -188,13 +190,14 @@ BYTE extcl_save_mapper_TxROM(BYTE mode, BYTE slot, FILE *fp) {
 		save_slot_ele(mode, slot, txrom.chr);
 		if (mode == SAVE_SLOT_READ) {
 			BYTE i;
+
 			for (i = 0; i < LENGTH(txrom.chr); i++) {
 				if (txrom.chr[i][0]) {
-					chr.bank_1k[i] = &txrom.chrRam[txrom.chr[i][1]];
+					chr.bank_1k[i] = &txrom.chr_ram[txrom.chr[i][1]];
 				}
 			}
 		}
-		save_slot_ele(mode, slot, txrom.chrRam);
+		save_slot_ele(mode, slot, txrom.chr_ram);
 	}
 	extcl_save_mapper_MMC3(mode, slot, fp);
 

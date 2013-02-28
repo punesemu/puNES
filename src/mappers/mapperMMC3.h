@@ -10,11 +10,11 @@
 
 #include "common.h"
 
-#define swapChrBank1k(src, dst)\
+#define swap_chr_bank_1k(src, dst)\
 {\
-	BYTE *chrBank1k = chr.bank_1k[src];\
+	BYTE *chr_bank_1k = chr.bank_1k[src];\
 	chr.bank_1k[src] = chr.bank_1k[dst];\
-	chr.bank_1k[dst] = chrBank1k;\
+	chr.bank_1k[dst] = chr_bank_1k;\
 }
 
 enum {
@@ -31,10 +31,10 @@ enum {
 };
 
 struct _mmc3 {
-	BYTE prgRamProtect;
-	BYTE bankToUpdate;
-	BYTE prgRomCfg;
-	BYTE chrRomCfg;
+	BYTE prg_ram_protect;
+	BYTE bank_to_update;
+	BYTE prg_rom_cfg;
+	BYTE chr_rom_cfg;
 } mmc3;
 
 void map_init_MMC3(void);

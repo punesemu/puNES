@@ -12,37 +12,37 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-#define rexDbzSwapChrRomBank1k(slot1, slot2)\
+#define rex_dbz_swap_chr_rom_bank_1k(slot1, slot2)\
 {\
-	WORD tmp = rexDbz.chrRomBank[slot1];\
-	rexDbz.chrRomBank[slot1] = rexDbz.chrRomBank[slot2];\
-	rexDbz.chrRomBank[slot2] = tmp;\
+	WORD tmp = rex_dbz.chr_rom_bank[slot1];\
+	rex_dbz.chr_rom_bank[slot1] = rex_dbz.chr_rom_bank[slot2];\
+	rex_dbz.chr_rom_bank[slot2] = tmp;\
 }
-#define rexDbzChr1kUpdate(slot)\
+#define rex_dbz_chr_1k_update(slot)\
 {\
-	WORD tmp = (rexDbz.chrHigh << ((slot >= 4) ? 4 : 8)) & 0x0100;\
-	chr.bank_1k[slot] = &chr.data[(tmp | rexDbz.chrRomBank[slot]) << 10];\
+	WORD tmp = (rex_dbz.chr_high << ((slot >= 4) ? 4 : 8)) & 0x0100;\
+	chr.bank_1k[slot] = &chr.data[(tmp | rex_dbz.chr_rom_bank[slot]) << 10];\
 }
-#define rexDbzIntercept8001(slot, val)\
+#define rex_dbz_intercept_8001(slot, val)\
 {\
 	BYTE bank = slot;\
-	rexDbz.chrRomBank[bank] = val;\
-	rexDbzChr1kUpdate(bank)\
+	rex_dbz.chr_rom_bank[bank] = val;\
+	rex_dbz_chr_1k_update(bank)\
 }
-#define rexDbzChrUpdate()\
+#define rex_dbz_chr_update()\
 {\
 	BYTE i;\
 	for (i = 0; i < 8 ; i++) {\
-		rexDbzChr1kUpdate(i)\
+		rex_dbz_chr_1k_update(i)\
 	}\
 }
 
-WORD prgRom8kMax, prgRom8kBeforeLast, chrRom1kMax;
+WORD prg_rom_8k_max, prg_rom_8k_before_last, chr_rom_1k_max;
 
 void map_init_Rex(BYTE model) {
-	prgRom8kMax = info.prg_rom_8k_count - 1;
-	chrRom1kMax = info.chr_rom_1k_count - 1;
-	prgRom8kBeforeLast = info.prg_rom_8k_count - 2;
+	prg_rom_8k_max = info.prg_rom_8k_count - 1;
+	chr_rom_1k_max = info.chr_rom_1k_count - 1;
+	prg_rom_8k_before_last = info.prg_rom_8k_count - 2;
 
 	if (model == DBZ) {
 		EXTCL_CPU_WR_MEM(Rex_dbz);
@@ -54,20 +54,20 @@ void map_init_Rex(BYTE model) {
 		EXTCL_PPU_256_TO_319(MMC3);
 		EXTCL_PPU_320_TO_34X(MMC3);
 		EXTCL_UPDATE_R2006(MMC3);
-		mapper.internal_struct[0] = (BYTE *) &rexDbz;
-		mapper.internal_struct_size[0] = sizeof(rexDbz);
+		mapper.internal_struct[0] = (BYTE *) &rex_dbz;
+		mapper.internal_struct_size[0] = sizeof(rex_dbz);
 		mapper.internal_struct[1] = (BYTE *) &mmc3;
 		mapper.internal_struct_size[1] = sizeof(mmc3);
 
 		if (info.reset >= HARD) {
 			BYTE i;
 
-			memset(&rexDbz, 0x00, sizeof(rexDbz));
+			memset(&rex_dbz, 0x00, sizeof(rex_dbz));
 			memset(&mmc3, 0x00, sizeof(mmc3));
 			memset(&irqA12, 0x00, sizeof(irqA12));
 
 			for (i = 0; i < 8; i++) {
-				rexDbz.chrRomBank[i] = i;
+				rex_dbz.chr_rom_bank[i] = i;
 			}
 		} else {
 			memset(&irqA12, 0x00, sizeof(irqA12));
@@ -84,44 +84,44 @@ void extcl_cpu_wr_mem_Rex_dbz(WORD address, BYTE value) {
 
 	/* intercetto cio' che mi interessa */
 	if ((address >= 0x4100) && (address < 0x8000)) {
-		if (rexDbz.chrHigh != value) {
-			rexDbz.chrHigh = value;
-			rexDbzChrUpdate()
+		if (rex_dbz.chr_high != value) {
+			rex_dbz.chr_high = value;
+			rex_dbz_chr_update()
 		}
 		return;
 	} else if (adr == 0x8000) {
-		BYTE chrRomCfg = (value & 0x80) >> 5;
+		BYTE chr_rom_cfg = (value & 0x80) >> 5;
 
-		if (mmc3.chrRomCfg != chrRomCfg) {
-			rexDbzSwapChrRomBank1k(0, 4)
-			rexDbzSwapChrRomBank1k(1, 5)
-			rexDbzSwapChrRomBank1k(2, 6)
-			rexDbzSwapChrRomBank1k(3, 7)
+		if (mmc3.chr_rom_cfg != chr_rom_cfg) {
+			rex_dbz_swap_chr_rom_bank_1k(0, 4)
+			rex_dbz_swap_chr_rom_bank_1k(1, 5)
+			rex_dbz_swap_chr_rom_bank_1k(2, 6)
+			rex_dbz_swap_chr_rom_bank_1k(3, 7)
 
-			mmc3.chrRomCfg = chrRomCfg;
+			mmc3.chr_rom_cfg = chr_rom_cfg;
 		}
 	} else if (adr == 0x8001) {
-		if (mmc3.bankToUpdate <= 5) {
-			switch (mmc3.bankToUpdate) {
+		if (mmc3.bank_to_update <= 5) {
+			switch (mmc3.bank_to_update) {
 				case 0:
-					rexDbzIntercept8001(mmc3.chrRomCfg, value)
-					rexDbzIntercept8001(mmc3.chrRomCfg | 0x01, value + 1)
+					rex_dbz_intercept_8001(mmc3.chr_rom_cfg, value)
+					rex_dbz_intercept_8001(mmc3.chr_rom_cfg | 0x01, value + 1)
 					break;
 				case 1:
-					rexDbzIntercept8001(mmc3.chrRomCfg | 0x02, value)
-					rexDbzIntercept8001(mmc3.chrRomCfg | 0x03, value + 1)
+					rex_dbz_intercept_8001(mmc3.chr_rom_cfg | 0x02, value)
+					rex_dbz_intercept_8001(mmc3.chr_rom_cfg | 0x03, value + 1)
 					break;
 				case 2:
-					rexDbzIntercept8001(mmc3.chrRomCfg ^ 0x04, value)
+					rex_dbz_intercept_8001(mmc3.chr_rom_cfg ^ 0x04, value)
 					break;
 				case 3:
-					rexDbzIntercept8001((mmc3.chrRomCfg ^ 0x04) | 0x01, value)
+					rex_dbz_intercept_8001((mmc3.chr_rom_cfg ^ 0x04) | 0x01, value)
 					break;
 				case 4:
-					rexDbzIntercept8001((mmc3.chrRomCfg ^ 0x04) | 0x02, value)
+					rex_dbz_intercept_8001((mmc3.chr_rom_cfg ^ 0x04) | 0x02, value)
 					break;
 				case 5:
-					rexDbzIntercept8001((mmc3.chrRomCfg ^ 0x04) | 0x03, value)
+					rex_dbz_intercept_8001((mmc3.chr_rom_cfg ^ 0x04) | 0x03, value)
 					break;
 			}
 			return;
@@ -137,11 +137,12 @@ BYTE extcl_cpu_rd_mem_Rex_dbz(WORD address, BYTE openbus, BYTE before) {
 		 */
 		return (0x01);
 	}
+
 	return (openbus);
 }
 BYTE extcl_save_mapper_Rex_dbz(BYTE mode, BYTE slot, FILE *fp) {
-	save_slot_ele(mode, slot, rexDbz.chrRomBank);
-	save_slot_ele(mode, slot, rexDbz.chrHigh);
+	save_slot_ele(mode, slot, rex_dbz.chr_rom_bank);
+	save_slot_ele(mode, slot, rex_dbz.chr_high);
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	return (EXIT_OK);

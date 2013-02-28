@@ -12,8 +12,8 @@
 
 struct _m37 {
 	BYTE reg;
-	WORD prgmap[4];
-	WORD chrmap[8];
+	WORD prg_map[4];
+	WORD chr_map[8];
 } m37;
 
 void map_init_37(void);

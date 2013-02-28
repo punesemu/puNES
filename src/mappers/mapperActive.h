@@ -12,7 +12,7 @@
 
 struct _active {
 	BYTE openbus;
-	BYTE prgRam[4];
+	BYTE prg_ram[4];
 } active;
 
 void map_init_Active(void);

@@ -13,8 +13,8 @@
 struct _m45 {
 	BYTE reg[4];
 	BYTE index;
-	WORD prgmap[4];
-	WORD chrmap[8];
+	WORD prg_map[4];
+	WORD chr_map[8];
 } m45;
 
 void map_init_45(void);

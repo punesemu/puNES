@@ -11,12 +11,12 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
-WORD prgRom16kMax, prgRom8kMax;
-BYTE *prg6000;
+WORD prg_rom_16k_max, prg_rom_8k_max;
+BYTE *prg_6000;
 
 void map_init_53(void) {
-	prgRom16kMax = info.prg_rom_16k_count - 1;
-	prgRom8kMax = info.prg_rom_8k_count - 1;
+	prg_rom_16k_max = info.prg_rom_16k_count - 1;
+	prg_rom_8k_max = info.prg_rom_8k_count - 1;
 
 	EXTCL_CPU_WR_MEM(53);
 	EXTCL_CPU_RD_MEM(53);
@@ -53,16 +53,16 @@ void extcl_cpu_wr_mem_53(WORD address, BYTE value) {
 
 	tmp = (m53.reg[0] << 3) & 0x78;
 
-	m53.prg6000 = ((tmp << 1) | 0x0F) + 4;
-	_control_bank(m53.prg6000, prgRom8kMax)
-	prg6000 = &prg.rom[m53.prg6000 << 13];
+	m53.prg_6000 = ((tmp << 1) | 0x0F) + 4;
+	_control_bank(m53.prg_6000, prg_rom_8k_max)
+	prg_6000 = &prg.rom[m53.prg_6000 << 13];
 
 	value = (m53.reg[0] & 0x10) ? (tmp | (m53.reg[1] & 0x07)) + 2 : 0;
-	control_bank(prgRom16kMax)
+	control_bank(prg_rom_16k_max)
 	map_prg_rom_8k(2, 0, value);
 
 	value = (m53.reg[0] & 0x10) ? (tmp | (0xFF & 0x07)) + 2 : 1;
-	control_bank(prgRom16kMax)
+	control_bank(prg_rom_16k_max)
 	map_prg_rom_8k(2, 2, value);
 
 	map_prg_rom_8k_update();
@@ -72,14 +72,14 @@ BYTE extcl_cpu_rd_mem_53(WORD address, BYTE openbus, BYTE before) {
 		return (openbus);
 	}
 
-	return (prg6000[address & 0x1FFF]);
+	return (prg_6000[address & 0x1FFF]);
 }
 BYTE extcl_save_mapper_53(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m53.reg);
-	save_slot_ele(mode, slot, m53.prg6000);
+	save_slot_ele(mode, slot, m53.prg_6000);
 
 	if (mode == SAVE_SLOT_READ) {
-		prg6000 = &prg.rom[m53.prg6000 << 13];
+		prg_6000 = &prg.rom[m53.prg_6000 << 13];
 	}
 
 	return (EXIT_OK);

@@ -10,18 +10,18 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
-#define avenina06swap()\
+#define ave_nina06_swap()\
 {\
 	const BYTE save = value;\
 	DBWORD bank;\
-	if (prgRom32kMax != 0xFFFF) {\
+	if (prg_rom_32k_max != 0xFFFF) {\
 		value >>= 3;\
-		control_bank(prgRom32kMax)\
+		control_bank(prg_rom_32k_max)\
 		map_prg_rom_8k(4, 0, value);\
 		map_prg_rom_8k_update();\
 		value = save;\
 	}\
-	control_bank_with_AND(0x07, chrRom8kMax)\
+	control_bank_with_AND(0x07, chr_rom_8k_max)\
 	bank = value << 13;\
 	chr.bank_1k[0] = &chr.data[bank];\
 	chr.bank_1k[1] = &chr.data[bank | 0x0400];\
@@ -33,11 +33,11 @@
 	chr.bank_1k[7] = &chr.data[bank | 0x1C00];\
 }
 
-WORD prgRom32kMax, chrRom8kMax;
+WORD prg_rom_32k_max, chr_rom_8k_max;
 
 void map_init_Ave(BYTE model) {
-	prgRom32kMax = (info.prg_rom_16k_count >> 1) - 1;
-	chrRom8kMax = info.chr_rom_8k_count - 1;
+	prg_rom_32k_max = (info.prg_rom_16k_count >> 1) - 1;
+	chr_rom_8k_max = info.chr_rom_8k_count - 1;
 
 	switch (model) {
 		case NINA06:
@@ -46,7 +46,7 @@ void map_init_Ave(BYTE model) {
 			info.mapper_extend_wr = TRUE;
 
 			if (info.reset >= HARD) {
-				if (prgRom32kMax != 0xFFFF) {
+				if (prg_rom_32k_max != 0xFFFF) {
 					map_prg_rom_8k(4, 0, 0);
 				}
 			}
@@ -83,10 +83,10 @@ void extcl_cpu_wr_mem_Ave_NINA06(WORD address, BYTE value) {
 			if (info.id != PUZZLEUNL) {
 				return;
 			}
-			avenina06swap()
+			ave_nina06_swap()
 			return;
 		case 0x0100:
-			avenina06swap()
+			ave_nina06_swap()
 			return;
 	}
 }
@@ -128,13 +128,13 @@ void extcl_cpu_wr_mem_Ave_D1012(WORD address, BYTE value) {
 	}
 
 	value = (ave_d1012.reg[0] & 0xE) | (ave_d1012.reg[(ave_d1012.reg[0] >> 6) & 0x1] & 0x1);
-	control_bank(prgRom32kMax)
+	control_bank(prg_rom_32k_max)
 	map_prg_rom_8k(4, 0, value);
 	map_prg_rom_8k_update();
 
 	value = ((ave_d1012.reg[0] << 2) & (((ave_d1012.reg[0] >> 4) & 0x4) ^ 0x3C))
         		| ((ave_d1012.reg[1] >> 4) & (((ave_d1012.reg[0] >> 4) & 0x4) | 0x3));
-	control_bank(chrRom8kMax)
+	control_bank(chr_rom_8k_max)
 	bank = value << 13;
 	chr.bank_1k[0] = &chr.data[bank];
 	chr.bank_1k[1] = &chr.data[bank | 0x0400];

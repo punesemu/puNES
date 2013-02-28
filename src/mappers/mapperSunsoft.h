@@ -12,27 +12,15 @@
 
 enum {
 	SUN1 = 2,
-	SUN2A = 3,
-	SUN2B = 4,
-	SUN3 = 5,
-	SUN4 = 6,
-	FM7 = 7,
-	MAHARAJA = 8,
-	BARCODEWORLD = 9,
-	DODGEDANPEI2 = 10
+	SUN2A,
+	SUN2B,
+	SUN3,
+	SUN4,
+	FM7,
+	MAHARAJA,
+	BARCODEWORLD,
+	DODGEDANPEI2
 };
-
-struct _sunsoft3 {
-	BYTE enable;
-	BYTE toggle;
-	WORD count;
-	BYTE delay;
-} s3;
-struct _sunsoft4 {
-	uint32_t chrNmt[2];
-	BYTE mode;
-	BYTE mirroring;
-} s4;
 
 typedef struct {
 	BYTE disable;
@@ -47,19 +35,30 @@ typedef struct {
 /* ------------------------------------------------------- */
 /* */ BYTE clocked;                                     /* */
 /* ------------------------------------------------------- */
-} _squareFM7;
+} _square_fm7;
 
-struct sunsoftFm {
+struct _sunsoft3 {
+	BYTE enable;
+	BYTE toggle;
+	WORD count;
+	BYTE delay;
+} s3;
+struct _sunsoft4 {
+	uint32_t chr_nmt[2];
+	BYTE mode;
+	BYTE mirroring;
+} s4;
+struct sunsoft_fm7 {
 	BYTE address;
-	BYTE prgRamEnable;
-	BYTE prgRamMode;
-	uint32_t prgRamAddress;
-	BYTE irqEnableTrig;
-	BYTE irqEnableCount;
-	WORD irqCount;
-	BYTE irqDelay;
-	BYTE sndReg;
-	_squareFM7 square[3];
+	BYTE prg_ram_enable;
+	BYTE prg_ram_mode;
+	uint32_t prg_ram_address;
+	BYTE irq_enable_trig;
+	BYTE irq_enable_count;
+	WORD irq_count;
+	BYTE irq_delay;
+	BYTE snd_reg;
+	_square_fm7 square[3];
 } fm7;
 
 void map_init_Sunsoft(BYTE model);

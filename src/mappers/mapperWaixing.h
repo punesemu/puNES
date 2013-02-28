@@ -20,13 +20,13 @@ enum {
 	WTG,
 	WTH,
 	SH2,
-	BADSUGOROQUEST
+	BAD_SUGOROQUEST
 };
 
 struct _waixing {
-	WORD prgmap[4];
-	WORD chrmap[8];
-	BYTE chrRam[0x2000];
+	WORD prg_map[4];
+	WORD chr_map[8];
+	BYTE chr_ram[0x2000];
 	BYTE reg;
 	WORD ctrl[8];
 } waixing;
@@ -35,20 +35,20 @@ void map_init_Waixing(BYTE model);
 
 void extcl_cpu_wr_mem_Waixing_PSx(WORD address, BYTE value);
 
-void extcl_cpu_wr_mem_Waixing_TypeACDE(WORD address, BYTE value);
-BYTE extcl_save_mapper_Waixing_TypeACDE(BYTE mode, BYTE slot, FILE *fp);
-void extcl_wr_chr_Waixing_TypeACDE(WORD address, BYTE value);
+void extcl_cpu_wr_mem_Waixing_type_ACDE(WORD address, BYTE value);
+BYTE extcl_save_mapper_Waixing_type_ACDE(BYTE mode, BYTE slot, FILE *fp);
+void extcl_wr_chr_Waixing_type_ACDE(WORD address, BYTE value);
 
-void extcl_cpu_wr_mem_Waixing_TypeB(WORD address, BYTE value);
-BYTE extcl_save_mapper_Waixing_TypeB(BYTE mode, BYTE slot, FILE *fp);
-void extcl_wr_chr_Waixing_TypeB(WORD address, BYTE value);
+void extcl_cpu_wr_mem_Waixing_type_B(WORD address, BYTE value);
+BYTE extcl_save_mapper_Waixing_type_B(BYTE mode, BYTE slot, FILE *fp);
+void extcl_wr_chr_Waixing_type_B(WORD address, BYTE value);
 
-void extcl_cpu_wr_mem_Waixing_TypeG(WORD address, BYTE value);
-BYTE extcl_save_mapper_Waixing_TypeG(BYTE mode, BYTE slot, FILE *fp);
-void extcl_wr_chr_Waixing_TypeG(WORD address, BYTE value);
+void extcl_cpu_wr_mem_Waixing_type_G(WORD address, BYTE value);
+BYTE extcl_save_mapper_Waixing_type_G(BYTE mode, BYTE slot, FILE *fp);
+void extcl_wr_chr_Waixing_type_G(WORD address, BYTE value);
 
-void extcl_cpu_wr_mem_Waixing_TypeH(WORD address, BYTE value);
-BYTE extcl_save_mapper_Waixing_TypeH(BYTE mode, BYTE slot, FILE *fp);
+void extcl_cpu_wr_mem_Waixing_type_H(WORD address, BYTE value);
+BYTE extcl_save_mapper_Waixing_type_H(BYTE mode, BYTE slot, FILE *fp);
 
 void extcl_cpu_wr_mem_Waixing_SH2(WORD address, BYTE value);
 BYTE extcl_save_mapper_Waixing_SH2(BYTE mode, BYTE slot, FILE *fp);

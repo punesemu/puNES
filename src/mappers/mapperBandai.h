@@ -33,7 +33,7 @@ typedef struct {
 	BYTE output;
 } _FCGXeeprom;
 struct _b161x02x74 {
-	BYTE chrRomBank;
+	BYTE chr_rom_bank;
 } b161x02x74;
 struct _FCGX {
 	BYTE reg[8];

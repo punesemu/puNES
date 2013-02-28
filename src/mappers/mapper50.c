@@ -12,12 +12,12 @@
 #include "cpu.h"
 #include "save_slot.h"
 
-WORD prgRom8kMax, chrRom1kMax;
-BYTE *prg6000;
+WORD prg_rom_8k_max, chr_rom_1k_max;
+BYTE *prg_6000;
 
 void map_init_50(void) {
-	prgRom8kMax = info.prg_rom_8k_count - 1;
-	chrRom1kMax = info.chr_rom_1k_count - 1;
+	prg_rom_8k_max = info.prg_rom_8k_count - 1;
+	chr_rom_1k_max = info.chr_rom_1k_count - 1;
 
 	EXTCL_CPU_WR_MEM(50);
 	EXTCL_CPU_RD_MEM(50);
@@ -32,7 +32,7 @@ void map_init_50(void) {
 		mapper.rom_map_to[2] = 0;
 	}
 
-	prg6000 = &prg.rom[prgRom8kMax << 13];
+	prg_6000 = &prg.rom[prg_rom_8k_max << 13];
 
 	mapper.rom_map_to[0] = 8;
 	mapper.rom_map_to[1] = 9;
@@ -51,7 +51,7 @@ void extcl_cpu_wr_mem_50(WORD address, BYTE value) {
 		}
 
 		value = (value & 0x08) | ((value << 2) & 0x04) | ((value >> 1) & 0x03);
-		control_bank(prgRom8kMax)
+		control_bank(prg_rom_8k_max)
 		map_prg_rom_8k(1, 2, value);
 		map_prg_rom_8k_update();
 		return;
@@ -62,7 +62,7 @@ BYTE extcl_cpu_rd_mem_50(WORD address, BYTE openbus, BYTE before) {
 		return (openbus);
 	}
 
-	return (prg6000[address & 0x1FFF]);
+	return (prg_6000[address & 0x1FFF]);
 }
 BYTE extcl_save_mapper_50(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m50.enabled);

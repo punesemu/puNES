@@ -12,18 +12,18 @@
 #include "cpu.h"
 #include "save_slot.h"
 
-#define chrRom1kUpdate(slot, mask, shift)\
-	value = (vrc4.chrRomBank[slot] & mask) | ((value & 0x0F) << shift);\
-	control_bank(chrRom1kMax)\
+#define chr_rom_1k_update(slot, mask, shift)\
+	value = (vrc4.chr_rom_bank[slot] & mask) | ((value & 0x0F) << shift);\
+	control_bank(chr_rom_1k_max)\
 	chr.bank_1k[slot] = &chr.data[value << 10];\
-	vrc4.chrRomBank[slot] = value
+	vrc4.chr_rom_bank[slot] = value
 
-WORD prgRom8kMax, prgRom8kBeforeLast, chrRom1kMax;
+WORD prg_rom_8k_max, prg_rom_8k_before_last, chr_rom_1k_max;
 BYTE type;
 
-const BYTE shiftVRC4[5] = { 0x01, 0x00, 0x06, 0x02, 0x02 };
-const WORD maskVRC4[5]  = { 0x0006, 0x0003, 0x00C0, 0x000C, 0x000C };
-const WORD tableVRC4[5][4] = {
+const BYTE shift_VRC4[5] = { 0x01, 0x00, 0x06, 0x02, 0x02 };
+const WORD mask_VRC4[5]  = { 0x0006, 0x0003, 0x00C0, 0x000C, 0x000C };
+const WORD table_VRC4[5][4] = {
 	{0x0000, 0x0001, 0x0002, 0x0003},
 	{0x0000, 0x0002, 0x0001, 0x0003},
 	{0x0000, 0x0001, 0x0002, 0x0003},
@@ -32,9 +32,9 @@ const WORD tableVRC4[5][4] = {
 };
 
 void map_init_VRC4(BYTE revision) {
-	prgRom8kMax = info.prg_rom_8k_count - 1;
-	prgRom8kBeforeLast = prgRom8kMax - 1;
-	chrRom1kMax = info.chr_rom_1k_count - 1;
+	prg_rom_8k_max = info.prg_rom_8k_count - 1;
+	prg_rom_8k_before_last = prg_rom_8k_max - 1;
+	chr_rom_1k_max = info.chr_rom_1k_count - 1;
 
 	EXTCL_CPU_WR_MEM(VRC4);
 	EXTCL_SAVE_MAPPER(VRC4);
@@ -47,15 +47,15 @@ void map_init_VRC4(BYTE revision) {
 
 		memset(&vrc4, 0x00, sizeof(vrc4));
 		for (i = 0; i < 8; i++) {
-			vrc4.chrRomBank[i] = i;
+			vrc4.chr_rom_bank[i] = i;
 		}
 	} else {
-		vrc4.irqEnabled = 0;
-		vrc4.irqReload = 0;
-		vrc4.irqMode = 0;
-		vrc4.irqAcknowledge = 0;
-		vrc4.irqCount = 0;
-		vrc4.irqPrescaler = 0;
+		vrc4.irq_enabled = 0;
+		vrc4.irq_reload = 0;
+		vrc4.irq_mode = 0;
+		vrc4.irq_acknowledge = 0;
+		vrc4.irq_count = 0;
+		vrc4.irq_prescaler = 0;
 	}
 
 	type = revision;
@@ -67,18 +67,18 @@ void extcl_cpu_wr_mem_VRC4(WORD address, BYTE value) {
 		address &= 0xF000;
 	} else {
 		address = (address & 0xF000)
-		        | tableVRC4[type][(address & maskVRC4[type]) >> shiftVRC4[type]];
+		        | table_VRC4[type][(address & mask_VRC4[type]) >> shift_VRC4[type]];
 	}
 
 	switch (address) {
 		case 0x8000:
-			control_bank_with_AND(0x1F, prgRom8kMax)
-			map_prg_rom_8k(1, vrc4.swapMode, value);
-			map_prg_rom_8k(1, 0x02 >> vrc4.swapMode, prgRom8kBeforeLast);
+			control_bank_with_AND(0x1F, prg_rom_8k_max)
+			map_prg_rom_8k(1, vrc4.swap_mode, value);
+			map_prg_rom_8k(1, 0x02 >> vrc4.swap_mode, prg_rom_8k_before_last);
 			map_prg_rom_8k_update();
 			return;
 		case 0xA000:
-			control_bank_with_AND(0x1F, prgRom8kMax)
+			control_bank_with_AND(0x1F, prg_rom_8k_max)
 			map_prg_rom_8k(1, 1, value);
 			map_prg_rom_8k_update();
 			return;
@@ -103,80 +103,81 @@ void extcl_cpu_wr_mem_VRC4(WORD address, BYTE value) {
 		case 0x9002:
 		case 0x9003:
 			value &= 0x02;
-			if (vrc4.swapMode != value) {
+			if (vrc4.swap_mode != value) {
 				WORD swap = mapper.rom_map_to[0];
+
 				mapper.rom_map_to[0] = mapper.rom_map_to[2];
 				mapper.rom_map_to[2] = swap;
 				map_prg_rom_8k_update();
-				vrc4.swapMode = value;
+				vrc4.swap_mode = value;
 			}
 			return;
 		case 0xB000:
-			chrRom1kUpdate(0, 0xF0, 0);
+			chr_rom_1k_update(0, 0xF0, 0);
 			return;
 		case 0xB001:
-			chrRom1kUpdate(0, 0x0F, 4);
+			chr_rom_1k_update(0, 0x0F, 4);
 			return;
 		case 0xB002:
-			chrRom1kUpdate(1, 0xF0, 0);
+			chr_rom_1k_update(1, 0xF0, 0);
 			return;
 		case 0xB003:
-			chrRom1kUpdate(1, 0x0F, 4);
+			chr_rom_1k_update(1, 0x0F, 4);
 			return;
 		case 0xC000:
-			chrRom1kUpdate(2, 0xF0, 0);
+			chr_rom_1k_update(2, 0xF0, 0);
 			return;
 		case 0xC001:
-			chrRom1kUpdate(2, 0x0F, 4);
+			chr_rom_1k_update(2, 0x0F, 4);
 			return;
 		case 0xC002:
-			chrRom1kUpdate(3, 0xF0, 0);
+			chr_rom_1k_update(3, 0xF0, 0);
 			return;
 		case 0xC003:
-			chrRom1kUpdate(3, 0x0F, 4);
+			chr_rom_1k_update(3, 0x0F, 4);
 			return;
 		case 0xD000:
-			chrRom1kUpdate(4, 0xF0, 0);
+			chr_rom_1k_update(4, 0xF0, 0);
 			return;
 		case 0xD001:
-			chrRom1kUpdate(4, 0x0F, 4);
+			chr_rom_1k_update(4, 0x0F, 4);
 			return;
 		case 0xD002:
-			chrRom1kUpdate(5, 0xF0, 0);
+			chr_rom_1k_update(5, 0xF0, 0);
 			return;
 		case 0xD003:
-			chrRom1kUpdate(5, 0x0F, 4);
+			chr_rom_1k_update(5, 0x0F, 4);
 			return;
 		case 0xE000:
-			chrRom1kUpdate(6, 0xF0, 0);
+			chr_rom_1k_update(6, 0xF0, 0);
 			return;
 		case 0xE001:
-			chrRom1kUpdate(6, 0x0F, 4);
+			chr_rom_1k_update(6, 0x0F, 4);
 			return;
 		case 0xE002:
-			chrRom1kUpdate(7, 0xF0, 0);
+			chr_rom_1k_update(7, 0xF0, 0);
 			return;
 		case 0xE003:
-			chrRom1kUpdate(7, 0x0F, 4);
+			chr_rom_1k_update(7, 0x0F, 4);
 			return;
 		case 0xF000:
-			vrc4.irqReload = (vrc4.irqReload & 0xF0) | (value & 0x0F);
+			vrc4.irq_reload = (vrc4.irq_reload & 0xF0) | (value & 0x0F);
 			return;
 		case 0xF001:
-			vrc4.irqReload = (vrc4.irqReload & 0x0F) | ((value & 0x0F) << 4);
+			vrc4.irq_reload = (vrc4.irq_reload & 0x0F) | ((value & 0x0F) << 4);
 			return;
 		case 0xF002:
-			vrc4.irqAcknowledge = value & 0x01;
-			vrc4.irqEnabled = value & 0x02;
-			vrc4.irqMode = value & 0x04;
-			if (vrc4.irqEnabled) {
-				vrc4.irqPrescaler = 0;
-				vrc4.irqCount = vrc4.irqReload;
+			vrc4.irq_acknowledge = value & 0x01;
+			vrc4.irq_enabled = value & 0x02;
+			vrc4.irq_mode = value & 0x04;
+			if (vrc4.irq_enabled) {
+				vrc4.irq_prescaler = 0;
+				vrc4.irq_count = vrc4.irq_reload;
 			}
 			irq.high &= ~EXT_IRQ;
 			return;
 		case 0xF003:
-			vrc4.irqEnabled = vrc4.irqAcknowledge;
+			vrc4.irq_enabled = vrc4.irq_acknowledge;
 			irq.high &= ~EXT_IRQ;
 			return;
 		default:
@@ -184,42 +185,42 @@ void extcl_cpu_wr_mem_VRC4(WORD address, BYTE value) {
 	}
 }
 BYTE extcl_save_mapper_VRC4(BYTE mode, BYTE slot, FILE *fp) {
-	save_slot_ele(mode, slot, vrc4.chrRomBank);
-	save_slot_ele(mode, slot, vrc4.swapMode);
-	save_slot_ele(mode, slot, vrc4.irqEnabled);
-	save_slot_ele(mode, slot, vrc4.irqReload);
-	save_slot_ele(mode, slot, vrc4.irqMode);
-	save_slot_ele(mode, slot, vrc4.irqAcknowledge);
-	save_slot_ele(mode, slot, vrc4.irqCount);
-	save_slot_ele(mode, slot, vrc4.irqPrescaler);
+	save_slot_ele(mode, slot, vrc4.chr_rom_bank);
+	save_slot_ele(mode, slot, vrc4.swap_mode);
+	save_slot_ele(mode, slot, vrc4.irq_enabled);
+	save_slot_ele(mode, slot, vrc4.irq_reload);
+	save_slot_ele(mode, slot, vrc4.irq_mode);
+	save_slot_ele(mode, slot, vrc4.irq_acknowledge);
+	save_slot_ele(mode, slot, vrc4.irq_count);
+	save_slot_ele(mode, slot, vrc4.irq_prescaler);
 
 	return (EXIT_OK);
 }
 void extcl_cpu_every_cycle_VRC4(void) {
-	if (!vrc4.irqEnabled) {
+	if (!vrc4.irq_enabled) {
 		return;
 	}
 
-	if (!vrc4.irqMode) {
-		if (vrc4.irqPrescaler < 338) {
-			vrc4.irqPrescaler += 3;
+	if (!vrc4.irq_mode) {
+		if (vrc4.irq_prescaler < 338) {
+			vrc4.irq_prescaler += 3;
 			return;
 		}
-		vrc4.irqPrescaler -= 338;
+		vrc4.irq_prescaler -= 338;
 	}
 
-	if (vrc4.irqCount != 0xFF) {
-		vrc4.irqCount++;
+	if (vrc4.irq_count != 0xFF) {
+		vrc4.irq_count++;
 		return;
 	}
 
-	vrc4.irqCount = vrc4.irqReload;
+	vrc4.irq_count = vrc4.irq_reload;
 	irq.delay = TRUE;
 	irq.high |= EXT_IRQ;
 }
 
 void map_init_VRC4BMC(void) {
-	prgRom8kMax = info.prg_rom_8k_count - 1;
+	prg_rom_8k_max = info.prg_rom_8k_count - 1;
 
 	map_init_VRC4(VRC4E);
 
@@ -232,14 +233,14 @@ void extcl_cpu_wr_mem_VRC4BMC(WORD address, BYTE value) {
 
 	if ((address >= 0x8000) && (address <= 0x8FFF)) {
 		value = (mapper.rom_map_to[0] & 0x20) | (value & 0x1F);
-		control_bank(prgRom8kMax)
-		map_prg_rom_8k(1, vrc4.swapMode, value);
+		control_bank(prg_rom_8k_max)
+		map_prg_rom_8k(1, vrc4.swap_mode, value);
 		map_prg_rom_8k_update();
 		return;
 	}
 	if ((address >= 0xA000) && (address <= 0xAFFF)) {
 		value = (mapper.rom_map_to[0] & 0x20) | (value & 0x1F);
-		control_bank(prgRom8kMax)
+		control_bank(prg_rom_8k_max)
 		map_prg_rom_8k(1, 1, value);
 		map_prg_rom_8k_update();
 		return;
@@ -248,19 +249,19 @@ void extcl_cpu_wr_mem_VRC4BMC(WORD address, BYTE value) {
 		BYTE save = value << 2 & 0x20;
 
 		value = (mapper.rom_map_to[0] & 0x1F) | save ;
-		control_bank(prgRom8kMax)
+		control_bank(prg_rom_8k_max)
 		map_prg_rom_8k(1, 0, value);
 
 		value = (mapper.rom_map_to[1] & 0x1F) | save ;
-		control_bank(prgRom8kMax)
+		control_bank(prg_rom_8k_max)
 		map_prg_rom_8k(1, 1, value);
 
 		value = (mapper.rom_map_to[2] & 0x1F) | save ;
-		control_bank(prgRom8kMax)
+		control_bank(prg_rom_8k_max)
 		map_prg_rom_8k(1, 2, value);
 
 		value = (mapper.rom_map_to[3] & 0x1F) | save ;
-		control_bank(prgRom8kMax)
+		control_bank(prg_rom_8k_max)
 		map_prg_rom_8k(1, 3, value);
 
 		map_prg_rom_8k_update();

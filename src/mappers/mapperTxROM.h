@@ -10,16 +10,12 @@
 
 #include "common.h"
 
-enum {
-	TKSROM = 2,
-	TLSROM = 3,
-	TQROM = 4
-};
+enum { TKSROM = 2, TLSROM, TQROM };
 
 struct _txrom {
 	BYTE delay;
 	uint32_t chr[8][2];
-	BYTE chrRam[0x2000];
+	BYTE chr_ram[0x2000];
 } txrom;
 
 void map_init_TxROM(BYTE model);

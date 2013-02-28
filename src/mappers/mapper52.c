@@ -12,149 +12,149 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-#define m52chr1k(vl)\
+#define m52_chr_1k(vl)\
 	bank = ((((m52.reg >> 3) & 0x04) | ((m52.reg >> 1) & 0x02) |\
 		((m52.reg >> 6) & (m52.reg >> 4) & 0x01)) << 7) |\
 		(vl & (((m52.reg & 0x40) << 1) ^ 0xFF))
-#define m52prg8k(vl)\
+#define m52_prg_8k(vl)\
 	value = (((m52.reg & 0x06) | ((m52.reg >> 3) & m52.reg & 0x01)) << 4) |\
 		(vl & (((m52.reg << 1) & 0x10) ^ 0x1F))
-#define m52chr1kupdate()\
+#define m52_chr_1k_update()\
 {\
 	BYTE i;\
 	for (i = 0; i < 8; i++) {\
 		WORD bank;\
-		m52chr1k(m52.chrmap[i]);\
-		_control_bank(bank, chrRom1kMax)\
+		m52_chr_1k(m52.chr_map[i]);\
+		_control_bank(bank, chr_rom_1k_max)\
 		chr.bank_1k[i] = &chr.data[bank << 10];\
 	}\
 }
-#define m52prg8kupdate()\
+#define m52_prg_8k_update()\
 {\
 	BYTE i;\
 	for (i = 0; i < 4; i++) {\
-		m52prg8k(m52.prgmap[i]);\
-		control_bank(prgRom8kMax)\
+		m52_prg_8k(m52.prg_map[i]);\
+		control_bank(prg_rom_8k_max)\
 		map_prg_rom_8k(1, i, value);\
 	}\
 	map_prg_rom_8k_update();\
 }
-#define m52swapChrBank1k(src, dst)\
+#define m52_swap_chr_bank_1k(src, dst)\
 {\
-	BYTE *chrBank1k = chr.bank_1k[src];\
+	BYTE *chr_bank_1k = chr.bank_1k[src];\
 	chr.bank_1k[src] = chr.bank_1k[dst];\
-	chr.bank_1k[dst] = chrBank1k;\
-	WORD map = m52.chrmap[src];\
-	m52.chrmap[src] = m52.chrmap[dst];\
-	m52.chrmap[dst] = map;\
+	chr.bank_1k[dst] = chr_bank_1k;\
+	WORD map = m52.chr_map[src];\
+	m52.chr_map[src] = m52.chr_map[dst];\
+	m52.chr_map[dst] = map;\
 }
 #define m52_8000()\
 {\
-	const BYTE chrRomCfgOld = mmc3.chrRomCfg;\
-	const BYTE prgRomCfgOld = mmc3.prgRomCfg;\
-	mmc3.bankToUpdate = value & 0x07;\
-	mmc3.prgRomCfg = (value & 0x40) >> 5;\
-	mmc3.chrRomCfg = (value & 0x80) >> 5;\
+	const BYTE chr_rom_cfg_old = mmc3.chr_rom_cfg;\
+	const BYTE prg_rom_cfg_old = mmc3.prg_rom_cfg;\
+	mmc3.bank_to_update = value & 0x07;\
+	mmc3.prg_rom_cfg = (value & 0x40) >> 5;\
+	mmc3.chr_rom_cfg = (value & 0x80) >> 5;\
 	/*\
 	 * se il tipo di configurazione della chr cambia,\
 	 * devo swappare i primi 4 banchi con i secondi\
 	 * quattro.\
 	 */\
-	if (mmc3.chrRomCfg != chrRomCfgOld) {\
-		m52swapChrBank1k(0, 4)\
-		m52swapChrBank1k(1, 5)\
-		m52swapChrBank1k(2, 6)\
-		m52swapChrBank1k(3, 7)\
+	if (mmc3.chr_rom_cfg != chr_rom_cfg_old) {\
+		m52_swap_chr_bank_1k(0, 4)\
+		m52_swap_chr_bank_1k(1, 5)\
+		m52_swap_chr_bank_1k(2, 6)\
+		m52_swap_chr_bank_1k(3, 7)\
 	}\
-	if (mmc3.prgRomCfg != prgRomCfgOld) {\
+	if (mmc3.prg_rom_cfg != prg_rom_cfg_old) {\
 		WORD p0 = mapper.rom_map_to[0];\
 		WORD p2 = mapper.rom_map_to[2];\
 		mapper.rom_map_to[0] = p2;\
 		mapper.rom_map_to[2] = p0;\
-		p0 = m52.prgmap[0];\
-		p2 = m52.prgmap[2];\
-		m52.prgmap[0] = p2;\
-		m52.prgmap[2] = p0;\
+		p0 = m52.prg_map[0];\
+		p2 = m52.prg_map[2];\
+		m52.prg_map[0] = p2;\
+		m52.prg_map[2] = p0;\
 		/*\
-		 * prgRomCfg 0x00 : $C000 - $DFFF fisso al penultimo banco\
-		 * prgRomCfg 0x02 : $8000 - $9FFF fisso al penultimo banco\
+		 * prg_rom_cfg 0x00 : $C000 - $DFFF fisso al penultimo banco\
+		 * prg_rom_cfg 0x02 : $8000 - $9FFF fisso al penultimo banco\
 		 */\
-		m52.prgmap[mmc3.prgRomCfg ^ 0x02] = prgRom8kBeforeLast;\
-		m52prg8k(prgRom8kBeforeLast);\
-		control_bank(prgRom8kMax)\
-		map_prg_rom_8k(1, mmc3.prgRomCfg ^ 0x02, value);\
+		m52.prg_map[mmc3.prg_rom_cfg ^ 0x02] = prg_rom_8k_before_last;\
+		m52_prg_8k(prg_rom_8k_before_last);\
+		control_bank(prg_rom_8k_max)\
+		map_prg_rom_8k(1, mmc3.prg_rom_cfg ^ 0x02, value);\
 		map_prg_rom_8k_update();\
 	}\
 }
 #define m52_8001()\
 {\
 	WORD bank;\
-	switch (mmc3.bankToUpdate) {\
+	switch (mmc3.bank_to_update) {\
 		case 0:\
-			m52.chrmap[mmc3.chrRomCfg] = value;\
-			m52.chrmap[mmc3.chrRomCfg | 0x01] = value + 1;\
-			m52chr1k(value);\
+			m52.chr_map[mmc3.chr_rom_cfg] = value;\
+			m52.chr_map[mmc3.chr_rom_cfg | 0x01] = value + 1;\
+			m52_chr_1k(value);\
 			bank &= 0xFFE;\
-			_control_bank(bank, chrRom1kMax)\
-			chr.bank_1k[mmc3.chrRomCfg] = &chr.data[bank << 10];\
-			chr.bank_1k[mmc3.chrRomCfg | 0x01] = &chr.data[(bank + 1) << 10];\
+			_control_bank(bank, chr_rom_1k_max)\
+			chr.bank_1k[mmc3.chr_rom_cfg] = &chr.data[bank << 10];\
+			chr.bank_1k[mmc3.chr_rom_cfg | 0x01] = &chr.data[(bank + 1) << 10];\
 			return;\
 		case 1:\
-			m52.chrmap[mmc3.chrRomCfg | 0x02] = value;\
-			m52.chrmap[mmc3.chrRomCfg | 0x03] = value + 1;\
-			m52chr1k(value);\
+			m52.chr_map[mmc3.chr_rom_cfg | 0x02] = value;\
+			m52.chr_map[mmc3.chr_rom_cfg | 0x03] = value + 1;\
+			m52_chr_1k(value);\
 			bank &= 0xFFE;\
-			_control_bank(bank, chrRom1kMax)\
-			chr.bank_1k[mmc3.chrRomCfg | 0x02] = &chr.data[bank << 10];\
-			chr.bank_1k[mmc3.chrRomCfg | 0x03] = &chr.data[(bank + 1) << 10];\
+			_control_bank(bank, chr_rom_1k_max)\
+			chr.bank_1k[mmc3.chr_rom_cfg | 0x02] = &chr.data[bank << 10];\
+			chr.bank_1k[mmc3.chr_rom_cfg | 0x03] = &chr.data[(bank + 1) << 10];\
 			return;\
 		case 2:\
-			m52.chrmap[mmc3.chrRomCfg ^ 0x04] = value;\
-			m52chr1k(value);\
-			_control_bank(bank, chrRom1kMax)\
-			chr.bank_1k[mmc3.chrRomCfg ^ 0x04] = &chr.data[bank << 10];\
+			m52.chr_map[mmc3.chr_rom_cfg ^ 0x04] = value;\
+			m52_chr_1k(value);\
+			_control_bank(bank, chr_rom_1k_max)\
+			chr.bank_1k[mmc3.chr_rom_cfg ^ 0x04] = &chr.data[bank << 10];\
 			return;\
 		case 3:\
-			m52.chrmap[(mmc3.chrRomCfg ^ 0x04) | 0x01] = value;\
-			m52chr1k(value);\
-			_control_bank(bank, chrRom1kMax)\
-			chr.bank_1k[(mmc3.chrRomCfg ^ 0x04) | 0x01] = &chr.data[bank << 10];\
+			m52.chr_map[(mmc3.chr_rom_cfg ^ 0x04) | 0x01] = value;\
+			m52_chr_1k(value);\
+			_control_bank(bank, chr_rom_1k_max)\
+			chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x01] = &chr.data[bank << 10];\
 			return;\
 		case 4:\
-			m52.chrmap[(mmc3.chrRomCfg ^ 0x04) | 0x02] = value;\
-			m52chr1k(value);\
-			_control_bank(bank, chrRom1kMax)\
-			chr.bank_1k[(mmc3.chrRomCfg ^ 0x04) | 0x02] = &chr.data[bank << 10];\
+			m52.chr_map[(mmc3.chr_rom_cfg ^ 0x04) | 0x02] = value;\
+			m52_chr_1k(value);\
+			_control_bank(bank, chr_rom_1k_max)\
+			chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x02] = &chr.data[bank << 10];\
 			return;\
 		case 5:\
-			m52.chrmap[(mmc3.chrRomCfg ^ 0x04) | 0x03] = value;\
-			m52chr1k(value);\
-			_control_bank(bank, chrRom1kMax)\
-			chr.bank_1k[(mmc3.chrRomCfg ^ 0x04) | 0x03] = &chr.data[bank << 10];\
+			m52.chr_map[(mmc3.chr_rom_cfg ^ 0x04) | 0x03] = value;\
+			m52_chr_1k(value);\
+			_control_bank(bank, chr_rom_1k_max)\
+			chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x03] = &chr.data[bank << 10];\
 			return;\
 		case 6:\
-			m52.prgmap[mmc3.prgRomCfg] = value;\
-			m52prg8k(value);\
-			control_bank(prgRom8kMax)\
-			map_prg_rom_8k(1, mmc3.prgRomCfg, value);\
+			m52.prg_map[mmc3.prg_rom_cfg] = value;\
+			m52_prg_8k(value);\
+			control_bank(prg_rom_8k_max)\
+			map_prg_rom_8k(1, mmc3.prg_rom_cfg, value);\
 			map_prg_rom_8k_update();\
 			return;\
 		case 7:\
-			m52.prgmap[1] = value;\
-			m52prg8k(value);\
-			control_bank(prgRom8kMax)\
+			m52.prg_map[1] = value;\
+			m52_prg_8k(value);\
+			control_bank(prg_rom_8k_max)\
 			map_prg_rom_8k(1, 1, value);\
 			map_prg_rom_8k_update();\
 			return;\
 	}\
 }
 
-WORD prgRom8kMax, prgRom8kBeforeLast, chrRom1kMax;
+WORD prg_rom_8k_max, prg_rom_8k_before_last, chr_rom_1k_max;
 
 void map_init_52(void) {
-	prgRom8kMax = info.prg_rom_8k_count - 1;
-	prgRom8kBeforeLast = info.prg_rom_8k_count - 2;
-	chrRom1kMax = info.chr_rom_1k_count - 1;
+	prg_rom_8k_max = info.prg_rom_8k_count - 1;
+	prg_rom_8k_before_last = info.prg_rom_8k_count - 2;
+	chr_rom_1k_max = info.chr_rom_1k_count - 1;
 
 	EXTCL_CPU_WR_MEM(52);
 	EXTCL_SAVE_MAPPER(52);
@@ -181,13 +181,13 @@ void map_init_52(void) {
 
 		for (i = 0; i < 8; i++) {
 			if (i < 4) {
-				m52.prgmap[i] = mapper.rom_map_to[i];
+				m52.prg_map[i] = mapper.rom_map_to[i];
 			}
-			m52.chrmap[i] = i;
+			m52.chr_map[i] = i;
 		}
 
-		m52prg8kupdate()
-		m52chr1kupdate()
+		m52_prg_8k_update()
+		m52_chr_1k_update()
 	}
 
 	info.mapper_extend_wr = TRUE;
@@ -214,16 +214,16 @@ void extcl_cpu_wr_mem_52(WORD address, BYTE value) {
 			m52.disabled = TRUE;
 			m52.reg = value;
 
-			m52prg8kupdate()
-			m52chr1kupdate()
+			m52_prg_8k_update()
+			m52_chr_1k_update()
 		}
 	}
 }
 BYTE extcl_save_mapper_52(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m52.disabled);
 	save_slot_ele(mode, slot, m52.reg);
-	save_slot_ele(mode, slot, m52.prgmap);
-	save_slot_ele(mode, slot, m52.chrmap);
+	save_slot_ele(mode, slot, m52.prg_map);
+	save_slot_ele(mode, slot, m52.chr_map);
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	return (EXIT_OK);

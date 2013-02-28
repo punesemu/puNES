@@ -10,20 +10,20 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
-#define m221prg16kswap()\
+#define m221_prg_16k_swap()\
 	value = ((m221.reg[0] >> 1) & 0x38) | ((m221.reg[0] & 0x01) ? (m221.reg[0] & 0x80) ?\
 		m221.reg[1] : (m221.reg[1] & 0x06) : m221.reg[1]);\
-   	control_bank(prgRom16kMax)\
+   	control_bank(prg_rom_16k_max)\
 	map_prg_rom_8k(2, 0, value);\
 	value = ((m221.reg[0] >> 1) & 0x38) | ((m221.reg[0] & 0x01) ? (m221.reg[0] & 0x80) ?\
 		0x07 : (m221.reg[1] & 0x06) | 0x1 : m221.reg[1]);\
-   	control_bank(prgRom16kMax)\
+   	control_bank(prg_rom_16k_max)\
 	map_prg_rom_8k(2, 2, value)
 
-WORD prgRom16kMax;
+WORD prg_rom_16k_max;
 
 void map_init_221(void) {
-	prgRom16kMax = info.prg_rom_16k_count - 1;
+	prg_rom_16k_max = info.prg_rom_16k_count - 1;
 
 	EXTCL_CPU_WR_MEM(221);
 	EXTCL_SAVE_MAPPER(221);
@@ -34,7 +34,7 @@ void map_init_221(void) {
 		memset(&m221, 0x00, sizeof(m221));
 		{
 			BYTE value;
-			m221prg16kswap();
+			m221_prg_16k_swap();
 		}
 	}
 }
@@ -56,7 +56,7 @@ void extcl_cpu_wr_mem_221(WORD address, BYTE value) {
 				return;
 			}
 			m221.reg[0] = reg;
-			m221prg16kswap();
+			m221_prg_16k_swap();
 			break;
 		case 0xC000:
 		case 0xD000:
@@ -66,7 +66,7 @@ void extcl_cpu_wr_mem_221(WORD address, BYTE value) {
 				return;
 			}
 			m221.reg[1] = reg;
-			m221prg16kswap();
+			m221_prg_16k_swap();
 			break;
 	}
 	map_prg_rom_8k_update();

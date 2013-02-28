@@ -10,22 +10,18 @@
 
 #include "common.h"
 
-enum {
-	TRAMBO = 3,
-	T800037 = 4,
-	NOCNTPLUS = 5
-};
+enum { TRAMBO = 3, T800037, NOCNTPLUS };
 
-struct _tengenRambo {
-	BYTE prgMode;
-	BYTE chrMode;
-	BYTE regIndex;
+struct _tengen_rambo {
+	BYTE prg_mode;
+	BYTE chr_mode;
+	BYTE reg_index;
 	BYTE chr[8];
 	BYTE prg[4];
-	BYTE irqMode;
-	BYTE irqDelay;
-	BYTE irqPrescaler;
-} tRambo;
+	BYTE irq_mode;
+	BYTE irq_delay;
+	BYTE irq_prescaler;
+} tengen_rambo;
 
 void map_init_Tengen(BYTE model);
 

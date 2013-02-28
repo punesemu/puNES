@@ -12,14 +12,14 @@
 
 enum {
 	N163 = 2,
-	N3416 = 3,
-	N3425 = 4,
-	N3433 = 5,
-	N3446 = 6,
-	N3453 = 7,
-	NHARDWIREDV = 8,
-	NHARDWIREDH = 9,
-	MINDSEEKER = 10
+	N3416,
+	N3425,
+	N3433,
+	N3446,
+	N3453,
+	NAMCO_HARD_WIRED_V,
+	NAMCO_HARD_WIRED_H,
+	MINDSEEKER
 };
 
 typedef struct {
@@ -27,30 +27,30 @@ typedef struct {
 	BYTE active;
 	WORD address;
 	DBWORD freq;
-	DBWORD cyclesReload;
+	DBWORD cycles_reload;
 	DBWORD cycles;
 	BYTE length;
 	BYTE step;
 	WORD volume;
 	SWORD output;
-} _n163SndCh;
+} _n163_snd_ch;
 struct _n163 {
-	uint32_t nmtBank[4][2];
-	BYTE irqDelay;
-	DBWORD irqCount;
-	BYTE sndRam[0x80];
-	BYTE sndAdr;
-	BYTE sndAutoInc;
-	BYTE sndChStart;
-	BYTE sndWave[0x100];
-	_n163SndCh ch[8];
+	uint32_t nmt_bank[4][2];
+	BYTE irq_delay;
+	DBWORD irq_count;
+	BYTE snd_ram[0x80];
+	BYTE snd_adr;
+	BYTE snd_auto_inc;
+	BYTE snd_ch_start;
+	BYTE snd_wave[0x100];
+	_n163_snd_ch ch[8];
 } n163;
 struct _n3425 {
-	BYTE bankToUpdate;
+	BYTE bank_to_update;
 } n3425;
 struct _n3446 {
-	BYTE bankToUpdate;
-	BYTE prgRomMode;
+	BYTE bank_to_update;
+	BYTE prg_rom_mode;
 } n3446;
 
 void map_init_Namco(BYTE model);

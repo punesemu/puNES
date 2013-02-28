@@ -12,16 +12,16 @@
 
 enum {
 	CNROM = 2,
-	CNROMCNFL = 3,
-	CNROM26CE27CE = 4,
-	CNROM26CE27NCE = 5,
-	CNROM26NCE27CE = 6,
-	CNROM26NCE27NCE = 7
+	CNROM_CNFL = 3,
+	CNROM_26CE27CE = 4,
+	CNROM_26CE27NCE = 5,
+	CNROM_26NCE27CE = 6,
+	CNROM_26NCE27NCE = 7
 };
 
-struct _cnrom2627 {
-	BYTE chrReadEnable;
-} cnrom2627;
+struct _cnrom_2627 {
+	BYTE chr_rd_enable;
+} cnrom_2627;
 
 void map_init_CNROM(BYTE model);
 void extcl_cpu_wr_mem_CNROM(WORD address, BYTE value);

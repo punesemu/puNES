@@ -11,30 +11,30 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
-#define asderChrCtrlBank(src, ctrl)\
+#define asder_chr_ctrl_bank(src, ctrl)\
 	if (src > ctrl) {\
 		src &= ctrl;\
 	}
-#define asderChr2kUpdate(shift, slot, slot1, slot2)\
-	newValue = ((chrHigh << shift) & 0x0080) | asder.reg[slot];\
-	asderChrCtrlBank(newValue, chrRom2kMax)\
-	bank = newValue << 11;\
+#define asder_chr_2k_update(shift, slot, slot1, slot2)\
+	new_value = ((chr_high << shift) & 0x0080) | asder.reg[slot];\
+	asder_chr_ctrl_bank(new_value, chr_rom_2k_max)\
+	bank = new_value << 11;\
 	chr.bank_1k[slot1] = &chr.data[bank];\
 	chr.bank_1k[slot2] = &chr.data[bank | 0x0400]
-#define asderChr1kUpdate(shift, slot)\
-	newValue = ((chrHigh << shift) & 0x0100) | asder.reg[slot];\
-	asderChrCtrlBank(newValue, chrRom1kMax)\
-	bank = newValue << 10;\
+#define asder_chr_1k_update(shift, slot)\
+	new_value = ((chr_high << shift) & 0x0100) | asder.reg[slot];\
+	asder_chr_ctrl_bank(new_value, chr_rom_1k_max)\
+	bank = new_value << 10;\
 	chr.bank_1k[slot] = &chr.data[bank]
 
-WORD prgRom32kMax, prgRom8kMax, chrRom4kMax, chrRom2kMax, chrRom1kMax;
+WORD prg_rom_32k_max, prg_rom_8k_max, chr_rom_4k_max, chr_rom_2k_max, chr_rom_1k_max;
 
 void map_init_Ntdec(BYTE model) {
-	prgRom32kMax = (info.prg_rom_16k_count >> 1) - 1;
-	prgRom8kMax = info.prg_rom_8k_count - 1;
-	chrRom4kMax = info.chr_rom_4k_count - 1;
-	chrRom2kMax = (info.chr_rom_1k_count >> 1) - 1;
-	chrRom1kMax = info.chr_rom_1k_count - 1;
+	prg_rom_32k_max = (info.prg_rom_16k_count >> 1) - 1;
+	prg_rom_8k_max = info.prg_rom_8k_count - 1;
+	chr_rom_4k_max = info.chr_rom_4k_count - 1;
+	chr_rom_2k_max = (info.chr_rom_1k_count >> 1) - 1;
+	chr_rom_1k_max = info.chr_rom_1k_count - 1;
 
 	switch (model) {
 		case ASDER:
@@ -54,7 +54,7 @@ void map_init_Ntdec(BYTE model) {
 			info.mapper_extend_wr = TRUE;
 
 			if (info.reset >= HARD) {
-				map_prg_rom_8k(4, 0, prgRom32kMax);
+				map_prg_rom_8k(4, 0, prg_rom_32k_max);
 			}
 			break;
 	}
@@ -71,7 +71,7 @@ void extcl_cpu_wr_mem_Ntdec_asder(WORD address, BYTE value) {
 			switch (asder.address) {
 				case 0:
 				case 1:
-					control_bank(prgRom8kMax)
+					control_bank(prg_rom_8k_max)
 					map_prg_rom_8k(1, asder.address, value);
 					map_prg_rom_8k_update();
 					return;
@@ -101,16 +101,16 @@ void extcl_cpu_wr_mem_Ntdec_asder(WORD address, BYTE value) {
 			break;
 	}
 	{
-		const WORD chrHigh = (asder.reg[1] & 0x02) ? asder.reg[0] : 0;
-		WORD newValue;
 		DBWORD bank;
+		const WORD chr_high = (asder.reg[1] & 0x02) ? asder.reg[0] : 0;
+		WORD new_value;
 
-		asderChr2kUpdate(5, 2, 0, 1);
-		asderChr2kUpdate(4, 3, 2, 3);
-		asderChr1kUpdate(4, 4);
-		asderChr1kUpdate(3, 5);
-		asderChr1kUpdate(2, 6);
-		asderChr1kUpdate(1, 7);
+		asder_chr_2k_update(5, 2, 0, 1);
+		asder_chr_2k_update(4, 3, 2, 3);
+		asder_chr_1k_update(4, 4);
+		asder_chr_1k_update(3, 5);
+		asder_chr_1k_update(2, 6);
+		asder_chr_1k_update(1, 7);
 	}
 }
 BYTE extcl_save_mapper_Ntdec_asder(BYTE mode, BYTE slot, FILE *fp) {
@@ -130,7 +130,7 @@ void extcl_cpu_wr_mem_Ntdec_fhero(WORD address, BYTE value) {
 			DBWORD bank;
 
 			value >>= 2;
-			control_bank(chrRom4kMax)
+			control_bank(chr_rom_4k_max)
 			bank = value << 12;
 			chr.bank_1k[0] = &chr.data[bank];
 			chr.bank_1k[1] = &chr.data[bank | 0x0400];
@@ -142,7 +142,7 @@ void extcl_cpu_wr_mem_Ntdec_fhero(WORD address, BYTE value) {
 			DBWORD bank;
 
 			value >>= 1;
-			control_bank(chrRom2kMax)
+			control_bank(chr_rom_2k_max)
 			bank = value << 11;
 			chr.bank_1k[4] = &chr.data[bank];
 			chr.bank_1k[5] = &chr.data[bank | 0x0400];
@@ -152,14 +152,14 @@ void extcl_cpu_wr_mem_Ntdec_fhero(WORD address, BYTE value) {
 			DBWORD bank;
 
 			value >>= 1;
-			control_bank(chrRom2kMax)
+			control_bank(chr_rom_2k_max)
 			bank = value << 11;
 			chr.bank_1k[6] = &chr.data[bank];
 			chr.bank_1k[7] = &chr.data[bank | 0x0400];
 			return;
 		}
 		case 3:
-			control_bank(prgRom8kMax)
+			control_bank(prg_rom_8k_max)
 			map_prg_rom_8k(1, 0, value);
 			map_prg_rom_8k_update();
 			return;

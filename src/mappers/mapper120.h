@@ -11,7 +11,7 @@
 #include "common.h"
 
 struct _m120 {
-	BYTE *prgRamRd;
+	BYTE *prg_ram_rd;
 } m120;
 
 void map_init_120(void);

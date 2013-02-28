@@ -11,11 +11,11 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
-WORD prgRom32kMax;
+WORD prg_rom_32k_max;
 BYTE type;
 
 void map_init_178(BYTE model) {
-	prgRom32kMax = (info.prg_rom_16k_count >> 1) - 1;
+	prg_rom_32k_max = (info.prg_rom_16k_count >> 1) - 1;
 
 	EXTCL_CPU_WR_MEM(178);
 	EXTCL_SAVE_MAPPER(178);
@@ -42,7 +42,7 @@ void extcl_cpu_wr_mem_178(WORD address, BYTE value) {
 			return;
 		case 0x4801:
 			value = m178.reg = (m178.reg & 0x0C) | ((value >> 1) & 0x03);
-			control_bank(prgRom32kMax)
+			control_bank(prg_rom_32k_max)
 			map_prg_rom_8k(4, 0, value);
 			map_prg_rom_8k_update();
 			return;
@@ -51,7 +51,7 @@ void extcl_cpu_wr_mem_178(WORD address, BYTE value) {
 			return;
 		case 0x8000:
 			if (type == XINGJI) {
-				control_bank(prgRom32kMax)
+				control_bank(prg_rom_32k_max)
 				map_prg_rom_8k(4, 0, value);
 				map_prg_rom_8k_update();
 			}

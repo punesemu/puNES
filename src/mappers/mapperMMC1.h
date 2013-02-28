@@ -11,24 +11,19 @@
 #include <stdio.h>
 #include "common.h"
 
-enum {
-	SNROM = 2,
-	SOROM = 3,
-	SUROM = 4,
-	SXROM = 5
-};
+enum { SNROM = 2, SOROM, SUROM, SXROM };
 
 struct _mmc1 {
 	BYTE reg;
 	BYTE pos;
-	BYTE prgMode;
-	BYTE chrMode;
+	BYTE prg_mode;
+	BYTE chr_mode;
 	BYTE ctrl;
 	BYTE chr0;
 	BYTE chr1;
 	BYTE prg0;
 	BYTE reset;
-	BYTE prgUpper;
+	BYTE prg_upper;
 } mmc1;
 
 void map_init_MMC1(void);

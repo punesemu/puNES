@@ -12,7 +12,7 @@
 
 struct _m217 {
 	BYTE reg[4];
-	WORD prg8kBank[4];
+	WORD prg_8k_bank[4];
 } m217;
 
 void map_init_217(void);

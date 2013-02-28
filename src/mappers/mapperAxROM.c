@@ -8,10 +8,10 @@
 #include "mappers.h"
 #include "mem_map.h"
 
-WORD prgRom32kMax;
+WORD prg_rom_32k_max;
 
 void map_init_AxROM(void) {
-	prgRom32kMax = (info.prg_rom_16k_count >> 1) - 1;
+	prg_rom_32k_max = (info.prg_rom_16k_count >> 1) - 1;
 
 	EXTCL_CPU_WR_MEM(AxROM);
 
@@ -35,7 +35,7 @@ void extcl_cpu_wr_mem_AxROM(WORD address, BYTE value) {
 		mirroring_SCR1();
 	}
 
-	control_bank_with_AND(0x0F, prgRom32kMax)
+	control_bank_with_AND(0x0F, prg_rom_32k_max)
 	map_prg_rom_8k(4, 0, value);
 	map_prg_rom_8k_update();
 }

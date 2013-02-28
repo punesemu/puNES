@@ -13,8 +13,8 @@
 struct _m52 {
 	BYTE disabled;
 	BYTE reg;
-	WORD prgmap[4];
-	WORD chrmap[8];
+	WORD prg_map[4];
+	WORD chr_map[8];
 } m52;
 
 void map_init_52(void);

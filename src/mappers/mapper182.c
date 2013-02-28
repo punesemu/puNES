@@ -12,13 +12,13 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-WORD prgRom8kMax, prgRom8kBeforeLast, chrRom2kMax, chrRom1kMax;
+WORD prg_rom_8k_max, prg_rom_8k_before_last, chr_rom_2k_max, chr_rom_1k_max;
 
 void map_init_182(void) {
-	prgRom8kMax = info.prg_rom_8k_count - 1;
-	prgRom8kBeforeLast = info.prg_rom_8k_count - 2;
-	chrRom2kMax = (info.chr_rom_1k_count >> 1) - 1;
-	chrRom1kMax = info.chr_rom_1k_count - 1;
+	prg_rom_8k_max = info.prg_rom_8k_count - 1;
+	prg_rom_8k_before_last = info.prg_rom_8k_count - 2;
+	chr_rom_2k_max = (info.chr_rom_1k_count >> 1) - 1;
+	chr_rom_1k_max = info.chr_rom_1k_count - 1;
 
 	EXTCL_CPU_WR_MEM(182);
 	EXTCL_SAVE_MAPPER(MMC3);
@@ -48,52 +48,52 @@ void extcl_cpu_wr_mem_182(WORD address, BYTE value) {
 			extcl_cpu_wr_mem_MMC3(0x8000, value);
 			return;
 		case 0xC000: {
-			switch (mmc3.bankToUpdate) {
+			switch (mmc3.bank_to_update) {
 				case 0: {
 					DBWORD bank;
 
 					value >>= 1;
-					control_bank(chrRom2kMax)
+					control_bank(chr_rom_2k_max)
 					bank = value << 11;
-					chr.bank_1k[mmc3.chrRomCfg] = &chr.data[bank];
-					chr.bank_1k[mmc3.chrRomCfg | 0x01] = &chr.data[bank | 0x0400];
+					chr.bank_1k[mmc3.chr_rom_cfg] = &chr.data[bank];
+					chr.bank_1k[mmc3.chr_rom_cfg | 0x01] = &chr.data[bank | 0x0400];
 					break;
 				}
 				case 1:
-					control_bank(chrRom1kMax)
-					chr.bank_1k[(mmc3.chrRomCfg ^ 0x04) | 0x01] = &chr.data[value << 10];
+					control_bank(chr_rom_1k_max)
+					chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x01] = &chr.data[value << 10];
 					break;
 				case 2: {
 					DBWORD bank;
 
 					value >>= 1;
-					control_bank(chrRom2kMax)
+					control_bank(chr_rom_2k_max)
 					bank = value << 11;
-					chr.bank_1k[mmc3.chrRomCfg | 0x02] = &chr.data[bank];
-					chr.bank_1k[mmc3.chrRomCfg | 0x03] = &chr.data[bank | 0x0400];
+					chr.bank_1k[mmc3.chr_rom_cfg | 0x02] = &chr.data[bank];
+					chr.bank_1k[mmc3.chr_rom_cfg | 0x03] = &chr.data[bank | 0x0400];
 					break;
 				}
 				case 3:
-					control_bank(chrRom1kMax)
-					chr.bank_1k[(mmc3.chrRomCfg ^ 0x04) | 0x03] = &chr.data[value << 10];
+					control_bank(chr_rom_1k_max)
+					chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x03] = &chr.data[value << 10];
 					break;
 				case 4:
-					control_bank(prgRom8kMax)
-					map_prg_rom_8k(1, mmc3.prgRomCfg, value);
+					control_bank(prg_rom_8k_max)
+					map_prg_rom_8k(1, mmc3.prg_rom_cfg, value);
 					map_prg_rom_8k_update();
 					break;
 				case 5:
-					control_bank(prgRom8kMax)
+					control_bank(prg_rom_8k_max)
 					map_prg_rom_8k(1, 1, value);
 					map_prg_rom_8k_update();
 					break;
 				case 6:
-					control_bank(chrRom1kMax)
-					chr.bank_1k[mmc3.chrRomCfg ^ 0x04] = &chr.data[value << 10];
+					control_bank(chr_rom_1k_max)
+					chr.bank_1k[mmc3.chr_rom_cfg ^ 0x04] = &chr.data[value << 10];
 					break;
 				case 7:
-					control_bank(chrRom1kMax)
-					chr.bank_1k[(mmc3.chrRomCfg ^ 0x04) | 0x02] = &chr.data[value << 10];
+					control_bank(chr_rom_1k_max)
+					chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x02] = &chr.data[value << 10];
 					break;
 			}
 			return;

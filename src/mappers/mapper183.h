@@ -15,7 +15,7 @@ struct _m183 {
 	BYTE prescaler;
 	BYTE count;
 	BYTE delay;
-	BYTE chrRomBank[8];
+	BYTE chr_rom_bank[8];
 } m183;
 
 void map_init_183(void);

@@ -13,7 +13,7 @@
 struct _m51 {
 	BYTE mode;
 	WORD bank;
-	BYTE prg6000;
+	BYTE prg_6000;
 } m51;
 
 void map_init_51(void);

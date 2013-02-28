@@ -13,25 +13,25 @@
 #include "ppu.h"
 #include "save_slot.h"
 
-WORD prgRom32kMax, prgRom16kMax, prgRom8kMax, chrRom8kMax, chrRom1kMax;
+WORD prg_rom_32k_max, prg_rom_16k_max, prg_rom_8k_max, chr_rom_8k_max, chr_rom_1k_max;
 
-#define prgRom8kUpdate(slot, mask, shift)\
+#define prg_rom_8k_update(slot, mask, shift)\
 	value = (mapper.rom_map_to[slot] & mask) | ((value & 0x0F) << shift);\
-	control_bank(prgRom8kMax)\
+	control_bank(prg_rom_8k_max)\
 	map_prg_rom_8k(1, slot, value);\
 	map_prg_rom_8k_update()
-#define chrRom1kUpdate(slot, mask, shift)\
-	value = (ss8806.chrRomBank[slot] & mask) | ((value & 0x0F) << shift);\
-	control_bank(chrRom1kMax)\
+#define chr_rom_1k_update(slot, mask, shift)\
+	value = (ss8806.chr_rom_bank[slot] & mask) | ((value & 0x0F) << shift);\
+	control_bank(chr_rom_1k_max)\
 	chr.bank_1k[slot] = &chr.data[value << 10];\
-	ss8806.chrRomBank[slot] = value
+	ss8806.chr_rom_bank[slot] = value
 
 void map_init_Jaleco(BYTE model) {
-	prgRom32kMax = (info.prg_rom_16k_count >> 1) - 1;
-	prgRom16kMax = info.prg_rom_16k_count - 1;
-	prgRom8kMax = info.prg_rom_8k_count - 1;
-	chrRom8kMax = (info.chr_rom_4k_count >> 1) - 1;
-	chrRom1kMax = info.chr_rom_1k_count - 1;
+	prg_rom_32k_max = (info.prg_rom_16k_count >> 1) - 1;
+	prg_rom_16k_max = info.prg_rom_16k_count - 1;
+	prg_rom_8k_max = info.prg_rom_8k_count - 1;
+	chr_rom_8k_max = (info.chr_rom_4k_count >> 1) - 1;
+	chr_rom_1k_max = info.chr_rom_1k_count - 1;
 
 	switch (model) {
 		case JF05:
@@ -76,7 +76,7 @@ void map_init_Jaleco(BYTE model) {
 				ss8806.delay = 255;
 
 				for (i = 0; i < 8; i++) {
-					ss8806.chrRomBank[i] = i;
+					ss8806.chr_rom_bank[i] = i;
 				}
 			} else {
 				ss8806.mask = 0xFFFF;
@@ -96,7 +96,6 @@ void map_init_Jaleco(BYTE model) {
 		default:
 			break;
 	}
-
 }
 
 void extcl_cpu_wr_mem_Jaleco_JF05(WORD address, BYTE value) {
@@ -107,7 +106,7 @@ void extcl_cpu_wr_mem_Jaleco_JF05(WORD address, BYTE value) {
 	}
 
 	value = (((value >> 1) & 0x1) | ((value << 1) & 0x2));
-	control_bank_with_AND(0x03, chrRom8kMax)
+	control_bank_with_AND(0x03, chr_rom_8k_max)
 	bank = value << 13;
 	chr.bank_1k[0] = &chr.data[bank];
 	chr.bank_1k[1] = &chr.data[bank | 0x0400];
@@ -128,12 +127,12 @@ void extcl_cpu_wr_mem_Jaleco_JF11(WORD address, BYTE value) {
 	}
 
 	value >>= 4;
-	control_bank_with_AND(0x03, prgRom32kMax)
+	control_bank_with_AND(0x03, prg_rom_32k_max)
 	map_prg_rom_8k(4, 0, value);
 	map_prg_rom_8k_update();
 
 	value = save;
-	control_bank_with_AND(0x0F, chrRom8kMax)
+	control_bank_with_AND(0x0F, chr_rom_8k_max)
 	bank = value << 13;
 	chr.bank_1k[0] = &chr.data[bank];
 	chr.bank_1k[1] = &chr.data[bank | 0x0400];
@@ -155,12 +154,12 @@ void extcl_cpu_wr_mem_Jaleco_JF13(WORD address, BYTE value) {
 	}
 
 	value >>= 4;
-	control_bank_with_AND(0x03, prgRom32kMax)
+	control_bank_with_AND(0x03, prg_rom_32k_max)
 	map_prg_rom_8k(4, 0, value);
 	map_prg_rom_8k_update();
 
 	value = ((save & 0x40) >> 4) | (save & 0x03);
-	control_bank(chrRom8kMax)
+	control_bank(chr_rom_8k_max)
 	bank = value << 13;
 	chr.bank_1k[0] = &chr.data[bank];
 	chr.bank_1k[1] = &chr.data[bank | 0x0400];
@@ -176,12 +175,12 @@ void extcl_cpu_wr_mem_Jaleco_JF16(WORD address, BYTE value) {
 	BYTE save = value &= prg_rom_rd(address);
 	DBWORD bank;
 
-	control_bank_with_AND(0x07, prgRom16kMax)
+	control_bank_with_AND(0x07, prg_rom_16k_max)
 	map_prg_rom_8k(2, 0, value);
 	map_prg_rom_8k_update();
 
 	value = save >> 4;
-	control_bank_with_AND(0x0F, chrRom8kMax)
+	control_bank_with_AND(0x0F, chr_rom_8k_max)
 	bank = value << 13;
 	chr.bank_1k[0] = &chr.data[bank];
 	chr.bank_1k[1] = &chr.data[bank | 0x0400];
@@ -211,14 +210,14 @@ void extcl_cpu_wr_mem_Jaleco_JF17(WORD address, BYTE value) {
 	DBWORD bank;
 
 	if (save & 0x80) {
-		control_bank_with_AND(0x0F, prgRom16kMax)
+		control_bank_with_AND(0x0F, prg_rom_16k_max)
 		map_prg_rom_8k(2, 0, value);
 		map_prg_rom_8k_update();
 	}
 
 	if (save & 0x40) {
 		value = save;
-		control_bank_with_AND(0x0F, chrRom8kMax)
+		control_bank_with_AND(0x0F, chr_rom_8k_max)
 		bank = value << 13;
 		chr.bank_1k[0] = &chr.data[bank];
 		chr.bank_1k[1] = &chr.data[bank | 0x0400];
@@ -239,14 +238,14 @@ void extcl_cpu_wr_mem_Jaleco_JF19(WORD address, BYTE value) {
 	DBWORD bank;
 
 	if (save & 0x80) {
-		control_bank_with_AND(0x0F, prgRom16kMax)
+		control_bank_with_AND(0x0F, prg_rom_16k_max)
 		map_prg_rom_8k(2, 2, value);
 		map_prg_rom_8k_update();
 	}
 
 	if (save & 0x40) {
 		value = save;
-		control_bank_with_AND(0x0F, chrRom8kMax)
+		control_bank_with_AND(0x0F, chr_rom_8k_max)
 		bank = value << 13;
 		chr.bank_1k[0] = &chr.data[bank];
 		chr.bank_1k[1] = &chr.data[bank | 0x0400];
@@ -264,22 +263,22 @@ void extcl_cpu_wr_mem_Jaleco_JF19(WORD address, BYTE value) {
 void extcl_cpu_wr_mem_Jaleco_SS8806(WORD address, BYTE value) {
 	switch (address) {
 		case 0x8000:
-			prgRom8kUpdate(0, 0xF0, 0);
+			prg_rom_8k_update(0, 0xF0, 0);
 			break;
 		case 0x8001:
-			prgRom8kUpdate(0, 0x0F, 4);
+			prg_rom_8k_update(0, 0x0F, 4);
 			break;
 		case 0x8002:
-			prgRom8kUpdate(1, 0xF0, 0);
+			prg_rom_8k_update(1, 0xF0, 0);
 			break;
 		case 0x8003:
-			prgRom8kUpdate(1, 0x0F, 4);
+			prg_rom_8k_update(1, 0x0F, 4);
 			break;
 		case 0x9000:
-			prgRom8kUpdate(2, 0xF0, 0);
+			prg_rom_8k_update(2, 0xF0, 0);
 			break;
 		case 0x9001:
-			prgRom8kUpdate(2, 0x0F, 4);
+			prg_rom_8k_update(2, 0x0F, 4);
 			break;
 		case 0x9002:
 			if ((value != 0x03) || !value) {
@@ -293,52 +292,52 @@ void extcl_cpu_wr_mem_Jaleco_SS8806(WORD address, BYTE value) {
 			}
 			break;
 		case 0xA000:
-			chrRom1kUpdate(0, 0xF0, 0);
+			chr_rom_1k_update(0, 0xF0, 0);
 			break;
 		case 0xA001:
-			chrRom1kUpdate(0, 0x0F, 4);
+			chr_rom_1k_update(0, 0x0F, 4);
 			break;
 		case 0xA002:
-			chrRom1kUpdate(1, 0xF0, 0);
+			chr_rom_1k_update(1, 0xF0, 0);
 			break;
 		case 0xA003:
-			chrRom1kUpdate(1, 0x0F, 4);
+			chr_rom_1k_update(1, 0x0F, 4);
 			break;
 		case 0xB000:
-			chrRom1kUpdate(2, 0xF0, 0);
+			chr_rom_1k_update(2, 0xF0, 0);
 			break;
 		case 0xB001:
-			chrRom1kUpdate(2, 0x0F, 4);
+			chr_rom_1k_update(2, 0x0F, 4);
 			break;
 		case 0xB002:
-			chrRom1kUpdate(3, 0xF0, 0);
+			chr_rom_1k_update(3, 0xF0, 0);
 			break;
 		case 0xB003:
-			chrRom1kUpdate(3, 0x0F, 4);
+			chr_rom_1k_update(3, 0x0F, 4);
 			break;
 		case 0xC000:
-			chrRom1kUpdate(4, 0xF0, 0);
+			chr_rom_1k_update(4, 0xF0, 0);
 			break;
 		case 0xC001:
-			chrRom1kUpdate(4, 0x0F, 4);
+			chr_rom_1k_update(4, 0x0F, 4);
 			break;
 		case 0xC002:
-			chrRom1kUpdate(5, 0xF0, 0);
+			chr_rom_1k_update(5, 0xF0, 0);
 			break;
 		case 0xC003:
-			chrRom1kUpdate(5, 0x0F, 4);
+			chr_rom_1k_update(5, 0x0F, 4);
 			break;
 		case 0xD000:
-			chrRom1kUpdate(6, 0xF0, 0);
+			chr_rom_1k_update(6, 0xF0, 0);
 			break;
 		case 0xD001:
-			chrRom1kUpdate(6, 0x0F, 4);
+			chr_rom_1k_update(6, 0x0F, 4);
 			break;
 		case 0xD002:
-			chrRom1kUpdate(7, 0xF0, 0);
+			chr_rom_1k_update(7, 0xF0, 0);
 			break;
 		case 0xD003:
-			chrRom1kUpdate(7, 0x0F, 4);
+			chr_rom_1k_update(7, 0x0F, 4);
 			break;
 		case 0xE000:
 			ss8806.reload = (ss8806.reload & 0xFFF0) | (value & 0x0F);
@@ -381,7 +380,7 @@ void extcl_cpu_wr_mem_Jaleco_SS8806(WORD address, BYTE value) {
 	}
 }
 BYTE extcl_save_mapper_Jaleco_SS8806(BYTE mode, BYTE slot, FILE *fp) {
-	save_slot_ele(mode, slot, ss8806.chrRomBank);
+	save_slot_ele(mode, slot, ss8806.chr_rom_bank);
 	save_slot_ele(mode, slot, ss8806.enabled);
 	save_slot_ele(mode, slot, ss8806.mask);
 	save_slot_ele(mode, slot, ss8806.reload);

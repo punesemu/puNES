@@ -12,38 +12,33 @@
 #include "common.h"
 #include "apu.h"
 
-enum {
-	EKROM = 2,
-	ELROM = 3,
-	ETROM = 4,
-	EWROM = 5
-};
+enum { EKROM = 2, ELROM, ETROM, EWROM };
 
 struct _mmc5 {
-	BYTE prgMode;
-	BYTE chrMode;
-	BYTE extMode;
-	BYTE nmtMode[4];
-	BYTE prgRamWrite[2];
-	BYTE prgBank[4];
-	uint32_t prgRamBank[4][2];
-	BYTE chrLast;
-	WORD chrHigh;
-	WORD chrS[8];
-	WORD chrB[4];
-	BYTE extRam[0x400];
-	BYTE fillTable[0x400];
-	BYTE fillTile;
-	BYTE fillAttr;
+	BYTE prg_mode;
+	BYTE chr_mode;
+	BYTE ext_mode;
+	BYTE nmt_mode[4];
+	BYTE prg_ram_write[2];
+	BYTE prg_bank[4];
+	uint32_t prg_ram_bank[4][2];
+	BYTE chr_last;
+	WORD chr_high;
+	WORD chr_s[8];
+	WORD chr_b[4];
+	BYTE ext_ram[0x400];
+	BYTE fill_table[0x400];
+	BYTE fill_tile;
+	BYTE fill_attr;
 	BYTE split;
-	BYTE splitStTile;
-	BYTE splitSide;
-	BYTE splitScrl;
-	BYTE splitInReg;
-	BYTE splitX;
-	BYTE splitY;
-	WORD splitTile;
-	uint32_t splitBank;
+	BYTE split_st_tile;
+	BYTE split_side;
+	BYTE split_scrl;
+	BYTE split_in_reg;
+	BYTE split_x;
+	BYTE split_y;
+	WORD split_tile;
+	uint32_t split_bank;
 	BYTE factor[2];
 	WORD product;
 	_apuSquare S3, S4;

@@ -290,7 +290,7 @@ BYTE emu_search_in_database(FILE *fp) {
 					 * Fix per "Best of the Best - Championship Karate (E) [!].nes"
 					 * che ha l'header INES non corretto.
 					 */
-					if (info.id == BADINESBOTBE) {
+					if (info.id == BAD_INES_BOTBE) {
 						info.prg_rom_16k_count = 16;
 						info.chr_rom_8k_count = 0;
 					}
@@ -300,27 +300,27 @@ BYTE emu_search_in_database(FILE *fp) {
 					 * Fix per "WWF Wrestlemania (E) [!].nes"
 					 * che ha l'header INES non corretto.
 					 */
-					if (info.id == BADINESWWFWE) {
+					if (info.id == BAD_INES_WWFWE) {
 						info.prg_rom_16k_count = 8;
 						info.chr_rom_8k_count = 0;
 					}
 					break;
 				case 10:
 					/* Fix per Famicom Wars (J) [!] che ha l'header INES errato */
-					if (info.id == BADINESFWJ) {
+					if (info.id == BAD_INES_FWJ) {
 						info.chr_rom_8k_count = 8;
 					}
 					break;
 				case 11:
 					/* Fix per King Neptune's Adventure (Color Dreams) [!]
 					 * che ha l'header INES errato */
-					if (info.id == BADKINGNEPT) {
+					if (info.id == BAD_KING_NEPT) {
 						info.prg_rom_16k_count = 4;
 						info.chr_rom_8k_count = 4;
 					}
 					break;
 				case 33:
-					if (info.id == BADINEFLINJ) {
+					if (info.id == BAD_INES_FLINJ) {
 						info.chr_rom_8k_count = 32;
 					}
 					break;
@@ -329,28 +329,28 @@ BYTE emu_search_in_database(FILE *fp) {
 					mapper.write_vram = TRUE;
 					break;
 				case 191:
-					if (info.id == BADSUGOROQUEST) {
+					if (info.id == BAD_SUGOROQUEST) {
 						info.chr_rom_8k_count = 16;
 					}
 					break;
 				case 235:
 					/*
-					 * 260-in-1 [p1][b1].nes ha un numero di prgRom16kCount
+					 * 260-in-1 [p1][b1].nes ha un numero di prg_rom_16k_count
 					 * pari a 256 (0x100) ed essendo un BYTE (0xFF) quello che l'INES
 					 * utilizza per indicare in numero di 16k, nell'INES header sara'
 					 * presente 0.
 					 * 150-in-1 [a1][p1][!].nes ha lo stesso chsum del 260-in-1 [p1][b1].nes
-					 * ma ha un numero di prgRom16kCount di 127.
+					 * ma ha un numero di prg_rom_16k_count di 127.
 					 */
 					if (!info.prg_rom_16k_count) {
 						info.prg_rom_16k_count = 256;
 					}
 					break;
 			}
-			if (info.mapper_type == UNKVERTICAL) {
+			if (info.mapper_type == UNK_VERTICAL) {
 				mirroring_V();
 			}
-			if (info.mapper_type == UNKHORIZONTAL) {
+			if (info.mapper_type == UNK_HORIZONTAL) {
 				mirroring_H();
 			}
 			break;

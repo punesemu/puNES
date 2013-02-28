@@ -11,7 +11,7 @@
 #include "common.h"
 
 struct _whirlwind {
-	uint32_t prgRam;
+	uint32_t prg_ram;
 } whirlwind;
 
 void map_init_Whirlwind(void);

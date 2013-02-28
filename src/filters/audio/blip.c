@@ -318,7 +318,7 @@ void apu_tick_blip_Namco_N163(void) {
 	SWORD output = 0;
 
 	if (++bl.ch[BL_EXT0].period == bl.ch[BL_EXT0].min_period) {
-		for (i = n163.sndChStart; i < 8; i++) {
+		for (i = n163.snd_ch_start; i < 8; i++) {
 			if (n163.ch[i].active) {
 				output += ((n163.ch[i].output * 1.5) * (n163.ch[i].volume >> 2));
 			}
@@ -364,7 +364,7 @@ void end_frame_blip_Namco_N163(void) {
 	BYTE i;
 	SWORD output = 0;
 
-	for (i = n163.sndChStart; i < 8; i++) {
+	for (i = n163.snd_ch_start; i < 8; i++) {
 		if (n163.ch[i].active) {
 			output += ((n163.ch[i].output * 1.5) * (n163.ch[i].volume >> 2));
 		}

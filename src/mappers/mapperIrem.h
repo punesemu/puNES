@@ -20,19 +20,19 @@ enum {
 	MAJORLEAGUE = 8
 };
 
-struct _iremG101 {
-	BYTE prgMode;
-	BYTE prgReg;
-} iremG101;
-struct _iremH3000 {
+struct _irem_G101 {
+	BYTE prg_mode;
+	BYTE prg_reg;
+} irem_G101;
+struct _irem_H3000 {
 	BYTE enable;
 	WORD count;
 	WORD reload;
 	BYTE delay;
-} iremH3000;
-struct _iremLROG017 {
-	BYTE chrRam[0x1800];
-} iremLROG017;
+} irem_H3000;
+struct _irem_LROG017 {
+	BYTE chr_ram[0x1800];
+} irem_LROG017;
 
 void map_init_Irem(BYTE model);
 

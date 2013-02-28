@@ -10,11 +10,11 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
-WORD prgRom32kMax, chrRom8kMax;
+WORD prg_rom_32k_max, chr_rom_8k_max;
 
 void map_init_Caltron(void) {
-	prgRom32kMax = (info.prg_rom_16k_count >> 1) - 1;
-	chrRom8kMax = info.chr_rom_8k_count - 1;
+	prg_rom_32k_max = (info.prg_rom_16k_count >> 1) - 1;
+	chr_rom_8k_max = info.chr_rom_8k_count - 1;
 
 	EXTCL_CPU_WR_MEM(Caltron);
 
@@ -35,7 +35,7 @@ void extcl_cpu_wr_mem_Caltron(WORD address, BYTE value) {
 	if ((address >= 0x6000) && (address < 0x6800)) {
 		caltron.reg = value = address & 0x00FF;
 
-		control_bank_with_AND(0x07, prgRom32kMax)
+		control_bank_with_AND(0x07, prg_rom_32k_max)
 		map_prg_rom_8k(4, 0, value);
 		map_prg_rom_8k_update();
 
@@ -53,7 +53,7 @@ void extcl_cpu_wr_mem_Caltron(WORD address, BYTE value) {
 
 	if (caltron.reg & 0x04) {
 		value = ((caltron.reg >> 1) & 0x0C) | (value & 0x03);
-		control_bank(chrRom8kMax)
+		control_bank(chr_rom_8k_max)
 		bank = value << 13;
 		chr.bank_1k[0] = &chr.data[bank];
 		chr.bank_1k[1] = &chr.data[bank | 0x0400];

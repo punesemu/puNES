@@ -12,19 +12,14 @@
 #include "cpu.h"
 #include "save_slot.h"
 
-static void INLINE ctrlReg_MMC1(void);
-static void INLINE swapPrgRom_MMC1(void);
-static void INLINE swapChr0_MMC1(void);
-static void INLINE swapChr1_MMC1(void);
+static void INLINE ctrl_reg_MMC1(void);
+static void INLINE swap_prg_rom_MMC1(void);
+static void INLINE swap_chr0_MMC1(void);
+static void INLINE swap_chr1_MMC1(void);
 
-enum {
-	CTRL = 0,
-	CHR0 = 1,
-	CHR1 = 2,
-	PRG0 = 3
-};
+enum { CTRL, CHR0, CHR1, PRG0 };
 
-#define chrReg(reg)\
+#define chr_reg(reg)\
 	value = reg;\
 	switch (info.mapper_type) {\
 		case SNROM:\
@@ -41,20 +36,20 @@ enum {
 			value &= 0x01;\
 			break;\
 		case SOROM: {\
-			BYTE bankPrgRam = (reg & 0x08) >> 3;\
-			prg.ram_plus_8k = &prg.ram_plus[bankPrgRam * 0x2000];\
-			mmc1.prgUpper = reg & 0x10;\
+			BYTE bank = (reg & 0x08) >> 3;\
+			prg.ram_plus_8k = &prg.ram_plus[bank * 0x2000];\
+			mmc1.prg_upper = reg & 0x10;\
 			value &= 0x01;\
 			break;\
 		}\
 		case SUROM:\
-			mmc1.prgUpper = reg & 0x10;\
+			mmc1.prg_upper = reg & 0x10;\
 			value &= 0x01;\
 			break;\
 		case SXROM: {\
-			BYTE bankPrgRam = (reg & 0x0C) >> 2;\
-			prg.ram_plus_8k = &prg.ram_plus[bankPrgRam * 0x2000];\
-			mmc1.prgUpper = reg & 0x10;\
+			BYTE bank = (reg & 0x0C) >> 2;\
+			prg.ram_plus_8k = &prg.ram_plus[bank * 0x2000];\
+			mmc1.prg_upper = reg & 0x10;\
 			value &= 0x01;\
 			break;\
 		}\
@@ -63,12 +58,12 @@ enum {
 			break;\
 	}
 
-WORD prgRom16kMax, chrRom8kMax, chrRom4kMax;
+WORD prg_rom_16k_max, chr_rom_8k_max, chr_rom_4k_max;
 
 void map_init_MMC1(void) {
-	prgRom16kMax = info.prg_rom_16k_count - 1;
-	chrRom8kMax = info.chr_rom_8k_count - 1;
-	chrRom4kMax = info.chr_rom_4k_count - 1;
+	prg_rom_16k_max = info.prg_rom_16k_count - 1;
+	chr_rom_8k_max = info.chr_rom_8k_count - 1;
+	chr_rom_4k_max = info.chr_rom_4k_count - 1;
 
 	EXTCL_CPU_WR_MEM(MMC1);
 	EXTCL_SAVE_MAPPER(MMC1);
@@ -78,7 +73,7 @@ void map_init_MMC1(void) {
 	if (info.reset >= HARD) {
 		memset(&mmc1, 0x00, sizeof(mmc1));
 		mmc1.ctrl = 0x0C;
-		mmc1.prgMode = 3;
+		mmc1.prg_mode = 3;
 		mmc1.chr1 = 1;
 	}
 
@@ -131,12 +126,12 @@ void extcl_cpu_wr_mem_MMC1(WORD address, BYTE value) {
 		 */
 		mmc1.ctrl |= 0x0C;
 		/* reinizializzo tutto */
-		ctrlReg_MMC1();
+		ctrl_reg_MMC1();
 		/*
 		 * locking PRG ROM at $C000-$FFFF
 		 * to the last 16k bank.
 		 */
-		map_prg_rom_8k(2, 2, mmc1.prgUpper | (prgRom16kMax & 0x0F));
+		map_prg_rom_8k(2, 2, mmc1.prg_upper | (prg_rom_16k_max & 0x0F));
 		map_prg_rom_8k_update();
 		return;
 	}
@@ -149,15 +144,15 @@ void extcl_cpu_wr_mem_MMC1(WORD address, BYTE value) {
 		switch (reg) {
 			case CTRL:
 				mmc1.ctrl = mmc1.reg;
-				ctrlReg_MMC1();
+				ctrl_reg_MMC1();
 				break;
 			case CHR0:
 				mmc1.chr0 = mmc1.reg;
-				swapChr0_MMC1();
+				swap_chr0_MMC1();
 				break;
 			case CHR1:
 				mmc1.chr1 = mmc1.reg;
-				swapChr1_MMC1();
+				swap_chr1_MMC1();
 				break;
 			case PRG0:
 				mmc1.prg0 = mmc1.reg;
@@ -165,7 +160,7 @@ void extcl_cpu_wr_mem_MMC1(WORD address, BYTE value) {
 				cpu.prg_ram_wr_active = cpu.prg_ram_rd_active;
 				break;
 		}
-		swapPrgRom_MMC1();
+		swap_prg_rom_MMC1();
 		/* azzero posizione e registro temporaneo */
 		mmc1.pos = mmc1.reg = 0;
 	}
@@ -173,20 +168,21 @@ void extcl_cpu_wr_mem_MMC1(WORD address, BYTE value) {
 BYTE extcl_save_mapper_MMC1(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, mmc1.reg);
 	save_slot_ele(mode, slot, mmc1.pos);
-	save_slot_ele(mode, slot, mmc1.prgMode);
-	save_slot_ele(mode, slot, mmc1.chrMode);
+	save_slot_ele(mode, slot, mmc1.prg_mode);
+	save_slot_ele(mode, slot, mmc1.chr_mode);
 	save_slot_ele(mode, slot, mmc1.ctrl);
 	save_slot_ele(mode, slot, mmc1.chr0);
 	save_slot_ele(mode, slot, mmc1.chr1);
 	save_slot_ele(mode, slot, mmc1.prg0);
 	save_slot_ele(mode, slot, mmc1.reset);
-	save_slot_ele(mode, slot, mmc1.prgUpper);
+	save_slot_ele(mode, slot, mmc1.prg_upper);
+
 	return (EXIT_OK);
 }
 
-static void INLINE ctrlReg_MMC1(void) {
-	mmc1.prgMode = (mmc1.ctrl & 0x0C) >> 2;
-	mmc1.chrMode = (mmc1.ctrl & 0x10) >> 4;
+static void INLINE ctrl_reg_MMC1(void) {
+	mmc1.prg_mode = (mmc1.ctrl & 0x0C) >> 2;
+	mmc1.chr_mode = (mmc1.ctrl & 0x10) >> 4;
 	switch (mmc1.ctrl & 0x03) {
 		case 0x00:
 			mirroring_SCR0();
@@ -201,46 +197,47 @@ static void INLINE ctrlReg_MMC1(void) {
 			mirroring_H();
 			break;
 	}
-	swapChr0_MMC1();
-	swapChr1_MMC1();
+	swap_chr0_MMC1();
+	swap_chr1_MMC1();
 }
-static void INLINE swapPrgRom_MMC1(void) {
+static void INLINE swap_prg_rom_MMC1(void) {
 	BYTE value = mmc1.prg0;
 
-	switch (mmc1.prgMode) {
+	switch (mmc1.prg_mode) {
 		case 0:
 		case 1: {
 			BYTE bank;
-			control_bank_with_AND(0x0E, prgRom16kMax)
-			bank = mmc1.prgUpper | value;
+
+			control_bank_with_AND(0x0E, prg_rom_16k_max)
+			bank = mmc1.prg_upper | value;
 			/* switch 32k at $8000, ignoring low bit of bank number */
 			map_prg_rom_8k(2, 0, bank);
 			map_prg_rom_8k(2, 2, bank + 1);
 			break;
 		}
 		case 2:
-			control_bank_with_AND(0x0F, prgRom16kMax)
+			control_bank_with_AND(0x0F, prg_rom_16k_max)
 			/* fix first 16k bank at $8000 and switch 16 KB bank at $C000 */
-			map_prg_rom_8k(2, 0, mmc1.prgUpper);
-			map_prg_rom_8k(2, 2, mmc1.prgUpper | value);
+			map_prg_rom_8k(2, 0, mmc1.prg_upper);
+			map_prg_rom_8k(2, 2, mmc1.prg_upper | value);
 			break;
 		case 3:
-			control_bank_with_AND(0x0F, prgRom16kMax)
+			control_bank_with_AND(0x0F, prg_rom_16k_max)
 			/* fix last 16k bank at $C000 and switch 16 KB bank at $8000 */
-			map_prg_rom_8k(2, 0, mmc1.prgUpper | value);
-			map_prg_rom_8k(2, 2, mmc1.prgUpper | (prgRom16kMax & 0x0F));
+			map_prg_rom_8k(2, 0, mmc1.prg_upper | value);
+			map_prg_rom_8k(2, 2, mmc1.prg_upper | (prg_rom_16k_max & 0x0F));
 			break;
 	}
 	map_prg_rom_8k_update();
 }
-static void INLINE swapChr0_MMC1(void) {
+static void INLINE swap_chr0_MMC1(void) {
 	DBWORD value;
 
-	chrReg(mmc1.chr0)
+	chr_reg(mmc1.chr0)
 
 	/* 4k mode */
-	if (mmc1.chrMode) {
-		control_bank(chrRom4kMax)
+	if (mmc1.chr_mode) {
+		control_bank(chr_rom_4k_max)
 		value <<= 12;
 		chr.bank_1k[0] = &chr.data[value];
 		chr.bank_1k[1] = &chr.data[value | 0x0400];
@@ -259,7 +256,7 @@ static void INLINE swapChr0_MMC1(void) {
 		return;
 	}
 
-	control_bank_with_AND(0x1E, chrRom4kMax)
+	control_bank_with_AND(0x1E, chr_rom_4k_max)
 	value <<= 12;
 	chr.bank_1k[0] = &chr.data[value];
 	chr.bank_1k[1] = &chr.data[value | 0x0400];
@@ -270,13 +267,13 @@ static void INLINE swapChr0_MMC1(void) {
 	chr.bank_1k[6] = &chr.data[value | 0x1800];
 	chr.bank_1k[7] = &chr.data[value | 0x1C00];
 }
-static void INLINE swapChr1_MMC1(void) {
-	if (mmc1.chrMode) {
+static void INLINE swap_chr1_MMC1(void) {
+	if (mmc1.chr_mode) {
 		DBWORD value;
 
-		chrReg(mmc1.chr1)
+		chr_reg(mmc1.chr1)
 
-		control_bank(chrRom4kMax)
+		control_bank(chr_rom_4k_max)
 		value <<= 12;
 		chr.bank_1k[4] = &chr.data[value];
 		chr.bank_1k[5] = &chr.data[value | 0x0400];

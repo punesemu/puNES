@@ -12,16 +12,16 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-#define m219Chr1k(a, b)\
+#define m219_chr_1k(a, b)\
 	value = m219.reg[2] | ((save >> 1) & a);\
-	control_bank(chrRom1kMax)\
+	control_bank(chr_rom_1k_max)\
 	chr.bank_1k[b] = &chr.data[value << 10]
 
-WORD prgRom8kMax, chrRom1kMax;
+WORD prg_rom_8k_max, chr_rom_1k_max;
 
 void map_init_219(void) {
-	prgRom8kMax = info.prg_rom_8k_count - 1;
-	chrRom1kMax = info.chr_rom_1k_count - 1;
+	prg_rom_8k_max = info.prg_rom_8k_count - 1;
+	chr_rom_1k_max = info.chr_rom_1k_count - 1;
 
 	EXTCL_CPU_WR_MEM(219);
 	EXTCL_SAVE_MAPPER(219);
@@ -62,12 +62,12 @@ void extcl_cpu_wr_mem_219(WORD address, BYTE value) {
 
 			if (value < 4) {
 				value ^= 0x03;
-				control_bank(prgRom8kMax)
+				control_bank(prg_rom_8k_max)
 				map_prg_rom_8k(2, 0, value);
 
 				value = ((value >> 5) & 0x01) | ((value >> 3) & 0x02) | ((value >> 1) & 0x04)
 				        		| ((value << 1) & 0x08);
-				control_bank(prgRom8kMax)
+				control_bank(prg_rom_8k_max)
 				map_prg_rom_8k(2, 2, value);
 
 				map_prg_rom_8k_update();
@@ -84,33 +84,33 @@ void extcl_cpu_wr_mem_219(WORD address, BYTE value) {
 					m219.reg[2] = save << 4;
 					return;
 				case 0x09:
-					m219Chr1k(0x0E, 0);
+					m219_chr_1k(0x0E, 0);
 					return;
 				case 0x0B:
-					m219Chr1k(0x01, 1);
+					m219_chr_1k(0x01, 1);
 					return;
 				case 0x0C:
 				case 0x0D:
-					m219Chr1k(0x0E, 2);
+					m219_chr_1k(0x0E, 2);
 					return;
 				case 0x0F:
-					m219Chr1k(0x01, 3);
+					m219_chr_1k(0x01, 3);
 					return;
 				case 0x10:
 				case 0x11:
-					m219Chr1k(0x0F, 4);
+					m219_chr_1k(0x0F, 4);
 					return;
 				case 0x14:
 				case 0x15:
-					m219Chr1k(0x0F, 5);
+					m219_chr_1k(0x0F, 5);
 					return;
 				case 0x18:
 				case 0x19:
-					m219Chr1k(0x0F, 6);
+					m219_chr_1k(0x0F, 6);
 					return;
 				case 0x1C:
 				case 0x1D:
-					m219Chr1k(0x0F, 7);
+					m219_chr_1k(0x0F, 7);
 					return;
 			}
 

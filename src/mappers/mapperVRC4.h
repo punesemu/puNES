@@ -13,14 +13,14 @@
 enum { VRC4A, VRC4B, VRC4C, VRC4D, VRC4E, VRC4BMC };
 
 struct _vrc4 {
-	BYTE chrRomBank[8];
-	BYTE swapMode;
-	BYTE irqEnabled;
-	BYTE irqReload;
-	BYTE irqMode;
-	BYTE irqAcknowledge;
-	BYTE irqCount;
-	WORD irqPrescaler;
+	BYTE chr_rom_bank[8];
+	BYTE swap_mode;
+	BYTE irq_enabled;
+	BYTE irq_reload;
+	BYTE irq_mode;
+	BYTE irq_acknowledge;
+	BYTE irq_count;
+	WORD irq_prescaler;
 } vrc4;
 
 void map_init_VRC4(BYTE revision);

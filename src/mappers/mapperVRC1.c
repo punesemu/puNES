@@ -8,11 +8,11 @@
 #include "mappers.h"
 #include "mem_map.h"
 
-WORD prgRom8kMax, chrRom4kMax;
+WORD prg_rom_8k_max, chr_rom_4k_max;
 
 void map_init_VRC1(void) {
-	prgRom8kMax = info.prg_rom_8k_count - 1;
-	chrRom4kMax = info.chr_rom_4k_count - 1;
+	prg_rom_8k_max = info.prg_rom_8k_count - 1;
+	chr_rom_4k_max = info.chr_rom_4k_count - 1;
 
 	EXTCL_CPU_WR_MEM(VRC1);
 }
@@ -23,7 +23,7 @@ void extcl_cpu_wr_mem_VRC1(WORD address, BYTE value) {
 
 	switch (address) {
 		case 0x8000:
-			control_bank_with_AND(0x0F, prgRom8kMax)
+			control_bank_with_AND(0x0F, prg_rom_8k_max)
 			map_prg_rom_8k(1, 0, value);
 			map_prg_rom_8k_update();
 			return;
@@ -47,18 +47,18 @@ void extcl_cpu_wr_mem_VRC1(WORD address, BYTE value) {
 			}
 			return;
 		case 0xA000:
-			control_bank_with_AND(0x0F, prgRom8kMax)
+			control_bank_with_AND(0x0F, prg_rom_8k_max)
 			map_prg_rom_8k(1, 1, value);
 			map_prg_rom_8k_update();
 			return;
 		case 0xC000:
-			control_bank_with_AND(0x0F, prgRom8kMax)
+			control_bank_with_AND(0x0F, prg_rom_8k_max)
 			map_prg_rom_8k(1, 2, value);
 			map_prg_rom_8k_update();
 			return;
 		case 0xE000:
 			value = (((chr.bank_1k[0] - chr.data) >> 12) & 0x10) | (value & 0x0F);
-			control_bank(chrRom4kMax)
+			control_bank(chr_rom_4k_max)
 			bank = value << 12;
 			chr.bank_1k[0] = &chr.data[bank];
 			chr.bank_1k[1] = &chr.data[bank | 0x0400];
@@ -67,7 +67,7 @@ void extcl_cpu_wr_mem_VRC1(WORD address, BYTE value) {
 			return;
 		case 0xF000:
 			value = (((chr.bank_1k[4] - chr.data) >> 12) & 0x10) | (value & 0x0F);
-			control_bank(chrRom4kMax)
+			control_bank(chr_rom_4k_max)
 			bank = value << 12;
 			chr.bank_1k[4] = &chr.data[bank];
 			chr.bank_1k[5] = &chr.data[bank | 0x0400];

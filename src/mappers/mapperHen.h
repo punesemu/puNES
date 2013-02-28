@@ -11,9 +11,9 @@
 #include "common.h"
 
 enum {
-	HEN177 = 2,
-	HENXJZB = 3,
-	HENFANKONG = 4
+	HEN_177 = 2,
+	HEN_XJZB = 3,
+	HEN_FANKONG = 4
 };
 
 void map_init_Hen(BYTE model);

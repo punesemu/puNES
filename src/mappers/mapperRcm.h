@@ -10,9 +10,7 @@
 
 #include "common.h"
 
-enum {
-	GS2015 = 2
-};
+enum { GS2015 = 2 };
 
 void map_init_Rcm(BYTE type);
 

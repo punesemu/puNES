@@ -15,17 +15,17 @@
 #include "save_slot.h"
 #include "mapperVRC7snd.h"
 
-const WORD tableVRC7[2][4] = {
+const WORD table_VRC7[2][4] = {
 	{0x0000, 0x0002, 0x0001, 0x0003},
 	{0x0000, 0x0001, 0x0002, 0x0003},
 };
 
-WORD prgRom8kMax, chrRom1kMax, mask;
+WORD prg_rom_8k_max, chr_rom_1k_max, mask;
 BYTE type, delay;
 
 void map_init_VRC7(BYTE revision) {
-	prgRom8kMax = info.prg_rom_8k_count - 1;
-	chrRom1kMax = info.chr_rom_1k_count - 1;
+	prg_rom_8k_max = info.prg_rom_8k_count - 1;
+	chr_rom_1k_max = info.chr_rom_1k_count - 1;
 
 	EXTCL_CPU_WR_MEM(VRC7);
 	EXTCL_SAVE_MAPPER(VRC7);
@@ -55,21 +55,21 @@ void map_init_VRC7(BYTE revision) {
 	type = revision;
 }
 void extcl_cpu_wr_mem_VRC7(WORD address, BYTE value) {
-	address = (address & mask) | tableVRC7[type][(address & 0x0018) >> 3];
+	address = (address & mask) | table_VRC7[type][(address & 0x0018) >> 3];
 
 	switch (address) {
 		case 0x8000:
-			control_bank(prgRom8kMax)
+			control_bank(prg_rom_8k_max)
 			map_prg_rom_8k(1, 0, value);
 			map_prg_rom_8k_update();
 			return;
 		case 0x8001:
-			control_bank(prgRom8kMax)
+			control_bank(prg_rom_8k_max)
 			map_prg_rom_8k(1, 1, value);
 			map_prg_rom_8k_update();
 			return;
 		case 0x9000:
-			control_bank(prgRom8kMax)
+			control_bank(prg_rom_8k_max)
 			map_prg_rom_8k(1, 2, value);
 			map_prg_rom_8k_update();
 			return;
@@ -80,35 +80,35 @@ void extcl_cpu_wr_mem_VRC7(WORD address, BYTE value) {
 			opll_write_reg(vrc7.reg, value);
 			return;
 		case 0xA000:
-            control_bank(chrRom1kMax)
+            control_bank(chr_rom_1k_max)
             chr.bank_1k[0] = &chr.data[value << 10];
 			return;
 		case 0xA001:
-            control_bank(chrRom1kMax)
+            control_bank(chr_rom_1k_max)
             chr.bank_1k[1] = &chr.data[value << 10];
 			return;
 		case 0xB000:
-            control_bank(chrRom1kMax)
+            control_bank(chr_rom_1k_max)
             chr.bank_1k[2] = &chr.data[value << 10];
 			return;
 		case 0xB001:
-            control_bank(chrRom1kMax)
+            control_bank(chr_rom_1k_max)
             chr.bank_1k[3] = &chr.data[value << 10];
 			return;
 		case 0xC000:
-            control_bank(chrRom1kMax)
+            control_bank(chr_rom_1k_max)
             chr.bank_1k[4] = &chr.data[value << 10];
 			return;
 		case 0xC001:
-            control_bank(chrRom1kMax)
+            control_bank(chr_rom_1k_max)
             chr.bank_1k[5] = &chr.data[value << 10];
 			return;
 		case 0xD000:
-            control_bank(chrRom1kMax)
+            control_bank(chr_rom_1k_max)
             chr.bank_1k[6] = &chr.data[value << 10];
 			return;
 		case 0xD001:
-            control_bank(chrRom1kMax)
+            control_bank(chr_rom_1k_max)
             chr.bank_1k[7] = &chr.data[value << 10];
 			return;
 		case 0xE000: {

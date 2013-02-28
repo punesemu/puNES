@@ -16,18 +16,18 @@ enum {
 	X1005A = 4,
 	X1005B = 5,
 	X1017 = 6,
-	BADINEFLINJ = 100,
-	X1005NOBAT = 101
+	BAD_INES_FLINJ = 100,
+	X1005_NO_BAT = 101
 };
 
-struct _taitoX1005 {
+struct _taito_X1005 {
 	BYTE ram[0x80];
 	BYTE enable;
-} taitoX1005;
-struct _taitoX1017 {
+} taito_X1005;
+struct _taito_X1017 {
 	BYTE chr[6];
 	BYTE control;
-} taitoX1017;
+} taito_X1017;
 
 void map_init_Taito(BYTE model);
 

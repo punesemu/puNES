@@ -12,27 +12,27 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-#define m114prgRomBackup()\
-	m114.prgRomBank[0] = mapper.rom_map_to[0];\
-	m114.prgRomBank[1] = mapper.rom_map_to[1];\
-	m114.prgRomBank[2] = mapper.rom_map_to[2];\
-	m114.prgRomBank[3] = mapper.rom_map_to[3]
-#define m114prgRomRestore()\
-	mapper.rom_map_to[0] = m114.prgRomBank[0];\
-	mapper.rom_map_to[1] = m114.prgRomBank[1];\
-	mapper.rom_map_to[2] = m114.prgRomBank[2];\
-	mapper.rom_map_to[3] = m114.prgRomBank[3]
+#define m114_prg_rom_backup()\
+	m114.prg_rom_bank[0] = mapper.rom_map_to[0];\
+	m114.prg_rom_bank[1] = mapper.rom_map_to[1];\
+	m114.prg_rom_bank[2] = mapper.rom_map_to[2];\
+	m114.prg_rom_bank[3] = mapper.rom_map_to[3]
+#define m114_prg_rom_restore()\
+	mapper.rom_map_to[0] = m114.prg_rom_bank[0];\
+	mapper.rom_map_to[1] = m114.prg_rom_bank[1];\
+	mapper.rom_map_to[2] = m114.prg_rom_bank[2];\
+	mapper.rom_map_to[3] = m114.prg_rom_bank[3]
 
 static const BYTE vlu114[8] = {0, 3, 1, 5, 6, 7, 2, 4};
 
-WORD prgRom16kMax, prgRom8kMax, prgRom8kBeforeLast, chrRom2kMax, chrRom1kMax;
+WORD prg_rom_16k_max, prg_rom_8k_max, prg_rom_8k_before_last, chr_rom_2k_max, chr_rom_1k_max;
 
 void map_init_114(void) {
-	prgRom16kMax = info.prg_rom_16k_count - 1;
-	prgRom8kMax = info.prg_rom_8k_count - 1;
-	prgRom8kBeforeLast = info.prg_rom_8k_count - 2;
-	chrRom2kMax = (info.chr_rom_1k_count >> 1) - 1;
-	chrRom1kMax = info.chr_rom_1k_count - 1;
+	prg_rom_16k_max = info.prg_rom_16k_count - 1;
+	prg_rom_8k_max = info.prg_rom_8k_count - 1;
+	prg_rom_8k_before_last = info.prg_rom_8k_count - 2;
+	chr_rom_2k_max = (info.chr_rom_1k_count >> 1) - 1;
+	chr_rom_1k_max = info.chr_rom_1k_count - 1;
 
 	EXTCL_CPU_WR_MEM(114);
 	EXTCL_SAVE_MAPPER(114);
@@ -56,7 +56,7 @@ void map_init_114(void) {
 			BYTE i;
 
 			for (i = 0; i < 4; i++) {
-				m114.prgRomBank[i] = mapper.rom_map_to[i];
+				m114.prg_rom_bank[i] = mapper.rom_map_to[i];
 			}
 		}
 	}
@@ -76,14 +76,14 @@ void extcl_cpu_wr_mem_114(WORD address, BYTE value) {
 		case 0x4001:
 		case 0x6000:
 		case 0x6001:
-			m114.prgRomSwitch = value >> 7;
-			if (m114.prgRomSwitch) {
-				control_bank_with_AND(0x1F, prgRom16kMax)
+			m114.prg_rom_switch = value >> 7;
+			if (m114.prg_rom_switch) {
+				control_bank_with_AND(0x1F, prg_rom_16k_max)
 				map_prg_rom_8k(2, 0, value);
 				map_prg_rom_8k(2, 2, value);
 				map_prg_rom_8k_update();
 			} else {
-				m114prgRomRestore();
+				m114_prg_rom_restore();
 				map_prg_rom_8k_update();
 			}
 			return;
@@ -94,28 +94,28 @@ void extcl_cpu_wr_mem_114(WORD address, BYTE value) {
 		case 0xA000:
 		case 0xA001:
 			value = (value & 0xC0) | vlu114[value & 0x07];
-			m114.mmc3CtrlChange = TRUE;
+			m114.mmc3_ctrl_change = TRUE;
 			extcl_cpu_wr_mem_MMC3(0x8000, value);
-			if (m114.prgRomSwitch) {
-				const BYTE prgRomCfg = (value & 0x40) >> 5;
+			if (m114.prg_rom_switch) {
+				const BYTE prg_rom_cfg = (value & 0x40) >> 5;
 
-				if (mmc3.prgRomCfg != prgRomCfg) {
-					BYTE p0 = m114.prgRomBank[0];
-					BYTE p2 = m114.prgRomBank[2];
-					m114.prgRomBank[0] = p2;
-					m114.prgRomBank[2] = p0;
-					m114.prgRomBank[prgRomCfg ^ 0x02] = prgRom8kBeforeLast;
+				if (mmc3.prg_rom_cfg != prg_rom_cfg) {
+					BYTE p0 = m114.prg_rom_bank[0];
+					BYTE p2 = m114.prg_rom_bank[2];
+					m114.prg_rom_bank[0] = p2;
+					m114.prg_rom_bank[2] = p0;
+					m114.prg_rom_bank[prg_rom_cfg ^ 0x02] = prg_rom_8k_before_last;
 				}
 			} else {
-				m114prgRomBackup();
+				m114_prg_rom_backup();
 			}
 			return;
 		case 0xC000:
 		case 0xC001:
-			if (m114.mmc3CtrlChange && (!m114.prgRomSwitch || (mmc3.bankToUpdate < 6))) {
-				m114.mmc3CtrlChange = FALSE;
+			if (m114.mmc3_ctrl_change && (!m114.prg_rom_switch || (mmc3.bank_to_update < 6))) {
+				m114.mmc3_ctrl_change = FALSE;
 				extcl_cpu_wr_mem_MMC3(0x8001, value);
-				m114prgRomBackup();
+				m114_prg_rom_backup();
 			}
 			return;
 		case 0xE000:
@@ -131,22 +131,22 @@ void extcl_cpu_wr_mem_114(WORD address, BYTE value) {
 	}
 }
 BYTE extcl_save_mapper_114(BYTE mode, BYTE slot, FILE *fp) {
-	save_slot_ele(mode, slot, m114.prgRomSwitch);
-	save_slot_ele(mode, slot, m114.mmc3CtrlChange);
+	save_slot_ele(mode, slot, m114.prg_rom_switch);
+	save_slot_ele(mode, slot, m114.mmc3_ctrl_change);
 	if (save_slot.version < 6) {
 		if (mode == SAVE_SLOT_READ) {
-			BYTE old_prgRomBank[4], i;
+			BYTE old_prg_rom_bank[4], i;
 
-			save_slot_ele(mode, slot, old_prgRomBank)
+			save_slot_ele(mode, slot, old_prg_rom_bank)
 
 			for (i = 0; i < 4; i++) {
-				m114.prgRomBank[i] = old_prgRomBank[i];
+				m114.prg_rom_bank[i] = old_prg_rom_bank[i];
 			}
 		} else if (mode == SAVE_SLOT_COUNT) {
 			save_slot.tot_size[slot] += sizeof(BYTE) * 4;
 		}
 	} else {
-		save_slot_ele(mode, slot, m114.prgRomBank);
+		save_slot_ele(mode, slot, m114.prg_rom_bank);
 	}
 	extcl_save_mapper_MMC3(mode, slot, fp);
 

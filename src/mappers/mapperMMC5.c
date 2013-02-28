@@ -16,66 +16,64 @@
 #include "save_slot.h"
 
 /* PRG */
-#define prg8kUpdate(slot)\
-	value = mmc5.prgBank[slot];\
+#define prg_8k_update(slot)\
+	value = mmc5.prg_bank[slot];\
 	if (value & 0x80) {\
 		/* modalita' rom */\
-		mmc5.prgRamBank[slot][0] = FALSE;\
-		control_bank_with_AND(0x7F, prgRom8kMax)\
+		mmc5.prg_ram_bank[slot][0] = FALSE;\
+		control_bank_with_AND(0x7F, prg_rom_8k_max)\
 		map_prg_rom_8k(1, slot, value);\
 	} else {\
 		/* modalita' ram */\
-		BYTE prgRamBank;\
-		prgRamBank = prgRamAccess[prgRamMode][value & 0x07];\
-		if (prgRamBank != INVALID) {\
-			mmc5.prgRamBank[slot][0] = TRUE;\
-			mmc5.prgRamBank[slot][1] = prgRamBank << 13;\
+		BYTE bank = prg_ram_access[prg_ram_mode][value & 0x07];\
+		if (bank != INVALID) {\
+			mmc5.prg_ram_bank[slot][0] = TRUE;\
+			mmc5.prg_ram_bank[slot][1] = bank << 13;\
 		}\
 	}
-#define prg16kUpdate()\
-	value = mmc5.prgBank[1];\
+#define prg_16k_update()\
+	value = mmc5.prg_bank[1];\
 	if (value & 0x80) {\
 		/* modalita' rom */\
-		mmc5.prgRamBank[0][0] = mmc5.prgRamBank[1][0] = FALSE;\
+		mmc5.prg_ram_bank[0][0] = mmc5.prg_ram_bank[1][0] = FALSE;\
 		value = (value & 0x7F) >> 1;\
-		control_bank(prgRom16kMax)\
+		control_bank(prg_rom_16k_max)\
 		map_prg_rom_8k(2, 0, value);\
 	} else {\
 		/* modalita' ram */\
-		BYTE prgRamBank;\
-		prgRamBank = prgRamAccess[prgRamMode][value & 0x07];\
-		if (prgRamBank != INVALID) {\
-			mmc5.prgRamBank[0][0] = TRUE;\
-			mmc5.prgRamBank[0][1] = (value & 0x06) << 13;\
+		BYTE bank = prg_ram_access[prg_ram_mode][value & 0x07];\
+		if (bank != INVALID) {\
+			mmc5.prg_ram_bank[0][0] = TRUE;\
+			mmc5.prg_ram_bank[0][1] = (value & 0x06) << 13;\
 		}\
-		prgRamBank = prgRamAccess[prgRamMode][(value + 1) & 0x07];\
-		if (prgRamBank != INVALID) {\
-			mmc5.prgRamBank[1][0] = TRUE;\
-			mmc5.prgRamBank[1][1] = (value & 0x07) << 13;\
+		bank = prg_ram_access[prg_ram_mode][(value + 1) & 0x07];\
+		if (bank != INVALID) {\
+			mmc5.prg_ram_bank[1][0] = TRUE;\
+			mmc5.prg_ram_bank[1][1] = (value & 0x07) << 13;\
 		}\
 	}
-#define prgRom8kUpdate()\
-	value = mmc5.prgBank[3];\
-	mmc5.prgRamBank[3][0] = FALSE;\
-	control_bank_with_AND(0x7F, prgRom8kMax)\
+#define prg_rom_8k_update()\
+	value = mmc5.prg_bank[3];\
+	mmc5.prg_ram_bank[3][0] = FALSE;\
+	control_bank_with_AND(0x7F, prg_rom_8k_max)\
 	map_prg_rom_8k(1, 3, value)
-#define prgRom16kUpdate()\
-	value = (mmc5.prgBank[3] & 0x7F) >> 1;\
-	mmc5.prgRamBank[2][0] = mmc5.prgRamBank[3][0] = FALSE;\
-	control_bank(prgRom16kMax)\
+#define prg_rom_16k_update()\
+	value = (mmc5.prg_bank[3] & 0x7F) >> 1;\
+	mmc5.prg_ram_bank[2][0] = mmc5.prg_ram_bank[3][0] = FALSE;\
+	control_bank(prg_rom_16k_max)\
 	map_prg_rom_8k(2, 2, value)
-#define prgRom32kUpdate()\
-	value = (mmc5.prgBank[3] & 0x7F) >> 2;\
-	mmc5.prgRamBank[0][0] = mmc5.prgRamBank[1][0] = FALSE;\
-	mmc5.prgRamBank[2][0] = mmc5.prgRamBank[3][0] = FALSE;\
-	control_bank(prgRom32kMax)\
+#define prg_rom_32k_update()\
+	value = (mmc5.prg_bank[3] & 0x7F) >> 2;\
+	mmc5.prg_ram_bank[0][0] = mmc5.prg_ram_bank[1][0] = FALSE;\
+	mmc5.prg_ram_bank[2][0] = mmc5.prg_ram_bank[3][0] = FALSE;\
+	control_bank(prg_rom_32k_max)\
 	map_prg_rom_8k(4, 0, value)
-#define prgRamUseBank(slot)\
-	prg.rom_8k[slot] = &prg.ram_plus[mmc5.prgRamBank[slot][1]]
+#define prg_ram_use_bank(slot)\
+	prg.rom_8k[slot] = &prg.ram_plus[mmc5.prg_ram_bank[slot][1]]
 /* CHR */
-#define chr8kUpdate(chrType, slot)\
-	value = mmc5.chrType[slot];\
-	control_bank_with_AND(0x03FF, chrRom8kMax)\
+#define chr_8k_update(chr_type, slot)\
+	value = mmc5.chr_type[slot];\
+	control_bank_with_AND(0x03FF, chr_rom_8k_max)\
 	value <<= 13;\
 	chr.bank_1k[0] = &chr.data[value];\
 	chr.bank_1k[1] = &chr.data[value | 0x0400];\
@@ -85,33 +83,33 @@
 	chr.bank_1k[5] = &chr.data[value | 0x1400];\
 	chr.bank_1k[6] = &chr.data[value | 0x1800];\
 	chr.bank_1k[7] = &chr.data[value | 0x1C00]
-#define chr4kUpdate(chrType, slot, base)\
-	value = mmc5.chrType[slot];\
-	control_bank_with_AND(0x03FF, chrRom4kMax)\
+#define chr_4k_update(chr_type, slot, base)\
+	value = mmc5.chr_type[slot];\
+	control_bank_with_AND(0x03FF, chr_rom_4k_max)\
 	value <<= 12;\
 	chr.bank_1k[base | 0] = &chr.data[value];\
 	chr.bank_1k[base | 1] = &chr.data[value | 0x0400];\
 	chr.bank_1k[base | 2] = &chr.data[value | 0x0800];\
 	chr.bank_1k[base | 3] = &chr.data[value | 0x0C00]
-#define chr2kUpdate(chrType, slot, base)\
-	value = mmc5.chrType[slot];\
-	control_bank_with_AND(0x03FF, chrRom2kMax)\
+#define chr_2k_update(chr_type, slot, base)\
+	value = mmc5.chr_type[slot];\
+	control_bank_with_AND(0x03FF, chr_rom_2k_max)\
 	value <<= 11;\
 	chr.bank_1k[base | 0] = &chr.data[value];\
 	chr.bank_1k[base | 1] = &chr.data[value | 0x0400]
-#define chr1kUpdate(chrType, slot, base)\
-	value = mmc5.chrType[slot];\
-	control_bank_with_AND(0x03FF, chrRom1kMax)\
+#define chr_1k_update(chr_type, slot, base)\
+	value = mmc5.chr_type[slot];\
+	control_bank_with_AND(0x03FF, chr_rom_1k_max)\
 	value <<= 10;\
 	chr.bank_1k[base] = &chr.data[value]
 /* nametables **/
-#define nmtUpdate(bits, slot)\
+#define nmt_update(bits, slot)\
 {\
 	BYTE mode = (value >> bits) & 0x03;\
-	mmc5.nmtMode[slot] = mode;\
-	_nmtUpdate(slot)\
+	mmc5.nmt_mode[slot] = mode;\
+	_nmt_update(slot)\
 }
-#define _nmtUpdate(slot)\
+#define _nmt_update(slot)\
 	switch (mode) {\
 		case MODE0:\
 			ntbl.bank_1k[slot] = &ntbl.data[0];\
@@ -120,43 +118,37 @@
 			ntbl.bank_1k[slot] = &ntbl.data[0x400];\
 			break;\
 		case MODE2:\
-			ntbl.bank_1k[slot] = &mmc5.extRam[0];\
+			ntbl.bank_1k[slot] = &mmc5.ext_ram[0];\
 			break;\
 		case MODE3:\
-			ntbl.bank_1k[slot] = &mmc5.fillTable[0];\
+			ntbl.bank_1k[slot] = &mmc5.fill_table[0];\
 			break;\
 	}
 
-void prgSwap(void);
-void useChrS(void);
-void useChrB(void);
+void prg_swap(void);
+void use_chr_s(void);
+void use_chr_b(void);
 
 enum {
-	PRGRAMNONE,
-	PRGRAM8K,
-	PRGRAM16K,
-	PRGRAM32K,
-	PRGRAM40K,
-	PRGRAM64K,
+	PRG_RAM_NONE,
+	PRG_RAM_8K,
+	PRG_RAM_16K,
+	PRG_RAM_32K,
+	PRG_RAM_40K,
+	PRG_RAM_64K,
 	INVALID,
 	X = INVALID
 };
-enum {
-	MODE0, MODE1, MODE2, MODE3
-};
-enum {
-	CHRS, CHRB
-};
-enum {
-	SPLIT_LEFT, SPLIT_RIGHT = 0x40
-};
+enum { MODE0, MODE1, MODE2, MODE3 };
+enum { CHR_S, CHR_B };
+enum { SPLIT_LEFT, SPLIT_RIGHT = 0x40 };
 
-const BYTE fillerAttrib[4] = {0x00, 0x55, 0xAA, 0xFF};
-WORD prgRom32kMax, prgRom16kMax, prgRom8kMax;
-WORD chrRom8kMax, chrRom4kMax, chrRom2kMax, chrRom1kMax;
-BYTE prgRamMode;
+const BYTE filler_attrib[4] = {0x00, 0x55, 0xAA, 0xFF};
+WORD prg_rom_32k_max, prg_rom_16k_max, prg_rom_8k_max;
+WORD chr_rom_8k_max, chr_rom_4k_max, chr_rom_2k_max, chr_rom_1k_max;
+BYTE prg_ram_mode;
 
-static const BYTE prgRamAccess[6][8] = {
+static const BYTE prg_ram_access[6][8] = {
 	{X,X,X,X,X,X,X,X},
 	{0,0,0,0,X,X,X,X},
 	{0,0,0,0,1,1,1,1},
@@ -166,14 +158,14 @@ static const BYTE prgRamAccess[6][8] = {
 };
 
 void map_init_MMC5(void) {
-	prgRom32kMax = (info.prg_rom_16k_count >> 1) - 1;
-	prgRom16kMax = info.prg_rom_16k_count - 1;
-	prgRom8kMax = info.prg_rom_8k_count - 1;
+	prg_rom_32k_max = (info.prg_rom_16k_count >> 1) - 1;
+	prg_rom_16k_max = info.prg_rom_16k_count - 1;
+	prg_rom_8k_max = info.prg_rom_8k_count - 1;
 
-	chrRom8kMax = info.chr_rom_8k_count - 1;
-	chrRom4kMax = info.chr_rom_4k_count - 1;
-	chrRom2kMax = (info.chr_rom_4k_count << 1) - 1;
-	chrRom1kMax = (info.chr_rom_4k_count << 2) - 1;
+	chr_rom_8k_max = info.chr_rom_8k_count - 1;
+	chr_rom_4k_max = info.chr_rom_4k_count - 1;
+	chr_rom_2k_max = (info.chr_rom_4k_count << 1) - 1;
+	chr_rom_1k_max = (info.chr_rom_4k_count << 2) - 1;
 
 	EXTCL_CPU_WR_MEM(MMC5);
 	EXTCL_CPU_RD_MEM(MMC5);
@@ -194,10 +186,10 @@ void map_init_MMC5(void) {
 
 		memset(&mmc5, 0x00, sizeof(mmc5));
 		memset(&irql2f, 0x00, sizeof(irql2f));
-		mmc5.prgMode = MODE3;
-		mmc5.chrMode = MODE0;
-		mmc5.extMode = MODE0;
-		mmc5.chrLast = CHRS;
+		mmc5.prg_mode = MODE3;
+		mmc5.chr_mode = MODE0;
+		mmc5.ext_mode = MODE0;
+		mmc5.chr_last = CHR_S;
 
 		mmc5.S3.frequency = 1;
 		mmc5.S4.frequency = 1;
@@ -206,18 +198,18 @@ void map_init_MMC5(void) {
 		irql2f.frame_x = 339;
 
 		for (i = 0; i < 4; ++i) {
-			mmc5.prgBank[i] = 0xFF;
+			mmc5.prg_bank[i] = 0xFF;
 		}
 
 		for (i = 0; i < 8; ++i) {
-			mmc5.chrS[i] = i;
+			mmc5.chr_s[i] = i;
 		}
 
 		for (i = 0; i < 4; ++i) {
-			mmc5.chrB[i] = i;
+			mmc5.chr_b[i] = i;
 		}
 
-		useChrS();
+		use_chr_s();
 	} else {
 		mmc5.S3.length.enabled = 0;
 		mmc5.S3.length.value = 0;
@@ -232,24 +224,24 @@ void map_init_MMC5(void) {
 		case EKROM:
 			info.prg_ram_plus_8k_count = 1;
 			info.prg_ram_bat_banks = 1;
-			prgRamMode = PRGRAM8K;
+			prg_ram_mode = PRG_RAM_8K;
 			break;
-		default:
 		case ELROM:
+		default:
 			info.prg_ram_plus_8k_count = FALSE;
 			info.prg_ram_bat_banks = FALSE;
-			prgRamMode = PRGRAMNONE;
+			prg_ram_mode = PRG_RAM_NONE;
 			break;
 		case ETROM:
 			info.prg_ram_plus_8k_count = 2;
 			info.prg_ram_bat_banks = 1;
 			info.prg_ram_bat_start = 0;
-			prgRamMode = PRGRAM16K;
+			prg_ram_mode = PRG_RAM_16K;
 			break;
 		case EWROM:
 			info.prg_ram_plus_8k_count = 4;
 			info.prg_ram_bat_banks = 4;
-			prgRamMode = PRGRAM32K;
+			prg_ram_mode = PRG_RAM_32K;
 			break;
 	}
 }
@@ -309,55 +301,55 @@ void extcl_cpu_wr_mem_MMC5(WORD address, BYTE value) {
 			return;
 		case 0x5100:
 			value &= 0x03;
-			if (value != mmc5.prgMode) {
-				mmc5.prgMode = value;
-				prgSwap();
+			if (value != mmc5.prg_mode) {
+				mmc5.prg_mode = value;
+				prg_swap();
 			}
 			return;
 		case 0x5101:
 			value &= 0x03;
-			if (value != mmc5.chrMode) {
-				mmc5.chrMode = value;
+			if (value != mmc5.chr_mode) {
+				mmc5.chr_mode = value;
 				if ((r2000.size_spr != 16) || !r2001.visible || r2002.vblank) {
-					if (mmc5.chrLast == CHRS) {
-						useChrS();
+					if (mmc5.chr_last == CHR_S) {
+						use_chr_s();
 					} else {
-						useChrB();
+						use_chr_b();
 					}
 				}
 			}
 			return;
 		case 0x5102:
 		case 0x5103:
-			mmc5.prgRamWrite[address & 0x0001] = value & 0x03;
-			if ((mmc5.prgRamWrite[0] == 0x02) && (mmc5.prgRamWrite[1] == 0x01)) {
+			mmc5.prg_ram_write[address & 0x0001] = value & 0x03;
+			if ((mmc5.prg_ram_write[0] == 0x02) && (mmc5.prg_ram_write[1] == 0x01)) {
 				cpu.prg_ram_wr_active = TRUE;
 			} else {
 				cpu.prg_ram_wr_active = FALSE;
 			}
 			return;
 		case 0x5104:
-			mmc5.extMode = value & 0x03;
+			mmc5.ext_mode = value & 0x03;
 			return;
 		case 0x5105:
-			nmtUpdate(0, 0)
-			nmtUpdate(2, 1)
-			nmtUpdate(4, 2)
-			nmtUpdate(6, 3)
+			nmt_update(0, 0)
+			nmt_update(2, 1)
+			nmt_update(4, 2)
+			nmt_update(6, 3)
 			return;
 			/* --------------------------------- PRG bankswitching ---------------------------------*/
 		case 0x5106:
-			mmc5.fillTile = value;
-			memset(&mmc5.fillTable[0], mmc5.fillTile, 0x3C0);
-			memset(&mmc5.fillTable[0x3C0], fillerAttrib[mmc5.fillAttr], 0x40);
+			mmc5.fill_tile = value;
+			memset(&mmc5.fill_table[0], mmc5.fill_tile, 0x3C0);
+			memset(&mmc5.fill_table[0x3C0], filler_attrib[mmc5.fill_attr], 0x40);
 			return;
 		case 0x5107:
-			mmc5.fillAttr = value & 0x03;
-			memset(&mmc5.fillTable[0x3C0], fillerAttrib[mmc5.fillAttr], 0x40);
+			mmc5.fill_attr = value & 0x03;
+			memset(&mmc5.fill_table[0x3C0], filler_attrib[mmc5.fill_attr], 0x40);
 			return;
 		case 0x5113: {
-			BYTE bank;
-			bank = prgRamAccess[prgRamMode][value & 0x07];
+			BYTE bank = prg_ram_access[prg_ram_mode][value & 0x07];
+
 			if (bank != INVALID) {
 				prg.ram_plus_8k = &prg.ram_plus[bank * 0x2000];
 			}
@@ -368,9 +360,9 @@ void extcl_cpu_wr_mem_MMC5(WORD address, BYTE value) {
 		case 0x5116:
 		case 0x5117:
 			address &= 0x0003;
-			if (mmc5.prgBank[address] != value) {
-				mmc5.prgBank[address] = value;
-				prgSwap();
+			if (mmc5.prg_bank[address] != value) {
+				mmc5.prg_bank[address] = value;
+				prg_swap();
 			}
 			return;
 /* --------------------------------- CHR bankswitching ---------------------------------*/
@@ -382,14 +374,15 @@ void extcl_cpu_wr_mem_MMC5(WORD address, BYTE value) {
 		case 0x5125:
 		case 0x5126:
 		case 0x5127: {
-			WORD bank = value | (mmc5.chrHigh << 2);
+			WORD bank = value | (mmc5.chr_high << 2);
+
 			address &= 0x0007;
 
-			if ((mmc5.chrLast != CHRS) || (mmc5.chrS[address] != bank)) {
-				mmc5.chrS[address] = bank;
-				mmc5.chrLast = CHRS;
+			if ((mmc5.chr_last != CHR_S) || (mmc5.chr_s[address] != bank)) {
+				mmc5.chr_s[address] = bank;
+				mmc5.chr_last = CHR_S;
 				if ((r2000.size_spr != 16) || !r2001.visible || r2002.vblank) {
-					useChrS();
+					use_chr_s();
 				}
 			}
 			return;
@@ -398,35 +391,36 @@ void extcl_cpu_wr_mem_MMC5(WORD address, BYTE value) {
 		case 0x5129:
 		case 0x512A:
 		case 0x512B: {
-			WORD bank = value | (mmc5.chrHigh << 2);
+			WORD bank = value | (mmc5.chr_high << 2);
+
 			address &= 0x0003;
 
-			if ((mmc5.chrLast != CHRB) || (mmc5.chrB[address] != bank)) {
-				mmc5.chrB[address] = bank;
-				mmc5.chrLast = CHRB;
+			if ((mmc5.chr_last != CHR_B) || (mmc5.chr_b[address] != bank)) {
+				mmc5.chr_b[address] = bank;
+				mmc5.chr_last = CHR_B;
 				if ((r2000.size_spr != 16) || !r2001.visible || r2002.vblank) {
-					useChrB();
+					use_chr_b();
 				}
 			}
 			return;
 		}
 		case 0x5130:
-			mmc5.chrHigh = (value & 0x03) << 6;
+			mmc5.chr_high = (value & 0x03) << 6;
 			return;
 		case 0x5200:
 			mmc5.split = value & 0x80;
-			mmc5.splitSide = value & 0x40;
-			mmc5.splitStTile = value & 0x1F;
+			mmc5.split_side = value & 0x40;
+			mmc5.split_st_tile = value & 0x1F;
 			return;
 		case 0x5201:
 			if (value >= 240) {
 				value -= 16;
 			}
-			mmc5.splitScrl = value;
+			mmc5.split_scrl = value;
 			return;
 		case 0x5202:
-			control_bank(chrRom4kMax)
-			mmc5.splitBank = value << 12;
+			control_bank(chr_rom_4k_max)
+			mmc5.split_bank = value << 12;
 			return;
 		case 0x5203:
 			irql2f.scanline = value;
@@ -451,16 +445,16 @@ void extcl_cpu_wr_mem_MMC5(WORD address, BYTE value) {
 		default:
 			if ((address >= 0x5C00) && (address < 0x6000)) {
 				address &= 0x03FF;
-				if (mmc5.extMode < MODE2) {
+				if (mmc5.ext_mode < MODE2) {
 					if (!r2002.vblank && r2001.visible && (ppu.screen_y < SCR_LINES)) {
-						mmc5.extRam[address] = value;
+						mmc5.ext_ram[address] = value;
 					} else {
-						mmc5.extRam[address] = 0;
+						mmc5.ext_ram[address] = 0;
 					}
 					return;
 				}
-				if (mmc5.extMode == MODE2) {
-					mmc5.extRam[address] = value;
+				if (mmc5.ext_mode == MODE2) {
+					mmc5.ext_ram[address] = value;
 					return;
 				}
 				return;
@@ -471,7 +465,7 @@ void extcl_cpu_wr_mem_MMC5(WORD address, BYTE value) {
 			 */
 			if (address >= 0x8000) {
 				BYTE index = ((address >> 13) & 0x03);
-				if (mmc5.prgRamBank[index][0] && cpu.prg_ram_wr_active) {
+				if (mmc5.prg_ram_bank[index][0] && cpu.prg_ram_wr_active) {
 					prg.rom_8k[index][address & 0x1FFF] = value;
 				}
 			}
@@ -511,57 +505,58 @@ BYTE extcl_cpu_rd_mem_MMC5(WORD address, BYTE openbus, BYTE before) {
 			if ((address < 0x5C00) || (address >= 0x6000)) {
 				return (openbus);
 			}
-			if (mmc5.extMode < MODE2) {
+			if (mmc5.ext_mode < MODE2) {
 				return (openbus);
 			}
-			if (mmc5.extMode == MODE2) {
-				return (mmc5.extRam[address & 0x03FF]);
+			if (mmc5.ext_mode == MODE2) {
+				return (mmc5.ext_ram[address & 0x03FF]);
 			}
-			return (mmc5.fillTable[address & 0x03FF]);
+			return (mmc5.fill_table[address & 0x03FF]);
 	}
 }
 BYTE extcl_save_mapper_MMC5(BYTE mode, BYTE slot, FILE *fp) {
 	BYTE i;
 
-	save_slot_ele(mode, slot, mmc5.prgMode);
-	save_slot_ele(mode, slot, mmc5.chrMode);
-	save_slot_ele(mode, slot, mmc5.extMode);
-	save_slot_ele(mode, slot, mmc5.nmtMode);
+	save_slot_ele(mode, slot, mmc5.prg_mode);
+	save_slot_ele(mode, slot, mmc5.chr_mode);
+	save_slot_ele(mode, slot, mmc5.ext_mode);
+	save_slot_ele(mode, slot, mmc5.nmt_mode);
 	if (mode == SAVE_SLOT_READ) {
-		for (i = 0; i < LENGTH(mmc5.nmtMode); i++) {
-			BYTE mode = mmc5.nmtMode[i];
-			_nmtUpdate(i)
+		for (i = 0; i < LENGTH(mmc5.nmt_mode); i++) {
+			BYTE mode = mmc5.nmt_mode[i];
+
+			_nmt_update(i)
 		}
 	}
-	save_slot_ele(mode, slot, mmc5.prgRamWrite);
-	save_slot_ele(mode, slot, mmc5.prgBank);
-	for (i = 0; i < LENGTH(mmc5.prgRamBank); i++) {
-		save_slot_int(mode, slot, mmc5.prgRamBank[i][0]);
-		save_slot_int(mode, slot, mmc5.prgRamBank[i][1]);
-		if ((mode == SAVE_SLOT_READ) && (mmc5.prgRamBank[i][0])) {
-			prgRamUseBank(i);
+	save_slot_ele(mode, slot, mmc5.prg_ram_write);
+	save_slot_ele(mode, slot, mmc5.prg_bank);
+	for (i = 0; i < LENGTH(mmc5.prg_ram_bank); i++) {
+		save_slot_int(mode, slot, mmc5.prg_ram_bank[i][0]);
+		save_slot_int(mode, slot, mmc5.prg_ram_bank[i][1]);
+		if ((mode == SAVE_SLOT_READ) && (mmc5.prg_ram_bank[i][0])) {
+			prg_ram_use_bank(i);
 		}
 	}
-	save_slot_ele(mode, slot, mmc5.chrLast);
-	save_slot_ele(mode, slot, mmc5.chrHigh);
-	save_slot_ele(mode, slot, mmc5.chrS);
-	save_slot_ele(mode, slot, mmc5.chrB);
-	save_slot_ele(mode, slot, mmc5.extRam);
-	save_slot_ele(mode, slot, mmc5.fillTile);
-	save_slot_ele(mode, slot, mmc5.fillAttr);
+	save_slot_ele(mode, slot, mmc5.chr_last);
+	save_slot_ele(mode, slot, mmc5.chr_high);
+	save_slot_ele(mode, slot, mmc5.chr_s);
+	save_slot_ele(mode, slot, mmc5.chr_b);
+	save_slot_ele(mode, slot, mmc5.ext_ram);
+	save_slot_ele(mode, slot, mmc5.fill_tile);
+	save_slot_ele(mode, slot, mmc5.fill_attr);
 	if (mode == SAVE_SLOT_READ) {
-		memset(&mmc5.fillTable[0], mmc5.fillTile, 0x3C0);
-		memset(&mmc5.fillTable[0x3C0], fillerAttrib[mmc5.fillAttr], 0x40);
+		memset(&mmc5.fill_table[0], mmc5.fill_tile, 0x3C0);
+		memset(&mmc5.fill_table[0x3C0], filler_attrib[mmc5.fill_attr], 0x40);
 	}
 	save_slot_ele(mode, slot, mmc5.split);
-	save_slot_ele(mode, slot, mmc5.splitStTile);
-	save_slot_ele(mode, slot, mmc5.splitSide);
-	save_slot_ele(mode, slot, mmc5.splitScrl);
-	save_slot_ele(mode, slot, mmc5.splitInReg);
-	save_slot_ele(mode, slot, mmc5.splitX);
-	save_slot_ele(mode, slot, mmc5.splitY);
-	save_slot_ele(mode, slot, mmc5.splitTile);
-	save_slot_ele(mode, slot, mmc5.splitBank);
+	save_slot_ele(mode, slot, mmc5.split_st_tile);
+	save_slot_ele(mode, slot, mmc5.split_side);
+	save_slot_ele(mode, slot, mmc5.split_scrl);
+	save_slot_ele(mode, slot, mmc5.split_in_reg);
+	save_slot_ele(mode, slot, mmc5.split_x);
+	save_slot_ele(mode, slot, mmc5.split_y);
+	save_slot_ele(mode, slot, mmc5.split_tile);
+	save_slot_ele(mode, slot, mmc5.split_bank);
 	save_slot_ele(mode, slot, mmc5.factor);
 	save_slot_ele(mode, slot, mmc5.product);
 
@@ -581,10 +576,10 @@ void extcl_ppu_256_to_319_MMC5(void) {
 		return;
 	};
 
-	if ((mmc5.chrLast == CHRS) || (r2000.size_spr == 16)) {
-		useChrS();
+	if ((mmc5.chr_last == CHR_S) || (r2000.size_spr == 16)) {
+		use_chr_s();
 	} else {
-		useChrB();
+		use_chr_b();
 	}
 }
 void extcl_ppu_320_to_34x_MMC5(void) {
@@ -595,22 +590,22 @@ void extcl_ppu_320_to_34x_MMC5(void) {
 	};
 
 	if (mmc5.split) {
-		mmc5.splitX = 0x1F;
+		mmc5.split_x = 0x1F;
 		if (ppu.screen_y == SCR_LINES - 1) {
-			mmc5.splitY = mmc5.splitScrl - 1;
+			mmc5.split_y = mmc5.split_scrl - 1;
 		} else {
-			if (mmc5.splitY < 239) {
-				mmc5.splitY++;
+			if (mmc5.split_y < 239) {
+				mmc5.split_y++;
 			} else {
-				mmc5.splitY = 0;
+				mmc5.split_y = 0;
 			}
 		}
 	}
 
-	if ((mmc5.chrLast == CHRB) || (r2000.size_spr == 16)) {
-		useChrB();
+	if ((mmc5.chr_last == CHR_B) || (r2000.size_spr == 16)) {
+		use_chr_b();
 	} else {
-		useChrS();
+		use_chr_s();
 	}
 }
 void extcl_after_rd_chr_MMC5(WORD address) {
@@ -621,7 +616,7 @@ void extcl_after_rd_chr_MMC5(WORD address) {
 	 * che lo fosse realmente o meno). In questo modo sono
 	 * che non rimanga settato quando in realta' non serve.
 	 */
-	mmc5.splitInReg = FALSE;
+	mmc5.split_in_reg = FALSE;
 }
 BYTE extcl_rd_chr_MMC5(WORD address) {
 	BYTE value;
@@ -633,61 +628,65 @@ BYTE extcl_rd_chr_MMC5(WORD address) {
 	}
 
 	/* sono nella regione di split? */
-	if (mmc5.split && mmc5.splitInReg) {
-		return (chr.data[mmc5.splitBank + (address & 0x0FFF)]);
+	if (mmc5.split && mmc5.split_in_reg) {
+		return (chr.data[mmc5.split_bank + (address & 0x0FFF)]);
 	}
 
 	/* se non sono nella modalita' 1 esco normalmente */
-	if (mmc5.extMode != MODE1) {
+	if (mmc5.ext_mode != MODE1) {
 		return (chr.bank_1k[address >> 10][address & 0x3FF]);
 	}
 
-	value = (mmc5.extRam[r2006.value & 0x03FF] & 0x3F);
-	control_bank(chrRom4kMax)
-	index = ((value + mmc5.chrHigh) << 12) + (address & 0x0FFF);
+	value = (mmc5.ext_ram[r2006.value & 0x03FF] & 0x3F);
+	control_bank(chr_rom_4k_max)
+	index = ((value + mmc5.chr_high) << 12) + (address & 0x0FFF);
+
 	return (chr.data[index]);
 }
 BYTE extcl_rd_nmt_MMC5(WORD address) {
 	BYTE nmt = address >> 10;
 
-	if ((ntbl.bank_1k[nmt] == mmc5.extRam) && (mmc5.extMode > MODE1)) {
+	if ((ntbl.bank_1k[nmt] == mmc5.ext_ram) && (mmc5.ext_mode > MODE1)) {
 		return (0);
 	}
 
 	if (mmc5.split) {
 		WORD adr = (address & 0x03FF);
+
 		/* attributi */
 		if (adr >= 0x03C0) {
-			mmc5.splitX = (mmc5.splitX + 1) & 0x1F;
+			mmc5.split_x = (mmc5.split_x + 1) & 0x1F;
 
-			mmc5.splitInReg = FALSE;
+			mmc5.split_in_reg = FALSE;
 
-			if (((mmc5.splitSide == SPLIT_LEFT) && (mmc5.splitX <= mmc5.splitStTile))
-			        || ((mmc5.splitSide == SPLIT_RIGHT) && (mmc5.splitX >= mmc5.splitStTile))) {
+			if (((mmc5.split_side == SPLIT_LEFT) && (mmc5.split_x <= mmc5.split_st_tile))
+			        || ((mmc5.split_side == SPLIT_RIGHT) && (mmc5.split_x >= mmc5.split_st_tile))) {
 
-				mmc5.splitTile = ((mmc5.splitY & 0xF8) << 2) | mmc5.splitX;
+				mmc5.split_tile = ((mmc5.split_y & 0xF8) << 2) | mmc5.split_x;
 
-				mmc5.splitInReg = TRUE;
+				mmc5.split_in_reg = TRUE;
 
-				return (fillerAttrib[(mmc5.extRam[0x3C0 | (mmc5.splitTile >> 4 & 0x38)
-				        | (mmc5.splitTile >> 2 & 0x7)]
-				        >> ((mmc5.splitTile >> 4 & 0x4) | (mmc5.splitTile & 0x2))) & 0x3]);
+				return (filler_attrib[(mmc5.ext_ram[0x3C0 | (mmc5.split_tile >> 4 & 0x38)
+				        | (mmc5.split_tile >> 2 & 0x7)]
+				        >> ((mmc5.split_tile >> 4 & 0x4) | (mmc5.split_tile & 0x2))) & 0x3]);
 			}
 		}
 		/* tile */
-		if (mmc5.splitInReg) {
-			return (mmc5.extRam[mmc5.splitTile]);
+		if (mmc5.split_in_reg) {
+			return (mmc5.ext_ram[mmc5.split_tile]);
 		}
 	}
 
-	if (mmc5.extMode != MODE1) {
+	if (mmc5.ext_mode != MODE1) {
 		return (ntbl.bank_1k[nmt][address & 0x3FF]);
 	}
 
 	if ((address & 0x03FF) >= 0x03C0) {
 		BYTE shift_at = (((r2006.value & 0x40) >> 4) | (r2006.value & 0x02));
-		return (((mmc5.extRam[r2006.value & 0x03FF] & 0xC0) >> 6) << shift_at);
+
+		return (((mmc5.ext_ram[r2006.value & 0x03FF] & 0xC0) >> 6) << shift_at);
 	}
+
 	return (ntbl.bank_1k[nmt][address & 0x3FF]);
 }
 void extcl_length_clock_MMC5(void) {
@@ -703,103 +702,103 @@ void extcl_apu_tick_MMC5(void) {
 	square_tick(mmc5.S4, 0)
 }
 
-void prgSwap(void) {
+void prg_swap(void) {
 	BYTE value, i;
 
-	switch (mmc5.prgMode) {
+	switch (mmc5.prg_mode) {
 		case MODE0:
-			if (prgRom32kMax == 0xFFFF) {
+			if (prg_rom_32k_max == 0xFFFF) {
 				break;
 			}
-			prgRom32kUpdate();
+			prg_rom_32k_update();
 			break;
 		case MODE1:
-			if (prgRom16kMax == 0xFFFF) {
+			if (prg_rom_16k_max == 0xFFFF) {
 				break;
 			}
-			prg16kUpdate()
-			prgRom16kUpdate();
+			prg_16k_update()
+			prg_rom_16k_update();
 			break;
 		case MODE2:
-			if (prgRom16kMax != 0xFFFF) {
-				prg16kUpdate()
+			if (prg_rom_16k_max != 0xFFFF) {
+				prg_16k_update()
 			}
-			prg8kUpdate(2)
-			prgRom8kUpdate();
+			prg_8k_update(2)
+			prg_rom_8k_update();
 			break;
 		case MODE3:
-			prg8kUpdate(0)
-			prg8kUpdate(1)
-			prg8kUpdate(2)
-			prgRom8kUpdate();
+			prg_8k_update(0)
+			prg_8k_update(1)
+			prg_8k_update(2)
+			prg_rom_8k_update();
 			break;
 	}
 
 	map_prg_rom_8k_update();
 
 	for (i = 0; i < 4; i++) {
-		if (mmc5.prgRamBank[i][0]) {
-			prgRamUseBank(i);
+		if (mmc5.prg_ram_bank[i][0]) {
+			prg_ram_use_bank(i);
 		} else {
-			mmc5.prgRamBank[i][1] = 0;
+			mmc5.prg_ram_bank[i][1] = 0;
 		}
 	}
 }
-void useChrS(void) {
+void use_chr_s(void) {
 	DBWORD value;
 
-	switch (mmc5.chrMode) {
+	switch (mmc5.chr_mode) {
 		case MODE0:
-			chr8kUpdate(chrS, 7);
+			chr_8k_update(chr_s, 7);
 			break;
 		case MODE1:
-			chr4kUpdate(chrS, 3, 0);
-			chr4kUpdate(chrS, 7, 4);
+			chr_4k_update(chr_s, 3, 0);
+			chr_4k_update(chr_s, 7, 4);
 			break;
 		case MODE2:
-			chr2kUpdate(chrS, 1, 0);
-			chr2kUpdate(chrS, 3, 2);
-			chr2kUpdate(chrS, 5, 4);
-			chr2kUpdate(chrS, 7, 6);
+			chr_2k_update(chr_s, 1, 0);
+			chr_2k_update(chr_s, 3, 2);
+			chr_2k_update(chr_s, 5, 4);
+			chr_2k_update(chr_s, 7, 6);
 			break;
 		case MODE3:
-			chr1kUpdate(chrS, 0, 0);
-			chr1kUpdate(chrS, 1, 1);
-			chr1kUpdate(chrS, 2, 2);
-			chr1kUpdate(chrS, 3, 3);
-			chr1kUpdate(chrS, 4, 4);
-			chr1kUpdate(chrS, 5, 5);
-			chr1kUpdate(chrS, 6, 6);
-			chr1kUpdate(chrS, 7, 7);
+			chr_1k_update(chr_s, 0, 0);
+			chr_1k_update(chr_s, 1, 1);
+			chr_1k_update(chr_s, 2, 2);
+			chr_1k_update(chr_s, 3, 3);
+			chr_1k_update(chr_s, 4, 4);
+			chr_1k_update(chr_s, 5, 5);
+			chr_1k_update(chr_s, 6, 6);
+			chr_1k_update(chr_s, 7, 7);
 			break;
 	}
 }
-void useChrB(void) {
+void use_chr_b(void) {
 	DBWORD value;
 
-	switch (mmc5.chrMode) {
+	switch (mmc5.chr_mode) {
 		case MODE0:
-			chr8kUpdate(chrB, 3);
+			chr_8k_update(chr_b, 3);
 			break;
 		case MODE1:
-			chr4kUpdate(chrB, 3, 0);
-			chr4kUpdate(chrB, 3, 4);
+			chr_4k_update(chr_b, 3, 0);
+			chr_4k_update(chr_b, 3, 4);
 			break;
 		case MODE2:
-			chr2kUpdate(chrB, 1, 0);
-			chr2kUpdate(chrB, 3, 2);
-			chr2kUpdate(chrB, 1, 4);
-			chr2kUpdate(chrB, 3, 6);
+			chr_2k_update(chr_b, 1, 0);
+			chr_2k_update(chr_b, 3, 2);
+			chr_2k_update(chr_b, 1, 4);
+			chr_2k_update(chr_b, 3, 6);
 			break;
 		case MODE3:
-			chr1kUpdate(chrB, 0, 0);
-			chr1kUpdate(chrB, 1, 1);
-			chr1kUpdate(chrB, 2, 2);
-			chr1kUpdate(chrB, 3, 3);
-			chr1kUpdate(chrB, 0, 4);
-			chr1kUpdate(chrB, 1, 5);
-			chr1kUpdate(chrB, 2, 6);
-			chr1kUpdate(chrB, 3, 7);
+			chr_1k_update(chr_b, 0, 0);
+			chr_1k_update(chr_b, 1, 1);
+			chr_1k_update(chr_b, 2, 2);
+			chr_1k_update(chr_b, 3, 3);
+			chr_1k_update(chr_b, 0, 4);
+			chr_1k_update(chr_b, 1, 5);
+			chr_1k_update(chr_b, 2, 6);
+			chr_1k_update(chr_b, 3, 7);
 			break;
 	}
 }

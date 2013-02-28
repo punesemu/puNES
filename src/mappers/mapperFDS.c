@@ -108,9 +108,6 @@ void extcl_cpu_every_cycle_FDS(void) {
 	 */
 	if (fds.drive.gap_ended) {
 		if (fds.drive.irq_disk_enabled) {
-#ifndef RELEASE
-			//fprintf(stderr, "qui ed ora\n");
-#endif
 			fds.drive.irq_disk_high = 0x01;
 			irq.high |= FDS_DISK_IRQ;
 		}
@@ -136,15 +133,6 @@ void extcl_cpu_every_cycle_FDS(void) {
 
 				fds_diff_op(FDS_OP_WRITE, position, fds.drive.data_to_write);
 			}
-#ifndef RELEASE
-			/*fprintf(stderr, "data : [%5d 0x%04X 0x%04X] 0x%04X 0x%02X %d\n",
-					fds.drive.disk_position - 2,
-			        prima,
-			        (*src),
-			        data,
-			        fds.drive.data_to_write,
-			        fds.drive.crc_char);*/
-#endif
 			fds.info.last_operation = FDS_OP_WRITE;
 		} else if (!fds.info.last_operation) {
 			fds.info.last_operation = FDS_OP_READ;
@@ -153,17 +141,10 @@ void extcl_cpu_every_cycle_FDS(void) {
 
 	if (data != FDS_DISK_GAP) {
 		fds.drive.gap_ended = TRUE;
-#ifndef RELEASE
-		//fprintf(stderr, "gap ended : [%5d 0x%04X 0x%04X]\n", fds.drive.disk_position,
-		//		fds.side.data[fds.drive.disk_position], data);
-#endif
 	}
 
 	if (fds.drive.crc_char && !(--fds.drive.crc_char)) {
 		fds.drive.gap_ended = fds.drive.crc_control = FALSE;
-#ifndef RELEASE
-		//fprintf(stderr, "gap ended to false : %d\n", irq.high);
-#endif
 	}
 
 	if (!fds.drive.drive_ready) {

@@ -12,18 +12,18 @@
 
 enum {
 	SA0036 = 2,
-	SA0037 = 3,
-	SA8259A = 4,
-	SA8259B = 5,
-	SA8259C = 6,
-	SA8259D = 7,
-	TCA01 = 8,
-	TCU01 = 9,
-	TCU02 = 10,
-	SA72007 = 11,
-	SA72008 = 12,
-	SA74374A = 13,
-	SA74374B = 14,
+	SA0037,
+	SA8259A,
+	SA8259B,
+	SA8259C,
+	SA8259D,
+	TCA01,
+	TCU01,
+	TCU02,
+	SA72007,
+	SA72008,
+	SA74374A,
+	SA74374B,
 };
 
 struct _sa8259 {
@@ -35,7 +35,7 @@ struct _tcu02 {
 } tcu02;
 struct _sa74374x {
 	BYTE reg;
-	BYTE chrRom8kBank;
+	BYTE chr_rom_8k_bank;
 } sa74374x;
 
 static const char pokeriiichr[2][40] = {

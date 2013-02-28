@@ -11,11 +11,11 @@
 #include "common.h"
 
 struct _kasing {
-	BYTE prgMode;
-	BYTE prgHigh;
-	WORD prgRomBank[4];
-	BYTE chrHigh;
-	WORD chrRomBank[8];
+	BYTE prg_mode;
+	BYTE prg_high;
+	WORD prg_rom_bank[4];
+	BYTE chr_high;
+	WORD chr_rom_bank[8];
 } kasing;
 
 void map_init_Kasing(void);

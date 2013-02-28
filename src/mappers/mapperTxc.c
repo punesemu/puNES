@@ -12,15 +12,15 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-WORD prgRom32kMax, prgRom8kMax, prgRom8kBeforeLast, chrRom8kMax, chrRom1kMax;
+WORD prg_rom_32k_max, prg_rom_8k_max, prg_rom_8k_before_last, chr_rom_8k_max, chr_rom_1k_max;
 BYTE type;
 
 void map_init_Txc(BYTE model) {
-	prgRom32kMax = (info.prg_rom_16k_count >> 1) - 1;
-	prgRom8kMax = info.prg_rom_8k_count - 1;
-	chrRom1kMax = info.chr_rom_1k_count - 1;
-	chrRom8kMax = info.chr_rom_8k_count - 1;
-	prgRom8kBeforeLast = info.prg_rom_8k_count - 2;
+	prg_rom_32k_max = (info.prg_rom_16k_count >> 1) - 1;
+	prg_rom_8k_max = info.prg_rom_8k_count - 1;
+	chr_rom_1k_max = info.chr_rom_1k_count - 1;
+	chr_rom_8k_max = info.chr_rom_8k_count - 1;
+	prg_rom_8k_before_last = info.prg_rom_8k_count - 2;
 
 	switch (model) {
 		case TXCTW:
@@ -40,7 +40,7 @@ void map_init_Txc(BYTE model) {
 			if (info.reset >= HARD) {
 				memset(&mmc3, 0x00, sizeof(mmc3));
 				/* sembra proprio che parta in questa modalita' */
-				mmc3.prgRomCfg = 0x02;
+				mmc3.prg_rom_cfg = 0x02;
 				map_prg_rom_8k(4, 0, 0);
 			}
 
@@ -62,7 +62,7 @@ void map_init_Txc(BYTE model) {
 
 			if (info.reset >= HARD) {
 				memset(&t22211x, 0x00, sizeof(t22211x));
-				if (prgRom32kMax != 0xFFFF) {
+				if (prg_rom_32k_max != 0xFFFF) {
 					map_prg_rom_8k(4, 0, 0);
 				}
 			}
@@ -83,7 +83,7 @@ void extcl_cpu_wr_mem_Txc_tw(WORD address, BYTE value) {
 	}
 
 	value = (value >> 4) | value;
-	control_bank(prgRom32kMax)
+	control_bank(prg_rom_32k_max)
 	map_prg_rom_8k(4, 0, value);
 	map_prg_rom_8k_update();
 }
@@ -100,9 +100,9 @@ void extcl_cpu_wr_mem_Txc_t22211x(WORD address, BYTE value) {
 		return;
 	}
 
-	if (prgRom32kMax != 0xFFFF) {
+	if (prg_rom_32k_max != 0xFFFF) {
 		value = t22211x.reg[2] >> 2;
-		control_bank(prgRom32kMax)
+		control_bank(prg_rom_32k_max)
 		map_prg_rom_8k(4, 0, value);
 		map_prg_rom_8k_update();
 	}
@@ -112,12 +112,12 @@ void extcl_cpu_wr_mem_Txc_t22211x(WORD address, BYTE value) {
 
 		if (type == T22211B) {
 			value = (((save ^ t22211x.reg[2]) >> 3) & 0x02)
-			        		| (((save ^ t22211x.reg[2]) >> 5) & 0x01);
+			        | (((save ^ t22211x.reg[2]) >> 5) & 0x01);
 		} else {
 			value = t22211x.reg[2];
 		}
 
-		control_bank(chrRom8kMax)
+		control_bank(chr_rom_8k_max)
 		bank = value << 13;
 
 		chr.bank_1k[0] = &chr.data[bank];

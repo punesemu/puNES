@@ -26,7 +26,7 @@ enum {
 };
 
 struct _ss8806 {
-	BYTE chrRomBank[8];
+	BYTE chr_rom_bank[8];
 	BYTE enabled;
 	WORD mask;
 	WORD reload;

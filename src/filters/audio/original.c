@@ -173,7 +173,7 @@ SWORD mixer_original_Namco_N163(SWORD mixer) {
 	BYTE i;
 	SWORD a = 0;
 
-	for (i = n163.sndChStart; i < 8; i++) {
+	for (i = n163.snd_ch_start; i < 8; i++) {
 		if (n163.ch[i].active) {
 			a += ((n163.ch[i].output << 1) * (n163.ch[i].volume >> 2));
 		}

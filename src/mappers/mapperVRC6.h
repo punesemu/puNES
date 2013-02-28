@@ -27,7 +27,7 @@ typedef struct {
 /* ------------------------------------------------------- */
 /* */ BYTE clocked;                                     /* */
 /* ------------------------------------------------------- */
-} _vrc6Square;
+} _vrc6_square;
 typedef struct {
 	BYTE enabled;
 	BYTE accumulator;
@@ -42,7 +42,7 @@ typedef struct {
 /* ------------------------------------------------------- */
 /* */ BYTE clocked;                                     /* */
 /* ------------------------------------------------------- */
-} _vrc6Saw;
+} _vrc6_saw;
 struct _vrc6 {
 	BYTE enabled;
 	BYTE reload;
@@ -51,8 +51,8 @@ struct _vrc6 {
 	BYTE count;
 	BYTE delay;
 	WORD prescaler;
-	_vrc6Square S3, S4;
-	_vrc6Saw saw;
+	_vrc6_square S3, S4;
+	_vrc6_saw saw;
 } vrc6;
 
 void map_init_VRC6(BYTE revision);

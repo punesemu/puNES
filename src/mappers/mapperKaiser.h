@@ -23,7 +23,7 @@ struct _ks202 {
 	WORD reload;
 	BYTE delay;
 	BYTE reg;
-	BYTE *prgRamRd;
+	BYTE *prg_ram_rd;
 } ks202;
 struct _ks7022 {
 	BYTE reg;

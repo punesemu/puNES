@@ -12,8 +12,8 @@
 
 struct _m205 {
 	BYTE reg;
-	WORD prgmap[4];
-	WORD chrmap[8];
+	WORD prg_map[4];
+	WORD chr_map[8];
 } m205;
 
 void map_init_205(void);

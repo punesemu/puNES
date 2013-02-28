@@ -152,7 +152,7 @@
 #define wave2_8pi(e)	( (e) << ( 2 + PG_BITS - SLOT_AMP_BITS ))
 #endif
 
-enum {OPLL_VRC7_TONE=0};
+enum { OPLL_VRC7_TONE = 0 };
 /* Definition of envelope mode */
 enum {
 	SETTLE,

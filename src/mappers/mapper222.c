@@ -13,11 +13,11 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-WORD prgRom8kMax, chrRom1kMax;
+WORD prg_rom_8k_max, chr_rom_1k_max;
 
 void map_init_222(void) {
-	prgRom8kMax = info.prg_rom_8k_count - 1;
-	chrRom1kMax = info.chr_rom_1k_count - 1;
+	prg_rom_8k_max = info.prg_rom_8k_count - 1;
+	chr_rom_1k_max = info.chr_rom_1k_count - 1;
 
 	EXTCL_CPU_WR_MEM(222);
 	EXTCL_SAVE_MAPPER(222);
@@ -40,7 +40,7 @@ void map_init_222(void) {
 void extcl_cpu_wr_mem_222(WORD address, BYTE value) {
 	switch (address & 0xF003) {
 		case 0x8000:
-			control_bank(prgRom8kMax)
+			control_bank(prg_rom_8k_max)
 			map_prg_rom_8k(1, 0, value);
 			map_prg_rom_8k_update();
 			return;
@@ -52,40 +52,40 @@ void extcl_cpu_wr_mem_222(WORD address, BYTE value) {
 			}
 			return;
 		case 0xA000:
-			control_bank(prgRom8kMax)
+			control_bank(prg_rom_8k_max)
 			map_prg_rom_8k(1, 1, value);
 			map_prg_rom_8k_update();
 			return;
 		case 0xB000:
-			control_bank(chrRom1kMax)
+			control_bank(chr_rom_1k_max)
 			chr.bank_1k[0] = &chr.data[value << 10];
 			return;
 		case 0xB002:
-			control_bank(chrRom1kMax)
+			control_bank(chr_rom_1k_max)
 			chr.bank_1k[1] = &chr.data[value << 10];
 			return;
 		case 0xC000:
-			control_bank(chrRom1kMax)
+			control_bank(chr_rom_1k_max)
 			chr.bank_1k[2] = &chr.data[value << 10];
 			return;
 		case 0xC002:
-			control_bank(chrRom1kMax)
+			control_bank(chr_rom_1k_max)
 			chr.bank_1k[3] = &chr.data[value << 10];
 			return;
 		case 0xD000:
-			control_bank(chrRom1kMax)
+			control_bank(chr_rom_1k_max)
 			chr.bank_1k[4] = &chr.data[value << 10];
 			return;
 		case 0xD002:
-			control_bank(chrRom1kMax)
+			control_bank(chr_rom_1k_max)
 			chr.bank_1k[5] = &chr.data[value << 10];
 			return;
 		case 0xE000:
-			control_bank(chrRom1kMax)
+			control_bank(chr_rom_1k_max)
 			chr.bank_1k[6] = &chr.data[value << 10];
 			return;
 		case 0xE002:
-			control_bank(chrRom1kMax)
+			control_bank(chr_rom_1k_max)
 			chr.bank_1k[7] = &chr.data[value << 10];
 			return;
 		case 0xF000:

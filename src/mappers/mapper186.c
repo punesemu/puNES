@@ -12,12 +12,12 @@
 #include "cpu.h"
 #include "save_slot.h"
 
-WORD prgRom16kMax, prgRom8kMax, chrRom1kMax;
+WORD prg_rom_16k_max, prg_rom_8k_max, chr_rom_1k_max;
 
 void map_init_186(void) {
-	prgRom16kMax = info.prg_rom_16k_count - 1;
-	prgRom8kMax = info.prg_rom_8k_count - 1;
-	chrRom1kMax = info.chr_rom_1k_count - 1;
+	prg_rom_16k_max = info.prg_rom_16k_count - 1;
+	prg_rom_8k_max = info.prg_rom_8k_count - 1;
+	chr_rom_1k_max = info.chr_rom_1k_count - 1;
 
 	EXTCL_CPU_WR_MEM(186);
 	EXTCL_CPU_RD_MEM(186);
@@ -32,7 +32,7 @@ void map_init_186(void) {
 
 	if (info.reset >= HARD) {
 		memset(&m186, 0x00, sizeof(m186));
-		m186.prgRamBank2 = &prg.rom[0];
+		m186.prg_ram_bank2 = &prg.rom[0];
 		map_prg_rom_8k(2, 0, 0);
 		map_prg_rom_8k(2, 2, 0);
 	}
@@ -50,11 +50,11 @@ void extcl_cpu_wr_mem_186(WORD address, BYTE value) {
 	switch (address & 0x0001) {
 		case 0x0000:
 			value >>= 6;
-			control_bank(prgRom8kMax)
-			m186.prgRamBank2 = &prg.rom[value << 13];
+			control_bank(prg_rom_8k_max)
+			m186.prg_ram_bank2 = &prg.rom[value << 13];
 			return;
 		case 0x0001:
-			control_bank(prgRom16kMax)
+			control_bank(prg_rom_16k_max)
 			map_prg_rom_8k(2, 0, value);
 			map_prg_rom_8k_update();
 			return;
@@ -84,13 +84,13 @@ BYTE extcl_cpu_rd_mem_186(WORD address, BYTE openbus, BYTE before) {
 
 	/* mi mancano informazioni per far funzionare questa mapper */
 	if (address > 0x5FFF) {
-		return (m186.prgRamBank2[address & 0x1FFF]);
+		return (m186.prg_ram_bank2[address & 0x1FFF]);
 	}
 
 	return (openbus);
 }
 BYTE extcl_save_mapper_186(BYTE mode, BYTE slot, FILE *fp) {
-	save_slot_pos(mode, slot, prg.rom, m186.prgRamBank2);
+	save_slot_pos(mode, slot, prg.rom, m186.prg_ram_bank2);
 
 	return (EXIT_OK);
 }

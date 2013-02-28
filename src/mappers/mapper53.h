@@ -12,7 +12,7 @@
 
 struct _m53 {
 	BYTE reg[2];
-	BYTE prg6000;
+	BYTE prg_6000;
 } m53;
 
 void map_init_53(void);

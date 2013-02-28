@@ -11,12 +11,12 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
-WORD prgRom16kMax, prgRom8kMax, chrRom4kMax;
+WORD prg_rom_16k_max, prg_rom_8k_max, chr_rom_4k_max;
 
 void map_init_MMC2and4(void) {
-	prgRom16kMax = info.prg_rom_16k_count - 1;
-	prgRom8kMax = info.prg_rom_8k_count - 1;
-	chrRom4kMax = info.chr_rom_4k_count - 1;
+	prg_rom_16k_max = info.prg_rom_16k_count - 1;
+	prg_rom_8k_max = info.prg_rom_8k_count - 1;
+	chr_rom_4k_max = info.chr_rom_4k_count - 1;
 
 	EXTCL_CPU_WR_MEM(MMC2and4);
 	EXTCL_SAVE_MAPPER(MMC2and4);
@@ -43,29 +43,29 @@ void extcl_cpu_wr_mem_MMC2and4(WORD address, BYTE value) {
 		case 0xA000:
 			if (info.mapper == 9) {
 				/* MMC2 */
-				control_bank_with_AND(0x0F, prgRom8kMax)
+				control_bank_with_AND(0x0F, prg_rom_8k_max)
 				map_prg_rom_8k(1, 0, value);
 			} else {
 				/* MMC4 */
-				control_bank_with_AND(0x0F, prgRom16kMax)
+				control_bank_with_AND(0x0F, prg_rom_16k_max)
 				map_prg_rom_8k(2, 0, value);
 			}
 			map_prg_rom_8k_update();
 			return;
 		case 0xB000:
-			control_bank_with_AND(0x1F, chrRom4kMax)
+			control_bank_with_AND(0x1F, chr_rom_4k_max)
 			mmc2and4.regs[0] = value;
 			break;
 		case 0xC000:
-			control_bank_with_AND(0x1F, chrRom4kMax)
+			control_bank_with_AND(0x1F, chr_rom_4k_max)
 			mmc2and4.regs[1] = value;
 			break;
 		case 0xD000:
-			control_bank_with_AND(0x1F, chrRom4kMax)
+			control_bank_with_AND(0x1F, chr_rom_4k_max)
 			mmc2and4.regs[2] = value;
 			break;
 		case 0xE000:
-			control_bank_with_AND(0x1F, chrRom4kMax)
+			control_bank_with_AND(0x1F, chr_rom_4k_max)
 			mmc2and4.regs[3] = value;
 			break;
 		case 0xF000:
@@ -91,6 +91,7 @@ BYTE extcl_save_mapper_MMC2and4(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, mmc2and4.regs);
 	save_slot_ele(mode, slot, mmc2and4.latch0);
 	save_slot_ele(mode, slot, mmc2and4.latch1);
+
 	return (EXIT_OK);
 }
 void extcl_after_rd_chr_MMC2and4(WORD address) {

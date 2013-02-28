@@ -12,14 +12,14 @@
 #include "cpu.h"
 #include "save_slot.h"
 
-WORD prgRom16kMax, prgRom8kMax, chrRom8kMax, chrRom4kMax, chrRom1kMax;
+WORD prg_rom_16k_max, prg_rom_8k_max, chr_rom_8k_max, chr_rom_4k_max, chr_rom_1k_max;
 
 void map_init_Kaiser(BYTE model) {
-	prgRom16kMax = info.prg_rom_16k_count - 1;
-	prgRom8kMax = info.prg_rom_8k_count - 1;
-	chrRom8kMax = info.chr_rom_8k_count - 1;
-	chrRom4kMax = info.chr_rom_4k_count - 1;
-	chrRom1kMax = info.chr_rom_1k_count - 1;
+	prg_rom_16k_max = info.prg_rom_16k_count - 1;
+	prg_rom_8k_max = info.prg_rom_8k_count - 1;
+	chr_rom_8k_max = info.chr_rom_8k_count - 1;
+	chr_rom_4k_max = info.chr_rom_4k_count - 1;
+	chr_rom_1k_max = info.chr_rom_1k_count - 1;
 
 	switch (model) {
 		case KS202:
@@ -44,7 +44,7 @@ void map_init_Kaiser(BYTE model) {
 
 			if (info.reset >= HARD) {
 				memset(&ks202, 0x00, sizeof(ks202));
-				ks202.prgRamRd = &prg.rom[0];
+				ks202.prg_ram_rd = &prg.rom[0];
 			}
 			break;
 		case KS7058:
@@ -105,14 +105,14 @@ void extcl_cpu_wr_mem_Kaiser_ks202(WORD address, BYTE value) {
 				case 1:
 				case 2: {
 					value = (mapper.rom_map_to[slot] & 0x10) | (value & 0x0F);
-					control_bank(prgRom8kMax)
+					control_bank(prg_rom_8k_max)
 					map_prg_rom_8k(1, slot, value);
 					map_prg_rom_8k_update();
 					break;
 				}
 				case 3:
-					control_bank(prgRom8kMax)
-					ks202.prgRamRd = &prg.rom[value << 13];
+					control_bank(prg_rom_8k_max)
+					ks202.prg_ram_rd = &prg.rom[value << 13];
 					break;
 			}
 
@@ -121,7 +121,7 @@ void extcl_cpu_wr_mem_Kaiser_ks202(WORD address, BYTE value) {
 					address &= 0x0003;
 					if (address < 3) {
 						value = (save & 0x10) | (mapper.rom_map_to[address] & 0x0F);
-						control_bank(prgRom8kMax)
+						control_bank(prg_rom_8k_max)
 						map_prg_rom_8k(1, address, value);
 						map_prg_rom_8k_update();
 					}
@@ -135,7 +135,7 @@ void extcl_cpu_wr_mem_Kaiser_ks202(WORD address, BYTE value) {
 					break;
 				case 0x0C00:
 					value = save;
-					control_bank(chrRom1kMax)
+					control_bank(chr_rom_1k_max)
 					chr.bank_1k[address & 0x0007] = &chr.data[value << 10];
 					break;
 			}
@@ -148,7 +148,7 @@ BYTE extcl_cpu_rd_mem_Kaiser_ks202(WORD address, BYTE openbus, BYTE before) {
 		return (openbus);
 	}
 
-	return (ks202.prgRamRd[address & 0x1FFF]);
+	return (ks202.prg_ram_rd[address & 0x1FFF]);
 }
 BYTE extcl_save_mapper_Kaiser_ks202(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, ks202.enabled);
@@ -156,10 +156,9 @@ BYTE extcl_save_mapper_Kaiser_ks202(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, ks202.reload);
 	save_slot_ele(mode, slot, ks202.delay);
 	save_slot_ele(mode, slot, ks202.reg);
-	save_slot_pos(mode, slot, prg.rom, ks202.prgRamRd);
+	save_slot_pos(mode, slot, prg.rom, ks202.prg_ram_rd);
 
 	return (EXIT_OK);
-
 }
 void extcl_cpu_every_cycle_Kaiser_ks202(void) {
 	if (ks202.delay && !(--ks202.delay)) {
@@ -181,7 +180,7 @@ void extcl_cpu_wr_mem_Kaiser_ks7058(WORD address, BYTE value) {
 
 	switch (address & 0xF080) {
 		case 0xF000:
-			control_bank(chrRom4kMax)
+			control_bank(chr_rom_4k_max)
 			bank = value << 12;
 			chr.bank_1k[0] = &chr.data[bank];
 			chr.bank_1k[1] = &chr.data[bank | 0x0400];
@@ -189,7 +188,7 @@ void extcl_cpu_wr_mem_Kaiser_ks7058(WORD address, BYTE value) {
 			chr.bank_1k[3] = &chr.data[bank | 0x0C00];
 			return;
 		case 0xF080:
-			control_bank(chrRom4kMax)
+			control_bank(chr_rom_4k_max)
 			bank = value << 12;
 			chr.bank_1k[4] = &chr.data[bank];
 			chr.bank_1k[5] = &chr.data[bank | 0x0400];
@@ -218,13 +217,13 @@ BYTE extcl_cpu_rd_mem_Kaiser_ks7022(WORD address, BYTE openbus, BYTE before) {
 		BYTE value = ks7022.reg;
 		DBWORD bank;
 
-		control_bank(prgRom16kMax)
+		control_bank(prg_rom_16k_max)
 		map_prg_rom_8k(2, 0, value);
 		map_prg_rom_8k(2, 2, value);
 		map_prg_rom_8k_update();
 
 		value = ks7022.reg;
-		control_bank(chrRom8kMax)
+		control_bank(chr_rom_8k_max)
 		bank = value << 13;
 		chr.bank_1k[0] = &chr.data[bank];
 		chr.bank_1k[1] = &chr.data[bank | 0x0400];
@@ -244,5 +243,4 @@ BYTE extcl_save_mapper_Kaiser_ks7022(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, ks7022.reg);
 
 	return (EXIT_OK);
-
 }

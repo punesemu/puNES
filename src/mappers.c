@@ -173,7 +173,7 @@ BYTE map_init(WORD mapper_type) {
 			map_init_58();
 			break;
 		case 60:
-			if (info.mapper_type == M60VT5201) {
+			if (info.mapper_type == M60_VT5201) {
 				map_init_60_vt5201();
 			} else {
 				map_init_60();
@@ -412,7 +412,7 @@ BYTE map_init(WORD mapper_type) {
 				/* questa e' la mappers 179 in nestopia */
 				map_init_Hen(info.mapper_type);
 			} else {
-				map_init_Hen(HEN177);
+				map_init_Hen(HEN_177);
 			}
 			break;
 		case 178:
@@ -435,7 +435,7 @@ BYTE map_init(WORD mapper_type) {
 			map_init_Sunsoft(SUN1);
 			break;
 		case 185:
-			map_init_CNROM(CNROMCNFL);
+			map_init_CNROM(CNROM_CNFL);
 			break;
 		case 186:
 			map_init_186();

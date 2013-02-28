@@ -11,9 +11,9 @@
 #include "common.h"
 
 enum {
-	M116TYPEA = 2,
-	M116TYPEB,
-	M116TYPEC
+	M116_TYPE_A = 2,
+	M116_TYPE_B,
+	M116_TYPE_C
 };
 
 struct _m166 {
@@ -37,21 +37,21 @@ struct _m166 {
 		BYTE padding[2];
 	} mode2;
 
-	WORD prgmap[4];
-	WORD chrmap[8];
-	BYTE chrRam[0x2000];
+	WORD prg_map[4];
+	WORD chr_map[8];
+	BYTE chr_ram[0x2000];
 } m116;
 
 void map_init_116(void);
 
-void extcl_cpu_wr_mem_116_TypeA(WORD address, BYTE value);
-BYTE extcl_save_mapper_116_TypeA(BYTE mode, BYTE slot, FILE *fp);
+void extcl_cpu_wr_mem_116_type_A(WORD address, BYTE value);
+BYTE extcl_save_mapper_116_type_A(BYTE mode, BYTE slot, FILE *fp);
 
-void extcl_cpu_wr_mem_116_TypeB(WORD address, BYTE value);
-BYTE extcl_save_mapper_116_TypeB(BYTE mode, BYTE slot, FILE *fp);
-void extcl_wr_chr_116_TypeB(WORD address, BYTE value);
+void extcl_cpu_wr_mem_116_type_B(WORD address, BYTE value);
+BYTE extcl_save_mapper_116_type_B(BYTE mode, BYTE slot, FILE *fp);
+void extcl_wr_chr_116_type_B(WORD address, BYTE value);
 
-void extcl_cpu_wr_mem_116_TypeC(WORD address, BYTE value);
-BYTE extcl_save_mapper_116_TypeC(BYTE mode, BYTE slot, FILE *fp);
+void extcl_cpu_wr_mem_116_type_C(WORD address, BYTE value);
+BYTE extcl_save_mapper_116_type_C(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPER116_H_ */

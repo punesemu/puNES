@@ -11,9 +11,9 @@
 #include "common.h"
 
 struct _m114 {
-	BYTE prgRomSwitch;
-	BYTE mmc3CtrlChange;
-	WORD prgRomBank[4];
+	BYTE prg_rom_switch;
+	BYTE mmc3_ctrl_change;
+	WORD prg_rom_bank[4];
 } m114;
 
 void map_init_114(void);

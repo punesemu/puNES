@@ -13,7 +13,7 @@
 #include "save_slot.h"
 
 /* vecchia versione
-#define vcr6SquareTick(square)\
+#define vcr6_square_tick(square)\
 	vrc6.square.output = 0;\
 	if (--vrc6.square.timer == 0) {\
 		vrc6.square.step = (vrc6.square.step + 1) & 0x0F;\
@@ -26,7 +26,7 @@
 		}\
 	}
 */
-#define vcr6SquareTick(square)\
+#define vcr6_square_tick(square)\
 	if (--vrc6.square.timer == 0) {\
 		vrc6.square.step = (vrc6.square.step + 1) & 0x0F;\
 		vrc6.square.timer = vrc6.square.frequency + 1;\
@@ -42,7 +42,7 @@
 		vrc6.square.output = 0;\
 	}
 
-#define savestateSquareVrc6(square)\
+#define vrc6_square_saveslot(square)\
 	save_slot_ele(mode, slot, square.enabled);\
 	save_slot_ele(mode, slot, square.duty);\
 	save_slot_ele(mode, slot, square.step);\
@@ -52,18 +52,18 @@
 	save_slot_ele(mode, slot, square.frequency);\
 	save_slot_ele(mode, slot, square.output)
 
-WORD prgRom16kMax, prgRom8kMax, chrRom1kMax;
+WORD prg_rom_16k_max, prg_rom_8k_max, chr_rom_1k_max;
 BYTE type, delay;
 
-const WORD tableVRC6[2][4] = {
+const WORD table_VRC6[2][4] = {
 	{0x0000, 0x0001, 0x0002, 0x0003},
 	{0x0000, 0x0002, 0x0001, 0x0003},
 };
 
 void map_init_VRC6(BYTE revision) {
-	prgRom16kMax = info.prg_rom_16k_count - 1;
-	prgRom8kMax = info.prg_rom_8k_count - 1;
-	chrRom1kMax = info.chr_rom_1k_count - 1;
+	prg_rom_16k_max = info.prg_rom_16k_count - 1;
+	prg_rom_8k_max = info.prg_rom_8k_count - 1;
+	chr_rom_1k_max = info.chr_rom_1k_count - 1;
 
 	EXTCL_CPU_WR_MEM(VRC6);
 	EXTCL_SAVE_MAPPER(VRC6);
@@ -93,14 +93,14 @@ void map_init_VRC6(BYTE revision) {
 	type = revision;
 }
 void extcl_cpu_wr_mem_VRC6(WORD address, BYTE value) {
-	address = (address & 0xF000) | tableVRC6[type][(address & 0x0003)];
+	address = (address & 0xF000) | table_VRC6[type][(address & 0x0003)];
 
 	switch (address) {
 		case 0x8000:
 		case 0x8001:
 		case 0x8002:
 		case 0x8003:
-			control_bank(prgRom16kMax)
+			control_bank(prg_rom_16k_max)
 			map_prg_rom_8k(2, 0, value);
 			map_prg_rom_8k_update();
 			return;
@@ -159,40 +159,40 @@ void extcl_cpu_wr_mem_VRC6(WORD address, BYTE value) {
 		case 0xC001:
 		case 0xC002:
 		case 0xC003:
-			control_bank(prgRom8kMax)
+			control_bank(prg_rom_8k_max)
 			map_prg_rom_8k(1, 2, value);
 			map_prg_rom_8k_update();
 			return;
 		case 0xD000:
-            control_bank(chrRom1kMax)
+            control_bank(chr_rom_1k_max)
             chr.bank_1k[0] = &chr.data[value << 10];
 			return;
 		case 0xD001:
-            control_bank(chrRom1kMax)
+            control_bank(chr_rom_1k_max)
             chr.bank_1k[1] = &chr.data[value << 10];
 			return;
 		case 0xD002:
-            control_bank(chrRom1kMax)
+            control_bank(chr_rom_1k_max)
             chr.bank_1k[2] = &chr.data[value << 10];
 			return;
 		case 0xD003:
-            control_bank(chrRom1kMax)
+            control_bank(chr_rom_1k_max)
             chr.bank_1k[3] = &chr.data[value << 10];
 			return;
 		case 0xE000:
-            control_bank(chrRom1kMax)
+            control_bank(chr_rom_1k_max)
             chr.bank_1k[4] = &chr.data[value << 10];
 			return;
 		case 0xE001:
-            control_bank(chrRom1kMax)
+            control_bank(chr_rom_1k_max)
             chr.bank_1k[5] = &chr.data[value << 10];
 			return;
 		case 0xE002:
-            control_bank(chrRom1kMax)
+            control_bank(chr_rom_1k_max)
             chr.bank_1k[6] = &chr.data[value << 10];
 			return;
 		case 0xE003:
-            control_bank(chrRom1kMax)
+            control_bank(chr_rom_1k_max)
             chr.bank_1k[7] = &chr.data[value << 10];
 			return;
 		case 0xF000:
@@ -225,8 +225,8 @@ BYTE extcl_save_mapper_VRC6(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, vrc6.prescaler);
 	save_slot_ele(mode, slot, vrc6.delay);
 
-	savestateSquareVrc6(vrc6.S3)
-	savestateSquareVrc6(vrc6.S4)
+	vrc6_square_saveslot(vrc6.S3)
+	vrc6_square_saveslot(vrc6.S4)
 
 	save_slot_ele(mode, slot, vrc6.saw.enabled);
 	save_slot_ele(mode, slot, vrc6.saw.accumulator);
@@ -264,8 +264,8 @@ void extcl_cpu_every_cycle_VRC6(void) {
 	vrc6.delay = delay;
 }
 void extcl_apu_tick_VRC6(void) {
-	vcr6SquareTick(S3)
-	vcr6SquareTick(S4)
+	vcr6_square_tick(S3)
+	vcr6_square_tick(S4)
 
 	if (--vrc6.saw.timer == 0) {
 		vrc6.saw.timer = vrc6.saw.frequency + 1;

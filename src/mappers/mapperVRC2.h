@@ -13,7 +13,7 @@
 enum { VRC2B, VRC2A };
 
 struct _vrc2 {
-	BYTE chrRomBank[8];
+	BYTE chr_rom_bank[8];
 } vrc2;
 
 void map_init_VRC2(BYTE revision);

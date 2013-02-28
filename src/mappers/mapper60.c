@@ -9,11 +9,11 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
-WORD prgRom16kMax, chrRom8kMax;
+WORD prg_rom_16k_max, chr_rom_8k_max;
 
 void map_init_60(void) {
-	prgRom16kMax = info.prg_rom_16k_count - 1;
-	chrRom8kMax = info.chr_rom_8k_count - 1;
+	prg_rom_16k_max = info.prg_rom_16k_count - 1;
+	chr_rom_8k_max = info.chr_rom_8k_count - 1;
 
 	EXTCL_CPU_WR_MEM(60);
 	EXTCL_SAVE_MAPPER(60);
@@ -24,6 +24,7 @@ void map_init_60(void) {
 		m60.index = 0;
 	} else {
 		BYTE tmp = m60.index;
+
 		m60.index = ++tmp & 0x03;
 	}
 
@@ -32,12 +33,12 @@ void map_init_60(void) {
 		DBWORD bank;
 
 		value = m60.index;
-		control_bank(prgRom16kMax)
+		control_bank(prg_rom_16k_max)
 		map_prg_rom_8k(2, 0, value);
 		map_prg_rom_8k(2, 2, value);
 
 		value = m60.index;
-		control_bank(chrRom8kMax)
+		control_bank(chr_rom_8k_max)
 		bank = value << 13;
 		chr.bank_1k[0] = &chr.data[bank];
 		chr.bank_1k[1] = &chr.data[bank | 0x0400];
@@ -59,8 +60,8 @@ BYTE extcl_save_mapper_60(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 void map_init_60_vt5201(void) {
-	prgRom16kMax = info.prg_rom_16k_count - 1;
-	chrRom8kMax = info.chr_rom_8k_count - 1;
+	prg_rom_16k_max = info.prg_rom_16k_count - 1;
+	chr_rom_8k_max = info.chr_rom_8k_count - 1;
 
 	EXTCL_CPU_WR_MEM(60_vt5201);
 
@@ -78,17 +79,17 @@ void extcl_cpu_wr_mem_60_vt5201(WORD address, BYTE value) {
 	}
 
 	value = (address >> 4) & ~((~address >> 7) & 0x01);
-	control_bank(prgRom16kMax)
+	control_bank(prg_rom_16k_max)
 	map_prg_rom_8k(2, 0, value);
 
 	value = (address >> 4) | ((~address >> 7) & 0x01);
-	control_bank(prgRom16kMax)
+	control_bank(prg_rom_16k_max)
 	map_prg_rom_8k(2, 2, value);
 
 	map_prg_rom_8k_update();
 
 	value = address & 0xFF;
-	control_bank(chrRom8kMax)
+	control_bank(chr_rom_8k_max)
 	bank = value << 13;
 	chr.bank_1k[0] = &chr.data[bank];
 	chr.bank_1k[1] = &chr.data[bank | 0x0400];

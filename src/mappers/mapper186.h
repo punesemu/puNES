@@ -11,7 +11,7 @@
 #include "common.h"
 
 struct _m186 {
-	BYTE *prgRamBank2;
+	BYTE *prg_ram_bank2;
 } m186;
 
 void map_init_186(void);
