@@ -10,7 +10,7 @@
 
 #include <stdio.h>
 #include "common.h"
-#include "mappers/mapperGameGenie.h"
+#include "mappers/mapper_GameGenie.h"
 
 #define GG_CHEATS 3
 

@@ -1,0 +1,195 @@
+/*
+ * mapper_VRC7.c
+ *
+ *  Created on: 24/gen/2012
+ *      Author: fhorse
+ */
+
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+#include <float.h>
+#include "mappers.h"
+#include "mem_map.h"
+#include "cpu.h"
+#include "save_slot.h"
+#include "mapper_VRC7_snd.h"
+
+const WORD table_VRC7[2][4] = {
+	{0x0000, 0x0002, 0x0001, 0x0003},
+	{0x0000, 0x0001, 0x0002, 0x0003},
+};
+
+WORD prg_rom_8k_max, chr_rom_1k_max, mask;
+BYTE type, delay;
+
+void map_init_VRC7(BYTE revision) {
+	prg_rom_8k_max = info.prg_rom_8k_count - 1;
+	chr_rom_1k_max = info.chr_rom_1k_count - 1;
+
+	EXTCL_CPU_WR_MEM(VRC7);
+	EXTCL_SAVE_MAPPER(VRC7);
+	EXTCL_CPU_EVERY_CYCLE(VRC7);
+	EXTCL_SND_START(VRC7);
+	mapper.internal_struct[0] = (BYTE *) &vrc7;
+	mapper.internal_struct_size[0] = sizeof(vrc7);
+
+	if (info.reset >= HARD) {
+		memset(&vrc7, 0x00, sizeof(vrc7));
+	} else {
+		vrc7.enabled = 0;
+		vrc7.reload = 0;
+		vrc7.mode = 0;
+		vrc7.acknowledge = 0;
+		vrc7.count = 0;
+		vrc7.prescaler = 0;
+	}
+
+	mask = 0xF000;
+	if (revision == VRC7A) {
+		mask = 0xF020;
+	}
+
+	delay = 1;
+
+	type = revision;
+}
+void extcl_cpu_wr_mem_VRC7(WORD address, BYTE value) {
+	address = (address & mask) | table_VRC7[type][(address & 0x0018) >> 3];
+
+	switch (address) {
+		case 0x8000:
+			control_bank(prg_rom_8k_max)
+			map_prg_rom_8k(1, 0, value);
+			map_prg_rom_8k_update();
+			return;
+		case 0x8001:
+			control_bank(prg_rom_8k_max)
+			map_prg_rom_8k(1, 1, value);
+			map_prg_rom_8k_update();
+			return;
+		case 0x9000:
+			control_bank(prg_rom_8k_max)
+			map_prg_rom_8k(1, 2, value);
+			map_prg_rom_8k_update();
+			return;
+		case 0x9001:   // 0x9010
+			vrc7.reg = value;
+			return;
+		case 0x9021:   // 0x9030
+			opll_write_reg(vrc7.reg, value);
+			return;
+		case 0xA000:
+            control_bank(chr_rom_1k_max)
+            chr.bank_1k[0] = &chr.data[value << 10];
+			return;
+		case 0xA001:
+            control_bank(chr_rom_1k_max)
+            chr.bank_1k[1] = &chr.data[value << 10];
+			return;
+		case 0xB000:
+            control_bank(chr_rom_1k_max)
+            chr.bank_1k[2] = &chr.data[value << 10];
+			return;
+		case 0xB001:
+            control_bank(chr_rom_1k_max)
+            chr.bank_1k[3] = &chr.data[value << 10];
+			return;
+		case 0xC000:
+            control_bank(chr_rom_1k_max)
+            chr.bank_1k[4] = &chr.data[value << 10];
+			return;
+		case 0xC001:
+            control_bank(chr_rom_1k_max)
+            chr.bank_1k[5] = &chr.data[value << 10];
+			return;
+		case 0xD000:
+            control_bank(chr_rom_1k_max)
+            chr.bank_1k[6] = &chr.data[value << 10];
+			return;
+		case 0xD001:
+            control_bank(chr_rom_1k_max)
+            chr.bank_1k[7] = &chr.data[value << 10];
+			return;
+		case 0xE000: {
+			switch (value & 0x03) {
+				case 0:
+					mirroring_V();
+					break;
+				case 1:
+					mirroring_H();
+					break;
+				case 2:
+					mirroring_SCR0();
+					break;
+				case 3:
+					mirroring_SCR1();
+					break;
+			}
+			return;
+		}
+		case 0xE001:
+			vrc7.reload = value;
+			return;
+		case 0xF000:
+			vrc7.acknowledge = value & 0x01;
+			vrc7.enabled = value & 0x02;
+			vrc7.mode = value & 0x04;
+			if (vrc7.enabled) {
+				vrc7.prescaler = 0;
+				vrc7.count = vrc7.reload;
+			}
+			irq.high &= ~EXT_IRQ;
+			return;
+		case 0xF001:
+			vrc7.enabled = vrc7.acknowledge;
+			irq.high &= ~EXT_IRQ;
+			return;
+		default:
+			return;
+	}
+}
+BYTE extcl_save_mapper_VRC7(BYTE mode, BYTE slot, FILE *fp) {
+	save_slot_ele(mode, slot, vrc7.reg);
+	save_slot_ele(mode, slot, vrc7.enabled);
+	save_slot_ele(mode, slot, vrc7.reload);
+	save_slot_ele(mode, slot, vrc7.mode);
+	save_slot_ele(mode, slot, vrc7.acknowledge);
+	save_slot_ele(mode, slot, vrc7.count);
+	save_slot_ele(mode, slot, vrc7.prescaler);
+	save_slot_ele(mode, slot, vrc7.delay);
+
+	if (opll_save(mode, slot, fp) == EXIT_ERROR) {
+		return (EXIT_ERROR);
+	}
+
+	return (EXIT_OK);
+}
+void extcl_cpu_every_cycle_VRC7(void) {
+	if (vrc7.delay && !(--vrc7.delay)) {
+		irq.high |= EXT_IRQ;
+	}
+
+	if (!vrc7.enabled) {
+		return;
+	}
+
+	if (!vrc7.mode) {
+		if (vrc7.prescaler < 338) {
+			vrc7.prescaler += 3;
+			return;
+		}
+		vrc7.prescaler -= 338;
+	}
+
+	if (vrc7.count != 0xFF) {
+		vrc7.count++;
+		return;
+	}
+
+	vrc7.count = vrc7.reload;
+	vrc7.delay = delay;
+}
+void extcl_snd_start_VRC7(WORD samplarate) {
+	opll_reset(3579545, samplarate);
+}

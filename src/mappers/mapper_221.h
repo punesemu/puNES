@@ -1,0 +1,21 @@
+/*
+ * mapper_221.h
+ *
+ *  Created on: 14/feb/2012
+ *      Author: fhorse
+ */
+
+#ifndef MAPPER_221_H_
+#define MAPPER_221_H_
+
+#include "common.h"
+
+struct _m221 {
+	BYTE reg[2];
+} m221;
+
+void map_init_221(void);
+void extcl_cpu_wr_mem_221(WORD address, BYTE value);
+BYTE extcl_save_mapper_221(BYTE mode, BYTE slot, FILE *fp);
+
+#endif /* MAPPER_221_H_ */

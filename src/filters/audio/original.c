@@ -9,7 +9,7 @@
 #include "apu.h"
 #include "sdl_snd.h"
 #include "mappers.h"
-#include "mappers/mapperVRC7snd.h"
+#include "mappers/mapper_VRC7_snd.h"
 #include "fds.h"
 #include "cfg_file.h"
 #include "clock.h"
