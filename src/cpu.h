@@ -79,6 +79,10 @@ typedef struct {
 	BYTE prg_ram_rd_active;
 	/* scrittura PRG Ram attiva/disattiva */
 	BYTE prg_ram_wr_active;
+	/* i cicli (senza aggiustamenti) impiegati dall'opcode */
+	WORD base_opcode_cycles;
+	/* i cicli passati dall'inizio dell'NMI */
+	uint32_t cycles_from_nmi;
 } _cpu;
 typedef struct {
 	BYTE high;

@@ -30,24 +30,19 @@ enum overflow_sprite { OVERFLOW_SPR = 3 };
 		| (((tmp >> shift_at) & 0x03) << 8);\
 }
 #define fetch_lb()\
-{\
 	ppu_bck_adr();\
 	tile_fetch.l_byte = (tile_fetch.l_byte >> 8)\
-		| (inv_chr[ppu_rd_mem(ppu.bck_adr)] << 8);\
-}
+		| (inv_chr[ppu_rd_mem(ppu.bck_adr)] << 8);
 #define fetch_hb()\
-{\
 	tile_fetch.h_byte = (tile_fetch.h_byte >> 8)\
 		| (inv_chr[ppu_rd_mem(ppu.bck_adr | 0x0008)] << 8);\
-	((r2006.value & 0x1F) == 0x1F) ? (r2006.value ^= 0x041F) : (r2006.value++);\
-}
+	((r2006.value & 0x1F) == 0x1F) ? (r2006.value ^= 0x041F) : (r2006.value++);
 #define ppu_ticket()\
-{\
 	ppu.cycles -= machine.ppu_divide;\
+	cpu.cycles_from_nmi++;\
 	ppu.frame_x++;\
-	r2006.changed_from_op = 0;\
-	continue;\
-}
+	/* deve essere azzerato alla fine di ogni ciclo PPU */\
+	r2006.changed_from_op = 0;
 #define put_pixel(clr)\
 {\
 	WORD pixel = r2001.emphasis | clr;\
@@ -773,6 +768,7 @@ void ppu_tick(WORD cycles_cpu) {
 					ppu.pixel_tile = 0;
 				}
 				ppu_ticket()
+				continue;
 			}
 		}
 
@@ -869,6 +865,7 @@ void ppu_tick(WORD cycles_cpu) {
 					r2003.value = 0;
 				}
 				ppu_ticket()
+				continue;
 			}
 		}
 /* ------------------------------- FETCH TILE 0 e 1 SCANLINE+1 ------------------------------- */
@@ -937,10 +934,7 @@ void ppu_tick(WORD cycles_cpu) {
 			} else {
 				r2004.value = oam.element[63][YC];
 			}
-			ppu.cycles -= machine.ppu_divide;
-			ppu.frame_x++;
-			/* deve essere azzerato alla fine di ogni ciclo PPU */
-			r2006.changed_from_op = 0;
+			ppu_ticket()
 			/*
 			 * se e' iniziato il ciclo 341, vuol dire
 			 * che in realta' e' iniziato il ciclo 0
@@ -1021,8 +1015,10 @@ void ppu_tick(WORD cycles_cpu) {
 		if (ppu.frame_y == machine.total_lines) {
 			/* incremento il contatore dei frames */
 			ppu.frames++;
-			/* azzero frameY */
+			/* azzero frame_y */
 			ppu.frame_y = 0;
+			/* azzero i numeri di cicli dall'nmi */
+			cpu.cycles_from_nmi = 0;
 			/*
 			 * setto il flag che indica che un frame
 			 * e' stato completato.

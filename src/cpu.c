@@ -651,7 +651,8 @@ void cpu_exe_op(void) {
 	/* ------------------------------------------------ */
 
 	/* salvo i cicli presi dall'istruzione... */
-	mod_cycles_op(+=, table_opcode_cycles[(BYTE) cpu.opcode]);
+	cpu.base_opcode_cycles = table_opcode_cycles[(BYTE) cpu.opcode];
+	mod_cycles_op(+=, cpu.base_opcode_cycles);
 
 	/* ... e la eseguo */
 	switch (cpu.opcode) {

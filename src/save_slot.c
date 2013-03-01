@@ -27,7 +27,7 @@
 #include "fds.h"
 #include "gamegenie.h"
 
-#define SAVE_VERSION 8
+#define SAVE_VERSION 9
 
 BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp);
 BYTE name_slot_file(char *file, BYTE slot);
@@ -267,6 +267,12 @@ BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, cpu.double_wr)
 	save_slot_ele(mode, slot, cpu.prg_ram_rd_active)
 	save_slot_ele(mode, slot, cpu.prg_ram_wr_active)
+	/* questo dato e' stato aggiunto solo dalla versione 9 in poi */
+	if (save_slot.version >= 9) {
+		save_slot_ele(mode, slot, cpu.base_opcode_cycles)
+		save_slot_ele(mode, slot, cpu.cycles_from_nmi)
+	}
+
 	/* irq */
 	save_slot_ele(mode, slot, irq.high)
 	save_slot_ele(mode, slot, irq.delay)
@@ -620,7 +626,6 @@ BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 		 * sound dalla 4 in poi.
 		 */
 		if (save_slot.version >= 4) {
-
 			save_slot_ele(mode, slot, fds.snd.wave.data)
 			save_slot_ele(mode, slot, fds.snd.wave.writable)
 			save_slot_ele(mode, slot, fds.snd.wave.volume)
