@@ -39,8 +39,8 @@ enum overflow_sprite { OVERFLOW_SPR = 3 };
 	((r2006.value & 0x1F) == 0x1F) ? (r2006.value ^= 0x041F) : (r2006.value++);
 #define ppu_ticket()\
 	ppu.cycles -= machine.ppu_divide;\
-	cpu.cycles_from_nmi++;\
 	ppu.frame_x++;\
+	nmi.cpu_cycles_from_last_nmi++;\
 	/* deve essere azzerato alla fine di ogni ciclo PPU */\
 	r2006.changed_from_op = 0;
 #define put_pixel(clr)\
@@ -1017,8 +1017,6 @@ void ppu_tick(WORD cycles_cpu) {
 			ppu.frames++;
 			/* azzero frame_y */
 			ppu.frame_y = 0;
-			/* azzero i numeri di cicli dall'nmi */
-			cpu.cycles_from_nmi = 0;
 			/*
 			 * setto il flag che indica che un frame
 			 * e' stato completato.
@@ -1035,6 +1033,8 @@ void ppu_tick(WORD cycles_cpu) {
 			if (r2000.nmi_enable) {
 				nmi.high = TRUE;
 				nmi.frame_x = ppu.frame_x;
+				/* azzero i numeri di cicli dall'nmi */
+				nmi.cpu_cycles_from_last_nmi = 0;
 			}
 		}
 		/*

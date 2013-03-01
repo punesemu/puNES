@@ -270,7 +270,6 @@ BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 	/* questo dato e' stato aggiunto solo dalla versione 9 in poi */
 	if (save_slot.version >= 9) {
 		save_slot_ele(mode, slot, cpu.base_opcode_cycles)
-		save_slot_ele(mode, slot, cpu.cycles_from_nmi)
 	}
 
 	/* irq */
@@ -284,6 +283,10 @@ BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, nmi.before)
 	save_slot_ele(mode, slot, nmi.inhibit)
 	save_slot_ele(mode, slot, nmi.frame_x)
+	/* questo dato e' stato aggiunto solo dalla versione 9 in poi */
+	if (save_slot.version >= 9) {
+		save_slot_ele(mode, slot, nmi.cpu_cycles_from_last_nmi)
+	}
 
 	/* ppu */
 	save_slot_ele(mode, slot, ppu.frame_x)

@@ -735,7 +735,7 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 		 * esecuzione dell'istruzione successiva pone le condizioni
 		 * per il secondo nmi che avverra' 25 scanline dopo.
 		 */
-		if (nmi.high && (cpu.cycles_from_nmi <= cpu.base_opcode_cycles)) {
+		if (nmi.high && (nmi.cpu_cycles_from_last_nmi <= cpu.base_opcode_cycles)) {
 #ifndef RELEASE
 			old_delay = TRUE;
 #endif
@@ -825,7 +825,7 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 #ifndef RELEASE
 		if (old_delay && nmi.high) {
 			fprintf(stderr, "r2000 nmi high, set delay nmi.before, %d %d %d - %d %d - 0x%02X %d\n",
-			        ppu.frames, ppu.frame_y, ppu.frame_x, nmi.frame_x, cpu.cycles_from_nmi,
+			        ppu.frames, ppu.frame_y, ppu.frame_x, nmi.frame_x, nmi.cpu_cycles_from_last_nmi,
 			        cpu.opcode, cpu.base_opcode_cycles);
 		}
 #endif
