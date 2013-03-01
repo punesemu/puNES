@@ -8,7 +8,7 @@
 #include "gui.h"
 
 #include "param.h"
-#include "cfgfile.h"
+#include "cfg_file.h"
 #include "opengl.h"
 
 #include "glade/audio_configuration_glade.h"
@@ -111,30 +111,31 @@ void general_configurations_init(void) {
 	populate_combobox("combobox_mode", "liststore_mode", "NTSC", 2, NTSC, cfg->mode);
 	populate_combobox("combobox_mode", "liststore_mode", "Dendy", 3, DENDY, cfg->mode);
 
-	//populate_combobox_whit_parameters(pMode, LENGTH(pMode), 0, cfg->mode, "combobox_mode",
-	//        "liststore_mode");
-
 	/* save now */
 	change_image_element(save_now_inline, "image_save_now");
 }
 void video_configurations_init(void) {
 	/* rendering */
 	change_image_element(rendering_inline, "image_rendering");
-	populate_combobox("combobox_rendering", "liststore_rendering", "Software", 0, 0, cfg->mode);
+	populate_combobox("combobox_rendering", "liststore_rendering", "Software", 0, 0, cfg->render);
 	if (opengl.supported) {
-		populate_combobox("combobox_rendering", "liststore_rendering", "OpenGL", 1, 1, cfg->mode);
+		populate_combobox("combobox_rendering", "liststore_rendering", "OpenGL", 1, 1, cfg->render);
 	}
 	if (opengl.glsl.compliant) {
-		populate_combobox("combobox_rendering", "liststore_rendering", "OpenGL GLSL", 2, 2, cfg->mode);
+		populate_combobox("combobox_rendering", "liststore_rendering", "OpenGL GLSL", 2, 2,
+		        cfg->render);
 	}
 
-	//populate_combobox_whit_parameters(pRendering, LENGTH(pRendering), 0, "liststore_rendering");
 	/* fps */
 	change_image_element(fps_inline, "image_fps");
-	//populate_combobox_whit_parameters(pFps, LENGTH(pFps), 0, "liststore_fps");
+	populate_combobox_with_parameters(param_fps, LENGTH(param_fps), 0, cfg->fps, "combobox_fps",
+	        "liststore_fps");
+
 	/* frame skip */
 	change_image_element(frame_skip_inline, "image_frame_skip");
-	//populate_combobox_whit_parameters(pFsk, LENGTH(pFsk), 0, "liststore_frame_skip");
+	populate_combobox_with_parameters(param_fsk, LENGTH(param_fsk), 0, cfg->frameskip,
+	        "combobox_frame_skip", "liststore_frame_skip");
+
 	/* scale */
 	change_image_element(scale_inline, "image_scale");
 	//populate_combobox_whit_parameters(pSize, LENGTH(pSize), 1, "liststore_scale");
