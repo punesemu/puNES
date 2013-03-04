@@ -1,0 +1,378 @@
+#include <winuser.h>
+#include <afxres.h>
+#include "resources.h"
+#include "../../../version.h"
+
+CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "Application.manifest"
+
+IDI_MYICON        ICON   "punes.ico"
+IDB_ABOUT         BITMAP "about.bmp"
+
+IDR_ACCKEYS ACCELERATORS
+BEGIN
+	"O",        IDM_FILE_OPEN,           CONTROL, VIRTKEY
+	VK_F4,      IDM_FILE_EXIT,           ALT,     VIRTKEY
+	VK_F11,     IDM_NES_HARD,            VIRTKEY
+	VK_F12,     IDM_NES_SOFT,            VIRTKEY
+	"S",        IDM_NES_FDS_DISK_SWITCH, ALT,     VIRTKEY
+	"E",        IDM_NES_FDS_EJECT,       ALT,     VIRTKEY
+	VK_F1,      IDM_SET_SAVE_SAVE,       VIRTKEY
+	VK_F4,      IDM_SET_SAVE_LOAD,       VIRTKEY
+	VK_F3,      IDM_SET_SAVE_INC,        VIRTKEY
+	VK_F2,      IDM_SET_SAVE_DEC,        VIRTKEY
+	VK_F6,      IDM_SET_MODE_PAL,        VIRTKEY
+	VK_F7,      IDM_SET_MODE_NTSC,       VIRTKEY
+	VK_F8,      IDM_SET_MODE_DENDY,      VIRTKEY
+	VK_F9,      IDM_SET_MODE_AUTO,       VIRTKEY
+	"1",        IDM_SET_SIZE_1X,         VIRTKEY
+	"2",        IDM_SET_SIZE_2X,         VIRTKEY
+	"3",        IDM_SET_SIZE_3X,         VIRTKEY
+	"4",        IDM_SET_SIZE_4X,         VIRTKEY
+	VK_RETURN,  IDM_SET_FULLSCREEN,      ALT,     VIRTKEY
+	"R",        IDM_SET_EFFECT_CUBE,     VIRTKEY
+	"P",        IDM_SET_STRETCHFLSCR,    VIRTKEY
+	"W",        IDM_SET_SAVENOW,         CONTROL, VIRTKEY
+	"A",        IDM_SET_AUDIO_ENABLE,    CONTROL, VIRTKEY
+	
+END
+
+IDR_MAINMENU MENU
+BEGIN
+	POPUP "&File"
+	BEGIN
+		MENUITEM "&Open\tCtrl+O",                 IDM_FILE_OPEN
+		MENUITEM SEPARATOR
+		MENUITEM "E&xit\tAlt+F4",                 IDM_FILE_EXIT
+	END
+	POPUP "&NES"
+	BEGIN
+		MENUITEM "&Hard Reset\tF11",              IDM_NES_HARD
+		MENUITEM "&Soft Reset\tF12",              IDM_NES_SOFT
+		MENUITEM SEPARATOR
+		POPUP "&Disk side"
+		BEGIN
+			MENUITEM "Disk 1 side A",             IDM_NES_FDS_DISK_SIDE0
+			MENUITEM "Disk 1 side B",             IDM_NES_FDS_DISK_SIDE1
+			MENUITEM "Disk 2 side A",             IDM_NES_FDS_DISK_SIDE2
+			MENUITEM "Disk 2 side B",             IDM_NES_FDS_DISK_SIDE3
+			MENUITEM "Disk 3 side A",             IDM_NES_FDS_DISK_SIDE4
+			MENUITEM "Disk 3 side B",             IDM_NES_FDS_DISK_SIDE5
+			MENUITEM "Disk 4 side A",             IDM_NES_FDS_DISK_SIDE6
+			MENUITEM "Disk 4 side B",             IDM_NES_FDS_DISK_SIDE7
+			MENUITEM SEPARATOR
+			MENUITEM "&Switch side\tALT+S",       IDM_NES_FDS_DISK_SWITCH
+		END
+		MENUITEM "Ej&ect/Insert disk\tALT+E",     IDM_NES_FDS_EJECT
+	END
+	POPUP "Sett&ings"
+	BEGIN
+		POPUP "&Mode"
+		BEGIN
+			MENUITEM "&PAL\tF6",                  IDM_SET_MODE_PAL
+			MENUITEM "&NTSC\tF7",                 IDM_SET_MODE_NTSC
+			MENUITEM "&Dendy\tF8",                IDM_SET_MODE_DENDY
+			MENUITEM "&Auto\tF9",                 IDM_SET_MODE_AUTO
+		END
+		MENUITEM SEPARATOR
+		POPUP "&Video"
+		BEGIN
+			POPUP "&Rendering"
+			BEGIN
+				MENUITEM "&Software",             IDM_SET_RENDERING_SOFTWARE
+				MENUITEM "&OpenGL",               IDM_SET_RENDERING_OPENGL
+				MENUITEM "OpenGL &GLSL",          IDM_SET_RENDERING_GLSL
+			END
+			POPUP "&FPS"
+			BEGIN
+				MENUITEM "Default",               IDM_SET_FPS_DEFAULT
+				MENUITEM SEPARATOR
+				MENUITEM "60",                    IDM_SET_FPS_60
+				MENUITEM "59",                    IDM_SET_FPS_59
+				MENUITEM "58",                    IDM_SET_FPS_58
+				MENUITEM "57",                    IDM_SET_FPS_57
+				MENUITEM "56",                    IDM_SET_FPS_56
+				MENUITEM "55",                    IDM_SET_FPS_55
+				MENUITEM "54",                    IDM_SET_FPS_54
+				MENUITEM "53",                    IDM_SET_FPS_53
+				MENUITEM "52",                    IDM_SET_FPS_52
+				MENUITEM "51",                    IDM_SET_FPS_51
+				MENUITEM "49",                    IDM_SET_FPS_49
+				MENUITEM "48",                    IDM_SET_FPS_48
+				MENUITEM "47",                    IDM_SET_FPS_47
+				MENUITEM "46",                    IDM_SET_FPS_46
+				MENUITEM "45",                    IDM_SET_FPS_45
+				MENUITEM "44",                    IDM_SET_FPS_44
+			END
+			POPUP "Fra&me skip"
+			BEGIN
+				MENUITEM "Default",               IDM_SET_FSK_DEFAULT
+				MENUITEM SEPARATOR
+				MENUITEM "1",                     IDM_SET_FSK_1
+				MENUITEM "2",                     IDM_SET_FSK_2
+				MENUITEM "3",                     IDM_SET_FSK_3
+				MENUITEM "4",                     IDM_SET_FSK_4
+				MENUITEM "5",                     IDM_SET_FSK_5
+				MENUITEM "6",                     IDM_SET_FSK_6
+				MENUITEM "7",                     IDM_SET_FSK_7
+				MENUITEM "8",                     IDM_SET_FSK_8
+				MENUITEM "9",                     IDM_SET_FSK_9
+			END
+			POPUP "&VSync"
+			BEGIN
+				MENUITEM "&On",                   IDM_SET_VSYNC_ON
+				MENUITEM "O&ff",                  IDM_SET_VSYNC_OFF
+			END
+			MENUITEM SEPARATOR
+			POPUP "&Size"
+			BEGIN
+				MENUITEM "&1x\t1",                IDM_SET_SIZE_1X
+				MENUITEM "&2x\t2",                IDM_SET_SIZE_2X
+				MENUITEM "&3x\t3",                IDM_SET_SIZE_3X
+				MENUITEM "&4x\t4",                IDM_SET_SIZE_4X
+			END
+			POPUP "&Overscan"
+			BEGIN
+				MENUITEM "&Default",              IDM_SET_OSCAN_DEF
+				MENUITEM SEPARATOR
+				MENUITEM "&On",                   IDM_SET_OSCAN_ON
+				MENUITEM "O&ff",                  IDM_SET_OSCAN_OFF
+				MENUITEM SEPARATOR
+				POPUP "De&fault value"
+				BEGIN
+					MENUITEM "&On",               IDM_SET_OSCAN_DEFAULT_ON
+					MENUITEM "O&ff",              IDM_SET_OSCAN_DEFAULT_OFF
+				END
+			END
+			POPUP "Fi&lter"
+			BEGIN
+				MENUITEM "&No Filter",            IDM_SET_FILTER_NO_FILTER
+				MENUITEM "&Bilinear",             IDM_SET_FILTER_BILINEAR
+				MENUITEM "&Poshpor",              IDM_SET_FILTER_POSPHOR
+				MENUITEM "S&canline",             IDM_SET_FILTER_SCANLINE
+				MENUITEM "&DBL",                  IDM_SET_FILTER_DBL
+				POPUP "C&RT"
+				BEGIN
+					MENUITEM "With &Curve",       IDM_SET_FILTER_CRTCURVE
+					MENUITEM "&Without Curve",    IDM_SET_FILTER_CRTNOCURVE
+				END
+				POPUP "&Scalex"
+				BEGIN
+					MENUITEM "Scale&2X",          IDM_SET_FILTER_SCALE2X
+					MENUITEM "Scale&3X",          IDM_SET_FILTER_SCALE3X
+					MENUITEM "Scale&4X",          IDM_SET_FILTER_SCALE4X
+				END
+				POPUP "&Hqx"
+				BEGIN
+					MENUITEM "Hq&2x",             IDM_SET_FILTER_HQ2X
+					MENUITEM "Hq&3x",             IDM_SET_FILTER_HQ3X
+					MENUITEM "Hq&4x",             IDM_SET_FILTER_HQ4X
+				END
+				POPUP "N&TSC"
+				BEGIN
+					MENUITEM "&Composite",        IDM_SET_FILTER_RGBNTSCCOM
+					MENUITEM "&S-Video",          IDM_SET_FILTER_RGBNTSCSVD
+					MENUITEM "&RGB",              IDM_SET_FILTER_RGBNTSCRGB
+				END
+			END
+			POPUP "&Palette"
+			BEGIN
+				MENUITEM "&PAL",                  IDM_SET_PALETTE_PAL
+				MENUITEM "&NTSC",                 IDM_SET_PALETTE_NTSC
+				MENUITEM "&Sony CXA2025AS US",    IDM_SET_PALETTE_SONY
+				MENUITEM "&Monochrome",           IDM_SET_PALETTE_MONO
+				MENUITEM "&Green",                IDM_SET_PALETTE_GREEN
+			END
+			POPUP "&Effect"
+			BEGIN
+				MENUITEM "&Cube\tR",              IDM_SET_EFFECT_CUBE
+			END
+			MENUITEM SEPARATOR
+			MENUITEM "F&ullscreen\tAlt+Enter",    IDM_SET_FULLSCREEN
+			MENUITEM "S&tretch in fullscreen\tP", IDM_SET_STRETCHFLSCR
+		END
+		POPUP "&Audio"
+		BEGIN
+			POPUP "&Sample rate"
+			BEGIN
+				MENUITEM "&44100",                IDM_SET_SAMPLERATE_44100
+				MENUITEM "&22050",                IDM_SET_SAMPLERATE_22050
+				MENUITEM "&11025",                IDM_SET_SAMPLERATE_11025
+			END
+			POPUP "&Channels"
+			BEGIN
+				MENUITEM "&Mono",                 IDM_SET_CHANNELS_MONO
+				MENUITEM "&Stereo",               IDM_SET_CHANNELS_STEREO
+			END
+			POPUP "&Quality"
+			BEGIN
+				MENUITEM "&Low",                  IDM_SET_AUDIO_QUALITY_LOW
+				MENUITEM "&High",                 IDM_SET_AUDIO_QUALITY_HIGH
+			END
+			MENUITEM SEPARATOR
+			MENUITEM "S&wap Duty Cycles",         IDM_SET_AUDIO_SWAP_DUTY
+			MENUITEM "&Enable\tCtrl+A",           IDM_SET_AUDIO_ENABLE
+		END
+		POPUP "&Input"
+		BEGIN
+			MENUITEM "&Config",                   IDM_SET_INPUT_CONFIG
+		END
+		MENUITEM SEPARATOR
+		MENUITEM "Game Genie",                    IDM_SET_GAMEGENIE
+		MENUITEM SEPARATOR
+		MENUITEM "Save se&ttings\tCtrl+W",        IDM_SET_SAVENOW
+		MENUITEM "Save settings on e&xit",        IDM_SET_SAVEONEXIT
+	END
+	POPUP "S&tate"
+	BEGIN
+		MENUITEM "&Save state\tF1",               IDM_SET_SAVE_SAVE
+		MENUITEM "&Load state\tF4",               IDM_SET_SAVE_LOAD
+		MENUITEM SEPARATOR
+		MENUITEM "&Inc state\tF3",                IDM_SET_SAVE_INC
+		MENUITEM "&Dec state\tF2",                IDM_SET_SAVE_DEC
+		MENUITEM SEPARATOR
+		MENUITEM "Slot &0",                       IDM_SET_SAVE_0
+		MENUITEM "Slot &1",                       IDM_SET_SAVE_1
+		MENUITEM "Slot &2",                       IDM_SET_SAVE_2
+		MENUITEM "Slot &3",                       IDM_SET_SAVE_3
+		MENUITEM "Slot &4",                       IDM_SET_SAVE_4
+		MENUITEM "Slot &5",                       IDM_SET_SAVE_5
+	END
+	POPUP "&Help"
+	BEGIN
+		MENUITEM "&About",                        IDM_HELP_ABOUT
+	END
+END
+
+/*
+IDD_ABOUT DIALOG 0, 0, 239, 66
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION NAME " " VERSION
+FONT 8, "MS Sans Serif"
+BEGIN
+	DEFPUSHBUTTON   "&OK", IDOK, 174, 18, 50, 14
+	GROUPBOX        "Dedicated to Giulia", IDC_STATIC, 7, 7, 225, 52
+	CONTROL         IDB_ABOUT, IDC_STATIC, "static", SS_BITMAP, 0,0,32,30
+	CTEXT           COMMENT "\r\n\r\n" AUTHOR,
+                    IDC_STATIC, 16, 18, 144, 33
+END
+*/
+
+IDD_ABOUT DIALOGEX 0, 0, 149, 140
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION NAME " " VERSION
+FONT 8, "MS Sans Serif"
+BEGIN
+	DEFPUSHBUTTON   "&OK", IDOK, 50, 110, 50, 14
+	GROUPBOX        "Dedicated to Giulia", IDC_STATIC, 7, 7, 135, 124
+	CTEXT           COMMENT "\r\n\r\nby " AUTHOR, IDC_STATIC, 16, 65, 118, 40
+END
+
+IDD_ABOUT_PORTABLE DIALOGEX 0, 0, 149, 140
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION NAME " Portable " VERSION
+FONT 8, "MS Sans Serif"
+BEGIN
+	DEFPUSHBUTTON   "&OK", IDOK, 50, 110, 50, 14
+	GROUPBOX        "Dedicated to Giulia", IDC_STATIC, 7, 7, 135, 124
+	CTEXT           COMMENT "\r\n\r\nby " AUTHOR, IDC_STATIC, 16, 65, 118, 40
+END
+
+LANGUAGE 0, SUBLANG_NEUTRAL
+IDD_INPUT_CONTROLLERS DIALOG 0, 0, 224, 78
+STYLE DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP
+EXSTYLE WS_EX_WINDOWEDGE
+CAPTION "Input Configuration"
+FONT 8, "Microsoft Sans Serif"
+{
+    DEFPUSHBUTTON   "OK", IDOK, 117, 57, 50, 14
+    PUSHBUTTON      "Cancel", IDCANCEL, 167, 57, 50, 14
+    GROUPBOX        " Controllers ", IDC_STATIC, 5, 5, 214, 50
+    LTEXT           "Controller Port &1:", IDC_STATIC, 11, 19, 57, 8, SS_LEFT | SS_CENTERIMAGE
+    COMBOBOX        IDC_INPUT_CTRL_PORT1_C, 70, 17, 89, 12, CBS_DROPDOWNLIST | CBS_HASSTRINGS
+    PUSHBUTTON      "Setup", IDC_INPUT_CTRL_PORT1_B, 164, 16, 50, 14
+    LTEXT           "Controller Port &2:", IDC_STATIC, 11, 35, 57, 8, SS_LEFT | SS_CENTERIMAGE
+    COMBOBOX        IDC_INPUT_CTRL_PORT2_C, 70, 33, 89, 12, CBS_DROPDOWNLIST | CBS_HASSTRINGS
+    PUSHBUTTON      "Setup", IDC_INPUT_CTRL_PORT2_B, 164, 32, 50, 14
+}
+
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+IDD_STD_CTRL DIALOG 0, 0, 276, 269
+STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP
+CAPTION "Controller Setup"
+FONT 8, "Microsoft Sans Serif"
+{
+    GROUPBOX        "Keyboard", IDC_STATIC, 16, 19, 118, 217
+    LTEXT           "A", IDC_STATIC, 22, 34, 8, 8, SS_LEFT | SS_CENTERIMAGE
+    PUSHBUTTON      "A", IDC_STD_CTRL_KEY_A, 79, 31, 50, 14
+    LTEXT           "B", IDC_STATIC, 22, 50, 8, 8, SS_LEFT | SS_CENTERIMAGE
+    PUSHBUTTON      "B", IDC_STD_CTRL_KEY_B, 79, 47, 50, 14
+    LTEXT           "SELECT", IDC_STATIC, 22, 66, 28, 8, SS_LEFT | SS_CENTERIMAGE
+    PUSHBUTTON      "SELECT", IDC_STD_CTRL_KEY_SELECT, 79, 63, 50, 14
+    LTEXT           "START", IDC_STATIC, 22, 82, 25, 8, SS_LEFT | SS_CENTERIMAGE
+    LTEXT           "UP", IDC_STATIC, 22, 98, 11, 8, SS_LEFT | SS_CENTERIMAGE
+    LTEXT           "DOWN", IDC_STATIC, 22, 114, 24, 8, SS_LEFT | SS_CENTERIMAGE
+    LTEXT           "LEFT", IDC_STATIC, 22, 130, 18, 8, SS_LEFT | SS_CENTERIMAGE
+    LTEXT           "RIGHT", IDC_STATIC, 22, 146, 24, 8, SS_LEFT | SS_CENTERIMAGE
+    PUSHBUTTON      "START", IDC_STD_CTRL_KEY_START, 79, 79, 50, 14
+    PUSHBUTTON      "UP", IDC_STD_CTRL_KEY_UP, 79, 95, 50, 14
+    PUSHBUTTON      "DOWN", IDC_STD_CTRL_KEY_DOWN, 79, 111, 50, 14
+    PUSHBUTTON      "LEFT", IDC_STD_CTRL_KEY_LEFT, 79, 127, 50, 14
+    PUSHBUTTON      "RIGHT", IDC_STD_CTRL_KEY_RIGHT, 79, 143, 50, 14
+    GROUPBOX        "Joystick", IDC_STATIC, 141, 19, 118, 217
+    LTEXT           "A", IDC_STATIC, 147, 34, 8, 8, SS_LEFT | SS_CENTERIMAGE
+    PUSHBUTTON      "A", IDC_STD_CTRL_JOY_A, 204, 31, 50, 14
+    LTEXT           "B", IDC_STATIC, 147, 50, 8, 8, SS_LEFT | SS_CENTERIMAGE
+    PUSHBUTTON      "B", IDC_STD_CTRL_JOY_B, 204, 47, 50, 14
+    LTEXT           "SELECT", IDC_STATIC, 147, 66, 28, 8, SS_LEFT | SS_CENTERIMAGE
+    PUSHBUTTON      "SELECT", IDC_STD_CTRL_JOY_SELECT, 204, 63, 50, 14
+    LTEXT           "START", IDC_STATIC, 147, 82, 25, 8, SS_LEFT | SS_CENTERIMAGE
+    LTEXT           "UP", IDC_STATIC, 147, 98, 11, 8, SS_LEFT | SS_CENTERIMAGE
+    LTEXT           "DOWN", IDC_STATIC, 147, 114, 24, 8, SS_LEFT | SS_CENTERIMAGE
+    LTEXT           "LEFT", IDC_STATIC, 147, 130, 18, 8, SS_LEFT | SS_CENTERIMAGE
+    LTEXT           "RIGHT", IDC_STATIC, 147, 146, 24, 8, SS_LEFT | SS_CENTERIMAGE
+    PUSHBUTTON      "START", IDC_STD_CTRL_JOY_START, 204, 79, 50, 14
+    PUSHBUTTON      "UP", IDC_STD_CTRL_JOY_UP, 204, 95, 50, 14
+    PUSHBUTTON      "DOWN", IDC_STD_CTRL_JOY_DOWN, 204, 111, 50, 14
+    PUSHBUTTON      "LEFT", IDC_STD_CTRL_JOY_LEFT, 204, 127, 50, 14
+    PUSHBUTTON      "RIGHT", IDC_STD_CTRL_JOY_RIGHT, 204, 143, 50, 14
+    LTEXT           "Joystick", IDC_STATIC, 147, 199, 26, 8, SS_LEFT | SS_CENTERIMAGE
+    COMBOBOX        IDC_STD_CTRL_JOY_ID, 204, 194, 50, 14, CBS_DROPDOWNLIST | CBS_HASSTRINGS | CBS_OWNERDRAWFIXED
+    LTEXT           "Press ESC to erase the key", IDC_STATIC, 7, 251, 87, 8, SS_LEFT | SS_CENTERIMAGE
+    DEFPUSHBUTTON   "OK", IDOK, 167, 248, 50, 14
+    PUSHBUTTON      "Cancel", IDCANCEL, 219, 248, 50, 14
+    GROUPBOX        "Standard Pad", IDC_STATIC, 7, 7, 262, 239
+    PUSHBUTTON      "TURBO A", IDC_STD_CTRL_KEY_TURBOA, 79, 159, 50, 14
+    LTEXT           "TURBO A", IDC_STATIC, 22, 162, 33, 8, SS_LEFT | SS_CENTERIMAGE
+    PUSHBUTTON      "TURBO B", IDC_STD_CTRL_KEY_TURBOB, 79, 175, 50, 14
+    LTEXT           "TURBO B", IDC_STATIC, 22, 178, 33, 8, SS_LEFT | SS_CENTERIMAGE
+    PUSHBUTTON      "TURBO A", IDC_STD_CTRL_JOY_TURBOA, 204, 159, 50, 14
+    LTEXT           "TURBO A", IDC_STATIC, 147, 162, 33, 8, SS_LEFT | SS_CENTERIMAGE
+    LTEXT           "TURBO B", IDC_STATIC, 147, 178, 33, 8, SS_LEFT | SS_CENTERIMAGE
+    PUSHBUTTON      "TURBO B", IDC_STD_CTRL_JOY_TURBOB, 204, 175, 50, 14
+    PUSHBUTTON      "Erase All", IDC_STD_CTRL_KEY_ERASE, 22, 217, 107, 14
+    PUSHBUTTON      "Erase All", IDC_STD_CTRL_JOY_ERASE, 147, 217, 107, 14
+}
+
+VS_VERSION_INFO VERSIONINFO
+FILEFLAGSMASK VS_FF_PRERELEASE // Which bits are to be taken
+FILEFLAGS VS_FF_PRERELEASE // This is a pre-release version
+FILEOS VOS__WINDOWS32 // Built for Windows 32 bit OS
+FILETYPE VFT_APP // Type of this is Application
+FILESUBTYPE 0x0L // 0
+BEGIN
+	BLOCK "StringFileInfo"
+	BEGIN
+		BLOCK "040904B0"
+		BEGIN
+			VALUE "CompanyName", AUTHOR
+			VALUE "FileDescription", COMMENT
+			VALUE "FileVersion", VER1 ", " VER1 ", " VER1 ", " VER2
+			VALUE "InternalName", NAME
+			VALUE "LegalCopyright", COPYRIGTH
+			VALUE "LegalTrademarks", AUTHOR
+			VALUE "OriginalFilename", NAME ".exe"
+			VALUE "ProductName", NAME
+			VALUE "ProductVersion", VER1 ", " VER1 ", " VER1 ", " VER2
+		END
+	END
+END

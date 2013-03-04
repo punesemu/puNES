@@ -15,7 +15,7 @@
 #include "ppu_inline.h"
 #include "clock.h"
 #include "cpu_inline.h"
-#include "sdl_text.h"
+#include "text.h"
 
 enum cpu_opcode_type { RD_OP, WR_OP };
 

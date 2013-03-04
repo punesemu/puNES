@@ -18,7 +18,7 @@
 #include "irqA12.h"
 #include "irql2f.h"
 #include "fds.h"
-#include "sdl_gfx.h"
+#include "gfx.h"
 #include "gui.h"
 
 enum timeline_mode { TL_SAVE, TL_READ, TL_COUNT };

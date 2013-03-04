@@ -13,7 +13,7 @@
 #include "cpu.h"
 #include "mappers.h"
 #include "mem_map.h"
-#include "sdl_text.h"
+#include "text.h"
 #include "emu.h"
 #include "clock.h"
 

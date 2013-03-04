@@ -13,7 +13,7 @@
 #include "irqA12.h"
 #include "irql2f.h"
 #include "tas.h"
-#include "sdl_text.h"
+#include "text.h"
 
 BYTE map_init(WORD mapper_type) {
 	BYTE i;

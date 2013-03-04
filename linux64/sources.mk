@@ -14,11 +14,12 @@ EXECUTABLES :=
 # Every subdirectory with source files must be described here
 SUBDIRS := \
 src \
-src/openGL \
+src/sdl \
+src/sdl/openGL \
+src/sdl/gui/gtk2/menu \
+src/sdl/gui/gtk2 \
+src/sdl/glew \
+src/sdl/filters/video \
+src/sdl/filters/audio \
 src/mappers \
-src/gui/gtk2/menu \
-src/gui/gtk2 \
-src/glew \
-src/filters/video \
-src/filters/audio \
 

@@ -8,13 +8,14 @@ RM := rm -rf
 
 # All of the sources participating in the build are defined here
 -include sources.mk
--include src/openGL/subdir.mk
+-include src/sdl/openGL/subdir.mk
+-include src/sdl/gui/gtk2/menu/subdir.mk
+-include src/sdl/gui/gtk2/subdir.mk
+-include src/sdl/glew/subdir.mk
+-include src/sdl/filters/video/subdir.mk
+-include src/sdl/filters/audio/subdir.mk
+-include src/sdl/subdir.mk
 -include src/mappers/subdir.mk
--include src/gui/gtk2/menu/subdir.mk
--include src/gui/gtk2/subdir.mk
--include src/glew/subdir.mk
--include src/filters/video/subdir.mk
--include src/filters/audio/subdir.mk
 -include src/subdir.mk
 -include subdir.mk
 -include objects.mk
@@ -49,7 +50,7 @@ clean:
 	-@echo ' '
 
 pre-build:
-	-../src/gui/gtk2/glade/glade_to_h ../src/gui/gtk2/glade
+	-../src/sdl/gui/gtk2/glade/glade_to_h ../src/sdl/gui/gtk2/glade
 	-@echo ' '
 
 .PHONY: all clean dependents

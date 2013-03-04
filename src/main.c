@@ -9,8 +9,8 @@
 #include "main.h"
 #include "emu.h"
 #include "mem_map.h"
-#include "sdl_gfx.h"
-#include "sdl_text.h"
+#include "gfx.h"
+#include "text.h"
 #include "cfg_file.h"
 #include "cmd_line.h"
 #include "timeline.h"
@@ -20,13 +20,11 @@
 #include "gamegenie.h"
 
 #if defined MINGW32 || defined MINGW64
-int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance,
-		PSTR szCmdLine, int iCmdShow) {
+int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine, int iCmdShow) {
 	int argc = __argc;
 	char **argv = (char **)__argv;
-#if !defined SDL
+
 	gui.mainhInstance = hInstance;
-#endif
 #else
 int main(int argc, char **argv) {
 #endif

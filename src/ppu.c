@@ -11,7 +11,7 @@
 #include "clock.h"
 #include "mem_map.h"
 #include "ppu_inline.h"
-#include "sdl_gfx.h"
+#include "gfx.h"
 #include "mappers.h"
 #include "irqA12.h"
 #include "irql2f.h"

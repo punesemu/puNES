@@ -12,7 +12,7 @@
 #include "palette.h"
 #include "opengl.h"
 #include "gui.h"
-#include "sdl_gfx.h"
+#include "gfx.h"
 #include "apu.h"
 #include "overscan.h"
 #include "fps.h"

@@ -10,7 +10,7 @@
 #include "clock.h"
 #include "gui.h"
 #include "ppu.h"
-#include "sdl_snd.h"
+#include "snd.h"
 #include "cfg_file.h"
 
 void fps_init(void) {

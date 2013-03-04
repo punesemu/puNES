@@ -20,10 +20,10 @@
 #include "irqA12.h"
 #include "irql2f.h"
 #include "timeline.h"
-#include "sdl_gfx.h"
+#include "gfx.h"
 #include "gui.h"
 #include "tas.h"
-#include "sdl_text.h"
+#include "text.h"
 #include "fds.h"
 #include "gamegenie.h"
 

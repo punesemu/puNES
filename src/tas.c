@@ -13,7 +13,7 @@
 #include <sys/stat.h>
 #include "tas.h"
 #include "input.h"
-#include "sdl_text.h"
+#include "text.h"
 #include "emu.h"
 
 #define tas_set_data_port_ctrlstd(prt, dt)\

@@ -5,10 +5,6 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
 ../src/apu.c \
-../src/audio_quality.c \
-../src/blip_buf.c \
-../src/cfg_file.c \
-../src/cmd_line.c \
 ../src/cpu.c \
 ../src/emu.c \
 ../src/external_calls.c \
@@ -21,22 +17,14 @@ C_SRCS += \
 ../src/irql2f.c \
 ../src/main.c \
 ../src/mappers.c \
-../src/opengl.c \
 ../src/ppu.c \
 ../src/save_slot.c \
-../src/sdl_gfx.c \
-../src/sdl_snd.c \
-../src/sdl_text.c \
 ../src/sha1.c \
 ../src/tas.c \
 ../src/timeline.c 
 
 OBJS += \
 ./src/apu.o \
-./src/audio_quality.o \
-./src/blip_buf.o \
-./src/cfg_file.o \
-./src/cmd_line.o \
 ./src/cpu.o \
 ./src/emu.o \
 ./src/external_calls.o \
@@ -49,22 +37,14 @@ OBJS += \
 ./src/irql2f.o \
 ./src/main.o \
 ./src/mappers.o \
-./src/opengl.o \
 ./src/ppu.o \
 ./src/save_slot.o \
-./src/sdl_gfx.o \
-./src/sdl_snd.o \
-./src/sdl_text.o \
 ./src/sha1.o \
 ./src/tas.o \
 ./src/timeline.o 
 
 C_DEPS += \
 ./src/apu.d \
-./src/audio_quality.d \
-./src/blip_buf.d \
-./src/cfg_file.d \
-./src/cmd_line.d \
 ./src/cpu.d \
 ./src/emu.d \
 ./src/external_calls.d \
@@ -77,12 +57,8 @@ C_DEPS += \
 ./src/irql2f.d \
 ./src/main.d \
 ./src/mappers.d \
-./src/opengl.d \
 ./src/ppu.d \
 ./src/save_slot.d \
-./src/sdl_gfx.d \
-./src/sdl_snd.d \
-./src/sdl_text.d \
 ./src/sha1.d \
 ./src/tas.d \
 ./src/timeline.d 
@@ -92,7 +68,7 @@ C_DEPS += \
 src/%.o: ../src/%.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
-	x86_64-glibc2.12.2-linux-gnu-gcc -DGTK -DGLEW_STATIC -I../src -I/usr/x86_64-glibc2.12.2-linux-gnu/usr/include/SDL -O3 -Wall -ffast-math -msse2 -mfpmath=sse -c -fmessage-length=0 -finline-functions -Winline `x86_64-glibc2.12.2-linux-gnu-pkg-config --cflags gtk+-2.0` -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
+	x86_64-glibc2.12.2-linux-gnu-gcc -DGTK -DSDL -DGLEW_STATIC -I../src -I../src/sdl -I/usr/x86_64-glibc2.12.2-linux-gnu/usr/include/SDL -O3 -Wall -ffast-math -msse2 -mfpmath=sse -c -fmessage-length=0 -finline-functions -Winline `x86_64-glibc2.12.2-linux-gnu-pkg-config --cflags gtk+-2.0` -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 

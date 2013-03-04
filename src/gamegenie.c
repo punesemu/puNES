@@ -9,7 +9,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/stat.h>
-#include "sdl_text.h"
+#include "text.h"
 #include "gamegenie.h"
 
 #define GGFILE "gamegenie.rom"
