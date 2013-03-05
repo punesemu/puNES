@@ -15,7 +15,7 @@
 #include "resources.h"
 #include "keyboard.h"
 #include "joystick.h"
-#include "cfginput.h"
+#include "cfg_input.h"
 #include "common.h"
 #include "emu.h"
 
@@ -27,11 +27,11 @@
 #define exit_thread(value) return
 
 struct _gui {
-	HINSTANCE mainhInstance;
-	WORD versionOS;
+	HINSTANCE main_hinstance;
+	WORD version_os;
 	char home[MAX_PATH];
 	double frequency;
-	uint64_t counterStart;
+	uint64_t counter_start;
 	uint8_t cpu_cores;
 	uint8_t start;
 	int x;
@@ -40,19 +40,19 @@ struct _gui {
 	uint8_t right_button;
 } gui;
 
-void guiInit(int argc, char **argv);
-BYTE guiCreate(void);
-void guiSetVideoMode(void);
-void guiStart(void);
-void guiEvent(void);
-HWND guiWindowID(void);
-void guiUpdate(void);
-void guiFullscreen(void);
-void guiTimeline(void);
-void guiSavestate(BYTE slot);
-double (*guiGetMs)(void);
-int guiSleep(double ms);
-void guiSetThreadAffinity(uint8_t core);
+void gui_init(int argc, char **argv);
+BYTE gui_create(void);
+void gui_set_video_mode(void);
+void gui_start(void);
+void gui_event(void);
+HWND gui_window_id(void);
+void gui_update(void);
+void gui_fullscreen(void);
+void gui_timeline(void);
+void gui_save_slot(BYTE slot);
+double (*gui_get_ms)(void);
+int gui_sleep(double ms);
+void gui_set_thread_affinity(uint8_t core);
 
 void set_effect(void);
 

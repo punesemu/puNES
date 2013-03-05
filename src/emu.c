@@ -68,15 +68,15 @@ BYTE emu_loop(void) {
 //	guiSetThreadAffinity(0);
 //#endif
 
-	fps.second_start = guiGetMs();
+	fps.second_start = gui_get_ms();
 
-	fps.next_frame = guiGetMs() + machine.ms_frame;
+	fps.next_frame = gui_get_ms() + machine.ms_frame;
 
 	for (;;) {
 		tas.lag_frame = TRUE;
 
 		/* controllo se ci sono eventi dalla tastiera */
-		guiEvent();
+		gui_event();
 
 		/* gestione uscita */
 		if (info.stop) {
@@ -488,7 +488,7 @@ BYTE emu_turn_on(void) {
 	input_init();
 
 	/* joystick */
-	jsInit();
+	js_init();
 
 	/* gestione grafica */
 	if (gfx_init()) {
@@ -533,7 +533,7 @@ void emu_pause(BYTE mode) {
 
 	if (mode == FALSE) {
 		info.pause = FALSE;
-		fps.next_frame = guiGetMs();
+		fps.next_frame = gui_get_ms();
 		return;
 	}
 }
@@ -647,7 +647,7 @@ void emu_quit(BYTE exit_code) {
 
 	timeline_quit();
 
-	jsQuit();
+	js_quit();
 
 	exit(exit_code);
 }

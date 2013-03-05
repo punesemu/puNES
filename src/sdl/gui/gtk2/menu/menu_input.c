@@ -137,5 +137,5 @@ void menu_input(GtkWidget *settings, GtkAccelGroup *accel_group) {
 
 	icon_inline(config, config_icon_inline)
 
-	g_signal_connect(G_OBJECT(config), "activate", G_CALLBACK(cfgInput), NULL);
+	g_signal_connect(G_OBJECT(config), "activate", G_CALLBACK(cfg_input), NULL);
 }

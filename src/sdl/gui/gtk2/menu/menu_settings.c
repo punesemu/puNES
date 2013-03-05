@@ -124,7 +124,7 @@ void menu_settings_check(void) {
 	}
 }
 void switch_save_on_exit(void) {
-	if (guiupdate) {
+	if (gui_in_update) {
 		return;
 	}
 

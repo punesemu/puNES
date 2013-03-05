@@ -104,21 +104,21 @@ void fps_frameskip(void) {
 	double diff;
 	double frame_end;
 
-	frame_end = guiGetMs();
+	frame_end = gui_get_ms();
 
 	ppu.skip_draw = FALSE;
 
 	diff = (frame_end - fps.next_frame);
 
 	if (diff < 0) {
-		guiSleep(fps.next_frame - frame_end);
+		gui_sleep(fps.next_frame - frame_end);
 	}
 
 	fps.next_frame += fps.ms;
 
 	if (diff >= (machine.ms_frame * fps.frames_before_skip)) {
 		if (fps.frames_skipped >= fps.max_frames_skipped) {
-			fps.next_frame = guiGetMs();
+			fps.next_frame = gui_get_ms();
 			fps.frames_skipped = 0;
 		} else {
 			fps.frames_skipped++;
@@ -129,7 +129,7 @@ void fps_frameskip(void) {
 
 	if ((diff = frame_end - fps.second_start) >= 1000.0) {
 		fps.avarage = (fps.avarage + (double) fps.counter) / 2.0;
-		fps.second_start = guiGetMs() - (diff - 1000.0);
+		fps.second_start = gui_get_ms() - (diff - 1000.0);
 		fps.counter = 0;
 	} else {
 		fps.counter++;

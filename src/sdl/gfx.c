@@ -24,14 +24,14 @@
 #define sdl_wid()\
 	if (info.gui) {\
 		char SDL_windowhack[50];\
-		sprintf(SDL_windowhack,"SDL_WINDOWID=%I64u", (uint64_t) guiWindowID());\
+		sprintf(SDL_windowhack,"SDL_WINDOWID=%I64u", (uint64_t) gui_window_id());\
 		SDL_putenv(SDL_windowhack);\
 	}
 #else
 #define sdl_wid()\
 	if (info.gui) {\
 		char SDL_windowhack[50];\
-		sprintf(SDL_windowhack,"SDL_WINDOWID=%i", (int) guiWindowID());\
+		sprintf(SDL_windowhack,"SDL_WINDOWID=%i", (int) gui_window_id());\
 		SDL_putenv(SDL_windowhack);\
 	}
 #endif
@@ -88,7 +88,7 @@ BYTE gfx_init(void) {
 	overscan.up = 8;
 	overscan.down = 8;
 
-	if (guiCreate()) {
+	if (gui_create()) {
 		fprintf(stderr, "gui initialization failed\n");
 		return (EXIT_ERROR);
 	}
@@ -171,7 +171,7 @@ BYTE gfx_init(void) {
 		gfx_set_screen(cfg->scale, cfg->filter, NO_FULLSCR, cfg->palette, FALSE);
 		cfg->fullscreen = NO_FULLSCR;
 		cfg->scale = gfx.scale_before_fscreen;
-		guiFullscreen();
+		gui_fullscreen();
 	} else {
 		gfx_set_screen(cfg->scale, cfg->filter, NO_FULLSCR, cfg->palette, FALSE);
 	}
@@ -456,7 +456,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 		}
 
 		/* faccio quello che serve prima del setvideo */
-		guiSetVideoMode();
+		gui_set_video_mode();
 
 		/*
 		 * nella versione a 32 bit (GTK) dopo un gfx_reset_video,
@@ -733,7 +733,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 	gfx.h_pr = ((float) h_for_pr / gfx.h[CURRENT]) * ((float) gfx.h[NO_OVERSCAN] / SCR_LINES);
 
 	/* setto il titolo della finestra */
-	guiUpdate();
+	gui_update();
 
 	if (info.on_cfg == TRUE) {
 		info.on_cfg = FALSE;

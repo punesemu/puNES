@@ -9,12 +9,12 @@
 #include <string.h>
 #include "win.h"
 
-struct keyvalElement {
+typedef struct {
 	DBWORD keyval;
 	char keyval_name[20];
-};
+} _keyval_element;
 
-static const struct keyvalElement kvlist[] = {
+static const _keyval_element kv_list[] = {
 	{ 0,            "NULL"      },
 	{ VK_SPACE,     "Spacebar"  },
 	{ VK_INSERT,    "Insert"    },
@@ -47,13 +47,13 @@ static const struct keyvalElement kvlist[] = {
 	{ VK_RETURN,    "Enter"     }
 };
 
-DBWORD keyvalFromName(const char *keyval_name) {
+DBWORD keyval_from_name(const char *keyval_name) {
 	DBWORD keyval;
 	BYTE index;
 
-	for (index = 0; index < LENGTH(kvlist); index++) {
-		if (!strcmp(keyval_name, kvlist[index].keyval_name)) {
-			return (kvlist[index].keyval);
+	for (index = 0; index < LENGTH(kv_list); index++) {
+		if (!strcmp(keyval_name, kv_list[index].keyval_name)) {
+			return (kv_list[index].keyval);
 		}
 	}
 
@@ -61,21 +61,21 @@ DBWORD keyvalFromName(const char *keyval_name) {
 
 	return (keyval);
 }
-char *keyvalToName(const DBWORD keyval) {
-	DBWORD lScan = MapVirtualKey(keyval, 0);
+char *keyval_to_name(const DBWORD keyval) {
+	DBWORD l_scan = MapVirtualKey(keyval, 0);
 	BYTE index;
 	static char str[20];
 
 	memset(str, 0, 20);
 
-	for (index = 0; index < LENGTH(kvlist); index++) {
-		if (keyval == kvlist[index].keyval) {
-			strcpy(str, kvlist[index].keyval_name);
+	for (index = 0; index < LENGTH(kv_list); index++) {
+		if (keyval == kv_list[index].keyval) {
+			strcpy(str, kv_list[index].keyval_name);
 			return (str);
 		}
 	}
 
-	GetKeyNameText((lScan << 16), str, 20);
+	GetKeyNameText((l_scan << 16), str, 20);
 
 	return (str);
 }

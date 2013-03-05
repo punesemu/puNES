@@ -111,7 +111,7 @@ void timeline_snap(BYTE mode) {
 	tl_operation(TL_SAVE, snap);
 
 	if (mode == TL_NORMAL) {
-		guiTimeline();
+		gui_timeline();
 	}
 }
 void timeline_preview(BYTE snap) {
@@ -238,7 +238,7 @@ void tl_operation(BYTE mode, BYTE snap) {
 		 */
 		if ((mode == TL_READ) && (old_side_inserted != fds.drive.side_inserted)) {
 			fds_disk_op(FDS_DISK_TIMELINE_SELECT, fds.drive.side_inserted);
-			guiUpdate();
+			gui_update();
 		}
 	}
 

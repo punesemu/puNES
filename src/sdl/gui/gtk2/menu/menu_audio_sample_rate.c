@@ -67,7 +67,7 @@ enum {
 	NUMCHKS
 };
 
-void set_sample_rate(int newsamplerate);
+void set_sample_rate(int samplerate);
 
 static GtkWidget *check[NUMCHKS];
 
@@ -108,23 +108,19 @@ void menu_audio_sample_rate_check(void) {
 		}
 	}
 }
-void set_sample_rate(int newsamplerate) {
-	if (guiupdate) {
+void set_sample_rate(int samplerate) {
+	if (gui_in_update) {
 		return;
 	}
 
-	if (cfg->samplerate == newsamplerate) {
-		guiUpdate();
+	if (cfg->samplerate == samplerate) {
+		gui_update();
 		return;
 	}
 
 	emu_pause(TRUE);
-
-	cfg->samplerate = newsamplerate;
-
+	cfg->samplerate = samplerate;
 	snd_start();
-
-	guiUpdate();
-
+	gui_update();
 	emu_pause(FALSE);
 }

@@ -24,7 +24,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine
 	int argc = __argc;
 	char **argv = (char **)__argv;
 
-	gui.mainhInstance = hInstance;
+	gui.main_hinstance = hInstance;
 #else
 int main(int argc, char **argv) {
 #endif
@@ -45,7 +45,7 @@ int main(int argc, char **argv) {
 		}
 	}
 
-	guiInit(argc, argv);
+	gui_init(argc, argv);
 
 #define control_dir(fld, txt)\
 {\
@@ -111,7 +111,7 @@ int main(int argc, char **argv) {
 		emu_quit(EXIT_FAILURE);
 	}
 
-	guiStart();
+	gui_start();
 
 	emu_quit(EXIT_SUCCESS);
 

@@ -287,25 +287,25 @@ void menu_state(GtkWidget *mainmenu, GtkAccelGroup *accel_group) {
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), check[MSSLOT5]);
 
 	g_signal_connect_swapped(G_OBJECT(sslotsave), "activate",
-			G_CALLBACK(menu_state_saveslot_action), GINT_TO_POINTER(SAVE));
+			G_CALLBACK(menu_state_save_slot_action), GINT_TO_POINTER(SAVE));
 	g_signal_connect_swapped(G_OBJECT(check[MLOAD]), "activate",
-			G_CALLBACK(menu_state_saveslot_action), GINT_TO_POINTER(LOAD));
-	g_signal_connect_swapped(G_OBJECT(sslotinc), "activate", G_CALLBACK(menu_state_saveslot_incdec),
-			GINT_TO_POINTER(INC));
-	g_signal_connect_swapped(G_OBJECT(sslotdec), "activate", G_CALLBACK(menu_state_saveslot_incdec),
-			GINT_TO_POINTER(DEC));
+			G_CALLBACK(menu_state_save_slot_action), GINT_TO_POINTER(LOAD));
+	g_signal_connect_swapped(G_OBJECT(sslotinc), "activate",
+			G_CALLBACK(menu_state_save_slot_incdec), GINT_TO_POINTER(INC));
+	g_signal_connect_swapped(G_OBJECT(sslotdec), "activate",
+			G_CALLBACK(menu_state_save_slot_incdec), GINT_TO_POINTER(DEC));
 	g_signal_connect_swapped(G_OBJECT(check[MSSLOT0]), "activate",
-			G_CALLBACK(menu_state_saveslot_set), GINT_TO_POINTER(0));
+			G_CALLBACK(menu_state_save_slot_set), GINT_TO_POINTER(0));
 	g_signal_connect_swapped(G_OBJECT(check[MSSLOT1]), "activate",
-			G_CALLBACK(menu_state_saveslot_set), GINT_TO_POINTER(1));
+			G_CALLBACK(menu_state_save_slot_set), GINT_TO_POINTER(1));
 	g_signal_connect_swapped(G_OBJECT(check[MSSLOT2]), "activate",
-			G_CALLBACK(menu_state_saveslot_set), GINT_TO_POINTER(2));
+			G_CALLBACK(menu_state_save_slot_set), GINT_TO_POINTER(2));
 	g_signal_connect_swapped(G_OBJECT(check[MSSLOT3]), "activate",
-			G_CALLBACK(menu_state_saveslot_set), GINT_TO_POINTER(3));
+			G_CALLBACK(menu_state_save_slot_set), GINT_TO_POINTER(3));
 	g_signal_connect_swapped(G_OBJECT(check[MSSLOT4]), "activate",
-			G_CALLBACK(menu_state_saveslot_set), GINT_TO_POINTER(4));
+			G_CALLBACK(menu_state_save_slot_set), GINT_TO_POINTER(4));
 	g_signal_connect_swapped(G_OBJECT(check[MSSLOT5]), "activate",
-			G_CALLBACK(menu_state_saveslot_set), GINT_TO_POINTER(5));
+			G_CALLBACK(menu_state_save_slot_set), GINT_TO_POINTER(5));
 
 }
 void menu_state_check(void) {
@@ -347,23 +347,23 @@ void menu_state_check(void) {
 	}
 	gtk_widget_queue_draw(GTK_WIDGET(saveslot));
 }
-void menu_state_saveslot_incdec(BYTE mode) {
-	BYTE newslot;
+void menu_state_save_slot_incdec(BYTE mode) {
+	BYTE new_slot;
 
 	if (mode == INC) {
-		newslot = save_slot.slot + 1;
-		if (newslot >= SAVE_SLOTS) {
-			newslot = 0;
+		new_slot = save_slot.slot + 1;
+		if (new_slot >= SAVE_SLOTS) {
+			new_slot = 0;
 		}
 	} else {
-		newslot = save_slot.slot - 1;
-		if (newslot >= SAVE_SLOTS) {
-			newslot = SAVE_SLOTS - 1;
+		new_slot = save_slot.slot - 1;
+		if (new_slot >= SAVE_SLOTS) {
+			new_slot = SAVE_SLOTS - 1;
 		}
 	}
-	menu_state_saveslot_set(newslot);
+	menu_state_save_slot_set(new_slot);
 }
-void menu_state_saveslot_action(BYTE mode) {
+void menu_state_save_slot_action(BYTE mode) {
 	emu_pause(TRUE);
 
 	if (mode == SAVE) {
@@ -373,12 +373,12 @@ void menu_state_saveslot_action(BYTE mode) {
 		save_slot_load();
 	}
 
-	guiUpdate();
+	gui_update();
 
 	emu_pause(FALSE);
 }
-void menu_state_saveslot_set(BYTE slot) {
-	if (guiupdate) {
+void menu_state_save_slot_set(BYTE slot) {
+	if (gui_in_update) {
 		return;
 	}
 
@@ -386,5 +386,5 @@ void menu_state_saveslot_set(BYTE slot) {
 
 	gtk_combo_box_set_active(GTK_COMBO_BOX(saveslot), slot);
 
-	guiUpdate();
+	gui_update();
 }

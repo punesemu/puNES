@@ -12,6 +12,6 @@
 
 void menu_mode(GtkWidget *settings, GtkAccelGroup *accel_group);
 void menu_mode_check(void);
-void menu_mode_set_mode(int newmode);
+void menu_mode_set_mode(int mode);
 
 #endif /* MENU_MODE_H_ */

@@ -143,7 +143,7 @@ enum {
 	NUMCHKS
 };
 
-void set_overscan(int newoscan);
+void set_overscan(int oscan);
 
 static GtkWidget *check[NUMCHKS];
 
@@ -228,16 +228,16 @@ void menu_video_overscan_check(void) {
 	}
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[index]), TRUE);
 }
-void set_overscan(int newoscan) {
-	if (guiupdate) {
+void set_overscan(int oscan) {
+	if (gui_in_update) {
 		return;
 	}
 
-	switch (newoscan) {
+	switch (oscan) {
 		case OSCAN_ON:
 		case OSCAN_OFF:
 		case OSCAN_DEFAULT:
-			cfg->oscan = newoscan;
+			cfg->oscan = oscan;
 			cfg_file_pgs_save();
 			break;
 		case OSCAN_DEFAULT_OFF:

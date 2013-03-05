@@ -314,7 +314,7 @@ void netplay_display_message(uint8_t mode, uint32_t size, const char *fmt, ...) 
 	vsnprintf(event->arg[1], size, fmt, ap);
 	va_end(ap);
 
-	guiAddEvent(funct, event);
+	gui_add_event(funct, event);
 }
 void netplay_enable_widget(uint32_t widget, uint8_t mode) {
 	_guievent *event;
@@ -326,7 +326,7 @@ void netplay_enable_widget(uint32_t widget, uint8_t mode) {
 	(*(uint32_t *)event->arg[0]) = widget;
 	(*(uint8_t *)event->arg[1]) = mode;
 
-	guiAddEvent(enable_widget, event);
+	gui_add_event(enable_widget, event);
 }
 
 void active_server_mode(void) {
@@ -418,7 +418,7 @@ void cancel_clicked(GtkButton *button, gpointer user_data) {
 	net_close(net.protocol_data);
 
 	/* se ci sono eventi gtk pendenti li eseguo */
-	guiFlush();
+	gui_flush();
 
 	/* ditruggo la finestra */
 	gtk_widget_destroy(net.widget[NETPLAY]);

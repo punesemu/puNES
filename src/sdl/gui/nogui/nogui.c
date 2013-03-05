@@ -181,7 +181,7 @@ void guiEvent(void) {
 						gfx.ntscFormat = COMPOSITE;
 					}
 					ntsc_set(gfx.ntscFormat, 0, 0, (BYTE *) palette_RGB, 0);
-					guiUpdate();
+					gui_update();
 				} else {
 					gfx_set_screen(NO_CHANGE, RGBNTSC, NO_CHANGE, NO_CHANGE, FALSE);
 				}
@@ -352,7 +352,7 @@ void guiEvent(void) {
 int guiWindowID(void) {
 	return(0);
 }
-void guiUpdate(void) {
+void gui_update(void) {
 	char title[255];
 
 	emu_set_title(title);

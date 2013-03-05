@@ -148,27 +148,27 @@ void menu_mode_check(void) {
 	}
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[index]), TRUE);
 }
-void menu_mode_set_mode(int newmode) {
+void menu_mode_set_mode(int mode) {
 	BYTE reset = TRUE;
 
-	if (guiupdate) {
+	if (gui_in_update) {
 		return;
 	}
 
-	if (newmode == cfg->mode) {
-		guiUpdate();
+	if (mode == cfg->mode) {
+		gui_update();
 		return;
 	}
 
-	switch (newmode) {
+	switch (mode) {
 		case PAL:
 		case NTSC:
 		case DENDY:
-			if ((cfg->mode == AUTO) && (newmode == machine.type)) {
+			if ((cfg->mode == AUTO) && (mode == machine.type)) {
 				reset = FALSE;
 			}
-			cfg->mode = newmode;
-			machine = machinedb[newmode - 1];
+			cfg->mode = mode;
+			machine = machinedb[mode - 1];
 			break;
 		case AUTO:
 			if (info.machine_db == PAL) {
@@ -192,7 +192,7 @@ void menu_mode_set_mode(int newmode) {
 			break;
 	}
 
-	guiUpdate();
+	gui_update();
 
 	if (reset) {
 		text_add_line_info(1, "switched to [green]%s", param_mode[machine.type].lname);

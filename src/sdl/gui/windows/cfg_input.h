@@ -1,12 +1,12 @@
 /*
- * cfginput.h
+ * cfg_input.h
  *
  *  Created on: 04/nov/2011
  *      Author: fhorse
  */
 
-#ifndef CFGINPUT_H_
-#define CFGINPUT_H_
+#ifndef CFG_INPUT_H_
+#define CFG_INPUT_H_
 
 #include "common.h"
 
@@ -17,6 +17,6 @@ typedef struct {
 
 _cfg_port cfg_port1, cfg_port2;
 
-void cfgInput(HWND hwnd);
+void cfg_input(HWND hwnd);
 
-#endif /* CFGINPUT_H_ */
+#endif /* CFG_INPUT_H_ */

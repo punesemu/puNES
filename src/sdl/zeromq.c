@@ -71,7 +71,7 @@ uint8_t net_server(void *data) {
 	}
 
 	/* diamo il tempo ai thread zmq di fare cio' che devono */
-	guiSleep(10);
+	gui_sleep(10);
 
 	if (zmq_bind(zmq->socket, "tcp://*:5555") == -1) {
 		info("zmq_bind %s", zmq_strerror(errno));
@@ -79,7 +79,7 @@ uint8_t net_server(void *data) {
 	}
 
 	/* diamo il tempo ai thread zmq di fare cio' che devono */
-	guiSleep(10);
+	gui_sleep(10);
 
 	zmq->exchange->active = TRUE;
 	return (EXIT_OK);
@@ -115,7 +115,7 @@ uint8_t net_client(void *data, char *ip) {
 	}
 
 	/* diamo il tempo ai thread zmq di fare cio' che devono */
-	guiSleep(10);
+	gui_sleep(10);
 
 	snprintf(server_service, 60, "tcp://%s:5555", ip);
 
@@ -125,7 +125,7 @@ uint8_t net_client(void *data, char *ip) {
 	}
 
 	/* diamo il tempo ai thread zmq di fare cio' che devono */
-	guiSleep(10);
+	gui_sleep(10);
 	return (EXIT_OK);
 
 	net_client_error: zmq->error = errno;
@@ -344,7 +344,7 @@ void net_server_thread(void *data) {
 		}
 
 		net_server_thread_step: zmq_msg_close(&in);
-		guiSleep(1);
+		gui_sleep(1);
 		continue;
 
 		net_server_thread_reset: zmq->exchange->want_disconnect = TRUE;
@@ -383,7 +383,7 @@ void net_client_thread(void *data) {
 			goto net_client_thread_stop;
 		}
 
-		guiSleep(500);
+		gui_sleep(500);
 
 		if (!zmq->exchange->peer_connected) {
 			continue;
@@ -429,7 +429,7 @@ void net_client_send(void *data, net_req request, char *buffer, uint32_t size) {
 
 	/*  se sto gia' trasmettendo un messaggio aspetto */
 	while (zmq->in_send) {
-		guiSleep(1);
+		gui_sleep(1);
 	}
 
 	zmq->in_send = TRUE;
@@ -676,7 +676,7 @@ uint8_t _net_recv(void *data, net_req *request, void *buffer) {
 						info("the server is not responding");
 						goto _net_receive_error;
 					}
-					guiSleep(5);
+					gui_sleep(5);
 					continue;
 				case EFSM:
 				case ENOTSUP:
@@ -712,7 +712,7 @@ void net_close_socket(void *data) {
 	zmq->socket = NULL;
 
 	/* aspetto qualche millisecondo che l'operazione venga conclusa */
-	guiSleep(5);
+	gui_sleep(5);
 }
 void net_close(void *data) {
 	_zmq *zmq = data;
@@ -729,7 +729,7 @@ void net_close(void *data) {
 		zmq->exchange->want_quit = TRUE;
 
 		while (zmq->exchange->active && zmq->exchange->want_quit) {
-			guiSleep(5);
+			gui_sleep(5);
 		}
 
 		/*
@@ -739,7 +739,7 @@ void net_close(void *data) {
 		 */
 		if ((zmq->socket != NULL)) {
 			net_close_socket(data);
-			guiSleep(5);
+			gui_sleep(5);
 		}
 
 		if (zmq->context) {
@@ -751,7 +751,7 @@ void net_close(void *data) {
 		zmq->exchange->want_disconnect = FALSE;
 		zmq->exchange->want_quit = FALSE;
 
-		guiSleep(5);
+		gui_sleep(5);
 
 		free(zmq);
 	}

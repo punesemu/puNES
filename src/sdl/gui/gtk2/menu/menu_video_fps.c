@@ -84,7 +84,7 @@ enum {
 	NUMCHKS
 };
 
-void set_fps(int newfps);
+void set_fps(int fps);
 
 static GtkWidget *check[NUMCHKS];
 
@@ -124,18 +124,18 @@ void menu_video_fps_check(void) {
 		}
 	}
 }
-void set_fps(int newfps) {
-	if (guiupdate) {
+void set_fps(int fps) {
+	if (gui_in_update) {
 		return;
 	}
-	if (cfg->fps == newfps) {
-		guiUpdate();
+	if (cfg->fps == fps) {
+		gui_update();
 		return;
 	}
-	cfg->fps = newfps;
+	cfg->fps = fps;
 	emu_pause(TRUE);
 	fps_init();
 	snd_start();
-	guiUpdate();
+	gui_update();
 	emu_pause(FALSE);
 }

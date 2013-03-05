@@ -120,24 +120,24 @@ void menu_video_vsync_check(void) {
 void vsync_set(int bool) {
 	gint x, y;
 
-	if (guiupdate) {
+	if (gui_in_update) {
 		return;
 	}
 
 	if (cfg->vsync == bool) {
-		guiUpdate();
+		gui_update();
 		return;
 	}
 
 	/* salvo la posizione */
-	gtk_window_get_position(GTK_WINDOW(mainWin), &x, &y);
+	gtk_window_get_position(GTK_WINDOW(main_win), &x, &y);
 
 	/*
 	 * se non nascondo la finestra, al momento del
 	 * SDL_QuitSubSystem e del SDL_InitSubSystem
 	 * l'applicazione crasha.
 	 */
-	gtk_widget_hide(mainWin);
+	gtk_widget_hide(main_win);
 
 	/* switch vsync */
 	cfg->vsync = bool;
@@ -146,7 +146,7 @@ void vsync_set(int bool) {
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE);
 
 	/* rispristino la posizione */
-	gtk_window_move(GTK_WINDOW(mainWin), x, y);
+	gtk_window_move(GTK_WINDOW(main_win), x, y);
 
-	gtk_widget_show(mainWin);
+	gtk_widget_show(main_win);
 }

@@ -148,9 +148,9 @@
 
 #define IDM_SET_GAMEGENIE           940
 
-#define ID_SAVESLOT_CB              100
-#define ID_SAVESLOT_BS              101
-#define ID_SAVESLOT_BL              102
+#define ID_SAVE_SLOT_CB             100
+#define ID_SAVE_SLOT_BS             101
+#define ID_SAVE_SLOT_BL             102
 
 #define IDC_INPUT_CTRL_PORT1_C      100
 #define IDC_INPUT_CTRL_PORT1_B      101

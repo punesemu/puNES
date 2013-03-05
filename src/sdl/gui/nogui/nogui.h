@@ -33,7 +33,7 @@ void guiAfterSet(void);
 void guiStart(void);
 void guiEvent(void);
 int guiWindowID(void);
-void guiUpdate(void);
+void gui_update(void);
 void guiGetPosition(void);
 void guiSetPosition(char *buffer);
 void guiGetResolution(void);

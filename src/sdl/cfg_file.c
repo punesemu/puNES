@@ -54,12 +54,12 @@
 		if (strcmp(key, buf) == 0) {\
 			if (type == JOYSTICK) {\
 				if (index == (LENGTH(param) - 1)) {\
-					port.joy_id = nameToJsn(value);\
+					port.joy_id = name_to_jsn(value);\
 				} else {\
-					port.input[JOYSTICK][index] = nameToJsv(value);\
+					port.input[JOYSTICK][index] = name_to_jsv(value);\
 				}\
 			} else {\
-				port.input[KEYBOARD][index] = keyvalFromName(value);\
+				port.input[KEYBOARD][index] = keyval_from_name(value);\
 			}\
 			found = TRUE;\
 			break;\
@@ -348,9 +348,9 @@ void cfg_file_input_save(void) {
 void set_default(void) {
 
 #define _port_kb_default(port, button, name)\
-	port.input[KEYBOARD][button] = keyvalFromName(name);
+	port.input[KEYBOARD][button] = keyval_from_name(name);
 #define _port_js_default(port, button, name)\
-	port.input[JOYSTICK][button] = nameToJsv(name)
+	port.input[JOYSTICK][button] = name_to_jsv(name)
 #define port_kb_default(port, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10)\
 	_port_kb_default(port, BUT_A,  s1);\
 	_port_kb_default(port, BUT_B,  s2);\
@@ -363,7 +363,7 @@ void set_default(void) {
 	_port_kb_default(port, TRB_A,  s9);\
 	_port_kb_default(port, TRB_B,  s10)
 #define port_js_default(port, id, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10)\
-	port.joy_id = nameToJsn(id);\
+	port.joy_id = name_to_jsn(id);\
 	_port_js_default(port, BUT_A,  s1);\
 	_port_js_default(port, BUT_B,  s2);\
 	_port_js_default(port, SELECT, s3);\
@@ -408,7 +408,7 @@ void set_default(void) {
 	        "JA0PLS", "JB2", "JB3");
 
 	port2.type = FALSE;
-	port2.joy_id = nameToJsn("JOYSTICKID2");
+	port2.joy_id = name_to_jsn("JOYSTICKID2");
 }
 void set_default_pgs(void) {
 	cfg_from_file.oscan = OSCAN_DEFAULT;
@@ -444,16 +444,17 @@ void write_input_param(_param *prmtr, FILE *fp, BYTE end, _port port, BYTE numpo
 		if (index == 0) {
 			if (type == JOYSTICK) {
 				fprintf(fp, "# player %d joystick\n", numport);
-				fprintf(fp, "%s = %s\n", prmtr[end - 1].lname, jsnToName(port.joy_id));
+				fprintf(fp, "%s = %s\n", prmtr[end - 1].lname, jsn_to_name(port.joy_id));
 				end--;
 			} else {
 				fprintf(fp, "# player %d keyboard\n", numport);
 			}
 		}
 		if (type == JOYSTICK) {
-			fprintf(fp, "%s = %s\n", prmtr[index].lname, jsvToName(port.input[JOYSTICK][index]));
+			fprintf(fp, "%s = %s\n", prmtr[index].lname, jsv_to_name(port.input[JOYSTICK][index]));
 		} else {
-			fprintf(fp, "%s = %s\n", prmtr[index].lname, keyvalToName(port.input[KEYBOARD][index]));
+			fprintf(fp, "%s = %s\n", prmtr[index].lname,
+			        keyval_to_name(port.input[KEYBOARD][index]));
 		}
 	}
 }

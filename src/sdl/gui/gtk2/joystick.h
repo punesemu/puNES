@@ -11,11 +11,11 @@
 #include "common.h"
 #include "input.h"
 
-#define JSDEVPATH "/dev/input/js"
-#define nameToJsv(name) jsFromName(name, jsvlist, LENGTH(jsvlist))
-#define nameToJsn(name) jsFromName(name, jsnlist, LENGTH(jsnlist))
-#define jsvToName(jsvl) jsToName(jsvl, jsvlist, LENGTH(jsvlist))
-#define jsnToName(jsvl) jsToName(jsvl, jsnlist, LENGTH(jsnlist))
+#define JS_DEV_PATH "/dev/input/js"
+#define name_to_jsv(name) js_from_name(name, jsv_list, LENGTH(jsv_list))
+#define name_to_jsn(name) js_from_name(name, jsn_list, LENGTH(jsn_list))
+#define jsv_to_name(jsvl) js_to_name(jsvl, jsv_list, LENGTH(jsv_list))
+#define jsn_to_name(jsvl) js_to_name(jsvl, jsn_list, LENGTH(jsn_list))
 
 enum {
 	/* button pressed/released */
@@ -29,10 +29,9 @@ enum {
 typedef struct {
 	char dev[30];
 	SDBWORD fd;
-	WORD openTry;
+	WORD open_try;
 	SWORD last[16];
-	BYTE (*inputPort)(BYTE mode, DBWORD event, BYTE type,
-			_port *port);
+	BYTE (*input_port)(BYTE mode, DBWORD event, BYTE type, _port *port);
 } _js;
 typedef struct {
 	/* event timestamp in milliseconds */
@@ -43,15 +42,15 @@ typedef struct {
 	BYTE type;
 	/* axis/button number */
 	BYTE number;
-} _jsevent;
+} _js_event;
 typedef struct {
 	DBWORD value;
 	char name[20];
-} _jselement;
+} _js_element;
 
 _js js1, js2;
 
-static const _jselement jsvlist[] = {
+static const _js_element jsv_list[] = {
 	{ 0x000, "NULL"   },
 	{ 0x001, "JA0MIN" }, { 0x002, "JA0PLS" },
 	{ 0x003, "JA1MIN" }, { 0x004, "JA1PLS" },
@@ -76,7 +75,7 @@ static const _jselement jsvlist[] = {
 	{ 0x414, "JB20"   }, { 0x415, "JB21"   },
 	{ 0x416, "JB22"   }, { 0x417, "JB23"   },
 };
-static const _jselement jsnlist[] = {
+static const _js_element jsn_list[] = {
 	{ 0x0FF,  "NULL"        },
 	{ 0x000,  "JOYSTICKID1" },
 	{ 0x001,  "JOYSTICKID2" },
@@ -84,13 +83,13 @@ static const _jselement jsnlist[] = {
 	{ 0x003,  "JOYSTICKID4" },
 };
 
-void jsInit(void);
-void jsOpen(_js *joy);
-void jsControl(_js *joy, _port *port);
-void jsClose(_js *joy);
-void jsQuit(void);
-BYTE jsReadEvent(_jsevent *jse, _js *joy);
-char *jsToName(const DBWORD jsval, const _jselement *jslist, const DBWORD length);
-DBWORD jsFromName(const char *jsname, const _jselement *jslist, const DBWORD lenght);
+void js_init(void);
+void js_open(_js *joy);
+void js_control(_js *joy, _port *port);
+void js_close(_js *joy);
+void js_quit(void);
+BYTE js_read_event(_js_event *event, _js *joy);
+char *js_to_name(const DBWORD val, const _js_element *list, const DBWORD length);
+DBWORD js_from_name(const char *name, const _js_element *list, const DBWORD lenght);
 
 #endif /* JOYSTICK_H_ */

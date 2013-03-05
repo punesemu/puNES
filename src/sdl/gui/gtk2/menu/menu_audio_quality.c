@@ -59,7 +59,7 @@ enum {
 	NUMCHKS
 };
 
-void set_audio_quality(int new_quality);
+void set_audio_quality(int quality);
 
 static GtkWidget *check[NUMCHKS];
 
@@ -96,23 +96,19 @@ void menu_audio_quality_check(void) {
 		}
 	}
 }
-void set_audio_quality(int new_quality) {
-	if (guiupdate) {
+void set_audio_quality(int quality) {
+	if (gui_in_update) {
 		return;
 	}
 
-	if (cfg->audio_quality == new_quality) {
-		guiUpdate();
+	if (cfg->audio_quality == quality) {
+		gui_update();
 		return;
 	}
 
 	emu_pause(TRUE);
-
-	cfg->audio_quality = new_quality;
-
+	cfg->audio_quality = quality;
 	audio_quality(cfg->audio_quality);
-
-	guiUpdate();
-
+	gui_update();
 	emu_pause(FALSE);
 }

@@ -13,17 +13,17 @@
 #include "emu.h"
 #include "keyboard.h"
 #include "joystick.h"
-#include "cfginput.h"
+#include "cfg_input.h"
 #ifdef __NETPLAY__
 #include <arpa/inet.h>
 #include "netplay.h"
 #endif
 
 #define g_timeout_redraw_start()\
-		redraw = TRUE;\
-		g_timeout_add(25, (GSourceFunc) time_handler_redraw, NULL)
+	redraw = TRUE;\
+	g_timeout_add(25, (GSourceFunc) time_handler_redraw, NULL)
 #define g_timeout_redraw_stop()\
-		redraw = FALSE
+	redraw = FALSE
 #define exit_thread(value) g_thread_exit(value)
 #define icon_inline(wid, icn)\
 {\
@@ -52,29 +52,29 @@ typedef struct {
 
 _gui gui;
 
-GtkWidget *mainWin, *hboxss, *saveslot, *sssave, *ssload;
-gboolean guiupdate, redraw;
+GtkWidget *main_win, *hboxss, *saveslot, *sssave, *ssload;
+gboolean gui_in_update, redraw;
 
-void guiInit(int argc, char **argv);
-BYTE guiCreate(void);
-void guiSetVideoMode(void);
-void guiStart(void);
-void guiEvent(void);
-GdkNativeWindow guiWindowID(void);
-void guiUpdate(void);
-void guiFullscreen(void);
-void guiTimeline(void);
-void guiSavestate(BYTE slot);
-double (*guiGetMs)(void);
-int guiSleep(double ms);
-void guiAddEvent(void *funct, void *args);
-void guiFlush(void);
-void guiSetThreadAffinity(uint8_t core);
+void gui_init(int argc, char **argv);
+BYTE gui_create(void);
+void gui_set_video_mode(void);
+void gui_start(void);
+void gui_event(void);
+GdkNativeWindow gui_window_id(void);
+void gui_update(void);
+void gui_fullscreen(void);
+void gui_timeline(void);
+void gui_save_slot(BYTE slot);
+double (*gui_get_ms)(void);
+int gui_sleep(double ms);
+void gui_add_event(void *funct, void *args);
+void gui_flush(void);
+void gui_set_thread_affinity(uint8_t core);
 
 gboolean time_handler_redraw(void);
 void make_reset(int type);
 void file_open(void);
-void mainWin_destroy(void);
+void main_win_destroy(void);
 void help_about(void);
 
 #endif /* GTK2_H_ */

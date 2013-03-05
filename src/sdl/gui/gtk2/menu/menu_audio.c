@@ -131,16 +131,16 @@ void menu_audio_check(void) {
 	}
 }
 void menu_audio_set_audio_swap_duty(void) {
-	if (guiupdate) {
+	if (gui_in_update) {
 		return;
 	}
 	emu_pause(TRUE);
 	cfg->swap_duty = !cfg->swap_duty;
-	guiUpdate();
+	gui_update();
 	emu_pause(FALSE);
 }
 void menu_audio_set_audio_enable(void) {
-	if (guiupdate) {
+	if (gui_in_update) {
 		return;
 	}
 	emu_pause(TRUE);
@@ -150,6 +150,6 @@ void menu_audio_set_audio_enable(void) {
 	} else {
 		snd_stop();
 	}
-	guiUpdate();
+	gui_update();
 	emu_pause(FALSE);
 }

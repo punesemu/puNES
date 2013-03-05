@@ -91,7 +91,7 @@ enum {
 	NUMCHKS
 };
 
-void set_palette(int newpalette);
+void set_palette(int palette);
 
 static GtkWidget *check[NUMCHKS];
 
@@ -141,10 +141,10 @@ void menu_video_palette_check(void) {
 	}
 }
 
-void set_palette(int newpalette) {
-	if (guiupdate) {
+void set_palette(int palette) {
+	if (gui_in_update) {
 		return;
 	}
 
-	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, newpalette, FALSE);
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, palette, FALSE);
 }

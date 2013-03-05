@@ -87,7 +87,7 @@ enum {
 	NUMCHKS
 };
 
-void set_frame_skip(int newframeskip);
+void set_frame_skip(int frameskip);
 
 static GtkWidget *check[NUMCHKS];
 
@@ -127,17 +127,17 @@ void menu_video_frame_skip_check(void) {
 		}
 	}
 }
-void set_frame_skip(int newframeskip) {
-	if (guiupdate) {
+void set_frame_skip(int frameskip) {
+	if (gui_in_update) {
 		return;
 	}
-	if (cfg->frameskip == newframeskip) {
-		guiUpdate();
+	if (cfg->frameskip == frameskip) {
+		gui_update();
 		return;
 	}
-	cfg->frameskip = newframeskip;
+	cfg->frameskip = frameskip;
 	if (!fps.fast_forward) {
 		fps_normalize();
 	}
-	guiUpdate();
+	gui_update();
 }

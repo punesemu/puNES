@@ -4,22 +4,22 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../src/sdl/gui/windows/cfginput.c \
-../src/sdl/gui/windows/cfgstdctrl.c \
+../src/sdl/gui/windows/cfg_input.c \
+../src/sdl/gui/windows/cfg_std_ctrl.c \
 ../src/sdl/gui/windows/joystick.c \
 ../src/sdl/gui/windows/keyboard.c \
 ../src/sdl/gui/windows/win.c 
 
 OBJS += \
-./src/sdl/gui/windows/cfginput.o \
-./src/sdl/gui/windows/cfgstdctrl.o \
+./src/sdl/gui/windows/cfg_input.o \
+./src/sdl/gui/windows/cfg_std_ctrl.o \
 ./src/sdl/gui/windows/joystick.o \
 ./src/sdl/gui/windows/keyboard.o \
 ./src/sdl/gui/windows/win.o 
 
 C_DEPS += \
-./src/sdl/gui/windows/cfginput.d \
-./src/sdl/gui/windows/cfgstdctrl.d \
+./src/sdl/gui/windows/cfg_input.d \
+./src/sdl/gui/windows/cfg_std_ctrl.d \
 ./src/sdl/gui/windows/joystick.d \
 ./src/sdl/gui/windows/keyboard.d \
 ./src/sdl/gui/windows/win.d 

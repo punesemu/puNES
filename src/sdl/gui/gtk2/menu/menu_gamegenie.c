@@ -35,7 +35,7 @@ void menu_gamegenie_check(void) {
 	}
 }
 void menu_gamegenie_select(void) {
-	if (guiupdate) {
+	if (gui_in_update) {
 		return;
 	}
 
@@ -45,5 +45,5 @@ void menu_gamegenie_select(void) {
 		gamegenie_check_rom_present(TRUE);
 	}
 
-	guiUpdate();
+	gui_update();
 }

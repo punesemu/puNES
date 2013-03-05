@@ -75,7 +75,7 @@ enum {
 	NUMCHKS
 };
 
-void set_scale(int newscale);
+void set_scale(int scale);
 
 static GtkWidget *check[NUMCHKS];
 
@@ -149,12 +149,12 @@ void menu_video_size_check(void) {
 		gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[index]), TRUE);
 	}
 }
-void set_scale(int newscale) {
-	if (guiupdate) {
+void set_scale(int scale) {
+	if (gui_in_update) {
 		return;
 	}
 
-	switch (newscale) {
+	switch (scale) {
 		case X1:
 			gfx_set_screen(X1, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE);
 			return;

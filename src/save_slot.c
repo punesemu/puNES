@@ -191,7 +191,7 @@ void save_slot_count_load(void) {
 		}
 	}
 
-	guiSavestate(save_slot.slot);
+	gui_save_slot(save_slot.slot);
 }
 BYTE save_slot_element_struct(BYTE mode, BYTE slot, uintptr_t *src, DBWORD size, FILE *fp,
         BYTE preview) {
@@ -669,7 +669,7 @@ BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 		 */
 		if ((mode == SAVE_SLOT_READ) && (old_side_inserted != fds.drive.side_inserted)) {
 			fds_disk_op(FDS_DISK_TIMELINE_SELECT, fds.drive.side_inserted);
-			guiUpdate();
+			gui_update();
 		}
 	}
 

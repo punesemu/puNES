@@ -10,7 +10,7 @@
 
 #include "common.h"
 
-DBWORD keyvalFromName(const char *keyval_name);
-char *keyvalToName(const DBWORD keyval);
+DBWORD keyval_from_name(const char *keyval_name);
+char *keyval_to_name(const DBWORD keyval);
 
 #endif /* KEYBOARD_H_ */

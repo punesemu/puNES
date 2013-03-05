@@ -8,13 +8,13 @@
 #include <string.h>
 #include "gtk2.h"
 
-DBWORD keyvalFromName(const gchar *keyval_name) {
+DBWORD keyval_from_name(const gchar *keyval_name) {
 	if (strcmp(keyval_name, "NULL") == 0) {
 		return (0);
 	}
 	return (gdk_keyval_to_lower(gdk_keyval_from_name(keyval_name)));
 }
-gchar *keyvalToName(const DBWORD keyval) {
+gchar *keyval_to_name(const DBWORD keyval) {
 	if (!keyval) {
 		return ("NULL");
 	}

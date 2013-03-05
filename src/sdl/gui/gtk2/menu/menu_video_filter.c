@@ -296,7 +296,7 @@ enum {
 	NUMCHKS
 };
 
-void set_filter(int newfilter);
+void set_filter(int filter);
 
 static GtkWidget *check[NUMCHKS];
 
@@ -530,12 +530,12 @@ void menu_video_filter_check(void) {
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[index]), TRUE);
 }
 
-void set_filter(int newfilter) {
-	if (guiupdate) {
+void set_filter(int filter) {
+	if (gui_in_update) {
 		return;
 	}
 
-	switch (newfilter) {
+	switch (filter) {
 		case NO_FILTER:
 			gfx_set_screen(NO_CHANGE, NO_FILTER, NO_CHANGE, NO_CHANGE, FALSE);
 			return;
@@ -584,7 +584,7 @@ void set_filter(int newfilter) {
 			 * e' stato effettuato con successo.
 			 */
 			if (cfg->filter == NTSC_FILTER) {
-				switch (newfilter) {
+				switch (filter) {
 					case MRGBNTSCCOM:
 						cfg->ntsc_format = COMPOSITE;
 						break;
@@ -596,7 +596,7 @@ void set_filter(int newfilter) {
 						break;
 				}
 				ntsc_set(cfg->ntsc_format, 0, 0, (BYTE *) palette_RGB, 0);
-				guiUpdate();
+				gui_update();
 			}
 			return;
 	}

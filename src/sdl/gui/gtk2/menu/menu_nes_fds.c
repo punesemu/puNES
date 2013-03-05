@@ -329,7 +329,7 @@ void menu_nes_fds_check(void) {
 	}
 }
 void menu_nes_fds_eject_insert_disk(void) {
-	if (guiupdate) {
+	if (gui_in_update) {
 		return;
 	}
 
@@ -339,10 +339,10 @@ void menu_nes_fds_eject_insert_disk(void) {
 		fds_disk_op(FDS_DISK_INSERT, 0);
 	}
 
-	guiUpdate();
+	gui_update();
 }
 void menu_nes_fds_select_side(int side) {
-	if (guiupdate) {
+	if (gui_in_update) {
 		return;
 	}
 
@@ -359,5 +359,5 @@ void menu_nes_fds_select_side(int side) {
 
 	fds_disk_op(FDS_DISK_SELECT, side);
 
-	guiUpdate();
+	gui_update();
 }

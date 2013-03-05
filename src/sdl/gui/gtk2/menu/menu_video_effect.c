@@ -119,7 +119,7 @@ void menu_video_effect_check(void) {
 	}
 }
 void menu_video_effect_set(void) {
-	if (guiupdate) {
+	if (gui_in_update) {
 		return;
 	}
 

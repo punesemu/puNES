@@ -32,14 +32,14 @@
 #include "opengl.h"
 #include "menu/menu.h"
 
-#define tlPressed(type)\
+#define tl_pressed(type)\
 	emu_pause(TRUE);\
 	type = TRUE;\
 	if (tl.snaps_fill) {\
 		/* faccio lo screenshot dello screen attuale */\
 		memcpy(tl.snaps[TL_SNAP_FREE] + tl.preview, screen.data, screen_size());\
 	}
-#define tlRelease(type)\
+#define tl_release(type)\
 	if (tl.snaps_fill) {\
 		BYTE snap = gtk_range_get_value(GTK_RANGE(timeline));\
 		if (snap != (tl.snaps_fill - 1)) {\
@@ -50,9 +50,7 @@
 	type = FALSE;\
 	emu_pause(FALSE)
 
-enum {
-	COLUMN_STRING, COLUMN_INT, N_COLUMNS
-};
+enum { COLUMN_STRING, COLUMN_INT, N_COLUMNS };
 
 typedef struct {
 	GdkWindow *window;
@@ -72,8 +70,8 @@ typedef struct {
 	gulong hook_id;
 }  _trcb;
 
-double highResolutionMs(void);
-gboolean mainWin_configure_event(void);
+double high_resolution_ms(void);
+gboolean main_win_configure_event(void);
 gboolean sock_key_press_event(GtkWidget *widget, GdkEventKey *event);
 gboolean sock_key_release_event(GtkWidget *widget, GdkEventKey *event);
 gboolean mouse_button_press_release_event(GtkWidget *widget, GdkEventButton *event);
@@ -83,12 +81,12 @@ void file_open_filter_add(GtkWidget *filechooser, const gchar *title, const gcha
 gboolean timeline_value_changed(GtkRange *range);
 gboolean timeline_button_press_release_event(GtkWidget *widget, GdkEventButton *event);
 gchar *timeline_format_value(GtkScale *scale, gdouble value);
-void saveslot_changed(GtkComboBox *widget);
-void saveslot_control(GtkCellLayout *cell_layout, GtkCellRenderer *cell, GtkTreeModel *tree_model,
+void save_slot_changed(GtkComboBox *widget);
+void save_slot_control(GtkCellLayout *cell_layout, GtkCellRenderer *cell, GtkTreeModel *tree_model,
 		GtkTreeIter *iter, gpointer data);
-void saveslot_notify_popup_shown(GtkComboBox *widget);
-void saveslot_preview(void);
-gboolean saveslot_key_press_event(GSignalInvocationHint *ihint, guint n_param_values,
+void save_slot_notify_popup_shown(GtkComboBox *widget);
+void save_slot_gui_preview(void);
+gboolean save_slot_key_press_event(GSignalInvocationHint *ihint, guint n_param_values,
 		const GValue *param_values, gpointer data);
 void change_rom(char *rom);
 void drag_data_received(GtkWidget *widget, GdkDragContext *context, gint x, gint y,
@@ -101,13 +99,13 @@ GtkWidget *sock, *hbox;
 GtkWidget *hboxtl, *timeline;
 GtkAllocation alSeparator;
 GdkRectangle monitor;
-gint guiPosX, guiPosY;
+gint gui_pos_x, gui_pos_y;
 
-void guiInit(int argc, char **argv) {
+void gui_init(int argc, char **argv) {
 	memset(&gui, 0, sizeof(_gui));
-	guiPosX = guiPosY = 100;
+	gui_pos_x = gui_pos_y = 100;
 	info.gui = TRUE;
-	guiupdate = FALSE;
+	gui_in_update = FALSE;
 
 	g_thread_init(NULL);
 	gdk_threads_init();
@@ -159,31 +157,31 @@ void guiInit(int argc, char **argv) {
  	}
 
 	gettimeofday(&gui.counterStart, NULL);
-	guiGetMs = highResolutionMs;
+	gui_get_ms = high_resolution_ms;
 }
-BYTE guiCreate(void) {
+BYTE gui_create(void) {
 	GtkWidget *vbox, *separator;
 
 	/* main window */
-	mainWin = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-	gtk_window_set_icon(GTK_WINDOW(mainWin),
+	main_win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+	gtk_window_set_icon(GTK_WINDOW(main_win),
 			gdk_pixbuf_new_from_inline(-1, icon_inline, FALSE, NULL));
 
 	/* destroy event */
-	g_signal_connect(G_OBJECT(mainWin), "destroy", G_CALLBACK(mainWin_destroy), NULL);
+	g_signal_connect(G_OBJECT(main_win), "destroy", G_CALLBACK(main_win_destroy), NULL);
 
 	/* configure event */
-	//g_signal_connect(G_OBJECT(mainWin), "configure-event", G_CALLBACK(mainWin_configure_event),
+	//g_signal_connect(G_OBJECT(main_win), "configure-event", G_CALLBACK(main_win_configure_event),
 	//		NULL);
 
 	/* la finestra non e' ridimensionabile */
-	gtk_window_set_resizable(GTK_WINDOW(mainWin), FALSE);
+	gtk_window_set_resizable(GTK_WINDOW(main_win), FALSE);
 
 	vbox = gtk_vbox_new(FALSE, 0);
-	gtk_container_add(GTK_CONTAINER(mainWin), vbox);
+	gtk_container_add(GTK_CONTAINER(main_win), vbox);
 
 	/* menu */
-	menu_create(mainWin, vbox);
+	menu_create(main_win, vbox);
 
 	/* sdl window */
 	{
@@ -331,17 +329,16 @@ BYTE guiCreate(void) {
 		renderer = gtk_cell_renderer_text_new();
 		gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(saveslot), renderer, TRUE);
 		gtk_cell_layout_add_attribute(GTK_CELL_LAYOUT(saveslot), renderer, "text", COLUMN_STRING);
-		gtk_cell_layout_set_cell_data_func(GTK_CELL_LAYOUT(saveslot), renderer, saveslot_control,
+		gtk_cell_layout_set_cell_data_func(GTK_CELL_LAYOUT(saveslot), renderer, save_slot_control,
 				NULL, NULL);
 
-		g_signal_connect(G_OBJECT(saveslot), "changed", G_CALLBACK(saveslot_changed), NULL);
+		g_signal_connect(G_OBJECT(saveslot), "changed", G_CALLBACK(save_slot_changed), NULL);
 		g_signal_connect(G_OBJECT(saveslot), "notify::popup-shown",
-				G_CALLBACK(saveslot_notify_popup_shown), NULL);
+				G_CALLBACK(save_slot_notify_popup_shown), NULL);
 		g_signal_connect_swapped(G_OBJECT(sssave), "clicked",
-		        G_CALLBACK(menu_state_saveslot_action), GINT_TO_POINTER(SAVE));
+		        G_CALLBACK(menu_state_save_slot_action), GINT_TO_POINTER(SAVE));
 		g_signal_connect_swapped(G_OBJECT(ssload), "clicked",
-		        G_CALLBACK(menu_state_saveslot_action),
-				GINT_TO_POINTER(LOAD));
+		        G_CALLBACK(menu_state_save_slot_action), GINT_TO_POINTER(LOAD));
 
 		/* il saveslot non puo' avere il focus */
 		gtk_combo_box_set_focus_on_click(GTK_COMBO_BOX(saveslot), FALSE);
@@ -357,13 +354,13 @@ BYTE guiCreate(void) {
 
 	gtk_widget_show_all(vbox);
 
-	gtk_widget_show_all(mainWin);
+	gtk_widget_show_all(main_win);
 
 	g_object_ref_sink(separator);
 
 	return (EXIT_OK);
 }
-void guiSetVideoMode(void) {
+void gui_set_video_mode(void) {
 	WORD rows = SCR_ROWS;
 
 	if (cfg->scale == X1) {
@@ -381,15 +378,15 @@ void guiSetVideoMode(void) {
 	}
 	gtk_widget_set_size_request(GTK_WIDGET(hboxtl), rows, -1);
 	gtk_widget_set_size_request(GTK_WIDGET(timeline),
-			rows - (alSeparator.width * 2) - (SPACING * 2), -1);
+	        rows - (alSeparator.width * 2) - (SPACING * 2), -1);
 	gtk_widget_set_size_request(sock, gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE]);
 }
-void guiStart(void) {
-	gtk_idle_add((GtkFunction) emu_loop, mainWin);
+void gui_start(void) {
+	gtk_idle_add((GtkFunction) emu_loop, main_win);
 	gui.start = TRUE;
 	gtk_main();
 }
-void guiEvent(void) {
+void gui_event(void) {
 	while (gtk_events_pending()) {
 		gtk_main_iteration();
 	}
@@ -403,39 +400,39 @@ void guiEvent(void) {
 		return;
 	}
 
-	jsControl(&js1, &port1);
+	js_control(&js1, &port1);
 	/* i due joystick non possono essere gli stessi */
 	if (port2.joy_id != port1.joy_id) {
-		jsControl(&js2, &port2);
+		js_control(&js2, &port2);
 	}
 	input_turbo_buttons_control(&port1);
 	input_turbo_buttons_control(&port2);
 }
-GdkNativeWindow guiWindowID(void) {
+GdkNativeWindow gui_window_id(void) {
 	return (gtk_socket_get_id(GTK_SOCKET(sock)));
 }
-void guiUpdate(void) {
+void gui_update(void) {
 	char title[255];
 
-	guiupdate = TRUE;
+	gui_in_update = TRUE;
 
 	/* aggiorno il titolo */
 	emu_set_title(title);
-	gtk_window_set_title(GTK_WINDOW(mainWin), title);
+	gtk_window_set_title(GTK_WINDOW(main_win), title);
 
 	menu_nes_check();
 	menu_settings_check();
 	menu_state_check();
 
-	guiupdate = FALSE;
-	guiFlush();
+	gui_in_update = FALSE;
+	gui_flush();
 }
-void guiFullscreen(void) {
-	if (guiupdate) {
+void gui_fullscreen(void) {
+	if (gui_in_update) {
 		return;
 	}
 
-	guiFlush();
+	gui_flush();
 
 	/* Fullscreen */
 	if ((cfg->fullscreen == NO_FULLSCR) || (cfg->fullscreen == NO_CHANGE)) {
@@ -443,27 +440,27 @@ void guiFullscreen(void) {
 		gfx.scale_before_fscreen = cfg->scale;
 		/* trovo la risoluzione del monitor in uso */
 		{
-			GdkScreen *screen = gtk_window_get_screen(GTK_WINDOW(mainWin));
+			GdkScreen *screen = gtk_window_get_screen(GTK_WINDOW(main_win));
 			gdk_screen_get_monitor_geometry(screen,
-			        gdk_screen_get_monitor_at_window(screen, GTK_WIDGET(mainWin)->window),
+			        gdk_screen_get_monitor_at_window(screen, GTK_WIDGET(main_win)->window),
 			        &monitor);
 			gfx.w[MONITOR] = monitor.width;
 			gfx.h[MONITOR] = monitor.height;
 		}
 		/* salvo la posizione */
-		gtk_window_get_position(GTK_WINDOW(mainWin), &guiPosX, &guiPosY);
+		gtk_window_get_position(GTK_WINDOW(main_win), &gui_pos_x, &gui_pos_y);
 		/* nascondo la finestra */
 		if (gui.start) {
-			gtk_widget_hide(mainWin);
+			gtk_widget_hide(main_win);
 		}
 		/* nascondo il menu */
 		menu_hide();
 		/* nascondo la toolbar */
 		gtk_widget_hide(hbox);
 		/* abilito il ridimensionamento della finestra */
-		gtk_window_set_resizable(GTK_WINDOW(mainWin), TRUE);
+		gtk_window_set_resizable(GTK_WINDOW(main_win), TRUE);
 		/* disabilito le decorazioni */
-		gtk_window_set_decorated(GTK_WINDOW(mainWin), FALSE);
+		gtk_window_set_decorated(GTK_WINDOW(main_win), FALSE);
 		/* abilito il fullscreen */
 		gfx_set_screen(NO_CHANGE, NO_CHANGE, FULLSCR, NO_CHANGE, FALSE);
 		/* nascondo il cursore, se serve */
@@ -471,49 +468,49 @@ void guiFullscreen(void) {
 			SDL_ShowCursor(SDL_DISABLE);
 		}
 		/* indico alle gtk che sono in fullscreen */
-		gtk_window_fullscreen(GTK_WINDOW(mainWin));
+		gtk_window_fullscreen(GTK_WINDOW(main_win));
 		/* muovo la finestra nell'angolo alto a sinistra del monitor */
-		gtk_window_move(GTK_WINDOW(mainWin), monitor.x, monitor.y);
+		gtk_window_move(GTK_WINDOW(main_win), monitor.x, monitor.y);
 	} else {
 		/* nascondo la finestra */
-		gtk_widget_hide(mainWin);
+		gtk_widget_hide(main_win);
 		/* riabilito le decorazioni */
-		gtk_window_set_decorated(GTK_WINDOW(mainWin), TRUE);
+		gtk_window_set_decorated(GTK_WINDOW(main_win), TRUE);
 		/* ribilito la toolbar */
 		gtk_widget_show(hbox);
 		/* ribilito il menu */
 		menu_show();
 		/* esco dal fullscreen */
-		gtk_window_unfullscreen(GTK_WINDOW(mainWin));
+		gtk_window_unfullscreen(GTK_WINDOW(main_win));
 		/* ripristino i valori di scale ed esco dal fullscreen */
 		gfx_set_screen(gfx.scale_before_fscreen, NO_CHANGE, NO_FULLSCR, NO_CHANGE, FALSE);
 		/* riabilito la visualizzazione del puntatore */
 		SDL_ShowCursor(SDL_ENABLE);
 		/* blocco il ridimensionamento */
-		gtk_window_set_resizable(GTK_WINDOW(mainWin), FALSE);
+		gtk_window_set_resizable(GTK_WINDOW(main_win), FALSE);
 		/* riposiziono la finestra nella posizione prima del fullscreen */
-		gtk_window_move(GTK_WINDOW(mainWin), guiPosX, guiPosY);
+		gtk_window_move(GTK_WINDOW(main_win), gui_pos_x, gui_pos_y);
 	}
 
 	/* visualizzo la finestra*/
-	gtk_widget_show(mainWin);
+	gtk_widget_show(main_win);
 	/* setto il focus */
 	gtk_widget_grab_focus(GTK_WIDGET(sock));
 
-	guiFlush();
+	gui_flush();
 }
-void guiTimeline(void) {
+void gui_timeline(void) {
 	tl.update = TRUE;
 	gtk_range_set_value(GTK_RANGE(timeline), tl.snaps_fill - 1);
 	tl.update = FALSE;
 }
-void guiSavestate(BYTE slot) {
+void gui_save_slot(BYTE slot) {
 	if (slot >= SAVE_SLOTS) {
 		slot = SAVE_SLOTS - 1;
 	}
-	menu_state_saveslot_set(slot);
+	menu_state_save_slot_set(slot);
 }
-int guiSleep(double ms) {
+int gui_sleep(double ms) {
 	struct timespec req = { 0 }, rem = { 0 };
 	time_t sec;
 
@@ -526,6 +523,7 @@ int guiSleep(double ms) {
 	req.tv_sec = sec;
 	req.tv_nsec = ms * 1000000L;
 	__nsleep(&req, &rem);
+
 	return (EXIT_OK);
 }
 int __nsleep(const struct timespec *req, struct timespec *rem) {
@@ -536,17 +534,18 @@ int __nsleep(const struct timespec *req, struct timespec *rem) {
 	} else {
 		return (EXIT_ERROR);
 	}
+
 	return (EXIT_OK);
 }
-void guiAddEvent(void *funct, void *args) {
+void gui_add_event(void *funct, void *args) {
 	g_idle_add((GSourceFunc) funct, (gpointer) args);
 }
-void guiFlush(void) {
+void gui_flush(void) {
     while (gtk_events_pending()) {
     	gtk_main_iteration();
 	}
 }
-void guiSetThreadAffinity(uint8_t core) {
+void gui_set_thread_affinity(uint8_t core) {
 	cpu_set_t cpuset;
 	pthread_t thread;
 
@@ -556,7 +555,7 @@ void guiSetThreadAffinity(uint8_t core) {
 	pthread_setaffinity_np(thread, sizeof(cpu_set_t), &cpuset);
 }
 
-double highResolutionMs(void) {
+double high_resolution_ms(void) {
 	struct timeval time;
 
 	double elapsed_seconds; /* diff between seconds counter */
@@ -570,8 +569,8 @@ double highResolutionMs(void) {
     //return ((elapsed_seconds * 1000) + (elapsed_useconds / 1000.0f) + 0.5f);
     return ((elapsed_seconds * 1000) + (elapsed_useconds / 1000.0f));
 }
-/* mainWin */
-void mainWin_destroy(void) {
+/* main_win */
+void main_win_destroy(void) {
 	if (cfg_controllers_toplevel != NULL) {
 		gtk_widget_destroy(cfg_controllers_toplevel);
 	}
@@ -580,7 +579,7 @@ void mainWin_destroy(void) {
 
 	info.stop = TRUE;
 }
-gboolean mainWin_configure_event(void) {
+gboolean main_win_configure_event(void) {
 	/*
 	 * devo fare un return FALSE se voglio che l'evento
 	 * sia propagato all'uscita della routine (e deve
@@ -594,7 +593,7 @@ gboolean sock_key_press_event(GtkWidget *widget, GdkEventKey *event) {
 	switch (keyval) {
 		case GDK_KEY_Control_L:
 			if (!tl.key) {
-				tlPressed(tl.key);
+				tl_pressed(tl.key);
 			}
 			return (TRUE);
 		case GDK_KEY_Shift_L:
@@ -625,8 +624,8 @@ gboolean sock_key_press_event(GtkWidget *widget, GdkEventKey *event) {
 				break;
 			case GDK_q:
 				if ((event->state & 0x1F0D) == GDK_CONTROL_MASK) {
-					guiFullscreen();
-					mainWin_destroy();
+					gui_fullscreen();
+					main_win_destroy();
 					return (TRUE);
 				}
 				break;
@@ -655,16 +654,16 @@ gboolean sock_key_press_event(GtkWidget *widget, GdkEventKey *event) {
 				menu_video_fullscreen_switch_stretch();
 				return (TRUE);
 			case GDK_F1:
-				menu_state_saveslot_action(SAVE);
+				menu_state_save_slot_action(SAVE);
 				return (TRUE);
 			case GDK_F2:
-				menu_state_saveslot_incdec(DEC);
+				menu_state_save_slot_incdec(DEC);
 				return (TRUE);
 			case GDK_F3:
-				menu_state_saveslot_incdec(INC);
+				menu_state_save_slot_incdec(INC);
 				return (TRUE);
 			case GDK_F4:
-				menu_state_saveslot_action(LOAD);
+				menu_state_save_slot_action(LOAD);
 				return (TRUE);
 			case GDK_F6:
 				menu_mode_set_mode(PAL);
@@ -679,11 +678,11 @@ gboolean sock_key_press_event(GtkWidget *widget, GdkEventKey *event) {
 				menu_mode_set_mode(AUTO);
 				return (TRUE);
 			case GDK_Escape:
-				guiFullscreen();
+				gui_fullscreen();
 				return (TRUE);
 			case GDK_Return:
 				if ((event->state & 0x1F0D) == GDK_MOD1_MASK) {
-					guiFullscreen();
+					gui_fullscreen();
 					return (TRUE);
 				}
 				break;
@@ -709,7 +708,7 @@ gboolean sock_key_release_event(GtkWidget *widget, GdkEventKey *event) {
 	switch (keyval) {
 		case GDK_KEY_Control_L:
 			if (tl.key) {
-				tlRelease(tl.key);
+				tl_release(tl.key);
 			}
 			return (TRUE);
 		case GDK_KEY_Shift_L:
@@ -770,7 +769,7 @@ void file_open(void) {
 	/* potrei essere entrato con il CTRL+O */
 	tl.key = FALSE;
 
-	dialog = gtk_file_chooser_dialog_new("Open File", GTK_WINDOW(mainWin),
+	dialog = gtk_file_chooser_dialog_new("Open File", GTK_WINDOW(main_win),
 			GTK_FILE_CHOOSER_ACTION_OPEN, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, GTK_STOCK_OPEN,
 			GTK_RESPONSE_ACCEPT, NULL);
 
@@ -869,7 +868,7 @@ void make_reset(int type) {
 	}
 
 	if (emu_reset(type)) {
-		mainWin_destroy();
+		main_win_destroy();
 	}
 }
 /* timeline */
@@ -902,12 +901,12 @@ gboolean timeline_button_press_release_event(GtkWidget *widget, GdkEventButton *
 	switch (event->type) {
 		case GDK_BUTTON_PRESS:
 			if (event->button == 1) {
-				tlPressed(tl.button)
+				tl_pressed(tl.button)
 			}
 			break;
 		case GDK_BUTTON_RELEASE:
 			if (event->button == 1) {
-				tlRelease(tl.button);
+				tl_release(tl.button);
 			}
 			break;
 		default:
@@ -938,11 +937,11 @@ gboolean time_handler_redraw(void) {
 	return (redraw);
 }
 
-void saveslot_changed(GtkComboBox *widget) {
+void save_slot_changed(GtkComboBox *widget) {
 	GtkTreeIter iter;
 	GtkTreeModel *model;
 
-	if (guiupdate) {
+	if (gui_in_update) {
 		return;
 	}
 
@@ -952,21 +951,17 @@ void saveslot_changed(GtkComboBox *widget) {
 
 	gtk_tree_model_get(model, &iter, COLUMN_INT, &save_slot.slot, -1);
 
-	guiUpdate();
+	gui_update();
 
 	/* setto il focus */
 	gtk_widget_grab_focus(GTK_WIDGET(sock));
 }
-void saveslot_control(GtkCellLayout *cell_layout, GtkCellRenderer *cell, GtkTreeModel *tree_model,
+void save_slot_control(GtkCellLayout *cell_layout, GtkCellRenderer *cell, GtkTreeModel *tree_model,
 		GtkTreeIter *iter, gpointer data) {
 	guint index;
 
-	enum {
-		FIRST_ITER, INC_POINTER, DEC_POINTER, RESET_MODE, OUT_OF_WIDTH
-	};
-	enum {
-		NO_KEY, KEY_UP, KEY_DOWN
-	};
+	enum { FIRST_ITER, INC_POINTER, DEC_POINTER, RESET_MODE, OUT_OF_WIDTH };
+	enum { NO_KEY, KEY_UP, KEY_DOWN };
 
 	gtk_tree_model_get(tree_model, iter, COLUMN_INT, &index, -1);
 
@@ -983,7 +978,7 @@ void saveslot_control(GtkCellLayout *cell_layout, GtkCellRenderer *cell, GtkTree
 					gtk_combo_box_get_active_iter(GTK_COMBO_BOX(saveslot), &active_iter);
 					gtk_tree_model_get(model, &active_iter, COLUMN_INT, &trcb.selected, -1);
 
-					saveslot_preview();
+					save_slot_gui_preview();
 
 					trcb.popup = FALSE;
 					trcb.counter = 0;
@@ -1065,7 +1060,7 @@ void saveslot_control(GtkCellLayout *cell_layout, GtkCellRenderer *cell, GtkTree
 						trcb.selected = trcb.save_index;
 						break;
 				}
-				saveslot_preview();
+				save_slot_gui_preview();
 			}
 			trcb.save_index = index;
 			trcb.y = y;
@@ -1080,7 +1075,7 @@ void saveslot_control(GtkCellLayout *cell_layout, GtkCellRenderer *cell, GtkTree
 		g_object_set(cell, "foreground-set", FALSE, NULL);
 	}
 }
-void saveslot_notify_popup_shown(GtkComboBox *widget) {
+void save_slot_notify_popup_shown(GtkComboBox *widget) {
 	gboolean mode;
 
 	g_object_get(GTK_OBJECT(widget), "popup-shown", &mode, NULL);
@@ -1089,7 +1084,7 @@ void saveslot_notify_popup_shown(GtkComboBox *widget) {
 		emu_pause(TRUE);
 		/* intercetto il "key-press-event" del combobox */
 		trcb.hook_id = g_signal_add_emission_hook(
-				g_signal_lookup("key-press-event", GTK_TYPE_WINDOW), 0, saveslot_key_press_event,
+				g_signal_lookup("key-press-event", GTK_TYPE_WINDOW), 0, save_slot_key_press_event,
 				NULL, (GDestroyNotify) NULL);
 		trcb.window = gdk_window_at_pointer(NULL, NULL);
 		gdk_window_get_geometry(GDK_WINDOW(trcb.window), NULL, NULL, &trcb.width, &trcb.height,
@@ -1104,10 +1099,10 @@ void saveslot_notify_popup_shown(GtkComboBox *widget) {
 		emu_pause(FALSE);
 	}
 }
-void saveslot_preview(void) {
+void save_slot_gui_preview(void) {
 	save_slot_preview(trcb.selected);
 }
-gboolean saveslot_key_press_event(GSignalInvocationHint *ihint, guint n_param_values,
+gboolean save_slot_key_press_event(GSignalInvocationHint *ihint, guint n_param_values,
 		const GValue *param_values, gpointer data) {
 	if (trcb.window) {
 		GdkEventKey *event = g_value_get_boxed(param_values + 1);
@@ -1124,7 +1119,7 @@ void change_rom(char *rom) {
 	strncpy(info.load_rom_file, rom, sizeof(info.load_rom_file));
 	gamegenie_reset(FALSE);
 	make_reset(CHANGE_ROM);
-	guiUpdate();
+	gui_update();
 }
 void drag_data_received(GtkWidget *widget, GdkDragContext *context, gint x, gint y,
 		GtkSelectionData *data, guint ttype, guint time, gpointer *NA) {

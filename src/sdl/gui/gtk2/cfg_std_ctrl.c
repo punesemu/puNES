@@ -11,7 +11,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include "gtk2.h"
-#include "cfgstdctrl.h"
+#include "cfg_std_ctrl.h"
 #include "param.h"
 
 void cfg_standard_controller_page_notebook_keyboard(GtkWidget *notebook);
@@ -21,8 +21,8 @@ void cfg_standard_controller_combobox_select_joystick_control(GtkCellLayout *cel
 void cfg_standard_controller_combobox_joystick_changed(GtkComboBox *combobox);
 void cfg_standard_controller_input_changed_clicked(GtkButton *button, BYTE input);
 void cfg_standard_controller_js_press_event(void);
-void cfg_standard_controller_ok_clicked(GtkWidget *widget, _cfg_port *cfgport);
-void cfg_standard_controller_cancel_clicked(GtkWidget *widget, _cfg_port *cfgport);
+void cfg_standard_controller_ok_clicked(GtkWidget *widget, _cfg_port *cfg_port);
+void cfg_standard_controller_cancel_clicked(GtkWidget *widget, _cfg_port *cfg_port);
 void cfg_standard_controller_destroy(void);
 void cfg_standard_controller_erase(GtkWidget *widget, int type);
 GtkWidget *cfg_standard_controller_line_notebook(const char *description, BYTE input);
@@ -30,18 +30,16 @@ GtkWidget *cfg_standard_controller_combobox_select_joystick(void);
 gboolean cfg_standard_controller_key_press_event(GtkWidget *widget, GdkEventKey *event);
 gboolean cfg_standard_controller_input_is_not_ok(DBWORD value);
 
-#define maxButtons LENGTH(param_input_p1k)
+#define max_buttons LENGTH(param_input_p1k)
 #define cfg_standard_controller_change_button_label(new_label)\
 	gtk_button_set_label(cfg_std_ctrl.button_pressed, new_label);
 
-enum {
-	NAME_JOYSTICK, VALUE_JOYSTICK, N_JOYSTICK, MAX_JOYSTICK = 4
-};
+enum { NAME_JOYSTICK, VALUE_JOYSTICK, N_JOYSTICK, MAX_JOYSTICK = 4 };
 
 typedef struct {
 	_cfg_port cfg;
 	GtkButton *button_pressed;
-	GtkWidget *button[maxButtons * 2];
+	GtkWidget *button[max_buttons * 2];
 	GtkWidget *jscombo;
 	BYTE no_other_buttons;
 	BYTE controller_input;
@@ -61,20 +59,20 @@ char cazzata[][15] = {
 	"i don't think"
 };
 
-void cfg_standard_controller(_cfg_port *cfgport) {
+void cfg_standard_controller(_cfg_port *cfg_port) {
 	GtkWidget *mainbox, *notebook, *okcancel;
 
 	char title[30];
 
 	memset(&cfg_std_ctrl, 0, sizeof(cfg_std_ctrl));
-	memcpy(&cfg_std_ctrl.cfg, cfgport, sizeof(cfg_std_ctrl.cfg));
+	memcpy(&cfg_std_ctrl.cfg, cfg_port, sizeof(cfg_std_ctrl.cfg));
 
 	cfg_standard_controller_toplevel = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 
 	gtk_container_set_border_width(GTK_CONTAINER(cfg_standard_controller_toplevel), 10);
 	gtk_window_set_resizable(GTK_WINDOW(cfg_standard_controller_toplevel), FALSE);
 
-	sprintf(title, "Controller %d setup", cfgport->id);
+	sprintf(title, "Controller %d setup", cfg_port->id);
 	gtk_window_set_title(GTK_WINDOW(cfg_standard_controller_toplevel), title);
 
 	g_signal_connect(G_OBJECT(cfg_standard_controller_toplevel), "key_press_event",
@@ -93,7 +91,7 @@ void cfg_standard_controller(_cfg_port *cfgport) {
 	cfg_standard_controller_page_notebook_joystick(notebook);
 
 	okcancel = cfg_input_ok_cancel(G_CALLBACK(cfg_standard_controller_ok_clicked),
-			G_CALLBACK(cfg_standard_controller_cancel_clicked), cfgport);
+			G_CALLBACK(cfg_standard_controller_cancel_clicked), cfg_port);
 	gtk_box_pack_start(GTK_BOX(mainbox), okcancel, FALSE, FALSE, 0);
 
 	gtk_widget_show_all(cfg_standard_controller_toplevel);
@@ -181,34 +179,34 @@ void cfg_standard_controller_page_notebook_joystick(GtkWidget *notebook) {
 	vbox = gtk_vbox_new(FALSE, SPACING);
 	gtk_container_add(GTK_CONTAINER(frame), vbox);
 
-	line = cfg_standard_controller_line_notebook("A", BUT_A + maxButtons);
+	line = cfg_standard_controller_line_notebook("A", BUT_A + max_buttons);
 	gtk_box_pack_start(GTK_BOX(vbox), line, FALSE, FALSE, 0);
 
-	line = cfg_standard_controller_line_notebook("B", BUT_B + maxButtons);
+	line = cfg_standard_controller_line_notebook("B", BUT_B + max_buttons);
 	gtk_box_pack_start(GTK_BOX(vbox), line, FALSE, FALSE, 0);
 
-	line = cfg_standard_controller_line_notebook("Select", SELECT + maxButtons);
+	line = cfg_standard_controller_line_notebook("Select", SELECT + max_buttons);
 	gtk_box_pack_start(GTK_BOX(vbox), line, FALSE, FALSE, 0);
 
-	line = cfg_standard_controller_line_notebook("Start", START + maxButtons);
+	line = cfg_standard_controller_line_notebook("Start", START + max_buttons);
 	gtk_box_pack_start(GTK_BOX(vbox), line, FALSE, FALSE, 0);
 
-	line = cfg_standard_controller_line_notebook("Up", UP + maxButtons);
+	line = cfg_standard_controller_line_notebook("Up", UP + max_buttons);
 	gtk_box_pack_start(GTK_BOX(vbox), line, FALSE, FALSE, 0);
 
-	line = cfg_standard_controller_line_notebook("Down", DOWN + maxButtons);
+	line = cfg_standard_controller_line_notebook("Down", DOWN + max_buttons);
 	gtk_box_pack_start(GTK_BOX(vbox), line, FALSE, FALSE, 0);
 
-	line = cfg_standard_controller_line_notebook("Left", LEFT + maxButtons);
+	line = cfg_standard_controller_line_notebook("Left", LEFT + max_buttons);
 	gtk_box_pack_start(GTK_BOX(vbox), line, FALSE, FALSE, 0);
 
-	line = cfg_standard_controller_line_notebook("Right", RIGHT + maxButtons);
+	line = cfg_standard_controller_line_notebook("Right", RIGHT + max_buttons);
 	gtk_box_pack_start(GTK_BOX(vbox), line, FALSE, FALSE, 0);
 
-	line = cfg_standard_controller_line_notebook("Turbo A", TRB_A + maxButtons);
+	line = cfg_standard_controller_line_notebook("Turbo A", TRB_A + max_buttons);
 	gtk_box_pack_start(GTK_BOX(vbox), line, FALSE, FALSE, 0);
 
-	line = cfg_standard_controller_line_notebook("Turbo B", TRB_B + maxButtons);
+	line = cfg_standard_controller_line_notebook("Turbo B", TRB_B + max_buttons);
 	gtk_box_pack_start(GTK_BOX(vbox), line, FALSE, FALSE, 0);
 
 	gtk_box_pack_start(GTK_BOX(vbox), gtk_hseparator_new(), FALSE, FALSE, 0);
@@ -280,7 +278,7 @@ void cfg_standard_controller_combobox_select_joystick_control(GtkCellLayout *cel
 		}
 	}
 
-	sprintf(device, "%s%d", JSDEVPATH, index);
+	sprintf(device, "%s%d", JS_DEV_PATH, index);
 	fd = open(device, O_RDONLY | O_NONBLOCK);
 
 	if ((fd < 0) || same_port) {
@@ -313,20 +311,20 @@ void cfg_standard_controller_input_changed_clicked(GtkButton *button, BYTE input
 	cfg_std_ctrl.button_pressed = button;
 	cfg_std_ctrl.controller_input = input;
 
-	if (input < maxButtons) {
+	if (input < max_buttons) {
 		/* keyboard */
 		cfg_std_ctrl.no_other_buttons = TRUE;
 		cfg_standard_controller_change_button_label("press a key");
 	} else {
 		/* joystick */
 		if (!cfg_std_ctrl.no_other_buttons) {
-			g_thread_create( (GThreadFunc) cfg_standard_controller_js_press_event, NULL, FALSE,
-					NULL);
+			g_thread_create((GThreadFunc) cfg_standard_controller_js_press_event, NULL, FALSE,
+			        NULL);
 		}
 	}
 }
 void cfg_standard_controller_js_press_event(void) {
-	_jsevent jse;
+	_js_event jse;
 	char device[30];
 	BYTE index = cfg_std_ctrl.cfg.port.joy_id;
 	BYTE read_ok = FALSE;
@@ -336,16 +334,15 @@ void cfg_standard_controller_js_press_event(void) {
 	WORD bytes;
 
 #define _protect_change_gui(command)\
-		if (cfg_standard_controller_toplevel) {\
-			gdk_threads_enter();\
-			command;\
-			gdk_threads_leave();\
-		}
+	if (cfg_standard_controller_toplevel) {\
+		gdk_threads_enter();\
+		command;\
+		gdk_threads_leave();\
+	}
 #define protect_change_button_label(label)\
-		_protect_change_gui(cfg_standard_controller_change_button_label(label))
+	_protect_change_gui(cfg_standard_controller_change_button_label(label))
 #define protect_change_combobox_sensitive(state)\
-		_protect_change_gui(gtk_widget_set_sensitive(GTK_WIDGET(cfg_std_ctrl.jscombo),\
-				state))
+	_protect_change_gui(gtk_widget_set_sensitive(GTK_WIDGET(cfg_std_ctrl.jscombo), state))
 
 	if (cfg_std_ctrl.no_other_buttons) {
 		g_thread_exit(NULL);
@@ -365,7 +362,7 @@ void cfg_standard_controller_js_press_event(void) {
 		}
 	}
 
-	sprintf(device, "%s%d", JSDEVPATH, index);
+	sprintf(device, "%s%d", JS_DEV_PATH, index);
 	fd = open(device, O_RDONLY | O_NONBLOCK);
 
 	if (fd < 0) {
@@ -405,10 +402,10 @@ void cfg_standard_controller_js_press_event(void) {
 				if (jse.value > 0) {
 					value++;
 				}
-				//fprintf(stderr, "axis   : %s (%d)\n", jsvToName(value), value);
+				//fprintf(stderr, "axis   : %s (%d)\n", jsv_to_name(value), value);
 			} else if (jse.type == JS_EVENT_BUTTON && jse.value) {
 				value = jse.number | 0x400;
-				//fprintf(stderr, "button : %s (%d) %d\n", jsvToName(value), value, jse.value);
+				//fprintf(stderr, "button : %s (%d) %d\n", jsv_to_name(value), value, jse.value);
 			} else {
 				//fprintf(stderr, "%04X %04X %d\n", jse.type, jse.number, (SWORD) jse.value);
 				continue;
@@ -416,22 +413,22 @@ void cfg_standard_controller_js_press_event(void) {
 			read_ok = TRUE;
 			break;
 		}
-		guiSleep(30);
+		gui_sleep(30);
 	}
 
 	if (read_ok) {
-		//fprintf(stderr, "reak_ok : %s (%d)\n\n", jsvToName(value), value);
+		//fprintf(stderr, "reak_ok : %s (%d)\n\n", jsv_to_name(value), value);
 		if (cfg_standard_controller_input_is_not_ok(value)) {
 			cfg_std_ctrl.wait_js_input = TRUE;
 			protect_change_button_label(cazzata[(WORD) (rand() % 8) & 0x07]);
 			goto retry;
 		} else {
-			BYTE button = cfg_std_ctrl.controller_input - maxButtons;
+			BYTE button = cfg_std_ctrl.controller_input - max_buttons;
 
 			cfg_std_ctrl.cfg.port.input[JOYSTICK][button] = value;
 			cfg_std_ctrl.no_other_buttons = FALSE;
 			cfg_std_ctrl.controller_input = 0;
-			protect_change_button_label(jsvToName(value));
+			protect_change_button_label(jsv_to_name(value));
 		}
 	}
 
@@ -441,28 +438,28 @@ void cfg_standard_controller_js_press_event(void) {
 
 	g_thread_exit(NULL);
 }
-void cfg_standard_controller_ok_clicked(GtkWidget *widget, _cfg_port *cfgport) {
+void cfg_standard_controller_ok_clicked(GtkWidget *widget, _cfg_port *cfg_port) {
 	gtk_widget_destroy(cfg_standard_controller_toplevel);
 
 	/* la mamcpy deve andare necessariamente dopo il destroy */
-	memcpy(cfgport, &cfg_std_ctrl.cfg, sizeof(cfg_std_ctrl.cfg));
+	memcpy(cfg_port, &cfg_std_ctrl.cfg, sizeof(cfg_std_ctrl.cfg));
 }
 void cfg_standard_controller_erase(GtkWidget *widget, int type) {
 	BYTE i;
 
 	if (type == KEYBOARD) {
-		for (i = 0; i < maxButtons; i++) {
+		for (i = 0; i < max_buttons; i++) {
 			cfg_std_ctrl.cfg.port.input[KEYBOARD][i] = 0;
 			gtk_button_set_label(GTK_BUTTON(cfg_std_ctrl.button[i]), "NULL");
 		}
 	} else {
-		for (i = maxButtons; i < maxButtons * 2; i++) {
+		for (i = max_buttons; i < max_buttons * 2; i++) {
 			cfg_std_ctrl.cfg.port.input[JOYSTICK][i] = 0;
 			gtk_button_set_label(GTK_BUTTON(cfg_std_ctrl.button[i]), "NULL");
 		}
 	}
 }
-void cfg_standard_controller_cancel_clicked(GtkWidget *widget, _cfg_port *cfgport) {
+void cfg_standard_controller_cancel_clicked(GtkWidget *widget, _cfg_port *cfg_port) {
 	gtk_widget_destroy(cfg_standard_controller_toplevel);
 }
 void cfg_standard_controller_destroy(void) {
@@ -495,10 +492,10 @@ GtkWidget *cfg_standard_controller_line_notebook(const char *description, BYTE i
 	label = gtk_label_new("  ");
 	gtk_box_pack_end(GTK_BOX(line), label, FALSE, FALSE, 0);
 
-	if (input < maxButtons) {
-		strcpy(text, keyvalToName(cfg_std_ctrl.cfg.port.input[KEYBOARD][input]));
+	if (input < max_buttons) {
+		strcpy(text, keyval_to_name(cfg_std_ctrl.cfg.port.input[KEYBOARD][input]));
 	} else {
-		strcpy(text, jsvToName(cfg_std_ctrl.cfg.port.input[JOYSTICK][input - maxButtons]));
+		strcpy(text, jsv_to_name(cfg_std_ctrl.cfg.port.input[JOYSTICK][input - max_buttons]));
 	}
 
 	cfg_std_ctrl.button[input] = cfg_input_std_button(text);
@@ -541,7 +538,7 @@ GtkWidget *cfg_standard_controller_combobox_select_joystick(void) {
 	gtk_cell_layout_set_cell_data_func(GTK_CELL_LAYOUT(combobox), renderer,
 			cfg_standard_controller_combobox_select_joystick_control, NULL, NULL);
 
-	if (cfg_std_ctrl.cfg.port.joy_id == nameToJsn("NULL")) {
+	if (cfg_std_ctrl.cfg.port.joy_id == name_to_jsn("NULL")) {
 		gtk_combo_box_set_active(GTK_COMBO_BOX(combobox), 0);
 	} else {
 		gtk_combo_box_set_active(GTK_COMBO_BOX(combobox), cfg_std_ctrl.cfg.port.joy_id);
@@ -560,12 +557,12 @@ gboolean cfg_standard_controller_key_press_event(GtkWidget *widget, GdkEventKey 
 		return (TRUE);
 	}
 
-	if (cfg_std_ctrl.controller_input < maxButtons) {
+	if (cfg_std_ctrl.controller_input < max_buttons) {
 		type = KEYBOARD;
 		index = cfg_std_ctrl.controller_input;
 	} else {
 		type = JOYSTICK;
-		index = cfg_std_ctrl.controller_input - maxButtons;
+		index = cfg_std_ctrl.controller_input - max_buttons;
 	}
 
 	value_ok = TRUE;
@@ -580,7 +577,7 @@ gboolean cfg_standard_controller_key_press_event(GtkWidget *widget, GdkEventKey 
 				cfg_standard_controller_change_button_label(cazzata[(WORD) (rand() % 8) & 0x07]);
 			} else {
 				cfg_std_ctrl.cfg.port.input[type][index] = event->keyval;
-				cfg_standard_controller_change_button_label(keyvalToName(event->keyval));
+				cfg_standard_controller_change_button_label(keyval_to_name(event->keyval));
 			}
 		}
 	} else {
@@ -619,9 +616,9 @@ gboolean cfg_standard_controller_input_is_not_ok(DBWORD input) {
 		p2 = &cfg_port1;
 	}
 
-	if (cfg_std_ctrl.controller_input < maxButtons) {
+	if (cfg_std_ctrl.controller_input < max_buttons) {
 		/* keyboard */
-		for (i = 0; i < maxButtons; i++) {
+		for (i = 0; i < max_buttons; i++) {
 			if ((p1->port.input[KEYBOARD][i] == input) || (p2->port.input[KEYBOARD][i] == input)) {
 				if (cfg_std_ctrl.controller_input == i) {
 					return (EXIT_OK);
@@ -632,14 +629,14 @@ gboolean cfg_standard_controller_input_is_not_ok(DBWORD input) {
 		}
 	} else {
 		/* joystick */
-		for (i = 0; i < maxButtons; i++) {
+		for (i = 0; i < max_buttons; i++) {
 			if (p2->port.input[JOYSTICK][i] == input) {
 				if (p1->port.joy_id == p2->port.joy_id) {
 					return (EXIT_ERROR);
 				}
 			}
 			if (p1->port.input[JOYSTICK][i] == input) {
-				if ((cfg_std_ctrl.controller_input - maxButtons) == i) {
+				if ((cfg_std_ctrl.controller_input - max_buttons) == i) {
 					return (EXIT_OK);
 				} else {
 					return (EXIT_ERROR);

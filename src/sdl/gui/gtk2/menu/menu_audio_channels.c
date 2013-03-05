@@ -66,7 +66,7 @@ enum {
 	NUMCHKS
 };
 
-void set_channels(int newchannels);
+void set_channels(int channels);
 
 static GtkWidget *check[NUMCHKS];
 
@@ -103,23 +103,19 @@ void menu_audio_channels_check(void) {
 		}
 	}
 }
-void set_channels(int newchannels) {
-	if (guiupdate) {
+void set_channels(int channels) {
+	if (gui_in_update) {
 		return;
 	}
 
-	if (cfg->channels == newchannels) {
-		guiUpdate();
+	if (cfg->channels == channels) {
+		gui_update();
 		return;
 	}
 
 	emu_pause(TRUE);
-
-	cfg->channels = newchannels;
-
+	cfg->channels = channels;
 	snd_start();
-
-	guiUpdate();
-
+	gui_update();
 	emu_pause(FALSE);
 }

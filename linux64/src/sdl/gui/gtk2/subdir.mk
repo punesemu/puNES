@@ -4,24 +4,24 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../src/sdl/gui/gtk2/cfginput.c \
-../src/sdl/gui/gtk2/cfgstdctrl.c \
+../src/sdl/gui/gtk2/cfg_input.c \
+../src/sdl/gui/gtk2/cfg_std_ctrl.c \
 ../src/sdl/gui/gtk2/configurations.c \
 ../src/sdl/gui/gtk2/gtk2.c \
 ../src/sdl/gui/gtk2/joystick.c \
 ../src/sdl/gui/gtk2/keyboard.c 
 
 OBJS += \
-./src/sdl/gui/gtk2/cfginput.o \
-./src/sdl/gui/gtk2/cfgstdctrl.o \
+./src/sdl/gui/gtk2/cfg_input.o \
+./src/sdl/gui/gtk2/cfg_std_ctrl.o \
 ./src/sdl/gui/gtk2/configurations.o \
 ./src/sdl/gui/gtk2/gtk2.o \
 ./src/sdl/gui/gtk2/joystick.o \
 ./src/sdl/gui/gtk2/keyboard.o 
 
 C_DEPS += \
-./src/sdl/gui/gtk2/cfginput.d \
-./src/sdl/gui/gtk2/cfgstdctrl.d \
+./src/sdl/gui/gtk2/cfg_input.d \
+./src/sdl/gui/gtk2/cfg_std_ctrl.d \
 ./src/sdl/gui/gtk2/configurations.d \
 ./src/sdl/gui/gtk2/gtk2.d \
 ./src/sdl/gui/gtk2/joystick.d \

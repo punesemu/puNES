@@ -65,7 +65,7 @@ enum {
 	NUMCHKS
 };
 
-void rendering_set(int newrendering);
+void rendering_set(int rendering);
 
 static GtkWidget *check[NUMCHKS];
 
@@ -127,37 +127,37 @@ void menu_video_rendering_check(void) {
 	}
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[index]), TRUE);
 }
-void rendering_set(int newrendering) {
+void rendering_set(int rendering) {
 	gint x, y;
 
-	if (guiupdate) {
+	if (gui_in_update) {
 		return;
 	}
 
-	if (cfg->render == newrendering) {
-		guiUpdate();
+	if (cfg->render == rendering) {
+		gui_update();
 		return;
 	}
 
 	/* salvo la posizione */
-	gtk_window_get_position(GTK_WINDOW(mainWin), &x, &y);
+	gtk_window_get_position(GTK_WINDOW(main_win), &x, &y);
 
 	/*
 	 * se non nascondo la finestra, al momento del
 	 * SDL_QuitSubSystem e del SDL_InitSubSystem
 	 * l'applicazione crasha.
 	 */
-	gtk_widget_hide(mainWin);
+	gtk_widget_hide(main_win);
 
 	/* switch opengl/software render */
-	gfx_set_render(newrendering);
-	cfg->render = newrendering;
+	gfx_set_render(rendering);
+	cfg->render = rendering;
 
 	gfx_reset_video();
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE);
 
 	/* rispristino la posizione */
-	gtk_window_move(GTK_WINDOW(mainWin), x, y);
+	gtk_window_move(GTK_WINDOW(main_win), x, y);
 
-	gtk_widget_show(mainWin);
+	gtk_widget_show(main_win);
 }
