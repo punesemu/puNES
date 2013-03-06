@@ -219,10 +219,17 @@ BYTE gui_create(void) {
 	}
 
 	/* creo la finestra principale */
-	main_win = CreateWindowEx(WS_EX_CLIENTEDGE | WS_EX_ACCEPTFILES, className, "puNES MainFrame",
-	        WS_OVERLAPPED | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | WS_CAPTION | WS_SYSMENU
-	                | WS_MINIMIZEBOX, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
-	        (HWND) NULL, (HMENU) NULL, gui.main_hinstance, NULL);
+	main_win = CreateWindowEx(WS_EX_CLIENTEDGE | WS_EX_ACCEPTFILES,
+			className,
+			"puNES window",
+			WS_OVERLAPPED | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | WS_CAPTION | WS_SYSMENU |
+			WS_MINIMIZEBOX,
+			CW_USEDEFAULT, CW_USEDEFAULT,
+			CW_USEDEFAULT, CW_USEDEFAULT,
+	        (HWND) NULL,
+	        (HMENU) NULL,
+	        gui.main_hinstance,
+	        NULL);
 
 	if (main_win == NULL) {
 		MessageBox(NULL, "Window Creation Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
