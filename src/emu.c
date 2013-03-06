@@ -37,7 +37,6 @@
 #include "database.h"
 #include "input.h"
 #include "version.h"
-#include "opengl.h"
 #include "param.h"
 #include "cfg_file.h"
 #include "save_slot.h"
@@ -46,6 +45,9 @@
 #include "ines.h"
 #include "fds.h"
 #include "gamegenie.h"
+#if defined SDL
+#include "opengl.h"
+#endif
 
 BYTE emu_loop(void) {
 #ifdef DEBUG
@@ -395,6 +397,7 @@ void emu_set_title(char *title) {
 		sprintf(name, "%s", NAME);
 	}
 
+#if defined SDL
 	if (info.portable && (cfg->scale != X1)) {
 		strcat(name, "_p");
 	}
@@ -425,6 +428,8 @@ void emu_set_title(char *title) {
 	}
 
 	strcat(title, ")");
+#endif
+
 }
 BYTE emu_turn_on(void) {
 	info.reset = POWER_UP;

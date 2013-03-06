@@ -7,6 +7,7 @@
 
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "cpu.h"
 #include "clock.h"
 #include "mem_map.h"

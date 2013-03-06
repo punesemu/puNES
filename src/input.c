@@ -10,7 +10,6 @@
 #include "clock.h"
 #include "ppu.h"
 #include "palette.h"
-#include "opengl.h"
 #include "gui.h"
 #include "gfx.h"
 #include "apu.h"
@@ -18,6 +17,9 @@
 #include "fps.h"
 #include "tas.h"
 #include "cfg_file.h"
+#if defined SDL
+#include "opengl.h"
+#endif
 
 void input_init(void) {
 	switch (port1.type) {
@@ -206,17 +208,19 @@ BYTE input_rd_reg_zapper(BYTE openbus, WORD **screen_index, _port *port) {
 	}
 
 	if (!gui.right_button) {
+#if defined SDL
 		if (gfx.opengl) {
 			gx -= opengl.x_texture1;
 			gy -= opengl.y_texture1;
 		}
-
+#endif
 		x_zapper = gx / gfx.w_pr;
 		y_zapper = gy / gfx.h_pr;
 
 		if (overscan.enabled) {
 			x_zapper += overscan.left;
 			y_zapper += overscan.up;
+#if defined SDL
 			/*
 			 * il filtro NTSC necessita di un'aggiustatina sia con
 			 * l'overscan abilitato che senza.
@@ -224,10 +228,13 @@ BYTE input_rd_reg_zapper(BYTE openbus, WORD **screen_index, _port *port) {
 			if (cfg->filter == NTSC_FILTER) {
 				x_zapper += 1;
 			}
+#endif
 		} else {
+#if defined SDL
 			if (cfg->filter == NTSC_FILTER) {
 				x_zapper -= 1;
 			}
+#endif
 		}
 	}
 
