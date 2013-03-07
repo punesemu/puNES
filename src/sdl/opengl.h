@@ -16,10 +16,7 @@
 
 #define slow_factor	3
 
-enum {
-	NO_POWER_OF_TWO,
-	POWER_OF_TWO
-};
+enum { NO_POWER_OF_TWO, POWER_OF_TWO };
 
 struct _opengl {
 	BYTE rotation;

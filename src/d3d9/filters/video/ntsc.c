@@ -5,6 +5,7 @@
  *      Author: fhorse
  */
 
+#include <stdio.h>
 #include "ntsc.h"
 #include "overscan.h"
 
@@ -73,6 +74,7 @@ int burst_phase = 0;
  * sono i parametri WORD **screen_index e
  * Uint32 *palette.
  */
+/*
 void ntsc_surface(WORD *screen, WORD **screeIndex, Uint32 *palette, SDL_Surface *dst, WORD rows,
 		WORD lines, BYTE factor) {
 	int y;
@@ -81,8 +83,6 @@ void ntsc_surface(WORD *screen, WORD **screeIndex, Uint32 *palette, SDL_Surface 
 		screen += (SCR_ROWS * overscan.up);
 	}
 
-	/* lock della destinazione */
-	//SDL_LockSurface(dst);
 	if (factor == 1) {
 		return;
 	} else if (factor == 2) {
@@ -95,28 +95,8 @@ void ntsc_surface(WORD *screen, WORD **screeIndex, Uint32 *palette, SDL_Surface 
 		nes_ntsc(4);
 		adjust_output(QUADRUPLE)
 	}
-	/* unlock della destinazione */
-	//SDL_UnlockSurface(dst);
-
-	/*
-	 switch ( key_pressed )
-	{
-		case ' ': merge_fields = !merge_fields; break;
-		case 'c': setup = nes_ntsc_composite; break;
-		case 's': setup = nes_ntsc_svideo; break;
-		case 'r': setup = nes_ntsc_rgb; break;
-		case 'm': setup = nes_ntsc_monochrome; break;
-		case 'd': sony_decoder = !sony_decoder; break;
-	}
-*/
-
-/*
-	if ( key_pressed || mouse_moved )
-	{
-		setup.merge_fields = merge_fields;
-
-*/
 }
+*/
 BYTE ntsc_init(BYTE effect, BYTE color, BYTE *palette_base, BYTE *palette_in, BYTE *palette_out) {
 	format[COMPOSITE] = nes_ntsc_composite;
 	format[SVIDEO] = nes_ntsc_svideo;

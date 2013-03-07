@@ -222,7 +222,8 @@ void opengl_create_texture(_texture *texture, uint32_t width, uint32_t height,
 
 	{
 		/* per sicurezza creo una superficie piu' grande del necessario */
-		SDL_Surface *blank = gfx_create_RGB_surface(opengl.surface_gl, texture->w * 2, texture->h * 2);
+		SDL_Surface *blank = gfx_create_RGB_surface(opengl.surface_gl, texture->w * 2,
+		        texture->h * 2);
 
 		memset(blank->pixels, 0, blank->w * blank->h * blank->format->BytesPerPixel);
 
