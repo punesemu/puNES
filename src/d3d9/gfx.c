@@ -144,7 +144,7 @@ BYTE gfx_init(void) {
 			d3d9.dynamic_texture = TRUE;
 		} else {
 			d3d9.dynamic_texture = FALSE;
-			printf("Video driver don't support dynamic_texture\n");
+			printf("Video driver don't support dynamic texture\n");
 		}
 
 		/*
@@ -213,19 +213,24 @@ BYTE gfx_init(void) {
 	{
 		// create the vertices using the CUSTOMVERTEX struct
 		CUSTOMVERTEX vertices[] = {
-			{ 400.0f, 62.5f, 0.5f, 1.0f, D3DCOLOR_XRGB(0, 0, 255), },
+			//{ 400.0f, 62.5f, 0.5f, 1.0f, D3DCOLOR_XRGB(0, 0, 255), },
+			//{ 650.0f, 500.0f, 0.5f, 1.0f, D3DCOLOR_XRGB(0, 255, 0), },
+			//{ 150.0f, 500.0f, 0.5f, 1.0f, D3DCOLOR_XRGB(255, 0, 0), },
+			{ 150.0f,  62.5f, 0.5f, 1.0f, D3DCOLOR_XRGB(40, 40, 40), },
+			{ 650.0f,  62.5f, 0.5f, 1.0f, D3DCOLOR_XRGB(0, 0, 255), },
 			{ 650.0f, 500.0f, 0.5f, 1.0f, D3DCOLOR_XRGB(0, 255, 0), },
 			{ 150.0f, 500.0f, 0.5f, 1.0f, D3DCOLOR_XRGB(255, 0, 0), },
+
 		};
 
 		VOID* pVoid;    // a void pointer
 
 		// create a vertex buffer interface called v_buffer
 		IDirect3DDevice9_CreateVertexBuffer(d3d9.d3ddev,
-				3 * sizeof(CUSTOMVERTEX),
+				4 * sizeof(CUSTOMVERTEX),
 				0,
 				CUSTOMFVF,
-				D3DPOOL_MANAGED,
+				D3DPOOL_DEFAULT,
 				&d3d9.v_buffer,
 				NULL);
 
@@ -293,7 +298,7 @@ void gfx_draw_screen(BYTE forced) {
 		IDirect3DDevice9_SetStreamSource(d3d9.d3ddev, 0, d3d9.v_buffer, 0, sizeof(CUSTOMVERTEX));
 
 		// copy the vertex buffer to the back buffer
-		IDirect3DDevice9_DrawPrimitive(d3d9.d3ddev, D3DPT_TRIANGLELIST, 0, 1);
+		IDirect3DDevice9_DrawPrimitive(d3d9.d3ddev, D3DPT_TRIANGLEFAN, 0, 2);
 
 	IDirect3DDevice9_EndScene(d3d9.d3ddev);    // ends the 3D scene
 
@@ -358,9 +363,21 @@ BYTE d3d9_create_texture(LPDIRECT3DTEXTURE9 *texture, uint32_t width, uint32_t h
 			usage |= D3DUSAGE_AUTOGENMIPMAP;
 		}
 
-		if (IDirect3DDevice9_CreateTexture(d3d9.d3ddev, w, h, 0, usage, d3d9.display_mode.Format,
-		        D3DPOOL_DEFAULT, texture, NULL) != D3D_OK) {
-			return (EXIT_ERROR);
+		{
+			HRESULT hresult = IDirect3DDevice9_CreateTexture(d3d9.d3ddev, w, h, 1, usage,
+					d3d9.display_mode.Format, D3DPOOL_DEFAULT, texture, NULL);
+
+			if (hresult == D3DERR_INVALIDCALL) {
+				if (IDirect3DDevice9_CreateTexture(d3d9.d3ddev, w, h, 1,
+						usage & ~D3DUSAGE_WRITEONLY, d3d9.display_mode.Format, D3DPOOL_DEFAULT,
+						texture, NULL ) == D3D_OK) {
+					printf("Video driver don't support use of D3DUSAGE_WRITEONLY\n");
+				} else {
+					return (EXIT_ERROR);
+				}
+			} else if (hresult != D3D_OK) {
+				return (EXIT_ERROR);
+			}
 		}
 	}
 
