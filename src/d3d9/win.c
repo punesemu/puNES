@@ -37,17 +37,21 @@ void gui_init(int argc, char **argv) {
 	/* cerco la Documents e imposto la directory base */
 	{
 		switch (gui.version_os) {
-			case SEVEN:
-			case VISTA:
+			case WIN_EIGHT:
+			case WIN_SEVEN:
+			case WIN_VISTA:
 				// FIXME : non compila sotto mingw
 				//hr = SHGetKnownFolderPath(FOLDERID_Documents, KF_FLAG_CREATE, NULL,
 				//		&gui.home);
 				//break;
-			case WINXP:
-			case WINXP64:
+			case WIN_XP64:
+			case WIN_XP:
+			default:
 				SHGetFolderPath(NULL, CSIDL_PERSONAL, NULL, 0, gui.home);
 				break;
 		}
+
+		fprintf(stderr, "gui home: path %s\n", gui.home);
 
 		if (info.portable) {
 			char path[sizeof(info.base_folder)], *dname;

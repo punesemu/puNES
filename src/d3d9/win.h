@@ -18,10 +18,11 @@
 #include "common.h"
 #include "emu.h"
 
-#define	SEVEN		61
-#define	VISTA		60
-#define	WINXP64		52
-#define	WINXP		51
+#define	WIN_EIGHT 62
+#define	WIN_SEVEN 61
+#define	WIN_VISTA 60
+#define	WIN_XP64  52
+#define	WIN_XP    51
 
 #define exit_thread(value) return
 
