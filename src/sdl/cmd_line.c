@@ -23,12 +23,12 @@ void usage(char *name);
 BYTE cmd_line_parse(int argc, char **argv) {
 	int longIndex = 0, opt = 0;
 
-	opt = getopt_long(argc, argv, optShort, optLong, &longIndex);
+	opt = getopt_long(argc, argv, opt_short, opt_long, &longIndex);
 	while (opt != -1) {
 		switch (opt) {
 			case 0:
 				/* long options */
-				if (!(strcmp(optLong[longIndex].name, "swap-duty"))) {
+				if (!(strcmp(opt_long[longIndex].name, "swap-duty"))) {
 					param_search(0, optarg, param_no_yes, cfg_from_file.swap_duty = index);
 				}
 				break;
@@ -102,7 +102,7 @@ BYTE cmd_line_parse(int argc, char **argv) {
 				break;
 		}
 
-		opt = getopt_long(argc, argv, optShort, optLong, &longIndex);
+		opt = getopt_long(argc, argv, opt_short, opt_long, &longIndex);
 	}
 	return (optind);
 }

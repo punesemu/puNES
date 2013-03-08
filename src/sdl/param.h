@@ -54,9 +54,9 @@ typedef struct {
 } _param;
 
 #ifdef __CMDLINE__
-static const char *optShort = "m:f:k:s:o:i:n:p:r:v:u:t:a:l:c:q:g:Vh?";
+static const char *opt_short = "m:f:k:s:o:i:n:p:r:v:u:t:a:l:c:q:g:Vh?";
 
-static const struct option optLong[] = {
+static const struct option opt_long[] = {
 	{ "mode",               required_argument, NULL, 'm'},
 	{ "fps",                required_argument, NULL, 'f'},
 	{ "frameskip",          required_argument, NULL, 'k'},

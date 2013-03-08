@@ -124,7 +124,7 @@ BYTE gui_create(void) {
 
 	main_win = CreateWindowEx(WS_EX_CLIENTEDGE | WS_EX_ACCEPTFILES,
 			class_name,
-			"puNES window",
+			"puNES D3D9 window",
 	        WS_OVERLAPPED | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | WS_CAPTION | WS_SYSMENU
 	                | WS_MINIMIZEBOX,
 	        CW_USEDEFAULT, CW_USEDEFAULT,

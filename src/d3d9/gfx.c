@@ -20,8 +20,8 @@ enum { NO_POWER_OF_TWO, POWER_OF_TWO };
 
 struct _d3d9 {
 	LPDIRECT3D9 d3d;
-	LPDIRECT3DDEVICE9 d3ddev;
-	LPDIRECT3DVERTEXBUFFER9 v_buffer;
+	LPDIRECT3DDEVICE9 dev;
+	LPDIRECT3DVERTEXBUFFER9 textured_vertex;
 	LPDIRECT3DTEXTURE9 texture;
 	D3DDISPLAYMODE display_mode;
 
@@ -37,9 +37,11 @@ struct _d3d9 {
 
 typedef struct {
 	FLOAT X, Y, Z, RHW;
-	DWORD COLOR;
+	FLOAT TU, TV;
+	//DWORD COLOR;
 } CUSTOMVERTEX;
-#define CUSTOMFVF (D3DFVF_XYZRHW | D3DFVF_DIFFUSE)
+//#define CUSTOMFVF (D3DFVF_XYZRHW | D3DFVF_DIFFUSE)
+#define CUSTOMFVF (D3DFVF_XYZRHW | D3DFVF_TEX1)
 
 BYTE d3d9_create_texture(LPDIRECT3DTEXTURE9 *texture, uint32_t width, uint32_t height,
         uint8_t interpolation, uint8_t pow);
@@ -174,7 +176,7 @@ BYTE gfx_init(void) {
 				gui_window_id(),
 				vertex_processing,
 				&d3dpp,
-				&d3d9.d3ddev);
+				&d3d9.dev);
 
 		if (rc != D3D_OK) {
 			fprintf(stderr, "Unable to create d3d device\n");
@@ -211,33 +213,30 @@ BYTE gfx_init(void) {
 	}
 
 	{
-		// create the vertices using the CUSTOMVERTEX struct
+		VOID *tv_vertices;
 		CUSTOMVERTEX vertices[] = {
-			//{ 400.0f, 62.5f, 0.5f, 1.0f, D3DCOLOR_XRGB(0, 0, 255), },
-			//{ 650.0f, 500.0f, 0.5f, 1.0f, D3DCOLOR_XRGB(0, 255, 0), },
-			//{ 150.0f, 500.0f, 0.5f, 1.0f, D3DCOLOR_XRGB(255, 0, 0), },
-			{ 150.0f,  62.5f, 0.5f, 1.0f, D3DCOLOR_XRGB(40, 40, 40), },
-			{ 650.0f,  62.5f, 0.5f, 1.0f, D3DCOLOR_XRGB(0, 0, 255), },
-			{ 650.0f, 500.0f, 0.5f, 1.0f, D3DCOLOR_XRGB(0, 255, 0), },
-			{ 150.0f, 500.0f, 0.5f, 1.0f, D3DCOLOR_XRGB(255, 0, 0), },
-
+			{ 150.0f,  62.5f, 0.5f, 1.0f, 0, 0 },
+			{ 650.0f,  62.5f, 0.5f, 1.0f, 1, 0 },
+			{ 650.0f, 500.0f, 0.5f, 1.0f, 1, 1 },
+			{ 150.0f,  62.5f, 0.5f, 1.0f, 0, 0 },
+			{ 650.0f, 500.0f, 0.5f, 1.0f, 1, 1 },
+			{ 150.0f, 500.0f, 0.5f, 1.0f, 0, 1 },
 		};
 
-		VOID* pVoid;    // a void pointer
-
-		// create a vertex buffer interface called v_buffer
-		IDirect3DDevice9_CreateVertexBuffer(d3d9.d3ddev,
-				4 * sizeof(CUSTOMVERTEX),
-				0,
+		if (IDirect3DDevice9_CreateVertexBuffer(d3d9.dev,
+				6 * sizeof(CUSTOMVERTEX),
+				D3DUSAGE_WRITEONLY,
 				CUSTOMFVF,
 				D3DPOOL_DEFAULT,
-				&d3d9.v_buffer,
-				NULL);
+				&d3d9.textured_vertex,
+				NULL) != D3D_OK) {
+			fprintf(stderr, "Unable to create the vertex buffer\n");
+			return (EXIT_ERROR);
+		}
 
-		// lock v_buffer and load the vertices into it
-		IDirect3DVertexBuffer9_Lock(d3d9.v_buffer, 0, 0, (void**) &pVoid, 0);
-		memcpy(pVoid, vertices, sizeof(vertices));
-		IDirect3DVertexBuffer9_Unlock(d3d9.v_buffer);
+		IDirect3DVertexBuffer9_Lock(d3d9.textured_vertex, 0, 0, (void**) &tv_vertices, 0);
+		memcpy(tv_vertices, vertices, sizeof(vertices));
+		IDirect3DVertexBuffer9_Unlock(d3d9.textured_vertex);
 	}
 
 	return (EXIT_OK);
@@ -268,6 +267,8 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 }
 void gfx_draw_screen(BYTE forced) {
 	{
+		BOOL unable_lock = FALSE;
+
 		D3DLOCKED_RECT locked_rect;
 
 		/* lock della texture */
@@ -276,46 +277,52 @@ void gfx_draw_screen(BYTE forced) {
 
 			/* applico l'effetto */
 			d3d9.effect(screen.data, screen.line, d3d9.palette, d3d9.bpp, locked_rect.Pitch,
-			        locked_rect.pBits, gfx.rows, gfx.lines, d3d9.scale);
+					locked_rect.pBits, gfx.rows, gfx.lines, d3d9.scale);
 
 			/* unlock della texture */
 			IDirect3DTexture9_UnlockRect(d3d9.texture, 0);
-		} else {
+		} else if (unable_lock == FALSE) {
 			printf("Unable to lock texture\n");
+			unable_lock = TRUE;
 		}
 	}
 
-    // clear the window to a deep blue
-	//IDirect3DDevice9_Clear(d3d9.d3ddev, 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 40, 100), 1.0f, 0);
-	IDirect3DDevice9_Clear(d3d9.d3ddev, 0, NULL, D3DCLEAR_TARGET, d3d9.palette[40], 1.0f, 0);
+	IDirect3DDevice9_Clear(d3d9.dev, 0, NULL, D3DCLEAR_TARGET, d3d9.palette[40], 1.0f, 0);
 
-	IDirect3DDevice9_BeginScene(d3d9.d3ddev);    // begins the 3D scene
+	IDirect3DDevice9_BeginScene(d3d9.dev);    // begins the 3D scene
+
+		IDirect3DDevice9_SetTextureStageState(d3d9.dev, 0, D3DTSS_COLOROP, D3DTOP_MODULATE);
+		IDirect3DDevice9_SetTextureStageState(d3d9.dev, 0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
+		IDirect3DDevice9_SetTextureStageState(d3d9.dev, 0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
+		IDirect3DDevice9_SetTextureStageState(d3d9.dev, 0, D3DTSS_ALPHAOP, D3DTOP_DISABLE);
+
+		IDirect3DDevice9_SetTexture(d3d9.dev, 0, (IDirect3DBaseTexture9 *) d3d9.texture);
 
 		// select which vertex format we are using
-		IDirect3DDevice9_SetFVF(d3d9.d3ddev, CUSTOMFVF);
+		IDirect3DDevice9_SetFVF(d3d9.dev, CUSTOMFVF);
 
 		// select the vertex buffer to display
-		IDirect3DDevice9_SetStreamSource(d3d9.d3ddev, 0, d3d9.v_buffer, 0, sizeof(CUSTOMVERTEX));
+		IDirect3DDevice9_SetStreamSource(d3d9.dev, 0, d3d9.textured_vertex, 0, sizeof(CUSTOMVERTEX));
 
 		// copy the vertex buffer to the back buffer
-		IDirect3DDevice9_DrawPrimitive(d3d9.d3ddev, D3DPT_TRIANGLEFAN, 0, 2);
+		IDirect3DDevice9_DrawPrimitive(d3d9.dev, D3DPT_TRIANGLELIST, 0, 2);
 
-	IDirect3DDevice9_EndScene(d3d9.d3ddev);    // ends the 3D scene
+	IDirect3DDevice9_EndScene(d3d9.dev);    // ends the 3D scene
 
-	IDirect3DDevice9_Present(d3d9.d3ddev, NULL, NULL, NULL, NULL);    // displays the created frame
+	IDirect3DDevice9_Present(d3d9.dev, NULL, NULL, NULL, NULL);    // displays the created frame
 }
 void gfx_reset_video(void) {
 	return;
 }
 void gfx_quit(void) {
-	if (d3d9.v_buffer) {
-		IDirect3DVertexBuffer9_Release(d3d9.v_buffer);
+	if (d3d9.textured_vertex) {
+		IDirect3DVertexBuffer9_Release(d3d9.textured_vertex);
 	}
 	if (d3d9.texture) {
 		IDirect3DTexture9_Release(d3d9.texture);
 	}
-	if (d3d9.d3ddev) {
-		IDirect3DDevice9_Release(d3d9.d3ddev);
+	if (d3d9.dev) {
+		IDirect3DDevice9_Release(d3d9.dev);
 	}
 	if (d3d9.d3d) {
 		IDirect3D9_Release(d3d9.d3d);
@@ -359,16 +366,16 @@ BYTE d3d9_create_texture(LPDIRECT3DTEXTURE9 *texture, uint32_t width, uint32_t h
 		if (d3d9.dynamic_texture == TRUE) {
 			usage |= D3DUSAGE_DYNAMIC;
 		}
-		if (d3d9.auto_gen_mipmap == TRUE) {
-			usage |= D3DUSAGE_AUTOGENMIPMAP;
-		}
+		//if (d3d9.auto_gen_mipmap == TRUE) {
+		//	usage |= D3DUSAGE_AUTOGENMIPMAP;
+		//}
 
 		{
-			HRESULT hresult = IDirect3DDevice9_CreateTexture(d3d9.d3ddev, w, h, 1, usage,
+			HRESULT hresult = IDirect3DDevice9_CreateTexture(d3d9.dev, w, h, 0, usage,
 					d3d9.display_mode.Format, D3DPOOL_DEFAULT, texture, NULL);
 
 			if (hresult == D3DERR_INVALIDCALL) {
-				if (IDirect3DDevice9_CreateTexture(d3d9.d3ddev, w, h, 1,
+				if (IDirect3DDevice9_CreateTexture(d3d9.dev, w, h, 0,
 						usage & ~D3DUSAGE_WRITEONLY, d3d9.display_mode.Format, D3DPOOL_DEFAULT,
 						texture, NULL ) == D3D_OK) {
 					printf("Video driver don't support use of D3DUSAGE_WRITEONLY\n");
