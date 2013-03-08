@@ -15,6 +15,17 @@
 #include <shlobj.h>
 #include <libgen.h>
 #include "version.h"
+#include "gfx.h"
+
+#define TOOLBAR_HEIGHT   26
+#define FRAME_TL_HEIGHT  (TOOLBAR_HEIGHT - 2)
+#define FRAME_TL_WIDTH   SCR_ROWS
+#define FRAME_SS_HEIGHT  TOOLBAR_HEIGHT - 2
+#define FRAME_SS_WIDTH   1 + BUTTON_SS_WIDTH + 0 + COMBO_SS_WIDTH + 2 + BUTTON_SS_WIDTH + 1
+#define BUTTON_SS_HEIGHT FRAME_SS_HEIGHT - 1
+#define BUTTON_SS_WIDTH  31
+#define COMBO_SS_WIDTH   60
+#define SEPARATOR_WIDTH  3
 
 long __stdcall main_proc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam);
 double high_resolution_ms(void);
@@ -50,8 +61,6 @@ void gui_init(int argc, char **argv) {
 				SHGetFolderPath(NULL, CSIDL_PERSONAL, NULL, 0, gui.home);
 				break;
 		}
-
-		fprintf(stderr, "gui home: path %s\n", gui.home);
 
 		if (info.portable) {
 			char path[sizeof(info.base_folder)], *dname;
@@ -105,7 +114,7 @@ void gui_quit(void) {
 }
 BYTE gui_create(void) {
 	WNDCLASSEX wc;
-	INITCOMMONCONTROLSEX icex;
+	//INITCOMMONCONTROLSEX icex;
 	const char class_name[] = "FHWindowClass";
 
 	//Step 1: Registering the Window Class
@@ -132,8 +141,8 @@ BYTE gui_create(void) {
 	main_win = CreateWindowEx(WS_EX_CLIENTEDGE | WS_EX_ACCEPTFILES,
 			class_name,
 			"puNES D3D9 window",
-	        WS_OVERLAPPED | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | WS_CAPTION | WS_SYSMENU
-	                | WS_MINIMIZEBOX,
+	        WS_OVERLAPPED | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | WS_CAPTION | WS_SYSMENU |
+	        WS_MINIMIZEBOX,
 	        CW_USEDEFAULT, CW_USEDEFAULT,
 	        CW_USEDEFAULT, CW_USEDEFAULT,
 	        (HWND) NULL,
@@ -158,7 +167,7 @@ BYTE gui_create(void) {
 			"puNES D3D frame",
 			WS_CHILD,
 			CW_USEDEFAULT, CW_USEDEFAULT,
-			800, 600,
+			CW_USEDEFAULT, CW_USEDEFAULT,
 			main_win,
 			(HMENU) NULL,
 			gui.main_hinstance,
@@ -172,7 +181,48 @@ BYTE gui_create(void) {
 	return (EXIT_OK);
 }
 void gui_set_video_mode(void) {
-	return;
+	RECT rc_client, rc_wind;
+	POINT pt_diff;
+
+	/* aggiorno la dimensione della finestra principale */
+	GetClientRect(main_win, &rc_client);
+	GetWindowRect(main_win, &rc_wind);
+	pt_diff.x = (rc_wind.right - rc_wind.left) - rc_client.right;
+	pt_diff.y = (rc_wind.bottom - rc_wind.top) - rc_client.bottom;
+	MoveWindow(main_win, rc_wind.left, rc_wind.top, gfx.w[VIDEO_MODE] + pt_diff.x,
+	        gfx.h[VIDEO_MODE] + pt_diff.y + TOOLBAR_HEIGHT, TRUE);
+	/* aggiorno la finestra dell'sdl */
+	MoveWindow(d3d_frame, 0, 0, gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE], TRUE);
+	/* aggiorno la toolbar */
+	//MoveWindow(toolbox_frame, 0, gfx.h[VIDEO_MODE], gfx.w[VIDEO_MODE], TOOLBAR_HEIGHT, TRUE);
+	/* aggiorno il frame della timeline */
+	/*
+	{
+		WORD rows = FRAME_TL_WIDTH;
+
+		if (cfg->scale == X1) {
+			hide_tool_widget();
+			if (overscan.enabled) {
+				rows = gfx.rows;
+			}
+		} else {
+			show_tool_widget();
+		}
+		pt_diff.x = gfx.w[VIDEO_MODE] - rows;
+		MoveWindow(hFrameTl, pt_diff.x, 0, rows, FRAME_TL_HEIGHT, TRUE);
+		MoveWindow(hTimeline, 0, 0, rows - 4, FRAME_TL_HEIGHT, TRUE);
+	}
+	*/
+	//pt_diff.x -= SEPARATOR_WIDTH;
+	//MoveWindow(hSepTl, pt_diff.x, 0, SEPARATOR_WIDTH, FRAME_TL_HEIGHT, TRUE);
+	/* aggiorno il frame dello saveslot */
+	//pt_diff.x -= FRAME_SS_WIDTH;
+	//MoveWindow(hFrameSs, pt_diff.x, 0, FRAME_SS_WIDTH, FRAME_SS_HEIGHT, TRUE);
+	//pt_diff.x -= SEPARATOR_WIDTH;
+	//MoveWindow(hSepSs, pt_diff.x, 0, SEPARATOR_WIDTH, FRAME_TL_HEIGHT, TRUE);
+	/* frame vuoto */
+	//pt_diff.y = gfx.w[VIDEO_MODE] - pt_diff.x;
+	//MoveWindow(hFrameBl, 0, 0, gfx.w[VIDEO_MODE] - pt_diff.y, FRAME_TL_HEIGHT, TRUE);
 }
 void gui_start(void) {
 	/* visualizzo il frame principale */

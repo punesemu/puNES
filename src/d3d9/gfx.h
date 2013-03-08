@@ -12,6 +12,13 @@
 #include "filters/video/scale.h"
 #include "filters/video/ntsc.h"
 
+enum scale_type { X1 = 1, X2, X3, X4 };
+enum filters_type {
+	NO_FILTER,
+};
+
+enum overcan_type { OSCAN_OFF, OSCAN_ON, OSCAN_DEFAULT, OSCAN_DEFAULT_OFF, OSCAN_DEFAULT_ON };
+enum gfx_info_index { CURRENT, NO_OVERSCAN, MONITOR, VIDEO_MODE };
 enum no_change { NO_CHANGE = 255 };
 
 struct _gfx {

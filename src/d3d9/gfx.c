@@ -16,6 +16,23 @@
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 600
 
+#define ntsc_width(wdt, a, flag)\
+{\
+	wdt = 0;\
+	/*\
+	if (filter == NTSC_FILTER) {\
+		wdt = NES_NTSC_OUT_WIDTH(gfx.rows, a);\
+		if (overscan.enabled) {\
+			wdt -= (a - nes_ntsc_in_chunk);\
+		}\
+		if (flag) {\
+			gfx.w[CURRENT] = wdt;\
+			gfx.w[NO_OVERSCAN] = (NES_NTSC_OUT_WIDTH(SCR_ROWS, a));\
+		}\
+	}\
+	*/\
+}
+
 enum { NO_POWER_OF_TWO, POWER_OF_TWO };
 
 struct _d3d9 {
@@ -28,6 +45,7 @@ struct _d3d9 {
 	uint32_t *palette;
 	GFX_EFFECT_ROUTINE;
 
+	DWORD flags;
 	BYTE bpp;
 	BOOL auto_gen_mipmap;
 	BOOL dynamic_texture;
@@ -41,6 +59,7 @@ typedef struct {
 } CUSTOMVERTEX;
 #define CUSTOMFVF (D3DFVF_XYZRHW | D3DFVF_TEX1)
 
+BYTE d3d9_create_context(void);
 BYTE d3d9_create_texture(LPDIRECT3DTEXTURE9 *texture, uint32_t width, uint32_t height,
         uint8_t interpolation, uint8_t pow);
 int d3d9_power_of_two(int base);
@@ -53,11 +72,11 @@ BYTE gfx_init(void) {
 
 	memset(&d3d9, 0x00, sizeof(d3d9));
 
+	cfg->scale = X2;
+	d3d9.scale = X1;
+
 	{
-		D3DPRESENT_PARAMETERS d3dpp;
 		D3DCAPS9 d3dcaps;
-		DWORD vertex_processing = 0;
-		HRESULT rc;
 
 		if ((d3d9.d3d = Direct3DCreate9(D3D_SDK_VERSION)) == NULL) {
 			fprintf(stderr, "Unable to create d3d device\n");
@@ -102,14 +121,6 @@ BYTE gfx_init(void) {
 			}
 		}
 
-		ZeroMemory(&d3dpp, sizeof(d3dpp));
-		d3dpp.Windowed = TRUE;
-		d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
-		d3dpp.hDeviceWindow = gui_window_id();
-		d3dpp.BackBufferFormat = d3d9.display_mode.Format;
-		d3dpp.BackBufferWidth = SCREEN_WIDTH;
-		d3dpp.BackBufferHeight = SCREEN_HEIGHT;
-
 		/* Check for hardware T&L */
 		if (IDirect3D9_GetDeviceCaps(d3d9.d3d,
 				D3DADAPTER_DEFAULT,
@@ -136,15 +147,15 @@ BYTE gfx_init(void) {
 				d3d9.display_mode.Format) == D3D_OK)) {
 			d3d9.auto_gen_mipmap = TRUE;
 		} else {
-			d3d9.auto_gen_mipmap = FALSE;
 			printf("Video driver don't support automatic generation of mipmap\n");
+			d3d9.auto_gen_mipmap = FALSE;
 		}
 
 		if (d3dcaps.Caps2 & D3DCAPS2_DYNAMICTEXTURES) {
 			d3d9.dynamic_texture = TRUE;
 		} else {
-			d3d9.dynamic_texture = FALSE;
 			printf("Video driver don't support dynamic texture\n");
+			d3d9.dynamic_texture = FALSE;
 		}
 
 		/*
@@ -157,29 +168,16 @@ BYTE gfx_init(void) {
 		}
 
 		if (d3dcaps.DevCaps & D3DDEVCAPS_HWTRANSFORMANDLIGHT) {
-			vertex_processing = D3DCREATE_HARDWARE_VERTEXPROCESSING;
+			d3d9.flags = D3DCREATE_HARDWARE_VERTEXPROCESSING;
 			/* Check for pure device */
 			if (d3dcaps.DevCaps & D3DDEVCAPS_PUREDEVICE) {
-				vertex_processing |= D3DCREATE_PUREDEVICE;
+				d3d9.flags |= D3DCREATE_PUREDEVICE;
 			}
 		} else {
-			vertex_processing = D3DCREATE_SOFTWARE_VERTEXPROCESSING;
 			printf("Video driver don't support hardware accelaration\n");
+			d3d9.flags = D3DCREATE_SOFTWARE_VERTEXPROCESSING;
 		}
 
-		// create a device class using this information and the info from the d3dpp stuct
-		rc = IDirect3D9_CreateDevice(d3d9.d3d,
-				D3DADAPTER_DEFAULT,
-				D3DDEVTYPE_HAL,
-				gui_window_id(),
-				vertex_processing,
-				&d3dpp,
-				&d3d9.dev);
-
-		if (rc != D3D_OK) {
-			fprintf(stderr, "Unable to create d3d device\n");
-			return (EXIT_ERROR);
-		}
 	}
 
 	/*
@@ -202,54 +200,169 @@ BYTE gfx_init(void) {
 
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE);
 
-	/* creo la texture principale */
-	cfg->scale = d3d9.scale = 1;
-	if (d3d9_create_texture(&d3d9.texture, SCR_ROWS * d3d9.scale, SCR_LINES * d3d9.scale, 0,
-	        POWER_OF_TWO) == EXIT_ERROR) {
-		fprintf(stderr, "Unable to create main texture\n");
-		return (EXIT_ERROR);
-	}
-
-	{
-		VOID *tv_vertices;
-		CUSTOMVERTEX vertices[] = {
-			/* primo triangolo */
-			{ 150.0f,  62.5f, 0.5f, 1.0f, 0, 0 },
-			{ 650.0f,  62.5f, 0.5f, 1.0f, 1, 0 },
-			{ 650.0f, 500.0f, 0.5f, 1.0f, 1, 1 },
-			/* secondo triangolo */
-			{ 150.0f,  62.5f, 0.5f, 1.0f, 0, 0 },
-			{ 650.0f, 500.0f, 0.5f, 1.0f, 1, 1 },
-			{ 150.0f, 500.0f, 0.5f, 1.0f, 0, 1 },
-		};
-
-		if (IDirect3DDevice9_CreateVertexBuffer(d3d9.dev,
-				6 * sizeof(CUSTOMVERTEX),
-				D3DUSAGE_WRITEONLY,
-				CUSTOMFVF,
-				D3DPOOL_DEFAULT,
-				&d3d9.textured_vertex,
-				NULL) != D3D_OK) {
-			fprintf(stderr, "Unable to create the vertex buffer\n");
-			return (EXIT_ERROR);
-		}
-
-		IDirect3DVertexBuffer9_Lock(d3d9.textured_vertex, 0, 0, (void**) &tv_vertices, 0);
-		memcpy(tv_vertices, vertices, sizeof(vertices));
-		IDirect3DVertexBuffer9_Unlock(d3d9.textured_vertex);
-	}
-
 	return (EXIT_OK);
 }
 void gfx_set_render(BYTE render) {
 	return;
 }
 void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE force_scale) {
+	BYTE set_mode;
+	WORD width, height, w_for_pr, h_for_pr;
 
-	gfx.rows = SCR_ROWS;
-	gfx.lines = SCR_LINES;
+	//gfx_set_screen_start:
+	set_mode = FALSE;
+	width = 0, height = 0;
+	w_for_pr = 0, h_for_pr = 0;
+
+	/*
+	 * l'ordine dei vari controlli non deve essere cambiato:
+	 * 0) overscan
+	 * 1) filtro
+	 * 2) fullscreen
+	 * 3) fattore di scala
+	 * 4) tipo di paletta (IMPORTANTE: dopo il SDL_SetVideoMode)
+	 */
+
+	/* overscan */
+	{
+		//overscan.enabled = cfg->oscan;
+
+		gfx.rows = SCR_ROWS;
+		gfx.lines = SCR_LINES;
+
+		//if (overscan.enabled == OSCAN_DEFAULT) {
+		//	overscan.enabled = cfg->oscan_default;
+		//}
+
+		//if (overscan.enabled) {
+		//	gfx.rows -= (overscan.left + overscan.right);
+		//	gfx.lines -= (overscan.up + overscan.down);
+		//}
+	}
+
+	// .......................
+	// .......................
+	// .......................
+	// mancano un saaaaaaacco di cose
+	// .......................
+	// .......................
+	// .......................
+
+	/* fattore di scala */
+	if (scale == NO_CHANGE) {
+		scale = cfg->scale;
+	}
+	if ((scale != cfg->scale) || info.on_cfg || force_scale) {
+/*
+#define ctrl_filter_scale(scalexf, hqxf)\
+	if ((filter >= SCALE2X) && (filter <= SCALE4X)) {\
+		filter = scalexf;\
+	} else  if ((filter >= HQ2X) && (filter <= HQ4X)) {\
+		filter = hqxf;\
+	}
+*/
+		switch (scale) {
+			case X1:
+				/*
+				 * il fattore di scala a 1 e' possibile
+				 * solo senza filtro.
+				 */
+				if (filter != NO_FILTER) {
+					/*
+					 * con un fattore di scala X1 effect deve essere
+					 * sempre impostato su scale_surface.
+					 */
+					effect = scale_surface;
+					return;
+				}
+				set_mode = TRUE;
+				break;
+			case X2:
+				//ctrl_filter_scale(SCALE2X, HQ2X)
+				ntsc_width(width, ntsc_width_pixel[scale], TRUE);
+				set_mode = TRUE;
+				break;
+			case X3:
+				//ctrl_filter_scale(SCALE3X, HQ3X)
+				ntsc_width(width, ntsc_width_pixel[scale], TRUE);
+				set_mode = TRUE;
+				break;
+			case X4:
+				//ctrl_filter_scale(SCALE4X, HQ4X)
+				ntsc_width(width, ntsc_width_pixel[scale], TRUE);
+				set_mode = TRUE;
+				break;
+		}
+		if (!width) {
+			width = gfx.rows * scale;
+			gfx.w[CURRENT] = width;
+			gfx.w[NO_OVERSCAN] = SCR_ROWS * scale;
+		}
+		height = gfx.lines * scale;
+		gfx.h[CURRENT] = height;
+		gfx.h[NO_OVERSCAN] = SCR_LINES * scale;
+	}
 
 	d3d9.effect = scale_surface;
+
+	/*
+	 * cfg->scale e cfg->filter posso aggiornarli prima
+	 * del set_mode, mentre cfg->fullscreen e cfg->palette
+	 * devo farlo necessariamente dopo.
+	 */
+	/* salvo il nuovo fattore di scala */
+	cfg->scale = scale;
+	/* salvo ill nuovo filtro */
+	//cfg->filter = filter;
+	/* devo eseguire un SDL_SetVideoMode? */
+	if (set_mode) {
+		//uint32_t flags = software_flags;
+
+		gfx.w[VIDEO_MODE] = width;
+		gfx.h[VIDEO_MODE] = height;
+
+		/*
+		if (gfx.opengl) {
+			flags = opengl.flags;
+
+			SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 5);
+			SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 5);
+			SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 5);
+			SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
+
+			SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, TRUE);
+			SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, cfg->vsync);
+
+			if (fullscreen) {
+				gfx.w[VIDEO_MODE] = gfx.w[MONITOR];
+				gfx.h[VIDEO_MODE] = gfx.h[MONITOR];
+			}
+		}
+		*/
+
+		/* faccio quello che serve prima del setvideo */
+		gui_set_video_mode();
+
+		/*
+		 * nella versione a 32 bit (GTK) dopo un gfx_reset_video,
+		 * se non lo faccio anche qui, crasha tutto.
+		 */
+		//sdl_wid();
+
+		/* inizializzo la superfice video */
+		//surface_sdl = SDL_SetVideoMode(gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE], 0, flags);
+		if (d3d9_create_context() == EXIT_ERROR) {
+			fprintf(stderr, "Unable to initialize d3d context\n");
+		}
+
+		/* in caso di errore */
+		/*if (!surface_sdl) {
+			fprintf(stderr, "SDL_SetVideoMode failed : %s\n", SDL_GetError());
+			return;
+		}*/
+
+		//gfx.bit_per_pixel = surface_sdl->format->BitsPerPixel;
+	}
 
 	ntsc_set(cfg->ntsc_format, FALSE, 0, 0, (BYTE *) palette_RGB);
 
@@ -267,8 +380,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 }
 void gfx_draw_screen(BYTE forced) {
 	{
-		BOOL unable_lock = FALSE;
-
+		static BOOL unable_lock = FALSE;
 		D3DLOCKED_RECT locked_rect;
 
 		/* lock della texture */
@@ -349,7 +461,81 @@ void gfx_quit(void) {
 
 
 
+BYTE d3d9_create_context(void) {
 
+	if (d3d9.textured_vertex) {
+		IDirect3DVertexBuffer9_Release(d3d9.textured_vertex);
+		d3d9.textured_vertex = NULL;
+	}
+
+	if (d3d9.dev) {
+		IDirect3DDevice9_Release(d3d9.dev);
+		d3d9.dev = NULL;
+	}
+
+	{
+		D3DPRESENT_PARAMETERS d3dpp;
+
+		ZeroMemory(&d3dpp, sizeof(d3dpp));
+		d3dpp.Windowed = TRUE;
+		d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
+		d3dpp.hDeviceWindow = gui_window_id();
+		d3dpp.BackBufferFormat = d3d9.display_mode.Format;
+		d3dpp.BackBufferWidth = gfx.w[VIDEO_MODE];
+		d3dpp.BackBufferHeight = gfx.h[VIDEO_MODE];
+
+		// create a device class using this information and the info from the d3dpp stuct
+		if (IDirect3D9_CreateDevice(d3d9.d3d,
+				D3DADAPTER_DEFAULT,
+				D3DDEVTYPE_HAL,
+				gui_window_id(),
+				d3d9.flags,
+				&d3dpp,
+				&d3d9.dev) != D3D_OK) {
+			fprintf(stderr, "Unable to create d3d device\n");
+			return (EXIT_ERROR);
+		}
+	}
+
+	{
+		VOID *tv_vertices;
+		CUSTOMVERTEX vertices[] = {
+			/* primo triangolo */
+			{ 0.0f,  0.0f, 0.5f, 1.0f, 0, 0 },
+			{ gfx.w[VIDEO_MODE], 0.0f, 0.5f, 1.0f, 1, 0 },
+			{ gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE], 0.5f, 1.0f, 1, 1 },
+			/* secondo triangolo */
+			{ 0.0f, 0.0f, 0.5f, 1.0f, 0, 0 },
+			{ gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE], 0.5f, 1.0f, 1, 1 },
+			{ 0.0f,  gfx.h[VIDEO_MODE], 0.5f, 1.0f, 0, 1 },
+
+		};
+
+		if (IDirect3DDevice9_CreateVertexBuffer(d3d9.dev,
+				6 * sizeof(CUSTOMVERTEX),
+				D3DUSAGE_WRITEONLY,
+				CUSTOMFVF,
+				D3DPOOL_DEFAULT,
+				&d3d9.textured_vertex,
+				NULL) != D3D_OK) {
+			fprintf(stderr, "Unable to create the vertex buffer\n");
+			return (EXIT_ERROR);
+		}
+
+		IDirect3DVertexBuffer9_Lock(d3d9.textured_vertex, 0, 0, (void**) &tv_vertices, 0);
+		memcpy(tv_vertices, vertices, sizeof(vertices));
+		IDirect3DVertexBuffer9_Unlock(d3d9.textured_vertex);
+	}
+
+	/* creo la texture principale */
+	if (d3d9_create_texture(&d3d9.texture, SCR_ROWS * d3d9.scale, SCR_LINES * d3d9.scale, 0,
+	        POWER_OF_TWO) == EXIT_ERROR) {
+		fprintf(stderr, "Unable to create main texture\n");
+		return (EXIT_ERROR);
+	}
+
+	return (EXIT_OK);
+}
 
 
 BYTE d3d9_create_texture(LPDIRECT3DTEXTURE9 *texture, uint32_t width, uint32_t height,
@@ -386,7 +572,7 @@ BYTE d3d9_create_texture(LPDIRECT3DTEXTURE9 *texture, uint32_t width, uint32_t h
 				if (IDirect3DDevice9_CreateTexture(d3d9.dev, w, h, 0,
 						usage & ~D3DUSAGE_WRITEONLY, d3d9.display_mode.Format, D3DPOOL_DEFAULT,
 						texture, NULL ) == D3D_OK) {
-					printf("Video driver don't support use of D3DUSAGE_WRITEONLY\n");
+					printf("Video driver don't support use of D3DUSAGE_WRITEONLY on the texture\n");
 				} else {
 					return (EXIT_ERROR);
 				}

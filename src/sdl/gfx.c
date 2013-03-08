@@ -366,7 +366,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 				 */
 				if (filter != NO_FILTER) {
 					/*
-					 * con un fatto redi scala X1 effect deve essere
+					 * con un fattore di scala X1 effect deve essere
 					 * sempre impostato su scale_surface.
 					 */
 					effect = scale_surface;
