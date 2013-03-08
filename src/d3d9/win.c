@@ -96,6 +96,9 @@ void gui_init(int argc, char **argv) {
 		}
 	}
 }
+void gui_quit(void) {
+	DestroyWindow(main_win);
+}
 BYTE gui_create(void) {
 	WNDCLASSEX wc;
 	INITCOMMONCONTROLSEX icex;
@@ -226,14 +229,10 @@ void gui_set_thread_affinity(uint8_t core) {
 	return;
 }
 
-
-
-
 long __stdcall main_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	switch (msg) {
 		case WM_CLOSE:
 			info.stop = TRUE;
-			DestroyWindow(main_win);
 			break;
 		case WM_DESTROY:
 			PostQuitMessage(EXIT_SUCCESS);

@@ -38,9 +38,7 @@ struct _d3d9 {
 typedef struct {
 	FLOAT X, Y, Z, RHW;
 	FLOAT TU, TV;
-	//DWORD COLOR;
 } CUSTOMVERTEX;
-//#define CUSTOMFVF (D3DFVF_XYZRHW | D3DFVF_DIFFUSE)
 #define CUSTOMFVF (D3DFVF_XYZRHW | D3DFVF_TEX1)
 
 BYTE d3d9_create_texture(LPDIRECT3DTEXTURE9 *texture, uint32_t width, uint32_t height,
@@ -215,9 +213,11 @@ BYTE gfx_init(void) {
 	{
 		VOID *tv_vertices;
 		CUSTOMVERTEX vertices[] = {
+			/* primo triangolo */
 			{ 150.0f,  62.5f, 0.5f, 1.0f, 0, 0 },
 			{ 650.0f,  62.5f, 0.5f, 1.0f, 1, 0 },
 			{ 650.0f, 500.0f, 0.5f, 1.0f, 1, 1 },
+			/* secondo triangolo */
 			{ 150.0f,  62.5f, 0.5f, 1.0f, 0, 0 },
 			{ 650.0f, 500.0f, 0.5f, 1.0f, 1, 1 },
 			{ 150.0f, 500.0f, 0.5f, 1.0f, 0, 1 },
@@ -315,24 +315,32 @@ void gfx_reset_video(void) {
 	return;
 }
 void gfx_quit(void) {
-	if (d3d9.textured_vertex) {
-		IDirect3DVertexBuffer9_Release(d3d9.textured_vertex);
-	}
-	if (d3d9.texture) {
-		IDirect3DTexture9_Release(d3d9.texture);
-	}
-	if (d3d9.dev) {
-		IDirect3DDevice9_Release(d3d9.dev);
-	}
-	if (d3d9.d3d) {
-		IDirect3D9_Release(d3d9.d3d);
-	}
+	ntsc_quit();
 
 	if (d3d9.palette) {
 		free(d3d9.palette);
+		d3d9.palette = NULL;
 	}
 
-	ntsc_quit();
+	if (d3d9.texture) {
+		IDirect3DTexture9_Release(d3d9.texture);
+		d3d9.texture = NULL;
+	}
+
+	if (d3d9.textured_vertex) {
+		IDirect3DVertexBuffer9_Release(d3d9.textured_vertex);
+		d3d9.textured_vertex = NULL;
+	}
+
+	if (d3d9.dev) {
+		IDirect3DDevice9_Release(d3d9.dev);
+		d3d9.dev = NULL;
+	}
+
+	if (d3d9.d3d) {
+		IDirect3D9_Release(d3d9.d3d);
+		d3d9.d3d = NULL;
+	}
 
     return;
 }
@@ -366,9 +374,9 @@ BYTE d3d9_create_texture(LPDIRECT3DTEXTURE9 *texture, uint32_t width, uint32_t h
 		if (d3d9.dynamic_texture == TRUE) {
 			usage |= D3DUSAGE_DYNAMIC;
 		}
-		//if (d3d9.auto_gen_mipmap == TRUE) {
-		//	usage |= D3DUSAGE_AUTOGENMIPMAP;
-		//}
+		if (d3d9.auto_gen_mipmap == TRUE) {
+			usage |= D3DUSAGE_AUTOGENMIPMAP;
+		}
 
 		{
 			HRESULT hresult = IDirect3DDevice9_CreateTexture(d3d9.dev, w, h, 0, usage,

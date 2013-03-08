@@ -360,6 +360,9 @@ BYTE gui_create(void) {
 
 	return (EXIT_OK);
 }
+void gui_quit(void) {
+	return;
+}
 void gui_set_video_mode(void) {
 	WORD rows = SCR_ROWS;
 

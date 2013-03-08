@@ -41,6 +41,7 @@ struct _gui {
 } gui;
 
 void gui_init(int argc, char **argv);
+void gui_quit(void);
 BYTE gui_create(void);
 void gui_set_video_mode(void);
 void gui_start(void);

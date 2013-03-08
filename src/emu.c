@@ -654,5 +654,7 @@ void emu_quit(BYTE exit_code) {
 
 	js_quit();
 
+	gui_quit();
+
 	exit(exit_code);
 }
