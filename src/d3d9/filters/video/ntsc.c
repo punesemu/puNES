@@ -6,6 +6,7 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include "ntsc.h"
 #include "overscan.h"
 
@@ -15,68 +16,67 @@ int merge_fields = 1;
 int burst_phase = 0;
 
 #define adjust_output(scale)\
-	for (y = ((dst->h / factor) - (overscan.enabled ? 0 : 1)); --y >= 0;) {\
-		unsigned char const *in = dst->pixels + (y * dst->pitch);\
-		unsigned char *out = dst->pixels + ((y * factor) * dst->pitch);\
+	for (y = ((height / factor) - (overscan.enabled ? 0 : 1)); --y >= 0;) {\
+		unsigned char const *in = pix + (y * pitch);\
+		unsigned char *out = pix + ((y * factor) * pitch);\
 		int n;\
-		for (n = dst->w; n; --n) {\
-			switch (dst->format->BitsPerPixel) {\
+		for (n = width; n; --n) {\
+			switch (bpp) {\
 				case 15:\
 				case 16:\
-					scale(Uint16, 0x0821, 0x18E3);\
+					scale(uint16_t, 0x0821, 0x18E3);\
 					break;\
 				case 24:\
 				case 32:\
-					scale(Uint32, 0x00010101, 0x00030703);\
+					scale(uint32_t, 0x00010101, 0x00030703);\
 					break;\
 			}\
-			in += dst->format->BytesPerPixel;\
-			out += dst->format->BytesPerPixel;\
+			in += bpp / 8;\
+			out += bpp / 8;\
 		}\
 	}
 #define DOUBLE(type, mask_low_bits, mask_darken)\
 {\
 	unsigned prev = *(type *) in;\
-	unsigned next = *(type *) (in + dst->pitch);\
+	unsigned next = *(type *) (in + pitch);\
 	/* mix rgb without losing low bits */\
 	unsigned mixed = prev + next + ((prev ^ next) & mask_low_bits);\
 	/* darken by 12% */\
 	*(type *) out = prev;\
-	*(type *) (out + dst->pitch) = (mixed >> 1) - (mixed >> 4 & mask_darken);\
+	*(type *) (out + pitch) = (mixed >> 1) - (mixed >> 4 & mask_darken);\
 }
 #define TRIPLE(type, mask_low_bits, mask_darken)\
 {\
 	unsigned prev = *(type *) in;\
-	unsigned next = *(type *) (in + dst->pitch);\
+	unsigned next = *(type *) (in + pitch);\
 	/* mix rgb without losing low bits */\
 	unsigned mixed = prev + next + ((prev ^ next) & mask_low_bits);\
 	/* darken by 12% */\
 	*(type *) out = prev;\
-	*(type *) (out + dst->pitch) = (mixed >> 1) - (mixed >> 2 & mask_darken);\
-	*(type *) (out + dst->pitch + dst->pitch) = (mixed >> 1) - (mixed >> 4 & mask_darken);\
+	*(type *) (out + pitch) = (mixed >> 1) - (mixed >> 2 & mask_darken);\
+	*(type *) (out + pitch + pitch) = (mixed >> 1) - (mixed >> 4 & mask_darken);\
 }
 #define QUADRUPLE(type, mask_low_bits, mask_darken)\
 {\
 	unsigned prev = *(type *) in;\
-	unsigned next = *(type *) (in + dst->pitch);\
+	unsigned next = *(type *) (in + pitch);\
 	/* mix rgb without losing low bits */\
 	unsigned mixed = prev + next + ((prev ^ next) & mask_low_bits);\
 	/* darken by 12% */\
-	*(type *) out = *(type *) (out + dst->pitch) = prev;\
-	*(type *) (out + (dst->pitch << 1)) = *(type *) (out + ((dst->pitch << 1) + dst->pitch)) =\
+	*(type *) out = *(type *) (out + pitch) = prev;\
+	*(type *) (out + (pitch << 1)) = *(type *) (out + ((pitch << 1) + pitch)) =\
 			(mixed >> 1) - (mixed >> 4 & mask_darken);\
 }
 #define nes_ntsc(factor) nes_ntscx##factor(ntsc, screen, SCR_ROWS, burst_phase, rows, lines,\
-	dst->pixels, dst->pitch, dst->format->BitsPerPixel)
+	pix, pitch, bpp)
 
 /*
  * cio' che non utilizzo in questa funzione
  * sono i parametri WORD **screen_index e
  * Uint32 *palette.
  */
-/*
-void ntsc_surface(WORD *screen, WORD **screeIndex, Uint32 *palette, SDL_Surface *dst, WORD rows,
-		WORD lines, BYTE factor) {
+void ntsc_surface(WORD *screen, WORD **screen_index, uint32_t *palette, BYTE bpp, uint32_t pitch,
+        void *pix, WORD rows, WORD lines, WORD width, WORD height, BYTE factor) {
 	int y;
 
 	if (overscan.enabled) {
@@ -96,7 +96,7 @@ void ntsc_surface(WORD *screen, WORD **screeIndex, Uint32 *palette, SDL_Surface 
 		adjust_output(QUADRUPLE)
 	}
 }
-*/
+
 BYTE ntsc_init(BYTE effect, BYTE color, BYTE *palette_base, BYTE *palette_in, BYTE *palette_out) {
 	format[COMPOSITE] = nes_ntsc_composite;
 	format[SVIDEO] = nes_ntsc_svideo;

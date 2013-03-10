@@ -15,6 +15,21 @@
 enum scale_type { X1 = 1, X2, X3, X4 };
 enum filters_type {
 	NO_FILTER,
+	//SCALE2X,
+	//SCALE3X,
+	//SCALE4X,
+	//HQ2X,
+	//HQ3X,
+	//HQ4X,
+	NTSC_FILTER,
+	BILINEAR,
+	/* glsl shaders */
+	//POSPHOR,
+	//SCANLINE,
+	//DBL,
+	//CRT_CURVE,
+	//CRT_NO_CURVE,
+	/* glsl shaders end */
 };
 
 enum overcan_type { OSCAN_OFF, OSCAN_ON, OSCAN_DEFAULT, OSCAN_DEFAULT_OFF, OSCAN_DEFAULT_ON };
@@ -42,8 +57,6 @@ void gfx_quit(void);
 /* funzioni virtuali */
 #define GFX_EFFECT_ROUTINE\
 	void (*effect)(WORD *screen, WORD **screen_index, uint32_t *palette, BYTE bpp, uint32_t pitch,\
-			void *pix, WORD rows, WORD lines, BYTE factor)
-
-GFX_EFFECT_ROUTINE;
+			void *pix, WORD rows, WORD lines, WORD width, WORD height, BYTE factor)
 
 #endif /* GFX_H_ */

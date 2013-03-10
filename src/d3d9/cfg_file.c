@@ -11,6 +11,8 @@ void cfg_file_init(void) {
 	cfg = &cfg_from_file;
 }
 void cfg_file_parse(void) {
+	info.on_cfg = TRUE;
+
 	return;
 }
 void cfg_file_save(void) {

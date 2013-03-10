@@ -77,12 +77,15 @@ BEGIN
 		MENUITEM SEPARATOR
 		POPUP "&Video"
 		BEGIN
+		/*
 			POPUP "&Rendering"
 			BEGIN
 				MENUITEM "&Software",             IDM_SET_RENDERING_SOFTWARE
 				MENUITEM "&OpenGL",               IDM_SET_RENDERING_OPENGL
 				MENUITEM "OpenGL &GLSL",          IDM_SET_RENDERING_GLSL
 			END
+		/*
+		/*
 			POPUP "&FPS"
 			BEGIN
 				MENUITEM "Default",               IDM_SET_FPS_DEFAULT
@@ -124,6 +127,7 @@ BEGIN
 				MENUITEM "O&ff",                  IDM_SET_VSYNC_OFF
 			END
 			MENUITEM SEPARATOR
+		*/
 			POPUP "&Size"
 			BEGIN
 				MENUITEM "&1x\t1",                IDM_SET_SIZE_1X
@@ -131,6 +135,7 @@ BEGIN
 				MENUITEM "&3x\t3",                IDM_SET_SIZE_3X
 				MENUITEM "&4x\t4",                IDM_SET_SIZE_4X
 			END
+		/*
 			POPUP "&Overscan"
 			BEGIN
 				MENUITEM "&Default",              IDM_SET_OSCAN_DEF
@@ -144,10 +149,12 @@ BEGIN
 					MENUITEM "O&ff",              IDM_SET_OSCAN_DEFAULT_OFF
 				END
 			END
+		*/
 			POPUP "Fi&lter"
 			BEGIN
 				MENUITEM "&No Filter",            IDM_SET_FILTER_NO_FILTER
 				MENUITEM "&Bilinear",             IDM_SET_FILTER_BILINEAR
+				/*
 				MENUITEM "&Poshpor",              IDM_SET_FILTER_POSPHOR
 				MENUITEM "S&canline",             IDM_SET_FILTER_SCANLINE
 				MENUITEM "&DBL",                  IDM_SET_FILTER_DBL
@@ -168,6 +175,7 @@ BEGIN
 					MENUITEM "Hq&3x",             IDM_SET_FILTER_HQ3X
 					MENUITEM "Hq&4x",             IDM_SET_FILTER_HQ4X
 				END
+				*/
 				POPUP "N&TSC"
 				BEGIN
 					MENUITEM "&Composite",        IDM_SET_FILTER_RGBNTSCCOM
@@ -183,6 +191,7 @@ BEGIN
 				MENUITEM "&Monochrome",           IDM_SET_PALETTE_MONO
 				MENUITEM "&Green",                IDM_SET_PALETTE_GREEN
 			END
+		/*
 			POPUP "&Effect"
 			BEGIN
 				MENUITEM "&Cube\tR",              IDM_SET_EFFECT_CUBE
@@ -190,7 +199,9 @@ BEGIN
 			MENUITEM SEPARATOR
 			MENUITEM "F&ullscreen\tAlt+Enter",    IDM_SET_FULLSCREEN
 			MENUITEM "S&tretch in fullscreen\tP", IDM_SET_STRETCHFLSCR
+		*/
 		END
+		/*
 		POPUP "&Audio"
 		BEGIN
 			POPUP "&Sample rate"
@@ -222,7 +233,9 @@ BEGIN
 		MENUITEM SEPARATOR
 		MENUITEM "Save se&ttings\tCtrl+W",        IDM_SET_SAVENOW
 		MENUITEM "Save settings on e&xit",        IDM_SET_SAVEONEXIT
+		*/
 	END
+	/*
 	POPUP "S&tate"
 	BEGIN
 		MENUITEM "&Save state\tF1",               IDM_SET_SAVE_SAVE
@@ -242,6 +255,7 @@ BEGIN
 	BEGIN
 		MENUITEM "&About",                        IDM_HELP_ABOUT
 	END
+	*/
 END
 #endif
 

@@ -8,18 +8,16 @@
 #include <d3d9.h>
 #include "win.h"
 #include "emu.h"
-#include "palette.h"
 #include "gfx.h"
 #include "cfg_file.h"
 #include "ppu.h"
-
-#define SCREEN_WIDTH 800
-#define SCREEN_HEIGHT 600
+#include "overscan.h"
+#define __STATICPAL__
+#include "palette.h"
 
 #define ntsc_width(wdt, a, flag)\
 {\
 	wdt = 0;\
-	/*\
 	if (filter == NTSC_FILTER) {\
 		wdt = NES_NTSC_OUT_WIDTH(gfx.rows, a);\
 		if (overscan.enabled) {\
@@ -30,27 +28,61 @@
 			gfx.w[NO_OVERSCAN] = (NES_NTSC_OUT_WIDTH(SCR_ROWS, a));\
 		}\
 	}\
-	*/\
 }
+#define change_color(index, color, operation)\
+	tmp = palette_RGB[index].color + operation;\
+	palette_RGB[index].color = (tmp < 0 ? 0 : (tmp > 0xFF ? 0xFF : tmp))
+#define rgb_modifier(red, green, blue)\
+	/* prima ottengo la paletta monocromatica */\
+	ntsc_set(cfg->ntsc_format, PALETTE_MONO, 0, 0, (BYTE *) palette_RGB);\
+	/* quindi la modifico */\
+	{\
+		WORD i;\
+		SWORD tmp;\
+		for (i = 0; i < NUM_COLORS; i++) {\
+			/* rosso */\
+			change_color(i, r, red);\
+			/* green */\
+			change_color(i, g, green);\
+			/* blue */\
+			change_color(i, b, blue);\
+		}\
+	}\
+	/* ed infine utilizzo la nuova */\
+	ntsc_set(cfg->ntsc_format, FALSE, 0, (BYTE *) palette_RGB,(BYTE *) palette_RGB)
 
-enum { NO_POWER_OF_TWO, POWER_OF_TWO };
+enum pow_types { NO_POWER_OF_TWO, POWER_OF_TWO };
+
+typedef struct {
+	FLOAT w, h;
+	FLOAT x, y;
+	WORD no_pow_w, no_pow_h;
+	LPDIRECT3DTEXTURE9 data;
+} _texture;
 
 struct _d3d9 {
 	LPDIRECT3D9 d3d;
 	LPDIRECT3DDEVICE9 dev;
 	LPDIRECT3DVERTEXBUFFER9 textured_vertex;
-	LPDIRECT3DTEXTURE9 texture;
 	D3DDISPLAYMODE display_mode;
+
+	_texture texture;
 
 	uint32_t *palette;
 	GFX_EFFECT_ROUTINE;
 
 	DWORD flags;
+	/* bit per pixel */
 	BYTE bpp;
+	/* byte per pixel */
+	BYTE BPP;
 	BOOL auto_gen_mipmap;
 	BOOL dynamic_texture;
 	WORD texture_create_usage;
-	int scale;
+	BOOL scale_force;
+	FLOAT scale;
+	FLOAT factor;
+	BOOL interpolation;
 } d3d9;
 
 typedef struct {
@@ -60,20 +92,25 @@ typedef struct {
 #define CUSTOMFVF (D3DFVF_XYZRHW | D3DFVF_TEX1)
 
 BYTE d3d9_create_context(void);
-BYTE d3d9_create_texture(LPDIRECT3DTEXTURE9 *texture, uint32_t width, uint32_t height,
-        uint8_t interpolation, uint8_t pow);
+BYTE d3d9_create_texture(_texture *texture, uint32_t width, uint32_t height, uint8_t interpolation,
+        uint8_t pow);
 int d3d9_power_of_two(int base);
+
+static BYTE ntsc_width_pixel[5] = {0, 0, 7, 10, 14};
 
 BYTE gfx_init(void) {
 	if (gui_create()) {
-		fprintf(stderr, "gui initialization failed\n");
+		fprintf(stderr, "Gui initialization failed\n");
 		return (EXIT_ERROR);
 	}
 
 	memset(&d3d9, 0x00, sizeof(d3d9));
 
+	//cfg->filter = NTSC_FILTER;
+	cfg->filter = NO_FILTER;
+	//cfg->filter = BILINEAR;
+	cfg->palette = PALETTE_NTSC;
 	cfg->scale = X2;
-	d3d9.scale = X1;
 
 	{
 		D3DCAPS9 d3dcaps;
@@ -177,7 +214,6 @@ BYTE gfx_init(void) {
 			printf("Video driver don't support hardware accelaration\n");
 			d3d9.flags = D3DCREATE_SOFTWARE_VERTEXPROCESSING;
 		}
-
 	}
 
 	/*
@@ -207,12 +243,13 @@ void gfx_set_render(BYTE render) {
 }
 void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE force_scale) {
 	BYTE set_mode;
-	WORD width, height, w_for_pr, h_for_pr;
+	WORD width, height;
+	//WORD w_for_pr, h_for_pr;
 
 	//gfx_set_screen_start:
 	set_mode = FALSE;
 	width = 0, height = 0;
-	w_for_pr = 0, h_for_pr = 0;
+	//w_for_pr = 0, h_for_pr = 0;
 
 	/*
 	 * l'ordine dei vari controlli non deve essere cambiato:
@@ -225,19 +262,103 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 
 	/* overscan */
 	{
-		//overscan.enabled = cfg->oscan;
+		overscan.enabled = cfg->oscan;
 
 		gfx.rows = SCR_ROWS;
 		gfx.lines = SCR_LINES;
 
-		//if (overscan.enabled == OSCAN_DEFAULT) {
-		//	overscan.enabled = cfg->oscan_default;
-		//}
+		if (overscan.enabled == OSCAN_DEFAULT) {
+			overscan.enabled = cfg->oscan_default;
+		}
 
-		//if (overscan.enabled) {
-		//	gfx.rows -= (overscan.left + overscan.right);
-		//	gfx.lines -= (overscan.up + overscan.down);
-		//}
+		if (overscan.enabled) {
+			gfx.rows -= (overscan.left + overscan.right);
+			gfx.lines -= (overscan.up + overscan.down);
+		}
+	}
+
+	/* filtro */
+	if (filter == NO_CHANGE) {
+		filter = cfg->filter;
+	}
+	if ((filter != cfg->filter) || info.on_cfg) {
+		switch (filter) {
+			//case POSPHOR:
+			//case SCANLINE:
+			//case DBL:
+			//case CRT_CURVE:
+			//case CRT_NO_CURVE:
+			case NO_FILTER:
+			case BILINEAR:
+				d3d9.effect = scale_surface;
+				/*
+				 * se sto passando dal filtro ntsc ad un'altro, devo
+				 * ricalcolare la larghezza del video mode quindi
+				 * forzo il controllo del fattore di scala.
+				 */
+				if (cfg->filter == NTSC_FILTER) {
+					/* devo reimpostare la larghezza del video mode */
+					scale = cfg->scale;
+				}
+				/* forzo il controllo del fattore di scale */
+				force_scale = TRUE;
+				/* indico che devo cambiare il video mode */
+				set_mode = TRUE;
+				break;
+			//case SCALE2X:
+			//case SCALE3X:
+			//case SCALE4X:
+			//	effect = scaleNx;
+				/*
+				 * se sto passando dal filtro ntsc ad un'altro, devo
+				 * ricalcolare la larghezza del video mode quindi
+				 * forzo il controllo del fattore di scala.
+				 */
+			//	if (cfg->filter == NTSC_FILTER) {
+					/* forzo il controllo del fattore di scale */
+			//		force_scale = TRUE;
+					/* indico che devo cambiare il video mode */
+			//		set_mode = TRUE;
+			//	}
+			//	break;
+			//case HQ2X:
+			//case HQ3X:
+			//case HQ4X:
+			//	effect = hqNx;
+				/*
+				 * se sto passando dal filtro ntsc ad un'altro, devo
+				 * ricalcolare la larghezza del video mode quindi
+				 * forzo il controllo del fattore di scala.
+				 */
+			//	if (cfg->filter == NTSC_FILTER) {
+					/* forzo il controllo del fattore di scale */
+			//		force_scale = TRUE;
+					/* indico che devo cambiare il video mode */
+			//		set_mode = TRUE;
+			//	}
+			//	break;
+			case NTSC_FILTER:
+				d3d9.effect = ntsc_surface;
+				/*
+				 * il fattore di scala deve essere gia' stato
+				 * inizializzato almeno una volta.
+				 */
+				if (cfg->scale != NO_CHANGE) {
+					/* devo reimpostare la larghezza del video mode */
+					scale = cfg->scale;
+				} else if (scale == NO_CHANGE) {
+					/*
+					 * se scale e new_scale sono uguali a NO_CHANGE,
+					 * imposto un default.
+					 */
+					scale = X2;
+				}
+				/* forzo il controllo del fattore di scale */
+				force_scale = TRUE;
+				/* indico che devo cambiare il video mode */
+				set_mode = TRUE;
+				break;
+		}
 	}
 
 	// .......................
@@ -272,7 +393,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 					 * con un fattore di scala X1 effect deve essere
 					 * sempre impostato su scale_surface.
 					 */
-					effect = scale_surface;
+					d3d9.effect = scale_surface;
 					return;
 				}
 				set_mode = TRUE;
@@ -303,112 +424,128 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 		gfx.h[NO_OVERSCAN] = SCR_LINES * scale;
 	}
 
-	d3d9.effect = scale_surface;
+	/* paletta */
+	if (palette == NO_CHANGE) {
+		palette = cfg->palette;
+	}
+	if ((palette != cfg->palette) || info.on_cfg) {
+		switch (palette) {
+			case PALETTE_PAL:
+				ntsc_set(cfg->ntsc_format, FALSE, (BYTE *) palette_base_pal, 0,
+						(BYTE *) palette_RGB);
+				break;
+			case PALETTE_NTSC:
+				ntsc_set(cfg->ntsc_format, FALSE, 0, 0, (BYTE *) palette_RGB);
+				break;
+			case PALETTE_GREEN:
+				rgb_modifier(-0x20, 0x20, -0x20);
+				break;
+			default:
+				ntsc_set(cfg->ntsc_format, palette, 0, 0, (BYTE *) palette_RGB);
+				break;
+		}
 
-	/*
-	 * cfg->scale e cfg->filter posso aggiornarli prima
-	 * del set_mode, mentre cfg->fullscreen e cfg->palette
-	 * devo farlo necessariamente dopo.
-	 */
+		/* inizializzo in ogni caso la tabella YUV dell'hqx */
+		//hqx_init();
+
+		/*
+		 * memorizzo i colori della paletta nel
+		 * formato di visualizzazione.
+		 */
+		{
+			WORD i;
+
+			for (i = 0; i < NUM_COLORS; i++) {
+				d3d9.palette[i] =
+						D3DCOLOR_ARGB(255, palette_RGB[i].r, palette_RGB[i].g, palette_RGB[i].b);
+			}
+		}
+	}
+
 	/* salvo il nuovo fattore di scala */
 	cfg->scale = scale;
 	/* salvo ill nuovo filtro */
-	//cfg->filter = filter;
-	/* devo eseguire un SDL_SetVideoMode? */
-	if (set_mode) {
-		//uint32_t flags = software_flags;
+	cfg->filter = filter;
+	/* salvo il nuovo tipo di paletta */
+	cfg->palette = palette;
 
+	{
+		d3d9.scale_force = FALSE;
+		d3d9.scale = cfg->scale;
+		d3d9.factor = 1;
+		d3d9.interpolation = FALSE;
+
+		switch (cfg->filter) {
+			case NO_FILTER:
+				d3d9.scale_force = TRUE;
+				d3d9.scale = X1;
+				d3d9.factor = cfg->scale;
+				d3d9.interpolation = FALSE;
+				break;
+			case BILINEAR:
+				d3d9.scale_force = TRUE;
+				d3d9.scale = X1;
+				d3d9.factor = cfg->scale;
+				d3d9.interpolation = TRUE;
+				break;
+		}
+	}
+
+	if (set_mode) {
 		gfx.w[VIDEO_MODE] = width;
 		gfx.h[VIDEO_MODE] = height;
 
 		/*
-		if (gfx.opengl) {
-			flags = opengl.flags;
-
-			SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 5);
-			SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 5);
-			SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 5);
-			SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
-
-			SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, TRUE);
-			SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, cfg->vsync);
-
-			if (fullscreen) {
-				gfx.w[VIDEO_MODE] = gfx.w[MONITOR];
-				gfx.h[VIDEO_MODE] = gfx.h[MONITOR];
-			}
-		}
+		SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, cfg->vsync);
 		*/
+
+		if (fullscreen == TRUE) {
+			gfx.w[VIDEO_MODE] = gfx.w[MONITOR];
+			gfx.h[VIDEO_MODE] = gfx.h[MONITOR];
+		}
 
 		/* faccio quello che serve prima del setvideo */
 		gui_set_video_mode();
 
-		/*
-		 * nella versione a 32 bit (GTK) dopo un gfx_reset_video,
-		 * se non lo faccio anche qui, crasha tutto.
-		 */
-		//sdl_wid();
-
-		/* inizializzo la superfice video */
-		//surface_sdl = SDL_SetVideoMode(gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE], 0, flags);
 		if (d3d9_create_context() == EXIT_ERROR) {
 			fprintf(stderr, "Unable to initialize d3d context\n");
-		}
-
-		/* in caso di errore */
-		/*if (!surface_sdl) {
-			fprintf(stderr, "SDL_SetVideoMode failed : %s\n", SDL_GetError());
 			return;
-		}*/
-
-		//gfx.bit_per_pixel = surface_sdl->format->BitsPerPixel;
+		}
 	}
 
-	ntsc_set(cfg->ntsc_format, FALSE, 0, 0, (BYTE *) palette_RGB);
-
-	/* memorizzo i colori della paletta nel formato di visualizzazione */
-	{
-		WORD i;
-
-		for (i = 0; i < NUM_COLORS; i++) {
-			d3d9.palette[i] =
-			        D3DCOLOR_ARGB(255, palette_RGB[i].r, palette_RGB[i].g, palette_RGB[i].b);
-		}
+	if (info.on_cfg == TRUE) {
+		info.on_cfg = FALSE;
 	}
 
 	return;
 }
 void gfx_draw_screen(BYTE forced) {
 	{
-		static BOOL unable_lock = FALSE;
 		D3DLOCKED_RECT locked_rect;
 
 		/* lock della texture */
-		if (IDirect3DTexture9_LockRect(d3d9.texture, 0, &locked_rect, NULL, D3DLOCK_DISCARD)
-		        == D3D_OK) {
+		IDirect3DTexture9_LockRect(d3d9.texture.data, 0, &locked_rect, NULL, D3DLOCK_DISCARD);
 
-			/* applico l'effetto */
-			d3d9.effect(screen.data, screen.line, d3d9.palette, d3d9.bpp, locked_rect.Pitch,
-					locked_rect.pBits, gfx.rows, gfx.lines, d3d9.scale);
+		/* applico e l'effetto copio nella texture */
+		d3d9.effect(screen.data,
+				screen.line,
+				d3d9.palette,
+				d3d9.bpp,
+				locked_rect.Pitch,
+				locked_rect.pBits,
+				gfx.rows,
+				gfx.lines,
+				d3d9.texture.no_pow_w,
+				d3d9.texture.no_pow_h,
+				d3d9.scale);
 
-			/* unlock della texture */
-			IDirect3DTexture9_UnlockRect(d3d9.texture, 0);
-		} else if (unable_lock == FALSE) {
-			printf("Unable to lock texture\n");
-			unable_lock = TRUE;
-		}
+		/* unlock della texture */
+		IDirect3DTexture9_UnlockRect(d3d9.texture.data, 0);
 	}
 
 	IDirect3DDevice9_Clear(d3d9.dev, 0, NULL, D3DCLEAR_TARGET, d3d9.palette[40], 1.0f, 0);
 
-	IDirect3DDevice9_BeginScene(d3d9.dev);    // begins the 3D scene
-
-		IDirect3DDevice9_SetTextureStageState(d3d9.dev, 0, D3DTSS_COLOROP, D3DTOP_MODULATE);
-		IDirect3DDevice9_SetTextureStageState(d3d9.dev, 0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
-		IDirect3DDevice9_SetTextureStageState(d3d9.dev, 0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
-		IDirect3DDevice9_SetTextureStageState(d3d9.dev, 0, D3DTSS_ALPHAOP, D3DTOP_DISABLE);
-
-		IDirect3DDevice9_SetTexture(d3d9.dev, 0, (IDirect3DBaseTexture9 *) d3d9.texture);
+	IDirect3DDevice9_BeginScene(d3d9.dev);
 
 		// select which vertex format we are using
 		IDirect3DDevice9_SetFVF(d3d9.dev, CUSTOMFVF);
@@ -419,9 +556,9 @@ void gfx_draw_screen(BYTE forced) {
 		// copy the vertex buffer to the back buffer
 		IDirect3DDevice9_DrawPrimitive(d3d9.dev, D3DPT_TRIANGLELIST, 0, 2);
 
-	IDirect3DDevice9_EndScene(d3d9.dev);    // ends the 3D scene
+	IDirect3DDevice9_EndScene(d3d9.dev);
 
-	IDirect3DDevice9_Present(d3d9.dev, NULL, NULL, NULL, NULL);    // displays the created frame
+	IDirect3DDevice9_Present(d3d9.dev, NULL, NULL, NULL, NULL);
 }
 void gfx_reset_video(void) {
 	return;
@@ -434,9 +571,9 @@ void gfx_quit(void) {
 		d3d9.palette = NULL;
 	}
 
-	if (d3d9.texture) {
-		IDirect3DTexture9_Release(d3d9.texture);
-		d3d9.texture = NULL;
+	if (d3d9.texture.data) {
+		IDirect3DTexture9_Release(d3d9.texture.data);
+		d3d9.texture.data = NULL;
 	}
 
 	if (d3d9.textured_vertex) {
@@ -484,7 +621,6 @@ BYTE d3d9_create_context(void) {
 		d3dpp.BackBufferWidth = gfx.w[VIDEO_MODE];
 		d3dpp.BackBufferHeight = gfx.h[VIDEO_MODE];
 
-		// create a device class using this information and the info from the d3dpp stuct
 		if (IDirect3D9_CreateDevice(d3d9.d3d,
 				D3DADAPTER_DEFAULT,
 				D3DDEVTYPE_HAL,
@@ -497,129 +633,127 @@ BYTE d3d9_create_context(void) {
 		}
 	}
 
+	if (IDirect3DDevice9_CreateVertexBuffer(d3d9.dev,
+			6 * sizeof(CUSTOMVERTEX),
+			D3DUSAGE_WRITEONLY,
+			CUSTOMFVF,
+			D3DPOOL_DEFAULT,
+			&d3d9.textured_vertex,
+			NULL) != D3D_OK) {
+		fprintf(stderr, "Unable to create the vertex buffer\n");
+		return (EXIT_ERROR);
+	}
+
 	{
 		VOID *tv_vertices;
-		CUSTOMVERTEX vertices[] = {
-			/* primo triangolo */
-			{ 0.0f,  0.0f, 0.5f, 1.0f, 0, 0 },
-			{ gfx.w[VIDEO_MODE], 0.0f, 0.5f, 1.0f, 1, 0 },
-			{ gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE], 0.5f, 1.0f, 1, 1 },
-			/* secondo triangolo */
-			{ 0.0f, 0.0f, 0.5f, 1.0f, 0, 0 },
-			{ gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE], 0.5f, 1.0f, 1, 1 },
-			{ 0.0f,  gfx.h[VIDEO_MODE], 0.5f, 1.0f, 0, 1 },
+		WORD w, h;
 
-		};
+		if (d3d9.scale_force) {
+			w = SCR_ROWS * d3d9.scale;
+			h = SCR_LINES * d3d9.scale;
+		} else {
+			w = gfx.w[CURRENT];
+			h = gfx.h[CURRENT];
+		}
 
-		if (IDirect3DDevice9_CreateVertexBuffer(d3d9.dev,
-				6 * sizeof(CUSTOMVERTEX),
-				D3DUSAGE_WRITEONLY,
-				CUSTOMFVF,
-				D3DPOOL_DEFAULT,
-				&d3d9.textured_vertex,
-				NULL) != D3D_OK) {
-			fprintf(stderr, "Unable to create the vertex buffer\n");
+		/* creo la texture principale */
+		if (d3d9_create_texture(&d3d9.texture, w, h, 0, POWER_OF_TWO) == EXIT_ERROR) {
+			fprintf(stderr, "Unable to create main texture\n");
 			return (EXIT_ERROR);
 		}
+
+		IDirect3DDevice9_SetTexture(d3d9.dev, 0, (IDirect3DBaseTexture9 *) d3d9.texture.data);
+
+		IDirect3DDevice9_SetTextureStageState(d3d9.dev, 0, D3DTSS_COLOROP, D3DTOP_MODULATE);
+		IDirect3DDevice9_SetTextureStageState(d3d9.dev, 0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
+		IDirect3DDevice9_SetTextureStageState(d3d9.dev, 0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
+		IDirect3DDevice9_SetTextureStageState(d3d9.dev, 0, D3DTSS_ALPHAOP, D3DTOP_DISABLE);
+
+		if (d3d9.interpolation == TRUE) {
+			 /* bilinear filtering */
+			IDirect3DDevice9_SetSamplerState(d3d9.dev, 0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
+			IDirect3DDevice9_SetSamplerState(d3d9.dev, 0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
+			IDirect3DDevice9_SetSamplerState(d3d9.dev, 0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
+		} else {
+			IDirect3DDevice9_SetSamplerState(d3d9.dev, 0, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
+			IDirect3DDevice9_SetSamplerState(d3d9.dev, 0, D3DSAMP_MINFILTER, D3DTEXF_POINT);
+			IDirect3DDevice9_SetSamplerState(d3d9.dev, 0, D3DSAMP_MIPFILTER, D3DTEXF_POINT);
+		}
+
+		d3d9.texture.x = (FLOAT) gfx.w[CURRENT] / (d3d9.texture.w * d3d9.factor);
+		d3d9.texture.y = (FLOAT) gfx.h[CURRENT] / (d3d9.texture.h * d3d9.factor);
+
+		const CUSTOMVERTEX vertices[] = {
+			/* primo triangolo */
+			{ 0.0f             , 0.0f             , 0.5f, 1.0f, 0.0f          , 0.0f           },
+			{ gfx.w[VIDEO_MODE], 0.0f             , 0.5f, 1.0f, d3d9.texture.x, 0.0f           },
+			{ gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE], 0.5f, 1.0f, d3d9.texture.x, d3d9.texture.y },
+			/* secondo triangolo */
+			{ 0.0f             , 0.0f             , 0.5f, 1.0f, 0.0f          , 0.0f           },
+			{ gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE], 0.5f, 1.0f, d3d9.texture.x, d3d9.texture.y },
+			{ 0.0f             , gfx.h[VIDEO_MODE], 0.5f, 1.0f, 0.0f          , d3d9.texture.y },
+
+		};
 
 		IDirect3DVertexBuffer9_Lock(d3d9.textured_vertex, 0, 0, (void**) &tv_vertices, 0);
 		memcpy(tv_vertices, vertices, sizeof(vertices));
 		IDirect3DVertexBuffer9_Unlock(d3d9.textured_vertex);
 	}
 
-	/* creo la texture principale */
-	if (d3d9_create_texture(&d3d9.texture, SCR_ROWS * d3d9.scale, SCR_LINES * d3d9.scale, 0,
-	        POWER_OF_TWO) == EXIT_ERROR) {
-		fprintf(stderr, "Unable to create main texture\n");
-		return (EXIT_ERROR);
-	}
-
 	return (EXIT_OK);
 }
 
 
-BYTE d3d9_create_texture(LPDIRECT3DTEXTURE9 *texture, uint32_t width, uint32_t height,
-        uint8_t interpolation, uint8_t pow) {
-	int w, h;
+BYTE d3d9_create_texture(_texture *texture, uint32_t width, uint32_t height, uint8_t interpolation,
+        uint8_t pow) {
+	DWORD usage = D3DUSAGE_WRITEONLY;
+
+	texture->no_pow_w = width;
+	texture->no_pow_h = height;
 
 	if (pow) {
-		w = d3d9_power_of_two(width);
-		h = d3d9_power_of_two(height);
+		texture->w = d3d9_power_of_two(width);
+		texture->h = d3d9_power_of_two(height);
 	} else {
-		w = width;
-		h = height;
+		texture->w = width;
+		texture->h = height;
 	}
 
-	if ((*texture)) {
-		IDirect3DTexture9_Release((*texture));
+	if (texture->data) {
+		IDirect3DTexture9_Release(texture->data);
+	}
+
+	if (d3d9.dynamic_texture == TRUE) {
+		usage |= D3DUSAGE_DYNAMIC;
+	}
+	if (d3d9.auto_gen_mipmap == TRUE) {
+		usage |= D3DUSAGE_AUTOGENMIPMAP;
 	}
 
 	{
-		DWORD usage = D3DUSAGE_WRITEONLY;
+		HRESULT hresult = IDirect3DDevice9_CreateTexture(d3d9.dev, texture->w, texture->h, 0,
+				usage, d3d9.display_mode.Format, D3DPOOL_DEFAULT, &texture->data, NULL);
 
-		if (d3d9.dynamic_texture == TRUE) {
-			usage |= D3DUSAGE_DYNAMIC;
-		}
-		if (d3d9.auto_gen_mipmap == TRUE) {
-			usage |= D3DUSAGE_AUTOGENMIPMAP;
-		}
-
-		{
-			HRESULT hresult = IDirect3DDevice9_CreateTexture(d3d9.dev, w, h, 0, usage,
-					d3d9.display_mode.Format, D3DPOOL_DEFAULT, texture, NULL);
-
-			if (hresult == D3DERR_INVALIDCALL) {
-				if (IDirect3DDevice9_CreateTexture(d3d9.dev, w, h, 0,
-						usage & ~D3DUSAGE_WRITEONLY, d3d9.display_mode.Format, D3DPOOL_DEFAULT,
-						texture, NULL ) == D3D_OK) {
-					printf("Video driver don't support use of D3DUSAGE_WRITEONLY on the texture\n");
-				} else {
-					return (EXIT_ERROR);
-				}
-			} else if (hresult != D3D_OK) {
+		if (hresult == D3DERR_INVALIDCALL) {
+			if (IDirect3DDevice9_CreateTexture(d3d9.dev,
+					texture->w,
+					texture->h,
+					0,
+					usage & ~D3DUSAGE_WRITEONLY,
+					d3d9.display_mode.Format,
+					D3DPOOL_DEFAULT,
+					&texture->data,
+					NULL) == D3D_OK) {
+				printf("Video driver don't support use of D3DUSAGE_WRITEONLY on the texture\n");
+			} else {
 				return (EXIT_ERROR);
 			}
+		} else if (hresult != D3D_OK) {
+			return (EXIT_ERROR);
 		}
 	}
 
 	return (EXIT_OK);
-
-	/*glGenTextures(1, &texture->data);
-	glBindTexture(GL_TEXTURE_2D, texture->data);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-	if (interpolation) {
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	} else {
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	}
-
-	if (opengl.glew && !GLEW_VERSION_3_1) {
-		glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
-	}
-
-	{
-		SDL_Surface *blank = gfx_create_RGB_surface(opengl.surface_gl, texture->w * 2,
-		        texture->h * 2);
-
-		memset(blank->pixels, 0, blank->w * blank->h * blank->format->BytesPerPixel);
-
-		glTexImage2D(GL_TEXTURE_2D, 0, texture->format_internal, texture->w, texture->h, 0,
-		        texture->format, texture->type, blank->pixels);
-
-		SDL_FreeSurface(blank);
-	}
-
-	if (opengl.glew && GLEW_VERSION_3_1) {
-		glGenerateMipmap(GL_TEXTURE_2D);
-	}
-
-	glDisable(GL_TEXTURE_2D);
-	*/
 }
 
 int d3d9_power_of_two(int base) {

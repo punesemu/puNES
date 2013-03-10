@@ -12,10 +12,10 @@
 #include "nes_ntsc.h"
 #include "palette.h"
 
-enum { COMPOSITE, SVIDEO, RGBMODE };
+enum ntsc_mode { COMPOSITE, SVIDEO, RGBMODE };
 
-//void ntsc_surface(WORD *screen, WORD **screeIndex, Uint32 *palette, SDL_Surface *dst, WORD rows,
-//		WORD lines, BYTE factor);
+void ntsc_surface(WORD *screen, WORD **screen_index, uint32_t *palette, BYTE bpp, uint32_t pitch,
+        void *pix, WORD rows, WORD lines, WORD width, WORD height, BYTE factor);
 BYTE ntsc_init(BYTE effect, BYTE color, BYTE *palette_base, BYTE *palette_in, BYTE *palette_out);
 void ntsc_quit(void);
 void ntsc_set(BYTE effect, BYTE color, BYTE *palette_base, BYTE *palette_in, BYTE *palette_out);
