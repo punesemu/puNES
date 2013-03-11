@@ -58,6 +58,8 @@ typedef struct {
 	FLOAT x, y;
 	WORD no_pow_w, no_pow_h;
 	LPDIRECT3DTEXTURE9 data;
+	LPDIRECT3DSURFACE9 surface;
+	LPDIRECT3DSURFACE9 surface_map0;
 } _texture;
 
 struct _d3d9 {
@@ -105,7 +107,7 @@ BYTE gfx_init(void) {
 		return (EXIT_ERROR);
 	}
 
-	cfg->filter = NO_FILTER;
+	cfg->filter =  NTSC_FILTER;
 
 	memset(&d3d9, 0x00, sizeof(d3d9));
 
@@ -520,13 +522,14 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 	return;
 }
 void gfx_draw_screen(BYTE forced) {
+	/* filtro e aggiornamento texture */
 	{
 		D3DLOCKED_RECT locked_rect;
 
-		/* lock della texture */
-		IDirect3DTexture9_LockRect(d3d9.texture.data, 0, &locked_rect, NULL, D3DLOCK_DISCARD);
+		/* lock della surface in memoria */
+		IDirect3DSurface9_LockRect(d3d9.texture.surface, &locked_rect, NULL, D3DLOCK_DISCARD);
 
-		/* applico e l'effetto copio nella texture */
+		/* applico l'effetto */
 		d3d9.effect(screen.data,
 				screen.line,
 				d3d9.palette,
@@ -539,8 +542,13 @@ void gfx_draw_screen(BYTE forced) {
 				d3d9.texture.no_pow_h,
 				d3d9.scale);
 
-		/* unlock della texture */
-		IDirect3DTexture9_UnlockRect(d3d9.texture.data, 0);
+		/* unlock della surface in memoria */
+		IDirect3DSurface9_UnlockRect(d3d9.texture.surface);
+
+		/* aggiorno la texture */
+		IDirect3DDevice9_UpdateSurface(d3d9.dev, d3d9.texture.surface, NULL,
+				d3d9.texture.surface_map0, NULL);
+
 	}
 
 	IDirect3DDevice9_Clear(d3d9.dev, 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_ARGB(255, 0, 0, 0),
@@ -555,7 +563,6 @@ void gfx_draw_screen(BYTE forced) {
 		IDirect3DDevice9_SetStreamSource(d3d9.dev, 0, d3d9.textured_vertex, 0, sizeof(vertex));
 		// copy the vertex buffer to the back buffer
 		IDirect3DDevice9_DrawPrimitive(d3d9.dev, D3DPT_TRIANGLEFAN, 0, 2);
-		//IDirect3DDevice9_DrawPrimitive(d3d9.dev, D3DPT_TRIANGLELIST, 0, 2);
 
 	IDirect3DDevice9_EndScene(d3d9.dev);
 
@@ -575,6 +582,11 @@ void gfx_quit(void) {
 	if (d3d9.texture.data) {
 		IDirect3DTexture9_Release(d3d9.texture.data);
 		d3d9.texture.data = NULL;
+	}
+
+	if (d3d9.texture.surface) {
+		IDirect3DSurface9_Release(d3d9.texture.surface);
+		d3d9.texture.surface = NULL;
 	}
 
 	if (d3d9.textured_vertex) {
@@ -697,8 +709,12 @@ BYTE d3d9_create_context(void) {
 		d3d9.texture.x = (FLOAT) (gfx.w[CURRENT] - 1) / (d3d9.texture.w * (FLOAT) d3d9.factor);
 		d3d9.texture.y = (FLOAT) (gfx.h[CURRENT] - 1) / (d3d9.texture.h * (FLOAT) d3d9.factor);
 
+		printf("t0 : %f - %f\n", d3d9.texture.w, d3d9.texture.h);
+		printf("t1 : %f - %f\n", d3d9.texture.x, d3d9.texture.y);
+		printf("t2 : %f - %f\n", (FLOAT) gfx.w[CURRENT], (FLOAT) gfx.h[CURRENT]);
+
 		{
-			VOID *tv_vertices;
+			void *tv_vertices;
 			const vertex vertices[] = {
 				{-1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f          , d3d9.texture.y },
 				{-1.0f,  1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f          , 0.0f           },
@@ -733,6 +749,12 @@ BYTE d3d9_create_texture(_texture *texture, uint32_t width, uint32_t height, uin
 
 	if (texture->data) {
 		IDirect3DTexture9_Release(texture->data);
+		d3d9.texture.data = NULL;
+	}
+
+	if (d3d9.texture.surface) {
+		IDirect3DSurface9_Release(d3d9.texture.surface);
+		d3d9.texture.surface = NULL;
 	}
 
 	if (d3d9.dynamic_texture == TRUE) {
@@ -751,6 +773,20 @@ BYTE d3d9_create_texture(_texture *texture, uint32_t width, uint32_t height, uin
 			D3DPOOL_DEFAULT,
 			&texture->data,
 			NULL) != D3D_OK) {
+		fprintf(stderr, "Unable to create the texture\n");
+		return (EXIT_ERROR);
+	}
+
+	IDirect3DTexture9_GetSurfaceLevel(texture->data, 0, &texture->surface_map0);
+
+	if (IDirect3DDevice9_CreateOffscreenPlainSurface(d3d9.dev,
+			texture->w,
+			texture->h,
+			d3d9.display_mode.Format,
+			D3DPOOL_SYSTEMMEM,
+			&texture->surface,
+			NULL) != D3D_OK) {
+		fprintf(stderr, "Unable to create the memory surface\n");
 		return (EXIT_ERROR);
 	}
 
