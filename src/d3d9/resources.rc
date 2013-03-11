@@ -84,8 +84,7 @@ BEGIN
 				MENUITEM "&OpenGL",               IDM_SET_RENDERING_OPENGL
 				MENUITEM "OpenGL &GLSL",          IDM_SET_RENDERING_GLSL
 			END
-		/*
-		/*
+		*/
 			POPUP "&FPS"
 			BEGIN
 				MENUITEM "Default",               IDM_SET_FPS_DEFAULT
@@ -121,6 +120,7 @@ BEGIN
 				MENUITEM "8",                     IDM_SET_FSK_8
 				MENUITEM "9",                     IDM_SET_FSK_9
 			END
+		/*
 			POPUP "&VSync"
 			BEGIN
 				MENUITEM "&On",                   IDM_SET_VSYNC_ON

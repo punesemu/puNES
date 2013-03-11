@@ -17,9 +17,11 @@
 #include "clock.h"
 #include "version.h"
 #include "gfx.h"
+#include "snd.h"
+#include "text.h"
 #include "cfg_file.h"
 #include "gamegenie.h"
-#include "text.h"
+#include "fps.h"
 
 #define TOOLBAR_HEIGHT   26
 #define FRAME_TL_HEIGHT  (TOOLBAR_HEIGHT - 2)
@@ -31,13 +33,18 @@
 #define COMBO_SS_WIDTH   60
 #define SEPARATOR_WIDTH  3
 
+enum menu_item_state { CHECK, ENAB };
+
 long __stdcall main_proc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam);
-double high_resolution_ms(void);
 
 void set_mode(BYTE mode);
 void set_scale(BYTE scale);
 void set_filter(BYTE filter);
+void set_fps(int fps);
+void set_frame_skip(int frameskip);
 
+double high_resolution_ms(void);
+void change_menuitem(BYTE check_or_enab, UINT type, UINT menuitem_id);
 void open_event(void);
 void make_reset(BYTE type);
 void change_rom(char *rom);
@@ -203,7 +210,7 @@ void gui_set_video_mode(void) {
 	pt_diff.x = (rc_wind.right - rc_wind.left) - rc_client.right;
 	pt_diff.y = (rc_wind.bottom - rc_wind.top) - rc_client.bottom;
 	MoveWindow(main_win, rc_wind.left, rc_wind.top, gfx.w[VIDEO_MODE] + pt_diff.x,
-	        gfx.h[VIDEO_MODE] + pt_diff.y + TOOLBAR_HEIGHT, TRUE);
+			gfx.h[VIDEO_MODE] + pt_diff.y + TOOLBAR_HEIGHT, TRUE);
 	/* aggiorno la finestra dell'sdl */
 	MoveWindow(d3d_frame, 0, 0, gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE], TRUE);
 	/* aggiorno la toolbar */
@@ -278,7 +285,615 @@ HWND gui_window_id(void) {
 	return (d3d_frame);
 }
 void gui_update(void) {
-	return;
+	WORD id = 0;
+	//char title[255];
+
+	/* aggiorno il titolo */
+	//emu_set_title(title);
+	//SetWindowText(main_win, title);
+
+	/* checko le voci di menu corrette */
+
+	/* FDS */
+	/*
+	if (fds.info.enabled) {
+		BYTE i;
+
+		HMENU menu_NES = GetSubMenu(main_menu, 1);
+		MENUITEMINFO menuitem;
+
+		if (fds.drive.disk_ejected) {
+			menuitem.dwTypeData = "&Insert disk\tALT+E";
+		} else {
+			menuitem.dwTypeData = "&Eject disk\tALT+E";
+		}
+		menuitem.cbSize = sizeof(MENUITEMINFO);
+		menuitem.fMask = MIIM_STRING | MIIM_STATE;
+		menuitem.fState = MFS_ENABLED;
+		SetMenuItemInfo(menu_NES, IDM_NES_FDS_EJECT, FALSE, &menuitem);
+
+		menuitem.cbSize = sizeof(MENUITEMINFO);
+		menuitem.fMask = MIIM_STATE;
+		menuitem.fState = MFS_ENABLED;
+		SetMenuItemInfo(menu_NES, 3, TRUE, &menuitem);
+
+		for (i = 0; i < (IDM_NES_FDS_DISK_SIDE7 + 1) - IDM_NES_FDS_DISK_SIDE0; i++) {
+			if (i < fds.info.total_sides) {
+				change_menuitem(ENAB, MF_HILITE, IDM_NES_FDS_DISK_SIDE0 + i);
+			} else {
+				change_menuitem(ENAB, MF_GRAYED, IDM_NES_FDS_DISK_SIDE0 + i);
+			}
+			if (i == fds.drive.side_inserted) {
+				change_menuitem(CHECK, MF_CHECKED, IDM_NES_FDS_DISK_SIDE0 + i);
+			} else {
+				change_menuitem(CHECK, MF_UNCHECKED, IDM_NES_FDS_DISK_SIDE0 + i);
+			}
+		}
+	} else {
+		HMENU menu_NES = GetSubMenu(main_menu, 1);
+		MENUITEMINFO menuitem;
+
+		menuitem.dwTypeData = "Ej&ect/Insert disk\tALT+E";
+		menuitem.cbSize = sizeof(MENUITEMINFO);
+		menuitem.fMask = MIIM_STRING | MIIM_STATE;
+		menuitem.fState = MFS_DISABLED;
+		SetMenuItemInfo(menu_NES, IDM_NES_FDS_EJECT, FALSE, &menuitem);
+
+		menuitem.cbSize = sizeof(MENUITEMINFO);
+		menuitem.fMask = MIIM_STATE;
+		menuitem.fState = MFS_GRAYED;
+		SetMenuItemInfo(menu_NES, 3, TRUE, &menuitem);
+
+		change_menuitem(ENAB, MF_GRAYED, IDM_NES_FDS_DISK_SIDE0);
+		change_menuitem(ENAB, MF_GRAYED, IDM_NES_FDS_DISK_SIDE1);
+		change_menuitem(ENAB, MF_GRAYED, IDM_NES_FDS_DISK_SIDE2);
+		change_menuitem(ENAB, MF_GRAYED, IDM_NES_FDS_DISK_SIDE3);
+		change_menuitem(ENAB, MF_GRAYED, IDM_NES_FDS_DISK_SIDE4);
+		change_menuitem(ENAB, MF_GRAYED, IDM_NES_FDS_DISK_SIDE5);
+		change_menuitem(ENAB, MF_GRAYED, IDM_NES_FDS_DISK_SIDE6);
+		change_menuitem(ENAB, MF_GRAYED, IDM_NES_FDS_DISK_SIDE7);
+		change_menuitem(ENAB, MF_GRAYED, IDM_NES_FDS_DISK_SWITCH);
+		change_menuitem(ENAB, MF_GRAYED, IDM_NES_FDS_EJECT);
+	}
+	*/
+
+	/* Save slot */
+	/*
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_SAVE_0);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_SAVE_1);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_SAVE_2);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_SAVE_3);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_SAVE_4);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_SAVE_5);
+	switch (save_slot.slot) {
+		case 0:
+			id = IDM_SET_SAVE_0;
+			break;
+		case 1:
+			id = IDM_SET_SAVE_1;
+			break;
+		case 2:
+			id = IDM_SET_SAVE_2;
+			break;
+		case 3:
+			id = IDM_SET_SAVE_3;
+			break;
+		case 4:
+			id = IDM_SET_SAVE_4;
+			break;
+		case 5:
+			id = IDM_SET_SAVE_5;
+			break;
+	}
+	change_menuitem(CHECK, MF_CHECKED, id);
+	if (save_slot.state[save_slot.slot]) {
+		change_menuitem(ENAB, MF_HILITE, IDM_SET_SAVE_LOAD);
+		EnableWindow(hLoadButton, TRUE);
+	} else {
+		change_menuitem(ENAB, MF_GRAYED, IDM_SET_SAVE_LOAD);
+		EnableWindow(hLoadButton, FALSE);
+	}
+	RedrawWindow(hSaveslot, NULL, NULL, RDW_INVALIDATE);
+	*/
+
+	/* Mode */
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_MODE_PAL);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_MODE_NTSC);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_MODE_DENDY);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_MODE_AUTO);
+	if (cfg->mode == AUTO) {
+		id = IDM_SET_MODE_AUTO;
+	} else if (machine.type == PAL) {
+		id = IDM_SET_MODE_PAL;
+	} else if (machine.type == NTSC) {
+		id = IDM_SET_MODE_NTSC;
+	} else if (machine.type == DENDY) {
+		id = IDM_SET_MODE_DENDY;
+	}
+	change_menuitem(CHECK, MF_CHECKED, id);
+
+	/* Fps */
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FPS_DEFAULT);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FPS_60);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FPS_59);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FPS_58);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FPS_57);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FPS_56);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FPS_55);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FPS_54);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FPS_53);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FPS_52);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FPS_51);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FPS_50);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FPS_49);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FPS_48);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FPS_47);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FPS_46);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FPS_45);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FPS_44);
+	switch (cfg->fps) {
+		case FPS_DEFAULT:
+			id = IDM_SET_FPS_DEFAULT;
+			break;
+		case FPS_60:
+			id = IDM_SET_FPS_60;
+			break;
+		case FPS_59:
+			id = IDM_SET_FPS_59;
+			break;
+		case FPS_58:
+			id = IDM_SET_FPS_58;
+			break;
+		case FPS_57:
+			id = IDM_SET_FPS_57;
+			break;
+		case FPS_56:
+			id = IDM_SET_FPS_56;
+			break;
+		case FPS_55:
+			id = IDM_SET_FPS_55;
+			break;
+		case FPS_54:
+			id = IDM_SET_FPS_54;
+			break;
+		case FPS_53:
+			id = IDM_SET_FPS_53;
+			break;
+		case FPS_52:
+			id = IDM_SET_FPS_52;
+			break;
+		case FPS_51:
+			id = IDM_SET_FPS_51;
+			break;
+		case FPS_50:
+			id = IDM_SET_FPS_50;
+			break;
+		case FPS_49:
+			id = IDM_SET_FPS_49;
+			break;
+		case FPS_48:
+			id = IDM_SET_FPS_48;
+			break;
+		case FPS_47:
+			id = IDM_SET_FPS_47;
+			break;
+		case FPS_46:
+			id = IDM_SET_FPS_46;
+			break;
+		case FPS_45:
+			id = IDM_SET_FPS_45;
+			break;
+		case FPS_44:
+			id = IDM_SET_FPS_44;
+			break;
+	}
+	change_menuitem(CHECK, MF_CHECKED, id);
+
+	/* Frame skip */
+	for (id = IDM_SET_FSK_DEFAULT; id <= IDM_SET_FSK_9; id++) {
+		if (cfg->frameskip == (id - IDM_SET_FSK_DEFAULT)) {
+			change_menuitem(CHECK, MF_CHECKED, id);
+		} else {
+			change_menuitem(CHECK, MF_UNCHECKED, id);
+		}
+	}
+
+	/* Size */
+	if (cfg->filter != NO_FILTER) {
+		change_menuitem(ENAB, MF_GRAYED, IDM_SET_SIZE_1X);
+	} else {
+		change_menuitem(ENAB, MF_HILITE, IDM_SET_SIZE_1X);
+	}
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_SIZE_1X);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_SIZE_2X);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_SIZE_3X);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_SIZE_4X);
+	if (cfg->fullscreen == NO_FULLSCR) {
+		switch (cfg->scale) {
+			case X1:
+				id = IDM_SET_SIZE_1X;
+				break;
+			case X2:
+				id = IDM_SET_SIZE_2X;
+				break;
+			case X3:
+				id = IDM_SET_SIZE_3X;
+				break;
+			case X4:
+				id = IDM_SET_SIZE_4X;
+				break;
+		}
+	}
+	change_menuitem(CHECK, MF_CHECKED, id);
+
+	/* Overscan */
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_OSCAN_ON);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_OSCAN_OFF);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_OSCAN_DEF);
+	switch (cfg->oscan) {
+		case OSCAN_ON:
+			id = IDM_SET_OSCAN_ON;
+			break;
+		case OSCAN_OFF:
+			id = IDM_SET_OSCAN_OFF;
+			break;
+		case OSCAN_DEFAULT:
+			id = IDM_SET_OSCAN_DEF;
+			break;
+	}
+	change_menuitem(CHECK, MF_CHECKED, id);
+
+	/* Overscan/Default value */
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_OSCAN_DEFAULT_ON);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_OSCAN_DEFAULT_OFF);
+	switch (cfg->oscan_default) {
+		case OSCAN_ON:
+			id = IDM_SET_OSCAN_DEFAULT_ON;
+			break;
+		case OSCAN_OFF:
+			id = IDM_SET_OSCAN_DEFAULT_OFF;
+			break;
+	}
+	change_menuitem(CHECK, MF_CHECKED, id);
+
+	/* Filter */
+	/*
+	if (gfx.bit_per_pixel < 32) {
+		change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_HQ2X);
+		change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_HQ3X);
+		change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_HQ4X);
+	} else {
+		change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_HQ2X);
+		change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_HQ3X);
+		change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_HQ4X);
+	}
+	*/
+	//{
+	//	HMENU menu_to_change;
+	//	MENUITEMINFO menuitem;
+
+	//	menuitem.cbSize = sizeof(MENUITEMINFO);
+	//	menuitem.fMask = MIIM_STATE;
+
+		/* Video/Rendering */
+	//	menu_to_change = GetSubMenu(GetSubMenu(GetSubMenu(main_menu, 2), 2), 0);
+
+	//	if (opengl.supported) {
+	//		menuitem.fState = MFS_ENABLED;
+	//	} else {
+	//		menuitem.fState = MFS_DISABLED;
+	//	}
+		/* Video/Rendering/OpenGL */
+	//	SetMenuItemInfo(menu_to_change, 1, TRUE, &menuitem);
+
+	//	if (opengl.glsl.compliant) {
+	//		menuitem.fState = MFS_ENABLED;
+	//	} else {
+	//		menuitem.fState = MFS_DISABLED;
+	//	}
+		/* Video/Rendering/OpenGL GLSL */
+	//	SetMenuItemInfo(menu_to_change, 2, TRUE, &menuitem);
+
+	//	menu_to_change = GetSubMenu(GetSubMenu(GetSubMenu(main_menu, 2), 2), 7);
+
+		//if (opengl.glsl.enabled) {
+		//	change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_POSPHOR);
+		//	change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_SCANLINE);
+		//	change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_DBL);
+
+		//	menuitem.fState = MFS_ENABLED;
+
+		//	/* Video/Filter/CRT */
+		//	SetMenuItemInfo(menu_to_change, 5, TRUE, &menuitem);
+
+		//	change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_CRTCURVE);
+		//	change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_CRTNOCURVE);
+		//} else {
+		//	change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_POSPHOR);
+		//	change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_SCANLINE);
+		//	change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_DBL);
+
+		//	menuitem.fState = MFS_DISABLED;
+
+			/* Video/Filter/CRT */
+		//	SetMenuItemInfo(menu_to_change, 5, TRUE, &menuitem);
+
+		//	change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_CRTCURVE);
+		//	change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_CRTNOCURVE);
+		//}
+	//}
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_NO_FILTER);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_BILINEAR);
+	/*
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_SCALE2X);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_SCALE3X);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_SCALE4X);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_HQ2X);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_HQ3X);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_HQ4X);
+	*/
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_RGBNTSCCOM);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_RGBNTSCSVD);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_RGBNTSCRGB);
+	/*
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_POSPHOR);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_SCANLINE);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_DBL);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_CRTCURVE);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_CRTNOCURVE);
+	*/
+	switch (cfg->filter) {
+		case NO_FILTER:
+			id = IDM_SET_FILTER_NO_FILTER;
+			break;
+		case BILINEAR:
+			id = IDM_SET_FILTER_BILINEAR;
+			break;
+		/*
+		case POSPHOR:
+			id = IDM_SET_FILTER_POSPHOR;
+			break;
+		case SCANLINE:
+			id = IDM_SET_FILTER_SCANLINE;
+			break;
+		case DBL:
+			id = IDM_SET_FILTER_DBL;
+			break;
+		case CRT_CURVE:
+			id = IDM_SET_FILTER_CRTCURVE;
+			break;
+		case CRT_NO_CURVE:
+			id = IDM_SET_FILTER_CRTNOCURVE;
+			break;
+		case SCALE2X:
+			id = IDM_SET_FILTER_SCALE2X;
+			break;
+		case SCALE3X:
+			id = IDM_SET_FILTER_SCALE3X;
+			break;
+		case SCALE4X:
+			id = IDM_SET_FILTER_SCALE4X;
+			break;
+		case HQ2X:
+			id = IDM_SET_FILTER_HQ2X;
+			break;
+		case HQ3X:
+			id = IDM_SET_FILTER_HQ3X;
+			break;
+		case HQ4X:
+			id = IDM_SET_FILTER_HQ4X;
+			break;
+		*/
+		case NTSC_FILTER:
+			switch (cfg->ntsc_format) {
+				case COMPOSITE:
+					id = IDM_SET_FILTER_RGBNTSCCOM;
+					break;
+				case SVIDEO:
+					id = IDM_SET_FILTER_RGBNTSCSVD;
+					break;
+				case RGBMODE:
+					id = IDM_SET_FILTER_RGBNTSCRGB;
+					break;
+			}
+			break;
+	}
+	change_menuitem(CHECK, MF_CHECKED, id);
+
+	/* Palette */
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_PALETTE_PAL);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_PALETTE_NTSC);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_PALETTE_SONY);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_PALETTE_MONO);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_PALETTE_GREEN);
+	switch (cfg->palette) {
+		case PALETTE_PAL:
+			id = IDM_SET_PALETTE_PAL;
+			break;
+		case PALETTE_NTSC:
+			id = IDM_SET_PALETTE_NTSC;
+			break;
+		case PALETTE_SONY:
+			id = IDM_SET_PALETTE_SONY;
+			break;
+		case PALETTE_MONO:
+			id = IDM_SET_PALETTE_MONO;
+			break;
+		case PALETTE_GREEN:
+			id = IDM_SET_PALETTE_GREEN;
+			break;
+	}
+	change_menuitem(CHECK, MF_CHECKED, id);
+
+	/* Render */
+	//change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_RENDERING_SOFTWARE);
+	//change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_RENDERING_OPENGL);
+	//change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_RENDERING_GLSL);
+	//if (gfx.opengl) {
+	//	HMENU menuSettings = GetSubMenu(main_menu, 2);
+	//	HMENU menuVideo = GetSubMenu(menuSettings, 2);
+	//	MENUITEMINFO menuitem;
+
+		/* VSync */
+	//	menuitem.cbSize = sizeof(MENUITEMINFO);
+	//	menuitem.fMask = MIIM_STATE;
+	//	menuitem.fState = MFS_ENABLED;
+	//	SetMenuItemInfo(menuVideo, 3, TRUE, &menuitem);
+
+		/* questi li abilito solo se non c'e' come input lo zapper */
+	//	if ((port1.type != CTRL_ZAPPER) && (port2.type != CTRL_ZAPPER)) {
+	//		menuitem.fState = MFS_ENABLED;
+	//		change_menuitem(ENAB, MF_ENABLED, IDM_SET_EFFECT_CUBE);
+	//	} else {
+	//		menuitem.fState = MFS_GRAYED;
+	//		change_menuitem(ENAB, MF_GRAYED, IDM_SET_EFFECT_CUBE);
+	//	}
+	//	menuitem.cbSize = sizeof(MENUITEMINFO);
+	//	menuitem.fMask = MIIM_STATE;
+	//	SetMenuItemInfo(menuVideo, 9, TRUE, &menuitem);
+
+	//	change_menuitem(ENAB, MF_ENABLED, IDM_SET_FULLSCREEN);
+	//	change_menuitem(ENAB, MF_ENABLED, IDM_SET_STRETCHFLSCR);
+	//	change_menuitem(ENAB, MF_ENABLED, IDM_SET_VSYNC_ON);
+	//	change_menuitem(ENAB, MF_ENABLED, IDM_SET_VSYNC_OFF);
+
+	//	if (!opengl.glsl.compliant) {
+	//		id = IDM_SET_RENDERING_OPENGL;
+	//	} else if (!opengl.glsl.enabled) {
+	//		id = IDM_SET_RENDERING_OPENGL;
+	//	} else {
+	//		id = IDM_SET_RENDERING_GLSL;
+	//	}
+	//} else {
+	//	HMENU menuSettings = GetSubMenu(main_menu, 2);
+	//	HMENU menuVideo = GetSubMenu(menuSettings, 2);
+	//	MENUITEMINFO menuitem;
+
+		/* VSync */
+	//	menuitem.cbSize = sizeof(MENUITEMINFO);
+	//	menuitem.fMask = MIIM_STATE;
+	//	menuitem.fState = MFS_DISABLED;
+	//	SetMenuItemInfo(menuVideo, 3, TRUE, &menuitem);
+		/* Effect */
+	//	SetMenuItemInfo(menuVideo, 9, TRUE, &menuitem);
+
+	//	change_menuitem(ENAB, MF_GRAYED, IDM_SET_FULLSCREEN);
+	//	change_menuitem(ENAB, MF_GRAYED, IDM_SET_STRETCHFLSCR);
+	//	change_menuitem(ENAB, MF_GRAYED, IDM_SET_VSYNC_ON);
+	//	change_menuitem(ENAB, MF_GRAYED, IDM_SET_VSYNC_OFF);
+	//	change_menuitem(ENAB, MF_GRAYED, IDM_SET_EFFECT_CUBE);
+
+	//	id = IDM_SET_RENDERING_SOFTWARE;
+	//}
+	//change_menuitem(CHECK, MF_CHECKED, id);
+
+	/* Effect */
+	/*
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_EFFECT_CUBE);
+	if (opengl.rotation) {
+		change_menuitem(CHECK, MF_CHECKED, IDM_SET_EFFECT_CUBE);
+	}
+	*/
+
+	/* Vsync */
+	/*
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_VSYNC_ON);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_VSYNC_OFF);
+	if (cfg->vsync) {
+		change_menuitem(CHECK, MF_CHECKED, IDM_SET_VSYNC_ON);
+	} else {
+		change_menuitem(CHECK, MF_CHECKED, IDM_SET_VSYNC_OFF);
+	}
+	*/
+
+	/* Aspect ratio */
+	/*
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_STRETCHFLSCR);
+	if (gfx.opengl && !cfg->aspect_ratio) {
+		change_menuitem(CHECK, MF_CHECKED, IDM_SET_STRETCHFLSCR);
+	}
+	*/
+
+	/* Samplerate */
+	/*
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_SAMPLERATE_44100);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_SAMPLERATE_22050);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_SAMPLERATE_11025);
+	switch (cfg->samplerate) {
+		case S44100:
+			id = IDM_SET_SAMPLERATE_44100;
+			break;
+		case S22050:
+			id = IDM_SET_SAMPLERATE_22050;
+			break;
+		case S11025:
+			id = IDM_SET_SAMPLERATE_11025;
+			break;
+	}
+	change_menuitem(CHECK, MF_CHECKED, id);
+	*/
+
+	/* Channels */
+	/*
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_CHANNELS_MONO);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_CHANNELS_STEREO);
+	switch (cfg->channels) {
+		case MONO:
+			id = IDM_SET_CHANNELS_MONO;
+			break;
+		case STEREO:
+			id = IDM_SET_CHANNELS_STEREO;
+			break;
+	}
+	change_menuitem(CHECK, MF_CHECKED, id);
+	*/
+
+	/* Audio Filter */
+	/*
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_AUDIO_QUALITY_LOW);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_AUDIO_QUALITY_HIGH);
+	switch (cfg->audio_quality) {
+		case AQ_LOW:
+			id = IDM_SET_AUDIO_QUALITY_LOW;
+			break;
+		case AQ_HIGH:
+			id = IDM_SET_AUDIO_QUALITY_HIGH;
+			break;
+	}
+	change_menuitem(CHECK, MF_CHECKED, id);
+	*/
+
+	/* Swap Duty Cycles */
+	/*
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_AUDIO_SWAP_DUTY);
+	if (cfg->swap_duty) {
+		change_menuitem(CHECK, MF_CHECKED, IDM_SET_AUDIO_SWAP_DUTY);
+	}
+	*/
+
+	/* Audio Enable */
+	/*
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_AUDIO_ENABLE);
+	if (cfg->audio) {
+		change_menuitem(CHECK, MF_CHECKED, IDM_SET_AUDIO_ENABLE);
+	}
+	*/
+
+	/* Game Genie */
+	/*
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_GAMEGENIE);
+	if (cfg->gamegenie) {
+		change_menuitem(CHECK, MF_CHECKED, IDM_SET_GAMEGENIE);
+	}
+	*/
+
+	/* Save on exit */
+	/*
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_SAVEONEXIT);
+	if (cfg->save_on_exit) {
+		change_menuitem(CHECK, MF_CHECKED, IDM_SET_SAVEONEXIT);
+	}
+	*/
 }
 void gui_fullscreen(void) {
 	return;
@@ -393,7 +1008,6 @@ long __stdcall main_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 				case IDM_SET_MODE_AUTO:
 					set_mode(AUTO);
 					break;
-				/*
 				case IDM_SET_FPS_DEFAULT:
 					set_fps(FPS_DEFAULT);
 					break;
@@ -460,7 +1074,6 @@ long __stdcall main_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 				case IDM_SET_FSK_9:
 					set_frame_skip(LOWORD(wParam) - IDM_SET_FSK_DEFAULT);
 					break;
-				*/
 				case IDM_SET_SIZE_1X:
 					set_scale(X1);
 					break;
@@ -684,14 +1297,9 @@ long __stdcall main_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 
 	return (DefWindowProc(hwnd, msg, wParam, lParam));
 }
-double high_resolution_ms(void) {
-	uint64_t time, diff;
 
-	QueryPerformanceCounter((LARGE_INTEGER *) &time);
-	diff = ((time - gui.counter_start) * 1000) / gui.frequency;
 
-	return ((double) (diff & 0xffffffff));
-}
+
 void set_mode(BYTE mode) {
 	BYTE reset = TRUE;
 
@@ -743,7 +1351,7 @@ void set_scale(BYTE scale) {
 		return;
 	}
 
-	//ShowWindow(main_win, SW_HIDE);
+	ShowWindow(main_win, SW_HIDE);
 
 	switch (scale) {
 		case X1:
@@ -760,11 +1368,9 @@ void set_scale(BYTE scale) {
 			break;
 	}
 
-	//ShowWindow(main_win, SW_NORMAL);
+	ShowWindow(main_win, SW_NORMAL);
 }
 void set_filter(BYTE filter) {
-	//LockWindowUpdate(main_win);
-
 	switch (filter) {
 		case NO_FILTER:
 			gfx_set_screen(NO_CHANGE, NO_FILTER, NO_CHANGE, NO_CHANGE, FALSE);
@@ -815,10 +1421,52 @@ void set_filter(BYTE filter) {
 			}
 			break;
 	}
+}
+void set_fps(int fps) {
+	if (cfg->fps == fps) {
+		return;
+	}
 
-	//LockWindowUpdate(NULL);
+	cfg->fps = fps;
+
+	emu_pause(TRUE);
+
+	fps_init();
+	snd_start();
+	gui_update();
+
+	emu_pause(FALSE);
+}
+void set_frame_skip(int frameskip) {
+	if (cfg->frameskip == frameskip) {
+		return;
+	}
+
+	cfg->frameskip = frameskip;
+
+	if (!fps.fast_forward) {
+		fps_normalize();
+	}
+
+	gui_update();
 }
 
+
+double high_resolution_ms(void) {
+	uint64_t time, diff;
+
+	QueryPerformanceCounter((LARGE_INTEGER *) &time);
+	diff = ((time - gui.counter_start) * 1000) / gui.frequency;
+
+	return ((double) (diff & 0xffffffff));
+}
+void change_menuitem(BYTE check_or_enab, UINT type, UINT menuitem_id) {
+	if (check_or_enab == CHECK) {
+		CheckMenuItem(main_menu, menuitem_id, MF_BYCOMMAND | type);
+	} else {
+		EnableMenuItem(main_menu, menuitem_id, MF_BYCOMMAND | type);
+	}
+}
 void open_event(void) {
 	OPENFILENAME ofn;
 	char file[1024];
@@ -874,24 +1522,15 @@ void make_reset(BYTE type) {
 }
 void change_rom(char *rom) {
 	strcpy(info.load_rom_file, rom);
-	/*
-	 * nascondo la finestra perche' la nuova rom potrebbe
-	 * avere una configurazione dell'overscan diversa da quella
-	 * della rom precedente e quindi potrei essere costretto
-	 * a fare un SDL_SetVideoMode con dimensioni x ed y diverse
-	 * che sotto windows, se la finestra non e' nascosta, crasha
-	 * l'emulatore.
-	 */
-	//ShowWindow(main_win, SW_HIDE);
-	//LockWindowUpdate(main_win);
+
+	ShowWindow(main_win, SW_HIDE);
 
 	gamegenie_reset(FALSE);
 
 	make_reset(CHANGE_ROM);
 
 	/* visualizzo nuovamente la finestra */
-	//ShowWindow(main_win, SW_NORMAL);
-	//LockWindowUpdate(NULL);
+	ShowWindow(main_win, SW_NORMAL);
 
 	gui_update();
 }

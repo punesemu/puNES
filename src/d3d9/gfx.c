@@ -6,6 +6,7 @@
  */
 
 #include <d3d9.h>
+//#include <d3dx9math.h>
 #include "win.h"
 #include "emu.h"
 #include "gfx.h"
@@ -86,10 +87,11 @@ struct _d3d9 {
 } d3d9;
 
 typedef struct {
-	FLOAT X, Y, Z, RHW;
-	FLOAT TU, TV;
-} CUSTOMVERTEX;
-#define CUSTOMFVF (D3DFVF_XYZRHW | D3DFVF_TEX1)
+	FLOAT x, y, z;
+	FLOAT nx, ny, nz;
+	FLOAT tu, tv;
+} vertex;
+#define FVF (D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_TEX1)
 
 BYTE d3d9_create_context(void);
 BYTE d3d9_create_texture(_texture *texture, uint32_t width, uint32_t height, uint8_t interpolation,
@@ -104,13 +106,9 @@ BYTE gfx_init(void) {
 		return (EXIT_ERROR);
 	}
 
-	memset(&d3d9, 0x00, sizeof(d3d9));
+	cfg_from_file.filter = NO_FILTER;
 
-	//cfg->filter = NTSC_FILTER;
-	cfg->filter = NO_FILTER;
-	//cfg->filter = BILINEAR;
-	cfg->palette = PALETTE_NTSC;
-	cfg->scale = X2;
+	memset(&d3d9, 0x00, sizeof(d3d9));
 
 	{
 		D3DCAPS9 d3dcaps;
@@ -513,6 +511,9 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 		}
 	}
 
+	/* setto il titolo della finestra */
+	gui_update();
+
 	if (info.on_cfg == TRUE) {
 		info.on_cfg = FALSE;
 	}
@@ -543,18 +544,21 @@ void gfx_draw_screen(BYTE forced) {
 		IDirect3DTexture9_UnlockRect(d3d9.texture.data, 0);
 	}
 
-	IDirect3DDevice9_Clear(d3d9.dev, 0, NULL, D3DCLEAR_TARGET, d3d9.palette[40], 1.0f, 0);
+	//IDirect3DDevice9_Clear(d3d9.dev, 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_ARGB(255, 255, 255, 255),
+	//		1.0f, 0);
+	IDirect3DDevice9_Clear(d3d9.dev, 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_ARGB(255, 0, 0, 0),
+			1.0f, 0);
 
 	IDirect3DDevice9_BeginScene(d3d9.dev);
 
+		//IDirect3DDevice9_SetRenderState(d3d9.dev, D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+
 		// select which vertex format we are using
-		IDirect3DDevice9_SetFVF(d3d9.dev, CUSTOMFVF);
-
+		IDirect3DDevice9_SetFVF(d3d9.dev, FVF);
 		// select the vertex buffer to display
-		IDirect3DDevice9_SetStreamSource(d3d9.dev, 0, d3d9.textured_vertex, 0, sizeof(CUSTOMVERTEX));
-
+		IDirect3DDevice9_SetStreamSource(d3d9.dev, 0, d3d9.textured_vertex, 0, sizeof(vertex));
 		// copy the vertex buffer to the back buffer
-		IDirect3DDevice9_DrawPrimitive(d3d9.dev, D3DPT_TRIANGLELIST, 0, 2);
+		IDirect3DDevice9_DrawPrimitive(d3d9.dev, D3DPT_TRIANGLEFAN, 0, 2);
 
 	IDirect3DDevice9_EndScene(d3d9.dev);
 
@@ -621,6 +625,10 @@ BYTE d3d9_create_context(void) {
 		d3dpp.BackBufferWidth = gfx.w[VIDEO_MODE];
 		d3dpp.BackBufferHeight = gfx.h[VIDEO_MODE];
 
+		d3dpp.BackBufferCount = 1;
+		//d3dpp.EnableAutoDepthStencil = TRUE;
+		d3dpp.MultiSampleQuality = D3DMULTISAMPLE_NONE;
+
 		if (IDirect3D9_CreateDevice(d3d9.d3d,
 				D3DADAPTER_DEFAULT,
 				D3DDEVTYPE_HAL,
@@ -634,9 +642,9 @@ BYTE d3d9_create_context(void) {
 	}
 
 	if (IDirect3DDevice9_CreateVertexBuffer(d3d9.dev,
-			6 * sizeof(CUSTOMVERTEX),
+			6 * sizeof(vertex),
 			D3DUSAGE_WRITEONLY,
-			CUSTOMFVF,
+			FVF,
 			D3DPOOL_DEFAULT,
 			&d3d9.textured_vertex,
 			NULL) != D3D_OK) {
@@ -645,59 +653,79 @@ BYTE d3d9_create_context(void) {
 	}
 
 	{
-		VOID *tv_vertices;
-		WORD w, h;
+		{
+			WORD w, h;
 
-		if (d3d9.scale_force) {
-			w = SCR_ROWS * d3d9.scale;
-			h = SCR_LINES * d3d9.scale;
-		} else {
-			w = gfx.w[CURRENT];
-			h = gfx.h[CURRENT];
-		}
+			if (d3d9.scale_force) {
+				w = SCR_ROWS * d3d9.scale;
+				h = SCR_LINES * d3d9.scale;
+			} else {
+				w = gfx.w[CURRENT];
+				h = gfx.h[CURRENT];
+			}
 
-		/* creo la texture principale */
-		if (d3d9_create_texture(&d3d9.texture, w, h, 0, POWER_OF_TWO) == EXIT_ERROR) {
-			fprintf(stderr, "Unable to create main texture\n");
-			return (EXIT_ERROR);
+			/* creo la texture principale */
+			if (d3d9_create_texture(&d3d9.texture, w, h, 0, POWER_OF_TWO) == EXIT_ERROR) {
+				fprintf(stderr, "Unable to create main texture\n");
+				return (EXIT_ERROR);
+			}
 		}
 
 		IDirect3DDevice9_SetTexture(d3d9.dev, 0, (IDirect3DBaseTexture9 *) d3d9.texture.data);
-
-		IDirect3DDevice9_SetTextureStageState(d3d9.dev, 0, D3DTSS_COLOROP, D3DTOP_MODULATE);
-		IDirect3DDevice9_SetTextureStageState(d3d9.dev, 0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
-		IDirect3DDevice9_SetTextureStageState(d3d9.dev, 0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
-		IDirect3DDevice9_SetTextureStageState(d3d9.dev, 0, D3DTSS_ALPHAOP, D3DTOP_DISABLE);
 
 		if (d3d9.interpolation == TRUE) {
 			 /* bilinear filtering */
 			IDirect3DDevice9_SetSamplerState(d3d9.dev, 0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
 			IDirect3DDevice9_SetSamplerState(d3d9.dev, 0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
 			IDirect3DDevice9_SetSamplerState(d3d9.dev, 0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
+			//IDirect3DDevice9_SetSamplerState(d3d9.dev, 0, D3DSAMP_MIPFILTER, D3DTEXF_POINT);
 		} else {
 			IDirect3DDevice9_SetSamplerState(d3d9.dev, 0, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
 			IDirect3DDevice9_SetSamplerState(d3d9.dev, 0, D3DSAMP_MINFILTER, D3DTEXF_POINT);
 			IDirect3DDevice9_SetSamplerState(d3d9.dev, 0, D3DSAMP_MIPFILTER, D3DTEXF_POINT);
 		}
 
-		d3d9.texture.x = (FLOAT) gfx.w[CURRENT] / (d3d9.texture.w * d3d9.factor);
-		d3d9.texture.y = (FLOAT) gfx.h[CURRENT] / (d3d9.texture.h * d3d9.factor);
+		/* Enable Z-Buffer (Depth Buffer) */
+		IDirect3DDevice9_SetRenderState(d3d9.dev, D3DRS_ZENABLE,  FALSE );
+		/* Disable Backface Culling */
+		IDirect3DDevice9_SetRenderState(d3d9.dev, D3DRS_CULLMODE, FALSE);
+		IDirect3DDevice9_SetRenderState(d3d9.dev, D3DRS_LIGHTING, FALSE);
 
-		const CUSTOMVERTEX vertices[] = {
-			/* primo triangolo */
-			{ 0.0f             , 0.0f             , 0.5f, 1.0f, 0.0f          , 0.0f           },
-			{ gfx.w[VIDEO_MODE], 0.0f             , 0.5f, 1.0f, d3d9.texture.x, 0.0f           },
-			{ gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE], 0.5f, 1.0f, d3d9.texture.x, d3d9.texture.y },
-			/* secondo triangolo */
-			{ 0.0f             , 0.0f             , 0.5f, 1.0f, 0.0f          , 0.0f           },
-			{ gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE], 0.5f, 1.0f, d3d9.texture.x, d3d9.texture.y },
-			{ 0.0f             , gfx.h[VIDEO_MODE], 0.5f, 1.0f, 0.0f          , d3d9.texture.y },
+		d3d9.texture.x = (FLOAT) gfx.w[CURRENT] / (d3d9.texture.w * (FLOAT) d3d9.factor);
+		d3d9.texture.y = (FLOAT) gfx.h[CURRENT] / (d3d9.texture.h * (FLOAT) d3d9.factor);
 
-		};
+		printf("t0 : %f - %f\n", d3d9.texture.w, d3d9.texture.h);
+		printf("t1 : %f - %f\n", d3d9.texture.x, d3d9.texture.y);
+		printf("t2 : %f - %f\n", (FLOAT) gfx.w[CURRENT], (FLOAT) gfx.h[CURRENT]);
 
-		IDirect3DVertexBuffer9_Lock(d3d9.textured_vertex, 0, 0, (void**) &tv_vertices, 0);
-		memcpy(tv_vertices, vertices, sizeof(vertices));
-		IDirect3DVertexBuffer9_Unlock(d3d9.textured_vertex);
+		{
+			VOID *tv_vertices;
+			const vertex vertices[] = {
+				//{ 1.0f, 1.0f, 0.5f, 1.0f, 0.0f          , 0.0f           },
+				//{  vmw, 1.0f, 0.5f, 1.0f, d3d9.texture.x, 0.0f           },
+				//{  vmw,  vmh, 0.5f, 1.0f, d3d9.texture.x, d3d9.texture.y },
+				//{ 1.0f,  vmh, 0.5f, 1.0f, 0.0f          , d3d9.texture.y },
+				{-1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f          , d3d9.texture.y },
+				{-1.0f,  1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f          , 0.0f           },
+				{ 1.0f,  1.0f, 0.0f, 0.0f, 0.0f, 0.0f, d3d9.texture.x, 0.0f           },
+				{ 1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, d3d9.texture.x, d3d9.texture.y }
+			};
+
+			IDirect3DVertexBuffer9_Lock(d3d9.textured_vertex, 0, 0, (void**) &tv_vertices, 0);
+			memcpy(tv_vertices, vertices, sizeof(vertices));
+			IDirect3DVertexBuffer9_Unlock(d3d9.textured_vertex);
+		}
+
+		/*
+	    D3DXMATRIX proj;
+	    D3DXMatrixPerspectiveFovLH(
+	            &proj,
+	            D3DX_PI * 0.5f, // 90 - degree
+	            (float)gfx.w[CURRENT] / (float)gfx.h[CURRENT],
+	            1.0f,
+	            1000.0f);
+	    IDirect3DDevice9_SetTransform(d3d9.dev, D3DTS_PROJECTION, &proj);
+	    */
 	}
 
 	return (EXIT_OK);
@@ -706,7 +734,7 @@ BYTE d3d9_create_context(void) {
 
 BYTE d3d9_create_texture(_texture *texture, uint32_t width, uint32_t height, uint8_t interpolation,
         uint8_t pow) {
-	DWORD usage = D3DUSAGE_WRITEONLY;
+	DWORD usage = 0;
 
 	texture->no_pow_w = width;
 	texture->no_pow_h = height;
@@ -730,27 +758,16 @@ BYTE d3d9_create_texture(_texture *texture, uint32_t width, uint32_t height, uin
 		usage |= D3DUSAGE_AUTOGENMIPMAP;
 	}
 
-	{
-		HRESULT hresult = IDirect3DDevice9_CreateTexture(d3d9.dev, texture->w, texture->h, 0,
-				usage, d3d9.display_mode.Format, D3DPOOL_DEFAULT, &texture->data, NULL);
-
-		if (hresult == D3DERR_INVALIDCALL) {
-			if (IDirect3DDevice9_CreateTexture(d3d9.dev,
-					texture->w,
-					texture->h,
-					0,
-					usage & ~D3DUSAGE_WRITEONLY,
-					d3d9.display_mode.Format,
-					D3DPOOL_DEFAULT,
-					&texture->data,
-					NULL) == D3D_OK) {
-				printf("Video driver don't support use of D3DUSAGE_WRITEONLY on the texture\n");
-			} else {
-				return (EXIT_ERROR);
-			}
-		} else if (hresult != D3D_OK) {
-			return (EXIT_ERROR);
-		}
+	if (IDirect3DDevice9_CreateTexture(d3d9.dev,
+			texture->w,
+			texture->h,
+			0,
+			usage,
+			d3d9.display_mode.Format,
+			D3DPOOL_DEFAULT,
+			&texture->data,
+			NULL) != D3D_OK) {
+		return (EXIT_ERROR);
 	}
 
 	return (EXIT_OK);

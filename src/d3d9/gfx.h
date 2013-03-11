@@ -12,6 +12,7 @@
 #include "filters/video/scale.h"
 #include "filters/video/ntsc.h"
 
+enum fullscreen_mode { NO_FULLSCR, FULLSCR };
 enum scale_type { X1 = 1, X2, X3, X4 };
 enum filters_type {
 	NO_FILTER,
