@@ -6,7 +6,6 @@
  */
 
 #include <d3d9.h>
-//#include <d3dx9math.h>
 #include "win.h"
 #include "emu.h"
 #include "gfx.h"
@@ -106,7 +105,7 @@ BYTE gfx_init(void) {
 		return (EXIT_ERROR);
 	}
 
-	cfg_from_file.filter = NO_FILTER;
+	cfg->filter = NO_FILTER;
 
 	memset(&d3d9, 0x00, sizeof(d3d9));
 
@@ -544,21 +543,19 @@ void gfx_draw_screen(BYTE forced) {
 		IDirect3DTexture9_UnlockRect(d3d9.texture.data, 0);
 	}
 
-	//IDirect3DDevice9_Clear(d3d9.dev, 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_ARGB(255, 255, 255, 255),
-	//		1.0f, 0);
 	IDirect3DDevice9_Clear(d3d9.dev, 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_ARGB(255, 0, 0, 0),
 			1.0f, 0);
 
 	IDirect3DDevice9_BeginScene(d3d9.dev);
 
 		//IDirect3DDevice9_SetRenderState(d3d9.dev, D3DRS_FILLMODE, D3DFILL_WIREFRAME);
-
 		// select which vertex format we are using
 		IDirect3DDevice9_SetFVF(d3d9.dev, FVF);
 		// select the vertex buffer to display
 		IDirect3DDevice9_SetStreamSource(d3d9.dev, 0, d3d9.textured_vertex, 0, sizeof(vertex));
 		// copy the vertex buffer to the back buffer
 		IDirect3DDevice9_DrawPrimitive(d3d9.dev, D3DPT_TRIANGLEFAN, 0, 2);
+		//IDirect3DDevice9_DrawPrimitive(d3d9.dev, D3DPT_TRIANGLELIST, 0, 2);
 
 	IDirect3DDevice9_EndScene(d3d9.dev);
 
@@ -621,12 +618,10 @@ BYTE d3d9_create_context(void) {
 		d3dpp.Windowed = TRUE;
 		d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
 		d3dpp.hDeviceWindow = gui_window_id();
+		d3dpp.BackBufferCount = 1;
 		d3dpp.BackBufferFormat = d3d9.display_mode.Format;
 		d3dpp.BackBufferWidth = gfx.w[VIDEO_MODE];
 		d3dpp.BackBufferHeight = gfx.h[VIDEO_MODE];
-
-		d3dpp.BackBufferCount = 1;
-		//d3dpp.EnableAutoDepthStencil = TRUE;
 		d3dpp.MultiSampleQuality = D3DMULTISAMPLE_NONE;
 
 		if (IDirect3D9_CreateDevice(d3d9.d3d,
@@ -642,7 +637,7 @@ BYTE d3d9_create_context(void) {
 	}
 
 	if (IDirect3DDevice9_CreateVertexBuffer(d3d9.dev,
-			6 * sizeof(vertex),
+			4 * sizeof(vertex),
 			D3DUSAGE_WRITEONLY,
 			FVF,
 			D3DPOOL_DEFAULT,
@@ -677,8 +672,8 @@ BYTE d3d9_create_context(void) {
 			 /* bilinear filtering */
 			IDirect3DDevice9_SetSamplerState(d3d9.dev, 0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
 			IDirect3DDevice9_SetSamplerState(d3d9.dev, 0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
-			IDirect3DDevice9_SetSamplerState(d3d9.dev, 0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
-			//IDirect3DDevice9_SetSamplerState(d3d9.dev, 0, D3DSAMP_MIPFILTER, D3DTEXF_POINT);
+			//IDirect3DDevice9_SetSamplerState(d3d9.dev, 0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
+			IDirect3DDevice9_SetSamplerState(d3d9.dev, 0, D3DSAMP_MIPFILTER, D3DTEXF_POINT);
 		} else {
 			IDirect3DDevice9_SetSamplerState(d3d9.dev, 0, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
 			IDirect3DDevice9_SetSamplerState(d3d9.dev, 0, D3DSAMP_MINFILTER, D3DTEXF_POINT);
@@ -689,22 +684,22 @@ BYTE d3d9_create_context(void) {
 		IDirect3DDevice9_SetRenderState(d3d9.dev, D3DRS_ZENABLE,  FALSE );
 		/* Disable Backface Culling */
 		IDirect3DDevice9_SetRenderState(d3d9.dev, D3DRS_CULLMODE, FALSE);
+
 		IDirect3DDevice9_SetRenderState(d3d9.dev, D3DRS_LIGHTING, FALSE);
 
-		d3d9.texture.x = (FLOAT) gfx.w[CURRENT] / (d3d9.texture.w * (FLOAT) d3d9.factor);
-		d3d9.texture.y = (FLOAT) gfx.h[CURRENT] / (d3d9.texture.h * (FLOAT) d3d9.factor);
-
-		printf("t0 : %f - %f\n", d3d9.texture.w, d3d9.texture.h);
-		printf("t1 : %f - %f\n", d3d9.texture.x, d3d9.texture.y);
-		printf("t2 : %f - %f\n", (FLOAT) gfx.w[CURRENT], (FLOAT) gfx.h[CURRENT]);
+		/*
+		 * Su moltissime schede video, quando la texture veniva disegnata sui due triangoli
+		 * la meta' sul secondo era traslasta di un pixel rispetto al primo sia sull'asse
+		 * verticale che su quello orizzontale. In poche parole le proorzioni della texture
+		 * erano sbagliate. Per correggerle ho dovuto sottrarre 1 a gfx.w[CURRENT] e
+		 * gfx.h[CURRENT].
+		 */
+		d3d9.texture.x = (FLOAT) (gfx.w[CURRENT] - 1) / (d3d9.texture.w * (FLOAT) d3d9.factor);
+		d3d9.texture.y = (FLOAT) (gfx.h[CURRENT] - 1) / (d3d9.texture.h * (FLOAT) d3d9.factor);
 
 		{
 			VOID *tv_vertices;
 			const vertex vertices[] = {
-				//{ 1.0f, 1.0f, 0.5f, 1.0f, 0.0f          , 0.0f           },
-				//{  vmw, 1.0f, 0.5f, 1.0f, d3d9.texture.x, 0.0f           },
-				//{  vmw,  vmh, 0.5f, 1.0f, d3d9.texture.x, d3d9.texture.y },
-				//{ 1.0f,  vmh, 0.5f, 1.0f, 0.0f          , d3d9.texture.y },
 				{-1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f          , d3d9.texture.y },
 				{-1.0f,  1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f          , 0.0f           },
 				{ 1.0f,  1.0f, 0.0f, 0.0f, 0.0f, 0.0f, d3d9.texture.x, 0.0f           },
@@ -715,17 +710,6 @@ BYTE d3d9_create_context(void) {
 			memcpy(tv_vertices, vertices, sizeof(vertices));
 			IDirect3DVertexBuffer9_Unlock(d3d9.textured_vertex);
 		}
-
-		/*
-	    D3DXMATRIX proj;
-	    D3DXMatrixPerspectiveFovLH(
-	            &proj,
-	            D3DX_PI * 0.5f, // 90 - degree
-	            (float)gfx.w[CURRENT] / (float)gfx.h[CURRENT],
-	            1.0f,
-	            1000.0f);
-	    IDirect3DDevice9_SetTransform(d3d9.dev, D3DTS_PROJECTION, &proj);
-	    */
 	}
 
 	return (EXIT_OK);
