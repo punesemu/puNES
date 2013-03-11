@@ -107,7 +107,7 @@ BYTE gfx_init(void) {
 		return (EXIT_ERROR);
 	}
 
-	cfg->filter =  NTSC_FILTER;
+	cfg->filter =  NO_FILTER;
 
 	memset(&d3d9, 0x00, sizeof(d3d9));
 
@@ -684,12 +684,11 @@ BYTE d3d9_create_context(void) {
 			 /* bilinear filtering */
 			IDirect3DDevice9_SetSamplerState(d3d9.dev, 0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
 			IDirect3DDevice9_SetSamplerState(d3d9.dev, 0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
-			//IDirect3DDevice9_SetSamplerState(d3d9.dev, 0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
 			IDirect3DDevice9_SetSamplerState(d3d9.dev, 0, D3DSAMP_MIPFILTER, D3DTEXF_POINT);
 		} else {
-			IDirect3DDevice9_SetSamplerState(d3d9.dev, 0, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
-			IDirect3DDevice9_SetSamplerState(d3d9.dev, 0, D3DSAMP_MINFILTER, D3DTEXF_POINT);
-			IDirect3DDevice9_SetSamplerState(d3d9.dev, 0, D3DSAMP_MIPFILTER, D3DTEXF_POINT);
+			IDirect3DDevice9_SetSamplerState(d3d9.dev, 0, D3DSAMP_MAGFILTER, D3DTEXF_NONE);
+			IDirect3DDevice9_SetSamplerState(d3d9.dev, 0, D3DSAMP_MINFILTER, D3DTEXF_NONE);
+			IDirect3DDevice9_SetSamplerState(d3d9.dev, 0, D3DSAMP_MIPFILTER, D3DTEXF_NONE);
 		}
 
 		/* Enable Z-Buffer (Depth Buffer) */
@@ -760,6 +759,7 @@ BYTE d3d9_create_texture(_texture *texture, uint32_t width, uint32_t height, uin
 	if (d3d9.dynamic_texture == TRUE) {
 		usage |= D3DUSAGE_DYNAMIC;
 	}
+
 	if (d3d9.auto_gen_mipmap == TRUE) {
 		usage |= D3DUSAGE_AUTOGENMIPMAP;
 	}

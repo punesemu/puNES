@@ -38,6 +38,7 @@ punes32.exe: $(OBJS) $(USER_OBJS)
 	i686-mingw32-gcc -L../misc/DXSDK/Lib -Wl,-subsystem,console -o "punes32.exe" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
+	$(MAKE) --no-print-directory post-build
 
 # Other Targets
 clean:
@@ -48,7 +49,11 @@ pre-build:
 	-i686-mingw32-windres ../src/d3d9/resources.rc src/d3d9/resources.o
 	-@echo ' '
 
+post-build:
+	-../../bin/build_increment
+	-@echo ' '
+
 .PHONY: all clean dependents
-.SECONDARY: main-build pre-build
+.SECONDARY: main-build pre-build post-build
 
 -include ../makefile.targets

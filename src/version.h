@@ -8,6 +8,10 @@
 #ifndef VERSION_H_
 #define VERSION_H_
 
+#ifndef RELEASE
+#include "build.h"
+#endif
+
 #define VER1        "0"
 #define VER2        "69"
 #define VERSION     VER1 "." VER2 " WIP"

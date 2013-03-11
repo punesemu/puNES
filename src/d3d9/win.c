@@ -286,11 +286,15 @@ HWND gui_window_id(void) {
 }
 void gui_update(void) {
 	WORD id = 0;
-	//char title[255];
+	char title[255];
 
 	/* aggiorno il titolo */
+#ifndef RELEASE
+	sprintf(title, "%s build : %s", NAME, BUILD_RELEASE);
+#else
 	//emu_set_title(title);
-	//SetWindowText(main_win, title);
+#endif
+	SetWindowText(main_win, title);
 
 	/* checko le voci di menu corrette */
 
