@@ -585,14 +585,14 @@ void gfx_quit(void) {
 		d3d9.palette = NULL;
 	}
 
-	if (d3d9.quad) {
-		IDirect3DVertexBuffer9_Release(d3d9.quad);
-		d3d9.quad = NULL;
+	if (d3d9.shader.vrt) {
+		IDirect3DVertexShader9_Release(d3d9.shader.vrt);
+		d3d9.shader.vrt = NULL;
 	}
 
-	if (d3d9.texture.data) {
-		IDirect3DTexture9_Release(d3d9.texture.data);
-		d3d9.texture.data = NULL;
+	if (d3d9.shader.pxl) {
+		IDirect3DPixelShader9_Release(d3d9.shader.pxl);
+		d3d9.shader.pxl = NULL;
 	}
 
 	if (d3d9.texture.surface) {
@@ -600,9 +600,14 @@ void gfx_quit(void) {
 		d3d9.texture.surface = NULL;
 	}
 
-	if (d3d9.shader.vrt) {
-		IDirect3DVertexShader9_Release(d3d9.shader.vrt);
-		d3d9.shader.vrt = NULL;
+	if (d3d9.texture.data) {
+		IDirect3DTexture9_Release(d3d9.texture.data);
+		d3d9.texture.data = NULL;
+	}
+
+	if (d3d9.quad) {
+		IDirect3DVertexBuffer9_Release(d3d9.quad);
+		d3d9.quad = NULL;
 	}
 
 	if (d3d9.dev) {
@@ -751,15 +756,21 @@ BYTE d3d9_create_context(void) {
 			d3d9.shader.vrt = NULL;
 		}
 
+		if (d3d9.shader.pxl) {
+			IDirect3DPixelShader9_Release(d3d9.shader.pxl);
+			d3d9.shader.pxl = NULL;
+		}
+
 		d3d9.shader.code = &shader_code[d3d9.shader.id];
 
+		/* vertex shader */
 		if (d3d9.shader.code->vertex != NULL) {
 			if (D3DXCompileShader(d3d9.shader.code->vertex,
 					strlen(d3d9.shader.code->vertex),
 					NULL,
 					NULL,
 					"main",
-					"vs_1_1",
+					"vs_2_0",
 					flags,
 					&code,
 					&buffer_errors,
@@ -775,6 +786,33 @@ BYTE d3d9_create_context(void) {
 			IDirect3DDevice9_CreateVertexShader(d3d9.dev,
 					(DWORD *) ID3DXBuffer_GetBufferPointer(code),
 					&d3d9.shader.vrt);
+
+			ID3DXBuffer_Release(code);
+		}
+
+		/* pixel shader */
+		if (d3d9.shader.code->pixel != NULL) {
+			if (D3DXCompileShader(d3d9.shader.code->pixel,
+					strlen(d3d9.shader.code->pixel),
+					NULL,
+					NULL,
+					"main",
+					"ps_2_0",
+					flags,
+					&code,
+					&buffer_errors,
+					&d3d9.shader.table_pxl) != D3D_OK) {
+				LPVOID errors = ID3DXBuffer_GetBufferPointer(buffer_errors);
+
+				fprintf(stderr, "Pixel shader compile error : %s\n", (const char *) errors);
+				ID3DXBuffer_Release(buffer_errors);
+				return (EXIT_ERROR);
+			}
+
+			/* creo il pixel shader */
+			IDirect3DDevice9_CreatePixelShader(d3d9.dev,
+					(DWORD *) ID3DXBuffer_GetBufferPointer(code),
+					&d3d9.shader.pxl);
 
 			ID3DXBuffer_Release(code);
 		}
