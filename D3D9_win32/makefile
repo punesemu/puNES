@@ -35,7 +35,7 @@ main-build: punes32.exe
 punes32.exe: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: Cross GCC Linker'
-	i686-mingw32-gcc -L../misc/DXSDK/Lib -Wl,-subsystem,console -o "punes32.exe" $(OBJS) $(USER_OBJS) $(LIBS)
+	i686-mingw32-gcc -L../misc/DXSDK/Lib/x86 -Wl,-subsystem,console -o "punes32.exe" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 	$(MAKE) --no-print-directory post-build

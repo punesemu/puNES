@@ -6,14 +6,19 @@
  */
 
 #include <d3d9.h>
+#include <d3dx9shader.h>
 #include "win.h"
 #include "emu.h"
 #include "gfx.h"
 #include "cfg_file.h"
 #include "ppu.h"
 #include "overscan.h"
+#define _SHADERS_CODE_
+#include "filters/video/shaders.h"
+#undef  _SHADERS_CODE_
 #define __STATICPAL__
 #include "palette.h"
+#undef  __STATICPAL__
 
 #define ntsc_width(wdt, a, flag)\
 {\
@@ -53,25 +58,18 @@
 
 enum pow_types { NO_POWER_OF_TWO, POWER_OF_TWO };
 
-typedef struct {
-	FLOAT w, h;
-	FLOAT x, y;
-	WORD no_pow_w, no_pow_h;
-	LPDIRECT3DTEXTURE9 data;
-	LPDIRECT3DSURFACE9 surface;
-	LPDIRECT3DSURFACE9 surface_map0;
-} _texture;
-
 struct _d3d9 {
 	LPDIRECT3D9 d3d;
 	LPDIRECT3DDEVICE9 dev;
-	LPDIRECT3DVERTEXBUFFER9 textured_vertex;
+	LPDIRECT3DVERTEXBUFFER9 quad;
 	D3DDISPLAYMODE display_mode;
 
 	_texture texture;
 
 	uint32_t *palette;
 	GFX_EFFECT_ROUTINE;
+
+	_shader shader;
 
 	DWORD flags;
 	/* bit per pixel */
@@ -85,6 +83,7 @@ struct _d3d9 {
 	FLOAT scale;
 	FLOAT factor;
 	BOOL interpolation;
+	UINT ps_major, ps_minor;
 } d3d9;
 
 typedef struct {
@@ -213,6 +212,14 @@ BYTE gfx_init(void) {
 			printf("Video driver don't support hardware accelaration\n");
 			d3d9.flags = D3DCREATE_SOFTWARE_VERTEXPROCESSING;
 		}
+
+		d3d9.ps_major = D3DSHADER_VERSION_MAJOR(d3dcaps.PixelShaderVersion);
+		d3d9.ps_minor = D3DSHADER_VERSION_MAJOR(d3dcaps.PixelShaderVersion);
+
+		if (d3dcaps.PixelShaderVersion < D3DPS_VERSION(2, 0)) {
+			printf("Video driver don't support Pixel Shader > 2.0\n");
+		}
+
 	}
 
 	/*
@@ -548,7 +555,6 @@ void gfx_draw_screen(BYTE forced) {
 		/* aggiorno la texture */
 		IDirect3DDevice9_UpdateSurface(d3d9.dev, d3d9.texture.surface, NULL,
 				d3d9.texture.surface_map0, NULL);
-
 	}
 
 	IDirect3DDevice9_Clear(d3d9.dev, 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_ARGB(255, 0, 0, 0),
@@ -560,7 +566,7 @@ void gfx_draw_screen(BYTE forced) {
 		// select which vertex format we are using
 		IDirect3DDevice9_SetFVF(d3d9.dev, FVF);
 		// select the vertex buffer to display
-		IDirect3DDevice9_SetStreamSource(d3d9.dev, 0, d3d9.textured_vertex, 0, sizeof(vertex));
+		IDirect3DDevice9_SetStreamSource(d3d9.dev, 0, d3d9.quad, 0, sizeof(vertex));
 		// copy the vertex buffer to the back buffer
 		IDirect3DDevice9_DrawPrimitive(d3d9.dev, D3DPT_TRIANGLEFAN, 0, 2);
 
@@ -579,6 +585,11 @@ void gfx_quit(void) {
 		d3d9.palette = NULL;
 	}
 
+	if (d3d9.quad) {
+		IDirect3DVertexBuffer9_Release(d3d9.quad);
+		d3d9.quad = NULL;
+	}
+
 	if (d3d9.texture.data) {
 		IDirect3DTexture9_Release(d3d9.texture.data);
 		d3d9.texture.data = NULL;
@@ -589,9 +600,9 @@ void gfx_quit(void) {
 		d3d9.texture.surface = NULL;
 	}
 
-	if (d3d9.textured_vertex) {
-		IDirect3DVertexBuffer9_Release(d3d9.textured_vertex);
-		d3d9.textured_vertex = NULL;
+	if (d3d9.shader.vrt) {
+		IDirect3DVertexShader9_Release(d3d9.shader.vrt);
+		d3d9.shader.vrt = NULL;
 	}
 
 	if (d3d9.dev) {
@@ -613,9 +624,9 @@ void gfx_quit(void) {
 
 BYTE d3d9_create_context(void) {
 
-	if (d3d9.textured_vertex) {
-		IDirect3DVertexBuffer9_Release(d3d9.textured_vertex);
-		d3d9.textured_vertex = NULL;
+	if (d3d9.quad) {
+		IDirect3DVertexBuffer9_Release(d3d9.quad);
+		d3d9.quad = NULL;
 	}
 
 	if (d3d9.dev) {
@@ -653,7 +664,7 @@ BYTE d3d9_create_context(void) {
 			D3DUSAGE_WRITEONLY,
 			FVF,
 			D3DPOOL_DEFAULT,
-			&d3d9.textured_vertex,
+			&d3d9.quad,
 			NULL) != D3D_OK) {
 		fprintf(stderr, "Unable to create the vertex buffer\n");
 		return (EXIT_ERROR);
@@ -708,9 +719,9 @@ BYTE d3d9_create_context(void) {
 		d3d9.texture.x = (FLOAT) (gfx.w[CURRENT] - 1) / (d3d9.texture.w * (FLOAT) d3d9.factor);
 		d3d9.texture.y = (FLOAT) (gfx.h[CURRENT] - 1) / (d3d9.texture.h * (FLOAT) d3d9.factor);
 
-		printf("t0 : %f - %f\n", d3d9.texture.w, d3d9.texture.h);
-		printf("t1 : %f - %f\n", d3d9.texture.x, d3d9.texture.y);
-		printf("t2 : %f - %f\n", (FLOAT) gfx.w[CURRENT], (FLOAT) gfx.h[CURRENT]);
+		//printf("t0 : %f - %f\n", d3d9.texture.w, d3d9.texture.h);
+		//printf("t1 : %f - %f\n", d3d9.texture.x, d3d9.texture.y);
+		//printf("t2 : %f - %f\n", (FLOAT) gfx.w[CURRENT], (FLOAT) gfx.h[CURRENT]);
 
 		{
 			void *tv_vertices;
@@ -721,9 +732,51 @@ BYTE d3d9_create_context(void) {
 				{ 1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, d3d9.texture.x, d3d9.texture.y }
 			};
 
-			IDirect3DVertexBuffer9_Lock(d3d9.textured_vertex, 0, 0, (void**) &tv_vertices, 0);
+			IDirect3DVertexBuffer9_Lock(d3d9.quad, 0, 0, (void**) &tv_vertices, 0);
 			memcpy(tv_vertices, vertices, sizeof(vertices));
-			IDirect3DVertexBuffer9_Unlock(d3d9.textured_vertex);
+			IDirect3DVertexBuffer9_Unlock(d3d9.quad);
+		}
+	}
+
+	/* shaders */
+	{
+		#define ID3DXBuffer_GetBufferPointer(p) (p)->lpVtbl->GetBufferPointer(p)
+		#define ID3DXBuffer_Release(p) (p)->lpVtbl->Release(p)
+
+		LPD3DXBUFFER code, buffer_errors = NULL;
+		DWORD flags = 0;
+
+		if (d3d9.shader.vrt) {
+			IDirect3DVertexShader9_Release(d3d9.shader.vrt);
+			d3d9.shader.vrt = NULL;
+		}
+
+		d3d9.shader.code = &shader_code[d3d9.shader.id];
+
+		if (d3d9.shader.code->vertex != NULL) {
+			if (D3DXCompileShader(d3d9.shader.code->vertex,
+					strlen(d3d9.shader.code->vertex),
+					NULL,
+					NULL,
+					"main",
+					"vs_1_1",
+					flags,
+					&code,
+					&buffer_errors,
+					&d3d9.shader.table_vrt) != D3D_OK) {
+				LPVOID errors = ID3DXBuffer_GetBufferPointer(buffer_errors);
+
+				fprintf(stderr, "Vertex shader compile error : %s\n", (const char *) errors);
+				ID3DXBuffer_Release(buffer_errors);
+				return (EXIT_ERROR);
+			}
+
+			/* creo il vertex shader */
+			IDirect3DDevice9_CreateVertexShader(d3d9.dev,
+					(DWORD *) ID3DXBuffer_GetBufferPointer(code),
+					&d3d9.shader.vrt);
+
+			ID3DXBuffer_Release(code);
 		}
 	}
 
