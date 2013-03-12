@@ -43,7 +43,7 @@ enum screen_dimension { SCR_LINES = 240, SCR_ROWS = 256 };
 #ifdef DEBUG
 #define INLINE
 #else
-#define INLINE __attribute__((always_inline))
+#define INLINE inline __attribute__((always_inline))
 #endif
 
 struct _info {

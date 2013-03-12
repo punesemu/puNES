@@ -98,7 +98,7 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 	{
 		// vertex shader
 		NULL,
-		// fragment shader
+		// pixel shader
 		"void main(void) {\n"
 		"	gl_FragColor = gl_Color;\n"
 		"}"

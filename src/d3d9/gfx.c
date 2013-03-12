@@ -20,6 +20,11 @@
 #include "palette.h"
 #undef  __STATICPAL__
 
+#define COMPILERSHADER_NOT_FOUND 0x8007007e
+
+#define ID3DXBuffer_GetBufferPointer(p) (p)->lpVtbl->GetBufferPointer(p)
+#define ID3DXBuffer_Release(p) (p)->lpVtbl->Release(p)
+
 #define ntsc_width(wdt, a, flag)\
 {\
 	wdt = 0;\
@@ -83,6 +88,7 @@ struct _d3d9 {
 	FLOAT scale;
 	FLOAT factor;
 	BOOL interpolation;
+	BOOL shaders_hlsl;
 	UINT ps_major, ps_minor;
 } d3d9;
 
@@ -96,6 +102,8 @@ typedef struct {
 BYTE d3d9_create_context(void);
 BYTE d3d9_create_texture(_texture *texture, uint32_t width, uint32_t height, uint8_t interpolation,
         uint8_t pow);
+BYTE d3d9_create_shader(_shader *shd);
+void d3d9_release_shader(_shader *shd);
 int d3d9_power_of_two(int base);
 
 static BYTE ntsc_width_pixel[5] = {0, 0, 7, 10, 14};
@@ -107,6 +115,7 @@ BYTE gfx_init(void) {
 	}
 
 	cfg->filter =  NO_FILTER;
+	d3d9.shader.id = SHADER_COLOR;
 
 	memset(&d3d9, 0x00, sizeof(d3d9));
 
@@ -213,13 +222,30 @@ BYTE gfx_init(void) {
 			d3d9.flags = D3DCREATE_SOFTWARE_VERTEXPROCESSING;
 		}
 
-		d3d9.ps_major = D3DSHADER_VERSION_MAJOR(d3dcaps.PixelShaderVersion);
-		d3d9.ps_minor = D3DSHADER_VERSION_MAJOR(d3dcaps.PixelShaderVersion);
+		{
+			d3d9.shaders_hlsl = FALSE;
 
-		if (d3dcaps.PixelShaderVersion < D3DPS_VERSION(2, 0)) {
-			printf("Video driver don't support Pixel Shader > 2.0\n");
+			d3d9.ps_major = D3DSHADER_VERSION_MAJOR(d3dcaps.PixelShaderVersion);
+			d3d9.ps_minor = D3DSHADER_VERSION_MAJOR(d3dcaps.PixelShaderVersion);
+
+			if (d3dcaps.PixelShaderVersion < D3DPS_VERSION(2, 0)) {
+				printf("Video driver don't support Pixel Shader > 2.0\n");
+			} else {
+				_shader tmp;
+
+				memset(&tmp, 0x00, sizeof(_shader));
+
+				tmp.id = SHADER_COLOR;
+
+				if (d3d9_create_shader(&tmp) == EXIT_OK) {
+					d3d9.shaders_hlsl = TRUE;
+				}
+			}
+
+			if (d3d9.shaders_hlsl == FALSE) {
+				printf("Pixel Shader are disabled\n");
+			}
 		}
-
 	}
 
 	/*
@@ -481,6 +507,8 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 		d3d9.factor = 1;
 		d3d9.interpolation = FALSE;
 
+		/* TODO: aggiungere il controllo se supportate le shaders */
+
 		switch (cfg->filter) {
 			case NO_FILTER:
 				d3d9.scale_force = TRUE;
@@ -585,15 +613,7 @@ void gfx_quit(void) {
 		d3d9.palette = NULL;
 	}
 
-	if (d3d9.shader.vrt) {
-		IDirect3DVertexShader9_Release(d3d9.shader.vrt);
-		d3d9.shader.vrt = NULL;
-	}
-
-	if (d3d9.shader.pxl) {
-		IDirect3DPixelShader9_Release(d3d9.shader.pxl);
-		d3d9.shader.pxl = NULL;
-	}
+	d3d9_release_shader(&d3d9.shader);
 
 	if (d3d9.texture.surface) {
 		IDirect3DSurface9_Release(d3d9.texture.surface);
@@ -743,79 +763,8 @@ BYTE d3d9_create_context(void) {
 		}
 	}
 
-	/* shaders */
-	{
-		#define ID3DXBuffer_GetBufferPointer(p) (p)->lpVtbl->GetBufferPointer(p)
-		#define ID3DXBuffer_Release(p) (p)->lpVtbl->Release(p)
-
-		LPD3DXBUFFER code, buffer_errors = NULL;
-		DWORD flags = 0;
-
-		if (d3d9.shader.vrt) {
-			IDirect3DVertexShader9_Release(d3d9.shader.vrt);
-			d3d9.shader.vrt = NULL;
-		}
-
-		if (d3d9.shader.pxl) {
-			IDirect3DPixelShader9_Release(d3d9.shader.pxl);
-			d3d9.shader.pxl = NULL;
-		}
-
-		d3d9.shader.code = &shader_code[d3d9.shader.id];
-
-		/* vertex shader */
-		if (d3d9.shader.code->vertex != NULL) {
-			if (D3DXCompileShader(d3d9.shader.code->vertex,
-					strlen(d3d9.shader.code->vertex),
-					NULL,
-					NULL,
-					"main",
-					"vs_2_0",
-					flags,
-					&code,
-					&buffer_errors,
-					&d3d9.shader.table_vrt) != D3D_OK) {
-				LPVOID errors = ID3DXBuffer_GetBufferPointer(buffer_errors);
-
-				fprintf(stderr, "Vertex shader compile error : %s\n", (const char *) errors);
-				ID3DXBuffer_Release(buffer_errors);
-				return (EXIT_ERROR);
-			}
-
-			/* creo il vertex shader */
-			IDirect3DDevice9_CreateVertexShader(d3d9.dev,
-					(DWORD *) ID3DXBuffer_GetBufferPointer(code),
-					&d3d9.shader.vrt);
-
-			ID3DXBuffer_Release(code);
-		}
-
-		/* pixel shader */
-		if (d3d9.shader.code->pixel != NULL) {
-			if (D3DXCompileShader(d3d9.shader.code->pixel,
-					strlen(d3d9.shader.code->pixel),
-					NULL,
-					NULL,
-					"main",
-					"ps_2_0",
-					flags,
-					&code,
-					&buffer_errors,
-					&d3d9.shader.table_pxl) != D3D_OK) {
-				LPVOID errors = ID3DXBuffer_GetBufferPointer(buffer_errors);
-
-				fprintf(stderr, "Pixel shader compile error : %s\n", (const char *) errors);
-				ID3DXBuffer_Release(buffer_errors);
-				return (EXIT_ERROR);
-			}
-
-			/* creo il pixel shader */
-			IDirect3DDevice9_CreatePixelShader(d3d9.dev,
-					(DWORD *) ID3DXBuffer_GetBufferPointer(code),
-					&d3d9.shader.pxl);
-
-			ID3DXBuffer_Release(code);
-		}
+	if (d3d9.shaders_hlsl) {
+		d3d9_create_shader(&d3d9.shader);
 	}
 
 	return (EXIT_OK);
@@ -882,6 +831,139 @@ BYTE d3d9_create_texture(_texture *texture, uint32_t width, uint32_t height, uin
 	}
 
 	return (EXIT_OK);
+}
+BYTE d3d9_create_shader(_shader *shd) {
+	LPD3DXBUFFER code, buffer_errors = NULL;
+	DWORD flags = 0;
+
+	printf("1 pippo\n");
+
+	d3d9_release_shader(shd);
+
+	shd->code = &shader_code[shd->id];
+
+	printf("2 pluto\n");
+
+
+	/* vertex shader */
+	if (shd->code->vertex != NULL) {
+		HRESULT hr;
+
+		hr = D3DXCompileShader(shd->code->vertex,
+				strlen(shd->code->vertex),
+				NULL,
+				NULL,
+				"main",
+				"vs_2_0",
+				flags,
+				&code,
+				&buffer_errors,
+				&shd->table_vrt);
+
+		switch (hr) {
+			case D3D_OK:
+				/* creo il vertex shader */
+				IDirect3DDevice9_CreateVertexShader(d3d9.dev,
+						(DWORD *) ID3DXBuffer_GetBufferPointer(code),
+						&shd->vrt);
+
+				ID3DXBuffer_Release(code);
+				break;
+			case D3DERR_INVALIDCALL:
+			case D3DXERR_INVALIDDATA:
+			case E_OUTOFMEMORY: {
+				LPVOID errors = ID3DXBuffer_GetBufferPointer(buffer_errors);
+
+				fprintf(stderr, "Vertex shader compile error : %s\n", (const char *) errors);
+				ID3DXBuffer_Release(buffer_errors);
+				break;
+			}
+			case COMPILERSHADER_NOT_FOUND:
+				fprintf(stderr, "ATTENTION: DirectX HLSL compiler installation are incomplete or "
+						"corrupted.\n"
+						"           Please reinstall DirectX 9C\n");
+				break;
+			default:
+				fprintf(stderr, "Vertex shader error : 0x%lx\n", hr);
+				break;
+		}
+
+		if (hr != D3D_OK) {
+			d3d9_release_shader(shd);
+			return (EXIT_ERROR);
+		}
+	}
+
+
+	printf("3 pluto\n");
+
+
+	/* pixel shader */
+	if (shd->code->pixel != NULL) {
+		HRESULT hr;
+
+		printf("4 pluto %s\n", D3DXGetPixelShaderProfile(d3d9.dev));
+		printf("4 pluto %s\n", D3DXGetVertexShaderProfile(d3d9.dev));
+
+		hr = D3DXCompileShader(shd->code->pixel,
+				strlen(shd->code->pixel),
+				NULL,
+				NULL,
+				"main",
+				"ps_2_0",
+				flags,
+				&code,
+				&buffer_errors,
+				&shd->table_vrt);
+
+		printf("5 pluto\n");
+
+		switch (hr) {
+			case D3D_OK:
+				/* creo il pixel shader */
+				IDirect3DDevice9_CreatePixelShader(d3d9.dev,
+						(DWORD *) ID3DXBuffer_GetBufferPointer(code),
+						&shd->pxl);
+
+				ID3DXBuffer_Release(code);
+				break;
+			case D3DERR_INVALIDCALL:
+			case D3DXERR_INVALIDDATA:
+			case E_OUTOFMEMORY:
+				fprintf(stderr, "Unable to create pixel shader\n");
+				if (buffer_errors){
+					LPVOID errors = ID3DXBuffer_GetBufferPointer(buffer_errors);
+
+					fprintf(stderr, "Vertex shader compile error : %s\n", (const char *) errors);
+					ID3DXBuffer_Release(buffer_errors);
+				}
+				break;
+			case COMPILERSHADER_NOT_FOUND:
+				fprintf(stderr, "ATTENTION: DirectX HLSL compiler installation are incomplete or "
+						"corrupted.\n"
+						"           Please reinstall DirectX 9C\n");
+				break;
+			default:
+				fprintf(stderr, "Pixel shader error : 0x%lx\n", hr);
+				break;
+		}
+
+		if (hr != D3D_OK) {
+			d3d9_release_shader(shd);
+			return (EXIT_ERROR);
+		}
+	}
+	return (EXIT_OK);
+}
+void d3d9_release_shader(_shader *shd) {
+	if (shd->vrt) {
+		IDirect3DVertexShader9_Release(shd->vrt);
+		shd->vrt = NULL;
+	}
+	if (shd->pxl) {
+		IDirect3DPixelShader9_Release(shd->pxl);
+		shd->pxl = NULL;
+	}
 }
 
 int d3d9_power_of_two(int base) {
