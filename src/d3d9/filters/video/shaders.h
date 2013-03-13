@@ -13,6 +13,7 @@
 enum shader_type {
 	SHADER_COLOR,
 	SHADER_NO_FILTER,
+	SHADER_SCANLINE,
 	SHADER_SCALE2X,
 	SHADER_SCALE3X,
 	SHADER_SCALE4X,
@@ -21,7 +22,6 @@ enum shader_type {
 	SHADER_4xBR,
 	SHADER_PIXELLATE,
 	SHADER_POSPHOR,
-	SHADER_SCANLINE,
 	SHADER_QUILAZ,
 	SHADER_WATERPAINT,
 	SHADER_CRT,
@@ -96,56 +96,128 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 	/* COLOR                                                                                 */
 	/*****************************************************************************************/
 	{
-		// vertex shader
-		//NULL,
-		// pixel shader
-		//"void main(void) {\n"
-		//"	gl_FragColor = gl_Color;\n"
-		//"}"
-		"struct a2v {\n"
+		"struct VsOutput {\n"
 		"	float4 Position : POSITION;\n"
+		"	float2 TexCoord : TEXCOORD0;\n"
 		"};\n"
-		"struct v2p {\n"
-		"	float4 Position : POSITION;\n"
-		"};\n"
-		"void main(in a2v IN, out v2p OUT, uniform float4x4 ModelViewMatrix) {\n"
-		"	OUT.Position = mul(IN.Position, ModelViewMatrix);\n"
+		"VsOutput Vs(float3 position : POSITION, float2 texCoord : TEXCOORD0) {\n"
+		"	VsOutput output;\n"
+		//"	output.Position = mul(float4(position, 1), WorldViewProjection);\n"
+		"	output.Position = float4(position, 1.0);\n"
+		"	output.TexCoord = texCoord;\n"
+		"	return output;\n"
 		"}",
-		NULL
+		// pixel shader
+		"texture texture_scr;\n"
+		"sampler s0 = sampler_state { Texture = <texture_scr>; };\n"
+		"float4 Ps(float2 texCoord : TEXCOORD0) : COLOR {\n"
+		"	float4 color_to_mix = float4(0.21, 0.21, 0.40, 1.0);\n"
+		"	float4 scr = tex2D(s0, texCoord) * color_to_mix;\n"
+		"	return scr;\n"
+		"}"
 	},
-
-
-
-
-
-
-
 	/*****************************************************************************************/
 	/* NO_FILTER                                                                             */
 	/*****************************************************************************************/
 	{
 		// vertex shader
-		"varying vec4 v_texCoord;\n"
-		"void main(void) {\n"
-		"	v_texCoord = gl_MultiTexCoord0;\n"
-		"	gl_FrontColor = gl_Color;\n"
-		"	gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;\n"
+		"struct VsOutput {\n"
+		"	float4 Position : POSITION;\n"
+		"	float2 TexCoord : TEXCOORD0;\n"
+		"};\n"
+		"VsOutput Vs(float3 position : POSITION, float2 texCoord : TEXCOORD0) {\n"
+		"	VsOutput output;\n"
+		"	output.Position = float4(position, 1.0);\n"
+		"	output.TexCoord = texCoord;\n"
+		"	return output;\n"
 		"}",
-		// fragment shader
-		"uniform sampler2D texture_scr;\n"
-		"uniform sampler2D texture_txt;\n"
-		"varying vec4 v_texCoord;\n"
-		"void main(void) {\n"
-		"	vec4 scr = texture2DProj(texture_scr, v_texCoord);\n"
-		"	vec4 txt = texture2DProj(texture_txt, v_texCoord);\n"
-		"	gl_FragColor = mix(scr, txt, txt.a) * gl_Color;\n"
+		// pixel shader
+		"float2 size_texture;\n"
+		"texture texture_scr;\n"
+		"sampler s0 = sampler_state { Texture = <texture_scr>; };\n"
+		"float4 Ps(float2 texCoord : TEXCOORD0) : COLOR {\n"
+		"	float4 scr = tex2D(s0, texCoord);\n"
+		"	return scr;\n"
 		"}"
 	},
+	/*****************************************************************************************/
+	/* Scanline                                                                              */
+	/*****************************************************************************************/
+	{
+		// vertex shader
+		"struct VsOutput {\n"
+		"	float4 Position : POSITION;\n"
+		"	float2 TexCoord : TEXCOORD0;\n"
+		"};\n"
+		"VsOutput Vs(float3 position : POSITION, float2 texCoord : TEXCOORD0) {\n"
+		"	VsOutput output;\n"
+		"	output.Position = float4(position, 1.0);\n"
+		"	output.TexCoord = texCoord;\n"
+		"	return output;\n"
+		"}",
+		// pixel shader
+		"float2 size_input;\n"
+		"float2 size_output;\n"
+		"float2 size_texture;\n"
+		"texture texture_scr;\n"
+		"static const float base_brightness = 0.95;\n"
+		"static const float2 sine_comp = float2(0.05, 0.15);\n"
+
+		"sampler s0 = sampler_state { Texture = <texture_scr>; };\n"
+		"float4 Ps(float2 texCoord : TEXCOORD0) : COLOR {\n"
+		"	float2 omega = float2(3.1415 * size_output.x * size_texture.x / size_input.x,"
+		"							2.0 * 3.1415 * size_texture.y);\n"
+
+		"	float4 c11 = tex2D(s0, texCoord);\n"
+
+		"	float4 scanline = c11 * (base_brightness + dot(sine_comp * sin(texCoord * omega),"
+		"			float2(1.0, 1.0)));\n"
+
+		"	float4 scr =  saturate(scanline);\n"
+
+		"	return scr;\n"
+		"}"
+	},
+
+
+
+
+
+
+
+
+
+
+
 	/*****************************************************************************************/
 	/* SCALE2X                                                                               */
 	/*****************************************************************************************/
 	{
 		// vertex shader
+		"struct VsOutput {\n"
+		"	float4 Position : POSITION;\n"
+		"	float2 TexCoord : TEXCOORD0;\n"
+		"};\n"
+		"VsOutput Vs(float4 position : POSITION, float2 texCoord : TEXCOORD0) {\n"
+		"	VsOutput output;\n"
+		"	output.Position = position;\n"
+		"	output.TexCoord = texCoord;\n"
+		"	return output;\n"
+		"}",
+		// pixel shader
+		"float2 size_texture;\n"
+		"texture texture_scr;\n"
+		"sampler s0 = sampler_state { Texture = <texture_scr>; };\n"
+		"// Size of one Texel\n"
+		"float2 TexelSize : TEXELSIZE = { 1.0F / size_texture.x, 1.0F / size_texture.y };\n"
+
+		"float4 Ps(float2 texCoord : TEXCOORD0) : COLOR {\n"
+		"	float4 color = tex2D(s0, texCoord);\n"
+		"	return color;\n"
+		"}"
+
+		// vertex shader
+		/*
 		"uniform vec2 size_texture;\n"
 		"varying vec4 v_texCoord[5];\n"
 		"void main() {\n"
@@ -161,7 +233,9 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"	v_texCoord[3].xy = v_texCoord[0].xy - dy; // top\n"
 		"	v_texCoord[4].xy = v_texCoord[0].xy + dy; // bottom\n"
 		"}",
+		*/
 		// fragment shader
+		/*
 		"uniform vec2 size_texture;\n"
 		"uniform sampler2D texture_scr;\n"
 		"uniform sampler2D texture_txt;\n"
@@ -188,6 +262,7 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 
 		"	gl_FragColor = mix(scr, txt, txt.a) * gl_Color;\n"
 		"}",
+		*/
 
 		/*// fragment shader
 		"uniform vec4 size;\n"
@@ -801,47 +876,6 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"	vec4 scr = vec4(intensity * result, 1.0);\n"
 
 		"	vec4 txt = texture2D(texture_txt, gl_TexCoord[0].xy);\n"
-
-		"	gl_FragColor = mix(scr, txt, txt.a) * gl_Color;\n"
-		"}"
-	},
-	/*****************************************************************************************/
-	/* Scanline                                                                              */
-	/*****************************************************************************************/
-	{
-		// vertex shader
-		"uniform vec2 size_input;\n"
-		"uniform vec2 size_output;\n"
-		"uniform vec2 size_texture;\n"
-		"varying vec4 v_texCoord;\n"
-		"varying vec2 omega;\n"
-		"void main() {\n"
-		"	omega = vec2(3.1415 * size_output.x * size_texture.x /"
-		"				size_input.x, 2.0 * 3.1415 * size_texture.y);\n"
-
-		"	gl_FrontColor = gl_Color;\n"
-		"	gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;\n"
-
-		"	v_texCoord = gl_MultiTexCoord0;\n"
-		"}",
-		// fragment shader
-		"uniform vec2 size_texture;\n"
-		"uniform sampler2D texture_scr;\n"
-		"uniform sampler2D texture_txt;\n"
-		"varying vec4 v_texCoord;\n"
-		"varying vec2 omega;\n"
-
-		"const float base_brightness = 0.95;\n"
-		"const vec2 sine_comp = vec2(0.05, 0.15);\n"
-
-		"void main() {\n"
-		"	vec4 c11 = texture2D(texture_scr, v_texCoord.xy);\n"
-
-		"	vec4 scanline = c11 * (base_brightness +"
-		"					dot(sine_comp * sin(v_texCoord.xy * omega), vec2(1.0)));\n"
-		"	vec4 scr = clamp(scanline, 0.0, 1.0);\n"
-
-		"	vec4 txt = texture2D(texture_txt, v_texCoord.xy);\n"
 
 		"	gl_FragColor = mix(scr, txt, txt.a) * gl_Color;\n"
 		"}"

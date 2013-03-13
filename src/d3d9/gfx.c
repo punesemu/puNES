@@ -24,6 +24,7 @@
 
 #define ID3DXBuffer_GetBufferPointer(p) (p)->lpVtbl->GetBufferPointer(p)
 #define ID3DXBuffer_Release(p) (p)->lpVtbl->Release(p)
+#define ID3DXConstantTable_SetFloatArray(p,a,b,c,d) (p)->lpVtbl->SetFloatArray(p,a,b,c,d)
 
 #define ntsc_width(wdt, a, flag)\
 {\
@@ -93,10 +94,9 @@ struct _d3d9 {
 
 typedef struct {
 	FLOAT x, y, z;
-	FLOAT nx, ny, nz;
 	FLOAT tu, tv;
 } vertex;
-#define FVF (D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_TEX1)
+#define FVF (D3DFVF_XYZ | D3DFVF_TEX1)
 
 BYTE d3d9_create_context(UINT width, UINT height);
 void d3d9_release_context(void);
@@ -115,10 +115,9 @@ BYTE gfx_init(void) {
 		return (EXIT_ERROR);
 	}
 
-	cfg->filter =  NO_FILTER;
-	d3d9.shader.id = SHADER_COLOR;
-
 	memset(&d3d9, 0x00, sizeof(d3d9));
+
+	cfg->filter =  NO_FILTER;
 
 	{
 		D3DCAPS9 d3dcaps;
@@ -224,7 +223,9 @@ BYTE gfx_init(void) {
 		}
 
 		/* per poter verificare se le shaders sono utilizzabili devo creare il dev d3d */
-		d3d9_create_device(0, 0);
+		if (d3d9_create_device(1, 1) != EXIT_OK) {
+			return (EXIT_ERROR);
+		}
 
 		{
 			d3d9.shaders_hlsl = FALSE;
@@ -240,6 +241,7 @@ BYTE gfx_init(void) {
 				tmp.id = SHADER_COLOR;
 
 				if (d3d9_create_shader(&tmp) == EXIT_OK) {
+					d3d9_release_shader(&tmp);
 					d3d9.shaders_hlsl = TRUE;
 				}
 			}
@@ -508,6 +510,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 		d3d9.scale = cfg->scale;
 		d3d9.factor = 1;
 		d3d9.interpolation = FALSE;
+		d3d9.shader.id = SHADER_NONE;
 
 		/* TODO: aggiungere il controllo se supportate le shaders */
 
@@ -517,12 +520,19 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 				d3d9.scale = X1;
 				d3d9.factor = cfg->scale;
 				d3d9.interpolation = FALSE;
+				if (d3d9.shaders_hlsl) {
+					d3d9.shader.id = SHADER_NO_FILTER;
+					d3d9.shader.id = SHADER_SCANLINE;
+				}
 				break;
 			case BILINEAR:
 				d3d9.scale_force = TRUE;
 				d3d9.scale = X1;
 				d3d9.factor = cfg->scale;
 				d3d9.interpolation = TRUE;
+				if (d3d9.shaders_hlsl) {
+					d3d9.shader.id = SHADER_COLOR;
+				}
 				break;
 		}
 	}
@@ -602,6 +612,13 @@ void gfx_draw_screen(BYTE forced) {
 		IDirect3DDevice9_SetFVF(d3d9.dev, FVF);
 		// select the vertex buffer to display
 		IDirect3DDevice9_SetStreamSource(d3d9.dev, 0, d3d9.quad, 0, sizeof(vertex));
+		//Enabling your vertex shader:
+		if (d3d9.shader.vrt) {
+			IDirect3DDevice9_SetVertexShader(d3d9.dev, d3d9.shader.vrt);
+		}
+		if (d3d9.shader.pxl) {
+			IDirect3DDevice9_SetPixelShader(d3d9.dev, d3d9.shader.pxl);
+		}
 		// copy the vertex buffer to the back buffer
 		IDirect3DDevice9_DrawPrimitive(d3d9.dev, D3DPT_TRIANGLEFAN, 0, 2);
 
@@ -707,10 +724,10 @@ BYTE d3d9_create_context(UINT width, UINT height) {
 		{
 			void *tv_vertices;
 			const vertex vertices[] = {
-				{-1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f          , d3d9.texture.y },
-				{-1.0f,  1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f          , 0.0f           },
-				{ 1.0f,  1.0f, 0.0f, 0.0f, 0.0f, 0.0f, d3d9.texture.x, 0.0f           },
-				{ 1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, d3d9.texture.x, d3d9.texture.y }
+				{-1.0f, -1.0f, 0.0f, 0.0f          , d3d9.texture.y },
+				{-1.0f,  1.0f, 0.0f, 0.0f          , 0.0f           },
+				{ 1.0f,  1.0f, 0.0f, d3d9.texture.x, 0.0f           },
+				{ 1.0f, -1.0f, 0.0f, d3d9.texture.x, d3d9.texture.y }
 			};
 
 			IDirect3DVertexBuffer9_Lock(d3d9.quad, 0, 0, (void**) &tv_vertices, 0);
@@ -845,6 +862,10 @@ BYTE d3d9_create_shader(_shader *shd) {
 
 	d3d9_release_shader(shd);
 
+	if (shd->id == SHADER_NONE) {
+		return (EXIT_OK);
+	}
+
 	shd->code = &shader_code[shd->id];
 
 	/* vertex shader */
@@ -856,7 +877,7 @@ BYTE d3d9_create_shader(_shader *shd) {
 				strlen(shd->code->vertex),
 				NULL,
 				NULL,
-				"main",
+				"Vs",
 				D3DXGetVertexShaderProfile(d3d9.dev),
 				flags,
 				&code,
@@ -887,6 +908,14 @@ BYTE d3d9_create_shader(_shader *shd) {
 				d3d9_release_shader(shd);
 				break;
 		}
+
+		//if (hr == D3D_OK) {
+		//	FLOAT size_input[2] = { (FLOAT) SCR_ROWS, (FLOAT) SCR_LINES };
+		//	FLOAT size_texture[2] = { d3d9.texture.w, d3d9.texture.h };
+
+		//	ID3DXConstantTable_SetFloatArray(shd->table_vrt, d3d9.dev, "size_texture",
+		//				(CONST FLOAT * ) &size_texture, 2);
+		//}
 	}
 
 	/* pixel shader */
@@ -898,7 +927,7 @@ BYTE d3d9_create_shader(_shader *shd) {
 				strlen(shd->code->pixel),
 				NULL,
 				NULL,
-				"main",
+				"Ps",
 				D3DXGetPixelShaderProfile(d3d9.dev),
 				flags,
 				&code,
@@ -929,15 +958,31 @@ BYTE d3d9_create_shader(_shader *shd) {
 				d3d9_release_shader(shd);
 				break;
 		}
+
+		if (hr == D3D_OK) {
+			FLOAT size_input[2] = { (FLOAT) SCR_ROWS, (FLOAT) SCR_LINES };
+			FLOAT size_output[2] = { (FLOAT) gfx.w[VIDEO_MODE], (FLOAT) gfx.h[VIDEO_MODE] };
+			FLOAT size_texture[2] = { d3d9.texture.w, d3d9.texture.h };
+
+			ID3DXConstantTable_SetFloatArray(shd->table_pxl, d3d9.dev, "size_input",
+						(CONST FLOAT * ) &size_input, 2);
+			ID3DXConstantTable_SetFloatArray(shd->table_pxl, d3d9.dev, "size_output",
+						(CONST FLOAT * ) &size_output, 2);
+			ID3DXConstantTable_SetFloatArray(shd->table_pxl, d3d9.dev, "size_texture",
+						(CONST FLOAT * ) &size_texture, 2);
+		}
 	}
+
 	return (EXIT_OK);
 }
 void d3d9_release_shader(_shader *shd) {
 	if (shd->vrt) {
+		IDirect3DDevice9_SetVertexShader(d3d9.dev, NULL);
 		IDirect3DVertexShader9_Release(shd->vrt);
 		shd->vrt = NULL;
 	}
 	if (shd->pxl) {
+		IDirect3DDevice9_SetPixelShader(d3d9.dev, NULL);
 		IDirect3DPixelShader9_Release(shd->pxl);
 		shd->pxl = NULL;
 	}
