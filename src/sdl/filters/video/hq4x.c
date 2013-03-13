@@ -21,6 +21,7 @@
 #include "hqx.h"
 #define _HQ4X_
 #include "hqx_inline.h"
+#undef  _HQ4X_
 
 #define PIXEL00_0     (*dp) = wrgb[5];
 #define PIXEL00_11    (*dp) = Interp1(wrgb[5], wrgb[4]);

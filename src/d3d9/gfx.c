@@ -89,7 +89,6 @@ struct _d3d9 {
 	FLOAT factor;
 	BOOL interpolation;
 	BOOL shaders_hlsl;
-	UINT ps_major, ps_minor;
 } d3d9;
 
 typedef struct {
@@ -99,7 +98,9 @@ typedef struct {
 } vertex;
 #define FVF (D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_TEX1)
 
-BYTE d3d9_create_context(void);
+BYTE d3d9_create_context(UINT width, UINT height);
+void d3d9_release_context(void);
+BYTE d3d9_create_device(UINT width, UINT height);
 BYTE d3d9_create_texture(_texture *texture, uint32_t width, uint32_t height, uint8_t interpolation,
         uint8_t pow);
 BYTE d3d9_create_shader(_shader *shd);
@@ -222,14 +223,15 @@ BYTE gfx_init(void) {
 			d3d9.flags = D3DCREATE_SOFTWARE_VERTEXPROCESSING;
 		}
 
+		/* per poter verificare se le shaders sono utilizzabili devo creare il dev d3d */
+		d3d9_create_device(0, 0);
+
 		{
 			d3d9.shaders_hlsl = FALSE;
 
-			d3d9.ps_major = D3DSHADER_VERSION_MAJOR(d3dcaps.PixelShaderVersion);
-			d3d9.ps_minor = D3DSHADER_VERSION_MAJOR(d3dcaps.PixelShaderVersion);
-
-			if (d3dcaps.PixelShaderVersion < D3DPS_VERSION(2, 0)) {
-				printf("Video driver don't support Pixel Shader > 2.0\n");
+			if (d3dcaps.PixelShaderVersion < D3DPS_VERSION(2, 0) ||
+					(d3dcaps.VertexShaderVersion < D3DVS_VERSION(2, 0))) {
+				printf("Video driver don't support shaders >= 2.0\n");
 			} else {
 				_shader tmp;
 
@@ -243,7 +245,7 @@ BYTE gfx_init(void) {
 			}
 
 			if (d3d9.shaders_hlsl == FALSE) {
-				printf("Pixel Shader are disabled\n");
+				printf("Shaders are disabled\n");
 			}
 		}
 	}
@@ -538,13 +540,18 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 			gfx.h[VIDEO_MODE] = gfx.h[MONITOR];
 		}
 
+		ShowWindow(gui_main_window_id(), SW_HIDE);
+
 		/* faccio quello che serve prima del setvideo */
 		gui_set_video_mode();
 
-		if (d3d9_create_context() == EXIT_ERROR) {
+		if (d3d9_create_context(gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE]) == EXIT_ERROR) {
 			fprintf(stderr, "Unable to initialize d3d context\n");
+			ShowWindow(gui_main_window_id(), SW_NORMAL);
 			return;
 		}
+
+		ShowWindow(gui_main_window_id(), SW_NORMAL);
 	}
 
 	/* setto il titolo della finestra */
@@ -613,27 +620,7 @@ void gfx_quit(void) {
 		d3d9.palette = NULL;
 	}
 
-	d3d9_release_shader(&d3d9.shader);
-
-	if (d3d9.texture.surface) {
-		IDirect3DSurface9_Release(d3d9.texture.surface);
-		d3d9.texture.surface = NULL;
-	}
-
-	if (d3d9.texture.data) {
-		IDirect3DTexture9_Release(d3d9.texture.data);
-		d3d9.texture.data = NULL;
-	}
-
-	if (d3d9.quad) {
-		IDirect3DVertexBuffer9_Release(d3d9.quad);
-		d3d9.quad = NULL;
-	}
-
-	if (d3d9.dev) {
-		IDirect3DDevice9_Release(d3d9.dev);
-		d3d9.dev = NULL;
-	}
+	d3d9_release_context();
 
 	if (d3d9.d3d) {
 		IDirect3D9_Release(d3d9.d3d);
@@ -645,43 +632,12 @@ void gfx_quit(void) {
 
 
 
+BYTE d3d9_create_context(UINT width, UINT height) {
 
+	d3d9_release_context();
 
-BYTE d3d9_create_context(void) {
-
-	if (d3d9.quad) {
-		IDirect3DVertexBuffer9_Release(d3d9.quad);
-		d3d9.quad = NULL;
-	}
-
-	if (d3d9.dev) {
-		IDirect3DDevice9_Release(d3d9.dev);
-		d3d9.dev = NULL;
-	}
-
-	{
-		D3DPRESENT_PARAMETERS d3dpp;
-
-		ZeroMemory(&d3dpp, sizeof(d3dpp));
-		d3dpp.Windowed = TRUE;
-		d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
-		d3dpp.hDeviceWindow = gui_window_id();
-		d3dpp.BackBufferCount = 1;
-		d3dpp.BackBufferFormat = d3d9.display_mode.Format;
-		d3dpp.BackBufferWidth = gfx.w[VIDEO_MODE];
-		d3dpp.BackBufferHeight = gfx.h[VIDEO_MODE];
-		d3dpp.MultiSampleQuality = D3DMULTISAMPLE_NONE;
-
-		if (IDirect3D9_CreateDevice(d3d9.d3d,
-				D3DADAPTER_DEFAULT,
-				D3DDEVTYPE_HAL,
-				gui_window_id(),
-				d3d9.flags,
-				&d3dpp,
-				&d3d9.dev) != D3D_OK) {
-			fprintf(stderr, "Unable to create d3d device\n");
-			return (EXIT_ERROR);
-		}
+	if (d3d9_create_device(width, height) == EXIT_ERROR) {
+		return (EXIT_ERROR);
 	}
 
 	if (IDirect3DDevice9_CreateVertexBuffer(d3d9.dev,
@@ -769,8 +725,60 @@ BYTE d3d9_create_context(void) {
 
 	return (EXIT_OK);
 }
+void d3d9_release_context(void) {
+	d3d9_release_shader(&d3d9.shader);
 
+	if (d3d9.texture.surface) {
+		IDirect3DSurface9_Release(d3d9.texture.surface);
+		d3d9.texture.surface = NULL;
+	}
 
+	if (d3d9.texture.data) {
+		IDirect3DTexture9_Release(d3d9.texture.data);
+		d3d9.texture.data = NULL;
+	}
+
+	if (d3d9.quad) {
+		IDirect3DVertexBuffer9_Release(d3d9.quad);
+		d3d9.quad = NULL;
+	}
+
+	if (d3d9.dev) {
+		IDirect3DDevice9_Release(d3d9.dev);
+		d3d9.dev = NULL;
+	}
+}
+BYTE d3d9_create_device(UINT width, UINT height) {
+	D3DPRESENT_PARAMETERS d3dpp;
+
+	if (d3d9.dev) {
+		IDirect3DDevice9_Release(d3d9.dev);
+		d3d9.dev = NULL;
+	}
+
+	ZeroMemory(&d3dpp, sizeof(d3dpp));
+	d3dpp.Windowed = TRUE;
+	d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
+	d3dpp.hDeviceWindow = gui_emu_frame_id();
+	d3dpp.BackBufferCount = 1;
+	d3dpp.BackBufferFormat = d3d9.display_mode.Format;
+	d3dpp.BackBufferWidth = width;
+	d3dpp.BackBufferHeight = height;
+	d3dpp.MultiSampleQuality = D3DMULTISAMPLE_NONE;
+
+	if (IDirect3D9_CreateDevice(d3d9.d3d,
+			D3DADAPTER_DEFAULT,
+			D3DDEVTYPE_HAL,
+			gui_emu_frame_id(),
+			d3d9.flags,
+			&d3dpp,
+			&d3d9.dev) != D3D_OK) {
+		fprintf(stderr, "Unable to create d3d device\n");
+		return (EXIT_ERROR);
+	}
+
+	return (EXIT_OK);
+}
 BYTE d3d9_create_texture(_texture *texture, uint32_t width, uint32_t height, uint8_t interpolation,
         uint8_t pow) {
 	DWORD usage = 0;
@@ -833,20 +841,15 @@ BYTE d3d9_create_texture(_texture *texture, uint32_t width, uint32_t height, uin
 	return (EXIT_OK);
 }
 BYTE d3d9_create_shader(_shader *shd) {
-	LPD3DXBUFFER code, buffer_errors = NULL;
 	DWORD flags = 0;
-
-	printf("1 pippo\n");
 
 	d3d9_release_shader(shd);
 
 	shd->code = &shader_code[shd->id];
 
-	printf("2 pluto\n");
-
-
 	/* vertex shader */
 	if (shd->code->vertex != NULL) {
+		LPD3DXBUFFER code = NULL, buffer_errors = NULL;
 		HRESULT hr;
 
 		hr = D3DXCompileShader(shd->code->vertex,
@@ -854,7 +857,7 @@ BYTE d3d9_create_shader(_shader *shd) {
 				NULL,
 				NULL,
 				"main",
-				"vs_2_0",
+				D3DXGetVertexShaderProfile(d3d9.dev),
 				flags,
 				&code,
 				&buffer_errors,
@@ -866,57 +869,41 @@ BYTE d3d9_create_shader(_shader *shd) {
 				IDirect3DDevice9_CreateVertexShader(d3d9.dev,
 						(DWORD *) ID3DXBuffer_GetBufferPointer(code),
 						&shd->vrt);
-
 				ID3DXBuffer_Release(code);
 				break;
-			case D3DERR_INVALIDCALL:
-			case D3DXERR_INVALIDDATA:
-			case E_OUTOFMEMORY: {
-				LPVOID errors = ID3DXBuffer_GetBufferPointer(buffer_errors);
-
-				fprintf(stderr, "Vertex shader compile error : %s\n", (const char *) errors);
-				ID3DXBuffer_Release(buffer_errors);
-				break;
-			}
 			case COMPILERSHADER_NOT_FOUND:
 				fprintf(stderr, "ATTENTION: DirectX HLSL compiler installation are incomplete or "
-						"corrupted.\n"
-						"           Please reinstall DirectX 9C\n");
-				break;
+						"corrupted.\n           Please reinstall DirectX 9C\n");
+				d3d9_release_shader(shd);
+				return (EXIT_ERROR);
 			default:
 				fprintf(stderr, "Vertex shader error : 0x%lx\n", hr);
-				break;
-		}
+				if (buffer_errors) {
+					LPVOID errors = ID3DXBuffer_GetBufferPointer(buffer_errors);
 
-		if (hr != D3D_OK) {
-			d3d9_release_shader(shd);
-			return (EXIT_ERROR);
+					fprintf(stderr, "Vertex shader compile error : %s\n", (const char *) errors);
+					ID3DXBuffer_Release(buffer_errors);
+				}
+				d3d9_release_shader(shd);
+				break;
 		}
 	}
 
-
-	printf("3 pluto\n");
-
-
 	/* pixel shader */
 	if (shd->code->pixel != NULL) {
+		LPD3DXBUFFER code = NULL, buffer_errors = NULL;
 		HRESULT hr;
-
-		printf("4 pluto %s\n", D3DXGetPixelShaderProfile(d3d9.dev));
-		printf("4 pluto %s\n", D3DXGetVertexShaderProfile(d3d9.dev));
 
 		hr = D3DXCompileShader(shd->code->pixel,
 				strlen(shd->code->pixel),
 				NULL,
 				NULL,
 				"main",
-				"ps_2_0",
+				D3DXGetPixelShaderProfile(d3d9.dev),
 				flags,
 				&code,
 				&buffer_errors,
-				&shd->table_vrt);
-
-		printf("5 pluto\n");
+				&shd->table_pxl);
 
 		switch (hr) {
 			case D3D_OK:
@@ -924,33 +911,23 @@ BYTE d3d9_create_shader(_shader *shd) {
 				IDirect3DDevice9_CreatePixelShader(d3d9.dev,
 						(DWORD *) ID3DXBuffer_GetBufferPointer(code),
 						&shd->pxl);
-
 				ID3DXBuffer_Release(code);
-				break;
-			case D3DERR_INVALIDCALL:
-			case D3DXERR_INVALIDDATA:
-			case E_OUTOFMEMORY:
-				fprintf(stderr, "Unable to create pixel shader\n");
-				if (buffer_errors){
-					LPVOID errors = ID3DXBuffer_GetBufferPointer(buffer_errors);
-
-					fprintf(stderr, "Vertex shader compile error : %s\n", (const char *) errors);
-					ID3DXBuffer_Release(buffer_errors);
-				}
 				break;
 			case COMPILERSHADER_NOT_FOUND:
 				fprintf(stderr, "ATTENTION: DirectX HLSL compiler installation are incomplete or "
-						"corrupted.\n"
-						"           Please reinstall DirectX 9C\n");
-				break;
+						"corrupted.\n           Please reinstall DirectX 9C\n");
+				d3d9_release_shader(shd);
+				return (EXIT_ERROR);
 			default:
 				fprintf(stderr, "Pixel shader error : 0x%lx\n", hr);
-				break;
-		}
+				if (buffer_errors){
+					LPVOID errors = ID3DXBuffer_GetBufferPointer(buffer_errors);
 
-		if (hr != D3D_OK) {
-			d3d9_release_shader(shd);
-			return (EXIT_ERROR);
+					fprintf(stderr, "Pixel shader compile error : %s\n", (const char *) errors);
+					ID3DXBuffer_Release(buffer_errors);
+				}
+				d3d9_release_shader(shd);
+				break;
 		}
 	}
 	return (EXIT_OK);

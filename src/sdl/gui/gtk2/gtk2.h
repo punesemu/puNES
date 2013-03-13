@@ -61,7 +61,7 @@ BYTE gui_create(void);
 void gui_set_video_mode(void);
 void gui_start(void);
 void gui_event(void);
-GdkNativeWindow gui_window_id(void);
+GdkNativeWindow gui_emu_frame_id(void);
 void gui_update(void);
 void gui_fullscreen(void);
 void gui_timeline(void);

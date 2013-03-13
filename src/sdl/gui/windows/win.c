@@ -602,7 +602,7 @@ void gui_event(void) {
 	input_turbo_buttons_control(&port2);
 	return;
 }
-HWND gui_window_id(void) {
+HWND gui_emu_frame_id(void) {
 	return (sdl_frame);
 }
 void gui_update(void) {

@@ -17,6 +17,7 @@
 #include "opengl.h"
 #define __CMDLINE__
 #include "param.h"
+#undef  __CMDLINE__
 
 void usage(char *name);
 

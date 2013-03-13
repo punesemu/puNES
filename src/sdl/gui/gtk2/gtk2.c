@@ -411,7 +411,7 @@ void gui_event(void) {
 	input_turbo_buttons_control(&port1);
 	input_turbo_buttons_control(&port2);
 }
-GdkNativeWindow gui_window_id(void) {
+GdkNativeWindow gui_emu_frame_id(void) {
 	return (gtk_socket_get_id(GTK_SOCKET(sock)));
 }
 void gui_update(void) {

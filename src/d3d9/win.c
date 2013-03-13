@@ -281,8 +281,11 @@ void gui_event(void) {
 
 	return;
 }
-HWND gui_window_id(void) {
+HWND gui_emu_frame_id(void) {
 	return (d3d_frame);
+}
+HWND gui_main_window_id(void) {
+	return (main_win);
 }
 void gui_update(void) {
 	WORD id = 0;
@@ -1355,8 +1358,6 @@ void set_scale(BYTE scale) {
 		return;
 	}
 
-	ShowWindow(main_win, SW_HIDE);
-
 	switch (scale) {
 		case X1:
 			gfx_set_screen(X1, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE);
@@ -1371,8 +1372,6 @@ void set_scale(BYTE scale) {
 			gfx_set_screen(X4, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE);
 			break;
 	}
-
-	ShowWindow(main_win, SW_NORMAL);
 }
 void set_filter(BYTE filter) {
 	switch (filter) {
@@ -1527,14 +1526,9 @@ void make_reset(BYTE type) {
 void change_rom(char *rom) {
 	strcpy(info.load_rom_file, rom);
 
-	ShowWindow(main_win, SW_HIDE);
-
 	gamegenie_reset(FALSE);
 
 	make_reset(CHANGE_ROM);
-
-	/* visualizzo nuovamente la finestra */
-	ShowWindow(main_win, SW_NORMAL);
 
 	gui_update();
 }

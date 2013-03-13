@@ -97,11 +97,21 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 	/*****************************************************************************************/
 	{
 		// vertex shader
-		NULL,
+		//NULL,
 		// pixel shader
-		"void main(void) {\n"
-		"	gl_FragColor = gl_Color;\n"
-		"}"
+		//"void main(void) {\n"
+		//"	gl_FragColor = gl_Color;\n"
+		//"}"
+		"struct a2v {\n"
+		"	float4 Position : POSITION;\n"
+		"};\n"
+		"struct v2p {\n"
+		"	float4 Position : POSITION;\n"
+		"};\n"
+		"void main(in a2v IN, out v2p OUT, uniform float4x4 ModelViewMatrix) {\n"
+		"	OUT.Position = mul(IN.Position, ModelViewMatrix);\n"
+		"}",
+		NULL
 	},
 
 

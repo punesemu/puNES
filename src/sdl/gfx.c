@@ -17,6 +17,7 @@
 #include "text.h"
 #define __STATICPAL__
 #include "palette.h"
+#undef  __STATICPAL__
 #include "opengl.h"
 #include "cfg_file.h"
 
@@ -24,14 +25,14 @@
 #define sdl_wid()\
 	if (info.gui) {\
 		char SDL_windowhack[50];\
-		sprintf(SDL_windowhack,"SDL_WINDOWID=%I64u", (uint64_t) gui_window_id());\
+		sprintf(SDL_windowhack,"SDL_WINDOWID=%I64u", (uint64_t) gui_emu_frame_id());\
 		SDL_putenv(SDL_windowhack);\
 	}
 #else
 #define sdl_wid()\
 	if (info.gui) {\
 		char SDL_windowhack[50];\
-		sprintf(SDL_windowhack,"SDL_WINDOWID=%i", (int) gui_window_id());\
+		sprintf(SDL_windowhack,"SDL_WINDOWID=%i", (int) gui_emu_frame_id());\
 		SDL_putenv(SDL_windowhack);\
 	}
 #endif

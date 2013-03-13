@@ -9,6 +9,7 @@
 #include "emu.h"
 #define __CMDLINE__
 #include "param.h"
+#undef  __CMDLINE__
 
 BYTE cmd_line_parse(int argc, char **argv) {
 	int long_index = 0, opt = 0;
