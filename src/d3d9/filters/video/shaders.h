@@ -111,8 +111,7 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"texture texture_scr;\n"
 		"sampler s0 = sampler_state { Texture = <texture_scr>; };\n"
 		"float4 Ps(float2 texCoord : TEXCOORD0) : COLOR {\n"
-		"	float4 color_to_mix = float4(0.21, 0.21, 0.40, 1.0);\n"
-		"	float4 scr = tex2D(s0, texCoord) * color_to_mix;\n"
+		"	float4 scr = tex2D(s0, texCoord) * 2;\n"
 		"	return scr;\n"
 		"}"
 	},
@@ -140,6 +139,124 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"	return scr;\n"
 		"}"
 	},
+
+	/*****************************************************************************************/
+	/* Phosphor                                                                              */
+	/*****************************************************************************************/
+	{
+		// vertex shader
+		"struct VsOutput {\n"
+		"	float4 Position : POSITION;\n"
+		"	float2 TexCoord : TEXCOORD0;\n"
+		"};\n"
+		"VsOutput Vs(float3 position : POSITION, float2 texCoord : TEXCOORD0) {\n"
+		"	VsOutput output;\n"
+		"	output.Position = float4(position, 1.0);\n"
+		"	output.TexCoord = texCoord;\n"
+		"	return output;\n"
+		"}",
+		// pixel shader
+		"float2 size_input;\n"
+		"float2 size_output;\n"
+		"float2 size_texture;\n"
+		"texture texture_scr;\n"
+		"sampler s0 = sampler_state { Texture = <texture_scr>; };\n"
+
+		"float mod(float x, float y) {\n"
+		"	return x - y * floor(x/y);\n"
+		"}\n"
+
+		"float3 to_focus(float pixel) {\n"
+		"	pixel = mod(pixel + 3.0, 3.0);\n"
+		"	if (pixel >= 2.0) {                      //  Blue\n"
+		"		return float3(pixel - 2.0, 0.0, 3.0 - pixel);\n"
+		"	} else if (pixel >= 1.0) {               // Green\n"
+		"		return float3(0.0, 2.0 - pixel, pixel - 1.0);\n"
+		"	} else {                                 //  Red\n"
+		"		return float3(1.0 - pixel, pixel, 0.0);\n"
+		"	}\n"
+		"}\n"
+
+		"float4 Ps(float2 texCoord : TEXCOORD0) : COLOR {\n"
+		"	float y = mod(texCoord.y * size_texture.y, 1.0);\n"
+		"	float intensity = exp(-0.2 * y);\n"
+
+		//"	float2 one_x = float2(1.0 / (3.0 * size_texture.x), 0.0);\n"
+		"	float2 one_x = float2(1.0 / (1.0 * size_texture.x / size_output.x), 0.0);\n"
+
+		"	float3 color = tex2D(s0, texCoord).rgb;\n"
+		"	float3 color_prev = tex2D(s0, texCoord - one_x).rgb;\n"
+		"	float3 color_prev_prev = tex2D(s0, texCoord - (one_x * 2.0)).rgb;\n"
+
+		//"	float pixel_x = 3.0 * texCoord.x * size_texture.x;\n"
+		"	float pixel_x = 3.0 * texCoord.x * size_texture.x;\n"
+
+		"	float3 focus = to_focus(pixel_x - 0.0);\n"
+		"	float3 focus_prev = to_focus(pixel_x - 1.0);\n"
+		"	float3 focus_prev_prev = to_focus(pixel_x - 2.0);\n"
+
+		//"	float3 focus = float3(1.0, 1.0, 1.0);\n"
+		//"	float3 focus_prev = float3(1.0, 1.0, 1.0);\n"
+		//"	float3 focus_prev_prev = float3(1.0, 1.0, 1.0);\n"
+
+		"	float3 result = 0.8 * color * focus +"
+		"					0.6 * color_prev * focus_prev +"
+		"					0.3 * color_prev_prev * focus_prev_prev;\n"
+
+		"	result = 2.3 * pow(result, float3(1.4, 1.4, 1.4));\n"
+
+		"	float4 scr = float4(intensity * result, 1.0);\n"
+
+		"	return scr;\n"
+
+		"}"
+
+		// fragment shader
+		/*
+		"uniform vec2 size_texture;\n"
+		"uniform sampler2D texture_scr;\n"
+		"uniform sampler2D texture_txt;\n"
+
+		"vec3 to_focus(float pixel) {\n"
+		"	pixel = mod(pixel + 3.0, 3.0);\n"
+		"	if (pixel >= 2.0) // Blue\n"
+		"		return vec3(pixel - 2.0, 0.0, 3.0 - pixel);\n"
+		"	else if (pixel >= 1.0)// Green\n"
+		"		return vec3(0.0, 2.0 - pixel, pixel - 1.0);\n"
+		"	else// Red\n"
+		"		return vec3(1.0 - pixel, pixel, 0.0);\n"
+		"}\n"
+
+		"void main() {\n"
+		"	float y = mod(gl_TexCoord[0].y * size_texture.y, 1.0);\n"
+		"	float intensity = exp(-0.2 * y);\n"
+
+		"	vec2 one_x = vec2(1.0 / (3.0 * size_texture.x), 0.0);\n"
+
+		"	vec3 color = texture2D(texture_scr, gl_TexCoord[0].xy - 0.0 * one_x).rgb;\n"
+		"	vec3 color_prev = texture2D(texture_scr, gl_TexCoord[0].xy - 1.0 * one_x).rgb;\n"
+		"	vec3 color_prev_prev = texture2D(texture_scr, gl_TexCoord[0].xy - 2.0 * one_x).rgb;\n"
+
+		"	float pixel_x = 3.0 * gl_TexCoord[0].x * size_texture.x;\n"
+
+		"	vec3 focus = to_focus(pixel_x - 0.0);\n"
+		"	vec3 focus_prev = to_focus(pixel_x - 1.0);\n"
+		"	vec3 focus_prev_prev = to_focus(pixel_x - 2.0);\n"
+
+		"	vec3 result = 0.8 * color * focus +"
+		"				  0.6 * color_prev * focus_prev +"
+		"				  0.3 * color_prev_prev * focus_prev_prev;\n"
+
+		"	result = 2.3 * pow(result, vec3(1.4));\n"
+
+		"	vec4 scr = vec4(intensity * result, 1.0);\n"
+
+		"	vec4 txt = texture2D(texture_txt, gl_TexCoord[0].xy);\n"
+
+		"	gl_FragColor = mix(scr, txt, txt.a) * gl_Color;\n"
+		"}"
+		*/
+	},
 	/*****************************************************************************************/
 	/* Scanline                                                                              */
 	/*****************************************************************************************/
@@ -160,10 +277,11 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"float2 size_output;\n"
 		"float2 size_texture;\n"
 		"texture texture_scr;\n"
+		"sampler s0 = sampler_state { Texture = <texture_scr>; };\n"
+
 		"static const float base_brightness = 0.95;\n"
 		"static const float2 sine_comp = float2(0.05, 0.15);\n"
 
-		"sampler s0 = sampler_state { Texture = <texture_scr>; };\n"
 		"float4 Ps(float2 texCoord : TEXCOORD0) : COLOR {\n"
 		"	float2 omega = float2(3.1415 * size_output.x * size_texture.x / size_input.x,"
 		"							2.0 * 3.1415 * size_texture.y);\n"
@@ -173,7 +291,7 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"	float4 scanline = c11 * (base_brightness + dot(sine_comp * sin(texCoord * omega),"
 		"			float2(1.0, 1.0)));\n"
 
-		"	float4 scr =  saturate(scanline);\n"
+		"	float4 scr = saturate(scanline);\n"
 
 		"	return scr;\n"
 		"}"
@@ -830,56 +948,7 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"	gl_FragColor = mix(scr, txt, txt.a) * gl_Color;\n"
 		"}"
 	},
-	/*****************************************************************************************/
-	/* Phosphor                                                                              */
-	/*****************************************************************************************/
-	{
-		// vertex shader
-		NULL,
-		// fragment shader
-		"uniform vec2 size_texture;\n"
-		"uniform sampler2D texture_scr;\n"
-		"uniform sampler2D texture_txt;\n"
 
-		"vec3 to_focus(float pixel) {\n"
-		"	pixel = mod(pixel + 3.0, 3.0);\n"
-		"	if (pixel >= 2.0) // Blue\n"
-		"		return vec3(pixel - 2.0, 0.0, 3.0 - pixel);\n"
-		"	else if (pixel >= 1.0)// Green\n"
-		"		return vec3(0.0, 2.0 - pixel, pixel - 1.0);\n"
-		"	else// Red\n"
-		"		return vec3(1.0 - pixel, pixel, 0.0);\n"
-		"}\n"
-
-		"void main() {\n"
-		"	float y = mod(gl_TexCoord[0].y * size_texture.y, 1.0);\n"
-		"	float intensity = exp(-0.2 * y);\n"
-
-		"	vec2 one_x = vec2(1.0 / (3.0 * size_texture.x), 0.0);\n"
-
-		"	vec3 color = texture2D(texture_scr, gl_TexCoord[0].xy - 0.0 * one_x).rgb;\n"
-		"	vec3 color_prev = texture2D(texture_scr, gl_TexCoord[0].xy - 1.0 * one_x).rgb;\n"
-		"	vec3 color_prev_prev = texture2D(texture_scr, gl_TexCoord[0].xy - 2.0 * one_x).rgb;\n"
-
-		"	float pixel_x = 3.0 * gl_TexCoord[0].x * size_texture.x;\n"
-
-		"	vec3 focus = to_focus(pixel_x - 0.0);\n"
-		"	vec3 focus_prev = to_focus(pixel_x - 1.0);\n"
-		"	vec3 focus_prev_prev = to_focus(pixel_x - 2.0);\n"
-
-		"	vec3 result = 0.8 * color * focus +"
-		"				  0.6 * color_prev * focus_prev +"
-		"				  0.3 * color_prev_prev * focus_prev_prev;\n"
-
-		"	result = 2.3 * pow(result, vec3(1.4));\n"
-
-		"	vec4 scr = vec4(intensity * result, 1.0);\n"
-
-		"	vec4 txt = texture2D(texture_txt, gl_TexCoord[0].xy);\n"
-
-		"	gl_FragColor = mix(scr, txt, txt.a) * gl_Color;\n"
-		"}"
-	},
 	/*****************************************************************************************/
 	/* Quilaz                                                                                */
 	/*****************************************************************************************/

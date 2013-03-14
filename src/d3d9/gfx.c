@@ -89,7 +89,7 @@ struct _d3d9 {
 	FLOAT scale;
 	FLOAT factor;
 	BOOL interpolation;
-	BOOL shaders_hlsl;
+	BOOL hlsl;
 } d3d9;
 
 typedef struct {
@@ -228,7 +228,7 @@ BYTE gfx_init(void) {
 		}
 
 		{
-			d3d9.shaders_hlsl = FALSE;
+			d3d9.hlsl = FALSE;
 
 			if (d3dcaps.PixelShaderVersion < D3DPS_VERSION(2, 0) ||
 					(d3dcaps.VertexShaderVersion < D3DVS_VERSION(2, 0))) {
@@ -242,11 +242,11 @@ BYTE gfx_init(void) {
 
 				if (d3d9_create_shader(&tmp) == EXIT_OK) {
 					d3d9_release_shader(&tmp);
-					d3d9.shaders_hlsl = TRUE;
+					d3d9.hlsl = TRUE;
 				}
 			}
 
-			if (d3d9.shaders_hlsl == FALSE) {
+			if (d3d9.hlsl == FALSE) {
 				printf("Shaders are disabled\n");
 			}
 		}
@@ -273,6 +273,9 @@ BYTE gfx_init(void) {
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE);
 
 	return (EXIT_OK);
+}
+BYTE gfx_shader_check(void) {
+	return (d3d9.hlsl);
 }
 void gfx_set_render(BYTE render) {
 	return;
@@ -320,7 +323,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 	if ((filter != cfg->filter) || info.on_cfg) {
 		switch (filter) {
 			//case POSPHOR:
-			//case SCANLINE:
+			case SCANLINE:
 			//case DBL:
 			//case CRT_CURVE:
 			//case CRT_NO_CURVE:
@@ -520,19 +523,22 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 				d3d9.scale = X1;
 				d3d9.factor = cfg->scale;
 				d3d9.interpolation = FALSE;
-				if (d3d9.shaders_hlsl) {
-					d3d9.shader.id = SHADER_NO_FILTER;
-					d3d9.shader.id = SHADER_SCANLINE;
-				}
+				d3d9.shader.id = SHADER_NO_FILTER;
+				d3d9.shader.id = SHADER_SCANLINE;
 				break;
 			case BILINEAR:
 				d3d9.scale_force = TRUE;
 				d3d9.scale = X1;
 				d3d9.factor = cfg->scale;
 				d3d9.interpolation = TRUE;
-				if (d3d9.shaders_hlsl) {
-					d3d9.shader.id = SHADER_COLOR;
-				}
+				d3d9.shader.id = SHADER_NO_FILTER;
+				break;
+			case SCANLINE:
+				d3d9.scale_force = TRUE;
+				d3d9.scale = X1;
+				d3d9.factor = cfg->scale;
+				d3d9.interpolation = FALSE;
+				d3d9.shader.id = SHADER_SCANLINE;
 				break;
 		}
 	}
@@ -648,7 +654,6 @@ void gfx_quit(void) {
 }
 
 
-
 BYTE d3d9_create_context(UINT width, UINT height) {
 
 	d3d9_release_context();
@@ -736,7 +741,7 @@ BYTE d3d9_create_context(UINT width, UINT height) {
 		}
 	}
 
-	if (d3d9.shaders_hlsl) {
+	if (d3d9.hlsl) {
 		d3d9_create_shader(&d3d9.shader);
 	}
 

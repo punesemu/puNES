@@ -575,37 +575,16 @@ void gui_update(void) {
 		change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_HQ4X);
 	}
 	*/
-	//{
-	//	HMENU menu_to_change;
-	//	MENUITEMINFO menuitem;
+	{
+		//HMENU menu_to_change;
+		//MENUITEMINFO menuitem;
 
-	//	menuitem.cbSize = sizeof(MENUITEMINFO);
-	//	menuitem.fMask = MIIM_STATE;
+		//menuitem.cbSize = sizeof(MENUITEMINFO);
+		//menuitem.fMask = MIIM_STATE;
 
-		/* Video/Rendering */
-	//	menu_to_change = GetSubMenu(GetSubMenu(GetSubMenu(main_menu, 2), 2), 0);
-
-	//	if (opengl.supported) {
-	//		menuitem.fState = MFS_ENABLED;
-	//	} else {
-	//		menuitem.fState = MFS_DISABLED;
-	//	}
-		/* Video/Rendering/OpenGL */
-	//	SetMenuItemInfo(menu_to_change, 1, TRUE, &menuitem);
-
-	//	if (opengl.glsl.compliant) {
-	//		menuitem.fState = MFS_ENABLED;
-	//	} else {
-	//		menuitem.fState = MFS_DISABLED;
-	//	}
-		/* Video/Rendering/OpenGL GLSL */
-	//	SetMenuItemInfo(menu_to_change, 2, TRUE, &menuitem);
-
-	//	menu_to_change = GetSubMenu(GetSubMenu(GetSubMenu(main_menu, 2), 2), 7);
-
-		//if (opengl.glsl.enabled) {
+		if (gfx_shader_check() == TRUE) {
 		//	change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_POSPHOR);
-		//	change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_SCANLINE);
+			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_SCANLINE);
 		//	change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_DBL);
 
 		//	menuitem.fState = MFS_ENABLED;
@@ -615,9 +594,9 @@ void gui_update(void) {
 
 		//	change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_CRTCURVE);
 		//	change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_CRTNOCURVE);
-		//} else {
+		} else {
 		//	change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_POSPHOR);
-		//	change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_SCANLINE);
+			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_SCANLINE);
 		//	change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_DBL);
 
 		//	menuitem.fState = MFS_DISABLED;
@@ -627,8 +606,8 @@ void gui_update(void) {
 
 		//	change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_CRTCURVE);
 		//	change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_CRTNOCURVE);
-		//}
-	//}
+		}
+	}
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_NO_FILTER);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_BILINEAR);
 	/*
@@ -642,13 +621,12 @@ void gui_update(void) {
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_RGBNTSCCOM);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_RGBNTSCSVD);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_RGBNTSCRGB);
-	/*
-	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_POSPHOR);
+
+	//change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_POSPHOR);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_SCANLINE);
-	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_DBL);
-	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_CRTCURVE);
-	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_CRTNOCURVE);
-	*/
+	//change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_DBL);
+	//change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_CRTCURVE);
+	//change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_CRTNOCURVE);
 	switch (cfg->filter) {
 		case NO_FILTER:
 			id = IDM_SET_FILTER_NO_FILTER;
@@ -660,9 +638,11 @@ void gui_update(void) {
 		case POSPHOR:
 			id = IDM_SET_FILTER_POSPHOR;
 			break;
+		*/
 		case SCANLINE:
 			id = IDM_SET_FILTER_SCANLINE;
 			break;
+		/*
 		case DBL:
 			id = IDM_SET_FILTER_DBL;
 			break;
@@ -1116,13 +1096,13 @@ long __stdcall main_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 				case IDM_SET_FILTER_BILINEAR:
 					set_filter(BILINEAR);
 					break;
-				/*
-				case IDM_SET_FILTER_POSPHOR:
-					set_filter(POSPHOR);
-					break;
+				//case IDM_SET_FILTER_POSPHOR:
+				//	set_filter(POSPHOR);
+				//	break;
 				case IDM_SET_FILTER_SCANLINE:
 					set_filter(SCANLINE);
 					break;
+				/*
 				case IDM_SET_FILTER_DBL:
 					set_filter(DBL);
 					break;
@@ -1381,13 +1361,13 @@ void set_filter(BYTE filter) {
 		case BILINEAR:
 			gfx_set_screen(NO_CHANGE, BILINEAR, NO_CHANGE, NO_CHANGE, FALSE);
 			break;
-		/*
-		case POSPHOR:
-			gfx_set_screen(NO_CHANGE, POSPHOR, NO_CHANGE, NO_CHANGE, FALSE);
-			break;
+		//case POSPHOR:
+		//	gfx_set_screen(NO_CHANGE, POSPHOR, NO_CHANGE, NO_CHANGE, FALSE);
+		//	break;
 		case SCANLINE:
 			gfx_set_screen(NO_CHANGE, SCANLINE, NO_CHANGE, NO_CHANGE, FALSE);
 			break;
+		/*
 		case DBL:
 			gfx_set_screen(NO_CHANGE, DBL, NO_CHANGE, NO_CHANGE, FALSE);
 			break;

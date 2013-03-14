@@ -26,7 +26,7 @@ enum filters_type {
 	BILINEAR,
 	/* glsl shaders */
 	//POSPHOR,
-	//SCANLINE,
+	SCANLINE,
 	//DBL,
 	//CRT_CURVE,
 	//CRT_NO_CURVE,
@@ -49,6 +49,7 @@ struct _gfx {
 } gfx;
 
 BYTE gfx_init(void);
+BYTE gfx_shader_check(void);
 void gfx_set_render(BYTE render);
 void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE force_scale);
 void gfx_draw_screen(BYTE forced);
