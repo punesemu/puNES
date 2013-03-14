@@ -84,6 +84,7 @@ struct _d3d9 {
 	BYTE BPP;
 	BOOL auto_gen_mipmap;
 	BOOL dynamic_texture;
+	BOOL texture_square_only;
 	WORD texture_create_usage;
 	BOOL scale_force;
 	FLOAT scale;
@@ -200,6 +201,13 @@ BYTE gfx_init(void) {
 		} else {
 			printf("Video driver don't support dynamic texture\n");
 			d3d9.dynamic_texture = FALSE;
+		}
+
+		if (d3dcaps.TextureCaps & D3DPTEXTURECAPS_SQUAREONLY) {
+			printf("Video driver support only square texture\n");
+			d3d9.texture_square_only = TRUE;
+		} else {
+			d3d9.texture_square_only = FALSE;
 		}
 
 		/*
@@ -322,9 +330,9 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 	}
 	if ((filter != cfg->filter) || info.on_cfg) {
 		switch (filter) {
-			//case POSPHOR:
+			case POSPHOR:
 			case SCANLINE:
-			//case DBL:
+			case DBL:
 			//case CRT_CURVE:
 			//case CRT_NO_CURVE:
 			case NO_FILTER:
@@ -524,7 +532,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 				d3d9.factor = cfg->scale;
 				d3d9.interpolation = FALSE;
 				d3d9.shader.id = SHADER_NO_FILTER;
-				d3d9.shader.id = SHADER_SCANLINE;
+				//d3d9.shader.id = SHADER_DONTBLOOM;
 				break;
 			case BILINEAR:
 				d3d9.scale_force = TRUE;
@@ -533,12 +541,26 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 				d3d9.interpolation = TRUE;
 				d3d9.shader.id = SHADER_NO_FILTER;
 				break;
+			case POSPHOR:
+				d3d9.scale_force = TRUE;
+				d3d9.scale = X1;
+				d3d9.factor = cfg->scale;
+				d3d9.interpolation = FALSE;
+				d3d9.shader.id = SHADER_POSPHOR;
+				break;
 			case SCANLINE:
 				d3d9.scale_force = TRUE;
 				d3d9.scale = X1;
 				d3d9.factor = cfg->scale;
 				d3d9.interpolation = FALSE;
 				d3d9.shader.id = SHADER_SCANLINE;
+				break;
+			case DBL:
+				d3d9.scale_force = TRUE;
+				d3d9.scale = X1;
+				d3d9.factor = cfg->scale;
+				d3d9.interpolation = FALSE;
+				d3d9.shader.id = SHADER_DONTBLOOM;
 				break;
 		}
 	}
@@ -695,22 +717,42 @@ BYTE d3d9_create_context(UINT width, UINT height) {
 		IDirect3DDevice9_SetTexture(d3d9.dev, 0, (IDirect3DBaseTexture9 *) d3d9.texture.data);
 
 		if (d3d9.interpolation == TRUE) {
-			 /* bilinear filtering */
 			IDirect3DDevice9_SetSamplerState(d3d9.dev, 0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
 			IDirect3DDevice9_SetSamplerState(d3d9.dev, 0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
-			IDirect3DDevice9_SetSamplerState(d3d9.dev, 0, D3DSAMP_MIPFILTER, D3DTEXF_POINT);
+			IDirect3DDevice9_SetSamplerState(d3d9.dev, 0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
 		} else {
-			IDirect3DDevice9_SetSamplerState(d3d9.dev, 0, D3DSAMP_MAGFILTER, D3DTEXF_NONE);
-			IDirect3DDevice9_SetSamplerState(d3d9.dev, 0, D3DSAMP_MINFILTER, D3DTEXF_NONE);
-			IDirect3DDevice9_SetSamplerState(d3d9.dev, 0, D3DSAMP_MIPFILTER, D3DTEXF_NONE);
+			if (cfg->scale == X1) {
+				IDirect3DDevice9_SetSamplerState(d3d9.dev, 0, D3DSAMP_MAGFILTER, D3DTEXF_NONE);
+				IDirect3DDevice9_SetSamplerState(d3d9.dev, 0, D3DSAMP_MINFILTER, D3DTEXF_NONE);
+				IDirect3DDevice9_SetSamplerState(d3d9.dev, 0, D3DSAMP_MIPFILTER, D3DTEXF_NONE);
+			} else {
+				IDirect3DDevice9_SetSamplerState(d3d9.dev, 0, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
+				IDirect3DDevice9_SetSamplerState(d3d9.dev, 0, D3DSAMP_MINFILTER, D3DTEXF_POINT);
+				IDirect3DDevice9_SetSamplerState(d3d9.dev, 0, D3DSAMP_MIPFILTER, D3DTEXF_POINT);
+			}
 		}
-
-		/* Enable Z-Buffer (Depth Buffer) */
-		IDirect3DDevice9_SetRenderState(d3d9.dev, D3DRS_ZENABLE,  FALSE );
-		/* Disable Backface Culling */
-		IDirect3DDevice9_SetRenderState(d3d9.dev, D3DRS_CULLMODE, FALSE);
-
+		// set the fixed render state
+		IDirect3DDevice9_SetRenderState(d3d9.dev, D3DRS_ZENABLE, D3DZB_FALSE);
+		IDirect3DDevice9_SetRenderState(d3d9.dev, D3DRS_FILLMODE, D3DFILL_SOLID);
+		IDirect3DDevice9_SetRenderState(d3d9.dev, D3DRS_SHADEMODE, D3DSHADE_FLAT);
+		IDirect3DDevice9_SetRenderState(d3d9.dev, D3DRS_ZWRITEENABLE, FALSE);
+		IDirect3DDevice9_SetRenderState(d3d9.dev, D3DRS_ALPHATESTENABLE, TRUE);
+		IDirect3DDevice9_SetRenderState(d3d9.dev, D3DRS_LASTPIXEL, TRUE);
+		IDirect3DDevice9_SetRenderState(d3d9.dev, D3DRS_CULLMODE, D3DCULL_NONE);
+		IDirect3DDevice9_SetRenderState(d3d9.dev, D3DRS_ZFUNC, D3DCMP_LESS);
+		IDirect3DDevice9_SetRenderState(d3d9.dev, D3DRS_ALPHAREF, 0);
+		IDirect3DDevice9_SetRenderState(d3d9.dev, D3DRS_ALPHAFUNC, D3DCMP_GREATER);
+		IDirect3DDevice9_SetRenderState(d3d9.dev, D3DRS_DITHERENABLE, FALSE);
+		IDirect3DDevice9_SetRenderState(d3d9.dev, D3DRS_FOGENABLE, FALSE);
+		IDirect3DDevice9_SetRenderState(d3d9.dev, D3DRS_SPECULARENABLE, FALSE);
+		IDirect3DDevice9_SetRenderState(d3d9.dev, D3DRS_STENCILENABLE, FALSE);
+		IDirect3DDevice9_SetRenderState(d3d9.dev, D3DRS_WRAP0, FALSE);
+		IDirect3DDevice9_SetRenderState(d3d9.dev, D3DRS_CLIPPING, TRUE);
 		IDirect3DDevice9_SetRenderState(d3d9.dev, D3DRS_LIGHTING, FALSE);
+		IDirect3DDevice9_SetRenderState(d3d9.dev, D3DRS_COLORVERTEX, TRUE);
+
+		IDirect3DDevice9_SetTextureStageState(d3d9.dev, 0, D3DTSS_COLOROP, D3DTOP_MODULATE);
+		IDirect3DDevice9_SetTextureStageState(d3d9.dev, 0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
 
 		/*
 		 * Su moltissime schede video, quando la texture veniva disegnata sui due triangoli
@@ -814,6 +856,15 @@ BYTE d3d9_create_texture(_texture *texture, uint32_t width, uint32_t height, uin
 	} else {
 		texture->w = width;
 		texture->h = height;
+	}
+
+    // round up to square if we need to
+	if (d3d9.texture_square_only == TRUE) {
+		if (texture->w < texture->h) {
+			texture->w = texture->h;
+		} else {
+			texture->h = texture->w;
+		}
 	}
 
 	if (texture->data) {

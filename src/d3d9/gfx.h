@@ -25,9 +25,9 @@ enum filters_type {
 	NTSC_FILTER,
 	BILINEAR,
 	/* glsl shaders */
-	//POSPHOR,
+	POSPHOR,
 	SCANLINE,
-	//DBL,
+	DBL,
 	//CRT_CURVE,
 	//CRT_NO_CURVE,
 	/* glsl shaders end */
