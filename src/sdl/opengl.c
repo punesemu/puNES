@@ -93,8 +93,8 @@ void sdl_create_surface_gl(SDL_Surface *src, WORD width, WORD height, BYTE flags
 
 		/* con flags intendo sia il fullscreen che il futuro resize */
 		if (flags && cfg->aspect_ratio) {
-			float ratio_surface = (float) opengl.w_texture / opengl.h_texture;
-			float ratio_frame = (float) width / height;
+			GLfloat ratio_surface = (GLfloat) opengl.w_texture / (GLfloat) opengl.h_texture;
+			GLfloat ratio_frame = (GLfloat) width / (GLfloat) height;
 
 			//ratio_frame = (float) 4 / 3;
 			//ratio_frame = (float) 16 / 9;
@@ -107,7 +107,7 @@ void sdl_create_surface_gl(SDL_Surface *src, WORD width, WORD height, BYTE flags
 			 * sull'altezza.
 			 */
 			if (ratio_frame > ratio_surface) {
-				int centering_factor = 0;
+				GLint centering_factor = 0;
 
 				opengl.h_texture = opengl.w_texture / ratio_frame;
 				centering_factor = (src->h - opengl.h_texture) / 2;
@@ -122,7 +122,7 @@ void sdl_create_surface_gl(SDL_Surface *src, WORD width, WORD height, BYTE flags
 				 * sulla larghezza.
 				 */
 			} else if (ratio_frame < ratio_surface) {
-				int centering_factor = 0;
+				GLint centering_factor = 0;
 
 				opengl.w_texture = ratio_frame * opengl.h_texture;
 				centering_factor = (src->w - opengl.w_texture) / 2;

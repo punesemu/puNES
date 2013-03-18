@@ -163,12 +163,14 @@ BEGIN
 					MENUITEM "With &Curve",       IDM_SET_FILTER_CRTCURVE
 					MENUITEM "&Without Curve",    IDM_SET_FILTER_CRTNOCURVE
 				END
+				*/
 				POPUP "&Scalex"
 				BEGIN
 					MENUITEM "Scale&2X",          IDM_SET_FILTER_SCALE2X
 					MENUITEM "Scale&3X",          IDM_SET_FILTER_SCALE3X
 					MENUITEM "Scale&4X",          IDM_SET_FILTER_SCALE4X
 				END
+				/*
 				POPUP "&Hqx"
 				BEGIN
 					MENUITEM "Hq&2x",             IDM_SET_FILTER_HQ2X

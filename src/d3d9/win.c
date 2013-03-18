@@ -576,16 +576,27 @@ void gui_update(void) {
 	}
 	*/
 	{
-		//HMENU menu_to_change;
-		//MENUITEMINFO menuitem;
+		HMENU menu_to_change;
+		MENUITEMINFO menuitem;
 
-		//menuitem.cbSize = sizeof(MENUITEMINFO);
-		//menuitem.fMask = MIIM_STATE;
+		menuitem.cbSize = sizeof(MENUITEMINFO);
+		menuitem.fMask = MIIM_STATE;
+
+		menu_to_change = GetSubMenu(GetSubMenu(GetSubMenu(main_menu, 2), 2), 3);
 
 		if ((gfx_shader_check() == TRUE) && (cfg->scale != X1)) {
 			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_POSPHOR);
 			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_SCANLINE);
 			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_DBL);
+
+			menuitem.fState = MFS_ENABLED;
+
+			/* Video/Filter/Scalex */
+			SetMenuItemInfo(menu_to_change, 5, TRUE, &menuitem);
+
+			change_menuitem(CHECK, MF_ENABLED, IDM_SET_FILTER_SCALE2X);
+			change_menuitem(CHECK, MF_ENABLED, IDM_SET_FILTER_SCALE3X);
+			change_menuitem(CHECK, MF_ENABLED, IDM_SET_FILTER_SCALE4X);
 
 		//	menuitem.fState = MFS_ENABLED;
 
@@ -599,10 +610,14 @@ void gui_update(void) {
 			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_SCANLINE);
 			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_DBL);
 
-		//	menuitem.fState = MFS_DISABLED;
+			menuitem.fState = MFS_DISABLED;
 
-			/* Video/Filter/CRT */
-		//	SetMenuItemInfo(menu_to_change, 5, TRUE, &menuitem);
+			/* Video/Filter/Scalex */
+			SetMenuItemInfo(menu_to_change, 5, TRUE, &menuitem);
+
+			change_menuitem(CHECK, MF_GRAYED, IDM_SET_FILTER_SCALE2X);
+			change_menuitem(CHECK, MF_GRAYED, IDM_SET_FILTER_SCALE3X);
+			change_menuitem(CHECK, MF_GRAYED, IDM_SET_FILTER_SCALE4X);
 
 		//	change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_CRTCURVE);
 		//	change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_CRTNOCURVE);
@@ -610,10 +625,15 @@ void gui_update(void) {
 	}
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_NO_FILTER);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_BILINEAR);
-	/*
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_POSPHOR);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_SCANLINE);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_DBL);
+	//change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_CRTCURVE);
+	//change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_CRTNOCURVE);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_SCALE2X);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_SCALE3X);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_SCALE4X);
+	/*
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_HQ2X);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_HQ3X);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_HQ4X);
@@ -621,12 +641,6 @@ void gui_update(void) {
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_RGBNTSCCOM);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_RGBNTSCSVD);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_RGBNTSCRGB);
-
-	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_POSPHOR);
-	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_SCANLINE);
-	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_DBL);
-	//change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_CRTCURVE);
-	//change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_CRTNOCURVE);
 	switch (cfg->filter) {
 		case NO_FILTER:
 			id = IDM_SET_FILTER_NO_FILTER;
@@ -650,9 +664,11 @@ void gui_update(void) {
 		case CRT_NO_CURVE:
 			id = IDM_SET_FILTER_CRTNOCURVE;
 			break;
+		*/
 		case SCALE2X:
 			id = IDM_SET_FILTER_SCALE2X;
 			break;
+		/*
 		case SCALE3X:
 			id = IDM_SET_FILTER_SCALE3X;
 			break;
@@ -1110,6 +1126,7 @@ long __stdcall main_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 				case IDM_SET_FILTER_CRTNOCURVE:
 					set_filter(CRT_NO_CURVE);
 					break;
+				*/
 				case IDM_SET_FILTER_SCALE2X:
 					set_filter(SCALE2X);
 					break;
@@ -1119,6 +1136,7 @@ long __stdcall main_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 				case IDM_SET_FILTER_SCALE4X:
 					set_filter(SCALE4X);
 					break;
+				/*
 				case IDM_SET_FILTER_HQ2X:
 					set_filter(HQ2X);
 					break;
@@ -1375,15 +1393,18 @@ void set_filter(BYTE filter) {
 		case CRT_NO_CURVE:
 			gfx_set_screen(NO_CHANGE, CRT_NO_CURVE, NO_CHANGE, NO_CHANGE, FALSE);
 			break;
+		*/
 		case SCALE2X:
 			gfx_set_screen(X2, SCALE2X, NO_CHANGE, NO_CHANGE, FALSE);
 			break;
+
 		case SCALE3X:
 			gfx_set_screen(X3, SCALE3X, NO_CHANGE, NO_CHANGE, FALSE);
 			break;
 		case SCALE4X:
 			gfx_set_screen(X4, SCALE4X, NO_CHANGE, NO_CHANGE, FALSE);
 			break;
+		/*
 		case HQ2X:
 			gfx_set_screen(X2, HQ2X, NO_CHANGE, NO_CHANGE, FALSE);
 			break;

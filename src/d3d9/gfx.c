@@ -25,6 +25,7 @@
 #define ID3DXBuffer_GetBufferPointer(p) (p)->lpVtbl->GetBufferPointer(p)
 #define ID3DXBuffer_Release(p) (p)->lpVtbl->Release(p)
 #define ID3DXConstantTable_SetFloatArray(p,a,b,c,d) (p)->lpVtbl->SetFloatArray(p,a,b,c,d)
+#define ID3DXConstantTable_SetMatrix(p,a,b,c) (p)->lpVtbl->SetMatrix(p,a,b,c)
 
 #define ntsc_width(wdt, a, flag)\
 {\
@@ -71,6 +72,12 @@ struct _d3d9 {
 	D3DDISPLAYMODE display_mode;
 
 	_texture texture;
+	INT w_texture;
+	INT h_texture;
+	INT x_texture1;
+	INT y_texture1;
+	INT x_texture2;
+	INT y_texture2;
 
 	uint32_t *palette;
 	GFX_EFFECT_ROUTINE;
@@ -91,6 +98,7 @@ struct _d3d9 {
 	FLOAT factor;
 	BOOL interpolation;
 	BOOL hlsl;
+	BOOL hlsl_used;
 } d3d9;
 
 typedef struct {
@@ -221,10 +229,13 @@ BYTE gfx_init(void) {
 
 		if (d3dcaps.DevCaps & D3DDEVCAPS_HWTRANSFORMANDLIGHT) {
 			d3d9.flags = D3DCREATE_HARDWARE_VERTEXPROCESSING;
-			/* Check for pure device */
-			if (d3dcaps.DevCaps & D3DDEVCAPS_PUREDEVICE) {
-				d3d9.flags |= D3DCREATE_PUREDEVICE;
-			}
+			/*
+			 * se abilito il PURE DEVICE, non posso utilizzare il IDirect3DDevice9_GetTransform
+			 * quando uso le shaders.
+			 */
+			//if (d3dcaps.DevCaps & D3DDEVCAPS_PUREDEVICE) {
+			//	d3d9.flags |= D3DCREATE_PUREDEVICE;
+			//}
 		} else {
 			printf("Video driver don't support hardware accelaration\n");
 			d3d9.flags = D3DCREATE_SOFTWARE_VERTEXPROCESSING;
@@ -337,6 +348,9 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 			//case CRT_NO_CURVE:
 			case NO_FILTER:
 			case BILINEAR:
+			case SCALE2X:
+			case SCALE3X:
+			case SCALE4X:
 				d3d9.effect = scale_surface;
 				/*
 				 * se sto passando dal filtro ntsc ad un'altro, devo
@@ -521,6 +535,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 		d3d9.scale = cfg->scale;
 		d3d9.factor = 1;
 		d3d9.interpolation = FALSE;
+		d3d9.hlsl_used = FALSE;
 		d3d9.shader.id = SHADER_NONE;
 
 		/* TODO: aggiungere il controllo se supportate le shaders */
@@ -531,36 +546,85 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 				d3d9.scale = X1;
 				d3d9.factor = cfg->scale;
 				d3d9.interpolation = FALSE;
-				d3d9.shader.id = SHADER_NO_FILTER;
-				//d3d9.shader.id = SHADER_DONTBLOOM;
+				if (d3d9.hlsl == TRUE) {
+					d3d9.hlsl_used = TRUE;
+					d3d9.shader.id = SHADER_NO_FILTER;
+					//d3d9.shader.id = SHADER_DONTBLOOM;
+					//d3d9.shader.id = SHADER_COLOR;
+					//d3d9.shader.id = SHADER_POSPHOR;
+					//d3d9.shader.id = SHADER_SCALE2X;
+					d3d9.shader.id = SHADER_NTSC;
+				}
 				break;
 			case BILINEAR:
 				d3d9.scale_force = TRUE;
 				d3d9.scale = X1;
 				d3d9.factor = cfg->scale;
 				d3d9.interpolation = TRUE;
-				d3d9.shader.id = SHADER_NO_FILTER;
+				if (d3d9.hlsl == TRUE) {
+					d3d9.hlsl_used = TRUE;
+					d3d9.shader.id = SHADER_NO_FILTER;
+				}
 				break;
 			case POSPHOR:
 				d3d9.scale_force = TRUE;
 				d3d9.scale = X1;
 				d3d9.factor = cfg->scale;
 				d3d9.interpolation = FALSE;
-				d3d9.shader.id = SHADER_POSPHOR;
+				if (d3d9.hlsl == TRUE) {
+					d3d9.hlsl_used = TRUE;
+					d3d9.shader.id = SHADER_POSPHOR;
+				}
 				break;
 			case SCANLINE:
 				d3d9.scale_force = TRUE;
 				d3d9.scale = X1;
 				d3d9.factor = cfg->scale;
 				d3d9.interpolation = FALSE;
-				d3d9.shader.id = SHADER_SCANLINE;
+				if (d3d9.hlsl == TRUE) {
+					d3d9.hlsl_used = TRUE;
+					d3d9.shader.id = SHADER_SCANLINE;
+				}
 				break;
 			case DBL:
 				d3d9.scale_force = TRUE;
 				d3d9.scale = X1;
 				d3d9.factor = cfg->scale;
 				d3d9.interpolation = FALSE;
-				d3d9.shader.id = SHADER_DONTBLOOM;
+				if (d3d9.hlsl == TRUE) {
+					d3d9.hlsl_used = TRUE;
+					d3d9.shader.id = SHADER_DONTBLOOM;
+				}
+				break;
+			case SCALE2X:
+				d3d9.scale_force = TRUE;
+				d3d9.scale = X1;
+				d3d9.factor = cfg->scale;
+				d3d9.interpolation = FALSE;
+				if (d3d9.hlsl == TRUE) {
+					d3d9.hlsl_used = TRUE;
+					d3d9.shader.id = SHADER_SCALE2X;
+				}
+				break;
+			case SCALE3X:
+				d3d9.scale_force = TRUE;
+				d3d9.scale = X1;
+				d3d9.factor = cfg->scale;
+				d3d9.interpolation = FALSE;
+				if (d3d9.hlsl == TRUE) {
+					d3d9.hlsl_used = TRUE;
+					d3d9.shader.id = SHADER_SCALE3X;
+				}
+				break;
+			case SCALE4X:
+				d3d9.scale_force = TRUE;
+				d3d9.scale = X1;
+				d3d9.factor = cfg->scale;
+				d3d9.interpolation = FALSE;
+				if (d3d9.hlsl == TRUE) {
+					d3d9.hlsl_used = TRUE;
+					d3d9.shader.id = SHADER_SCALE4X;
+				}
 				break;
 		}
 	}
@@ -633,22 +697,36 @@ void gfx_draw_screen(BYTE forced) {
 	IDirect3DDevice9_Clear(d3d9.dev, 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_ARGB(255, 0, 0, 0),
 			1.0f, 0);
 
+	/* inizio */
 	IDirect3DDevice9_BeginScene(d3d9.dev);
 
-		//IDirect3DDevice9_SetRenderState(d3d9.dev, D3DRS_FILLMODE, D3DFILL_WIREFRAME);
-		// select which vertex format we are using
+	if (d3d9.hlsl_used == TRUE) {
+		/* comunico con il vertex shader */
+		D3DXMATRIX matrix_world, matrix_view, matrix_proj;
+		D3DXMATRIX world_view_projection;
+
+		IDirect3DDevice9_GetTransform(d3d9.dev, D3DTS_WORLD, &matrix_world);
+		IDirect3DDevice9_GetTransform(d3d9.dev, D3DTS_VIEW, &matrix_view);
+		IDirect3DDevice9_GetTransform(d3d9.dev, D3DTS_PROJECTION, &matrix_proj);
+
+		D3DXMatrixMultiply(&world_view_projection, &matrix_world, &matrix_view);
+		D3DXMatrixMultiply(&world_view_projection, &world_view_projection, &matrix_proj);
+
+		ID3DXConstantTable_SetMatrix(d3d9.shader.table_vrt, d3d9.dev, "m_world_view_projection",
+				&world_view_projection);
+
+		/* faccio il resto */
 		IDirect3DDevice9_SetFVF(d3d9.dev, FVF);
-		// select the vertex buffer to display
 		IDirect3DDevice9_SetStreamSource(d3d9.dev, 0, d3d9.quad, 0, sizeof(vertex));
-		//Enabling your vertex shader:
-		if (d3d9.shader.vrt) {
-			IDirect3DDevice9_SetVertexShader(d3d9.dev, d3d9.shader.vrt);
-		}
-		if (d3d9.shader.pxl) {
-			IDirect3DDevice9_SetPixelShader(d3d9.dev, d3d9.shader.pxl);
-		}
-		// copy the vertex buffer to the back buffer
+		if (d3d9.shader.vrt) { IDirect3DDevice9_SetVertexShader(d3d9.dev, d3d9.shader.vrt); }
+		if (d3d9.shader.pxl) { IDirect3DDevice9_SetPixelShader(d3d9.dev, d3d9.shader.pxl); }
 		IDirect3DDevice9_DrawPrimitive(d3d9.dev, D3DPT_TRIANGLEFAN, 0, 2);
+	} else {
+		//IDirect3DDevice9_SetTransform(d3d9.dev, D3DTS_WORLD, &d3d9.matrix_world);
+		IDirect3DDevice9_SetFVF(d3d9.dev, FVF);
+		IDirect3DDevice9_SetStreamSource(d3d9.dev, 0, d3d9.quad, 0, sizeof(vertex));
+		IDirect3DDevice9_DrawPrimitive(d3d9.dev, D3DPT_TRIANGLEFAN, 0, 2);
+	}
 
 	IDirect3DDevice9_EndScene(d3d9.dev);
 
@@ -731,6 +809,7 @@ BYTE d3d9_create_context(UINT width, UINT height) {
 				IDirect3DDevice9_SetSamplerState(d3d9.dev, 0, D3DSAMP_MIPFILTER, D3DTEXF_POINT);
 			}
 		}
+
 		// set the fixed render state
 		IDirect3DDevice9_SetRenderState(d3d9.dev, D3DRS_ZENABLE, D3DZB_FALSE);
 		IDirect3DDevice9_SetRenderState(d3d9.dev, D3DRS_FILLMODE, D3DFILL_SOLID);
@@ -764,13 +843,71 @@ BYTE d3d9_create_context(UINT width, UINT height) {
 		d3d9.texture.x = (FLOAT) (gfx.w[CURRENT] - 1) / (d3d9.texture.w * (FLOAT) d3d9.factor);
 		d3d9.texture.y = (FLOAT) (gfx.h[CURRENT] - 1) / (d3d9.texture.h * (FLOAT) d3d9.factor);
 
-		//printf("t0 : %f - %f\n", d3d9.texture.w, d3d9.texture.h);
-		//printf("t1 : %f - %f\n", d3d9.texture.x, d3d9.texture.y);
-		//printf("t2 : %f - %f\n", (FLOAT) gfx.w[CURRENT], (FLOAT) gfx.h[CURRENT]);
+		//printf("\n");
+		//printf("t2 : %f - %f\n", d3d9.texture.x, d3d9.texture.y);
+		//printf("t3 : %f - %f\n", (FLOAT) gfx.w[CURRENT], (FLOAT) gfx.h[CURRENT]);
+
+		{
+			/* aspect ratio */
+			d3d9.w_texture = gfx.w[VIDEO_MODE];
+			d3d9.h_texture = gfx.h[VIDEO_MODE];
+			d3d9.x_texture1 = 0;
+			d3d9.y_texture1 = 0;
+			d3d9.x_texture2 = gfx.w[VIDEO_MODE];
+			d3d9.y_texture2 = gfx.h[VIDEO_MODE];
+
+			int flags = FALSE;
+
+			/* con flags intendo sia il fullscreen che il futuro resize */
+			if (flags && cfg->aspect_ratio) {
+				float ratio_surface = (float) d3d9.w_texture / (float) d3d9.h_texture;
+				float ratio_frame = (float) width / (float) height;
+
+				//ratio_frame = (float) 4 / 3;
+				//ratio_frame = (float) 16 / 9;
+
+				//fprintf(stderr, "opengl : %f %f\n", ratio_surface, ratio_frame);
+
+				/*
+				 * se l'aspect ratio del frame e' maggiore di
+				 * quello della superficie allora devo agire
+				 * sull'altezza.
+				 */
+				if (ratio_frame > ratio_surface) {
+					INT centering_factor = 0;
+
+					d3d9.h_texture = d3d9.w_texture / ratio_frame;
+					centering_factor = (gfx.h[VIDEO_MODE] - d3d9.h_texture) / 2;
+
+					d3d9.x_texture1 = 0;
+					d3d9.y_texture1 = centering_factor;
+					d3d9.x_texture2 = d3d9.w_texture;
+					d3d9.y_texture2 = d3d9.h_texture + centering_factor;
+					/*
+					 * se l'aspect ratio del frame e' minore di
+					 * quello della superficie allora devo agire
+					 * sulla larghezza.
+					 */
+				} else if (ratio_frame < ratio_surface) {
+					INT centering_factor = 0;
+
+					d3d9.w_texture = ratio_frame * d3d9.h_texture;
+					centering_factor = (gfx.w[VIDEO_MODE] - d3d9.w_texture) / 2;
+
+					d3d9.x_texture1 = centering_factor;
+					d3d9.y_texture1 = 0;
+					d3d9.x_texture2 = d3d9.w_texture + centering_factor;
+					d3d9.y_texture2 = d3d9.h_texture;
+				}
+			}
+		}
+
+		//d3d9.texture.x = 1.0f;
+		//d3d9.texture.y = 1.0f;
 
 		{
 			void *tv_vertices;
-			const vertex vertices[] = {
+			const vertex quad_vertices[] = {
 				{-1.0f, -1.0f, 0.0f, 0.0f          , d3d9.texture.y },
 				{-1.0f,  1.0f, 0.0f, 0.0f          , 0.0f           },
 				{ 1.0f,  1.0f, 0.0f, d3d9.texture.x, 0.0f           },
@@ -778,7 +915,7 @@ BYTE d3d9_create_context(UINT width, UINT height) {
 			};
 
 			IDirect3DVertexBuffer9_Lock(d3d9.quad, 0, 0, (void**) &tv_vertices, 0);
-			memcpy(tv_vertices, vertices, sizeof(vertices));
+			memcpy(tv_vertices, quad_vertices, sizeof(quad_vertices));
 			IDirect3DVertexBuffer9_Unlock(d3d9.quad);
 		}
 	}
@@ -964,14 +1101,6 @@ BYTE d3d9_create_shader(_shader *shd) {
 				d3d9_release_shader(shd);
 				break;
 		}
-
-		//if (hr == D3D_OK) {
-		//	FLOAT size_input[2] = { (FLOAT) SCR_ROWS, (FLOAT) SCR_LINES };
-		//	FLOAT size_texture[2] = { d3d9.texture.w, d3d9.texture.h };
-
-		//	ID3DXConstantTable_SetFloatArray(shd->table_vrt, d3d9.dev, "size_texture",
-		//				(CONST FLOAT * ) &size_texture, 2);
-		//}
 	}
 
 	/* pixel shader */
@@ -991,13 +1120,47 @@ BYTE d3d9_create_shader(_shader *shd) {
 				&shd->table_pxl);
 
 		switch (hr) {
-			case D3D_OK:
+			case D3D_OK: {
+				FLOAT sse[2], svm[2], st[2], ft[2];
+
 				/* creo il pixel shader */
 				IDirect3DDevice9_CreatePixelShader(d3d9.dev,
 						(DWORD *) ID3DXBuffer_GetBufferPointer(code),
 						&shd->pxl);
 				ID3DXBuffer_Release(code);
+
+				sse[0] = (FLOAT) SCR_ROWS;
+				sse[1] = (FLOAT) SCR_LINES;
+				//if ((shd->id == SHADER_CRT) || (shd->id == SHADER_CRT4)) {
+				//	svm[0] = (FLOAT) d3d9.texture.w;
+				//	svm[1] = (FLOAT) d3d9.texture.h;
+				//} else {
+					svm[0] = (FLOAT) (d3d9.x_texture2 - d3d9.x_texture1);
+					svm[1] = (FLOAT) (d3d9.y_texture2 - d3d9.y_texture1);
+				//}
+				st[0] = (FLOAT) d3d9.texture.w;
+				st[1] = (FLOAT) d3d9.texture.h;
+				ft[0] = st[0] / svm[0];
+				ft[1] = st[1] / svm[1];
+
+				ID3DXConstantTable_SetFloatArray(shd->table_pxl, d3d9.dev, "size_screen_emu",
+							(CONST FLOAT * ) &sse, 2);
+				ID3DXConstantTable_SetFloatArray(shd->table_pxl, d3d9.dev, "size_video_mode",
+							(CONST FLOAT * ) &svm, 2);
+				ID3DXConstantTable_SetFloatArray(shd->table_pxl, d3d9.dev, "size_texture",
+							(CONST FLOAT * ) &st, 2);
+				ID3DXConstantTable_SetFloatArray(shd->table_pxl, d3d9.dev, "factor",
+							(CONST FLOAT * ) &ft, 2);
+
+				printf("\n");
+				printf("size_screen_emu : %f - %f\n", sse[0], sse[1]);
+				printf("size_video_mode : %f - %f\n", svm[0], svm[1]);
+				printf("size_texture    : %f - %f\n", st[0], st[1]);
+				printf("factor          : %f - %f\n", ft[0], ft[1]);
+				printf("\n");
+
 				break;
+			}
 			case COMPILERSHADER_NOT_FOUND:
 				fprintf(stderr, "ATTENTION: DirectX HLSL compiler installation are incomplete or "
 						"corrupted.\n           Please reinstall DirectX 9C\n");
@@ -1013,19 +1176,6 @@ BYTE d3d9_create_shader(_shader *shd) {
 				}
 				d3d9_release_shader(shd);
 				break;
-		}
-
-		if (hr == D3D_OK) {
-			FLOAT size_input[2] = { (FLOAT) SCR_ROWS, (FLOAT) SCR_LINES };
-			FLOAT size_output[2] = { (FLOAT) gfx.w[VIDEO_MODE], (FLOAT) gfx.h[VIDEO_MODE] };
-			FLOAT size_texture[2] = { d3d9.texture.w, d3d9.texture.h };
-
-			ID3DXConstantTable_SetFloatArray(shd->table_pxl, d3d9.dev, "size_input",
-						(CONST FLOAT * ) &size_input, 2);
-			ID3DXConstantTable_SetFloatArray(shd->table_pxl, d3d9.dev, "size_output",
-						(CONST FLOAT * ) &size_output, 2);
-			ID3DXConstantTable_SetFloatArray(shd->table_pxl, d3d9.dev, "size_texture",
-						(CONST FLOAT * ) &size_texture, 2);
 		}
 	}
 

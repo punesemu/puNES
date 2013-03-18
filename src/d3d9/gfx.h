@@ -16,9 +16,9 @@ enum fullscreen_mode { NO_FULLSCR, FULLSCR };
 enum scale_type { X1 = 1, X2, X3, X4 };
 enum filters_type {
 	NO_FILTER,
-	//SCALE2X,
-	//SCALE3X,
-	//SCALE4X,
+	SCALE2X,
+	SCALE3X,
+	SCALE4X,
 	//HQ2X,
 	//HQ3X,
 	//HQ4X,
