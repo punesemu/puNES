@@ -383,21 +383,36 @@ void glsl_shaders_init(_shader *shd) {
 
 	glUseProgram(shd->prg);
 
-	if ((shd->loc.size.input = glGetUniformLocation(shd->prg, "size_input")) >= 0) {
-		glUniform2f(shd->loc.size.input, (GLfloat) SCR_ROWS, (GLfloat) SCR_LINES);
-	}
+	{
+		GLfloat sse[2], svm[2], st[2], ft[2];
 
-	if ((shd->loc.size.output = glGetUniformLocation(shd->prg, "size_output")) >= 0) {
+		sse[0] = (GLfloat) SCR_ROWS;
+		sse[1] = (GLfloat) SCR_LINES;
 		if ((shd->id == SHADER_CRT) || (shd->id == SHADER_CRT4)) {
-			glUniform2f(shd->loc.size.output, opengl.texture.w, opengl.texture.h);
+			svm[0] = opengl.texture.w;
+			svm[1] = opengl.texture.h;
 		} else {
-			glUniform2f(shd->loc.size.output, opengl.x_texture2 - opengl.x_texture1,
-					opengl.y_texture2 - opengl.y_texture1);
-		}
-	}
+			svm[0] = (GLfloat) (opengl.x_texture2 - opengl.x_texture1);
+			svm[1] = (GLfloat) (opengl.y_texture2 - opengl.y_texture1);
 
-	if ((shd->loc.size.texture = glGetUniformLocation(shd->prg, "size_texture")) >= 0) {
-		glUniform2f(shd->loc.size.texture, opengl.texture.w, opengl.texture.h);
+		}
+		st[0] = opengl.texture.w;
+		st[1] = opengl.texture.h;
+		ft[0] = st[0] / svm[0];
+		ft[1] = st[1] / svm[1];
+
+		if ((shd->loc.size.screen_emu = glGetUniformLocation(shd->prg, "size_screen_emu")) >= 0) {
+			glUniform2f(shd->loc.size.screen_emu, sse[0], sse[1]);
+		}
+		if ((shd->loc.size.video_mode = glGetUniformLocation(shd->prg, "size_video_mode")) >= 0) {
+			glUniform2f(shd->loc.size.video_mode, svm[0], svm[1]);
+		}
+		if ((shd->loc.size.texture = glGetUniformLocation(shd->prg, "size_texture")) >= 0) {
+			glUniform2f(shd->loc.size.texture,  st[0],  st[1]);
+		}
+		if ((shd->loc.size.factor = glGetUniformLocation(shd->prg, "factor")) >= 0) {
+			glUniform2f(shd->loc.size.factor, ft[0], ft[1]);
+		}
 	}
 
 	if ((shd->loc.frame_counter = glGetUniformLocation(shd->prg, "frame_counter")) >= 0) {

@@ -66,9 +66,10 @@ typedef struct {
 
 	struct {
 		struct {
-			GLint input;
-			GLint output;
+			GLint screen_emu;
+			GLint video_mode;
 			GLint texture;
+			GLfloat factor;
 		} size;
 		struct {
 			GLint scr;
@@ -89,7 +90,10 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 	/*****************************************************************************************/
 	{
 		// vertex shader
-		NULL,
+		"void main(void) {\n"
+		"	gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;\n"
+		"	gl_FrontColor = gl_Color;\n"
+		"}",
 		// fragment shader
 		"void main(void) {\n"
 		"	gl_FragColor = gl_Color;\n"
@@ -101,18 +105,21 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 	{
 		// vertex shader
 		"varying vec4 v_texCoord;\n"
+
 		"void main(void) {\n"
-		"	v_texCoord = gl_MultiTexCoord0;\n"
-		"	gl_FrontColor = gl_Color;\n"
 		"	gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;\n"
+		"	gl_FrontColor = gl_Color;\n"
+		"	v_texCoord = gl_MultiTexCoord0;\n"
 		"}",
 		// fragment shader
 		"uniform sampler2D texture_scr;\n"
 		"uniform sampler2D texture_txt;\n"
+
 		"varying vec4 v_texCoord;\n"
+
 		"void main(void) {\n"
-		"	vec4 scr = texture2DProj(texture_scr, v_texCoord);\n"
-		"	vec4 txt = texture2DProj(texture_txt, v_texCoord);\n"
+		"	vec4 scr = texture2D(texture_scr, v_texCoord.xy);\n"
+		"	vec4 txt = texture2D(texture_txt, v_texCoord.xy);\n"
 		"	gl_FragColor = mix(scr, txt, txt.a) * gl_Color;\n"
 		"}"
 	},
@@ -122,13 +129,15 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 	{
 		// vertex shader
 		"uniform vec2 size_texture;\n"
+
 		"varying vec4 v_texCoord[5];\n"
+
 		"void main() {\n"
+		"	gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;\n"
+		"	gl_FrontColor = gl_Color;\n"
+
 		"	vec2 dx = vec2((1.0 / size_texture.x), 0);\n"
 		"	vec2 dy = vec2(0, (1.0 / size_texture.y));\n"
-
-		"	gl_FrontColor = gl_Color;\n"
-		"	gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;\n"
 
 		"	v_texCoord[0]    = gl_MultiTexCoord0;     // center\n"
 		"	v_texCoord[1].xy = v_texCoord[0].xy - dx; // left\n"
@@ -138,28 +147,32 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"}",
 		// fragment shader
 		"uniform vec2 size_texture;\n"
+		"uniform vec2 factor;\n"
+
 		"uniform sampler2D texture_scr;\n"
 		"uniform sampler2D texture_txt;\n"
-		"varying vec4 v_texCoord[5];\n"
-		"void main() {\n"
-		"	vec3 E = texture2DProj(texture_scr, v_texCoord[0]).xyz;\n"
-		"	vec3 D = texture2DProj(texture_scr, v_texCoord[1]).xyz;\n"
-		"	vec3 F = texture2DProj(texture_scr, v_texCoord[2]).xyz;\n"
-		"	vec3 H = texture2DProj(texture_scr, v_texCoord[3]).xyz;\n"
-		"	vec3 B = texture2DProj(texture_scr, v_texCoord[4]).xyz;\n"
 
-		"	vec4 scr;\n"
+		"varying vec4 v_texCoord[5];\n"
+
+		"void main() {\n"
+		"	vec3 E = texture2D(texture_scr, v_texCoord[0].xy).xyz;\n"
+		"	vec3 D = texture2D(texture_scr, v_texCoord[1].xy).xyz;\n"
+		"	vec3 F = texture2D(texture_scr, v_texCoord[2].xy).xyz;\n"
+		"	vec3 H = texture2D(texture_scr, v_texCoord[3].xy).xyz;\n"
+		"	vec3 B = texture2D(texture_scr, v_texCoord[4].xy).xyz;\n"
+
+		"	vec4 scr = vec4(1.0);\n"
 
 		"	if ((D - F) * (H - B) == vec3(0.0)) {\n"
 		"		scr.xyz = E;\n"
 		"	} else {"
-		"		vec2 p = fract(v_texCoord[0].xy * size_texture.xy);\n"
-		"		vec3 tmp1 = p.x < 0.5 ? D : F;\n"
-		"		vec3 tmp2 = p.y < 0.5 ? H : B;\n"
+		"		vec2 p = fract(v_texCoord[0].xy * size_texture);\n"
+		"		vec3 tmp1 = p.x < factor.x ? D : F;\n"
+		"		vec3 tmp2 = p.y < factor.y ? H : B;\n"
 		"		scr.xyz = ((tmp1 - tmp2) != vec3(0.0)) ? E : tmp1;\n"
 		"	}\n"
 
-		"	vec4 txt = texture2DProj(texture_txt, v_texCoord[0]);\n"
+		"	vec4 txt = texture2D(texture_txt, v_texCoord[0].xy);\n"
 
 		"	gl_FragColor = mix(scr, txt, txt.a) * gl_Color;\n"
 		"}",
@@ -197,15 +210,17 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 	{
 		// vertex shader
 		"uniform vec2 size_texture;\n"
-		"varying vec4 v_texCoord[5];\n"
-		"void main() {\n"
-		"	vec2 dx = vec2(1.0 / size_texture.x, 0);\n"
-		"	vec2 dy = vec2(0, 1.0 / size_texture.y);\n"
 
+		"varying vec4 v_texCoord[5];\n"
+
+		"void main() {\n"
 		"	gl_FrontColor = gl_Color;\n"
 		"	gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;\n"
 
-		"	v_texCoord[0]    = gl_MultiTexCoord0;         // E\n"
+		"	vec2 dx = vec2((1.0 / size_texture.x), 0.0);\n"
+		"	vec2 dy = vec2(0.0, (1.0 / size_texture.y));\n"
+
+		"	v_texCoord[0]    = gl_MultiTexCoord0;          // E\n"
 		"	v_texCoord[0].zw = v_texCoord[0].xy - dx - dy; // A\n"
 		"	v_texCoord[1].xy = v_texCoord[0].xy - dy;      // B\n"
 		"	v_texCoord[1].zw = v_texCoord[0].xy + dx - dy; // C\n"
@@ -217,11 +232,17 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"}",
 		// fragment shader
 		"uniform vec2 size_texture;\n"
+		"uniform vec2 factor;\n"
+
 		"uniform sampler2D texture_scr;\n"
 		"uniform sampler2D texture_txt;\n"
+
 		"varying vec4 v_texCoord[5];\n"
+
 		"void main() {\n"
-		"	const vec2 sep = vec2(0.33333, 0.66667); // sufficient precision for HDTV (1920x1080)\n"
+		//"	// sufficient precision for HDTV (1920x1080)\n"
+		//"	const vec2 sep = vec2(0.33333, 0.66667);\n"
+		"	vec2 sep = vec2(factor.x, (factor.y / 0.5));\n"
 
 		"	vec4 E = texture2D(texture_scr, v_texCoord[0].xy); // E\n"
 		"	vec4 A = texture2D(texture_scr, v_texCoord[0].zw); // A\n"
@@ -232,10 +253,12 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"	vec4 G = texture2D(texture_scr, v_texCoord[3].xy); // G\n"
 		"	vec4 H = texture2D(texture_scr, v_texCoord[3].zw); // H\n"
 		"	vec4 I = texture2D(texture_scr, v_texCoord[4].xy); // I\n"
-		"	vec4 X = vec4(1) - E; // to be sure that ((E != A) == true) in function call\n"
+		"	// to be sure that ((E != A) == true) in function call\n"
+		"	vec4 X = vec4(1.0) - E;\n"
 		"	vec4 T;\n"
 
-		"	vec2 sel = fract(v_texCoord[0].xy * size_texture.xy);// where are we (E0-E8)?\n"
+		"	// where are we (E0-E8)?\n"
+		"	vec2 sel = fract(v_texCoord[0].xy * size_texture.xy);\n"
 		"	// branching is very undesirable, so we make a lot of reassignments\n"
 		"	// of original pixels to make sure that rule for E1 pixel will work\n"
 		"	// with any other (rotate second matrix and swap some Ex)\n"
@@ -314,8 +337,13 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 	{
 		// vertex shader
 		"uniform vec2 size_texture;\n"
+
 		"varying vec4 v_texCoord[7];\n"
+
 		"void main() {\n"
+		"	gl_FrontColor = gl_Color;\n"
+		"	gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;\n"
+
 		"	float x = 0.5 * (1.0 / size_texture.x);\n"
 		"	float y = 0.5 * (1.0 / size_texture.y);\n"
 
@@ -323,9 +351,6 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"	vec2 dg2 = vec2(-x, y);\n"
 		"	vec2 sd1 = dg1 * 0.5;\n"
 		"	vec2 sd2 = dg2 * 0.5;\n"
-
-		"	gl_FrontColor = gl_Color;\n"
-		"	gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;\n"
 
 		"	v_texCoord[0] = gl_MultiTexCoord0;\n"
 		"	v_texCoord[1].xy = v_texCoord[0].xy - sd1;\n"
@@ -340,7 +365,9 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		// fragment shader
 		"uniform sampler2D texture_scr;\n"
 		"uniform sampler2D texture_txt;\n"
+
 		"varying vec4 v_texCoord[7];\n"
+
 		"void main() {\n"
 		"	vec3 c  = texture2D(texture_scr, v_texCoord[0].xy).xyz;\n"
 		"	vec3 i1 = texture2D(texture_scr, v_texCoord[1].xy).xyz;\n"
@@ -352,7 +379,7 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"	vec3 o2 = texture2D(texture_scr, v_texCoord[5].zw).xyz;\n"
 		"	vec3 o4 = texture2D(texture_scr, v_texCoord[6].zw).xyz;\n"
 
-		"	vec3 dt = vec3(1.0, 1.0, 1.0);\n"
+		"	vec3 dt = vec3(1.0);\n"
 
 		"	float ko1=dot(abs(o1-c),dt);\n"
 		"	float ko2=dot(abs(o2-c),dt);\n"
@@ -735,33 +762,44 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 	/*****************************************************************************************/
 	{
 		// vertex shader
-		NULL,
+		"varying vec4 v_texCoord;\n"
+
+		"void main(void) {\n"
+		"	gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;\n"
+		"	gl_FrontColor = gl_Color;\n"
+		"	v_texCoord = gl_MultiTexCoord0;\n"
+		"}",
 		// fragment shader
 		"uniform vec2 size_texture;\n"
+		"uniform vec2 factor;\n"
+
 		"uniform sampler2D texture_scr;\n"
 		"uniform sampler2D texture_txt;\n"
 
+		"varying vec4 v_texCoord;\n"
+
 		"vec3 to_focus(float pixel) {\n"
 		"	pixel = mod(pixel + 3.0, 3.0);\n"
-		"	if (pixel >= 2.0) // Blue\n"
+		"	if (pixel >= 2.0) {                    // Blue\n"
 		"		return vec3(pixel - 2.0, 0.0, 3.0 - pixel);\n"
-		"	else if (pixel >= 1.0)// Green\n"
+		"	} else if (pixel >= 1.0) {             // Green\n"
 		"		return vec3(0.0, 2.0 - pixel, pixel - 1.0);\n"
-		"	else// Red\n"
+		"	} else {                               // Red\n"
 		"		return vec3(1.0 - pixel, pixel, 0.0);\n"
+		"	}\n"
 		"}\n"
 
 		"void main() {\n"
-		"	float y = mod(gl_TexCoord[0].y * size_texture.y, 1.0);\n"
+		"	float y = mod(v_texCoord.y * size_texture.y, 1.0);\n"
 		"	float intensity = exp(-0.2 * y);\n"
 
 		"	vec2 one_x = vec2(1.0 / (3.0 * size_texture.x), 0.0);\n"
 
-		"	vec3 color = texture2D(texture_scr, gl_TexCoord[0].xy - 0.0 * one_x).rgb;\n"
-		"	vec3 color_prev = texture2D(texture_scr, gl_TexCoord[0].xy - 1.0 * one_x).rgb;\n"
-		"	vec3 color_prev_prev = texture2D(texture_scr, gl_TexCoord[0].xy - 2.0 * one_x).rgb;\n"
+		"	vec3 color = texture2D(texture_scr, v_texCoord.xy).rgb;\n"
+		"	vec3 color_prev = texture2D(texture_scr, v_texCoord.xy - one_x).rgb;\n"
+		"	vec3 color_prev_prev = texture2D(texture_scr, v_texCoord.xy - 2.0 * one_x).rgb;\n"
 
-		"	float pixel_x = 3.0 * gl_TexCoord[0].x * size_texture.x;\n"
+		"	float pixel_x = v_texCoord.x * (3.0 * size_texture.x);\n"
 
 		"	vec3 focus = to_focus(pixel_x - 0.0);\n"
 		"	vec3 focus_prev = to_focus(pixel_x - 1.0);\n"
@@ -775,7 +813,7 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 
 		"	vec4 scr = vec4(intensity * result, 1.0);\n"
 
-		"	vec4 txt = texture2D(texture_txt, gl_TexCoord[0].xy);\n"
+		"	vec4 txt = texture2D(texture_txt, v_texCoord.xy);\n"
 
 		"	gl_FragColor = mix(scr, txt, txt.a) * gl_Color;\n"
 		"}"
@@ -785,24 +823,29 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 	/*****************************************************************************************/
 	{
 		// vertex shader
-		"uniform vec2 size_input;\n"
-		"uniform vec2 size_output;\n"
+		"uniform vec2 size_screen_emu;\n"
+		"uniform vec2 size_video_mode;\n"
 		"uniform vec2 size_texture;\n"
+		"uniform vec2 factor;\n"
+
 		"varying vec4 v_texCoord;\n"
 		"varying vec2 omega;\n"
-		"void main() {\n"
-		"	omega = vec2(3.1415 * size_output.x * size_texture.x /"
-		"				size_input.x, 2.0 * 3.1415 * size_texture.y);\n"
 
+		"void main() {\n"
 		"	gl_FrontColor = gl_Color;\n"
 		"	gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;\n"
+
+		"	omega = vec2(3.1415 * size_video_mode.x * size_texture.x / size_screen_emu.x,"
+		"			2.0 * 3.1415 * size_texture.y);\n"
 
 		"	v_texCoord = gl_MultiTexCoord0;\n"
 		"}",
 		// fragment shader
 		"uniform vec2 size_texture;\n"
+
 		"uniform sampler2D texture_scr;\n"
 		"uniform sampler2D texture_txt;\n"
+
 		"varying vec4 v_texCoord;\n"
 		"varying vec2 omega;\n"
 
@@ -812,8 +855,9 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"void main() {\n"
 		"	vec4 c11 = texture2D(texture_scr, v_texCoord.xy);\n"
 
-		"	vec4 scanline = c11 * (base_brightness +"
-		"					dot(sine_comp * sin(v_texCoord.xy * omega), vec2(1.0)));\n"
+		"	vec4 scanline = c11 * (base_brightness + dot(sine_comp * sin(v_texCoord.xy * omega),"
+		"			vec2(1.0)));\n"
+
 		"	vec4 scr = clamp(scanline, 0.0, 1.0);\n"
 
 		"	vec4 txt = texture2D(texture_txt, v_texCoord.xy);\n"
