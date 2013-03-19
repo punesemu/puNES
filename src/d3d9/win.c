@@ -589,15 +589,6 @@ void gui_update(void) {
 			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_SCANLINE);
 			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_DBL);
 
-			menuitem.fState = MFS_ENABLED;
-
-			/* Video/Filter/Scalex */
-			SetMenuItemInfo(menu_to_change, 5, TRUE, &menuitem);
-
-			change_menuitem(CHECK, MF_ENABLED, IDM_SET_FILTER_SCALE2X);
-			change_menuitem(CHECK, MF_ENABLED, IDM_SET_FILTER_SCALE3X);
-			change_menuitem(CHECK, MF_ENABLED, IDM_SET_FILTER_SCALE4X);
-
 		//	menuitem.fState = MFS_ENABLED;
 
 		//	/* Video/Filter/CRT */
@@ -610,14 +601,10 @@ void gui_update(void) {
 			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_SCANLINE);
 			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_DBL);
 
-			menuitem.fState = MFS_DISABLED;
+		//	menuitem.fState = MFS_DISABLED;
 
-			/* Video/Filter/Scalex */
-			SetMenuItemInfo(menu_to_change, 5, TRUE, &menuitem);
-
-			change_menuitem(CHECK, MF_GRAYED, IDM_SET_FILTER_SCALE2X);
-			change_menuitem(CHECK, MF_GRAYED, IDM_SET_FILTER_SCALE3X);
-			change_menuitem(CHECK, MF_GRAYED, IDM_SET_FILTER_SCALE4X);
+			/* Video/Filter/CRT */
+		//	SetMenuItemInfo(menu_to_change, 5, TRUE, &menuitem);
 
 		//	change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_CRTCURVE);
 		//	change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_CRTNOCURVE);
@@ -633,11 +620,9 @@ void gui_update(void) {
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_SCALE2X);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_SCALE3X);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_SCALE4X);
-	/*
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_HQ2X);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_HQ3X);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_HQ4X);
-	*/
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_RGBNTSCCOM);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_RGBNTSCSVD);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_RGBNTSCRGB);
@@ -668,7 +653,6 @@ void gui_update(void) {
 		case SCALE2X:
 			id = IDM_SET_FILTER_SCALE2X;
 			break;
-		/*
 		case SCALE3X:
 			id = IDM_SET_FILTER_SCALE3X;
 			break;
@@ -684,7 +668,6 @@ void gui_update(void) {
 		case HQ4X:
 			id = IDM_SET_FILTER_HQ4X;
 			break;
-		*/
 		case NTSC_FILTER:
 			switch (cfg->ntsc_format) {
 				case COMPOSITE:
@@ -1136,7 +1119,6 @@ long __stdcall main_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 				case IDM_SET_FILTER_SCALE4X:
 					set_filter(SCALE4X);
 					break;
-				/*
 				case IDM_SET_FILTER_HQ2X:
 					set_filter(HQ2X);
 					break;
@@ -1146,7 +1128,6 @@ long __stdcall main_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 				case IDM_SET_FILTER_HQ4X:
 					set_filter(HQ4X);
 					break;
-				*/
 				case IDM_SET_FILTER_RGBNTSCCOM:
 					cfg->ntsc_format = COMPOSITE;
 					set_filter(NTSC_FILTER);
@@ -1404,7 +1385,6 @@ void set_filter(BYTE filter) {
 		case SCALE4X:
 			gfx_set_screen(X4, SCALE4X, NO_CHANGE, NO_CHANGE, FALSE);
 			break;
-		/*
 		case HQ2X:
 			gfx_set_screen(X2, HQ2X, NO_CHANGE, NO_CHANGE, FALSE);
 			break;
@@ -1414,7 +1394,6 @@ void set_filter(BYTE filter) {
 		case HQ4X:
 			gfx_set_screen(X4, HQ4X, NO_CHANGE, NO_CHANGE, FALSE);
 			break;
-		*/
 		case NTSC_FILTER:
 			gfx_set_screen(NO_CHANGE, NTSC_FILTER, NO_CHANGE, NO_CHANGE, FALSE);
 			if (cfg->filter == NTSC_FILTER) {

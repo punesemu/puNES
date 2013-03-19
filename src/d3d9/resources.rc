@@ -170,14 +170,12 @@ BEGIN
 					MENUITEM "Scale&3X",          IDM_SET_FILTER_SCALE3X
 					MENUITEM "Scale&4X",          IDM_SET_FILTER_SCALE4X
 				END
-				/*
 				POPUP "&Hqx"
 				BEGIN
 					MENUITEM "Hq&2x",             IDM_SET_FILTER_HQ2X
 					MENUITEM "Hq&3x",             IDM_SET_FILTER_HQ3X
 					MENUITEM "Hq&4x",             IDM_SET_FILTER_HQ4X
 				END
-				*/
 				POPUP "N&TSC"
 				BEGIN
 					MENUITEM "&Composite",        IDM_SET_FILTER_RGBNTSCCOM

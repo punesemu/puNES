@@ -11,6 +11,7 @@
 #include "common.h"
 #include "filters/video/scale.h"
 #include "filters/video/ntsc.h"
+#include "filters/video/hqx.h"
 
 enum fullscreen_mode { NO_FULLSCR, FULLSCR };
 enum scale_type { X1 = 1, X2, X3, X4 };
@@ -19,9 +20,9 @@ enum filters_type {
 	SCALE2X,
 	SCALE3X,
 	SCALE4X,
-	//HQ2X,
-	//HQ3X,
-	//HQ4X,
+	HQ2X,
+	HQ3X,
+	HQ4X,
 	NTSC_FILTER,
 	BILINEAR,
 	/* glsl shaders */

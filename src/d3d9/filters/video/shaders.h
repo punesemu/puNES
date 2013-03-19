@@ -16,7 +16,7 @@ enum shader_type {
 	SHADER_SCALE2X,
 	SHADER_SCALE3X,
 	SHADER_SCALE4X,
-	//SHADER_HQ2X,
+	SHADER_HQ2X,
 	//SHADER_HQ4X,
 	//SHADER_4xBR,
 	//SHADER_PIXELLATE,
@@ -169,8 +169,6 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"}\n"
 
 		"float4 Ps(float2 texCoord : TEXCOORD0) : COLOR {\n"
-		//"	float x = factor.x * (1.0 / size_texture.x);\n"
-		//"	float y = factor.y * (1.0 / size_texture.y);\n"
 		"	float x = (1.0 / size_texture.x);\n"
 		"	float y = (1.0 / size_texture.y);\n"
 		"	float2 dx = float2(x, 0.0);\n"
@@ -373,10 +371,8 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"}\n"
 
 		"float4 Ps(float2 texCoord : TEXCOORD0) : COLOR {\n"
-		//"	float x = (factor.x * 2.0) * (1.0 / size_texture.x);\n"
-		//"	float y = (factor.y * 2.0) * (1.0 / size_texture.y);\n"
-		"	float x = 0.5 * (1.0 / size_texture.x);\n"
-		"	float y = 0.5 * (1.0 / size_texture.y);\n"
+		"	float x = (factor.x * 2.0) * (1.0 / size_texture.x);\n"
+		"	float y = (factor.y * 2.0) * (1.0 / size_texture.y);\n"
 
 		"	float2 dg1 = float2( x, y);\n"
 		"	float2 dg2 = float2(-x, y);\n"
@@ -427,6 +423,101 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"}"
 	},
 	/*****************************************************************************************/
+	/* HQ2X                                                                                  */
+	/*****************************************************************************************/
+	{
+		"struct VsOutput {\n"
+		"	float4 Position : POSITION;\n"
+		"	float2 TexCoord : TEXCOORD0;\n"
+		"};\n"
+
+		"float4x4 m_world_view_projection : WORLDVIEWPROJECTION;\n"
+
+		"VsOutput Vs(float3 position : POSITION, float2 texCoord : TEXCOORD0) {\n"
+		"	VsOutput output;\n"
+		"	output.Position = mul(float4(position, 1.0), m_world_view_projection);\n"
+		"	output.TexCoord = texCoord;\n"
+		"	return output;\n"
+		"}",
+		// pixel shader
+		"float2 size_screen_emu;\n"
+		"float2 size_video_mode;\n"
+		"float2 size_texture;\n"
+		"float2 factor;\n"
+
+		"texture texture_scr;\n"
+		"sampler2D s0 = sampler_state { Texture = <texture_scr>; };\n"
+
+		"static const float mx = 0.325;     // start smoothing wt.\n"
+		"static const float k = -0.250;     // wt. decrease factor\n"
+		"static const float max_w = 0.25;   // max filter weigth\n"
+		"static const float min_w =-0.05;   // min filter weigth\n"
+		"static const float lum_add = 0.25; // effects smoothing\n"
+
+		"float4 Ps(float2 texCoord : TEXCOORD0) : COLOR {\n"
+		//"	float x = 0.5 * (1.0 / size_texture.x);\n"
+		//"	float y = 0.5 * (1.0 / size_texture.y);\n"
+		"	float x = factor.x * (1.0 / size_texture.x);\n"
+		"	float y = factor.y * (1.0 / size_texture.y);\n"
+
+		"	float2 dx = float2(x, 0.0);\n"
+		"	float2 dy = float2(0.0, y);\n"
+		"	float2 dg1 = float2( x, y);\n"
+		"	float2 dg2 = float2(-x, y);\n"
+
+		"	float4 v_texCoord[5];\n"
+
+		"	v_texCoord[0] = float4(texCoord.xy, 0.0, 0.0);\n"
+		"	v_texCoord[1].xy = v_texCoord[0].xy - dg1;\n"
+		"	v_texCoord[1].zw = v_texCoord[0].xy - dy;\n"
+		"	v_texCoord[2].xy = v_texCoord[0].xy - dg2;\n"
+		"	v_texCoord[2].zw = v_texCoord[0].xy + dx;\n"
+		"	v_texCoord[3].xy = v_texCoord[0].xy + dg1;\n"
+		"	v_texCoord[3].zw = v_texCoord[0].xy + dy;\n"
+		"	v_texCoord[4].xy = v_texCoord[0].xy + dg2;\n"
+		"	v_texCoord[4].zw = v_texCoord[0].xy - dx;\n"
+
+		"	float3 c00 = tex2D(s0, v_texCoord[1].xy).xyz;\n"
+		"	float3 c10 = tex2D(s0, v_texCoord[1].zw).xyz;\n"
+		"	float3 c20 = tex2D(s0, v_texCoord[2].xy).xyz;\n"
+		"	float3 c01 = tex2D(s0, v_texCoord[4].zw).xyz;\n"
+		"	float3 c11 = tex2D(s0, v_texCoord[0].xy).xyz;\n"
+		"	float3 c21 = tex2D(s0, v_texCoord[2].zw).xyz;\n"
+		"	float3 c02 = tex2D(s0, v_texCoord[4].xy).xyz;\n"
+		"	float3 c12 = tex2D(s0, v_texCoord[3].zw).xyz;\n"
+		"	float3 c22 = tex2D(s0, v_texCoord[3].xy).xyz;\n"
+
+		"	float3 dt = float3(1.0, 1.0, 1.0);\n"
+
+		"	float md1 = dot(abs(c00 - c22), dt);\n"
+		"	float md2 = dot(abs(c02 - c20), dt);\n"
+
+		"	float w1 = dot(abs(c22 - c11), dt) * md2;\n"
+		"	float w2 = dot(abs(c02 - c11), dt) * md1;\n"
+		"	float w3 = dot(abs(c00 - c11), dt) * md2;\n"
+		"	float w4 = dot(abs(c20 - c11), dt) * md1;\n"
+
+		"	float t1 = w1 + w3;\n"
+		"	float t2 = w2 + w4;\n"
+		"	float ww = max(t1, t2) + 0.0001;\n"
+
+		"	c11 = (w1 * c00 + w2 * c20 + w3 * c22 + w4 * c02 + ww * c11) / (t1 + t2 + ww);\n"
+
+		"	float lc1 = k / (0.12 * dot(c10 + c12 + c11, dt) + lum_add);\n"
+		"	float lc2 = k / (0.12 * dot(c01 + c21 + c11, dt) + lum_add);\n"
+
+		"	w1 = clamp(lc1 * dot(abs(c11 - c10), dt) + mx, min_w, max_w);\n"
+		"	w2 = clamp(lc2 * dot(abs(c11 - c21), dt) + mx, min_w, max_w);\n"
+		"	w3 = clamp(lc1 * dot(abs(c11 - c12), dt) + mx, min_w, max_w);\n"
+		"	w4 = clamp(lc2 * dot(abs(c11 - c01), dt) + mx, min_w, max_w);\n"
+
+		"	float4 scr = float4(w1 * c10 + w2 * c21 + w3 * c12 + w4 * c01 +"
+		"			  (1.0 - w1 - w2 - w3 - w4) * c11, 1.0);\n"
+
+		"	return scr;\n"
+		"}"
+	},
+	/*****************************************************************************************/
 	/* Phosphor                                                                              */
 	/*****************************************************************************************/
 	{
@@ -454,16 +545,16 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"sampler2D s0 = sampler_state { Texture = <texture_scr>; };\n"
 
 		"float mod(float x, float y) {\n"
-		"	return x - y * floor(x/y);\n"
+		"	return x - y * floor(x / y);\n"
 		"}\n"
 
 		"float3 to_focus(float pixel) {\n"
 		"	pixel = mod(pixel + 3.0, 3.0);\n"
-		"	if (pixel >= 2.0) {                      //  Blue\n"
+		"	if (pixel >= 2.0) {        //  Blue\n"
 		"		return float3(pixel - 2.0, 0.0, 3.0 - pixel);\n"
-		"	} else if (pixel >= 1.0) {               // Green\n"
+		"	} else if (pixel >= 1.0) { // Green\n"
 		"		return float3(0.0, 2.0 - pixel, pixel - 1.0);\n"
-		"	} else {                                 //  Red\n"
+		"	} else {                   //  Red\n"
 		"		return float3(1.0 - pixel, pixel, 0.0);\n"
 		"	}\n"
 		"}\n"
@@ -472,14 +563,13 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"	float y = mod(texCoord.y * size_texture.y, 1.0);\n"
 		"	float intensity = exp(-0.2 * y);\n"
 
-		//"	float2 one_x = float2(factor.x * (1.0 / (3.0 * size_texture.x)), 0.0);\n"
 		"	float2 one_x = float2((1.0 / (3.0 * size_texture.x)), 0.0);\n"
 
 		"	float3 color = tex2D(s0, texCoord).rgb;\n"
 		"	float3 color_prev = tex2D(s0, texCoord - one_x).rgb;\n"
 		"	float3 color_prev_prev = tex2D(s0, texCoord - (2.0 * one_x)).rgb;\n"
 
-		"	float pixel_x = texCoord.x * (3.0 * size_texture.x);\n"
+		"	float pixel_x = 3.0 * (texCoord.x * size_texture.x);\n"
 
 		"	float3 focus = to_focus(pixel_x - 0.0);\n"
 		"	float3 focus_prev = to_focus(pixel_x - 1.0);\n"
@@ -595,8 +685,10 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"}\n"
 
 		"float4 Ps(float2 texCoord : TEXCOORD0) : COLOR {\n"
-		"	float dx = factor.x * (1.0 / size_texture.x);\n"
-		"	float dy = factor.y * (1.0 / size_texture.y);\n"
+		//"	float dx = factor.x * (1.0 / size_texture.x);\n"
+		//"	float dy = factor.y * (1.0 / size_texture.y);\n"
+		"	float dx = (1.0 / size_texture.x);\n"
+		"	float dy = (1.0 / size_texture.y);\n"
 
 		"	float2 c00 = texCoord + float2(-dx, -dy);\n"
 		"	float2 c10 = texCoord + float2(  0, -dy);\n"
@@ -658,7 +750,7 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"	float3x3 rgb2yuv = float3x3("
 		"		0.299,-0.14713, 0.615  ,"
 		"		0.587,-0.28886,-0.51499,"
-		"		0.114, 0.436  ,-0.10001"
+		"		0.114, 0.436  ,-0.10001 "
 		"	);\n"
 		"	float3x3 yuv2rgb = float3x3("
 		"		1.0    , 1.0    , 1.0    ,"
@@ -666,33 +758,26 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"		1.13983,-0.58060, 0.0     "
 		"	);\n"
 
+		"	float4 wid = float4(3.0, 3.0, 3.0, 3.0);\n"
+		"	float4 c1 = float4(exp(float4(-1.0, -1.0, -1.0, -1.0) / wid / wid));\n"
+		"	float4 c2 = float4(exp(float4(-4.0, -4.0, -4.0, -4.0) / wid / wid));\n"
+		"	float4 c3 = float4(exp(float4(-9.0, -9.0, -9.0, -9.0) / wid / wid));\n"
+		"	float4 c4 = float4(exp(float4(-16.0, -16.0, -16.0, -16.0) / wid / wid));\n"
+		"	float4 norm = 1.0 / (float4(1.0, 1.0, 1.0, 1.0) + float4(2.0, 2.0, 2.0, 2.0) *"
+		"			(c1 + c2 + c3 + c4));\n"
+
+		"	float one_x = (1.0 / size_texture.x);\n"
+
 		"	float4 sum = float4(0.0, 0.0, 0.0, 0.0);\n"
-
-		"	float wid = 3.0;\n"
-		"	float tmp = 0;\n"
-		"	tmp = exp( -1.0 / wid / wid);\n"
-		"	float4 c1 = float4(tmp, tmp, tmp, tmp);\n"
-		"	tmp = exp( -4.0 / wid / wid);\n"
-		"	float4 c2 = float4(tmp, tmp, tmp, tmp);\n"
-		"	tmp = exp( -9.0 / wid / wid);\n"
-		"	float4 c3 = float4(tmp, tmp, tmp, tmp);\n"
-		"	tmp = exp( -16.0 / wid / wid);\n"
-		"	float4 c4 = float4(tmp, tmp, tmp, tmp);\n"
-		"	float4 norm = 1.0 / (float4(1.0, 1.0, 1.0, 1.0) + "
-		"			float4(2.0, 2.0, 2.0, 2.0) * (c1 + c2 + c3 + c4));\n"
-
-		//"	float onex = factor.x * (1.0 / size_texture.x);\n"
-		"	float onex = (1.0 / size_texture.x);\n"
-
-		"	sum += tex2D(s0, texCoord + float2(-4.0 * onex, 0.0)) * c4;\n"
-		"	sum += tex2D(s0, texCoord + float2(-3.0 * onex, 0.0)) * c3;\n"
-		"	sum += tex2D(s0, texCoord + float2(-2.0 * onex, 0.0)) * c2;\n"
-		"	sum += tex2D(s0, texCoord + float2(-1.0 * onex, 0.0)) * c1;\n"
+		"	sum += tex2D(s0, texCoord + float2(-4.0 * one_x, 0.0)) * c4;\n"
+		"	sum += tex2D(s0, texCoord + float2(-3.0 * one_x, 0.0)) * c3;\n"
+		"	sum += tex2D(s0, texCoord + float2(-2.0 * one_x, 0.0)) * c2;\n"
+		"	sum += tex2D(s0, texCoord + float2(-1.0 * one_x, 0.0)) * c1;\n"
 		"	sum += tex2D(s0, texCoord);\n"
-		"	sum += tex2D(s0, texCoord + float2(+1.0 * onex, 0.0)) * c1;\n"
-		"	sum += tex2D(s0, texCoord + float2(+2.0 * onex, 0.0)) * c2;\n"
-		"	sum += tex2D(s0, texCoord + float2(+3.0 * onex, 0.0)) * c3;\n"
-		"	sum += tex2D(s0, texCoord + float2(+4.0 * onex, 0.0)) * c4;\n"
+		"	sum += tex2D(s0, texCoord + float2(+1.0 * one_x, 0.0)) * c1;\n"
+		"	sum += tex2D(s0, texCoord + float2(+2.0 * one_x, 0.0)) * c2;\n"
+		"	sum += tex2D(s0, texCoord + float2(+3.0 * one_x, 0.0)) * c3;\n"
+		"	sum += tex2D(s0, texCoord + float2(+4.0 * one_x, 0.0)) * c4;\n"
 
 		"	float y = mul(rgb2yuv, tex2D(s0, texCoord).rgb).x;\n"
 		"	float2 uv = mul(rgb2yuv, float3(sum.rgb * norm.rgb)).yz;\n"

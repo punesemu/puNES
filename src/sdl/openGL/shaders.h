@@ -381,20 +381,21 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 
 		"	vec3 dt = vec3(1.0);\n"
 
-		"	float ko1=dot(abs(o1-c),dt);\n"
-		"	float ko2=dot(abs(o2-c),dt);\n"
-		"	float ko3=dot(abs(o3-c),dt);\n"
-		"	float ko4=dot(abs(o4-c),dt);\n"
+		"	float ko1 = dot(abs(o1 - c), dt);\n"
+		"	float ko2 = dot(abs(o2 - c), dt);\n"
+		"	float ko3 = dot(abs(o3 - c), dt);\n"
+		"	float ko4 = dot(abs(o4 - c), dt);\n"
 
 		"	float k1=min(dot(abs(i1-i3),dt),dot(abs(o1-o3),dt));\n"
 		"	float k2=min(dot(abs(i2-i4),dt),dot(abs(o2-o4),dt));\n"
 
-		"	float w1 = k2; if (ko3<ko1) w1 = 0.0;\n"
-		"	float w2 = k1; if (ko4<ko2) w2 = 0.0;\n"
-		"	float w3 = k2; if (ko1<ko3) w3 = 0.0;\n"
-		"	float w4 = k1; if (ko2<ko4) w4 = 0.0;\n"
+		"	float w1 = k2; if (ko3 < ko1) { w1 = 0.0; }\n"
+		"	float w2 = k1; if (ko4 < ko2) { w2 = 0.0; }\n"
+		"	float w3 = k2; if (ko1 < ko3) { w3 = 0.0; }\n"
+		"	float w4 = k1; if (ko2 < ko4) { w4 = 0.0; }\n"
 
-		"	vec4 scr = vec4((w1*o1+w2*o2+w3*o3+w4*o4+0.0001*c)/(w1+w2+w3+w4+0.0001), 1.0);\n"
+		"	vec4 scr = vec4(((w1 * o1) + (w2 * o2) + (w3 * o3) + (w4 * o4) + (0.0001 * c)) /"
+		"			(w1 + w2 + w3 + w4 + 0.0001), 1.0);\n"
 
 		"	vec4 txt = texture2D(texture_txt, v_texCoord[0].xy);\n"
 
@@ -780,11 +781,11 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 
 		"vec3 to_focus(float pixel) {\n"
 		"	pixel = mod(pixel + 3.0, 3.0);\n"
-		"	if (pixel >= 2.0) {                    // Blue\n"
+		"	if (pixel >= 2.0) {         // Blue\n"
 		"		return vec3(pixel - 2.0, 0.0, 3.0 - pixel);\n"
-		"	} else if (pixel >= 1.0) {             // Green\n"
+		"	} else if (pixel >= 1.0) {  // Green\n"
 		"		return vec3(0.0, 2.0 - pixel, pixel - 1.0);\n"
-		"	} else {                               // Red\n"
+		"	} else {                    // Red\n"
 		"		return vec3(1.0 - pixel, pixel, 0.0);\n"
 		"	}\n"
 		"}\n"
@@ -793,13 +794,13 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"	float y = mod(v_texCoord.y * size_texture.y, 1.0);\n"
 		"	float intensity = exp(-0.2 * y);\n"
 
-		"	vec2 one_x = vec2(1.0 / (3.0 * size_texture.x), 0.0);\n"
+		"	vec2 one_x = vec2((1.0 / (3.0 * size_texture.x)), 0.0);\n"
 
 		"	vec3 color = texture2D(texture_scr, v_texCoord.xy).rgb;\n"
 		"	vec3 color_prev = texture2D(texture_scr, v_texCoord.xy - one_x).rgb;\n"
 		"	vec3 color_prev_prev = texture2D(texture_scr, v_texCoord.xy - 2.0 * one_x).rgb;\n"
 
-		"	float pixel_x = v_texCoord.x * (3.0 * size_texture.x);\n"
+		"	float pixel_x = 3.0 * (v_texCoord.x * size_texture.x);\n"
 
 		"	vec3 focus = to_focus(pixel_x - 0.0);\n"
 		"	vec3 focus_prev = to_focus(pixel_x - 1.0);\n"
@@ -1818,20 +1819,20 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"void main() {\n"
 		"	gl_FrontColor = gl_Color;\n"
 		"	gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;\n"
-		"	float dx = 1.0 / size_texture.x;\n"
-		"	float dy = 1.0 / size_texture.y;\n"
 
-		"	vec2 tex = gl_MultiTexCoord0.xy;\n"
-		"	c00 = tex + vec2(-dx, -dy);\n"
-		"	c10 = tex + vec2(  0, -dy);\n"
-		"	c20 = tex + vec2( dx, -dy);\n"
-		"	c01 = tex + vec2(-dx,   0);\n"
-		"	c11 = tex + vec2(  0,   0);\n"
-		"	c21 = tex + vec2( dx,   0);\n"
-		"	c02 = tex + vec2(-dx,  dy);\n"
-		"	c12 = tex + vec2(  0,  dy);\n"
-		"	c22 = tex + vec2( dx,  dy);\n"
-		"	pixel_no = tex * size_texture;\n"
+		"	float dx = (1.0 / size_texture.x);\n"
+		"	float dy = (1.0 / size_texture.y);\n"
+
+		"	c00 = gl_MultiTexCoord0.xy + vec2(-dx, -dy);\n"
+		"	c10 = gl_MultiTexCoord0.xy + vec2(  0, -dy);\n"
+		"	c20 = gl_MultiTexCoord0.xy + vec2( dx, -dy);\n"
+		"	c01 = gl_MultiTexCoord0.xy + vec2(-dx,   0);\n"
+		"	c11 = gl_MultiTexCoord0.xy + vec2(  0,   0);\n"
+		"	c21 = gl_MultiTexCoord0.xy + vec2( dx,   0);\n"
+		"	c02 = gl_MultiTexCoord0.xy + vec2(-dx,  dy);\n"
+		"	c12 = gl_MultiTexCoord0.xy + vec2(  0,  dy);\n"
+		"	c22 = gl_MultiTexCoord0.xy + vec2( dx,  dy);\n"
+		"	pixel_no = gl_MultiTexCoord0.xy * size_texture;\n"
 		"}",
 		// fragment shader
 		"uniform sampler2D texture_scr;\n"
@@ -1897,7 +1898,13 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 	/*****************************************************************************************/
 	{
 		// vertex shader
-		NULL,
+		"varying vec4 v_texCoord;\n"
+
+		"void main(void) {\n"
+		"	gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;\n"
+		"	gl_FrontColor = gl_Color;\n"
+		"	v_texCoord = gl_MultiTexCoord0;\n"
+		"}",
 		// fragment shader
 		"#version 120\n"
 
@@ -1905,44 +1912,47 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"uniform sampler2D texture_txt;\n"
 		"uniform vec2 size_texture;\n"
 
-		"#define TEX2D(v) texture2D(texture_scr, (v))\n"
+		"varying vec4 v_texCoord;\n"
 
 		"void main() {\n"
-		"	mat3x3 rgb2yuv = mat3x3(0.299,-0.14713, 0.615,"
-		"			0.587,-0.28886,-0.51499,"
-		"			0.114, 0.436 ,-0.10001);\n"
-		"	mat3x3 yuv2rgb = mat3x3(1.0, 1.0, 1.0,"
-		"			0.0,-0.39465,2.03211,"
-		"			1.13983,-0.58060,0.0);\n"
+		"	mat3x3 rgb2yuv = mat3x3("
+		"		0.299,-0.14713, 0.615  ,"
+		"		0.587,-0.28886,-0.51499,"
+		"		0.114, 0.436  ,-0.10001 "
+		");\n"
+		"	mat3x3 yuv2rgb = mat3x3("
+		"		1.0    , 1.0    , 1.0    ,"
+		"		0.0    ,-0.39465, 2.03211,"
+		"		1.13983,-0.58060, 0.0     "
+		");\n"
 
 		"	vec4 sum = vec4(0.0);\n"
 
 		"	float wid = 3.0;\n"
-		"	vec4 c1 = vec4(exp(-1.0/wid/wid));\n"
-		"	vec4 c2 = vec4(exp(-4.0/wid/wid));\n"
-		"	vec4 c3 = vec4(exp(-9.0/wid/wid));\n"
-		"	vec4 c4 = vec4(exp(-16.0/wid/wid));\n"
-		"	vec4 norm = 1.0 / (vec4(1.0) + vec4(2.0)*(c1+c2+c3+c4));\n"
+		"	vec4 c1 = vec4(exp(-1.0 / wid / wid));\n"
+		"	vec4 c2 = vec4(exp(-4.0 / wid / wid));\n"
+		"	vec4 c3 = vec4(exp(-9.0 / wid / wid));\n"
+		"	vec4 c4 = vec4(exp(-16.0 / wid / wid));\n"
+		"	vec4 norm = 1.0 / (vec4(1.0) + vec4(2.0) * (c1 + c2 + c3 + c4));\n"
 
-		"	vec2 xy = gl_TexCoord[0].st;\n"
-		"	float onex = 1.0 / size_texture.x;\n"
+		"	float onex = (1.0 / size_texture.x);\n"
 
-		"	sum += TEX2D(xy + vec2(-4.0 * onex, 0.0)) * c4;\n"
-		"	sum += TEX2D(xy + vec2(-3.0 * onex, 0.0)) * c3;\n"
-		"	sum += TEX2D(xy + vec2(-2.0 * onex, 0.0)) * c2;\n"
-		"	sum += TEX2D(xy + vec2(-1.0 * onex, 0.0)) * c1;\n"
-		"	sum += TEX2D(xy);\n"
-		"	sum += TEX2D(xy + vec2(+1.0 * onex, 0.0)) * c1;\n"
-		"	sum += TEX2D(xy + vec2(+2.0 * onex, 0.0)) * c2;\n"
-		"	sum += TEX2D(xy + vec2(+3.0 * onex, 0.0)) * c3;\n"
-		"	sum += TEX2D(xy + vec2(+4.0 * onex, 0.0)) * c4;\n"
+		"	sum += texture2D(texture_scr, v_texCoord.xy + vec2(-4.0 * onex, 0.0)) * c4;\n"
+		"	sum += texture2D(texture_scr, v_texCoord.xy + vec2(-3.0 * onex, 0.0)) * c3;\n"
+		"	sum += texture2D(texture_scr, v_texCoord.xy + vec2(-2.0 * onex, 0.0)) * c2;\n"
+		"	sum += texture2D(texture_scr, v_texCoord.xy + vec2(-1.0 * onex, 0.0)) * c1;\n"
+		"	sum += texture2D(texture_scr, v_texCoord.xy);\n"
+		"	sum += texture2D(texture_scr, v_texCoord.xy + vec2(+1.0 * onex, 0.0)) * c1;\n"
+		"	sum += texture2D(texture_scr, v_texCoord.xy + vec2(+2.0 * onex, 0.0)) * c2;\n"
+		"	sum += texture2D(texture_scr, v_texCoord.xy + vec2(+3.0 * onex, 0.0)) * c3;\n"
+		"	sum += texture2D(texture_scr, v_texCoord.xy + vec2(+4.0 * onex, 0.0)) * c4;\n"
 
-		"	float y = (rgb2yuv * TEX2D(xy).rgb).x;\n"
-		"	vec2 uv = (rgb2yuv * (sum.rgb*norm.rgb)).yz;\n"
+		"	float y = (rgb2yuv * texture2D(texture_scr, v_texCoord.xy).rgb).x;\n"
+		"	vec2 uv = (rgb2yuv * (sum.rgb * norm.rgb)).yz;\n"
 
 		"	vec4 scr = vec4(yuv2rgb * vec3(y, uv), 0.0);\n"
 
-		"	vec4 txt = texture2D(texture_txt, xy);\n"
+		"	vec4 txt = texture2D(texture_txt, v_texCoord.xy);\n"
 
 		"	gl_FragColor = mix(scr, txt, txt.a) * gl_Color;\n"
 		"}"

@@ -265,6 +265,8 @@ BYTE gfx_init(void) {
 				}
 			}
 
+			//d3d9.hlsl = FALSE;
+
 			if (d3d9.hlsl == FALSE) {
 				printf("Shaders are disabled\n");
 			}
@@ -341,17 +343,14 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 	}
 	if ((filter != cfg->filter) || info.on_cfg) {
 		switch (filter) {
+			case NO_FILTER:
 			case POSPHOR:
 			case SCANLINE:
 			case DBL:
 			//case CRT_CURVE:
 			//case CRT_NO_CURVE:
-			case NO_FILTER:
-			case BILINEAR:
-			case SCALE2X:
-			case SCALE3X:
-			case SCALE4X:
 				d3d9.effect = scale_surface;
+				d3d9.interpolation = FALSE;
 				/*
 				 * se sto passando dal filtro ntsc ad un'altro, devo
 				 * ricalcolare la larghezza del video mode quindi
@@ -361,45 +360,25 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 					/* devo reimpostare la larghezza del video mode */
 					scale = cfg->scale;
 				}
-				/* forzo il controllo del fattore di scale */
-				force_scale = TRUE;
-				/* indico che devo cambiare il video mode */
-				set_mode = TRUE;
 				break;
-			//case SCALE2X:
-			//case SCALE3X:
-			//case SCALE4X:
-			//	effect = scaleNx;
-				/*
-				 * se sto passando dal filtro ntsc ad un'altro, devo
-				 * ricalcolare la larghezza del video mode quindi
-				 * forzo il controllo del fattore di scala.
-				 */
-			//	if (cfg->filter == NTSC_FILTER) {
-					/* forzo il controllo del fattore di scale */
-			//		force_scale = TRUE;
-					/* indico che devo cambiare il video mode */
-			//		set_mode = TRUE;
-			//	}
-			//	break;
-			//case HQ2X:
-			//case HQ3X:
-			//case HQ4X:
-			//	effect = hqNx;
-				/*
-				 * se sto passando dal filtro ntsc ad un'altro, devo
-				 * ricalcolare la larghezza del video mode quindi
-				 * forzo il controllo del fattore di scala.
-				 */
-			//	if (cfg->filter == NTSC_FILTER) {
-					/* forzo il controllo del fattore di scale */
-			//		force_scale = TRUE;
-					/* indico che devo cambiare il video mode */
-			//		set_mode = TRUE;
-			//	}
-			//	break;
+			case BILINEAR:
+				d3d9.interpolation = TRUE;
+				break;
+			case SCALE2X:
+			case SCALE3X:
+			case SCALE4X:
+				d3d9.effect = scale_surface;
+				d3d9.interpolation = FALSE;
+				break;
+			case HQ2X:
+			case HQ3X:
+			case HQ4X:
+				d3d9.effect = hqNx;
+				d3d9.interpolation = FALSE;
+				break;
 			case NTSC_FILTER:
 				d3d9.effect = ntsc_surface;
+				d3d9.interpolation = FALSE;
 				/*
 				 * il fattore di scala deve essere gia' stato
 				 * inizializzato almeno una volta.
@@ -414,12 +393,12 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 					 */
 					scale = X2;
 				}
-				/* forzo il controllo del fattore di scale */
-				force_scale = TRUE;
-				/* indico che devo cambiare il video mode */
-				set_mode = TRUE;
 				break;
 		}
+		/* forzo il controllo del fattore di scale */
+		force_scale = TRUE;
+		/* indico che devo cambiare il video mode */
+		set_mode = TRUE;
 	}
 
 	// .......................
@@ -435,14 +414,14 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 		scale = cfg->scale;
 	}
 	if ((scale != cfg->scale) || info.on_cfg || force_scale) {
-/*
+
 #define ctrl_filter_scale(scalexf, hqxf)\
 	if ((filter >= SCALE2X) && (filter <= SCALE4X)) {\
 		filter = scalexf;\
 	} else  if ((filter >= HQ2X) && (filter <= HQ4X)) {\
 		filter = hqxf;\
 	}
-*/
+
 		switch (scale) {
 			case X1:
 				/*
@@ -460,17 +439,17 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 				set_mode = TRUE;
 				break;
 			case X2:
-				//ctrl_filter_scale(SCALE2X, HQ2X)
+				ctrl_filter_scale(SCALE2X, HQ2X)
 				ntsc_width(width, ntsc_width_pixel[scale], TRUE);
 				set_mode = TRUE;
 				break;
 			case X3:
-				//ctrl_filter_scale(SCALE3X, HQ3X)
+				ctrl_filter_scale(SCALE3X, HQ3X)
 				ntsc_width(width, ntsc_width_pixel[scale], TRUE);
 				set_mode = TRUE;
 				break;
 			case X4:
-				//ctrl_filter_scale(SCALE4X, HQ4X)
+				ctrl_filter_scale(SCALE4X, HQ4X)
 				ntsc_width(width, ntsc_width_pixel[scale], TRUE);
 				set_mode = TRUE;
 				break;
@@ -507,7 +486,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 		}
 
 		/* inizializzo in ogni caso la tabella YUV dell'hqx */
-		//hqx_init();
+		hqx_init();
 
 		/*
 		 * memorizzo i colori della paletta nel
@@ -530,101 +509,59 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 	/* salvo il nuovo tipo di paletta */
 	cfg->palette = palette;
 
-	{
-		d3d9.scale_force = FALSE;
-		d3d9.scale = cfg->scale;
-		d3d9.factor = 1;
-		d3d9.interpolation = FALSE;
-		d3d9.hlsl_used = FALSE;
-		d3d9.shader.id = SHADER_NONE;
+	d3d9.scale_force = FALSE;
+	d3d9.scale = cfg->scale;
+	d3d9.factor = 1;
+	d3d9.hlsl_used = FALSE;
+	d3d9.shader.id = SHADER_NONE;
 
-		/* TODO: aggiungere il controllo se supportate le shaders */
+	/* TODO: aggiungere il controllo se supportate le shaders */
+	if (d3d9.hlsl == TRUE) {
+
+#define hlsl_up(s)\
+		d3d9.hlsl_used = TRUE;\
+		d3d9.shader.id = s;\
+		d3d9.scale_force = TRUE;\
+		d3d9.scale = X1;\
+		d3d9.factor = cfg->scale
 
 		switch (cfg->filter) {
 			case NO_FILTER:
-				d3d9.scale_force = TRUE;
-				d3d9.scale = X1;
-				d3d9.factor = cfg->scale;
-				d3d9.interpolation = FALSE;
-				if (d3d9.hlsl == TRUE) {
-					d3d9.hlsl_used = TRUE;
-					d3d9.shader.id = SHADER_NO_FILTER;
-					//d3d9.shader.id = SHADER_DONTBLOOM;
-					//d3d9.shader.id = SHADER_COLOR;
-					//d3d9.shader.id = SHADER_POSPHOR;
-					//d3d9.shader.id = SHADER_SCALE2X;
-					d3d9.shader.id = SHADER_NTSC;
-				}
+				//hlsl_up(SHADER_NO_FILTER);
+				hlsl_up(SHADER_NTSC);
 				break;
 			case BILINEAR:
-				d3d9.scale_force = TRUE;
-				d3d9.scale = X1;
-				d3d9.factor = cfg->scale;
-				d3d9.interpolation = TRUE;
-				if (d3d9.hlsl == TRUE) {
-					d3d9.hlsl_used = TRUE;
-					d3d9.shader.id = SHADER_NO_FILTER;
-				}
+				hlsl_up(SHADER_NO_FILTER);
 				break;
 			case POSPHOR:
-				d3d9.scale_force = TRUE;
-				d3d9.scale = X1;
-				d3d9.factor = cfg->scale;
-				d3d9.interpolation = FALSE;
-				if (d3d9.hlsl == TRUE) {
-					d3d9.hlsl_used = TRUE;
-					d3d9.shader.id = SHADER_POSPHOR;
-				}
+				hlsl_up(SHADER_POSPHOR);
 				break;
 			case SCANLINE:
-				d3d9.scale_force = TRUE;
-				d3d9.scale = X1;
-				d3d9.factor = cfg->scale;
-				d3d9.interpolation = FALSE;
-				if (d3d9.hlsl == TRUE) {
-					d3d9.hlsl_used = TRUE;
-					d3d9.shader.id = SHADER_SCANLINE;
-				}
+				hlsl_up(SHADER_SCANLINE);
 				break;
 			case DBL:
-				d3d9.scale_force = TRUE;
-				d3d9.scale = X1;
-				d3d9.factor = cfg->scale;
-				d3d9.interpolation = FALSE;
-				if (d3d9.hlsl == TRUE) {
-					d3d9.hlsl_used = TRUE;
-					d3d9.shader.id = SHADER_DONTBLOOM;
-				}
+				hlsl_up(SHADER_DONTBLOOM);
 				break;
 			case SCALE2X:
-				d3d9.scale_force = TRUE;
-				d3d9.scale = X1;
-				d3d9.factor = cfg->scale;
-				d3d9.interpolation = FALSE;
-				if (d3d9.hlsl == TRUE) {
-					d3d9.hlsl_used = TRUE;
-					d3d9.shader.id = SHADER_SCALE2X;
-				}
+				hlsl_up(SHADER_SCALE2X);
+				d3d9.effect = scale_surface;
 				break;
 			case SCALE3X:
-				d3d9.scale_force = TRUE;
-				d3d9.scale = X1;
-				d3d9.factor = cfg->scale;
-				d3d9.interpolation = FALSE;
-				if (d3d9.hlsl == TRUE) {
-					d3d9.hlsl_used = TRUE;
-					d3d9.shader.id = SHADER_SCALE3X;
-				}
+				hlsl_up(SHADER_SCALE3X);
+				d3d9.effect = scale_surface;
 				break;
 			case SCALE4X:
-				d3d9.scale_force = TRUE;
-				d3d9.scale = X1;
-				d3d9.factor = cfg->scale;
-				d3d9.interpolation = FALSE;
-				if (d3d9.hlsl == TRUE) {
-					d3d9.hlsl_used = TRUE;
-					d3d9.shader.id = SHADER_SCALE4X;
-				}
+				hlsl_up(SHADER_SCALE4X);
+				d3d9.effect = scale_surface;
+				break;
+			case HQ2X:
+				hlsl_up(SHADER_HQ2X);
+				d3d9.effect = scale_surface;
+				break;
+			case HQ4X:
+				hlsl_up(SHADER_HQ2X);
+				d3d9.scale = X2;
+				d3d9.factor = 2;
 				break;
 		}
 	}
