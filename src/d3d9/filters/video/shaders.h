@@ -24,7 +24,7 @@ enum shader_type {
 	SHADER_SCANLINE,
 	//SHADER_QUILAZ,
 	//SHADER_WATERPAINT,
-	//SHADER_CRT,
+	SHADER_CRT,
 	//SHADER_CRT2,
 	//SHADER_CRT3,
 	//SHADER_CRT4,
@@ -629,6 +629,548 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 
 		"	return scr;\n"
 		"}"
+	},
+	/*****************************************************************************************/
+	/* CRT                                                                                   */
+	/*****************************************************************************************/
+	{
+		// vertex shader
+		"struct VsOutput {\n"
+		"	float4 Position : POSITION;\n"
+		"	float2 TexCoord : TEXCOORD0;\n"
+		"};\n"
+
+		"float4x4 m_world_view_projection;"
+
+		"VsOutput Vs(float3 position : POSITION, float2 texCoord : TEXCOORD0) {\n"
+		"	VsOutput output;\n"
+		"	output.Position = mul(float4(position, 1.0), m_world_view_projection);\n"
+		"	output.TexCoord = texCoord;\n"
+		"	return output;\n"
+		"}",
+		// pixel shader
+		"float2 size_screen_emu;\n"
+		"float2 size_video_mode;\n"
+		"float2 size_texture;\n"
+		"float2 factor;\n"
+
+		"texture texture_scr;\n"
+		"sampler2D s0 = sampler_state { Texture = <texture_scr>; };\n"
+
+		"// Comment the next line to disable interpolation in linear gamma (and\n"
+		"// gain speed).\n"
+		"#define LINEAR_PROCESSING\n"
+
+		"// Enable screen curvature.\n"
+		"#define CURVATURE\n"
+
+		"// Enable 3x oversampling of the beam profile\n"
+		"#define OVERSAMPLE\n"
+
+		"// Use the older, purely gaussian beam profile\n"
+		"//#define USEGAUSSIAN\n"
+
+		"// Macros.\n"
+		"#define FIX(c) max(abs(c), 1e-5);\n"
+		"#define PI 3.141592653589\n"
+
+		"#ifdef LINEAR_PROCESSING\n"
+		"#	define TEX2D(c) pow(tex2D(s0, (c)), float4(CRTgamma, CRTgamma, CRTgamma, CRTgamma))\n"
+		"#else\n"
+		"#  define TEX2D(c) tex2D(s0, (c))\n"
+		"#endif\n"
+
+		"static float CRTgamma;\n"
+		"static float monitorgamma;\n"
+		"static float2 overscan;\n"
+
+		"static float2 aspect;\n"
+		"static float d;\n"
+		"static float R;\n"
+		"static float cornersize;\n"
+		"static float cornersmooth;\n"
+
+		"static float3 stretch;\n"
+		"static float2 sinangle;\n"
+		"static float2 cosangle;\n"
+
+		"float intersect(float2 xy) {\n"
+		"	float A = dot(xy,xy)+d*d;\n"
+		"	float B = 2.0*(R*(dot(xy,sinangle)-d*cosangle.x*cosangle.y)-d*d);\n"
+		"	float C = d*d + 2.0*R*d*cosangle.x*cosangle.y;\n"
+		"	return (-B-sqrt(B*B-4.0*A*C))/(2.0*A);\n"
+		"}\n"
+
+		"float2 bkwtrans(float2 xy) {\n"
+		"	float c = intersect(xy);\n"
+		"	float2 pnt = float2(c,c)*xy;\n"
+		"	pnt -= float2(-R,-R)*sinangle;\n"
+		"	pnt /= float2(R,R);\n"
+		"	float2 tang = sinangle/cosangle;\n"
+		"	float2 poc = pnt/cosangle;\n"
+		"	float A = dot(tang,tang)+1.0;\n"
+		"	float B = -2.0*dot(poc,tang);\n"
+		"	float C = dot(poc,poc)-1.0;\n"
+		"	float a = (-B+sqrt(B*B-4.0*A*C))/(2.0*A);\n"
+		"	float2 uv = (pnt-a*sinangle)/cosangle;\n"
+		"	float r = R*acos(a);\n"
+		"	return uv*r/sin(r/R);\n"
+		"}\n"
+
+		"float2 fwtrans(float2 uv) {\n"
+		"	float r = FIX(sqrt(dot(uv,uv)));\n"
+		"	uv *= sin(r/R)/r;\n"
+		"	float x = 1.0-cos(r/R);\n"
+		"	float D = d/R + x*cosangle.x*cosangle.y+dot(uv,sinangle);\n"
+		"	return d*(uv*cosangle-x*sinangle)/D;\n"
+		"}\n"
+
+		"float3 maxscale() {\n"
+		"	float2 c = bkwtrans(-R * sinangle / (1.0 + R/d*cosangle.x*cosangle.y));\n"
+		"	float2 a = float2(0.5,0.5)*aspect;\n"
+		"	float2 lo = float2(fwtrans(float2(-a.x,c.y)).x,\n"
+		"			fwtrans(float2(c.x,-a.y)).y)/aspect;\n"
+		"	float2 hi = float2(fwtrans(float2(+a.x,c.y)).x,\n"
+		"			fwtrans(float2(c.x,+a.y)).y)/aspect;\n"
+		"	return float3((hi+lo)*aspect*0.5,max(hi.x-lo.x,hi.y-lo.y));\n"
+		"}\n"
+
+		"float2 transform(float2 coord) {\n"
+		"	coord *= size_texture / size_screen_emu;\n"
+		"	coord = (coord-float2(0.5,0.5))*aspect*stretch.z+stretch.xy;\n"
+		"	return (bkwtrans(coord)/overscan/aspect+float2(0.5,0.5)) *"
+		"		size_screen_emu / size_texture;\n"
+		"}\n"
+
+		"float corner(float2 coord) {\n"
+		"	coord *= size_texture / size_screen_emu;\n"
+		"	coord = (coord - float2(0.5,0.5)) * overscan + float2(0.5,0.5);\n"
+		"	coord = min(coord, float2(1.0,1.0)-coord) * aspect;\n"
+		"	float2 cdist = float2(cornersize,cornersize);\n"
+		"	coord = (cdist - min(coord,cdist));\n"
+		"	float dist = sqrt(dot(coord,coord));\n"
+		"	return clamp((cdist.x-dist)*cornersmooth,0.0, 1.0);\n"
+		"}\n"
+
+		"// Calculate the influence of a scanline on the current pixel.\n"
+		"// 'distance' is the distance in texture coordinates from the current\n"
+		"// pixel to the scanline in question.\n"
+		"// 'color' is the colour of the scanline at the horizontal location of\n"
+		"// the current pixel.\n"
+		"float4 scanlineWeights(float distance, float4 color) {\n"
+		"	// 'wid' controls the width of the scanline beam, for each RGB\n"
+		"	// channel The 'weights' lines basically specify the formula\n"
+		"	// that gives you the profile of the beam, i.e. the intensity as\n"
+		"	// a function of distance from the vertical center of the\n"
+		"	// scanline. In this case, it is gaussian if width=2, and\n"
+		"	// becomes nongaussian for larger widths. Ideally this should\n"
+		"	// be normalized so that the integral across the beam is\n"
+		"	// independent of its width. That is, for a narrower beam\n"
+		"	// 'weights' should have a higher peak at the center of the\n"
+		"	// scanline than for a wider beam.\n"
+		"#ifdef USEGAUSSIAN\n"
+		"	float4 wid = 0.3 + 0.1 * pow(color, float4(3.0,3.0,3.0,3.0));\n"
+		"	float a = distance / wid;\n"
+		"	float4 weights = float4(a,a,a,a);\n"
+		"	return 0.4 * exp(-weights * weights) / wid;\n"
+		"#else\n"
+		"	float4 wid = 2.0 + 2.0 * pow(color, float4(4.0,4.0,4.0,4.0));\n"
+		"	float a = distance / 0.3;\n"
+		"	float4 weights = float4(a,a,a,a);\n"
+		"	return 1.4 * exp(-pow(weights * rsqrt(0.5 * wid), wid)) / (0.6 + 0.2 * wid);\n"
+		"#endif\n"
+		"}\n"
+
+		"float4 Ps(float2 texCoord : TEXCOORD0) : COLOR {\n"
+		"	// START of parameters\n"
+
+		"	// gamma of simulated CRT\n"
+		"	CRTgamma = 2.4;\n"
+		"	// gamma of display monitor (typically 2.2 is correct)\n"
+		"	monitorgamma = 2.2;\n"
+		"	// overscan (e.g. 1.02 for 2% overscan)\n"
+		"	overscan = float2(1.01,1.01);\n"
+		"	// aspect ratio\n"
+		"	aspect = float2(1.0, 0.75);\n"
+		"	// lengths are measured in units of (approximately) the width\n"
+		"	// of the monitor simulated distance from viewer to monitor\n"
+		"	d = 2.0;\n"
+		"	// radius of curvature\n"
+		"	R = 1.5;\n"
+		"	// tilt angle in radians\n"
+		"	// (behavior might be a bit wrong if both components are\n"
+		"	// nonzero)\n"
+		"	const float2 angle = float2(0.0,-0.15);\n"
+		"	// size of curved corners\n"
+		"	cornersize = 0.03;\n"
+		"	// border smoothness parameter\n"
+		"	// decrease if borders are too aliased\n"
+		"	cornersmooth = 1000.0;\n"
+
+		"	// END of parameters\n"
+
+		"	// Precalculate a bunch of useful values we'll need in the fragment\n"
+		"	// shader.\n"
+		"	sinangle = sin(angle);\n"
+		"	cosangle = cos(angle);\n"
+		"	stretch = maxscale();\n"
+
+		"	// The size of one texel, in texture-coordinates.\n"
+		"	float2 one = (1.0 / size_texture);\n"
+
+		"	// Resulting X pixel-coordinate of the pixel we're drawing.\n"
+		"	float mod_factor = texCoord.x * size_texture.x * size_video_mode.x / size_screen_emu.x;\n"
+
+		"	return float4(0.387, 0.387, 0.387, 1.0);"
+		"}"
+
+
+
+
+
+
+
+
+/*
+		"varying float CRTgamma;\n"
+		"varying float monitorgamma;\n"
+		"varying vec2 overscan;\n"
+		"varying vec2 aspect;\n"
+		"varying float d;\n"
+		"varying float R;\n"
+		"varying float cornersize;\n"
+		"varying float cornersmooth;\n"
+
+		"varying vec3 stretch;\n"
+		"varying vec2 sinangle;\n"
+		"varying vec2 cosangle;\n"
+
+		"uniform vec2 size_input;\n"
+		"uniform vec2 size_output;\n"
+		"uniform vec2 size_texture;\n"
+
+		"varying vec2 texCoord;\n"
+		"varying vec2 one;\n"
+		"varying float mod_factor;\n"
+
+		"#define FIX(c) max(abs(c), 1e-5);\n"
+
+		"float intersect(vec2 xy) {\n"
+		"	float A = dot(xy,xy)+d*d;\n"
+		"	float B = 2.0*(R*(dot(xy,sinangle)-d*cosangle.x*cosangle.y)-d*d);\n"
+		"	float C = d*d + 2.0*R*d*cosangle.x*cosangle.y;\n"
+		"	return (-B-sqrt(B*B-4.0*A*C))/(2.0*A);\n"
+		"}\n"
+
+		"vec2 bkwtrans(vec2 xy) {\n"
+		"	float c = intersect(xy);\n"
+		"	vec2 point = vec2(c)*xy;\n"
+		"	point -= vec2(-R)*sinangle;\n"
+		"	point /= vec2(R);\n"
+		"	vec2 tang = sinangle/cosangle;\n"
+		"	vec2 poc = point/cosangle;\n"
+		"	float A = dot(tang,tang)+1.0;\n"
+		"	float B = -2.0*dot(poc,tang);\n"
+		"	float C = dot(poc,poc)-1.0;\n"
+		"	float a = (-B+sqrt(B*B-4.0*A*C))/(2.0*A);\n"
+		"	vec2 uv = (point-a*sinangle)/cosangle;\n"
+		"	float r = R*acos(a);\n"
+		"	return uv*r/sin(r/R);\n"
+		"}\n"
+
+		"vec2 fwtrans(vec2 uv) {\n"
+		"	float r = FIX(sqrt(dot(uv,uv)));\n"
+		"	uv *= sin(r/R)/r;\n"
+		"	float x = 1.0-cos(r/R);\n"
+		"	float D = d/R + x*cosangle.x*cosangle.y+dot(uv,sinangle);\n"
+		"	return d*(uv*cosangle-x*sinangle)/D;\n"
+		"}\n"
+
+		"vec3 maxscale() {\n"
+		"	vec2 c = bkwtrans(-R * sinangle / (1.0 + R/d*cosangle.x*cosangle.y));\n"
+		"	vec2 a = vec2(0.5,0.5)*aspect;\n"
+		"	vec2 lo = vec2(fwtrans(vec2(-a.x,c.y)).x,\n"
+		"			fwtrans(vec2(c.x,-a.y)).y)/aspect;\n"
+		"	vec2 hi = vec2(fwtrans(vec2(+a.x,c.y)).x,\n"
+		"			fwtrans(vec2(c.x,+a.y)).y)/aspect;\n"
+		"	return vec3((hi+lo)*aspect*0.5,max(hi.x-lo.x,hi.y-lo.y));\n"
+		"}\n"
+
+		"void main() {\n"
+		"	// START of parameters\n"
+
+		"	// gamma of simulated CRT\n"
+		"	CRTgamma = 2.4;\n"
+		"	// gamma of display monitor (typically 2.2 is correct)\n"
+		"	monitorgamma = 2.2;\n"
+		"	// overscan (e.g. 1.02 for 2% overscan)\n"
+		"	overscan = vec2(1.01,1.01);\n"
+		"	// aspect ratio\n"
+		"	aspect = vec2(1.0, 0.75);\n"
+		"	// lengths are measured in units of (approximately) the width\n"
+		"	// of the monitor simulated distance from viewer to monitor\n"
+		"	d = 2.0;\n"
+		"	// radius of curvature\n"
+		"	R = 1.5;\n"
+		"	// tilt angle in radians\n"
+		"	// (behavior might be a bit wrong if both components are\n"
+		"	// nonzero)\n"
+		"	const vec2 angle = vec2(0.0,-0.15);\n"
+		"	// size of curved corners\n"
+		"	cornersize = 0.03;\n"
+		"	// border smoothness parameter\n"
+		"	// decrease if borders are too aliased\n"
+		"	cornersmooth = 1000.0;\n"
+
+		"	// END of parameters\n"
+
+		"	gl_FrontColor = gl_Color;\n"
+
+		"	// Do the standard vertex processing.\n"
+		"	gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;\n"
+
+		"	// Precalculate a bunch of useful values we'll need in the fragment\n"
+		"	// shader.\n"
+		"	sinangle = sin(angle);\n"
+		"	cosangle = cos(angle);\n"
+		"	stretch = maxscale();\n"
+
+		"	// Texture coords.\n"
+		"	texCoord = gl_MultiTexCoord0.xy;\n"
+
+		"	// The size of one texel, in texture-coordinates.\n"
+		"	one = 1.0 / size_texture;\n"
+
+		"	// Resulting X pixel-coordinate of the pixel we're drawing.\n"
+		"	mod_factor = texCoord.x * size_texture.x * size_output.x / size_input.x;\n"
+		"}",
+		// fragment shader
+		"// Comment the next line to disable interpolation in linear gamma (and\n"
+		"// gain speed).\n"
+		"#define LINEAR_PROCESSING\n"
+
+		"// Enable screen curvature.\n"
+		"#define CURVATURE\n"
+
+		"// Enable 3x oversampling of the beam profile\n"
+		"#define OVERSAMPLE\n"
+
+		"// Use the older, purely gaussian beam profile\n"
+		"//#define USEGAUSSIAN\n"
+
+		"// Macros.\n"
+		"#define FIX(c) max(abs(c), 1e-5);\n"
+		"#define PI 3.141592653589\n"
+
+		"#ifdef LINEAR_PROCESSING\n"
+		"#	define TEX2D(c) pow(texture2D(texture_scr, (c)), vec4(CRTgamma))\n"
+		"#else\n"
+		"#  define TEX2D(c) texture2D(texture_scr, (c))\n"
+		"#endif\n"
+
+		"uniform vec2 size_input;\n"
+		"uniform vec2 size_texture;\n"
+		"uniform sampler2D texture_scr;\n"
+		"uniform sampler2D texture_txt;\n"
+
+		"varying vec2 texCoord;\n"
+		"varying vec2 one;\n"
+		"varying float mod_factor;\n"
+
+		"varying float CRTgamma;\n"
+		"varying float monitorgamma;\n"
+
+		"varying vec2 overscan;\n"
+		"varying vec2 aspect;\n"
+
+		"varying float d;\n"
+		"varying float R;\n"
+
+		"varying float cornersize;\n"
+		"varying float cornersmooth;\n"
+
+		"varying vec3 stretch;\n"
+		"varying vec2 sinangle;\n"
+		"varying vec2 cosangle;\n"
+
+		"float intersect(vec2 xy) {\n"
+		"	float A = dot(xy,xy)+d*d;\n"
+		"	float B = 2.0*(R*(dot(xy,sinangle)-d*cosangle.x*cosangle.y)-d*d);\n"
+		"	float C = d*d + 2.0*R*d*cosangle.x*cosangle.y;\n"
+		"	return (-B-sqrt(B*B-4.0*A*C))/(2.0*A);\n"
+		"}\n"
+
+		"vec2 bkwtrans(vec2 xy) {\n"
+		"	float c = intersect(xy);\n"
+		"	vec2 point = vec2(c)*xy;\n"
+		"	point -= vec2(-R)*sinangle;\n"
+		"	point /= vec2(R);\n"
+		"	vec2 tang = sinangle/cosangle;\n"
+		"	vec2 poc = point/cosangle;\n"
+		"	float A = dot(tang,tang)+1.0;\n"
+		"	float B = -2.0*dot(poc,tang);\n"
+		"	float C = dot(poc,poc)-1.0;\n"
+		"	float a = (-B+sqrt(B*B-4.0*A*C))/(2.0*A);\n"
+		"	vec2 uv = (point-a*sinangle)/cosangle;\n"
+		"	float r = FIX(R*acos(a));\n"
+		"	return uv*r/sin(r/R);\n"
+		"}\n"
+
+		"vec2 transform(vec2 coord) {\n"
+		"	coord *= size_texture / size_input;\n"
+		"	coord = (coord-vec2(0.5))*aspect*stretch.z+stretch.xy;\n"
+		"	return (bkwtrans(coord)/overscan/aspect+vec2(0.5)) * size_input / size_texture;\n"
+		"}\n"
+
+		"float corner(vec2 coord) {\n"
+		"	coord *= size_texture / size_input;\n"
+		"	coord = (coord - vec2(0.5)) * overscan + vec2(0.5);\n"
+		"	coord = min(coord, vec2(1.0)-coord) * aspect;\n"
+		"	vec2 cdist = vec2(cornersize);\n"
+		"	coord = (cdist - min(coord,cdist));\n"
+		"	float dist = sqrt(dot(coord,coord));\n"
+		"	return clamp((cdist.x-dist)*cornersmooth,0.0, 1.0);\n"
+		"}\n"
+
+		"// Calculate the influence of a scanline on the current pixel.\n"
+		"// 'distance' is the distance in texture coordinates from the current\n"
+		"// pixel to the scanline in question.\n"
+		"// 'color' is the colour of the scanline at the horizontal location of\n"
+		"// the current pixel.\n"
+		"vec4 scanlineWeights(float distance, vec4 color) {\n"
+		"	// 'wid' controls the width of the scanline beam, for each RGB\n"
+		"	// channel The 'weights' lines basically specify the formula\n"
+		"	// that gives you the profile of the beam, i.e. the intensity as\n"
+		"	// a function of distance from the vertical center of the\n"
+		"	// scanline. In this case, it is gaussian if width=2, and\n"
+		"	// becomes nongaussian for larger widths. Ideally this should\n"
+		"	// be normalized so that the integral across the beam is\n"
+		"	// independent of its width. That is, for a narrower beam\n"
+		"	// 'weights' should have a higher peak at the center of the\n"
+		"	// scanline than for a wider beam.\n"
+		"#ifdef USEGAUSSIAN\n"
+		"	vec4 wid = 0.3 + 0.1 * pow(color, vec4(3.0));\n"
+		"	vec4 weights = vec4(distance / wid);\n"
+		"	return 0.4 * exp(-weights * weights) / wid;\n"
+		"#else\n"
+		"	vec4 wid = 2.0 + 2.0 * pow(color, vec4(4.0));\n"
+		"	vec4 weights = vec4(distance / 0.3);\n"
+		"	return 1.4 * exp(-pow(weights * inversesqrt(0.5 * wid), wid)) / (0.6 + 0.2 * wid);\n"
+		"#endif\n"
+		"}\n"
+
+		"void main() {\n"
+		"	// Here's a helpful diagram to keep in mind while trying to\n"
+		"	// understand the code:\n"
+		"	//\n"
+		"	//  |      |      |      |      |\n"
+		"	// -------------------------------\n"
+		"	//  |      |      |      |      |\n"
+		"	//  |  01  |  11  |  21  |  31  | <-- current scanline\n"
+		"	//  |      | @    |      |      |\n"
+		"	// -------------------------------\n"
+		"	//  |      |      |      |      |\n"
+		"	//  |  02  |  12  |  22  |  32  | <-- next scanline\n"
+		"	//  |      |      |      |      |\n"
+		"	// -------------------------------\n"
+		"	//  |      |      |      |      |\n"
+		"	//\n"
+		"	// Each character-cell represents a pixel on the output\n"
+		"	// surface, '@' represents the current pixel (always somewhere\n"
+		"	// in the bottom half of the current scan-line, or the top-half\n"
+		"	// of the next scanline). The grid of lines represents the\n"
+		"	// edges of the texels of the underlying texture.\n"
+
+		"	// Texture coordinates of the texel containing the active pixel.\n"
+		"#ifdef CURVATURE\n"
+		"	vec2 xy = transform(texCoord);\n"
+		"#else\n"
+		"	vec2 xy = texCoord;\n"
+		"#endif\n"
+		"	float cval = corner(xy);\n"
+
+		"	// Of all the pixels that are mapped onto the texel we are\n"
+		"	// currently rendering, which pixel are we currently rendering?\n"
+		"	vec2 ratio_scale = xy * size_texture - vec2(0.5);\n"
+		"#ifdef OVERSAMPLE\n"
+		"	float filter = fwidth(ratio_scale.y);\n"
+		"#endif\n"
+		"	vec2 uv_ratio = fract(ratio_scale);\n"
+
+		"	// Snap to the center of the underlying texel.\n"
+		"	xy = (floor(ratio_scale) + vec2(0.5)) / size_texture;\n"
+
+		"	// Calculate Lanczos scaling coefficients describing the effect\n"
+		"	// of various neighbour texels in a scanline on the current\n"
+		"	// pixel.\n"
+		"	vec4 coeffs = PI * vec4(1.0 + uv_ratio.x, uv_ratio.x,"
+		"					 1.0 - uv_ratio.x, 2.0 - uv_ratio.x);\n"
+
+		"	// Prevent division by zero.\n"
+		"	coeffs = FIX(coeffs);\n"
+
+		"	// Lanczos2 kernel.\n"
+		"	coeffs = 2.0 * sin(coeffs) * sin(coeffs / 2.0) / (coeffs * coeffs);\n"
+
+		"	// Normalize.\n"
+		"	coeffs /= dot(coeffs, vec4(1.0));\n"
+
+		"	// Calculate the effective colour of the current and next\n"
+		"	// scanlines at the horizontal location of the current pixel,\n"
+		"	// using the Lanczos coefficients above.\n"
+		"	vec4 col = clamp(mat4("
+		"			TEX2D(xy + vec2(-one.x, 0.0)),"
+		"			TEX2D(xy),"
+		"			TEX2D(xy + vec2(one.x, 0.0)),"
+		"			TEX2D(xy + vec2(2.0 * one.x, 0.0))) * coeffs,"
+		"			0.0, 1.0);\n"
+		"	vec4 col2 = clamp(mat4("
+		"			TEX2D(xy + vec2(-one.x, one.y)),"
+		"			TEX2D(xy + vec2(0.0, one.y)),"
+		"			TEX2D(xy + one),"
+		"			TEX2D(xy + vec2(2.0 * one.x, one.y))) * coeffs,"
+		"			0.0, 1.0);\n"
+
+		"#ifndef LINEAR_PROCESSING\n"
+		"	col = pow(col , vec4(CRTgamma));\n"
+		"	col2 = pow(col2, vec4(CRTgamma));\n"
+		"#endif\n"
+
+		"	// Calculate the influence of the current and next scanlines on\n"
+		"	// the current pixel.\n"
+		"	vec4 weights = scanlineWeights(uv_ratio.y, col);\n"
+		"	vec4 weights2 = scanlineWeights(1.0 - uv_ratio.y, col2);\n"
+		"#ifdef OVERSAMPLE\n"
+		"	uv_ratio.y =uv_ratio.y+1.0/3.0*filter;\n"
+		"	weights = (weights+scanlineWeights(uv_ratio.y, col))/3.0;\n"
+		"	weights2=(weights2+scanlineWeights(abs(1.0-uv_ratio.y), col2))/3.0;\n"
+		"	uv_ratio.y =uv_ratio.y-2.0/3.0*filter;\n"
+		"	weights=weights+scanlineWeights(abs(uv_ratio.y), col)/3.0;\n"
+		"	weights2=weights2+scanlineWeights(abs(1.0-uv_ratio.y), col2)/3.0;\n"
+		"#endif\n"
+		"	vec3 mul_res = (col * weights + col2 * weights2).rgb * vec3(cval);\n"
+
+		"	// dot-mask emulation:\n"
+		"	// Output pixels are alternately tinted green and magenta.\n"
+		"	vec3 dotMaskWeights = mix("
+		"			vec3(1.0, 0.7, 1.0),"
+		"			vec3(0.7, 1.0, 0.7),"
+		"			floor(mod(mod_factor, 2.0))\n"
+		"	);\n"
+
+		"	mul_res *= dotMaskWeights;\n"
+
+		"	// Convert the image gamma for display on our output device.\n"
+		"	mul_res = pow(mul_res, vec3(1.0 / monitorgamma));\n"
+
+		"	// Color the texel.\n"
+		"	vec4 scr = vec4(mul_res, 1.0);\n"
+
+		"	vec4 txt = texture2D(texture_txt, texCoord.xy);\n"
+
+		"	gl_FragColor = mix(scr, txt, txt.a) * gl_Color;\n"
+		"}"
+*/
 	},
 	/*****************************************************************************************/
 	/* don't BLOOM                                                                           */

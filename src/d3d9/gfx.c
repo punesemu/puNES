@@ -112,6 +112,7 @@ void d3d9_release_context(void);
 BYTE d3d9_create_device(UINT width, UINT height);
 BYTE d3d9_create_texture(_texture *texture, uint32_t width, uint32_t height, uint8_t interpolation,
         uint8_t pow);
+void d3d9_release_texture(_texture *texture);
 BYTE d3d9_create_shader(_shader *shd);
 void d3d9_release_shader(_shader *shd);
 int d3d9_power_of_two(int base);
@@ -362,6 +363,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 				}
 				break;
 			case BILINEAR:
+				d3d9.effect = scale_surface;
 				d3d9.interpolation = TRUE;
 				break;
 			case SCALE2X:
@@ -528,7 +530,8 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 		switch (cfg->filter) {
 			case NO_FILTER:
 				//hlsl_up(SHADER_NO_FILTER);
-				hlsl_up(SHADER_NTSC);
+				//hlsl_up(SHADER_NTSC);
+				hlsl_up(SHADER_CRT);
 				break;
 			case BILINEAR:
 				hlsl_up(SHADER_NO_FILTER);
@@ -659,7 +662,6 @@ void gfx_draw_screen(BYTE forced) {
 		if (d3d9.shader.pxl) { IDirect3DDevice9_SetPixelShader(d3d9.dev, d3d9.shader.pxl); }
 		IDirect3DDevice9_DrawPrimitive(d3d9.dev, D3DPT_TRIANGLEFAN, 0, 2);
 	} else {
-		//IDirect3DDevice9_SetTransform(d3d9.dev, D3DTS_WORLD, &d3d9.matrix_world);
 		IDirect3DDevice9_SetFVF(d3d9.dev, FVF);
 		IDirect3DDevice9_SetStreamSource(d3d9.dev, 0, d3d9.quad, 0, sizeof(vertex));
 		IDirect3DDevice9_DrawPrimitive(d3d9.dev, D3DPT_TRIANGLEFAN, 0, 2);
@@ -781,8 +783,10 @@ BYTE d3d9_create_context(UINT width, UINT height) {
 		d3d9.texture.y = (FLOAT) (gfx.h[CURRENT] - 1) / (d3d9.texture.h * (FLOAT) d3d9.factor);
 
 		//printf("\n");
+		//printf("t1 : %f - %f - %f\n", d3d9.texture.w, d3d9.texture.h, d3d9.factor);
 		//printf("t2 : %f - %f\n", d3d9.texture.x, d3d9.texture.y);
 		//printf("t3 : %f - %f\n", (FLOAT) gfx.w[CURRENT], (FLOAT) gfx.h[CURRENT]);
+		//printf("\n");
 
 		{
 			/* aspect ratio */
@@ -839,9 +843,6 @@ BYTE d3d9_create_context(UINT width, UINT height) {
 			}
 		}
 
-		//d3d9.texture.x = 1.0f;
-		//d3d9.texture.y = 1.0f;
-
 		{
 			void *tv_vertices;
 			const vertex quad_vertices[] = {
@@ -866,15 +867,7 @@ BYTE d3d9_create_context(UINT width, UINT height) {
 void d3d9_release_context(void) {
 	d3d9_release_shader(&d3d9.shader);
 
-	if (d3d9.texture.surface) {
-		IDirect3DSurface9_Release(d3d9.texture.surface);
-		d3d9.texture.surface = NULL;
-	}
-
-	if (d3d9.texture.data) {
-		IDirect3DTexture9_Release(d3d9.texture.data);
-		d3d9.texture.data = NULL;
-	}
+	d3d9_release_texture(&d3d9.texture);
 
 	if (d3d9.quad) {
 		IDirect3DVertexBuffer9_Release(d3d9.quad);
@@ -921,6 +914,8 @@ BYTE d3d9_create_texture(_texture *texture, uint32_t width, uint32_t height, uin
         uint8_t pow) {
 	DWORD usage = 0;
 
+	d3d9_release_texture(texture);
+
 	texture->no_pow_w = width;
 	texture->no_pow_h = height;
 
@@ -932,23 +927,13 @@ BYTE d3d9_create_texture(_texture *texture, uint32_t width, uint32_t height, uin
 		texture->h = height;
 	}
 
-    // round up to square if we need to
+    /* se la scheda video supporta solo texture quadre allore devo crerle cosi' */
 	if (d3d9.texture_square_only == TRUE) {
 		if (texture->w < texture->h) {
 			texture->w = texture->h;
 		} else {
 			texture->h = texture->w;
 		}
-	}
-
-	if (texture->data) {
-		IDirect3DTexture9_Release(texture->data);
-		d3d9.texture.data = NULL;
-	}
-
-	if (d3d9.texture.surface) {
-		IDirect3DSurface9_Release(d3d9.texture.surface);
-		d3d9.texture.surface = NULL;
 	}
 
 	if (d3d9.dynamic_texture == TRUE) {
@@ -974,9 +959,10 @@ BYTE d3d9_create_texture(_texture *texture, uint32_t width, uint32_t height, uin
 
 	IDirect3DTexture9_GetSurfaceLevel(texture->data, 0, &texture->surface_map0);
 
+	/* creo la superficie temporanea le cui dimensioni non devono essere "POWerate" */
 	if (IDirect3DDevice9_CreateOffscreenPlainSurface(d3d9.dev,
-			texture->w,
-			texture->h,
+			texture->no_pow_w,
+			texture->no_pow_h,
 			d3d9.display_mode.Format,
 			D3DPOOL_SYSTEMMEM,
 			&texture->surface,
@@ -986,6 +972,19 @@ BYTE d3d9_create_texture(_texture *texture, uint32_t width, uint32_t height, uin
 	}
 
 	return (EXIT_OK);
+}
+void d3d9_release_texture(_texture *texture) {
+	if (texture->data) {
+		IDirect3DTexture9_Release(texture->data);
+		texture->data = NULL;
+	}
+
+	texture->surface_map0 = NULL;
+
+	if (texture->surface) {
+		IDirect3DSurface9_Release(texture->surface);
+		texture->surface = NULL;
+	}
 }
 BYTE d3d9_create_shader(_shader *shd) {
 	DWORD flags = 0;
@@ -1130,7 +1129,6 @@ void d3d9_release_shader(_shader *shd) {
 		shd->pxl = NULL;
 	}
 }
-
 int d3d9_power_of_two(int base) {
 	int pot = 1;
 

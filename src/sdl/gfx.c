@@ -556,7 +556,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 					opengl.factor = cfg->scale;
 					opengl.glsl.shader_used = TRUE;
 					shader.id = SHADER_NO_FILTER;
-					shader.id = SHADER_NTSC;
+					//shader.id = SHADER_NTSC;
 					opengl.effect = scale_surface;
 					use_txt_texture = TRUE;
 					break;
