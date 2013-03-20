@@ -985,8 +985,8 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"varying vec2 sinangle;\n"
 		"varying vec2 cosangle;\n"
 
-		"uniform vec2 size_input;\n"
-		"uniform vec2 size_output;\n"
+		"uniform vec2 size_screen_emu;\n"
+		"uniform vec2 size_video_mode;\n"
 		"uniform vec2 size_texture;\n"
 
 		"varying vec2 texCoord;\n"
@@ -1082,7 +1082,7 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"	one = 1.0 / size_texture;\n"
 
 		"	// Resulting X pixel-coordinate of the pixel we're drawing.\n"
-		"	mod_factor = texCoord.x * size_texture.x * size_output.x / size_input.x;\n"
+		"	mod_factor = texCoord.x * size_texture.x * size_video_mode.x / size_screen_emu.x;\n"
 		"}",
 		// fragment shader
 		"// Comment the next line to disable interpolation in linear gamma (and\n"
@@ -1108,7 +1108,7 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"#  define TEX2D(c) texture2D(texture_scr, (c))\n"
 		"#endif\n"
 
-		"uniform vec2 size_input;\n"
+		"uniform vec2 size_screen_emu;\n"
 		"uniform vec2 size_texture;\n"
 		"uniform sampler2D texture_scr;\n"
 		"uniform sampler2D texture_txt;\n"
@@ -1157,13 +1157,13 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"}\n"
 
 		"vec2 transform(vec2 coord) {\n"
-		"	coord *= size_texture / size_input;\n"
+		"	coord *= size_texture / size_screen_emu;\n"
 		"	coord = (coord-vec2(0.5))*aspect*stretch.z+stretch.xy;\n"
-		"	return (bkwtrans(coord)/overscan/aspect+vec2(0.5)) * size_input / size_texture;\n"
+		"	return (bkwtrans(coord)/overscan/aspect+vec2(0.5)) * size_screen_emu / size_texture;\n"
 		"}\n"
 
 		"float corner(vec2 coord) {\n"
-		"	coord *= size_texture / size_input;\n"
+		"	coord *= size_texture / size_screen_emu;\n"
 		"	coord = (coord - vec2(0.5)) * overscan + vec2(0.5);\n"
 		"	coord = min(coord, vec2(1.0)-coord) * aspect;\n"
 		"	vec2 cdist = vec2(cornersize);\n"
@@ -1295,7 +1295,7 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"	vec3 dotMaskWeights = mix("
 		"			vec3(1.0, 0.7, 1.0),"
 		"			vec3(0.7, 1.0, 0.7),"
-		"			floor(mod(mod_factor, 2.0))\n"
+		"			floor(mod(mod_factor, 2.0))"
 		"	);\n"
 
 		"	mul_res *= dotMaskWeights;\n"
@@ -1420,8 +1420,8 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"varying vec2 sinangle;\n"
 		"varying vec2 cosangle;\n"
 
-		"uniform vec2 size_input;\n"
-		"uniform vec2 size_output;\n"
+		"uniform vec2 size_screen_emu;\n"
+		"uniform vec2 size_video_mode;\n"
 		"uniform vec2 size_texture;\n"
 
 		"varying vec2 texCoord;\n"
@@ -1514,13 +1514,13 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"	// Texture coords.\n"
 		"	texCoord = gl_MultiTexCoord0.xy;\n"
 
-		"	ilfac = vec2(1.0,floor(size_input.y/200.0));\n"
+		"	ilfac = vec2(1.0,floor(size_screen_emu.y/200.0));\n"
 
 		"	// The size of one texel, in texture-coordinates.\n"
 		"	one = ilfac / size_texture;\n"
 
 		"	// Resulting X pixel-coordinate of the pixel we're drawing.\n"
-		"	mod_factor = texCoord.x * size_texture.x * size_output.x / size_input.x;\n"
+		"	mod_factor = texCoord.x * size_texture.x * size_video_mode.x / size_screen_emu.x;\n"
 		"}",
 		// fragment shader
 		"// Comment the next line to disable interpolation in linear gamma (and\n"
@@ -1546,9 +1546,9 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"#  define TEX2D(c) texture2D(texture_scr, (c))\n"
 		"#endif\n"
 
-		"uniform vec2 size_input;\n"
+		"uniform vec2 size_screen_emu;\n"
 		"uniform vec2 size_texture;\n"
-		"uniform int frame_counter;\n"
+		"uniform float frame_counter;\n"
 		"uniform sampler2D texture_scr;\n"
 		"uniform sampler2D texture_txt;\n"
 
@@ -1597,13 +1597,13 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"}\n"
 
 		"vec2 transform(vec2 coord) {\n"
-		"	coord *= size_texture / size_input;\n"
+		"	coord *= size_texture / size_screen_emu;\n"
 		"	coord = (coord-vec2(0.5))*aspect*stretch.z+stretch.xy;\n"
-		"	return (bkwtrans(coord)/overscan/aspect+vec2(0.5)) * size_input / size_texture;\n"
+		"	return (bkwtrans(coord)/overscan/aspect+vec2(0.5)) * size_screen_emu / size_texture;\n"
 		"}\n"
 
 		"float corner(vec2 coord) {\n"
-		"	coord *= size_texture / size_input;\n"
+		"	coord *= size_texture / size_screen_emu;\n"
 		"	coord = (coord - vec2(0.5)) * overscan + vec2(0.5);\n"
 		"	coord = min(coord, vec2(1.0)-coord) * aspect;\n"
 		"	vec2 cdist = vec2(cornersize);\n"
@@ -1671,7 +1671,7 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 
 		"	// Of all the pixels that are mapped onto the texel we are\n"
 		"	// currently rendering, which pixel are we currently rendering?\n"
-		"	vec2 ilvec = vec2(0.0,ilfac.y > 1.5 ? mod(float(frame_counter),2.0) : 0.0);\n"
+		"	vec2 ilvec = vec2(0.0,ilfac.y > 1.5 ? mod(frame_counter,2.0) : 0.0);\n"
 		"	vec2 ratio_scale = (xy * size_texture - vec2(0.5) + ilvec)/ilfac;\n"
 		"#ifdef OVERSAMPLE\n"
 		"	float filter = fwidth(ratio_scale.y);\n"
@@ -1699,12 +1699,12 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"	// Calculate the effective colour of the current and next\n"
 		"	// scanlines at the horizontal location of the current pixel,\n"
 		"	// using the Lanczos coefficients above.\n"
-		"	vec4 col = clamp(mat4(\n"
+		"	vec4 col = clamp(mat4("
 		"			TEX2D(xy + vec2(-one.x, 0.0)),"
 		"			TEX2D(xy),"
 		"			TEX2D(xy + vec2(one.x, 0.0)),"
 		"			TEX2D(xy + vec2(2.0 * one.x, 0.0))) * coeffs,"
-		"			0.0, 1.0);"
+		"			0.0, 1.0);\n"
 		"	vec4 col2 = clamp(mat4("
 		"			TEX2D(xy + vec2(-one.x, one.y)),"
 		"			TEX2D(xy + vec2(0.0, one.y)),"
@@ -1969,7 +1969,7 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"uniform sampler2D texture_scr;\n"
 		"uniform sampler2D texture_txt;\n"
 		"uniform vec2 size_texture;\n"
-		"uniform int frame_counter;\n"
+		"uniform float frame_counter;\n"
 
 		"#define TEX2D(c) texture2D(texture_scr,(c))\n"
 
@@ -2040,8 +2040,8 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"uniform sampler2D texture_scr;\n"
 		"uniform sampler2D texture_txt;\n"
 		"uniform vec2 size_texture;\n"
-		"uniform vec2 size_input;\n"
-		"uniform int frame_counter;\n"
+		"uniform vec2 size_screen_emu;\n"
+		"uniform float frame_counter;\n"
 
 		"#define TEX2D(c) texture2D(texture_scr,(c))\n"
 
@@ -2063,10 +2063,10 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"	yuv = rgb2yuv * rgb.rgb;\n"
 
 		"	float dx = PI/3.0;\n"
-		"	xyp.x = xyp.x * size_input.x/256.0;\n"
+		"	xyp.x = xyp.x * size_screen_emu.x/256.0;\n"
 		"	float c0 = yuv.x + yuv.y * sin(xyp.x+xyp.y) + yuv.z*cos(xyp.x+xyp.y);\n"
 		"	float c1 = yuv.x + yuv.y * sin(xyp.x+xyp.y+dx) + yuv.z * cos(xyp.x+xyp.y+dx);\n"
-		"	rgb = TEX2D(xy + vec2(1.0/size_texture.x * size_input.x / 512.0, 0.0));\n"
+		"	rgb = TEX2D(xy + vec2(1.0/size_texture.x * size_screen_emu.x / 512.0, 0.0));\n"
 		"	yuv = rgb2yuv * rgb.rgb;\n"
 		"	float c2 = yuv.x + yuv.y * sin(xyp.x+xyp.y+2.0*dx) + yuv.z * cos(xyp.x+xyp.y+2.0*dx);\n"
 		"	float c3 = yuv.x + yuv.y * sin(xyp.x+xyp.y+3.0*dx) + yuv.z * cos(xyp.x+xyp.y+3.0*dx);\n"

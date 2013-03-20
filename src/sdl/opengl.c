@@ -384,7 +384,7 @@ void glsl_shaders_init(_shader *shd) {
 	glUseProgram(shd->prg);
 
 	{
-		GLfloat sse[2], svm[2], st[2], ft[2];
+		GLfloat sse[2], svm[2], st[2], ft[2], fc;
 
 		sse[0] = (GLfloat) SCR_ROWS;
 		sse[1] = (GLfloat) SCR_LINES;
@@ -400,6 +400,7 @@ void glsl_shaders_init(_shader *shd) {
 		st[1] = opengl.texture.h;
 		ft[0] = st[0] / svm[0];
 		ft[1] = st[1] / svm[1];
+		fc = (GLfloat) ppu.frames;
 
 		if ((shd->loc.size.screen_emu = glGetUniformLocation(shd->prg, "size_screen_emu")) >= 0) {
 			glUniform2f(shd->loc.size.screen_emu, sse[0], sse[1]);
@@ -413,10 +414,9 @@ void glsl_shaders_init(_shader *shd) {
 		if ((shd->loc.size.factor = glGetUniformLocation(shd->prg, "factor")) >= 0) {
 			glUniform2f(shd->loc.size.factor, ft[0], ft[1]);
 		}
-	}
-
-	if ((shd->loc.frame_counter = glGetUniformLocation(shd->prg, "frame_counter")) >= 0) {
-		glUniform1f(shd->loc.frame_counter, (GLfloat) ppu.frames);
+		if ((shd->loc.frame_counter = glGetUniformLocation(shd->prg, "frame_counter")) >= 0) {
+			glUniform1f(shd->loc.frame_counter, fc);
+		}
 	}
 
 	glEnable(GL_TEXTURE_2D);

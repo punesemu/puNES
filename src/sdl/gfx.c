@@ -547,93 +547,49 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 
 		if (opengl.glsl.compliant && opengl.glsl.enabled) {
 
+#define glsl_up(e, s)\
+		opengl.glsl.shader_used = TRUE;\
+		shader.id = s;\
+		opengl.scale_force = TRUE;\
+		opengl.scale = X1;\
+		opengl.factor = cfg->scale;\
+		opengl.effect = e;\
+		use_txt_texture = TRUE
+
 			glsl_delete_shaders(&shader);
 
 			switch (cfg->filter) {
 				case NO_FILTER:
-					opengl.scale_force = TRUE;
-					opengl.scale = X1;
-					opengl.factor = cfg->scale;
-					opengl.glsl.shader_used = TRUE;
-					shader.id = SHADER_NO_FILTER;
-					//shader.id = SHADER_NTSC;
-					opengl.effect = scale_surface;
-					use_txt_texture = TRUE;
+					glsl_up(scale_surface, SHADER_NO_FILTER);
+					//glsl_up(scale_surface, SHADER_NTSC);
 					break;
 				case BILINEAR:
-					opengl.scale_force = TRUE;
-					opengl.scale = X1;
-					opengl.factor = cfg->scale;
-					opengl.glsl.shader_used = TRUE;
-					shader.id = SHADER_NO_FILTER;
-					opengl.effect = scale_surface;
+					glsl_up(scale_surface, SHADER_NO_FILTER);
 					opengl.interpolation = TRUE;
-					use_txt_texture = TRUE;
 					break;
 				case POSPHOR:
-					opengl.scale_force = TRUE;
-					opengl.scale = X1;
-					opengl.factor = cfg->scale;
-					opengl.glsl.shader_used = TRUE;
-					shader.id = SHADER_POSPHOR;
-					opengl.effect = scale_surface;
-					use_txt_texture = TRUE;
+					glsl_up(scale_surface, SHADER_POSPHOR);
 					break;
 				case SCANLINE:
-					opengl.scale_force = TRUE;
-					opengl.scale = X1;
-					opengl.factor = cfg->scale;
-					opengl.glsl.shader_used = TRUE;
-					shader.id = SHADER_SCANLINE;
-					opengl.effect = scale_surface;
-					use_txt_texture = TRUE;
+					glsl_up(scale_surface, SHADER_SCANLINE);
 					break;
 				case DBL:
-					opengl.scale_force = TRUE;
-					opengl.scale = X1;
-					opengl.factor = cfg->scale;
-					opengl.glsl.shader_used = TRUE;
-					shader.id = SHADER_DONTBLOOM;
-					opengl.effect = scale_surface;
-					use_txt_texture = TRUE;
+					glsl_up(scale_surface, SHADER_DONTBLOOM);
 					break;
 				case CRT_CURVE:
-					opengl.scale_force = TRUE;
-					opengl.scale = X1;
-					opengl.factor = cfg->scale;
-					opengl.glsl.shader_used = TRUE;
-					shader.id = SHADER_CRT;
-					opengl.effect = scale_surface;
-					use_txt_texture = TRUE;
+					glsl_up(scale_surface, SHADER_CRT);
 					break;
 				case CRT_NO_CURVE:
-					opengl.scale_force = TRUE;
-					opengl.scale = X1;
-					opengl.factor = cfg->scale;
-					opengl.glsl.shader_used = TRUE;
-					shader.id = SHADER_CRT4;
-					opengl.effect = scale_surface;
-					use_txt_texture = TRUE;
+					glsl_up(scale_surface, SHADER_CRT4);
 					break;
 				case SCALE2X:
-					opengl.scale_force = TRUE;
-					opengl.scale = X1;
-					opengl.factor = cfg->scale;
-					opengl.glsl.shader_used = TRUE;
-					shader.id = SHADER_SCALE2X;
-					opengl.effect = scale_surface;
-					use_txt_texture = TRUE;
+					glsl_up(scale_surface, SHADER_SCALE2X);
 					break;
 				case SCALE3X:
-					opengl.scale_force = TRUE;
-					opengl.scale = X1;
-					opengl.factor = cfg->scale;
-					opengl.glsl.shader_used = TRUE;
-					shader.id = SHADER_SCALE3X;
-					opengl.effect = scale_surface;
-					use_txt_texture = TRUE;
+					glsl_up(scale_surface, SHADER_SCALE3X);
 					break;
 				case SCALE4X:
+					glsl_up(scale_surface, SHADER_SCALE4X);
 					/*
 					opengl.scale_force = TRUE;
 					opengl.scale = X2;
@@ -643,51 +599,26 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 					opengl.effect = scaleNx;
 					use_txt_texture = TRUE;
 					*/
-					opengl.scale_force = TRUE;
-					opengl.scale = X1;
-					opengl.factor = cfg->scale;
-					opengl.glsl.shader_used = TRUE;
-					shader.id = SHADER_SCALE4X;
-					opengl.effect = scale_surface;
-					use_txt_texture = TRUE;
 					break;
 				case HQ2X:
-					opengl.scale_force = TRUE;
-					opengl.scale = X1;
-					opengl.factor = cfg->scale;
-					opengl.glsl.shader_used = TRUE;
-					shader.id = SHADER_HQ2X;
-					opengl.effect = scale_surface;
-					use_txt_texture = TRUE;
+					glsl_up(scale_surface, SHADER_HQ2X);
 					break;
 				case HQ4X:
-					opengl.scale_force = TRUE;
+					glsl_up(hqNx, SHADER_HQ2X);
 					opengl.scale = X2;
 					opengl.factor = 2;
-					opengl.glsl.shader_used = TRUE;
-					shader.id = SHADER_HQ2X;
-					opengl.effect = hqNx;
-					use_txt_texture = TRUE;
 					break;
 			}
 
 			if (cfg->fullscreen) {
 				if ((cfg->filter >= SCALE2X) && (cfg->filter <= SCALE4X)) {
-					opengl.scale_force = TRUE;
+					glsl_up(scaleNx, SHADER_NO_FILTER);
 					opengl.scale = X2;
 					opengl.factor = (float) cfg->scale / 2.0;
-					opengl.glsl.shader_used = TRUE;
-					shader.id = SHADER_NO_FILTER;
-					opengl.effect = scaleNx;
-					use_txt_texture = TRUE;
 				} else if ((cfg->filter >= HQ2X) && (cfg->filter <= HQ4X)) {
-					opengl.scale_force = TRUE;
+					glsl_up(hqNx, SHADER_NO_FILTER);
 					opengl.scale = X2;
 					opengl.factor = (float) cfg->scale / 2.0;
-					opengl.glsl.shader_used = TRUE;
-					shader.id = SHADER_NO_FILTER;
-					opengl.effect = hqNx;
-					use_txt_texture = TRUE;
 				}
 			}
 		}
