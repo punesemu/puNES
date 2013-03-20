@@ -726,7 +726,7 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"#define round(x) floor( (x) + 0.5 )\n"
 
 		"void main() {\n"
-		"	vec2 texelSize = 1.0 / size_texture;\n"
+		"	vec2 texelSize = (1.0 / size_texture);\n"
 		"	vec2 texCoord = v_texCoord.xy;\n"
 
 		"	vec2 range = vec2(abs(dFdx(texCoord.x)), abs(dFdy(texCoord.y)));\n"
@@ -1037,6 +1037,10 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"}\n"
 
 		"void main() {\n"
+		"	gl_FrontColor = gl_Color;\n"
+		"	gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;\n"
+		"	texCoord = gl_MultiTexCoord0.xy;\n"
+
 		"	// START of parameters\n"
 
 		"	// gamma of simulated CRT\n"
@@ -1064,22 +1068,14 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 
 		"	// END of parameters\n"
 
-		"	gl_FrontColor = gl_Color;\n"
-
-		"	// Do the standard vertex processing.\n"
-		"	gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;\n"
-
 		"	// Precalculate a bunch of useful values we'll need in the fragment\n"
 		"	// shader.\n"
 		"	sinangle = sin(angle);\n"
 		"	cosangle = cos(angle);\n"
 		"	stretch = maxscale();\n"
 
-		"	// Texture coords.\n"
-		"	texCoord = gl_MultiTexCoord0.xy;\n"
-
 		"	// The size of one texel, in texture-coordinates.\n"
-		"	one = 1.0 / size_texture;\n"
+		"	one = (1.0 / size_texture);\n"
 
 		"	// Resulting X pixel-coordinate of the pixel we're drawing.\n"
 		"	mod_factor = texCoord.x * size_texture.x * size_video_mode.x / size_screen_emu.x;\n"
@@ -1473,6 +1469,10 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"}\n"
 
 		"void main() {\n"
+		"	gl_FrontColor = gl_Color;\n"
+		"	gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;\n"
+		"	texCoord = gl_MultiTexCoord0.xy;\n"
+
 		"	// START of parameters\n"
 
 		"	// gamma of simulated CRT\n"
@@ -1500,19 +1500,11 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 
 		"	// END of parameters\n"
 
-		"	gl_FrontColor = gl_Color;\n"
-
-		"	// Do the standard vertex processing.\n"
-		"	gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;\n"
-
 		"	// Precalculate a bunch of useful values we'll need in the fragment\n"
 		"	// shader.\n"
 		"	sinangle = sin(angle);\n"
 		"	cosangle = cos(angle);\n"
 		"	stretch = maxscale();\n"
-
-		"	// Texture coords.\n"
-		"	texCoord = gl_MultiTexCoord0.xy;\n"
 
 		"	ilfac = vec2(1.0,floor(size_screen_emu.y/200.0));\n"
 
