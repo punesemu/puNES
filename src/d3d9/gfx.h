@@ -25,13 +25,11 @@ enum filters_type {
 	HQ4X,
 	NTSC_FILTER,
 	BILINEAR,
-	/* glsl shaders */
 	POSPHOR,
 	SCANLINE,
 	DBL,
-	//CRT_CURVE,
-	//CRT_NO_CURVE,
-	/* glsl shaders end */
+	CRT_CURVE,
+	CRT_NO_CURVE,
 };
 
 enum overcan_type { OSCAN_OFF, OSCAN_ON, OSCAN_DEFAULT, OSCAN_DEFAULT_OFF, OSCAN_DEFAULT_ON };

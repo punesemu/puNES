@@ -348,8 +348,8 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 			case POSPHOR:
 			case SCANLINE:
 			case DBL:
-			//case CRT_CURVE:
-			//case CRT_NO_CURVE:
+			case CRT_CURVE:
+			case CRT_NO_CURVE:
 				d3d9.effect = scale_surface;
 				d3d9.interpolation = FALSE;
 				/*
@@ -402,14 +402,6 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 		/* indico che devo cambiare il video mode */
 		set_mode = TRUE;
 	}
-
-	// .......................
-	// .......................
-	// .......................
-	// mancano un saaaaaaacco di cose
-	// .......................
-	// .......................
-	// .......................
 
 	/* fattore di scala */
 	if (scale == NO_CHANGE) {
@@ -529,9 +521,8 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 
 		switch (cfg->filter) {
 			case NO_FILTER:
-				//hlsl_up(SHADER_NO_FILTER);
+				hlsl_up(SHADER_NO_FILTER);
 				//hlsl_up(SHADER_NTSC);
-				hlsl_up(SHADER_CRT);
 				break;
 			case BILINEAR:
 				hlsl_up(SHADER_NO_FILTER);
@@ -544,6 +535,12 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 				break;
 			case DBL:
 				hlsl_up(SHADER_DONTBLOOM);
+				break;
+			case CRT_CURVE:
+				hlsl_up(SHADER_CRT);
+				break;
+			case CRT_NO_CURVE:
+				hlsl_up(SHADER_CRT4);
 				break;
 			case SCALE2X:
 				hlsl_up(SHADER_SCALE2X);
@@ -1057,7 +1054,7 @@ BYTE d3d9_create_shader(_shader *shd) {
 
 		switch (hr) {
 			case D3D_OK: {
-				FLOAT sse[2], svm[2], st[2], ft[2];
+				FLOAT sse[2], svm[2], st[2], ft[2], fc;
 
 				/* creo il pixel shader */
 				IDirect3DDevice9_CreatePixelShader(d3d9.dev,
@@ -1078,6 +1075,7 @@ BYTE d3d9_create_shader(_shader *shd) {
 				st[1] = (FLOAT) d3d9.texture.h;
 				ft[0] = st[0] / svm[0];
 				ft[1] = st[1] / svm[1];
+				fc = (FLOAT) ppu.frames;
 
 				ID3DXConstantTable_SetFloatArray(shd->table_pxl, d3d9.dev, "size_screen_emu",
 							(CONST FLOAT * ) &sse, 2);
@@ -1087,6 +1085,8 @@ BYTE d3d9_create_shader(_shader *shd) {
 							(CONST FLOAT * ) &st, 2);
 				ID3DXConstantTable_SetFloatArray(shd->table_pxl, d3d9.dev, "factor",
 							(CONST FLOAT * ) &ft, 2);
+				ID3DXConstantTable_SetFloatArray(shd->table_pxl, d3d9.dev, "frame_counter",
+							(CONST FLOAT * ) &fc, 1);
 
 				printf("\n");
 				printf("size_screen_emu : %f - %f\n", sse[0], sse[1]);
