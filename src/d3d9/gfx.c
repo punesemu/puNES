@@ -522,7 +522,6 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 		switch (cfg->filter) {
 			case NO_FILTER:
 				hlsl_up(SHADER_NO_FILTER);
-				//hlsl_up(SHADER_NTSC);
 				break;
 			case BILINEAR:
 				hlsl_up(SHADER_NO_FILTER);
