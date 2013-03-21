@@ -63,7 +63,7 @@
 	/* ed infine utilizzo la nuova */\
 	ntsc_set(cfg->ntsc_format, FALSE, 0, (BYTE *) palette_RGB,(BYTE *) palette_RGB)
 
-enum pow_types { NO_POWER_OF_TWO, POWER_OF_TWO };
+enum power_of_two_switch { NO_POWER_OF_TWO, POWER_OF_TWO };
 
 struct _d3d9 {
 	LPDIRECT3D9 d3d;
