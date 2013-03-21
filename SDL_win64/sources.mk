@@ -18,7 +18,7 @@ src/sdl \
 src/sdl/openGL \
 src/sdl/gui/windows \
 src/sdl/glew \
-src/sdl/filters/video \
 src/sdl/filters/audio \
 src/mappers \
+src/filters/video \
 

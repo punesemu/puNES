@@ -9,10 +9,10 @@
 #define SCALE_H_
 
 #include "common.h"
+#include "gfx.h"
 #include "palette.h"
 
-void scale_surface(WORD *screen, WORD **screen_index, uint32_t *palette, BYTE bpp, uint32_t pitch,
-        void *pix, WORD rows, WORD lines, WORD width, WORD height, BYTE factor);
+gfx_filter_function(scale_surface);
 void scale_surface1x(WORD **screen_index, uint32_t *palette, BYTE bpp, uint32_t pitch, void *pix);
 void scale_surface2x(WORD **screen_index, uint32_t *palette, BYTE bpp, uint32_t pitch, void *pix);
 void scale_surface3x(WORD **screen_index, uint32_t *palette, BYTE bpp, uint32_t pitch, void *pix);

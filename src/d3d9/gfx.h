@@ -5,11 +5,19 @@
  *      Author: fhorse
  */
 
+/* definizione funzione virtuale */
+#ifndef gfx_filter_function
+#define gfx_filter_function(name) void name(WORD *screen, WORD **screen_index, uint32_t *palette,\
+		BYTE bpp, uint32_t pitch, void *pix, WORD rows, WORD lines, WORD width, WORD height,\
+		BYTE factor)
+#endif
+
 #ifndef GFX_H_
 #define GFX_H_
 
 #include "common.h"
 #include "filters/video/scale.h"
+#include "filters/video/scale2x.h"
 #include "filters/video/ntsc.h"
 #include "filters/video/hqx.h"
 
@@ -45,6 +53,7 @@ struct _gfx {
 	SDBWORD h[4];
 	float w_pr;
 	float h_pr;
+	gfx_filter_function((*filter));
 } gfx;
 
 BYTE gfx_init(void);
@@ -54,10 +63,5 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 void gfx_draw_screen(BYTE forced);
 void gfx_reset_video(void);
 void gfx_quit(void);
-
-/* funzioni virtuali */
-#define GFX_EFFECT_ROUTINE\
-	void (*effect)(WORD *screen, WORD **screen_index, uint32_t *palette, BYTE bpp, uint32_t pitch,\
-			void *pix, WORD rows, WORD lines, WORD width, WORD height, BYTE factor)
 
 #endif /* GFX_H_ */

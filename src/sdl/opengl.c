@@ -11,7 +11,7 @@
 #include "cfg_file.h"
 #include "openGL/no_effect.h"
 #define _SHADERS_CODE_
-#include "openGL/shaders.h"
+#include "shaders.h"
 #undef  _SHADERS_CODE_
 
 void glsl_print_log(GLuint obj);

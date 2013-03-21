@@ -250,7 +250,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 			case CRT_CURVE:
 			case CRT_NO_CURVE:
 			case NO_FILTER:
-				effect = scale_surface;
+				gfx.filter = scale_surface;
 				/*
 				 * se sto passando dal filtro ntsc ad un'altro, devo
 				 * ricalcolare la larghezza del video mode quindi
@@ -266,7 +266,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 				}
 				break;
 			case BILINEAR:
-				effect = bilinear;
+				gfx.filter = bilinear;
 				/*
 				 * se sto passando dal filtro ntsc ad un'altro, devo
 				 * ricalcolare la larghezza del video mode quindi
@@ -282,7 +282,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 			case SCALE2X:
 			case SCALE3X:
 			case SCALE4X:
-				effect = scaleNx;
+				gfx.filter = scaleNx;
 				/*
 				 * se sto passando dal filtro ntsc ad un'altro, devo
 				 * ricalcolare la larghezza del video mode quindi
@@ -298,7 +298,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 			case HQ2X:
 			case HQ3X:
 			case HQ4X:
-				effect = hqNx;
+				gfx.filter = hqNx;
 				/*
 				 * se sto passando dal filtro ntsc ad un'altro, devo
 				 * ricalcolare la larghezza del video mode quindi
@@ -312,7 +312,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 				}
 				break;
 			case NTSC_FILTER:
-				effect = ntsc_surface;
+				gfx.filter = ntsc_surface;
 				/*
 				 * il fattore di scala deve essere gia' stato
 				 * inizializzato almeno una volta.
@@ -370,7 +370,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 					 * con un fattore di scala X1 effect deve essere
 					 * sempre impostato su scale_surface.
 					 */
-					effect = scale_surface;
+					gfx.filter = scale_surface;
 					return;
 				}
 				set_mode = TRUE;
@@ -541,7 +541,6 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 		opengl.factor = 1;
 		opengl.glsl.shader_used = FALSE;
 		shader.id = SHADER_NONE;
-		opengl.effect = effect;
 		opengl.interpolation = FALSE;
 		use_txt_texture = FALSE;
 
@@ -553,7 +552,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 		opengl.scale_force = TRUE;\
 		opengl.scale = X1;\
 		opengl.factor = cfg->scale;\
-		opengl.effect = e;\
+		gfx.filter = e;\
 		use_txt_texture = TRUE
 
 			glsl_delete_shaders(&shader);
@@ -687,14 +686,32 @@ void gfx_draw_screen(BYTE forced) {
 	if (forced || !ppu.skip_draw) {
 		/* applico l'effetto desiderato */
 		if (gfx.opengl) {
-			opengl.effect(screen.data, screen.line, palette_win, framebuffer, gfx.rows,
-					gfx.lines, opengl.scale);
+			gfx.filter(screen.data,
+					screen.line,
+					palette_win,
+					framebuffer->format->BitsPerPixel,
+					framebuffer->pitch,
+					framebuffer->pixels,
+					gfx.rows,
+					gfx.lines,
+					framebuffer->w,
+					framebuffer->h,
+					opengl.scale);
 
 			text_rendering(TRUE);
 
 			opengl_draw_scene(framebuffer);
 		} else {
-			effect(screen.data, screen.line, palette_win, framebuffer, gfx.rows, gfx.lines,
+			gfx.filter(screen.data,
+					screen.line,
+					palette_win,
+					framebuffer->format->BitsPerPixel,
+					framebuffer->pitch,
+					framebuffer->pixels,
+					gfx.rows,
+					gfx.lines,
+					framebuffer->w,
+					framebuffer->h,
 					cfg->scale);
 
 			text_rendering(TRUE);
@@ -746,7 +763,4 @@ SDL_Surface *gfx_create_RGB_surface(SDL_Surface *src, uint32_t width, uint32_t h
 
 double sdl_get_ms(void) {
 	return (SDL_GetTicks());
-}
-void sdl_nop(double ms) {
-	SDL_Delay(ms);
 }

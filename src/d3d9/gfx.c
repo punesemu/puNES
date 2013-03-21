@@ -14,7 +14,7 @@
 #include "ppu.h"
 #include "overscan.h"
 #define _SHADERS_CODE_
-#include "filters/video/shaders.h"
+#include "shaders.h"
 #undef  _SHADERS_CODE_
 #define __STATICPAL__
 #include "palette.h"
@@ -80,7 +80,6 @@ struct _d3d9 {
 	INT y_texture2;
 
 	uint32_t *palette;
-	GFX_EFFECT_ROUTINE;
 
 	_shader shader;
 
@@ -350,7 +349,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 			case DBL:
 			case CRT_CURVE:
 			case CRT_NO_CURVE:
-				d3d9.effect = scale_surface;
+				gfx.filter = scale_surface;
 				d3d9.interpolation = FALSE;
 				/*
 				 * se sto passando dal filtro ntsc ad un'altro, devo
@@ -363,23 +362,23 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 				}
 				break;
 			case BILINEAR:
-				d3d9.effect = scale_surface;
+				gfx.filter = scale_surface;
 				d3d9.interpolation = TRUE;
 				break;
 			case SCALE2X:
 			case SCALE3X:
 			case SCALE4X:
-				d3d9.effect = scale_surface;
+				gfx.filter = scaleNx;
 				d3d9.interpolation = FALSE;
 				break;
 			case HQ2X:
 			case HQ3X:
 			case HQ4X:
-				d3d9.effect = hqNx;
+				gfx.filter = hqNx;
 				d3d9.interpolation = FALSE;
 				break;
 			case NTSC_FILTER:
-				d3d9.effect = ntsc_surface;
+				gfx.filter = ntsc_surface;
 				d3d9.interpolation = FALSE;
 				/*
 				 * il fattore di scala deve essere gia' stato
@@ -427,7 +426,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 					 * con un fattore di scala X1 effect deve essere
 					 * sempre impostato su scale_surface.
 					 */
-					d3d9.effect = scale_surface;
+					gfx.filter = scale_surface;
 					return;
 				}
 				set_mode = TRUE;
@@ -512,53 +511,50 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 	/* TODO: aggiungere il controllo se supportate le shaders */
 	if (d3d9.hlsl == TRUE) {
 
-#define hlsl_up(s)\
+#define hlsl_up(e, s)\
 		d3d9.hlsl_used = TRUE;\
 		d3d9.shader.id = s;\
 		d3d9.scale_force = TRUE;\
 		d3d9.scale = X1;\
-		d3d9.factor = cfg->scale
+		d3d9.factor = cfg->scale;\
+		gfx.filter = e
 
 		switch (cfg->filter) {
 			case NO_FILTER:
-				hlsl_up(SHADER_NO_FILTER);
+				hlsl_up(scale_surface, SHADER_NO_FILTER);
 				break;
 			case BILINEAR:
-				hlsl_up(SHADER_NO_FILTER);
+				hlsl_up(scale_surface, SHADER_NO_FILTER);
 				break;
 			case POSPHOR:
-				hlsl_up(SHADER_POSPHOR);
+				hlsl_up(scale_surface, SHADER_POSPHOR);
 				break;
 			case SCANLINE:
-				hlsl_up(SHADER_SCANLINE);
+				hlsl_up(scale_surface, SHADER_SCANLINE);
 				break;
 			case DBL:
-				hlsl_up(SHADER_DONTBLOOM);
+				hlsl_up(scale_surface, SHADER_DONTBLOOM);
 				break;
 			case CRT_CURVE:
-				hlsl_up(SHADER_CRT);
+				hlsl_up(scale_surface, SHADER_CRT);
 				break;
 			case CRT_NO_CURVE:
-				hlsl_up(SHADER_CRT4);
+				hlsl_up(scale_surface, SHADER_CRT4);
 				break;
 			case SCALE2X:
-				hlsl_up(SHADER_SCALE2X);
-				d3d9.effect = scale_surface;
+				hlsl_up(scale_surface, SHADER_SCALE2X);
 				break;
 			case SCALE3X:
-				hlsl_up(SHADER_SCALE3X);
-				d3d9.effect = scale_surface;
+				hlsl_up(scale_surface, SHADER_SCALE3X);
 				break;
 			case SCALE4X:
-				hlsl_up(SHADER_SCALE4X);
-				d3d9.effect = scale_surface;
+				hlsl_up(scale_surface, SHADER_SCALE4X);
 				break;
 			case HQ2X:
-				hlsl_up(SHADER_HQ2X);
-				d3d9.effect = scale_surface;
+				hlsl_up(scale_surface, SHADER_HQ2X);
 				break;
 			case HQ4X:
-				hlsl_up(SHADER_HQ2X);
+				hlsl_up(hqNx, SHADER_HQ2X);
 				d3d9.scale = X2;
 				d3d9.factor = 2;
 				break;
@@ -610,7 +606,7 @@ void gfx_draw_screen(BYTE forced) {
 		IDirect3DSurface9_LockRect(d3d9.texture.surface, &locked_rect, NULL, D3DLOCK_DISCARD);
 
 		/* applico l'effetto */
-		d3d9.effect(screen.data,
+		gfx.filter(screen.data,
 				screen.line,
 				d3d9.palette,
 				d3d9.bpp,

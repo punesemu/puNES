@@ -24,10 +24,8 @@ void hqx_init(void) {
 		v = (uint32_t) (0.5 * r - 0.419 * g - 0.081 * b) + 128;
 		RGBtoYUV[i] = (y << 16) + (u << 8) + v;
 	}
-
 }
-void hqNx(WORD *screen, WORD **screen_index, Uint32 *palette, SDL_Surface *dst, WORD rows,
-		WORD lines, BYTE factor) {
+gfx_filter_function(hqNx) {
 	hqnx.sx = 0;
 	hqnx.sy = 0;
 	hqnx.lines = lines;
@@ -45,10 +43,10 @@ void hqNx(WORD *screen, WORD **screen_index, Uint32 *palette, SDL_Surface *dst, 
 	if (factor == 1) {
 		return;
 	} else if (factor == 2) {
-		hq2x_32_rb(screen, dst, palette);
+		hq2x_32_rb(screen, pix, palette);
 	} else if (factor == 3) {
-		hq3x_32_rb(screen, dst, palette);
+		hq3x_32_rb(screen, pix, palette);
 	} else if (factor == 4) {
-		hq4x_32_rb(screen, dst, palette);
+		hq4x_32_rb(screen, pix, palette);
 	}
 }

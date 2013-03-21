@@ -8,10 +8,9 @@
 #ifndef BILINEAR_H_
 #define BILINEAR_H_
 
-#include <SDL.h>
 #include "common.h"
+#include "gfx.h"
 
-void bilinear(WORD *screen, WORD **screen_index, Uint32 *palette, SDL_Surface *dst, WORD rows,
-        WORD lines, BYTE factor);
+gfx_filter_function(bilinear);
 
 #endif /* BILINEAR_H_ */

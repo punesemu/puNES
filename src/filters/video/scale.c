@@ -22,8 +22,7 @@ struct _scl {
 	WORD lines;
 } scl;
 
-void scale_surface(WORD *screen, WORD **screen_index, uint32_t *palette, BYTE bpp, uint32_t pitch,
-        void *pix, WORD rows, WORD lines, WORD width, WORD height, BYTE factor) {
+gfx_filter_function(scale_surface) {
 	scl.sx = 0;
 	scl.sy = 0;
 	scl.oy = 0;

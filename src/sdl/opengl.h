@@ -12,11 +12,11 @@
 #include <SDL.h>
 #include "common.h"
 #include "gfx.h"
-#include "openGL/shaders.h"
+#include "shaders.h"
 
 #define slow_factor	3
 
-enum { NO_POWER_OF_TWO, POWER_OF_TWO };
+enum power_of_two_switch { NO_POWER_OF_TWO, POWER_OF_TWO };
 
 struct _opengl {
 	BYTE rotation;
@@ -34,7 +34,6 @@ struct _opengl {
 	GLfloat scale;
 	GLfloat factor;
 	BYTE interpolation;
-	GFX_EFFECT_ROUTINE;
 
 	SDL_Surface *surface_gl;
 

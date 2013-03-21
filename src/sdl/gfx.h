@@ -5,9 +5,17 @@
  *      Author: fhorse
  */
 
+/* definizione funzione virtuale */
+#ifndef gfx_filter_function
+#define gfx_filter_function(name) void name(WORD *screen, WORD **screen_index, uint32_t *palette,\
+		BYTE bpp, uint32_t pitch, void *pix, WORD rows, WORD lines, WORD width, WORD height,\
+		BYTE factor)
+#endif
+
 #ifndef GFX_H_
 #define GFX_H_
 
+#include <SDL.h>
 #include "common.h"
 #include "filters/video/scale.h"
 #include "filters/video/scale2x.h"
@@ -50,6 +58,7 @@ struct _gfx {
 	SDBWORD h[4];
 	float w_pr;
 	float h_pr;
+	gfx_filter_function((*filter));
 } gfx;
 
 SDL_Surface *surface_sdl;
@@ -61,17 +70,8 @@ void gfx_draw_screen(BYTE forced);
 void gfx_reset_video(void);
 void gfx_quit(void);
 
-SDL_Surface *gfx_create_RGB_surface(SDL_Surface *src, uint32_t width, uint32_t height);
-
 double sdl_get_ms(void);
-void sdl_nop(double ms);
-
-/* funzioni virtuali */
-#define GFX_EFFECT_ROUTINE\
-	void (*effect)(WORD *screen, WORD **screen_index, Uint32 *palette, SDL_Surface *dst,\
-			WORD rows, WORD lines, BYTE factor)
-
-GFX_EFFECT_ROUTINE;
+SDL_Surface *gfx_create_RGB_surface(SDL_Surface *src, uint32_t width, uint32_t height);
 int (*flip)(SDL_Surface *surface);
 
 #endif /* GFX_H_ */

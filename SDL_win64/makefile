@@ -11,10 +11,10 @@ RM := rm -rf
 -include src/sdl/openGL/subdir.mk
 -include src/sdl/gui/windows/subdir.mk
 -include src/sdl/glew/subdir.mk
--include src/sdl/filters/video/subdir.mk
 -include src/sdl/filters/audio/subdir.mk
 -include src/sdl/subdir.mk
 -include src/mappers/subdir.mk
+-include src/filters/video/subdir.mk
 -include src/subdir.mk
 -include subdir.mk
 -include objects.mk

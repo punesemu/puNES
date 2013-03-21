@@ -22,8 +22,8 @@
 #ifndef __HQX_H_
 #define __HQX_H_
 
-#include <SDL.h>
 #include "common.h"
+#include "gfx.h"
 #include "palette.h"
 
 struct _hqx {
@@ -36,10 +36,9 @@ struct _hqx {
 } hqnx;
 
 void hqx_init(void);
-void hqNx(WORD *screen, WORD **screen_index, Uint32 *palette, SDL_Surface *dst, WORD rows,
-		WORD lines, BYTE factor);
-void hq2x_32_rb(WORD *screen, SDL_Surface *dst, uint32_t *palette);
-void hq3x_32_rb(WORD *screen, SDL_Surface *dst, uint32_t *palette);
-void hq4x_32_rb(WORD *screen, SDL_Surface *dst, uint32_t *palette);
+gfx_filter_function(hqNx);
+void hq2x_32_rb(WORD *screen, void *pix, uint32_t *palette);
+void hq3x_32_rb(WORD *screen, void *pix, uint32_t *palette);
+void hq4x_32_rb(WORD *screen, void *pix, uint32_t *palette);
 
 #endif

@@ -5,6 +5,8 @@
  *      Author: fhorse
  */
 
+#include <stdio.h>
+#include <stdlib.h>
 #include "scale2x.h"
 #include "overscan.h"
 
@@ -50,13 +52,18 @@ struct _scl2x {
 	WORD lines;
 } scl2x;
 
+struct _s4x_buffer {
+	uint32_t w, h;
+	uint32_t pitch;
+	uint32_t size;
+	void *pixels;
+} scl4x_buffer;
+
 /*
  * cio' che non utilizzo in questa funzione
  * e' il parametro WORD *screen.
  */
-void scaleNx(WORD *screen, WORD **screen_index, Uint32 *palette, SDL_Surface *dst, WORD rows,
-		WORD lines, BYTE factor) {
-
+gfx_filter_function(scaleNx) {
 	scl2x.sx = 0;
 	scl2x.sy = 0;
 	scl2x.oy = 0;
@@ -74,22 +81,34 @@ void scaleNx(WORD *screen, WORD **screen_index, Uint32 *palette, SDL_Surface *ds
 	if (factor == 1) {
 		return;
 	} else if (factor == 2) {
-		scale2x(screen_index, palette, dst);
+		scale2x(screen_index, palette, bpp, pitch, pix);
 	} else if (factor == 3) {
-		scale3x(screen_index, palette, dst);
+		scale3x(screen_index, palette, bpp, pitch, pix);
 	} else if (factor == 4) {
-		scale4x(screen_index, palette, dst);
+		scl4x_buffer.w = rows * 2;
+		scl4x_buffer.h = lines * 2;
+
+		if ((bpp == 15) || (bpp == 16)) {
+			scl4x_buffer.pitch = scl4x_buffer.w * sizeof(uint16_t);
+		} else if (bpp == 24) {
+			scl4x_buffer.pitch = scl4x_buffer.w * sizeof(int);
+		} else if (bpp == 32) {
+			scl4x_buffer.pitch = scl4x_buffer.w * sizeof(uint32_t);
+		} else {
+			scl4x_buffer.pitch = 0;
+		}
+		scl4x_buffer.size = scl4x_buffer.pitch * scl4x_buffer.h;
+
+		scale4x(screen_index, palette, bpp, pitch, pix);
 	}
 }
-void scale2x(WORD **screen_index, Uint32 *palette, SDL_Surface *dst) {
-	const DBWORD dstpitch = dst->pitch;
+void scale2x(WORD **screen_index, uint32_t *palette, BYTE bpp, uint32_t pitch, void *pix) {
+	const DBWORD dstpitch = pitch;
 	WORD E0, E1, E2, E3, B, D, E, F, H;
-	Uint8 *dstpix = (Uint8 *) dst->pixels;
-	Uint32 TH0, TH1, TH2, TH3, TH4;
-	Uint32 TW0, TW1, TW2;
+	uint8_t *dstpix = (uint8_t *) pix;
+	uint32_t TH0, TH1, TH2, TH3, TH4;
+	uint32_t TW0, TW1, TW2;
 
-	/* lock della destinazione */
-	//SDL_LockSurface(dst);
 	for (; scl2x.sy < scl2x.lines; ++scl2x.sy) {
 		TH0 = MAX(0, scl2x.sy - 1);
 		TH1 = scl2x.sy;
@@ -109,15 +128,15 @@ void scale2x(WORD **screen_index, Uint32 *palette, SDL_Surface *dst) {
 			F = screen_index[TH1][TW2];
 			H = screen_index[TH2][TW1];
 			SCALE2X()
-			switch (dst->format->BitsPerPixel) {
+			switch (bpp) {
 				case 15:
 				case 16:
 					TW0 = (scl2x.ox << 2);
 					TW1 = TW0 + 2;
-					put_pixel(Uint16, E0, TH3, TW0);
-					put_pixel(Uint16, E1, TH3, TW1);
-					put_pixel(Uint16, E2, TH4, TW0);
-					put_pixel(Uint16, E3, TH4, TW1);
+					put_pixel(uint16_t, E0, TH3, TW0);
+					put_pixel(uint16_t, E1, TH3, TW1);
+					put_pixel(uint16_t, E2, TH4, TW0);
+					put_pixel(uint16_t, E3, TH4, TW1);
 					break;
 				case 24:
 					TW0 = X3((scl2x.ox << 1));
@@ -130,29 +149,25 @@ void scale2x(WORD **screen_index, Uint32 *palette, SDL_Surface *dst) {
 				default:
 					TW0 = (scl2x.ox << 3);
 					TW1 = TW0 + 4;
-					put_pixel(Uint32, E0, TH3, TW0);
-					put_pixel(Uint32, E1, TH3, TW1);
-					put_pixel(Uint32, E2, TH4, TW0);
-					put_pixel(Uint32, E3, TH4, TW1);
+					put_pixel(uint32_t, E0, TH3, TW0);
+					put_pixel(uint32_t, E1, TH3, TW1);
+					put_pixel(uint32_t, E2, TH4, TW0);
+					put_pixel(uint32_t, E3, TH4, TW1);
 					break;
 			}
 			scl2x.ox++;
 		}
 		scl2x.oy++;
 	}
-	/* unlock della destinazione */
-	//SDL_UnlockSurface(dst);
 }
-void scale3x(WORD **screen_index, Uint32 *palette, SDL_Surface *dst) {
-	const DBWORD dstpitch = dst->pitch;
+void scale3x(WORD **screen_index, uint32_t *palette, BYTE bpp, uint32_t pitch, void *pix) {
+	const DBWORD dstpitch = pitch;
 	WORD A, B, C, D, E, F, G, H, I;
 	WORD E0, E1, E2, E3, E4, E5, E6, E7, E8;
-	Uint8 *dstpix = (Uint8 *) dst->pixels;
-	Uint32 TH0, TH1, TH2, TH3, TH4, TH5;
-	Uint32 TW0, TW1, TW2;
+	uint8_t *dstpix = (uint8_t *) pix;
+	uint32_t TH0, TH1, TH2, TH3, TH4, TH5;
+	uint32_t TW0, TW1, TW2;
 
-	/* lock della destinazione */
-	//SDL_LockSurface(dst);
 	for (; scl2x.sy < scl2x.lines; ++scl2x.sy) {
 		TH0 = MAX(0, scl2x.sy - 1);
 		TH1 = scl2x.sy;
@@ -181,21 +196,21 @@ void scale3x(WORD **screen_index, Uint32 *palette, SDL_Surface *dst) {
 			} else {
 				SCALE3X_B()
 			}
-			switch (dst->format->BitsPerPixel) {
+			switch (bpp) {
 				case 15:
 				case 16:
 					TW0 = (X3(scl2x.ox) << 1);
 					TW1 = TW0 + 2;
 					TW2 = TW0 + 4;
-					put_pixel(Uint16, E0, TH3, TW0);
-					put_pixel(Uint16, E1, TH3, TW1);
-					put_pixel(Uint16, E2, TH3, TW2);
-					put_pixel(Uint16, E3, TH4, TW0);
-					put_pixel(Uint16, E4, TH4, TW1);
-					put_pixel(Uint16, E5, TH4, TW2);
-					put_pixel(Uint16, E6, TH5, TW0);
-					put_pixel(Uint16, E7, TH5, TW1);
-					put_pixel(Uint16, E8, TH5, TW2);
+					put_pixel(uint16_t, E0, TH3, TW0);
+					put_pixel(uint16_t, E1, TH3, TW1);
+					put_pixel(uint16_t, E2, TH3, TW2);
+					put_pixel(uint16_t, E3, TH4, TW0);
+					put_pixel(uint16_t, E4, TH4, TW1);
+					put_pixel(uint16_t, E5, TH4, TW2);
+					put_pixel(uint16_t, E6, TH5, TW0);
+					put_pixel(uint16_t, E7, TH5, TW1);
+					put_pixel(uint16_t, E8, TH5, TW2);
 					break;
 				case 24:
 					TW0 = X3((X3(scl2x.ox)));
@@ -215,44 +230,41 @@ void scale3x(WORD **screen_index, Uint32 *palette, SDL_Surface *dst) {
 					TW0 = (X3(scl2x.ox) << 2);
 					TW1 = TW0 + 4;
 					TW2 = TW0 + 8;
-					put_pixel(Uint32, E0, TH3, TW0);
-					put_pixel(Uint32, E1, TH3, TW1);
-					put_pixel(Uint32, E2, TH3, TW2);
-					put_pixel(Uint32, E3, TH4, TW0);
-					put_pixel(Uint32, E4, TH4, TW1);
-					put_pixel(Uint32, E5, TH4, TW2);
-					put_pixel(Uint32, E6, TH5, TW0);
-					put_pixel(Uint32, E7, TH5, TW1);
-					put_pixel(Uint32, E8, TH5, TW2);
+					put_pixel(uint32_t, E0, TH3, TW0);
+					put_pixel(uint32_t, E1, TH3, TW1);
+					put_pixel(uint32_t, E2, TH3, TW2);
+					put_pixel(uint32_t, E3, TH4, TW0);
+					put_pixel(uint32_t, E4, TH4, TW1);
+					put_pixel(uint32_t, E5, TH4, TW2);
+					put_pixel(uint32_t, E6, TH5, TW0);
+					put_pixel(uint32_t, E7, TH5, TW1);
+					put_pixel(uint32_t, E8, TH5, TW2);
 					break;
 			}
 			scl2x.ox++;
 		}
 		scl2x.oy++;
 	}
-	/* unlock della destinazione */
-	//SDL_UnlockSurface(dst);
 }
-void scale4x(WORD **screen_index, Uint32 *palette, SDL_Surface *dst) {
-	SDL_Surface *buffer;
+void scale4x(WORD **screen_index, uint32_t *palette, BYTE bpp, uint32_t pitch, void *pix) {
 	WORD x, y, width, height;
-	DBWORD srcpitch, dstpitch = dst->pitch;
-	Uint8 *srcpix, *dstpix = (Uint8 *) dst->pixels;
-	Uint32 TH0, TH1, TH2, TH3, TH4;
-	Uint32 TW0, TW1, TW2;
+	DBWORD srcpitch, dstpitch = pitch;
+	uint8_t *srcpix, *dstpix = (uint8_t *) pix;
+	uint32_t TH0, TH1, TH2, TH3, TH4;
+	uint32_t TW0, TW1, TW2;
 
-	buffer = SDL_CreateRGBSurface(dst->flags, dst->w >> 1, dst->h >> 1, dst->format->BitsPerPixel,
-			dst->format->Rmask, dst->format->Gmask, dst->format->Bmask, dst->format->Amask);
+	if ((scl4x_buffer.pixels = malloc(scl4x_buffer.size)) == NULL) {
+		printf("Out of memory\n");
+		return;
+	} else {
+		scale2x(screen_index, palette, bpp, scl4x_buffer.pitch, scl4x_buffer.pixels);
+	}
 
-	scale2x(screen_index, palette, buffer);
+	srcpix = (uint8_t *) scl4x_buffer.pixels;
+	srcpitch = scl4x_buffer.pitch;
+	width = scl4x_buffer.w;
+	height = scl4x_buffer.h;
 
-	srcpix = (Uint8 *) buffer->pixels;
-	srcpitch = buffer->pitch;
-	width = buffer->w;
-	height = buffer->h;
-
-	/* lock della destinazione */
-	//SDL_LockSurface(dst);
 	for (y = 0; y < height; ++y) {
 		TH0 = (MAX(0, y - 1) * srcpitch);
 		TH1 = (y * srcpitch);
@@ -260,25 +272,25 @@ void scale4x(WORD **screen_index, Uint32 *palette, SDL_Surface *dst) {
 		TH3 = ((y << 1) * dstpitch);
 		TH4 = TH3 + dstpitch;
 		for (x = 0; x < width; ++x) {
-			switch (buffer->format->BitsPerPixel) {
+			switch (bpp) {
 				case 15:
 				case 16: {
-					Uint16 E0, E1, E2, E3, B, D, E, F, H;
+					uint16_t E0, E1, E2, E3, B, D, E, F, H;
 					TW0 = (MAX(0, x - 1) << 1);
 					TW1 = (x << 1);
 					TW2 = (MIN(width - 1, x + 1) << 1);
-					B = *(Uint16 *) (srcpix + TH0 + TW1);
-					D = *(Uint16 *) (srcpix + TH1 + TW0);
-					E = *(Uint16 *) (srcpix + TH1 + TW1);
-					F = *(Uint16 *) (srcpix + TH1 + TW2);
-					H = *(Uint16 *) (srcpix + TH2 + TW1);
+					B = *(uint16_t *) (srcpix + TH0 + TW1);
+					D = *(uint16_t *) (srcpix + TH1 + TW0);
+					E = *(uint16_t *) (srcpix + TH1 + TW1);
+					F = *(uint16_t *) (srcpix + TH1 + TW2);
+					H = *(uint16_t *) (srcpix + TH2 + TW1);
 					SCALE2X()
 					TW0 = (x << 2);
 					TW1 = TW0 + 2;
-					*(Uint16 *) (dstpix + TH3 + TW0) = E0;
-					*(Uint16 *) (dstpix + TH3 + TW1) = E1;
-					*(Uint16 *) (dstpix + TH4 + TW0) = E2;
-					*(Uint16 *) (dstpix + TH4 + TW1) = E3;
+					*(uint16_t *) (dstpix + TH3 + TW0) = E0;
+					*(uint16_t *) (dstpix + TH3 + TW1) = E1;
+					*(uint16_t *) (dstpix + TH4 + TW0) = E2;
+					*(uint16_t *) (dstpix + TH4 + TW1) = E3;
 					break;
 				}
 				case 24: {
@@ -301,29 +313,27 @@ void scale4x(WORD **screen_index, Uint32 *palette, SDL_Surface *dst) {
 					break;
 				}
 				default: {
-					Uint32 E0, E1, E2, E3, B, D, E, F, H;
+					uint32_t E0, E1, E2, E3, B, D, E, F, H;
 					TW0 = (MAX(0, x - 1) << 2);
 					TW1 = (x << 2);
 					TW2 = (MIN(width - 1, x + 1) << 2);
-					B = *(Uint32 *) (srcpix + TH0 + TW1);
-					D = *(Uint32 *) (srcpix + TH1 + TW0);
-					E = *(Uint32 *) (srcpix + TH1 + TW1);
-					F = *(Uint32 *) (srcpix + TH1 + TW2);
-					H = *(Uint32 *) (srcpix + TH2 + TW1);
+					B = *(uint32_t *) (srcpix + TH0 + TW1);
+					D = *(uint32_t *) (srcpix + TH1 + TW0);
+					E = *(uint32_t *) (srcpix + TH1 + TW1);
+					F = *(uint32_t *) (srcpix + TH1 + TW2);
+					H = *(uint32_t *) (srcpix + TH2 + TW1);
 					SCALE2X()
 					TW0 = (x << 3);
 					TW1 = TW0 + 4;
-					*(Uint32 *) (dstpix + TH3 + TW0) = E0;
-					*(Uint32 *) (dstpix + TH3 + TW1) = E1;
-					*(Uint32 *) (dstpix + TH4 + TW0) = E2;
-					*(Uint32 *) (dstpix + TH4 + TW1) = E3;
+					*(uint32_t *) (dstpix + TH3 + TW0) = E0;
+					*(uint32_t *) (dstpix + TH3 + TW1) = E1;
+					*(uint32_t *) (dstpix + TH4 + TW0) = E2;
+					*(uint32_t *) (dstpix + TH4 + TW1) = E3;
 					break;
 				}
 			}
 		}
 	}
-	/* unlock della destinazione */
-	//SDL_UnlockSurface(dst);
-	/* distruggo la superficie temporanea */
-	SDL_FreeSurface(buffer);
+
+	free(scl4x_buffer.pixels);
 }

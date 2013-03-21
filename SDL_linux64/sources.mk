@@ -19,7 +19,7 @@ src/sdl/openGL \
 src/sdl/gui/gtk2/menu \
 src/sdl/gui/gtk2 \
 src/sdl/glew \
-src/sdl/filters/video \
 src/sdl/filters/audio \
 src/mappers \
+src/filters/video \
 

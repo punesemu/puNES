@@ -9,9 +9,8 @@
 #include "overscan.h"
 #include "palette.h"
 
-void bilinear(WORD *screen, WORD **screen_index, Uint32 *palette, SDL_Surface *dst, WORD rows,
-        WORD lines, BYTE factor) {
-	int32_t *dstpix = (int32_t *) dst->pixels;
+gfx_filter_function(bilinear) {
+	int32_t *dstpix = (int32_t *) pix;
 	WORD ox = 0, oy = 0;
 	_color_RGB A, B, C, D;
 	unsigned int w_step_fixed_16b, h_step_fixed_16b, w_coef, h_coef, x, y;
@@ -34,21 +33,18 @@ void bilinear(WORD *screen, WORD **screen_index, Uint32 *palette, SDL_Surface *d
 		oy = overscan.up;
 	}
 
-	/* lock della destinazione */
-	//SDL_LockSurface(dst);
-
-	w_step_fixed_16b = ((rows - 1) << 16) / (dst->w - 1);
-	h_step_fixed_16b = ((lines - 1) << 16) / (dst->h - 1);
+	w_step_fixed_16b = ((rows - 1) << 16) / (width - 1);
+	h_step_fixed_16b = ((lines - 1) << 16) / (height - 1);
 
 	h_coef = 0;
 
-	for (y = 0; y < dst->h; y++) {
+	for (y = 0; y < height; y++) {
 		offsetY[0] = (h_coef >> 16) + oy;
 		hc2 = (h_coef >> 9) & 127;
 		hc1 = 128 - hc2;
 
 		w_coef = 0;
-		for (x = 0; x < dst->w; x++) {
+		for (x = 0; x < width; x++) {
 			uint8_t pippo = FALSE;
 			uint8_t pluto = FALSE;
 			uint8_t minni = FALSE;
@@ -105,9 +101,6 @@ void bilinear(WORD *screen, WORD **screen_index, Uint32 *palette, SDL_Surface *d
 		}
 		h_coef += h_step_fixed_16b;
 	}
-
-	/* unlock della destinazione */
-	//SDL_UnlockSurface(dst);
 
 	return;
 
