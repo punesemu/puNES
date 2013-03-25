@@ -126,6 +126,9 @@ BYTE gfx_init(void) {
 
 	memset(&d3d9, 0x00, sizeof(d3d9));
 
+	/* TODO : una volta aggiunta la lettura del file di configurazione devo
+	 * eliminare la riga sotto.
+	 */
 	cfg->filter =  NO_FILTER;
 
 	{
@@ -417,10 +420,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 
 		switch (scale) {
 			case X1:
-				/*
-				 * il fattore di scala a 1 e' possibile
-				 * solo senza filtro.
-				 */
+				/* il fattore di scala a 1 e' possibile solo senza filtro */
 				if (filter != NO_FILTER) {
 					/*
 					 * con un fattore di scala X1 effect deve essere

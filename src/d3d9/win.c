@@ -22,6 +22,7 @@
 #include "cfg_file.h"
 #include "gamegenie.h"
 #include "fps.h"
+#include "tas.h"
 
 #define TOOLBAR_HEIGHT   26
 #define FRAME_TL_HEIGHT  (TOOLBAR_HEIGHT - 2)
@@ -260,7 +261,7 @@ void gui_start(void) {
 	return;
 }
 void gui_event(void) {
-	//BYTE no_process = FALSE;
+	BYTE no_process = FALSE;
 	MSG msg = { 0 };
 
 	while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
@@ -272,13 +273,138 @@ void gui_event(void) {
 			Sleep(3);
 			continue;
 		}
-		//if (!TranslateAccelerator(main_win, hAccKeys, &Msg)) {
+		//fprintf(stderr, "0: %X %X\n", msg.message, LOWORD(msg.wParam));
+		switch (msg.message) {
+			case WM_KEYDOWN: {
+				/*
+				switch (LOWORD(msg.wParam)) {
+					case VK_CONTROL:
+						if (!tl.key) {
+							tl_down(tl.key);
+						}
+						no_process = TRUE;
+						break;
+					case VK_SHIFT:
+						fps_fast_forward();
+						no_process = TRUE;
+						break;
+					case VK_LEFT:
+						if (tl.key) {
+							BYTE snap = SendMessage(hTimeline, TBM_GETPOS, 0, 0);
+
+							if (snap) {
+								wrap_tl_preview(snap - 1);
+							}
+							no_process = TRUE;
+						}
+						break;
+					case VK_RIGHT:
+						if (tl.key) {
+							BYTE snap = SendMessage(hTimeline, TBM_GETPOS, 0, 0);
+
+							if (snap < (TL_SNAPS - 1)) {
+								wrap_tl_preview(snap + 1);
+							}
+							no_process = TRUE;
+						}
+						break;
+					case VK_ESCAPE:
+						if (cfg->fullscreen == FULLSCR) {
+							gui_fullscreen();
+						}
+						no_process = TRUE;
+						break;
+				}
+				*/
+				if (!tas.type && !no_process) {
+					if (input_port1 && !input_port1(PRESSED, LOWORD(msg.wParam),
+							KEYBOARD, &port1)) {
+						break;
+					}
+					if (input_port2) {
+						input_port2(PRESSED, LOWORD(msg.wParam), KEYBOARD, &port2);
+					}
+				}
+				break;
+			}
+			case WM_KEYUP: {
+			/*
+				switch (LOWORD(msg.wParam)) {
+					case VK_CONTROL:
+						if (tl.key) {
+							tl_up(tl.key);
+						}
+						no_process = TRUE;
+						break;
+					case VK_SHIFT:
+						fps_normalize();
+						no_process = TRUE;
+						break;
+				}
+			*/
+				if (!tas.type && !no_process) {
+					if (input_port1 && !input_port1(RELEASED, LOWORD(msg.wParam),
+							KEYBOARD, &port1)) {
+						break;
+					}
+					if (input_port2) {
+						input_port2(RELEASED, LOWORD(msg.wParam), KEYBOARD, &port2);
+					}
+				}
+				break;
+			}
+			/*
+			case WM_LBUTTONDOWN:
+				gui.left_button = TRUE;
+				//opengl.x_diff = GET_X_LPARAM(Msg.lParam) - (opengl.y_rotate * slow_factor);
+				//opengl.y_diff = -GET_Y_LPARAM(Msg.lParam) + (opengl.x_rotate * slow_factor);
+				opengl.x_diff = gui.x - (opengl.y_rotate * slow_factor);
+				opengl.y_diff = -gui.y + (opengl.x_rotate * slow_factor);
+				break;
+			case WM_RBUTTONDOWN:
+				gui.right_button = TRUE;
+				break;
+			case WM_MOUSEMOVE:
+				if (msg.hwnd == sdl_frame) {
+					gui.x = GET_X_LPARAM(msg.lParam);
+					gui.y = GET_Y_LPARAM(msg.lParam);
+				}
+				if (gui.left_button && opengl.rotation) {
+					opengl.x_rotate = (gui.y + opengl.y_diff) / slow_factor;
+					opengl.y_rotate = (gui.x - opengl.x_diff) / slow_factor;
+				}
+				break;
+			case WM_LBUTTONUP:
+				gui.left_button = FALSE;
+				break;
+			case WM_RBUTTONUP:
+				gui.right_button = FALSE;
+				break;
+			*/
+		}
+		//if (!TranslateAccelerator(main_win, acc_keys, &msg)) {
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		//}
 		msg.hwnd = 0;
 	}
 
+	if (info.no_rom | info.pause) {
+		return;
+	}
+
+	if (tas.type) {
+		tas_frame();
+		return;
+	}
+
+	//js_control(&js1, &port1);
+	/* i due joystick non possono essere gli stessi */
+	//if (port2.joy_id != port1.joy_id) {
+	//	js_control(&js2, &port2);
+	//}
+	//input_turbo_buttons_control(&port1);
+	//input_turbo_buttons_control(&port2);
 	return;
 }
 HWND gui_emu_frame_id(void) {

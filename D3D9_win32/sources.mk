@@ -17,4 +17,5 @@ src \
 src/mappers \
 src/filters/video \
 src/d3d9 \
+src/d3d9/filters/audio \
 

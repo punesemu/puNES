@@ -10,6 +10,7 @@ RM := rm -rf
 -include sources.mk
 -include src/mappers/subdir.mk
 -include src/filters/video/subdir.mk
+-include src/d3d9/filters/audio/subdir.mk
 -include src/d3d9/subdir.mk
 -include src/subdir.mk
 -include subdir.mk
@@ -35,7 +36,7 @@ main-build: punes32.exe
 punes32.exe: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: Cross GCC Linker'
-	i686-mingw32-gcc -L../misc/DXSDK/Lib/x86 -Wl,-subsystem,console -o "punes32.exe" $(OBJS) $(USER_OBJS) $(LIBS)
+	i686-mingw32-gcc -L/home/fhorse/sviluppo/personale/punes/misc/DXSDK/Lib/x86 -Wl,-subsystem,console -o "punes32.exe" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 	$(MAKE) --no-print-directory post-build
