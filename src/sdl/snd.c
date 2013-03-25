@@ -53,7 +53,6 @@ BYTE snd_start(void) {
 	memset(cache, 0, sizeof(_callback_data));
 	snd.cache = cache;
 
-	/* samplarate */
 #if defined MINGW32 || defined MINGW64
 	WORD factor = 8;
 #else
@@ -79,7 +78,7 @@ BYTE snd_start(void) {
 		WORD latency;
 		long sample_latency;
 
-		if (dev->channels == STEREO) {
+		if (cfg->channels == STEREO) {
 			latency = 200;
 		} else {
 			latency = 400;

@@ -27,7 +27,6 @@ SWORD mixer_original_VRC6(SWORD mixer);
 SWORD mixer_original_VRC7(SWORD mixer);
 
 BYTE audio_quality_init_original(void) {
-
 	audio_quality_quit = audio_quality_quit_original;
 
 	snd_apu_tick = audio_quality_apu_tick_original;
