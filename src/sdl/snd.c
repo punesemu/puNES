@@ -79,7 +79,8 @@ BYTE snd_start(void) {
 		long sample_latency;
 
 		if (cfg->channels == STEREO) {
-			latency = 200;
+			//latency = 200;
+			latency = 400;
 		} else {
 			latency = 400;
 		}

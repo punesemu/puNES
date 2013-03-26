@@ -10,12 +10,12 @@
 
 #include "common.h"
 
-#define SND_BUFFER_SAMPLES cache->samples
-
 enum samplerate_mode { S44100, S22050, S11025 };
 enum channel_mode { MONO = 1, STEREO };
 enum channels { CH_LEFT, CH_RIGHT };
-enum snd_factor_type { SND_FACTOR_NORMAL, SND_FACTOR_NONE };
+enum snd_factor_type { SND_FACTOR_SPEED, SND_FACTOR_NORMAL, SND_FACTOR_NONE };
+
+#define SND_BUFFER_SAMPLES cache->samples
 
 #define snd_frequency(a)\
 	if (snd.factor != a) {\
@@ -37,11 +37,11 @@ typedef struct {
 
 	SWORD filled;
 
-	//SDL_mutex *lock;
+	void *lock;
 } _callback_data;
 
 struct _snd {
-	SWORD last_sample;
+	BYTE brk;
 
 	uint32_t samplerate;
 
@@ -71,8 +71,8 @@ struct _snd {
 	} buffer;
 } snd;
 
-static const double snd_factor[3][2] = {
-	{ 0.997, 1.1 }, { 1.0, 1.1 }, { 1.0, 1.1 }
+static const double snd_factor[3][3] = {
+	{ 0.967f, 0.997f, 1.1f }, { 1.0f, 1.0f, 1.1f }, { 1.0f, 1.0f, 1.1f }
 };
 
 BYTE snd_init(void);
@@ -80,6 +80,9 @@ BYTE snd_start(void);
 void snd_output(void *udata, BYTE *stream, int len);
 void snd_stop(void);
 void snd_quit(void);
+
+void snd_lock_buffer(_callback_data *cache);
+void snd_unlock_buffer(_callback_data *cache);;
 
 void (*snd_apu_tick)(void);
 void (*snd_end_frame)(void);

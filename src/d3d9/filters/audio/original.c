@@ -72,19 +72,17 @@ void audio_quality_quit_original(void) {
 void audio_quality_apu_tick_original(void) {
 	_callback_data *cache = snd.cache;
 
-	//return;
-
 	if (!cfg->audio) {
 		return;
 	}
 
-	//if (snd.brk) {
-	//	if (cache->filled < 3) {
-	//		snd.brk = FALSE;
-	//	} else {
-	//		return;
-	//	}
-	//}
+	if (snd.brk) {
+		if (cache->filled < 3) {
+			snd.brk = FALSE;
+		} else {
+			return;
+		}
+	}
 
 	if ((snd.pos.current = snd.cycles++ / snd.frequency) == snd.pos.last) {
 		return;
@@ -99,20 +97,20 @@ void audio_quality_apu_tick_original(void) {
 		/* azzero posizione e contatore dei cicli del frame audio */
 		snd.pos.current = snd.cycles = 0;
 
-		//SDL_mutexP(cache->lock);
-
-		++cache->filled;
+		snd_lock_buffer(cache);
 
 		/* incremento il contatore dei frames pieni non ancora 'riprodotti' */
-		//if (++cache->filled >= snd.buffer.count) {
-		//	snd.brk = TRUE;
-		//} else if (cache->filled >= ((snd.buffer.count >> 1) + 1)) {
-		//	snd_frequency(snd_factor[apu.type][SND_FACTOR_NONE])
-		//} else if (cache->filled < 3) {
-		//	snd_frequency(snd_factor[apu.type][SND_FACTOR_NORMAL])
-		//}
+		if (++cache->filled >= snd.buffer.count) {
+			snd.brk = TRUE;
+		} else if (++cache->filled == 1) {
+			snd_frequency(snd_factor[apu.type][SND_FACTOR_SPEED])
+		} else if (cache->filled >= ((snd.buffer.count >> 1) + 1)) {
+			snd_frequency(snd_factor[apu.type][SND_FACTOR_NONE])
+		} else if (cache->filled < 3) {
+			snd_frequency(snd_factor[apu.type][SND_FACTOR_NORMAL])
+		}
 
-		//SDL_mutexV(cache->lock);
+		snd_unlock_buffer(cache);
 	}
 
 	{
@@ -151,8 +149,6 @@ void audio_quality_apu_tick_original(void) {
 
 		snd.pos.last = snd.pos.current;
 	}
-
-	return;
 }
 
 /* --------------------------------------------------------------------------------------- */

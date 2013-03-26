@@ -1013,6 +1013,9 @@ void gui_save_slot(BYTE slot) {
 	return;
 }
 int gui_sleep(double ms) {
+	if (ms > 0) {
+		Sleep(ms);
+	}
 	return (EXIT_OK);
 }
 void gui_set_thread_affinity(uint8_t core) {
