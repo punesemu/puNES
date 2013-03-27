@@ -102,7 +102,7 @@ void audio_quality_apu_tick_original(void) {
 		/* incremento il contatore dei frames pieni non ancora 'riprodotti' */
 		if (++cache->filled >= snd.buffer.count) {
 			snd.brk = TRUE;
-		} else if (++cache->filled == 1) {
+		} else if (cache->filled == 1) {
 			snd_frequency(snd_factor[apu.type][SND_FACTOR_SPEED])
 		} else if (cache->filled >= ((snd.buffer.count >> 1) + 1)) {
 			snd_frequency(snd_factor[apu.type][SND_FACTOR_NONE])

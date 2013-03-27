@@ -72,7 +72,7 @@ struct _snd {
 } snd;
 
 static const double snd_factor[3][3] = {
-	{ 0.967f, 0.997f, 1.1f }, { 1.0f, 1.0f, 1.1f }, { 1.0f, 1.0f, 1.1f }
+	{ 0.967f, 0.987f, 1.1f }, { 1.0f, 1.0f, 1.1f }, { 1.0f, 1.0f, 1.1f }
 };
 
 BYTE snd_init(void);

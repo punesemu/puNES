@@ -160,7 +160,7 @@ BYTE snd_init(void) {
 		}
 	}
 
-	snd_frequency(snd_factor[apu.type][SND_FACTOR_NORMAL])
+	snd_frequency(snd_factor[apu.type][SND_FACTOR_SPEED])
 
 	{
 		/* dimensione in bytes del buffer */
