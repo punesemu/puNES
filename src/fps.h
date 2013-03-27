@@ -33,7 +33,7 @@ enum fps_values {
 
 #define fps_machine_ms(factor)\
 	if (fps.fast_forward == FALSE) {\
-		machine.ms_frame = (1000.0 / (double) machine.fps) * factor;\
+		machine.ms_frame = (1000.0f / (double) machine.fps) * factor;\
 		fps.ms = machine.ms_frame;\
 	}
 
