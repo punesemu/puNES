@@ -85,7 +85,7 @@ BYTE snd_start(void) {
 			latency = 400;
 		}
 
-		sample_latency = latency * dev->freq * cfg->channels / 1000;
+		sample_latency = latency * dev->freq * cfg->channels / 1000.0f;
 		snd.buffer.count = sample_latency / snd.buffer.size;
 	}
 
@@ -108,7 +108,7 @@ BYTE snd_start(void) {
 		return (EXIT_ERROR);
 	}
 
-	snd.frequency = (fps.nominal * machine.cpu_cycles_frame) / dev->freq;
+	snd.frequency = (fps.nominal * (double) machine.cpu_cycles_frame) / (double) dev->freq;
 
 	/* valorizzo il flag di apertura device */
 	snd.opened = TRUE;
@@ -132,7 +132,7 @@ BYTE snd_start(void) {
 		}
 	}
 
-	snd_frequency(snd_factor[apu.type][SND_FACTOR_NORMAL])
+	snd_frequency(snd_factor[apu.type][SND_FACTOR_SPEED])
 
 	{
 		DBWORD total_buffer_size;
@@ -195,8 +195,8 @@ void snd_output(void *udata, BYTE *stream, int len) {
 	} else {
 #ifndef RELEASE
 		fprintf(stderr, "snd : %d %d %d %d %2d %d %f %f %4s\r", len, snd.buffer.count, snd.brk,
-		        fps.total_frames_skipped, cache->filled, snd.out_of_sync, snd.frequency,
-		        machine.ms_frame, "");
+				fps.total_frames_skipped, cache->filled, snd.out_of_sync, snd.frequency,
+				machine.ms_frame, "");
 #endif
 		/* invio i samples richiesti alla scheda sonora */
 		memcpy(stream, cache->read, len);

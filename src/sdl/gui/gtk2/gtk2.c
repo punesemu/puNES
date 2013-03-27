@@ -521,8 +521,8 @@ int gui_sleep(double ms) {
 		return (EXIT_OK);
 	}
 
-	sec = (int) (ms / 1000);
-	ms = ms - (sec * 1000);
+	sec = (time_t) (ms / 1000.0f);
+	ms = ms - ((double) sec * 1000.0f);
 	req.tv_sec = sec;
 	req.tv_nsec = ms * 1000000L;
 	__nsleep(&req, &rem);
@@ -570,7 +570,7 @@ double high_resolution_ms(void) {
     elapsed_useconds = time.tv_usec - gui.counterStart.tv_usec;
 
     //return ((elapsed_seconds * 1000) + (elapsed_useconds / 1000.0f) + 0.5f);
-    return ((elapsed_seconds * 1000) + (elapsed_useconds / 1000.0f));
+    return ((elapsed_seconds * 1000.0f) + (elapsed_useconds / 1000.0f));
 }
 /* main_win */
 void main_win_destroy(void) {
