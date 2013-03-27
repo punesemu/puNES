@@ -141,7 +141,7 @@ BYTE snd_init(void) {
 		}
 	}
 
-	snd.frequency = (fps.nominal * machine.cpu_cycles_frame) / (double) snd.samplerate;
+	snd.frequency = ((fps.nominal * machine.cpu_cycles_frame) / (double) snd.samplerate) * 0.998f;
 
 	cache->samples = snd.buffer.size / cfg->channels;
 
@@ -149,7 +149,6 @@ BYTE snd_init(void) {
 		BYTE i;
 
 		snd.channel.max_pos = cache->samples * 0.300;
-
 		snd.channel.pos = 0;
 
 		for (i = 0; i < 2; i++) {
@@ -216,6 +215,10 @@ BYTE snd_init(void) {
 			fprintf(stderr, "Unable to set sound engine\n");
 			return (EXIT_ERROR);
 		}
+	}
+
+	if (extcl_snd_start) {
+		extcl_snd_start((WORD) snd.samplerate);
 	}
 
 	audio_quality(cfg->audio_quality);
