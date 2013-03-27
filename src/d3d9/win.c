@@ -115,18 +115,18 @@ void gui_init(int argc, char **argv) {
 
 	/* avvio il contatore dei millisecondi */
 	{
-		uint64_t pf;
+		LARGE_INTEGER pf;
 
 		/*
 		 * se il pc non ha il supporto per l'high-resolution
 		 * counter allora utilizzo il contatore dell'sdl.
 		 */
-		if (!QueryPerformanceFrequency((LARGE_INTEGER *) &pf)) {
+		if (!QueryPerformanceFrequency(&pf)) {
 			//gui_get_mss = sdl_get_ms;
 		} else {
-			gui.frequency = (double) pf;
-			QueryPerformanceCounter((LARGE_INTEGER *) &pf);
-			gui.counter_start = pf;
+			gui.frequency = (double) pf.QuadPart / 1000.0f;
+			QueryPerformanceCounter(&pf);
+			gui.counter_start = pf.QuadPart;
 			gui_get_ms = high_resolution_ms;
 		}
 	}
@@ -1556,12 +1556,11 @@ void set_frame_skip(int frameskip) {
 
 
 double high_resolution_ms(void) {
-	uint64_t time, diff;
+	LARGE_INTEGER time;
+	uint64_t diff;
 
-	QueryPerformanceCounter((LARGE_INTEGER *) &time);
-	diff = ((time - gui.counter_start) * 1000) / gui.frequency;
-
-	return ((double) (diff & 0xffffffff));
+	QueryPerformanceCounter(&time);
+	return (diff = (double) (time.QuadPart - gui.counter_start) / gui.frequency);
 }
 void change_menuitem(BYTE check_or_enab, UINT type, UINT menuitem_id) {
 	if (check_or_enab == CHECK) {
