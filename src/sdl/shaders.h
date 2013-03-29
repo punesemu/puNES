@@ -39,16 +39,21 @@ enum shader_type {
 };
 
 typedef struct {
+	FLOAT u;
+	FLOAT d;
+	FLOAT l;
+	FLOAT r;
+} _texcoords;
+typedef struct {
 	GLuint data;
 	GLenum format;
 	GLenum type;
 	GLint format_internal;
 
-	GLfloat x;
-	GLfloat y;
-
 	GLfloat w;
 	GLfloat h;
+
+	_texcoords tc;
 } _texture;
 typedef struct {
 	const GLchar *vertex;
@@ -167,8 +172,8 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"		scr.xyz = E;\n"
 		"	} else {"
 		"		vec2 p = fract(v_texCoord[0].xy * size_texture);\n"
-		"		vec3 tmp1 = p.x < factor.x ? D : F;\n"
-		"		vec3 tmp2 = p.y < factor.y ? H : B;\n"
+		"		vec3 tmp1 = p.x < 0.5 ? D : F;\n"
+		"		vec3 tmp2 = p.y < 0.5 ? H : B;\n"
 		"		scr.xyz = ((tmp1 - tmp2) != vec3(0.0)) ? E : tmp1;\n"
 		"	}\n"
 
@@ -241,8 +246,7 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 
 		"void main() {\n"
 		//"	// sufficient precision for HDTV (1920x1080)\n"
-		//"	const vec2 sep = vec2(0.33333, 0.66667);\n"
-		"	vec2 sep = vec2(factor.x, (factor.y / 0.5));\n"
+		"	const vec2 sep = vec2(0.33333, 0.66667);\n"
 
 		"	vec4 E = texture2D(texture_scr, v_texCoord[0].xy); // E\n"
 		"	vec4 A = texture2D(texture_scr, v_texCoord[0].zw); // A\n"

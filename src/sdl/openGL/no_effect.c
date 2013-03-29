@@ -49,16 +49,16 @@ void opengl_draw_scene_no_effect(SDL_Surface *surface) {
 	/* disegno la texture */
 	glBegin(GL_QUADS);
 		/* Bottom Left Of The Texture */
-		glTexCoord2f(0.0f, 0.0f);
+		glTexCoord2f(opengl.texture.tc.l, opengl.texture.tc.b);
 		glVertex2i(opengl.x_texture1, opengl.y_texture1);
 		/* Bottom Right Of The Texture */
-		glTexCoord2f(opengl.texture.x, 0.0f);
+		glTexCoord2f(opengl.texture.tc.r, opengl.texture.tc.b);
 		glVertex2i(opengl.x_texture2, opengl.y_texture1);
 		/* Top Right Of The Texture */
-		glTexCoord2f(opengl.texture.x, opengl.texture.y);
+		glTexCoord2f(opengl.texture.tc.r, opengl.texture.tc.t);
 		glVertex2i(opengl.x_texture2, opengl.y_texture2);
 		/* Top Left Of The Texture */
-		glTexCoord2f(0.0f, opengl.texture.y);
+		glTexCoord2f(opengl.texture.tc.l, opengl.texture.tc.t);
 		glVertex2i(opengl.x_texture1, opengl.y_texture2);
 	glEnd();
 

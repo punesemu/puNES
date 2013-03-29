@@ -79,8 +79,10 @@ void sdl_create_surface_gl(SDL_Surface *src, WORD width, WORD height, BYTE flags
 	opengl_create_texture(&opengl.texture, opengl.surface_gl->w, opengl.surface_gl->h,
 			opengl.interpolation, POWER_OF_TWO);
 
-	opengl.texture.x = (GLfloat) width  / (opengl.texture.w * opengl.factor);
-	opengl.texture.y = (GLfloat) height / (opengl.texture.h * opengl.factor);
+	opengl.texture.tc.l = 0.0f;
+	opengl.texture.tc.r = (GLfloat) width / (d3d9.texture.w * (FLOAT) d3d9.factor);
+	opengl.texture.tc.b = 0.0f;
+	opengl.texture.tc.t = (GLfloat) height / (d3d9.texture.h * (FLOAT) d3d9.factor);
 
 	{
 		/* aspect ratio */
