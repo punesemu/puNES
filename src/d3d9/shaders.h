@@ -39,18 +39,23 @@ enum shader_type {
 };
 
 typedef struct {
+	FLOAT t;
+	FLOAT b;
+	FLOAT l;
+	FLOAT r;
+} _texcoords;
+typedef struct {
 	LPDIRECT3DTEXTURE9 data;
 	LPDIRECT3DSURFACE9 surface;
 	LPDIRECT3DSURFACE9 surface_map0;
-
-	FLOAT x;
-	FLOAT y;
 
 	FLOAT w;
 	FLOAT h;
 
 	WORD no_pow_w;
 	WORD no_pow_h;
+
+	_texcoords tc;
 } _texture;
 typedef struct {
 	const char *vertex;
@@ -84,9 +89,9 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 
 		"float4x4 m_world_view_projection : WORLDVIEWPROJECTION;\n"
 
-		"VsOutput Vs(float3 position : POSITION, float2 texCoord : TEXCOORD0) {\n"
+		"VsOutput Vs(float4 position : POSITION, float2 texCoord : TEXCOORD0) {\n"
 		"	VsOutput output;\n"
-		"	output.Position = mul(float4(position, 1.0), m_world_view_projection);\n"
+		"	output.Position = mul(position, m_world_view_projection);\n"
 		"	output.TexCoord = texCoord;\n"
 		"	return output;\n"
 		"}",
@@ -117,9 +122,9 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 
 		"float4x4 m_world_view_projection : WORLDVIEWPROJECTION;\n"
 
-		"VsOutput Vs(float3 position : POSITION, float2 texCoord : TEXCOORD0) {\n"
+		"VsOutput Vs(float4 position : POSITION, float2 texCoord : TEXCOORD0) {\n"
 		"	VsOutput output;\n"
-		"	output.Position = mul(float4(position, 1.0), m_world_view_projection);\n"
+		"	output.Position = mul(position, m_world_view_projection);\n"
 		"	output.TexCoord = texCoord;\n"
 		"	return output;\n"
 		"}",
@@ -149,9 +154,9 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 
 		"float4x4 m_world_view_projection : WORLDVIEWPROJECTION;\n"
 
-		"VsOutput Vs(float3 position : POSITION, float2 texCoord : TEXCOORD0) {\n"
+		"VsOutput Vs(float4 position : POSITION, float2 texCoord : TEXCOORD0) {\n"
 		"	VsOutput output;\n"
-		"	output.Position = mul(float4(position, 1.0), m_world_view_projection);\n"
+		"	output.Position = mul(position, m_world_view_projection);\n"
 		"	output.TexCoord = texCoord;\n"
 		"	return output;\n"
 		"}",
@@ -192,8 +197,8 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 
 		"	if (any((D - F) * (H - B))) {\n"
 		"		float2 p = fract(v_texCoord[0] * size_texture);\n"
-		"		float3 tmp1 = p.x < factor.x ? D : F;\n"
-		"		float3 tmp2 = p.y < factor.y ? H : B;\n"
+		"		float3 tmp1 = p.x < 0.5 ? D : F;\n"
+		"		float3 tmp2 = p.y < 0.5 ? H : B;\n"
 		"		scr = any(tmp1 - tmp2) ? float4(E, 1.0) : float4(tmp1, 1.0);\n"
 		"	} else {"
 		"		scr = float4(E, 1.0);\n"
@@ -214,9 +219,9 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 
 		"float4x4 m_world_view_projection : WORLDVIEWPROJECTION;\n"
 
-		"VsOutput Vs(float3 position : POSITION, float2 texCoord : TEXCOORD0) {\n"
+		"VsOutput Vs(float4 position : POSITION, float2 texCoord : TEXCOORD0) {\n"
 		"	VsOutput output;\n"
-		"	output.Position = mul(float4(position, 1.0), m_world_view_projection);\n"
+		"	output.Position = mul(position, m_world_view_projection);\n"
 		"	output.TexCoord = texCoord;\n"
 		"	return output;\n"
 		"}",
@@ -234,8 +239,6 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"}\n"
 
 		"float4 Ps(float2 texCoord : TEXCOORD0) : COLOR {\n"
-		//"	float2 dx = float2(factor.x * (1.0 / size_texture.x), 1.0);\n"
-		//"	float2 dy = float2(0.0, factor.y * (1.0 / size_texture.y));\n"
 		"	float2 dx = float2((1.0 / size_texture.x), 1.0);\n"
 		"	float2 dy = float2(0.0, (1.0 / size_texture.y));\n"
 
@@ -252,8 +255,7 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"	v_texCoord[4].xy = v_texCoord[0].xy + dx + dy; // I\n"
 
 		"	// sufficient precision for HDTV (1920x1080)\n"
-		//"	const float2 sep = float2(0.33333, 0.66667);\n"
-		"	const float2 sep = float2(factor.x, (factor.y / 0.5));\n"
+		"	const float2 sep = float2(0.33333, 0.66667);\n"
 
 		"	float4 E = tex2D(s0, v_texCoord[0].xy); // E\n"
 		"	float4 A = tex2D(s0, v_texCoord[0].zw); // A\n"
@@ -351,9 +353,9 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 
 		"float4x4 m_world_view_projection : WORLDVIEWPROJECTION;\n"
 
-		"VsOutput Vs(float3 position : POSITION, float2 texCoord : TEXCOORD0) {\n"
+		"VsOutput Vs(float4 position : POSITION, float2 texCoord : TEXCOORD0) {\n"
 		"	VsOutput output;\n"
-		"	output.Position = mul(float4(position, 1.0), m_world_view_projection);\n"
+		"	output.Position = mul(position, m_world_view_projection);\n"
 		"	output.TexCoord = texCoord;\n"
 		"	return output;\n"
 		"}",
@@ -371,8 +373,8 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"}\n"
 
 		"float4 Ps(float2 texCoord : TEXCOORD0) : COLOR {\n"
-		"	float x = (factor.x * 2.0) * (1.0 / size_texture.x);\n"
-		"	float y = (factor.y * 2.0) * (1.0 / size_texture.y);\n"
+		"	float x = 0.5 * (1.0 / size_texture.x);\n"
+		"	float y = 0.5 * (1.0 / size_texture.y);\n"
 
 		"	float2 dg1 = float2( x, y);\n"
 		"	float2 dg2 = float2(-x, y);\n"
@@ -433,9 +435,9 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 
 		"float4x4 m_world_view_projection : WORLDVIEWPROJECTION;\n"
 
-		"VsOutput Vs(float3 position : POSITION, float2 texCoord : TEXCOORD0) {\n"
+		"VsOutput Vs(float4 position : POSITION, float2 texCoord : TEXCOORD0) {\n"
 		"	VsOutput output;\n"
-		"	output.Position = mul(float4(position, 1.0), m_world_view_projection);\n"
+		"	output.Position = mul(position, m_world_view_projection);\n"
 		"	output.TexCoord = texCoord;\n"
 		"	return output;\n"
 		"}",
@@ -455,10 +457,8 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"static const float lum_add = 0.25; // effects smoothing\n"
 
 		"float4 Ps(float2 texCoord : TEXCOORD0) : COLOR {\n"
-		//"	float x = 0.5 * (1.0 / size_texture.x);\n"
-		//"	float y = 0.5 * (1.0 / size_texture.y);\n"
-		"	float x = factor.x * (1.0 / size_texture.x);\n"
-		"	float y = factor.y * (1.0 / size_texture.y);\n"
+		"	float x = 0.5 * (1.0 / size_texture.x);\n"
+		"	float y = 0.5 * (1.0 / size_texture.y);\n"
 
 		"	float2 dx = float2(x, 0.0);\n"
 		"	float2 dy = float2(0.0, y);\n"
@@ -529,9 +529,9 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 
 		"float4x4 m_world_view_projection : WORLDVIEWPROJECTION;\n"
 
-		"VsOutput Vs(float3 position : POSITION, float2 texCoord : TEXCOORD0) {\n"
+		"VsOutput Vs(float4 position : POSITION, float2 texCoord : TEXCOORD0) {\n"
 		"	VsOutput output;\n"
-		"	output.Position = mul(float4(position, 1.0), m_world_view_projection);\n"
+		"	output.Position = mul(position, m_world_view_projection);\n"
 		"	output.TexCoord = texCoord;\n"
 		"	return output;\n"
 		"}",
@@ -588,9 +588,9 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 
 		"float4x4 m_world_view_projection : WORLDVIEWPROJECTION;\n"
 
-		"VsOutput Vs(float3 position : POSITION, float2 texCoord : TEXCOORD0) {\n"
+		"VsOutput Vs(float4 position : POSITION, float2 texCoord : TEXCOORD0) {\n"
 		"	VsOutput output;\n"
-		"	output.Position = mul(float4(position, 1.0), m_world_view_projection);\n"
+		"	output.Position = mul(position, m_world_view_projection);\n"
 		"	output.TexCoord = texCoord;\n"
 		"	return output;\n"
 		"}",
@@ -657,9 +657,9 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 
 		"float4x4 m_world_view_projection : WORLDVIEWPROJECTION;\n"
 
-		"VsOutput Vs(float3 position : POSITION, float2 texCoord : TEXCOORD0) {\n"
+		"VsOutput Vs(float4 position : POSITION, float2 texCoord : TEXCOORD0) {\n"
 		"	VsOutput output;\n"
-		"	output.Position = mul(float4(position, 1.0), m_world_view_projection);\n"
+		"	output.Position = mul(position, m_world_view_projection);\n"
 		"	output.TexCoord = texCoord;\n"
 		"	return output;\n"
 		"}",
@@ -701,9 +701,9 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 
 		"float4x4 m_world_view_projection : WORLDVIEWPROJECTION;\n"
 
-		"VsOutput Vs(float3 position : POSITION, float2 texCoord : TEXCOORD0) {\n"
+		"VsOutput Vs(float4 position : POSITION, float2 texCoord : TEXCOORD0) {\n"
 		"	VsOutput output;\n"
-		"	output.Position = mul(float4(position, 1.0), m_world_view_projection);\n"
+		"	output.Position = mul(position, m_world_view_projection);\n"
 		"	output.TexCoord = texCoord;\n"
 		"	return output;\n"
 		"}",
@@ -1013,9 +1013,9 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 
 		"float4x4 m_world_view_projection : WORLDVIEWPROJECTION;\n"
 
-		"VsOutput Vs(float3 position : POSITION, float2 texCoord : TEXCOORD0) {\n"
+		"VsOutput Vs(float4 position : POSITION, float2 texCoord : TEXCOORD0) {\n"
 		"	VsOutput output;\n"
-		"	output.Position = mul(float4(position, 1.0), m_world_view_projection);\n"
+		"	output.Position = mul(position, m_world_view_projection);\n"
 		"	output.TexCoord = texCoord;\n"
 		"	return output;\n"
 		"}",
@@ -1329,9 +1329,9 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 
 		"float4x4 m_world_view_projection;"
 
-		"VsOutput Vs(float3 position : POSITION, float2 texCoord : TEXCOORD0) {\n"
+		"VsOutput Vs(float4 position : POSITION, float2 texCoord : TEXCOORD0) {\n"
 		"	VsOutput output;\n"
-		"	output.Position = mul(float4(position, 1.0), m_world_view_projection);\n"
+		"	output.Position = mul(position, m_world_view_projection);\n"
 		"	output.TexCoord = texCoord;\n"
 		"	return output;\n"
 		"}",
@@ -1372,8 +1372,6 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"}\n"
 
 		"float4 Ps(float2 texCoord : TEXCOORD0) : COLOR {\n"
-		//"	float dx = factor.x * (1.0 / size_texture.x);\n"
-		//"	float dy = factor.y * (1.0 / size_texture.y);\n"
 		"	float dx = (1.0 / size_texture.x);\n"
 		"	float dy = (1.0 / size_texture.y);\n"
 
@@ -1418,9 +1416,9 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 
 		"float4x4 m_world_view_projection;"
 
-		"VsOutput Vs(float3 position : POSITION, float2 texCoord : TEXCOORD0) {\n"
+		"VsOutput Vs(float4 position : POSITION, float2 texCoord : TEXCOORD0) {\n"
 		"	VsOutput output;\n"
-		"	output.Position = mul(float4(position, 1.0), m_world_view_projection);\n"
+		"	output.Position = mul(position, m_world_view_projection);\n"
 		"	output.TexCoord = texCoord;\n"
 		"	return output;\n"
 		"}",

@@ -71,6 +71,10 @@ struct _d3d9 {
 	LPDIRECT3DVERTEXBUFFER9 quad;
 	D3DDISPLAYMODE display_mode;
 
+	D3DXMATRIX world;
+	D3DXMATRIX view;
+	D3DXMATRIX projection;
+
 	_texture texture;
 	INT w_texture;
 	INT h_texture;
@@ -101,10 +105,10 @@ struct _d3d9 {
 } d3d9;
 
 typedef struct {
-	FLOAT x, y, z;
+	FLOAT x, y, z, rhw;
 	FLOAT tu, tv;
 } vertex;
-#define FVF (D3DFVF_XYZ | D3DFVF_TEX1)
+#define FVF (D3DFVF_XYZRHW | D3DFVF_TEX1)
 
 BYTE d3d9_create_context(UINT width, UINT height);
 void d3d9_release_context(void);
@@ -634,15 +638,16 @@ void gfx_draw_screen(BYTE forced) {
 
 	if (d3d9.hlsl_used == TRUE) {
 		/* comunico con il vertex shader */
-		D3DXMATRIX matrix_world, matrix_view, matrix_proj;
+
 		D3DXMATRIX world_view_projection;
 
-		IDirect3DDevice9_GetTransform(d3d9.dev, D3DTS_WORLD, &matrix_world);
-		IDirect3DDevice9_GetTransform(d3d9.dev, D3DTS_VIEW, &matrix_view);
-		IDirect3DDevice9_GetTransform(d3d9.dev, D3DTS_PROJECTION, &matrix_proj);
+		//D3DXMATRIX matrix_world, matrix_view, matrix_proj;
+		//IDirect3DDevice9_GetTransform(d3d9.dev, D3DTS_WORLD, &matrix_world);
+		//IDirect3DDevice9_GetTransform(d3d9.dev, D3DTS_VIEW, &matrix_view);
+		//IDirect3DDevice9_GetTransform(d3d9.dev, D3DTS_PROJECTION, &matrix_proj);
 
-		D3DXMatrixMultiply(&world_view_projection, &matrix_world, &matrix_view);
-		D3DXMatrixMultiply(&world_view_projection, &world_view_projection, &matrix_proj);
+		D3DXMatrixMultiply(&world_view_projection, &d3d9.world, &d3d9.view);
+		D3DXMatrixMultiply(&world_view_projection, &world_view_projection, &d3d9.projection);
 
 		ID3DXConstantTable_SetMatrix(d3d9.shader.table_vrt, d3d9.dev, "m_world_view_projection",
 				&world_view_projection);
@@ -686,7 +691,6 @@ void gfx_quit(void) {
 
 
 BYTE d3d9_create_context(UINT width, UINT height) {
-
 	d3d9_release_context();
 
 	if (d3d9_create_device(width, height) == EXIT_ERROR) {
@@ -764,22 +768,6 @@ BYTE d3d9_create_context(UINT width, UINT height) {
 		IDirect3DDevice9_SetTextureStageState(d3d9.dev, 0, D3DTSS_COLOROP, D3DTOP_MODULATE);
 		IDirect3DDevice9_SetTextureStageState(d3d9.dev, 0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
 
-		/*
-		 * Su moltissime schede video, quando la texture veniva disegnata sui due triangoli
-		 * la meta' sul secondo era traslasta di un pixel rispetto al primo sia sull'asse
-		 * verticale che su quello orizzontale. In poche parole le proorzioni della texture
-		 * erano sbagliate. Per correggerle ho dovuto sottrarre 1 a gfx.w[CURRENT] e
-		 * gfx.h[CURRENT].
-		 */
-		d3d9.texture.x = (FLOAT) (gfx.w[CURRENT] - 1) / (d3d9.texture.w * (FLOAT) d3d9.factor);
-		d3d9.texture.y = (FLOAT) (gfx.h[CURRENT] - 1) / (d3d9.texture.h * (FLOAT) d3d9.factor);
-
-		//printf("\n");
-		//printf("t1 : %f - %f - %f\n", d3d9.texture.w, d3d9.texture.h, d3d9.factor);
-		//printf("t2 : %f - %f\n", d3d9.texture.x, d3d9.texture.y);
-		//printf("t3 : %f - %f\n", (FLOAT) gfx.w[CURRENT], (FLOAT) gfx.h[CURRENT]);
-		//printf("\n");
-
 		{
 			/* aspect ratio */
 			d3d9.w_texture = gfx.w[VIDEO_MODE];
@@ -836,18 +824,60 @@ BYTE d3d9_create_context(UINT width, UINT height) {
 		}
 
 		{
+			_texcoords *tc = &d3d9.texture.tc;
+
+			tc->l = 0.0f;
+			tc->r = (FLOAT) gfx.w[CURRENT] / (d3d9.texture.w * (FLOAT) d3d9.factor);
+			tc->t = 0.0f;
+			tc->b = (FLOAT) gfx.h[CURRENT] / (d3d9.texture.h * (FLOAT) d3d9.factor);
+
 			void *tv_vertices;
-			const vertex quad_vertices[] = {
-				{-1.0f, -1.0f, 0.0f, 0.0f          , d3d9.texture.y },
-				{-1.0f,  1.0f, 0.0f, 0.0f          , 0.0f           },
-				{ 1.0f,  1.0f, 0.0f, d3d9.texture.x, 0.0f           },
-				{ 1.0f, -1.0f, 0.0f, d3d9.texture.x, d3d9.texture.y }
+			vertex quad_vertices[] = {
+				{ 0.0f                     , (FLOAT) gfx.h[VIDEO_MODE], 0.0f, 1.0f, tc->l, tc->b },
+				{ 0.0f                     , 0.0f                     , 0.0f, 1.0f, tc->l, tc->t },
+				{ (FLOAT) gfx.w[VIDEO_MODE], 0.0f                     , 0.0f, 1.0f, tc->r, tc->t },
+				{ (FLOAT) gfx.w[VIDEO_MODE], (FLOAT) gfx.h[VIDEO_MODE], 0.0f, 1.0f, tc->r, tc->b }
 			};
+
+			/*
+			 * problema del infamous half-texel offset of D3D9:
+			 * http://msdn.microsoft.com/en-us/library/bb206246%28v=vs.85%29.aspx
+			 */
+			{
+				int i;
+
+				for (i=0; i < 4; i++) {
+					quad_vertices[i].x -= 0.5f;
+					quad_vertices[i].y -= 0.5f;
+				}
+			}
 
 			IDirect3DVertexBuffer9_Lock(d3d9.quad, 0, 0, (void**) &tv_vertices, 0);
 			memcpy(tv_vertices, quad_vertices, sizeof(quad_vertices));
 			IDirect3DVertexBuffer9_Unlock(d3d9.quad);
 		}
+	}
+
+	{
+		D3DXMatrixRotationY(&d3d9.world, 0.0f);
+
+		IDirect3DDevice9_SetTransform(d3d9.dev, D3DTS_WORLD, &d3d9.world);
+
+		D3DXVECTOR3 position = { 0.0f, 0.0f, -1.0f }; // the camera position
+		D3DXVECTOR3 target = { 0.0f, 0.0f, 0.0f }; // the look-at position
+		D3DXVECTOR3 up = { 0.0f, 1.0f, 0.0f }; // the up direction
+
+		D3DXMatrixLookAtLH(&d3d9.view, &position, &target, &up);
+
+		IDirect3DDevice9_SetTransform(d3d9.dev, D3DTS_VIEW, &d3d9.view);
+
+		D3DXMatrixPerspectiveFovLH(&d3d9.projection,
+				D3DXToRadian(90.0f),
+				1.0f,
+				0.0f,
+				100.0f);
+
+		IDirect3DDevice9_SetTransform(d3d9.dev, D3DTS_PROJECTION, &d3d9.projection);
 	}
 
 	if (d3d9.hlsl) {
@@ -1059,13 +1089,13 @@ BYTE d3d9_create_shader(_shader *shd) {
 
 				sse[0] = (FLOAT) SCR_ROWS;
 				sse[1] = (FLOAT) SCR_LINES;
-				//if ((shd->id == SHADER_CRT) || (shd->id == SHADER_CRT4)) {
-				//	svm[0] = (FLOAT) d3d9.texture.w;
-				//	svm[1] = (FLOAT) d3d9.texture.h;
-				//} else {
+				if ((shd->id == SHADER_CRT) || (shd->id == SHADER_CRT4)) {
+					svm[0] = (FLOAT) d3d9.texture.w;
+					svm[1] = (FLOAT) d3d9.texture.h;
+				} else {
 					svm[0] = (FLOAT) (d3d9.x_texture2 - d3d9.x_texture1);
 					svm[1] = (FLOAT) (d3d9.y_texture2 - d3d9.y_texture1);
-				//}
+				}
 				st[0] = (FLOAT) d3d9.texture.w;
 				st[1] = (FLOAT) d3d9.texture.h;
 				ft[0] = st[0] / svm[0];
