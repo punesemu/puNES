@@ -77,14 +77,11 @@ BEGIN
 		MENUITEM SEPARATOR
 		POPUP "&Video"
 		BEGIN
-		/*
 			POPUP "&Rendering"
 			BEGIN
 				MENUITEM "&Software",             IDM_SET_RENDERING_SOFTWARE
-				MENUITEM "&OpenGL",               IDM_SET_RENDERING_OPENGL
-				MENUITEM "OpenGL &GLSL",          IDM_SET_RENDERING_GLSL
+				MENUITEM "D3D &HLSL",             IDM_SET_RENDERING_HLSL
 			END
-		*/
 			POPUP "&FPS"
 			BEGIN
 				MENUITEM "Default",               IDM_SET_FPS_DEFAULT
@@ -126,8 +123,8 @@ BEGIN
 				MENUITEM "&On",                   IDM_SET_VSYNC_ON
 				MENUITEM "O&ff",                  IDM_SET_VSYNC_OFF
 			END
-			MENUITEM SEPARATOR
 		*/
+			MENUITEM SEPARATOR
 			POPUP "&Size"
 			BEGIN
 				MENUITEM "&1x\t1",                IDM_SET_SIZE_1X
@@ -135,7 +132,6 @@ BEGIN
 				MENUITEM "&3x\t3",                IDM_SET_SIZE_3X
 				MENUITEM "&4x\t4",                IDM_SET_SIZE_4X
 			END
-		/*
 			POPUP "&Overscan"
 			BEGIN
 				MENUITEM "&Default",              IDM_SET_OSCAN_DEF
@@ -149,7 +145,6 @@ BEGIN
 					MENUITEM "O&ff",              IDM_SET_OSCAN_DEFAULT_OFF
 				END
 			END
-		*/
 			POPUP "Fi&lter"
 			BEGIN
 				MENUITEM "&No Filter",            IDM_SET_FILTER_NO_FILTER

@@ -149,6 +149,7 @@ static const _param param[] = {
 		NULL,
 		NULL
 	},
+#if defined SDL
 	{
 		"rendering",
 		NULL,
@@ -156,6 +157,15 @@ static const _param param[] = {
 		NULL,
 		"-r, --rendering           type of rendering     : software, opengl, glsl"
 	},
+#elif defined D3D9
+	{
+		"rendering",
+		NULL,
+		"# possible values: software, hlsl",
+		NULL,
+		"-r, --rendering           type of rendering     : software, hlsl"
+	},
+#endif
 	{
 		"vsync",
 		NULL,
@@ -353,11 +363,18 @@ static const _param param_palette[] = {
 	{"Monochrome",        "mono" },
 	{"Green",             "green"}
 };
+#if defined SDL
 static const _param param_render[] = {
 	{"Software", "software"},
 	{"OpenGL",   "opengl"  },
 	{"GLSL",     "glsl"    }
 };
+#elif defined D3D9
+static const _param param_render[] = {
+	{"Software", "software"},
+	{"HLSL",     "hlsl"    }
+};
+#endif
 static const _param param_samplerate[] = {
 	{"44100", "44100"},
 	{"22050", "22050"},

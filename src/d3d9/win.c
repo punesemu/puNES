@@ -39,7 +39,9 @@ enum menu_item_state { CHECK, ENAB };
 long __stdcall main_proc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam);
 
 void set_mode(BYTE mode);
+void set_rendering(BYTE rendering);
 void set_scale(BYTE scale);
+void set_overscan(BYTE oscan);
 void set_filter(BYTE filter);
 void set_fps(BYTE fps);
 void set_frame_skip(BYTE frameskip);
@@ -692,7 +694,6 @@ void gui_update(void) {
 	change_menuitem(CHECK, MF_CHECKED, id);
 
 	/* Filter */
-	/*
 	if (gfx.bit_per_pixel < 32) {
 		change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_HQ2X);
 		change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_HQ3X);
@@ -702,7 +703,6 @@ void gui_update(void) {
 		change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_HQ3X);
 		change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_HQ4X);
 	}
-	*/
 	{
 		HMENU menu_to_change;
 		MENUITEMINFO menuitem;
@@ -710,9 +710,21 @@ void gui_update(void) {
 		menuitem.cbSize = sizeof(MENUITEMINFO);
 		menuitem.fMask = MIIM_STATE;
 
-		menu_to_change = GetSubMenu(GetSubMenu(GetSubMenu(main_menu, 2), 2), 3);
+		/* Video/Rendering */
+		menu_to_change = GetSubMenu(GetSubMenu(GetSubMenu(main_menu, 2), 2), 0);
 
-		if ((gfx_shader_check() == TRUE) && (cfg->scale != X1)) {
+		if (gfx.hlsl.compliant) {
+			menuitem.fState = MFS_ENABLED;
+		} else {
+			menuitem.fState = MFS_DISABLED;
+		}
+
+		/* Video/Rendering/HLSL */
+		SetMenuItemInfo(menu_to_change, 1, TRUE, &menuitem);
+
+		menu_to_change = GetSubMenu(GetSubMenu(GetSubMenu(main_menu, 2), 2), 6);
+
+		if ((gfx.hlsl.enabled == TRUE) && (cfg->scale != X1)) {
 			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_POSPHOR);
 			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_SCANLINE);
 			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_DBL);
@@ -881,10 +893,9 @@ void gui_update(void) {
 	change_menuitem(CHECK, MF_CHECKED, id);
 
 	/* Render */
-	//change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_RENDERING_SOFTWARE);
-	//change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_RENDERING_OPENGL);
-	//change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_RENDERING_GLSL);
-	//if (gfx.opengl) {
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_RENDERING_SOFTWARE);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_RENDERING_HLSL);
+	if (gfx.hlsl.compliant == TRUE) {
 	//	HMENU menuSettings = GetSubMenu(main_menu, 2);
 	//	HMENU menuVideo = GetSubMenu(menuSettings, 2);
 	//	MENUITEMINFO menuitem;
@@ -912,14 +923,12 @@ void gui_update(void) {
 	//	change_menuitem(ENAB, MF_ENABLED, IDM_SET_VSYNC_ON);
 	//	change_menuitem(ENAB, MF_ENABLED, IDM_SET_VSYNC_OFF);
 
-	//	if (!opengl.glsl.compliant) {
-	//		id = IDM_SET_RENDERING_OPENGL;
-	//	} else if (!opengl.glsl.enabled) {
-	//		id = IDM_SET_RENDERING_OPENGL;
-	//	} else {
-	//		id = IDM_SET_RENDERING_GLSL;
-	//	}
-	//} else {
+		if ((gfx.hlsl.compliant == TRUE) && (gfx.hlsl.enabled == TRUE)) {
+			id = IDM_SET_RENDERING_HLSL;
+		} else {
+			id = IDM_SET_RENDERING_SOFTWARE;
+		}
+	} else {
 	//	HMENU menuSettings = GetSubMenu(main_menu, 2);
 	//	HMENU menuVideo = GetSubMenu(menuSettings, 2);
 	//	MENUITEMINFO menuitem;
@@ -938,9 +947,9 @@ void gui_update(void) {
 	//	change_menuitem(ENAB, MF_GRAYED, IDM_SET_VSYNC_OFF);
 	//	change_menuitem(ENAB, MF_GRAYED, IDM_SET_EFFECT_CUBE);
 
-	//	id = IDM_SET_RENDERING_SOFTWARE;
-	//}
-	//change_menuitem(CHECK, MF_CHECKED, id);
+		id = IDM_SET_RENDERING_SOFTWARE;
+	}
+	change_menuitem(CHECK, MF_CHECKED, id);
 
 	/* Effect */
 	/*
@@ -1245,7 +1254,6 @@ long __stdcall main_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 				case IDM_SET_SIZE_4X:
 					set_scale(X4);
 					break;
-				/*
 				case IDM_SET_OSCAN_ON:
 					set_overscan(OSCAN_ON);
 					break;
@@ -1261,7 +1269,6 @@ long __stdcall main_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 				case IDM_SET_OSCAN_DEFAULT_OFF:
 					set_overscan(OSCAN_DEFAULT_OFF);
 					break;
-				*/
 				case IDM_SET_FILTER_NO_FILTER:
 					set_filter(NO_FILTER);
 					break;
@@ -1328,16 +1335,13 @@ long __stdcall main_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 				case IDM_SET_PALETTE_GREEN:
 					gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, PALETTE_GREEN, FALSE);
 					break;
-				/*
 				case IDM_SET_RENDERING_SOFTWARE:
-					set_rendering(0);
+					set_rendering(RENDER_SOFTWARE);
 					break;
-				case IDM_SET_RENDERING_OPENGL:
-					set_rendering(1);
+				case IDM_SET_RENDERING_HLSL:
+					set_rendering(RENDER_HLSL);
 					break;
-				case IDM_SET_RENDERING_GLSL:
-					set_rendering(2);
-					break;
+				/*
 				case IDM_SET_EFFECT_CUBE:
 					set_effect();
 					break;
@@ -1507,6 +1511,17 @@ void set_mode(BYTE mode) {
 		make_reset(CHANGE_MODE);
 	}
 }
+void set_rendering(BYTE rendering) {
+	if (cfg->render == rendering) {
+		return;
+	}
+
+	gfx_set_render(rendering);
+	cfg->render = rendering;
+
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE);
+}
+
 void set_scale(BYTE scale) {
 	if (cfg->scale == scale) {
 		return;
@@ -1526,6 +1541,28 @@ void set_scale(BYTE scale) {
 			gfx_set_screen(X4, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE);
 			break;
 	}
+}
+void set_overscan(BYTE oscan) {
+	//LockWindowUpdate(main_win);
+
+	switch (oscan) {
+		case OSCAN_ON:
+		case OSCAN_OFF:
+		case OSCAN_DEFAULT:
+			cfg->oscan = oscan;
+			cfg_file_pgs_save();
+			break;
+		case OSCAN_DEFAULT_OFF:
+			cfg->oscan_default = OSCAN_OFF;
+			break;
+		case OSCAN_DEFAULT_ON:
+			cfg->oscan_default = OSCAN_ON;
+			break;
+	}
+
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE);
+
+	//LockWindowUpdate(NULL);
 }
 void set_filter(BYTE filter) {
 	switch (filter) {

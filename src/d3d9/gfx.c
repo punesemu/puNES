@@ -88,10 +88,6 @@ struct _d3d9 {
 	_shader shader;
 
 	DWORD flags;
-	/* bit per pixel */
-	BYTE bpp;
-	/* byte per pixel */
-	BYTE BPP;
 	BOOL auto_gen_mipmap;
 	BOOL dynamic_texture;
 	BOOL texture_square_only;
@@ -100,10 +96,7 @@ struct _d3d9 {
 	FLOAT scale;
 	FLOAT factor;
 	BOOL interpolation;
-	BOOL hlsl;
-	BOOL hlsl_used;
 } d3d9;
-
 typedef struct {
 	FLOAT x, y, z, rhw;
 	FLOAT tu, tv;
@@ -123,7 +116,17 @@ int d3d9_power_of_two(int base);
 static BYTE ntsc_width_pixel[5] = {0, 0, 7, 10, 14};
 
 BYTE gfx_init(void) {
-	if (gui_create()) {
+	/* casi particolari provenienti dal cfg_file_parse() e cmd_line_parse() */
+	if ((cfg->scale == X1) && (cfg->filter != NO_FILTER)) {
+		cfg->scale = X2;
+	}
+
+	overscan.left = 8;
+	overscan.right = 9;
+	overscan.up = 8;
+	overscan.down = 8;
+
+	if (gui_create() == EXIT_OK) {
 		fprintf(stderr, "Gui initialization failed\n");
 		return (EXIT_ERROR);
 	}
@@ -156,23 +159,23 @@ BYTE gfx_init(void) {
 			if ((d3d9.display_mode.Format == D3DFMT_X8R8G8B8)
 					|| (d3d9.display_mode.Format == D3DFMT_A8R8G8B8)) {
 				supported = TRUE;
-				d3d9.bpp = 32;
+				gfx.bit_per_pixel = 32;
 			}
 			/* 24 bit */
 			if (d3d9.display_mode.Format == D3DFMT_R8G8B8) {
 				supported = TRUE;
-				d3d9.bpp = 24;
+				gfx.bit_per_pixel = 24;
 			}
 			/* 16 bit */
 			if ((d3d9.display_mode.Format == D3DFMT_A1R5G5B5)
 					|| (d3d9.display_mode.Format == D3DFMT_X1R5G5B5)) {
 				supported = TRUE;
-				d3d9.bpp = 16;
+				gfx.bit_per_pixel = 16;
 			}
 			/* 16 bit */
 			if (d3d9.display_mode.Format == D3DFMT_R5G6B5) {
 				supported = TRUE;
-				d3d9.bpp = 16;
+				gfx.bit_per_pixel = 16;
 			}
 
 			if (supported == FALSE) {
@@ -254,7 +257,7 @@ BYTE gfx_init(void) {
 		}
 
 		{
-			d3d9.hlsl = FALSE;
+			gfx.hlsl.compliant = FALSE;
 
 			if (d3dcaps.PixelShaderVersion < D3DPS_VERSION(2, 0) ||
 					(d3dcaps.VertexShaderVersion < D3DVS_VERSION(2, 0))) {
@@ -268,14 +271,14 @@ BYTE gfx_init(void) {
 
 				if (d3d9_create_shader(&tmp) == EXIT_OK) {
 					d3d9_release_shader(&tmp);
-					d3d9.hlsl = TRUE;
+					gfx.hlsl.compliant = TRUE;
 				}
 			}
 
-			//d3d9.hlsl = FALSE;
-
-			if (d3d9.hlsl == FALSE) {
-				printf("Shaders are disabled\n");
+			if (gfx.hlsl.compliant == FALSE) {
+				printf("Shaders are not supported\n");
+				gfx_set_render(RENDER_SOFTWARE);
+				cfg->render = RENDER_SOFTWARE;
 			}
 		}
 	}
@@ -285,7 +288,7 @@ BYTE gfx_init(void) {
 	 * come filtro ma anche nel gfx_set_screen() per
 	 * generare la paletta dei colori.
 	 */
-	if (ntsc_init(0, 0, 0, 0, 0)) {
+	if (ntsc_init(0, 0, 0, 0, 0) == EXIT_OK) {
 		return (EXIT_ERROR);
 	}
 
@@ -294,7 +297,7 @@ BYTE gfx_init(void) {
 	 * paletta nel formato di visualizzazione.
 	 */
 	if (!(d3d9.palette = malloc(NUM_COLORS * sizeof(uint32_t)))) {
-		fprintf(stderr, "Out of memory\n");
+		fprintf(stderr, "Unable to allocate the palette\n");
 		return (EXIT_ERROR);
 	}
 
@@ -302,18 +305,24 @@ BYTE gfx_init(void) {
 
 	return (EXIT_OK);
 }
-BYTE gfx_shader_check(void) {
-	return (d3d9.hlsl);
-}
 void gfx_set_render(BYTE render) {
-	return;
+	switch (render) {
+		case RENDER_SOFTWARE:
+			gfx.hlsl.enabled = FALSE;
+			gfx.hlsl.used = FALSE;
+			break;
+		case RENDER_HLSL:
+			gfx.hlsl.enabled = TRUE;
+			gfx.hlsl.used = FALSE;
+			break;
+	}
 }
 void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE force_scale) {
 	BYTE set_mode;
 	WORD width, height;
 	//WORD w_for_pr, h_for_pr;
 
-	//gfx_set_screen_start:
+	gfx_set_screen_start:
 	set_mode = FALSE;
 	width = 0, height = 0;
 	//w_for_pr = 0, h_for_pr = 0;
@@ -509,19 +518,18 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 	d3d9.scale_force = FALSE;
 	d3d9.scale = cfg->scale;
 	d3d9.factor = 1;
-	d3d9.hlsl_used = FALSE;
 	d3d9.shader.id = SHADER_NONE;
+	gfx.hlsl.used = FALSE;
 
-	/* TODO: aggiungere il controllo se supportate le shaders */
-	if (d3d9.hlsl == TRUE) {
+	if ((gfx.hlsl.compliant == TRUE) && (gfx.hlsl.enabled == TRUE)) {
 
 #define hlsl_up(e, s)\
-		d3d9.hlsl_used = TRUE;\
-		d3d9.shader.id = s;\
-		d3d9.scale_force = TRUE;\
-		d3d9.scale = X1;\
-		d3d9.factor = cfg->scale;\
-		gfx.filter = e
+	d3d9.shader.id = s;\
+	d3d9.scale_force = TRUE;\
+	d3d9.scale = X1;\
+	d3d9.factor = cfg->scale;\
+	gfx.hlsl.used = TRUE;\
+	gfx.filter = e
 
 		switch (cfg->filter) {
 			case NO_FILTER:
@@ -592,6 +600,14 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 		ShowWindow(gui_main_window_id(), SW_NORMAL);
 	}
 
+	/* questo controllo devo farlo necessariamente dopo il glew_init() */
+	if ((gfx.hlsl.compliant == FALSE) || (gfx.hlsl.enabled == FALSE)) {
+		if ((filter >= POSPHOR) && (filter <= CRT_NO_CURVE)) {
+			filter = NO_FILTER;
+			goto gfx_set_screen_start;
+		}
+	}
+
 	/* setto il titolo della finestra */
 	gui_update();
 
@@ -613,7 +629,7 @@ void gfx_draw_screen(BYTE forced) {
 		gfx.filter(screen.data,
 				screen.line,
 				d3d9.palette,
-				d3d9.bpp,
+				gfx.bit_per_pixel,
 				locked_rect.Pitch,
 				locked_rect.pBits,
 				gfx.rows,
@@ -636,7 +652,7 @@ void gfx_draw_screen(BYTE forced) {
 	/* inizio */
 	IDirect3DDevice9_BeginScene(d3d9.dev);
 
-	if (d3d9.hlsl_used == TRUE) {
+	if (gfx.hlsl.used == TRUE) {
 		/* comunico con il vertex shader */
 		D3DXMATRIX world_view_projection;
 
@@ -779,8 +795,8 @@ BYTE d3d9_create_context(UINT width, UINT height) {
 
 			/* con flags intendo sia il fullscreen che il futuro resize */
 			if (flags && cfg->aspect_ratio) {
-				float ratio_surface = (float) w_quad / (float) h_quad;
-				float ratio_frame = (float) width / (float) height;
+				FLOAT ratio_surface = w_quad / h_quad;
+				FLOAT ratio_frame = (FLOAT) width / (FLOAT) height;
 
 				//ratio_frame = (float) 4 / 3;
 				//ratio_frame = (float) 16 / 9;
@@ -865,7 +881,7 @@ BYTE d3d9_create_context(UINT width, UINT height) {
 		IDirect3DDevice9_SetTransform(d3d9.dev, D3DTS_PROJECTION, &d3d9.projection);
 	}
 
-	if (d3d9.hlsl) {
+	if (gfx.hlsl.enabled == TRUE) {
 		d3d9_create_shader(&d3d9.shader);
 	}
 
@@ -1088,11 +1104,13 @@ BYTE d3d9_create_shader(_shader *shd) {
 				ID3DXConstantTable_SetFloatArray(shd->table_pxl, d3d9.dev, "frame_counter",
 							(CONST FLOAT * ) &fc, 1);
 
+				/*
 				printf("\n");
 				printf("size_screen_emu : %f - %f\n", sse[0], sse[1]);
 				printf("size_video_mode : %f - %f\n", svm[0], svm[1]);
 				printf("size_texture    : %f - %f\n", st[0], st[1]);
 				printf("\n");
+				*/
 
 				break;
 			}

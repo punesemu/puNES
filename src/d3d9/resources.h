@@ -95,13 +95,12 @@
 #define IDM_SET_PALETTE_GREEN       414
 
 #define IDM_SET_RENDERING_SOFTWARE  420
-#define IDM_SET_RENDERING_OPENGL    421
-#define IDM_SET_RENDERING_GLSL      422
-#define IDM_SET_EFFECT_CUBE         423
-#define IDM_SET_VSYNC_ON            424
-#define IDM_SET_VSYNC_OFF           425
-#define IDM_SET_FULLSCREEN          426
-#define IDM_SET_STRETCHFLSCR        427
+#define IDM_SET_RENDERING_HLSL      421
+#define IDM_SET_EFFECT_CUBE         422
+#define IDM_SET_VSYNC_ON            423
+#define IDM_SET_VSYNC_OFF           424
+#define IDM_SET_FULLSCREEN          425
+#define IDM_SET_STRETCHFLSCR        426
 
 #define IDM_SET_SAVENOW             430
 #define IDM_SET_SAVEONEXIT          431

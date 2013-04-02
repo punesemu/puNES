@@ -14,9 +14,6 @@
 #include "mem_map.h"
 #include "fds.h"
 #include "cfg_file.h"
-#if defined SDL
-#include "audio_quality.h"
-#endif
 
 void apu_tick(SWORD cycles_cpu, BYTE *hwtick) {
 	/* sottraggo il numero di cicli eseguiti */

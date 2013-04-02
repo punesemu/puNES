@@ -89,7 +89,7 @@ BYTE gfx_init(void) {
 	overscan.up = 8;
 	overscan.down = 8;
 
-	if (gui_create()) {
+	if (gui_create() == EXIT_OK) {
 		fprintf(stderr, "gui initialization failed\n");
 		return (EXIT_ERROR);
 	}
@@ -155,7 +155,7 @@ BYTE gfx_init(void) {
 	 * come filtro ma anche nel gfx_set_screen() per
 	 * generare la paletta dei colori.
 	 */
-	if (ntsc_init(0, 0, 0, 0, 0)) {
+	if (ntsc_init(0, 0, 0, 0, 0) == EXIT_OK) {
 		return (EXIT_ERROR);
 	}
 
@@ -164,7 +164,7 @@ BYTE gfx_init(void) {
 	 * paletta nel formato di visualizzazione.
 	 */
 	if (!(palette_win = malloc(NUM_COLORS * sizeof(uint32_t)))) {
-		fprintf(stderr, "Out of memory\n");
+		fprintf(stderr, "Unable to allocate the palette\n");
 		return (EXIT_ERROR);
 	}
 
@@ -544,16 +544,16 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 		opengl.interpolation = FALSE;
 		use_txt_texture = FALSE;
 
-		if (opengl.glsl.compliant && opengl.glsl.enabled) {
+		if ((opengl.glsl.compliant == TRUE) && (opengl.glsl.enabled == TRUE)) {
 
 #define glsl_up(e, s)\
-		opengl.glsl.shader_used = TRUE;\
-		shader.id = s;\
-		opengl.scale_force = TRUE;\
-		opengl.scale = X1;\
-		opengl.factor = cfg->scale;\
-		gfx.filter = e;\
-		use_txt_texture = TRUE
+	opengl.glsl.shader_used = TRUE;\
+	shader.id = s;\
+	opengl.scale_force = TRUE;\
+	opengl.scale = X1;\
+	opengl.factor = cfg->scale;\
+	gfx.filter = e;\
+	use_txt_texture = TRUE
 
 			glsl_delete_shaders(&shader);
 
@@ -654,7 +654,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 	}
 
 	/* questo controllo devo farlo necessariamente dopo il glew_init() */
-	if (!opengl.glsl.compliant || !opengl.glsl.enabled) {
+	if ((opengl.glsl.compliant == FALSE) || (opengl.glsl.enabled == FALSE)) {
 		if ((filter >= POSPHOR) && (filter <= CRT_NO_CURVE)) {
 			filter = NO_FILTER;
 			goto gfx_set_screen_start;
