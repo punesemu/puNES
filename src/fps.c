@@ -79,7 +79,7 @@ void fps_init(void) {
 
 	fps_machine_ms(1.0)
 
-	fps.nominal = 1000.0 / machine.ms_frame;
+	fps.nominal = 1000.0f / machine.ms_frame;
 	fps.avarage = fps.nominal;
 	fps_normalize();
 	input_turbo_buttons_frequency();
@@ -114,7 +114,8 @@ void fps_frameskip(void) {
 		gui_sleep(fps.next_frame - frame_end);
 	}
 
-	fps.next_frame = gui_get_ms() + fps.ms;
+	//fps.next_frame = gui_get_ms() + fps.ms;
+	fps.next_frame += fps.ms;
 
 	if (diff >= (machine.ms_frame * (double) fps.frames_before_skip)) {
 		if (fps.frames_skipped >= fps.max_frames_skipped) {
