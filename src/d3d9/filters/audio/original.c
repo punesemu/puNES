@@ -76,7 +76,7 @@ void audio_quality_apu_tick_original(void) {
 		return;
 	}
 
-	if (snd.brk) {
+	if (snd.brk == TRUE) {
 		if (cache->filled < 3) {
 			snd.brk = FALSE;
 		} else {
@@ -105,7 +105,7 @@ void audio_quality_apu_tick_original(void) {
 		} else if (cache->filled == 1) {
 			snd_frequency(snd_factor[apu.type][SND_FACTOR_SPEED])
 		} else if (cache->filled >= ((snd.buffer.count >> 1) + 1)) {
-			snd_frequency(snd_factor[apu.type][SND_FACTOR_NONE])
+			snd_frequency(snd_factor[apu.type][SND_FACTOR_SLOW])
 		} else if (cache->filled < 3) {
 			snd_frequency(snd_factor[apu.type][SND_FACTOR_NORMAL])
 		}
@@ -115,6 +115,7 @@ void audio_quality_apu_tick_original(void) {
 
 	{
 		SWORD mixer = 0;
+
 		mixer += nla_table.pulse[S1.output + S2.output];
 		mixer += nla_table.tnd[(TR.output * 3) + (NS.output * 2) + DMC.output];
 
@@ -131,7 +132,7 @@ void audio_quality_apu_tick_original(void) {
 		if (cfg->channels == STEREO) {
 			/* salvo il dato nel buffer del canale sinistro */
 			snd.channel.ptr[CH_LEFT][snd.channel.pos] = mixer;
-			/* scrivo nel nel frame audio il canale destro ritardato di un frame */
+			/* scrivo nel frame audio il canale destro ritardato rispetto al canale sinistro */
 			(*cache->write++) = snd.channel.ptr[CH_RIGHT][snd.channel.pos];
 			/* swappo i buffers dei canali */
 			if (++snd.channel.pos >= snd.channel.max_pos) {

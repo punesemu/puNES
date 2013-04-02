@@ -43,14 +43,27 @@ struct _xaudio2 {
 } xaudio2;
 
 BYTE snd_init(void) {
-	_callback_data *cache;
+	memset(&snd, 0x00, sizeof(snd));
 
-	cfg->channels = MONO;
-	//cfg->audio = 0;
+	snd_apu_tick = NULL;
+	snd_end_frame = NULL;
+
+	/* apro e avvio la riproduzione */
+	if (snd_start()) {
+		return (EXIT_ERROR);
+	}
+
+	return (EXIT_OK);
+}
+BYTE snd_start(void) {
+	_callback_data *cache;
 
 	if (!cfg->audio) {
 		return (EXIT_OK);
 	}
+
+	/* come prima cosa blocco eventuali riproduzioni */
+	snd_stop();
 
 	memset(&snd, 0x00, sizeof(snd));
 	memset(&xaudio2, 0x00, sizeof(xaudio2));
@@ -141,7 +154,7 @@ BYTE snd_init(void) {
 		}
 	}
 
-	snd.frequency = ((fps.nominal * machine.cpu_cycles_frame) / (double) snd.samplerate) * 0.998f;
+	snd.frequency = ((fps.nominal * machine.cpu_cycles_frame) / (double) snd.samplerate);
 
 	cache->samples = snd.buffer.size / cfg->channels;
 
@@ -172,9 +185,14 @@ BYTE snd_init(void) {
 
 		/* alloco il buffer in memoria */
 		cache->start = malloc(total_buffer_size);
-
 		if (!cache->start) {
-			fprintf(stderr, "Out of memory\n");
+			fprintf(stderr, "Unable to allocate audio buffers\n");
+			return (EXIT_ERROR);
+		}
+
+		cache->silence = malloc(snd.buffer.size * sizeof(*cache->write));
+		if (!cache->silence) {
+			fprintf(stderr, "Unable to allocate silence buffer\n");
 			return (EXIT_ERROR);
 		}
 
@@ -189,8 +207,11 @@ BYTE snd_init(void) {
 			fprintf(stderr, "Unable to create XAudio2 semaphore\n");
 			return (EXIT_ERROR);
 		}
-		/* azzero completamente il buffer */
-		memset(cache->start, 0, total_buffer_size);
+
+		/* azzero completamente i buffers */
+		memset(cache->start, 0x00, total_buffer_size);
+		/* azzero completamente il buffer del silenzio */
+		memset(cache->silence, 0x00, snd.buffer.size * sizeof(*cache->write));
 
 		/* punto all'inizio del frame di scrittura */
 		snd.pos.current = snd.pos.last = 0;
@@ -235,9 +256,6 @@ BYTE snd_init(void) {
 
 	return (EXIT_OK);
 }
-BYTE snd_start(void) {
-	return (EXIT_OK);
-}
 void snd_output(void *udata, BYTE *stream, int len) {
 	return;
 }
@@ -271,6 +289,10 @@ void snd_stop(void) {
 
 		if (cache->start) {
 			free(cache->start);
+		}
+
+		if (cache->silence) {
+			free(cache->silence);
 		}
 
 	    if (xaudio2.semaphore) {
@@ -326,9 +348,6 @@ static void STDMETHODCALLTYPE OnBufferEnd(THIS_ void *data) {
 
 	snd_lock_buffer(cache);
 
-	if (!cache->filled) {
-		snd.out_of_sync++;
-	} else {
 #ifndef RELEASE
 		fprintf(stderr, "snd : %d %d %d %d %2d %d %f %f %4s\r",
 				buffer->AudioBytes,
@@ -341,6 +360,12 @@ static void STDMETHODCALLTYPE OnBufferEnd(THIS_ void *data) {
 				machine.ms_frame,
 				"");
 #endif
+
+	if (!cache->filled) {
+		snd.out_of_sync++;
+
+		buffer->pAudioData = (const BYTE *) cache->silence;
+	} else {
 		/*
 	 	 * mi preparo per i prossimi frames da inviare, sempre
 	 	 * che non abbia raggiunto la fine del buffer, nel
@@ -351,9 +376,9 @@ static void STDMETHODCALLTYPE OnBufferEnd(THIS_ void *data) {
 		}
 
 		cache->filled--;
-	}
 
-	buffer->pAudioData = (const BYTE *) cache->read;
+		buffer->pAudioData = (const BYTE *) cache->read;
+	}
 
 	if(IXAudio2SourceVoice_SubmitSourceBuffer(source, buffer, NULL) != S_OK) {
 		fprintf(stderr, "Unable to submit source buffer\n");

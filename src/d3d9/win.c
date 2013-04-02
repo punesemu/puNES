@@ -41,8 +41,10 @@ long __stdcall main_proc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam);
 void set_mode(BYTE mode);
 void set_scale(BYTE scale);
 void set_filter(BYTE filter);
-void set_fps(int fps);
-void set_frame_skip(int frameskip);
+void set_fps(BYTE fps);
+void set_frame_skip(BYTE frameskip);
+void set_samplerate(BYTE samplerate);
+void set_channels(BYTE channels);
 
 double high_resolution_ms(void);
 void change_menuitem(BYTE check_or_enab, UINT type, UINT menuitem_id);
@@ -719,7 +721,6 @@ void gui_update(void) {
 
 			/* Video/Filter/CRT */
 			SetMenuItemInfo(menu_to_change, 5, TRUE, &menuitem);
-
 			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_CRTCURVE);
 			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_CRTNOCURVE);
 		} else {
@@ -731,10 +732,56 @@ void gui_update(void) {
 
 			/* Video/Filter/CRT */
 			SetMenuItemInfo(menu_to_change, 5, TRUE, &menuitem);
-
 			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_CRTCURVE);
 			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_CRTNOCURVE);
 		}
+
+		if ((cfg->scale != X1)) {
+			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_BILINEAR);
+
+			menuitem.fState = MFS_ENABLED;
+
+			/* Video/Filter/ScaleX */
+			SetMenuItemInfo(menu_to_change, 6, TRUE, &menuitem);
+			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_SCALE2X);
+			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_SCALE3X);
+			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_SCALE4X);
+
+			/* Video/Filter/HqX */
+			SetMenuItemInfo(menu_to_change, 7, TRUE, &menuitem);
+			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_HQ2X);
+			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_HQ3X);
+			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_HQ4X);
+
+			/* Video/Filter/HqX */
+			SetMenuItemInfo(menu_to_change, 8, TRUE, &menuitem);
+			change_menuitem(CHECK, MF_ENABLED, IDM_SET_FILTER_RGBNTSCCOM);
+			change_menuitem(CHECK, MF_ENABLED, IDM_SET_FILTER_RGBNTSCSVD);
+			change_menuitem(CHECK, MF_ENABLED, IDM_SET_FILTER_RGBNTSCRGB);
+		} else {
+			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_BILINEAR);
+
+			menuitem.fState = MFS_DISABLED;
+
+			/* Video/Filter/ScaleX */
+			SetMenuItemInfo(menu_to_change, 6, TRUE, &menuitem);
+			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_SCALE2X);
+			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_SCALE3X);
+			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_SCALE4X);
+
+			/* Video/Filter/HqX */
+			SetMenuItemInfo(menu_to_change, 7, TRUE, &menuitem);
+			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_HQ2X);
+			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_HQ3X);
+			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_HQ4X);
+
+			/* Video/Filter/HqX */
+			SetMenuItemInfo(menu_to_change, 8, TRUE, &menuitem);
+			change_menuitem(CHECK, MF_GRAYED, IDM_SET_FILTER_RGBNTSCCOM);
+			change_menuitem(CHECK, MF_GRAYED, IDM_SET_FILTER_RGBNTSCSVD);
+			change_menuitem(CHECK, MF_GRAYED, IDM_SET_FILTER_RGBNTSCRGB);
+		}
+
 	}
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_NO_FILTER);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_BILINEAR);
@@ -923,7 +970,6 @@ void gui_update(void) {
 	*/
 
 	/* Samplerate */
-	/*
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_SAMPLERATE_44100);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_SAMPLERATE_22050);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_SAMPLERATE_11025);
@@ -939,10 +985,8 @@ void gui_update(void) {
 			break;
 	}
 	change_menuitem(CHECK, MF_CHECKED, id);
-	*/
 
 	/* Channels */
-	/*
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_CHANNELS_MONO);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_CHANNELS_STEREO);
 	switch (cfg->channels) {
@@ -954,7 +998,6 @@ void gui_update(void) {
 			break;
 	}
 	change_menuitem(CHECK, MF_CHECKED, id);
-	*/
 
 	/* Audio Filter */
 	/*
@@ -972,20 +1015,16 @@ void gui_update(void) {
 	*/
 
 	/* Swap Duty Cycles */
-	/*
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_AUDIO_SWAP_DUTY);
 	if (cfg->swap_duty) {
 		change_menuitem(CHECK, MF_CHECKED, IDM_SET_AUDIO_SWAP_DUTY);
 	}
-	*/
 
 	/* Audio Enable */
-	/*
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_AUDIO_ENABLE);
 	if (cfg->audio) {
 		change_menuitem(CHECK, MF_CHECKED, IDM_SET_AUDIO_ENABLE);
 	}
-	*/
 
 	/* Game Genie */
 	/*
@@ -1024,6 +1063,15 @@ void gui_set_thread_affinity(uint8_t core) {
 
 long __stdcall main_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	switch (msg) {
+		case WM_ENTERSIZEMOVE:
+		case WM_ENTERMENULOOP:
+			emu_pause(TRUE);
+			break;
+		case WM_EXITSIZEMOVE:
+		case WM_EXITMENULOOP:
+			emu_pause(FALSE);
+			SetFocus(d3d_frame);
+			break;
 		case WM_COMMAND: {
 			switch (LOWORD(wParam)) {
 				case IDM_FILE_OPEN:
@@ -1309,6 +1357,7 @@ long __stdcall main_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 					}
 					gui_update();
 					break;
+				*/
 				case IDM_SET_SAMPLERATE_44100:
 					set_samplerate(S44100);
 					break;
@@ -1330,12 +1379,14 @@ long __stdcall main_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 					gui_update();
 					emu_pause(FALSE);
 					break;
+				/*
 				case IDM_SET_AUDIO_QUALITY_LOW:
 					set_audio_quality(AQ_LOW);
 					break;
 				case IDM_SET_AUDIO_QUALITY_HIGH:
 					set_audio_quality(AQ_HIGH);
 					break;
+				*/
 				case IDM_SET_AUDIO_ENABLE:
 					emu_pause(TRUE);
 					cfg->audio = !cfg->audio;
@@ -1347,6 +1398,7 @@ long __stdcall main_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 					gui_update();
 					emu_pause(FALSE);
 					break;
+				/*
 				case IDM_SET_GAMEGENIE:
 					set_gamegenie();
 					break;
@@ -1525,7 +1577,7 @@ void set_filter(BYTE filter) {
 			break;
 	}
 }
-void set_fps(int fps) {
+void set_fps(BYTE fps) {
 	if (cfg->fps == fps) {
 		return;
 	}
@@ -1540,7 +1592,7 @@ void set_fps(int fps) {
 
 	emu_pause(FALSE);
 }
-void set_frame_skip(int frameskip) {
+void set_frame_skip(BYTE frameskip) {
 	if (cfg->frameskip == frameskip) {
 		return;
 	}
@@ -1551,6 +1603,24 @@ void set_frame_skip(int frameskip) {
 		fps_normalize();
 	}
 
+	gui_update();
+}
+void set_samplerate(BYTE samplerate) {
+	if (cfg->samplerate == samplerate) {
+		return;
+	}
+
+	cfg->samplerate = samplerate;
+	snd_start();
+	gui_update();
+}
+void set_channels(BYTE channels) {
+	if (cfg->channels == channels) {
+		return;
+	}
+
+	cfg->channels = channels;
+	snd_start();
 	gui_update();
 }
 

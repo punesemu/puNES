@@ -146,7 +146,7 @@ void set_default(void) {
 	cfg_from_file.samplerate = S44100;
 	cfg_from_file.channels = STEREO;
 	cfg_from_file.audio_quality = AQ_HIGH;
-	//cfg_from_file.swap_duty = 0;
+	cfg_from_file.swap_duty = 0;
 	//cfg_from_file.gamegenie = FALSE;
 
 	port1.type = CTRL_STANDARD;

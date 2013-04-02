@@ -13,7 +13,7 @@
 enum samplerate_mode { S44100, S22050, S11025 };
 enum channel_mode { MONO = 1, STEREO };
 enum channels { CH_LEFT, CH_RIGHT };
-enum snd_factor_type { SND_FACTOR_SPEED, SND_FACTOR_NORMAL, SND_FACTOR_NONE };
+enum snd_factor_type { SND_FACTOR_SPEED, SND_FACTOR_NORMAL, SND_FACTOR_SLOW };
 
 #define SND_BUFFER_SAMPLES cache->samples
 
@@ -29,6 +29,8 @@ typedef struct {
 
 	WORD samples;
 
+	SWORD *silence;
+
 	SWORD *start;
 	SBYTE *end;
 
@@ -39,7 +41,6 @@ typedef struct {
 
 	void *lock;
 } _callback_data;
-
 struct _snd {
 	BYTE brk;
 
@@ -57,14 +58,12 @@ struct _snd {
 		DBWORD current;
 		DBWORD last;
 	} pos;
-
 	struct _channel {
 		DBWORD max_pos;
 		DBWORD pos;
 		SWORD *ptr[2];
 		SWORD *buf[2];
 	} channel;
-
 	struct _buffer {
 		DBWORD size;
 		DBWORD count;
@@ -72,7 +71,7 @@ struct _snd {
 } snd;
 
 static const double snd_factor[3][3] = {
-	{ 0.967f, 0.987f, 1.1f }, { 1.0f, 1.0f, 1.1f }, { 1.0f, 1.0f, 1.1f }
+	{ 0.967f, 0.998f, 1.1f }, { 0.967f, 1.0f, 1.1f }, { 0.967f, 1.0f, 1.1f }
 };
 
 BYTE snd_init(void);
