@@ -39,23 +39,17 @@ enum shader_type {
 };
 
 typedef struct {
-	FLOAT t;
-	FLOAT b;
-	FLOAT l;
-	FLOAT r;
-} _texcoords;
-typedef struct {
 	LPDIRECT3DTEXTURE9 data;
-	LPDIRECT3DSURFACE9 surface;
-	LPDIRECT3DSURFACE9 surface_map0;
+	LPDIRECT3DSURFACE9 map0;
 
 	FLOAT w;
 	FLOAT h;
 
-	WORD no_pow_w;
-	WORD no_pow_h;
-
-	_texcoords tc;
+	struct _surface {
+		LPDIRECT3DSURFACE9 data;
+		WORD w;
+		WORD h;
+	} surface;
 } _texture;
 typedef struct {
 	const char *vertex;
@@ -99,7 +93,6 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"float2 size_screen_emu;\n"
 		"float2 size_video_mode;\n"
 		"float2 size_texture;\n"
-		"float2 factor;\n"
 
 		"texture texture_scr;\n"
 		"sampler2D s0 = sampler_state { Texture = <texture_scr>; };\n"
@@ -132,7 +125,6 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"float2 size_screen_emu;\n"
 		"float2 size_video_mode;\n"
 		"float2 size_texture;\n"
-		"float2 factor;\n"
 
 		"texture texture_scr;\n"
 		"sampler2D s0 = sampler_state { Texture = <texture_scr>; };\n"
@@ -164,7 +156,6 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"float2 size_screen_emu;\n"
 		"float2 size_video_mode;\n"
 		"float2 size_texture;\n"
-		"float2 factor;\n"
 
 		"texture texture_scr;\n"
 		"sampler2D s0 = sampler_state { Texture = <texture_scr>; };\n"
@@ -229,7 +220,6 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"float2 size_screen_emu;\n"
 		"float2 size_video_mode;\n"
 		"float2 size_texture;\n"
-		"float2 factor;\n"
 
 		"texture texture_scr;\n"
 		"sampler2D s0 = sampler_state { Texture = <texture_scr>; };\n"
@@ -363,7 +353,6 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"float2 size_screen_emu;\n"
 		"float2 size_video_mode;\n"
 		"float2 size_texture;\n"
-		"float2 factor;\n"
 
 		"texture texture_scr;\n"
 		"sampler2D s0 = sampler_state { Texture = <texture_scr>; };\n"
@@ -445,7 +434,6 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"float2 size_screen_emu;\n"
 		"float2 size_video_mode;\n"
 		"float2 size_texture;\n"
-		"float2 factor;\n"
 
 		"texture texture_scr;\n"
 		"sampler2D s0 = sampler_state { Texture = <texture_scr>; };\n"
@@ -539,7 +527,6 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"float2 size_screen_emu;\n"
 		"float2 size_video_mode;\n"
 		"float2 size_texture;\n"
-		"float2 factor;\n"
 
 		"texture texture_scr;\n"
 		"sampler2D s0 = sampler_state { Texture = <texture_scr>; };\n"
@@ -598,7 +585,6 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"float2 size_screen_emu;\n"
 		"float2 size_video_mode;\n"
 		"float2 size_texture;\n"
-		"float2 factor;\n"
 
 		"texture texture_scr;\n"
 		"sampler2D s0 = sampler_state { Texture = <texture_scr>; };\n"
@@ -667,7 +653,6 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"float2 size_screen_emu;\n"
 		"float2 size_video_mode;\n"
 		"float2 size_texture;\n"
-		"float2 factor;\n"
 
 		"texture texture_scr;\n"
 		"sampler2D s0 = sampler_state { Texture = <texture_scr>; };\n"
@@ -711,7 +696,6 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"float2 size_screen_emu;\n"
 		"float2 size_video_mode;\n"
 		"float2 size_texture;\n"
-		"float2 factor;\n"
 
 		"texture texture_scr;\n"
 		"sampler2D s0 = sampler_state { Texture = <texture_scr>; };\n"
@@ -734,24 +718,40 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"#define PI 3.141592653589\n"
 
 		"#ifdef LINEAR_PROCESSING\n"
-		"#	define TEX2D(c) pow(tex2D(s0, (c)), float4(CRTgamma, CRTgamma, CRTgamma, CRTgamma))\n"
+		"#	define TEX2D(c) pow(tex2D(s0, (c)), CRTgamma)\n"
 		"#else\n"
 		"#  define TEX2D(c) tex2D(s0, (c))\n"
 		"#endif\n"
 
-		"static float CRTgamma;\n"
-		"static float monitorgamma;\n"
-		"static float2 overscan;\n"
+		"// START of parameters\n"
 
-		"static float2 aspect;\n"
-		"static float d;\n"
-		"static float R;\n"
-		"static float cornersize;\n"
-		"static float cornersmooth;\n"
+		"// gamma of simulated CRT\n"
+		"static float CRTgamma = 2.4;\n"
+		"// gamma of display monitor (typically 2.2 is correct)\n"
+		"static float monitorgamma = 2.2;\n"
+		"// overscan (e.g. 1.02 for 2% overscan)\n"
+		"static float2 overscan = float2(1.01,1.01);\n"
+		"// aspect ratio\n"
+		"static float2 aspect = float2(1.0, 0.75);\n"
+		"// lengths are measured in units of (approximately) the width\n"
+		"// of the monitor simulated distance from viewer to monitor\n"
+		"static float d = 2.0;\n"
+		"// radius of curvature\n"
+		"static float R = 1.5;\n"
+		"// tilt angle in radians\n"
+		"// (behavior might be a bit wrong if both components are\n"
+		"// nonzero)\n"
+		"static float2 angle = float2(0.0,-0.15);\n"
+		"// size of curved corners\n"
+		"static float cornersize = 0.03;\n"
+		"// border smoothness parameter\n"
+		"// decrease if borders are too aliased\n"
+		"static float cornersmooth = 1000.0;\n"
 
-		"static float3 stretch;\n"
-		"static float2 sinangle;\n"
-		"static float2 cosangle;\n"
+		"// END of parameters\n"
+
+		"static float2 sinangle = sin(angle);\n"
+		"static float2 cosangle = cos(angle);\n"
 
 		"float intersect(float2 xy) {\n"
 		"	float A = dot(xy,xy)+d*d;\n"
@@ -762,9 +762,9 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 
 		"float2 bkwtrans(float2 xy) {\n"
 		"	float c = intersect(xy);\n"
-		"	float2 pnt = float2(c,c)*xy;\n"
-		"	pnt -= float2(-R,-R)*sinangle;\n"
-		"	pnt /= float2(R,R);\n"
+		"	float2 pnt = c*xy;\n"
+		"	pnt -= -R*sinangle;\n"
+		"	pnt /= R;\n"
 		"	float2 tang = sinangle/cosangle;\n"
 		"	float2 poc = pnt/cosangle;\n"
 		"	float A = dot(tang,tang)+1.0;\n"
@@ -794,18 +794,19 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"	return float3((hi+lo)*aspect*0.5,max(hi.x-lo.x,hi.y-lo.y));\n"
 		"}\n"
 
+		"static float3 stretch = maxscale();\n"
+
 		"float2 transform(float2 coord) {\n"
 		"	coord *= size_texture / size_screen_emu;\n"
-		"	coord = (coord-float2(0.5,0.5))*aspect*stretch.z+stretch.xy;\n"
-		"	return (bkwtrans(coord)/overscan/aspect+float2(0.5,0.5)) *"
-		"		size_screen_emu / size_texture;\n"
+		"	coord = (coord-0.5)*aspect*stretch.z+stretch.xy;\n"
+		"	return (bkwtrans(coord)/overscan/aspect+0.5) * size_screen_emu / size_texture;\n"
 		"}\n"
 
 		"float corner(float2 coord) {\n"
 		"	coord *= size_texture / size_screen_emu;\n"
-		"	coord = (coord - float2(0.5,0.5)) * overscan + float2(0.5,0.5);\n"
-		"	coord = min(coord, float2(1.0,1.0)-coord) * aspect;\n"
-		"	float2 cdist = float2(cornersize,cornersize);\n"
+		"	coord = (coord - 0.5) * overscan + 0.5;\n"
+		"	coord = min(coord, 1.0-coord) * aspect;\n"
+		"	float2 cdist = cornersize;\n"
 		"	coord = (cdist - min(coord,cdist));\n"
 		"	float dist = sqrt(dot(coord,coord));\n"
 		"	return clamp((cdist.x-dist)*cornersmooth,0.0, 1.0);\n"
@@ -828,14 +829,12 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"	// 'weights' should have a higher peak at the center of the\n"
 		"	// scanline than for a wider beam.\n"
 		"#ifdef USEGAUSSIAN\n"
-		"	float4 wid = 0.3 + 0.1 * pow(color, float4(3.0,3.0,3.0,3.0));\n"
-		"	float a = distance / wid;\n"
-		"	float4 weights = float4(a,a,a,a);\n"
+		"	float4 wid = 0.3 + 0.1 * pow(color, 3.0);\n"
+		"	float4 weights = distance / wid;\n"
 		"	return 0.4 * exp(-weights * weights) / wid;\n"
 		"#else\n"
-		"	float4 wid = 2.0 + 2.0 * pow(color, float4(4.0,4.0,4.0,4.0));\n"
-		"	float a = distance / 0.3;\n"
-		"	float4 weights = float4(a,a,a,a);\n"
+		"	float4 wid = 2.0 + 2.0 * pow(color, 4.0);\n"
+		"	float4 weights = distance / 0.3;\n"
 		"	return 1.4 * exp(-pow(weights * rsqrt(0.5 * wid), wid)) / (0.6 + 0.2 * wid);\n"
 		"#endif\n"
 		"}\n"
@@ -849,44 +848,11 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"}\n"
 
 		"float4 Ps(float2 texCoord : TEXCOORD0) : COLOR {\n"
-		"	// START of parameters\n"
-
-		"	// gamma of simulated CRT\n"
-		"	CRTgamma = 2.4;\n"
-		"	// gamma of display monitor (typically 2.2 is correct)\n"
-		"	monitorgamma = 2.2;\n"
-		"	// overscan (e.g. 1.02 for 2% overscan)\n"
-		"	overscan = float2(1.01,1.01);\n"
-		"	// aspect ratio\n"
-		"	aspect = float2(1.0, 0.75);\n"
-		"	// lengths are measured in units of (approximately) the width\n"
-		"	// of the monitor simulated distance from viewer to monitor\n"
-		"	d = 2.0;\n"
-		"	// radius of curvature\n"
-		"	R = 1.5;\n"
-		"	// tilt angle in radians\n"
-		"	// (behavior might be a bit wrong if both components are\n"
-		"	// nonzero)\n"
-		"	const float2 angle = float2(0.0,-0.15);\n"
-		"	// size of curved corners\n"
-		"	cornersize = 0.03;\n"
-		"	// border smoothness parameter\n"
-		"	// decrease if borders are too aliased\n"
-		"	cornersmooth = 1000.0;\n"
-
-		"	// END of parameters\n"
-
-		"	// Precalculate a bunch of useful values we'll need in the fragment\n"
-		"	// shader.\n"
-		"	sinangle = sin(angle);\n"
-		"	cosangle = cos(angle);\n"
-		"	stretch = maxscale();\n"
-
 		"	// The size of one texel, in texture-coordinates.\n"
 		"	float2 one = (1.0 / size_texture);\n"
 
 		"	// Resulting X pixel-coordinate of the pixel we're drawing.\n"
-		"	float mod_factor = texCoord.x * size_texture.x * size_video_mode.x / size_screen_emu.x;\n"
+		"	float mod_factor = texCoord.x * size_texture.x * size_texture.x / size_screen_emu.x;\n"
 
 		"	// Here's a helpful diagram to keep in mind while trying to\n"
 		"	// understand the code:\n"
@@ -919,20 +885,21 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 
 		"	// Of all the pixels that are mapped onto the texel we are\n"
 		"	// currently rendering, which pixel are we currently rendering?\n"
-		"	float2 ratio_scale = xy * size_texture - float2(0.5, 0.5);\n"
+		"	float2 ratio_scale = xy * size_texture - 0.5;\n"
+
 		"#ifdef OVERSAMPLE\n"
 		"	float filter = fwidth(ratio_scale.y);\n"
 		"#endif\n"
+
 		"	float2 uv_ratio = fract(ratio_scale);\n"
 
 		"	// Snap to the center of the underlying texel.\n"
-		"	xy = (floor(ratio_scale) + float2(0.5, 0.5)) / size_texture;\n"
+		"	xy = (floor(ratio_scale) + 0.5) / size_texture;\n"
 
 		"	// Calculate Lanczos scaling coefficients describing the effect\n"
 		"	// of various neighbour texels in a scanline on the current\n"
 		"	// pixel.\n"
-		"	float4 coeffs = PI * float4(1.0 + uv_ratio.x, uv_ratio.x,"
-		"					 1.0 - uv_ratio.x, 2.0 - uv_ratio.x);\n"
+		"	float4 coeffs = PI * float4(1.0 + uv_ratio.x, uv_ratio.x, 1.0 - uv_ratio.x, 2.0 - uv_ratio.x);\n"
 
 		"	// Prevent division by zero.\n"
 		"	coeffs = FIX(coeffs);\n"
@@ -941,7 +908,7 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"	coeffs = 2.0 * sin(coeffs) * sin(coeffs / 2.0) / (coeffs * coeffs);\n"
 
 		"	// Normalize.\n"
-		"	coeffs /= dot(coeffs, float4(1.0, 1.0, 1.0, 1.0));\n"
+		"	coeffs /= dot(coeffs, 1.0);\n"
 
 		"	// Calculate the effective colour of the current and next\n"
 		"	// scanlines at the horizontal location of the current pixel,\n"
@@ -951,19 +918,17 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"			TEX2D(xy),"
 		"			TEX2D(xy + float2(one.x, 0.0)),"
 		"			TEX2D(xy + float2(2.0 * one.x, 0.0)))),"
-		"			float4(0.0, 0.0, 0.0, 0.0),"
-		"			float4(1.0, 1.0, 1.0, 1.0));\n"
+		"			0.0, 1.0);\n"
 		"	float4 col2 = clamp(mul(coeffs, float4x4("
 		"			TEX2D(xy + float2(-one.x, one.y)),"
 		"			TEX2D(xy + float2(0.0, one.y)),"
 		"			TEX2D(xy + one),"
 		"			TEX2D(xy + float2(2.0 * one.x, one.y)))),"
-		"			float4(0.0, 0.0, 0.0, 0.0),"
-		"			float4(1.0, 1.0, 1.0, 1.0));\n"
+		"			0.0, 1.0);\n"
 
 		"#ifndef LINEAR_PROCESSING\n"
-		"	col = pow(col , float4(CRTgamma, CRTgamma, CRTgamma, CRTgamma));\n"
-		"	col2 = pow(col2, float4(CRTgamma, CRTgamma, CRTgamma, CRTgamma));\n"
+		"	col  = pow(col , CRTgamma);\n"
+		"	col2 = pow(col2, CRTgamma);\n"
 		"#endif\n"
 
 		"	// Calculate the influence of the current and next scanlines on\n"
@@ -979,7 +944,8 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"	weights=weights+scanlineWeights(abs(uv_ratio.y), col)/3.0;\n"
 		"	weights2=weights2+scanlineWeights(abs(1.0-uv_ratio.y), col2)/3.0;\n"
 		"#endif\n"
-		"	float3 mul_res = (col * weights + col2 * weights2).rgb * float3(cval, cval, cval);\n"
+
+		"	float3 mul_res = (col * weights + col2 * weights2).rgb * cval;\n"
 
 		"	// dot-mask emulation:\n"
 		"	// Output pixels are alternately tinted green and magenta.\n"
@@ -992,8 +958,7 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"	mul_res *= dotMaskWeights;\n"
 
 		"	// Convert the image gamma for display on our output device.\n"
-		"	float inv_gamma = 1.0 / monitorgamma;\n"
-		"	mul_res = pow(mul_res, float3(inv_gamma, inv_gamma, inv_gamma));\n"
+		"	mul_res = pow(mul_res, 1.0 / monitorgamma);\n"
 
 		"	// Color the texel.\n"
 		"	float4 scr = float4(mul_res, 1.0);\n"
@@ -1024,7 +989,6 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"float2 size_video_mode;\n"
 		"float2 size_texture;\n"
 		"float frame_counter;\n"
-		"float2 factor;\n"
 
 		"texture texture_scr;\n"
 		"sampler2D s0 = sampler_state { Texture = <texture_scr>; };\n"
@@ -1047,24 +1011,42 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"#define PI 3.141592653589\n"
 
 		"#ifdef LINEAR_PROCESSING\n"
-		"#	define TEX2D(c) pow(tex2D(s0, (c)), float4(CRTgamma, CRTgamma, CRTgamma, CRTgamma))\n"
+		"#	define TEX2D(c) pow(tex2D(s0, (c)), CRTgamma)\n"
 		"#else\n"
 		"#  define TEX2D(c) tex2D(s0, (c))\n"
 		"#endif\n"
 
-		"static float CRTgamma;\n"
-		"static float monitorgamma;\n"
-		"static float2 overscan;\n"
+		"// START of parameters\n"
 
-		"static float2 aspect;\n"
-		"static float d;\n"
-		"static float R;\n"
-		"static float cornersize;\n"
-		"static float cornersmooth;\n"
+		"// gamma of simulated CRT\n"
+		"static float CRTgamma = 2.4;\n"
+		"// gamma of display monitor (typically 2.2 is correct)\n"
+		"static float monitorgamma = 2.2;\n"
+		"// overscan (e.g. 1.02 for 2% overscan)\n"
+		"static float2 overscan = float2(1.01,1.01);\n"
+		"// aspect ratio\n"
+		"static float2 aspect = float2(1.0, 0.75);\n"
+		"// lengths are measured in units of (approximately) the width\n"
+		"// of the monitor simulated distance from viewer to monitor\n"
+		"static float d = 2.0;\n"
+		"// radius of curvature\n"
+		"static float R = 1.5;\n"
+		"// tilt angle in radians\n"
+		"// (behavior might be a bit wrong if both components are\n"
+		"// nonzero)\n"
+		"static float2 angle = float2(0.0,-0.15);\n"
+		"// size of curved corners\n"
+		"static float cornersize = 0.03;\n"
+		"// border smoothness parameter\n"
+		"// decrease if borders are too aliased\n"
+		"static float cornersmooth = 1000.0;\n"
 
-		"static float3 stretch;\n"
-		"static float2 sinangle;\n"
-		"static float2 cosangle;\n"
+		"// END of parameters\n"
+
+		"// Precalculate a bunch of useful values we'll need in the fragment\n"
+		"// shader.\n"
+		"static float2 sinangle = sin(angle);\n"
+		"static float2 cosangle = cos(angle);\n"
 
 		"float intersect(float2 xy) {\n"
 		"	float A = dot(xy,xy)+d*d;\n"
@@ -1075,9 +1057,9 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 
 		"float2 bkwtrans(float2 xy) {\n"
 		"	float c = intersect(xy);\n"
-		"	float2 pnt = float2(c,c)*xy;\n"
-		"	pnt -= float2(-R,-R)*sinangle;\n"
-		"	pnt /= float2(R,R);\n"
+		"	float2 pnt = c*xy;\n"
+		"	pnt -= -R*sinangle;\n"
+		"	pnt /= R;\n"
 		"	float2 tang = sinangle/cosangle;\n"
 		"	float2 poc = pnt/cosangle;\n"
 		"	float A = dot(tang,tang)+1.0;\n"
@@ -1107,18 +1089,19 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"	return float3((hi+lo)*aspect*0.5,max(hi.x-lo.x,hi.y-lo.y));\n"
 		"}\n"
 
+		"static float3 stretch = maxscale();\n"
+
 		"float2 transform(float2 coord) {\n"
 		"	coord *= size_texture / size_screen_emu;\n"
-		"	coord = (coord-float2(0.5,0.5))*aspect*stretch.z+stretch.xy;\n"
-		"	return (bkwtrans(coord)/overscan/aspect+float2(0.5,0.5)) *"
-		"		size_screen_emu / size_texture;\n"
+		"	coord = (coord-0.5)*aspect*stretch.z+stretch.xy;\n"
+		"	return (bkwtrans(coord)/overscan/aspect+0.5) * size_screen_emu / size_texture;\n"
 		"}\n"
 
 		"float corner(float2 coord) {\n"
 		"	coord *= size_texture / size_screen_emu;\n"
-		"	coord = (coord - float2(0.5,0.5)) * overscan + float2(0.5,0.5);\n"
-		"	coord = min(coord, float2(1.0,1.0)-coord) * aspect;\n"
-		"	float2 cdist = float2(cornersize,cornersize);\n"
+		"	coord = (coord - 0.5) * overscan + 0.5;\n"
+		"	coord = min(coord, 1.0-coord) * aspect;\n"
+		"	float2 cdist = cornersize;\n"
 		"	coord = (cdist - min(coord,cdist));\n"
 		"	float dist = sqrt(dot(coord,coord));\n"
 		"	return clamp((cdist.x-dist)*cornersmooth,0.0, 1.0);\n"
@@ -1141,14 +1124,12 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"	// 'weights' should have a higher peak at the center of the\n"
 		"	// scanline than for a wider beam.\n"
 		"#ifdef USEGAUSSIAN\n"
-		"	float4 wid = 0.3 + 0.1 * pow(color, float4(3.0,3.0,3.0,3.0));\n"
-		"	float a = distance / wid;\n"
-		"	float4 weights = float4(a,a,a,a);\n"
+		"	float4 wid = 0.3 + 0.1 * pow(color, 3.0);\n"
+		"	float4 weights = distance / wid;\n"
 		"	return 0.4 * exp(-weights * weights) / wid;\n"
 		"#else\n"
-		"	float4 wid = 2.0 + 2.0 * pow(color, float4(4.0,4.0,4.0,4.0));\n"
-		"	float a = distance / 0.3;\n"
-		"	float4 weights = float4(a,a,a,a);\n"
+		"	float4 wid = 2.0 + 2.0 * pow(color, 4.0);\n"
+		"	float4 weights = distance / 0.3;\n"
 		"	return 1.4 * exp(-pow(weights * rsqrt(0.5 * wid), wid)) / (0.6 + 0.2 * wid);\n"
 		"#endif\n"
 		"}\n"
@@ -1162,46 +1143,13 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"}\n"
 
 		"float4 Ps(float2 texCoord : TEXCOORD0) : COLOR {\n"
-		"	// START of parameters\n"
-
-		"	// gamma of simulated CRT\n"
-		"	CRTgamma = 2.4;\n"
-		"	// gamma of display monitor (typically 2.2 is correct)\n"
-		"	monitorgamma = 2.2;\n"
-		"	// overscan (e.g. 1.02 for 2% overscan)\n"
-		"	overscan = float2(1.01,1.01);\n"
-		"	// aspect ratio\n"
-		"	aspect = float2(1.0, 0.75);\n"
-		"	// lengths are measured in units of (approximately) the width\n"
-		"	// of the monitor simulated distance from viewer to monitor\n"
-		"	d = 2.0;\n"
-		"	// radius of curvature\n"
-		"	R = 1.5;\n"
-		"	// tilt angle in radians\n"
-		"	// (behavior might be a bit wrong if both components are\n"
-		"	// nonzero)\n"
-		"	const float2 angle = float2(0.0,-0.15);\n"
-		"	// size of curved corners\n"
-		"	cornersize = 0.03;\n"
-		"	// border smoothness parameter\n"
-		"	// decrease if borders are too aliased\n"
-		"	cornersmooth = 1000.0;\n"
-
-		"	// END of parameters\n"
-
-		"	// Precalculate a bunch of useful values we'll need in the fragment\n"
-		"	// shader.\n"
-		"	sinangle = sin(angle);\n"
-		"	cosangle = cos(angle);\n"
-		"	stretch = maxscale();\n"
-
 		"	float2 ilfac = float2(1.0,floor(size_screen_emu.y/200.0));\n"
 
 		"	// The size of one texel, in texture-coordinates.\n"
 		"	float2 one = (ilfac / size_texture);\n"
 
 		"	// Resulting X pixel-coordinate of the pixel we're drawing.\n"
-		"	float mod_factor = texCoord.x * size_texture.x * size_video_mode.x / size_screen_emu.x;\n"
+		"	float mod_factor = texCoord.x * size_texture.x * size_texture.x / size_screen_emu.x;\n"
 
 		"	// Here's a helpful diagram to keep in mind while trying to\n"
 		"	// understand the code:\n"
@@ -1235,20 +1183,19 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"	// Of all the pixels that are mapped onto the texel we are\n"
 		"	// currently rendering, which pixel are we currently rendering?\n"
 		"	float2 ilvec = float2(0.0,ilfac.y > 1.5 ? mod(frame_counter,2.0) : 0.0);\n"
-		"	float2 ratio_scale = (xy * size_texture - float2(0.5, 0.5) + ilvec)/ilfac;\n"
+		"	float2 ratio_scale = (xy * size_texture - 0.5 + ilvec)/ilfac;\n"
 		"#ifdef OVERSAMPLE\n"
 		"	float filter = fwidth(ratio_scale.y);\n"
 		"#endif\n"
 		"	float2 uv_ratio = fract(ratio_scale);\n"
 
 		"	// Snap to the center of the underlying texel.\n"
-		"	xy = (floor(ratio_scale)*ilfac + float2(0.5,0.5) - ilvec) / size_texture;\n"
+		"	xy = (floor(ratio_scale)*ilfac + 0.5 - ilvec) / size_texture;\n"
 
 		"	// Calculate Lanczos scaling coefficients describing the effect\n"
 		"	// of various neighbour texels in a scanline on the current\n"
 		"	// pixel.\n"
-		"	float4 coeffs = PI * float4(1.0 + uv_ratio.x, uv_ratio.x,"
-		"					 1.0 - uv_ratio.x, 2.0 - uv_ratio.x);\n"
+		"	float4 coeffs = PI * float4(1.0 + uv_ratio.x, uv_ratio.x, 1.0 - uv_ratio.x, 2.0 - uv_ratio.x);\n"
 
 		"	// Prevent division by zero.\n"
 		"	coeffs = FIX(coeffs);\n"
@@ -1257,7 +1204,7 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"	coeffs = 2.0 * sin(coeffs) * sin(coeffs / 2.0) / (coeffs * coeffs);\n"
 
 		"	// Normalize.\n"
-		"	coeffs /= dot(coeffs, float4(1.0, 1.0, 1.0, 1.0));\n"
+		"	coeffs /= dot(coeffs, 1.0);\n"
 
 		"	// Calculate the effective colour of the current and next\n"
 		"	// scanlines at the horizontal location of the current pixel,\n"
@@ -1267,19 +1214,17 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"			TEX2D(xy),"
 		"			TEX2D(xy + float2(one.x, 0.0)),"
 		"			TEX2D(xy + float2(2.0 * one.x, 0.0)))),"
-		"			float4(0.0, 0.0, 0.0, 0.0),"
-		"			float4(1.0, 1.0, 1.0, 1.0));\n"
+		"			0.0, 1.0);\n"
 		"	float4 col2 = clamp(mul(coeffs, float4x4("
 		"			TEX2D(xy + float2(-one.x, one.y)),"
 		"			TEX2D(xy + float2(0.0, one.y)),"
 		"			TEX2D(xy + one),"
 		"			TEX2D(xy + float2(2.0 * one.x, one.y)))),"
-		"			float4(0.0, 0.0, 0.0, 0.0),"
-		"			float4(1.0, 1.0, 1.0, 1.0));\n"
+		"			0.0, 1.0);\n"
 
 		"#ifndef LINEAR_PROCESSING\n"
-		"	col = pow(col , float4(CRTgamma, CRTgamma, CRTgamma, CRTgamma));\n"
-		"	col2 = pow(col2, float4(CRTgamma, CRTgamma, CRTgamma, CRTgamma));\n"
+		"	col  = pow(col , CRTgamma);\n"
+		"	col2 = pow(col2, CRTgamma);\n"
 		"#endif\n"
 
 		"	// Calculate the influence of the current and next scanlines on\n"
@@ -1295,7 +1240,7 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"	weights=weights+scanlineWeights(abs(uv_ratio.y), col)/3.0;\n"
 		"	weights2=weights2+scanlineWeights(abs(1.0-uv_ratio.y), col2)/3.0;\n"
 		"#endif\n"
-		"	float3 mul_res = (col * weights + col2 * weights2).rgb * float3(cval, cval, cval);\n"
+		"	float3 mul_res = (col * weights + col2 * weights2).rgb * cval;\n"
 
 		"	// dot-mask emulation:\n"
 		"	// Output pixels are alternately tinted green and magenta.\n"
@@ -1308,8 +1253,7 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"	mul_res *= dotMaskWeights;\n"
 
 		"	// Convert the image gamma for display on our output device.\n"
-		"	float inv_gamma = 1.0 / monitorgamma;\n"
-		"	mul_res = pow(mul_res, float3(inv_gamma, inv_gamma, inv_gamma));\n"
+		"	mul_res = pow(mul_res, 1.0 / monitorgamma);\n"
 
 		"	// Color the texel.\n"
 		"	float4 scr = float4(mul_res, 1.0);\n"
@@ -1339,7 +1283,6 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"float2 size_screen_emu;\n"
 		"float2 size_video_mode;\n"
 		"float2 size_texture;\n"
-		"float2 factor;\n"
 
 		"texture texture_scr;\n"
 		"sampler2D s0 = sampler_state { Texture = <texture_scr>; };\n"
@@ -1426,22 +1369,22 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"float2 size_screen_emu;\n"
 		"float2 size_video_mode;\n"
 		"float2 size_texture;\n"
-		"float2 factor;\n"
 
 		"texture texture_scr;\n"
 		"sampler2D s0 = sampler_state { Texture = <texture_scr>; };\n"
 
+		"static float3x3 rgb2yuv = float3x3("
+		"	 0.299  , 0.587  , 0.114  ,"
+		"	-0.14713,-0.28886, 0.436  ,"
+		"	 0.615  ,-0.51499,-0.10001 "
+		");\n"
+		"static	float3x3 yuv2rgb = float3x3("
+		"	1.0    , 0.0    , 1.13983,"
+		"	1.0    ,-0.39465,-0.58060,"
+		"	1.0    , 2.03211, 0.0     "
+		");\n"
+
 		"float4 Ps(float2 texCoord : TEXCOORD0) : COLOR {\n"
-		"	float3x3 rgb2yuv = float3x3("
-		"		 0.299  , 0.587  , 0.114  ,"
-		"		-0.14713,-0.28886, 0.436  ,"
-		"		 0.615  ,-0.51499,-0.10001 "
-		"	);\n"
-		"	float3x3 yuv2rgb = float3x3("
-		"		1.0    , 0.0    , 1.13983,"
-		"		1.0    ,-0.39465,-0.58060,"
-		"		1.0    , 2.03211, 0.0     "
-		"	);\n"
 
 		"	float4 wid = float4(3.0, 3.0, 3.0, 3.0);\n"
 		"	float4 c1 = float4(exp(float4(-1.0, -1.0, -1.0, -1.0) / wid / wid));\n"
