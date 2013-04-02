@@ -18,6 +18,10 @@
 
 enum power_of_two_switch { NO_POWER_OF_TWO, POWER_OF_TWO };
 
+typedef struct {
+	GLfloat l, r;
+	GLfloat t, b;
+} _texcoords;
 struct _opengl {
 	BYTE rotation;
 
@@ -37,12 +41,9 @@ struct _opengl {
 
 	SDL_Surface *surface_gl;
 
-	GLint w_texture;
-	GLint h_texture;
-	GLint x_texture1;
-	GLint y_texture1;
-	GLint x_texture2;
-	GLint y_texture2;
+	_texture texture;
+	_texcoords texcoords;
+	_texcoords quadcoords;
 
 	Uint32 flags;
 	BYTE factor_distance;
@@ -51,8 +52,6 @@ struct _opengl {
 	float y_rotate;
 	float x_diff;
 	float y_diff;
-
-	_texture texture;
 } opengl;
 
 void sdl_init_gl(void);

@@ -39,12 +39,6 @@ enum shader_type {
 };
 
 typedef struct {
-	FLOAT u;
-	FLOAT d;
-	FLOAT l;
-	FLOAT r;
-} _texcoords;
-typedef struct {
 	GLuint data;
 	GLenum format;
 	GLenum type;
@@ -52,8 +46,6 @@ typedef struct {
 
 	GLfloat w;
 	GLfloat h;
-
-	_texcoords tc;
 } _texture;
 typedef struct {
 	const GLchar *vertex;
@@ -74,7 +66,6 @@ typedef struct {
 			GLint screen_emu;
 			GLint video_mode;
 			GLint texture;
-			GLfloat factor;
 		} size;
 		struct {
 			GLint scr;
@@ -152,7 +143,6 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"}",
 		// fragment shader
 		"uniform vec2 size_texture;\n"
-		"uniform vec2 factor;\n"
 
 		"uniform sampler2D texture_scr;\n"
 		"uniform sampler2D texture_txt;\n"
@@ -237,7 +227,6 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"}",
 		// fragment shader
 		"uniform vec2 size_texture;\n"
-		"uniform vec2 factor;\n"
 
 		"uniform sampler2D texture_scr;\n"
 		"uniform sampler2D texture_txt;\n"
@@ -776,7 +765,6 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"}",
 		// fragment shader
 		"uniform vec2 size_texture;\n"
-		"uniform vec2 factor;\n"
 
 		"uniform sampler2D texture_scr;\n"
 		"uniform sampler2D texture_txt;\n"
@@ -831,7 +819,6 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"uniform vec2 size_screen_emu;\n"
 		"uniform vec2 size_video_mode;\n"
 		"uniform vec2 size_texture;\n"
-		"uniform vec2 factor;\n"
 
 		"varying vec4 v_texCoord;\n"
 		"varying vec2 omega;\n"
@@ -1082,7 +1069,7 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"	one = (1.0 / size_texture);\n"
 
 		"	// Resulting X pixel-coordinate of the pixel we're drawing.\n"
-		"	mod_factor = texCoord.x * size_texture.x * size_video_mode.x / size_screen_emu.x;\n"
+		"	mod_factor = texCoord.x * size_texture.x * size_texture.x / size_screen_emu.x;\n"
 		"}",
 		// fragment shader
 		"// Comment the next line to disable interpolation in linear gamma (and\n"
@@ -1516,7 +1503,7 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"	one = ilfac / size_texture;\n"
 
 		"	// Resulting X pixel-coordinate of the pixel we're drawing.\n"
-		"	mod_factor = texCoord.x * size_texture.x * size_video_mode.x / size_screen_emu.x;\n"
+		"	mod_factor = texCoord.x * size_texture.x * size_texture.x / size_screen_emu.x;\n"
 		"}",
 		// fragment shader
 		"// Comment the next line to disable interpolation in linear gamma (and\n"

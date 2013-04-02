@@ -641,8 +641,16 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 		text.w = gfx.w[CURRENT];
 		text.h = gfx.h[CURRENT];
 
-		w_for_pr = opengl.x_texture2 - opengl.x_texture1;
-		h_for_pr = opengl.y_texture2 - opengl.y_texture1;
+		{
+			WORD r = (WORD) opengl.quadcoords.r;
+			WORD l = (WORD) opengl.quadcoords.l;
+			WORD t = (WORD) opengl.quadcoords.t;
+			WORD b = (WORD) opengl.quadcoords.b;
+
+			w_for_pr = r - l;
+			h_for_pr = t - b;
+ 		}
+
 	}
 
 	/* questo controllo devo farlo necessariamente dopo il glew_init() */

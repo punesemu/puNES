@@ -106,7 +106,7 @@ void audio_quality_apu_tick_original(void) {
 		} else if (cache->filled == 1) {
 			snd_frequency(snd_factor[apu.type][SND_FACTOR_SPEED])
 		} else if (cache->filled >= ((snd.buffer.count >> 1) + 1)) {
-			snd_frequency(snd_factor[apu.type][SND_FACTOR_NONE])
+			snd_frequency(snd_factor[apu.type][SND_FACTOR_SLOW])
 		} else if (cache->filled < 3) {
 			snd_frequency(snd_factor[apu.type][SND_FACTOR_NORMAL])
 		}

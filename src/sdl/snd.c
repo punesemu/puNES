@@ -144,7 +144,7 @@ BYTE snd_start(void) {
 		cache->start = malloc(total_buffer_size);
 
 		if (!cache->start) {
-			fprintf(stderr, "Out of memory\n");
+			fprintf(stderr, "Unable to allocate audio buffers\n");
 			snd_stop();
 			return (EXIT_ERROR);
 		}
@@ -188,16 +188,17 @@ void snd_output(void *udata, BYTE *stream, int len) {
 
 	SDL_mutexP(cache->lock);
 
-	if (!cache->filled) {
-		memset(stream, snd.last_sample, len);
-
-		snd.out_of_sync++;
-	} else {
 #ifndef RELEASE
 		fprintf(stderr, "snd : %d %d %d %d %2d %d %f %f %4s\r", len, snd.buffer.count, snd.brk,
 				fps.total_frames_skipped, cache->filled, snd.out_of_sync, snd.frequency,
 				machine.ms_frame, "");
 #endif
+
+	if (!cache->filled) {
+		memset(stream, snd.last_sample, len);
+
+		snd.out_of_sync++;
+	} else {
 		/* invio i samples richiesti alla scheda sonora */
 		memcpy(stream, cache->read, len);
 

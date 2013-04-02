@@ -49,17 +49,17 @@ void opengl_draw_scene_no_effect(SDL_Surface *surface) {
 	/* disegno la texture */
 	glBegin(GL_QUADS);
 		/* Bottom Left Of The Texture */
-		glTexCoord2f(opengl.texture.tc.l, opengl.texture.tc.b);
-		glVertex2i(opengl.x_texture1, opengl.y_texture1);
+		glTexCoord2f(opengl.texcoords.l, opengl.texcoords.b);
+		glVertex2f(opengl.quadcoords.l, opengl.quadcoords.b);
 		/* Bottom Right Of The Texture */
-		glTexCoord2f(opengl.texture.tc.r, opengl.texture.tc.b);
-		glVertex2i(opengl.x_texture2, opengl.y_texture1);
+		glTexCoord2f(opengl.texcoords.r, opengl.texcoords.b);
+		glVertex2f(opengl.quadcoords.r, opengl.quadcoords.b);
 		/* Top Right Of The Texture */
-		glTexCoord2f(opengl.texture.tc.r, opengl.texture.tc.t);
-		glVertex2i(opengl.x_texture2, opengl.y_texture2);
+		glTexCoord2f(opengl.texcoords.r, opengl.texcoords.t);
+		glVertex2f(opengl.quadcoords.r, opengl.quadcoords.t);
 		/* Top Left Of The Texture */
-		glTexCoord2f(opengl.texture.tc.l, opengl.texture.tc.t);
-		glVertex2i(opengl.x_texture1, opengl.y_texture2);
+		glTexCoord2f(opengl.texcoords.l, opengl.texcoords.t);
+		glVertex2f(opengl.quadcoords.l, opengl.quadcoords.t);
 	glEnd();
 
 	if (opengl.glsl.shader_used) {

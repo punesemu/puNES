@@ -345,7 +345,7 @@ void audio_quality_end_frame_blip2(void) {
 				if (++cache->filled >= snd.buffer.count) {
 					snd.brk = TRUE;
 				} else if (cache->filled >= bl2.max) {
-					snd_frequency(snd_factor[apu.type][SND_FACTOR_NONE])
+					snd_frequency(snd_factor[apu.type][SND_FACTOR_SLOW])
 				} else if (cache->filled < bl2.min) {
 					snd_frequency(snd_factor[apu.type][SND_FACTOR_NORMAL])
 				}

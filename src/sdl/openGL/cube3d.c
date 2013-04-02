@@ -29,8 +29,8 @@ void opengl_init_cube3d(void) {
 	memset (&color, 0, sizeof(_shader));
 }
 void opengl_set_cube3d(SDL_Surface *src) {
-	x_vertex = 1.0f - ((1.0f / (src->w / 2)) * opengl.x_texture1);
-	y_vertex = 1.0f - ((1.0f / (src->h / 2)) * opengl.y_texture1);
+	x_vertex = 1.0f - ((1.0f / ((GLfloat) src->w / 2.0f)) * opengl.quadcoords.l);
+	y_vertex = 1.0f - ((1.0f / ((GLfloat) src->h / 2.0f)) * opengl.quadcoords.b);
 	z_vertex = x_vertex;
 
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -86,23 +86,23 @@ void opengl_draw_scene_cube3d(SDL_Surface *surface) {
 	glBegin(GL_QUADS);
 		/* avanti */
 		glColor3f(1.0f, 1.0f, 1.0f);
-		glTexCoord2f(0.0f, opengl.texture.y);
+		glTexCoord2f(opengl.texcoords.l, opengl.texcoords.t);
 		glVertex3f(-x_vertex, -y_vertex, +z_vertex);
-		glTexCoord2f(opengl.texture.x, opengl.texture.y);
+		glTexCoord2f(opengl.texcoords.r, opengl.texcoords.t);
 		glVertex3f(+x_vertex, -y_vertex, +z_vertex);
-		glTexCoord2f(opengl.texture.x, 0.0f);
+		glTexCoord2f(opengl.texcoords.r, opengl.texcoords.b);
 		glVertex3f(+x_vertex, +y_vertex, +z_vertex);
-		glTexCoord2f(0.0f, 0.0f);
+		glTexCoord2f(opengl.texcoords.l, opengl.texcoords.b);
 		glVertex3f(-x_vertex, +y_vertex, +z_vertex);
 		/* dietro */
 		glColor3f(1.0f, 0.0f, 0.0f);
-		glTexCoord2f(0.0f, opengl.texture.y);
+		glTexCoord2f(opengl.texcoords.l, opengl.texcoords.t);
 		glVertex3f(+x_vertex, -y_vertex, -z_vertex);
-		glTexCoord2f(opengl.texture.x, opengl.texture.y);
+		glTexCoord2f(opengl.texcoords.r, opengl.texcoords.t);
 		glVertex3f(-x_vertex, -y_vertex, -z_vertex);
-		glTexCoord2f(opengl.texture.x, 0.0f);
+		glTexCoord2f(opengl.texcoords.r, opengl.texcoords.b);
 		glVertex3f(-x_vertex, +y_vertex, -z_vertex);
-		glTexCoord2f(0.0f, 0.0f);
+		glTexCoord2f(opengl.texcoords.l, opengl.texcoords.b);
 		glVertex3f(+x_vertex, +y_vertex, -z_vertex);
 		/* sopra */
 		/*
@@ -128,23 +128,23 @@ void opengl_draw_scene_cube3d(SDL_Surface *surface) {
 		*/
 		/* destra */
 		glColor3f(0.0f, 1.0f, 0.0f);
-		glTexCoord2f(0.0f, opengl.texture.y);
+		glTexCoord2f(opengl.texcoords.l, opengl.texcoords.t);
 		glVertex3f(+x_vertex, -y_vertex, +z_vertex);
-		glTexCoord2f(opengl.texture.x, opengl.texture.y);
+		glTexCoord2f(opengl.texcoords.r, opengl.texcoords.t);
 		glVertex3f(+x_vertex, -y_vertex, -z_vertex);
-		glTexCoord2f(opengl.texture.x, 0.0f);
+		glTexCoord2f(opengl.texcoords.r, opengl.texcoords.b);
 		glVertex3f(+x_vertex, +y_vertex, -z_vertex);
-		glTexCoord2f(0.0f, 0.0f);
+		glTexCoord2f(opengl.texcoords.l, opengl.texcoords.b);
 		glVertex3f(+x_vertex, +y_vertex, +z_vertex);
 		/* sinistra */
 		glColor3f(0.0f, 0.0f, 1.0f);
-		glTexCoord2f(0.0f, opengl.texture.y);
+		glTexCoord2f(opengl.texcoords.l, opengl.texcoords.t);
 		glVertex3f(-x_vertex, -y_vertex, -z_vertex);
-		glTexCoord2f(opengl.texture.x, opengl.texture.y);
+		glTexCoord2f(opengl.texcoords.r, opengl.texcoords.t);
 		glVertex3f(-x_vertex, -y_vertex, +z_vertex);
-		glTexCoord2f(opengl.texture.x, 0.0f);
+		glTexCoord2f(opengl.texcoords.r, opengl.texcoords.b);
 		glVertex3f(-x_vertex, +y_vertex, +z_vertex);
-		glTexCoord2f(0.0f, 0.0f);
+		glTexCoord2f(opengl.texcoords.l, opengl.texcoords.b);
 		glVertex3f(-x_vertex, +y_vertex, -z_vertex);
 	glEnd();
 

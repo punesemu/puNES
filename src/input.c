@@ -210,8 +210,11 @@ BYTE input_rd_reg_zapper(BYTE openbus, WORD **screen_index, _port *port) {
 	if (!gui.right_button) {
 #if defined SDL
 		if (gfx.opengl) {
-			gx -= opengl.x_texture1;
-			gy -= opengl.y_texture1;
+			int l = (int) opengl.quadcoords.l;
+			int b = (int) opengl.quadcoords.b;
+
+			gx -= l;
+			gy -= b;
 		}
 #endif
 		x_zapper = gx / gfx.w_pr;
