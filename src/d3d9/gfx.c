@@ -88,6 +88,7 @@ struct _d3d9 {
 	_shader shader;
 
 	DWORD flags;
+	WORD number_of_adapters;
 	BOOL auto_gen_mipmap;
 	BOOL dynamic_texture;
 	BOOL texture_square_only;
@@ -126,7 +127,7 @@ BYTE gfx_init(void) {
 	overscan.up = 8;
 	overscan.down = 8;
 
-	if (gui_create() == EXIT_OK) {
+	if (gui_create() == EXIT_ERROR) {
 		fprintf(stderr, "Gui initialization failed\n");
 		return (EXIT_ERROR);
 	}
@@ -243,13 +244,17 @@ BYTE gfx_init(void) {
 			 * se abilito il PURE DEVICE, non posso utilizzare il IDirect3DDevice9_GetTransform
 			 * quando uso le shaders.
 			 */
-			//if (d3dcaps.DevCaps & D3DDEVCAPS_PUREDEVICE) {
-			//	d3d9.flags |= D3DCREATE_PUREDEVICE;
-			//}
+			if (d3dcaps.DevCaps & D3DDEVCAPS_PUREDEVICE) {
+				d3d9.flags |= D3DCREATE_PUREDEVICE;
+			}
 		} else {
 			printf("Video driver don't support hardware accelaration\n");
 			d3d9.flags = D3DCREATE_SOFTWARE_VERTEXPROCESSING;
 		}
+
+		d3d9.number_of_adapters = d3dcaps.NumberOfAdaptersInGroup;
+		d3d9.flags |= D3DCREATE_ADAPTERGROUP_DEVICE;
+		printf("adapters : %d\n", d3d9.number_of_adapters);
 
 		/* per poter verificare se le shaders sono utilizzabili devo creare il dev d3d */
 		if (d3d9_create_device(1, 1) != EXIT_OK) {
@@ -288,7 +293,7 @@ BYTE gfx_init(void) {
 	 * come filtro ma anche nel gfx_set_screen() per
 	 * generare la paletta dei colori.
 	 */
-	if (ntsc_init(0, 0, 0, 0, 0) == EXIT_OK) {
+	if (ntsc_init(0, 0, 0, 0, 0) == EXIT_ERROR) {
 		return (EXIT_ERROR);
 	}
 
@@ -515,9 +520,19 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 	/* salvo il nuovo tipo di paletta */
 	cfg->palette = palette;
 
-	d3d9.scale_force = FALSE;
-	d3d9.scale = cfg->scale;
-	d3d9.factor = 1;
+	switch (cfg->filter) {
+		case NO_FILTER:
+		case BILINEAR:
+			d3d9.scale_force = TRUE;
+			d3d9.scale = X1;
+			d3d9.factor = cfg->scale;
+			break;
+		default:
+			d3d9.scale_force = FALSE;
+			d3d9.scale = cfg->scale;
+			d3d9.factor = X1;
+			break;
+	}
 	d3d9.shader.id = SHADER_NONE;
 	gfx.hlsl.used = FALSE;
 
@@ -568,7 +583,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 			case HQ4X:
 				hlsl_up(hqNx, SHADER_HQ2X);
 				d3d9.scale = X2;
-				d3d9.factor = 2;
+				d3d9.factor = X2;
 				break;
 		}
 	}
@@ -681,7 +696,12 @@ void gfx_draw_screen(BYTE forced) {
 
 	IDirect3DDevice9_EndScene(d3d9.dev);
 
+	//double start = gui_get_ms();
+
 	IDirect3DDevice9_Present(d3d9.dev, NULL, NULL, NULL, NULL);
+
+	//double stop = gui_get_ms();
+	//printf("ms draw = %f\r", stop - start);
 }
 void gfx_reset_video(void) {
 	return;
@@ -700,8 +720,6 @@ void gfx_quit(void) {
 		IDirect3D9_Release(d3d9.d3d);
 		d3d9.d3d = NULL;
 	}
-
-    return;
 }
 
 
@@ -778,9 +796,9 @@ BYTE d3d9_create_context(UINT width, UINT height) {
 		IDirect3DDevice9_SetTextureStageState(d3d9.dev, 0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
 
 		d3d9.texcoords.l = 0.0f;
-		d3d9.texcoords.r = (FLOAT) width / (d3d9.texture.w * (FLOAT) d3d9.factor);
+		d3d9.texcoords.r = (FLOAT) width / (d3d9.texture.w * d3d9.factor);
 		d3d9.texcoords.t = 0.0f;
-		d3d9.texcoords.b = (FLOAT) height / (d3d9.texture.h * (FLOAT) d3d9.factor);
+		d3d9.texcoords.b = (FLOAT) height / (d3d9.texture.h * d3d9.factor);
 
 		{
 			/* aspect ratio */
@@ -903,29 +921,39 @@ void d3d9_release_context(void) {
 	}
 }
 BYTE d3d9_create_device(UINT width, UINT height) {
-	D3DPRESENT_PARAMETERS d3dpp;
+	D3DPRESENT_PARAMETERS d3dpp[d3d9.number_of_adapters];
 
 	if (d3d9.dev) {
 		IDirect3DDevice9_Release(d3d9.dev);
 		d3d9.dev = NULL;
 	}
 
-	ZeroMemory(&d3dpp, sizeof(d3dpp));
-	d3dpp.Windowed = TRUE;
-	d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
-	d3dpp.hDeviceWindow = gui_emu_frame_id();
-	d3dpp.BackBufferCount = 1;
-	d3dpp.BackBufferFormat = d3d9.display_mode.Format;
-	d3dpp.BackBufferWidth = width;
-	d3dpp.BackBufferHeight = height;
-	d3dpp.MultiSampleQuality = D3DMULTISAMPLE_NONE;
+	ZeroMemory(&d3dpp, d3d9.number_of_adapters * sizeof(D3DPRESENT_PARAMETERS));
+
+	{
+		int i;
+
+		for (i = 0; i < d3d9.number_of_adapters; i++) {
+			d3dpp[i].Windowed = TRUE;
+			d3dpp[i].SwapEffect = D3DSWAPEFFECT_DISCARD;
+			d3dpp[i].hDeviceWindow = gui_emu_frame_id();
+			d3dpp[i].BackBufferCount = 1;
+			d3dpp[i].BackBufferFormat = d3d9.display_mode.Format;
+			d3dpp[i].BackBufferWidth = width;
+			d3dpp[i].BackBufferHeight = height;
+			//d3dpp[i].EnableAutoDepthStencil = TRUE;
+			//d3dpp[i].AutoDepthStencilFormat = D3DFMT_D16;
+			d3dpp[i].MultiSampleQuality = D3DMULTISAMPLE_NONE;
+			d3dpp[i].PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
+		}
+	}
 
 	if (IDirect3D9_CreateDevice(d3d9.d3d,
 			D3DADAPTER_DEFAULT,
 			D3DDEVTYPE_HAL,
 			gui_emu_frame_id(),
 			d3d9.flags,
-			&d3dpp,
+			d3dpp,
 			&d3d9.dev) != D3D_OK) {
 		fprintf(stderr, "Unable to create d3d device\n");
 		return (EXIT_ERROR);
@@ -1121,7 +1149,7 @@ BYTE d3d9_create_shader(_shader *shd) {
 				return (EXIT_ERROR);
 			default:
 				fprintf(stderr, "Pixel shader error : 0x%lx\n", hr);
-				if (buffer_errors){
+				if (buffer_errors) {
 					LPVOID errors = ID3DXBuffer_GetBufferPointer(buffer_errors);
 
 					fprintf(stderr, "Pixel shader compile error : %s\n", (const char *) errors);
