@@ -89,7 +89,7 @@ BYTE gfx_init(void) {
 	overscan.up = 8;
 	overscan.down = 8;
 
-	if (gui_create() == EXIT_OK) {
+	if (gui_create() == EXIT_ERROR) {
 		fprintf(stderr, "gui initialization failed\n");
 		return (EXIT_ERROR);
 	}
@@ -155,7 +155,7 @@ BYTE gfx_init(void) {
 	 * come filtro ma anche nel gfx_set_screen() per
 	 * generare la paletta dei colori.
 	 */
-	if (ntsc_init(0, 0, 0, 0, 0) == EXIT_OK) {
+	if (ntsc_init(0, 0, 0, 0, 0) == EXIT_ERROR) {
 		return (EXIT_ERROR);
 	}
 
@@ -538,7 +538,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 
 		opengl.scale_force = FALSE;
 		opengl.scale = cfg->scale;
-		opengl.factor = 1;
+		opengl.factor = X1;
 		opengl.glsl.shader_used = FALSE;
 		shader.id = SHADER_NONE;
 		opengl.interpolation = FALSE;
@@ -592,7 +592,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 					/*
 					opengl.scale_force = TRUE;
 					opengl.scale = X2;
-					opengl.factor = 2;
+					opengl.factor = X2;
 					opengl.glsl.shader_used = TRUE;
 					shader.id = SHADER_SCALE2X;
 					opengl.effect = scaleNx;
@@ -605,7 +605,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 				case HQ4X:
 					glsl_up(hqNx, SHADER_HQ2X);
 					opengl.scale = X2;
-					opengl.factor = 2;
+					opengl.factor = X2;
 					break;
 			}
 
@@ -613,11 +613,11 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 				if ((cfg->filter >= SCALE2X) && (cfg->filter <= SCALE4X)) {
 					glsl_up(scaleNx, SHADER_NO_FILTER);
 					opengl.scale = X2;
-					opengl.factor = (float) cfg->scale / 2.0;
+					opengl.factor = (float) cfg->scale / 2.0f;
 				} else if ((cfg->filter >= HQ2X) && (cfg->filter <= HQ4X)) {
 					glsl_up(hqNx, SHADER_NO_FILTER);
 					opengl.scale = X2;
-					opengl.factor = (float) cfg->scale / 2.0;
+					opengl.factor = (float) cfg->scale / 2.0f;
 				}
 			}
 		}
