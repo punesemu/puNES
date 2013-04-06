@@ -5,9 +5,9 @@
  *      Author: fhorse
  */
 
+#include "win.h"
 #include <d3d9.h>
 #include <d3dx9shader.h>
-#include "win.h"
 #include "emu.h"
 #include "gfx.h"
 #include "cfg_file.h"
@@ -63,40 +63,53 @@
 	/* ed infine utilizzo la nuova */\
 	ntsc_set(cfg->ntsc_format, FALSE, 0, (BYTE *) palette_RGB,(BYTE *) palette_RGB)
 
+#define D3D9_ADAPTER(i) (_d3d9_adapter *) ((BYTE *) d3d9.array + (i * sizeof(_d3d9_adapter)))
+
 enum power_of_two_switch { NO_POWER_OF_TWO, POWER_OF_TWO };
 
 typedef struct {
 	FLOAT l, r;
 	FLOAT t, b;
 } _texcoords;
+typedef struct {
+	UINT id;
+
+	LPDIRECT3DDEVICE9 dev;
+	D3DDISPLAYMODE display_mode;
+
+	DWORD flags;
+
+	WORD bit_per_pixel;
+	WORD number_of_monitors;
+
+	BOOL auto_gen_mipmap;
+	BOOL dynamic_texture;
+	BOOL texture_square_only;
+	BOOL hlsl_compliant;
+} _d3d9_adapter;
 struct _d3d9 {
 	LPDIRECT3D9 d3d;
-	LPDIRECT3DDEVICE9 dev;
 	LPDIRECT3DVERTEXBUFFER9 quad;
-	D3DDISPLAYMODE display_mode;
 
 	D3DXMATRIX world;
 	D3DXMATRIX view;
 	D3DXMATRIX projection;
 
+	UINT adapters_on_system;
+	UINT adapters_in_use;
+	_d3d9_adapter *array, *adapter;
+
 	_texture texture;
 	_texcoords texcoords;
 	_texcoords quadcoords;
+	_shader shader;
 
 	uint32_t *palette;
 
-	_shader shader;
-
-	DWORD flags;
-	WORD number_of_adapters;
-	BOOL auto_gen_mipmap;
-	BOOL dynamic_texture;
-	BOOL texture_square_only;
-	WORD texture_create_usage;
 	BOOL scale_force;
+	BOOL interpolation;
 	FLOAT scale;
 	FLOAT factor;
-	BOOL interpolation;
 } d3d9;
 typedef struct {
 	FLOAT x, y, z, rhw;
@@ -104,9 +117,10 @@ typedef struct {
 } vertex;
 #define FVF (D3DFVF_XYZRHW | D3DFVF_TEX1)
 
+void d3d9_set_adapter(_d3d9_adapter *adapter);
+BYTE d3d9_create_device(UINT width, UINT height);
 BYTE d3d9_create_context(UINT width, UINT height);
 void d3d9_release_context(void);
-BYTE d3d9_create_device(UINT width, UINT height);
 BYTE d3d9_create_texture(_texture *texture, uint32_t width, uint32_t height, uint8_t interpolation,
         uint8_t pow);
 void d3d9_release_texture(_texture *texture);
@@ -139,154 +153,195 @@ BYTE gfx_init(void) {
 	 */
 	cfg->filter =  NO_FILTER;
 
+	if ((d3d9.d3d = Direct3DCreate9(D3D_SDK_VERSION)) == NULL) {
+		fprintf(stderr, "Unable to create d3d device\n");
+		return (EXIT_ERROR);
+	}
+
+	/* mi passo in rassegna tutti gli adapter presenti sul sistema */
+	d3d9.adapters_on_system = IDirect3D9_GetAdapterCount(d3d9.d3d);
+
+	if (!(d3d9.array = malloc(d3d9.adapters_on_system * sizeof(_d3d9_adapter)))) {
+		fprintf(stderr, "Unable to create devices array\n");
+		return (EXIT_ERROR);
+	}
+
 	{
-		D3DCAPS9 d3dcaps;
+#define dev_error(s) fprintf(stderr, "adapter %d : "s, dev->id)
+#define dev_info(s) printf("adapter %d : "s, dev->id)
+#define dev_info_args(s, ...) printf("adapter %d : "s, dev->id, __VA_ARGS__)
 
-		if ((d3d9.d3d = Direct3DCreate9(D3D_SDK_VERSION)) == NULL) {
-			fprintf(stderr, "Unable to create d3d device\n");
-			return (EXIT_ERROR);
-		}
+		int this;
 
-		if (IDirect3D9_GetAdapterDisplayMode(d3d9.d3d, D3DADAPTER_DEFAULT, &d3d9.display_mode)
-		        != D3D_OK) {
-			fprintf(stderr, "Unable to get adapter display mode\n");
-			return (EXIT_ERROR);
-		}
+		for (this = 0; this < d3d9.adapters_on_system; this++) {
+			_d3d9_adapter *dev = D3D9_ADAPTER(d3d9.adapters_in_use);
+			D3DADAPTER_IDENTIFIER9 info;
+			D3DCAPS9 d3dcaps;
 
-		{
-			BOOL supported = FALSE;
+			memset(dev, 0x00, sizeof(_d3d9_adapter));
+
+			dev->id = this;
+
+			if (IDirect3D9_GetAdapterIdentifier(d3d9.d3d, dev->id, 0, &info)!= D3D_OK) {
+				dev_error("Unable to get adapter display info\n");
+				continue;
+			}
+
+			dev_info_args("%s\n", info.Description);
+
+			if (IDirect3D9_GetAdapterDisplayMode(d3d9.d3d, dev->id, &dev->display_mode)
+					!= D3D_OK) {
+				dev_error("unable to get adapter display mode\n");
+				continue;
+			}
 
 			/* 32 bit */
-			if ((d3d9.display_mode.Format == D3DFMT_X8R8G8B8)
-					|| (d3d9.display_mode.Format == D3DFMT_A8R8G8B8)) {
-				supported = TRUE;
-				gfx.bit_per_pixel = 32;
+			if ((dev->display_mode.Format == D3DFMT_X8R8G8B8)
+					|| (dev->display_mode.Format == D3DFMT_A8R8G8B8)) {
+				dev->bit_per_pixel = 32;
 			}
 			/* 24 bit */
-			if (d3d9.display_mode.Format == D3DFMT_R8G8B8) {
-				supported = TRUE;
-				gfx.bit_per_pixel = 24;
+			if (dev->display_mode.Format == D3DFMT_R8G8B8) {
+				dev->bit_per_pixel = 24;
 			}
 			/* 16 bit */
-			if ((d3d9.display_mode.Format == D3DFMT_A1R5G5B5)
-					|| (d3d9.display_mode.Format == D3DFMT_X1R5G5B5)) {
-				supported = TRUE;
-				gfx.bit_per_pixel = 16;
+			if ((dev->display_mode.Format == D3DFMT_A1R5G5B5)
+					|| (dev->display_mode.Format == D3DFMT_X1R5G5B5)) {
+				dev->bit_per_pixel = 16;
 			}
 			/* 16 bit */
-			if (d3d9.display_mode.Format == D3DFMT_R5G6B5) {
-				supported = TRUE;
-				gfx.bit_per_pixel = 16;
+			if (dev->display_mode.Format == D3DFMT_R5G6B5) {
+				dev->bit_per_pixel = 16;
+			}
+			if (dev->bit_per_pixel < 16) {
+				dev_error("video mode < 16 bits are not supported\n");
+				continue;
 			}
 
-			if (supported == FALSE) {
-				fprintf(stderr, "Sorry but video mode < 16 bits are not supported\n");
-				return (EXIT_ERROR);
+			/* Check for hardware T&L */
+			if (IDirect3D9_GetDeviceCaps(d3d9.d3d,
+					dev->id,
+					D3DDEVTYPE_HAL,
+					&d3dcaps) != D3D_OK) {
+				dev_error("unable to get device caps\n");
+				continue;
 			}
-		}
 
-		/* Check for hardware T&L */
-		if (IDirect3D9_GetDeviceCaps(d3d9.d3d,
-				D3DADAPTER_DEFAULT,
-				D3DDEVTYPE_HAL,
-				&d3dcaps) != D3D_OK) {
-			fprintf(stderr, "Unable to get device caps\n");
-			return (EXIT_ERROR);
-		}
-
-		/* The driver is capable of automatically generating mipmaps */
-		/*
-		 * The resource will automatically generate mipmaps. See Automatic
-		 * Generation of Mipmaps (Direct3D 9). Automatic generation of mipmaps
-		 * is not supported for volume textures and depth stencil
-		 * surfaces/textures. This usage is not valid for a resource in
-		 * system memory (D3DPOOL_SYSTEMMEM).
-		 */
-		if ((d3dcaps.Caps2 & D3DCAPS2_CANAUTOGENMIPMAP) && (IDirect3D9_CheckDeviceFormat(d3d9.d3d,
-				D3DADAPTER_DEFAULT,
-				D3DDEVTYPE_HAL,
-				d3d9.display_mode.Format,
-				D3DUSAGE_AUTOGENMIPMAP,
-				D3DRTYPE_TEXTURE,
-				d3d9.display_mode.Format) == D3D_OK)) {
-			d3d9.auto_gen_mipmap = TRUE;
-		} else {
-			printf("Video driver don't support automatic generation of mipmap\n");
-			d3d9.auto_gen_mipmap = FALSE;
-		}
-
-		if (d3dcaps.Caps2 & D3DCAPS2_DYNAMICTEXTURES) {
-			d3d9.dynamic_texture = TRUE;
-		} else {
-			printf("Video driver don't support dynamic texture\n");
-			d3d9.dynamic_texture = FALSE;
-		}
-
-		if (d3dcaps.TextureCaps & D3DPTEXTURECAPS_SQUAREONLY) {
-			printf("Video driver support only square texture\n");
-			d3d9.texture_square_only = TRUE;
-		} else {
-			d3d9.texture_square_only = FALSE;
-		}
-
-		/*
-		 * Device can accelerate a memory copy from system memory to local video memory.
-		 * This cap guarantees that UpdateSurface and UpdateTexture calls will be hardware
-		 * accelerated. If this cap is absent, these calls will succeed but will be slower.
-		 */
-		if (!(d3dcaps.Caps3 & D3DCAPS3_COPY_TO_VIDMEM)) {
-			printf("Video driver don't support accelerated texture update\n");
-		}
-
-		if (d3dcaps.DevCaps & D3DDEVCAPS_HWTRANSFORMANDLIGHT) {
-			d3d9.flags = D3DCREATE_HARDWARE_VERTEXPROCESSING;
+			/* The driver is capable of automatically generating mipmaps */
 			/*
-			 * se abilito il PURE DEVICE, non posso utilizzare il IDirect3DDevice9_GetTransform
-			 * quando uso le shaders.
-			 */
-			if (d3dcaps.DevCaps & D3DDEVCAPS_PUREDEVICE) {
-				d3d9.flags |= D3DCREATE_PUREDEVICE;
-			}
-		} else {
-			printf("Video driver don't support hardware accelaration\n");
-			d3d9.flags = D3DCREATE_SOFTWARE_VERTEXPROCESSING;
-		}
-
-		d3d9.number_of_adapters = d3dcaps.NumberOfAdaptersInGroup;
-		d3d9.flags |= D3DCREATE_ADAPTERGROUP_DEVICE;
-		printf("adapters : %d\n", d3d9.number_of_adapters);
-
-		/* per poter verificare se le shaders sono utilizzabili devo creare il dev d3d */
-		if (d3d9_create_device(1, 1) != EXIT_OK) {
-			return (EXIT_ERROR);
-		}
-
-		{
-			gfx.hlsl.compliant = FALSE;
-
-			if (d3dcaps.PixelShaderVersion < D3DPS_VERSION(2, 0) ||
-					(d3dcaps.VertexShaderVersion < D3DVS_VERSION(2, 0))) {
-				printf("Video driver don't support shaders >= 2.0\n");
+		 	 * The resource will automatically generate mipmaps. See Automatic
+		 	 * Generation of Mipmaps (Direct3D 9). Automatic generation of mipmaps
+		 	 * is not supported for volume textures and depth stencil
+		 	 * surfaces/textures. This usage is not valid for a resource in
+		 	 * system memory (D3DPOOL_SYSTEMMEM).
+		 	 */
+			if ((d3dcaps.Caps2 & D3DCAPS2_CANAUTOGENMIPMAP) &&
+					(IDirect3D9_CheckDeviceFormat(d3d9.d3d,
+							dev->id,
+							D3DDEVTYPE_HAL,
+							dev->display_mode.Format,
+							D3DUSAGE_AUTOGENMIPMAP,
+							D3DRTYPE_TEXTURE,
+							dev->display_mode.Format) == D3D_OK)) {
+				dev->auto_gen_mipmap = TRUE;
 			} else {
-				_shader tmp;
+				dev->auto_gen_mipmap = FALSE;
+				dev_info("don't support automatic generation of mipmap\n");
+			}
 
-				memset(&tmp, 0x00, sizeof(_shader));
+			if (d3dcaps.Caps2 & D3DCAPS2_DYNAMICTEXTURES) {
+				dev->dynamic_texture = TRUE;
+			} else {
+				dev->dynamic_texture = FALSE;
+				dev_info("don't support dynamic texture\n");
+			}
 
-				tmp.id = SHADER_COLOR;
+			if (d3dcaps.TextureCaps & D3DPTEXTURECAPS_SQUAREONLY) {
+				dev->texture_square_only = TRUE;
+				dev_info("support only square texture\n");
+			} else {
+				dev->texture_square_only = FALSE;
+			}
 
-				if (d3d9_create_shader(&tmp) == EXIT_OK) {
-					d3d9_release_shader(&tmp);
-					gfx.hlsl.compliant = TRUE;
+			/*
+		 	 * Device can accelerate a memory copy from system memory to local video memory.
+		 	 * This cap guarantees that UpdateSurface and UpdateTexture calls will be hardware
+		 	 * accelerated. If this cap is absent, these calls will succeed but will be slower.
+		 	 */
+			if (!(d3dcaps.Caps3 & D3DCAPS3_COPY_TO_VIDMEM)) {
+				dev_info("don't support accelerated texture update\n");
+			}
+
+			if (d3dcaps.DevCaps & D3DDEVCAPS_HWTRANSFORMANDLIGHT) {
+				dev->flags = D3DCREATE_HARDWARE_VERTEXPROCESSING;
+				/*
+				 * se abilito il PURE DEVICE, non posso utilizzare il
+				 * IDirect3DDevice9_GetTransform quando uso le shaders.
+				 */
+				if (d3dcaps.DevCaps & D3DDEVCAPS_PUREDEVICE) {
+					dev->flags |= D3DCREATE_PUREDEVICE;
 				}
+			} else {
+				dev_info("don't support hardware accelaration\n");
+				dev->flags = D3DCREATE_SOFTWARE_VERTEXPROCESSING;
 			}
 
-			if (gfx.hlsl.compliant == FALSE) {
-				printf("Shaders are not supported\n");
-				gfx_set_render(RENDER_SOFTWARE);
-				cfg->render = RENDER_SOFTWARE;
+			dev->number_of_monitors = d3dcaps.NumberOfAdaptersInGroup;
+
+			//if (dev->number_of_monitors > 1) {
+				dev_info_args("MasterAdapterOrdinal    %d\n", d3dcaps.MasterAdapterOrdinal);
+				dev_info_args("AdapterOrdinalInGroup   %d\n", d3dcaps.AdapterOrdinalInGroup);
+				dev_info_args("NumberOfAdaptersInGroup %d\n", dev->number_of_monitors);
+				//dev->flags |= D3DCREATE_ADAPTERGROUP_DEVICE;
+			//}
+
+			{
+				d3d9.adapter = dev;
+
+				/* per poter verificare se le shaders sono utilizzabili devo creare il dev d3d */
+				if (d3d9_create_device(1, 1) != EXIT_OK) {
+					continue;
+				}
+
+				dev->hlsl_compliant = FALSE;
+
+				if (d3dcaps.PixelShaderVersion < D3DPS_VERSION(2, 0) ||
+						(d3dcaps.VertexShaderVersion < D3DVS_VERSION(2, 0))) {
+					dev_info("don't support shaders >= 2.0\n");
+				} else {
+					_shader tmp;
+
+					memset(&tmp, 0x00, sizeof(_shader));
+
+					tmp.id = SHADER_COLOR;
+
+					if (d3d9_create_shader(&tmp) == EXIT_OK) {
+						d3d9_release_shader(&tmp);
+						dev->hlsl_compliant = TRUE;
+					}
+				}
+
+				if (dev->hlsl_compliant == FALSE) {
+					dev_info("shaders are not supported\n");
+				}
+
+				d3d9.adapter = NULL;
 			}
+
+			d3d9.adapters_in_use++;
 		}
+
+#undef dev_error
+#undef dev_info
+#undef dev_info_args
 	}
+
+	if (d3d9.adapters_in_use == 0) {
+		fprintf(stderr, "Unable find usable adapter\n");
+		return (EXIT_ERROR);
+	}
+
+	d3d9_set_adapter(D3D9_ADAPTER(0));
 
 	/*
 	 * inizializzo l'ntsc che utilizzero' non solo
@@ -657,54 +712,83 @@ void gfx_draw_screen(BYTE forced) {
 		IDirect3DSurface9_UnlockRect(d3d9.texture.surface.data);
 
 		/* aggiorno la texture */
-		IDirect3DDevice9_UpdateSurface(d3d9.dev, d3d9.texture.surface.data, NULL,
+		IDirect3DDevice9_UpdateSurface(d3d9.adapter->dev, d3d9.texture.surface.data, NULL,
 				d3d9.texture.map0, NULL);
 	}
 
-	IDirect3DDevice9_Clear(d3d9.dev, 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_ARGB(255, 0, 0, 0),
-			1.0f, 0);
+	IDirect3DDevice9_Clear(d3d9.adapter->dev, 0, NULL, D3DCLEAR_TARGET,
+			D3DCOLOR_ARGB(255, 0, 0, 0), 1.0f, 0);
 
 	/* inizio */
-	IDirect3DDevice9_BeginScene(d3d9.dev);
+	IDirect3DDevice9_BeginScene(d3d9.adapter->dev);
 
 	if (gfx.hlsl.used == TRUE) {
 		/* comunico con il vertex shader */
 		D3DXMATRIX world_view_projection;
 
 		//D3DXMATRIX matrix_world, matrix_view, matrix_proj;
-		//IDirect3DDevice9_GetTransform(d3d9.dev, D3DTS_WORLD, &matrix_world);
-		//IDirect3DDevice9_GetTransform(d3d9.dev, D3DTS_VIEW, &matrix_view);
-		//IDirect3DDevice9_GetTransform(d3d9.dev, D3DTS_PROJECTION, &matrix_proj);
+		//IDirect3DDevice9_GetTransform(d3d9.adapter->dev, D3DTS_WORLD, &matrix_world);
+		//IDirect3DDevice9_GetTransform(d3d9.adapter->dev, D3DTS_VIEW, &matrix_view);
+		//IDirect3DDevice9_GetTransform(d3d9.adapter->dev, D3DTS_PROJECTION, &matrix_proj);
 
 		D3DXMatrixMultiply(&world_view_projection, &d3d9.world, &d3d9.view);
 		D3DXMatrixMultiply(&world_view_projection, &world_view_projection, &d3d9.projection);
 
-		ID3DXConstantTable_SetMatrix(d3d9.shader.table_vrt, d3d9.dev, "m_world_view_projection",
-				&world_view_projection);
+		ID3DXConstantTable_SetMatrix(d3d9.shader.table_vrt, d3d9.adapter->dev,
+				"m_world_view_projection", &world_view_projection);
 
 		/* faccio il resto */
-		IDirect3DDevice9_SetFVF(d3d9.dev, FVF);
-		IDirect3DDevice9_SetStreamSource(d3d9.dev, 0, d3d9.quad, 0, sizeof(vertex));
-		if (d3d9.shader.vrt) { IDirect3DDevice9_SetVertexShader(d3d9.dev, d3d9.shader.vrt); }
-		if (d3d9.shader.pxl) { IDirect3DDevice9_SetPixelShader(d3d9.dev, d3d9.shader.pxl); }
-		IDirect3DDevice9_DrawPrimitive(d3d9.dev, D3DPT_TRIANGLEFAN, 0, 2);
+		IDirect3DDevice9_SetFVF(d3d9.adapter->dev, FVF);
+		IDirect3DDevice9_SetStreamSource(d3d9.adapter->dev, 0, d3d9.quad, 0, sizeof(vertex));
+		if (d3d9.shader.vrt) {
+			IDirect3DDevice9_SetVertexShader(d3d9.adapter->dev, d3d9.shader.vrt);
+		}
+		if (d3d9.shader.pxl) {
+			IDirect3DDevice9_SetPixelShader(d3d9.adapter->dev, d3d9.shader.pxl);
+		}
+		IDirect3DDevice9_DrawPrimitive(d3d9.adapter->dev, D3DPT_TRIANGLEFAN, 0, 2);
 	} else {
-		IDirect3DDevice9_SetFVF(d3d9.dev, FVF);
-		IDirect3DDevice9_SetStreamSource(d3d9.dev, 0, d3d9.quad, 0, sizeof(vertex));
-		IDirect3DDevice9_DrawPrimitive(d3d9.dev, D3DPT_TRIANGLEFAN, 0, 2);
+		IDirect3DDevice9_SetFVF(d3d9.adapter->dev, FVF);
+		IDirect3DDevice9_SetStreamSource(d3d9.adapter->dev, 0, d3d9.quad, 0, sizeof(vertex));
+		IDirect3DDevice9_DrawPrimitive(d3d9.adapter->dev, D3DPT_TRIANGLEFAN, 0, 2);
 	}
 
-	IDirect3DDevice9_EndScene(d3d9.dev);
+	IDirect3DDevice9_EndScene(d3d9.adapter->dev);
 
 	//double start = gui_get_ms();
-
-	IDirect3DDevice9_Present(d3d9.dev, NULL, NULL, NULL, NULL);
-
+	IDirect3DDevice9_Present(d3d9.adapter->dev, NULL, NULL, NULL, NULL);
 	//double stop = gui_get_ms();
 	//printf("ms draw = %f\r", stop - start);
 }
-void gfx_reset_video(void) {
-	return;
+void gfx_control_change_monitor(void *monitor) {
+	_d3d9_adapter *old_adapter = d3d9.adapter;
+	HMONITOR *in_use = monitor;
+	int i;
+
+	if ((*in_use) == IDirect3D9_GetAdapterMonitor(d3d9.d3d, d3d9.adapter->id)) {
+		return;
+	}
+
+	for (i = 0; i < d3d9.adapters_in_use; i++) {
+		_d3d9_adapter *adapter = D3D9_ADAPTER(i);
+
+		if ((*in_use) == IDirect3D9_GetAdapterMonitor(d3d9.d3d, adapter->id)) {
+			d3d9_release_context();
+
+			d3d9_set_adapter(adapter);
+			if (d3d9_create_context(gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE]) == EXIT_OK) {
+				return;
+			}
+			fprintf(stderr, "Unable to initialize new d3d context\n");
+
+			d3d9_set_adapter(old_adapter);
+			if (d3d9_create_context(gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE]) == EXIT_OK) {
+				return;
+			}
+			fprintf(stderr, "Unable to initialize old d3d context\n");
+			break;
+		}
+	}
 }
 void gfx_quit(void) {
 	ntsc_quit();
@@ -716,13 +800,78 @@ void gfx_quit(void) {
 
 	d3d9_release_context();
 
+	{
+		int i;
+
+		for (i = 0; i < d3d9.adapters_in_use; i++) {
+			_d3d9_adapter *dev = D3D9_ADAPTER(i);
+
+			if (dev->dev) {
+				IDirect3DDevice9_Release(dev->dev);
+				dev->dev = NULL;
+			}
+
+		}
+	}
+
 	if (d3d9.d3d) {
 		IDirect3D9_Release(d3d9.d3d);
 		d3d9.d3d = NULL;
 	}
+
+	if (d3d9.array) {
+		free(d3d9.array);
+		d3d9.array = d3d9.adapter = NULL;
+	}
 }
 
+void d3d9_set_adapter(_d3d9_adapter *adapter) {
+	d3d9.adapter = adapter;
 
+	gfx.bit_per_pixel = d3d9.adapter->bit_per_pixel;
+	gfx.hlsl.compliant = d3d9.adapter->hlsl_compliant;
+
+	if (gfx.hlsl.compliant == FALSE) {
+		gfx_set_render(RENDER_SOFTWARE);
+		cfg->render = RENDER_SOFTWARE;
+	}
+}
+BYTE d3d9_create_device(UINT width, UINT height) {
+	D3DPRESENT_PARAMETERS d3dpp;
+
+	if (d3d9.adapter->dev) {
+		IDirect3DDevice9_Release(d3d9.adapter->dev);
+		d3d9.adapter->dev = NULL;
+	}
+
+	ZeroMemory(&d3dpp, sizeof(D3DPRESENT_PARAMETERS));
+	d3dpp.Windowed = TRUE;
+	d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
+	d3dpp.hDeviceWindow = gui_emu_frame_id();
+	d3dpp.BackBufferCount = 1;
+	d3dpp.BackBufferFormat = d3d9.adapter->display_mode.Format;
+	d3dpp.BackBufferWidth = width;
+	d3dpp.BackBufferHeight = height;
+	d3dpp.EnableAutoDepthStencil = TRUE;
+	d3dpp.AutoDepthStencilFormat = D3DFMT_D16;
+	d3dpp.MultiSampleQuality = D3DMULTISAMPLE_NONE;
+	d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
+	//d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;
+	//d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_ONE;
+
+	if (IDirect3D9_CreateDevice(d3d9.d3d,
+			d3d9.adapter->id,
+			D3DDEVTYPE_HAL,
+			gui_emu_frame_id(),
+			d3d9.adapter->flags | D3DCREATE_MULTITHREADED | D3DCREATE_FPU_PRESERVE,
+			&d3dpp,
+			&d3d9.adapter->dev) != D3D_OK) {
+		fprintf(stderr, "Unable to create d3d device\n");
+		return (EXIT_ERROR);
+	}
+
+	return (EXIT_OK);
+}
 BYTE d3d9_create_context(UINT width, UINT height) {
 	d3d9_release_context();
 
@@ -730,7 +879,7 @@ BYTE d3d9_create_context(UINT width, UINT height) {
 		return (EXIT_ERROR);
 	}
 
-	if (IDirect3DDevice9_CreateVertexBuffer(d3d9.dev,
+	if (IDirect3DDevice9_CreateVertexBuffer(d3d9.adapter->dev,
 			4 * sizeof(vertex),
 			D3DUSAGE_WRITEONLY,
 			FVF,
@@ -760,40 +909,49 @@ BYTE d3d9_create_context(UINT width, UINT height) {
 			}
 		}
 
-		IDirect3DDevice9_SetTexture(d3d9.dev, 0, (IDirect3DBaseTexture9 *) d3d9.texture.data);
+		IDirect3DDevice9_SetTexture(d3d9.adapter->dev, 0,
+				(IDirect3DBaseTexture9 *) d3d9.texture.data);
 
 		if (d3d9.interpolation == TRUE) {
-			IDirect3DDevice9_SetSamplerState(d3d9.dev, 0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
-			IDirect3DDevice9_SetSamplerState(d3d9.dev, 0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
-			IDirect3DDevice9_SetSamplerState(d3d9.dev, 0, D3DSAMP_MIPFILTER, D3DTEXF_NONE);
+			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
+					D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
+			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
+					D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
+			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
+					D3DSAMP_MIPFILTER, D3DTEXF_NONE);
 		} else {
-			IDirect3DDevice9_SetSamplerState(d3d9.dev, 0, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
-			IDirect3DDevice9_SetSamplerState(d3d9.dev, 0, D3DSAMP_MINFILTER, D3DTEXF_POINT);
-			IDirect3DDevice9_SetSamplerState(d3d9.dev, 0, D3DSAMP_MIPFILTER, D3DTEXF_NONE);
+			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
+					D3DSAMP_MAGFILTER, D3DTEXF_POINT);
+			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
+					D3DSAMP_MINFILTER, D3DTEXF_POINT);
+			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
+					D3DSAMP_MIPFILTER, D3DTEXF_NONE);
 		}
 
 		// set the fixed render state
-		IDirect3DDevice9_SetRenderState(d3d9.dev, D3DRS_ZENABLE, D3DZB_FALSE);
-		IDirect3DDevice9_SetRenderState(d3d9.dev, D3DRS_FILLMODE, D3DFILL_SOLID);
-		IDirect3DDevice9_SetRenderState(d3d9.dev, D3DRS_SHADEMODE, D3DSHADE_FLAT);
-		IDirect3DDevice9_SetRenderState(d3d9.dev, D3DRS_ZWRITEENABLE, FALSE);
-		IDirect3DDevice9_SetRenderState(d3d9.dev, D3DRS_ALPHATESTENABLE, TRUE);
-		IDirect3DDevice9_SetRenderState(d3d9.dev, D3DRS_LASTPIXEL, TRUE);
-		IDirect3DDevice9_SetRenderState(d3d9.dev, D3DRS_CULLMODE, D3DCULL_NONE);
-		IDirect3DDevice9_SetRenderState(d3d9.dev, D3DRS_ZFUNC, D3DCMP_LESS);
-		IDirect3DDevice9_SetRenderState(d3d9.dev, D3DRS_ALPHAREF, 0);
-		IDirect3DDevice9_SetRenderState(d3d9.dev, D3DRS_ALPHAFUNC, D3DCMP_GREATER);
-		IDirect3DDevice9_SetRenderState(d3d9.dev, D3DRS_DITHERENABLE, FALSE);
-		IDirect3DDevice9_SetRenderState(d3d9.dev, D3DRS_FOGENABLE, FALSE);
-		IDirect3DDevice9_SetRenderState(d3d9.dev, D3DRS_SPECULARENABLE, FALSE);
-		IDirect3DDevice9_SetRenderState(d3d9.dev, D3DRS_STENCILENABLE, FALSE);
-		IDirect3DDevice9_SetRenderState(d3d9.dev, D3DRS_WRAP0, FALSE);
-		IDirect3DDevice9_SetRenderState(d3d9.dev, D3DRS_CLIPPING, TRUE);
-		IDirect3DDevice9_SetRenderState(d3d9.dev, D3DRS_LIGHTING, FALSE);
-		IDirect3DDevice9_SetRenderState(d3d9.dev, D3DRS_COLORVERTEX, TRUE);
+		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_ZENABLE, D3DZB_FALSE);
+		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_FILLMODE, D3DFILL_SOLID);
+		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_SHADEMODE, D3DSHADE_FLAT);
+		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_ZWRITEENABLE, FALSE);
+		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_ALPHATESTENABLE, TRUE);
+		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_LASTPIXEL, TRUE);
+		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_CULLMODE, D3DCULL_NONE);
+		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_ZFUNC, D3DCMP_LESS);
+		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_ALPHAREF, 0);
+		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_ALPHAFUNC, D3DCMP_GREATER);
+		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_DITHERENABLE, FALSE);
+		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_FOGENABLE, FALSE);
+		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_SPECULARENABLE, FALSE);
+		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_STENCILENABLE, FALSE);
+		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_WRAP0, FALSE);
+		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_CLIPPING, TRUE);
+		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_LIGHTING, FALSE);
+		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_COLORVERTEX, TRUE);
 
-		IDirect3DDevice9_SetTextureStageState(d3d9.dev, 0, D3DTSS_COLOROP, D3DTOP_MODULATE);
-		IDirect3DDevice9_SetTextureStageState(d3d9.dev, 0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
+		IDirect3DDevice9_SetTextureStageState(d3d9.adapter->dev, 0,
+				D3DTSS_COLOROP, D3DTOP_MODULATE);
+		IDirect3DDevice9_SetTextureStageState(d3d9.adapter->dev, 0,
+				D3DTSS_ALPHAOP, D3DTOP_MODULATE);
 
 		d3d9.texcoords.l = 0.0f;
 		d3d9.texcoords.r = (FLOAT) width / (d3d9.texture.w * d3d9.factor);
@@ -890,13 +1048,13 @@ BYTE d3d9_create_context(UINT width, UINT height) {
 		D3DXVECTOR3 up = { 0.0f, 1.0f, 0.0f };
 
 		D3DXMatrixRotationY(&d3d9.world, 0.0f);
-		IDirect3DDevice9_SetTransform(d3d9.dev, D3DTS_WORLD, &d3d9.world);
+		IDirect3DDevice9_SetTransform(d3d9.adapter->dev, D3DTS_WORLD, &d3d9.world);
 
 		D3DXMatrixLookAtLH(&d3d9.view, &position, &target, &up);
-		IDirect3DDevice9_SetTransform(d3d9.dev, D3DTS_VIEW, &d3d9.view);
+		IDirect3DDevice9_SetTransform(d3d9.adapter->dev, D3DTS_VIEW, &d3d9.view);
 
 		D3DXMatrixPerspectiveFovLH(&d3d9.projection, D3DXToRadian(90.0f), 1.0f, 0.0f, 1.0f);
-		IDirect3DDevice9_SetTransform(d3d9.dev, D3DTS_PROJECTION, &d3d9.projection);
+		IDirect3DDevice9_SetTransform(d3d9.adapter->dev, D3DTS_PROJECTION, &d3d9.projection);
 	}
 
 	if (gfx.hlsl.enabled == TRUE) {
@@ -915,51 +1073,10 @@ void d3d9_release_context(void) {
 		d3d9.quad = NULL;
 	}
 
-	if (d3d9.dev) {
-		IDirect3DDevice9_Release(d3d9.dev);
-		d3d9.dev = NULL;
+	if (d3d9.adapter && d3d9.adapter->dev) {
+		IDirect3DDevice9_Release(d3d9.adapter->dev);
+		d3d9.adapter->dev = NULL;
 	}
-}
-BYTE d3d9_create_device(UINT width, UINT height) {
-	D3DPRESENT_PARAMETERS d3dpp[d3d9.number_of_adapters];
-
-	if (d3d9.dev) {
-		IDirect3DDevice9_Release(d3d9.dev);
-		d3d9.dev = NULL;
-	}
-
-	ZeroMemory(&d3dpp, d3d9.number_of_adapters * sizeof(D3DPRESENT_PARAMETERS));
-
-	{
-		int i;
-
-		for (i = 0; i < d3d9.number_of_adapters; i++) {
-			d3dpp[i].Windowed = TRUE;
-			d3dpp[i].SwapEffect = D3DSWAPEFFECT_DISCARD;
-			d3dpp[i].hDeviceWindow = gui_emu_frame_id();
-			d3dpp[i].BackBufferCount = 1;
-			d3dpp[i].BackBufferFormat = d3d9.display_mode.Format;
-			d3dpp[i].BackBufferWidth = width;
-			d3dpp[i].BackBufferHeight = height;
-			//d3dpp[i].EnableAutoDepthStencil = TRUE;
-			//d3dpp[i].AutoDepthStencilFormat = D3DFMT_D16;
-			d3dpp[i].MultiSampleQuality = D3DMULTISAMPLE_NONE;
-			d3dpp[i].PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
-		}
-	}
-
-	if (IDirect3D9_CreateDevice(d3d9.d3d,
-			D3DADAPTER_DEFAULT,
-			D3DDEVTYPE_HAL,
-			gui_emu_frame_id(),
-			d3d9.flags,
-			d3dpp,
-			&d3d9.dev) != D3D_OK) {
-		fprintf(stderr, "Unable to create d3d device\n");
-		return (EXIT_ERROR);
-	}
-
-	return (EXIT_OK);
 }
 BYTE d3d9_create_texture(_texture *texture, uint32_t width, uint32_t height, uint8_t interpolation,
         uint8_t pow) {
@@ -975,8 +1092,8 @@ BYTE d3d9_create_texture(_texture *texture, uint32_t width, uint32_t height, uin
 		texture->h = height;
 	}
 
-    /* se la scheda video supporta solo texture quadre allore devo crerle cosi' */
-	if (d3d9.texture_square_only == TRUE) {
+    /* se la scheda video supporta solo texture quadre allore devo crearle quadre */
+	if (d3d9.adapter->texture_square_only == TRUE) {
 		if (texture->w < texture->h) {
 			texture->w = texture->h;
 		} else {
@@ -984,20 +1101,20 @@ BYTE d3d9_create_texture(_texture *texture, uint32_t width, uint32_t height, uin
 		}
 	}
 
-	if (d3d9.dynamic_texture == TRUE) {
+	if (d3d9.adapter->dynamic_texture == TRUE) {
 		usage |= D3DUSAGE_DYNAMIC;
 	}
 
-	if (d3d9.auto_gen_mipmap == TRUE) {
+	if (d3d9.adapter->auto_gen_mipmap == TRUE) {
 		usage |= D3DUSAGE_AUTOGENMIPMAP;
 	}
 
-	if (IDirect3DDevice9_CreateTexture(d3d9.dev,
+	if (IDirect3DDevice9_CreateTexture(d3d9.adapter->dev,
 			texture->w,
 			texture->h,
 			0,
 			usage,
-			d3d9.display_mode.Format,
+			d3d9.adapter->display_mode.Format,
 			D3DPOOL_DEFAULT,
 			&texture->data,
 			NULL) != D3D_OK) {
@@ -1011,10 +1128,10 @@ BYTE d3d9_create_texture(_texture *texture, uint32_t width, uint32_t height, uin
 	texture->surface.h = height;
 
 	/* creo la superficie temporanea le cui dimensioni non devono essere "POWerate" */
-	if (IDirect3DDevice9_CreateOffscreenPlainSurface(d3d9.dev,
+	if (IDirect3DDevice9_CreateOffscreenPlainSurface(d3d9.adapter->dev,
 			texture->surface.w,
 			texture->surface.h,
-			d3d9.display_mode.Format,
+			d3d9.adapter->display_mode.Format,
 			D3DPOOL_SYSTEMMEM,
 			&texture->surface.data,
 			NULL) != D3D_OK) {
@@ -1058,7 +1175,7 @@ BYTE d3d9_create_shader(_shader *shd) {
 				NULL,
 				NULL,
 				"Vs",
-				D3DXGetVertexShaderProfile(d3d9.dev),
+				D3DXGetVertexShaderProfile(d3d9.adapter->dev),
 				flags,
 				&code,
 				&buffer_errors,
@@ -1067,7 +1184,7 @@ BYTE d3d9_create_shader(_shader *shd) {
 		switch (hr) {
 			case D3D_OK:
 				/* creo il vertex shader */
-				IDirect3DDevice9_CreateVertexShader(d3d9.dev,
+				IDirect3DDevice9_CreateVertexShader(d3d9.adapter->dev,
 						(DWORD *) ID3DXBuffer_GetBufferPointer(code),
 						&shd->vrt);
 				ID3DXBuffer_Release(code);
@@ -1100,7 +1217,7 @@ BYTE d3d9_create_shader(_shader *shd) {
 				NULL,
 				NULL,
 				"Ps",
-				D3DXGetPixelShaderProfile(d3d9.dev),
+				D3DXGetPixelShaderProfile(d3d9.adapter->dev),
 				flags,
 				&code,
 				&buffer_errors,
@@ -1110,7 +1227,7 @@ BYTE d3d9_create_shader(_shader *shd) {
 				FLOAT sse[2], svm[2], st[2], fc;
 
 				/* creo il pixel shader */
-				IDirect3DDevice9_CreatePixelShader(d3d9.dev,
+				IDirect3DDevice9_CreatePixelShader(d3d9.adapter->dev,
 						(DWORD *) ID3DXBuffer_GetBufferPointer(code),
 						&shd->pxl);
 				ID3DXBuffer_Release(code);
@@ -1123,14 +1240,14 @@ BYTE d3d9_create_shader(_shader *shd) {
 				st[1] = d3d9.texture.h;
 				fc = (FLOAT) ppu.frames;
 
-				ID3DXConstantTable_SetFloatArray(shd->table_pxl, d3d9.dev, "size_screen_emu",
-							(CONST FLOAT * ) &sse, 2);
-				ID3DXConstantTable_SetFloatArray(shd->table_pxl, d3d9.dev, "size_video_mode",
-							(CONST FLOAT * ) &svm, 2);
-				ID3DXConstantTable_SetFloatArray(shd->table_pxl, d3d9.dev, "size_texture",
-							(CONST FLOAT * ) &st, 2);
-				ID3DXConstantTable_SetFloatArray(shd->table_pxl, d3d9.dev, "frame_counter",
-							(CONST FLOAT * ) &fc, 1);
+				ID3DXConstantTable_SetFloatArray(shd->table_pxl, d3d9.adapter->dev,
+						"size_screen_emu", (CONST FLOAT * ) &sse, 2);
+				ID3DXConstantTable_SetFloatArray(shd->table_pxl, d3d9.adapter->dev,
+						"size_video_mode", (CONST FLOAT * ) &svm, 2);
+				ID3DXConstantTable_SetFloatArray(shd->table_pxl, d3d9.adapter->dev,
+						"size_texture", (CONST FLOAT * ) &st, 2);
+				ID3DXConstantTable_SetFloatArray(shd->table_pxl, d3d9.adapter->dev,
+						"frame_counter", (CONST FLOAT * ) &fc, 1);
 
 				/*
 				printf("\n");
@@ -1164,12 +1281,12 @@ BYTE d3d9_create_shader(_shader *shd) {
 }
 void d3d9_release_shader(_shader *shd) {
 	if (shd->vrt) {
-		IDirect3DDevice9_SetVertexShader(d3d9.dev, NULL);
+		IDirect3DDevice9_SetVertexShader(d3d9.adapter->dev, NULL);
 		IDirect3DVertexShader9_Release(shd->vrt);
 		shd->vrt = NULL;
 	}
 	if (shd->pxl) {
-		IDirect3DDevice9_SetPixelShader(d3d9.dev, NULL);
+		IDirect3DDevice9_SetPixelShader(d3d9.adapter->dev, NULL);
 		IDirect3DPixelShader9_Release(shd->pxl);
 		shd->pxl = NULL;
 	}

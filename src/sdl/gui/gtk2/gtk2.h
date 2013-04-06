@@ -67,7 +67,7 @@ void gui_fullscreen(void);
 void gui_timeline(void);
 void gui_save_slot(BYTE slot);
 double (*gui_get_ms)(void);
-int gui_sleep(double ms);
+void gui_sleep(double ms);
 void gui_add_event(void *funct, void *args);
 void gui_flush(void);
 void gui_set_thread_affinity(uint8_t core);

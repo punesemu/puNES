@@ -70,7 +70,7 @@ BYTE gfx_init(void);
 void gfx_set_render(BYTE render);
 void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE force_scale);
 void gfx_draw_screen(BYTE forced);
-void gfx_reset_video(void);
+void gfx_control_change_monitor(void *monitor);
 void gfx_quit(void);
 
 #endif /* GFX_H_ */

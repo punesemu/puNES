@@ -513,12 +513,12 @@ void gui_save_slot(BYTE slot) {
 	}
 	menu_state_save_slot_set(slot);
 }
-int gui_sleep(double ms) {
+void gui_sleep(double ms) {
 	struct timespec req = { 0 }, rem = { 0 };
 	time_t sec;
 
 	if (ms <= 0) {
-		return (EXIT_OK);
+		return;
 	}
 
 	sec = (time_t) (ms / 1000.0f);
@@ -526,8 +526,6 @@ int gui_sleep(double ms) {
 	req.tv_sec = sec;
 	req.tv_nsec = ms * 1000000L;
 	__nsleep(&req, &rem);
-
-	return (EXIT_OK);
 }
 int __nsleep(const struct timespec *req, struct timespec *rem) {
 	struct timespec temp_rem;

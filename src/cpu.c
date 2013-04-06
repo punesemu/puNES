@@ -846,7 +846,6 @@ void cpu_exe_op(void) {
 	case 0x98: IMP(RD_OP, _RSZ(cpu.AR = cpu.YR;, cpu.AR)) break;         // TYA
 
 	/* illegal opcodes */
-
 #ifndef ILLEGAL
 	case 0x0B:                                                           // AAC #IMM
 	case 0x2B: IMP(RD_OP, AAC) break;                                    // AAC #IMM

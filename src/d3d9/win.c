@@ -1060,11 +1060,10 @@ void gui_timeline(void) {
 void gui_save_slot(BYTE slot) {
 	return;
 }
-int gui_sleep(double ms) {
+void gui_sleep(double ms) {
 	if (ms > 0) {
 		Sleep(ms);
 	}
-	return (EXIT_OK);
 }
 void gui_set_thread_affinity(uint8_t core) {
 	return;
@@ -1076,7 +1075,14 @@ long __stdcall main_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 		case WM_ENTERMENULOOP:
 			emu_pause(TRUE);
 			break;
-		case WM_EXITSIZEMOVE:
+		case WM_EXITSIZEMOVE: {
+			HMONITOR monitor = MonitorFromWindow(main_win, MONITOR_DEFAULTTOPRIMARY);
+
+			gfx_control_change_monitor(&monitor);
+			emu_pause(FALSE);
+
+			break;
+		}
 		case WM_EXITMENULOOP:
 			emu_pause(FALSE);
 			SetFocus(d3d_frame);
