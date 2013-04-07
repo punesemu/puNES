@@ -4,8 +4,6 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../src/sdl/audio_quality.c \
-../src/sdl/blip_buf.c \
 ../src/sdl/cfg_file.c \
 ../src/sdl/cmd_line.c \
 ../src/sdl/gfx.c \
@@ -14,8 +12,6 @@ C_SRCS += \
 ../src/sdl/text.c 
 
 OBJS += \
-./src/sdl/audio_quality.o \
-./src/sdl/blip_buf.o \
 ./src/sdl/cfg_file.o \
 ./src/sdl/cmd_line.o \
 ./src/sdl/gfx.o \
@@ -24,8 +20,6 @@ OBJS += \
 ./src/sdl/text.o 
 
 C_DEPS += \
-./src/sdl/audio_quality.d \
-./src/sdl/blip_buf.d \
 ./src/sdl/cfg_file.d \
 ./src/sdl/cmd_line.d \
 ./src/sdl/gfx.d \

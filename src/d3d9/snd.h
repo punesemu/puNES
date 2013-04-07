@@ -15,8 +15,6 @@ enum channel_mode { MONO = 1, STEREO };
 enum channels { CH_LEFT, CH_RIGHT };
 enum snd_factor_type { SND_FACTOR_SPEED, SND_FACTOR_NORMAL, SND_FACTOR_SLOW };
 
-#define SND_BUFFER_SAMPLES cache->samples
-
 #define snd_frequency(a)\
 	if (snd.factor != a) {\
 		snd.factor = a;\
@@ -26,8 +24,6 @@ enum snd_factor_type { SND_FACTOR_SPEED, SND_FACTOR_NORMAL, SND_FACTOR_SLOW };
 typedef struct {
 	void *xa2buffer;
 	void *xa2source;
-
-	WORD samples;
 
 	SWORD *silence;
 
@@ -44,7 +40,8 @@ typedef struct {
 struct _snd {
 	BYTE brk;
 
-	uint32_t samplerate;
+	WORD samples;
+	DBWORD samplerate;
 
 	DBWORD cycles;
 	DBWORD out_of_sync;
@@ -77,11 +74,10 @@ static const double snd_factor[3][3] = {
 BYTE snd_init(void);
 BYTE snd_start(void);
 void snd_output(void *udata, BYTE *stream, int len);
+void snd_lock_cache(_callback_data *cache);
+void snd_unlock_cache(_callback_data *cache);
 void snd_stop(void);
 void snd_quit(void);
-
-void snd_lock_buffer(_callback_data *cache);
-void snd_unlock_buffer(_callback_data *cache);;
 
 void (*snd_apu_tick)(void);
 void (*snd_end_frame)(void);

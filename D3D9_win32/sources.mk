@@ -16,6 +16,6 @@ SUBDIRS := \
 src \
 src/mappers \
 src/filters/video \
+src/filters/audio \
 src/d3d9 \
-src/d3d9/filters/audio \
 

@@ -5,6 +5,8 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
 ../src/apu.c \
+../src/audio_quality.c \
+../src/blip_buf.c \
 ../src/cpu.c \
 ../src/emu.c \
 ../src/external_calls.c \
@@ -25,6 +27,8 @@ C_SRCS += \
 
 OBJS += \
 ./src/apu.o \
+./src/audio_quality.o \
+./src/blip_buf.o \
 ./src/cpu.o \
 ./src/emu.o \
 ./src/external_calls.o \
@@ -45,6 +49,8 @@ OBJS += \
 
 C_DEPS += \
 ./src/apu.d \
+./src/audio_quality.d \
+./src/blip_buf.d \
 ./src/cpu.d \
 ./src/emu.d \
 ./src/external_calls.d \

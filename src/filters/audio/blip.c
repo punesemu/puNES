@@ -90,30 +90,26 @@ BYTE audio_quality_init_blip(void) {
 	snd_apu_tick = audio_quality_apu_tick_blip;
 	snd_end_frame = audio_quality_end_frame_blip;
 
-	{
-		SDL_AudioSpec *dev = snd.dev;
+	bl.blip = blip_new(snd.samplerate / 10);
 
-		bl.blip = blip_new(dev->freq / 10);
-
-		if (bl.blip == NULL) {
-			 /* out of memory */
-			return (EXIT_ERROR);
-		}
-
-		blip_set_rates(bl.blip, machine.cpu_hz, dev->freq);
-
-		bl.ch[APU_S1].gain = master_vol  * (1.8 * volume_fator) / 100;
-		bl.ch[APU_S2].gain = master_vol  * (1.8 * volume_fator) / 100;
-		bl.ch[APU_TR].gain = master_vol  * (2.2 * volume_fator) / 100;
-		bl.ch[APU_NS].gain = master_vol  * (1.8 * volume_fator) / 100;
-		bl.ch[APU_DMC].gain = master_vol * (1.2 * volume_fator) / 100;
-
-		bl.ch[APU_S1].min_period  = min_period;
-		bl.ch[APU_S2].min_period  = min_period;
-		bl.ch[APU_TR].min_period  = min_period / 2.5;
-		bl.ch[APU_NS].min_period  = min_period / 2;
-		bl.ch[APU_DMC].min_period = min_period;
+	if (bl.blip == NULL) {
+		 /* out of memory */
+		return (EXIT_ERROR);
 	}
+
+	blip_set_rates(bl.blip, machine.cpu_hz, snd.samplerate);
+
+	bl.ch[APU_S1].gain = master_vol  * (1.8 * volume_fator) / 100;
+	bl.ch[APU_S2].gain = master_vol  * (1.8 * volume_fator) / 100;
+	bl.ch[APU_TR].gain = master_vol  * (2.2 * volume_fator) / 100;
+	bl.ch[APU_NS].gain = master_vol  * (1.8 * volume_fator) / 100;
+	bl.ch[APU_DMC].gain = master_vol * (1.2 * volume_fator) / 100;
+
+	bl.ch[APU_S1].min_period  = min_period;
+	bl.ch[APU_S2].min_period  = min_period;
+	bl.ch[APU_TR].min_period  = min_period / 2.5;
+	bl.ch[APU_NS].min_period  = min_period / 2;
+	bl.ch[APU_DMC].min_period = min_period;
 
 	switch (info.mapper) {
 		case FDS_MAPPER:
@@ -215,7 +211,6 @@ void audio_quality_apu_tick_blip(void) {
 	bl.counter++;
 }
 void audio_quality_end_frame_blip(void) {
-	SDL_AudioSpec *dev = snd.dev;
 	_callback_data *cache = snd.cache;
 
 	if (!bl.blip) {
@@ -256,7 +251,7 @@ void audio_quality_end_frame_blip(void) {
 			(*cache->write++) = data;
 
 			/* stereo */
-			if (dev->channels == STEREO) {
+			if (cfg->channels == STEREO) {
 				/* salvo il dato nel buffer del canale sinistro */
 				snd.channel.ptr[CH_LEFT][snd.channel.pos] = data;
 				/* scrivo nel nel frame audio il canale destro ritardato di un frame */
@@ -275,21 +270,23 @@ void audio_quality_end_frame_blip(void) {
 				cache->write = cache->start;
 			}
 
-			if (++snd.pos.current >= dev->samples) {
+			if (++snd.pos.current >= snd.samples) {
 				snd.pos.current = 0;
 
-				SDL_mutexP(cache->lock);
+				snd_lock_cache(cache);
 
 				/* incremento il contatore dei frames pieni non ancora 'riprodotti' */
 				if (++cache->filled >= snd.buffer.count) {
 					snd.brk = TRUE;
+				} else if (cache->filled == 1) {
+					snd_frequency(snd_factor[apu.type][SND_FACTOR_SPEED])
 				} else if (cache->filled >= ((snd.buffer.count >> 1) + 1)) {
 					snd_frequency(snd_factor[apu.type][SND_FACTOR_SLOW])
 				} else if (cache->filled < 3) {
 					snd_frequency(snd_factor[apu.type][SND_FACTOR_NORMAL])
 				}
 
-				SDL_mutexV(cache->lock);
+				snd_unlock_cache(cache);
 			}
 		}
 	}

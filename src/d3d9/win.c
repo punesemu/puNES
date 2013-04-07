@@ -23,6 +23,7 @@
 #include "gamegenie.h"
 #include "fps.h"
 #include "tas.h"
+#include "audio_quality.h"
 
 #define TOOLBAR_HEIGHT   26
 #define FRAME_TL_HEIGHT  (TOOLBAR_HEIGHT - 2)
@@ -47,6 +48,7 @@ void set_fps(BYTE fps);
 void set_frame_skip(BYTE frameskip);
 void set_samplerate(BYTE samplerate);
 void set_channels(BYTE channels);
+void set_audio_quality(BYTE quality);
 
 double high_resolution_ms(void);
 void change_menuitem(BYTE check_or_enab, UINT type, UINT menuitem_id);
@@ -1009,7 +1011,6 @@ void gui_update(void) {
 	change_menuitem(CHECK, MF_CHECKED, id);
 
 	/* Audio Filter */
-	/*
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_AUDIO_QUALITY_LOW);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_AUDIO_QUALITY_HIGH);
 	switch (cfg->audio_quality) {
@@ -1021,7 +1022,6 @@ void gui_update(void) {
 			break;
 	}
 	change_menuitem(CHECK, MF_CHECKED, id);
-	*/
 
 	/* Swap Duty Cycles */
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_AUDIO_SWAP_DUTY);
@@ -1389,14 +1389,12 @@ long __stdcall main_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 					gui_update();
 					emu_pause(FALSE);
 					break;
-				/*
 				case IDM_SET_AUDIO_QUALITY_LOW:
 					set_audio_quality(AQ_LOW);
 					break;
 				case IDM_SET_AUDIO_QUALITY_HIGH:
 					set_audio_quality(AQ_HIGH);
 					break;
-				*/
 				case IDM_SET_AUDIO_ENABLE:
 					emu_pause(TRUE);
 					cfg->audio = !cfg->audio;
@@ -1664,6 +1662,14 @@ void set_channels(BYTE channels) {
 
 	cfg->channels = channels;
 	snd_start();
+	gui_update();
+}
+void set_audio_quality(BYTE quality) {
+	if (cfg->audio_quality == quality) {
+		return;
+	}
+	cfg->audio_quality = quality;
+	audio_quality(cfg->audio_quality);
 	gui_update();
 }
 

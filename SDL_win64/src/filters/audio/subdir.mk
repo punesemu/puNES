@@ -4,23 +4,23 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../src/sdl/filters/audio/blip.c \
-../src/sdl/filters/audio/blip2.c \
-../src/sdl/filters/audio/original.c 
+../src/filters/audio/blip.c \
+../src/filters/audio/blip2.c \
+../src/filters/audio/original.c 
 
 OBJS += \
-./src/sdl/filters/audio/blip.o \
-./src/sdl/filters/audio/blip2.o \
-./src/sdl/filters/audio/original.o 
+./src/filters/audio/blip.o \
+./src/filters/audio/blip2.o \
+./src/filters/audio/original.o 
 
 C_DEPS += \
-./src/sdl/filters/audio/blip.d \
-./src/sdl/filters/audio/blip2.d \
-./src/sdl/filters/audio/original.d 
+./src/filters/audio/blip.d \
+./src/filters/audio/blip2.d \
+./src/filters/audio/original.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
-src/sdl/filters/audio/%.o: ../src/sdl/filters/audio/%.c
+src/filters/audio/%.o: ../src/filters/audio/%.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
 	x86_64-w64-mingw32-gcc -DMINGW64 -DSDL -DGLEW_STATIC -I../src -I../src/sdl -I/usr/x86_64-w64-mingw32/usr/include/SDL -O3 -Wall -ffast-math -c -fmessage-length=0 -finline-functions -Winline -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"

@@ -207,13 +207,11 @@ BEGIN
 				MENUITEM "&Mono",                 IDM_SET_CHANNELS_MONO
 				MENUITEM "&Stereo",               IDM_SET_CHANNELS_STEREO
 			END
-		/*
 			POPUP "&Quality"
 			BEGIN
 				MENUITEM "&Low",                  IDM_SET_AUDIO_QUALITY_LOW
 				MENUITEM "&High",                 IDM_SET_AUDIO_QUALITY_HIGH
 			END
-		*/
 			MENUITEM SEPARATOR
 			MENUITEM "S&wap Duty Cycles",         IDM_SET_AUDIO_SWAP_DUTY
 			MENUITEM "&Enable\tCtrl+A",           IDM_SET_AUDIO_ENABLE

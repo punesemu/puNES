@@ -5,6 +5,7 @@
  *      Author: fhorse
  */
 
+#include <stddef.h>
 #include "audio_quality.h"
 #include "snd.h"
 #include "filters/audio/original.h"
@@ -12,7 +13,6 @@
 #include "filters/audio/blip2.h"
 
 void audio_quality(BYTE quality) {
-
 	if (audio_quality_quit) {
 		audio_quality_quit();
 	}

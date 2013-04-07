@@ -93,11 +93,11 @@ void audio_quality_apu_tick_original(void) {
 	 * di samples che compongono il frame, vuol dire che
 	 * sono passato nel frame successivo.
 	 */
-	if (snd.pos.current >= SND_BUFFER_SAMPLES) {
+	if (snd.pos.current >= snd.samples) {
 		/* azzero posizione e contatore dei cicli del frame audio */
 		snd.pos.current = snd.cycles = 0;
 
-		snd_lock_buffer(cache);
+		snd_lock_cache(cache);
 
 		/* incremento il contatore dei frames pieni non ancora 'riprodotti' */
 		if (++cache->filled >= snd.buffer.count) {
@@ -110,7 +110,7 @@ void audio_quality_apu_tick_original(void) {
 			snd_frequency(snd_factor[apu.type][SND_FACTOR_NORMAL])
 		}
 
-		snd_unlock_buffer(cache);
+		snd_unlock_cache(cache);
 	}
 
 	{

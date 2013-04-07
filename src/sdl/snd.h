@@ -8,9 +8,6 @@
 #ifndef SND_H_
 #define SND_H_
 
-#include <SDL.h>
-#include <SDL_audio.h>
-#include <SDL_thread.h>
 #include "common.h"
 
 enum samplerate_mode { S44100, S22050, S11025 };
@@ -33,12 +30,14 @@ typedef struct {
 
 	SWORD filled;
 
-	SDL_mutex *lock;
+	void *lock;
 } _callback_data;
-
 struct _snd {
 	BYTE opened;
 	BYTE brk;
+
+	WORD samples;
+	DBWORD samplerate;
 
 	SWORD last_sample;
 
@@ -57,14 +56,12 @@ struct _snd {
 		DBWORD current;
 		DBWORD last;
 	} pos;
-
 	struct _channel {
 		DBWORD max_pos;
 		DBWORD pos;
 		SWORD *ptr[2];
 		SWORD *buf[2];
 	} channel;
-
 	struct _buffer {
 		DBWORD size;
 		DBWORD count;
@@ -75,13 +72,11 @@ static const double snd_factor[3][3] = {
 	{ 0.967f, 0.998f, 1.1f }, { 0.967f, 1.0f, 1.1f }, { 0.967f, 1.0f, 1.1f }
 };
 
-//static const double snd_factor[3][2] = {
-//	{ 0.997f, 1.1f }, { 1.0f, 1.1f }, { 1.0f, 1.1f }
-//};
-
 BYTE snd_init(void);
 BYTE snd_start(void);
 void snd_output(void *udata, BYTE *stream, int len);
+void snd_lock_cache(_callback_data *cache);
+void snd_unlock_cache(_callback_data *cache);
 void snd_stop(void);
 void snd_quit(void);
 

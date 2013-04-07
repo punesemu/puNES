@@ -5,6 +5,9 @@
  *      Author: fhorse
  */
 
+#include <SDL.h>
+#include <SDL_audio.h>
+#include <SDL_thread.h>
 #include "snd.h"
 #include "clock.h"
 #include "fps.h"
@@ -53,39 +56,33 @@ BYTE snd_start(void) {
 	memset(cache, 0, sizeof(_callback_data));
 	snd.cache = cache;
 
-#if defined MINGW32 || defined MINGW64
-	WORD factor = 8;
-#else
-	WORD factor = 8;
-#endif
-
 	switch (cfg->samplerate) {
 		case S44100:
-			dev->freq = 44100;
-			snd.buffer.size = 512 * factor;
+			snd.samplerate = 44100;
+			snd.buffer.size = 512 * 8;
 			break;
 		case S22050:
-			dev->freq = 22050;
-			snd.buffer.size = 256 * factor;
+			snd.samplerate = 22050;
+			snd.buffer.size = 256 * 8;
 			break;
 		case S11025:
-			dev->freq = 11025;
-			snd.buffer.size = 128 * factor;
+			snd.samplerate = 11025;
+			snd.buffer.size = 128 * 8;
 			break;
 	}
 
 	{
-		WORD latency;
-		long sample_latency;
+		double latency;
+		double sample_latency;
 
 		if (cfg->channels == STEREO) {
 			//latency = 200;
-			latency = 400;
+			latency = 400.0f;
 		} else {
-			latency = 400;
+			latency = 400.0f;
 		}
 
-		sample_latency = latency * dev->freq * cfg->channels / 1000.0f;
+		sample_latency = latency * (double) snd.samplerate * (double) cfg->channels / 1000.0f;
 		snd.buffer.count = sample_latency / snd.buffer.size;
 	}
 
@@ -93,10 +90,12 @@ BYTE snd_start(void) {
 	dev->format = AUDIO_S16SYS;
 	/* il numero dei canali (1 = mono) */
 	dev->channels = cfg->channels;
+	/* il samplerate */
+	dev->freq = snd.samplerate;
 	/* il valore del silenzio */
 	dev->silence = 0;
 	/* il numero dei samples da passare al device */
-	dev->samples = snd.buffer.size / dev->channels;
+	dev->samples = snd.buffer.size / cfg->channels;
 	/* la funzione di callback */
 	dev->callback = snd_output;
 	/* la struttura dei dati */
@@ -108,19 +107,16 @@ BYTE snd_start(void) {
 		return (EXIT_ERROR);
 	}
 
-	snd.frequency = (fps.nominal * (double) machine.cpu_cycles_frame) / (double) dev->freq;
-
-	/* valorizzo il flag di apertura device */
+	snd.frequency = (fps.nominal * (double) machine.cpu_cycles_frame) / (double) snd.samplerate;
+	snd.samples = dev->samples;
 	snd.opened = TRUE;
-
 	//snd.last_sample = dev->silence;
 	snd.last_sample = 0;
 
-	if (dev->channels == STEREO) {
+	if (cfg->channels == STEREO) {
 		BYTE i;
 
-		snd.channel.max_pos = dev->samples * 0.300;
-
+		snd.channel.max_pos = snd.samples * 0.300f;
 		snd.channel.pos = 0;
 
 		for (i = 0; i < 2; i++) {
@@ -165,7 +161,7 @@ BYTE snd_start(void) {
 	}
 
 	if (extcl_snd_start) {
-		extcl_snd_start(dev->freq);
+		extcl_snd_start(snd.samplerate);
 	}
 
 	audio_quality(cfg->audio_quality);
@@ -186,12 +182,19 @@ void snd_output(void *udata, BYTE *stream, int len) {
 		return;
 	}
 
-	SDL_mutexP(cache->lock);
+	snd_lock_cache(cache);
 
 #ifndef RELEASE
-		fprintf(stderr, "snd : %d %d %d %d %2d %d %f %f %4s\r", len, snd.buffer.count, snd.brk,
-				fps.total_frames_skipped, cache->filled, snd.out_of_sync, snd.frequency,
-				machine.ms_frame, "");
+		fprintf(stderr, "snd : %d %d %d %d %2d %d %f %f %4s\r",
+				len,
+				snd.buffer.count,
+				snd.brk,
+				fps.total_frames_skipped,
+				cache->filled,
+				snd.out_of_sync,
+				snd.frequency,
+				machine.ms_frame,
+				"");
 #endif
 
 	if (!cache->filled) {
@@ -214,15 +217,17 @@ void snd_output(void *udata, BYTE *stream, int len) {
 			cache->read = (SBYTE *) cache->start;
 		}
 
-		{
-			SDL_AudioSpec *dev = snd.dev;
-
-			/* decremento il numero dei frames pieni */
-			cache->filled -= (((len / dev->channels) / sizeof(*cache->write)) / dev->samples);
-		}
+		/* decremento il numero dei frames pieni */
+		cache->filled -= (((len / cfg->channels) / sizeof(*cache->write)) / snd.samples);
 	}
 
-	SDL_mutexV(cache->lock);
+	snd_unlock_cache(cache);
+}
+void snd_lock_cache(_callback_data *cache) {
+	SDL_mutexP((SDL_mutex *) cache->lock);
+}
+void snd_unlock_cache(_callback_data *cache) {
+	SDL_mutexV((SDL_mutex *) cache->lock);
 }
 void snd_stop(void) {
 	if (snd.opened) {

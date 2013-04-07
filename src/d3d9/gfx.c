@@ -183,7 +183,7 @@ BYTE gfx_init(void) {
 			dev->id = this;
 
 			if (IDirect3D9_GetAdapterIdentifier(d3d9.d3d, dev->id, 0, &info)!= D3D_OK) {
-				dev_error("Unable to get adapter display info\n");
+				dev_error("unable to get adapter display info\n");
 				continue;
 			}
 
@@ -994,11 +994,11 @@ BYTE d3d9_create_context(UINT width, UINT height) {
 					d3d9.quadcoords.r = w_quad;
 					d3d9.quadcoords.t = centering_factor;
 					d3d9.quadcoords.b = h_quad + centering_factor;
-					/*
-					 * se l'aspect ratio del frame e' minore di
-					 * quello della superficie allora devo agire
-					 * sulla larghezza.
-					 */
+				/*
+				 * se l'aspect ratio del frame e' minore di
+				 * quello della superficie allora devo agire
+				 * sulla larghezza.
+				 */
 				} else if (ratio_frame < ratio_surface) {
 					FLOAT centering_factor = 0.0f;
 

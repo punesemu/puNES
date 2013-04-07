@@ -122,27 +122,23 @@ BYTE audio_quality_init_blip2(void) {
 	bl2.max = ((snd.buffer.count >> 1) + 1);
 	bl2.min = (((snd.buffer.count >> 1) + 1) < 3 ? 3 : ((snd.buffer.count >> 1) + 1));
 
-	{
-		SDL_AudioSpec *dev = snd.dev;
+	bl2.wave = blip_new(snd.samplerate / 10);
 
-		bl2.wave = blip_new(dev->freq / 10);
-
-		if (bl2.wave == NULL) {
-			 /* out of memory */
-			return (EXIT_ERROR);
-		}
-
-		blip_set_rates(bl2.wave, machine.cpu_hz, dev->freq);
-
-		bl2.group[PULSE].gain = master_vol * (1.2 * volume_fator) / 100;
-		bl2.group[TND].gain = master_vol * (1.2 * volume_fator) / 100;
-
-		bl2.ch[APU_S1].min_period  = min_period;
-		bl2.ch[APU_S2].min_period  = min_period;
-		bl2.ch[APU_TR].min_period  = min_period; // / 2.5;
-		bl2.ch[APU_NS].min_period  = min_period; // / 2;
-		bl2.ch[APU_DMC].min_period = min_period;
+	if (bl2.wave == NULL) {
+		 /* out of memory */
+		return (EXIT_ERROR);
 	}
+
+	blip_set_rates(bl2.wave, machine.cpu_hz, snd.samplerate);
+
+	bl2.group[PULSE].gain = master_vol * (1.2 * volume_fator) / 100;
+	bl2.group[TND].gain = master_vol * (1.2 * volume_fator) / 100;
+
+	bl2.ch[APU_S1].min_period  = min_period;
+	bl2.ch[APU_S2].min_period  = min_period;
+	bl2.ch[APU_TR].min_period  = min_period; // / 2.5;
+	bl2.ch[APU_NS].min_period  = min_period; // / 2;
+	bl2.ch[APU_DMC].min_period = min_period;
 
 	switch (info.mapper) {
 		case FDS_MAPPER:
@@ -279,7 +275,6 @@ void audio_quality_apu_tick_blip2(void) {
 	bl2.counter++;
 }
 void audio_quality_end_frame_blip2(void) {
-	SDL_AudioSpec *dev = snd.dev;
 	_callback_data *cache = snd.cache;
 
 	if (!bl2.wave) {
@@ -317,7 +312,7 @@ void audio_quality_end_frame_blip2(void) {
 			(*cache->write++) = data;
 
 			/* stereo */
-			if (dev->channels == STEREO) {
+			if (cfg->channels == STEREO) {
 				/* salvo il dato nel buffer del canale sinistro */
 				snd.channel.ptr[CH_LEFT][snd.channel.pos] = data;
 				/* scrivo nel nel frame audio il canale destro ritardato di un frame */
@@ -336,21 +331,23 @@ void audio_quality_end_frame_blip2(void) {
 				cache->write = cache->start;
 			}
 
-			if (++snd.pos.current >= dev->samples) {
+			if (++snd.pos.current >= snd.samples) {
 				snd.pos.current = 0;
 
-				SDL_mutexP(cache->lock);
+				snd_lock_cache(cache);
 
 				/* incremento il contatore dei frames pieni non ancora 'riprodotti' */
 				if (++cache->filled >= snd.buffer.count) {
 					snd.brk = TRUE;
+				} else if (cache->filled == 1) {
+					snd_frequency(snd_factor[apu.type][SND_FACTOR_SPEED])
 				} else if (cache->filled >= bl2.max) {
 					snd_frequency(snd_factor[apu.type][SND_FACTOR_SLOW])
 				} else if (cache->filled < bl2.min) {
 					snd_frequency(snd_factor[apu.type][SND_FACTOR_NORMAL])
 				}
 
-				SDL_mutexV(cache->lock);
+				snd_unlock_cache(cache);
 			}
 		}
 	}

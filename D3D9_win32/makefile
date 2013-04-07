@@ -10,7 +10,7 @@ RM := rm -rf
 -include sources.mk
 -include src/mappers/subdir.mk
 -include src/filters/video/subdir.mk
--include src/d3d9/filters/audio/subdir.mk
+-include src/filters/audio/subdir.mk
 -include src/d3d9/subdir.mk
 -include src/subdir.mk
 -include subdir.mk

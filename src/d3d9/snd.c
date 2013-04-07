@@ -156,12 +156,12 @@ BYTE snd_start(void) {
 
 	snd.frequency = ((fps.nominal * machine.cpu_cycles_frame) / (double) snd.samplerate);
 
-	cache->samples = snd.buffer.size / cfg->channels;
+	snd.samples = snd.buffer.size / cfg->channels;
 
 	if (cfg->channels == STEREO) {
 		BYTE i;
 
-		snd.channel.max_pos = cache->samples * 0.300;
+		snd.channel.max_pos = snd.samples * 0.300f;
 		snd.channel.pos = 0;
 
 		for (i = 0; i < 2; i++) {
@@ -222,7 +222,7 @@ BYTE snd_start(void) {
 		xaudio2.buffer.AudioBytes = snd.buffer.size * sizeof(*cache->write);
 		xaudio2.buffer.pAudioData = (const BYTE *) cache->read;
 		xaudio2.buffer.PlayBegin = 0;
-		xaudio2.buffer.PlayLength = cache->samples;
+		xaudio2.buffer.PlayLength = snd.samples;
 		xaudio2.buffer.LoopBegin = 0;
 		xaudio2.buffer.LoopLength = 0;
 		xaudio2.buffer.LoopCount = 0;
@@ -258,6 +258,12 @@ BYTE snd_start(void) {
 }
 void snd_output(void *udata, BYTE *stream, int len) {
 	return;
+}
+void snd_lock_cache(_callback_data *cache) {
+	WaitForSingleObject((HANDLE **) cache->lock, INFINITE);
+}
+void snd_unlock_cache(_callback_data *cache) {
+	ReleaseSemaphore((HANDLE **) cache->lock, 1, NULL);
 }
 void snd_stop(void) {
 	if (xaudio2.source) {
@@ -325,13 +331,6 @@ void snd_quit(void) {
 	snd_stop();
 }
 
-void snd_lock_buffer(_callback_data *cache) {
-	WaitForSingleObject((HANDLE **) cache->lock, INFINITE);
-}
-void snd_unlock_buffer(_callback_data *cache) {
-	ReleaseSemaphore((HANDLE **) cache->lock, 1, NULL);
-}
-
 static void STDMETHODCALLTYPE OnVoiceProcessPassStart(THIS_ UINT32 b) {}
 static void STDMETHODCALLTYPE OnVoiceProcessPassEnd(THIS) {}
 static void STDMETHODCALLTYPE OnStreamEnd(THIS) {}
@@ -346,7 +345,7 @@ static void STDMETHODCALLTYPE OnBufferEnd(THIS_ void *data) {
 		return;
 	}
 
-	snd_lock_buffer(cache);
+	snd_lock_cache(cache);
 
 #ifndef RELEASE
 		fprintf(stderr, "snd : %d %d %d %d %2d %d %f %f %4s\r",
@@ -384,7 +383,7 @@ static void STDMETHODCALLTYPE OnBufferEnd(THIS_ void *data) {
 		fprintf(stderr, "Unable to submit source buffer\n");
 	}
 
-	snd_unlock_buffer(cache);
+	snd_unlock_cache(cache);
 }
 static void STDMETHODCALLTYPE OnLoopEnd(THIS_ void *data) {}
 static void STDMETHODCALLTYPE OnVoiceError(THIS_ void* data, HRESULT Error) {}
