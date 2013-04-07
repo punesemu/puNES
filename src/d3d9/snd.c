@@ -12,7 +12,6 @@
 #include "fps.h"
 #include "clock.h"
 #include "apu.h"
-
 #define INITGUID 1
 #include <XAudio2.h>
 
@@ -20,7 +19,6 @@
 #undef THIS
 #define THIS IXAudio2VoiceCallback *callback
 #endif
-
 #if defined THIS_
 #undef THIS_
 #define THIS_ IXAudio2VoiceCallback *callback,
