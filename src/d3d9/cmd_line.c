@@ -24,3 +24,14 @@ BYTE cmd_line_parse(int argc, char **argv) {
 	}
 	return (optind);
 }
+BYTE cmd_line_check_portable(int argc, char **argv) {
+	int opt;
+
+	for (opt = 0; opt < argc; opt++) {
+		//if (!(strcmp(argv[opt], "--portable"))) {
+		//	return (TRUE);
+		//}
+	}
+
+	return (FALSE);
+}

@@ -55,7 +55,6 @@ typedef struct {
 
 #ifdef __CMDLINE__
 static const char *opt_short = "m:f:k:s:o:i:n:p:r:v:u:t:a:l:c:q:g:Vh?";
-
 static const struct option opt_long[] = {
 	{ "mode",               required_argument, NULL, 'm'},
 	{ "fps",                required_argument, NULL, 'f'},
@@ -77,6 +76,7 @@ static const struct option opt_long[] = {
 	{ "gamegenie",          required_argument, NULL, 'g'},
 	{ "help",               no_argument,       NULL, 'h'},
 	{ "version",            no_argument,       NULL, 'V'},
+	{ "portable",           no_argument,       NULL,  0 },
 	{ 0,                    0,                 0,     0 }
 };
 #endif

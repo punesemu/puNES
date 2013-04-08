@@ -31,6 +31,9 @@ BYTE cmd_line_parse(int argc, char **argv) {
 				/* long options */
 				if (!(strcmp(opt_long[longIndex].name, "swap-duty"))) {
 					param_search(0, optarg, param_no_yes, cfg_from_file.swap_duty = index);
+				} else if (!(strcmp(argv[opt], "portable"))) {
+					/* l'ho gia' controllato quindi qui non faccio niente */
+					;
 				}
 				break;
 			case 'a':
@@ -107,11 +110,24 @@ BYTE cmd_line_parse(int argc, char **argv) {
 	}
 	return (optind);
 }
+BYTE cmd_line_check_portable(int argc, char **argv) {
+	int opt;
+
+	for (opt = 0; opt < argc; opt++) {
+		if (!(strcmp(argv[opt], "--portable"))) {
+			return (TRUE);
+		}
+	}
+
+	return (FALSE);
+}
+
 void usage(char *name) {
 	char *istructions = { "Usage: %s [options] file...\n\n"
 			"Options:\n"
 			"-h, --help                print this help\n"
 			"-V, --version             print the version\n"
+			"    --portable            start in portable mode\n"
 			"%s\n"
 			"%s\n"
 			"%s\n"

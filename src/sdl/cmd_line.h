@@ -11,5 +11,6 @@
 #include "common.h"
 
 BYTE cmd_line_parse(int argc, char **argv);
+BYTE cmd_line_check_portable(int argc, char **argv);
 
 #endif /* CMD_LINE_H_ */

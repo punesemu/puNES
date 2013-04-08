@@ -35,9 +35,11 @@ int main(int argc, char **argv) {
 
 	{
 #if defined MINGW32 || defined MINGW64
-		if (!(strncmp(argv[0] + (strlen(argv[0]) - 6), "_p", 2))) {
+		if (!(strncmp(argv[0] + (strlen(argv[0]) - 6), "_p", 2)) ||
+				(cmd_line_check_portable(argc, argv) == TRUE)) {
 #else
-		if (!(strcmp(argv[0] + (strlen(argv[0]) - 2), "_p"))) {
+		if (!(strcmp(argv[0] + (strlen(argv[0]) - 2), "_p")) ||
+				(cmd_line_check_portable(argc, argv) == TRUE)) {
 #endif
 			info.portable = TRUE;
 		} else {
