@@ -77,6 +77,7 @@ enum { CHECK, ENAB };
 #define COMBO_SS_WIDTH   60
 #define SEPARATOR_WIDTH  3
 
+LRESULT CALLBACK CBTProc(int nCode, WPARAM wParam, LPARAM lParam);
 long __stdcall main_win_proc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam);
 long __stdcall timeline_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 long __stdcall save_slot_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -107,6 +108,7 @@ void fds_eject_insert_disk(void);
 void fds_select_side(int side);
 void change_rom(char *rom);
 
+static HHOOK hMsgBoxHook;
 static HWND main_win, sdl_frame, toolbox_frame;
 static HWND hFrameTl, hTimeline;
 static HWND hSepTl;
@@ -1259,8 +1261,69 @@ void gui_sleep(double ms) {
 void gui_set_thread_affinity(uint8_t core) {
 	SetThreadAffinityMask(GetCurrentThread(), core + 1);
 }
+void gui_print_usage(char *usage) {
+	hMsgBoxHook = SetWindowsHookEx(WH_CBT, CBTProc, NULL, GetCurrentThreadId());
+	MessageBox(NULL, usage, NAME " parameters", MB_OK);
+	UnhookWindowsHookEx(hMsgBoxHook);
+}
 
 /* funzioni interne */
+LRESULT CALLBACK CBTProc(int nCode, WPARAM wParam, LPARAM lParam) {
+	HFONT hFont = NULL;
+
+	if (nCode < 0) {
+		return (CallNextHookEx(hMsgBoxHook, nCode, wParam, lParam));
+	}
+
+	switch (nCode) {
+		case HCBT_ACTIVATE: {
+			HWND hwnd = (HWND) wParam, hCh;
+			RECT rc_client, rc_wind;
+			POINT pt_diff, pt_text;
+			INT widht_font = 13;
+
+			hFont = CreateFont (widht_font, 0, 0, 0, FW_DONTCARE, FALSE, FALSE, FALSE, ANSI_CHARSET,
+					OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY,
+					FIXED_PITCH | FF_DONTCARE, TEXT("Monospace"));
+
+			/* aggiorno la dimensione della finestra principale */
+			GetWindowRect(hwnd, &rc_wind);
+			GetClientRect(hwnd, &rc_client);
+
+			pt_diff.x = (rc_wind.right - rc_wind.left) - rc_client.right;
+			pt_diff.y = (rc_wind.bottom - rc_wind.top) - rc_client.bottom;
+
+			pt_text.x = (50 * widht_font);
+			pt_text.y = (30 * widht_font);
+
+			hCh = GetWindow(hwnd, GW_CHILD);
+
+			while (hCh) {
+				TCHAR szClassName[16];
+
+				if (GetClassName(hCh, szClassName, 16)&& (strcmp(szClassName, "Static") == 0)) {
+					SendMessage(hCh, WM_SETFONT,(WPARAM) hFont, TRUE);
+					MoveWindow(hCh, 0,0, pt_text.x, pt_text.y, TRUE);
+				}
+
+				hCh = GetNextWindow(hCh, GW_HWNDNEXT);
+			}
+
+			MoveWindow(hwnd, rc_wind.left, rc_wind.top, pt_text.x + pt_diff.x,
+					pt_text.y + pt_diff.y, TRUE);
+
+			return (0);
+		}
+		case HCBT_DESTROYWND:
+			DeleteObject(hFont);
+			return (0);
+			break;
+
+	}
+
+	// Call the next hook, if there is one
+	return (CallNextHookEx(hMsgBoxHook, nCode, wParam, lParam));
+}
 long __stdcall main_win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	switch (msg) {
 		case WM_ENTERSIZEMOVE:

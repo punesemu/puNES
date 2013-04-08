@@ -555,6 +555,9 @@ void gui_set_thread_affinity(uint8_t core) {
 	CPU_SET(core, &cpuset);
 	pthread_setaffinity_np(thread, sizeof(cpu_set_t), &cpuset);
 }
+void gui_print_usage(char *usage) {
+	printf("%s", usage);
+}
 
 double high_resolution_ms(void) {
 	struct timeval time;

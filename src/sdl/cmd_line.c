@@ -15,6 +15,7 @@
 #include "emu.h"
 #include "gamegenie.h"
 #include "opengl.h"
+#include "gui.h"
 #define __CMDLINE__
 #include "param.h"
 #undef  __CMDLINE__
@@ -123,7 +124,9 @@ BYTE cmd_line_check_portable(int argc, char **argv) {
 }
 
 void usage(char *name) {
-	char *istructions = { "Usage: %s [options] file...\n\n"
+	char *usage_string;
+	char *istructions = {
+			"Usage: %s [options] file...\n\n"
 			"Options:\n"
 			"-h, --help                print this help\n"
 			"-V, --version             print the version\n"
@@ -147,7 +150,9 @@ void usage(char *name) {
 			"%s\n"
 			"%s\n"
 	};
-	fprintf(stdout, istructions, name,
+
+	usage_string = malloc(1024 * 8);
+	sprintf(usage_string, istructions, name,
 			param[P_MODE].help,
 			param[P_FPS].help,
 	        param[P_FSK].help,
@@ -167,5 +172,8 @@ void usage(char *name) {
 			param[P_SWAP_DUTY].help,
 			param[P_GAMEGENIE].help
 	);
+	gui_print_usage(usage_string);
+	free(usage_string);
+
 	emu_quit(EXIT_SUCCESS);
 }
