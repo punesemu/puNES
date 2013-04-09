@@ -38,6 +38,7 @@ typedef struct {
 	void *lock;
 } _callback_data;
 struct _snd {
+	BYTE opened;
 	BYTE brk;
 
 	WORD samples;

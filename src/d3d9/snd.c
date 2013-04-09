@@ -40,6 +40,17 @@ struct _xaudio2 {
 	HANDLE semaphore;
 } xaudio2;
 
+static IXAudio2VoiceCallbackVtbl callbacks_vtable = {
+	OnVoiceProcessPassStart,
+	OnVoiceProcessPassEnd,
+	OnStreamEnd,
+	OnBufferStart,
+	OnBufferEnd,
+	OnLoopEnd,
+	OnVoiceError
+};
+static IXAudio2VoiceCallback callbacks = { &callbacks_vtable };
+
 BYTE snd_init(void) {
 	memset(&snd, 0x00, sizeof(snd));
 
@@ -117,16 +128,6 @@ BYTE snd_start(void) {
 	}
 
 	{
-		static IXAudio2VoiceCallbackVtbl callbacks_vtable = {
-			OnVoiceProcessPassStart,
-			OnVoiceProcessPassEnd,
-			OnStreamEnd,
-			OnBufferStart,
-			OnBufferEnd,
-			OnLoopEnd,
-			OnVoiceError
-		};
-		static IXAudio2VoiceCallback callbacks = { &callbacks_vtable };
 		WAVEFORMATEX wfm;
 
 		memset(&wfm, 0, sizeof(wfm));
@@ -153,8 +154,8 @@ BYTE snd_start(void) {
 	}
 
 	snd.frequency = ((fps.nominal * machine.cpu_cycles_frame) / (double) snd.samplerate);
-
 	snd.samples = snd.buffer.size / cfg->channels;
+	snd.opened = TRUE;
 
 	if (cfg->channels == STEREO) {
 		BYTE i;
@@ -177,9 +178,9 @@ BYTE snd_start(void) {
 		/* dimensione in bytes del buffer */
     	DBWORD total_buffer_size = snd.buffer.size * snd.buffer.count * sizeof(*cache->write);
 
-		printf("snd.buffer.size   : %d\n", snd.buffer.size);
-		printf("snd.buffer.count  : %d\n", snd.buffer.count);
-		printf("total_buffer_size : %d\n", total_buffer_size);
+		//printf("snd.buffer.size   : %d\n", snd.buffer.size);
+		//printf("snd.buffer.count  : %d\n", snd.buffer.count);
+		//printf("total_buffer_size : %d\n", total_buffer_size);
 
 		/* alloco il buffer in memoria */
 		cache->start = malloc(total_buffer_size);
@@ -264,6 +265,8 @@ void snd_unlock_cache(_callback_data *cache) {
 	ReleaseSemaphore((HANDLE **) cache->lock, 1, NULL);
 }
 void snd_stop(void) {
+	snd.opened = FALSE;
+
 	if (xaudio2.source) {
 		IXAudio2SourceVoice_Stop(xaudio2.source, 0, XAUDIO2_COMMIT_NOW);
 		IXAudio2SourceVoice_FlushSourceBuffers(xaudio2.source);
@@ -286,7 +289,6 @@ void snd_stop(void) {
 	}
 
 	CoUninitialize();
-
 
 	if (snd.cache) {
     	_callback_data *cache = snd.cache;
@@ -317,7 +319,7 @@ void snd_stop(void) {
 				free(snd.channel.buf[i]);
 			}
 			/* azzero i puntatori */
-			snd.channel.ptr[i] =  snd.channel.buf[i] = NULL;
+			snd.channel.ptr[i] = snd.channel.buf[i] = NULL;
 		}
 	}
 
@@ -339,7 +341,7 @@ static void STDMETHODCALLTYPE OnBufferEnd(THIS_ void *data) {
 	XAUDIO2_BUFFER *buffer = cache->xa2buffer;
 	WORD len = buffer->AudioBytes;
 
-	if (info.no_rom) {
+	if (snd.opened == FALSE) {
 		return;
 	}
 
@@ -358,7 +360,9 @@ static void STDMETHODCALLTYPE OnBufferEnd(THIS_ void *data) {
 				"");
 #endif
 
-	if (!cache->filled) {
+	if (info.no_rom) {
+		buffer->pAudioData = (const BYTE *) cache->silence;
+	} else if (!cache->filled) {
 		snd.out_of_sync++;
 
 		buffer->pAudioData = (const BYTE *) cache->silence;

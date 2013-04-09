@@ -613,7 +613,6 @@ BYTE emu_reset(BYTE type) {
 		save_slot_count_load();
 	}
 
-
 	fps_init();
 
 	if (info.reset >= CHANGE_ROM) {
