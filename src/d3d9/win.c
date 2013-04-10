@@ -24,6 +24,8 @@
 #include "fps.h"
 #include "tas.h"
 #include "audio_quality.h"
+#include "save_slot.h"
+#include "fds.h"
 
 #define TOOLBAR_HEIGHT   26
 #define FRAME_TL_HEIGHT  (TOOLBAR_HEIGHT - 2)
@@ -35,8 +37,9 @@
 #define COMBO_SS_WIDTH   60
 #define SEPARATOR_WIDTH  3
 
+enum menu_inc_dec { INC, DEC };
+enum menu_save_load { SAVE, LOAD };
 enum menu_item_state { CHECK, ENAB };
-
 
 LRESULT CALLBACK CBTProc(int nCode, WPARAM wParam, LPARAM lParam);
 long __stdcall main_proc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam);
@@ -56,6 +59,8 @@ double high_resolution_ms(void);
 void change_menuitem(BYTE check_or_enab, UINT type, UINT menuitem_id);
 void open_event(void);
 void make_reset(BYTE type);
+void fds_eject_insert_disk(void);
+void fds_select_side(int side);
 void change_rom(char *rom);
 
 static HHOOK hMsgBoxHook;
@@ -437,7 +442,6 @@ void gui_update(void) {
 	/* checko le voci di menu corrette */
 
 	/* FDS */
-	/*
 	if (fds.info.enabled) {
 		BYTE i;
 
@@ -497,7 +501,6 @@ void gui_update(void) {
 		change_menuitem(ENAB, MF_GRAYED, IDM_NES_FDS_DISK_SWITCH);
 		change_menuitem(ENAB, MF_GRAYED, IDM_NES_FDS_EJECT);
 	}
-	*/
 
 	/* Save slot */
 	/*
@@ -1176,7 +1179,6 @@ long __stdcall main_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 				case IDM_NES_HARD:
 					make_reset(HARD);
 					break;
-				/*
 				case IDM_NES_FDS_DISK_SIDE0:
 					fds_select_side(0);
 					break;
@@ -1207,6 +1209,7 @@ long __stdcall main_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 				case IDM_NES_FDS_EJECT:
 					fds_eject_insert_disk();
 					break;
+				/*
 				case IDM_SET_SAVE_SAVE:
 					save_slot_action(SAVE);
 					break;
@@ -1816,6 +1819,31 @@ void make_reset(BYTE type) {
 	if (emu_reset(type)) {
 		PostMessage(main_win, WM_CLOSE, EXIT_FAILURE, 0);
 	}
+}
+void fds_eject_insert_disk(void) {
+	if (!fds.drive.disk_ejected) {
+		fds_disk_op(FDS_DISK_EJECT, 0);
+	} else {
+		fds_disk_op(FDS_DISK_INSERT, 0);
+	}
+
+	gui_update();
+}
+void fds_select_side(int side) {
+	if (side == 0xFFF) {
+		side = fds.drive.side_inserted;
+		if (++side >= fds.info.total_sides) {
+			side = 0;
+		}
+	}
+
+	if (fds.drive.side_inserted == side) {
+		return;
+	}
+
+	fds_disk_op(FDS_DISK_SELECT, side);
+
+	gui_update();
 }
 void change_rom(char *rom) {
 	strcpy(info.load_rom_file, rom);
