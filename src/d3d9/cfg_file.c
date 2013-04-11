@@ -139,7 +139,7 @@ void set_default(void) {
 
 	//cfg_from_file.vsync = TRUE;
 	//cfg_from_file.fullscreen = NO_FULLSCR;
-	//cfg_from_file.aspect_ratio = FALSE;
+	cfg_from_file.aspect_ratio = FALSE;
 	//cfg_from_file.save_on_exit = FALSE;
 
 	cfg_from_file.audio = TRUE;
@@ -147,7 +147,7 @@ void set_default(void) {
 	cfg_from_file.channels = STEREO;
 	cfg_from_file.audio_quality = AQ_HIGH;
 	cfg_from_file.swap_duty = 0;
-	//cfg_from_file.gamegenie = FALSE;
+	cfg_from_file.gamegenie = FALSE;
 
 	port1.type = CTRL_STANDARD;
 	port_kb_default(port1, "S", "A", "Z", "X", "Up", "Down", "Left", "Right", "W", "Q");

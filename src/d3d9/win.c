@@ -16,16 +16,16 @@
 #include <libgen.h>
 #include "clock.h"
 #include "version.h"
-#include "gfx.h"
-#include "snd.h"
-#include "text.h"
-#include "cfg_file.h"
-#include "gamegenie.h"
 #include "fps.h"
-#include "tas.h"
+#include "gfx.h"
+#include "text.h"
+#include "snd.h"
 #include "audio_quality.h"
+#include "cfg_file.h"
+#include "tas.h"
 #include "save_slot.h"
 #include "fds.h"
+#include "gamegenie.h"
 
 #define TOOLBAR_HEIGHT   26
 #define FRAME_TL_HEIGHT  (TOOLBAR_HEIGHT - 2)
@@ -54,6 +54,7 @@ void set_frame_skip(BYTE frameskip);
 void set_samplerate(BYTE samplerate);
 void set_channels(BYTE channels);
 void set_audio_quality(BYTE quality);
+void set_gamegenie(void);
 
 double high_resolution_ms(void);
 void change_menuitem(BYTE check_or_enab, UINT type, UINT menuitem_id);
@@ -194,6 +195,11 @@ BYTE gui_create(void) {
 	main_menu = GetMenu(main_win);
 
 	acc_keys = LoadAccelerators(gui.main_hinstance, "IDR_ACCKEYS");
+
+	if (acc_keys == NULL) {
+		MessageBox(NULL, "Window Accelerators Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
+		return (EXIT_ERROR);
+	}
 
 	/* ---------------------------------- D3D frame ---------------------------------- */
 
@@ -396,10 +402,10 @@ void gui_event(void) {
 				break;
 			*/
 		}
-		//if (!TranslateAccelerator(main_win, acc_keys, &msg)) {
+		if (!TranslateAccelerator(main_win, acc_keys, &msg)) {
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
-		//}
+		}
 		msg.hwnd = 0;
 	}
 
@@ -979,12 +985,10 @@ void gui_update(void) {
 	*/
 
 	/* Aspect ratio */
-	/*
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_STRETCHFLSCR);
-	if (gfx.opengl && !cfg->aspect_ratio) {
+	if (!cfg->aspect_ratio) {
 		change_menuitem(CHECK, MF_CHECKED, IDM_SET_STRETCHFLSCR);
 	}
-	*/
 
 	/* Samplerate */
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_SAMPLERATE_44100);
@@ -1042,12 +1046,10 @@ void gui_update(void) {
 	}
 
 	/* Game Genie */
-	/*
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_GAMEGENIE);
 	if (cfg->gamegenie) {
 		change_menuitem(CHECK, MF_CHECKED, IDM_SET_GAMEGENIE);
 	}
-	*/
 
 	/* Save on exit */
 	/*
@@ -1431,6 +1433,7 @@ long __stdcall main_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 				case IDM_SET_FULLSCREEN:
 					gui_fullscreen();
 					break;
+				*/
 				case IDM_SET_STRETCHFLSCR:
 					cfg->aspect_ratio = !cfg->aspect_ratio;
 					if (cfg->fullscreen == FULLSCR) {
@@ -1438,7 +1441,6 @@ long __stdcall main_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 					}
 					gui_update();
 					break;
-				*/
 				case IDM_SET_SAMPLERATE_44100:
 					set_samplerate(S44100);
 					break;
@@ -1477,10 +1479,10 @@ long __stdcall main_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 					gui_update();
 					emu_pause(FALSE);
 					break;
-				/*
 				case IDM_SET_GAMEGENIE:
 					set_gamegenie();
 					break;
+				/*
 				case IDM_SET_SAVENOW:
 					cfg_file_save();
 					break;
@@ -1749,6 +1751,15 @@ void set_audio_quality(BYTE quality) {
 	}
 	cfg->audio_quality = quality;
 	audio_quality(cfg->audio_quality);
+	gui_update();
+}
+void set_gamegenie(void) {
+	cfg->gamegenie = !cfg->gamegenie;
+
+	if (cfg->gamegenie) {
+		gamegenie_check_rom_present(TRUE);
+	}
+
 	gui_update();
 }
 

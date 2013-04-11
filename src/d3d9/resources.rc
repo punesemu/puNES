@@ -17,10 +17,10 @@ BEGIN
 	VK_F12,     IDM_NES_SOFT,            VIRTKEY
 	"S",        IDM_NES_FDS_DISK_SWITCH, ALT,     VIRTKEY
 	"E",        IDM_NES_FDS_EJECT,       ALT,     VIRTKEY
-	VK_F1,      IDM_SET_SAVE_SAVE,       VIRTKEY
-	VK_F4,      IDM_SET_SAVE_LOAD,       VIRTKEY
-	VK_F3,      IDM_SET_SAVE_INC,        VIRTKEY
-	VK_F2,      IDM_SET_SAVE_DEC,        VIRTKEY
+	//VK_F1,      IDM_SET_SAVE_SAVE,       VIRTKEY
+	//VK_F4,      IDM_SET_SAVE_LOAD,       VIRTKEY
+	//VK_F3,      IDM_SET_SAVE_INC,        VIRTKEY
+	//VK_F2,      IDM_SET_SAVE_DEC,        VIRTKEY
 	VK_F6,      IDM_SET_MODE_PAL,        VIRTKEY
 	VK_F7,      IDM_SET_MODE_NTSC,       VIRTKEY
 	VK_F8,      IDM_SET_MODE_DENDY,      VIRTKEY
@@ -29,12 +29,11 @@ BEGIN
 	"2",        IDM_SET_SIZE_2X,         VIRTKEY
 	"3",        IDM_SET_SIZE_3X,         VIRTKEY
 	"4",        IDM_SET_SIZE_4X,         VIRTKEY
-	VK_RETURN,  IDM_SET_FULLSCREEN,      ALT,     VIRTKEY
-	"R",        IDM_SET_EFFECT_CUBE,     VIRTKEY
+	//VK_RETURN,  IDM_SET_FULLSCREEN,      ALT,     VIRTKEY
+	//"R",        IDM_SET_EFFECT_CUBE,     VIRTKEY
 	"P",        IDM_SET_STRETCHFLSCR,    VIRTKEY
-	"W",        IDM_SET_SAVENOW,         CONTROL, VIRTKEY
+	//"W",        IDM_SET_SAVENOW,         CONTROL, VIRTKEY
 	"A",        IDM_SET_AUDIO_ENABLE,    CONTROL, VIRTKEY
-	
 END
 
 IDR_MAINMENU MENU
@@ -189,10 +188,10 @@ BEGIN
 			BEGIN
 				MENUITEM "&Cube\tR",              IDM_SET_EFFECT_CUBE
 			END
-			MENUITEM SEPARATOR
-			MENUITEM "F&ullscreen\tAlt+Enter",    IDM_SET_FULLSCREEN
-			MENUITEM "S&tretch in fullscreen\tP", IDM_SET_STRETCHFLSCR
 		*/
+			MENUITEM SEPARATOR
+		//	MENUITEM "F&ullscreen\tAlt+Enter",    IDM_SET_FULLSCREEN
+			MENUITEM "S&tretch in fullscreen\tP", IDM_SET_STRETCHFLSCR
 		END
 		POPUP "&Audio"
 		BEGIN
@@ -221,12 +220,12 @@ BEGIN
 		BEGIN
 			MENUITEM "&Config",                   IDM_SET_INPUT_CONFIG
 		END
+		*/
 		MENUITEM SEPARATOR
 		MENUITEM "Game Genie",                    IDM_SET_GAMEGENIE
-		MENUITEM SEPARATOR
-		MENUITEM "Save se&ttings\tCtrl+W",        IDM_SET_SAVENOW
-		MENUITEM "Save settings on e&xit",        IDM_SET_SAVEONEXIT
-		*/
+		//MENUITEM SEPARATOR
+		//MENUITEM "Save se&ttings\tCtrl+W",        IDM_SET_SAVENOW
+		//MENUITEM "Save settings on e&xit",        IDM_SET_SAVEONEXIT
 	END
 	/*
 	POPUP "S&tate"

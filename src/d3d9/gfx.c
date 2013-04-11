@@ -142,7 +142,7 @@ BYTE gfx_init(void) {
 	overscan.down = 8;
 
 	if (gui_create() == EXIT_ERROR) {
-		fprintf(stderr, "Gui initialization failed\n");
+		MessageBox(NULL, "Gui initialization failed", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
 
@@ -154,7 +154,7 @@ BYTE gfx_init(void) {
 	cfg->filter =  NO_FILTER;
 
 	if ((d3d9.d3d = Direct3DCreate9(D3D_SDK_VERSION)) == NULL) {
-		fprintf(stderr, "Unable to create d3d device\n");
+		MessageBox(NULL, "Unable to create d3d object", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
 
@@ -162,7 +162,7 @@ BYTE gfx_init(void) {
 	d3d9.adapters_on_system = IDirect3D9_GetAdapterCount(d3d9.d3d);
 
 	if (!(d3d9.array = malloc(d3d9.adapters_on_system * sizeof(_d3d9_adapter)))) {
-		fprintf(stderr, "Unable to create devices array\n");
+		MessageBox(NULL, "Unable to create devices array", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
 
@@ -337,7 +337,7 @@ BYTE gfx_init(void) {
 	}
 
 	if (d3d9.adapters_in_use == 0) {
-		fprintf(stderr, "Unable find usable adapter\n");
+		MessageBox(NULL, "Unable find usable adapter", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
 
@@ -349,6 +349,7 @@ BYTE gfx_init(void) {
 	 * generare la paletta dei colori.
 	 */
 	if (ntsc_init(0, 0, 0, 0, 0) == EXIT_ERROR) {
+		MessageBox(NULL, "Unable to initialize palette", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
 
@@ -357,7 +358,7 @@ BYTE gfx_init(void) {
 	 * paletta nel formato di visualizzazione.
 	 */
 	if (!(d3d9.palette = malloc(NUM_COLORS * sizeof(uint32_t)))) {
-		fprintf(stderr, "Unable to allocate the palette\n");
+		MessageBox(NULL, "Unable to allocate the palette", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
 
@@ -866,7 +867,8 @@ BYTE d3d9_create_device(UINT width, UINT height) {
 			d3d9.adapter->flags | D3DCREATE_MULTITHREADED | D3DCREATE_FPU_PRESERVE,
 			&d3dpp,
 			&d3d9.adapter->dev) != D3D_OK) {
-		fprintf(stderr, "Unable to create d3d device\n");
+		MessageBox(NULL, "Unable to create d3d device", "Error!",
+		        MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
 
@@ -886,7 +888,8 @@ BYTE d3d9_create_context(UINT width, UINT height) {
 			D3DPOOL_DEFAULT,
 			&d3d9.quad,
 			NULL) != D3D_OK) {
-		fprintf(stderr, "Unable to create the vertex buffer\n");
+		MessageBox(NULL, "Unable to create the vertex buffer", "Error!",
+		        MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
 
@@ -904,7 +907,8 @@ BYTE d3d9_create_context(UINT width, UINT height) {
 
 			/* creo la texture principale */
 			if (d3d9_create_texture(&d3d9.texture, w, h, 0, POWER_OF_TWO) == EXIT_ERROR) {
-				fprintf(stderr, "Unable to create main texture\n");
+				MessageBox(NULL, "Unable to create main texture", "Error!",
+				        MB_ICONEXCLAMATION | MB_OK);
 				return (EXIT_ERROR);
 			}
 		}
@@ -1118,7 +1122,8 @@ BYTE d3d9_create_texture(_texture *texture, uint32_t width, uint32_t height, uin
 			D3DPOOL_DEFAULT,
 			&texture->data,
 			NULL) != D3D_OK) {
-		fprintf(stderr, "Unable to create the texture\n");
+		MessageBox(NULL, "Unable to create the texture", "Error!",
+		        MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
 
@@ -1135,7 +1140,8 @@ BYTE d3d9_create_texture(_texture *texture, uint32_t width, uint32_t height, uin
 			D3DPOOL_SYSTEMMEM,
 			&texture->surface.data,
 			NULL) != D3D_OK) {
-		fprintf(stderr, "Unable to create the memory surface\n");
+		MessageBox(NULL, "Unable to create the memory surface", "Error!",
+		        MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
 
@@ -1190,8 +1196,11 @@ BYTE d3d9_create_shader(_shader *shd) {
 				ID3DXBuffer_Release(code);
 				break;
 			case COMPILERSHADER_NOT_FOUND:
-				fprintf(stderr, "ATTENTION: DirectX HLSL compiler installation are incomplete or "
-						"corrupted.\n           Please reinstall DirectX 9C\n");
+				MessageBox(NULL,
+					"ATTENTION: DirectX HLSL compiler installation are incomplete or corrupted.\n"
+					"           Please reinstall DirectX 10\n"	,
+					"Error!",
+					MB_ICONEXCLAMATION | MB_OK);
 				d3d9_release_shader(shd);
 				return (EXIT_ERROR);
 			default:
@@ -1260,8 +1269,11 @@ BYTE d3d9_create_shader(_shader *shd) {
 				break;
 			}
 			case COMPILERSHADER_NOT_FOUND:
-				fprintf(stderr, "ATTENTION: DirectX HLSL compiler installation are incomplete or "
-						"corrupted.\n           Please reinstall DirectX 9C\n");
+				MessageBox(NULL,
+					"ATTENTION: DirectX HLSL compiler installation are incomplete or corrupted.\n"
+					"           Please reinstall DirectX 10\n"	,
+					"Error!",
+					MB_ICONEXCLAMATION | MB_OK);
 				d3d9_release_shader(shd);
 				return (EXIT_ERROR);
 			default:

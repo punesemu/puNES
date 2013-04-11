@@ -10,11 +10,8 @@
 #include <libgen.h>
 #include "cmd_line.h"
 #include "cfg_file.h"
-#include "gfx.h"
 #include "version.h"
-#include "emu.h"
-#include "gamegenie.h"
-#include "opengl.h"
+#include "gfx.h"
 #include "gui.h"
 #define __CMDLINE__
 #include "param.h"
@@ -86,23 +83,26 @@ BYTE cmd_line_parse(int argc, char **argv) {
 			case 'q':
 				param_search(0, optarg, param_audio_quality, cfg_from_file.audio_quality = index);
 				break;
-			case 's':
-				param_search(1, optarg, param_size, cfg_from_file.scale = index);
-				gfx.scale_before_fscreen = cfg_from_file.scale;
-				break;
 			case 'r':
 				param_search(0, optarg, param_render, cfg_from_file.render = index);
 				gfx_set_render(cfg_from_file.render);
 				break;
-			case 'v':
-				param_search(0, optarg, param_off_on, cfg_from_file.vsync = index);
+			case 's':
+				param_search(1, optarg, param_size, cfg_from_file.scale = index);
+				gfx.scale_before_fscreen = cfg_from_file.scale;
 				break;
 			case 't':
 				param_search(0, optarg, param_no_yes, cfg_from_file.aspect_ratio = !index);
 				break;
+/* TODO: da eliminare uan volta gestisto il vsync nella versione d3d9 */
+#ifndef D3D9
 			case 'u':
 				param_search(0, optarg, param_no_yes, cfg_from_file.fullscreen = index);
 				break;
+			case 'v':
+				param_search(0, optarg, param_off_on, cfg_from_file.vsync = index);
+				break;
+#endif
 			default:
 				break;
 		}
@@ -113,6 +113,14 @@ BYTE cmd_line_parse(int argc, char **argv) {
 }
 BYTE cmd_line_check_portable(int argc, char **argv) {
 	int opt;
+
+#if defined MINGW32 || defined MINGW64
+	if (!(strncmp(argv[0] + (strlen(argv[0]) - 6), "_p", 2))) {
+#else
+	if (!(strcmp(argv[0] + (strlen(argv[0]) - 2), "_p"))) {
+#endif
+		return (TRUE);
+	}
 
 	for (opt = 0; opt < argc; opt++) {
 		if (!(strcmp(argv[opt], "--portable"))) {

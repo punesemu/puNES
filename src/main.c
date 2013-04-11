@@ -33,18 +33,10 @@ int main(int argc, char **argv) {
 	memset(&info, 0x00, sizeof(info));
 	info.machine = info.machine_db = DEFAULT;
 
-	{
-#if defined MINGW32 || defined MINGW64
-		if (!(strncmp(argv[0] + (strlen(argv[0]) - 6), "_p", 2)) ||
-				(cmd_line_check_portable(argc, argv) == TRUE)) {
-#else
-		if (!(strcmp(argv[0] + (strlen(argv[0]) - 2), "_p")) ||
-				(cmd_line_check_portable(argc, argv) == TRUE)) {
-#endif
-			info.portable = TRUE;
-		} else {
-			info.portable = FALSE;
-		}
+	if (cmd_line_check_portable(argc, argv) == TRUE) {
+		info.portable = TRUE;
+	} else {
+		info.portable = FALSE;
 	}
 
 	gui_init(argc, argv);
