@@ -648,10 +648,6 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 		gfx.w[VIDEO_MODE] = width;
 		gfx.h[VIDEO_MODE] = height;
 
-		/*
-		SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, cfg->vsync);
-		*/
-
 		if (fullscreen == TRUE) {
 			gfx.w[VIDEO_MODE] = gfx.w[MONITOR];
 			gfx.h[VIDEO_MODE] = gfx.h[MONITOR];
@@ -685,8 +681,6 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 	if (info.on_cfg == TRUE) {
 		info.on_cfg = FALSE;
 	}
-
-	return;
 }
 void gfx_draw_screen(BYTE forced) {
 	/* filtro e aggiornamento texture */
@@ -849,16 +843,19 @@ BYTE d3d9_create_device(UINT width, UINT height) {
 	d3dpp.Windowed = TRUE;
 	d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
 	d3dpp.hDeviceWindow = gui_emu_frame_id();
-	d3dpp.BackBufferCount = 1;
+	d3dpp.BackBufferCount = 2;
 	d3dpp.BackBufferFormat = d3d9.adapter->display_mode.Format;
 	d3dpp.BackBufferWidth = width;
 	d3dpp.BackBufferHeight = height;
 	d3dpp.EnableAutoDepthStencil = TRUE;
 	d3dpp.AutoDepthStencilFormat = D3DFMT_D16;
 	d3dpp.MultiSampleQuality = D3DMULTISAMPLE_NONE;
-	d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
-	//d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;
-	//d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_ONE;
+	if (cfg->vsync == TRUE) {
+		//d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;
+		d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_ONE;
+	} else {
+		d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
+	}
 
 	if (IDirect3D9_CreateDevice(d3d9.d3d,
 			d3d9.adapter->id,
@@ -868,7 +865,7 @@ BYTE d3d9_create_device(UINT width, UINT height) {
 			&d3dpp,
 			&d3d9.adapter->dev) != D3D_OK) {
 		MessageBox(NULL, "Unable to create d3d device", "Error!",
-		        MB_ICONEXCLAMATION | MB_OK);
+				MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
 
@@ -889,7 +886,7 @@ BYTE d3d9_create_context(UINT width, UINT height) {
 			&d3d9.quad,
 			NULL) != D3D_OK) {
 		MessageBox(NULL, "Unable to create the vertex buffer", "Error!",
-		        MB_ICONEXCLAMATION | MB_OK);
+				MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
 
@@ -908,7 +905,7 @@ BYTE d3d9_create_context(UINT width, UINT height) {
 			/* creo la texture principale */
 			if (d3d9_create_texture(&d3d9.texture, w, h, 0, POWER_OF_TWO) == EXIT_ERROR) {
 				MessageBox(NULL, "Unable to create main texture", "Error!",
-				        MB_ICONEXCLAMATION | MB_OK);
+						MB_ICONEXCLAMATION | MB_OK);
 				return (EXIT_ERROR);
 			}
 		}
@@ -1123,7 +1120,7 @@ BYTE d3d9_create_texture(_texture *texture, uint32_t width, uint32_t height, uin
 			&texture->data,
 			NULL) != D3D_OK) {
 		MessageBox(NULL, "Unable to create the texture", "Error!",
-		        MB_ICONEXCLAMATION | MB_OK);
+				MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
 
@@ -1141,7 +1138,7 @@ BYTE d3d9_create_texture(_texture *texture, uint32_t width, uint32_t height, uin
 			&texture->surface.data,
 			NULL) != D3D_OK) {
 		MessageBox(NULL, "Unable to create the memory surface", "Error!",
-		        MB_ICONEXCLAMATION | MB_OK);
+				MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
 

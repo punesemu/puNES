@@ -77,8 +77,8 @@ enum { CHECK, ENAB };
 #define COMBO_SS_WIDTH   60
 #define SEPARATOR_WIDTH  3
 
-LRESULT CALLBACK cbt_proc(int nCode, WPARAM wParam, LPARAM lParam);
-long __stdcall main_win_proc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam);
+LRESULT CALLBACK cbt_proc(int code, WPARAM wParam, LPARAM lParam);
+long __stdcall main_win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 long __stdcall timeline_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 long __stdcall save_slot_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 long __stdcall about_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -90,8 +90,8 @@ void set_mode(BYTE mode);
 void set_scale(BYTE scale);
 void set_overscan(BYTE oscan);
 void set_filter(BYTE filter);
-void set_rendering(BYTE bool);
-void set_vsync(BYTE bool);
+void set_rendering(BYTE rendering);
+void set_vsync(BYTE vsync);
 void set_samplerate(int samplerate);
 void set_channels(int channels);
 void set_audio_quality(int quality);
@@ -99,7 +99,7 @@ void set_fps(int fps);
 void set_frame_skip(int frameskip);
 void set_gamegenie(void);
 void __stdcall time_handler_redraw(void);
-HBITMAP create_bitmap_mask(HBITMAP hbmColour, COLORREF crTransparent);
+HBITMAP create_bitmap_mask(HBITMAP hbm_colour, COLORREF cr_transparent);
 void wrap_tl_preview(BYTE snap);
 void save_slot_incdec(BYTE mode);
 void save_slot_action(BYTE mode);
@@ -108,7 +108,7 @@ void fds_eject_insert_disk(void);
 void fds_select_side(int side);
 void change_rom(char *rom);
 
-static HHOOK hMsgBoxHook;
+static HHOOK msgbox_hook;
 static HWND main_win, sdl_frame, toolbox_frame;
 static HWND hFrameTl, hTimeline;
 static HWND hSepTl;
@@ -1268,16 +1268,16 @@ void gui_print_usage(char *usage) {
 }
 
 /* funzioni interne */
-LRESULT CALLBACK cbt_proc(int nCode, WPARAM wParam, LPARAM lParam) {
-	static HFONT hFont = NULL;
+LRESULT CALLBACK cbt_proc(int code, WPARAM wParam, LPARAM lParam) {
+	static HFONT font = NULL;
 	static HWND txt = NULL, button = NULL;
 	static RECT rc_button;
 
-	if (nCode < 0) {
-		return (CallNextHookEx(hMsgBoxHook, nCode, wParam, lParam));
+	if (code < 0) {
+		return (CallNextHookEx(msgbox_hook, code, wParam, lParam));
 	}
 
-	switch (nCode) {
+	switch (code) {
 		case HCBT_CREATEWND: {
 			HWND hwnd = (HWND) wParam;
 			TCHAR szClassName[16];
@@ -1306,11 +1306,11 @@ LRESULT CALLBACK cbt_proc(int nCode, WPARAM wParam, LPARAM lParam) {
 			{
 				INT x, y, widht_font = 13;
 
-				hFont = CreateFont(widht_font, 0, 0, 0, FW_DONTCARE, FALSE, FALSE, FALSE,
+				font = CreateFont(widht_font, 0, 0, 0, FW_DONTCARE, FALSE, FALSE, FALSE,
 						ANSI_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,
 						DEFAULT_QUALITY, FIXED_PITCH | FF_DONTCARE, TEXT("Monospace"));
 
-				SendMessage(txt, WM_SETFONT,(WPARAM) hFont, TRUE);
+				SendMessage(txt, WM_SETFONT,(WPARAM) font, TRUE);
 				RedrawWindow(txt, NULL, NULL, RDW_UPDATENOW);
 
 #define BORDER_SIZE 2
@@ -1334,11 +1334,11 @@ LRESULT CALLBACK cbt_proc(int nCode, WPARAM wParam, LPARAM lParam) {
 			return (0);
 		}
 		case HCBT_DESTROYWND:
-			DeleteObject(hFont);
+			DeleteObject(font);
 			return (0);
 	}
 
-	return (CallNextHookEx(hMsgBoxHook, nCode, wParam, lParam));
+	return (CallNextHookEx(msgbox_hook, code, wParam, lParam));
 }
 long __stdcall main_win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	switch (msg) {
@@ -1957,19 +1957,19 @@ long __stdcall about_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 
 			HDC hdc = BeginPaint(hwnd, &ps);
 
-			HDC hdcMem = CreateCompatibleDC(hdc);
-			HBITMAP hbmOld = SelectObject(hdcMem, about_img);
+			HDC hdc_mem = CreateCompatibleDC(hdc);
+			HBITMAP hbm_old = SelectObject(hdc_mem, about_img);
 
 			GetObject(about_img, sizeof(bm), &bm);
 
-			SelectObject(hdcMem, about_mask);
-			BitBlt(hdc, 90, 30, bm.bmWidth, bm.bmHeight, hdcMem, 0, 0, SRCAND);
+			SelectObject(hdc_mem, about_mask);
+			BitBlt(hdc, 90, 30, bm.bmWidth, bm.bmHeight, hdc_mem, 0, 0, SRCAND);
 
-			SelectObject(hdcMem, about_img);
-			BitBlt(hdc, 90, 30, bm.bmWidth, bm.bmHeight, hdcMem, 0, 0, SRCPAINT);
+			SelectObject(hdc_mem, about_img);
+			BitBlt(hdc, 90, 30, bm.bmWidth, bm.bmHeight, hdc_mem, 0, 0, SRCPAINT);
 
-			SelectObject(hdcMem, hbmOld);
-			DeleteDC(hdcMem);
+			SelectObject(hdc_mem, hbm_old);
+			DeleteDC(hdc_mem);
 
 			EndPaint(hwnd, &ps);
 			break;
@@ -1987,9 +1987,9 @@ long __stdcall about_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 			break;
 		}
 		default:
-			return FALSE;
+			return (FALSE);
 	}
-	return TRUE;
+	return (TRUE);
 }
 double high_resolution_ms(void) {
 	uint64_t time, diff;
@@ -2225,8 +2225,8 @@ void set_rendering(BYTE rendering) {
 
 	ShowWindow(main_win, SW_NORMAL);
 }
-void set_vsync(BYTE bool) {
-	if (cfg->vsync == bool) {
+void set_vsync(BYTE vsync) {
+	if (cfg->vsync == vsync) {
 		return;
 	}
 
@@ -2238,7 +2238,7 @@ void set_vsync(BYTE bool) {
 	ShowWindow(main_win, SW_HIDE);
 
 	/* switch vsync */
-	cfg->vsync = bool;
+	cfg->vsync = vsync;
 
 	gfx_reset_video();
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE);
@@ -2336,45 +2336,45 @@ void set_gamegenie(void) {
 void __stdcall time_handler_redraw(void) {
 	gfx_draw_screen(TRUE);
 }
-HBITMAP create_bitmap_mask(HBITMAP hbmColour, COLORREF crTransparent) {
-	HDC hdcMem, hdcMem2;
-	HBITMAP hbmMask;
+HBITMAP create_bitmap_mask(HBITMAP hbm_colour, COLORREF cr_transparent) {
+	HDC hdc_mem, hdc_mem2;
+	HBITMAP hbm_mask;
 	BITMAP bm;
 
 	// Create monochrome (1 bit) mask bitmap.
-	GetObject(hbmColour, sizeof(BITMAP), &bm);
-	hbmMask = CreateBitmap(bm.bmWidth, bm.bmHeight, 1, 1, NULL);
+	GetObject(hbm_colour, sizeof(BITMAP), &bm);
+	hbm_mask = CreateBitmap(bm.bmWidth, bm.bmHeight, 1, 1, NULL);
 
 	// Get some HDCs that are compatible with the display driver
-	hdcMem = CreateCompatibleDC(0);
-	hdcMem2 = CreateCompatibleDC(0);
+	hdc_mem = CreateCompatibleDC(0);
+	hdc_mem2 = CreateCompatibleDC(0);
 
-	if (SelectBitmap(hdcMem, hbmColour) == 0) {
+	if (SelectBitmap(hdc_mem, hbm_colour) == 0) {
 		;
 	}
-	if (SelectBitmap(hdcMem2, hbmMask) == 0) {
+	if (SelectBitmap(hdc_mem2, hbm_mask) == 0) {
 		;
 	}
 
 	// Set the background colour of the colour image to the colour
 	// you want to be transparent.
-	SetBkColor(hdcMem, crTransparent);
+	SetBkColor(hdc_mem, cr_transparent);
 
 	// Copy the bits from the colour image to the B+W mask... everything
 	// with the background colour ends up white while everythig else ends up
 	// black...Just what we wanted.
-	BitBlt(hdcMem2, 0, 0, bm.bmWidth, bm.bmHeight, hdcMem, 0, 0, SRCCOPY);
+	BitBlt(hdc_mem2, 0, 0, bm.bmWidth, bm.bmHeight, hdc_mem, 0, 0, SRCCOPY);
 
 	// Take our new mask and use it to turn the transparent colour in our
 	// original colour image to black so the transparency effect will
 	// work right.
-	BitBlt(hdcMem, 0, 0, bm.bmWidth, bm.bmHeight, hdcMem2, 0, 0, SRCINVERT);
+	BitBlt(hdc_mem, 0, 0, bm.bmWidth, bm.bmHeight, hdc_mem2, 0, 0, SRCINVERT);
 
 	// Clean up.
-	DeleteDC(hdcMem);
-	DeleteDC(hdcMem2);
+	DeleteDC(hdc_mem);
+	DeleteDC(hdc_mem2);
 
-	return hbmMask;
+	return (hbm_mask);
 }
 void wrap_tl_preview(BYTE snap) {
 	if (!(tl.button | tl.key)) {

@@ -41,11 +41,13 @@ enum menu_inc_dec { INC, DEC };
 enum menu_save_load { SAVE, LOAD };
 enum menu_item_state { CHECK, ENAB };
 
-LRESULT CALLBACK cbt_proc(int nCode, WPARAM wParam, LPARAM lParam);
-long __stdcall main_proc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam);
+LRESULT CALLBACK cbt_proc(int code, WPARAM wParam, LPARAM lParam);
+long __stdcall main_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+long __stdcall about_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 void set_mode(BYTE mode);
 void set_rendering(BYTE rendering);
+void set_vsync(BYTE vsync);
 void set_scale(BYTE scale);
 void set_overscan(BYTE oscan);
 void set_filter(BYTE filter);
@@ -63,9 +65,11 @@ void make_reset(BYTE type);
 void fds_eject_insert_disk(void);
 void fds_select_side(int side);
 void change_rom(char *rom);
+HBITMAP create_bitmap_mask(HBITMAP hbm_colour, COLORREF cr_transparent);
 
-static HHOOK hMsgBoxHook;
+static HHOOK msgbox_hook;
 static HWND main_win, d3d_frame;
+HBITMAP about_img, about_mask;
 HMENU main_menu;
 HACCEL acc_keys;
 
@@ -178,14 +182,14 @@ BYTE gui_create(void) {
 	main_win = CreateWindowEx(WS_EX_CLIENTEDGE | WS_EX_ACCEPTFILES,
 			class_name,
 			"puNES D3D9 window",
-	        WS_OVERLAPPED | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | WS_CAPTION | WS_SYSMENU |
-	        WS_MINIMIZEBOX,
-	        CW_USEDEFAULT, CW_USEDEFAULT,
-	        CW_USEDEFAULT, CW_USEDEFAULT,
-	        (HWND) NULL,
-	        (HMENU) NULL,
-	        gui.main_hinstance,
-	        NULL);
+			WS_OVERLAPPED | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | WS_CAPTION | WS_SYSMENU |
+			WS_MINIMIZEBOX,
+			CW_USEDEFAULT, CW_USEDEFAULT,
+			CW_USEDEFAULT, CW_USEDEFAULT,
+			(HWND) NULL,
+			(HMENU) NULL,
+			gui.main_hinstance,
+			NULL);
 
 	if (main_win == NULL) {
 		MessageBox(NULL, "Window Creation Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
@@ -779,7 +783,7 @@ void gui_update(void) {
 			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_HQ3X);
 			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_HQ4X);
 
-			/* Video/Filter/HqX */
+			/* Video/Filter/NTSC */
 			SetMenuItemInfo(menu_to_change, 8, TRUE, &menuitem);
 			change_menuitem(CHECK, MF_ENABLED, IDM_SET_FILTER_RGBNTSCCOM);
 			change_menuitem(CHECK, MF_ENABLED, IDM_SET_FILTER_RGBNTSCSVD);
@@ -801,7 +805,7 @@ void gui_update(void) {
 			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_HQ3X);
 			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_HQ4X);
 
-			/* Video/Filter/HqX */
+			/* Video/Filter/NTSC */
 			SetMenuItemInfo(menu_to_change, 8, TRUE, &menuitem);
 			change_menuitem(CHECK, MF_GRAYED, IDM_SET_FILTER_RGBNTSCCOM);
 			change_menuitem(CHECK, MF_GRAYED, IDM_SET_FILTER_RGBNTSCSVD);
@@ -974,7 +978,6 @@ void gui_update(void) {
 	*/
 
 	/* Vsync */
-	/*
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_VSYNC_ON);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_VSYNC_OFF);
 	if (cfg->vsync) {
@@ -982,7 +985,6 @@ void gui_update(void) {
 	} else {
 		change_menuitem(CHECK, MF_CHECKED, IDM_SET_VSYNC_OFF);
 	}
-	*/
 
 	/* Aspect ratio */
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_STRETCHFLSCR);
@@ -1077,24 +1079,24 @@ void gui_set_thread_affinity(uint8_t core) {
 	return;
 }
 void gui_print_usage(char *usage) {
-	hMsgBoxHook = SetWindowsHookEx(WH_CBT, cbt_proc, NULL, GetCurrentThreadId());
+	msgbox_hook = SetWindowsHookEx(WH_CBT, cbt_proc, NULL, GetCurrentThreadId());
 	MessageBox(NULL, usage, NAME " parameters", MB_OK);
-	UnhookWindowsHookEx(hMsgBoxHook);
+	UnhookWindowsHookEx(msgbox_hook);
 }
 
 
 
 /* funzioni interne */
-LRESULT CALLBACK cbt_proc(int nCode, WPARAM wParam, LPARAM lParam) {
-	static HFONT hFont = NULL;
+LRESULT CALLBACK cbt_proc(int code, WPARAM wParam, LPARAM lParam) {
+	static HFONT font = NULL;
 	static HWND txt = NULL, button = NULL;
 	static RECT rc_button;
 
-	if (nCode < 0) {
-		return (CallNextHookEx(hMsgBoxHook, nCode, wParam, lParam));
+	if (code < 0) {
+		return (CallNextHookEx(msgbox_hook, code, wParam, lParam));
 	}
 
-	switch (nCode) {
+	switch (code) {
 		case HCBT_CREATEWND: {
 			HWND hwnd = (HWND) wParam;
 			TCHAR szClassName[16];
@@ -1123,11 +1125,11 @@ LRESULT CALLBACK cbt_proc(int nCode, WPARAM wParam, LPARAM lParam) {
 			{
 				INT x, y, widht_font = 13;
 
-				hFont = CreateFont(widht_font, 0, 0, 0, FW_DONTCARE, FALSE, FALSE, FALSE,
+				font = CreateFont(widht_font, 0, 0, 0, FW_DONTCARE, FALSE, FALSE, FALSE,
 						ANSI_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,
 						DEFAULT_QUALITY, FIXED_PITCH | FF_DONTCARE, TEXT("Monospace"));
 
-				SendMessage(txt, WM_SETFONT,(WPARAM) hFont, TRUE);
+				SendMessage(txt, WM_SETFONT,(WPARAM) font, TRUE);
 				RedrawWindow(txt, NULL, NULL, RDW_UPDATENOW);
 
 #define BORDER_SIZE 2
@@ -1151,11 +1153,11 @@ LRESULT CALLBACK cbt_proc(int nCode, WPARAM wParam, LPARAM lParam) {
 			return (0);
 		}
 		case HCBT_DESTROYWND:
-			DeleteObject(hFont);
+			DeleteObject(font);
 			return (0);
 	}
 
-	return (CallNextHookEx(hMsgBoxHook, nCode, wParam, lParam));
+	return (CallNextHookEx(msgbox_hook, code, wParam, lParam));
 }
 long __stdcall main_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	switch (msg) {
@@ -1440,12 +1442,14 @@ long __stdcall main_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 				case IDM_SET_EFFECT_CUBE:
 					set_effect();
 					break;
+				*/
 				case IDM_SET_VSYNC_ON:
 					set_vsync(TRUE);
 					break;
 				case IDM_SET_VSYNC_OFF:
 					set_vsync(FALSE);
 					break;
+				/*
 				case IDM_SET_FULLSCREEN:
 					gui_fullscreen();
 					break;
@@ -1506,20 +1510,22 @@ long __stdcall main_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 					cfg->save_on_exit = !cfg->save_on_exit;
 					gui_update();
 					break;
+				*/
 				case IDM_HELP_ABOUT:
 					if (!info.portable) {
 						DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_ABOUT), hwnd,
-						        (DLGPROC) about_proc);
+								(DLGPROC) about_proc);
 					} else {
 						DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_ABOUT_PORTABLE), hwnd,
-						        (DLGPROC) about_proc);
+								(DLGPROC) about_proc);
 					}
-					SetFocus(sdl_frame);
+					SetFocus(d3d_frame);
 					break;
+				/*
 				case IDM_SET_INPUT_CONFIG:
 					cfg_input(hwnd);
 					break;
-			*/
+				*/
 			}
 			break;
 		}
@@ -1563,6 +1569,53 @@ long __stdcall main_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	}
 
 	return (DefWindowProc(hwnd, msg, wParam, lParam));
+}
+long __stdcall about_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+	switch (msg) {
+		case WM_DESTROY:
+			DeleteObject(about_img);
+			DeleteObject(about_mask);
+			PostQuitMessage(0);
+			break;
+		case WM_PAINT: {
+			BITMAP bm;
+			PAINTSTRUCT ps;
+
+			HDC hdc = BeginPaint(hwnd, &ps);
+
+			HDC hdc_mem = CreateCompatibleDC(hdc);
+			HBITMAP hbm_old = SelectObject(hdc_mem, about_img);
+
+			GetObject(about_img, sizeof(bm), &bm);
+
+			SelectObject(hdc_mem, about_mask);
+			BitBlt(hdc, 90, 30, bm.bmWidth, bm.bmHeight, hdc_mem, 0, 0, SRCAND);
+
+			SelectObject(hdc_mem, about_img);
+			BitBlt(hdc, 90, 30, bm.bmWidth, bm.bmHeight, hdc_mem, 0, 0, SRCPAINT);
+
+			SelectObject(hdc_mem, hbm_old);
+			DeleteDC(hdc_mem);
+
+			EndPaint(hwnd, &ps);
+			break;
+		}
+		case WM_INITDIALOG:
+			about_img = LoadBitmap(GetModuleHandle(NULL), MAKEINTRESOURCE(IDB_ABOUT));
+			about_mask = create_bitmap_mask(about_img, RGB(255, 255, 255));
+			return TRUE;
+		case WM_COMMAND: {
+			switch (LOWORD(wParam)) {
+				case IDOK:
+					EndDialog(hwnd, IDOK);
+					break;
+			}
+			break;
+		}
+		default:
+			return (FALSE);
+	}
+	return (TRUE);
 }
 
 
@@ -1619,6 +1672,16 @@ void set_rendering(BYTE rendering) {
 
 	gfx_set_render(rendering);
 	cfg->render = rendering;
+
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE);
+}
+void set_vsync(BYTE vsync) {
+	if (cfg->vsync == vsync) {
+		return;
+	}
+
+	/* switch vsync */
+	cfg->vsync = vsync;
 
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE);
 }
@@ -1785,6 +1848,46 @@ double high_resolution_ms(void) {
 
 	QueryPerformanceCounter(&time);
 	return (diff = (double) (time.QuadPart - gui.counter_start) / gui.frequency);
+}
+HBITMAP create_bitmap_mask(HBITMAP hbm_colour, COLORREF cr_transparent) {
+	HDC hdc_mem, hdc_mem2;
+	HBITMAP hbm_mask;
+	BITMAP bm;
+
+	// Create monochrome (1 bit) mask bitmap.
+	GetObject(hbm_colour, sizeof(BITMAP), &bm);
+	hbm_mask = CreateBitmap(bm.bmWidth, bm.bmHeight, 1, 1, NULL);
+
+	// Get some HDCs that are compatible with the display driver
+	hdc_mem = CreateCompatibleDC(0);
+	hdc_mem2 = CreateCompatibleDC(0);
+
+	if (SelectBitmap(hdc_mem, hbm_colour) == 0) {
+		;
+	}
+	if (SelectBitmap(hdc_mem2, hbm_mask) == 0) {
+		;
+	}
+
+	// Set the background colour of the colour image to the colour
+	// you want to be transparent.
+	SetBkColor(hdc_mem, cr_transparent);
+
+	// Copy the bits from the colour image to the B+W mask... everything
+	// with the background colour ends up white while everythig else ends up
+	// black...Just what we wanted.
+	BitBlt(hdc_mem2, 0, 0, bm.bmWidth, bm.bmHeight, hdc_mem, 0, 0, SRCCOPY);
+
+	// Take our new mask and use it to turn the transparent colour in our
+	// original colour image to black so the transparency effect will
+	// work right.
+	BitBlt(hdc_mem, 0, 0, bm.bmWidth, bm.bmHeight, hdc_mem2, 0, 0, SRCINVERT);
+
+	// Clean up.
+	DeleteDC(hdc_mem);
+	DeleteDC(hdc_mem2);
+
+	return (hbm_mask);
 }
 void change_menuitem(BYTE check_or_enab, UINT type, UINT menuitem_id) {
 	if (check_or_enab == CHECK) {

@@ -137,7 +137,7 @@ void set_default(void) {
 	cfg_from_file.render = RENDER_HLSL;
 	gfx_set_render(cfg_from_file.render);
 
-	//cfg_from_file.vsync = TRUE;
+	cfg_from_file.vsync = TRUE;
 	//cfg_from_file.fullscreen = NO_FULLSCR;
 	cfg_from_file.aspect_ratio = FALSE;
 	//cfg_from_file.save_on_exit = FALSE;
