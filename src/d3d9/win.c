@@ -232,7 +232,7 @@ void gui_set_video_mode(void) {
 	pt_diff.y = (rc_wind.bottom - rc_wind.top) - rc_client.bottom;
 	MoveWindow(main_win, rc_wind.left, rc_wind.top, gfx.w[VIDEO_MODE] + pt_diff.x,
 			gfx.h[VIDEO_MODE] + pt_diff.y + TOOLBAR_HEIGHT, TRUE);
-	/* aggiorno la finestra dell'sdl */
+	/* aggiorno la finestra dell'd3d */
 	MoveWindow(d3d_frame, 0, 0, gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE], TRUE);
 	/* aggiorno la toolbar */
 	//MoveWindow(toolbox_frame, 0, gfx.h[VIDEO_MODE], gfx.w[VIDEO_MODE], TOOLBAR_HEIGHT, TRUE);
@@ -1087,16 +1087,31 @@ void gui_print_usage(char *usage) {
 /* funzioni interne */
 LRESULT CALLBACK cbt_proc(int nCode, WPARAM wParam, LPARAM lParam) {
 	static HFONT hFont = NULL;
+	static HWND txt = NULL, button = NULL;
+	static RECT rc_button;
 
 	if (nCode < 0) {
 		return (CallNextHookEx(hMsgBoxHook, nCode, wParam, lParam));
 	}
 
 	switch (nCode) {
+		case HCBT_CREATEWND: {
+			HWND hwnd = (HWND) wParam;
+			TCHAR szClassName[16];
+
+			if (GetClassName(hwnd, szClassName, 16)) {
+				if (strcmp(szClassName, "Static") == 0) {
+					txt = hwnd;
+				} else if (strcmp(szClassName, "Button") == 0) {
+					button = hwnd;
+				}
+			}
+			break;
+		}
 		case HCBT_ACTIVATE: {
-			HWND hwnd = (HWND) wParam, hCh;
+			HWND hwnd = (HWND) wParam;
 			RECT rc_client, rc_wind;
-			POINT pt_diff, pt_text;
+			POINT pt_diff;
 
 			/* aggiorno la dimensione della finestra principale */
 			GetWindowRect(hwnd, &rc_wind);
@@ -1104,43 +1119,40 @@ LRESULT CALLBACK cbt_proc(int nCode, WPARAM wParam, LPARAM lParam) {
 
 			pt_diff.x = (rc_wind.right - rc_wind.left) - rc_client.right;
 			pt_diff.y = (rc_wind.bottom - rc_wind.top) - rc_client.bottom;
-			pt_text.x = pt_text.y = 0;
 
-			hCh = GetWindow(hwnd, GW_CHILD);
+			{
+				INT x, y, widht_font = 13;
 
-			while (hCh) {
-				TCHAR szClassName[16];
+				hFont = CreateFont(widht_font, 0, 0, 0, FW_DONTCARE, FALSE, FALSE, FALSE,
+						ANSI_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,
+						DEFAULT_QUALITY, FIXED_PITCH | FF_DONTCARE, TEXT("Monospace"));
 
-				if (GetClassName(hCh, szClassName, 16)&& (strcmp(szClassName, "Static") == 0)) {
-					INT widht_font = 13;
-					//HDC hdc = GetDC(hCh);
-					//INT nHeight = -MulDiv(widht_font, GetDeviceCaps(hdc, LOGPIXELSY), 72);
+				SendMessage(txt, WM_SETFONT,(WPARAM) hFont, TRUE);
+				RedrawWindow(txt, NULL, NULL, RDW_UPDATENOW);
 
-					hFont = CreateFont(widht_font, 0, 0, 0, FW_DONTCARE, FALSE, FALSE, FALSE,
-							ANSI_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY,
-							FIXED_PITCH | FF_DONTCARE, TEXT("Monospace"));
+#define BORDER_SIZE 2
+				x = (50 * widht_font);
+				y = (30 * widht_font);
 
-					SendMessage(hCh, WM_SETFONT,(WPARAM) hFont, TRUE);
-
-					pt_text.x = (50 * widht_font);
-					pt_text.y = (30 * widht_font);
-
-					MoveWindow(hCh, 0,0, pt_text.x, pt_text.y, TRUE);
+				if (rc_button.bottom == 0) {
+					GetClientRect(button, &rc_button);
 				}
 
-				hCh = GetNextWindow(hCh, GW_HWNDNEXT);
-			}
+				pt_diff.x += x;
+				pt_diff.y += y + (rc_button.bottom + (BORDER_SIZE * 2));
 
-			MoveWindow(hwnd, rc_wind.left, rc_wind.top, pt_text.x + pt_diff.x,
-					pt_text.y + pt_diff.y, TRUE);
+				MoveWindow(hwnd, rc_wind.left, rc_wind.top, pt_diff.x, pt_diff.y, TRUE);
+				MoveWindow(txt, 0, 0, x, y, TRUE);
+				MoveWindow(button, BORDER_SIZE, y + BORDER_SIZE, x - (BORDER_SIZE * 2),
+						rc_button.bottom, TRUE);
+#undef BORDER_SIZE
+			}
 
 			return (0);
 		}
 		case HCBT_DESTROYWND:
 			DeleteObject(hFont);
 			return (0);
-			break;
-
 	}
 
 	return (CallNextHookEx(hMsgBoxHook, nCode, wParam, lParam));
@@ -1610,7 +1622,6 @@ void set_rendering(BYTE rendering) {
 
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE);
 }
-
 void set_scale(BYTE scale) {
 	if (cfg->scale == scale) {
 		return;
