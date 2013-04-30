@@ -1060,6 +1060,15 @@ BYTE d3d9_create_context(UINT width, UINT height) {
 
 	if (gfx.hlsl.enabled == TRUE) {
 		d3d9_create_shader(&d3d9.shader);
+		/* texture per il testo */
+		if (gfx.hlsl.used == TRUE) {
+			if (d3d9_create_texture(&d3d9.shader.text, d3d9.texture.w * d3d9.factor,
+					d3d9.texture.w * d3d9.factor, 0, NO_POWER_OF_TWO) == EXIT_ERROR) {
+				MessageBox(NULL, "Unable to create text texture", "Error!",
+						MB_ICONEXCLAMATION | MB_OK);
+				return (EXIT_ERROR);
+			}
+		}
 	}
 
 	return (EXIT_OK);
@@ -1151,10 +1160,12 @@ void d3d9_release_texture(_texture *texture) {
 	}
 
 	texture->map0 = NULL;
+	texture->w = texture->h = 0;
 
 	if (texture->surface.data) {
 		IDirect3DSurface9_Release(texture->surface.data);
 		texture->surface.data = NULL;
+		texture->surface.w = texture->surface.h = 0;
 	}
 }
 BYTE d3d9_create_shader(_shader *shd) {
@@ -1298,6 +1309,9 @@ void d3d9_release_shader(_shader *shd) {
 		IDirect3DDevice9_SetPixelShader(d3d9.adapter->dev, NULL);
 		IDirect3DPixelShader9_Release(shd->pxl);
 		shd->pxl = NULL;
+	}
+	if (shd->text.data) {
+		d3d9_release_texture(&shd->text);
 	}
 }
 int d3d9_power_of_two(int base) {
