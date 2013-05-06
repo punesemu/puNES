@@ -10,6 +10,17 @@
 
 #include "common.h"
 
+enum txt_type {	TXT_INFO, TXT_SINGLE };
+enum txt_fonts { FONT_8X10, FONT_12X10 };
+enum txt_misc { TXT_MAX_MSG = 256, TXT_MAX_LINES = 10 };
+enum txt_position {
+	TXT_CENTER = 65000,
+	TXT_LEFT,
+	TXT_RIGHT,
+	TXT_UP,
+	TXT_DOWN
+};
+
 #define text_add_line_info(factor, ...)\
 	text_add_line(0, 0, 0, 0, 0, 0, 0, 0, __VA_ARGS__)
 #define text_add_line_single(factor, font, alpha, start_x, start_y, x, y, ...)\
