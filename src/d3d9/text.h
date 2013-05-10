@@ -8,6 +8,12 @@
 #ifndef TEXT_H_
 #define TEXT_H_
 
+#if defined SDL
+#include <SDL.h>
+#elif defined D3D9
+#include <d3d9.h>
+#endif
+#include <time.h>
 #include "common.h"
 
 enum txt_type {	TXT_INFO, TXT_SINGLE };
@@ -20,11 +26,94 @@ enum txt_position {
 	TXT_UP,
 	TXT_DOWN
 };
+enum txt_tgs {
+	TXT_NORMAL,
+	TXT_RED,
+	TXT_YELLOW,
+	TXT_GREEN,
+	TXT_CYAN,
+	TXT_BROWN,
+	TXT_BLUE,
+	TXT_BLACK,
+	TXT_FONT_8,
+	TXT_FONT_12,
+	TXT_BUTTON_LEFT,
+	TXT_BUTTON_RIGHT,
+	TXT_BUTTON_UP,
+	TXT_BUTTON_DOWN,
+	TXT_BUTTON_SELECT,
+	TXT_BUTTON_START,
+	TXT_BUTTON_A,
+	TXT_BUTTON_B,
+	TXT_FLOPPY,
+	TXT_TAGS
+};
 
 #define text_add_line_info(factor, ...)\
 	text_add_line(0, 0, 0, 0, 0, 0, 0, 0, __VA_ARGS__)
 #define text_add_line_single(factor, font, alpha, start_x, start_y, x, y, ...)\
 	text_add_line(0, 0, 0, 0, 0, 0, 0, 0, __VA_ARGS__)
+
+typedef struct {
+	uint8_t enabled;
+	uint8_t bck;
+	uint8_t bck_color;
+	uint8_t font;
+	uint8_t factor;
+	int start_x;
+	int start_y;
+	int x;
+	int y;
+	int w;
+	int h;
+	int alpha_start_fade;
+	int alpha[3];
+	time_t start;
+	char text[TXT_MAX_MSG];
+	int length;
+
+	int index;
+
+#if defined SDL
+	SDL_Surface *surface;
+	SDL_Surface *blank;
+#elif defined D3D9
+	LPDIRECT3DSURFACE9 *surface;
+	LPDIRECT3DSURFACE9 *blank;
+#endif
+
+} _txt_element;
+
+struct _text {
+#if defined SDL
+	SDL_Surface *surface;
+#elif defined D3D9
+	LPDIRECT3DSURFACE9 *surface;
+#endif
+	BYTE on_screen;
+	uint32_t w;
+	uint32_t h;
+
+	struct _txt_info {
+		uint8_t index;
+		uint8_t count;
+		_txt_element buffers[TXT_MAX_LINES];
+		_txt_element *lines[2][TXT_MAX_LINES];
+	} info;
+	struct _txt_single {
+		uint8_t count;
+		_txt_element *lines[TXT_MAX_LINES];
+	} single;
+	struct _txt_tas {
+		_txt_element counter_frames;
+		_txt_element controllers[4];
+	} tas;
+	struct _txt_fds {
+		_txt_element floppy;
+	} fds;
+} text;
+
+uint32_t txt_table[TXT_BLACK + 1];
 
 void text_init(void);
 void text_reset(void);

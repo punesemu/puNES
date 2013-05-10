@@ -100,6 +100,7 @@ struct _d3d9 {
 	_d3d9_adapter *array, *adapter;
 
 	_texture texture;
+	_surface text;
 	_texcoords texcoords;
 	_texcoords quadcoords;
 	_shader shader;
@@ -675,6 +676,8 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 		}
 	}
 
+	gfx_text_reset();
+
 	/* setto il titolo della finestra */
 	gui_update();
 
@@ -784,6 +787,27 @@ void gfx_control_change_monitor(void *monitor) {
 			break;
 		}
 	}
+}
+void gfx_text_create_surface(void *surface, WORD w, WORD h) {
+	if (IDirect3DDevice9_CreateOffscreenPlainSurface(d3d9.adapter->dev,
+			w, h,
+			d3d9.adapter->display_mode.Format,
+			D3DPOOL_SYSTEMMEM,
+			surface,
+			NULL) != D3D_OK ) {
+		//MessageBox(NULL, "Unable to create ele text surface", "Error!",
+		//		MB_ICONEXCLAMATION | MB_OK);
+	}
+}
+void gfx_text_reset(void) {
+	txt_table[TXT_NORMAL] = D3DCOLOR_ARGB(0, 0xFF, 0xFF, 0xFF);
+	txt_table[TXT_RED]    = D3DCOLOR_ARGB(0, 0xFF, 0x4C, 0x3E);
+	txt_table[TXT_YELLOW] = D3DCOLOR_ARGB(0, 0xFF, 0xFF, 0   );
+	txt_table[TXT_GREEN]  = D3DCOLOR_ARGB(0, 0   , 0xFF, 0   );
+	txt_table[TXT_CYAN]   = D3DCOLOR_ARGB(0, 0   , 0xFF, 0xFF);
+	txt_table[TXT_BROWN]  = D3DCOLOR_ARGB(0, 0xEB, 0x89, 0x31);
+	txt_table[TXT_BLUE]   = D3DCOLOR_ARGB(0, 0x2D, 0x8D, 0xBD);
+	txt_table[TXT_BLACK]  = D3DCOLOR_ARGB(0, 0   , 0   , 0   );
 }
 void gfx_quit(void) {
 	ntsc_quit();
@@ -1060,21 +1084,38 @@ BYTE d3d9_create_context(UINT width, UINT height) {
 
 	if (gfx.hlsl.enabled == TRUE) {
 		d3d9_create_shader(&d3d9.shader);
-		/* texture per il testo */
-		if (gfx.hlsl.used == TRUE) {
-			if (d3d9_create_texture(&d3d9.shader.text, d3d9.texture.w * d3d9.factor,
-					d3d9.texture.w * d3d9.factor, 0, NO_POWER_OF_TWO) == EXIT_ERROR) {
-				MessageBox(NULL, "Unable to create text texture", "Error!",
-						MB_ICONEXCLAMATION | MB_OK);
-				return (EXIT_ERROR);
-			}
-		}
 	}
+
+	/* superficie per il testo */
+	d3d9.text.w = d3d9.text.h =  d3d9.texture.w * d3d9.factor;
+
+	if (IDirect3DDevice9_CreateOffscreenPlainSurface(d3d9.adapter->dev,
+			d3d9.text.w,
+			d3d9.text.h,
+			d3d9.adapter->display_mode.Format,
+			D3DPOOL_SYSTEMMEM,
+			&d3d9.text.data,
+			NULL) != D3D_OK ) {
+		MessageBox(NULL, "Unable to create text surface", "Error!", MB_ICONEXCLAMATION | MB_OK);
+		return (EXIT_ERROR);
+	}
+
+	//if (d3d9_create_texture(&d3d9.text, d3d9.texture.w * d3d9.factor, d3d9.texture.w * d3d9.factor,
+	//		0, NO_POWER_OF_TWO) == EXIT_ERROR) {
+	//	MessageBox(NULL, "Unable to create text texture", "Error!", MB_ICONEXCLAMATION | MB_OK);
+	//	return (EXIT_ERROR);
+	//}
 
 	return (EXIT_OK);
 }
 void d3d9_release_context(void) {
 	d3d9_release_shader(&d3d9.shader);
+
+	if (d3d9.text.data) {
+		IDirect3DSurface9_Release(d3d9.text.data);
+		d3d9.text.data = NULL;
+		d3d9.text.w = d3d9.text.h = 0;
+	}
 
 	d3d9_release_texture(&d3d9.texture);
 
@@ -1309,9 +1350,6 @@ void d3d9_release_shader(_shader *shd) {
 		IDirect3DDevice9_SetPixelShader(d3d9.adapter->dev, NULL);
 		IDirect3DPixelShader9_Release(shd->pxl);
 		shd->pxl = NULL;
-	}
-	if (shd->text.data) {
-		d3d9_release_texture(&shd->text);
 	}
 }
 int d3d9_power_of_two(int base) {

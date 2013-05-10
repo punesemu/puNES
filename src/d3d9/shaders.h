@@ -39,17 +39,18 @@ enum shader_type {
 };
 
 typedef struct {
+	LPDIRECT3DSURFACE9 data;
+	WORD w;
+	WORD h;
+} _surface;
+typedef struct {
 	LPDIRECT3DTEXTURE9 data;
 	LPDIRECT3DSURFACE9 map0;
 
 	FLOAT w;
 	FLOAT h;
 
-	struct _surface {
-		LPDIRECT3DSURFACE9 data;
-		WORD w;
-		WORD h;
-	} surface;
+	_surface surface;
 } _texture;
 typedef struct {
 	const char *vertex;
@@ -64,8 +65,6 @@ typedef struct {
 
 	UINT id;
 	_shader_code *code;
-
-	_texture text;
 } _shader;
 
 #endif /* SHADERS_H_ */

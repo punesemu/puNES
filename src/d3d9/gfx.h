@@ -7,9 +7,9 @@
 
 /* definizione funzione virtuale */
 #ifndef gfx_filter_function
-#define gfx_filter_function(name) void name(WORD *screen, WORD **screen_index, uint32_t *palette,\
-		BYTE bpp, uint32_t pitch, void *pix, WORD rows, WORD lines, WORD width, WORD height,\
-		BYTE factor)
+#define gfx_filter_function(name)\
+	void name(WORD *screen, WORD **screen_index, uint32_t *palette, BYTE bpp, uint32_t pitch,\
+	void *pix, WORD rows, WORD lines, WORD width, WORD height, BYTE factor)
 #endif
 
 #ifndef GFX_H_
@@ -71,6 +71,8 @@ void gfx_set_render(BYTE render);
 void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE force_scale);
 void gfx_draw_screen(BYTE forced);
 void gfx_control_change_monitor(void *monitor);
+void gfx_text_create_surface(void *surface, WORD w, WORD h);
+void gfx_text_reset(void);
 void gfx_quit(void);
 
 #endif /* GFX_H_ */
