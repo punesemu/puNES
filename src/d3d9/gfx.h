@@ -72,6 +72,8 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 void gfx_draw_screen(BYTE forced);
 void gfx_control_change_monitor(void *monitor);
 void gfx_text_create_surface(void *surface, WORD w, WORD h);
+void gfx_text_release_surface(void *surface);
+void gfx_text_rect_fill(void *surface, void *rect, uint32_t color);
 void gfx_text_reset(void);
 void gfx_quit(void);
 

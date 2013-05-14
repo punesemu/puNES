@@ -11,7 +11,7 @@
 #if defined SDL
 #include <SDL.h>
 #elif defined D3D9
-#include <d3d9.h>
+//#include <d3d9.h>
 #endif
 #include <time.h>
 #include "common.h"
@@ -55,6 +55,10 @@ enum txt_tgs {
 	text_add_line(0, 0, 0, 0, 0, 0, 0, 0, __VA_ARGS__)
 
 typedef struct {
+	int16_t x, y;
+	uint16_t w, h;
+} _rect;
+typedef struct {
 	uint8_t enabled;
 	uint8_t bck;
 	uint8_t bck_color;
@@ -78,8 +82,10 @@ typedef struct {
 	SDL_Surface *surface;
 	SDL_Surface *blank;
 #elif defined D3D9
-	LPDIRECT3DSURFACE9 *surface;
-	LPDIRECT3DSURFACE9 *blank;
+	void *surface;
+	void *blank;
+	//LPDIRECT3DSURFACE9 surface;
+	//LPDIRECT3DSURFACE9 blank;
 #endif
 
 } _txt_element;
@@ -88,7 +94,8 @@ struct _text {
 #if defined SDL
 	SDL_Surface *surface;
 #elif defined D3D9
-	LPDIRECT3DSURFACE9 *surface;
+	void *surface;
+	//LPDIRECT3DSURFACE9 surface;
 #endif
 	BYTE on_screen;
 	uint32_t w;

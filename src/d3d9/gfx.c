@@ -793,11 +793,28 @@ void gfx_text_create_surface(void *surface, WORD w, WORD h) {
 			w, h,
 			d3d9.adapter->display_mode.Format,
 			D3DPOOL_SYSTEMMEM,
-			surface,
+			(LPDIRECT3DSURFACE9 *) surface,
 			NULL) != D3D_OK ) {
 		//MessageBox(NULL, "Unable to create ele text surface", "Error!",
 		//		MB_ICONEXCLAMATION | MB_OK);
 	}
+}
+void gfx_text_release_surface(void *surface) {
+	if (surface) {
+		IDirect3DSurface9_Release((LPDIRECT3DSURFACE9) surface);
+		surface = NULL;
+	}
+}
+void gfx_text_rect_fill(void *surface, void *rect, uint32_t color) {
+	_rect *a = rect;
+	RECT b;
+
+	b.left = a->x;
+	b.top = a->y;
+	b.right = a->x + a->w;
+	b.bottom = a->y + a->h;
+
+	IDirect3DDevice9_ColorFill(d3d9.adapter->dev, (LPDIRECT3DSURFACE9) surface, &b, color);
 }
 void gfx_text_reset(void) {
 	txt_table[TXT_NORMAL] = D3DCOLOR_ARGB(0, 0xFF, 0xFF, 0xFF);
@@ -811,6 +828,7 @@ void gfx_text_reset(void) {
 }
 void gfx_quit(void) {
 	ntsc_quit();
+	text_quit();
 
 	if (d3d9.palette) {
 		free(d3d9.palette);

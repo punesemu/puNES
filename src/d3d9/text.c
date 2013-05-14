@@ -35,6 +35,8 @@ static char txt_tags[][10] = {
 	"[a]"     ,	"[b]"   ,	"[floppy]"
 };
 
+static void INLINE rendering(_txt_element *txt);
+
 void text_init(void) {
 	uint8_t i;
 
@@ -235,10 +237,12 @@ void text_rendering(BYTE render) {
 				}
 
 				if (!ele->enabled) {
+					gfx_text_release_surface(ele->surface);
+					gfx_text_release_surface(ele->blank);
 					//SDL_FreeSurface(ele->surface);
 					//SDL_FreeSurface(ele->blank);
-					ele->surface = NULL;
-					ele->blank = NULL;
+					//ele->surface = NULL;
+					//ele->blank = NULL;
 				}
 			}
 		}
@@ -253,6 +257,7 @@ void text_rendering(BYTE render) {
 			if (ele != NULL) {
 				if (ele->enabled == TRUE) {
 					if (!ele->surface) {
+						gfx_text_create_surface(ele->surface, ele->w, ele->h);
 						//ele->surface = gfx_create_RGB_surface(text.surface, ele->w, ele->h);
 					}
 
@@ -278,8 +283,9 @@ void text_rendering(BYTE render) {
 						//rendering(ele);
 					}
 				} else {
+					gfx_text_release_surface(ele->surface);
 					//SDL_FreeSurface(ele->surface);
-					ele->surface = NULL;
+					//ele->surface = NULL;
 
 					free(text.single.lines[i]);
 					text.single.lines[i] = NULL;
@@ -312,11 +318,13 @@ void text_rendering(BYTE render) {
 			ele->h = font_size[ele->font][1];
 
 			if ((old_w != ele->w) && ele->surface) {
+				gfx_text_release_surface(ele->surface);
 				//SDL_FreeSurface(ele->surface);
-				ele->surface = NULL;
+				//ele->surface = NULL;
 			}
 
 			if (!ele->surface) {
+				gfx_text_create_surface(ele->surface, ele->w, ele->h);
 				//ele->surface = gfx_create_RGB_surface(text.surface, ele->w, ele->h);
 			}
 
@@ -339,6 +347,7 @@ void text_rendering(BYTE render) {
 			port_control(port1, BUT_B, "[b]");
 
 			if (!ele->surface) {
+				gfx_text_create_surface(ele->surface, ele->w, ele->h);
 				//ele->surface = gfx_create_RGB_surface(text.surface, ele->w, ele->h);
 			}
 
@@ -384,6 +393,7 @@ void text_rendering(BYTE render) {
 			strcat(ele->text, "[floppy]");
 
 			if (!ele->surface) {
+				gfx_text_create_surface(ele->surface, ele->w, ele->h);
 				//ele->surface = gfx_create_RGB_surface(text.surface, ele->w, ele->h);
 			}
 
@@ -394,5 +404,647 @@ void text_rendering(BYTE render) {
 	}
 }
 void text_quit(void) {
-	return;
+	if (text.info.count) {
+		uint8_t i;
+
+		for (i = 0; i < TXT_MAX_LINES; i++) {
+			_txt_element *ele = text.info.lines[text.info.index][i];
+
+			if (ele->enabled) {
+				gfx_text_release_surface(ele->surface);
+				//SDL_FreeSurface(ele->surface);
+				//ele->surface = NULL;
+
+				ele->enabled = FALSE;
+			}
+		}
+	}
+
+	if (text.single.count) {
+		uint8_t i;
+
+		for (i = 0; i < TXT_MAX_LINES; i++) {
+			_txt_element *ele = text.single.lines[i];
+
+			if (ele != NULL) {
+				gfx_text_release_surface(ele->surface);
+				//SDL_FreeSurface(ele->surface);
+				//ele->surface = NULL;
+
+				free(text.single.lines[i]);
+				text.single.lines[i] = NULL;
+
+				text.single.count--;
+			}
+		}
+	}
+
+	{
+		_txt_element *ele = &text.tas.counter_frames;
+		uint8_t i;
+
+		if (ele->surface) {
+			gfx_text_release_surface(ele->surface);
+			//SDL_FreeSurface(ele->surface);
+			//ele->surface = NULL;
+		}
+
+		for (i = 0; i < 4; i++) {
+			_txt_element *ele = text.tas.controllers;
+
+			if (ele->surface) {
+				gfx_text_release_surface(ele->surface);
+				//SDL_FreeSurface(ele->surface);
+				//ele->surface = NULL;
+			}
+		}
+	}
+
+	{
+		_txt_element *ele = &text.fds.floppy;
+
+		if (ele->surface) {
+			gfx_text_release_surface(ele->surface);
+			//SDL_FreeSurface(ele->surface);
+			//ele->surface = NULL;
+		}
+	}
+}
+
+
+
+
+
+
+
+
+static void INLINE rendering(_txt_element *ele) {
+	int i = 0, font_x = 0, font_y = 0, ch_font = ele->font;
+	uint32_t color[3], max_pixels = (text.w - 16), pixels = 0;
+	_rect surface_rect, font;
+
+	text.on_screen = TRUE;
+
+	font.x = 0;
+	font.w = ele->factor * font_size[ch_font][0];
+
+	surface_rect.x = ele->x;
+	surface_rect.y = ele->y;
+	surface_rect.w = ele->w;
+	surface_rect.h = ele->h;
+
+	if (ele->start_x >= TXT_CENTER) {
+		if (ele->start_x == TXT_CENTER) {
+			surface_rect.x = ((text.w - ele->w) >> 1) + ele->x;
+		} else if (ele->start_x == TXT_LEFT) {
+			surface_rect.x = 8 + ele->x;
+		} else if (ele->start_x == TXT_RIGHT) {
+			surface_rect.x = ((text.w - 8) - ele->w) + ele->x;
+		}
+		if (surface_rect.x < 0) {
+			surface_rect.x = 0;
+		}
+	}
+
+	if (ele->start_y >= TXT_CENTER) {
+		if (ele->start_y == TXT_CENTER) {
+			surface_rect.y = ((text.h - (ele->factor * font_size[ch_font][1])) >> 1)
+			        + ele->y;
+		} else if (ele->start_y == TXT_UP) {
+			surface_rect.y = 8 + ele->y;
+		} else if (ele->start_y == TXT_DOWN) {
+			surface_rect.y = ((text.h - 8) - font_size[ch_font][1]) + ele->y;
+		}
+		if (surface_rect.y < 0) {
+			surface_rect.y = 0;
+		}
+	}
+
+	color[0] = (ele->alpha[0] << 24) | txt_table[TXT_NORMAL];
+	color[1] = (ele->alpha[1] << 24) | txt_table[TXT_BLACK];
+	if (!ele->bck_color) {
+		color[2] = (ele->alpha[2] << 24) | txt_table[TXT_BLACK];
+	} else {
+		color[2] = (ele->alpha[2] << 24) | txt_table[ele->bck_color];
+	}
+
+	ele->index = 0;
+
+	for (pixels = ele->x; pixels < max_pixels;) {
+		char ch = ' ';
+
+		if (i < strlen(ele->text)) {
+			ch = ele->text[i];
+		} else {
+			break;
+		}
+
+		if (ch == '[') {
+			int tag, found = FALSE;
+
+			for (tag = 0; tag < LENGTH(txt_tags); tag++) {
+				int len = strlen(txt_tags[tag]);
+
+				if (strncmp(ele->text + i, txt_tags[tag], len) == 0) {
+					if (tag <= TXT_BLACK) {
+						color[0] = (ele->alpha[0] << 24) | txt_table[tag];
+						i += len;
+						found = TRUE;
+					} else if (tag <= TXT_FONT_12) {
+						ch_font = tag - TXT_FONT_8;
+						font.w = ele->factor * font_size[ch_font][0];
+						i += len;
+						found = TRUE;
+					} else if (tag <= TXT_FLOPPY) {
+						ch = tag - TXT_BUTTON_LEFT;
+						i += len - 1;
+						found = FALSE;
+					}
+					break;
+				}
+			}
+
+			if (found) {
+				continue;
+			}
+		}
+
+		if ((pixels += font.w) >= max_pixels) {
+			break;
+		}
+
+		switch (ch) {
+/* riga 0 */
+			case ' ':
+				font_x = 0  * font_size[ch_font][0];
+				font_y = 0  * font_size[ch_font][1];
+				break;
+			case '!':
+				font_x = 1  * font_size[ch_font][0];
+				font_y = 0  * font_size[ch_font][1];
+				break;
+			case '"':
+				font_x = 2  * font_size[ch_font][0];
+				font_y = 0  * font_size[ch_font][1];
+				break;
+			case '#':
+				font_x = 3  * font_size[ch_font][0];
+				font_y = 0  * font_size[ch_font][1];
+				break;
+			case '$':
+				font_x = 4  * font_size[ch_font][0];
+				font_y = 0  * font_size[ch_font][1];
+				break;
+			case '%':
+				font_x = 5  * font_size[ch_font][0];
+				font_y = 0  * font_size[ch_font][1];
+				break;
+			case '&':
+				font_x = 6  * font_size[ch_font][0];
+				font_y = 0  * font_size[ch_font][1];
+				break;
+			case 0x27: // '
+				font_x = 7  * font_size[ch_font][0];
+				font_y = 0  * font_size[ch_font][1];
+				break;
+/* riga 1 */
+			case '(':
+				font_x = 0  * font_size[ch_font][0];
+				font_y = 1  * font_size[ch_font][1];
+				break;
+			case ')':
+				font_x = 1  * font_size[ch_font][0];
+				font_y = 1  * font_size[ch_font][1];
+				break;
+			case '*':
+				font_x = 2  * font_size[ch_font][0];
+				font_y = 1  * font_size[ch_font][1];
+				break;
+			case '+':
+				font_x = 3  * font_size[ch_font][0];
+				font_y = 1  * font_size[ch_font][1];
+				break;
+			case ',':
+				font_x = 4  * font_size[ch_font][0];
+				font_y = 1  * font_size[ch_font][1];
+				break;
+			case '-':
+				font_x = 5  * font_size[ch_font][0];
+				font_y = 1  * font_size[ch_font][1];
+				break;
+			case '.':
+				font_x = 6  * font_size[ch_font][0];
+				font_y = 1  * font_size[ch_font][1];
+				break;
+			case '/':
+				font_x = 7  * font_size[ch_font][0];
+				font_y = 1  * font_size[ch_font][1];
+				break;
+/* riga 2 */
+			case '0':
+				font_x = 0  * font_size[ch_font][0];
+				font_y = 2  * font_size[ch_font][1];
+				break;
+			case '1':
+				font_x = 1  * font_size[ch_font][0];
+				font_y = 2  * font_size[ch_font][1];
+				break;
+			case '2':
+				font_x = 2  * font_size[ch_font][0];
+				font_y = 2  * font_size[ch_font][1];
+				break;
+			case '3':
+				font_x = 3  * font_size[ch_font][0];
+				font_y = 2  * font_size[ch_font][1];
+				break;
+			case '4':
+				font_x = 4  * font_size[ch_font][0];
+				font_y = 2  * font_size[ch_font][1];
+				break;
+			case '5':
+				font_x = 5  * font_size[ch_font][0];
+				font_y = 2  * font_size[ch_font][1];
+				break;
+			case '6':
+				font_x = 6  * font_size[ch_font][0];
+				font_y = 2  * font_size[ch_font][1];
+				break;
+			case '7':
+				font_x = 7  * font_size[ch_font][0];
+				font_y = 2  * font_size[ch_font][1];
+				break;
+/* riga 3 */
+			case '8':
+				font_x = 0  * font_size[ch_font][0];
+				font_y = 3  * font_size[ch_font][1];
+				break;
+			case '9':
+				font_x = 1  * font_size[ch_font][0];
+				font_y = 3  * font_size[ch_font][1];
+				break;
+			case ':':
+				font_x = 2  * font_size[ch_font][0];
+				font_y = 3  * font_size[ch_font][1];
+				break;
+			case ';':
+				font_x = 3  * font_size[ch_font][0];
+				font_y = 3  * font_size[ch_font][1];
+				break;
+			case '<':
+				font_x = 4  * font_size[ch_font][0];
+				font_y = 3  * font_size[ch_font][1];
+				break;
+			case '=':
+				font_x = 5  * font_size[ch_font][0];
+				font_y = 3  * font_size[ch_font][1];
+				break;
+			case '>':
+				font_x = 6  * font_size[ch_font][0];
+				font_y = 3  * font_size[ch_font][1];
+				break;
+			case '?':
+				font_x = 7  * font_size[ch_font][0];
+				font_y = 3  * font_size[ch_font][1];
+				break;
+/* riga 4 */
+			case '@':
+				font_x = 0  * font_size[ch_font][0];
+				font_y = 4  * font_size[ch_font][1];
+				break;
+			case 'A':
+				font_x = 1  * font_size[ch_font][0];
+				font_y = 4  * font_size[ch_font][1];
+				break;
+			case 'B':
+				font_x = 2  * font_size[ch_font][0];
+				font_y = 4  * font_size[ch_font][1];
+				break;
+			case 'C':
+				font_x = 3  * font_size[ch_font][0];
+				font_y = 4  * font_size[ch_font][1];
+				break;
+			case 'D':
+				font_x = 4  * font_size[ch_font][0];
+				font_y = 4  * font_size[ch_font][1];
+				break;
+			case 'E':
+				font_x = 5  * font_size[ch_font][0];
+				font_y = 4  * font_size[ch_font][1];
+				break;
+			case 'F':
+				font_x = 6  * font_size[ch_font][0];
+				font_y = 4  * font_size[ch_font][1];
+				break;
+			case 'G':
+				font_x = 7  * font_size[ch_font][0];
+				font_y = 4  * font_size[ch_font][1];
+				break;
+/* riga 5 */
+			case 'H':
+				font_x = 0  * font_size[ch_font][0];
+				font_y = 5  * font_size[ch_font][1];
+				break;
+			case 'I':
+				font_x = 1  * font_size[ch_font][0];
+				font_y = 5  * font_size[ch_font][1];
+				break;
+			case 'J':
+				font_x = 2  * font_size[ch_font][0];
+				font_y = 5  * font_size[ch_font][1];
+				break;
+			case 'K':
+				font_x = 3  * font_size[ch_font][0];
+				font_y = 5  * font_size[ch_font][1];
+				break;
+			case 'L':
+				font_x = 4  * font_size[ch_font][0];
+				font_y = 5  * font_size[ch_font][1];
+				break;
+			case 'M':
+				font_x = 5  * font_size[ch_font][0];
+				font_y = 5  * font_size[ch_font][1];
+				break;
+			case 'N':
+				font_x = 6  * font_size[ch_font][0];
+				font_y = 5  * font_size[ch_font][1];
+				break;
+			case 'O':
+				font_x = 7  * font_size[ch_font][0];
+				font_y = 5  * font_size[ch_font][1];
+				break;
+/* riga 6 */
+			case 'P':
+				font_x = 0  * font_size[ch_font][0];
+				font_y = 6  * font_size[ch_font][1];
+				break;
+			case 'Q':
+				font_x = 1  * font_size[ch_font][0];
+				font_y = 6  * font_size[ch_font][1];
+				break;
+			case 'R':
+				font_x = 2  * font_size[ch_font][0];
+				font_y = 6  * font_size[ch_font][1];
+				break;
+			case 'S':
+				font_x = 3  * font_size[ch_font][0];
+				font_y = 6  * font_size[ch_font][1];
+				break;
+			case 'T':
+				font_x = 4  * font_size[ch_font][0];
+				font_y = 6  * font_size[ch_font][1];
+				break;
+			case 'U':
+				font_x = 5  * font_size[ch_font][0];
+				font_y = 6  * font_size[ch_font][1];
+				break;
+			case 'V':
+				font_x = 6  * font_size[ch_font][0];
+				font_y = 6  * font_size[ch_font][1];
+				break;
+			case 'W':
+				font_x = 7  * font_size[ch_font][0];
+				font_y = 6  * font_size[ch_font][1];
+				break;
+/* riga 7 */
+			case 'X':
+				font_x = 0  * font_size[ch_font][0];
+				font_y = 7  * font_size[ch_font][1];
+				break;
+			case 'Y':
+				font_x = 1  * font_size[ch_font][0];
+				font_y = 7  * font_size[ch_font][1];
+				break;
+			case 'Z':
+				font_x = 2  * font_size[ch_font][0];
+				font_y = 7  * font_size[ch_font][1];
+				break;
+			case '[':
+				font_x = 3  * font_size[ch_font][0];
+				font_y = 7  * font_size[ch_font][1];
+				break;
+			case '\\':
+				font_x = 4  * font_size[ch_font][0];
+				font_y = 7  * font_size[ch_font][1];
+				break;
+			case ']':
+				font_x = 5  * font_size[ch_font][0];
+				font_y = 7  * font_size[ch_font][1];
+				break;
+			case '^':
+				font_x = 6  * font_size[ch_font][0];
+				font_y = 7  * font_size[ch_font][1];
+				break;
+			case '_':
+				font_x = 7  * font_size[ch_font][0];
+				font_y = 7  * font_size[ch_font][1];
+				break;
+/* riga 8 */
+			case '`':
+				font_x = 0  * font_size[ch_font][0];
+				font_y = 8  * font_size[ch_font][1];
+				break;
+			case 'a':
+				font_x = 1  * font_size[ch_font][0];
+				font_y = 8  * font_size[ch_font][1];
+				break;
+			case 'b':
+				font_x = 2  * font_size[ch_font][0];
+				font_y = 8  * font_size[ch_font][1];
+				break;
+			case 'c':
+				font_x = 3  * font_size[ch_font][0];
+				font_y = 8  * font_size[ch_font][1];
+				break;
+			case 'd':
+				font_x = 4  * font_size[ch_font][0];
+				font_y = 8  * font_size[ch_font][1];
+				break;
+			case 'e':
+				font_x = 5  * font_size[ch_font][0];
+				font_y = 8  * font_size[ch_font][1];
+				break;
+			case 'f':
+				font_x = 6  * font_size[ch_font][0];
+				font_y = 8  * font_size[ch_font][1];
+				break;
+			case 'g':
+				font_x = 7  * font_size[ch_font][0];
+				font_y = 8  * font_size[ch_font][1];
+				break;
+/* riga 9 */
+			case 'h':
+				font_x = 0  * font_size[ch_font][0];
+				font_y = 9  * font_size[ch_font][1];
+				break;
+			case 'i':
+				font_x = 1  * font_size[ch_font][0];
+				font_y = 9  * font_size[ch_font][1];
+				break;
+			case 'j':
+				font_x = 2  * font_size[ch_font][0];
+				font_y = 9  * font_size[ch_font][1];
+				break;
+			case 'k':
+				font_x = 3  * font_size[ch_font][0];
+				font_y = 9  * font_size[ch_font][1];
+				break;
+			case 'l':
+				font_x = 4  * font_size[ch_font][0];
+				font_y = 9  * font_size[ch_font][1];
+				break;
+			case 'm':
+				font_x = 5  * font_size[ch_font][0];
+				font_y = 9  * font_size[ch_font][1];
+				break;
+			case 'n':
+				font_x = 6  * font_size[ch_font][0];
+				font_y = 9  * font_size[ch_font][1];
+				break;
+			case 'o':
+				font_x = 7  * font_size[ch_font][0];
+				font_y = 9  * font_size[ch_font][1];
+				break;
+/* riga 10 */
+			case 'p':
+				font_x = 0  * font_size[ch_font][0];
+				font_y = 10 * font_size[ch_font][1];
+				break;
+			case 'q':
+				font_x = 1  * font_size[ch_font][0];
+				font_y = 10 * font_size[ch_font][1];
+				break;
+			case 'r':
+				font_x = 2  * font_size[ch_font][0];
+				font_y = 10 * font_size[ch_font][1];
+				break;
+			case 's':
+				font_x = 3  * font_size[ch_font][0];
+				font_y = 10 * font_size[ch_font][1];
+				break;
+			case 't':
+				font_x = 4  * font_size[ch_font][0];
+				font_y = 10 * font_size[ch_font][1];
+				break;
+			case 'u':
+				font_x = 5  * font_size[ch_font][0];
+				font_y = 10 * font_size[ch_font][1];
+				break;
+			case 'v':
+				font_x = 6  * font_size[ch_font][0];
+				font_y = 10 * font_size[ch_font][1];
+				break;
+			case 'w':
+				font_x = 7  * font_size[ch_font][0];
+				font_y = 10 * font_size[ch_font][1];
+				break;
+/* riga 11 */
+			case 'x':
+				font_x = 0  * font_size[ch_font][0];
+				font_y = 11 * font_size[ch_font][1];
+				break;
+			case 'y':
+				font_x = 1  * font_size[ch_font][0];
+				font_y = 11 * font_size[ch_font][1];
+				break;
+			case 'z':
+				font_x = 2  * font_size[ch_font][0];
+				font_y = 11 * font_size[ch_font][1];
+				break;
+			case '{':
+				font_x = 3  * font_size[ch_font][0];
+				font_y = 11 * font_size[ch_font][1];
+				break;
+			case '|':
+				font_x = 4  * font_size[ch_font][0];
+				font_y = 11 * font_size[ch_font][1];
+				break;
+			case '}':
+				font_x = 5  * font_size[ch_font][0];
+				font_y = 11 * font_size[ch_font][1];
+				break;
+			case '~':
+				font_x = 6  * font_size[ch_font][0];
+				font_y = 11 * font_size[ch_font][1];
+				break;
+			case 8:
+				font_x = 7  * font_size[ch_font][0];
+				font_y = 11 * font_size[ch_font][1];
+				break;
+/* riga 12 */
+			case 0:
+				font_x = 0  * font_size[ch_font][0];
+				font_y = 12  * font_size[ch_font][1];
+				break;
+			case 1:
+				font_x = 1  * font_size[ch_font][0];
+				font_y = 12  * font_size[ch_font][1];
+				break;
+			case 2:
+				font_x = 2  * font_size[ch_font][0];
+				font_y = 12  * font_size[ch_font][1];
+				break;
+			case 3:
+				font_x = 3  * font_size[ch_font][0];
+				font_y = 12  * font_size[ch_font][1];
+				break;
+			case 4:
+			case 5:
+				font_x = 4  * font_size[ch_font][0];
+				font_y = 12  * font_size[ch_font][1];
+				break;
+			case 6:
+			case 7:
+				font_x = 5  * font_size[ch_font][0];
+				font_y = 12  * font_size[ch_font][1];
+				break;
+		}
+		{
+			int x, y;
+			_rect rect;
+
+			rect.w = ele->factor;
+			rect.h = ele->factor;
+
+			for (y = 0; y < font_size[ch_font][1]; y++) {
+				char *list;
+
+				if (ch_font == 0) {
+					list = font_8x10[font_y] + font_x;
+				} else {
+					list = font_12x10[font_y] + font_x;
+				}
+
+				rect.y = y * ele->factor;
+
+				for (x = 0; x < font_size[ch_font][0]; x++) {
+					rect.x = font.x + (x * ele->factor);
+					if (list[x] == '@') {
+						gfx_text_rect_fill(ele->surface, &rect, color[0]);
+						//SDL_FillRect(ele->surface, &rect, color[0]);
+					} else if (list[x] == '+') {
+						gfx_text_rect_fill(ele->surface, &rect, color[1]);
+						//SDL_FillRect(ele->surface, &rect, color[1]);
+					} else if (list[x] == '.') {
+						gfx_text_rect_fill(ele->surface, &rect, color[2]);
+						//SDL_FillRect(ele->surface, &rect, color[2]);
+					} else {
+						if (!ele->bck) {
+							gfx_text_rect_fill(ele->surface, &rect, 0);
+							//SDL_FillRect(ele->surface, &rect, 0);
+						} else {
+							gfx_text_rect_fill(ele->surface, &rect, color[2]);
+							//SDL_FillRect(ele->surface, &rect, color[2]);
+						}
+					}
+				}
+				font_y++;
+			}
+		}
+		font.x += font.w;
+
+		ele->index++;
+		i++;
+	}
+
+	//text_blit(ele, &surface_rect);
 }
