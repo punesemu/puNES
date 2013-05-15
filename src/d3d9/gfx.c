@@ -686,8 +686,18 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 	}
 }
 void gfx_draw_screen(BYTE forced) {
+	if (!forced && (info.no_rom || info.pause)) {
+		if (++info.pause_frames_drawscreen == 4) {
+			info.pause_frames_drawscreen = 0;
+			forced = TRUE;
+		} else {
+			text_rendering(FALSE);
+			return;
+		}
+	}
+
 	/* filtro e aggiornamento texture */
-	{
+	if (forced || !ppu.skip_draw) {
 		D3DLOCKED_RECT locked_rect;
 
 		/* lock della surface in memoria */
@@ -709,54 +719,58 @@ void gfx_draw_screen(BYTE forced) {
 		/* unlock della surface in memoria */
 		IDirect3DSurface9_UnlockRect(d3d9.texture.surface.data);
 
+		/* rendering del testo */
+		text_rendering(TRUE);
+
 		/* aggiorno la texture */
 		IDirect3DDevice9_UpdateSurface(d3d9.adapter->dev, d3d9.texture.surface.data, NULL,
 				d3d9.texture.map0, NULL);
-	}
 
-	IDirect3DDevice9_Clear(d3d9.adapter->dev, 0, NULL, D3DCLEAR_TARGET,
-			D3DCOLOR_ARGB(255, 0, 0, 0), 1.0f, 0);
+		/* pulisco la scena */
+		IDirect3DDevice9_Clear(d3d9.adapter->dev, 0, NULL, D3DCLEAR_TARGET,
+				D3DCOLOR_ARGB(255, 0, 0, 0), 1.0f, 0);
 
-	/* inizio */
-	IDirect3DDevice9_BeginScene(d3d9.adapter->dev);
+		/* inizio */
+		IDirect3DDevice9_BeginScene(d3d9.adapter->dev);
 
-	if (gfx.hlsl.used == TRUE) {
-		/* comunico con il vertex shader */
-		D3DXMATRIX world_view_projection;
+		if (gfx.hlsl.used == TRUE) {
+			/* comunico con il vertex shader */
+			D3DXMATRIX world_view_projection;
 
-		//D3DXMATRIX matrix_world, matrix_view, matrix_proj;
-		//IDirect3DDevice9_GetTransform(d3d9.adapter->dev, D3DTS_WORLD, &matrix_world);
-		//IDirect3DDevice9_GetTransform(d3d9.adapter->dev, D3DTS_VIEW, &matrix_view);
-		//IDirect3DDevice9_GetTransform(d3d9.adapter->dev, D3DTS_PROJECTION, &matrix_proj);
+			//D3DXMATRIX matrix_world, matrix_view, matrix_proj;
+			//IDirect3DDevice9_GetTransform(d3d9.adapter->dev, D3DTS_WORLD, &matrix_world);
+			//IDirect3DDevice9_GetTransform(d3d9.adapter->dev, D3DTS_VIEW, &matrix_view);
+			//IDirect3DDevice9_GetTransform(d3d9.adapter->dev, D3DTS_PROJECTION, &matrix_proj);
 
-		D3DXMatrixMultiply(&world_view_projection, &d3d9.world, &d3d9.view);
-		D3DXMatrixMultiply(&world_view_projection, &world_view_projection, &d3d9.projection);
+			D3DXMatrixMultiply(&world_view_projection, &d3d9.world, &d3d9.view);
+			D3DXMatrixMultiply(&world_view_projection, &world_view_projection, &d3d9.projection);
 
-		ID3DXConstantTable_SetMatrix(d3d9.shader.table_vrt, d3d9.adapter->dev,
-				"m_world_view_projection", &world_view_projection);
+			ID3DXConstantTable_SetMatrix(d3d9.shader.table_vrt, d3d9.adapter->dev,
+					"m_world_view_projection", &world_view_projection);
 
-		/* faccio il resto */
-		IDirect3DDevice9_SetFVF(d3d9.adapter->dev, FVF);
-		IDirect3DDevice9_SetStreamSource(d3d9.adapter->dev, 0, d3d9.quad, 0, sizeof(vertex));
-		if (d3d9.shader.vrt) {
-			IDirect3DDevice9_SetVertexShader(d3d9.adapter->dev, d3d9.shader.vrt);
+			/* faccio il resto */
+			IDirect3DDevice9_SetFVF(d3d9.adapter->dev, FVF);
+			IDirect3DDevice9_SetStreamSource(d3d9.adapter->dev, 0, d3d9.quad, 0, sizeof(vertex));
+			if (d3d9.shader.vrt) {
+				IDirect3DDevice9_SetVertexShader(d3d9.adapter->dev, d3d9.shader.vrt);
+			}
+			if (d3d9.shader.pxl) {
+				IDirect3DDevice9_SetPixelShader(d3d9.adapter->dev, d3d9.shader.pxl);
+			}
+			IDirect3DDevice9_DrawPrimitive(d3d9.adapter->dev, D3DPT_TRIANGLEFAN, 0, 2);
+		} else {
+			IDirect3DDevice9_SetFVF(d3d9.adapter->dev, FVF);
+			IDirect3DDevice9_SetStreamSource(d3d9.adapter->dev, 0, d3d9.quad, 0, sizeof(vertex));
+			IDirect3DDevice9_DrawPrimitive(d3d9.adapter->dev, D3DPT_TRIANGLEFAN, 0, 2);
 		}
-		if (d3d9.shader.pxl) {
-			IDirect3DDevice9_SetPixelShader(d3d9.adapter->dev, d3d9.shader.pxl);
-		}
-		IDirect3DDevice9_DrawPrimitive(d3d9.adapter->dev, D3DPT_TRIANGLEFAN, 0, 2);
-	} else {
-		IDirect3DDevice9_SetFVF(d3d9.adapter->dev, FVF);
-		IDirect3DDevice9_SetStreamSource(d3d9.adapter->dev, 0, d3d9.quad, 0, sizeof(vertex));
-		IDirect3DDevice9_DrawPrimitive(d3d9.adapter->dev, D3DPT_TRIANGLEFAN, 0, 2);
+
+		IDirect3DDevice9_EndScene(d3d9.adapter->dev);
+
+		//double start = gui_get_ms();
+		IDirect3DDevice9_Present(d3d9.adapter->dev, NULL, NULL, NULL, NULL);
+		//double stop = gui_get_ms();
+		//printf("ms draw = %f\r", stop - start);
 	}
-
-	IDirect3DDevice9_EndScene(d3d9.adapter->dev);
-
-	//double start = gui_get_ms();
-	IDirect3DDevice9_Present(d3d9.adapter->dev, NULL, NULL, NULL, NULL);
-	//double stop = gui_get_ms();
-	//printf("ms draw = %f\r", stop - start);
 }
 void gfx_control_change_monitor(void *monitor) {
 	_d3d9_adapter *old_adapter = d3d9.adapter;
@@ -787,44 +801,6 @@ void gfx_control_change_monitor(void *monitor) {
 			break;
 		}
 	}
-}
-void gfx_text_create_surface(void *surface, WORD w, WORD h) {
-	if (IDirect3DDevice9_CreateOffscreenPlainSurface(d3d9.adapter->dev,
-			w, h,
-			d3d9.adapter->display_mode.Format,
-			D3DPOOL_SYSTEMMEM,
-			(LPDIRECT3DSURFACE9 *) surface,
-			NULL) != D3D_OK ) {
-		//MessageBox(NULL, "Unable to create ele text surface", "Error!",
-		//		MB_ICONEXCLAMATION | MB_OK);
-	}
-}
-void gfx_text_release_surface(void *surface) {
-	if (surface) {
-		IDirect3DSurface9_Release((LPDIRECT3DSURFACE9) surface);
-		surface = NULL;
-	}
-}
-void gfx_text_rect_fill(void *surface, void *rect, uint32_t color) {
-	_rect *a = rect;
-	RECT b;
-
-	b.left = a->x;
-	b.top = a->y;
-	b.right = a->x + a->w;
-	b.bottom = a->y + a->h;
-
-	IDirect3DDevice9_ColorFill(d3d9.adapter->dev, (LPDIRECT3DSURFACE9) surface, &b, color);
-}
-void gfx_text_reset(void) {
-	txt_table[TXT_NORMAL] = D3DCOLOR_ARGB(0, 0xFF, 0xFF, 0xFF);
-	txt_table[TXT_RED]    = D3DCOLOR_ARGB(0, 0xFF, 0x4C, 0x3E);
-	txt_table[TXT_YELLOW] = D3DCOLOR_ARGB(0, 0xFF, 0xFF, 0   );
-	txt_table[TXT_GREEN]  = D3DCOLOR_ARGB(0, 0   , 0xFF, 0   );
-	txt_table[TXT_CYAN]   = D3DCOLOR_ARGB(0, 0   , 0xFF, 0xFF);
-	txt_table[TXT_BROWN]  = D3DCOLOR_ARGB(0, 0xEB, 0x89, 0x31);
-	txt_table[TXT_BLUE]   = D3DCOLOR_ARGB(0, 0x2D, 0x8D, 0xBD);
-	txt_table[TXT_BLACK]  = D3DCOLOR_ARGB(0, 0   , 0   , 0   );
 }
 void gfx_quit(void) {
 	ntsc_quit();
@@ -860,6 +836,117 @@ void gfx_quit(void) {
 		free(d3d9.array);
 		d3d9.array = d3d9.adapter = NULL;
 	}
+}
+
+void gfx_text_create_surface(_txt_element *ele) {
+	if (IDirect3DDevice9_CreateOffscreenPlainSurface(d3d9.adapter->dev,
+			ele->w,
+			ele->h,
+			d3d9.adapter->display_mode.Format,
+			D3DPOOL_DEFAULT,
+			(LPDIRECT3DSURFACE9 *) &ele->surface,
+			NULL) != D3D_OK ) {
+		/* devo gestirlo ? */
+	}
+	if (IDirect3DDevice9_CreateOffscreenPlainSurface(d3d9.adapter->dev,
+			ele->w,
+			ele->h,
+			d3d9.adapter->display_mode.Format,
+			D3DPOOL_DEFAULT,
+			(LPDIRECT3DSURFACE9 *) &ele->blank,
+			NULL) != D3D_OK ) {
+		/* devo gestirlo ? */
+	}
+}
+void gfx_text_release_surface(_txt_element *ele) {
+	if (ele->surface) {
+		if (IDirect3DSurface9_Release((LPDIRECT3DSURFACE9) ele->surface) != D3D_OK ) {
+			/* devo gestirlo ? */
+		}
+		ele->surface = NULL;
+	}
+	if (ele->blank) {
+		if (IDirect3DSurface9_Release((LPDIRECT3DSURFACE9) ele->blank) != D3D_OK ) {
+			/* devo gestirlo ? */
+		}
+		ele->blank = NULL;
+	}
+}
+void gfx_text_rect_fill(_txt_element *ele, _rect *rect, uint32_t color) {
+	RECT r;
+
+	r.left = rect->x;
+	r.top = rect->y;
+	r.right = rect->x + rect->w;
+	r.bottom = rect->y + rect->h;
+
+	if (IDirect3DDevice9_ColorFill(d3d9.adapter->dev, (LPDIRECT3DSURFACE9) ele->surface, &r, color)
+			!= D3D_OK ) {
+		/* devo gestirlo ? */
+	}
+}
+void gfx_text_reset(void) {
+	txt_table[TXT_NORMAL] = D3DCOLOR_ARGB(0, 0xFF, 0xFF, 0xFF);
+	txt_table[TXT_RED]    = D3DCOLOR_ARGB(0, 0xFF, 0x4C, 0x3E);
+	txt_table[TXT_YELLOW] = D3DCOLOR_ARGB(0, 0xFF, 0xFF, 0   );
+	txt_table[TXT_GREEN]  = D3DCOLOR_ARGB(0, 0   , 0xFF, 0   );
+	txt_table[TXT_CYAN]   = D3DCOLOR_ARGB(0, 0   , 0xFF, 0xFF);
+	txt_table[TXT_BROWN]  = D3DCOLOR_ARGB(0, 0xEB, 0x89, 0x31);
+	txt_table[TXT_BLUE]   = D3DCOLOR_ARGB(0, 0x2D, 0x8D, 0xBD);
+	txt_table[TXT_BLACK]  = D3DCOLOR_ARGB(0, 0   , 0   , 0   );
+}
+void gfx_text_clear(_txt_element *ele) {
+	if (!ele->blank) {
+		return;
+	}
+
+	//glEnable(GL_TEXTURE_2D);
+	//glBindTexture(GL_TEXTURE_2D, shader.text.data);
+
+	//glPixelStorei(GL_UNPACK_ROW_LENGTH, ele->w);
+
+	//glTexSubImage2D(GL_TEXTURE_2D, 0, ele->x, ele->y, ele->w, ele->h,
+	//        shader.text.format, shader.text.type, ele->blank->pixels);
+
+	//glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+
+	//glDisable(GL_TEXTURE_2D);
+}
+void gfx_text_blit(_txt_element *ele, _rect *rect) {
+	RECT src, dst;
+
+	src.left = 0;
+	src.top = 0;
+	src.right = rect->w;
+	src.bottom = rect->h;
+
+	dst.left = rect->x;
+	dst.top = rect->y;
+	dst.right = rect->x + rect->w;
+	dst.bottom = rect->y + rect->h;
+
+	if (IDirect3DDevice9_StretchRect(d3d9.adapter->dev,
+			(LPDIRECT3DSURFACE9) ele->surface,
+			&src,
+			//d3d9.texture.surface.data,
+			d3d9.text.data,
+			&dst,
+			D3DTEXF_NONE) != D3D_OK ) {
+		/* devo gestirlo ? */
+		printf("nonononononono\n");
+	}
+
+	//glEnable(GL_TEXTURE_2D);
+	//glBindTexture(GL_TEXTURE_2D, shader.text.data);
+
+	//glPixelStorei(GL_UNPACK_ROW_LENGTH, dst_rect->w);
+
+	//glTexSubImage2D(GL_TEXTURE_2D, 0, dst_rect->x, dst_rect->y, dst_rect->w, dst_rect->h,
+	//        opengl.texture.format, opengl.texture.type, ele->surface->pixels);
+
+	//glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+
+	//glDisable(GL_TEXTURE_2D);
 }
 
 void d3d9_set_adapter(_d3d9_adapter *adapter) {
@@ -1111,7 +1198,8 @@ BYTE d3d9_create_context(UINT width, UINT height) {
 			d3d9.text.w,
 			d3d9.text.h,
 			d3d9.adapter->display_mode.Format,
-			D3DPOOL_SYSTEMMEM,
+			D3DPOOL_DEFAULT,
+			//D3DPOOL_SYSTEMMEM,
 			&d3d9.text.data,
 			NULL) != D3D_OK ) {
 		MessageBox(NULL, "Unable to create text surface", "Error!", MB_ICONEXCLAMATION | MB_OK);
@@ -1202,6 +1290,7 @@ BYTE d3d9_create_texture(_texture *texture, uint32_t width, uint32_t height, uin
 			texture->surface.w,
 			texture->surface.h,
 			d3d9.adapter->display_mode.Format,
+			//D3DPOOL_DEFAULT,
 			D3DPOOL_SYSTEMMEM,
 			&texture->surface.data,
 			NULL) != D3D_OK) {

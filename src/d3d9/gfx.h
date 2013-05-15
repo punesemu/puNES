@@ -16,6 +16,7 @@
 #define GFX_H_
 
 #include "common.h"
+#include "text.h"
 #include "filters/video/scale.h"
 #include "filters/video/scale2x.h"
 #include "filters/video/ntsc.h"
@@ -71,10 +72,13 @@ void gfx_set_render(BYTE render);
 void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE force_scale);
 void gfx_draw_screen(BYTE forced);
 void gfx_control_change_monitor(void *monitor);
-void gfx_text_create_surface(void *surface, WORD w, WORD h);
-void gfx_text_release_surface(void *surface);
-void gfx_text_rect_fill(void *surface, void *rect, uint32_t color);
-void gfx_text_reset(void);
 void gfx_quit(void);
+
+void gfx_text_create_surface(_txt_element *ele);
+void gfx_text_release_surface(_txt_element *ele);
+void gfx_text_rect_fill(_txt_element *ele, _rect *rect, uint32_t color);
+void gfx_text_reset(void);
+void gfx_text_clear(_txt_element *ele);
+void gfx_text_blit(_txt_element *ele, _rect *rect);
 
 #endif /* GFX_H_ */

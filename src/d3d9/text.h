@@ -50,9 +50,9 @@ enum txt_tgs {
 };
 
 #define text_add_line_info(factor, ...)\
-	text_add_line(0, 0, 0, 0, 0, 0, 0, 0, __VA_ARGS__)
+	text_add_line(TXT_INFO, factor, FONT_12X10, 255, 0, 0, 0, 0, __VA_ARGS__)
 #define text_add_line_single(factor, font, alpha, start_x, start_y, x, y, ...)\
-	text_add_line(0, 0, 0, 0, 0, 0, 0, 0, __VA_ARGS__)
+	text_add_line(TXT_SINGLE, factor, font, alpha, start_x, start_y, x, y, __VA_ARGS__)
 
 typedef struct {
 	int16_t x, y;
@@ -84,8 +84,6 @@ typedef struct {
 #elif defined D3D9
 	void *surface;
 	void *blank;
-	//LPDIRECT3DSURFACE9 surface;
-	//LPDIRECT3DSURFACE9 blank;
 #endif
 
 } _txt_element;
@@ -95,7 +93,6 @@ struct _text {
 	SDL_Surface *surface;
 #elif defined D3D9
 	void *surface;
-	//LPDIRECT3DSURFACE9 surface;
 #endif
 	BYTE on_screen;
 	uint32_t w;
@@ -128,5 +125,8 @@ void text_add_line(int type, int factor, int font, int alpha, int start_x, int s
         int y, const char *fmt, ...);
 void text_rendering(BYTE render);
 void text_quit(void);
+
+void (*text_clear)(_txt_element *ele);
+void (*text_blit)(_txt_element *ele, _rect *rect);
 
 #endif /* TEXT_H_ */

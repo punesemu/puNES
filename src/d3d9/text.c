@@ -40,8 +40,8 @@ static void INLINE rendering(_txt_element *txt);
 void text_init(void) {
 	uint8_t i;
 
-	//text_clear = sdl_text_clear;
-	//text_blit = sdl_text_blit;
+	text_clear = gfx_text_clear;
+	text_blit = gfx_text_blit;
 
 	memset(&text, 0, sizeof(text));
 
@@ -93,7 +93,7 @@ void text_add_line(int type, int factor, int font, int alpha, int start_x, int s
 	if (type == TXT_INFO) {
 		for (i = 0; i < TXT_MAX_LINES; i++) {
 			if (text.info.lines[text.info.index][i]->enabled) {
-				//text_clear(text.info.lines[text.info.index][i]);
+				text_clear(text.info.lines[text.info.index][i]);
 			}
 			if (i == (TXT_MAX_LINES - 1)) {
 				text.info.lines[new][0] = text.info.lines[text.info.index][i];
@@ -202,8 +202,7 @@ void text_rendering(BYTE render) {
 
 			if (ele->enabled == TRUE) {
 				if (!ele->surface) {
-					gfx_text_create_surface(ele->surface, ele->w, ele->h);
-					gfx_text_create_surface(ele->blank, ele->w, ele->h);
+					gfx_text_create_surface(ele);
 					//ele->surface = gfx_create_RGB_surface(text.surface, ele->w, ele->h);
 					//ele->blank = gfx_create_RGB_surface(text.surface, ele->w, ele->h);
 				}
@@ -233,15 +232,14 @@ void text_rendering(BYTE render) {
 				ele->y = pos_y;
 
 				if ((cfg->scale != X1) && render){
-					//rendering(ele);
+					rendering(ele);
 				}
 
 				if (!ele->enabled) {
-					gfx_text_release_surface(ele->surface);
-					gfx_text_release_surface(ele->blank);
+					gfx_text_release_surface(ele);
 					//SDL_FreeSurface(ele->surface);
-					//SDL_FreeSurface(ele->blank);
 					//ele->surface = NULL;
+					//SDL_FreeSurface(ele->blank);
 					//ele->blank = NULL;
 				}
 			}
@@ -257,7 +255,7 @@ void text_rendering(BYTE render) {
 			if (ele != NULL) {
 				if (ele->enabled == TRUE) {
 					if (!ele->surface) {
-						gfx_text_create_surface(ele->surface, ele->w, ele->h);
+						gfx_text_create_surface(ele);
 						//ele->surface = gfx_create_RGB_surface(text.surface, ele->w, ele->h);
 					}
 
@@ -280,10 +278,10 @@ void text_rendering(BYTE render) {
 						}
 					}
 					if ((cfg->scale != X1) && render){
-						//rendering(ele);
+						rendering(ele);
 					}
 				} else {
-					gfx_text_release_surface(ele->surface);
+					gfx_text_release_surface(ele);
 					//SDL_FreeSurface(ele->surface);
 					//ele->surface = NULL;
 
@@ -318,18 +316,18 @@ void text_rendering(BYTE render) {
 			ele->h = font_size[ele->font][1];
 
 			if ((old_w != ele->w) && ele->surface) {
-				gfx_text_release_surface(ele->surface);
+				gfx_text_release_surface(ele);
 				//SDL_FreeSurface(ele->surface);
 				//ele->surface = NULL;
 			}
 
 			if (!ele->surface) {
-				gfx_text_create_surface(ele->surface, ele->w, ele->h);
+				gfx_text_create_surface(ele);
 				//ele->surface = gfx_create_RGB_surface(text.surface, ele->w, ele->h);
 			}
 
 			if (render) {
-				//rendering(ele);
+				rendering(ele);
 			}
 		}
 
@@ -347,12 +345,12 @@ void text_rendering(BYTE render) {
 			port_control(port1, BUT_B, "[b]");
 
 			if (!ele->surface) {
-				gfx_text_create_surface(ele->surface, ele->w, ele->h);
+				gfx_text_create_surface(ele);
 				//ele->surface = gfx_create_RGB_surface(text.surface, ele->w, ele->h);
 			}
 
 			if (render) {
-				//rendering(ele);
+				rendering(ele);
 			}
 		}
 	}
@@ -393,12 +391,12 @@ void text_rendering(BYTE render) {
 			strcat(ele->text, "[floppy]");
 
 			if (!ele->surface) {
-				gfx_text_create_surface(ele->surface, ele->w, ele->h);
+				gfx_text_create_surface(ele);
 				//ele->surface = gfx_create_RGB_surface(text.surface, ele->w, ele->h);
 			}
 
 			if (render) {
-				//rendering(ele);
+				rendering(ele);
 			}
 		}
 	}
@@ -411,7 +409,7 @@ void text_quit(void) {
 			_txt_element *ele = text.info.lines[text.info.index][i];
 
 			if (ele->enabled) {
-				gfx_text_release_surface(ele->surface);
+				gfx_text_release_surface(ele);
 				//SDL_FreeSurface(ele->surface);
 				//ele->surface = NULL;
 
@@ -427,7 +425,7 @@ void text_quit(void) {
 			_txt_element *ele = text.single.lines[i];
 
 			if (ele != NULL) {
-				gfx_text_release_surface(ele->surface);
+				gfx_text_release_surface(ele);
 				//SDL_FreeSurface(ele->surface);
 				//ele->surface = NULL;
 
@@ -444,7 +442,7 @@ void text_quit(void) {
 		uint8_t i;
 
 		if (ele->surface) {
-			gfx_text_release_surface(ele->surface);
+			gfx_text_release_surface(ele);
 			//SDL_FreeSurface(ele->surface);
 			//ele->surface = NULL;
 		}
@@ -453,7 +451,7 @@ void text_quit(void) {
 			_txt_element *ele = text.tas.controllers;
 
 			if (ele->surface) {
-				gfx_text_release_surface(ele->surface);
+				gfx_text_release_surface(ele);
 				//SDL_FreeSurface(ele->surface);
 				//ele->surface = NULL;
 			}
@@ -464,7 +462,7 @@ void text_quit(void) {
 		_txt_element *ele = &text.fds.floppy;
 
 		if (ele->surface) {
-			gfx_text_release_surface(ele->surface);
+			gfx_text_release_surface(ele);
 			//SDL_FreeSurface(ele->surface);
 			//ele->surface = NULL;
 		}
@@ -1019,20 +1017,20 @@ static void INLINE rendering(_txt_element *ele) {
 				for (x = 0; x < font_size[ch_font][0]; x++) {
 					rect.x = font.x + (x * ele->factor);
 					if (list[x] == '@') {
-						gfx_text_rect_fill(ele->surface, &rect, color[0]);
+						gfx_text_rect_fill(ele, &rect, color[0]);
 						//SDL_FillRect(ele->surface, &rect, color[0]);
 					} else if (list[x] == '+') {
-						gfx_text_rect_fill(ele->surface, &rect, color[1]);
+						gfx_text_rect_fill(ele, &rect, color[1]);
 						//SDL_FillRect(ele->surface, &rect, color[1]);
 					} else if (list[x] == '.') {
-						gfx_text_rect_fill(ele->surface, &rect, color[2]);
+						gfx_text_rect_fill(ele, &rect, color[2]);
 						//SDL_FillRect(ele->surface, &rect, color[2]);
 					} else {
 						if (!ele->bck) {
-							gfx_text_rect_fill(ele->surface, &rect, 0);
+							gfx_text_rect_fill(ele, &rect, 0);
 							//SDL_FillRect(ele->surface, &rect, 0);
 						} else {
-							gfx_text_rect_fill(ele->surface, &rect, color[2]);
+							gfx_text_rect_fill(ele, &rect, color[2]);
 							//SDL_FillRect(ele->surface, &rect, color[2]);
 						}
 					}
@@ -1046,5 +1044,5 @@ static void INLINE rendering(_txt_element *ele) {
 		i++;
 	}
 
-	//text_blit(ele, &surface_rect);
+	text_blit(ele, &surface_rect);
 }

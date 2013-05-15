@@ -348,7 +348,7 @@ static void STDMETHODCALLTYPE OnBufferEnd(THIS_ void *data) {
 	snd_lock_cache(cache);
 
 #ifndef RELEASE
-		fprintf(stderr, "snd : %d %d %d %d %2d %d %f %f %4s\r",
+		/*fprintf(stderr, "snd : %d %d %d %d %2d %d %f %f %4s\r",
 				buffer->AudioBytes,
 				snd.buffer.count,
 				snd.brk,
@@ -357,7 +357,7 @@ static void STDMETHODCALLTYPE OnBufferEnd(THIS_ void *data) {
 				snd.out_of_sync,
 				snd.frequency,
 				machine.ms_frame,
-				"");
+				"");*/
 #endif
 
 	if (info.no_rom) {
