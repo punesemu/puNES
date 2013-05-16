@@ -668,6 +668,12 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 		ShowWindow(gui_main_window_id(), SW_NORMAL);
 	}
 
+	//text.surface = surface_sdl;
+	//text_clear = sdl_text_clear;
+	//text_blit = sdl_text_blit;
+	text.w = gfx.w[VIDEO_MODE];
+	text.h = gfx.h[VIDEO_MODE];
+
 	/* questo controllo devo farlo necessariamente dopo il glew_init() */
 	if ((gfx.hlsl.compliant == FALSE) || (gfx.hlsl.enabled == FALSE)) {
 		if ((filter >= POSPHOR) && (filter <= CRT_NO_CURVE)) {
@@ -844,15 +850,18 @@ void gfx_text_create_surface(_txt_element *ele) {
 			ele->h,
 			d3d9.adapter->display_mode.Format,
 			D3DPOOL_DEFAULT,
+			//D3DPOOL_SYSTEMMEM,
 			(LPDIRECT3DSURFACE9 *) &ele->surface,
 			NULL) != D3D_OK ) {
 		/* devo gestirlo ? */
+		printf("78797987897979\n");
 	}
 	if (IDirect3DDevice9_CreateOffscreenPlainSurface(d3d9.adapter->dev,
 			ele->w,
 			ele->h,
 			d3d9.adapter->display_mode.Format,
 			D3DPOOL_DEFAULT,
+			//D3DPOOL_SYSTEMMEM,
 			(LPDIRECT3DSURFACE9 *) &ele->blank,
 			NULL) != D3D_OK ) {
 		/* devo gestirlo ? */
@@ -1290,7 +1299,6 @@ BYTE d3d9_create_texture(_texture *texture, uint32_t width, uint32_t height, uin
 			texture->surface.w,
 			texture->surface.h,
 			d3d9.adapter->display_mode.Format,
-			//D3DPOOL_DEFAULT,
 			D3DPOOL_SYSTEMMEM,
 			&texture->surface.data,
 			NULL) != D3D_OK) {

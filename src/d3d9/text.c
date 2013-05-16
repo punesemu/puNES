@@ -186,8 +186,9 @@ void text_add_line(int type, int factor, int font, int alpha, int start_x, int s
 	}
 
 	if (ele->surface) {
+		gfx_text_release_surface(ele);
 		//SDL_FreeSurface(ele->surface);
-		ele->surface = NULL;
+		//ele->surface = NULL;
 	}
 }
 void text_rendering(BYTE render) {
