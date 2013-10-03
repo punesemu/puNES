@@ -1262,9 +1262,9 @@ void gui_set_thread_affinity(uint8_t core) {
 	SetThreadAffinityMask(GetCurrentThread(), core + 1);
 }
 void gui_print_usage(char *usage) {
-	hMsgBoxHook = SetWindowsHookEx(WH_CBT, cbt_proc, NULL, GetCurrentThreadId());
+	msgbox_hook = SetWindowsHookEx(WH_CBT, cbt_proc, NULL, GetCurrentThreadId());
 	MessageBox(NULL, usage, NAME " parameters", MB_OK);
-	UnhookWindowsHookEx(hMsgBoxHook);
+	UnhookWindowsHookEx(msgbox_hook);
 }
 
 /* funzioni interne */

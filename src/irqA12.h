@@ -13,19 +13,22 @@
 #include "ppu.h"
 
 #define _irqA12_clock(function)\
-	if (!irqA12.counter) {\
-		irqA12.counter = irqA12.latch;\
-		if (!irqA12.counter && (irqA12.reload == TRUE)) {\
-			irqA12.save_counter = 1;\
+	if (irqA12.cycles > irqA12_min_cpu_cycles_prev_rising_edge) {\
+		irqA12.cycles = 0;\
+		if (!irqA12.counter) {\
+			irqA12.counter = irqA12.latch;\
+			if (!irqA12.counter && (irqA12.reload == TRUE)) {\
+				irqA12.save_counter = 1;\
+			}\
+			irqA12.reload = FALSE;\
+		} else {\
+			irqA12.counter--;\
 		}\
-		irqA12.reload = FALSE;\
-	} else {\
-		irqA12.counter--;\
-	}\
-	if (!irqA12.counter && irqA12.save_counter && irqA12.enable) {\
-		function;\
-	}\
-	irqA12.save_counter = irqA12.counter
+		if (!irqA12.counter && irqA12.save_counter && irqA12.enable) {\
+			function;\
+		}\
+		irqA12.save_counter = irqA12.counter;\
+	}
 #define irqA12_irq_default()\
 	/*\
 	 * visto che (per la sincronizzazione tra cpu e ppu)\
@@ -52,6 +55,17 @@
 #define irqA12_clock() _irqA12_clock(irqA12_irq_default())
 #define irqA12_mod(function) _irqA12_clock(function)
 
+/*
+ * in "Mickey's Safari in Letterland" avviene un rising edge
+ * all'inizio dell'istruzione (quando legge l'opcode) nell'istruzione in cui
+ * viene scritto al registro $2001 quindi qualche ciclo dopo viene effettuata
+ * una scrittura nel registro $2006 che ne fa fare un'altro. Il secondo se avviene
+ * a pochi cicli cpu dal primo non deve essere considerato.
+ */
+enum irqA12_misc_value {
+	irqA12_min_cpu_cycles_prev_rising_edge = 18
+};
+
 typedef struct {
 	BYTE present;
 	BYTE delay;
@@ -64,6 +78,8 @@ typedef struct {
 	BYTE a12SB;
 	WORD b_adr_old;
 	WORD s_adr_old;
+
+	uint32_t cycles;
 } _irqA12;
 
 _irqA12 irqA12;

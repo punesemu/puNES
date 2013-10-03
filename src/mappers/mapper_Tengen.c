@@ -287,23 +287,26 @@ void extcl_irq_A12_clock_Tengen_Rambo(void) {
 	}
 
 	/* usa una versione un po' modificata dell'irqA12 */
-	if (!irqA12.counter) {
-		irqA12.counter = irqA12.latch;
-		if (irqA12.reload == TRUE) {
-			irqA12.counter++;
-			irqA12.save_counter = 0;
+	if (irqA12.cycles > irqA12_min_cpu_cycles_prev_rising_edge) {
+		irqA12.cycles = 0;
+		if (!irqA12.counter) {
+			irqA12.counter = irqA12.latch;
+			if (irqA12.reload == TRUE) {
+				irqA12.counter++;
+				irqA12.save_counter = 0;
+			}
+			if (!irqA12.counter && (irqA12.reload == TRUE)) {
+				irqA12.save_counter = 1;
+			}
+			irqA12.reload = FALSE;
+		} else {
+			irqA12.counter--;
 		}
-		if (!irqA12.counter && (irqA12.reload == TRUE)) {
-			irqA12.save_counter = 1;
+		if (!irqA12.counter && irqA12.save_counter && irqA12.enable) {
+			tengen_rambo.irq_delay = tengen_rambo_delay_A12;
 		}
-		irqA12.reload = FALSE;
-	} else {
-		irqA12.counter--;
+		irqA12.save_counter = irqA12.counter;
 	}
-	if (!irqA12.counter && irqA12.save_counter && irqA12.enable) {
-		tengen_rambo.irq_delay = tengen_rambo_delay_A12;
-	}
-	irqA12.save_counter = irqA12.counter;
 }
 void extcl_cpu_every_cycle_Tengen_Rambo(void) {
 	if (tengen_rambo.irq_delay && !(--tengen_rambo.irq_delay)) {

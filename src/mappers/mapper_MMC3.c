@@ -276,7 +276,7 @@ void extcl_ppu_320_to_34x_MMC3(void) {
 void extcl_update_r2006_MMC3(WORD old_r2006) {
 	irqA12_IO(old_r2006);
 }
-void extcl_irqA12_clock_MMC3_alternate(void) {
+void extcl_irq_A12_clock_MMC3_alternate(void) {
 	if (!irqA12.counter) {
 		irqA12.counter = irqA12.latch;
 		irqA12.reload = FALSE;

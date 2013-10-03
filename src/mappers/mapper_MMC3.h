@@ -47,6 +47,6 @@ void extcl_ppu_000_to_255_MMC3(void);
 void extcl_ppu_256_to_319_MMC3(void);
 void extcl_ppu_320_to_34x_MMC3(void);
 void extcl_update_r2006_MMC3(WORD old_r2006);
-void extcl_irqA12_clock_MMC3_alternate(void);
+void extcl_irq_A12_clock_MMC3_alternate(void);
 
 #endif /* MAPPER_MMC3_H_ */

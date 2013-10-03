@@ -27,7 +27,7 @@
 #include "fds.h"
 #include "gamegenie.h"
 
-#define SAVE_VERSION 9
+#define SAVE_VERSION 10
 
 BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp);
 BYTE name_slot_file(char *file, BYTE slot);
@@ -575,6 +575,9 @@ BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 		save_slot_ele(mode, slot, irqA12.a12SB)
 		save_slot_ele(mode, slot, irqA12.b_adr_old)
 		save_slot_ele(mode, slot, irqA12.s_adr_old)
+		if (save_slot.version >= 10) {
+			save_slot_ele(mode, slot, irqA12.cycles)
+		}
 	}
 
 	/* irql2f */

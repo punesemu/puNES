@@ -11,28 +11,31 @@
 
 void irqA12_IO(WORD value_old) {
 	if (!(value_old & 0x1000) && (r2006.value & 0x1000)) {
-		if (!extcl_irq_A12_clock) {
-			if (!irqA12.counter) {
-				irqA12.counter = irqA12.latch;
-				if (!irqA12.counter && (irqA12.reload == TRUE)) {
-					irqA12.save_counter = 1;
+		if (irqA12.cycles > irqA12_min_cpu_cycles_prev_rising_edge) {
+			irqA12.cycles = 0;
+			if (!extcl_irq_A12_clock) {
+				if (!irqA12.counter) {
+					irqA12.counter = irqA12.latch;
+					if (!irqA12.counter && (irqA12.reload == TRUE)) {
+						irqA12.save_counter = 1;
+					}
+					irqA12.reload = FALSE;
+				} else {
+					irqA12.counter--;
 				}
-				irqA12.reload = FALSE;
+				if (!irqA12.counter && irqA12.save_counter && irqA12.enable) {
+					irq.high |= EXT_IRQ;
+				}
+				irqA12.save_counter = irqA12.counter;
 			} else {
-				irqA12.counter--;
+				/*
+				 * utilizzato dalle mappers :
+				 * mapper222
+				 * Futuremedia
+				 * Tengen
+				 */
+				extcl_irq_A12_clock();
 			}
-			if (!irqA12.counter && irqA12.save_counter && irqA12.enable) {
-				irq.high |= EXT_IRQ;
-			}
-			irqA12.save_counter = irqA12.counter;
-		} else {
-			/*
-			 * utilizzato dalle mappers :
-			 * mapper222
-			 * Futuremedia
-			 * Tengen
-			 */
-			extcl_irq_A12_clock();
 		}
 	}
 }

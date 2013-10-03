@@ -1680,6 +1680,10 @@ static void INLINE tick_hw(BYTE value) {
 		cpu.odd_cycle = !cpu.odd_cycle;
 		value--;
 		mod_cycles_op(-=, 1);
+
+		if (irqA12.present == TRUE) {
+			irqA12.cycles++;
+		}
 	}
 }
 /* --------------------------------------------------------------------------------------------- */
