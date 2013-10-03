@@ -289,11 +289,11 @@ void extcl_irq_A12_clock_Tengen_Rambo(void) {
 	/* usa una versione un po' modificata dell'irqA12 */
 	if (!irqA12.counter) {
 		irqA12.counter = irqA12.latch;
-		if (irqA12.reload) {
+		if (irqA12.reload == TRUE) {
 			irqA12.counter++;
 			irqA12.save_counter = 0;
 		}
-		if (!irqA12.counter && irqA12.reload) {
+		if (!irqA12.counter && (irqA12.reload == TRUE)) {
 			irqA12.save_counter = 1;
 		}
 		irqA12.reload = FALSE;
@@ -320,7 +320,7 @@ void extcl_cpu_every_cycle_Tengen_Rambo(void) {
 	}
 	tengen_rambo.irq_prescaler = 0;
 
-	if (irqA12.reload) {
+	if (irqA12.reload == TRUE) {
 		irqA12.counter = irqA12.latch + 1;
 		irqA12.reload = FALSE;
 		return;

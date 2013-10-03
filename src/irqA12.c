@@ -14,10 +14,10 @@ void irqA12_IO(WORD value_old) {
 		if (!extcl_irq_A12_clock) {
 			if (!irqA12.counter) {
 				irqA12.counter = irqA12.latch;
-				if (!irqA12.counter && irqA12.reload) {
+				if (!irqA12.counter && (irqA12.reload == TRUE)) {
 					irqA12.save_counter = 1;
 				}
-				irqA12.reload = 0;
+				irqA12.reload = FALSE;
 			} else {
 				irqA12.counter--;
 			}
@@ -28,6 +28,8 @@ void irqA12_IO(WORD value_old) {
 		} else {
 			/*
 			 * utilizzato dalle mappers :
+			 * mapper222
+			 * Futuremedia
 			 * Tengen
 			 */
 			extcl_irq_A12_clock();
@@ -59,6 +61,8 @@ void irqA12_BS(void) {
 		} else {
 			/*
 			 * utilizzato dalle mappers :
+			 * mapper222
+			 * Futuremedia
 			 * Tengen
 			 */
 			extcl_irq_A12_clock();
@@ -85,6 +89,8 @@ void irqA12_SB(void) {
 		} else {
 			/*
 			 * utilizzato dalle mappers :
+			 * mapper222
+			 * Futuremedia
 			 * Tengen
 			 */
 			extcl_irq_A12_clock();

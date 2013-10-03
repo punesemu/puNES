@@ -15,7 +15,7 @@
 #define _irqA12_clock(function)\
 	if (!irqA12.counter) {\
 		irqA12.counter = irqA12.latch;\
-		if (!irqA12.counter && irqA12.reload) {\
+		if (!irqA12.counter && (irqA12.reload == TRUE)) {\
 			irqA12.save_counter = 1;\
 		}\
 		irqA12.reload = FALSE;\

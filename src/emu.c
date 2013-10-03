@@ -177,8 +177,12 @@ BYTE emu_load_rom(void) {
 	if (info.rom_file[0]) {
 		sprintf(name_file, "%s", basename(info.rom_file));
 
-		/* salvo l'estensione del file */
-		strcpy(ext, strrchr(name_file, '.'));
+		if (strrchr(name_file, '.') == NULL) {
+			strcpy(ext, ".nes");
+		} else {
+			/* salvo l'estensione del file */
+			strcpy(ext, strrchr(name_file, '.'));
+		}
 
 		if (!(strcasecmp(ext, ".fds")) || !(strcasecmp(ext, ".FDS"))) {
 			if (fds_load_rom()) {

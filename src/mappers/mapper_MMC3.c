@@ -57,6 +57,9 @@ void map_init_MMC3(void) {
 		case NAMCO3451:
 			mirroring_V();
 			break;
+		case MMC3_ALTERNATE:
+			EXTCL_IRQ_A12_CLOCK(MMC3_alternate);
+			break;
 	}
 
 	if (info.id == SMB2JSMB1) {
@@ -272,4 +275,15 @@ void extcl_ppu_320_to_34x_MMC3(void) {
 }
 void extcl_update_r2006_MMC3(WORD old_r2006) {
 	irqA12_IO(old_r2006);
+}
+void extcl_irqA12_clock_MMC3_alternate(void) {
+	if (!irqA12.counter) {
+		irqA12.counter = irqA12.latch;
+		irqA12.reload = FALSE;
+	} else {
+		irqA12.counter--;
+	}
+	if (!irqA12.counter && irqA12.enable) {
+		irq.high |= EXT_IRQ;
+	}
 }

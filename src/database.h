@@ -1978,6 +1978,13 @@ static const _dbelement dblist[] = {
 	/* Super Mario Bros 2J + SMB1 Chars (Hack).nes */
 	{"3af18925766baa141dce6ab67ce011fa94d643f7", 4, DEFAULT, SMB2JSMB1, DEFAULT},
 
+	/* 5-MMC3.nes */
+	{"f8266c01494c0da28db89c405105274e71adaac0", 4, MMC3_ALTERNATE, DEFAULT, DEFAULT},
+	/* 5-MMC3.nes */
+	{"7ab1e18c8fbce1ac5f7699ea50ea05b5490fe3e0", 4, MMC3_ALTERNATE, DEFAULT, DEFAULT},
+	/* 6.MMC3_rev_B.nes */
+	{"0e971e2ccad1dee51a0c305ed38fafd2e6ca3b41", 4, MMC3_ALTERNATE, DEFAULT, DEFAULT},
+
 	/* Adventures of Lolo 2 (E) [!].nes */
 	{"1d99e097573e55457cc0858a06c63e8e6b76fb8f", 4, DEFAULT, DEFAULT, PAL},
 	/* Alien 3 (E) [!].nes */
