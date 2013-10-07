@@ -337,7 +337,7 @@ void extcl_cpu_wr_mem_MMC5(WORD address, BYTE value) {
 			nmt_update(4, 2)
 			nmt_update(6, 3)
 			return;
-			/* --------------------------------- PRG bankswitching ---------------------------------*/
+/* --------------------------------- PRG bankswitching ---------------------------------*/
 		case 0x5106:
 			mmc5.fill_tile = value;
 			memset(&mmc5.fill_table[0], mmc5.fill_tile, 0x3C0);

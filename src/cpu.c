@@ -621,7 +621,7 @@ void cpu_exe_op(void) {
 	 * (fonte: http://wiki.nesdev.com/w/index.php/NMI)
 	 *
 	 * FIXME: non sono affatto sicuro di questa cosa.
-	 * Disabilito l'NMI quando viene settato (dal registro 2000)
+	 * Disabilito l'NMI quando viene settato (dal registro $2000)
 	 * nello stesso momento in cui il vblank viene disabilitato
 	 * (frameX = 0). In questo modo passo la rom di test
 	 * 07-nmi_on_timing.nes. Non ho trovato informazioni su quando
