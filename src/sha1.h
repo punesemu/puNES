@@ -18,9 +18,9 @@
 #endif
 
 typedef struct {
-    ulong total[2];
-    ulong state[5];
-    uchar buffer[64];
+	ulong total[2];
+	ulong state[5];
+	uchar buffer[64];
 } sha1_context;
 
 /*

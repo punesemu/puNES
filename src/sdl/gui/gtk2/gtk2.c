@@ -542,8 +542,8 @@ void gui_add_event(void *funct, void *args) {
 	g_idle_add((GSourceFunc) funct, (gpointer) args);
 }
 void gui_flush(void) {
-    while (gtk_events_pending()) {
-    	gtk_main_iteration();
+	while (gtk_events_pending()) {
+		gtk_main_iteration();
 	}
 }
 void gui_set_thread_affinity(uint8_t core) {
@@ -567,11 +567,11 @@ double high_resolution_ms(void) {
 
 	gettimeofday(&time, NULL);
 
-    elapsed_seconds  = time.tv_sec  - gui.counterStart.tv_sec;
-    elapsed_useconds = time.tv_usec - gui.counterStart.tv_usec;
+	elapsed_seconds  = time.tv_sec  - gui.counterStart.tv_sec;
+	elapsed_useconds = time.tv_usec - gui.counterStart.tv_usec;
 
-    //return ((elapsed_seconds * 1000) + (elapsed_useconds / 1000.0f) + 0.5f);
-    return ((elapsed_seconds * 1000.0f) + (elapsed_useconds / 1000.0f));
+	//return ((elapsed_seconds * 1000) + (elapsed_useconds / 1000.0f) + 0.5f);
+	return ((elapsed_seconds * 1000.0f) + (elapsed_useconds / 1000.0f));
 }
 /* main_win */
 void main_win_destroy(void) {
@@ -1128,7 +1128,7 @@ void change_rom(char *rom) {
 void drag_data_received(GtkWidget *widget, GdkDragContext *context, gint x, gint y,
 		GtkSelectionData *data, guint ttype, guint time, gpointer *NA) {
 	gchar **uri_list;
-    gboolean dnd_success = FALSE;
+	gboolean dnd_success = FALSE;
 
 	if ((uri_list = gtk_selection_data_get_uris(data))) {
 		gchar *path = NULL;

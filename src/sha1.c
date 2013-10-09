@@ -44,19 +44,19 @@
 #ifndef GET_UINT32_BE
 #define GET_UINT32_BE(n,b,i)                    \
 {                                               \
-    (n) = ( (ulong) (b)[(i)    ] << 24 )        \
-        | ( (ulong) (b)[(i) + 1] << 16 )        \
-        | ( (ulong) (b)[(i) + 2] <<  8 )        \
-        | ( (ulong) (b)[(i) + 3]       );       \
+	(n) = ( (ulong) (b)[(i)    ] << 24 )    \
+	    | ( (ulong) (b)[(i) + 1] << 16 )    \
+	    | ( (ulong) (b)[(i) + 2] <<  8 )    \
+	    | ( (ulong) (b)[(i) + 3]       );   \
 }
 #endif
 #ifndef PUT_UINT32_BE
 #define PUT_UINT32_BE(n,b,i)                    \
 {                                               \
-    (b)[(i)    ] = (uchar) ( (n) >> 24 );       \
-    (b)[(i) + 1] = (uchar) ( (n) >> 16 );       \
-    (b)[(i) + 2] = (uchar) ( (n) >>  8 );       \
-    (b)[(i) + 3] = (uchar) ( (n)       );       \
+	(b)[(i)    ] = (uchar) ( (n) >> 24 );   \
+	(b)[(i) + 1] = (uchar) ( (n) >> 16 );   \
+	(b)[(i) + 2] = (uchar) ( (n) >>  8 );   \
+	(b)[(i) + 3] = (uchar) ( (n)       );   \
 }
 #endif
 

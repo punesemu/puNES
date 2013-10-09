@@ -183,7 +183,7 @@ void hq2x_32_rb(WORD *screen, void *pix, uint32_t *palette) {
 				flag <<= 1;
 			}
 
-            switch (pattern) {
+			switch (pattern) {
 				case 0:
 				case 1:
 				case 4:
@@ -2134,9 +2134,9 @@ void hq2x_32_rb(WORD *screen, void *pix, uint32_t *palette) {
 					}
 					break;
 				}
-            }
-            screen++;
-            dp += 2;
+			}
+			screen++;
+			dp += 2;
 		}
 
 		s_row_p += srb;

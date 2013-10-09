@@ -176,7 +176,7 @@ BYTE snd_start(void) {
 
 	{
 		/* dimensione in bytes del buffer */
-    	DBWORD total_buffer_size = snd.buffer.size * snd.buffer.count * sizeof(*cache->write);
+		DBWORD total_buffer_size = snd.buffer.size * snd.buffer.count * sizeof(*cache->write);
 
 		//printf("snd.buffer.size   : %d\n", snd.buffer.size);
 		//printf("snd.buffer.count  : %d\n", snd.buffer.count);
@@ -251,7 +251,7 @@ BYTE snd_start(void) {
 	if(IXAudio2SourceVoice_Start(xaudio2.source, 0, XAUDIO2_COMMIT_NOW) != S_OK) {
 		fprintf(stderr, "Unable to start source voice\n");
 		return (EXIT_ERROR);
-    }
+	}
 
 	return (EXIT_OK);
 }
@@ -291,7 +291,7 @@ void snd_stop(void) {
 	CoUninitialize();
 
 	if (snd.cache) {
-    	_callback_data *cache = snd.cache;
+	_callback_data *cache = snd.cache;
 
 		if (cache->start) {
 			free(cache->start);

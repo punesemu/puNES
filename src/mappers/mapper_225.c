@@ -24,21 +24,21 @@ void map_init_225(void) {
 void extcl_cpu_wr_mem_225(WORD address, BYTE value) {
 	DBWORD bank;
 
-    value = (address >> 7) & 0x1F;
+	value = (address >> 7) & 0x1F;
 
 	if (prg_rom_32k_max > 0x1F) {
 		value |= ((address >> 9) & 0x20);
 	}
 
-    if (address & 0x1000) {
-    	value = (value << 1) | ((address >> 6) & 0x01);
-    	control_bank(prg_rom_16k_max)
-    	map_prg_rom_8k(2, 0, value);
-    	map_prg_rom_8k(2, 2, value);
-    } else {
+	if (address & 0x1000) {
+		value = (value << 1) | ((address >> 6) & 0x01);
+		control_bank(prg_rom_16k_max)
+		map_prg_rom_8k(2, 0, value);
+		map_prg_rom_8k(2, 2, value);
+	} else {
 		control_bank(prg_rom_32k_max)
 		map_prg_rom_8k(4, 0, value);
-    }
+	}
 	map_prg_rom_8k_update();
 
 	if (address & 0x2000) {

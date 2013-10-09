@@ -10,7 +10,7 @@
 
 #define X3(a) ((a << 1) + a)
 #define put_pixel(type, p0, p1)\
-    *(type *) (dstpix + p0 + p1) = (type) pixel
+	*(type *) (dstpix + p0 + p1) = (type) pixel
 
 struct _scl {
 	WORD sx;

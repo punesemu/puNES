@@ -3113,14 +3113,14 @@ void hq3x_32_rb(WORD *screen, void *pix, uint32_t *palette) {
 					break;
 				}
 			}
-            screen++;
-            dp += 3;
-        }
+			screen++;
+			dp += 3;
+		}
 
 		s_row_p += srb;
 		screen = (WORD *) s_row_p + hqnx.startx;
 
 		d_row_p += drb * 3;
 		dp = (uint32_t *) d_row_p;
-    }
+	}
 }

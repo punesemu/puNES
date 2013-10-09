@@ -1258,7 +1258,7 @@ BYTE d3d9_create_texture(_texture *texture, uint32_t width, uint32_t height, uin
 		texture->h = height;
 	}
 
-    /* se la scheda video supporta solo texture quadre allore devo crearle quadre */
+	/* se la scheda video supporta solo texture quadre allore devo crearle quadre */
 	if (d3d9.adapter->texture_square_only == TRUE) {
 		if (texture->w < texture->h) {
 			texture->w = texture->h;

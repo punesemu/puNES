@@ -4559,14 +4559,14 @@ void hq4x_32_rb(WORD *screen, void *pix, uint32_t *palette) {
 					break;
 				}
 			}
-            screen++;
-            dp += 4;
-        }
+			screen++;
+			dp += 4;
+		}
 
 		s_row_p += srb;
 		screen = (WORD *) s_row_p + hqnx.startx;
 
 		d_row_p += drb * 4;
 		dp = (uint32_t *) d_row_p;
-    }
+	}
 }

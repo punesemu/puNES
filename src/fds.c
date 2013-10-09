@@ -247,7 +247,7 @@ void fds_disk_op(WORD type, BYTE side_to_insert) {
 		position = side_to_insert * DISK_SIDE_SIZE;
 	}
 
-    fseek(fds.info.fp, position, SEEK_SET);
+	fseek(fds.info.fp, position, SEEK_SET);
 	if (fread(buffer, DISK_SIDE_SIZE, 1, fds.info.fp) < 1) {
 		fprintf(stderr, "error in fds disk\n");
 	}

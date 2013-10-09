@@ -13,11 +13,11 @@
 #define m221_prg_16k_swap()\
 	value = ((m221.reg[0] >> 1) & 0x38) | ((m221.reg[0] & 0x01) ? (m221.reg[0] & 0x80) ?\
 		m221.reg[1] : (m221.reg[1] & 0x06) : m221.reg[1]);\
-   	control_bank(prg_rom_16k_max)\
+	control_bank(prg_rom_16k_max)\
 	map_prg_rom_8k(2, 0, value);\
 	value = ((m221.reg[0] >> 1) & 0x38) | ((m221.reg[0] & 0x01) ? (m221.reg[0] & 0x80) ?\
 		0x07 : (m221.reg[1] & 0x06) | 0x1 : m221.reg[1]);\
-   	control_bank(prg_rom_16k_max)\
+	control_bank(prg_rom_16k_max)\
 	map_prg_rom_8k(2, 2, value)
 
 WORD prg_rom_16k_max;

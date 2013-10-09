@@ -423,15 +423,15 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 #define _RDP _RDX(cpu.PC++, TRUE)
 #define _RDX(src, LASTTICKHW) cpu_rd_mem(src, LASTTICKHW)
 #define _RLA(dst, bitmask, opr)\
-	_ROX(dst, bitmask, opr, oldCF);\
+	_ROX(dst, bitmask, opr, old_cf);\
 	cpu.AR &= shift
 #define _ROL(dst, bitmask, opr)\
-	_ROX(dst, bitmask, opr, oldCF)
+	_ROX(dst, bitmask, opr, old_cf)
 #define _ROR(dst, bitmask, opr)\
-	_ROX(dst, bitmask, opr, (oldCF << 7))
+	_ROX(dst, bitmask, opr, (old_cf << 7))
 #define _ROX(dst, bitmask, opr, oprnd)\
 	{\
-	BYTE oldCF = cpu.cf;\
+	BYTE old_cf = cpu.cf;\
 	_BSH(dst, bitmask, opr);\
 	dst |= oprnd;\
 	}

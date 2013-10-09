@@ -25,15 +25,15 @@ void extcl_cpu_wr_mem_233(WORD address, BYTE value) {
 
 	value &= 0x1F;
 
-    if (save & 0x20) {
-    	control_bank(prg_rom_16k_max)
-    	map_prg_rom_8k(2, 0, value);
-    	map_prg_rom_8k(2, 2, value);
-    } else {
-    	value >>= 1;
+	if (save & 0x20) {
+		control_bank(prg_rom_16k_max)
+		map_prg_rom_8k(2, 0, value);
+		map_prg_rom_8k(2, 2, value);
+	} else {
+		value >>= 1;
 		control_bank(prg_rom_32k_max)
 		map_prg_rom_8k(4, 0, value);
-    }
+	}
 	map_prg_rom_8k_update();
 
 	switch ((save & 0xC0) >> 6) {

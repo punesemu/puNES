@@ -21,21 +21,21 @@ void map_init_227(void) {
 void extcl_cpu_wr_mem_227(WORD address, BYTE value) {
 	BYTE bank = ((address >> 4) & 0x10) | ((address >> 3) & 0x0F);
 
-    if (address & 0x0001) {
-    	value = bank;
+	if (address & 0x0001) {
+		value = bank;
 		control_bank(prg_rom_32k_max)
 		map_prg_rom_8k(4, 0, value);
-    } else {
-    	value = (bank << 1) | ((address >> 2) & 0x01);
-    	control_bank(prg_rom_16k_max)
-    	map_prg_rom_8k(2, 0, value);
-    	map_prg_rom_8k(2, 2, value);
-    }
+	} else {
+		value = (bank << 1) | ((address >> 2) & 0x01);
+		control_bank(prg_rom_16k_max)
+		map_prg_rom_8k(2, 0, value);
+		map_prg_rom_8k(2, 2, value);
+	}
 
 	if (!(address & 0x0080)) {
-    	value = ((address & 0x0200) ? 0x07 : 0x00) | ((bank << 1) & 0x38);
-    	control_bank(prg_rom_16k_max)
-    	map_prg_rom_8k(2, 2, value);
+		value = ((address & 0x0200) ? 0x07 : 0x00) | ((bank << 1) & 0x38);
+		control_bank(prg_rom_16k_max)
+		map_prg_rom_8k(2, 2, value);
 	}
 	map_prg_rom_8k_update();
 

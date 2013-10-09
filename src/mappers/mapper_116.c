@@ -870,7 +870,7 @@ void extcl_cpu_wr_mem_116_type_C(WORD address, BYTE value) {
 				}
 				return;
 		}
-    }
+	}
 }
 BYTE extcl_save_mapper_116_type_C(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m116.mode);

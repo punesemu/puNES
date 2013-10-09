@@ -50,8 +50,8 @@ void map_init_235(void) {
 	}
 
 	if (info.reset >= HARD) {
-        m235.openbus = 0;
-        extcl_cpu_wr_mem_235(0x8000, 0x00);
+		m235.openbus = 0;
+		extcl_cpu_wr_mem_235(0x8000, 0x00);
 	}
 }
 void extcl_cpu_wr_mem_235(WORD address, BYTE value) {
@@ -60,9 +60,9 @@ void extcl_cpu_wr_mem_235(WORD address, BYTE value) {
 
 	if (address & 0x0800) {
 		value = (bank << 1) | ((address >> 12) & 0x01);
-    	control_bank(prg_rom_16k_max)
+		control_bank(prg_rom_16k_max)
 		map_prg_rom_8k(2, 0, value);
-    	map_prg_rom_8k(2, 2, value);
+		map_prg_rom_8k(2, 2, value);
 	} else {
 		value = bank;
 		control_bank(prg_rom_32k_max)

@@ -19,28 +19,28 @@
 	x[2] = i & 0xff
 #define X3(a) ((a << 1) + a)
 #define SCALE2X()\
-    if (B != H && D != F) {\
-        E0 = D == B ? D : E;\
-        E1 = B == F ? F : E;\
-        E2 = D == H ? D : E;\
-        E3 = H == F ? F : E;\
-    } else {\
-        E0 = E1 = E2 = E3 = E;\
-    }
+	if (B != H && D != F) {\
+		E0 = D == B ? D : E;\
+		E1 = B == F ? F : E;\
+		E2 = D == H ? D : E;\
+		E3 = H == F ? F : E;\
+	} else {\
+		E0 = E1 = E2 = E3 = E;\
+	}
 #define SCALE3X_A()\
-    E0 = D == B ? D : E;\
-    E1 = (D == B && E != C) || (B == F && E != A) ? B : E;\
-    E2 = B == F ? F : E;\
-    E3 = (D == B && E != G) || (D == H && E != A) ? D : E;\
-    E4 = E;\
-    E5 = (B == F && E != I) || (H == F && E != C) ? F : E;\
-    E6 = D == H ? D : E;\
-    E7 = (D == H && E != I) || (H == F && E != G) ? H : E;\
-    E8 = H == F ? F : E;
+	E0 = D == B ? D : E;\
+	E1 = (D == B && E != C) || (B == F && E != A) ? B : E;\
+	E2 = B == F ? F : E;\
+	E3 = (D == B && E != G) || (D == H && E != A) ? D : E;\
+	E4 = E;\
+	E5 = (B == F && E != I) || (H == F && E != C) ? F : E;\
+	E6 = D == H ? D : E;\
+	E7 = (D == H && E != I) || (H == F && E != G) ? H : E;\
+	E8 = H == F ? F : E;
 #define SCALE3X_B()\
-    E0 = E1 = E2 = E3 = E4 = E5 = E6 = E7 = E8 = E;
+	E0 = E1 = E2 = E3 = E4 = E5 = E6 = E7 = E8 = E;
 #define put_pixel(type, pixel, p0, p1)\
-    *(type *) (dstpix + p0 + p1) = (type) palette[pixel]
+	*(type *) (dstpix + p0 + p1) = (type) palette[pixel]
 
 struct _scl2x {
 	WORD sx;

@@ -164,36 +164,36 @@ void extcl_cpu_wr_mem_VRC6(WORD address, BYTE value) {
 			map_prg_rom_8k_update();
 			return;
 		case 0xD000:
-            control_bank(chr_rom_1k_max)
-            chr.bank_1k[0] = &chr.data[value << 10];
+			control_bank(chr_rom_1k_max)
+			chr.bank_1k[0] = &chr.data[value << 10];
 			return;
 		case 0xD001:
-            control_bank(chr_rom_1k_max)
-            chr.bank_1k[1] = &chr.data[value << 10];
+			control_bank(chr_rom_1k_max)
+			chr.bank_1k[1] = &chr.data[value << 10];
 			return;
 		case 0xD002:
-            control_bank(chr_rom_1k_max)
-            chr.bank_1k[2] = &chr.data[value << 10];
+			control_bank(chr_rom_1k_max)
+			chr.bank_1k[2] = &chr.data[value << 10];
 			return;
 		case 0xD003:
-            control_bank(chr_rom_1k_max)
-            chr.bank_1k[3] = &chr.data[value << 10];
+			control_bank(chr_rom_1k_max)
+			chr.bank_1k[3] = &chr.data[value << 10];
 			return;
 		case 0xE000:
-            control_bank(chr_rom_1k_max)
-            chr.bank_1k[4] = &chr.data[value << 10];
+			control_bank(chr_rom_1k_max)
+			chr.bank_1k[4] = &chr.data[value << 10];
 			return;
 		case 0xE001:
-            control_bank(chr_rom_1k_max)
-            chr.bank_1k[5] = &chr.data[value << 10];
+			control_bank(chr_rom_1k_max)
+			chr.bank_1k[5] = &chr.data[value << 10];
 			return;
 		case 0xE002:
-            control_bank(chr_rom_1k_max)
-            chr.bank_1k[6] = &chr.data[value << 10];
+			control_bank(chr_rom_1k_max)
+			chr.bank_1k[6] = &chr.data[value << 10];
 			return;
 		case 0xE003:
-            control_bank(chr_rom_1k_max)
-            chr.bank_1k[7] = &chr.data[value << 10];
+			control_bank(chr_rom_1k_max)
+			chr.bank_1k[7] = &chr.data[value << 10];
 			return;
 		case 0xF000:
 			vrc6.reload = value;
