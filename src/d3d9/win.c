@@ -1179,7 +1179,7 @@ long __stdcall main_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 			SetFocus(d3d_frame);
 			break;
 		case WM_SYSCOMMAND: {
-			switch (wParam & 0xfff0) {
+			switch (wParam & 0xFFF0) {
 				case SC_MONITORPOWER:
 				case SC_SCREENSAVE:
 					return (0);
