@@ -41,8 +41,11 @@ BYTE map_init(WORD mapper_type) {
 		case 2:
 			if (info.mapper_type == UNLROM) {
 				map_init_UxROM(UNLROM);
+			} else if (info.mapper_type == UNROM_BK2) {
+				map_init_UxROM(UNROM_BK2);
 			} else {
 				map_init_UxROM(UXROM);
+
 			}
 			break;
 		case 3:

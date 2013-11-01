@@ -26,6 +26,9 @@ void map_init_UxROM(BYTE model) {
 		case UNROM180:
 			EXTCL_CPU_WR_MEM(UNROM_180);
 			break;
+		case UNROM_BK2:
+			EXTCL_CPU_WR_MEM(UNROM_BK2);
+			break;
 	}
 }
 
@@ -55,6 +58,12 @@ void extcl_cpu_wr_mem_UNROM_180(WORD address, BYTE value) {
 
 void extcl_cpu_wr_mem_UnlROM(WORD address, BYTE value) {
 	control_bank_with_AND(0x0F, prg_rom_16k_max)
+	map_prg_rom_8k(2, 0, value);
+	map_prg_rom_8k_update();
+}
+
+void extcl_cpu_wr_mem_UNROM_BK2(WORD address, BYTE value) {
+	control_bank(prg_rom_16k_max)
 	map_prg_rom_8k(2, 0, value);
 	map_prg_rom_8k_update();
 }

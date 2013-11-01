@@ -1669,6 +1669,8 @@ static const _dbelement dblist[] = {
 	{"1b143750dc8597372892ff4fa64c7e982b5e7cdb", 2, UNLROM, DEFAULT, DEFAULT},
 	/* Zoids 2 - Zenebas no Gyakushuu (J) [p1][hM02].nes */
 	{"e81966607afceca236779c63134ff5a9333c4638", 2, UNLROM, DEFAULT, DEFAULT},
+	/* Battle Kid 2 - Mountain of Torment (U).nes */
+	{"dcd6870e0d5a79899dce11b975c8a16652fc7143", 2, UNROM_BK2, DEFAULT, DEFAULT},
 	/* Best of the Best - Championship Karate (E) [!].nes */
 	{"45a47a23cd3d6779ff8a1be8853d14a9df7ea3ca", 2, DEFAULT, BAD_INES_BOTBE, PAL},
 	/* Alfred Chicken (E) [!].nes */
