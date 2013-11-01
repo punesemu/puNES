@@ -944,6 +944,7 @@ gboolean time_handler_redraw(void) {
 void save_slot_changed(GtkComboBox *widget) {
 	GtkTreeIter iter;
 	GtkTreeModel *model;
+	guint slot;
 
 	if (gui_in_update) {
 		return;
@@ -953,7 +954,8 @@ void save_slot_changed(GtkComboBox *widget) {
 
 	gtk_combo_box_get_active_iter(GTK_COMBO_BOX(widget), &iter);
 
-	gtk_tree_model_get(model, &iter, COLUMN_INT, &save_slot.slot, -1);
+	gtk_tree_model_get(model, &iter, COLUMN_INT, &slot, -1);
+	save_slot.slot = slot;
 
 	gui_update();
 

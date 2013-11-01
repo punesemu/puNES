@@ -317,6 +317,10 @@ void cfg_file_input_parse(void) {
 		}
 	}
 
+	if (port1.joy_id == port2.joy_id) {
+		port2.joy_id = name_to_jsn("NULL");
+	}
+
 	text_add_line_info(1, "input configuration [green]loaded");
 
 	fclose(fp);

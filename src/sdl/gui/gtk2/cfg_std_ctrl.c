@@ -267,14 +267,22 @@ void cfg_standard_controller_combobox_select_joystick_control(GtkCellLayout *cel
 
 	gtk_tree_model_get(tree_model, iter, VALUE_JOYSTICK, &index, -1);
 
+	if (index == name_to_jsn("NULL")) {
+		gtk_cell_renderer_set_sensitive (cell, TRUE);
+		return;
+	}
+
 	/* il controller 1 ha priorita' sul 2 */
-	if (cfg_std_ctrl.cfg.id == 1) {
-		if (index == cfg_port2.port.joy_id) {
-			same_port = TRUE;
-		}
-	} else if (cfg_std_ctrl.cfg.id == 2) {
-		if (index == cfg_port1.port.joy_id) {
-			same_port = TRUE;
+	if ((cfg_port1.port.type == cfg_port2.port.type)
+	        && ((cfg_port1.port.type != CTRL_STANDARD) && (cfg_port2.port.type != CTRL_STANDARD))) {
+		if (cfg_std_ctrl.cfg.id == 1) {
+			if (index == cfg_port2.port.joy_id) {
+				same_port = TRUE;
+			}
+		} else if (cfg_std_ctrl.cfg.id == 2) {
+			if (index == cfg_port1.port.joy_id) {
+				same_port = TRUE;
+			}
 		}
 	}
 
@@ -282,10 +290,9 @@ void cfg_standard_controller_combobox_select_joystick_control(GtkCellLayout *cel
 	fd = open(device, O_RDONLY | O_NONBLOCK);
 
 	if ((fd < 0) || same_port) {
-		g_object_set(cell, "foreground", "Gray", "foreground-set", TRUE, NULL);
+		gtk_cell_renderer_set_sensitive (cell, FALSE);
 	} else {
-		/* imposto il colore di default */
-		g_object_set(cell, "foreground-set", FALSE, NULL);
+		gtk_cell_renderer_set_sensitive (cell, TRUE);
 	}
 
 	if (fd) {
@@ -295,13 +302,14 @@ void cfg_standard_controller_combobox_select_joystick_control(GtkCellLayout *cel
 void cfg_standard_controller_combobox_joystick_changed(GtkComboBox *combobox) {
 	GtkTreeIter iter;
 	GtkTreeModel *model;
+	guint joy_id;
 
 	model = gtk_combo_box_get_model(GTK_COMBO_BOX(combobox));
 
 	gtk_combo_box_get_active_iter(GTK_COMBO_BOX(combobox), &iter);
 
-	gtk_tree_model_get(model, &iter, VALUE_JOYSTICK,
-			&cfg_std_ctrl.cfg.port.joy_id, -1);
+	gtk_tree_model_get(model, &iter, VALUE_JOYSTICK, &joy_id, -1);
+	cfg_std_ctrl.cfg.port.joy_id = joy_id;
 }
 void cfg_standard_controller_input_changed_clicked(GtkButton *button, BYTE input) {
 	if (cfg_std_ctrl.no_other_buttons) {
@@ -348,17 +356,17 @@ void cfg_standard_controller_js_press_event(void) {
 		g_thread_exit(NULL);
 	}
 
-	/*
-	 * i due controller non possono
-	 * utilizzare lo stesso device. ed
-	 */
-	if (cfg_std_ctrl.cfg.id == 1) {
-		if (index == cfg_port2.port.joy_id) {
-			g_thread_exit(NULL);
-		}
-	} else if (cfg_std_ctrl.cfg.id == 2) {
-		if (index == cfg_port1.port.joy_id) {
-			g_thread_exit(NULL);
+	/* i due controller non possono utilizzare lo stesso device */
+	if ((cfg_port1.port.type == cfg_port2.port.type)
+	        && ((cfg_port1.port.type != CTRL_STANDARD) && (cfg_port2.port.type != CTRL_STANDARD))) {
+		if (cfg_std_ctrl.cfg.id == 1) {
+			if (index == cfg_port2.port.joy_id) {
+				g_thread_exit(NULL);
+			}
+		} else if (cfg_std_ctrl.cfg.id == 2) {
+			if (index == cfg_port1.port.joy_id) {
+				g_thread_exit(NULL);
+			}
 		}
 	}
 
@@ -520,13 +528,19 @@ GtkWidget *cfg_standard_controller_combobox_select_joystick(void) {
 
 	model = gtk_list_store_new(N_JOYSTICK, G_TYPE_STRING, G_TYPE_INT);
 
-	for (i = 0; i < MAX_JOYSTICK; i++) {
+	for (i = 0; i <= MAX_JOYSTICK; i++) {
 		char description[30];
+		BYTE id = i;
 
-		sprintf(description, "%d", i);
+		if (i < MAX_JOYSTICK) {
+			sprintf(description, "%d", i);
+		} else {
+			sprintf(description, "Disabled");
+			id = name_to_jsn("NULL");
+		}
 
 		gtk_list_store_append(model, &iter);
-		gtk_list_store_set(model, &iter, NAME_JOYSTICK, description, VALUE_JOYSTICK, i, -1);
+		gtk_list_store_set(model, &iter, NAME_JOYSTICK, description, VALUE_JOYSTICK, id, -1);
 	}
 
 	gtk_combo_box_set_model(GTK_COMBO_BOX(combobox), GTK_TREE_MODEL(model));
@@ -539,7 +553,7 @@ GtkWidget *cfg_standard_controller_combobox_select_joystick(void) {
 			cfg_standard_controller_combobox_select_joystick_control, NULL, NULL);
 
 	if (cfg_std_ctrl.cfg.port.joy_id == name_to_jsn("NULL")) {
-		gtk_combo_box_set_active(GTK_COMBO_BOX(combobox), 0);
+		gtk_combo_box_set_active(GTK_COMBO_BOX(combobox), MAX_JOYSTICK);
 	} else {
 		gtk_combo_box_set_active(GTK_COMBO_BOX(combobox), cfg_std_ctrl.cfg.port.joy_id);
 	}

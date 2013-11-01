@@ -118,12 +118,14 @@ void cfg_input_resize_std_widget(GtkWidget *widget) {
 void cfg_input_combobox_controller_changed(GtkComboBox *combobox, _cfg_port *cfg_port) {
 	GtkTreeIter iter;
 	GtkTreeModel *model;
+	guint type;
 
 	model = gtk_combo_box_get_model(GTK_COMBO_BOX(combobox));
 
 	gtk_combo_box_get_active_iter(GTK_COMBO_BOX(combobox), &iter);
 
-	gtk_tree_model_get(model, &iter, VALUE_CONTROLLER, &cfg_port->port.type, -1);
+	gtk_tree_model_get(model, &iter, VALUE_CONTROLLER, &type, -1);
+	cfg_port->port.type = type;
 
 	cfg_input_enable_config(cfg_port->id - 1);
 }

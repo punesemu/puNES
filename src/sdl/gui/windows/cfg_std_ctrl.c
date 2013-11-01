@@ -71,6 +71,8 @@ void cfg_standard_controller(HWND hwnd, _cfg_port *cfg_port) {
 long __stdcall cfg_standard_controller_wnd_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	DRAWITEMSTRUCT *pdis;
 
+	//printf("|!!! %d !!!|\n", msg);
+
 	switch (msg) {
 		case WM_INITDIALOG: {
 			BYTE i;
@@ -84,19 +86,23 @@ long __stdcall cfg_standard_controller_wnd_proc(HWND hwnd, UINT msg, WPARAM wPar
 
 			SendDlgItemMessage(hwnd, IDC_STD_CTRL_JOY_ID, CB_RESETCONTENT, 0, 0);
 
-			for (i = 0; i < 4; i++) {
+			for (i = 0; i <= 4; i++) {
 				char label[30];
 
-				sprintf(label, "Device %d", i);
+				if (i < 4) {
+					sprintf(label, "Device %d", i);
+				} else {
+					sprintf(label, "Disabled");
+				}
+
 				SendDlgItemMessage(hwnd, IDC_STD_CTRL_JOY_ID, CB_ADDSTRING, i, (LPARAM) label);
 			}
 
 			if (cfg_std_ctrl.cfg.port.joy_id == name_to_jsn("NULL")) {
-				SendDlgItemMessage(hwnd, IDC_STD_CTRL_JOY_ID, CB_SETCURSEL, 0, 0);
-				cfg_std_ctrl.cfg.port.joy_id = 0;
+				SendDlgItemMessage(hwnd, IDC_STD_CTRL_JOY_ID, CB_SETCURSEL, 4, 0);
 			} else {
 				SendDlgItemMessage(hwnd, IDC_STD_CTRL_JOY_ID, CB_SETCURSEL,
-				        cfg_std_ctrl.cfg.port.joy_id, 0);
+						cfg_std_ctrl.cfg.port.joy_id, 0);
 			}
 			return (TRUE);
 		}
@@ -134,16 +140,27 @@ long __stdcall cfg_standard_controller_wnd_proc(HWND hwnd, UINT msg, WPARAM wPar
 					SetBkColor(pdis->hDC, back_colour);
 				}
 
+				if (strcmp(string, "Disabled") == 0) {
+					SetTextColor(pdis->hDC, RGB(0, 0, 0));
+					DrawText(pdis->hDC, string, strlen(string), &pdis->rcItem,
+					        DT_LEFT | DT_SINGLELINE);
+					return (FALSE);
+				}
+
 				joy_info.dwFlags = JOY_RETURNBUTTONS;
 				joy_info.dwSize = sizeof(joy_info);
 
-				if (cfg_std_ctrl.cfg.id == 1) {
-					if (slot == cfg_port2.port.joy_id) {
-						same_port = TRUE;
-					}
-				} else if (cfg_std_ctrl.cfg.id == 2) {
-					if (slot == cfg_port1.port.joy_id) {
-						same_port = TRUE;
+				if ((cfg_port1.port.type == cfg_port2.port.type)
+				        && ((cfg_port1.port.type != CTRL_STANDARD)
+				                && (cfg_port2.port.type != CTRL_STANDARD))) {
+					if (cfg_std_ctrl.cfg.id == 1) {
+						if (slot == cfg_port2.port.joy_id) {
+							same_port = TRUE;
+						}
+					} else if (cfg_std_ctrl.cfg.id == 2) {
+						if (slot == cfg_port1.port.joy_id) {
+							same_port = TRUE;
+						}
 					}
 				}
 
@@ -182,6 +199,9 @@ long __stdcall cfg_standard_controller_wnd_proc(HWND hwnd, UINT msg, WPARAM wPar
 					if (HIWORD(wParam) == CBN_SELCHANGE) {
 						cfg_std_ctrl.cfg.port.joy_id = SendDlgItemMessage(hwnd,
 								IDC_STD_CTRL_JOY_ID, CB_GETCURSEL, 0, 0);
+						if (cfg_std_ctrl.cfg.port.joy_id == 4) {
+							cfg_std_ctrl.cfg.port.joy_id = name_to_jsn("NULL");
+						}
 					}
 					return (TRUE);
 				case IDC_STD_CTRL_KEY_A:
@@ -240,6 +260,10 @@ long __stdcall cfg_standard_controller_wnd_proc(HWND hwnd, UINT msg, WPARAM wPar
 
 					if (cfg_std_ctrl.no_other_buttons) {
 						SetFocus(cfg_std_ctrl.button_pressed);
+						return (TRUE);
+					}
+					/* se il joystick e' disabilitato non faccio niente */
+					if (cfg_std_ctrl.cfg.port.joy_id == name_to_jsn("NULL")) {
 						return (TRUE);
 					}
 					/* se il joystick non e' collegato non faccio niente */
@@ -329,13 +353,16 @@ void __stdcall cfg_standard_controller_read_joy(void) {
 	 * i due controller non possono
 	 * utilizzare lo stesso device. ed
 	 */
-	if (cfg_std_ctrl.cfg.id == 1) {
-		if (cfg_std_ctrl.cfg.port.joy_id == cfg_port2.port.joy_id) {
-			return;
-		}
-	} else if (cfg_std_ctrl.cfg.id == 2) {
-		if (cfg_std_ctrl.cfg.port.joy_id == cfg_port1.port.joy_id) {
-			return;
+	if ((cfg_port1.port.type == cfg_port2.port.type)
+	        && ((cfg_port1.port.type != CTRL_STANDARD) && (cfg_port2.port.type != CTRL_STANDARD))) {
+		if (cfg_std_ctrl.cfg.id == 1) {
+			if (cfg_std_ctrl.cfg.port.joy_id == cfg_port2.port.joy_id) {
+				return;
+			}
+		} else if (cfg_std_ctrl.cfg.id == 2) {
+			if (cfg_std_ctrl.cfg.port.joy_id == cfg_port1.port.joy_id) {
+				return;
+			}
 		}
 	}
 
