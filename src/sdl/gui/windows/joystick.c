@@ -72,7 +72,8 @@ void js_open(_js *joy) {
 	for (index = 0; index < LENGTH(jsn_list); index++) {
 		if (!strcmp(joy->dev, jsn_list[index].name)) {
 			joy->id = jsn_list[index].value;
-			joy->joy_info.dwFlags = JOY_RETURNALL | JOY_RETURNCENTERED | JOY_USEDEADZONE;
+			joy->joy_info.dwFlags = JOY_RETURNALL | JOY_RETURNCENTERED | JOY_RETURNPOV
+			        | JOY_USEDEADZONE;
 			joy->joy_info.dwSize = sizeof(joy->joy_info);
 
 			if (joyGetPosEx(joy->id, &joy->joy_info) == JOYERR_NOERROR) {
@@ -138,7 +139,7 @@ void js_control(_js *joy, _port *port) {
 		}
 	}
 
-	if (joy->last_axis[POV] != joy->joy_info.dwPOV) {
+	if ((joy->joy_caps.wCaps & JOYCAPS_HASPOV) && (joy->last_axis[POV] != joy->joy_info.dwPOV)) {
 		if (joy->last_axis[POV] != JOY_POVCENTERED) {
 			mode = RELEASED;
 

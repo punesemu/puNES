@@ -15,6 +15,7 @@ long __stdcall cfg_standard_controller_read_kbd(HWND hwnd, UINT msg, WPARAM wPar
 long __stdcall cfg_standard_controller_joy_esc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 void __stdcall cfg_standard_controller_read_joy(void);
 BOOL cfg_standard_controller_input_is_not_ok(DBWORD input, BYTE type);
+void cfg_standard_controller_joy_timer_kill(void);
 
 #define cfg_port_input(type)\
 	cfg_std_ctrl.cfg.port.input[type][cfg_std_ctrl.controller_input]
@@ -31,6 +32,7 @@ typedef struct {
 	BYTE no_other_buttons;
 	BYTE controller_input;
 	BYTE joy_connected[JOYSTICKID15];
+	BYTE joy_timer_run;
 	_cfg_port cfg;
 	_cfg_port *cfg_port;
 } _cfg_standard_controller;
@@ -96,7 +98,7 @@ long __stdcall cfg_standard_controller_wnd_proc(HWND hwnd, UINT msg, WPARAM wPar
 				SendDlgItemMessage(hwnd, IDC_STD_CTRL_JOY_ID, CB_SETCURSEL,
 				        cfg_std_ctrl.cfg.port.joy_id, 0);
 			}
-			return TRUE;
+			return (TRUE);
 		}
 		case WM_DRAWITEM:
 			pdis = (DRAWITEMSTRUCT *) lParam;
@@ -110,7 +112,7 @@ long __stdcall cfg_standard_controller_wnd_proc(HWND hwnd, UINT msg, WPARAM wPar
 				BYTE same_port = FALSE;
 
 				if (pdis->itemID == -1) {
-					return TRUE;
+					return (TRUE);
 				}
 
 				SendDlgItemMessage(hwnd, IDC_STD_CTRL_JOY_ID, CB_GETLBTEXT, pdis->itemID,
@@ -155,23 +157,33 @@ long __stdcall cfg_standard_controller_wnd_proc(HWND hwnd, UINT msg, WPARAM wPar
 
 				DrawText(pdis->hDC, string, strlen(string), &pdis->rcItem, DT_LEFT | DT_SINGLELINE);
 			}
-			return FALSE;
+			return (FALSE);
 		case WM_COMMAND:
 			switch(LOWORD(wParam)) {
 				case IDOK:
+					if (cfg_std_ctrl.joy_timer_run == TRUE) {
+						cfg_standard_controller_joy_timer_kill();
+					}
 					EndDialog(hwnd, IDOK);
 					memcpy(cfg_std_ctrl.cfg_port, &cfg_std_ctrl.cfg,
 							sizeof(cfg_std_ctrl.cfg));
-					return TRUE;
+					return (TRUE);
 				case IDCANCEL:
+					if (cfg_std_ctrl.joy_timer_run == TRUE) {
+						cfg_standard_controller_joy_timer_kill();
+					}
 					EndDialog(hwnd, IDCANCEL);
-					return TRUE;
+					return (TRUE);
 				case IDC_STD_CTRL_JOY_ID:
+					if (cfg_std_ctrl.no_other_buttons) {
+						SetFocus(cfg_std_ctrl.button_pressed);
+						return (TRUE);
+					}
 					if (HIWORD(wParam) == CBN_SELCHANGE) {
 						cfg_std_ctrl.cfg.port.joy_id = SendDlgItemMessage(hwnd,
 								IDC_STD_CTRL_JOY_ID, CB_GETCURSEL, 0, 0);
 					}
-					return TRUE;
+					return (TRUE);
 				case IDC_STD_CTRL_KEY_A:
 				case IDC_STD_CTRL_KEY_B:
 				case IDC_STD_CTRL_KEY_SELECT:
@@ -186,7 +198,7 @@ long __stdcall cfg_standard_controller_wnd_proc(HWND hwnd, UINT msg, WPARAM wPar
 
 					if (cfg_std_ctrl.no_other_buttons) {
 						SetFocus(cfg_std_ctrl.button_pressed);
-						return TRUE;
+						return (TRUE);
 					}
 
 					cfg_std_ctrl.no_other_buttons = TRUE;
@@ -199,16 +211,20 @@ long __stdcall cfg_standard_controller_wnd_proc(HWND hwnd, UINT msg, WPARAM wPar
 					cfg_std_ctrl.old_wnd_proc = (WNDPROC) SetWindowLongPtr(
 							cfg_std_ctrl.button_pressed, GWLP_WNDPROC,
 							(LONG_PTR) cfg_standard_controller_read_kbd);
-					return TRUE;
+					return (TRUE);
 				}
 				case IDC_STD_CTRL_KEY_ERASE: {
 					int i;
 
+					if (cfg_std_ctrl.no_other_buttons) {
+						SetFocus(cfg_std_ctrl.button_pressed);
+						return (TRUE);
+					}
 					for (i = IDC_STD_CTRL_KEY_A; i <= IDC_STD_CTRL_KEY_TURBOB; i++) {
 						cfg_std_ctrl.cfg.port.input[KEYBOARD][i - IDC_STD_CTRL_KEY_A] = 0;
 						SetDlgItemText(hwnd, i, "NULL");
 					}
-					return TRUE;
+					return (TRUE);
 				}
 				case IDC_STD_CTRL_JOY_A:
 				case IDC_STD_CTRL_JOY_B:
@@ -224,12 +240,11 @@ long __stdcall cfg_standard_controller_wnd_proc(HWND hwnd, UINT msg, WPARAM wPar
 
 					if (cfg_std_ctrl.no_other_buttons) {
 						SetFocus(cfg_std_ctrl.button_pressed);
-						return TRUE;
+						return (TRUE);
 					}
-
 					/* se il joystick non e' collegato non faccio niente */
 					if (cfg_std_ctrl.joy_connected[cfg_std_ctrl.cfg.port.joy_id] == FALSE) {
-						return TRUE;
+						return (TRUE);
 					}
 					/*
 					 * i due controller non possono
@@ -238,7 +253,7 @@ long __stdcall cfg_standard_controller_wnd_proc(HWND hwnd, UINT msg, WPARAM wPar
 					 */
 					if (cfg_std_ctrl.cfg.id == 2) {
 						if (cfg_std_ctrl.cfg.port.joy_id == cfg_port1.port.joy_id) {
-							return TRUE;
+							return (TRUE);
 						}
 					}
 
@@ -253,23 +268,29 @@ long __stdcall cfg_standard_controller_wnd_proc(HWND hwnd, UINT msg, WPARAM wPar
 							cfg_std_ctrl.button_pressed, GWLP_WNDPROC,
 							(LONG_PTR) cfg_standard_controller_joy_esc);
 
+					cfg_std_ctrl.joy_timer_run = TRUE;
+
 					SetTimer(hwnd, IDT_TIMER2, 150,
 							(TIMERPROC) cfg_standard_controller_read_joy);
-					return TRUE;
+					return (TRUE);
 				}
 				case IDC_STD_CTRL_JOY_ERASE: {
 					int i;
 
+					if (cfg_std_ctrl.no_other_buttons) {
+						SetFocus(cfg_std_ctrl.button_pressed);
+						return (TRUE);
+					}
 					for (i = IDC_STD_CTRL_JOY_A; i <= IDC_STD_CTRL_JOY_TURBOB; i++) {
 						cfg_std_ctrl.cfg.port.input[JOYSTICK][i - IDC_STD_CTRL_JOY_A] = 0;
 						SetDlgItemText(hwnd, i, "NULL");
 					}
-					return TRUE;
+					return (TRUE);
 				}
 			}
-			return FALSE;
+			return (FALSE);
 	}
-	return FALSE;
+	return (FALSE);
 }
 long __stdcall cfg_standard_controller_read_kbd(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	switch (msg) {
@@ -320,7 +341,7 @@ void __stdcall cfg_standard_controller_read_joy(void) {
 
 	joyGetDevCaps(cfg_std_ctrl.cfg.port.joy_id, &joy_caps, sizeof(joy_caps));
 
-	joy_info.dwFlags = JOY_RETURNALL | JOY_RETURNCENTERED | JOY_USEDEADZONE;
+	joy_info.dwFlags = JOY_RETURNALL | JOY_RETURNCENTERED | JOY_RETURNPOV | JOY_USEDEADZONE;
 	joy_info.dwSize = sizeof(joy_info);
 
 	if (joyGetPosEx(cfg_std_ctrl.cfg.port.joy_id, &joy_info) != JOYERR_NOERROR) {
@@ -343,7 +364,7 @@ void __stdcall cfg_standard_controller_read_joy(void) {
 	}
 
 	/* esamino gli assi */
-	if (joy_info.dwPOV != JOY_POVCENTERED) {
+	if ((joy_caps.wCaps & JOYCAPS_HASPOV) && (joy_info.dwPOV != JOY_POVCENTERED)) {
 		if (joy_info.dwPOV == JOY_POVFORWARD) {
 			value = 0x100;
 		} else if (joy_info.dwPOV == JOY_POVRIGHT) {
@@ -374,37 +395,18 @@ void __stdcall cfg_standard_controller_read_joy(void) {
 			SetWindowText(cfg_std_ctrl.button_pressed, cazzata[(WORD) (rand() % 8) & 0x07]);
 			return;
 		}
-
-		KillTimer(cfg_std_ctrl.toplevel, IDT_TIMER2);
-
 		cfg_port_input(JOYSTICK) = value;
-
 		SetWindowText(cfg_std_ctrl.button_pressed, jsv_to_name(cfg_port_input(JOYSTICK)));
-
-		SetWindowLongPtr(cfg_std_ctrl.button_pressed, GWLP_WNDPROC,
-				(LONG_PTR) cfg_std_ctrl.old_wnd_proc);
-
-		cfg_std_ctrl.old_wnd_proc = NULL;
-		cfg_std_ctrl.no_other_buttons = FALSE;
-		cfg_std_ctrl.controller_input = 0;
+		cfg_standard_controller_joy_timer_kill();
 	}
 }
 long __stdcall cfg_standard_controller_joy_esc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	switch (msg) {
 		case WM_KEYDOWN:
 			if (LOWORD(wParam) == VK_ESCAPE) {
-				KillTimer(cfg_std_ctrl.toplevel, IDT_TIMER2);
-
 				cfg_port_input(JOYSTICK) = 0;
-
 				SetWindowText(hwnd, keyval_to_name(cfg_port_input(JOYSTICK)));
-
-				SetWindowLongPtr(cfg_std_ctrl.button_pressed, GWLP_WNDPROC,
-						(LONG_PTR) cfg_std_ctrl.old_wnd_proc);
-
-				cfg_std_ctrl.old_wnd_proc = NULL;
-				cfg_std_ctrl.no_other_buttons = FALSE;
-				cfg_std_ctrl.controller_input = 0;
+				cfg_standard_controller_joy_timer_kill();
 			}
 			break;
 	}
@@ -451,4 +453,16 @@ BOOL cfg_standard_controller_input_is_not_ok(DBWORD input, BYTE type) {
 		}
 	}
 	return (EXIT_OK);
+}
+void cfg_standard_controller_joy_timer_kill(void) {
+	KillTimer(cfg_std_ctrl.toplevel, IDT_TIMER2);
+
+	SetWindowLongPtr(cfg_std_ctrl.button_pressed, GWLP_WNDPROC,
+	        (LONG_PTR) cfg_std_ctrl.old_wnd_proc);
+
+	cfg_std_ctrl.old_wnd_proc = NULL;
+	cfg_std_ctrl.no_other_buttons = FALSE;
+	cfg_std_ctrl.controller_input = 0;
+
+	cfg_std_ctrl.joy_timer_run = FALSE;
 }

@@ -1611,7 +1611,7 @@ long __stdcall about_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 		case WM_INITDIALOG:
 			about_img = LoadBitmap(GetModuleHandle(NULL), MAKEINTRESOURCE(IDB_ABOUT));
 			about_mask = create_bitmap_mask(about_img, RGB(255, 255, 255));
-			return TRUE;
+			return (TRUE);
 		case WM_COMMAND: {
 			switch (LOWORD(wParam)) {
 				case IDOK:

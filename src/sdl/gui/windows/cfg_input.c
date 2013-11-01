@@ -56,7 +56,7 @@ long __stdcall cfg_input_controllers(HWND hwnd, UINT msg, WPARAM wParam, LPARAM 
 		case WM_DESTROY:
 			emu_pause(FALSE);
 			PostQuitMessage(0);
-			return TRUE;
+			return (TRUE);
 		case WM_INITDIALOG: {
 			BYTE i;
 
@@ -75,7 +75,7 @@ long __stdcall cfg_input_controllers(HWND hwnd, UINT msg, WPARAM wParam, LPARAM 
 			cfg_input_enable_config(cfg_port1, IDC_INPUT_CTRL_PORT1_B);
 			cfg_input_enable_config(cfg_port2, IDC_INPUT_CTRL_PORT2_B);
 
-			return TRUE;
+			return (TRUE);
 		}
 		case WM_COMMAND: {
 			switch(LOWORD(wParam)) {
@@ -111,33 +111,33 @@ long __stdcall cfg_input_controllers(HWND hwnd, UINT msg, WPARAM wParam, LPARAM 
 
 					js_quit();
 					js_init();
-					return TRUE;
+					return (TRUE);
 				case IDCANCEL:
 					EndDialog(hwnd, IDCANCEL);
-					return TRUE;
+					return (TRUE);
 				case IDC_INPUT_CTRL_PORT1_C:
 					if (HIWORD(wParam) == CBN_SELCHANGE) {
 						cfg_port1.port.type = SendDlgItemMessage(hwnd,
 								IDC_INPUT_CTRL_PORT1_C, CB_GETCURSEL, 0, 0);
 						cfg_input_enable_config(cfg_port1, IDC_INPUT_CTRL_PORT1_B);
 					}
-					return TRUE;
+					return (TRUE);
 				case IDC_INPUT_CTRL_PORT2_C:
 					if (HIWORD(wParam) == CBN_SELCHANGE) {
 						cfg_port2.port.type = SendDlgItemMessage(hwnd,
 								IDC_INPUT_CTRL_PORT2_C, CB_GETCURSEL, 0, 0);
 						cfg_input_enable_config(cfg_port2, IDC_INPUT_CTRL_PORT2_B);
 					}
-					return TRUE;
+					return (TRUE);
 				case IDC_INPUT_CTRL_PORT1_B:
 					cfg_standard_controller(hwnd, &cfg_port1);
-					return TRUE;
+					return (TRUE);
 				case IDC_INPUT_CTRL_PORT2_B:
 					cfg_standard_controller(hwnd, &cfg_port2);
-					return TRUE;
+					return (TRUE);
 			}
 			break;
 		}
 	}
-	return FALSE;
+	return (FALSE);
 }
