@@ -14,7 +14,7 @@
 #include "shaders.h"
 #undef  _SHADERS_CODE_
 
-void glsl_print_log(GLuint obj);
+void glsl_print_log(GLuint obj, BYTE ret);
 char *glsl_file2string(const char *path);
 
 void sdl_init_gl(void) {
@@ -360,7 +360,7 @@ void glsl_shaders_init(_shader *shd) {
 		glShaderSource(shd->vrt, 1, &shd->code->vertex, NULL);
 		glCompileShader(shd->vrt);
 #ifndef RELEASE
-		glsl_print_log(shd->vrt);
+		glsl_print_log(shd->vrt, FALSE);
 #endif
 		glAttachShader(shd->prg, shd->vrt);
 	}
@@ -371,15 +371,14 @@ void glsl_shaders_init(_shader *shd) {
 		glShaderSource(shd->frg, 1, &shd->code->fragment, NULL);
 		glCompileShader(shd->frg);
 #ifndef RELEASE
-		glsl_print_log(shd->frg);
+		glsl_print_log(shd->frg, FALSE);
 #endif
 		glAttachShader(shd->prg, shd->frg);
 	}
 
 	glLinkProgram(shd->prg);
 #ifndef RELEASE
-	glsl_print_log(shd->prg);
-	printf("\n");
+	glsl_print_log(shd->prg, TRUE);
 #endif
 
 	glUseProgram(shd->prg);
@@ -450,7 +449,7 @@ void glsl_delete_shaders(_shader *shd) {
 	}
 	shd->prg = 0;
 }
-void glsl_print_log(GLuint obj) {
+void glsl_print_log(GLuint obj, BYTE ret) {
 	int info_log_length = 0, max_length;
 
 	if (glIsShader(obj)) {
@@ -472,6 +471,9 @@ void glsl_print_log(GLuint obj) {
 
 		if (info_log_length > 0) {
 			printf("INFO: %s", info_log);
+			if (ret == TRUE) {
+				printf("\n");
+			}
 		}
 	}
 }
