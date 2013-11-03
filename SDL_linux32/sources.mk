@@ -16,8 +16,8 @@ SUBDIRS := \
 src \
 src/sdl \
 src/sdl/openGL \
-src/sdl/gui/gtk2/menu \
 src/sdl/gui/gtk2 \
+src/sdl/gui/gtk2/menu \
 src/sdl/glew \
 src/mappers \
 src/filters/video \

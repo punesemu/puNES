@@ -31,7 +31,7 @@
 #include "apu.h"
 #include "ppu.h"
 #include "gfx.h"
-#include "snd.h"
+#include "gui_snd.h"
 #include "text.h"
 #include "sha1.h"
 #include "database.h"

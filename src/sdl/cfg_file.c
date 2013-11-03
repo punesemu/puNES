@@ -12,7 +12,7 @@
 #include "version.h"
 #include "clock.h"
 #include "gfx.h"
-#include "snd.h"
+#include "gui_snd.h"
 #include "text.h"
 #include "fps.h"
 #include "param.h"

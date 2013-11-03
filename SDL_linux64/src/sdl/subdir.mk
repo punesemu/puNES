@@ -7,21 +7,18 @@ C_SRCS += \
 ../src/sdl/cfg_file.c \
 ../src/sdl/gfx.c \
 ../src/sdl/opengl.c \
-../src/sdl/snd.c \
 ../src/sdl/text.c 
 
 OBJS += \
 ./src/sdl/cfg_file.o \
 ./src/sdl/gfx.o \
 ./src/sdl/opengl.o \
-./src/sdl/snd.o \
 ./src/sdl/text.o 
 
 C_DEPS += \
 ./src/sdl/cfg_file.d \
 ./src/sdl/gfx.d \
 ./src/sdl/opengl.d \
-./src/sdl/snd.d \
 ./src/sdl/text.d 
 
 

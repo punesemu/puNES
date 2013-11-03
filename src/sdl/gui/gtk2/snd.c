@@ -56,35 +56,56 @@ BYTE snd_start(void) {
 	memset(cache, 0, sizeof(_callback_data));
 	snd.cache = cache;
 
-	switch (cfg->samplerate) {
-		case S44100:
-			snd.samplerate = 44100;
-			snd.buffer.size = 512 * 8;
-			break;
-		case S22050:
-			snd.samplerate = 22050;
-			snd.buffer.size = 256 * 8;
-			break;
-		case S11025:
-			snd.samplerate = 11025;
-			snd.buffer.size = 128 * 8;
-			break;
-	}
+ 	{
+		double latency = 200.0f;
+ 		double sample_latency;
 
-	{
-		double latency;
-		double sample_latency;
+#if defined MINGW32 || defined MINGW64
+ 		/*
+ 		 * Anche se ormai non uso più l'SDL per l'audio nella versione windows,
+ 		 * conservo i parametri con cui arginavo il problema del delay audio
+ 		 * riscontrato da molti utenti.
+ 		 */
+		BYTE factor = 4, bs = 32;
 
-		if (cfg->channels == STEREO) {
-			//latency = 200;
-			latency = 400.0f;
-		} else {
-			latency = 400.0f;
+		switch (cfg->samplerate) {
+			case S44100:
+				snd.samplerate = 44100;
+				snd.buffer.size = (bs * 21) * factor;
+				break;
+			case S22050:
+				snd.samplerate = 22050;
+				snd.buffer.size = (bs * 11) * factor;
+				break;
+			case S11025:
+				snd.samplerate = 11025;
+				snd.buffer.size = (bs * 6) * factor;
+				break;
+ 		}
+#else
+		switch (cfg->samplerate) {
+			case S44100:
+				snd.samplerate = 44100;
+				snd.buffer.size = 512 * 8;
+				break;
+			case S22050:
+				snd.samplerate = 22050;
+				snd.buffer.size = 256 * 8;
+				break;
+			case S11025:
+				snd.samplerate = 11025;
+				snd.buffer.size = 128 * 8;
+				break;
+		}
+#endif
+
+		if (cfg->channels == MONO) {
+			latency *= 2.0f;
 		}
 
 		sample_latency = latency * (double) snd.samplerate * (double) cfg->channels / 1000.0f;
 		snd.buffer.count = sample_latency / snd.buffer.size;
-	}
+ 	}
 
 	/* il formato dei samples (16 bit signed) */
 	dev->format = AUDIO_S16SYS;
@@ -185,16 +206,16 @@ void snd_output(void *udata, BYTE *stream, int len) {
 	snd_lock_cache(cache);
 
 #ifndef RELEASE
-		fprintf(stderr, "snd : %d %d %d %d %2d %d %f %f %4s\r",
-				len,
-				snd.buffer.count,
-				snd.brk,
-				fps.total_frames_skipped,
-				cache->filled,
-				snd.out_of_sync,
-				snd.frequency,
-				machine.ms_frame,
-				"");
+	fprintf(stderr, "snd : %d %d %d %d %2d %d %f %f %4s\r",
+			len,
+			snd.buffer.count,
+			snd.brk,
+			fps.total_frames_skipped,
+			cache->filled,
+			snd.out_of_sync,
+			snd.frequency,
+			machine.ms_frame,
+			"");
 #endif
 
 	if (!cache->filled) {

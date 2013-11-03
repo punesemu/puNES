@@ -6,7 +6,7 @@
  */
 
 #include "menu_state.h"
-#include "snd.h"
+#include "gui_snd.h"
 #include "save_slot.h"
 #include "cfg_file.h"
 

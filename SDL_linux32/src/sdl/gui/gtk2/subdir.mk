@@ -9,7 +9,8 @@ C_SRCS += \
 ../src/sdl/gui/gtk2/configurations.c \
 ../src/sdl/gui/gtk2/gtk2.c \
 ../src/sdl/gui/gtk2/joystick.c \
-../src/sdl/gui/gtk2/keyboard.c 
+../src/sdl/gui/gtk2/keyboard.c \
+../src/sdl/gui/gtk2/snd.c 
 
 OBJS += \
 ./src/sdl/gui/gtk2/cfg_input.o \
@@ -17,7 +18,8 @@ OBJS += \
 ./src/sdl/gui/gtk2/configurations.o \
 ./src/sdl/gui/gtk2/gtk2.o \
 ./src/sdl/gui/gtk2/joystick.o \
-./src/sdl/gui/gtk2/keyboard.o 
+./src/sdl/gui/gtk2/keyboard.o \
+./src/sdl/gui/gtk2/snd.o 
 
 C_DEPS += \
 ./src/sdl/gui/gtk2/cfg_input.d \
@@ -25,7 +27,8 @@ C_DEPS += \
 ./src/sdl/gui/gtk2/configurations.d \
 ./src/sdl/gui/gtk2/gtk2.d \
 ./src/sdl/gui/gtk2/joystick.d \
-./src/sdl/gui/gtk2/keyboard.d 
+./src/sdl/gui/gtk2/keyboard.d \
+./src/sdl/gui/gtk2/snd.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

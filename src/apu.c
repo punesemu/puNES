@@ -10,7 +10,7 @@
 #include "ppu.h"
 #include "cpu.h"
 #include "clock.h"
-#include "snd.h"
+#include "gui_snd.h"
 #include "mem_map.h"
 #include "fds.h"
 #include "cfg_file.h"

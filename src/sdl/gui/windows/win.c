@@ -1746,6 +1746,15 @@ long __stdcall main_win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 			ValidateRect(hwnd, NULL);
 			return (0);
 		case WM_CLOSE:
+			/*
+			 * blocco l'audio gia' qui perche' l'engine XAudio2
+			 * necessita che la gestione degli eventi gui_event()
+			 * funzioni ancora per potersi bloccare correttamente.
+			 * Impostando l'info.stop a TRUE il gui_event() non verrebbe
+			 * piu' chiamato e l'emulatore crasharebbe (almeno questo
+			 * accade da Vista in poi e non su XP).
+			 */
+			snd_stop();
 			info.stop = TRUE;
 			break;
 		case WM_DESTROY:
