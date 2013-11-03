@@ -28,12 +28,13 @@
 #include "gamegenie.h"
 
 #define SAVE_VERSION 10
+#define LENGTH_FILE_NAME 512
 
 BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp);
 BYTE name_slot_file(char *file, BYTE slot);
 
 BYTE save_slot_save(void) {
-	char file[512];
+	char file[LENGTH_FILE_NAME];
 	FILE *fp;
 
 	/* game genie */
@@ -62,7 +63,7 @@ BYTE save_slot_save(void) {
 	return (EXIT_OK);
 }
 BYTE save_slot_load(void) {
-	char file[512];
+	char file[LENGTH_FILE_NAME];
 	FILE *fp;
 
 	if (tas.type) {
@@ -107,7 +108,7 @@ BYTE save_slot_load(void) {
 	return (EXIT_OK);
 }
 void save_slot_preview(BYTE slot) {
-	char file[512];
+	char file[LENGTH_FILE_NAME];
 	FILE *fp;
 
 	if (!save_slot.preview_start) {
@@ -152,7 +153,7 @@ void save_slot_preview(BYTE slot) {
 void save_slot_count_load(void) {
 	BYTE i;
 	struct stat status;
-	char file[512];
+	char file[LENGTH_FILE_NAME];
 
 	for (i = 0; i < SAVE_SLOTS; i++) {
 		save_slot.preview[i] = save_slot.tot_size[i] = 0;
@@ -686,6 +687,8 @@ BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 }
 BYTE name_slot_file(char *file, BYTE slot) {
 	char ext[10], *last_dot, *fl;
+
+	memset(file, 0x00, LENGTH_FILE_NAME);
 
 	/* game genie */
 	if (info.mapper == GAMEGENIE_MAPPER) {
