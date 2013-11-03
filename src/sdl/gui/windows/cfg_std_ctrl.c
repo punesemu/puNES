@@ -71,8 +71,6 @@ void cfg_standard_controller(HWND hwnd, _cfg_port *cfg_port) {
 long __stdcall cfg_standard_controller_wnd_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	DRAWITEMSTRUCT *pdis;
 
-	//printf("|!!! %d !!!|\n", msg);
-
 	switch (msg) {
 		case WM_INITDIALOG: {
 			BYTE i;
