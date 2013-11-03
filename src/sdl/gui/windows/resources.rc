@@ -250,7 +250,7 @@ CAPTION NAME " " VERSION
 FONT 8, "MS Sans Serif"
 BEGIN
 	DEFPUSHBUTTON   "&OK", IDOK, 174, 18, 50, 14
-	GROUPBOX        "Dedicated to Giulia", IDC_STATIC, 7, 7, 225, 52
+	GROUPBOX        "Dedicated to someone", IDC_STATIC, 7, 7, 225, 52
 	CONTROL         IDB_ABOUT, IDC_STATIC, "static", SS_BITMAP, 0,0,32,30
 	CTEXT           COMMENT "\r\n\r\n" AUTHOR,
                     IDC_STATIC, 16, 18, 144, 33
@@ -263,7 +263,7 @@ CAPTION NAME " " VERSION
 FONT 8, "MS Sans Serif"
 BEGIN
 	DEFPUSHBUTTON   "&OK", IDOK, 50, 110, 50, 14
-	GROUPBOX        "Dedicated to Giulia", IDC_STATIC, 7, 7, 135, 124
+	GROUPBOX        "Dedicated to someone", IDC_STATIC, 7, 7, 135, 124
 	CTEXT           COMMENT "\r\n\r\nby " AUTHOR, IDC_STATIC, 16, 65, 118, 40
 END
 
@@ -273,7 +273,7 @@ CAPTION NAME " Portable " VERSION
 FONT 8, "MS Sans Serif"
 BEGIN
 	DEFPUSHBUTTON   "&OK", IDOK, 50, 110, 50, 14
-	GROUPBOX        "Dedicated to Giulia", IDC_STATIC, 7, 7, 135, 124
+	GROUPBOX        "Dedicated to someone", IDC_STATIC, 7, 7, 135, 124
 	CTEXT           COMMENT "\r\n\r\nby " AUTHOR, IDC_STATIC, 16, 65, 118, 40
 END
 
