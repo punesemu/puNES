@@ -7,6 +7,18 @@
 
 #include "win.h"
 
+enum joy_misc {
+	JOY_MAX_FRAME_COUNT = 3,
+	JOY_POV_UP = 0,
+	JOY_POV_RIGHT,
+	JOY_POV_DOWN,
+	JOY_POV_LEFT,
+	JOY_POV_UP_RIGHT,
+	JOY_POV_RIGHT_DOWN,
+	JOY_POV_DOWN_LEFT,
+	JOY_POV_LEFT_UP
+};
+
 #define js_elaborate_axis(axis, info)\
 	value = (axis << 1) + 1;\
 	if (joy->joy_info.info == CENTER) {\
@@ -21,26 +33,61 @@
 			value++;\
 		}\
 		joy->last_axis[axis] = joy->joy_info.info;\
+	}\
+	if (value && joy->input_port) {\
+		joy->input_port(mode, value, JOYSTICK, port);\
 	}
-#define middle (JOY_POVRIGHT / 2)
+#define js_elaborate_pov(md, pov)\
+	mode = md;\
+	value = 0;\
+	if (pov == JOY_POVCENTERED) {\
+		;\
+	} else if (pov == POV_table[JOY_POV_UP]) {\
+		value = 0x100;\
+	} else if (pov == POV_table[JOY_POV_RIGHT]) {\
+		value = 0x101;\
+	} else if (pov == POV_table[JOY_POV_DOWN]) {\
+		value = 0x102;\
+	} else if (pov == POV_table[JOY_POV_LEFT]) {\
+		value = 0x103;\
+	} else if (pov == POV_table[JOY_POV_UP_RIGHT]) {\
+		value = 0x100;\
+		if (joy->input_port) {\
+			joy->input_port(mode, value, JOYSTICK, port);\
+		}\
+		value = 0x101;\
+	} else if (pov == POV_table[JOY_POV_RIGHT_DOWN]) {\
+		value = 0x101;\
+		if (joy->input_port) {\
+			joy->input_port(mode, value, JOYSTICK, port);\
+		}\
+		value = 0x102;\
+	} else if (pov == POV_table[JOY_POV_DOWN_LEFT]) {\
+		value = 0x102;\
+		if (joy->input_port) {\
+			joy->input_port(mode, value, JOYSTICK, port);\
+		}\
+		value = 0x103;\
+	} else if (pov == POV_table[JOY_POV_LEFT_UP]) {\
+		value = 0x103;\
+		if (joy->input_port) {\
+			joy->input_port(mode, value, JOYSTICK, port);\
+		}\
+		value = 0x100;\
+	}\
+	if (value && joy->input_port) {\
+		joy->input_port(mode, value, JOYSTICK, port);\
+	}
 
 static const WORD POV_table[8] = {
-	/* Up           (JOY_POVFORWARD)           */
-	JOY_POVFORWARD,
-	/* Right        (JOY_POVRIGHT)             */
-	JOY_POVRIGHT,
-	/* Down         (JOY_POVBACKWARD)          */
-	JOY_POVBACKWARD,
-	/* Left         (JOY_POVLEFT)              */
-	JOY_POVLEFT,
-	/* Up + Right   (JOY_POVFORWARD + middle)  */
-	JOY_POVFORWARD + middle,
-	/* Right + Down (JOY_POVRIGHT + middle)    */
-	JOY_POVRIGHT + middle,
-	/* Down + Left  (JOY_POVBACKWARD + middle) */
-	JOY_POVBACKWARD + middle,
-	/* Left + Up    (JOY_POVLEFT + middle)     */
-	JOY_POVLEFT + middle,
+	JOY_POVFORWARD                      , /* Up           */
+	JOY_POVRIGHT                        , /* Right        */
+	JOY_POVBACKWARD                     , /* Down         */
+	JOY_POVLEFT                         , /* Left         */
+	JOY_POVFORWARD  + (JOY_POVRIGHT / 2), /* Up + Right   */
+	JOY_POVRIGHT    + (JOY_POVRIGHT / 2), /* Right + Down */
+	JOY_POVBACKWARD + (JOY_POVRIGHT / 2), /* Down + Left  */
+	JOY_POVLEFT     + (JOY_POVRIGHT / 2), /* Left + Up    */
 };
 
 void js_init(void) {
@@ -87,7 +134,7 @@ void js_control(_js *joy, _port *port) {
 	WORD value = 0;
 	BYTE mode = 0;
 
-	if (++joy->clock < 3) {
+	if (++joy->clock < JOY_MAX_FRAME_COUNT) {
 		return;
 	}
 
@@ -140,114 +187,27 @@ void js_control(_js *joy, _port *port) {
 	}
 
 	if ((joy->joy_caps.wCaps & JOYCAPS_HASPOV) && (joy->last_axis[POV] != joy->joy_info.dwPOV)) {
-		if (joy->last_axis[POV] != JOY_POVCENTERED) {
-			mode = RELEASED;
-
-			if (joy->last_axis[POV] == POV_table[0]) {
-				/* up */
-				value = 0x100;
-			} else if (joy->last_axis[POV] == POV_table[1]) {
-				/* right */
-				value = 0x101;
-			} else if (joy->last_axis[POV] == POV_table[2]) {
-				/* down */
-				value = 0x102;
-			} else if (joy->last_axis[POV] == POV_table[3]) {
-				/* left */
-				value = 0x103;
-			} else if (joy->last_axis[POV] == POV_table[4]) {
-				/* up + right */
-				value = 0x100;
-				if (joy->input_port) {
-					joy->input_port(mode, value, JOYSTICK, port);
-				}
-				value = 0x101;
-			} else if (joy->last_axis[POV] == POV_table[5]) {
-				/* right + down */
-				value = 0x101;
-				if (joy->input_port) {
-					joy->input_port(mode, value, JOYSTICK, port);
-				}
-				value = 0x102;
-			} else if (joy->last_axis[POV] == POV_table[6]) {
-				/* down + left */
-				value = 0x102;
-				if (joy->input_port) {
-					joy->input_port(mode, value, JOYSTICK, port);
-				}
-				value = 0x103;
-			} else if (joy->last_axis[POV] == POV_table[7]) {
-				/* left + up */
-				value = 0x103;
-				if (joy->input_port) {
-					joy->input_port(mode, value, JOYSTICK, port);
-				}
-				value = 0x100;
-			}
-			joy->last_axis[POV] = JOY_POVCENTERED;
-		} else {
-			mode = PRESSED;
-
-			if (joy->joy_info.dwPOV == JOY_POVCENTERED) {
-			} else if (joy->joy_info.dwPOV == POV_table[0]) {
-				/* up */
-				value = 0x100;
-			} else if (joy->joy_info.dwPOV == POV_table[1]) {
-				/* right */
-				value = 0x101;
-			} else if (joy->joy_info.dwPOV == POV_table[2]) {
-				/* down */
-				value = 0x102;
-			} else if (joy->joy_info.dwPOV == POV_table[3]) {
-				/* left */
-				value = 0x103;
-			} else if (joy->joy_info.dwPOV == POV_table[4]) {
-				/* up + right */
-				value = 0x100;
-				if (joy->input_port) {
-					joy->input_port(mode, value, JOYSTICK, port);
-				}
-				value = 0x101;
-			} else if (joy->joy_info.dwPOV == POV_table[5]) {
-				/* right + down */
-				value = 0x101;
-				if (joy->input_port) {
-					joy->input_port(mode, value, JOYSTICK, port);
-				}
-				value = 0x102;
-			} else if (joy->joy_info.dwPOV == POV_table[6]) {
-				/* down + left */
-				value = 0x102;
-				if (joy->input_port) {
-					joy->input_port(mode, value, JOYSTICK, port);
-				}
-				value = 0x103;
-			} else if (joy->joy_info.dwPOV == POV_table[7]) {
-				/* left + up */
-				value = 0x103;
-				if (joy->input_port) {
-					joy->input_port(mode, value, JOYSTICK, port);
-				}
-				value = 0x100;
-			}
-			joy->last_axis[POV] = joy->joy_info.dwPOV;
-		}
-	} else if (joy->last_axis[X] != joy->joy_info.dwXpos) {
-		js_elaborate_axis(X, dwXpos);
-	} else if (joy->last_axis[Y] != joy->joy_info.dwYpos) {
-		js_elaborate_axis(Y, dwYpos);
-	} else if (joy->last_axis[Z] != joy->joy_info.dwZpos) {
-		js_elaborate_axis(Z, dwZpos);
-	} else if (joy->last_axis[R] != joy->joy_info.dwRpos) {
-		js_elaborate_axis(R, dwRpos);
-	} else if (joy->last_axis[U] != joy->joy_info.dwUpos) {
-		js_elaborate_axis(U, dwUpos);
-	} else if (joy->last_axis[V] != joy->joy_info.dwVpos) {
-		js_elaborate_axis(V, dwVpos);
+		js_elaborate_pov(RELEASED, joy->last_axis[POV])
+		js_elaborate_pov(PRESSED, joy->joy_info.dwPOV)
+		joy->last_axis[POV] = joy->joy_info.dwPOV;
 	}
-
-	if (value && joy->input_port) {
-		joy->input_port(mode, value, JOYSTICK, port);
+	if (joy->last_axis[X] != joy->joy_info.dwXpos) {
+		js_elaborate_axis(X, dwXpos)
+	}
+	if (joy->last_axis[Y] != joy->joy_info.dwYpos) {
+		js_elaborate_axis(Y, dwYpos)
+	}
+	if ((joy->joy_caps.wCaps & JOYCAPS_HASZ) && (joy->last_axis[Z] != joy->joy_info.dwZpos)) {
+		js_elaborate_axis(Z, dwZpos)
+	}
+	if ((joy->joy_caps.wCaps & JOYCAPS_HASR) && (joy->last_axis[R] != joy->joy_info.dwRpos)) {
+		js_elaborate_axis(R, dwRpos)
+	}
+	if ((joy->joy_caps.wCaps & JOYCAPS_HASU) && (joy->last_axis[U] != joy->joy_info.dwUpos)) {
+		js_elaborate_axis(U, dwUpos)
+	}
+	if ((joy->joy_caps.wCaps & JOYCAPS_HASV) && (joy->last_axis[V] != joy->joy_info.dwVpos)) {
+		js_elaborate_axis(V, dwVpos)
 	}
 }
 void js_close(_js *joy) {
