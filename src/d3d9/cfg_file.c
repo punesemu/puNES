@@ -29,6 +29,7 @@
 #define cfg_search(structp, prm, start, desc, cmd)\
 {\
 	char buf[MAXLEN];\
+	memset(buf, 0x00, MAXLEN);\
 	strcpy(buf,  structp[prm].lname);\
 	trim_space(buf);\
 	if (strcmp(key, buf) == 0) {\
@@ -40,7 +41,8 @@
 {\
 	BYTE index, found = FALSE;\
 	for(index = 0; index < LENGTH(param); index++) {\
-		char buf[512];\
+		char buf[MAXLEN];\
+		memset(buf, 0x00, MAXLEN);\
 		strcpy(buf, param[index].lname);\
 		trim_space(buf);\
 		if (strcmp(key, buf) == 0) {\

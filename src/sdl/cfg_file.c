@@ -37,6 +37,7 @@
 #define cfg_search(structp, prm, start, desc, cmd)\
 {\
 	char buf[MAXLEN];\
+	memset(buf, 0x00, MAXLEN);\
 	strcpy(buf,  structp[prm].lname);\
 	trim_space(buf);\
 	if (strcmp(key, buf) == 0) {\
@@ -48,7 +49,8 @@
 {\
 	BYTE index, found = FALSE;\
 	for(index = 0; index < LENGTH(param); index++) {\
-		char buf[512];\
+		char buf[MAXLEN];\
+		memset(buf, 0x00, MAXLEN);\
 		strcpy(buf, param[index].lname);\
 		trim_space(buf);\
 		if (strcmp(key, buf) == 0) {\
@@ -82,6 +84,8 @@ void cfg_file_init(void) {
 void cfg_file_parse(void) {
 	FILE *fp;
 	char tmp[MAXLEN], line[MAXLEN];
+
+	memset(line, 0x00, MAXLEN);
 
 	/* attivo la modalita' configurazione */
 	info.on_cfg = TRUE;
@@ -228,6 +232,8 @@ void cfg_file_pgs_parse(void) {
 	FILE *fp;
 	char tmp[MAXLEN], line[MAXLEN];
 
+	memset(line, 0x00, MAXLEN);
+
 	/* default */
 	set_default_pgs();
 
@@ -286,6 +292,8 @@ void cfg_file_pgs_save(void) {
 void cfg_file_input_parse(void) {
 	FILE *fp;
 	char tmp[MAXLEN], line[MAXLEN];
+
+	memset(line, 0x00, MAXLEN);
 
 	/* apro il file di configurazione */
 	sprintf(tmp, "%s/%s", info.base_folder, INPUTFILE);
@@ -423,8 +431,8 @@ void trim_space(char *src) {
 	unsigned int i = 0, size = strlen(src);
 
 	strcpy(out, src);
-	while (current != '\0' && i < size) {
-		if (*current != ' ' && *current != '\t') {
+	while ((current != '\0') && (i < size)) {
+		if ((*current != ' ') && (*current != '\t')) {
 			out[i++] = *current;
 		}
 		++current;
