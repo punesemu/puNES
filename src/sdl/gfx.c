@@ -25,14 +25,14 @@
 #define sdl_wid()\
 	if (info.gui) {\
 		char SDL_windowhack[50];\
-		sprintf(SDL_windowhack,"SDL_WINDOWID=%I64u", (uint64_t) gui_emu_frame_id());\
+		sprintf(SDL_windowhack, "SDL_WINDOWID=%I64u", (uint64_t) gui_emu_frame_id());\
 		SDL_putenv(SDL_windowhack);\
 	}
 #else
 #define sdl_wid()\
 	if (info.gui) {\
 		char SDL_windowhack[50];\
-		sprintf(SDL_windowhack,"SDL_WINDOWID=%i", (int) gui_emu_frame_id());\
+		sprintf(SDL_windowhack, "SDL_WINDOWID=%i", (int) gui_emu_frame_id());\
 		SDL_putenv(SDL_windowhack);\
 	}
 #endif
@@ -730,7 +730,10 @@ void gfx_draw_screen(BYTE forced) {
 	}
 }
 void gfx_reset_video(void) {
-	SDL_FreeSurface(surface_sdl);
+	if (surface_sdl) {
+		SDL_FreeSurface(surface_sdl);
+	}
+
 	surface_sdl = framebuffer = NULL;
 
 	if (opengl.surface_gl) {
@@ -748,6 +751,10 @@ void gfx_reset_video(void) {
 void gfx_quit(void) {
 	if (palette_win) {
 		free(palette_win);
+	}
+
+	if (surface_sdl) {
+		SDL_FreeSurface(surface_sdl);
 	}
 
 	sdl_quit_gl();

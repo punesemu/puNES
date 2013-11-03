@@ -155,5 +155,5 @@ void menu_file(GtkWidget *mainmenu, GtkAccelGroup *accel_group) {
 
 	/* signals */
 	g_signal_connect(G_OBJECT(open), "activate", G_CALLBACK(file_open), NULL);
-	g_signal_connect(G_OBJECT(quit), "activate", G_CALLBACK(main_win_destroy), NULL);
+	g_signal_connect(G_OBJECT(quit), "activate", G_CALLBACK(main_win_delete_event), NULL);
 }

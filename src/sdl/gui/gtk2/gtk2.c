@@ -167,8 +167,8 @@ BYTE gui_create(void) {
 	gtk_window_set_icon(GTK_WINDOW(main_win),
 			gdk_pixbuf_new_from_inline(-1, icon_inline, FALSE, NULL));
 
-	/* destroy event */
-	g_signal_connect(G_OBJECT(main_win), "destroy", G_CALLBACK(main_win_destroy), NULL);
+	/* delete-event */
+	g_signal_connect(G_OBJECT(main_win), "delete-event", G_CALLBACK(main_win_delete_event), NULL);
 
 	/* configure event */
 	//g_signal_connect(G_OBJECT(main_win), "configure-event", G_CALLBACK(main_win_configure_event),
@@ -574,14 +574,13 @@ double high_resolution_ms(void) {
 	return ((elapsed_seconds * 1000.0f) + (elapsed_useconds / 1000.0f));
 }
 /* main_win */
-void main_win_destroy(void) {
+gboolean main_win_delete_event(GtkWidget *widget, GdkEvent *event, gpointer data) {
 	if (cfg_controllers_toplevel != NULL) {
 		gtk_widget_destroy(cfg_controllers_toplevel);
 	}
-
 	gtk_main_quit();
-
 	info.stop = TRUE;
+	return (TRUE);
 }
 gboolean main_win_configure_event(void) {
 	/*
@@ -629,7 +628,7 @@ gboolean sock_key_press_event(GtkWidget *widget, GdkEventKey *event) {
 			case GDK_q:
 				if ((event->state & 0x1F0D) == GDK_CONTROL_MASK) {
 					gui_fullscreen();
-					main_win_destroy();
+					main_win_delete_event(NULL, NULL, NULL);
 					return (TRUE);
 				}
 				break;
@@ -872,7 +871,7 @@ void make_reset(int type) {
 	}
 
 	if (emu_reset(type)) {
-		main_win_destroy();
+		main_win_delete_event(NULL, NULL, NULL);
 	}
 }
 /* timeline */

@@ -76,7 +76,7 @@ void gui_print_usage(char *usage);
 gboolean time_handler_redraw(void);
 void make_reset(int type);
 void file_open(void);
-void main_win_destroy(void);
+gboolean main_win_delete_event(GtkWidget *widget, GdkEvent *event, gpointer data);
 void help_about(void);
 
 #endif /* GTK2_H_ */

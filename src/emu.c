@@ -81,7 +81,7 @@ BYTE emu_loop(void) {
 		gui_event();
 
 		/* gestione uscita */
-		if (info.stop) {
+		if (info.stop == TRUE) {
 			emu_quit(EXIT_SUCCESS);
 		}
 
@@ -91,7 +91,7 @@ BYTE emu_loop(void) {
 			/* riprendo a far correre la CPU */
 			info.execute_cpu = TRUE;
 
-			while (info.execute_cpu) {
+			while (info.execute_cpu == TRUE) {
 #ifdef DEBUG
 				if (cpu.PC == PCBREAK) {
 					BYTE pippo = 5;
@@ -650,8 +650,8 @@ void emu_quit(BYTE exit_code) {
 
 	fds_quit();
 	ppu_quit();
-	gfx_quit();
 	snd_quit();
+	gfx_quit();
 
 	timeline_quit();
 
