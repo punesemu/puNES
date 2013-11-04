@@ -558,6 +558,28 @@ void gui_set_thread_affinity(uint8_t core) {
 void gui_print_usage(char *usage) {
 	printf("%s", usage);
 }
+void gui_reset_video(void) {
+	gint x, y;
+
+	/* salvo la posizione */
+	gtk_window_get_position(GTK_WINDOW(main_win), &x, &y);
+
+	/*
+	 * se non nascondo la finestra, al momento del
+	 * SDL_QuitSubSystem e del SDL_InitSubSystem
+	 * l'applicazione crasha.
+	 */
+	gtk_widget_hide(main_win);
+
+	gfx_reset_video();
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE);
+
+	/* rispristino la posizione */
+	gtk_window_move(GTK_WINDOW(main_win), x, y);
+
+	gtk_widget_show(main_win);
+
+}
 
 double high_resolution_ms(void) {
 	struct timeval time;

@@ -175,6 +175,14 @@ BYTE gfx_init(void) {
 		gui_fullscreen();
 	} else {
 		gfx_set_screen(cfg->scale, cfg->filter, NO_FULLSCR, cfg->palette, FALSE);
+		/*
+		 * nella versione windows (non so in quella linux), sembra che
+		 * il VSync (con alcune schede video) non venga settato correttamente
+		 * al primo gfx_set_screen. E' necessario fare un gfx_reset_video
+		 * e poi nuovamente un gfx_set_screen. Visto che non sembra portare
+		 * problemi anche nella versione linux, lo faccio per entrambe.
+		 */
+		gui_reset_video();
 	}
 
 	if (!surface_sdl) {

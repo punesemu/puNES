@@ -1266,6 +1266,14 @@ void gui_print_usage(char *usage) {
 	MessageBox(NULL, usage, NAME " parameters", MB_OK);
 	UnhookWindowsHookEx(msgbox_hook);
 }
+void gui_reset_video(void) {
+	ShowWindow(main_win, SW_HIDE);
+
+	gfx_reset_video();
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE);
+
+	ShowWindow(main_win, SW_NORMAL);
+}
 
 /* funzioni interne */
 LRESULT CALLBACK cbt_proc(int code, WPARAM wParam, LPARAM lParam) {

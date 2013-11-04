@@ -72,6 +72,7 @@ void gui_add_event(void *funct, void *args);
 void gui_flush(void);
 void gui_set_thread_affinity(uint8_t core);
 void gui_print_usage(char *usage);
+void gui_reset_video(void);
 
 gboolean time_handler_redraw(void);
 void make_reset(int type);
