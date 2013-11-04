@@ -1361,8 +1361,8 @@ BYTE d3d9_create_shader(_shader *shd) {
 				break;
 			case COMPILERSHADER_NOT_FOUND:
 				MessageBox(NULL,
-					"ATTENTION: DirectX HLSL compiler installation are incomplete or corrupted.\n"
-					"           Please reinstall DirectX 10\n"	,
+					"ATTENTION: DirectX HLSL compiler installation are incomplete\n"
+					"or corrupted. Please reinstall the DirectX 10."	,
 					"Error!",
 					MB_ICONEXCLAMATION | MB_OK);
 				d3d9_release_shader(shd);
@@ -1434,8 +1434,8 @@ BYTE d3d9_create_shader(_shader *shd) {
 			}
 			case COMPILERSHADER_NOT_FOUND:
 				MessageBox(NULL,
-					"ATTENTION: DirectX HLSL compiler installation are incomplete or corrupted.\n"
-					"           Please reinstall DirectX 10\n"	,
+					"ATTENTION: DirectX HLSL compiler installation are incomplete\n"
+					"or corrupted. Please reinstall the DirectX 10."	,
 					"Error!",
 					MB_ICONEXCLAMATION | MB_OK);
 				d3d9_release_shader(shd);

@@ -118,8 +118,8 @@ BYTE snd_start(void) {
 
 	if (XAudio2Create(&xaudio2.engine, 0, XAUDIO2_DEFAULT_PROCESSOR) != S_OK) {
 		MessageBox(NULL,
-			"ATTENTION: Unable to create XAudio2 object. Probably you have an incomplete\n"
-			"           installation of DirectX 10\n"   ,
+			"ATTENTION: Unable to create XAudio2 object. Probably you\n"
+			"have an incomplete installation of DirectX 10."   ,
 			"Error!",
 			MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
