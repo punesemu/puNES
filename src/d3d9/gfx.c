@@ -419,7 +419,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 	if (filter == NO_CHANGE) {
 		filter = cfg->filter;
 	}
-	if ((filter != cfg->filter) || info.on_cfg) {
+	if ((filter != cfg->filter) || info.on_cfg || force_scale) {
 		switch (filter) {
 			case NO_FILTER:
 			case POSPHOR:
