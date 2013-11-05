@@ -179,8 +179,8 @@ BYTE gfx_init(void) {
 		 * nella versione windows (non so in quella linux), sembra che
 		 * il VSync (con alcune schede video) non venga settato correttamente
 		 * al primo gfx_set_screen. E' necessario fare un gfx_reset_video
-		 * e poi nuovamente un gfx_set_screen. Visto che non sembra portare
-		 * problemi anche nella versione linux, lo faccio per entrambe.
+		 * e poi nuovamente un gfx_set_screen. Nella versione linux il gui_reset_video()
+		 * non fa assolutamente nulla.
 		 */
 		gui_reset_video();
 	}

@@ -8,7 +8,9 @@
 #include "menu.h"
 #include "gui.h"
 
+#ifndef RELEASE
 #include "../configurations.h"
+#endif
 
 GtkWidget *menu;
 
@@ -30,7 +32,7 @@ void menu_create(GtkWidget *win, GtkWidget *mainbox) {
 	menu_state(menu, accel_group);
 	/* Help */
 	menu_help(menu, accel_group);
-
+#ifndef RELEASE
 	{
 		GtkWidget *submenu, *config;
 
@@ -44,6 +46,7 @@ void menu_create(GtkWidget *win, GtkWidget *mainbox) {
 		/* signals */
 		g_signal_connect(G_OBJECT(config), "activate", G_CALLBACK(configurations_notebook), NULL);
 	}
+#endif
 
 	gtk_box_pack_start(GTK_BOX(mainbox), menu, FALSE, FALSE, 0);
 }
