@@ -79,5 +79,6 @@ void make_reset(int type);
 void file_open(void);
 gboolean main_win_delete_event(GtkWidget *widget, GdkEvent *event, gpointer data);
 void help_about(void);
+void change_rom(char *rom);
 
 #endif /* GTK2_H_ */

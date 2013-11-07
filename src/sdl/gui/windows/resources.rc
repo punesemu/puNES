@@ -41,6 +41,7 @@ BEGIN
 	POPUP "&File"
 	BEGIN
 		MENUITEM "&Open\tCtrl+O",                 IDM_FILE_OPEN
+		MENUITEM "Recent Roms",                   IDM_FILE_RECENT
 		MENUITEM SEPARATOR
 		MENUITEM "E&xit\tAlt+F4",                 IDM_FILE_EXIT
 	END

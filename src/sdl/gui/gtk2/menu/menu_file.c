@@ -5,7 +5,10 @@
  *      Author: fhorse
  */
 
+#include <libgen.h>
+#include <string.h>
 #include "menu_file.h"
+#include "recent_roms.h"
 
 #ifdef __SUNPRO_C
 #pragma align 4 (open_icon_inline)
@@ -58,6 +61,64 @@ static const guint8 open_icon_inline[] =
   "\257\236\377\260\260\237\377\261\261\241\377\257\257\237\377\255\255"
   "\234\377\252\252\231\377\247\247\227\377\245\245\223\377\242\242\220"
   "\377\214\214z\377QQC\376NN@oNNB\365\214JJ>\377\2NNB\365MM@p"};
+
+#ifdef __SUNPRO_C
+#pragma align 4 (recent_roms_icon)
+#endif
+#ifdef __GNUC__
+static const guint8 recent_roms_icon[] __attribute__ ((__aligned__ (4))) =
+#else
+static const guint8 recent_roms_icon[] =
+#endif
+{ ""
+  /* Pixbuf magic (0x47646b50) */
+  "GdkP"
+  /* length: header (24) + pixel_data (711) */
+  "\0\0\2\337"
+  /* pixdata_type (0x2010002) */
+  "\2\1\0\2"
+  /* rowstride (64) */
+  "\0\0\0@"
+  /* width (16) */
+  "\0\0\0\20"
+  /* height (16) */
+  "\0\0\0\20"
+  /* pixel_data: */
+  "\203\377\377\377\0\1\364\2404\350\204\364\2415\377\5\364\2414\377\365"
+  "\2558\377\366\265<\377\366\2579\354\377\377\0\1\206\377\377\377\0\13"
+  "\354\223+\377\375\313\201\377\375\312\177\377\375\311}\377\375\313y\377"
+  "\374\332c\377\374\341R\377\357\326(\377\347\316\32\377\370\344C\225\377"
+  "\353N\32\205\377\377\377\0\2\344\205\40\377\376\331\242\377\202\375\305"
+  "r\377\7\374\330`\377\374\351O\377\364\337-\377\362\341a\377\362\344w"
+  "\377\360\330-\377\373\351O\216\205\377\377\377\0\14\335y\27\377\376\346"
+  "\302\377\376\326\234\377\375\331\220\377\366\335@\377\356\326\33\377"
+  "\354\325\24\377\374\371\341\377\375\372\347\377\344\312\22\377\344\313"
+  "\32\372\345\313\34v\204\377\377\377\0\5\326k\15\377\376\351\315\377\375"
+  "\331\250\377\375\336\213\377\347\317\30\377\204\377\377\377\377\3\377"
+  "\377\372\377\377\377\377\377\334\300\12\365\204\377\377\377\0\7\317^"
+  "\4\377\375\343\302\377\374\314\221\377\374\326|\377\356\327+\377\354"
+  "\330K\377\377\377\375\377\202\377\377\377\377\3\377\375\353\377\347\322"
+  "E\377\342\310\32\302\204\377\377\377\0\14\317^\4\377\375\333\265\377"
+  "\373\277z\377\373\305s\377\373\342V\377\344\311\24\377\374\370\335\377"
+  "\377\376\363\377\377\374\350\377\371\361\270\377\337\301\21\374\377\345"
+  "K:\204\377\377\377\0\2\317^\3\377\374\321\242\377\202\372\262c\377\10"
+  "\373\317X\377\337\304\23\377\377\377\377\377\360\341y\377\361\341z\377"
+  "\377\377\377\377\331\273\11\371\377\377\0\1\204\377\377\377\0\2\317^"
+  "\3\377\373\305\215\377\202\371\244L\377\7\370\251L\377\346\301%\377\334"
+  "\275\13\377\346\313&\377\342\303\37\377\330\271\10\372\330\275\21\245"
+  "\205\377\377\377\0\2\317^\3\377\372\270v\377\204\370\2275\377\4\370\247"
+  ":\377\373\313r\377\331z\22\377\377\377U\3\206\377\377\377\0\2\316]\2"
+  "\377\371\252\\\377\205\367\212\36\377\2\372\261h\377\317^\3\377\207\377"
+  "\377\377\0\11\316]\2\377\367\233@\377\365}\7\377\366\216(\377\367\235"
+  "D\377\366\217*\377\365}\7\377\370\242N\377\317^\3\377\207\377\377\377"
+  "\0\11\316]\2\377\367\221.\377\366\210\34\377\357\210(\377\325f\11\364"
+  "\357\212,\377\366\213\"\377\367\231=\377\316]\2\377\207\377\377\377\0"
+  "\11\316]\1\377\366\213#\377\356\202\35\377\320^\2\363\315[\0p\320^\2"
+  "\363\357\206%\377\367\2232\377\316]\2\377\207\377\377\377\0\11\316\\"
+  "\1\377\355|\21\377\320^\1\363\314^\0<\377\377\377\0\314^\0<\320^\2\363"
+  "\356\202\35\377\316]\1\377\207\377\377\377\0\3\317\\\0\350\317]\1\365"
+  "\314^\0<\203\377\377\377\0\3\314^\0<\317^\2\365\317\\\0\350\204\377\377"
+  "\377\0"};
 
 #ifdef __SUNPRO_C
 #pragma align 4 (quit_icon_inline)
@@ -125,6 +186,10 @@ static const guint8 quit_icon_inline[] =
   "Y[W\377\377\377\377\1""554\247klj\377\202XZV\377\211Y[W\377\3WYU\377"
   "\\^Z\205\377\377\377\0"};
 
+void menu_file_recent_roms_activate(gint index);
+
+static GtkWidget *recent;
+
 void menu_file(GtkWidget *mainmenu, GtkAccelGroup *accel_group) {
 	GtkWidget *menu, *file, *open, *quit;
 
@@ -136,10 +201,12 @@ void menu_file(GtkWidget *mainmenu, GtkAccelGroup *accel_group) {
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(file), menu);
 
 	open = gtk_image_menu_item_new_with_mnemonic("_Open");
+	recent = gtk_image_menu_item_new_with_mnemonic("Recent Roms");
 	quit = gtk_image_menu_item_new_with_mnemonic("E_xit");
 
 	/* icons */
 	icon_inline(open, open_icon_inline)
+	icon_inline(recent, recent_roms_icon)
 	icon_inline(quit, quit_icon_inline)
 
 	/* accelerators */
@@ -150,10 +217,55 @@ void menu_file(GtkWidget *mainmenu, GtkAccelGroup *accel_group) {
 
 	/* append menu shell */
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), open);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), recent);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), gtk_separator_menu_item_new());
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), quit);
 
 	/* signals */
 	g_signal_connect(G_OBJECT(open), "activate", G_CALLBACK(file_open), NULL);
 	g_signal_connect(G_OBJECT(quit), "activate", G_CALLBACK(main_win_delete_event), NULL);
+}
+void menu_file_check(void) {
+	GtkWidget *submenu;
+
+	gtk_widget_hide_all(recent);
+
+	gtk_menu_item_set_submenu(GTK_MENU_ITEM(recent), NULL);
+
+	if (recent_roms_list.count > 0) {
+		gint index;
+
+		submenu = gtk_menu_new();
+		gtk_menu_item_set_submenu(GTK_MENU_ITEM(recent), submenu);
+
+		for (index = 0; index < RECENT_ROMS_MAX; index++) {
+			GtkWidget *slot;
+			char description[RECENT_ROMS_LINE];
+
+			if (recent_roms_list.item[index][0] == 0) {
+				break;
+			}
+
+			sprintf(description, "%2d\t%s", index + 1, basename(recent_roms_list.item[index]));
+			slot = gtk_menu_item_new_with_mnemonic(description);
+
+			gtk_menu_shell_append(GTK_MENU_SHELL(submenu), slot);
+
+			g_signal_connect_swapped(G_OBJECT(slot), "activate",
+			        G_CALLBACK(menu_file_recent_roms_activate), GINT_TO_POINTER(index));
+		}
+	}
+
+	gtk_widget_show_all(recent);
+}
+
+void menu_file_recent_roms_activate(gint index) {
+	emu_pause(TRUE);
+
+	if (strncmp(recent_roms_list.current, recent_roms_list.item[index],
+	        RECENT_ROMS_LINE) != 0) {
+		change_rom(recent_roms_list.item[index]);
+	}
+
+	emu_pause(FALSE);
 }

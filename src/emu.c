@@ -45,9 +45,16 @@
 #include "ines.h"
 #include "fds.h"
 #include "gamegenie.h"
+#include "recent_roms.h"
 #if defined SDL
 #include "opengl.h"
 #endif
+
+#define recent_roms_add_wrap()\
+	if (recent_roms_permit_add == TRUE) {\
+		recent_roms_permit_add = FALSE;\
+		recent_roms_add(save_rom_file);\
+	}
 
 BYTE emu_loop(void) {
 #ifdef DEBUG
@@ -162,6 +169,7 @@ BYTE emu_make_dir(char *path) {
 }
 BYTE emu_load_rom(void) {
 	char ext[10], name_file[255];
+	BYTE recent_roms_permit_add = TRUE;
 
 	elaborate_rom_file:
 	info.no_rom = FALSE;
@@ -175,6 +183,10 @@ BYTE emu_load_rom(void) {
 	}
 
 	if (info.rom_file[0]) {
+		char save_rom_file[1024];
+
+		strncpy(save_rom_file, info.rom_file, 1024);
+
 		sprintf(name_file, "%s", basename(info.rom_file));
 
 		if (strrchr(name_file, '.') == NULL) {
@@ -185,29 +197,31 @@ BYTE emu_load_rom(void) {
 		}
 
 		if (!(strcasecmp(ext, ".fds")) || !(strcasecmp(ext, ".FDS"))) {
-			if (fds_load_rom()) {
+			if (fds_load_rom() == EXIT_ERROR) {
 				info.rom_file[0] = 0;
 				goto elaborate_rom_file;
 			}
+			recent_roms_add_wrap()
 		} else if (!(strcasecmp(ext, ".fm2")) || !(strcasecmp(ext, ".FM2"))) {
 			tas_file(ext, info.rom_file);
 			if (!info.rom_file[0]) {
 				text_add_line_info(1, "[red]error on loading rom");
 				fprintf(stderr, "error on loading rom\n");
 			}
+			recent_roms_add_wrap()
 			/* rielaboro il nome del file */
 			goto elaborate_rom_file;
 		} else {
 			/* carico la rom in memoria */
-			if (ines_load_rom()) {
+			if (ines_load_rom() == EXIT_ERROR) {
 				info.rom_file[0] = 0;
 				text_add_line_info(1, "[red]error on loading rom");
 				fprintf(stderr, "error on loading rom\n");
 				goto elaborate_rom_file;
 			}
+			recent_roms_add_wrap()
 		}
 	} else if (info.gui) {
-
 		info.chr_rom_8k_count = info.prg_rom_16k_count = 1;
 
 		info.prg_rom_8k_count = info.prg_rom_16k_count * 2;

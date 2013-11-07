@@ -88,7 +88,6 @@ void save_slot_notify_popup_shown(GtkComboBox *widget);
 void save_slot_gui_preview(void);
 gboolean save_slot_key_press_event(GSignalInvocationHint *ihint, guint n_param_values,
 		const GValue *param_values, gpointer data);
-void change_rom(char *rom);
 void drag_data_received(GtkWidget *widget, GdkDragContext *context, gint x, gint y,
 		GtkSelectionData *data, guint ttype, guint time, gpointer *NA);
 int __nsleep(const struct timespec *req, struct timespec *rem);
@@ -423,6 +422,7 @@ void gui_update(void) {
 	emu_set_title(title);
 	gtk_window_set_title(GTK_WINDOW(main_win), title);
 
+	menu_file_check();
 	menu_nes_check();
 	menu_settings_check();
 	menu_state_check();

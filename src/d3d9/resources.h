@@ -20,10 +20,26 @@
 #define IDT_TIMER1                  101
 #define IDT_TIMER2                  102
 
-#ifndef SDL
 #define IDR_MAINMENU                200
 #define IDM_FILE_OPEN               201
 #define IDM_FILE_EXIT               202
+
+#define IDM_FILE_RECENT             210
+#define IDM_FILE_RECENT_0           211
+#define IDM_FILE_RECENT_1           212
+#define IDM_FILE_RECENT_2           213
+#define IDM_FILE_RECENT_3           214
+#define IDM_FILE_RECENT_4           215
+#define IDM_FILE_RECENT_5           216
+#define IDM_FILE_RECENT_6           217
+#define IDM_FILE_RECENT_7           218
+#define IDM_FILE_RECENT_8           219
+#define IDM_FILE_RECENT_9           220
+#define IDM_FILE_RECENT_10          221
+#define IDM_FILE_RECENT_11          222
+#define IDM_FILE_RECENT_12          223
+#define IDM_FILE_RECENT_13          224
+#define IDM_FILE_RECENT_14          225
 
 #define IDM_SET_MODE_PAL            300
 #define IDM_SET_MODE_NTSC           301
@@ -151,7 +167,6 @@
 #define ID_SAVESLOT_CB              100
 #define ID_SAVESLOT_BS              101
 #define ID_SAVESLOT_BL              102
-#endif
 
 #define IDC_INPUT_CTRL_PORT1_C      100
 #define IDC_INPUT_CTRL_PORT1_B      101

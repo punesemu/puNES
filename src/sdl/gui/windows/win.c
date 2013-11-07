@@ -36,6 +36,7 @@
 #include "opengl.h"
 #include "openGL/no_effect.h"
 #include "openGL/cube3d.h"
+#include "recent_roms.h"
 
 #define timer_redraw_start()\
 	SetTimer(hwnd, IDT_TIMER1, 650, (TIMERPROC) time_handler_redraw)
@@ -614,6 +615,47 @@ void gui_update(void) {
 	/* aggiorno il titolo */
 	emu_set_title(title);
 	SetWindowText(main_win, title);
+
+	/* aggiorno il menu dei files aperti di recente */
+	{
+		HMENU menu_file = GetSubMenu(main_menu, 0), menu_recent;
+		MENUITEMINFO mr_mi = { 0 };
+		UINT index = 0;
+
+		DeleteMenu(menu_file, 1, MF_BYPOSITION);
+		menu_recent = CreatePopupMenu();
+
+		mr_mi.cbSize = sizeof(MENUITEMINFO);
+		mr_mi.fMask = MIIM_STRING | MIIM_ID;
+		if (recent_roms_list.count > 0) {
+			mr_mi.fMask |= MIIM_SUBMENU;
+		}
+		mr_mi.wID = IDM_FILE_RECENT;
+		mr_mi.hSubMenu = menu_recent;
+		mr_mi.dwTypeData = "Recent Roms";
+
+		InsertMenuItem(menu_file, 0, FALSE, &mr_mi);
+
+		if (recent_roms_list.count > 0) {
+			for (index = 0; index < RECENT_ROMS_MAX; index++) {
+				MENUITEMINFO mi = { 0 };
+				char description[RECENT_ROMS_LINE];
+
+				if (recent_roms_list.item[index][0] == 0) {
+					break;
+				}
+
+				mi.cbSize = sizeof(MENUITEMINFO);
+				mi.fMask = MIIM_STRING | MIIM_ID;
+				mi.wID = IDM_FILE_RECENT_0 + index;
+
+				sprintf(description, "%2d\t%s", index + 1, basename(recent_roms_list.item[index]));
+				mi.dwTypeData = description;
+
+				InsertMenuItem(menu_recent, index, FALSE, &mi);
+			}
+		}
+	}
 
 	/* checko le voci di menu corrette */
 
@@ -1413,6 +1455,32 @@ long __stdcall main_win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 					open_event();
 					SetFocus(sdl_frame);
 					break;
+				case IDM_FILE_RECENT_0:
+				case IDM_FILE_RECENT_1:
+				case IDM_FILE_RECENT_2:
+				case IDM_FILE_RECENT_3:
+				case IDM_FILE_RECENT_4:
+				case IDM_FILE_RECENT_5:
+				case IDM_FILE_RECENT_6:
+				case IDM_FILE_RECENT_7:
+				case IDM_FILE_RECENT_8:
+				case IDM_FILE_RECENT_9:
+				case IDM_FILE_RECENT_10:
+				case IDM_FILE_RECENT_11:
+				case IDM_FILE_RECENT_12:
+				case IDM_FILE_RECENT_13:
+				case IDM_FILE_RECENT_14: {
+					int index = LOWORD(wParam) - IDM_FILE_RECENT_0;
+
+					emu_pause(TRUE);
+
+					if (strncmp(recent_roms_list.current, recent_roms_list.item[index],
+					        RECENT_ROMS_LINE) != 0) {
+						change_rom(recent_roms_list.item[index]);
+					}
+					emu_pause(FALSE);
+					break;
+				}
 				case IDM_FILE_EXIT:
 					PostMessage(hwnd, WM_CLOSE, EXIT_SUCCESS, 0);
 					break;

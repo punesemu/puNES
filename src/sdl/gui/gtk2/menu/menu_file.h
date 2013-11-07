@@ -11,5 +11,6 @@
 #include "../gtk2.h"
 
 void menu_file(GtkWidget *mainmenu, GtkAccelGroup *accel_group);
+void menu_file_check(void);
 
 #endif /* MENU_FILE_H_ */

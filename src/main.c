@@ -16,8 +16,8 @@
 #include "timeline.h"
 #include "version.h"
 #include "gui.h"
-
 #include "gamegenie.h"
+#include "recent_roms.h"
 
 #if defined MINGW32 || defined MINGW64
 int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine, int iCmdShow) {
@@ -100,6 +100,9 @@ int main(int argc, char **argv) {
 	}
 
 	fprintf(stderr, "INFO: path %s\n", info.base_folder);
+
+	recent_roms_init();
+	recent_roms_parse();
 
 	if (emu_turn_on()) {
 		emu_quit(EXIT_FAILURE);
