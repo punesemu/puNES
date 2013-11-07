@@ -246,7 +246,7 @@ void menu_file_check(void) {
 				break;
 			}
 
-			sprintf(description, "%2d\t%s", index + 1, basename(recent_roms_list.item[index]));
+			sprintf(description, "%2d.\t%s", index + 1, basename(recent_roms_list.item[index]));
 			slot = gtk_menu_item_new_with_mnemonic(description);
 
 			gtk_menu_shell_append(GTK_MENU_SHELL(submenu), slot);
