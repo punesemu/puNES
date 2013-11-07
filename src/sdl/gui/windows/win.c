@@ -649,7 +649,7 @@ void gui_update(void) {
 				mi.fMask = MIIM_STRING | MIIM_ID;
 				mi.wID = IDM_FILE_RECENT_0 + index;
 
-				sprintf(description, "%2d\t%s", index + 1, basename(recent_roms_list.item[index]));
+				sprintf(description, "%s", basename(recent_roms_list.item[index]));
 				mi.dwTypeData = description;
 
 				InsertMenuItem(menu_recent, index, FALSE, &mi);
