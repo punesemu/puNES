@@ -8,7 +8,6 @@ CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "Application.manifest"
 IDI_MYICON        ICON   "punes.ico"
 IDB_ABOUT         BITMAP "about.bmp"
 
-#ifndef SDL
 IDR_ACCKEYS ACCELERATORS
 BEGIN
 	"O",        IDM_FILE_OPEN,           CONTROL, VIRTKEY
@@ -248,7 +247,6 @@ BEGIN
 		MENUITEM "&About",                        IDM_HELP_ABOUT
 	END
 END
-#endif
 
 /*
 IDD_ABOUT DIALOG 0, 0, 239, 66
