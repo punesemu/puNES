@@ -21,10 +21,12 @@ void cfg_standard_controller_combobox_select_joystick_control(GtkCellLayout *cel
 void cfg_standard_controller_combobox_joystick_changed(GtkComboBox *combobox);
 void cfg_standard_controller_input_changed_clicked(GtkButton *button, BYTE input);
 void cfg_standard_controller_js_press_event(void);
+void cfg_standard_controller_turbo_delay_value_changed(GtkRange *range, gint type);
 void cfg_standard_controller_ok_clicked(GtkWidget *widget, _cfg_port *cfg_port);
 void cfg_standard_controller_cancel_clicked(GtkWidget *widget, _cfg_port *cfg_port);
 void cfg_standard_controller_destroy(void);
 void cfg_standard_controller_erase(GtkWidget *widget, int type);
+GtkWidget *cfg_standard_controller_turbo_delay(const char *description, int type);
 GtkWidget *cfg_standard_controller_line_notebook(const char *description, BYTE input);
 GtkWidget *cfg_standard_controller_combobox_select_joystick(void);
 gboolean cfg_standard_controller_key_press_event(GtkWidget *widget, GdkEventKey *event);
@@ -89,6 +91,22 @@ void cfg_standard_controller(_cfg_port *cfg_port) {
 
 	cfg_standard_controller_page_notebook_keyboard(notebook);
 	cfg_standard_controller_page_notebook_joystick(notebook);
+
+	{
+		GtkWidget *frame, *vbox, *tbdelay;
+
+		frame = gtk_frame_new(" Turbo Button Delay ");
+		gtk_box_pack_start(GTK_BOX(mainbox), frame, FALSE, FALSE, 0);
+
+		vbox = gtk_vbox_new(FALSE, 0);
+		gtk_container_add(GTK_CONTAINER(frame), vbox);
+
+		tbdelay = cfg_standard_controller_turbo_delay("Turbo A", TURBOA);
+		gtk_box_pack_start(GTK_BOX(vbox), tbdelay, FALSE, FALSE, 0);
+
+		tbdelay = cfg_standard_controller_turbo_delay("Turbo B", TURBOB);
+		gtk_box_pack_start(GTK_BOX(vbox), tbdelay, FALSE, FALSE, 0);
+	}
 
 	okcancel = cfg_input_ok_cancel(G_CALLBACK(cfg_standard_controller_ok_clicked),
 			G_CALLBACK(cfg_standard_controller_cancel_clicked), cfg_port);
@@ -446,6 +464,10 @@ void cfg_standard_controller_js_press_event(void) {
 
 	g_thread_exit(NULL);
 }
+void cfg_standard_controller_turbo_delay_value_changed(GtkRange *range, gint type) {
+	cfg_std_ctrl.cfg.port.turbo[type].frequency = (BYTE) gtk_range_get_value(range);
+	cfg_std_ctrl.cfg.port.turbo[type].counter = 0;
+}
 void cfg_standard_controller_ok_clicked(GtkWidget *widget, _cfg_port *cfg_port) {
 	gtk_widget_destroy(cfg_standard_controller_toplevel);
 
@@ -485,6 +507,29 @@ void cfg_standard_controller_destroy(void) {
 	if (cfg_controllers_toplevel != NULL) {
 		gtk_widget_show(cfg_controllers_toplevel);
 	}
+}
+GtkWidget *cfg_standard_controller_turbo_delay(const char *description, int type) {
+	GtkWidget *line, *widget, *label;
+	char text[30];
+
+	line = gtk_hbox_new(FALSE, SPACING);
+
+	sprintf(text, "   %-15s", description);
+
+	label = gtk_label_new(text);
+	gtk_box_pack_start(GTK_BOX(line), label, FALSE, FALSE, 0);
+
+	widget = gtk_hscale_new_with_range(1.0f, (double) TURBO_BUTTON_DELAY_MAX, 1.0f);
+	gtk_box_pack_end(GTK_BOX(line), widget, TRUE, TRUE, 0);
+
+	gtk_scale_set_value_pos(GTK_SCALE(widget), GTK_POS_RIGHT);
+	gtk_scale_add_mark(GTK_SCALE(widget), (double) TURBO_BUTTON_DELAY_DEFAULT, GTK_POS_TOP, NULL);
+	gtk_range_set_value(GTK_RANGE(widget), cfg_std_ctrl.cfg.port.turbo[type].frequency);
+
+	g_signal_connect(G_OBJECT(widget), "value-changed",
+	        G_CALLBACK(cfg_standard_controller_turbo_delay_value_changed), GINT_TO_POINTER(type));
+
+	return (line);
 }
 GtkWidget *cfg_standard_controller_line_notebook(const char *description, BYTE input) {
 	GtkWidget *line, *label;

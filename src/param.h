@@ -18,6 +18,32 @@
 		}\
 	}\
 }
+#define _param_num_search(buffer, param, round, td, calc, max)\
+{\
+	WORD tmp = atoi(buffer);\
+	if (round > 0) {\
+		tmp = emu_round_WORD(tmp, round);\
+	}\
+	param = ((td) tmp) calc;\
+	if (param > max) {\
+		param = max;\
+	}\
+}
+#define param_double_search(buffer, param, round)\
+	_param_num_search(buffer, param, round, double, / 100.0f, 1.0f)
+#define param_apu_channel_search(start, buffer, param, ch)\
+{\
+	BYTE index;\
+	char *c = strtok(buffer, ",");\
+	for(index = start; index < LENGTH(param); index++) {\
+		if (strcmp(c, param[index].sname) == 0) {\
+			cfg_from_file.apu.channel[ch] = index;\
+			if ((c = strtok(NULL, ",")) != NULL) {\
+				param_double_search(c, cfg_from_file.apu.volume[ch], 0);\
+			}\
+		}\
+	}\
+}
 
 enum {
 	P_MODE,
@@ -38,7 +64,8 @@ enum {
 	P_CHANNELS,
 	P_AUDIO_QUALITY,
 	P_SWAP_DUTY,
-	P_GAMEGENIE
+	P_GAMEGENIE,
+	P_STEREODELAY
 };
 enum {
 	PGS_SLOT,
@@ -54,7 +81,7 @@ typedef struct {
 } _param;
 
 #ifdef __CMDLINE__
-static const char *opt_short = "m:f:k:s:o:i:n:p:r:v:u:t:a:l:c:q:g:Vh?";
+static const char *opt_short = "m:f:k:s:o:i:n:p:r:v:u:t:a:l:c:d:q:g:Vh?";
 static const struct option opt_long[] = {
 	{ "mode",               required_argument, NULL, 'm'},
 	{ "fps",                required_argument, NULL, 'f'},
@@ -71,6 +98,7 @@ static const struct option opt_long[] = {
 	{ "audio",              required_argument, NULL, 'a'},
 	{ "samplerate",         required_argument, NULL, 'l'},
 	{ "channels",           required_argument, NULL, 'c'},
+	{ "stereo-delay",       required_argument, NULL, 'd'},
 	{ "audio-quality",      required_argument, NULL, 'q'},
 	{ "swap-duty",          required_argument, NULL,  0 },
 	{ "gamegenie",          required_argument, NULL, 'g'},
@@ -229,6 +257,13 @@ static const _param param[] = {
 		NULL,
 		"-g, --gamegenie           active game genie     : yes, no"
 	},
+	{
+		"stereo delay",
+		NULL,
+		"# possible values: [5 - 100]",
+		NULL,
+		"-d, --stereo-delay        stereo effect delay   : [5 - 100]"
+	},
 };
 static const _param param_pgs[] = {
 	{
@@ -242,6 +277,57 @@ static const _param param_pgs[] = {
 		"overscan",
 		NULL,
 		"# possible values: on, off, default",
+		NULL,
+		NULL
+	},
+};
+static const _param param_apu_channel[] = {
+	{
+		"square1",
+		NULL,
+		"# possible values: [on, off],[0 - 100]",
+		NULL,
+		NULL
+	},
+	{
+		"square2",
+		NULL,
+		"# possible values: [on, off],[0 - 100]",
+		NULL,
+		NULL
+	},
+	{
+		"triangle",
+		NULL,
+		"# possible values: [on, off],[0 - 100]",
+		NULL,
+		NULL
+	},
+	{
+		"noise",
+		NULL,
+		"# possible values: [on, off],[0 - 100]",
+		NULL,
+		NULL
+	},
+	{
+		"dmc",
+		NULL,
+		"# possible values: [on, off],[0 - 100]",
+		NULL,
+		NULL
+	},
+	{
+		"extra",
+		NULL,
+		"# possible values: [on, off],[0 - 100]",
+		NULL,
+		NULL
+	},
+	{
+		"master volume",
+		NULL,
+		"# possible values: [0 - 100]",
 		NULL,
 		NULL
 	},
@@ -263,24 +349,30 @@ static const _param param_input_ctrl[] = {
 	}
 };
 static const _param param_input_p1k[] = {
-	{ "P1K A     " }, { "P1K B     " },	{ "P1K Select" }, { "P1K Start " },
-	{ "P1K Up    " }, { "P1K Down  " },	{ "P1K Left  " }, { "P1K Right " },
-	{ "P1K TurboA" }, { "P1K TurboB" }
+	{ "P1K A       " }, { "P1K B       " }, { "P1K Select  " }, { "P1K Start   " },
+	{ "P1K Up      " }, { "P1K Down    " }, { "P1K Left    " }, { "P1K Right   " },
+	{ "P1K TurboA  " }, { "P1K TurboB  " }
 };
 static const _param param_input_p1j[] = {
-	{ "P1J A     " }, { "P1J B     " }, { "P1J Select" }, { "P1J Start " },
-	{ "P1J Up    " }, { "P1J Down  " }, { "P1J Left  " }, { "P1J Right " },
-	{ "P1J TurboA" }, { "P1J TurboB" }, { "P1J Id    " }
+	{ "P1J A       " }, { "P1J B       " }, { "P1J Select  " }, { "P1J Start   " },
+	{ "P1J Up      " }, { "P1J Down    " }, { "P1J Left    " }, { "P1J Right   " },
+	{ "P1J TurboA  " }, { "P1J TurboB  " }, { "P1J Id      " }
+};
+static const _param param_turbo_delay_p1[] = {
+	{ "P1 TA Delay " }, { "P1 TB Delay " }
 };
 static const _param param_input_p2k[] = {
-	{ "P2K A     " }, { "P2K B     " },	{ "P2K Select" }, { "P2K Start " },
-	{ "P2K Up    " }, { "P2K Down  " },	{ "P2K Left  " }, { "P2K Right " },
-	{ "P2K TurboA" }, { "P2K TurboB" }
+	{ "P2K A       " }, { "P2K B       " }, { "P2K Select  " }, { "P2K Start   " },
+	{ "P2K Up      " }, { "P2K Down    " }, { "P2K Left    " }, { "P2K Right   " },
+	{ "P2K TurboA  " }, { "P2K TurboB  " }
 };
 static const _param param_input_p2j[] = {
-	{ "P2J A     " }, { "P2J B     " }, { "P2J Select" }, { "P2J Start " },
-	{ "P2J Up    " }, { "P2J Down  " }, { "P2J Left  " }, { "P2J Right " },
-	{ "P2J TurboA" }, { "P2J TurboB" }, { "P2J Id    " }
+	{ "P2J A       " }, { "P2J B       " }, { "P2J Select  " }, { "P2J Start   " },
+	{ "P2J Up      " }, { "P2J Down    " }, { "P2J Left    " }, { "P2J Right   " },
+	{ "P2J TurboA  " }, { "P2J TurboB  " }, { "P2J Id      " }
+};
+static const _param param_turbo_delay_p2[] = {
+	{ "P2 TA Delay " }, { "P2 TB Delay " }
 };
 static const _param param_no_yes[] = {
 	{"No",  "no" },

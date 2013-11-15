@@ -49,7 +49,7 @@ clean:
 	-@echo ' '
 
 pre-build:
-	-i686-mingw32-windres -DOPENGL ../src/sdl/gui/windows/resources.rc src/sdl/gui/windows/resources.o
+	-i686-mingw32-windres -DOPENGL -DMINGW32 ../src/sdl/gui/windows/resources.rc src/sdl/gui/windows/resources.o
 	-@echo ' '
 
 .PHONY: all clean dependents

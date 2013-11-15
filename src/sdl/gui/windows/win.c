@@ -37,6 +37,8 @@
 #include "openGL/no_effect.h"
 #include "openGL/cube3d.h"
 #include "recent_roms.h"
+#include "cfg_input.h"
+#include "cfg_apu_channels.h"
 
 #define timer_redraw_start()\
 	SetTimer(hwnd, IDT_TIMER1, 650, (TIMERPROC) time_handler_redraw)
@@ -95,6 +97,7 @@ void set_rendering(BYTE rendering);
 void set_vsync(BYTE vsync);
 void set_samplerate(int samplerate);
 void set_channels(int channels);
+void set_stereo_delay(int stereo_delay);
 void set_audio_quality(int quality);
 void set_fps(int fps);
 void set_frame_skip(int frameskip);
@@ -1178,14 +1181,49 @@ void gui_update(void) {
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_CHANNELS_MONO);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_CHANNELS_STEREO);
 	switch (cfg->channels) {
-		case MONO:
+		case MONO:{
+			HMENU menuChannels = GetSubMenu(GetSubMenu(GetSubMenu(main_menu, 2), 3), 1);
+			MENUITEMINFO menuitem;
+
+			/* Stereo delay */
+			menuitem.cbSize = sizeof(MENUITEMINFO);
+			menuitem.fMask = MIIM_STATE;
+			menuitem.fState = MFS_DISABLED;
+			SetMenuItemInfo(menuChannels, 3, TRUE, &menuitem);
+
 			id = IDM_SET_CHANNELS_MONO;
 			break;
-		case STEREO:
+		}
+		case STEREO: {
+			HMENU menuChannels = GetSubMenu(GetSubMenu(GetSubMenu(main_menu, 2), 3), 1);
+			MENUITEMINFO menuitem;
+
+			/* Stereo delay */
+			menuitem.cbSize = sizeof(MENUITEMINFO);
+			menuitem.fMask = MIIM_STATE;
+			menuitem.fState = MFS_ENABLED;
+			SetMenuItemInfo(menuChannels, 3, TRUE, &menuitem);
+
 			id = IDM_SET_CHANNELS_STEREO;
 			break;
+		}
 	}
 	change_menuitem(CHECK, MF_CHECKED, id);
+
+	/* Stereo delay */
+	{
+		int index;
+
+		for (index = IDM_SET_STEREO_DELAY_5; index <= IDM_SET_STEREO_DELAY_100; index++) {
+			int delay = cfg->stereo_delay * 100;
+
+			if (delay == (((index - IDM_SET_STEREO_DELAY_5) + 1) * 5)) {
+				change_menuitem(CHECK, MF_CHECKED, index);
+			} else {
+				change_menuitem(CHECK, MF_UNCHECKED, index);
+			}
+		}
+	}
 
 	/* Audio Filter */
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_AUDIO_QUALITY_LOW);
@@ -1208,7 +1246,7 @@ void gui_update(void) {
 
 	/* Audio Enable */
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_AUDIO_ENABLE);
-	if (cfg->audio) {
+	if (cfg->apu.channel[APU_MASTER]) {
 		change_menuitem(CHECK, MF_CHECKED, IDM_SET_AUDIO_ENABLE);
 	}
 
@@ -1768,6 +1806,28 @@ long __stdcall main_win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 				case IDM_SET_CHANNELS_STEREO:
 					set_channels(STEREO);
 					break;
+				case IDM_SET_STEREO_DELAY_5:
+				case IDM_SET_STEREO_DELAY_10:
+				case IDM_SET_STEREO_DELAY_15:
+				case IDM_SET_STEREO_DELAY_20:
+				case IDM_SET_STEREO_DELAY_25:
+				case IDM_SET_STEREO_DELAY_30:
+				case IDM_SET_STEREO_DELAY_35:
+				case IDM_SET_STEREO_DELAY_40:
+				case IDM_SET_STEREO_DELAY_45:
+				case IDM_SET_STEREO_DELAY_50:
+				case IDM_SET_STEREO_DELAY_55:
+				case IDM_SET_STEREO_DELAY_60:
+				case IDM_SET_STEREO_DELAY_65:
+				case IDM_SET_STEREO_DELAY_70:
+				case IDM_SET_STEREO_DELAY_75:
+				case IDM_SET_STEREO_DELAY_80:
+				case IDM_SET_STEREO_DELAY_85:
+				case IDM_SET_STEREO_DELAY_90:
+				case IDM_SET_STEREO_DELAY_95:
+				case IDM_SET_STEREO_DELAY_100:
+					set_stereo_delay(((LOWORD(wParam) - IDM_SET_STEREO_DELAY_5) + 1) * 5);
+					break;
 				case IDM_SET_AUDIO_SWAP_DUTY:
 					emu_pause(TRUE);
 					cfg->swap_duty = !cfg->swap_duty;
@@ -1780,10 +1840,13 @@ long __stdcall main_win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 				case IDM_SET_AUDIO_QUALITY_HIGH:
 					set_audio_quality(AQ_HIGH);
 					break;
+				case IDM_SET_AUDIO_APU_CHANNELS:
+					apu_channels_dialog(hwnd);
+					break;
 				case IDM_SET_AUDIO_ENABLE:
 					emu_pause(TRUE);
-					cfg->audio = !cfg->audio;
-					if (cfg->audio) {
+					cfg->apu.channel[APU_MASTER] = !cfg->apu.channel[APU_MASTER];
+					if (cfg->apu.channel[APU_MASTER]) {
 						snd_start();
 					} else {
 						snd_stop();
@@ -1849,7 +1912,7 @@ long __stdcall timeline_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 	LPNMCUSTOMDRAW lpDraw;
 	static char szBuf[80] = "";
 
-	if (!tl.button) {
+	if (!tl.button && (GetForegroundWindow() == main_win)) {
 		SetFocus(sdl_frame);
 	}
 
@@ -2118,9 +2181,21 @@ void open_event(void) {
 	ofn.lpstrInitialDir = NULL;
 	ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
 
+	if (cfg->fullscreen == FULLSCR) {
+		/* nascondo la finestra */
+		ShowWindow(main_win, SW_HIDE);
+	}
+
 	// Display the Open dialog box.
 	if (GetOpenFileName(&ofn) == TRUE) {
 		change_rom(ofn.lpstrFile);
+	}
+
+	if (cfg->fullscreen == FULLSCR) {
+		/* visualizzo la finestra */
+		ShowWindow(main_win, SW_NORMAL);
+		/* setto il focus*/
+		SetFocus(sdl_frame);
 	}
 
 	emu_pause(FALSE);
@@ -2388,6 +2463,18 @@ void set_channels(int channels) {
 	snd_start();
 	gui_update();
 }
+void set_stereo_delay(int stereo_delay) {
+	double delay = ((double) stereo_delay) / 100.f;
+
+	if (cfg->stereo_delay == delay) {
+		return;
+	}
+
+	cfg->stereo_delay = delay;
+	snd_stereo_delay();
+	gui_update();
+}
+
 void set_audio_quality(int quality) {
 	if (cfg->audio_quality == quality) {
 		return;

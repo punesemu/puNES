@@ -72,8 +72,23 @@ long __stdcall cfg_standard_controller_wnd_proc(HWND hwnd, UINT msg, WPARAM wPar
 	DRAWITEMSTRUCT *pdis;
 
 	switch (msg) {
+		case WM_NOTIFY: {
+			switch (((LPNMHDR) lParam)->code) {
+				case TTN_NEEDTEXT: {
+					LPTOOLTIPTEXT lpToolTipText = (LPTOOLTIPTEXT) lParam;
+					int ctrlID = GetDlgCtrlID((HWND) wParam);
+					int value = SendDlgItemMessage(hwnd, ctrlID, TBM_GETPOS, 0, 0);
+					static char szBuf[80] = "";
+
+					sprintf(szBuf, "%d", value);
+					lpToolTipText->lpszText = szBuf;
+					break;
+				}
+			}
+			break;
+		}
 		case WM_INITDIALOG: {
-			BYTE i;
+			int i;
 
 			for (i = 0; i < max_buttons; i++) {
 				SetDlgItemText(hwnd, IDC_STD_CTRL_KEY_A + i,
@@ -102,6 +117,16 @@ long __stdcall cfg_standard_controller_wnd_proc(HWND hwnd, UINT msg, WPARAM wPar
 				SendDlgItemMessage(hwnd, IDC_STD_CTRL_JOY_ID, CB_SETCURSEL,
 						cfg_std_ctrl.cfg.port.joy_id, 0);
 			}
+
+			for (i = IDC_TURBOA_DELAY_SLIDER; i <= IDC_TURBOB_DELAY_SLIDER; i++) {
+				int pos = cfg_std_ctrl.cfg.port.turbo[i - IDC_TURBOA_DELAY_SLIDER].frequency;
+
+				SendDlgItemMessage(hwnd, i, TBM_SETRANGE, (WPARAM) TRUE,
+				        (LPARAM) MAKELONG(1, TURBO_BUTTON_DELAY_MAX));
+				SendDlgItemMessage(hwnd, i, TBM_SETTIC, 0, (LPARAM) TURBO_BUTTON_DELAY_DEFAULT);
+				SendDlgItemMessage(hwnd, i, TBM_SETPOS, (WPARAM) TRUE, (LPARAM) pos);
+			}
+
 			return (TRUE);
 		}
 		case WM_DRAWITEM:
@@ -173,6 +198,16 @@ long __stdcall cfg_standard_controller_wnd_proc(HWND hwnd, UINT msg, WPARAM wPar
 				DrawText(pdis->hDC, string, strlen(string), &pdis->rcItem, DT_LEFT | DT_SINGLELINE);
 			}
 			return (FALSE);
+		case WM_HSCROLL: {
+			int ctrlID = GetDlgCtrlID((HWND) lParam);
+			int type = ctrlID - IDC_TURBOA_DELAY_SLIDER;
+			int value = SendDlgItemMessage(hwnd, ctrlID, TBM_GETPOS, 0, 0);
+
+			cfg_std_ctrl.cfg.port.turbo[type].frequency = value;
+			cfg_std_ctrl.cfg.port.turbo[type].counter = 0;
+
+			return (TRUE);
+		}
 		case WM_COMMAND:
 			switch(LOWORD(wParam)) {
 				case IDOK:

@@ -71,8 +71,6 @@ void input_init(void) {
 			port1.changed = FALSE;
 		}
 
-		input_turbo_buttons_frequency();
-
 		for (i = 0; i < 24; i++) {
 			if (i < 8) {
 				port1.data[i] = port2.data[i] = RELEASED;
@@ -81,10 +79,6 @@ void input_init(void) {
 			}
 		}
 	}
-}
-void input_turbo_buttons_frequency(void){
-	port1.turbo[TURBOA].frequency = port1.turbo[TURBOB].frequency = fps.nominal / 15;
-	port2.turbo[TURBOA].frequency = port2.turbo[TURBOB].frequency = fps.nominal / 15;
 }
 
 BYTE input_rd_reg_disabled(BYTE openbus, WORD **screen_index, _port *port) {

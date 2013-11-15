@@ -45,6 +45,37 @@
 		continue;\
 	}\
 }
+#define cfg_double_search(structp, prm, var, round)\
+{\
+	char buf[MAXLEN];\
+	memset(buf, 0x00, MAXLEN);\
+	strcpy(buf,  structp[prm].lname);\
+	trim_space(buf);\
+	if (strcmp(key, buf) == 0) {\
+		param_double_search(value, var, round);\
+	}\
+}
+#define cfg_int_search(structp, prm, var, round, max)\
+{\
+	char buf[MAXLEN];\
+	memset(buf, 0x00, MAXLEN);\
+	strcpy(buf,  structp[prm].lname);\
+	trim_space(buf);\
+	if (strcmp(key, buf) == 0) {\
+		_param_num_search(value, var, round, int, * 1, max);\
+	}\
+}
+#define cfg_apu_channel_search(structp, prm, start, desc)\
+{\
+	char buf[MAXLEN];\
+	memset(buf, 0x00, MAXLEN);\
+	strcpy(buf, structp[prm].lname);\
+	trim_space(buf);\
+	if (strcmp(key, buf) == 0) {\
+		param_apu_channel_search(start, value, desc, prm);\
+		continue;\
+	}\
+}
 #define cfg_input_search(param, port, type)\
 {\
 	BYTE index, found = FALSE;\
@@ -71,10 +102,14 @@
 		continue;\
 	}\
 }
+
 void set_default(void);
 void set_default_pgs(void);
 void trim_space(char *src);
 void write_param(_param *prmtr, FILE *fp, BYTE prm, char *value);
+void write_double_param(_param *prmtr, FILE *fp, BYTE prm, double value);
+void write_int_param(_param *prmtr, FILE *fp, BYTE prm, int value);
+void write_apu_channel_param(_param *prmtr, FILE *fp, BYTE prm);
 void write_input_param(_param *prmtr, FILE *fp, BYTE end, _port port, BYTE numport, BYTE type);
 BYTE name_pgs_file(char *file);
 
@@ -138,14 +173,32 @@ void cfg_file_parse(void) {
 			/* stretch in fullscreen */
 			cfg_search(param, P_STRETCH, 0, param_no_yes, cfg_from_file.aspect_ratio = !index);
 			/* audio */
-			cfg_search(param, P_AUDIO, 0, param_off_on, cfg_from_file.audio = index);
+			cfg_search(param, P_AUDIO, 0, param_off_on, cfg_from_file.apu.channel[APU_MASTER] =
+			        index);
 			/* sample rate */
 			cfg_search(param, P_SAMPLERATE, 0, param_samplerate, cfg_from_file.samplerate = index);
 			/* channels */
 			cfg_search(param, P_CHANNELS, 0, param_channels, cfg_from_file.channels = index);
+			/* stereo delay */
+			cfg_double_search(param, P_STEREODELAY, cfg_from_file.stereo_delay, 5);
 			/* audio quality */
 			cfg_search(param, P_AUDIO_QUALITY, 0, param_audio_quality,
 			        cfg_from_file.audio_quality = index);
+			/* master volume */
+			cfg_double_search(param_apu_channel, APU_MASTER, cfg_from_file.apu.volume[APU_MASTER],
+					0);
+			/* square1 active and volume */
+			cfg_apu_channel_search(param_apu_channel, APU_S1, 0, param_off_on);
+			/* square2 active and volume */
+			cfg_apu_channel_search(param_apu_channel, APU_S2, 0, param_off_on);
+			/* triangle active and volume */
+			cfg_apu_channel_search(param_apu_channel, APU_TR, 0, param_off_on);
+			/* noise active and volume */
+			cfg_apu_channel_search(param_apu_channel, APU_NS, 0, param_off_on);
+			/* DMC active and volume */
+			cfg_apu_channel_search(param_apu_channel, APU_DMC, 0, param_off_on);
+			/* extra active and volume */
+			cfg_apu_channel_search(param_apu_channel, APU_EXTRA, 0, param_off_on);
 			/* swap duty cycles */
 			cfg_search(param, P_SWAP_DUTY, 0, param_no_yes, cfg_from_file.swap_duty = index);
 			/* game genie */
@@ -207,15 +260,33 @@ void cfg_file_save(void) {
 	/* stretch in fullscreen */
 	write_param((_param *) param, fp, P_STRETCH, param_no_yes[!cfg_from_file.aspect_ratio].sname);
 	/* audio */
-	write_param((_param *) param, fp, P_AUDIO, param_off_on[cfg_from_file.audio].sname);
+	write_param((_param *) param, fp, P_AUDIO,
+	        param_off_on[cfg_from_file.apu.channel[APU_MASTER]].sname);
 	/* sample rate */
 	write_param((_param *) param, fp, P_SAMPLERATE,
 	        param_samplerate[cfg_from_file.samplerate].sname);
 	/* channels */
 	write_param((_param *) param, fp, P_CHANNELS, param_channels[cfg_from_file.channels].sname);
+	/* stereo delay */
+	write_double_param((_param *) param, fp, P_STEREODELAY,	cfg_from_file.stereo_delay);
 	/* audio quality */
 	write_param((_param *) param, fp, P_AUDIO_QUALITY,
 			param_audio_quality[cfg_from_file.audio_quality].sname);
+	/* master volume */
+	write_double_param((_param *) param_apu_channel, fp, APU_MASTER,
+			cfg_from_file.apu.volume[APU_MASTER]);
+	/* square1 active and volume */
+	write_apu_channel_param((_param *) param_apu_channel, fp, APU_S1);
+	/* square2 active and volume */
+	write_apu_channel_param((_param *) param_apu_channel, fp, APU_S2);
+	/* triangle active and volume */
+	write_apu_channel_param((_param *) param_apu_channel, fp, APU_TR);
+	/* noise active and volume */
+	write_apu_channel_param((_param *) param_apu_channel, fp, APU_NS);
+	/* DMC active and volume */
+	write_apu_channel_param((_param *) param_apu_channel, fp, APU_DMC);
+	/* extra active and volume */
+	write_apu_channel_param((_param *) param_apu_channel, fp, APU_EXTRA);
 	/* swap duty cycles */
 	write_param((_param *) param, fp, P_SWAP_DUTY, param_no_yes[cfg_from_file.swap_duty].sname);
 	/* game genie */
@@ -319,9 +390,17 @@ void cfg_file_input_parse(void) {
 
 			cfg_input_search(param_input_p1k, port1, KEYBOARD);
 			cfg_input_search(param_input_p1j, port1, JOYSTICK);
+			cfg_int_search(param_turbo_delay_p1, 0, port1.turbo[TURBOA].frequency, 0,
+			        TURBO_BUTTON_DELAY_MAX);
+			cfg_int_search(param_turbo_delay_p1, 1, port1.turbo[TURBOB].frequency, 0,
+			        TURBO_BUTTON_DELAY_MAX);
 
 			cfg_input_search(param_input_p2k, port2, KEYBOARD);
 			cfg_input_search(param_input_p2j, port2, JOYSTICK);
+			cfg_int_search(param_turbo_delay_p2, 0, port2.turbo[TURBOA].frequency, 0,
+			        TURBO_BUTTON_DELAY_MAX);
+			cfg_int_search(param_turbo_delay_p2, 1, port2.turbo[TURBOB].frequency, 0,
+			        TURBO_BUTTON_DELAY_MAX);
 		}
 	}
 
@@ -351,8 +430,16 @@ void cfg_file_input_save(void) {
 	write_input_param((_param *) param_input_p1k, fp, LENGTH(param_input_p1k), port1, 1, KEYBOARD);
 	write_input_param((_param *) param_input_p1j, fp, LENGTH(param_input_p1j), port1, 1, JOYSTICK);
 
+	fprintf(fp, "# player 1 turbo buttons delays\n");
+	write_int_param((_param *) param_turbo_delay_p1, fp, 0,	port1.turbo[TURBOA].frequency);
+	write_int_param((_param *) param_turbo_delay_p1, fp, 1,	port1.turbo[TURBOB].frequency);
+
 	write_input_param((_param *) param_input_p2k, fp, LENGTH(param_input_p2k), port2, 2, KEYBOARD);
 	write_input_param((_param *) param_input_p2j, fp, LENGTH(param_input_p2j), port2, 2, JOYSTICK);
+
+	fprintf(fp, "# player 2 turbo buttons delays\n");
+	write_int_param((_param *) param_turbo_delay_p2, fp, 0,	port2.turbo[TURBOA].frequency);
+	write_int_param((_param *) param_turbo_delay_p2, fp, 1,	port2.turbo[TURBOB].frequency);
 
 	fclose(fp);
 }
@@ -360,7 +447,7 @@ void cfg_file_input_save(void) {
 void set_default(void) {
 
 #define _port_kb_default(port, button, name)\
-	port.input[KEYBOARD][button] = keyval_from_name(name);
+	port.input[KEYBOARD][button] = keyval_from_name(name)
 #define _port_js_default(port, button, name)\
 	port.input[JOYSTICK][button] = name_to_jsv(name)
 #define port_kb_default(port, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10)\
@@ -407,20 +494,33 @@ void set_default(void) {
 	cfg_from_file.aspect_ratio = FALSE;
 	cfg_from_file.save_on_exit = FALSE;
 
-	cfg_from_file.audio = TRUE;
+	{
+		int index;
+
+		for (index = 0; index <= APU_MASTER; index++) {
+			cfg_from_file.apu.channel[index] = TRUE;
+			cfg_from_file.apu.volume[index] = 1.0f;
+		}
+	}
 	cfg_from_file.samplerate = S44100;
 	cfg_from_file.channels = STEREO;
+	cfg_from_file.stereo_delay = STEREO_DELAY_DEFAULT;
 	cfg_from_file.audio_quality = AQ_HIGH;
 	cfg_from_file.swap_duty = 0;
+
 	cfg_from_file.gamegenie = FALSE;
 
 	port1.type = CTRL_STANDARD;
 	port_kb_default(port1, "S", "A", "Z", "X", "Up", "Down", "Left", "Right", "W", "Q");
 	port_js_default(port1, "JOYSTICKID1", "JB1", "JB0", "JB8", "JB9", "JA1MIN", "JA1PLS", "JA0MIN",
 	        "JA0PLS", "JB2", "JB3");
+	port1.turbo[TURBOA].frequency = TURBO_BUTTON_DELAY_DEFAULT;
+	port1.turbo[TURBOB].frequency = TURBO_BUTTON_DELAY_DEFAULT;
 
 	port2.type = FALSE;
 	port2.joy_id = name_to_jsn("JOYSTICKID2");
+	port2.turbo[TURBOA].frequency = TURBO_BUTTON_DELAY_DEFAULT;
+	port2.turbo[TURBOB].frequency = TURBO_BUTTON_DELAY_DEFAULT;
 }
 void set_default_pgs(void) {
 	cfg_from_file.oscan = OSCAN_DEFAULT;
@@ -449,6 +549,36 @@ void write_param(_param *prmtr, FILE *fp, BYTE prm, char *value) {
 	}
 	fprintf(fp, "%s = %s\n\n", prmtr[prm].lname, value);
 }
+void write_double_param(_param *prmtr, FILE *fp, BYTE prm, double value) {
+	if (prmtr[prm].comment1 != NULL) {
+		fprintf(fp, "%s\n", prmtr[prm].comment1);
+	}
+	if (prmtr[prm].comment2 != NULL) {
+		fprintf(fp, "%s\n", prmtr[prm].comment2);
+	}
+	fprintf(fp, "%s = %d\n\n", prmtr[prm].lname, (int) (value * 100.0f));
+}
+void write_int_param(_param *prmtr, FILE *fp, BYTE prm, int value) {
+	if (prmtr[prm].comment1 != NULL) {
+		fprintf(fp, "%s\n", prmtr[prm].comment1);
+	}
+	if (prmtr[prm].comment2 != NULL) {
+		fprintf(fp, "%s\n", prmtr[prm].comment2);
+	}
+	fprintf(fp, "%s = %d\n", prmtr[prm].lname, value);
+}
+
+void write_apu_channel_param(_param *prmtr, FILE *fp, BYTE prm) {
+	if (prmtr[prm].comment1 != NULL) {
+		fprintf(fp, "%s\n", prmtr[prm].comment1);
+	}
+	if (prmtr[prm].comment2 != NULL) {
+		fprintf(fp, "%s\n", prmtr[prm].comment2);
+	}
+	fprintf(fp, "%s = %s,%d\n\n", prmtr[prm].lname,
+			param_off_on[cfg_from_file.apu.channel[prm]].sname,
+			(int) (cfg_from_file.apu.volume[prm] * 100.0f));
+}
 void write_input_param(_param *prmtr, FILE *fp, BYTE end, _port port, BYTE numport, BYTE type) {
 	BYTE index;
 
@@ -463,7 +593,8 @@ void write_input_param(_param *prmtr, FILE *fp, BYTE end, _port port, BYTE numpo
 			}
 		}
 		if (type == JOYSTICK) {
-			fprintf(fp, "%s = %s\n", prmtr[index].lname, jsv_to_name(port.input[JOYSTICK][index]));
+			fprintf(fp, "%s = %s\n", prmtr[index].lname,
+			        jsv_to_name(port.input[JOYSTICK][index]));
 		} else {
 			fprintf(fp, "%s = %s\n", prmtr[index].lname,
 			        keyval_to_name(port.input[KEYBOARD][index]));

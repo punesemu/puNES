@@ -144,9 +144,17 @@ void set_default(void) {
 	cfg_from_file.aspect_ratio = FALSE;
 	//cfg_from_file.save_on_exit = FALSE;
 
-	cfg_from_file.audio = TRUE;
+	{
+		int index;
+
+		for (index = 0; index <= APU_MASTER; index++) {
+			cfg_from_file.apu.channel[index] = TRUE;
+			cfg_from_file.apu.volume[index] = 1.0f;
+		}
+	}
 	cfg_from_file.samplerate = S44100;
 	cfg_from_file.channels = STEREO;
+	cfg_from_file.stereo_delay = STEREO_DELAY_DEFAULT;
 	cfg_from_file.audio_quality = AQ_HIGH;
 	cfg_from_file.swap_duty = 0;
 	cfg_from_file.gamegenie = FALSE;
@@ -155,7 +163,11 @@ void set_default(void) {
 	port_kb_default(port1, "S", "A", "Z", "X", "Up", "Down", "Left", "Right", "W", "Q");
 	//port_js_default(port1, "JOYSTICKID1", "JB1", "JB0", "JB8", "JB9", "JA1MIN", "JA1PLS", "JA0MIN",
 	//		"JA0PLS", "JB2", "JB3");
+	port1.turbo[TURBOA].frequency = TURBO_BUTTON_DELAY_DEFAULT;
+	port1.turbo[TURBOB].frequency = TURBO_BUTTON_DELAY_DEFAULT;
 
 	//port2.type = FALSE;
 	//port2.joy_id = name_to_jsn("JOYSTICKID2");
+	port2.turbo[TURBOA].frequency = TURBO_BUTTON_DELAY_DEFAULT;
+	port2.turbo[TURBOB].frequency = TURBO_BUTTON_DELAY_DEFAULT;
 }

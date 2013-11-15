@@ -47,7 +47,7 @@ clean:
 	-@echo ' '
 
 pre-build:
-	-i686-mingw32-windres ../src/d3d9/resources.rc src/d3d9/resources.o
+	-i686-mingw32-windres  -DMINGW32 ../src/d3d9/resources.rc src/d3d9/resources.o
 	-@echo ' '
 
 post-build:

@@ -39,7 +39,7 @@ BYTE snd_start(void) {
 	SDL_AudioSpec *dev;
 	_callback_data *cache;
 
-	if (!cfg->audio) {
+	if (!cfg->apu.channel[APU_MASTER]) {
 		return (EXIT_OK);
 	}
 
@@ -137,15 +137,21 @@ BYTE snd_start(void) {
 	if (cfg->channels == STEREO) {
 		BYTE i;
 
-		snd.channel.max_pos = snd.samples * 0.300f;
+		snd.channel.max_pos = snd.samples * cfg->stereo_delay;
 		snd.channel.pos = 0;
 
 		for (i = 0; i < 2; i++) {
-			DBWORD size = snd.channel.max_pos * sizeof(*cache->write);
+			DBWORD size = snd.samples * sizeof(*cache->write);
 
 			snd.channel.buf[i] = malloc(size);
-			memset(snd.channel.buf[i], 0, size);
+			memset(snd.channel.buf[i], 0x00, size);
 			snd.channel.ptr[i] = snd.channel.buf[i];
+
+			snd.channel.bck.start = malloc(size * 2);
+			memset(snd.channel.bck.start, 0x00, size * 2);
+			snd.channel.bck.write = snd.channel.bck.start;
+			snd.channel.bck.middle = snd.channel.bck.start + snd.samples;
+			snd.channel.bck.end = (SBYTE *) snd.channel.bck.start + (size * 2);
 		}
 	}
 
@@ -196,6 +202,33 @@ BYTE snd_start(void) {
 
 	return (EXIT_OK);
 }
+void snd_stereo_delay(void) {
+	int i;
+	_callback_data *cache = snd.cache;
+	SWORD *here;
+
+	snd.channel.max_pos = snd.samples * cfg->stereo_delay;
+	snd.channel.pos = 0;
+
+	for (i = 0; i < 2; i++) {
+		snd.channel.ptr[i] = snd.channel.buf[i];
+	}
+
+	here = snd.channel.bck.write - snd.channel.max_pos;
+
+	if (here >= snd.channel.bck.start) {
+		memcpy(snd.channel.ptr[CH_RIGHT], here, snd.channel.max_pos * sizeof(*cache->write));
+	} else {
+		DBWORD step = snd.channel.bck.start - here;
+		SWORD *src1 = (SWORD *) snd.channel.bck.end - step;
+		SWORD *src2 = snd.channel.bck.start;
+		SWORD *dst1 = snd.channel.ptr[CH_RIGHT];
+		SWORD *dst2 = snd.channel.ptr[CH_RIGHT] + step;
+
+		memcpy(dst1, src1, step * sizeof(*cache->write));
+		memcpy(dst2, src2, (snd.channel.max_pos - step) * sizeof(*cache->write));
+	}
+}
 void snd_output(void *udata, BYTE *stream, int len) {
 	_callback_data *cache = udata;
 
@@ -206,6 +239,7 @@ void snd_output(void *udata, BYTE *stream, int len) {
 	snd_lock_cache(cache);
 
 #ifndef RELEASE
+	/*
 	fprintf(stderr, "snd : %d %d %d %d %2d %d %f %f %4s\r",
 			len,
 			snd.buffer.count,
@@ -216,6 +250,7 @@ void snd_output(void *udata, BYTE *stream, int len) {
 			snd.frequency,
 			machine.ms_frame,
 			"");
+	*/
 #endif
 
 	if (!cache->filled) {
@@ -279,6 +314,11 @@ void snd_stop(void) {
 
 	{
 		BYTE i;
+
+		if (snd.channel.bck.start) {
+			free(snd.channel.bck.start);
+			snd.channel.bck.start = NULL;
+		}
 
 		for (i = 0; i < STEREO; i++) {
 			/* rilascio la memoria */

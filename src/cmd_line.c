@@ -35,10 +35,13 @@ BYTE cmd_line_parse(int argc, char **argv) {
 				}
 				break;
 			case 'a':
-				param_search(0, optarg, param_off_on, cfg_from_file.audio = index);
+				param_search(0, optarg, param_off_on, cfg_from_file.apu.channel[APU_MASTER] = index);
 				break;
 			case 'c':
 				param_search(0, optarg, param_channels, cfg_from_file.channels = index);
+				break;
+			case 'd':
+				param_double_search(optarg, cfg_from_file.stereo_delay, 5);
 				break;
 			case 'f':
 				param_search(0, optarg, param_fps, cfg_from_file.fps = index);
@@ -157,6 +160,7 @@ void usage(char *name) {
 			"%s\n"
 			"%s\n"
 			"%s\n"
+			"%s\n"
 	};
 
 	usage_string = malloc(1024 * 8);
@@ -176,6 +180,7 @@ void usage(char *name) {
 			param[P_AUDIO].help,
 			param[P_SAMPLERATE].help,
 			param[P_CHANNELS].help,
+			param[P_STEREODELAY].help,
 			param[P_AUDIO_QUALITY].help,
 			param[P_SWAP_DUTY].help,
 			param[P_GAMEGENIE].help

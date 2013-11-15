@@ -4,6 +4,7 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
+../src/sdl/gui/gtk2/cfg_apu_channels.c \
 ../src/sdl/gui/gtk2/cfg_input.c \
 ../src/sdl/gui/gtk2/cfg_std_ctrl.c \
 ../src/sdl/gui/gtk2/configurations.c \
@@ -13,6 +14,7 @@ C_SRCS += \
 ../src/sdl/gui/gtk2/snd.c 
 
 OBJS += \
+./src/sdl/gui/gtk2/cfg_apu_channels.o \
 ./src/sdl/gui/gtk2/cfg_input.o \
 ./src/sdl/gui/gtk2/cfg_std_ctrl.o \
 ./src/sdl/gui/gtk2/configurations.o \
@@ -22,6 +24,7 @@ OBJS += \
 ./src/sdl/gui/gtk2/snd.o 
 
 C_DEPS += \
+./src/sdl/gui/gtk2/cfg_apu_channels.d \
 ./src/sdl/gui/gtk2/cfg_input.d \
 ./src/sdl/gui/gtk2/cfg_std_ctrl.d \
 ./src/sdl/gui/gtk2/configurations.d \

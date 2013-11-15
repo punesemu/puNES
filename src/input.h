@@ -15,6 +15,9 @@
 #define SET_RD_REG1(funct) input_rd_reg1 = funct
 #define SET_RD_REG2(funct) input_rd_reg2 = funct
 
+#define TURBO_BUTTON_DELAY_DEFAULT 3
+#define TURBO_BUTTON_DELAY_MAX     20
+
 enum controller_types { CTRL_DISABLED, CTRL_STANDARD, CTRL_ZAPPER };
 enum controller_buttons {
 	BUT_A,
@@ -58,7 +61,6 @@ _r4016 r4016;
 _port port1, port2;
 
 void input_init(void);
-void input_turbo_buttons_frequency(void);
 
 BYTE input_rd_reg_disabled(BYTE openbus, WORD **screen_index, _port *port);
 

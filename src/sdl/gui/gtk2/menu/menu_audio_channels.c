@@ -6,6 +6,7 @@
  */
 
 #include "menu_audio_channels.h"
+#include "menu_audio_stereo_delay.h"
 #include "param.h"
 #include "cfg_file.h"
 #include "gui_snd.h"
@@ -86,6 +87,8 @@ void menu_audio_channels(GtkWidget *audio, GtkAccelGroup *accel_group) {
 
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), check[MMONO]);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), check[MSTEREO]);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), gtk_separator_menu_item_new());
+	menu_audio_stereo_delay(menu, accel_group);
 
 	g_signal_connect_swapped(G_OBJECT(check[MMONO]), "activate", G_CALLBACK(set_channels),
 	        GINT_TO_POINTER(1));
@@ -102,6 +105,8 @@ void menu_audio_channels_check(void) {
 			gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[index]), FALSE);
 		}
 	}
+
+	menu_audio_stereo_delay_check();
 }
 void set_channels(int channels) {
 	if (gui_in_update) {

@@ -9,7 +9,8 @@
 #include "gui.h"
 
 #ifndef RELEASE
-#include "../configurations.h"
+//#include "../configurations.h"
+//#include "../audio_extra_configurations.h"
 #endif
 
 GtkWidget *menu;
@@ -33,19 +34,19 @@ void menu_create(GtkWidget *win, GtkWidget *mainbox) {
 	/* Help */
 	menu_help(menu, accel_group);
 #ifndef RELEASE
+	/*
 	{
 		GtkWidget *submenu, *config;
 
 		submenu = gtk_menu_new();
 		config = gtk_menu_item_new_with_mnemonic("_Prova");
 
-		/* append menu file to main menu */
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), config);
 		gtk_menu_item_set_submenu(GTK_MENU_ITEM(config), submenu);
 
-		/* signals */
 		g_signal_connect(G_OBJECT(config), "activate", G_CALLBACK(configurations_notebook), NULL);
 	}
+	*/
 #endif
 
 	gtk_box_pack_start(GTK_BOX(mainbox), menu, FALSE, FALSE, 0);

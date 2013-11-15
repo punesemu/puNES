@@ -548,7 +548,6 @@ BYTE emu_turn_on(void) {
 	return (EXIT_OK);
 }
 void emu_pause(BYTE mode) {
-
 	if (mode == TRUE) {
 		info.pause = TRUE;
 		return;
@@ -654,6 +653,15 @@ BYTE emu_reset(BYTE type) {
 	emu_pause(FALSE);
 
 	return (EXIT_OK);
+}
+WORD emu_round_WORD(WORD number, WORD round) {
+	WORD remainder = number % round;
+
+	if (remainder < (round / 2)) {
+		return (number - remainder);
+	} else {
+		return ((number - remainder) + round);
+	}
 }
 void emu_quit(BYTE exit_code) {
 	if (cfg->save_on_exit) {

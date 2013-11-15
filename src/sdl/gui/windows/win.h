@@ -15,7 +15,6 @@
 #include "resources.h"
 #include "keyboard.h"
 #include "joystick.h"
-#include "cfg_input.h"
 #include "common.h"
 #include "emu.h"
 

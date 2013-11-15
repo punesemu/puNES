@@ -9,17 +9,18 @@
 #include "menu_audio_sample_rate.h"
 #include "menu_audio_channels.h"
 #include "menu_audio_quality.h"
+#include "../cfg_apu_channels.h"
 #include "param.h"
 #include "cfg_file.h"
 #include "gui_snd.h"
 
 #ifdef __SUNPRO_C
-#pragma align 4 (icon_inline)
+#pragma align 4 (audio_icon_inline)
 #endif
 #ifdef __GNUC__
-static const guint8 icon_inline[] __attribute__ ((__aligned__ (4))) =
+static const guint8 audio_icon_inline[] __attribute__ ((__aligned__ (4))) =
 #else
-static const guint8 icon_inline[] =
+static const guint8 audio_icon_inline[] =
 #endif
 { ""
   /* Pixbuf magic (0x47646b50) */
@@ -71,6 +72,62 @@ static const guint8 icon_inline[] =
   "\36\36\305\30\33\33\362\27\32\33\362\32\34\34\305\27\31\31\205\25\25"
   "\25%\204\377\377\377\0"};
 
+#ifdef __SUNPRO_C
+#pragma align 4 (volumes_icon_inline)
+#endif
+#ifdef __GNUC__
+static const guint8 volumes_icon_inline[] __attribute__ ((__aligned__ (4))) =
+#else
+static const guint8 volumes_icon_inline[] =
+#endif
+{ ""
+  /* Pixbuf magic (0x47646b50) */
+  "GdkP"
+  /* length: header (24) + pixel_data (683) */
+  "\0\0\2\303"
+  /* pixdata_type (0x2010002) */
+  "\2\1\0\2"
+  /* rowstride (64) */
+  "\0\0\0@"
+  /* width (16) */
+  "\0\0\0\20"
+  /* height (16) */
+  "\0\0\0\20"
+  /* pixel_data: */
+  "\221\0\0\0\0\1e\300\352\243\214e\300\352\377\4e\301\352\227\0\0\0\0X"
+  "\267\346\255\226\333\365\377\215\227\333\365\377\6O\262\345\237W\257"
+  "\342\377s\313\361\377A\230\324\377\232\336\370\377r\315\363\377\202t"
+  "\312\357\377\2A\230\324\377\226\330\362\377\202t\312\357\377\10v\314"
+  "\360\377A\230\324\377r\311\357\377t\312\357\377J\251\340\377T\252\337"
+  "\377[\234\304\377l\230\265\377\202a\210\250\377\4D\235\322\377l\304\355"
+  "\377\13b\265\377\230\332\366\377\202l\304\355\377\27q\311\361\377\13"
+  "b\265\377i\303\355\377l\304\355\377F\244\335\377M\241\331\377H\220\274"
+  "\377\350\352\352\377\337\345\350\377\350\352\352\377D\235\322\377[\273"
+  "\350\377\20f\267\377\226\331\363\377[\273\350\377D\235\322\377-\212\305"
+  "\377\13b\265\377-\212\305\377D\235\322\377\77\231\327\377H\233\327\377"
+  "B\217\276\377\202k\216\237\377\21o\220\241\377D\235\322\377S\266\347"
+  "\377\20f\267\377\222\327\363\377S\266\347\377D\235\322\377\377\375\367"
+  "\377\366\365\364\377\377\375\370\377f\206\230\377:\224\325\377B\221\317"
+  "\377C\253\343\377\26Y\252\377\213\323\361\377@\252\342\377\202D\254\343"
+  "\377\37\22g\270\377\213\323\361\377D\254\343\377D\235\322\377=t\230\377"
+  "\32U\214\377:q\226\377=\222\311\3774\211\315\377\77\214\313\377=\247"
+  "\341\377\26Y\252\377\206\320\357\377:\245\340\377>\250\341\3771n\226"
+  "\377\32U\214\377l\230\265\377<\251\343\377>\250\341\377@\257\350\377"
+  "\26Y\252\377:\251\344\377>\251\343\3770\202\310\3778\203\306\377.\237"
+  "\335\377\25X\247\377z\316\366\377*\235\333\377\37s\252\377\202\374\367"
+  "\362\377-\371\364\360\377\37s\252\377.\242\341\3770\244\340\377\25X\247"
+  "\377*\235\333\377/\240\335\377)x\301\3776\177\302\377(\233\334\377\25"
+  "U\246\377b\303\361\377%\231\333\3771n\226\377l\230\265\377\32U\214\377"
+  "l\230\265\3771n\226\377)\236\337\377*\240\337\377\25U\246\377%\231\333"
+  "\377)\234\334\377(t\276\377/w\275\377\37\225\331\377\25U\246\377O\265"
+  "\346\377\35\224\330\377\37\226\331\377\37\227\332\377\30j\271\377P\270"
+  "\351\377\37\226\332\377\37\226\331\377\40\230\333\377\25U\246\377\35"
+  "\224\330\377\40\226\331\377\"l\270\377,s\271\265\35\223\330\377\36\224"
+  "\330\377\"\216\323\377\35\224\330\377\202\36\224\330\377\2\36\225\331"
+  "\377\35\223\327\377\203\36\224\330\377\6\36\226\332\377\35\223\330\377"
+  "\36\224\330\377\37h\263\252\0\0\0\0\30]\255\261\214\31]\255\377\1\31"
+  "]\255\245\241\0\0\0\0"};
+
 enum {
 	MSNDSWAPDUTY,
 	MSNDENABLE,
@@ -82,16 +139,18 @@ void menu_audio_set_audio_swap_duty(void);
 static GtkWidget *check[NUMCHKS];
 
 void menu_audio(GtkWidget *settings, GtkAccelGroup *accel_group) {
-	GtkWidget *menu, *audio;
+	GtkWidget *menu, *audio, *volumes;
 
 	menu = gtk_menu_new();
 
 	audio = gtk_image_menu_item_new_with_mnemonic("_Audio");
+	volumes = gtk_image_menu_item_new_with_mnemonic("A_PU channels");
 
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(audio), menu);
 	gtk_menu_shell_append(GTK_MENU_SHELL(settings), audio);
 
-	icon_inline(audio, icon_inline)
+	icon_inline(audio, audio_icon_inline)
+	icon_inline(volumes, volumes_icon_inline)
 
 	menu_audio_sample_rate(menu, NULL);
 	menu_audio_channels(menu, NULL);
@@ -100,6 +159,7 @@ void menu_audio(GtkWidget *settings, GtkAccelGroup *accel_group) {
 	check[MSNDSWAPDUTY] = gtk_check_menu_item_new_with_mnemonic("S_wap Duty Cycles");
 	check[MSNDENABLE] = gtk_check_menu_item_new_with_mnemonic("_Enable");
 
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), volumes);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), gtk_separator_menu_item_new());
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), check[MSNDSWAPDUTY]);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), check[MSNDENABLE]);
@@ -107,6 +167,8 @@ void menu_audio(GtkWidget *settings, GtkAccelGroup *accel_group) {
 	gtk_widget_add_accelerator(check[MSNDENABLE], "activate", accel_group, GDK_a,
 	        GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
+	g_signal_connect(G_OBJECT(volumes), "activate",
+	        G_CALLBACK(apu_channels_dialog), NULL);
 	g_signal_connect_swapped(G_OBJECT(check[MSNDSWAPDUTY]), "activate",
 	        G_CALLBACK(menu_audio_set_audio_swap_duty), NULL);
 	g_signal_connect_swapped(G_OBJECT(check[MSNDENABLE]), "activate",
@@ -126,7 +188,7 @@ void menu_audio_check(void) {
 
 	/* Audio Enable */
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MSNDENABLE]), FALSE);
-	if (cfg->audio) {
+	if (cfg->apu.channel[APU_MASTER]) {
 		gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MSNDENABLE]), TRUE);
 	}
 }
@@ -144,8 +206,8 @@ void menu_audio_set_audio_enable(void) {
 		return;
 	}
 	emu_pause(TRUE);
-	cfg->audio = !cfg->audio;
-	if (cfg->audio) {
+	cfg->apu.channel[APU_MASTER] = !cfg->apu.channel[APU_MASTER];
+	if (cfg->apu.channel[APU_MASTER]) {
 		snd_start();
 	} else {
 		snd_stop();

@@ -9,13 +9,18 @@
 #define CFG_FILE_H_
 
 #include "common.h"
+#include "apu.h"
 
+typedef struct {
+	BYTE channel[APU_MASTER + 1];
+	double volume[APU_MASTER + 1];
+} _config_apu;
 typedef struct {
 	BYTE save_on_exit;
 	BYTE mode;
-	BYTE audio;
 	BYTE samplerate;
 	BYTE channels;
+	double stereo_delay;
 	BYTE audio_quality;
 	BYTE swap_duty;
 	BYTE fps;
@@ -32,6 +37,8 @@ typedef struct {
 	BYTE oscan;
 	BYTE oscan_default;
 	BYTE gamegenie;
+
+	_config_apu apu;
 } _config;
 
 _config cfg_from_file, *cfg;

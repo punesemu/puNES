@@ -75,14 +75,13 @@ void fps_init(void) {
 			break;
 	}
 
-	memset (&fps, 0, sizeof(fps));
+	memset(&fps, 0, sizeof(fps));
 
 	fps_machine_ms(1.0)
 
 	fps.nominal = 1000.0f / machine.ms_frame;
 	fps.avarage = fps.nominal;
 	fps_normalize();
-	input_turbo_buttons_frequency();
 }
 void fps_fast_forward(void) {
 	fps.fast_forward = TRUE;

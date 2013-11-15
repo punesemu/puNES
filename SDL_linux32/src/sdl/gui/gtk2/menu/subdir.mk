@@ -9,6 +9,7 @@ C_SRCS += \
 ../src/sdl/gui/gtk2/menu/menu_audio_channels.c \
 ../src/sdl/gui/gtk2/menu/menu_audio_quality.c \
 ../src/sdl/gui/gtk2/menu/menu_audio_sample_rate.c \
+../src/sdl/gui/gtk2/menu/menu_audio_stereo_delay.c \
 ../src/sdl/gui/gtk2/menu/menu_file.c \
 ../src/sdl/gui/gtk2/menu/menu_gamegenie.c \
 ../src/sdl/gui/gtk2/menu/menu_help.c \
@@ -36,6 +37,7 @@ OBJS += \
 ./src/sdl/gui/gtk2/menu/menu_audio_channels.o \
 ./src/sdl/gui/gtk2/menu/menu_audio_quality.o \
 ./src/sdl/gui/gtk2/menu/menu_audio_sample_rate.o \
+./src/sdl/gui/gtk2/menu/menu_audio_stereo_delay.o \
 ./src/sdl/gui/gtk2/menu/menu_file.o \
 ./src/sdl/gui/gtk2/menu/menu_gamegenie.o \
 ./src/sdl/gui/gtk2/menu/menu_help.o \
@@ -63,6 +65,7 @@ C_DEPS += \
 ./src/sdl/gui/gtk2/menu/menu_audio_channels.d \
 ./src/sdl/gui/gtk2/menu/menu_audio_quality.d \
 ./src/sdl/gui/gtk2/menu/menu_audio_sample_rate.d \
+./src/sdl/gui/gtk2/menu/menu_audio_stereo_delay.d \
 ./src/sdl/gui/gtk2/menu/menu_file.d \
 ./src/sdl/gui/gtk2/menu/menu_gamegenie.d \
 ./src/sdl/gui/gtk2/menu/menu_help.d \

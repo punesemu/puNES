@@ -12,7 +12,7 @@
 #include "external_calls.h"
 
 enum dmc_types_of_dma { DMC_NORMAL, DMC_CPU_WRITE, DMC_R4014, DMC_NNL_DMA };
-enum apu_channels { APU_S1, APU_S2, APU_TR, APU_NS, APU_DMC };
+enum apu_channels { APU_S1, APU_S2, APU_TR, APU_NS, APU_DMC, APU_EXTRA, APU_MASTER };
 enum apu_mode { APU_60HZ, APU_48HZ };
 
 /* length counter */
@@ -311,7 +311,20 @@ enum apu_mode { APU_60HZ, APU_48HZ };
 		nla_table.tnd[i] = (vl * t);\
 	}\
 }
-
+#define _apu_channel_volume_adjust(ch, index)\
+	((SWORD) (((double) (ch * cfg->apu.channel[index])) * cfg->apu.volume[index]))
+#define s1_out\
+	_apu_channel_volume_adjust(S1.output, APU_S1)
+#define s2_out\
+	_apu_channel_volume_adjust(S2.output, APU_S2)
+#define tr_out\
+	_apu_channel_volume_adjust(TR.output, APU_TR)
+#define ns_out\
+	_apu_channel_volume_adjust(NS.output, APU_NS)
+#define dmc_out\
+	_apu_channel_volume_adjust(DMC.output, APU_DMC)
+#define extra_out(out)\
+	_apu_channel_volume_adjust(out, APU_EXTRA)
 
 typedef struct {
 	BYTE mode;

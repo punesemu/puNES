@@ -4,6 +4,7 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
+../src/sdl/gui/windows/cfg_apu_channels.c \
 ../src/sdl/gui/windows/cfg_input.c \
 ../src/sdl/gui/windows/cfg_std_ctrl.c \
 ../src/sdl/gui/windows/joystick.c \
@@ -12,6 +13,7 @@ C_SRCS += \
 ../src/sdl/gui/windows/win.c 
 
 OBJS += \
+./src/sdl/gui/windows/cfg_apu_channels.o \
 ./src/sdl/gui/windows/cfg_input.o \
 ./src/sdl/gui/windows/cfg_std_ctrl.o \
 ./src/sdl/gui/windows/joystick.o \
@@ -20,6 +22,7 @@ OBJS += \
 ./src/sdl/gui/windows/win.o 
 
 C_DEPS += \
+./src/sdl/gui/windows/cfg_apu_channels.d \
 ./src/sdl/gui/windows/cfg_input.d \
 ./src/sdl/gui/windows/cfg_std_ctrl.d \
 ./src/sdl/gui/windows/joystick.d \

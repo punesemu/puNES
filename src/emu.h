@@ -19,6 +19,7 @@ void emu_set_title(char *title);
 BYTE emu_turn_on(void);
 void emu_pause(BYTE mode);
 BYTE emu_reset(BYTE type);
+WORD emu_round_WORD(WORD number, WORD round);
 void emu_quit(BYTE exit_code);
 
 #endif /* EMU_H_ */

@@ -217,11 +217,11 @@ void audio_quality_end_frame_blip(void) {
 		return;
 	}
 
-	update_end_frame_channel(S1, bl.ch[APU_S1], S1.output)
-	update_end_frame_channel(S2, bl.ch[APU_S2], S2.output)
-	update_end_frame_channel(TR, bl.ch[APU_TR], TR.output)
-	update_end_frame_channel(NS, bl.ch[APU_NS], NS.output)
-	update_end_frame_channel(DMC, bl.ch[APU_DMC], DMC.output)
+	update_end_frame_channel(S1, bl.ch[APU_S1], s1_out)
+	update_end_frame_channel(S2, bl.ch[APU_S2], s2_out)
+	update_end_frame_channel(TR, bl.ch[APU_TR], tr_out)
+	update_end_frame_channel(NS, bl.ch[APU_NS], ns_out)
+	update_end_frame_channel(DMC, bl.ch[APU_DMC], dmc_out)
 
 	if (extra_end_frame_blip) {
 		extra_end_frame_blip();
@@ -245,7 +245,7 @@ void audio_quality_end_frame_blip(void) {
 		}
 
 		for (i = 0; i < count; i++) {
-			SWORD data = temp[i];
+			SWORD data = temp[i] * cfg->apu.volume[APU_MASTER];
 
 			/* mono or left*/
 			(*cache->write++) = data;
@@ -263,6 +263,12 @@ void audio_quality_end_frame_blip(void) {
 					snd.channel.ptr[CH_RIGHT] = snd.channel.ptr[CH_LEFT];
 					snd.channel.ptr[CH_LEFT] = swap;
 					snd.channel.pos = 0;
+				}
+
+				(*snd.channel.bck.write++) = data;
+
+				if (snd.channel.bck.write >= (SWORD *) snd.channel.bck.end) {
+					snd.channel.bck.write = snd.channel.bck.start;
 				}
 			}
 
@@ -299,16 +305,16 @@ void apu_tick_blip_FDS(void) {
 	if (fds.snd.wave.clocked && (bl.ch[BL_EXT0].period >= bl.ch[BL_EXT0].min_period)) {
 		fds.snd.wave.clocked = FALSE;
 		bl.ch[BL_EXT0].time += bl.ch[BL_EXT0].period;
-		update_amp(bl.ch[BL_EXT0], fds.snd.main.output)
+		update_amp(bl.ch[BL_EXT0], extra_out(fds.snd.main.output))
 		bl.ch[BL_EXT0].period = 1;
 	} else {
 		bl.ch[BL_EXT0].period++;
 	}
 }
 void apu_tick_blip_MMC5(void) {
-	update_tick_channel(mmc5.S3, bl.ch[BL_EXT0], mmc5.S3.output)
-	update_tick_channel(mmc5.S4, bl.ch[BL_EXT1], mmc5.S4.output)
-	update_tick_channel(mmc5.pcm, bl.ch[BL_EXT2], mmc5.pcm.output)
+	update_tick_channel(mmc5.S3, bl.ch[BL_EXT0], extra_out(mmc5.S3.output))
+	update_tick_channel(mmc5.S4, bl.ch[BL_EXT1], extra_out(mmc5.S4.output))
+	update_tick_channel(mmc5.pcm, bl.ch[BL_EXT2], extra_out(mmc5.pcm.output))
 }
 void apu_tick_blip_Namco_N163(void) {
 	BYTE i;
@@ -321,24 +327,24 @@ void apu_tick_blip_Namco_N163(void) {
 			}
 		}
 		bl.ch[BL_EXT0].time += bl.ch[BL_EXT0].period;
-		update_amp(bl.ch[BL_EXT0], output)
+		update_amp(bl.ch[BL_EXT0], extra_out(output))
 		bl.ch[BL_EXT0].period = 0;
 	}
 }
 void apu_tick_blip_Sunsoft_FM7(void) {
-	update_tick_channel(fm7.square[0], bl.ch[BL_EXT0], fm7.square[0].output)
-	update_tick_channel(fm7.square[1], bl.ch[BL_EXT1], fm7.square[1].output)
-	update_tick_channel(fm7.square[2], bl.ch[BL_EXT2], fm7.square[2].output)
+	update_tick_channel(fm7.square[0], bl.ch[BL_EXT0], extra_out(fm7.square[0].output))
+	update_tick_channel(fm7.square[1], bl.ch[BL_EXT1], extra_out(fm7.square[1].output))
+	update_tick_channel(fm7.square[2], bl.ch[BL_EXT2], extra_out(fm7.square[2].output))
 }
 void apu_tick_blip_VRC6(void) {
-	update_tick_channel(vrc6.S3, bl.ch[BL_EXT0], vrc6.S3.output)
-	update_tick_channel(vrc6.S4, bl.ch[BL_EXT1], vrc6.S4.output)
-	update_tick_channel(vrc6.saw, bl.ch[BL_EXT2], vrc6.saw.output)
+	update_tick_channel(vrc6.S3, bl.ch[BL_EXT0], extra_out(vrc6.S3.output))
+	update_tick_channel(vrc6.S4, bl.ch[BL_EXT1], extra_out(vrc6.S4.output))
+	update_tick_channel(vrc6.saw, bl.ch[BL_EXT2], extra_out(vrc6.saw.output))
 }
 void apu_tick_blip_VRC7(void) {
 	if (++bl.ch[BL_EXT0].period == bl.ch[BL_EXT0].min_period) {
 		bl.ch[BL_EXT0].time += bl.ch[BL_EXT0].period;
-		update_amp(bl.ch[BL_EXT0], opll_calc())
+		update_amp(bl.ch[BL_EXT0], extra_out(opll_calc()))
 		bl.ch[BL_EXT0].period = 0;
 	}
 }
@@ -348,14 +354,14 @@ void apu_tick_blip_VRC7(void) {
 /* --------------------------------------------------------------------------------------- */
 void end_frame_blip_FDS(void) {
 	bl.ch[BL_EXT0].time += bl.ch[BL_EXT0].period;
-	update_amp(bl.ch[BL_EXT0], fds.snd.main.output)
+	update_amp(bl.ch[BL_EXT0], extra_out(fds.snd.main.output))
 	bl.ch[BL_EXT0].period = 0;
 	bl.ch[BL_EXT0].time -= bl.counter;
 }
 void end_frame_blip_MMC5(void) {
-	update_end_frame_channel(mmc5.S3, bl.ch[BL_EXT0], mmc5.S3.output)
-	update_end_frame_channel(mmc5.S4, bl.ch[BL_EXT1], mmc5.S4.output)
-	update_end_frame_channel(mmc5.pcm, bl.ch[BL_EXT2], mmc5.pcm.output)
+	update_end_frame_channel(mmc5.S3, bl.ch[BL_EXT0], extra_out(mmc5.S3.output))
+	update_end_frame_channel(mmc5.S4, bl.ch[BL_EXT1], extra_out(mmc5.S4.output))
+	update_end_frame_channel(mmc5.pcm, bl.ch[BL_EXT2], extra_out(mmc5.pcm.output))
 }
 void end_frame_blip_Namco_N163(void) {
 	BYTE i;
@@ -367,23 +373,23 @@ void end_frame_blip_Namco_N163(void) {
 		}
 	}
 	bl.ch[BL_EXT0].time += bl.ch[BL_EXT0].period;
-	update_amp(bl.ch[BL_EXT0], output)
+	update_amp(bl.ch[BL_EXT0], extra_out(output))
 	bl.ch[BL_EXT0].period = 0;
 	bl.ch[BL_EXT0].time -= bl.counter;
 }
 void end_frame_blip_Sunsoft_FM7(void) {
-	update_end_frame_channel(fm7.square[0], bl.ch[BL_EXT0], fm7.square[0].output)
-	update_end_frame_channel(fm7.square[1], bl.ch[BL_EXT1], fm7.square[1].output)
-	update_end_frame_channel(fm7.square[2], bl.ch[BL_EXT2], fm7.square[2].output)
+	update_end_frame_channel(fm7.square[0], bl.ch[BL_EXT0], extra_out(fm7.square[0].output))
+	update_end_frame_channel(fm7.square[1], bl.ch[BL_EXT1], extra_out(fm7.square[1].output))
+	update_end_frame_channel(fm7.square[2], bl.ch[BL_EXT2], extra_out(fm7.square[2].output))
 }
 void end_frame_blip_VRC6(void) {
-	update_end_frame_channel(vrc6.S3, bl.ch[BL_EXT0], vrc6.S3.output)
-	update_end_frame_channel(vrc6.S4, bl.ch[BL_EXT1], vrc6.S4.output)
-	update_end_frame_channel(vrc6.saw, bl.ch[BL_EXT2], vrc6.saw.output)
+	update_end_frame_channel(vrc6.S3, bl.ch[BL_EXT0], extra_out(vrc6.S3.output))
+	update_end_frame_channel(vrc6.S4, bl.ch[BL_EXT1], extra_out(vrc6.S4.output))
+	update_end_frame_channel(vrc6.saw, bl.ch[BL_EXT2], extra_out(vrc6.saw.output))
 }
 void end_frame_blip_VRC7(void) {
 	bl.ch[BL_EXT0].time += bl.ch[BL_EXT0].period;
-	update_amp(bl.ch[BL_EXT0], opll_calc())
+	update_amp(bl.ch[BL_EXT0], extra_out(opll_calc()))
 	bl.ch[BL_EXT0].period = 0;
 	bl.ch[BL_EXT0].time -= bl.counter;
 }
