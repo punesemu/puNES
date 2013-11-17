@@ -178,19 +178,20 @@ void js_control(_js *joy, _port *port) {
 				if (joy->input_port) {
 					joy->input_port(mode, value, JOYSTICK, port);
 				}
-				return;
+				break;
 			}
 			mask <<= 1;
 			buttons >>= 1;
 			last_buttons >>= 1;
 		}
 	}
-
+	/*esamino i POV */
 	if ((joy->joy_caps.wCaps & JOYCAPS_HASPOV) && (joy->last_axis[POV] != joy->joy_info.dwPOV)) {
 		js_elaborate_pov(RELEASED, joy->last_axis[POV])
 		js_elaborate_pov(PRESSED, joy->joy_info.dwPOV)
 		joy->last_axis[POV] = joy->joy_info.dwPOV;
 	}
+	/*esamino gli assi */
 	if (joy->last_axis[X] != joy->joy_info.dwXpos) {
 		js_elaborate_axis(X, dwXpos)
 	}
