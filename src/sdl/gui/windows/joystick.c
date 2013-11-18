@@ -178,7 +178,6 @@ void js_control(_js *joy, _port *port) {
 				if (joy->input_port) {
 					joy->input_port(mode, value, JOYSTICK, port);
 				}
-				break;
 			}
 			mask <<= 1;
 			buttons >>= 1;
