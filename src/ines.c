@@ -94,6 +94,12 @@ BYTE ines_load_rom(void) {
 			return (EXIT_ERROR);
 		}
 
+		if (info.trainer) {
+			fread(&trainer.data, sizeof(trainer.data), 1, fp);
+		} else {
+			memset(&trainer.data, 0x00, sizeof(trainer.data));
+		}
+
 		if (info.machine == DEFAULT) {
 			info.machine = tmp;
 		}

@@ -2843,10 +2843,28 @@ static const _dbelement dblist[] = {
 	{"77e12ce848192a51309393136c4a240c729ddb30", 33, TC0190FMCPAL16R4, DEFAULT, DEFAULT},
 
 /* -------------------------------------- BxROM ------------------------------------------- */
+	/* Bio Senshi Dan - Increaser Tono Tatakai (J) [hM34].nes */
+	{"26b9209aed037a3df48c16ef0e490e4686f3df8c", 34, AVENINA001, DEFAULT, DEFAULT},
+	/* Dragon Ball - Shen Long no Nazo (J) [hM34][b7].nes */
+	{"6e2ee85d8f14ad8fcadf36eccbbab4bc17b97a49", 34, AVENINA001, DEFAULT, DEFAULT},
+	/* Dragon Ball - Shen Long no Nazo (J) [hM34][o1].nes */
+	{"cac343f85b13c62b8e5972b863fc922da2bd9c08", 34, AVENINA001, DEFAULT, DEFAULT},
+	/* Dragon Ball - Shen Long no Nazo (J) [hM34][T-Eng1.0_TransBRC].nes */
+	{"db0b2b60aedceb37fa3423e5cfc603737d555045", 34, AVENINA001, DEFAULT, DEFAULT},
+	/* Dragon Ball - Shen Long no Nazo (J) [hM34][T+Eng1.11_TransBRC].nes */
+	{"34264167d47730d392b029ae87ce30d7a568f44d", 34, AVENINA001, DEFAULT, DEFAULT},
+	/* Dragon Ball - Shen Long no Nazo (J) [hM34][T+Por1.00_TransBRC+CBT].nes */
+	{"09c0180b4f3e4301198484be08285465159283b4", 34, AVENINA001, DEFAULT, DEFAULT},
+	/* Dragon Ball - Shen Long no Nazo (J) [hM34][T+Por95%_CBT].nes */
+	{"999828ad3a37296fbcb6afaf1cff25978f9494c2", 34, AVENINA001, DEFAULT, DEFAULT},
 	/* Impossible Mission II (U) [b1].nes */
 	{"b1c919a40fa6c1fc368d40c8afb7c6de9e9c00b8", 34, AVENINA001, DEFAULT, DEFAULT},
 	/* Impossible Mission II (U) [o1].nes */
 	{"5a199f03c366930e06eb2247c593254bb99df208", 34, AVENINA001, DEFAULT, DEFAULT},
+	/* SD Gundam - Gachapon Senshi 2 - Capsule Senki (J) [hM34].nes */
+	{"25eda90ce02bfb1feb15c9a0ade09a7a20db46c5", 34, AVENINA001, DEFAULT, DEFAULT},
+	/* Takahashi Meijin no Bugutte Honey (J) [hM34].nes */
+	{"66f44675d7690a687cb8f7405edc2c6681f5c618", 34, AVENINA001, DEFAULT, DEFAULT},
 	/* Dance Xtreme - Prima (Unl).nes */
 	{"e634f17660ee95a5cb968c9aa7a93034ae55ac89", 34, BXROMUNL, DEFAULT, DEFAULT},
 	/* Darkseed (Unl) [p1][b1].nes */

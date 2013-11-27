@@ -168,6 +168,10 @@ typedef struct {
 	WORD internal_struct_size[2];
 } _mapper;
 
+struct _trainer {
+	BYTE data[512];
+} trainer;
+
 _mapper mapper;
 
 BYTE map_init(WORD mapper_type);

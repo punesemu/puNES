@@ -727,6 +727,15 @@ void map_prg_ram_init(void) {
 			}
 		}
 	}
+	if (info.trainer) {
+		BYTE *here = prg.ram;
+
+		if (prg.ram_plus) {
+			here = prg.ram_plus;
+		}
+
+		memcpy(here + 0x1000, &trainer.data, sizeof(trainer.data));
+	}
 }
 BYTE map_chr_ram_init(void) {
 	if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) && mapper.write_vram) {

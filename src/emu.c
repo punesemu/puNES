@@ -273,7 +273,7 @@ BYTE emu_search_in_database(FILE *fp) {
 
 	/* posiziono il puntatore del file */
 	if (info.trainer) {
-		fseek(fp, (0x10 + 512), SEEK_SET);
+		fseek(fp, (0x10 + sizeof(trainer.data)), SEEK_SET);
 	} else {
 		fseek(fp, 0x10, SEEK_SET);
 	}
@@ -291,7 +291,8 @@ BYTE emu_search_in_database(FILE *fp) {
 		return (EXIT_ERROR);
 	}
 	/* calcolo l'sha1 della PRG Rom */
-	sha1_csum(sha1prg, info.prg_rom_16k_count * (16 * 1024), info.sha1sum, info.sha1sum_string, LOWER);
+	sha1_csum(sha1prg, info.prg_rom_16k_count * (16 * 1024), info.sha1sum, info.sha1sum_string,
+	        LOWER);
 	/* libero la memoria */
 	free(sha1prg);
 	/* cerco nel database */
@@ -399,11 +400,8 @@ BYTE emu_search_in_database(FILE *fp) {
 		free(sha1chr);
 	}
 	/* riposiziono il puntatore del file */
-	if (info.trainer) {
-		fseek(fp, (0x10 + 512), SEEK_SET);
-	} else {
-		fseek(fp, 0x10, SEEK_SET);
-	}
+	fseek(fp, 0x10, SEEK_SET);
+
 	return (EXIT_OK);
 }
 void emu_set_title(char *title) {

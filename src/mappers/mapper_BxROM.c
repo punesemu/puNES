@@ -50,6 +50,12 @@ void extcl_cpu_wr_mem_BxROM_UNL(WORD address, BYTE value) {
 void extcl_cpu_wr_mem_AveNina001(WORD address, BYTE value) {
 	DBWORD bank;
 
+	if (address >= 0x8000) {
+		control_bank_with_AND(0x0F, prg_rom_32k_max)
+		map_prg_rom_8k(4, 0, value);
+		map_prg_rom_8k_update();
+	}
+
 	switch (address) {
 		case 0x7FFD:
 			control_bank_with_AND(0x03, prg_rom_32k_max)
@@ -57,7 +63,7 @@ void extcl_cpu_wr_mem_AveNina001(WORD address, BYTE value) {
 			map_prg_rom_8k_update();
 			break;
 		case 0x7FFE:
-			control_bank_with_AND(0x0F, chr_rom_4k_max)
+			control_bank_with_AND(0x1F, chr_rom_4k_max)
 			bank = value << 12;
 			chr.bank_1k[0] = &chr.data[bank];
 			chr.bank_1k[1] = &chr.data[bank | 0x0400];
@@ -65,7 +71,7 @@ void extcl_cpu_wr_mem_AveNina001(WORD address, BYTE value) {
 			chr.bank_1k[3] = &chr.data[bank | 0x0C00];
 			break;
 		case 0x7FFF:
-			control_bank_with_AND(0x0F, chr_rom_4k_max)
+			control_bank_with_AND(0x1F, chr_rom_4k_max)
 			bank = value << 12;
 			chr.bank_1k[4] = &chr.data[bank];
 			chr.bank_1k[5] = &chr.data[bank | 0x0400];
