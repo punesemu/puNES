@@ -17,9 +17,7 @@
 #include "gfx.h"
 #include "snd.h"
 #include "clock.h"
-#define _INPUTINLINE_
 #include "input.h"
-#undef  _INPUTINLINE_
 #include "palette.h"
 #include "version.h"
 #include "cfg_file.h"
@@ -31,6 +29,7 @@
 #include "gamegenie.h"
 #include "opengl.h"
 #include "menu/menu.h"
+#include "cfg_input.h"
 
 #define tl_pressed(type)\
 	emu_pause(TRUE);\
@@ -402,13 +401,15 @@ void gui_event(void) {
 		return;
 	}
 
-	js_control(&js1, &port1);
-	/* i due joystick non possono essere gli stessi */
-	if (port2.joy_id != port1.joy_id) {
-		js_control(&js2, &port2);
+	{
+		BYTE i;
+
+		for (i = PORT1; i < PORT_MAX; i++) {
+			if (input_add_event[i]) {
+				input_add_event[i](i);
+			}
+		}
 	}
-	input_turbo_buttons_control(&port1);
-	input_turbo_buttons_control(&port2);
 }
 GdkNativeWindow gui_emu_frame_id(void) {
 	return (gtk_socket_get_id(GTK_SOCKET(sock)));
@@ -467,7 +468,7 @@ void gui_fullscreen(void) {
 		/* abilito il fullscreen */
 		gfx_set_screen(NO_CHANGE, NO_CHANGE, FULLSCR, NO_CHANGE, FALSE);
 		/* nascondo il cursore, se serve */
-		if (!opengl.rotation && (port1.type != CTRL_ZAPPER) && (port2.type != CTRL_ZAPPER)) {
+		if (!opengl.rotation && (input_zapper_is_connected((_port *) &port) == FALSE)) {
 			SDL_ShowCursor(SDL_DISABLE);
 		}
 		/* indico alle gtk che sono in fullscreen */
@@ -578,8 +579,8 @@ double high_resolution_ms(void) {
 }
 /* main_win */
 gboolean main_win_delete_event(GtkWidget *widget, GdkEvent *event, gpointer data) {
-	if (cfg_controllers_toplevel != NULL) {
-		gtk_widget_destroy(cfg_controllers_toplevel);
+	if (cfg_input.father != NULL) {
+		gtk_widget_destroy(cfg_input.father);
 	}
 	gtk_main_quit();
 	info.stop = TRUE;
@@ -700,11 +701,16 @@ gboolean sock_key_press_event(GtkWidget *widget, GdkEventKey *event) {
 				return (TRUE);
 		}
 	}
-	if (input_port1 && !input_port1(PRESSED, keyval, KEYBOARD, &port1)) {
-		return (TRUE);
-	}
-	if (input_port2 && !input_port2(PRESSED, keyval, KEYBOARD, &port2)) {
-		return (TRUE);
+
+	{
+		BYTE i;
+
+		for (i = PORT1; i < PORT_MAX; i++) {
+			if (input_decode_event[i]
+			        && (input_decode_event[i](PRESSED, keyval, KEYBOARD, &port[i]) == EXIT_OK)) {
+				return (TRUE);
+			}
+		}
 	}
 	return (FALSE);
 }
@@ -721,11 +727,16 @@ gboolean sock_key_release_event(GtkWidget *widget, GdkEventKey *event) {
 			fps_normalize();
 			return (TRUE);
 	}
-	if (input_port1 && !input_port1(RELEASED, keyval, KEYBOARD, &port1)) {
-		return (TRUE);
-	}
-	if (input_port2 && !input_port2(RELEASED, keyval, KEYBOARD, &port2)) {
-		return (TRUE);
+
+	{
+		BYTE i;
+
+		for (i = PORT1; i < PORT_MAX; i++) {
+			if (input_decode_event[i]
+			        && (input_decode_event[i](RELEASED, keyval, KEYBOARD, &port[i]) == EXIT_OK)) {
+				return (TRUE);
+			}
+		}
 	}
 	return (FALSE);
 }
@@ -969,7 +980,7 @@ void save_slot_control(GtkCellLayout *cell_layout, GtkCellRenderer *cell, GtkTre
 	guint index;
 
 	enum { FIRST_ITER, INC_POINTER, DEC_POINTER, RESET_MODE, OUT_OF_WIDTH };
-	enum { NO_KEY, KEY_UP, KEY_DOWN };
+	enum { SL_NO_KEY, SL_KEY_UP, SL_KEY_DOWN };
 
 	gtk_tree_model_get(tree_model, iter, COLUMN_INT, &index, -1);
 
@@ -1012,12 +1023,12 @@ void save_slot_control(GtkCellLayout *cell_layout, GtkCellRenderer *cell, GtkTre
 				 * dato dalla tastiera e quello attuale e' dato dal movimento
 				 * del mouse.
 				 */
-				if (trcb.last_key == KEY_DOWN) {
+				if (trcb.last_key == SL_KEY_DOWN) {
 					trcb.mode = DEC_POINTER;
-					trcb.last_key = NO_KEY;
-				} else if (trcb.last_key == KEY_UP) {
+					trcb.last_key = SL_NO_KEY;
+				} else if (trcb.last_key == SL_KEY_UP) {
 					trcb.mode = INC_POINTER;
-					trcb.last_key = NO_KEY;
+					trcb.last_key = SL_NO_KEY;
 				}
 				/*
 				 * qui tratto il caso in cui lo stato attuale e'
@@ -1028,7 +1039,7 @@ void save_slot_control(GtkCellLayout *cell_layout, GtkCellRenderer *cell, GtkTre
 					switch (trcb.key) {
 						case GDK_Up:
 						case GDK_KP_Up:
-							trcb.last_key = KEY_UP;
+							trcb.last_key = SL_KEY_UP;
 							if (trcb.selected == 0) {
 								trcb.mode = INC_POINTER;
 							} else {
@@ -1042,7 +1053,7 @@ void save_slot_control(GtkCellLayout *cell_layout, GtkCellRenderer *cell, GtkTre
 							break;
 						case GDK_Down:
 						case GDK_KP_Down:
-							trcb.last_key = KEY_DOWN;
+							trcb.last_key = SL_KEY_DOWN;
 							if (trcb.selected == (SAVE_SLOTS - 1)) {
 								trcb.mode = DEC_POINTER;
 							} else {

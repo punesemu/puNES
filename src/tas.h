@@ -9,6 +9,7 @@
 #define TAS_H_
 
 #include "common.h"
+#include "input.h"
 
 enum tas_types { NOTAS, FM2 };
 enum tas_emulators { FCEUX, PUNES };
@@ -17,8 +18,7 @@ enum tas_misc { TAS_CACHE = 960 };
 
 typedef struct {
 	BYTE state;
-	BYTE port1[8];
-	BYTE port2[8];
+	BYTE port[PORT_MAX][8];
 } _tas_input_log;
 struct _tas {
 	FILE *fp;

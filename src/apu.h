@@ -327,6 +327,10 @@ enum apu_mode { APU_60HZ, APU_48HZ };
 	_apu_channel_volume_adjust(out, APU_EXTRA)
 
 typedef struct {
+	BYTE channel[APU_MASTER + 1];
+	double volume[APU_MASTER + 1];
+} _config_apu;
+typedef struct {
 	BYTE mode;
 	BYTE type;
 	BYTE step;

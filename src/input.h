@@ -10,10 +10,9 @@
 
 #include "common.h"
 
-#define SET_PORT1(funct) input_port1 = funct
-#define SET_PORT2(funct) input_port2 = funct
-#define SET_RD_REG1(funct) input_rd_reg1 = funct
-#define SET_RD_REG2(funct) input_rd_reg2 = funct
+#define SET_DECODE_EVENT(id, funct) input_decode_event[id] = funct
+#define SET_ADD_EVENT(id, funct) input_add_event[id] = funct
+#define SET_RD_REG(id, funct) input_rd_reg[id] = funct
 
 #define TURBO_BUTTON_DELAY_DEFAULT 3
 #define TURBO_BUTTON_DELAY_MAX     20
@@ -29,24 +28,35 @@ enum controller_buttons {
 	LEFT,
 	RIGHT,
 	TRB_A,
-	TRB_B
+	TRB_B,
+	MAX_STD_PAD_BUTTONS
 };
 enum turbo_buttons { TURBOA, TURBOB };
 enum input_types { KEYBOARD, JOYSTICK };
 enum button_states { RELEASED = 0x40, PRESSED = 0x41 };
+enum port_controllers {
+	PORT1,
+	PORT2,
+	//PORT3,
+	//PORT4,
+	PORT_MAX
+};
 
+typedef struct {
+	BYTE permit_updown_leftright;
+	BYTE check_input_conflicts;
+} _config_input;
 typedef struct {
 	BYTE value;
 } _r4016;
 typedef struct {
-	BYTE active;
 	BYTE frequency;
+	BYTE active;
 	BYTE counter;
 } _turbo_button;
 typedef struct {
 	BYTE type;
 	BYTE joy_id;
-	BYTE changed;
 	/* standard controller */
 	BYTE index;
 	BYTE data[24];
@@ -56,45 +66,27 @@ typedef struct {
 	/* zapper */
 	BYTE zapper;
 } _port;
+typedef struct {
+	_port *port[PORT_MAX];
+} _array_pointers_port;
 
 _r4016 r4016;
-_port port1, port2;
+_port port[PORT_MAX];
 
 void input_init(void);
+void input_check_conflicts(_config_input *settings, _array_pointers_port *array);
 
 BYTE input_rd_reg_disabled(BYTE openbus, WORD **screen_index, _port *port);
 
-BYTE input_port_standard(BYTE mode, DBWORD event, BYTE type, _port *port);
+BYTE input_decode_event_standard(BYTE mode, DBWORD event, BYTE type, _port *port);
+void input_add_event_standard(BYTE index);
 BYTE input_rd_reg_standard(BYTE openbus, WORD **screen_index, _port *port);
 
 BYTE input_rd_reg_zapper(BYTE openbus, WORD **screen_index, _port *port);
+BYTE input_zapper_is_connected(_port *array);
 
-BYTE (*input_port1)(BYTE mode, DBWORD event, BYTE type, _port *port);
-BYTE (*input_port2)(BYTE mode, DBWORD event, BYTE type, _port *port);
-BYTE (*input_rd_reg1)(BYTE openbus, WORD **screen_index, _port *port);
-BYTE (*input_rd_reg2)(BYTE openbus, WORD **screen_index, _port *port);
+BYTE (*input_decode_event[PORT_MAX])(BYTE mode, DBWORD event, BYTE type, _port *port);
+void (*input_add_event[PORT_MAX])(BYTE index);
+BYTE (*input_rd_reg[PORT_MAX])(BYTE openbus, WORD **screen_index, _port *port);
 
 #endif /* INPUT_H_ */
-
-#ifdef _INPUTINLINE_
-static void INLINE input_turbo_buttons_control(_port *port);
-
-static void INLINE input_turbo_buttons_control(_port *port) {
-	if (port->turbo[TURBOA].active) {
-		if (++port->turbo[TURBOA].counter == port->turbo[TURBOA].frequency) {
-			port->data[BUT_A] = PRESSED;
-		} else if (port->turbo[TURBOA].counter > port->turbo[TURBOA].frequency) {
-			port->data[BUT_A] = RELEASED;
-			port->turbo[TURBOA].counter = 0;
-		}
-	}
-	if (port->turbo[TURBOB].active) {
-		if (++port->turbo[TURBOB].counter == port->turbo[TURBOB].frequency) {
-			port->data[BUT_B] = PRESSED;
-		} else if (port->turbo[TURBOB].counter > port->turbo[TURBOB].frequency) {
-			port->data[BUT_B] = RELEASED;
-			port->turbo[TURBOB].counter = 0;
-		}
-	}
-}
-#endif

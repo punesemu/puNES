@@ -373,9 +373,9 @@ void menu_file(GtkWidget *mainmenu, GtkAccelGroup *accel_group) {
 	quit = gtk_image_menu_item_new_with_mnemonic("E_xit");
 
 	/* icons */
-	icon_inline(open, open_icon_inline)
-	icon_inline(recent, recent_roms_icon)
-	icon_inline(quit, quit_icon_inline)
+	gw_image_from_inline(open, open_icon_inline);
+	gw_image_from_inline(recent, recent_roms_icon);
+	gw_image_from_inline(quit, quit_icon_inline);
 
 	/* accelerators */
 	gtk_widget_add_accelerator(open, "activate", accel_group, GDK_o, GDK_CONTROL_MASK,
@@ -419,13 +419,13 @@ void menu_file_check(void) {
 
 			ext = strrchr(description, '.');
 			if (ext == NULL) {
-				icon_inline(slot, recent_roms_nes_pixbuf)
+				gw_image_from_inline(slot, recent_roms_nes_pixbuf);
 			} else if (!(strcasecmp(ext, ".fds")) || !(strcasecmp(ext, ".FDS"))) {
-				icon_inline(slot, recent_roms_fds_pixbuf)
+				gw_image_from_inline(slot, recent_roms_fds_pixbuf);
 			} else if (!(strcasecmp(ext, ".fm2")) || !(strcasecmp(ext, ".FM2"))) {
-				icon_inline(slot, recent_roms_fm2_pixbuf)
+				gw_image_from_inline(slot, recent_roms_fm2_pixbuf);
 			} else {
-				icon_inline(slot, recent_roms_nes_pixbuf)
+				gw_image_from_inline(slot, recent_roms_nes_pixbuf);
 			}
 
 			gtk_menu_shell_append(GTK_MENU_SHELL(submenu), slot);

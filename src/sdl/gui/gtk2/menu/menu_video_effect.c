@@ -93,7 +93,7 @@ void menu_video_effect(GtkWidget *video, GtkAccelGroup *accel_group) {
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(check[MEFFECT]), menu);
 	gtk_menu_shell_append(GTK_MENU_SHELL(video), check[MEFFECT]);
 
-	icon_inline(check[MEFFECT], icon_inline)
+	gw_image_from_inline(check[MEFFECT], icon_inline);
 
 	check[MCUBE] = gtk_check_menu_item_new_with_mnemonic("_Cube");
 
@@ -106,7 +106,7 @@ void menu_video_effect(GtkWidget *video, GtkAccelGroup *accel_group) {
 	        G_CALLBACK(menu_video_effect_set), GINT_TO_POINTER(FALSE));
 }
 void menu_video_effect_check(void) {
-	if (gfx.opengl && (port1.type != CTRL_ZAPPER) && (port2.type != CTRL_ZAPPER)) {
+	if (gfx.opengl && (input_zapper_is_connected((_port *) &port) == FALSE)) {
 		gtk_widget_set_sensitive(check[MEFFECT], TRUE);
 	} else {
 		gtk_widget_set_sensitive(check[MEFFECT], FALSE);
@@ -123,7 +123,7 @@ void menu_video_effect_set(void) {
 		return;
 	}
 
-	if ((port1.type == CTRL_ZAPPER) || (port2.type == CTRL_ZAPPER)) {
+	if (input_zapper_is_connected((_port *) &port) == TRUE) {
 		return;
 	}
 

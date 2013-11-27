@@ -156,7 +156,7 @@ void menu_video_overscan(GtkWidget *video, GtkAccelGroup *accel_group) {
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(overscan), menu[0]);
 	gtk_menu_shell_append(GTK_MENU_SHELL(video), overscan);
 
-	icon_inline(overscan, icon_inline)
+	gw_image_from_inline(overscan, icon_inline);
 
 	check[MOSCANDEF] = gtk_check_menu_item_new_with_mnemonic("_Default");
 	check[MOSCANON] = gtk_check_menu_item_new_with_mnemonic("_On");
@@ -183,7 +183,7 @@ void menu_video_overscan(GtkWidget *video, GtkAccelGroup *accel_group) {
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(ovscan), menu[1]);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu[0]), ovscan);
 
-	icon_inline(ovscan, default_icon_inline)
+	gw_image_from_inline(ovscan, default_icon_inline);
 
 	check[MOSCANDON] = gtk_check_menu_item_new_with_mnemonic("_On");
 	check[MOSCANDOFF] = gtk_check_menu_item_new_with_mnemonic("O_ff");

@@ -6,6 +6,7 @@
  */
 
 #include "menu_input.h"
+#include "../cfg_input.h"
 
 #ifdef __SUNPRO_C
 #pragma align 4 (icon_inline)
@@ -129,13 +130,13 @@ void menu_input(GtkWidget *settings, GtkAccelGroup *accel_group) {
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(input), menu);
 	gtk_menu_shell_append(GTK_MENU_SHELL(settings), input);
 
-	icon_inline(input, icon_inline)
+	gw_image_from_inline(input, icon_inline);
 
 	config = gtk_image_menu_item_new_with_mnemonic("_Config");
 
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), config);
 
-	icon_inline(config, config_icon_inline)
+	gw_image_from_inline(config, config_icon_inline);
 
-	g_signal_connect(G_OBJECT(config), "activate", G_CALLBACK(cfg_input), NULL);
+	g_signal_connect(G_OBJECT(config), "activate", G_CALLBACK(cfg_input_dialog), NULL);
 }

@@ -71,7 +71,7 @@ void menu_help(GtkWidget *mainmenu, GtkAccelGroup *accel_group) {
 
 	about = gtk_image_menu_item_new_with_mnemonic("_About");
 
-	icon_inline(about, about_icon_inline)
+	gw_image_from_inline(about, about_icon_inline);
 
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), about);
 

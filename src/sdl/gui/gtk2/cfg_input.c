@@ -1,121 +1,160 @@
 /*
  * cfg_input.c
  *
- *  Created on: 04/nov/2011
+ *  Created on: 17/nov/2013
  *      Author: fhorse
  */
 
 #include <string.h>
-#include "cfg_file.h"
-#include "gfx.h"
-#include "snd.h"
-#include "gtk2.h"
-#include "cfg_std_ctrl.h"
-#include "opengl.h"
+#include "cfg_input.h"
+#include "cfg_std_pad.h"
 #include "menu/menu_video_effect.h"
+#include "opengl.h"
+#include "cfg_file.h"
 
-#define cfg_input_enable_config(ind)\
-	switch (cfg_port->port.type) {\
-		case CTRL_DISABLED:\
-		case CTRL_ZAPPER:\
-			gtk_widget_set_sensitive(GTK_WIDGET(button_controller[ind]), FALSE);\
-			break;\
-		case CTRL_STANDARD:\
-			gtk_widget_set_sensitive(GTK_WIDGET(button_controller[ind]), TRUE);\
-			break;\
-	}
+void cfg_input_update_dialog(void);
+
+void cfg_input_controller_combobox_init(char *glade_combobox, _cfg_port *cfg_port);
+void cfg_input_controller_combobox_changed(GtkComboBox *combobox, _cfg_port *cfg_port);
+void cfg_input_setup_clicked(GtkWidget *widget, _cfg_port *cfg_port);
+void cfg_input_permit_updown_leftright_checkbutton_toggled(GtkWidget *widget, gpointer user_data);
+void cfg_input_check_conflicts_checkbutton_toggled(GtkWidget *widget, gpointer user_data);
+void cfg_input_default_clicked(GtkWidget *widget, gpointer user_data);
+void cfg_input_ok_clicked(GtkWidget *widget, gpointer user_data);
+void cfg_input_cancel_clicked(GtkWidget *widget, gpointer user_data);
+void cfg_input_window_destroy(GtkWidget *widget, gpointer user_data);
 
 enum {
-	NAME_CONTROLLER,
-	VALUE_CONTROLLER,
-	NUMBER_CONTROLLER,
-	N_TYPE_CONTROLLERS
+	CTRL_NAME,
+	CTRL_TYPE,
+	CTRL_NUMBER,
+	CTRL_COLUMNS
 };
 
-typedef struct {
-	DBWORD controller;
-	DBWORD value;
-	char name[20];
-} _types_element;
+void cfg_input_dialog(void) {
+	memset(&cfg_input, 0x00, sizeof(cfg_input));
 
-static const _types_element ctrl_list[] = {
-	{ 0, CTRL_DISABLED, "Disabled"     },
-	{ 0, CTRL_STANDARD, "Standard Pad" },
-	{ 0, CTRL_ZAPPER,   "Zapper"       }
-};
+	memcpy(&cfg_input.settings, &cfg->input, sizeof(_config_input));
 
-void cfg_input_controllers(void);
-void cfg_input_combobox_controller_changed(GtkComboBox *combobox, _cfg_port *cfg_port);
-void cfg_input_configure_controllers(GtkWidget *widget, _cfg_port *cfg_port);
-void cfg_input_ok_clicked(GtkWidget *widget, _cfg_port *cfg_port);
-void cfg_input_cancel_clicked(GtkWidget *widget, _cfg_port *cfg_port);
-void cfg_input_window_destroy(void);
-GtkWidget *cfg_input_line_select_type_controllers(BYTE number_controller, _cfg_port *cfg_port);
-GtkWidget *cfg_input_combobox_select_controllers(_cfg_port *cfg_port);
+	{
+		BYTE i;
 
-GtkWidget *button_controller[2];
+		for (i = PORT1; i < PORT_MAX; i++) {
+			cfg_input.port[i].id = i + 1;
+			memcpy(&cfg_input.port[i].port, &port[i], sizeof(_port));
+		}
+	}
 
-void cfg_input(void) {
-	cfg_port1.id = 1;
-	memcpy(&cfg_port1.port, &port1, sizeof(port1));
-	cfg_port2.id = 2;
-	memcpy(&cfg_port2.port, &port2, sizeof(port2));
+	dg_create_gtkbuilder(&cfg_input.builder, INPUT_DIALOG);
+
+	cfg_input.father = GTK_WIDGET(
+	        gtk_builder_get_object(cfg_input.builder, "input_dialog"));
+
+	gtk_builder_connect_signals(cfg_input.builder, NULL);
+
+	{
+		BYTE i;
+
+		for (i = PORT1 ; i < PORT_MAX; i++) {
+			cfg_input_controller_combobox_init(
+			        dg_obj_name("input_ctrl%d_combobox", cfg_input.port[i].id), &cfg_input.port[i]);
+		}
+	}
+
+	cfg_input_update_dialog();
+
+	dg_signal_connect_swapped(cfg_input.builder, "input_updown_leftright_checkbutton", "toggled",
+	        cfg_input_permit_updown_leftright_checkbutton_toggled, NULL);
+
+	dg_signal_connect_swapped(cfg_input.builder, "input_check_conflicts_checkbutton", "toggled",
+	        cfg_input_check_conflicts_checkbutton_toggled, NULL);
+
+	dg_signal_connect(cfg_input.builder, "input_default_button", "clicked",
+			cfg_input_default_clicked, NULL);
+	dg_signal_connect(cfg_input.builder, "input_ok_button", "clicked",
+			cfg_input_ok_clicked, NULL);
+	dg_signal_connect(cfg_input.builder, "input_cancel_button", "clicked",
+	        cfg_input_cancel_clicked, NULL);
+	g_signal_connect(G_OBJECT(cfg_input.father), "destroy",
+	        G_CALLBACK(cfg_input_window_destroy), NULL);
 
 	emu_pause(TRUE);
-
-	button_controller[0] = button_controller[1] = NULL;
-
 	/* ridisegno lo screen sdl ogni tot millisecondi */
 	g_timeout_redraw_start();
 
-	cfg_input_controllers();
+	gtk_widget_show(cfg_input.father);
 }
-void cfg_input_controllers(void) {
-	GtkWidget *vbox, *mainbox;
-	GtkWidget *line, *frame;
 
-	cfg_controllers_toplevel = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+void cfg_input_update_dialog(void) {
+	BYTE i;
 
-	gtk_container_set_border_width(GTK_CONTAINER(cfg_controllers_toplevel), 10);
-	gtk_window_set_resizable(GTK_WINDOW(cfg_controllers_toplevel), FALSE);
+	for (i = PORT1; i < PORT_MAX; i++) {
+		_cfg_port *this = &cfg_input.port[i];
 
-	gtk_window_set_title(GTK_WINDOW(cfg_controllers_toplevel), "Input Configuration");
+		gtk_combo_box_set_active(
+		        _gw_get_combobox(cfg_input.builder, dg_obj_name("input_ctrl%d_combobox", this->id)),
+		        this->port.type);
+	}
 
-	g_signal_connect(G_OBJECT(cfg_controllers_toplevel), "destroy",
-			G_CALLBACK(cfg_input_window_destroy), NULL);
+	gtk_toggle_button_set_active(
+	        _gw_get_togglebutton(cfg_input.builder, "input_updown_leftright_checkbutton"),
+	        cfg_input.settings.permit_updown_leftright);
 
-	mainbox = gtk_vbox_new(FALSE, SPACING);
-	gtk_container_add(GTK_CONTAINER(cfg_controllers_toplevel), mainbox);
+	{
+		gboolean state = TRUE;
 
-	frame = gtk_frame_new(" Controllers ");
-	gtk_box_pack_start(GTK_BOX(mainbox), frame, FALSE, FALSE, 0);
-	gtk_container_set_border_width(GTK_CONTAINER(frame), 10);
+		if (cfg_input.settings.check_input_conflicts == TRUE) {
+			state = FALSE;
+		}
 
-	vbox = gtk_vbox_new(FALSE, SPACING);
-	gtk_container_add(GTK_CONTAINER(frame), vbox);
-
-	line = gtk_label_new("");
-	gtk_box_pack_start(GTK_BOX(vbox), line, FALSE, FALSE, 0);
-
-	line = cfg_input_line_select_type_controllers(1, &cfg_port1);
-	gtk_box_pack_start(GTK_BOX(vbox), line, FALSE, FALSE, 0);
-
-	line = cfg_input_line_select_type_controllers(2, &cfg_port2);
-	gtk_box_pack_start(GTK_BOX(vbox), line, FALSE, FALSE, 0);
-
-	line = gtk_label_new("");
-	gtk_box_pack_start(GTK_BOX(vbox), line, FALSE, FALSE, 0);
-
-	line = cfg_input_ok_cancel(G_CALLBACK(cfg_input_ok_clicked),
-			G_CALLBACK(cfg_input_cancel_clicked), NULL);
-	gtk_container_add(GTK_CONTAINER(mainbox), line);
-
-	gtk_widget_show_all(cfg_controllers_toplevel);
+		gtk_toggle_button_set_active(
+		        _gw_get_togglebutton(cfg_input.builder, "input_check_conflicts_checkbutton"),
+		        state);
+	}
 }
-void cfg_input_resize_std_widget(GtkWidget *widget) {
-	gtk_widget_set_size_request(GTK_WIDGET(widget), 100, -1);
+void cfg_input_controller_combobox_init(char *glade_combobox, _cfg_port *cfg_port) {
+	GtkComboBox *combobox;
+	GtkListStore *liststore;
+	static struct _ctrl_list_element {
+		gint type;
+		char name[20];
+	} ctrl_list[] = {
+		{ CTRL_DISABLED, "Disabled"     },
+		{ CTRL_STANDARD, "Standard Pad" },
+		{ CTRL_ZAPPER,   "Zapper"       }
+	};
+
+	combobox = _gw_get_combobox(cfg_input.builder, glade_combobox);
+	liststore = gtk_list_store_new(CTRL_COLUMNS, G_TYPE_STRING, G_TYPE_INT, G_TYPE_INT);
+
+	{
+		BYTE i;
+
+		for (i = 0; i < LENGTH(ctrl_list); i++) {
+			GtkTreeIter iter;
+
+			gtk_list_store_append(liststore, &iter);
+			gtk_list_store_set(liststore, &iter, CTRL_NAME, ctrl_list[i].name, CTRL_TYPE,
+			        ctrl_list[i].type, CTRL_NUMBER, (cfg_port->id - 1), -1);
+		}
+	}
+
+	gtk_combo_box_set_model(combobox, GTK_TREE_MODEL(liststore));
+	g_object_unref(liststore);
+
+	{
+		GtkCellRenderer *renderer = gtk_cell_renderer_text_new();
+
+		gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(combobox), renderer, TRUE);
+		gtk_cell_layout_add_attribute(GTK_CELL_LAYOUT(combobox), renderer, "text", 0);
+	}
+
+	g_signal_connect(G_OBJECT(combobox), "changed",
+			G_CALLBACK(cfg_input_controller_combobox_changed), cfg_port);
+
+	//gtk_combo_box_set_active(combobox, cfg_port->port.type);
 }
-void cfg_input_combobox_controller_changed(GtkComboBox *combobox, _cfg_port *cfg_port) {
+void cfg_input_controller_combobox_changed(GtkComboBox *combobox, _cfg_port *cfg_port) {
 	GtkTreeIter iter;
 	GtkTreeModel *model;
 	guint type;
@@ -124,42 +163,91 @@ void cfg_input_combobox_controller_changed(GtkComboBox *combobox, _cfg_port *cfg
 
 	gtk_combo_box_get_active_iter(GTK_COMBO_BOX(combobox), &iter);
 
-	gtk_tree_model_get(model, &iter, VALUE_CONTROLLER, &type, -1);
+	gtk_tree_model_get(model, &iter, CTRL_TYPE, &type, -1);
 	cfg_port->port.type = type;
 
-	cfg_input_enable_config(cfg_port->id - 1);
+	{
+		char *obj_name;
+
+		obj_name = dg_obj_name("input_ctrl%d_setup_button", cfg_port->id);
+
+		switch (cfg_port->port.type) {
+			case CTRL_DISABLED:
+			case CTRL_ZAPPER:
+				dg_set_sensitive(cfg_input.builder, obj_name, FALSE);
+				dg_signal_disconnect(cfg_input.builder, obj_name, "clicked");
+				break;
+			case CTRL_STANDARD:
+				dg_set_sensitive(cfg_input.builder, obj_name, TRUE);
+				dg_signal_connect(cfg_input.builder, obj_name, "clicked",
+						cfg_input_setup_clicked, cfg_port);
+				break;
+		}
+	}
 }
-void cfg_input_configure_controllers(GtkWidget *widget, _cfg_port *cfg_port) {
+void cfg_input_setup_clicked(GtkWidget *widget, _cfg_port *cfg_port) {
 	switch (cfg_port->port.type) {
 		case CTRL_DISABLED:
+		case CTRL_ZAPPER:
 			break;
 		case CTRL_STANDARD:
-			cfg_standard_controller(cfg_port);
-			break;
-		case CTRL_ZAPPER:
+			cfg_std_pad_dialog(cfg_port);
 			break;
 	}
 }
-void cfg_input_ok_clicked(GtkWidget *widget, _cfg_port *cfg_port) {
-	if (((cfg_port1.port.type == CTRL_ZAPPER) || (cfg_port2.port.type == CTRL_ZAPPER))
-	        && opengl.rotation) {
+void cfg_input_permit_updown_leftright_checkbutton_toggled(GtkWidget *widget, gpointer user_data) {
+	cfg_input.settings.permit_updown_leftright = !cfg_input.settings.permit_updown_leftright;
+}
+void cfg_input_check_conflicts_checkbutton_toggled(GtkWidget *widget, gpointer user_data) {
+	cfg_input.settings.check_input_conflicts = !cfg_input.settings.check_input_conflicts;
+
+	/* faccio il check dell'input */
+	if (cfg_input.settings.check_input_conflicts == TRUE) {
+		BYTE i;
+		_array_pointers_port array;
+
+		for (i = PORT1; i < PORT_MAX; i++) {
+			array.port[i] = &cfg_input.port[i].port;
+		}
+		input_check_conflicts(&cfg_input.settings, &array);
+	}
+}
+void cfg_input_default_clicked(GtkWidget *widget, gpointer user_data) {
+	_array_pointers_port array;
+	BYTE i;
+
+	for (i = PORT1; i < PORT_MAX; i++) {
+		array.port[i] = &cfg_input.port[i].port;
+	}
+
+	cfg_file_set_all_input_default(&cfg_input.settings, &array);
+
+	cfg_input_update_dialog();
+}
+void cfg_input_ok_clicked(GtkWidget *widget, gpointer user_data) {
+	if (opengl.rotation && (input_zapper_is_connected((_port *) &cfg_input.port) == TRUE)) {
 		menu_video_effect_set();
 	}
 
-	if (cfg_port1.port.type != port1.type) {
-		cfg_port1.port.changed = TRUE;
-	} else {
-		cfg_port1.port.changed = FALSE;
-	}
+	memcpy(&cfg->input, &cfg_input.settings, sizeof(_config_input));
 
-	if (cfg_port2.port.type != port2.type) {
-		cfg_port2.port.changed = TRUE;
-	} else {
-		cfg_port2.port.changed = FALSE;
-	}
+	{
+		BYTE i;
 
-	memcpy(&port1, &cfg_port1.port, sizeof(port1));
-	memcpy(&port2, &cfg_port2.port, sizeof(port2));
+		for (i = PORT1; i < PORT_MAX; i++) {
+			if (cfg_input.port[i].port.type != port[i].type) {
+				BYTE a;
+
+				for (a = TRB_A; a <= TRB_B; a++) {
+					gint type = a - TRB_A;
+
+					cfg_input.port[i].port.turbo[type].active = 0;
+					cfg_input.port[i].port.turbo[type].counter = 0;
+				}
+			}
+			memcpy(&port[i], &cfg_input.port[i].port, sizeof(_port));
+		}
+	}
 
 	/* Faccio l'update del menu per i casi dello zapper e degli effetti */
 	gui_update();
@@ -171,104 +259,20 @@ void cfg_input_ok_clicked(GtkWidget *widget, _cfg_port *cfg_port) {
 	js_quit();
 	js_init();
 
-	gtk_widget_destroy(cfg_controllers_toplevel);
+	gtk_widget_destroy(cfg_input.father);
 }
-void cfg_input_cancel_clicked(GtkWidget *widget, _cfg_port *cfg_port) {
-	gtk_widget_destroy(cfg_controllers_toplevel);
+void cfg_input_cancel_clicked(GtkWidget *widget, gpointer user_data) {
+	gtk_widget_destroy(cfg_input.father);
 }
-void cfg_input_window_destroy(void) {
-	cfg_controllers_toplevel = NULL;
+void cfg_input_window_destroy(GtkWidget *widget, gpointer user_data) {
+	cfg_input.father = NULL;
 
-	if (cfg_standard_controller_toplevel != NULL) {
-		gtk_widget_destroy(cfg_standard_controller_toplevel);
+	if (cfg_input.child != NULL) {
+		gtk_widget_destroy(cfg_input.child);
 	}
+
+	g_object_unref(G_OBJECT(cfg_input.builder));
 
 	g_timeout_redraw_stop();
 	emu_pause(FALSE);
-}
-GtkWidget *cfg_input_std_button(const char *description) {
-	GtkWidget *button;
-
-	button = gtk_button_new_with_label(description);
-	cfg_input_resize_std_widget(button);
-
-	return (button);
-}
-GtkWidget *cfg_input_ok_cancel(GCallback ok, GCallback cancel, _cfg_port *cfg_port) {
-	GtkWidget *buttonsbox, *button;
-
-	buttonsbox = gtk_hbox_new(FALSE, SPACING);
-
-	button = cfg_input_std_button("Cancel");
-	gtk_box_pack_end(GTK_BOX(buttonsbox), button, FALSE, FALSE, 0);
-	if (cancel != NULL) {
-		g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(cancel), cfg_port);
-	}
-
-	button = cfg_input_std_button("OK");
-	gtk_box_pack_end(GTK_BOX(buttonsbox), button, FALSE, FALSE, 0);
-	if (ok != NULL) {
-		g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(ok), cfg_port);
-	}
-
-	return (buttonsbox);
-}
-GtkWidget *cfg_input_line_select_type_controllers(BYTE number_controller, _cfg_port *cfg_port) {
-	GtkWidget *line, *label, *select;
-	char description[30];
-	BYTE index_button = number_controller - 1;
-
-	sprintf(description, "  Controller %d  ", number_controller);
-
-	line = gtk_hbox_new(FALSE, SPACING);
-
-	label = gtk_label_new(description);
-	gtk_box_pack_start(GTK_BOX(line), label, FALSE, FALSE, 0);
-
-	select = cfg_input_combobox_select_controllers(cfg_port);
-	gtk_box_pack_start(GTK_BOX(line), select, FALSE, FALSE, 0);
-
-	label = gtk_label_new("  ");
-	gtk_box_pack_end(GTK_BOX(line), label, FALSE, FALSE, 0);
-
-	button_controller[index_button] = cfg_input_std_button("Setup");
-	gtk_box_pack_end(GTK_BOX(line), button_controller[index_button], FALSE, FALSE, 0);
-
-	g_signal_connect(G_OBJECT(button_controller[index_button]), "clicked",
-			G_CALLBACK(cfg_input_configure_controllers), cfg_port);
-
-	cfg_input_enable_config(index_button);
-
-	return (line);
-}
-GtkWidget *cfg_input_combobox_select_controllers(_cfg_port *cfg_port) {
-	BYTE i;
-	GtkWidget *combobox;
-	GtkListStore *model;
-	GtkTreeIter iter;
-	GtkCellRenderer *renderer;
-
-	combobox = gtk_combo_box_new();
-
-	model = gtk_list_store_new(N_TYPE_CONTROLLERS, G_TYPE_STRING, G_TYPE_INT, G_TYPE_INT);
-
-	for (i = 0; i < LENGTH(ctrl_list); i++) {
-		gtk_list_store_append(model, &iter);
-		gtk_list_store_set(model, &iter, NAME_CONTROLLER, ctrl_list[i].name, VALUE_CONTROLLER,
-				ctrl_list[i].value, NUMBER_CONTROLLER, (cfg_port->id - 1), -1);
-	}
-
-	gtk_combo_box_set_model(GTK_COMBO_BOX(combobox), GTK_TREE_MODEL(model));
-	g_object_unref(model);
-
-	renderer = gtk_cell_renderer_text_new();
-	gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(combobox), renderer, TRUE);
-	gtk_cell_layout_add_attribute(GTK_CELL_LAYOUT(combobox), renderer, "text", 0);
-
-	gtk_combo_box_set_active(GTK_COMBO_BOX(combobox), cfg_port->port.type);
-
-	g_signal_connect(G_OBJECT(combobox), "changed",
-			G_CALLBACK(cfg_input_combobox_controller_changed), cfg_port);
-
-	return (combobox);
 }

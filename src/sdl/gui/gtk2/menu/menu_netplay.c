@@ -116,13 +116,13 @@ void menu_netplay(GtkWidget *settings, GtkAccelGroup *accel_group) {
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(netplay), menu);
 	gtk_menu_shell_append(GTK_MENU_SHELL(settings), netplay);
 
-	icon_inline(netplay, icon_inline)
+	gw_image_from_inline(netplay, icon_inline);
 
 	connect = gtk_image_menu_item_new_with_mnemonic("Connect");
 
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), connect);
 
-	icon_inline(connect, connect_icon_inline)
+	gw_image_from_inline(connect, connect_icon_inline);
 
 	gtk_widget_add_accelerator(connect, "activate", accel_group, GDK_c,
 	        GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);

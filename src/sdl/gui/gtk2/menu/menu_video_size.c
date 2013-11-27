@@ -88,7 +88,7 @@ void menu_video_size(GtkWidget *video, GtkAccelGroup *accel_group) {
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(size), menu);
 	gtk_menu_shell_append(GTK_MENU_SHELL(video), size);
 
-	icon_inline(size, icon_inline)
+	gw_image_from_inline(size, icon_inline);
 
 	check[MX1] = gtk_check_menu_item_new_with_mnemonic("_1x");
 	check[MX2] = gtk_check_menu_item_new_with_mnemonic("_2x");

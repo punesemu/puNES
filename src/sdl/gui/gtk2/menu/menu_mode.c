@@ -100,7 +100,7 @@ void menu_mode(GtkWidget *settings, GtkAccelGroup *accel_group) {
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(mode), menu);
 	gtk_menu_shell_append(GTK_MENU_SHELL(settings), mode);
 
-	icon_inline(mode, icon_inline)
+	gw_image_from_inline(mode, icon_inline);
 
 	check[MPAL] = gtk_check_menu_item_new_with_mnemonic("_PAL");
 	check[MNTSC] = gtk_check_menu_item_new_with_mnemonic("_NTSC");

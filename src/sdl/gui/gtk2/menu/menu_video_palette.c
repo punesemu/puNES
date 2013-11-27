@@ -104,7 +104,7 @@ void menu_video_palette(GtkWidget *video, GtkAccelGroup *accel_group) {
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(palette), menu);
 	gtk_menu_shell_append(GTK_MENU_SHELL(video), palette);
 
-	icon_inline(palette, icon_inline)
+	gw_image_from_inline(palette, icon_inline);
 
 	check[MPALETTEPAL] = gtk_check_menu_item_new_with_mnemonic("_PAL");
 	check[MPALETTENTSC] = gtk_check_menu_item_new_with_mnemonic("_NTSC");

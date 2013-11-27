@@ -98,7 +98,7 @@ void menu_video_fps(GtkWidget *video, GtkAccelGroup *accel_group) {
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(fps), menu);
 	gtk_menu_shell_append(GTK_MENU_SHELL(video), fps);
 
-	icon_inline(fps, icon_inline)
+	gw_image_from_inline(fps, icon_inline);
 
 	for (index = MFPSDEFAULT; index < NUMCHKS; index++) {
 		check[index] = gtk_check_menu_item_new_with_mnemonic(param_fps[index].lname);

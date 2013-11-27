@@ -332,7 +332,7 @@ static const _param param_apu_channel[] = {
 		NULL
 	},
 };
-static const _param param_input_ctrl[] = {
+static const _param param_input_base[] = {
 	{
 		"controller 1",
 		NULL,
@@ -346,7 +346,21 @@ static const _param param_input_ctrl[] = {
 		"# possible values: disable, standard, zapper",
 		NULL,
 		NULL
-	}
+	},
+	{
+		"permit up+down left+right",
+		NULL,
+		"# possible values: yes, no",
+		NULL,
+		NULL
+	},
+	{
+		"check conflicts",
+		NULL,
+		"# possible values: yes, no",
+		NULL,
+		NULL
+	},
 };
 static const _param param_input_p1k[] = {
 	{ "P1K A       " }, { "P1K B       " }, { "P1K Select  " }, { "P1K Start   " },

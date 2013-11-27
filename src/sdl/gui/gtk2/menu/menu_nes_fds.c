@@ -255,9 +255,9 @@ void menu_nes_fds(GtkWidget *mainmenu, GtkAccelGroup *accel_group) {
 	check[MSIDE7] = gtk_check_menu_item_new_with_mnemonic("Disk 4 side B");
 	check[MSWITCH] = gtk_image_menu_item_new_with_mnemonic("_Switch sides");
 
-	icon_inline(check[MSIDES], disk_side_icon_inline)
-	icon_inline(check[MSWITCH], switch_icon_inline)
-	icon_inline(check[MEJECT], eject_icon_inline)
+	gw_image_from_inline(check[MSIDES], disk_side_icon_inline);
+	gw_image_from_inline(check[MSWITCH], switch_icon_inline);
+	gw_image_from_inline(check[MEJECT], eject_icon_inline);
 
 	gtk_widget_add_accelerator(check[MEJECT], "activate", accel_group, GDK_e,
 			GDK_MOD1_MASK, GTK_ACCEL_VISIBLE);

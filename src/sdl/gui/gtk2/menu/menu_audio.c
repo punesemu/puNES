@@ -149,8 +149,8 @@ void menu_audio(GtkWidget *settings, GtkAccelGroup *accel_group) {
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(audio), menu);
 	gtk_menu_shell_append(GTK_MENU_SHELL(settings), audio);
 
-	icon_inline(audio, audio_icon_inline)
-	icon_inline(volumes, volumes_icon_inline)
+	gw_image_from_inline(audio, audio_icon_inline);
+	gw_image_from_inline(volumes, volumes_icon_inline);
 
 	menu_audio_sample_rate(menu, NULL);
 	menu_audio_channels(menu, NULL);

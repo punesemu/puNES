@@ -6,9 +6,9 @@
 C_SRCS += \
 ../src/sdl/gui/gtk2/cfg_apu_channels.c \
 ../src/sdl/gui/gtk2/cfg_input.c \
-../src/sdl/gui/gtk2/cfg_std_ctrl.c \
-../src/sdl/gui/gtk2/configurations.c \
+../src/sdl/gui/gtk2/cfg_std_pad.c \
 ../src/sdl/gui/gtk2/gtk2.c \
+../src/sdl/gui/gtk2/gtk_wrap.c \
 ../src/sdl/gui/gtk2/joystick.c \
 ../src/sdl/gui/gtk2/keyboard.c \
 ../src/sdl/gui/gtk2/snd.c 
@@ -16,9 +16,9 @@ C_SRCS += \
 OBJS += \
 ./src/sdl/gui/gtk2/cfg_apu_channels.o \
 ./src/sdl/gui/gtk2/cfg_input.o \
-./src/sdl/gui/gtk2/cfg_std_ctrl.o \
-./src/sdl/gui/gtk2/configurations.o \
+./src/sdl/gui/gtk2/cfg_std_pad.o \
 ./src/sdl/gui/gtk2/gtk2.o \
+./src/sdl/gui/gtk2/gtk_wrap.o \
 ./src/sdl/gui/gtk2/joystick.o \
 ./src/sdl/gui/gtk2/keyboard.o \
 ./src/sdl/gui/gtk2/snd.o 
@@ -26,9 +26,9 @@ OBJS += \
 C_DEPS += \
 ./src/sdl/gui/gtk2/cfg_apu_channels.d \
 ./src/sdl/gui/gtk2/cfg_input.d \
-./src/sdl/gui/gtk2/cfg_std_ctrl.d \
-./src/sdl/gui/gtk2/configurations.d \
+./src/sdl/gui/gtk2/cfg_std_pad.d \
 ./src/sdl/gui/gtk2/gtk2.d \
+./src/sdl/gui/gtk2/gtk_wrap.d \
 ./src/sdl/gui/gtk2/joystick.d \
 ./src/sdl/gui/gtk2/keyboard.d \
 ./src/sdl/gui/gtk2/snd.d 

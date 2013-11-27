@@ -268,10 +268,10 @@ void menu_state(GtkWidget *mainmenu, GtkAccelGroup *accel_group) {
 	gtk_widget_add_accelerator(sslotinc, "activate", accel_group, GDK_F3, 0, GTK_ACCEL_VISIBLE);
 	gtk_widget_add_accelerator(sslotdec, "activate", accel_group, GDK_F2, 0, GTK_ACCEL_VISIBLE);
 
-	icon_inline(sslotsave, savestate_icon_inline)
-	icon_inline(check[MLOAD], loadstate_icon_inline)
-	icon_inline(sslotinc, inc_icon_inline)
-	icon_inline(sslotdec, dec_icon_inline)
+	gw_image_from_inline(sslotsave, savestate_icon_inline);
+	gw_image_from_inline(check[MLOAD], loadstate_icon_inline);
+	gw_image_from_inline(sslotinc, inc_icon_inline);
+	gw_image_from_inline(sslotdec, dec_icon_inline);
 
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), sslotsave);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), check[MLOAD]);

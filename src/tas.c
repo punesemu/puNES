@@ -12,7 +12,6 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include "tas.h"
-#include "input.h"
 #include "text.h"
 #include "emu.h"
 
@@ -23,7 +22,7 @@
 		tas_read();\
 	}
 
-_port tas_port_bck1, tas_port_bck2;
+_port tas_port_bck[PORT_MAX];
 
 BYTE tas_file(char *ext, char *file) {
 	if (!(strcasecmp(ext, ".fm2")) || !(strcasecmp(ext, ".FM2"))) {
@@ -36,8 +35,13 @@ BYTE tas_file(char *ext, char *file) {
 	if (tas.type) {
 		BYTE found = FALSE;
 
-		memcpy(&tas_port_bck1, &port1, sizeof(_port));
-		memcpy(&tas_port_bck2, &port2, sizeof(_port));
+		{
+			BYTE i;
+
+			for (i = PORT1; i < PORT_MAX; i++) {
+				memcpy(&tas_port_bck[i], &port[i], sizeof(_port));
+			}
+		}
 
 		strncpy(tas.file, file, sizeof(tas.file));
 
@@ -84,8 +88,13 @@ void tas_quit(void) {
 	tas_header = NULL;
 	tas_read = NULL;
 
-	memcpy(&port1, &tas_port_bck1, sizeof(_port));
-	memcpy(&port2, &tas_port_bck2, sizeof(_port));
+	{
+		BYTE i;
+
+		for (i = PORT1; i < PORT_MAX; i++) {
+			memcpy(&port[i], &tas_port_bck[i], sizeof(_port));
+		}
+	}
 
 	input_init();
 
@@ -145,26 +154,22 @@ void tas_frame_FM2(void) {
 		}
 	}
 
-	if (port1.type == CTRL_STANDARD) {
-		tas_set_data_port_ctrlstd(port1, BUT_A);
-		tas_set_data_port_ctrlstd(port1, BUT_B);
-		tas_set_data_port_ctrlstd(port1, SELECT);
-		tas_set_data_port_ctrlstd(port1, START);
-		tas_set_data_port_ctrlstd(port1, UP);
-		tas_set_data_port_ctrlstd(port1, DOWN);
-		tas_set_data_port_ctrlstd(port1, LEFT);
-		tas_set_data_port_ctrlstd(port1, RIGHT);
-	}
+	{
+		BYTE i;
 
-	if (port2.type == CTRL_STANDARD) {
-		tas_set_data_port_ctrlstd(port2, BUT_A);
-		tas_set_data_port_ctrlstd(port2, BUT_B);
-		tas_set_data_port_ctrlstd(port2, SELECT);
-		tas_set_data_port_ctrlstd(port2, START);
-		tas_set_data_port_ctrlstd(port2, UP);
-		tas_set_data_port_ctrlstd(port2, DOWN);
-		tas_set_data_port_ctrlstd(port2, LEFT);
-		tas_set_data_port_ctrlstd(port2, RIGHT);
+		for (i = PORT1; i < PORT_MAX; i++) {
+			if (port[i].type == CTRL_STANDARD) {
+				tas_set_data_port_ctrlstd(port[i], BUT_A);
+				tas_set_data_port_ctrlstd(port[i], BUT_B);
+				tas_set_data_port_ctrlstd(port[i], SELECT);
+				tas_set_data_port_ctrlstd(port[i], START);
+				tas_set_data_port_ctrlstd(port[i], UP);
+				tas_set_data_port_ctrlstd(port[i], DOWN);
+				tas_set_data_port_ctrlstd(port[i], LEFT);
+				tas_set_data_port_ctrlstd(port[i], RIGHT);
+			}
+
+		}
 	}
 
 	tas_increment_index()
@@ -219,9 +224,9 @@ void tas_header_FM2(char *file) {
 			strcat(info.rom_file, "/");
 			strcat(info.rom_file, value);
 		} else if (strcasecmp(key, "port0") == 0) {
-			port1.type = atoi(value);
+			port[PORT1].type = atoi(value);
 		} else if (strcasecmp(key, "port1") == 0) {
-			port2.type = atoi(value);
+			port[PORT2].type = atoi(value);
 		}
 	}
 
@@ -236,7 +241,7 @@ void tas_header_FM2(char *file) {
 	fseek(tas.fp, 0, SEEK_SET);
 }
 void tas_read_FM2(void) {
-	int i, start;
+	int start;
 	char line[256], *sep;
 
 	tas.count = tas.index = 0;
@@ -259,27 +264,20 @@ void tas_read_FM2(void) {
 		tas.il[tas.count].state = atoi(sep);
 
 		/* port1 */
-		sep = strtok(NULL, "|");
+		{
+			BYTE a, b;
 
-		if (port1.type == CTRL_STANDARD) {
-			for (i = 0; i < 8; i++) {
-				tas.il[tas.count].port1[RIGHT - i] = PRESSED;
+			for (a = PORT1; a <= PORT2; a++) {
+				sep = strtok(NULL, "|");
 
-				if ((sep[i] == ' ') || (sep[i] == '.')) {
-					tas.il[tas.count].port1[RIGHT - i] = RELEASED;
-				}
-			}
-		}
+				if (port[a].type == CTRL_STANDARD) {
+					for (b = 0; b < 8; b++) {
+						tas.il[tas.count].port[a][RIGHT - b] = PRESSED;
 
-		/* port2 */
-		sep = strtok(NULL, "|");
-
-		if (port2.type == CTRL_STANDARD) {
-			for (i = 0; i < 8; i++) {
-				tas.il[tas.count].port2[RIGHT - i] = PRESSED;
-
-				if ((sep[i] == ' ') || (sep[i] == '.')) {
-					tas.il[tas.count].port2[RIGHT - i] = RELEASED;
+						if ((sep[b] == ' ') || (sep[b] == '.')) {
+							tas.il[tas.count].port[a][RIGHT - b] = RELEASED;
+						}
+					}
 				}
 			}
 		}

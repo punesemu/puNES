@@ -82,7 +82,7 @@ void menu_video(GtkWidget *settings, GtkAccelGroup *accel_group) {
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(video), menu);
 	gtk_menu_shell_append(GTK_MENU_SHELL(settings), video);
 
-	icon_inline(video, icon_inline)
+	gw_image_from_inline(video, icon_inline);
 	menu_video_rendering(menu, NULL);
 	menu_video_fps(menu, NULL);
 	menu_video_frame_skip(menu, NULL);

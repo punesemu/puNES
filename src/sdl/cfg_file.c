@@ -385,27 +385,33 @@ void cfg_file_input_parse(void) {
 			/* ...da quello che c'e' dopo */
 			cfg_evaluate(NULL, value, "\n");
 
-			cfg_search(param_input_ctrl, 0, 0, param_controller, port1.type = index);
-			cfg_search(param_input_ctrl, 1, 0, param_controller, port2.type = index);
+			cfg_search(param_input_base, 2, 0, param_no_yes,
+			        cfg_from_file.input.permit_updown_leftright = index);
+			cfg_search(param_input_base, 3, 0, param_no_yes,
+			        cfg_from_file.input.check_input_conflicts = index);
 
-			cfg_input_search(param_input_p1k, port1, KEYBOARD);
-			cfg_input_search(param_input_p1j, port1, JOYSTICK);
-			cfg_int_search(param_turbo_delay_p1, 0, port1.turbo[TURBOA].frequency, 0,
+			{
+				BYTE i;
+
+				for (i = PORT1; i < PORT_MAX; i++) {
+					cfg_search(param_input_base, i, 0, param_controller, port[i].type = index);
+				}
+			}
+
+			cfg_input_search(param_input_p1k, port[PORT1], KEYBOARD);
+			cfg_input_search(param_input_p1j, port[PORT1], JOYSTICK);
+			cfg_int_search(param_turbo_delay_p1, 0, port[PORT1].turbo[TURBOA].frequency, 0,
 			        TURBO_BUTTON_DELAY_MAX);
-			cfg_int_search(param_turbo_delay_p1, 1, port1.turbo[TURBOB].frequency, 0,
+			cfg_int_search(param_turbo_delay_p1, 1, port[PORT1].turbo[TURBOB].frequency, 0,
 			        TURBO_BUTTON_DELAY_MAX);
 
-			cfg_input_search(param_input_p2k, port2, KEYBOARD);
-			cfg_input_search(param_input_p2j, port2, JOYSTICK);
-			cfg_int_search(param_turbo_delay_p2, 0, port2.turbo[TURBOA].frequency, 0,
+			cfg_input_search(param_input_p2k, port[PORT2], KEYBOARD);
+			cfg_input_search(param_input_p2j, port[PORT2], JOYSTICK);
+			cfg_int_search(param_turbo_delay_p2, 0, port[PORT2].turbo[TURBOA].frequency, 0,
 			        TURBO_BUTTON_DELAY_MAX);
-			cfg_int_search(param_turbo_delay_p2, 1, port2.turbo[TURBOB].frequency, 0,
+			cfg_int_search(param_turbo_delay_p2, 1, port[PORT2].turbo[TURBOB].frequency, 0,
 			        TURBO_BUTTON_DELAY_MAX);
 		}
-	}
-
-	if (port1.joy_id == port2.joy_id) {
-		port2.joy_id = name_to_jsn("NULL");
 	}
 
 	text_add_line_info(1, "input configuration [green]loaded");
@@ -424,57 +430,110 @@ void cfg_file_input_save(void) {
 
 	fprintf(fp, "# input configuration\n\n");
 
-	write_param((_param *) param_input_ctrl, fp, 0, param_controller[port1.type].sname);
-	write_param((_param *) param_input_ctrl, fp, 1, param_controller[port2.type].sname);
+	/* permit up+down left+right */
+	write_param((_param *) param_input_base, fp, 2,
+	        param_no_yes[cfg_from_file.input.permit_updown_leftright].sname);
+	/* check control */
+	write_param((_param *) param_input_base, fp, 3,
+	        param_no_yes[cfg_from_file.input.check_input_conflicts].sname);
+	{
+		BYTE i;
 
-	write_input_param((_param *) param_input_p1k, fp, LENGTH(param_input_p1k), port1, 1, KEYBOARD);
-	write_input_param((_param *) param_input_p1j, fp, LENGTH(param_input_p1j), port1, 1, JOYSTICK);
+		for (i = PORT1; i < PORT_MAX; i++) {
+			write_param((_param *) param_input_base, fp, i, param_controller[port[i].type].sname);
+		}
+	}
+
+	write_input_param((_param *) param_input_p1k, fp, LENGTH(param_input_p1k), port[PORT1], 1,
+	        KEYBOARD);
+	write_input_param((_param *) param_input_p1j, fp, LENGTH(param_input_p1j), port[PORT1], 1,
+	        JOYSTICK);
 
 	fprintf(fp, "# player 1 turbo buttons delays\n");
-	write_int_param((_param *) param_turbo_delay_p1, fp, 0,	port1.turbo[TURBOA].frequency);
-	write_int_param((_param *) param_turbo_delay_p1, fp, 1,	port1.turbo[TURBOB].frequency);
+	write_int_param((_param *) param_turbo_delay_p1, fp, 0, port[PORT1].turbo[TURBOA].frequency);
+	write_int_param((_param *) param_turbo_delay_p1, fp, 1, port[PORT1].turbo[TURBOB].frequency);
 
-	write_input_param((_param *) param_input_p2k, fp, LENGTH(param_input_p2k), port2, 2, KEYBOARD);
-	write_input_param((_param *) param_input_p2j, fp, LENGTH(param_input_p2j), port2, 2, JOYSTICK);
+	write_input_param((_param *) param_input_p2k, fp, LENGTH(param_input_p2k), port[PORT2], 2,
+	        KEYBOARD);
+	write_input_param((_param *) param_input_p2j, fp, LENGTH(param_input_p2j), port[PORT2], 2,
+	        JOYSTICK);
 
 	fprintf(fp, "# player 2 turbo buttons delays\n");
-	write_int_param((_param *) param_turbo_delay_p2, fp, 0,	port2.turbo[TURBOA].frequency);
-	write_int_param((_param *) param_turbo_delay_p2, fp, 1,	port2.turbo[TURBOB].frequency);
+	write_int_param((_param *) param_turbo_delay_p2, fp, 0,	port[PORT2].turbo[TURBOA].frequency);
+	write_int_param((_param *) param_turbo_delay_p2, fp, 1,	port[PORT2].turbo[TURBOB].frequency);
 
 	fclose(fp);
 }
+void cfg_file_set_all_input_default(_config_input *config_input, _array_pointers_port *array) {
+	BYTE i;
+
+	config_input->permit_updown_leftright = FALSE;
+	config_input->check_input_conflicts = TRUE;
+
+	for (i = PORT1; i < PORT_MAX; i++) {
+		cfg_file_set_single_port_default(array->port[i], i);
+	}
+}
+void cfg_file_set_single_port_default(_port *port, int index) {
+	switch (index) {
+		case PORT1:
+			port->type = CTRL_STANDARD;
+			port->joy_id = name_to_jsn("JOYSTICKID1");
+			break;
+		case PORT2:
+			port->joy_id = name_to_jsn("JOYSTICKID2");
+			port->type = FALSE;
+			break;
+		default:
+			port->joy_id = name_to_jsn("NULL");
+			port->type = FALSE;
+			break;
+	}
+
+	port->turbo[TURBOA].frequency = TURBO_BUTTON_DELAY_DEFAULT;
+	port->turbo[TURBOB].frequency = TURBO_BUTTON_DELAY_DEFAULT;
+	cfg_file_set_kbd_joy_default(port, index, JOYSTICK + 1);
+}
+void cfg_file_set_kbd_joy_default(_port *port, int index, int mode) {
+	char default_value_port[PORT_MAX][2][MAX_STD_PAD_BUTTONS][15] = {
+		{
+			{
+				"S",  "A",    "Z",    "X",
+				"Up", "Down", "Left", "Right",
+				"W",  "Q"
+			},
+			{
+				"JB1",    "JB0",    "JB8",    "JB9",
+				"JA1MIN", "JA1PLS", "JA0MIN", "JA0PLS",
+				"JB2",    "JB3"
+			}
+		},
+		{
+			{
+				"Page_Down", "End",     "Insert",  "Delete",
+				"KP_Up",     "KP_Down", "KP_Left", "KP_Right",
+				"Home",      "Page_Up"
+			},
+			{
+				"JB1",    "JB0",    "JB8",    "JB9",
+				"JA1MIN", "JA1PLS", "JA0MIN", "JA0PLS",
+				"JB2",    "JB3"
+			}
+		},
+	};
+	BYTE i;
+
+	for (i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
+		if ((mode == KEYBOARD) || (mode > JOYSTICK)) {
+			port->input[KEYBOARD][i] = keyval_from_name(default_value_port[index][KEYBOARD][i]);
+		}
+		if ((mode == JOYSTICK) || (mode > JOYSTICK)) {
+			port->input[JOYSTICK][i] = name_to_jsv(default_value_port[index][JOYSTICK][i]);
+		}
+	}
+}
 
 void set_default(void) {
-
-#define _port_kb_default(port, button, name)\
-	port.input[KEYBOARD][button] = keyval_from_name(name)
-#define _port_js_default(port, button, name)\
-	port.input[JOYSTICK][button] = name_to_jsv(name)
-#define port_kb_default(port, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10)\
-	_port_kb_default(port, BUT_A,  s1);\
-	_port_kb_default(port, BUT_B,  s2);\
-	_port_kb_default(port, SELECT, s3);\
-	_port_kb_default(port, START,  s4);\
-	_port_kb_default(port, UP,     s5);\
-	_port_kb_default(port, DOWN,   s6);\
-	_port_kb_default(port, LEFT,   s7);\
-	_port_kb_default(port, RIGHT,  s8);\
-	_port_kb_default(port, TRB_A,  s9);\
-	_port_kb_default(port, TRB_B,  s10)
-#define port_js_default(port, id, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10)\
-	port.joy_id = name_to_jsn(id);\
-	_port_js_default(port, BUT_A,  s1);\
-	_port_js_default(port, BUT_B,  s2);\
-	_port_js_default(port, SELECT, s3);\
-	_port_js_default(port, START,  s4);\
-	_port_js_default(port, UP,     s5);\
-	_port_js_default(port, DOWN,   s6);\
-	_port_js_default(port, LEFT,   s7);\
-	_port_js_default(port, RIGHT,  s8);\
-	_port_js_default(port, TRB_A,  s9);\
-	_port_js_default(port, TRB_B,  s10)
-
-	/* default */
 	cfg_from_file.mode = AUTO;
 	machine = machinedb[NTSC - 1];
 
@@ -495,11 +554,11 @@ void set_default(void) {
 	cfg_from_file.save_on_exit = FALSE;
 
 	{
-		int index;
+		BYTE i;
 
-		for (index = 0; index <= APU_MASTER; index++) {
-			cfg_from_file.apu.channel[index] = TRUE;
-			cfg_from_file.apu.volume[index] = 1.0f;
+		for (i = APU_S1; i <= APU_MASTER; i++) {
+			cfg_from_file.apu.channel[i] = TRUE;
+			cfg_from_file.apu.volume[i] = 1.0f;
 		}
 	}
 	cfg_from_file.samplerate = S44100;
@@ -510,17 +569,16 @@ void set_default(void) {
 
 	cfg_from_file.gamegenie = FALSE;
 
-	port1.type = CTRL_STANDARD;
-	port_kb_default(port1, "S", "A", "Z", "X", "Up", "Down", "Left", "Right", "W", "Q");
-	port_js_default(port1, "JOYSTICKID1", "JB1", "JB0", "JB8", "JB9", "JA1MIN", "JA1PLS", "JA0MIN",
-	        "JA0PLS", "JB2", "JB3");
-	port1.turbo[TURBOA].frequency = TURBO_BUTTON_DELAY_DEFAULT;
-	port1.turbo[TURBOB].frequency = TURBO_BUTTON_DELAY_DEFAULT;
+	{
+		_array_pointers_port array;
+		BYTE i;
 
-	port2.type = FALSE;
-	port2.joy_id = name_to_jsn("JOYSTICKID2");
-	port2.turbo[TURBOA].frequency = TURBO_BUTTON_DELAY_DEFAULT;
-	port2.turbo[TURBOB].frequency = TURBO_BUTTON_DELAY_DEFAULT;
+		for (i = PORT1; i < PORT_MAX; i++) {
+			array.port[i] = &port[i];
+		}
+
+		cfg_file_set_all_input_default(&cfg_from_file.input, &array);
+	}
 }
 void set_default_pgs(void) {
 	cfg_from_file.oscan = OSCAN_DEFAULT;

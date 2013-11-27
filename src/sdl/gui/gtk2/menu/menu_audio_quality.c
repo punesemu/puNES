@@ -72,7 +72,7 @@ void menu_audio_quality(GtkWidget *audio, GtkAccelGroup *accel_group) {
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(quality), menu);
 	gtk_menu_shell_append(GTK_MENU_SHELL(audio), quality);
 
-	icon_inline(quality, icon_inline)
+	gw_image_from_inline(quality, icon_inline);
 
 	check[MAQLOW] = gtk_check_menu_item_new_with_mnemonic("_Low");
 	check[MAQHIGH] = gtk_check_menu_item_new_with_mnemonic("_High");

@@ -80,7 +80,7 @@ void menu_audio_channels(GtkWidget *audio, GtkAccelGroup *accel_group) {
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(channels), menu);
 	gtk_menu_shell_append(GTK_MENU_SHELL(audio), channels);
 
-	icon_inline(channels, icon_inline)
+	gw_image_from_inline(channels, icon_inline);
 
 	check[MMONO] = gtk_check_menu_item_new_with_mnemonic("_Mono");
 	check[MSTEREO] = gtk_check_menu_item_new_with_mnemonic("_Stereo");

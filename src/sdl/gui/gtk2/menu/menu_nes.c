@@ -140,8 +140,8 @@ void menu_nes(GtkWidget *mainmenu, GtkAccelGroup *accel_group) {
 	hard = gtk_image_menu_item_new_with_mnemonic("_Hard Reset");
 	soft = gtk_image_menu_item_new_with_mnemonic("_Soft Reset");
 
-	icon_inline(hard, hard_icon_inline)
-	icon_inline(soft, soft_icon_inline)
+	gw_image_from_inline(hard, hard_icon_inline);
+	gw_image_from_inline(soft, soft_icon_inline);
 
 	gtk_widget_add_accelerator(hard, "activate", accel_group, GDK_F11, 0, GTK_ACCEL_VISIBLE);
 	gtk_widget_add_accelerator(soft, "activate", accel_group, GDK_F12, 0, GTK_ACCEL_VISIBLE);

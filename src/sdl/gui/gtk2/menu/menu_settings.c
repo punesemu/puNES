@@ -102,7 +102,7 @@ void menu_settings(GtkWidget *mainmenu, GtkAccelGroup *accel_group) {
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), savenow);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), check[MSAVEONEXIT]);
 
-	icon_inline(savenow, icon_inline)
+	gw_image_from_inline(savenow, icon_inline);
 
 	gtk_widget_add_accelerator(savenow, "activate", accel_group, GDK_w, GDK_CONTROL_MASK,
 			GTK_ACCEL_VISIBLE);

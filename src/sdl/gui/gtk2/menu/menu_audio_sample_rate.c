@@ -80,7 +80,7 @@ void menu_audio_sample_rate(GtkWidget *audio, GtkAccelGroup *accel_group) {
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(sample_rate), menu);
 	gtk_menu_shell_append(GTK_MENU_SHELL(audio), sample_rate);
 
-	icon_inline(sample_rate, icon_inline)
+	gw_image_from_inline(sample_rate, icon_inline);
 
 	check[M44100] = gtk_check_menu_item_new_with_mnemonic("_44100");
 	check[M22050] = gtk_check_menu_item_new_with_mnemonic("_22050");

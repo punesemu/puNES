@@ -10,11 +10,8 @@
 
 #include "common.h"
 #include "apu.h"
+#include "input.h"
 
-typedef struct {
-	BYTE channel[APU_MASTER + 1];
-	double volume[APU_MASTER + 1];
-} _config_apu;
 typedef struct {
 	BYTE save_on_exit;
 	BYTE mode;
@@ -38,6 +35,7 @@ typedef struct {
 	BYTE oscan_default;
 	BYTE gamegenie;
 
+	_config_input input;
 	_config_apu apu;
 } _config;
 
@@ -50,5 +48,8 @@ void cfg_file_pgs_parse(void);
 void cfg_file_pgs_save(void);
 void cfg_file_input_parse(void);
 void cfg_file_input_save(void);
+void cfg_file_set_all_input_default(_config_input *config_input, _array_pointers_port *array);
+void cfg_file_set_single_port_default(_port *port, int index);
+void cfg_file_set_kbd_joy_default(_port *port, int index, int mode);
 
 #endif /* CFG_FILE_H_ */

@@ -2,6 +2,11 @@
 <interface>
   <requires lib="gtk+" version="2.24"/>
   <!-- interface-naming-policy project-wide -->
+  <object class="GtkAdjustment" id="apu_channels_dmc_adjustment">
+    <property name="upper">1</property>
+    <property name="step_increment">0.050000000000000003</property>
+    <property name="page_increment">1</property>
+  </object>
   <object class="GtkDialog" id="apu_channels_dialog">
     <property name="can_focus">False</property>
     <property name="border_width">5</property>
@@ -556,11 +561,10 @@
             <property name="layout_style">end</property>
             <child>
               <object class="GtkButton" id="apu_channels_ok_button">
-                <property name="label">gtk-ok</property>
+                <property name="label">OK</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="use_stock">True</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -570,11 +574,10 @@
             </child>
             <child>
               <object class="GtkButton" id="apu_channels_cancel_button">
-                <property name="label">gtk-undo</property>
+                <property name="label">Cancel</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="use_stock">True</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -595,11 +598,6 @@
       <action-widget response="0">apu_channels_ok_button</action-widget>
       <action-widget response="0">apu_channels_cancel_button</action-widget>
     </action-widgets>
-  </object>
-  <object class="GtkAdjustment" id="apu_channels_dmc_adjustment">
-    <property name="upper">1</property>
-    <property name="step_increment">0.050000000000000003</property>
-    <property name="page_increment">1</property>
   </object>
   <object class="GtkAdjustment" id="apu_channels_extra_adjustment">
     <property name="upper">1</property>

@@ -87,6 +87,17 @@ int main(int argc, char **argv) {
 	cfg_file_parse();
 	optind = cmd_line_parse(argc, argv);
 
+	/* faccio il check dell'input */
+	if (cfg->input.check_input_conflicts == TRUE) {
+		BYTE i;
+		_array_pointers_port array;
+
+		for (i = PORT1; i < PORT_MAX; i++) {
+			array.port[i] = &port[i];
+		}
+		input_check_conflicts(&cfg->input, &array);
+	}
+
 	if (argc == optind) {
 #ifndef DEBUG
 		//if(!info.gui) {

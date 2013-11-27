@@ -7,6 +7,7 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/ioctl.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <string.h>
@@ -16,17 +17,19 @@
 #include "input.h"
 
 void js_init(void) {
-	memset(&js1, 0, sizeof(js1));
-	memset(&js2, 0, sizeof(js2));
+	BYTE i;
 
-	sprintf(js1.dev, "%s%d", JS_DEV_PATH, port1.joy_id);
-	js1.input_port = input_port1;
+	for (i = PORT1; i < PORT_MAX; i++) {
+		memset(&js[i], 0x00, sizeof(_js));
 
-	sprintf(js2.dev, "%s%d", JS_DEV_PATH, port2.joy_id);
-	js2.input_port = input_port2;
+		if (port[i].joy_id == name_to_jsn("NULL")) {
+			continue;
+		}
 
-	js_open(&js1);
-	js_open(&js2);
+		sprintf(js[i].dev, "%s%d", JS_DEV_PATH, port[i].joy_id);
+		js[i].input_decode_event = input_decode_event[i];
+		js_open(&js[i]);
+	}
 }
 void js_open(_js *joy) {
 	joy->fd = 0;
@@ -42,6 +45,10 @@ void js_control(_js *joy, _port *port) {
 	DBWORD value = 0;
 	BYTE mode = 0;
 
+	if (port->joy_id == name_to_jsn("NULL")) {
+		return;
+	}
+
 	if (!joy->fd) {
 		if (++joy->open_try == 300) {
 			joy->open_try = 0;
@@ -51,7 +58,6 @@ void js_control(_js *joy, _port *port) {
 	}
 
 	if (!js_read_event(&jse, joy)) {
-		//fprintf(stderr, "%04X %04X %d\n", jse.type, jse.number, (SWORD) jse.value);
 		jse.type &= ~JS_EVENT_INIT;
 
 		if (jse.type == JS_EVENT_AXIS) {
@@ -63,29 +69,25 @@ void js_control(_js *joy, _port *port) {
 				if (jse.value > 0) {
 					value++;
 				}
-				//fprintf(stderr, "pressed  : %s (%d) (%d)\n\n", jsvalToName(value), axis, value);
 				joy->last[axis] = value;
 			} else {
 				mode = RELEASED;
 				value = joy->last[axis];
-				//fprintf(stderr, "released : %s (%d) (%d)\n\n", jsvalToName(value), axis, value);
 				joy->last[axis] = 0;
 			}
 		} else if (jse.type == JS_EVENT_BUTTON) {
 			value = jse.number | 0x400;
 			if (jse.value == 0) {
 				mode = RELEASED;
-				//fprintf(stderr, "released : %s\n\n", jsv_to_name(value));
 			} else if (jse.value == 1) {
 				mode = PRESSED;
-				//fprintf(stderr, "pressed  : %s\n\n", jsv_to_name(value));
 			} else {
 				value = 0;
 			}
 		}
 
-		if (value && joy->input_port) {
-			joy->input_port(mode, value, JOYSTICK, port);
+		if (value && joy->input_decode_event) {
+			joy->input_decode_event(mode, value, JOYSTICK, port);
 		}
 	}
 }
@@ -96,8 +98,43 @@ void js_close(_js *joy) {
 	joy->fd = 0;
 }
 void js_quit(void) {
-	js_close(&js1);
-	js_close(&js2);
+	BYTE i;
+
+	for (i = PORT1; i < PORT_MAX; i++) {
+		js_close(&js[i]);
+	}
+}
+BYTE js_is_connected(int dev) {
+	char path_dev[30];
+	int fd;
+
+	snprintf(path_dev, sizeof(path_dev), "%s%d", JS_DEV_PATH, dev);
+	fd = open(path_dev, O_RDONLY | O_NONBLOCK);
+	close(fd);
+
+	if (fd == -1) {
+		return (EXIT_ERROR);
+	}
+
+	return (EXIT_OK);
+}
+char *js_name_device(int dev) {
+	static char name[128];
+	char path_dev[30];
+	int fd;
+
+	memset(name, 0x00, sizeof(name));
+
+	snprintf(path_dev, sizeof(path_dev), "%s%d", JS_DEV_PATH, dev);
+	fd = open(path_dev, O_RDONLY | O_NONBLOCK);
+
+	if (ioctl(fd, JSIOCGNAME(sizeof(name)), name) < 0) {
+		strncpy(name, "Not connected", sizeof(name));
+	}
+
+	close(fd);
+
+	return(name);
 }
 BYTE js_read_event(_js_event *event, _js *joy) {
 	SWORD bytes;

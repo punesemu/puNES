@@ -14,9 +14,7 @@
 #include <windowsx.h>
 #include <shlobj.h>
 #include <libgen.h>
-#define _INPUTINLINE_
 #include "input.h"
-#undef  _INPUTINLINE_
 #include "overscan.h"
 #include "gfx.h"
 #include "snd.h"

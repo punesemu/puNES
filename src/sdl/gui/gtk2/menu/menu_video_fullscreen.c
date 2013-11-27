@@ -74,7 +74,7 @@ void menu_video_fullscreen(GtkWidget *video, GtkAccelGroup *accel_group) {
 	gtk_menu_shell_append(GTK_MENU_SHELL(video), check[MFULLSCR]);
 	gtk_menu_shell_append(GTK_MENU_SHELL(video), check[MSTRETCHFSCR]);
 
-	icon_inline(check[MFULLSCR], icon_inline)
+	gw_image_from_inline(check[MFULLSCR], icon_inline);
 
 	gtk_widget_add_accelerator(check[MFULLSCR], "activate", accel_group, GDK_Return, GDK_MOD1_MASK,
 	        GTK_ACCEL_VISIBLE);

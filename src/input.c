@@ -17,65 +17,102 @@
 #include "fps.h"
 #include "tas.h"
 #include "cfg_file.h"
+#include "param.h"
 #if defined SDL
 #include "opengl.h"
 #endif
 
+static void INLINE input_turbo_buttons_control_standard(_port *port);
+
 void input_init(void) {
-	switch (port1.type) {
-		case CTRL_DISABLED:
-		default:
-			input_port1 = NULL;
-			SET_RD_REG1(input_rd_reg_disabled);
-			break;
-		case CTRL_STANDARD:
-			SET_PORT1(input_port_standard);
-			SET_RD_REG1(input_rd_reg_standard);
-			break;
-		case CTRL_ZAPPER:
-			input_port1 = NULL;
-			SET_RD_REG1(input_rd_reg_zapper);
-			break;
-	}
+	BYTE a;
 
-	switch (port2.type) {
-		case CTRL_DISABLED:
-		default:
-			input_port2 = NULL;
-			SET_RD_REG2(input_rd_reg_disabled);
-			break;
-		case CTRL_STANDARD:
-			SET_PORT2(input_port_standard);
-			SET_RD_REG2(input_rd_reg_standard);
-			break;
-		case CTRL_ZAPPER:
-			input_port2 = NULL;
-			SET_RD_REG2(input_rd_reg_zapper);
-			break;
-	}
+	r4016.value = 0;
 
-	{
-		BYTE i;
-
-		r4016.value = 0;
-		port1.index = port2.index = 0;
-		port1.zapper = port2.zapper = 0;
-
-		if (port1.changed) {
-			memset(&port1.turbo, 0, sizeof(_turbo_button) * LENGTH(port1.turbo));
-			port1.changed = FALSE;
+	for (a = PORT1; a < PORT_MAX; a++) {
+		switch (port[a].type) {
+			case CTRL_DISABLED:
+			default:
+				input_decode_event[a] = NULL;
+				input_add_event[a] = NULL;
+				SET_RD_REG(a, input_rd_reg_disabled);
+				break;
+			case CTRL_STANDARD:
+				SET_DECODE_EVENT(a, input_decode_event_standard);
+				SET_ADD_EVENT(a, input_add_event_standard);
+				SET_RD_REG(a, input_rd_reg_standard);
+				break;
+			case CTRL_ZAPPER:
+				input_decode_event[a] = NULL;
+				input_add_event[a] = NULL;
+				SET_RD_REG(a, input_rd_reg_zapper);
+				break;
 		}
 
-		if (port2.changed) {
-			memset(&port2.turbo, 0, sizeof(_turbo_button) * LENGTH(port2.turbo));
-			port1.changed = FALSE;
+		port[a].index = port[a].zapper = 0;
+
+		{
+			BYTE b;
+
+			for (b = 0; b < 24; b++) {
+				if (b < 8) {
+					port[a].data[b] = RELEASED;
+				} else {
+					port[a].data[b] = PRESSED;
+				}
+			}
+		}
+	}
+}
+void input_check_conflicts(_config_input *settings, _array_pointers_port *array) {
+	BYTE a;
+
+	if (settings->check_input_conflicts == FALSE) {
+		return;
+	}
+
+	/* Standard Controller */
+	for (a = PORT1; a < PORT_MAX; a++) {
+		BYTE b;
+		_port *this = array->port[a];
+
+		if (this->type != CTRL_STANDARD) {
+			continue;
 		}
 
-		for (i = 0; i < 24; i++) {
-			if (i < 8) {
-				port1.data[i] = port2.data[i] = RELEASED;
-			} else {
-				port1.data[i] = port2.data[i] = PRESSED;
+		for (b = a; b < PORT_MAX; b++) {
+			BYTE type;
+			_port *other = array->port[b];
+
+			if (other->type != CTRL_STANDARD) {
+				continue;
+			}
+
+			for (type = KEYBOARD; type <= JOYSTICK ; type++) {
+				BYTE this_button;
+
+				if (type == JOYSTICK) {
+					if ((this != other) && (this->joy_id != name_to_jsn("NULL"))
+					        && (this->joy_id == other->joy_id)) {
+						other->joy_id = name_to_jsn("NULL");
+					}
+					continue;
+				}
+
+				for (this_button = BUT_A; this_button < MAX_STD_PAD_BUTTONS; this_button++) {
+					BYTE other_button;
+
+					for (other_button = this_button; other_button < MAX_STD_PAD_BUTTONS;
+					        other_button++) {
+						if ((this == other) && (this_button == other_button)) {
+							continue;
+						}
+
+						if (this->input[type][this_button] == other->input[type][other_button]) {
+							other->input[type][other_button] = 0;
+						}
+					}
+				}
 			}
 		}
 	}
@@ -86,7 +123,7 @@ BYTE input_rd_reg_disabled(BYTE openbus, WORD **screen_index, _port *port) {
 	/*return (0x80);*/
 }
 
-BYTE input_port_standard(BYTE mode, DBWORD event, BYTE type, _port *port) {
+BYTE input_decode_event_standard(BYTE mode, DBWORD event, BYTE type, _port *port) {
 	if (tas.type) {
 		return (EXIT_OK);
 	} else if (event == port->input[type][BUT_A]) {
@@ -108,28 +145,28 @@ BYTE input_port_standard(BYTE mode, DBWORD event, BYTE type, _port *port) {
 	} else if (event == port->input[type][UP]) {
 		port->data[UP] = mode;
 		/* non possono essere premuti contemporaneamente */
-		if (mode == PRESSED) {
+		if ((cfg->input.permit_updown_leftright == FALSE) && (mode == PRESSED)) {
 			port->data[DOWN] = RELEASED;
 		}
 		return (EXIT_OK);
 	} else if (event == port->input[type][DOWN]) {
 		port->data[DOWN] = mode;
 		/* non possono essere premuti contemporaneamente */
-		if (mode == PRESSED) {
+		if ((cfg->input.permit_updown_leftright == FALSE) && (mode == PRESSED)) {
 			port->data[UP] = RELEASED;
 		}
 		return (EXIT_OK);
 	} else if (event == port->input[type][LEFT]) {
 		port->data[LEFT] = mode;
 		/* non possono essere premuti contemporaneamente */
-		if (mode == PRESSED) {
+		if ((cfg->input.permit_updown_leftright == FALSE) && (mode == PRESSED)) {
 			port->data[RIGHT] = RELEASED;
 		}
 		return (EXIT_OK);
 	} else if (event == port->input[type][RIGHT]) {
 		port->data[RIGHT] = mode;
 		/* non possono essere premuti contemporaneamente */
-		if (mode == PRESSED) {
+		if ((cfg->input.permit_updown_leftright == FALSE) && (mode == PRESSED)) {
 			port->data[LEFT] = RELEASED;
 		}
 		return (EXIT_OK);
@@ -162,6 +199,10 @@ BYTE input_port_standard(BYTE mode, DBWORD event, BYTE type, _port *port) {
 	}
 	return (EXIT_ERROR);
 }
+void input_add_event_standard(BYTE index) {
+	js_control(&js[index], &port[index]);
+	input_turbo_buttons_control_standard(&port[index]);
+}
 BYTE input_rd_reg_standard(BYTE openbus, WORD **screen_index, _port *port) {
 	BYTE value;
 
@@ -187,6 +228,24 @@ BYTE input_rd_reg_standard(BYTE openbus, WORD **screen_index, _port *port) {
 	}
 
 	return(value);
+}
+static void INLINE input_turbo_buttons_control_standard(_port *port) {
+	if (port->turbo[TURBOA].active) {
+		if (++port->turbo[TURBOA].counter == port->turbo[TURBOA].frequency) {
+			port->data[BUT_A] = PRESSED;
+		} else if (port->turbo[TURBOA].counter > port->turbo[TURBOA].frequency) {
+			port->data[BUT_A] = RELEASED;
+			port->turbo[TURBOA].counter = 0;
+		}
+	}
+	if (port->turbo[TURBOB].active) {
+		if (++port->turbo[TURBOB].counter == port->turbo[TURBOB].frequency) {
+			port->data[BUT_B] = PRESSED;
+		} else if (port->turbo[TURBOB].counter > port->turbo[TURBOB].frequency) {
+			port->data[BUT_B] = RELEASED;
+			port->turbo[TURBOB].counter = 0;
+		}
+	}
 }
 
 BYTE input_rd_reg_zapper(BYTE openbus, WORD **screen_index, _port *port) {
@@ -281,3 +340,16 @@ BYTE input_rd_reg_zapper(BYTE openbus, WORD **screen_index, _port *port) {
 
 	return (port->zapper);
 }
+BYTE input_zapper_is_connected(_port *array) {
+	BYTE i;
+
+	for (i = PORT1; i < PORT_MAX; i++) {
+		if (array[i].type == CTRL_ZAPPER) {
+			return (TRUE);
+		}
+	}
+
+	return (FALSE);
+}
+
+

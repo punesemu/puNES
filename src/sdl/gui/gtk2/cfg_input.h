@@ -1,7 +1,7 @@
 /*
  * cfg_input.h
  *
- *  Created on: 04/nov/2011
+ *  Created on: 17/nov/2013
  *      Author: fhorse
  */
 
@@ -9,20 +9,24 @@
 #define CFG_INPUT_H_
 
 #include "common.h"
+#include "gui.h"
+#include "cfg_file.h"
 
 typedef struct {
 	BYTE id;
 	_port port;
 } _cfg_port;
 
-_cfg_port cfg_port1;
-_cfg_port cfg_port2;
+struct _cfg_input {
+	GtkBuilder *builder;
+	GtkWidget *father;
+	GtkWidget *child;
 
-GtkWidget *cfg_controllers_toplevel;
+	_config_input settings;
 
-void cfg_input(void);
-void cfg_input_resize_std_widget(GtkWidget *widget);
-GtkWidget *cfg_input_std_button(const char *description);
-GtkWidget *cfg_input_ok_cancel(GCallback ok, GCallback cancel, _cfg_port *cfg_port);
+	_cfg_port port[PORT_MAX];
+} cfg_input;
+
+void cfg_input_dialog(void);
 
 #endif /* CFG_INPUT_H_ */

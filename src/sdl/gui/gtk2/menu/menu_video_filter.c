@@ -309,7 +309,7 @@ void menu_video_filter(GtkWidget *video, GtkAccelGroup *accel_group) {
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(filter), menu[0]);
 	gtk_menu_shell_append(GTK_MENU_SHELL(video), filter);
 
-	icon_inline(filter, filter_icon_inline)
+	gw_image_from_inline(filter, filter_icon_inline);
 
 	check[MNO_FILTER] = gtk_check_menu_item_new_with_mnemonic("_No Filter");
 	check[MBILINEAR] = gtk_check_menu_item_new_with_mnemonic("_Bilinear");
@@ -343,7 +343,7 @@ void menu_video_filter(GtkWidget *video, GtkAccelGroup *accel_group) {
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(check[MCRT]), menu[1]);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu[0]), check[MCRT]);
 
-	icon_inline(check[MCRT], crt_icon_inline)
+	gw_image_from_inline(check[MCRT], crt_icon_inline);
 
 	check[MCRTCURVE] = gtk_check_menu_item_new_with_mnemonic("With _Curve");
 	check[MCRTNOCURVE] = gtk_check_menu_item_new_with_mnemonic("_Without Curve");
@@ -363,7 +363,7 @@ void menu_video_filter(GtkWidget *video, GtkAccelGroup *accel_group) {
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(scalex), menu[1]);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu[0]), scalex);
 
-	icon_inline(scalex, scalex_icon_inline)
+	gw_image_from_inline(scalex, scalex_icon_inline);
 
 	check[MSCALE2X] = gtk_check_menu_item_new_with_mnemonic("Scale_2X");
 	check[MSCALE3X] = gtk_check_menu_item_new_with_mnemonic("Scale_3X");
@@ -387,7 +387,7 @@ void menu_video_filter(GtkWidget *video, GtkAccelGroup *accel_group) {
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(hqx), menu[1]);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu[0]), hqx);
 
-	icon_inline(hqx, hqx_icon_inline)
+	gw_image_from_inline(hqx, hqx_icon_inline);
 
 	check[MHQ2X] = gtk_check_menu_item_new_with_mnemonic("Hq_2X");
 	check[MHQ3X] = gtk_check_menu_item_new_with_mnemonic("Hq_3X");
@@ -411,7 +411,7 @@ void menu_video_filter(GtkWidget *video, GtkAccelGroup *accel_group) {
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(ntsc), menu[1]);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu[0]), ntsc);
 
-	icon_inline(ntsc, ntsc_icon_inline)
+	gw_image_from_inline(ntsc, ntsc_icon_inline);
 
 	check[MRGBNTSCCOM] = gtk_check_menu_item_new_with_mnemonic("_Composite");
 	check[MRGBNTSCSVD] = gtk_check_menu_item_new_with_mnemonic("_S-Video");

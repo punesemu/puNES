@@ -101,7 +101,7 @@ void menu_video_frame_skip(GtkWidget *video, GtkAccelGroup *accel_group) {
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(frame_skip), menu);
 	gtk_menu_shell_append(GTK_MENU_SHELL(video), frame_skip);
 
-	icon_inline(frame_skip, icon_inline)
+	gw_image_from_inline(frame_skip, icon_inline);
 
 	for (index = MFSKDEFAULT; index < NUMCHKS; index++) {
 		check[index] = gtk_check_menu_item_new_with_mnemonic(param_fsk[index].lname);

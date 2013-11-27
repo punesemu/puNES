@@ -78,7 +78,7 @@ void menu_video_rendering(GtkWidget *video, GtkAccelGroup *accel_group) {
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(rendering), menu);
 	gtk_menu_shell_append(GTK_MENU_SHELL(video), rendering);
 
-	icon_inline(rendering, icon_inline)
+	gw_image_from_inline(rendering, icon_inline);
 
 	check[MSOFTWARE] = gtk_check_menu_item_new_with_mnemonic("_Software");
 	check[MOPENGL] = gtk_check_menu_item_new_with_mnemonic("_OpenGL");

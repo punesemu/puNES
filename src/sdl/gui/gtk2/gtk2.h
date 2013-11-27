@@ -10,10 +10,10 @@
 
 #include <gtk/gtk.h>
 #include "common.h"
+#include "gtk_wrap.h"
 #include "emu.h"
 #include "keyboard.h"
 #include "joystick.h"
-#include "cfg_input.h"
 #ifdef __NETPLAY__
 #include <arpa/inet.h>
 #include "netplay.h"
@@ -25,13 +25,6 @@
 #define g_timeout_redraw_stop()\
 	redraw = FALSE
 #define exit_thread(value) g_thread_exit(value)
-#define icon_inline(wid, icn)\
-{\
-	GdkPixbuf *pixbuf;\
-	pixbuf = gdk_pixbuf_new_from_inline(-1, icn, FALSE, NULL);\
-	gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(wid), gtk_image_new_from_pixbuf(pixbuf));\
-	g_object_unref(pixbuf), pixbuf = NULL;\
-}
 
 enum { IN = 1, OUT = 2, SPACING = 4 };
 

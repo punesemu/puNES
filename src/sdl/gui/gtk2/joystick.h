@@ -8,6 +8,7 @@
 #ifndef JOYSTICK_H_
 #define JOYSTICK_H_
 
+#include <linux/joystick.h>
 #include "common.h"
 #include "input.h"
 
@@ -17,21 +18,12 @@
 #define jsv_to_name(jsvl) js_to_name(jsvl, jsv_list, LENGTH(jsv_list))
 #define jsn_to_name(jsvl) js_to_name(jsvl, jsn_list, LENGTH(jsn_list))
 
-enum {
-	/* button pressed/released */
-	JS_EVENT_BUTTON = 0x01,
-	/* joystick moved */
-	JS_EVENT_AXIS = 0x02,
-	/* initial state of device */
-	JS_EVENT_INIT = 0x80
-};
-
 typedef struct {
 	char dev[30];
 	SDBWORD fd;
 	WORD open_try;
 	SWORD last[16];
-	BYTE (*input_port)(BYTE mode, DBWORD event, BYTE type, _port *port);
+	BYTE (*input_decode_event)(BYTE mode, DBWORD event, BYTE type, _port *port);
 } _js;
 typedef struct {
 	/* event timestamp in milliseconds */
@@ -48,7 +40,7 @@ typedef struct {
 	char name[20];
 } _js_element;
 
-_js js1, js2;
+_js js[PORT_MAX];
 
 static const _js_element jsv_list[] = {
 	{ 0x000, "NULL"   },
@@ -88,6 +80,8 @@ void js_open(_js *joy);
 void js_control(_js *joy, _port *port);
 void js_close(_js *joy);
 void js_quit(void);
+BYTE js_is_connected(int dev);
+char *js_name_device(int dev);
 BYTE js_read_event(_js_event *event, _js *joy);
 char *js_to_name(const DBWORD val, const _js_element *list, const DBWORD length);
 DBWORD js_from_name(const char *name, const _js_element *list, const DBWORD lenght);
