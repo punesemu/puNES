@@ -6,7 +6,7 @@
 C_SRCS += \
 ../src/sdl/gui/windows/cfg_apu_channels.c \
 ../src/sdl/gui/windows/cfg_input.c \
-../src/sdl/gui/windows/cfg_std_ctrl.c \
+../src/sdl/gui/windows/cfg_std_pad.c \
 ../src/sdl/gui/windows/joystick.c \
 ../src/sdl/gui/windows/keyboard.c \
 ../src/sdl/gui/windows/snd.c \
@@ -15,7 +15,7 @@ C_SRCS += \
 OBJS += \
 ./src/sdl/gui/windows/cfg_apu_channels.o \
 ./src/sdl/gui/windows/cfg_input.o \
-./src/sdl/gui/windows/cfg_std_ctrl.o \
+./src/sdl/gui/windows/cfg_std_pad.o \
 ./src/sdl/gui/windows/joystick.o \
 ./src/sdl/gui/windows/keyboard.o \
 ./src/sdl/gui/windows/snd.o \
@@ -24,7 +24,7 @@ OBJS += \
 C_DEPS += \
 ./src/sdl/gui/windows/cfg_apu_channels.d \
 ./src/sdl/gui/windows/cfg_input.d \
-./src/sdl/gui/windows/cfg_std_ctrl.d \
+./src/sdl/gui/windows/cfg_std_pad.d \
 ./src/sdl/gui/windows/joystick.d \
 ./src/sdl/gui/windows/keyboard.d \
 ./src/sdl/gui/windows/snd.d \

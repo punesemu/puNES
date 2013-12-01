@@ -495,7 +495,21 @@ void cfg_file_set_single_port_default(_port *port, int index) {
 	cfg_file_set_kbd_joy_default(port, index, JOYSTICK + 1);
 }
 void cfg_file_set_kbd_joy_default(_port *port, int index, int mode) {
-	char default_value_port[PORT_MAX][2][MAX_STD_PAD_BUTTONS][15] = {
+	BYTE i;
+
+	for (i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
+		if ((mode == KEYBOARD) || (mode > JOYSTICK)) {
+			port->input[KEYBOARD][i] = keyval_from_name(
+			        cfg_file_set_kbd_joy_button_default(index, KEYBOARD, i));
+		}
+		if ((mode == JOYSTICK) || (mode > JOYSTICK)) {
+			port->input[JOYSTICK][i] = name_to_jsv(
+			        cfg_file_set_kbd_joy_button_default(index, JOYSTICK, i));
+		}
+	}
+}
+char *cfg_file_set_kbd_joy_button_default(int index, int mode, int button) {
+	static char default_value_port[PORT_MAX][2][MAX_STD_PAD_BUTTONS][15] = {
 		{
 			{
 				"S",  "A",    "Z",    "X",
@@ -510,9 +524,15 @@ void cfg_file_set_kbd_joy_default(_port *port, int index, int mode) {
 		},
 		{
 			{
+#ifdef GTK
 				"Page_Down", "End",     "Insert",  "Delete",
 				"KP_Up",     "KP_Down", "KP_Left", "KP_Right",
 				"Home",      "Page_Up"
+#else
+				"PgDown",    "End",     "Insert",  "Delete",
+				"NumPad8",   "NumPad2", "NumPad4", "NumPad6",
+				"Home",      "PgUp"
+#endif
 			},
 			{
 				"JB1",    "JB0",    "JB8",    "JB9",
@@ -521,16 +541,8 @@ void cfg_file_set_kbd_joy_default(_port *port, int index, int mode) {
 			}
 		},
 	};
-	BYTE i;
 
-	for (i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
-		if ((mode == KEYBOARD) || (mode > JOYSTICK)) {
-			port->input[KEYBOARD][i] = keyval_from_name(default_value_port[index][KEYBOARD][i]);
-		}
-		if ((mode == JOYSTICK) || (mode > JOYSTICK)) {
-			port->input[JOYSTICK][i] = name_to_jsv(default_value_port[index][JOYSTICK][i]);
-		}
-	}
+	return(default_value_port[index][mode][button]);
 }
 
 void set_default(void) {

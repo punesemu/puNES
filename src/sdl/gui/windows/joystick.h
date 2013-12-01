@@ -49,14 +49,14 @@ typedef struct {
 	DWORD last_buttons;
 	JOYINFOEX joy_info;
 	JOYCAPS joy_caps;
-	BYTE (*input_port)(BYTE mode, DBWORD event, BYTE type, _port *port);
+	BYTE (*input_decode_event)(BYTE mode, DBWORD event, BYTE type, _port *port);
 } _js;
 typedef struct {
 	DBWORD value;
 	char name[20];
 } _js_element;
 
-_js js1, js2;
+_js js[PORT_MAX];
 
 static const _js_element jsn_list[] = {
 	{ 0xFF,         "NULL"         },
@@ -113,6 +113,7 @@ void js_open(_js *joy);
 void js_control(_js *joy, _port *port);
 void js_close(_js *joy);
 void js_quit(void);
+BYTE js_is_connected(int dev);
 char *js_to_name(const DBWORD val, const _js_element *list, const DBWORD length);
 DBWORD js_from_name(const char *name, const _js_element *list, const DBWORD lenght);
 

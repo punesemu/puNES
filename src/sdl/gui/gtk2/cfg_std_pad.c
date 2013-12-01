@@ -15,8 +15,8 @@
 #include "param.h"
 
 void cfg_std_pad_info_entry_print(int type, const char *fmt, ...);
-void cfg_std_pad_disable_notebook_and_other(gint type, gint virtual_button, gint mode);
-void cfg_std_pad_disable_joystick_notebook_buttons(gint mode);
+void cfg_std_pad_enable_notebook_and_other(gint type, gint virtual_button, gint mode);
+void cfg_std_pad_enable_joystick_notebook_buttons(gint mode);
 gboolean cfg_std_pad_input_is_not_ok(gint type, gint virtual_button, guint input);
 
 gboolean cfg_std_pad_key_press_event(GtkWidget *widget, GdkEventKey *event, gpointer user_data);
@@ -27,9 +27,10 @@ void cfg_std_pad_joystick_device_combobox_changed(GtkComboBox *combobox, gpointe
 
 void cfg_std_pad_input_clicked(GtkButton *button, gint virtual_button);
 void cfg_std_pad_input_unset_clicked(GtkButton *button, gint virtual_button);
+void cfg_std_pad_input_default_clicked(GtkButton *button, gint virtual_button);
 void cfg_std_pad_input_in_sequence_clicked(GtkButton *button, gint type);
 void cfg_std_pad_input_unset_all_clicked(GtkButton *button, gint type);
-void cfg_std_pad_input_default_clicked(GtkButton *button, gint type);
+void cfg_std_pad_input_default_all_clicked(GtkButton *button, gint type);
 
 void cfg_std_pad_turbo_delay_value_changed(GtkRange *range, gint type);
 
@@ -37,7 +38,7 @@ void cfg_std_pad_ok_clicked(GtkWidget *widget, _cfg_port *cfg_port);
 void cfg_std_pad_cancel_clicked(GtkWidget *widget, gpointer user_data);
 void cfg_std_pad_window_destroy(GtkWidget *widget, gpointer user_data);
 
-enum {
+enum std_pad_combo_value {
 	JOY_NAME,
 	JOY_VALUE,
 	JOY_COLUMNS,
@@ -68,6 +69,8 @@ struct _cfg_std_pad {
 	BYTE virtual_button;
 	BYTE no_other_buttons;
 	BYTE wait_js_input;
+	BYTE in_sequence;
+	BYTE force_exit_in_sequence;
 
 	_cfg_port cfg;
 } cfg_std_pad;
@@ -113,7 +116,7 @@ void cfg_std_pad_dialog(_cfg_port *cfg_port) {
 					        jsv_to_name(cfg_std_pad.cfg.port.input[a][b]));
 				}
 
-				widget = dg_widget_from_obj_name(cfg_std_pad.builder, "%s_%s_togglebutton",
+				widget = dg_widget_from_obj_name(cfg_std_pad.builder, "%s_%s_button",
 				        std_pad_input_type[a], std_pad_button[b][0]);
 
 				gtk_button_set_label(GTK_BUTTON(widget), text);
@@ -127,6 +130,13 @@ void cfg_std_pad_dialog(_cfg_port *cfg_port) {
 				g_signal_connect(G_OBJECT(widget), "clicked",
 				        G_CALLBACK(cfg_std_pad_input_unset_clicked),
 				        GINT_TO_POINTER(virtual_button));
+
+				widget = dg_widget_from_obj_name(cfg_std_pad.builder, "%s_%s_default_button",
+				        std_pad_input_type[a], std_pad_button[b][0]);
+
+				g_signal_connect(G_OBJECT(widget), "clicked",
+				        G_CALLBACK(cfg_std_pad_input_default_clicked),
+				        GINT_TO_POINTER(virtual_button));
 			}
 
 			dg_signal_connect(cfg_std_pad.builder,
@@ -138,8 +148,8 @@ void cfg_std_pad_dialog(_cfg_port *cfg_port) {
 			        cfg_std_pad_input_unset_all_clicked, GINT_TO_POINTER(a));
 
 			dg_signal_connect(cfg_std_pad.builder,
-			        dg_obj_name("%s_default_button", std_pad_input_type[a]), "clicked",
-			        cfg_std_pad_input_default_clicked, GINT_TO_POINTER(a));
+			        dg_obj_name("%s_default_all_button", std_pad_input_type[a]), "clicked",
+			        cfg_std_pad_input_default_all_clicked, GINT_TO_POINTER(a));
 		}
 	}
 
@@ -192,63 +202,79 @@ void cfg_std_pad_info_entry_print(int type, const char *fmt, ...) {
 
 	gtk_entry_set_text(GTK_ENTRY(widget), buffer);
 }
-void cfg_std_pad_disable_notebook_and_other(gint type, gint virtual_button, gint mode) {
+void cfg_std_pad_enable_notebook_and_other(gint type, gint virtual_button, gint mode) {
 	gint other_type = KEYBOARD;
 
-	if (type == KEYBOARD) {
-		other_type = JOYSTICK;
-	}
+	if ((mode == TRUE) && (cfg_std_pad.in_sequence == TRUE)) {
+		;
+	} else {
+		if (type == KEYBOARD) {
+			other_type = JOYSTICK;
+		}
 
-	if (mode == TRUE) {
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(cfg_std_pad.button_clicked), FALSE);
-	}
+		/* notebook */
+		gtk_widget_set_sensitive(
+		        _gw_get_widget(cfg_std_pad.builder,
+		                dg_obj_name("%s_notebook_alignment", std_pad_input_type[other_type])), mode);
+		gtk_widget_set_sensitive(
+		        _gw_get_widget(cfg_std_pad.builder,
+		                dg_obj_name("%s_notebook_label", std_pad_input_type[other_type])), mode);
 
-	/* notebook */
-	gtk_widget_set_sensitive(
-	        _gw_get_widget(cfg_std_pad.builder,
-	                dg_obj_name("%s_notebook_alignment", std_pad_input_type[other_type])), mode);
-	gtk_widget_set_sensitive(
-	        _gw_get_widget(cfg_std_pad.builder,
-	                dg_obj_name("%s_notebook_label", std_pad_input_type[other_type])), mode);
+		/* device combobox */
+		gtk_widget_set_sensitive(
+		        _gw_get_widget(cfg_std_pad.builder,
+		                dg_obj_name("%s_device_hbox", std_pad_input_type[type])), mode);
 
-	/* device combobox */
-	gtk_widget_set_sensitive(
-	        _gw_get_widget(cfg_std_pad.builder,
-	                dg_obj_name("%s_device_hbox", std_pad_input_type[type])), mode);
+		/* notebook */
+		{
+			BYTE i;
+			char *bt;
 
-	/* notebook */
-	{
-		BYTE i;
-		char *bt;
+			/* button */
+			for (i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
+				bt = dg_obj_name("%s_%s_button", std_pad_input_type[type], std_pad_button[i][0]);
+				gtk_widget_set_sensitive(_gw_get_widget(cfg_std_pad.builder, bt), mode);
 
-		/* togglebutton */
-		for (i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
-			if (virtual_button == i) {
-				continue;
+				bt = dg_obj_name("%s_%s_label", std_pad_input_type[type], std_pad_button[i][0]);
+				gtk_widget_set_sensitive(_gw_get_widget(cfg_std_pad.builder, bt), mode);
 			}
 
-			bt = dg_obj_name("%s_%s_togglebutton", std_pad_input_type[type], std_pad_button[i][0]);
-			gtk_widget_set_sensitive(_gw_get_widget(cfg_std_pad.builder, bt), mode);
+			/* unset */
+			for (i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
+				bt = dg_obj_name("%s_%s_unset_button", std_pad_input_type[type],
+				        std_pad_button[i][0]);
+				gtk_widget_set_sensitive(_gw_get_widget(cfg_std_pad.builder, bt), mode);
+			}
 
-			bt = dg_obj_name("%s_%s_label", std_pad_input_type[type], std_pad_button[i][0]);
-			gtk_widget_set_sensitive(_gw_get_widget(cfg_std_pad.builder, bt), mode);
+			/* default */
+			for (i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
+				bt = dg_obj_name("%s_%s_default_button", std_pad_input_type[type],
+				        std_pad_button[i][0]);
+				gtk_widget_set_sensitive(_gw_get_widget(cfg_std_pad.builder, bt), mode);
+			}
 		}
+		gtk_widget_set_sensitive(
+		        _gw_get_widget(cfg_std_pad.builder,
+		                dg_obj_name("%s_notebook_button_hbox", std_pad_input_type[type])), mode);
 
-		/* unset */
-		for (i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
-			bt = dg_obj_name("%s_%s_unset_button", std_pad_input_type[type], std_pad_button[i][0]);
-			gtk_widget_set_sensitive(_gw_get_widget(cfg_std_pad.builder, bt), mode);
-		}
+		/* turbo delay */
+		gtk_widget_set_sensitive(
+		        _gw_get_widget(cfg_std_pad.builder, "standard_pad_turbo_delay_alignment"), mode);
 	}
-	gtk_widget_set_sensitive(
-	        _gw_get_widget(cfg_std_pad.builder,
-	                dg_obj_name("%s_notebook_button_hbox", std_pad_input_type[type])), mode);
 
-	/* turbo delay */
-	gtk_widget_set_sensitive(
-	        _gw_get_widget(cfg_std_pad.builder, "standard_pad_turbo_delay_alignment"), mode);
+	if (mode == FALSE) {
+		char *bt;
+
+		bt = dg_obj_name("%s_%s_button", std_pad_input_type[type],
+		        std_pad_button[virtual_button][0]);
+		gtk_widget_set_sensitive(_gw_get_widget(cfg_std_pad.builder, bt), TRUE);
+
+		bt = dg_obj_name("%s_%s_label", std_pad_input_type[type],
+		        std_pad_button[virtual_button][0]);
+		gtk_widget_set_sensitive(_gw_get_widget(cfg_std_pad.builder, bt), TRUE);
+	}
 }
-void cfg_std_pad_disable_joystick_notebook_buttons(gint mode) {
+void cfg_std_pad_enable_joystick_notebook_buttons(gint mode) {
 	gtk_widget_set_sensitive(_gw_get_widget(cfg_std_pad.builder, "joystick_buttons_hbox"), mode);
 	gtk_widget_set_sensitive(_gw_get_widget(cfg_std_pad.builder, "joystick_info_entry"), mode);
 	gtk_widget_set_sensitive(_gw_get_widget(cfg_std_pad.builder, "joystick_notebook_button_hbox"),
@@ -372,7 +398,7 @@ gboolean cfg_std_pad_key_press_event(GtkWidget *widget, GdkEventKey *event, gpoi
 	}
 
 	if (value_is_good) {
-		cfg_std_pad_disable_notebook_and_other(type, virtual_button, TRUE);
+		cfg_std_pad_enable_notebook_and_other(type, virtual_button, TRUE);
 
 		cfg_std_pad.no_other_buttons = FALSE;
 		cfg_std_pad.virtual_button = 0;
@@ -401,7 +427,7 @@ void cfg_std_pad_js_press_event(void) {
 		if (cfg_input.child) {
 			gdk_threads_enter();
 			cfg_std_pad_info_entry_print(type, "Select device first");
-			cfg_std_pad_disable_notebook_and_other(type, virtual_button, TRUE);
+			cfg_std_pad_enable_notebook_and_other(type, virtual_button, TRUE);
 			gdk_threads_leave();
 		}
 		g_thread_exit(NULL);
@@ -414,7 +440,7 @@ void cfg_std_pad_js_press_event(void) {
 		if (cfg_input.child) {
 			gdk_threads_enter();
 			cfg_std_pad_info_entry_print(type, "Error on open device %s", device);
-			cfg_std_pad_disable_notebook_and_other(type, virtual_button, TRUE);
+			cfg_std_pad_enable_notebook_and_other(type, virtual_button, TRUE);
 			gdk_threads_leave();
 		}
 		g_thread_exit(NULL);
@@ -482,7 +508,7 @@ void cfg_std_pad_js_press_event(void) {
 			cfg_std_pad.cfg.port.input[type][virtual_button] = value;
 			if (cfg_input.child) {
 				gdk_threads_enter();
-				cfg_std_pad_disable_notebook_and_other(type, virtual_button, TRUE);
+				cfg_std_pad_enable_notebook_and_other(type, virtual_button, TRUE);
 				gtk_button_set_label(cfg_std_pad.button_clicked, jsv_to_name(value));
 				gdk_threads_leave();
 			}
@@ -492,7 +518,7 @@ void cfg_std_pad_js_press_event(void) {
 	} else {
 		if (cfg_input.child) {
 			gdk_threads_enter();
-			cfg_std_pad_disable_notebook_and_other(type, virtual_button, TRUE);
+			cfg_std_pad_enable_notebook_and_other(type, virtual_button, TRUE);
 			gdk_threads_leave();
 		}
 	}
@@ -576,10 +602,10 @@ void cfg_std_pad_joystick_device_combobox_init(_cfg_port *cfg_port) {
 			        name_to_jsn("NULL"), -1);
 
 			gtk_widget_set_sensitive(GTK_WIDGET(combobox), FALSE);
-			cfg_std_pad_disable_joystick_notebook_buttons(FALSE);
+			cfg_std_pad_enable_joystick_notebook_buttons(FALSE);
 		} else {
 			gtk_widget_set_sensitive(GTK_WIDGET(combobox), TRUE);
-			cfg_std_pad_disable_joystick_notebook_buttons(TRUE);
+			cfg_std_pad_enable_joystick_notebook_buttons(TRUE);
 		}
 	}
 
@@ -597,10 +623,10 @@ void cfg_std_pad_joystick_device_combobox_init(_cfg_port *cfg_port) {
 		if (cfg_std_pad.cfg.port.joy_id == name_to_jsn("NULL")
 		        || (current_line == name_to_jsn("NULL"))) {
 			gtk_combo_box_set_active(GTK_COMBO_BOX(combobox), disabled_line);
-			//cfg_std_pad_disable_joystick_notebook_buttons(FALSE);
+			cfg_std_pad_enable_joystick_notebook_buttons(FALSE);
 		} else {
 			gtk_combo_box_set_active(GTK_COMBO_BOX(combobox), current_line);
-			//cfg_std_pad_disable_joystick_notebook_buttons(TRUE);
+			cfg_std_pad_enable_joystick_notebook_buttons(TRUE);
 		}
 
 		g_signal_connect(G_OBJECT(combobox), "changed",
@@ -621,9 +647,9 @@ void cfg_std_pad_joystick_device_combobox_changed(GtkComboBox *combobox, gpointe
 	gtk_tree_model_get(model, &iter, JOY_VALUE, &joy_id, -1);
 
 	if (joy_id == name_to_jsn("NULL")) {
-		cfg_std_pad_disable_joystick_notebook_buttons(FALSE);
+		cfg_std_pad_enable_joystick_notebook_buttons(FALSE);
 	} else {
-		cfg_std_pad_disable_joystick_notebook_buttons(TRUE);
+		cfg_std_pad_enable_joystick_notebook_buttons(TRUE);
 	}
 
 	cfg_std_pad.cfg.port.joy_id = joy_id;
@@ -644,7 +670,7 @@ void cfg_std_pad_input_clicked(GtkButton *button, gint virtual_button) {
 
 	cfg_std_pad.retry = 1;
 
-	cfg_std_pad_disable_notebook_and_other(type, virtual_button, FALSE);
+	cfg_std_pad_enable_notebook_and_other(type, virtual_button, FALSE);
 
 	if (type == KEYBOARD) {
 		cfg_std_pad.no_other_buttons = TRUE;
@@ -667,9 +693,67 @@ void cfg_std_pad_input_unset_clicked(GtkButton *button, gint virtual_button) {
 
 	cfg_std_pad_info_entry_print(type, "");
 
-	obj_name = dg_obj_name("%s_%s_togglebutton", std_pad_input_type[type],
+	obj_name = dg_obj_name("%s_%s_button", std_pad_input_type[type],
 	        std_pad_button[virtual_button][0]);
 	gtk_button_set_label(_gw_get_button(cfg_std_pad.builder, obj_name), "NULL");
+}
+void cfg_std_pad_input_default_clicked(GtkButton *button, gint virtual_button) {
+	char *obj_name, *def;
+	gint type;
+
+	type = virtual_button / MAX_STD_PAD_BUTTONS;
+	virtual_button -= (type * MAX_STD_PAD_BUTTONS);
+
+	def = cfg_file_set_kbd_joy_button_default(cfg_std_pad.cfg.id - 1, type, virtual_button);
+
+	if (type == KEYBOARD) {
+		cfg_std_pad.cfg.port.input[type][virtual_button] = keyval_from_name(def);
+	} else {
+		cfg_std_pad.cfg.port.input[type][virtual_button] = name_to_jsv(def);
+	}
+
+	cfg_std_pad_info_entry_print(type, "");
+
+	obj_name = dg_obj_name("%s_%s_button", std_pad_input_type[type],
+	        std_pad_button[virtual_button][0]);
+	gtk_button_set_label(_gw_get_button(cfg_std_pad.builder, obj_name), def);
+
+	if (cfg_input.settings.check_input_conflicts == TRUE) {
+		BYTE a;
+
+		for (a = PORT1; a < PORT_MAX; a++) {
+			BYTE b;
+			_cfg_port *other = &cfg_input.port[a];
+
+			if (cfg_std_pad.cfg.id == other->id) {
+				other = &cfg_std_pad.cfg;
+			}
+
+			for (b = BUT_A; b < MAX_STD_PAD_BUTTONS; b++) {
+				BYTE c;
+				gint input = cfg_std_pad.cfg.port.input[type][b];
+
+				for (c = BUT_A; c < MAX_STD_PAD_BUTTONS; c++) {
+					if (cfg_std_pad.cfg.id == other->id) {
+						if ((b == c) || (c == virtual_button)) {
+							continue;
+						}
+					}
+
+					if (other->port.input[type][c] == input) {
+						other->port.input[type][c] = 0;
+
+						if (cfg_std_pad.cfg.id == other->id) {
+							char *obj_name = dg_obj_name("%s_%s_button",
+							        std_pad_input_type[type], std_pad_button[c][0]);
+							gtk_button_set_label(_gw_get_button(cfg_std_pad.builder, obj_name),
+							        "NULL");
+						}
+					}
+				}
+			}
+		}
+	}
 }
 void cfg_std_pad_input_in_sequence_clicked(GtkButton *button, gint type) {
 	gint a, new_order[MAX_STD_PAD_BUTTONS] = {
@@ -680,24 +764,35 @@ void cfg_std_pad_input_in_sequence_clicked(GtkButton *button, gint type) {
 
 	cfg_std_pad_info_entry_print(type, "");
 
-	if ((type == JOYSTICK) && (cfg_std_pad.cfg.port.joy_id == name_to_jsn("NULL"))) {
-		cfg_std_pad_info_entry_print(type, "Select device first");
-		return;
-	}
+	cfg_std_pad.in_sequence = TRUE;
 
-	for (a = 0; a < MAX_STD_PAD_BUTTONS; a++) {
-		GtkWidget *widget = dg_widget_from_obj_name(cfg_std_pad.builder, "%s_%s_togglebutton",
+	for (a = BUT_A; a < MAX_STD_PAD_BUTTONS; a++) {
+		GtkWidget *widget;
+
+		if (cfg_std_pad.force_exit_in_sequence == TRUE) {
+			return;
+		}
+
+		widget = dg_widget_from_obj_name(cfg_std_pad.builder, "%s_%s_button",
 		        std_pad_input_type[type], std_pad_button[new_order[a]][0]);
 
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(widget), TRUE);
+		gtk_button_clicked(GTK_BUTTON(widget));
+
 		gui_sleep(30);
+
 		while (cfg_std_pad.no_other_buttons == TRUE) {
 			gui_flush();
 			gui_sleep(30);
 		}
+
 		gui_sleep(30);
 		gui_flush();
 	}
+
+	cfg_std_pad.in_sequence = FALSE;
+
+	cfg_std_pad_enable_notebook_and_other(type, 0, TRUE);
+	gui_flush();
 }
 void cfg_std_pad_input_unset_all_clicked(GtkButton *button, gint type) {
 	gint a;
@@ -705,12 +800,10 @@ void cfg_std_pad_input_unset_all_clicked(GtkButton *button, gint type) {
 	cfg_std_pad_info_entry_print(type, "");
 
 	for (a = BUT_A; a < MAX_STD_PAD_BUTTONS; a++) {
-
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(cfg_std_pad.button_clicked), FALSE);
 		cfg_std_pad_input_unset_clicked(NULL, a + (type * MAX_STD_PAD_BUTTONS));
 	}
 }
-void cfg_std_pad_input_default_clicked(GtkButton *button, gint type) {
+void cfg_std_pad_input_default_all_clicked(GtkButton *button, gint type) {
 	BYTE a;
 
 	cfg_std_pad_info_entry_print(type, "");
@@ -728,7 +821,7 @@ void cfg_std_pad_input_default_clicked(GtkButton *button, gint type) {
 
 		gtk_button_set_label(
 		        _gw_get_button(cfg_std_pad.builder,
-		                dg_obj_name("%s_%s_togglebutton", std_pad_input_type[type],
+		                dg_obj_name("%s_%s_button", std_pad_input_type[type],
 		                        std_pad_button[a][0])), text);
 	}
 
@@ -756,7 +849,6 @@ void cfg_std_pad_input_default_clicked(GtkButton *button, gint type) {
 		}
 	}
 }
-
 void cfg_std_pad_turbo_delay_value_changed(GtkRange *range, gint type) {
 	cfg_std_pad.cfg.port.turbo[type].frequency = (BYTE) gtk_range_get_value(range);
 	cfg_std_pad.cfg.port.turbo[type].counter = 0;
@@ -783,16 +875,14 @@ void cfg_std_pad_cancel_clicked(GtkWidget *widget, gpointer user_data) {
 	gtk_widget_destroy(cfg_input.child);
 }
 void cfg_std_pad_window_destroy(GtkWidget *widget, gpointer user_data) {
+	cfg_std_pad.wait_js_input = FALSE;
+	cfg_std_pad.force_exit_in_sequence = TRUE;
+	cfg_std_pad.in_sequence = FALSE;
+	cfg_std_pad.no_other_buttons = FALSE;
+
 	cfg_input.child = NULL;
 
 	g_object_unref(G_OBJECT(cfg_std_pad.builder));
-
-	/*
-	 * nel caso sia stato premuto il tasto cancel
-	 * mentre sono in attesa di un input dal joystick,
-	 * chiedo di uscire dalla routine cfg_std_pad_js_press_event.
-	 */
-	cfg_std_pad.wait_js_input = FALSE;
 
 	if (cfg_input.father != NULL) {
 		gtk_widget_show(cfg_input.father);

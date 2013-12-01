@@ -34,8 +34,8 @@ enum joy_misc {
 		}\
 		joy->last_axis[axis] = joy->joy_info.info;\
 	}\
-	if (value && joy->input_port) {\
-		joy->input_port(mode, value, JOYSTICK, port);\
+	if (value && joy->input_decode_event) {\
+		joy->input_decode_event(mode, value, JOYSTICK, port);\
 	}
 #define js_elaborate_pov(md, pov)\
 	mode = md;\
@@ -52,31 +52,31 @@ enum joy_misc {
 		value = 0x103;\
 	} else if (pov == POV_table[JOY_POV_UP_RIGHT]) {\
 		value = 0x100;\
-		if (joy->input_port) {\
-			joy->input_port(mode, value, JOYSTICK, port);\
+		if (joy->input_decode_event) {\
+			joy->input_decode_event(mode, value, JOYSTICK, port);\
 		}\
 		value = 0x101;\
 	} else if (pov == POV_table[JOY_POV_RIGHT_DOWN]) {\
 		value = 0x101;\
-		if (joy->input_port) {\
-			joy->input_port(mode, value, JOYSTICK, port);\
+		if (joy->input_decode_event) {\
+			joy->input_decode_event(mode, value, JOYSTICK, port);\
 		}\
 		value = 0x102;\
 	} else if (pov == POV_table[JOY_POV_DOWN_LEFT]) {\
 		value = 0x102;\
-		if (joy->input_port) {\
-			joy->input_port(mode, value, JOYSTICK, port);\
+		if (joy->input_decode_event) {\
+			joy->input_decode_event(mode, value, JOYSTICK, port);\
 		}\
 		value = 0x103;\
 	} else if (pov == POV_table[JOY_POV_LEFT_UP]) {\
 		value = 0x103;\
-		if (joy->input_port) {\
-			joy->input_port(mode, value, JOYSTICK, port);\
+		if (joy->input_decode_event) {\
+			joy->input_decode_event(mode, value, JOYSTICK, port);\
 		}\
 		value = 0x100;\
 	}\
-	if (value && joy->input_port) {\
-		joy->input_port(mode, value, JOYSTICK, port);\
+	if (value && joy->input_decode_event) {\
+		joy->input_decode_event(mode, value, JOYSTICK, port);\
 	}
 
 static const WORD POV_table[8] = {
@@ -91,21 +91,23 @@ static const WORD POV_table[8] = {
 };
 
 void js_init(void) {
-	memset(&js1, 0, sizeof(js1));
-	memset(&js2, 0, sizeof(js2));
+	BYTE i;
 
-	sprintf(js1.dev, "%s", jsn_to_name(port1.joy_id));
-	js1.open_try = (BYTE) (rand() % 110);
-	js1.clock = 0;
-	js1.input_port = input_port1;
+	for (i = PORT1; i < PORT_MAX; i++) {
+		memset(&js[i], 0x00, sizeof(_js));
 
-	sprintf(js2.dev, "%s", jsn_to_name(port2.joy_id));
-	js2.open_try = (BYTE) (rand() % 110);
-	js2.clock = 1;
-	js2.input_port = input_port2;
+		if (port[i].joy_id == name_to_jsn("NULL")) {
+			continue;
+		}
 
-	js_open(&js1);
-	js_open(&js2);
+		sprintf(js[i].dev, "%s", jsn_to_name(port[i].joy_id));
+		js[i].open_try = (BYTE) (rand() % 110);
+		/* TODO : controllare con quattro gamepad come si comporta */
+		js[i].clock = i & 0x01;
+		js[i].input_decode_event = input_decode_event[i];
+
+		js_open(&js[i]);
+	}
 }
 void js_open(_js *joy) {
 	BYTE index;
@@ -175,8 +177,8 @@ void js_control(_js *joy, _port *port) {
 					joy->last_buttons &= ~mask;
 				}
 				/* elaboro l'evento */
-				if (joy->input_port) {
-					joy->input_port(mode, value, JOYSTICK, port);
+				if (joy->input_decode_event) {
+					joy->input_decode_event(mode, value, JOYSTICK, port);
 				}
 			}
 			mask <<= 1;
@@ -214,9 +216,22 @@ void js_close(_js *joy) {
 	return;
 }
 void js_quit(void) {
-	js_close(&js1);
-	js_close(&js2);
+	BYTE i;
+
+	for (i = PORT1; i < PORT_MAX; i++) {
+		js_close(&js[i]);
+	}
 }
+BYTE js_is_connected(int dev) {
+	JOYCAPS caps;
+
+	if (joyGetDevCaps(dev, &caps, sizeof(caps)) != JOYERR_NOERROR) {
+		return (EXIT_ERROR);
+	}
+
+	return (EXIT_OK);
+}
+
 char *js_to_name(const DBWORD val, const _js_element *list, const DBWORD length) {
 	BYTE index;
 	static char str[20];

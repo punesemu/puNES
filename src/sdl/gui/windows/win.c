@@ -199,9 +199,15 @@ void gui_init(int argc, char **argv) {
 			gui_get_ms = high_resolution_ms;
 		}
 	}
+
+	gui.accelerators_anabled = TRUE;
+
+	gui.richedit = LoadLibrary("Riched20.Dll");
 }
 void gui_quit(void) {
 	DestroyWindow(main_win);
+
+	FreeLibrary(gui.richedit);
 }
 BYTE gui_create(void) {
 	WNDCLASSEX wc;
@@ -522,11 +528,14 @@ void gui_event(void) {
 						break;
 				}
 				if (!tas.type && !no_process) {
-					if (input_port1 && !input_port1(PRESSED, LOWORD(msg.wParam), KEYBOARD, &port1)) {
-						break;
-					}
-					if (input_port2) {
-						input_port2(PRESSED, LOWORD(msg.wParam), KEYBOARD, &port2);
+					BYTE i;
+
+					for (i = PORT1; i < PORT_MAX; i++) {
+						if (input_decode_event[i]
+						        && (input_decode_event[i](PRESSED, LOWORD(msg.wParam), KEYBOARD,
+						                &port[i]) == EXIT_OK)) {
+							break;
+						}
 					}
 				}
 				break;
@@ -545,11 +554,14 @@ void gui_event(void) {
 						break;
 				}
 				if (!tas.type && !no_process) {
-					if (input_port1 && !input_port1(RELEASED, LOWORD(msg.wParam), KEYBOARD, &port1)) {
-						break;
-					}
-					if (input_port2) {
-						input_port2(RELEASED, LOWORD(msg.wParam), KEYBOARD, &port2);
+					BYTE i;
+
+					for (i = PORT1; i < PORT_MAX; i++) {
+						if (input_decode_event[i]
+						        && (input_decode_event[i](RELEASED, LOWORD(msg.wParam), KEYBOARD,
+						                &port[i]) == EXIT_OK)) {
+							break;
+						}
 					}
 				}
 				break;
@@ -581,7 +593,8 @@ void gui_event(void) {
 				gui.right_button = FALSE;
 				break;
 		}
-		if (!TranslateAccelerator(main_win, acc_keys, &msg)) {
+		if ((gui.accelerators_anabled == FALSE)
+		        || !TranslateAccelerator(main_win, acc_keys, &msg)) {
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
@@ -597,14 +610,25 @@ void gui_event(void) {
 		return;
 	}
 
-	js_control(&js1, &port1);
-	/* i due joystick non possono essere gli stessi */
-	if (port2.joy_id != port1.joy_id) {
-		js_control(&js2, &port2);
+	{
+		BYTE i;
+
+		for (i = PORT1; i < PORT_MAX; i++) {
+			if (input_add_event[i]) {
+				input_add_event[i](i);
+			}
+		}
 	}
-	input_turbo_buttons_control(&port1);
-	input_turbo_buttons_control(&port2);
-	return;
+
+	{
+		BYTE i;
+
+		for (i = PORT1; i < PORT_MAX; i++) {
+			if (input_add_event[i]) {
+				input_add_event[i](i);
+			}
+		}
+	}
 }
 HWND gui_emu_frame_id(void) {
 	return (sdl_frame);
@@ -1094,7 +1118,8 @@ void gui_update(void) {
 		SetMenuItemInfo(menuVideo, 3, TRUE, &menuitem);
 
 		/* questi li abilito solo se non c'e' come input lo zapper */
-		if ((port1.type != CTRL_ZAPPER) && (port2.type != CTRL_ZAPPER)) {
+
+		if (input_zapper_is_connected((_port *) &port) == FALSE) {
 			menuitem.fState = MFS_ENABLED;
 			change_menuitem(ENAB, MF_ENABLED, IDM_SET_EFFECT_CUBE);
 		} else {
@@ -1284,7 +1309,7 @@ void gui_fullscreen(void) {
 		/* abilito il fullscreen */
 		gfx_set_screen(NO_CHANGE, NO_CHANGE, FULLSCR, NO_CHANGE, FALSE);
 		/* disabilito la visualizzazione del puntatore */
-		if (!opengl.rotation && (port1.type != CTRL_ZAPPER) && (port2.type != CTRL_ZAPPER)) {
+		if (!opengl.rotation && (input_zapper_is_connected((_port *) &port) == FALSE)) {
 			SDL_ShowCursor(SDL_DISABLE);
 		}
 		/* queste sono le cose che devo disabilitare per il fullscreen */
@@ -1873,7 +1898,7 @@ long __stdcall main_win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 					SetFocus(sdl_frame);
 					break;
 				case IDM_SET_INPUT_CONFIG:
-					cfg_input(hwnd);
+					cfg_input_dialog(hwnd);
 					break;
 			}
 			break;
@@ -2412,7 +2437,7 @@ void set_vsync(BYTE vsync) {
 	ShowWindow(main_win, SW_NORMAL);
 }
 void set_effect(void) {
-	if ((port1.type == CTRL_ZAPPER) || (port2.type == CTRL_ZAPPER)) {
+	if (input_zapper_is_connected((_port *) &port) == TRUE) {
 		return;
 	}
 

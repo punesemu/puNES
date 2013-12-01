@@ -190,8 +190,8 @@
 #define ID_SAVESLOT_BL              102
 
 #define IDC_INPUT_CTRL_PORT1_C      100
-#define IDC_INPUT_CTRL_PORT1_B      101
-#define IDC_INPUT_CTRL_PORT2_C      102
+#define IDC_INPUT_CTRL_PORT2_C      101
+#define IDC_INPUT_CTRL_PORT1_B      102
 #define IDC_INPUT_CTRL_PORT2_B      103
 
 #define IDC_STD_CTRL_KEY_A          200

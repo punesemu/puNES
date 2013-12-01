@@ -28,6 +28,8 @@
 
 struct _gui {
 	HINSTANCE main_hinstance;
+	HMODULE richedit;
+
 	WORD version_os;
 	char home[MAX_PATH];
 	double frequency;
@@ -38,6 +40,8 @@ struct _gui {
 	int y;
 	uint8_t left_button;
 	uint8_t right_button;
+
+	uint8_t accelerators_anabled;
 } gui;
 
 void gui_init(int argc, char **argv);
