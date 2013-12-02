@@ -44,7 +44,6 @@ enum port_controllers {
 
 typedef struct {
 	BYTE permit_updown_leftright;
-	BYTE check_input_conflicts;
 } _config_input;
 typedef struct {
 	BYTE value;
@@ -74,7 +73,6 @@ _r4016 r4016;
 _port port[PORT_MAX];
 
 void input_init(void);
-void input_check_conflicts(_config_input *settings, _array_pointers_port *array);
 
 BYTE input_rd_reg_disabled(BYTE openbus, WORD **screen_index, _port *port);
 

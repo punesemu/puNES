@@ -147,21 +147,6 @@ long __stdcall cfg_input_messages(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPa
 					cfg_input.settings.permit_updown_leftright =
 							!cfg_input.settings.permit_updown_leftright;
 					return (TRUE);
-				case IDC_CHECK_CONFLICTS_CHECKBOX:
-					cfg_input.settings.check_input_conflicts =
-							!cfg_input.settings.check_input_conflicts;
-
-					/* faccio il check dell'input */
-					if (cfg_input.settings.check_input_conflicts == TRUE) {
-						BYTE i;
-						_array_pointers_port array;
-
-						for (i = PORT1; i < PORT_MAX; i++) {
-							array.port[i] = &cfg_input.port[i].port;
-						}
-						input_check_conflicts(&cfg_input.settings, &array);
-					}
-					return (TRUE);
 			}
 			break;
 		}
@@ -205,15 +190,6 @@ void cfg_input_update_dialog(HWND hwnd) {
 	} else {
 		SendDlgItemMessage(hwnd, IDC_PERMIT_UPDOWN_LEFTRIGHT_CHECKBOX, BM_SETCHECK,
 		        (WPARAM) BST_UNCHECKED, 0);
-	}
-
-
-	if (cfg_input.settings.check_input_conflicts == TRUE) {
-		SendDlgItemMessage(hwnd, IDC_CHECK_CONFLICTS_CHECKBOX, BM_SETCHECK,
-		        (WPARAM) BST_UNCHECKED, 0);
-	} else {
-		SendDlgItemMessage(hwnd, IDC_CHECK_CONFLICTS_CHECKBOX, BM_SETCHECK,
-		        (WPARAM) BST_CHECKED, 0);
 	}
 }
 void cfg_input_setup_button_enable(HWND hwnd, _port *port, int button) {

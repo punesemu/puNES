@@ -64,59 +64,6 @@ void input_init(void) {
 		}
 	}
 }
-void input_check_conflicts(_config_input *settings, _array_pointers_port *array) {
-	BYTE a;
-
-	if (settings->check_input_conflicts == FALSE) {
-		return;
-	}
-
-	/* Standard Controller */
-	for (a = PORT1; a < PORT_MAX; a++) {
-		BYTE b;
-		_port *this = array->port[a];
-
-		if (this->type != CTRL_STANDARD) {
-			continue;
-		}
-
-		for (b = a; b < PORT_MAX; b++) {
-			BYTE type;
-			_port *other = array->port[b];
-
-			if (other->type != CTRL_STANDARD) {
-				continue;
-			}
-
-			for (type = KEYBOARD; type <= JOYSTICK ; type++) {
-				BYTE this_button;
-
-				if (type == JOYSTICK) {
-					if ((this != other) && (this->joy_id != name_to_jsn("NULL"))
-					        && (this->joy_id == other->joy_id)) {
-						other->joy_id = name_to_jsn("NULL");
-					}
-					continue;
-				}
-
-				for (this_button = BUT_A; this_button < MAX_STD_PAD_BUTTONS; this_button++) {
-					BYTE other_button;
-
-					for (other_button = this_button; other_button < MAX_STD_PAD_BUTTONS;
-					        other_button++) {
-						if ((this == other) && (this_button == other_button)) {
-							continue;
-						}
-
-						if (this->input[type][this_button] == other->input[type][other_button]) {
-							other->input[type][other_button] = 0;
-						}
-					}
-				}
-			}
-		}
-	}
-}
 
 BYTE input_rd_reg_disabled(BYTE openbus, WORD **screen_index, _port *port) {
 	return (openbus);

@@ -353,14 +353,7 @@ static const _param param_input_base[] = {
 		"# possible values: yes, no",
 		NULL,
 		NULL
-	},
-	{
-		"check conflicts",
-		NULL,
-		"# possible values: yes, no",
-		NULL,
-		NULL
-	},
+	}
 };
 static const _param param_input_p1k[] = {
 	{ "P1K A       " }, { "P1K B       " }, { "P1K Select  " }, { "P1K Start   " },

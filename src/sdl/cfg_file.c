@@ -387,8 +387,6 @@ void cfg_file_input_parse(void) {
 
 			cfg_search(param_input_base, 2, 0, param_no_yes,
 			        cfg_from_file.input.permit_updown_leftright = index);
-			cfg_search(param_input_base, 3, 0, param_no_yes,
-			        cfg_from_file.input.check_input_conflicts = index);
 
 			{
 				BYTE i;
@@ -433,9 +431,6 @@ void cfg_file_input_save(void) {
 	/* permit up+down left+right */
 	write_param((_param *) param_input_base, fp, 2,
 	        param_no_yes[cfg_from_file.input.permit_updown_leftright].sname);
-	/* check control */
-	write_param((_param *) param_input_base, fp, 3,
-	        param_no_yes[cfg_from_file.input.check_input_conflicts].sname);
 	{
 		BYTE i;
 
@@ -468,41 +463,39 @@ void cfg_file_set_all_input_default(_config_input *config_input, _array_pointers
 	BYTE i;
 
 	config_input->permit_updown_leftright = FALSE;
-	config_input->check_input_conflicts = TRUE;
 
 	for (i = PORT1; i < PORT_MAX; i++) {
-		cfg_file_set_single_port_default(array->port[i], i);
-	}
-}
-void cfg_file_set_single_port_default(_port *port, int index) {
-	switch (index) {
-		case PORT1:
-			port->type = CTRL_STANDARD;
-			port->joy_id = name_to_jsn("JOYSTICKID1");
-			break;
-		case PORT2:
-			port->joy_id = name_to_jsn("JOYSTICKID2");
-			port->type = FALSE;
-			break;
-		default:
-			port->joy_id = name_to_jsn("NULL");
-			port->type = FALSE;
-			break;
-	}
+		_port *port = array->port[i];
 
-	port->turbo[TURBOA].frequency = TURBO_BUTTON_DELAY_DEFAULT;
-	port->turbo[TURBOB].frequency = TURBO_BUTTON_DELAY_DEFAULT;
-	cfg_file_set_kbd_joy_default(port, index, JOYSTICK + 1);
+		switch (i) {
+			case PORT1:
+				port->type = CTRL_STANDARD;
+				port->joy_id = name_to_jsn("JOYSTICKID1");
+				break;
+			case PORT2:
+				port->joy_id = name_to_jsn("JOYSTICKID2");
+				port->type = FALSE;
+				break;
+			default:
+				port->joy_id = name_to_jsn("NULL");
+				port->type = FALSE;
+				break;
+		}
+
+		port->turbo[TURBOA].frequency = TURBO_BUTTON_DELAY_DEFAULT;
+		port->turbo[TURBOB].frequency = TURBO_BUTTON_DELAY_DEFAULT;
+		cfg_file_set_kbd_joy_default(port, i, KEYBOARD);
+		cfg_file_set_kbd_joy_default(port, i, JOYSTICK);
+	}
 }
 void cfg_file_set_kbd_joy_default(_port *port, int index, int mode) {
 	BYTE i;
 
 	for (i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
-		if ((mode == KEYBOARD) || (mode > JOYSTICK)) {
+		if (mode == KEYBOARD) {
 			port->input[KEYBOARD][i] = keyval_from_name(
 			        cfg_file_set_kbd_joy_button_default(index, KEYBOARD, i));
-		}
-		if ((mode == JOYSTICK) || (mode > JOYSTICK)) {
+		} else {
 			port->input[JOYSTICK][i] = name_to_jsv(
 			        cfg_file_set_kbd_joy_button_default(index, JOYSTICK, i));
 		}

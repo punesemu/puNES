@@ -24,13 +24,11 @@ void __stdcall cfg_std_pad_joy_read(void);
 DWORD WINAPI cfg_std_pad_in_sequence(LPVOID lpParam);
 
 void cfg_std_pad_info_entry_print(const char *fmt, ...);
-BOOL cfg_std_pad_input_is_not_ok(int input);
 
 void cfg_std_pad_tab_init(void);
 void cfg_std_pad_enable_page_and_other(int no_disable, int mode);
 void cfg_std_pad_enable_page_buttons(int mode);
 void cfg_std_pad_unset(HWND hwnd, int button);
-void cfg_std_pad_default(HWND hwnd, int button);
 void cfg_std_pad_joy_timer_kill(void);
 
 void cfg_std_pad_destroy(HWND hwnd, INT_PTR nResult);
@@ -58,9 +56,7 @@ struct _cfg_std_pad {
 	HWND pressed;
 	WNDPROC old_wnd_proc;
 	HANDLE thread;
-	//HBITMAP img;
 
-	int retry;
 	BYTE joy_count;
 	BYTE type;
 	BYTE vbutton;
@@ -189,17 +185,6 @@ long __stdcall cfg_std_pad_messages(HWND hwnd, UINT msg, WPARAM wParam, LPARAM l
 				case IDOK:
 					cfg_std_pad_destroy(hwnd, IDOK);
 
-					/* faccio il check dell'input */
-					if (cfg_input.settings.check_input_conflicts == TRUE) {
-						BYTE i;
-						_array_pointers_port array;
-
-						for (i = PORT1; i < PORT_MAX; i++) {
-							array.port[i] = &cfg_input.port[i].port;
-						}
-						input_check_conflicts(&cfg_input.settings, &array);
-					}
-
 					/* la mamcpy deve andare necessariamente dopo il destroy */
 					memcpy(cfg_std_pad.cfg_port_father, &cfg_std_pad.cfg, sizeof(_cfg_port));
 					break;
@@ -262,7 +247,6 @@ long __stdcall cfg_std_pad_kbd_joy_messages(HWND hwnd, UINT msg, WPARAM wParam, 
 					cfg_std_pad.vbutton = bt - IDC_A_BUTTON;
 					cfg_std_pad.pressed = GetDlgItem(cfg_std_pad.page, bt);
 					cfg_std_pad.no_other_buttons = TRUE;
-					cfg_std_pad.retry = 1;
 
 					cfg_std_pad_enable_page_and_other(bt, FALSE);
 
@@ -303,18 +287,6 @@ long __stdcall cfg_std_pad_kbd_joy_messages(HWND hwnd, UINT msg, WPARAM wParam, 
 				case IDC_TB_UNSET_BUTTON:
 					cfg_std_pad_unset(hwnd, LOWORD(wParam) - IDC_A_UNSET_BUTTON);
 					return (TRUE);
-				case IDC_A_DEFAULT_BUTTON:
-				case IDC_B_DEFAULT_BUTTON:
-				case IDC_SELECT_DEFAULT_BUTTON:
-				case IDC_START_DEFAULT_BUTTON:
-				case IDC_UP_DEFAULT_BUTTON:
-				case IDC_DOWN_DEFAULT_BUTTON:
-				case IDC_LEFT_DEFAULT_BUTTON:
-				case IDC_RIGHT_DEFAULT_BUTTON:
-				case IDC_TA_DEFAULT_BUTTON:
-				case IDC_TB_DEFAULT_BUTTON:
-					cfg_std_pad_default(hwnd, LOWORD(wParam) - IDC_A_DEFAULT_BUTTON);
-					return (TRUE);
 				case FHCOMMAND:
 					cfg_std_pad_enable_page_and_other(0, TRUE);
 					return (TRUE);
@@ -350,31 +322,6 @@ long __stdcall cfg_std_pad_kbd_joy_messages(HWND hwnd, UINT msg, WPARAM wParam, 
 
 						SetDlgItemText(hwnd, a + IDC_A_BUTTON, text);
 					}
-
-					if ((cfg_input.settings.check_input_conflicts == TRUE)
-					        && (PTYPE == KEYBOARD)) {
-						BYTE a;
-
-						for (a = PORT1; a < PORT_MAX; a++) {
-							BYTE b;
-							_cfg_port *other = &cfg_input.port[a];
-
-							if (cfg_std_pad.cfg.id == other->id) {
-								continue;
-							}
-
-							for (b = BUT_A; b < MAX_STD_PAD_BUTTONS; b++) {
-								BYTE c;
-								int input = cfg_std_pad.cfg.port.input[PTYPE][b];
-
-								for (c = b; c < MAX_STD_PAD_BUTTONS; c++) {
-									if (other->port.input[PTYPE][c] == input) {
-										other->port.input[PTYPE][c] = 0;
-									}
-								}
-							}
-						}
-					}
 					return (TRUE);
 				}
 			}
@@ -386,40 +333,24 @@ long __stdcall cfg_std_pad_kbd_read(HWND hwnd, UINT msg, WPARAM wParam, LPARAM l
 	switch (msg) {
 		case WM_KEYDOWN: {
 			int keyval = LOWORD(wParam);
-			BYTE value_is_good = TRUE;
 
 			if (keyval == VK_ESCAPE) {
 				SendMessage(cfg_std_pad.pressed, WM_SETTEXT, 0,
 				        (LPARAM) keyval_to_name(cfg_std_pad.cfg.port.input[PTYPE][PVBUTTON]));
-				if (cfg_std_pad.retry > 5) {
-					cfg_std_pad_info_entry_print("you give up after only %d attempts?",
-					        cfg_std_pad.retry);
-				} else {
-					cfg_std_pad_info_entry_print("");
-				}
 			} else {
-				if (cfg_std_pad_input_is_not_ok(keyval) == EXIT_ERROR) {
-					value_is_good = FALSE;
-				} else {
-					cfg_std_pad.cfg.port.input[PTYPE][PVBUTTON] = keyval;
-					SendMessage(cfg_std_pad.pressed, WM_SETTEXT, 0,
-					        (LPARAM) keyval_to_name(keyval));
-				}
+				cfg_std_pad.cfg.port.input[PTYPE][PVBUTTON] = keyval;
+				SendMessage(cfg_std_pad.pressed, WM_SETTEXT, 0, (LPARAM) keyval_to_name(keyval));
 			}
 
-			if (value_is_good) {
-				cfg_std_pad_enable_page_and_other(0, TRUE);
+			cfg_std_pad_info_entry_print("");
 
-				SetWindowLongPtr(hwnd, GWLP_WNDPROC, (LONG_PTR) cfg_std_pad.old_wnd_proc);
+			cfg_std_pad_enable_page_and_other(0, TRUE);
 
-				cfg_std_pad.old_wnd_proc = NULL;
-				cfg_std_pad.no_other_buttons = FALSE;
-				cfg_std_pad.vbutton = 0;
+			SetWindowLongPtr(hwnd, GWLP_WNDPROC, (LONG_PTR) cfg_std_pad.old_wnd_proc);
 
-				return (TRUE);
-			}
-
-			SetFocus(cfg_std_pad.pressed);
+			cfg_std_pad.old_wnd_proc = NULL;
+			cfg_std_pad.no_other_buttons = FALSE;
+			cfg_std_pad.vbutton = 0;
 
 			return (TRUE);
 		}
@@ -433,12 +364,7 @@ long __stdcall cfg_std_pad_joy_esc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lP
 			if (LOWORD(wParam) == VK_ESCAPE) {
 				SendMessage(cfg_std_pad.pressed, WM_SETTEXT, 0,
 				        (LPARAM) jsv_to_name(cfg_std_pad.cfg.port.input[PTYPE][PVBUTTON]));
-				if (cfg_std_pad.retry > 5) {
-					cfg_std_pad_info_entry_print("you give up after only %d attempts?",
-					        cfg_std_pad.retry);
-				} else {
-					cfg_std_pad_info_entry_print("");
-				}
+				cfg_std_pad_info_entry_print("");
 				cfg_std_pad_joy_timer_kill();
 			}
 			return (TRUE);
@@ -502,10 +428,7 @@ void __stdcall cfg_std_pad_joy_read(void) {
 
 	elaborate_value:
 	if (value) {
-		if (cfg_std_pad_input_is_not_ok(value) == EXIT_ERROR) {
-			SetFocus(cfg_std_pad.pressed);
-			return;
-		}
+		cfg_std_pad_info_entry_print("");
 		cfg_std_pad.cfg.port.input[PTYPE][PVBUTTON] = value;
 		SendMessage(cfg_std_pad.pressed, WM_SETTEXT, 0, (LPARAM) jsv_to_name(value));
 		cfg_std_pad_joy_timer_kill();
@@ -575,89 +498,6 @@ void cfg_std_pad_info_entry_print(const char *fmt, ...) {
 	st.flags = ST_DEFAULT;
 	SendMessage(rich, EM_SETTEXTEX, (WPARAM) &st,(LPARAM) buffer);
 }
-BOOL cfg_std_pad_input_is_not_ok(int input) {
-	int a, b, count = 0;
-	char text[80];
-
-	if (cfg_input.settings.check_input_conflicts == FALSE) {
-		return (EXIT_OK);
-	}
-
-	memset(text, 0x00, sizeof(text));
-
-	for (a = PORT1; a < PORT_MAX; a++) {
-		_cfg_port *other = &cfg_input.port[a];
-
-		if (cfg_std_pad.cfg.id == other->id) {
-			other = &cfg_std_pad.cfg;
-		}
-
-		if ((PTYPE == JOYSTICK) && (cfg_std_pad.cfg.port.joy_id != other->port.joy_id)) {
-			continue;
-		}
-
-		for (b = BUT_A; b < MAX_STD_PAD_BUTTONS; b++) {
-			if (other->port.input[PTYPE][b] == input) {
-				/*
-				 * se il tasto premuto e' lo stesso con cui
-				 * era configurato allora non devo considerarlo
-				 * un conflitto.
-				 */
-				if ((cfg_std_pad.cfg.id == other->id) && (PVBUTTON == b)) {
-					continue;
-				}
-
-				if (count++ == 0) {
-					char *tmp;
-
-					if (PTYPE == KEYBOARD) {
-						tmp = keyval_to_name(input);
-					} else {
-						tmp = jsv_to_name(input);
-					}
-
-					sprintf(text, "try %d : \"%s\" conflict with ", cfg_std_pad.retry, tmp);
-				} else {
-					strcat(text, ", ");
-				}
-
-				{
-					static const char std_pad_button[10][15] = {
-						"Button A", "Button B",
-						"Select",   "Start",
-						"Up",       "Down",
-						"Left",     "Right",
-						"Turbo A",  "Turbo B"
-					};
-
-					char buffer[30];
-
-					sprintf(buffer, "[Ctrl %d:%s]", other->id, std_pad_button[b]);
-					strcat(text, buffer);
-				}
-			}
-		}
-	}
-
-	if (count == 0) {
-		if (cfg_std_pad.retry > 15) {
-			sprintf(text, "%d attempts... I have no words...", cfg_std_pad.retry);
-		} else if (cfg_std_pad.retry > 10) {
-			sprintf(text, "%d attempts??? really???", cfg_std_pad.retry);
-		} else if (cfg_std_pad.retry > 5) {
-			sprintf(text, "After %d attempts you have win, congratulation!!", cfg_std_pad.retry);
-		}
-	}
-
-	cfg_std_pad_info_entry_print(text);
-
-	if (count == 0) {
-		return (EXIT_OK);
-	} else {
-		cfg_std_pad.retry++;
-		return (EXIT_ERROR);
-	}
-}
 
 void cfg_std_pad_tab_init(void) {
 	BYTE i;
@@ -722,33 +562,8 @@ void cfg_std_pad_tab_init(void) {
 			BYTE id = a;
 
 			if (a < MAX_JOYSTICK) {
-				BYTE b, add = TRUE;
-
 				if (ele->present == FALSE) {
 					continue;
-				}
-
-				if (cfg_input.settings.check_input_conflicts == TRUE) {
-					for (b = PORT1; b < PORT_MAX; b++) {
-						_cfg_port *other = &cfg_input.port[b];
-
-						/*
-						 * se le tre condizioni primarie :
-						 * 1) non sto controllando me stesso
-						 * 2) il controller che sto esaminando sia uno standard pad
-						 * 3) il controller che sto esaminando usa lo stesso device
-						 * sono vere alloro rimuovo dall'elenco il dispositivo
-						 */
-						if ((cfg_std_pad.cfg.id != other->id) && (other->port.type == CTRL_STANDARD)
-						        && (other->port.joy_id == id)) {
-							add = FALSE;
-							break;
-						}
-					}
-
-					if (add == FALSE) {
-						continue;
-					}
 				}
 
 				if (id == cfg_std_pad.cfg.port.joy_id) {
@@ -819,7 +634,7 @@ void cfg_std_pad_enable_page_and_other(int no_disable, int mode) {
 void cfg_std_pad_enable_page_buttons(int mode) {
 	int idc;
 
-	for (idc = IDC_INFO_RICHEDIT; idc <= IDC_TB_DEFAULT_BUTTON; idc++) {
+	for (idc = IDC_INFO_RICHEDIT; idc <= IDC_TB_UNSET_BUTTON; idc++) {
 		EnableWindow(GetDlgItem(cfg_std_pad.page, idc), mode);
 	}
 }
@@ -827,55 +642,6 @@ void cfg_std_pad_unset(HWND hwnd, int button) {
 	cfg_std_pad_info_entry_print("");
 	cfg_std_pad.cfg.port.input[PTYPE][button] = 0;
 	SetDlgItemText(hwnd, button + IDC_A_BUTTON, "NULL");
-}
-void cfg_std_pad_default(HWND hwnd, int button) {
-	cfg_std_pad_info_entry_print("");
-
-	{
-		char *def = cfg_file_set_kbd_joy_button_default(cfg_std_pad.cfg.id - 1, PTYPE, button);
-
-		if (PTYPE == KEYBOARD) {
-			cfg_std_pad.cfg.port.input[PTYPE][button] = keyval_from_name(def);
-		} else {
-			cfg_std_pad.cfg.port.input[PTYPE][button] = name_to_jsv(def);
-		}
-
-		SetDlgItemText(hwnd, button + IDC_A_BUTTON, def);
-	}
-
-	if (cfg_input.settings.check_input_conflicts == TRUE) {
-		BYTE a;
-
-		for (a = PORT1; a < PORT_MAX; a++) {
-			BYTE b;
-			_cfg_port *other = &cfg_input.port[a];
-
-			if (cfg_std_pad.cfg.id == other->id) {
-				other = &cfg_std_pad.cfg;
-			}
-
-			for (b = BUT_A; b < MAX_STD_PAD_BUTTONS; b++) {
-				BYTE c;
-				int input = cfg_std_pad.cfg.port.input[PTYPE][b];
-
-				for (c = BUT_A; c < MAX_STD_PAD_BUTTONS; c++) {
-					if (cfg_std_pad.cfg.id == other->id) {
-						if ((b == c) || (c == button)) {
-							continue;
-						}
-					}
-
-					if (other->port.input[PTYPE][c] == input) {
-						other->port.input[PTYPE][c] = 0;
-
-						if (cfg_std_pad.cfg.id == other->id) {
-							SetDlgItemText(hwnd, c + IDC_A_BUTTON, "NULL");
-						}
-					}
-				}
-			}
-		}
-	}
 }
 
 void cfg_std_pad_joy_timer_kill(void) {

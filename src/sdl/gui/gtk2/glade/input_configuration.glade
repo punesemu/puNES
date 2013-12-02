@@ -213,20 +213,6 @@
                         <property name="position">1</property>
                       </packing>
                     </child>
-                    <child>
-                      <object class="GtkCheckButton" id="input_check_conflicts_checkbutton">
-                        <property name="label" translatable="yes">Disable check conflicts</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">False</property>
-                        <property name="draw_indicator">True</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">1</property>
-                      </packing>
-                    </child>
                   </object>
                 </child>
               </object>
@@ -661,7 +647,7 @@
                                                             <property name="spacing">4</property>
                                                             <child>
                                                             <object class="GtkButton" id="keyboard_up_unset_button">
-                                                            <property name="label" translatable="yes">U</property>
+                                                            <property name="label" translatable="yes">unset</property>
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">True</property>
                                                             <property name="receives_default">True</property>
@@ -674,7 +660,7 @@
                                                             </child>
                                                             <child>
                                                             <object class="GtkButton" id="keyboard_down_unset_button">
-                                                            <property name="label" translatable="yes">U</property>
+                                                            <property name="label" translatable="yes">unset</property>
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">True</property>
                                                             <property name="receives_default">True</property>
@@ -687,7 +673,7 @@
                                                             </child>
                                                             <child>
                                                             <object class="GtkButton" id="keyboard_left_unset_button">
-                                                            <property name="label" translatable="yes">U</property>
+                                                            <property name="label" translatable="yes">unset</property>
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">True</property>
                                                             <property name="receives_default">True</property>
@@ -700,7 +686,7 @@
                                                             </child>
                                                             <child>
                                                             <object class="GtkButton" id="keyboard_right_unset_button">
-                                                            <property name="label" translatable="yes">U</property>
+                                                            <property name="label" translatable="yes">unset</property>
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">True</property>
                                                             <property name="receives_default">True</property>
@@ -713,7 +699,7 @@
                                                             </child>
                                                             <child>
                                                             <object class="GtkButton" id="keyboard_select_unset_button">
-                                                            <property name="label" translatable="yes">U</property>
+                                                            <property name="label" translatable="yes">unset</property>
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">True</property>
                                                             <property name="receives_default">True</property>
@@ -731,89 +717,6 @@
                                                         <property name="expand">True</property>
                                                         <property name="fill">True</property>
                                                         <property name="position">2</property>
-                                                      </packing>
-                                                    </child>
-                                                    <child>
-                                                      <object class="GtkAlignment" id="keyboard_notebook_def1_alignment">
-                                                        <property name="visible">True</property>
-                                                        <property name="can_focus">False</property>
-                                                        <child>
-                                                          <object class="GtkVBox" id="vbox4">
-                                                            <property name="visible">True</property>
-                                                            <property name="can_focus">False</property>
-                                                            <property name="spacing">4</property>
-                                                            <child>
-                                                            <object class="GtkButton" id="keyboard_up_default_button">
-                                                            <property name="label" translatable="yes">D</property>
-                                                            <property name="visible">True</property>
-                                                            <property name="can_focus">True</property>
-                                                            <property name="receives_default">True</property>
-                                                            </object>
-                                                            <packing>
-                                                            <property name="expand">True</property>
-                                                            <property name="fill">True</property>
-                                                            <property name="position">0</property>
-                                                            </packing>
-                                                            </child>
-                                                            <child>
-                                                            <object class="GtkButton" id="keyboard_down_default_button">
-                                                            <property name="label" translatable="yes">D</property>
-                                                            <property name="visible">True</property>
-                                                            <property name="can_focus">True</property>
-                                                            <property name="receives_default">True</property>
-                                                            </object>
-                                                            <packing>
-                                                            <property name="expand">True</property>
-                                                            <property name="fill">True</property>
-                                                            <property name="position">1</property>
-                                                            </packing>
-                                                            </child>
-                                                            <child>
-                                                            <object class="GtkButton" id="keyboard_left_default_button">
-                                                            <property name="label" translatable="yes">D</property>
-                                                            <property name="visible">True</property>
-                                                            <property name="can_focus">True</property>
-                                                            <property name="receives_default">True</property>
-                                                            </object>
-                                                            <packing>
-                                                            <property name="expand">True</property>
-                                                            <property name="fill">True</property>
-                                                            <property name="position">2</property>
-                                                            </packing>
-                                                            </child>
-                                                            <child>
-                                                            <object class="GtkButton" id="keyboard_right_default_button">
-                                                            <property name="label" translatable="yes">D</property>
-                                                            <property name="visible">True</property>
-                                                            <property name="can_focus">True</property>
-                                                            <property name="receives_default">True</property>
-                                                            </object>
-                                                            <packing>
-                                                            <property name="expand">True</property>
-                                                            <property name="fill">True</property>
-                                                            <property name="position">3</property>
-                                                            </packing>
-                                                            </child>
-                                                            <child>
-                                                            <object class="GtkButton" id="keyboard_select_default_button">
-                                                            <property name="label" translatable="yes">D</property>
-                                                            <property name="visible">True</property>
-                                                            <property name="can_focus">True</property>
-                                                            <property name="receives_default">True</property>
-                                                            </object>
-                                                            <packing>
-                                                            <property name="expand">True</property>
-                                                            <property name="fill">True</property>
-                                                            <property name="position">4</property>
-                                                            </packing>
-                                                            </child>
-                                                          </object>
-                                                        </child>
-                                                      </object>
-                                                      <packing>
-                                                        <property name="expand">True</property>
-                                                        <property name="fill">True</property>
-                                                        <property name="position">3</property>
                                                       </packing>
                                                     </child>
                                                   </object>
@@ -1008,7 +911,7 @@
                                                             <property name="spacing">4</property>
                                                             <child>
                                                             <object class="GtkButton" id="keyboard_start_unset_button">
-                                                            <property name="label" translatable="yes">U</property>
+                                                            <property name="label" translatable="yes">unset</property>
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">True</property>
                                                             <property name="receives_default">True</property>
@@ -1021,7 +924,7 @@
                                                             </child>
                                                             <child>
                                                             <object class="GtkButton" id="keyboard_a_unset_button">
-                                                            <property name="label" translatable="yes">U</property>
+                                                            <property name="label" translatable="yes">unset</property>
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">True</property>
                                                             <property name="receives_default">True</property>
@@ -1034,7 +937,7 @@
                                                             </child>
                                                             <child>
                                                             <object class="GtkButton" id="keyboard_b_unset_button">
-                                                            <property name="label" translatable="yes">U</property>
+                                                            <property name="label" translatable="yes">unset</property>
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">True</property>
                                                             <property name="receives_default">True</property>
@@ -1047,7 +950,7 @@
                                                             </child>
                                                             <child>
                                                             <object class="GtkButton" id="keyboard_ta_unset_button">
-                                                            <property name="label" translatable="yes">U</property>
+                                                            <property name="label" translatable="yes">unset</property>
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">True</property>
                                                             <property name="receives_default">True</property>
@@ -1060,7 +963,7 @@
                                                             </child>
                                                             <child>
                                                             <object class="GtkButton" id="keyboard_tb_unset_button">
-                                                            <property name="label" translatable="yes">U</property>
+                                                            <property name="label" translatable="yes">unset</property>
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">True</property>
                                                             <property name="receives_default">True</property>
@@ -1078,89 +981,6 @@
                                                         <property name="expand">True</property>
                                                         <property name="fill">True</property>
                                                         <property name="position">2</property>
-                                                      </packing>
-                                                    </child>
-                                                    <child>
-                                                      <object class="GtkAlignment" id="keyboard_notebook_def2_alignment">
-                                                        <property name="visible">True</property>
-                                                        <property name="can_focus">False</property>
-                                                        <child>
-                                                          <object class="GtkVBox" id="vbox10">
-                                                            <property name="visible">True</property>
-                                                            <property name="can_focus">False</property>
-                                                            <property name="spacing">4</property>
-                                                            <child>
-                                                            <object class="GtkButton" id="keyboard_start_default_button">
-                                                            <property name="label" translatable="yes">D</property>
-                                                            <property name="visible">True</property>
-                                                            <property name="can_focus">True</property>
-                                                            <property name="receives_default">True</property>
-                                                            </object>
-                                                            <packing>
-                                                            <property name="expand">True</property>
-                                                            <property name="fill">True</property>
-                                                            <property name="position">0</property>
-                                                            </packing>
-                                                            </child>
-                                                            <child>
-                                                            <object class="GtkButton" id="keyboard_a_default_button">
-                                                            <property name="label" translatable="yes">D</property>
-                                                            <property name="visible">True</property>
-                                                            <property name="can_focus">True</property>
-                                                            <property name="receives_default">True</property>
-                                                            </object>
-                                                            <packing>
-                                                            <property name="expand">True</property>
-                                                            <property name="fill">True</property>
-                                                            <property name="position">1</property>
-                                                            </packing>
-                                                            </child>
-                                                            <child>
-                                                            <object class="GtkButton" id="keyboard_b_default_button">
-                                                            <property name="label" translatable="yes">D</property>
-                                                            <property name="visible">True</property>
-                                                            <property name="can_focus">True</property>
-                                                            <property name="receives_default">True</property>
-                                                            </object>
-                                                            <packing>
-                                                            <property name="expand">True</property>
-                                                            <property name="fill">True</property>
-                                                            <property name="position">2</property>
-                                                            </packing>
-                                                            </child>
-                                                            <child>
-                                                            <object class="GtkButton" id="keyboard_ta_default_button">
-                                                            <property name="label" translatable="yes">D</property>
-                                                            <property name="visible">True</property>
-                                                            <property name="can_focus">True</property>
-                                                            <property name="receives_default">True</property>
-                                                            </object>
-                                                            <packing>
-                                                            <property name="expand">True</property>
-                                                            <property name="fill">True</property>
-                                                            <property name="position">3</property>
-                                                            </packing>
-                                                            </child>
-                                                            <child>
-                                                            <object class="GtkButton" id="keyboard_tb_default_button">
-                                                            <property name="label" translatable="yes">D</property>
-                                                            <property name="visible">True</property>
-                                                            <property name="can_focus">True</property>
-                                                            <property name="receives_default">True</property>
-                                                            </object>
-                                                            <packing>
-                                                            <property name="expand">True</property>
-                                                            <property name="fill">True</property>
-                                                            <property name="position">4</property>
-                                                            </packing>
-                                                            </child>
-                                                          </object>
-                                                        </child>
-                                                      </object>
-                                                      <packing>
-                                                        <property name="expand">True</property>
-                                                        <property name="fill">True</property>
-                                                        <property name="position">3</property>
                                                       </packing>
                                                     </child>
                                                   </object>
@@ -1243,7 +1063,7 @@
                                             </child>
                                             <child>
                                               <object class="GtkButton" id="keyboard_default_all_button">
-                                                <property name="label" translatable="yes">Default all</property>
+                                                <property name="label" translatable="yes">Defaults</property>
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">True</property>
                                                 <property name="receives_default">True</property>
@@ -1529,7 +1349,7 @@
                                                             <property name="spacing">4</property>
                                                             <child>
                                                             <object class="GtkButton" id="joystick_up_unset_button">
-                                                            <property name="label" translatable="yes">U</property>
+                                                            <property name="label" translatable="yes">unset</property>
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">True</property>
                                                             <property name="receives_default">True</property>
@@ -1542,7 +1362,7 @@
                                                             </child>
                                                             <child>
                                                             <object class="GtkButton" id="joystick_down_unset_button">
-                                                            <property name="label" translatable="yes">U</property>
+                                                            <property name="label" translatable="yes">unset</property>
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">True</property>
                                                             <property name="receives_default">True</property>
@@ -1555,7 +1375,7 @@
                                                             </child>
                                                             <child>
                                                             <object class="GtkButton" id="joystick_left_unset_button">
-                                                            <property name="label" translatable="yes">U</property>
+                                                            <property name="label" translatable="yes">unset</property>
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">True</property>
                                                             <property name="receives_default">True</property>
@@ -1568,7 +1388,7 @@
                                                             </child>
                                                             <child>
                                                             <object class="GtkButton" id="joystick_right_unset_button">
-                                                            <property name="label" translatable="yes">U</property>
+                                                            <property name="label" translatable="yes">unset</property>
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">True</property>
                                                             <property name="receives_default">True</property>
@@ -1581,7 +1401,7 @@
                                                             </child>
                                                             <child>
                                                             <object class="GtkButton" id="joystick_select_unset_button">
-                                                            <property name="label" translatable="yes">U</property>
+                                                            <property name="label" translatable="yes">unset</property>
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">True</property>
                                                             <property name="receives_default">True</property>
@@ -1599,89 +1419,6 @@
                                                         <property name="expand">True</property>
                                                         <property name="fill">True</property>
                                                         <property name="position">2</property>
-                                                      </packing>
-                                                    </child>
-                                                    <child>
-                                                      <object class="GtkAlignment" id="joystick_notebook_def1_alignment">
-                                                        <property name="visible">True</property>
-                                                        <property name="can_focus">False</property>
-                                                        <child>
-                                                          <object class="GtkVBox" id="vbox21">
-                                                            <property name="visible">True</property>
-                                                            <property name="can_focus">False</property>
-                                                            <property name="spacing">4</property>
-                                                            <child>
-                                                            <object class="GtkButton" id="joystick_up_default_button">
-                                                            <property name="label" translatable="yes">D</property>
-                                                            <property name="visible">True</property>
-                                                            <property name="can_focus">True</property>
-                                                            <property name="receives_default">True</property>
-                                                            </object>
-                                                            <packing>
-                                                            <property name="expand">True</property>
-                                                            <property name="fill">True</property>
-                                                            <property name="position">0</property>
-                                                            </packing>
-                                                            </child>
-                                                            <child>
-                                                            <object class="GtkButton" id="joystick_down_default_button">
-                                                            <property name="label" translatable="yes">D</property>
-                                                            <property name="visible">True</property>
-                                                            <property name="can_focus">True</property>
-                                                            <property name="receives_default">True</property>
-                                                            </object>
-                                                            <packing>
-                                                            <property name="expand">True</property>
-                                                            <property name="fill">True</property>
-                                                            <property name="position">1</property>
-                                                            </packing>
-                                                            </child>
-                                                            <child>
-                                                            <object class="GtkButton" id="joystick_left_default_button">
-                                                            <property name="label" translatable="yes">D</property>
-                                                            <property name="visible">True</property>
-                                                            <property name="can_focus">True</property>
-                                                            <property name="receives_default">True</property>
-                                                            </object>
-                                                            <packing>
-                                                            <property name="expand">True</property>
-                                                            <property name="fill">True</property>
-                                                            <property name="position">2</property>
-                                                            </packing>
-                                                            </child>
-                                                            <child>
-                                                            <object class="GtkButton" id="joystick_right_default_button">
-                                                            <property name="label" translatable="yes">D</property>
-                                                            <property name="visible">True</property>
-                                                            <property name="can_focus">True</property>
-                                                            <property name="receives_default">True</property>
-                                                            </object>
-                                                            <packing>
-                                                            <property name="expand">True</property>
-                                                            <property name="fill">True</property>
-                                                            <property name="position">3</property>
-                                                            </packing>
-                                                            </child>
-                                                            <child>
-                                                            <object class="GtkButton" id="joystick_select_default_button">
-                                                            <property name="label" translatable="yes">D</property>
-                                                            <property name="visible">True</property>
-                                                            <property name="can_focus">True</property>
-                                                            <property name="receives_default">True</property>
-                                                            </object>
-                                                            <packing>
-                                                            <property name="expand">True</property>
-                                                            <property name="fill">True</property>
-                                                            <property name="position">4</property>
-                                                            </packing>
-                                                            </child>
-                                                          </object>
-                                                        </child>
-                                                      </object>
-                                                      <packing>
-                                                        <property name="expand">True</property>
-                                                        <property name="fill">True</property>
-                                                        <property name="position">3</property>
                                                       </packing>
                                                     </child>
                                                   </object>
@@ -1876,7 +1613,7 @@
                                                             <property name="spacing">4</property>
                                                             <child>
                                                             <object class="GtkButton" id="joystick_start_unset_button">
-                                                            <property name="label" translatable="yes">U</property>
+                                                            <property name="label" translatable="yes">unset</property>
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">True</property>
                                                             <property name="receives_default">True</property>
@@ -1889,7 +1626,7 @@
                                                             </child>
                                                             <child>
                                                             <object class="GtkButton" id="joystick_a_unset_button">
-                                                            <property name="label" translatable="yes">U</property>
+                                                            <property name="label" translatable="yes">unset</property>
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">True</property>
                                                             <property name="receives_default">True</property>
@@ -1902,7 +1639,7 @@
                                                             </child>
                                                             <child>
                                                             <object class="GtkButton" id="joystick_b_unset_button">
-                                                            <property name="label" translatable="yes">U</property>
+                                                            <property name="label" translatable="yes">unset</property>
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">True</property>
                                                             <property name="receives_default">True</property>
@@ -1915,7 +1652,7 @@
                                                             </child>
                                                             <child>
                                                             <object class="GtkButton" id="joystick_ta_unset_button">
-                                                            <property name="label" translatable="yes">U</property>
+                                                            <property name="label" translatable="yes">unset</property>
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">True</property>
                                                             <property name="receives_default">True</property>
@@ -1928,7 +1665,7 @@
                                                             </child>
                                                             <child>
                                                             <object class="GtkButton" id="joystick_tb_unset_button">
-                                                            <property name="label" translatable="yes">U</property>
+                                                            <property name="label" translatable="yes">unset</property>
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">True</property>
                                                             <property name="receives_default">True</property>
@@ -1946,89 +1683,6 @@
                                                         <property name="expand">True</property>
                                                         <property name="fill">True</property>
                                                         <property name="position">2</property>
-                                                      </packing>
-                                                    </child>
-                                                    <child>
-                                                      <object class="GtkAlignment" id="joystick_notebook_def2_alignment">
-                                                        <property name="visible">True</property>
-                                                        <property name="can_focus">False</property>
-                                                        <child>
-                                                          <object class="GtkVBox" id="vbox22">
-                                                            <property name="visible">True</property>
-                                                            <property name="can_focus">False</property>
-                                                            <property name="spacing">4</property>
-                                                            <child>
-                                                            <object class="GtkButton" id="joystick_start_default_button">
-                                                            <property name="label" translatable="yes">D</property>
-                                                            <property name="visible">True</property>
-                                                            <property name="can_focus">True</property>
-                                                            <property name="receives_default">True</property>
-                                                            </object>
-                                                            <packing>
-                                                            <property name="expand">True</property>
-                                                            <property name="fill">True</property>
-                                                            <property name="position">0</property>
-                                                            </packing>
-                                                            </child>
-                                                            <child>
-                                                            <object class="GtkButton" id="joystick_a_default_button">
-                                                            <property name="label" translatable="yes">D</property>
-                                                            <property name="visible">True</property>
-                                                            <property name="can_focus">True</property>
-                                                            <property name="receives_default">True</property>
-                                                            </object>
-                                                            <packing>
-                                                            <property name="expand">True</property>
-                                                            <property name="fill">True</property>
-                                                            <property name="position">1</property>
-                                                            </packing>
-                                                            </child>
-                                                            <child>
-                                                            <object class="GtkButton" id="joystick_b_default_button">
-                                                            <property name="label" translatable="yes">D</property>
-                                                            <property name="visible">True</property>
-                                                            <property name="can_focus">True</property>
-                                                            <property name="receives_default">True</property>
-                                                            </object>
-                                                            <packing>
-                                                            <property name="expand">True</property>
-                                                            <property name="fill">True</property>
-                                                            <property name="position">2</property>
-                                                            </packing>
-                                                            </child>
-                                                            <child>
-                                                            <object class="GtkButton" id="joystick_ta_default_button">
-                                                            <property name="label" translatable="yes">D</property>
-                                                            <property name="visible">True</property>
-                                                            <property name="can_focus">True</property>
-                                                            <property name="receives_default">True</property>
-                                                            </object>
-                                                            <packing>
-                                                            <property name="expand">True</property>
-                                                            <property name="fill">True</property>
-                                                            <property name="position">3</property>
-                                                            </packing>
-                                                            </child>
-                                                            <child>
-                                                            <object class="GtkButton" id="joystick_tb_default_button">
-                                                            <property name="label" translatable="yes">D</property>
-                                                            <property name="visible">True</property>
-                                                            <property name="can_focus">True</property>
-                                                            <property name="receives_default">True</property>
-                                                            </object>
-                                                            <packing>
-                                                            <property name="expand">True</property>
-                                                            <property name="fill">True</property>
-                                                            <property name="position">4</property>
-                                                            </packing>
-                                                            </child>
-                                                          </object>
-                                                        </child>
-                                                      </object>
-                                                      <packing>
-                                                        <property name="expand">True</property>
-                                                        <property name="fill">True</property>
-                                                        <property name="position">3</property>
                                                       </packing>
                                                     </child>
                                                   </object>
@@ -2111,7 +1765,7 @@
                                             </child>
                                             <child>
                                               <object class="GtkButton" id="joystick_default_all_button">
-                                                <property name="label" translatable="yes">Default all</property>
+                                                <property name="label" translatable="yes">Defaults</property>
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">True</property>
                                                 <property name="receives_default">True</property>
@@ -2315,12 +1969,6 @@
       <action-widget response="0">standard_pad_cancel_button</action-widget>
     </action-widgets>
   </object>
-  <object class="GtkAdjustment" id="ta_delay_adjustment">
-    <property name="upper">20</property>
-    <property name="value">3</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">1</property>
-  </object>
   <object class="GtkListStore" id="std_pad_keyboard_liststore">
     <columns>
       <!-- column-name name -->
@@ -2331,6 +1979,12 @@
         <col id="0" translatable="yes">Keyboard</col>
       </row>
     </data>
+  </object>
+  <object class="GtkAdjustment" id="ta_delay_adjustment">
+    <property name="upper">20</property>
+    <property name="value">3</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">1</property>
   </object>
   <object class="GtkAdjustment" id="tb_delay_adjustment">
     <property name="upper">20</property>

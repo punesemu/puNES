@@ -17,7 +17,6 @@
 void cfg_std_pad_info_entry_print(int type, const char *fmt, ...);
 void cfg_std_pad_enable_notebook_and_other(gint type, gint virtual_button, gint mode);
 void cfg_std_pad_enable_joystick_notebook_buttons(gint mode);
-gboolean cfg_std_pad_input_is_not_ok(gint type, gint virtual_button, guint input);
 
 gboolean cfg_std_pad_key_press_event(GtkWidget *widget, GdkEventKey *event, gpointer user_data);
 void cfg_std_pad_js_press_event(void);
@@ -27,7 +26,6 @@ void cfg_std_pad_joystick_device_combobox_changed(GtkComboBox *combobox, gpointe
 
 void cfg_std_pad_input_clicked(GtkButton *button, gint virtual_button);
 void cfg_std_pad_input_unset_clicked(GtkButton *button, gint virtual_button);
-void cfg_std_pad_input_default_clicked(GtkButton *button, gint virtual_button);
 void cfg_std_pad_input_in_sequence_clicked(GtkButton *button, gint type);
 void cfg_std_pad_input_unset_all_clicked(GtkButton *button, gint type);
 void cfg_std_pad_input_default_all_clicked(GtkButton *button, gint type);
@@ -65,7 +63,6 @@ struct _cfg_std_pad {
 	GtkBuilder *builder;
 	GtkButton *button_clicked;
 
-	int retry;
 	BYTE virtual_button;
 	BYTE no_other_buttons;
 	BYTE wait_js_input;
@@ -129,13 +126,6 @@ void cfg_std_pad_dialog(_cfg_port *cfg_port) {
 
 				g_signal_connect(G_OBJECT(widget), "clicked",
 				        G_CALLBACK(cfg_std_pad_input_unset_clicked),
-				        GINT_TO_POINTER(virtual_button));
-
-				widget = dg_widget_from_obj_name(cfg_std_pad.builder, "%s_%s_default_button",
-				        std_pad_input_type[a], std_pad_button[b][0]);
-
-				g_signal_connect(G_OBJECT(widget), "clicked",
-				        G_CALLBACK(cfg_std_pad_input_default_clicked),
 				        GINT_TO_POINTER(virtual_button));
 			}
 
@@ -245,14 +235,9 @@ void cfg_std_pad_enable_notebook_and_other(gint type, gint virtual_button, gint 
 				        std_pad_button[i][0]);
 				gtk_widget_set_sensitive(_gw_get_widget(cfg_std_pad.builder, bt), mode);
 			}
-
-			/* default */
-			for (i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
-				bt = dg_obj_name("%s_%s_default_button", std_pad_input_type[type],
-				        std_pad_button[i][0]);
-				gtk_widget_set_sensitive(_gw_get_widget(cfg_std_pad.builder, bt), mode);
-			}
 		}
+
+		/* in sequence, unset all, default */
 		gtk_widget_set_sensitive(
 		        _gw_get_widget(cfg_std_pad.builder,
 		                dg_obj_name("%s_notebook_button_hbox", std_pad_input_type[type])), mode);
@@ -280,77 +265,9 @@ void cfg_std_pad_enable_joystick_notebook_buttons(gint mode) {
 	gtk_widget_set_sensitive(_gw_get_widget(cfg_std_pad.builder, "joystick_notebook_button_hbox"),
 	        mode);
 }
-gboolean cfg_std_pad_input_is_not_ok(gint type, gint virtual_button, guint input) {
-	gint a, b, count = 0;
-	char text[80];
-
-	if (cfg_input.settings.check_input_conflicts == FALSE) {
-		return (EXIT_OK);
-	}
-
-	memset(text, 0x00, sizeof(text));
-
-	for (a = PORT1; a < PORT_MAX; a++) {
-		_cfg_port *other = &cfg_input.port[a];
-
-		if (cfg_std_pad.cfg.id == other->id) {
-			other = &cfg_std_pad.cfg;
-		}
-
-		if ((type == JOYSTICK) && (cfg_std_pad.cfg.port.joy_id != other->port.joy_id)) {
-			continue;
-		}
-
-		for (b = BUT_A; b < MAX_STD_PAD_BUTTONS; b++) {
-			if (other->port.input[type][b] == input) {
-				/*
-				 * se il tasto premuto e' lo stesso con cui
-				 * era configurato allora non devo considerarlo
-				 * un conflitto.
-				 */
-				if ((cfg_std_pad.cfg.id == other->id) && (virtual_button == b)) {
-					continue;
-				}
-
-				if (count++ == 0) {
-					sprintf(text, "try %d : conflict with ", cfg_std_pad.retry);
-				} else {
-					strcat(text, ", ");
-				}
-
-				{
-					char buffer[30];
-
-					sprintf(buffer, "[Ctrl %d:%s]", other->id, std_pad_button[b][1]);
-					strcat(text, buffer);
-				}
-			}
-		}
-	}
-
-	if (count == 0) {
-		if (cfg_std_pad.retry > 15) {
-			sprintf(text, "%d attempts... I have no words...", cfg_std_pad.retry);
-		} else if (cfg_std_pad.retry > 10) {
-			sprintf(text, "%d attempts??? really???", cfg_std_pad.retry);
-		} else if (cfg_std_pad.retry > 5) {
-			sprintf(text, "After %d attempts you have win, congratulation!!", cfg_std_pad.retry);
-		}
-	}
-
-	cfg_std_pad_info_entry_print(type, text);
-
-	if (count == 0) {
-		return (EXIT_OK);
-	} else {
-		cfg_std_pad.retry++;
-		return (EXIT_ERROR);
-	}
-}
 
 gboolean cfg_std_pad_key_press_event(GtkWidget *widget, GdkEventKey *event, gpointer user_data) {
 	gint type, virtual_button;
-	gboolean value_is_good;
 
 	if (cfg_std_pad.no_other_buttons == FALSE) {
 		return (TRUE);
@@ -358,26 +275,16 @@ gboolean cfg_std_pad_key_press_event(GtkWidget *widget, GdkEventKey *event, gpoi
 
 	type = cfg_std_pad.virtual_button / MAX_STD_PAD_BUTTONS;
 	virtual_button = cfg_std_pad.virtual_button - (type * MAX_STD_PAD_BUTTONS);
-	value_is_good = TRUE;
 
 	if (type == KEYBOARD) {
 		if (event->keyval == GDK_Escape) {
 			gtk_button_set_label(cfg_std_pad.button_clicked,
 			        keyval_to_name(cfg_std_pad.cfg.port.input[type][virtual_button]));
-			if (cfg_std_pad.retry > 5) {
-				cfg_std_pad_info_entry_print(type, "you give up after only %d attempts?",
-				        cfg_std_pad.retry);
-			} else {
-				cfg_std_pad_info_entry_print(type, "");
-			}
 		} else {
-			if (cfg_std_pad_input_is_not_ok(type, virtual_button, event->keyval) == EXIT_ERROR) {
-				value_is_good = FALSE;
-			} else {
-				cfg_std_pad.cfg.port.input[type][virtual_button] = event->keyval;
-				gtk_button_set_label(cfg_std_pad.button_clicked, keyval_to_name(event->keyval));
-			}
+			cfg_std_pad.cfg.port.input[type][virtual_button] = event->keyval;
+			gtk_button_set_label(cfg_std_pad.button_clicked, keyval_to_name(event->keyval));
 		}
+		cfg_std_pad_info_entry_print(type, "");
 	} else {
 		/*
 		 * quando sto configurando il joystick, l'unico input da tastiera
@@ -386,27 +293,17 @@ gboolean cfg_std_pad_key_press_event(GtkWidget *widget, GdkEventKey *event, gpoi
 		if (event->keyval == GDK_Escape) {
 			gtk_button_set_label(cfg_std_pad.button_clicked,
 					jsv_to_name(cfg_std_pad.cfg.port.input[type][virtual_button]));
-			if (cfg_std_pad.retry > 5) {
-				cfg_std_pad_info_entry_print(type, "you give up after only %d attempts?",
-				        cfg_std_pad.retry);
-			} else {
-				cfg_std_pad_info_entry_print(type, "");
-			}
 		} else {
 			return (TRUE);
 		}
 	}
 
-	if (value_is_good) {
-		cfg_std_pad_enable_notebook_and_other(type, virtual_button, TRUE);
+	cfg_std_pad_enable_notebook_and_other(type, virtual_button, TRUE);
 
-		cfg_std_pad.no_other_buttons = FALSE;
-		cfg_std_pad.virtual_button = 0;
+	cfg_std_pad.no_other_buttons = FALSE;
+	cfg_std_pad.virtual_button = 0;
 
-		cfg_std_pad.wait_js_input = FALSE;
-
-		return (TRUE);
-	}
+	cfg_std_pad.wait_js_input = FALSE;
 
 	return (TRUE);
 }
@@ -472,7 +369,6 @@ void cfg_std_pad_js_press_event(void) {
 		gdk_threads_leave();
 	}
 
-	cfg_std_pad_js_press_event___retry___:
 	while (cfg_std_pad.wait_js_input == TRUE) {
 		read_is_ok = FALSE;
 
@@ -501,20 +397,16 @@ void cfg_std_pad_js_press_event(void) {
 	}
 
 	if (read_is_ok) {
-		if (cfg_std_pad_input_is_not_ok(type, virtual_button, value) == EXIT_ERROR) {
-			cfg_std_pad.wait_js_input = TRUE;
-			goto cfg_std_pad_js_press_event___retry___;
-		} else {
-			cfg_std_pad.cfg.port.input[type][virtual_button] = value;
-			if (cfg_input.child) {
-				gdk_threads_enter();
-				cfg_std_pad_enable_notebook_and_other(type, virtual_button, TRUE);
-				gtk_button_set_label(cfg_std_pad.button_clicked, jsv_to_name(value));
-				gdk_threads_leave();
-			}
-			cfg_std_pad.no_other_buttons = FALSE;
-			cfg_std_pad.virtual_button = 0;
+		cfg_std_pad.cfg.port.input[type][virtual_button] = value;
+		if (cfg_input.child) {
+			gdk_threads_enter();
+			cfg_std_pad_info_entry_print(type, "");
+			cfg_std_pad_enable_notebook_and_other(type, virtual_button, TRUE);
+			gtk_button_set_label(cfg_std_pad.button_clicked, jsv_to_name(value));
+			gdk_threads_leave();
 		}
+		cfg_std_pad.no_other_buttons = FALSE;
+		cfg_std_pad.virtual_button = 0;
 	} else {
 		if (cfg_input.child) {
 			gdk_threads_enter();
@@ -545,33 +437,8 @@ void cfg_std_pad_joystick_device_combobox_init(_cfg_port *cfg_port) {
 			BYTE id = a;
 
 			if (a < MAX_JOYSTICK) {
-				BYTE b, add = TRUE;
-
 				if (js_is_connected(id) == EXIT_ERROR) {
 					continue;
-				}
-
-				if (cfg_input.settings.check_input_conflicts == TRUE) {
-					for (b = PORT1; b < PORT_MAX; b++) {
-						_cfg_port *other = &cfg_input.port[b];
-
-						/*
-						 * se le tre condizioni primarie :
-						 * 1) non sto controllando me stesso
-						 * 2) il controller che sto esaminando sia uno standard pad
-						 * 3) il controller che sto esaminando usa lo stesso device
-						 * sono vere alloro rimuovo dall'elenco il dispositivo
-						 */
-						if ((cfg_std_pad.cfg.id != other->id) && (other->port.type == CTRL_STANDARD)
-						        && (other->port.joy_id == id)) {
-							add = FALSE;
-							break;
-						}
-					}
-
-					if (add == FALSE) {
-						continue;
-					}
 				}
 
 				if (id == cfg_port->port.joy_id) {
@@ -668,8 +535,6 @@ void cfg_std_pad_input_clicked(GtkButton *button, gint virtual_button) {
 	type = virtual_button / MAX_STD_PAD_BUTTONS;
 	virtual_button -= (type * MAX_STD_PAD_BUTTONS);
 
-	cfg_std_pad.retry = 1;
-
 	cfg_std_pad_enable_notebook_and_other(type, virtual_button, FALSE);
 
 	if (type == KEYBOARD) {
@@ -696,64 +561,6 @@ void cfg_std_pad_input_unset_clicked(GtkButton *button, gint virtual_button) {
 	obj_name = dg_obj_name("%s_%s_button", std_pad_input_type[type],
 	        std_pad_button[virtual_button][0]);
 	gtk_button_set_label(_gw_get_button(cfg_std_pad.builder, obj_name), "NULL");
-}
-void cfg_std_pad_input_default_clicked(GtkButton *button, gint virtual_button) {
-	char *obj_name, *def;
-	gint type;
-
-	type = virtual_button / MAX_STD_PAD_BUTTONS;
-	virtual_button -= (type * MAX_STD_PAD_BUTTONS);
-
-	def = cfg_file_set_kbd_joy_button_default(cfg_std_pad.cfg.id - 1, type, virtual_button);
-
-	if (type == KEYBOARD) {
-		cfg_std_pad.cfg.port.input[type][virtual_button] = keyval_from_name(def);
-	} else {
-		cfg_std_pad.cfg.port.input[type][virtual_button] = name_to_jsv(def);
-	}
-
-	cfg_std_pad_info_entry_print(type, "");
-
-	obj_name = dg_obj_name("%s_%s_button", std_pad_input_type[type],
-	        std_pad_button[virtual_button][0]);
-	gtk_button_set_label(_gw_get_button(cfg_std_pad.builder, obj_name), def);
-
-	if (cfg_input.settings.check_input_conflicts == TRUE) {
-		BYTE a;
-
-		for (a = PORT1; a < PORT_MAX; a++) {
-			BYTE b;
-			_cfg_port *other = &cfg_input.port[a];
-
-			if (cfg_std_pad.cfg.id == other->id) {
-				other = &cfg_std_pad.cfg;
-			}
-
-			for (b = BUT_A; b < MAX_STD_PAD_BUTTONS; b++) {
-				BYTE c;
-				gint input = cfg_std_pad.cfg.port.input[type][b];
-
-				for (c = BUT_A; c < MAX_STD_PAD_BUTTONS; c++) {
-					if (cfg_std_pad.cfg.id == other->id) {
-						if ((b == c) || (c == virtual_button)) {
-							continue;
-						}
-					}
-
-					if (other->port.input[type][c] == input) {
-						other->port.input[type][c] = 0;
-
-						if (cfg_std_pad.cfg.id == other->id) {
-							char *obj_name = dg_obj_name("%s_%s_button",
-							        std_pad_input_type[type], std_pad_button[c][0]);
-							gtk_button_set_label(_gw_get_button(cfg_std_pad.builder, obj_name),
-							        "NULL");
-						}
-					}
-				}
-			}
-		}
-	}
 }
 void cfg_std_pad_input_in_sequence_clicked(GtkButton *button, gint type) {
 	gint a, new_order[MAX_STD_PAD_BUTTONS] = {
@@ -824,30 +631,6 @@ void cfg_std_pad_input_default_all_clicked(GtkButton *button, gint type) {
 		                dg_obj_name("%s_%s_button", std_pad_input_type[type],
 		                        std_pad_button[a][0])), text);
 	}
-
-	if ((cfg_input.settings.check_input_conflicts == TRUE) && (type == KEYBOARD)) {
-		BYTE a;
-
-		for (a = PORT1; a < PORT_MAX; a++) {
-			BYTE b;
-			_cfg_port *other = &cfg_input.port[a];
-
-			if (cfg_std_pad.cfg.id == other->id) {
-				continue;
-			}
-
-			for (b = BUT_A; b < MAX_STD_PAD_BUTTONS; b++) {
-				BYTE c;
-				gint input = cfg_std_pad.cfg.port.input[type][b];
-
-				for (c = b; c < MAX_STD_PAD_BUTTONS; c++) {
-					if (other->port.input[type][c] == input) {
-						other->port.input[type][c] = 0;
-					}
-				}
-			}
-		}
-	}
 }
 void cfg_std_pad_turbo_delay_value_changed(GtkRange *range, gint type) {
 	cfg_std_pad.cfg.port.turbo[type].frequency = (BYTE) gtk_range_get_value(range);
@@ -856,17 +639,6 @@ void cfg_std_pad_turbo_delay_value_changed(GtkRange *range, gint type) {
 
 void cfg_std_pad_ok_clicked(GtkWidget *widget, _cfg_port *cfg_port) {
 	gtk_widget_destroy(cfg_input.child);
-
-	/* faccio il check dell'input */
-	if (cfg_input.settings.check_input_conflicts == TRUE) {
-		BYTE i;
-		_array_pointers_port array;
-
-		for (i = PORT1; i < PORT_MAX; i++) {
-			array.port[i] = &cfg_input.port[i].port;
-		}
-		input_check_conflicts(&cfg_input.settings, &array);
-	}
 
 	/* la mamcpy deve andare necessariamente dopo il destroy */
 	memcpy(cfg_port, &cfg_std_pad.cfg, sizeof(_cfg_port));

@@ -18,7 +18,6 @@ void cfg_input_controller_combobox_init(char *glade_combobox, _cfg_port *cfg_por
 void cfg_input_controller_combobox_changed(GtkComboBox *combobox, _cfg_port *cfg_port);
 void cfg_input_setup_clicked(GtkWidget *widget, _cfg_port *cfg_port);
 void cfg_input_permit_updown_leftright_checkbutton_toggled(GtkWidget *widget, gpointer user_data);
-void cfg_input_check_conflicts_checkbutton_toggled(GtkWidget *widget, gpointer user_data);
 void cfg_input_default_clicked(GtkWidget *widget, gpointer user_data);
 void cfg_input_ok_clicked(GtkWidget *widget, gpointer user_data);
 void cfg_input_cancel_clicked(GtkWidget *widget, gpointer user_data);
@@ -66,9 +65,6 @@ void cfg_input_dialog(void) {
 	dg_signal_connect_swapped(cfg_input.builder, "input_updown_leftright_checkbutton", "toggled",
 	        cfg_input_permit_updown_leftright_checkbutton_toggled, NULL);
 
-	dg_signal_connect_swapped(cfg_input.builder, "input_check_conflicts_checkbutton", "toggled",
-	        cfg_input_check_conflicts_checkbutton_toggled, NULL);
-
 	dg_signal_connect(cfg_input.builder, "input_default_button", "clicked",
 			cfg_input_default_clicked, NULL);
 	dg_signal_connect(cfg_input.builder, "input_ok_button", "clicked",
@@ -99,18 +95,6 @@ void cfg_input_update_dialog(void) {
 	gtk_toggle_button_set_active(
 	        _gw_get_togglebutton(cfg_input.builder, "input_updown_leftright_checkbutton"),
 	        cfg_input.settings.permit_updown_leftright);
-
-	{
-		gboolean state = TRUE;
-
-		if (cfg_input.settings.check_input_conflicts == TRUE) {
-			state = FALSE;
-		}
-
-		gtk_toggle_button_set_active(
-		        _gw_get_togglebutton(cfg_input.builder, "input_check_conflicts_checkbutton"),
-		        state);
-	}
 }
 void cfg_input_controller_combobox_init(char *glade_combobox, _cfg_port *cfg_port) {
 	GtkComboBox *combobox;
@@ -197,20 +181,6 @@ void cfg_input_setup_clicked(GtkWidget *widget, _cfg_port *cfg_port) {
 }
 void cfg_input_permit_updown_leftright_checkbutton_toggled(GtkWidget *widget, gpointer user_data) {
 	cfg_input.settings.permit_updown_leftright = !cfg_input.settings.permit_updown_leftright;
-}
-void cfg_input_check_conflicts_checkbutton_toggled(GtkWidget *widget, gpointer user_data) {
-	cfg_input.settings.check_input_conflicts = !cfg_input.settings.check_input_conflicts;
-
-	/* faccio il check dell'input */
-	if (cfg_input.settings.check_input_conflicts == TRUE) {
-		BYTE i;
-		_array_pointers_port array;
-
-		for (i = PORT1; i < PORT_MAX; i++) {
-			array.port[i] = &cfg_input.port[i].port;
-		}
-		input_check_conflicts(&cfg_input.settings, &array);
-	}
 }
 void cfg_input_default_clicked(GtkWidget *widget, gpointer user_data) {
 	_array_pointers_port array;
