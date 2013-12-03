@@ -150,7 +150,7 @@ static BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 			/* eseguo un tick hardware */
 			tick_hw(1);
 			/* leggo dal controller */
-			cpu.openbus = input_rd_reg[PORT1](cpu.openbus, screen.line, &port[PORT1]);
+			cpu.openbus = input_rd_reg[PORT1](cpu.openbus, screen.line, PORT1);
 			return (cpu.openbus);
 		}
 		/* Controller port 2 */
@@ -159,7 +159,7 @@ static BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 			/* eseguo un tick hardware */
 			tick_hw(1);
 			/* leggo dal controller */
-			cpu.openbus = input_rd_reg[PORT2](cpu.openbus, screen.line, &port[PORT2]);
+			cpu.openbus = input_rd_reg[PORT2](cpu.openbus, screen.line, PORT2);
 			return (cpu.openbus);
 		}
 	}
@@ -615,16 +615,8 @@ static void cpu_wr_mem(WORD address, BYTE value) {
 				 */
 				extcl_cpu_wr_r4016(value);
 			}
-			/* in caso di strobe azzero l'indice */
-			if (r4016.value && !(value & 0x01)) {
-				BYTE i;
-
-				for (i = PORT1; i < PORT_MAX; i++) {
-					port[i].index = 0;
-				}
-			}
-			/* memorizzo il valore */
-			r4016.value = value & 0x01;
+			/* memorizzo il nuovo valore */
+			r4016.value = input_wr_reg(value);
 			return;
 		}
 		/* APU */

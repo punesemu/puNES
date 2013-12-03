@@ -531,10 +531,8 @@ void gui_event(void) {
 					BYTE i;
 
 					for (i = PORT1; i < PORT_MAX; i++) {
-						if (input_decode_event[i]
-						        && (input_decode_event[i](PRESSED, LOWORD(msg.wParam), KEYBOARD,
-						                &port[i]) == EXIT_OK)) {
-							break;
+						if (input_decode_event[i]) {
+							input_decode_event[i](PRESSED, LOWORD(msg.wParam), KEYBOARD, &port[i]);
 						}
 					}
 				}
@@ -557,10 +555,8 @@ void gui_event(void) {
 					BYTE i;
 
 					for (i = PORT1; i < PORT_MAX; i++) {
-						if (input_decode_event[i]
-						        && (input_decode_event[i](RELEASED, LOWORD(msg.wParam), KEYBOARD,
-						                &port[i]) == EXIT_OK)) {
-							break;
+						if (input_decode_event[i]) {
+					        input_decode_event[i](RELEASED, LOWORD(msg.wParam), KEYBOARD, &port[i]);
 						}
 					}
 				}

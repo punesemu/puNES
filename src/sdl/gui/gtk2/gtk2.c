@@ -703,16 +703,17 @@ gboolean sock_key_press_event(GtkWidget *widget, GdkEventKey *event) {
 	}
 
 	{
-		BYTE i;
+		BYTE i, result = FALSE;
 
 		for (i = PORT1; i < PORT_MAX; i++) {
 			if (input_decode_event[i]
 			        && (input_decode_event[i](PRESSED, keyval, KEYBOARD, &port[i]) == EXIT_OK)) {
-				return (TRUE);
+				result = TRUE;
 			}
 		}
+
+		return (result);
 	}
-	return (FALSE);
 }
 gboolean sock_key_release_event(GtkWidget *widget, GdkEventKey *event) {
 	guint keyval = gdk_keyval_to_lower(event->keyval);
@@ -729,16 +730,17 @@ gboolean sock_key_release_event(GtkWidget *widget, GdkEventKey *event) {
 	}
 
 	{
-		BYTE i;
+		BYTE i, result = FALSE;
 
 		for (i = PORT1; i < PORT_MAX; i++) {
 			if (input_decode_event[i]
 			        && (input_decode_event[i](RELEASED, keyval, KEYBOARD, &port[i]) == EXIT_OK)) {
-				return (TRUE);
+				result = TRUE;
 			}
 		}
+
+		return (result);
 	}
-	return (FALSE);
 }
 gboolean mouse_button_press_release_event(GtkWidget *widget, GdkEventButton *event) {
 	switch (event->type) {

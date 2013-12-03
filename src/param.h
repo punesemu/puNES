@@ -348,6 +348,27 @@ static const _param param_input_base[] = {
 		NULL
 	},
 	{
+		"controller 3",
+		NULL,
+		"# possible values: disable, standard",
+		NULL,
+		NULL
+	},
+	{
+		"controller 4",
+		NULL,
+		"# possible values: disable, standard",
+		NULL,
+		NULL
+	},
+	{
+		"controller mode",
+		NULL,
+		"# possible values: nes, famicom, fourscore",
+		NULL,
+		NULL
+	},
+	{
 		"permit up+down left+right",
 		NULL,
 		"# possible values: yes, no",
@@ -381,6 +402,33 @@ static const _param param_input_p2j[] = {
 static const _param param_turbo_delay_p2[] = {
 	{ "P2 TA Delay " }, { "P2 TB Delay " }
 };
+static const _param param_input_p3k[] = {
+	{ "P3K A       " }, { "P3K B       " }, { "P3K Select  " }, { "P3K Start   " },
+	{ "P3K Up      " }, { "P3K Down    " }, { "P3K Left    " }, { "P3K Right   " },
+	{ "P3K TurboA  " }, { "P3K TurboB  " }
+};
+static const _param param_input_p3j[] = {
+	{ "P3J A       " }, { "P3J B       " }, { "P3J Select  " }, { "P3J Start   " },
+	{ "P3J Up      " }, { "P3J Down    " }, { "P3J Left    " }, { "P3J Right   " },
+	{ "P3J TurboA  " }, { "P3J TurboB  " }, { "P3J Id      " }
+};
+static const _param param_turbo_delay_p3[] = {
+	{ "P3 TA Delay " }, { "P3 TB Delay " }
+};
+static const _param param_input_p4k[] = {
+	{ "P4K A       " }, { "P4K B       " }, { "P4K Select  " }, { "P4K Start   " },
+	{ "P4K Up      " }, { "P4K Down    " }, { "P4K Left    " }, { "P4K Right   " },
+	{ "P4K TurboA  " }, { "P4K TurboB  " }
+};
+static const _param param_input_p4j[] = {
+	{ "P4J A       " }, { "P4J B       " }, { "P4J Select  " }, { "P4J Start   " },
+	{ "P4J Up      " }, { "P4J Down    " }, { "P4J Left    " }, { "P4J Right   " },
+	{ "P4J TurboA  " }, { "P4J TurboB  " }, { "P4J Id      " }
+};
+static const _param param_turbo_delay_p4[] = {
+	{ "P4 TA Delay " }, { "P4 TB Delay " }
+};
+
 static const _param param_no_yes[] = {
 	{"No",  "no" },
 	{"Yes", "yes"}
@@ -501,10 +549,19 @@ static const _param param_oscan[] = {
 	{"On",      "on"      },
 	{"Default", "default" }
 };
-static const _param param_controller[] = {
+static const _param param_controller_1_2[] = {
 	{"Disable",  "disable" },
 	{"Standard", "standard"},
 	{"Zapper",   "zapper"  }
+};
+static const _param param_controller_3_4[] = {
+	{"Disable",  "disable" },
+	{"Standard", "standard"}
+};
+static const _param param_controller_mode[] = {
+	{"NES",        "nes"       },
+	{"Famicom",    "famicom"   },
+	{"Four Score", "four score"}
 };
 
 #endif /* PARAM_H_ */

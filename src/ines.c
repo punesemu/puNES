@@ -95,7 +95,7 @@ BYTE ines_load_rom(void) {
 		}
 
 		if (info.trainer) {
-			fread(&trainer.data, sizeof(trainer.data), 1, fp);
+			tmp = fread(&trainer.data, sizeof(trainer.data), 1, fp);
 		} else {
 			memset(&trainer.data, 0x00, sizeof(trainer.data));
 		}

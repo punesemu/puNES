@@ -9,11 +9,11 @@
 #include "cfg_std_pad.h"
 #include "opengl.h"
 #include "cfg_file.h"
+#include "param.h"
 
 long __stdcall cfg_input_messages(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 void cfg_input_destory(HWND hwnd, INT_PTR result);
 void cfg_input_update_dialog(HWND hwnd);
-void cfg_input_setup_button_enable(HWND hwnd, _port *port, int button);
 
 void cfg_input_dialog(HWND hwnd) {
 	memset(&cfg_input, 0x00, sizeof(cfg_input));
@@ -55,14 +55,21 @@ long __stdcall cfg_input_messages(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPa
 			BYTE a;
 
 			for (a = PORT1; a < PORT_MAX; a++) {
-				BYTE b;
+				BYTE b, length = LENGTH(ctrl_list) - ((cfg_input.port[a].id - 1) >> 1);
 
 				SendDlgItemMessage(hwnd, IDC_INPUT_CONTROLLER1_COMBO + a, CB_RESETCONTENT, 0, 0);
 
-				for (b = 0; b < LENGTH(ctrl_list); b++) {
+				for (b = 0; b < length; b++) {
 					SendDlgItemMessage(hwnd, IDC_INPUT_CONTROLLER1_COMBO + a, CB_ADDSTRING, 0,
 					        (LPARAM) ctrl_list[b].name);
 				}
+			}
+
+			SendDlgItemMessage(hwnd, IDC_INPUT_CONTROLLER_MODE_COMBO, CB_RESETCONTENT, 0, 0);
+
+			for (a = 0; a < LENGTH(param_controller_mode); a++) {
+				SendDlgItemMessage(hwnd, IDC_INPUT_CONTROLLER_MODE_COMBO, CB_ADDSTRING, 0,
+				        (LPARAM) param_controller_mode[a].lname);
 			}
 
 			cfg_input_update_dialog(hwnd);
@@ -127,22 +134,32 @@ long __stdcall cfg_input_messages(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPa
 					return (TRUE);
 				case IDC_INPUT_CONTROLLER1_COMBO:
 				case IDC_INPUT_CONTROLLER2_COMBO:
+				case IDC_INPUT_CONTROLLER3_COMBO:
+				case IDC_INPUT_CONTROLLER4_COMBO:
 					if (HIWORD(wParam) == CBN_SELCHANGE) {
 						BYTE index = LOWORD(wParam) - IDC_INPUT_CONTROLLER1_COMBO;
 
 						cfg_input.port[index].port.type = SendDlgItemMessage(hwnd,
 								IDC_INPUT_CONTROLLER1_COMBO + index, CB_GETCURSEL, 0, 0);
-						cfg_input_setup_button_enable(hwnd, &cfg_input.port[index].port,
-								IDC_INPUT_CONTROLLER1_SETUP_BUTTON + index);
+						cfg_input_update_dialog(hwnd);
 					}
 					return (TRUE);
 				case IDC_INPUT_CONTROLLER1_SETUP_BUTTON:
-				case IDC_INPUT_CONTROLLER2_SETUP_BUTTON: {
+				case IDC_INPUT_CONTROLLER2_SETUP_BUTTON:
+				case IDC_INPUT_CONTROLLER3_SETUP_BUTTON:
+				case IDC_INPUT_CONTROLLER4_SETUP_BUTTON: {
 					BYTE index = LOWORD(wParam) - IDC_INPUT_CONTROLLER1_SETUP_BUTTON;
 
 					cfg_std_pad_dialog(hwnd, &cfg_input.port[index]);
 					return (TRUE);
 				}
+				case IDC_INPUT_CONTROLLER_MODE_COMBO:
+					if (HIWORD(wParam) == CBN_SELCHANGE) {
+						cfg_input.settings.controller_mode = SendDlgItemMessage(hwnd,
+								IDC_INPUT_CONTROLLER_MODE_COMBO, CB_GETCURSEL, 0, 0);
+						cfg_input_update_dialog(hwnd);
+					}
+					return (TRUE);
 				case IDC_PERMIT_UPDOWN_LEFTRIGHT_CHECKBOX:
 					cfg_input.settings.permit_updown_leftright =
 							!cfg_input.settings.permit_updown_leftright;
@@ -159,29 +176,43 @@ void cfg_input_destory(HWND hwnd, INT_PTR result) {
 	emu_pause(FALSE);
 }
 void cfg_input_update_dialog(HWND hwnd) {
-	{
-		BYTE i;
+	BYTE i;
 
-		for (i = PORT1; i < PORT_MAX; i++) {
-			SendDlgItemMessage(hwnd, IDC_INPUT_CONTROLLER1_COMBO + i, CB_SETCURSEL,
-					cfg_input.port[i].port.type, 0);
+	for (i = PORT1; i < PORT_MAX; i++) {
+		SendDlgItemMessage(hwnd, IDC_INPUT_CONTROLLER1_COMBO + i, CB_SETCURSEL,
+				cfg_input.port[i].port.type, 0);
 
-			cfg_input_setup_button_enable(hwnd, &cfg_input.port[i].port,
-					IDC_INPUT_CONTROLLER1_SETUP_BUTTON + i);
+		switch (cfg_input.port[i].port.type) {
+			case CTRL_DISABLED:
+			case CTRL_ZAPPER:
+				EnableWindow(GetDlgItem(hwnd, IDC_INPUT_CONTROLLER1_SETUP_BUTTON + i), FALSE);
+				break;
+			case CTRL_STANDARD:
+				EnableWindow(GetDlgItem(hwnd, IDC_INPUT_CONTROLLER1_SETUP_BUTTON + i), TRUE);
+				break;
 		}
 	}
 
 	{
-		EnableWindow(GetDlgItem(hwnd, IDC_INPUT_CONTROLLER4_LABEL_STATIC), FALSE);
-		EnableWindow(GetDlgItem(hwnd, IDC_INPUT_CONTROLLER4_COMBO), FALSE);
-		EnableWindow(GetDlgItem(hwnd, IDC_INPUT_CONTROLLER4_SETUP_BUTTON), FALSE);
+		BYTE mode = TRUE;
 
-		EnableWindow(GetDlgItem(hwnd, IDC_INPUT_CONTROLLER3_LABEL_STATIC), FALSE);
-		EnableWindow(GetDlgItem(hwnd, IDC_INPUT_CONTROLLER3_COMBO), FALSE);
-		EnableWindow(GetDlgItem(hwnd, IDC_INPUT_CONTROLLER3_SETUP_BUTTON), FALSE);
+		SendDlgItemMessage(hwnd, IDC_INPUT_CONTROLLER_MODE_COMBO, CB_SETCURSEL,
+				cfg_input.settings.controller_mode, 0);
 
-		EnableWindow(GetDlgItem(hwnd, IDC_INPUT_EXPANSION_LABEL_STATIC), FALSE);
-		EnableWindow(GetDlgItem(hwnd, IDC_INPUT_EXPANSION_COMBO), FALSE);
+		if (cfg_input.settings.controller_mode == CTRL_MODE_NES) {
+			mode = FALSE;
+		}
+
+		EnableWindow(GetDlgItem(hwnd, IDC_INPUT_CONTROLLER3_LABEL_STATIC), mode);
+		EnableWindow(GetDlgItem(hwnd, IDC_INPUT_CONTROLLER3_COMBO), mode);
+
+		EnableWindow(GetDlgItem(hwnd, IDC_INPUT_CONTROLLER4_LABEL_STATIC), mode);
+		EnableWindow(GetDlgItem(hwnd, IDC_INPUT_CONTROLLER4_COMBO), mode);
+
+		if (mode == FALSE) {
+			EnableWindow(GetDlgItem(hwnd, IDC_INPUT_CONTROLLER3_SETUP_BUTTON), mode);
+			EnableWindow(GetDlgItem(hwnd, IDC_INPUT_CONTROLLER4_SETUP_BUTTON), mode);
+		}
 	}
 
 	if (cfg_input.settings.permit_updown_leftright == TRUE) {
@@ -190,16 +221,5 @@ void cfg_input_update_dialog(HWND hwnd) {
 	} else {
 		SendDlgItemMessage(hwnd, IDC_PERMIT_UPDOWN_LEFTRIGHT_CHECKBOX, BM_SETCHECK,
 		        (WPARAM) BST_UNCHECKED, 0);
-	}
-}
-void cfg_input_setup_button_enable(HWND hwnd, _port *port, int button) {
-	switch (port->type) {
-		case CTRL_DISABLED:
-		case CTRL_ZAPPER:
-			EnableWindow(GetDlgItem(hwnd, button), FALSE);
-			break;
-		case CTRL_STANDARD:
-			EnableWindow(GetDlgItem(hwnd, button), TRUE);
-			break;
 	}
 }

@@ -29,23 +29,53 @@ void input_init(void) {
 
 	r4016.value = 0;
 
+	for (a = PORT1; a <= PORT2; a++) {
+		memset(&four_score[a], 0x00, sizeof(_four_score));
+	}
+
+	switch (cfg->input.controller_mode) {
+		case CTRL_MODE_NES:
+		case CTRL_MODE_FAMICOM:
+			SET_WR_REG(input_wr_reg_standard);
+			break;
+		case CTRL_MODE_FOUR_SCORE:
+			SET_WR_REG(input_wr_reg_four_score);
+			break;
+	}
+
 	for (a = PORT1; a < PORT_MAX; a++) {
 		switch (port[a].type) {
 			case CTRL_DISABLED:
 			default:
 				input_decode_event[a] = NULL;
 				input_add_event[a] = NULL;
-				SET_RD_REG(a, input_rd_reg_disabled);
+				if (a <= PORT2) {
+					SET_RD_REG(a, input_rd_reg_disabled);
+				}
 				break;
 			case CTRL_STANDARD:
 				SET_DECODE_EVENT(a, input_decode_event_standard);
 				SET_ADD_EVENT(a, input_add_event_standard);
-				SET_RD_REG(a, input_rd_reg_standard);
+				if (a <= PORT2) {
+					switch (cfg->input.controller_mode) {
+						case CTRL_MODE_NES:
+							SET_RD_REG(a, input_rd_reg_standard);
+							break;
+						case CTRL_MODE_FAMICOM:
+							SET_RD_REG(a, input_rd_reg_famicon_expansion);
+							break;
+						case CTRL_MODE_FOUR_SCORE:
+							SET_RD_REG(a, input_rd_reg_four_score);
+							break;
+					}
+				}
 				break;
 			case CTRL_ZAPPER:
 				input_decode_event[a] = NULL;
 				input_add_event[a] = NULL;
-				SET_RD_REG(a, input_rd_reg_zapper);
+				if (a <= PORT2) {
+					SET_RD_REG(a, input_rd_reg_zapper);
+				}
 				break;
 		}
 
@@ -65,11 +95,29 @@ void input_init(void) {
 	}
 }
 
-BYTE input_rd_reg_disabled(BYTE openbus, WORD **screen_index, _port *port) {
+BYTE input_rd_reg_disabled(BYTE openbus, WORD **screen_index, BYTE nport) {
 	return (openbus);
 	/*return (0x80);*/
 }
 
+static void INLINE input_turbo_buttons_control_standard(_port *port) {
+	if (port->turbo[TURBOA].active) {
+		if (++port->turbo[TURBOA].counter == port->turbo[TURBOA].frequency) {
+			port->data[BUT_A] = PRESSED;
+		} else if (port->turbo[TURBOA].counter > port->turbo[TURBOA].frequency) {
+			port->data[BUT_A] = RELEASED;
+			port->turbo[TURBOA].counter = 0;
+		}
+	}
+	if (port->turbo[TURBOB].active) {
+		if (++port->turbo[TURBOB].counter == port->turbo[TURBOB].frequency) {
+			port->data[BUT_B] = PRESSED;
+		} else if (port->turbo[TURBOB].counter > port->turbo[TURBOB].frequency) {
+			port->data[BUT_B] = RELEASED;
+			port->turbo[TURBOB].counter = 0;
+		}
+	}
+}
 BYTE input_decode_event_standard(BYTE mode, DBWORD event, BYTE type, _port *port) {
 	if (tas.type) {
 		return (EXIT_OK);
@@ -150,61 +198,130 @@ void input_add_event_standard(BYTE index) {
 	js_control(&js[index], &port[index]);
 	input_turbo_buttons_control_standard(&port[index]);
 }
-BYTE input_rd_reg_standard(BYTE openbus, WORD **screen_index, _port *port) {
+BYTE input_wr_reg_standard(BYTE value) {
+	/* in caso di strobe azzero l'indice */
+	if (r4016.value && !(value & 0x01)) {
+		BYTE i;
+
+		for (i = PORT1; i < PORT_MAX; i++) {
+			port[i].index = 0;
+		}
+	}
+
+	/* restiruisco il nuovo valore del $4016 */
+	return(value & 0x01);
+}
+BYTE input_rd_reg_standard(BYTE openbus, WORD **screen_index, BYTE nport) {
 	BYTE value;
 
+#define _input_rd()\
+	value = port[nport].data[port[nport].index];\
+	if (!r4016.value) {\
+		port[nport].index++;\
+	}
 	/*
 	 * Se $4016 e' a 1 leggo solo lo stato del primo pulsante
 	 * del controller. Quando verra' scritto 0 nel $4016
 	 * riprendero' a leggere lo stato di tutti i pulsanti.
 	 */
-	value = port->data[port->index];
-	if (!r4016.value) {
-		port->index++;
-	}
+	_input_rd()
 	/*
  	 * se avviene un DMA del DMC all'inizio
  	 * dell'istruzione di lettura del registro,
  	 * avverrano due letture.
  	 */
 	if (!info.r4016_dmc_double_read_disabled && (DMC.dma_cycle == 2)) {
-		value = port->data[port->index];
-		if (!r4016.value) {
-			port->index++;
-		}
+		_input_rd()
+	}
+#undef _input_rd
+
+	return(value);
+}
+
+BYTE input_rd_reg_famicon_expansion(BYTE openbus, WORD **screen_index, BYTE nport) {
+	BYTE value, nport2 = nport + 2;
+
+#define _input_rd()\
+	value = port[nport].data[port[nport].index];\
+	value |= (port[nport2].data[port[nport2].index] << 1);\
+	if (!r4016.value) {\
+		port[nport].index++;\
+		port[nport2].index++;\
+	}
+	/*
+	 * Se $4016 e' a 1 leggo solo lo stato del primo pulsante
+	 * del controller. Quando verra' scritto 0 nel $4016
+	 * riprendero' a leggere lo stato di tutti i pulsanti.
+	 */
+	_input_rd()
+	/*
+ 	 * se avviene un DMA del DMC all'inizio
+ 	 * dell'istruzione di lettura del registro,
+ 	 * avverrano due letture.
+ 	 */
+	if (!info.r4016_dmc_double_read_disabled && (DMC.dma_cycle == 2)) {
+		_input_rd()
+	}
+#undef _input_rd
+
+	return(value);
+}
+
+BYTE input_wr_reg_four_score(BYTE value) {
+	value &= 0x01;
+
+	if (!value) {
+		four_score[PORT1].count = 0;
+		four_score[PORT2].count = 0;
 	}
 
 	return(value);
 }
-static void INLINE input_turbo_buttons_control_standard(_port *port) {
-	if (port->turbo[TURBOA].active) {
-		if (++port->turbo[TURBOA].counter == port->turbo[TURBOA].frequency) {
-			port->data[BUT_A] = PRESSED;
-		} else if (port->turbo[TURBOA].counter > port->turbo[TURBOA].frequency) {
-			port->data[BUT_A] = RELEASED;
-			port->turbo[TURBOA].counter = 0;
-		}
+BYTE input_rd_reg_four_score(BYTE openbus, WORD **screen_index, BYTE nport) {
+	BYTE value = 0, nport2 = nport + 2;
+
+#define _input_rd(np)\
+	value = port[np].data[four_score[nport].count & 0x07];
+
+	if (four_score[nport].count < 8) {
+		_input_rd(nport)
+	} else if (four_score[nport].count < 16) {
+		_input_rd(nport2)
+	} else if (four_score[nport].count < 20) {
+		value = (four_score[nport].count - 18) ^ nport;
 	}
-	if (port->turbo[TURBOB].active) {
-		if (++port->turbo[TURBOB].counter == port->turbo[TURBOB].frequency) {
-			port->data[BUT_B] = PRESSED;
-		} else if (port->turbo[TURBOB].counter > port->turbo[TURBOB].frequency) {
-			port->data[BUT_B] = RELEASED;
-			port->turbo[TURBOB].counter = 0;
-		}
-	}
+
+	++four_score[nport].count;
+
+	/*
+	 * Se $4016 e' a 1 leggo solo lo stato del primo pulsante
+	 * del controller. Quando verra' scritto 0 nel $4016
+	 * riprendero' a leggere lo stato di tutti i pulsanti.
+	 */
+	//_input_rd(nport)
+	/*
+ 	 * se avviene un DMA del DMC all'inizio
+ 	 * dell'istruzione di lettura del registro,
+ 	 * avverrano due letture.
+ 	 */
+	//if (!info.r4016_dmc_double_read_disabled && (DMC.dma_cycle == 2)) {
+	//	_input_rd(nport)
+	//}
+#undef _input_rd
+
+	return(value);
 }
 
-BYTE input_rd_reg_zapper(BYTE openbus, WORD **screen_index, _port *port) {
+BYTE input_rd_reg_zapper(BYTE openbus, WORD **screen_index, BYTE nport) {
 	int x_zapper = -1, y_zapper = -1;
 	int x_rect, y_rect;
 	int gx = gui.x, gy = gui.y;
 	int count = 0;
 
-	port->zapper &= ~0x10;
+	port[nport].zapper &= ~0x10;
 
 	if (gui.left_button) {
-		port->zapper |= 0x10;
+		port[nport].zapper |= 0x10;
 	}
 
 	if (!gui.right_button) {
@@ -244,7 +361,7 @@ BYTE input_rd_reg_zapper(BYTE openbus, WORD **screen_index, _port *port) {
 	//fprintf(stderr, "x : %d (%d)    %d (%d)   \r", x_zapper, gui.x, y_zapper, gui.y);
 
 	if ((x_zapper <= 0) || (x_zapper >= SCR_ROWS) || (y_zapper <= 0) || (y_zapper >= SCR_LINES)) {
-		return (port->zapper |= 0x08);
+		return (port[nport].zapper |= 0x08);
 	}
 
 	if (!r2002.vblank && r2001.visible && (ppu.frame_y > machine.vint_lines)
@@ -279,13 +396,13 @@ BYTE input_rd_reg_zapper(BYTE openbus, WORD **screen_index, _port *port) {
 		}
 	}
 
-	port->zapper &= ~0x08;
+	port[nport].zapper &= ~0x08;
 
 	if (count < 0x40) {
-		port->zapper |= 0x08;
+		port[nport].zapper |= 0x08;
 	}
 
-	return (port->zapper);
+	return (port[nport].zapper);
 }
 BYTE input_zapper_is_connected(_port *array) {
 	BYTE i;

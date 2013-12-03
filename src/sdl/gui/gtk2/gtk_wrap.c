@@ -90,7 +90,7 @@ void dg_signal_disconnect(GtkBuilder *builder, char *obj_name, char *signal) {
 	guint handler;
 
 	while ((handler = g_signal_handler_find(widget, G_SIGNAL_MATCH_ID, signal_id, 0, NULL, NULL,
-	NULL))) {
+			NULL))) {
 		g_signal_handler_disconnect(widget, handler);
 	}
 }

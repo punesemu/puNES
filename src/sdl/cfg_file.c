@@ -385,14 +385,20 @@ void cfg_file_input_parse(void) {
 			/* ...da quello che c'e' dopo */
 			cfg_evaluate(NULL, value, "\n");
 
-			cfg_search(param_input_base, 2, 0, param_no_yes,
+			cfg_search(param_input_base, 5, 0, param_no_yes,
 			        cfg_from_file.input.permit_updown_leftright = index);
+
+			cfg_search(param_input_base, 4, 0, param_controller_mode,
+			        cfg_from_file.input.controller_mode = index);
 
 			{
 				BYTE i;
 
-				for (i = PORT1; i < PORT_MAX; i++) {
-					cfg_search(param_input_base, i, 0, param_controller, port[i].type = index);
+				for (i = PORT1; i <= PORT2; i++) {
+					cfg_search(param_input_base, i, 0, param_controller_1_2, port[i].type = index);
+				}
+				for (i = PORT3; i <= PORT4; i++) {
+					cfg_search(param_input_base, i, 0, param_controller_3_4, port[i].type = index);
 				}
 			}
 
@@ -408,6 +414,20 @@ void cfg_file_input_parse(void) {
 			cfg_int_search(param_turbo_delay_p2, 0, port[PORT2].turbo[TURBOA].frequency, 0,
 			        TURBO_BUTTON_DELAY_MAX);
 			cfg_int_search(param_turbo_delay_p2, 1, port[PORT2].turbo[TURBOB].frequency, 0,
+			        TURBO_BUTTON_DELAY_MAX);
+
+			cfg_input_search(param_input_p3k, port[PORT3], KEYBOARD);
+			cfg_input_search(param_input_p3j, port[PORT3], JOYSTICK);
+			cfg_int_search(param_turbo_delay_p3, 0, port[PORT3].turbo[TURBOA].frequency, 0,
+			        TURBO_BUTTON_DELAY_MAX);
+			cfg_int_search(param_turbo_delay_p3, 1, port[PORT3].turbo[TURBOB].frequency, 0,
+			        TURBO_BUTTON_DELAY_MAX);
+
+			cfg_input_search(param_input_p4k, port[PORT4], KEYBOARD);
+			cfg_input_search(param_input_p4j, port[PORT4], JOYSTICK);
+			cfg_int_search(param_turbo_delay_p4, 0, port[PORT4].turbo[TURBOA].frequency, 0,
+			        TURBO_BUTTON_DELAY_MAX);
+			cfg_int_search(param_turbo_delay_p4, 1, port[PORT4].turbo[TURBOB].frequency, 0,
 			        TURBO_BUTTON_DELAY_MAX);
 		}
 	}
@@ -429,16 +449,28 @@ void cfg_file_input_save(void) {
 	fprintf(fp, "# input configuration\n\n");
 
 	/* permit up+down left+right */
-	write_param((_param *) param_input_base, fp, 2,
+	write_param((_param *) param_input_base, fp, 5,
 	        param_no_yes[cfg_from_file.input.permit_updown_leftright].sname);
+
+	/* controller mode */
+	write_param((_param *) param_input_base, fp, 4,
+			param_controller_mode[cfg_from_file.input.controller_mode].sname);
+
+	/* controller type */
 	{
 		BYTE i;
 
-		for (i = PORT1; i < PORT_MAX; i++) {
-			write_param((_param *) param_input_base, fp, i, param_controller[port[i].type].sname);
+		for (i = PORT1; i <= PORT2; i++) {
+			write_param((_param *) param_input_base, fp, i,
+					param_controller_1_2[port[i].type].sname);
+		}
+		for (i = PORT3; i <= PORT4; i++) {
+			write_param((_param *) param_input_base, fp, i,
+					param_controller_3_4[port[i].type].sname);
 		}
 	}
 
+	/* port 1 */
 	write_input_param((_param *) param_input_p1k, fp, LENGTH(param_input_p1k), port[PORT1], 1,
 	        KEYBOARD);
 	write_input_param((_param *) param_input_p1j, fp, LENGTH(param_input_p1j), port[PORT1], 1,
@@ -448,6 +480,7 @@ void cfg_file_input_save(void) {
 	write_int_param((_param *) param_turbo_delay_p1, fp, 0, port[PORT1].turbo[TURBOA].frequency);
 	write_int_param((_param *) param_turbo_delay_p1, fp, 1, port[PORT1].turbo[TURBOB].frequency);
 
+	/* port 2 */
 	write_input_param((_param *) param_input_p2k, fp, LENGTH(param_input_p2k), port[PORT2], 2,
 	        KEYBOARD);
 	write_input_param((_param *) param_input_p2j, fp, LENGTH(param_input_p2j), port[PORT2], 2,
@@ -457,12 +490,33 @@ void cfg_file_input_save(void) {
 	write_int_param((_param *) param_turbo_delay_p2, fp, 0,	port[PORT2].turbo[TURBOA].frequency);
 	write_int_param((_param *) param_turbo_delay_p2, fp, 1,	port[PORT2].turbo[TURBOB].frequency);
 
+	/* port 3 */
+	write_input_param((_param *) param_input_p3k, fp, LENGTH(param_input_p3k), port[PORT3], 3,
+	        KEYBOARD);
+	write_input_param((_param *) param_input_p3j, fp, LENGTH(param_input_p3j), port[PORT3], 3,
+	        JOYSTICK);
+
+	fprintf(fp, "# player 3 turbo buttons delays\n");
+	write_int_param((_param *) param_turbo_delay_p3, fp, 0,	port[PORT3].turbo[TURBOA].frequency);
+	write_int_param((_param *) param_turbo_delay_p3, fp, 1,	port[PORT3].turbo[TURBOB].frequency);
+
+	/* port 4 */
+	write_input_param((_param *) param_input_p4k, fp, LENGTH(param_input_p4k), port[PORT4], 4,
+	        KEYBOARD);
+	write_input_param((_param *) param_input_p4j, fp, LENGTH(param_input_p4j), port[PORT4], 4,
+	        JOYSTICK);
+
+	fprintf(fp, "# player 4 turbo buttons delays\n");
+	write_int_param((_param *) param_turbo_delay_p4, fp, 0,	port[PORT4].turbo[TURBOA].frequency);
+	write_int_param((_param *) param_turbo_delay_p4, fp, 1,	port[PORT4].turbo[TURBOB].frequency);
+
 	fclose(fp);
 }
 void cfg_file_set_all_input_default(_config_input *config_input, _array_pointers_port *array) {
 	BYTE i;
 
 	config_input->permit_updown_leftright = FALSE;
+	config_input->controller_mode = CTRL_MODE_NES;
 
 	for (i = PORT1; i < PORT_MAX; i++) {
 		_port *port = array->port[i];
@@ -473,12 +527,12 @@ void cfg_file_set_all_input_default(_config_input *config_input, _array_pointers
 				port->joy_id = name_to_jsn("JOYSTICKID1");
 				break;
 			case PORT2:
-				port->joy_id = name_to_jsn("JOYSTICKID2");
 				port->type = FALSE;
+				port->joy_id = name_to_jsn("JOYSTICKID2");
 				break;
 			default:
-				port->joy_id = name_to_jsn("NULL");
 				port->type = FALSE;
+				port->joy_id = name_to_jsn("NULL");
 				break;
 		}
 
@@ -533,6 +587,30 @@ char *cfg_file_set_kbd_joy_button_default(int index, int mode, int button) {
 				"JB2",    "JB3"
 			}
 		},
+		{
+			{
+				"NULL", "NULL", "NULL", "NULL",
+				"NULL", "NULL", "NULL", "NULL",
+				"NULL", "NULL"
+			},
+			{
+				"JB1",    "JB0",    "JB8",    "JB9",
+				"JA1MIN", "JA1PLS", "JA0MIN", "JA0PLS",
+				"JB2",    "JB3"
+			}
+		},
+		{
+			{
+				"NULL", "NULL", "NULL", "NULL",
+				"NULL", "NULL", "NULL", "NULL",
+				"NULL", "NULL"
+			},
+			{
+				"JB1",    "JB0",    "JB8",    "JB9",
+				"JA1MIN", "JA1PLS", "JA0MIN", "JA0PLS",
+				"JB2",    "JB3"
+			}
+		}
 	};
 
 	return(default_value_port[index][mode][button]);

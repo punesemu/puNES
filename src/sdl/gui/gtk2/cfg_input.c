@@ -11,11 +11,14 @@
 #include "menu/menu_video_effect.h"
 #include "opengl.h"
 #include "cfg_file.h"
+#include "param.h"
 
 void cfg_input_update_dialog(void);
 
 void cfg_input_controller_combobox_init(char *glade_combobox, _cfg_port *cfg_port);
 void cfg_input_controller_combobox_changed(GtkComboBox *combobox, _cfg_port *cfg_port);
+void cfg_input_controller_mode_combobox_init(char *glade_combobox);
+void cfg_input_controller_mode_combobox_changed(GtkComboBox *combobox, gpointer user_data);
 void cfg_input_setup_clicked(GtkWidget *widget, _cfg_port *cfg_port);
 void cfg_input_permit_updown_leftright_checkbutton_toggled(GtkWidget *widget, gpointer user_data);
 void cfg_input_default_clicked(GtkWidget *widget, gpointer user_data);
@@ -60,6 +63,8 @@ void cfg_input_dialog(void) {
 		}
 	}
 
+	cfg_input_controller_mode_combobox_init(dg_obj_name("input_ctrl_mode_combobox"));
+
 	cfg_input_update_dialog();
 
 	dg_signal_connect_swapped(cfg_input.builder, "input_updown_leftright_checkbutton", "toggled",
@@ -83,13 +88,53 @@ void cfg_input_dialog(void) {
 
 void cfg_input_update_dialog(void) {
 	BYTE i;
+	_cfg_port *this;
 
 	for (i = PORT1; i < PORT_MAX; i++) {
-		_cfg_port *this = &cfg_input.port[i];
+		char *obj_name;
+
+		this = &cfg_input.port[i];
+
+		obj_name = dg_obj_name("input_ctrl%d_combobox", this->id);
+		gtk_combo_box_set_active(_gw_get_combobox(cfg_input.builder, obj_name), this->port.type);
+
+		obj_name = dg_obj_name("input_ctrl%d_setup_button", this->id);
+		dg_signal_disconnect(cfg_input.builder, obj_name, "clicked");
+		switch (this->port.type) {
+			case CTRL_DISABLED:
+			case CTRL_ZAPPER:
+				dg_set_sensitive(cfg_input.builder, obj_name, FALSE);
+				break;
+			case CTRL_STANDARD:
+				dg_set_sensitive(cfg_input.builder, obj_name, TRUE);
+				dg_signal_connect(cfg_input.builder, obj_name, "clicked",
+						cfg_input_setup_clicked, this);
+				break;
+		}
+	}
+
+	{
+		BYTE mode = TRUE;
 
 		gtk_combo_box_set_active(
-		        _gw_get_combobox(cfg_input.builder, dg_obj_name("input_ctrl%d_combobox", this->id)),
-		        this->port.type);
+		        _gw_get_combobox(cfg_input.builder, dg_obj_name("input_ctrl_mode_combobox")),
+		        cfg_input.settings.controller_mode);
+
+		if (cfg_input.settings.controller_mode == CTRL_MODE_NES) {
+			mode = FALSE;
+		}
+
+		for (i = PORT3; i <= PORT4; i++) {
+			this = &cfg_input.port[i];
+
+			dg_set_sensitive(cfg_input.builder, dg_obj_name("input_ctrl%d_label", this->id), mode);
+			dg_set_sensitive(cfg_input.builder, dg_obj_name("input_ctrl%d_combobox", this->id),
+			        mode);
+			if (mode == FALSE) {
+				dg_set_sensitive(cfg_input.builder,
+				        dg_obj_name("input_ctrl%d_setup_button", this->id), mode);
+			}
+		}
 	}
 
 	gtk_toggle_button_set_active(
@@ -112,9 +157,9 @@ void cfg_input_controller_combobox_init(char *glade_combobox, _cfg_port *cfg_por
 	liststore = gtk_list_store_new(CTRL_COLUMNS, G_TYPE_STRING, G_TYPE_INT, G_TYPE_INT);
 
 	{
-		BYTE i;
+		BYTE i, length = LENGTH(ctrl_list) - ((cfg_port->id - 1) >> 1);
 
-		for (i = 0; i < LENGTH(ctrl_list); i++) {
+		for (i = 0; i < length; i++) {
 			GtkTreeIter iter;
 
 			gtk_list_store_append(liststore, &iter);
@@ -135,8 +180,6 @@ void cfg_input_controller_combobox_init(char *glade_combobox, _cfg_port *cfg_por
 
 	g_signal_connect(G_OBJECT(combobox), "changed",
 			G_CALLBACK(cfg_input_controller_combobox_changed), cfg_port);
-
-	//gtk_combo_box_set_active(combobox, cfg_port->port.type);
 }
 void cfg_input_controller_combobox_changed(GtkComboBox *combobox, _cfg_port *cfg_port) {
 	GtkTreeIter iter;
@@ -150,24 +193,53 @@ void cfg_input_controller_combobox_changed(GtkComboBox *combobox, _cfg_port *cfg
 	gtk_tree_model_get(model, &iter, CTRL_TYPE, &type, -1);
 	cfg_port->port.type = type;
 
+	cfg_input_update_dialog();
+}
+void cfg_input_controller_mode_combobox_init(char *glade_combobox) {
+	GtkComboBox *combobox;
+	GtkListStore *liststore;
+
+	combobox = _gw_get_combobox(cfg_input.builder, glade_combobox);
+	liststore = gtk_list_store_new(CTRL_COLUMNS, G_TYPE_STRING, G_TYPE_INT);
+
 	{
-		char *obj_name;
+		BYTE i;
 
-		obj_name = dg_obj_name("input_ctrl%d_setup_button", cfg_port->id);
+		for (i = 0; i < LENGTH(param_controller_mode); i++) {
+			GtkTreeIter iter;
 
-		switch (cfg_port->port.type) {
-			case CTRL_DISABLED:
-			case CTRL_ZAPPER:
-				dg_set_sensitive(cfg_input.builder, obj_name, FALSE);
-				dg_signal_disconnect(cfg_input.builder, obj_name, "clicked");
-				break;
-			case CTRL_STANDARD:
-				dg_set_sensitive(cfg_input.builder, obj_name, TRUE);
-				dg_signal_connect(cfg_input.builder, obj_name, "clicked",
-						cfg_input_setup_clicked, cfg_port);
-				break;
+			gtk_list_store_append(liststore, &iter);
+			gtk_list_store_set(liststore, &iter, CTRL_NAME, param_controller_mode[i].lname,
+			        CTRL_TYPE, i, -1);
 		}
 	}
+
+	gtk_combo_box_set_model(combobox, GTK_TREE_MODEL(liststore));
+	g_object_unref(liststore);
+
+	{
+		GtkCellRenderer *renderer = gtk_cell_renderer_text_new();
+
+		gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(combobox), renderer, TRUE);
+		gtk_cell_layout_add_attribute(GTK_CELL_LAYOUT(combobox), renderer, "text", 0);
+	}
+
+	g_signal_connect(G_OBJECT(combobox), "changed",
+			G_CALLBACK(cfg_input_controller_mode_combobox_changed), NULL);
+}
+void cfg_input_controller_mode_combobox_changed(GtkComboBox *combobox, gpointer user_data) {
+	GtkTreeIter iter;
+	GtkTreeModel *model;
+	guint type;
+
+	model = gtk_combo_box_get_model(GTK_COMBO_BOX(combobox));
+
+	gtk_combo_box_get_active_iter(GTK_COMBO_BOX(combobox), &iter);
+
+	gtk_tree_model_get(model, &iter, CTRL_TYPE, &type, -1);
+	cfg_input.settings.controller_mode = type;
+
+	cfg_input_update_dialog();
 }
 void cfg_input_setup_clicked(GtkWidget *widget, _cfg_port *cfg_port) {
 	switch (cfg_port->port.type) {
