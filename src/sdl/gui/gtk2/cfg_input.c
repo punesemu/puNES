@@ -200,7 +200,7 @@ void cfg_input_controller_mode_combobox_init(char *glade_combobox) {
 	GtkListStore *liststore;
 
 	combobox = _gw_get_combobox(cfg_input.builder, glade_combobox);
-	liststore = gtk_list_store_new(CTRL_COLUMNS, G_TYPE_STRING, G_TYPE_INT);
+	liststore = gtk_list_store_new(CTRL_COLUMNS - 1, G_TYPE_STRING, G_TYPE_INT);
 
 	{
 		BYTE i;
