@@ -113,11 +113,11 @@ void apu_channels_toggle(gint channel) {
 	cfg->apu.channel[channel] = !cfg->apu.channel[channel];
 }
 void apu_channels_toggle_all(gint mode) {
-	int index;
+	BYTE i;
 
 	if (mode == 2) {
-		for (index = APU_S1; index <= APU_MASTER; index++) {
-			cfg->apu.volume[index] = 1.0f;
+		for (i = APU_S1; i <= APU_MASTER; i++) {
+			cfg->apu.volume[i] = 1.0f;
 		}
 		mode = TRUE;
 	}
@@ -126,8 +126,8 @@ void apu_channels_toggle_all(gint mode) {
 	 * lo utilizzo per abilitare o disabilitare il suono
 	 * globalmente e viene impostato altrove.
 	 */
-	for (index = APU_S1; index <= APU_EXTRA; index++) {
-		cfg->apu.channel[index] = mode;
+	for (i = APU_S1; i <= APU_EXTRA; i++) {
+		cfg->apu.channel[i] = mode;
 	}
 	apu_channels_check();
 	emu_pause(TRUE);
