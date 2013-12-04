@@ -10,7 +10,6 @@
 #include "gui_snd.h"
 #include "apu.h"
 #include "cfg_file.h"
-#include "param.h"
 
 void apu_channels_check(void);
 void apu_channels_toggle(gint channel);
