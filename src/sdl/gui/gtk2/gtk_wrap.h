@@ -11,8 +11,9 @@
 #include "gui.h"
 
 enum glade_h_name {
+	APU_CHANNELS_DIALOG,
 	INPUT_DIALOG,
-	INPUT_STD_PAD
+	INPUT_STD_PAD_DIALOG
 };
 
 #define _gw_get_object(builder, obj, type_object) type_object(gtk_builder_get_object(builder, obj))
@@ -23,6 +24,7 @@ enum glade_h_name {
 #define _gw_get_button(builder, obj) _gw_get_object(builder, obj, GTK_BUTTON)
 #define _gw_get_togglebutton(builder, obj) _gw_get_object(builder, obj, GTK_TOGGLE_BUTTON)
 #define _gw_get_entry(builder, obj) _gw_get_object(builder, obj, GTK_ENTRY)
+#define _gw_get_range(builder, obj) _gw_get_object(builder, obj, GTK_RANGE)
 
 void gw_image_from_inline(GtkWidget *widget, const guint8 *data);
 

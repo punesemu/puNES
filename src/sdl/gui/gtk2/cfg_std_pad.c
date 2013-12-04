@@ -76,7 +76,7 @@ void cfg_std_pad_dialog(_cfg_port *cfg_port) {
 	memset(&cfg_std_pad, 0x00, sizeof(cfg_std_pad));
 	memcpy(&cfg_std_pad.cfg, cfg_port, sizeof(_cfg_port));
 
-	dg_create_gtkbuilder(&cfg_std_pad.builder, INPUT_STD_PAD);
+	dg_create_gtkbuilder(&cfg_std_pad.builder, INPUT_STD_PAD_DIALOG);
 
 	cfg_input.child = GTK_WIDGET(
 	        gtk_builder_get_object(cfg_std_pad.builder, "standard_pad_dialog"));

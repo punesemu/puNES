@@ -6,6 +6,7 @@
  */
 
 #include "gtk_wrap.h"
+#include "glade/apu_channels_glade.h"
 #include "glade/input_configuration_glade.h"
 
 char *_dg_obj_name(const char *fmt, va_list argp);
@@ -61,8 +62,11 @@ void dg_create_gtkbuilder(GtkBuilder **builder, int id_glade_h) {
 	(*builder) = gtk_builder_new();
 
 	switch (id_glade_h) {
+		case APU_CHANNELS_DIALOG:
+			data =  apu_channels_glade;
+			break;
 		case INPUT_DIALOG:
-		case INPUT_STD_PAD:
+		case INPUT_STD_PAD_DIALOG:
 			data = input_configuration_glade;
 			break;
 	}

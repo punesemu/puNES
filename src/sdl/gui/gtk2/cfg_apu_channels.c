@@ -8,49 +8,9 @@
 #include <string.h>
 #include "gui.h"
 #include "gui_snd.h"
-#include "glade/apu_channels_glade.h"
-#include "param.h"
-#include "cfg_file.h"
 #include "apu.h"
-
-#define _get_object(out, obj)\
-	out = GTK_WIDGET(gtk_builder_get_object(apu_channels_data.builder, obj));
-#define _signal_connect_swapped(obj, signal, callback, gint)\
-{\
-	GtkWidget *tmp;\
-	_get_object(tmp, obj)\
-	g_signal_connect_swapped(G_OBJECT(tmp), signal, G_CALLBACK(callback), GINT_TO_POINTER(gint));\
-}
-#define _signal_connect(obj, signal, callback, gint)\
-{\
-	GtkWidget *tmp;\
-	_get_object(tmp, obj)\
-	g_signal_connect(G_OBJECT(tmp), signal, G_CALLBACK(callback), GINT_TO_POINTER(gint));\
-}
-#define _check_hscale(obj, dst)\
-{\
-	GtkWidget *tmp;\
-	_get_object(tmp, obj)\
-	gtk_range_set_value(GTK_RANGE(tmp), dst);\
-}
-#define channel_connect_toggled(obj, index)\
-	_signal_connect_swapped(obj, "toggled", apu_channels_toggle, index)
-#define channel_connect_clicked(obj, mode)\
-	_signal_connect_swapped(obj, "clicked", apu_channels_toggle_all, mode)
-#define volume_connect_value_changed(obj, mode)\
-	_signal_connect(obj, "value-changed", apu_channels_volume_value_changed, mode)
-#define channel_check_active(obj, index)\
-{\
-	GtkWidget *tmp;\
-	_get_object(tmp, obj)\
-	if (!cfg->apu.channel[index]) {\
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(tmp), FALSE);\
-	} else {\
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(tmp), TRUE);\
-	}\
-}
-#define volume_check(obj, index)\
-	_check_hscale(obj, cfg->apu.volume[index])
+#include "cfg_file.h"
+#include "param.h"
 
 void apu_channels_check(void);
 void apu_channels_toggle(gint channel);
@@ -59,6 +19,7 @@ void apu_channels_volume_value_changed(GtkRange *range, gint channel);
 gboolean apu_channels_delete_event(GtkWidget *widget, GdkEvent *event, gpointer data);
 void apu_channels_ok_clicked(GtkButton *button, gpointer user_data);
 void apu_channels_cancel_clicked(GtkButton *button, gpointer user_data);
+void apu_channels_window_destroy(GtkWidget *widget, gpointer user_data);
 
 struct _apu_channels_data {
 	int update;
@@ -67,79 +28,80 @@ struct _apu_channels_data {
 	GtkWidget *window;
 } apu_channels_data;
 
-void apu_channels_dialog(void) {
-	GError *error = NULL;
+static const char apu_channels_list[][10] = {
+		"square1", "square2", "triangle", "noise", "dmc", "extra", "master"
+};
 
+void apu_channels_dialog(void) {
 	memset(&apu_channels_data, 0x00, sizeof(apu_channels_data));
 	memcpy(&apu_channels_data.cfg_save, &cfg->apu, sizeof(_config_apu));
 
-	/* Create new GtkBuilder object */
-	apu_channels_data.builder = gtk_builder_new();
+	dg_create_gtkbuilder(&apu_channels_data.builder, APU_CHANNELS_DIALOG);
 
-	/* Load UI from file. If error occurs, report it and quit application. */
-	if (!gtk_builder_add_from_string(apu_channels_data.builder, apu_channels_glade, -1,
-	        &error)) {
-		g_warning("%s", error->message);
-		g_free(error);
-	}
-
-	/* Get main window pointer from UI */
 	apu_channels_data.window = GTK_WIDGET(
-	        gtk_builder_get_object(apu_channels_data.builder,
-	                "apu_channels_dialog"));
+	        gtk_builder_get_object(apu_channels_data.builder, "apu_channels_dialog"));
 
-	/* Connect signals */
 	gtk_builder_connect_signals(apu_channels_data.builder, NULL);
 
 	/* ora collego i miei segnali */
-	channel_connect_toggled("apu_channels_square1_checkbutton", APU_S1)
-	channel_connect_toggled("apu_channels_square2_checkbutton", APU_S2)
-	channel_connect_toggled("apu_channels_triangle_checkbutton", APU_TR)
-	channel_connect_toggled("apu_channels_noise_checkbutton", APU_NS)
-	channel_connect_toggled("apu_channels_dmc_checkbutton", APU_DMC)
-	channel_connect_toggled("apu_channels_extra_checkbutton", APU_EXTRA)
+	{
+		BYTE i;
 
-	channel_connect_clicked("apu_channels_disable_all_button", FALSE)
-	channel_connect_clicked("apu_channels_active_all_button", TRUE)
-	channel_connect_clicked("apu_channels_defaults_button", 2)
+		for (i = APU_S1; i <= APU_EXTRA; i++) {
+			dg_signal_connect_swapped(apu_channels_data.builder,
+			        dg_obj_name("apu_channels_%s_checkbutton", apu_channels_list[i]), "toggled",
+			        apu_channels_toggle, GINT_TO_POINTER(i));
+		}
+	}
 
-	volume_connect_value_changed("apu_channels_square1_hscale", APU_S1)
-	volume_connect_value_changed("apu_channels_square2_hscale", APU_S2)
-	volume_connect_value_changed("apu_channels_triangle_hscale", APU_TR)
-	volume_connect_value_changed("apu_channels_noise_hscale", APU_NS)
-	volume_connect_value_changed("apu_channels_dmc_hscale", APU_DMC)
-	volume_connect_value_changed("apu_channels_extra_hscale", APU_EXTRA)
-	volume_connect_value_changed("apu_channels_master_hscale", APU_MASTER)
+	dg_signal_connect_swapped(apu_channels_data.builder, "apu_channels_disable_all_button",
+	        "clicked", apu_channels_toggle_all, GINT_TO_POINTER(FALSE));
+	dg_signal_connect_swapped(apu_channels_data.builder, "apu_channels_active_all_button",
+	        "clicked", apu_channels_toggle_all, GINT_TO_POINTER(TRUE));
+	dg_signal_connect_swapped(apu_channels_data.builder, "apu_channels_defaults_button",
+	        "clicked", apu_channels_toggle_all, GINT_TO_POINTER(2));
 
-	_signal_connect("apu_channels_ok_button", "clicked",
-	        G_CALLBACK(apu_channels_ok_clicked), 0);
-	_signal_connect("apu_channels_cancel_button", "clicked",
-	        G_CALLBACK(apu_channels_cancel_clicked), 0);
+	{
+		BYTE i;
+
+		for (i = APU_S1; i <= APU_MASTER; i++) {
+			dg_signal_connect(apu_channels_data.builder,
+			        dg_obj_name("apu_channels_%s_hscale", apu_channels_list[i]), "value-changed",
+			        apu_channels_volume_value_changed, GINT_TO_POINTER(i));
+		}
+	}
+
+	dg_signal_connect(apu_channels_data.builder, "apu_channels_ok_button", "clicked",
+	        apu_channels_ok_clicked, NULL);
+	dg_signal_connect(apu_channels_data.builder, "apu_channels_cancel_button", "clicked",
+	        apu_channels_cancel_clicked, NULL);
 	g_signal_connect(G_OBJECT(apu_channels_data.window), "delete-event",
 	        G_CALLBACK(apu_channels_delete_event), NULL);
+	g_signal_connect(G_OBJECT(apu_channels_data.window), "destroy",
+	        G_CALLBACK(apu_channels_window_destroy), NULL);
 
 	apu_channels_check();
 
-	/* Show window. All other widgets are automatically shown by GtkBuilder */
 	gtk_widget_show(apu_channels_data.window);
 }
 void apu_channels_check(void) {
+	BYTE i;
+
 	apu_channels_data.update = TRUE;
 
-	channel_check_active("apu_channels_square1_checkbutton", APU_S1)
-	channel_check_active("apu_channels_square2_checkbutton", APU_S2)
-	channel_check_active("apu_channels_triangle_checkbutton", APU_TR)
-	channel_check_active("apu_channels_noise_checkbutton", APU_NS)
-	channel_check_active("apu_channels_dmc_checkbutton", APU_DMC)
-	channel_check_active("apu_channels_extra_checkbutton", APU_EXTRA)
+	for (i = APU_S1; i <= APU_EXTRA; i++) {
+		gtk_toggle_button_set_active(
+		        _gw_get_togglebutton(apu_channels_data.builder,
+		                dg_obj_name("apu_channels_%s_checkbutton", apu_channels_list[i])),
+		        cfg->apu.channel[i]);
+		gtk_range_set_value(
+		        _gw_get_range(apu_channels_data.builder,
+		                dg_obj_name("apu_channels_%s_hscale", apu_channels_list[i])),
+		        cfg->apu.volume[i]);
+	}
 
-	volume_check("apu_channels_square1_hscale", APU_S1)
-	volume_check("apu_channels_square2_hscale", APU_S2)
-	volume_check("apu_channels_triangle_hscale", APU_TR)
-	volume_check("apu_channels_noise_hscale", APU_NS)
-	volume_check("apu_channels_dmc_hscale", APU_DMC)
-	volume_check("apu_channels_extra_hscale", APU_EXTRA)
-	volume_check("apu_channels_master_hscale", APU_MASTER)
+	gtk_range_set_value(_gw_get_range(apu_channels_data.builder, "apu_channels_master_hscale"),
+	        cfg->apu.volume[i]);
 
 	apu_channels_data.update = FALSE;
 }
@@ -192,3 +154,7 @@ gboolean apu_channels_delete_event(GtkWidget *widget, GdkEvent *event, gpointer 
 
 	return (FALSE);
 }
+void apu_channels_window_destroy(GtkWidget *widget, gpointer user_data) {
+	g_object_unref(G_OBJECT(apu_channels_data.builder));
+}
+
