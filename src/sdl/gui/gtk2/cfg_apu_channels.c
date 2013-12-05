@@ -44,7 +44,7 @@ void apu_channels_dialog(void) {
 
 	/* ora collego i miei segnali */
 	{
-		BYTE i;
+		gint i;
 
 		for (i = APU_S1; i <= APU_EXTRA; i++) {
 			dg_signal_connect_swapped(apu_channels_data.builder,
@@ -61,7 +61,7 @@ void apu_channels_dialog(void) {
 	        "clicked", apu_channels_toggle_all, GINT_TO_POINTER(2));
 
 	{
-		BYTE i;
+		gint i;
 
 		for (i = APU_S1; i <= APU_MASTER; i++) {
 			dg_signal_connect(apu_channels_data.builder,
