@@ -196,13 +196,13 @@ BYTE emu_load_rom(void) {
 			strcpy(ext, strrchr(name_file, '.'));
 		}
 
-		if (!(strcasecmp(ext, ".fds")) || !(strcasecmp(ext, ".FDS"))) {
+		if (!strcasecmp(ext, ".fds")) {
 			if (fds_load_rom() == EXIT_ERROR) {
 				info.rom_file[0] = 0;
 				goto elaborate_rom_file;
 			}
 			recent_roms_add_wrap()
-		} else if (!(strcasecmp(ext, ".fm2")) || !(strcasecmp(ext, ".FM2"))) {
+		} else if (!strcasecmp(ext, ".fm2")) {
 			tas_file(ext, info.rom_file);
 			if (!info.rom_file[0]) {
 				text_add_line_info(1, "[red]error on loading rom");
