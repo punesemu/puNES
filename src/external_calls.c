@@ -21,6 +21,7 @@ void extcl_init(void) {
 	extcl_ppu_000_to_255 = NULL;
 	extcl_ppu_256_to_319 = NULL;
 	extcl_ppu_320_to_34x = NULL;
+	extcl_ppu_update_screen_y = NULL;
 	extcl_update_r2006 = NULL;
 	extcl_after_rd_chr = NULL;
 	extcl_rd_nmt = NULL;

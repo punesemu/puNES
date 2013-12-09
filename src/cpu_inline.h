@@ -674,6 +674,8 @@ static void cpu_wr_mem(WORD address, BYTE value) {
 			 * Jaleco (JF05 e JF11)
 			 * MMC5
 			 * REX (DBZ)
+			 * 163
+			 * 164
 			 */
 			extcl_cpu_wr_mem(address, value);
 		}

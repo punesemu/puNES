@@ -976,6 +976,13 @@ void ppu_tick(WORD cycles_cpu) {
 			if (ppu.frame_y > machine.vint_lines) {
 				/* incremento il contatore delle scanline renderizzate */
 				ppu.screen_y++;
+				if (extcl_ppu_update_screen_y) {
+					/*
+					 * utilizzato dalle mappers :
+					 * m163
+					 */
+					extcl_ppu_update_screen_y();
+				}
 			}
 			/*
 			 * l'indice degli sprite per la (scanline+1)

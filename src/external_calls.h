@@ -25,6 +25,7 @@
 #define EXTCL_PPU_000_TO_255(n) extcl_ppu_000_to_255 = extcl_ppu_000_to_255_##n
 #define EXTCL_PPU_256_TO_319(n) extcl_ppu_256_to_319 = extcl_ppu_256_to_319_##n
 #define EXTCL_PPU_320_TO_34X(n) extcl_ppu_320_to_34x = extcl_ppu_320_to_34x_##n
+#define EXTCL_PPU_UPDATE_SCREEN_Y(n) extcl_ppu_update_screen_y = extcl_ppu_update_screen_y_##n
 #define EXTCL_UPDATE_R2006(n) extcl_update_r2006 = extcl_update_r2006_##n
 #define EXTCL_AFTER_RD_CHR(n) extcl_after_rd_chr = extcl_after_rd_chr_##n
 #define EXTCL_RD_NMT(n) extcl_rd_nmt = extcl_rd_nmt_##n
@@ -72,6 +73,8 @@ void (*extcl_ppu_000_to_255)(void);
  */
 void (*extcl_ppu_256_to_319)(void);
 void (*extcl_ppu_320_to_34x)(void);
+/* viene chiamata ogni volta viene modificato ppu.screen_y */
+void (*extcl_ppu_update_screen_y)(void);
 /* viene chiamata dopo ogni cambiamento del $2006 in cpu_inline.h */
 void (*extcl_update_r2006)(WORD old_r2006);
 /* vengono chiamate in ppu_inline.h */

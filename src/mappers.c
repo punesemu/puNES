@@ -392,6 +392,12 @@ BYTE map_init(WORD mapper_type) {
 		case 159:
 			map_init_Bandai(E24C01);
 			break;
+		case 163:
+			map_init_163();
+			break;
+		case 164:
+			map_init_164();
+			break;
 		case 165:
 			map_init_Waixing(SH2);
 			break;
