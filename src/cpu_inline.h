@@ -194,6 +194,9 @@ static BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 			 * Namcot (163)
 			 * Rex (DBZ)
 			 * Sunsoft (FM7)
+			 * 249
+			 * 163
+			 * 164
 			 */
 			/* Mappers */
 			cpu.openbus = extcl_cpu_rd_mem(address, cpu.openbus, before);
@@ -1665,6 +1668,7 @@ static void INLINE tick_hw(BYTE value) {
 			 * Irem (H3000)
 			 * Namco (163)
 			 * Tengen (Rambo)
+			 * MMC3
 			 * VRC3
 			 * VRC4
 			 * VRC6

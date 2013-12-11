@@ -580,6 +580,9 @@ BYTE map_init(WORD mapper_type) {
 		case 246:
 			map_init_246();
 			break;
+		case 249:
+			map_init_249();
+			break;
 		default:
 			text_add_line_info(1, "[yellow]Mapper %d not supported", mapper_type);
 			fprintf(stderr, "Mapper not supported\n");
