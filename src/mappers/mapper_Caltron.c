@@ -17,6 +17,8 @@ void map_init_Caltron(void) {
 	chr_rom_8k_max = info.chr_rom_8k_count - 1;
 
 	EXTCL_CPU_WR_MEM(Caltron);
+	mapper.internal_struct[0] = (BYTE *) &caltron;
+	mapper.internal_struct_size[0] = sizeof(caltron);
 
 	info.mapper_extend_wr = TRUE;
 

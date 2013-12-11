@@ -21,6 +21,8 @@ void map_init_164(void) {
 	EXTCL_CPU_WR_MEM(164);
 	EXTCL_CPU_RD_MEM(164);
 	EXTCL_SAVE_MAPPER(164);
+	mapper.internal_struct[0] = (BYTE *) &m164;
+	mapper.internal_struct_size[0] = sizeof(m164);
 
 	memset(&m164, 0x00, sizeof(m164));
 	m164.prg = 0x0F;

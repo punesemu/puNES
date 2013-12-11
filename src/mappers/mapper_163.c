@@ -20,13 +20,15 @@ void map_init_163(void) {
 	EXTCL_CPU_RD_MEM(163);
 	EXTCL_PPU_UPDATE_SCREEN_Y(163);
 	EXTCL_SAVE_MAPPER(163);
+	mapper.internal_struct[0] = (BYTE *) &m163;
+	mapper.internal_struct_size[0] = sizeof(m163);
 
 	memset(&m163, 0x00, sizeof(m163));
 	m163.reg = 1;
-	m164.prg = 0x0F;
+	m163.prg = 0x0F;
 
 	{
-		BYTE value = m164.prg;
+		BYTE value = m163.prg;
 
 		control_bank(prg_rom_32k_max)
 		map_prg_rom_8k(4, 0, value);
