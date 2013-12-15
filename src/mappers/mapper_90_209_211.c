@@ -12,9 +12,6 @@
 #include "cpu.h"
 #include "ppu.h"
 #include "save_slot.h"
-
-#include "clock.h"
-#include "irqA12.h"
 #include "ppu_inline.h"
 
 static void INLINE prg_setup_90_209_211(void);
