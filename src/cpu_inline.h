@@ -708,6 +708,14 @@ static void INLINE ppu_wr_mem(WORD address, BYTE value) {
 		return;
 	}
 	if (address < 0x3F00) {
+		if (extcl_wr_nmt) {
+			/*
+			 * utilizzato dalle mappers :
+			 * 90_209_211
+			 */
+			extcl_wr_nmt(address, value);
+			return;
+		}
 		address &= 0x0FFF;
 		ntbl.bank_1k[address >> 10][address & 0x3FF] = value;
 		return;

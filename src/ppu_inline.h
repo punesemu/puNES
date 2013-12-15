@@ -13,7 +13,16 @@
 static BYTE INLINE ppu_rd_mem(WORD address);
 
 static BYTE INLINE ppu_rd_mem(WORD address) {
+	if (extcl_rd_ppu) {
+		/*
+		 * utilizzato dalle mappers :
+		 * 90_201_211
+		 */
+		extcl_rd_ppu(address);
+	}
+
 	address &= 0x3FFF;
+
 	if (address < 0x2000) {
 		if (extcl_rd_chr) {
 			/*

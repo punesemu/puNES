@@ -24,8 +24,10 @@ void extcl_init(void) {
 	extcl_ppu_update_screen_y = NULL;
 	extcl_update_r2006 = NULL;
 	extcl_after_rd_chr = NULL;
+	extcl_rd_ppu = NULL;
 	extcl_rd_nmt = NULL;
 	extcl_rd_chr = NULL;
+	extcl_wr_nmt = NULL;
 	extcl_wr_chr = NULL;
 	/* APU */
 	extcl_length_clock = NULL;

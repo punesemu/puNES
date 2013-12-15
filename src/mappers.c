@@ -265,6 +265,9 @@ BYTE map_init(WORD mapper_type) {
 		case 89:
 			map_init_Sunsoft(SUN2B);
 			break;
+		case 90:
+			map_init_90_209_211(MAP90);
+			break;
 		case 92:
 			map_init_Jaleco(JF19);
 			break;
@@ -497,6 +500,12 @@ BYTE map_init(WORD mapper_type) {
 		 */
 		case 208:
 			map_init_208();
+			break;
+		case 209:
+			map_init_90_209_211(MAP209);
+			break;
+		case 211:
+			map_init_90_209_211(MAP211);
 			break;
 		case 212:
 			map_init_212();

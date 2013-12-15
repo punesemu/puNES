@@ -28,8 +28,10 @@
 #define EXTCL_PPU_UPDATE_SCREEN_Y(n) extcl_ppu_update_screen_y = extcl_ppu_update_screen_y_##n
 #define EXTCL_UPDATE_R2006(n) extcl_update_r2006 = extcl_update_r2006_##n
 #define EXTCL_AFTER_RD_CHR(n) extcl_after_rd_chr = extcl_after_rd_chr_##n
+#define EXTCL_RD_PPU(n) extcl_rd_ppu = extcl_rd_ppu_##n
 #define EXTCL_RD_NMT(n) extcl_rd_nmt = extcl_rd_nmt_##n
 #define EXTCL_RD_CHR(n) extcl_rd_chr = extcl_rd_chr_##n
+#define EXTCL_WR_NMT(n) extcl_wr_nmt = extcl_wr_nmt_##n
 #define EXTCL_WR_CHR(n) extcl_wr_chr = extcl_wr_chr_##n
 
 /* APU */
@@ -78,10 +80,13 @@ void (*extcl_ppu_update_screen_y)(void);
 /* viene chiamata dopo ogni cambiamento del $2006 in cpu_inline.h */
 void (*extcl_update_r2006)(WORD old_r2006);
 /* vengono chiamate in ppu_inline.h */
+void (*extcl_rd_ppu)(WORD address);
 BYTE (*extcl_rd_nmt)(WORD address);
 BYTE (*extcl_rd_chr)(WORD address);
 /* viene chiamata dopo il FETCHB e dopo il fetch dello sprite */
 void (*extcl_after_rd_chr)(WORD address);
+/* viene chiamato quando si tenta di scrivere nella Nametable Ram */
+void (*extcl_wr_nmt)(WORD address, BYTE value);
 /* viene chiamato quando si tenta di scrivere nella CHR Ram */
 void (*extcl_wr_chr)(WORD address, BYTE value);
 
