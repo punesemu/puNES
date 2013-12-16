@@ -176,7 +176,7 @@ BYTE map_init(WORD mapper_type) {
 			map_init_58();
 			break;
 		case 60:
-			if (info.mapper_type == M60_VT5201) {
+			if (info.mapper_type == MAP60_VT5201) {
 				map_init_60_vt5201();
 			} else {
 				map_init_60();
@@ -245,6 +245,9 @@ BYTE map_init(WORD mapper_type) {
 			break;
 		case 82:
 			map_init_Taito(X1017);
+			break;
+		case 83:
+			map_init_83();
 			break;
 		case 85:
 			if (info.mapper_type == VRC7A) {
@@ -431,7 +434,7 @@ BYTE map_init(WORD mapper_type) {
 			if (info.mapper_type != DEFAULT) {
 				map_init_178(info.mapper_type);
 			} else {
-				map_init_178(M178);
+				map_init_178(MAP178);
 			}
 			break;
 		case 180:

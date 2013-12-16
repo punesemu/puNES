@@ -2888,9 +2888,9 @@ static const _dbelement dblist[] = {
 
 /* ------------------------------------- mapper 60 ---------------------------------------- */
 	/* Reset Based 4-in-1 [p1].nes */
-	{"8765e6ec43d4c767e2568ac55e35ed670dfa8730", 60, M60, DEFAULT, DEFAULT},
+	{"8765e6ec43d4c767e2568ac55e35ed670dfa8730", 60, MAP60, DEFAULT, DEFAULT},
 	/* TN 95-in-1 (6-in-1) [p1].nes */
-	{"9a37bc3003f6629499fe86c7ca2487a74291bcff", 60, M60_VT5201, DEFAULT, DEFAULT},
+	{"9a37bc3003f6629499fe86c7ca2487a74291bcff", 60, MAP60_VT5201, DEFAULT, DEFAULT},
 
 /* ------------------------------------- mapper 62 ---------------------------------------- */
 	/* Super 700-in-1 [p1][!].nes */
@@ -3041,6 +3041,19 @@ static const _dbelement dblist[] = {
 	/* Yamamura Misa Suspense - Kyouto Ryuu no Tera Satsujin Jiken (J).nes */
 	{"74683a411fcfa269d644a6caf5ab498dab356406", 80, DEFAULT, X1005_NO_BAT, DEFAULT},
 
+/* ------------------------------------- mapper 83 ---------------------------------------- */
+	/* Dragon Ball Party [p1][!].nes */
+	{"af8df8dd9449d512c34deddee2a758ca46677bd5", 83, DEFAULT, MAP83_DGP, DEFAULT},
+	/* Fatal Fury 2 (Unl) [a1].nes */
+	{"7eb0902c5da5cb0635af2d2559ba4f2467d2baa4", 83, DEFAULT, MAP83_REG0, DEFAULT},
+	/* Fatal Fury 2 (Unl).nes */
+	{"5118e873f62ca3421f344edb8c67635165e8a009", 83, DEFAULT, MAP83_REG0, DEFAULT},
+	/* Fatal Fury 2' (Unl) [!].nes */
+	{"3012891262def01890ff0b24dcc777ff5ed74c9b", 83, DEFAULT, MAP83_REG0, DEFAULT},
+	/* World Heroes 2 (Unl).nes */
+	{"4f9b4b225eb17982b306b676ed5a8b9cd4667701", 83, DEFAULT, MAP83_REG0, DEFAULT},
+
+
 /* ---------------------------------------- VRC7 ------------------------------------------ */
 
 	/* Lagrange Point (J) [b1].nes */
@@ -3178,13 +3191,13 @@ static const _dbelement dblist[] = {
 
 /* --------------------------------------- 116 -------------------------------------------- */
 	/* AV Mei Shao Nv Zhan Shi (Unl) [a1].nes */
-	{"893c9dd94677fe5b88a4d65adfd4245da14aa9f5", 116, M116_TYPE_A, DEFAULT, DEFAULT},
+	{"893c9dd94677fe5b88a4d65adfd4245da14aa9f5", 116, MAP116_TYPE_A, DEFAULT, DEFAULT},
 	/* AV Mei Shao Nv Zhan Shi (Unl).nes */
-	{"84a3afb5f556a8f14ec2a6dcaf4ff219992bb90a", 116, M116_TYPE_A, DEFAULT, DEFAULT},
+	{"84a3afb5f556a8f14ec2a6dcaf4ff219992bb90a", 116, MAP116_TYPE_A, DEFAULT, DEFAULT},
 	/* Chuugoku Taitei (Sachen).nes */
-	{"32436a43d3c371ab7aa6bb5165f60ca5c006a60e", 116, M116_TYPE_B, DEFAULT, DEFAULT},
+	{"32436a43d3c371ab7aa6bb5165f60ca5c006a60e", 116, MAP116_TYPE_B, DEFAULT, DEFAULT},
 	/* Samurai Spirits (Rex Soft).nes */
-	{"648dc9e5f3b4228aeb9d424f0ae4047cd946a736", 116, M116_TYPE_C, DEFAULT, DEFAULT},
+	{"648dc9e5f3b4228aeb9d424f0ae4047cd946a736", 116, MAP116_TYPE_C, DEFAULT, DEFAULT},
 
 /* ----------------------------------- Futuremedia ---------------------------------------- */
 	/* Crayon Shin-Chan (Ch) [!].nes */

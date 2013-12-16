@@ -384,7 +384,7 @@ void map_init_116(void) {
 
 	switch (info.mapper_type) {
 		default:
-		case M116_TYPE_A:
+		case MAP116_TYPE_A:
 			EXTCL_CPU_WR_MEM(116_type_A);
 			EXTCL_SAVE_MAPPER(116_type_A);
 			EXTCL_CPU_EVERY_CYCLE(MMC3);
@@ -440,7 +440,7 @@ void map_init_116(void) {
 			irqA12.present = TRUE;
 			irqA12_delay = 1;
 			break;
-		case M116_TYPE_B:
+		case MAP116_TYPE_B:
 			EXTCL_CPU_WR_MEM(116_type_B);
 			EXTCL_SAVE_MAPPER(116_type_B);
 			EXTCL_WR_CHR(116_type_B);
@@ -476,7 +476,7 @@ void map_init_116(void) {
 			irqA12.present = TRUE;
 			irqA12_delay = 1;
 			break;
-		case M116_TYPE_C:
+		case MAP116_TYPE_C:
 			EXTCL_CPU_WR_MEM(116_type_C);
 			EXTCL_SAVE_MAPPER(116_type_C);
 			EXTCL_CPU_EVERY_CYCLE(MMC3);

@@ -11,7 +11,7 @@
 #include "common.h"
 
 enum {
-	M178 = 2,
+	MAP178 = 2,
 	XINGJI = 3
 };
 

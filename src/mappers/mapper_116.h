@@ -11,9 +11,9 @@
 #include "common.h"
 
 enum {
-	M116_TYPE_A = 2,
-	M116_TYPE_B,
-	M116_TYPE_C
+	MAP116_TYPE_A = 2,
+	MAP116_TYPE_B,
+	MAP116_TYPE_C
 };
 
 struct _m166 {
