@@ -143,8 +143,14 @@ BYTE emu_loop(void) {
 	}
 	return (EXIT_OK);
 }
-BYTE emu_make_dir(char *path) {
+BYTE emu_make_dir(const char *fmt, ...) {
+	static char path[512];
 	struct stat status;
+	va_list ap;
+
+	va_start(ap, fmt);
+	vsnprintf(path, sizeof(path), fmt, ap);
+	va_end(ap);
 
 	if (!(access(path, 0))) {
 		/* se esiste controllo che sia una directory */

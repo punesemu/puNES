@@ -21,6 +21,7 @@ typedef signed int SDBWORD;
 #define DIFF_FOLDER    "/diff"
 #define PERGAME_FOLDER "/pgs"
 #define SAVE_FOLDER    "/save"
+#define TMP_FOLDER     "/tmp"
 
 #ifndef FALSE
 enum false_value { FALSE, TRUE };

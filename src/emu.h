@@ -12,7 +12,7 @@
 #include "common.h"
 
 BYTE emu_loop(void);
-BYTE emu_make_dir(char *path);
+BYTE emu_make_dir(const char *fmt, ...);
 BYTE emu_load_rom(void);
 BYTE emu_search_in_database(FILE *fp);
 void emu_set_title(char *title);
