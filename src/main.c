@@ -41,26 +41,32 @@ int main(int argc, char **argv) {
 
 	gui_init(argc, argv);
 
-#define control_dir(fld, txt)\
-{\
-	char file[512];\
-	sprintf(file, fld, info.base_folder);\
-	if (emu_make_dir(file)) {\
-		fprintf(stderr, txt);\
-		return (EXIT_ERROR);\
-	}\
-}
-
 	/* controllo l'esistenza della directory principale */
 	if (emu_make_dir(info.base_folder)) {
 		fprintf(stderr, "error on create puNES folder\n");
 		return (EXIT_ERROR);
 	}
 	/* creo le sottocartelle */
-	control_dir("%s" SAVE_FOLDER, "error on create save folder\n")
-	control_dir("%s" PERGAME_FOLDER, "error on create psg folder\n")
-	control_dir("%s" BIOS_FOLDER, "error on create bios folder\n")
-	control_dir("%s" DIFF_FOLDER, "error on create diff folder\n")
+	if (emu_make_dir("%s" SAVE_FOLDER, info.base_folder)) {
+		fprintf(stderr, "error on create save folder\n");
+		return (EXIT_ERROR);
+	}
+	if (emu_make_dir("%s" PERGAME_FOLDER, info.base_folder)) {
+		fprintf(stderr, "error on create psg folder\n");
+		return (EXIT_ERROR);
+	}
+	if (emu_make_dir("%s" BIOS_FOLDER, info.base_folder)) {
+		fprintf(stderr, "error on create bios folder\n");
+		return (EXIT_ERROR);
+	}
+	if (emu_make_dir("%s" DIFF_FOLDER, info.base_folder)) {
+		fprintf(stderr, "error on create diff folder\n");
+		return (EXIT_ERROR);
+	}
+	if (emu_make_dir("%s" TMP_FOLDER, info.base_folder)) {
+		fprintf(stderr, "error on create tmp folder\n");
+		return (EXIT_ERROR);
+	}
 
 #ifdef __NETPLAY__
 	netplay_init();
