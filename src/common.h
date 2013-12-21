@@ -51,7 +51,6 @@ struct _info {
 	char base_folder[1024];
 	char rom_file[1024];
 	char load_rom_file[1024];
-	BYTE uncompress_rom;
 	BYTE machine;
 	BYTE machine_db;
 	WORD mapper;

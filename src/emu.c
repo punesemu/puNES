@@ -50,11 +50,6 @@
 #include "opengl.h"
 #endif
 
-
-//#include "uncompress.h"
-
-
-
 #define recent_roms_add_wrap()\
 	if (recent_roms_permit_add == TRUE) {\
 		recent_roms_permit_add = FALSE;\
@@ -206,10 +201,6 @@ BYTE emu_load_rom(void) {
 			/* salvo l'estensione del file */
 			strcpy(ext, strrchr(name_file, '.'));
 		}
-
-		//if (uncomp_ctrl(ext) == EXIT_ERROR) {
-		//	return (EXIT_ERROR);
-		//}
 
 		if (!strcasecmp(ext, ".fds")) {
 			if (fds_load_rom() == EXIT_ERROR) {
@@ -693,8 +684,6 @@ void emu_quit(BYTE exit_code) {
 	js_quit();
 
 	gui_quit();
-
-	//uncomp_quit();
 
 	exit(exit_code);
 }
