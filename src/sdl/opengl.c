@@ -494,7 +494,7 @@ char *glsl_file2string(const char *path) {
 
 	fseek(fd, 0, SEEK_SET);
 
-	if (!(str = malloc(len * sizeof(char)))) {
+	if (!(str = (char *) malloc(len * sizeof(char)))) {
 		fprintf(stderr, "Can't malloc space for '%s'\n", path);
 		return NULL;
 	}

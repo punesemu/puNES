@@ -49,16 +49,16 @@ void apu_channels_dialog(void) {
 		for (i = APU_S1; i <= APU_EXTRA; i++) {
 			dg_signal_connect_swapped(apu_channels_data.builder,
 			        dg_obj_name("apu_channels_%s_checkbutton", apu_channels_list[i]), "toggled",
-			        apu_channels_toggle, GINT_TO_POINTER(i));
+			        G_CALLBACK(apu_channels_toggle), GINT_TO_POINTER(i));
 		}
 	}
 
 	dg_signal_connect_swapped(apu_channels_data.builder, "apu_channels_disable_all_button",
-	        "clicked", apu_channels_toggle_all, GINT_TO_POINTER(FALSE));
+	        "clicked", G_CALLBACK(apu_channels_toggle_all), GINT_TO_POINTER(FALSE));
 	dg_signal_connect_swapped(apu_channels_data.builder, "apu_channels_active_all_button",
-	        "clicked", apu_channels_toggle_all, GINT_TO_POINTER(TRUE));
+	        "clicked", G_CALLBACK(apu_channels_toggle_all), GINT_TO_POINTER(TRUE));
 	dg_signal_connect_swapped(apu_channels_data.builder, "apu_channels_defaults_button",
-	        "clicked", apu_channels_toggle_all, GINT_TO_POINTER(2));
+	        "clicked", G_CALLBACK(apu_channels_toggle_all), GINT_TO_POINTER(2));
 
 	{
 		gint i;
@@ -66,14 +66,14 @@ void apu_channels_dialog(void) {
 		for (i = APU_S1; i <= APU_MASTER; i++) {
 			dg_signal_connect(apu_channels_data.builder,
 			        dg_obj_name("apu_channels_%s_hscale", apu_channels_list[i]), "value-changed",
-			        apu_channels_volume_value_changed, GINT_TO_POINTER(i));
+			        G_CALLBACK(apu_channels_volume_value_changed), GINT_TO_POINTER(i));
 		}
 	}
 
 	dg_signal_connect(apu_channels_data.builder, "apu_channels_ok_button", "clicked",
-	        apu_channels_ok_clicked, NULL);
+			G_CALLBACK(apu_channels_ok_clicked), NULL);
 	dg_signal_connect(apu_channels_data.builder, "apu_channels_cancel_button", "clicked",
-	        apu_channels_cancel_clicked, NULL);
+			G_CALLBACK(apu_channels_cancel_clicked), NULL);
 	g_signal_connect(G_OBJECT(apu_channels_data.window), "delete-event",
 	        G_CALLBACK(apu_channels_delete_event), NULL);
 	g_signal_connect(G_OBJECT(apu_channels_data.window), "destroy",

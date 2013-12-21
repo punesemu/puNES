@@ -50,6 +50,11 @@
 #include "opengl.h"
 #endif
 
+
+//#include "uncompress.h"
+
+
+
 #define recent_roms_add_wrap()\
 	if (recent_roms_permit_add == TRUE) {\
 		recent_roms_permit_add = FALSE;\
@@ -202,6 +207,10 @@ BYTE emu_load_rom(void) {
 			strcpy(ext, strrchr(name_file, '.'));
 		}
 
+		//if (uncomp_ctrl(ext) == EXIT_ERROR) {
+		//	return (EXIT_ERROR);
+		//}
+
 		if (!strcasecmp(ext, ".fds")) {
 			if (fds_load_rom() == EXIT_ERROR) {
 				info.rom_file[0] = 0;
@@ -235,13 +244,13 @@ BYTE emu_load_rom(void) {
 		info.chr_rom_1k_count = info.chr_rom_4k_count * 4;
 
 		/* PRG Ram */
-		if (!(prg.ram = malloc(0x2000))) {
+		if (!(prg.ram = (BYTE *) malloc(0x2000))) {
 			fprintf(stderr, "Out of memory\n");
 			return (EXIT_ERROR);
 		}
 
 		/* PRG Rom */
-		if ((prg.rom = malloc(info.prg_rom_16k_count * (16 * 1024)))) {
+		if ((prg.rom = (BYTE *) malloc(info.prg_rom_16k_count * (16 * 1024)))) {
 			memset(prg.rom, 0xEA, info.prg_rom_16k_count * (16 * 1024));
 		} else {
 			fprintf(stderr, "Out of memory\n");
@@ -285,7 +294,7 @@ BYTE emu_search_in_database(FILE *fp) {
 	}
 
 	/* mi alloco una zona di memoria dove leggere la PRG Rom */
-	sha1prg = malloc(info.prg_rom_16k_count * (16 * 1024));
+	sha1prg = (BYTE *) malloc(info.prg_rom_16k_count * (16 * 1024));
 	if (!sha1prg) {
 		fprintf(stderr, "Out of memory\n");
 		return (EXIT_ERROR);
@@ -388,7 +397,7 @@ BYTE emu_search_in_database(FILE *fp) {
 		BYTE *sha1chr;
 
 		/* mi alloco una zona di memoria dove leggere la CHR Rom */
-		sha1chr = malloc(info.chr_rom_8k_count * (8 * 1024));
+		sha1chr = (BYTE *) malloc(info.chr_rom_8k_count * (8 * 1024));
 		if (!sha1chr) {
 			fprintf(stderr, "Out of memory\n");
 			return (EXIT_ERROR);
@@ -684,6 +693,8 @@ void emu_quit(BYTE exit_code) {
 	js_quit();
 
 	gui_quit();
+
+	//uncomp_quit();
 
 	exit(exit_code);
 }

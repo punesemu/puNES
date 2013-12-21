@@ -38,7 +38,7 @@ enum fds_misc {
 	FDS_DISK_CRC_CHAR1 = 0x0155,
 	FDS_DISK_CRC_CHAR2 = 0x01AA
 };
-struct {
+struct _fds {
 	/* generali */
 	struct {
 		BYTE enabled;

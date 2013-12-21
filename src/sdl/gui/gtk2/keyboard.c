@@ -14,7 +14,7 @@ DBWORD keyval_from_name(const gchar *keyval_name) {
 	}
 	return (gdk_keyval_to_lower(gdk_keyval_from_name(keyval_name)));
 }
-gchar *keyval_to_name(const DBWORD keyval) {
+const gchar *keyval_to_name(const DBWORD keyval) {
 	if (!keyval) {
 		return ("NULL");
 	}

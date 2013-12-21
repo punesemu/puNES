@@ -35,7 +35,7 @@ typedef struct {
 	BYTE compare;
 } _cheat;
 
-struct {
+struct _gamegenie {
 	BYTE phase;
 	BYTE rom_present;
 	BYTE counter;

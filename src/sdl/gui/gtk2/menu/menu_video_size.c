@@ -95,13 +95,13 @@ void menu_video_size(GtkWidget *video, GtkAccelGroup *accel_group) {
 	check[MX3] = gtk_check_menu_item_new_with_mnemonic("_3x");
 	check[MX4] = gtk_check_menu_item_new_with_mnemonic("_4x");
 
-	gtk_widget_add_accelerator(check[MX1], "activate", accel_group, GDK_1, 0,
+	gtk_widget_add_accelerator(check[MX1], "activate", accel_group, GDK_1, (GdkModifierType) 0,
 			GTK_ACCEL_VISIBLE);
-	gtk_widget_add_accelerator(check[MX2], "activate", accel_group, GDK_2, 0,
+	gtk_widget_add_accelerator(check[MX2], "activate", accel_group, GDK_2, (GdkModifierType) 0,
 			GTK_ACCEL_VISIBLE);
-	gtk_widget_add_accelerator(check[MX3], "activate", accel_group, GDK_3, 0,
+	gtk_widget_add_accelerator(check[MX3], "activate", accel_group, GDK_3, (GdkModifierType) 0,
 			GTK_ACCEL_VISIBLE);
-	gtk_widget_add_accelerator(check[MX4], "activate", accel_group, GDK_4, 0,
+	gtk_widget_add_accelerator(check[MX4], "activate", accel_group, GDK_4, (GdkModifierType) 0,
 			GTK_ACCEL_VISIBLE);
 
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), check[MX1]);

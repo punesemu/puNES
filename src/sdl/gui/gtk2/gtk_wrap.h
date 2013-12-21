@@ -32,12 +32,12 @@ void gw_image_from_inline(GtkWidget *widget, const guint8 *data);
 char *dg_obj_name(const char *fmt, ...);
 GtkWidget *dg_widget_from_obj_name(GtkBuilder *builder, const char *fmt, ...);
 void dg_create_gtkbuilder(GtkBuilder **builder, int id_glade_h);
-void dg_signal_connect(GtkBuilder *builder, char *obj_name, char *signal, gpointer callback,
-        gpointer user_data);
-void dg_signal_connect_swapped(GtkBuilder *builder, char *obj_name, char *signal,
-		gpointer callback, gpointer user_data);
-void dg_signal_disconnect(GtkBuilder *builder, char *obj_name, char *signal);
+void dg_signal_connect(GtkBuilder *builder, const char *obj_name, const char *signal,
+		GCallback callback, gpointer user_data);
+void dg_signal_connect_swapped(GtkBuilder *builder, const char *obj_name, const char *signal,
+		GCallback callback, gpointer user_data);
+void dg_signal_disconnect(GtkBuilder *builder, const char *obj_name, const char *signal);
 void dg_set_sensitive(GtkBuilder *builder, char *obj_name, gboolean sensitive);
-void dg_image_from_inline(GtkBuilder *builder, char *obj_name, const guint8 *data);
+void dg_image_from_inline(GtkBuilder *builder, const char *obj_name, const guint8 *data);
 
 #endif /* GTK_WRAP_H_ */

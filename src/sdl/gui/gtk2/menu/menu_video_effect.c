@@ -99,7 +99,7 @@ void menu_video_effect(GtkWidget *video, GtkAccelGroup *accel_group) {
 
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), check[MCUBE]);
 
-	gtk_widget_add_accelerator(check[MCUBE], "activate", accel_group, GDK_r, 0,
+	gtk_widget_add_accelerator(check[MCUBE], "activate", accel_group, GDK_r, (GdkModifierType) 0,
 			GTK_ACCEL_VISIBLE);
 
 	g_signal_connect_swapped(G_OBJECT(check[MCUBE]), "activate",

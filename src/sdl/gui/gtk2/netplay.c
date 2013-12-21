@@ -287,18 +287,18 @@ void netplay_display_message(uint8_t mode, uint32_t size, const char *fmt, ...) 
 	void *funct;
 	va_list ap;
 
-	event = malloc(sizeof(_guievent));
+	event = (_guievent *) malloc(sizeof(_guievent));
 	event->arg[0] = malloc(sizeof(uint32_t));
 
 	if (mode == INFO) {
-		funct = info_display_message;
+		funct = (void *) info_display_message;
 		if (net.exchange.rule == SERVER) {
 			(*(uint32_t *)event->arg[0]) = ID_SERVER_INFO;
 		} else {
 			(*(uint32_t *)event->arg[0]) = ID_CLIENT_INFO;
 		}
 	} else {
-		funct = chat_display_message;
+		funct = (void *) chat_display_message;
 	}
 
 	if (!size || (size > NET_MAX_MSG_SIZE))  {
@@ -311,7 +311,7 @@ void netplay_display_message(uint8_t mode, uint32_t size, const char *fmt, ...) 
 	event->arg[1] = malloc(size);
 
 	va_start(ap, fmt);
-	vsnprintf(event->arg[1], size, fmt, ap);
+	vsnprintf((char *) event->arg[1], size, fmt, ap);
 	va_end(ap);
 
 	gui_add_event(funct, event);
@@ -319,14 +319,14 @@ void netplay_display_message(uint8_t mode, uint32_t size, const char *fmt, ...) 
 void netplay_enable_widget(uint32_t widget, uint8_t mode) {
 	_guievent *event;
 
-	event = malloc(sizeof(_guievent));
+	event = (_guievent *) malloc(sizeof(_guievent));
 	event->arg[0] = malloc(sizeof(uint32_t));
 	event->arg[1] = malloc(sizeof(uint8_t));
 
 	(*(uint32_t *)event->arg[0]) = widget;
 	(*(uint8_t *)event->arg[1]) = mode;
 
-	gui_add_event(enable_widget, event);
+	gui_add_event((void *) enable_widget, event);
 }
 
 void active_server_mode(void) {
@@ -475,11 +475,11 @@ void chat_entry_activated(GtkEntry *entry, gpointer user_data) {
 }
 
 uint8_t chat_display_message(void *guievent) {
-	_guievent *event = guievent;
+	_guievent *event = (_guievent *) guievent;
 	GtkTextBuffer *buffer;
 
 	buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(net.widget[ID_CHAT_WINDOW]));
-	gtk_text_buffer_insert_at_cursor(buffer, event->arg[1], -1);
+	gtk_text_buffer_insert_at_cursor(buffer, (const gchar *) event->arg[1], -1);
 
 	free(event->arg[0]);
 	free(event->arg[1]);
@@ -488,9 +488,10 @@ uint8_t chat_display_message(void *guievent) {
 	return (FALSE);
 }
 uint8_t info_display_message(void *guievent) {
-	_guievent *event = guievent;
+	_guievent *event = (_guievent *) guievent;
 
-	gtk_entry_set_text(GTK_ENTRY(net.widget[(*(uint32_t *)event->arg[0])]), event->arg[1]);
+	gtk_entry_set_text(GTK_ENTRY(net.widget[(*(uint32_t * )event->arg[0])]),
+	        (const gchar *) event->arg[1]);
 
 	free(event->arg[0]);
 	free(event->arg[1]);
@@ -499,7 +500,7 @@ uint8_t info_display_message(void *guievent) {
 	return (FALSE);
 }
 uint8_t enable_widget(void *guievent) {
-	_guievent *event = guievent;
+	_guievent *event = (_guievent *) guievent;
 
 	gtk_widget_set_sensitive(GTK_WIDGET(net.widget[(*(uint32_t *)event->arg[0])]),
 	        (*(uint8_t *)event->arg[1]));

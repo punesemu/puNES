@@ -112,13 +112,13 @@ void menu_mode(GtkWidget *settings, GtkAccelGroup *accel_group) {
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), check[MDENDY]);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), check[MAUTO]);
 
-	gtk_widget_add_accelerator(check[MPAL], "activate", accel_group, GDK_F6, 0,
+	gtk_widget_add_accelerator(check[MPAL], "activate", accel_group, GDK_F6, (GdkModifierType) 0,
 			GTK_ACCEL_VISIBLE);
-	gtk_widget_add_accelerator(check[MNTSC], "activate", accel_group, GDK_F7, 0,
+	gtk_widget_add_accelerator(check[MNTSC], "activate", accel_group, GDK_F7, (GdkModifierType) 0,
 			GTK_ACCEL_VISIBLE);
-	gtk_widget_add_accelerator(check[MDENDY], "activate", accel_group, GDK_F8, 0,
+	gtk_widget_add_accelerator(check[MDENDY], "activate", accel_group, GDK_F8, (GdkModifierType) 0,
 			GTK_ACCEL_VISIBLE);
-	gtk_widget_add_accelerator(check[MAUTO], "activate", accel_group, GDK_F9, 0,
+	gtk_widget_add_accelerator(check[MAUTO], "activate", accel_group, GDK_F9, (GdkModifierType) 0,
 			GTK_ACCEL_VISIBLE);
 
 	g_signal_connect_swapped(G_OBJECT(check[MPAL]), "activate", G_CALLBACK(menu_mode_set_mode),

@@ -33,7 +33,7 @@ void net_close_socket(void *data);
 void *net_init(_exchange_info *exchange) {
 	_zmq *zmq = 0;
 
-	zmq = malloc(sizeof(_zmq));
+	zmq = (_zmq *) malloc(sizeof(_zmq));
 
 	memset(zmq, 0, sizeof(_zmq));
 
@@ -49,7 +49,7 @@ void *net_init(_exchange_info *exchange) {
 }
 
 uint8_t net_server(void *data) {
-	_zmq *zmq = data;
+	_zmq *zmq = (_zmq *) data;
 
 	if (zmq->exchange->active && !zmq->exchange->want_disconnect) {
 		info("server is alredy active");
@@ -89,7 +89,7 @@ uint8_t net_server(void *data) {
 	return (EXIT_ERROR);
 }
 uint8_t net_client(void *data, char *ip) {
-	_zmq *zmq = data;
+	_zmq *zmq = (_zmq *) data;
 	char server_service[61];
 
 	if (zmq->exchange->peer_connected) {
@@ -134,7 +134,7 @@ uint8_t net_client(void *data, char *ip) {
 }
 
 void net_server_thread(void *data) {
-	_zmq *zmq = data;
+	_zmq *zmq = (_zmq *) data;
 	uint32_t repeat = 0;
 	net_req request = 0;
 
@@ -216,7 +216,7 @@ void net_server_thread(void *data) {
 
 				net_server_wait_window();
 
-				pinfo = (void *) pointer;
+				pinfo = (_peer_info *) pointer;
 
 				zmq->exchange->peer_info = (*pinfo);
 
@@ -285,7 +285,7 @@ void net_server_thread(void *data) {
 					strncpy(pinfo.version, VERSION, sizeof(pinfo.version));
 					pinfo.cfg = (*cfg);
 
-					if (_net_send(data, NET_SERVER_ACCEPT, (void *) &pinfo, sizeof(_peer_info))
+					if (_net_send(data, NET_SERVER_ACCEPT, (char *) &pinfo, sizeof(_peer_info))
 					        == EXIT_OK) {
 						net_server_accept_client_window();
 
@@ -364,7 +364,7 @@ void net_server_thread(void *data) {
 	exit_thread(NULL);
 }
 void net_client_thread(void *data) {
-	_zmq *zmq = data;
+	_zmq *zmq = (_zmq *) data;
 
 	/*
 	 * a differenza della modalita' server, zmq->exchange->active
@@ -408,7 +408,8 @@ void net_client_thread(void *data) {
 }
 
 void net_client_send(void *data, net_req request, char *buffer, uint32_t size) {
-	_zmq *zmq = data;
+	_zmq *zmq = (_zmq *) data;
+	net_req response = 0;
 
 #define net_client_reset_window_no_clean_info()\
 	netplay_enab_widget(ID_CLIENT_IP);\
@@ -449,7 +450,7 @@ void net_client_send(void *data, net_req request, char *buffer, uint32_t size) {
 			strncpy(pinfo.version, VERSION, sizeof(pinfo.version));
 			pinfo.cfg = (*cfg);
 
-			buffer = (void *) &pinfo;
+			buffer = (char *) &pinfo;
 
 			size = sizeof(_peer_info);
 
@@ -506,13 +507,13 @@ void net_client_send(void *data, net_req request, char *buffer, uint32_t size) {
 		char *pointer;
 		size_t size;
 		zmq_msg_t in;
-		net_req response = 0;
+
 
 		if (_net_recv(data, &response, &in) != EXIT_OK) {
 			goto net_client_send_stop;
 		}
 
-		pointer = zmq_msg_data(&in) + SIZE_REQUEST;
+		pointer = ((char *) zmq_msg_data(&in)) + SIZE_REQUEST;
 		size = zmq_msg_size(&in) - SIZE_REQUEST;
 
 		/* se ricevo una risposta vuol dire che e' avvenuto un collegamento */
@@ -526,7 +527,7 @@ void net_client_send(void *data, net_req request, char *buffer, uint32_t size) {
 
 				net_client_accepted_window();
 
-				pinfo = (void *) pointer;
+				pinfo = (_peer_info *) pointer;
 
 				zmq->exchange->peer_info = (*pinfo);
 
@@ -577,7 +578,8 @@ void net_client_send(void *data, net_req request, char *buffer, uint32_t size) {
 		zmq_msg_close(&in);
 		goto net_client_send_exit;
 
-		net_client_send_stop: net_client_reset_window_no_clean_info();
+net_client_send_stop:
+		net_client_reset_window_no_clean_info();
 		zmq_msg_close(&in);
 		net_close_socket(data);
 		zmq->exchange->want_disconnect = FALSE;
@@ -591,7 +593,7 @@ void net_client_send(void *data, net_req request, char *buffer, uint32_t size) {
 }
 
 uint8_t _net_send(void *data, net_req request, char *buffer, uint32_t size) {
-	_zmq *zmq = data;
+	_zmq *zmq = (_zmq *) data;
 	zmq_msg_t out;
 	uint32_t repeat = 0;
 
@@ -619,7 +621,7 @@ uint8_t _net_send(void *data, net_req request, char *buffer, uint32_t size) {
 			goto _net_send_error;
 		}
 
-		pointer_out = zmq_msg_data(&out);
+		pointer_out = (char *) zmq_msg_data(&out);
 
 		if (!repeat) {
 			memcpy(pointer_out, &request, SIZE_REQUEST);
@@ -656,8 +658,8 @@ uint8_t _net_send(void *data, net_req request, char *buffer, uint32_t size) {
 	return (EXIT_ERROR);
 }
 uint8_t _net_recv(void *data, net_req *request, void *buffer) {
-	_zmq *zmq = data;
-	zmq_msg_t *in = buffer;
+	_zmq *zmq = (_zmq *) data;
+	zmq_msg_t *in = (zmq_msg_t *) buffer;
 	int counter = 0;
 
 	zmq->error = 0;
@@ -701,7 +703,7 @@ uint8_t _net_recv(void *data, net_req *request, void *buffer) {
 }
 
 void net_close_socket(void *data) {
-	_zmq *zmq = data;
+	_zmq *zmq = (_zmq *)  data;
 
 	if (zmq->socket != NULL) {
 		if (zmq_close(zmq->socket) == -1) {
@@ -715,7 +717,7 @@ void net_close_socket(void *data) {
 	gui_sleep(5);
 }
 void net_close(void *data) {
-	_zmq *zmq = data;
+	_zmq *zmq = (_zmq *) data;
 
 	if (zmq != NULL) {
 		/*

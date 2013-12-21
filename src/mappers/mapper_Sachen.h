@@ -38,7 +38,7 @@ struct _sa74374x {
 	BYTE chr_rom_8k_bank;
 } sa74374x;
 
-static const char pokeriiichr[2][40] = {
+static const char pokeriiichr[2][41] = {
 	"5066c2d12ff2ac45ef395d3a4353e897fce19f78",
 	"c6bf926ed14c21f1a5b64fbccf3288005ff54be5"
 };

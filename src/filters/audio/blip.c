@@ -211,7 +211,7 @@ void audio_quality_apu_tick_blip(void) {
 	bl.counter++;
 }
 void audio_quality_end_frame_blip(void) {
-	_callback_data *cache = snd.cache;
+	_callback_data *cache = (_callback_data *) snd.cache;
 
 	if (!bl.blip) {
 		return;
@@ -282,11 +282,11 @@ void audio_quality_end_frame_blip(void) {
 				snd_lock_cache(cache);
 
 				/* incremento il contatore dei frames pieni non ancora 'riprodotti' */
-				if (++cache->filled >= snd.buffer.count) {
+				if (++cache->filled >= (SDBWORD) snd.buffer.count) {
 					snd.brk = TRUE;
 				} else if (cache->filled == 1) {
 					snd_frequency(snd_factor[apu.type][SND_FACTOR_SPEED])
-				} else if (cache->filled >= ((snd.buffer.count >> 1) + 1)) {
+				} else if (cache->filled >= (SDBWORD) ((snd.buffer.count >> 1) + 1)) {
 					snd_frequency(snd_factor[apu.type][SND_FACTOR_SLOW])
 				} else if (cache->filled < 3) {
 					snd_frequency(snd_factor[apu.type][SND_FACTOR_NORMAL])

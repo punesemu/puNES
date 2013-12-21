@@ -76,19 +76,19 @@ void dg_create_gtkbuilder(GtkBuilder **builder, int id_glade_h) {
 		g_free(error);
 	}
 }
-void dg_signal_connect(GtkBuilder *builder, char *obj_name, char *signal, gpointer callback,
-        gpointer user_data) {
+void dg_signal_connect(GtkBuilder *builder, const char *obj_name, const char *signal,
+		GCallback callback, gpointer user_data) {
 	GtkWidget *widget = _gw_get_object(builder, obj_name, GTK_WIDGET);
 
 	g_signal_connect(G_OBJECT(widget), signal, G_CALLBACK(callback), user_data);
 }
-void dg_signal_connect_swapped(GtkBuilder *builder, char *obj_name, char *signal,
-        gpointer callback, gpointer user_data) {
+void dg_signal_connect_swapped(GtkBuilder *builder, const char *obj_name, const char *signal,
+		GCallback callback, gpointer user_data) {
 	GtkWidget *widget = _gw_get_object(builder, obj_name, GTK_WIDGET);
 
 	g_signal_connect_swapped(G_OBJECT(widget), signal, G_CALLBACK(callback), user_data);
 }
-void dg_signal_disconnect(GtkBuilder *builder, char *obj_name, char *signal) {
+void dg_signal_disconnect(GtkBuilder *builder, const char *obj_name, const char *signal) {
 	GtkWidget *widget = _gw_get_object(builder, obj_name, GTK_WIDGET);
 	guint signal_id = g_signal_lookup(signal, G_OBJECT_TYPE(widget));
 	guint handler;
@@ -101,7 +101,7 @@ void dg_signal_disconnect(GtkBuilder *builder, char *obj_name, char *signal) {
 void dg_set_sensitive(GtkBuilder *builder, char *obj_name, gboolean sensitive) {
 	gtk_widget_set_sensitive(_gw_get_widget(builder, obj_name), sensitive);
 }
-void dg_image_from_inline(GtkBuilder *builder, char *obj_name, const guint8 *data) {
+void dg_image_from_inline(GtkBuilder *builder, const char *obj_name, const guint8 *data) {
 	GtkWidget *widget = _gw_get_object(builder, obj_name, GTK_WIDGET);
 
 	gw_image_from_inline(widget, data);

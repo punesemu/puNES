@@ -12,7 +12,7 @@
 #include "mappers.h"
 
 typedef struct {
-	char sha1sum[40];
+	char sha1sum[41];
 	WORD mapper;
 	BYTE type;
 	BYTE id;

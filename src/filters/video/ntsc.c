@@ -17,8 +17,8 @@ int burst_phase = 0;
 
 #define adjust_output(scale)\
 	for (y = ((height / factor) - (overscan.enabled ? 0 : 1)); --y >= 0;) {\
-		unsigned char const *in = pix + (y * pitch);\
-		unsigned char *out = pix + ((y * factor) * pitch);\
+		unsigned char const *in = ((const unsigned char *) pix) + (y * pitch);\
+		unsigned char *out = ((unsigned char *) pix) + ((y * factor) * pitch);\
 		int n;\
 		for (n = width; n; --n) {\
 			switch (bpp) {\

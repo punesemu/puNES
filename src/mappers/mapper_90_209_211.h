@@ -42,7 +42,7 @@ struct _m90_209_211 {
 		BYTE mode;
 		BYTE prescaler;
 		BYTE count;
-		BYTE xor;
+		BYTE xor_value;
 		BYTE pre_size;
 		BYTE premask;
 	} irq;

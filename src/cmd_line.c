@@ -136,7 +136,7 @@ BYTE cmd_line_check_portable(int argc, char **argv) {
 
 void usage(char *name) {
 	char *usage_string;
-	char *istructions = {
+	const char *istructions = {
 			"Usage: %s [options] file...\n\n"
 			"Options:\n"
 			"-h, --help                print this help\n"
@@ -163,7 +163,7 @@ void usage(char *name) {
 			"%s\n"
 	};
 
-	usage_string = malloc(1024 * 8);
+	usage_string = (char *) malloc(1024 * 8);
 	sprintf(usage_string, istructions, name,
 			param[P_MODE].help,
 			param[P_FPS].help,

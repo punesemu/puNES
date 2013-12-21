@@ -176,7 +176,7 @@ void tas_frame_FM2(void) {
 }
 void tas_header_FM2(char *file) {
 	char line[256];
-	int start;
+	unsigned int start;
 
 	tas.emulator = FCEUX;
 
@@ -199,7 +199,7 @@ void tas_header_FM2(char *file) {
 		}
 
 		if ((value = strtok(NULL, "\n"))) {
-			int i;
+			unsigned int i;
 
 			for (i = 0; i < strlen(value); i++) {
 				if (value[i] == '\r') {
@@ -241,7 +241,7 @@ void tas_header_FM2(char *file) {
 	fseek(tas.fp, 0, SEEK_SET);
 }
 void tas_read_FM2(void) {
-	int start;
+	unsigned int start;
 	char line[256], *sep;
 
 	tas.count = tas.index = 0;

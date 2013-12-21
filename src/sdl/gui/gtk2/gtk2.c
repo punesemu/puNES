@@ -5,7 +5,9 @@
  *      Author: fhorse
  */
 
+#ifndef _GNU_SOURCE
 #define _GNU_SOURCE
+#endif
 #include <pthread.h>
 #include <sched.h>
 #include <sys/time.h>
@@ -132,7 +134,7 @@ void gui_init(int argc, char **argv) {
 			if (length < 0) {
 				fprintf(stderr, "INFO: Error resolving symlink /proc/self/exe.\n");
 				info.portable = FALSE;
-			} else if (length >= sizeof(info.base_folder)) {
+			} else if (length >= (signed int) sizeof(info.base_folder)) {
 				fprintf(stderr, "INFO: Path too long. Truncated.\n");
 				info.portable = FALSE;
 			} else {
@@ -189,7 +191,7 @@ BYTE gui_create(void) {
 		gtk_box_pack_start(GTK_BOX(vbox), event_box, TRUE, FALSE, 0);
 
 		{
-			const GtkTargetEntry target = {"text/uri-list", 0, 0};
+			const GtkTargetEntry target = { (gchar *) "text/uri-list", 0, 0 };
 
 			gtk_drag_dest_set(event_box, GTK_DEST_DEFAULT_ALL, &target, 1, GDK_ACTION_COPY);
 
@@ -990,7 +992,7 @@ void save_slot_control(GtkCellLayout *cell_layout, GtkCellRenderer *cell, GtkTre
 		gint x, y;
 
 		if (trcb.popup) {
-			if (index == trcb.counter) {
+			if (index == (guint) trcb.counter) {
 				if (++trcb.counter == SAVE_SLOTS) {
 					GtkTreeIter active_iter;
 					GtkTreeModel *model;
@@ -1126,7 +1128,7 @@ void save_slot_gui_preview(void) {
 gboolean save_slot_key_press_event(GSignalInvocationHint *ihint, guint n_param_values,
 		const GValue *param_values, gpointer data) {
 	if (trcb.window) {
-		GdkEventKey *event = g_value_get_boxed(param_values + 1);
+		GdkEventKey *event = (GdkEventKey *) g_value_get_boxed(param_values + 1);
 		if ((event->keyval == GDK_Up) || (event->keyval == GDK_KP_Up) || (event->keyval == GDK_Down)
 				|| (event->keyval == GDK_KP_Down) || (event->keyval == GDK_Page_Up)
 				|| (event->keyval == GDK_Page_Down) || (event->keyval == GDK_Home)

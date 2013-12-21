@@ -68,14 +68,14 @@ void cfg_input_dialog(void) {
 	cfg_input_update_dialog();
 
 	dg_signal_connect_swapped(cfg_input.builder, "input_updown_leftright_checkbutton", "toggled",
-	        cfg_input_permit_updown_leftright_checkbutton_toggled, NULL);
+			G_CALLBACK(cfg_input_permit_updown_leftright_checkbutton_toggled), NULL);
 
 	dg_signal_connect(cfg_input.builder, "input_default_button", "clicked",
-			cfg_input_default_clicked, NULL);
+			G_CALLBACK(cfg_input_default_clicked), NULL);
 	dg_signal_connect(cfg_input.builder, "input_ok_button", "clicked",
-			cfg_input_ok_clicked, NULL);
+			G_CALLBACK(cfg_input_ok_clicked), NULL);
 	dg_signal_connect(cfg_input.builder, "input_cancel_button", "clicked",
-	        cfg_input_cancel_clicked, NULL);
+			G_CALLBACK(cfg_input_cancel_clicked), NULL);
 	g_signal_connect(G_OBJECT(cfg_input.father), "destroy",
 	        G_CALLBACK(cfg_input_window_destroy), NULL);
 
@@ -88,19 +88,19 @@ void cfg_input_dialog(void) {
 
 void cfg_input_update_dialog(void) {
 	BYTE i;
-	_cfg_port *this;
+	_cfg_port *ctrl_in;
 
 	for (i = PORT1; i < PORT_MAX; i++) {
 		char *obj_name;
 
-		this = &cfg_input.port[i];
+		ctrl_in = &cfg_input.port[i];
 
-		obj_name = dg_obj_name("input_ctrl%d_combobox", this->id);
-		gtk_combo_box_set_active(_gw_get_combobox(cfg_input.builder, obj_name), this->port.type);
+		obj_name = dg_obj_name("input_ctrl%d_combobox", ctrl_in->id);
+		gtk_combo_box_set_active(_gw_get_combobox(cfg_input.builder, obj_name), ctrl_in->port.type);
 
-		obj_name = dg_obj_name("input_ctrl%d_setup_button", this->id);
+		obj_name = dg_obj_name("input_ctrl%d_setup_button", ctrl_in->id);
 		dg_signal_disconnect(cfg_input.builder, obj_name, "clicked");
-		switch (this->port.type) {
+		switch (ctrl_in->port.type) {
 			case CTRL_DISABLED:
 			case CTRL_ZAPPER:
 				dg_set_sensitive(cfg_input.builder, obj_name, FALSE);
@@ -108,7 +108,7 @@ void cfg_input_update_dialog(void) {
 			case CTRL_STANDARD:
 				dg_set_sensitive(cfg_input.builder, obj_name, TRUE);
 				dg_signal_connect(cfg_input.builder, obj_name, "clicked",
-						cfg_input_setup_clicked, this);
+						G_CALLBACK(cfg_input_setup_clicked), ctrl_in);
 				break;
 		}
 	}
@@ -125,14 +125,15 @@ void cfg_input_update_dialog(void) {
 		}
 
 		for (i = PORT3; i <= PORT4; i++) {
-			this = &cfg_input.port[i];
+			ctrl_in = &cfg_input.port[i];
 
-			dg_set_sensitive(cfg_input.builder, dg_obj_name("input_ctrl%d_label", this->id), mode);
-			dg_set_sensitive(cfg_input.builder, dg_obj_name("input_ctrl%d_combobox", this->id),
+			dg_set_sensitive(cfg_input.builder, dg_obj_name("input_ctrl%d_label", ctrl_in->id),
+			        mode);
+			dg_set_sensitive(cfg_input.builder, dg_obj_name("input_ctrl%d_combobox", ctrl_in->id),
 			        mode);
 			if (mode == FALSE) {
 				dg_set_sensitive(cfg_input.builder,
-				        dg_obj_name("input_ctrl%d_setup_button", this->id), mode);
+				        dg_obj_name("input_ctrl%d_setup_button", ctrl_in->id), mode);
 			}
 		}
 	}

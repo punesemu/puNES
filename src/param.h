@@ -73,11 +73,11 @@ enum {
  };
 
 typedef struct {
-	char *lname;
-	char *sname;
-	char *comment1;
-	char *comment2;
-	char *help;
+	const char *lname;
+	const char *sname;
+	const char *comment1;
+	const char *comment2;
+	const char *help;
 } _param;
 
 #ifdef __CMDLINE__

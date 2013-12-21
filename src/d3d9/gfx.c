@@ -172,16 +172,16 @@ BYTE gfx_init(void) {
 #define dev_info(s) printf("adapter %d : "s, dev->id)
 #define dev_info_args(s, ...) printf("adapter %d : "s, dev->id, __VA_ARGS__)
 
-		int this;
+		int adapt;
 
-		for (this = 0; this < d3d9.adapters_on_system; this++) {
+		for (adapt = 0; adapt < d3d9.adapters_on_system; adapt++) {
 			_d3d9_adapter *dev = D3D9_ADAPTER(d3d9.adapters_in_use);
 			D3DADAPTER_IDENTIFIER9 info;
 			D3DCAPS9 d3dcaps;
 
 			memset(dev, 0x00, sizeof(_d3d9_adapter));
 
-			dev->id = this;
+			dev->id = adapt;
 
 			if (IDirect3D9_GetAdapterIdentifier(d3d9.d3d, dev->id, 0, &info)!= D3D_OK) {
 				dev_error("unable to get adapter display info\n");

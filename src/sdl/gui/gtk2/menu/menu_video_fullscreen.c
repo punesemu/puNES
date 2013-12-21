@@ -78,8 +78,8 @@ void menu_video_fullscreen(GtkWidget *video, GtkAccelGroup *accel_group) {
 
 	gtk_widget_add_accelerator(check[MFULLSCR], "activate", accel_group, GDK_Return, GDK_MOD1_MASK,
 	        GTK_ACCEL_VISIBLE);
-	gtk_widget_add_accelerator(check[MSTRETCHFSCR], "activate", accel_group, GDK_p, 0,
-	        GTK_ACCEL_VISIBLE);
+	gtk_widget_add_accelerator(check[MSTRETCHFSCR], "activate", accel_group, GDK_p,
+	        (GdkModifierType) 0, GTK_ACCEL_VISIBLE);
 
 	g_signal_connect(G_OBJECT(check[MFULLSCR]), "activate", G_CALLBACK(gui_fullscreen), NULL);
 	g_signal_connect(G_OBJECT(check[MSTRETCHFSCR]), "activate",

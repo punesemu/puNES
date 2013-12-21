@@ -48,11 +48,11 @@ BYTE snd_start(void) {
 
 	memset(&snd, 0, sizeof(snd));
 
-	dev = malloc(sizeof(SDL_AudioSpec));
+	dev = (SDL_AudioSpec *) malloc(sizeof(SDL_AudioSpec));
 	memset(dev, 0, sizeof(SDL_AudioSpec));
 	snd.dev = dev;
 
-	cache = malloc(sizeof(_callback_data));
+	cache = (_callback_data *) malloc(sizeof(_callback_data));
 	memset(cache, 0, sizeof(_callback_data));
 	snd.cache = cache;
 
@@ -143,11 +143,11 @@ BYTE snd_start(void) {
 		for (i = 0; i < 2; i++) {
 			DBWORD size = snd.samples * sizeof(*cache->write);
 
-			snd.channel.buf[i] = malloc(size);
+			snd.channel.buf[i] = (SWORD *) malloc(size);
 			memset(snd.channel.buf[i], 0x00, size);
 			snd.channel.ptr[i] = snd.channel.buf[i];
 
-			snd.channel.bck.start = malloc(size * 2);
+			snd.channel.bck.start = (SWORD *) malloc(size * 2);
 			memset(snd.channel.bck.start, 0x00, size * 2);
 			snd.channel.bck.write = snd.channel.bck.start;
 			snd.channel.bck.middle = snd.channel.bck.start + snd.samples;
@@ -164,7 +164,7 @@ BYTE snd_start(void) {
 		total_buffer_size = snd.buffer.size * snd.buffer.count * sizeof(*cache->write);
 
 		/* alloco il buffer in memoria */
-		cache->start = malloc(total_buffer_size);
+		cache->start = (SWORD *) malloc(total_buffer_size);
 
 		if (!cache->start) {
 			fprintf(stderr, "Unable to allocate audio buffers\n");
@@ -204,7 +204,7 @@ BYTE snd_start(void) {
 }
 void snd_stereo_delay(void) {
 	int i;
-	_callback_data *cache = snd.cache;
+	_callback_data *cache = (_callback_data *) snd.cache;
 	SWORD *here;
 
 	snd.channel.max_pos = snd.samples * cfg->stereo_delay;
@@ -230,7 +230,7 @@ void snd_stereo_delay(void) {
 	}
 }
 void snd_output(void *udata, BYTE *stream, int len) {
-	_callback_data *cache = udata;
+	_callback_data *cache = (_callback_data *) udata;
 
 	if (info.no_rom) {
 		return;
@@ -298,14 +298,14 @@ void snd_stop(void) {
 	}
 
 	if (snd.cache) {
-		_callback_data *cache = snd.cache;
+		_callback_data *cache = (_callback_data *) snd.cache;
 
 		if (cache->start) {
 			free(cache->start);
 		}
 
 		if (cache->lock) {
-			SDL_DestroyMutex(cache->lock);
+			SDL_DestroyMutex((SDL_mutex *) cache->lock);
 		}
 
 		free(snd.cache);

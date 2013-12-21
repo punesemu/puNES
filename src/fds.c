@@ -116,7 +116,7 @@ BYTE fds_load_rom(void) {
 	fds.info.enabled = TRUE;
 
 	/* Prg Ram */
-	if ((prg.ram = malloc(0x8000))) {
+	if ((prg.ram = (BYTE *) malloc(0x8000))) {
 		memset(prg.ram, 0xEA, 0x8000);
 	} else {
 		fprintf(stderr, "Out of memory\n");
@@ -171,7 +171,7 @@ BYTE fds_load_bios(void) {
 	return (EXIT_ERROR);
 
 	fds_load_bios_founded:
-	if (!(prg.rom = malloc(0x2000))) {
+	if (!(prg.rom = (BYTE *) malloc(0x2000))) {
 		fclose(bios);
 		fprintf(stderr, "Out of memory\n");
 		return (EXIT_ERROR);
@@ -234,7 +234,7 @@ void fds_disk_op(WORD type, BYTE side_to_insert) {
 			fprintf(stdout, "virtual disk size : %5d\n", fds.info.sides_size[side_to_insert]);
 #endif
 
-			fds.side.data = malloc(fds.info.sides_size[side_to_insert] * sizeof(WORD));
+			fds.side.data = (WORD *) malloc(fds.info.sides_size[side_to_insert] * sizeof(WORD));
 
 			fds.side.counted_files = 0xFFFF;
 

@@ -74,7 +74,7 @@ enum {
 	NUMCHKS
 };
 
-void vsync_set(int bool);
+void vsync_set(int value);
 
 static GtkWidget *check[NUMCHKS];
 
@@ -117,14 +117,14 @@ void menu_video_vsync_check(void) {
 		gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MVSYNCOFF]), TRUE);
 	}
 }
-void vsync_set(int bool) {
+void vsync_set(int value) {
 	gint x, y;
 
 	if (gui_in_update) {
 		return;
 	}
 
-	if (cfg->vsync == bool) {
+	if (cfg->vsync == value) {
 		gui_update();
 		return;
 	}
@@ -140,7 +140,7 @@ void vsync_set(int bool) {
 	gtk_widget_hide(main_win);
 
 	/* switch vsync */
-	cfg->vsync = bool;
+	cfg->vsync = value;
 
 	gfx_reset_video();
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE);

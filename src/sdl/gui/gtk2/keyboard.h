@@ -12,6 +12,6 @@
 #include <gdk/gdkkeysyms.h>
 
 DBWORD keyval_from_name(const gchar *keyval_name);
-gchar *keyval_to_name(const DBWORD keyval);
+const gchar *keyval_to_name(const DBWORD keyval);
 
 #endif /* KEYBOARD_H_ */

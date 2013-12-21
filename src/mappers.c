@@ -716,7 +716,7 @@ void map_prg_ram_init(void) {
 	if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) && info.prg_ram_plus_8k_count
 	        && !prg.ram_plus) {
 		/* alloco la memoria necessaria */
-		prg.ram_plus = malloc(prg_ram_plus_size());
+		prg.ram_plus = (BYTE *) malloc(prg_ram_plus_size());
 		/* inizializzo */
 		memset(prg.ram_plus, 0x00, prg_ram_plus_size());
 		/* gli 8k iniziali */
@@ -764,7 +764,7 @@ BYTE map_chr_ram_init(void) {
 			free(chr.data);
 		}
 		/* alloco la CHR Rom */
-		if (!(chr.data = malloc(chr_ram_size()))) {
+		if (!(chr.data = (BYTE *) malloc(chr_ram_size()))) {
 			fprintf(stderr, "Out of memory\n");
 			return (EXIT_ERROR);
 		}

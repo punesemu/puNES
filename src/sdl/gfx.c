@@ -163,7 +163,7 @@ BYTE gfx_init(void) {
 	 * mi alloco una zona di memoria dove conservare la
 	 * paletta nel formato di visualizzazione.
 	 */
-	if (!(palette_win = malloc(NUM_COLORS * sizeof(uint32_t)))) {
+	if (!(palette_win = (uint32_t *) malloc(NUM_COLORS * sizeof(uint32_t)))) {
 		fprintf(stderr, "Unable to allocate the palette\n");
 		return (EXIT_ERROR);
 	}

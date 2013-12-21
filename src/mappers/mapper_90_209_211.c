@@ -183,13 +183,13 @@ void extcl_cpu_wr_mem_90_209_211(WORD address, BYTE value) {
 				m90_209_211.irq.active = 1;
 				break;
 			case 4:
-				m90_209_211.irq.prescaler = value ^ m90_209_211.irq.xor;
+				m90_209_211.irq.prescaler = value ^ m90_209_211.irq.xor_value;
 				break;
 			case 5:
-				m90_209_211.irq.count = value ^ m90_209_211.irq.xor;
+				m90_209_211.irq.count = value ^ m90_209_211.irq.xor_value;
 				break;
 			case 6:
-				m90_209_211.irq.xor = value;
+				m90_209_211.irq.xor_value = value;
 				break;
 			case 7:
 				m90_209_211.irq.pre_size = value;
@@ -267,7 +267,7 @@ BYTE extcl_save_mapper_90_209_211(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m90_209_211.irq.mode);
 	save_slot_ele(mode, slot, m90_209_211.irq.prescaler);
 	save_slot_ele(mode, slot, m90_209_211.irq.count);
-	save_slot_ele(mode, slot, m90_209_211.irq.xor);
+	save_slot_ele(mode, slot, m90_209_211.irq.xor_value);
 	save_slot_ele(mode, slot, m90_209_211.irq.pre_size);
 	save_slot_ele(mode, slot, m90_209_211.irq.premask);
 

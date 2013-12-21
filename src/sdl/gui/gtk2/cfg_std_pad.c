@@ -131,15 +131,15 @@ void cfg_std_pad_dialog(_cfg_port *cfg_port) {
 
 			dg_signal_connect(cfg_std_pad.builder,
 			        dg_obj_name("%s_in_sequence_button", std_pad_input_type[a]), "clicked",
-			        cfg_std_pad_input_in_sequence_clicked, GINT_TO_POINTER(a));
+			        G_CALLBACK(cfg_std_pad_input_in_sequence_clicked), GINT_TO_POINTER(a));
 
 			dg_signal_connect(cfg_std_pad.builder,
 			        dg_obj_name("%s_unset_all_button", std_pad_input_type[a]), "clicked",
-			        cfg_std_pad_input_unset_all_clicked, GINT_TO_POINTER(a));
+			        G_CALLBACK(cfg_std_pad_input_unset_all_clicked), GINT_TO_POINTER(a));
 
 			dg_signal_connect(cfg_std_pad.builder,
 			        dg_obj_name("%s_default_all_button", std_pad_input_type[a]), "clicked",
-			        cfg_std_pad_input_default_all_clicked, GINT_TO_POINTER(a));
+			        G_CALLBACK(cfg_std_pad_input_default_all_clicked), GINT_TO_POINTER(a));
 		}
 	}
 
@@ -163,9 +163,9 @@ void cfg_std_pad_dialog(_cfg_port *cfg_port) {
 	}
 
 	dg_signal_connect(cfg_std_pad.builder, "standard_pad_ok_button", "clicked",
-	        cfg_std_pad_ok_clicked, cfg_port);
+			G_CALLBACK(cfg_std_pad_ok_clicked), cfg_port);
 	dg_signal_connect(cfg_std_pad.builder, "standard_pad_cancel_button", "clicked",
-	        cfg_std_pad_cancel_clicked, NULL);
+			G_CALLBACK(cfg_std_pad_cancel_clicked), NULL);
 	g_signal_connect(G_OBJECT(cfg_input.child), "key_press_event",
 			G_CALLBACK(cfg_std_pad_key_press_event), NULL);
 	g_signal_connect(G_OBJECT(cfg_input.child), "destroy",
@@ -312,7 +312,7 @@ void cfg_std_pad_js_press_event(void) {
 	gint type, virtual_button;
 	int fd;
 	char device[30];
-	size_t size = sizeof(jse);
+	ssize_t size = sizeof(jse);
 	BYTE index = cfg_std_pad.cfg.port.joy_id;
 	BYTE read_is_ok = FALSE;
 	DBWORD value = 0;

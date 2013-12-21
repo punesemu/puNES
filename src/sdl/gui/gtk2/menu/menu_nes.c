@@ -143,8 +143,10 @@ void menu_nes(GtkWidget *mainmenu, GtkAccelGroup *accel_group) {
 	gw_image_from_inline(hard, hard_icon_inline);
 	gw_image_from_inline(soft, soft_icon_inline);
 
-	gtk_widget_add_accelerator(hard, "activate", accel_group, GDK_F11, 0, GTK_ACCEL_VISIBLE);
-	gtk_widget_add_accelerator(soft, "activate", accel_group, GDK_F12, 0, GTK_ACCEL_VISIBLE);
+	gtk_widget_add_accelerator(hard, "activate", accel_group, GDK_F11, (GdkModifierType) 0,
+	        GTK_ACCEL_VISIBLE);
+	gtk_widget_add_accelerator(soft, "activate", accel_group, GDK_F12, (GdkModifierType) 0,
+	        GTK_ACCEL_VISIBLE);
 
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), hard);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), soft);

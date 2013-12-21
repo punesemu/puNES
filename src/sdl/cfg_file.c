@@ -106,7 +106,7 @@
 void set_default(void);
 void set_default_pgs(void);
 void trim_space(char *src);
-void write_param(_param *prmtr, FILE *fp, BYTE prm, char *value);
+void write_param(_param *prmtr, FILE *fp, BYTE prm, const char *value);
 void write_double_param(_param *prmtr, FILE *fp, BYTE prm, double value);
 void write_int_param(_param *prmtr, FILE *fp, BYTE prm, int value);
 void write_apu_channel_param(_param *prmtr, FILE *fp, BYTE prm);
@@ -681,7 +681,7 @@ void trim_space(char *src) {
 	out[i] = '\0';
 	strcpy(src, out);
 }
-void write_param(_param *prmtr, FILE *fp, BYTE prm, char *value) {
+void write_param(_param *prmtr, FILE *fp, BYTE prm, const char *value) {
 	if (prmtr[prm].comment1 != NULL) {
 		fprintf(fp, "%s\n", prmtr[prm].comment1);
 	}

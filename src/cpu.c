@@ -1005,7 +1005,7 @@ void cpu_turn_on(void) {
 		cpu.SR = 0x34;
 
 		if (tas.type && (tas.emulator == FCEUX)) {
-			int x;
+			unsigned int x;
 
 			for (x = 0; x < sizeof(mmcpu.ram); x++) {
 				mmcpu.ram[x] = (x & 0x04) ? 0xFF : 0x00;

@@ -137,10 +137,10 @@ long __stdcall cfg_std_pad_messages(HWND hwnd, UINT msg, WPARAM wParam, LPARAM l
 
 				tcitem.mask = TCIF_TEXT;
 
-				tcitem.pszText = "Keyboard";
+				tcitem.pszText = (LPSTR) "Keyboard";
 				(void) TabCtrl_InsertItem(tab, 0, &tcitem);
 
-				tcitem.pszText = "Joystick";
+				tcitem.pszText = (LPSTR) "Joystick";
 				(void) TabCtrl_InsertItem(tab, 1, &tcitem);
 
 				cfg_std_pad.type = KEYBOARD;
@@ -545,8 +545,13 @@ void cfg_std_pad_tab_init(void) {
 				}
 			}
 
+#ifdef __cplusplus
+			if ((ret = DirectInput8Create(GetModuleHandle(NULL), DIRECTINPUT_VERSION,
+			        IID_IDirectInput8, (LPVOID *) &di8, NULL)) != DI_OK) {
+#else
 			if ((ret = DirectInput8Create(GetModuleHandle(NULL), DIRECTINPUT_VERSION,
 			        &IID_IDirectInput8, (LPVOID *) &di8, NULL)) != DI_OK) {
+#endif
 				printf("DirectInput8Create error: %s - %s", DXGetErrorString8(ret),
 				        DXGetErrorDescription8(ret));
 			}

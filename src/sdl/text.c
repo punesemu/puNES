@@ -117,7 +117,7 @@ void text_reset(void) {
 }
 void text_add_line(int type, int factor, int font, int alpha, int start_x, int start_y, int x,
         int y, const char *fmt, ...) {
-	uint8_t i, new = !text.info.index;
+	uint8_t i, shift_line = !text.info.index;
 	_txt_element *ele = NULL;
 	va_list ap;
 
@@ -127,13 +127,13 @@ void text_add_line(int type, int factor, int font, int alpha, int start_x, int s
 				text_clear(text.info.lines[text.info.index][i]);
 			}
 			if (i == (TXT_MAX_LINES - 1)) {
-				text.info.lines[new][0] = text.info.lines[text.info.index][i];
+				text.info.lines[shift_line][0] = text.info.lines[text.info.index][i];
 			} else {
-				text.info.lines[new][i + 1] = text.info.lines[text.info.index][i];
+				text.info.lines[shift_line][i + 1] = text.info.lines[text.info.index][i];
 			}
 		}
 
-		text.info.index = new;
+		text.info.index = shift_line;
 
 		ele = text.info.lines[text.info.index][0];
 		ele->enabled = TRUE;
@@ -154,7 +154,7 @@ void text_add_line(int type, int factor, int font, int alpha, int start_x, int s
 	if (type == TXT_SINGLE) {
 		for (i = 0; i < TXT_MAX_LINES; i++) {
 			if (text.single.lines[i] == NULL) {
-				text.single.lines[i] = malloc(sizeof(_txt_element));
+				text.single.lines[i] = (_txt_element *) malloc(sizeof(_txt_element));
 				text.single.count++;
 
 				ele = text.single.lines[i];
@@ -187,7 +187,7 @@ void text_add_line(int type, int factor, int font, int alpha, int start_x, int s
 
 	for (i = 0; i < strlen(ele->text); i++) {
 		if (ele->text[i] == '[') {
-			int tag, found = FALSE;
+			unsigned int tag, found = FALSE;
 
 			for (tag = 0; tag < LENGTH(txt_tags); tag++) {
 				int len = strlen(txt_tags[tag]);
@@ -502,7 +502,8 @@ void sdl_text_blit(_txt_element *ele, SDL_Rect *dst_rect) {
 }
 
 static void INLINE rendering(_txt_element *ele) {
-	int i = 0, font_x = 0, font_y = 0, ch_font = ele->font;
+	unsigned int i = 0;
+	int font_x = 0, font_y = 0, ch_font = ele->font;
 	uint32_t color[3], max_pixels = (text.w - 16), pixels = 0;
 	SDL_Rect surface_rect, font;
 
@@ -563,7 +564,7 @@ static void INLINE rendering(_txt_element *ele) {
 		}
 
 		if (ch == '[') {
-			int tag, found = FALSE;
+			unsigned int tag, found = FALSE;
 
 			for (tag = 0; tag < LENGTH(txt_tags); tag++) {
 				int len = strlen(txt_tags[tag]);

@@ -125,13 +125,13 @@ BYTE ines_load_rom(void) {
 		}
 
 		/* alloco la PRG Ram */
-		if (!(prg.ram = malloc(0x2000))) {
+		if (!(prg.ram = (BYTE *) malloc(0x2000))) {
 			fprintf(stderr, "Out of memory\n");
 			return (EXIT_ERROR);
 		}
 
 		/* alloco e carico la PRG Rom */
-		if ((prg.rom = malloc(info.prg_rom_16k_count * (16 * 1024)))) {
+		if ((prg.rom = (BYTE *) malloc(info.prg_rom_16k_count * (16 * 1024)))) {
 			tmp = fread(&prg.rom[0], 16384, info.prg_rom_16k_count, fp);
 		} else {
 			fprintf(stderr, "Out of memory\n");
@@ -146,7 +146,7 @@ BYTE ines_load_rom(void) {
 		 */
 		if (!mapper.write_vram) {
 			/* alloco la CHR Rom */
-			if ((chr.data = malloc(info.chr_rom_8k_count * (8 * 1024)))) {
+			if ((chr.data = (BYTE *) malloc(info.chr_rom_8k_count * (8 * 1024)))) {
 				tmp = fread(&chr.data[0], 8192, info.chr_rom_8k_count, fp);
 				chr_bank_1k_reset();
 			} else {
