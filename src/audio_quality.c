@@ -7,7 +7,9 @@
 
 #include <stddef.h>
 #include "audio_quality.h"
-#include "gui_snd.h"
+#define __GUI_SND__
+#include "gui.h"
+#undef __GUI_SND__
 #include "filters/audio/original.h"
 #include "filters/audio/blip.h"
 #include "filters/audio/blip2.h"

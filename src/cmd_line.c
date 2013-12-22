@@ -12,7 +12,9 @@
 #include "cfg_file.h"
 #include "version.h"
 #include "gfx.h"
+#define __GUI_BASE__
 #include "gui.h"
+#undef __GUI_BASE__
 #define __CMDLINE__
 #include "param.h"
 #undef  __CMDLINE__

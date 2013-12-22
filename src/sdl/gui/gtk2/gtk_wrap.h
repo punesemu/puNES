@@ -8,7 +8,9 @@
 #ifndef GTK_WRAP_H_
 #define GTK_WRAP_H_
 
+#define __GUI_BASE__
 #include "gui.h"
+#undef __GUI_BASE__
 
 enum glade_h_name {
 	APU_CHANNELS_DIALOG,

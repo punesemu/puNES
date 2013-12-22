@@ -6,7 +6,9 @@
  */
 
 #include "cfg_file.h"
+#define __GUI_BASE__
 #include "gui.h"
+#undef __GUI_BASE__
 #include "gfx.h"
 #include "snd.h"
 #include "clock.h"

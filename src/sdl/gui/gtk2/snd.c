@@ -12,7 +12,9 @@
 #include "clock.h"
 #include "fps.h"
 #include "apu.h"
+#define __GUI_BASE__
 #include "gui.h"
+#undef __GUI_BASE__
 #include "cfg_file.h"
 #include "audio_quality.h"
 

@@ -10,7 +10,9 @@
 #include "clock.h"
 #include "ppu.h"
 #include "palette.h"
+#define __GUI_BASE__
 #include "gui.h"
+#undef __GUI_BASE__
 #include "gfx.h"
 #include "apu.h"
 #include "overscan.h"

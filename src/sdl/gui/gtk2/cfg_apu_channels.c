@@ -6,8 +6,11 @@
  */
 
 #include <string.h>
+#define __GUI_BASE__
+#define __GUI_SND__
 #include "gui.h"
-#include "gui_snd.h"
+#undef __GUI_SND__
+#undef __GUI_BASE__
 #include "apu.h"
 #include "cfg_file.h"
 

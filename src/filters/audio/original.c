@@ -7,7 +7,9 @@
 
 #include "audio_quality.h"
 #include "apu.h"
-#include "gui_snd.h"
+#define __GUI_SND__
+#include "gui.h"
+#undef __GUI_SND__
 #include "mappers.h"
 #include "mappers/mapper_VRC7_snd.h"
 #include "fds.h"

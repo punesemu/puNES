@@ -8,7 +8,9 @@
 #if defined MINGW32
 #define _WIN32_IE 0x0300
 #endif
+#define __GUI_BASE__
 #include "gui.h"
+#undef __GUI_BASE__
 #include "dinput.h"
 #include "dxerr8.h"
 #include "commctrl.h"

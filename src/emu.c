@@ -22,7 +22,11 @@
 #include <libgen.h>
 #include "main.h"
 #include "emu.h"
+#define __GUI_BASE__
+#define __GUI_SND__
 #include "gui.h"
+#undef __GUI_SND__
+#undef __GUI_BASE__
 #include "clock.h"
 #include "cpu.h"
 #include "mem_map.h"
@@ -31,7 +35,6 @@
 #include "apu.h"
 #include "ppu.h"
 #include "gfx.h"
-#include "gui_snd.h"
 #include "text.h"
 #include "sha1.h"
 #include "database.h"
@@ -201,6 +204,10 @@ BYTE emu_load_rom(void) {
 			/* salvo l'estensione del file */
 			strcpy(ext, strrchr(name_file, '.'));
 		}
+
+		//if (uncomp_ctrl(ext) == EXIT_ERROR) {
+		//	return (EXIT_ERROR);
+		//}
 
 		if (!strcasecmp(ext, ".fds")) {
 			if (fds_load_rom() == EXIT_ERROR) {

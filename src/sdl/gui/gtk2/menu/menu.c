@@ -6,7 +6,9 @@
  */
 
 #include "menu.h"
+#define __GUI_BASE__
 #include "gui.h"
+#undef __GUI_BASE__
 
 #ifndef RELEASE
 //#include "../configurations.h"
