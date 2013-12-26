@@ -11,7 +11,8 @@ C_SRCS += \
 ../src/sdl/gui/gtk2/gtk_wrap.c \
 ../src/sdl/gui/gtk2/joystick.c \
 ../src/sdl/gui/gtk2/keyboard.c \
-../src/sdl/gui/gtk2/snd.c 
+../src/sdl/gui/gtk2/snd.c \
+../src/sdl/gui/gtk2/uncompress_selection.c 
 
 OBJS += \
 ./src/sdl/gui/gtk2/cfg_apu_channels.o \
@@ -21,7 +22,8 @@ OBJS += \
 ./src/sdl/gui/gtk2/gtk_wrap.o \
 ./src/sdl/gui/gtk2/joystick.o \
 ./src/sdl/gui/gtk2/keyboard.o \
-./src/sdl/gui/gtk2/snd.o 
+./src/sdl/gui/gtk2/snd.o \
+./src/sdl/gui/gtk2/uncompress_selection.o 
 
 C_DEPS += \
 ./src/sdl/gui/gtk2/cfg_apu_channels.d \
@@ -31,7 +33,8 @@ C_DEPS += \
 ./src/sdl/gui/gtk2/gtk_wrap.d \
 ./src/sdl/gui/gtk2/joystick.d \
 ./src/sdl/gui/gtk2/keyboard.d \
-./src/sdl/gui/gtk2/snd.d 
+./src/sdl/gui/gtk2/snd.d \
+./src/sdl/gui/gtk2/uncompress_selection.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

@@ -60,6 +60,7 @@ void gui_sleep(double ms);
 void gui_set_thread_affinity(uint8_t core);
 void gui_print_usage(char *usage);
 void gui_reset_video(void);
+int gui_uncompress_selection_dialog();
 
 void set_effect(void);
 

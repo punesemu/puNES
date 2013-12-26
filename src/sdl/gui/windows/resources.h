@@ -21,6 +21,7 @@
 #define IDD_KBD_JOY_TAB_PAGE        161
 #define IDD_INPUT_DIALOG            162
 #define IDD_APU_CHANNELS            163
+#define IDD_UNCOMPRESS_SELECTION    164
 
 #define IDT_TIMER1                  101
 #define IDT_TIMER2                  102
@@ -248,10 +249,6 @@
 #define ID_APU_CHANNELS_OK                      1052
 #define ID_APU_CHANNELS_CANCEL                  1053
 
-
-
-
-
 #define IDC_INFO_RICHEDIT                       1035
 #define IDC_IN_SEQUENCE_BUTTON                  1036
 #define IDC_UNSET_ALL_BUTTON                    1037
@@ -310,5 +307,7 @@
 #define IDC_INPUT_CONTROLLER4_LABEL_STATIC      1131
 #define IDC_INPUT_CONTROLLER_MODE_LABEL_STATIC  1132
 #define IDC_INPUT_CONTROLLER_MODE_COMBO         1133
+
+#define IDC_UNCOMPRESS_SELECTION_LIST           1035
 
 #endif /* RESOURCES_H_ */

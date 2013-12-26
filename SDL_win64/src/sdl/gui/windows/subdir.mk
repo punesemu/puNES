@@ -10,6 +10,7 @@ C_SRCS += \
 ../src/sdl/gui/windows/joystick.c \
 ../src/sdl/gui/windows/keyboard.c \
 ../src/sdl/gui/windows/snd.c \
+../src/sdl/gui/windows/uncompress_selection.c \
 ../src/sdl/gui/windows/win.c 
 
 OBJS += \
@@ -19,6 +20,7 @@ OBJS += \
 ./src/sdl/gui/windows/joystick.o \
 ./src/sdl/gui/windows/keyboard.o \
 ./src/sdl/gui/windows/snd.o \
+./src/sdl/gui/windows/uncompress_selection.o \
 ./src/sdl/gui/windows/win.o 
 
 C_DEPS += \
@@ -28,6 +30,7 @@ C_DEPS += \
 ./src/sdl/gui/windows/joystick.d \
 ./src/sdl/gui/windows/keyboard.d \
 ./src/sdl/gui/windows/snd.d \
+./src/sdl/gui/windows/uncompress_selection.d \
 ./src/sdl/gui/windows/win.d 
 
 

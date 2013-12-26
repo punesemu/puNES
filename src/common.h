@@ -65,6 +65,7 @@ struct _info {
 	BYTE execute_cpu;
 	BYTE gui;
 	BYTE no_rom;
+	BYTE uncompress_rom;
 	BYTE pause;
 	BYTE on_cfg;
 	BYTE pause_frames_drawscreen;

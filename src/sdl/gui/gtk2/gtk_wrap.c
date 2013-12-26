@@ -8,6 +8,7 @@
 #include "gtk_wrap.h"
 #include "glade/apu_channels_glade.h"
 #include "glade/input_configuration_glade.h"
+#include "glade/uncompress_selection_glade.h"
 
 char *_dg_obj_name(const char *fmt, va_list argp);
 
@@ -68,6 +69,9 @@ void dg_create_gtkbuilder(GtkBuilder **builder, int id_glade_h) {
 		case INPUT_DIALOG:
 		case INPUT_STD_PAD_DIALOG:
 			data = input_configuration_glade;
+			break;
+		case UNCOMPRESS_SELECTION_DIALOG:
+			data = uncompress_selection_glade;
 			break;
 	}
 

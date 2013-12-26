@@ -32,6 +32,8 @@
 #include "opengl.h"
 #include "menu/menu.h"
 #include "cfg_input.h"
+#include "uncompress/l7z.h"
+#include "uncompress_selection.h"
 
 #define tl_pressed(type)\
 	emu_pause(TRUE);\
@@ -564,6 +566,9 @@ void gui_print_usage(char *usage) {
 void gui_reset_video(void) {
 	return;
 }
+int gui_uncompress_selection_dialog(void) {
+	return (uncompress_selection_dialog());
+}
 
 double high_resolution_ms(void) {
 	struct timeval time;
@@ -794,7 +799,15 @@ void file_open(void) {
 			GTK_FILE_CHOOSER_ACTION_OPEN, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, GTK_STOCK_OPEN,
 			GTK_RESPONSE_ACCEPT, NULL);
 
-	file_open_filter_add(dialog, "All supported formats", "*.nes;*.NES;*.fds;*.FDS;*.fm2;*.FM2");
+	if (l7z_present() == TRUE) {
+		file_open_filter_add(dialog, "All supported formats",
+		        "*.zip;*.ZIP;*.7z;*.7Z;*.rar;*.RAR;*.nes;*.NES;*.fds;*.FDS;*.fm2;*.FM2");
+		file_open_filter_add(dialog, "Compressed files", "*.zip;*.ZIP;*.7z;*.7Z;*.rar;*.RAR");
+	} else {
+		file_open_filter_add(dialog, "All supported formats",
+		        "*.zip;*.ZIP;*.nes;*.NES;*.fds;*.FDS;*.fm2;*.FM2");
+		file_open_filter_add(dialog, "Compressed files", "*.zip;*.ZIP");
+	}
 	file_open_filter_add(dialog, "Nes rom files", "*.nes;*.NES");
 	file_open_filter_add(dialog, "FDS image files", "*.fds;*.FDS");
 	file_open_filter_add(dialog, "TAS movie files", "*.fm2;*.FM2");
@@ -812,9 +825,11 @@ void file_open(void) {
 	g_timeout_redraw_start();
 
 	if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
+		gtk_widget_hide(dialog);
 		change_rom(gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog)));
 		gui.last_state_path = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(dialog));
 	}
+
 	gtk_widget_destroy(dialog);
 
 	g_timeout_redraw_stop();

@@ -11,10 +11,10 @@
 #define __GUI_BASE__
 #include "gui.h"
 #undef __GUI_BASE__
+#include <commctrl.h>
+#include <richedit.h>
 #include "dinput.h"
 #include "dxerr8.h"
-#include "commctrl.h"
-#include "richedit.h"
 #include "cfg_std_pad.h"
 
 long __stdcall cfg_std_pad_messages(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);

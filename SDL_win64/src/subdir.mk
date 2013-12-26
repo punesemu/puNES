@@ -25,7 +25,8 @@ C_SRCS += \
 ../src/save_slot.c \
 ../src/sha1.c \
 ../src/tas.c \
-../src/timeline.c 
+../src/timeline.c \
+../src/uncompress.c 
 
 OBJS += \
 ./src/apu.o \
@@ -49,7 +50,8 @@ OBJS += \
 ./src/save_slot.o \
 ./src/sha1.o \
 ./src/tas.o \
-./src/timeline.o 
+./src/timeline.o \
+./src/uncompress.o 
 
 C_DEPS += \
 ./src/apu.d \
@@ -73,7 +75,8 @@ C_DEPS += \
 ./src/save_slot.d \
 ./src/sha1.d \
 ./src/tas.d \
-./src/timeline.d 
+./src/timeline.d \
+./src/uncompress.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

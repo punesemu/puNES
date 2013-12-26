@@ -20,6 +20,7 @@
 #undef __GUI_BASE__
 #include "gamegenie.h"
 #include "recent_roms.h"
+#include "uncompress.h"
 
 #if defined MINGW32 || defined MINGW64
 int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine, int iCmdShow) {
@@ -111,6 +112,8 @@ int main(int argc, char **argv) {
 
 	recent_roms_init();
 	recent_roms_parse();
+
+	uncomp_init();
 
 	if (emu_turn_on()) {
 		emu_quit(EXIT_FAILURE);

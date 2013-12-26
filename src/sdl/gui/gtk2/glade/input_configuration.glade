@@ -2,11 +2,6 @@
 <interface>
   <requires lib="gtk+" version="2.24"/>
   <!-- interface-naming-policy project-wide -->
-  <object class="GtkListStore" id="input_ctrl1_liststore"/>
-  <object class="GtkListStore" id="input_ctrl2_liststore"/>
-  <object class="GtkListStore" id="input_ctrl3_liststore"/>
-  <object class="GtkListStore" id="input_ctrl4_liststore"/>
-  <object class="GtkListStore" id="input_ctrl_mode_liststore"/>
   <object class="GtkDialog" id="input_dialog">
     <property name="can_focus">False</property>
     <property name="border_width">5</property>
@@ -126,7 +121,6 @@
                               <object class="GtkComboBox" id="input_ctrl1_combobox">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="model">input_ctrl1_liststore</property>
                               </object>
                               <packing>
                                 <property name="expand">True</property>
@@ -138,7 +132,6 @@
                               <object class="GtkComboBox" id="input_ctrl2_combobox">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="model">input_ctrl2_liststore</property>
                               </object>
                               <packing>
                                 <property name="expand">True</property>
@@ -150,7 +143,6 @@
                               <object class="GtkComboBox" id="input_ctrl3_combobox">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="model">input_ctrl3_liststore</property>
                               </object>
                               <packing>
                                 <property name="expand">True</property>
@@ -162,7 +154,6 @@
                               <object class="GtkComboBox" id="input_ctrl4_combobox">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="model">input_ctrl4_liststore</property>
                               </object>
                               <packing>
                                 <property name="expand">True</property>
@@ -174,7 +165,6 @@
                               <object class="GtkComboBox" id="input_ctrl_mode_combobox">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="model">input_ctrl_mode_liststore</property>
                               </object>
                               <packing>
                                 <property name="expand">True</property>
@@ -404,6 +394,12 @@
       <action-widget response="0">input_ok_button</action-widget>
       <action-widget response="0">input_cancel_button</action-widget>
     </action-widgets>
+  </object>
+  <object class="GtkAdjustment" id="ta_delay_adjustment">
+    <property name="upper">20</property>
+    <property name="value">3</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">1</property>
   </object>
   <object class="GtkDialog" id="standard_pad_dialog">
     <property name="can_focus">False</property>
@@ -2092,12 +2088,6 @@
         <col id="0" translatable="yes">Keyboard</col>
       </row>
     </data>
-  </object>
-  <object class="GtkAdjustment" id="ta_delay_adjustment">
-    <property name="upper">20</property>
-    <property name="value">3</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">1</property>
   </object>
   <object class="GtkAdjustment" id="tb_delay_adjustment">
     <property name="upper">20</property>

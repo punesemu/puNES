@@ -10,6 +10,8 @@ C_SRCS += \
 ../src/mappers/mapper_120.c \
 ../src/mappers/mapper_121.c \
 ../src/mappers/mapper_156.c \
+../src/mappers/mapper_163.c \
+../src/mappers/mapper_164.c \
 ../src/mappers/mapper_176.c \
 ../src/mappers/mapper_178.c \
 ../src/mappers/mapper_182.c \
@@ -43,6 +45,7 @@ C_SRCS += \
 ../src/mappers/mapper_242.c \
 ../src/mappers/mapper_244.c \
 ../src/mappers/mapper_246.c \
+../src/mappers/mapper_249.c \
 ../src/mappers/mapper_37.c \
 ../src/mappers/mapper_44.c \
 ../src/mappers/mapper_45.c \
@@ -60,6 +63,8 @@ C_SRCS += \
 ../src/mappers/mapper_62.c \
 ../src/mappers/mapper_74x138x161.c \
 ../src/mappers/mapper_74x161x161x32.c \
+../src/mappers/mapper_83.c \
+../src/mappers/mapper_90_209_211.c \
 ../src/mappers/mapper_Active.c \
 ../src/mappers/mapper_Agci.c \
 ../src/mappers/mapper_Ave.c \
@@ -115,6 +120,8 @@ OBJS += \
 ./src/mappers/mapper_120.o \
 ./src/mappers/mapper_121.o \
 ./src/mappers/mapper_156.o \
+./src/mappers/mapper_163.o \
+./src/mappers/mapper_164.o \
 ./src/mappers/mapper_176.o \
 ./src/mappers/mapper_178.o \
 ./src/mappers/mapper_182.o \
@@ -148,6 +155,7 @@ OBJS += \
 ./src/mappers/mapper_242.o \
 ./src/mappers/mapper_244.o \
 ./src/mappers/mapper_246.o \
+./src/mappers/mapper_249.o \
 ./src/mappers/mapper_37.o \
 ./src/mappers/mapper_44.o \
 ./src/mappers/mapper_45.o \
@@ -165,6 +173,8 @@ OBJS += \
 ./src/mappers/mapper_62.o \
 ./src/mappers/mapper_74x138x161.o \
 ./src/mappers/mapper_74x161x161x32.o \
+./src/mappers/mapper_83.o \
+./src/mappers/mapper_90_209_211.o \
 ./src/mappers/mapper_Active.o \
 ./src/mappers/mapper_Agci.o \
 ./src/mappers/mapper_Ave.o \
@@ -220,6 +230,8 @@ C_DEPS += \
 ./src/mappers/mapper_120.d \
 ./src/mappers/mapper_121.d \
 ./src/mappers/mapper_156.d \
+./src/mappers/mapper_163.d \
+./src/mappers/mapper_164.d \
 ./src/mappers/mapper_176.d \
 ./src/mappers/mapper_178.d \
 ./src/mappers/mapper_182.d \
@@ -253,6 +265,7 @@ C_DEPS += \
 ./src/mappers/mapper_242.d \
 ./src/mappers/mapper_244.d \
 ./src/mappers/mapper_246.d \
+./src/mappers/mapper_249.d \
 ./src/mappers/mapper_37.d \
 ./src/mappers/mapper_44.d \
 ./src/mappers/mapper_45.d \
@@ -270,6 +283,8 @@ C_DEPS += \
 ./src/mappers/mapper_62.d \
 ./src/mappers/mapper_74x138x161.d \
 ./src/mappers/mapper_74x161x161x32.d \
+./src/mappers/mapper_83.d \
+./src/mappers/mapper_90_209_211.d \
 ./src/mappers/mapper_Active.d \
 ./src/mappers/mapper_Agci.d \
 ./src/mappers/mapper_Ave.d \

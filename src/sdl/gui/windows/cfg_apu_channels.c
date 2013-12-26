@@ -6,9 +6,9 @@
  */
 
 #include "win.h"
+#include <commctrl.h>
 #include "cfg_apu_channels.h"
 #include "cfg_file.h"
-#include "commctrl.h"
 
 long __stdcall apu_channels_wnd_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 void apu_channels_check(HWND hwnd);

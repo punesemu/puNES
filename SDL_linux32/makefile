@@ -40,7 +40,7 @@ main-build: punes32
 punes32: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: Cross GCC Linker'
-	i686-pc-linux-gnu-gcc -L/usr/i686-pc-linux-gnu/usr/lib -export-dynamic -o "punes32" $(OBJS) $(USER_OBJS) $(LIBS)
+	i686-pc-linux-gnu-g++ -L/usr/i686-pc-linux-gnu/usr/lib -L"/home/fhorse/sviluppo/personale/punes/misc/lib/linux32" -export-dynamic -o "punes32" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -50,7 +50,7 @@ clean:
 	-@echo ' '
 
 pre-build:
-	-../src/sdl/gui/gtk2/glade/glade_to_h ../src/sdl/gui/gtk2/glade
+	-/home/fhorse/sviluppo/personale/bin/buildBefore -3
 	-@echo ' '
 
 .PHONY: all clean dependents

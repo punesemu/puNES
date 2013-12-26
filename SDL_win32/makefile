@@ -39,7 +39,7 @@ main-build: punes32.exe
 punes32.exe: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: Cross GCC Linker'
-	i686-mingw32-gcc -Wl,-subsystem,console -o "punes32.exe" $(OBJS) $(USER_OBJS) $(LIBS)
+	i686-mingw32-g++ -L"/home/fhorse/sviluppo/personale/punes/misc/lib/win32" -Wl,-subsystem,console -static-libgcc -static-libstdc++ -o "punes32.exe" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -49,7 +49,7 @@ clean:
 	-@echo ' '
 
 pre-build:
-	-i686-mingw32-windres -DOPENGL -DMINGW32 ../src/sdl/gui/windows/resources.rc src/sdl/gui/windows/resources.o
+	-/home/fhorse/sviluppo/personale/bin/buildBefore -w
 	-@echo ' '
 
 .PHONY: all clean dependents

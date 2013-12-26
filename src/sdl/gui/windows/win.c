@@ -37,6 +37,8 @@
 #include "recent_roms.h"
 #include "cfg_input.h"
 #include "cfg_apu_channels.h"
+#include "uncompress/l7z.h"
+#include "uncompress_selection.h"
 
 #define timer_redraw_start()\
 	SetTimer(hwnd, IDT_TIMER1, 650, (TIMERPROC) time_handler_redraw)
@@ -1373,6 +1375,9 @@ void gui_reset_video(void) {
 
 	ShowWindow(main_win, SW_NORMAL);
 }
+int gui_uncompress_selection_dialog(void) {
+	return (uncompress_selection_dialog(main_win));
+}
 
 /* funzioni interne */
 LRESULT CALLBACK cbt_proc(int code, WPARAM wParam, LPARAM lParam) {
@@ -2189,11 +2194,22 @@ void open_event(void) {
 	// use the contents of szFile to initialize itself.
 	ofn.lpstrFile[0] = '\0';
 	ofn.nMaxFile = sizeof(szFile);
-	ofn.lpstrFilter = "All supported formats\0*.nes;*.NES;*.fds;*.FDS;*.fm2;*.FM2\0"
-			"Nes rom files\0*.nes;*.NES\0"
-			"FDS image files\0*.fds;*.FDS\0"
-			"TAS movie files\0*.fm2;*.FM2\0"
-			"All files\0*.*\0";
+	if (l7z_present() == TRUE) {
+		ofn.lpstrFilter =
+		        "All supported formats\0*.zip;*.ZIP;*.7z;*.7Z;*.rar;*.RAR;*.nes;*.NES;*.fds;*.FDS;*.fm2;*.FM2;\0"
+				"Compressed files\0*.zip;*.ZIP;*.7z;*.7Z;*.rar;*.RAR\0"
+				"Nes rom files\0*.nes;*.NES\0"
+				"FDS image files\0*.fds;*.FDS\0"
+				"TAS movie files\0*.fm2;*.FM2\0"
+				"All files\0*.*\0";
+	} else {
+		ofn.lpstrFilter = "All supported formats\0*.zip;*.ZIP;*.nes;*.NES;*.fds;*.FDS;*.fm2;*.FM2\0"
+				"Compressed files\0*.zip;*.ZIP\0"
+				"Nes rom files\0*.nes;*.NES\0"
+				"FDS image files\0*.fds;*.FDS\0"
+				"TAS movie files\0*.fm2;*.FM2\0"
+				"All files\0*.*\0";
+	}
 	ofn.nFilterIndex = 1;
 	ofn.lpstrFileTitle = NULL;
 	ofn.nMaxFileTitle = 0;

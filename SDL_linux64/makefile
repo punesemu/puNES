@@ -31,13 +31,16 @@ endif
 # Add inputs and outputs from these tool invocations to the build variables 
 
 # All Target
-all: punes64
+all: pre-build main-build
+
+# Main-build Target
+main-build: punes64
 
 # Tool invocations
 punes64: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: Cross GCC Linker'
-	x86_64-glibc2.12.2-linux-gnu-gcc -L/usr/x86_64-glibc2.12.2-linux-gnu/usr/lib -L/usr/x86_64-glibc2.12.2-linux-gnu/usr/lib64 -o "punes64" $(OBJS) $(USER_OBJS) $(LIBS)
+	x86_64-glibc2.12.2-linux-gnu-g++ -L/usr/x86_64-glibc2.12.2-linux-gnu/usr/lib -L/usr/x86_64-glibc2.12.2-linux-gnu/usr/lib64 -L"/home/fhorse/sviluppo/personale/punes/misc/lib/linux64" -o "punes64" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -46,7 +49,11 @@ clean:
 	-$(RM) $(OBJS)$(C_DEPS)$(EXECUTABLES) punes64
 	-@echo ' '
 
+pre-build:
+	-/home/fhorse/sviluppo/personale/bin/buildBefore -6
+	-@echo ' '
+
 .PHONY: all clean dependents
-.SECONDARY:
+.SECONDARY: main-build pre-build
 
 -include ../makefile.targets
