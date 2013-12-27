@@ -50,9 +50,15 @@ int uncompress_selection_dialog(void) {
 	g_signal_connect(G_OBJECT(uncompress_selection.window), "destroy",
 	        G_CALLBACK(uncompress_selection_window_destroy), NULL);
 
-	emu_pause(TRUE);
-	/* ridisegno lo screen sdl ogni tot millisecondi */
-	g_timeout_redraw_start();
+	/*
+	 * se l'archivio compresso e' caricato da riga di comando,
+	 * la gui non e' ancora stata avviata.
+	 */
+	if (gui.start == TRUE) {
+		emu_pause(TRUE);
+		/* ridisegno lo screen sdl ogni tot millisecondi */
+		g_timeout_redraw_start();
+	}
 
 	gtk_widget_show(uncompress_selection.window);
 
@@ -138,6 +144,8 @@ void uncompress_selection_window_destroy(GtkWidget *widget, gpointer user_data) 
 
 	uncompress_selection.on_selec = FALSE;
 
-	g_timeout_redraw_stop();
-	emu_pause(FALSE);
+	if (gui.start == TRUE) {
+		g_timeout_redraw_stop();
+		emu_pause(FALSE);
+	}
 }
