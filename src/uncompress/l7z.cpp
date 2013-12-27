@@ -1,5 +1,5 @@
 /*
- *  main.c
+ *  l7z.cpp
  *
  *   Created on: 22/dic/2013
  *       Author: fhorse
@@ -280,6 +280,7 @@ BYTE l7z_file_from_archive(_uncomp_file_data *file) {
 		return (EXIT_ERROR);
 	}
 
+	strncpy(uncomp.compress_archive, info.rom_file, sizeof(uncomp.compress_archive));
 	strncpy(info.rom_file, uncomp.uncompress_file, sizeof(info.rom_file));
 	info.uncompress_rom = TRUE;
 

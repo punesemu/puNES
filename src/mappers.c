@@ -8,12 +8,14 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <libgen.h>
 #include "mappers.h"
 #include "mem_map.h"
 #include "irqA12.h"
 #include "irql2f.h"
 #include "tas.h"
 #include "text.h"
+#include "uncompress.h"
 
 BYTE map_init(WORD mapper_type) {
 	BYTE i;
@@ -622,7 +624,14 @@ void map_quit(void) {
 		FILE *fp;
 
 		/* copio il nome del file nella variabile */
-		strcpy(prg_ram_file, info.rom_file);
+		if (info.uncompress_rom == TRUE) {
+			strcpy(prg_ram_file, uncomp.compress_archive);
+			dirname(prg_ram_file);
+			strcat(prg_ram_file, "/");
+			strcat(prg_ram_file, basename(uncomp.uncompress_file));
+		} else {
+			strcpy(prg_ram_file, info.rom_file);
+		}
 		/* rintraccio l'ultimo '.' nel nome */
 		last_dot = strrchr(prg_ram_file, '.');
 		/* elimino l'estensione */
@@ -727,7 +736,15 @@ void map_prg_ram_init(void) {
 			FILE *fp;
 
 			/* copio il nome del file nella variabile */
-			strcpy(prg_ram_file, info.rom_file);
+			if (info.uncompress_rom == TRUE) {
+				strcpy(prg_ram_file, uncomp.compress_archive);
+				dirname(prg_ram_file);
+				strcat(prg_ram_file, "/");
+				strcat(prg_ram_file, basename(uncomp.uncompress_file));
+			} else {
+				strncpy(prg_ram_file, info.rom_file, sizeof(prg_ram_file));
+			}
+
 			/* rintraccio l'ultimo '.' nel nome */
 			last_dot = strrchr(prg_ram_file, '.');
 			/* elimino l'estensione */
@@ -736,7 +753,6 @@ void map_prg_ram_init(void) {
 			strcat(prg_ram_file, ".prb");
 			/* provo ad aprire il file */
 			fp = fopen(prg_ram_file, "rb");
-
 			if (extcl_battery_io) {
 				extcl_battery_io(RD_BAT, fp);
 			} else {

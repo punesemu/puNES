@@ -149,6 +149,7 @@ BYTE uncomp_zip_file_from_archive(_uncomp_file_data *file) {
 	        info.base_folder, basename(uncomp.buffer));
 
 	if (mz_zip_reader_extract_to_file(&zip_archive, file->num, uncomp.uncompress_file, 0)) {
+		strncpy(uncomp.compress_archive, info.rom_file, sizeof(uncomp.compress_archive));
 		strncpy(info.rom_file, uncomp.uncompress_file, sizeof(info.rom_file));
 		info.uncompress_rom = TRUE;
 	} else {

@@ -32,13 +32,14 @@ typedef struct {
 
 static const _format_supported format_supported[] = {
 	{ ".nes", FMT_NES },
-	{ ".fds", FMT_FDS },
-	{ ".fm2", FMT_FM2 }
+	{ ".fds", FMT_FDS }
+	//{ ".fm2", FMT_FM2 }
 };
 
 struct _uncomp {
 	int files_founded;
 	_uncomp_file_data file[100];
+	char compress_archive[1024];
 	char uncompress_file[1024];
 	char buffer[1024];
 } uncomp;

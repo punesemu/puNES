@@ -800,9 +800,15 @@ void file_open(void) {
 			GTK_RESPONSE_ACCEPT, NULL);
 
 	if (l7z_present() == TRUE) {
-		file_open_filter_add(dialog, "All supported formats",
-		        "*.zip;*.ZIP;*.7z;*.7Z;*.rar;*.RAR;*.nes;*.NES;*.fds;*.FDS;*.fm2;*.FM2");
-		file_open_filter_add(dialog, "Compressed files", "*.zip;*.ZIP;*.7z;*.7Z;*.rar;*.RAR");
+		if ((l7z_control_ext("rar") == EXIT_OK)) {
+			file_open_filter_add(dialog, "All supported formats",
+			        "*.zip;*.ZIP;*.7z;*.7Z;*.rar;*.RAR;*.nes;*.NES;*.fds;*.FDS;*.fm2;*.FM2");
+			file_open_filter_add(dialog, "Compressed files", "*.zip;*.ZIP;*.7z;*.7Z;*.rar;*.RAR");
+		} else {
+			file_open_filter_add(dialog, "All supported formats",
+			        "*.zip;*.ZIP;*.7z;*.7Z;*.nes;*.NES;*.fds;*.FDS;*.fm2;*.FM2");
+			file_open_filter_add(dialog, "Compressed files", "*.zip;*.ZIP;*.7z;*.7Z");
+		}
 	} else {
 		file_open_filter_add(dialog, "All supported formats",
 		        "*.zip;*.ZIP;*.nes;*.NES;*.fds;*.FDS;*.fm2;*.FM2");
