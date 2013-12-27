@@ -1298,7 +1298,13 @@ long __stdcall main_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 					if (strncmp(recent_roms_list.current, recent_roms_list.item[index],
 					        RECENT_ROMS_LINE) != 0) {
 						change_rom(recent_roms_list.item[index]);
+					} else {
+						/* se l'archivio e' compresso e contiene piu' di una rom allora lo carico */
+						if ((info.uncompress_rom == TRUE) && (uncomp.files_founded > 1)) {
+							change_rom(recent_roms_list.item[index]);
+						}
 					}
+
 					emu_pause(FALSE);
 					break;
 				}

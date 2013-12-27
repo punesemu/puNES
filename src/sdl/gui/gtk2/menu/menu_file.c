@@ -9,6 +9,7 @@
 #include <string.h>
 #include "menu_file.h"
 #include "recent_roms.h"
+#include "uncompress.h"
 
 #ifdef __SUNPRO_C
 #pragma align 4 (open_icon_inline)
@@ -444,6 +445,11 @@ void menu_file_recent_roms_activate(gint index) {
 	if (strncmp(recent_roms_list.current, recent_roms_list.item[index],
 	        RECENT_ROMS_LINE) != 0) {
 		change_rom(recent_roms_list.item[index]);
+	} else {
+		/* se l'archivio e' compresso e contiene piu' di una rom allora lo carico */
+		if ((info.uncompress_rom == TRUE) && (uncomp.files_founded > 1)) {
+			change_rom(recent_roms_list.item[index]);
+		}
 	}
 
 	emu_pause(FALSE);
