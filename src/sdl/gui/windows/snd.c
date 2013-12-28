@@ -108,7 +108,7 @@ BYTE snd_start(void) {
 		snd.buffer.count = sample_latency / snd.buffer.size;
  	}
 
-	if (CoInitializeEx(NULL, COINIT_MULTITHREADED) != S_OK) {
+	if (CoInitializeEx(NULL, COINIT_APARTMENTTHREADED) != S_OK) {
 		MessageBox(NULL,
 			"ATTENTION: Unable to initialize COM interface.",
 			"Error!",

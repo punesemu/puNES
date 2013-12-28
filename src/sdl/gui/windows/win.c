@@ -2202,14 +2202,15 @@ void open_event(void) {
 	ofn.nMaxFile = sizeof(szFile);
 	if (l7z_present() == TRUE) {
 		ofn.lpstrFilter =
-		        "All supported formats\0*.zip;*.ZIP;*.7z;*.7Z;*.rar;*.RAR;*.nes;*.NES;*.fds;*.FDS;*.fm2;*.FM2;\0"
+				"All supported formats\0*.zip;*.ZIP;*.7z;*.7Z;*.rar;*.RAR;*.nes;*.NES;*.fds;*.FDS;*.fm2;*.FM2;\0"
 				"Compressed files\0*.zip;*.ZIP;*.7z;*.7Z;*.rar;*.RAR\0"
 				"Nes rom files\0*.nes;*.NES\0"
 				"FDS image files\0*.fds;*.FDS\0"
 				"TAS movie files\0*.fm2;*.FM2\0"
 				"All files\0*.*\0";
 	} else {
-		ofn.lpstrFilter = "All supported formats\0*.zip;*.ZIP;*.nes;*.NES;*.fds;*.FDS;*.fm2;*.FM2\0"
+		ofn.lpstrFilter =
+				"All supported formats\0*.zip;*.ZIP;*.nes;*.NES;*.fds;*.FDS;*.fm2;*.FM2\0"
 				"Compressed files\0*.zip;*.ZIP\0"
 				"Nes rom files\0*.nes;*.NES\0"
 				"FDS image files\0*.fds;*.FDS\0"
