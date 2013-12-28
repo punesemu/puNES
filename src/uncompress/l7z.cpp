@@ -233,13 +233,13 @@ BYTE l7z_control_in_archive(void) {
 		//       archive_item->GetFullPath().c_str(), archive_item->IsDir());
 
 		for (b = 0; b < LENGTH(format_supported); b++) {
-			char buf[50];
 			char *ext;
 
-			memset(&buf, 0x00, sizeof(buf));
-			wcstombs((char *) &buf, archive_item->GetFullPath().c_str(), sizeof(buf));
+			memset(&uncomp.buffer, 0x00, sizeof(uncomp.buffer));
+			wcstombs((char *) &uncomp.buffer, archive_item->GetFullPath().c_str(),
+			        sizeof(uncomp.buffer));
 
-			ext = strrchr(buf, '.');
+			ext = strrchr(uncomp.buffer, '.');
 
 			if ((ext != NULL) && (strcasecmp(ext, format_supported[b].ext) == 0)) {
 				uncomp.file[uncomp.files_founded].num = archive_item->GetArchiveIndex();
