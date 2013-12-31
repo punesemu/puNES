@@ -10,7 +10,7 @@
 
 #include "common.h"
 
-enum  { UNK_HORIZONTAL, UNK_VERTICAL };
+enum { UNK_HORIZONTAL, UNK_VERTICAL };
 
 void map_init_0(void);
 void extcl_cpu_wr_mem_0(WORD address, BYTE value);

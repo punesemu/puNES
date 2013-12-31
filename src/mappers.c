@@ -123,6 +123,9 @@ BYTE map_init(WORD mapper_type) {
 		case 26:
 			map_init_VRC6(VRC6B);
 			break;
+		case 28:
+			map_init_28();
+			break;
 		case 32:
 			map_init_Irem(G101);
 			break;

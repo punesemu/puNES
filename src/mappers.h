@@ -117,6 +117,7 @@
 #include "mappers/mapper_249.h"
 #include "mappers/mapper_90_209_211.h"
 #include "mappers/mapper_83.h"
+#include "mappers/mapper_28.h"
 
 #define _control_bank(val, max)\
 	if (val > max) {\
