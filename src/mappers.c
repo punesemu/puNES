@@ -144,6 +144,9 @@ BYTE map_init(WORD mapper_type) {
 		case 41:
 			map_init_Caltron();
 			break;
+		case 42:
+			map_init_42();
+			break;
 		case 44:
 			map_init_44();
 			break;
