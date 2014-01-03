@@ -279,6 +279,9 @@ BYTE map_init(WORD mapper_type) {
 		case 90:
 			map_init_90_209_211(MAP90);
 			break;
+		case 91:
+			map_init_91();
+			break;
 		case 92:
 			map_init_Jaleco(JF19);
 			break;

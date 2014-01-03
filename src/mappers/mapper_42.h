@@ -13,7 +13,7 @@
 struct _m42 {
 	WORD rom_map_to;
 	BYTE *prg_8k_6000;
-	struct _irq {
+	struct _m42_irq {
 		BYTE active;
 		uint32_t count;
 	} irq;
