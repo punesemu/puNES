@@ -679,6 +679,7 @@ static void cpu_wr_mem(WORD address, BYTE value) {
 			 * REX (DBZ)
 			 * 163
 			 * 164
+			 * 28
 			 */
 			extcl_cpu_wr_mem(address, value);
 		}
