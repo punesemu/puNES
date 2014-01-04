@@ -8,7 +8,9 @@
 #include <string.h>
 #include "mappers.h"
 #include "mem_map.h"
-#include "irqA12.h"
+#include "save_slot.h"
+#include "cpu.h"
+#include "ppu.h"
 
 WORD prg_rom_8k_max, chr_rom_2k_max;
 
@@ -17,19 +19,12 @@ void map_init_91(void) {
 	chr_rom_2k_max = (info.chr_rom_1k_count >> 1) - 1;
 
 	EXTCL_CPU_WR_MEM(91);
-	EXTCL_CPU_EVERY_CYCLE(MMC3);
-	EXTCL_PPU_000_TO_34X(MMC3);
-	EXTCL_PPU_000_TO_255(MMC3);
-	EXTCL_PPU_256_TO_319(MMC3);
-	EXTCL_PPU_320_TO_34X(MMC3);
-	EXTCL_UPDATE_R2006(MMC3);
+	EXTCL_SAVE_MAPPER(91);
+	EXTCL_PPU_256_TO_319(91);
+	mapper.internal_struct[0] = (BYTE *) &m91;
+	mapper.internal_struct_size[0] = sizeof(m91);
 
-	if (info.reset >= HARD) {
-		memset(&irqA12, 0x00, sizeof(irqA12));
-	}
-
-	irqA12.present = TRUE;
-	irqA12_delay = 1;
+	memset(&m91, 0x00, sizeof(m91));
 
 	info.mapper_extend_wr = TRUE;
 }
@@ -75,13 +70,32 @@ void extcl_cpu_wr_mem_91(WORD address, BYTE value) {
 				map_prg_rom_8k_update();
 				return;
 			case 2:
-				extcl_cpu_wr_mem_MMC3(0xE000, value);
+				m91.irq.active = 0;
+				m91.irq.count = 0;
+				irq.high &= ~EXT_IRQ;
 				return;
 			case 3:
-				extcl_cpu_wr_mem_MMC3(0xC000, 0x07);
-				extcl_cpu_wr_mem_MMC3(0xC001, value);
-				extcl_cpu_wr_mem_MMC3(0xE001, value);
+				m91.irq.active = 1;
+				irq.high &= ~EXT_IRQ;
 				return;
+		}
+	}
+}
+BYTE extcl_save_mapper_91(BYTE mode, BYTE slot, FILE *fp) {
+	save_slot_ele(mode, slot, m91.irq.active);
+	save_slot_ele(mode, slot, m91.irq.count);
+
+	return (EXIT_OK);
+}
+void extcl_ppu_256_to_319_91(void) {
+	if (ppu.frame_x != 319) {
+		return;
+	}
+
+	if (m91.irq.active && (m91.irq.count < 8)) {
+		m91.irq.count++;
+		if (m91.irq.count >= 8) {
+			irq.high |= EXT_IRQ;
 		}
 	}
 }
