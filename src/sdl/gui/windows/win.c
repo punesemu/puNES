@@ -2295,7 +2295,8 @@ void set_mode(BYTE mode) {
 			 * non devo fare nessun reset.
 			 */
 			if ((cfg->mode == info.machine_db)
-			        || ((cfg->mode == NTSC) && ((info.machine_db < NTSC) || (info.machine_db > DENDY)))) {
+			        || ((cfg->mode == NTSC)
+			                && ((info.machine_db < NTSC) || (info.machine_db > DENDY)))) {
 				reset = FALSE;
 			}
 			cfg->mode = AUTO;
@@ -2305,7 +2306,7 @@ void set_mode(BYTE mode) {
 	gui_update();
 
 	if (reset) {
-		text_add_line_info(1, "switched to [green]%s", param_fps[machine.type].lname);
+		text_add_line_info(1, "switched to [green]%s", param_mode[machine.type].lname);
 		make_reset(CHANGE_MODE);
 	}
 }
