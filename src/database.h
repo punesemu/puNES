@@ -3124,6 +3124,8 @@ static const _dbelement dblist[] = {
 	{"bb4142a8ef1c70a7d7d1af32e4e83ab2fb0025a0", 87, DEFAULT, DEFAULT, DEFAULT},
 	/* Urusei Yatsura - Lum no Wedding Bell (J) [!].nes */
 	{"1a83157cf727a5e707a54bef0d6bb213206f819d", 87, DEFAULT, DEFAULT, DEFAULT},
+	/* Urusei Yatsura - Lum no Wedding Bell (J) [a1][T+Fre].nes */
+	{"30493270d26fff020fa68fb764334300ab38d868", 87, DEFAULT, DEFAULT, DEFAULT},
 
 /* ------------------------------------- Namco 3433 --------------------------------------- */
 	/* Dragon Spirit - Aratanaru Densetsu (J) [o1].nes */
