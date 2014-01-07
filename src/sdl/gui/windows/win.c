@@ -617,16 +617,6 @@ void gui_event(void) {
 			}
 		}
 	}
-
-	{
-		BYTE i;
-
-		for (i = PORT1; i < PORT_MAX; i++) {
-			if (input_add_event[i]) {
-				input_add_event[i](i);
-			}
-		}
-	}
 }
 HWND gui_emu_frame_id(void) {
 	return (sdl_frame);
