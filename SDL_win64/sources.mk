@@ -19,6 +19,7 @@ src/sdl/openGL \
 src/sdl/gui/windows \
 src/sdl/glew \
 src/mappers \
+src/l7zip \
 src/filters/video \
 src/filters/audio \
 

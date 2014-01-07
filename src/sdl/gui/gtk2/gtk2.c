@@ -32,7 +32,7 @@
 #include "opengl.h"
 #include "menu/menu.h"
 #include "cfg_input.h"
-#include "uncompress/l7z.h"
+#include "l7zip/l7z.h"
 #include "uncompress_selection.h"
 
 #define tl_pressed(type)\

@@ -20,6 +20,7 @@ src/sdl/gui/gtk2 \
 src/sdl/gui/gtk2/menu \
 src/sdl/glew \
 src/mappers \
+src/l7zip \
 src/filters/video \
 src/filters/audio \
 

@@ -7,7 +7,7 @@
 
 #include <libgen.h>
 #include "uncompress.h"
-#include "uncompress/l7z.h"
+#include "l7zip/l7z.h"
 #define __GUI_BASE__
 #define __GUI_UNCOMPRESS_SELECTION__
 #include "gui.h"
@@ -16,7 +16,7 @@
 
 #define MINIZ_NO_ARCHIVE_WRITING_APIS
 #define MINIZ_NO_TIME
-#include "uncompress/miniz.c"
+#include "miniz.h"
 #undef MINIZ_NO_TIME
 #undef MINIZ_NO_ARCHIVE_WRITING_APIS
 

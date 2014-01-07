@@ -13,6 +13,7 @@ RM := rm -rf
 -include src/sdl/glew/subdir.mk
 -include src/sdl/subdir.mk
 -include src/mappers/subdir.mk
+-include src/l7zip/subdir.mk
 -include src/filters/video/subdir.mk
 -include src/filters/audio/subdir.mk
 -include src/subdir.mk

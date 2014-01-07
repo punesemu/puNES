@@ -37,7 +37,7 @@
 #include "recent_roms.h"
 #include "cfg_input.h"
 #include "cfg_apu_channels.h"
-#include "uncompress/l7z.h"
+#include "l7zip/l7z.h"
 #include "uncompress_selection.h"
 
 #define timer_redraw_start()\
