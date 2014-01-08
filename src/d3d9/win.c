@@ -1801,7 +1801,7 @@ void set_mode(BYTE mode) {
 	gui_update();
 
 	if (reset) {
-		//text_add_line_info(1, "switched to [green]%s", param_fps[machine.type].lname);
+		//text_add_line_info(1, "switched to [green]%s", param_mode[machine.type].lname);
 		make_reset(CHANGE_MODE);
 	}
 }
