@@ -400,6 +400,10 @@ BYTE map_init(WORD mapper_type) {
 		case 152:
 			map_init_74x161x161x32(IC74X161X161X32B);
 			break;
+		case 153:
+			/* Famicom Jump II - Saikyou no 7 Nin (J) [!].nes */
+			map_init_Bandai(FCGx);
+			break;
 		case 154:
 			map_init_Namco(N3453);
 			break;

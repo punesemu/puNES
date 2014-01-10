@@ -2606,10 +2606,6 @@ static const _dbelement dblist[] = {
 	{"3e41e7244176577e37b18949fd790623ace9d579", 16, E24C02, DEFAULT, DEFAULT},
 	/* Dragon Ball Z III - Ressen Jinzou Ningen (J) [T+Spa70%_PaladinKnights].nes */
 	{"cf0ae54dacc2a70bf627e32d1f48994685ca68b5", 16, E24C02, DEFAULT, DEFAULT},
-	/* Famicom Jump II - Saikyou no 7 Nin (J) [b1].nes */
-	{"7348a4530054205925f3182aa5f12dd4d8a19410", 16, FCGx, FAMICOMJUMPII, DEFAULT},
-	/* Famicom Jump II - Saikyou no 7 Nin (J) [o1].nes */
-	{"1d7417d31e19b590afceb6a8a6e7b9cab9f9b475", 16, FCGx, FAMICOMJUMPII, DEFAULT},
 	/* Famicom Jump - Eiyuu Retsuden (J) [f1].nes */
 	{"fa9e8062a38a115bd9b2e9fe8fda2badf4177762", 16, FCGx, DEFAULT, DEFAULT},
 	/* Famicom Jump - Eiyuu Retsuden (J) [!].nes */
@@ -3322,6 +3318,12 @@ static const _dbelement dblist[] = {
 	{"721f484d52221e96ff89c1eaf171fdc7d938a97e", 152, DEFAULT, DEFAULT, DEFAULT},
 	/* Saint Seiya - Ougon Densetsu (J) [!].nes */
 	{"1ca2ee893fe00c942822e00dbdc3d0093380a5ba", 152, DEFAULT, DEFAULT, DEFAULT},
+
+/* ----------------------------------------- 153 ------------------------------------------ */
+	/* Famicom Jump II - Saikyou no 7 Nin (J) [b1].nes */
+	{"7348a4530054205925f3182aa5f12dd4d8a19410", 153, FCGx, FAMICOMJUMPII, DEFAULT},
+	/* Famicom Jump II - Saikyou no 7 Nin (J) [o1].nes */
+	{"1d7417d31e19b590afceb6a8a6e7b9cab9f9b475", 153, FCGx, FAMICOMJUMPII, DEFAULT},
 
 /* ----------------------------------------- 156 ------------------------------------------ */
 	/* Buzz and Waldog (Prototype) [!].nes */
