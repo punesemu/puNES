@@ -148,7 +148,7 @@ void map_init_Bandai(BYTE model) {
 	}
 
 	switch (info.id) {
-		case FAMICONJUMPII:
+		case FAMICOMJUMPII:
 			info.prg_ram_plus_8k_count = 1;
 			info.prg_ram_bat_banks = 1;
 			break;
@@ -282,7 +282,9 @@ void extcl_cpu_wr_mem_Bandai_FCGX(WORD address, BYTE value) {
 	}
 }
 BYTE extcl_cpu_rd_mem_Bandai_FCGX(WORD address, BYTE openbus, BYTE before) {
-	if (!FCGX.e0.size || (address < 0x6000)) { return (openbus); }
+	if (!FCGX.e0.size || (address < 0x6000)) {
+		return (openbus);
+	}
 
 	if (address & 0x0100) {
 		BYTE value = FCGX.e0.output;
@@ -311,7 +313,7 @@ BYTE extcl_save_mapper_Bandai_FCGX(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 void extcl_battery_io_Bandai_FCGX(BYTE mode, FILE *fp) {
-	if (!fp) {
+	if ((mode == WR_BAT) && !fp) {
 		return;
 	}
 
@@ -343,6 +345,16 @@ void extcl_battery_io_Bandai_FCGX(BYTE mode, FILE *fp) {
 			mapper_wr_battery_default();
 		} else {
 			mapper_rd_battery_default();
+			/*
+			 * ho notato che se quando avvio per la prima volta
+			 * "Famicom Jump II - Saikyou no 7 Nin (J) [!].nes", questa zona di memoria
+			 * non e' valorizzata almeno ad uno, il gioco va in loop. Con un reset (soft
+			 * o hard non ha importanza) il gioco inizia a funzionare perche' questa
+			 * locazione di memoria e' stata nel frattempo valorizzata dal gioco stesso.
+			 */
+			if (!fp && (info.id == FAMICOMJUMPII)) {
+				prg.ram_battery[0xBBC] = 0x01;
+			}
 		}
 	}
 }

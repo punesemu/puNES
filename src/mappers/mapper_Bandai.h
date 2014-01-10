@@ -16,7 +16,7 @@ enum {
 	E24C01 = 4,
 	E24C02 = 5,
 	DATACH = 6,
-	FAMICONJUMPII = 100
+	FAMICOMJUMPII = 100
 };
 
 typedef struct {

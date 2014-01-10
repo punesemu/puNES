@@ -2607,9 +2607,9 @@ static const _dbelement dblist[] = {
 	/* Dragon Ball Z III - Ressen Jinzou Ningen (J) [T+Spa70%_PaladinKnights].nes */
 	{"cf0ae54dacc2a70bf627e32d1f48994685ca68b5", 16, E24C02, DEFAULT, DEFAULT},
 	/* Famicom Jump II - Saikyou no 7 Nin (J) [b1].nes */
-	{"7348a4530054205925f3182aa5f12dd4d8a19410", 16, FCGx, FAMICONJUMPII, DEFAULT},
+	{"7348a4530054205925f3182aa5f12dd4d8a19410", 16, FCGx, FAMICOMJUMPII, DEFAULT},
 	/* Famicom Jump II - Saikyou no 7 Nin (J) [o1].nes */
-	{"1d7417d31e19b590afceb6a8a6e7b9cab9f9b475", 16, FCGx, FAMICONJUMPII, DEFAULT},
+	{"1d7417d31e19b590afceb6a8a6e7b9cab9f9b475", 16, FCGx, FAMICOMJUMPII, DEFAULT},
 	/* Famicom Jump - Eiyuu Retsuden (J) [f1].nes */
 	{"fa9e8062a38a115bd9b2e9fe8fda2badf4177762", 16, FCGx, DEFAULT, DEFAULT},
 	/* Famicom Jump - Eiyuu Retsuden (J) [!].nes */
