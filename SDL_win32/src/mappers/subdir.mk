@@ -5,6 +5,7 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
 ../src/mappers/mapper_0.c \
+../src/mappers/mapper_105.c \
 ../src/mappers/mapper_114.c \
 ../src/mappers/mapper_116.c \
 ../src/mappers/mapper_120.c \
@@ -118,6 +119,7 @@ C_SRCS += \
 
 OBJS += \
 ./src/mappers/mapper_0.o \
+./src/mappers/mapper_105.o \
 ./src/mappers/mapper_114.o \
 ./src/mappers/mapper_116.o \
 ./src/mappers/mapper_120.o \
@@ -231,6 +233,7 @@ OBJS += \
 
 C_DEPS += \
 ./src/mappers/mapper_0.d \
+./src/mappers/mapper_105.d \
 ./src/mappers/mapper_114.d \
 ./src/mappers/mapper_116.d \
 ./src/mappers/mapper_120.d \

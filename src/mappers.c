@@ -303,6 +303,9 @@ BYTE map_init(WORD mapper_type) {
 		case 99:
 			map_init_Vs();
 			break;
+		case 105:
+			map_init_105();
+			break;
 		case 107:
 			map_init_Magic();
 			break;

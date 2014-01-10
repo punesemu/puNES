@@ -11,7 +11,7 @@
 #include <stdio.h>
 #include "common.h"
 
-enum { SNROM = 2, SOROM, SUROM, SXROM };
+enum MMC1_types { SNROM = 2, SOROM, SUROM, SXROM };
 
 struct _mmc1 {
 	BYTE reg;

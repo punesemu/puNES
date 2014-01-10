@@ -17,7 +17,7 @@ static void INLINE swap_prg_rom_MMC1(void);
 static void INLINE swap_chr0_MMC1(void);
 static void INLINE swap_chr1_MMC1(void);
 
-enum { CTRL, CHR0, CHR1, PRG0 };
+enum MMC1_regs { CTRL, CHR0, CHR1, PRG0 };
 
 #define chr_reg(reg)\
 	value = reg;\
