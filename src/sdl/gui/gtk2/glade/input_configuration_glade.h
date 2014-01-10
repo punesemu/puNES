@@ -5,7 +5,7 @@
 const gchar *input_configuration_glade=
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
 "<interface>"
-"  <requires lib=\"gtk+\" version=\"2.24\"/>"
+"  <requires lib=\"gtk+\" version=\"2.18\"/>"
 "  <!-- interface-naming-policy project-wide -->"
 "  <object class=\"GtkDialog\" id=\"input_dialog\">"
 "    <property name=\"can_focus\">False</property>"

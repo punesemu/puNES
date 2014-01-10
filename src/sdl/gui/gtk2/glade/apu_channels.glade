@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <requires lib="gtk+" version="2.24"/>
+  <requires lib="gtk+" version="2.18"/>
   <!-- interface-naming-policy project-wide -->
-  <object class="GtkAdjustment" id="apu_channels_dmc_adjustment">
-    <property name="upper">1</property>
-    <property name="step_increment">0.050000000000000003</property>
-    <property name="page_increment">1</property>
-  </object>
   <object class="GtkDialog" id="apu_channels_dialog">
     <property name="can_focus">False</property>
     <property name="border_width">5</property>
@@ -57,7 +52,7 @@
                           <packing>
                             <property name="left_attach">1</property>
                             <property name="right_attach">2</property>
-                            <property name="x_options"></property>
+                            <property name="x_options"/>
                           </packing>
                         </child>
                         <child>
@@ -97,7 +92,6 @@
                         </child>
                         <child>
                           <object class="GtkCheckButton" id="apu_channels_square1_checkbutton">
-                            <property name="use_action_appearance">False</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">False</property>
@@ -108,7 +102,7 @@
                             <property name="right_attach">2</property>
                             <property name="top_attach">2</property>
                             <property name="bottom_attach">3</property>
-                            <property name="x_options"></property>
+                            <property name="x_options"/>
                           </packing>
                         </child>
                         <child>
@@ -153,7 +147,6 @@
                         </child>
                         <child>
                           <object class="GtkCheckButton" id="apu_channels_square2_checkbutton">
-                            <property name="use_action_appearance">False</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">False</property>
@@ -164,7 +157,7 @@
                             <property name="right_attach">2</property>
                             <property name="top_attach">3</property>
                             <property name="bottom_attach">4</property>
-                            <property name="x_options"></property>
+                            <property name="x_options"/>
                           </packing>
                         </child>
                         <child>
@@ -209,7 +202,6 @@
                         </child>
                         <child>
                           <object class="GtkCheckButton" id="apu_channels_triangle_checkbutton">
-                            <property name="use_action_appearance">False</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">False</property>
@@ -220,7 +212,7 @@
                             <property name="right_attach">2</property>
                             <property name="top_attach">4</property>
                             <property name="bottom_attach">5</property>
-                            <property name="x_options"></property>
+                            <property name="x_options"/>
                           </packing>
                         </child>
                         <child>
@@ -265,7 +257,6 @@
                         </child>
                         <child>
                           <object class="GtkCheckButton" id="apu_channels_noise_checkbutton">
-                            <property name="use_action_appearance">False</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">False</property>
@@ -276,7 +267,7 @@
                             <property name="right_attach">2</property>
                             <property name="top_attach">5</property>
                             <property name="bottom_attach">6</property>
-                            <property name="x_options"></property>
+                            <property name="x_options"/>
                           </packing>
                         </child>
                         <child>
@@ -321,7 +312,6 @@
                         </child>
                         <child>
                           <object class="GtkCheckButton" id="apu_channels_dmc_checkbutton">
-                            <property name="use_action_appearance">False</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">False</property>
@@ -332,7 +322,7 @@
                             <property name="right_attach">2</property>
                             <property name="top_attach">6</property>
                             <property name="bottom_attach">7</property>
-                            <property name="x_options"></property>
+                            <property name="x_options"/>
                           </packing>
                         </child>
                         <child>
@@ -377,7 +367,6 @@
                         </child>
                         <child>
                           <object class="GtkCheckButton" id="apu_channels_extra_checkbutton">
-                            <property name="use_action_appearance">False</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">False</property>
@@ -388,7 +377,7 @@
                             <property name="right_attach">2</property>
                             <property name="top_attach">7</property>
                             <property name="bottom_attach">8</property>
-                            <property name="x_options"></property>
+                            <property name="x_options"/>
                           </packing>
                         </child>
                         <child>
@@ -499,7 +488,6 @@
                         <child>
                           <object class="GtkButton" id="apu_channels_active_all_button">
                             <property name="label" translatable="yes">Active all</property>
-                            <property name="use_action_appearance">False</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
@@ -513,7 +501,6 @@
                         <child>
                           <object class="GtkButton" id="apu_channels_disable_all_button">
                             <property name="label" translatable="yes">Disable all</property>
-                            <property name="use_action_appearance">False</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
@@ -527,7 +514,6 @@
                         <child>
                           <object class="GtkButton" id="apu_channels_defaults_button">
                             <property name="label" translatable="yes">Defaults</property>
-                            <property name="use_action_appearance">False</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
@@ -573,7 +559,6 @@
             <child>
               <object class="GtkButton" id="apu_channels_ok_button">
                 <property name="label">OK</property>
-                <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
@@ -587,7 +572,6 @@
             <child>
               <object class="GtkButton" id="apu_channels_cancel_button">
                 <property name="label">Cancel</property>
-                <property name="use_action_appearance">False</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
@@ -612,6 +596,11 @@
       <action-widget response="0">apu_channels_ok_button</action-widget>
       <action-widget response="0">apu_channels_cancel_button</action-widget>
     </action-widgets>
+  </object>
+  <object class="GtkAdjustment" id="apu_channels_dmc_adjustment">
+    <property name="upper">1</property>
+    <property name="step_increment">0.050000000000000003</property>
+    <property name="page_increment">1</property>
   </object>
   <object class="GtkAdjustment" id="apu_channels_extra_adjustment">
     <property name="upper">1</property>

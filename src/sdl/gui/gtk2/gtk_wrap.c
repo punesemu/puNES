@@ -76,8 +76,10 @@ void dg_create_gtkbuilder(GtkBuilder **builder, int id_glade_h) {
 	}
 
 	if (!gtk_builder_add_from_string((*builder), data, -1, &error)) {
-		g_warning("%s", error->message);
-		g_free(error);
+		if (error != NULL) {
+			g_warning("%s", error->message);
+			g_error_free(error);
+		}
 	}
 }
 void dg_signal_connect(GtkBuilder *builder, const char *obj_name, const char *signal,
