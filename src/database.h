@@ -203,6 +203,8 @@ static const _dbelement dblist[] = {
 	{"ff341d3b1e87a8685c05594365858ab747795f0d", 0, DEFAULT, DEFAULT, DEFAULT},
 	/* Othello (HES) [o1].nes */
 	{"0b698ad2b7cfa855e01726226f221294a8a2d9ed", 0, DEFAULT, DEFAULT, DEFAULT},
+	/* Ball Hack v.2_2001-03-21 by Knoxburry-Aneurysm (Balloon Fight Hack) [o1].nes */
+	{"c0a936c933185a73edde30f34160c61219a8bae0", 0, DEFAULT, DEFAULT, DEFAULT},
 
 /* -------------------------------------- MMC1 -------------------------------------------- */
 	/* Darkman (E) [!].nes */
