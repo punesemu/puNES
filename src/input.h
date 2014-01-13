@@ -35,7 +35,7 @@ enum controller_buttons {
 };
 enum turbo_buttons { TURBOA, TURBOB };
 enum input_types { KEYBOARD, JOYSTICK };
-enum button_states { RELEASED = 0x40, PRESSED = 0x41 };
+enum button_states { RELEASED = 0x00, PRESSED = 0x01 };
 
 enum port_controllers {
 	PORT1,

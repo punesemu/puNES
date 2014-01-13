@@ -237,7 +237,17 @@ BYTE input_rd_reg_standard(BYTE openbus, WORD **screen_index, BYTE nport) {
 	}
 #undef _input_rd
 
-	return(value);
+	/*
+	 * NES only, both $4016 and $4017:
+	 * 7  bit  0
+	 * ---- ----
+	 * OOOx xxxD
+	 * |||| ||||
+	 * |||| |||+- Serial controller data
+	 * |||+-+++-- Always 0
+	 * +++------- Open bus
+	 */
+	return((openbus & 0xE0) | value);
 }
 
 BYTE input_rd_reg_famicon_expansion(BYTE openbus, WORD **screen_index, BYTE nport) {
@@ -266,7 +276,31 @@ BYTE input_rd_reg_famicon_expansion(BYTE openbus, WORD **screen_index, BYTE npor
 	}
 #undef _input_rd
 
-	return(value);
+	/*
+	 * Famicom $4016:
+	 * 7  bit  0
+	 * ---- ----
+	 * OOOx xMFD
+	 * |||| ||||
+	 * |||| |||+- Player 1 serial controller data
+	 * |||| ||+-- If connected to expansion port, player 3 serial controller data (0 otherwise)
+	 * |||| |+--- Microphone in controller 2 on traditional Famicom, 0 on AV Famicom
+	 * |||+-+---- Open bus on traditional Famicom, all 0s on AV Famicom
+	 * +++------- Open bus
+	 *
+	 * Famicom $4017:
+	 * 7  bit  0
+	 * ---- ----
+	 * OOOx xxFD
+	 * |||| ||||
+	 * |||| |||+- Player 2 serial controller data
+	 * |||| ||+-- If connected to expansion port, player 4 serial controller data (0 otherwise)
+	 * |||+-+++-- Returns 0 unless something is plugged into the Famicom expansion port
+	 * +++------- Open bus
+	 */
+	/* emulo un traditional Famicom */
+	/* visto che per ora non emulo alcun microfono metto tutto a 0 */
+	return((openbus & 0xF8) | value);
 }
 
 BYTE input_wr_reg_four_score(BYTE value) {
