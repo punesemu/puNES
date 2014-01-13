@@ -16,8 +16,8 @@
 enum {
 	A12_MODE,
 	CPU_MODE,
-	tengen_rambo_delay_A12 = 3,
-	tengen_rambo_delay_CPU = 3,
+	tengen_rambo_delay_A12 = 4,
+	tengen_rambo_delay_CPU = 4,
 };
 
 #define tengen_rambo_prg_24k_update()\
@@ -101,11 +101,11 @@ void map_init_Tengen(BYTE model) {
 		case TRAMBO:
 			EXTCL_CPU_WR_MEM(Tengen_Rambo);
 			EXTCL_SAVE_MAPPER(Tengen_Rambo);
-			EXTCL_PPU_000_TO_34X(MMC3);
+			EXTCL_PPU_000_TO_34X(Tengen_Rambo);
 			EXTCL_PPU_000_TO_255(Tengen_Rambo);
 			EXTCL_PPU_256_TO_319(Tengen_Rambo);
 			EXTCL_PPU_320_TO_34X(Tengen_Rambo);
-			EXTCL_UPDATE_R2006(MMC3);
+			EXTCL_UPDATE_R2006(Tengen_Rambo);
 			EXTCL_IRQ_A12_CLOCK(Tengen_Rambo);
 			EXTCL_CPU_EVERY_CYCLE(Tengen_Rambo);
 			mapper.internal_struct[0] = (BYTE *) &tengen_rambo;
@@ -266,6 +266,14 @@ BYTE extcl_save_mapper_Tengen_Rambo(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
+void extcl_ppu_000_to_34x_Tengen_Rambo(void) {
+	if (tengen_rambo.irq_delay && !(--tengen_rambo.irq_delay)) {
+		irq.high |= EXT_IRQ;
+	}
+
+	irqA12_RS();
+}
+
 void extcl_ppu_000_to_255_Tengen_Rambo(void) {
 	if ((tengen_rambo.irq_mode == A12_MODE) && (r2001.visible)) {
 		irqA12_SB();
@@ -281,6 +289,11 @@ void extcl_ppu_320_to_34x_Tengen_Rambo(void) {
 		irqA12_SB();
 	}
 }
+void extcl_update_r2006_Tengen_Rambo(WORD value_old) {
+	if (!(value_old & 0x1000) && (r2006.value & 0x1000)) {
+		extcl_irq_A12_clock();
+	}
+}
 void extcl_irq_A12_clock_Tengen_Rambo(void) {
 	if (tengen_rambo.irq_mode != A12_MODE) {
 		return;
@@ -288,31 +301,32 @@ void extcl_irq_A12_clock_Tengen_Rambo(void) {
 
 	/* usa una versione un po' modificata dell'irqA12 */
 	if (irqA12.cycles > irqA12_min_cpu_cycles_prev_rising_edge) {
+		BYTE force = FALSE;
+
 		irqA12.cycles = 0;
-		if (!irqA12.counter) {
+		if (!irqA12.counter){
 			irqA12.counter = irqA12.latch;
+
 			if (irqA12.reload == TRUE) {
-				irqA12.counter++;
-				irqA12.save_counter = 0;
-			}
-			if (!irqA12.counter && (irqA12.reload == TRUE)) {
-				irqA12.save_counter = 1;
+				if (irqA12.latch == 0) {
+					force = TRUE;
+				} else if (irqA12.latch == 1) {
+					;
+				} else {
+					irqA12.counter++;
+				}
 			}
 			irqA12.reload = FALSE;
 		} else {
 			irqA12.counter--;
 		}
-		if (!irqA12.counter && irqA12.save_counter && irqA12.enable) {
+		if ((force == TRUE) || (!irqA12.counter && (irqA12.save_counter == 1) && irqA12.enable)) {
 			tengen_rambo.irq_delay = tengen_rambo_delay_A12;
 		}
 		irqA12.save_counter = irqA12.counter;
 	}
 }
 void extcl_cpu_every_cycle_Tengen_Rambo(void) {
-	if (tengen_rambo.irq_delay && !(--tengen_rambo.irq_delay)) {
-		irq.high |= EXT_IRQ;
-	}
-
 	if (tengen_rambo.irq_mode != CPU_MODE) {
 		return;
 	}
@@ -337,5 +351,4 @@ void extcl_cpu_every_cycle_Tengen_Rambo(void) {
 	}
 
 	irqA12.counter = irqA12.latch;
-	return;
 }
