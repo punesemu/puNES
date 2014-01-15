@@ -1673,6 +1673,10 @@ static const _dbelement dblist[] = {
 	{"e81966607afceca236779c63134ff5a9333c4638", 2, UNLROM, DEFAULT, DEFAULT},
 	/* Battle Kid 2 - Mountain of Torment (U).nes */
 	{"dcd6870e0d5a79899dce11b975c8a16652fc7143", 2, UNROM_BK2, DEFAULT, DEFAULT},
+	/* Trog (U) [b1].nes */
+	{"13c3394f08f4bc6d3df83db92693bdac9d091766", 2, DEFAULT, DEFAULT, DEFAULT},
+	/* Trog (U) [o1].nes */
+	{"29ca7cc398b855472c9d94e7581be8288468382b", 2, DEFAULT, DEFAULT, DEFAULT},
 	/* Best of the Best - Championship Karate (E) [!].nes */
 	{"45a47a23cd3d6779ff8a1be8853d14a9df7ea3ca", 2, DEFAULT, BAD_INES_BOTBE, PAL},
 	/* Alfred Chicken (E) [!].nes */
