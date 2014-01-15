@@ -47,7 +47,6 @@ BYTE map_init(WORD mapper_type) {
 				map_init_UxROM(UNROM_BK2);
 			} else {
 				map_init_UxROM(UXROM);
-
 			}
 			break;
 		case 3:
