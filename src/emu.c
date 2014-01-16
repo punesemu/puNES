@@ -259,20 +259,35 @@ BYTE emu_load_rom(void) {
 		info.no_rom = TRUE;
 	}
 
-	if (cfg->mode == AUTO) {
-		if (info.machine_db == PAL) {
-			machine = machinedb[PAL - 1];
-		} else if (info.machine_db == DENDY) {
-			machine = machinedb[DENDY - 1];
-		} else {
-			machine = machinedb[NTSC - 1];
-		}
-	} else if (cfg->mode == NTSC) {
-		machine = machinedb[NTSC -1];
-	} else if (cfg->mode == PAL) {
-		machine = machinedb[PAL - 1];
-	} else if (cfg->mode == DENDY) {
-		machine = machinedb[DENDY - 1];
+	/* setto il tipo di sistema */
+	switch (cfg->mode) {
+		case AUTO:
+			switch (info.machine[DATABASE]) {
+				case NTSC:
+				case PAL:
+				case DENDY:
+					machine = machinedb[info.machine[DATABASE] - 1];
+					break;
+				case DEFAULT:
+					if (info.machine[HEADER] == info.machine[DATABASE]) {
+						/*
+						 * posso essere nella condizione
+						 * info.machine[DATABASE] == DEFAULT && info.machine[HEADER] == DEFAULT
+						 * solo quando avvio senza caricare nessuna rom.
+						 */
+						machine = machinedb[NTSC - 1];
+					} else {
+						machine = machinedb[info.machine[HEADER] - 1];
+					}
+					break;
+				default:
+					machine = machinedb[NTSC - 1];
+					break;
+			}
+			break;
+		default:
+			machine = machinedb[cfg->mode - 1];
+			break;
 	}
 
 	return (EXIT_OK);
@@ -282,8 +297,7 @@ BYTE emu_search_in_database(FILE *fp) {
 	WORD i;
 
 	/* setto i default prima della ricerca */
-	info.machine_db = info.machine = 0;
-	info.mapper_type = info.id = DEFAULT;
+	info.machine[DATABASE] = info.mapper_type = info.id = DEFAULT;
 
 	/* posiziono il puntatore del file */
 	if (info.trainer) {
@@ -315,10 +329,7 @@ BYTE emu_search_in_database(FILE *fp) {
 			info.mapper = dblist[i].mapper;
 			info.mapper_type = dblist[i].type;
 			info.id = dblist[i].id;
-			info.machine = dblist[i].machine;
-			if (info.machine != DEFAULT) {
-				info.machine_db = info.machine;
-			}
+			info.machine[DATABASE] = dblist[i].machine;
 			switch (info.mapper) {
 				case 2:
 					/*

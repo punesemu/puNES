@@ -34,7 +34,7 @@ int main(int argc, char **argv) {
 	BYTE optind;
 
 	memset(&info, 0x00, sizeof(info));
-	info.machine = info.machine_db = DEFAULT;
+	info.machine[HEADER] = info.machine[DATABASE] = DEFAULT;
 
 	if (cmd_line_check_portable(argc, argv) == TRUE) {
 		info.portable = TRUE;

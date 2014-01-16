@@ -38,6 +38,8 @@ enum reset_type {
 };
 /* le dimesioni dello screen da renderizzare */
 enum screen_dimension { SCR_LINES = 240, SCR_ROWS = 256 };
+enum type_of_system_info { HEADER, DATABASE };
+enum header_type { iNES1_0, iNES2_0 };
 
 #define LENGTH(x) (sizeof(x)/sizeof(*(x)))
 
@@ -51,8 +53,8 @@ struct _info {
 	char base_folder[1024];
 	char rom_file[1024];
 	char load_rom_file[1024];
-	BYTE machine;
-	BYTE machine_db;
+	BYTE header;
+	BYTE machine[2];
 	WORD mapper;
 	BYTE mapper_type;
 	BYTE mapper_extend_wr;

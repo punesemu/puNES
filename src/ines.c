@@ -17,8 +17,10 @@
 #include "clock.h"
 #include "gamegenie.h"
 
+enum flags { FL6, FL7, FL8, FL9, FL10, FL11, FL12, FL13, FL14, FL15, TOTAL_FL };
+
 BYTE ines_load_rom(void) {
-	BYTE tmp, flags6, flags7;
+	BYTE tmp, flags[TOTAL_FL];
 	FILE *fp;
 
 	{
@@ -59,27 +61,36 @@ BYTE ines_load_rom(void) {
 		info.prg_rom_16k_count = fgetc(fp);
 		info.chr_rom_8k_count = fgetc(fp);
 
-		flags6 = fgetc(fp);
-		flags7 = fgetc(fp);
-		info.mapper = (flags7 & 0xF0) | (flags6 >> 4);
-		info.prg_ram_bat_banks = (flags6 & 0x02) >> 1;
-		info.trainer = flags6 & 0x04;
-		if (flags6 & 0x08) {
+		fread(&flags[0], TOTAL_FL, 1, fp);
+
+		/* iNES 2.0 */
+		if ((flags[FL7] & 0x0C) == 0x08) {
+			info.header = iNES2_0;
+		} else {
+			info.header = iNES1_0;
+		}
+
+		info.mapper = (flags[FL7] & 0xF0) | (flags[FL6] >> 4);
+		info.prg_ram_bat_banks = (flags[FL6] & 0x02) >> 1;
+		info.trainer = flags[FL6] & 0x04;
+		if (flags[FL6] & 0x08) {
 			mirroring_FSCR();
 		} else {
-			if (flags6 & 0x01) {
+			if (flags[FL6] & 0x01) {
 				mirroring_V();
 			} else {
 				mirroring_H();
 			}
 		}
 
-		/* il byte 8 non mi interessa */
-		fgetc(fp);
-
-		tmp = fgetc(fp);
-		tmp &= 0x01;
-		tmp = (~tmp & 0x01);
+		switch(flags[FL9] & 0x01) {
+			case 0:
+				info.machine[HEADER] = NTSC;
+				break;
+			case 1:
+				info.machine[HEADER] = PAL;
+				break;
+		}
 
 		/*
 		 * inizializzo qui il writeVRAM per la mapper 96 perche'
@@ -98,10 +109,6 @@ BYTE ines_load_rom(void) {
 			tmp = fread(&trainer.data, sizeof(trainer.data), 1, fp);
 		} else {
 			memset(&trainer.data, 0x00, sizeof(trainer.data));
-		}
-
-		if (info.machine == DEFAULT) {
-			info.machine = tmp;
 		}
 
 #ifndef RELEASE

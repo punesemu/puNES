@@ -160,37 +160,33 @@ void menu_mode_set_mode(int mode) {
 		return;
 	}
 
-	switch (mode) {
-		case PAL:
-		case NTSC:
-		case DENDY:
-			if ((cfg->mode == AUTO) && (mode == machine.type)) {
-				reset = FALSE;
-			}
-			cfg->mode = mode;
-			machine = machinedb[mode - 1];
-			break;
-		case AUTO:
-			if (info.machine_db == PAL) {
-				machine = machinedb[PAL - 1];
-			} else if (info.machine_db == DENDY) {
-				machine = machinedb[DENDY - 1];
-			} else {
-				machine = machinedb[NTSC - 1];
-			}
-			/*
-			 * se la modalita' in cui mi trovo e' gia' quella del database oppure
-			 * se ne database la modalita' e' a 0 o impostata su default ed
-			 * io sono gia' nella modalita' NTSC (appunto quella di default), allora
-			 * non devo fare nessun reset.
-			 */
-			if ((cfg->mode == info.machine_db) || ((cfg->mode == NTSC) &&
-					((info.machine_db < NTSC) || (info.machine_db > DENDY)))){
-				reset = FALSE;
-			}
-			cfg->mode = AUTO;
-			break;
+	cfg->mode = mode;
+
+	if (cfg->mode == AUTO) {
+		switch (info.machine[DATABASE]) {
+			case NTSC:
+			case PAL:
+			case DENDY:
+				mode = info.machine[DATABASE];
+				break;
+			case DEFAULT:
+				mode = info.machine[HEADER];
+				break;
+			default:
+				mode = NTSC;
+				break;
+		}
 	}
+
+	/*
+	 * se la nuova modalita' e' identica a quella attuale
+	 * non e' necessario fare un reset.
+	 */
+	if (mode == machine.type) {
+		reset = FALSE;
+	}
+
+	machine = machinedb[mode - 1];
 
 	gui_update();
 
