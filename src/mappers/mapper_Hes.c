@@ -11,12 +11,12 @@
 WORD prg_rom_32k_max, chr_rom_8k_max;
 
 void map_init_Hes(void) {
-	prg_rom_32k_max = (info.prg_rom_16k_count >> 1) - 1;
-	chr_rom_8k_max = info.chr_rom_8k_count - 1;
+	prg_rom_32k_max = (info.prg.rom.banks_16k >> 1) - 1;
+	chr_rom_8k_max = info.chr.rom.banks_8k - 1;
 
 	EXTCL_CPU_WR_MEM(Hes);
 
-	info.mapper_extend_wr = TRUE;
+	info.mapper.extend_wr = TRUE;
 
 	if (info.reset >= HARD) {
 		if (prg_rom_32k_max != 0xFFFF) {

@@ -20,7 +20,7 @@
 enum flags { FL6, FL7, FL8, FL9, FL10, FL11, FL12, FL13, FL14, FL15, TOTAL_FL };
 
 BYTE ines_load_rom(void) {
-	BYTE tmp, flags[TOTAL_FL];
+	BYTE flags[TOTAL_FL];
 	FILE *fp;
 
 	{
@@ -58,21 +58,36 @@ BYTE ines_load_rom(void) {
 	}
 
 	if ((fgetc(fp) == 'N') && (fgetc(fp) == 'E') && (fgetc(fp) == 'S') && (fgetc(fp) == '\32')) {
-		info.prg_rom_16k_count = fgetc(fp);
-		info.chr_rom_8k_count = fgetc(fp);
+		info.prg.rom.banks_16k = fgetc(fp);
+		info.chr.rom.banks_8k = fgetc(fp);
 
 		fread(&flags[0], TOTAL_FL, 1, fp);
 
-		/* iNES 2.0 */
 		if ((flags[FL7] & 0x0C) == 0x08) {
-			info.header = iNES2_0;
+			/* NES 2.0 */
+			info.header = NES_2_0;
+
+			info.mapper.id = ((flags[FL8] & 0x0F) << 8) | (flags[FL7] & 0xF0) | (flags[FL6] >> 4);
+			info.mapper.submapper = (flags[FL8] & 0xF0) >> 4;
 		} else {
-			info.header = iNES1_0;
+			/* iNES 1.0 */
+			info.header = iNES_1_0;
+
+			info.mapper.id = (flags[FL7] & 0xF0) | (flags[FL6] >> 4);
+			info.prg.ram.bat.banks = (flags[FL6] & 0x02) >> 1;
+
+			switch(flags[FL9] & 0x01) {
+				case 0:
+					info.machine[HEADER] = NTSC;
+					break;
+				case 1:
+					info.machine[HEADER] = PAL;
+					break;
+			}
 		}
 
-		info.mapper = (flags[FL7] & 0xF0) | (flags[FL6] >> 4);
-		info.prg_ram_bat_banks = (flags[FL6] & 0x02) >> 1;
 		info.trainer = flags[FL6] & 0x04;
+
 		if (flags[FL6] & 0x08) {
 			mirroring_FSCR();
 		} else {
@@ -81,15 +96,6 @@ BYTE ines_load_rom(void) {
 			} else {
 				mirroring_H();
 			}
-		}
-
-		switch(flags[FL9] & 0x01) {
-			case 0:
-				info.machine[HEADER] = NTSC;
-				break;
-			case 1:
-				info.machine[HEADER] = PAL;
-				break;
 		}
 
 		/*
@@ -106,29 +112,29 @@ BYTE ines_load_rom(void) {
 		}
 
 		if (info.trainer) {
-			tmp = fread(&trainer.data, sizeof(trainer.data), 1, fp);
+			fread(&trainer.data, sizeof(trainer.data), 1, fp);
 		} else {
 			memset(&trainer.data, 0x00, sizeof(trainer.data));
 		}
 
 #ifndef RELEASE
-		fprintf(stderr, "mapper %u\n8k rom = %u\n4k vrom = %u\n", info.mapper,
-				info.prg_rom_16k_count * 2, info.chr_rom_8k_count * 2);
-		fprintf(stderr, "sha1prg = %40s\n", info.sha1sum_string);
-		fprintf(stderr, "sha1chr = %40s\n", info.sha1sum_string_chr);
+		fprintf(stderr, "mapper %u\n8k rom = %u\n4k vrom = %u\n", info.mapper.id,
+				info.prg.rom.banks_16k * 2, info.chr.rom.banks_8k * 2);
+		fprintf(stderr, "sha1prg = %40s\n", info.sha1sum.prg.string);
+		fprintf(stderr, "sha1chr = %40s\n", info.sha1sum.chr.string);
 #endif
 
-		if (!info.chr_rom_8k_count) {
+		if (!info.chr.rom.banks_8k) {
 			mapper.write_vram = TRUE;
-			info.chr_rom_8k_count = 1;
+			info.chr.rom.banks_8k = 1;
 		}
 
-		info.prg_rom_8k_count = info.prg_rom_16k_count * 2;
-		info.chr_rom_4k_count = info.chr_rom_8k_count * 2;
-		info.chr_rom_1k_count = info.chr_rom_4k_count * 4;
+		info.prg.rom.banks_8k = info.prg.rom.banks_16k * 2;
+		info.chr.rom.banks_4k = info.chr.rom.banks_8k * 2;
+		info.chr.rom.banks_1k = info.chr.rom.banks_4k * 4;
 
-		if (info.prg_ram_bat_banks) {
-			info.prg_ram_plus_8k_count = 1;
+		if (info.prg.ram.bat.banks) {
+			info.prg.ram.banks_8k_plus = 1;
 		}
 
 		/* alloco la PRG Ram */
@@ -138,8 +144,8 @@ BYTE ines_load_rom(void) {
 		}
 
 		/* alloco e carico la PRG Rom */
-		if ((prg.rom = (BYTE *) malloc(info.prg_rom_16k_count * (16 * 1024)))) {
-			tmp = fread(&prg.rom[0], 16384, info.prg_rom_16k_count, fp);
+		if ((prg.rom = (BYTE *) malloc(info.prg.rom.banks_16k * (16 * 1024)))) {
+			fread(&prg.rom[0], 16384, info.prg.rom.banks_16k, fp);
 		} else {
 			fprintf(stderr, "Out of memory\n");
 			return (EXIT_ERROR);
@@ -153,8 +159,8 @@ BYTE ines_load_rom(void) {
 		 */
 		if (!mapper.write_vram) {
 			/* alloco la CHR Rom */
-			if ((chr.data = (BYTE *) malloc(info.chr_rom_8k_count * (8 * 1024)))) {
-				tmp = fread(&chr.data[0], 8192, info.chr_rom_8k_count, fp);
+			if ((chr.data = (BYTE *) malloc(info.chr.rom.banks_8k * (8 * 1024)))) {
+				fread(&chr.data[0], 8192, info.chr.rom.banks_8k, fp);
 				chr_bank_1k_reset();
 			} else {
 				fprintf(stderr, "Out of memory\n");

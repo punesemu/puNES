@@ -12,7 +12,7 @@ WORD prg_rom_32k_max;
 BYTE type;
 
 void map_init_Hen(BYTE model) {
-	prg_rom_32k_max = (info.prg_rom_16k_count >> 1) - 1;
+	prg_rom_32k_max = (info.prg.rom.banks_16k >> 1) - 1;
 
 	switch (model) {
 		case HEN_177:
@@ -21,7 +21,7 @@ void map_init_Hen(BYTE model) {
 			break;
 		case HEN_XJZB:
 			EXTCL_CPU_WR_MEM(Hen_xjzb);
-			info.mapper_extend_wr = TRUE;
+			info.mapper.extend_wr = TRUE;
 			break;
 	}
 

@@ -11,12 +11,12 @@
 WORD prg_rom_16k_max, chr_rom_8k_max;
 
 void map_init_202(void) {
-	prg_rom_16k_max = info.prg_rom_16k_count - 1;
-	chr_rom_8k_max = (info.chr_rom_4k_count >> 1) - 1;
+	prg_rom_16k_max = info.prg.rom.banks_16k - 1;
+	chr_rom_8k_max = (info.chr.rom.banks_4k >> 1) - 1;
 
 	EXTCL_CPU_WR_MEM(202);
 
-	info.mapper_extend_wr = TRUE;
+	info.mapper.extend_wr = TRUE;
 
 	if (info.reset >= HARD) {
 		extcl_cpu_wr_mem_202(0x8000, 0);

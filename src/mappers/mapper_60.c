@@ -12,8 +12,8 @@
 WORD prg_rom_16k_max, chr_rom_8k_max;
 
 void map_init_60(void) {
-	prg_rom_16k_max = info.prg_rom_16k_count - 1;
-	chr_rom_8k_max = info.chr_rom_8k_count - 1;
+	prg_rom_16k_max = info.prg.rom.banks_16k - 1;
+	chr_rom_8k_max = info.chr.rom.banks_8k - 1;
 
 	EXTCL_CPU_WR_MEM(60);
 	EXTCL_SAVE_MAPPER(60);
@@ -60,8 +60,8 @@ BYTE extcl_save_mapper_60(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 void map_init_60_vt5201(void) {
-	prg_rom_16k_max = info.prg_rom_16k_count - 1;
-	chr_rom_8k_max = info.chr_rom_8k_count - 1;
+	prg_rom_16k_max = info.prg.rom.banks_16k - 1;
+	chr_rom_8k_max = info.chr.rom.banks_8k - 1;
 
 	EXTCL_CPU_WR_MEM(60_vt5201);
 

@@ -35,10 +35,10 @@ static const BYTE vlu121[4] = { 0x00, 0x83, 0x42, 0x00 };
 WORD prg_rom_32k_max, prg_rom_8k_max, prg_rom_8k_before_last, chr_rom_1k_max;
 
 void map_init_121(void) {
-	prg_rom_32k_max = (info.prg_rom_16k_count >> 1) - 1;
-	prg_rom_8k_max = info.prg_rom_8k_count - 1;
-	chr_rom_1k_max = info.chr_rom_1k_count - 1;
-	prg_rom_8k_before_last = info.prg_rom_8k_count - 2;
+	prg_rom_32k_max = (info.prg.rom.banks_16k >> 1) - 1;
+	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
+	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
+	prg_rom_8k_before_last = info.prg.rom.banks_8k - 2;
 
 	EXTCL_CPU_WR_MEM(121);
 	EXTCL_CPU_RD_MEM(121);
@@ -54,7 +54,7 @@ void map_init_121(void) {
 	mapper.internal_struct[1] = (BYTE *) &mmc3;
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
-	info.mapper_extend_wr = TRUE;
+	info.mapper.extend_wr = TRUE;
 
 	if (info.reset >= HARD) {
 		memset(&m121, 0x00, sizeof(m121));

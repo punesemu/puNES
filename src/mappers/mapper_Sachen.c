@@ -32,11 +32,11 @@ WORD prg_rom_32k_max, chr_rom_8k_max, chr_rom_4k_max, chr_rom_2k_max, chr_rom_1k
 BYTE type, shift, ored[3];
 
 void map_init_Sachen(BYTE model) {
-	prg_rom_32k_max = (info.prg_rom_16k_count >> 1) - 1;
-	chr_rom_8k_max = info.chr_rom_8k_count - 1;
-	chr_rom_4k_max = info.chr_rom_4k_count - 1;
-	chr_rom_2k_max = (info.chr_rom_1k_count >> 1) - 1;
-	chr_rom_1k_max = info.chr_rom_1k_count - 1;
+	prg_rom_32k_max = (info.prg.rom.banks_16k >> 1) - 1;
+	chr_rom_8k_max = info.chr.rom.banks_8k - 1;
+	chr_rom_4k_max = info.chr.rom.banks_4k - 1;
+	chr_rom_2k_max = (info.chr.rom.banks_1k >> 1) - 1;
+	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
 
 	switch (model) {
 		case SA0036:
@@ -60,7 +60,7 @@ void map_init_Sachen(BYTE model) {
 			mapper.internal_struct[0] = (BYTE *) &sa8259;
 			mapper.internal_struct_size[0] = sizeof(sa8259);
 
-			info.mapper_extend_wr = TRUE;
+			info.mapper.extend_wr = TRUE;
 
 			if (info.reset >= HARD) {
 				memset(&sa8259, 0x00, sizeof(sa8259));
@@ -109,7 +109,7 @@ void map_init_Sachen(BYTE model) {
 		case TCU01:
 			EXTCL_CPU_WR_MEM(Sachen_tcu01);
 
-			info.mapper_extend_wr = TRUE;
+			info.mapper.extend_wr = TRUE;
 
 			if (info.reset >= HARD) {
 				if (prg_rom_32k_max != 0xFFFF) {
@@ -124,7 +124,7 @@ void map_init_Sachen(BYTE model) {
 			mapper.internal_struct[0] = (BYTE *) &tcu02;
 			mapper.internal_struct_size[0] = sizeof(tcu02);
 
-			info.mapper_extend_wr = TRUE;
+			info.mapper.extend_wr = TRUE;
 
 			if (info.reset >= HARD) {
 				memset(&tcu02, 0x00, sizeof(tcu02));
@@ -133,26 +133,26 @@ void map_init_Sachen(BYTE model) {
 		case SA72007:
 			EXTCL_CPU_WR_MEM(Sachen_sa72007);
 
-			info.mapper_extend_wr = TRUE;
+			info.mapper.extend_wr = TRUE;
 			break;
 		case SA72008:
 			EXTCL_CPU_WR_MEM(Sachen_sa72008);
 
-			info.mapper_extend_wr = TRUE;
+			info.mapper.extend_wr = TRUE;
 			break;
 		case SA74374A:
 		case SA74374B: {
 			BYTE i;
 
 			for (i = 0; i < LENGTH(pokeriiichr); i++) {
-				if (!(memcmp(pokeriiichr[i], info.sha1sum_string_chr, 40))) {
+				if (!(memcmp(pokeriiichr[i], info.sha1sum.chr.string, 40))) {
 					if (i == 0) {
 						/* Poker III 5-in-1 (Sachen) [!].nes */
-						info.mapper = 150;
+						info.mapper.id = 150;
 						model = SA74374B;
 					} else {
 						/* Poker III [!].nes */
-						info.mapper = 243;
+						info.mapper.id = 243;
 						model = SA74374A;
 					}
 				}
@@ -167,7 +167,7 @@ void map_init_Sachen(BYTE model) {
 			mapper.internal_struct[0] = (BYTE *) &sa74374x;
 			mapper.internal_struct_size[0] = sizeof(sa74374x);
 
-			info.mapper_extend_wr = TRUE;
+			info.mapper.extend_wr = TRUE;
 
 			if (info.reset >= HARD) {
 				memset(&sa74374x, 0x00, sizeof(sa74374x));

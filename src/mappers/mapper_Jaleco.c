@@ -27,27 +27,27 @@ WORD prg_rom_32k_max, prg_rom_16k_max, prg_rom_8k_max, chr_rom_8k_max, chr_rom_1
 	ss8806.chr_rom_bank[slot] = value
 
 void map_init_Jaleco(BYTE model) {
-	prg_rom_32k_max = (info.prg_rom_16k_count >> 1) - 1;
-	prg_rom_16k_max = info.prg_rom_16k_count - 1;
-	prg_rom_8k_max = info.prg_rom_8k_count - 1;
-	chr_rom_8k_max = (info.chr_rom_4k_count >> 1) - 1;
-	chr_rom_1k_max = info.chr_rom_1k_count - 1;
+	prg_rom_32k_max = (info.prg.rom.banks_16k >> 1) - 1;
+	prg_rom_16k_max = info.prg.rom.banks_16k - 1;
+	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
+	chr_rom_8k_max = (info.chr.rom.banks_4k >> 1) - 1;
+	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
 
 	switch (model) {
 		case JF05:
 			EXTCL_CPU_WR_MEM(Jaleco_JF05);
-			info.mapper_extend_wr = TRUE;
+			info.mapper.extend_wr = TRUE;
 			break;
 		case JF11:
 			EXTCL_CPU_WR_MEM(Jaleco_JF11);
-			info.mapper_extend_wr = TRUE;
+			info.mapper.extend_wr = TRUE;
 			if (info.reset >= HARD) {
 				map_prg_rom_8k(4, 0, 0);
 			}
 			break;
 		case JF13:
 			EXTCL_CPU_WR_MEM(Jaleco_JF13);
-			info.mapper_extend_wr = TRUE;
+			info.mapper.extend_wr = TRUE;
 			if (info.reset >= HARD) {
 				map_prg_rom_8k(4, 0, 0);
 			}
@@ -88,8 +88,8 @@ void map_init_Jaleco(BYTE model) {
 			switch (info.id) {
 				case JAJAMARU:
 				case MEZASETOPPRO:
-					info.prg_ram_plus_8k_count = 1;
-					info.prg_ram_bat_banks = 1;
+					info.prg.ram.banks_8k_plus = 1;
+					info.prg.ram.bat.banks = 1;
 					break;
 			}
 			break;
@@ -193,12 +193,12 @@ void extcl_cpu_wr_mem_Jaleco_JF16(WORD address, BYTE value) {
 
 	if (save & 0x08) {
 		mirroring_SCR1();
-		if (info.mapper_type == HOLYDIVER) {
+		if (info.mapper.from_db == HOLYDIVER) {
 			mirroring_V();
 		}
 	} else {
 		mirroring_SCR0();
-		if (info.mapper_type == HOLYDIVER) {
+		if (info.mapper.from_db == HOLYDIVER) {
 			mirroring_H();
 		}
 	}

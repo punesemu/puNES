@@ -18,10 +18,10 @@ WORD prg_rom_16k_max, prg_rom_8k_max;
 WORD chr_rom_2k_max, chr_rom_1k_max;
 
 void map_init_83(void) {
-	prg_rom_16k_max = info.prg_rom_16k_count - 1;
-	prg_rom_8k_max = info.prg_rom_8k_count - 1;
-	chr_rom_2k_max = (info.chr_rom_1k_count >> 1) - 1;
-	chr_rom_1k_max = info.chr_rom_1k_count - 1;
+	prg_rom_16k_max = info.prg.rom.banks_16k - 1;
+	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
+	chr_rom_2k_max = (info.chr.rom.banks_1k >> 1) - 1;
+	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
 
 	EXTCL_CPU_WR_MEM(83);
 	EXTCL_CPU_RD_MEM(83);
@@ -43,14 +43,14 @@ void map_init_83(void) {
 			break;
 		case MAP83_DGP:
 			m83.dip = 0xFF;
-			info.prg_ram_plus_8k_count = 1;
+			info.prg.ram.banks_8k_plus = 1;
 			break;
 		default:
 			m83.dip = 0xFF;
 			break;
 	}
 
-	info.mapper_extend_wr = TRUE;
+	info.mapper.extend_wr = TRUE;
 }
 void extcl_cpu_wr_mem_83(WORD address, BYTE value) {
 	switch (address) {
@@ -122,7 +122,7 @@ BYTE extcl_cpu_rd_mem_83(WORD address, BYTE openbus, BYTE before) {
 		return (before);
 	}
 	/* nestopia */
-	if ((address <= 0x7FFF) && !info.prg_ram_plus_8k_count) {
+	if ((address <= 0x7FFF) && !info.prg.ram.banks_8k_plus) {
 		return ((m83.mode & 0x20) ? openbus : (address >> 8));
 	}
 	/*          */

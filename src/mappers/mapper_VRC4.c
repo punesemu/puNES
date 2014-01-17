@@ -32,9 +32,9 @@ const WORD table_VRC4[5][4] = {
 };
 
 void map_init_VRC4(BYTE revision) {
-	prg_rom_8k_max = info.prg_rom_8k_count - 1;
+	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
 	prg_rom_8k_before_last = prg_rom_8k_max - 1;
-	chr_rom_1k_max = info.chr_rom_1k_count - 1;
+	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
 
 	EXTCL_CPU_WR_MEM(VRC4);
 	EXTCL_SAVE_MAPPER(VRC4);
@@ -220,7 +220,7 @@ void extcl_cpu_every_cycle_VRC4(void) {
 }
 
 void map_init_VRC4BMC(void) {
-	prg_rom_8k_max = info.prg_rom_8k_count - 1;
+	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
 
 	map_init_VRC4(VRC4E);
 

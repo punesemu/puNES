@@ -35,7 +35,7 @@ BYTE audio_quality_init_original(void) {
 
 	init_nla_table(502, 522)
 
-	switch (info.mapper) {
+	switch (info.mapper.id) {
 		case FDS_MAPPER:
 			/* FDS */
 			extra_mixer_original = mixer_original_FDS;

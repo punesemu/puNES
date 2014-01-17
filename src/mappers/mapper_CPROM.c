@@ -11,11 +11,11 @@
 WORD chr_rom_4k_max;
 
 void map_init_CPROM(void) {
-	info.chr_rom_8k_count = 2;
-	info.chr_rom_4k_count = 4;
-	info.chr_rom_1k_count = 16;
+	info.chr.rom.banks_8k = 2;
+	info.chr.rom.banks_4k = 4;
+	info.chr.rom.banks_1k = 16;
 
-	chr_rom_4k_max = info.chr_rom_4k_count - 1;
+	chr_rom_4k_max = info.chr.rom.banks_4k - 1;
 
 	if (info.reset >= HARD) {
 		chr.bank_1k[4] = &chr.data[0x0000];

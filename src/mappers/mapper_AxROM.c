@@ -11,7 +11,7 @@
 WORD prg_rom_32k_max;
 
 void map_init_AxROM(void) {
-	prg_rom_32k_max = (info.prg_rom_16k_count >> 1) - 1;
+	prg_rom_32k_max = (info.prg.rom.banks_16k >> 1) - 1;
 
 	EXTCL_CPU_WR_MEM(AxROM);
 
@@ -25,7 +25,7 @@ void map_init_AxROM(void) {
 }
 void extcl_cpu_wr_mem_AxROM(WORD address, BYTE value) {
 	/* bus conflict */
-	if (info.mapper_type == AMROM) {
+	if (info.mapper.from_db == AMROM) {
 		value &= prg_rom_rd(address);
 	}
 

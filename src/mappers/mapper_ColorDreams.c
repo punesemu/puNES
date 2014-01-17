@@ -11,8 +11,8 @@
 WORD prg_rom_32k_max, chr_rom_8k_max;
 
 void map_init_ColorDreams(void) {
-	prg_rom_32k_max = (info.prg_rom_16k_count >> 1) - 1;
-	chr_rom_8k_max = info.chr_rom_8k_count - 1;
+	prg_rom_32k_max = (info.prg.rom.banks_16k >> 1) - 1;
+	chr_rom_8k_max = info.chr.rom.banks_8k - 1;
 
 	EXTCL_CPU_WR_MEM(ColorDreams);
 
@@ -25,7 +25,7 @@ void extcl_cpu_wr_mem_ColorDreams(WORD address, BYTE value) {
 	DBWORD chr_bank;
 
 	/* bus conflict */
-	if (info.mapper_type != CD_NO_CONFLCT) {
+	if (info.mapper.from_db != CD_NO_CONFLCT) {
 		save = value &= prg_rom_rd(address);
 	}
 

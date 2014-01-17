@@ -11,9 +11,9 @@
 WORD prg_rom_32k_max, prg_rom_16k_max, chr_rom_8k_max;
 
 void map_init_62(void) {
-	prg_rom_32k_max = (info.prg_rom_16k_count >> 1) - 1;
-	prg_rom_16k_max = info.prg_rom_16k_count - 1;
-	chr_rom_8k_max = info.chr_rom_8k_count - 1;
+	prg_rom_32k_max = (info.prg.rom.banks_16k >> 1) - 1;
+	prg_rom_16k_max = info.prg.rom.banks_16k - 1;
+	chr_rom_8k_max = info.chr.rom.banks_8k - 1;
 
 	EXTCL_CPU_WR_MEM(62);
 
@@ -35,7 +35,7 @@ void extcl_cpu_wr_mem_62(WORD address, BYTE value) {
 	 * della rom "Super 700-in-1 [p1][!].nes" che non utilizza ne il mirroring
 	 * verticale ne quello orizzontale.
 	 */
-	if ((info.mapper_type == SUPER700IN1) && (address == 0x8790)) {
+	if ((info.mapper.from_db == SUPER700IN1) && (address == 0x8790)) {
 		mirroring_FSCR();
 	}
 

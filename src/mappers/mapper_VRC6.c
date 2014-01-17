@@ -61,9 +61,9 @@ const WORD table_VRC6[2][4] = {
 };
 
 void map_init_VRC6(BYTE revision) {
-	prg_rom_16k_max = info.prg_rom_16k_count - 1;
-	prg_rom_8k_max = info.prg_rom_8k_count - 1;
-	chr_rom_1k_max = info.chr_rom_1k_count - 1;
+	prg_rom_16k_max = info.prg.rom.banks_16k - 1;
+	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
+	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
 
 	EXTCL_CPU_WR_MEM(VRC6);
 	EXTCL_SAVE_MAPPER(VRC6);

@@ -61,9 +61,9 @@ WORD prg_rom_8k_max, chr_rom_2k_max, chr_rom_1k_max;
 BYTE hardwired, type;
 
 void map_init_Namco(BYTE model) {
-	prg_rom_8k_max = info.prg_rom_8k_count - 1;
-	chr_rom_2k_max = (info.chr_rom_1k_count >> 1) - 1;
-	chr_rom_1k_max = info.chr_rom_1k_count - 1;
+	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
+	chr_rom_2k_max = (info.chr.rom.banks_1k >> 1) - 1;
+	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
 
 	switch (model) {
 		case N163:
@@ -89,7 +89,7 @@ void map_init_Namco(BYTE model) {
 				n163.snd_auto_inc = 1;
 			}
 
-			info.mapper_extend_wr = TRUE;
+			info.mapper.extend_wr = TRUE;
 			hardwired = FALSE;
 
 			switch (info.id) {
@@ -102,8 +102,8 @@ void map_init_Namco(BYTE model) {
 					mirroring_H();
 					break;
 				case MINDSEEKER:
-					info.prg_ram_plus_8k_count = 1;
-					info.prg_ram_bat_banks = 1;
+					info.prg.ram.banks_8k_plus = 1;
+					info.prg.ram.bat.banks = 1;
 					break;
 			}
 			break;

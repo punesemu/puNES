@@ -11,8 +11,8 @@
 WORD prg_rom_32k_max, chr_rom_8k_max;
 
 void map_init_GxROM(void) {
-	prg_rom_32k_max = (info.prg_rom_16k_count >> 1) - 1;
-	chr_rom_8k_max = (info.chr_rom_4k_count >> 1) - 1;
+	prg_rom_32k_max = (info.prg.rom.banks_16k >> 1) - 1;
+	chr_rom_8k_max = (info.chr.rom.banks_4k >> 1) - 1;
 
 	if (info.reset >= HARD) {
 		map_prg_rom_8k(4, 0, 0);

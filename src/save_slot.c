@@ -29,7 +29,7 @@
 #include "fds.h"
 #include "gamegenie.h"
 
-#define SAVE_VERSION 10
+#define SAVE_VERSION 11
 #define LENGTH_FILE_NAME 512
 
 BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp);
@@ -40,7 +40,7 @@ BYTE save_slot_save(void) {
 	FILE *fp;
 
 	/* game genie */
-	if (info.mapper == GAMEGENIE_MAPPER) {
+	if (info.mapper.id == GAMEGENIE_MAPPER) {
 		text_add_line_info(1, "[yellow]save is impossible in Game Genie menu");
 		return (EXIT_ERROR);
 	}
@@ -74,7 +74,7 @@ BYTE save_slot_load(void) {
 	}
 
 	/* game genie */
-	if (info.mapper == GAMEGENIE_MAPPER) {
+	if (info.mapper.id == GAMEGENIE_MAPPER) {
 		gamegenie_reset(FALSE);
 		gamegenie.phase = GG_LOAD_ROM;
 		emu_reset(CHANGE_ROM);
@@ -236,14 +236,22 @@ BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 	if (mode == SAVE_SLOT_READ) {
 		save_slot_int(mode, slot, save_slot.version)
 		i += sizeof(info.rom_file);
-		i += sizeof(info.sha1sum);
-		i += sizeof(info.sha1sum_string);
+		i += sizeof(info.sha1sum.prg.value);
+		i += sizeof(info.sha1sum.prg.string);
+		if (save_slot.version >= 11) {
+			i += sizeof(info.sha1sum.chr.value);
+			i += sizeof(info.sha1sum.chr.string);
+		}
 		fseek(fp, i, SEEK_CUR);
 	} else {
 		save_slot_int(mode, slot, save_slot.version)
 		save_slot_ele(mode, slot, info.rom_file)
-		save_slot_ele(mode, slot, info.sha1sum)
-		save_slot_ele(mode, slot, info.sha1sum_string)
+		save_slot_ele(mode, slot, info.sha1sum.prg.value)
+		save_slot_ele(mode, slot, info.sha1sum.prg.string)
+		if (save_slot.version >= 11) {
+			save_slot_ele(mode, slot, info.sha1sum.chr.value)
+			save_slot_ele(mode, slot, info.sha1sum.chr.string)
+		}
 	}
 
 	/* cpu */
@@ -468,7 +476,7 @@ BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 
 	/* mem map */
 	save_slot_ele(mode, slot, mmcpu.ram)
-	if (info.mapper == FDS_MAPPER) {
+	if (info.mapper.id == FDS_MAPPER) {
 		save_slot_mem(mode, slot, prg.ram, 0x8000, FALSE)
 	} else {
 		save_slot_mem(mode, slot, prg.ram, 0x2000, FALSE)
@@ -693,7 +701,7 @@ BYTE name_slot_file(char *file, BYTE slot) {
 	memset(file, 0x00, LENGTH_FILE_NAME);
 
 	/* game genie */
-	if (info.mapper == GAMEGENIE_MAPPER) {
+	if (info.mapper.id == GAMEGENIE_MAPPER) {
 		fl = info.load_rom_file;
 	} else {
 		fl = info.rom_file;

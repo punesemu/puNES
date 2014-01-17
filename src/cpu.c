@@ -1037,7 +1037,7 @@ void cpu_turn_on(void) {
 			 * questo workaround serve solo per
 			 * Dancing Blocks (Sachen) [!].nes
 			 */
-			if (info.mapper == 143) {
+			if (info.mapper.id == 143) {
 				mmcpu.ram[0x004] = 0x00;
 			}
 		}

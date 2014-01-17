@@ -15,14 +15,14 @@ WORD prg_rom_32k_max;
 BYTE type;
 
 void map_init_178(BYTE model) {
-	prg_rom_32k_max = (info.prg_rom_16k_count >> 1) - 1;
+	prg_rom_32k_max = (info.prg.rom.banks_16k >> 1) - 1;
 
 	EXTCL_CPU_WR_MEM(178);
 	EXTCL_SAVE_MAPPER(178);
 	mapper.internal_struct[0] = (BYTE *) &m178;
 	mapper.internal_struct_size[0] = sizeof(m178);
 
-	info.mapper_extend_wr = TRUE;
+	info.mapper.extend_wr = TRUE;
 
 	if (info.reset >= HARD) {
 		memset(&m178, 0x00, sizeof(m178));

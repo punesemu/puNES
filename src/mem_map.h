@@ -56,8 +56,8 @@ enum mirroring_type {
 	ntbl.bank_1k[2] = &ntbl.data[0];\
 	ntbl.bank_1k[3] = &ntbl.data[0x0400]
 
-#define prg_ram_plus_size() info.prg_ram_plus_8k_count << 13
-#define chr_ram_size() info.chr_rom_8k_count << 13
+#define prg_ram_plus_size() info.prg.ram.banks_8k_plus << 13
+#define chr_ram_size() info.chr.rom.banks_8k << 13
 
 struct _mmcpu {
 	BYTE ram[0x800];   // Mirrored four times

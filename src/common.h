@@ -39,7 +39,7 @@ enum reset_type {
 /* le dimesioni dello screen da renderizzare */
 enum screen_dimension { SCR_LINES = 240, SCR_ROWS = 256 };
 enum type_of_system_info { HEADER, DATABASE };
-enum header_type { iNES1_0, iNES2_0 };
+enum header_type { iNES_1_0, NES_2_0 };
 
 #define LENGTH(x) (sizeof(x)/sizeof(*(x)))
 
@@ -55,10 +55,13 @@ struct _info {
 	char load_rom_file[1024];
 	BYTE header;
 	BYTE machine[2];
-	WORD mapper;
-	BYTE mapper_type;
-	BYTE mapper_extend_wr;
-	BYTE mapper_extend_rd;
+	struct _info_mapper {
+		WORD id;
+		BYTE submapper;
+		BYTE extend_wr;
+		BYTE extend_rd;
+		BYTE from_db;
+	} mapper;
 	BYTE portable;
 	BYTE id;
 	BYTE trainer;
@@ -72,19 +75,36 @@ struct _info {
 	BYTE on_cfg;
 	BYTE pause_frames_drawscreen;
 	BYTE first_illegal_opcode;
-	BYTE sha1sum[20];
-	char sha1sum_string[41];
-	BYTE sha1sum_chr[20];
-	char sha1sum_string_chr[41];
-	WORD chr_rom_8k_count;
-	WORD chr_rom_4k_count;
-	WORD chr_rom_1k_count;
-	WORD prg_rom_16k_count;
-	WORD prg_rom_8k_count;
-	BYTE prg_ram_plus_8k_count;
-	BYTE prg_ram_bat_banks;
-	BYTE prg_ram_bat_start;
-
+	struct _info_sh1sum {
+		struct _info_sha1sum_prg {
+			BYTE value[20];
+			char string[41];
+		} prg;
+		struct _info_sha1sum_chr {
+			BYTE value[20];
+			char string[41];
+		} chr;
+	} sha1sum;
+	struct _info_chr {
+		struct _info_chr_rom {
+			WORD banks_8k;
+			WORD banks_4k;
+			WORD banks_1k;
+		} rom;
+	} chr;
+	struct _info_prg {
+		struct _info_prg_rom {
+			WORD banks_16k;
+			WORD banks_8k;
+		} rom;
+		struct _info_prg_ram {
+			BYTE banks_8k_plus;
+			struct _info_prg_ram_bat {
+				BYTE banks;
+				BYTE start;
+			} bat;
+		} ram;
+	} prg;
 	BYTE r4016_dmc_double_read_disabled;
 	BYTE r2002_race_condition_disabled;
 	BYTE r4014_precise_timing_disabled;

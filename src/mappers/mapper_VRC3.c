@@ -15,7 +15,7 @@
 WORD prg_rom_16k_max;
 
 void map_init_VRC3(void) {
-	prg_rom_16k_max = info.prg_rom_16k_count - 1;
+	prg_rom_16k_max = info.prg.rom.banks_16k - 1;
 
 	EXTCL_CPU_WR_MEM(VRC3);
 	EXTCL_SAVE_MAPPER(VRC3);
@@ -23,7 +23,7 @@ void map_init_VRC3(void) {
 	mapper.internal_struct[0] = (BYTE *) &vrc3;
 	mapper.internal_struct_size[0] = sizeof(vrc3);
 
-	info.prg_ram_plus_8k_count = 1;
+	info.prg.ram.banks_8k_plus = 1;
 
 	if (info.reset) {
 		memset(&vrc3, 0x00, sizeof(vrc3));

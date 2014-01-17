@@ -14,9 +14,9 @@
 WORD prg_rom_16k_max, prg_rom_8k_max, chr_rom_4k_max;
 
 void map_init_MMC2and4(void) {
-	prg_rom_16k_max = info.prg_rom_16k_count - 1;
-	prg_rom_8k_max = info.prg_rom_8k_count - 1;
-	chr_rom_4k_max = info.chr_rom_4k_count - 1;
+	prg_rom_16k_max = info.prg.rom.banks_16k - 1;
+	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
+	chr_rom_4k_max = info.chr.rom.banks_4k - 1;
 
 	EXTCL_CPU_WR_MEM(MMC2and4);
 	EXTCL_SAVE_MAPPER(MMC2and4);
@@ -29,8 +29,8 @@ void map_init_MMC2and4(void) {
 		mmc2and4.latch1 = 2;
 
 		/* MMC2 */
-		if (info.mapper == 9) {
-			mapper.rom_map_to[1] = info.prg_rom_8k_count - 3;
+		if (info.mapper.id == 9) {
+			mapper.rom_map_to[1] = info.prg.rom.banks_8k - 3;
 		}
 	}
 }
@@ -41,7 +41,7 @@ void extcl_cpu_wr_mem_MMC2and4(WORD address, BYTE value) {
 
 	switch (address) {
 		case 0xA000:
-			if (info.mapper == 9) {
+			if (info.mapper.id == 9) {
 				/* MMC2 */
 				control_bank_with_AND(0x0F, prg_rom_8k_max)
 				map_prg_rom_8k(1, 0, value);

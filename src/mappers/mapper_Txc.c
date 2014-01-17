@@ -16,11 +16,11 @@ WORD prg_rom_32k_max, prg_rom_8k_max, prg_rom_8k_before_last, chr_rom_8k_max, ch
 BYTE type;
 
 void map_init_Txc(BYTE model) {
-	prg_rom_32k_max = (info.prg_rom_16k_count >> 1) - 1;
-	prg_rom_8k_max = info.prg_rom_8k_count - 1;
-	chr_rom_1k_max = info.chr_rom_1k_count - 1;
-	chr_rom_8k_max = info.chr_rom_8k_count - 1;
-	prg_rom_8k_before_last = info.prg_rom_8k_count - 2;
+	prg_rom_32k_max = (info.prg.rom.banks_16k >> 1) - 1;
+	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
+	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
+	chr_rom_8k_max = info.chr.rom.banks_8k - 1;
+	prg_rom_8k_before_last = info.prg.rom.banks_8k - 2;
 
 	switch (model) {
 		case TXCTW:
@@ -35,7 +35,7 @@ void map_init_Txc(BYTE model) {
 			mapper.internal_struct[0] = (BYTE *) &mmc3;
 			mapper.internal_struct_size[0] = sizeof(mmc3);
 
-			info.mapper_extend_wr = TRUE;
+			info.mapper.extend_wr = TRUE;
 
 			if (info.reset >= HARD) {
 				memset(&mmc3, 0x00, sizeof(mmc3));
@@ -58,7 +58,7 @@ void map_init_Txc(BYTE model) {
 			mapper.internal_struct[0] = (BYTE *) &t22211x;
 			mapper.internal_struct_size[0] = sizeof(t22211x);
 
-			info.mapper_extend_wr = TRUE;
+			info.mapper.extend_wr = TRUE;
 
 			if (info.reset >= HARD) {
 				memset(&t22211x, 0x00, sizeof(t22211x));

@@ -88,17 +88,17 @@ WORD chr_rom_8k_max, chr_rom_4k_max, chr_rom_2k_max, chr_rom_1k_max;
 BYTE type;
 
 void map_init_Sunsoft(BYTE model) {
-	prg_rom_16k_max = info.prg_rom_16k_count - 1;
-	prg_rom_8k_max = info.prg_rom_8k_count - 1;
-	chr_rom_8k_max = info.chr_rom_8k_count - 1;
-	chr_rom_4k_max = info.chr_rom_4k_count - 1;
-	chr_rom_2k_max = (info.chr_rom_1k_count >> 1) - 1;
-	chr_rom_1k_max = info.chr_rom_1k_count - 1;
+	prg_rom_16k_max = info.prg.rom.banks_16k - 1;
+	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
+	chr_rom_8k_max = info.chr.rom.banks_8k - 1;
+	chr_rom_4k_max = info.chr.rom.banks_4k - 1;
+	chr_rom_2k_max = (info.chr.rom.banks_1k >> 1) - 1;
+	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
 
 	switch (model) {
 		case SUN1:
 			EXTCL_CPU_WR_MEM(Sunsoft_S1);
-			info.mapper_extend_wr = TRUE;
+			info.mapper.extend_wr = TRUE;
 			break;
 		case SUN2A:
 		case SUN2B:
@@ -128,8 +128,8 @@ void map_init_Sunsoft(BYTE model) {
 			}
 
 			if (info.id == MAHARAJA) {
-				info.prg_ram_plus_8k_count = 1;
-				info.prg_ram_bat_banks = 1;
+				info.prg.ram.banks_8k_plus = 1;
+				info.prg.ram.bat.banks = 1;
 			}
 			break;
 		case FM7:
@@ -145,10 +145,10 @@ void map_init_Sunsoft(BYTE model) {
 				memset(&fm7, 0x00, sizeof(fm7));
 			}
 
-			info.prg_ram_plus_8k_count = 1;
+			info.prg.ram.banks_8k_plus = 1;
 
 			if ((info.id == BARCODEWORLD) || (info.id == DODGEDANPEI2)) {
-				info.prg_ram_bat_banks = 1;
+				info.prg.ram.bat.banks = 1;
 			}
 
 			fm7.square[0].timer = 1;

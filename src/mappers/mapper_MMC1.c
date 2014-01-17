@@ -21,7 +21,7 @@ enum MMC1_regs { CTRL, CHR0, CHR1, PRG0 };
 
 #define chr_reg(reg)\
 	value = reg;\
-	switch (info.mapper_type) {\
+	switch (info.mapper.from_db) {\
 		case SNROM:\
 			/*\
 			 * 4bit0\
@@ -61,9 +61,9 @@ enum MMC1_regs { CTRL, CHR0, CHR1, PRG0 };
 WORD prg_rom_16k_max, chr_rom_8k_max, chr_rom_4k_max;
 
 void map_init_MMC1(void) {
-	prg_rom_16k_max = info.prg_rom_16k_count - 1;
-	chr_rom_8k_max = info.chr_rom_8k_count - 1;
-	chr_rom_4k_max = info.chr_rom_4k_count - 1;
+	prg_rom_16k_max = info.prg.rom.banks_16k - 1;
+	chr_rom_8k_max = info.chr.rom.banks_8k - 1;
+	chr_rom_4k_max = info.chr.rom.banks_4k - 1;
 
 	EXTCL_CPU_WR_MEM(MMC1);
 	EXTCL_SAVE_MAPPER(MMC1);
@@ -77,18 +77,18 @@ void map_init_MMC1(void) {
 		mmc1.chr1 = 1;
 	}
 
-	switch (info.mapper_type) {
+	switch (info.mapper.from_db) {
 		case SNROM:
 			/* SUROM usa 8k di PRG Ram */
-			info.prg_ram_plus_8k_count = 1;
+			info.prg.ram.banks_8k_plus = 1;
 			break;
 		case SOROM:
 			/* SOROM usa 16k di PRG Ram */
-			info.prg_ram_plus_8k_count = 2;
+			info.prg.ram.banks_8k_plus = 2;
 			break;
 		case SXROM:
 			/* SXROM usa 32k di PRG Ram */
-			info.prg_ram_plus_8k_count = 4;
+			info.prg.ram.banks_8k_plus = 4;
 			break;
 	}
 }

@@ -15,13 +15,13 @@ WORD chr_rom_8k_max;
 BYTE type, mask, state;
 
 void map_init_CNROM(BYTE model) {
-	chr_rom_8k_max = info.chr_rom_8k_count - 1;
+	chr_rom_8k_max = info.chr.rom.banks_8k - 1;
 
 	EXTCL_CPU_WR_MEM(CNROM);
 
 	mask = state = 0x00;
 
-	if ((info.mapper_type >= CNROM_26CE27CE) && (info.mapper_type <= CNROM_26NCE27NCE)) {
+	if ((info.mapper.from_db >= CNROM_26CE27CE) && (info.mapper.from_db <= CNROM_26NCE27NCE)) {
 
 		EXTCL_RD_CHR(CNROM);
 		EXTCL_SAVE_MAPPER(CNROM);
@@ -31,7 +31,7 @@ void map_init_CNROM(BYTE model) {
 		memset(&cnrom_2627, 0x00, sizeof(cnrom_2627));
 		mask = 0x03;
 
-		switch (info.mapper_type) {
+		switch (info.mapper.from_db) {
 			case CNROM_26CE27CE:
 				state = 0x03;
 				break;

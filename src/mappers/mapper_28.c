@@ -19,8 +19,8 @@ BYTE static const outer_and[4] = { 0x7E, 0x7C, 0x78, 0x70 };
 WORD prg_rom_16k_max, chr_rom_8k_max;
 
 void map_init_28(void) {
-	prg_rom_16k_max = info.prg_rom_16k_count - 1;
-	chr_rom_8k_max = info.chr_rom_8k_count - 1;
+	prg_rom_16k_max = info.prg.rom.banks_16k - 1;
+	chr_rom_8k_max = info.chr.rom.banks_8k - 1;
 
 	EXTCL_CPU_WR_MEM(28);
 	EXTCL_CPU_RD_MEM(28);
@@ -34,7 +34,7 @@ void map_init_28(void) {
 		m28.prg[0] = 0x0F;
 	}
 
-	info.mapper_extend_wr = TRUE;
+	info.mapper.extend_wr = TRUE;
 }
 void extcl_cpu_wr_mem_28(WORD address, BYTE value) {
 	if (address < 0x5000) {

@@ -749,7 +749,7 @@ BYTE name_pgs_file(char *file) {
 	char ext[10], *last_dot;
 
 	/* game genie */
-	if (info.mapper == GAMEGENIE_MAPPER) {
+	if (info.mapper.id == GAMEGENIE_MAPPER) {
 		return (EXIT_ERROR);
 	}
 

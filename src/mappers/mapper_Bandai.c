@@ -72,10 +72,10 @@ WORD prg_rom_32k_max, prg_rom_16k_max, chr_ram_4k_max, chr_rom_1k_max;
 BYTE type;
 
 void map_init_Bandai(BYTE model) {
-	prg_rom_32k_max = (info.prg_rom_16k_count >> 1) - 1;
-	prg_rom_16k_max = info.prg_rom_16k_count - 1;
-	chr_ram_4k_max = info.chr_rom_4k_count - 1;
-	chr_rom_1k_max = info.chr_rom_1k_count - 1;
+	prg_rom_32k_max = (info.prg.rom.banks_16k >> 1) - 1;
+	prg_rom_16k_max = info.prg.rom.banks_16k - 1;
+	chr_ram_4k_max = info.chr.rom.banks_4k - 1;
+	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
 
 	switch (model) {
 		case B161X02X74:
@@ -111,13 +111,13 @@ void map_init_Bandai(BYTE model) {
 			mapper.internal_struct[0] = (BYTE *) &FCGX;
 			mapper.internal_struct_size[0] = sizeof(FCGX);
 
-			info.mapper_extend_wr = TRUE;
+			info.mapper.extend_wr = TRUE;
 
 			if (info.reset >= HARD) {
 				memset(&FCGX, 0x00, sizeof(FCGX));
 				FCGX.e0.output = FCGX.e1.output = 0x10;
 
-				if (info.prg_rom_16k_count >= 32) {
+				if (info.prg.rom.banks_16k >= 32) {
 					map_prg_rom_8k(2, 2, prg_rom_16k_max);
 				}
 			} else {
@@ -129,15 +129,15 @@ void map_init_Bandai(BYTE model) {
 
 			switch (model) {
 				case E24C01:
-					info.prg_ram_bat_banks = TRUE;
+					info.prg.ram.bat.banks = TRUE;
 					FCGX.e0.size = 128;
 					break;
 				case E24C02:
-					info.prg_ram_bat_banks = TRUE;
+					info.prg.ram.bat.banks = TRUE;
 					FCGX.e0.size = 256;
 					break;
 				case DATACH:
-					info.prg_ram_bat_banks = TRUE;
+					info.prg.ram.bat.banks = TRUE;
 					FCGX.e0.size = 256;
 					FCGX.e1.size = 128;
 					break;
@@ -148,8 +148,8 @@ void map_init_Bandai(BYTE model) {
 
 	switch (info.id) {
 		case FAMICOMJUMPII:
-			info.prg_ram_plus_8k_count = 1;
-			info.prg_ram_bat_banks = 1;
+			info.prg.ram.banks_8k_plus = 1;
+			info.prg.ram.bat.banks = 1;
 			break;
 	}
 
@@ -190,7 +190,7 @@ void extcl_cpu_wr_mem_Bandai_FCGX(WORD address, BYTE value) {
 		return;
 	}
 
-	if (!info.prg_ram_plus_8k_count) {
+	if (!info.prg.ram.banks_8k_plus) {
 		address |= 0x8000;
 	}
 
@@ -205,7 +205,7 @@ void extcl_cpu_wr_mem_Bandai_FCGX(WORD address, BYTE value) {
 		case 0x8007: {
 			const BYTE slot = address & 0x000F;
 
-			if (info.prg_rom_16k_count >= 32) {
+			if (info.prg.rom.banks_16k >= 32) {
 				BYTE i;
 
 				FCGX.reg[slot] = value;
@@ -235,7 +235,7 @@ void extcl_cpu_wr_mem_Bandai_FCGX(WORD address, BYTE value) {
 			return;
 		}
 		case 0x8008:
-			if (info.prg_rom_16k_count >= 32) {
+			if (info.prg.rom.banks_16k >= 32) {
 				value = ((mapper.rom_map_to[0] >> 1) & 0x10) | (value & 0x0F);
 			}
 			control_bank(prg_rom_16k_max)

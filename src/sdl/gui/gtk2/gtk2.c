@@ -892,7 +892,7 @@ void help_about(void) {
 void make_reset(int type) {
 	if (type == HARD) {
 		if (cfg->gamegenie && gamegenie.rom_present) {
-			if (info.mapper != GAMEGENIE_MAPPER) {
+			if (info.mapper.id != GAMEGENIE_MAPPER) {
 				strcpy(info.load_rom_file, info.rom_file);
 			}
 			gamegenie_reset(TRUE);
@@ -902,7 +902,7 @@ void make_reset(int type) {
 			 * se e' stato disabilitato il game genie quando ormai
 			 * e' gia' in esecuzione e si preme un reset, carico la rom.
 			 */
-			if (info.mapper == GAMEGENIE_MAPPER) {
+			if (info.mapper.id == GAMEGENIE_MAPPER) {
 				gamegenie_reset(TRUE);
 				type = CHANGE_ROM;
 			}

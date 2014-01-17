@@ -158,14 +158,14 @@ static const BYTE prg_ram_access[6][8] = {
 };
 
 void map_init_MMC5(void) {
-	prg_rom_32k_max = (info.prg_rom_16k_count >> 1) - 1;
-	prg_rom_16k_max = info.prg_rom_16k_count - 1;
-	prg_rom_8k_max = info.prg_rom_8k_count - 1;
+	prg_rom_32k_max = (info.prg.rom.banks_16k >> 1) - 1;
+	prg_rom_16k_max = info.prg.rom.banks_16k - 1;
+	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
 
-	chr_rom_8k_max = info.chr_rom_8k_count - 1;
-	chr_rom_4k_max = info.chr_rom_4k_count - 1;
-	chr_rom_2k_max = (info.chr_rom_4k_count << 1) - 1;
-	chr_rom_1k_max = (info.chr_rom_4k_count << 2) - 1;
+	chr_rom_8k_max = info.chr.rom.banks_8k - 1;
+	chr_rom_4k_max = info.chr.rom.banks_4k - 1;
+	chr_rom_2k_max = (info.chr.rom.banks_4k << 1) - 1;
+	chr_rom_1k_max = (info.chr.rom.banks_4k << 2) - 1;
 
 	EXTCL_CPU_WR_MEM(MMC5);
 	EXTCL_CPU_RD_MEM(MMC5);
@@ -217,30 +217,30 @@ void map_init_MMC5(void) {
 		mmc5.S4.length.value = 0;
 	}
 
-	info.mapper_extend_wr = TRUE;
+	info.mapper.extend_wr = TRUE;
 	irql2f.present = TRUE;
 
-	switch (info.mapper_type) {
+	switch (info.mapper.from_db) {
 		case EKROM:
-			info.prg_ram_plus_8k_count = 1;
-			info.prg_ram_bat_banks = 1;
+			info.prg.ram.banks_8k_plus = 1;
+			info.prg.ram.bat.banks = 1;
 			prg_ram_mode = PRG_RAM_8K;
 			break;
 		case ELROM:
 		default:
-			info.prg_ram_plus_8k_count = FALSE;
-			info.prg_ram_bat_banks = FALSE;
+			info.prg.ram.banks_8k_plus = FALSE;
+			info.prg.ram.bat.banks = FALSE;
 			prg_ram_mode = PRG_RAM_NONE;
 			break;
 		case ETROM:
-			info.prg_ram_plus_8k_count = 2;
-			info.prg_ram_bat_banks = 1;
-			info.prg_ram_bat_start = 0;
+			info.prg.ram.banks_8k_plus = 2;
+			info.prg.ram.bat.banks = 1;
+			info.prg.ram.bat.start = 0;
 			prg_ram_mode = PRG_RAM_16K;
 			break;
 		case EWROM:
-			info.prg_ram_plus_8k_count = 4;
-			info.prg_ram_bat_banks = 4;
+			info.prg.ram.banks_8k_plus = 4;
+			info.prg.ram.bat.banks = 4;
 			prg_ram_mode = PRG_RAM_32K;
 			break;
 	}

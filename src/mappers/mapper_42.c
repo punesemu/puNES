@@ -13,8 +13,8 @@
 WORD prg_rom_8k_max, chr_rom_8k_max;
 
 void map_init_42(void) {
-	prg_rom_8k_max = info.prg_rom_8k_count - 1;
-	chr_rom_8k_max = info.chr_rom_8k_count - 1;
+	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
+	chr_rom_8k_max = info.chr.rom.banks_8k - 1;
 
 	EXTCL_CPU_WR_MEM(42);
 	EXTCL_CPU_RD_MEM(42);
@@ -23,7 +23,7 @@ void map_init_42(void) {
 	mapper.internal_struct[0] = (BYTE *) &m42;
 	mapper.internal_struct_size[0] = sizeof(m42);
 
-	map_prg_rom_8k(4, 0, (info.prg_rom_16k_count >> 1) - 1);
+	map_prg_rom_8k(4, 0, (info.prg.rom.banks_16k >> 1) - 1);
 	m42.prg_8k_6000 = &prg.rom[0 << 13];
 }
 void extcl_cpu_wr_mem_42(WORD address, BYTE value) {

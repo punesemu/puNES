@@ -17,7 +17,7 @@
 #include "text.h"
 #include "uncompress.h"
 
-BYTE map_init(WORD mapper_type) {
+BYTE map_init(void) {
 	BYTE i;
 	/*
 	 * di default la routine di salvataggio
@@ -33,7 +33,7 @@ BYTE map_init(WORD mapper_type) {
 	/* disabilito tutte le chiamate relative alle mappers */
 	extcl_init();
 
-	switch (mapper_type) {
+	switch (info.mapper.id) {
 		case 0:
 			map_init_0();
 			break;
@@ -41,9 +41,9 @@ BYTE map_init(WORD mapper_type) {
 			map_init_MMC1();
 			break;
 		case 2:
-			if (info.mapper_type == UNLROM) {
+			if (info.mapper.from_db == UNLROM) {
 				map_init_UxROM(UNLROM);
-			} else if (info.mapper_type == UNROM_BK2) {
+			} else if (info.mapper.from_db == UNROM_BK2) {
 				map_init_UxROM(UNROM_BK2);
 			} else {
 				map_init_UxROM(UXROM);
@@ -79,7 +79,7 @@ BYTE map_init(WORD mapper_type) {
 			map_init_Waixing(WPSX);
 			break;
 		case 16: {
-			switch (info.mapper_type) {
+			switch (info.mapper.from_db) {
 				case E24C02:
 					map_init_Bandai(E24C02);
 					break;
@@ -99,15 +99,15 @@ BYTE map_init(WORD mapper_type) {
 			map_init_Namco(N163);
 			break;
 		case 21:
-			map_init_VRC4(info.mapper_type == DEFAULT ? VRC4A : info.mapper_type);
+			map_init_VRC4(info.mapper.from_db == DEFAULT ? VRC4A : info.mapper.from_db);
 			break;
 		case 22:
 			map_init_VRC2(VRC2A);
 			break;
 		case 23:
-			if (info.mapper_type == VRC4BMC) {
+			if (info.mapper.from_db == VRC4BMC) {
 				map_init_VRC4BMC();
-			} else if (info.mapper_type == VRC4E) {
+			} else if (info.mapper.from_db == VRC4E) {
 				map_init_VRC4(VRC4E);
 			} else {
 				map_init_VRC2(VRC2B);
@@ -117,7 +117,7 @@ BYTE map_init(WORD mapper_type) {
 			map_init_VRC6(VRC6A);
 			break;
 		case 25:
-			map_init_VRC4(info.mapper_type == DEFAULT ? VRC4B : info.mapper_type);
+			map_init_VRC4(info.mapper.from_db == DEFAULT ? VRC4B : info.mapper.from_db);
 			break;
 		case 26:
 			map_init_VRC6(VRC6B);
@@ -183,7 +183,7 @@ BYTE map_init(WORD mapper_type) {
 			map_init_58();
 			break;
 		case 60:
-			if (info.mapper_type == MAP60_VT5201) {
+			if (info.mapper.from_db == MAP60_VT5201) {
 				map_init_60_vt5201();
 			} else {
 				map_init_60();
@@ -244,7 +244,7 @@ BYTE map_init(WORD mapper_type) {
 			map_init_Ave(NINA06);
 			break;
 		case 80:
-			if (info.mapper_type == X1005B) {
+			if (info.mapper.from_db == X1005B) {
 				map_init_Taito(X1005B);
 			} else {
 				map_init_Taito(X1005A);
@@ -257,7 +257,7 @@ BYTE map_init(WORD mapper_type) {
 			map_init_83();
 			break;
 		case 85:
-			if (info.mapper_type == VRC7A) {
+			if (info.mapper.from_db == VRC7A) {
 				map_init_VRC7(VRC7A);
 			} else {
 				map_init_VRC7(VRC7B);
@@ -330,7 +330,7 @@ BYTE map_init(WORD mapper_type) {
 			map_init_Futuremedia();
 			break;
 		case 118:
-			if (info.mapper_type == TKSROM) {
+			if (info.mapper.from_db == TKSROM) {
 				map_init_TxROM(TKSROM);
 			} else {
 				map_init_TxROM(TLSROM);
@@ -440,16 +440,16 @@ BYTE map_init(WORD mapper_type) {
 			map_init_176();
 			break;
 		case 177:
-			if (info.mapper_type != DEFAULT) {
+			if (info.mapper.from_db != DEFAULT) {
 				/* questa e' la mappers 179 in nestopia */
-				map_init_Hen(info.mapper_type);
+				map_init_Hen(info.mapper.from_db);
 			} else {
 				map_init_Hen(HEN_177);
 			}
 			break;
 		case 178:
-			if (info.mapper_type != DEFAULT) {
-				map_init_178(info.mapper_type);
+			if (info.mapper.from_db != DEFAULT) {
+				map_init_178(info.mapper.from_db);
 			} else {
 				map_init_178(MAP178);
 			}
@@ -576,7 +576,7 @@ BYTE map_init(WORD mapper_type) {
 			map_init_231();
 			break;
 		case 232:
-			info.mapper_type = BF9096;
+			info.mapper.from_db = BF9096;
 			map_init_Camerica();
 			break;
 		case 233:
@@ -613,7 +613,7 @@ BYTE map_init(WORD mapper_type) {
 			map_init_249();
 			break;
 		default:
-			text_add_line_info(1, "[yellow]Mapper %d not supported", mapper_type);
+			text_add_line_info(1, "[yellow]Mapper %d not supported", info.mapper.id);
 			fprintf(stderr, "Mapper not supported\n");
 			EXTCL_CPU_WR_MEM(0);
 			break;
@@ -634,7 +634,7 @@ BYTE map_init(WORD mapper_type) {
 }
 void map_quit(void) {
 	/* se c'e' della PRG Ram battery packed la salvo in un file */
-	if (info.prg_ram_bat_banks) {
+	if (info.prg.ram.bat.banks) {
 		char prg_ram_file[1024], *last_dot;
 		FILE *fp;
 
@@ -666,23 +666,12 @@ void map_quit(void) {
 		}
 	}
 
-	info.mapper = 0;
-	info.mapper_type = 0;
-	info.mapper_extend_wr = 0;
-	info.mapper_extend_rd = 0;
 	info.id = 0;
-	memset(info.sha1sum, 0, sizeof(info.sha1sum));
-	memset(info.sha1sum_string, 0, sizeof(info.sha1sum_string));
-	memset(info.sha1sum_chr, 0, sizeof(info.sha1sum_chr));
-	memset(info.sha1sum_string_chr, 0, sizeof(info.sha1sum_string_chr));
-	info.chr_rom_8k_count = 0;
-	info.chr_rom_4k_count = 0;
-	info.chr_rom_1k_count = 0;
-	info.prg_rom_16k_count = 0;
-	info.prg_rom_8k_count = 0;
-	info.prg_ram_plus_8k_count = 0;
-	info.prg_ram_bat_banks = 0;
-	info.prg_ram_bat_start = DEFAULT;
+	memset(&info.mapper, 0x00, sizeof(info.mapper));
+	memset(&info.sha1sum, 0x00, sizeof(info.sha1sum));
+	memset(&info.chr, 0x00, sizeof(info.chr));
+	memset(&info.prg, 0x00, sizeof(info.prg));
+	info.prg.ram.bat.start = DEFAULT;
 
 	/* PRG */
 	if (prg.rom) {
@@ -695,7 +684,7 @@ void map_quit(void) {
 		free(prg.ram_plus);
 	}
 	prg.rom = NULL;
-	memset(prg.rom_8k, 0, sizeof(prg.rom_8k));
+	memset(prg.rom_8k, 0x00, sizeof(prg.rom_8k));
 	prg.ram = NULL;
 	prg.ram_plus = NULL;
 	prg.ram_plus_8k = NULL;
@@ -722,8 +711,8 @@ void map_prg_rom_8k(BYTE banks_8k, BYTE at, BYTE value) {
 void map_prg_rom_8k_reset(void) {
 	mapper.rom_map_to[0] = 0;
 	mapper.rom_map_to[1] = 1;
-	mapper.rom_map_to[2] = info.prg_rom_8k_count - 2;
-	mapper.rom_map_to[3] = info.prg_rom_8k_count - 1;
+	mapper.rom_map_to[2] = info.prg.rom.banks_8k - 2;
+	mapper.rom_map_to[3] = info.prg.rom.banks_8k - 1;
 }
 void map_prg_rom_8k_update(void) {
 	BYTE i;
@@ -737,7 +726,7 @@ void map_prg_ram_init(void) {
 	 * se non ci sono stati settaggi particolari della mapper
 	 * e devono esserci banchi di PRG Ram extra allora li assegno.
 	 */
-	if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) && info.prg_ram_plus_8k_count
+	if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) && info.prg.ram.banks_8k_plus
 	        && !prg.ram_plus) {
 		/* alloco la memoria necessaria */
 		prg.ram_plus = (BYTE *) malloc(prg_ram_plus_size());
@@ -746,7 +735,7 @@ void map_prg_ram_init(void) {
 		/* gli 8k iniziali */
 		prg.ram_plus_8k = &prg.ram_plus[0];
 		/* controllo se la rom ha una RAM PRG battery packed */
-		if (info.prg_ram_bat_banks && !tas.type) {
+		if (info.prg.ram.bat.banks && !tas.type) {
 			char prg_ram_file[1024], *last_dot;
 			FILE *fp;
 

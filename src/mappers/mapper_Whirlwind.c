@@ -14,8 +14,8 @@
 WORD prg_rom_32k_max, prg_rom_8k_max;
 
 void map_init_Whirlwind(void) {
-	prg_rom_32k_max = (info.prg_rom_16k_count >> 1) - 1;
-	prg_rom_8k_max = info.prg_rom_8k_count - 1;
+	prg_rom_32k_max = (info.prg.rom.banks_16k >> 1) - 1;
+	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
 
 	EXTCL_CPU_WR_MEM(Whirlwind);
 	EXTCL_CPU_RD_MEM(Whirlwind);
@@ -23,7 +23,7 @@ void map_init_Whirlwind(void) {
 	mapper.internal_struct[0] = (BYTE *) &whirlwind;
 	mapper.internal_struct_size[0] = sizeof(whirlwind);
 
-	info.prg_ram_plus_8k_count = FALSE;
+	info.prg.ram.banks_8k_plus = FALSE;
 
 	if (info.reset >= HARD) {
 		memset(&whirlwind, 0x00, sizeof(whirlwind));

@@ -236,11 +236,12 @@ BYTE emu_load_rom(void) {
 			recent_roms_add_wrap()
 		}
 	} else if (info.gui) {
-		info.chr_rom_8k_count = info.prg_rom_16k_count = 1;
+		/* impostazione primaria */
+		info.chr.rom.banks_8k = info.prg.rom.banks_16k = 1;
 
-		info.prg_rom_8k_count = info.prg_rom_16k_count * 2;
-		info.chr_rom_4k_count = info.chr_rom_8k_count * 2;
-		info.chr_rom_1k_count = info.chr_rom_4k_count * 4;
+		info.prg.rom.banks_8k = info.prg.rom.banks_16k * 2;
+		info.chr.rom.banks_4k = info.chr.rom.banks_8k * 2;
+		info.chr.rom.banks_1k = info.chr.rom.banks_4k * 4;
 
 		/* PRG Ram */
 		if (!(prg.ram = (BYTE *) malloc(0x2000))) {
@@ -249,8 +250,8 @@ BYTE emu_load_rom(void) {
 		}
 
 		/* PRG Rom */
-		if ((prg.rom = (BYTE *) malloc(info.prg_rom_16k_count * (16 * 1024)))) {
-			memset(prg.rom, 0xEA, info.prg_rom_16k_count * (16 * 1024));
+		if ((prg.rom = (BYTE *) malloc(info.prg.rom.banks_16k * (16 * 1024)))) {
+			memset(prg.rom, 0xEA, info.prg.rom.banks_16k * (16 * 1024));
 		} else {
 			fprintf(stderr, "Out of memory\n");
 			return (EXIT_ERROR);
@@ -297,7 +298,7 @@ BYTE emu_search_in_database(FILE *fp) {
 	WORD i;
 
 	/* setto i default prima della ricerca */
-	info.machine[DATABASE] = info.mapper_type = info.id = DEFAULT;
+	info.machine[DATABASE] = info.mapper.from_db = info.id = DEFAULT;
 
 	/* posiziono il puntatore del file */
 	if (info.trainer) {
@@ -307,38 +308,38 @@ BYTE emu_search_in_database(FILE *fp) {
 	}
 
 	/* mi alloco una zona di memoria dove leggere la PRG Rom */
-	sha1prg = (BYTE *) malloc(info.prg_rom_16k_count * (16 * 1024));
+	sha1prg = (BYTE *) malloc(info.prg.rom.banks_16k * (16 * 1024));
 	if (!sha1prg) {
 		fprintf(stderr, "Out of memory\n");
 		return (EXIT_ERROR);
 	}
 	/* leggo dal file la PRG Rom */
-	if (fread(&sha1prg[0], (16 * 1024), info.prg_rom_16k_count, fp) < info.prg_rom_16k_count) {
+	if (fread(&sha1prg[0], (16 * 1024), info.prg.rom.banks_16k, fp) < info.prg.rom.banks_16k) {
 		fprintf(stderr, "Error on read prg\n");
 		free(sha1prg);
 		return (EXIT_ERROR);
 	}
 	/* calcolo l'sha1 della PRG Rom */
-	sha1_csum(sha1prg, info.prg_rom_16k_count * (16 * 1024), info.sha1sum, info.sha1sum_string,
-	        LOWER);
+	sha1_csum(sha1prg, info.prg.rom.banks_16k * (16 * 1024), info.sha1sum.prg.value,
+	        info.sha1sum.prg.string, LOWER);
 	/* libero la memoria */
 	free(sha1prg);
 	/* cerco nel database */
 	for (i = 0; i < LENGTH(dblist); i++) {
-		if (!(memcmp(dblist[i].sha1sum, info.sha1sum_string, 40))) {
-			info.mapper = dblist[i].mapper;
-			info.mapper_type = dblist[i].type;
+		if (!(memcmp(dblist[i].sha1sum, info.sha1sum.prg.string, 40))) {
+			info.mapper.id = dblist[i].mapper;
+			info.mapper.from_db = dblist[i].type;
 			info.id = dblist[i].id;
 			info.machine[DATABASE] = dblist[i].machine;
-			switch (info.mapper) {
+			switch (info.mapper.id) {
 				case 2:
 					/*
 					 * Fix per "Best of the Best - Championship Karate (E) [!].nes"
 					 * che ha l'header INES non corretto.
 					 */
 					if (info.id == BAD_INES_BOTBE) {
-						info.prg_rom_16k_count = 16;
-						info.chr_rom_8k_count = 0;
+						info.prg.rom.banks_16k = 16;
+						info.chr.rom.banks_8k = 0;
 					}
 					break;
 				case 7:
@@ -347,36 +348,36 @@ BYTE emu_search_in_database(FILE *fp) {
 					 * che ha l'header INES non corretto.
 					 */
 					if (info.id == BAD_INES_WWFWE) {
-						info.prg_rom_16k_count = 8;
-						info.chr_rom_8k_count = 0;
+						info.prg.rom.banks_16k = 8;
+						info.chr.rom.banks_8k = 0;
 					}
 					break;
 				case 10:
 					/* Fix per Famicom Wars (J) [!] che ha l'header INES errato */
 					if (info.id == BAD_INES_FWJ) {
-						info.chr_rom_8k_count = 8;
+						info.chr.rom.banks_8k = 8;
 					}
 					break;
 				case 11:
 					/* Fix per King Neptune's Adventure (Color Dreams) [!]
 					 * che ha l'header INES errato */
 					if (info.id == BAD_KING_NEPT) {
-						info.prg_rom_16k_count = 4;
-						info.chr_rom_8k_count = 4;
+						info.prg.rom.banks_16k = 4;
+						info.chr.rom.banks_8k = 4;
 					}
 					break;
 				case 33:
 					if (info.id == BAD_INES_FLINJ) {
-						info.chr_rom_8k_count = 32;
+						info.chr.rom.banks_8k = 32;
 					}
 					break;
 				case 96:
-					info.chr_rom_8k_count = 4;
+					info.chr.rom.banks_8k = 4;
 					mapper.write_vram = TRUE;
 					break;
 				case 191:
 					if (info.id == BAD_SUGOROQUEST) {
-						info.chr_rom_8k_count = 16;
+						info.chr.rom.banks_8k = 16;
 					}
 					break;
 				case 235:
@@ -388,39 +389,39 @@ BYTE emu_search_in_database(FILE *fp) {
 					 * 150-in-1 [a1][p1][!].nes ha lo stesso chsum del 260-in-1 [p1][b1].nes
 					 * ma ha un numero di prg_rom_16k_count di 127.
 					 */
-					if (!info.prg_rom_16k_count) {
-						info.prg_rom_16k_count = 256;
+					if (!info.prg.rom.banks_16k) {
+						info.prg.rom.banks_16k = 256;
 					}
 					break;
 			}
-			if (info.mapper_type == UNK_VERTICAL) {
+			if (info.mapper.from_db == UNK_VERTICAL) {
 				mirroring_V();
 			}
-			if (info.mapper_type == UNK_HORIZONTAL) {
+			if (info.mapper.from_db == UNK_HORIZONTAL) {
 				mirroring_H();
 			}
 			break;
 		}
 	}
 	/* calcolo anche l'sha1 della CHR rom */
-	if (info.chr_rom_8k_count) {
+	if (info.chr.rom.banks_8k) {
 		BYTE *sha1chr;
 
 		/* mi alloco una zona di memoria dove leggere la CHR Rom */
-		sha1chr = (BYTE *) malloc(info.chr_rom_8k_count * (8 * 1024));
+		sha1chr = (BYTE *) malloc(info.chr.rom.banks_8k * (8 * 1024));
 		if (!sha1chr) {
 			fprintf(stderr, "Out of memory\n");
 			return (EXIT_ERROR);
 		}
 		/* leggo dal file la CHR Rom */
-		if (fread(&sha1chr[0], (8 * 1024), info.chr_rom_8k_count, fp) < info.chr_rom_8k_count) {
+		if (fread(&sha1chr[0], (8 * 1024), info.chr.rom.banks_8k, fp) < info.chr.rom.banks_8k) {
 			fprintf(stderr, "Error on read chr\n");
 			free(sha1chr);
 			return (EXIT_ERROR);
 		}
 		/* calcolo l'sha1 della CHR Rom */
-		sha1_csum(sha1chr, info.chr_rom_8k_count * (8 * 1024), info.sha1sum_chr,
-		        info.sha1sum_string_chr, LOWER);
+		sha1_csum(sha1chr, info.chr.rom.banks_8k * (8 * 1024), info.sha1sum.chr.value,
+		        info.sha1sum.chr.string, LOWER);
 		/* libero la memoria */
 		free(sha1chr);
 	}
@@ -457,9 +458,9 @@ void emu_set_title(char *title) {
 
 #ifndef RELEASE
 	if (cfg->scale != X1) {
-		char mapper_type[10];
-		sprintf(mapper_type, ", %d", info.mapper);
-		strcat(title, mapper_type);
+		char mapper_id[10];
+		sprintf(mapper_id, ", %d", info.mapper.id);
+		strcat(title, mapper_id);
 	}
 #endif
 
@@ -524,7 +525,7 @@ BYTE emu_turn_on(void) {
 	 * ...e inizializzazione della mapper (che
 	 * deve necessariamente seguire quella della PPU.
 	 */
-	if (map_init(info.mapper)) {
+	if (map_init()) {
 		return (EXIT_ERROR);
 	}
 
@@ -628,7 +629,7 @@ BYTE emu_reset(BYTE type) {
 	cpu_turn_on();
 
 	/* mapper */
-	if (map_init(info.mapper)) {
+	if (map_init()) {
 		return (EXIT_ERROR);
 	}
 

@@ -14,7 +14,7 @@
 WORD prg_rom_32k_max;
 
 void map_init_163(void) {
-	prg_rom_32k_max = (info.prg_rom_16k_count >> 1) - 1;
+	prg_rom_32k_max = (info.prg.rom.banks_16k >> 1) - 1;
 
 	EXTCL_CPU_WR_MEM(163);
 	EXTCL_CPU_RD_MEM(163);
@@ -34,10 +34,10 @@ void map_init_163(void) {
 		map_prg_rom_8k(4, 0, value);
 	}
 
-	info.mapper_extend_wr = TRUE;
+	info.mapper.extend_wr = TRUE;
 
-	info.prg_ram_plus_8k_count = 1;
-	info.prg_ram_bat_banks = 1;
+	info.prg.ram.banks_8k_plus = 1;
+	info.prg.ram.bat.banks = 1;
 }
 void extcl_cpu_wr_mem_163(WORD address, BYTE value) {
 	if ((address == 0x5100) && (value == 0x06)) {

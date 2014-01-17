@@ -24,8 +24,8 @@ WORD prg_rom_8k_max, chr_rom_1k_max, mask;
 BYTE type, delay;
 
 void map_init_VRC7(BYTE revision) {
-	prg_rom_8k_max = info.prg_rom_8k_count - 1;
-	chr_rom_1k_max = info.chr_rom_1k_count - 1;
+	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
+	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
 
 	EXTCL_CPU_WR_MEM(VRC7);
 	EXTCL_SAVE_MAPPER(VRC7);

@@ -94,7 +94,7 @@ static BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 		/* leggo */
 		cpu.openbus = prg_rom_rd(address);
 
-		if (info.mapper_extend_rd) {
+		if (info.mapper.extend_rd) {
 			cpu.openbus = extcl_cpu_rd_mem(address, cpu.openbus, before);
 		}
 
@@ -666,7 +666,7 @@ static void cpu_wr_mem(WORD address, BYTE value) {
 				}
 			}
 		}
-		if (info.mapper_extend_wr) {
+		if (info.mapper.extend_wr) {
 			/*
 			 * utilizzato dalle mappers :
 			 * Active

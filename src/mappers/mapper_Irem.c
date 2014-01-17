@@ -34,12 +34,12 @@ WORD prg_rom_32k_max, prg_rom_16k_max, prg_rom_8k_max, prg_rom_8k_before_last;
 WORD chr_rom_2k_max, chr_rom_1k_max;
 
 void map_init_Irem(BYTE model) {
-	prg_rom_32k_max = (info.prg_rom_16k_count >> 1) - 1;
-	prg_rom_16k_max = info.prg_rom_16k_count - 1;
-	prg_rom_8k_max = info.prg_rom_8k_count - 1;
+	prg_rom_32k_max = (info.prg.rom.banks_16k >> 1) - 1;
+	prg_rom_16k_max = info.prg.rom.banks_16k - 1;
+	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
 	prg_rom_8k_before_last = prg_rom_8k_max - 1;
-	chr_rom_2k_max = (info.chr_rom_1k_count >> 1) - 1;
-	chr_rom_1k_max = info.chr_rom_1k_count - 1;
+	chr_rom_2k_max = (info.chr.rom.banks_1k >> 1) - 1;
+	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
 
 	switch (model) {
 		case G101:
@@ -109,7 +109,7 @@ void extcl_cpu_wr_mem_Irem_G101(WORD address, BYTE value) {
 			irem_G101_prg_rom_update();
 			break;
 		case 0x9000:
-			if (info.mapper_type != G101B) {
+			if (info.mapper.from_db != G101B) {
 				if (value & 0x01) {
 					mirroring_H();
 				} else {

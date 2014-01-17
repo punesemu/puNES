@@ -144,7 +144,7 @@ BYTE audio_quality_init_blip2(void) {
 	blip2.ch[APU_NS].min_period  = min_period; // / 2;
 	blip2.ch[APU_DMC].min_period = min_period;
 
-	switch (info.mapper) {
+	switch (info.mapper.id) {
 		case FDS_MAPPER:
 			/* FDS */
 			extra_apu_tick_blip2 = apu_tick_blip2_FDS;

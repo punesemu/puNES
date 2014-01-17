@@ -58,9 +58,9 @@ WORD prg_rom_8k_max, prg_rom_8k_before_last, chr_rom_1k_max;
 BYTE type;
 
 void map_init_TxROM(BYTE model) {
-	prg_rom_8k_max = info.prg_rom_8k_count - 1;
-	chr_rom_1k_max = info.chr_rom_1k_count - 1;
-	prg_rom_8k_before_last = info.prg_rom_8k_count - 2;
+	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
+	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
+	prg_rom_8k_before_last = info.prg.rom.banks_8k - 2;
 
 	switch (model) {
 		case TLSROM:
@@ -70,8 +70,8 @@ void map_init_TxROM(BYTE model) {
 			irqA12_delay = 1;
 
 			if (model == TKSROM) {
-				info.prg_ram_plus_8k_count = 1;
-				info.prg_ram_bat_banks = 1;
+				info.prg.ram.banks_8k_plus = 1;
+				info.prg.ram.bat.banks = 1;
 			}
 			break;
 		case TQROM:

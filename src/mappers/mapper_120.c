@@ -15,7 +15,7 @@
 WORD prg_rom_8k_max;
 
 void map_init_120(void) {
-	prg_rom_8k_max = info.prg_rom_8k_count - 1;
+	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
 
 	EXTCL_CPU_WR_MEM(120);
 	EXTCL_CPU_RD_MEM(120);
@@ -23,7 +23,7 @@ void map_init_120(void) {
 	mapper.internal_struct[0] = (BYTE *) &m120;
 	mapper.internal_struct_size[0] = sizeof(m120);
 
-	info.mapper_extend_wr = TRUE;
+	info.mapper.extend_wr = TRUE;
 	cpu.prg_ram_wr_active = FALSE;
 	cpu.prg_ram_rd_active = FALSE;
 

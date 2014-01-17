@@ -16,13 +16,13 @@ WORD prg_rom_8k_max, chr_rom_2k_max, chr_rom_1k_max;
 BYTE type;
 
 void map_init_Taito(BYTE model) {
-	prg_rom_8k_max = info.prg_rom_8k_count - 1;
-	chr_rom_2k_max = (info.chr_rom_1k_count >> 1) - 1;
-	chr_rom_1k_max = info.chr_rom_1k_count - 1;
+	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
+	chr_rom_2k_max = (info.chr.rom.banks_1k >> 1) - 1;
+	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
 
 	switch (model) {
 		case TC0190FMC: {
-			switch (info.mapper_type) {
+			switch (info.mapper.from_db) {
 				case TC0190FMCPAL16R4:
 					EXTCL_CPU_WR_MEM(Taito_TC0190FMCPAL16R4);
 					EXTCL_CPU_EVERY_CYCLE(MMC3);
@@ -55,7 +55,7 @@ void map_init_Taito(BYTE model) {
 			mapper.internal_struct[0] = (BYTE *) &taito_X1005;
 			mapper.internal_struct_size[0] = sizeof(taito_X1005);
 
-			info.mapper_extend_wr = TRUE;
+			info.mapper.extend_wr = TRUE;
 
 			if (info.reset > HARD) {
 				memset(&taito_X1005, 0x00, sizeof(taito_X1005));
@@ -70,9 +70,9 @@ void map_init_Taito(BYTE model) {
 			}
 
 			if (info.id == X1005_NO_BAT) {
-				info.prg_ram_bat_banks = FALSE;
+				info.prg.ram.bat.banks = FALSE;
 			} else {
-				info.prg_ram_bat_banks = TRUE;
+				info.prg.ram.bat.banks = TRUE;
 			}
 
 			break;
@@ -82,10 +82,10 @@ void map_init_Taito(BYTE model) {
 			mapper.internal_struct[0] = (BYTE *) &taito_X1017;
 			mapper.internal_struct_size[0] = sizeof(taito_X1017);
 
-			info.mapper_extend_wr = TRUE;
+			info.mapper.extend_wr = TRUE;
 
-			info.prg_ram_plus_8k_count = 1;
-			info.prg_ram_bat_banks = 1;
+			info.prg.ram.banks_8k_plus = 1;
+			info.prg.ram.bat.banks = 1;
 
 			break;
 	}
@@ -330,7 +330,7 @@ void extcl_battery_io_Taito_X1005(BYTE mode, FILE *fp) {
 		return;
 	}
 
-	if (info.prg_ram_bat_banks) {
+	if (info.prg.ram.bat.banks) {
 		if (mode == WR_BAT) {
 			if (fwrite(&taito_X1005.ram[0], LENGTH(taito_X1005.ram), 1, fp) < 1) {
 				fprintf(stderr, "error on write battery memory\n");

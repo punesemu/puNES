@@ -123,7 +123,7 @@ BYTE fds_load_rom(void) {
 		return (EXIT_ERROR);
 	}
 
-	info.mapper = 0x1000;
+	info.mapper.id = 0x1000;
 
 	return (EXIT_OK);
 }

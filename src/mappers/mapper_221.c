@@ -23,7 +23,7 @@
 WORD prg_rom_16k_max;
 
 void map_init_221(void) {
-	prg_rom_16k_max = info.prg_rom_16k_count - 1;
+	prg_rom_16k_max = info.prg.rom.banks_16k - 1;
 
 	EXTCL_CPU_WR_MEM(221);
 	EXTCL_SAVE_MAPPER(221);

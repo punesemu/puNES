@@ -20,7 +20,7 @@ void map_init_FDS(void) {
 	EXTCL_CPU_EVERY_CYCLE(FDS);
 	EXTCL_APU_TICK(FDS);
 
-	info.chr_rom_8k_count = 1;
+	info.chr.rom.banks_8k = 1;
 	mapper.write_vram = TRUE;
 
 	mirroring_H();

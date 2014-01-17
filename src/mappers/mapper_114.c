@@ -28,11 +28,11 @@ static const BYTE vlu114[8] = {0, 3, 1, 5, 6, 7, 2, 4};
 WORD prg_rom_16k_max, prg_rom_8k_max, prg_rom_8k_before_last, chr_rom_2k_max, chr_rom_1k_max;
 
 void map_init_114(void) {
-	prg_rom_16k_max = info.prg_rom_16k_count - 1;
-	prg_rom_8k_max = info.prg_rom_8k_count - 1;
-	prg_rom_8k_before_last = info.prg_rom_8k_count - 2;
-	chr_rom_2k_max = (info.chr_rom_1k_count >> 1) - 1;
-	chr_rom_1k_max = info.chr_rom_1k_count - 1;
+	prg_rom_16k_max = info.prg.rom.banks_16k - 1;
+	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
+	prg_rom_8k_before_last = info.prg.rom.banks_8k - 2;
+	chr_rom_2k_max = (info.chr.rom.banks_1k >> 1) - 1;
+	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
 
 	EXTCL_CPU_WR_MEM(114);
 	EXTCL_SAVE_MAPPER(114);
@@ -61,7 +61,7 @@ void map_init_114(void) {
 		}
 	}
 
-	info.mapper_extend_wr = TRUE;
+	info.mapper.extend_wr = TRUE;
 
 	irqA12.present = TRUE;
 	irqA12_delay = 1;

@@ -15,8 +15,8 @@
 WORD prg_rom_8k_max, chr_rom_2k_max;
 
 void map_init_91(void) {
-	prg_rom_8k_max = info.prg_rom_8k_count - 1;
-	chr_rom_2k_max = (info.chr_rom_1k_count >> 1) - 1;
+	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
+	chr_rom_2k_max = (info.chr.rom.banks_1k >> 1) - 1;
 
 	EXTCL_CPU_WR_MEM(91);
 	EXTCL_SAVE_MAPPER(91);
@@ -26,7 +26,7 @@ void map_init_91(void) {
 
 	memset(&m91, 0x00, sizeof(m91));
 
-	info.mapper_extend_wr = TRUE;
+	info.mapper.extend_wr = TRUE;
 }
 void extcl_cpu_wr_mem_91(WORD address, BYTE value) {
 	if (address < 0x6000) {

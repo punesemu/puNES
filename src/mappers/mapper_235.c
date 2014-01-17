@@ -20,10 +20,10 @@ WORD prg_rom_32k_max, prg_rom_16k_max;
 BYTE type;
 
 void map_init_235(void) {
-	prg_rom_32k_max = (info.prg_rom_16k_count >> 1) - 1;
-	prg_rom_16k_max = info.prg_rom_16k_count - 1;
+	prg_rom_32k_max = (info.prg.rom.banks_16k >> 1) - 1;
+	prg_rom_16k_max = info.prg.rom.banks_16k - 1;
 
-	switch (info.prg_rom_16k_count) {
+	switch (info.prg.rom.banks_16k) {
 		case 64:
 			type = 0;
 			break;
@@ -46,7 +46,7 @@ void map_init_235(void) {
 		mapper.internal_struct[0] = (BYTE *) &m235;
 		mapper.internal_struct_size[0] = sizeof(m235);
 
-		info.mapper_extend_rd = TRUE;
+		info.mapper.extend_rd = TRUE;
 	}
 
 	if (info.reset >= HARD) {

@@ -14,6 +14,10 @@
 typedef struct {
 	char sha1sum[41];
 	WORD mapper;
+	/*
+	 * questo lo utilizzo per diversi scopi, tra cui forzare
+	 * il mirroring o indicare una submapper.
+	 */
 	BYTE type;
 	BYTE id;
 	BYTE machine;

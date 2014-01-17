@@ -147,9 +147,9 @@
 WORD prg_rom_8k_max, prg_rom_8k_before_last, chr_rom_1k_max;
 
 void map_init_47(void) {
-	prg_rom_8k_max = info.prg_rom_8k_count - 1;
-	prg_rom_8k_before_last = info.prg_rom_8k_count - 2;
-	chr_rom_1k_max = info.chr_rom_1k_count - 1;
+	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
+	prg_rom_8k_before_last = info.prg.rom.banks_8k - 2;
+	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
 
 	EXTCL_CPU_WR_MEM(47);
 	EXTCL_SAVE_MAPPER(47);
@@ -185,7 +185,7 @@ void map_init_47(void) {
 		m47_chr_1k_update()
 	}
 
-	info.mapper_extend_wr = TRUE;
+	info.mapper.extend_wr = TRUE;
 
 	irqA12.present = TRUE;
 	irqA12_delay = 1;

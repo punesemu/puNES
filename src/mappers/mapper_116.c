@@ -374,15 +374,15 @@ WORD chr_rom_1k_max, chr_rom_2k_max, chr_rom_4k_max;
 }
 
 void map_init_116(void) {
-	prg_rom_32k_max = (info.prg_rom_16k_count >> 1) - 1;
-	prg_rom_16k_max = info.prg_rom_16k_count - 1;
-	prg_rom_8k_before_last = info.prg_rom_8k_count - 2;
-	prg_rom_8k_max = info.prg_rom_8k_count - 1;
-	chr_rom_4k_max = info.chr_rom_4k_count - 1;
-	chr_rom_2k_max = (info.chr_rom_1k_count >> 1) - 1;
-	chr_rom_1k_max = info.chr_rom_1k_count - 1;
+	prg_rom_32k_max = (info.prg.rom.banks_16k >> 1) - 1;
+	prg_rom_16k_max = info.prg.rom.banks_16k - 1;
+	prg_rom_8k_before_last = info.prg.rom.banks_8k - 2;
+	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
+	chr_rom_4k_max = info.chr.rom.banks_4k - 1;
+	chr_rom_2k_max = (info.chr.rom.banks_1k >> 1) - 1;
+	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
 
-	switch (info.mapper_type) {
+	switch (info.mapper.from_db) {
 		default:
 		case MAP116_TYPE_A:
 			EXTCL_CPU_WR_MEM(116_type_A);
@@ -435,7 +435,7 @@ void map_init_116(void) {
 			m116_A_update_chr()
 			m116_A_update_mirroring()
 
-			info.mapper_extend_wr = TRUE;
+			info.mapper.extend_wr = TRUE;
 
 			irqA12.present = TRUE;
 			irqA12_delay = 1;
@@ -471,7 +471,7 @@ void map_init_116(void) {
 				}
 			}
 
-			info.mapper_extend_wr = TRUE;
+			info.mapper.extend_wr = TRUE;
 
 			irqA12.present = TRUE;
 			irqA12_delay = 1;

@@ -148,22 +148,22 @@
 	 * se non e' specificato da che banco di PRG ram inizia\
 	 * la battery packed Ram, utilizzo sempre l'ultimo.\
 	 */\
-	if (info.prg_ram_bat_start == DEFAULT) {\
-		bank = info.prg_ram_plus_8k_count - info.prg_ram_bat_banks;\
+	if (info.prg.ram.bat.start == DEFAULT) {\
+		bank = info.prg.ram.banks_8k_plus - info.prg.ram.bat.banks;\
 	} else {\
-		bank = info.prg_ram_bat_start;\
+		bank = info.prg.ram.bat.start;\
 	}\
 	prg.ram_battery = &prg.ram_plus[bank * 0x2000];\
 	if (fp) {\
 		/* ne leggo il contenuto */\
-		if (fread(&prg.ram_battery[0], info.prg_ram_bat_banks * 8192, 1, fp) < 1) {\
+		if (fread(&prg.ram_battery[0], info.prg.ram.bat.banks * 8192, 1, fp) < 1) {\
 			fprintf(stderr, "error on read battery memory\n");\
 		}\
 	}\
 }
 #define mapper_wr_battery_default()\
 	/* ci scrivo i dati */\
-	if (fwrite(&prg.ram_battery[0], info.prg_ram_bat_banks * 8192, 1, fp) < 1) {\
+	if (fwrite(&prg.ram_battery[0], info.prg.ram.bat.banks * 8192, 1, fp) < 1) {\
 		fprintf(stderr, "error on write battery memory\n");\
 	}
 
@@ -183,7 +183,7 @@ struct _trainer {
 
 _mapper mapper;
 
-BYTE map_init(WORD mapper_type);
+BYTE map_init(void);
 void map_quit(void);
 void map_prg_rom_8k_reset(void);
 void map_prg_rom_8k(BYTE banks_8k, BYTE at, BYTE value);

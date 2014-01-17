@@ -11,9 +11,9 @@
 WORD prg_rom_16k_max;
 
 void map_init_Camerica(void) {
-	prg_rom_16k_max = info.prg_rom_16k_count - 1;
+	prg_rom_16k_max = info.prg.rom.banks_16k - 1;
 
-	switch (info.mapper_type) {
+	switch (info.mapper.from_db) {
 		case BF9096:
 			EXTCL_CPU_WR_MEM(Camerica_BF9096);
 			break;
