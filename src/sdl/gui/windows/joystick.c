@@ -9,6 +9,7 @@
 
 enum joy_misc {
 	JOY_MAX_FRAME_COUNT = 3,
+	JOY_MAX_FRAME_COUNT_NO_PRESENT = 300 / JOY_MAX_FRAME_COUNT,
 	JOY_POV_UP = 0,
 	JOY_POV_RIGHT,
 	JOY_POV_DOWN,
@@ -143,7 +144,7 @@ void js_control(_js *joy, _port *port) {
 	joy->clock = 0;
 
 	if (joy->present == FALSE) {
-		if (++joy->open_try == 100) {
+		if (++joy->open_try == JOY_MAX_FRAME_COUNT_NO_PRESENT) {
 			joy->open_try = 0;
 			js_open(joy);
 		}
@@ -167,7 +168,7 @@ void js_control(_js *joy, _port *port) {
 			BYTE before = last_buttons & 0x1;
 
 			if (after != before) {
-				mode = after | 0x40;
+				mode = after;
 				value = i | 0x400;
 				if (after) {
 					/* PRESSED */
