@@ -48,10 +48,9 @@ static const BYTE vlu208[256] = {
 		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
-WORD prg_rom_32k_max, prg_rom_8k_max, prg_rom_8k_before_last, chr_rom_1k_max;
+WORD prg_rom_8k_max, prg_rom_8k_before_last, chr_rom_1k_max;
 
 void map_init_208(void) {
-	prg_rom_32k_max = (info.prg.rom.banks_16k >> 1) - 1;
 	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
 	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
 	prg_rom_8k_before_last = info.prg.rom.banks_8k - 2;
@@ -98,7 +97,7 @@ void extcl_cpu_wr_mem_208(WORD address, BYTE value) {
 	switch (address & 0xF800) {
 		case 0x4800:
 			value = ((value >> 3) & 0x02) | (value & 0x01);
-			control_bank(prg_rom_32k_max)
+			control_bank(info.prg.rom.max.banks_32k)
 			map_prg_rom_8k(4, 0, value);
 			map_prg_rom_8k_update();
 			return;

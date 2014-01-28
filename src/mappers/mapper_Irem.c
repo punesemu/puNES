@@ -30,11 +30,10 @@
 	chr.bank_1k[6] = &irem_LROG017.chr_ram[0x1000];\
 	chr.bank_1k[7] = &irem_LROG017.chr_ram[0x1400]
 
-WORD prg_rom_32k_max, prg_rom_16k_max, prg_rom_8k_max, prg_rom_8k_before_last;
+WORD prg_rom_16k_max, prg_rom_8k_max, prg_rom_8k_before_last;
 WORD chr_rom_2k_max, chr_rom_1k_max;
 
 void map_init_Irem(BYTE model) {
-	prg_rom_32k_max = (info.prg.rom.banks_16k >> 1) - 1;
 	prg_rom_16k_max = info.prg.rom.banks_16k - 1;
 	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
 	prg_rom_8k_before_last = prg_rom_8k_max - 1;
@@ -212,7 +211,7 @@ void extcl_cpu_wr_mem_Irem_LROG017(WORD address, BYTE value) {
 	const BYTE save = value &= prg_rom_rd(address);
 	DBWORD bank;
 
-	control_bank_with_AND(0x0F, prg_rom_32k_max)
+	control_bank_with_AND(0x0F, info.prg.rom.max.banks_32k)
 	map_prg_rom_8k(4, 0, value);
 	map_prg_rom_8k_update();
 

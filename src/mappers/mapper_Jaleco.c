@@ -13,7 +13,7 @@
 #include "ppu.h"
 #include "save_slot.h"
 
-WORD prg_rom_32k_max, prg_rom_16k_max, prg_rom_8k_max, chr_rom_8k_max, chr_rom_1k_max;
+WORD prg_rom_16k_max, prg_rom_8k_max, chr_rom_8k_max, chr_rom_1k_max;
 
 #define prg_rom_8k_update(slot, mask, shift)\
 	value = (mapper.rom_map_to[slot] & mask) | ((value & 0x0F) << shift);\
@@ -27,7 +27,6 @@ WORD prg_rom_32k_max, prg_rom_16k_max, prg_rom_8k_max, chr_rom_8k_max, chr_rom_1
 	ss8806.chr_rom_bank[slot] = value
 
 void map_init_Jaleco(BYTE model) {
-	prg_rom_32k_max = (info.prg.rom.banks_16k >> 1) - 1;
 	prg_rom_16k_max = info.prg.rom.banks_16k - 1;
 	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
 	chr_rom_8k_max = (info.chr.rom.banks_4k >> 1) - 1;
@@ -127,7 +126,7 @@ void extcl_cpu_wr_mem_Jaleco_JF11(WORD address, BYTE value) {
 	}
 
 	value >>= 4;
-	control_bank_with_AND(0x03, prg_rom_32k_max)
+	control_bank_with_AND(0x03, info.prg.rom.max.banks_32k)
 	map_prg_rom_8k(4, 0, value);
 	map_prg_rom_8k_update();
 
@@ -154,7 +153,7 @@ void extcl_cpu_wr_mem_Jaleco_JF13(WORD address, BYTE value) {
 	}
 
 	value >>= 4;
-	control_bank_with_AND(0x03, prg_rom_32k_max)
+	control_bank_with_AND(0x03, info.prg.rom.max.banks_32k)
 	map_prg_rom_8k(4, 0, value);
 	map_prg_rom_8k_update();
 

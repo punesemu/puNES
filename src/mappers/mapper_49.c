@@ -148,10 +148,9 @@
 	}\
 }
 
-WORD prg_rom_32k_max, prg_rom_8k_max, prg_rom_8k_before_last, chr_rom_1k_max;
+WORD prg_rom_8k_max, prg_rom_8k_before_last, chr_rom_1k_max;
 
 void map_init_49(void) {
-	prg_rom_32k_max = (info.prg.rom.banks_16k >> 1) - 1;
 	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
 	prg_rom_8k_before_last = info.prg.rom.banks_8k - 2;
 	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
@@ -217,7 +216,7 @@ void extcl_cpu_wr_mem_49(WORD address, BYTE value) {
 				m49_prg_8k_update()
 			} else {
 				value = (m49.reg >> 4) & 0x03;
-				control_bank(prg_rom_32k_max)
+				control_bank(info.prg.rom.max.banks_32k)
 				map_prg_rom_8k(4, 0, value);
 				map_prg_rom_8k_update();
 			}

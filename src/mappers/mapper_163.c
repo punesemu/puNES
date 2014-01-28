@@ -11,11 +11,7 @@
 #include "ppu.h"
 #include "save_slot.h"
 
-WORD prg_rom_32k_max;
-
 void map_init_163(void) {
-	prg_rom_32k_max = (info.prg.rom.banks_16k >> 1) - 1;
-
 	EXTCL_CPU_WR_MEM(163);
 	EXTCL_CPU_RD_MEM(163);
 	EXTCL_PPU_UPDATE_SCREEN_Y(163);
@@ -30,7 +26,7 @@ void map_init_163(void) {
 	{
 		BYTE value = m163.prg;
 
-		control_bank(prg_rom_32k_max)
+		control_bank(info.prg.rom.max.banks_32k)
 		map_prg_rom_8k(4, 0, value);
 	}
 
@@ -70,14 +66,14 @@ void extcl_cpu_wr_mem_163(WORD address, BYTE value) {
 			/* PRG */
 			m163.prg = (m163.prg & 0xF0) | (value & 0x0F);
 			value = m163.prg;
-			control_bank(prg_rom_32k_max)
+			control_bank(info.prg.rom.max.banks_32k)
 			map_prg_rom_8k(4, 0, value);
 			map_prg_rom_8k_update();
 			return;
 		case 0x5200:
 			m163.prg = (m163.prg & 0x0F) | (value << 4);
 			value = m163.prg;
-			control_bank(prg_rom_32k_max)
+			control_bank(info.prg.rom.max.banks_32k)
 			map_prg_rom_8k(4, 0, value);
 			map_prg_rom_8k_update();
 			return;

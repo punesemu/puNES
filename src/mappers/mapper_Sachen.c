@@ -28,11 +28,10 @@
 	sa74374x.chr_rom_8k_bank = value;\
 }
 
-WORD prg_rom_32k_max, chr_rom_8k_max, chr_rom_4k_max, chr_rom_2k_max, chr_rom_1k_max;
+WORD chr_rom_8k_max, chr_rom_4k_max, chr_rom_2k_max, chr_rom_1k_max;
 BYTE type, shift, ored[3];
 
 void map_init_Sachen(BYTE model) {
-	prg_rom_32k_max = (info.prg.rom.banks_16k >> 1) - 1;
 	chr_rom_8k_max = info.chr.rom.banks_8k - 1;
 	chr_rom_4k_max = info.chr.rom.banks_4k - 1;
 	chr_rom_2k_max = (info.chr.rom.banks_1k >> 1) - 1;
@@ -46,7 +45,7 @@ void map_init_Sachen(BYTE model) {
 			EXTCL_CPU_WR_MEM(Sachen_sa0037);
 
 			if (info.reset >= HARD) {
-				if (prg_rom_32k_max != 0xFFFF) {
+				if (info.prg.rom.max.banks_32k != 0xFFFF) {
 					map_prg_rom_8k(4, 0, 0);
 				}
 			}
@@ -65,7 +64,7 @@ void map_init_Sachen(BYTE model) {
 			if (info.reset >= HARD) {
 				memset(&sa8259, 0x00, sizeof(sa8259));
 
-				if (prg_rom_32k_max != 0xFFFF) {
+				if (info.prg.rom.max.banks_32k != 0xFFFF) {
 					map_prg_rom_8k(4, 0, 0);
 				}
 			}
@@ -112,7 +111,7 @@ void map_init_Sachen(BYTE model) {
 			info.mapper.extend_wr = TRUE;
 
 			if (info.reset >= HARD) {
-				if (prg_rom_32k_max != 0xFFFF) {
+				if (info.prg.rom.max.banks_32k != 0xFFFF) {
 					map_prg_rom_8k(4, 0, 0);
 				}
 			}
@@ -201,9 +200,9 @@ void extcl_cpu_wr_mem_Sachen_sa0037(WORD address, BYTE value) {
 	const BYTE save = value &= prg_rom_rd(address);
 	DBWORD bank;
 
-	if (prg_rom_32k_max != 0xFFFF) {
+	if (info.prg.rom.max.banks_32k != 0xFFFF) {
 		value >>= 3;
-		control_bank(prg_rom_32k_max)
+		control_bank(info.prg.rom.max.banks_32k)
 		map_prg_rom_8k(4, 0, value);
 		map_prg_rom_8k_update();
 		value = save;
@@ -236,8 +235,8 @@ void extcl_cpu_wr_mem_Sachen_sa8259x(WORD address, BYTE value) {
 			sa8259.reg[slot] = value;
 			switch (slot) {
 				case 5:
-					if (prg_rom_32k_max != 0xFFFF) {
-						control_bank(prg_rom_32k_max)
+					if (info.prg.rom.max.banks_32k != 0xFFFF) {
+						control_bank(info.prg.rom.max.banks_32k)
 						map_prg_rom_8k(4, 0, value);
 						map_prg_rom_8k_update();
 					}
@@ -356,9 +355,9 @@ void extcl_cpu_wr_mem_Sachen_tcu01(WORD address, BYTE value) {
 		const BYTE save = value;
 		DBWORD bank;
 
-		if (prg_rom_32k_max != 0xFFFF) {
+		if (info.prg.rom.max.banks_32k != 0xFFFF) {
 			value = ((value >> 6) & 0x02) | ((value >> 2) & 0x01);
-			control_bank(prg_rom_32k_max)
+			control_bank(info.prg.rom.max.banks_32k)
 			map_prg_rom_8k(4, 0, value);
 			map_prg_rom_8k_update();
 			value = save;
@@ -448,9 +447,9 @@ void extcl_cpu_wr_mem_Sachen_sa72008(WORD address, BYTE value) {
 		const BYTE save = value;
 		DBWORD bank;
 
-		if (prg_rom_32k_max != 0xFFFF) {
+		if (info.prg.rom.max.banks_32k != 0xFFFF) {
 			value >>= 2;
-			control_bank(prg_rom_32k_max)
+			control_bank(info.prg.rom.max.banks_32k)
 			map_prg_rom_8k(4, 0, value);
 			map_prg_rom_8k_update();
 			value = save;
@@ -494,7 +493,7 @@ void extcl_cpu_wr_mem_Sachen_sa74374a(WORD address, BYTE value) {
 					break;
 				case 5:
 					value &= 0x01;
-					control_bank(prg_rom_32k_max)
+					control_bank(info.prg.rom.max.banks_32k)
 					map_prg_rom_8k(4, 0, value);
 					map_prg_rom_8k_update();
 					break;
@@ -539,7 +538,7 @@ void extcl_cpu_wr_mem_Sachen_sa74374b(WORD address, BYTE value) {
 					sa74347x_chr_8k_swap((sa74374x.chr_rom_8k_bank & 0x07) | ((value << 3) & 0x08))
 
 					value = save & 0x01;
-					control_bank(prg_rom_32k_max)
+					control_bank(info.prg.rom.max.banks_32k)
 					map_prg_rom_8k(4, 0, value);
 					map_prg_rom_8k_update();
 					break;
@@ -549,7 +548,7 @@ void extcl_cpu_wr_mem_Sachen_sa74374b(WORD address, BYTE value) {
 					break;
 				case 5:
 					value &= 0x07;
-					control_bank(prg_rom_32k_max)
+					control_bank(info.prg.rom.max.banks_32k)
 					map_prg_rom_8k(4, 0, value);
 					map_prg_rom_8k_update();
 					break;

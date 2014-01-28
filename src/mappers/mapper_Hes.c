@@ -8,10 +8,9 @@
 #include "mappers.h"
 #include "mem_map.h"
 
-WORD prg_rom_32k_max, chr_rom_8k_max;
+WORD chr_rom_8k_max;
 
 void map_init_Hes(void) {
-	prg_rom_32k_max = (info.prg.rom.banks_16k >> 1) - 1;
 	chr_rom_8k_max = info.chr.rom.banks_8k - 1;
 
 	EXTCL_CPU_WR_MEM(Hes);
@@ -19,7 +18,7 @@ void map_init_Hes(void) {
 	info.mapper.extend_wr = TRUE;
 
 	if (info.reset >= HARD) {
-		if (prg_rom_32k_max != 0xFFFF) {
+		if (info.prg.rom.max.banks_32k != 0xFFFF) {
 			map_prg_rom_8k(4, 0, 0);
 		}
 	}
@@ -39,9 +38,9 @@ void extcl_cpu_wr_mem_Hes(WORD address, BYTE value) {
 			mirroring_H();
 		}
 
-		if (prg_rom_32k_max != 0xFFFF) {
+		if (info.prg.rom.max.banks_32k != 0xFFFF) {
 			value = (value >> 3) & 0x07;
-			control_bank(prg_rom_32k_max)
+			control_bank(info.prg.rom.max.banks_32k)
 			map_prg_rom_8k(4, 0, value);
 			map_prg_rom_8k_update();
 		}

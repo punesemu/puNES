@@ -12,11 +12,10 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-WORD prg_rom_32k_max, prg_rom_8k_max, prg_rom_8k_before_last, chr_rom_8k_max, chr_rom_1k_max;
+WORD prg_rom_8k_max, prg_rom_8k_before_last, chr_rom_8k_max, chr_rom_1k_max;
 BYTE type;
 
 void map_init_Txc(BYTE model) {
-	prg_rom_32k_max = (info.prg.rom.banks_16k >> 1) - 1;
 	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
 	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
 	chr_rom_8k_max = info.chr.rom.banks_8k - 1;
@@ -62,7 +61,7 @@ void map_init_Txc(BYTE model) {
 
 			if (info.reset >= HARD) {
 				memset(&t22211x, 0x00, sizeof(t22211x));
-				if (prg_rom_32k_max != 0xFFFF) {
+				if (info.prg.rom.max.banks_32k != 0xFFFF) {
 					map_prg_rom_8k(4, 0, 0);
 				}
 			}
@@ -83,7 +82,7 @@ void extcl_cpu_wr_mem_Txc_tw(WORD address, BYTE value) {
 	}
 
 	value = (value >> 4) | value;
-	control_bank(prg_rom_32k_max)
+	control_bank(info.prg.rom.max.banks_32k)
 	map_prg_rom_8k(4, 0, value);
 	map_prg_rom_8k_update();
 }
@@ -100,9 +99,9 @@ void extcl_cpu_wr_mem_Txc_t22211x(WORD address, BYTE value) {
 		return;
 	}
 
-	if (prg_rom_32k_max != 0xFFFF) {
+	if (info.prg.rom.max.banks_32k != 0xFFFF) {
 		value = t22211x.reg[2] >> 2;
-		control_bank(prg_rom_32k_max)
+		control_bank(info.prg.rom.max.banks_32k)
 		map_prg_rom_8k(4, 0, value);
 		map_prg_rom_8k_update();
 	}

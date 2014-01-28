@@ -8,10 +8,9 @@
 #include "mappers.h"
 #include "mem_map.h"
 
-WORD prg_rom_32k_max, chr_rom_4k_max;
+WORD chr_rom_4k_max;
 
 void map_init_BxROM(void) {
-	prg_rom_32k_max = (info.prg.rom.banks_16k >> 1) - 1;
 	chr_rom_4k_max = info.chr.rom.banks_4k - 1;
 
 	if (info.reset >= HARD) {
@@ -36,13 +35,13 @@ void extcl_cpu_wr_mem_BxROM(WORD address, BYTE value) {
 	/* bus conflict */
 	value &= prg_rom_rd(address);
 
-	control_bank_with_AND(0x0F, prg_rom_32k_max)
+	control_bank_with_AND(0x0F, info.prg.rom.max.banks_32k)
 	map_prg_rom_8k(4, 0, value);
 	map_prg_rom_8k_update();
 }
 
 void extcl_cpu_wr_mem_BxROM_UNL(WORD address, BYTE value) {
-	control_bank_with_AND(0x3F, prg_rom_32k_max)
+	control_bank_with_AND(0x3F, info.prg.rom.max.banks_32k)
 	map_prg_rom_8k(4, 0, value);
 	map_prg_rom_8k_update();
 }
@@ -51,14 +50,14 @@ void extcl_cpu_wr_mem_AveNina001(WORD address, BYTE value) {
 	DBWORD bank;
 
 	if (address >= 0x8000) {
-		control_bank_with_AND(0x0F, prg_rom_32k_max)
+		control_bank_with_AND(0x0F, info.prg.rom.max.banks_32k)
 		map_prg_rom_8k(4, 0, value);
 		map_prg_rom_8k_update();
 	}
 
 	switch (address) {
 		case 0x7FFD:
-			control_bank_with_AND(0x03, prg_rom_32k_max)
+			control_bank_with_AND(0x03, info.prg.rom.max.banks_32k)
 			map_prg_rom_8k(4, 0, value);
 			map_prg_rom_8k_update();
 			break;

@@ -14,9 +14,9 @@
 {\
 	const BYTE save = value;\
 	DBWORD bank;\
-	if (prg_rom_32k_max != 0xFFFF) {\
+	if (info.prg.rom.max.banks_32k != 0xFFFF) {\
 		value >>= 3;\
-		control_bank(prg_rom_32k_max)\
+		control_bank(info.prg.rom.max.banks_32k)\
 		map_prg_rom_8k(4, 0, value);\
 		map_prg_rom_8k_update();\
 		value = save;\
@@ -33,10 +33,9 @@
 	chr.bank_1k[7] = &chr.data[bank | 0x1C00];\
 }
 
-WORD prg_rom_32k_max, chr_rom_8k_max;
+WORD chr_rom_8k_max;
 
 void map_init_Ave(BYTE model) {
-	prg_rom_32k_max = (info.prg.rom.banks_16k >> 1) - 1;
 	chr_rom_8k_max = info.chr.rom.banks_8k - 1;
 
 	switch (model) {
@@ -46,7 +45,7 @@ void map_init_Ave(BYTE model) {
 			info.mapper.extend_wr = TRUE;
 
 			if (info.reset >= HARD) {
-				if (prg_rom_32k_max != 0xFFFF) {
+				if (info.prg.rom.max.banks_32k != 0xFFFF) {
 					map_prg_rom_8k(4, 0, 0);
 				}
 			}
@@ -128,7 +127,7 @@ void extcl_cpu_wr_mem_Ave_D1012(WORD address, BYTE value) {
 	}
 
 	value = (ave_d1012.reg[0] & 0xE) | (ave_d1012.reg[(ave_d1012.reg[0] >> 6) & 0x1] & 0x1);
-	control_bank(prg_rom_32k_max)
+	control_bank(info.prg.rom.max.banks_32k)
 	map_prg_rom_8k(4, 0, value);
 	map_prg_rom_8k_update();
 

@@ -68,11 +68,10 @@ enum {
 	MODE_MAX
 };
 
-WORD prg_rom_32k_max, prg_rom_16k_max, chr_ram_4k_max, chr_rom_1k_max;
+WORD prg_rom_16k_max, chr_ram_4k_max, chr_rom_1k_max;
 BYTE type;
 
 void map_init_Bandai(BYTE model) {
-	prg_rom_32k_max = (info.prg.rom.banks_16k >> 1) - 1;
 	prg_rom_16k_max = info.prg.rom.banks_16k - 1;
 	chr_ram_4k_max = info.chr.rom.banks_4k - 1;
 	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
@@ -161,7 +160,7 @@ void extcl_cpu_wr_mem_Bandai_161x02x74(WORD address, BYTE value) {
 	const BYTE save = value &= prg_rom_rd(address);
 	DBWORD bank;
 
-	control_bank_with_AND(0x03, prg_rom_32k_max)
+	control_bank_with_AND(0x03, info.prg.rom.max.banks_32k)
 	map_prg_rom_8k(4, 0, value);
 	map_prg_rom_8k_update();
 

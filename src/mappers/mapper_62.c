@@ -8,10 +8,9 @@
 #include "mappers.h"
 #include "mem_map.h"
 
-WORD prg_rom_32k_max, prg_rom_16k_max, chr_rom_8k_max;
+WORD prg_rom_16k_max, chr_rom_8k_max;
 
 void map_init_62(void) {
-	prg_rom_32k_max = (info.prg.rom.banks_16k >> 1) - 1;
 	prg_rom_16k_max = info.prg.rom.banks_16k - 1;
 	chr_rom_8k_max = info.chr.rom.banks_8k - 1;
 
@@ -58,7 +57,7 @@ void extcl_cpu_wr_mem_62(WORD address, BYTE value) {
 		map_prg_rom_8k(2, 2, value);
 	} else {
 		value = ((address & 0x40) | ((address >> 8) & 0x3F)) >> 1;
-		control_bank(prg_rom_32k_max)
+		control_bank(info.prg.rom.max.banks_32k)
 		map_prg_rom_8k(4, 0, value);
 	}
 	map_prg_rom_8k_update();

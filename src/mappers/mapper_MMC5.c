@@ -66,7 +66,7 @@
 	value = (mmc5.prg_bank[3] & 0x7F) >> 2;\
 	mmc5.prg_ram_bank[0][0] = mmc5.prg_ram_bank[1][0] = FALSE;\
 	mmc5.prg_ram_bank[2][0] = mmc5.prg_ram_bank[3][0] = FALSE;\
-	control_bank(prg_rom_32k_max)\
+	control_bank(info.prg.rom.max.banks_32k)\
 	map_prg_rom_8k(4, 0, value)
 #define prg_ram_use_bank(slot)\
 	prg.rom_8k[slot] = &prg.ram_plus[mmc5.prg_ram_bank[slot][1]]
@@ -144,7 +144,7 @@ enum { CHR_S, CHR_B };
 enum { SPLIT_LEFT, SPLIT_RIGHT = 0x40 };
 
 const BYTE filler_attrib[4] = {0x00, 0x55, 0xAA, 0xFF};
-WORD prg_rom_32k_max, prg_rom_16k_max, prg_rom_8k_max;
+WORD prg_rom_16k_max, prg_rom_8k_max;
 WORD chr_rom_8k_max, chr_rom_4k_max, chr_rom_2k_max, chr_rom_1k_max;
 BYTE prg_ram_mode;
 
@@ -158,7 +158,6 @@ static const BYTE prg_ram_access[6][8] = {
 };
 
 void map_init_MMC5(void) {
-	prg_rom_32k_max = (info.prg.rom.banks_16k >> 1) - 1;
 	prg_rom_16k_max = info.prg.rom.banks_16k - 1;
 	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
 
@@ -707,7 +706,7 @@ void prg_swap(void) {
 
 	switch (mmc5.prg_mode) {
 		case MODE0:
-			if (prg_rom_32k_max == 0xFFFF) {
+			if (info.prg.rom.max.banks_32k == 0xFFFF) {
 				break;
 			}
 			prg_rom_32k_update();

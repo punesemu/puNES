@@ -27,10 +27,9 @@
 	bank = new_value << 10;\
 	chr.bank_1k[slot] = &chr.data[bank]
 
-WORD prg_rom_32k_max, prg_rom_8k_max, chr_rom_4k_max, chr_rom_2k_max, chr_rom_1k_max;
+WORD prg_rom_8k_max, chr_rom_4k_max, chr_rom_2k_max, chr_rom_1k_max;
 
 void map_init_Ntdec(BYTE model) {
-	prg_rom_32k_max = (info.prg.rom.banks_16k >> 1) - 1;
 	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
 	chr_rom_4k_max = info.chr.rom.banks_4k - 1;
 	chr_rom_2k_max = (info.chr.rom.banks_1k >> 1) - 1;
@@ -54,7 +53,7 @@ void map_init_Ntdec(BYTE model) {
 			info.mapper.extend_wr = TRUE;
 
 			if (info.reset >= HARD) {
-				map_prg_rom_8k(4, 0, prg_rom_32k_max);
+				map_prg_rom_8k(4, 0, info.prg.rom.max.banks_32k);
 			}
 			break;
 	}

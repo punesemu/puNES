@@ -96,6 +96,11 @@ struct _info {
 		struct _info_prg_rom {
 			WORD banks_16k;
 			WORD banks_8k;
+			struct _info_prg_rom_max {
+				WORD banks_32k;
+				WORD banks_16k;
+				WORD banks_8k;
+			} max;
 		} rom;
 		struct _info_prg_ram {
 			BYTE banks_8k_plus;

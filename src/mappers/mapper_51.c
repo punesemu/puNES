@@ -11,11 +11,10 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
-WORD prg_rom_32k_max, prg_rom_16k_max, prg_rom_8k_max;
+WORD prg_rom_16k_max, prg_rom_8k_max;
 BYTE *prg_6000;
 
 void map_init_51(void) {
-	prg_rom_32k_max = (info.prg.rom.banks_16k >> 1) - 1;
 	prg_rom_16k_max = info.prg.rom.banks_16k - 1;
 	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
 
@@ -53,7 +52,7 @@ void extcl_cpu_wr_mem_51(WORD address, BYTE value) {
 		m51.prg_6000 = 0x23;
 
 		value = m51.bank;
-		control_bank(prg_rom_32k_max)
+		control_bank(info.prg.rom.max.banks_32k)
 		map_prg_rom_8k(4, 0, value);
 	} else {
 		m51.prg_6000 = 0x2F;

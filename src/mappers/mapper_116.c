@@ -12,7 +12,7 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-WORD prg_rom_32k_max, prg_rom_16k_max, prg_rom_8k_max, prg_rom_8k_before_last;
+WORD prg_rom_16k_max, prg_rom_8k_max, prg_rom_8k_before_last;
 WORD chr_rom_1k_max, chr_rom_2k_max, chr_rom_4k_max;
 
 #define m116_update_prg_8k(bnk, vl)\
@@ -25,7 +25,7 @@ WORD chr_rom_1k_max, chr_rom_2k_max, chr_rom_4k_max;
 	map_prg_rom_8k(2, bnk, tmp)
 #define m116_update_prg_32k(vl)\
 	tmp = vl;\
-	_control_bank(tmp, prg_rom_32k_max)\
+	_control_bank(tmp, info.prg.rom.max.banks_32k)\
 	map_prg_rom_8k(4, 0, tmp)
 
 #define m116_update_chr_1k(bnk, vl)\
@@ -374,7 +374,6 @@ WORD chr_rom_1k_max, chr_rom_2k_max, chr_rom_4k_max;
 }
 
 void map_init_116(void) {
-	prg_rom_32k_max = (info.prg.rom.banks_16k >> 1) - 1;
 	prg_rom_16k_max = info.prg.rom.banks_16k - 1;
 	prg_rom_8k_before_last = info.prg.rom.banks_8k - 2;
 	prg_rom_8k_max = info.prg.rom.banks_8k - 1;

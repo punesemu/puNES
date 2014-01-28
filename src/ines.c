@@ -20,7 +20,7 @@
 enum flags { FL6, FL7, FL8, FL9, FL10, FL11, FL12, FL13, FL14, FL15, TOTAL_FL };
 
 BYTE ines_load_rom(void) {
-	BYTE flags[TOTAL_FL];
+	BYTE tmp, flags[TOTAL_FL];
 	FILE *fp;
 
 	{
@@ -69,6 +69,10 @@ BYTE ines_load_rom(void) {
 
 			info.mapper.id = ((flags[FL8] & 0x0F) << 8) | (flags[FL7] & 0xF0) | (flags[FL6] >> 4);
 			info.mapper.submapper = (flags[FL8] & 0xF0) >> 4;
+
+			info.prg.rom.banks_16k |= ((flags[FL9] & 0x0F) << 8);
+			info.chr.rom.banks_8k |= ((flags[FL9] & 0xF0) << 4);
+			tmp = flags[FL12] & 0x01;
 		} else {
 			/* iNES 1.0 */
 			info.header = iNES_1_0;
@@ -76,14 +80,16 @@ BYTE ines_load_rom(void) {
 			info.mapper.id = (flags[FL7] & 0xF0) | (flags[FL6] >> 4);
 			info.prg.ram.bat.banks = (flags[FL6] & 0x02) >> 1;
 
-			switch(flags[FL9] & 0x01) {
-				case 0:
-					info.machine[HEADER] = NTSC;
-					break;
-				case 1:
-					info.machine[HEADER] = PAL;
-					break;
-			}
+			tmp = flags[FL9] & 0x01;
+		}
+
+		switch (tmp) {
+			case 0:
+				info.machine[HEADER] = NTSC;
+				break;
+			case 1:
+				info.machine[HEADER] = PAL;
+				break;
 		}
 
 		info.trainer = flags[FL6] & 0x04;
@@ -112,7 +118,7 @@ BYTE ines_load_rom(void) {
 		}
 
 		if (info.trainer) {
-			fread(&trainer.data, sizeof(trainer.data), 1, fp);
+			tmp = fread(&trainer.data, sizeof(trainer.data), 1, fp);
 		} else {
 			memset(&trainer.data, 0x00, sizeof(trainer.data));
 		}
@@ -133,6 +139,9 @@ BYTE ines_load_rom(void) {
 		info.chr.rom.banks_4k = info.chr.rom.banks_8k * 2;
 		info.chr.rom.banks_1k = info.chr.rom.banks_4k * 4;
 
+		info.prg.rom.max.banks_32k = (info.prg.rom.banks_16k >> 1) - 1;
+		info.prg.rom.max.banks_16k = info.prg.rom.banks_16k - 1;
+
 		if (info.prg.ram.bat.banks) {
 			info.prg.ram.banks_8k_plus = 1;
 		}
@@ -145,7 +154,7 @@ BYTE ines_load_rom(void) {
 
 		/* alloco e carico la PRG Rom */
 		if ((prg.rom = (BYTE *) malloc(info.prg.rom.banks_16k * (16 * 1024)))) {
-			fread(&prg.rom[0], 16384, info.prg.rom.banks_16k, fp);
+			tmp = fread(&prg.rom[0], 16384, info.prg.rom.banks_16k, fp);
 		} else {
 			fprintf(stderr, "Out of memory\n");
 			return (EXIT_ERROR);
@@ -160,7 +169,7 @@ BYTE ines_load_rom(void) {
 		if (!mapper.write_vram) {
 			/* alloco la CHR Rom */
 			if ((chr.data = (BYTE *) malloc(info.chr.rom.banks_8k * (8 * 1024)))) {
-				fread(&chr.data[0], 8192, info.chr.rom.banks_8k, fp);
+				tmp = fread(&chr.data[0], 8192, info.chr.rom.banks_8k, fp);
 				chr_bank_1k_reset();
 			} else {
 				fprintf(stderr, "Out of memory\n");
