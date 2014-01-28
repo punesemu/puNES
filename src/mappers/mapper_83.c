@@ -14,11 +14,9 @@
 
 static void INLINE sync_83(void);
 
-WORD prg_rom_8k_max;
 WORD chr_rom_2k_max, chr_rom_1k_max;
 
 void map_init_83(void) {
-	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
 	chr_rom_2k_max = (info.chr.rom.banks_1k >> 1) - 1;
 	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
 
@@ -209,15 +207,15 @@ static void INLINE sync_83(void) {
 		map_prg_rom_8k(2, 2, value);
 	} else {
 		value = m83.reg[8];
-		control_bank(prg_rom_8k_max)
+		control_bank(info.prg.rom.max.banks_8k)
 		map_prg_rom_8k(1, 0, value);
 		value = m83.reg[9];
-		control_bank(prg_rom_8k_max)
+		control_bank(info.prg.rom.max.banks_8k)
 		map_prg_rom_8k(1, 1, value);
 		value = m83.reg[10];
-		control_bank(prg_rom_8k_max)
+		control_bank(info.prg.rom.max.banks_8k)
 		map_prg_rom_8k(1, 2, value);
-		map_prg_rom_8k(1, 3, prg_rom_8k_max);
+		map_prg_rom_8k(1, 3, info.prg.rom.max.banks_8k);
 	}
 	map_prg_rom_8k_update();
 }

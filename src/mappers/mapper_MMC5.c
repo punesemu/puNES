@@ -21,7 +21,7 @@
 	if (value & 0x80) {\
 		/* modalita' rom */\
 		mmc5.prg_ram_bank[slot][0] = FALSE;\
-		control_bank_with_AND(0x7F, prg_rom_8k_max)\
+		control_bank_with_AND(0x7F, info.prg.rom.max.banks_8k)\
 		map_prg_rom_8k(1, slot, value);\
 	} else {\
 		/* modalita' ram */\
@@ -55,7 +55,7 @@
 #define prg_rom_8k_update()\
 	value = mmc5.prg_bank[3];\
 	mmc5.prg_ram_bank[3][0] = FALSE;\
-	control_bank_with_AND(0x7F, prg_rom_8k_max)\
+	control_bank_with_AND(0x7F, info.prg.rom.max.banks_8k)\
 	map_prg_rom_8k(1, 3, value)
 #define prg_rom_16k_update()\
 	value = (mmc5.prg_bank[3] & 0x7F) >> 1;\
@@ -144,7 +144,6 @@ enum { CHR_S, CHR_B };
 enum { SPLIT_LEFT, SPLIT_RIGHT = 0x40 };
 
 const BYTE filler_attrib[4] = {0x00, 0x55, 0xAA, 0xFF};
-WORD prg_rom_8k_max;
 WORD chr_rom_8k_max, chr_rom_4k_max, chr_rom_2k_max, chr_rom_1k_max;
 BYTE prg_ram_mode;
 
@@ -158,8 +157,6 @@ static const BYTE prg_ram_access[6][8] = {
 };
 
 void map_init_MMC5(void) {
-	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
-
 	chr_rom_8k_max = info.chr.rom.banks_8k - 1;
 	chr_rom_4k_max = info.chr.rom.banks_4k - 1;
 	chr_rom_2k_max = (info.chr.rom.banks_4k << 1) - 1;

@@ -16,26 +16,25 @@
 #define m121_swap_8k_prg()\
 	if (m121.reg[0]) {\
 		value = m121.reg[0];\
-		control_bank(prg_rom_8k_max)\
+		control_bank(info.prg.rom.max.banks_8k)\
 		map_prg_rom_8k(1, 2, value);\
 	} else {\
 		mapper.rom_map_to[2] = m121.bck[1];\
 	}\
 	if (m121.reg[1]) {\
 		value = m121.reg[1];\
-		control_bank(prg_rom_8k_max)\
+		control_bank(info.prg.rom.max.banks_8k)\
 		map_prg_rom_8k(1, 3, value);\
 	} else {\
-		mapper.rom_map_to[3] = prg_rom_8k_max;\
+		mapper.rom_map_to[3] = info.prg.rom.max.banks_8k;\
 	}\
 	map_prg_rom_8k_update()
 
 static const BYTE vlu121[4] = { 0x00, 0x83, 0x42, 0x00 };
 
-WORD prg_rom_8k_max, prg_rom_8k_before_last, chr_rom_1k_max;
+WORD prg_rom_8k_before_last, chr_rom_1k_max;
 
 void map_init_121(void) {
-	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
 	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
 	prg_rom_8k_before_last = info.prg.rom.banks_8k - 2;
 
@@ -88,10 +87,10 @@ void extcl_cpu_wr_mem_121(WORD address, BYTE value) {
 			case 0x8001:
 				if (mmc3.bank_to_update == 6) {
 					if (mmc3.prg_rom_cfg) {
-						control_bank(prg_rom_8k_max)
+						control_bank(info.prg.rom.max.banks_8k)
 						m121.bck[1] = value;
 					} else {
-						control_bank(prg_rom_8k_max)
+						control_bank(info.prg.rom.max.banks_8k)
 						m121.bck[0] = value;
 					}
 				}

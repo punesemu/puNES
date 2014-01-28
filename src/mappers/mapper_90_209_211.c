@@ -32,13 +32,11 @@ static void INLINE irq_clock_count_90_209_211(void);
 	ntbl.bank_1k[index] = &ntbl.data[value << 10];\
 	m90_209_211.nmt.write[index] = TRUE
 
-WORD prg_rom_8k_max;
 WORD chr_rom_8k_max, chr_rom_4k_max, chr_rom_2k_max, chr_rom_1k_max;
 
 void map_init_90_209_211(BYTE model) {
 	BYTE i;
 
-	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
 	chr_rom_8k_max = info.chr.rom.banks_8k - 1;
 	chr_rom_4k_max = info.chr.rom.banks_4k - 1;
 	chr_rom_2k_max = (info.chr.rom.banks_1k >> 1) - 1;
@@ -370,7 +368,7 @@ static void INLINE prg_setup_90_209_211(void) {
 		case 0:
 			/* prg rom da 8k al 0x6000 */
 			value = (((m90_209_211.prg[3] << 2) + 3) & 0x3F) | bankmode;
-			control_bank(prg_rom_8k_max)
+			control_bank(info.prg.rom.max.banks_8k)
 			m90_209_211.m6000.prg = value;
 			/* prg rom switch normale */
 			value = 0x0F | ((m90_209_211.mode[3] & 0x06) << 3);
@@ -380,7 +378,7 @@ static void INLINE prg_setup_90_209_211(void) {
 		case 1:
 			/* prg rom da 8k al 0x6000 */
 			value = (((m90_209_211.prg[3] << 1) + 1) & 0x3F) | bankmode;
-			control_bank(prg_rom_8k_max)
+			control_bank(info.prg.rom.max.banks_8k)
 			m90_209_211.m6000.prg = value;
 			/* prg rom switch normale */
 			value = (m90_209_211.prg[1] & 0x1F) | ((m90_209_211.mode[3] & 0x06) << 4);
@@ -394,26 +392,26 @@ static void INLINE prg_setup_90_209_211(void) {
 		case 2:
 			/* prg rom da 8k al 0x6000 */
 			value = (m90_209_211.prg[3] & 0x3F) | bankmode;
-			control_bank(prg_rom_8k_max)
+			control_bank(info.prg.rom.max.banks_8k)
 			m90_209_211.m6000.prg = value;
 			/* prg rom switch normale */
 			value = (m90_209_211.prg[0] & 0x3F) | bankmode;
-			control_bank(prg_rom_8k_max)
+			control_bank(info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 0, value);
 			value = (m90_209_211.prg[1] & 0x3F) | bankmode;
-			control_bank(prg_rom_8k_max)
+			control_bank(info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 1, value);
 			value = (m90_209_211.prg[2] & 0x3F) | bankmode;
-			control_bank(prg_rom_8k_max)
+			control_bank(info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 2, value);
 			value = 0x3F | bankmode;
-			control_bank(prg_rom_8k_max)
+			control_bank(info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 3, value);
 			break;
 		case 4:
 			/* prg rom da 8k al 0x6000 */
 			value = (((m90_209_211.prg[3] << 2) + 3) & 0x3F) | bankmode;
-			control_bank(prg_rom_8k_max)
+			control_bank(info.prg.rom.max.banks_8k)
 			m90_209_211.m6000.prg = value;
 			/* prg rom switch normale */
 			value = (m90_209_211.prg[3] & 0x0F) | ((m90_209_211.mode[3] & 0x06) << 3);
@@ -423,7 +421,7 @@ static void INLINE prg_setup_90_209_211(void) {
 		case 5:
 			/* prg rom da 8k al 0x6000 */
 			value = (((m90_209_211.prg[3] << 1) + 1) & 0x3F) | bankmode;
-			control_bank(prg_rom_8k_max)
+			control_bank(info.prg.rom.max.banks_8k)
 			m90_209_211.m6000.prg = value;
 			/* prg rom switch normale */
 			value = (m90_209_211.prg[1] & 0x1F) | ((m90_209_211.mode[3] & 0x06) << 4);
@@ -437,20 +435,20 @@ static void INLINE prg_setup_90_209_211(void) {
 		case 6:
 			/* prg rom da 8k al 0x6000 */
 			value = (m90_209_211.prg[3] & 0x3F) | bankmode;
-			control_bank(prg_rom_8k_max)
+			control_bank(info.prg.rom.max.banks_8k)
 			m90_209_211.m6000.prg = value;
 			/* prg rom switch normale */
 			value = (m90_209_211.prg[0] & 0x3F) | bankmode;
-			control_bank(prg_rom_8k_max)
+			control_bank(info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 0, value);
 			value = (m90_209_211.prg[1] & 0x3F) | bankmode;
-			control_bank(prg_rom_8k_max)
+			control_bank(info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 1, value);
 			value = (m90_209_211.prg[2] & 0x3F) | bankmode;
-			control_bank(prg_rom_8k_max)
+			control_bank(info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 2, value);
 			value = (m90_209_211.prg[3] & 0x3F) | bankmode;
-			control_bank(prg_rom_8k_max)
+			control_bank(info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 3, value);
 			break;
 	}

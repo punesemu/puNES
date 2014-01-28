@@ -12,10 +12,9 @@
 #include "cpu.h"
 #include "save_slot.h"
 
-WORD prg_rom_8k_max, chr_rom_1k_max;
+WORD chr_rom_1k_max;
 
 void map_init_183(void) {
-	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
 	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
 
 	EXTCL_CPU_WR_MEM(183);
@@ -42,7 +41,7 @@ void extcl_cpu_wr_mem_183(WORD address, BYTE value) {
 		case 0x8801:
 		case 0x8802:
 		case 0x8803:
-			control_bank(prg_rom_8k_max)
+			control_bank(info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 0, value);
 			map_prg_rom_8k_update();
 			return;
@@ -70,7 +69,7 @@ void extcl_cpu_wr_mem_183(WORD address, BYTE value) {
 		case 0xA001:
 		case 0xA002:
 		case 0xA003:
-			control_bank(prg_rom_8k_max)
+			control_bank(info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 2, value);
 			map_prg_rom_8k_update();
 			return;
@@ -78,7 +77,7 @@ void extcl_cpu_wr_mem_183(WORD address, BYTE value) {
 		case 0xA801:
 		case 0xA802:
 		case 0xA803:
-			control_bank(prg_rom_8k_max)
+			control_bank(info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 1, value);
 			map_prg_rom_8k_update();
 			return;

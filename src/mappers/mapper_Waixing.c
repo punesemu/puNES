@@ -12,7 +12,7 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-WORD prg_rom_8k_before_last, prg_rom_8k_max, chr_rom_4k_max, chr_rom_1k_max;
+WORD prg_rom_8k_before_last, chr_rom_4k_max, chr_rom_1k_max;
 BYTE min, max;
 
 #define waixing_swap_chr_bank_1k(src, dst)\
@@ -192,22 +192,22 @@ BYTE min, max;
 			waixing_type_G_chr_1k(7)\
 			return;\
 		case 6:\
-			control_bank(prg_rom_8k_max)\
+			control_bank(info.prg.rom.max.banks_8k)\
 			map_prg_rom_8k(1, 0, value);\
 			map_prg_rom_8k_update();\
 			return;\
 		case 7:\
-			control_bank(prg_rom_8k_max)\
+			control_bank(info.prg.rom.max.banks_8k)\
 			map_prg_rom_8k(1, 1, value);\
 			map_prg_rom_8k_update();\
 			return;\
 		case 8:\
-			control_bank(prg_rom_8k_max)\
+			control_bank(info.prg.rom.max.banks_8k)\
 			map_prg_rom_8k(1, 2, value);\
 			map_prg_rom_8k_update();\
 			return;\
 		case 9:\
-			control_bank(prg_rom_8k_max)\
+			control_bank(info.prg.rom.max.banks_8k)\
 			map_prg_rom_8k(1, 3, value);\
 			map_prg_rom_8k_update();\
 			return;\
@@ -238,7 +238,7 @@ BYTE min, max;
 	BYTE i;\
 	for (i = 0; i < 4; i++) {\
 		waixing_type_H_prg_8k(waixing.prg_map[i]);\
-		control_bank(prg_rom_8k_max)\
+		control_bank(info.prg.rom.max.banks_8k)\
 		map_prg_rom_8k(1, i, value);\
 	}\
 	map_prg_rom_8k_update();\
@@ -276,7 +276,7 @@ BYTE min, max;
 		 * prg_rom_cfg 0x02 : $8000 - $9FFF fisso al penultimo banco\
 		 */\
 		waixing_type_H_prg_8k(prg_rom_8k_before_last);\
-		control_bank(prg_rom_8k_max)\
+		control_bank(info.prg.rom.max.banks_8k)\
 		map_prg_rom_8k(1, mmc3.prg_rom_cfg ^ 0x02, value);\
 		map_prg_rom_8k_update();\
 	}\
@@ -328,14 +328,14 @@ BYTE min, max;
 		case 6:\
 			waixing.prg_map[mmc3.prg_rom_cfg] = value;\
 			waixing_type_H_prg_8k(value);\
-			control_bank(prg_rom_8k_max)\
+			control_bank(info.prg.rom.max.banks_8k)\
 			map_prg_rom_8k(1, mmc3.prg_rom_cfg, value);\
 			map_prg_rom_8k_update();\
 			return;\
 		case 7:\
 			waixing.prg_map[1] = value;\
 			waixing_type_H_prg_8k(value);\
-			control_bank(prg_rom_8k_max)\
+			control_bank(info.prg.rom.max.banks_8k)\
 			map_prg_rom_8k(1, 1, value);\
 			map_prg_rom_8k_update();\
 			return;\
@@ -427,7 +427,6 @@ BYTE min, max;
 }
 
 void map_init_Waixing(BYTE model) {
-	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
 	prg_rom_8k_before_last = info.prg.rom.banks_8k - 2;
 	chr_rom_4k_max = info.chr.rom.banks_4k - 1;
 	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
@@ -677,7 +676,7 @@ void extcl_cpu_wr_mem_Waixing_PSx(WORD address, BYTE value) {
 			break;
 		case 0x0002:
 			value = (value << 1) | swap;
-			control_bank(prg_rom_8k_max)
+			control_bank(info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 0, value);
 			map_prg_rom_8k(1, 1, value);
 			map_prg_rom_8k(1, 2, value);

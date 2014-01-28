@@ -20,11 +20,10 @@ const WORD table_VRC7[2][4] = {
 	{0x0000, 0x0001, 0x0002, 0x0003},
 };
 
-WORD prg_rom_8k_max, chr_rom_1k_max, mask;
+WORD chr_rom_1k_max, mask;
 BYTE type, delay;
 
 void map_init_VRC7(BYTE revision) {
-	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
 	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
 
 	EXTCL_CPU_WR_MEM(VRC7);
@@ -59,17 +58,17 @@ void extcl_cpu_wr_mem_VRC7(WORD address, BYTE value) {
 
 	switch (address) {
 		case 0x8000:
-			control_bank(prg_rom_8k_max)
+			control_bank(info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 0, value);
 			map_prg_rom_8k_update();
 			return;
 		case 0x8001:
-			control_bank(prg_rom_8k_max)
+			control_bank(info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 1, value);
 			map_prg_rom_8k_update();
 			return;
 		case 0x9000:
-			control_bank(prg_rom_8k_max)
+			control_bank(info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 2, value);
 			map_prg_rom_8k_update();
 			return;

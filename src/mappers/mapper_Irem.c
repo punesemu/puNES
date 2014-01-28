@@ -13,7 +13,7 @@
 #include "save_slot.h"
 
 #define irem_G101_prg_rom_update()\
-	control_bank(prg_rom_8k_max)\
+	control_bank(info.prg.rom.max.banks_8k)\
 	if (!irem_G101.prg_mode) {\
 		map_prg_rom_8k(1, 0, value);\
 		map_prg_rom_8k(1, 2, prg_rom_8k_before_last);\
@@ -30,12 +30,11 @@
 	chr.bank_1k[6] = &irem_LROG017.chr_ram[0x1000];\
 	chr.bank_1k[7] = &irem_LROG017.chr_ram[0x1400]
 
-WORD prg_rom_8k_max, prg_rom_8k_before_last;
+WORD prg_rom_8k_before_last;
 WORD chr_rom_2k_max, chr_rom_1k_max;
 
 void map_init_Irem(BYTE model) {
-	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
-	prg_rom_8k_before_last = prg_rom_8k_max - 1;
+	prg_rom_8k_before_last = info.prg.rom.max.banks_8k - 1;
 	chr_rom_2k_max = (info.chr.rom.banks_1k >> 1) - 1;
 	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
 
@@ -50,9 +49,9 @@ void map_init_Irem(BYTE model) {
 				memset(&irem_G101, 0x00, sizeof(irem_G101));
 
 				mapper.rom_map_to[0] = 0;
-				mapper.rom_map_to[1] = prg_rom_8k_max;
+				mapper.rom_map_to[1] = info.prg.rom.max.banks_8k;
 				mapper.rom_map_to[2] = prg_rom_8k_before_last;
-				mapper.rom_map_to[3] = prg_rom_8k_max;
+				mapper.rom_map_to[3] = info.prg.rom.max.banks_8k;
 
 				if (info.id == MAJORLEAGUE) {
 					mirroring_SCR0();
@@ -119,7 +118,7 @@ void extcl_cpu_wr_mem_Irem_G101(WORD address, BYTE value) {
 			irem_G101_prg_rom_update();
 			break;
 		case 0xA000:
-			control_bank(prg_rom_8k_max)
+			control_bank(info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 1, value);
 			map_prg_rom_8k_update();
 			break;
@@ -139,7 +138,7 @@ BYTE extcl_save_mapper_Irem_G101(BYTE mode, BYTE slot, FILE *fp) {
 void extcl_cpu_wr_mem_Irem_H3000(WORD address, BYTE value) {
 	switch (address & 0xF000) {
 		case 0x8000:
-			control_bank(prg_rom_8k_max)
+			control_bank(info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 0, value);
 			map_prg_rom_8k_update();
 			break;
@@ -174,12 +173,12 @@ void extcl_cpu_wr_mem_Irem_H3000(WORD address, BYTE value) {
 			chr.bank_1k[address & 0x0007] = &chr.data[value << 10];
 			break;
 		case 0xA000:
-			control_bank(prg_rom_8k_max)
+			control_bank(info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 1, value);
 			map_prg_rom_8k_update();
 			break;
 		case 0xC000:
-			control_bank(prg_rom_8k_max)
+			control_bank(info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 2, value);
 			map_prg_rom_8k_update();
 			break;

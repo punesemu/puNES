@@ -11,11 +11,7 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
-WORD prg_rom_8k_max;
-
 void map_init_Whirlwind(void) {
-	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
-
 	EXTCL_CPU_WR_MEM(Whirlwind);
 	EXTCL_CPU_RD_MEM(Whirlwind);
 	EXTCL_SAVE_MAPPER(Whirlwind);
@@ -32,7 +28,7 @@ void map_init_Whirlwind(void) {
 }
 void extcl_cpu_wr_mem_Whirlwind(WORD address, BYTE value) {
 	if (address == 0x8FFF) {
-		control_bank(prg_rom_8k_max)
+		control_bank(info.prg.rom.max.banks_8k)
 		whirlwind.prg_ram = value << 13;
 	}
 }

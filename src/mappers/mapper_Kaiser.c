@@ -12,10 +12,9 @@
 #include "cpu.h"
 #include "save_slot.h"
 
-WORD prg_rom_8k_max, chr_rom_8k_max, chr_rom_4k_max, chr_rom_1k_max;
+WORD chr_rom_8k_max, chr_rom_4k_max, chr_rom_1k_max;
 
 void map_init_Kaiser(BYTE model) {
-	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
 	chr_rom_8k_max = info.chr.rom.banks_8k - 1;
 	chr_rom_4k_max = info.chr.rom.banks_4k - 1;
 	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
@@ -104,13 +103,13 @@ void extcl_cpu_wr_mem_Kaiser_ks202(WORD address, BYTE value) {
 				case 1:
 				case 2: {
 					value = (mapper.rom_map_to[slot] & 0x10) | (value & 0x0F);
-					control_bank(prg_rom_8k_max)
+					control_bank(info.prg.rom.max.banks_8k)
 					map_prg_rom_8k(1, slot, value);
 					map_prg_rom_8k_update();
 					break;
 				}
 				case 3:
-					control_bank(prg_rom_8k_max)
+					control_bank(info.prg.rom.max.banks_8k)
 					ks202.prg_ram_rd = &prg.rom[value << 13];
 					break;
 			}
@@ -120,7 +119,7 @@ void extcl_cpu_wr_mem_Kaiser_ks202(WORD address, BYTE value) {
 					address &= 0x0003;
 					if (address < 3) {
 						value = (save & 0x10) | (mapper.rom_map_to[address] & 0x0F);
-						control_bank(prg_rom_8k_max)
+						control_bank(info.prg.rom.max.banks_8k)
 						map_prg_rom_8k(1, address, value);
 						map_prg_rom_8k_update();
 					}

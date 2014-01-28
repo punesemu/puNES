@@ -18,7 +18,7 @@
 	chr.bank_1k[slot] = &chr.data[value << 10];\
 	vrc4.chr_rom_bank[slot] = value
 
-WORD prg_rom_8k_max, prg_rom_8k_before_last, chr_rom_1k_max;
+WORD prg_rom_8k_before_last, chr_rom_1k_max;
 BYTE type;
 
 const BYTE shift_VRC4[5] = { 0x01, 0x00, 0x06, 0x02, 0x02 };
@@ -32,8 +32,7 @@ const WORD table_VRC4[5][4] = {
 };
 
 void map_init_VRC4(BYTE revision) {
-	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
-	prg_rom_8k_before_last = prg_rom_8k_max - 1;
+	prg_rom_8k_before_last = info.prg.rom.max.banks_8k - 1;
 	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
 
 	EXTCL_CPU_WR_MEM(VRC4);
@@ -72,13 +71,13 @@ void extcl_cpu_wr_mem_VRC4(WORD address, BYTE value) {
 
 	switch (address) {
 		case 0x8000:
-			control_bank_with_AND(0x1F, prg_rom_8k_max)
+			control_bank_with_AND(0x1F, info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, vrc4.swap_mode, value);
 			map_prg_rom_8k(1, 0x02 >> vrc4.swap_mode, prg_rom_8k_before_last);
 			map_prg_rom_8k_update();
 			return;
 		case 0xA000:
-			control_bank_with_AND(0x1F, prg_rom_8k_max)
+			control_bank_with_AND(0x1F, info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 1, value);
 			map_prg_rom_8k_update();
 			return;
@@ -220,8 +219,6 @@ void extcl_cpu_every_cycle_VRC4(void) {
 }
 
 void map_init_VRC4BMC(void) {
-	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
-
 	map_init_VRC4(VRC4E);
 
 	EXTCL_CPU_WR_MEM(VRC4BMC);
@@ -233,14 +230,14 @@ void extcl_cpu_wr_mem_VRC4BMC(WORD address, BYTE value) {
 
 	if ((address >= 0x8000) && (address <= 0x8FFF)) {
 		value = (mapper.rom_map_to[0] & 0x20) | (value & 0x1F);
-		control_bank(prg_rom_8k_max)
+		control_bank(info.prg.rom.max.banks_8k)
 		map_prg_rom_8k(1, vrc4.swap_mode, value);
 		map_prg_rom_8k_update();
 		return;
 	}
 	if ((address >= 0xA000) && (address <= 0xAFFF)) {
 		value = (mapper.rom_map_to[0] & 0x20) | (value & 0x1F);
-		control_bank(prg_rom_8k_max)
+		control_bank(info.prg.rom.max.banks_8k)
 		map_prg_rom_8k(1, 1, value);
 		map_prg_rom_8k_update();
 		return;
@@ -249,19 +246,19 @@ void extcl_cpu_wr_mem_VRC4BMC(WORD address, BYTE value) {
 		BYTE save = value << 2 & 0x20;
 
 		value = (mapper.rom_map_to[0] & 0x1F) | save ;
-		control_bank(prg_rom_8k_max)
+		control_bank(info.prg.rom.max.banks_8k)
 		map_prg_rom_8k(1, 0, value);
 
 		value = (mapper.rom_map_to[1] & 0x1F) | save ;
-		control_bank(prg_rom_8k_max)
+		control_bank(info.prg.rom.max.banks_8k)
 		map_prg_rom_8k(1, 1, value);
 
 		value = (mapper.rom_map_to[2] & 0x1F) | save ;
-		control_bank(prg_rom_8k_max)
+		control_bank(info.prg.rom.max.banks_8k)
 		map_prg_rom_8k(1, 2, value);
 
 		value = (mapper.rom_map_to[3] & 0x1F) | save ;
-		control_bank(prg_rom_8k_max)
+		control_bank(info.prg.rom.max.banks_8k)
 		map_prg_rom_8k(1, 3, value);
 
 		map_prg_rom_8k_update();

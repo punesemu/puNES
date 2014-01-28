@@ -17,10 +17,9 @@
 	control_bank(chr_rom_1k_max)\
 	chr.bank_1k[b] = &chr.data[value << 10]
 
-WORD prg_rom_8k_max, chr_rom_1k_max;
+WORD chr_rom_1k_max;
 
 void map_init_219(void) {
-	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
 	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
 
 	EXTCL_CPU_WR_MEM(219);
@@ -62,12 +61,12 @@ void extcl_cpu_wr_mem_219(WORD address, BYTE value) {
 
 			if (value < 4) {
 				value ^= 0x03;
-				control_bank(prg_rom_8k_max)
+				control_bank(info.prg.rom.max.banks_8k)
 				map_prg_rom_8k(2, 0, value);
 
 				value = ((value >> 5) & 0x01) | ((value >> 3) & 0x02) | ((value >> 1) & 0x04)
 				        		| ((value << 1) & 0x08);
-				control_bank(prg_rom_8k_max)
+				control_bank(info.prg.rom.max.banks_8k)
 				map_prg_rom_8k(2, 2, value);
 
 				map_prg_rom_8k_update();

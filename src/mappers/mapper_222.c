@@ -13,10 +13,9 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-WORD prg_rom_8k_max, chr_rom_1k_max;
+WORD chr_rom_1k_max;
 
 void map_init_222(void) {
-	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
 	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
 
 	EXTCL_CPU_WR_MEM(222);
@@ -40,7 +39,7 @@ void map_init_222(void) {
 void extcl_cpu_wr_mem_222(WORD address, BYTE value) {
 	switch (address & 0xF003) {
 		case 0x8000:
-			control_bank(prg_rom_8k_max)
+			control_bank(info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 0, value);
 			map_prg_rom_8k_update();
 			return;
@@ -52,7 +51,7 @@ void extcl_cpu_wr_mem_222(WORD address, BYTE value) {
 			}
 			return;
 		case 0xA000:
-			control_bank(prg_rom_8k_max)
+			control_bank(info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 1, value);
 			map_prg_rom_8k_update();
 			return;

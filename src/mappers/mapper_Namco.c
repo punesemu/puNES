@@ -14,7 +14,7 @@
 #include "save_slot.h"
 
 #define n163_prg_rom_8k_update(slot)\
-	control_bank_with_AND(0x3F, prg_rom_8k_max)\
+	control_bank_with_AND(0x3F, info.prg.rom.max.banks_8k)\
 	map_prg_rom_8k(1, slot, value);\
 	map_prg_rom_8k_update()
 #define _n163_nmt_update(slot)\
@@ -57,11 +57,10 @@
 		ntbl.bank_1k[n3425.bank_to_update >> 1] = &ntbl.data[((value >> 5) & 0x01) << 10];\
 	}
 
-WORD prg_rom_8k_max, chr_rom_2k_max, chr_rom_1k_max;
+WORD chr_rom_2k_max, chr_rom_1k_max;
 BYTE hardwired, type;
 
 void map_init_Namco(BYTE model) {
-	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
 	chr_rom_2k_max = (info.chr.rom.banks_1k >> 1) - 1;
 	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
 
@@ -134,7 +133,7 @@ void map_init_Namco(BYTE model) {
 				memset(&n3446, 0x00, sizeof(n3446));
 			}
 
-			mapper.rom_map_to[2] = prg_rom_8k_max - 1;
+			mapper.rom_map_to[2] = info.prg.rom.max.banks_8k - 1;
 			break;
 	}
 
@@ -391,12 +390,12 @@ void extcl_cpu_wr_mem_Namco_3425(WORD address, BYTE value) {
 					chr.bank_1k[n3425.bank_to_update + 2] = &chr.data[value << 10];
 					return;
 				case 0x06:
-					control_bank(prg_rom_8k_max)
+					control_bank(info.prg.rom.max.banks_8k)
 					map_prg_rom_8k(1, 0, value);
 					map_prg_rom_8k_update();
 					return;
 				case 0x07:
-					control_bank(prg_rom_8k_max)
+					control_bank(info.prg.rom.max.banks_8k)
 					map_prg_rom_8k(1, 1, value);
 					map_prg_rom_8k_update();
 					return;
@@ -433,12 +432,12 @@ void extcl_cpu_wr_mem_Namco_3446(WORD address, BYTE value) {
 					return;
 				}
 				case 0x06:
-					control_bank(prg_rom_8k_max)
+					control_bank(info.prg.rom.max.banks_8k)
 					map_prg_rom_8k(1, n3446.prg_rom_mode, value);
 					map_prg_rom_8k_update();
 					return;
 				case 0x07:
-					control_bank(prg_rom_8k_max)
+					control_bank(info.prg.rom.max.banks_8k)
 					map_prg_rom_8k(1, 1, value);
 					map_prg_rom_8k_update();
 					return;

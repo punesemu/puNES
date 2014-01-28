@@ -10,10 +10,9 @@
 #include "save_slot.h"
 #include "cpu.h"
 
-WORD prg_rom_8k_max, chr_rom_8k_max;
+WORD chr_rom_8k_max;
 
 void map_init_42(void) {
-	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
 	chr_rom_8k_max = info.chr.rom.banks_8k - 1;
 
 	EXTCL_CPU_WR_MEM(42);
@@ -44,7 +43,7 @@ void extcl_cpu_wr_mem_42(WORD address, BYTE value) {
 			return;
 		}
 		case 0xE000:
-			control_bank(prg_rom_8k_max)
+			control_bank(info.prg.rom.max.banks_8k)
 			m42.rom_map_to = value;
 			m42.prg_8k_6000 = &prg.rom[value << 13];
 			return;

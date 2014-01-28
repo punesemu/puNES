@@ -12,11 +12,7 @@
 #include "cpu.h"
 #include "save_slot.h"
 
-WORD prg_rom_8k_max;
-
 void map_init_120(void) {
-	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
-
 	EXTCL_CPU_WR_MEM(120);
 	EXTCL_CPU_RD_MEM(120);
 	EXTCL_SAVE_MAPPER(120);
@@ -39,7 +35,7 @@ void extcl_cpu_wr_mem_120(WORD address, BYTE value) {
 	}
 
 	if ((address & 0xE3C0) == 0x41C0) {
-		control_bank_with_AND(0x07, prg_rom_8k_max)
+		control_bank_with_AND(0x07, info.prg.rom.max.banks_8k)
 		m120.prg_ram_rd = &prg.rom[value << 13];
 	}
 }

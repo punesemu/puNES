@@ -27,10 +27,9 @@
 	bank = new_value << 10;\
 	chr.bank_1k[slot] = &chr.data[bank]
 
-WORD prg_rom_8k_max, chr_rom_4k_max, chr_rom_2k_max, chr_rom_1k_max;
+WORD chr_rom_4k_max, chr_rom_2k_max, chr_rom_1k_max;
 
 void map_init_Ntdec(BYTE model) {
-	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
 	chr_rom_4k_max = info.chr.rom.banks_4k - 1;
 	chr_rom_2k_max = (info.chr.rom.banks_1k >> 1) - 1;
 	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
@@ -70,7 +69,7 @@ void extcl_cpu_wr_mem_Ntdec_asder(WORD address, BYTE value) {
 			switch (asder.address) {
 				case 0:
 				case 1:
-					control_bank(prg_rom_8k_max)
+					control_bank(info.prg.rom.max.banks_8k)
 					map_prg_rom_8k(1, asder.address, value);
 					map_prg_rom_8k_update();
 					return;
@@ -158,7 +157,7 @@ void extcl_cpu_wr_mem_Ntdec_fhero(WORD address, BYTE value) {
 			return;
 		}
 		case 3:
-			control_bank(prg_rom_8k_max)
+			control_bank(info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 0, value);
 			map_prg_rom_8k_update();
 			return;

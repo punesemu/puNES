@@ -22,10 +22,9 @@
 	mmc3.irq_reload = FALSE;\
 }
 
-WORD prg_rom_8k_max, prg_rom_8k_before_last, chr_rom_1k_max;
+WORD prg_rom_8k_before_last, chr_rom_1k_max;
 
 void map_init_MMC3(void) {
-	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
 	prg_rom_8k_before_last = info.prg.rom.banks_8k - 2;
 	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
 
@@ -178,13 +177,13 @@ void extcl_cpu_wr_mem_MMC3(WORD address, BYTE value) {
 					 * prg_rom_cfg 0x00 : $8000 - $9FFF swappable
 					 * prg_rom_cfg 0x02 : $C000 - $DFFF swappable
 					 */
-					control_bank(prg_rom_8k_max)
+					control_bank(info.prg.rom.max.banks_8k)
 					map_prg_rom_8k(1, mmc3.prg_rom_cfg, value);
 					map_prg_rom_8k_update();
 					break;
 				case 7:
 					/* $A000 - $BFFF swappable */
-					control_bank(prg_rom_8k_max)
+					control_bank(info.prg.rom.max.banks_8k)
 					map_prg_rom_8k(1, 1, value);
 					map_prg_rom_8k_update();
 					break;

@@ -141,6 +141,7 @@ BYTE ines_load_rom(void) {
 
 		info.prg.rom.max.banks_32k = (info.prg.rom.banks_16k >> 1) - 1;
 		info.prg.rom.max.banks_16k = info.prg.rom.banks_16k - 1;
+		info.prg.rom.max.banks_8k = info.prg.rom.banks_8k - 1;
 
 		if (info.prg.ram.bat.banks) {
 			info.prg.ram.banks_8k_plus = 1;

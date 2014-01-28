@@ -8,10 +8,9 @@
 #include "mappers.h"
 #include "mem_map.h"
 
-WORD prg_rom_8k_max, chr_rom_4k_max;
+WORD chr_rom_4k_max;
 
 void map_init_VRC1(void) {
-	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
 	chr_rom_4k_max = info.chr.rom.banks_4k - 1;
 
 	EXTCL_CPU_WR_MEM(VRC1);
@@ -23,7 +22,7 @@ void extcl_cpu_wr_mem_VRC1(WORD address, BYTE value) {
 
 	switch (address) {
 		case 0x8000:
-			control_bank_with_AND(0x0F, prg_rom_8k_max)
+			control_bank_with_AND(0x0F, info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 0, value);
 			map_prg_rom_8k_update();
 			return;
@@ -47,12 +46,12 @@ void extcl_cpu_wr_mem_VRC1(WORD address, BYTE value) {
 			}
 			return;
 		case 0xA000:
-			control_bank_with_AND(0x0F, prg_rom_8k_max)
+			control_bank_with_AND(0x0F, info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 1, value);
 			map_prg_rom_8k_update();
 			return;
 		case 0xC000:
-			control_bank_with_AND(0x0F, prg_rom_8k_max)
+			control_bank_with_AND(0x0F, info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 2, value);
 			map_prg_rom_8k_update();
 			return;

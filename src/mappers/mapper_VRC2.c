@@ -17,7 +17,7 @@
 	chr.bank_1k[slot] = &chr.data[value << 10];\
 	vrc2.chr_rom_bank[slot] = value
 
-WORD prg_rom_8k_max, chr_rom_1k_max;
+WORD chr_rom_1k_max;
 BYTE type;
 
 const WORD shift_VRC2[2][4] = {
@@ -26,7 +26,6 @@ const WORD shift_VRC2[2][4] = {
 };
 
 void map_init_VRC2(BYTE revision) {
-	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
 	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
 
 	EXTCL_CPU_WR_MEM(VRC2);
@@ -54,7 +53,7 @@ void extcl_cpu_wr_mem_VRC2(WORD address, BYTE value) {
 
 	switch (address) {
 		case 0x8000:
-			control_bank_with_AND(0x0F, prg_rom_8k_max)
+			control_bank_with_AND(0x0F, info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 0, value);
 			map_prg_rom_8k_update();
 			return;
@@ -76,7 +75,7 @@ void extcl_cpu_wr_mem_VRC2(WORD address, BYTE value) {
 			return;
 		}
 		case 0xA000:
-			control_bank_with_AND(0x0F, prg_rom_8k_max)
+			control_bank_with_AND(0x0F, info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 1, value);
 			map_prg_rom_8k_update();
 			return;

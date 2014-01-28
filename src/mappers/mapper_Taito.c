@@ -12,11 +12,10 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-WORD prg_rom_8k_max, chr_rom_2k_max, chr_rom_1k_max;
+WORD chr_rom_2k_max, chr_rom_1k_max;
 BYTE type;
 
 void map_init_Taito(BYTE model) {
-	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
 	chr_rom_2k_max = (info.chr.rom.banks_1k >> 1) - 1;
 	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
 
@@ -103,12 +102,12 @@ void extcl_cpu_wr_mem_Taito_TC0190FMC(WORD address, BYTE value) {
 			} else {
 				mirroring_V();
 			}
-			control_bank_with_AND(0x3F, prg_rom_8k_max)
+			control_bank_with_AND(0x3F, info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 0, value);
 			map_prg_rom_8k_update();
 			return;
 		case 0x8001:
-			control_bank_with_AND(0x3F, prg_rom_8k_max)
+			control_bank_with_AND(0x3F, info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 1, value);
 			map_prg_rom_8k_update();
 			return;
@@ -152,12 +151,12 @@ void extcl_cpu_wr_mem_Taito_TC0190FMCPAL16R4(WORD address, BYTE value) {
 
 	switch (address & 0xF003) {
 		case 0x8000:
-			control_bank_with_AND(0x3F, prg_rom_8k_max)
+			control_bank_with_AND(0x3F, info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 0, value);
 			map_prg_rom_8k_update();
 			return;
 		case 0x8001:
-			control_bank_with_AND(0x3F, prg_rom_8k_max)
+			control_bank_with_AND(0x3F, info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 1, value);
 			map_prg_rom_8k_update();
 			return;
@@ -280,17 +279,17 @@ void extcl_cpu_wr_mem_Taito_X1005(WORD address, BYTE value) {
 			taito_X1005.enable = value;
 			return;
 		case 0x7EFA:
-			control_bank(prg_rom_8k_max)
+			control_bank(info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 0, value);
 			map_prg_rom_8k_update();
 			return;
 		case 0x7EFC:
-			control_bank(prg_rom_8k_max)
+			control_bank(info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 1, value);
 			map_prg_rom_8k_update();
 			return;
 		case 0x7EFE:
-			control_bank(prg_rom_8k_max)
+			control_bank(info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 2, value);
 			map_prg_rom_8k_update();
 			return;
@@ -424,19 +423,19 @@ void extcl_cpu_wr_mem_Taito_X1017(WORD address, BYTE value) {
 			return;
 		case 0x7EFA:
 			value >>= 2;
-			control_bank(prg_rom_8k_max)
+			control_bank(info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 0, value);
 			map_prg_rom_8k_update();
 			return;
 		case 0x7EFB:
 			value >>= 2;
-			control_bank(prg_rom_8k_max)
+			control_bank(info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 1, value);
 			map_prg_rom_8k_update();
 			return;
 		case 0x7EFC:
 			value >>= 2;
-			control_bank(prg_rom_8k_max)
+			control_bank(info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, 2, value);
 			map_prg_rom_8k_update();
 			return;

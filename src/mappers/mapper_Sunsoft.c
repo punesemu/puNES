@@ -83,12 +83,10 @@
 		fm7.square[sq].output = fm7.square[sq].volume * ((fm7.square[sq].step & 0x10) ? 1 : 0);\
 	}
 
-WORD prg_rom_8k_max;
 WORD chr_rom_8k_max, chr_rom_4k_max, chr_rom_2k_max, chr_rom_1k_max;
 BYTE type;
 
 void map_init_Sunsoft(BYTE model) {
-	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
 	chr_rom_8k_max = info.chr.rom.banks_8k - 1;
 	chr_rom_4k_max = info.chr.rom.banks_4k - 1;
 	chr_rom_2k_max = (info.chr.rom.banks_1k >> 1) - 1;
@@ -354,7 +352,7 @@ void extcl_cpu_wr_mem_Sunsoft_FM7(WORD address, BYTE value) {
 						case 0x80:
 							cpu.prg_ram_rd_active = TRUE;
 							cpu.prg_ram_wr_active = FALSE;
-							control_bank_with_AND(0x3F, prg_rom_8k_max)
+							control_bank_with_AND(0x3F, info.prg.rom.max.banks_8k)
 							fm7.prg_ram_address = value << 13;
 							prg.ram_plus_8k = &prg.rom[fm7.prg_ram_address];
 							return;
@@ -374,7 +372,7 @@ void extcl_cpu_wr_mem_Sunsoft_FM7(WORD address, BYTE value) {
 				case 0x09:
 				case 0x0A:
 				case 0x0B:
-					control_bank(prg_rom_8k_max)
+					control_bank(info.prg.rom.max.banks_8k)
 					map_prg_rom_8k(1, (bank & 0x03) - 1, value);
 					map_prg_rom_8k_update();
 					return;

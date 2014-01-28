@@ -12,10 +12,9 @@
 #include "cpu.h"
 #include "ppu.h"
 
-WORD prg_rom_8k_max, chr_rom_2k_max;
+WORD chr_rom_2k_max;
 
 void map_init_91(void) {
-	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
 	chr_rom_2k_max = (info.chr.rom.banks_1k >> 1) - 1;
 
 	EXTCL_CPU_WR_MEM(91);
@@ -60,12 +59,12 @@ void extcl_cpu_wr_mem_91(WORD address, BYTE value) {
 	if (address < 0x7FFF) {
 		switch (address & 0x0003) {
 			case 0:
-				control_bank(prg_rom_8k_max)
+				control_bank(info.prg.rom.max.banks_8k)
 				map_prg_rom_8k(1, 0, value);
 				map_prg_rom_8k_update();
 				return;
 			case 1:
-				control_bank(prg_rom_8k_max)
+				control_bank(info.prg.rom.max.banks_8k)
 				map_prg_rom_8k(1, 1, value);
 				map_prg_rom_8k_update();
 				return;

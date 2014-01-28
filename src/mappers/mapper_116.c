@@ -12,12 +12,12 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-WORD prg_rom_8k_max, prg_rom_8k_before_last;
+WORD prg_rom_8k_before_last;
 WORD chr_rom_1k_max, chr_rom_2k_max, chr_rom_4k_max;
 
 #define m116_update_prg_8k(bnk, vl)\
 	tmp = vl;\
-	_control_bank(tmp, prg_rom_8k_max)\
+	_control_bank(tmp, info.prg.rom.max.banks_8k)\
 	map_prg_rom_8k(1, bnk, tmp)
 #define m116_update_prg_16k(bnk, vl)\
 	tmp = vl;\
@@ -359,13 +359,13 @@ WORD chr_rom_1k_max, chr_rom_2k_max, chr_rom_4k_max;
 			chr.bank_1k[slot] = &chr.data[bank << 10];\
 			return;\
 		case 6:\
-			control_bank(prg_rom_8k_max)\
+			control_bank(info.prg.rom.max.banks_8k)\
 			m116.prg_map[mmc3.prg_rom_cfg] = value;\
 			map_prg_rom_8k(1, mmc3.prg_rom_cfg, value);\
 			map_prg_rom_8k_update();\
 			return;\
 		case 7:\
-			control_bank(prg_rom_8k_max)\
+			control_bank(info.prg.rom.max.banks_8k)\
 			m116.prg_map[1] = value;\
 			map_prg_rom_8k(1, 1, value);\
 			map_prg_rom_8k_update();\
@@ -375,7 +375,6 @@ WORD chr_rom_1k_max, chr_rom_2k_max, chr_rom_4k_max;
 
 void map_init_116(void) {
 	prg_rom_8k_before_last = info.prg.rom.banks_8k - 2;
-	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
 	chr_rom_4k_max = info.chr.rom.banks_4k - 1;
 	chr_rom_2k_max = (info.chr.rom.banks_1k >> 1) - 1;
 	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
@@ -842,7 +841,7 @@ void extcl_cpu_wr_mem_116_type_C(WORD address, BYTE value) {
 	} else {
 		switch (address & 0xF003) {
 			case 0x8000:
-				control_bank(prg_rom_8k_max)
+				control_bank(info.prg.rom.max.banks_8k)
 				if (m116.mode0.prg[0] != value) {
 					m116.mode0.prg[0] = value;
 					map_prg_rom_8k(1, 0, value);
@@ -860,7 +859,7 @@ void extcl_cpu_wr_mem_116_type_C(WORD address, BYTE value) {
 				}
 				return;
 			case 0xA000:
-				control_bank(prg_rom_8k_max)
+				control_bank(info.prg.rom.max.banks_8k)
 				if (m116.mode0.prg[1] != value) {
 					m116.mode0.prg[1] = value;
 					map_prg_rom_8k(1, 1, value);
