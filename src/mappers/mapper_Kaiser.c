@@ -12,10 +12,9 @@
 #include "cpu.h"
 #include "save_slot.h"
 
-WORD prg_rom_16k_max, prg_rom_8k_max, chr_rom_8k_max, chr_rom_4k_max, chr_rom_1k_max;
+WORD prg_rom_8k_max, chr_rom_8k_max, chr_rom_4k_max, chr_rom_1k_max;
 
 void map_init_Kaiser(BYTE model) {
-	prg_rom_16k_max = info.prg.rom.banks_16k - 1;
 	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
 	chr_rom_8k_max = info.chr.rom.banks_8k - 1;
 	chr_rom_4k_max = info.chr.rom.banks_4k - 1;
@@ -217,7 +216,7 @@ BYTE extcl_cpu_rd_mem_Kaiser_ks7022(WORD address, BYTE openbus, BYTE before) {
 		BYTE value = ks7022.reg;
 		DBWORD bank;
 
-		control_bank(prg_rom_16k_max)
+		control_bank(info.prg.rom.max.banks_16k)
 		map_prg_rom_8k(2, 0, value);
 		map_prg_rom_8k(2, 2, value);
 		map_prg_rom_8k_update();

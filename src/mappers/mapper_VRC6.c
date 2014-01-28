@@ -52,7 +52,7 @@
 	save_slot_ele(mode, slot, square.frequency);\
 	save_slot_ele(mode, slot, square.output)
 
-WORD prg_rom_16k_max, prg_rom_8k_max, chr_rom_1k_max;
+WORD prg_rom_8k_max, chr_rom_1k_max;
 BYTE type, delay;
 
 const WORD table_VRC6[2][4] = {
@@ -61,7 +61,6 @@ const WORD table_VRC6[2][4] = {
 };
 
 void map_init_VRC6(BYTE revision) {
-	prg_rom_16k_max = info.prg.rom.banks_16k - 1;
 	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
 	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
 
@@ -100,7 +99,7 @@ void extcl_cpu_wr_mem_VRC6(WORD address, BYTE value) {
 		case 0x8001:
 		case 0x8002:
 		case 0x8003:
-			control_bank(prg_rom_16k_max)
+			control_bank(info.prg.rom.max.banks_16k)
 			map_prg_rom_8k(2, 0, value);
 			map_prg_rom_8k_update();
 			return;

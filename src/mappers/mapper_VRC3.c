@@ -12,11 +12,7 @@
 #include "cpu.h"
 #include "save_slot.h"
 
-WORD prg_rom_16k_max;
-
 void map_init_VRC3(void) {
-	prg_rom_16k_max = info.prg.rom.banks_16k - 1;
-
 	EXTCL_CPU_WR_MEM(VRC3);
 	EXTCL_SAVE_MAPPER(VRC3);
 	EXTCL_CPU_EVERY_CYCLE(VRC3);
@@ -62,7 +58,7 @@ void extcl_cpu_wr_mem_VRC3(WORD address, BYTE value) {
 			irq.high &= ~EXT_IRQ;
 			return;
 		case 0xF000:
-			control_bank_with_AND(0x0F, prg_rom_16k_max)
+			control_bank_with_AND(0x0F, info.prg.rom.max.banks_16k)
 			map_prg_rom_8k(2, 0, value);
 			map_prg_rom_8k_update();
 			return;

@@ -30,11 +30,10 @@
 	chr.bank_1k[6] = &irem_LROG017.chr_ram[0x1000];\
 	chr.bank_1k[7] = &irem_LROG017.chr_ram[0x1400]
 
-WORD prg_rom_16k_max, prg_rom_8k_max, prg_rom_8k_before_last;
+WORD prg_rom_8k_max, prg_rom_8k_before_last;
 WORD chr_rom_2k_max, chr_rom_1k_max;
 
 void map_init_Irem(BYTE model) {
-	prg_rom_16k_max = info.prg.rom.banks_16k - 1;
 	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
 	prg_rom_8k_before_last = prg_rom_8k_max - 1;
 	chr_rom_2k_max = (info.chr.rom.banks_1k >> 1) - 1;
@@ -90,7 +89,7 @@ void map_init_Irem(BYTE model) {
 			EXTCL_CPU_WR_MEM(Irem_TAMS1);
 
 			if (info.reset >= HARD) {
-				map_prg_rom_8k(2, 0, prg_rom_16k_max);
+				map_prg_rom_8k(2, 0, info.prg.rom.max.banks_16k);
 				map_prg_rom_8k(2, 2, 0);
 			}
 			break;
@@ -251,7 +250,7 @@ void extcl_cpu_wr_mem_Irem_TAMS1(WORD address, BYTE value) {
 		mirroring_H();
 	}
 
-	control_bank(prg_rom_16k_max)
+	control_bank(info.prg.rom.max.banks_16k)
 	map_prg_rom_8k(2, 2, value);
 	map_prg_rom_8k_update();
 }

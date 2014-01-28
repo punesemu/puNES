@@ -16,10 +16,9 @@ static void INLINE prg_setup_28(void);
 BYTE static const inner_and[4] = { 0x01, 0x03, 0x07, 0x0F };
 BYTE static const outer_and[4] = { 0x7E, 0x7C, 0x78, 0x70 };
 
-WORD prg_rom_16k_max, chr_rom_8k_max;
+WORD chr_rom_8k_max;
 
 void map_init_28(void) {
-	prg_rom_16k_max = info.prg.rom.banks_16k - 1;
 	chr_rom_8k_max = info.chr.rom.banks_8k - 1;
 
 	EXTCL_CPU_WR_MEM(28);
@@ -126,27 +125,27 @@ static void INLINE prg_setup_28(void) {
 
 	if (!(m28.prg[1] & 0x08)) {
 		value = (m28.prg[0] & (inner_and[i] >> 1)) | ((m28.prg[2] << 1) & outer_and[i]);
-		control_bank(prg_rom_16k_max)
+		control_bank(info.prg.rom.max.banks_16k)
 		map_prg_rom_8k(2, 0, value);
 		value |= 1;
-		control_bank(prg_rom_16k_max)
+		control_bank(info.prg.rom.max.banks_16k)
 		map_prg_rom_8k(2, 2, value);
 	} else {
 		value = (m28.prg[0] & inner_and[i]) | ((m28.prg[2] << 1) & outer_and[i]);
 
 		if (!(m28.prg[1] & 0x04)) {
-			control_bank(prg_rom_16k_max)
+			control_bank(info.prg.rom.max.banks_16k)
 			map_prg_rom_8k(2, 2, value);
 
 			value = (m28.prg[2] << 1);
-			control_bank(prg_rom_16k_max)
+			control_bank(info.prg.rom.max.banks_16k)
 			map_prg_rom_8k(2, 0, value);
 		} else {
-			control_bank(prg_rom_16k_max)
+			control_bank(info.prg.rom.max.banks_16k)
 			map_prg_rom_8k(2, 0, value);
 
 			value = (m28.prg[2] << 1) | 1;
-			control_bank(prg_rom_16k_max)
+			control_bank(info.prg.rom.max.banks_16k)
 			map_prg_rom_8k(2, 2, value);
 		}
 	}

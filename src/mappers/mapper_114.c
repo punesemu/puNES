@@ -25,10 +25,9 @@
 
 static const BYTE vlu114[8] = {0, 3, 1, 5, 6, 7, 2, 4};
 
-WORD prg_rom_16k_max, prg_rom_8k_max, prg_rom_8k_before_last, chr_rom_2k_max, chr_rom_1k_max;
+WORD prg_rom_8k_max, prg_rom_8k_before_last, chr_rom_2k_max, chr_rom_1k_max;
 
 void map_init_114(void) {
-	prg_rom_16k_max = info.prg.rom.banks_16k - 1;
 	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
 	prg_rom_8k_before_last = info.prg.rom.banks_8k - 2;
 	chr_rom_2k_max = (info.chr.rom.banks_1k >> 1) - 1;
@@ -78,7 +77,7 @@ void extcl_cpu_wr_mem_114(WORD address, BYTE value) {
 		case 0x6001:
 			m114.prg_rom_switch = value >> 7;
 			if (m114.prg_rom_switch) {
-				control_bank_with_AND(0x1F, prg_rom_16k_max)
+				control_bank_with_AND(0x1F, info.prg.rom.max.banks_16k)
 				map_prg_rom_8k(2, 0, value);
 				map_prg_rom_8k(2, 2, value);
 				map_prg_rom_8k_update();

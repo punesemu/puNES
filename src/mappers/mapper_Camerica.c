@@ -8,11 +8,7 @@
 #include "mappers.h"
 #include "mem_map.h"
 
-WORD prg_rom_16k_max;
-
 void map_init_Camerica(void) {
-	prg_rom_16k_max = info.prg.rom.banks_16k - 1;
-
 	switch (info.mapper.from_db) {
 		case BF9096:
 			EXTCL_CPU_WR_MEM(Camerica_BF9096);
@@ -32,7 +28,7 @@ void map_init_Camerica(void) {
 	}
 }
 void extcl_cpu_wr_mem_Camerica_BF9093(WORD address, BYTE value) {
-	control_bank_with_AND(0x0F, prg_rom_16k_max)
+	control_bank_with_AND(0x0F, info.prg.rom.max.banks_16k)
 	map_prg_rom_8k(2, 0, value);
 	map_prg_rom_8k_update();
 }
@@ -61,7 +57,7 @@ void extcl_cpu_wr_mem_Camerica_BF9097(WORD address, BYTE value) {
 			}
 			return;
 		default:
-			control_bank_with_AND(0x07, prg_rom_16k_max)
+			control_bank_with_AND(0x07, info.prg.rom.max.banks_16k)
 			map_prg_rom_8k(2, 0, value);
 			map_prg_rom_8k_update();
 			return;

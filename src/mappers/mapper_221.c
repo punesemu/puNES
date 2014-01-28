@@ -13,18 +13,14 @@
 #define m221_prg_16k_swap()\
 	value = ((m221.reg[0] >> 1) & 0x38) | ((m221.reg[0] & 0x01) ? (m221.reg[0] & 0x80) ?\
 		m221.reg[1] : (m221.reg[1] & 0x06) : m221.reg[1]);\
-	control_bank(prg_rom_16k_max)\
+	control_bank(info.prg.rom.max.banks_16k)\
 	map_prg_rom_8k(2, 0, value);\
 	value = ((m221.reg[0] >> 1) & 0x38) | ((m221.reg[0] & 0x01) ? (m221.reg[0] & 0x80) ?\
 		0x07 : (m221.reg[1] & 0x06) | 0x1 : m221.reg[1]);\
-	control_bank(prg_rom_16k_max)\
+	control_bank(info.prg.rom.max.banks_16k)\
 	map_prg_rom_8k(2, 2, value)
 
-WORD prg_rom_16k_max;
-
 void map_init_221(void) {
-	prg_rom_16k_max = info.prg.rom.banks_16k - 1;
-
 	EXTCL_CPU_WR_MEM(221);
 	EXTCL_SAVE_MAPPER(221);
 	mapper.internal_struct[0] = (BYTE *) &m221;

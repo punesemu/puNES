@@ -44,7 +44,7 @@
 		}\
 	} else {\
 		value = (m215.reg[0] & 0x0F) | (m215.reg[1] & 0x10);\
-		control_bank(prg_rom_16k_max)\
+		control_bank(info.prg.rom.max.banks_16k)\
 		map_prg_rom_8k(2, 0, value);\
 		map_prg_rom_8k(2, 2, value);\
 	}\
@@ -147,10 +147,9 @@
 	}\
 }
 
-WORD prg_rom_16k_max, prg_rom_8k_max, prg_rom_8k_before_last, chr_rom_1k_max;
+WORD prg_rom_8k_max, prg_rom_8k_before_last, chr_rom_1k_max;
 
 void map_init_215(void) {
-	prg_rom_16k_max = info.prg.rom.banks_16k - 1;
 	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
 	prg_rom_8k_before_last = info.prg.rom.banks_8k - 2;
 	chr_rom_1k_max = info.chr.rom.banks_1k - 1;

@@ -16,12 +16,9 @@ static const BYTE slots[4][4][2] = {
 	{ { 0x00, 0 }, { 0x20, 0 }, { 0x40, 0 }, { 0x60, 0 } }
 };
 
-WORD prg_rom_16k_max;
 BYTE type;
 
 void map_init_235(void) {
-	prg_rom_16k_max = info.prg.rom.banks_16k - 1;
-
 	switch (info.prg.rom.banks_16k) {
 		case 64:
 			type = 0;
@@ -59,7 +56,7 @@ void extcl_cpu_wr_mem_235(WORD address, BYTE value) {
 
 	if (address & 0x0800) {
 		value = (bank << 1) | ((address >> 12) & 0x01);
-		control_bank(prg_rom_16k_max)
+		control_bank(info.prg.rom.max.banks_16k)
 		map_prg_rom_8k(2, 0, value);
 		map_prg_rom_8k(2, 2, value);
 	} else {

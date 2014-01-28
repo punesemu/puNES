@@ -68,11 +68,10 @@ enum {
 	MODE_MAX
 };
 
-WORD prg_rom_16k_max, chr_ram_4k_max, chr_rom_1k_max;
+WORD chr_ram_4k_max, chr_rom_1k_max;
 BYTE type;
 
 void map_init_Bandai(BYTE model) {
-	prg_rom_16k_max = info.prg.rom.banks_16k - 1;
 	chr_ram_4k_max = info.chr.rom.banks_4k - 1;
 	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
 
@@ -117,7 +116,7 @@ void map_init_Bandai(BYTE model) {
 				FCGX.e0.output = FCGX.e1.output = 0x10;
 
 				if (info.prg.rom.banks_16k >= 32) {
-					map_prg_rom_8k(2, 2, prg_rom_16k_max);
+					map_prg_rom_8k(2, 2, info.prg.rom.max.banks_16k);
 				}
 			} else {
 				BYTE i;
@@ -213,11 +212,11 @@ void extcl_cpu_wr_mem_Bandai_FCGX(WORD address, BYTE value) {
 					value |= (FCGX.reg[i] << 4) & 0x10;
 				}
 				value |= ((mapper.rom_map_to[0] >> 1) & 0x0F);
-				control_bank(prg_rom_16k_max)
+				control_bank(info.prg.rom.max.banks_16k)
 				map_prg_rom_8k(2, 0, value);
 
 				value |= 0x0F;
-				control_bank(prg_rom_16k_max)
+				control_bank(info.prg.rom.max.banks_16k)
 				map_prg_rom_8k(2, 2, value);
 
 				map_prg_rom_8k_update();
@@ -237,7 +236,7 @@ void extcl_cpu_wr_mem_Bandai_FCGX(WORD address, BYTE value) {
 			if (info.prg.rom.banks_16k >= 32) {
 				value = ((mapper.rom_map_to[0] >> 1) & 0x10) | (value & 0x0F);
 			}
-			control_bank(prg_rom_16k_max)
+			control_bank(info.prg.rom.max.banks_16k)
 			map_prg_rom_8k(2, 0, value);
 			map_prg_rom_8k_update();
 			return;

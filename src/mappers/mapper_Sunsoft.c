@@ -83,12 +83,11 @@
 		fm7.square[sq].output = fm7.square[sq].volume * ((fm7.square[sq].step & 0x10) ? 1 : 0);\
 	}
 
-WORD prg_rom_16k_max, prg_rom_8k_max;
+WORD prg_rom_8k_max;
 WORD chr_rom_8k_max, chr_rom_4k_max, chr_rom_2k_max, chr_rom_1k_max;
 BYTE type;
 
 void map_init_Sunsoft(BYTE model) {
-	prg_rom_16k_max = info.prg.rom.banks_16k - 1;
 	prg_rom_8k_max = info.prg.rom.banks_8k - 1;
 	chr_rom_8k_max = info.chr.rom.banks_8k - 1;
 	chr_rom_4k_max = info.chr.rom.banks_4k - 1;
@@ -200,7 +199,7 @@ void extcl_cpu_wr_mem_Sunsoft_S2(WORD address, BYTE value) {
 	}
 
 	value = (save >> 4) & 0x07;
-	control_bank(prg_rom_16k_max)
+	control_bank(info.prg.rom.max.banks_16k)
 	map_prg_rom_8k(2, 0, value);
 	map_prg_rom_8k_update();
 
@@ -248,7 +247,7 @@ void extcl_cpu_wr_mem_Sunsoft_S3(WORD address, BYTE value) {
 			mirroring(value)
 			return;
 		case 0xF800:
-			control_bank(prg_rom_16k_max)
+			control_bank(info.prg.rom.max.banks_16k)
 			map_prg_rom_8k(2, 0, value);
 			map_prg_rom_8k_update();
 			return;
@@ -302,7 +301,7 @@ void extcl_cpu_wr_mem_Sunsoft_S4(WORD address, BYTE value) {
 			s4_mirroring()
 			return;
 		case 0xF000:
-			control_bank(prg_rom_16k_max)
+			control_bank(info.prg.rom.max.banks_16k)
 			map_prg_rom_8k(2, 0, value);
 			map_prg_rom_8k_update();
 			return;
