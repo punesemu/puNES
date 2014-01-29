@@ -14,11 +14,7 @@
 
 static void INLINE sync_83(void);
 
-WORD chr_rom_2k_max;
-
 void map_init_83(void) {
-	chr_rom_2k_max = (info.chr.rom.banks_1k >> 1) - 1;
-
 	EXTCL_CPU_WR_MEM(83);
 	EXTCL_CPU_RD_MEM(83);
 	EXTCL_SAVE_MAPPER(83);
@@ -169,22 +165,22 @@ static void INLINE sync_83(void) {
 		SDBWORD bank;
 
 		value = m83.reg[0];
-		control_bank(chr_rom_2k_max)
+		control_bank(info.chr.rom.max.banks_2k)
 		bank = value << 11;
 		chr.bank_1k[0] = &chr.data[bank];
 		chr.bank_1k[1] = &chr.data[bank | 0x0400];
 		value = m83.reg[1];
-		control_bank(chr_rom_2k_max)
+		control_bank(info.chr.rom.max.banks_2k)
 		bank = value << 11;
 		chr.bank_1k[2] = &chr.data[bank];
 		chr.bank_1k[3] = &chr.data[bank | 0x0400];
 		value = m83.reg[6];
-		control_bank(chr_rom_2k_max)
+		control_bank(info.chr.rom.max.banks_2k)
 		bank = value << 11;
 		chr.bank_1k[4] = &chr.data[bank];
 		chr.bank_1k[5] = &chr.data[bank | 0x0400];
 		value = m83.reg[7];
-		control_bank(chr_rom_2k_max)
+		control_bank(info.chr.rom.max.banks_2k)
 		bank = value << 11;
 		chr.bank_1k[6] = &chr.data[bank];
 		chr.bank_1k[7] = &chr.data[bank | 0x0400];

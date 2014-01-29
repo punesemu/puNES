@@ -17,7 +17,7 @@
 	}
 #define asder_chr_2k_update(shift, slot, slot1, slot2)\
 	new_value = ((chr_high << shift) & 0x0080) | asder.reg[slot];\
-	asder_chr_ctrl_bank(new_value, chr_rom_2k_max)\
+	asder_chr_ctrl_bank(new_value, info.chr.rom.max.banks_2k)\
 	bank = new_value << 11;\
 	chr.bank_1k[slot1] = &chr.data[bank];\
 	chr.bank_1k[slot2] = &chr.data[bank | 0x0400]
@@ -27,11 +27,7 @@
 	bank = new_value << 10;\
 	chr.bank_1k[slot] = &chr.data[bank]
 
-WORD chr_rom_2k_max;
-
 void map_init_Ntdec(BYTE model) {
-	chr_rom_2k_max = (info.chr.rom.banks_1k >> 1) - 1;
-
 	switch (model) {
 		case ASDER:
 			EXTCL_CPU_WR_MEM(Ntdec_asder);
@@ -138,7 +134,7 @@ void extcl_cpu_wr_mem_Ntdec_fhero(WORD address, BYTE value) {
 			DBWORD bank;
 
 			value >>= 1;
-			control_bank(chr_rom_2k_max)
+			control_bank(info.chr.rom.max.banks_2k)
 			bank = value << 11;
 			chr.bank_1k[4] = &chr.data[bank];
 			chr.bank_1k[5] = &chr.data[bank | 0x0400];
@@ -148,7 +144,7 @@ void extcl_cpu_wr_mem_Ntdec_fhero(WORD address, BYTE value) {
 			DBWORD bank;
 
 			value >>= 1;
-			control_bank(chr_rom_2k_max)
+			control_bank(info.chr.rom.max.banks_2k)
 			bank = value << 11;
 			chr.bank_1k[6] = &chr.data[bank];
 			chr.bank_1k[7] = &chr.data[bank | 0x0400];

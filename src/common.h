@@ -92,6 +92,7 @@ struct _info {
 			WORD banks_1k;
 			struct _info_chr_rom_max {
 				WORD banks_4k;
+				WORD banks_2k;
 				WORD banks_1k;
 			} max;
 		} rom;

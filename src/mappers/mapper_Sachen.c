@@ -28,12 +28,11 @@
 	sa74374x.chr_rom_8k_bank = value;\
 }
 
-WORD chr_rom_8k_max, chr_rom_2k_max;
+WORD chr_rom_8k_max;
 BYTE type, shift, ored[3];
 
 void map_init_Sachen(BYTE model) {
 	chr_rom_8k_max = info.chr.rom.banks_8k - 1;
-	chr_rom_2k_max = (info.chr.rom.banks_1k >> 1) - 1;
 
 	switch (model) {
 		case SA0036:
@@ -289,28 +288,28 @@ void extcl_cpu_wr_mem_Sachen_sa8259x(WORD address, BYTE value) {
 							const BYTE high = (sa8259.reg[4] << 3) & 0x38;
 
 							value = (high | (sa8259.reg[0] & 0x07)) << shift;
-							control_bank(chr_rom_2k_max)
+							control_bank(info.chr.rom.max.banks_2k)
 							bank = value << 11;
 							chr.bank_1k[0] = &chr.data[bank];
 							chr.bank_1k[1] = &chr.data[bank | 0x0400];
 
 							value = ((high | (sa8259.reg[(sa8259.reg[7] & 0x01) ? 0 : 1] & 0x07))
 									<< shift) | ored[0];
-							control_bank(chr_rom_2k_max)
+							control_bank(info.chr.rom.max.banks_2k)
 							bank = value << 11;
 							chr.bank_1k[2] = &chr.data[bank];
 							chr.bank_1k[3] = &chr.data[bank | 0x0400];
 
 							value = ((high | (sa8259.reg[(sa8259.reg[7] & 0x01) ? 0 : 2] & 0x07))
 									<< shift) | ored[1];
-							control_bank(chr_rom_2k_max)
+							control_bank(info.chr.rom.max.banks_2k)
 							bank = value << 11;
 							chr.bank_1k[4] = &chr.data[bank];
 							chr.bank_1k[5] = &chr.data[bank | 0x0400];
 
 							value = ((high | (sa8259.reg[(sa8259.reg[7] & 0x01) ? 0 : 3] & 0x07))
 									<< shift) | ored[2];
-							control_bank(chr_rom_2k_max)
+							control_bank(info.chr.rom.max.banks_2k)
 							bank = value << 11;
 							chr.bank_1k[6] = &chr.data[bank];
 							chr.bank_1k[7] = &chr.data[bank | 0x0400];

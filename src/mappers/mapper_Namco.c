@@ -57,12 +57,9 @@
 		ntbl.bank_1k[n3425.bank_to_update >> 1] = &ntbl.data[((value >> 5) & 0x01) << 10];\
 	}
 
-WORD chr_rom_2k_max;
 BYTE hardwired, type;
 
 void map_init_Namco(BYTE model) {
-	chr_rom_2k_max = (info.chr.rom.banks_1k >> 1) - 1;
-
 	switch (model) {
 		case N163:
 			EXTCL_CPU_WR_MEM(Namco_163);
@@ -373,7 +370,7 @@ void extcl_cpu_wr_mem_Namco_3425(WORD address, BYTE value) {
 
 					n3425_nmt_update()
 					value >>= 1;
-					control_bank(chr_rom_2k_max)
+					control_bank(info.chr.rom.max.banks_2k)
 					bank = value << 11;
 					chr.bank_1k[slot] = &chr.data[bank];
 					chr.bank_1k[slot | 0x01] = &chr.data[bank | 0x400];
@@ -424,7 +421,7 @@ void extcl_cpu_wr_mem_Namco_3446(WORD address, BYTE value) {
 					const BYTE slot = (n3446.bank_to_update - 2) << 1;
 					DBWORD bank;
 
-					control_bank(chr_rom_2k_max)
+					control_bank(info.chr.rom.max.banks_2k)
 					bank = value << 11;
 					chr.bank_1k[slot] = &chr.data[bank];
 					chr.bank_1k[slot | 0x01] = &chr.data[bank | 0x400];

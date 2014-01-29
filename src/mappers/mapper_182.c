@@ -12,11 +12,10 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-WORD prg_rom_8k_before_last, chr_rom_2k_max;
+WORD prg_rom_8k_before_last;
 
 void map_init_182(void) {
 	prg_rom_8k_before_last = info.prg.rom.banks_8k - 2;
-	chr_rom_2k_max = (info.chr.rom.banks_1k >> 1) - 1;
 
 	EXTCL_CPU_WR_MEM(182);
 	EXTCL_SAVE_MAPPER(MMC3);
@@ -51,7 +50,7 @@ void extcl_cpu_wr_mem_182(WORD address, BYTE value) {
 					DBWORD bank;
 
 					value >>= 1;
-					control_bank(chr_rom_2k_max)
+					control_bank(info.chr.rom.max.banks_2k)
 					bank = value << 11;
 					chr.bank_1k[mmc3.chr_rom_cfg] = &chr.data[bank];
 					chr.bank_1k[mmc3.chr_rom_cfg | 0x01] = &chr.data[bank | 0x0400];
@@ -65,7 +64,7 @@ void extcl_cpu_wr_mem_182(WORD address, BYTE value) {
 					DBWORD bank;
 
 					value >>= 1;
-					control_bank(chr_rom_2k_max)
+					control_bank(info.chr.rom.max.banks_2k)
 					bank = value << 11;
 					chr.bank_1k[mmc3.chr_rom_cfg | 0x02] = &chr.data[bank];
 					chr.bank_1k[mmc3.chr_rom_cfg | 0x03] = &chr.data[bank | 0x0400];

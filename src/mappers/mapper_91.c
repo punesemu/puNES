@@ -12,11 +12,7 @@
 #include "cpu.h"
 #include "ppu.h"
 
-WORD chr_rom_2k_max;
-
 void map_init_91(void) {
-	chr_rom_2k_max = (info.chr.rom.banks_1k >> 1) - 1;
-
 	EXTCL_CPU_WR_MEM(91);
 	EXTCL_SAVE_MAPPER(91);
 	EXTCL_PPU_256_TO_319(91);
@@ -34,7 +30,7 @@ void extcl_cpu_wr_mem_91(WORD address, BYTE value) {
 	if (address <= 0x6FFF) {
 		DBWORD bank;
 
-		control_bank(chr_rom_2k_max)
+		control_bank(info.chr.rom.max.banks_2k)
 		bank = value << 11;
 
 		switch (address & 0x0003) {
