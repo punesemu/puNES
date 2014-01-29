@@ -73,7 +73,7 @@
 /* CHR */
 #define chr_8k_update(chr_type, slot)\
 	value = mmc5.chr_type[slot];\
-	control_bank_with_AND(0x03FF, chr_rom_8k_max)\
+	control_bank_with_AND(0x03FF, info.chr.rom.max.banks_8k)\
 	value <<= 13;\
 	chr.bank_1k[0] = &chr.data[value];\
 	chr.bank_1k[1] = &chr.data[value | 0x0400];\
@@ -144,9 +144,6 @@ enum { CHR_S, CHR_B };
 enum { SPLIT_LEFT, SPLIT_RIGHT = 0x40 };
 
 const BYTE filler_attrib[4] = {0x00, 0x55, 0xAA, 0xFF};
-WORD chr_rom_8k_max;
-BYTE prg_ram_mode;
-
 static const BYTE prg_ram_access[6][8] = {
 	{X,X,X,X,X,X,X,X},
 	{0,0,0,0,X,X,X,X},
@@ -155,10 +152,9 @@ static const BYTE prg_ram_access[6][8] = {
 	{0,1,2,3,4,4,4,4},
 	{0,1,2,3,4,5,6,7}
 };
+BYTE prg_ram_mode;
 
 void map_init_MMC5(void) {
-	chr_rom_8k_max = info.chr.rom.banks_8k - 1;
-
 	EXTCL_CPU_WR_MEM(MMC5);
 	EXTCL_CPU_RD_MEM(MMC5);
 	EXTCL_SAVE_MAPPER(MMC5);

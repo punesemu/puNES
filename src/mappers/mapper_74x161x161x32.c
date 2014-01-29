@@ -8,12 +8,9 @@
 #include "mappers.h"
 #include "mem_map.h"
 
-WORD chr_rom_8k_max;
 BYTE type;
 
 void map_init_74x161x161x32(BYTE model) {
-	chr_rom_8k_max = info.chr.rom.banks_8k - 1;
-
 	EXTCL_CPU_WR_MEM(74x161x161x32);
 
 	type = model;
@@ -31,7 +28,7 @@ void extcl_cpu_wr_mem_74x161x161x32(WORD address, BYTE value) {
 		}
 	}
 
-	control_bank_with_AND(0x0F, chr_rom_8k_max)
+	control_bank_with_AND(0x0F, info.chr.rom.max.banks_8k)
 	bank = value << 13;
 	chr.bank_1k[0] = &chr.data[bank];
 	chr.bank_1k[1] = &chr.data[bank | 0x0400];

@@ -12,11 +12,7 @@
 #include "cpu.h"
 #include "save_slot.h"
 
-WORD chr_rom_8k_max;
-
 void map_init_Kaiser(BYTE model) {
-	chr_rom_8k_max = info.chr.rom.banks_8k - 1;
-
 	switch (model) {
 		case KS202:
 		case KS7032:
@@ -219,7 +215,7 @@ BYTE extcl_cpu_rd_mem_Kaiser_ks7022(WORD address, BYTE openbus, BYTE before) {
 		map_prg_rom_8k_update();
 
 		value = ks7022.reg;
-		control_bank(chr_rom_8k_max)
+		control_bank(info.chr.rom.max.banks_8k)
 		bank = value << 13;
 		chr.bank_1k[0] = &chr.data[bank];
 		chr.bank_1k[1] = &chr.data[bank | 0x0400];

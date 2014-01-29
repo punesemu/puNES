@@ -134,7 +134,6 @@ BYTE ines_load_rom(void) {
 			mapper.write_vram = TRUE;
 			info.chr.rom.banks_8k = 1;
 		}
-
 		info.prg.rom.banks_8k = info.prg.rom.banks_16k * 2;
 		info.chr.rom.banks_4k = info.chr.rom.banks_8k * 2;
 		info.chr.rom.banks_1k = info.chr.rom.banks_4k * 4;

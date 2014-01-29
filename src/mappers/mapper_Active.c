@@ -11,11 +11,7 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
-WORD chr_rom_8k_max;
-
 void map_init_Active(void) {
-	chr_rom_8k_max = info.chr.rom.banks_8k - 1;
-
 	EXTCL_CPU_WR_MEM(Active);
 	EXTCL_CPU_RD_MEM(Active);
 	EXTCL_SAVE_MAPPER(Active);
@@ -71,7 +67,7 @@ void extcl_cpu_wr_mem_Active(WORD address, BYTE value) {
 	}
 
 	value = ((address << 2) & 0x3C) | (save & 0x03);
-	control_bank(chr_rom_8k_max)
+	control_bank(info.chr.rom.max.banks_8k)
 	bank = value << 13;
 	chr.bank_1k[0] = &chr.data[bank];
 	chr.bank_1k[1] = &chr.data[bank | 0x0400];

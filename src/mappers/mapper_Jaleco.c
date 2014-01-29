@@ -13,8 +13,6 @@
 #include "ppu.h"
 #include "save_slot.h"
 
-WORD chr_rom_8k_max;
-
 #define prg_rom_8k_update(slot, mask, shift)\
 	value = (mapper.rom_map_to[slot] & mask) | ((value & 0x0F) << shift);\
 	control_bank(info.prg.rom.max.banks_8k)\
@@ -27,8 +25,6 @@ WORD chr_rom_8k_max;
 	ss8806.chr_rom_bank[slot] = value
 
 void map_init_Jaleco(BYTE model) {
-	chr_rom_8k_max = (info.chr.rom.banks_4k >> 1) - 1;
-
 	switch (model) {
 		case JF05:
 			EXTCL_CPU_WR_MEM(Jaleco_JF05);
@@ -102,7 +98,7 @@ void extcl_cpu_wr_mem_Jaleco_JF05(WORD address, BYTE value) {
 	}
 
 	value = (((value >> 1) & 0x1) | ((value << 1) & 0x2));
-	control_bank_with_AND(0x03, chr_rom_8k_max)
+	control_bank_with_AND(0x03, info.chr.rom.max.banks_8k)
 	bank = value << 13;
 	chr.bank_1k[0] = &chr.data[bank];
 	chr.bank_1k[1] = &chr.data[bank | 0x0400];
@@ -128,7 +124,7 @@ void extcl_cpu_wr_mem_Jaleco_JF11(WORD address, BYTE value) {
 	map_prg_rom_8k_update();
 
 	value = save;
-	control_bank_with_AND(0x0F, chr_rom_8k_max)
+	control_bank_with_AND(0x0F, info.chr.rom.max.banks_8k)
 	bank = value << 13;
 	chr.bank_1k[0] = &chr.data[bank];
 	chr.bank_1k[1] = &chr.data[bank | 0x0400];
@@ -155,7 +151,7 @@ void extcl_cpu_wr_mem_Jaleco_JF13(WORD address, BYTE value) {
 	map_prg_rom_8k_update();
 
 	value = ((save & 0x40) >> 4) | (save & 0x03);
-	control_bank(chr_rom_8k_max)
+	control_bank(info.chr.rom.max.banks_8k)
 	bank = value << 13;
 	chr.bank_1k[0] = &chr.data[bank];
 	chr.bank_1k[1] = &chr.data[bank | 0x0400];
@@ -176,7 +172,7 @@ void extcl_cpu_wr_mem_Jaleco_JF16(WORD address, BYTE value) {
 	map_prg_rom_8k_update();
 
 	value = save >> 4;
-	control_bank_with_AND(0x0F, chr_rom_8k_max)
+	control_bank_with_AND(0x0F, info.chr.rom.max.banks_8k)
 	bank = value << 13;
 	chr.bank_1k[0] = &chr.data[bank];
 	chr.bank_1k[1] = &chr.data[bank | 0x0400];
@@ -213,7 +209,7 @@ void extcl_cpu_wr_mem_Jaleco_JF17(WORD address, BYTE value) {
 
 	if (save & 0x40) {
 		value = save;
-		control_bank_with_AND(0x0F, chr_rom_8k_max)
+		control_bank_with_AND(0x0F, info.chr.rom.max.banks_8k)
 		bank = value << 13;
 		chr.bank_1k[0] = &chr.data[bank];
 		chr.bank_1k[1] = &chr.data[bank | 0x0400];
@@ -241,7 +237,7 @@ void extcl_cpu_wr_mem_Jaleco_JF19(WORD address, BYTE value) {
 
 	if (save & 0x40) {
 		value = save;
-		control_bank_with_AND(0x0F, chr_rom_8k_max)
+		control_bank_with_AND(0x0F, info.chr.rom.max.banks_8k)
 		bank = value << 13;
 		chr.bank_1k[0] = &chr.data[bank];
 		chr.bank_1k[1] = &chr.data[bank | 0x0400];

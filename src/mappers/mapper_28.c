@@ -16,11 +16,7 @@ static void INLINE prg_setup_28(void);
 BYTE static const inner_and[4] = { 0x01, 0x03, 0x07, 0x0F };
 BYTE static const outer_and[4] = { 0x7E, 0x7C, 0x78, 0x70 };
 
-WORD chr_rom_8k_max;
-
 void map_init_28(void) {
-	chr_rom_8k_max = info.chr.rom.banks_8k - 1;
-
 	EXTCL_CPU_WR_MEM(28);
 	EXTCL_CPU_RD_MEM(28);
 	EXTCL_SAVE_MAPPER(28);
@@ -56,7 +52,7 @@ void extcl_cpu_wr_mem_28(WORD address, BYTE value) {
 			}
 
 			value &= 0x03;
-			control_bank(chr_rom_8k_max)
+			control_bank(info.chr.rom.max.banks_8k)
 			bank = value << 13;
 			chr.bank_1k[0] = &chr.data[bank];
 			chr.bank_1k[1] = &chr.data[bank | 0x0400];

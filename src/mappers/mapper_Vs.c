@@ -8,11 +8,7 @@
 #include "mappers.h"
 #include "mem_map.h"
 
-WORD chr_rom_8k_max;
-
 void map_init_Vs(void) {
-	chr_rom_8k_max = info.chr.rom.banks_8k - 1;
-
 	EXTCL_CPU_WR_MEM(Vs);
 	EXTCL_CPU_WR_R4016(Vs);
 
@@ -33,7 +29,7 @@ void extcl_cpu_wr_r4016_Vs(BYTE value) {
 	map_prg_rom_8k_update();
 
 	value = save >> 2;
-	control_bank(chr_rom_8k_max)
+	control_bank(info.chr.rom.max.banks_8k)
 	bank = value << 13;
 	chr.bank_1k[0] = &chr.data[bank];
 	chr.bank_1k[1] = &chr.data[bank | 0x0400];

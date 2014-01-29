@@ -32,12 +32,8 @@ static void INLINE irq_clock_count_90_209_211(void);
 	ntbl.bank_1k[index] = &ntbl.data[value << 10];\
 	m90_209_211.nmt.write[index] = TRUE
 
-WORD chr_rom_8k_max;
-
 void map_init_90_209_211(BYTE model) {
 	BYTE i;
-
-	chr_rom_8k_max = info.chr.rom.banks_8k - 1;
 
 	EXTCL_CPU_WR_MEM(90_209_211);
 	EXTCL_CPU_RD_MEM(90_209_211);
@@ -480,7 +476,7 @@ static void INLINE chr_setup_90_209_211(void) {
 	switch (m90_209_211.mode[0] & 0x18) {
 		case 0x00:
 			value = chr_90_209_211(0);
-			control_bank(chr_rom_8k_max)
+			control_bank(info.chr.rom.max.banks_8k)
 			bank = value << 13;
 			chr.bank_1k[0] = &chr.data[bank];
 			chr.bank_1k[1] = &chr.data[bank | 0x0400];

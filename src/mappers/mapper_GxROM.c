@@ -8,11 +8,7 @@
 #include "mem_map.h"
 #include "mappers.h"
 
-WORD chr_rom_8k_max;
-
 void map_init_GxROM(void) {
-	chr_rom_8k_max = (info.chr.rom.banks_4k >> 1) - 1;
-
 	if (info.reset >= HARD) {
 		map_prg_rom_8k(4, 0, 0);
 	}
@@ -30,7 +26,7 @@ void extcl_cpu_wr_mem_GxROM(WORD address, BYTE value) {
 	map_prg_rom_8k_update();
 
 	value = save;
-	control_bank_with_AND(0x03, chr_rom_8k_max)
+	control_bank_with_AND(0x03, info.chr.rom.max.banks_8k)
 	bank = value << 13;
 	chr.bank_1k[0] = &chr.data[bank];
 	chr.bank_1k[1] = &chr.data[bank | 0x0400];

@@ -10,11 +10,7 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
-WORD chr_rom_8k_max;
-
 void map_init_Caltron(void) {
-	chr_rom_8k_max = info.chr.rom.banks_8k - 1;
-
 	EXTCL_CPU_WR_MEM(Caltron);
 	mapper.internal_struct[0] = (BYTE *) &caltron;
 	mapper.internal_struct_size[0] = sizeof(caltron);
@@ -54,7 +50,7 @@ void extcl_cpu_wr_mem_Caltron(WORD address, BYTE value) {
 
 	if (caltron.reg & 0x04) {
 		value = ((caltron.reg >> 1) & 0x0C) | (value & 0x03);
-		control_bank(chr_rom_8k_max)
+		control_bank(info.chr.rom.max.banks_8k)
 		bank = value << 13;
 		chr.bank_1k[0] = &chr.data[bank];
 		chr.bank_1k[1] = &chr.data[bank | 0x0400];

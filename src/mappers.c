@@ -799,6 +799,7 @@ void map_set_banks_max_prg_and_chr(void) {
 	info.prg.rom.max.banks_16k = info.prg.rom.banks_16k - 1;
 	info.prg.rom.max.banks_8k = info.prg.rom.banks_8k - 1;
 
+	info.chr.rom.max.banks_8k = info.chr.rom.banks_8k - 1;
 	info.chr.rom.max.banks_4k = info.chr.rom.banks_4k - 1;
 	info.chr.rom.max.banks_2k = (info.chr.rom.banks_1k >> 1) - 1;
 	info.chr.rom.max.banks_1k = info.chr.rom.banks_1k - 1;

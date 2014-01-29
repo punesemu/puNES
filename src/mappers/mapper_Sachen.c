@@ -15,7 +15,7 @@
 {\
 	DBWORD bank;\
 	value = bank8k;\
-	control_bank(chr_rom_8k_max)\
+	control_bank(info.chr.rom.max.banks_8k)\
 	bank = value << 13;\
 	chr.bank_1k[0] = &chr.data[bank];\
 	chr.bank_1k[1] = &chr.data[bank | 0x0400];\
@@ -28,12 +28,9 @@
 	sa74374x.chr_rom_8k_bank = value;\
 }
 
-WORD chr_rom_8k_max;
 BYTE type, shift, ored[3];
 
 void map_init_Sachen(BYTE model) {
-	chr_rom_8k_max = info.chr.rom.banks_8k - 1;
-
 	switch (model) {
 		case SA0036:
 			EXTCL_CPU_WR_MEM(Sachen_sa0036);
@@ -180,7 +177,7 @@ void extcl_cpu_wr_mem_Sachen_sa0036(WORD address, BYTE value) {
 	DBWORD bank;
 
 	value >>= 7;
-	control_bank(chr_rom_8k_max)
+	control_bank(info.chr.rom.max.banks_8k)
 	bank = value << 13;
 	chr.bank_1k[0] = &chr.data[bank];
 	chr.bank_1k[1] = &chr.data[bank | 0x0400];
@@ -205,7 +202,7 @@ void extcl_cpu_wr_mem_Sachen_sa0037(WORD address, BYTE value) {
 		value = save;
 	}
 
-	control_bank(chr_rom_8k_max)
+	control_bank(info.chr.rom.max.banks_8k)
 	bank = value << 13;
 	chr.bank_1k[0] = &chr.data[bank];
 	chr.bank_1k[1] = &chr.data[bank | 0x0400];
@@ -361,7 +358,7 @@ void extcl_cpu_wr_mem_Sachen_tcu01(WORD address, BYTE value) {
 		}
 
 		value = (value >> 3);
-		control_bank(chr_rom_8k_max)
+		control_bank(info.chr.rom.max.banks_8k)
 		bank = value << 13;
 		chr.bank_1k[0] = &chr.data[bank];
 		chr.bank_1k[1] = &chr.data[bank | 0x0400];
@@ -384,7 +381,7 @@ void extcl_cpu_wr_mem_Sachen_tcu02(WORD address, BYTE value) {
 
 		tcu02.reg = (value & 0x30) | ((value + 3) & 0x0F);
 		value = tcu02.reg;
-		control_bank(chr_rom_8k_max)
+		control_bank(info.chr.rom.max.banks_8k)
 		bank = value << 13;
 		chr.bank_1k[0] = &chr.data[bank];
 		chr.bank_1k[1] = &chr.data[bank | 0x0400];
@@ -422,7 +419,7 @@ void extcl_cpu_wr_mem_Sachen_sa72007(WORD address, BYTE value) {
 		DBWORD bank;
 
 		value >>= 7;
-		control_bank(chr_rom_8k_max)
+		control_bank(info.chr.rom.max.banks_8k)
 		bank = value << 13;
 		chr.bank_1k[0] = &chr.data[bank];
 		chr.bank_1k[1] = &chr.data[bank | 0x0400];
@@ -452,7 +449,7 @@ void extcl_cpu_wr_mem_Sachen_sa72008(WORD address, BYTE value) {
 			value = save;
 		}
 
-		control_bank(chr_rom_8k_max)
+		control_bank(info.chr.rom.max.banks_8k)
 		bank = value << 13;
 		chr.bank_1k[0] = &chr.data[bank];
 		chr.bank_1k[1] = &chr.data[bank | 0x0400];

@@ -11,12 +11,9 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
-WORD chr_rom_8k_max;
 BYTE type, mask, state;
 
 void map_init_CNROM(BYTE model) {
-	chr_rom_8k_max = info.chr.rom.banks_8k - 1;
-
 	EXTCL_CPU_WR_MEM(CNROM);
 
 	mask = state = 0x00;
@@ -66,7 +63,7 @@ void extcl_cpu_wr_mem_CNROM(WORD address, BYTE value) {
 		value &= ~mask;
 	}
 
-	control_bank(chr_rom_8k_max)
+	control_bank(info.chr.rom.max.banks_8k)
 	bank = value << 13;
 
 	chr.bank_1k[0] = &chr.data[bank];

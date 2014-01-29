@@ -12,11 +12,10 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-WORD prg_rom_8k_before_last, chr_rom_8k_max;
+WORD prg_rom_8k_before_last;
 BYTE type;
 
 void map_init_Txc(BYTE model) {
-	chr_rom_8k_max = info.chr.rom.banks_8k - 1;
 	prg_rom_8k_before_last = info.prg.rom.banks_8k - 2;
 
 	switch (model) {
@@ -114,7 +113,7 @@ void extcl_cpu_wr_mem_Txc_t22211x(WORD address, BYTE value) {
 			value = t22211x.reg[2];
 		}
 
-		control_bank(chr_rom_8k_max)
+		control_bank(info.chr.rom.max.banks_8k)
 		bank = value << 13;
 
 		chr.bank_1k[0] = &chr.data[bank];

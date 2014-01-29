@@ -58,11 +58,7 @@ enum MMC1_regs { CTRL, CHR0, CHR1, PRG0 };
 			break;\
 	}
 
-WORD chr_rom_8k_max;
-
 void map_init_MMC1(void) {
-	chr_rom_8k_max = info.chr.rom.banks_8k - 1;
-
 	EXTCL_CPU_WR_MEM(MMC1);
 	EXTCL_SAVE_MAPPER(MMC1);
 	mapper.internal_struct[0] = (BYTE *) &mmc1;

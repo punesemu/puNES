@@ -8,11 +8,7 @@
 #include "mappers.h"
 #include "mem_map.h"
 
-WORD chr_rom_8k_max;
-
 void map_init_225(void) {
-	chr_rom_8k_max = info.chr.rom.banks_8k - 1;
-
 	EXTCL_CPU_WR_MEM(225);
 
 	if (info.reset >= HARD) {
@@ -55,11 +51,11 @@ void extcl_cpu_wr_mem_225(WORD address, BYTE value) {
 
 	value = address & 0x3F;
 
-	if (chr_rom_8k_max > 0x3F) {
+	if (info.chr.rom.max.banks_8k > 0x3F) {
 		value |= ((address >> 8) & 0x40);
 	}
 
-	control_bank(chr_rom_8k_max)
+	control_bank(info.chr.rom.max.banks_8k)
 	bank = value << 13;
 	chr.bank_1k[0] = &chr.data[bank];
 	chr.bank_1k[1] = &chr.data[bank | 0x0400];

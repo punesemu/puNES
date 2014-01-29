@@ -8,11 +8,7 @@
 #include "mappers.h"
 #include "mem_map.h"
 
-WORD chr_rom_8k_max;
-
 void map_init_176(void) {
-	chr_rom_8k_max = info.chr.rom.banks_8k - 1;
-
 	EXTCL_CPU_WR_MEM(176);
 
 	info.mapper.extend_wr = TRUE;
@@ -28,7 +24,7 @@ void extcl_cpu_wr_mem_176(WORD address, BYTE value) {
 		case 0x5FF2: {
 			DBWORD bank;
 
-			control_bank(chr_rom_8k_max)
+			control_bank(info.chr.rom.max.banks_8k)
 			bank = value << 13;
 			chr.bank_1k[0] = &chr.data[bank];
 			chr.bank_1k[1] = &chr.data[bank | 0x0400];

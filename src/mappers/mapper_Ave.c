@@ -21,7 +21,7 @@
 		map_prg_rom_8k_update();\
 		value = save;\
 	}\
-	control_bank_with_AND(0x07, chr_rom_8k_max)\
+	control_bank_with_AND(0x07, info.chr.rom.max.banks_8k)\
 	bank = value << 13;\
 	chr.bank_1k[0] = &chr.data[bank];\
 	chr.bank_1k[1] = &chr.data[bank | 0x0400];\
@@ -33,11 +33,7 @@
 	chr.bank_1k[7] = &chr.data[bank | 0x1C00];\
 }
 
-WORD chr_rom_8k_max;
-
 void map_init_Ave(BYTE model) {
-	chr_rom_8k_max = info.chr.rom.banks_8k - 1;
-
 	switch (model) {
 		case NINA06:
 			EXTCL_CPU_WR_MEM(Ave_NINA06);
@@ -133,7 +129,7 @@ void extcl_cpu_wr_mem_Ave_D1012(WORD address, BYTE value) {
 
 	value = ((ave_d1012.reg[0] << 2) & (((ave_d1012.reg[0] >> 4) & 0x4) ^ 0x3C))
 			| ((ave_d1012.reg[1] >> 4) & (((ave_d1012.reg[0] >> 4) & 0x4) | 0x3));
-	control_bank(chr_rom_8k_max)
+	control_bank(info.chr.rom.max.banks_8k)
 	bank = value << 13;
 	chr.bank_1k[0] = &chr.data[bank];
 	chr.bank_1k[1] = &chr.data[bank | 0x0400];

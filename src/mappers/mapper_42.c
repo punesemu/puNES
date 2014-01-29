@@ -10,11 +10,7 @@
 #include "save_slot.h"
 #include "cpu.h"
 
-WORD chr_rom_8k_max;
-
 void map_init_42(void) {
-	chr_rom_8k_max = info.chr.rom.banks_8k - 1;
-
 	EXTCL_CPU_WR_MEM(42);
 	EXTCL_CPU_RD_MEM(42);
 	EXTCL_SAVE_MAPPER(42);
@@ -30,7 +26,7 @@ void extcl_cpu_wr_mem_42(WORD address, BYTE value) {
 		case 0x8000: {
 			DBWORD bank;
 
-			control_bank(chr_rom_8k_max)
+			control_bank(info.chr.rom.max.banks_8k)
 			bank = value << 13;
 			chr.bank_1k[0] = &chr.data[bank];
 			chr.bank_1k[1] = &chr.data[bank | 0x0400];
