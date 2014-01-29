@@ -12,12 +12,9 @@
 #include "cpu.h"
 #include "save_slot.h"
 
-WORD chr_rom_1k_max;
 BYTE *prg_6000;
 
 void map_init_50(void) {
-	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
-
 	EXTCL_CPU_WR_MEM(50);
 	EXTCL_CPU_RD_MEM(50);
 	EXTCL_SAVE_MAPPER(50);

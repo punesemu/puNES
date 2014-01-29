@@ -14,14 +14,10 @@
 
 #define m219_chr_1k(a, b)\
 	value = m219.reg[2] | ((save >> 1) & a);\
-	control_bank(chr_rom_1k_max)\
+	control_bank(info.chr.rom.max.banks_1k)\
 	chr.bank_1k[b] = &chr.data[value << 10]
 
-WORD chr_rom_1k_max;
-
 void map_init_219(void) {
-	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
-
 	EXTCL_CPU_WR_MEM(219);
 	EXTCL_SAVE_MAPPER(219);
 	EXTCL_CPU_EVERY_CYCLE(MMC3);

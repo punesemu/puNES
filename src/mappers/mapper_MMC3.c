@@ -22,11 +22,10 @@
 	mmc3.irq_reload = FALSE;\
 }
 
-WORD prg_rom_8k_before_last, chr_rom_1k_max;
+WORD prg_rom_8k_before_last;
 
 void map_init_MMC3(void) {
 	prg_rom_8k_before_last = info.prg.rom.banks_8k - 2;
-	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
 
 	EXTCL_CPU_WR_MEM(MMC3);
 	EXTCL_SAVE_MAPPER(MMC3);
@@ -121,7 +120,7 @@ void extcl_cpu_wr_mem_MMC3(WORD address, BYTE value) {
 					 * Kb quello pari e come secondo il dispari.
 					 * Per questo motivo faccio l'AND con 0xFE.
 					 */
-					control_bank_with_AND(0xFE, chr_rom_1k_max)
+					control_bank_with_AND(0xFE, info.chr.rom.max.banks_1k)
 					chr.bank_1k[mmc3.chr_rom_cfg] = &chr.data[value << 10];
 					chr.bank_1k[mmc3.chr_rom_cfg | 0x01] = &chr.data[(value + 1) << 10];
 					break;
@@ -136,7 +135,7 @@ void extcl_cpu_wr_mem_MMC3(WORD address, BYTE value) {
 					 * Kb quello pari e come secondo il dispari.
 					 * Per questo motivo faccio l'AND con 0xFE.
 					 */
-					control_bank_with_AND(0xFE, chr_rom_1k_max)
+					control_bank_with_AND(0xFE, info.chr.rom.max.banks_1k)
 					chr.bank_1k[mmc3.chr_rom_cfg | 0x02] = &chr.data[value << 10];
 					chr.bank_1k[mmc3.chr_rom_cfg | 0x03] = &chr.data[(value + 1) << 10];
 					break;
@@ -145,7 +144,7 @@ void extcl_cpu_wr_mem_MMC3(WORD address, BYTE value) {
 					 * chr_rom_cfg 0x00 : chr_bank_1k 4
 					 * chr_rom_cfg 0x04 : chr_bank_1k 0
 					 */
-					control_bank(chr_rom_1k_max)
+					control_bank(info.chr.rom.max.banks_1k)
 					chr.bank_1k[mmc3.chr_rom_cfg ^ 0x04] = &chr.data[value << 10];
 					break;
 				case 3:
@@ -153,7 +152,7 @@ void extcl_cpu_wr_mem_MMC3(WORD address, BYTE value) {
 					 * chr_rom_cfg 0x00 : chr_bank_1k 5
 					 * chr_rom_cfg 0x04 : chr_bank_1k 1
 					 */
-					control_bank(chr_rom_1k_max)
+					control_bank(info.chr.rom.max.banks_1k)
 					chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x01] = &chr.data[value << 10];
 					break;
 				case 4:
@@ -161,7 +160,7 @@ void extcl_cpu_wr_mem_MMC3(WORD address, BYTE value) {
 					 * chr_rom_cfg 0x00 : chr_bank_1k 6
 					 * chr_rom_cfg 0x04 : chr_bank_1k 2
 					 */
-					control_bank(chr_rom_1k_max)
+					control_bank(info.chr.rom.max.banks_1k)
 					chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x02] = &chr.data[value << 10];
 					break;
 				case 5:
@@ -169,7 +168,7 @@ void extcl_cpu_wr_mem_MMC3(WORD address, BYTE value) {
 					 * chr_rom_cfg 0x00 : chr_bank_1k 7
 					 * chr_rom_cfg 0x04 : chr_bank_1k 3
 					 */
-					control_bank(chr_rom_1k_max)
+					control_bank(info.chr.rom.max.banks_1k)
 					chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x03] = &chr.data[value << 10];
 					break;
 				case 6:

@@ -31,12 +31,11 @@
 	chr.bank_1k[7] = &irem_LROG017.chr_ram[0x1400]
 
 WORD prg_rom_8k_before_last;
-WORD chr_rom_2k_max, chr_rom_1k_max;
+WORD chr_rom_2k_max;
 
 void map_init_Irem(BYTE model) {
 	prg_rom_8k_before_last = info.prg.rom.max.banks_8k - 1;
 	chr_rom_2k_max = (info.chr.rom.banks_1k >> 1) - 1;
-	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
 
 	switch (model) {
 		case G101:
@@ -123,7 +122,7 @@ void extcl_cpu_wr_mem_Irem_G101(WORD address, BYTE value) {
 			map_prg_rom_8k_update();
 			break;
 		case 0xB000:
-			control_bank(chr_rom_1k_max)
+			control_bank(info.chr.rom.max.banks_1k)
 			chr.bank_1k[address & 0x0007] = &chr.data[value << 10];
 			break;
 	}
@@ -169,7 +168,7 @@ void extcl_cpu_wr_mem_Irem_H3000(WORD address, BYTE value) {
 			break;
 		}
 		case 0xB000:
-			control_bank(chr_rom_1k_max)
+			control_bank(info.chr.rom.max.banks_1k)
 			chr.bank_1k[address & 0x0007] = &chr.data[value << 10];
 			break;
 		case 0xA000:

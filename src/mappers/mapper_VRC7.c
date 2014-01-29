@@ -20,12 +20,10 @@ const WORD table_VRC7[2][4] = {
 	{0x0000, 0x0001, 0x0002, 0x0003},
 };
 
-WORD chr_rom_1k_max, mask;
+WORD mask;
 BYTE type, delay;
 
 void map_init_VRC7(BYTE revision) {
-	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
-
 	EXTCL_CPU_WR_MEM(VRC7);
 	EXTCL_SAVE_MAPPER(VRC7);
 	EXTCL_CPU_EVERY_CYCLE(VRC7);
@@ -79,35 +77,35 @@ void extcl_cpu_wr_mem_VRC7(WORD address, BYTE value) {
 			opll_write_reg(vrc7.reg, value);
 			return;
 		case 0xA000:
-			control_bank(chr_rom_1k_max)
+			control_bank(info.chr.rom.max.banks_1k)
 			chr.bank_1k[0] = &chr.data[value << 10];
 			return;
 		case 0xA001:
-			control_bank(chr_rom_1k_max)
+			control_bank(info.chr.rom.max.banks_1k)
 			chr.bank_1k[1] = &chr.data[value << 10];
 			return;
 		case 0xB000:
-			control_bank(chr_rom_1k_max)
+			control_bank(info.chr.rom.max.banks_1k)
 			chr.bank_1k[2] = &chr.data[value << 10];
 			return;
 		case 0xB001:
-			control_bank(chr_rom_1k_max)
+			control_bank(info.chr.rom.max.banks_1k)
 			chr.bank_1k[3] = &chr.data[value << 10];
 			return;
 		case 0xC000:
-			control_bank(chr_rom_1k_max)
+			control_bank(info.chr.rom.max.banks_1k)
 			chr.bank_1k[4] = &chr.data[value << 10];
 			return;
 		case 0xC001:
-			control_bank(chr_rom_1k_max)
+			control_bank(info.chr.rom.max.banks_1k)
 			chr.bank_1k[5] = &chr.data[value << 10];
 			return;
 		case 0xD000:
-			control_bank(chr_rom_1k_max)
+			control_bank(info.chr.rom.max.banks_1k)
 			chr.bank_1k[6] = &chr.data[value << 10];
 			return;
 		case 0xD001:
-			control_bank(chr_rom_1k_max)
+			control_bank(info.chr.rom.max.banks_1k)
 			chr.bank_1k[7] = &chr.data[value << 10];
 			return;
 		case 0xE000: {

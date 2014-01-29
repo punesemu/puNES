@@ -14,11 +14,10 @@
 
 static void INLINE sync_83(void);
 
-WORD chr_rom_2k_max, chr_rom_1k_max;
+WORD chr_rom_2k_max;
 
 void map_init_83(void) {
 	chr_rom_2k_max = (info.chr.rom.banks_1k >> 1) - 1;
-	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
 
 	EXTCL_CPU_WR_MEM(83);
 	EXTCL_CPU_RD_MEM(83);
@@ -194,7 +193,7 @@ static void INLINE sync_83(void) {
 
 		for (i = 0; i < 8; i++) {
 			value = ((m83.bank << 4) & 0x0300) | m83.reg[i];
-			control_bank(chr_rom_1k_max)
+			control_bank(info.chr.rom.max.banks_1k)
 			chr.bank_1k[i] = &chr.data[value << 10];
 		}
 	}

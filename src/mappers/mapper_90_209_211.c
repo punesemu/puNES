@@ -24,7 +24,7 @@ static void INLINE irq_clock_count_90_209_211(void);
 	((m90_209_211.chr.low[index] | (m90_209_211.chr.high[index] << 8)) & mask) | base
 #define nmt_rom_90_209_211(index)\
 	value = m90_209_211.nmt.reg[index];\
-	control_bank(chr_rom_1k_max)\
+	control_bank(info.chr.rom.max.banks_1k)\
 	ntbl.bank_1k[index] = &chr.data[value << 10];\
 	m90_209_211.nmt.write[index] = FALSE
 #define nmt_ram_90_209_211(index)\
@@ -32,7 +32,7 @@ static void INLINE irq_clock_count_90_209_211(void);
 	ntbl.bank_1k[index] = &ntbl.data[value << 10];\
 	m90_209_211.nmt.write[index] = TRUE
 
-WORD chr_rom_8k_max, chr_rom_4k_max, chr_rom_2k_max, chr_rom_1k_max;
+WORD chr_rom_8k_max, chr_rom_4k_max, chr_rom_2k_max;
 
 void map_init_90_209_211(BYTE model) {
 	BYTE i;
@@ -40,7 +40,6 @@ void map_init_90_209_211(BYTE model) {
 	chr_rom_8k_max = info.chr.rom.banks_8k - 1;
 	chr_rom_4k_max = info.chr.rom.banks_4k - 1;
 	chr_rom_2k_max = (info.chr.rom.banks_1k >> 1) - 1;
-	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
 
 	EXTCL_CPU_WR_MEM(90_209_211);
 	EXTCL_CPU_RD_MEM(90_209_211);
@@ -534,35 +533,35 @@ static void INLINE chr_setup_90_209_211(void) {
 			break;
 		case 0x18:
 			value = chr_90_209_211(0);
-			control_bank(chr_rom_1k_max)
+			control_bank(info.chr.rom.max.banks_1k)
 			bank = value << 10;
 			chr.bank_1k[0] = &chr.data[bank];
 			value = chr_90_209_211(1);
-			control_bank(chr_rom_1k_max)
+			control_bank(info.chr.rom.max.banks_1k)
 			bank = value << 10;
 			chr.bank_1k[1] = &chr.data[bank];
 			value = chr_90_209_211(2);
-			control_bank(chr_rom_1k_max)
+			control_bank(info.chr.rom.max.banks_1k)
 			bank = value << 10;
 			chr.bank_1k[2] = &chr.data[bank];
 			value = chr_90_209_211(3);
-			control_bank(chr_rom_1k_max)
+			control_bank(info.chr.rom.max.banks_1k)
 			bank = value << 10;
 			chr.bank_1k[3] = &chr.data[bank];
 			value = chr_90_209_211(4);
-			control_bank(chr_rom_1k_max)
+			control_bank(info.chr.rom.max.banks_1k)
 			bank = value << 10;
 			chr.bank_1k[4] = &chr.data[bank];
 			value = chr_90_209_211(5);
-			control_bank(chr_rom_1k_max)
+			control_bank(info.chr.rom.max.banks_1k)
 			bank = value << 10;
 			chr.bank_1k[5] = &chr.data[bank];
 			value = chr_90_209_211(6);
-			control_bank(chr_rom_1k_max)
+			control_bank(info.chr.rom.max.banks_1k)
 			bank = value << 10;
 			chr.bank_1k[6] = &chr.data[bank];
 			value = chr_90_209_211(7);
-			control_bank(chr_rom_1k_max)
+			control_bank(info.chr.rom.max.banks_1k)
 			bank = value << 10;
 			chr.bank_1k[7] = &chr.data[bank];
 			break;

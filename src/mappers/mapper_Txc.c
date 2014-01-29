@@ -12,11 +12,10 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-WORD prg_rom_8k_before_last, chr_rom_8k_max, chr_rom_1k_max;
+WORD prg_rom_8k_before_last, chr_rom_8k_max;
 BYTE type;
 
 void map_init_Txc(BYTE model) {
-	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
 	chr_rom_8k_max = info.chr.rom.banks_8k - 1;
 	prg_rom_8k_before_last = info.prg.rom.banks_8k - 2;
 

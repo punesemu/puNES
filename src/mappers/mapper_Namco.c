@@ -27,7 +27,7 @@
 		n163.nmt_bank[slot][0] = FALSE;\
 		ntbl.bank_1k[slot] = &ntbl.data[(value & 0x03) << 10];\
 	} else {\
-		control_bank(chr_rom_1k_max)\
+		control_bank(info.chr.rom.max.banks_1k)\
 		n163.nmt_bank[slot][0] = TRUE;\
 		n163.nmt_bank[slot][1] = value << 10;\
 		_n163_nmt_update(slot);\
@@ -57,12 +57,11 @@
 		ntbl.bank_1k[n3425.bank_to_update >> 1] = &ntbl.data[((value >> 5) & 0x01) << 10];\
 	}
 
-WORD chr_rom_2k_max, chr_rom_1k_max;
+WORD chr_rom_2k_max;
 BYTE hardwired, type;
 
 void map_init_Namco(BYTE model) {
 	chr_rom_2k_max = (info.chr.rom.banks_1k >> 1) - 1;
-	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
 
 	switch (model) {
 		case N163:
@@ -210,35 +209,35 @@ void extcl_cpu_wr_mem_Namco_163(WORD address, BYTE value) {
 			return;
 		}
 		case 0x8000:
-			control_bank(chr_rom_1k_max)
+			control_bank(info.chr.rom.max.banks_1k)
 			chr.bank_1k[0] = &chr.data[value << 10];
 			return;
 		case 0x8800:
-			control_bank(chr_rom_1k_max)
+			control_bank(info.chr.rom.max.banks_1k)
 			chr.bank_1k[1] = &chr.data[value << 10];
 			return;
 		case 0x9000:
-			control_bank(chr_rom_1k_max)
+			control_bank(info.chr.rom.max.banks_1k)
 			chr.bank_1k[2] = &chr.data[value << 10];
 			return;
 		case 0x9800:
-			control_bank(chr_rom_1k_max)
+			control_bank(info.chr.rom.max.banks_1k)
 			chr.bank_1k[3] = &chr.data[value << 10];
 			return;
 		case 0xA000:
-			control_bank(chr_rom_1k_max)
+			control_bank(info.chr.rom.max.banks_1k)
 			chr.bank_1k[4] = &chr.data[value << 10];
 			return;
 		case 0xA800:
-			control_bank(chr_rom_1k_max)
+			control_bank(info.chr.rom.max.banks_1k)
 			chr.bank_1k[5] = &chr.data[value << 10];
 			return;
 		case 0xB000:
-			control_bank(chr_rom_1k_max)
+			control_bank(info.chr.rom.max.banks_1k)
 			chr.bank_1k[6] = &chr.data[value << 10];
 			return;
 		case 0xB800:
-			control_bank(chr_rom_1k_max)
+			control_bank(info.chr.rom.max.banks_1k)
 			chr.bank_1k[7] = &chr.data[value << 10];
 			return;
 		case 0xC000:
@@ -386,7 +385,7 @@ void extcl_cpu_wr_mem_Namco_3425(WORD address, BYTE value) {
 				case 0x05:
 					n3425_nmt_update()
 					value |= 0x40;
-					control_bank(chr_rom_1k_max)
+					control_bank(info.chr.rom.max.banks_1k)
 					chr.bank_1k[n3425.bank_to_update + 2] = &chr.data[value << 10];
 					return;
 				case 0x06:

@@ -22,7 +22,7 @@
 	for (i = 0; i < 8; i++) {\
 		WORD bank;\
 		m37_chr_1k(m37.chr_map[i]);\
-		_control_bank(bank, chr_rom_1k_max)\
+		_control_bank(bank, info.chr.rom.max.banks_1k)\
 		chr.bank_1k[i] = &chr.data[bank << 10];\
 	}\
 }
@@ -92,7 +92,7 @@
 			m37.chr_map[mmc3.chr_rom_cfg | 0x01] = value + 1;\
 			m37_chr_1k(value);\
 			bank &= 0xFFE;\
-			_control_bank(bank, chr_rom_1k_max)\
+			_control_bank(bank, info.chr.rom.max.banks_1k)\
 			chr.bank_1k[mmc3.chr_rom_cfg] = &chr.data[bank << 10];\
 			chr.bank_1k[mmc3.chr_rom_cfg | 0x01] = &chr.data[(bank + 1) << 10];\
 			return;\
@@ -101,32 +101,32 @@
 			m37.chr_map[mmc3.chr_rom_cfg | 0x03] = value + 1;\
 			m37_chr_1k(value);\
 			bank &= 0xFFE;\
-			_control_bank(bank, chr_rom_1k_max)\
+			_control_bank(bank, info.chr.rom.max.banks_1k)\
 			chr.bank_1k[mmc3.chr_rom_cfg | 0x02] = &chr.data[bank << 10];\
 			chr.bank_1k[mmc3.chr_rom_cfg | 0x03] = &chr.data[(bank + 1) << 10];\
 			return;\
 		case 2:\
 			m37.chr_map[mmc3.chr_rom_cfg ^ 0x04] = value;\
 			m37_chr_1k(value);\
-			_control_bank(bank, chr_rom_1k_max)\
+			_control_bank(bank, info.chr.rom.max.banks_1k)\
 			chr.bank_1k[mmc3.chr_rom_cfg ^ 0x04] = &chr.data[bank << 10];\
 			return;\
 		case 3:\
 			m37.chr_map[(mmc3.chr_rom_cfg ^ 0x04) | 0x01] = value;\
 			m37_chr_1k(value);\
-			_control_bank(bank, chr_rom_1k_max)\
+			_control_bank(bank, info.chr.rom.max.banks_1k)\
 			chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x01] = &chr.data[bank << 10];\
 			return;\
 		case 4:\
 			m37.chr_map[(mmc3.chr_rom_cfg ^ 0x04) | 0x02] = value;\
 			m37_chr_1k(value);\
-			_control_bank(bank, chr_rom_1k_max)\
+			_control_bank(bank, info.chr.rom.max.banks_1k)\
 			chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x02] = &chr.data[bank << 10];\
 			return;\
 		case 5:\
 			m37.chr_map[(mmc3.chr_rom_cfg ^ 0x04) | 0x03] = value;\
 			m37_chr_1k(value);\
-			_control_bank(bank, chr_rom_1k_max)\
+			_control_bank(bank, info.chr.rom.max.banks_1k)\
 			chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x03] = &chr.data[bank << 10];\
 			return;\
 		case 6:\
@@ -146,11 +146,10 @@
 	}\
 }
 
-WORD prg_rom_8k_before_last, chr_rom_1k_max;
+WORD prg_rom_8k_before_last;
 
 void map_init_37(void) {
 	prg_rom_8k_before_last = info.prg.rom.banks_8k - 2;
-	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
 
 	EXTCL_CPU_WR_MEM(37);
 	EXTCL_SAVE_MAPPER(37);

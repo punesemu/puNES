@@ -68,12 +68,11 @@ enum {
 	MODE_MAX
 };
 
-WORD chr_ram_4k_max, chr_rom_1k_max;
+WORD chr_ram_4k_max;
 BYTE type;
 
 void map_init_Bandai(BYTE model) {
 	chr_ram_4k_max = info.chr.rom.banks_4k - 1;
-	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
 
 	switch (model) {
 		case B161X02X74:
@@ -227,7 +226,7 @@ void extcl_cpu_wr_mem_Bandai_FCGX(WORD address, BYTE value) {
 				datach_set_scl((value << 2) & 0x20);
 			}
 			if (!mapper.write_vram) {
-				control_bank(chr_rom_1k_max)
+				control_bank(info.chr.rom.max.banks_1k)
 				chr.bank_1k[slot] = &chr.data[value << 10];
 			}
 			return;

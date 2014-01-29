@@ -52,7 +52,6 @@
 	save_slot_ele(mode, slot, square.frequency);\
 	save_slot_ele(mode, slot, square.output)
 
-WORD chr_rom_1k_max;
 BYTE type, delay;
 
 const WORD table_VRC6[2][4] = {
@@ -61,8 +60,6 @@ const WORD table_VRC6[2][4] = {
 };
 
 void map_init_VRC6(BYTE revision) {
-	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
-
 	EXTCL_CPU_WR_MEM(VRC6);
 	EXTCL_SAVE_MAPPER(VRC6);
 	EXTCL_CPU_EVERY_CYCLE(VRC6);
@@ -162,35 +159,35 @@ void extcl_cpu_wr_mem_VRC6(WORD address, BYTE value) {
 			map_prg_rom_8k_update();
 			return;
 		case 0xD000:
-			control_bank(chr_rom_1k_max)
+			control_bank(info.chr.rom.max.banks_1k)
 			chr.bank_1k[0] = &chr.data[value << 10];
 			return;
 		case 0xD001:
-			control_bank(chr_rom_1k_max)
+			control_bank(info.chr.rom.max.banks_1k)
 			chr.bank_1k[1] = &chr.data[value << 10];
 			return;
 		case 0xD002:
-			control_bank(chr_rom_1k_max)
+			control_bank(info.chr.rom.max.banks_1k)
 			chr.bank_1k[2] = &chr.data[value << 10];
 			return;
 		case 0xD003:
-			control_bank(chr_rom_1k_max)
+			control_bank(info.chr.rom.max.banks_1k)
 			chr.bank_1k[3] = &chr.data[value << 10];
 			return;
 		case 0xE000:
-			control_bank(chr_rom_1k_max)
+			control_bank(info.chr.rom.max.banks_1k)
 			chr.bank_1k[4] = &chr.data[value << 10];
 			return;
 		case 0xE001:
-			control_bank(chr_rom_1k_max)
+			control_bank(info.chr.rom.max.banks_1k)
 			chr.bank_1k[5] = &chr.data[value << 10];
 			return;
 		case 0xE002:
-			control_bank(chr_rom_1k_max)
+			control_bank(info.chr.rom.max.banks_1k)
 			chr.bank_1k[6] = &chr.data[value << 10];
 			return;
 		case 0xE003:
-			control_bank(chr_rom_1k_max)
+			control_bank(info.chr.rom.max.banks_1k)
 			chr.bank_1k[7] = &chr.data[value << 10];
 			return;
 		case 0xF000:

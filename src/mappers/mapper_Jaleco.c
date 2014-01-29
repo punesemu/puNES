@@ -13,7 +13,7 @@
 #include "ppu.h"
 #include "save_slot.h"
 
-WORD chr_rom_8k_max, chr_rom_1k_max;
+WORD chr_rom_8k_max;
 
 #define prg_rom_8k_update(slot, mask, shift)\
 	value = (mapper.rom_map_to[slot] & mask) | ((value & 0x0F) << shift);\
@@ -22,13 +22,12 @@ WORD chr_rom_8k_max, chr_rom_1k_max;
 	map_prg_rom_8k_update()
 #define chr_rom_1k_update(slot, mask, shift)\
 	value = (ss8806.chr_rom_bank[slot] & mask) | ((value & 0x0F) << shift);\
-	control_bank(chr_rom_1k_max)\
+	control_bank(info.chr.rom.max.banks_1k)\
 	chr.bank_1k[slot] = &chr.data[value << 10];\
 	ss8806.chr_rom_bank[slot] = value
 
 void map_init_Jaleco(BYTE model) {
 	chr_rom_8k_max = (info.chr.rom.banks_4k >> 1) - 1;
-	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
 
 	switch (model) {
 		case JF05:

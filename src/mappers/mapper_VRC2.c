@@ -13,11 +13,10 @@
 
 #define chr_rom_1k_update(slot, mask, shift)\
 	value = (vrc2.chr_rom_bank[slot] & mask) | (((value >> type) & 0x0F) << shift);\
-	control_bank(chr_rom_1k_max)\
+	control_bank(info.chr.rom.max.banks_1k)\
 	chr.bank_1k[slot] = &chr.data[value << 10];\
 	vrc2.chr_rom_bank[slot] = value
 
-WORD chr_rom_1k_max;
 BYTE type;
 
 const WORD shift_VRC2[2][4] = {
@@ -26,8 +25,6 @@ const WORD shift_VRC2[2][4] = {
 };
 
 void map_init_VRC2(BYTE revision) {
-	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
-
 	EXTCL_CPU_WR_MEM(VRC2);
 	EXTCL_SAVE_MAPPER(VRC2);
 	mapper.internal_struct[0] = (BYTE *) &vrc2;

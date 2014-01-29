@@ -83,14 +83,13 @@
 		fm7.square[sq].output = fm7.square[sq].volume * ((fm7.square[sq].step & 0x10) ? 1 : 0);\
 	}
 
-WORD chr_rom_8k_max, chr_rom_4k_max, chr_rom_2k_max, chr_rom_1k_max;
+WORD chr_rom_8k_max, chr_rom_4k_max, chr_rom_2k_max;
 BYTE type;
 
 void map_init_Sunsoft(BYTE model) {
 	chr_rom_8k_max = info.chr.rom.banks_8k - 1;
 	chr_rom_4k_max = info.chr.rom.banks_4k - 1;
 	chr_rom_2k_max = (info.chr.rom.banks_1k >> 1) - 1;
-	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
 
 	switch (model) {
 		case SUN1:
@@ -341,7 +340,7 @@ void extcl_cpu_wr_mem_Sunsoft_FM7(WORD address, BYTE value) {
 				case 0x05:
 				case 0x06:
 				case 0x07:
-					control_bank(chr_rom_1k_max)
+					control_bank(info.chr.rom.max.banks_1k)
 					chr.bank_1k[bank] = &chr.data[value << 10];
 					return;
 				case 0x08: {

@@ -23,16 +23,15 @@
 	chr.bank_1k[slot2] = &chr.data[bank | 0x0400]
 #define asder_chr_1k_update(shift, slot)\
 	new_value = ((chr_high << shift) & 0x0100) | asder.reg[slot];\
-	asder_chr_ctrl_bank(new_value, chr_rom_1k_max)\
+	asder_chr_ctrl_bank(new_value, info.chr.rom.max.banks_1k)\
 	bank = new_value << 10;\
 	chr.bank_1k[slot] = &chr.data[bank]
 
-WORD chr_rom_4k_max, chr_rom_2k_max, chr_rom_1k_max;
+WORD chr_rom_4k_max, chr_rom_2k_max;
 
 void map_init_Ntdec(BYTE model) {
 	chr_rom_4k_max = info.chr.rom.banks_4k - 1;
 	chr_rom_2k_max = (info.chr.rom.banks_1k >> 1) - 1;
-	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
 
 	switch (model) {
 		case ASDER:

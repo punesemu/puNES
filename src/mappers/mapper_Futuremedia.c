@@ -12,11 +12,7 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-WORD chr_rom_1k_max;
-
 void map_init_Futuremedia(void) {
-	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
-
 	EXTCL_CPU_WR_MEM(Futuremedia);
 	EXTCL_SAVE_MAPPER(Futuremedia);
 	EXTCL_PPU_000_TO_34X(MMC3);
@@ -52,7 +48,7 @@ void extcl_cpu_wr_mem_Futuremedia(WORD address, BYTE value) {
 		case 0xA005:
 		case 0xA006:
 		case 0xA007:
-			control_bank(chr_rom_1k_max)
+			control_bank(info.chr.rom.max.banks_1k)
 			chr.bank_1k[address & 0x0007] = &chr.data[value << 10];
 			return;
 		case 0xC001:

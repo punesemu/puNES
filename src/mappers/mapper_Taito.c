@@ -12,12 +12,11 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-WORD chr_rom_2k_max, chr_rom_1k_max;
+WORD chr_rom_2k_max;
 BYTE type;
 
 void map_init_Taito(BYTE model) {
 	chr_rom_2k_max = (info.chr.rom.banks_1k >> 1) - 1;
-	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
 
 	switch (model) {
 		case TC0190FMC: {
@@ -124,22 +123,22 @@ void extcl_cpu_wr_mem_Taito_TC0190FMC(WORD address, BYTE value) {
 			chr.bank_1k[3] = &chr.data[bank | 0x0400];
 			return;
 		case 0xA000:
-			control_bank(chr_rom_1k_max)
+			control_bank(info.chr.rom.max.banks_1k)
 			bank = value << 10;
 			chr.bank_1k[4] = &chr.data[bank];
 			return;
 		case 0xA001:
-			control_bank(chr_rom_1k_max)
+			control_bank(info.chr.rom.max.banks_1k)
 			bank = value << 10;
 			chr.bank_1k[5] = &chr.data[bank];
 			return;
 		case 0xA002:
-			control_bank(chr_rom_1k_max)
+			control_bank(info.chr.rom.max.banks_1k)
 			bank = value << 10;
 			chr.bank_1k[6] = &chr.data[bank];
 			return;
 		case 0xA003:
-			control_bank(chr_rom_1k_max)
+			control_bank(info.chr.rom.max.banks_1k)
 			bank = value << 10;
 			chr.bank_1k[7] = &chr.data[bank];
 			return;
@@ -173,22 +172,22 @@ void extcl_cpu_wr_mem_Taito_TC0190FMCPAL16R4(WORD address, BYTE value) {
 			chr.bank_1k[3] = &chr.data[bank | 0x0400];
 			return;
 		case 0xA000:
-			control_bank(chr_rom_1k_max)
+			control_bank(info.chr.rom.max.banks_1k)
 			bank = value << 10;
 			chr.bank_1k[4] = &chr.data[bank];
 			return;
 		case 0xA001:
-			control_bank(chr_rom_1k_max)
+			control_bank(info.chr.rom.max.banks_1k)
 			bank = value << 10;
 			chr.bank_1k[5] = &chr.data[bank];
 			return;
 		case 0xA002:
-			control_bank(chr_rom_1k_max)
+			control_bank(info.chr.rom.max.banks_1k)
 			bank = value << 10;
 			chr.bank_1k[6] = &chr.data[bank];
 			return;
 		case 0xA003:
-			control_bank(chr_rom_1k_max)
+			control_bank(info.chr.rom.max.banks_1k)
 			bank = value << 10;
 			chr.bank_1k[7] = &chr.data[bank];
 			return;
@@ -263,7 +262,7 @@ void extcl_cpu_wr_mem_Taito_X1005(WORD address, BYTE value) {
 					mirroring_SCR0();
 				}
 			}
-			control_bank(chr_rom_1k_max)
+			control_bank(info.chr.rom.max.banks_1k)
 			chr.bank_1k[(address & 0x0007) + 2] = &chr.data[value << 10];
 			return;
 		case 0x7EF6:
@@ -371,7 +370,7 @@ void extcl_cpu_wr_mem_Taito_X1017(WORD address, BYTE value) {
 		case 0x7EF5: {
 			BYTE slot = address & 0x0007;
 
-			control_bank(chr_rom_1k_max)
+			control_bank(info.chr.rom.max.banks_1k)
 			if (taito_X1017.chr[slot] != value) {
 				const DBWORD bank = value << 10;
 

@@ -48,10 +48,9 @@ static const BYTE vlu208[256] = {
 		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
-WORD prg_rom_8k_before_last, chr_rom_1k_max;
+WORD prg_rom_8k_before_last;
 
 void map_init_208(void) {
-	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
 	prg_rom_8k_before_last = info.prg.rom.banks_8k - 2;
 
 	EXTCL_CPU_WR_MEM(208);

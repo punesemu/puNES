@@ -12,11 +12,7 @@
 #include "cpu.h"
 #include "save_slot.h"
 
-WORD chr_rom_1k_max;
-
 void map_init_183(void) {
-	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
-
 	EXTCL_CPU_WR_MEM(183);
 	EXTCL_CPU_RD_MEM(183);
 	EXTCL_SAVE_MAPPER(183);
@@ -121,7 +117,7 @@ void extcl_cpu_wr_mem_183(WORD address, BYTE value) {
 				const BYTE slot = (((address - 0x3000) >> 1 | (address << 7)) & 0x1C00) >> 10;
 
 				value = (m183.chr_rom_bank[slot] & (0xF0 >> shift)) | ((value & 0x0F) << shift);
-				control_bank(chr_rom_1k_max)
+				control_bank(info.chr.rom.max.banks_1k)
 				chr.bank_1k[slot] = &chr.data[value << 10];
 				m183.chr_rom_bank[slot] = value;
 			}

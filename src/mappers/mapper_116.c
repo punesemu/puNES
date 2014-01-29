@@ -13,7 +13,7 @@
 #include "save_slot.h"
 
 WORD prg_rom_8k_before_last;
-WORD chr_rom_1k_max, chr_rom_2k_max, chr_rom_4k_max;
+WORD chr_rom_2k_max, chr_rom_4k_max;
 
 #define m116_update_prg_8k(bnk, vl)\
 	tmp = vl;\
@@ -30,7 +30,7 @@ WORD chr_rom_1k_max, chr_rom_2k_max, chr_rom_4k_max;
 
 #define m116_update_chr_1k(bnk, vl)\
 	bank = vl;\
-	_control_bank(bank, chr_rom_1k_max)\
+	_control_bank(bank, info.chr.rom.max.banks_1k)\
 	chr.bank_1k[bnk] = &chr.data[bank << 10]
 #define m116_update_chr_2k(bnk, vl)\
 	bank = vl;\
@@ -225,31 +225,31 @@ WORD chr_rom_1k_max, chr_rom_2k_max, chr_rom_4k_max;
 {\
 	switch (mmc3.bank_to_update) {\
 		case 0:\
-			control_bank_with_AND(0xFE, chr_rom_1k_max)\
+			control_bank_with_AND(0xFE, info.chr.rom.max.banks_1k)\
 			m116_B_chr_1k(mmc3.chr_rom_cfg)\
 			value++;\
 			m116_B_chr_1k(mmc3.chr_rom_cfg | 0x01)\
 			return;\
 		case 1:\
-			control_bank_with_AND(0xFE, chr_rom_1k_max)\
+			control_bank_with_AND(0xFE, info.chr.rom.max.banks_1k)\
 			m116_B_chr_1k(mmc3.chr_rom_cfg | 0x02)\
 			value++;\
 			m116_B_chr_1k(mmc3.chr_rom_cfg | 0x03)\
 			return;\
 		case 2:\
-			control_bank(chr_rom_1k_max)\
+			control_bank(info.chr.rom.max.banks_1k)\
 			m116_B_chr_1k(mmc3.chr_rom_cfg ^ 0x04)\
 			return;\
 		case 3:\
-			control_bank(chr_rom_1k_max)\
+			control_bank(info.chr.rom.max.banks_1k)\
 			m116_B_chr_1k((mmc3.chr_rom_cfg ^ 0x04) | 0x01)\
 			return;\
 		case 4:\
-			control_bank(chr_rom_1k_max)\
+			control_bank(info.chr.rom.max.banks_1k)\
 			m116_B_chr_1k((mmc3.chr_rom_cfg ^ 0x04) | 0x02)\
 			return;\
 		case 5:\
-			control_bank(chr_rom_1k_max)\
+			control_bank(info.chr.rom.max.banks_1k)\
 			m116_B_chr_1k((mmc3.chr_rom_cfg ^ 0x04) | 0x03)\
 			return;\
 	}\
@@ -316,7 +316,7 @@ WORD chr_rom_1k_max, chr_rom_2k_max, chr_rom_4k_max;
 			m116.chr_map[slot + 1] = value + 1;\
 			m116_C_chr_1k(slot, value);\
 			bank &= 0xFFE;\
-			_control_bank(bank, chr_rom_1k_max)\
+			_control_bank(bank, info.chr.rom.max.banks_1k)\
 			chr.bank_1k[slot] = &chr.data[bank << 10];\
 			chr.bank_1k[slot + 1] = &chr.data[(bank + 1) << 10];\
 			return;\
@@ -326,7 +326,7 @@ WORD chr_rom_1k_max, chr_rom_2k_max, chr_rom_4k_max;
 			m116.chr_map[slot + 1] = value + 1;\
 			m116_C_chr_1k(slot, value);\
 			bank &= 0xFFE;\
-			_control_bank(bank, chr_rom_1k_max)\
+			_control_bank(bank, info.chr.rom.max.banks_1k)\
 			chr.bank_1k[slot] = &chr.data[bank << 10];\
 			chr.bank_1k[slot + 1] = &chr.data[(bank + 1) << 10];\
 			return;\
@@ -334,28 +334,28 @@ WORD chr_rom_1k_max, chr_rom_2k_max, chr_rom_4k_max;
 			slot = mmc3.chr_rom_cfg ^ 0x04;\
 			m116.chr_map[slot] = value;\
 			m116_C_chr_1k(slot, value);\
-			_control_bank(bank, chr_rom_1k_max)\
+			_control_bank(bank, info.chr.rom.max.banks_1k)\
 			chr.bank_1k[slot] = &chr.data[bank << 10];\
 			return;\
 		case 3:\
 			slot = (mmc3.chr_rom_cfg ^ 0x04) | 0x01;\
 			m116.chr_map[slot] = value;\
 			m116_C_chr_1k(slot, value);\
-			_control_bank(bank, chr_rom_1k_max)\
+			_control_bank(bank, info.chr.rom.max.banks_1k)\
 			chr.bank_1k[slot] = &chr.data[bank << 10];\
 			return;\
 		case 4:\
 			slot = (mmc3.chr_rom_cfg ^ 0x04) | 0x02;\
 			m116.chr_map[slot] = value;\
 			m116_C_chr_1k(slot, value);\
-			_control_bank(bank, chr_rom_1k_max)\
+			_control_bank(bank, info.chr.rom.max.banks_1k)\
 			chr.bank_1k[slot] = &chr.data[bank << 10];\
 			return;\
 		case 5:\
 			slot = (mmc3.chr_rom_cfg ^ 0x04) | 0x03;\
 			m116.chr_map[slot] = value;\
 			m116_C_chr_1k(slot, value);\
-			_control_bank(bank, chr_rom_1k_max)\
+			_control_bank(bank, info.chr.rom.max.banks_1k)\
 			chr.bank_1k[slot] = &chr.data[bank << 10];\
 			return;\
 		case 6:\
@@ -377,7 +377,6 @@ void map_init_116(void) {
 	prg_rom_8k_before_last = info.prg.rom.banks_8k - 2;
 	chr_rom_4k_max = info.chr.rom.banks_4k - 1;
 	chr_rom_2k_max = (info.chr.rom.banks_1k >> 1) - 1;
-	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
 
 	switch (info.mapper.from_db) {
 		default:
@@ -835,7 +834,7 @@ void extcl_cpu_wr_mem_116_type_C(WORD address, BYTE value) {
 		m116.mode0.chr[address] = (m116.mode0.chr[address] & (0xF0 >> offset))
 		        | ((value & 0x0F) << offset);
 
-		_control_bank(m116.mode0.chr[address], chr_rom_1k_max)
+		_control_bank(m116.mode0.chr[address], info.chr.rom.max.banks_1k)
 		chr.bank_1k[address] = &chr.data[m116.mode0.chr[address] << 10];
 		return;
 	} else {

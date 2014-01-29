@@ -14,11 +14,11 @@
 
 #define chr_rom_1k_update(slot, mask, shift)\
 	value = (vrc4.chr_rom_bank[slot] & mask) | ((value & 0x0F) << shift);\
-	control_bank(chr_rom_1k_max)\
+	control_bank(info.chr.rom.max.banks_1k)\
 	chr.bank_1k[slot] = &chr.data[value << 10];\
 	vrc4.chr_rom_bank[slot] = value
 
-WORD prg_rom_8k_before_last, chr_rom_1k_max;
+WORD prg_rom_8k_before_last;
 BYTE type;
 
 const BYTE shift_VRC4[5] = { 0x01, 0x00, 0x06, 0x02, 0x02 };
@@ -33,7 +33,6 @@ const WORD table_VRC4[5][4] = {
 
 void map_init_VRC4(BYTE revision) {
 	prg_rom_8k_before_last = info.prg.rom.max.banks_8k - 1;
-	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
 
 	EXTCL_CPU_WR_MEM(VRC4);
 	EXTCL_SAVE_MAPPER(VRC4);

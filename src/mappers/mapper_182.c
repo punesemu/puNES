@@ -12,12 +12,11 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-WORD prg_rom_8k_before_last, chr_rom_2k_max, chr_rom_1k_max;
+WORD prg_rom_8k_before_last, chr_rom_2k_max;
 
 void map_init_182(void) {
 	prg_rom_8k_before_last = info.prg.rom.banks_8k - 2;
 	chr_rom_2k_max = (info.chr.rom.banks_1k >> 1) - 1;
-	chr_rom_1k_max = info.chr.rom.banks_1k - 1;
 
 	EXTCL_CPU_WR_MEM(182);
 	EXTCL_SAVE_MAPPER(MMC3);
@@ -59,7 +58,7 @@ void extcl_cpu_wr_mem_182(WORD address, BYTE value) {
 					break;
 				}
 				case 1:
-					control_bank(chr_rom_1k_max)
+					control_bank(info.chr.rom.max.banks_1k)
 					chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x01] = &chr.data[value << 10];
 					break;
 				case 2: {
@@ -73,7 +72,7 @@ void extcl_cpu_wr_mem_182(WORD address, BYTE value) {
 					break;
 				}
 				case 3:
-					control_bank(chr_rom_1k_max)
+					control_bank(info.chr.rom.max.banks_1k)
 					chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x03] = &chr.data[value << 10];
 					break;
 				case 4:
@@ -87,11 +86,11 @@ void extcl_cpu_wr_mem_182(WORD address, BYTE value) {
 					map_prg_rom_8k_update();
 					break;
 				case 6:
-					control_bank(chr_rom_1k_max)
+					control_bank(info.chr.rom.max.banks_1k)
 					chr.bank_1k[mmc3.chr_rom_cfg ^ 0x04] = &chr.data[value << 10];
 					break;
 				case 7:
-					control_bank(chr_rom_1k_max)
+					control_bank(info.chr.rom.max.banks_1k)
 					chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x02] = &chr.data[value << 10];
 					break;
 			}
