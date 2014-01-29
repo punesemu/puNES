@@ -12,11 +12,10 @@
 #include "cpu.h"
 #include "save_slot.h"
 
-WORD chr_rom_8k_max, chr_rom_4k_max;
+WORD chr_rom_8k_max;
 
 void map_init_Kaiser(BYTE model) {
 	chr_rom_8k_max = info.chr.rom.banks_8k - 1;
-	chr_rom_4k_max = info.chr.rom.banks_4k - 1;
 
 	switch (model) {
 		case KS202:
@@ -177,7 +176,7 @@ void extcl_cpu_wr_mem_Kaiser_ks7058(WORD address, BYTE value) {
 
 	switch (address & 0xF080) {
 		case 0xF000:
-			control_bank(chr_rom_4k_max)
+			control_bank(info.chr.rom.max.banks_4k)
 			bank = value << 12;
 			chr.bank_1k[0] = &chr.data[bank];
 			chr.bank_1k[1] = &chr.data[bank | 0x0400];
@@ -185,7 +184,7 @@ void extcl_cpu_wr_mem_Kaiser_ks7058(WORD address, BYTE value) {
 			chr.bank_1k[3] = &chr.data[bank | 0x0C00];
 			return;
 		case 0xF080:
-			control_bank(chr_rom_4k_max)
+			control_bank(info.chr.rom.max.banks_4k)
 			bank = value << 12;
 			chr.bank_1k[4] = &chr.data[bank];
 			chr.bank_1k[5] = &chr.data[bank | 0x0400];

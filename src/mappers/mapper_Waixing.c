@@ -12,7 +12,7 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-WORD prg_rom_8k_before_last, chr_rom_4k_max;
+WORD prg_rom_8k_before_last;
 BYTE min, max;
 
 #define waixing_swap_chr_bank_1k(src, dst)\
@@ -401,24 +401,24 @@ BYTE min, max;
 	switch (mmc3.bank_to_update) {\
 		case 0:\
 			waixing.chr_map[0] = value >> 2;\
-			_control_bank(waixing.chr_map[0], chr_rom_4k_max)\
+			_control_bank(waixing.chr_map[0], info.chr.rom.max.banks_4k)\
 			waixing_SH2_PPUFD()\
 			return;\
 		case 1:\
 			waixing.chr_map[1] = value >> 2;\
-			_control_bank(waixing.chr_map[1], chr_rom_4k_max)\
+			_control_bank(waixing.chr_map[1], info.chr.rom.max.banks_4k)\
 			waixing_SH2_PPUFE()\
 			return;\
 		case 2:\
 			waixing.chr_map[2] = value >> 2;\
-			_control_bank(waixing.chr_map[2], chr_rom_4k_max)\
+			_control_bank(waixing.chr_map[2], info.chr.rom.max.banks_4k)\
 			waixing_SH2_PPUFD()\
 			return;\
 		case 3:\
 			return;\
 		case 4:\
 			waixing.chr_map[4] = value >> 2;\
-			_control_bank(waixing.chr_map[4], chr_rom_4k_max)\
+			_control_bank(waixing.chr_map[4], info.chr.rom.max.banks_4k)\
 			waixing_SH2_PPUFE()\
 			return;\
 		case 5:\
@@ -428,7 +428,6 @@ BYTE min, max;
 
 void map_init_Waixing(BYTE model) {
 	prg_rom_8k_before_last = info.prg.rom.banks_8k - 2;
-	chr_rom_4k_max = info.chr.rom.banks_4k - 1;
 
 	switch (model) {
 		case WPSX:

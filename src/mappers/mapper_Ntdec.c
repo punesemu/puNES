@@ -27,10 +27,9 @@
 	bank = new_value << 10;\
 	chr.bank_1k[slot] = &chr.data[bank]
 
-WORD chr_rom_4k_max, chr_rom_2k_max;
+WORD chr_rom_2k_max;
 
 void map_init_Ntdec(BYTE model) {
-	chr_rom_4k_max = info.chr.rom.banks_4k - 1;
 	chr_rom_2k_max = (info.chr.rom.banks_1k >> 1) - 1;
 
 	switch (model) {
@@ -127,7 +126,7 @@ void extcl_cpu_wr_mem_Ntdec_fhero(WORD address, BYTE value) {
 			DBWORD bank;
 
 			value >>= 2;
-			control_bank(chr_rom_4k_max)
+			control_bank(info.chr.rom.max.banks_4k)
 			bank = value << 12;
 			chr.bank_1k[0] = &chr.data[bank];
 			chr.bank_1k[1] = &chr.data[bank | 0x0400];

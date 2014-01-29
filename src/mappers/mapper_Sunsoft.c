@@ -83,12 +83,11 @@
 		fm7.square[sq].output = fm7.square[sq].volume * ((fm7.square[sq].step & 0x10) ? 1 : 0);\
 	}
 
-WORD chr_rom_8k_max, chr_rom_4k_max, chr_rom_2k_max;
+WORD chr_rom_8k_max, chr_rom_2k_max;
 BYTE type;
 
 void map_init_Sunsoft(BYTE model) {
 	chr_rom_8k_max = info.chr.rom.banks_8k - 1;
-	chr_rom_4k_max = info.chr.rom.banks_4k - 1;
 	chr_rom_2k_max = (info.chr.rom.banks_1k >> 1) - 1;
 
 	switch (model) {
@@ -165,7 +164,7 @@ void extcl_cpu_wr_mem_Sunsoft_S1(WORD address, BYTE value) {
 		const BYTE save = value;
 		DBWORD bank;
 
-		control_bank_with_AND(0x0F, chr_rom_4k_max)
+		control_bank_with_AND(0x0F, info.chr.rom.max.banks_4k)
 		bank = value << 12;
 		chr.bank_1k[0] = &chr.data[bank];
 		chr.bank_1k[1] = &chr.data[bank | 0x0400];
@@ -173,7 +172,7 @@ void extcl_cpu_wr_mem_Sunsoft_S1(WORD address, BYTE value) {
 		chr.bank_1k[3] = &chr.data[bank | 0x0C00];
 
 		value = save >> 4;
-		control_bank(chr_rom_4k_max)
+		control_bank(info.chr.rom.max.banks_4k)
 		bank = value << 12;
 		chr.bank_1k[4] = &chr.data[bank];
 		chr.bank_1k[5] = &chr.data[bank | 0x0400];

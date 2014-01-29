@@ -32,13 +32,12 @@ static void INLINE irq_clock_count_90_209_211(void);
 	ntbl.bank_1k[index] = &ntbl.data[value << 10];\
 	m90_209_211.nmt.write[index] = TRUE
 
-WORD chr_rom_8k_max, chr_rom_4k_max, chr_rom_2k_max;
+WORD chr_rom_8k_max, chr_rom_2k_max;
 
 void map_init_90_209_211(BYTE model) {
 	BYTE i;
 
 	chr_rom_8k_max = info.chr.rom.banks_8k - 1;
-	chr_rom_4k_max = info.chr.rom.banks_4k - 1;
 	chr_rom_2k_max = (info.chr.rom.banks_1k >> 1) - 1;
 
 	EXTCL_CPU_WR_MEM(90_209_211);
@@ -495,14 +494,14 @@ static void INLINE chr_setup_90_209_211(void) {
 			break;
 		case 0x08:
 			value = chr_90_209_211(m90_209_211.chr.latch[0]);
-			control_bank(chr_rom_4k_max)
+			control_bank(info.chr.rom.max.banks_4k)
 			bank = value << 12;
 			chr.bank_1k[0] = &chr.data[bank];
 			chr.bank_1k[1] = &chr.data[bank | 0x0400];
 			chr.bank_1k[2] = &chr.data[bank | 0x0800];
 			chr.bank_1k[3] = &chr.data[bank | 0x0C00];
 			value = chr_90_209_211(m90_209_211.chr.latch[1]);
-			control_bank(chr_rom_4k_max)
+			control_bank(info.chr.rom.max.banks_4k)
 			bank = value << 12;
 			chr.bank_1k[4] = &chr.data[bank];
 			chr.bank_1k[5] = &chr.data[bank | 0x0400];

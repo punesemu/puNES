@@ -85,7 +85,7 @@
 	chr.bank_1k[7] = &chr.data[value | 0x1C00]
 #define chr_4k_update(chr_type, slot, base)\
 	value = mmc5.chr_type[slot];\
-	control_bank_with_AND(0x03FF, chr_rom_4k_max)\
+	control_bank_with_AND(0x03FF, info.chr.rom.max.banks_4k)\
 	value <<= 12;\
 	chr.bank_1k[base | 0] = &chr.data[value];\
 	chr.bank_1k[base | 1] = &chr.data[value | 0x0400];\
@@ -144,7 +144,7 @@ enum { CHR_S, CHR_B };
 enum { SPLIT_LEFT, SPLIT_RIGHT = 0x40 };
 
 const BYTE filler_attrib[4] = {0x00, 0x55, 0xAA, 0xFF};
-WORD chr_rom_8k_max, chr_rom_4k_max, chr_rom_2k_max;
+WORD chr_rom_8k_max, chr_rom_2k_max;
 BYTE prg_ram_mode;
 
 static const BYTE prg_ram_access[6][8] = {
@@ -158,7 +158,6 @@ static const BYTE prg_ram_access[6][8] = {
 
 void map_init_MMC5(void) {
 	chr_rom_8k_max = info.chr.rom.banks_8k - 1;
-	chr_rom_4k_max = info.chr.rom.banks_4k - 1;
 	chr_rom_2k_max = (info.chr.rom.banks_4k << 1) - 1;
 
 	EXTCL_CPU_WR_MEM(MMC5);
@@ -413,7 +412,7 @@ void extcl_cpu_wr_mem_MMC5(WORD address, BYTE value) {
 			mmc5.split_scrl = value;
 			return;
 		case 0x5202:
-			control_bank(chr_rom_4k_max)
+			control_bank(info.chr.rom.max.banks_4k)
 			mmc5.split_bank = value << 12;
 			return;
 		case 0x5203:
@@ -632,7 +631,7 @@ BYTE extcl_rd_chr_MMC5(WORD address) {
 	}
 
 	value = (mmc5.ext_ram[r2006.value & 0x03FF] & 0x3F);
-	control_bank(chr_rom_4k_max)
+	control_bank(info.chr.rom.max.banks_4k)
 	index = ((value + mmc5.chr_high) << 12) + (address & 0x0FFF);
 
 	return (chr.data[index]);

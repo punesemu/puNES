@@ -8,11 +8,7 @@
 #include "mappers.h"
 #include "mem_map.h"
 
-WORD chr_rom_4k_max;
-
 void map_init_BxROM(void) {
-	chr_rom_4k_max = info.chr.rom.banks_4k - 1;
-
 	if (info.reset >= HARD) {
 		map_prg_rom_8k(4, 0, 0);
 	}
@@ -62,7 +58,7 @@ void extcl_cpu_wr_mem_AveNina001(WORD address, BYTE value) {
 			map_prg_rom_8k_update();
 			break;
 		case 0x7FFE:
-			control_bank_with_AND(0x1F, chr_rom_4k_max)
+			control_bank_with_AND(0x1F, info.chr.rom.max.banks_4k)
 			bank = value << 12;
 			chr.bank_1k[0] = &chr.data[bank];
 			chr.bank_1k[1] = &chr.data[bank | 0x0400];
@@ -70,7 +66,7 @@ void extcl_cpu_wr_mem_AveNina001(WORD address, BYTE value) {
 			chr.bank_1k[3] = &chr.data[bank | 0x0C00];
 			break;
 		case 0x7FFF:
-			control_bank_with_AND(0x1F, chr_rom_4k_max)
+			control_bank_with_AND(0x1F, info.chr.rom.max.banks_4k)
 			bank = value << 12;
 			chr.bank_1k[4] = &chr.data[bank];
 			chr.bank_1k[5] = &chr.data[bank | 0x0400];

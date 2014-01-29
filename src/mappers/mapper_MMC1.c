@@ -58,11 +58,10 @@ enum MMC1_regs { CTRL, CHR0, CHR1, PRG0 };
 			break;\
 	}
 
-WORD chr_rom_8k_max, chr_rom_4k_max;
+WORD chr_rom_8k_max;
 
 void map_init_MMC1(void) {
 	chr_rom_8k_max = info.chr.rom.banks_8k - 1;
-	chr_rom_4k_max = info.chr.rom.banks_4k - 1;
 
 	EXTCL_CPU_WR_MEM(MMC1);
 	EXTCL_SAVE_MAPPER(MMC1);
@@ -236,7 +235,7 @@ static void INLINE swap_chr0_MMC1(void) {
 
 	/* 4k mode */
 	if (mmc1.chr_mode) {
-		control_bank(chr_rom_4k_max)
+		control_bank(info.chr.rom.max.banks_4k)
 		value <<= 12;
 		chr.bank_1k[0] = &chr.data[value];
 		chr.bank_1k[1] = &chr.data[value | 0x0400];
@@ -255,7 +254,7 @@ static void INLINE swap_chr0_MMC1(void) {
 		return;
 	}
 
-	control_bank_with_AND(0x1E, chr_rom_4k_max)
+	control_bank_with_AND(0x1E, info.chr.rom.max.banks_4k)
 	value <<= 12;
 	chr.bank_1k[0] = &chr.data[value];
 	chr.bank_1k[1] = &chr.data[value | 0x0400];
@@ -272,7 +271,7 @@ static void INLINE swap_chr1_MMC1(void) {
 
 		chr_reg(mmc1.chr1)
 
-		control_bank(chr_rom_4k_max)
+		control_bank(info.chr.rom.max.banks_4k)
 		value <<= 12;
 		chr.bank_1k[4] = &chr.data[value];
 		chr.bank_1k[5] = &chr.data[value | 0x0400];

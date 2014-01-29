@@ -190,5 +190,6 @@ void map_prg_rom_8k(BYTE banks_8k, BYTE at, BYTE value);
 void map_prg_rom_8k_update(void);
 void map_prg_ram_init(void);
 BYTE map_chr_ram_init(void);
+void map_set_banks_max_prg_and_chr(void);
 
 #endif /* MAPPERS_H_ */

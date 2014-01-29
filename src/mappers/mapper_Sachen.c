@@ -28,12 +28,11 @@
 	sa74374x.chr_rom_8k_bank = value;\
 }
 
-WORD chr_rom_8k_max, chr_rom_4k_max, chr_rom_2k_max;
+WORD chr_rom_8k_max, chr_rom_2k_max;
 BYTE type, shift, ored[3];
 
 void map_init_Sachen(BYTE model) {
 	chr_rom_8k_max = info.chr.rom.banks_8k - 1;
-	chr_rom_4k_max = info.chr.rom.banks_4k - 1;
 	chr_rom_2k_max = (info.chr.rom.banks_1k >> 1) - 1;
 
 	switch (model) {
@@ -89,7 +88,7 @@ void map_init_Sachen(BYTE model) {
 					break;
 				case SA8259D:
 					if (!mapper.write_vram) {
-						const DBWORD bank = chr_rom_4k_max << 12;
+						const DBWORD bank = info.chr.rom.max.banks_4k << 12;
 
 						chr.bank_1k[4] = &chr.data[bank];
 						chr.bank_1k[5] = &chr.data[bank | 0x0400];

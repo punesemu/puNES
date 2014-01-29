@@ -11,11 +11,7 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
-WORD chr_rom_4k_max;
-
 void map_init_MMC2and4(void) {
-	chr_rom_4k_max = info.chr.rom.banks_4k - 1;
-
 	EXTCL_CPU_WR_MEM(MMC2and4);
 	EXTCL_SAVE_MAPPER(MMC2and4);
 	EXTCL_AFTER_RD_CHR(MMC2and4);
@@ -51,19 +47,19 @@ void extcl_cpu_wr_mem_MMC2and4(WORD address, BYTE value) {
 			map_prg_rom_8k_update();
 			return;
 		case 0xB000:
-			control_bank_with_AND(0x1F, chr_rom_4k_max)
+			control_bank_with_AND(0x1F, info.chr.rom.max.banks_4k)
 			mmc2and4.regs[0] = value;
 			break;
 		case 0xC000:
-			control_bank_with_AND(0x1F, chr_rom_4k_max)
+			control_bank_with_AND(0x1F, info.chr.rom.max.banks_4k)
 			mmc2and4.regs[1] = value;
 			break;
 		case 0xD000:
-			control_bank_with_AND(0x1F, chr_rom_4k_max)
+			control_bank_with_AND(0x1F, info.chr.rom.max.banks_4k)
 			mmc2and4.regs[2] = value;
 			break;
 		case 0xE000:
-			control_bank_with_AND(0x1F, chr_rom_4k_max)
+			control_bank_with_AND(0x1F, info.chr.rom.max.banks_4k)
 			mmc2and4.regs[3] = value;
 			break;
 		case 0xF000:

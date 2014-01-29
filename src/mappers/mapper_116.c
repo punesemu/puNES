@@ -13,7 +13,7 @@
 #include "save_slot.h"
 
 WORD prg_rom_8k_before_last;
-WORD chr_rom_2k_max, chr_rom_4k_max;
+WORD chr_rom_2k_max;
 
 #define m116_update_prg_8k(bnk, vl)\
 	tmp = vl;\
@@ -40,7 +40,7 @@ WORD chr_rom_2k_max, chr_rom_4k_max;
 	chr.bank_1k[bnk | 0x01] = &chr.data[bank | 0x0400]
 #define m116_update_chr_4k(bnk, vl)\
 	bank = vl;\
-	_control_bank(bank, chr_rom_4k_max)\
+	_control_bank(bank, info.chr.rom.max.banks_4k)\
 	bank <<= 12;\
 	chr.bank_1k[bnk       ] = &chr.data[bank         ];\
 	chr.bank_1k[bnk | 0x01] = &chr.data[bank | 0x0400];\
@@ -375,7 +375,6 @@ WORD chr_rom_2k_max, chr_rom_4k_max;
 
 void map_init_116(void) {
 	prg_rom_8k_before_last = info.prg.rom.banks_8k - 2;
-	chr_rom_4k_max = info.chr.rom.banks_4k - 1;
 	chr_rom_2k_max = (info.chr.rom.banks_1k >> 1) - 1;
 
 	switch (info.mapper.from_db) {
