@@ -16,9 +16,9 @@
 	control_bank(info.prg.rom.max.banks_8k)\
 	if (!irem_G101.prg_mode) {\
 		map_prg_rom_8k(1, 0, value);\
-		map_prg_rom_8k(1, 2, prg_rom_8k_before_last);\
+		map_prg_rom_8k(1, 2, info.prg.rom.max.banks_8k_before_last);\
 	} else {\
-		map_prg_rom_8k(1, 0, prg_rom_8k_before_last);\
+		map_prg_rom_8k(1, 0, info.prg.rom.max.banks_8k_before_last);\
 		map_prg_rom_8k(1, 2, value);\
 	}\
 	map_prg_rom_8k_update()
@@ -30,11 +30,7 @@
 	chr.bank_1k[6] = &irem_LROG017.chr_ram[0x1000];\
 	chr.bank_1k[7] = &irem_LROG017.chr_ram[0x1400]
 
-WORD prg_rom_8k_before_last;
-
 void map_init_Irem(BYTE model) {
-	prg_rom_8k_before_last = info.prg.rom.max.banks_8k - 1;
-
 	switch (model) {
 		case G101:
 			EXTCL_CPU_WR_MEM(Irem_G101);
@@ -47,7 +43,7 @@ void map_init_Irem(BYTE model) {
 
 				mapper.rom_map_to[0] = 0;
 				mapper.rom_map_to[1] = info.prg.rom.max.banks_8k;
-				mapper.rom_map_to[2] = prg_rom_8k_before_last;
+				mapper.rom_map_to[2] = info.prg.rom.max.banks_8k_before_last;
 				mapper.rom_map_to[3] = info.prg.rom.max.banks_8k;
 
 				if (info.id == MAJORLEAGUE) {

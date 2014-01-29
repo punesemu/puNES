@@ -18,7 +18,6 @@
 	chr.bank_1k[slot] = &chr.data[value << 10];\
 	vrc4.chr_rom_bank[slot] = value
 
-WORD prg_rom_8k_before_last;
 BYTE type;
 
 const BYTE shift_VRC4[5] = { 0x01, 0x00, 0x06, 0x02, 0x02 };
@@ -32,8 +31,6 @@ const WORD table_VRC4[5][4] = {
 };
 
 void map_init_VRC4(BYTE revision) {
-	prg_rom_8k_before_last = info.prg.rom.max.banks_8k - 1;
-
 	EXTCL_CPU_WR_MEM(VRC4);
 	EXTCL_SAVE_MAPPER(VRC4);
 	EXTCL_CPU_EVERY_CYCLE(VRC4);
@@ -72,7 +69,7 @@ void extcl_cpu_wr_mem_VRC4(WORD address, BYTE value) {
 		case 0x8000:
 			control_bank_with_AND(0x1F, info.prg.rom.max.banks_8k)
 			map_prg_rom_8k(1, vrc4.swap_mode, value);
-			map_prg_rom_8k(1, 0x02 >> vrc4.swap_mode, prg_rom_8k_before_last);
+			map_prg_rom_8k(1, 0x02 >> vrc4.swap_mode, info.prg.rom.max.banks_8k_before_last);
 			map_prg_rom_8k_update();
 			return;
 		case 0xA000:

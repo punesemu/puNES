@@ -70,12 +70,12 @@
 		p2 = m44.prg_map[2];\
 		m44.prg_map[0] = p2;\
 		m44.prg_map[2] = p0;\
-		m44.prg_map[mmc3.prg_rom_cfg ^ 0x02] = prg_rom_8k_before_last;\
+		m44.prg_map[mmc3.prg_rom_cfg ^ 0x02] = info.prg.rom.max.banks_8k_before_last;\
 		/*\
 		 * prg_rom_cfg 0x00 : $C000 - $DFFF fisso al penultimo banco\
 		 * prg_rom_cfg 0x02 : $8000 - $9FFF fisso al penultimo banco\
 		 */\
-		m44_prg_8k(prg_rom_8k_before_last);\
+		m44_prg_8k(info.prg.rom.max.banks_8k_before_last);\
 		control_bank(info.prg.rom.max.banks_8k)\
 		map_prg_rom_8k(1, mmc3.prg_rom_cfg ^ 0x02, value);\
 		map_prg_rom_8k_update();\
@@ -144,11 +144,7 @@
 	}\
 }
 
-WORD prg_rom_8k_before_last;
-
 void map_init_44(void) {
-	prg_rom_8k_before_last = info.prg.rom.banks_8k - 2;
-
 	EXTCL_CPU_WR_MEM(44);
 	EXTCL_SAVE_MAPPER(44);
 	EXTCL_CPU_EVERY_CYCLE(MMC3);

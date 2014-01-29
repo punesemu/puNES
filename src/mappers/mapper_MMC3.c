@@ -22,11 +22,7 @@
 	mmc3.irq_reload = FALSE;\
 }
 
-WORD prg_rom_8k_before_last;
-
 void map_init_MMC3(void) {
-	prg_rom_8k_before_last = info.prg.rom.banks_8k - 2;
-
 	EXTCL_CPU_WR_MEM(MMC3);
 	EXTCL_SAVE_MAPPER(MMC3);
 	EXTCL_CPU_EVERY_CYCLE(MMC3);
@@ -102,7 +98,7 @@ void extcl_cpu_wr_mem_MMC3(WORD address, BYTE value) {
 				 * prg_rom_cfg 0x00 : $C000 - $DFFF fisso al penultimo banco
 				 * prg_rom_cfg 0x02 : $8000 - $9FFF fisso al penultimo banco
 				 */
-				map_prg_rom_8k(1, mmc3.prg_rom_cfg ^ 0x02, prg_rom_8k_before_last);
+				map_prg_rom_8k(1, mmc3.prg_rom_cfg ^ 0x02, info.prg.rom.max.banks_8k_before_last);
 				map_prg_rom_8k_update();
 			}
 			break;

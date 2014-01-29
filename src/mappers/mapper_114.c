@@ -25,11 +25,7 @@
 
 static const BYTE vlu114[8] = {0, 3, 1, 5, 6, 7, 2, 4};
 
-WORD prg_rom_8k_before_last;
-
 void map_init_114(void) {
-	prg_rom_8k_before_last = info.prg.rom.banks_8k - 2;
-
 	EXTCL_CPU_WR_MEM(114);
 	EXTCL_SAVE_MAPPER(114);
 	EXTCL_CPU_EVERY_CYCLE(MMC3);
@@ -100,7 +96,7 @@ void extcl_cpu_wr_mem_114(WORD address, BYTE value) {
 					BYTE p2 = m114.prg_rom_bank[2];
 					m114.prg_rom_bank[0] = p2;
 					m114.prg_rom_bank[2] = p0;
-					m114.prg_rom_bank[prg_rom_cfg ^ 0x02] = prg_rom_8k_before_last;
+					m114.prg_rom_bank[prg_rom_cfg ^ 0x02] = info.prg.rom.max.banks_8k_before_last;
 				}
 			} else {
 				m114_prg_rom_backup();

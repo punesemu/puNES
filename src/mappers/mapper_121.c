@@ -32,11 +32,7 @@
 
 static const BYTE vlu121[4] = { 0x00, 0x83, 0x42, 0x00 };
 
-WORD prg_rom_8k_before_last;
-
 void map_init_121(void) {
-	prg_rom_8k_before_last = info.prg.rom.banks_8k - 2;
-
 	EXTCL_CPU_WR_MEM(121);
 	EXTCL_CPU_RD_MEM(121);
 	EXTCL_SAVE_MAPPER(121);

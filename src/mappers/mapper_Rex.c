@@ -37,11 +37,7 @@
 	}\
 }
 
-WORD prg_rom_8k_before_last;
-
 void map_init_Rex(BYTE model) {
-	prg_rom_8k_before_last = info.prg.rom.banks_8k - 2;
-
 	if (model == DBZ) {
 		EXTCL_CPU_WR_MEM(Rex_dbz);
 		EXTCL_CPU_RD_MEM(Rex_dbz);

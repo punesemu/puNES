@@ -12,11 +12,7 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-WORD prg_rom_8k_before_last;
-
 void map_init_182(void) {
-	prg_rom_8k_before_last = info.prg.rom.banks_8k - 2;
-
 	EXTCL_CPU_WR_MEM(182);
 	EXTCL_SAVE_MAPPER(MMC3);
 	EXTCL_CPU_EVERY_CYCLE(MMC3);

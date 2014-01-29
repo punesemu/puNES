@@ -60,7 +60,7 @@
 		 * prg_rom_cfg 0x00 : $C000 - $DFFF fisso al penultimo banco\
 		 * prg_rom_cfg 0x02 : $8000 - $9FFF fisso al penultimo banco\
 		 */\
-		m217_prg_8k(prg_rom_8k_before_last)\
+		m217_prg_8k(info.prg.rom.max.banks_8k_before_last)\
 		control_bank(info.prg.rom.max.banks_8k)\
 		map_prg_rom_8k(1, mmc3.prg_rom_cfg ^ 0x02, value);\
 		map_prg_rom_8k_update();\
@@ -125,11 +125,7 @@
 	}\
 }
 
-WORD prg_rom_8k_before_last;
-
 void map_init_217(void) {
-	prg_rom_8k_before_last = info.prg.rom.banks_8k - 2;
-
 	EXTCL_CPU_WR_MEM(217);
 	EXTCL_SAVE_MAPPER(217);
 	EXTCL_CPU_EVERY_CYCLE(MMC3);
@@ -154,7 +150,7 @@ void map_init_217(void) {
 	m217.reg[3] = FALSE;
 	m217.prg_8k_bank[0] = 0;
 	m217.prg_8k_bank[1] = 1;
-	m217.prg_8k_bank[2] = prg_rom_8k_before_last;
+	m217.prg_8k_bank[2] = info.prg.rom.max.banks_8k_before_last;
 	m217.prg_8k_bank[3] = info.prg.rom.max.banks_8k;
 
 	info.mapper.extend_wr = TRUE;

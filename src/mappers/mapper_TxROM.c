@@ -54,12 +54,9 @@
 	}\
 }
 
-WORD prg_rom_8k_before_last;
 BYTE type;
 
 void map_init_TxROM(BYTE model) {
-	prg_rom_8k_before_last = info.prg.rom.banks_8k - 2;
-
 	switch (model) {
 		case TLSROM:
 		case TKSROM:

@@ -12,7 +12,6 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-WORD prg_rom_8k_before_last;
 BYTE min, max;
 
 #define waixing_swap_chr_bank_1k(src, dst)\
@@ -51,7 +50,7 @@ BYTE min, max;
 		 * prg_rom_cfg 0x00 : $C000 - $DFFF fisso al penultimo banco\
 		 * prg_rom_cfg 0x02 : $8000 - $9FFF fisso al penultimo banco\
 		 */\
-		map_prg_rom_8k(1, mmc3.prg_rom_cfg ^ 0x02, prg_rom_8k_before_last);\
+		map_prg_rom_8k(1, mmc3.prg_rom_cfg ^ 0x02, info.prg.rom.max.banks_8k_before_last);\
 		map_prg_rom_8k_update();\
 	}\
 }
@@ -270,12 +269,12 @@ BYTE min, max;
 		p2 = waixing.prg_map[2];\
 		waixing.prg_map[0] = p2;\
 		waixing.prg_map[2] = p0;\
-		waixing.prg_map[mmc3.prg_rom_cfg ^ 0x02] = prg_rom_8k_before_last;\
+		waixing.prg_map[mmc3.prg_rom_cfg ^ 0x02] = info.prg.rom.max.banks_8k_before_last;\
 		/*\
 		 * prg_rom_cfg 0x00 : $C000 - $DFFF fisso al penultimo banco\
 		 * prg_rom_cfg 0x02 : $8000 - $9FFF fisso al penultimo banco\
 		 */\
-		waixing_type_H_prg_8k(prg_rom_8k_before_last);\
+		waixing_type_H_prg_8k(info.prg.rom.max.banks_8k_before_last);\
 		control_bank(info.prg.rom.max.banks_8k)\
 		map_prg_rom_8k(1, mmc3.prg_rom_cfg ^ 0x02, value);\
 		map_prg_rom_8k_update();\
@@ -392,7 +391,7 @@ BYTE min, max;
 		 * prg_rom_cfg 0x00 : $C000 - $DFFF fisso al penultimo banco\
 		 * prg_rom_cfg 0x02 : $8000 - $9FFF fisso al penultimo banco\
 		 */\
-		map_prg_rom_8k(1, mmc3.prg_rom_cfg ^ 0x02, prg_rom_8k_before_last);\
+		map_prg_rom_8k(1, mmc3.prg_rom_cfg ^ 0x02, info.prg.rom.max.banks_8k_before_last);\
 		map_prg_rom_8k_update();\
 	}\
 }
@@ -427,8 +426,6 @@ BYTE min, max;
 }
 
 void map_init_Waixing(BYTE model) {
-	prg_rom_8k_before_last = info.prg.rom.banks_8k - 2;
-
 	switch (model) {
 		case WPSX:
 			EXTCL_CPU_WR_MEM(Waixing_PSx);

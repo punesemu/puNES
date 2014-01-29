@@ -12,8 +12,6 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-WORD prg_rom_8k_before_last;
-
 #define m116_update_prg_8k(bnk, vl)\
 	tmp = vl;\
 	_control_bank(tmp, info.prg.rom.max.banks_8k)\
@@ -216,7 +214,7 @@ WORD prg_rom_8k_before_last;
 		 * prg_rom_cfg 0x00 : $C000 - $DFFF fisso al penultimo banco\
 		 * prg_rom_cfg 0x02 : $8000 - $9FFF fisso al penultimo banco\
 		 */\
-		map_prg_rom_8k(1, mmc3.prg_rom_cfg ^ 0x02, prg_rom_8k_before_last);\
+		map_prg_rom_8k(1, mmc3.prg_rom_cfg ^ 0x02, info.prg.rom.max.banks_8k_before_last);\
 		map_prg_rom_8k_update();\
 	}\
 }
@@ -295,12 +293,12 @@ WORD prg_rom_8k_before_last;
 		p2 = m116.prg_map[2];\
 		m116.prg_map[0] = p2;\
 		m116.prg_map[2] = p0;\
-		m116.prg_map[mmc3.prg_rom_cfg ^ 0x02] = prg_rom_8k_before_last;\
+		m116.prg_map[mmc3.prg_rom_cfg ^ 0x02] = info.prg.rom.max.banks_8k_before_last;\
 		/*\
 		 * prg_rom_cfg 0x00 : $C000 - $DFFF fisso al penultimo banco\
 		 * prg_rom_cfg 0x02 : $8000 - $9FFF fisso al penultimo banco\
 		 */\
-		map_prg_rom_8k(1, mmc3.prg_rom_cfg ^ 0x02, prg_rom_8k_before_last);\
+		map_prg_rom_8k(1, mmc3.prg_rom_cfg ^ 0x02, info.prg.rom.max.banks_8k_before_last);\
 		map_prg_rom_8k_update();\
 	}\
 }
@@ -373,8 +371,6 @@ WORD prg_rom_8k_before_last;
 }
 
 void map_init_116(void) {
-	prg_rom_8k_before_last = info.prg.rom.banks_8k - 2;
-
 	switch (info.mapper.from_db) {
 		default:
 		case MAP116_TYPE_A:

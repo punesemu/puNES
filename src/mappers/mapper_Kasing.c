@@ -49,11 +49,7 @@
 	}\
 }
 
-WORD prg_rom_8k_before_last;
-
 void map_init_Kasing(void) {
-	prg_rom_8k_before_last = info.prg.rom.banks_8k - 2;
-
 	EXTCL_CPU_WR_MEM(Kasing);
 	EXTCL_SAVE_MAPPER(Kasing);
 	EXTCL_CPU_EVERY_CYCLE(MMC3);

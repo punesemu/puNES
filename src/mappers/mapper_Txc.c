@@ -12,12 +12,9 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-WORD prg_rom_8k_before_last;
 BYTE type;
 
 void map_init_Txc(BYTE model) {
-	prg_rom_8k_before_last = info.prg.rom.banks_8k - 2;
-
 	switch (model) {
 		case TXCTW:
 			EXTCL_CPU_WR_MEM(Txc_tw);
