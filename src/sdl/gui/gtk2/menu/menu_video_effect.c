@@ -7,11 +7,6 @@
 
 #include "menu_video_effect.h"
 #include "opengl.h"
-#include "gfx.h"
-#include "input.h"
-#include "cfg_file.h"
-#include "openGL/no_effect.h"
-#include "openGL/cube3d.h"
 
 #ifdef __SUNPRO_C
 #pragma align 4 (icon_inline)
@@ -123,37 +118,5 @@ void menu_video_effect_set(void) {
 		return;
 	}
 
-	if (input_zapper_is_connected((_port *) &port) == TRUE) {
-		return;
-	}
-
-	opengl_unset_effect();
-
-	opengl.rotation = !opengl.rotation;
-
-	if (opengl.rotation) {
-		opengl_init_effect = opengl_init_cube3d;
-		opengl_set_effect = opengl_set_cube3d;
-		opengl_unset_effect = opengl_unset_cube3d;
-		opengl_draw_scene = opengl_draw_scene_cube3d;
-
-		opengl.factor_distance = opengl.x_rotate = opengl.y_rotate = 0;
-		if (cfg->fullscreen == FULLSCR) {
-			SDL_ShowCursor(SDL_ENABLE);
-		}
-
-	} else {
-		opengl_init_effect = opengl_init_no_effect;
-		opengl_set_effect = opengl_set_no_effect;
-		opengl_unset_effect = opengl_unset_no_effect;
-		opengl_draw_scene = opengl_draw_scene_no_effect;
-
-		if (cfg->fullscreen == FULLSCR) {
-			SDL_ShowCursor(SDL_DISABLE);
-		}
-	}
-
-	opengl_init_effect();
-
-	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE);
+	opengl_effect_change(!opengl.rotation);
 }

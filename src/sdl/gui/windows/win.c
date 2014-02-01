@@ -2416,6 +2416,8 @@ void set_rendering(BYTE rendering) {
 	gfx_set_render(rendering);
 	cfg->render = rendering;
 
+	opengl_effect_change(opengl.rotation);
+
 	gfx_reset_video();
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE);
 
@@ -2442,38 +2444,7 @@ void set_vsync(BYTE vsync) {
 	ShowWindow(main_win, SW_NORMAL);
 }
 void set_effect(void) {
-	if (input_zapper_is_connected((_port *) &port) == TRUE) {
-		return;
-	}
-
-	opengl_unset_effect();
-
-	opengl.rotation = !opengl.rotation;
-
-	if (opengl.rotation) {
-		opengl_init_effect = opengl_init_cube3d;
-		opengl_set_effect = opengl_set_cube3d;
-		opengl_unset_effect = opengl_unset_cube3d;
-		opengl_draw_scene = opengl_draw_scene_cube3d;
-
-		opengl.factor_distance = opengl.x_rotate = opengl.y_rotate = 0;
-		if (cfg->fullscreen == FULLSCR) {
-			SDL_ShowCursor(SDL_ENABLE);
-		}
-	} else {
-		opengl_init_effect = opengl_init_no_effect;
-		opengl_set_effect = opengl_set_no_effect;
-		opengl_unset_effect = opengl_unset_no_effect;
-		opengl_draw_scene = opengl_draw_scene_no_effect;
-
-		if (cfg->fullscreen == FULLSCR) {
-			SDL_ShowCursor(SDL_DISABLE);
-		}
-	}
-
-	opengl_init_effect();
-
-	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE);
+	opengl_effect_change(!opengl.rotation);
 }
 void set_samplerate(int samplerate) {
 	if (cfg->samplerate == samplerate) {

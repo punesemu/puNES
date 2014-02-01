@@ -203,12 +203,10 @@ void gfx_set_render(BYTE render) {
 			break;
 		case RENDER_OPENGL:
 			gfx.opengl = TRUE;
-			opengl.rotation = TRUE;
 			opengl.glsl.enabled = FALSE;
 			break;
 		case RENDER_GLSL:
 			gfx.opengl = TRUE;
-			opengl.rotation = TRUE;
 			opengl.glsl.enabled = TRUE;
 			break;
 	}

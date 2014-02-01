@@ -63,6 +63,8 @@ void opengl_create_texture(_texture *texture, uint32_t width, uint32_t height,
         uint8_t interpolation, uint8_t pow);
 void opengl_update_texture(SDL_Surface *surface, uint8_t generate_mipmap);
 
+void opengl_effect_change(BYTE mode);
+
 void opengl_text_clear(_txt_element *ele);
 void opengl_text_blit(_txt_element *ele, SDL_Rect *dst_rect);
 
