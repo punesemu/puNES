@@ -275,7 +275,7 @@ BYTE l7z_file_from_archive(_uncomp_file_data *file) {
 	}
 
 	if (!archive->GetItemInfo(file->num, &archive_item)) {
-		delete (archive);
+		delete(archive);
 		return (EXIT_ERROR);
 	}
 
@@ -288,7 +288,7 @@ BYTE l7z_file_from_archive(_uncomp_file_data *file) {
 
 	if (!archive->Extract(archive_item, &o_stream)) {
 		fprintf(stderr, "uncompress file failed!\n");
-		delete (archive);
+		delete(archive);
 		return (EXIT_ERROR);
 	}
 
@@ -296,7 +296,8 @@ BYTE l7z_file_from_archive(_uncomp_file_data *file) {
 	strncpy(info.rom_file, uncomp.uncompress_file, sizeof(info.rom_file));
 	info.uncompress_rom = TRUE;
 
-	delete (archive);
+	delete(archive);
+
 	return (EXIT_OK);
 }
 BYTE l7z_name_file_compress(_uncomp_file_data *file) {
@@ -309,12 +310,13 @@ BYTE l7z_name_file_compress(_uncomp_file_data *file) {
 	}
 
 	if (!archive->GetItemInfo(file->num, &archive_item)) {
-		delete (archive);
+		delete(archive);
 		return (EXIT_ERROR);
 	}
 
 	wcstombs((char *) &uncomp.buffer, archive_item->GetFullPath().c_str(), sizeof(uncomp.buffer));
 
-	delete (archive);
+	delete(archive);
+
 	return (EXIT_OK);
 }
