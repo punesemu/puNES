@@ -84,6 +84,11 @@ BYTE uncomp_name_file(_uncomp_file_data *file) {
 }
 
 void uncomp_remove(void) {
+	if (uncomp.file != NULL) {
+		free(uncomp.file);
+		uncomp.file = NULL;
+	}
+
 	if (info.uncompress_rom == TRUE) {
 		remove(uncomp.uncompress_file);
 	}
@@ -93,7 +98,7 @@ void uncomp_remove(void) {
 
 BYTE uncomp_zip_control_in_archive(void) {
 	mz_zip_archive zip_archive;
-	int a;
+	int a, mode;
 
 	memset(&zip_archive, 0, sizeof(zip_archive));
 
@@ -102,30 +107,41 @@ BYTE uncomp_zip_control_in_archive(void) {
 		return (EXIT_ERROR);
 	}
 
-	for (a = 0; a < (int) mz_zip_reader_get_num_files(&zip_archive); a++) {
-		mz_zip_archive_file_stat file_stat;
-		int b;
+	for (mode = UNCOMP_CTRL_FILE_COUNT_ROMS; mode <= UNCOMP_CTRL_FILE_SAVE_DATA; mode++) {
+		uncomp.files_founded = 0;
 
-		if (!mz_zip_reader_file_stat(&zip_archive, a, &file_stat)) {
-			fprintf(stderr, "mz_zip_reader_file_stat() failed!\n");
-			mz_zip_reader_end(&zip_archive);
-			return (EXIT_ERROR);
-		}
+		for (a = 0; a < (int) mz_zip_reader_get_num_files(&zip_archive); a++) {
+			mz_zip_archive_file_stat file_stat;
+			int b;
 
-		/* se e' una directory continuo */
-		if (mz_zip_reader_is_file_a_directory(&zip_archive, a)) {
-			continue;
-		}
-
-		for (b = 0; b < LENGTH(format_supported); b++) {
-			char *ext = strrchr(file_stat.m_filename, '.');
-
-			if ((ext != NULL) && (strcasecmp(ext, format_supported[b].ext) == 0)) {
-				uncomp.file[uncomp.files_founded].num = file_stat.m_file_index;
-				uncomp.file[uncomp.files_founded].format = format_supported[b].id;
-				uncomp.files_founded++;
-				break;
+			if (!mz_zip_reader_file_stat(&zip_archive, a, &file_stat)) {
+				fprintf(stderr, "mz_zip_reader_file_stat() failed!\n");
+				mz_zip_reader_end(&zip_archive);
+				return (EXIT_ERROR);
 			}
+
+			/* se e' una directory continuo */
+			if (mz_zip_reader_is_file_a_directory(&zip_archive, a)) {
+				continue;
+			}
+
+			for (b = 0; b < LENGTH(format_supported); b++) {
+				char *ext = strrchr(file_stat.m_filename, '.');
+
+				if ((ext != NULL) && (strcasecmp(ext, format_supported[b].ext) == 0)) {
+					if (mode == UNCOMP_CTRL_FILE_SAVE_DATA) {
+						uncomp.file[uncomp.files_founded].num = file_stat.m_file_index;
+						uncomp.file[uncomp.files_founded].format = format_supported[b].id;
+					}
+					uncomp.files_founded++;
+					break;
+				}
+			}
+		}
+
+		if ((mode == UNCOMP_CTRL_FILE_COUNT_ROMS) && (uncomp.files_founded > 0)) {
+			uncomp.file = (_uncomp_file_data *) malloc(
+			        uncomp.files_founded * sizeof(_uncomp_file_data));
 		}
 	}
 

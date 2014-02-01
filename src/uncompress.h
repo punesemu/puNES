@@ -15,10 +15,12 @@ enum uncomp_formats {
 	FMT_FDS,
 	FMT_FM2
 };
-
 enum uncomp_misc {
+	UNCOMP_CTRL_FILE_COUNT_ROMS,
+	UNCOMP_CTRL_FILE_SAVE_DATA,
 	UNCOMP_NO_FILE_SELECTED = 0xFFFF
 };
+
 
 typedef struct {
 	char ext[10];
@@ -38,7 +40,7 @@ static const _format_supported format_supported[] = {
 
 struct _uncomp {
 	int files_founded;
-	_uncomp_file_data file[100];
+	_uncomp_file_data *file;
 	char compress_archive[1024];
 	char uncompress_file[1024];
 	char buffer[1024];

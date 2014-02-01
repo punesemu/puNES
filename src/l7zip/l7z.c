@@ -205,7 +205,7 @@ BYTE l7z_control_ext(char *ext) {
 }
 BYTE l7z_control_in_archive(void) {
 	C7ZipArchive *archive = NULL;
-	unsigned int a, num_items = 0;
+	unsigned int a, mode, num_items = 0;
 
 	in_stream stream(info.rom_file);
 
@@ -216,41 +216,53 @@ BYTE l7z_control_in_archive(void) {
 
 	archive->GetItemCount(&num_items);
 
-	for (a = 0; a < num_items; a++) {
-		C7ZipArchiveItem *archive_item = NULL;
-		unsigned int b;
+	for (mode = UNCOMP_CTRL_FILE_COUNT_ROMS; mode <= UNCOMP_CTRL_FILE_SAVE_DATA; mode++) {
+		uncomp.files_founded = 0;
 
-		if (!(archive->GetItemInfo(a, &archive_item))) {
-			continue;
-		}
+		for (a = 0; a < num_items; a++) {
+			C7ZipArchiveItem *archive_item = NULL;
+			unsigned int b;
 
-		/* se e' una directory continuo */
-		if (archive_item->IsDir()) {
-			continue;
-		}
-
-		//printf("%d,%ls,%d\n", archive_item->GetArchiveIndex(),
-		//       archive_item->GetFullPath().c_str(), archive_item->IsDir());
-
-		for (b = 0; b < LENGTH(format_supported); b++) {
-			char *ext;
-
-			memset(&uncomp.buffer, 0x00, sizeof(uncomp.buffer));
-			wcstombs((char *) &uncomp.buffer, archive_item->GetFullPath().c_str(),
-			        sizeof(uncomp.buffer));
-
-			ext = strrchr(uncomp.buffer, '.');
-
-			if ((ext != NULL) && (strcasecmp(ext, format_supported[b].ext) == 0)) {
-				uncomp.file[uncomp.files_founded].num = archive_item->GetArchiveIndex();
-				uncomp.file[uncomp.files_founded].format = format_supported[b].id;
-				uncomp.files_founded++;
-				break;
+			if (!(archive->GetItemInfo(a, &archive_item))) {
+				continue;
 			}
+
+			/* se e' una directory continuo */
+			if (archive_item->IsDir()) {
+				continue;
+			}
+
+			//printf("%d,%ls,%d\n", archive_item->GetArchiveIndex(),
+			//       archive_item->GetFullPath().c_str(), archive_item->IsDir());
+
+			for (b = 0; b < LENGTH(format_supported); b++) {
+				char *ext;
+
+				memset(&uncomp.buffer, 0x00, sizeof(uncomp.buffer));
+				wcstombs((char *) &uncomp.buffer, archive_item->GetFullPath().c_str(),
+				        sizeof(uncomp.buffer));
+
+				ext = strrchr(uncomp.buffer, '.');
+
+				if ((ext != NULL) && (strcasecmp(ext, format_supported[b].ext) == 0)) {
+					if (mode == UNCOMP_CTRL_FILE_SAVE_DATA) {
+						uncomp.file[uncomp.files_founded].num = archive_item->GetArchiveIndex();
+						uncomp.file[uncomp.files_founded].format = format_supported[b].id;
+					}
+					uncomp.files_founded++;
+					break;
+				}
+			}
+		}
+
+		if ((mode == UNCOMP_CTRL_FILE_COUNT_ROMS) && (uncomp.files_founded > 0)) {
+			uncomp.file = (_uncomp_file_data *) malloc(
+			        uncomp.files_founded * sizeof(_uncomp_file_data));
 		}
 	}
 
-	delete (archive);
+	delete(archive);
+
 	return (EXIT_OK);
 }
 BYTE l7z_file_from_archive(_uncomp_file_data *file) {
