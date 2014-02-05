@@ -21,6 +21,7 @@ struct _tengen_rambo {
 	BYTE irq_mode;
 	BYTE irq_delay;
 	BYTE irq_prescaler;
+	BYTE irq_force_clock;
 } tengen_rambo;
 
 void map_init_Tengen(BYTE model);

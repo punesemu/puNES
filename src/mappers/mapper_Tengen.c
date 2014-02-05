@@ -16,8 +16,10 @@
 enum {
 	A12_MODE,
 	CPU_MODE,
-	tengen_rambo_delay_A12 = 4,
-	tengen_rambo_delay_CPU = 4,
+	//tengen_rambo_delay_A12 = 4,
+	//tengen_rambo_delay_CPU = 4,
+	tengen_rambo_delay_A12 = 3,
+	tengen_rambo_delay_CPU = 3,
 };
 
 #define tengen_rambo_prg_24k_update()\
@@ -80,24 +82,19 @@ enum {
 }
 #define tengen_rambo_chr_1k_control(chr_1k, bank_1k)\
 	value = tengen_rambo.chr[chr_1k];\
-	control_bank(chr_rom_1k_max)\
+	control_bank(info.chr.rom.max.banks_1k)\
 	bank[bank_1k] = value
 #define tengen_rambo_chr_2k_control(chr_2k, bank_2k)\
 	value = tengen_rambo.chr[chr_2k] >> 1;\
-	control_bank(chr_rom_2k_max)\
+	control_bank(info.chr.rom.max.banks_2k)\
 	bank[bank_2k] = value << 1;\
 	bank[bank_2k + 1] = bank[bank_2k] | 0x01
 
 static void INLINE irq_clock_Tengen_Rambo(int delay);
 
-WORD prg_rom_8k_max, chr_rom_1k_max, chr_rom_2k_max;
 BYTE type;
 
 void map_init_Tengen(BYTE model) {
-	prg_rom_8k_max = info.prg.rom.banks_8k  - 1;
-	chr_rom_1k_max = info.chr.rom.banks_1k  - 1;
-	chr_rom_2k_max = (info.chr.rom.banks_1k >> 1) - 1;
-
 	switch (model) {
 		case T800037:
 		case TRAMBO:
@@ -182,7 +179,7 @@ void extcl_cpu_wr_mem_Tengen_Rambo(WORD address, BYTE value) {
 						ntbl.bank_1k[tengen_rambo.reg_index - 2] = &ntbl.data[((value >> 7) ^ 0x01)
 						        << 10];
 					}
-					control_bank(chr_rom_1k_max)
+					control_bank(info.chr.rom.max.banks_1k)
 					if (tengen_rambo.chr[tengen_rambo.reg_index] != value) {
 						tengen_rambo.chr[tengen_rambo.reg_index] = value;
 						tengen_rambo_chr_8k_update()
@@ -192,7 +189,7 @@ void extcl_cpu_wr_mem_Tengen_Rambo(WORD address, BYTE value) {
 				case 0x07: {
 					const BYTE index = tengen_rambo.reg_index & 0x01;
 
-					control_bank(prg_rom_8k_max)
+					control_bank(info.prg.rom.max.banks_8k)
 					if (tengen_rambo.prg[index] != value) {
 						tengen_rambo.prg[index] = value;
 						tengen_rambo_prg_24k_update()
@@ -203,7 +200,7 @@ void extcl_cpu_wr_mem_Tengen_Rambo(WORD address, BYTE value) {
 				case 0x09: {
 					const BYTE index = tengen_rambo.reg_index - 0x02;
 
-					control_bank(chr_rom_1k_max)
+					control_bank(info.chr.rom.max.banks_1k)
 					if (tengen_rambo.chr[index] != value) {
 						tengen_rambo.chr[index] = value;
 						tengen_rambo_chr_8k_update()
@@ -211,7 +208,7 @@ void extcl_cpu_wr_mem_Tengen_Rambo(WORD address, BYTE value) {
 					break;
 				}
 				case 0x0F:
-					control_bank(prg_rom_8k_max)
+					control_bank(info.prg.rom.max.banks_8k)
 					if (tengen_rambo.prg[2] != value) {
 						tengen_rambo.prg[2] = value;
 						tengen_rambo_prg_24k_update()
@@ -233,8 +230,13 @@ void extcl_cpu_wr_mem_Tengen_Rambo(WORD address, BYTE value) {
 		case 0xC000:
 			irqA12.latch = value;
 			return;
-		case 0xC001:
+		case 0xC001: {
 			irqA12.reload = TRUE;
+
+			if (((value & 0x01) == A12_MODE) && (tengen_rambo.irq_mode == CPU_MODE)) {
+				tengen_rambo.irq_force_clock = TRUE;
+			}
+
 			if (value & 0x01) {
 				/* abilito' la modalita' CPU cycles */
 				tengen_rambo.irq_mode = CPU_MODE;
@@ -244,6 +246,7 @@ void extcl_cpu_wr_mem_Tengen_Rambo(WORD address, BYTE value) {
 				tengen_rambo.irq_mode = A12_MODE;
 			}
 			return;
+		}
 		case 0xE000:
 			irqA12.enable = FALSE;
 			irq.high &= ~EXT_IRQ;
@@ -290,6 +293,7 @@ void extcl_irq_A12_clock_Tengen_Rambo(void) {
 	}
 }
 void extcl_cpu_every_cycle_Tengen_Rambo(void) {
+	//if ((tengen_rambo.irq_mode != CPU_MODE) && (tengen_rambo.irq_force_clock == FALSE)) {
 	if (tengen_rambo.irq_mode != CPU_MODE) {
 		return;
 	}
@@ -299,11 +303,13 @@ void extcl_cpu_every_cycle_Tengen_Rambo(void) {
 		return;
 	}
 	tengen_rambo.irq_prescaler = 0;
+	tengen_rambo.irq_force_clock = FALSE;
 
 	irq_clock_Tengen_Rambo(tengen_rambo_delay_CPU);
 }
 
 static void INLINE irq_clock_Tengen_Rambo(int delay) {
+	/*
 	if (irqA12.reload == TRUE) {
 		if (irqA12.latch <= 1) {
 			irqA12.counter = irqA12.latch + 1;
@@ -313,6 +319,19 @@ static void INLINE irq_clock_Tengen_Rambo(int delay) {
 		irqA12.reload = FALSE;
 	} else if (!irqA12.counter) {
 		irqA12.counter = irqA12.latch + 1;
+	}
+	*/
+
+	if (irqA12.reload == TRUE) {
+		if (irqA12.latch == 0) {
+			irqA12.counter = irqA12.latch + 1;
+		} else {
+			irqA12.counter = irqA12.latch + 1;
+		}
+
+		irqA12.reload = FALSE;
+	} else if (!irqA12.counter) {
+		irqA12.counter = irqA12.latch + 2;
 	}
 
 	irqA12.counter--;
