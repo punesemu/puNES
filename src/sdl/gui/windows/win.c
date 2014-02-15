@@ -141,6 +141,7 @@ void gui_init(int argc, char **argv) {
 	/* cerco la Documents e imposto la directory base */
 	{
 		switch (gui.version_os) {
+			case WIN_EIGHTP1:
 			case WIN_EIGHT:
 			case WIN_SEVEN:
 			case WIN_VISTA:

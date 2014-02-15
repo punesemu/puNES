@@ -18,17 +18,18 @@
 #include "common.h"
 #include "emu.h"
 
-#define	WIN_EIGHT 62
-#define	WIN_SEVEN 61
-#define	WIN_VISTA 60
-#define	WIN_XP64  52
-#define	WIN_XP    51
+#define	WIN_EIGHTP1 63
+#define	WIN_EIGHT   62
+#define	WIN_SEVEN   61
+#define	WIN_VISTA   60
+#define	WIN_XP64    52
+#define	WIN_XP      51
 
 #define exit_thread(value) return
 
 struct _gui {
 	HINSTANCE main_hinstance;
-	WORD version_os;
+	DWORD version_os;
 	char home[MAX_PATH];
 	double frequency;
 	uint64_t counter_start;
