@@ -293,8 +293,8 @@ void extcl_irq_A12_clock_Tengen_Rambo(void) {
 	}
 }
 void extcl_cpu_every_cycle_Tengen_Rambo(void) {
-	//if ((tengen_rambo.irq_mode != CPU_MODE) && (tengen_rambo.irq_force_clock == FALSE)) {
-	if (tengen_rambo.irq_mode != CPU_MODE) {
+	if ((tengen_rambo.irq_mode != CPU_MODE) && (tengen_rambo.irq_force_clock == FALSE)) {
+	//if (tengen_rambo.irq_mode != CPU_MODE) {
 		return;
 	}
 
@@ -309,7 +309,7 @@ void extcl_cpu_every_cycle_Tengen_Rambo(void) {
 }
 
 static void INLINE irq_clock_Tengen_Rambo(int delay) {
-	/*
+	/**/
 	if (irqA12.reload == TRUE) {
 		if (irqA12.latch <= 1) {
 			irqA12.counter = irqA12.latch + 1;
@@ -320,8 +320,9 @@ static void INLINE irq_clock_Tengen_Rambo(int delay) {
 	} else if (!irqA12.counter) {
 		irqA12.counter = irqA12.latch + 1;
 	}
-	*/
+	/**/
 
+	/*
 	if (irqA12.reload == TRUE) {
 		if (irqA12.latch == 0) {
 			irqA12.counter = irqA12.latch + 1;
@@ -333,6 +334,7 @@ static void INLINE irq_clock_Tengen_Rambo(int delay) {
 	} else if (!irqA12.counter) {
 		irqA12.counter = irqA12.latch + 2;
 	}
+	*/
 
 	irqA12.counter--;
 	if (!irqA12.counter && irqA12.enable) {
