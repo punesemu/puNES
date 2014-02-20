@@ -108,7 +108,11 @@ BYTE snd_start(void) {
 		snd.buffer.count = sample_latency / snd.buffer.size;
  	}
 
-	if (CoInitializeEx(NULL, COINIT_APARTMENTTHREADED) != S_OK) {
+#if defined(__MINGW64__)
+	if (CoInitializeEx(NULL, COINIT_MULTITHREADED) != S_OK) {
+#else
+ 	if (CoInitializeEx(NULL, COINIT_APARTMENTTHREADED) != S_OK) {
+#endif
 		MessageBox(NULL,
 			"ATTENTION: Unable to initialize COM interface.",
 			"Error!",
