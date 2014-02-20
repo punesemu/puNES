@@ -5,9 +5,13 @@
  *      Author: fhorse
  */
 
+
+
 #include "cfg_file.h"
 #define __GUI_BASE__
+#define __GUI_SND__
 #include "gui.h"
+#undef __GUI_SND__
 #undef __GUI_BASE__
 #include "gfx.h"
 #include "snd.h"
@@ -15,6 +19,11 @@
 #include "fps.h"
 #include "input.h"
 #include "audio_quality.h"
+
+
+
+
+
 
 #define INIFILE NAME  ".cfg"
 #define INPUTFILE     "input.cfg"
@@ -95,38 +104,111 @@ void cfg_file_input_parse(void) {
 void cfg_file_input_save(void) {
 	return;
 }
+void cfg_file_set_all_input_default(_config_input *config_input, _array_pointers_port *array) {
+	BYTE i;
+
+	config_input->permit_updown_leftright = FALSE;
+	config_input->controller_mode = CTRL_MODE_NES;
+
+	for (i = PORT1; i < PORT_MAX; i++) {
+		_port *port = array->port[i];
+
+		switch (i) {
+			case PORT1:
+				port->type = CTRL_STANDARD;
+				port->joy_id = name_to_jsn("JOYSTICKID1");
+				break;
+			case PORT2:
+				port->type = FALSE;
+				port->joy_id = name_to_jsn("JOYSTICKID2");
+				break;
+			default:
+				port->type = FALSE;
+				port->joy_id = name_to_jsn("NULL");
+				break;
+		}
+
+		port->turbo[TURBOA].frequency = TURBO_BUTTON_DELAY_DEFAULT;
+		port->turbo[TURBOB].frequency = TURBO_BUTTON_DELAY_DEFAULT;
+		cfg_file_set_kbd_joy_default(port, i, KEYBOARD);
+		cfg_file_set_kbd_joy_default(port, i, JOYSTICK);
+	}
+}
+void cfg_file_set_kbd_joy_default(_port *port, int index, int mode) {
+	BYTE i;
+
+	for (i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
+		if (mode == KEYBOARD) {
+			port->input[KEYBOARD][i] = keyval_from_name(
+			        cfg_file_set_kbd_joy_button_default(index, KEYBOARD, i));
+		} else {
+			port->input[JOYSTICK][i] = name_to_jsv(
+			        cfg_file_set_kbd_joy_button_default(index, JOYSTICK, i));
+		}
+	}
+}
+char *cfg_file_set_kbd_joy_button_default(int index, int mode, int button) {
+	static char default_value_port[PORT_MAX][2][MAX_STD_PAD_BUTTONS][15] = {
+		{
+			{
+				"S",  "A",    "Z",    "X",
+				"Up", "Down", "Left", "Right",
+				"W",  "Q"
+			},
+			{
+				"JB1",    "JB0",    "JB8",    "JB9",
+				"JA1MIN", "JA1PLS", "JA0MIN", "JA0PLS",
+				"JB2",    "JB3"
+			}
+		},
+		{
+			{
+#ifdef GTK
+				"Page_Down", "End",     "Insert",  "Delete",
+				"KP_Up",     "KP_Down", "KP_Left", "KP_Right",
+				"Home",      "Page_Up"
+#else
+				"PgDown",    "End",     "Insert",  "Delete",
+				"NumPad8",   "NumPad2", "NumPad4", "NumPad6",
+				"Home",      "PgUp"
+#endif
+			},
+			{
+				"JB1",    "JB0",    "JB8",    "JB9",
+				"JA1MIN", "JA1PLS", "JA0MIN", "JA0PLS",
+				"JB2",    "JB3"
+			}
+		},
+		{
+			{
+				"NULL", "NULL", "NULL", "NULL",
+				"NULL", "NULL", "NULL", "NULL",
+				"NULL", "NULL"
+			},
+			{
+				"JB1",    "JB0",    "JB8",    "JB9",
+				"JA1MIN", "JA1PLS", "JA0MIN", "JA0PLS",
+				"JB2",    "JB3"
+			}
+		},
+		{
+			{
+				"NULL", "NULL", "NULL", "NULL",
+				"NULL", "NULL", "NULL", "NULL",
+				"NULL", "NULL"
+			},
+			{
+				"JB1",    "JB0",    "JB8",    "JB9",
+				"JA1MIN", "JA1PLS", "JA0MIN", "JA0PLS",
+				"JB2",    "JB3"
+			}
+		}
+	};
+
+	return(default_value_port[index][mode][button]);
+}
 
 void set_default(void) {
-
-#define _port_kb_default(port, button, name)\
-	port.input[KEYBOARD][button] = keyval_from_name(name);
-#define _port_js_default(port, button, name)\
-	port.input[JOYSTICK][button] = name_to_jsv(name)
-#define port_kb_default(port, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10)\
-	_port_kb_default(port, BUT_A,  s1);\
-	_port_kb_default(port, BUT_B,  s2);\
-	_port_kb_default(port, SELECT, s3);\
-	_port_kb_default(port, START,  s4);\
-	_port_kb_default(port, UP,     s5);\
-	_port_kb_default(port, DOWN,   s6);\
-	_port_kb_default(port, LEFT,   s7);\
-	_port_kb_default(port, RIGHT,  s8);\
-	_port_kb_default(port, TRB_A,  s9);\
-	_port_kb_default(port, TRB_B,  s10)
-#define port_js_default(port, id, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10)\
-	port.joy_id = name_to_jsn(id);\
-	_port_js_default(port, BUT_A,  s1);\
-	_port_js_default(port, BUT_B,  s2);\
-	_port_js_default(port, SELECT, s3);\
-	_port_js_default(port, START,  s4);\
-	_port_js_default(port, UP,     s5);\
-	_port_js_default(port, DOWN,   s6);\
-	_port_js_default(port, LEFT,   s7);\
-	_port_js_default(port, RIGHT,  s8);\
-	_port_js_default(port, TRB_A,  s9);\
-	_port_js_default(port, TRB_B,  s10)
-
-	/* default */
 	cfg_from_file.mode = AUTO;
 	machine = machinedb[NTSC - 1];
 
@@ -147,11 +229,11 @@ void set_default(void) {
 	//cfg_from_file.save_on_exit = FALSE;
 
 	{
-		int index;
+		BYTE i;
 
-		for (index = 0; index <= APU_MASTER; index++) {
-			cfg_from_file.apu.channel[index] = TRUE;
-			cfg_from_file.apu.volume[index] = 1.0f;
+		for (i = APU_S1; i <= APU_MASTER; i++) {
+			cfg_from_file.apu.channel[i] = TRUE;
+			cfg_from_file.apu.volume[i] = 1.0f;
 		}
 	}
 	cfg_from_file.samplerate = S44100;
@@ -159,17 +241,17 @@ void set_default(void) {
 	cfg_from_file.stereo_delay = STEREO_DELAY_DEFAULT;
 	cfg_from_file.audio_quality = AQ_HIGH;
 	cfg_from_file.swap_duty = 0;
+
 	cfg_from_file.gamegenie = FALSE;
 
-	port1.type = CTRL_STANDARD;
-	port_kb_default(port1, "S", "A", "Z", "X", "Up", "Down", "Left", "Right", "W", "Q");
-	//port_js_default(port1, "JOYSTICKID1", "JB1", "JB0", "JB8", "JB9", "JA1MIN", "JA1PLS", "JA0MIN",
-	//		"JA0PLS", "JB2", "JB3");
-	port1.turbo[TURBOA].frequency = TURBO_BUTTON_DELAY_DEFAULT;
-	port1.turbo[TURBOB].frequency = TURBO_BUTTON_DELAY_DEFAULT;
+	{
+		_array_pointers_port array;
+		BYTE i;
 
-	//port2.type = FALSE;
-	//port2.joy_id = name_to_jsn("JOYSTICKID2");
-	port2.turbo[TURBOA].frequency = TURBO_BUTTON_DELAY_DEFAULT;
-	port2.turbo[TURBOB].frequency = TURBO_BUTTON_DELAY_DEFAULT;
+		for (i = PORT1; i < PORT_MAX; i++) {
+			array.port[i] = &port[i];
+		}
+
+		cfg_file_set_all_input_default(&cfg_from_file.input, &array);
+	}
 }

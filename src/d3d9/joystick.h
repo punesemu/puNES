@@ -23,6 +23,8 @@ typedef struct {
 	BYTE p2;
 } _js_element;
 
+_js js[PORT_MAX];
+
 static const _js_element jsn_list[] = {
 };
 static const _js_element jsv_list[] = {

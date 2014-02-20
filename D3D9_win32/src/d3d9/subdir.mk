@@ -10,6 +10,7 @@ C_SRCS += \
 ../src/d3d9/keyboard.c \
 ../src/d3d9/snd.c \
 ../src/d3d9/text.c \
+../src/d3d9/uncompress_selection.c \
 ../src/d3d9/win.c 
 
 OBJS += \
@@ -19,6 +20,7 @@ OBJS += \
 ./src/d3d9/keyboard.o \
 ./src/d3d9/snd.o \
 ./src/d3d9/text.o \
+./src/d3d9/uncompress_selection.o \
 ./src/d3d9/win.o 
 
 C_DEPS += \
@@ -28,6 +30,7 @@ C_DEPS += \
 ./src/d3d9/keyboard.d \
 ./src/d3d9/snd.d \
 ./src/d3d9/text.d \
+./src/d3d9/uncompress_selection.d \
 ./src/d3d9/win.d 
 
 
@@ -35,7 +38,7 @@ C_DEPS += \
 src/d3d9/%.o: ../src/d3d9/%.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
-	i686-mingw32-gcc -DMINGW32 -DD3D9 -I"/home/fhorse/sviluppo/personale/punes/src" -I"/home/fhorse/sviluppo/personale/punes/src/d3d9" -I/home/fhorse/sviluppo/personale/punes/misc/DXSDK/Include -I/home/fhorse/sviluppo/personale/punes/misc/DXSDK/vc10/include -O3 -Wall -ffast-math -c -fmessage-length=0 -finline-functions -Winline -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
+	i686-mingw32-gcc -DMINGW32 -DD3D9 -I../src -I../src/d3d9 -I/home/fhorse/sviluppo/personale/punes/misc/DXSDK/Include -I/home/fhorse/sviluppo/personale/punes/misc/DXSDK/vc10/include -O3 -Wall -ffast-math -c -fmessage-length=0 -finline-functions -Winline -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 

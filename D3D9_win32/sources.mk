@@ -15,6 +15,7 @@ EXECUTABLES :=
 SUBDIRS := \
 src \
 src/mappers \
+src/l7zip \
 src/filters/video \
 src/filters/audio \
 src/d3d9 \

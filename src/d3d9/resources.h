@@ -16,6 +16,7 @@
 
 #define IDD_INPUT_CONTROLLERS       160
 #define IDD_STD_CTRL                161
+#define IDD_UNCOMPRESS_SELECTION    164
 
 #define IDT_TIMER1                  101
 #define IDT_TIMER2                  102
@@ -217,5 +218,7 @@
 #define IDC_STD_CTRL_JOY_TURBOB     220
 #define IDC_STD_CTRL_JOY_ID         221
 #define IDC_STD_CTRL_JOY_ERASE      222
+
+#define IDC_UNCOMPRESS_SELECTION_LIST           1035
 
 #endif /* RESOURCES_H_ */

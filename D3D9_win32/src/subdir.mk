@@ -25,7 +25,8 @@ C_SRCS += \
 ../src/save_slot.c \
 ../src/sha1.c \
 ../src/tas.c \
-../src/timeline.c 
+../src/timeline.c \
+../src/uncompress.c 
 
 OBJS += \
 ./src/apu.o \
@@ -49,7 +50,8 @@ OBJS += \
 ./src/save_slot.o \
 ./src/sha1.o \
 ./src/tas.o \
-./src/timeline.o 
+./src/timeline.o \
+./src/uncompress.o 
 
 C_DEPS += \
 ./src/apu.d \
@@ -73,14 +75,15 @@ C_DEPS += \
 ./src/save_slot.d \
 ./src/sha1.d \
 ./src/tas.d \
-./src/timeline.d 
+./src/timeline.d \
+./src/uncompress.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
 src/%.o: ../src/%.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
-	i686-mingw32-gcc -DMINGW32 -DD3D9 -I"/home/fhorse/sviluppo/personale/punes/src" -I"/home/fhorse/sviluppo/personale/punes/src/d3d9" -I/home/fhorse/sviluppo/personale/punes/misc/DXSDK/Include -I/home/fhorse/sviluppo/personale/punes/misc/DXSDK/vc10/include -O3 -Wall -ffast-math -c -fmessage-length=0 -finline-functions -Winline -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
+	i686-mingw32-gcc -DMINGW32 -DD3D9 -I../src -I../src/d3d9 -I/home/fhorse/sviluppo/personale/punes/misc/DXSDK/Include -I/home/fhorse/sviluppo/personale/punes/misc/DXSDK/vc10/include -O3 -Wall -ffast-math -c -fmessage-length=0 -finline-functions -Winline -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 

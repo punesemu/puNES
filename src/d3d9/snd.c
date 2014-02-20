@@ -77,7 +77,7 @@ BYTE snd_start(void) {
 	memset(&snd, 0x00, sizeof(snd));
 	memset(&xaudio2, 0x00, sizeof(xaudio2));
 
-	cache = malloc(sizeof(_callback_data));
+	cache = (_callback_data *) malloc(sizeof(_callback_data));
 	memset(cache, 0x00, sizeof(_callback_data));
 	snd.cache = cache;
 
@@ -180,11 +180,11 @@ BYTE snd_start(void) {
 		for (i = 0; i < 2; i++) {
 			DBWORD size = snd.samples * sizeof(*cache->write);
 
-			snd.channel.buf[i] = malloc(size);
+			snd.channel.buf[i] = (SWORD *) malloc(size);
 			memset(snd.channel.buf[i], 0x00, size);
 			snd.channel.ptr[i] = snd.channel.buf[i];
 
-			snd.channel.bck.start = malloc(size * 2);
+			snd.channel.bck.start = (SWORD *) malloc(size * 2);
 			memset(snd.channel.bck.start, 0x00, size * 2);
 			snd.channel.bck.write = snd.channel.bck.start;
 			snd.channel.bck.middle = snd.channel.bck.start + snd.samples;
@@ -203,7 +203,7 @@ BYTE snd_start(void) {
 		//printf("total_buffer_size : %d\n", total_buffer_size);
 
 		/* alloco il buffer in memoria */
-		cache->start = malloc(total_buffer_size);
+		cache->start = (SWORD *) malloc(total_buffer_size);
 		if (!cache->start) {
 			MessageBox(NULL,
 				"ATTENTION: Unable to allocate audio buffers.\n",
@@ -212,7 +212,7 @@ BYTE snd_start(void) {
 			return (EXIT_ERROR);
 		}
 
-		cache->silence = malloc(snd.buffer.size * sizeof(*cache->write));
+		cache->silence = (SWORD *) malloc(snd.buffer.size * sizeof(*cache->write));
 		if (!cache->silence) {
 			MessageBox(NULL,
 				"ATTENTION: Unable to allocate silence buffer.\n",
@@ -260,7 +260,8 @@ BYTE snd_start(void) {
 		cache->xa2source = xaudio2.source;
 		cache->lock = &xaudio2.semaphore;
 
-		if(IXAudio2SourceVoice_SubmitSourceBuffer(xaudio2.source, cache->xa2buffer, NULL) != S_OK) {
+		if (IXAudio2SourceVoice_SubmitSourceBuffer(xaudio2.source,
+		        (const XAUDIO2_BUFFER *) cache->xa2buffer, NULL) != S_OK) {
 			MessageBox(NULL,
 				"ATTENTION: Unable to set sound engine.\n",
 				"Error!",
@@ -295,7 +296,7 @@ BYTE snd_start(void) {
 }
 void snd_stereo_delay(void) {
 	int i;
-	_callback_data *cache = snd.cache;
+	_callback_data *cache = (_callback_data *) snd.cache;
 	SWORD *here;
 
 	snd.channel.max_pos = snd.samples * cfg->stereo_delay;
@@ -356,7 +357,7 @@ void snd_stop(void) {
 	CoUninitialize();
 
 	if (snd.cache) {
-		_callback_data *cache = snd.cache;
+		_callback_data *cache = (_callback_data *) snd.cache;
 
 		if (cache->start) {
 			free(cache->start);
@@ -407,8 +408,8 @@ static void STDMETHODCALLTYPE OnStreamEnd(THIS) {}
 static void STDMETHODCALLTYPE OnBufferStart(THIS_ void *data) {}
 static void STDMETHODCALLTYPE OnBufferEnd(THIS_ void *data) {
 	_callback_data *cache = (_callback_data *) data;
-	IXAudio2SourceVoice *source = cache->xa2source;
-	XAUDIO2_BUFFER *buffer = cache->xa2buffer;
+	IXAudio2SourceVoice *source = (IXAudio2SourceVoice *) cache->xa2source;
+	XAUDIO2_BUFFER *buffer = (XAUDIO2_BUFFER *) cache->xa2buffer;
 	WORD len = buffer->AudioBytes;
 
 	if (snd.opened == FALSE) {

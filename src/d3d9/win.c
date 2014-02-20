@@ -27,6 +27,8 @@
 #include "fds.h"
 #include "gamegenie.h"
 #include "recent_roms.h"
+#include "l7zip/l7z.h"
+#include "uncompress_selection.h"
 
 #define TOOLBAR_HEIGHT   26
 #define FRAME_TL_HEIGHT  (TOOLBAR_HEIGHT - 2)
@@ -137,18 +139,18 @@ void gui_init(int argc, char **argv) {
 
 	/* avvio il contatore dei millisecondi */
 	{
-		LARGE_INTEGER pf;
+		uint64_t pf;
 
 		/*
 		 * se il pc non ha il supporto per l'high-resolution
 		 * counter allora utilizzo il contatore dell'sdl.
 		 */
-		if (!QueryPerformanceFrequency(&pf)) {
-			//gui_get_mss = sdl_get_ms;
+		if (!QueryPerformanceFrequency((LARGE_INTEGER *) &pf)) {
+			//gui_get_ms = sdl_get_ms;
 		} else {
-			gui.frequency = (double) pf.QuadPart / 1000.0f;
-			QueryPerformanceCounter(&pf);
-			gui.counter_start = pf.QuadPart;
+			gui.frequency = (double) pf;
+			QueryPerformanceCounter((LARGE_INTEGER *) &pf);
+			gui.counter_start = pf;
 			gui_get_ms = high_resolution_ms;
 		}
 	}
@@ -344,12 +346,12 @@ void gui_event(void) {
 				}
 				*/
 				if (!tas.type && !no_process) {
-					if (input_port1 && !input_port1(PRESSED, LOWORD(msg.wParam),
-							KEYBOARD, &port1)) {
-						break;
-					}
-					if (input_port2) {
-						input_port2(PRESSED, LOWORD(msg.wParam), KEYBOARD, &port2);
+					BYTE i;
+
+					for (i = PORT1; i < PORT_MAX; i++) {
+						if (input_decode_event[i]) {
+							input_decode_event[i](PRESSED, LOWORD(msg.wParam), KEYBOARD, &port[i]);
+						}
 					}
 				}
 				break;
@@ -370,12 +372,12 @@ void gui_event(void) {
 				}
 			*/
 				if (!tas.type && !no_process) {
-					if (input_port1 && !input_port1(RELEASED, LOWORD(msg.wParam),
-							KEYBOARD, &port1)) {
-						break;
-					}
-					if (input_port2) {
-						input_port2(RELEASED, LOWORD(msg.wParam), KEYBOARD, &port2);
+					BYTE i;
+
+					for (i = PORT1; i < PORT_MAX; i++) {
+						if (input_decode_event[i]) {
+					        input_decode_event[i](RELEASED, LOWORD(msg.wParam), KEYBOARD, &port[i]);
+						}
 					}
 				}
 				break;
@@ -425,14 +427,17 @@ void gui_event(void) {
 		return;
 	}
 
-	//js_control(&js1, &port1);
-	/* i due joystick non possono essere gli stessi */
-	//if (port2.joy_id != port1.joy_id) {
-	//	js_control(&js2, &port2);
-	//}
-	//input_turbo_buttons_control(&port1);
-	//input_turbo_buttons_control(&port2);
-	return;
+	/*
+	{
+		BYTE i;
+
+		for (i = PORT1; i < PORT_MAX; i++) {
+			if (input_add_event[i]) {
+				input_add_event[i](i);
+			}
+		}
+	}
+	*/
 }
 HWND gui_emu_frame_id(void) {
 	return (d3d_frame);
@@ -1162,7 +1167,9 @@ void gui_print_usage(char *usage) {
 	MessageBox(NULL, usage, NAME " parameters", MB_OK);
 	UnhookWindowsHookEx(msgbox_hook);
 }
-
+int gui_uncompress_selection_dialog(void) {
+	return (uncompress_selection_dialog(main_win));
+}
 
 
 /* funzioni interne */
@@ -1991,11 +1998,12 @@ void set_gamegenie(void) {
 
 
 double high_resolution_ms(void) {
-	LARGE_INTEGER time;
-	uint64_t diff;
+	uint64_t time, diff;
 
-	QueryPerformanceCounter(&time);
-	return (diff = (double) (time.QuadPart - gui.counter_start) / gui.frequency);
+	QueryPerformanceCounter((LARGE_INTEGER *) &time);
+	diff = ((time - gui.counter_start) * 1000) / gui.frequency;
+
+	return ((double) (diff & 0xffffffff));
 }
 HBITMAP create_bitmap_mask(HBITMAP hbm_colour, COLORREF cr_transparent) {
 	HDC hdc_mem, hdc_mem2;

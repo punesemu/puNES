@@ -9,6 +9,7 @@ RM := rm -rf
 # All of the sources participating in the build are defined here
 -include sources.mk
 -include src/mappers/subdir.mk
+-include src/l7zip/subdir.mk
 -include src/filters/video/subdir.mk
 -include src/filters/audio/subdir.mk
 -include src/d3d9/subdir.mk
@@ -30,24 +31,24 @@ endif
 all: pre-build main-build
 
 # Main-build Target
-main-build: punes32.exe
+main-build: punes32_D3D9.exe
 
 # Tool invocations
-punes32.exe: $(OBJS) $(USER_OBJS)
+punes32_D3D9.exe: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: Cross GCC Linker'
-	i686-mingw32-gcc -L/home/fhorse/sviluppo/personale/punes/misc/DXSDK/Lib/x86 -Wl,-subsystem,console -o "punes32.exe" $(OBJS) $(USER_OBJS) $(LIBS)
+	i686-mingw32-g++ -L"/home/fhorse/sviluppo/personale/punes/misc/lib/win32" -L/home/fhorse/sviluppo/personale/punes/misc/DXSDK/Lib/x86 -Wl,-subsystem,console -static-libgcc -static-libstdc++ -o "punes32_D3D9.exe" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 	$(MAKE) --no-print-directory post-build
 
 # Other Targets
 clean:
-	-$(RM) $(OBJS)$(C_DEPS)$(EXECUTABLES) punes32.exe
+	-$(RM) $(OBJS)$(C_DEPS)$(EXECUTABLES) punes32_D3D9.exe
 	-@echo ' '
 
 pre-build:
-	-i686-mingw32-windres  -DMINGW32 ../src/d3d9/resources.rc src/d3d9/resources.o
+	-/home/fhorse/sviluppo/personale/bin/buildBefore -q
 	-@echo ' '
 
 post-build:

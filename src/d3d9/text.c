@@ -336,14 +336,14 @@ void text_rendering(BYTE render) {
 			ele = &text.tas.controllers[0];
 
 			ele->text[0] = 0;
-			port_control(port1, UP, "[up]");
-			port_control(port1, DOWN, "[down]");
-			port_control(port1, LEFT, "[left]");
-			port_control(port1, RIGHT, "[right]");
-			port_control(port1, SELECT, "[select]");
-			port_control(port1, START, "[start]");
-			port_control(port1, BUT_A, "[a]");
-			port_control(port1, BUT_B, "[b]");
+			port_control(port[PORT1], UP, "[up]");
+			port_control(port[PORT1], DOWN, "[down]");
+			port_control(port[PORT1], LEFT, "[left]");
+			port_control(port[PORT1], RIGHT, "[right]");
+			port_control(port[PORT1], SELECT, "[select]");
+			port_control(port[PORT1], START, "[start]");
+			port_control(port[PORT1], BUT_A, "[a]");
+			port_control(port[PORT1], BUT_B, "[b]");
 
 			if (!ele->surface) {
 				gfx_text_create_surface(ele);
