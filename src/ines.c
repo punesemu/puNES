@@ -61,7 +61,7 @@ BYTE ines_load_rom(void) {
 		info.prg.rom.banks_16k = fgetc(fp);
 		info.chr.rom.banks_8k = fgetc(fp);
 
-		fread(&flags[0], TOTAL_FL, 1, fp);
+		tmp = fread(&flags[0], TOTAL_FL, 1, fp);
 
 		if ((flags[FL7] & 0x0C) == 0x08) {
 			/* NES 2.0 */
@@ -114,6 +114,7 @@ BYTE ines_load_rom(void) {
 		mapper.write_vram = FALSE;
 
 		if (emu_search_in_database(fp)) {
+			fclose(fp);
 			return (EXIT_ERROR);
 		}
 
@@ -147,6 +148,7 @@ BYTE ines_load_rom(void) {
 		/* alloco la PRG Ram */
 		if (!(prg.ram = (BYTE *) malloc(0x2000))) {
 			fprintf(stderr, "Out of memory\n");
+			fclose(fp);
 			return (EXIT_ERROR);
 		}
 
@@ -155,6 +157,7 @@ BYTE ines_load_rom(void) {
 			tmp = fread(&prg.rom[0], 16384, info.prg.rom.banks_16k, fp);
 		} else {
 			fprintf(stderr, "Out of memory\n");
+			fclose(fp);
 			return (EXIT_ERROR);
 		}
 
@@ -171,11 +174,12 @@ BYTE ines_load_rom(void) {
 				chr_bank_1k_reset();
 			} else {
 				fprintf(stderr, "Out of memory\n");
+				fclose(fp);
 				return (EXIT_ERROR);
 			}
 		}
 	} else {
-		fprintf(stderr, "Formato non riconosciuto.\n");
+		fprintf(stderr, "format not supported.\n");
 		fclose(fp);
 		return (EXIT_ERROR);
 	}
