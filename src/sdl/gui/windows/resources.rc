@@ -217,7 +217,7 @@ BEGIN
 					MENUITEM "15%",               IDM_SET_STEREO_DELAY_15
 					MENUITEM "20%",               IDM_SET_STEREO_DELAY_20
 					MENUITEM "25%",               IDM_SET_STEREO_DELAY_25
-					MENUITEM "30% (Deafult)",     IDM_SET_STEREO_DELAY_30
+					MENUITEM "30% (Default)",     IDM_SET_STEREO_DELAY_30
 					MENUITEM "35%",               IDM_SET_STEREO_DELAY_35
 					MENUITEM "40%",               IDM_SET_STEREO_DELAY_40
 					MENUITEM "45%",               IDM_SET_STEREO_DELAY_45
