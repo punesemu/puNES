@@ -237,6 +237,7 @@ void text_rendering(BYTE render) {
 				}
 
 				if (!ele->enabled) {
+					text_clear(ele);
 					gfx_text_release_surface(ele);
 				}
 			}
@@ -277,6 +278,7 @@ void text_rendering(BYTE render) {
 						rendering(ele);
 					}
 				} else {
+					text_clear(ele);
 					gfx_text_release_surface(ele);
 
 					free(text.single.lines[i]);
