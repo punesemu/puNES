@@ -22,10 +22,10 @@ BEGIN
 	VK_F12,     IDM_NES_SOFT,            VIRTKEY
 	"S",        IDM_NES_FDS_DISK_SWITCH, ALT,     VIRTKEY
 	"E",        IDM_NES_FDS_EJECT,       ALT,     VIRTKEY
-	//VK_F1,      IDM_SET_SAVE_SAVE,       VIRTKEY
-	//VK_F4,      IDM_SET_SAVE_LOAD,       VIRTKEY
-	//VK_F3,      IDM_SET_SAVE_INC,        VIRTKEY
-	//VK_F2,      IDM_SET_SAVE_DEC,        VIRTKEY
+	VK_F1,      IDM_SET_SAVE_SAVE,       VIRTKEY
+	VK_F4,      IDM_SET_SAVE_LOAD,       VIRTKEY
+	VK_F3,      IDM_SET_SAVE_INC,        VIRTKEY
+	VK_F2,      IDM_SET_SAVE_DEC,        VIRTKEY
 	VK_F6,      IDM_SET_MODE_PAL,        VIRTKEY
 	VK_F7,      IDM_SET_MODE_NTSC,       VIRTKEY
 	VK_F8,      IDM_SET_MODE_DENDY,      VIRTKEY
@@ -262,7 +262,6 @@ BEGIN
 		MENUITEM "Save se&ttings\tCtrl+W",        IDM_SET_SAVENOW
 		MENUITEM "Save settings on e&xit",        IDM_SET_SAVEONEXIT
 	END
-	/*
 	POPUP "S&tate"
 	BEGIN
 		MENUITEM "&Save state\tF1",               IDM_SET_SAVE_SAVE
@@ -278,7 +277,6 @@ BEGIN
 		MENUITEM "Slot &4",                       IDM_SET_SAVE_4
 		MENUITEM "Slot &5",                       IDM_SET_SAVE_5
 	END
-	*/
 	POPUP "&Help"
 	BEGIN
 		MENUITEM "&About",                        IDM_HELP_ABOUT
