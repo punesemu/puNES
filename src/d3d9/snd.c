@@ -12,7 +12,7 @@
 #include "fps.h"
 #include "clock.h"
 #include "apu.h"
-#define INITGUID 1
+#define INITGUID
 #include <XAudio2.h>
 
 #if defined THIS

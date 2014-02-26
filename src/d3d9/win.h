@@ -11,6 +11,9 @@
 #ifndef _WIN32_WINNT
 #define _WIN32_WINNT 0x0500
 #endif
+
+#define INITGUID
+
 #include <windows.h>
 #include "resources.h"
 #include "keyboard.h"
@@ -29,6 +32,8 @@
 
 struct _gui {
 	HINSTANCE main_hinstance;
+	HMODULE richedit;
+
 	DWORD version_os;
 	char home[MAX_PATH];
 	double frequency;
@@ -39,6 +44,8 @@ struct _gui {
 	int y;
 	uint8_t left_button;
 	uint8_t right_button;
+
+	uint8_t accelerators_anabled;
 } gui;
 
 void gui_init(int argc, char **argv);
@@ -59,6 +66,6 @@ void gui_set_thread_affinity(uint8_t core);
 void gui_print_usage(char *usage);
 int gui_uncompress_selection_dialog(void);
 
-//void set_effect(void);
+void set_effect(void);
 
 #endif /* WIN_H_ */

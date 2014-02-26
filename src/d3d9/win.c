@@ -27,6 +27,8 @@
 #include "fds.h"
 #include "gamegenie.h"
 #include "recent_roms.h"
+#include "cfg_input.h"
+#include "cfg_apu_channels.h"
 #include "l7zip/l7z.h"
 #include "uncompress_selection.h"
 
@@ -154,9 +156,15 @@ void gui_init(int argc, char **argv) {
 			gui_get_ms = high_resolution_ms;
 		}
 	}
+
+	gui.accelerators_anabled = TRUE;
+
+	gui.richedit = LoadLibrary("Riched20.Dll");
 }
 void gui_quit(void) {
 	DestroyWindow(main_win);
+
+	FreeLibrary(gui.richedit);
 }
 BYTE gui_create(void) {
 	WNDCLASSEX wc;
@@ -1657,6 +1665,9 @@ long __stdcall main_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 				case IDM_SET_AUDIO_QUALITY_HIGH:
 					set_audio_quality(AQ_HIGH);
 					break;
+				case IDM_SET_AUDIO_APU_CHANNELS:
+					apu_channels_dialog(hwnd);
+					break;
 				case IDM_SET_AUDIO_ENABLE:
 					emu_pause(TRUE);
 					cfg->apu.channel[APU_MASTER] = !cfg->apu.channel[APU_MASTER];
@@ -1688,11 +1699,9 @@ long __stdcall main_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 					}
 					SetFocus(d3d_frame);
 					break;
-				/*
 				case IDM_SET_INPUT_CONFIG:
-					cfg_input(hwnd);
+					cfg_input_dialog(hwnd);
 					break;
-				*/
 			}
 			break;
 		}
