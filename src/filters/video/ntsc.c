@@ -24,48 +24,48 @@ int burst_phase = 0;
 			switch (bpp) {\
 				case 15:\
 				case 16:\
-					scale(uint16_t, 0x0821, 0x18E3);\
+					scale(uint16_t, 0x0821, 0x18E3, 0x0000);\
 					break;\
 				case 24:\
 				case 32:\
-					scale(uint32_t, 0x00010101, 0x00030703);\
+					scale(uint32_t, 0x00010101, 0x00030703, 0xFF000000);\
 					break;\
 			}\
 			in += bpp / 8;\
 			out += bpp / 8;\
 		}\
 	}
-#define DOUBLE(type, mask_low_bits, mask_darken)\
+#define DOUBLE(type, mask_low_bits, mask_darken, mask_alpha)\
 {\
 	unsigned prev = *(type *) in;\
 	unsigned next = *(type *) (in + pitch);\
 	/* mix rgb without losing low bits */\
 	unsigned mixed = prev + next + ((prev ^ next) & mask_low_bits);\
 	/* darken by 12% */\
-	*(type *) out = prev;\
-	*(type *) (out + pitch) = (mixed >> 1) - (mixed >> 4 & mask_darken);\
+	*(type *) out = prev | mask_alpha;\
+	*(type *) (out + pitch) = ((mixed >> 1) - (mixed >> 4 & mask_darken)) | mask_alpha;\
 }
-#define TRIPLE(type, mask_low_bits, mask_darken)\
+#define TRIPLE(type, mask_low_bits, mask_darken, mask_alpha)\
 {\
 	unsigned prev = *(type *) in;\
 	unsigned next = *(type *) (in + pitch);\
 	/* mix rgb without losing low bits */\
 	unsigned mixed = prev + next + ((prev ^ next) & mask_low_bits);\
 	/* darken by 12% */\
-	*(type *) out = prev;\
-	*(type *) (out + pitch) = (mixed >> 1) - (mixed >> 2 & mask_darken);\
-	*(type *) (out + pitch + pitch) = (mixed >> 1) - (mixed >> 4 & mask_darken);\
+	*(type *) out = prev | mask_alpha;\
+	*(type *) (out + pitch) = ((mixed >> 1) - (mixed >> 2 & mask_darken)) | mask_alpha ;\
+	*(type *) (out + pitch + pitch) = ((mixed >> 1) - (mixed >> 4 & mask_darken)) | mask_alpha;\
 }
-#define QUADRUPLE(type, mask_low_bits, mask_darken)\
+#define QUADRUPLE(type, mask_low_bits, mask_darken, mask_alpha)\
 {\
 	unsigned prev = *(type *) in;\
 	unsigned next = *(type *) (in + pitch);\
 	/* mix rgb without losing low bits */\
 	unsigned mixed = prev + next + ((prev ^ next) & mask_low_bits);\
 	/* darken by 12% */\
-	*(type *) out = *(type *) (out + pitch) = prev;\
+	*(type *) out = *(type *) (out + pitch) = prev | mask_alpha;\
 	*(type *) (out + (pitch << 1)) = *(type *) (out + ((pitch << 1) + pitch)) =\
-			(mixed >> 1) - (mixed >> 4 & mask_darken);\
+			((mixed >> 1) - (mixed >> 4 & mask_darken)) | mask_alpha;\
 }
 #define nes_ntsc(factor) nes_ntscx##factor(ntsc, screen, SCR_ROWS, burst_phase, rows, lines,\
 	pix, pitch, bpp)
