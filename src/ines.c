@@ -179,7 +179,7 @@ BYTE ines_load_rom(void) {
 			}
 		}
 	} else {
-		fprintf(stderr, "format not supported.\n");
+		fprintf(stderr, "Format not supported.\n");
 		fclose(fp);
 		return (EXIT_ERROR);
 	}
