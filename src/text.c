@@ -5,39 +5,23 @@
  *      Author: fhorse
  */
 
+#if defined SDL
 #include <time.h>
+#elif defined D3D9
+#include <string.h>
+#include <stdarg.h>
+#include <stdlib.h>
+#include <stdio.h>
+#endif
 #include "text.h"
 #include "gfx.h"
 #include "font.h"
 #include "tas.h"
-#include "ppu.h"
 #include "input.h"
 #include "fds.h"
 #include "cfg_file.h"
 
 enum txt_fade { FADE_SPEED = 4 };
-enum txt_tgs {
-	TXT_NORMAL,
-	TXT_RED,
-	TXT_YELLOW,
-	TXT_GREEN,
-	TXT_CYAN,
-	TXT_BROWN,
-	TXT_BLUE,
-	TXT_BLACK,
-	TXT_FONT_8,
-	TXT_FONT_12,
-	TXT_BUTTON_LEFT,
-	TXT_BUTTON_RIGHT,
-	TXT_BUTTON_UP,
-	TXT_BUTTON_DOWN,
-	TXT_BUTTON_SELECT,
-	TXT_BUTTON_START,
-	TXT_BUTTON_A,
-	TXT_BUTTON_B,
-	TXT_FLOPPY,
-	TXT_TAGS
-};
 
 #define port_control(prt, button, ch)\
 	if (prt.data[button] == PRESSED) {\
@@ -54,15 +38,14 @@ static char txt_tags[][10] = {
 	"[up]"    ,	"[down]",	"[select]",	"[start]",
 	"[a]"     ,	"[b]"   ,	"[floppy]"
 };
-static uint32_t txt_table[TXT_BLACK + 1];
 
 static void INLINE rendering(_txt_element *txt);
 
 void text_init(void) {
 	uint8_t i;
 
-	text_clear = sdl_text_clear;
-	text_blit = sdl_text_blit;
+	text_clear = gfx_text_clear;
+	text_blit = gfx_text_blit;
 
 	memset(&text, 0, sizeof(text));
 
@@ -104,16 +87,6 @@ void text_init(void) {
 			ele->h = font_size[ele->font][1];
 		}
 	}
-}
-void text_reset(void) {
-	txt_table[TXT_NORMAL] = SDL_MapRGBA(text.surface->format, 0xFF, 0xFF, 0xFF, 0);
-	txt_table[TXT_RED]    = SDL_MapRGBA(text.surface->format, 0xFF, 0x4C, 0x3E, 0);
-	txt_table[TXT_YELLOW] = SDL_MapRGBA(text.surface->format, 0xFF, 0xFF, 0   , 0);
-	txt_table[TXT_GREEN]  = SDL_MapRGBA(text.surface->format, 0   , 0xFF, 0   , 0);
-	txt_table[TXT_CYAN]   = SDL_MapRGBA(text.surface->format, 0   , 0xFF, 0xFF, 0);
-	txt_table[TXT_BROWN]  = SDL_MapRGBA(text.surface->format, 0xEB, 0x89, 0x31, 0);
-	txt_table[TXT_BLUE]   = SDL_MapRGBA(text.surface->format, 0x2D, 0x8D, 0xBD, 0);
-	txt_table[TXT_BLACK]  = SDL_MapRGBA(text.surface->format, 0   , 0   , 0   , 0);
 }
 void text_add_line(int type, int factor, int font, int alpha, int start_x, int start_y, int x,
         int y, const char *fmt, ...) {
@@ -217,8 +190,7 @@ void text_add_line(int type, int factor, int font, int alpha, int start_x, int s
 	}
 
 	if (ele->surface) {
-		SDL_FreeSurface(ele->surface);
-		ele->surface = NULL;
+		gfx_text_release_surface(ele);
 	}
 }
 void text_rendering(BYTE render) {
@@ -233,8 +205,7 @@ void text_rendering(BYTE render) {
 
 			if (ele->enabled == TRUE) {
 				if (!ele->surface) {
-					ele->surface = gfx_create_RGB_surface(text.surface, ele->w, ele->h);
-					ele->blank = gfx_create_RGB_surface(text.surface, ele->w, ele->h);
+					gfx_text_create_surface(ele);
 				}
 
 				if (ele->alpha[0] == ele->alpha_start_fade) {
@@ -266,10 +237,7 @@ void text_rendering(BYTE render) {
 				}
 
 				if (!ele->enabled) {
-					SDL_FreeSurface(ele->surface);
-					SDL_FreeSurface(ele->blank);
-					ele->surface = NULL;
-					ele->blank = NULL;
+					gfx_text_release_surface(ele);
 				}
 			}
 		}
@@ -284,7 +252,7 @@ void text_rendering(BYTE render) {
 			if (ele != NULL) {
 				if (ele->enabled == TRUE) {
 					if (!ele->surface) {
-						ele->surface = gfx_create_RGB_surface(text.surface, ele->w, ele->h);
+						gfx_text_create_surface(ele);
 					}
 
 					if (ele->alpha[0] == ele->alpha_start_fade) {
@@ -309,8 +277,7 @@ void text_rendering(BYTE render) {
 						rendering(ele);
 					}
 				} else {
-					SDL_FreeSurface(ele->surface);
-					ele->surface = NULL;
+					gfx_text_release_surface(ele);
 
 					free(text.single.lines[i]);
 					text.single.lines[i] = NULL;
@@ -343,12 +310,11 @@ void text_rendering(BYTE render) {
 			ele->h = font_size[ele->font][1];
 
 			if ((old_w != ele->w) && ele->surface) {
-				SDL_FreeSurface(ele->surface);
-				ele->surface = NULL;
+				gfx_text_release_surface(ele);
 			}
 
 			if (!ele->surface) {
-				ele->surface = gfx_create_RGB_surface(text.surface, ele->w, ele->h);
+				gfx_text_create_surface(ele);
 			}
 
 			if (render) {
@@ -370,7 +336,7 @@ void text_rendering(BYTE render) {
 			port_control(port[PORT1], BUT_B, "[b]");
 
 			if (!ele->surface) {
-				ele->surface = gfx_create_RGB_surface(text.surface, ele->w, ele->h);
+				gfx_text_create_surface(ele);
 			}
 
 			if (render) {
@@ -415,7 +381,7 @@ void text_rendering(BYTE render) {
 			strcat(ele->text, "[floppy]");
 
 			if (!ele->surface) {
-				ele->surface = gfx_create_RGB_surface(text.surface, ele->w, ele->h);
+				gfx_text_create_surface(ele);
 			}
 
 			if (render) {
@@ -432,8 +398,7 @@ void text_quit(void) {
 			_txt_element *ele = text.info.lines[text.info.index][i];
 
 			if (ele->enabled) {
-				SDL_FreeSurface(ele->surface);
-				ele->surface = NULL;
+				gfx_text_release_surface(ele);
 
 				ele->enabled = FALSE;
 			}
@@ -447,8 +412,7 @@ void text_quit(void) {
 			_txt_element *ele = text.single.lines[i];
 
 			if (ele != NULL) {
-				SDL_FreeSurface(ele->surface);
-				ele->surface = NULL;
+				gfx_text_release_surface(ele);
 
 				free(text.single.lines[i]);
 				text.single.lines[i] = NULL;
@@ -463,16 +427,14 @@ void text_quit(void) {
 		uint8_t i;
 
 		if (ele->surface) {
-			SDL_FreeSurface(ele->surface);
-			ele->surface = NULL;
+			gfx_text_release_surface(ele);
 		}
 
 		for (i = 0; i < 4; i++) {
 			_txt_element *ele = text.tas.controllers;
 
 			if (ele->surface) {
-				SDL_FreeSurface(ele->surface);
-				ele->surface = NULL;
+				gfx_text_release_surface(ele);
 			}
 		}
 	}
@@ -481,31 +443,16 @@ void text_quit(void) {
 		_txt_element *ele = &text.fds.floppy;
 
 		if (ele->surface) {
-			SDL_FreeSurface(ele->surface);
-			ele->surface = NULL;
+			gfx_text_release_surface(ele);
 		}
 	}
-}
-
-void sdl_text_clear(_txt_element *ele) {
-	return;
-}
-void sdl_text_blit(_txt_element *ele, SDL_Rect *dst_rect) {
-	SDL_Rect rect;
-
-	rect.x = 0;
-	rect.y = 0;
-	rect.w = ele->w;
-	rect.h = ele->h;
-
-	SDL_BlitSurface(ele->surface, &rect, text.surface, dst_rect);
 }
 
 static void INLINE rendering(_txt_element *ele) {
 	unsigned int i = 0;
 	int font_x = 0, font_y = 0, ch_font = ele->font;
 	uint32_t color[3], max_pixels = (text.w - 16), pixels = 0;
-	SDL_Rect surface_rect, font;
+	_rect surface_rect, font;
 
 	text.on_screen = TRUE;
 
@@ -1024,7 +971,7 @@ static void INLINE rendering(_txt_element *ele) {
 		}
 		{
 			int x, y;
-			SDL_Rect rect;
+			_rect rect;
 
 			rect.w = ele->factor;
 			rect.h = ele->factor;
@@ -1043,16 +990,16 @@ static void INLINE rendering(_txt_element *ele) {
 				for (x = 0; x < font_size[ch_font][0]; x++) {
 					rect.x = font.x + (x * ele->factor);
 					if (list[x] == '@') {
-						SDL_FillRect(ele->surface, &rect, color[0]);
+						gfx_text_rect_fill(ele, &rect, color[0]);
 					} else if (list[x] == '+') {
-						SDL_FillRect(ele->surface, &rect, color[1]);
+						gfx_text_rect_fill(ele, &rect, color[1]);
 					} else if (list[x] == '.') {
-						SDL_FillRect(ele->surface, &rect, color[2]);
+						gfx_text_rect_fill(ele, &rect, color[2]);
 					} else {
 						if (!ele->bck) {
-							SDL_FillRect(ele->surface, &rect, 0);
+							gfx_text_rect_fill(ele, &rect, 0);
 						} else {
-							SDL_FillRect(ele->surface, &rect, color[2]);
+							gfx_text_rect_fill(ele, &rect, color[2]);
 						}
 					}
 				}

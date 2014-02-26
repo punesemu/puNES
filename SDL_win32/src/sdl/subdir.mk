@@ -6,20 +6,17 @@
 C_SRCS += \
 ../src/sdl/cfg_file.c \
 ../src/sdl/gfx.c \
-../src/sdl/opengl.c \
-../src/sdl/text.c 
+../src/sdl/opengl.c 
 
 OBJS += \
 ./src/sdl/cfg_file.o \
 ./src/sdl/gfx.o \
-./src/sdl/opengl.o \
-./src/sdl/text.o 
+./src/sdl/opengl.o 
 
 C_DEPS += \
 ./src/sdl/cfg_file.d \
 ./src/sdl/gfx.d \
-./src/sdl/opengl.d \
-./src/sdl/text.d 
+./src/sdl/opengl.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

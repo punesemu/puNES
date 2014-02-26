@@ -324,14 +324,14 @@ void opengl_text_clear(_txt_element *ele) {
 
 	glDisable(GL_TEXTURE_2D);
 }
-void opengl_text_blit(_txt_element *ele, SDL_Rect *dst_rect) {
+void opengl_text_blit(_txt_element *ele, _rect *rect) {
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, shader.text.data);
 
-	glPixelStorei(GL_UNPACK_ROW_LENGTH, dst_rect->w);
+	glPixelStorei(GL_UNPACK_ROW_LENGTH, rect->w);
 
-	glTexSubImage2D(GL_TEXTURE_2D, 0, dst_rect->x, dst_rect->y, dst_rect->w, dst_rect->h,
-	        opengl.texture.format, opengl.texture.type, ele->surface->pixels);
+	glTexSubImage2D(GL_TEXTURE_2D, 0, rect->x, rect->y, rect->w, rect->h, opengl.texture.format,
+	        opengl.texture.type, ele->surface->pixels);
 
 	glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
 

@@ -25,6 +25,7 @@ C_SRCS += \
 ../src/save_slot.c \
 ../src/sha1.c \
 ../src/tas.c \
+../src/text.c \
 ../src/timeline.c \
 ../src/uncompress.c 
 
@@ -50,6 +51,7 @@ OBJS += \
 ./src/save_slot.o \
 ./src/sha1.o \
 ./src/tas.o \
+./src/text.o \
 ./src/timeline.o \
 ./src/uncompress.o 
 
@@ -75,6 +77,7 @@ C_DEPS += \
 ./src/save_slot.d \
 ./src/sha1.d \
 ./src/tas.d \
+./src/text.d \
 ./src/timeline.d \
 ./src/uncompress.d 
 

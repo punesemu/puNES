@@ -9,7 +9,6 @@ C_SRCS += \
 ../src/d3d9/joystick.c \
 ../src/d3d9/keyboard.c \
 ../src/d3d9/snd.c \
-../src/d3d9/text.c \
 ../src/d3d9/uncompress_selection.c \
 ../src/d3d9/win.c 
 
@@ -19,7 +18,6 @@ OBJS += \
 ./src/d3d9/joystick.o \
 ./src/d3d9/keyboard.o \
 ./src/d3d9/snd.o \
-./src/d3d9/text.o \
 ./src/d3d9/uncompress_selection.o \
 ./src/d3d9/win.o 
 
@@ -29,7 +27,6 @@ C_DEPS += \
 ./src/d3d9/joystick.d \
 ./src/d3d9/keyboard.d \
 ./src/d3d9/snd.d \
-./src/d3d9/text.d \
 ./src/d3d9/uncompress_selection.d \
 ./src/d3d9/win.d 
 

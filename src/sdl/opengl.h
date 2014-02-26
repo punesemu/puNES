@@ -66,7 +66,7 @@ void opengl_update_texture(SDL_Surface *surface, uint8_t generate_mipmap);
 void opengl_effect_change(BYTE mode);
 
 void opengl_text_clear(_txt_element *ele);
-void opengl_text_blit(_txt_element *ele, SDL_Rect *dst_rect);
+void opengl_text_blit(_txt_element *ele, _rect *rect);
 
 int opengl_flip(SDL_Surface *surface);
 int opengl_power_of_two(int base);

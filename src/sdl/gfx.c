@@ -533,8 +533,8 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 	flip = SDL_Flip;
 
 	text.surface = surface_sdl;
-	text_clear = sdl_text_clear;
-	text_blit = sdl_text_blit;
+	text_clear = gfx_text_clear;
+	text_blit = gfx_text_blit;
 	text.w = surface_sdl->w;
 	text.h = surface_sdl->h;
 
@@ -643,8 +643,8 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 			text_blit = opengl_text_blit;
 		} else {
 			text.surface = opengl.surface_gl;
-			text_clear = sdl_text_clear;
-			text_blit = sdl_text_blit;
+			text_clear = gfx_text_clear;
+			text_blit = gfx_text_blit;
  		}
 		text.w = gfx.w[CURRENT];
 		text.h = gfx.h[CURRENT];
@@ -669,7 +669,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 		}
 	}
 
-	text_reset();
+	gfx_text_reset();
 
 	/*
 	 * calcolo le proporzioni tra il disegnato a video (overscan e schermo
@@ -769,6 +769,47 @@ void gfx_quit(void) {
 	ntsc_quit();
 	text_quit();
 	SDL_Quit();
+}
+
+void gfx_text_create_surface(_txt_element *ele) {
+	ele->surface = gfx_create_RGB_surface(text.surface, ele->w, ele->h);
+	ele->blank = gfx_create_RGB_surface(text.surface, ele->w, ele->h);
+}
+void gfx_text_release_surface(_txt_element *ele) {
+	if (ele->surface) {
+		SDL_FreeSurface(ele->surface);
+		ele->surface = NULL;
+	}
+	if (ele->blank) {
+		SDL_FreeSurface(ele->blank);
+		ele->blank = NULL;
+	}
+}
+void gfx_text_rect_fill(_txt_element *ele, _rect *rect, uint32_t color) {
+	SDL_FillRect(ele->surface, rect, color);
+}
+void gfx_text_reset(void) {
+	txt_table[TXT_NORMAL] = SDL_MapRGBA(text.surface->format, 0xFF, 0xFF, 0xFF, 0);
+	txt_table[TXT_RED]    = SDL_MapRGBA(text.surface->format, 0xFF, 0x4C, 0x3E, 0);
+	txt_table[TXT_YELLOW] = SDL_MapRGBA(text.surface->format, 0xFF, 0xFF, 0   , 0);
+	txt_table[TXT_GREEN]  = SDL_MapRGBA(text.surface->format, 0   , 0xFF, 0   , 0);
+	txt_table[TXT_CYAN]   = SDL_MapRGBA(text.surface->format, 0   , 0xFF, 0xFF, 0);
+	txt_table[TXT_BROWN]  = SDL_MapRGBA(text.surface->format, 0xEB, 0x89, 0x31, 0);
+	txt_table[TXT_BLUE]   = SDL_MapRGBA(text.surface->format, 0x2D, 0x8D, 0xBD, 0);
+	txt_table[TXT_BLACK]  = SDL_MapRGBA(text.surface->format, 0   , 0   , 0   , 0);
+}
+void gfx_text_clear(_txt_element *ele) {
+	return;
+}
+void gfx_text_blit(_txt_element *ele, _rect *rect) {
+	SDL_Rect src_rect;
+
+	src_rect.x = 0;
+	src_rect.y = 0;
+	src_rect.w = ele->w;
+	src_rect.h = ele->h;
+
+	SDL_BlitSurface(ele->surface, &src_rect, text.surface, rect);
 }
 
 SDL_Surface *gfx_create_RGB_surface(SDL_Surface *src, uint32_t width, uint32_t height) {
