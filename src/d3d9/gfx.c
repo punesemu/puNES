@@ -732,14 +732,12 @@ void gfx_draw_screen(BYTE forced) {
 		/* rendering del testo */
 		text_rendering(TRUE);
 
-		/* aggiorno la texture */
+		/* aggiorno la texture dello schermo*/
 		IDirect3DDevice9_UpdateSurface(d3d9.adapter->dev, d3d9.screen.surface.data, NULL,
 				d3d9.screen.map0, NULL);
-
-		if (IDirect3DDevice9_UpdateSurface(d3d9.adapter->dev, d3d9.text.surface.data, NULL,
-				d3d9.text.map0, NULL) != D3D_OK) {
-			printf("UpdateSurface text error\n");
-		}
+		/* aggiorno la texture del testo */
+		IDirect3DDevice9_UpdateSurface(d3d9.adapter->dev, d3d9.text.surface.data, NULL,
+				d3d9.text.map0, NULL);
 
 		/* pulisco la scena */
 		IDirect3DDevice9_Clear(d3d9.adapter->dev, 0, NULL, D3DCLEAR_TARGET,
@@ -786,7 +784,7 @@ void gfx_draw_screen(BYTE forced) {
 			IDirect3DDevice9_SetStreamSource(d3d9.adapter->dev, 0, d3d9.quad, 0, sizeof(vertex));
 			IDirect3DDevice9_DrawPrimitive(d3d9.adapter->dev, D3DPT_TRIANGLEFAN, 0, 2);
 
-			/* disabilito le shaders perchè non devono essere applicate al testo */
+			/* disabilito le shaders perche' non devono essere applicate al testo */
 			if (d3d9.shader.vrt) {
 				IDirect3DDevice9_SetVertexShader(d3d9.adapter->dev, NULL);
 			}
@@ -943,6 +941,10 @@ void gfx_text_clear(_txt_element *ele) {
 	RECT dst;
 	uint32_t *pbits;
 	int w, h;
+
+	if (!d3d9.text.data) {
+		return;
+	}
 
 	dst.left = ele->x;
 	dst.top = ele->y;
