@@ -116,9 +116,14 @@
 #define IDM_SET_PALETTE_MONO        413
 #define IDM_SET_PALETTE_GREEN       414
 
+#if defined SDL
 #define IDM_SET_RENDERING_SOFTWARE  420
 #define IDM_SET_RENDERING_OPENGL    421
 #define IDM_SET_RENDERING_GLSL      422
+#elif defined D3D9
+#define IDM_SET_RENDERING_SOFTWARE  420
+#define IDM_SET_RENDERING_HLSL      421
+#endif
 #define IDM_SET_EFFECT_CUBE         423
 #define IDM_SET_VSYNC_ON            424
 #define IDM_SET_VSYNC_OFF           425
