@@ -5,8 +5,6 @@
  *      Author: fhorse
  */
 
-#include <ctype.h>
-#include <string.h>
 #include "win.h"
 
 typedef struct {
@@ -62,9 +60,9 @@ DBWORD keyval_from_name(const char *keyval_name) {
 	return (keyval);
 }
 char *keyval_to_name(const DBWORD keyval) {
+	static char str[20];
 	DBWORD l_scan = MapVirtualKey(keyval, 0);
 	BYTE index;
-	static char str[20];
 
 	memset(str, 0, 20);
 
