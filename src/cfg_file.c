@@ -6,7 +6,6 @@
  */
 
 #include <libgen.h>
-#include <stdlib.h>
 #include "cfg_file.h"
 #define __GUI_BASE__
 #define __GUI_SND__
@@ -23,7 +22,6 @@
 #include "input.h"
 #include "gamegenie.h"
 #include "audio_quality.h"
-#include "opengl.h"
 
 #define INIFILE NAME  ".cfg"
 #define INPUTFILE     "input.cfg"
@@ -300,7 +298,6 @@ void cfg_file_save(void) {
 	fclose(fp);
 
 	cfg_file_input_save();
-
 }
 void cfg_file_pgs_parse(void) {
 	FILE *fp;
@@ -631,7 +628,11 @@ void set_default(void) {
 	cfg_from_file.ntsc_format = COMPOSITE;
 	cfg_from_file.palette = PALETTE_NTSC;
 
+#if defined SDL
 	cfg_from_file.render = RENDER_OPENGL;
+#elif defined D3D9
+	cfg_from_file.render = RENDER_HLSL;
+#endif
 	gfx_set_render(cfg_from_file.render);
 
 	cfg_from_file.vsync = TRUE;

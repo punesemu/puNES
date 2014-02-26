@@ -789,7 +789,7 @@ void gui_update(void) {
 		/* Video/Rendering/HLSL */
 		SetMenuItemInfo(menu_to_change, 1, TRUE, &menuitem);
 
-		menu_to_change = GetSubMenu(GetSubMenu(GetSubMenu(main_menu, 2), 2), 6);
+		menu_to_change = GetSubMenu(GetSubMenu(GetSubMenu(main_menu, 2), 2), 7);
 
 		if ((gfx.hlsl.enabled == TRUE) && (cfg->scale != X1)) {
 			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_POSPHOR);
@@ -800,6 +800,7 @@ void gui_update(void) {
 
 			/* Video/Filter/CRT */
 			SetMenuItemInfo(menu_to_change, 5, TRUE, &menuitem);
+
 			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_CRTCURVE);
 			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_CRTNOCURVE);
 		} else {
@@ -811,6 +812,7 @@ void gui_update(void) {
 
 			/* Video/Filter/CRT */
 			SetMenuItemInfo(menu_to_change, 5, TRUE, &menuitem);
+
 			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_CRTCURVE);
 			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_CRTNOCURVE);
 		}
@@ -1264,6 +1266,25 @@ long __stdcall main_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 			emu_pause(FALSE);
 			SetFocus(d3d_frame);
 			break;
+		case WM_DROPFILES: {
+			TCHAR file[sizeof(info.load_rom_file)];
+			HDROP drop = (HDROP) wParam;
+			int i = 0, count = DragQueryFile(drop, 0xFFFFFFFF, file, sizeof(info.load_rom_file));
+
+			for (i = 0; i < count; i++) {
+				DragQueryFile(drop, i, file, sizeof(info.load_rom_file));
+			}
+
+			DragFinish(drop);
+
+			if (count) {
+				emu_pause(TRUE);
+				change_rom(file);
+				emu_pause(FALSE);
+			}
+
+			break;
+		}
 		case WM_SYSCOMMAND: {
 			switch (wParam & 0xFFF0) {
 				case SC_MONITORPOWER:
@@ -1650,7 +1671,6 @@ long __stdcall main_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 				case IDM_SET_GAMEGENIE:
 					set_gamegenie();
 					break;
-				/*
 				case IDM_SET_SAVENOW:
 					cfg_file_save();
 					break;
@@ -1658,7 +1678,6 @@ long __stdcall main_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 					cfg->save_on_exit = !cfg->save_on_exit;
 					gui_update();
 					break;
-				*/
 				case IDM_HELP_ABOUT:
 					if (!info.portable) {
 						DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_ABOUT), hwnd,
@@ -1675,26 +1694,6 @@ long __stdcall main_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 					break;
 				*/
 			}
-			break;
-		}
-		case WM_DROPFILES: {
-			TCHAR file[sizeof(info.load_rom_file)];
-			HDROP drop = (HDROP) wParam;
-
-			int i = 0, count = DragQueryFile(drop, 0xFFFFFFFF, file, sizeof(info.load_rom_file));
-
-			for (i = 0; i < count; i++) {
-				DragQueryFile(drop, i, file, sizeof(info.load_rom_file));
-			}
-
-			DragFinish(drop);
-
-			if (count) {
-				emu_pause(TRUE);
-				change_rom(file);
-				emu_pause(FALSE);
-			}
-
 			break;
 		}
 		case WM_CLOSE:

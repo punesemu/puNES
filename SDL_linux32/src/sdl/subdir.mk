@@ -4,17 +4,14 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../src/sdl/cfg_file.c \
 ../src/sdl/gfx.c \
 ../src/sdl/opengl.c 
 
 OBJS += \
-./src/sdl/cfg_file.o \
 ./src/sdl/gfx.o \
 ./src/sdl/opengl.o 
 
 C_DEPS += \
-./src/sdl/cfg_file.d \
 ./src/sdl/gfx.d \
 ./src/sdl/opengl.d 
 

@@ -8,14 +8,19 @@
 #ifndef RESOURCES_H_
 #define RESOURCES_H_
 
+#define FHCOMMAND                   5000
+
 #define IDI_MYICON                  101
 #define IDB_ABOUT                   102
+#define IDB_NES_STD_PAD             103
 
 #define IDD_ABOUT                   150
 #define IDD_ABOUT_PORTABLE          151
 
-#define IDD_INPUT_CONTROLLERS       160
-#define IDD_STD_CTRL                161
+#define IDD_STANDARD_PAD_DIALOG     160
+#define IDD_KBD_JOY_TAB_PAGE        161
+#define IDD_INPUT_DIALOG            162
+#define IDD_APU_CHANNELS            163
 #define IDD_UNCOMPRESS_SELECTION    164
 
 #define IDT_TIMER1                  101
@@ -111,13 +116,19 @@
 #define IDM_SET_PALETTE_MONO        413
 #define IDM_SET_PALETTE_GREEN       414
 
+#if defined SDL
+#define IDM_SET_RENDERING_SOFTWARE  420
+#define IDM_SET_RENDERING_OPENGL    421
+#define IDM_SET_RENDERING_GLSL      422
+#elif defined D3D9
 #define IDM_SET_RENDERING_SOFTWARE  420
 #define IDM_SET_RENDERING_HLSL      421
-#define IDM_SET_EFFECT_CUBE         422
-#define IDM_SET_VSYNC_ON            423
-#define IDM_SET_VSYNC_OFF           424
-#define IDM_SET_FULLSCREEN          425
-#define IDM_SET_STRETCHFLSCR        426
+#endif
+#define IDM_SET_EFFECT_CUBE         423
+#define IDM_SET_VSYNC_ON            424
+#define IDM_SET_VSYNC_OFF           425
+#define IDM_SET_FULLSCREEN          426
+#define IDM_SET_STRETCHFLSCR        427
 
 #define IDM_SET_SAVENOW             430
 #define IDM_SET_SAVEONEXIT          431
@@ -181,18 +192,20 @@
 #define IDM_SET_AUDIO_QUALITY_LOW   950
 #define IDM_SET_AUDIO_QUALITY_HIGH  951
 
+#define IDM_SET_AUDIO_APU_CHANNELS  955
+
 #define IDM_SET_AUDIO_SWAP_DUTY     960
 #define IDM_SET_AUDIO_ENABLE        961
 
 #define IDM_SET_GAMEGENIE           970
 
-#define ID_SAVESLOT_CB              100
-#define ID_SAVESLOT_BS              101
-#define ID_SAVESLOT_BL              102
+#define ID_SAVE_SLOT_CB             100
+#define ID_SAVE_SLOT_BS             101
+#define ID_SAVE_SLOT_BL             102
 
 #define IDC_INPUT_CTRL_PORT1_C      100
-#define IDC_INPUT_CTRL_PORT2_C      101
-#define IDC_INPUT_CTRL_PORT1_B      102
+#define IDC_INPUT_CTRL_PORT1_B      101
+#define IDC_INPUT_CTRL_PORT2_C      102
 #define IDC_INPUT_CTRL_PORT2_B      103
 
 #define IDC_STD_CTRL_KEY_A          200
@@ -218,6 +231,87 @@
 #define IDC_STD_CTRL_JOY_TURBOB     220
 #define IDC_STD_CTRL_JOY_ID         221
 #define IDC_STD_CTRL_JOY_ERASE      222
+#define IDC_TURBOA_DELAY_SLIDER     223
+#define IDC_TURBOB_DELAY_SLIDER     224
+
+#define IDC_APU_CHANNELS_ACTIVE_ALL_BUTTON      1035
+#define IDC_APU_CHANNELS_DISABLE_ALL_BUTTON     1036
+#define IDC_APU_CHANNELS_DEFAULTS_BUTTON        1037
+#define IDC_APU_CHANNELS_SQUARE1_CHECKBOX       1038
+#define IDC_APU_CHANNELS_SQUARE2_CHECKBOX       1039
+#define IDC_APU_CHANNELS_TRIANGLE_CHECKBOX      1040
+#define IDC_APU_CHANNELS_NOISE_CHECKBOX         1041
+#define IDC_APU_CHANNELS_DMC_CHECKBOX           1042
+#define IDC_APU_CHANNELS_EXTRA_CHECKBOX         1043
+#define IDC_APU_CHANNELS_MASTER_STATIC          1044
+#define IDC_APU_CHANNELS_SQUARE1_SLIDER         1045
+#define IDC_APU_CHANNELS_SQUARE2_SLIDER         1046
+#define IDC_APU_CHANNELS_TRIANGLE_SLIDER        1047
+#define IDC_APU_CHANNELS_NOISE_SLIDER           1048
+#define IDC_APU_CHANNELS_DMC_SLIDER             1049
+#define IDC_APU_CHANNELS_EXTRA_SLIDER           1050
+#define IDC_APU_CHANNELS_MASTER_SLIDER          1051
+#define ID_APU_CHANNELS_OK                      1052
+#define ID_APU_CHANNELS_CANCEL                  1053
+
+#define IDC_INFO_RICHEDIT                       1035
+#define IDC_IN_SEQUENCE_BUTTON                  1036
+#define IDC_UNSET_ALL_BUTTON                    1037
+#define IDC_DEFAULT_BUTTON                      1038
+#define IDC_A_LABEL_STATIC                      1039
+#define IDC_B_LABEL_STATIC                      1040
+#define IDC_SELECT_LABEL_STATIC                 1041
+#define IDC_START_LABEL_STATIC                  1042
+#define IDC_UP_LABEL_STATIC                     1043
+#define IDC_DOWN_LABEL_STATIC                   1044
+#define IDC_LEFT_LABEL_STATIC                   1045
+#define IDC_RIGHT_LABEL_STATIC                  1046
+#define IDC_TA_LABEL_STATIC                     1047
+#define IDC_TB_LABEL_STATIC                     1048
+#define IDC_A_BUTTON                            1049
+#define IDC_B_BUTTON                            1050
+#define IDC_SELECT_BUTTON                       1051
+#define IDC_START_BUTTON                        1052
+#define IDC_UP_BUTTON                           1053
+#define IDC_DOWN_BUTTON                         1054
+#define IDC_LEFT_BUTTON                         1055
+#define IDC_RIGHT_BUTTON                        1056
+#define IDC_TA_BUTTON                           1057
+#define IDC_TB_BUTTON                           1058
+#define IDC_A_UNSET_BUTTON                      1059
+#define IDC_B_UNSET_BUTTON                      1060
+#define IDC_SELECT_UNSET_BUTTON                 1061
+#define IDC_START_UNSET_BUTTON                  1062
+#define IDC_UP_UNSET_BUTTON                     1063
+#define IDC_DOWN_UNSET_BUTTON                   1064
+#define IDC_LEFT_UNSET_BUTTON                   1065
+#define IDC_RIGHT_USET_BUTTON                   1066
+#define IDC_TA_UNSET_BUTTON                     1067
+#define IDC_TB_UNSET_BUTTON                     1068
+#define IDC_DEVICE_LABEL_STATIC                 1069
+#define IDC_DEVICE_COMBO                        1070
+#define IDC_STANDARD_PAD_CONTROL_BOX            1071
+#define IDC_STANDARD_PAD_IMAGE                  1072
+#define IDC_STANDARD_PAD_TAB                    1073
+#define IDC_TURBO_DELAY_CONTROL_BOX             1074
+#define IDC_TURBO_DELAY_A_LABEL_STATIC          1075
+#define IDC_TURBO_DELAY_B_LABEL_STATIC          1076
+#define IDC_TURBO_DELAY_A_SLIDER                1077
+#define IDC_TURBO_DELAY_B_SLIDER                1078
+#define IDC_INPUT_CONTROLLER1_COMBO             1100
+#define IDC_INPUT_CONTROLLER2_COMBO             1101
+#define IDC_INPUT_CONTROLLER3_COMBO             1102
+#define IDC_INPUT_CONTROLLER4_COMBO             1103
+#define IDC_INPUT_CONTROLLER1_SETUP_BUTTON      1110
+#define IDC_INPUT_CONTROLLER2_SETUP_BUTTON      1111
+#define IDC_INPUT_CONTROLLER3_SETUP_BUTTON      1112
+#define IDC_INPUT_CONTROLLER4_SETUP_BUTTON      1113
+#define IDC_PERMIT_UPDOWN_LEFTRIGHT_CHECKBOX    1120
+#define ID_INPUT_DEFAULT                        1122
+#define IDC_INPUT_CONTROLLER3_LABEL_STATIC      1130
+#define IDC_INPUT_CONTROLLER4_LABEL_STATIC      1131
+#define IDC_INPUT_CONTROLLER_MODE_LABEL_STATIC  1132
+#define IDC_INPUT_CONTROLLER_MODE_COMBO         1133
 
 #define IDC_UNCOMPRESS_SELECTION_LIST           1035
 

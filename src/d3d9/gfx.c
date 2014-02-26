@@ -146,15 +146,6 @@ BYTE gfx_init(void) {
 
 	memset(&d3d9, 0x00, sizeof(d3d9));
 
-	/* TODO : una volta aggiunta la lettura del file di configurazione devo
-	 * eliminare la riga sotto.
-	 */
-	cfg->filter = NO_FILTER;
-
-	cfg->filter = NTSC_FILTER;
-	cfg->ntsc_format = COMPOSITE;
-	//cfg->filter = CRT_NO_CURVE;
-
 	if ((d3d9.d3d = Direct3DCreate9(D3D_SDK_VERSION)) == NULL) {
 		MessageBox(NULL, "Unable to create d3d object", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);

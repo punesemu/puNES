@@ -3,6 +3,8 @@
 #endif
 #include <winuser.h>
 #include <afxres.h>
+#include <commctrl.h>
+#include <richedit.h>
 #include "resources.h"
 #include "../version.h"
 
@@ -10,6 +12,7 @@ CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "Application.manifest"
 
 IDI_MYICON        ICON   "punes.ico"
 IDB_ABOUT         BITMAP "about.bmp"
+//IDB_NES_STD_PAD   BITMAP "pad.bmp"
 
 IDR_ACCKEYS ACCELERATORS
 BEGIN
@@ -34,7 +37,7 @@ BEGIN
 	//VK_RETURN,  IDM_SET_FULLSCREEN,      ALT,     VIRTKEY
 	//"R",        IDM_SET_EFFECT_CUBE,     VIRTKEY
 	"P",        IDM_SET_STRETCHFLSCR,    VIRTKEY
-	//"W",        IDM_SET_SAVENOW,         CONTROL, VIRTKEY
+	"W",        IDM_SET_SAVENOW,         CONTROL, VIRTKEY
 	"A",        IDM_SET_AUDIO_ENABLE,    CONTROL, VIRTKEY
 END
 
@@ -81,8 +84,14 @@ BEGIN
 		BEGIN
 			POPUP "&Rendering"
 			BEGIN
+#if defined SDL
+				MENUITEM "&Software",             IDM_SET_RENDERING_SOFTWARE
+				MENUITEM "&OpenGL",               IDM_SET_RENDERING_OPENGL
+				MENUITEM "OpenGL &GLSL",          IDM_SET_RENDERING_GLSL
+#elif defined D3D9
 				MENUITEM "&Software",             IDM_SET_RENDERING_SOFTWARE
 				MENUITEM "D3D &HLSL",             IDM_SET_RENDERING_HLSL
+#endif
 			END
 			POPUP "&FPS"
 			BEGIN
@@ -214,7 +223,7 @@ BEGIN
 					MENUITEM "15%",               IDM_SET_STEREO_DELAY_15
 					MENUITEM "20%",               IDM_SET_STEREO_DELAY_20
 					MENUITEM "25%",               IDM_SET_STEREO_DELAY_25
-					MENUITEM "30% (Deafult)",     IDM_SET_STEREO_DELAY_30
+					MENUITEM "30% (Default)",     IDM_SET_STEREO_DELAY_30
 					MENUITEM "35%",               IDM_SET_STEREO_DELAY_35
 					MENUITEM "40%",               IDM_SET_STEREO_DELAY_40
 					MENUITEM "45%",               IDM_SET_STEREO_DELAY_45
@@ -240,17 +249,15 @@ BEGIN
 			MENUITEM "S&wap Duty Cycles",         IDM_SET_AUDIO_SWAP_DUTY
 			MENUITEM "&Enable\tCtrl+A",           IDM_SET_AUDIO_ENABLE
 		END
-		/*
 		POPUP "&Input"
 		BEGIN
 			MENUITEM "&Config",                   IDM_SET_INPUT_CONFIG
 		END
-		*/
 		MENUITEM SEPARATOR
 		MENUITEM "Game Genie",                    IDM_SET_GAMEGENIE
-		//MENUITEM SEPARATOR
-		//MENUITEM "Save se&ttings\tCtrl+W",        IDM_SET_SAVENOW
-		//MENUITEM "Save settings on e&xit",        IDM_SET_SAVEONEXIT
+		MENUITEM SEPARATOR
+		MENUITEM "Save se&ttings\tCtrl+W",        IDM_SET_SAVENOW
+		MENUITEM "Save settings on e&xit",        IDM_SET_SAVEONEXIT
 	END
 	/*
 	POPUP "S&tate"

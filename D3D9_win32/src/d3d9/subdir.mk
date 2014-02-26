@@ -4,7 +4,6 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../src/d3d9/cfg_file.c \
 ../src/d3d9/gfx.c \
 ../src/d3d9/joystick.c \
 ../src/d3d9/keyboard.c \
@@ -13,7 +12,6 @@ C_SRCS += \
 ../src/d3d9/win.c 
 
 OBJS += \
-./src/d3d9/cfg_file.o \
 ./src/d3d9/gfx.o \
 ./src/d3d9/joystick.o \
 ./src/d3d9/keyboard.o \
@@ -22,7 +20,6 @@ OBJS += \
 ./src/d3d9/win.o 
 
 C_DEPS += \
-./src/d3d9/cfg_file.d \
 ./src/d3d9/gfx.d \
 ./src/d3d9/joystick.d \
 ./src/d3d9/keyboard.d \
