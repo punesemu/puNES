@@ -111,7 +111,7 @@ struct _d3d9 {
 
 	BOOL scale_force;
 	BOOL interpolation;
-	FLOAT scale;
+	BYTE scale;
 	FLOAT factor;
 } d3d9;
 
@@ -150,6 +150,10 @@ BYTE gfx_init(void) {
 	 * eliminare la riga sotto.
 	 */
 	cfg->filter = NO_FILTER;
+
+	cfg->filter = NTSC_FILTER;
+	cfg->ntsc_format = COMPOSITE;
+	//cfg->filter = CRT_NO_CURVE;
 
 	if ((d3d9.d3d = Direct3DCreate9(D3D_SDK_VERSION)) == NULL) {
 		MessageBox(NULL, "Unable to create d3d object", "Error!", MB_ICONEXCLAMATION | MB_OK);
@@ -764,61 +768,47 @@ void gfx_draw_screen(BYTE forced) {
 			/* faccio il resto */
 			IDirect3DDevice9_SetFVF(d3d9.adapter->dev, FVF);
 
-			/* abilito le operazioni di blending */
-			IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_ALPHABLENDENABLE, TRUE);
-			IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_BLENDOP, D3DBLENDOP_ADD);
-
-			/* seleziono la texture principale */
-			IDirect3DDevice9_SetTexture(d3d9.adapter->dev, 0,
-					(IDirect3DBaseTexture9 * ) d3d9.screen.data);
-
-			/* se necessario utilizzo le shaders */
-			if (d3d9.shader.vrt) {
-				IDirect3DDevice9_SetVertexShader(d3d9.adapter->dev, d3d9.shader.vrt);
-			}
-			if (d3d9.shader.pxl) {
-				IDirect3DDevice9_SetPixelShader(d3d9.adapter->dev, d3d9.shader.pxl);
-			}
-
-			/* disegno la texture */
-			IDirect3DDevice9_SetStreamSource(d3d9.adapter->dev, 0, d3d9.quad, 0, sizeof(vertex));
-			IDirect3DDevice9_DrawPrimitive(d3d9.adapter->dev, D3DPT_TRIANGLEFAN, 0, 2);
-
-			/* disabilito le shaders perche' non devono essere applicate al testo */
-			if (d3d9.shader.vrt) {
-				IDirect3DDevice9_SetVertexShader(d3d9.adapter->dev, NULL);
-			}
-			if (d3d9.shader.pxl) {
-				IDirect3DDevice9_SetPixelShader(d3d9.adapter->dev, NULL);
+			/* screen texture */
+			{
+				/* se necessario utilizzo le shaders */
+				if (d3d9.shader.vrt) {
+					IDirect3DDevice9_SetVertexShader(d3d9.adapter->dev, d3d9.shader.vrt);
+				}
+				if (d3d9.shader.pxl) {
+					IDirect3DDevice9_SetPixelShader(d3d9.adapter->dev, d3d9.shader.pxl);
+				}
+				/* disegno la texture dello screen */
+				IDirect3DDevice9_SetTexture(d3d9.adapter->dev, 0,
+				        (IDirect3DBaseTexture9 * ) d3d9.screen.data);
+				IDirect3DDevice9_SetStreamSource(d3d9.adapter->dev, 0, d3d9.quad, 0,
+				        sizeof(vertex));
+				IDirect3DDevice9_DrawPrimitive(d3d9.adapter->dev, D3DPT_TRIANGLEFAN, 0, 2);
 			}
 
-			/* imposto i parametri del blend */
-			IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-			IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_DESTBLEND,
-					D3DBLEND_INVSRCALPHA);
-
-			/* disegno la texture del testo */
-			IDirect3DDevice9_SetTexture(d3d9.adapter->dev, 0,
-					(IDirect3DBaseTexture9 * ) d3d9.text.data);
-			IDirect3DDevice9_SetStreamSource(d3d9.adapter->dev, 0, d3d9.quad, 0, sizeof(vertex));
-			IDirect3DDevice9_DrawPrimitive(d3d9.adapter->dev, D3DPT_TRIANGLEFAN, 0, 2);
+			/* text texture */
+			{
+				/* disabilito le shaders perche' non devono essere applicate al testo */
+				if (d3d9.shader.vrt) {
+					IDirect3DDevice9_SetVertexShader(d3d9.adapter->dev, NULL);
+				}
+				if (d3d9.shader.pxl) {
+					IDirect3DDevice9_SetPixelShader(d3d9.adapter->dev, NULL);
+				}
+				/* disegno la texture del testo */
+				IDirect3DDevice9_SetTexture(d3d9.adapter->dev, 0,
+				        (IDirect3DBaseTexture9 * ) d3d9.text.data);
+				IDirect3DDevice9_SetStreamSource(d3d9.adapter->dev, 0, d3d9.quad, 0,
+				        sizeof(vertex));
+				IDirect3DDevice9_DrawPrimitive(d3d9.adapter->dev, D3DPT_TRIANGLEFAN, 0, 2);
+			}
 		} else {
 			IDirect3DDevice9_SetFVF(d3d9.adapter->dev, FVF);
 
-			/* abilito le operazioni di blending */
-			IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_ALPHABLENDENABLE, TRUE);
-			IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_BLENDOP, D3DBLENDOP_ADD);
-
-			/* disegno la texture principale */
+			/* disegno la texture dello screen */
 			IDirect3DDevice9_SetTexture(d3d9.adapter->dev, 0,
 					(IDirect3DBaseTexture9 * ) d3d9.screen.data);
 			IDirect3DDevice9_SetStreamSource(d3d9.adapter->dev, 0, d3d9.quad, 0, sizeof(vertex));
 			IDirect3DDevice9_DrawPrimitive(d3d9.adapter->dev, D3DPT_TRIANGLEFAN, 0, 2);
-
-			/* imposto i parametri del blend */
-			IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-			IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_DESTBLEND,
-					D3DBLEND_INVSRCALPHA);
 
 			/* disegno la texture del testo */
 			IDirect3DDevice9_SetTexture(d3d9.adapter->dev, 0,
@@ -1108,6 +1098,14 @@ BYTE d3d9_create_context(UINT width, UINT height) {
 					D3DSAMP_MIPFILTER, D3DTEXF_NONE);
 		}
 
+		IDirect3DDevice9_SetTextureStageState(d3d9.adapter->dev, 0,
+				D3DTSS_COLOROP, D3DTOP_MODULATE);
+		IDirect3DDevice9_SetTextureStageState(d3d9.adapter->dev, 0,
+				D3DTSS_ALPHAOP, D3DTOP_MODULATE);
+
+		/* abilito le operazioni di blending */
+		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_ALPHABLENDENABLE, TRUE);
+		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_BLENDOP, D3DBLENDOP_ADD);
 		// set the fixed render state
 		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_ZENABLE, D3DZB_FALSE);
 		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_FILLMODE, D3DFILL_SOLID);
@@ -1127,11 +1125,10 @@ BYTE d3d9_create_context(UINT width, UINT height) {
 		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_CLIPPING, TRUE);
 		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_LIGHTING, FALSE);
 		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_COLORVERTEX, TRUE);
-
-		IDirect3DDevice9_SetTextureStageState(d3d9.adapter->dev, 0,
-				D3DTSS_COLOROP, D3DTOP_MODULATE);
-		IDirect3DDevice9_SetTextureStageState(d3d9.adapter->dev, 0,
-				D3DTSS_ALPHAOP, D3DTOP_MODULATE);
+		/* imposto i parametri del blend */
+		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_DESTBLEND,
+				D3DBLEND_INVSRCALPHA);
 
 		d3d9.texcoords.l = 0.0f;
 		d3d9.texcoords.r = (FLOAT) width / (d3d9.screen.w * d3d9.factor);
