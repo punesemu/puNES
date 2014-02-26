@@ -140,7 +140,7 @@ void sdl_create_surface_gl(SDL_Surface *src, WORD width, WORD height, BYTE flags
 
 	if (opengl.glsl.enabled && opengl.glsl.shader_used) {
 		opengl_create_texture(&shader.text, opengl.texture.w * opengl.factor,
-				opengl.texture.w * opengl.factor, FALSE, NO_POWER_OF_TWO);
+				opengl.texture.h * opengl.factor, FALSE, NO_POWER_OF_TWO);
 		glsl_shaders_init(&shader);
 	}
 

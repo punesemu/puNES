@@ -1238,7 +1238,7 @@ BYTE d3d9_create_context(UINT width, UINT height) {
 		d3d9_create_shader(&d3d9.shader);
 	}
 
-	if (d3d9_create_texture(&d3d9.text, d3d9.screen.w * d3d9.factor, d3d9.screen.w * d3d9.factor,
+	if (d3d9_create_texture(&d3d9.text, d3d9.screen.w * d3d9.factor, d3d9.screen.h * d3d9.factor,
 			0, NO_POWER_OF_TWO) == EXIT_ERROR) {
 		MessageBox(NULL, "Unable to create text texture", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
