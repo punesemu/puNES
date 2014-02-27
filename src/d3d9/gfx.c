@@ -114,6 +114,7 @@ void d3d9_set_adapter(_d3d9_adapter *adapter);
 BYTE d3d9_create_device(UINT width, UINT height);
 BYTE d3d9_create_context(UINT width, UINT height);
 void d3d9_release_context(void);
+void d3d9_adjust_coords(void);
 BYTE d3d9_create_texture(_texture *texture, uint32_t width, uint32_t height, uint8_t interpolation,
         uint8_t pow);
 void d3d9_release_texture(_texture *texture);
@@ -360,7 +361,20 @@ BYTE gfx_init(void) {
 		return (EXIT_ERROR);
 	}
 
-	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE);
+	/* casi particolari provenienti dal cfg_file_parse() e cmd_line_parse()*/
+	if (cfg->fullscreen == FULLSCR) {
+		gfx.scale_before_fscreen = cfg->scale;
+	}
+
+	if (cfg->fullscreen) {
+		gfx_set_screen(cfg->scale, cfg->filter, NO_FULLSCR, cfg->palette, FALSE);
+		cfg->fullscreen = NO_FULLSCR;
+		cfg->scale = gfx.scale_before_fscreen;
+		gui_fullscreen();
+	} else {
+		gfx_set_screen(cfg->scale, cfg->filter, NO_FULLSCR, cfg->palette, FALSE);
+	}
+	//gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE);
 
 	return (EXIT_OK);
 }
@@ -540,6 +554,18 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 		gfx.h[NO_OVERSCAN] = SCR_LINES * scale;
 	}
 
+	/*
+	 * se sono a schermo intero, non e' necessario
+	 * fare un d3d9_create_context() visto che
+	 * uso una texture ridimensionabile.
+	 */
+	if (set_mode && ((cfg->fullscreen == FULLSCR) && (fullscreen == cfg->fullscreen))) {
+		/* se e' il primo avvio, non devo mai disabilitare il set_mode */
+		if (!info.on_cfg) {
+			set_mode = FALSE;
+		}
+	}
+
 	/* paletta */
 	if (palette == NO_CHANGE) {
 		palette = cfg->palette;
@@ -653,6 +679,18 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 				d3d9.factor = X2;
 				break;
 		}
+
+		if (cfg->fullscreen) {
+			if ((cfg->filter >= SCALE2X) && (cfg->filter <= SCALE4X)) {
+				hlsl_up(scaleNx, SHADER_NO_FILTER);
+				d3d9.scale = X2;
+				d3d9.factor = (float) cfg->scale / 2.0f;
+			} else if ((cfg->filter >= HQ2X) && (cfg->filter <= HQ4X)) {
+				hlsl_up(hqNx, SHADER_NO_FILTER);
+				d3d9.scale = X2;
+				d3d9.factor = (float) cfg->scale / 2.0f;
+			}
+		}
 	}
 
 	if (set_mode) {
@@ -678,8 +716,10 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 		ShowWindow(gui_main_window_id(), SW_NORMAL);
 	}
 
-	text.w = gfx.w[VIDEO_MODE];
-	text.h = gfx.h[VIDEO_MODE];
+	d3d9_adjust_coords();
+
+	text.w = gfx.w[CURRENT];
+	text.h = gfx.h[CURRENT];
 
 	{
 		WORD r = (WORD) gfx.quadcoords.r;
@@ -837,10 +877,7 @@ void gfx_draw_screen(BYTE forced) {
 
 		IDirect3DDevice9_EndScene(d3d9.adapter->dev);
 
-		//double start = gui_get_ms();
 		IDirect3DDevice9_Present(d3d9.adapter->dev, NULL, NULL, NULL, NULL);
-		//double stop = gui_get_ms();
-		//printf("ms draw = %f\r", stop - start);
 	}
 }
 void gfx_control_change_monitor(void *monitor) {
@@ -1149,92 +1186,11 @@ BYTE d3d9_create_context(UINT width, UINT height) {
 				D3DBLEND_INVSRCALPHA);
 
 		d3d9.texcoords.l = 0.0f;
-		d3d9.texcoords.r = (FLOAT) width / (d3d9.screen.w * d3d9.factor);
+		//d3d9.texcoords.r = (FLOAT) width / (d3d9.screen.w * d3d9.factor);
+		d3d9.texcoords.r = (FLOAT) gfx.w[CURRENT] / (d3d9.screen.w * d3d9.factor);
 		d3d9.texcoords.t = 0.0f;
-		d3d9.texcoords.b = (FLOAT) height / (d3d9.screen.h * d3d9.factor);
-
-		{
-			/* aspect ratio */
-			FLOAT w_quad = (FLOAT) gfx.w[VIDEO_MODE];
-			FLOAT h_quad = (FLOAT) gfx.h[VIDEO_MODE];
-			gfx.quadcoords.l = 0.0f;
-			gfx.quadcoords.r = w_quad;
-			gfx.quadcoords.t = 0.0f;
-			gfx.quadcoords.b = h_quad;
-
-			int flags = FALSE;
-
-			/* con flags intendo sia il fullscreen che il futuro resize */
-			if (flags && cfg->aspect_ratio) {
-				FLOAT ratio_surface = w_quad / h_quad;
-				FLOAT ratio_frame = (FLOAT) width / (FLOAT) height;
-
-				//ratio_frame = (float) 4 / 3;
-				//ratio_frame = (float) 16 / 9;
-
-				//fprintf(stderr, "opengl : %f %f\n", ratio_surface, ratio_frame);
-
-				/*
-				 * se l'aspect ratio del frame e' maggiore di
-				 * quello della superficie allora devo agire
-				 * sull'altezza.
-				 */
-				if (ratio_frame > ratio_surface) {
-					FLOAT centering_factor = 0.0f;
-
-					h_quad = w_quad / ratio_frame;
-					centering_factor = ((FLOAT) gfx.h[VIDEO_MODE] - h_quad) / 2.0f;
-
-					gfx.quadcoords.l = 0.0f;
-					gfx.quadcoords.r = w_quad;
-					gfx.quadcoords.t = centering_factor;
-					gfx.quadcoords.b = h_quad + centering_factor;
-				/*
-				 * se l'aspect ratio del frame e' minore di
-				 * quello della superficie allora devo agire
-				 * sulla larghezza.
-				 */
-				} else if (ratio_frame < ratio_surface) {
-					FLOAT centering_factor = 0.0f;
-
-					w_quad = ratio_frame * h_quad;
-					centering_factor = ((FLOAT) gfx.w[VIDEO_MODE] - w_quad) / 2.0f;
-
-					gfx.quadcoords.l = centering_factor;
-					gfx.quadcoords.r = w_quad + centering_factor;
-					gfx.quadcoords.t = 0.0f;
-					gfx.quadcoords.b = h_quad;
-				}
-			}
-		}
-
-		{
-			_texcoords *tc = &d3d9.texcoords;
-			void *tv_vertices;
-			vertex quad_vertices[] = {
-				{ gfx.quadcoords.l, gfx.quadcoords.b, 0.0f, 1.0f, tc->l, tc->b },
-				{ gfx.quadcoords.l, gfx.quadcoords.t, 0.0f, 1.0f, tc->l, tc->t },
-				{ gfx.quadcoords.r, gfx.quadcoords.t, 0.0f, 1.0f, tc->r, tc->t },
-				{ gfx.quadcoords.r, gfx.quadcoords.b, 0.0f, 1.0f, tc->r, tc->b }
-			};
-
-			/*
-			 * problema dell'infamous half-texel offset of D3D9 (corretto dalle D3D10 in poi) :
-			 * http://msdn.microsoft.com/en-us/library/bb219690%28VS.85%29.aspx
-			 */
-			{
-				int i;
-
-				for (i=0; i < LENGTH(quad_vertices); i++) {
-					quad_vertices[i].x -= 0.5f;
-					quad_vertices[i].y -= 0.5f;
-				}
-			}
-
-			IDirect3DVertexBuffer9_Lock(d3d9.quad, 0, 0, (void**) &tv_vertices, 0);
-			memcpy(tv_vertices, quad_vertices, sizeof(quad_vertices));
-			IDirect3DVertexBuffer9_Unlock(d3d9.quad);
-		}
+		//d3d9.texcoords.b = (FLOAT) height / (d3d9.screen.h * d3d9.factor);
+		d3d9.texcoords.b = (FLOAT) gfx.h[CURRENT] / (d3d9.screen.h * d3d9.factor);
 	}
 
 	{
@@ -1262,28 +1218,6 @@ BYTE d3d9_create_context(UINT width, UINT height) {
 		return (EXIT_ERROR);
 	}
 
-	/*
-	D3DLOCKED_RECT lock_dst;
-	uint32_t *pbits;
-	int w, h;
-
-	if (IDirect3DSurface9_LockRect(d3d9.text.surface.data, &lock_dst, NULL,
-			D3DLOCK_DISCARD) != D3D_OK) {
-		printf("LockRect text surface error\n");
-	}
-
-	pbits = (uint32_t *) lock_dst.pBits;
-
-	for (h = 0; h < (int) d3d9.text.h; h++) {
-		for (w = 0; w < (int) d3d9.text.w; w++) {
-			(* (pbits + w)) = D3DCOLOR_ARGB(0x80, 0x00, 0x00, 0x00);
-		}
-		pbits += lock_dst.Pitch / (gfx.bit_per_pixel / 8);
-	}
-
-	IDirect3DSurface9_UnlockRect(d3d9.text.surface.data);
-	*/
-
 	return (EXIT_OK);
 }
 void d3d9_release_context(void) {
@@ -1300,6 +1234,89 @@ void d3d9_release_context(void) {
 	if (d3d9.adapter && d3d9.adapter->dev) {
 		IDirect3DDevice9_Release(d3d9.adapter->dev);
 		d3d9.adapter->dev = NULL;
+	}
+}
+void d3d9_adjust_coords(void) {
+	{
+		/* aspect ratio */
+		FLOAT w_quad = (FLOAT) gfx.w[VIDEO_MODE];
+		FLOAT h_quad = (FLOAT) gfx.h[VIDEO_MODE];
+
+		gfx.quadcoords.l = 0.0f;
+		gfx.quadcoords.r = w_quad;
+		gfx.quadcoords.t = 0.0f;
+		gfx.quadcoords.b = h_quad;
+
+		/* con flags intendo sia il fullscreen che il futuro resize */
+		if (cfg->fullscreen && cfg->aspect_ratio) {
+			FLOAT ratio_surface = w_quad / h_quad;
+			FLOAT ratio_frame = (FLOAT) gfx.w[CURRENT] / (FLOAT) gfx.h[CURRENT];
+
+			//ratio_frame = (float) 4 / 3;
+			//ratio_frame = (float) 16 / 9;
+
+			//fprintf(stderr, "opengl : %f %f\n", ratio_surface, ratio_frame);
+
+			/*
+			 * se l'aspect ratio del frame e' maggiore di
+			 * quello della superficie allora devo agire
+			 * sull'altezza.
+			 */
+			if (ratio_frame > ratio_surface) {
+				FLOAT centering_factor = 0.0f;
+
+				h_quad = w_quad / ratio_frame;
+				centering_factor = ((FLOAT) gfx.h[VIDEO_MODE] - h_quad) / 2.0f;
+
+				gfx.quadcoords.l = 0.0f;
+				gfx.quadcoords.r = w_quad;
+				gfx.quadcoords.t = centering_factor;
+				gfx.quadcoords.b = h_quad + centering_factor;
+			/*
+			 * se l'aspect ratio del frame e' minore di
+			 * quello della superficie allora devo agire
+			 * sulla larghezza.
+			 */
+			} else if (ratio_frame < ratio_surface) {
+				FLOAT centering_factor = 0.0f;
+
+				w_quad = ratio_frame * h_quad;
+				centering_factor = ((FLOAT) gfx.w[VIDEO_MODE] - w_quad) / 2.0f;
+
+				gfx.quadcoords.l = centering_factor;
+				gfx.quadcoords.r = w_quad + centering_factor;
+				gfx.quadcoords.t = 0.0f;
+				gfx.quadcoords.b = h_quad;
+			}
+		}
+	}
+
+	{
+		_texcoords *tc = &d3d9.texcoords;
+		void *tv_vertices;
+		vertex quad_vertices[] = {
+			{ gfx.quadcoords.l, gfx.quadcoords.b, 0.0f, 1.0f, tc->l, tc->b },
+			{ gfx.quadcoords.l, gfx.quadcoords.t, 0.0f, 1.0f, tc->l, tc->t },
+			{ gfx.quadcoords.r, gfx.quadcoords.t, 0.0f, 1.0f, tc->r, tc->t },
+			{ gfx.quadcoords.r, gfx.quadcoords.b, 0.0f, 1.0f, tc->r, tc->b }
+		};
+
+		/*
+		 * problema dell'infamous half-texel offset of D3D9 (corretto dalle D3D10 in poi) :
+		 * http://msdn.microsoft.com/en-us/library/bb219690%28VS.85%29.aspx
+		 */
+		{
+			int i;
+
+			for (i=0; i < LENGTH(quad_vertices); i++) {
+				quad_vertices[i].x -= 0.5f;
+				quad_vertices[i].y -= 0.5f;
+			}
+		}
+
+		IDirect3DVertexBuffer9_Lock(d3d9.quad, 0, 0, (void**) &tv_vertices, 0);
+		memcpy(tv_vertices, quad_vertices, sizeof(quad_vertices));
+		IDirect3DVertexBuffer9_Unlock(d3d9.quad);
 	}
 }
 BYTE d3d9_create_texture(_texture *texture, uint32_t width, uint32_t height, uint8_t interpolation,
@@ -1419,10 +1436,10 @@ BYTE d3d9_create_shader(_shader *shd) {
 				break;
 			case COMPILERSHADER_NOT_FOUND:
 				MessageBox(NULL,
-					"ATTENTION: DirectX HLSL compiler installation are incomplete\n"
-					"or corrupted. Please reinstall the DirectX 10."	,
-					"Error!",
-					MB_ICONEXCLAMATION | MB_OK);
+						"ATTENTION: DirectX HLSL compiler installation are incomplete\n"
+						"or corrupted. Please reinstall the DirectX 10."	,
+						"Error!",
+						MB_ICONEXCLAMATION | MB_OK);
 				d3d9_release_shader(shd);
 				return (EXIT_ERROR);
 			default:
@@ -1486,16 +1503,16 @@ BYTE d3d9_create_shader(_shader *shd) {
 				printf("size_video_mode : %f - %f\n", svm[0], svm[1]);
 				printf("size_texture    : %f - %f\n", st[0], st[1]);
 				printf("\n");
-				*/
+				 */
 
 				break;
 			}
 			case COMPILERSHADER_NOT_FOUND:
 				MessageBox(NULL,
-					"ATTENTION: DirectX HLSL compiler installation are incomplete\n"
-					"or corrupted. Please reinstall the DirectX 10."	,
-					"Error!",
-					MB_ICONEXCLAMATION | MB_OK);
+						"ATTENTION: DirectX HLSL compiler installation are incomplete\n"
+						"or corrupted. Please reinstall the DirectX 10."	,
+						"Error!",
+						MB_ICONEXCLAMATION | MB_OK);
 				d3d9_release_shader(shd);
 				return (EXIT_ERROR);
 			default:

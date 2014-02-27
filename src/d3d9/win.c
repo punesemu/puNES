@@ -128,8 +128,8 @@ static HWND frame_bl;
 HMENU main_menu;
 HACCEL acc_keys;
 HBITMAP about_img, about_mask;
-
-
+MONITORINFO mi = { sizeof(mi) };
+WINDOWPLACEMENT wp_prev = { sizeof(wp_prev) };
 
 void gui_init(int argc, char **argv) {
 	gui.start = FALSE;
@@ -1399,7 +1399,78 @@ void gui_update(void) {
 	}
 }
 void gui_fullscreen(void) {
-	return;
+	emu_pause(TRUE);
+
+	/* nascondo la finestra */
+	ShowWindow(main_win, SW_HIDE);
+
+	if ((cfg->fullscreen == NO_FULLSCR) || (cfg->fullscreen == NO_CHANGE)) {
+		/* salvo il valore scale prima del fullscreen */
+		gfx.scale_before_fscreen = cfg->scale;
+
+		/* trovo la risoluzione del monitor in uso */
+		GetMonitorInfo(MonitorFromWindow(main_win, MONITOR_DEFAULTTOPRIMARY), &mi);
+		gfx.w[MONITOR] = mi.rcMonitor.right - mi.rcMonitor.left;
+		gfx.h[MONITOR] = mi.rcMonitor.bottom - mi.rcMonitor.top;
+
+		/*salvo la posizione della finestra */
+		if (gui.start) {
+			GetWindowPlacement(main_win, &wp_prev);
+		} else {
+			wp_prev.rcNormalPosition.bottom = 0;
+		}
+
+		/* dissocio il menu dalla finestra */
+		SetMenu(main_win, NULL);
+
+		/* abilito il fullscreen */
+		gfx_set_screen(NO_CHANGE, NO_CHANGE, FULLSCR, NO_CHANGE, FALSE);
+
+		/* disabilito la visualizzazione del puntatore */
+		if (input_zapper_is_connected((_port *) &port) == FALSE) {
+			ShowCursor(FALSE);
+		}
+
+		/* queste sono le cose che devo disabilitare per il fullscreen */
+		SetWindowLongPtr(main_win, GWL_STYLE,
+				GetWindowLong(main_win, GWL_STYLE) & ~(WS_CAPTION | WS_BORDER | WS_SYSMENU));
+		SetWindowLongPtr(main_win, GWL_EXSTYLE,
+				(GetWindowLongPtr(main_win, GWL_EXSTYLE) | WS_EX_APPWINDOW | WS_EX_TOPMOST)
+				& ~WS_EX_CLIENTEDGE);
+
+		/* muovo la finestra al margine superiore destro del monitor */
+		MoveWindow(main_win, mi.rcMonitor.left, mi.rcMonitor.top, gfx.w[VIDEO_MODE],
+				gfx.h[VIDEO_MODE], TRUE);
+	} else {
+		/* ribilito gli stili della finestra corretti */
+		SetWindowLongPtr(main_win, GWL_STYLE,
+				GetWindowLong(main_win, GWL_STYLE) | WS_CAPTION | WS_BORDER | WS_SYSMENU);
+		SetWindowLongPtr(main_win, GWL_EXSTYLE,
+				(GetWindowLongPtr(main_win, GWL_EXSTYLE) | WS_EX_CLIENTEDGE)
+				& ~(WS_EX_APPWINDOW | WS_EX_TOPMOST));
+
+		/* riassocio il menu */
+		SetMenu(main_win, main_menu);
+
+		/* ripristino i valori di scale ed esco dal fullscreen */
+		gfx_set_screen(gfx.scale_before_fscreen, NO_CHANGE, NO_FULLSCR, NO_CHANGE, FALSE);
+
+		/* riabilito la visualizzazione del puntatore */
+		ShowCursor(TRUE);
+
+		/* posiziono la finestra alle coordinate precedenti il fullscreen */
+		if (wp_prev.rcNormalPosition.bottom) {
+			SetWindowPlacement(main_win, &wp_prev);
+		}
+	}
+
+	/* visualizzo la finestra */
+	ShowWindow(main_win, SW_NORMAL);
+
+	/* setto il focus*/
+	SetFocus(frame_screen_nes);
+
+	emu_pause(FALSE);
 }
 void gui_timeline(void) {
 	SendMessage(timeline, TBM_SETPOS, TRUE, tl.snaps_fill - 1);
@@ -1785,11 +1856,9 @@ long __stdcall main_win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 				case IDM_SET_VSYNC_OFF:
 					set_vsync(FALSE);
 					break;
-				/*
 				case IDM_SET_FULLSCREEN:
 					gui_fullscreen();
 					break;
-				*/
 				case IDM_SET_STRETCHFLSCR:
 					cfg->aspect_ratio = !cfg->aspect_ratio;
 					if (cfg->fullscreen == FULLSCR) {

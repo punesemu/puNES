@@ -34,7 +34,7 @@ BEGIN
 	"2",        IDM_SET_SIZE_2X,         VIRTKEY
 	"3",        IDM_SET_SIZE_3X,         VIRTKEY
 	"4",        IDM_SET_SIZE_4X,         VIRTKEY
-	//VK_RETURN,  IDM_SET_FULLSCREEN,      ALT,     VIRTKEY
+	VK_RETURN,  IDM_SET_FULLSCREEN,      ALT,     VIRTKEY
 #if defined SDL
 	"R",        IDM_SET_EFFECT_CUBE,     VIRTKEY
 #endif
@@ -202,8 +202,8 @@ BEGIN
 			END
 #endif
 			MENUITEM SEPARATOR
-			//MENUITEM "F&ullscreen\tAlt+Enter",    IDM_SET_FULLSCREEN
-			//MENUITEM "S&tretch in fullscreen\tP", IDM_SET_STRETCHFLSCR
+			MENUITEM "F&ullscreen\tAlt+Enter",    IDM_SET_FULLSCREEN
+			MENUITEM "S&tretch in fullscreen\tP", IDM_SET_STRETCHFLSCR
 		END
 		POPUP "&Audio"
 		BEGIN

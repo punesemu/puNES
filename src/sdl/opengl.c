@@ -89,6 +89,7 @@ void sdl_create_surface_gl(SDL_Surface *src, WORD width, WORD height, BYTE flags
 		/* aspect ratio */
 		GLfloat w_quad = (GLfloat) src->w;
 		GLfloat h_quad = (GLfloat) src->h;
+
 		opengl.quadcoords.l = 0.0f;
 		opengl.quadcoords.r = w_quad;
 		opengl.quadcoords.b = 0.0f;
