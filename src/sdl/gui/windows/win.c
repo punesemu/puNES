@@ -68,13 +68,13 @@
 			timeline_back(TL_NORMAL, snap);\
 		}\
 	}\
-	SetFocus(sdl_frame);\
+	SetFocus(frame_screen_nes);\
 	type = FALSE;\
 	emu_pause(FALSE)
 #define hide_tool_widget()\
-	ShowWindow(ss_frame, SW_HIDE)
+	ShowWindow(frame_ss, SW_HIDE)
 #define show_tool_widget()\
-	ShowWindow(ss_frame, SW_SHOW)
+	ShowWindow(frame_ss, SW_SHOW)
 
 enum menu_inc_dec { INC, DEC };
 enum menu_save_load { SAVE, LOAD };
@@ -119,12 +119,12 @@ void fds_eject_insert_disk(void);
 void fds_select_side(int side);
 
 static HHOOK msgbox_hook;
-static HWND main_win, sdl_frame, toolbox_frame;
-static HWND tl_frame, timeline;
+static HWND main_win, frame_screen_nes, frame_toolbox;
+static HWND frame_tl, timeline;
 static HWND sep_tl;
-static HWND ss_frame, sslot, save_button, load_button;
+static HWND frame_ss, sslot, save_button, load_button;
 static HWND sep_ss;
-static HWND bl_frame;
+static HWND frame_bl;
 HMENU main_menu;
 HACCEL acc_keys;
 HBITMAP about_img, about_mask;
@@ -223,7 +223,6 @@ BYTE gui_create(void) {
 	INITCOMMONCONTROLSEX icex;
 	const char class_name[] = "FHWindowClass";
 
-	//Step 1: Registering the Window Class
 	wc.cbSize = sizeof(WNDCLASSEX);
 	wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
 	wc.lpfnWndProc = (WNDPROC) main_win_proc;
@@ -244,7 +243,6 @@ BYTE gui_create(void) {
 
 	/* ---------------------------------- main window ---------------------------------- */
 
-	/* creo la finestra principale */
 	main_win = CreateWindowEx(WS_EX_CLIENTEDGE | WS_EX_ACCEPTFILES,
 			class_name,
 			"puNES window",
@@ -271,12 +269,11 @@ BYTE gui_create(void) {
 		return (EXIT_ERROR);
 	}
 
-	/* ---------------------------------- SDL window ---------------------------------- */
+	/* ------------------------------ frame screen NES ----------------------------- */
 
-	/* creo la finestra a cui attacchero' lo screen sdl */
-	sdl_frame = CreateWindowEx(0,
+	frame_screen_nes = CreateWindowEx(0,
 			class_name,
-			"puNES SDL Frame",
+			"puNES screen NES frame",
 			WS_CHILD,
 			CW_USEDEFAULT, CW_USEDEFAULT,
 			CW_USEDEFAULT, CW_USEDEFAULT,
@@ -285,18 +282,18 @@ BYTE gui_create(void) {
 			gui.main_hinstance,
 			NULL);
 
-	if (sdl_frame == NULL) {
+	if (frame_screen_nes == NULL) {
 		MessageBox(NULL, "Window Creation Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
 
-	/* ---------------------------------- Toolbar ---------------------------------- */
+	/* ---------------------------------- toolbar ---------------------------------- */
 
 	icex.dwSize = sizeof(INITCOMMONCONTROLSEX);
 	icex.dwICC = ICC_WIN95_CLASSES;
 	InitCommonControlsEx(&icex);
 
-	toolbox_frame = CreateWindowEx(0,
+	frame_toolbox = CreateWindowEx(0,
 			TOOLBARCLASSNAME,
 			NULL,
 			WS_CHILD | WS_VISIBLE | CCS_NORESIZE,
@@ -308,31 +305,30 @@ BYTE gui_create(void) {
 			gui.main_hinstance,
 			NULL);
 
-	if (toolbox_frame == NULL) {
+	if (frame_toolbox == NULL) {
 		MessageBox(NULL, "Window Creation Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
 
-	/* ---------------------------------- Timeline ---------------------------------- */
+	/* ------------------------------- frame timeline ------------------------------ */
 
-	/* Frame Timeline */
-	tl_frame = CreateWindowEx(0,
+	frame_tl = CreateWindowEx(0,
 			"static",
 			"",
 			WS_CHILD | WS_VISIBLE | SS_ETCHEDVERT,
 			0, 0,
 			FRAME_TL_WIDTH, FRAME_TL_HEIGHT,
-			toolbox_frame,
+			frame_toolbox,
 			NULL,
 			NULL,
 			NULL);
 
-	if (tl_frame == NULL) {
+	if (frame_tl == NULL) {
 		MessageBox(NULL, "Window Creation Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
 
-	SetWindowLongPtr(tl_frame, GWLP_WNDPROC, (LONG_PTR) timeline_proc);
+	SetWindowLongPtr(frame_tl, GWLP_WNDPROC, (LONG_PTR) timeline_proc);
 
 	timeline = CreateWindowEx(0,
 			TRACKBAR_CLASS,
@@ -340,7 +336,7 @@ BYTE gui_create(void) {
 			WS_CHILD | WS_VISIBLE | TBS_AUTOTICKS | TBS_FIXEDLENGTH | TBS_TOOLTIPS,
 			2, 0,
 			FRAME_TL_WIDTH - 4, FRAME_TL_HEIGHT,
-			tl_frame,
+			frame_tl,
 			(HMENU) NULL,
 			gui.main_hinstance,
 			NULL);
@@ -355,7 +351,7 @@ BYTE gui_create(void) {
 	SendMessage(timeline, TBM_SETPAGESIZE, 0, 0);
 	SendMessage(timeline, TBM_SETTIPSIDE, TBTS_BOTTOM, 0);
 
-	/* -------------------------------- Separatore Tl -------------------------------- */
+	/* ----------------------------- separatore timeline ----------------------------- */
 
 	sep_tl = CreateWindowEx(0,
 			"static",
@@ -363,33 +359,32 @@ BYTE gui_create(void) {
 			WS_CHILD | WS_VISIBLE,
 			0, 0,
 			SEPARATOR_WIDTH, TOOLBAR_HEIGHT,
-			toolbox_frame,
+			frame_toolbox,
 			(HMENU) NULL,
 			gui.main_hinstance,
 			NULL);
 
-	/* ---------------------------------- Save slot ---------------------------------- */
+	/* ------------------------------- frame save slot ------------------------------- */
 
 	HFONT font = (HFONT) GetStockObject(DEFAULT_GUI_FONT);
 
-	/* Frame Saveslot */
-	ss_frame = CreateWindowEx(WS_EX_WINDOWEDGE,
+	frame_ss = CreateWindowEx(WS_EX_WINDOWEDGE,
 			"static",
 			"",
 			WS_CHILD | WS_VISIBLE | SS_ETCHEDVERT,
 			0, 0,
 			FRAME_SS_WIDTH, FRAME_SS_HEIGHT,
-			toolbox_frame,
+			frame_toolbox,
 			NULL,
 			NULL,
 			NULL);
 
-	if (ss_frame == NULL) {
+	if (frame_ss == NULL) {
 		MessageBox(NULL, "Window Creation Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
 
-	SetWindowLongPtr(ss_frame, GWLP_WNDPROC, (LONG_PTR) save_slot_proc);
+	SetWindowLongPtr(frame_ss, GWLP_WNDPROC, (LONG_PTR) save_slot_proc);
 
 	sslot = CreateWindowEx(0,
 			"COMBOBOX",
@@ -397,7 +392,7 @@ BYTE gui_create(void) {
 			WS_CHILD | WS_VISIBLE | CBS_DROPDOWNLIST | CBS_HASSTRINGS | CBS_OWNERDRAWFIXED,
 			1 + BUTTON_SS_WIDTH + 0, 1,
 			COMBO_SS_WIDTH, 130,
-			ss_frame,
+			frame_ss,
 			(HMENU) ID_SAVE_SLOT_CB,
 			gui.main_hinstance,
 			NULL);
@@ -415,7 +410,7 @@ BYTE gui_create(void) {
 			WS_CHILD | WS_VISIBLE | BS_OWNERDRAW,
 			1, 0,
 			BUTTON_SS_WIDTH, BUTTON_SS_HEIGHT,
-			ss_frame,
+			frame_ss,
 			(HMENU) ID_SAVE_SLOT_BS,
 			gui.main_hinstance,
 			NULL);
@@ -433,7 +428,7 @@ BYTE gui_create(void) {
 			WS_CHILD | WS_VISIBLE | BS_OWNERDRAW,
 			1 + BUTTON_SS_WIDTH + 0 + COMBO_SS_WIDTH + 2, 0,
 			BUTTON_SS_WIDTH, BUTTON_SS_HEIGHT,
-			ss_frame,
+			frame_ss,
 			(HMENU) ID_SAVE_SLOT_BL,
 			gui.main_hinstance,
 			NULL);
@@ -458,31 +453,31 @@ BYTE gui_create(void) {
 
 	SendMessage(sslot, CB_SETCURSEL, 0, 0);
 
-	/* -------------------------------- Separatore Ss -------------------------------- */
+	/* --------------------------- separatore save slot ---------------------------- */
 
 	sep_ss = CreateWindowEx(0,
 			"static", "",
 			WS_CHILD | WS_VISIBLE,
 			0, 0,
 			SEPARATOR_WIDTH, TOOLBAR_HEIGHT,
-			toolbox_frame,
+			frame_toolbox,
 			(HMENU) NULL,
 			gui.main_hinstance,
 			NULL);
 
-	/* -------------------------------- Frame vuoto -------------------------------- */
+	/* -------------------------------- frame vuoto -------------------------------- */
 
-	bl_frame = CreateWindowEx(WS_EX_WINDOWEDGE,
+	frame_bl = CreateWindowEx(WS_EX_WINDOWEDGE,
 			"static", "",
 			WS_CHILD | WS_VISIBLE | SS_ETCHEDVERT,
 			0, 0,
 			0, FRAME_SS_HEIGHT,
-			toolbox_frame,
+			frame_toolbox,
 			NULL,
 			NULL,
 			NULL);
 
-	if (bl_frame == NULL) {
+	if (frame_bl == NULL) {
 		MessageBox(NULL, "Window Creation Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
@@ -500,10 +495,10 @@ void gui_set_video_mode(void) {
 	pt_diff.y = (rc_wind.bottom - rc_wind.top) - rc_client.bottom;
 	MoveWindow(main_win, rc_wind.left, rc_wind.top, gfx.w[VIDEO_MODE] + pt_diff.x,
 			gfx.h[VIDEO_MODE] + pt_diff.y + TOOLBAR_HEIGHT, TRUE);
-	/* aggiorno la finestra dell'sdl */
-	MoveWindow(sdl_frame, 0, 0, gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE], TRUE);
+	/* aggiorno la finestra dello screen */
+	MoveWindow(frame_screen_nes, 0, 0, gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE], TRUE);
 	/* aggiorno la toolbar */
-	MoveWindow(toolbox_frame, 0, gfx.h[VIDEO_MODE], gfx.w[VIDEO_MODE], TOOLBAR_HEIGHT, TRUE);
+	MoveWindow(frame_toolbox, 0, gfx.h[VIDEO_MODE], gfx.w[VIDEO_MODE], TOOLBAR_HEIGHT, TRUE);
 	/* aggiorno il frame della timeline */
 	{
 		WORD rows = FRAME_TL_WIDTH;
@@ -517,44 +512,44 @@ void gui_set_video_mode(void) {
 			show_tool_widget();
 		}
 		pt_diff.x = gfx.w[VIDEO_MODE] - rows;
-		MoveWindow(tl_frame, pt_diff.x, 0, rows, FRAME_TL_HEIGHT, TRUE);
+		MoveWindow(frame_tl, pt_diff.x, 0, rows, FRAME_TL_HEIGHT, TRUE);
 		MoveWindow(timeline, 0, 0, rows - 4, FRAME_TL_HEIGHT, TRUE);
 	}
 	pt_diff.x -= SEPARATOR_WIDTH;
 	MoveWindow(sep_tl, pt_diff.x, 0, SEPARATOR_WIDTH, FRAME_TL_HEIGHT, TRUE);
 	/* aggiorno il frame dello saveslot */
 	pt_diff.x -= FRAME_SS_WIDTH;
-	MoveWindow(ss_frame, pt_diff.x, 0, FRAME_SS_WIDTH, FRAME_SS_HEIGHT, TRUE);
+	MoveWindow(frame_ss, pt_diff.x, 0, FRAME_SS_WIDTH, FRAME_SS_HEIGHT, TRUE);
 	pt_diff.x -= SEPARATOR_WIDTH;
 	MoveWindow(sep_ss, pt_diff.x, 0, SEPARATOR_WIDTH, FRAME_TL_HEIGHT, TRUE);
 	/* frame vuoto */
 	pt_diff.y = gfx.w[VIDEO_MODE] - pt_diff.x;
-	MoveWindow(bl_frame, 0, 0, gfx.w[VIDEO_MODE] - pt_diff.y, FRAME_TL_HEIGHT, TRUE);
+	MoveWindow(frame_bl, 0, 0, gfx.w[VIDEO_MODE] - pt_diff.y, FRAME_TL_HEIGHT, TRUE);
 }
 void gui_start(void) {
 	/* visualizzo il frame principale */
 	ShowWindow(main_win, SW_NORMAL);
 	UpdateWindow(main_win);
 
-	/* visualizzo il frame sdl */
-	ShowWindow(sdl_frame, SW_SHOWNOACTIVATE);
-	UpdateWindow(sdl_frame);
+	/* visualizzo il frame dello screen */
+	ShowWindow(frame_screen_nes, SW_SHOWNOACTIVATE);
+	UpdateWindow(frame_screen_nes);
 
 	/* visualizzo la toolbar */
-	ShowWindow(toolbox_frame, SW_SHOWNOACTIVATE);
-	UpdateWindow(toolbox_frame);
+	ShowWindow(frame_toolbox, SW_SHOWNOACTIVATE);
+	UpdateWindow(frame_toolbox);
 
 	/* visualizzo il frame della timeline */
-	ShowWindow(tl_frame, SW_SHOWNOACTIVATE);
-	UpdateWindow(tl_frame);
+	ShowWindow(frame_tl, SW_SHOWNOACTIVATE);
+	UpdateWindow(frame_tl);
 
 	/* visualizzo la timeline */
 	ShowWindow(timeline, SW_SHOWNOACTIVATE);
 	UpdateWindow(timeline);
 
-	/* setto il focus sulla finestra sdl */
-	SetForegroundWindow(sdl_frame);
-	SetFocus(sdl_frame);
+	/* setto il focus sulla finestra dello screen */
+	SetForegroundWindow(frame_screen_nes);
+	SetFocus(frame_screen_nes);
 
 	gui.start = TRUE;
 
@@ -573,7 +568,7 @@ void gui_event(void) {
 			Sleep(3);
 			continue;
 		}
-		//fprintf(stderr, "0: %X %X\n", Msg.message, LOWORD(Msg.wParam));
+		//fprintf(stderr, "0: %X %X\n", msg.message, LOWORD(msg.wParam));
 		switch (msg.message) {
 			case WM_KEYDOWN: {
 				switch (LOWORD(msg.wParam)) {
@@ -660,7 +655,7 @@ void gui_event(void) {
 				gui.right_button = TRUE;
 				break;
 			case WM_MOUSEMOVE:
-				if (msg.hwnd == sdl_frame) {
+				if (msg.hwnd == frame_screen_nes) {
 					gui.x = GET_X_LPARAM(msg.lParam);
 					gui.y = GET_Y_LPARAM(msg.lParam);
 				}
@@ -704,7 +699,7 @@ void gui_event(void) {
 	}
 }
 HWND gui_emu_frame_id(void) {
-	return (sdl_frame);
+	return (frame_screen_nes);
 }
 void gui_update(void) {
 	WORD id = 0;
@@ -1235,11 +1230,13 @@ void gui_update(void) {
 	}
 	change_menuitem(CHECK, MF_CHECKED, id);
 
+	/* Effect */
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_EFFECT_CUBE);
 	if (opengl.rotation) {
 		change_menuitem(CHECK, MF_CHECKED, IDM_SET_EFFECT_CUBE);
 	}
 
+	/* Vsync */
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_VSYNC_ON);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_VSYNC_OFF);
 	if (cfg->vsync) {
@@ -1248,6 +1245,7 @@ void gui_update(void) {
 		change_menuitem(CHECK, MF_CHECKED, IDM_SET_VSYNC_OFF);
 	}
 
+	/* Aspect ratio */
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_STRETCHFLSCR);
 	if (gfx.opengl && !cfg->aspect_ratio) {
 		change_menuitem(CHECK, MF_CHECKED, IDM_SET_STRETCHFLSCR);
@@ -1413,7 +1411,7 @@ void gui_fullscreen(void) {
 	/* visualizzo la finestra */
 	ShowWindow(main_win, SW_NORMAL);
 	/* setto il focus*/
-	SetFocus(sdl_frame);
+	SetFocus(frame_screen_nes);
 
 	emu_pause(FALSE);
 }
@@ -1463,7 +1461,7 @@ long __stdcall main_win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 		case WM_EXITMENULOOP:
 			emu_pause(FALSE);
 			//timer_redraw_stop();
-			SetFocus(sdl_frame);
+			SetFocus(frame_screen_nes);
 			break;
 			//case 293:
 			//case WM_ENTERIDLE:
@@ -1515,7 +1513,7 @@ long __stdcall main_win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 					 */
 					tl.key = FALSE;
 					open_event();
-					SetFocus(sdl_frame);
+					SetFocus(frame_screen_nes);
 					break;
 				case IDM_FILE_RECENT_0:
 				case IDM_FILE_RECENT_1:
@@ -1898,7 +1896,7 @@ long __stdcall main_win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 						DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_ABOUT_PORTABLE), hwnd,
 								(DLGPROC) about_proc);
 					}
-					SetFocus(sdl_frame);
+					SetFocus(frame_screen_nes);
 					break;
 				case IDM_SET_INPUT_CONFIG:
 					cfg_input_dialog(hwnd);
@@ -1939,7 +1937,7 @@ long __stdcall timeline_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 	static char buf[80] = "";
 
 	if (!tl.button && (GetForegroundWindow() == main_win)) {
-		SetFocus(sdl_frame);
+		SetFocus(frame_screen_nes);
 	}
 
 	switch (msg) {
@@ -2089,7 +2087,7 @@ long __stdcall save_slot_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 							save_slot_action(SAVE);
 							break;
 					}
-					SetFocus(sdl_frame);
+					SetFocus(frame_screen_nes);
 					break;
 				}
 				case ID_SAVE_SLOT_BL: {
@@ -2098,7 +2096,7 @@ long __stdcall save_slot_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 							save_slot_action(LOAD);
 							break;
 					}
-					SetFocus(sdl_frame);
+					SetFocus(frame_screen_nes);
 					break;
 				}
 				case ID_SAVE_SLOT_CB: {
@@ -2111,7 +2109,7 @@ long __stdcall save_slot_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 							gui_update();
 							save_slot.preview_start = FALSE;
 							emu_pause(FALSE);
-							SetFocus(sdl_frame);
+							SetFocus(frame_screen_nes);
 							break;
 						case CBN_EDITUPDATE:
 							break;
@@ -2311,6 +2309,7 @@ void set_fps(BYTE fps) {
 	if (cfg->fps == fps) {
 		return;
 	}
+
 	cfg->fps = fps;
 
 	emu_pause(TRUE);
@@ -2636,7 +2635,7 @@ void open_event(void) {
 		/* visualizzo la finestra */
 		ShowWindow(main_win, SW_NORMAL);
 		/* setto il focus*/
-		SetFocus(sdl_frame);
+		SetFocus(frame_screen_nes);
 	}
 
 	emu_pause(FALSE);
