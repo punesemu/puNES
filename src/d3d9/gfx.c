@@ -70,10 +70,6 @@ typedef struct {
 	FLOAT tu, tv;
 } vertex;
 typedef struct {
-	FLOAT l, r;
-	FLOAT t, b;
-} _texcoords;
-typedef struct {
 	UINT id;
 
 	LPDIRECT3DDEVICE9 dev;
@@ -104,7 +100,6 @@ struct _d3d9 {
 	_texture screen;
 	_texture text;
 	_texcoords texcoords;
-	_texcoords quadcoords;
 	_shader shader;
 
 	uint32_t *palette;
@@ -384,12 +379,12 @@ void gfx_set_render(BYTE render) {
 void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE force_scale) {
 	BYTE set_mode;
 	WORD width, height;
-	//WORD w_for_pr, h_for_pr;
+	WORD w_for_pr, h_for_pr;
 
 	gfx_set_screen_start:
 	set_mode = FALSE;
 	width = 0, height = 0;
-	//w_for_pr = 0, h_for_pr = 0;
+	w_for_pr = 0, h_for_pr = 0;
 
 	/*
 	 * l'ordine dei vari controlli non deve essere cambiato:
@@ -476,6 +471,17 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 				}
 				break;
 		}
+		/* forzo il controllo del fattore di scale */
+		force_scale = TRUE;
+		/* indico che devo cambiare il video mode */
+		set_mode = TRUE;
+	}
+
+	/* fullscreen */
+	if (fullscreen == NO_CHANGE) {
+		fullscreen = cfg->fullscreen;
+	}
+	if ((fullscreen != cfg->fullscreen) || info.on_cfg) {
 		/* forzo il controllo del fattore di scale */
 		force_scale = TRUE;
 		/* indico che devo cambiare il video mode */
@@ -576,6 +582,8 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 	cfg->scale = scale;
 	/* salvo ill nuovo filtro */
 	cfg->filter = filter;
+	/* salvo il nuovo stato del fullscreen */
+	cfg->fullscreen = fullscreen;
 	/* salvo il nuovo tipo di paletta */
 	cfg->palette = palette;
 
@@ -673,6 +681,16 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 	text.w = gfx.w[VIDEO_MODE];
 	text.h = gfx.h[VIDEO_MODE];
 
+	{
+		WORD r = (WORD) gfx.quadcoords.r;
+		WORD l = (WORD) gfx.quadcoords.l;
+		WORD b = (WORD) gfx.quadcoords.b;
+		WORD t = (WORD) gfx.quadcoords.t;
+
+		w_for_pr = r - l;
+		h_for_pr = b - t;
+	}
+
 	/* questo controllo devo farlo necessariamente dopo il glew_init() */
 	if ((gfx.hlsl.compliant == FALSE) || (gfx.hlsl.enabled == FALSE)) {
 		if ((filter >= POSPHOR) && (filter <= CRT_NO_CURVE)) {
@@ -682,6 +700,15 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 	}
 
 	gfx_text_reset();
+
+	/*
+	 * calcolo le proporzioni tra il disegnato a video (overscan e schermo
+	 * con le dimensioni per il filtro NTSC compresi) e quello che dovrebbe
+	 * essere (256 x 240). Mi serve per calcolarmi la posizione del puntatore
+	 * dello zapper.
+	 */
+	gfx.w_pr = ((float) w_for_pr / gfx.w[CURRENT]) * ((float) gfx.w[NO_OVERSCAN] / SCR_ROWS);
+	gfx.h_pr = ((float) h_for_pr / gfx.h[CURRENT]) * ((float) gfx.h[NO_OVERSCAN] / SCR_LINES);
 
 	/* setto il titolo della finestra */
 	gui_update();
@@ -1130,10 +1157,10 @@ BYTE d3d9_create_context(UINT width, UINT height) {
 			/* aspect ratio */
 			FLOAT w_quad = (FLOAT) gfx.w[VIDEO_MODE];
 			FLOAT h_quad = (FLOAT) gfx.h[VIDEO_MODE];
-			d3d9.quadcoords.l = 0.0f;
-			d3d9.quadcoords.r = w_quad;
-			d3d9.quadcoords.t = 0.0f;
-			d3d9.quadcoords.b = h_quad;
+			gfx.quadcoords.l = 0.0f;
+			gfx.quadcoords.r = w_quad;
+			gfx.quadcoords.t = 0.0f;
+			gfx.quadcoords.b = h_quad;
 
 			int flags = FALSE;
 
@@ -1158,10 +1185,10 @@ BYTE d3d9_create_context(UINT width, UINT height) {
 					h_quad = w_quad / ratio_frame;
 					centering_factor = ((FLOAT) gfx.h[VIDEO_MODE] - h_quad) / 2.0f;
 
-					d3d9.quadcoords.l = 0.0f;
-					d3d9.quadcoords.r = w_quad;
-					d3d9.quadcoords.t = centering_factor;
-					d3d9.quadcoords.b = h_quad + centering_factor;
+					gfx.quadcoords.l = 0.0f;
+					gfx.quadcoords.r = w_quad;
+					gfx.quadcoords.t = centering_factor;
+					gfx.quadcoords.b = h_quad + centering_factor;
 				/*
 				 * se l'aspect ratio del frame e' minore di
 				 * quello della superficie allora devo agire
@@ -1173,10 +1200,10 @@ BYTE d3d9_create_context(UINT width, UINT height) {
 					w_quad = ratio_frame * h_quad;
 					centering_factor = ((FLOAT) gfx.w[VIDEO_MODE] - w_quad) / 2.0f;
 
-					d3d9.quadcoords.l = centering_factor;
-					d3d9.quadcoords.r = w_quad + centering_factor;
-					d3d9.quadcoords.t = 0.0f;
-					d3d9.quadcoords.b = h_quad;
+					gfx.quadcoords.l = centering_factor;
+					gfx.quadcoords.r = w_quad + centering_factor;
+					gfx.quadcoords.t = 0.0f;
+					gfx.quadcoords.b = h_quad;
 				}
 			}
 		}
@@ -1185,10 +1212,10 @@ BYTE d3d9_create_context(UINT width, UINT height) {
 			_texcoords *tc = &d3d9.texcoords;
 			void *tv_vertices;
 			vertex quad_vertices[] = {
-				{ d3d9.quadcoords.l, d3d9.quadcoords.b, 0.0f, 1.0f, tc->l, tc->b },
-				{ d3d9.quadcoords.l, d3d9.quadcoords.t, 0.0f, 1.0f, tc->l, tc->t },
-				{ d3d9.quadcoords.r, d3d9.quadcoords.t, 0.0f, 1.0f, tc->r, tc->t },
-				{ d3d9.quadcoords.r, d3d9.quadcoords.b, 0.0f, 1.0f, tc->r, tc->b }
+				{ gfx.quadcoords.l, gfx.quadcoords.b, 0.0f, 1.0f, tc->l, tc->b },
+				{ gfx.quadcoords.l, gfx.quadcoords.t, 0.0f, 1.0f, tc->l, tc->t },
+				{ gfx.quadcoords.r, gfx.quadcoords.t, 0.0f, 1.0f, tc->r, tc->t },
+				{ gfx.quadcoords.r, gfx.quadcoords.b, 0.0f, 1.0f, tc->r, tc->b }
 			};
 
 			/*
@@ -1438,8 +1465,8 @@ BYTE d3d9_create_shader(_shader *shd) {
 
 				sse[0] = (FLOAT) SCR_ROWS;
 				sse[1] = (FLOAT) SCR_LINES;
-				svm[0] = d3d9.quadcoords.r - d3d9.quadcoords.l;
-				svm[1] = d3d9.quadcoords.b - d3d9.quadcoords.t;
+				svm[0] = gfx.quadcoords.r - gfx.quadcoords.l;
+				svm[1] = gfx.quadcoords.b - gfx.quadcoords.t;
 				st[0] = d3d9.screen.w;
 				st[1] = d3d9.screen.h;
 				fc = (FLOAT) ppu.frames;

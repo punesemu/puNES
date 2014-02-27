@@ -369,6 +369,14 @@ BYTE input_rd_reg_zapper(BYTE openbus, WORD **screen_index, BYTE nport) {
 			gx -= l;
 			gy -= b;
 		}
+#elif defined D3D9
+		{
+			int l = (int) gfx.quadcoords.l;
+			int t = (int) gfx.quadcoords.t;
+
+			gx -= l;
+			gy -= t;
+		}
 #endif
 		x_zapper = gx / gfx.w_pr;
 		y_zapper = gy / gfx.h_pr;
@@ -376,7 +384,6 @@ BYTE input_rd_reg_zapper(BYTE openbus, WORD **screen_index, BYTE nport) {
 		if (overscan.enabled) {
 			x_zapper += overscan.left;
 			y_zapper += overscan.up;
-#if defined SDL
 			/*
 			 * il filtro NTSC necessita di un'aggiustatina sia con
 			 * l'overscan abilitato che senza.
@@ -384,13 +391,10 @@ BYTE input_rd_reg_zapper(BYTE openbus, WORD **screen_index, BYTE nport) {
 			if (cfg->filter == NTSC_FILTER) {
 				x_zapper += 1;
 			}
-#endif
 		} else {
-#if defined SDL
 			if (cfg->filter == NTSC_FILTER) {
 				x_zapper -= 1;
 			}
-#endif
 		}
 	}
 

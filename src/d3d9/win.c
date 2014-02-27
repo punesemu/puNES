@@ -644,13 +644,12 @@ void gui_event(void) {
 				}
 				break;
 			}
-			/*
 			case WM_LBUTTONDOWN:
 				gui.left_button = TRUE;
 				//opengl.x_diff = GET_X_LPARAM(Msg.lParam) - (opengl.y_rotate * slow_factor);
 				//opengl.y_diff = -GET_Y_LPARAM(Msg.lParam) + (opengl.x_rotate * slow_factor);
-				opengl.x_diff = gui.x - (opengl.y_rotate * slow_factor);
-				opengl.y_diff = -gui.y + (opengl.x_rotate * slow_factor);
+				//opengl.x_diff = gui.x - (opengl.y_rotate * slow_factor);
+				//opengl.y_diff = -gui.y + (opengl.x_rotate * slow_factor);
 				break;
 			case WM_RBUTTONDOWN:
 				gui.right_button = TRUE;
@@ -660,10 +659,10 @@ void gui_event(void) {
 					gui.x = GET_X_LPARAM(msg.lParam);
 					gui.y = GET_Y_LPARAM(msg.lParam);
 				}
-				if (gui.left_button && opengl.rotation) {
-					opengl.x_rotate = (gui.y + opengl.y_diff) / slow_factor;
-					opengl.y_rotate = (gui.x - opengl.x_diff) / slow_factor;
-				}
+				//if (gui.left_button && opengl.rotation) {
+				//	opengl.x_rotate = (gui.y + opengl.y_diff) / slow_factor;
+				//	opengl.y_rotate = (gui.x - opengl.x_diff) / slow_factor;
+				//}
 				break;
 			case WM_LBUTTONUP:
 				gui.left_button = FALSE;
@@ -671,7 +670,6 @@ void gui_event(void) {
 			case WM_RBUTTONUP:
 				gui.right_button = FALSE;
 				break;
-			*/
 		}
 		if ((gui.accelerators_anabled == FALSE)
 		        || !TranslateAccelerator(main_win, acc_keys, &msg)) {
@@ -2168,12 +2166,12 @@ LRESULT CALLBACK cbt_proc(int code, WPARAM wParam, LPARAM lParam) {
 	switch (code) {
 		case HCBT_CREATEWND: {
 			HWND hwnd = (HWND) wParam;
-			TCHAR szClassName[16];
+			TCHAR class_name[16];
 
-			if (GetClassName(hwnd, szClassName, 16)) {
-				if (strcmp(szClassName, "Static") == 0) {
+			if (GetClassName(hwnd, class_name, 16)) {
+				if (strcmp(class_name, "Static") == 0) {
 					txt = hwnd;
-				} else if (strcmp(szClassName, "Button") == 0) {
+				} else if (strcmp(class_name, "Button") == 0) {
 					button = hwnd;
 				}
 			}

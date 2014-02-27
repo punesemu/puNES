@@ -45,6 +45,10 @@ enum overcan_type { OSCAN_OFF, OSCAN_ON, OSCAN_DEFAULT, OSCAN_DEFAULT_OFF, OSCAN
 enum gfx_info_index { CURRENT, NO_OVERSCAN, MONITOR, VIDEO_MODE };
 enum no_change { NO_CHANGE = 255 };
 
+typedef struct {
+	float l, r;
+	float t, b;
+} _texcoords;
 struct _gfx {
 	BYTE scale_before_fscreen;
 	BYTE bit_per_pixel;
@@ -65,6 +69,8 @@ struct _gfx {
 		BYTE enabled;
 		BYTE used;
 	} hlsl;
+
+	_texcoords quadcoords;
 } gfx;
 
 BYTE gfx_init(void);

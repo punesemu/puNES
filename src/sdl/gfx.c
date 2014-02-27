@@ -658,7 +658,6 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 			w_for_pr = r - l;
 			h_for_pr = t - b;
  		}
-
 	}
 
 	/* questo controllo devo farlo necessariamente dopo il glew_init() */

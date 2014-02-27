@@ -2184,12 +2184,12 @@ LRESULT CALLBACK cbt_proc(int code, WPARAM wParam, LPARAM lParam) {
 	switch (code) {
 		case HCBT_CREATEWND: {
 			HWND hwnd = (HWND) wParam;
-			TCHAR szClassName[16];
+			TCHAR class_name[16];
 
-			if (GetClassName(hwnd, szClassName, 16)) {
-				if (strcmp(szClassName, "Static") == 0) {
+			if (GetClassName(hwnd, class_name, 16)) {
+				if (strcmp(class_name, "Static") == 0) {
 					txt = hwnd;
-				} else if (strcmp(szClassName, "Button") == 0) {
+				} else if (strcmp(class_name, "Button") == 0) {
 					button = hwnd;
 				}
 			}
