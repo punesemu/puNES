@@ -26,7 +26,7 @@
 #include "fps.h"
 #include "tas.h"
 #include "text.h"
-
+#include "param.h"
 #include "ppu.h"
 #include "fds.h"
 #include "gamegenie.h"
@@ -80,7 +80,7 @@ enum menu_inc_dec { INC, DEC };
 enum menu_save_load { SAVE, LOAD };
 enum menu_item_state { CHECK, ENAB };
 
-long __stdcall main_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+long __stdcall main_win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 long __stdcall timeline_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 long __stdcall save_slot_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 long __stdcall about_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -125,9 +125,11 @@ static HWND sep_tl;
 static HWND ss_frame, sslot, save_button, load_button;
 static HWND sep_ss;
 static HWND bl_frame;
-HBITMAP about_img, about_mask;
 HMENU main_menu;
 HACCEL acc_keys;
+HBITMAP about_img, about_mask;
+
+
 
 void gui_init(int argc, char **argv) {
 	gui.start = FALSE;
@@ -224,7 +226,7 @@ BYTE gui_create(void) {
 	//Step 1: Registering the Window Class
 	wc.cbSize = sizeof(WNDCLASSEX);
 	wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
-	wc.lpfnWndProc = (WNDPROC) main_proc;
+	wc.lpfnWndProc = (WNDPROC) main_win_proc;
 	wc.cbClsExtra = 0;
 	wc.cbWndExtra = 0;
 	wc.hInstance = gui.main_hinstance;
@@ -426,7 +428,8 @@ BYTE gui_create(void) {
 	SendMessage(save_button, WM_SETFONT, (WPARAM) font, MAKELPARAM(TRUE, 0));
 
 	load_button = CreateWindowEx(0,
-			"BUTTON", "Load",
+			"BUTTON",
+			"Load",
 			WS_CHILD | WS_VISIBLE | BS_OWNERDRAW,
 			1 + BUTTON_SS_WIDTH + 0 + COMBO_SS_WIDTH + 2, 0,
 			BUTTON_SS_WIDTH, BUTTON_SS_HEIGHT,
@@ -497,7 +500,7 @@ void gui_set_video_mode(void) {
 	pt_diff.y = (rc_wind.bottom - rc_wind.top) - rc_client.bottom;
 	MoveWindow(main_win, rc_wind.left, rc_wind.top, gfx.w[VIDEO_MODE] + pt_diff.x,
 			gfx.h[VIDEO_MODE] + pt_diff.y + TOOLBAR_HEIGHT, TRUE);
-	/* aggiorno la finestra dell'd3d */
+	/* aggiorno la finestra del d3d */
 	MoveWindow(d3d_frame, 0, 0, gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE], TRUE);
 	/* aggiorno la toolbar */
 	MoveWindow(toolbox_frame, 0, gfx.h[VIDEO_MODE], gfx.w[VIDEO_MODE], TOOLBAR_HEIGHT, TRUE);
@@ -537,11 +540,25 @@ void gui_start(void) {
 	ShowWindow(d3d_frame, SW_SHOWNOACTIVATE);
 	UpdateWindow(d3d_frame);
 
+	/* visualizzo la toolbar */
+	ShowWindow(toolbox_frame, SW_SHOWNOACTIVATE);
+	UpdateWindow(toolbox_frame);
+
+	/* visualizzo il frame della timeline */
+	ShowWindow(tl_frame, SW_SHOWNOACTIVATE);
+	UpdateWindow(tl_frame);
+
+	/* visualizzo la timeline */
+	ShowWindow(timeline, SW_SHOWNOACTIVATE);
+	UpdateWindow(timeline);
+
+	/* setto il focus sulla finestra sdl */
+	SetForegroundWindow(d3d_frame);
+	SetFocus(d3d_frame);
+
 	gui.start = TRUE;
 
 	emu_loop();
-
-	return;
 }
 void gui_event(void) {
 	BYTE no_process = FALSE;
@@ -559,7 +576,6 @@ void gui_event(void) {
 		//fprintf(stderr, "0: %X %X\n", msg.message, LOWORD(msg.wParam));
 		switch (msg.message) {
 			case WM_KEYDOWN: {
-				/*
 				switch (LOWORD(msg.wParam)) {
 					case VK_CONTROL:
 						if (!tl.key) {
@@ -573,7 +589,7 @@ void gui_event(void) {
 						break;
 					case VK_LEFT:
 						if (tl.key) {
-							BYTE snap = SendMessage(hTimeline, TBM_GETPOS, 0, 0);
+							BYTE snap = SendMessage(timeline, TBM_GETPOS, 0, 0);
 
 							if (snap) {
 								wrap_tl_preview(snap - 1);
@@ -583,7 +599,7 @@ void gui_event(void) {
 						break;
 					case VK_RIGHT:
 						if (tl.key) {
-							BYTE snap = SendMessage(hTimeline, TBM_GETPOS, 0, 0);
+							BYTE snap = SendMessage(timeline, TBM_GETPOS, 0, 0);
 
 							if (snap < (TL_SNAPS - 1)) {
 								wrap_tl_preview(snap + 1);
@@ -598,7 +614,6 @@ void gui_event(void) {
 						no_process = TRUE;
 						break;
 				}
-				*/
 				if (!tas.type && !no_process) {
 					BYTE i;
 
@@ -611,7 +626,6 @@ void gui_event(void) {
 				break;
 			}
 			case WM_KEYUP: {
-			/*
 				switch (LOWORD(msg.wParam)) {
 					case VK_CONTROL:
 						if (tl.key) {
@@ -624,7 +638,6 @@ void gui_event(void) {
 						no_process = TRUE;
 						break;
 				}
-			*/
 				if (!tas.type && !no_process) {
 					BYTE i;
 
@@ -665,7 +678,8 @@ void gui_event(void) {
 				break;
 			*/
 		}
-		if (!TranslateAccelerator(main_win, acc_keys, &msg)) {
+		if ((gui.accelerators_anabled == FALSE)
+		        || !TranslateAccelerator(main_win, acc_keys, &msg)) {
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
@@ -681,7 +695,6 @@ void gui_event(void) {
 		return;
 	}
 
-	/*
 	{
 		BYTE i;
 
@@ -691,7 +704,6 @@ void gui_event(void) {
 			}
 		}
 	}
-	*/
 }
 HWND gui_emu_frame_id(void) {
 	return (d3d_frame);
@@ -816,7 +828,6 @@ void gui_update(void) {
 	}
 
 	/* Save slot */
-	/*
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_SAVE_0);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_SAVE_1);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_SAVE_2);
@@ -846,13 +857,12 @@ void gui_update(void) {
 	change_menuitem(CHECK, MF_CHECKED, id);
 	if (save_slot.state[save_slot.slot]) {
 		change_menuitem(ENAB, MF_HILITE, IDM_SET_SAVE_LOAD);
-		EnableWindow(hLoadButton, TRUE);
+		EnableWindow(load_button, TRUE);
 	} else {
 		change_menuitem(ENAB, MF_GRAYED, IDM_SET_SAVE_LOAD);
-		EnableWindow(hLoadButton, FALSE);
+		EnableWindow(load_button, FALSE);
 	}
-	RedrawWindow(hSaveslot, NULL, NULL, RDW_INVALIDATE);
-	*/
+	RedrawWindow(sslot, NULL, NULL, RDW_INVALIDATE);
 
 	/* Mode */
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_MODE_PAL);
@@ -1039,7 +1049,6 @@ void gui_update(void) {
 		} else {
 			menuitem.fState = MFS_DISABLED;
 		}
-
 		/* Video/Rendering/HLSL */
 		SetMenuItemInfo(menu_to_change, 1, TRUE, &menuitem);
 
@@ -1116,7 +1125,6 @@ void gui_update(void) {
 			change_menuitem(CHECK, MF_GRAYED, IDM_SET_FILTER_RGBNTSCSVD);
 			change_menuitem(CHECK, MF_GRAYED, IDM_SET_FILTER_RGBNTSCRGB);
 		}
-
 	}
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_NO_FILTER);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_BILINEAR);
@@ -1219,18 +1227,17 @@ void gui_update(void) {
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_RENDERING_SOFTWARE);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_RENDERING_HLSL);
 	if (gfx.hlsl.compliant == TRUE) {
-	//	HMENU menuSettings = GetSubMenu(main_menu, 2);
-	//	HMENU menuVideo = GetSubMenu(menuSettings, 2);
+	//	HMENU menu_video = GetSubMenu(GetSubMenu(main_menu, 2), 2);
 	//	MENUITEMINFO menuitem;
 
 		/* VSync */
 	//	menuitem.cbSize = sizeof(MENUITEMINFO);
 	//	menuitem.fMask = MIIM_STATE;
 	//	menuitem.fState = MFS_ENABLED;
-	//	SetMenuItemInfo(menuVideo, 3, TRUE, &menuitem);
+	//	SetMenuItemInfo(menu_video, 3, TRUE, &menuitem);
 
-		/* questi li abilito solo se non c'e' come input lo zapper */
-	//	if ((port1.type != CTRL_ZAPPER) && (port2.type != CTRL_ZAPPER)) {
+	//	/* questi li abilito solo se non c'e' come input lo zapper */
+	//	if (input_zapper_is_connected((_port *) &port) == FALSE) {
 	//		menuitem.fState = MFS_ENABLED;
 	//		change_menuitem(ENAB, MF_ENABLED, IDM_SET_EFFECT_CUBE);
 	//	} else {
@@ -1239,12 +1246,12 @@ void gui_update(void) {
 	//	}
 	//	menuitem.cbSize = sizeof(MENUITEMINFO);
 	//	menuitem.fMask = MIIM_STATE;
-	//	SetMenuItemInfo(menuVideo, 9, TRUE, &menuitem);
+	//	SetMenuItemInfo(menu_video, 9, TRUE, &menuitem);
 
-	//	change_menuitem(ENAB, MF_ENABLED, IDM_SET_FULLSCREEN);
-	//	change_menuitem(ENAB, MF_ENABLED, IDM_SET_STRETCHFLSCR);
 	//	change_menuitem(ENAB, MF_ENABLED, IDM_SET_VSYNC_ON);
 	//	change_menuitem(ENAB, MF_ENABLED, IDM_SET_VSYNC_OFF);
+	//	change_menuitem(ENAB, MF_ENABLED, IDM_SET_FULLSCREEN);
+	//	change_menuitem(ENAB, MF_ENABLED, IDM_SET_STRETCHFLSCR);
 
 		if ((gfx.hlsl.compliant == TRUE) && (gfx.hlsl.enabled == TRUE)) {
 			id = IDM_SET_RENDERING_HLSL;
@@ -1252,8 +1259,7 @@ void gui_update(void) {
 			id = IDM_SET_RENDERING_SOFTWARE;
 		}
 	} else {
-	//	HMENU menuSettings = GetSubMenu(main_menu, 2);
-	//	HMENU menuVideo = GetSubMenu(menuSettings, 2);
+	//	HMENU menu_video = GetSubMenu(GetSubMenu(main_menu, 2), 2);
 	//	MENUITEMINFO menuitem;
 
 		/* VSync */
@@ -1264,11 +1270,11 @@ void gui_update(void) {
 		/* Effect */
 	//	SetMenuItemInfo(menuVideo, 9, TRUE, &menuitem);
 
-	//	change_menuitem(ENAB, MF_GRAYED, IDM_SET_FULLSCREEN);
-	//	change_menuitem(ENAB, MF_GRAYED, IDM_SET_STRETCHFLSCR);
 	//	change_menuitem(ENAB, MF_GRAYED, IDM_SET_VSYNC_ON);
 	//	change_menuitem(ENAB, MF_GRAYED, IDM_SET_VSYNC_OFF);
 	//	change_menuitem(ENAB, MF_GRAYED, IDM_SET_EFFECT_CUBE);
+	//	change_menuitem(ENAB, MF_GRAYED, IDM_SET_FULLSCREEN);
+	//	change_menuitem(ENAB, MF_GRAYED, IDM_SET_STRETCHFLSCR);
 
 		id = IDM_SET_RENDERING_SOFTWARE;
 	}
@@ -1394,12 +1400,10 @@ void gui_update(void) {
 	}
 
 	/* Save on exit */
-	/*
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_SAVEONEXIT);
 	if (cfg->save_on_exit) {
 		change_menuitem(CHECK, MF_CHECKED, IDM_SET_SAVEONEXIT);
 	}
-	*/
 }
 void gui_fullscreen(void) {
 	return;
@@ -1419,7 +1423,7 @@ void gui_sleep(double ms) {
 	}
 }
 void gui_set_thread_affinity(uint8_t core) {
-	return;
+	SetThreadAffinityMask(GetCurrentThread(), core + 1);
 }
 void gui_print_usage(char *usage) {
 	msgbox_hook = SetWindowsHookEx(WH_CBT, cbt_proc, NULL, GetCurrentThreadId());
@@ -1431,11 +1435,12 @@ int gui_uncompress_selection_dialog(void) {
 }
 
 /* funzioni interne */
-long __stdcall main_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+long __stdcall main_win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	switch (msg) {
 		case WM_ENTERSIZEMOVE:
 		case WM_ENTERMENULOOP:
 			emu_pause(TRUE);
+			//timer_redraw_start();
 			break;
 		case WM_EXITSIZEMOVE: {
 			HMONITOR monitor = MonitorFromWindow(main_win, MONITOR_DEFAULTTOPRIMARY);
@@ -1444,11 +1449,20 @@ long __stdcall main_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 			emu_pause(FALSE);
 			SetFocus(d3d_frame);
 
+			//timer_redraw_stop();
 			break;
 		}
+		//case WM_TIMER: {
+		//	switch (wParam) {
+		//		case IDT_TIMER1:
+		//			return (0);
+		//	}
+		//	break;
+		//}
 		case WM_EXITMENULOOP:
 			emu_pause(FALSE);
 			SetFocus(d3d_frame);
+			//timer_redraw_stop();
 			break;
 		case WM_DROPFILES: {
 			TCHAR file[sizeof(info.load_rom_file)];
@@ -1485,7 +1499,7 @@ long __stdcall main_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 					 * arrivato anche premendo CTRL+O, quindi in uscita
 					 * potrei ancora avere il tl.key settato.
 					 */
-					//tl.key = FALSE;
+					tl.key = FALSE;
 					open_event();
 					SetFocus(d3d_frame);
 					break;
@@ -1879,6 +1893,10 @@ long __stdcall main_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 			}
 			break;
 		}
+		//case WM_PAINT:
+		//	time_handler_redraw();
+		//	ValidateRect(hwnd, NULL);
+		//	return (0);
 		case WM_CLOSE:
 			/*
 			 * blocco l'audio gia' qui perche' l'engine XAudio2
@@ -1894,10 +1912,11 @@ long __stdcall main_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 		case WM_DESTROY:
 			PostQuitMessage(EXIT_SUCCESS);
 			return (1);
+		//case WM_ERASEBKGND:
+		//	return (1);
 		default:
 			break;
 	}
-
 	return (DefWindowProc(hwnd, msg, wParam, lParam));
 }
 long __stdcall timeline_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
@@ -1959,7 +1978,7 @@ long __stdcall timeline_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 			return (FALSE);
 			break;
 	}
-	return DefWindowProc(hwnd, msg, wParam, lParam);
+	return (DefWindowProc(hwnd, msg, wParam, lParam));
 }
 long __stdcall save_slot_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	DRAWITEMSTRUCT *pdis;
@@ -2092,7 +2111,7 @@ long __stdcall save_slot_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			break;
 		}
 	}
-	return DefWindowProc(hwnd, msg, wParam, lParam);
+	return (DefWindowProc(hwnd, msg, wParam, lParam));
 }
 long __stdcall about_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	switch (msg) {
@@ -2141,8 +2160,6 @@ long __stdcall about_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	}
 	return (TRUE);
 }
-
-
 
 LRESULT CALLBACK cbt_proc(int code, WPARAM wParam, LPARAM lParam) {
 	static HFONT font = NULL;
@@ -2255,7 +2272,7 @@ void set_mode(BYTE mode) {
 	gui_update();
 
 	if (reset) {
-		//text_add_line_info(1, "switched to [green]%s", param_mode[machine.type].lname);
+		text_add_line_info(1, "switched to [green]%s", param_mode[machine.type].lname);
 		make_reset(CHANGE_MODE);
 	}
 }
@@ -2446,8 +2463,6 @@ void set_gamegenie(void) {
 	gui_update();
 }
 
-
-
 double high_resolution_ms(void) {
 	uint64_t time, diff;
 
@@ -2544,19 +2559,43 @@ void open_event(void) {
 	ofn.lpstrFile = file;
 	ofn.lpstrFile[0] = '\0';
 	ofn.nMaxFile = sizeof(file);
-	ofn.lpstrFilter = "All supported formats\0*.nes;*.NES;*.fds;*.FDS;*.fm2;*.FM2\0"
-			"Nes rom files\0*.nes;*.NES\0"
-			"FDS image files\0*.fds;*.FDS\0"
-			"TAS movie files\0*.fm2;*.FM2\0"
-			"All files\0*.*\0";
+	if (l7z_present() == TRUE) {
+		ofn.lpstrFilter =
+				"All supported formats\0*.zip;*.ZIP;*.7z;*.7Z;*.rar;*.RAR;*.nes;*.NES;*.fds;*.FDS;*.fm2;*.FM2;\0"
+				"Compressed files\0*.zip;*.ZIP;*.7z;*.7Z;*.rar;*.RAR\0"
+				"Nes rom files\0*.nes;*.NES\0"
+				"FDS image files\0*.fds;*.FDS\0"
+				"TAS movie files\0*.fm2;*.FM2\0"
+				"All files\0*.*\0";
+	} else {
+		ofn.lpstrFilter =
+				"All supported formats\0*.zip;*.ZIP;*.nes;*.NES;*.fds;*.FDS;*.fm2;*.FM2\0"
+				"Compressed files\0*.zip;*.ZIP\0"
+				"Nes rom files\0*.nes;*.NES\0"
+				"FDS image files\0*.fds;*.FDS\0"
+				"TAS movie files\0*.fm2;*.FM2\0"
+				"All files\0*.*\0";
+	}
 	ofn.nFilterIndex = 1;
 	ofn.lpstrFileTitle = NULL;
 	ofn.nMaxFileTitle = 0;
 	ofn.lpstrInitialDir = NULL;
 	ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
 
+	if (cfg->fullscreen == FULLSCR) {
+		/* nascondo la finestra */
+		ShowWindow(main_win, SW_HIDE);
+	}
+
 	if (GetOpenFileName(&ofn) == TRUE) {
 		change_rom(ofn.lpstrFile);
+	}
+
+	if (cfg->fullscreen == FULLSCR) {
+		/* visualizzo la finestra */
+		ShowWindow(main_win, SW_NORMAL);
+		/* setto il focus*/
+		SetFocus(d3d_frame);
 	}
 
 	emu_pause(FALSE);

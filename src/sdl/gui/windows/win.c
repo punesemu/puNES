@@ -63,7 +63,7 @@
 	}
 #define tl_up(type)\
 	if (tl.snaps_fill) {\
-		BYTE snap = SendMessage(hTimeline, TBM_GETPOS, 0, 0);\
+		BYTE snap = SendMessage(timeline, TBM_GETPOS, 0, 0);\
 		if (snap != (tl.snaps_fill - 1)) {\
 			timeline_back(TL_NORMAL, snap);\
 		}\
@@ -72,13 +72,13 @@
 	type = FALSE;\
 	emu_pause(FALSE)
 #define hide_tool_widget()\
-	ShowWindow(hFrameSs, SW_HIDE)
+	ShowWindow(ss_frame, SW_HIDE)
 #define show_tool_widget()\
-	ShowWindow(hFrameSs, SW_SHOW)
+	ShowWindow(ss_frame, SW_SHOW)
 
-enum { INC, DEC };
-enum { SAVE, LOAD };
-enum { CHECK, ENAB };
+enum menu_inc_dec { INC, DEC };
+enum menu_save_load { SAVE, LOAD };
+enum menu_item_state { CHECK, ENAB };
 
 long __stdcall main_win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 long __stdcall timeline_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -120,11 +120,11 @@ void fds_select_side(int side);
 
 static HHOOK msgbox_hook;
 static HWND main_win, sdl_frame, toolbox_frame;
-static HWND hFrameTl, hTimeline;
-static HWND hSepTl;
-static HWND hFrameSs, hSaveslot, hSaveButton, hLoadButton;
-static HWND hSepSs;
-static HWND hFrameBl;
+static HWND tl_frame, timeline;
+static HWND sep_tl;
+static HWND ss_frame, sslot, save_button, load_button;
+static HWND sep_ss;
+static HWND bl_frame;
 HMENU main_menu;
 HACCEL acc_keys;
 HBITMAP about_img, about_mask;
@@ -221,7 +221,7 @@ void gui_quit(void) {
 BYTE gui_create(void) {
 	WNDCLASSEX wc;
 	INITCOMMONCONTROLSEX icex;
-	const char className[] = "FHWindowClass";
+	const char class_name[] = "FHWindowClass";
 
 	//Step 1: Registering the Window Class
 	wc.cbSize = sizeof(WNDCLASSEX);
@@ -234,7 +234,7 @@ BYTE gui_create(void) {
 	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
 	wc.hbrBackground = (HBRUSH)(COLOR_WINDOW);
 	wc.lpszMenuName = MAKEINTRESOURCE(IDR_MAINMENU);
-	wc.lpszClassName = className;
+	wc.lpszClassName = class_name;
 	wc.hIconSm = LoadIcon(gui.main_hinstance, MAKEINTRESOURCE(IDI_MYICON));
 
 	if (!RegisterClassEx(&wc)) {
@@ -246,7 +246,7 @@ BYTE gui_create(void) {
 
 	/* creo la finestra principale */
 	main_win = CreateWindowEx(WS_EX_CLIENTEDGE | WS_EX_ACCEPTFILES,
-			className,
+			class_name,
 			"puNES window",
 			WS_OVERLAPPED | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | WS_CAPTION | WS_SYSMENU |
 			WS_MINIMIZEBOX,
@@ -275,7 +275,7 @@ BYTE gui_create(void) {
 
 	/* creo la finestra a cui attacchero' lo screen sdl */
 	sdl_frame = CreateWindowEx(0,
-			className,
+			class_name,
 			"puNES SDL Frame",
 			WS_CHILD,
 			CW_USEDEFAULT, CW_USEDEFAULT,
@@ -316,7 +316,7 @@ BYTE gui_create(void) {
 	/* ---------------------------------- Timeline ---------------------------------- */
 
 	/* Frame Timeline */
-	hFrameTl = CreateWindowEx(0,
+	tl_frame = CreateWindowEx(0,
 			"static",
 			"",
 			WS_CHILD | WS_VISIBLE | SS_ETCHEDVERT,
@@ -327,30 +327,37 @@ BYTE gui_create(void) {
 			NULL,
 			NULL);
 
-	if (hFrameTl == NULL) {
+	if (tl_frame == NULL) {
 		MessageBox(NULL, "Window Creation Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
 
-	SetWindowLongPtr(hFrameTl, GWLP_WNDPROC, (LONG_PTR) timeline_proc);
+	SetWindowLongPtr(tl_frame, GWLP_WNDPROC, (LONG_PTR) timeline_proc);
 
-	hTimeline = CreateWindowEx(0, TRACKBAR_CLASS, "Timeline",
-			WS_CHILD | WS_VISIBLE | TBS_AUTOTICKS | TBS_FIXEDLENGTH | TBS_TOOLTIPS, 2, 0,
-			FRAME_TL_WIDTH - 4, FRAME_TL_HEIGHT, hFrameTl, (HMENU) NULL, gui.main_hinstance, NULL);
+	timeline = CreateWindowEx(0,
+			TRACKBAR_CLASS,
+			"Timeline",
+			WS_CHILD | WS_VISIBLE | TBS_AUTOTICKS | TBS_FIXEDLENGTH | TBS_TOOLTIPS,
+			2, 0,
+			FRAME_TL_WIDTH - 4, FRAME_TL_HEIGHT,
+			tl_frame,
+			(HMENU) NULL,
+			gui.main_hinstance,
+			NULL);
 
-	if (hTimeline == NULL) {
+	if (timeline == NULL) {
 		MessageBox(NULL, "Window Creation Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
 
-	SendMessage(hTimeline, TBM_SETRANGE, TRUE, MAKELONG(0, (TL_SNAPS - 1)));
-	SendMessage(hTimeline, TBM_SETTHUMBLENGTH, 15, 0);
-	SendMessage(hTimeline, TBM_SETPAGESIZE, 0, 0);
-	SendMessage(hTimeline, TBM_SETTIPSIDE, TBTS_BOTTOM, 0);
+	SendMessage(timeline, TBM_SETRANGE, TRUE, MAKELONG(0, (TL_SNAPS - 1)));
+	SendMessage(timeline, TBM_SETTHUMBLENGTH, 15, 0);
+	SendMessage(timeline, TBM_SETPAGESIZE, 0, 0);
+	SendMessage(timeline, TBM_SETTIPSIDE, TBTS_BOTTOM, 0);
 
 	/* -------------------------------- Separatore Tl -------------------------------- */
 
-	hSepTl = CreateWindowEx(0,
+	sep_tl = CreateWindowEx(0,
 			"static",
 			"",
 			WS_CHILD | WS_VISIBLE,
@@ -363,10 +370,10 @@ BYTE gui_create(void) {
 
 	/* ---------------------------------- Save slot ---------------------------------- */
 
-	HFONT hFont = (HFONT) GetStockObject(DEFAULT_GUI_FONT);
+	HFONT font = (HFONT) GetStockObject(DEFAULT_GUI_FONT);
 
 	/* Frame Saveslot */
-	hFrameSs = CreateWindowEx(WS_EX_WINDOWEDGE,
+	ss_frame = CreateWindowEx(WS_EX_WINDOWEDGE,
 			"static",
 			"",
 			WS_CHILD | WS_VISIBLE | SS_ETCHEDVERT,
@@ -377,64 +384,66 @@ BYTE gui_create(void) {
 			NULL,
 			NULL);
 
-	if (hFrameSs == NULL) {
+	if (ss_frame == NULL) {
 		MessageBox(NULL, "Window Creation Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
 
-	SetWindowLongPtr(hFrameSs, GWLP_WNDPROC, (LONG_PTR) save_slot_proc);
+	SetWindowLongPtr(ss_frame, GWLP_WNDPROC, (LONG_PTR) save_slot_proc);
 
-	hSaveslot = CreateWindowEx(0,
-			"COMBOBOX", "Saveslot",
+	sslot = CreateWindowEx(0,
+			"COMBOBOX",
+			"Saveslot",
 			WS_CHILD | WS_VISIBLE | CBS_DROPDOWNLIST | CBS_HASSTRINGS | CBS_OWNERDRAWFIXED,
 			1 + BUTTON_SS_WIDTH + 0, 1,
 			COMBO_SS_WIDTH, 130,
-			hFrameSs,
+			ss_frame,
 			(HMENU) ID_SAVE_SLOT_CB,
 			gui.main_hinstance,
 			NULL);
 
-	if (hSaveslot == NULL) {
+	if (sslot == NULL) {
 		MessageBox(NULL, "Window Creation Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
 
-	SendMessage(hSaveslot, WM_SETFONT, (WPARAM) hFont, MAKELPARAM(TRUE, 0));
+	SendMessage(sslot, WM_SETFONT, (WPARAM) font, MAKELPARAM(TRUE, 0));
 
-	hSaveButton = CreateWindowEx(0,
+	save_button = CreateWindowEx(0,
 			"BUTTON",
 			"Save",
 			WS_CHILD | WS_VISIBLE | BS_OWNERDRAW,
 			1, 0,
 			BUTTON_SS_WIDTH, BUTTON_SS_HEIGHT,
-			hFrameSs,
+			ss_frame,
 			(HMENU) ID_SAVE_SLOT_BS,
 			gui.main_hinstance,
 			NULL);
 
-	if (hSaveButton == NULL) {
+	if (save_button == NULL) {
 		MessageBox(NULL, "Window Creation Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
 
-	SendMessage(hSaveButton, WM_SETFONT, (WPARAM) hFont, MAKELPARAM(TRUE, 0));
+	SendMessage(save_button, WM_SETFONT, (WPARAM) font, MAKELPARAM(TRUE, 0));
 
-	hLoadButton = CreateWindowEx(0,
-			"BUTTON", "Load",
+	load_button = CreateWindowEx(0,
+			"BUTTON",
+			"Load",
 			WS_CHILD | WS_VISIBLE | BS_OWNERDRAW,
 			1 + BUTTON_SS_WIDTH + 0 + COMBO_SS_WIDTH + 2, 0,
 			BUTTON_SS_WIDTH, BUTTON_SS_HEIGHT,
-			hFrameSs,
+			ss_frame,
 			(HMENU) ID_SAVE_SLOT_BL,
 			gui.main_hinstance,
 			NULL);
 
-	if (hLoadButton == NULL) {
+	if (load_button == NULL) {
 		MessageBox(NULL, "Window Creation Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
 
-	SendMessage(hLoadButton, WM_SETFONT, (WPARAM) hFont, MAKELPARAM(TRUE, 0));
+	SendMessage(load_button, WM_SETFONT, (WPARAM) font, MAKELPARAM(TRUE, 0));
 
 	{
 		BYTE i;
@@ -443,15 +452,15 @@ BYTE gui_create(void) {
 			char item[10];
 
 			sprintf(item, "Slot %d", i);
-			SendMessage(hSaveslot, CB_ADDSTRING, 0, (LPARAM) item);
+			SendMessage(sslot, CB_ADDSTRING, 0, (LPARAM) item);
 		}
 	}
 
-	SendMessage(hSaveslot, CB_SETCURSEL, 0, 0);
+	SendMessage(sslot, CB_SETCURSEL, 0, 0);
 
 	/* -------------------------------- Separatore Ss -------------------------------- */
 
-	hSepSs = CreateWindowEx(0,
+	sep_ss = CreateWindowEx(0,
 			"static", "",
 			WS_CHILD | WS_VISIBLE,
 			0, 0,
@@ -463,7 +472,7 @@ BYTE gui_create(void) {
 
 	/* -------------------------------- Frame vuoto -------------------------------- */
 
-	hFrameBl = CreateWindowEx(WS_EX_WINDOWEDGE,
+	bl_frame = CreateWindowEx(WS_EX_WINDOWEDGE,
 			"static", "",
 			WS_CHILD | WS_VISIBLE | SS_ETCHEDVERT,
 			0, 0,
@@ -473,7 +482,7 @@ BYTE gui_create(void) {
 			NULL,
 			NULL);
 
-	if (hFrameBl == NULL) {
+	if (bl_frame == NULL) {
 		MessageBox(NULL, "Window Creation Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
@@ -490,7 +499,7 @@ void gui_set_video_mode(void) {
 	pt_diff.x = (rc_wind.right - rc_wind.left) - rc_client.right;
 	pt_diff.y = (rc_wind.bottom - rc_wind.top) - rc_client.bottom;
 	MoveWindow(main_win, rc_wind.left, rc_wind.top, gfx.w[VIDEO_MODE] + pt_diff.x,
-	        gfx.h[VIDEO_MODE] + pt_diff.y + TOOLBAR_HEIGHT, TRUE);
+			gfx.h[VIDEO_MODE] + pt_diff.y + TOOLBAR_HEIGHT, TRUE);
 	/* aggiorno la finestra dell'sdl */
 	MoveWindow(sdl_frame, 0, 0, gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE], TRUE);
 	/* aggiorno la toolbar */
@@ -508,36 +517,40 @@ void gui_set_video_mode(void) {
 			show_tool_widget();
 		}
 		pt_diff.x = gfx.w[VIDEO_MODE] - rows;
-		MoveWindow(hFrameTl, pt_diff.x, 0, rows, FRAME_TL_HEIGHT, TRUE);
-		MoveWindow(hTimeline, 0, 0, rows - 4, FRAME_TL_HEIGHT, TRUE);
+		MoveWindow(tl_frame, pt_diff.x, 0, rows, FRAME_TL_HEIGHT, TRUE);
+		MoveWindow(timeline, 0, 0, rows - 4, FRAME_TL_HEIGHT, TRUE);
 	}
 	pt_diff.x -= SEPARATOR_WIDTH;
-	MoveWindow(hSepTl, pt_diff.x, 0, SEPARATOR_WIDTH, FRAME_TL_HEIGHT, TRUE);
+	MoveWindow(sep_tl, pt_diff.x, 0, SEPARATOR_WIDTH, FRAME_TL_HEIGHT, TRUE);
 	/* aggiorno il frame dello saveslot */
 	pt_diff.x -= FRAME_SS_WIDTH;
-	MoveWindow(hFrameSs, pt_diff.x, 0, FRAME_SS_WIDTH, FRAME_SS_HEIGHT, TRUE);
+	MoveWindow(ss_frame, pt_diff.x, 0, FRAME_SS_WIDTH, FRAME_SS_HEIGHT, TRUE);
 	pt_diff.x -= SEPARATOR_WIDTH;
-	MoveWindow(hSepSs, pt_diff.x, 0, SEPARATOR_WIDTH, FRAME_TL_HEIGHT, TRUE);
+	MoveWindow(sep_ss, pt_diff.x, 0, SEPARATOR_WIDTH, FRAME_TL_HEIGHT, TRUE);
 	/* frame vuoto */
 	pt_diff.y = gfx.w[VIDEO_MODE] - pt_diff.x;
-	MoveWindow(hFrameBl, 0, 0, gfx.w[VIDEO_MODE] - pt_diff.y, FRAME_TL_HEIGHT, TRUE);
+	MoveWindow(bl_frame, 0, 0, gfx.w[VIDEO_MODE] - pt_diff.y, FRAME_TL_HEIGHT, TRUE);
 }
 void gui_start(void) {
 	/* visualizzo il frame principale */
 	ShowWindow(main_win, SW_NORMAL);
 	UpdateWindow(main_win);
+
 	/* visualizzo il frame sdl */
 	ShowWindow(sdl_frame, SW_SHOWNOACTIVATE);
 	UpdateWindow(sdl_frame);
+
 	/* visualizzo la toolbar */
 	ShowWindow(toolbox_frame, SW_SHOWNOACTIVATE);
 	UpdateWindow(toolbox_frame);
+
 	/* visualizzo il frame della timeline */
-	ShowWindow(hFrameTl, SW_SHOWNOACTIVATE);
-	UpdateWindow(hFrameTl);
+	ShowWindow(tl_frame, SW_SHOWNOACTIVATE);
+	UpdateWindow(tl_frame);
+
 	/* visualizzo la timeline */
-	ShowWindow(hTimeline, SW_SHOWNOACTIVATE);
-	UpdateWindow(hTimeline);
+	ShowWindow(timeline, SW_SHOWNOACTIVATE);
+	UpdateWindow(timeline);
 
 	/* setto il focus sulla finestra sdl */
 	SetForegroundWindow(sdl_frame);
@@ -546,13 +559,11 @@ void gui_start(void) {
 	gui.start = TRUE;
 
 	emu_loop();
-	return;
 }
 void gui_event(void) {
 	BYTE no_process = FALSE;
 	MSG msg = { 0 };
 
-	/* SDL */
 	while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
 		/*
 		 * e' a zero solo quando non ci sono messaggi
@@ -578,7 +589,7 @@ void gui_event(void) {
 						break;
 					case VK_LEFT:
 						if (tl.key) {
-							BYTE snap = SendMessage(hTimeline, TBM_GETPOS, 0, 0);
+							BYTE snap = SendMessage(timeline, TBM_GETPOS, 0, 0);
 
 							if (snap) {
 								wrap_tl_preview(snap - 1);
@@ -588,7 +599,7 @@ void gui_event(void) {
 						break;
 					case VK_RIGHT:
 						if (tl.key) {
-							BYTE snap = SendMessage(hTimeline, TBM_GETPOS, 0, 0);
+							BYTE snap = SendMessage(timeline, TBM_GETPOS, 0, 0);
 
 							if (snap < (TL_SNAPS - 1)) {
 								wrap_tl_preview(snap + 1);
@@ -837,12 +848,12 @@ void gui_update(void) {
 	change_menuitem(CHECK, MF_CHECKED, id);
 	if (save_slot.state[save_slot.slot]) {
 		change_menuitem(ENAB, MF_HILITE, IDM_SET_SAVE_LOAD);
-		EnableWindow(hLoadButton, TRUE);
+		EnableWindow(load_button, TRUE);
 	} else {
 		change_menuitem(ENAB, MF_GRAYED, IDM_SET_SAVE_LOAD);
-		EnableWindow(hLoadButton, FALSE);
+		EnableWindow(load_button, FALSE);
 	}
-	RedrawWindow(hSaveslot, NULL, NULL, RDW_INVALIDATE);
+	RedrawWindow(sslot, NULL, NULL, RDW_INVALIDATE);
 
 	/* Mode */
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_MODE_PAL);
@@ -1070,6 +1081,11 @@ void gui_update(void) {
 	}
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_NO_FILTER);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_BILINEAR);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_POSPHOR);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_SCANLINE);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_DBL);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_CRTCURVE);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_CRTNOCURVE);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_SCALE2X);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_SCALE3X);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_SCALE4X);
@@ -1079,11 +1095,6 @@ void gui_update(void) {
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_RGBNTSCCOM);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_RGBNTSCSVD);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_RGBNTSCRGB);
-	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_POSPHOR);
-	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_SCANLINE);
-	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_DBL);
-	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_CRTCURVE);
-	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_CRTNOCURVE);
 	switch (cfg->filter) {
 		case NO_FILTER:
 			id = IDM_SET_FILTER_NO_FILTER;
@@ -1169,18 +1180,16 @@ void gui_update(void) {
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_RENDERING_OPENGL);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_RENDERING_GLSL);
 	if (gfx.opengl) {
-		HMENU menuSettings = GetSubMenu(main_menu, 2);
-		HMENU menuVideo = GetSubMenu(menuSettings, 2);
+		HMENU menu_video = GetSubMenu(GetSubMenu(main_menu, 2), 2);
 		MENUITEMINFO menuitem;
 
 		/* VSync */
 		menuitem.cbSize = sizeof(MENUITEMINFO);
 		menuitem.fMask = MIIM_STATE;
 		menuitem.fState = MFS_ENABLED;
-		SetMenuItemInfo(menuVideo, 3, TRUE, &menuitem);
+		SetMenuItemInfo(menu_video, 3, TRUE, &menuitem);
 
 		/* questi li abilito solo se non c'e' come input lo zapper */
-
 		if (input_zapper_is_connected((_port *) &port) == FALSE) {
 			menuitem.fState = MFS_ENABLED;
 			change_menuitem(ENAB, MF_ENABLED, IDM_SET_EFFECT_CUBE);
@@ -1190,12 +1199,12 @@ void gui_update(void) {
 		}
 		menuitem.cbSize = sizeof(MENUITEMINFO);
 		menuitem.fMask = MIIM_STATE;
-		SetMenuItemInfo(menuVideo, 9, TRUE, &menuitem);
+		SetMenuItemInfo(menu_video, 9, TRUE, &menuitem);
 
-		change_menuitem(ENAB, MF_ENABLED, IDM_SET_FULLSCREEN);
-		change_menuitem(ENAB, MF_ENABLED, IDM_SET_STRETCHFLSCR);
 		change_menuitem(ENAB, MF_ENABLED, IDM_SET_VSYNC_ON);
 		change_menuitem(ENAB, MF_ENABLED, IDM_SET_VSYNC_OFF);
+		change_menuitem(ENAB, MF_ENABLED, IDM_SET_FULLSCREEN);
+		change_menuitem(ENAB, MF_ENABLED, IDM_SET_STRETCHFLSCR);
 
 		if (!opengl.glsl.compliant) {
 			id = IDM_SET_RENDERING_OPENGL;
@@ -1205,23 +1214,22 @@ void gui_update(void) {
 			id = IDM_SET_RENDERING_GLSL;
 		}
 	} else {
-		HMENU menuSettings = GetSubMenu(main_menu, 2);
-		HMENU menuVideo = GetSubMenu(menuSettings, 2);
+		HMENU menu_video = GetSubMenu(GetSubMenu(main_menu, 2), 2);
 		MENUITEMINFO menuitem;
 
 		/* VSync */
 		menuitem.cbSize = sizeof(MENUITEMINFO);
 		menuitem.fMask = MIIM_STATE;
 		menuitem.fState = MFS_DISABLED;
-		SetMenuItemInfo(menuVideo, 3, TRUE, &menuitem);
+		SetMenuItemInfo(menu_video, 3, TRUE, &menuitem);
 		/* Effect */
-		SetMenuItemInfo(menuVideo, 9, TRUE, &menuitem);
+		SetMenuItemInfo(menu_video, 9, TRUE, &menuitem);
 
-		change_menuitem(ENAB, MF_GRAYED, IDM_SET_FULLSCREEN);
-		change_menuitem(ENAB, MF_GRAYED, IDM_SET_STRETCHFLSCR);
 		change_menuitem(ENAB, MF_GRAYED, IDM_SET_VSYNC_ON);
 		change_menuitem(ENAB, MF_GRAYED, IDM_SET_VSYNC_OFF);
 		change_menuitem(ENAB, MF_GRAYED, IDM_SET_EFFECT_CUBE);
+		change_menuitem(ENAB, MF_GRAYED, IDM_SET_FULLSCREEN);
+		change_menuitem(ENAB, MF_GRAYED, IDM_SET_STRETCHFLSCR);
 
 		id = IDM_SET_RENDERING_SOFTWARE;
 	}
@@ -1410,7 +1418,7 @@ void gui_fullscreen(void) {
 	emu_pause(FALSE);
 }
 void gui_timeline(void) {
-	SendMessage(hTimeline, TBM_SETPOS, TRUE, tl.snaps_fill - 1);
+	SendMessage(timeline, TBM_SETPOS, TRUE, tl.snaps_fill - 1);
 }
 void gui_save_slot(BYTE slot) {
 	if (slot >= SAVE_SLOTS) {
@@ -1471,19 +1479,19 @@ long __stdcall main_win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 			break;
 		}
 		case WM_DROPFILES: {
-			TCHAR szFile[sizeof(info.load_rom_file)];
-			HDROP hDrop = (HDROP) wParam;
-			int i = 0, count = DragQueryFile(hDrop, 0xFFFFFFFF, szFile, sizeof(info.load_rom_file));
+			TCHAR file[sizeof(info.load_rom_file)];
+			HDROP drop = (HDROP) wParam;
+			int i = 0, count = DragQueryFile(drop, 0xFFFFFFFF, file, sizeof(info.load_rom_file));
 
 			for (i = 0; i < count; i++) {
-				DragQueryFile(hDrop, i, szFile, sizeof(info.load_rom_file));
+				DragQueryFile(drop, i, file, sizeof(info.load_rom_file));
 			}
 
-			DragFinish(hDrop);
+			DragFinish(drop);
 
 			if (count) {
 				emu_pause(TRUE);
-				change_rom(szFile);
+				change_rom(file);
 				emu_pause(FALSE);
 			}
 
@@ -1689,19 +1697,15 @@ long __stdcall main_win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 					set_frame_skip(LOWORD(wParam) - IDM_SET_FSK_DEFAULT);
 					break;
 				case IDM_SET_SIZE_1X:
-					/* 1x */
 					set_scale(X1);
 					break;
 				case IDM_SET_SIZE_2X:
-					/* 2x */
 					set_scale(X2);
 					break;
 				case IDM_SET_SIZE_3X:
-					/* 3x */
 					set_scale(X3);
 					break;
 				case IDM_SET_SIZE_4X:
-					/* 4x */
 					set_scale(X4);
 					break;
 				case IDM_SET_OSCAN_ON:
@@ -1786,13 +1790,13 @@ long __stdcall main_win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 					gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, PALETTE_GREEN, FALSE);
 					break;
 				case IDM_SET_RENDERING_SOFTWARE:
-					set_rendering(0);
+					set_rendering(RENDER_SOFTWARE);
 					break;
 				case IDM_SET_RENDERING_OPENGL:
-					set_rendering(1);
+					set_rendering(RENDER_OPENGL);
 					break;
 				case IDM_SET_RENDERING_GLSL:
-					set_rendering(2);
+					set_rendering(RENDER_GLSL);
 					break;
 				case IDM_SET_EFFECT_CUBE:
 					set_effect();
@@ -1889,10 +1893,10 @@ long __stdcall main_win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 				case IDM_HELP_ABOUT:
 					if (!info.portable) {
 						DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_ABOUT), hwnd,
-						        (DLGPROC) about_proc);
+								(DLGPROC) about_proc);
 					} else {
 						DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_ABOUT_PORTABLE), hwnd,
-						        (DLGPROC) about_proc);
+								(DLGPROC) about_proc);
 					}
 					SetFocus(sdl_frame);
 					break;
@@ -1926,13 +1930,13 @@ long __stdcall main_win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 		default:
 			break;
 	}
-	return DefWindowProc(hwnd, msg, wParam, lParam);
+	return (DefWindowProc(hwnd, msg, wParam, lParam));
 }
 long __stdcall timeline_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
-	BYTE dec = 0, snap = SendMessage(hTimeline, TBM_GETPOS, 0, 0);
-	LPTOOLTIPTEXT lpToolTipText = (LPTOOLTIPTEXT) lParam;
-	LPNMCUSTOMDRAW lpDraw;
-	static char szBuf[80] = "";
+	BYTE dec = 0, snap = SendMessage(timeline, TBM_GETPOS, 0, 0);
+	LPTOOLTIPTEXT tooltip_text = (LPTOOLTIPTEXT) lParam;
+	LPNMCUSTOMDRAW draw;
+	static char buf[80] = "";
 
 	if (!tl.button && (GetForegroundWindow() == main_win)) {
 		SetFocus(sdl_frame);
@@ -1942,18 +1946,18 @@ long __stdcall timeline_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 		case WM_NOTIFY: {
 			switch (((LPNMHDR) lParam)->code) {
 				case NM_CUSTOMDRAW: {
-					lpDraw = (LPNMCUSTOMDRAW) lParam;
-					switch (lpDraw->dwDrawStage) {
+					draw = (LPNMCUSTOMDRAW) lParam;
+					switch (draw->dwDrawStage) {
 						case CDDS_PREPAINT:
-							return CDRF_NOTIFYITEMDRAW;
+							return (CDRF_NOTIFYITEMDRAW);
 						case CDDS_ITEMPREPAINT: {
-							switch (lpDraw->dwItemSpec) {
+							switch (draw->dwItemSpec) {
 								case TBCD_THUMB:
-									FillRect(lpDraw->hdc, &lpDraw->rc,
-									        (HBRUSH) GetStockObject(LTGRAY_BRUSH));
-									DrawEdge(lpDraw->hdc, &lpDraw->rc, EDGE_ETCHED,
-									        BF_RECT | BF_ADJUST);
-									return CDRF_SKIPDEFAULT;
+									FillRect(draw->hdc, &draw->rc,
+											(HBRUSH) GetStockObject(LTGRAY_BRUSH));
+									DrawEdge(draw->hdc, &draw->rc, EDGE_ETCHED,
+											BF_RECT | BF_ADJUST);
+									return (CDRF_SKIPDEFAULT);
 							}
 							break;
 						}
@@ -1973,11 +1977,11 @@ long __stdcall timeline_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 						dec = ((tl.snaps_fill - 1) - snap) * TL_SNAP_SEC;
 					}
 					if (!dec) {
-						sprintf(szBuf, "%d sec", 0);
+						sprintf(buf, "%d sec", 0);
 					} else {
-						sprintf(szBuf, "% 2d sec", -abs(((tl.snaps_fill - 1) - snap) * TL_SNAP_SEC));
+						sprintf(buf, "% 2d sec", -abs(((tl.snaps_fill - 1) - snap) * TL_SNAP_SEC));
 					}
-					lpToolTipText->lpszText = szBuf;
+					tooltip_text->lpszText = buf;
 					break;
 			}
 			break;
@@ -1987,7 +1991,7 @@ long __stdcall timeline_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 			return (FALSE);
 			break;
 	}
-	return DefWindowProc(hwnd, msg, wParam, lParam);
+	return (DefWindowProc(hwnd, msg, wParam, lParam));
 }
 long __stdcall save_slot_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	DRAWITEMSTRUCT *pdis;
@@ -1999,10 +2003,10 @@ long __stdcall save_slot_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			switch (pmis->CtlID) {
 				case ID_SAVE_SLOT_CB: {
 					TEXTMETRIC tm;
-					HDC hDC = GetDC(NULL);
-					GetTextMetrics(hDC, &tm);
+					HDC hdc = GetDC(NULL);
+					GetTextMetrics(hdc, &tm);
 					pmis->itemHeight = tm.tmHeight + tm.tmExternalLeading - 1;
-					ReleaseDC(NULL, hDC);
+					ReleaseDC(NULL, hdc);
 					break;
 				}
 			}
@@ -2022,7 +2026,7 @@ long __stdcall save_slot_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 						return 0;
 					}
 
-					SendMessage(hSaveslot, CB_GETLBTEXT, pdis->itemID, (LPARAM) string);
+					SendMessage(sslot, CB_GETLBTEXT, pdis->itemID, (LPARAM) string);
 
 					slot = atoi(string + 5);
 
@@ -2047,7 +2051,7 @@ long __stdcall save_slot_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 						}
 					}
 					DrawText(pdis->hDC, string, strlen(string), &pdis->rcItem,
-					        DT_LEFT | DT_SINGLELINE);
+							DT_LEFT | DT_SINGLELINE);
 					break;
 				}
 				case ID_SAVE_SLOT_BL:
@@ -2055,7 +2059,7 @@ long __stdcall save_slot_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 						DrawEdge(pdis->hDC, &pdis->rcItem, EDGE_SUNKEN, BF_RECT | BF_ADJUST);
 					} else {
 						DrawEdge(pdis->hDC, &pdis->rcItem, EDGE_ETCHED,
-						        BF_MIDDLE | BF_FLAT | BF_ADJUST);
+								BF_MIDDLE | BF_FLAT | BF_ADJUST);
 						if (pdis->itemState & ODS_DISABLED) {
 							SetTextColor(pdis->hDC, GetSysColor(COLOR_GRAYTEXT));
 						}
@@ -2067,7 +2071,7 @@ long __stdcall save_slot_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 						DrawEdge(pdis->hDC, &pdis->rcItem, EDGE_SUNKEN, BF_RECT | BF_ADJUST);
 					} else {
 						DrawEdge(pdis->hDC, &pdis->rcItem, EDGE_ETCHED,
-						        BF_MIDDLE | BF_FLAT | BF_ADJUST);
+								BF_MIDDLE | BF_FLAT | BF_ADJUST);
 						if (pdis->itemState & ODS_DISABLED) {
 							SetTextColor(pdis->hDC, GetSysColor(COLOR_GRAYTEXT));
 						}
@@ -2103,7 +2107,7 @@ long __stdcall save_slot_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 							emu_pause(TRUE);
 							break;
 						case CBN_CLOSEUP:
-							save_slot.slot = SendMessage(hSaveslot, CB_GETCURSEL, 0, 0);
+							save_slot.slot = SendMessage(sslot, CB_GETCURSEL, 0, 0);
 							gui_update();
 							save_slot.preview_start = FALSE;
 							emu_pause(FALSE);
@@ -2120,7 +2124,7 @@ long __stdcall save_slot_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			break;
 		}
 	}
-	return DefWindowProc(hwnd, msg, wParam, lParam);
+	return (DefWindowProc(hwnd, msg, wParam, lParam));
 }
 long __stdcall about_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	switch (msg) {
@@ -2308,20 +2312,26 @@ void set_fps(BYTE fps) {
 		return;
 	}
 	cfg->fps = fps;
+
 	emu_pause(TRUE);
+
 	fps_init();
 	snd_start();
 	gui_update();
+
 	emu_pause(FALSE);
 }
 void set_frame_skip(BYTE frameskip) {
 	if (cfg->frameskip == frameskip) {
 		return;
 	}
+
 	cfg->frameskip = frameskip;
+
 	if (!fps.fast_forward) {
 		fps_normalize();
 	}
+
 	gui_update();
 }
 void set_vsync(BYTE vsync) {
@@ -2451,6 +2461,7 @@ void set_samplerate(BYTE samplerate) {
 	if (cfg->samplerate == samplerate) {
 		return;
 	}
+
 	cfg->samplerate = samplerate;
 	snd_start();
 	gui_update();
@@ -2459,6 +2470,7 @@ void set_channels(BYTE channels) {
 	if (cfg->channels == channels) {
 		return;
 	}
+
 	cfg->channels = channels;
 	snd_start();
 	gui_update();
@@ -2549,17 +2561,17 @@ void wrap_tl_preview(BYTE snap) {
 	}
 
 	if (!tl.snaps_fill) {
-		SendMessage(hTimeline, TBM_SETPOS, TRUE, 0);
+		SendMessage(timeline, TBM_SETPOS, TRUE, 0);
 		return;
 	}
 
 	/* snap non puo' essere mai maggiore del numero di snap effettuate */
 	if (snap > (tl.snaps_fill - 1)) {
-		SendMessage(hTimeline, TBM_SETPOS, TRUE, tl.snaps_fill - 1);
+		SendMessage(timeline, TBM_SETPOS, TRUE, tl.snaps_fill - 1);
 		snap = (tl.snaps_fill - 1);
 	}
 
-	SendMessage(hTimeline, TBM_SETPOS, TRUE, snap);
+	SendMessage(timeline, TBM_SETPOS, TRUE, snap);
 
 	if (snap == (tl.snaps_fill - 1)) {
 		memcpy(screen.data, tl.snaps[TL_SNAP_FREE] + tl.preview, screen_size());
@@ -2577,20 +2589,17 @@ void change_menuitem(BYTE check_or_enab, UINT type, UINT menuitem_id) {
 	}
 }
 void open_event(void) {
-	OPENFILENAME ofn;       // common dialog box structure
-	char szFile[1024];      // buffer for file name
+	OPENFILENAME ofn;
+	char file[1024];
 
 	emu_pause(TRUE);
 
-	// Initialize OPENFILENAME
 	ZeroMemory(&ofn, sizeof(ofn));
 	ofn.lStructSize = sizeof(ofn);
 	ofn.hwndOwner = main_win;
-	ofn.lpstrFile = szFile;
-	// Set lpstrFile[0] to '\0' so that GetOpenFileName does not
-	// use the contents of szFile to initialize itself.
+	ofn.lpstrFile = file;
 	ofn.lpstrFile[0] = '\0';
-	ofn.nMaxFile = sizeof(szFile);
+	ofn.nMaxFile = sizeof(file);
 	if (l7z_present() == TRUE) {
 		ofn.lpstrFilter =
 				"All supported formats\0*.zip;*.ZIP;*.7z;*.7Z;*.rar;*.RAR;*.nes;*.NES;*.fds;*.FDS;*.fm2;*.FM2;\0"
@@ -2619,7 +2628,6 @@ void open_event(void) {
 		ShowWindow(main_win, SW_HIDE);
 	}
 
-	// Display the Open dialog box.
 	if (GetOpenFileName(&ofn) == TRUE) {
 		change_rom(ofn.lpstrFile);
 	}
@@ -2711,7 +2719,7 @@ void save_slot_action(BYTE mode) {
 	emu_pause(FALSE);
 }
 void save_slot_set(BYTE selection) {
-	SendMessage(hSaveslot, CB_SETCURSEL, selection, 0);
+	SendMessage(sslot, CB_SETCURSEL, selection, 0);
 	save_slot.slot = selection;
 	gui_update();
 }
