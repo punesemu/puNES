@@ -1456,7 +1456,9 @@ void gui_fullscreen(void) {
 		gfx_set_screen(gfx.scale_before_fscreen, NO_CHANGE, NO_FULLSCR, NO_CHANGE, FALSE);
 
 		/* riabilito la visualizzazione del puntatore */
-		ShowCursor(TRUE);
+		if (input_zapper_is_connected((_port *) &port) == FALSE) {
+			ShowCursor(TRUE);
+		}
 
 		/* posiziono la finestra alle coordinate precedenti il fullscreen */
 		if (wp_prev.rcNormalPosition.bottom) {
