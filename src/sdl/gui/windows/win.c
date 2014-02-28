@@ -1449,6 +1449,9 @@ void gui_print_usage(char *usage) {
 	MessageBox(NULL, usage, NAME " parameters", MB_OK);
 	UnhookWindowsHookEx(msgbox_hook);
 }
+int gui_uncompress_selection_dialog(void) {
+	return (uncompress_selection_dialog(main_win));
+}
 void gui_reset_video(void) {
 	ShowWindow(main_win, SW_HIDE);
 
@@ -1456,9 +1459,6 @@ void gui_reset_video(void) {
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE);
 
 	ShowWindow(main_win, SW_NORMAL);
-}
-int gui_uncompress_selection_dialog(void) {
-	return (uncompress_selection_dialog(main_win));
 }
 
 /* funzioni interne */

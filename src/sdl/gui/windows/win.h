@@ -13,8 +13,8 @@
 #endif
 
 #define INITGUID
-
 #include <windows.h>
+#undef INITGUID
 #include "resources.h"
 #include "keyboard.h"
 #include "joystick.h"
@@ -63,8 +63,12 @@ double (*gui_get_ms)(void);
 void gui_sleep(double ms);
 void gui_set_thread_affinity(uint8_t core);
 void gui_print_usage(char *usage);
+int gui_uncompress_selection_dialog(void);
+#if defined (SDL)
 void gui_reset_video(void);
-int gui_uncompress_selection_dialog();
+#elif defined (D3D9)
+HWND gui_main_window_id(void);
+#endif
 
 void set_effect(void);
 

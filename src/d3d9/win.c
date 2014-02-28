@@ -701,9 +701,6 @@ void gui_event(void) {
 HWND gui_emu_frame_id(void) {
 	return (frame_screen_nes);
 }
-HWND gui_main_window_id(void) {
-	return (main_win);
-}
 void gui_update(void) {
 	WORD id = 0;
 	char title[255];
@@ -1498,6 +1495,9 @@ void gui_print_usage(char *usage) {
 }
 int gui_uncompress_selection_dialog(void) {
 	return (uncompress_selection_dialog(main_win));
+}
+HWND gui_main_window_id(void) {
+	return (main_win);
 }
 
 /* funzioni interne */
