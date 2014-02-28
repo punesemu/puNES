@@ -6,7 +6,11 @@
 #include <commctrl.h>
 #include <richedit.h>
 #include "resources.h"
+#if defined (SDL)
+#include "../../../version.h"
+#elif defined (D3D9)
 #include "../version.h"
+#endif
 
 CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "Application.manifest"
 

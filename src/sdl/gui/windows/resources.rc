@@ -6,7 +6,11 @@
 #include <commctrl.h>
 #include <richedit.h>
 #include "resources.h"
+#if defined (SDL)
 #include "../../../version.h"
+#elif defined (D3D9)
+#include "../version.h"
+#endif
 
 CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "Application.manifest"
 
@@ -35,7 +39,9 @@ BEGIN
 	"3",        IDM_SET_SIZE_3X,         VIRTKEY
 	"4",        IDM_SET_SIZE_4X,         VIRTKEY
 	VK_RETURN,  IDM_SET_FULLSCREEN,      ALT,     VIRTKEY
+#if defined (SDL)
 	"R",        IDM_SET_EFFECT_CUBE,     VIRTKEY
+#endif
 	"P",        IDM_SET_STRETCHFLSCR,    VIRTKEY
 	"W",        IDM_SET_SAVENOW,         CONTROL, VIRTKEY
 	"A",        IDM_SET_AUDIO_ENABLE,    CONTROL, VIRTKEY
@@ -84,9 +90,14 @@ BEGIN
 		BEGIN
 			POPUP "&Rendering"
 			BEGIN
+#if defined (SDL)
 				MENUITEM "&Software",             IDM_SET_RENDERING_SOFTWARE
 				MENUITEM "&OpenGL",               IDM_SET_RENDERING_OPENGL
 				MENUITEM "OpenGL &GLSL",          IDM_SET_RENDERING_GLSL
+#elif defined (D3D9)
+				MENUITEM "&Software",             IDM_SET_RENDERING_SOFTWARE
+				MENUITEM "D3D &HLSL",             IDM_SET_RENDERING_HLSL
+#endif
 			END
 			POPUP "&FPS"
 			BEGIN
@@ -188,10 +199,12 @@ BEGIN
 				MENUITEM "&Monochrome",           IDM_SET_PALETTE_MONO
 				MENUITEM "&Green",                IDM_SET_PALETTE_GREEN
 			END
+#if defined (SDL)
 			POPUP "&Effect"
 			BEGIN
 				MENUITEM "&Cube\tR",              IDM_SET_EFFECT_CUBE
 			END
+#endif
 			MENUITEM SEPARATOR
 			MENUITEM "F&ullscreen\tAlt+Enter",    IDM_SET_FULLSCREEN
 			MENUITEM "S&tretch in fullscreen\tP", IDM_SET_STRETCHFLSCR
