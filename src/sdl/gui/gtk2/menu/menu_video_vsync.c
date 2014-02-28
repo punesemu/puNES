@@ -9,10 +9,10 @@
 #include "gfx.h"
 #include "cfg_file.h"
 
-#ifdef __SUNPRO_C
+#if defined (__SUNPRO_C)
 #pragma align 4 (icon_inline)
 #endif
-#ifdef __GNUC__
+#if defined (__GNUC__)
 static const guint8 icon_inline[] __attribute__ ((__aligned__ (4))) =
 #else
 static const guint8 icon_inline[] =

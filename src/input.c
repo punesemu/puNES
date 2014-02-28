@@ -20,7 +20,7 @@
 #include "tas.h"
 #include "cfg_file.h"
 #include "param.h"
-#if defined SDL
+#if defined (SDL)
 #include "opengl.h"
 #endif
 
@@ -361,7 +361,7 @@ BYTE input_rd_reg_zapper(BYTE openbus, WORD **screen_index, BYTE nport) {
 	}
 
 	if (!gui.right_button) {
-#if defined SDL
+#if defined (SDL)
 		if (gfx.opengl) {
 			int l = (int) opengl.quadcoords.l;
 			int b = (int) opengl.quadcoords.b;
@@ -369,7 +369,7 @@ BYTE input_rd_reg_zapper(BYTE openbus, WORD **screen_index, BYTE nport) {
 			gx -= l;
 			gy -= b;
 		}
-#elif defined D3D9
+#elif defined (D3D9)
 		{
 			int l = (int) gfx.quadcoords.l;
 			int t = (int) gfx.quadcoords.t;

@@ -1,9 +1,9 @@
 /* GdkPixbuf RGBA C-Source image dump 1-byte-run-length-encoded */
 
-#ifdef __SUNPRO_C
+#if defined (__SUNPRO_C)
 #pragma align 4 (standard_pad_image)
 #endif
-#ifdef __GNUC__
+#if defined (__GNUC__)
 static const guint8 standard_pad_image[] __attribute__ ((__aligned__ (4))) =
 #else
 static const guint8 standard_pad_image[] =

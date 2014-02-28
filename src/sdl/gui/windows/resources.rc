@@ -1,4 +1,4 @@
-#if defined MINGW32
+#if defined (MINGW32)
 #define _WIN32_IE 0x0300
 #endif
 #include <winuser.h>

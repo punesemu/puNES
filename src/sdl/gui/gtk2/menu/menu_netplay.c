@@ -8,10 +8,10 @@
 #include "menu_netplay.h"
 #include "../netplay.h"
 
-#ifdef __SUNPRO_C
+#if defined (__SUNPRO_C)
 #pragma align 4 (icon_inline)
 #endif
-#ifdef __GNUC__
+#if defined (__GNUC__)
 static const guint8 icon_inline[] __attribute__ ((__aligned__ (4))) =
 #else
 static const guint8 icon_inline[] =
@@ -67,10 +67,10 @@ static const guint8 icon_inline[] =
   "\377\377\377\0\4@o\260\11<f\253\2678]\244\3724T\236\6\214\377\377\377"
   "\0"};
 
-#ifdef __SUNPRO_C
+#if defined (__SUNPRO_C)
 #pragma align 4 (connect_icon_inline)
 #endif
-#ifdef __GNUC__
+#if defined (__GNUC__)
 static const guint8 connect_icon_inline[] __attribute__ ((__aligned__ (4))) =
 #else
 static const guint8 connect_icon_inline[] =

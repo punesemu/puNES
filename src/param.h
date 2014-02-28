@@ -80,7 +80,7 @@ typedef struct {
 	const char *help;
 } _param;
 
-#ifdef __CMDLINE__
+#if defined (__CMDLINE__)
 static const char *opt_short = "m:f:k:s:o:i:n:p:r:v:u:t:a:l:c:d:q:g:Vh?";
 static const struct option opt_long[] = {
 	{ "mode",               required_argument, NULL, 'm'},
@@ -177,7 +177,7 @@ static const _param param[] = {
 		NULL,
 		NULL
 	},
-#if defined SDL
+#if defined (SDL)
 	{
 		"rendering",
 		NULL,
@@ -185,7 +185,7 @@ static const _param param[] = {
 		NULL,
 		"-r, --rendering           type of rendering     : software, opengl, glsl"
 	},
-#elif defined D3D9
+#elif defined (D3D9)
 	{
 		"rendering",
 		NULL,
@@ -510,13 +510,13 @@ static const _param param_palette[] = {
 	{"Monochrome",        "mono" },
 	{"Green",             "green"}
 };
-#if defined SDL
+#if defined (SDL)
 static const _param param_render[] = {
 	{"Software", "software"},
 	{"OpenGL",   "opengl"  },
 	{"GLSL",     "glsl"    }
 };
-#elif defined D3D9
+#elif defined (D3D9)
 static const _param param_render[] = {
 	{"Software", "software"},
 	{"HLSL",     "hlsl"    }

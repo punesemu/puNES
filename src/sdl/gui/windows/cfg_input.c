@@ -9,7 +9,7 @@
 #include "cfg_std_pad.h"
 #include "cfg_file.h"
 #include "param.h"
-#if defined SDL
+#if defined (SDL)
 #include "opengl.h"
 #endif
 
@@ -96,7 +96,7 @@ long __stdcall cfg_input_messages(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPa
 				case IDOK:
 					cfg_input_destory(hwnd, IDOK);
 
-#if defined SDL
+#if defined (SDL)
 					if (opengl.rotation
 					        && (input_zapper_is_connected((_port *) &cfg_input.port) == TRUE)) {
 						set_effect();

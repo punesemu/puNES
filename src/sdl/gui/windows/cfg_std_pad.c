@@ -5,7 +5,7 @@
  *      Author: fhorse
  */
 
-#if defined MINGW32
+#if defined (MINGW32)
 #define _WIN32_IE 0x0300
 #endif
 #define __GUI_BASE__
@@ -547,7 +547,7 @@ void cfg_std_pad_tab_init(void) {
 				}
 			}
 
-#ifdef __cplusplus
+#if defined (__cplusplus)
 			if ((ret = DirectInput8Create(GetModuleHandle(NULL), DIRECTINPUT_VERSION,
 			        IID_IDirectInput8, (LPVOID *) &di8, NULL)) != DI_OK) {
 #else

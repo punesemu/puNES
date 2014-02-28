@@ -99,15 +99,12 @@ BYTE cmd_line_parse(int argc, char **argv) {
 			case 't':
 				param_search(0, optarg, param_no_yes, cfg_from_file.aspect_ratio = !index);
 				break;
-/* TODO: da eliminare uan volta gestisto il vsync nella versione d3d9 */
-#ifndef D3D9
 			case 'u':
 				param_search(0, optarg, param_no_yes, cfg_from_file.fullscreen = index);
 				break;
 			case 'v':
 				param_search(0, optarg, param_off_on, cfg_from_file.vsync = index);
 				break;
-#endif
 			default:
 				break;
 		}
@@ -119,7 +116,7 @@ BYTE cmd_line_parse(int argc, char **argv) {
 BYTE cmd_line_check_portable(int argc, char **argv) {
 	int opt;
 
-#if defined MINGW32 || defined MINGW64
+#if defined (MINGW32) || defined (MINGW64)
 	if (!(strncmp(argv[0] + (strlen(argv[0]) - 6), "_p", 2))) {
 #else
 	if (!(strcmp(argv[0] + (strlen(argv[0]) - 2), "_p"))) {

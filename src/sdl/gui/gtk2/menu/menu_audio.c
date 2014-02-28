@@ -16,10 +16,10 @@
 #include "gui.h"
 #undef __GUI_SND__
 
-#ifdef __SUNPRO_C
+#if defined (__SUNPRO_C)
 #pragma align 4 (audio_icon_inline)
 #endif
-#ifdef __GNUC__
+#if defined (__GNUC__)
 static const guint8 audio_icon_inline[] __attribute__ ((__aligned__ (4))) =
 #else
 static const guint8 audio_icon_inline[] =
@@ -74,10 +74,10 @@ static const guint8 audio_icon_inline[] =
   "\36\36\305\30\33\33\362\27\32\33\362\32\34\34\305\27\31\31\205\25\25"
   "\25%\204\377\377\377\0"};
 
-#ifdef __SUNPRO_C
+#if defined (__SUNPRO_C)
 #pragma align 4 (volumes_icon_inline)
 #endif
-#ifdef __GNUC__
+#if defined (__GNUC__)
 static const guint8 volumes_icon_inline[] __attribute__ ((__aligned__ (4))) =
 #else
 static const guint8 volumes_icon_inline[] =

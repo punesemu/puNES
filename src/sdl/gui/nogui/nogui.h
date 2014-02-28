@@ -8,7 +8,7 @@
 #ifndef NOGUI_H_
 #define NOGUI_H_
 
-#if defined MINGW32
+#if defined (MINGW32)
 #include <windows.h>
 #include <shlobj.h>
 #else
@@ -37,7 +37,7 @@ void gui_update(void);
 void guiGetPosition(void);
 void guiSetPosition(char *buffer);
 void guiGetResolution(void);
-#ifdef OPENGL
+#if defined (OPENGL)
 void guiFullscreen(void);
 #endif
 

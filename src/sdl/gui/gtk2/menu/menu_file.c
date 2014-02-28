@@ -11,10 +11,10 @@
 #include "recent_roms.h"
 #include "uncompress.h"
 
-#ifdef __SUNPRO_C
+#if defined (__SUNPRO_C)
 #pragma align 4 (open_icon_inline)
 #endif
-#ifdef __GNUC__
+#if defined (__GNUC__)
 static const guint8 open_icon_inline[] __attribute__ ((__aligned__ (4))) =
 #else
 static const guint8 open_icon_inline[] =
@@ -63,10 +63,10 @@ static const guint8 open_icon_inline[] =
   "\234\377\252\252\231\377\247\247\227\377\245\245\223\377\242\242\220"
   "\377\214\214z\377QQC\376NN@oNNB\365\214JJ>\377\2NNB\365MM@p"};
 
-#ifdef __SUNPRO_C
+#if defined (__SUNPRO_C)
 #pragma align 4 (recent_roms_icon)
 #endif
-#ifdef __GNUC__
+#if defined (__GNUC__)
 static const guint8 recent_roms_icon[] __attribute__ ((__aligned__ (4))) =
 #else
 static const guint8 recent_roms_icon[] =
@@ -121,10 +121,10 @@ static const guint8 recent_roms_icon[] =
   "\314^\0<\203\377\377\377\0\3\314^\0<\317^\2\365\317\\\0\350\204\377\377"
   "\377\0"};
 
-#ifdef __SUNPRO_C
+#if defined (__SUNPRO_C)
 #pragma align 4 (quit_icon_inline)
 #endif
-#ifdef __GNUC__
+#if defined (__GNUC__)
 static const guint8 quit_icon_inline[] __attribute__ ((__aligned__ (4))) =
 #else
 static const guint8 quit_icon_inline[] =
@@ -187,10 +187,10 @@ static const guint8 quit_icon_inline[] =
   "Y[W\377\377\377\377\1""554\247klj\377\202XZV\377\211Y[W\377\3WYU\377"
   "\\^Z\205\377\377\377\0"};
 
-#ifdef __SUNPRO_C
+#if defined (__SUNPRO_C)
 #pragma align 4 (recent_roms_nes_pixbuf)
 #endif
-#ifdef __GNUC__
+#if defined (__GNUC__)
 static const guint8 recent_roms_nes_pixbuf[] __attribute__ ((__aligned__ (4))) =
 #else
 static const guint8 recent_roms_nes_pixbuf[] =
@@ -241,10 +241,10 @@ static const guint8 recent_roms_nes_pixbuf[] =
   "\207S\204\377\377\377\0\6\213\216\211a\217\220\213\330\212\214\207\372"
   "\216\221\214\331\207\213\203D\377\377\377\0"};
 
-#ifdef __SUNPRO_C
+#if defined (__SUNPRO_C)
 #pragma align 4 (recent_roms_fm2_pixbuf)
 #endif
-#ifdef __GNUC__
+#if defined (__GNUC__)
 static const guint8 recent_roms_fm2_pixbuf[] __attribute__ ((__aligned__ (4))) =
 #else
 static const guint8 recent_roms_fm2_pixbuf[] =
@@ -301,10 +301,10 @@ static const guint8 recent_roms_fm2_pixbuf[] =
   "T\374UWS\377VWT\377\204\210\212\205\377\202UWS\377\7Qe=\375F\213\5\334"
   "D\211\5\362D\210\4\375D\211\5\363F\214\5\335D\210\4G"};
 
-#ifdef __SUNPRO_C
+#if defined (__SUNPRO_C)
 #pragma align 4 (recent_roms_fds_pixbuf)
 #endif
-#ifdef __GNUC__
+#if defined (__GNUC__)
 static const guint8 recent_roms_fds_pixbuf[] __attribute__ ((__aligned__ (4))) =
 #else
 static const guint8 recent_roms_fds_pixbuf[] =

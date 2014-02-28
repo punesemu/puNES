@@ -1,4 +1,4 @@
-#if defined MINGW32
+#if defined (MINGW32)
 #define _WIN32_IE 0x0300
 #endif
 #include <winuser.h>
@@ -35,7 +35,7 @@ BEGIN
 	"3",        IDM_SET_SIZE_3X,         VIRTKEY
 	"4",        IDM_SET_SIZE_4X,         VIRTKEY
 	VK_RETURN,  IDM_SET_FULLSCREEN,      ALT,     VIRTKEY
-#if defined SDL
+#if defined (SDL)
 	"R",        IDM_SET_EFFECT_CUBE,     VIRTKEY
 #endif
 	"P",        IDM_SET_STRETCHFLSCR,    VIRTKEY
@@ -86,11 +86,11 @@ BEGIN
 		BEGIN
 			POPUP "&Rendering"
 			BEGIN
-#if defined SDL
+#if defined (SDL)
 				MENUITEM "&Software",             IDM_SET_RENDERING_SOFTWARE
 				MENUITEM "&OpenGL",               IDM_SET_RENDERING_OPENGL
 				MENUITEM "OpenGL &GLSL",          IDM_SET_RENDERING_GLSL
-#elif defined D3D9
+#elif defined (D3D9)
 				MENUITEM "&Software",             IDM_SET_RENDERING_SOFTWARE
 				MENUITEM "D3D &HLSL",             IDM_SET_RENDERING_HLSL
 #endif
@@ -195,7 +195,7 @@ BEGIN
 				MENUITEM "&Monochrome",           IDM_SET_PALETTE_MONO
 				MENUITEM "&Green",                IDM_SET_PALETTE_GREEN
 			END
-#if defined SDL
+#if defined (SDL)
 			POPUP "&Effect"
 			BEGIN
 				MENUITEM "&Cube\tR",              IDM_SET_EFFECT_CUBE

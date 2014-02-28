@@ -8,9 +8,9 @@
 #ifndef TEXT_H_
 #define TEXT_H_
 
-#if defined SDL
+#if defined (SDL)
 #include <SDL.h>
-#elif defined D3D9
+#elif defined (D3D9)
 #include <time.h>
 #endif
 #include "common.h"
@@ -53,7 +53,7 @@ enum txt_tgs {
 #define text_add_line_single(factor, font, alpha, start_x, start_y, x, y, ...)\
 	text_add_line(TXT_SINGLE, factor, font, alpha, start_x, start_y, x, y, __VA_ARGS__)
 
-#if defined SDL
+#if defined (SDL)
 #define _rect SDL_Rect
 #else
 typedef struct {
@@ -81,16 +81,16 @@ typedef struct {
 
 	int index;
 
-#if defined SDL
+#if defined (SDL)
 	SDL_Surface *surface;
 	SDL_Surface *blank;
-#elif defined D3D9
+#elif defined (D3D9)
 	void *surface;
 #endif
 } _txt_element;
 
 struct _text {
-#if defined SDL
+#if defined (SDL)
 	SDL_Surface *surface;
 #endif
 	BYTE on_screen;

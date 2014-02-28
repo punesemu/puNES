@@ -5,10 +5,10 @@
  *      Author: fhorse
  */
 
-#if defined __GUI_BASE__
+#if defined (__GUI_BASE__)
 #include "win.h"
 #endif /* __GUI_BASE__ */
 
-#if defined __GUI_SND__
+#if defined (__GUI_SND__)
 #include "snd.h"
 #endif /* __GUI_SND__ */

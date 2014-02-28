@@ -8,10 +8,10 @@
 #include "menu_input.h"
 #include "../cfg_input.h"
 
-#ifdef __SUNPRO_C
+#if defined (__SUNPRO_C)
 #pragma align 4 (icon_inline)
 #endif
-#ifdef __GNUC__
+#if defined (__GNUC__)
 static const guint8 icon_inline[] __attribute__ ((__aligned__ (4))) =
 #else
 static const guint8 icon_inline[] =
@@ -62,10 +62,10 @@ static const guint8 icon_inline[] =
   "\207S\204\377\377\377\0\6\213\216\211a\217\220\213\330\212\214\207\372"
   "\216\221\214\331\207\213\203D\377\377\377\0"};
 
-#ifdef __SUNPRO_C
+#if defined (__SUNPRO_C)
 #pragma align 4 (config_icon_inline)
 #endif
-#ifdef __GNUC__
+#if defined (__GNUC__)
 static const guint8 config_icon_inline[] __attribute__ ((__aligned__ (4))) =
 #else
 static const guint8 config_icon_inline[] =

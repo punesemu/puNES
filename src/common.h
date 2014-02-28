@@ -23,7 +23,7 @@ typedef signed int SDBWORD;
 #define SAVE_FOLDER    "/save"
 #define TMP_FOLDER     "/tmp"
 
-#ifndef FALSE
+#if !defined (FALSE)
 enum false_value { FALSE, TRUE };
 #endif
 enum exit_type { EXIT_OK, EXIT_ERROR };
@@ -43,7 +43,7 @@ enum header_type { iNES_1_0, NES_2_0 };
 
 #define LENGTH(x) (sizeof(x)/sizeof(*(x)))
 
-#ifdef DEBUG
+#if defined (DEBUG)
 #define INLINE
 #else
 #define INLINE inline __attribute__((always_inline))

@@ -8,7 +8,7 @@
 #ifndef VERSION_H_
 #define VERSION_H_
 
-#ifndef RELEASE
+#if !defined (RELEASE)
 #include "build.h"
 #endif
 

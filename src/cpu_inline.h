@@ -333,7 +333,7 @@ static BYTE INLINE ppu_rd_reg(WORD address) {
 		return (value);
 	}
 
-#ifdef DEBUG
+#if defined (DEBUG)
 	fprintf(stderr, "Alert: Attempt to read PPU port %04X\n", address);
 #endif
 
@@ -382,7 +382,7 @@ static BYTE INLINE apu_rd_reg(WORD address) {
 		if ((irq.high & APU_IRQ) && irq.before) {
 			irq.high &= ~APU_IRQ;
 		}
-#ifdef DEBUG
+#if defined (DEBUG)
 	} else {
 		fprintf(stderr, "Alert: Attempt to read APU port %04X\n", address);
 #endif
@@ -450,7 +450,7 @@ static BYTE INLINE fds_rd_mem(WORD address, BYTE made_tick) {
 			fds.drive.irq_disk_high = FALSE;
 			irq.high &= ~FDS_DISK_IRQ;
 
-#ifndef RELEASE
+#if !defined (RELEASE)
 			//fprintf(stderr, "0x%04X 0x%02X %d\n", address, cpu.openbus, irq.high);
 #endif
 
@@ -461,7 +461,7 @@ static BYTE INLINE fds_rd_mem(WORD address, BYTE made_tick) {
 			/* azzero il transfer flag */
 			fds.drive.transfer_flag = FALSE;
 
-#ifndef RELEASE
+#if !defined (RELEASE)
 			/*fprintf(stderr, "0x%04X 0x%02X [0x%04X] 0x%04X %d %d %d\n", address, cpu.openbus,
 			        fds.side.data[fds.drive.disk_position], cpu.opcode_PC, fds.drive.disk_position,
 			        fds.info.sides_size[fds.drive.side_inserted], irq.high);*/
@@ -491,7 +491,7 @@ static BYTE INLINE fds_rd_mem(WORD address, BYTE made_tick) {
 				cpu.openbus |= 0x02;
 			}
 
-#ifndef RELEASE
+#if !defined (RELEASE)
 			//fprintf(stderr, "0x%04X 0x%02X\n", address, cpu.openbus);
 #endif
 
@@ -732,7 +732,7 @@ static void INLINE ppu_wr_mem(WORD address, BYTE value) {
 }
 static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 	if (address == 0x2000) {
-#ifndef RELEASE
+#if !defined (RELEASE)
 		BYTE old_delay = FALSE;
 #endif
 
@@ -747,7 +747,7 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 		 * per il secondo nmi che avverra' 25 scanline dopo.
 		 */
 		if (nmi.high && (nmi.cpu_cycles_from_last_nmi <= cpu.base_opcode_cycles)) {
-#ifndef RELEASE
+#if !defined (RELEASE)
 			old_delay = TRUE;
 #endif
 			nmi.delay = TRUE;
@@ -833,7 +833,7 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 			}
 		}
 
-#ifndef RELEASE
+#if !defined (RELEASE)
 		if (old_delay && nmi.high) {
 			fprintf(stderr, "r2000 nmi high, set delay nmi.before, %d %d %d - %d %d - 0x%02X %d\n",
 			        ppu.frames, ppu.frame_y, ppu.frame_x, nmi.frame_x, nmi.cpu_cycles_from_last_nmi,
@@ -1114,7 +1114,7 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 		return;
 	}
 
-#ifdef DEBUG
+#if defined (DEBUG)
 	/* non si puo' scrivere nel registro $2002 */
 	fprintf(stderr, "Alert: Attempt to write PPU port %04X\n", address);
 #endif
@@ -1381,7 +1381,7 @@ static void INLINE apu_wr_reg(WORD address, BYTE value) {
 		}
 	}
 
-#ifdef DEBUG
+#if defined (DEBUG)
 		//fprintf(stderr, "Alert: Attempt to write APU port %04X\n", address);
 #endif
 
@@ -1405,7 +1405,7 @@ static BYTE INLINE fds_wr_mem(WORD address, BYTE value) {
 		/* eseguo un tick hardware */
 		tick_hw(1);
 
-#ifndef RELEASE
+#if !defined (RELEASE)
 		/*if (address == 0x4025) {
 			fprintf(stderr, "0x%04X 0x%02X %d\n", address, value, fds.drive.enabled_dsk_reg);
 		} else {

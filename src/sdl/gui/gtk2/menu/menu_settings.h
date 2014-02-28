@@ -13,7 +13,7 @@
 #include "menu_video.h"
 #include "menu_audio.h"
 #include "menu_input.h"
-#ifdef __NETPLAY__
+#if defined (__NETPLAY__)
 #include "menu_netplay.h"
 #endif
 #include "menu_gamegenie.h"

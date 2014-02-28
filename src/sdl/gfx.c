@@ -23,7 +23,7 @@
 #include "opengl.h"
 #include "cfg_file.h"
 
-#if defined MINGW64
+#if defined (MINGW64)
 #define sdl_wid()\
 	if (info.gui) {\
 		char SDL_windowhack[50];\

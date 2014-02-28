@@ -124,7 +124,7 @@ BYTE ines_load_rom(void) {
 			memset(&trainer.data, 0x00, sizeof(trainer.data));
 		}
 
-#ifndef RELEASE
+#if !defined (RELEASE)
 		fprintf(stderr, "mapper %u\n8k rom = %u\n4k vrom = %u\n", info.mapper.id,
 				info.prg.rom.banks_16k * 2, info.chr.rom.banks_8k * 2);
 		fprintf(stderr, "sha1prg = %40s\n", info.sha1sum.prg.string);

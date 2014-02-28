@@ -10,10 +10,10 @@
 #include "opengl.h"
 #include "cfg_file.h"
 
-#ifdef __SUNPRO_C
+#if defined (__SUNPRO_C)
 #pragma align 4 (filter_icon_inline)
 #endif
-#ifdef __GNUC__
+#if defined (__GNUC__)
 static const guint8 filter_icon_inline[] __attribute__ ((__aligned__ (4))) =
 #else
 static const guint8 filter_icon_inline[] =
@@ -59,10 +59,10 @@ static const guint8 filter_icon_inline[] =
   "\377\377\377\0\4iii\377\311\311\311\377\225\225\225\377\26\26\26\377"
   "\214\377\377\377\0\3FFFo>>>\377\27\27\27\377\215\377\377\377\0"};
 
-#ifdef __SUNPRO_C
+#if defined (__SUNPRO_C)
 #pragma align 4 (scalex_icon_inline)
 #endif
-#ifdef __GNUC__
+#if defined (__GNUC__)
 static const guint8 scalex_icon_inline[] __attribute__ ((__aligned__ (4))) =
 #else
 static const guint8 scalex_icon_inline[] =
@@ -128,10 +128,10 @@ static const guint8 scalex_icon_inline[] =
   "\252E\377GB*\377%\222n\377O\236\210\377.\232v\377!<1\377\224l\0\377\222"
   "m\0\377"};
 
-#ifdef __SUNPRO_C
+#if defined (__SUNPRO_C)
 #pragma align 4 (hqx_icon_inline)
 #endif
-#ifdef __GNUC__
+#if defined (__GNUC__)
 static const guint8 hqx_icon_inline[] __attribute__ ((__aligned__ (4))) =
 #else
 static const guint8 hqx_icon_inline[] =
@@ -173,10 +173,10 @@ static const guint8 hqx_icon_inline[] =
   "\6\363@D\34\362:\77\333\371rt\377\367pr\377\356(0\367\355#+V\213\377"
   "\377\377\0\4\36028+\357,3\311\356'.\340\355!*Q\266\377\377\377\0"};
 
-#ifdef __SUNPRO_C
+#if defined (__SUNPRO_C)
 #pragma align 4 (ntsc_icon_inline)
 #endif
-#ifdef __GNUC__
+#if defined (__GNUC__)
 static const guint8 ntsc_icon_inline[] __attribute__ ((__aligned__ (4))) =
 #else
 static const guint8 ntsc_icon_inline[] =
@@ -234,10 +234,10 @@ static const guint8 ntsc_icon_inline[] =
   "\377\0\13QQQ\377;;;\377999\377777\377555\377444\377222\377000\377///"
   "\377---\377,,,\377\202+++\377\2***\377\377\377\377\0"};
 
-#ifdef __SUNPRO_C
+#if defined (__SUNPRO_C)
 #pragma align 4 (crt_icon_inline)
 #endif
-#ifdef __GNUC__
+#if defined (__GNUC__)
 static const guint8 crt_icon_inline[] __attribute__ ((__aligned__ (4))) =
 #else
 static const guint8 crt_icon_inline[] =

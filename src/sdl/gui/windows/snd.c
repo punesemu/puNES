@@ -14,12 +14,13 @@
 #include "apu.h"
 #define INITGUID
 #include <XAudio2.h>
+#undef INITGUID
 
-#if defined THIS
+#if defined (THIS)
 #undef THIS
 #define THIS IXAudio2VoiceCallback *callback
 #endif
-#if defined THIS_
+#if defined (THIS_)
 #undef THIS_
 #define THIS_ IXAudio2VoiceCallback *callback,
 #endif
@@ -108,7 +109,7 @@ BYTE snd_start(void) {
 		snd.buffer.count = sample_latency / snd.buffer.size;
  	}
 
-#if defined(__MINGW64__)
+#if defined (MINGW64)
 	if (CoInitializeEx(NULL, COINIT_MULTITHREADED) != S_OK) {
 #else
  	if (CoInitializeEx(NULL, COINIT_APARTMENTTHREADED) != S_OK) {
@@ -418,7 +419,7 @@ static void STDMETHODCALLTYPE OnBufferEnd(THIS_ void *data) {
 
 	snd_lock_cache(cache);
 
-#ifndef RELEASE
+#if !defined RELEASE
 	/*
 	fprintf(stderr, "snd : %d %d %d %d %2d %d %f %f %4s\r",
 			buffer->AudioBytes,

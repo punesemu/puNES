@@ -144,7 +144,7 @@ BYTE fds_load_bios(void) {
 	/* copio il nome del file nella variabile */
 	strcpy(bios_file, info.rom_file);
 	/* rintraccio l'ultimo '.' nel nome */
-#if defined MINGW32 || defined MINGW64
+#if defined (MINGW32) || defined (MINGW64)
 	if ((lastSlash = strrchr(bios_file, '\\'))) {
 		(*(lastSlash + 1)) = 0x00;
 	}
@@ -230,7 +230,7 @@ void fds_disk_op(WORD type, BYTE side_to_insert) {
 				fds.side.data = NULL;
 			}
 
-#ifndef RELEASE
+#if !defined (RELEASE)
 			fprintf(stdout, "virtual disk size : %5d\n", fds.info.sides_size[side_to_insert]);
 #endif
 
@@ -307,7 +307,7 @@ void fds_disk_op(WORD type, BYTE side_to_insert) {
 				switch (block) {
 					case 1:
 						fds.side.block_1.position = size;
-#ifndef RELEASE
+#if !defined (RELEASE)
 						fprintf(stdout, "block 1 : (pos  : %5d)\n", fds.side.block_1.position);
 #endif
 						break;
@@ -318,7 +318,7 @@ void fds_disk_op(WORD type, BYTE side_to_insert) {
 						/* a questo punto fds.side.counted_files e' 0xFFFF */
 						fds.side.counted_files = 0;
 
-#ifndef RELEASE
+#if !defined (RELEASE)
 						fprintf(stdout, "block 2 : (pos  : %5d) (fl : %5d)\n",
 								fds.side.block_2.position,
 								fds.side.block_2.tot_files);
@@ -330,7 +330,7 @@ void fds_disk_op(WORD type, BYTE side_to_insert) {
 						break;
 					case 4:
 						fds.side.file[fds.side.counted_files].block_4.position = size;
-#ifndef RELEASE
+#if !defined (RELEASE)
 						fprintf(stdout, "file %2d : (size : %5d - 0x%04X) (b3 : %5d) (b4 : %5d)\n",
 								fds.side.counted_files,
 								fds.side.file[fds.side.counted_files].block_3.length,

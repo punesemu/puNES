@@ -9,10 +9,10 @@
 #include "fds.h"
 #include "text.h"
 
-#ifdef __SUNPRO_C
+#if defined (__SUNPRO_C)
 #pragma align 4 (my_pixbuf)
 #endif
-#ifdef __GNUC__
+#if defined (__GNUC__)
 static const guint8 eject_icon_inline[] __attribute__ ((__aligned__ (4))) =
 #else
 static const guint8 eject_icon_inline[] =
@@ -80,10 +80,10 @@ static const guint8 eject_icon_inline[] =
   "\0\3E\227\377\32E\227\3775E\227\377J\202E\227\377Y\3E\227\377JE\227\377"
   "5E\227\377\32\204\377\377\377\0"};
 
-#ifdef __SUNPRO_C
+#if defined (__SUNPRO_C)
 #pragma align 4 (my_pixbuf)
 #endif
-#ifdef __GNUC__
+#if defined (__GNUC__)
 static const guint8 disk_side_icon_inline[] __attribute__ ((__aligned__ (4))) =
 #else
 static const guint8 disk_side_icon_inline[] =
@@ -146,10 +146,10 @@ static const guint8 disk_side_icon_inline[] =
   "\323\377p\217\341\377l\215\334\377m\213\332\377n\212\327\377l\213\315"
   "\377Dm\253\377._\246\377"};
 
-#ifdef __SUNPRO_C
+#if defined (__SUNPRO_C)
 #pragma align 4 (my_pixbuf)
 #endif
-#ifdef __GNUC__
+#if defined (__GNUC__)
 static const guint8 switch_icon_inline[] __attribute__ ((__aligned__ (4))) =
 #else
 static const guint8 switch_icon_inline[] =

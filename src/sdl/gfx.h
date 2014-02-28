@@ -6,7 +6,7 @@
  */
 
 /* definizione funzione virtuale */
-#ifndef gfx_filter_function
+#if !defined (gfx_filter_function)
 #define gfx_filter_function(name)\
 	void name(WORD *screen, WORD **screen_index, uint32_t *palette, BYTE bpp, uint32_t pitch,\
 	void *pix, WORD rows, WORD lines, WORD width, WORD height, BYTE factor)

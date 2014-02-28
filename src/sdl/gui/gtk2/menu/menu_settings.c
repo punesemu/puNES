@@ -8,10 +8,10 @@
 #include "menu_settings.h"
 #include "cfg_file.h"
 
-#ifdef __SUNPRO_C
+#if defined (__SUNPRO_C)
 #pragma align 4 (icon_inline)
 #endif
-#ifdef __GNUC__
+#if defined (__GNUC__)
 static const guint8 icon_inline[] __attribute__ ((__aligned__ (4))) =
 #else
 static const guint8 icon_inline[] =
@@ -85,7 +85,7 @@ void menu_settings(GtkWidget *mainmenu, GtkAccelGroup *accel_group) {
 	menu_audio(menu, accel_group);
 	/* input */
 	menu_input(menu, accel_group);
-#ifdef __NETPLAY__
+#if defined (__NETPLAY__)
 	/* netplay */
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), gtk_separator_menu_item_new());
 	menu_netplay(menu, accel_group);

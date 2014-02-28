@@ -14,7 +14,7 @@
 #include "emu.h"
 #include "keyboard.h"
 #include "joystick.h"
-#ifdef __NETPLAY__
+#if defined (__NETPLAY__)
 #include <arpa/inet.h>
 #include "netplay.h"
 #endif

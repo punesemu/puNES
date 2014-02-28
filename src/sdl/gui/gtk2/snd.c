@@ -62,7 +62,7 @@ BYTE snd_start(void) {
 		double latency = 200.0f;
  		double sample_latency;
 
-#if defined MINGW32 || defined MINGW64
+#if defined (MINGW32) || defined (MINGW64)
  		/*
  		 * Anche se ormai non uso più l'SDL per l'audio nella versione windows,
  		 * conservo i parametri con cui arginavo il problema del delay audio
@@ -195,7 +195,7 @@ BYTE snd_start(void) {
 
 	audio_quality(cfg->audio_quality);
 
-#ifdef DEBUG
+#if defined (DEBUG)
 	return (EXIT_OK);
 #endif
 
@@ -240,7 +240,7 @@ void snd_output(void *udata, BYTE *stream, int len) {
 
 	snd_lock_cache(cache);
 
-#ifndef RELEASE
+#if !defined (RELEASE)
 	/*
 	fprintf(stderr, "snd : %d %d %d %d %2d %d %f %f %4s\r",
 			len,
@@ -339,7 +339,7 @@ void snd_stop(void) {
 void snd_quit(void) {
 	snd_stop();
 
-#ifndef RELEASE
+#if !defined (RELEASE)
 	fprintf(stderr, "\n");
 #endif
 }

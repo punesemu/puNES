@@ -15,7 +15,7 @@ void map_init_0(void) {
 	EXTCL_CPU_RD_MEM(0);
 }
 void extcl_cpu_wr_mem_0(WORD address, BYTE value) {
-#ifdef DEBUG
+#if defined (DEBUG)
 	fprintf(stderr, "Attempt to write %02X to %04X\n", value, address);
 #endif
 }

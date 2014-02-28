@@ -7,10 +7,10 @@
 
 #include "menu_nes.h"
 
-#ifdef __SUNPRO_C
+#if defined (__SUNPRO_C)
 #pragma align 4 (hard_icon_inline)
 #endif
-#ifdef __GNUC__
+#if defined (__GNUC__)
 static const guint8 hard_icon_inline[] __attribute__ ((__aligned__ (4))) =
 #else
 static const guint8 hard_icon_inline[] =
@@ -72,10 +72,10 @@ static const guint8 hard_icon_inline[] =
   "\2\210\210\202-\213\215\207\361\205\210\212\205\377\2\212\214\210\362"
   "\210\210\202-\224\377\377\377\0"};
 
-#ifdef __SUNPRO_C
+#if defined (__SUNPRO_C)
 #pragma align 4 (soft_icon_inline)
 #endif
-#ifdef __GNUC__
+#if defined (__GNUC__)
 static const guint8 soft_icon_inline[] __attribute__ ((__aligned__ (4))) =
 #else
 static const guint8 soft_icon_inline[] =

@@ -12,10 +12,10 @@
 #include "save_slot.h"
 #include "cfg_file.h"
 
-#ifdef __SUNPRO_C
+#if defined (__SUNPRO_C)
 #pragma align 4 (savestate_icon_inline)
 #endif
-#ifdef __GNUC__
+#if defined (__GNUC__)
 static const guint8 savestate_icon_inline[] __attribute__ ((__aligned__ (4))) =
 #else
 static const guint8 savestate_icon_inline[] =
@@ -77,10 +77,10 @@ static const guint8 savestate_icon_inline[] =
   "4f\262\3773e\260\3773d\256\3772c\254\3772b\252\3772a\251\3771`\250\377"
   "1`\247\3761`\246\3611a\250\304"};
 
-#ifdef __SUNPRO_C
+#if defined (__SUNPRO_C)
 #pragma align 4 (loadstate_icon_inline)
 #endif
-#ifdef __GNUC__
+#if defined (__GNUC__)
 static const guint8 loadstate_icon_inline[] __attribute__ ((__aligned__ (4))) =
 #else
 static const guint8 loadstate_icon_inline[] =
@@ -126,10 +126,10 @@ static const guint8 loadstate_icon_inline[] =
   "/q+\352,m(\267)i%p&f\"\35\206\377\377\377\0\2A\207:\234=\2027\322\216"
   "\377\377\377\0\2<\2016\3""9}3x\213\377\377\377\0"};
 
-#ifdef __SUNPRO_C
+#if defined (__SUNPRO_C)
 #pragma align 4 (inc_icon_inline)
 #endif
-#ifdef __GNUC__
+#if defined (__GNUC__)
 static const guint8 inc_icon_inline[] __attribute__ ((__aligned__ (4))) =
 #else
 static const guint8 inc_icon_inline[] =
@@ -178,10 +178,10 @@ static const guint8 inc_icon_inline[] =
   "\204\377\377\377\0\5\200\200\200\2VWR\233[]Y\377VWR\236\200\200\200\2"
   "\203\377\377\377\0"};
 
-#ifdef __SUNPRO_C
+#if defined (__SUNPRO_C)
 #pragma align 4 (dec_icon_inline)
 #endif
-#ifdef __GNUC__
+#if defined (__GNUC__)
 static const guint8 dec_icon_inline[] __attribute__ ((__aligned__ (4))) =
 #else
 static const guint8 dec_icon_inline[] =

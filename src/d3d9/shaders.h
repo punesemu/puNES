@@ -69,7 +69,7 @@ typedef struct {
 
 #endif /* SHADERS_H_ */
 
-#ifdef _SHADERS_CODE_
+#if defined (_SHADERS_CODE_)
 static _shader_code shader_code[SHADER_TOTAL] = {
 	/*****************************************************************************************/
 	/* COLOR                                                                                 */

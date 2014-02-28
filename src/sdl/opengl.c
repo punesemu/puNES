@@ -399,7 +399,7 @@ void glsl_shaders_init(_shader *shd) {
 		shd->vrt = glCreateShader(GL_VERTEX_SHADER);
 		glShaderSource(shd->vrt, 1, &shd->code->vertex, NULL);
 		glCompileShader(shd->vrt);
-#ifndef RELEASE
+#if !defined (RELEASE)
 		glsl_print_log(shd->vrt, FALSE);
 #endif
 		glAttachShader(shd->prg, shd->vrt);
@@ -410,14 +410,14 @@ void glsl_shaders_init(_shader *shd) {
 		shd->frg = glCreateShader(GL_FRAGMENT_SHADER);
 		glShaderSource(shd->frg, 1, &shd->code->fragment, NULL);
 		glCompileShader(shd->frg);
-#ifndef RELEASE
+#if !defined (RELEASE)
 		glsl_print_log(shd->frg, FALSE);
 #endif
 		glAttachShader(shd->prg, shd->frg);
 	}
 
 	glLinkProgram(shd->prg);
-#ifndef RELEASE
+#if !defined (RELEASE)
 	glsl_print_log(shd->prg, TRUE);
 #endif
 

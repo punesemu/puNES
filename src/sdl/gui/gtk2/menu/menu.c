@@ -10,7 +10,7 @@
 #include "gui.h"
 #undef __GUI_BASE__
 
-#ifndef RELEASE
+#if !defined (RELEASE)
 //#include "../configurations.h"
 //#include "../audio_extra_configurations.h"
 #endif
@@ -35,7 +35,7 @@ void menu_create(GtkWidget *win, GtkWidget *mainbox) {
 	menu_state(menu, accel_group);
 	/* Help */
 	menu_help(menu, accel_group);
-#ifndef RELEASE
+#if !defined (RELEASE)
 	/*
 	{
 		GtkWidget *submenu, *config;

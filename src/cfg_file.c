@@ -571,7 +571,7 @@ char *cfg_file_set_kbd_joy_button_default(int index, int mode, int button) {
 		},
 		{
 			{
-#ifdef GTK
+#if defined (GTK)
 				"Page_Down", "End",     "Insert",  "Delete",
 				"KP_Up",     "KP_Down", "KP_Left", "KP_Right",
 				"Home",      "Page_Up"
@@ -628,9 +628,9 @@ void set_default(void) {
 	cfg_from_file.ntsc_format = COMPOSITE;
 	cfg_from_file.palette = PALETTE_NTSC;
 
-#if defined SDL
+#if defined (SDL)
 	cfg_from_file.render = RENDER_OPENGL;
-#elif defined D3D9
+#elif defined (D3D9)
 	cfg_from_file.render = RENDER_HLSL;
 #endif
 	gfx_set_render(cfg_from_file.render);

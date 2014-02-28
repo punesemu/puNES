@@ -22,7 +22,7 @@
 #include "recent_roms.h"
 #include "uncompress.h"
 
-#if defined MINGW32 || defined MINGW64
+#if defined (MINGW32) || defined (MINGW64)
 int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine, int iCmdShow) {
 	int argc = __argc;
 	char **argv = (char **)__argv;
@@ -71,7 +71,7 @@ int main(int argc, char **argv) {
 		return (EXIT_ERROR);
 	}
 
-#ifdef __NETPLAY__
+#if defined (__NETPLAY__)
 	netplay_init();
 #endif
 
@@ -97,7 +97,7 @@ int main(int argc, char **argv) {
 	optind = cmd_line_parse(argc, argv);
 
 	if (argc == optind) {
-#ifndef DEBUG
+#if !defined (DEBUG)
 		//if(!info.gui) {
 		//	strcpy(info.rom_file, "rom.nes");
 		//}

@@ -49,7 +49,7 @@
 #include "fds.h"
 #include "gamegenie.h"
 #include "recent_roms.h"
-#if defined SDL
+#if defined (SDL)
 #include "opengl.h"
 #endif
 #include "uncompress.h"
@@ -61,7 +61,7 @@
 	}
 
 BYTE emu_loop(void) {
-#ifdef DEBUG
+#if defined (DEBUG)
 	WORD PCBREAK = 0xDA5A;
 	PCBREAK = 0xEC06; //PCBREAK = 0xDA7A;
 	PCBREAK = 0xEBE5;
@@ -77,7 +77,7 @@ BYTE emu_loop(void) {
 	 * thread su un singolo core,le prestazioni migliorano
 	 * notevolmente. In questo caso setto l'uso del core 0.
 	 */
-//#if defined MINGW32 || defined MINGW64
+//#if defined (MINGW32) || defined (MINGW64)
 //	guiSetThreadAffinity(0);
 //#endif
 
@@ -103,7 +103,7 @@ BYTE emu_loop(void) {
 			info.execute_cpu = TRUE;
 
 			while (info.execute_cpu == TRUE) {
-#ifdef DEBUG
+#if defined (DEBUG)
 				if (cpu.PC == PCBREAK) {
 					BYTE pippo = 5;
 					pippo = pippo + 1;
@@ -127,7 +127,7 @@ BYTE emu_loop(void) {
 				snd_end_frame();
 			}
 
-#ifdef DEBUG
+#if defined (DEBUG)
 			gfx_draw_screen(TRUE);
 #else
 			gfx_draw_screen(FALSE);
@@ -165,7 +165,7 @@ BYTE emu_make_dir(const char *fmt, ...) {
 			return (EXIT_ERROR);
 		}
 	} else {
-#if defined MINGW32 || defined MINGW64
+#if defined (MINGW32) || defined (MINGW64)
 		if (mkdir(path)) {
 			return (EXIT_ERROR);
 		}
@@ -439,7 +439,7 @@ void emu_set_title(char *title) {
 		sprintf(name, "%s", NAME);
 	}
 
-#if defined SDL
+#if defined (SDL)
 	if (info.portable && (cfg->scale != X1)) {
 		strcat(name, "_p");
 	}
@@ -456,7 +456,7 @@ void emu_set_title(char *title) {
 		        param_palette[cfg->palette].lname);
 	}
 
-#ifndef RELEASE
+#if !defined (RELEASE)
 	if (cfg->scale != X1) {
 		char mapper_id[10];
 		sprintf(mapper_id, ", %d", info.mapper.id);

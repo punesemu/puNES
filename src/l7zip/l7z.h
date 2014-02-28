@@ -8,7 +8,7 @@
 #ifndef L7Z_H_
 #define L7Z_H_
 
-#ifdef __cplusplus
+#if defined (__cplusplus)
 #define EXTERNC extern "C"
 #else
 #define EXTERNC

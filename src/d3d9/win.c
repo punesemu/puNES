@@ -5,9 +5,9 @@
  *      Author: fhorse
  */
 
-#if defined MINGW32
+#if defined (MINGW32)
 #define _WIN32_IE 0x0300
-#elif defined MINGW64
+#elif defined (MINGW64)
 #define _WIN32_IE 0x0501
 #endif
 #include "win.h"
@@ -709,7 +709,7 @@ void gui_update(void) {
 	char title[255];
 
 	/* aggiorno il titolo */
-#ifndef RELEASE
+#if !defined (RELEASE)
 	sprintf(title, "%s build : %s", NAME, BUILD_RELEASE);
 #else
 	//emu_set_title(title);

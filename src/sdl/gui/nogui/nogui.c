@@ -61,7 +61,7 @@ void guiAfterSet(void) {
 		fprintf(stderr, "SDL GetWMInfo failed\n");
     }
 
-#if defined MINGW32 || defined MINGW64
+#if defined (MINGW32) || defined (MINGW64)
 	/* abilito l'intercettazzioni di eventi particolari */
 	SDL_EventState(SDL_SYSWMEVENT, SDL_ENABLE);
 #endif
@@ -84,7 +84,7 @@ void guiEvent(void) {
 		case SDL_QUIT:
 			info.stop = TRUE;
 			break;
-#if defined MINGW32 || defined MINGW64
+#if defined (MINGW32) || defined (MINGW64)
 		case SDL_SYSWMEVENT:
 			switch (event.syswm.msg->msg) {
 			case WM_CAPTURECHANGED:
@@ -105,7 +105,7 @@ void guiEvent(void) {
 			//sndWmEvent(600);
 			break;
 #endif
-#ifdef OPENGL
+#if defined (OPENGL)
 		case SDL_MOUSEBUTTONDOWN:
 			if (event.button.button == SDL_BUTTON_LEFT) {
 				opengl.mouseLeftButton = TRUE;
@@ -205,7 +205,7 @@ void guiEvent(void) {
 			case SDLK_w:
 				cfg_file_save();
 				break;
-#ifdef OPENGL
+#if defined (OPENGL)
 			case SDLK_f:
 				/* Fullscreen */
 				if (gfx.fullscreen == NO_FULLSCR) {
@@ -362,13 +362,13 @@ void guiSetPosition(char *buffer) {
 	sprintf(buffer, "SDL_VIDEO_WINDOW_POS=%d,%d",
 			guiPosX, guiPosY);
 }
-#ifdef OPENGL
+#if defined (OPENGL)
 void guiFullscreen(void) {
 	return;
 }
 #endif
 
-#if defined MINGW32 || defined MINGW64
+#if defined (MINGW32) || defined (MINGW64)
 void guiInit(int argc, char **argv) {
 	OSVERSIONINFO winInfo;
 

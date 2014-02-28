@@ -5,9 +5,9 @@
  *      Author: fhorse
  */
 
-#if defined SDL
+#if defined (SDL)
 #include <time.h>
-#elif defined D3D9
+#elif defined (D3D9)
 #include <string.h>
 #include <stdarg.h>
 #include <stdlib.h>
