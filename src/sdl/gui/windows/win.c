@@ -14,7 +14,6 @@
 #include <windowsx.h>
 #include <shlobj.h>
 #include <libgen.h>
-#include "input.h"
 #include "overscan.h"
 #include "gfx.h"
 #include "snd.h"
