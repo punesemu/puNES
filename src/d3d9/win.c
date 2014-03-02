@@ -213,6 +213,8 @@ void gui_init(int argc, char **argv) {
 	gui.richedit = LoadLibrary("Riched20.Dll");
 }
 void gui_quit(void) {
+	SetThreadExecutionState(ES_CONTINUOUS);
+
 	DestroyWindow(main_win);
 
 	FreeLibrary(gui.richedit);
@@ -557,6 +559,8 @@ void gui_start(void) {
 void gui_event(void) {
 	BYTE no_process = FALSE;
 	MSG msg = { 0 };
+
+	SetThreadExecutionState(ES_DISPLAY_REQUIRED | ES_CONTINUOUS);
 
 	while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
 		/*
