@@ -785,6 +785,9 @@ void gui_update(void) {
 				change_menuitem(CHECK, MF_UNCHECKED, IDM_NES_FDS_DISK_SIDE0 + i);
 			}
 		}
+		if (fds.info.total_sides > 1) {
+			change_menuitem(ENAB, MF_HILITE, IDM_NES_FDS_DISK_SWITCH);
+		}
 	} else {
 		HMENU menu_NES = GetSubMenu(main_menu, 1);
 		MENUITEMINFO menuitem;
