@@ -1837,6 +1837,8 @@ static const _dbelement dblist[] = {
 	{"0b5672e139a98ce2aa49fd8f1be933d278e0161d", 2, DEFAULT, DEFAULT, PAL},
 
 /* ------------------------------------- CNROM -------------------------------------------- */
+	/* Cybernoid - The Fighting Machine (U) [o2].nes */
+	{"2b2dacd2dd74a6be31dafad273fa4a34c5785fe7", 3, DEFAULT, CNROM_CYBERNOID, DEFAULT},
 	/* Alpha Mission (E) [!].nes */
 	{"1293d08a7a5690aeb08f15b5e4ecec7703b9668b", 3, DEFAULT, DEFAULT, PAL},
 	/* Athletic World (E) [!].nes */
