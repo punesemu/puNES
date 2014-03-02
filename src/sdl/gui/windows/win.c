@@ -560,6 +560,11 @@ void gui_event(void) {
 	BYTE no_process = FALSE;
 	MSG msg = { 0 };
 
+	/*
+	 * Enables an application to inform the system that it is in use,
+	 * thereby preventing the system from entering sleep or turning
+	 * off the display while the application is running.
+	 */
 	SetThreadExecutionState(ES_DISPLAY_REQUIRED | ES_CONTINUOUS);
 
 	while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
