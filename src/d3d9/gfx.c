@@ -897,12 +897,14 @@ void gfx_control_change_monitor(void *monitor) {
 
 			d3d9_set_adapter(adapter);
 			if (d3d9_create_context(gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE]) == EXIT_OK) {
+				d3d9_adjust_coords();
 				return;
 			}
 			fprintf(stderr, "Unable to initialize new d3d context\n");
 
 			d3d9_set_adapter(old_adapter);
 			if (d3d9_create_context(gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE]) == EXIT_OK) {
+				d3d9_adjust_coords();
 				return;
 			}
 			fprintf(stderr, "Unable to initialize old d3d context\n");
