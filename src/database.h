@@ -94,7 +94,23 @@ static const _dbelement dblist[] = {
 
 /* --------------------------------------- 0 ---------------------------------------------- */
 	/* ElevatorAction_J.nes */
-	{"2070d3241f5f29de74b004c9a6237cec17951f9a", 0, UNK_HORIZONTAL, DEFAULT, DEFAULT},
+	{"2070d3241f5f29de74b004c9a6237cec17951f9a", 0, UNK_VERTICAL, DEFAULT, DEFAULT},
+	/* Hogan's Alley (W) [b1].nes */
+	{"e0f22ffc03c315145686ca98f8dcf3f91cca06f5", 0, UNK_VERTICAL, DEFAULT, DEFAULT},
+	/* Hogan's Alley (W) [o1].nes */
+	{"1bc2f7e09a5c965df3beba6e49c8d4ba5ed059f7", 0, UNK_VERTICAL, DEFAULT, DEFAULT},
+	/* Hogan's Alley (W) [o2].nes */
+	{"bca489ed0fb58e1e99f36c427bc0d7d805b6c61a", 0, UNK_VERTICAL, DEFAULT, DEFAULT},
+	/* Hogan's Alley (W) [p1].nes */
+	{"43c7fe2bfa2720448289bcbc20657e3938f0676f", 0, UNK_VERTICAL, DEFAULT, DEFAULT},
+	/* Hogan's Alley (W) [p1][o3].nes */
+	{"56d7e3bf11eb1574c3d8b30d07f8126952ff928a", 0, UNK_VERTICAL, DEFAULT, DEFAULT},
+	/* Hogan's Alley (W) [p2].nes */
+	{"13743a35b1617c6a191fc3939e81be0388d36cdb", 0, UNK_VERTICAL, DEFAULT, DEFAULT},
+	/* Hogan's Alley (W) [p2][o1].nes */
+	{"91bae50bcd418e372352bb391fb9e78b2c179a33", 0, UNK_VERTICAL, DEFAULT, DEFAULT},
+	/* Hogan's Alley (W) [p3].nes */
+	{"94b530f0df450ae21bfae75b64118ea164796bb9", 0, UNK_VERTICAL, DEFAULT, DEFAULT},
 	/* Balloon Fight (E) [!].nes */
 	{"53583ef3c8a9eadd5cab927492ca12de8d4acdd1", 0, DEFAULT, DEFAULT, PAL},
 	/* Balloon Fight (E) [T+Fre1.1_ks151].nes */
