@@ -877,7 +877,19 @@ void gfx_draw_screen(BYTE forced) {
 
 		IDirect3DDevice9_EndScene(d3d9.adapter->dev);
 
-		IDirect3DDevice9_Present(d3d9.adapter->dev, NULL, NULL, NULL, NULL);
+		if (IDirect3DDevice9_Present(d3d9.adapter->dev, NULL, NULL, NULL, NULL) == D3DERR_DEVICELOST) {
+			if (IDirect3DDevice9_TestCooperativeLevel(d3d9.adapter->dev) == D3DERR_DEVICENOTRESET) {
+				emu_pause(TRUE);
+
+				if (d3d9_create_context(gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE]) == EXIT_ERROR) {
+					fprintf(stderr, "Unable to initialize d3d context\n");
+				} else {
+					d3d9_adjust_coords();
+				}
+
+				emu_pause(FALSE);
+			}
+		}
 	}
 }
 void gfx_control_change_monitor(void *monitor) {
@@ -1188,10 +1200,8 @@ BYTE d3d9_create_context(UINT width, UINT height) {
 				D3DBLEND_INVSRCALPHA);
 
 		d3d9.texcoords.l = 0.0f;
-		//d3d9.texcoords.r = (FLOAT) width / (d3d9.screen.w * d3d9.factor);
 		d3d9.texcoords.r = (FLOAT) gfx.w[CURRENT] / (d3d9.screen.w * d3d9.factor);
 		d3d9.texcoords.t = 0.0f;
-		//d3d9.texcoords.b = (FLOAT) height / (d3d9.screen.h * d3d9.factor);
 		d3d9.texcoords.b = (FLOAT) gfx.h[CURRENT] / (d3d9.screen.h * d3d9.factor);
 	}
 
