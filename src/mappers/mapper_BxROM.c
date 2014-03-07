@@ -14,15 +14,16 @@ void map_init_BxROM(void) {
 	}
 
 	switch (info.mapper.from_db) {
-		case BXROMUNL:
-			EXTCL_CPU_WR_MEM(BxROM_UNL);
+		case BXROMBC:
+			EXTCL_CPU_WR_MEM(BxROM);
 			break;
 		case AVENINA001:
 			info.mapper.extend_wr = TRUE;
 			EXTCL_CPU_WR_MEM(AveNina001);
 			break;
 		default:
-			EXTCL_CPU_WR_MEM(BxROM);
+		case BXROMUNL:
+			EXTCL_CPU_WR_MEM(BxROM_UNL);
 			break;
 	}
 }

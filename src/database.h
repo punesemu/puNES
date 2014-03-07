@@ -2885,6 +2885,8 @@ static const _dbelement dblist[] = {
 	{"b1c919a40fa6c1fc368d40c8afb7c6de9e9c00b8", 34, AVENINA001, DEFAULT, DEFAULT},
 	/* Impossible Mission II (U) [o1].nes */
 	{"5a199f03c366930e06eb2247c593254bb99df208", 34, AVENINA001, DEFAULT, DEFAULT},
+	/* Mississippi Satsujin Jiken (J) [hM34].nes */
+	{"082a83f58720191979bb903260939d7a1bc87635", 34, AVENINA001, DEFAULT, DEFAULT},
 	/* SD Gundam - Gachapon Senshi 2 - Capsule Senki (J) [hM34].nes */
 	{"25eda90ce02bfb1feb15c9a0ade09a7a20db46c5", 34, AVENINA001, DEFAULT, DEFAULT},
 	/* Takahashi Meijin no Bugutte Honey (J) [hM34].nes */
@@ -2899,6 +2901,24 @@ static const _dbelement dblist[] = {
 	{"1b8675b55ddd3d0430358ea3a2f888f210c8f680", 34, BXROMUNL, DEFAULT, DEFAULT},
 	/* Titanic 1912 (Unl).nes */
 	{"b96cb87b7cb300bc9225e8778d928672c2659ee6", 34, BXROMUNL, DEFAULT, DEFAULT},
+	/* 3-D Battles of World Runner, The (U) [b5].nes */
+	{"a74e7a04611536f7523a27d506f01d73d0d956b3", 34, BXROMBC, DEFAULT, DEFAULT},
+	/* Deadly Towers (U) [b1].nes */
+	{"fc15dba2abed3e3d9c0409edbd213158b8da27b9", 34, BXROMBC, DEFAULT, DEFAULT},
+	/* Deadly Towers (U) [o1].nes */
+	{"764c9a41db58d9a0f8dd56499cf1ea84c10addf8", 34, BXROMBC, DEFAULT, DEFAULT},
+	/* Mashou (J) [b1][o1].nes */
+	{"962e318b883d7dc3848a3e52eb62720850298426", 34, BXROMBC, DEFAULT, DEFAULT},
+	/* Mashou (J) [b5].nes */
+	{"f1f3712345704ebb0040e3b82f9132804d477ad2", 34, BXROMBC, DEFAULT, DEFAULT},
+	/* Mashou (J) [b6].nes */
+	{"e3ce526d4af1045f19a5445d014602be14585458", 34, BXROMBC, DEFAULT, DEFAULT},
+	/* Mashou (J) [b7].nes */
+	{"0b099fed3dafb39191aedb8bded5313dac3ff1ba", 34, BXROMBC, DEFAULT, DEFAULT},
+	/* Mashou (J) [!].nes */
+	{"a6b1a2acae1e4034c5e048d1318541d67a86f17c", 34, BXROMBC, DEFAULT, DEFAULT},
+	/* Variable Width Font Demo v0.02 by Damian Yerrick+Blargg (PD).nes */
+	{"8ef30f9143876207c9862fbc03af353df416fce7", 34, BXROMBC, DEFAULT, DEFAULT},
 
 /* ------------------------------------- mapper 37 ---------------------------------------- */
 	/* Super Mario Bros. + Tetris + Nintendo World Cup (E) [b1].nes */

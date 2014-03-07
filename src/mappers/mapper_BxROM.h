@@ -10,7 +10,7 @@
 
 #include "common.h"
 
-enum { AVENINA001 = 2, BXROMUNL = 3 };
+enum bxroms_types { AVENINA001 = 2, BXROMUNL = 3, BXROMBC = 4 };
 
 void map_init_BxROM(void);
 
