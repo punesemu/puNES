@@ -51,6 +51,9 @@ typedef struct {
 	FLOAT h;
 
 	_surface surface;
+
+	LPDIRECT3DVERTEXBUFFER9 quad;
+	_texcoords quadcoords;
 } _texture;
 typedef struct {
 	const char *vertex;

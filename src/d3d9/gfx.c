@@ -20,8 +20,6 @@
 #include "palette.h"
 #undef  __STATICPAL__
 
-enum power_of_two_switch { NO_POWER_OF_TWO, POWER_OF_TWO };
-
 #define COMPILERSHADER_NOT_FOUND 0x8007007e
 #define ID3DXBuffer_GetBufferPointer(p) (p)->lpVtbl->GetBufferPointer(p)
 #define ID3DXBuffer_Release(p) (p)->lpVtbl->Release(p)
@@ -87,7 +85,6 @@ typedef struct {
 } _d3d9_adapter;
 struct _d3d9 {
 	LPDIRECT3D9 d3d;
-	LPDIRECT3DVERTEXBUFFER9 quad;
 
 	D3DXMATRIX world;
 	D3DXMATRIX view;
@@ -99,7 +96,7 @@ struct _d3d9 {
 
 	_texture screen;
 	_texture text;
-	_texcoords texcoords;
+
 	_shader shader;
 
 	uint32_t *palette;
@@ -115,8 +112,8 @@ BYTE d3d9_create_device(UINT width, UINT height);
 BYTE d3d9_create_context(UINT width, UINT height);
 void d3d9_release_context(void);
 void d3d9_adjust_coords(void);
-BYTE d3d9_create_texture(_texture *texture, uint32_t width, uint32_t height, uint8_t interpolation,
-        uint8_t pow);
+void d3d9_adjust_vertex_buffer(_texture *texture, FLOAT factor);
+BYTE d3d9_create_texture(_texture *texture, uint32_t width, uint32_t height, uint8_t interpolation);
 void d3d9_release_texture(_texture *texture);
 BYTE d3d9_create_shader(_shader *shd);
 void d3d9_release_shader(_shader *shd);
@@ -838,7 +835,7 @@ void gfx_draw_screen(BYTE forced) {
 				/* disegno la texture dello screen */
 				IDirect3DDevice9_SetTexture(d3d9.adapter->dev, 0,
 				        (IDirect3DBaseTexture9 * ) d3d9.screen.data);
-				IDirect3DDevice9_SetStreamSource(d3d9.adapter->dev, 0, d3d9.quad, 0,
+				IDirect3DDevice9_SetStreamSource(d3d9.adapter->dev, 0, d3d9.screen.quad, 0,
 				        sizeof(vertex));
 				IDirect3DDevice9_DrawPrimitive(d3d9.adapter->dev, D3DPT_TRIANGLEFAN, 0, 2);
 			}
@@ -855,7 +852,7 @@ void gfx_draw_screen(BYTE forced) {
 				/* disegno la texture del testo */
 				IDirect3DDevice9_SetTexture(d3d9.adapter->dev, 0,
 				        (IDirect3DBaseTexture9 * ) d3d9.text.data);
-				IDirect3DDevice9_SetStreamSource(d3d9.adapter->dev, 0, d3d9.quad, 0,
+				IDirect3DDevice9_SetStreamSource(d3d9.adapter->dev, 0, d3d9.text.quad, 0,
 				        sizeof(vertex));
 				IDirect3DDevice9_DrawPrimitive(d3d9.adapter->dev, D3DPT_TRIANGLEFAN, 0, 2);
 			}
@@ -865,13 +862,15 @@ void gfx_draw_screen(BYTE forced) {
 			/* disegno la texture dello screen */
 			IDirect3DDevice9_SetTexture(d3d9.adapter->dev, 0,
 					(IDirect3DBaseTexture9 * ) d3d9.screen.data);
-			IDirect3DDevice9_SetStreamSource(d3d9.adapter->dev, 0, d3d9.quad, 0, sizeof(vertex));
+			IDirect3DDevice9_SetStreamSource(d3d9.adapter->dev, 0, d3d9.screen.quad, 0,
+			        sizeof(vertex));
 			IDirect3DDevice9_DrawPrimitive(d3d9.adapter->dev, D3DPT_TRIANGLEFAN, 0, 2);
 
 			/* disegno la texture del testo */
 			IDirect3DDevice9_SetTexture(d3d9.adapter->dev, 0,
 					(IDirect3DBaseTexture9 * ) d3d9.text.data);
-			IDirect3DDevice9_SetStreamSource(d3d9.adapter->dev, 0, d3d9.quad, 0, sizeof(vertex));
+			IDirect3DDevice9_SetStreamSource(d3d9.adapter->dev, 0, d3d9.text.quad, 0,
+			        sizeof(vertex));
 			IDirect3DDevice9_DrawPrimitive(d3d9.adapter->dev, D3DPT_TRIANGLEFAN, 0, 2);
 		}
 
@@ -1116,18 +1115,6 @@ BYTE d3d9_create_context(UINT width, UINT height) {
 		return (EXIT_ERROR);
 	}
 
-	if (IDirect3DDevice9_CreateVertexBuffer(d3d9.adapter->dev,
-			4 * sizeof(vertex),
-			D3DUSAGE_WRITEONLY,
-			FVF,
-			D3DPOOL_DEFAULT,
-			&d3d9.quad,
-			NULL) != D3D_OK) {
-		MessageBox(NULL, "Unable to create the vertex buffer", "Error!",
-				MB_ICONEXCLAMATION | MB_OK);
-		return (EXIT_ERROR);
-	}
-
 	{
 		{
 			WORD w, h;
@@ -1141,7 +1128,7 @@ BYTE d3d9_create_context(UINT width, UINT height) {
 			}
 
 			/* creo la texture principale */
-			if (d3d9_create_texture(&d3d9.screen, w, h, 0, POWER_OF_TWO) == EXIT_ERROR) {
+			if (d3d9_create_texture(&d3d9.screen, w, h, 0) == EXIT_ERROR) {
 				MessageBox(NULL, "Unable to create main texture", "Error!",
 						MB_ICONEXCLAMATION | MB_OK);
 				return (EXIT_ERROR);
@@ -1198,11 +1185,6 @@ BYTE d3d9_create_context(UINT width, UINT height) {
 		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_DESTBLEND,
 				D3DBLEND_INVSRCALPHA);
-
-		d3d9.texcoords.l = 0.0f;
-		d3d9.texcoords.r = (FLOAT) gfx.w[CURRENT] / (d3d9.screen.w * d3d9.factor);
-		d3d9.texcoords.t = 0.0f;
-		d3d9.texcoords.b = (FLOAT) gfx.h[CURRENT] / (d3d9.screen.h * d3d9.factor);
 	}
 
 	{
@@ -1224,8 +1206,8 @@ BYTE d3d9_create_context(UINT width, UINT height) {
 		d3d9_create_shader(&d3d9.shader);
 	}
 
-	if (d3d9_create_texture(&d3d9.text, d3d9.screen.w * d3d9.factor, d3d9.screen.h * d3d9.factor,
-			0, NO_POWER_OF_TWO) == EXIT_ERROR) {
+	if (d3d9_create_texture(&d3d9.text, d3d9.screen.w * d3d9.factor, d3d9.screen.h * d3d9.factor, 0)
+	        == EXIT_ERROR) {
 		MessageBox(NULL, "Unable to create text texture", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
@@ -1238,26 +1220,28 @@ void d3d9_release_context(void) {
 	d3d9_release_texture(&d3d9.screen);
 	d3d9_release_texture(&d3d9.text);
 
-	if (d3d9.quad) {
-		IDirect3DVertexBuffer9_Release(d3d9.quad);
-		d3d9.quad = NULL;
-	}
-
 	if (d3d9.adapter && d3d9.adapter->dev) {
 		IDirect3DDevice9_Release(d3d9.adapter->dev);
 		d3d9.adapter->dev = NULL;
 	}
 }
 void d3d9_adjust_coords(void) {
+
+	d3d9_adjust_vertex_buffer(&d3d9.screen, d3d9.factor);
+	d3d9_adjust_vertex_buffer(&d3d9.text, 1.0f);
+
+	gfx.quadcoords = d3d9.screen.quadcoords;
+}
+void d3d9_adjust_vertex_buffer(_texture *texture, FLOAT factor) {
 	{
 		/* aspect ratio */
 		FLOAT w_quad = (FLOAT) gfx.w[VIDEO_MODE];
 		FLOAT h_quad = (FLOAT) gfx.h[VIDEO_MODE];
 
-		gfx.quadcoords.l = 0.0f;
-		gfx.quadcoords.r = w_quad;
-		gfx.quadcoords.t = 0.0f;
-		gfx.quadcoords.b = h_quad;
+		texture->quadcoords.l = 0.0f;
+		texture->quadcoords.r = w_quad;
+		texture->quadcoords.t = 0.0f;
+		texture->quadcoords.b = h_quad;
 
 		/* con flags intendo sia il fullscreen che il futuro resize */
 		if (cfg->fullscreen && cfg->aspect_ratio) {
@@ -1280,10 +1264,10 @@ void d3d9_adjust_coords(void) {
 				h_quad = w_quad / ratio_frame;
 				centering_factor = ((FLOAT) gfx.h[VIDEO_MODE] - h_quad) / 2.0f;
 
-				gfx.quadcoords.l = 0.0f;
-				gfx.quadcoords.r = w_quad;
-				gfx.quadcoords.t = centering_factor;
-				gfx.quadcoords.b = h_quad + centering_factor;
+				texture->quadcoords.l = 0.0f;
+				texture->quadcoords.r = w_quad;
+				texture->quadcoords.t = centering_factor;
+				texture->quadcoords.b = h_quad + centering_factor;
 			/*
 			 * se l'aspect ratio del frame e' minore di
 			 * quello della superficie allora devo agire
@@ -1295,22 +1279,28 @@ void d3d9_adjust_coords(void) {
 				w_quad = ratio_frame * h_quad;
 				centering_factor = ((FLOAT) gfx.w[VIDEO_MODE] - w_quad) / 2.0f;
 
-				gfx.quadcoords.l = centering_factor;
-				gfx.quadcoords.r = w_quad + centering_factor;
-				gfx.quadcoords.t = 0.0f;
-				gfx.quadcoords.b = h_quad;
+				texture->quadcoords.l = centering_factor;
+				texture->quadcoords.r = w_quad + centering_factor;
+				texture->quadcoords.t = 0.0f;
+				texture->quadcoords.b = h_quad;
 			}
 		}
 	}
 
 	{
-		_texcoords *tc = &d3d9.texcoords;
 		void *tv_vertices;
+		_texcoords tc;
+
+		tc.l = 0.0f;
+		tc.r = (FLOAT) gfx.w[CURRENT] / (texture->w * factor);
+		tc.t = 0.0f;
+		tc.b = (FLOAT) gfx.h[CURRENT] / (texture->h * factor);
+
 		vertex quad_vertices[] = {
-			{ gfx.quadcoords.l, gfx.quadcoords.b, 0.0f, 1.0f, tc->l, tc->b },
-			{ gfx.quadcoords.l, gfx.quadcoords.t, 0.0f, 1.0f, tc->l, tc->t },
-			{ gfx.quadcoords.r, gfx.quadcoords.t, 0.0f, 1.0f, tc->r, tc->t },
-			{ gfx.quadcoords.r, gfx.quadcoords.b, 0.0f, 1.0f, tc->r, tc->b }
+			{ texture->quadcoords.l, texture->quadcoords.b, 0.0f, 1.0f, tc.l, tc.b },
+			{ texture->quadcoords.l, texture->quadcoords.t, 0.0f, 1.0f, tc.l, tc.t },
+			{ texture->quadcoords.r, texture->quadcoords.t, 0.0f, 1.0f, tc.r, tc.t },
+			{ texture->quadcoords.r, texture->quadcoords.b, 0.0f, 1.0f, tc.r, tc.b }
 		};
 
 		/*
@@ -1326,24 +1316,30 @@ void d3d9_adjust_coords(void) {
 			}
 		}
 
-		IDirect3DVertexBuffer9_Lock(d3d9.quad, 0, 0, (void**) &tv_vertices, 0);
+		IDirect3DVertexBuffer9_Lock(texture->quad, 0, 0, (void**) &tv_vertices, 0);
 		memcpy(tv_vertices, quad_vertices, sizeof(quad_vertices));
-		IDirect3DVertexBuffer9_Unlock(d3d9.quad);
+		IDirect3DVertexBuffer9_Unlock(texture->quad);
 	}
 }
-BYTE d3d9_create_texture(_texture *texture, uint32_t width, uint32_t height, uint8_t interpolation,
-        uint8_t pow) {
+BYTE d3d9_create_texture(_texture *texture, uint32_t width, uint32_t height, uint8_t interpolation) {
 	DWORD usage = 0;
 
 	d3d9_release_texture(texture);
 
-	if (pow) {
-		texture->w = d3d9_power_of_two(width);
-		texture->h = d3d9_power_of_two(height);
-	} else {
-		texture->w = width;
-		texture->h = height;
+	if (IDirect3DDevice9_CreateVertexBuffer(d3d9.adapter->dev,
+			4 * sizeof(vertex),
+			D3DUSAGE_WRITEONLY,
+			FVF,
+			D3DPOOL_DEFAULT,
+			&texture->quad,
+			NULL) != D3D_OK) {
+		MessageBox(NULL, "Unable to create the vertex buffer", "Error!",
+				MB_ICONEXCLAMATION | MB_OK);
+		return (EXIT_ERROR);
 	}
+
+	texture->w = d3d9_power_of_two(width);
+	texture->h = d3d9_power_of_two(height);
 
 	/* se la scheda video supporta solo texture quadre allore devo crearle quadre */
 	if (d3d9.adapter->texture_square_only == TRUE) {
@@ -1409,6 +1405,11 @@ void d3d9_release_texture(_texture *texture) {
 		IDirect3DSurface9_Release(texture->surface.data);
 		texture->surface.data = NULL;
 		texture->surface.w = texture->surface.h = 0;
+	}
+
+	if (texture->quad) {
+		IDirect3DVertexBuffer9_Release(texture->quad);
+		texture->quad = NULL;
 	}
 }
 BYTE d3d9_create_shader(_shader *shd) {
