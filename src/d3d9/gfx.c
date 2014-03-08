@@ -556,12 +556,12 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 	 * fare un d3d9_create_context() visto che
 	 * uso una texture ridimensionabile.
 	 */
-	if (set_mode && ((cfg->fullscreen == FULLSCR) && (fullscreen == cfg->fullscreen))) {
+	//if (set_mode && ((cfg->fullscreen == FULLSCR) && (fullscreen == cfg->fullscreen))) {
 		/* se e' il primo avvio, non devo mai disabilitare il set_mode */
-		if (!info.on_cfg) {
-			set_mode = FALSE;
-		}
-	}
+	//	if (!info.on_cfg) {
+	//		set_mode = FALSE;
+	//	}
+	//}
 
 	/* paletta */
 	if (palette == NO_CHANGE) {
@@ -1206,8 +1206,7 @@ BYTE d3d9_create_context(UINT width, UINT height) {
 		d3d9_create_shader(&d3d9.shader);
 	}
 
-	if (d3d9_create_texture(&d3d9.text, d3d9.screen.w * d3d9.factor, d3d9.screen.h * d3d9.factor, 0)
-	        == EXIT_ERROR) {
+	if (d3d9_create_texture(&d3d9.text, gfx.w[CURRENT], gfx.h[CURRENT], 0) == EXIT_ERROR) {
 		MessageBox(NULL, "Unable to create text texture", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
@@ -1398,8 +1397,12 @@ void d3d9_release_texture(_texture *texture) {
 		texture->data = NULL;
 	}
 
-	texture->map0 = NULL;
 	texture->w = texture->h = 0;
+
+	if (texture->map0) {
+		IDirect3DSurface9_Release(texture->map0);
+		texture->map0 = NULL;
+	}
 
 	if (texture->surface.data) {
 		IDirect3DSurface9_Release(texture->surface.data);
