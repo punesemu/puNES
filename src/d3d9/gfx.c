@@ -670,6 +670,9 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 			case HQ2X:
 				hlsl_up(scale_surface, SHADER_HQ2X);
 				break;
+			case HQ3X:
+				gfx.filter = hqNx;
+				break;
 			case HQ4X:
 				hlsl_up(hqNx, SHADER_HQ2X);
 				d3d9.scale = X2;
