@@ -59,6 +59,14 @@
 		recent_roms_permit_add = FALSE;\
 		recent_roms_add(save_rom_file);\
 	}
+#define save_rom_ext()\
+	sprintf(name_file, "%s", basename(info.rom_file));\
+	if (strrchr(name_file, '.') == NULL) {\
+		strcpy(ext, ".nes");\
+	} else {\
+		/* salvo l'estensione del file */\
+		strcpy(ext, strrchr(name_file, '.'));\
+	}
 
 BYTE emu_loop(void) {
 #if defined (DEBUG)
@@ -197,18 +205,13 @@ BYTE emu_load_rom(void) {
 
 		strncpy(save_rom_file, info.rom_file, 1024);
 
-		sprintf(name_file, "%s", basename(info.rom_file));
-
-		if (strrchr(name_file, '.') == NULL) {
-			strcpy(ext, ".nes");
-		} else {
-			/* salvo l'estensione del file */
-			strcpy(ext, strrchr(name_file, '.'));
-		}
+		save_rom_ext()
 
 		if (uncomp_ctrl(ext) == EXIT_ERROR) {
 			return (EXIT_ERROR);
 		}
+
+		save_rom_ext()
 
 		if (!strcasecmp(ext, ".fds")) {
 			if (fds_load_rom() == EXIT_ERROR) {
