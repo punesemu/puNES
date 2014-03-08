@@ -36,11 +36,19 @@ void extcl_cpu_wr_mem_Camerica_BF9096(WORD address, BYTE value) {
 	BYTE base;
 
 	switch ((address >> 12) & 0x0C) {
-		case 0x08:
-			base = (value >> 1) & 0x0C;
-			map_prg_rom_8k(2, 0, base | ((mapper.rom_map_to[0] & 0x07) >> 1));
+		case 0x08: {
+			BYTE low = (mapper.rom_map_to[0] >> 1);
+
+			if (info.id == PEGASUS4IN1) {
+				base = ((value & 0x10) >> 2) | (value & 0x08);
+				map_prg_rom_8k(2, 0, base | ((low & 0x07) >> 1));
+			} else {
+				base = (value & 0x18) >> 1;
+				map_prg_rom_8k(2, 0, base | ((low & 0x07) >> 1));
+			}
 			map_prg_rom_8k(2, 2, base | 0x03);
 			break;
+		}
 		default:
 			map_prg_rom_8k(2, 0, ((mapper.rom_map_to[0] & 0x18) >> 1) | (value & 0x03));
 			break;

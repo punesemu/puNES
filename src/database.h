@@ -3583,6 +3583,10 @@ static const _dbelement dblist[] = {
 	/* 52 Games [p1].nes */
 	{"512296fff80e4c6fc12a4c55c1af1854d12ab70d", 225, DEFAULT, BMC52IN1, DEFAULT},
 
+/* ----------------------------------- Camerica BF9096 ------------------------------------ */
+	/* Pegasus 4-in-1 (Unl) [!].nes */
+	{"40409fec8249efdb772e6ffb2dcd41860c6cca23", 232, DEFAULT, PEGASUS4IN1, DEFAULT},
+
 /* ------------------------------------- mapper 235 --------------------------------------- */
 	/* 150-in-1 [a1][p1][!].nes (2MB) */ /* 260-in-1 [p1][b1].nes (4Mb) */
 	{"4692a622af6a3d79514bf3e5fb4e9fbe6c6080fc", 235, DEFAULT, DEFAULT, DEFAULT},
