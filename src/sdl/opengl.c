@@ -72,7 +72,7 @@ void sdl_create_surface_gl(SDL_Surface *src, WORD width, WORD height, BYTE flags
 
 	if (opengl.scale_force) {
 		opengl.surface_gl = gfx_create_RGB_surface(src, SCR_ROWS * opengl.scale,
-		        SCR_LINES * opengl.scale);
+				SCR_LINES * opengl.scale);
 	} else {
 		opengl.surface_gl = gfx_create_RGB_surface(src, width, height);
 	}
@@ -232,7 +232,7 @@ void opengl_create_texture(_texture *texture, uint32_t width, uint32_t height,
 		memset(blank->pixels, 0, blank->w * blank->h * blank->format->BytesPerPixel);
 
 		glTexImage2D(GL_TEXTURE_2D, 0, texture->format_internal, texture->w, texture->h, 0,
-		        texture->format, texture->type, blank->pixels);
+				texture->format, texture->type, blank->pixels);
 
 		SDL_FreeSurface(blank);
 	}
@@ -254,7 +254,7 @@ void opengl_update_texture(SDL_Surface *surface, uint8_t generate_mipmap) {
 	glPixelStorei(GL_UNPACK_ROW_LENGTH, surface->w);
 
 	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, surface->w, surface->h, opengl.texture.format,
-	        opengl.texture.type, surface->pixels);
+			opengl.texture.type, surface->pixels);
 
 	glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
 

@@ -29,7 +29,8 @@ gfx_filter_function(hqNx) {
 	hqnx.sx = 0;
 	hqnx.sy = 0;
 	hqnx.lines = lines;
-	hqnx.rows = hqnx.dst_rows = rows;
+	hqnx.rows = rows;
+	hqnx.dst_rows = width / factor;
 	hqnx.startx = 0;
 
 	if (overscan.enabled) {

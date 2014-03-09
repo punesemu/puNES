@@ -614,9 +614,12 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 					gfx.filter = hqNx;
 					break;
 				case HQ4X:
+					//gfx.filter = hqNx;
+					/**/
 					glsl_up(hqNx, SHADER_HQ2X);
 					opengl.scale = X2;
 					opengl.factor = X2;
+					/**/
 					break;
 			}
 
