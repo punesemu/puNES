@@ -1421,7 +1421,7 @@ void gui_fullscreen(void) {
 		gfx.w[MONITOR] = mi.rcMonitor.right - mi.rcMonitor.left;
 		gfx.h[MONITOR] = mi.rcMonitor.bottom - mi.rcMonitor.top;
 
-		/*salvo la posizione della finestra */
+		/* salvo la posizione della finestra */
 		if (gui.start) {
 			GetWindowPlacement(main_win, &wp_prev);
 		} else {
@@ -2190,6 +2190,9 @@ long __stdcall save_slot_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 }
 long __stdcall about_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	switch (msg) {
+		case WM_CLOSE:
+			EndDialog(hwnd, 0);
+			break;
 		case WM_DESTROY:
 			DeleteObject(about_img);
 			DeleteObject(about_mask);
@@ -2628,6 +2631,13 @@ void open_event(void) {
 
 	emu_pause(TRUE);
 
+	switch (gui.version_os) {
+		case WIN_XP64:
+		case WIN_XP:
+			snd_stop();
+			break;
+	}
+
 	ZeroMemory(&ofn, sizeof(ofn));
 	ofn.lStructSize = sizeof(ofn);
 	ofn.hwndOwner = main_win;
@@ -2658,6 +2668,10 @@ void open_event(void) {
 	ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
 
 	if (cfg->fullscreen == FULLSCR) {
+		/* visualizzo il cursore */
+		if (input_zapper_is_connected((_port *) &port) == FALSE) {
+			ShowCursor(TRUE);
+		}
 		/* nascondo la finestra */
 		ShowWindow(main_win, SW_HIDE);
 	}
@@ -2667,10 +2681,21 @@ void open_event(void) {
 	}
 
 	if (cfg->fullscreen == FULLSCR) {
+		/* nascondo il cursore */
+		if (input_zapper_is_connected((_port *) &port) == FALSE) {
+			ShowCursor(FALSE);
+		}
 		/* visualizzo la finestra */
 		ShowWindow(main_win, SW_NORMAL);
 		/* setto il focus*/
 		SetFocus(frame_screen_nes);
+	}
+
+	switch (gui.version_os) {
+		case WIN_XP64:
+		case WIN_XP:
+			snd_start();
+			break;
 	}
 
 	emu_pause(FALSE);

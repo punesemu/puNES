@@ -34,6 +34,7 @@ static void STDMETHODCALLTYPE OnLoopEnd(THIS_ void *data);
 static void STDMETHODCALLTYPE OnVoiceError(THIS_ void* data, HRESULT Error);
 
 struct _xaudio2 {
+	BYTE coinitialize;
 	IXAudio2 *engine;
 	IXAudio2MasteringVoice *master;
 	IXAudio2SourceVoice *source;
@@ -54,6 +55,7 @@ static IXAudio2VoiceCallback callbacks = { &callbacks_vtable };
 
 BYTE snd_init(void) {
 	memset(&snd, 0x00, sizeof(snd));
+	memset(&xaudio2, 0x00, sizeof(xaudio2));
 
 	snd_apu_tick = NULL;
 	snd_end_frame = NULL;
@@ -109,16 +111,19 @@ BYTE snd_start(void) {
 		snd.buffer.count = sample_latency / snd.buffer.size;
  	}
 
-#if defined (MINGW64)
+//#if defined (MINGW64)
 	if (CoInitializeEx(NULL, COINIT_MULTITHREADED) != S_OK) {
-#else
- 	if (CoInitializeEx(NULL, COINIT_APARTMENTTHREADED) != S_OK) {
-#endif
+//#else
+// 	if (CoInitializeEx(NULL, COINIT_APARTMENTTHREADED) != S_OK) {
+//#endif
+		xaudio2.coinitialize = FALSE;
 		MessageBox(NULL,
 			"ATTENTION: Unable to initialize COM interface.",
 			"Error!",
 			MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
+	} else {
+		xaudio2.coinitialize = TRUE;
 	}
 
 	if (XAudio2Create(&xaudio2.engine, 0, XAUDIO2_DEFAULT_PROCESSOR) != S_OK) {
@@ -355,7 +360,10 @@ void snd_stop(void) {
 		xaudio2.engine = NULL;
 	}
 
-	CoUninitialize();
+	if (xaudio2.coinitialize == TRUE) {
+		CoUninitialize();
+		xaudio2.coinitialize = FALSE;
+	}
 
 	if (snd.cache) {
 		_callback_data *cache = (_callback_data *) snd.cache;

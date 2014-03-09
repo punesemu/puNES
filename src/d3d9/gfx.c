@@ -403,7 +403,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 	 * 1) filtro
 	 * 2) fullscreen
 	 * 3) fattore di scala
-	 * 4) tipo di paletta (IMPORTANTE: dopo il SDL_SetVideoMode)
+	 * 4) tipo di paletta
 	 */
 
 	/* overscan */
