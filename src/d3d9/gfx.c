@@ -61,10 +61,10 @@
 	}\
 	/* ed infine utilizzo la nuova */\
 	ntsc_set(cfg->ntsc_format, FALSE, 0, (BYTE *) palette_RGB,(BYTE *) palette_RGB)
-#define FVF (D3DFVF_XYZRHW | D3DFVF_TEX1)
+#define FVF (D3DFVF_XYZ | D3DFVF_TEX1)
 
 typedef struct {
-	FLOAT x, y, z, rhw;
+	FLOAT x, y, z;
 	FLOAT tu, tv;
 } vertex;
 typedef struct {
@@ -791,12 +791,13 @@ void gfx_draw_screen(BYTE forced) {
 		/* unlock della surface in memoria */
 		IDirect3DSurface9_UnlockRect(d3d9.screen.surface.data);
 
-		/* rendering del testo */
-		text_rendering(TRUE);
-
 		/* aggiorno la texture dello schermo*/
 		IDirect3DDevice9_UpdateSurface(d3d9.adapter->dev, d3d9.screen.surface.data, NULL,
 				d3d9.screen.map0, NULL);
+
+		/* rendering del testo */
+		text_rendering(TRUE);
+
 		/* aggiorno la texture del testo */
 		IDirect3DDevice9_UpdateSurface(d3d9.adapter->dev, d3d9.text.surface.data, NULL,
 				d3d9.text.map0, NULL);
@@ -811,11 +812,6 @@ void gfx_draw_screen(BYTE forced) {
 		if (gfx.hlsl.used == TRUE) {
 			/* comunico con il vertex shader */
 			D3DXMATRIX world_view_projection;
-
-			//D3DXMATRIX matrix_world, matrix_view, matrix_proj;
-			//IDirect3DDevice9_GetTransform(d3d9.adapter->dev, D3DTS_WORLD, &matrix_world);
-			//IDirect3DDevice9_GetTransform(d3d9.adapter->dev, D3DTS_VIEW, &matrix_view);
-			//IDirect3DDevice9_GetTransform(d3d9.adapter->dev, D3DTS_PROJECTION, &matrix_proj);
 
 			D3DXMatrixMultiply(&world_view_projection, &d3d9.world, &d3d9.view);
 			D3DXMatrixMultiply(&world_view_projection, &world_view_projection, &d3d9.projection);
@@ -879,8 +875,10 @@ void gfx_draw_screen(BYTE forced) {
 
 		IDirect3DDevice9_EndScene(d3d9.adapter->dev);
 
-		if (IDirect3DDevice9_Present(d3d9.adapter->dev, NULL, NULL, NULL, NULL) == D3DERR_DEVICELOST) {
-			if (IDirect3DDevice9_TestCooperativeLevel(d3d9.adapter->dev) == D3DERR_DEVICENOTRESET) {
+		if (IDirect3DDevice9_Present(d3d9.adapter->dev, NULL, NULL, NULL, NULL)
+				== D3DERR_DEVICELOST) {
+			if (IDirect3DDevice9_TestCooperativeLevel(d3d9.adapter->dev)
+					== D3DERR_DEVICENOTRESET) {
 				emu_pause(TRUE);
 
 				if (d3d9_create_context(gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE]) == EXIT_ERROR) {
@@ -1157,6 +1155,14 @@ BYTE d3d9_create_context(UINT width, UINT height) {
 					D3DSAMP_MIPFILTER, D3DTEXF_NONE);
 		}
 
+		/* Aggiunto il supporto del "Border Color Texture Address Mode" */
+		IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
+				D3DSAMP_ADDRESSU, D3DTADDRESS_BORDER);
+		IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
+				D3DSAMP_ADDRESSV, D3DTADDRESS_BORDER);
+		IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
+				D3DSAMP_BORDERCOLOR, 0xFF000000);
+
 		IDirect3DDevice9_SetTextureStageState(d3d9.adapter->dev, 0,
 				D3DTSS_COLOROP, D3DTOP_MODULATE);
 		IDirect3DDevice9_SetTextureStageState(d3d9.adapter->dev, 0,
@@ -1191,18 +1197,17 @@ BYTE d3d9_create_context(UINT width, UINT height) {
 	}
 
 	{
-		D3DXVECTOR3 position = { 0.0f, 0.0f, -1.0f };
-		D3DXVECTOR3 target = { 0.0f, 0.0f, 0.0f };
-		D3DXVECTOR3 up = { 0.0f, 1.0f, 0.0f };
+		D3DVIEWPORT9 vp = { 0, 0, gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE], 0.0f, 0.0f };
 
-		D3DXMatrixRotationY(&d3d9.world, 0.0f);
-		IDirect3DDevice9_SetTransform(d3d9.adapter->dev, D3DTS_WORLD, &d3d9.world);
-
-		D3DXMatrixLookAtLH(&d3d9.view, &position, &target, &up);
-		IDirect3DDevice9_SetTransform(d3d9.adapter->dev, D3DTS_VIEW, &d3d9.view);
-
-		D3DXMatrixPerspectiveFovLH(&d3d9.projection, D3DXToRadian(90.0f), 1.0f, 0.0f, 1.0f);
+		D3DXMatrixOrthoOffCenterRH(&d3d9.projection, 0.0f, gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE],
+		        0.0f, 1.0f, -1.0f);
 		IDirect3DDevice9_SetTransform(d3d9.adapter->dev, D3DTS_PROJECTION, &d3d9.projection);
+
+		IDirect3DDevice9_SetViewport(d3d9.adapter->dev, &vp);
+
+		IDirect3DDevice9_GetTransform(d3d9.adapter->dev, D3DTS_WORLD, &d3d9.world);
+		IDirect3DDevice9_GetTransform(d3d9.adapter->dev, D3DTS_VIEW, &d3d9.view);
+		IDirect3DDevice9_GetTransform(d3d9.adapter->dev, D3DTS_PROJECTION, &d3d9.projection);
 	}
 
 	if (gfx.hlsl.enabled == TRUE) {
@@ -1228,7 +1233,6 @@ void d3d9_release_context(void) {
 	}
 }
 void d3d9_adjust_coords(void) {
-
 	d3d9_adjust_vertex_buffer(&d3d9.screen, d3d9.factor);
 	d3d9_adjust_vertex_buffer(&d3d9.text, 1.0f);
 
@@ -1293,16 +1297,25 @@ void d3d9_adjust_vertex_buffer(_texture *texture, FLOAT factor) {
 		void *tv_vertices;
 		_texcoords tc;
 
+		/*
+		 * l'aggiunta di quel 0.5f e' un semplice workaround per ovviare ad
+		 * un problema che nasce quando si usa una risoluzione a schermo intero
+		 * di 1920x1080 (o magari anche ad altre risoluzioni a 16:9 ma questo
+		 * non ho potuto verificarlo) in cui appare visibile la linea che separa
+		 * i due triangoil che formano la quad. Con questa piccola modifica il
+		 * problema scompare e non va ad alterae ne' la visualizzazione in finestra
+		 * ne' a schermo intero a qualsiasi altra risoluzione (almeno lo spero).
+		 */
 		tc.l = 0.0f;
-		tc.r = (FLOAT) gfx.w[CURRENT] / (texture->w * factor);
+		tc.r = ((FLOAT) gfx.w[CURRENT] + 0.5f) / (texture->w * factor);
 		tc.t = 0.0f;
-		tc.b = (FLOAT) gfx.h[CURRENT] / (texture->h * factor);
+		tc.b = ((FLOAT) gfx.h[CURRENT] + 0.5f) / (texture->h * factor);
 
 		vertex quad_vertices[] = {
-			{ texture->quadcoords.l, texture->quadcoords.b, 0.0f, 1.0f, tc.l, tc.b },
-			{ texture->quadcoords.l, texture->quadcoords.t, 0.0f, 1.0f, tc.l, tc.t },
-			{ texture->quadcoords.r, texture->quadcoords.t, 0.0f, 1.0f, tc.r, tc.t },
-			{ texture->quadcoords.r, texture->quadcoords.b, 0.0f, 1.0f, tc.r, tc.b }
+			{ texture->quadcoords.l, texture->quadcoords.b, 0.0f, tc.l, tc.b },
+			{ texture->quadcoords.l, texture->quadcoords.t, 0.0f, tc.l, tc.t },
+			{ texture->quadcoords.r, texture->quadcoords.t, 0.0f, tc.r, tc.t },
+			{ texture->quadcoords.r, texture->quadcoords.b, 0.0f, tc.r, tc.b }
 		};
 
 		/*
@@ -1376,6 +1389,33 @@ BYTE d3d9_create_texture(_texture *texture, uint32_t width, uint32_t height, uin
 
 	IDirect3DTexture9_GetSurfaceLevel(texture->data, 0, &texture->map0);
 
+	/*
+	 * cancello la superficie map0 perche' alcuni driver (tipo intel) nella
+	 * versione per windows XP non mi passano una superficia "pulita" e inoltre
+	 * sembra che non fumzioni nemmeno il
+	 * IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0, D3DSAMP_BORDERCOLOR, 0xFF000000);
+	 */
+	{
+		D3DLOCKED_RECT lock_dst;
+
+		if (IDirect3DSurface9_LockRect(texture->map0, &lock_dst, NULL,
+				D3DLOCK_DISCARD) == D3D_OK) {
+			uint32_t *pbits;
+			int w, h;
+
+			pbits = (uint32_t *) lock_dst.pBits;
+
+			for (h = 0; h < texture->h; h++) {
+				for (w = 0; w < texture->w; w++) {
+					(*(pbits + w)) = 0;
+				}
+				pbits += lock_dst.Pitch / (gfx.bit_per_pixel / 8);
+			}
+
+			IDirect3DSurface9_UnlockRect(texture->map0);
+		}
+	}
+
 	texture->surface.w = width;
 	texture->surface.h = height;
 
@@ -1390,6 +1430,28 @@ BYTE d3d9_create_texture(_texture *texture, uint32_t width, uint32_t height, uin
 		MessageBox(NULL, "Unable to create the memory surface", "Error!",
 				MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
+	}
+
+	/* cancello la superficie */
+	{
+		D3DLOCKED_RECT lock_dst;
+
+		if (IDirect3DSurface9_LockRect(texture->surface.data, &lock_dst, NULL,
+				D3DLOCK_DISCARD) == D3D_OK) {
+			uint32_t *pbits;
+			int w, h;
+
+			pbits = (uint32_t *) lock_dst.pBits;
+
+			for (h = 0; h < texture->surface.h; h++) {
+				for (w = 0; w < texture->surface.w; w++) {
+					(*(pbits + w)) = 0;
+				}
+				pbits += lock_dst.Pitch / (gfx.bit_per_pixel / 8);
+			}
+
+			IDirect3DSurface9_UnlockRect(texture->surface.data);
+		}
 	}
 
 	return (EXIT_OK);
