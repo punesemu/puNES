@@ -2407,6 +2407,12 @@ void set_scale(BYTE scale) {
 		return;
 	}
 
+	if (cfg->fullscreen == FULLSCR) {
+		if(scale == X1) {
+			return;
+		}
+	}
+
 	switch (scale) {
 		case X1:
 			gfx_set_screen(X1, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE);

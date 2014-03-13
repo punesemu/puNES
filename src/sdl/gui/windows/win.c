@@ -2384,6 +2384,12 @@ void set_scale(BYTE scale) {
 		return;
 	}
 
+	if (cfg->fullscreen == FULLSCR) {
+		if(scale == X1) {
+			return;
+		}
+	}
+
 	ShowWindow(main_win, SW_HIDE);
 
 	switch (scale) {
