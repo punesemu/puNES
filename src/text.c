@@ -95,6 +95,8 @@ void text_add_line(int type, int factor, int font, int alpha, int start_x, int s
 	va_list ap;
 
 	if (type == TXT_INFO) {
+		text.info.count = 1;
+
 		for (i = 0; i < TXT_MAX_LINES; i++) {
 			if (text.info.lines[text.info.index][i]->enabled) {
 				text_clear(text.info.lines[text.info.index][i]);
@@ -103,6 +105,9 @@ void text_add_line(int type, int factor, int font, int alpha, int start_x, int s
 				text.info.lines[shift_line][0] = text.info.lines[text.info.index][i];
 			} else {
 				text.info.lines[shift_line][i + 1] = text.info.lines[text.info.index][i];
+				if (text.info.lines[text.info.index][i]->enabled) {
+					text.info.count++;
+				}
 			}
 		}
 
@@ -113,6 +118,8 @@ void text_add_line(int type, int factor, int font, int alpha, int start_x, int s
 		ele->bck = FALSE;
 		ele->font = font;
 		ele->factor = factor;
+		ele->w = 0;
+		ele->h = 0;
 		if (!text.info.lines[text.info.index][1]->start) {
 			ele->start = time(NULL);
 		} else {
@@ -196,7 +203,7 @@ void text_add_line(int type, int factor, int font, int alpha, int start_x, int s
 void text_rendering(BYTE render) {
 	text.on_screen = FALSE;
 
-	{
+	if (text.info.count) {
 		int pos_x = 8, pos_y = text.h - 8;
 		uint8_t i;
 
@@ -239,6 +246,7 @@ void text_rendering(BYTE render) {
 				if (!ele->enabled) {
 					text_clear(ele);
 					gfx_text_release_surface(ele);
+					text.single.count--;
 				}
 			}
 		}
