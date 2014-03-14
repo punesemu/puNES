@@ -64,8 +64,6 @@ void opengl_draw_scene_cube3d(SDL_Surface *surface) {
 	/* ripulisco la scena opengl */
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-	opengl_update_texture(surface, TRUE);
-
 	/* resetto la matrice corrente (modelview) */
 	glLoadIdentity();
 
@@ -80,7 +78,9 @@ void opengl_draw_scene_cube3d(SDL_Surface *surface) {
 		glRotatef(opengl.y_rotate, 0.0f, 1.0f, 0.0f);
 	}
 
-	opengl_enable_texture();
+	glEnable(GL_TEXTURE_2D);
+
+	opengl_update_texture(surface, TRUE);
 
 	/* cubo esterno */
 	glBegin(GL_QUADS);

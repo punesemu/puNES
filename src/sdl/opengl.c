@@ -151,17 +151,6 @@ void sdl_create_surface_gl(SDL_Surface *src, WORD width, WORD height, BYTE flags
 	glFinish();
 }
 
-void opengl_enable_texture(void) {
-	glEnable(GL_TEXTURE_2D);
-
-	if (opengl.glsl.shader_used) {
-		glUseProgram(shader.prg);
-
-		if (shader.loc.frame_counter != -1) {
-			glUniform1f(shader.loc.frame_counter, (GLfloat) ppu.frames);
-		}
-	}
-}
 void opengl_create_texture(_texture *texture, uint32_t width, uint32_t height,
         uint8_t interpolation, uint8_t pow) {
 	switch (opengl.surface_gl->format->BitsPerPixel) {
@@ -244,7 +233,6 @@ void opengl_create_texture(_texture *texture, uint32_t width, uint32_t height,
 	glDisable(GL_TEXTURE_2D);
 }
 void opengl_update_texture(SDL_Surface *surface, uint8_t generate_mipmap) {
-	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, opengl.texture.data);
 
 	if (generate_mipmap && opengl.glew && !GLEW_VERSION_3_1) {
@@ -262,12 +250,16 @@ void opengl_update_texture(SDL_Surface *surface, uint8_t generate_mipmap) {
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 
-	if (opengl.glsl.shader_used && text.on_screen) {
-		glBindTexture(GL_TEXTURE_2D, shader.text.data);
-	}
+	if (opengl.glsl.shader_used) {
+		glUseProgram(shader.prg);
 
-	/* disabilito l'uso delle texture */
-	glDisable(GL_TEXTURE_2D);
+		if (shader.loc.frame_counter != -1) {
+			glUniform1f(shader.loc.frame_counter, (GLfloat) ppu.frames);
+		}
+		if (text.on_screen) {
+			glBindTexture(GL_TEXTURE_2D, shader.text.data);
+		}
+	}
 }
 
 void opengl_effect_change(BYTE mode) {
@@ -331,8 +323,8 @@ void opengl_text_blit(_txt_element *ele, _rect *rect) {
 
 	glPixelStorei(GL_UNPACK_ROW_LENGTH, rect->w);
 
-	glTexSubImage2D(GL_TEXTURE_2D, 0, rect->x, rect->y, rect->w, rect->h, opengl.texture.format,
-	        opengl.texture.type, ele->surface->pixels);
+	glTexSubImage2D(GL_TEXTURE_2D, 0, rect->x, rect->y, rect->w, rect->h,  shader.text.format,
+			shader.text.type, ele->surface->pixels);
 
 	glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
 
