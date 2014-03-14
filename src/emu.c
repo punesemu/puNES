@@ -441,7 +441,6 @@ void emu_set_title(char *title) {
 		sprintf(name, "%s", NAME);
 	}
 
-#if defined (SDL)
 	if (info.portable && (cfg->scale != X1)) {
 		strcat(name, "_p");
 	}
@@ -472,8 +471,6 @@ void emu_set_title(char *title) {
 	}
 
 	strcat(title, ")");
-#endif
-
 }
 BYTE emu_turn_on(void) {
 	info.reset = POWER_UP;

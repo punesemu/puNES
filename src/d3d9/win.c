@@ -717,7 +717,7 @@ void gui_update(void) {
 #if !defined (RELEASE)
 	sprintf(title, "%s build : %s", NAME, BUILD_RELEASE);
 #else
-	//emu_set_title(title);
+	emu_set_title(title);
 #endif
 	SetWindowText(main_win, title);
 
