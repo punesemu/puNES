@@ -313,9 +313,7 @@ void cfg_file_pgs_parse(void) {
 	}
 
 	if ((fp = fopen(tmp, "r")) == NULL) {
-		if (!gamegenie.print) {
-			text_add_line_info(1, "rom configuration [yellow]not found");
-		}
+		printf("rom configuration not found\n");
 		return;
 	}
 
@@ -335,10 +333,6 @@ void cfg_file_pgs_parse(void) {
 			/* overscan */
 			cfg_search(param_pgs, PGS_OVERSCAN, 0, param_oscan, cfg_from_file.oscan = index);
 		}
-	}
-
-	if (!gamegenie.print) {
-		text_add_line_info(1, "rom configuration [green]loaded");
 	}
 
 	fclose(fp);
@@ -432,7 +426,7 @@ void cfg_file_input_parse(void) {
 		}
 	}
 
-	text_add_line_info(1, "input configuration [green]loaded");
+	//text_add_line_info(1, "input configuration [green]loaded");
 
 	fclose(fp);
 }

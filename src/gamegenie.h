@@ -39,13 +39,12 @@ struct _gamegenie {
 	BYTE phase;
 	BYTE rom_present;
 	BYTE counter;
-	BYTE print;
 	BYTE value;
 	_cheat cheat[GG_CHEATS];
 } gamegenie;
 
 void gamegenie_init(void);
-void gamegenie_reset(BYTE print_message);
+void gamegenie_reset(void);
 void gamegenie_check_rom_present(BYTE print_message);
 FILE *gamegenie_load_rom(FILE *fp);
 

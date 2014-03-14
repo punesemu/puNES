@@ -16,14 +16,13 @@
 
 void gamegenie_init(void) {
 	gamegenie.rom_present = FALSE;
-	gamegenie_reset(FALSE);
+	gamegenie_reset();
 }
-void gamegenie_reset(BYTE print_message) {
+void gamegenie_reset(void) {
 	BYTE i;
 
 	gamegenie.counter = 0;
 	gamegenie.phase = GG_LOAD_GAMEGENIE;
-	gamegenie.print = print_message;
 	gamegenie.value = 0x71;
 
 	for (i = 0; i < LENGTH(gamegenie.cheat); i++) {

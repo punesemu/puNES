@@ -124,7 +124,6 @@ BYTE emu_loop(void) {
 			if (gamegenie.phase == GG_LOAD_ROM) {
 				emu_reset(CHANGE_ROM);
 				gamegenie.phase = GG_FINISH;
-				gamegenie.print = FALSE;
 			}
 
 			if (tas.lag_frame) {

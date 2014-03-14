@@ -75,7 +75,7 @@ BYTE save_slot_load(void) {
 
 	/* game genie */
 	if (info.mapper.id == GAMEGENIE_MAPPER) {
-		gamegenie_reset(FALSE);
+		gamegenie_reset();
 		gamegenie.phase = GG_LOAD_ROM;
 		emu_reset(CHANGE_ROM);
 		gamegenie.phase = GG_FINISH;

@@ -2692,7 +2692,7 @@ void make_reset(BYTE type) {
 			if (info.mapper.id != GAMEGENIE_MAPPER) {
 				strcpy(info.load_rom_file, info.rom_file);
 			}
-			gamegenie_reset(TRUE);
+			gamegenie_reset();
 			type = CHANGE_ROM;
 		} else {
 			/*
@@ -2700,7 +2700,7 @@ void make_reset(BYTE type) {
 			 * e' gia' in esecuzione e si preme un reset, carico la rom.
 			 */
 			if (info.mapper.id == GAMEGENIE_MAPPER) {
-				gamegenie_reset(TRUE);
+				gamegenie_reset();
 				type = CHANGE_ROM;
 			}
 		}
@@ -2723,7 +2723,7 @@ void change_rom(char *rom) {
 	ShowWindow(main_win, SW_HIDE);
 	//LockWindowUpdate(main_win);
 
-	gamegenie_reset(FALSE);
+	gamegenie_reset();
 
 	make_reset(CHANGE_ROM);
 
