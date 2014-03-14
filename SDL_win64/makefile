@@ -34,19 +34,19 @@ endif
 all: pre-build main-build
 
 # Main-build Target
-main-build: punes64.exe
+main-build: punes64.sdl.exe
 
 # Tool invocations
-punes64.exe: $(OBJS) $(USER_OBJS)
+punes64.sdl.exe: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: Cross GCC Linker'
-	x86_64-w64-mingw32-g++ -L"/home/fhorse/sviluppo/personale/punes/misc/lib/win64" -Wl,-subsystem,console -static-libgcc -static-libstdc++ -o "punes64.exe" $(OBJS) $(USER_OBJS) $(LIBS)
+	x86_64-w64-mingw32-g++ -L"/home/fhorse/sviluppo/personale/punes/misc/lib/win64" -Wl,-subsystem,console -static-libgcc -static-libstdc++ -o "punes64.sdl.exe" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) $(OBJS)$(C_DEPS)$(EXECUTABLES) punes64.exe
+	-$(RM) $(OBJS)$(C_DEPS)$(EXECUTABLES) punes64.sdl.exe
 	-@echo ' '
 
 pre-build:

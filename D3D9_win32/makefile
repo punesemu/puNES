@@ -31,20 +31,20 @@ endif
 all: pre-build main-build
 
 # Main-build Target
-main-build: punes32_D3D9.exe
+main-build: punes32.d3d9.exe
 
 # Tool invocations
-punes32_D3D9.exe: $(OBJS) $(USER_OBJS)
+punes32.d3d9.exe: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: Cross GCC Linker'
-	i686-mingw32-g++ -L"/home/fhorse/sviluppo/personale/punes/misc/lib/win32" -L/home/fhorse/sviluppo/personale/punes/misc/DXSDK/Lib/x86 -Wl,-subsystem,console -static-libgcc -static-libstdc++ -o "punes32_D3D9.exe" $(OBJS) $(USER_OBJS) $(LIBS)
+	i686-mingw32-g++ -L"/home/fhorse/sviluppo/personale/punes/misc/lib/win32" -L/home/fhorse/sviluppo/personale/punes/misc/DXSDK/Lib/x86 -Wl,-subsystem,console -static-libgcc -static-libstdc++ -o "punes32.d3d9.exe" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 	$(MAKE) --no-print-directory post-build
 
 # Other Targets
 clean:
-	-$(RM) $(OBJS)$(C_DEPS)$(EXECUTABLES) punes32_D3D9.exe
+	-$(RM) $(OBJS)$(C_DEPS)$(EXECUTABLES) punes32.d3d9.exe
 	-@echo ' '
 
 pre-build:
