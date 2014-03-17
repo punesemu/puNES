@@ -15,7 +15,7 @@
 #define SET_WR_REG(funct) input_wr_reg = funct
 #define SET_RD_REG(id, funct) input_rd_reg[id] = funct
 
-#define TURBO_BUTTON_DELAY_DEFAULT 3
+#define TURBO_BUTTON_DELAY_DEFAULT 1
 #define TURBO_BUTTON_DELAY_MAX     20
 
 enum controller_modes { CTRL_MODE_NES, CTRL_MODE_FAMICOM, CTRL_MODE_FOUR_SCORE };
