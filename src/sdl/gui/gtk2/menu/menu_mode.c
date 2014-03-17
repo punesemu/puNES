@@ -163,18 +163,22 @@ void menu_mode_set_mode(int mode) {
 	cfg->mode = mode;
 
 	if (cfg->mode == AUTO) {
-		switch (info.machine[DATABASE]) {
-			case NTSC:
-			case PAL:
-			case DENDY:
-				mode = info.machine[DATABASE];
-				break;
-			case DEFAULT:
-				mode = info.machine[HEADER];
-				break;
-			default:
-				mode = NTSC;
-				break;
+		if (info.no_rom) {
+			mode = NTSC;
+		} else {
+			switch (info.machine[DATABASE]) {
+				case NTSC:
+				case PAL:
+				case DENDY:
+					mode = info.machine[DATABASE];
+					break;
+				case DEFAULT:
+					mode = info.machine[HEADER];
+					break;
+				default:
+					mode = NTSC;
+					break;
+			}
 		}
 	}
 
