@@ -1939,6 +1939,7 @@ long __stdcall main_win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 			 */
 			snd_stop();
 			info.stop = TRUE;
+			return (1);
 			break;
 		case WM_DESTROY:
 			PostQuitMessage(EXIT_SUCCESS);
