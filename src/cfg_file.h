@@ -34,6 +34,7 @@ typedef struct {
 	BYTE oscan;
 	BYTE oscan_default;
 	BYTE tv_aspect_ratio;
+	BYTE interpolation;
 	BYTE gamegenie;
 
 	_config_input input;

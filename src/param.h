@@ -66,7 +66,8 @@ enum {
 	P_SWAP_DUTY,
 	P_GAMEGENIE,
 	P_STEREODELAY,
-	P_TV_ASPECT_RATIO
+	P_TV_ASPECT_RATIO,
+	P_INTERPOLATION,
 };
 enum {
 	PGS_SLOT,
@@ -82,7 +83,7 @@ typedef struct {
 } _param;
 
 #if defined (__CMDLINE__)
-static const char *opt_short = "m:f:k:s:o:i:n:p:r:v:e:u:t:a:l:c:d:q:g:Vh?";
+static const char *opt_short = "m:f:k:s:o:i:n:p:r:v:e:j:u:t:a:l:c:d:q:g:Vh?";
 static const struct option opt_long[] = {
 	{ "mode",               required_argument, NULL, 'm'},
 	{ "fps",                required_argument, NULL, 'f'},
@@ -95,6 +96,7 @@ static const struct option opt_long[] = {
 	{ "rendering",          required_argument, NULL, 'r'},
 	{ "vsync",              required_argument, NULL, 'v'},
 	{ "tv-aspect-ratio",    required_argument, NULL, 'e'},
+	{ "interpolation",      required_argument, NULL, 'j'},
 	{ "fullscreen",         required_argument, NULL, 'u'},
 	{ "stretch-fullscreen", required_argument, NULL, 't'},
 	{ "audio",              required_argument, NULL, 'a'},
@@ -150,10 +152,10 @@ static const _param param[] = {
 	{
 		"filter",
 		NULL,
-		"# possible values: none, bilinear, scale2x, scale3x, scale4x, hq2x, hq3x, hq4x,\n"
+		"# possible values: none, scale2x, scale3x, scale4x, hq2x, hq3x, hq4x,\n"
 		"#                  ntsc, posphor, scanline, dbl, crtcurve, crtnocurve",
 		NULL,
-		"-i, --filter              filter to apply       : nofilter, bilinear, scale2x,\n"
+		"-i, --filter              filter to apply       : nofilter, scale2x,\n"
 		"                                                  scale3x, scale4x, hq2x, hq3x,\n"
 		"                                                  hq4x, ntsc, posphor, scanline,\n"
 		"                                                  dbl, crtcurve, crtnocurve"
@@ -272,6 +274,13 @@ static const _param param[] = {
 		"# possible values: yes, no",
 		NULL,
 		"-e, --tv-aspect-ratio     enable aspect ratio   : yes, no"
+	},
+	{
+		"interpolation",
+		NULL,
+		"# possible values: yes, no",
+		NULL,
+		"-j, --interpolation       enable interpolation  : yes, no"
 	},
 };
 static const _param param_pgs[] = {
@@ -500,7 +509,6 @@ static const _param param_filter[] = {
 	{"Hq3X",       "hq3x"      },
 	{"Hq4X",       "hq4x"      },
 	{"NTSC",       "ntsc"      },
-	{"Bilinear",   "bilinear"  },
 	{"Poshpor",    "posphor"   },
 	{"Scanline",   "scanline"  },
 	{"DBL",        "dbl"       },

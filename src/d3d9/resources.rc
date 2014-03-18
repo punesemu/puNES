@@ -163,7 +163,6 @@ BEGIN
 			POPUP "Fi&lter"
 			BEGIN
 				MENUITEM "&No Filter",            IDM_SET_FILTER_NO_FILTER
-				MENUITEM "&Bilinear",             IDM_SET_FILTER_BILINEAR
 				MENUITEM "&Poshpor",              IDM_SET_FILTER_POSPHOR
 				MENUITEM "S&canline",             IDM_SET_FILTER_SCANLINE
 				MENUITEM "&DBL",                  IDM_SET_FILTER_DBL
@@ -207,6 +206,7 @@ BEGIN
 #endif
 			MENUITEM SEPARATOR
 			MENUITEM "Aspec&t Ratio",             IDM_SET_TV_ASPECT_RATIO
+			MENUITEM "Interpolation",             IDM_SET_INTERPOLATION
 			MENUITEM SEPARATOR
 			MENUITEM "F&ullscreen\tAlt+Enter",    IDM_SET_FULLSCREEN
 			MENUITEM "S&tretch in fullscreen\tP", IDM_SET_STRETCHFLSCR

@@ -94,6 +94,7 @@ void set_vsync(BYTE vsync);
 void set_scale(BYTE scale);
 void set_overscan(BYTE oscan);
 void set_tv_aspect_ratio(void);
+void set_interpolation(void);
 void set_filter(BYTE filter);
 //void set_effect(void);
 void set_samplerate(BYTE samplerate);
@@ -1033,6 +1034,13 @@ void gui_update(void) {
 		change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_TV_ASPECT_RATIO);
 	}
 
+	/* Interpolation */
+	if (cfg->interpolation) {
+		change_menuitem(CHECK, MF_CHECKED, IDM_SET_INTERPOLATION);
+	} else {
+		change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_INTERPOLATION);
+	}
+
 	/* Filter */
 	if (gfx.bit_per_pixel < 32) {
 		change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_HQ2X);
@@ -1090,8 +1098,6 @@ void gui_update(void) {
 		}
 
 		if ((cfg->scale != X1)) {
-			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_BILINEAR);
-
 			menuitem.fState = MFS_ENABLED;
 
 			/* Video/Filter/ScaleX */
@@ -1112,8 +1118,6 @@ void gui_update(void) {
 			change_menuitem(CHECK, MF_ENABLED, IDM_SET_FILTER_RGBNTSCSVD);
 			change_menuitem(CHECK, MF_ENABLED, IDM_SET_FILTER_RGBNTSCRGB);
 		} else {
-			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_BILINEAR);
-
 			menuitem.fState = MFS_DISABLED;
 
 			/* Video/Filter/ScaleX */
@@ -1136,7 +1140,6 @@ void gui_update(void) {
 		}
 	}
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_NO_FILTER);
-	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_BILINEAR);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_POSPHOR);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_SCANLINE);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_DBL);
@@ -1154,9 +1157,6 @@ void gui_update(void) {
 	switch (cfg->filter) {
 		case NO_FILTER:
 			id = IDM_SET_FILTER_NO_FILTER;
-			break;
-		case BILINEAR:
-			id = IDM_SET_FILTER_BILINEAR;
 			break;
 		case POSPHOR:
 			id = IDM_SET_FILTER_POSPHOR;
@@ -1742,11 +1742,11 @@ long __stdcall main_win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 				case IDM_SET_TV_ASPECT_RATIO:
 					set_tv_aspect_ratio();
 					break;
+				case IDM_SET_INTERPOLATION:
+					set_interpolation();
+					break;
 				case IDM_SET_FILTER_NO_FILTER:
 					set_filter(NO_FILTER);
-					break;
-				case IDM_SET_FILTER_BILINEAR:
-					set_filter(BILINEAR);
 					break;
 				case IDM_SET_FILTER_POSPHOR:
 					set_filter(POSPHOR);
@@ -2411,13 +2411,15 @@ void set_tv_aspect_ratio(void) {
 
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE);
 }
+void set_interpolation(void) {
+	cfg->interpolation = !cfg->interpolation;
+
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE);
+}
 void set_filter(BYTE filter) {
 	switch (filter) {
 		case NO_FILTER:
 			gfx_set_screen(NO_CHANGE, NO_FILTER, NO_CHANGE, NO_CHANGE, FALSE);
-			break;
-		case BILINEAR:
-			gfx_set_screen(NO_CHANGE, BILINEAR, NO_CHANGE, NO_CHANGE, FALSE);
 			break;
 		case POSPHOR:
 			gfx_set_screen(NO_CHANGE, POSPHOR, NO_CHANGE, NO_CHANGE, FALSE);

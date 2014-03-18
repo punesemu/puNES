@@ -29,6 +29,8 @@ void menu_video_tv_aspect_ratio_check(void) {
 		gtk_widget_set_sensitive(check[MTVASPECTRATIO], TRUE);
 	} else {
 		gtk_widget_set_sensitive(check[MTVASPECTRATIO], FALSE);
+		gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MTVASPECTRATIO]), FALSE);
+		return;
 	}
 
 	if (cfg->tv_aspect_ratio == TRUE) {

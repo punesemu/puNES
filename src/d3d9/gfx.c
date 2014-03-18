@@ -114,7 +114,7 @@ BYTE d3d9_create_context(void);
 void d3d9_release_context(void);
 void d3d9_adjust_coords(void);
 void d3d9_adjust_vertex_buffer(_texture *texture, FLOAT factor);
-BYTE d3d9_create_texture(_texture *texture, uint32_t width, uint32_t height, uint8_t interpolation);
+BYTE d3d9_create_texture(_texture *texture, uint32_t width, uint32_t height);
 void d3d9_release_texture(_texture *texture);
 BYTE d3d9_create_shader(_shader *shd);
 void d3d9_release_shader(_shader *shd);
@@ -446,7 +446,6 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 			case CRT_CURVE:
 			case CRT_NO_CURVE:
 				gfx.filter = scale_surface;
-				d3d9.interpolation = FALSE;
 				/*
 				 * se sto passando dal filtro ntsc ad un'altro, devo
 				 * ricalcolare la larghezza del video mode quindi
@@ -457,25 +456,18 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 					scale = cfg->scale;
 				}
 				break;
-			case BILINEAR:
-				gfx.filter = scale_surface;
-				d3d9.interpolation = TRUE;
-				break;
 			case SCALE2X:
 			case SCALE3X:
 			case SCALE4X:
 				gfx.filter = scaleNx;
-				d3d9.interpolation = FALSE;
 				break;
 			case HQ2X:
 			case HQ3X:
 			case HQ4X:
 				gfx.filter = hqNx;
-				d3d9.interpolation = FALSE;
 				break;
 			case NTSC_FILTER:
 				gfx.filter = ntsc_surface;
-				d3d9.interpolation = FALSE;
 				/*
 				 * il fattore di scala deve essere gia' stato
 				 * inizializzato almeno una volta.
@@ -620,9 +612,15 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 		gfx.aspect_ratio = 1.0f;
 	}
 
+	/* interpolation */
+	if (cfg->interpolation) {
+		d3d9.interpolation = TRUE;
+	} else {
+		d3d9.interpolation = FALSE;
+	}
+
 	switch (cfg->filter) {
 		case NO_FILTER:
-		case BILINEAR:
 			d3d9.scale_force = TRUE;
 			d3d9.scale = X1;
 			d3d9.factor = cfg->scale;
@@ -650,9 +648,6 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 			case NO_FILTER:
 				hlsl_up(scale_surface, SHADER_NO_FILTER);
 				break;
-			case BILINEAR:
-				hlsl_up(scale_surface, SHADER_NO_FILTER);
-				break;
 			case POSPHOR:
 				hlsl_up(scale_surface, SHADER_POSPHOR);
 				break;
@@ -660,12 +655,15 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 				hlsl_up(scale_surface, SHADER_SCANLINE);
 				break;
 			case DBL:
+				d3d9.interpolation = FALSE;
 				hlsl_up(scale_surface, SHADER_DONTBLOOM);
 				break;
 			case CRT_CURVE:
+				d3d9.interpolation = FALSE;
 				hlsl_up(scale_surface, SHADER_CRT);
 				break;
 			case CRT_NO_CURVE:
+				d3d9.interpolation = FALSE;
 				hlsl_up(scale_surface, SHADER_CRT4);
 				break;
 			case SCALE2X:
@@ -674,10 +672,10 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 				 * ottenere un risultato migliore applico
 				 * filtro software.
 				 */
-				if (gfx.aspect_ratio == 1.0f) {
-					hlsl_up(scale_surface, SHADER_SCALE2X);
-				} else {
+				if ((gfx.aspect_ratio != 1.0f) || (d3d9.interpolation == TRUE)) {
 					gfx.filter = scaleNx;
+				} else {
+					hlsl_up(scale_surface, SHADER_SCALE2X);
 				}
 				break;
 			case SCALE3X:
@@ -695,7 +693,11 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 				}
 				break;
 			case SCALE4X:
-				hlsl_up(scale_surface, SHADER_SCALE4X);
+				if (d3d9.interpolation == TRUE) {
+					gfx.filter = scaleNx;
+				} else {
+					hlsl_up(scale_surface, SHADER_SCALE4X);
+				}
 				break;
 			case HQ2X:
 				hlsl_up(scale_surface, SHADER_HQ2X);
@@ -1206,7 +1208,7 @@ BYTE d3d9_create_context(void) {
 			}
 
 			/* creo la texture principale */
-			if (d3d9_create_texture(&d3d9.screen, w, h, 0) == EXIT_ERROR) {
+			if (d3d9_create_texture(&d3d9.screen, w, h) == EXIT_ERROR) {
 				MessageBox(NULL, "Unable to create main texture", "Error!",
 						MB_ICONEXCLAMATION | MB_OK);
 				return (EXIT_ERROR);
@@ -1275,7 +1277,7 @@ BYTE d3d9_create_context(void) {
 		d3d9_create_shader(&d3d9.shader);
 	}
 
-	if (d3d9_create_texture(&d3d9.text, gfx.w[CURRENT], gfx.h[CURRENT], 0) == EXIT_ERROR) {
+	if (d3d9_create_texture(&d3d9.text, gfx.w[CURRENT], gfx.h[CURRENT]) == EXIT_ERROR) {
 		MessageBox(NULL, "Unable to create text texture", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
@@ -1398,7 +1400,7 @@ void d3d9_adjust_vertex_buffer(_texture *texture, FLOAT factor) {
 		IDirect3DVertexBuffer9_Unlock(texture->quad);
 	}
 }
-BYTE d3d9_create_texture(_texture *texture, uint32_t width, uint32_t height, uint8_t interpolation) {
+BYTE d3d9_create_texture(_texture *texture, uint32_t width, uint32_t height) {
 	DWORD usage = 0;
 
 	d3d9_release_texture(texture);
@@ -1615,7 +1617,7 @@ BYTE d3d9_create_shader(_shader *shd) {
 				&shd->table_pxl);
 		switch (hr) {
 			case D3D_OK: {
-				FLOAT sse[2], svm[2], st[2], fc;
+				FLOAT sse[2], svm[2], st[2], fc, ar;
 
 				/* creo il pixel shader */
 				IDirect3DDevice9_CreatePixelShader(d3d9.adapter->dev,
@@ -1630,6 +1632,7 @@ BYTE d3d9_create_shader(_shader *shd) {
 				st[0] = d3d9.screen.w;
 				st[1] = d3d9.screen.h;
 				fc = (FLOAT) ppu.frames;
+				ar = gfx.aspect_ratio;
 
 				ID3DXConstantTable_SetFloatArray(shd->table_pxl, d3d9.adapter->dev,
 						"size_screen_emu", (CONST FLOAT * ) &sse, 2);
@@ -1639,6 +1642,8 @@ BYTE d3d9_create_shader(_shader *shd) {
 						"size_texture", (CONST FLOAT * ) &st, 2);
 				ID3DXConstantTable_SetFloatArray(shd->table_pxl, d3d9.adapter->dev,
 						"frame_counter", (CONST FLOAT * ) &fc, 1);
+				ID3DXConstantTable_SetFloatArray(shd->table_pxl, d3d9.adapter->dev,
+						"aspect_ratio", (CONST FLOAT * ) &ar, 1);
 
 				/*
 				printf("\n");

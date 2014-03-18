@@ -1285,6 +1285,7 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"float2 size_screen_emu;\n"
 		"float2 size_video_mode;\n"
 		"float2 size_texture;\n"
+		"float  aspect_ratio;\n"
 
 		"texture texture_scr;\n"
 		"sampler2D s0 = sampler_state { Texture = <texture_scr>; };\n"
@@ -1311,13 +1312,14 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"float3 lookup(float offset_x, float offset_y, float2 coord, float2 pix) {\n"
 		"	float2 offset = float2(offset_x, offset_y);\n"
 		"	float3 color = tex2D(s0, coord).rgb;\n"
-		/*"	float delta = dist(fract(pix), offset + float2(0.5, 0.5));\n"*/
-		"	float delta = dist(fract(pix), offset + float2(0.4, 0.4));\n"
+		/*"	float delta = dist(fract(pix), offset + float2(0.5 * (4.0 / 3.0), 0.5 * (4.0 / 3.0)));\n"*/
+		"	float delta = dist(fract(pix), offset + float2(0.45 * aspect_ratio, 0.45 * aspect_ratio));\n"
+		/*"	float delta = dist(fract(pix), offset + float2(0.4, 0.4));\n"*/
 		"	return color * exp(-gamma * delta * color_bloom(color));\n"
 		"}\n"
 
 		"float4 Ps(float2 texCoord : TEXCOORD0) : COLOR {\n"
-		"	float dx = (1.0 / size_texture.x);\n"
+		"	float dx = (1.0 / (size_texture.x * aspect_ratio));\n"
 		"	float dy = (1.0 / size_texture.y);\n"
 
 		"	float2 c00 = texCoord + float2(-dx, -dy);\n"

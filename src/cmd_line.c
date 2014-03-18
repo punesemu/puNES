@@ -108,6 +108,9 @@ BYTE cmd_line_parse(int argc, char **argv) {
 			case 'e':
 				param_search(0, optarg, param_no_yes, cfg_from_file.tv_aspect_ratio = index);
 				break;
+			case 'j':
+				param_search(0, optarg, param_no_yes, cfg_from_file.interpolation = index);
+				break;
 			default:
 				break;
 		}
@@ -164,6 +167,7 @@ void usage(char *name) {
 			"%s\n"
 			"%s\n"
 			"%s\n"
+			"%s\n"
 	};
 
 	usage_string = (char *) malloc(1024 * 8);
@@ -179,6 +183,7 @@ void usage(char *name) {
 			param[P_RENDER].help,
 			param[P_VSYNC].help,
 			param[P_TV_ASPECT_RATIO].help,
+			param[P_INTERPOLATION].help,
 			param[P_FSCREEN].help,
 			param[P_STRETCH].help,
 			param[P_AUDIO].help,

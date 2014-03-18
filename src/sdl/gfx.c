@@ -254,10 +254,10 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 		switch (filter) {
 			case POSPHOR:
 			case SCANLINE:
+			case NO_FILTER:
 			case DBL:
 			case CRT_CURVE:
 			case CRT_NO_CURVE:
-			case NO_FILTER:
 				gfx.filter = scale_surface;
 				/*
 				 * se sto passando dal filtro ntsc ad un'altro, devo
@@ -267,20 +267,6 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 				if (cfg->filter == NTSC_FILTER) {
 					/* devo reimpostare la larghezza del video mode */
 					scale = cfg->scale;
-					/* forzo il controllo del fattore di scale */
-					force_scale = TRUE;
-					/* indico che devo cambiare il video mode */
-					set_mode = TRUE;
-				}
-				break;
-			case BILINEAR:
-				gfx.filter = bilinear;
-				/*
-				 * se sto passando dal filtro ntsc ad un'altro, devo
-				 * ricalcolare la larghezza del video mode quindi
-				 * forzo il controllo del fattore di scala.
-				 */
-				if (cfg->filter == NTSC_FILTER) {
 					/* forzo il controllo del fattore di scale */
 					force_scale = TRUE;
 					/* indico che devo cambiare il video mode */
@@ -481,6 +467,13 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 			}
 		}
 
+		/* interpolation */
+		if (gfx.opengl  && opengl.glsl.enabled && cfg->interpolation) {
+			opengl.interpolation = TRUE;
+		} else {
+			opengl.interpolation = FALSE;
+		}
+
 		/* faccio quello che serve prima del setvideo */
 		gui_set_video_mode();
 
@@ -564,7 +557,6 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 		opengl.factor = X1;
 		opengl.glsl.shader_used = FALSE;
 		shader.id = SHADER_NONE;
-		opengl.interpolation = FALSE;
 
 		if ((opengl.glsl.compliant == TRUE) && (opengl.glsl.enabled == TRUE)) {
 
@@ -582,10 +574,6 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 				case NO_FILTER:
 					glsl_up(scale_surface, SHADER_NO_FILTER);
 					break;
-				case BILINEAR:
-					glsl_up(scale_surface, SHADER_NO_FILTER);
-					opengl.interpolation = TRUE;
-					break;
 				case POSPHOR:
 					glsl_up(scale_surface, SHADER_POSPHOR);
 					break;
@@ -593,12 +581,15 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 					glsl_up(scale_surface, SHADER_SCANLINE);
 					break;
 				case DBL:
+					opengl.interpolation = FALSE;
 					glsl_up(scale_surface, SHADER_DONTBLOOM);
 					break;
 				case CRT_CURVE:
+					opengl.interpolation = FALSE;
 					glsl_up(scale_surface, SHADER_CRT);
 					break;
 				case CRT_NO_CURVE:
+					opengl.interpolation = FALSE;
 					glsl_up(scale_surface, SHADER_CRT4);
 					break;
 				case SCALE2X:

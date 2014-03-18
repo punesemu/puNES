@@ -68,6 +68,7 @@ typedef struct {
 			GLint txt;
 		} texture;
 		GLint frame_counter;
+		GLint aspect_ratio;
 	} loc;
 } _shader;
 
@@ -1734,6 +1735,7 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 	{
 		// vertex shader
 		"uniform vec2 size_texture;\n"
+		"uniform float aspect_ratio;\n"
 
 		"varying vec2 c00;\n"
 		"varying vec2 c10;\n"
@@ -1750,7 +1752,7 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"	gl_FrontColor = gl_Color;\n"
 		"	gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;\n"
 
-		"	float dx = (1.0 / size_texture.x);\n"
+		"	float dx = (1.0 / (size_texture.x * aspect_ratio));\n"
 		"	float dy = (1.0 / size_texture.y);\n"
 
 		"	c00 = gl_MultiTexCoord0.xy + vec2(-dx, -dy);\n"
@@ -1766,6 +1768,7 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"}",
 		// fragment shader
 		"uniform sampler2D texture_scr;\n"
+		"uniform float aspect_ratio;\n"
 
 		"varying vec2 c00;\n"
 		"varying vec2 c10;\n"
@@ -1797,7 +1800,7 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"	vec2 offset = vec2(offset_x, offset_y);\n"
 		"	vec3 color = texture2D(texture_scr, coord).rgb;\n"
 		/*"	float delta = dist(fract(pixel_no), offset + vec2(0.5));\n"*/
-		"	float delta = dist(fract(pixel_no), offset + vec2(0.4));\n"
+		"	float delta = dist(fract(pixel_no), offset + vec2(0.45 * vec2(aspect_ratio)));\n"
 		"	return color * exp(-gamma * delta * color_bloom(color));\n"
 		"}\n"
 

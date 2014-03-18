@@ -94,6 +94,7 @@ void set_vsync(BYTE vsync);
 void set_scale(BYTE scale);
 void set_overscan(BYTE oscan);
 void set_tv_aspect_ratio(void);
+void set_interpolation(void);
 void set_filter(BYTE filter);
 void set_effect(void);
 void set_samplerate(BYTE samplerate);
@@ -1023,10 +1024,17 @@ void gui_update(void) {
 	change_menuitem(CHECK, MF_CHECKED, id);
 
 	/* TV Aspect Ratio */
-	if (cfg->tv_aspect_ratio) {
+	if (gfx.opengl && cfg->tv_aspect_ratio) {
 		change_menuitem(CHECK, MF_CHECKED, IDM_SET_TV_ASPECT_RATIO);
 	} else {
 		change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_TV_ASPECT_RATIO);
+	}
+
+	/* Interpolation */
+	if (gfx.opengl && opengl.glsl.enabled && cfg->interpolation) {
+		change_menuitem(CHECK, MF_CHECKED, IDM_SET_INTERPOLATION);
+	} else {
+		change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_INTERPOLATION);
 	}
 
 	/* Filter */
@@ -1075,7 +1083,7 @@ void gui_update(void) {
 			menuitem.fState = MFS_ENABLED;
 
 			/* Video/Filter/CRT */
-			SetMenuItemInfo(menu_to_change, 5, TRUE, &menuitem);
+			SetMenuItemInfo(menu_to_change, 4, TRUE, &menuitem);
 
 			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_CRTCURVE);
 			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_CRTNOCURVE);
@@ -1087,14 +1095,13 @@ void gui_update(void) {
 			menuitem.fState = MFS_DISABLED;
 
 			/* Video/Filter/CRT */
-			SetMenuItemInfo(menu_to_change, 5, TRUE, &menuitem);
+			SetMenuItemInfo(menu_to_change, 4, TRUE, &menuitem);
 
 			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_CRTCURVE);
 			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_CRTNOCURVE);
 		}
 	}
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_NO_FILTER);
-	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_BILINEAR);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_POSPHOR);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_SCANLINE);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_DBL);
@@ -1112,9 +1119,6 @@ void gui_update(void) {
 	switch (cfg->filter) {
 		case NO_FILTER:
 			id = IDM_SET_FILTER_NO_FILTER;
-			break;
-		case BILINEAR:
-			id = IDM_SET_FILTER_BILINEAR;
 			break;
 		case POSPHOR:
 			id = IDM_SET_FILTER_POSPHOR;
@@ -1218,6 +1222,11 @@ void gui_update(void) {
 		change_menuitem(ENAB, MF_ENABLED, IDM_SET_VSYNC_ON);
 		change_menuitem(ENAB, MF_ENABLED, IDM_SET_VSYNC_OFF);
 		change_menuitem(ENAB, MF_ENABLED, IDM_SET_TV_ASPECT_RATIO);
+		if (opengl.glsl.enabled) {
+			change_menuitem(ENAB, MF_ENABLED, IDM_SET_INTERPOLATION);
+		} else {
+			change_menuitem(ENAB, MF_GRAYED, IDM_SET_INTERPOLATION);
+		}
 		change_menuitem(ENAB, MF_ENABLED, IDM_SET_FULLSCREEN);
 		change_menuitem(ENAB, MF_ENABLED, IDM_SET_STRETCHFLSCR);
 
@@ -1244,6 +1253,7 @@ void gui_update(void) {
 		change_menuitem(ENAB, MF_GRAYED, IDM_SET_VSYNC_OFF);
 		change_menuitem(ENAB, MF_GRAYED, IDM_SET_EFFECT_CUBE);
 		change_menuitem(ENAB, MF_GRAYED, IDM_SET_TV_ASPECT_RATIO);
+		change_menuitem(ENAB, MF_GRAYED, IDM_SET_INTERPOLATION);
 		change_menuitem(ENAB, MF_GRAYED, IDM_SET_FULLSCREEN);
 		change_menuitem(ENAB, MF_GRAYED, IDM_SET_STRETCHFLSCR);
 
@@ -1757,11 +1767,11 @@ long __stdcall main_win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 				case IDM_SET_TV_ASPECT_RATIO:
 					set_tv_aspect_ratio();
 					break;
+				case IDM_SET_INTERPOLATION:
+					set_interpolation();
+					break;
 				case IDM_SET_FILTER_NO_FILTER:
 					set_filter(NO_FILTER);
-					break;
-				case IDM_SET_FILTER_BILINEAR:
-					set_filter(BILINEAR);
 					break;
 				case IDM_SET_FILTER_POSPHOR:
 					set_filter(POSPHOR);
@@ -2457,16 +2467,21 @@ void set_tv_aspect_ratio(void) {
 
 	LockWindowUpdate(NULL);
 }
+void set_interpolation(void) {
+	LockWindowUpdate(main_win);
 
+	cfg->interpolation = !cfg->interpolation;
+
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE);
+
+	LockWindowUpdate(NULL);
+}
 void set_filter(BYTE filter) {
 	LockWindowUpdate(main_win);
 
 	switch (filter) {
 		case NO_FILTER:
 			gfx_set_screen(NO_CHANGE, NO_FILTER, NO_CHANGE, NO_CHANGE, FALSE);
-			break;
-		case BILINEAR:
-			gfx_set_screen(NO_CHANGE, BILINEAR, NO_CHANGE, NO_CHANGE, FALSE);
 			break;
 		case POSPHOR:
 			gfx_set_screen(NO_CHANGE, POSPHOR, NO_CHANGE, NO_CHANGE, FALSE);

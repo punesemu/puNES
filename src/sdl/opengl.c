@@ -426,7 +426,7 @@ void glsl_shaders_init(_shader *shd) {
 	glUseProgram(shd->prg);
 
 	{
-		GLfloat sse[2], svm[2], st[2], fc;
+		GLfloat sse[2], svm[2], st[2], fc, ar;
 
 		sse[0] = (GLfloat) SCR_ROWS;
 		sse[1] = (GLfloat) SCR_LINES;
@@ -435,6 +435,7 @@ void glsl_shaders_init(_shader *shd) {
 		st[0] = opengl.screen.w;
 		st[1] = opengl.screen.h;
 		fc = (GLfloat) ppu.frames;
+		ar = gfx.aspect_ratio;
 
 		if ((shd->loc.size.screen_emu = glGetUniformLocation(shd->prg, "size_screen_emu")) >= 0) {
 			glUniform2f(shd->loc.size.screen_emu, sse[0], sse[1]);
@@ -447,6 +448,9 @@ void glsl_shaders_init(_shader *shd) {
 		}
 		if ((shd->loc.frame_counter = glGetUniformLocation(shd->prg, "frame_counter")) >= 0) {
 			glUniform1f(shd->loc.frame_counter, fc);
+		}
+		if ((shd->loc.aspect_ratio = glGetUniformLocation(shd->prg, "aspect_ratio")) >= 0) {
+			glUniform1f(shd->loc.aspect_ratio, ar);
 		}
 	}
 

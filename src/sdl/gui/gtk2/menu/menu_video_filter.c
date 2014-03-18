@@ -283,7 +283,6 @@ enum {
 	MHQ3X,
 	MHQ4X,
 	MRGBNTSC,
-	MBILINEAR,
 	MPOSPHOR,
 	MSCANLINE,
 	MDBL,
@@ -312,24 +311,17 @@ void menu_video_filter(GtkWidget *video, GtkAccelGroup *accel_group) {
 	gw_image_from_inline(filter, filter_icon_inline);
 
 	check[MNO_FILTER] = gtk_check_menu_item_new_with_mnemonic("_No Filter");
-	check[MBILINEAR] = gtk_check_menu_item_new_with_mnemonic("_Bilinear");
-
-	gtk_menu_shell_append(GTK_MENU_SHELL(menu[0]), check[MNO_FILTER]);
-	gtk_menu_shell_append(GTK_MENU_SHELL(menu[0]), check[MBILINEAR]);
-
-	g_signal_connect_swapped(G_OBJECT(check[MNO_FILTER]), "activate",
-			G_CALLBACK(set_filter), GINT_TO_POINTER(NO_FILTER));
-	g_signal_connect_swapped(G_OBJECT(check[MBILINEAR]), "activate",
-			G_CALLBACK(set_filter), GINT_TO_POINTER(BILINEAR));
-
 	check[MPOSPHOR] = gtk_check_menu_item_new_with_mnemonic("_Phospor");
 	check[MSCANLINE] = gtk_check_menu_item_new_with_mnemonic("S_canline");
 	check[MDBL] = gtk_check_menu_item_new_with_mnemonic("_DBL");
 
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu[0]), check[MNO_FILTER]);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu[0]), check[MPOSPHOR]);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu[0]), check[MSCANLINE]);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu[0]), check[MDBL]);
 
+	g_signal_connect_swapped(G_OBJECT(check[MNO_FILTER]), "activate",
+			G_CALLBACK(set_filter), GINT_TO_POINTER(NO_FILTER));
 	g_signal_connect_swapped(G_OBJECT(check[MPOSPHOR]), "activate",
 			G_CALLBACK(set_filter), GINT_TO_POINTER(POSPHOR));
 	g_signal_connect_swapped(G_OBJECT(check[MSCANLINE]), "activate",
@@ -455,7 +447,6 @@ void menu_video_filter_check(void) {
 	}
 
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MNO_FILTER]), FALSE);
-	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MBILINEAR]), FALSE);
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MSCALE2X]), FALSE);
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MSCALE3X]), FALSE);
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MSCALE4X]), FALSE);
@@ -475,9 +466,6 @@ void menu_video_filter_check(void) {
 	switch (cfg->filter) {
 		case NO_FILTER:
 			index = MNO_FILTER;
-			break;
-		case BILINEAR:
-			index = MBILINEAR;
 			break;
 		case POSPHOR:
 			index = MPOSPHOR;
@@ -538,9 +526,6 @@ void set_filter(int filter) {
 	switch (filter) {
 		case NO_FILTER:
 			gfx_set_screen(NO_CHANGE, NO_FILTER, NO_CHANGE, NO_CHANGE, FALSE);
-			return;
-		case BILINEAR:
-			gfx_set_screen(NO_CHANGE, BILINEAR, NO_CHANGE, NO_CHANGE, FALSE);
 			return;
 		case POSPHOR:
 			gfx_set_screen(NO_CHANGE, POSPHOR, NO_CHANGE, NO_CHANGE, FALSE);

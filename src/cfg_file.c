@@ -172,6 +172,8 @@ void cfg_file_parse(void) {
 			/* tv aspect ratio */
 			cfg_search(param, P_TV_ASPECT_RATIO, 0, param_no_yes, cfg_from_file.tv_aspect_ratio =
 			        index);
+			/* interpolation */
+			cfg_search(param, P_INTERPOLATION, 0, param_no_yes, cfg_from_file.interpolation = index);
 			/* fullscreen */
 			cfg_search(param, P_FSCREEN, 0, param_no_yes, cfg_from_file.fullscreen = index);
 			/* stretch in fullscreen */
@@ -262,6 +264,9 @@ void cfg_file_save(void) {
 	/* tv aspect ratio */
 	write_param((_param *) param, fp, P_TV_ASPECT_RATIO,
 	        param_no_yes[cfg_from_file.tv_aspect_ratio].sname);
+	/* interpolation */
+	write_param((_param *) param, fp, P_INTERPOLATION,
+	        param_no_yes[cfg_from_file.interpolation].sname);
 	/* fullscreen */
 	write_param((_param *) param, fp, P_FSCREEN, param_no_yes[cfg_from_file.fullscreen].sname);
 	/* stretch in fullscreen */
@@ -637,6 +642,7 @@ void set_default(void) {
 
 	cfg_from_file.vsync = TRUE;
 	cfg_from_file.tv_aspect_ratio = FALSE;
+	cfg_from_file.interpolation = FALSE;
 	cfg_from_file.fullscreen = NO_FULLSCR;
 	cfg_from_file.stretch = FALSE;
 	cfg_from_file.save_on_exit = FALSE;
