@@ -7,6 +7,8 @@
 
 #include "cube3d.h"
 
+INLINE void draw_primitive_cube3d(void);
+
 GLfloat x_vertex, y_vertex, z_vertex;
 GLfloat distance;
 GLfloat matrix_distance[60] = {
@@ -33,6 +35,8 @@ void opengl_set_cube3d(SDL_Surface *src) {
 	y_vertex = 1.0f - ((1.0f / ((GLfloat) src->h / 2.0f)) * opengl.quadcoords.b);
 	z_vertex = x_vertex;
 
+	printf("%f\n", z_vertex);
+
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
 	glViewport(0, 0, (GLint) src->w, (GLint) src->h);
@@ -46,7 +50,7 @@ void opengl_set_cube3d(SDL_Surface *src) {
 	glLoadIdentity();
 
 	glEnable(GL_CULL_FACE);
-	glEnable(GL_DEPTH_TEST);
+
 	glDepthMask(GL_TRUE);
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
@@ -78,10 +82,69 @@ void opengl_draw_scene_cube3d(SDL_Surface *surface) {
 		glRotatef(opengl.y_rotate, 0.0f, 1.0f, 0.0f);
 	}
 
+	glEnable(GL_DEPTH_TEST);
+
 	glEnable(GL_TEXTURE_2D);
 
-	opengl_update_texture(surface, TRUE);
+	opengl_update_scr_texture(surface, TRUE);
 
+	draw_primitive_cube3d();
+
+	if (opengl.glsl.shader_used) {
+		glUseProgram(0);
+	}
+
+	if (opengl_update_txt_texture(TRUE) == EXIT_OK) {
+		glDisable(GL_DEPTH_TEST);
+
+		/* disegno la texture del testo */
+		draw_primitive_cube3d();
+
+		glDisable(GL_BLEND);
+	}
+
+	glDisable(GL_TEXTURE_2D);
+
+	if (opengl.glsl.shader_used) {
+		glUseProgram(color.prg);
+	}
+
+	glEnable(GL_DEPTH_TEST);
+
+	/* cubo interno */
+	glBegin(GL_QUADS);
+		/* avanti */
+		glColor3f(1.0f, 1.0f, 1.0f);
+		glVertex3f(+x_vertex, -y_vertex, +z_vertex);
+		glVertex3f(-x_vertex, -y_vertex, +z_vertex);
+		glVertex3f(-x_vertex, +y_vertex, +z_vertex);
+		glVertex3f(+x_vertex, +y_vertex, +z_vertex);
+		/* dietro */
+		glColor3f(1.0f, 0.0f, 0.0f);
+		glVertex3f(-x_vertex, -y_vertex, -z_vertex);
+		glVertex3f(+x_vertex, -y_vertex, -z_vertex);
+		glVertex3f(+x_vertex, +y_vertex, -z_vertex);
+		glVertex3f(-x_vertex, +y_vertex, -z_vertex);
+		/* destra */
+		glColor3f(0.0f, 1.0f, 0.0f);
+		glVertex3f(+x_vertex, -y_vertex, -z_vertex);
+		glVertex3f(+x_vertex, -y_vertex, +z_vertex);
+		glVertex3f(+x_vertex, +y_vertex, +z_vertex);
+		glVertex3f(+x_vertex, +y_vertex, -z_vertex);
+		/* sinistra */
+		glColor3f(0.0f, 0.0f, 1.0f);
+		glVertex3f(-x_vertex, -y_vertex, +z_vertex);
+		glVertex3f(-x_vertex, -y_vertex, -z_vertex);
+		glVertex3f(-x_vertex, +y_vertex, -z_vertex);
+		glVertex3f(-x_vertex, +y_vertex, +z_vertex);
+	glEnd();
+
+	if (opengl.glsl.shader_used) {
+		glUseProgram(0);
+	}
+}
+
+INLINE void draw_primitive_cube3d(void) {
 	/* cubo esterno */
 	glBegin(GL_QUADS);
 		/* avanti */
@@ -147,42 +210,4 @@ void opengl_draw_scene_cube3d(SDL_Surface *surface) {
 		glTexCoord2f(opengl.texcoords.l, opengl.texcoords.b);
 		glVertex3f(-x_vertex, +y_vertex, -z_vertex);
 	glEnd();
-
-	if (opengl.glsl.shader_used) {
-		glUseProgram(color.prg);
-	}
-
-	glDisable(GL_TEXTURE_2D);
-
-	/* cubo interno */
-	glBegin(GL_QUADS);
-		/* avanti */
-		glColor3f(1.0f, 1.0f, 1.0f);
-		glVertex3f(+x_vertex, -y_vertex, +z_vertex);
-		glVertex3f(-x_vertex, -y_vertex, +z_vertex);
-		glVertex3f(-x_vertex, +y_vertex, +z_vertex);
-		glVertex3f(+x_vertex, +y_vertex, +z_vertex);
-		/* dietro */
-		glColor3f(1.0f, 0.0f, 0.0f);
-		glVertex3f(-x_vertex, -y_vertex, -z_vertex);
-		glVertex3f(+x_vertex, -y_vertex, -z_vertex);
-		glVertex3f(+x_vertex, +y_vertex, -z_vertex);
-		glVertex3f(-x_vertex, +y_vertex, -z_vertex);
-		/* destra */
-		glColor3f(0.0f, 1.0f, 0.0f);
-		glVertex3f(+x_vertex, -y_vertex, -z_vertex);
-		glVertex3f(+x_vertex, -y_vertex, +z_vertex);
-		glVertex3f(+x_vertex, +y_vertex, +z_vertex);
-		glVertex3f(+x_vertex, +y_vertex, -z_vertex);
-		/* sinistra */
-		glColor3f(0.0f, 0.0f, 1.0f);
-		glVertex3f(-x_vertex, -y_vertex, +z_vertex);
-		glVertex3f(-x_vertex, -y_vertex, -z_vertex);
-		glVertex3f(-x_vertex, +y_vertex, -z_vertex);
-		glVertex3f(-x_vertex, +y_vertex, +z_vertex);
-	glEnd();
-
-	if (opengl.glsl.shader_used) {
-		glUseProgram(0);
-	}
 }

@@ -109,7 +109,7 @@ struct _d3d9 {
 
 void d3d9_set_adapter(_d3d9_adapter *adapter);
 BYTE d3d9_create_device(UINT width, UINT height);
-BYTE d3d9_create_context(UINT width, UINT height);
+BYTE d3d9_create_context(void);
 void d3d9_release_context(void);
 void d3d9_adjust_coords(void);
 void d3d9_adjust_vertex_buffer(_texture *texture, FLOAT factor);
@@ -732,7 +732,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 		/* faccio quello che serve prima del setvideo */
 		gui_set_video_mode();
 
-		if (d3d9_create_context(gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE]) == EXIT_ERROR) {
+		if (d3d9_create_context() == EXIT_ERROR) {
 			fprintf(stderr, "Unable to initialize d3d context\n");
 			ShowWindow(gui_main_window_id(), SW_NORMAL);
 			return;
@@ -859,6 +859,21 @@ void gfx_draw_screen(BYTE forced) {
 				/* disegno la texture dello screen */
 				IDirect3DDevice9_SetTexture(d3d9.adapter->dev, 0,
 				        (IDirect3DBaseTexture9 * ) d3d9.screen.data);
+				if (d3d9.interpolation == TRUE) {
+					IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
+							D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
+					IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
+							D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
+					IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
+							D3DSAMP_MIPFILTER, D3DTEXF_NONE);
+				} else {
+					IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
+							D3DSAMP_MAGFILTER, D3DTEXF_NONE);
+					IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
+							D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
+					IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
+							D3DSAMP_MIPFILTER, D3DTEXF_NONE);
+				}
 				IDirect3DDevice9_SetStreamSource(d3d9.adapter->dev, 0, d3d9.screen.quad, 0,
 				        sizeof(vertex));
 				IDirect3DDevice9_DrawPrimitive(d3d9.adapter->dev, D3DPT_TRIANGLEFAN, 0, 2);
@@ -876,6 +891,12 @@ void gfx_draw_screen(BYTE forced) {
 				/* disegno la texture del testo */
 				IDirect3DDevice9_SetTexture(d3d9.adapter->dev, 0,
 				        (IDirect3DBaseTexture9 * ) d3d9.text.data);
+				IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
+						D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
+				IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
+						D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
+				IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
+						D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
 				IDirect3DDevice9_SetStreamSource(d3d9.adapter->dev, 0, d3d9.text.quad, 0,
 				        sizeof(vertex));
 				IDirect3DDevice9_DrawPrimitive(d3d9.adapter->dev, D3DPT_TRIANGLEFAN, 0, 2);
@@ -886,6 +907,21 @@ void gfx_draw_screen(BYTE forced) {
 			/* disegno la texture dello screen */
 			IDirect3DDevice9_SetTexture(d3d9.adapter->dev, 0,
 					(IDirect3DBaseTexture9 * ) d3d9.screen.data);
+			if (d3d9.interpolation == TRUE) {
+				IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
+						D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
+				IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
+						D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
+				IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
+						D3DSAMP_MIPFILTER, D3DTEXF_NONE);
+			} else {
+				IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
+						D3DSAMP_MAGFILTER, D3DTEXF_NONE);
+				IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
+						D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
+				IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
+						D3DSAMP_MIPFILTER, D3DTEXF_NONE);
+			}
 			IDirect3DDevice9_SetStreamSource(d3d9.adapter->dev, 0, d3d9.screen.quad, 0,
 			        sizeof(vertex));
 			IDirect3DDevice9_DrawPrimitive(d3d9.adapter->dev, D3DPT_TRIANGLEFAN, 0, 2);
@@ -893,6 +929,12 @@ void gfx_draw_screen(BYTE forced) {
 			/* disegno la texture del testo */
 			IDirect3DDevice9_SetTexture(d3d9.adapter->dev, 0,
 					(IDirect3DBaseTexture9 * ) d3d9.text.data);
+			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
+					D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
+			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
+					D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
+			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
+					D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
 			IDirect3DDevice9_SetStreamSource(d3d9.adapter->dev, 0, d3d9.text.quad, 0,
 			        sizeof(vertex));
 			IDirect3DDevice9_DrawPrimitive(d3d9.adapter->dev, D3DPT_TRIANGLEFAN, 0, 2);
@@ -906,7 +948,7 @@ void gfx_draw_screen(BYTE forced) {
 					== D3DERR_DEVICENOTRESET) {
 				emu_pause(TRUE);
 
-				if (d3d9_create_context(gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE]) == EXIT_ERROR) {
+				if (d3d9_create_context() == EXIT_ERROR) {
 					fprintf(stderr, "Unable to initialize d3d context\n");
 				} else {
 					d3d9_adjust_coords();
@@ -933,14 +975,14 @@ void gfx_control_change_monitor(void *monitor) {
 			d3d9_release_context();
 
 			d3d9_set_adapter(adapter);
-			if (d3d9_create_context(gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE]) == EXIT_OK) {
+			if (d3d9_create_context() == EXIT_OK) {
 				d3d9_adjust_coords();
 				return;
 			}
 			fprintf(stderr, "Unable to initialize new d3d context\n");
 
 			d3d9_set_adapter(old_adapter);
-			if (d3d9_create_context(gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE]) == EXIT_OK) {
+			if (d3d9_create_context() == EXIT_OK) {
 				d3d9_adjust_coords();
 				return;
 			}
@@ -1134,10 +1176,10 @@ BYTE d3d9_create_device(UINT width, UINT height) {
 
 	return (EXIT_OK);
 }
-BYTE d3d9_create_context(UINT width, UINT height) {
+BYTE d3d9_create_context(void) {
 	d3d9_release_context();
 
-	if (d3d9_create_device(width, height) == EXIT_ERROR) {
+	if (d3d9_create_device(gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE]) == EXIT_ERROR) {
 		return (EXIT_ERROR);
 	}
 
@@ -1163,22 +1205,6 @@ BYTE d3d9_create_context(UINT width, UINT height) {
 
 		IDirect3DDevice9_SetTexture(d3d9.adapter->dev, 0,
 				(IDirect3DBaseTexture9 *) d3d9.screen.data);
-
-		if (d3d9.interpolation == TRUE) {
-			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
-					D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
-			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
-					D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
-			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
-					D3DSAMP_MIPFILTER, D3DTEXF_NONE);
-		} else {
-			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
-					D3DSAMP_MAGFILTER, D3DTEXF_NONE);
-			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
-					D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
-			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
-					D3DSAMP_MIPFILTER, D3DTEXF_NONE);
-		}
 
 		/* Aggiunto il supporto del "Border Color Texture Address Mode" */
 		IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
@@ -1265,7 +1291,6 @@ void d3d9_adjust_coords(void) {
 }
 void d3d9_adjust_vertex_buffer(_texture *texture, FLOAT factor) {
 	{
-		/* stretch */
 		FLOAT w_quad = (FLOAT) gfx.w[VIDEO_MODE];
 		FLOAT h_quad = (FLOAT) gfx.h[VIDEO_MODE];
 

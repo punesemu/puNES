@@ -42,6 +42,7 @@ struct _opengl {
 	SDL_Surface *surface_gl;
 
 	_texture screen;
+	_texture text;
 
 	_texcoords texcoords;
 	_texcoords quadcoords;
@@ -59,9 +60,10 @@ void sdl_init_gl(void);
 void sdl_quit_gl(void);
 void sdl_create_surface_gl(SDL_Surface *src, WORD width, WORD height, BYTE flags);
 
-void opengl_create_texture(_texture *texture, uint32_t width, uint32_t height,
-        uint8_t interpolation, uint8_t pow);
-void opengl_update_texture(SDL_Surface *surface, uint8_t generate_mipmap);
+void opengl_create_texture(_texture *texture, uint32_t width, uint32_t height, uint8_t pow);
+void opengl_update_scr_texture(SDL_Surface *surface, uint8_t generate_mipmap);
+BYTE opengl_update_txt_texture(uint8_t generate_mipmap);
+
 
 void opengl_effect_change(BYTE mode);
 

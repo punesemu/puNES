@@ -7,6 +7,8 @@
 
 #include "no_effect.h"
 
+INLINE void draw_primitive_no_effect(void);
+
 void opengl_init_no_effect(void) {
 	return;
 }
@@ -44,9 +46,26 @@ void opengl_draw_scene_no_effect(SDL_Surface *surface) {
 
 	glEnable(GL_TEXTURE_2D);
 
-	opengl_update_texture(surface, FALSE);
+	opengl_update_scr_texture(surface, FALSE);
 
-	/* disegno la texture */
+	/* disegno la texture dello screen */
+	draw_primitive_no_effect();
+
+	if (opengl.glsl.shader_used) {
+		glUseProgram(0);
+	}
+
+	if (opengl_update_txt_texture(FALSE) == EXIT_OK) {
+		/* disegno la texture del testo */
+		draw_primitive_no_effect();
+
+		glDisable(GL_BLEND);
+	}
+
+	glDisable(GL_TEXTURE_2D);
+}
+
+INLINE void draw_primitive_no_effect(void) {
 	glBegin(GL_QUADS);
 		/* Bottom Left Of The Texture */
 		glTexCoord2f(opengl.texcoords.l, opengl.texcoords.b);
@@ -61,10 +80,4 @@ void opengl_draw_scene_no_effect(SDL_Surface *surface) {
 		glTexCoord2f(opengl.texcoords.l, opengl.texcoords.t);
 		glVertex2f(opengl.quadcoords.l, opengl.quadcoords.t);
 	glEnd();
-
-	if (opengl.glsl.shader_used) {
-		glUseProgram(0);
-	}
-
-	glDisable(GL_TEXTURE_2D);
 }

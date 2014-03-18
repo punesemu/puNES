@@ -466,7 +466,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 
 		/* TV Aspect Ratio */
 		{
-			if (cfg->tv_aspect_ratio) {
+			if (gfx.opengl && cfg->tv_aspect_ratio) {
 				if (fullscreen && (cfg->filter == NTSC_FILTER)) {
 					gfx.aspect_ratio = 1.0f;
 				} else {
@@ -476,7 +476,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 				gfx.aspect_ratio = 1.0f;
 			}
 
-			if (cfg->tv_aspect_ratio && !fullscreen) {
+			if ((gfx.aspect_ratio != 1.0f) && !fullscreen) {
 				gfx.w[VIDEO_MODE] = gfx.h[VIDEO_MODE] * gfx.aspect_ratio;
 			}
 		}
@@ -559,15 +559,12 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 	h_for_pr = gfx.h[VIDEO_MODE];
 
 	if (gfx.opengl) {
-		BYTE use_txt_texture;
-
 		opengl.scale_force = FALSE;
 		opengl.scale = cfg->scale;
 		opengl.factor = X1;
 		opengl.glsl.shader_used = FALSE;
 		shader.id = SHADER_NONE;
 		opengl.interpolation = FALSE;
-		use_txt_texture = FALSE;
 
 		if ((opengl.glsl.compliant == TRUE) && (opengl.glsl.enabled == TRUE)) {
 
@@ -577,8 +574,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 	opengl.scale_force = TRUE;\
 	opengl.scale = X1;\
 	opengl.factor = cfg->scale;\
-	gfx.filter = e;\
-	use_txt_texture = TRUE
+	gfx.filter = e
 
 			glsl_delete_shaders(&shader);
 
@@ -677,15 +673,10 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 		framebuffer = opengl.surface_gl;
 		flip = opengl_flip;
 
-		if (use_txt_texture) {
-			text.surface = surface_sdl;
-			text_clear = opengl_text_clear;
-			text_blit = opengl_text_blit;
-		} else {
-			text.surface = opengl.surface_gl;
-			text_clear = gfx_text_clear;
-			text_blit = gfx_text_blit;
- 		}
+		text.surface = surface_sdl;
+		text_clear = opengl_text_clear;
+		text_blit = opengl_text_blit;
+
 		text.w = gfx.w[CURRENT];
 		text.h = gfx.h[CURRENT];
 

@@ -48,8 +48,8 @@ void sdl_quit_gl(void) {
 		glDeleteTextures(1, &opengl.screen.data);
 	}
 
-	if (shader.text.data) {
-		glDeleteTextures(1, &shader.text.data);
+	if (opengl.text.data) {
+		glDeleteTextures(1, &opengl.text.data);
 	}
 
 	if (opengl_unset_effect) {
@@ -77,8 +77,7 @@ void sdl_create_surface_gl(SDL_Surface *src, WORD width, WORD height, BYTE flags
 		opengl.surface_gl = gfx_create_RGB_surface(src, width, height);
 	}
 
-	opengl_create_texture(&opengl.screen, opengl.surface_gl->w, opengl.surface_gl->h,
-			opengl.interpolation, POWER_OF_TWO);
+	opengl_create_texture(&opengl.screen, opengl.surface_gl->w, opengl.surface_gl->h, POWER_OF_TWO);
 
 	opengl.texcoords.l = 0.0f;
 	opengl.texcoords.r = (GLfloat) width / (opengl.screen.w * opengl.factor);
@@ -134,9 +133,10 @@ void sdl_create_surface_gl(SDL_Surface *src, WORD width, WORD height, BYTE flags
 		}
 	}
 
+	opengl_create_texture(&opengl.text, opengl.screen.w * opengl.factor,
+	        opengl.screen.h * opengl.factor, NO_POWER_OF_TWO);
+
 	if (opengl.glsl.enabled && opengl.glsl.shader_used) {
-		opengl_create_texture(&shader.text, opengl.screen.w * opengl.factor,
-				opengl.screen.h * opengl.factor, FALSE, NO_POWER_OF_TWO);
 		glsl_shaders_init(&shader);
 	}
 
@@ -146,8 +146,7 @@ void sdl_create_surface_gl(SDL_Surface *src, WORD width, WORD height, BYTE flags
 	glFinish();
 }
 
-void opengl_create_texture(_texture *texture, uint32_t width, uint32_t height,
-        uint8_t interpolation, uint8_t pow) {
+void opengl_create_texture(_texture *texture, uint32_t width, uint32_t height, uint8_t pow) {
 	switch (opengl.surface_gl->format->BitsPerPixel) {
 		case 16:
 			texture->format_internal = GL_RGB5;
@@ -196,14 +195,6 @@ void opengl_create_texture(_texture *texture, uint32_t width, uint32_t height,
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-	if (interpolation) {
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	} else {
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	}
-
 	if (opengl.glew && !GLEW_VERSION_3_1) {
 		glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
 	}
@@ -227,8 +218,16 @@ void opengl_create_texture(_texture *texture, uint32_t width, uint32_t height,
 
 	glDisable(GL_TEXTURE_2D);
 }
-void opengl_update_texture(SDL_Surface *surface, uint8_t generate_mipmap) {
+void opengl_update_scr_texture(SDL_Surface *surface, uint8_t generate_mipmap) {
 	glBindTexture(GL_TEXTURE_2D, opengl.screen.data);
+
+	if (opengl.interpolation) {
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	} else {
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	}
 
 	if (generate_mipmap && opengl.glew && !GLEW_VERSION_3_1) {
 		glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
@@ -251,12 +250,28 @@ void opengl_update_texture(SDL_Surface *surface, uint8_t generate_mipmap) {
 		if (shader.loc.frame_counter != -1) {
 			glUniform1f(shader.loc.frame_counter, (GLfloat) ppu.frames);
 		}
-		if (text.on_screen) {
-			glBindTexture(GL_TEXTURE_2D, shader.text.data);
-		}
 	}
 }
 
+BYTE opengl_update_txt_texture(uint8_t generate_mipmap) {
+	if (text.on_screen) {
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+
+		glBindTexture(GL_TEXTURE_2D, opengl.text.data);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		if (generate_mipmap && opengl.glew && !GLEW_VERSION_3_1) {
+			glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
+			glGenerateMipmap(GL_TEXTURE_2D);
+		}
+
+		return (EXIT_OK);
+	}
+	return (EXIT_ERROR);
+}
 void opengl_effect_change(BYTE mode) {
 	if (input_zapper_is_connected((_port *) &port) == TRUE) {
 		return;
@@ -301,12 +316,12 @@ void opengl_text_clear(_txt_element *ele) {
 	}
 
 	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, shader.text.data);
+	glBindTexture(GL_TEXTURE_2D, opengl.text.data);
 
 	glPixelStorei(GL_UNPACK_ROW_LENGTH, ele->w);
 
 	glTexSubImage2D(GL_TEXTURE_2D, 0, ele->x, ele->y, ele->w, ele->h,
-	        shader.text.format, shader.text.type, ele->blank->pixels);
+			opengl.text.format, opengl.text.type, ele->blank->pixels);
 
 	glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
 
@@ -314,12 +329,12 @@ void opengl_text_clear(_txt_element *ele) {
 }
 void opengl_text_blit(_txt_element *ele, _rect *rect) {
 	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, shader.text.data);
+	glBindTexture(GL_TEXTURE_2D, opengl.text.data);
 
 	glPixelStorei(GL_UNPACK_ROW_LENGTH, rect->w);
 
-	glTexSubImage2D(GL_TEXTURE_2D, 0, rect->x, rect->y, rect->w, rect->h,  shader.text.format,
-			shader.text.type, ele->surface->pixels);
+	glTexSubImage2D(GL_TEXTURE_2D, 0, rect->x, rect->y, rect->w, rect->h,  opengl.text.format,
+			opengl.text.type, ele->surface->pixels);
 
 	glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
 
@@ -441,12 +456,6 @@ void glsl_shaders_init(_shader *shd) {
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, opengl.screen.data);
 		glUniform1i(shd->loc.texture.scr, 0);
-	}
-
-	if ((shd->loc.texture.txt = glGetUniformLocation(shd->prg, "texture_txt")) >= 0) {
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, shd->text.data);
-		glUniform1i(shd->loc.texture.txt, 1);
 	}
 
 	glDisable(GL_TEXTURE_2D);

@@ -8,8 +8,6 @@
 #ifndef SHADERS_H_
 #define SHADERS_H_
 
-#include "text.h"
-
 enum shader_type {
 	SHADER_COLOR,
 	SHADER_NO_FILTER,
@@ -59,8 +57,6 @@ typedef struct {
 	GLuint id;
 	_shader_code *code;
 
-	_texture text;
-
 	struct {
 		struct {
 			GLint screen_emu;
@@ -109,14 +105,12 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"}",
 		// fragment shader
 		"uniform sampler2D texture_scr;\n"
-		"uniform sampler2D texture_txt;\n"
 
 		"varying vec4 v_texCoord;\n"
 
 		"void main(void) {\n"
 		"	vec4 scr = texture2D(texture_scr, v_texCoord.xy);\n"
-		"	vec4 txt = texture2D(texture_txt, v_texCoord.xy);\n"
-		"	gl_FragColor = mix(scr, txt, txt.a) * gl_Color;\n"
+		"	gl_FragColor = scr * gl_Color;\n"
 		"}"
 	},
 	/*****************************************************************************************/
@@ -145,7 +139,6 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"uniform vec2 size_texture;\n"
 
 		"uniform sampler2D texture_scr;\n"
-		"uniform sampler2D texture_txt;\n"
 
 		"varying vec4 v_texCoord[5];\n"
 
@@ -167,15 +160,12 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"		scr.xyz = ((tmp1 - tmp2) != vec3(0.0)) ? E : tmp1;\n"
 		"	}\n"
 
-		"	vec4 txt = texture2D(texture_txt, v_texCoord[0].xy);\n"
-
-		"	gl_FragColor = mix(scr, txt, txt.a) * gl_Color;\n"
+		"	gl_FragColor = scr * gl_Color;\n"
 		"}",
 
 		/*// fragment shader
 		"uniform vec4 size;\n"
 		"uniform sampler2D texture_scr;\n"
-		"uniform sampler2D texture_txt;\n"
 		"varying vec4 v_texCoord[5];\n"
 		"void main()\n"
 		"{\n"
@@ -195,8 +185,7 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"		col=colD;\n"
 		"	}\n"
 		"	scr = col;\n"
-		"	txt = texture2DProj(texture_txt, v_texCoord[0]);\n"
-		"	gl_FragColor = mix(scr, txt, txt.a);\n"
+		"	gl_FragColor = scr;\n"
 		"}"*/
 	},
 	/*****************************************************************************************/
@@ -229,7 +218,6 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"uniform vec2 size_texture;\n"
 
 		"uniform sampler2D texture_scr;\n"
-		"uniform sampler2D texture_txt;\n"
 
 		"varying vec4 v_texCoord[5];\n"
 
@@ -319,9 +307,7 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"		   (B == F && B != D && F != H && E != A)) ?"
 		"			B : E; // Scale3x rule\n"
 
-		"	vec4 txt = texture2D(texture_txt, v_texCoord[0].xy);\n"
-
-		"	gl_FragColor = mix(scr, txt, txt.a) * gl_Color;\n"
+		"	gl_FragColor = scr * gl_Color;\n"
 		"}"
 	},
 	/*****************************************************************************************/
@@ -357,7 +343,6 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"}",
 		// fragment shader
 		"uniform sampler2D texture_scr;\n"
-		"uniform sampler2D texture_txt;\n"
 
 		"varying vec4 v_texCoord[7];\n"
 
@@ -390,9 +375,7 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"	vec4 scr = vec4(((w1 * o1) + (w2 * o2) + (w3 * o3) + (w4 * o4) + (0.0001 * c)) /"
 		"			(w1 + w2 + w3 + w4 + 0.0001), 1.0);\n"
 
-		"	vec4 txt = texture2D(texture_txt, v_texCoord[0].xy);\n"
-
-		"	gl_FragColor = mix(scr, txt, txt.a) * gl_Color;\n"
+		"	gl_FragColor = scr * gl_Color;\n"
 		"}"
 	},
 	/*****************************************************************************************/
@@ -426,7 +409,6 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"}",
 		// fragment shader
 		"uniform sampler2D texture_scr;\n"
-		"uniform sampler2D texture_txt;\n"
 		"varying vec4 v_texCoord[5];\n"
 
 		"const float mx = 0.325;      // start smoothing wt.\n"
@@ -473,9 +455,7 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"	vec4 scr = vec4(w1 * c10 + w2 * c21 + w3 * c12 + w4 * c01 +"
 		"			  (1.0 - w1 - w2 - w3 - w4) * c11, 1.0);\n"
 
-		"	vec4 txt = texture2D(texture_txt, v_texCoord[0].xy);\n"
-
-		"	gl_FragColor = mix(scr, txt, txt.a) * gl_Color;\n"
+		"	gl_FragColor = scr * gl_Color;\n"
 		"}"
 	},
 	/*****************************************************************************************/
@@ -511,7 +491,6 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"}",
 		// fragment shader
 		"uniform sampler2D texture_scr;\n"
-		"uniform sampler2D texture_txt;\n"
 		"varying vec4 v_texCoord[7];\n"
 
 		"const float mx = 1.00;      // start smoothing wt.\n"
@@ -568,9 +547,7 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"			   (2.0*(w1+w2+w3+w4)+1.0);\n"
 		"	scr.a = 1.0;\n"
 
-		"	vec4 txt = texture2D(texture_txt, v_texCoord[0].xy);\n"
-
-		"	gl_FragColor = mix(scr, txt, txt.a) * gl_Color;\n"
+		"	gl_FragColor = scr * gl_Color;\n"
 		"}"
 	},
 	/*****************************************************************************************/
@@ -582,7 +559,6 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		// fragment shader
 		"uniform vec2 size_texture;\n"
 		"uniform sampler2D texture_scr;\n"
-		"uniform sampler2D texture_txt;\n"
 
 		"const vec3 dtt = vec3(65536.0, 255.0, 1.0);\n"
 		"float reduce(vec3 color) {\n"
@@ -713,7 +689,6 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		// fragment shader
 		"uniform vec2 size_texture;\n"
 		"uniform sampler2D texture_scr;\n"
-		"uniform sampler2D texture_txt;\n"
 		"varying vec4 v_texCoord;\n"
 
 		"#define round(x) floor( (x) + 0.5 )\n"
@@ -746,9 +721,7 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"	scr += ((border.x - left) * (border.y - bottom) / totalArea) * bottomLeftColor;\n"
 		"	scr += ((right - border.x) * (top - border.y) / totalArea) * topRightColor;\n"
 
-		"	vec4 txt = texture2D(texture_txt, v_texCoord.xy);\n"
-
-		"	gl_FragColor = mix(scr, txt, txt.a) * gl_Color;\n"
+		"	gl_FragColor = scr * gl_Color;\n"
 		"}"
 	},
 	/*****************************************************************************************/
@@ -767,7 +740,6 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"uniform vec2 size_texture;\n"
 
 		"uniform sampler2D texture_scr;\n"
-		"uniform sampler2D texture_txt;\n"
 
 		"varying vec4 v_texCoord;\n"
 
@@ -806,9 +778,7 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 
 		"	vec4 scr = vec4(intensity * result, 1.0);\n"
 
-		"	vec4 txt = texture2D(texture_txt, v_texCoord.xy);\n"
-
-		"	gl_FragColor = mix(scr, txt, txt.a) * gl_Color;\n"
+		"	gl_FragColor = scr * gl_Color;\n"
 		"}"
 	},
 	/*****************************************************************************************/
@@ -836,7 +806,6 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"uniform vec2 size_texture;\n"
 
 		"uniform sampler2D texture_scr;\n"
-		"uniform sampler2D texture_txt;\n"
 
 		"varying vec4 v_texCoord;\n"
 		"varying vec2 omega;\n"
@@ -852,9 +821,7 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 
 		"	vec4 scr = clamp(scanline, 0.0, 1.0);\n"
 
-		"	vec4 txt = texture2D(texture_txt, v_texCoord.xy);\n"
-
-		"	gl_FragColor = mix(scr, txt, txt.a) * gl_Color;\n"
+		"	gl_FragColor = scr * gl_Color;\n"
 		"}"
 	},
 	/*****************************************************************************************/
@@ -866,7 +833,6 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		// fragment shader
 		"uniform vec2 size_texture;\n"
 		"uniform sampler2D texture_scr;\n"
-		"uniform sampler2D texture_txt;\n"
 
 		"vec4 getTexel(vec2 p) {\n"
 		"	p = p * size_texture + vec2(0.5);\n"
@@ -882,8 +848,7 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 
 		"void main() {\n"
 		"	vec4 scr = getTexel(gl_TexCoord[0].xy);\n"
-		"	vec4 txt = texture2D(texture_txt, gl_TexCoord[0].xy);\n"
-		"	gl_FragColor = mix(scr, txt, txt.a) * gl_Color;\n"
+		"	gl_FragColor = scr * gl_Color;\n"
 		"}"
 	},
 	/*****************************************************************************************/
@@ -918,7 +883,6 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		// fragment shader
 		"uniform vec2 size_texture;\n"
 		"uniform sampler2D texture_scr;\n"
-		"uniform sampler2D texture_txt;\n"
 		"varying vec4 v_texCoord[5];\n"
 
 		"vec4 compress(vec4 in_color, float threshold, float ratio) {\n"
@@ -953,9 +917,7 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 
 		"	vec4 scr = compress(final, 0.8, 5.0);\n"
 
-		"	vec4 txt = texture2D(texture_txt, gl_TexCoord[0].xy);\n"
-
-		"	gl_FragColor = mix(scr, txt, txt.a) * gl_Color;\n"
+		"	gl_FragColor = scr * gl_Color;\n"
 		"}"
 	},
 	/*****************************************************************************************/
@@ -1098,7 +1060,6 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"uniform vec2 size_screen_emu;\n"
 		"uniform vec2 size_texture;\n"
 		"uniform sampler2D texture_scr;\n"
-		"uniform sampler2D texture_txt;\n"
 
 		"varying vec2 texCoord;\n"
 		"varying vec2 one;\n"
@@ -1293,9 +1254,7 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"	// Color the texel.\n"
 		"	vec4 scr = vec4(mul_res, 1.0);\n"
 
-		"	vec4 txt = texture2D(texture_txt, texCoord.xy);\n"
-
-		"	gl_FragColor = mix(scr, txt, txt.a) * gl_Color;\n"
+		"	gl_FragColor = scr * gl_Color;\n"
 		"}"
 	},
 	/*****************************************************************************************/
@@ -1307,7 +1266,6 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		// fragment shader
 		"uniform vec2 size_texture;\n"
 		"uniform sampler2D texture_scr;\n"
-		"uniform sampler2D texture_txt;\n"
 
 		"#define CRTgamma 2.5\n"
 		"#define display_gamma 2.2\n"
@@ -1339,9 +1297,7 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 
 		"	vec4 scr = pow(sum*vec4(norm),vec4(1.0/display_gamma));\n"
 
-		"	vec4 txt = texture2D(texture_txt, gl_TexCoord[0].xy);\n"
-
-		"	gl_FragColor = mix(scr, txt, txt.a) * gl_Color;\n"
+		"	gl_FragColor = scr * gl_Color;\n"
 		"}"
 	},
 	/*****************************************************************************************/
@@ -1353,7 +1309,6 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		// fragment shader
 		"uniform vec2 size_texture;\n"
 		"uniform sampler2D texture_scr;\n"
-		"uniform sampler2D texture_txt;\n"
 
 		"#define display_gamma 2.2\n"
 		"#define TEX2D(c) pow(texture2D(texture_scr,(c)),vec4(display_gamma))\n"
@@ -1384,9 +1339,7 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 
 		"	vec4 scr = pow(sum*vec4(norm),vec4(1.0/display_gamma));\n"
 
-		"	vec4 txt = texture2D(texture_txt, gl_TexCoord[0].xy);\n"
-
-		"	gl_FragColor = mix(scr, txt, txt.a) * gl_Color;\n"
+		"	gl_FragColor = scr * gl_Color;\n"
 		"}"
 	},
 	/*****************************************************************************************/
@@ -1533,7 +1486,6 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"uniform vec2 size_texture;\n"
 		"uniform float frame_counter;\n"
 		"uniform sampler2D texture_scr;\n"
-		"uniform sampler2D texture_txt;\n"
 
 		"varying vec2 texCoord;\n"
 		"varying vec2 one;\n"
@@ -1730,9 +1682,7 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"	// Color the texel.\n"
 		"	vec4 scr = vec4(mul_res, 1.0);\n"
 
-		"	vec4 txt = texture2D(texture_txt, texCoord.xy);\n"
-
-		"	gl_FragColor = mix(scr, txt, txt.a) * gl_Color;\n"
+		"	gl_FragColor = scr * gl_Color;\n"
 		"}"
 	},
 	/*****************************************************************************************/
@@ -1749,7 +1699,6 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		// fragment shader
 		"uniform vec2 size_texture;\n"
 		"uniform sampler2D texture_scr;\n"
-		"uniform sampler2D texture_txt;\n"
 		"varying vec4 v_texCoord;\n"
 
 		"#define glarebasesize 0.42\n"
@@ -1776,9 +1725,7 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"		scr = sum*sum*sum*0.001+bum*bum*bum*0.0080 + texture2D(texture_scr, texcoord);\n"
 		"	}\n"
 
-		"	vec4 txt = texture2D(texture_txt, texcoord);\n"
-
-		"	gl_FragColor = mix(scr, txt, txt.a) * gl_Color;\n"
+		"	gl_FragColor = scr * gl_Color;\n"
 		"}"
 	},
 	/*****************************************************************************************/
@@ -1819,7 +1766,6 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"}",
 		// fragment shader
 		"uniform sampler2D texture_scr;\n"
-		"uniform sampler2D texture_txt;\n"
 
 		"varying vec2 c00;\n"
 		"varying vec2 c10;\n"
@@ -1871,9 +1817,7 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 
 		"	vec4 scr = vec4(out_color, 1.0);\n"
 
-		"	vec4 txt = texture2D(texture_txt, c11);\n"
-
-		"	gl_FragColor = mix(scr, txt, txt.a) * gl_Color;\n"
+		"	gl_FragColor = scr * gl_Color;\n"
 		"}"
 	},
 	/*****************************************************************************************/
@@ -1892,7 +1836,6 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"#version 120\n"
 
 		"uniform sampler2D texture_scr;\n"
-		"uniform sampler2D texture_txt;\n"
 		"uniform vec2 size_texture;\n"
 
 		"varying vec4 v_texCoord;\n"
@@ -1935,9 +1878,7 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 
 		"	vec4 scr = vec4(yuv2rgb * vec3(y, uv), 0.0);\n"
 
-		"	vec4 txt = texture2D(texture_txt, v_texCoord.xy);\n"
-
-		"	gl_FragColor = mix(scr, txt, txt.a) * gl_Color;\n"
+		"	gl_FragColor = scr * gl_Color;\n"
 		"}"
 	},
 	/*****************************************************************************************/
@@ -1950,7 +1891,6 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"#version 120\n"
 
 		"uniform sampler2D texture_scr;\n"
-		"uniform sampler2D texture_txt;\n"
 		"uniform vec2 size_texture;\n"
 		"uniform float frame_counter;\n"
 
@@ -2006,9 +1946,7 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"	else\n"
 		"		scr = vec4(yuv2rgb*yuvd, 0.0);\n"
 
-		"	vec4 txt = texture2D(texture_txt, xy);\n"
-
-		"	gl_FragColor = mix(scr, txt, txt.a) * gl_Color;\n"
+		"	gl_FragColor = scr * gl_Color;\n"
 		"}"
 	},
 	/*****************************************************************************************/
@@ -2021,7 +1959,6 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"#version 120\n"
 
 		"uniform sampler2D texture_scr;\n"
-		"uniform sampler2D texture_txt;\n"
 		"uniform vec2 size_texture;\n"
 		"uniform vec2 size_screen_emu;\n"
 		"uniform float frame_counter;\n"
@@ -2056,9 +1993,7 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 
 		"	vec4 scr = (vec4(c0,c1,c2,c3)+0.65)/2.3;\n"
 
-		"	vec4 txt = texture2D(texture_txt, xy);\n"
-
-		"	gl_FragColor = mix(scr, txt, txt.a) * gl_Color;\n"
+		"	gl_FragColor = scr * gl_Color;\n"
 
 		"}"
 	},
@@ -2084,7 +2019,6 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"uniform float silhouetteThreshold;\n"
 
 		"uniform sampler2D texture_scr;\n"
-		"uniform sampler2D texture_txt;\n"
 
 		"void main (void) {\n"
 
@@ -2122,9 +2056,7 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"			scr *=0.8;\n"
 		"	}\n"
 
-		"	vec4 txt = texture2D(texture_txt, gl_TexCoord[0].st);\n"
-
-		"	gl_FragColor = mix(scr, txt, txt.a) * gl_Color;\n"
+		"	gl_FragColor = scr * gl_Color;\n"
 
 		"}"
 	}
