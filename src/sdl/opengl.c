@@ -256,7 +256,7 @@ void opengl_update_scr_texture(SDL_Surface *surface, uint8_t generate_mipmap) {
 BYTE opengl_update_txt_texture(uint8_t generate_mipmap) {
 	if (text.on_screen) {
 		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		glBindTexture(GL_TEXTURE_2D, opengl.text.data);
 
