@@ -206,6 +206,8 @@ BEGIN
 			END
 #endif
 			MENUITEM SEPARATOR
+			MENUITEM "Aspec&t Ratio",             IDM_SET_TV_ASPECT_RATIO
+			MENUITEM SEPARATOR
 			MENUITEM "F&ullscreen\tAlt+Enter",    IDM_SET_FULLSCREEN
 			MENUITEM "S&tretch in fullscreen\tP", IDM_SET_STRETCHFLSCR
 		END

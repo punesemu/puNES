@@ -23,7 +23,7 @@
 #include "filters/video/hqx.h"
 
 enum render_type { RENDER_SOFTWARE, RENDER_HLSL };
-enum fullscreen_mode { NO_FULLSCR, FULLSCR };
+enum fullscreen_type { NO_FULLSCR, FULLSCR };
 enum scale_type { X1 = 1, X2, X3, X4 };
 enum filters_type {
 	NO_FILTER,
@@ -42,7 +42,7 @@ enum filters_type {
 	CRT_NO_CURVE,
 };
 enum overcan_type { OSCAN_OFF, OSCAN_ON, OSCAN_DEFAULT, OSCAN_DEFAULT_OFF, OSCAN_DEFAULT_ON };
-enum gfx_info_index { CURRENT, NO_OVERSCAN, MONITOR, VIDEO_MODE };
+enum gfx_info_type { CURRENT, NO_OVERSCAN, MONITOR, VIDEO_MODE };
 enum no_change { NO_CHANGE = 255 };
 
 typedef struct {
@@ -61,6 +61,7 @@ struct _gfx {
 
 	float w_pr;
 	float h_pr;
+	float aspect_ratio;
 
 	gfx_filter_function((*filter));
 

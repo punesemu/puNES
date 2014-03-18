@@ -96,7 +96,7 @@ void menu_video_fullscreen_check(void) {
 
 	/* Stretch */
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MSTRETCHFSCR]), FALSE);
-	if (gfx.opengl && !cfg->aspect_ratio) {
+	if (gfx.opengl && !cfg->stretch) {
 		gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MSTRETCHFSCR]), TRUE);
 	}
 }
@@ -105,7 +105,7 @@ void menu_video_fullscreen_switch_stretch(void) {
 		return;
 	}
 
-	cfg->aspect_ratio = !cfg->aspect_ratio;
+	cfg->stretch = !cfg->stretch;
 
 	if (cfg->fullscreen == FULLSCR) {
 		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE);

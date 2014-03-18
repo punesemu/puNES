@@ -169,10 +169,13 @@ void cfg_file_parse(void) {
 			cfg_search(param, P_RENDER, 0, param_render, cfg_from_file.render = index);
 			/* vsync */
 			cfg_search(param, P_VSYNC, 0, param_off_on, cfg_from_file.vsync = index);
+			/* tv aspect ratio */
+			cfg_search(param, P_TV_ASPECT_RATIO, 0, param_no_yes, cfg_from_file.tv_aspect_ratio =
+			        index);
 			/* fullscreen */
 			cfg_search(param, P_FSCREEN, 0, param_no_yes, cfg_from_file.fullscreen = index);
 			/* stretch in fullscreen */
-			cfg_search(param, P_STRETCH, 0, param_no_yes, cfg_from_file.aspect_ratio = !index);
+			cfg_search(param, P_STRETCH, 0, param_no_yes, cfg_from_file.stretch = !index);
 			/* audio */
 			cfg_search(param, P_AUDIO, 0, param_off_on, cfg_from_file.apu.channel[APU_MASTER] =
 			        index);
@@ -256,10 +259,13 @@ void cfg_file_save(void) {
 	write_param((_param *) param, fp, P_RENDER, param_render[cfg_from_file.render].sname);
 	/* vsync */
 	write_param((_param *) param, fp, P_VSYNC, param_off_on[cfg_from_file.vsync].sname);
+	/* tv aspect ratio */
+	write_param((_param *) param, fp, P_TV_ASPECT_RATIO,
+	        param_no_yes[cfg_from_file.tv_aspect_ratio].sname);
 	/* fullscreen */
 	write_param((_param *) param, fp, P_FSCREEN, param_no_yes[cfg_from_file.fullscreen].sname);
 	/* stretch in fullscreen */
-	write_param((_param *) param, fp, P_STRETCH, param_no_yes[!cfg_from_file.aspect_ratio].sname);
+	write_param((_param *) param, fp, P_STRETCH, param_no_yes[!cfg_from_file.stretch].sname);
 	/* audio */
 	write_param((_param *) param, fp, P_AUDIO,
 	        param_off_on[cfg_from_file.apu.channel[APU_MASTER]].sname);
@@ -630,8 +636,9 @@ void set_default(void) {
 	gfx_set_render(cfg_from_file.render);
 
 	cfg_from_file.vsync = TRUE;
+	cfg_from_file.tv_aspect_ratio = FALSE;
 	cfg_from_file.fullscreen = NO_FULLSCR;
-	cfg_from_file.aspect_ratio = FALSE;
+	cfg_from_file.stretch = FALSE;
 	cfg_from_file.save_on_exit = FALSE;
 
 	{

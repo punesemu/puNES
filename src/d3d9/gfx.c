@@ -551,18 +551,6 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 		gfx.h[NO_OVERSCAN] = SCR_LINES * scale;
 	}
 
-	/*
-	 * se sono a schermo intero, non e' necessario
-	 * fare un d3d9_create_context() visto che
-	 * uso una texture ridimensionabile.
-	 */
-	//if (set_mode && ((cfg->fullscreen == FULLSCR) && (fullscreen == cfg->fullscreen))) {
-		/* se e' il primo avvio, non devo mai disabilitare il set_mode */
-	//	if (!info.on_cfg) {
-	//		set_mode = FALSE;
-	//	}
-	//}
-
 	/* paletta */
 	if (palette == NO_CHANGE) {
 		palette = cfg->palette;
@@ -609,6 +597,18 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 	cfg->fullscreen = fullscreen;
 	/* salvo il nuovo tipo di paletta */
 	cfg->palette = palette;
+
+	/* TV Aspect Ratio */
+
+	if (cfg->tv_aspect_ratio) {
+		if (fullscreen && (cfg->filter == NTSC_FILTER)) {
+			gfx.aspect_ratio = 1.0f;
+		} else {
+			gfx.aspect_ratio = 4.0f / 3.0f;
+		}
+	} else {
+		gfx.aspect_ratio = 1.0f;
+	}
 
 	switch (cfg->filter) {
 		case NO_FILTER:
@@ -659,10 +659,30 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 				hlsl_up(scale_surface, SHADER_CRT4);
 				break;
 			case SCALE2X:
-				hlsl_up(scale_surface, SHADER_SCALE2X);
+				/*
+				 * con l'aspect ratio attivo, per
+				 * ottenere un risultato migliore applico
+				 * filtro software.
+				 */
+				if (gfx.aspect_ratio == 1.0f) {
+					hlsl_up(scale_surface, SHADER_SCALE2X);
+				} else {
+					gfx.filter = scaleNx;
+				}
 				break;
 			case SCALE3X:
-				hlsl_up(scale_surface, SHADER_SCALE3X);
+				/*
+				 * con l'aspect ratio attivo, per
+				 * ottenere un risultato migliore applico
+				 * filtro software.
+				 */
+				if (gfx.aspect_ratio == 1.0f) {
+					/* FIXME : lo shader dello scale3x non funziona */
+					//hlsl_up(scale_surface, SHADER_SCALE3X);
+					gfx.filter = scaleNx;
+				} else {
+					gfx.filter = scaleNx;
+				}
 				break;
 			case SCALE4X:
 				hlsl_up(scale_surface, SHADER_SCALE4X);
@@ -700,6 +720,11 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 		if (fullscreen == TRUE) {
 			gfx.w[VIDEO_MODE] = gfx.w[MONITOR];
 			gfx.h[VIDEO_MODE] = gfx.h[MONITOR];
+		}
+
+		/* TV Aspect Ratio */
+		if (cfg->tv_aspect_ratio && !fullscreen) {
+			gfx.w[VIDEO_MODE] = gfx.h[VIDEO_MODE] * gfx.aspect_ratio;
 		}
 
 		ShowWindow(gui_main_window_id(), SW_HIDE);
@@ -1148,9 +1173,9 @@ BYTE d3d9_create_context(UINT width, UINT height) {
 					D3DSAMP_MIPFILTER, D3DTEXF_NONE);
 		} else {
 			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
-					D3DSAMP_MAGFILTER, D3DTEXF_POINT);
+					D3DSAMP_MAGFILTER, D3DTEXF_NONE);
 			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
-					D3DSAMP_MINFILTER, D3DTEXF_POINT);
+					D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
 			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
 					D3DSAMP_MIPFILTER, D3DTEXF_NONE);
 		}
@@ -1240,7 +1265,7 @@ void d3d9_adjust_coords(void) {
 }
 void d3d9_adjust_vertex_buffer(_texture *texture, FLOAT factor) {
 	{
-		/* aspect ratio */
+		/* stretch */
 		FLOAT w_quad = (FLOAT) gfx.w[VIDEO_MODE];
 		FLOAT h_quad = (FLOAT) gfx.h[VIDEO_MODE];
 
@@ -1250,14 +1275,9 @@ void d3d9_adjust_vertex_buffer(_texture *texture, FLOAT factor) {
 		texture->quadcoords.b = h_quad;
 
 		/* con flags intendo sia il fullscreen che il futuro resize */
-		if (cfg->fullscreen && cfg->aspect_ratio) {
+		if (cfg->fullscreen && cfg->stretch) {
 			FLOAT ratio_surface = w_quad / h_quad;
 			FLOAT ratio_frame = (FLOAT) gfx.w[CURRENT] / (FLOAT) gfx.h[CURRENT];
-
-			//ratio_frame = (float) 4 / 3;
-			//ratio_frame = (float) 16 / 9;
-
-			//fprintf(stderr, "opengl : %f %f\n", ratio_surface, ratio_frame);
 
 			/*
 			 * se l'aspect ratio del frame e' maggiore di
@@ -1267,7 +1287,7 @@ void d3d9_adjust_vertex_buffer(_texture *texture, FLOAT factor) {
 			if (ratio_frame > ratio_surface) {
 				FLOAT centering_factor = 0.0f;
 
-				h_quad = w_quad / ratio_frame;
+				h_quad = (w_quad / ratio_frame) / gfx.aspect_ratio;
 				centering_factor = ((FLOAT) gfx.h[VIDEO_MODE] - h_quad) / 2.0f;
 
 				texture->quadcoords.l = 0.0f;
@@ -1282,7 +1302,7 @@ void d3d9_adjust_vertex_buffer(_texture *texture, FLOAT factor) {
 			} else if (ratio_frame < ratio_surface) {
 				FLOAT centering_factor = 0.0f;
 
-				w_quad = ratio_frame * h_quad;
+				w_quad = (h_quad * ratio_frame) * gfx.aspect_ratio;
 				centering_factor = ((FLOAT) gfx.w[VIDEO_MODE] - w_quad) / 2.0f;
 
 				texture->quadcoords.l = centering_factor;
@@ -1306,10 +1326,17 @@ void d3d9_adjust_vertex_buffer(_texture *texture, FLOAT factor) {
 		 * problema scompare e non va ad alterae ne' la visualizzazione in finestra
 		 * ne' a schermo intero a qualsiasi altra risoluzione (almeno lo spero).
 		 */
+		/*
 		tc.l = 0.0f;
 		tc.r = ((FLOAT) gfx.w[CURRENT] + 0.5f) / (texture->w * factor);
 		tc.t = 0.0f;
 		tc.b = ((FLOAT) gfx.h[CURRENT] + 0.5f) / (texture->h * factor);
+		*/
+
+		tc.l = 0.0f;
+		tc.r = ((FLOAT) gfx.w[CURRENT]) / (texture->w * factor);
+		tc.t = 0.0f;
+		tc.b = ((FLOAT) gfx.h[CURRENT]) / (texture->h * factor);
 
 		vertex quad_vertices[] = {
 			{ texture->quadcoords.l, texture->quadcoords.b, 0.0f, tc.l, tc.b },

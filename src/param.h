@@ -65,7 +65,8 @@ enum {
 	P_AUDIO_QUALITY,
 	P_SWAP_DUTY,
 	P_GAMEGENIE,
-	P_STEREODELAY
+	P_STEREODELAY,
+	P_TV_ASPECT_RATIO
 };
 enum {
 	PGS_SLOT,
@@ -81,7 +82,7 @@ typedef struct {
 } _param;
 
 #if defined (__CMDLINE__)
-static const char *opt_short = "m:f:k:s:o:i:n:p:r:v:u:t:a:l:c:d:q:g:Vh?";
+static const char *opt_short = "m:f:k:s:o:i:n:p:r:v:e:u:t:a:l:c:d:q:g:Vh?";
 static const struct option opt_long[] = {
 	{ "mode",               required_argument, NULL, 'm'},
 	{ "fps",                required_argument, NULL, 'f'},
@@ -93,6 +94,7 @@ static const struct option opt_long[] = {
 	{ "palette",            required_argument, NULL, 'p'},
 	{ "rendering",          required_argument, NULL, 'r'},
 	{ "vsync",              required_argument, NULL, 'v'},
+	{ "tv-aspect-ratio",    required_argument, NULL, 'e'},
 	{ "fullscreen",         required_argument, NULL, 'u'},
 	{ "stretch-fullscreen", required_argument, NULL, 't'},
 	{ "audio",              required_argument, NULL, 'a'},
@@ -213,7 +215,7 @@ static const _param param[] = {
 		NULL,
 		"# possible values: yes, no",
 		NULL,
-		"-t, --stretch-fullscreen  adjust aspect ratio   : yes, no"
+		"-t, --stretch-fullscreen  stretch image         : yes, no"
 	},
 	{
 		"audio",
@@ -263,6 +265,13 @@ static const _param param[] = {
 		"# possible values: [5 - 100]",
 		NULL,
 		"-d, --stereo-delay        stereo effect delay   : [5 - 100]"
+	},
+	{
+		"tv aspect ratio",
+		NULL,
+		"# possible values: yes, no",
+		NULL,
+		"-e, --tv-aspect-ratio     enable aspect ratio   : yes, no"
 	},
 };
 static const _param param_pgs[] = {

@@ -29,7 +29,7 @@ void sdl_init_gl(void) {
 	opengl.x_diff = 0;
 	opengl.y_diff = 0;
 
-	memset(&opengl.texture, 0, sizeof(_texture));
+	memset(&opengl.screen, 0, sizeof(_texture));
 	memset(&shader, 0, sizeof(shader));
 
 	opengl_init_effect = opengl_init_no_effect;
@@ -44,8 +44,8 @@ void sdl_quit_gl(void) {
 		SDL_FreeSurface(opengl.surface_gl);
 	}
 
-	if (opengl.texture.data) {
-		glDeleteTextures(1, &opengl.texture.data);
+	if (opengl.screen.data) {
+		glDeleteTextures(1, &opengl.screen.data);
 	}
 
 	if (shader.text.data) {
@@ -77,13 +77,13 @@ void sdl_create_surface_gl(SDL_Surface *src, WORD width, WORD height, BYTE flags
 		opengl.surface_gl = gfx_create_RGB_surface(src, width, height);
 	}
 
-	opengl_create_texture(&opengl.texture, opengl.surface_gl->w, opengl.surface_gl->h,
+	opengl_create_texture(&opengl.screen, opengl.surface_gl->w, opengl.surface_gl->h,
 			opengl.interpolation, POWER_OF_TWO);
 
 	opengl.texcoords.l = 0.0f;
-	opengl.texcoords.r = (GLfloat) width / (opengl.texture.w * opengl.factor);
+	opengl.texcoords.r = (GLfloat) width / (opengl.screen.w * opengl.factor);
 	opengl.texcoords.b = 0.0f;
-	opengl.texcoords.t = (GLfloat) height / (opengl.texture.h * opengl.factor);
+	opengl.texcoords.t = (GLfloat) height / (opengl.screen.h * opengl.factor);
 
 	{
 		/* aspect ratio */
@@ -96,14 +96,9 @@ void sdl_create_surface_gl(SDL_Surface *src, WORD width, WORD height, BYTE flags
 		opengl.quadcoords.t = h_quad;
 
 		/* con flags intendo sia il fullscreen che il futuro resize */
-		if (flags && cfg->aspect_ratio) {
+		if (flags && cfg->stretch) {
 			GLfloat ratio_surface = w_quad / h_quad;
 			GLfloat ratio_frame = (GLfloat) width / (GLfloat) height;
-
-			//ratio_frame = (float) 4 / 3;
-			//ratio_frame = (float) 16 / 9;
-
-			//fprintf(stderr, "opengl : %f %f\n", ratio_surface, ratio_frame);
 
 			/*
 			 * se l'aspect ratio del frame e' maggiore di
@@ -113,22 +108,22 @@ void sdl_create_surface_gl(SDL_Surface *src, WORD width, WORD height, BYTE flags
 			if (ratio_frame > ratio_surface) {
 				GLfloat centering_factor = 0.0f;
 
-				h_quad = w_quad / ratio_frame;
+				h_quad = (w_quad / ratio_frame) / gfx.aspect_ratio;
 				centering_factor = ((GLfloat) src->h - h_quad) / 2.0f;
 
 				opengl.quadcoords.l = 0.0f;
 				opengl.quadcoords.r = w_quad;
 				opengl.quadcoords.b = centering_factor;
 				opengl.quadcoords.t = h_quad + centering_factor;
+			} else if (ratio_frame < ratio_surface) {
 				/*
 				 * se l'aspect ratio del frame e' minore di
 				 * quello della superficie allora devo agire
 				 * sulla larghezza.
 				 */
-			} else if (ratio_frame < ratio_surface) {
 				GLfloat centering_factor = 0.0f;
 
-				w_quad = ratio_frame * h_quad;
+				w_quad = (h_quad * ratio_frame) * gfx.aspect_ratio;
 				centering_factor = ((GLfloat) src->w - w_quad) / 2.0f;
 
 				opengl.quadcoords.l = centering_factor;
@@ -140,8 +135,8 @@ void sdl_create_surface_gl(SDL_Surface *src, WORD width, WORD height, BYTE flags
 	}
 
 	if (opengl.glsl.enabled && opengl.glsl.shader_used) {
-		opengl_create_texture(&shader.text, opengl.texture.w * opengl.factor,
-				opengl.texture.h * opengl.factor, FALSE, NO_POWER_OF_TWO);
+		opengl_create_texture(&shader.text, opengl.screen.w * opengl.factor,
+				opengl.screen.h * opengl.factor, FALSE, NO_POWER_OF_TWO);
 		glsl_shaders_init(&shader);
 	}
 
@@ -233,7 +228,7 @@ void opengl_create_texture(_texture *texture, uint32_t width, uint32_t height,
 	glDisable(GL_TEXTURE_2D);
 }
 void opengl_update_texture(SDL_Surface *surface, uint8_t generate_mipmap) {
-	glBindTexture(GL_TEXTURE_2D, opengl.texture.data);
+	glBindTexture(GL_TEXTURE_2D, opengl.screen.data);
 
 	if (generate_mipmap && opengl.glew && !GLEW_VERSION_3_1) {
 		glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
@@ -241,8 +236,8 @@ void opengl_update_texture(SDL_Surface *surface, uint8_t generate_mipmap) {
 
 	glPixelStorei(GL_UNPACK_ROW_LENGTH, surface->w);
 
-	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, surface->w, surface->h, opengl.texture.format,
-			opengl.texture.type, surface->pixels);
+	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, surface->w, surface->h, opengl.screen.format,
+			opengl.screen.type, surface->pixels);
 
 	glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
 
@@ -422,8 +417,8 @@ void glsl_shaders_init(_shader *shd) {
 		sse[1] = (GLfloat) SCR_LINES;
 		svm[0] = opengl.quadcoords.r - opengl.quadcoords.l;
 		svm[1] = opengl.quadcoords.t - opengl.quadcoords.b;
-		st[0] = opengl.texture.w;
-		st[1] = opengl.texture.h;
+		st[0] = opengl.screen.w;
+		st[1] = opengl.screen.h;
 		fc = (GLfloat) ppu.frames;
 
 		if ((shd->loc.size.screen_emu = glGetUniformLocation(shd->prg, "size_screen_emu")) >= 0) {
@@ -444,7 +439,7 @@ void glsl_shaders_init(_shader *shd) {
 
 	if ((shd->loc.texture.scr = glGetUniformLocation(shd->prg, "texture_scr")) >= 0) {
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, opengl.texture.data);
+		glBindTexture(GL_TEXTURE_2D, opengl.screen.data);
 		glUniform1i(shd->loc.texture.scr, 0);
 	}
 

@@ -41,7 +41,8 @@ struct _opengl {
 
 	SDL_Surface *surface_gl;
 
-	_texture texture;
+	_texture screen;
+
 	_texcoords texcoords;
 	_texcoords quadcoords;
 

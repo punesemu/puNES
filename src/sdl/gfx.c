@@ -464,6 +464,23 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 			}
 		}
 
+		/* TV Aspect Ratio */
+		{
+			if (cfg->tv_aspect_ratio) {
+				if (fullscreen && (cfg->filter == NTSC_FILTER)) {
+					gfx.aspect_ratio = 1.0f;
+				} else {
+					gfx.aspect_ratio = 4.0f / 3.0f;
+				}
+			} else {
+				gfx.aspect_ratio = 1.0f;
+			}
+
+			if (cfg->tv_aspect_ratio && !fullscreen) {
+				gfx.w[VIDEO_MODE] = gfx.h[VIDEO_MODE] * gfx.aspect_ratio;
+			}
+		}
+
 		/* faccio quello che serve prima del setvideo */
 		gui_set_video_mode();
 
@@ -568,7 +585,6 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 			switch (cfg->filter) {
 				case NO_FILTER:
 					glsl_up(scale_surface, SHADER_NO_FILTER);
-					//glsl_up(scale_surface, SHADER_NTSC);
 					break;
 				case BILINEAR:
 					glsl_up(scale_surface, SHADER_NO_FILTER);
@@ -590,10 +606,28 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 					glsl_up(scale_surface, SHADER_CRT4);
 					break;
 				case SCALE2X:
-					glsl_up(scale_surface, SHADER_SCALE2X);
+					/*
+					 * con l'aspect ratio attivo, per
+					 * ottenere un risultato migliore applico
+					 * filtro software.
+					 */
+					if (gfx.aspect_ratio == 1.0f) {
+						glsl_up(scale_surface, SHADER_SCALE2X);
+					} else {
+						gfx.filter = scaleNx;
+					}
 					break;
 				case SCALE3X:
-					glsl_up(scale_surface, SHADER_SCALE3X);
+					/*
+					 * con l'aspect ratio attivo, per
+					 * ottenere un risultato migliore applico
+					 * filtro software.
+					 */
+					if (gfx.aspect_ratio == 1.0f) {
+						glsl_up(scale_surface, SHADER_SCALE3X);
+					} else {
+						gfx.filter = scaleNx;
+					}
 					break;
 				case SCALE4X:
 					glsl_up(scale_surface, SHADER_SCALE4X);
@@ -752,8 +786,8 @@ void gfx_reset_video(void) {
 	if (opengl.surface_gl) {
 		SDL_FreeSurface(opengl.surface_gl);
 	}
-	if (opengl.texture.data) {
-		glDeleteTextures(1, &opengl.texture.data);
+	if (opengl.screen.data) {
+		glDeleteTextures(1, &opengl.screen.data);
 	}
 	opengl.surface_gl = NULL;
 

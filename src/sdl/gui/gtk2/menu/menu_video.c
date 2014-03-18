@@ -15,6 +15,7 @@
 #include "menu_video_rendering.h"
 #include "menu_video_vsync.h"
 #include "menu_video_effect.h"
+#include "menu_video_tv_aspect_ratio.h"
 #include "menu_video_fullscreen.h"
 
 #if defined (__SUNPRO_C)
@@ -94,6 +95,8 @@ void menu_video(GtkWidget *settings, GtkAccelGroup *accel_group) {
 	menu_video_palette(menu, NULL);
 	menu_video_effect(menu, accel_group);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), gtk_separator_menu_item_new());
+	menu_video_tv_aspect_ratio(menu, NULL);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), gtk_separator_menu_item_new());
 	menu_video_fullscreen(menu, accel_group);
 }
 void menu_video_check(void) {
@@ -103,6 +106,7 @@ void menu_video_check(void) {
 	menu_video_vsync_check();
 	menu_video_size_check();
 	menu_video_overscan_check();
+	menu_video_tv_aspect_ratio_check();
 	menu_video_filter_check();
 	menu_video_palette_check();
 	menu_video_effect_check();

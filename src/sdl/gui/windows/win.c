@@ -93,6 +93,7 @@ void set_frame_skip(BYTE frameskip);
 void set_vsync(BYTE vsync);
 void set_scale(BYTE scale);
 void set_overscan(BYTE oscan);
+void set_tv_aspect_ratio(void);
 void set_filter(BYTE filter);
 void set_effect(void);
 void set_samplerate(BYTE samplerate);
@@ -1021,6 +1022,13 @@ void gui_update(void) {
 	}
 	change_menuitem(CHECK, MF_CHECKED, id);
 
+	/* TV Aspect Ratio */
+	if (cfg->tv_aspect_ratio) {
+		change_menuitem(CHECK, MF_CHECKED, IDM_SET_TV_ASPECT_RATIO);
+	} else {
+		change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_TV_ASPECT_RATIO);
+	}
+
 	/* Filter */
 	if (gfx.bit_per_pixel < 32) {
 		change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_HQ2X);
@@ -1209,6 +1217,7 @@ void gui_update(void) {
 
 		change_menuitem(ENAB, MF_ENABLED, IDM_SET_VSYNC_ON);
 		change_menuitem(ENAB, MF_ENABLED, IDM_SET_VSYNC_OFF);
+		change_menuitem(ENAB, MF_ENABLED, IDM_SET_TV_ASPECT_RATIO);
 		change_menuitem(ENAB, MF_ENABLED, IDM_SET_FULLSCREEN);
 		change_menuitem(ENAB, MF_ENABLED, IDM_SET_STRETCHFLSCR);
 
@@ -1234,6 +1243,7 @@ void gui_update(void) {
 		change_menuitem(ENAB, MF_GRAYED, IDM_SET_VSYNC_ON);
 		change_menuitem(ENAB, MF_GRAYED, IDM_SET_VSYNC_OFF);
 		change_menuitem(ENAB, MF_GRAYED, IDM_SET_EFFECT_CUBE);
+		change_menuitem(ENAB, MF_GRAYED, IDM_SET_TV_ASPECT_RATIO);
 		change_menuitem(ENAB, MF_GRAYED, IDM_SET_FULLSCREEN);
 		change_menuitem(ENAB, MF_GRAYED, IDM_SET_STRETCHFLSCR);
 
@@ -1256,9 +1266,9 @@ void gui_update(void) {
 		change_menuitem(CHECK, MF_CHECKED, IDM_SET_VSYNC_OFF);
 	}
 
-	/* Aspect ratio */
+	/* Stretch */
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_STRETCHFLSCR);
-	if (gfx.opengl && !cfg->aspect_ratio) {
+	if (gfx.opengl && !cfg->stretch) {
 		change_menuitem(CHECK, MF_CHECKED, IDM_SET_STRETCHFLSCR);
 	}
 
@@ -1283,7 +1293,7 @@ void gui_update(void) {
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_CHANNELS_MONO);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_CHANNELS_STEREO);
 	switch (cfg->channels) {
-		case MONO:{
+		case MONO: {
 			HMENU menuChannels = GetSubMenu(GetSubMenu(GetSubMenu(main_menu, 2), 3), 1);
 			MENUITEMINFO menuitem;
 
@@ -1744,6 +1754,9 @@ long __stdcall main_win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 				case IDM_SET_OSCAN_DEFAULT_OFF:
 					set_overscan(OSCAN_DEFAULT_OFF);
 					break;
+				case IDM_SET_TV_ASPECT_RATIO:
+					set_tv_aspect_ratio();
+					break;
 				case IDM_SET_FILTER_NO_FILTER:
 					set_filter(NO_FILTER);
 					break;
@@ -1832,7 +1845,7 @@ long __stdcall main_win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 					gui_fullscreen();
 					break;
 				case IDM_SET_STRETCHFLSCR:
-					cfg->aspect_ratio = !cfg->aspect_ratio;
+					cfg->stretch = !cfg->stretch;
 					if (cfg->fullscreen == FULLSCR) {
 						gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE);
 					}
@@ -2435,6 +2448,16 @@ void set_overscan(BYTE oscan) {
 
 	LockWindowUpdate(NULL);
 }
+void set_tv_aspect_ratio(void) {
+	LockWindowUpdate(main_win);
+
+	cfg->tv_aspect_ratio = !cfg->tv_aspect_ratio;
+
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE);
+
+	LockWindowUpdate(NULL);
+}
+
 void set_filter(BYTE filter) {
 	LockWindowUpdate(main_win);
 

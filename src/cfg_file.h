@@ -30,9 +30,10 @@ typedef struct {
 	BYTE ntsc_format;
 	BYTE palette;
 	BYTE vsync;
-	BYTE aspect_ratio;
+	BYTE stretch;
 	BYTE oscan;
 	BYTE oscan_default;
+	BYTE tv_aspect_ratio;
 	BYTE gamegenie;
 
 	_config_input input;

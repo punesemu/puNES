@@ -44,9 +44,9 @@ enum filters_type {
 	CRT_NO_CURVE,
 	/* glsl shaders end */
 };
-enum fullscreen_mode { NO_FULLSCR, FULLSCR };
+enum fullscreen_type { NO_FULLSCR, FULLSCR };
 enum overcan_type { OSCAN_OFF, OSCAN_ON, OSCAN_DEFAULT, OSCAN_DEFAULT_OFF, OSCAN_DEFAULT_ON };
-enum gfx_info_index { CURRENT, NO_OVERSCAN, MONITOR, VIDEO_MODE };
+enum gfx_info_type { CURRENT, NO_OVERSCAN, MONITOR, VIDEO_MODE };
 enum no_change { NO_CHANGE = 255 };
 
 struct _gfx {
@@ -59,6 +59,7 @@ struct _gfx {
 	SDBWORD h[4];
 	float w_pr;
 	float h_pr;
+	float aspect_ratio;
 	gfx_filter_function((*filter));
 } gfx;
 
