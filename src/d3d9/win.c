@@ -1079,7 +1079,7 @@ void gui_update(void) {
 			menuitem.fState = MFS_ENABLED;
 
 			/* Video/Filter/CRT */
-			SetMenuItemInfo(menu_to_change, 5, TRUE, &menuitem);
+			SetMenuItemInfo(menu_to_change, 4, TRUE, &menuitem);
 
 			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_CRTCURVE);
 			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_CRTNOCURVE);
@@ -1091,7 +1091,7 @@ void gui_update(void) {
 			menuitem.fState = MFS_DISABLED;
 
 			/* Video/Filter/CRT */
-			SetMenuItemInfo(menu_to_change, 5, TRUE, &menuitem);
+			SetMenuItemInfo(menu_to_change, 4, TRUE, &menuitem);
 
 			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_CRTCURVE);
 			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_CRTNOCURVE);
@@ -1101,19 +1101,19 @@ void gui_update(void) {
 			menuitem.fState = MFS_ENABLED;
 
 			/* Video/Filter/ScaleX */
-			SetMenuItemInfo(menu_to_change, 6, TRUE, &menuitem);
+			SetMenuItemInfo(menu_to_change, 5, TRUE, &menuitem);
 			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_SCALE2X);
 			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_SCALE3X);
 			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_SCALE4X);
 
 			/* Video/Filter/HqX */
-			SetMenuItemInfo(menu_to_change, 7, TRUE, &menuitem);
+			SetMenuItemInfo(menu_to_change, 6, TRUE, &menuitem);
 			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_HQ2X);
 			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_HQ3X);
 			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_HQ4X);
 
 			/* Video/Filter/NTSC */
-			SetMenuItemInfo(menu_to_change, 8, TRUE, &menuitem);
+			SetMenuItemInfo(menu_to_change, 7, TRUE, &menuitem);
 			change_menuitem(CHECK, MF_ENABLED, IDM_SET_FILTER_RGBNTSCCOM);
 			change_menuitem(CHECK, MF_ENABLED, IDM_SET_FILTER_RGBNTSCSVD);
 			change_menuitem(CHECK, MF_ENABLED, IDM_SET_FILTER_RGBNTSCRGB);
@@ -1121,19 +1121,19 @@ void gui_update(void) {
 			menuitem.fState = MFS_DISABLED;
 
 			/* Video/Filter/ScaleX */
-			SetMenuItemInfo(menu_to_change, 6, TRUE, &menuitem);
+			SetMenuItemInfo(menu_to_change, 5, TRUE, &menuitem);
 			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_SCALE2X);
 			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_SCALE3X);
 			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_SCALE4X);
 
 			/* Video/Filter/HqX */
-			SetMenuItemInfo(menu_to_change, 7, TRUE, &menuitem);
+			SetMenuItemInfo(menu_to_change, 6, TRUE, &menuitem);
 			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_HQ2X);
 			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_HQ3X);
 			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_HQ4X);
 
 			/* Video/Filter/NTSC */
-			SetMenuItemInfo(menu_to_change, 8, TRUE, &menuitem);
+			SetMenuItemInfo(menu_to_change, 7, TRUE, &menuitem);
 			change_menuitem(CHECK, MF_GRAYED, IDM_SET_FILTER_RGBNTSCCOM);
 			change_menuitem(CHECK, MF_GRAYED, IDM_SET_FILTER_RGBNTSCSVD);
 			change_menuitem(CHECK, MF_GRAYED, IDM_SET_FILTER_RGBNTSCRGB);
