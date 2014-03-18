@@ -105,6 +105,7 @@ struct _d3d9 {
 	BOOL interpolation;
 	BYTE scale;
 	FLOAT factor;
+	DWORD text_linear;
 } d3d9;
 
 void d3d9_set_adapter(_d3d9_adapter *adapter);
@@ -371,7 +372,16 @@ BYTE gfx_init(void) {
 	} else {
 		gfx_set_screen(cfg->scale, cfg->filter, NO_FULLSCR, cfg->palette, FALSE);
 	}
-	//gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE);
+
+	switch (gui.version_os) {
+		case WIN_XP64:
+		case WIN_XP:
+			d3d9.text_linear = D3DTEXF_NONE;
+			break;
+		default:
+			d3d9.text_linear = D3DTEXF_LINEAR;
+			break;
+	}
 
 	return (EXIT_OK);
 }
@@ -892,11 +902,11 @@ void gfx_draw_screen(BYTE forced) {
 				IDirect3DDevice9_SetTexture(d3d9.adapter->dev, 0,
 				        (IDirect3DBaseTexture9 * ) d3d9.text.data);
 				IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
-						D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
+						D3DSAMP_MAGFILTER, d3d9.text_linear);
 				IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
-						D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
+						D3DSAMP_MINFILTER, d3d9.text_linear);
 				IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
-						D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
+						D3DSAMP_MIPFILTER, D3DTEXF_NONE);
 				IDirect3DDevice9_SetStreamSource(d3d9.adapter->dev, 0, d3d9.text.quad, 0,
 				        sizeof(vertex));
 				IDirect3DDevice9_DrawPrimitive(d3d9.adapter->dev, D3DPT_TRIANGLEFAN, 0, 2);
@@ -930,11 +940,11 @@ void gfx_draw_screen(BYTE forced) {
 			IDirect3DDevice9_SetTexture(d3d9.adapter->dev, 0,
 					(IDirect3DBaseTexture9 * ) d3d9.text.data);
 			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
-					D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
+					D3DSAMP_MAGFILTER, d3d9.text_linear);
 			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
-					D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
+					D3DSAMP_MINFILTER, d3d9.text_linear);
 			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
-					D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
+					D3DSAMP_MIPFILTER, D3DTEXF_NONE);
 			IDirect3DDevice9_SetStreamSource(d3d9.adapter->dev, 0, d3d9.text.quad, 0,
 			        sizeof(vertex));
 			IDirect3DDevice9_DrawPrimitive(d3d9.adapter->dev, D3DPT_TRIANGLEFAN, 0, 2);
