@@ -635,18 +635,19 @@ BYTE map_init(void) {
 void map_quit(void) {
 	/* se c'e' della PRG Ram battery packed la salvo in un file */
 	if (info.prg.ram.bat.banks) {
-		char prg_ram_file[1024], *last_dot;
+		char prg_ram_file[1024], *fl, *last_dot;
 		FILE *fp;
 
 		/* copio il nome del file nella variabile */
 		if (info.uncompress_rom == TRUE) {
-			strcpy(prg_ram_file, uncomp.compress_archive);
-			dirname(prg_ram_file);
-			strcat(prg_ram_file, "/");
-			strcat(prg_ram_file, basename(uncomp.uncompress_file));
+			fl = uncomp.compress_archive;
 		} else {
 			strcpy(prg_ram_file, info.rom_file);
+			fl = info.rom_file;
 		}
+
+		sprintf(prg_ram_file, "%s" PRB_FOLDER "/%s", info.base_folder, basename(fl));
+
 		/* rintraccio l'ultimo '.' nel nome */
 		last_dot = strrchr(prg_ram_file, '.');
 		/* elimino l'estensione */
@@ -736,18 +737,17 @@ void map_prg_ram_init(void) {
 		prg.ram_plus_8k = &prg.ram_plus[0];
 		/* controllo se la rom ha una RAM PRG battery packed */
 		if (info.prg.ram.bat.banks && !tas.type) {
-			char prg_ram_file[1024], *last_dot;
+			char prg_ram_file[1024], *fl, *last_dot;
 			FILE *fp;
 
 			/* copio il nome del file nella variabile */
 			if (info.uncompress_rom == TRUE) {
-				strcpy(prg_ram_file, uncomp.compress_archive);
-				dirname(prg_ram_file);
-				strcat(prg_ram_file, "/");
-				strcat(prg_ram_file, basename(uncomp.uncompress_file));
+				fl = uncomp.compress_archive;
 			} else {
-				strncpy(prg_ram_file, info.rom_file, sizeof(prg_ram_file));
+				fl = info.rom_file;
 			}
+
+			sprintf(prg_ram_file, "%s" PRB_FOLDER "/%s", info.base_folder, basename(fl));
 
 			/* rintraccio l'ultimo '.' nel nome */
 			last_dot = strrchr(prg_ram_file, '.');
