@@ -35,8 +35,6 @@ void opengl_set_cube3d(SDL_Surface *src) {
 	y_vertex = 1.0f - ((1.0f / ((GLfloat) src->h / 2.0f)) * opengl.quadcoords.b);
 	z_vertex = x_vertex;
 
-	printf("%f\n", z_vertex);
-
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
 	glViewport(0, 0, (GLint) src->w, (GLint) src->h);
