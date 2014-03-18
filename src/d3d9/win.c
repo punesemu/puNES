@@ -2243,7 +2243,7 @@ LRESULT CALLBACK cbt_proc(int code, WPARAM wParam, LPARAM lParam) {
 
 #define BORDER_SIZE 2
 				x = (50 * widht_font);
-				y = (30 * widht_font);
+				y = (33 * widht_font);
 
 				if (rc_button.bottom == 0) {
 					GetClientRect(button, &rc_button);
