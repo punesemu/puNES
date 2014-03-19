@@ -17,7 +17,7 @@ enum {
 static GtkWidget *check[NUMCHKS];
 
 void menu_video_tv_aspect_ratio(GtkWidget *video, GtkAccelGroup *accel_group) {
-	check[MTVASPECTRATIO] = gtk_check_menu_item_new_with_mnemonic("Aspect Ra_tio");
+	check[MTVASPECTRATIO] = gtk_check_menu_item_new_with_mnemonic("_TV Aspect Ratio");
 
 	gtk_menu_shell_append(GTK_MENU_SHELL(video), check[MTVASPECTRATIO]);
 

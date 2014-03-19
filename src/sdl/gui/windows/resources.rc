@@ -207,7 +207,7 @@ BEGIN
 			END
 #endif
 			MENUITEM SEPARATOR
-			MENUITEM "Aspec&t Ratio\t9",          IDM_SET_TV_ASPECT_RATIO
+			MENUITEM "&TV Aspect Ratio\t9",       IDM_SET_TV_ASPECT_RATIO
 			MENUITEM "Interpolation\t0",          IDM_SET_INTERPOLATION
 			MENUITEM SEPARATOR
 			MENUITEM "F&ullscreen\tAlt+Enter",    IDM_SET_FULLSCREEN
