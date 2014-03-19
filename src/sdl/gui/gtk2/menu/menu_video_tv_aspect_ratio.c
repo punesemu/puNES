@@ -21,6 +21,9 @@ void menu_video_tv_aspect_ratio(GtkWidget *video, GtkAccelGroup *accel_group) {
 
 	gtk_menu_shell_append(GTK_MENU_SHELL(video), check[MTVASPECTRATIO]);
 
+	gtk_widget_add_accelerator(check[MTVASPECTRATIO], "activate", accel_group, GDK_9,
+	        (GdkModifierType) 0, GTK_ACCEL_VISIBLE);
+
 	g_signal_connect_swapped(G_OBJECT(check[MTVASPECTRATIO]), "activate",
 	        G_CALLBACK(menu_video_tv_aspect_ratio_set), NULL);
 }

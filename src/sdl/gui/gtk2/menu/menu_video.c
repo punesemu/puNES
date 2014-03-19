@@ -96,8 +96,8 @@ void menu_video(GtkWidget *settings, GtkAccelGroup *accel_group) {
 	menu_video_palette(menu, NULL);
 	menu_video_effect(menu, accel_group);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), gtk_separator_menu_item_new());
-	menu_video_tv_aspect_ratio(menu, NULL);
-	menu_video_interpolation(menu, NULL);
+	menu_video_tv_aspect_ratio(menu, accel_group);
+	menu_video_interpolation(menu, accel_group);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), gtk_separator_menu_item_new());
 	menu_video_fullscreen(menu, accel_group);
 }

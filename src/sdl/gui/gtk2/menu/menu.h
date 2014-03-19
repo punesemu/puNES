@@ -15,6 +15,8 @@
 #include "menu_help.h"
 #include "menu_video_effect.h"
 #include "menu_video_fullscreen.h"
+#include "menu_video_tv_aspect_ratio.h"
+#include "menu_video_interpolation.h"
 
 void menu_create(GtkWidget *win, GtkWidget *mainbox);
 void menu_hide(void);

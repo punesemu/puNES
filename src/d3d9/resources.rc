@@ -42,6 +42,8 @@ BEGIN
 #if defined (SDL)
 	"R",        IDM_SET_EFFECT_CUBE,     VIRTKEY
 #endif
+	"9",        IDM_SET_TV_ASPECT_RATIO, VIRTKEY
+	"0",        IDM_SET_INTERPOLATION,   VIRTKEY
 	"P",        IDM_SET_STRETCHFLSCR,    VIRTKEY
 	"W",        IDM_SET_SAVENOW,         CONTROL, VIRTKEY
 	"A",        IDM_SET_AUDIO_ENABLE,    CONTROL, VIRTKEY
@@ -205,8 +207,8 @@ BEGIN
 			END
 #endif
 			MENUITEM SEPARATOR
-			MENUITEM "Aspec&t Ratio",             IDM_SET_TV_ASPECT_RATIO
-			MENUITEM "Interpolation",             IDM_SET_INTERPOLATION
+			MENUITEM "Aspec&t Ratio\t9",          IDM_SET_TV_ASPECT_RATIO
+			MENUITEM "Interpolation\t0",          IDM_SET_INTERPOLATION
 			MENUITEM SEPARATOR
 			MENUITEM "F&ullscreen\tAlt+Enter",    IDM_SET_FULLSCREEN
 			MENUITEM "S&tretch in fullscreen\tP", IDM_SET_STRETCHFLSCR

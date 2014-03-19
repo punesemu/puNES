@@ -664,6 +664,12 @@ gboolean sock_key_press_event(GtkWidget *widget, GdkEventKey *event) {
 					return (TRUE);
 				}
 				break;
+			case GDK_9:
+				menu_video_tv_aspect_ratio_set();
+				return (TRUE);
+			case GDK_0:
+				menu_video_interpolation_set();
+				return (TRUE);
 			case GDK_p:
 				menu_video_fullscreen_switch_stretch();
 				return (TRUE);

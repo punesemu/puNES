@@ -21,6 +21,9 @@ void menu_video_interpolation(GtkWidget *video, GtkAccelGroup *accel_group) {
 
 	gtk_menu_shell_append(GTK_MENU_SHELL(video), check[MINTERPOLATION]);
 
+	gtk_widget_add_accelerator(check[MINTERPOLATION], "activate", accel_group, GDK_0,
+	        (GdkModifierType) 0, GTK_ACCEL_VISIBLE);
+
 	g_signal_connect_swapped(G_OBJECT(check[MINTERPOLATION]), "activate",
 	        G_CALLBACK(menu_video_interpolation_set), NULL);
 }
