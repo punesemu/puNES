@@ -598,7 +598,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 					 * ottenere un risultato migliore applico
 					 * filtro software.
 					 */
-					if (gfx.aspect_ratio == 1.0f) {
+					if ((gfx.aspect_ratio == 1.0f)  || (opengl.interpolation == TRUE)) {
 						glsl_up(scale_surface, SHADER_SCALE2X);
 					} else {
 						gfx.filter = scaleNx;
@@ -617,30 +617,35 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 					}
 					break;
 				case SCALE4X:
-					glsl_up(scale_surface, SHADER_SCALE4X);
-					/*
-					opengl.scale_force = TRUE;
-					opengl.scale = X2;
-					opengl.factor = X2;
-					opengl.glsl.shader_used = TRUE;
-					shader.id = SHADER_SCALE2X;
-					opengl.effect = scaleNx;
-					use_txt_texture = TRUE;
-					*/
+					if (opengl.interpolation == TRUE) {
+						gfx.filter = scaleNx;
+					} else {
+						glsl_up(scale_surface, SHADER_SCALE4X);
+						/*
+						opengl.scale_force = TRUE;
+						opengl.scale = X2;
+						opengl.factor = X2;
+						opengl.glsl.shader_used = TRUE;
+						shader.id = SHADER_SCALE2X;
+						opengl.effect = scaleNx;
+						use_txt_texture = TRUE;
+						*/
+					}
 					break;
 				case HQ2X:
-					glsl_up(scale_surface, SHADER_HQ2X);
+					if (opengl.interpolation == TRUE) {
+						gfx.filter = hqNx;
+					} else {
+						glsl_up(scale_surface, SHADER_HQ2X);
+					}
 					break;
 				case HQ3X:
 					gfx.filter = hqNx;
 					break;
 				case HQ4X:
-					//gfx.filter = hqNx;
-					/**/
 					glsl_up(hqNx, SHADER_HQ2X);
 					opengl.scale = X2;
 					opengl.factor = X2;
-					/**/
 					break;
 			}
 

@@ -25,6 +25,7 @@
 #define ID3DXBuffer_Release(p) (p)->lpVtbl->Release(p)
 #define ID3DXConstantTable_SetFloatArray(p,a,b,c,d) (p)->lpVtbl->SetFloatArray(p,a,b,c,d)
 #define ID3DXConstantTable_SetMatrix(p,a,b,c) (p)->lpVtbl->SetMatrix(p,a,b,c)
+#define ID3DXConstantTable_Release(p) (p)->lpVtbl->Release(p)
 #define D3D9_ADAPTER(i) (_d3d9_adapter *) ((BYTE *) d3d9.array + (i * sizeof(_d3d9_adapter)))
 #define ntsc_width(wdt, a, flag)\
 {\
@@ -313,9 +314,10 @@ BYTE gfx_init(void) {
 					tmp.id = SHADER_COLOR;
 
 					if (d3d9_create_shader(&tmp) == EXIT_OK) {
-						d3d9_release_shader(&tmp);
 						dev->hlsl_compliant = TRUE;
 					}
+
+					d3d9_release_shader(&tmp);
 				}
 
 				if (dev->hlsl_compliant == FALSE) {
@@ -700,7 +702,11 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 				}
 				break;
 			case HQ2X:
-				hlsl_up(scale_surface, SHADER_HQ2X);
+				if (d3d9.interpolation == TRUE) {
+					gfx.filter = hqNx;
+				} else {
+					hlsl_up(scale_surface, SHADER_HQ2X);
+				}
 				break;
 			case HQ3X:
 				gfx.filter = hqNx;
@@ -1521,28 +1527,29 @@ BYTE d3d9_create_texture(_texture *texture, uint32_t width, uint32_t height) {
 	return (EXIT_OK);
 }
 void d3d9_release_texture(_texture *texture) {
-	if (texture->data) {
-		IDirect3DTexture9_Release(texture->data);
-		texture->data = NULL;
+	if (texture->surface.data) {
+		IDirect3DSurface9_Release(texture->surface.data);
+		texture->surface.data = NULL;
 	}
 
-	texture->w = texture->h = 0;
+	texture->surface.w = texture->surface.h = 0;
 
 	if (texture->map0) {
 		IDirect3DSurface9_Release(texture->map0);
 		texture->map0 = NULL;
 	}
 
-	if (texture->surface.data) {
-		IDirect3DSurface9_Release(texture->surface.data);
-		texture->surface.data = NULL;
-		texture->surface.w = texture->surface.h = 0;
+	if (texture->data) {
+		IDirect3DTexture9_Release(texture->data);
+		texture->data = NULL;
 	}
 
 	if (texture->quad) {
 		IDirect3DVertexBuffer9_Release(texture->quad);
 		texture->quad = NULL;
 	}
+
+	texture->w = texture->h = 0;
 }
 BYTE d3d9_create_shader(_shader *shd) {
 	DWORD flags = 0;
@@ -1560,6 +1567,14 @@ BYTE d3d9_create_shader(_shader *shd) {
 		LPD3DXBUFFER code = NULL, buffer_errors = NULL;
 		HRESULT hr;
 
+#define release_buffer\
+	if (code != NULL) {\
+		ID3DXBuffer_Release(code);\
+	}\
+	if (buffer_errors != NULL) {\
+		ID3DXBuffer_Release(buffer_errors);\
+	}
+
 		hr = D3DXCompileShader(shd->code->vertex,
 				strlen(shd->code->vertex),
 				NULL,
@@ -1570,14 +1585,13 @@ BYTE d3d9_create_shader(_shader *shd) {
 				&code,
 				&buffer_errors,
 				&shd->table_vrt);
-
 		switch (hr) {
 			case D3D_OK:
 				/* creo il vertex shader */
 				IDirect3DDevice9_CreateVertexShader(d3d9.adapter->dev,
 						(DWORD *) ID3DXBuffer_GetBufferPointer(code),
 						&shd->vrt);
-				ID3DXBuffer_Release(code);
+				release_buffer
 				break;
 			case COMPILERSHADER_NOT_FOUND:
 				MessageBox(NULL,
@@ -1585,6 +1599,7 @@ BYTE d3d9_create_shader(_shader *shd) {
 						"or corrupted. Please reinstall the DirectX 10."	,
 						"Error!",
 						MB_ICONEXCLAMATION | MB_OK);
+				release_buffer
 				d3d9_release_shader(shd);
 				return (EXIT_ERROR);
 			default:
@@ -1595,6 +1610,7 @@ BYTE d3d9_create_shader(_shader *shd) {
 					fprintf(stderr, "Vertex shader compile error : %s\n", (const char *) errors);
 					ID3DXBuffer_Release(buffer_errors);
 				}
+				release_buffer
 				d3d9_release_shader(shd);
 				break;
 		}
@@ -1623,7 +1639,6 @@ BYTE d3d9_create_shader(_shader *shd) {
 				IDirect3DDevice9_CreatePixelShader(d3d9.adapter->dev,
 						(DWORD *) ID3DXBuffer_GetBufferPointer(code),
 						&shd->pxl);
-				ID3DXBuffer_Release(code);
 
 				sse[0] = (FLOAT) SCR_ROWS;
 				sse[1] = (FLOAT) SCR_LINES;
@@ -1645,6 +1660,8 @@ BYTE d3d9_create_shader(_shader *shd) {
 				ID3DXConstantTable_SetFloatArray(shd->table_pxl, d3d9.adapter->dev,
 						"aspect_ratio", (CONST FLOAT * ) &ar, 1);
 
+				release_buffer
+
 				/*
 				printf("\n");
 				printf("size_screen_emu : %f - %f\n", sse[0], sse[1]);
@@ -1661,6 +1678,7 @@ BYTE d3d9_create_shader(_shader *shd) {
 						"or corrupted. Please reinstall the DirectX 10."	,
 						"Error!",
 						MB_ICONEXCLAMATION | MB_OK);
+				release_buffer
 				d3d9_release_shader(shd);
 				return (EXIT_ERROR);
 			default:
@@ -1671,9 +1689,13 @@ BYTE d3d9_create_shader(_shader *shd) {
 					fprintf(stderr, "Pixel shader compile error : %s\n", (const char *) errors);
 					ID3DXBuffer_Release(buffer_errors);
 				}
+				release_buffer
 				d3d9_release_shader(shd);
 				break;
 		}
+
+#undef release_buffer
+
 	}
 
 	return (EXIT_OK);
@@ -1684,10 +1706,19 @@ void d3d9_release_shader(_shader *shd) {
 		IDirect3DVertexShader9_Release(shd->vrt);
 		shd->vrt = NULL;
 	}
+	if (shd->table_vrt) {
+		ID3DXConstantTable_Release(shd->table_vrt);
+		shd->table_vrt = NULL;
+	}
+
 	if (shd->pxl) {
 		IDirect3DDevice9_SetPixelShader(d3d9.adapter->dev, NULL);
 		IDirect3DPixelShader9_Release(shd->pxl);
 		shd->pxl = NULL;
+	}
+	if (shd->table_pxl) {
+		ID3DXConstantTable_Release(shd->table_pxl);
+		shd->table_pxl = NULL;
 	}
 }
 int d3d9_power_of_two(int base) {
