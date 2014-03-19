@@ -467,13 +467,6 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 			}
 		}
 
-		/* interpolation */
-		if (gfx.opengl  && opengl.glsl.enabled && cfg->interpolation) {
-			opengl.interpolation = TRUE;
-		} else {
-			opengl.interpolation = FALSE;
-		}
-
 		/* faccio quello che serve prima del setvideo */
 		gui_set_video_mode();
 
@@ -493,6 +486,13 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 		}
 
 		gfx.bit_per_pixel = surface_sdl->format->BitsPerPixel;
+	}
+
+	/* interpolation */
+	if (gfx.opengl  && opengl.glsl.enabled && cfg->interpolation) {
+		opengl.interpolation = TRUE;
+	} else {
+		opengl.interpolation = FALSE;
 	}
 
 	/* paletta */
