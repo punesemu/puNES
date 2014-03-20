@@ -603,7 +603,6 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 	cfg->palette = palette;
 
 	/* TV Aspect Ratio */
-
 	if (cfg->tv_aspect_ratio) {
 		if (fullscreen && (cfg->filter == NTSC_FILTER)) {
 			gfx.aspect_ratio = 1.0f;
