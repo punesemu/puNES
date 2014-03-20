@@ -475,7 +475,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 	}
 
 	/* interpolation */
-	if (gfx.opengl && opengl.glsl.enabled && cfg->interpolation) {
+	if (gfx.opengl && cfg->interpolation) {
 		opengl.interpolation = TRUE;
 	} else {
 		opengl.interpolation = FALSE;

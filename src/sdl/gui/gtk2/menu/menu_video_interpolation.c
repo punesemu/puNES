@@ -28,7 +28,7 @@ void menu_video_interpolation(GtkWidget *video, GtkAccelGroup *accel_group) {
 	        G_CALLBACK(menu_video_interpolation_set), NULL);
 }
 void menu_video_interpolation_check(void) {
-	if (gfx.opengl && opengl.glsl.enabled) {
+	if (gfx.opengl) {
 		gtk_widget_set_sensitive(check[MINTERPOLATION], TRUE);
 	} else {
 		gtk_widget_set_sensitive(check[MINTERPOLATION], FALSE);

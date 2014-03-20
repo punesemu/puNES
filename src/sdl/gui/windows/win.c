@@ -1031,7 +1031,7 @@ void gui_update(void) {
 	}
 
 	/* Interpolation */
-	if (gfx.opengl && opengl.glsl.enabled && cfg->interpolation) {
+	if (gfx.opengl && cfg->interpolation) {
 		change_menuitem(CHECK, MF_CHECKED, IDM_SET_INTERPOLATION);
 	} else {
 		change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_INTERPOLATION);
@@ -1222,11 +1222,7 @@ void gui_update(void) {
 		change_menuitem(ENAB, MF_ENABLED, IDM_SET_VSYNC_ON);
 		change_menuitem(ENAB, MF_ENABLED, IDM_SET_VSYNC_OFF);
 		change_menuitem(ENAB, MF_ENABLED, IDM_SET_TV_ASPECT_RATIO);
-		if (opengl.glsl.enabled) {
-			change_menuitem(ENAB, MF_ENABLED, IDM_SET_INTERPOLATION);
-		} else {
-			change_menuitem(ENAB, MF_GRAYED, IDM_SET_INTERPOLATION);
-		}
+		change_menuitem(ENAB, MF_ENABLED, IDM_SET_INTERPOLATION);
 		change_menuitem(ENAB, MF_ENABLED, IDM_SET_FULLSCREEN);
 		change_menuitem(ENAB, MF_ENABLED, IDM_SET_STRETCHFLSCR);
 
