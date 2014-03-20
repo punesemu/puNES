@@ -396,20 +396,6 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 	}
 
 	/*
-	 * se sono a schermo intero in modalita' opengl, non
-	 * e' necessario fare un SDL_SetMode visto che
-	 * uso una texture ridimensionabile.
-	 */
-	if (gfx.opengl && set_mode) {
-		if ((cfg->fullscreen == FULLSCR) && (fullscreen == cfg->fullscreen)) {
-			/* se e' il primo avvio, non devo mai disabilitare il set_mode */
-			if (!info.on_cfg) {
-				set_mode = FALSE;
-			}
-		}
-	}
-
-	/*
 	 * cfg->scale e cfg->filter posso aggiornarli prima
 	 * del set_mode, mentre cfg->fullscreen e cfg->palette
 	 * devo farlo necessariamente dopo.
@@ -489,7 +475,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 	}
 
 	/* interpolation */
-	if (gfx.opengl  && opengl.glsl.enabled && cfg->interpolation) {
+	if (gfx.opengl && opengl.glsl.enabled && cfg->interpolation) {
 		opengl.interpolation = TRUE;
 	} else {
 		opengl.interpolation = FALSE;
@@ -598,10 +584,10 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 					 * ottenere un risultato migliore applico
 					 * filtro software.
 					 */
-					if ((gfx.aspect_ratio == 1.0f)  || (opengl.interpolation == TRUE)) {
-						glsl_up(scale_surface, SHADER_SCALE2X);
-					} else {
+					if ((gfx.aspect_ratio != 1.0f) || (opengl.interpolation == TRUE)) {
 						gfx.filter = scaleNx;
+					} else {
+						glsl_up(scale_surface, SHADER_SCALE2X);
 					}
 					break;
 				case SCALE3X:
