@@ -1448,6 +1448,13 @@ void gui_fullscreen(void) {
 		if (wp_prev.rcNormalPosition.bottom) {
 			SetWindowPlacement(main_win, &wp_prev);
 		}
+
+		/*
+		 * per sicurezza ricalcolo le dimensioni della finestra
+		 * perchè potrebbe essere cambiata dall'ingresso nel fullscreen per
+		 * la modifica dell'opzione "TV Aspect Ratio".
+		 */
+		gui_set_video_mode();
 	}
 
 	/* visualizzo la finestra */
