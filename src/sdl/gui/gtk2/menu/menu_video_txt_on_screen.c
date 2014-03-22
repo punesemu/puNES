@@ -20,9 +20,6 @@ void menu_video_txt_on_screen(GtkWidget *video, GtkAccelGroup *accel_group) {
 
 	gtk_menu_shell_append(GTK_MENU_SHELL(video), check[MTXTONSCREEN]);
 
-	gtk_widget_add_accelerator(check[MTXTONSCREEN], "activate", accel_group, GDK_9,
-	        (GdkModifierType) 0, GTK_ACCEL_VISIBLE);
-
 	g_signal_connect_swapped(G_OBJECT(check[MTXTONSCREEN]), "activate",
 	        G_CALLBACK(menu_video_txt_on_screen_set), NULL);
 }
