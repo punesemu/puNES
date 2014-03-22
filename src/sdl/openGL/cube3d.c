@@ -92,7 +92,7 @@ void opengl_draw_scene_cube3d(SDL_Surface *surface) {
 		glUseProgram(0);
 	}
 
-	if (opengl_update_txt_texture(TRUE) == EXIT_OK) {
+	if (opengl_update_txt_texture(FALSE) == EXIT_OK) {
 		glDisable(GL_DEPTH_TEST);
 
 		/* disegno la texture del testo */

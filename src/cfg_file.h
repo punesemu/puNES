@@ -36,6 +36,7 @@ typedef struct {
 	BYTE tv_aspect_ratio;
 	BYTE interpolation;
 	BYTE gamegenie;
+	BYTE txt_on_screen;
 
 	_config_input input;
 	_config_apu apu;

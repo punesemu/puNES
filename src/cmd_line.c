@@ -31,9 +31,11 @@ BYTE cmd_line_parse(int argc, char **argv) {
 				/* long options */
 				if (!(strcmp(opt_long[longIndex].name, "swap-duty"))) {
 					param_search(0, optarg, param_no_yes, cfg_from_file.swap_duty = index);
-				} else if (!(strcmp(argv[opt], "portable"))) {
+				} else if (!(strcmp(opt_long[longIndex].name, "portable"))) {
 					/* l'ho gia' controllato quindi qui non faccio niente */
 					;
+				} else if (!(strcmp(opt_long[longIndex].name, "txt-on-screen"))) {
+					param_search(0, optarg, param_no_yes, cfg_from_file.txt_on_screen = index);
 				}
 				break;
 			case 'a':
@@ -168,6 +170,7 @@ void usage(char *name) {
 			"%s\n"
 			"%s\n"
 			"%s\n"
+			"%s\n"
 	};
 
 	usage_string = (char *) malloc(1024 * 8);
@@ -184,6 +187,7 @@ void usage(char *name) {
 			param[P_VSYNC].help,
 			param[P_TV_ASPECT_RATIO].help,
 			param[P_INTERPOLATION].help,
+			param[P_TXT_ON_SCREEN].help,
 			param[P_FSCREEN].help,
 			param[P_STRETCH].help,
 			param[P_AUDIO].help,

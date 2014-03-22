@@ -68,6 +68,7 @@ enum {
 	P_STEREODELAY,
 	P_TV_ASPECT_RATIO,
 	P_INTERPOLATION,
+	P_TXT_ON_SCREEN,
 };
 enum {
 	PGS_SLOT,
@@ -109,6 +110,7 @@ static const struct option opt_long[] = {
 	{ "help",               no_argument,       NULL, 'h'},
 	{ "version",            no_argument,       NULL, 'V'},
 	{ "portable",           no_argument,       NULL,  0 },
+	{ "txt-on-screen",      required_argument, NULL,  0 },
 	{ 0,                    0,                 0,     0 }
 };
 #endif
@@ -281,6 +283,13 @@ static const _param param[] = {
 		"# possible values: yes, no",
 		NULL,
 		"-j, --interpolation       enable interpolation  : yes, no"
+	},
+	{
+		"text on screen",
+		NULL,
+		"# possible values: yes, no",
+		NULL,
+		"    --txt-on-screen       enable messages       : yes, no"
 	},
 };
 static const _param param_pgs[] = {

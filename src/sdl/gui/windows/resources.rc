@@ -209,6 +209,7 @@ BEGIN
 			MENUITEM SEPARATOR
 			MENUITEM "&TV Aspect Ratio\t9",       IDM_SET_TV_ASPECT_RATIO
 			MENUITEM "Interpolation\t0",          IDM_SET_INTERPOLATION
+			MENUITEM "Te&xt on screen",           IDM_SET_TXT_ON_SCREEN
 			MENUITEM SEPARATOR
 			MENUITEM "F&ullscreen\tAlt+Enter",    IDM_SET_FULLSCREEN
 			MENUITEM "S&tretch in fullscreen\tP", IDM_SET_STRETCHFLSCR

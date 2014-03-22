@@ -95,6 +95,7 @@ void set_scale(BYTE scale);
 void set_overscan(BYTE oscan);
 void set_tv_aspect_ratio(void);
 void set_interpolation(void);
+void set_txt_on_screen(void);
 void set_filter(BYTE filter);
 //void set_effect(void);
 void set_samplerate(BYTE samplerate);
@@ -1041,6 +1042,13 @@ void gui_update(void) {
 		change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_INTERPOLATION);
 	}
 
+	/* Text on screen */
+	if (cfg->txt_on_screen) {
+		change_menuitem(CHECK, MF_CHECKED, IDM_SET_TXT_ON_SCREEN);
+	} else {
+		change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_TXT_ON_SCREEN);
+	}
+
 	/* Filter */
 	if (gfx.bit_per_pixel < 32) {
 		change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_HQ2X);
@@ -1752,6 +1760,9 @@ long __stdcall main_win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 				case IDM_SET_INTERPOLATION:
 					set_interpolation();
 					break;
+				case IDM_SET_TXT_ON_SCREEN:
+					set_txt_on_screen();
+					break;
 				case IDM_SET_FILTER_NO_FILTER:
 					set_filter(NO_FILTER);
 					break;
@@ -2424,6 +2435,10 @@ void set_interpolation(void) {
 
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE);
 }
+void set_txt_on_screen(void) {
+	cfg->txt_on_screen = !cfg->txt_on_screen;
+}
+
 void set_filter(BYTE filter) {
 	switch (filter) {
 		case NO_FILTER:

@@ -262,23 +262,24 @@ void opengl_update_scr_texture(SDL_Surface *surface, uint8_t generate_mipmap) {
 }
 
 BYTE opengl_update_txt_texture(uint8_t generate_mipmap) {
-	if (text.on_screen) {
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-		glBindTexture(GL_TEXTURE_2D, opengl.text.data);
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-		if (generate_mipmap && opengl.glew && !GLEW_VERSION_3_1) {
-			glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
-			glGenerateMipmap(GL_TEXTURE_2D);
-		}
-
-		return (EXIT_OK);
+	if (!cfg->txt_on_screen || !text.on_screen) {
+		return (EXIT_ERROR);
 	}
-	return (EXIT_ERROR);
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	glBindTexture(GL_TEXTURE_2D, opengl.text.data);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	if (generate_mipmap && opengl.glew && !GLEW_VERSION_3_1) {
+		glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+
+	return (EXIT_OK);
 }
 void opengl_effect_change(BYTE mode) {
 	if (input_zapper_is_connected((_port *) &port) == TRUE) {
@@ -336,6 +337,10 @@ void opengl_text_clear(_txt_element *ele) {
 	glDisable(GL_TEXTURE_2D);
 }
 void opengl_text_blit(_txt_element *ele, _rect *rect) {
+	if (!cfg->txt_on_screen) {
+		return;
+	}
+
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, opengl.text.data);
 
@@ -498,12 +503,16 @@ void glsl_delete_shaders(_shader *shd) {
 	shd->prg = 0;
 }
 void glsl_print_log(GLuint obj, BYTE ret) {
-	int info_log_length = 0, max_length;
+	int info_log_length = 0, max_length = 0;
 
 	if (glIsShader(obj)) {
 		glGetShaderiv(obj, GL_INFO_LOG_LENGTH, &max_length);
 	} else {
 		glGetProgramiv(obj, GL_INFO_LOG_LENGTH, &max_length);
+	}
+
+	if (max_length == 0) {
+		return;
 	}
 
 	{

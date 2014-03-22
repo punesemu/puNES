@@ -120,6 +120,8 @@ void d3d9_release_texture(_texture *texture);
 BYTE d3d9_create_shader(_shader *shd);
 void d3d9_release_shader(_shader *shd);
 int d3d9_power_of_two(int base);
+INLINE void d3d9_draw_texture_screen(void);
+INLINE void d3d9_draw_texture_text(void);
 
 static BYTE ntsc_width_pixel[5] = {0, 0, 7, 10, 14};
 
@@ -841,8 +843,10 @@ void gfx_draw_screen(BYTE forced) {
 		text_rendering(TRUE);
 
 		/* aggiorno la texture del testo */
-		IDirect3DDevice9_UpdateSurface(d3d9.adapter->dev, d3d9.text.surface.data, NULL,
-				d3d9.text.map0, NULL);
+		if (cfg->txt_on_screen && text.on_screen) {
+			IDirect3DDevice9_UpdateSurface(d3d9.adapter->dev, d3d9.text.surface.data, NULL,
+			        d3d9.text.map0, NULL);
+		}
 
 		/* pulisco la scena */
 		IDirect3DDevice9_Clear(d3d9.adapter->dev, 0, NULL, D3DCLEAR_TARGET,
@@ -860,102 +864,14 @@ void gfx_draw_screen(BYTE forced) {
 
 			ID3DXConstantTable_SetMatrix(d3d9.shader.table_vrt, d3d9.adapter->dev,
 					"m_world_view_projection", &world_view_projection);
-
-			/* faccio il resto */
-			IDirect3DDevice9_SetFVF(d3d9.adapter->dev, FVF);
-
-			/* screen texture */
-			{
-				/* se necessario utilizzo le shaders */
-				if (d3d9.shader.vrt) {
-					IDirect3DDevice9_SetVertexShader(d3d9.adapter->dev, d3d9.shader.vrt);
-				}
-				if (d3d9.shader.pxl) {
-					IDirect3DDevice9_SetPixelShader(d3d9.adapter->dev, d3d9.shader.pxl);
-				}
-				/* disegno la texture dello screen */
-				IDirect3DDevice9_SetTexture(d3d9.adapter->dev, 0,
-				        (IDirect3DBaseTexture9 * ) d3d9.screen.data);
-				if (d3d9.interpolation == TRUE) {
-					IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
-							D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
-					IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
-							D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
-					IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
-							D3DSAMP_MIPFILTER, D3DTEXF_NONE);
-				} else {
-					IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
-							D3DSAMP_MAGFILTER, D3DTEXF_NONE);
-					IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
-							D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
-					IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
-							D3DSAMP_MIPFILTER, D3DTEXF_NONE);
-				}
-				IDirect3DDevice9_SetStreamSource(d3d9.adapter->dev, 0, d3d9.screen.quad, 0,
-				        sizeof(vertex));
-				IDirect3DDevice9_DrawPrimitive(d3d9.adapter->dev, D3DPT_TRIANGLEFAN, 0, 2);
-			}
-
-			/* text texture */
-			{
-				/* disabilito le shaders perche' non devono essere applicate al testo */
-				if (d3d9.shader.vrt) {
-					IDirect3DDevice9_SetVertexShader(d3d9.adapter->dev, NULL);
-				}
-				if (d3d9.shader.pxl) {
-					IDirect3DDevice9_SetPixelShader(d3d9.adapter->dev, NULL);
-				}
-				/* disegno la texture del testo */
-				IDirect3DDevice9_SetTexture(d3d9.adapter->dev, 0,
-				        (IDirect3DBaseTexture9 * ) d3d9.text.data);
-				IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
-						D3DSAMP_MAGFILTER, d3d9.text_linear);
-				IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
-						D3DSAMP_MINFILTER, d3d9.text_linear);
-				IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
-						D3DSAMP_MIPFILTER, D3DTEXF_NONE);
-				IDirect3DDevice9_SetStreamSource(d3d9.adapter->dev, 0, d3d9.text.quad, 0,
-				        sizeof(vertex));
-				IDirect3DDevice9_DrawPrimitive(d3d9.adapter->dev, D3DPT_TRIANGLEFAN, 0, 2);
-			}
-		} else {
-			IDirect3DDevice9_SetFVF(d3d9.adapter->dev, FVF);
-
-			/* disegno la texture dello screen */
-			IDirect3DDevice9_SetTexture(d3d9.adapter->dev, 0,
-					(IDirect3DBaseTexture9 * ) d3d9.screen.data);
-			if (d3d9.interpolation == TRUE) {
-				IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
-						D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
-				IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
-						D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
-				IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
-						D3DSAMP_MIPFILTER, D3DTEXF_NONE);
-			} else {
-				IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
-						D3DSAMP_MAGFILTER, D3DTEXF_NONE);
-				IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
-						D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
-				IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
-						D3DSAMP_MIPFILTER, D3DTEXF_NONE);
-			}
-			IDirect3DDevice9_SetStreamSource(d3d9.adapter->dev, 0, d3d9.screen.quad, 0,
-			        sizeof(vertex));
-			IDirect3DDevice9_DrawPrimitive(d3d9.adapter->dev, D3DPT_TRIANGLEFAN, 0, 2);
-
-			/* disegno la texture del testo */
-			IDirect3DDevice9_SetTexture(d3d9.adapter->dev, 0,
-					(IDirect3DBaseTexture9 * ) d3d9.text.data);
-			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
-					D3DSAMP_MAGFILTER, d3d9.text_linear);
-			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
-					D3DSAMP_MINFILTER, d3d9.text_linear);
-			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
-					D3DSAMP_MIPFILTER, D3DTEXF_NONE);
-			IDirect3DDevice9_SetStreamSource(d3d9.adapter->dev, 0, d3d9.text.quad, 0,
-			        sizeof(vertex));
-			IDirect3DDevice9_DrawPrimitive(d3d9.adapter->dev, D3DPT_TRIANGLEFAN, 0, 2);
 		}
+
+		IDirect3DDevice9_SetFVF(d3d9.adapter->dev, FVF);
+
+		/* disegno la texture dello screen */
+		d3d9_draw_texture_screen();
+		/* disegno la texture del testo */
+		d3d9_draw_texture_text();
 
 		IDirect3DDevice9_EndScene(d3d9.adapter->dev);
 
@@ -1117,6 +1033,10 @@ void gfx_text_blit(_txt_element *ele, _rect *rect) {
 	LONG pitch;
 	unsigned char *psrc, *pdst;
 	int h;
+
+	if (!cfg->txt_on_screen) {
+		return;
+	}
 
 	dst.left = rect->x;
 	dst.top = rect->y;
@@ -1727,4 +1647,62 @@ int d3d9_power_of_two(int base) {
 		pot <<= 1;
 	}
 	return (pot);
+}
+
+INLINE void d3d9_draw_texture_screen(void) {
+	/* se necessario utilizzo le shaders */
+	if (d3d9.shader.vrt) {
+		IDirect3DDevice9_SetVertexShader(d3d9.adapter->dev, d3d9.shader.vrt);
+	}
+	if (d3d9.shader.pxl) {
+		IDirect3DDevice9_SetPixelShader(d3d9.adapter->dev, d3d9.shader.pxl);
+	}
+
+	/* disegno la texture dello screen */
+	IDirect3DDevice9_SetTexture(d3d9.adapter->dev, 0,
+	        (IDirect3DBaseTexture9 * ) d3d9.screen.data);
+	if (d3d9.interpolation == TRUE) {
+		IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
+				D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
+		IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
+				D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
+		IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
+				D3DSAMP_MIPFILTER, D3DTEXF_NONE);
+	} else {
+		IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
+				D3DSAMP_MAGFILTER, D3DTEXF_NONE);
+		IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
+				D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
+		IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
+				D3DSAMP_MIPFILTER, D3DTEXF_NONE);
+	}
+	IDirect3DDevice9_SetStreamSource(d3d9.adapter->dev, 0, d3d9.screen.quad, 0,
+	        sizeof(vertex));
+	IDirect3DDevice9_DrawPrimitive(d3d9.adapter->dev, D3DPT_TRIANGLEFAN, 0, 2);
+}
+INLINE void d3d9_draw_texture_text(void) {
+	if (!cfg->txt_on_screen || !text.on_screen) {
+		return;
+	}
+
+	/* disabilito le shaders perche' non devono essere applicate al testo */
+	if (d3d9.shader.vrt) {
+		IDirect3DDevice9_SetVertexShader(d3d9.adapter->dev, NULL);
+	}
+	if (d3d9.shader.pxl) {
+		IDirect3DDevice9_SetPixelShader(d3d9.adapter->dev, NULL);
+	}
+
+	/* disegno la texture del testo */
+	IDirect3DDevice9_SetTexture(d3d9.adapter->dev, 0,
+	        (IDirect3DBaseTexture9 * ) d3d9.text.data);
+	IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
+			D3DSAMP_MAGFILTER, d3d9.text_linear);
+	IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
+			D3DSAMP_MINFILTER, d3d9.text_linear);
+	IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
+			D3DSAMP_MIPFILTER, D3DTEXF_NONE);
+	IDirect3DDevice9_SetStreamSource(d3d9.adapter->dev, 0, d3d9.text.quad, 0,
+	        sizeof(vertex));
+	IDirect3DDevice9_DrawPrimitive(d3d9.adapter->dev, D3DPT_TRIANGLEFAN, 0, 2);
 }

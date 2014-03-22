@@ -816,6 +816,10 @@ void gfx_text_clear(_txt_element *ele) {
 void gfx_text_blit(_txt_element *ele, _rect *rect) {
 	SDL_Rect src_rect;
 
+	if (!cfg->txt_on_screen) {
+		return;
+	}
+
 	src_rect.x = 0;
 	src_rect.y = 0;
 	src_rect.w = ele->w;

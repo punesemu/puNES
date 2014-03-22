@@ -174,6 +174,8 @@ void cfg_file_parse(void) {
 			        index);
 			/* interpolation */
 			cfg_search(param, P_INTERPOLATION, 0, param_no_yes, cfg_from_file.interpolation = index);
+			/* text on screen */
+			cfg_search(param, P_TXT_ON_SCREEN, 0, param_no_yes, cfg_from_file.txt_on_screen = index);
 			/* fullscreen */
 			cfg_search(param, P_FSCREEN, 0, param_no_yes, cfg_from_file.fullscreen = index);
 			/* stretch in fullscreen */
@@ -267,6 +269,9 @@ void cfg_file_save(void) {
 	/* interpolation */
 	write_param((_param *) param, fp, P_INTERPOLATION,
 	        param_no_yes[cfg_from_file.interpolation].sname);
+	/* text on screen */
+	write_param((_param *) param, fp, P_TXT_ON_SCREEN,
+	        param_no_yes[cfg_from_file.txt_on_screen].sname);
 	/* fullscreen */
 	write_param((_param *) param, fp, P_FSCREEN, param_no_yes[cfg_from_file.fullscreen].sname);
 	/* stretch in fullscreen */
@@ -643,6 +648,7 @@ void set_default(void) {
 	cfg_from_file.vsync = TRUE;
 	cfg_from_file.tv_aspect_ratio = FALSE;
 	cfg_from_file.interpolation = FALSE;
+	cfg_from_file.txt_on_screen = TRUE;
 	cfg_from_file.fullscreen = NO_FULLSCR;
 	cfg_from_file.stretch = FALSE;
 	cfg_from_file.save_on_exit = FALSE;

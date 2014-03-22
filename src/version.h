@@ -13,11 +13,11 @@
 #endif
 
 #define VER1        "0"
-#define VER2        "81"
+#define VER2        "82"
 #define VERSION     VER1 "." VER2 " WIP"
 #define NAME        "puNES"
 #define AUTHOR      "FHorse"
-#define COPYRIGTH   "(C) " AUTHOR " 2014"
+#define COPYRIGTH   "(C) " AUTHOR " 2016"
 #define COMMENT     "Nintendo Entertainment System Emulator"
 #define WEBSITE     "http://forums.nesdev.com/viewtopic.php?f=3&amp;t=6928"
 
