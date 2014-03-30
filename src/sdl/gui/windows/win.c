@@ -91,7 +91,7 @@ void set_mode(BYTE mode);
 void set_rendering(BYTE rendering);
 void set_fps(BYTE fps);
 void set_frame_skip(BYTE frameskip);
-void set_vsync(BYTE vsync);
+void set_vsync(void);
 void set_scale(BYTE scale);
 void set_overscan(BYTE oscan);
 void set_tv_aspect_ratio(void);
@@ -1025,6 +1025,13 @@ void gui_update(void) {
 	}
 	change_menuitem(CHECK, MF_CHECKED, id);
 
+	/* Vsync */
+	if (gfx.opengl && cfg->vsync) {
+		change_menuitem(CHECK, MF_CHECKED, IDM_SET_VSYNC);
+	} else {
+		change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_VSYNC);
+	}
+
 	/* TV Aspect Ratio */
 	if (gfx.opengl && cfg->tv_aspect_ratio) {
 		change_menuitem(CHECK, MF_CHECKED, IDM_SET_TV_ASPECT_RATIO);
@@ -1082,7 +1089,7 @@ void gui_update(void) {
 		/* Video/Rendering/OpenGL GLSL */
 		SetMenuItemInfo(menu_to_change, 2, TRUE, &menuitem);
 
-		menu_to_change = GetSubMenu(GetSubMenu(GetSubMenu(main_menu, 2), 2), 7);
+		menu_to_change = GetSubMenu(GetSubMenu(GetSubMenu(main_menu, 2), 2), 6);
 
 		if (opengl.glsl.enabled) {
 			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_POSPHOR);
@@ -1210,12 +1217,8 @@ void gui_update(void) {
 		HMENU menu_video = GetSubMenu(GetSubMenu(main_menu, 2), 2);
 		MENUITEMINFO menuitem;
 
-		/* VSync */
 		menuitem.cbSize = sizeof(MENUITEMINFO);
 		menuitem.fMask = MIIM_STATE;
-		menuitem.fState = MFS_ENABLED;
-		SetMenuItemInfo(menu_video, 3, TRUE, &menuitem);
-
 		/* questi li abilito solo se non c'e' come input lo zapper */
 		if (input_zapper_is_connected((_port *) &port) == FALSE) {
 			menuitem.fState = MFS_ENABLED;
@@ -1224,12 +1227,12 @@ void gui_update(void) {
 			menuitem.fState = MFS_GRAYED;
 			change_menuitem(ENAB, MF_GRAYED, IDM_SET_EFFECT_CUBE);
 		}
+
 		menuitem.cbSize = sizeof(MENUITEMINFO);
 		menuitem.fMask = MIIM_STATE;
-		SetMenuItemInfo(menu_video, 9, TRUE, &menuitem);
+		SetMenuItemInfo(menu_video, 8, TRUE, &menuitem);
 
-		change_menuitem(ENAB, MF_ENABLED, IDM_SET_VSYNC_ON);
-		change_menuitem(ENAB, MF_ENABLED, IDM_SET_VSYNC_OFF);
+		change_menuitem(ENAB, MF_ENABLED, IDM_SET_VSYNC);
 		change_menuitem(ENAB, MF_ENABLED, IDM_SET_TV_ASPECT_RATIO);
 		change_menuitem(ENAB, MF_ENABLED, IDM_SET_INTERPOLATION);
 		change_menuitem(ENAB, MF_ENABLED, IDM_SET_FULLSCREEN);
@@ -1246,16 +1249,13 @@ void gui_update(void) {
 		HMENU menu_video = GetSubMenu(GetSubMenu(main_menu, 2), 2);
 		MENUITEMINFO menuitem;
 
-		/* VSync */
+		/* Effect */
 		menuitem.cbSize = sizeof(MENUITEMINFO);
 		menuitem.fMask = MIIM_STATE;
 		menuitem.fState = MFS_DISABLED;
-		SetMenuItemInfo(menu_video, 3, TRUE, &menuitem);
-		/* Effect */
-		SetMenuItemInfo(menu_video, 9, TRUE, &menuitem);
+		SetMenuItemInfo(menu_video, 8, TRUE, &menuitem);
 
-		change_menuitem(ENAB, MF_GRAYED, IDM_SET_VSYNC_ON);
-		change_menuitem(ENAB, MF_GRAYED, IDM_SET_VSYNC_OFF);
+		change_menuitem(ENAB, MF_GRAYED, IDM_SET_VSYNC);
 		change_menuitem(ENAB, MF_GRAYED, IDM_SET_EFFECT_CUBE);
 		change_menuitem(ENAB, MF_GRAYED, IDM_SET_TV_ASPECT_RATIO);
 		change_menuitem(ENAB, MF_GRAYED, IDM_SET_INTERPOLATION);
@@ -1270,15 +1270,6 @@ void gui_update(void) {
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_EFFECT_CUBE);
 	if (opengl.rotation) {
 		change_menuitem(CHECK, MF_CHECKED, IDM_SET_EFFECT_CUBE);
-	}
-
-	/* Vsync */
-	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_VSYNC_ON);
-	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_VSYNC_OFF);
-	if (cfg->vsync) {
-		change_menuitem(CHECK, MF_CHECKED, IDM_SET_VSYNC_ON);
-	} else {
-		change_menuitem(CHECK, MF_CHECKED, IDM_SET_VSYNC_OFF);
 	}
 
 	/* Stretch */
@@ -1863,11 +1854,8 @@ long __stdcall main_win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 				case IDM_SET_EFFECT_CUBE:
 					set_effect();
 					break;
-				case IDM_SET_VSYNC_ON:
-					set_vsync(TRUE);
-					break;
-				case IDM_SET_VSYNC_OFF:
-					set_vsync(FALSE);
+				case IDM_SET_VSYNC:
+					set_vsync();
 					break;
 				case IDM_SET_FULLSCREEN:
 					gui_fullscreen();
@@ -2405,11 +2393,7 @@ void set_frame_skip(BYTE frameskip) {
 
 	gui_update();
 }
-void set_vsync(BYTE vsync) {
-	if (cfg->vsync == vsync) {
-		return;
-	}
-
+void set_vsync(void) {
 	/*
 	 * se non nascondo la finestra, al momento del
 	 * SDL_QuitSubSystem e del SDL_InitSubSystem
@@ -2418,7 +2402,7 @@ void set_vsync(BYTE vsync) {
 	ShowWindow(main_win, SW_HIDE);
 
 	/* switch vsync */
-	cfg->vsync = vsync;
+	cfg->vsync = !cfg->vsync;
 
 	gfx_reset_video();
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE);

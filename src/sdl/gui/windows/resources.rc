@@ -136,11 +136,6 @@ BEGIN
 				MENUITEM "8",                     IDM_SET_FSK_8
 				MENUITEM "9",                     IDM_SET_FSK_9
 			END
-			POPUP "&VSync"
-			BEGIN
-				MENUITEM "&On",                   IDM_SET_VSYNC_ON
-				MENUITEM "O&ff",                  IDM_SET_VSYNC_OFF
-			END
 			MENUITEM SEPARATOR
 			POPUP "&Size"
 			BEGIN
@@ -209,6 +204,7 @@ BEGIN
 			END
 #endif
 			MENUITEM SEPARATOR
+			MENUITEM "&Vsync",                    IDM_SET_VSYNC
 			MENUITEM "&TV Aspect Ratio\t9",       IDM_SET_TV_ASPECT_RATIO
 			MENUITEM "Interpolation\t0",          IDM_SET_INTERPOLATION
 			MENUITEM "Te&xt on screen",           IDM_SET_TXT_ON_SCREEN

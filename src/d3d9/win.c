@@ -91,7 +91,7 @@ void set_mode(BYTE mode);
 void set_rendering(BYTE rendering);
 void set_fps(BYTE fps);
 void set_frame_skip(BYTE frameskip);
-void set_vsync(BYTE vsync);
+void set_vsync(void);
 void set_scale(BYTE scale);
 void set_overscan(BYTE oscan);
 void set_tv_aspect_ratio(void);
@@ -1029,6 +1029,13 @@ void gui_update(void) {
 	}
 	change_menuitem(CHECK, MF_CHECKED, id);
 
+	/* Vsync */
+	if (cfg->vsync) {
+		change_menuitem(CHECK, MF_CHECKED, IDM_SET_VSYNC);
+	} else {
+		change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_VSYNC);
+	}
+
 	/* TV Aspect Ratio */
 	if (cfg->tv_aspect_ratio) {
 		change_menuitem(CHECK, MF_CHECKED, IDM_SET_TV_ASPECT_RATIO);
@@ -1078,7 +1085,7 @@ void gui_update(void) {
 		/* Video/Rendering/HLSL */
 		SetMenuItemInfo(menu_to_change, 1, TRUE, &menuitem);
 
-		menu_to_change = GetSubMenu(GetSubMenu(GetSubMenu(main_menu, 2), 2), 7);
+		menu_to_change = GetSubMenu(GetSubMenu(GetSubMenu(main_menu, 2), 2), 6);
 
 		if ((gfx.hlsl.enabled == TRUE) && (cfg->scale != X1)) {
 			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_POSPHOR);
@@ -1250,15 +1257,6 @@ void gui_update(void) {
 		id = IDM_SET_RENDERING_SOFTWARE;
 	}
 	change_menuitem(CHECK, MF_CHECKED, id);
-
-	/* Vsync */
-	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_VSYNC_ON);
-	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_VSYNC_OFF);
-	if (cfg->vsync) {
-		change_menuitem(CHECK, MF_CHECKED, IDM_SET_VSYNC_ON);
-	} else {
-		change_menuitem(CHECK, MF_CHECKED, IDM_SET_VSYNC_OFF);
-	}
 
 	/* Stretch */
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_STRETCHFLSCR);
@@ -1841,11 +1839,8 @@ long __stdcall main_win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 					set_effect();
 					break;
 				*/
-				case IDM_SET_VSYNC_ON:
-					set_vsync(TRUE);
-					break;
-				case IDM_SET_VSYNC_OFF:
-					set_vsync(FALSE);
+				case IDM_SET_VSYNC:
+					set_vsync();
 					break;
 				case IDM_SET_FULLSCREEN:
 					gui_fullscreen();
@@ -2375,13 +2370,9 @@ void set_frame_skip(BYTE frameskip) {
 
 	gui_update();
 }
-void set_vsync(BYTE vsync) {
-	if (cfg->vsync == vsync) {
-		return;
-	}
-
+void set_vsync(void) {
 	/* switch vsync */
-	cfg->vsync = vsync;
+	cfg->vsync = !cfg->vsync;
 
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE);
 }

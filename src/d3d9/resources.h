@@ -95,6 +95,7 @@
 #define IDM_SET_OSCAN_DEFAULT_OFF   374
 #define IDM_SET_OSCAN_BRDS          375
 
+#define IDM_SET_VSYNC               376
 #define IDM_SET_TV_ASPECT_RATIO     377
 #define IDM_SET_INTERPOLATION       378
 #define IDM_SET_TXT_ON_SCREEN       379
@@ -130,10 +131,8 @@
 #define IDM_SET_RENDERING_HLSL      421
 #endif
 #define IDM_SET_EFFECT_CUBE         423
-#define IDM_SET_VSYNC_ON            424
-#define IDM_SET_VSYNC_OFF           425
-#define IDM_SET_FULLSCREEN          426
-#define IDM_SET_STRETCHFLSCR        427
+#define IDM_SET_FULLSCREEN          424
+#define IDM_SET_STRETCHFLSCR        425
 
 #define IDM_SET_SAVENOW             430
 #define IDM_SET_SAVEONEXIT          431

@@ -89,7 +89,6 @@ void menu_video(GtkWidget *settings, GtkAccelGroup *accel_group) {
 	menu_video_rendering(menu, NULL);
 	menu_video_fps(menu, NULL);
 	menu_video_frame_skip(menu, NULL);
-	menu_video_vsync(menu, NULL);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), gtk_separator_menu_item_new());
 	menu_video_size(menu, accel_group);
 	menu_video_overscan(menu, NULL);
@@ -97,6 +96,7 @@ void menu_video(GtkWidget *settings, GtkAccelGroup *accel_group) {
 	menu_video_palette(menu, NULL);
 	menu_video_effect(menu, accel_group);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), gtk_separator_menu_item_new());
+	menu_video_vsync(menu, NULL);
 	menu_video_tv_aspect_ratio(menu, accel_group);
 	menu_video_interpolation(menu, accel_group);
 	menu_video_txt_on_screen(menu, NULL);
@@ -107,9 +107,9 @@ void menu_video_check(void) {
 	menu_video_rendering_check();
 	menu_video_fps_check();
 	menu_video_frame_skip_check();
-	menu_video_vsync_check();
 	menu_video_size_check();
 	menu_video_overscan_check();
+	menu_video_vsync_check();
 	menu_video_tv_aspect_ratio_check();
 	menu_video_interpolation_check();
 	menu_video_txt_on_screen_check();
