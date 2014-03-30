@@ -6,6 +6,7 @@
 C_SRCS += \
 ../src/sdl/gui/gtk2/cfg_apu_channels.c \
 ../src/sdl/gui/gtk2/cfg_input.c \
+../src/sdl/gui/gtk2/cfg_overscan_borders.c \
 ../src/sdl/gui/gtk2/cfg_std_pad.c \
 ../src/sdl/gui/gtk2/gtk2.c \
 ../src/sdl/gui/gtk2/gtk_wrap.c \
@@ -17,6 +18,7 @@ C_SRCS += \
 OBJS += \
 ./src/sdl/gui/gtk2/cfg_apu_channels.o \
 ./src/sdl/gui/gtk2/cfg_input.o \
+./src/sdl/gui/gtk2/cfg_overscan_borders.o \
 ./src/sdl/gui/gtk2/cfg_std_pad.o \
 ./src/sdl/gui/gtk2/gtk2.o \
 ./src/sdl/gui/gtk2/gtk_wrap.o \
@@ -28,6 +30,7 @@ OBJS += \
 C_DEPS += \
 ./src/sdl/gui/gtk2/cfg_apu_channels.d \
 ./src/sdl/gui/gtk2/cfg_input.d \
+./src/sdl/gui/gtk2/cfg_overscan_borders.d \
 ./src/sdl/gui/gtk2/cfg_std_pad.d \
 ./src/sdl/gui/gtk2/gtk2.d \
 ./src/sdl/gui/gtk2/gtk_wrap.d \

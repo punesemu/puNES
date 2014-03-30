@@ -16,7 +16,8 @@ enum glade_h_name {
 	APU_CHANNELS_DIALOG,
 	INPUT_DIALOG,
 	INPUT_STD_PAD_DIALOG,
-	UNCOMPRESS_SELECTION_DIALOG
+	UNCOMPRESS_SELECTION_DIALOG,
+	OVERSCAN_BORDERS_DIALOG
 };
 
 #define _gw_get_object(builder, obj, type_object) type_object(gtk_builder_get_object(builder, obj))
@@ -30,6 +31,7 @@ enum glade_h_name {
 #define _gw_get_range(builder, obj) _gw_get_object(builder, obj, GTK_RANGE)
 #define _gw_get_treeview(builder, obj) _gw_get_object(builder, obj, GTK_TREE_VIEW)
 #define _gw_get_treeviewcolumn(builder, obj) _gw_get_object(builder, obj, GTK_TREE_VIEW_COLUMN)
+#define _gw_get_spinbutton(builder, obj) _gw_get_object(builder, obj, GTK_SPIN_BUTTON)
 
 void gw_image_from_inline(GtkWidget *widget, const guint8 *data);
 

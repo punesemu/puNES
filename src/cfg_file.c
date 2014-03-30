@@ -103,6 +103,17 @@
 		continue;\
 	}\
 }
+#define cfg_ovscan_search(structp, prm, desc, md)\
+{\
+	char buf[MAXLEN];\
+	memset(buf, 0x00, MAXLEN);\
+	strcpy(buf, structp[prm].lname);\
+	trim_space(buf);\
+	if (strcmp(key, buf) == 0) {\
+		param_ovscan_search(value, md);\
+		continue;\
+	}\
+}
 
 void set_default(void);
 void set_default_pgs(void);
@@ -112,6 +123,7 @@ void write_double_param(_param *prmtr, FILE *fp, BYTE prm, double value);
 void write_int_param(_param *prmtr, FILE *fp, BYTE prm, int value);
 void write_apu_channel_param(_param *prmtr, FILE *fp, BYTE prm);
 void write_input_param(_param *prmtr, FILE *fp, BYTE end, _port port, BYTE numport, BYTE type);
+void write_ovascan_param(_param *prmtr, FILE *fp, BYTE prm, BYTE mode);
 BYTE name_pgs_file(char *file);
 
 void cfg_file_init(void) {
@@ -176,6 +188,10 @@ void cfg_file_parse(void) {
 			cfg_search(param, P_INTERPOLATION, 0, param_no_yes, cfg_from_file.interpolation = index);
 			/* text on screen */
 			cfg_search(param, P_TXT_ON_SCREEN, 0, param_no_yes, cfg_from_file.txt_on_screen = index);
+			/* overscan borders NTSC */
+			cfg_ovscan_search(param, P_OVERSCAN_BRD_NTSC, 0, 0)
+			/* overscan borders PAL */
+			cfg_ovscan_search(param, P_OVERSCAN_BRD_PAL, 0, 1)
 			/* fullscreen */
 			cfg_search(param, P_FSCREEN, 0, param_no_yes, cfg_from_file.fullscreen = index);
 			/* stretch in fullscreen */
@@ -272,6 +288,10 @@ void cfg_file_save(void) {
 	/* text on screen */
 	write_param((_param *) param, fp, P_TXT_ON_SCREEN,
 	        param_no_yes[cfg_from_file.txt_on_screen].sname);
+	/* overscan borders NTSC */
+	write_ovascan_param((_param *) param, fp, P_OVERSCAN_BRD_NTSC, 0);
+	/* overscan borders PAL */
+	write_ovascan_param((_param *) param, fp, P_OVERSCAN_BRD_PAL, 1);
 	/* fullscreen */
 	write_param((_param *) param, fp, P_FSCREEN, param_no_yes[cfg_from_file.fullscreen].sname);
 	/* stretch in fullscreen */
@@ -625,6 +645,21 @@ char *cfg_file_set_kbd_joy_button_default(int index, int mode, int button) {
 
 	return(default_value_port[index][mode][button]);
 }
+void cfg_file_set_overscan_default(_overscan_borders *ob, BYTE mode) {
+	if (mode == NTSC) {
+		/* NTSC */
+		ob->left = 8;
+		ob->right = 9;
+		ob->up = 8;
+		ob->down = 8;
+	} else {
+		/* PAL/Dendy */
+		ob->left = 8;
+		ob->right = 9;
+		ob->up = 8;
+		ob->down = 8;
+	}
+}
 
 void set_default(void) {
 	cfg_from_file.mode = AUTO;
@@ -668,6 +703,10 @@ void set_default(void) {
 	cfg_from_file.swap_duty = 0;
 
 	cfg_from_file.gamegenie = FALSE;
+
+	cfg_file_set_overscan_default(&overscan_borders[0], NTSC);
+	cfg_file_set_overscan_default(&overscan_borders[1], PAL);
+	overscan.borders = &overscan_borders[0];
 
 	{
 		_array_pointers_port array;
@@ -725,7 +764,6 @@ void write_int_param(_param *prmtr, FILE *fp, BYTE prm, int value) {
 	}
 	fprintf(fp, "%s = %d\n", prmtr[prm].lname, value);
 }
-
 void write_apu_channel_param(_param *prmtr, FILE *fp, BYTE prm) {
 	if (prmtr[prm].comment1 != NULL) {
 		fprintf(fp, "%s\n", prmtr[prm].comment1);
@@ -758,6 +796,16 @@ void write_input_param(_param *prmtr, FILE *fp, BYTE end, _port port, BYTE numpo
 			        keyval_to_name(port.input[KEYBOARD][index]));
 		}
 	}
+}
+void write_ovascan_param(_param *prmtr, FILE *fp, BYTE prm, BYTE mode) {
+	if (prmtr[prm].comment1 != NULL) {
+		fprintf(fp, "%s\n", prmtr[prm].comment1);
+	}
+	if (prmtr[prm].comment2 != NULL) {
+		fprintf(fp, "%s\n", prmtr[prm].comment2);
+	}
+	fprintf(fp, "%s = %d,%d,%d,%d\n\n", prmtr[prm].lname, overscan_borders[mode].up,
+			overscan_borders[mode].down, overscan_borders[mode].left, overscan_borders[mode].right);
 }
 BYTE name_pgs_file(char *file) {
 	char ext[10], *last_dot;

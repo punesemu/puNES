@@ -36,6 +36,7 @@
 #include "recent_roms.h"
 #include "cfg_input.h"
 #include "cfg_apu_channels.h"
+#include "cfg_overscan_borders.h"
 #include "l7zip/l7z.h"
 #include "uncompress_selection.h"
 
@@ -1753,6 +1754,9 @@ long __stdcall main_win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 					break;
 				case IDM_SET_OSCAN_DEFAULT_OFF:
 					set_overscan(OSCAN_DEFAULT_OFF);
+					break;
+				case IDM_SET_OSCAN_BRDS:
+					cfg_overscan_borders_dialog(hwnd);
 					break;
 				case IDM_SET_TV_ASPECT_RATIO:
 					set_tv_aspect_ratio();

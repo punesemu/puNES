@@ -72,10 +72,10 @@ gfx_filter_function(scaleNx) {
 	scl2x.startx = 0;
 
 	if (overscan.enabled) {
-		scl2x.sy += overscan.up;
-		scl2x.lines += overscan.up;
-		scl2x.rows += overscan.left;
-		scl2x.startx = overscan.left;
+		scl2x.sy += overscan.borders->up;
+		scl2x.lines += overscan.borders->up;
+		scl2x.rows += overscan.borders->left;
+		scl2x.startx = overscan.borders->left;
 	}
 
 	if (factor == 1) {

@@ -10,12 +10,24 @@
 
 #include "common.h"
 
-struct _overscan {
-	BYTE enabled;
+enum overscan_limit {
+	OVERSCAN_BORDERS_MIN = 0, OVERSCAN_BORDERS_MAX = 17
+};
+
+typedef struct {
 	BYTE up;
 	BYTE down;
 	BYTE left;
 	BYTE right;
+} _overscan_borders;
+
+struct overscan {
+	BYTE enabled;
+	_overscan_borders *borders;
 } overscan;
+
+_overscan_borders overscan_borders[2];
+
+BYTE overscan_set_mode(BYTE mode);
 
 #endif /* OVERSCAN_H_ */

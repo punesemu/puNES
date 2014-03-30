@@ -79,7 +79,7 @@ gfx_filter_function(ntsc_surface) {
 	int y;
 
 	if (overscan.enabled) {
-		screen += (SCR_ROWS * overscan.up);
+		screen += (SCR_ROWS * overscan.borders->up);
 	}
 
 	if (factor == 1) {

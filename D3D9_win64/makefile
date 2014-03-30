@@ -43,7 +43,7 @@ punes64.d3d9.exe: $(OBJS) $(USER_OBJS)
 
 # Other Targets
 clean:
-	-$(RM) $(OBJS)$(C_DEPS)$(EXECUTABLES) punes64.d3d9.exe
+	-$(RM) $(EXECUTABLES)$(OBJS)$(C_DEPS) punes64.d3d9.exe
 	-@echo ' '
 
 pre-build:

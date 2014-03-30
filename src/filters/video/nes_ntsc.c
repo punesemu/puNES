@@ -634,7 +634,7 @@ void nes_ntscx2(nes_ntsc_t const* ntsc, NES_NTSC_IN_T const* input, long in_row_
 			unsigned color_;
 
 			chunk_count++;
-			line_in += overscan.left;
+			line_in += overscan.borders->left;
 
 			kernel0 = (color_ = (line_in[0]), NES_NTSC_ENTRY_( ktable, color_ ));
 			kernel1 = (color_ = (line_in[1]), NES_NTSC_ENTRY_( ktable, color_ ));
@@ -710,7 +710,7 @@ void nes_ntscx3(nes_ntsc_t const* ntsc, NES_NTSC_IN_T const* input, long in_row_
 			unsigned color_;
 
 			chunk_count++;
-			line_in += overscan.left;
+			line_in += overscan.borders->left;
 
 			kernel0 = (color_ = (line_in[0]), NES_NTSC_ENTRY_( ktable, color_ ));
 			kernel1 = (color_ = (line_in[1]), NES_NTSC_ENTRY_( ktable, color_ ));
@@ -794,7 +794,7 @@ void nes_ntscx4(nes_ntsc_t const* ntsc, NES_NTSC_IN_T const* input, long in_row_
 			unsigned color_;
 
 			chunk_count++;
-			line_in += overscan.left;
+			line_in += overscan.borders->left;
 
 			kernel0 = (color_ = (line_in[0]), NES_NTSC_ENTRY_( ktable, color_ ));
 			kernel1 = (color_ = (line_in[1]), NES_NTSC_ENTRY_( ktable, color_ ));

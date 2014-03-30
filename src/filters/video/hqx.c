@@ -34,11 +34,11 @@ gfx_filter_function(hqNx) {
 	hqnx.startx = 0;
 
 	if (overscan.enabled) {
-		hqnx.sy += overscan.up;
-		hqnx.lines += overscan.up;
-		hqnx.rows += overscan.left;
-		hqnx.startx = overscan.left;
-		screen += (SCR_ROWS * overscan.up);
+		hqnx.sy += overscan.borders->up;
+		hqnx.lines += overscan.borders->up;
+		hqnx.rows += overscan.borders->left;
+		hqnx.startx = overscan.borders->left;
+		screen += (SCR_ROWS * overscan.borders->up);
 	}
 
 	if (factor == 1) {

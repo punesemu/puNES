@@ -31,6 +31,7 @@ C_SRCS += \
 ../src/sdl/gui/gtk2/menu/menu_video_rendering.c \
 ../src/sdl/gui/gtk2/menu/menu_video_size.c \
 ../src/sdl/gui/gtk2/menu/menu_video_tv_aspect_ratio.c \
+../src/sdl/gui/gtk2/menu/menu_video_txt_on_screen.c \
 ../src/sdl/gui/gtk2/menu/menu_video_vsync.c 
 
 OBJS += \
@@ -61,6 +62,7 @@ OBJS += \
 ./src/sdl/gui/gtk2/menu/menu_video_rendering.o \
 ./src/sdl/gui/gtk2/menu/menu_video_size.o \
 ./src/sdl/gui/gtk2/menu/menu_video_tv_aspect_ratio.o \
+./src/sdl/gui/gtk2/menu/menu_video_txt_on_screen.o \
 ./src/sdl/gui/gtk2/menu/menu_video_vsync.o 
 
 C_DEPS += \
@@ -91,6 +93,7 @@ C_DEPS += \
 ./src/sdl/gui/gtk2/menu/menu_video_rendering.d \
 ./src/sdl/gui/gtk2/menu/menu_video_size.d \
 ./src/sdl/gui/gtk2/menu/menu_video_tv_aspect_ratio.d \
+./src/sdl/gui/gtk2/menu/menu_video_txt_on_screen.d \
 ./src/sdl/gui/gtk2/menu/menu_video_vsync.d 
 
 

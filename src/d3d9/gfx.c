@@ -131,11 +131,6 @@ BYTE gfx_init(void) {
 		cfg->scale = X2;
 	}
 
-	overscan.left = 8;
-	overscan.right = 9;
-	overscan.up = 8;
-	overscan.down = 8;
-
 	if (gui_create() == EXIT_ERROR) {
 		MessageBox(NULL, "Gui initialization failed", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
@@ -432,8 +427,8 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 		}
 
 		if (overscan.enabled) {
-			gfx.rows -= (overscan.left + overscan.right);
-			gfx.lines -= (overscan.up + overscan.down);
+			gfx.rows -= (overscan.borders->left + overscan.borders->right);
+			gfx.lines -= (overscan.borders->up + overscan.borders->down);
 		}
 	}
 
@@ -743,7 +738,13 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 
 		/* TV Aspect Ratio */
 		if (cfg->tv_aspect_ratio && !fullscreen) {
-			gfx.w[VIDEO_MODE] = gfx.h[VIDEO_MODE] * gfx.aspect_ratio;
+			float ar = ((gfx.h[NO_OVERSCAN] * gfx.aspect_ratio) / SCR_ROWS);
+
+			if (overscan.enabled) {
+				ar *= (overscan.borders->right + overscan.borders->left);
+			}
+
+			gfx.w[VIDEO_MODE] = (gfx.h[NO_OVERSCAN] * gfx.aspect_ratio) - ar;
 		}
 
 		ShowWindow(gui_main_window_id(), SW_HIDE);

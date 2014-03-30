@@ -382,8 +382,8 @@ BYTE input_rd_reg_zapper(BYTE openbus, WORD **screen_index, BYTE nport) {
 		y_zapper = gy / gfx.h_pr;
 
 		if (overscan.enabled) {
-			x_zapper += overscan.left;
-			y_zapper += overscan.up;
+			x_zapper += overscan.borders->left;
+			y_zapper += overscan.borders->up;
 			/*
 			 * il filtro NTSC necessita di un'aggiustatina sia con
 			 * l'overscan abilitato che senza.

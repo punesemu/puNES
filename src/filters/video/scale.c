@@ -31,10 +31,10 @@ gfx_filter_function(scale_surface) {
 	scl.startx = 0;
 
 	if (overscan.enabled) {
-		scl.sy += overscan.up;
-		scl.lines += overscan.up;
-		scl.rows += overscan.left;
-		scl.startx = overscan.left;
+		scl.sy += overscan.borders->up;
+		scl.lines += overscan.borders->up;
+		scl.rows += overscan.borders->left;
+		scl.startx = overscan.borders->left;
 	}
 
 	if (factor == 1) {

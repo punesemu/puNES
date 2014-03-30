@@ -21,6 +21,7 @@ C_SRCS += \
 ../src/irql2f.c \
 ../src/main.c \
 ../src/mappers.c \
+../src/overscan.c \
 ../src/ppu.c \
 ../src/recent_roms.c \
 ../src/save_slot.c \
@@ -48,6 +49,7 @@ OBJS += \
 ./src/irql2f.o \
 ./src/main.o \
 ./src/mappers.o \
+./src/overscan.o \
 ./src/ppu.o \
 ./src/recent_roms.o \
 ./src/save_slot.o \
@@ -75,6 +77,7 @@ C_DEPS += \
 ./src/irql2f.d \
 ./src/main.d \
 ./src/mappers.d \
+./src/overscan.d \
 ./src/ppu.d \
 ./src/recent_roms.d \
 ./src/save_slot.d \

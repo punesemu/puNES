@@ -6,6 +6,7 @@
 C_SRCS += \
 ../src/d3d9/cfg_apu_channels.c \
 ../src/d3d9/cfg_input.c \
+../src/d3d9/cfg_overscan_borders.c \
 ../src/d3d9/cfg_std_pad.c \
 ../src/d3d9/gfx.c \
 ../src/d3d9/joystick.c \
@@ -17,6 +18,7 @@ C_SRCS += \
 OBJS += \
 ./src/d3d9/cfg_apu_channels.o \
 ./src/d3d9/cfg_input.o \
+./src/d3d9/cfg_overscan_borders.o \
 ./src/d3d9/cfg_std_pad.o \
 ./src/d3d9/gfx.o \
 ./src/d3d9/joystick.o \
@@ -28,6 +30,7 @@ OBJS += \
 C_DEPS += \
 ./src/d3d9/cfg_apu_channels.d \
 ./src/d3d9/cfg_input.d \
+./src/d3d9/cfg_overscan_borders.d \
 ./src/d3d9/cfg_std_pad.d \
 ./src/d3d9/gfx.d \
 ./src/d3d9/joystick.d \

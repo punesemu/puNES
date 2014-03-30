@@ -44,6 +44,18 @@
 		}\
 	}\
 }
+#define param_ovscan_search(buffer, md)\
+{\
+	BYTE index, *dst = (BYTE *) &overscan_borders[md];\
+	char *c = strtok(buffer, ",");\
+	for(index = 0; index < 4; index++) {\
+		if (c == NULL) {\
+			break;\
+		}\
+		(*(dst + index)) = atoi(c);\
+		c = strtok(NULL, ",");\
+	}\
+}
 
 enum {
 	P_MODE,
@@ -69,6 +81,8 @@ enum {
 	P_TV_ASPECT_RATIO,
 	P_INTERPOLATION,
 	P_TXT_ON_SCREEN,
+	P_OVERSCAN_BRD_NTSC,
+	P_OVERSCAN_BRD_PAL,
 };
 enum {
 	PGS_SLOT,
@@ -111,6 +125,8 @@ static const struct option opt_long[] = {
 	{ "version",            no_argument,       NULL, 'V'},
 	{ "portable",           no_argument,       NULL,  0 },
 	{ "txt-on-screen",      required_argument, NULL,  0 },
+	{ "overscan-brd-ntsc",  required_argument, NULL,  0 },
+	{ "overscan-brd-pal",   required_argument, NULL,  0 },
 	{ 0,                    0,                 0,     0 }
 };
 #endif
@@ -291,6 +307,20 @@ static const _param param[] = {
 		NULL,
 		"    --txt-on-screen       enable messages       : yes, no"
 	},
+	{
+		"overscan bordes NTSC",
+		NULL,
+		"# possible values: 1-17",
+		"# format string  : [UP],[DOWN],[LEFT],[RIGHT]",
+		"    --overscan-brd-ntsc   borders in pixels     : [UP],[DOWN],[LEFT],[RIGHT]"
+	},
+	{
+		"overscan bordes PAL",
+		NULL,
+		"# possible values: 1-17",
+		"# format string  : [UP],[DOWN],[LEFT],[RIGHT]",
+		"    --overscan-brd-pal    borders in pixels     : [UP],[DOWN],[LEFT],[RIGHT]"
+	}
 };
 static const _param param_pgs[] = {
 	{

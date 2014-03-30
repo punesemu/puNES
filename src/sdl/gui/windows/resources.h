@@ -13,6 +13,7 @@
 #define IDI_MYICON                  101
 #define IDB_ABOUT                   102
 #define IDB_NES_STD_PAD             103
+#define IDD_OSCAN_BRDS_DIALOG       104
 
 #define IDD_ABOUT                   150
 #define IDD_ABOUT_PORTABLE          151
@@ -92,6 +93,7 @@
 #define IDM_SET_OSCAN_OFF           372
 #define IDM_SET_OSCAN_DEFAULT_ON    373
 #define IDM_SET_OSCAN_DEFAULT_OFF   374
+#define IDM_SET_OSCAN_BRDS          375
 
 #define IDM_SET_TV_ASPECT_RATIO     377
 #define IDM_SET_INTERPOLATION       378
@@ -317,5 +319,17 @@
 #define IDC_INPUT_CONTROLLER_MODE_COMBO         1133
 
 #define IDC_UNCOMPRESS_SELECTION_LIST           1035
+
+#define IDC_OSCAN_BRDS_COMBO                    1035
+#define ID_OSCAN_BRDS_PREVIEW                   1036
+#define ID_OSCAN_BRDS_DEFAULTS                  1037
+#define IDC_OSCAN_BRDS_TEXT_UP                  1038
+#define IDC_OSCAN_BRDS_TEXT_DOWN                1039
+#define IDC_OSCAN_BRDS_TEXT_LEFT                1040
+#define IDC_OSCAN_BRDS_TEXT_RIGHT               1041
+#define IDC_OSCAN_BRDS_SPIN_UP                  1042
+#define IDC_OSCAN_BRDS_SPIN_DOWN                1043
+#define IDC_OSCAN_BRDS_SPIN_LEFT                1044
+#define IDC_OSCAN_BRDS_SPIN_RIGHT               1045
 
 #endif /* RESOURCES_H_ */

@@ -29,8 +29,8 @@ gfx_filter_function(bilinear) {
 	uint32_t ziopapero = 0;
 
 	if (overscan.enabled) {
-		ox = overscan.left;
-		oy = overscan.up;
+		ox = overscan.borders->left;
+		oy = overscan.borders->up;
 	}
 
 	w_step_fixed_16b = ((rows - 1) << 16) / (width - 1);

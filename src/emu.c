@@ -48,6 +48,7 @@
 #include "ines.h"
 #include "fds.h"
 #include "gamegenie.h"
+#include "overscan.h"
 #include "recent_roms.h"
 #if defined (SDL)
 #include "opengl.h"
@@ -504,6 +505,8 @@ BYTE emu_turn_on(void) {
 		return (EXIT_ERROR);
 	}
 
+	overscan_set_mode(machine.type);
+
 	/* ...nonche' dei puntatori alla PRG Rom... */
 	map_prg_rom_8k_reset();
 
@@ -606,7 +609,13 @@ BYTE emu_reset(BYTE type) {
 			return (EXIT_ERROR);
 		}
 
+		overscan_set_mode(machine.type);
+
 		cfg_file_pgs_parse();
+		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE);
+	}
+
+	if ((info.reset == CHANGE_MODE) && (overscan_set_mode(machine.type) == TRUE)) {
 		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE);
 	}
 

@@ -9,6 +9,7 @@
 #include "param.h"
 #include "gfx.h"
 #include "cfg_file.h"
+#include "../cfg_overscan_borders.h"
 
 #if defined (__SUNPRO_C)
 #pragma align 4 (icon_inline)
@@ -148,7 +149,7 @@ void set_overscan(int oscan);
 static GtkWidget *check[NUMCHKS];
 
 void menu_video_overscan(GtkWidget *video, GtkAccelGroup *accel_group) {
-	GtkWidget *menu[2], *overscan, *ovscan;
+	GtkWidget *menu[2], *overscan, *ovscan, *ovscanb;
 
 	menu[0] = gtk_menu_new();
 	overscan = gtk_image_menu_item_new_with_mnemonic("_Overscan");
@@ -166,6 +167,7 @@ void menu_video_overscan(GtkWidget *video, GtkAccelGroup *accel_group) {
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu[0]), gtk_separator_menu_item_new());
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu[0]), check[MOSCANON]);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu[0]), check[MOSCANOFF]);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu[0]), gtk_separator_menu_item_new());
 
 	g_signal_connect_swapped(G_OBJECT(check[MOSCANDEF]), "activate", G_CALLBACK(set_overscan),
 	        GINT_TO_POINTER(MOSCANDEF));
@@ -173,8 +175,6 @@ void menu_video_overscan(GtkWidget *video, GtkAccelGroup *accel_group) {
 	        GINT_TO_POINTER(MOSCANON));
 	g_signal_connect_swapped(G_OBJECT(check[MOSCANOFF]), "activate", G_CALLBACK(set_overscan),
 	        GINT_TO_POINTER(MOSCANOFF));
-
-	gtk_menu_shell_append(GTK_MENU_SHELL(menu[0]), gtk_separator_menu_item_new());
 
 	/* Settings/Video/Overscan/Default */
 	menu[1] = gtk_menu_new();
@@ -196,6 +196,15 @@ void menu_video_overscan(GtkWidget *video, GtkAccelGroup *accel_group) {
 	g_signal_connect_swapped(G_OBJECT(check[MOSCANDOFF]), "activate",
 			G_CALLBACK(set_overscan), GINT_TO_POINTER(OSCAN_DEFAULT_OFF));
 
+	/* Settings/Video/Overscan/Set borders */
+	ovscanb = gtk_image_menu_item_new_with_mnemonic("_Set borders");
+
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu[0]), gtk_separator_menu_item_new());
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu[0]), ovscanb);
+
+	gw_image_from_inline(ovscanb, icon_inline);
+
+	g_signal_connect(G_OBJECT(ovscanb), "activate", G_CALLBACK(cfg_overscan_borders_dialog), NULL);
 }
 void menu_video_overscan_check(void) {
 	int index = 0;
