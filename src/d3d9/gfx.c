@@ -1226,6 +1226,38 @@ void d3d9_adjust_coords(void) {
 	d3d9_adjust_vertex_buffer(&d3d9.text, 1.0f);
 
 	gfx.quadcoords = d3d9.screen.quadcoords;
+
+	if (d3d9.shader.table_pxl != NULL) {
+		FLOAT sse[2], svm[2], st[2], fc, ar;
+
+		sse[0] = (FLOAT) SCR_ROWS;
+		sse[1] = (FLOAT) SCR_LINES;
+		svm[0] = gfx.quadcoords.r - gfx.quadcoords.l;
+		svm[1] = gfx.quadcoords.b - gfx.quadcoords.t;
+		st[0] = d3d9.screen.w;
+		st[1] = d3d9.screen.h;
+		fc = (FLOAT) ppu.frames;
+		ar = gfx.aspect_ratio;
+
+		ID3DXConstantTable_SetFloatArray(d3d9.shader.table_pxl, d3d9.adapter->dev,
+				"size_screen_emu", (CONST FLOAT * ) &sse, 2);
+		ID3DXConstantTable_SetFloatArray(d3d9.shader.table_pxl, d3d9.adapter->dev,
+				"size_video_mode", (CONST FLOAT * ) &svm, 2);
+		ID3DXConstantTable_SetFloatArray(d3d9.shader.table_pxl, d3d9.adapter->dev,
+				"size_texture", (CONST FLOAT * ) &st, 2);
+		ID3DXConstantTable_SetFloatArray(d3d9.shader.table_pxl, d3d9.adapter->dev,
+				"frame_counter", (CONST FLOAT * ) &fc, 1);
+		ID3DXConstantTable_SetFloatArray(d3d9.shader.table_pxl, d3d9.adapter->dev,
+				"aspect_ratio", (CONST FLOAT * ) &ar, 1);
+
+		/*
+		printf("\n");
+		printf("size_screen_emu : %f - %f\n", sse[0], sse[1]);
+		printf("size_video_mode : %f - %f\n", svm[0], svm[1]);
+		printf("size_texture    : %f - %f\n", st[0], st[1]);
+		printf("\n");
+		 */
+	}
 }
 void d3d9_adjust_vertex_buffer(_texture *texture, FLOAT factor) {
 	{
@@ -1482,11 +1514,6 @@ BYTE d3d9_create_shader(_shader *shd) {
 
 	shd->code = &shader_code[shd->id];
 
-	/* vertex shader */
-	if (shd->code->vertex != NULL) {
-		LPD3DXBUFFER code = NULL, buffer_errors = NULL;
-		HRESULT hr;
-
 #define release_buffer\
 	if (code != NULL) {\
 		ID3DXBuffer_Release(code);\
@@ -1494,6 +1521,11 @@ BYTE d3d9_create_shader(_shader *shd) {
 	if (buffer_errors != NULL) {\
 		ID3DXBuffer_Release(buffer_errors);\
 	}
+
+	/* vertex shader */
+	if (shd->code->vertex != NULL) {
+		LPD3DXBUFFER code = NULL, buffer_errors = NULL;
+		HRESULT hr;
 
 		hr = D3DXCompileShader(shd->code->vertex,
 				strlen(shd->code->vertex),
@@ -1505,6 +1537,7 @@ BYTE d3d9_create_shader(_shader *shd) {
 				&code,
 				&buffer_errors,
 				&shd->table_vrt);
+
 		switch (hr) {
 			case D3D_OK:
 				/* creo il vertex shader */
@@ -1551,47 +1584,15 @@ BYTE d3d9_create_shader(_shader *shd) {
 				&code,
 				&buffer_errors,
 				&shd->table_pxl);
-		switch (hr) {
-			case D3D_OK: {
-				FLOAT sse[2], svm[2], st[2], fc, ar;
 
+		switch (hr) {
+			case D3D_OK:
 				/* creo il pixel shader */
 				IDirect3DDevice9_CreatePixelShader(d3d9.adapter->dev,
 						(DWORD *) ID3DXBuffer_GetBufferPointer(code),
 						&shd->pxl);
-
-				sse[0] = (FLOAT) SCR_ROWS;
-				sse[1] = (FLOAT) SCR_LINES;
-				svm[0] = gfx.quadcoords.r - gfx.quadcoords.l;
-				svm[1] = gfx.quadcoords.b - gfx.quadcoords.t;
-				st[0] = d3d9.screen.w;
-				st[1] = d3d9.screen.h;
-				fc = (FLOAT) ppu.frames;
-				ar = gfx.aspect_ratio;
-
-				ID3DXConstantTable_SetFloatArray(shd->table_pxl, d3d9.adapter->dev,
-						"size_screen_emu", (CONST FLOAT * ) &sse, 2);
-				ID3DXConstantTable_SetFloatArray(shd->table_pxl, d3d9.adapter->dev,
-						"size_video_mode", (CONST FLOAT * ) &svm, 2);
-				ID3DXConstantTable_SetFloatArray(shd->table_pxl, d3d9.adapter->dev,
-						"size_texture", (CONST FLOAT * ) &st, 2);
-				ID3DXConstantTable_SetFloatArray(shd->table_pxl, d3d9.adapter->dev,
-						"frame_counter", (CONST FLOAT * ) &fc, 1);
-				ID3DXConstantTable_SetFloatArray(shd->table_pxl, d3d9.adapter->dev,
-						"aspect_ratio", (CONST FLOAT * ) &ar, 1);
-
 				release_buffer
-
-				/*
-				printf("\n");
-				printf("size_screen_emu : %f - %f\n", sse[0], sse[1]);
-				printf("size_video_mode : %f - %f\n", svm[0], svm[1]);
-				printf("size_texture    : %f - %f\n", st[0], st[1]);
-				printf("\n");
-				 */
-
 				break;
-			}
 			case COMPILERSHADER_NOT_FOUND:
 				MessageBox(NULL,
 						"ATTENTION: DirectX HLSL compiler installation are incomplete\n"
