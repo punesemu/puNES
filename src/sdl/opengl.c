@@ -443,6 +443,12 @@ void glsl_shaders_init(_shader *shd) {
 
 		sse[0] = (GLfloat) SCR_ROWS;
 		sse[1] = (GLfloat) SCR_LINES;
+
+		if (overscan.enabled) {
+			sse[0] -= (GLfloat) (overscan.borders->left + overscan.borders->right);
+			sse[1] -= (GLfloat) (overscan.borders->up + overscan.borders->down);
+		}
+
 		svm[0] = opengl.quadcoords.r - opengl.quadcoords.l;
 		svm[1] = opengl.quadcoords.t - opengl.quadcoords.b;
 		st[0] = opengl.screen.w;

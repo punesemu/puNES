@@ -1232,6 +1232,12 @@ void d3d9_adjust_coords(void) {
 
 		sse[0] = (FLOAT) SCR_ROWS;
 		sse[1] = (FLOAT) SCR_LINES;
+
+		if (overscan.enabled) {
+			sse[0] -= (FLOAT) (overscan.borders->left + overscan.borders->right);
+			sse[1] -= (FLOAT) (overscan.borders->up + overscan.borders->down);
+		}
+
 		svm[0] = gfx.quadcoords.r - gfx.quadcoords.l;
 		svm[1] = gfx.quadcoords.b - gfx.quadcoords.t;
 		st[0] = d3d9.screen.w;
