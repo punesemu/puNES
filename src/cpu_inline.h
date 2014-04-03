@@ -453,7 +453,6 @@ static BYTE INLINE fds_rd_mem(WORD address, BYTE made_tick) {
 #if !defined (RELEASE)
 			//fprintf(stderr, "0x%04X 0x%02X %d\n", address, cpu.openbus, irq.high);
 #endif
-
 			return (TRUE);
 		}
 		if (address == 0x4031) {
@@ -462,9 +461,11 @@ static BYTE INLINE fds_rd_mem(WORD address, BYTE made_tick) {
 			fds.drive.transfer_flag = FALSE;
 
 #if !defined (RELEASE)
-			/*fprintf(stderr, "0x%04X 0x%02X [0x%04X] 0x%04X %d %d %d\n", address, cpu.openbus,
-			        fds.side.data[fds.drive.disk_position], cpu.opcode_PC, fds.drive.disk_position,
-			        fds.info.sides_size[fds.drive.side_inserted], irq.high);*/
+			/*
+			fprintf(stderr, "0x%04X 0x%02X [0x%04X] 0x%04X %d %d %d\n", address, cpu.openbus,
+					fds.side.data[fds.drive.disk_position], cpu.opcode_PC, fds.drive.disk_position,
+					fds.info.sides_size[fds.drive.side_inserted], irq.high);
+			*/
 #endif
 
 			/* devo disabilitare il disk IRQ */
@@ -494,7 +495,6 @@ static BYTE INLINE fds_rd_mem(WORD address, BYTE made_tick) {
 #if !defined (RELEASE)
 			//fprintf(stderr, "0x%04X 0x%02X\n", address, cpu.openbus);
 #endif
-
 			return (TRUE);
 		}
 		if (address == 0x4033) {
