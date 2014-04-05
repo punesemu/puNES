@@ -94,22 +94,10 @@ void sdl_create_surface_gl(SDL_Surface *src, WORD width, WORD height, BYTE flags
 		opengl.quadcoords.b = 0.0f;
 		opengl.quadcoords.t = h_quad;
 
-		printf("0 : %f %f\n", w_quad, h_quad);
-		printf("1 : %f %f\n", (GLfloat) width, (GLfloat) height);
-
 		/* con flags intendo sia il fullscreen che il futuro resize */
 		if (flags && cfg->stretch) {
 			GLfloat ratio_surface = w_quad / h_quad;
 			GLfloat ratio_frame = (GLfloat) width / (GLfloat) height;
-
-
-
-			//GLfloat brd = 24.0f * ((GLfloat) width / (GLfloat) SCR_ROWS);
-			//brd = 0;
-			//ratio_frame = (((GLfloat) width * gfx.aspect_ratio) + brd) / (GLfloat) height;
-
-
-
 
 			/*
 			 * se l'aspect ratio del frame e' maggiore di
@@ -119,7 +107,6 @@ void sdl_create_surface_gl(SDL_Surface *src, WORD width, WORD height, BYTE flags
 			if (ratio_frame > ratio_surface) {
 				GLfloat centering_factor = 0.0f;
 
-				//h_quad = (w_quad / ratio_frame) / (4.0f / 3.0f);
 				h_quad = (w_quad / ratio_frame) / gfx.aspect_ratio;
 				centering_factor = ((GLfloat) src->h - h_quad) / 2.0f;
 
@@ -135,15 +122,7 @@ void sdl_create_surface_gl(SDL_Surface *src, WORD width, WORD height, BYTE flags
 				 */
 				GLfloat centering_factor = 0.0f;
 
-				//w_quad = (h_quad * ratio_frame) * (4.0f / 3.0f);
-				//w_quad = (h_quad * ratio_frame) * gfx.aspect_ratio;
-
 				w_quad = (h_quad * ratio_frame) * gfx.aspect_ratio;
-				printf("2 : %f %f %f\n", w_quad, h_quad, ratio_frame);
-				w_quad = (w_quad * ratio_frame);
-				printf("3 : %f %f %f\n", w_quad, h_quad, ratio_frame);
-
-				//centering_factor = ((GLfloat) src->w - w_quad) / 2.0f;
 				centering_factor = ((GLfloat) src->w - w_quad) / 2.0f;
 
 				opengl.quadcoords.l = centering_factor;
