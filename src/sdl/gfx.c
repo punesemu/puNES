@@ -437,20 +437,23 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 				if (fullscreen && (cfg->filter == NTSC_FILTER)) {
 					gfx.aspect_ratio = 1.0f;
 				} else {
-					gfx.aspect_ratio = 4.0f / 3.0f;
+					gfx.aspect_ratio = 5.0f / 4.0f;
 				}
 			} else {
 				gfx.aspect_ratio = 1.0f;
 			}
 
 			if ((gfx.aspect_ratio != 1.0f) && !fullscreen) {
-				float ar = ((gfx.h[NO_OVERSCAN] * gfx.aspect_ratio) / SCR_ROWS);
+				float ar = 0;
+
+				gfx.w[VIDEO_MODE] = (gfx.w[NO_OVERSCAN] * gfx.aspect_ratio);
 
 				if (overscan.enabled) {
+					ar = (float) gfx.w[VIDEO_MODE] / (float) SCR_ROWS;
 					ar *= (overscan.borders->right + overscan.borders->left);
 				}
 
-				gfx.w[VIDEO_MODE] = (gfx.h[NO_OVERSCAN] * gfx.aspect_ratio) - ar;
+				gfx.w[VIDEO_MODE] -= ar;
 			}
 		}
 

@@ -739,6 +739,7 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"}",
 		// fragment shader
 		"uniform vec2 size_texture;\n"
+		"uniform float aspect_ratio;\n"
 
 		"uniform sampler2D texture_scr;\n"
 
@@ -759,13 +760,13 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"	float y = mod(v_texCoord.y * size_texture.y, 1.0);\n"
 		"	float intensity = exp(-0.2 * y);\n"
 
-		"	vec2 one_x = vec2((1.0 / (3.0 * size_texture.x)), 0.0);\n"
+		"	vec2 one_x = vec2((1.0 / (3.0 * (size_texture.x * aspect_ratio))), 0.0);\n"
 
 		"	vec3 color = texture2D(texture_scr, v_texCoord.xy).rgb;\n"
 		"	vec3 color_prev = texture2D(texture_scr, v_texCoord.xy - one_x).rgb;\n"
 		"	vec3 color_prev_prev = texture2D(texture_scr, v_texCoord.xy - 2.0 * one_x).rgb;\n"
 
-		"	float pixel_x = 3.0 * (v_texCoord.x * size_texture.x);\n"
+		"	float pixel_x = 3.0 * (v_texCoord.x * (size_texture.x * aspect_ratio));\n"
 
 		"	vec3 focus = to_focus(pixel_x - 0.0);\n"
 		"	vec3 focus_prev = to_focus(pixel_x - 1.0);\n"
