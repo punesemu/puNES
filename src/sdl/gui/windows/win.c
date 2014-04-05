@@ -1092,7 +1092,7 @@ void gui_update(void) {
 		menu_to_change = GetSubMenu(GetSubMenu(GetSubMenu(main_menu, 2), 2), 6);
 
 		if (opengl.glsl.enabled) {
-			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_POSPHOR);
+			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_PHOSPHOR);
 			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_SCANLINE);
 			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_DBL);
 
@@ -1104,7 +1104,7 @@ void gui_update(void) {
 			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_CRTCURVE);
 			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_CRTNOCURVE);
 		} else {
-			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_POSPHOR);
+			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_PHOSPHOR);
 			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_SCANLINE);
 			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_DBL);
 
@@ -1118,7 +1118,7 @@ void gui_update(void) {
 		}
 	}
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_NO_FILTER);
-	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_POSPHOR);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_PHOSPHOR);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_SCANLINE);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_DBL);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_CRTCURVE);
@@ -1136,8 +1136,8 @@ void gui_update(void) {
 		case NO_FILTER:
 			id = IDM_SET_FILTER_NO_FILTER;
 			break;
-		case POSPHOR:
-			id = IDM_SET_FILTER_POSPHOR;
+		case PHOSPHOR:
+			id = IDM_SET_FILTER_PHOSPHOR;
 			break;
 		case SCANLINE:
 			id = IDM_SET_FILTER_SCANLINE;
@@ -1782,8 +1782,8 @@ long __stdcall main_win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 				case IDM_SET_FILTER_NO_FILTER:
 					set_filter(NO_FILTER);
 					break;
-				case IDM_SET_FILTER_POSPHOR:
-					set_filter(POSPHOR);
+				case IDM_SET_FILTER_PHOSPHOR:
+					set_filter(PHOSPHOR);
 					break;
 				case IDM_SET_FILTER_SCANLINE:
 					set_filter(SCANLINE);
@@ -2489,8 +2489,8 @@ void set_filter(BYTE filter) {
 		case NO_FILTER:
 			gfx_set_screen(NO_CHANGE, NO_FILTER, NO_CHANGE, NO_CHANGE, FALSE);
 			break;
-		case POSPHOR:
-			gfx_set_screen(NO_CHANGE, POSPHOR, NO_CHANGE, NO_CHANGE, FALSE);
+		case PHOSPHOR:
+			gfx_set_screen(NO_CHANGE, PHOSPHOR, NO_CHANGE, NO_CHANGE, FALSE);
 			break;
 		case SCANLINE:
 			gfx_set_screen(NO_CHANGE, SCANLINE, NO_CHANGE, NO_CHANGE, FALSE);

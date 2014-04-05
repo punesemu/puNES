@@ -20,7 +20,7 @@ enum shader_type {
 	//SHADER_HQ4X,
 	//SHADER_4xBR,
 	SHADER_PIXELLATE,
-	SHADER_POSPHOR,
+	SHADER_PHOSPHOR,
 	SHADER_SCANLINE,
 	//SHADER_QUILAZ,
 	//SHADER_WATERPAINT,
@@ -587,6 +587,7 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"float2 size_screen_emu;\n"
 		"float2 size_video_mode;\n"
 		"float2 size_texture;\n"
+		"float aspect_ratio;\n"
 
 		"texture texture_scr;\n"
 		"sampler2D s0 = sampler_state { Texture = <texture_scr>; };\n"
@@ -610,13 +611,13 @@ static _shader_code shader_code[SHADER_TOTAL] = {
 		"	float y = mod(texCoord.y * size_texture.y, 1.0);\n"
 		"	float intensity = exp(-0.2 * y);\n"
 
-		"	float2 one_x = float2((1.0 / (3.0 * size_texture.x)), 0.0);\n"
+		"	float2 one_x = float2((1.0 / (3.0 * (size_texture.x * aspect_ratio))), 0.0);\n"
 
 		"	float3 color = tex2D(s0, texCoord).rgb;\n"
 		"	float3 color_prev = tex2D(s0, texCoord - one_x).rgb;\n"
 		"	float3 color_prev_prev = tex2D(s0, texCoord - (2.0 * one_x)).rgb;\n"
 
-		"	float pixel_x = 3.0 * (texCoord.x * size_texture.x);\n"
+		"	float pixel_x = 3.0 * (texCoord.x * (size_texture.x * aspect_ratio));\n"
 
 		"	float3 focus = to_focus(pixel_x - 0.0);\n"
 		"	float3 focus_prev = to_focus(pixel_x - 1.0);\n"

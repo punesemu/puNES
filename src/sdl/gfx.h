@@ -36,7 +36,7 @@ enum filters_type {
 	HQ4X,
 	NTSC_FILTER,
 	/* glsl shaders */
-	POSPHOR,
+	PHOSPHOR,
 	SCANLINE,
 	DBL,
 	CRT_CURVE,

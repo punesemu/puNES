@@ -129,7 +129,7 @@ BYTE gfx_init(void) {
 		cfg->render = RENDER_SOFTWARE;
 		gfx_set_render(cfg->render);
 
-		if ((cfg->filter >= POSPHOR) && (cfg->filter <= CRT_NO_CURVE)) {
+		if ((cfg->filter >= PHOSPHOR) && (cfg->filter <= CRT_NO_CURVE)) {
 			cfg->filter = NO_FILTER;
 		}
 
@@ -247,7 +247,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 	}
 	if ((filter != cfg->filter) || info.on_cfg || force_scale) {
 		switch (filter) {
-			case POSPHOR:
+			case PHOSPHOR:
 			case SCANLINE:
 			case NO_FILTER:
 			case DBL:
@@ -444,13 +444,16 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 			}
 
 			if ((gfx.aspect_ratio != 1.0f) && !fullscreen) {
-				float ar = ((gfx.h[NO_OVERSCAN] * gfx.aspect_ratio) / SCR_ROWS);
+				float ar = 0;
+
+				gfx.w[VIDEO_MODE] = (gfx.h[NO_OVERSCAN] * gfx.aspect_ratio);
 
 				if (overscan.enabled) {
+					ar = (float) gfx.w[VIDEO_MODE] / (float) SCR_ROWS;
 					ar *= (overscan.borders->right + overscan.borders->left);
 				}
 
-				gfx.w[VIDEO_MODE] = (gfx.h[NO_OVERSCAN] * gfx.aspect_ratio) - ar;
+				gfx.w[VIDEO_MODE] -= ar;
 			}
 		}
 
@@ -561,8 +564,8 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 				case NO_FILTER:
 					glsl_up(scale_surface, SHADER_NO_FILTER);
 					break;
-				case POSPHOR:
-					glsl_up(scale_surface, SHADER_POSPHOR);
+				case PHOSPHOR:
+					glsl_up(scale_surface, SHADER_PHOSPHOR);
 					break;
 				case SCANLINE:
 					glsl_up(scale_surface, SHADER_SCANLINE);
@@ -676,7 +679,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 
 	/* questo controllo devo farlo necessariamente dopo il glew_init() */
 	if ((opengl.glsl.compliant == FALSE) || (opengl.glsl.enabled == FALSE)) {
-		if ((filter >= POSPHOR) && (filter <= CRT_NO_CURVE)) {
+		if ((filter >= PHOSPHOR) && (filter <= CRT_NO_CURVE)) {
 			filter = NO_FILTER;
 			goto gfx_set_screen_start;
 		}

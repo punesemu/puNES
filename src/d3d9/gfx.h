@@ -34,7 +34,7 @@ enum filters_type {
 	HQ3X,
 	HQ4X,
 	NTSC_FILTER,
-	POSPHOR,
+	PHOSPHOR,
 	SCANLINE,
 	DBL,
 	CRT_CURVE,

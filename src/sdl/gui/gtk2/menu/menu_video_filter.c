@@ -283,7 +283,7 @@ enum {
 	MHQ3X,
 	MHQ4X,
 	MRGBNTSC,
-	MPOSPHOR,
+	MPHOSPHOR,
 	MSCANLINE,
 	MDBL,
 	MCRT,
@@ -311,19 +311,19 @@ void menu_video_filter(GtkWidget *video, GtkAccelGroup *accel_group) {
 	gw_image_from_inline(filter, filter_icon_inline);
 
 	check[MNO_FILTER] = gtk_check_menu_item_new_with_mnemonic("_No Filter");
-	check[MPOSPHOR] = gtk_check_menu_item_new_with_mnemonic("_Phospor");
+	check[MPHOSPHOR] = gtk_check_menu_item_new_with_mnemonic("_Phosphor");
 	check[MSCANLINE] = gtk_check_menu_item_new_with_mnemonic("S_canline");
 	check[MDBL] = gtk_check_menu_item_new_with_mnemonic("_DBL");
 
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu[0]), check[MNO_FILTER]);
-	gtk_menu_shell_append(GTK_MENU_SHELL(menu[0]), check[MPOSPHOR]);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu[0]), check[MPHOSPHOR]);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu[0]), check[MSCANLINE]);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu[0]), check[MDBL]);
 
 	g_signal_connect_swapped(G_OBJECT(check[MNO_FILTER]), "activate",
 			G_CALLBACK(set_filter), GINT_TO_POINTER(NO_FILTER));
-	g_signal_connect_swapped(G_OBJECT(check[MPOSPHOR]), "activate",
-			G_CALLBACK(set_filter), GINT_TO_POINTER(POSPHOR));
+	g_signal_connect_swapped(G_OBJECT(check[MPHOSPHOR]), "activate",
+			G_CALLBACK(set_filter), GINT_TO_POINTER(PHOSPHOR));
 	g_signal_connect_swapped(G_OBJECT(check[MSCANLINE]), "activate",
 			G_CALLBACK(set_filter), GINT_TO_POINTER(SCANLINE));
 	g_signal_connect_swapped(G_OBJECT(check[MDBL]), "activate",
@@ -435,12 +435,12 @@ void menu_video_filter_check(void) {
 	}
 
 	if (opengl.glsl.compliant && opengl.glsl.enabled) {
-		gtk_widget_set_sensitive(check[MPOSPHOR], TRUE);
+		gtk_widget_set_sensitive(check[MPHOSPHOR], TRUE);
 		gtk_widget_set_sensitive(check[MSCANLINE], TRUE);
 		gtk_widget_set_sensitive(check[MDBL], TRUE);
 		gtk_widget_set_sensitive(check[MCRT], TRUE);
 	} else {
-		gtk_widget_set_sensitive(check[MPOSPHOR], FALSE);
+		gtk_widget_set_sensitive(check[MPHOSPHOR], FALSE);
 		gtk_widget_set_sensitive(check[MSCANLINE], FALSE);
 		gtk_widget_set_sensitive(check[MDBL], FALSE);
 		gtk_widget_set_sensitive(check[MCRT], FALSE);
@@ -457,7 +457,7 @@ void menu_video_filter_check(void) {
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MRGBNTSCSVD]), FALSE);
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MRGBNTSCRGB]), FALSE);
 
-	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MPOSPHOR]), FALSE);
+	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MPHOSPHOR]), FALSE);
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MSCANLINE]), FALSE);
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MDBL]), FALSE);
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MCRTCURVE]), FALSE);
@@ -467,8 +467,8 @@ void menu_video_filter_check(void) {
 		case NO_FILTER:
 			index = MNO_FILTER;
 			break;
-		case POSPHOR:
-			index = MPOSPHOR;
+		case PHOSPHOR:
+			index = MPHOSPHOR;
 			break;
 		case SCANLINE:
 			index = MSCANLINE;
@@ -527,8 +527,8 @@ void set_filter(int filter) {
 		case NO_FILTER:
 			gfx_set_screen(NO_CHANGE, NO_FILTER, NO_CHANGE, NO_CHANGE, FALSE);
 			return;
-		case POSPHOR:
-			gfx_set_screen(NO_CHANGE, POSPHOR, NO_CHANGE, NO_CHANGE, FALSE);
+		case PHOSPHOR:
+			gfx_set_screen(NO_CHANGE, PHOSPHOR, NO_CHANGE, NO_CHANGE, FALSE);
 			return;
 		case SCANLINE:
 			gfx_set_screen(NO_CHANGE, SCANLINE, NO_CHANGE, NO_CHANGE, FALSE);
