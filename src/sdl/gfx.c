@@ -253,6 +253,8 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 			case DBL:
 			case CRT_CURVE:
 			case CRT_NO_CURVE:
+			case PHOSPHOR2:
+			case DARK_ROOM:
 				gfx.filter = scale_surface;
 				/*
 				 * se sto passando dal filtro ntsc ad un'altro, devo
@@ -407,6 +409,8 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 		gfx.w[VIDEO_MODE] = width;
 		gfx.h[VIDEO_MODE] = height;
 
+		gfx.pixel_aspect_ratio = 1.0f;
+
 		if (gfx.opengl) {
 			flags = opengl.flags;
 
@@ -429,31 +433,37 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 				gfx.w[VIDEO_MODE] = gfx.w[MONITOR];
 				gfx.h[VIDEO_MODE] = gfx.h[MONITOR];
 			}
-		}
 
-		/* TV Aspect Ratio */
-		{
-			if (gfx.opengl && cfg->tv_aspect_ratio) {
+			/* Pixel Aspect Ratio */
+			{
 				if (fullscreen && (cfg->filter == NTSC_FILTER)) {
-					gfx.aspect_ratio = 1.0f;
+					gfx.pixel_aspect_ratio = 1.0f;
 				} else {
-					gfx.aspect_ratio = 4.0f / 3.0f;
-				}
-			} else {
-				gfx.aspect_ratio = 1.0f;
-			}
-
-			if ((gfx.aspect_ratio != 1.0f) && !fullscreen) {
-				float ar = 0;
-
-				gfx.w[VIDEO_MODE] = (gfx.h[NO_OVERSCAN] * gfx.aspect_ratio);
-
-				if (overscan.enabled) {
-					ar = (float) gfx.w[VIDEO_MODE] / (float) SCR_ROWS;
-					ar *= (overscan.borders->right + overscan.borders->left);
+					switch (cfg->pixel_aspect_ratio) {
+						case PAR11:
+							gfx.pixel_aspect_ratio = 1.0f;
+							break;
+						case PAR54:
+							gfx.pixel_aspect_ratio = 5.0f / 4.0f;
+							break;
+						case PAR87:
+							gfx.pixel_aspect_ratio = 8.0f / 7.0f;
+							break;
+					}
 				}
 
-				gfx.w[VIDEO_MODE] -= ar;
+				if ((gfx.pixel_aspect_ratio != 1.0f) && !fullscreen) {
+					float brd = 0;
+
+					gfx.w[VIDEO_MODE] = (gfx.w[NO_OVERSCAN] * gfx.pixel_aspect_ratio);
+
+					if (overscan.enabled) {
+						brd = (float) gfx.w[VIDEO_MODE] / (float) SCR_ROWS;
+						brd *= (overscan.borders->right + overscan.borders->left);
+					}
+
+					gfx.w[VIDEO_MODE] -= brd;
+				}
 			}
 		}
 
@@ -547,6 +557,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 		opengl.factor = X1;
 		opengl.glsl.shader_used = FALSE;
 		shader.id = SHADER_NONE;
+		opengl.glsl.param = 0;
 
 		if ((opengl.glsl.compliant == TRUE) && (opengl.glsl.enabled == TRUE)) {
 
@@ -566,13 +577,22 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 					break;
 				case PHOSPHOR:
 					glsl_up(scale_surface, SHADER_PHOSPHOR);
+					opengl.glsl.param = 1;
+					break;
+				case PHOSPHOR2:
+					glsl_up(scale_surface, SHADER_PHOSPHOR);
+					opengl.glsl.param = 0;
 					break;
 				case SCANLINE:
 					glsl_up(scale_surface, SHADER_SCANLINE);
 					break;
 				case DBL:
-					opengl.interpolation = FALSE;
 					glsl_up(scale_surface, SHADER_DONTBLOOM);
+					opengl.glsl.param = 0;
+					break;
+				case DARK_ROOM:
+					glsl_up(scale_surface, SHADER_DONTBLOOM);
+					opengl.glsl.param = 1;
 					break;
 				case CRT_CURVE:
 					opengl.interpolation = FALSE;
@@ -588,7 +608,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 					 * ottenere un risultato migliore applico
 					 * filtro software.
 					 */
-					if ((gfx.aspect_ratio != 1.0f) || (opengl.interpolation == TRUE)) {
+					if ((gfx.pixel_aspect_ratio != 1.0f) || (opengl.interpolation == TRUE)) {
 						gfx.filter = scaleNx;
 					} else {
 						glsl_up(scale_surface, SHADER_SCALE2X);
@@ -600,7 +620,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 					 * ottenere un risultato migliore applico
 					 * filtro software.
 					 */
-					if (gfx.aspect_ratio == 1.0f) {
+					if (gfx.pixel_aspect_ratio == 1.0f) {
 						glsl_up(scale_surface, SHADER_SCALE3X);
 					} else {
 						gfx.filter = scaleNx;

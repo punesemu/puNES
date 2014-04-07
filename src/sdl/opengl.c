@@ -107,8 +107,8 @@ void sdl_create_surface_gl(SDL_Surface *src, WORD width, WORD height, BYTE flags
 			if (ratio_frame > ratio_surface) {
 				GLfloat centering_factor = 0.0f;
 
-				h_quad = (w_quad / ratio_frame) / gfx.aspect_ratio;
-				centering_factor = ((GLfloat) src->h - h_quad) / 2.0f;
+				h_quad = trunc((w_quad / ratio_frame) / gfx.pixel_aspect_ratio);
+				centering_factor = trunc(((GLfloat) src->h - h_quad) / 2.0f);
 
 				opengl.quadcoords.l = 0.0f;
 				opengl.quadcoords.r = w_quad;
@@ -122,8 +122,8 @@ void sdl_create_surface_gl(SDL_Surface *src, WORD width, WORD height, BYTE flags
 				 */
 				GLfloat centering_factor = 0.0f;
 
-				w_quad = (h_quad * ratio_frame) * gfx.aspect_ratio;
-				centering_factor = ((GLfloat) src->w - w_quad) / 2.0f;
+				w_quad = trunc((h_quad * ratio_frame) * gfx.pixel_aspect_ratio) - 1.0f;
+				centering_factor = trunc(((GLfloat) src->w - w_quad) / 2.0f);
 
 				opengl.quadcoords.l = centering_factor;
 				opengl.quadcoords.r = w_quad + centering_factor;
@@ -132,6 +132,7 @@ void sdl_create_surface_gl(SDL_Surface *src, WORD width, WORD height, BYTE flags
 			}
 		}
 	}
+
 
 	opengl_create_texture(&opengl.text, opengl.screen.w * opengl.factor,
 	        opengl.screen.h * opengl.factor, NO_POWER_OF_TWO);
@@ -203,7 +204,7 @@ void opengl_create_texture(_texture *texture, uint32_t width, uint32_t height, u
 		glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, color);
 	}
 
-	if (opengl.glew && !GLEW_VERSION_3_1) {
+	if (opengl.glew && !GLEW_VERSION_3_0) {
 		glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
 	}
 
@@ -220,7 +221,7 @@ void opengl_create_texture(_texture *texture, uint32_t width, uint32_t height, u
 		SDL_FreeSurface(blank);
 	}
 
-	if (opengl.glew && GLEW_VERSION_3_1) {
+	if (opengl.glew && GLEW_VERSION_3_0) {
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 
@@ -229,15 +230,7 @@ void opengl_create_texture(_texture *texture, uint32_t width, uint32_t height, u
 void opengl_update_scr_texture(SDL_Surface *surface, uint8_t generate_mipmap) {
 	glBindTexture(GL_TEXTURE_2D, opengl.screen.data);
 
-	if (opengl.interpolation) {
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	} else {
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	}
-
-	if (generate_mipmap && opengl.glew && !GLEW_VERSION_3_1) {
+	if (generate_mipmap && opengl.glew && !GLEW_VERSION_3_0) {
 		glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
 	}
 
@@ -248,8 +241,16 @@ void opengl_update_scr_texture(SDL_Surface *surface, uint8_t generate_mipmap) {
 
 	glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
 
-	if (generate_mipmap && opengl.glew && GLEW_VERSION_3_1) {
+	if (generate_mipmap && opengl.glew && GLEW_VERSION_3_0) {
 		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+
+	if (opengl.interpolation) {
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	} else {
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	}
 
 	if (opengl.glsl.shader_used) {
@@ -274,7 +275,7 @@ BYTE opengl_update_txt_texture(uint8_t generate_mipmap) {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	if (generate_mipmap && opengl.glew && !GLEW_VERSION_3_1) {
+	if (generate_mipmap && opengl.glew && !GLEW_VERSION_3_0) {
 		glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
@@ -394,10 +395,10 @@ void glew_init(void) {
 				opengl.glsl.enabled = FALSE;
 			}
 
-			if (GLEW_VERSION_3_1) {
-				fprintf(stderr, "INFO: OpenGL 3.1 supported.\n");
+			if (GLEW_VERSION_3_0) {
+				fprintf(stderr, "INFO: OpenGL 3.0 supported.\n");
 			} else {
-				fprintf(stderr, "INFO: OpenGL 3.1 not supported.\n");
+				fprintf(stderr, "INFO: OpenGL 3.0 not supported.\n");
 			}
 		}
 	}
@@ -439,7 +440,7 @@ void glsl_shaders_init(_shader *shd) {
 	glUseProgram(shd->prg);
 
 	{
-		GLfloat sse[2], svm[2], st[2], fc, ar;
+		GLfloat sse[2], svm[2], st[2], fc, param, par;
 
 		sse[0] = (GLfloat) SCR_ROWS;
 		sse[1] = (GLfloat) SCR_LINES;
@@ -453,8 +454,10 @@ void glsl_shaders_init(_shader *shd) {
 		svm[1] = opengl.quadcoords.t - opengl.quadcoords.b;
 		st[0] = opengl.screen.w;
 		st[1] = opengl.screen.h;
+
 		fc = (GLfloat) ppu.frames;
-		ar = gfx.aspect_ratio;
+		param = (GLfloat) opengl.glsl.param;
+		par = gfx.pixel_aspect_ratio;
 
 		if ((shd->loc.size.screen_emu = glGetUniformLocation(shd->prg, "size_screen_emu")) >= 0) {
 			glUniform2f(shd->loc.size.screen_emu, sse[0], sse[1]);
@@ -468,8 +471,12 @@ void glsl_shaders_init(_shader *shd) {
 		if ((shd->loc.frame_counter = glGetUniformLocation(shd->prg, "frame_counter")) >= 0) {
 			glUniform1f(shd->loc.frame_counter, fc);
 		}
-		if ((shd->loc.aspect_ratio = glGetUniformLocation(shd->prg, "aspect_ratio")) >= 0) {
-			glUniform1f(shd->loc.aspect_ratio, ar);
+		if ((shd->loc.param = glGetUniformLocation(shd->prg, "param")) >= 0) {
+			glUniform1f(shd->loc.param, param);
+		}
+		if ((shd->loc.pixel_aspect_ratio = glGetUniformLocation(shd->prg, "pixel_aspect_ratio"))
+		        >= 0) {
+			glUniform1f(shd->loc.pixel_aspect_ratio, par);
 		}
 	}
 

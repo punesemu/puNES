@@ -42,7 +42,6 @@ BEGIN
 #if defined (SDL)
 	"R",        IDM_SET_EFFECT_CUBE,     VIRTKEY
 #endif
-	"9",        IDM_SET_TV_ASPECT_RATIO, VIRTKEY
 	"0",        IDM_SET_INTERPOLATION,   VIRTKEY
 	"P",        IDM_SET_STRETCHFLSCR,    VIRTKEY
 	"W",        IDM_SET_SAVENOW,         CONTROL, VIRTKEY
@@ -144,6 +143,12 @@ BEGIN
 				MENUITEM "&3x\t3",                IDM_SET_SIZE_3X
 				MENUITEM "&4x\t4",                IDM_SET_SIZE_4X
 			END
+			POPUP "&Pixel Aspect Ra&tio"
+			BEGIN
+				MENUITEM "&1:1",                  IDM_SET_PAR11
+				MENUITEM "&5:4",                  IDM_SET_PAR54
+				MENUITEM "&8:7 (NTSC TV)",        IDM_SET_PAR87
+			END
 			POPUP "&Overscan"
 			BEGIN
 				MENUITEM "&Default",              IDM_SET_OSCAN_DEF
@@ -163,8 +168,10 @@ BEGIN
 			BEGIN
 				MENUITEM "&No Filter",            IDM_SET_FILTER_NO_FILTER
 				MENUITEM "&Phoshpor",             IDM_SET_FILTER_PHOSPHOR
+				MENUITEM "P&hoshpor2",            IDM_SET_FILTER_PHOSPHOR2
 				MENUITEM "S&canline",             IDM_SET_FILTER_SCANLINE
 				MENUITEM "&DBL",                  IDM_SET_FILTER_DBL
+				MENUITEM "Dark R&oom",            IDM_SET_FILTER_DARKROOM
 				POPUP "C&RT"
 				BEGIN
 					MENUITEM "With &Curve",       IDM_SET_FILTER_CRTCURVE
@@ -205,7 +212,6 @@ BEGIN
 #endif
 			MENUITEM SEPARATOR
 			MENUITEM "&Vsync",                    IDM_SET_VSYNC
-			MENUITEM "&TV Aspect Ratio\t9",       IDM_SET_TV_ASPECT_RATIO
 			MENUITEM "Interpolation\t0",          IDM_SET_INTERPOLATION
 			MENUITEM "Te&xt on screen",           IDM_SET_TXT_ON_SCREEN
 			MENUITEM SEPARATOR

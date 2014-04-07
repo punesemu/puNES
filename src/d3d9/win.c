@@ -93,8 +93,8 @@ void set_fps(BYTE fps);
 void set_frame_skip(BYTE frameskip);
 void set_vsync(void);
 void set_scale(BYTE scale);
+void set_pixel_aspect_ratio(BYTE par);
 void set_overscan(BYTE oscan);
-void set_tv_aspect_ratio(void);
 void set_interpolation(void);
 void set_txt_on_screen(void);
 void set_filter(BYTE filter);
@@ -999,6 +999,23 @@ void gui_update(void) {
 	}
 	change_menuitem(CHECK, MF_CHECKED, id);
 
+	/* Pixel Aspect Ratio */
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_PAR11);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_PAR54);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_PAR87);
+	switch (cfg->pixel_aspect_ratio) {
+		case PAR11:
+			id = IDM_SET_PAR11;
+			break;
+		case PAR54:
+			id = IDM_SET_PAR54;
+			break;
+		case PAR87:
+			id = IDM_SET_PAR87;
+			break;
+	}
+	change_menuitem(CHECK, MF_CHECKED, id);
+
 	/* Overscan */
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_OSCAN_ON);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_OSCAN_OFF);
@@ -1034,13 +1051,6 @@ void gui_update(void) {
 		change_menuitem(CHECK, MF_CHECKED, IDM_SET_VSYNC);
 	} else {
 		change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_VSYNC);
-	}
-
-	/* TV Aspect Ratio */
-	if (cfg->tv_aspect_ratio) {
-		change_menuitem(CHECK, MF_CHECKED, IDM_SET_TV_ASPECT_RATIO);
-	} else {
-		change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_TV_ASPECT_RATIO);
 	}
 
 	/* Interpolation */
@@ -1089,8 +1099,10 @@ void gui_update(void) {
 
 		if ((gfx.hlsl.enabled == TRUE) && (cfg->scale != X1)) {
 			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_PHOSPHOR);
+			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_PHOSPHOR2);
 			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_SCANLINE);
 			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_DBL);
+			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_DARKROOM);
 
 			menuitem.fState = MFS_ENABLED;
 
@@ -1101,8 +1113,10 @@ void gui_update(void) {
 			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_CRTNOCURVE);
 		} else {
 			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_PHOSPHOR);
+			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_PHOSPHOR2);
 			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_SCANLINE);
 			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_DBL);
+			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_DARKROOM);
 
 			menuitem.fState = MFS_DISABLED;
 
@@ -1157,8 +1171,10 @@ void gui_update(void) {
 	}
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_NO_FILTER);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_PHOSPHOR);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_PHOSPHOR2);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_SCANLINE);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_DBL);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_DARKROOM);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_CRTCURVE);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_CRTNOCURVE);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_SCALE2X);
@@ -1177,11 +1193,17 @@ void gui_update(void) {
 		case PHOSPHOR:
 			id = IDM_SET_FILTER_PHOSPHOR;
 			break;
+		case PHOSPHOR2:
+			id = IDM_SET_FILTER_PHOSPHOR2;
+			break;
 		case SCANLINE:
 			id = IDM_SET_FILTER_SCANLINE;
 			break;
 		case DBL:
 			id = IDM_SET_FILTER_DBL;
+			break;
+		case DARK_ROOM:
+			id = IDM_SET_FILTER_DARKROOM;
 			break;
 		case CRT_CURVE:
 			id = IDM_SET_FILTER_CRTCURVE;
@@ -1738,6 +1760,15 @@ long __stdcall main_win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 				case IDM_SET_SIZE_4X:
 					set_scale(X4);
 					break;
+				case IDM_SET_PAR11:
+					set_pixel_aspect_ratio(PAR11);
+					break;
+				case IDM_SET_PAR54:
+					set_pixel_aspect_ratio(PAR54);
+					break;
+				case IDM_SET_PAR87:
+					set_pixel_aspect_ratio(PAR87);
+					break;
 				case IDM_SET_OSCAN_ON:
 					set_overscan(OSCAN_ON);
 					break;
@@ -1756,9 +1787,6 @@ long __stdcall main_win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 				case IDM_SET_OSCAN_BRDS:
 					cfg_overscan_borders_dialog(hwnd);
 					break;
-				case IDM_SET_TV_ASPECT_RATIO:
-					set_tv_aspect_ratio();
-					break;
 				case IDM_SET_INTERPOLATION:
 					set_interpolation();
 					break;
@@ -1771,11 +1799,17 @@ long __stdcall main_win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 				case IDM_SET_FILTER_PHOSPHOR:
 					set_filter(PHOSPHOR);
 					break;
+				case IDM_SET_FILTER_PHOSPHOR2:
+					set_filter(PHOSPHOR2);
+					break;
 				case IDM_SET_FILTER_SCANLINE:
 					set_filter(SCANLINE);
 					break;
 				case IDM_SET_FILTER_DBL:
 					set_filter(DBL);
+					break;
+				case IDM_SET_FILTER_DARKROOM:
+					set_filter(DARK_ROOM);
 					break;
 				case IDM_SET_FILTER_CRTCURVE:
 					set_filter(CRT_CURVE);
@@ -2382,7 +2416,7 @@ void set_scale(BYTE scale) {
 	}
 
 	if (cfg->fullscreen == FULLSCR) {
-		if(scale == X1) {
+		if (scale == X1) {
 			return;
 		}
 	}
@@ -2402,6 +2436,15 @@ void set_scale(BYTE scale) {
 			break;
 	}
 }
+void set_pixel_aspect_ratio(BYTE par) {
+	if (cfg->pixel_aspect_ratio == par) {
+		return;
+	}
+
+	cfg->pixel_aspect_ratio = par;
+
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE);
+}
 void set_overscan(BYTE oscan) {
 	switch (oscan) {
 		case OSCAN_ON:
@@ -2417,11 +2460,6 @@ void set_overscan(BYTE oscan) {
 			cfg->oscan_default = OSCAN_ON;
 			break;
 	}
-
-	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE);
-}
-void set_tv_aspect_ratio(void) {
-	cfg->tv_aspect_ratio = !cfg->tv_aspect_ratio;
 
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE);
 }
@@ -2442,11 +2480,17 @@ void set_filter(BYTE filter) {
 		case PHOSPHOR:
 			gfx_set_screen(NO_CHANGE, PHOSPHOR, NO_CHANGE, NO_CHANGE, FALSE);
 			break;
+		case PHOSPHOR2:
+			gfx_set_screen(NO_CHANGE, PHOSPHOR2, NO_CHANGE, NO_CHANGE, FALSE);
+			break;
 		case SCANLINE:
 			gfx_set_screen(NO_CHANGE, SCANLINE, NO_CHANGE, NO_CHANGE, FALSE);
 			break;
 		case DBL:
 			gfx_set_screen(NO_CHANGE, DBL, NO_CHANGE, NO_CHANGE, FALSE);
+			break;
+		case DARK_ROOM:
+			gfx_set_screen(NO_CHANGE, DARK_ROOM, NO_CHANGE, NO_CHANGE, FALSE);
 			break;
 		case CRT_CURVE:
 			gfx_set_screen(NO_CHANGE, CRT_CURVE, NO_CHANGE, NO_CHANGE, FALSE);

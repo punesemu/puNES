@@ -181,9 +181,9 @@ void cfg_file_parse(void) {
 			cfg_search(param, P_RENDER, 0, param_render, cfg_from_file.render = index);
 			/* vsync */
 			cfg_search(param, P_VSYNC, 0, param_off_on, cfg_from_file.vsync = index);
-			/* tv aspect ratio */
-			cfg_search(param, P_TV_ASPECT_RATIO, 0, param_no_yes, cfg_from_file.tv_aspect_ratio =
-			        index);
+			/* pixel aspect ratio */
+			cfg_search(param, P_PIXEL_ASPECT_RATIO, 0, param_pixel_aspect_ratio,
+			        cfg_from_file.pixel_aspect_ratio = index);
 			/* interpolation */
 			cfg_search(param, P_INTERPOLATION, 0, param_no_yes, cfg_from_file.interpolation = index);
 			/* text on screen */
@@ -279,9 +279,9 @@ void cfg_file_save(void) {
 	write_param((_param *) param, fp, P_RENDER, param_render[cfg_from_file.render].sname);
 	/* vsync */
 	write_param((_param *) param, fp, P_VSYNC, param_off_on[cfg_from_file.vsync].sname);
-	/* tv aspect ratio */
-	write_param((_param *) param, fp, P_TV_ASPECT_RATIO,
-	        param_no_yes[cfg_from_file.tv_aspect_ratio].sname);
+	/* pixel aspect ratio */
+	write_param((_param *) param, fp, P_PIXEL_ASPECT_RATIO,
+	        param_pixel_aspect_ratio[cfg_from_file.pixel_aspect_ratio].sname);
 	/* interpolation */
 	write_param((_param *) param, fp, P_INTERPOLATION,
 	        param_no_yes[cfg_from_file.interpolation].sname);
@@ -681,7 +681,7 @@ void set_default(void) {
 	gfx_set_render(cfg_from_file.render);
 
 	cfg_from_file.vsync = TRUE;
-	cfg_from_file.tv_aspect_ratio = FALSE;
+	cfg_from_file.pixel_aspect_ratio = PAR11;
 	cfg_from_file.interpolation = FALSE;
 	cfg_from_file.txt_on_screen = TRUE;
 	cfg_from_file.fullscreen = NO_FULLSCR;

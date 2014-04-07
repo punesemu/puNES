@@ -88,6 +88,10 @@
 #define IDM_SET_SIZE_3X             362
 #define IDM_SET_SIZE_4X             363
 
+#define IDM_SET_PAR11               365
+#define IDM_SET_PAR54               366
+#define IDM_SET_PAR87               367
+
 #define IDM_SET_OSCAN_DEF           370
 #define IDM_SET_OSCAN_ON            371
 #define IDM_SET_OSCAN_OFF           372
@@ -96,25 +100,26 @@
 #define IDM_SET_OSCAN_BRDS          375
 
 #define IDM_SET_VSYNC               376
-#define IDM_SET_TV_ASPECT_RATIO     377
-#define IDM_SET_INTERPOLATION       378
-#define IDM_SET_TXT_ON_SCREEN       379
+#define IDM_SET_INTERPOLATION       377
+#define IDM_SET_TXT_ON_SCREEN       378
 
 #define IDM_SET_FILTER_NO_FILTER    380
 #define IDM_SET_FILTER_PHOSPHOR     381
-#define IDM_SET_FILTER_SCANLINE     382
-#define IDM_SET_FILTER_DBL          383
-#define IDM_SET_FILTER_CRTCURVE     384
-#define IDM_SET_FILTER_CRTNOCURVE   385
-#define IDM_SET_FILTER_SCALE2X      386
-#define IDM_SET_FILTER_SCALE3X      387
-#define IDM_SET_FILTER_SCALE4X      388
-#define IDM_SET_FILTER_HQ2X         389
-#define IDM_SET_FILTER_HQ3X         390
-#define IDM_SET_FILTER_HQ4X         391
-#define IDM_SET_FILTER_RGBNTSCCOM   392
-#define IDM_SET_FILTER_RGBNTSCSVD   393
-#define IDM_SET_FILTER_RGBNTSCRGB   394
+#define IDM_SET_FILTER_PHOSPHOR2    382
+#define IDM_SET_FILTER_SCANLINE     383
+#define IDM_SET_FILTER_DBL          384
+#define IDM_SET_FILTER_DARKROOM     385
+#define IDM_SET_FILTER_CRTCURVE     386
+#define IDM_SET_FILTER_CRTNOCURVE   387
+#define IDM_SET_FILTER_SCALE2X      388
+#define IDM_SET_FILTER_SCALE3X      389
+#define IDM_SET_FILTER_SCALE4X      390
+#define IDM_SET_FILTER_HQ2X         391
+#define IDM_SET_FILTER_HQ3X         392
+#define IDM_SET_FILTER_HQ4X         393
+#define IDM_SET_FILTER_RGBNTSCCOM   394
+#define IDM_SET_FILTER_RGBNTSCSVD   395
+#define IDM_SET_FILTER_RGBNTSCRGB   396
 
 #define IDM_SET_PALETTE_PAL         410
 #define IDM_SET_PALETTE_NTSC        411

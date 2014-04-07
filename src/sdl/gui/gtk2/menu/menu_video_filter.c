@@ -284,8 +284,10 @@ enum {
 	MHQ4X,
 	MRGBNTSC,
 	MPHOSPHOR,
+	MPHOSPHOR2,
 	MSCANLINE,
 	MDBL,
+	MDARKROOM,
 	MCRT,
 	MCRTCURVE,
 	MCRTNOCURVE,
@@ -312,22 +314,30 @@ void menu_video_filter(GtkWidget *video, GtkAccelGroup *accel_group) {
 
 	check[MNO_FILTER] = gtk_check_menu_item_new_with_mnemonic("_No Filter");
 	check[MPHOSPHOR] = gtk_check_menu_item_new_with_mnemonic("_Phosphor");
+	check[MPHOSPHOR2] = gtk_check_menu_item_new_with_mnemonic("P_hosphor2");
 	check[MSCANLINE] = gtk_check_menu_item_new_with_mnemonic("S_canline");
 	check[MDBL] = gtk_check_menu_item_new_with_mnemonic("_DBL");
+	check[MDARKROOM] = gtk_check_menu_item_new_with_mnemonic("Dark R_oom");
 
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu[0]), check[MNO_FILTER]);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu[0]), check[MPHOSPHOR]);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu[0]), check[MPHOSPHOR2]);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu[0]), check[MSCANLINE]);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu[0]), check[MDBL]);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu[0]), check[MDARKROOM]);
 
 	g_signal_connect_swapped(G_OBJECT(check[MNO_FILTER]), "activate",
 			G_CALLBACK(set_filter), GINT_TO_POINTER(NO_FILTER));
 	g_signal_connect_swapped(G_OBJECT(check[MPHOSPHOR]), "activate",
 			G_CALLBACK(set_filter), GINT_TO_POINTER(PHOSPHOR));
+	g_signal_connect_swapped(G_OBJECT(check[MPHOSPHOR2]), "activate",
+			G_CALLBACK(set_filter), GINT_TO_POINTER(PHOSPHOR2));
 	g_signal_connect_swapped(G_OBJECT(check[MSCANLINE]), "activate",
 			G_CALLBACK(set_filter), GINT_TO_POINTER(SCANLINE));
 	g_signal_connect_swapped(G_OBJECT(check[MDBL]), "activate",
 			G_CALLBACK(set_filter), GINT_TO_POINTER(DBL));
+	g_signal_connect_swapped(G_OBJECT(check[MDARKROOM]), "activate",
+			G_CALLBACK(set_filter), GINT_TO_POINTER(DARK_ROOM));
 
 	menu[1] = gtk_menu_new();
 	check[MCRT] = gtk_image_menu_item_new_with_mnemonic("_CRT");
@@ -436,13 +446,17 @@ void menu_video_filter_check(void) {
 
 	if (opengl.glsl.compliant && opengl.glsl.enabled) {
 		gtk_widget_set_sensitive(check[MPHOSPHOR], TRUE);
+		gtk_widget_set_sensitive(check[MPHOSPHOR2], TRUE);
 		gtk_widget_set_sensitive(check[MSCANLINE], TRUE);
 		gtk_widget_set_sensitive(check[MDBL], TRUE);
+		gtk_widget_set_sensitive(check[MDARKROOM], TRUE);
 		gtk_widget_set_sensitive(check[MCRT], TRUE);
 	} else {
 		gtk_widget_set_sensitive(check[MPHOSPHOR], FALSE);
+		gtk_widget_set_sensitive(check[MPHOSPHOR2], FALSE);
 		gtk_widget_set_sensitive(check[MSCANLINE], FALSE);
 		gtk_widget_set_sensitive(check[MDBL], FALSE);
+		gtk_widget_set_sensitive(check[MDARKROOM], FALSE);
 		gtk_widget_set_sensitive(check[MCRT], FALSE);
 	}
 
@@ -458,8 +472,10 @@ void menu_video_filter_check(void) {
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MRGBNTSCRGB]), FALSE);
 
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MPHOSPHOR]), FALSE);
+	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MPHOSPHOR2]), FALSE);
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MSCANLINE]), FALSE);
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MDBL]), FALSE);
+	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MDARKROOM]), FALSE);
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MCRTCURVE]), FALSE);
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MCRTNOCURVE]), FALSE);
 
@@ -470,11 +486,17 @@ void menu_video_filter_check(void) {
 		case PHOSPHOR:
 			index = MPHOSPHOR;
 			break;
+		case PHOSPHOR2:
+			index = MPHOSPHOR2;
+			break;
 		case SCANLINE:
 			index = MSCANLINE;
 			break;
 		case DBL:
 			index = MDBL;
+			break;
+		case DARK_ROOM:
+			index = MDARKROOM;
 			break;
 		case CRT_CURVE:
 			index = MCRTCURVE;
@@ -530,11 +552,17 @@ void set_filter(int filter) {
 		case PHOSPHOR:
 			gfx_set_screen(NO_CHANGE, PHOSPHOR, NO_CHANGE, NO_CHANGE, FALSE);
 			return;
+		case PHOSPHOR2:
+			gfx_set_screen(NO_CHANGE, PHOSPHOR2, NO_CHANGE, NO_CHANGE, FALSE);
+			return;
 		case SCANLINE:
 			gfx_set_screen(NO_CHANGE, SCANLINE, NO_CHANGE, NO_CHANGE, FALSE);
 			return;
 		case DBL:
 			gfx_set_screen(NO_CHANGE, DBL, NO_CHANGE, NO_CHANGE, FALSE);
+			return;
+		case DARK_ROOM:
+			gfx_set_screen(NO_CHANGE, DARK_ROOM, NO_CHANGE, NO_CHANGE, FALSE);
 			return;
 		case CRT_CURVE:
 			gfx_set_screen(NO_CHANGE, CRT_CURVE, NO_CHANGE, NO_CHANGE, FALSE);

@@ -112,7 +112,8 @@ BYTE cmd_line_parse(int argc, char **argv) {
 				param_search(0, optarg, param_off_on, cfg_from_file.vsync = index);
 				break;
 			case 'e':
-				param_search(0, optarg, param_no_yes, cfg_from_file.tv_aspect_ratio = index);
+				param_search(0, optarg, param_pixel_aspect_ratio,
+						cfg_from_file.pixel_aspect_ratio = index);
 				break;
 			case 'j':
 				param_search(0, optarg, param_no_yes, cfg_from_file.interpolation = index);
@@ -185,13 +186,13 @@ void usage(char *name) {
 			param[P_FPS].help,
 	        param[P_FSK].help,
 	        param[P_SIZE].help,
+			param[P_PIXEL_ASPECT_RATIO].help,
 	        param[P_OVERSCAN].help,
 	        param[P_FILTER].help,
 	        param[P_NTSCFORMAT].help,
 	        param[P_PALETTE].help,
 			param[P_RENDER].help,
 			param[P_VSYNC].help,
-			param[P_TV_ASPECT_RATIO].help,
 			param[P_INTERPOLATION].help,
 			param[P_TXT_ON_SCREEN].help,
 			param[P_OVERSCAN_BRD_NTSC].help,

@@ -26,6 +26,7 @@
 
 enum render_type { RENDER_SOFTWARE, RENDER_OPENGL, RENDER_GLSL };
 enum scale_type { X1 = 1, X2, X3, X4 };
+enum par_type { PAR11, PAR54, PAR87 };
 enum filters_type {
 	NO_FILTER,
 	SCALE2X,
@@ -41,6 +42,8 @@ enum filters_type {
 	DBL,
 	CRT_CURVE,
 	CRT_NO_CURVE,
+	PHOSPHOR2,
+	DARK_ROOM
 	/* glsl shaders end */
 };
 enum fullscreen_type { NO_FULLSCR, FULLSCR };
@@ -58,7 +61,7 @@ struct _gfx {
 	SDBWORD h[4];
 	float w_pr;
 	float h_pr;
-	float aspect_ratio;
+	float pixel_aspect_ratio;
 	gfx_filter_function((*filter));
 } gfx;
 

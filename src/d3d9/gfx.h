@@ -25,6 +25,7 @@
 enum render_type { RENDER_SOFTWARE, RENDER_HLSL };
 enum fullscreen_type { NO_FULLSCR, FULLSCR };
 enum scale_type { X1 = 1, X2, X3, X4 };
+enum par_type { PAR11, PAR54, PAR87 };
 enum filters_type {
 	NO_FILTER,
 	SCALE2X,
@@ -39,6 +40,8 @@ enum filters_type {
 	DBL,
 	CRT_CURVE,
 	CRT_NO_CURVE,
+	PHOSPHOR2,
+	DARK_ROOM
 };
 enum overcan_type { OSCAN_OFF, OSCAN_ON, OSCAN_DEFAULT, OSCAN_DEFAULT_OFF, OSCAN_DEFAULT_ON };
 enum gfx_info_type { CURRENT, NO_OVERSCAN, MONITOR, VIDEO_MODE };
@@ -60,7 +63,7 @@ struct _gfx {
 
 	float w_pr;
 	float h_pr;
-	float aspect_ratio;
+	float pixel_aspect_ratio;
 
 	gfx_filter_function((*filter));
 
@@ -68,6 +71,7 @@ struct _gfx {
 		BYTE compliant;
 		BYTE enabled;
 		BYTE used;
+		BYTE param;
 	} hlsl;
 
 	_texcoords quadcoords;

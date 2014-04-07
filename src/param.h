@@ -78,7 +78,7 @@ enum {
 	P_SWAP_DUTY,
 	P_GAMEGENIE,
 	P_STEREODELAY,
-	P_TV_ASPECT_RATIO,
+	P_PIXEL_ASPECT_RATIO,
 	P_INTERPOLATION,
 	P_TXT_ON_SCREEN,
 	P_OVERSCAN_BRD_NTSC,
@@ -110,7 +110,7 @@ static const struct option opt_long[] = {
 	{ "palette",            required_argument, NULL, 'p'},
 	{ "rendering",          required_argument, NULL, 'r'},
 	{ "vsync",              required_argument, NULL, 'v'},
-	{ "tv-aspect-ratio",    required_argument, NULL, 'e'},
+	{ "pixel-aspect-ratio", required_argument, NULL, 'e'},
 	{ "interpolation",      required_argument, NULL, 'j'},
 	{ "fullscreen",         required_argument, NULL, 'u'},
 	{ "stretch-fullscreen", required_argument, NULL, 't'},
@@ -171,12 +171,14 @@ static const _param param[] = {
 		"filter",
 		NULL,
 		"# possible values: none, scale2x, scale3x, scale4x, hq2x, hq3x, hq4x,\n"
-		"#                  ntsc, posphor, scanline, dbl, crtcurve, crtnocurve",
+		"#                  ntsc, phosphor, scanline, dbl, crtcurve, crtnocurve,\n"
+		"#                  phosphor2, dark_room\n",
 		NULL,
 		"-i, --filter              filter to apply       : nofilter, scale2x,\n"
 		"                                                  scale3x, scale4x, hq2x, hq3x,\n"
-		"                                                  hq4x, ntsc, posphor, scanline,\n"
-		"                                                  dbl, crtcurve, crtnocurve"
+		"                                                  hq4x, ntsc, phosphor, scanline,\n"
+		"                                                  dbl, crtcurve, crtnocurve,\n"
+		"                                                  phosphor2, dark_room\n"
 	},
 	{
 		"ntsc filter format",
@@ -287,11 +289,11 @@ static const _param param[] = {
 		"-d, --stereo-delay        stereo effect delay   : [5 - 100]"
 	},
 	{
-		"tv aspect ratio",
+		"pixel aspect ratio",
 		NULL,
-		"# possible values: yes, no",
+		"# possible values: 1:1, 5:4, 8:7",
 		NULL,
-		"-e, --tv-aspect-ratio     enable aspect ratio   : yes, no"
+		"-e, --pixel-aspect-ratio     enable aspect ratio   : 1:1, 5:4, 8:7"
 	},
 	{
 		"interpolation",
@@ -548,11 +550,13 @@ static const _param param_filter[] = {
 	{"Hq3X",       "hq3x"      },
 	{"Hq4X",       "hq4x"      },
 	{"NTSC",       "ntsc"      },
-	{"Poshpor",    "posphor"   },
+	{"Phoshpor",   "phosphor"  },
 	{"Scanline",   "scanline"  },
 	{"DBL",        "dbl"       },
 	{"CRTCURVE",   "crtcurve"  },
 	{"CRTNOCURVE", "crtnocurve"},
+	{"Phosphor2",  "phosphor2" },
+	{"DarkRoom",   "darkroom"  },
 };
 static const _param param_ntsc[] = {
 	{"Composite", "composite"},
@@ -618,6 +622,11 @@ static const _param param_controller_mode[] = {
 	{"NES",        "nes"       },
 	{"Famicom",    "famicom"   },
 	{"Four Score", "four score"}
+};
+static const _param param_pixel_aspect_ratio[] = {
+	{"1:1", "1:1" },
+	{"5:4", "5:4" },
+	{"8:7", "8:7" }
 };
 
 #endif /* PARAM_H_ */

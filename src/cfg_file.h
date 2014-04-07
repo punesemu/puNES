@@ -34,7 +34,7 @@ typedef struct {
 	BYTE stretch;
 	BYTE oscan;
 	BYTE oscan_default;
-	BYTE tv_aspect_ratio;
+	BYTE pixel_aspect_ratio;
 	BYTE interpolation;
 	BYTE gamegenie;
 	BYTE txt_on_screen;

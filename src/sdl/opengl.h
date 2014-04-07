@@ -32,6 +32,7 @@ struct _opengl {
 		BYTE compliant;
 		BYTE enabled;
 		BYTE shader_used;
+		BYTE param;
 	} glsl;
 
 	GLint scale_force;
