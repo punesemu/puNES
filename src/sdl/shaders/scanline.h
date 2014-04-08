@@ -14,8 +14,10 @@
 	"	gl_FrontColor = gl_Color;\n"
 	"	gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;\n"
 
-	"	omega = vec2(3.1415 * size_video_mode.x * size_texture.x / size_screen_emu.x,"
-	"			2.0 * 3.1415 * size_texture.y);\n"
+	"	omega = vec2(3.1415, 2.0 * 3.1415 * size_texture.y);\n"
+
+	//"	omega = vec2(3.1415 * size_video_mode.x * size_texture.x / size_screen_emu.x,"
+	//"			2.0 * 3.1415 * size_texture.y);\n"
 
 	"	v_texCoord = gl_MultiTexCoord0;\n"
 	"}",
@@ -28,7 +30,8 @@
 	"varying vec2 omega;\n"
 
 	"const float base_brightness = 0.95;\n"
-	"const vec2 sine_comp = vec2(0.05, 0.15);\n"
+	//"const vec2 sine_comp = vec2(0.05, 0.15);\n"
+	"const vec2 sine_comp = vec2(0.15, 0.25);\n"
 
 	"void main() {\n"
 	"	vec4 c11 = texture2D(texture_scr, v_texCoord.xy);\n"
