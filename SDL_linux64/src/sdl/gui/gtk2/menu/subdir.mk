@@ -28,9 +28,9 @@ C_SRCS += \
 ../src/sdl/gui/gtk2/menu/menu_video_interpolation.c \
 ../src/sdl/gui/gtk2/menu/menu_video_overscan.c \
 ../src/sdl/gui/gtk2/menu/menu_video_palette.c \
+../src/sdl/gui/gtk2/menu/menu_video_pixel_aspect_ratio.c \
 ../src/sdl/gui/gtk2/menu/menu_video_rendering.c \
 ../src/sdl/gui/gtk2/menu/menu_video_size.c \
-../src/sdl/gui/gtk2/menu/menu_video_tv_aspect_ratio.c \
 ../src/sdl/gui/gtk2/menu/menu_video_txt_on_screen.c \
 ../src/sdl/gui/gtk2/menu/menu_video_vsync.c 
 
@@ -59,9 +59,9 @@ OBJS += \
 ./src/sdl/gui/gtk2/menu/menu_video_interpolation.o \
 ./src/sdl/gui/gtk2/menu/menu_video_overscan.o \
 ./src/sdl/gui/gtk2/menu/menu_video_palette.o \
+./src/sdl/gui/gtk2/menu/menu_video_pixel_aspect_ratio.o \
 ./src/sdl/gui/gtk2/menu/menu_video_rendering.o \
 ./src/sdl/gui/gtk2/menu/menu_video_size.o \
-./src/sdl/gui/gtk2/menu/menu_video_tv_aspect_ratio.o \
 ./src/sdl/gui/gtk2/menu/menu_video_txt_on_screen.o \
 ./src/sdl/gui/gtk2/menu/menu_video_vsync.o 
 
@@ -90,9 +90,9 @@ C_DEPS += \
 ./src/sdl/gui/gtk2/menu/menu_video_interpolation.d \
 ./src/sdl/gui/gtk2/menu/menu_video_overscan.d \
 ./src/sdl/gui/gtk2/menu/menu_video_palette.d \
+./src/sdl/gui/gtk2/menu/menu_video_pixel_aspect_ratio.d \
 ./src/sdl/gui/gtk2/menu/menu_video_rendering.d \
 ./src/sdl/gui/gtk2/menu/menu_video_size.d \
-./src/sdl/gui/gtk2/menu/menu_video_tv_aspect_ratio.d \
 ./src/sdl/gui/gtk2/menu/menu_video_txt_on_screen.d \
 ./src/sdl/gui/gtk2/menu/menu_video_vsync.d 
 
