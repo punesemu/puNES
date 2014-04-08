@@ -204,7 +204,7 @@ void opengl_create_texture(_texture *texture, uint32_t width, uint32_t height, u
 		glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, color);
 	}
 
-	if (opengl.glew && !GLEW_VERSION_3_0) {
+	if (opengl.glew && !GLEW_VERSION_3_1) {
 		glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
 	}
 
@@ -221,7 +221,7 @@ void opengl_create_texture(_texture *texture, uint32_t width, uint32_t height, u
 		SDL_FreeSurface(blank);
 	}
 
-	if (opengl.glew && GLEW_VERSION_3_0) {
+	if (opengl.glew && GLEW_VERSION_3_1) {
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 
@@ -230,7 +230,7 @@ void opengl_create_texture(_texture *texture, uint32_t width, uint32_t height, u
 void opengl_update_scr_texture(SDL_Surface *surface, uint8_t generate_mipmap) {
 	glBindTexture(GL_TEXTURE_2D, opengl.screen.data);
 
-	if (generate_mipmap && opengl.glew && !GLEW_VERSION_3_0) {
+	if (generate_mipmap && opengl.glew && !GLEW_VERSION_3_1) {
 		glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
 	}
 
@@ -241,7 +241,7 @@ void opengl_update_scr_texture(SDL_Surface *surface, uint8_t generate_mipmap) {
 
 	glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
 
-	if (generate_mipmap && opengl.glew && GLEW_VERSION_3_0) {
+	if (generate_mipmap && opengl.glew && GLEW_VERSION_3_1) {
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 
@@ -275,7 +275,7 @@ BYTE opengl_update_txt_texture(uint8_t generate_mipmap) {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	if (generate_mipmap && opengl.glew && !GLEW_VERSION_3_0) {
+	if (generate_mipmap && opengl.glew && !GLEW_VERSION_3_1) {
 		glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
@@ -395,10 +395,10 @@ void glew_init(void) {
 				opengl.glsl.enabled = FALSE;
 			}
 
-			if (GLEW_VERSION_3_0) {
-				fprintf(stderr, "INFO: OpenGL 3.0 supported.\n");
+			if (GLEW_VERSION_3_1) {
+				fprintf(stderr, "INFO: OpenGL 3.1 supported.\n");
 			} else {
-				fprintf(stderr, "INFO: OpenGL 3.0 not supported.\n");
+				fprintf(stderr, "INFO: OpenGL 3.1 not supported.\n");
 			}
 		}
 	}
