@@ -122,7 +122,7 @@ void sdl_create_surface_gl(SDL_Surface *src, WORD width, WORD height, BYTE flags
 				 */
 				GLfloat centering_factor = 0.0f;
 
-				w_quad = trunc((h_quad * ratio_frame) * gfx.pixel_aspect_ratio) - 1.0f;
+				w_quad = trunc((h_quad * ratio_frame) * gfx.pixel_aspect_ratio);
 				centering_factor = trunc(((GLfloat) src->w - w_quad) / 2.0f);
 
 				opengl.quadcoords.l = centering_factor;
