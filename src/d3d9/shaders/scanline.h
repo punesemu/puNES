@@ -25,7 +25,7 @@
 	"sampler2D s0 = sampler_state { Texture = <texture_scr>; };\n"
 
 	"static const float base_brightness = 0.95;\n"
-	"static const float2 sine_comp = float2(0.15, 0.25);\n"
+	"static const float2 sine_comp = float2(0.00, 0.05);\n"
 
 	"float4 Ps(float2 texCoord : TEXCOORD0) : COLOR {\n"
 	"	float2 omega = float2(3.1415, 2.0 * 3.1415 * size_texture.y);\n"

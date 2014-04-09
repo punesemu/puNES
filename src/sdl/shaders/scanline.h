@@ -31,7 +31,7 @@
 
 	"const float base_brightness = 0.95;\n"
 	//"const vec2 sine_comp = vec2(0.05, 0.15);\n"
-	"const vec2 sine_comp = vec2(0.15, 0.25);\n"
+	"const vec2 sine_comp = vec2(0.00, 0.05);\n"
 
 	"void main() {\n"
 	"	vec4 c11 = texture2D(texture_scr, v_texCoord.xy);\n"
