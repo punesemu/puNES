@@ -1111,7 +1111,7 @@ void gui_update(void) {
 			menuitem.fState = MFS_ENABLED;
 
 			/* Video/Filter/CRT */
-			SetMenuItemInfo(menu_to_change, 4, TRUE, &menuitem);
+			SetMenuItemInfo(menu_to_change, 6, TRUE, &menuitem);
 
 			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_CRTCURVE);
 			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_CRTNOCURVE);
@@ -1125,7 +1125,7 @@ void gui_update(void) {
 			menuitem.fState = MFS_DISABLED;
 
 			/* Video/Filter/CRT */
-			SetMenuItemInfo(menu_to_change, 4, TRUE, &menuitem);
+			SetMenuItemInfo(menu_to_change, 6, TRUE, &menuitem);
 
 			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_CRTCURVE);
 			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_CRTNOCURVE);
