@@ -21,7 +21,6 @@ enum uncomp_misc {
 	UNCOMP_NO_FILE_SELECTED = 0xFFFF
 };
 
-
 typedef struct {
 	char ext[10];
 	BYTE id;
@@ -50,5 +49,6 @@ BYTE uncomp_init(void);
 void uncomp_quit(void);
 BYTE uncomp_ctrl(char *ext);
 BYTE uncomp_name_file(_uncomp_file_data *file);
+void uncomp_remove(void);
 
 #endif /* UNCOMPRESS_H_ */

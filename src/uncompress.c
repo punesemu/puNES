@@ -7,6 +7,7 @@
 
 #include <libgen.h>
 #include "uncompress.h"
+#include "gamegenie.h"
 #include "l7zip/l7z.h"
 #define __GUI_BASE__
 #define __GUI_UNCOMPRESS_SELECTION__
@@ -20,8 +21,6 @@
 #undef MINIZ_NO_TIME
 #undef MINIZ_NO_ARCHIVE_WRITING_APIS
 
-void uncomp_remove(void);
-
 BYTE (*uncomp_control_in_archive)(void);
 BYTE (*uncomp_file_from_archive)(_uncomp_file_data *file);
 BYTE (*uncomp_name_file_compress)(_uncomp_file_data *file);
@@ -33,6 +32,8 @@ BYTE uncomp_zip_name_file_compress(_uncomp_file_data *file);
 BYTE uncomp_init(void) {
 	l7z_init();
 
+	memset(&uncomp, 0x00, sizeof(uncomp));
+
 	return (EXIT_OK);
 }
 void uncomp_quit(void) {
@@ -41,9 +42,11 @@ void uncomp_quit(void) {
 	uncomp_remove();
 }
 BYTE uncomp_ctrl(char *ext) {
-	uncomp_remove();
-
-	memset(&uncomp, 0x00, sizeof(uncomp));
+	/* azzero singolarmente i campi della struttura uncomp */
+	uncomp.files_founded = 0;
+	uncomp.file = NULL;
+	memset(&uncomp.compress_archive, 0x00, sizeof(uncomp.compress_archive));
+	memset(&uncomp.buffer, 0x00, sizeof(uncomp.buffer));
 
 	if ((l7z_present() == TRUE) && (l7z_control_ext(ext) == EXIT_OK)){
 		uncomp_control_in_archive = l7z_control_in_archive;
@@ -84,6 +87,10 @@ BYTE uncomp_name_file(_uncomp_file_data *file) {
 }
 
 void uncomp_remove(void) {
+	if (gamegenie.phase == GG_LOAD_ROM) {
+		return;
+	}
+
 	if (uncomp.file != NULL) {
 		free(uncomp.file);
 		uncomp.file = NULL;
@@ -91,6 +98,7 @@ void uncomp_remove(void) {
 
 	if (info.uncompress_rom == TRUE) {
 		remove(uncomp.uncompress_file);
+		memset(&uncomp.uncompress_file, 0x00, sizeof(uncomp.uncompress_file));
 	}
 
 	info.uncompress_rom = FALSE;

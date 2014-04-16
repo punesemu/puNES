@@ -195,6 +195,9 @@ BYTE emu_load_rom(void) {
 	fds_quit();
 	map_quit();
 
+	/* se necessario rimuovo la rom decompressa */
+	uncomp_remove();
+
 	if (info.load_rom_file[0]) {
 		strncpy(info.rom_file, info.load_rom_file, sizeof(info.rom_file));
 		memset(info.load_rom_file, 0, sizeof(info.load_rom_file));
