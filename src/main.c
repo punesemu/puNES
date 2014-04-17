@@ -67,6 +67,10 @@ int main(int argc, char **argv) {
 		return (EXIT_ERROR);
 	}
 	if (emu_make_dir("%s" PRB_FOLDER, info.base_folder)) {
+		fprintf(stderr, "error on create prb folder\n");
+		return (EXIT_ERROR);
+	}
+	if (emu_make_dir("%s" TMP_FOLDER, info.base_folder)) {
 		fprintf(stderr, "error on create tmp folder\n");
 		return (EXIT_ERROR);
 	}
