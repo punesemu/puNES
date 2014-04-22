@@ -148,6 +148,12 @@ BEGIN
 				MENUITEM "&1:1",                  IDM_SET_PAR11
 				MENUITEM "&5:4",                  IDM_SET_PAR54
 				MENUITEM "&8:7 (NTSC TV)",        IDM_SET_PAR87
+				MENUITEM SEPARATOR
+#if defined (SDL)
+				MENUITEM "GLSL &soft Stretch",    IDM_SET_PAR_SOFT
+#elif defined (D3D9)
+				MENUITEM "HLSL &soft Stretch",    IDM_SET_PAR_SOFT
+#endif
 			END
 			POPUP "&Overscan"
 			BEGIN

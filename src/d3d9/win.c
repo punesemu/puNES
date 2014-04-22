@@ -97,6 +97,7 @@ void set_pixel_aspect_ratio(BYTE par);
 void set_overscan(BYTE oscan);
 void set_interpolation(void);
 void set_txt_on_screen(void);
+void set_par_soft_stretch(void);
 void set_filter(BYTE filter);
 //void set_effect(void);
 void set_samplerate(BYTE samplerate);
@@ -1015,6 +1016,17 @@ void gui_update(void) {
 			break;
 	}
 	change_menuitem(CHECK, MF_CHECKED, id);
+	/* Soft Stretch */
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_PAR_SOFT);
+	if ((gfx.hlsl.compliant == TRUE) && (gfx.hlsl.enabled == TRUE)
+	        && (cfg->pixel_aspect_ratio != PAR11)) {
+		change_menuitem(ENAB, MF_ENABLED, IDM_SET_PAR_SOFT);
+		if (cfg->PAR_soft_stretch) {
+			change_menuitem(CHECK, MF_CHECKED, IDM_SET_PAR_SOFT);
+		}
+	} else {
+		change_menuitem(ENAB, MF_GRAYED, IDM_SET_PAR_SOFT);
+	}
 
 	/* Overscan */
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_OSCAN_ON);
@@ -1095,7 +1107,7 @@ void gui_update(void) {
 		/* Video/Rendering/HLSL */
 		SetMenuItemInfo(menu_to_change, 1, TRUE, &menuitem);
 
-		menu_to_change = GetSubMenu(GetSubMenu(GetSubMenu(main_menu, 2), 2), 6);
+		menu_to_change = GetSubMenu(GetSubMenu(GetSubMenu(main_menu, 2), 2), 7);
 
 		if ((gfx.hlsl.enabled == TRUE) && (cfg->scale != X1)) {
 			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_PHOSPHOR);
@@ -1104,11 +1116,9 @@ void gui_update(void) {
 			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_DBL);
 			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_DARKROOM);
 
-			menuitem.fState = MFS_ENABLED;
-
 			/* Video/Filter/CRT */
-			SetMenuItemInfo(menu_to_change, 4, TRUE, &menuitem);
-
+			menuitem.fState = MFS_ENABLED;
+			SetMenuItemInfo(menu_to_change, 6, TRUE, &menuitem);
 			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_CRTCURVE);
 			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_CRTNOCURVE);
 		} else {
@@ -1118,11 +1128,9 @@ void gui_update(void) {
 			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_DBL);
 			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_DARKROOM);
 
-			menuitem.fState = MFS_DISABLED;
-
 			/* Video/Filter/CRT */
-			SetMenuItemInfo(menu_to_change, 4, TRUE, &menuitem);
-
+			menuitem.fState = MFS_DISABLED;
+			SetMenuItemInfo(menu_to_change, 6, TRUE, &menuitem);
 			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_CRTCURVE);
 			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_CRTNOCURVE);
 		}
@@ -1131,19 +1139,19 @@ void gui_update(void) {
 			menuitem.fState = MFS_ENABLED;
 
 			/* Video/Filter/ScaleX */
-			SetMenuItemInfo(menu_to_change, 5, TRUE, &menuitem);
+			SetMenuItemInfo(menu_to_change, 7, TRUE, &menuitem);
 			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_SCALE2X);
 			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_SCALE3X);
 			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_SCALE4X);
 
 			/* Video/Filter/HqX */
-			SetMenuItemInfo(menu_to_change, 6, TRUE, &menuitem);
+			SetMenuItemInfo(menu_to_change, 8, TRUE, &menuitem);
 			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_HQ2X);
 			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_HQ3X);
 			change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_HQ4X);
 
 			/* Video/Filter/NTSC */
-			SetMenuItemInfo(menu_to_change, 7, TRUE, &menuitem);
+			SetMenuItemInfo(menu_to_change, 9, TRUE, &menuitem);
 			change_menuitem(CHECK, MF_ENABLED, IDM_SET_FILTER_RGBNTSCCOM);
 			change_menuitem(CHECK, MF_ENABLED, IDM_SET_FILTER_RGBNTSCSVD);
 			change_menuitem(CHECK, MF_ENABLED, IDM_SET_FILTER_RGBNTSCRGB);
@@ -1151,19 +1159,19 @@ void gui_update(void) {
 			menuitem.fState = MFS_DISABLED;
 
 			/* Video/Filter/ScaleX */
-			SetMenuItemInfo(menu_to_change, 5, TRUE, &menuitem);
+			SetMenuItemInfo(menu_to_change, 7, TRUE, &menuitem);
 			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_SCALE2X);
 			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_SCALE3X);
 			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_SCALE4X);
 
 			/* Video/Filter/HqX */
-			SetMenuItemInfo(menu_to_change, 6, TRUE, &menuitem);
+			SetMenuItemInfo(menu_to_change, 8, TRUE, &menuitem);
 			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_HQ2X);
 			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_HQ3X);
 			change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_HQ4X);
 
 			/* Video/Filter/NTSC */
-			SetMenuItemInfo(menu_to_change, 7, TRUE, &menuitem);
+			SetMenuItemInfo(menu_to_change, 9, TRUE, &menuitem);
 			change_menuitem(CHECK, MF_GRAYED, IDM_SET_FILTER_RGBNTSCCOM);
 			change_menuitem(CHECK, MF_GRAYED, IDM_SET_FILTER_RGBNTSCSVD);
 			change_menuitem(CHECK, MF_GRAYED, IDM_SET_FILTER_RGBNTSCRGB);
@@ -1455,11 +1463,6 @@ void gui_fullscreen(void) {
 			SetWindowPlacement(main_win, &wp_prev);
 		}
 
-		/*
-		 * per sicurezza ricalcolo le dimensioni della finestra
-		 * perchè potrebbe essere cambiata dall'ingresso nel fullscreen per
-		 * la modifica dell'opzione "TV Aspect Ratio".
-		 */
 		gui_set_video_mode();
 	}
 
@@ -1789,6 +1792,9 @@ long __stdcall main_win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 					break;
 				case IDM_SET_INTERPOLATION:
 					set_interpolation();
+					break;
+				case IDM_SET_PAR_SOFT:
+					set_par_soft_stretch();
 					break;
 				case IDM_SET_TXT_ON_SCREEN:
 					set_txt_on_screen();
@@ -2294,7 +2300,7 @@ LRESULT CALLBACK cbt_proc(int code, WPARAM wParam, LPARAM lParam) {
 
 #define BORDER_SIZE 2
 				x = (50 * widht_font);
-				y = (33 * widht_font);
+				y = (41 * widht_font);
 
 				if (rc_button.bottom == 0) {
 					GetClientRect(button, &rc_button);
@@ -2471,7 +2477,11 @@ void set_interpolation(void) {
 void set_txt_on_screen(void) {
 	cfg->txt_on_screen = !cfg->txt_on_screen;
 }
+void set_par_soft_stretch(void) {
+	cfg->PAR_soft_stretch = !cfg->PAR_soft_stretch;
 
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE);
+}
 void set_filter(BYTE filter) {
 	switch (filter) {
 		case NO_FILTER:

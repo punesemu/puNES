@@ -11,11 +11,12 @@
 	"	v_texCoord = gl_MultiTexCoord0;\n"
 	"}",
 	// fragment shader
+	"uniform vec2 size_texture;\n"
 	"uniform vec2 size_screen_emu;\n"
 	"uniform vec2 size_video_mode;\n"
-	"uniform vec2 size_texture;\n"
 	"uniform float pixel_aspect_ratio;\n"
 	"uniform float param;\n"
+	"uniform float full_interpolation;\n"
 
 	"uniform sampler2D texture_scr;\n"
 
@@ -38,22 +39,25 @@
 	"	vec2 aspect2;\n"
 
 	"	if (param == 0.0) {\n"
-	"		aspect1 = aspect2 = (size_video_mode * (size_texture / size_screen_emu)) * 0.5;\n"
+	"		aspect1 = vec2(size_video_mode.x / pixel_aspect_ratio, size_video_mode.y);\n"
+	"		aspect2 = size_video_mode * (256.0 / size_screen_emu) * 0.5;\n"
 	"		green = 2.50;\n"
 	"	} else {\n"
 	"		aspect1 = size_screen_emu * pixel_aspect_ratio;\n"
-	"		aspect2 = size_texture * (size_video_mode / size_screen_emu);\n"
+	"		aspect2 = 256.0 * (size_video_mode / size_screen_emu);\n"
 	"		green = 2.10;"
 	"	}\n"
+
+#include "interpolation.h"
 
 	"	float y = mod(v_texCoord.y, 1.0);\n"
 	"	float intensity = exp(-0.2 * y);\n"
 
 	"	vec2 one_x = vec2(1.0 / (aspect1.x * 3.0), 0.0);\n"
 
-	"	vec3 color = texture2D(texture_scr, v_texCoord.xy).rgb;\n"
-	"	vec3 color_prev = texture2D(texture_scr, v_texCoord.xy - one_x).rgb;\n"
-	"	vec3 color_prev_prev = texture2D(texture_scr, v_texCoord.xy - (2.0 * one_x)).rgb;\n"
+	"	vec3 color = texture2D(texture_scr, pnt.xy).rgb;\n"
+	"	vec3 color_prev = texture2D(texture_scr, pnt.xy - one_x).rgb;\n"
+	"	vec3 color_prev_prev = texture2D(texture_scr, pnt.xy - (2.0 * one_x)).rgb;\n"
 
 	"	float pixel_x = 3.0 * (v_texCoord.x * aspect2.x);\n"
 

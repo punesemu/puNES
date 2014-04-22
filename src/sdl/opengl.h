@@ -39,6 +39,7 @@ struct _opengl {
 	GLfloat scale;
 	GLfloat factor;
 	BYTE interpolation;
+	BYTE PSS;
 
 	SDL_Surface *surface_gl;
 

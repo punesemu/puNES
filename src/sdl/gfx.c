@@ -555,110 +555,68 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 		opengl.scale_force = FALSE;
 		opengl.scale = cfg->scale;
 		opengl.factor = X1;
+		opengl.PSS = FALSE;
 		opengl.glsl.shader_used = FALSE;
 		shader.id = SHADER_NONE;
 		opengl.glsl.param = 0;
 
 		if ((opengl.glsl.compliant == TRUE) && (opengl.glsl.enabled == TRUE)) {
 
-#define glsl_up(e, s)\
+#define PSS()\
+	opengl.PSS = ((gfx.pixel_aspect_ratio != 1.0f) && (cfg->PAR_soft_stretch == TRUE)) ? TRUE : FALSE
+#define glsl_up(e, s, p)\
 	opengl.glsl.shader_used = TRUE;\
 	shader.id = s;\
 	opengl.scale_force = TRUE;\
 	opengl.scale = X1;\
 	opengl.factor = cfg->scale;\
+	PSS();\
+	opengl.glsl.param = p;\
 	gfx.filter = e
 
 			glsl_delete_shaders(&shader);
 
 			switch (cfg->filter) {
 				case NO_FILTER:
-					glsl_up(scale_surface, SHADER_NO_FILTER);
+					glsl_up(scale_surface, SHADER_NO_FILTER, 0);
 					break;
 				case PHOSPHOR:
-					glsl_up(scale_surface, SHADER_PHOSPHOR);
-					opengl.glsl.param = 1;
+					glsl_up(scale_surface, SHADER_PHOSPHOR, 0);
 					break;
 				case PHOSPHOR2:
-					glsl_up(scale_surface, SHADER_PHOSPHOR);
-					opengl.glsl.param = 0;
+					glsl_up(scale_surface, SHADER_PHOSPHOR, 1);
 					break;
 				case SCANLINE:
-					glsl_up(scale_surface, SHADER_SCANLINE);
+					glsl_up(scale_surface, SHADER_SCANLINE, 0);
 					break;
 				case DBL:
-					glsl_up(scale_surface, SHADER_DONTBLOOM);
-					opengl.glsl.param = 0;
+					glsl_up(scale_surface, SHADER_DONTBLOOM, 0);
 					break;
 				case DARK_ROOM:
-					glsl_up(scale_surface, SHADER_DONTBLOOM);
-					opengl.glsl.param = 1;
+					glsl_up(scale_surface, SHADER_DONTBLOOM, 1);
 					break;
 				case CRT_CURVE:
-					opengl.interpolation = FALSE;
-					glsl_up(scale_surface, SHADER_CRT);
+					glsl_up(scale_surface, SHADER_CRT, 0);
+					/* niente interpolazione perche' gia fatta dallo shader stesso */
+					opengl.interpolation = opengl.PSS = FALSE;
 					break;
 				case CRT_NO_CURVE:
-					opengl.interpolation = FALSE;
-					glsl_up(scale_surface, SHADER_CRT4);
+					glsl_up(scale_surface, SHADER_CRT, 1);
+					/* niente interpolazione perche' gia fatta dallo shader stesso */
+					opengl.interpolation = opengl.PSS = FALSE;
 					break;
 				case SCALE2X:
-					/*
-					 * con l'aspect ratio attivo, per
-					 * ottenere un risultato migliore applico
-					 * filtro software.
-					 */
-					if ((gfx.pixel_aspect_ratio != 1.0f) || (opengl.interpolation == TRUE)) {
-						gfx.filter = scaleNx;
-					} else {
-						glsl_up(scale_surface, SHADER_SCALE2X);
-					}
-					break;
 				case SCALE3X:
-					/*
-					 * con l'aspect ratio attivo, per
-					 * ottenere un risultato migliore applico
-					 * filtro software.
-					 */
-					if (gfx.pixel_aspect_ratio == 1.0f) {
-						glsl_up(scale_surface, SHADER_SCALE3X);
-					} else {
-						gfx.filter = scaleNx;
-					}
-					break;
 				case SCALE4X:
-					if (opengl.interpolation == TRUE) {
-						gfx.filter = scaleNx;
-					} else {
-						glsl_up(scale_surface, SHADER_SCALE4X);
-						/*
-						opengl.scale_force = TRUE;
-						opengl.scale = X2;
-						opengl.factor = X2;
-						opengl.glsl.shader_used = TRUE;
-						shader.id = SHADER_SCALE2X;
-						opengl.effect = scaleNx;
-						use_txt_texture = TRUE;
-						*/
-					}
-					break;
 				case HQ2X:
-					if (opengl.interpolation == TRUE) {
-						gfx.filter = hqNx;
-					} else {
-						glsl_up(scale_surface, SHADER_HQ2X);
-					}
-					break;
 				case HQ3X:
-					gfx.filter = hqNx;
-					break;
 				case HQ4X:
-					glsl_up(hqNx, SHADER_HQ2X);
-					opengl.scale = X2;
-					opengl.factor = X2;
+				case NTSC_FILTER:
+					PSS();
 					break;
 			}
 
+			/*
 			if (cfg->fullscreen) {
 				if ((cfg->filter >= SCALE2X) && (cfg->filter <= SCALE4X)) {
 					glsl_up(scaleNx, SHADER_NO_FILTER);
@@ -670,6 +628,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 					opengl.factor = (float) cfg->scale / 2.0f;
 				}
 			}
+			*/
 		}
 
 		/* creo la superficie che utilizzero' come texture */

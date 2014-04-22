@@ -83,6 +83,7 @@ enum {
 	P_TXT_ON_SCREEN,
 	P_OVERSCAN_BRD_NTSC,
 	P_OVERSCAN_BRD_PAL,
+	P_PAR_SOFT_STRETCH
 };
 enum {
 	PGS_SLOT,
@@ -127,6 +128,7 @@ static const struct option opt_long[] = {
 	{ "txt-on-screen",      required_argument, NULL,  0 },
 	{ "overscan-brd-ntsc",  required_argument, NULL,  0 },
 	{ "overscan-brd-pal",   required_argument, NULL,  0 },
+	{ "par-soft-stretch",   required_argument, NULL,  0 },
 	{ 0,                    0,                 0,     0 }
 };
 #endif
@@ -175,10 +177,11 @@ static const _param param[] = {
 		"#                  phosphor2, dark_room\n",
 		NULL,
 		"-i, --filter              filter to apply       : nofilter, scale2x,\n"
-		"                                                  scale3x, scale4x, hq2x, hq3x,\n"
-		"                                                  hq4x, ntsc, phosphor, scanline,\n"
-		"                                                  dbl, crtcurve, crtnocurve,\n"
-		"                                                  phosphor2, dark_room\n"
+		"                                                  scale3x, scale4x, hq2x,\n"
+		"                                                  hq3x, hq4x, ntsc, phosphor,\n"
+		"                                                  scanline, dbl, crtcurve,\n"
+		"                                                  crtnocurve, phosphor2,\n"
+		"                                                  dark_room"
 	},
 	{
 		"ntsc filter format",
@@ -293,7 +296,7 @@ static const _param param[] = {
 		NULL,
 		"# possible values: 1:1, 5:4, 8:7",
 		NULL,
-		"-e, --pixel-aspect-ratio     enable aspect ratio   : 1:1, 5:4, 8:7"
+		"-e, --pixel-aspect-ratio  enable aspect ratio   : 1:1, 5:4, 8:7"
 	},
 	{
 		"interpolation",
@@ -322,7 +325,15 @@ static const _param param[] = {
 		"# possible values: 1-17",
 		"# format string  : [UP],[DOWN],[LEFT],[RIGHT]",
 		"    --overscan-brd-pal    borders in pixels     : [UP],[DOWN],[LEFT],[RIGHT]"
-	}
+	},
+	{
+		"pixel aspect ratio soft stretch",
+		NULL,
+		"# possible values: yes, no",
+		NULL,
+		"    --par-soft-stretch    improves the          : yes, no\n"
+		"                          stretched image"
+	},
 };
 static const _param param_pgs[] = {
 	{

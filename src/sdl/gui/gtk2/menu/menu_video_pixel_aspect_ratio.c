@@ -62,6 +62,7 @@ enum {
 	MPAR11,
 	MPAR54,
 	MPAR87,
+	MPSS,
 	NUMCHKS
 };
 
@@ -81,10 +82,13 @@ void menu_video_pixel_aspect_ratio(GtkWidget *video, GtkAccelGroup *accel_group)
 	check[MPAR11] = gtk_check_menu_item_new_with_mnemonic("_1:1");
 	check[MPAR54] = gtk_check_menu_item_new_with_mnemonic("_5:4");
 	check[MPAR87] = gtk_check_menu_item_new_with_mnemonic("_8:7 (NTSC TV)");
+	check[MPSS] = gtk_check_menu_item_new_with_mnemonic("GLSL _soft stretch");
 
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), check[MPAR11]);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), check[MPAR54]);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), check[MPAR87]);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), gtk_separator_menu_item_new());
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), check[MPSS]);
 
 	g_signal_connect_swapped(G_OBJECT(check[MPAR11]), "activate",
 	        G_CALLBACK(menu_video_pixel_aspect_ratio_set), GINT_TO_POINTER(PAR11));
@@ -92,6 +96,8 @@ void menu_video_pixel_aspect_ratio(GtkWidget *video, GtkAccelGroup *accel_group)
 	        G_CALLBACK(menu_video_pixel_aspect_ratio_set), GINT_TO_POINTER(PAR54));
 	g_signal_connect_swapped(G_OBJECT(check[MPAR87]), "activate",
 	        G_CALLBACK(menu_video_pixel_aspect_ratio_set), GINT_TO_POINTER(PAR87));
+	g_signal_connect_swapped(G_OBJECT(check[MPSS]), "activate",
+	        G_CALLBACK(menu_video_par_soft_stretch), NULL);
 }
 void menu_video_pixel_aspect_ratio_check(void) {
 	int index = 0;
@@ -118,6 +124,21 @@ void menu_video_pixel_aspect_ratio_check(void) {
 			break;
 	}
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[index]), TRUE);
+
+	/* Soft stretch */
+	if ((opengl.glsl.compliant == TRUE) && (opengl.glsl.enabled == TRUE)
+	        && (cfg->pixel_aspect_ratio != PAR11)) {
+		gtk_widget_set_sensitive(check[MPSS], TRUE);
+
+		if (cfg->PAR_soft_stretch == TRUE) {
+			gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MPSS]), TRUE);
+		} else {
+			gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MPSS]), FALSE);
+		}
+	} else {
+		gtk_widget_set_sensitive(check[MPSS], FALSE);
+		gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MPSS]), FALSE);
+	}
 }
 void menu_video_pixel_aspect_ratio_set(int par) {
 	if (gui_in_update) {
@@ -129,6 +150,15 @@ void menu_video_pixel_aspect_ratio_set(int par) {
 	}
 
 	cfg->pixel_aspect_ratio = par;
+
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE);
+}
+void menu_video_par_soft_stretch(void) {
+	if (gui_in_update) {
+		return;
+	}
+
+	cfg->PAR_soft_stretch = !cfg->PAR_soft_stretch;
 
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE);
 }

@@ -17,11 +17,12 @@
 	"	return output;\n"
 	"}",
 	// pixel shader
+	"float2 size_texture;\n"
 	"float2 size_screen_emu;\n"
 	"float2 size_video_mode;\n"
-	"float2 size_texture;\n"
 	"float param;\n"
 	"float pixel_aspect_ratio;\n"
+	"float full_interpolation;\n"
 
 	"texture texture_scr;\n"
 	"sampler2D s0 = sampler_state { Texture = <texture_scr>; };\n"
@@ -47,22 +48,25 @@
 	"	float2 aspect2;\n"
 
 	"	if (param == 0.0) {\n"
-	"		aspect1 = aspect2 = (size_video_mode * (size_texture / size_screen_emu)) * 0.5;\n"
+	"		aspect1 = float2(size_video_mode.x / pixel_aspect_ratio, size_video_mode.y);\n"
+	"		aspect2 = size_video_mode * (256.0 / size_screen_emu) * 0.5;\n"
 	"		green = 2.50;\n"
 	"	} else {\n"
 	"		aspect1 = size_screen_emu * pixel_aspect_ratio;\n"
-	"		aspect2 = size_texture * (size_video_mode / size_screen_emu);\n"
+	"		aspect2 = 256.0 * (size_video_mode / size_screen_emu);\n"
 	"		green = 2.10;"
 	"	}\n"
+
+#include "interpolation.h"
 
 	"	float y = mod(texCoord.y, 1.0);\n"
 	"	float intensity = exp(-0.2 * y);\n"
 
 	"	float2 one_x = float2((1.0 / (aspect1.x * 3.0)), 0.0);\n"
 
-	"	float3 color = tex2D(s0, texCoord).rgb;\n"
-	"	float3 color_prev = tex2D(s0, texCoord - one_x).rgb;\n"
-	"	float3 color_prev_prev = tex2D(s0, texCoord - (2.0 * one_x)).rgb;\n"
+	"	float3 color = tex2D(s0, pnt).rgb;\n"
+	"	float3 color_prev = tex2D(s0, pnt - one_x).rgb;\n"
+	"	float3 color_prev_prev = tex2D(s0, pnt - (2.0 * one_x)).rgb;\n"
 
 	"	float pixel_x = 3.0 * (texCoord.x * aspect2.x);\n"
 

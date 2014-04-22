@@ -104,6 +104,7 @@ struct _d3d9 {
 
 	BOOL scale_force;
 	BOOL interpolation;
+	BOOL PSS;
 	BYTE scale;
 	FLOAT factor;
 	DWORD text_linear;
@@ -603,7 +604,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 
 	gfx.pixel_aspect_ratio = 1.0f;
 
-	/* TV Aspect Ratio */
+	/* Pixel Aspect Ratio */
 	if (fullscreen && (cfg->filter == NTSC_FILTER)) {
 		gfx.pixel_aspect_ratio = 1.0f;
 	} else {
@@ -627,113 +628,73 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 		d3d9.interpolation = FALSE;
 	}
 
-	switch (cfg->filter) {
-		case NO_FILTER:
-			d3d9.scale_force = TRUE;
-			d3d9.scale = X1;
-			d3d9.factor = cfg->scale;
-			break;
-		default:
-			d3d9.scale_force = FALSE;
-			d3d9.scale = cfg->scale;
-			d3d9.factor = X1;
-			break;
+	d3d9.scale_force = FALSE;
+	d3d9.scale = cfg->scale;
+	d3d9.factor = X1;
+	if (cfg->filter == NO_FILTER) {
+		d3d9.scale_force = TRUE;
+		d3d9.scale = X1;
+		d3d9.factor = cfg->scale;
 	}
 	d3d9.shader.id = SHADER_NONE;
+	d3d9.PSS = FALSE;
 	gfx.hlsl.used = FALSE;
 	gfx.hlsl.param = 0;
 
 	if ((gfx.hlsl.compliant == TRUE) && (gfx.hlsl.enabled == TRUE)) {
-
-#define hlsl_up(e, s)\
+#define PSS()\
+	d3d9.PSS = ((gfx.pixel_aspect_ratio != 1.0f) && (cfg->PAR_soft_stretch == TRUE)) ? TRUE : FALSE
+#define hlsl_up(e, s, p)\
 	d3d9.shader.id = s;\
 	d3d9.scale_force = TRUE;\
 	d3d9.scale = X1;\
 	d3d9.factor = cfg->scale;\
+	gfx.hlsl.param = p;\
+	PSS();\
 	gfx.hlsl.used = TRUE;\
 	gfx.filter = e
 
 		switch (cfg->filter) {
 			case NO_FILTER:
-				hlsl_up(scale_surface, SHADER_NO_FILTER);
+				hlsl_up(scale_surface, SHADER_NO_FILTER, 0);
 				break;
 			case PHOSPHOR:
-				hlsl_up(scale_surface, SHADER_PHOSPHOR);
-				gfx.hlsl.param = 1;
+				hlsl_up(scale_surface, SHADER_PHOSPHOR, 0);
 				break;
 			case PHOSPHOR2:
-				hlsl_up(scale_surface, SHADER_PHOSPHOR);
-				gfx.hlsl.param = 0;
+				hlsl_up(scale_surface, SHADER_PHOSPHOR, 1);
 				break;
 			case SCANLINE:
-				hlsl_up(scale_surface, SHADER_SCANLINE);
+				hlsl_up(scale_surface, SHADER_SCANLINE, 0);
 				break;
 			case DBL:
-				hlsl_up(scale_surface, SHADER_DONTBLOOM);
-				gfx.hlsl.param = 0;
+				hlsl_up(scale_surface, SHADER_DONTBLOOM, 0);
 				break;
 			case DARK_ROOM:
-				hlsl_up(scale_surface, SHADER_DONTBLOOM);
-				gfx.hlsl.param = 1;
+				hlsl_up(scale_surface, SHADER_DONTBLOOM, 1);
 				break;
 			case CRT_CURVE:
-				d3d9.interpolation = FALSE;
-				hlsl_up(scale_surface, SHADER_CRT);
+				hlsl_up(scale_surface, SHADER_CRT, 0);
+				/* niente interpolazione perche' gia fatta dallo shader stesso */
+				d3d9.interpolation = d3d9.PSS = FALSE;
 				break;
 			case CRT_NO_CURVE:
-				d3d9.interpolation = FALSE;
-				hlsl_up(scale_surface, SHADER_CRT4);
+				hlsl_up(scale_surface, SHADER_CRT, 1);
+				/* niente interpolazione perche' gia fatta dallo shader stesso */
+				d3d9.interpolation = d3d9.PSS = FALSE;
 				break;
 			case SCALE2X:
-				/*
-				 * con l'aspect ratio attivo, per
-				 * ottenere un risultato migliore applico
-				 * filtro software.
-				 */
-				if ((gfx.pixel_aspect_ratio != 1.0f) || (d3d9.interpolation == TRUE)) {
-					gfx.filter = scaleNx;
-				} else {
-					hlsl_up(scale_surface, SHADER_SCALE2X);
-				}
-				break;
 			case SCALE3X:
-				/*
-				 * con l'aspect ratio attivo, per
-				 * ottenere un risultato migliore applico
-				 * filtro software.
-				 */
-				if (gfx.pixel_aspect_ratio == 1.0f) {
-					/* FIXME : lo shader dello scale3x non funziona */
-					//hlsl_up(scale_surface, SHADER_SCALE3X);
-					gfx.filter = scaleNx;
-				} else {
-					gfx.filter = scaleNx;
-				}
-				break;
 			case SCALE4X:
-				if (d3d9.interpolation == TRUE) {
-					gfx.filter = scaleNx;
-				} else {
-					hlsl_up(scale_surface, SHADER_SCALE4X);
-				}
-				break;
 			case HQ2X:
-				if (d3d9.interpolation == TRUE) {
-					gfx.filter = hqNx;
-				} else {
-					hlsl_up(scale_surface, SHADER_HQ2X);
-				}
-				break;
 			case HQ3X:
-				gfx.filter = hqNx;
-				break;
 			case HQ4X:
-				hlsl_up(hqNx, SHADER_HQ2X);
-				d3d9.scale = X2;
-				d3d9.factor = X2;
+			case NTSC_FILTER:
+				PSS();
 				break;
 		}
 
+		/*
 		if (cfg->fullscreen) {
 			if ((cfg->filter >= SCALE2X) && (cfg->filter <= SCALE4X)) {
 				hlsl_up(scaleNx, SHADER_NO_FILTER);
@@ -745,6 +706,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 				d3d9.factor = (float) cfg->scale / 2.0f;
 			}
 		}
+		*/
 	}
 
 	if (set_mode) {
@@ -756,7 +718,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 			gfx.h[VIDEO_MODE] = gfx.h[MONITOR];
 		}
 
-		/* TV Aspect Ratio */
+		/* Pixel Aspect Ratio */
 		if (cfg->pixel_aspect_ratio && !fullscreen) {
 			float brd = 0;
 
@@ -1251,7 +1213,7 @@ void d3d9_adjust_coords(void) {
 	gfx.quadcoords = d3d9.screen.quadcoords;
 
 	if (d3d9.shader.table_pxl != NULL) {
-		FLOAT sse[2], svm[2], st[2], fc, param, par;
+		FLOAT sse[2], svm[2], st[2], fc, param, par, full_interpolation;
 
 		sse[0] = (FLOAT) SCR_ROWS;
 		sse[1] = (FLOAT) SCR_LINES;
@@ -1268,27 +1230,22 @@ void d3d9_adjust_coords(void) {
 		fc = (FLOAT) ppu.frames;
 		param = gfx.hlsl.param;
 		par = gfx.pixel_aspect_ratio;
+		full_interpolation = d3d9.interpolation;
 
 		ID3DXConstantTable_SetFloatArray(d3d9.shader.table_pxl, d3d9.adapter->dev,
-				"size_screen_emu", (CONST FLOAT * ) &sse, 2);
+				"size_screen_emu", (CONST FLOAT *) &sse, 2);
 		ID3DXConstantTable_SetFloatArray(d3d9.shader.table_pxl, d3d9.adapter->dev,
-				"size_video_mode", (CONST FLOAT * ) &svm, 2);
+				"size_video_mode", (CONST FLOAT *) &svm, 2);
 		ID3DXConstantTable_SetFloatArray(d3d9.shader.table_pxl, d3d9.adapter->dev,
-				"size_texture", (CONST FLOAT * ) &st, 2);
+				"size_texture", (CONST FLOAT *) &st, 2);
 		ID3DXConstantTable_SetFloatArray(d3d9.shader.table_pxl, d3d9.adapter->dev,
-				"frame_counter", (CONST FLOAT * ) &fc, 1);
+				"frame_counter", (CONST FLOAT *) &fc, 1);
 		ID3DXConstantTable_SetFloatArray(d3d9.shader.table_pxl, d3d9.adapter->dev,
-				"param", (CONST FLOAT * ) &param, 1);
+				"param", (CONST FLOAT *) &param, 1);
 		ID3DXConstantTable_SetFloatArray(d3d9.shader.table_pxl, d3d9.adapter->dev,
-				"pixel_aspect_ratio", (CONST FLOAT * ) &par, 1);
-
-		/*
-		printf("\n");
-		printf("size_screen_emu : %f - %f\n", sse[0], sse[1]);
-		printf("size_video_mode : %f - %f\n", svm[0], svm[1]);
-		printf("size_texture    : %f - %f\n", st[0], st[1]);
-		printf("\n");
-		 */
+				"pixel_aspect_ratio", (CONST FLOAT *) &par, 1);
+		ID3DXConstantTable_SetFloatArray(d3d9.shader.table_pxl, d3d9.adapter->dev,
+				"full_interpolation", (CONST FLOAT *) &full_interpolation, 1);
 	}
 }
 void d3d9_adjust_vertex_buffer(_texture *texture, FLOAT factor) {
@@ -1695,7 +1652,8 @@ INLINE void d3d9_draw_texture_screen(void) {
 	/* disegno la texture dello screen */
 	IDirect3DDevice9_SetTexture(d3d9.adapter->dev, 0,
 	        (IDirect3DBaseTexture9 * ) d3d9.screen.data);
-	if (d3d9.interpolation == TRUE) {
+
+	if ((d3d9.interpolation == TRUE) || (d3d9.PSS == TRUE)) {
 		IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
 				D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
 		IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
@@ -1710,8 +1668,10 @@ INLINE void d3d9_draw_texture_screen(void) {
 		IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
 				D3DSAMP_MIPFILTER, D3DTEXF_NONE);
 	}
+
 	IDirect3DDevice9_SetStreamSource(d3d9.adapter->dev, 0, d3d9.screen.quad, 0,
 	        sizeof(vertex));
+
 	IDirect3DDevice9_DrawPrimitive(d3d9.adapter->dev, D3DPT_TRIANGLEFAN, 0, 2);
 }
 INLINE void d3d9_draw_texture_text(void) {

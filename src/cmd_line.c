@@ -40,6 +40,8 @@ BYTE cmd_line_parse(int argc, char **argv) {
 					param_ovscan_search(optarg, 0);
 				} else if (!(strcmp(opt_long[longIndex].name, "overscan-brd-pal"))) {
 					param_ovscan_search(optarg, 1);
+				} else if (!(strcmp(opt_long[longIndex].name, "par-soft-stretch"))) {
+					param_search(0, optarg, param_no_yes, cfg_from_file.PAR_soft_stretch = index);
 				}
 				break;
 			case 'a':
@@ -178,6 +180,7 @@ void usage(char *name) {
 			"%s\n"
 			"%s\n"
 			"%s\n"
+			"%s\n"
 	};
 
 	usage_string = (char *) malloc(1024 * 8);
@@ -187,6 +190,7 @@ void usage(char *name) {
 	        param[P_FSK].help,
 	        param[P_SIZE].help,
 			param[P_PIXEL_ASPECT_RATIO].help,
+			param[P_PAR_SOFT_STRETCH].help,
 	        param[P_OVERSCAN].help,
 	        param[P_FILTER].help,
 	        param[P_NTSCFORMAT].help,

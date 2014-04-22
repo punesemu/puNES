@@ -91,6 +91,7 @@
 #define IDM_SET_PAR11               365
 #define IDM_SET_PAR54               366
 #define IDM_SET_PAR87               367
+#define IDM_SET_PAR_SOFT            368
 
 #define IDM_SET_OSCAN_DEF           370
 #define IDM_SET_OSCAN_ON            371

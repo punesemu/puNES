@@ -20,12 +20,17 @@
 	"float2 size_screen_emu;\n"
 	"float2 size_video_mode;\n"
 	"float2 size_texture;\n"
+	"float pixel_aspect_ratio;\n"
+	"float full_interpolation;\n"
 
 	"texture texture_scr;\n"
 	"sampler2D s0 = sampler_state { Texture = <texture_scr>; };\n"
 
 	"float4 Ps(float2 texCoord : TEXCOORD0) : COLOR {\n"
-	"	float4 scr = tex2D(s0, texCoord);\n"
+
+#include "interpolation.h"
+
+	"	float4 scr = tex2D(s0, pnt);\n"
 	"	return scr;\n"
 	"}"
 },

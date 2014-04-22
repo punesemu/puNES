@@ -245,7 +245,7 @@ void opengl_update_scr_texture(SDL_Surface *surface, uint8_t generate_mipmap) {
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 
-	if (opengl.interpolation) {
+	if ((opengl.interpolation == TRUE) || (opengl.PSS == TRUE)) {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	} else {
@@ -440,7 +440,7 @@ void glsl_shaders_init(_shader *shd) {
 	glUseProgram(shd->prg);
 
 	{
-		GLfloat sse[2], svm[2], st[2], fc, param, par;
+		GLfloat sse[2], svm[2], st[2], fc, param, par, full_interpolation;
 
 		sse[0] = (GLfloat) SCR_ROWS;
 		sse[1] = (GLfloat) SCR_LINES;
@@ -458,6 +458,7 @@ void glsl_shaders_init(_shader *shd) {
 		fc = (GLfloat) ppu.frames;
 		param = (GLfloat) opengl.glsl.param;
 		par = gfx.pixel_aspect_ratio;
+		full_interpolation = opengl.interpolation;
 
 		if ((shd->loc.size.screen_emu = glGetUniformLocation(shd->prg, "size_screen_emu")) >= 0) {
 			glUniform2f(shd->loc.size.screen_emu, sse[0], sse[1]);
@@ -477,6 +478,9 @@ void glsl_shaders_init(_shader *shd) {
 		if ((shd->loc.pixel_aspect_ratio = glGetUniformLocation(shd->prg, "pixel_aspect_ratio"))
 		        >= 0) {
 			glUniform1f(shd->loc.pixel_aspect_ratio, par);
+		}
+		if ((shd->loc.full_interpolation = glGetUniformLocation(shd->prg, "full_interpolation")) >= 0) {
+			glUniform1f(shd->loc.full_interpolation, full_interpolation);
 		}
 	}
 

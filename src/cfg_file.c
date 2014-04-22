@@ -184,6 +184,9 @@ void cfg_file_parse(void) {
 			/* pixel aspect ratio */
 			cfg_search(param, P_PIXEL_ASPECT_RATIO, 0, param_pixel_aspect_ratio,
 			        cfg_from_file.pixel_aspect_ratio = index);
+			/* pixel aspect ratio soft stretch */
+			cfg_search(param, P_PAR_SOFT_STRETCH, 0, param_no_yes,
+			        cfg_from_file.PAR_soft_stretch = index);
 			/* interpolation */
 			cfg_search(param, P_INTERPOLATION, 0, param_no_yes, cfg_from_file.interpolation = index);
 			/* text on screen */
@@ -281,13 +284,16 @@ void cfg_file_save(void) {
 	write_param((_param *) param, fp, P_VSYNC, param_off_on[cfg_from_file.vsync].sname);
 	/* pixel aspect ratio */
 	write_param((_param *) param, fp, P_PIXEL_ASPECT_RATIO,
-	        param_pixel_aspect_ratio[cfg_from_file.pixel_aspect_ratio].sname);
+			param_pixel_aspect_ratio[cfg_from_file.pixel_aspect_ratio].sname);
+	/* pixel aspect ratio soft stretch */
+	write_param((_param *) param, fp, P_PAR_SOFT_STRETCH,
+			param_no_yes[cfg_from_file.PAR_soft_stretch].sname);
 	/* interpolation */
 	write_param((_param *) param, fp, P_INTERPOLATION,
-	        param_no_yes[cfg_from_file.interpolation].sname);
+			param_no_yes[cfg_from_file.interpolation].sname);
 	/* text on screen */
 	write_param((_param *) param, fp, P_TXT_ON_SCREEN,
-	        param_no_yes[cfg_from_file.txt_on_screen].sname);
+			param_no_yes[cfg_from_file.txt_on_screen].sname);
 	/* overscan borders NTSC */
 	write_ovascan_param((_param *) param, fp, P_OVERSCAN_BRD_NTSC, 0);
 	/* overscan borders PAL */
@@ -298,10 +304,10 @@ void cfg_file_save(void) {
 	write_param((_param *) param, fp, P_STRETCH, param_no_yes[!cfg_from_file.stretch].sname);
 	/* audio */
 	write_param((_param *) param, fp, P_AUDIO,
-	        param_off_on[cfg_from_file.apu.channel[APU_MASTER]].sname);
+			param_off_on[cfg_from_file.apu.channel[APU_MASTER]].sname);
 	/* sample rate */
 	write_param((_param *) param, fp, P_SAMPLERATE,
-	        param_samplerate[cfg_from_file.samplerate].sname);
+			param_samplerate[cfg_from_file.samplerate].sname);
 	/* channels */
 	write_param((_param *) param, fp, P_CHANNELS, param_channels[cfg_from_file.channels].sname);
 	/* stereo delay */
@@ -683,6 +689,7 @@ void set_default(void) {
 	cfg_from_file.vsync = TRUE;
 	cfg_from_file.pixel_aspect_ratio = PAR11;
 	cfg_from_file.interpolation = FALSE;
+	cfg_from_file.PAR_soft_stretch = TRUE;
 	cfg_from_file.txt_on_screen = TRUE;
 	cfg_from_file.fullscreen = NO_FULLSCR;
 	cfg_from_file.stretch = FALSE;
