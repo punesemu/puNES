@@ -207,7 +207,8 @@
 #define IDM_SET_AUDIO_SWAP_DUTY     960
 #define IDM_SET_AUDIO_ENABLE        961
 
-#define IDM_SET_GAMEGENIE           970
+#define IDM_SET_LOST_FOCUS_PAUSE    970
+#define IDM_SET_GAMEGENIE           971
 
 #define ID_SAVE_SLOT_CB             100
 #define ID_SAVE_SLOT_BS             101

@@ -75,6 +75,8 @@ typedef struct {
 
 double high_resolution_ms(void);
 gboolean main_win_configure_event(void);
+gboolean main_win_focus_in_event(GtkWidget *widget, GdkEventFocus *event, gpointer data);
+gboolean main_win_focus_out_event(GtkWidget *widget, GdkEventFocus *event, gpointer data);
 gboolean sock_key_press_event(GtkWidget *widget, GdkEventKey *event);
 gboolean sock_key_release_event(GtkWidget *widget, GdkEventKey *event);
 gboolean mouse_button_press_release_event(GtkWidget *widget, GdkEventButton *event);
@@ -108,6 +110,8 @@ void gui_init(int argc, char **argv) {
 	gui_pos_x = gui_pos_y = 100;
 	info.gui = TRUE;
 	gui_in_update = FALSE;
+
+	gui.main_win_lfp = TRUE;
 
 	g_thread_init(NULL);
 	gdk_threads_init();
@@ -175,6 +179,12 @@ BYTE gui_create(void) {
 	/* configure event */
 	//g_signal_connect(G_OBJECT(main_win), "configure-event", G_CALLBACK(main_win_configure_event),
 	//		NULL);
+
+	gtk_widget_set_events(main_win, GDK_FOCUS_CHANGE_MASK);
+	g_signal_connect(G_OBJECT(main_win), "focus-in-event", G_CALLBACK(main_win_focus_in_event),
+			NULL);
+	g_signal_connect(G_OBJECT(main_win), "focus-out-event", G_CALLBACK(main_win_focus_out_event),
+			NULL);
 
 	/* la finestra non e' ridimensionabile */
 	gtk_window_set_resizable(GTK_WINDOW(main_win), FALSE);
@@ -600,6 +610,26 @@ gboolean main_win_configure_event(void) {
 	 * esserlo necessariamente).
 	 */
 	return (FALSE);
+}
+gboolean main_win_focus_in_event(GtkWidget *widget, GdkEventFocus *event, gpointer data) {
+	if ((cfg->lost_focus_pause == FALSE) || (gui.main_win_lfp == FALSE)) {
+		return (FALSE);
+	}
+
+	//g_timeout_redraw_stop();
+	emu_pause(FALSE);
+
+	return (TRUE);
+}
+gboolean main_win_focus_out_event(GtkWidget *widget, GdkEventFocus *event, gpointer data) {
+	if ((cfg->lost_focus_pause == FALSE) || (gui.main_win_lfp == FALSE)) {
+		return (FALSE);
+	}
+
+	//g_timeout_redraw_start();
+	emu_pause(TRUE);
+
+	return (TRUE);
 }
 gboolean sock_key_press_event(GtkWidget *widget, GdkEventKey *event) {
 	guint keyval = gdk_keyval_to_lower(event->keyval);

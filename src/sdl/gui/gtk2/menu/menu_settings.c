@@ -59,11 +59,13 @@ static const guint8 icon_inline[] =
   "\377\377\0\214XZV\377\202\377\377\377\0"};
 
 enum {
+	MLFP,
 	MSAVEONEXIT,
 	NUMCHKS
 };
 
 void switch_save_on_exit(void);
+void switch_lost_focus_pause(void);
 
 static GtkWidget *check[NUMCHKS];
 
@@ -90,8 +92,15 @@ void menu_settings(GtkWidget *mainmenu, GtkAccelGroup *accel_group) {
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), gtk_separator_menu_item_new());
 	menu_netplay(menu, accel_group);
 #endif
-	/* game genie */
+	/* lost focus pause */
+	check[MLFP] = gtk_check_menu_item_new_with_mnemonic("_In pause when lost focus");
+
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), gtk_separator_menu_item_new());
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), check[MLFP]);
+
+	g_signal_connect(G_OBJECT(check[MLFP]), "activate", G_CALLBACK(switch_lost_focus_pause), NULL);
+
+	/* game genie */
 	menu_gamegenie(menu, accel_group);
 
 	/* Save Settings */
@@ -109,18 +118,25 @@ void menu_settings(GtkWidget *mainmenu, GtkAccelGroup *accel_group) {
 
 	g_signal_connect(G_OBJECT(savenow), "activate", G_CALLBACK(cfg_file_save), NULL);
 	g_signal_connect(G_OBJECT(check[MSAVEONEXIT]), "activate", G_CALLBACK(switch_save_on_exit),
-	        NULL );
+	        NULL);
 }
 void menu_settings_check(void) {
 	menu_mode_check();
 	menu_video_check();
 	menu_audio_check();
+	/* lost focus pause */
+	if (cfg->lost_focus_pause) {
+		gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MLFP]), TRUE);
+	} else {
+		gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MLFP]), FALSE);
+	}
 	/* game genie */
 	menu_gamegenie_check();
 	/* Save on Exit*/
-	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MSAVEONEXIT]), FALSE);
 	if (cfg->save_on_exit) {
 		gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MSAVEONEXIT]), TRUE);
+	} else {
+		gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MSAVEONEXIT]), FALSE);
 	}
 }
 void switch_save_on_exit(void) {
@@ -129,4 +145,11 @@ void switch_save_on_exit(void) {
 	}
 
 	cfg->save_on_exit = !cfg->save_on_exit;
+}
+void switch_lost_focus_pause(void) {
+	if (gui_in_update) {
+		return;
+	}
+
+	cfg->lost_focus_pause = !cfg->lost_focus_pause;
 }

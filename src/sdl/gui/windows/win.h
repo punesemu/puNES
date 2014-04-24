@@ -46,6 +46,9 @@ struct _gui {
 	uint8_t right_button;
 
 	uint8_t accelerators_anabled;
+
+	/* lost focus pause */
+	uint8_t main_win_lfp;
 } gui;
 
 void gui_init(int argc, char **argv);

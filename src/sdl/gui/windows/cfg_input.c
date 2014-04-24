@@ -14,8 +14,8 @@
 #endif
 
 long __stdcall cfg_input_messages(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-void cfg_input_destory(HWND hwnd, INT_PTR result);
 void cfg_input_update_dialog(HWND hwnd);
+void cfg_input_destory(HWND hwnd, INT_PTR result);
 
 void cfg_input_dialog(HWND hwnd) {
 	memset(&cfg_input, 0x00, sizeof(cfg_input));
@@ -34,9 +34,12 @@ void cfg_input_dialog(HWND hwnd) {
 	/* Faccio l'update del menu per i casi dello zapper e degli effetti */
 	gui_update();
 
+	/* disabilito la gestiore del docus della finestra principale */
+	gui.main_win_lfp = FALSE;
+
 	emu_pause(TRUE);
 
-	cfg_input.father = CreateDialog(GetModuleHandle(NULL ),
+	cfg_input.father = CreateDialog(GetModuleHandle(NULL),
 			MAKEINTRESOURCE(IDD_INPUT_DIALOG), hwnd, (DLGPROC) cfg_input_messages);
 }
 
@@ -175,10 +178,6 @@ long __stdcall cfg_input_messages(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPa
 
 	return (FALSE);
 }
-void cfg_input_destory(HWND hwnd, INT_PTR result) {
-	EndDialog(hwnd, result);
-	emu_pause(FALSE);
-}
 void cfg_input_update_dialog(HWND hwnd) {
 	BYTE i;
 
@@ -226,4 +225,12 @@ void cfg_input_update_dialog(HWND hwnd) {
 		SendDlgItemMessage(hwnd, IDC_PERMIT_UPDOWN_LEFTRIGHT_CHECKBOX, BM_SETCHECK,
 		        (WPARAM) BST_UNCHECKED, 0);
 	}
+}
+void cfg_input_destory(HWND hwnd, INT_PTR result) {
+	EndDialog(hwnd, result);
+
+	emu_pause(FALSE);
+
+	/* restituisco alla finestra principale la gestione del focus */
+	gui.main_win_lfp = TRUE;
 }

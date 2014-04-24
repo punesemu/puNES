@@ -28,6 +28,9 @@ struct _uncompress_selection_data {
 int uncompress_selection_dialog(HWND hwnd) {
 	memset(&uncompress_selection, 0x00, sizeof(uncompress_selection));
 
+	/* disabilito la gestiore del docus della finestra principale */
+	gui.main_win_lfp = FALSE;
+
 	if (DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_UNCOMPRESS_SELECTION), hwnd,
 	        (DLGPROC) uncompress_selection_messages) == IDCANCEL) {
 		return (UNCOMP_NO_FILE_SELECTED);
@@ -135,4 +138,7 @@ long __stdcall uncompress_selection_messages(HWND hwnd, UINT msg, WPARAM wParam,
 }
 void uncompress_selection_destroy(HWND hwnd, INT_PTR result) {
 	EndDialog(hwnd, result);
+
+	/* restituisco alla finestra principale la gestione del focus */
+	gui.main_win_lfp = TRUE;
 }

@@ -13,6 +13,7 @@
 long __stdcall apu_channels_wnd_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 void apu_channels_check(HWND hwnd);
 void apu_channels_toggle_all(HWND hwnd, int mode);
+void apu_channels_destory(HWND hwnd, INT_PTR result);
 
 struct _apu_channels_data {
 	HWND toplevel;
@@ -22,6 +23,9 @@ struct _apu_channels_data {
 void apu_channels_dialog(HWND hwnd) {
 	memset(&apu_channels_data, 0x00, sizeof(apu_channels_data));
 	memcpy(&apu_channels_data.cfg_save, &cfg->apu, sizeof(_config_apu));
+
+	/* disabilito la gestiore del docus della finestra principale */
+	gui.main_win_lfp = FALSE;
 
 	apu_channels_data.toplevel = CreateDialog(GetModuleHandle(NULL),
 	        MAKEINTRESOURCE(IDD_APU_CHANNELS), hwnd, (DLGPROC) apu_channels_wnd_proc);
@@ -65,12 +69,12 @@ long __stdcall apu_channels_wnd_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM 
 					apu_channels_toggle_all(hwnd, 2);
 					return (TRUE);
 				case ID_APU_CHANNELS_OK:
-					EndDialog(hwnd, ID_APU_CHANNELS_OK);
+					apu_channels_destory(hwnd, ID_APU_CHANNELS_OK);
 					return (TRUE);
 					break;
 				case ID_APU_CHANNELS_CANCEL:
 					memcpy(&cfg->apu, &apu_channels_data.cfg_save, sizeof(_config_apu));
-					EndDialog(hwnd, ID_APU_CHANNELS_CANCEL);
+					apu_channels_destory(hwnd, ID_APU_CHANNELS_CANCEL);
 					return (TRUE);
 			}
 			break;
@@ -116,4 +120,10 @@ void apu_channels_toggle_all(HWND hwnd, int mode) {
 		cfg->apu.channel[index] = mode;
 	}
 	apu_channels_check(hwnd);
+}
+void apu_channels_destory(HWND hwnd, INT_PTR result) {
+	EndDialog(hwnd, result);
+
+	/* restituisco alla finestra principale la gestione del focus */
+	gui.main_win_lfp = TRUE;
 }

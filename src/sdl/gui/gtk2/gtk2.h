@@ -41,6 +41,8 @@ typedef struct {
 	int y;
 	uint8_t left_button;
 	uint8_t right_button;
+	/* lost focus pause */
+	uint8_t main_win_lfp;
 } _gui;
 
 _gui gui;

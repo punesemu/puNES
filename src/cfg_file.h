@@ -39,6 +39,7 @@ typedef struct {
 	BYTE interpolation;
 	BYTE gamegenie;
 	BYTE txt_on_screen;
+	BYTE lost_focus_pause;
 
 	_config_input input;
 	_config_apu apu;

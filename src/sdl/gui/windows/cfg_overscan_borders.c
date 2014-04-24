@@ -14,8 +14,8 @@
 #include "gfx.h"
 
 long __stdcall cfg_overscan_borders_messages(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-void cfg_overscan_borders_destory(HWND hwnd, INT_PTR result);
 void cfg_overscan_borders_update_dialog(HWND hwnd);
+void cfg_overscan_borders_destory(HWND hwnd, INT_PTR result);
 
 struct _cfg_overscan_borders {
 	HWND father;
@@ -51,6 +51,9 @@ void cfg_overscan_borders_dialog(HWND hwnd) {
 	gui.accelerators_anabled = FALSE;
 
 	cfg_oscan.initdialog = TRUE;
+
+	/* disabilito la gestiore del docus della finestra principale */
+	gui.main_win_lfp = FALSE;
 
 	emu_pause(TRUE);
 
@@ -180,6 +183,16 @@ long __stdcall cfg_overscan_borders_messages(HWND hwnd, UINT msg, WPARAM wParam,
 	}
 	return (FALSE);
 }
+void cfg_overscan_borders_update_dialog(HWND hwnd) {
+	int i;
+	BYTE *src = (BYTE *) cfg_oscan.borders;
+
+	for (i = 0; i <= IDC_OSCAN_BRDS_SPIN_RIGHT - IDC_OSCAN_BRDS_SPIN_UP; i++) {
+		BYTE value = (*(src + i));
+
+		SendDlgItemMessage(hwnd, IDC_OSCAN_BRDS_SPIN_UP + i, UDM_SETPOS, 0, value);
+	}
+}
 void cfg_overscan_borders_destory(HWND hwnd, INT_PTR result) {
 	EndDialog(hwnd, result);
 
@@ -215,14 +228,7 @@ void cfg_overscan_borders_destory(HWND hwnd, INT_PTR result) {
 
 	/* riabilito gli acceleratori */
 	gui.accelerators_anabled = TRUE;
-}
-void cfg_overscan_borders_update_dialog(HWND hwnd) {
-	int i;
-	BYTE *src = (BYTE *) cfg_oscan.borders;
 
-	for (i = 0; i <= IDC_OSCAN_BRDS_SPIN_RIGHT - IDC_OSCAN_BRDS_SPIN_UP; i++) {
-		BYTE value = (*(src + i));
-
-		SendDlgItemMessage(hwnd, IDC_OSCAN_BRDS_SPIN_UP + i, UDM_SETPOS, 0, value);
-	}
+	/* restituisco alla finestra principale la gestione del focus */
+	gui.main_win_lfp = TRUE;
 }

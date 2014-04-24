@@ -228,6 +228,9 @@ void cfg_file_parse(void) {
 			cfg_apu_channel_search(param_apu_channel, APU_EXTRA, 0, param_off_on);
 			/* swap duty cycles */
 			cfg_search(param, P_SWAP_DUTY, 0, param_no_yes, cfg_from_file.swap_duty = index);
+			/* lost foucus pause */
+			cfg_search(param, P_LOST_FOCUS_PAUSE, 0, param_no_yes, cfg_from_file.lost_focus_pause =
+			        index);
 			/* game genie */
 			cfg_search(param, P_GAMEGENIE, 0, param_no_yes, cfg_from_file.gamegenie = index);
 			/* save on exit */
@@ -332,6 +335,9 @@ void cfg_file_save(void) {
 	write_apu_channel_param((_param *) param_apu_channel, fp, APU_EXTRA);
 	/* swap duty cycles */
 	write_param((_param *) param, fp, P_SWAP_DUTY, param_no_yes[cfg_from_file.swap_duty].sname);
+	/* lost focus pause */
+	write_param((_param *) param, fp, P_LOST_FOCUS_PAUSE,
+	        param_no_yes[cfg_from_file.lost_focus_pause].sname);
 	/* game genie */
 	write_param((_param *) param, fp, P_GAMEGENIE, param_no_yes[cfg_from_file.gamegenie].sname);
 	/* save settings on exit */
@@ -709,6 +715,7 @@ void set_default(void) {
 	cfg_from_file.audio_quality = AQ_HIGH;
 	cfg_from_file.swap_duty = 0;
 
+	cfg_from_file.lost_focus_pause = TRUE;
 	cfg_from_file.gamegenie = FALSE;
 
 	cfg_file_set_overscan_default(&overscan_borders[0], NTSC);

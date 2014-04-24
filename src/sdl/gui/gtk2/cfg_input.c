@@ -50,7 +50,7 @@ void cfg_input_dialog(void) {
 	dg_create_gtkbuilder(&cfg_input.builder, INPUT_DIALOG);
 
 	cfg_input.father = GTK_WIDGET(
-	        gtk_builder_get_object(cfg_input.builder, "input_dialog"));
+			gtk_builder_get_object(cfg_input.builder, "input_dialog"));
 
 	gtk_builder_connect_signals(cfg_input.builder, NULL);
 
@@ -58,8 +58,8 @@ void cfg_input_dialog(void) {
 		BYTE i;
 
 		for (i = PORT1 ; i < PORT_MAX; i++) {
-			cfg_input_controller_combobox_init(
-			        dg_obj_name("input_ctrl%d_combobox", cfg_input.port[i].id), &cfg_input.port[i]);
+			cfg_input_controller_combobox_init(dg_obj_name("input_ctrl%d_combobox",
+					cfg_input.port[i].id), &cfg_input.port[i]);
 		}
 	}
 
@@ -77,11 +77,14 @@ void cfg_input_dialog(void) {
 	dg_signal_connect(cfg_input.builder, "input_cancel_button", "clicked",
 			G_CALLBACK(cfg_input_cancel_clicked), NULL);
 	g_signal_connect(G_OBJECT(cfg_input.father), "destroy",
-	        G_CALLBACK(cfg_input_window_destroy), NULL);
+			G_CALLBACK(cfg_input_window_destroy), NULL);
+
+	/* disabilito la gestiore del docus della finestra principale */
+	gui.main_win_lfp = FALSE;
 
 	emu_pause(TRUE);
 	/* ridisegno lo screen sdl ogni tot millisecondi */
-	g_timeout_redraw_start();
+	//g_timeout_redraw_start();
 
 	gtk_widget_show(cfg_input.father);
 }
@@ -128,19 +131,19 @@ void cfg_input_update_dialog(void) {
 			ctrl_in = &cfg_input.port[i];
 
 			dg_set_sensitive(cfg_input.builder, dg_obj_name("input_ctrl%d_label", ctrl_in->id),
-			        mode);
+					mode);
 			dg_set_sensitive(cfg_input.builder, dg_obj_name("input_ctrl%d_combobox", ctrl_in->id),
-			        mode);
+					mode);
 			if (mode == FALSE) {
 				dg_set_sensitive(cfg_input.builder,
-				        dg_obj_name("input_ctrl%d_setup_button", ctrl_in->id), mode);
+						dg_obj_name("input_ctrl%d_setup_button", ctrl_in->id), mode);
 			}
 		}
 	}
 
 	gtk_toggle_button_set_active(
-	        _gw_get_togglebutton(cfg_input.builder, "input_updown_leftright_checkbutton"),
-	        cfg_input.settings.permit_updown_leftright);
+			_gw_get_togglebutton(cfg_input.builder, "input_updown_leftright_checkbutton"),
+			cfg_input.settings.permit_updown_leftright);
 }
 void cfg_input_controller_combobox_init(char *glade_combobox, _cfg_port *cfg_port) {
 	GtkComboBox *combobox;
@@ -165,7 +168,7 @@ void cfg_input_controller_combobox_init(char *glade_combobox, _cfg_port *cfg_por
 
 			gtk_list_store_append(liststore, &iter);
 			gtk_list_store_set(liststore, &iter, CTRL_NAME, ctrl_list[i].name, CTRL_TYPE,
-			        ctrl_list[i].type, CTRL_NUMBER, (cfg_port->id - 1), -1);
+					ctrl_list[i].type, CTRL_NUMBER, (cfg_port->id - 1), -1);
 		}
 	}
 
@@ -211,7 +214,7 @@ void cfg_input_controller_mode_combobox_init(char *glade_combobox) {
 
 			gtk_list_store_append(liststore, &iter);
 			gtk_list_store_set(liststore, &iter, CTRL_NAME, param_controller_mode[i].lname,
-			        CTRL_TYPE, i, -1);
+					CTRL_TYPE, i, -1);
 		}
 	}
 
@@ -316,6 +319,9 @@ void cfg_input_window_destroy(GtkWidget *widget, gpointer user_data) {
 
 	g_object_unref(G_OBJECT(cfg_input.builder));
 
-	g_timeout_redraw_stop();
+	//g_timeout_redraw_stop();
 	emu_pause(FALSE);
+
+	/* restituisco alla finestra principale la gestione del focus */
+	gui.main_win_lfp = TRUE;
 }

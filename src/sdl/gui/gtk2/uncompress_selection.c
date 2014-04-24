@@ -50,6 +50,9 @@ int uncompress_selection_dialog(void) {
 	g_signal_connect(G_OBJECT(uncompress_selection.window), "destroy",
 	        G_CALLBACK(uncompress_selection_window_destroy), NULL);
 
+	/* disabilito la gestiore del docus della finestra principale */
+	gui.main_win_lfp = FALSE;
+
 	/*
 	 * se l'archivio compresso e' caricato da riga di comando,
 	 * la gui non e' ancora stata avviata.
@@ -57,7 +60,7 @@ int uncompress_selection_dialog(void) {
 	if (gui.start == TRUE) {
 		emu_pause(TRUE);
 		/* ridisegno lo screen sdl ogni tot millisecondi */
-		g_timeout_redraw_start();
+		//g_timeout_redraw_start();
 	}
 
 	gtk_widget_show(uncompress_selection.window);
@@ -145,7 +148,10 @@ void uncompress_selection_window_destroy(GtkWidget *widget, gpointer user_data) 
 	uncompress_selection.on_selec = FALSE;
 
 	if (gui.start == TRUE) {
-		g_timeout_redraw_stop();
+		//g_timeout_redraw_stop();
 		emu_pause(FALSE);
 	}
+
+	/* restituisco alla finestra principale la gestione del focus */
+	gui.main_win_lfp = TRUE;
 }

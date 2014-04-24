@@ -40,8 +40,8 @@ void apu_channels_dialog(void) {
 
 	dg_create_gtkbuilder(&apu_channels_data.builder, APU_CHANNELS_DIALOG);
 
-	apu_channels_data.window = GTK_WIDGET(
-	        gtk_builder_get_object(apu_channels_data.builder, "apu_channels_dialog"));
+	apu_channels_data.window = GTK_WIDGET(gtk_builder_get_object(apu_channels_data.builder,
+			"apu_channels_dialog"));
 
 	gtk_builder_connect_signals(apu_channels_data.builder, NULL);
 
@@ -51,25 +51,25 @@ void apu_channels_dialog(void) {
 
 		for (i = APU_S1; i <= APU_EXTRA; i++) {
 			dg_signal_connect_swapped(apu_channels_data.builder,
-			        dg_obj_name("apu_channels_%s_checkbutton", apu_channels_list[i]), "toggled",
-			        G_CALLBACK(apu_channels_toggle), GINT_TO_POINTER(i));
+					dg_obj_name("apu_channels_%s_checkbutton", apu_channels_list[i]), "toggled",
+					G_CALLBACK(apu_channels_toggle), GINT_TO_POINTER(i));
 		}
 	}
 
 	dg_signal_connect_swapped(apu_channels_data.builder, "apu_channels_disable_all_button",
-	        "clicked", G_CALLBACK(apu_channels_toggle_all), GINT_TO_POINTER(FALSE));
+			"clicked", G_CALLBACK(apu_channels_toggle_all), GINT_TO_POINTER(FALSE));
 	dg_signal_connect_swapped(apu_channels_data.builder, "apu_channels_active_all_button",
-	        "clicked", G_CALLBACK(apu_channels_toggle_all), GINT_TO_POINTER(TRUE));
+			"clicked", G_CALLBACK(apu_channels_toggle_all), GINT_TO_POINTER(TRUE));
 	dg_signal_connect_swapped(apu_channels_data.builder, "apu_channels_defaults_button",
-	        "clicked", G_CALLBACK(apu_channels_toggle_all), GINT_TO_POINTER(2));
+			"clicked", G_CALLBACK(apu_channels_toggle_all), GINT_TO_POINTER(2));
 
 	{
 		gint i;
 
 		for (i = APU_S1; i <= APU_MASTER; i++) {
 			dg_signal_connect(apu_channels_data.builder,
-			        dg_obj_name("apu_channels_%s_hscale", apu_channels_list[i]), "value-changed",
-			        G_CALLBACK(apu_channels_volume_value_changed), GINT_TO_POINTER(i));
+					dg_obj_name("apu_channels_%s_hscale", apu_channels_list[i]), "value-changed",
+					G_CALLBACK(apu_channels_volume_value_changed), GINT_TO_POINTER(i));
 		}
 	}
 
@@ -78,9 +78,12 @@ void apu_channels_dialog(void) {
 	dg_signal_connect(apu_channels_data.builder, "apu_channels_cancel_button", "clicked",
 			G_CALLBACK(apu_channels_cancel_clicked), NULL);
 	g_signal_connect(G_OBJECT(apu_channels_data.window), "delete-event",
-	        G_CALLBACK(apu_channels_delete_event), NULL);
+			G_CALLBACK(apu_channels_delete_event), NULL);
 	g_signal_connect(G_OBJECT(apu_channels_data.window), "destroy",
-	        G_CALLBACK(apu_channels_window_destroy), NULL);
+			G_CALLBACK(apu_channels_window_destroy), NULL);
+
+	/* disabilito la gestiore del docus della finestra principale */
+	gui.main_win_lfp = FALSE;
 
 	apu_channels_check();
 
@@ -93,17 +96,17 @@ void apu_channels_check(void) {
 
 	for (i = APU_S1; i <= APU_EXTRA; i++) {
 		gtk_toggle_button_set_active(
-		        _gw_get_togglebutton(apu_channels_data.builder,
-		                dg_obj_name("apu_channels_%s_checkbutton", apu_channels_list[i])),
-		        cfg->apu.channel[i]);
+				_gw_get_togglebutton(apu_channels_data.builder,
+						dg_obj_name("apu_channels_%s_checkbutton", apu_channels_list[i])),
+						cfg->apu.channel[i]);
 		gtk_range_set_value(
-		        _gw_get_range(apu_channels_data.builder,
-		                dg_obj_name("apu_channels_%s_hscale", apu_channels_list[i])),
-		        cfg->apu.volume[i]);
+				_gw_get_range(apu_channels_data.builder,
+						dg_obj_name("apu_channels_%s_hscale", apu_channels_list[i])),
+						cfg->apu.volume[i]);
 	}
 
 	gtk_range_set_value(_gw_get_range(apu_channels_data.builder, "apu_channels_master_hscale"),
-	        cfg->apu.volume[i]);
+			cfg->apu.volume[i]);
 
 	apu_channels_data.update = FALSE;
 }
@@ -143,9 +146,7 @@ void apu_channels_ok_clicked(GtkButton *button, gpointer user_data) {
 	gtk_widget_destroy(apu_channels_data.window);
 }
 void apu_channels_cancel_clicked(GtkButton *button, gpointer user_data) {
-	emu_pause(TRUE);
-	memcpy(&cfg->apu, &apu_channels_data.cfg_save, sizeof(_config_apu));
-	emu_pause(FALSE);
+	apu_channels_delete_event(NULL, NULL, NULL);
 
 	gtk_widget_destroy(apu_channels_data.window);
 }
@@ -158,5 +159,8 @@ gboolean apu_channels_delete_event(GtkWidget *widget, GdkEvent *event, gpointer 
 }
 void apu_channels_window_destroy(GtkWidget *widget, gpointer user_data) {
 	g_object_unref(G_OBJECT(apu_channels_data.builder));
+
+	/* restituisco alla finestra principale la gestione del focus */
+	gui.main_win_lfp = TRUE;
 }
 

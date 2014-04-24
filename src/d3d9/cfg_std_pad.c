@@ -86,7 +86,7 @@ void cfg_std_pad_dialog(HWND hwnd, _cfg_port *cfg_port) {
 	cfg_input.child = CreateDialog(GetModuleHandle(NULL),
 			MAKEINTRESOURCE(IDD_STANDARD_PAD_DIALOG), hwnd, (DLGPROC) cfg_std_pad_messages);
 
-	cfg_std_pad.thread = CreateThread( NULL, 0, cfg_std_pad_in_sequence, NULL, 0, NULL);
+	cfg_std_pad.thread = CreateThread(NULL, 0, cfg_std_pad_in_sequence, NULL, 0, NULL);
 
 	gui_sleep(30);
 
@@ -130,7 +130,6 @@ long __stdcall cfg_std_pad_messages(HWND hwnd, UINT msg, WPARAM wParam, LPARAM l
 				}
 			}
 			*/
-
 			{
 				HWND tab;
 				TCITEM tcitem;
@@ -149,8 +148,8 @@ long __stdcall cfg_std_pad_messages(HWND hwnd, UINT msg, WPARAM wParam, LPARAM l
 				(void) TabCtrl_SetCurSel(tab, PTYPE);
 
 				cfg_std_pad.page = CreateDialog(GetModuleHandle(NULL),
-				        MAKEINTRESOURCE(IDD_KBD_JOY_TAB_PAGE), tab,
-				        (DLGPROC) cfg_std_pad_kbd_joy_messages);
+						MAKEINTRESOURCE(IDD_KBD_JOY_TAB_PAGE), tab,
+						(DLGPROC) cfg_std_pad_kbd_joy_messages);
 
 				cfg_std_pad_tab_init();
 			}
@@ -162,7 +161,7 @@ long __stdcall cfg_std_pad_messages(HWND hwnd, UINT msg, WPARAM wParam, LPARAM l
 
 					SendDlgItemMessage(hwnd, i, TBM_SETTIPSIDE, (WPARAM) TBTS_TOP, 0);
 					SendDlgItemMessage(hwnd, i, TBM_SETRANGE, (WPARAM) TRUE,
-					        (LPARAM) MAKELONG(1, TURBO_BUTTON_DELAY_MAX));
+							(LPARAM) MAKELONG(1, TURBO_BUTTON_DELAY_MAX));
 					SendDlgItemMessage(hwnd, i, TBM_SETTIC, 0, (LPARAM) TURBO_BUTTON_DELAY_DEFAULT);
 					SendDlgItemMessage(hwnd, i, TBM_SETPOS, (WPARAM) TRUE, (LPARAM) pos);
 				}

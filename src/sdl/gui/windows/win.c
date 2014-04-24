@@ -104,6 +104,7 @@ void set_samplerate(BYTE samplerate);
 void set_channels(BYTE channels);
 void set_stereo_delay(int stereo_delay);
 void set_audio_quality(BYTE quality);
+void set_lost_focus_pause(void);
 void set_gamegenie(void);
 
 double high_resolution_ms(void);
@@ -214,6 +215,7 @@ void gui_init(int argc, char **argv) {
 	}
 
 	gui.accelerators_anabled = TRUE;
+	gui.main_win_lfp = TRUE;
 
 	gui.richedit = LoadLibrary("Riched20.Dll");
 }
@@ -1408,6 +1410,12 @@ void gui_update(void) {
 		change_menuitem(CHECK, MF_CHECKED, IDM_SET_AUDIO_ENABLE);
 	}
 
+	/* Lost focus pause */
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_LOST_FOCUS_PAUSE);
+	if (cfg->lost_focus_pause) {
+		change_menuitem(CHECK, MF_CHECKED, IDM_SET_LOST_FOCUS_PAUSE);
+	}
+
 	/* Game Genie */
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_GAMEGENIE);
 	if (cfg->gamegenie) {
@@ -1980,6 +1988,9 @@ long __stdcall main_win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 					gui_update();
 					emu_pause(FALSE);
 					break;
+				case IDM_SET_LOST_FOCUS_PAUSE:
+					set_lost_focus_pause();
+					break;
 				case IDM_SET_GAMEGENIE:
 					set_gamegenie();
 					break;
@@ -2022,6 +2033,18 @@ long __stdcall main_win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 			snd_stop();
 			info.stop = TRUE;
 			return (1);
+			break;
+		case WM_SETFOCUS:
+			if ((cfg->lost_focus_pause == FALSE) || (gui.main_win_lfp == FALSE)) {
+				break;
+			}
+			emu_pause(FALSE);
+			break;
+		case WM_KILLFOCUS:
+			if ((cfg->lost_focus_pause == FALSE) || (gui.main_win_lfp == FALSE)) {
+				break;
+			}
+			emu_pause(TRUE);
 			break;
 		case WM_DESTROY:
 			PostQuitMessage(EXIT_SUCCESS);
@@ -2636,6 +2659,11 @@ void set_audio_quality(BYTE quality) {
 	}
 	cfg->audio_quality = quality;
 	audio_quality(cfg->audio_quality);
+	gui_update();
+}
+void set_lost_focus_pause(void) {
+	cfg->lost_focus_pause = !cfg->lost_focus_pause;
+
 	gui_update();
 }
 void set_gamegenie(void) {
