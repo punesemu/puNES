@@ -55,7 +55,12 @@ DBWORD keyval_from_name(const char *keyval_name) {
 		}
 	}
 
-	keyval = VkKeyScan(keyval_name[0]) & 0x000000FF;
+	if ((keyval_name[0] >= 32) && (keyval_name[0] <= 126)) {
+		HKL hkL = LoadKeyboardLayout("00000409", 0);
+		keyval = VkKeyScanEx(keyval_name[0], hkL) & 0x000000FF;
+	} else {
+		keyval = VkKeyScan(keyval_name[0]) & 0x000000FF;
+	}
 
 	return (keyval);
 }
