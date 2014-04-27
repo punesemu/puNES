@@ -560,7 +560,7 @@ void ppu_tick(WORD cycles_cpu) {
 											spr_ev.index_plus = 0;
 										} else {
 											/*
-											 * indexPlus non superera'
+											 * index_plus non superera'
 											 * mai il valore 7.
 											 */
 											spr_ev.index_plus = spr_ev.count_plus;
@@ -578,10 +578,10 @@ void ppu_tick(WORD cycles_cpu) {
 								if (!(spr_ev.timing & 0x01)) {
 									/*
 									 * se non ho ancora trovato il nono sprite devo
-									 * aumentare sia byteOAM che index. Questo
+									 * aumentare sia byte_OAM che index. Questo
 									 * e' un'errore della PPU che, invece di controllare
 									 * la coordinata Y (byte 0), tratta il byte puntato
-									 * da byteOAM come se fosse la coordinata Y.
+									 * da byte_OAM come se fosse la coordinata Y.
 									 */
 									if (spr_ev.evaluate == FALSE) {
 										/* incremento l'indice del byte da leggere */
