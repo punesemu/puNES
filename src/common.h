@@ -108,6 +108,7 @@ struct _info {
 				WORD banks_16k;
 				WORD banks_8k;
 				WORD banks_8k_before_last;
+				WORD banks_4k;
 			} max;
 		} rom;
 		struct _info_prg_ram {

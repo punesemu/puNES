@@ -125,6 +125,9 @@ BYTE map_init(void) {
 		case 28:
 			map_init_28();
 			break;
+		case 31:
+			map_init_31();
+			break;
 		case 32:
 			map_init_Irem(G101);
 			break;
@@ -799,6 +802,7 @@ void map_set_banks_max_prg_and_chr(void) {
 	info.prg.rom.max.banks_16k = info.prg.rom.banks_16k - 1;
 	info.prg.rom.max.banks_8k = info.prg.rom.banks_8k - 1;
 	info.prg.rom.max.banks_8k_before_last = info.prg.rom.banks_8k - 2;
+	info.prg.rom.max.banks_4k = (info.prg.rom.banks_8k << 1) - 1;
 
 	info.chr.rom.max.banks_8k = info.chr.rom.banks_8k - 1;
 	info.chr.rom.max.banks_4k = info.chr.rom.banks_4k - 1;
