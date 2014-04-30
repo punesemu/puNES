@@ -84,7 +84,7 @@ enum {
 	P_OVERSCAN_BRD_NTSC,
 	P_OVERSCAN_BRD_PAL,
 	P_PAR_SOFT_STRETCH,
-	P_LOST_FOCUS_PAUSE
+	P_BCK_PAUSE
 };
 enum {
 	PGS_SLOT,
@@ -130,7 +130,7 @@ static const struct option opt_long[] = {
 	{ "overscan-brd-ntsc",  required_argument, NULL,  0 },
 	{ "overscan-brd-pal",   required_argument, NULL,  0 },
 	{ "par-soft-stretch",   required_argument, NULL,  0 },
-	{ "lost-focus-pause",   required_argument, NULL,  0 },
+	{ "background-pause",   required_argument, NULL,  0 },
 	{ 0,                    0,                 0,     0 }
 };
 #endif
@@ -337,11 +337,11 @@ static const _param param[] = {
 		"                          stretched image"
 	},
 	{
-		"pause if focus is lost",
+		"pause when in background",
 		NULL,
 		"# possible values: yes, no",
 		NULL,
-		"    --lost-focus-pause    improves the          : yes, no"
+		"    --background-pause                          : yes, no"
 	},
 };
 static const _param param_pgs[] = {

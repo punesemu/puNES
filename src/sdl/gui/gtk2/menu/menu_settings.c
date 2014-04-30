@@ -59,13 +59,13 @@ static const guint8 icon_inline[] =
   "\377\377\0\214XZV\377\202\377\377\377\0"};
 
 enum {
-	MLFP,
+	MBCKP,
 	MSAVEONEXIT,
 	NUMCHKS
 };
 
 void switch_save_on_exit(void);
-void switch_lost_focus_pause(void);
+void switch_bck_pause(void);
 
 static GtkWidget *check[NUMCHKS];
 
@@ -93,12 +93,12 @@ void menu_settings(GtkWidget *mainmenu, GtkAccelGroup *accel_group) {
 	menu_netplay(menu, accel_group);
 #endif
 	/* lost focus pause */
-	check[MLFP] = gtk_check_menu_item_new_with_mnemonic("_In pause when lost focus");
+	check[MBCKP] = gtk_check_menu_item_new_with_mnemonic("_In pause when in background");
 
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), gtk_separator_menu_item_new());
-	gtk_menu_shell_append(GTK_MENU_SHELL(menu), check[MLFP]);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), check[MBCKP]);
 
-	g_signal_connect(G_OBJECT(check[MLFP]), "activate", G_CALLBACK(switch_lost_focus_pause), NULL);
+	g_signal_connect(G_OBJECT(check[MBCKP]), "activate", G_CALLBACK(switch_bck_pause), NULL);
 
 	/* game genie */
 	menu_gamegenie(menu, accel_group);
@@ -125,10 +125,10 @@ void menu_settings_check(void) {
 	menu_video_check();
 	menu_audio_check();
 	/* lost focus pause */
-	if (cfg->lost_focus_pause) {
-		gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MLFP]), TRUE);
+	if (cfg->bck_pause) {
+		gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MBCKP]), TRUE);
 	} else {
-		gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MLFP]), FALSE);
+		gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MBCKP]), FALSE);
 	}
 	/* game genie */
 	menu_gamegenie_check();
@@ -146,10 +146,10 @@ void switch_save_on_exit(void) {
 
 	cfg->save_on_exit = !cfg->save_on_exit;
 }
-void switch_lost_focus_pause(void) {
+void switch_bck_pause(void) {
 	if (gui_in_update) {
 		return;
 	}
 
-	cfg->lost_focus_pause = !cfg->lost_focus_pause;
+	cfg->bck_pause = !cfg->bck_pause;
 }

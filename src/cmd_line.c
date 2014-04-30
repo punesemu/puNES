@@ -42,8 +42,8 @@ BYTE cmd_line_parse(int argc, char **argv) {
 					param_ovscan_search(optarg, 1);
 				} else if (!(strcmp(opt_long[longIndex].name, "par-soft-stretch"))) {
 					param_search(0, optarg, param_no_yes, cfg_from_file.PAR_soft_stretch = index);
-				} else if (!(strcmp(opt_long[longIndex].name, "lost-focus-pause"))) {
-					param_search(0, optarg, param_no_yes, cfg_from_file.lost_focus_pause = index);
+				} else if (!(strcmp(opt_long[longIndex].name, "background-pause"))) {
+					param_search(0, optarg, param_no_yes, cfg_from_file.bck_pause = index);
 				}
 				break;
 			case 'a':
@@ -212,7 +212,7 @@ void usage(char *name) {
 			param[P_STEREODELAY].help,
 			param[P_AUDIO_QUALITY].help,
 			param[P_SWAP_DUTY].help,
-			param[P_LOST_FOCUS_PAUSE].help,
+			param[P_BCK_PAUSE].help,
 			param[P_GAMEGENIE].help
 	);
 	gui_print_usage(usage_string);

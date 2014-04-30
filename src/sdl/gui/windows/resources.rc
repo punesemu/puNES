@@ -276,7 +276,7 @@ BEGIN
 			MENUITEM "&Config",                   IDM_SET_INPUT_CONFIG
 		END
 		MENUITEM SEPARATOR
-		MENUITEM "&In pause when lost focus",     IDM_SET_LOST_FOCUS_PAUSE
+		MENUITEM "&In pause when in background",  IDM_SET_BCK_PAUSE
 		MENUITEM "Game Genie",                    IDM_SET_GAMEGENIE
 		MENUITEM SEPARATOR
 		MENUITEM "Save se&ttings\tCtrl+W",        IDM_SET_SAVENOW

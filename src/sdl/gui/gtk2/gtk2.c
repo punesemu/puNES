@@ -612,7 +612,7 @@ gboolean main_win_configure_event(void) {
 	return (FALSE);
 }
 gboolean main_win_focus_in_event(GtkWidget *widget, GdkEventFocus *event, gpointer data) {
-	if ((cfg->lost_focus_pause == FALSE) || (gui.main_win_lfp == FALSE)) {
+	if ((cfg->bck_pause == FALSE) || (gui.main_win_lfp == FALSE)) {
 		return (FALSE);
 	}
 
@@ -622,7 +622,7 @@ gboolean main_win_focus_in_event(GtkWidget *widget, GdkEventFocus *event, gpoint
 	return (TRUE);
 }
 gboolean main_win_focus_out_event(GtkWidget *widget, GdkEventFocus *event, gpointer data) {
-	if ((cfg->lost_focus_pause == FALSE) || (gui.main_win_lfp == FALSE)) {
+	if ((cfg->bck_pause == FALSE) || (gui.main_win_lfp == FALSE)) {
 		return (FALSE);
 	}
 

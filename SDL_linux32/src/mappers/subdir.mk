@@ -48,6 +48,7 @@ C_SRCS += \
 ../src/mappers/mapper_246.c \
 ../src/mappers/mapper_249.c \
 ../src/mappers/mapper_28.c \
+../src/mappers/mapper_31.c \
 ../src/mappers/mapper_37.c \
 ../src/mappers/mapper_42.c \
 ../src/mappers/mapper_44.c \
@@ -162,6 +163,7 @@ OBJS += \
 ./src/mappers/mapper_246.o \
 ./src/mappers/mapper_249.o \
 ./src/mappers/mapper_28.o \
+./src/mappers/mapper_31.o \
 ./src/mappers/mapper_37.o \
 ./src/mappers/mapper_42.o \
 ./src/mappers/mapper_44.o \
@@ -276,6 +278,7 @@ C_DEPS += \
 ./src/mappers/mapper_246.d \
 ./src/mappers/mapper_249.d \
 ./src/mappers/mapper_28.d \
+./src/mappers/mapper_31.d \
 ./src/mappers/mapper_37.d \
 ./src/mappers/mapper_42.d \
 ./src/mappers/mapper_44.d \
