@@ -574,6 +574,22 @@ static void cpu_wr_mem(WORD address, BYTE value) {
 		}
 		if (address < 0x4000) {
 			address &= 0x2007;
+
+			if (address == 0x2001) {
+				if ((ppu.odd_frame) && (ppu.frame_x < SCR_ROWS)) {
+					if (!r2002.vblank && (ppu.screen_y < SCR_LINES)) {
+						if (ppu.frame_y > machine.vint_lines) {
+							if ((r2001.bck_visible && !(value & 0x08))
+							        || (r2001.spr_visible && !(value & 0x10))) {
+								ppu_wr_reg(address, value);
+								tick_hw(1);
+								return;
+							}
+						}
+					}
+				}
+			}
+
 			/*
 			 * per riuscire a far funzionare contemporaneamente
 			 * Battletoads e Fighting Road (J) senza trick, devo
@@ -945,7 +961,11 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 		return;
 	}
 	if (address == 0x2006) {
+#if defined (VECCHIA_GESTIONE_SENZA_DELAY)
 		WORD old_r2006 = r2006.value;
+#else
+		r2006.old = r2006.value;
+#endif
 
 		/* open bus */
 		ppu.openbus = value;
@@ -977,6 +997,7 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 			 * addressVRAM = tmpAdrVRAM
 			 */
 			ppu.tmp_vram = (ppu.tmp_vram & 0x7F00) | value;
+#if defined (VECCHIA_GESTIONE_SENZA_DELAY)
 			/* aggiorno l'r2006 */
 			r2006.value = ppu.tmp_vram;
 			/*
@@ -1003,11 +1024,13 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 				 */
 				extcl_update_r2006(old_r2006);
 			}
+#else
+			r2006.delay = 1;
+#endif
 		}
 		r2002.toggle = !r2002.toggle;
 		return;
 	}
-
 	if (address == 0x2007) {
 		WORD old_r2006 = r2006.value;
 
@@ -1598,7 +1621,7 @@ static BYTE INLINE fds_wr_mem(WORD address, BYTE value) {
 			if (address == 0x4088) {
 				BYTE i;
 
-				// 0,2,4,6, -8, -6,-4,-2
+				// 0,2,4,6,-8,-6,-4,-2
 				for (i = 0; i < 32; i++) {
 					BYTE a = i << 1;
 
@@ -1692,10 +1715,39 @@ static void INLINE tick_hw(BYTE value) {
 		cpu.odd_cycle = !cpu.odd_cycle;
 		value--;
 		mod_cycles_op(-=, 1);
-
 		if (irqA12.present == TRUE) {
 			irqA12.cycles++;
 		}
+#if !defined (VECCHIA_GESTIONE_SENZA_DELAY)
+		/* il solito delay */
+		if ((r2006.delay != 0) && (--r2006.delay == 0)) {
+			r2006.value = ppu.tmp_vram;
+			/*
+			 * se l'$2006 viene aggiornato proprio al
+			 * ciclo 253 della PPU, l'incremento che viene
+			 * fatto della PPU proprio al ciclo 253 viene
+			 * ignorato.
+			 * Rom interessata :
+			 * Cosmic Wars (J) [!].nes
+			 * (avviare la rom e non premere niente. Dopo la scritta
+			 * 260 iniziale e le esplosioni che seguono, si apre una
+			 * schermata con la parte centrale che saltella senza
+			 * questo controllo)
+			 */
+			//r2006.changed_from_op = ppu.frame_x;
+
+			if (extcl_update_r2006) {
+				/*
+				 * utilizzato dalle mappers :
+				 * MMC3
+				 * Rex (DBZ)
+				 * Taito (TC0190FMCPAL16R4)
+				 * Tengen (Rambo)
+				 */
+				extcl_update_r2006(r2006.old);
+			}
+		}
+#endif
 	}
 }
 /* --------------------------------------------------------------------------------------------- */

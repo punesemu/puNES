@@ -29,7 +29,7 @@
 #include "fds.h"
 #include "gamegenie.h"
 
-#define SAVE_VERSION 11
+#define SAVE_VERSION 12
 #define LENGTH_FILE_NAME 512
 
 BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp);
@@ -350,6 +350,10 @@ BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 	/* r2006 */
 	save_slot_ele(mode, slot, r2006.value)
 	save_slot_ele(mode, slot, r2006.changed_from_op)
+	if (save_slot.version >= 12) {
+		save_slot_ele(mode, slot, r2006.delay)
+		save_slot_ele(mode, slot, r2006.old)
+	}
 	/* r2007 */
 	save_slot_ele(mode, slot, r2007.value)
 	/* spr_ev */

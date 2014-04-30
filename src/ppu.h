@@ -158,6 +158,9 @@ typedef struct {
 typedef struct {
 	WORD value;
 	WORD changed_from_op;
+
+	WORD delay;
+	WORD old;
 } _r2006;
 typedef struct {
 	WORD range;

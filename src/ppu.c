@@ -174,7 +174,7 @@ void ppu_tick(WORD cycles_cpu) {
 						 * renderizzato (mi serve per il multiplexer).
 						 */
 						BYTE color_bg = 0, color_sp = 0, visible_spr = 0;
-						BYTE flag_sp = FALSE, flag_bg = FALSE;
+						//BYTE flag_sp = FALSE, flag_bg = FALSE;
 
 /* -------------------------- FETCH DATI PER TILE SUCCESSIVO --------------------------------- */
 						/*
@@ -293,7 +293,7 @@ void ppu_tick(WORD cycles_cpu) {
 							 */
 							if (r2001.bck_clipping || (ppu.frame_x >= 8)) {
 								/* sto trattando un pixel del background */
-								flag_bg = TRUE;
+								//flag_bg = TRUE;
 								/* recupero i 2 bit LSB del pixel */
 								color_bg = (tile_render.l_byte & 0x01)
 								        | (tile_render.h_byte & 0x02);
@@ -353,7 +353,7 @@ void ppu_tick(WORD cycles_cpu) {
 									 */
 									if (r2001.spr_clipping || (ppu.frame_x >= 8)) {
 										/* indico che uno sprite e' stato trovato */
-										flag_sp = TRUE;
+										//flag_sp = TRUE;
 										/*
 										 * nel caso il colore dello sprite
 										 * sia a zero vuol dire che nessuno
@@ -389,14 +389,15 @@ void ppu_tick(WORD cycles_cpu) {
 						}
 /* ------------------------------------ MULTIPLEXER ------------------------------------------ */
 						/* tratto i pixel del background e dello sprite */
-						if (!(flag_bg | flag_sp)) {
+						//if (!(flag_bg | flag_sp)) {
 							/*
 							 * se sono nella condizione in cui il BG e' invisibile
 							 * e non ho trovato nessuno sprite allora visualizzo
 							 * un pixel nero.
 							 */
-							put_pixel(palette.color[0])
-						} else if (!color_sp) {
+							//put_pixel(palette.color[0])
+						//} else
+						if (!color_sp) {
 							/*
 							 * se il colore dello sprite e' trasparente,
 							 * utilizzo quello del background.
@@ -1025,10 +1026,7 @@ void ppu_tick(WORD cycles_cpu) {
 			ppu.frames++;
 			/* azzero frame_y */
 			ppu.frame_y = 0;
-			/*
-			 * setto il flag che indica che un frame
-			 * e' stato completato.
-			 */
+			/* setto il flag che indica che un frame e' stato completato */
 			info.execute_cpu = FALSE;
 			/* e' un frame dispari? */
 			ppu.odd_frame = !ppu.odd_frame;
