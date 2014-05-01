@@ -643,9 +643,8 @@ void map_quit(void) {
 
 		/* copio il nome del file nella variabile */
 		if (info.uncompress_rom == TRUE) {
-			fl = uncomp.compress_archive;
+			fl = uncomp.uncompress_file;
 		} else {
-			strcpy(prg_ram_file, info.rom_file);
 			fl = info.rom_file;
 		}
 
@@ -745,7 +744,7 @@ void map_prg_ram_init(void) {
 
 			/* copio il nome del file nella variabile */
 			if (info.uncompress_rom == TRUE) {
-				fl = uncomp.compress_archive;
+				fl = uncomp.uncompress_file;
 			} else {
 				fl = info.rom_file;
 			}
