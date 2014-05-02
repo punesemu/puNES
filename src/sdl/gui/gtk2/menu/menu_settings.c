@@ -93,7 +93,7 @@ void menu_settings(GtkWidget *mainmenu, GtkAccelGroup *accel_group) {
 	menu_netplay(menu, accel_group);
 #endif
 	/* lost focus pause */
-	check[MBCKP] = gtk_check_menu_item_new_with_mnemonic("_In pause when in background");
+	check[MBCKP] = gtk_check_menu_item_new_with_mnemonic("Pause when _in background");
 
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), gtk_separator_menu_item_new());
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), check[MBCKP]);
