@@ -176,7 +176,7 @@ static const _param param[] = {
 		NULL,
 		"# possible values: none, scale2x, scale3x, scale4x, hq2x, hq3x, hq4x,\n"
 		"#                  ntsc, phosphor, scanline, dbl, crtcurve, crtnocurve,\n"
-		"#                  phosphor2, dark_room\n",
+		"#                  phosphor2, dark_room",
 		NULL,
 		"-i, --filter              filter to apply       : nofilter, scale2x,\n"
 		"                                                  scale3x, scale4x, hq2x,\n"
