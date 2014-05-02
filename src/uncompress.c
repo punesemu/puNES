@@ -42,6 +42,10 @@ void uncomp_quit(void) {
 	uncomp_remove();
 }
 BYTE uncomp_ctrl(char *ext) {
+	if (gamegenie.phase == GG_LOAD_ROM) {
+		return (EXIT_OK);
+	}
+
 	/* azzero singolarmente i campi della struttura uncomp */
 	uncomp.files_founded = 0;
 	uncomp.file = NULL;
