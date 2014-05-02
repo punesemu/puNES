@@ -7,8 +7,10 @@
 
 #include <string.h>
 #include <stdio.h>
+#include <unistd.h>
 #include "recent_roms.h"
 #include "cfg_file.h"
+#include "gamegenie.h"
 
 #define RECENT_ROMS_FILE "recent.cfg"
 
@@ -33,12 +35,17 @@ void recent_roms_add(char *rom) {
 	int index = 0, rr_index = 1, count = 0;
 	_recent_roms rr_tmp;
 
+	if (gamegenie.phase == GG_LOAD_ROM) {
+		return;
+	}
+
 	memset(&rr_tmp, 0x00, sizeof(_recent_roms));
 
 	for (index = 0; index < RECENT_ROMS_MAX; index++) {
 		if (recent_roms_list.item[index][0] == 0) {
 			break;
 		}
+
 		if (strncmp(recent_roms_list.item[index], rom, RECENT_ROMS_LINE) == 0) {
 			recent_roms_list.item[index][0] = 0;
 		}
@@ -79,14 +86,17 @@ void recent_roms_parse(void) {
 	while (fgets(line, sizeof(line), fp)) {
 		int index;
 
+		/* elimino il ritorno a capo */
+		line[strlen(line) - 1] = 0x00;
+
+		/* se il file non esiste passo alla riga successiva */
+		if (access(line, F_OK) == -1) {
+			continue;
+		}
+
 		for (index = 0; index < RECENT_ROMS_MAX; index++) {
 			if (recent_roms_list.item[index][0] == 0) {
-				int len;
-
 				strncpy(recent_roms_list.item[index], line, RECENT_ROMS_LINE);
-				/* elimino il ritorno a capo */
-				len = strlen(recent_roms_list.item[index]) - 1;
-				recent_roms_list.item[index][len] = 0x00;
 				break;
 			}
 			if (strncmp(recent_roms_list.item[index], line, RECENT_ROMS_LINE) == 0) {
