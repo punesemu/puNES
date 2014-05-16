@@ -84,7 +84,7 @@ void irqA12_SB(void) {
 		irqA12.b_adr_old = ppu.spr_adr;
 	}
 
-	ppu_bck_adr();
+	ppu_bck_adr(r2000.bpt_adr, r2006.value);
 
 	if (!(irqA12.b_adr_old & 0x1000) && (ppu.bck_adr & 0x1000)) {
 		if (!extcl_irq_A12_clock) {

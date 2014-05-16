@@ -30,11 +30,20 @@ void apu_tick(SWORD cycles_cpu, BYTE *hwtick) {
 	 * questo il ciclo successivo, valorizzo il
 	 * registro.
 	 */
-	if (r4017.delay) {
-		r4017.delay = FALSE;
+#if defined (VECCHIA_GESTIONE_JITTER)
+	if (r4017.jitter.delay) {
+		r4017.jitter.delay = FALSE;
 		r4017_jitter();
 	}
-	/* quando apuCycles e' a 0 devo eseguire uno step */
+#else
+	if (r4017.jitter.delay) {
+		r4017.jitter.delay = FALSE;
+		r4017_jitter(0)
+	}
+	r4017_reset_frame()
+#endif
+
+	/* quando apu.cycles e' a 0 devo eseguire uno step */
 	if (!apu.cycles) {
 		switch (apu.step) {
 			case 0:
@@ -232,9 +241,14 @@ void apu_turn_on(void) {
 		TR.output = 0;
 		NS.output = 0;
 		DMC.output = 0;
-
-		r4017.delay = FALSE;
+		r4017.jitter.delay = FALSE;
+		r4017.reset_frame_delay = 0;
+#if defined (VECCHIA_GESTIONE_JITTER)
 		r4017_jitter();
+#else
+		r4017_jitter(9999)
+		r4017_reset_frame()
+#endif
 		r4015.value = 0;
 		S1.length.enabled = 0;
 		S1.length.value = 0;

@@ -575,18 +575,12 @@ static void cpu_wr_mem(WORD address, BYTE value) {
 		if (address < 0x4000) {
 			address &= 0x2007;
 
+			/* condizione riscontrata in "scanline.nes" */
 			if (address == 0x2001) {
-				if ((ppu.odd_frame) && (ppu.frame_x < SCR_ROWS)) {
-					if (!r2002.vblank && (ppu.screen_y < SCR_LINES)) {
-						if (ppu.frame_y > machine.vint_lines) {
-							if ((r2001.bck_visible && !(value & 0x08))
-							        || (r2001.spr_visible && !(value & 0x10))) {
-								ppu_wr_reg(address, value);
-								tick_hw(1);
-								return;
-							}
-						}
-					}
+				if (ppu.sf.first_of_tick == TRUE) {
+					ppu_wr_reg(address, value);
+					tick_hw(1);
+					return;
 				}
 			}
 
@@ -773,6 +767,20 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 		ppu.openbus = value;
 		ppu_openbus_wr_all();
 
+		/* condizione riscontrata in "scanline.nes" */
+		if (ppu.frame_x < SCR_ROWS) {
+			if (!r2002.vblank && (ppu.screen_y < SCR_LINES)) {
+				if (ppu.frame_y > machine.vint_lines) {
+					if (r2001.visible) {
+						if (ppu.pixel_tile == 3) {
+							r2000.race.ctrl = TRUE;
+							r2000.race.value = r2000.bpt_adr;
+						}
+					}
+				}
+			}
+		}
+
 		/*
 		 * 76543210
 		 * ||||||||
@@ -862,6 +870,26 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 		/* open bus */
 		ppu.openbus = value;
 		ppu_openbus_wr_all();
+
+		/*
+		 * se viene scritto esattamente nel ppu.frame_x compreso tra (326 e 328)
+		 * e tra (334 e 336) azzerando l'r2001.visible, inibirebbe il
+		 * "FETCH TILE 0 e 1 SCANLINE+1" non permettendo piu' l'incremento del
+		 * r2006.value (glitch grafici in "Micro Machines (Camerica) [!].nes".
+		 */
+		if (((ppu.frame_x >= 326) && (ppu.frame_x <= 328)) ||
+			((ppu.frame_x >= 334) && (ppu.frame_x <= 336))) {
+			if (r2001.visible) {
+				r2001.race.ctrl = TRUE;
+				r2001.race.value = r2001.visible;
+			}
+		} else if ((ppu.frame_x >= 338) && (ppu.frame_x <= 339)) {
+			if (machine.type == NTSC) {
+				r2001.race.ctrl = TRUE;
+				r2001.race.value = r2001.visible;
+			}
+		}
+
 		/* valorizzo $2001 */
 		r2001.value = value;
 		/*
@@ -892,6 +920,10 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 		r2001.spr_clipping = value & 0x04;
 		/* salvo la maschera di enfatizzazione del colore */
 		r2001.emphasis = (value << 1) & 0x1C0;
+
+		//if ((ppu.screen_y == 83) )
+		//printf("0x%X : 0x%X : 0x%X - %d - %d - %d - %d\n", address, cpu.PC, value, ppu.frames, ppu.screen_y, ppu.frame_x, ppu.sf.actual);
+
 		return;
 	}
 	if (address == 0x2003) {
@@ -954,18 +986,13 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 			 * tmpAdrVRAM    %0yyy --YY YYY- ----
 			 * toggle = 0
 			 */
-			ppu.tmp_vram = (ppu.tmp_vram & 0x0C1F) | ((value & 0xF8) << 2)
-			        		| ((value & 0x07) << 12);
+			ppu.tmp_vram = (ppu.tmp_vram & 0x0C1F) | ((value & 0xF8) << 2) | ((value & 0x07) << 12);
 		}
 		r2002.toggle = !r2002.toggle;
 		return;
 	}
 	if (address == 0x2006) {
-#if defined (VECCHIA_GESTIONE_SENZA_DELAY)
 		WORD old_r2006 = r2006.value;
-#else
-		r2006.old = r2006.value;
-#endif
 
 		/* open bus */
 		ppu.openbus = value;
@@ -997,7 +1024,21 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 			 * addressVRAM = tmpAdrVRAM
 			 */
 			ppu.tmp_vram = (ppu.tmp_vram & 0x7F00) | value;
-#if defined (VECCHIA_GESTIONE_SENZA_DELAY)
+
+			/* condizione riscontrata in "scanline.nes" */
+			if (ppu.frame_x < SCR_ROWS) {
+				if (!r2002.vblank && (ppu.screen_y < SCR_LINES)) {
+					if (ppu.frame_y > machine.vint_lines) {
+						if (r2001.visible) {
+							if ((ppu.pixel_tile >= 1) && (ppu.pixel_tile <= 3)) {
+								r2006.race.ctrl = TRUE;
+								r2006.race.value = r2006.value;
+							}
+						}
+					}
+				}
+			}
+
 			/* aggiorno l'r2006 */
 			r2006.value = ppu.tmp_vram;
 			/*
@@ -1024,9 +1065,6 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 				 */
 				extcl_update_r2006(old_r2006);
 			}
-#else
-			r2006.delay = 1;
-#endif
 		}
 		r2002.toggle = !r2002.toggle;
 		return;
@@ -1307,12 +1345,12 @@ static void INLINE apu_wr_reg(WORD address, BYTE value) {
 				if (r4011.frames > 1) {
 					r4011.output = (value - save) >> 3;
 					DMC.counter = DMC.output = save + r4011.output;
-					/*printf("1 4011 : 0x%X %d %d %d %d %d %d\n", value, save, DMC.counter,
-							DMC.output, r4011.output, r4011.cycles, r4011.frames);*/
+					//printf("1 4011 : 0x%X %d %d %d %d %d %d\n", value, save, DMC.counter,
+					//		DMC.output, r4011.output, r4011.cycles, r4011.frames);
 				} else {
 					DMC.counter = DMC.output = value;
-					/*printf("2 4011 : 0x%X %d %d %d %d %d\n", value, save, DMC.counter, DMC.output,
-							r4011.cycles, r4011.frames);*/
+					//printf("2 4011 : 0x%X %d %d %d %d %d\n", value, save, DMC.counter, DMC.output,
+					//		r4011.cycles, r4011.frames);
 				}
 				DMC.clocked = TRUE;
 
@@ -1386,22 +1424,43 @@ static void INLINE apu_wr_reg(WORD address, BYTE value) {
 			}
 			return;
 		}
+
+#if defined (VECCHIA_GESTIONE_JITTER)
 		if (address == 0x4017) {
 			/* APU frame counter */
-			r4017.jitter = value;
+			r4017.jitter.value = value;
 			/*
 			 * nell'2A03 se la scrittura del $4017 avviene
 			 * in un ciclo pari, allora l'effettiva modifica
 			 * avverra' nel ciclo successivo.
 			 */
 			if (cpu.odd_cycle) {
-				r4017.delay = TRUE;
+				r4017.jitter.delay = TRUE;
 			} else {
-				r4017.delay = FALSE;
+				r4017.jitter.delay = FALSE;
 				r4017_jitter();
 			}
 			return;
 		}
+#else
+		if (address == 0x4017) {
+			/* APU frame counter */
+			r4017.jitter.value = value;
+			/*
+			 * nell'2A03 se la scrittura del $4017 avviene
+			 * in un ciclo pari, allora l'effettiva modifica
+			 * avverra' nel ciclo successivo.
+			 */
+			if (cpu.odd_cycle) {
+				r4017.jitter.delay = TRUE;
+			} else {
+				r4017.jitter.delay = FALSE;
+				r4017_jitter(1)
+				r4017_reset_frame()
+			}
+			return;
+		}
+#endif
 	}
 
 #if defined (DEBUG)
@@ -1715,39 +1774,14 @@ static void INLINE tick_hw(BYTE value) {
 		cpu.odd_cycle = !cpu.odd_cycle;
 		value--;
 		mod_cycles_op(-=, 1);
+
+		r2000.race.ctrl = FALSE;
+		r2001.race.ctrl = FALSE;
+		r2006.race.ctrl = FALSE;
+
 		if (irqA12.present == TRUE) {
 			irqA12.cycles++;
 		}
-#if !defined (VECCHIA_GESTIONE_SENZA_DELAY)
-		/* il solito delay */
-		if ((r2006.delay != 0) && (--r2006.delay == 0)) {
-			r2006.value = ppu.tmp_vram;
-			/*
-			 * se l'$2006 viene aggiornato proprio al
-			 * ciclo 253 della PPU, l'incremento che viene
-			 * fatto della PPU proprio al ciclo 253 viene
-			 * ignorato.
-			 * Rom interessata :
-			 * Cosmic Wars (J) [!].nes
-			 * (avviare la rom e non premere niente. Dopo la scritta
-			 * 260 iniziale e le esplosioni che seguono, si apre una
-			 * schermata con la parte centrale che saltella senza
-			 * questo controllo)
-			 */
-			//r2006.changed_from_op = ppu.frame_x;
-
-			if (extcl_update_r2006) {
-				/*
-				 * utilizzato dalle mappers :
-				 * MMC3
-				 * Rex (DBZ)
-				 * Taito (TC0190FMCPAL16R4)
-				 * Tengen (Rambo)
-				 */
-				extcl_update_r2006(r2006.old);
-			}
-		}
-#endif
 	}
 }
 /* --------------------------------------------------------------------------------------------- */

@@ -66,10 +66,9 @@ enum ppu_color_mode { PPU_CM_GRAYSCALE = 0x30, PPU_CM_NORMAL = 0x3F };
 	/* aggiungo la cordinata Y dello sprite */\
 	ppu.spr_adr += (flip_v & 0x07);\
 }
-#define ppu_bck_adr()\
-	ppu.bck_adr = r2000.bpt_adr |\
-		((ppu_rd_mem(0x2000 | (r2006.value & 0x0FFF)) << 4)\
-		| ((r2006.value & 0x7000) >> 12))
+#define ppu_bck_adr(r2000bck, r2006vl)\
+	ppu.bck_adr = r2000bck | ((ppu_rd_mem(0x2000 | (r2006vl & 0x0FFF)) << 4)\
+		| ((r2006vl & 0x7000) >> 12))
 #define r2006_inc()\
 {\
 	WORD tile_y;\
@@ -113,6 +112,11 @@ typedef struct {
 	BYTE skip_draw;
 	SWORD cycles;
 	uint32_t frames;
+	struct _short_frame {
+		BYTE actual;
+		BYTE prev;
+		BYTE first_of_tick;
+	} sf;
 }  _ppu;
 typedef struct {
 	WORD *data;
@@ -138,6 +142,10 @@ typedef struct {
 	BYTE r2006_inc;
 	WORD spt_adr;
 	WORD bpt_adr;
+	struct _r2000_race {
+		WORD ctrl;
+		WORD value;
+	} race;
 } _r2000;
 typedef struct {
 	BYTE value;
@@ -148,6 +156,10 @@ typedef struct {
 	BYTE bck_clipping;
 	BYTE spr_clipping;
 	BYTE color_mode;
+	struct _r2001_race {
+		WORD ctrl;
+		WORD value;
+	} race;
 } _r2001;
 typedef struct {
 	BYTE vblank;
@@ -158,9 +170,10 @@ typedef struct {
 typedef struct {
 	WORD value;
 	WORD changed_from_op;
-
-	WORD delay;
-	WORD old;
+	struct _r2006_race {
+		WORD ctrl;
+		WORD value;
+	} race;
 } _r2006;
 typedef struct {
 	WORD range;
@@ -173,6 +186,7 @@ typedef struct {
 	BYTE index;
 	BYTE timing;
 	BYTE phase;
+	BYTE real;
 } _spr_evaluate;
 typedef struct {
 	BYTE y_C;

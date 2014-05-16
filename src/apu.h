@@ -241,8 +241,9 @@ enum apu_mode { APU_60HZ, APU_48HZ };
 
 #define apu_change_step(index)\
 	apu.cycles += apuPeriod[apu.mode][apu.type][index]
+#if defined (VECCHIA_GESTIONE_JITTER)
 #define r4017_jitter()\
-	r4017.value = (r4017.jitter & 0xC0);\
+	r4017.value = (r4017.jitter.value & 0xC0);\
 	/*\
 	 * se il bit 7 e' a zero, devo attivare la\
 	 * modalita' NTSC, se a uno quella PAL.\
@@ -261,6 +262,39 @@ enum apu_mode { APU_60HZ, APU_48HZ };
 	/* riavvio il frame audio */\
 	apu.step = apu.cycles = 0;\
 	apu_change_step(apu.step)
+#else
+#define r4017_jitter(apc)\
+	r4017.value = (r4017.jitter.value & 0xC0);\
+	r4017.reset_frame_delay = 1;\
+	if (apu.cycles == apc) {\
+		if (apu.mode == APU_48HZ) {\
+			r4017.reset_frame_delay += 1;\
+		} else {\
+			r4017.reset_frame_delay += 2;\
+		}\
+	}\
+	/*\
+	 * se il bit 7 e' a zero, devo attivare la\
+	 * modalita' NTSC, se a uno quella PAL.\
+	 */\
+	if (r4017.value & 0x80) {\
+		apu.mode = APU_48HZ;\
+	} else {\
+		apu.mode = APU_60HZ;\
+	}\
+	if (r4017.value & 0x40) {\
+		/* azzero il bit 6 del $4015 */\
+		r4015.value &= 0xBF;\
+		/* disabilito l'IRQ del frame counter */\
+		irq.high &= ~APU_IRQ;\
+	}
+#define r4017_reset_frame()\
+	if (r4017.reset_frame_delay && (--r4017.reset_frame_delay == 0)) {\
+		/* riavvio il frame audio */\
+		apu.step = apu.cycles = 0;\
+		apu_change_step(apu.step);\
+	}
+#endif
 #define square_reg0(square)\
 	/* duty */\
 	square.duty = value >> 6;\
@@ -349,8 +383,11 @@ typedef struct {
 } _r4015;
 typedef struct {
 	BYTE value;
-	BYTE jitter;
-	BYTE delay;
+	struct _r4017_litter {
+		BYTE value;
+		BYTE delay;
+	} jitter;
+	BYTE reset_frame_delay;
 } _r4017;
 typedef struct {
 	BYTE enabled;

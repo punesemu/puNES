@@ -590,6 +590,9 @@ void cpu_exe_op(void) {
 		 * solo dopo avviarlo.
 		 */
 		if (!nmi.before || nmi.delay) {
+			if (ppu.sf.prev && (ppu.frame_x == 2)) {
+				ppu.sf.first_of_tick = TRUE;
+			}
 			nmi.delay = FALSE;
 		} else {
 			cpu.opcode = 0x100;
@@ -623,7 +626,7 @@ void cpu_exe_op(void) {
 	 * FIXME: non sono affatto sicuro di questa cosa.
 	 * Disabilito l'NMI quando viene settato (dal registro $2000)
 	 * nello stesso momento in cui il vblank viene disabilitato
-	 * (frameX = 0). In questo modo passo la rom di test
+	 * (ppu.frame_x = 0). In questo modo passo la rom di test
 	 * 07-nmi_on_timing.nes. Non ho trovato informazioni su quando
 	 * effettivamente questa situazione avvenga.
 	 */

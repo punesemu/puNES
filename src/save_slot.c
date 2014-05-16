@@ -29,7 +29,7 @@
 #include "fds.h"
 #include "gamegenie.h"
 
-#define SAVE_VERSION 12
+#define SAVE_VERSION 13
 #define LENGTH_FILE_NAME 512
 
 BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp);
@@ -313,6 +313,11 @@ BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, ppu.odd_frame)
 	save_slot_ele(mode, slot, ppu.cycles)
 	save_slot_ele(mode, slot, ppu.frames)
+	if (save_slot.version >= 13) {
+		save_slot_ele(mode, slot, ppu.sf.actual)
+		save_slot_ele(mode, slot, ppu.sf.prev)
+		save_slot_ele(mode, slot, ppu.sf.first_of_tick)
+	}
 	/* ppu_openbus */
 	save_slot_ele(mode, slot, ppu_openbus.bit0)
 	save_slot_ele(mode, slot, ppu_openbus.bit1)
@@ -329,6 +334,10 @@ BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, r2000.r2006_inc)
 	save_slot_ele(mode, slot, r2000.spt_adr)
 	save_slot_ele(mode, slot, r2000.bpt_adr)
+	if (save_slot.version >= 13) {
+		save_slot_ele(mode, slot, r2000.race.ctrl)
+		save_slot_ele(mode, slot, r2000.race.value)
+	}
 	/* r2001 */
 	save_slot_ele(mode, slot, r2001.value)
 	save_slot_ele(mode, slot, r2001.emphasis)
@@ -338,6 +347,10 @@ BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, r2001.bck_clipping)
 	save_slot_ele(mode, slot, r2001.spr_clipping)
 	save_slot_ele(mode, slot, r2001.color_mode)
+	if (save_slot.version >= 13) {
+		save_slot_ele(mode, slot, r2001.race.ctrl)
+		save_slot_ele(mode, slot, r2001.race.value)
+	}
 	/* r2002 */
 	save_slot_ele(mode, slot, r2002.vblank)
 	save_slot_ele(mode, slot, r2002.sprite0_hit)
@@ -351,8 +364,8 @@ BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, r2006.value)
 	save_slot_ele(mode, slot, r2006.changed_from_op)
 	if (save_slot.version >= 12) {
-		save_slot_ele(mode, slot, r2006.delay)
-		save_slot_ele(mode, slot, r2006.old)
+		save_slot_ele(mode, slot, r2006.race.ctrl)
+		save_slot_ele(mode, slot, r2006.race.value)
 	}
 	/* r2007 */
 	save_slot_ele(mode, slot, r2007.value)
@@ -367,6 +380,9 @@ BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, spr_ev.index)
 	save_slot_ele(mode, slot, spr_ev.timing)
 	save_slot_ele(mode, slot, spr_ev.phase)
+	if (save_slot.version >= 13) {
+		save_slot_ele(mode, slot, spr_ev.real)
+	}
 	/* sprite */
 	for (i = 0; i < LENGTH(sprite); i++) {
 		save_slot_ele(mode, slot, sprite[i].y_C)
@@ -409,8 +425,11 @@ BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, r4015.value)
 	/* r4017 */
 	save_slot_ele(mode, slot, r4017.value)
-	save_slot_ele(mode, slot, r4017.jitter)
-	save_slot_ele(mode, slot, r4017.delay)
+	save_slot_ele(mode, slot, r4017.jitter.value)
+	save_slot_ele(mode, slot, r4017.jitter.delay)
+	if (save_slot.version >= 13) {
+		save_slot_ele(mode, slot, r4017.reset_frame_delay)
+	}
 	/* S1 */
 	save_slot_square(S1, slot)
 	/* S2 */

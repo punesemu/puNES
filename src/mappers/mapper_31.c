@@ -19,17 +19,15 @@ void map_init_31(void) {
 	EXTCL_CPU_RD_MEM(31);
 	EXTCL_SAVE_MAPPER(31);
 
-	if (info.reset >= HARD) {
-		memset(&m31, 0x00, sizeof(m31));
-		m31.regs[7] = 0xFF;
-		sync_31();
-	}
+	memset(&m31, 0x00, sizeof(m31));
+	m31.regs[7] = 0xFF;
+	sync_31();
 
 	info.mapper.extend_wr = TRUE;
 	info.mapper.extend_rd = TRUE;
 }
 void extcl_cpu_wr_mem_31(WORD address, BYTE value) {
-	if (address > 0x5FFF) {
+	if ((address < 0x5000) && (address > 0x5FFF)) {
 		return;
 	}
 	m31.regs[address & 0x0007] = value;

@@ -317,7 +317,7 @@ void extcl_ppu_000_to_255_90_209_211(void) {
 			ppu_spr_adr(7);
 		}
 
-		ppu_bck_adr();
+		ppu_bck_adr(r2000.bpt_adr, r2006.value);
 
 		if ((m90_209_211.irq.mode & 0x03) == 1) {
 			if ((ppu.bck_adr & 0x1000) > (ppu.spr_adr & 0x1000)) {

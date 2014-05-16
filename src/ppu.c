@@ -30,8 +30,8 @@ enum overflow_sprite { OVERFLOW_SPR = 3 };
 	tile_fetch.attrib = (tile_fetch.attrib >> 8)\
 		| (((tmp >> shift_at) & 0x03) << 8);\
 }
-#define fetch_lb()\
-	ppu_bck_adr();\
+#define fetch_lb(r2000bck, r2006vl)\
+	ppu_bck_adr(r2000bck, r2006vl);\
 	tile_fetch.l_byte = (tile_fetch.l_byte >> 8)\
 		| (inv_chr[ppu_rd_mem(ppu.bck_adr)] << 8);
 #define fetch_hb()\
@@ -113,9 +113,22 @@ void ppu_tick(WORD cycles_cpu) {
 				 * della dummy line, ne anticipo il controllo e
 				 * l'eventuale modifica.
 				 */
-				if ((ppu.frame_x == (SHORT_SLINE_CYCLES - machine.ppu_for_1_cycle_cpu))
-				        && ppu.odd_frame && r2001.bck_visible) {
-					ppu.sline_cycles = SHORT_SLINE_CYCLES;
+				if (ppu.frame_x == (SHORT_SLINE_CYCLES - 1)) {
+					ppu.sf.prev = ppu.sf.actual;
+					ppu.sf.actual = FALSE;
+					if (ppu.odd_frame) {
+						if (r2001.bck_visible) {
+							if ((r2001.race.ctrl == FALSE) || (r2001.race.value & 0x08)) {
+								ppu.sline_cycles = SHORT_SLINE_CYCLES;
+								ppu.sf.actual = TRUE;
+							}
+						} else {
+							if ((r2001.race.ctrl == TRUE) && (r2001.race.value & 0x08)) {
+								ppu.sline_cycles = SHORT_SLINE_CYCLES;
+								ppu.sf.actual = TRUE;
+							}
+						}
+					}
 				}
 			}
 		}
@@ -206,9 +219,10 @@ void ppu_tick(WORD cycles_cpu) {
 							/*
 							 * faccio il fetch dei primi 8 bit che
 							 * che compongono il tile (che hanno un
-							 * peso minore ai secondi).
+							 * peso minore rispetto ai secondi).
 							 */
-							fetch_lb()
+							fetch_lb((r2000.race.ctrl ? r2000.race.value : r2000.bpt_adr),
+									(r2006.race.ctrl ? r2006.race.value : r2006.value))
 						} else if (ppu.pixel_tile == 5) {
 							/*
 							 * faccio il fetch dei secondi 8 bit che
@@ -458,6 +472,7 @@ void ppu_tick(WORD cycles_cpu) {
 								 * li incremento azzerandoli.
 								 */
 								spr_ev.timing = 0;
+								spr_ev.real = 0;
 								spr_ev.index = 0xFF;
 								/* la fase 1 e 2 corrispondono */
 								spr_ev.phase = 2;
@@ -475,7 +490,7 @@ void ppu_tick(WORD cycles_cpu) {
 									/* in caso di overflow dell'indice degli sprite ... */
 									if (++spr_ev.index == 64) {
 										/* ...azzero l'indice... */
-										spr_ev.index = 0;
+										spr_ev.index = spr_ev.real = 0;
 										/* ...passo alla fase 4... */
 										spr_ev.phase = 4;
 										/*
@@ -486,8 +501,24 @@ void ppu_tick(WORD cycles_cpu) {
 										/* leggo la coordinata Y dello sprite 0 */
 										r2004.value = oam.element[0][YC];
 									} else {
+										/*
+										 * http://forums.nesdev.com/viewtopic.php?f=3&t=465
+										 * The Wiki says something about sprite 0 and 1 being
+										 * fetched from the high 5 bits of the sprite address,
+										 * instead of address locations 0 and 4. The Sachen
+										 * game "Huge Insect (Sachen) [!].nes" relies on
+										 * this same behavior.
+										 * Questo, inoltre ha fatto sparire la pallina nella
+										 * rom "Escape_from_pong" che, a quanto sembra, e'
+										 * il reale comportamaneto su un autentico NES!!.
+										 */
+										if ((spr_ev.real = (
+												(spr_ev.index <= 1) ? ((r2003.value & 0xF8) >> 2) : 0)
+												+ spr_ev.index) >= 64) {
+											spr_ev.real -= 64;
+										}
 										/* leggo dall'OAM il byte 0 dell'elemento in esame */
-										r2004.value = oam.element[spr_ev.index][YC];
+										r2004.value = oam.element[spr_ev.real][YC];
 										/*
 										 * calcolo la differenza tra la posizione
 										 * iniziale dello sprite e la posizione Y
@@ -533,7 +564,7 @@ void ppu_tick(WORD cycles_cpu) {
 								/* tratto i cicli pari */
 								} else if (!(spr_ev.timing & 0x01)) {
 									/* leggo il prossimo byte dell'OAM */
-									r2004.value = oam.element[spr_ev.index][spr_ev.timing >> 1];
+									r2004.value = oam.element[spr_ev.real][spr_ev.timing >> 1];
 									/* passo al ciclo successivo */
 									spr_ev.timing++;
 								/* tratto i cicli dispari */
@@ -687,7 +718,7 @@ void ppu_tick(WORD cycles_cpu) {
 										 * alla fase 4 questo corrispondera' alla coordinata Y
 										 * dello sprite 0
 										 */
-										r2004.value = oam.element[spr_ev.index][spr_ev.byte_OAM];
+										r2004.value = oam.element[spr_ev.real][spr_ev.byte_OAM];
 										/* continuo a esaminare lo sprite */
 										spr_ev.timing++;
 									}
@@ -878,7 +909,7 @@ void ppu_tick(WORD cycles_cpu) {
 		 * 		3. Fetch 2 pattern table bitmap bytes
 		 * 		This process is repeated 2 times.
 		 */
-		if (!r2002.vblank && r2001.visible && (ppu.screen_y < SCR_LINES)) {
+		if (!r2002.vblank && (r2001.visible || r2001.race.ctrl) && (ppu.screen_y < SCR_LINES)) {
 			if (extcl_ppu_320_to_34x) {
 				/*
 				 * utilizzato dalle mappers :
@@ -901,7 +932,7 @@ void ppu_tick(WORD cycles_cpu) {
 			} else if (ppu.frame_x == 331) {
 				fetch_at()
 			} else if ((ppu.frame_x == 325) || (ppu.frame_x == 333)) {
-				fetch_lb()
+				fetch_lb(r2000.bpt_adr, r2006.value)
 			} else if ((ppu.frame_x == 327) || (ppu.frame_x == 335)) {
 				fetch_hb()
 				if (extcl_after_rd_chr) {
@@ -1042,6 +1073,7 @@ void ppu_tick(WORD cycles_cpu) {
 				/* azzero i numeri di cicli dall'nmi */
 				nmi.cpu_cycles_from_last_nmi = 0;
 			}
+			ppu.sf.first_of_tick = FALSE;
 		}
 		/*
 		 * azzero frameX, ed e' estremamente
