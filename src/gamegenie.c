@@ -68,8 +68,8 @@ FILE *gamegenie_load_rom(FILE *fp) {
 	sprintf(info.rom_file, "%s" BIOS_FOLDER "/%s", info.base_folder, GGFILE);
 
 	if (!(fp_gg = fopen(info.rom_file, "rb"))) {
-		text_add_line_info(1, "[red]error on loading Game Genie rom");
-		fprintf(stderr, "error on loading Game Genie rom\n");
+		text_add_line_info(1, "[red]error loading Game Genie rom");
+		fprintf(stderr, "error loading Game Genie rom\n");
 
 		strncpy(info.rom_file, info.load_rom_file, sizeof(info.rom_file));
 

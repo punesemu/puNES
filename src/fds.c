@@ -75,8 +75,8 @@ BYTE fds_load_rom(void) {
 		}
 
 		if (!found) {
-			text_add_line_info(1, "[red]error on loading rom");
-			fprintf(stderr, "error on loading rom\n");
+			text_add_line_info(1, "[red]error loading rom");
+			fprintf(stderr, "error loading rom\n");
 			return (EXIT_ERROR);
 		}
 	}

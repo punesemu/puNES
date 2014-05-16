@@ -225,8 +225,8 @@ BYTE emu_load_rom(void) {
 		} else if (!strcasecmp(ext, ".fm2")) {
 			tas_file(ext, info.rom_file);
 			if (!info.rom_file[0]) {
-				text_add_line_info(1, "[red]error on loading rom");
-				fprintf(stderr, "error on loading rom\n");
+				text_add_line_info(1, "[red]error loading rom");
+				fprintf(stderr, "error loading rom\n");
 			}
 			recent_roms_add_wrap()
 			/* rielaboro il nome del file */
@@ -235,8 +235,8 @@ BYTE emu_load_rom(void) {
 			/* carico la rom in memoria */
 			if (ines_load_rom() == EXIT_ERROR) {
 				info.rom_file[0] = 0;
-				text_add_line_info(1, "[red]error on loading rom");
-				fprintf(stderr, "error on loading rom\n");
+				text_add_line_info(1, "[red]error loading rom");
+				fprintf(stderr, "error loading rom\n");
 				goto elaborate_rom_file;
 			}
 			recent_roms_add_wrap()

@@ -86,8 +86,8 @@ BYTE save_slot_load(void) {
 	}
 
 	if ((fp = fopen(file, "rb")) == NULL) {
-		text_add_line_info(1, "[red]error[normal] on load state");
-		fprintf(stderr, "error on load state\n");
+		text_add_line_info(1, "[red]error[normal] loading state");
+		fprintf(stderr, "error loading state\n");
 		return (EXIT_ERROR);
 	}
 
@@ -98,7 +98,7 @@ BYTE save_slot_load(void) {
 	timeline_snap(TL_SAVE_SLOT);
 
 	if (slot_operation(SAVE_SLOT_READ, save_slot.slot, fp)) {
-		fprintf(stderr, "error on loading state, corrupted file.\n");
+		fprintf(stderr, "error loading state, corrupted file.\n");
 		timeline_back(TL_SAVE_SLOT, 0);
 	}
 
