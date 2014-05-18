@@ -707,6 +707,11 @@ void map_quit(void) {
 void map_prg_rom_8k(BYTE banks_8k, BYTE at, BYTE value) {
 	BYTE a;
 
+	/* se cerco di switchare 32k ma ho solo un banco da 16k esco */
+	if ((banks_8k == 4) && !info.prg.rom.max.banks_32k) {
+		return;
+	}
+
 	for (a = 0; a < banks_8k; ++a) {
 		mapper.rom_map_to[at + a] = ((value * banks_8k) + a);
 	}
@@ -797,7 +802,7 @@ BYTE map_chr_ram_init(void) {
 	return (EXIT_OK);
 }
 void map_set_banks_max_prg_and_chr(void) {
-	info.prg.rom.max.banks_32k = (info.prg.rom.banks_16k >> 1) - 1;
+	info.prg.rom.max.banks_32k = (info.prg.rom.banks_16k == 1 ? 0 : (info.prg.rom.banks_16k >> 1) - 1);
 	info.prg.rom.max.banks_16k = info.prg.rom.banks_16k - 1;
 	info.prg.rom.max.banks_8k = info.prg.rom.banks_8k - 1;
 	info.prg.rom.max.banks_8k_before_last = info.prg.rom.banks_8k - 2;
