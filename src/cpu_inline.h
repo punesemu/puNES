@@ -23,7 +23,7 @@
 #include "fds.h"
 #include "gamegenie.h"
 
-#define mod_cycles_op(op, value) cpu.cycles op value
+#define mod_cycles_op(op, vl) cpu.cycles op vl
 #define r2006_during_rendering()\
 {\
 	if (!r2002.vblank && r2001.visible &&\
@@ -168,7 +168,17 @@ static BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 		BYTE before = cpu.openbus;
 
 		/* eseguo un tick hardware */
-		tick_hw(1);
+		/*
+		 * la mancanza del controllo del made_tick l'ho notata grazie alla rom
+		 * "Tetris 2 + BomBliss (J) [!].nes". Questa utilizza la ram extra per eseguire
+		 * codice tra cui l'accesso ai registri della PPU quindi, utilizzo il lend_word()
+		 * e quindi devo controllare se mi trovo alla lettura del secondo BYTE e se si
+		 * non devo eseguire il tick_hw() esattamente come faccio quando
+		 * eseguo codice dal 0x8000 in su.
+		 */
+		if (made_tick) {
+			tick_hw(1);
+		}
 		/* controllo se e' consentita la lettura dalla PRG Ram */
 		if (cpu.prg_ram_rd_active) {
 			if (address < 0x6000) {
@@ -602,6 +612,7 @@ static void cpu_wr_mem(WORD address, BYTE value) {
 				tick_hw(1);
 				return;
 			}
+
 			/* eseguo un tick hardware */
 			tick_hw(1);
 			/* scrivo */
@@ -960,6 +971,7 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 		/* open bus */
 		ppu.openbus = value;
 		ppu_openbus_wr_all();
+
 		/*
 		 * Bit totali manipolati con $2005:
 		 * tmpAdrVRAM  %0yyy --YY YYYX XXXX
@@ -1079,7 +1091,7 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 		ppu_wr_mem(r2006.value, value);
 		/*
 		 * e' stato scoperto che anche se normalmente
-		 * durante il rendering scrittura e lettura del
+		 * durante il rendering, scrittura e lettura del
 		 * $2007 non viene mai fatto per non modificare
 		 * il $2006, un gioco lo fa (Young Indiana Jones
 		 * Chronicles, The (U) [!].nes) e quando avviene,
@@ -1089,7 +1101,7 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 		 */
 		r2006_during_rendering();
 
-		 if (extcl_update_r2006) {
+		if (extcl_update_r2006) {
 			 /*
 			  * utilizzato dalle mappers :
 			  * MMC3
@@ -1097,9 +1109,9 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 			  * Taito (TC0190FMCPAL16R4)
 			  * Tengen (Rambo)
 			  */
-			 extcl_update_r2006(old_r2006);
-		 }
-		 return;
+			extcl_update_r2006(old_r2006);
+		}
+		return;
 	}
 	if (address == 0x4014) {
 		/*
