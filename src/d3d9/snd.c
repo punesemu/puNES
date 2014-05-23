@@ -89,6 +89,10 @@ BYTE snd_start(void) {
  		double sample_latency;
 
  		switch (cfg->samplerate) {
+			case S48000:
+				snd.samplerate = 48000;
+				snd.buffer.size = (48000 / (11025 / 128)) * 8;
+				break;
  			case S44100:
  				snd.samplerate = 44100;
  				snd.buffer.size = 512 * 8;

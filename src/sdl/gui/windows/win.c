@@ -1321,10 +1321,14 @@ void gui_update(void) {
 	}
 
 	/* Samplerate */
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_SAMPLERATE_48000);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_SAMPLERATE_44100);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_SAMPLERATE_22050);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_SAMPLERATE_11025);
 	switch (cfg->samplerate) {
+		case S48000:
+			id = IDM_SET_SAMPLERATE_48000;
+			break;
 		case S44100:
 			id = IDM_SET_SAMPLERATE_44100;
 			break;
@@ -1924,6 +1928,9 @@ long __stdcall main_win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 						gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE);
 					}
 					gui_update();
+					break;
+				case IDM_SET_SAMPLERATE_48000:
+					set_samplerate(S48000);
 					break;
 				case IDM_SET_SAMPLERATE_44100:
 					set_samplerate(S44100);

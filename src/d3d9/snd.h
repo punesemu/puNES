@@ -10,7 +10,7 @@
 
 #include "common.h"
 
-enum samplerate_mode { S44100, S22050, S11025 };
+enum samplerate_mode { S44100, S22050, S11025, S48000 };
 enum channel_mode { MONO = 1, STEREO };
 enum channels { CH_LEFT, CH_RIGHT };
 enum snd_factor_type { SND_FACTOR_SPEED, SND_FACTOR_NORMAL, SND_FACTOR_SLOW };

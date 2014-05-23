@@ -66,6 +66,7 @@ enum {
 	M44100,
 	M22050,
 	M11025,
+	M48000,
 	NUMCHKS
 };
 
@@ -87,7 +88,9 @@ void menu_audio_sample_rate(GtkWidget *audio, GtkAccelGroup *accel_group) {
 	check[M44100] = gtk_check_menu_item_new_with_mnemonic("_44100");
 	check[M22050] = gtk_check_menu_item_new_with_mnemonic("_22050");
 	check[M11025] = gtk_check_menu_item_new_with_mnemonic("_11025");
+	check[M48000] = gtk_check_menu_item_new_with_mnemonic("4_8000");
 
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), check[M48000]);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), check[M44100]);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), check[M22050]);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), check[M11025]);
@@ -98,6 +101,8 @@ void menu_audio_sample_rate(GtkWidget *audio, GtkAccelGroup *accel_group) {
 	        GINT_TO_POINTER(1));
 	g_signal_connect_swapped(G_OBJECT(check[M11025]), "activate", G_CALLBACK(set_sample_rate),
 	        GINT_TO_POINTER(2));
+	g_signal_connect_swapped(G_OBJECT(check[M48000]), "activate", G_CALLBACK(set_sample_rate),
+	        GINT_TO_POINTER(3));
 }
 void menu_audio_sample_rate_check(void) {
 	int index;

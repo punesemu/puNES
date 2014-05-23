@@ -254,9 +254,9 @@ static const _param param[] = {
 	{
 		"sample rate",
 		NULL,
-		"# possible values: 44100, 22050, 11025",
+		"# possible values: 48000, 44100, 22050, 11025",
 		NULL,
-		"-l, --samplerate          sample rate           : 44100, 22050, 11025"
+		"-l, --samplerate          sample rate           : 48000, 44100, 22050, 11025"
 	},
 	{
 		"channels",
@@ -605,7 +605,8 @@ static const _param param_render[] = {
 static const _param param_samplerate[] = {
 	{"44100", "44100"},
 	{"22050", "22050"},
-	{"11025", "11025"}
+	{"11025", "11025"},
+	{"48000", "48000"}
 };
 static const _param param_channels[] = {
 	{"NULL",   "NULL"  },
