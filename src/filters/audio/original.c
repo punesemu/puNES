@@ -123,6 +123,7 @@ void audio_quality_apu_tick_original(void) {
 
 		mixer += nla_table.pulse[s1_out + s2_out];
 		mixer += nla_table.tnd[(tr_out * 3) + (ns_out * 2) + dmc_out];
+		mixer *= apu_pre_amp;
 		mixer *= cfg->apu.volume[APU_MASTER];
 
 		if (extra_mixer_original) {

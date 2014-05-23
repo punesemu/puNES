@@ -702,6 +702,7 @@ static void cpu_wr_mem(WORD address, BYTE value) {
 			 * 164
 			 * 28
 			 * 91
+			 * 31
 			 */
 			extcl_cpu_wr_mem(address, value);
 		}

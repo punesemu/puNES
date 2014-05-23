@@ -246,7 +246,7 @@ void audio_quality_end_frame_blip(void) {
 		}
 
 		for (i = 0; i < count; i++) {
-			SWORD data = temp[i] * cfg->apu.volume[APU_MASTER];
+			SWORD data = (temp[i] * apu_pre_amp) * cfg->apu.volume[APU_MASTER];
 
 			/* mono or left*/
 			(*cache->write++) = data;
