@@ -34,7 +34,7 @@ void extcl_cpu_wr_mem_31(WORD address, BYTE value) {
 	sync_31();
 }
 BYTE extcl_cpu_rd_mem_31(WORD address, BYTE openbus, BYTE before) {
-	if (address <= 0x8000) {
+	if (address < 0x8000) {
 		return (openbus);
 	}
 	return (m31.rom_4k[(address >> 12) & 0x07][address & 0x0FFF]);
