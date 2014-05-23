@@ -215,7 +215,10 @@ enum apu_mode { APU_60HZ, APU_48HZ };
 				DMC.buffer = prg.rom[DMC.address & 0x1FFF];\
 			}\
 		} else {\
-			DMC.buffer = prg.rom_8k[(DMC.address >> 13) & 0x03][DMC.address & 0x1FFF];\
+			DMC.buffer = prg_rom_rd(DMC.address);\
+			if (info.mapper.extend_rd) {\
+				DMC.buffer = extcl_cpu_rd_mem(DMC.address, DMC.buffer, 0);\
+			}\
 		}\
 		/* incremento gli hwtick da compiere */\
 		if (hwtick) { hwtick[0] += tick; }\

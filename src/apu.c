@@ -16,6 +16,7 @@
 #include "mem_map.h"
 #include "fds.h"
 #include "cfg_file.h"
+#include "mappers.h"
 
 void apu_tick(SWORD cycles_cpu, BYTE *hwtick) {
 	/* sottraggo il numero di cicli eseguiti */
