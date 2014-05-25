@@ -70,6 +70,7 @@ C_SRCS += \
 ../src/mappers/mapper_83.c \
 ../src/mappers/mapper_90_209_211.c \
 ../src/mappers/mapper_91.c \
+../src/mappers/mapper_A65AS.c \
 ../src/mappers/mapper_Active.c \
 ../src/mappers/mapper_Agci.c \
 ../src/mappers/mapper_Ave.c \
@@ -185,6 +186,7 @@ OBJS += \
 ./src/mappers/mapper_83.o \
 ./src/mappers/mapper_90_209_211.o \
 ./src/mappers/mapper_91.o \
+./src/mappers/mapper_A65AS.o \
 ./src/mappers/mapper_Active.o \
 ./src/mappers/mapper_Agci.o \
 ./src/mappers/mapper_Ave.o \
@@ -300,6 +302,7 @@ C_DEPS += \
 ./src/mappers/mapper_83.d \
 ./src/mappers/mapper_90_209_211.d \
 ./src/mappers/mapper_91.d \
+./src/mappers/mapper_A65AS.d \
 ./src/mappers/mapper_Active.d \
 ./src/mappers/mapper_Agci.d \
 ./src/mappers/mapper_Ave.d \
