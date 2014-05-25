@@ -29,7 +29,8 @@ C_SRCS += \
 ../src/tas.c \
 ../src/text.c \
 ../src/timeline.c \
-../src/uncompress.c 
+../src/uncompress.c \
+../src/unif.c 
 
 OBJS += \
 ./src/apu.o \
@@ -57,7 +58,8 @@ OBJS += \
 ./src/tas.o \
 ./src/text.o \
 ./src/timeline.o \
-./src/uncompress.o 
+./src/uncompress.o \
+./src/unif.o 
 
 C_DEPS += \
 ./src/apu.d \
@@ -85,7 +87,8 @@ C_DEPS += \
 ./src/tas.d \
 ./src/text.d \
 ./src/timeline.d \
-./src/uncompress.d 
+./src/uncompress.d \
+./src/unif.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

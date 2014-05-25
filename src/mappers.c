@@ -16,6 +16,7 @@
 #include "tas.h"
 #include "text.h"
 #include "uncompress.h"
+#include "unif.h"
 
 BYTE map_init(void) {
 	BYTE i;
@@ -626,6 +627,14 @@ BYTE map_init(void) {
 			break;
 		case GAMEGENIE_MAPPER:
 			map_init_GameGenie();
+			break;
+		case UNIF_MAPPER:
+			switch (unif.internal_mapper) {
+				case 0:
+					/* BMC-A65AS */
+					map_init_A65AS();
+					break;
+			}
 			break;
 	}
 	map_prg_rom_8k_update();

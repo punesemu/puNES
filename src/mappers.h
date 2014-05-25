@@ -8,6 +8,7 @@
 #ifndef MAPPERS_H_
 #define MAPPERS_H_
 
+/* INES/NES2.0 */
 #include "common.h"
 #include "external_calls.h"
 #include "mappers/mapper_0.h"
@@ -122,6 +123,8 @@
 #include "mappers/mapper_91.h"
 #include "mappers/mapper_105.h"
 #include "mappers/mapper_31.h"
+/* UNIF */
+#include "mappers/mapper_A65AS.h"
 
 #define _control_bank(val, max)\
 	if (val > max) {\

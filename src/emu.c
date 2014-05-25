@@ -46,6 +46,7 @@
 #include "timeline.h"
 #include "tas.h"
 #include "ines.h"
+#include "unif.h"
 #include "fds.h"
 #include "gamegenie.h"
 #include "overscan.h"
@@ -70,14 +71,10 @@
 	}
 
 BYTE emu_loop(void) {
+
 #if defined (DEBUG)
 	WORD PCBREAK = 0xDA5A;
-	PCBREAK = 0xEC06; //PCBREAK = 0xDA7A;
-	PCBREAK = 0xEBE5;
-	PCBREAK = 0xEBF3;
-	PCBREAK = 0x60C0;
-	PCBREAK = 0xE1F8;
-	PCBREAK = 0xE32A;
+	PCBREAK = 0xEC06;
 #endif
 
 	/*
@@ -233,12 +230,16 @@ BYTE emu_load_rom(void) {
 			goto elaborate_rom_file;
 		} else {
 			/* carico la rom in memoria */
-			if (ines_load_rom() == EXIT_ERROR) {
+			if (ines_load_rom() == EXIT_OK) {
+				goto accept_rom_file;
+			}
+			if (unif_load_rom() == EXIT_ERROR) {
 				info.rom_file[0] = 0;
 				text_add_line_info(1, "[red]error loading rom");
 				fprintf(stderr, "error loading rom\n");
 				goto elaborate_rom_file;
 			}
+			accept_rom_file:
 			recent_roms_add_wrap()
 		}
 	} else if (info.gui) {

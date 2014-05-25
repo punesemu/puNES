@@ -230,6 +230,7 @@ void ppu_tick(WORD cycles_cpu) {
 							 * rispetto ai primi).
 							 */
 							fetch_hb()
+
 							if (extcl_after_rd_chr) {
 								/*
 								 * utilizzato dalle mappers :

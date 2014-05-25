@@ -876,6 +876,9 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 			        cpu.opcode, cpu.base_opcode_cycles);
 		}
 #endif
+		//if ((ppu.screen_y == 188))
+		//printf("0x%X : 0x%X : 0x%X - %d - %d - %d - %d\n", address, cpu.PC, value, ppu.frames, ppu.screen_y, ppu.frame_x, ppu.sf.actual);
+
 		return;
 	}
 	if (address == 0x2001) {
@@ -932,10 +935,6 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 		r2001.spr_clipping = value & 0x04;
 		/* salvo la maschera di enfatizzazione del colore */
 		r2001.emphasis = (value << 1) & 0x1C0;
-
-		//if ((ppu.screen_y == 83) )
-		//printf("0x%X : 0x%X : 0x%X - %d - %d - %d - %d\n", address, cpu.PC, value, ppu.frames, ppu.screen_y, ppu.frame_x, ppu.sf.actual);
-
 		return;
 	}
 	if (address == 0x2003) {
@@ -988,7 +987,6 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 			 * toggle = 1
 			 */
 			ppu.fine_x = (value & 0x07);
-			//ppu.tmp_vram = (ppu.tmp_vram & 0x7FE0) | ((value & 0xF8) >> 3);
 			ppu.tmp_vram = (ppu.tmp_vram & 0x7FE0) | (value >> 3);
 		} else {
 			/*
@@ -1001,6 +999,7 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 			 */
 			ppu.tmp_vram = (ppu.tmp_vram & 0x0C1F) | ((value & 0xF8) << 2) | ((value & 0x07) << 12);
 		}
+
 		r2002.toggle = !r2002.toggle;
 		return;
 	}
@@ -1046,6 +1045,8 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 							if ((ppu.pixel_tile >= 1) && (ppu.pixel_tile <= 3)) {
 								r2006.race.ctrl = TRUE;
 								r2006.race.value = r2006.value;
+								/* prove per Knight Rider (U) [!].nes */
+								//(ppu.pixel_tile == 3) r2006.race.value = (r2006.value & 0xF3FF) | (ppu.tmp_vram & 0x0B00);
 							}
 						}
 					}
@@ -1079,6 +1080,7 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 				extcl_update_r2006(old_r2006);
 			}
 		}
+
 		r2002.toggle = !r2002.toggle;
 		return;
 	}

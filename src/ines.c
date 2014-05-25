@@ -25,7 +25,7 @@ BYTE ines_load_rom(void) {
 
 	{
 		BYTE i, found = TRUE;
-		char rom_ext[2][10] = { ".nes\0", ".NES\0" };
+		static const char rom_ext[2][10] = { ".nes\0", ".NES\0" };
 
 		fp = fopen(info.rom_file, "rb");
 
@@ -72,6 +72,7 @@ BYTE ines_load_rom(void) {
 
 			info.prg.rom.banks_16k |= ((flags[FL9] & 0x0F) << 8);
 			info.chr.rom.banks_8k |= ((flags[FL9] & 0xF0) << 4);
+
 			tmp = flags[FL12] & 0x01;
 		} else {
 			/* iNES 1.0 */
@@ -167,7 +168,7 @@ BYTE ines_load_rom(void) {
 		 * la trattero' nell'inizializzazione della mapper
 		 * (perche' alcune mapper ne hanno 16k, altre 8k).
 		 */
-		if (!mapper.write_vram) {
+		if (mapper.write_vram == FALSE) {
 			/* alloco la CHR Rom */
 			if ((chr.data = (BYTE *) malloc(info.chr.rom.banks_8k * (8 * 1024)))) {
 				tmp = fread(&chr.data[0], 8192, info.chr.rom.banks_8k, fp);
