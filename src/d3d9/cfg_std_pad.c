@@ -13,8 +13,7 @@
 #undef __GUI_BASE__
 #include <commctrl.h>
 #include <richedit.h>
-#include "dinput.h"
-#include "dxerr8.h"
+#include <regstr.h>
 #include "cfg_std_pad.h"
 
 long __stdcall cfg_std_pad_messages(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -34,10 +33,20 @@ void cfg_std_pad_unset(HWND hwnd, int button);
 void cfg_std_pad_joy_timer_kill(void);
 
 void cfg_std_pad_destroy(HWND hwnd, INT_PTR nResult);
-BOOL CALLBACK di8_enum_peripherals(LPCDIDEVICEINSTANCE lpddi, LPVOID pvRef);
+static char *cfg_std_pad_get_joy_name(int index, const char *reg_key);
 
 #define PVBUTTON cfg_std_pad.vbutton
 #define PTYPE    cfg_std_pad.type
+#define adjust_axis_joy(info)\
+	if (joy_info.info != CENTER) {\
+		if (joy_info.info < (CENTER - sensibility)) {\
+			joy_info.info = MINUS;\
+		} else if (joy_info.info > (CENTER + sensibility)) {\
+			joy_info.info = PLUS;\
+		} else {\
+			joy_info.info = CENTER;\
+		}\
+	}
 #define read_axis_joy(axis, info)\
 	value = (axis << 1) + 1;\
 	if (joy_info.info > CENTER) {\
@@ -73,6 +82,8 @@ struct _cfg_std_pad {
 	_cfg_port cfg;
 	_cfg_port *cfg_port_father;
 } cfg_std_pad;
+
+static const DWORD sensibility = (PLUS / 100) * 35;
 
 void cfg_std_pad_dialog(HWND hwnd, _cfg_port *cfg_port) {
 	memset(&cfg_std_pad, 0x00, sizeof(cfg_std_pad));
@@ -386,6 +397,11 @@ void __stdcall cfg_std_pad_joy_read(void) {
 		return;
 	}
 
+	adjust_axis_joy(dwXpos)
+	adjust_axis_joy(dwYpos)
+	adjust_axis_joy(dwZpos)
+	adjust_axis_joy(dwRpos)
+
 	/* esamino i pulsanti */
 	if (joy_info.dwButtons) {
 		BYTE i;
@@ -526,51 +542,40 @@ void cfg_std_pad_tab_init(void) {
 		EnableWindow(GetDlgItem(cfg_std_pad.page, IDC_DEVICE_COMBO), FALSE);
 		cfg_std_pad_enable_page_buttons(TRUE);
 	} else {
-		BYTE a, disabled_line = 0, count = 0, current_line = name_to_jsn("NULL");
+		BYTE disabled_line, count, current_line;
 		char description[100];
 
-		{
-			LPDIRECTINPUT8 di8 = NULL;
-			HRESULT ret;
+		disabled_line = count = cfg_std_pad.joy_count = 0;
+		current_line = name_to_jsn("NULL");
 
-			cfg_std_pad.joy_count = 0;
+		for (i = 0; i <= MAX_JOYSTICK; i++) {
+			JOYINFOEX joy_info;
+			_combo_element *ele;
+			BYTE id;
 
-			{
-				BYTE i;
+			ele = &cfg_std_pad.joy[i];
+			id = i;
 
-				for (i = 0; i < MAX_JOYSTICK; i++) {
-					memset(&cfg_std_pad.joy[i], 0x00, sizeof(_combo_element));
-					cfg_std_pad.joy[i].present = FALSE;
-					cfg_std_pad.joy[i].id = 255;
-					cfg_std_pad.joy[i].line = 255;
-				}
-			}
+			memset(ele, 0x00, sizeof(_combo_element));
+			ele->present = FALSE;
+			ele->id = 255;
+			ele->line = 255;
 
-#if defined (__cplusplus)
-			if ((ret = DirectInput8Create(GetModuleHandle(NULL), DIRECTINPUT_VERSION,
-			        IID_IDirectInput8, (LPVOID *) &di8, NULL)) != DI_OK) {
-#else
-			if ((ret = DirectInput8Create(GetModuleHandle(NULL), DIRECTINPUT_VERSION,
-			        &IID_IDirectInput8, (LPVOID *) &di8, NULL)) != DI_OK) {
-#endif
-				printf("DirectInput8Create error: %s - %s", DXGetErrorString8(ret),
-				        DXGetErrorDescription8(ret));
-			}
+			if (i < MAX_JOYSTICK) {
+				JOYCAPS joy_caps;
 
-			IDirectInput8_EnumDevices(di8, DI8DEVCLASS_GAMECTRL, di8_enum_peripherals,
-			        NULL, DIEDFL_ATTACHEDONLY);
+				joy_info.dwFlags = JOY_RETURNALL;
+				joy_info.dwSize = sizeof(joy_info);
 
-			IDirectInput8_Release(di8);
-		}
-
-		for (a = 0; a <= MAX_JOYSTICK; a++) {
-			_combo_element *ele = &cfg_std_pad.joy[a];
-			BYTE id = a;
-
-			if (a < MAX_JOYSTICK) {
-				if (ele->present == FALSE) {
+				if (joyGetPosEx(id, &joy_info) != JOYERR_NOERROR) {
 					continue;
 				}
+
+				joyGetDevCaps(id, &joy_caps, sizeof(joy_caps));
+
+				ele->present = TRUE;
+				snprintf(ele->description, sizeof(ele->description), "%s",
+						cfg_std_pad_get_joy_name(id, (CHAR *) &joy_caps.szRegKey));
 
 				if (id == cfg_std_pad.cfg.port.joy_id) {
 					current_line = count;
@@ -678,18 +683,68 @@ void cfg_std_pad_destroy(HWND hwnd, INT_PTR result) {
 	/* riabilito gli acceleratori */
 	gui.accelerators_anabled = TRUE;
 }
-BOOL CALLBACK di8_enum_peripherals(LPCDIDEVICEINSTANCE lpddi, LPVOID pvref) {
-	if (cfg_std_pad.joy_count == MAX_JOYSTICK) {
-		return (DIENUM_CONTINUE);
+static char *cfg_std_pad_get_joy_name(int index, const char *reg_key) {
+	char name[512], rkey[256], rvalue[256], rname[256];
+	HKEY topkey, key;
+	DWORD size;
+	LONG result;
+
+	snprintf(rkey, sizeof(rkey), "%s\\%s\\%s", REGSTR_PATH_JOYCONFIG, reg_key, REGSTR_KEY_JOYCURR);
+
+	{
+		topkey = HKEY_LOCAL_MACHINE;
+		result = RegOpenKeyExA(topkey, rkey, 0, KEY_READ, &key);
+
+		if (result != ERROR_SUCCESS) {
+			topkey = HKEY_CURRENT_USER;
+			result = RegOpenKeyExA(topkey, rkey, 0, KEY_READ, &key);
+		}
+
+		if (result != ERROR_SUCCESS) {
+			return (NULL);
+		}
 	}
 
-	if (GET_DIDEVICE_TYPE(lpddi->dwDevType) == DI8DEVTYPE_GAMEPAD ||
-		GET_DIDEVICE_TYPE(lpddi->dwDevType) == DI8DEVTYPE_JOYSTICK) {
-		_combo_element *ele = &cfg_std_pad.joy[cfg_std_pad.joy_count++];
+	/* trovo la chiave di registro delle proprieta' del joystick */
+	{
+		size = sizeof(rname);
+		snprintf(rvalue, sizeof(rvalue), "Joystick%d%s", index + 1, REGSTR_VAL_JOYOEMNAME);
+		result = RegQueryValueExA(key, rvalue, 0, 0, (LPBYTE) rname, &size);
+		RegCloseKey(key);
 
-		ele->present = TRUE;
-		snprintf(ele->description, sizeof(ele->description), "%s", lpddi->tszProductName);
+		if (result != ERROR_SUCCESS) {
+			return (NULL);
+		}
 	}
 
-	return (DIENUM_CONTINUE);
+	/* apro la chiave di registro */
+	{
+		snprintf(rkey, sizeof(rkey), "%s\\%s", REGSTR_PATH_JOYOEM, rname);
+		result = RegOpenKeyExA(topkey, rkey, 0, KEY_READ, &key);
+
+		if (result != ERROR_SUCCESS) {
+			return (NULL);
+		}
+	}
+
+	/* trovo la dimensione della stringa del nome OEM */
+	{
+		size = sizeof(rvalue);
+		result = RegQueryValueExA(key, REGSTR_VAL_JOYOEMNAME, 0, 0, NULL, &size);
+
+		if (result == ERROR_SUCCESS) {
+			memset(&name[0], 0x00, sizeof(name));
+
+			if (size >= sizeof(name)) {
+				size = sizeof(name) - 1;
+			}
+
+			/* leggo il nome OEM */
+			result = RegQueryValueExA(key, REGSTR_VAL_JOYOEMNAME, 0, 0, (LPBYTE) & name[0], &size);
+		}
+	}
+
+	RegCloseKey(key);
+
+	return (&name[0]);
 }

@@ -21,6 +21,17 @@ enum joy_misc {
 };
 
 #define js_elaborate_axis(axis, info)\
+	if ((joy->joy_info.info > (CENTER - sensibility))\
+	        && (joy->joy_info.info < (CENTER + sensibility))) {\
+		joy->joy_info.info = CENTER;\
+	} else {\
+		DWORD diff = ((joy->joy_info.info < joy->last_axis[axis]) ?\
+				(joy->last_axis[axis] - joy->joy_info.info) :\
+				(joy->joy_info.info - joy->last_axis[axis]));\
+		if (diff < sensibility) {\
+			joy->joy_info.info = joy->last_axis[axis];\
+		}\
+	}\
 	value = (axis << 1) + 1;\
 	if (joy->joy_info.info == CENTER) {\
 		mode = RELEASED;\
@@ -90,6 +101,8 @@ static const WORD POV_table[8] = {
 	JOY_POVBACKWARD + (JOY_POVRIGHT / 2), /* Down + Left  */
 	JOY_POVLEFT     + (JOY_POVRIGHT / 2), /* Left + Up    */
 };
+
+static const DWORD sensibility = (PLUS / 100) * 5;
 
 void js_init(void) {
 	BYTE i;
@@ -207,10 +220,11 @@ void js_control(_js *joy, _port *port) {
 		js_elaborate_axis(R, dwRpos)
 	}
 	if ((joy->joy_caps.wCaps & JOYCAPS_HASU) && (joy->last_axis[U] != joy->joy_info.dwUpos)) {
-		js_elaborate_axis(U, dwUpos)
+		//js_elaborate_axis(U, dwUpos)
 	}
 	if ((joy->joy_caps.wCaps & JOYCAPS_HASV) && (joy->last_axis[V] != joy->joy_info.dwVpos)) {
-		js_elaborate_axis(V, dwVpos)
+		//printf("v : %ld %ld %ld\n", joy->joy_info.dwPOV, joy->last_axis[V], joy->joy_info.dwVpos);
+		//js_elaborate_axis(V, dwVpos)
 	}
 }
 void js_close(_js *joy) {
