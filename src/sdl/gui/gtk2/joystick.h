@@ -18,11 +18,17 @@
 #define jsv_to_name(jsvl) js_to_name(jsvl, jsv_list, LENGTH(jsv_list))
 #define jsn_to_name(jsvl) js_to_name(jsvl, jsn_list, LENGTH(jsn_list))
 
+enum {
+	CENTER,
+	PLUS = 0x7FFF
+};
+
 typedef struct {
 	char dev[30];
 	SDBWORD fd;
 	WORD open_try;
 	SWORD last[16];
+	SWORD last_value[16];
 	BYTE (*input_decode_event)(BYTE mode, DBWORD event, BYTE type, _port *port);
 } _js;
 typedef struct {

@@ -16,6 +16,8 @@
 #include "joystick.h"
 #include "input.h"
 
+static const SWORD sensibility = (PLUS / 100) * 20;
+
 void js_init(void) {
 	BYTE i;
 
@@ -57,11 +59,19 @@ void js_control(_js *joy, _port *port) {
 		return;
 	}
 
-	if (!js_read_event(&jse, joy)) {
+	while (!js_read_event(&jse, joy)) {
 		jse.type &= ~JS_EVENT_INIT;
 
 		if (jse.type == JS_EVENT_AXIS) {
 			BYTE axis = jse.number & 0x000F;
+
+			if ((jse.value < (CENTER + sensibility)) && (jse.value > (CENTER - sensibility))) {
+				jse.value = CENTER;
+			}
+			if ((jse.value < (joy->last_value[axis] + sensibility))
+					&& (jse.value > (joy->last_value[axis] - sensibility))) {
+				continue;
+			}
 
 			if (jse.value) {
 				mode = PRESSED;
@@ -75,6 +85,7 @@ void js_control(_js *joy, _port *port) {
 				value = joy->last[axis];
 				joy->last[axis] = 0;
 			}
+			joy->last_value[axis] = jse.value;
 		} else if (jse.type == JS_EVENT_BUTTON) {
 			value = jse.number | 0x400;
 			if (jse.value == 0) {

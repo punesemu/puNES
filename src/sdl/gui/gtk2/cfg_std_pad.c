@@ -72,6 +72,8 @@ struct _cfg_std_pad {
 	_cfg_port cfg;
 } cfg_std_pad;
 
+static const WORD sensibility = (PLUS / 100) * 75;
+
 void cfg_std_pad_dialog(_cfg_port *cfg_port) {
 	memset(&cfg_std_pad, 0x00, sizeof(cfg_std_pad));
 	memcpy(&cfg_std_pad.cfg, cfg_port, sizeof(_cfg_port));
@@ -313,8 +315,7 @@ void cfg_std_pad_js_press_event(void) {
 	int fd;
 	char device[30];
 	ssize_t size = sizeof(jse);
-	BYTE index = cfg_std_pad.cfg.port.joy_id;
-	BYTE read_is_ok = FALSE;
+	BYTE index = cfg_std_pad.cfg.port.joy_id, read_is_ok = FALSE, i;
 	DBWORD value = 0;
 
 	type = cfg_std_pad.virtual_button / MAX_STD_PAD_BUTTONS;
@@ -322,12 +323,10 @@ void cfg_std_pad_js_press_event(void) {
 
 	if (index == name_to_jsn("NULL")) {
 		if (cfg_input.child) {
-			gdk_threads_enter();
 			cfg_std_pad_info_entry_print(type, "Select device first");
 			cfg_std_pad_enable_notebook_and_other(type, virtual_button, TRUE);
-			gdk_threads_leave();
 		}
-		g_thread_exit(NULL);
+		return;
 	}
 
 	sprintf(device, "%s%d", JS_DEV_PATH, index);
@@ -335,38 +334,33 @@ void cfg_std_pad_js_press_event(void) {
 
 	if (fd < 0) {
 		if (cfg_input.child) {
-			gdk_threads_enter();
 			cfg_std_pad_info_entry_print(type, "Error on open device %s", device);
 			cfg_std_pad_enable_notebook_and_other(type, virtual_button, TRUE);
-			gdk_threads_leave();
 		}
-		g_thread_exit(NULL);
+		return;
 	}
 
 	cfg_std_pad.no_other_buttons = TRUE;
 	cfg_std_pad.wait_js_input = TRUE;
 
-	{
-		BYTE i;
-
-		for (i = 0; i < MAX_JOYSTICK; i++) {
-			if (read(fd, &jse, size) < 0) {
-				if (cfg_input.child) {
-					gdk_threads_enter();
-					cfg_std_pad_info_entry_print(type,
-							"Error on reading controllers configurations");
-					gdk_threads_leave();
-				}
+	for (i = 0; i < MAX_JOYSTICK; i++) {
+		if (read(fd, &jse, size) < 0) {
+			if (cfg_input.child) {
+				cfg_std_pad_info_entry_print(type,
+						"Error on reading controllers configurations");
 			}
 		}
 	}
 
 	if (cfg_input.child) {
-		gdk_threads_enter();
 		gtk_button_set_label(cfg_std_pad.button_clicked, "...");
 		cfg_std_pad_info_entry_print(type, "Press a key (ESC for the previous value \"%s\")",
 				jsv_to_name(cfg_std_pad.cfg.port.input[type][virtual_button]));
-		gdk_threads_leave();
+	}
+
+	/* svuoto il buffer iniziale */
+	for (i = 0; i < 10; i++) {
+		read(fd, &jse, size);
 	}
 
 	while (cfg_std_pad.wait_js_input == TRUE) {
@@ -375,17 +369,21 @@ void cfg_std_pad_js_press_event(void) {
 		memset(&jse, 0x00, size);
 
 		if (read(fd, &jse, size) == size) {
-			if (jse.value == 0) {
+			if (jse.value == CENTER) {
 				continue;
 			}
 			jse.type &= ~JS_EVENT_INIT;
 
-			if (jse.type == JS_EVENT_AXIS && jse.value) {
-				value = (jse.number << 1) + 1;
-				if (jse.value > 0) {
-					value++;
+			if ((jse.type == JS_EVENT_AXIS) && jse.value) {
+				if (((jse.value < CENTER) ? (jse.value * -1) : jse.value) > sensibility) {
+					value = (jse.number << 1) + 1;
+					if (jse.value > CENTER) {
+						value++;
+					}
+				} else {
+					continue;
 				}
-			} else if (jse.type == JS_EVENT_BUTTON && jse.value) {
+			} else if ((jse.type == JS_EVENT_BUTTON) && jse.value) {
 				value = jse.number | 0x400;
 			} else {
 				continue;
@@ -393,31 +391,27 @@ void cfg_std_pad_js_press_event(void) {
 			read_is_ok = TRUE;
 			break;
 		}
+		gui_flush();
 		gui_sleep(30);
 	}
 
 	if (read_is_ok) {
 		cfg_std_pad.cfg.port.input[type][virtual_button] = value;
+		cfg_std_pad.virtual_button = 0;
 		if (cfg_input.child) {
-			gdk_threads_enter();
 			cfg_std_pad_info_entry_print(type, "");
 			cfg_std_pad_enable_notebook_and_other(type, virtual_button, TRUE);
 			gtk_button_set_label(cfg_std_pad.button_clicked, jsv_to_name(value));
-			gdk_threads_leave();
 		}
-		cfg_std_pad.no_other_buttons = FALSE;
-		cfg_std_pad.virtual_button = 0;
 	} else {
 		if (cfg_input.child) {
-			gdk_threads_enter();
+			cfg_std_pad_info_entry_print(type, "");
 			cfg_std_pad_enable_notebook_and_other(type, virtual_button, TRUE);
-			gdk_threads_leave();
 		}
 	}
+	cfg_std_pad.no_other_buttons = FALSE;
 
 	close(fd);
-
-	g_thread_exit(NULL);
 }
 
 void cfg_std_pad_joystick_device_combobox_init(_cfg_port *cfg_port) {
@@ -542,9 +536,8 @@ void cfg_std_pad_input_clicked(GtkButton *button, gint virtual_button) {
 		gtk_button_set_label(cfg_std_pad.button_clicked, "...");
 		cfg_std_pad_info_entry_print(type, "Press a key (ESC for the previous value \"%s\")",
 				keyval_to_name(cfg_std_pad.cfg.port.input[type][virtual_button]));
-
 	} else {
-		g_thread_create((GThreadFunc) cfg_std_pad_js_press_event, NULL, FALSE, NULL);
+		cfg_std_pad_js_press_event();
 	}
 }
 void cfg_std_pad_input_unset_clicked(GtkButton *button, gint virtual_button) {

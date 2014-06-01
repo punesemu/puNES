@@ -397,8 +397,10 @@ void gui_set_video_mode(void) {
 	gtk_widget_set_size_request(sock, gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE]);
 }
 void gui_start(void) {
-	gtk_idle_add((GtkFunction) emu_loop, main_win);
+	//gtk_idle_add((GtkFunction) emu_loop, main_win);
+	g_idle_add((GtkFunction) emu_loop, main_win);
 	gui.start = TRUE;
+
 	gtk_main();
 }
 void gui_event(void) {
