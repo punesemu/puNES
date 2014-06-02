@@ -43,6 +43,19 @@ static const _unif_board unif_boards[] = {
 	{"NROM-256", 0, NO_UNIF},
 	{"Sachen-74LS374N", 150, NO_UNIF},
 	{"A65AS", NO_INES , 0},
+	{"UOROM", 2 , NO_UNIF},
+	{"TC-U01-1.5M", 147, NO_UNIF},
+	{"SA-NROM", 143, NO_UNIF},
+	{"SLROM", 1, NO_UNIF},
+	{"22211", 132, NO_UNIF},
+	{"TLROM", 4, NO_UNIF},
+	{"TBROM", 4, NO_UNIF},
+	{"TKROM", 4, NO_UNIF},
+	{"Sachen-8259C", 139, NO_UNIF},
+	{"SA-016-1M", 146, NO_UNIF},
+	{"Sachen-8259D", 137, NO_UNIF},
+	{"ANROM", 7, NO_UNIF},
+	//{"NTBROM", 68, NO_UNIF},
 };
 
 BYTE unif_load_rom(void) {
@@ -323,7 +336,10 @@ BYTE unif_NAME(FILE *fp, BYTE phase) {
 }
 BYTE unif_PRG(FILE *fp, BYTE phase) {
 	if (phase == UNIF_COUNT) {
-		unif.prg.size += unif.chunk.length;
+		if (strncmp(unif.chunk.id, "PRG0", 4) == 0) {
+			unif.prg.size = unif.chunk.length;
+		}
+		//unif.prg.size += unif.chunk.length;
 		fseek(fp, unif.chunk.length, SEEK_CUR);
 	} else {
 		fread(unif.prg.pnt, unif.chunk.length, 1, fp);
@@ -338,7 +354,7 @@ BYTE unif_CHR(FILE *fp, BYTE phase) {
 		fseek(fp, unif.chunk.length, SEEK_CUR);
 	} else {
 		fread(unif.chr.pnt, unif.chunk.length, 1, fp);
-		unif.chr.pnt += unif.chunk.length;
+		//unif.chr.pnt += unif.chunk.length;
 	}
 
 	return (EXIT_OK);
