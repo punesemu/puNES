@@ -34,6 +34,7 @@ typedef struct {
 typedef struct {
 	const gchar *home;
 	const gchar *last_state_path;
+	uint8_t freed_last_state_path;
 	struct timeval counterStart;
 	int8_t cpu_cores;
 	uint8_t start;

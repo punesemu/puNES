@@ -373,6 +373,10 @@ BYTE gui_create(void) {
 	return (EXIT_OK);
 }
 void gui_quit(void) {
+	if (gui.freed_last_state_path == TRUE) {
+		g_free((gpointer) gui.last_state_path);
+	}
+
 	return;
 }
 void gui_set_video_mode(void) {
@@ -854,8 +858,14 @@ void file_open(void) {
 	file_open_filter_add(dialog, "TAS movie files", "*.fm2;*.FM2");
 	file_open_filter_add(dialog, "All files", "*.*;");
 
+	if (gui.freed_last_state_path == TRUE) {
+		g_free((gpointer) gui.last_state_path);
+		gui.freed_last_state_path = FALSE;
+	}
+
 	if (info.rom_file[0]) {
 		gui.last_state_path = g_path_get_dirname(info.rom_file);
+		gui.freed_last_state_path = TRUE;
 	} else {
 		gui.last_state_path = gui.home;
 	}
@@ -869,6 +879,7 @@ void file_open(void) {
 		gtk_widget_hide(dialog);
 		change_rom(gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog)));
 		gui.last_state_path = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(dialog));
+		gui.freed_last_state_path = TRUE;
 	}
 
 	gtk_widget_destroy(dialog);
