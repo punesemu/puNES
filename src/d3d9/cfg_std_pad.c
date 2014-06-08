@@ -684,7 +684,8 @@ void cfg_std_pad_destroy(HWND hwnd, INT_PTR result) {
 	gui.accelerators_anabled = TRUE;
 }
 static char *cfg_std_pad_get_joy_name(int index, const char *reg_key) {
-	char name[512], rkey[256], rvalue[256], rname[256];
+	static char name[512];
+	char rkey[256], rvalue[256], rname[256];
 	HKEY topkey, key;
 	DWORD size;
 	LONG result;
@@ -746,5 +747,5 @@ static char *cfg_std_pad_get_joy_name(int index, const char *reg_key) {
 
 	RegCloseKey(key);
 
-	return (&name[0]);
+	return ((char *) name);
 }
