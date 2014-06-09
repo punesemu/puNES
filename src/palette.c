@@ -36,8 +36,6 @@ BYTE palette_load_from_file(char *file) {
 
 	memset((BYTE *) palette_base_file, 0x00, 64 * 3);
 
-	printf( "000 %s\n", file);
-
 	if ((fp = fopen(file, "rb")) == NULL) {
 		fprintf(stderr, "ERROR: open file %s\n", file);
 		return (EXIT_ERROR);
