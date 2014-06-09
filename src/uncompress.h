@@ -40,9 +40,9 @@ static const _format_supported format_supported[] = {
 struct _uncomp {
 	int files_founded;
 	_uncomp_file_data *file;
-	char compress_archive[1024];
-	char uncompress_file[1024];
-	char buffer[1024];
+	char compress_archive[LENGTH_FILE_NAME_MID];
+	char uncompress_file[LENGTH_FILE_NAME_MID];
+	char buffer[LENGTH_FILE_NAME_MID];
 } uncomp;
 
 BYTE uncomp_init(void);

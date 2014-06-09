@@ -211,7 +211,7 @@ void cfg_overscan_borders_preview_clicked(GtkWidget *widget, gpointer user_data)
 	cfg->oscan = OSCAN_ON;
 	cfg_oscan.preview = (*cfg_oscan.borders);
 	overscan.borders = &cfg_oscan.preview;
-	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE);
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 }
 void cfg_overscan_borders_default_clicked(GtkWidget *widget, gpointer user_data) {
 	cfg_file_set_overscan_default(cfg_oscan.borders, cfg_oscan.mode + NTSC);
@@ -259,7 +259,7 @@ void cfg_overscan_borders_window_destroy(GtkWidget *widget, gpointer user_data) 
 	}
 
 	if (cfg_oscan.force_set_mode == TRUE) {
-		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE);
+		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 	}
 
 	//g_timeout_redraw_stop();

@@ -30,7 +30,6 @@
 #include "gamegenie.h"
 
 #define SAVE_VERSION 13
-#define LENGTH_FILE_NAME 512
 
 BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp);
 BYTE name_slot_file(char *file, BYTE slot);
@@ -154,7 +153,6 @@ void save_slot_preview(BYTE slot) {
 }
 void save_slot_count_load(void) {
 	BYTE i;
-	struct stat status;
 	char file[LENGTH_FILE_NAME];
 
 	for (i = 0; i < SAVE_SLOTS; i++) {
@@ -163,20 +161,17 @@ void save_slot_count_load(void) {
 		save_slot.state[i] = FALSE;
 		name_slot_file(file, i);
 
-		if (!(access(file, 0))) {
-			stat(file, &status);
-			if (status.st_mode & S_IFREG) {
-				FILE *fp;
+		if (emu_file_exist(file) == EXIT_OK) {
+			FILE *fp;
 
-				save_slot.state[i] = TRUE;
+			save_slot.state[i] = TRUE;
 
-				if ((fp = fopen(file, "rb")) == NULL) {
-					continue;
-				}
-
-				slot_operation(SAVE_SLOT_COUNT, i, fp);
-				fclose(fp);
+			if ((fp = fopen(file, "rb")) == NULL) {
+				continue;
 			}
+
+			slot_operation(SAVE_SLOT_COUNT, i, fp);
+			fclose(fp);
 		}
 	}
 

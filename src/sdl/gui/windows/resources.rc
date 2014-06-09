@@ -209,6 +209,9 @@ BEGIN
 				MENUITEM "&Sony CXA2025AS US",    IDM_SET_PALETTE_SONY
 				MENUITEM "&Monochrome",           IDM_SET_PALETTE_MONO
 				MENUITEM "&Green",                IDM_SET_PALETTE_GREEN
+				MENUITEM SEPARATOR
+				MENUITEM "&Load from file",       IDM_SET_PALETTE_LOAD
+				MENUITEM "&Save to file",         IDM_SET_PALETTE_SAVE
 			END
 #if defined (SDL)
 			POPUP "&Effect"

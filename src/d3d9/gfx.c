@@ -365,12 +365,12 @@ BYTE gfx_init(void) {
 	}
 
 	if (cfg->fullscreen) {
-		gfx_set_screen(cfg->scale, cfg->filter, NO_FULLSCR, cfg->palette, FALSE);
+		gfx_set_screen(cfg->scale, cfg->filter, NO_FULLSCR, cfg->palette, FALSE, FALSE);
 		cfg->fullscreen = NO_FULLSCR;
 		cfg->scale = gfx.scale_before_fscreen;
 		gui_fullscreen();
 	} else {
-		gfx_set_screen(cfg->scale, cfg->filter, NO_FULLSCR, cfg->palette, FALSE);
+		gfx_set_screen(cfg->scale, cfg->filter, NO_FULLSCR, cfg->palette, FALSE, FALSE);
 	}
 
 	switch (gui.version_os) {
@@ -397,7 +397,8 @@ void gfx_set_render(BYTE render) {
 			break;
 	}
 }
-void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE force_scale) {
+void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE force_scale,
+		BYTE force_palette) {
 	BYTE set_mode;
 	WORD width, height;
 	WORD w_for_pr, h_for_pr;
@@ -559,21 +560,36 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 	if (palette == NO_CHANGE) {
 		palette = cfg->palette;
 	}
-	if ((palette != cfg->palette) || info.on_cfg) {
-		switch (palette) {
-			case PALETTE_PAL:
-				ntsc_set(cfg->ntsc_format, FALSE, (BYTE *) palette_base_pal, 0,
+	if ((palette != cfg->palette) || info.on_cfg || force_palette) {
+		BYTE error_palette_file = TRUE;
+
+		if (strlen(cfg->palette_file) != 0) {
+			if (palette_load_from_file(cfg->palette_file) == EXIT_ERROR) {
+				memset(cfg->palette_file, 0x00, sizeof(cfg->palette_file));
+				palette = cfg->palette;
+			} else {
+				ntsc_set(cfg->ntsc_format, FALSE, (BYTE *) palette_base_file, 0,
 						(BYTE *) palette_RGB);
-				break;
-			case PALETTE_NTSC:
-				ntsc_set(cfg->ntsc_format, FALSE, 0, 0, (BYTE *) palette_RGB);
-				break;
-			case PALETTE_GREEN:
-				rgb_modifier(-0x20, 0x20, -0x20);
-				break;
-			default:
-				ntsc_set(cfg->ntsc_format, palette, 0, 0, (BYTE *) palette_RGB);
-				break;
+				error_palette_file = FALSE;
+			}
+		}
+
+		if (error_palette_file == TRUE) {
+			switch (palette) {
+				case PALETTE_PAL:
+					ntsc_set(cfg->ntsc_format, FALSE, (BYTE *) palette_base_pal, 0,
+							(BYTE *) palette_RGB);
+					break;
+				case PALETTE_NTSC:
+					ntsc_set(cfg->ntsc_format, FALSE, 0, 0, (BYTE *) palette_RGB);
+					break;
+				case PALETTE_GREEN:
+					rgb_modifier(-0x20, 0x20, -0x20);
+					break;
+				default:
+					ntsc_set(cfg->ntsc_format, palette, 0, 0, (BYTE *) palette_RGB);
+					break;
+			}
 		}
 
 		/* inizializzo in ogni caso la tabella YUV dell'hqx */

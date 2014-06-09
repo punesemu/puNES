@@ -76,7 +76,7 @@ BYTE unif_load_rom(void) {
 			found = FALSE;
 
 			for (i = 0; i < LENGTH(rom_ext); i++) {
-				char rom_file[1024];
+				char rom_file[LENGTH_FILE_NAME_MID];
 
 				strncpy(rom_file, info.rom_file, sizeof(rom_file));
 				strcat(rom_file, rom_ext[i]);

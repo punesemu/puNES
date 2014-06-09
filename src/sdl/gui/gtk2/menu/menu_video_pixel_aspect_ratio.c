@@ -151,7 +151,7 @@ void menu_video_pixel_aspect_ratio_set(int par) {
 
 	cfg->pixel_aspect_ratio = par;
 
-	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE);
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 }
 void menu_video_par_soft_stretch(void) {
 	if (gui_in_update) {
@@ -160,5 +160,5 @@ void menu_video_par_soft_stretch(void) {
 
 	cfg->PAR_soft_stretch = !cfg->PAR_soft_stretch;
 
-	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE);
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 }

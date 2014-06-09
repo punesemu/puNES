@@ -47,7 +47,7 @@ punes32: $(OBJS) $(USER_OBJS)
 
 # Other Targets
 clean:
-	-$(RM) $(EXECUTABLES)$(OBJS)$(C_DEPS) punes32
+	-$(RM) $(OBJS)$(C_DEPS)$(EXECUTABLES) punes32
 	-@echo ' '
 
 pre-build:

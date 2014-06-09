@@ -63,7 +63,7 @@ void menu_video_vsync_set(int value) {
 	cfg->vsync = !cfg->vsync;
 
 	gfx_reset_video();
-	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE);
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 
 	/* rispristino la posizione */
 	gtk_window_move(GTK_WINDOW(main_win), x, y);

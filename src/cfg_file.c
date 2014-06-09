@@ -25,7 +25,7 @@
 
 #define INIFILE NAME  ".cfg"
 #define INPUTFILE     "input.cfg"
-#define MAXLEN         512
+#define MAXLEN         4096
 #define cfg_evaluate(src, dst, chr)\
 {\
 	char *buf = 0;\
@@ -40,7 +40,7 @@
 	char buf[MAXLEN];\
 	memset(buf, 0x00, MAXLEN);\
 	strcpy(buf,  structp[prm].lname);\
-	trim_space(buf);\
+	strip_space(buf);\
 	if (strcmp(key, buf) == 0) {\
 		param_search(start, value, desc, cmd);\
 		continue;\
@@ -51,7 +51,7 @@
 	char buf[MAXLEN];\
 	memset(buf, 0x00, MAXLEN);\
 	strcpy(buf,  structp[prm].lname);\
-	trim_space(buf);\
+	strip_space(buf);\
 	if (strcmp(key, buf) == 0) {\
 		param_double_search(value, var, round);\
 	}\
@@ -61,7 +61,7 @@
 	char buf[MAXLEN];\
 	memset(buf, 0x00, MAXLEN);\
 	strcpy(buf,  structp[prm].lname);\
-	trim_space(buf);\
+	strip_space(buf);\
 	if (strcmp(key, buf) == 0) {\
 		_param_num_search(value, var, round, int, * 1, max);\
 	}\
@@ -71,7 +71,7 @@
 	char buf[MAXLEN];\
 	memset(buf, 0x00, MAXLEN);\
 	strcpy(buf, structp[prm].lname);\
-	trim_space(buf);\
+	strip_space(buf);\
 	if (strcmp(key, buf) == 0) {\
 		param_apu_channel_search(start, value, desc, prm);\
 		continue;\
@@ -84,7 +84,7 @@
 		char buf[MAXLEN];\
 		memset(buf, 0x00, MAXLEN);\
 		strcpy(buf, param[index].lname);\
-		trim_space(buf);\
+		strip_space(buf);\
 		if (strcmp(key, buf) == 0) {\
 			if (type == JOYSTICK) {\
 				if (index == (LENGTH(param) - 1)) {\
@@ -108,16 +108,42 @@
 	char buf[MAXLEN];\
 	memset(buf, 0x00, MAXLEN);\
 	strcpy(buf, structp[prm].lname);\
-	trim_space(buf);\
+	strip_space(buf);\
 	if (strcmp(key, buf) == 0) {\
 		param_ovscan_search(value, md);\
+		continue;\
+	}\
+}
+#define cfg_file_search(structp, prm, cfp)\
+{\
+	char buf[MAXLEN];\
+	memset(buf, 0x00, MAXLEN);\
+	strcpy(buf,  structp[prm].lname);\
+	strip_space(buf);\
+	if (strcmp(key, buf) == 0) {\
+		{\
+			char *prt = 0;\
+			prt = strtok(line_no_trim, "=");\
+			if (!prt) {\
+				continue;\
+			}\
+			prt = 0;\
+			prt = strtok(NULL, "\n");\
+			if (!prt) {\
+				continue;\
+			}\
+			strcpy(value, trim_space(prt));\
+		}\
+		memset((BYTE *) cfg_from_file.cfp, 0x00, sizeof(cfg_from_file.cfp));\
+		strncpy(cfg_from_file.cfp, value, sizeof(cfg_from_file.cfp) - 1);\
 		continue;\
 	}\
 }
 
 void set_default(void);
 void set_default_pgs(void);
-void trim_space(char *src);
+void strip_space(char *src);
+char *trim_space(char *src);
 void write_param(_param *prmtr, FILE *fp, BYTE prm, const char *value);
 void write_double_param(_param *prmtr, FILE *fp, BYTE prm, double value);
 void write_int_param(_param *prmtr, FILE *fp, BYTE prm, int value);
@@ -131,7 +157,7 @@ void cfg_file_init(void) {
 }
 void cfg_file_parse(void) {
 	FILE *fp;
-	char tmp[MAXLEN], line[MAXLEN];
+	char tmp[MAXLEN], line[MAXLEN], line_no_trim[MAXLEN];
 
 	memset(line, 0x00, MAXLEN);
 
@@ -153,44 +179,48 @@ void cfg_file_parse(void) {
 	/* leggo il file di configurazione */
 	while (fgets(line, sizeof(line), fp)) {
 		char key[MAXLEN], value[MAXLEN];
+		memset(line_no_trim, 0x00, MAXLEN);
+		strcpy(line_no_trim, line);
 		/* elimino gli spazi */
-		trim_space(line);
+		strip_space(line);
 		/* se la linea non inizia con # (commento) o '\n' allora la esamino */
 		if ((line[0] != '#') && (line[0] != '\n')) {
 			/* separo quello che viene prima dell'uguale... */
-			cfg_evaluate(line, key, "=");
+			cfg_evaluate(line, key, "=")
 			/* ...da quello che c'e' dopo */
-			cfg_evaluate(NULL, value, "\n");
+			cfg_evaluate(NULL, value, "\n")
 			/* mode */
-			cfg_search(param, P_MODE, 0, param_mode, cfg_from_file.mode = index);
+			cfg_search(param, P_MODE, 0, param_mode, cfg_from_file.mode = index)
 			/* fps */
-			cfg_search(param, P_FPS, 0, param_fps, cfg_from_file.fps = index);
+			cfg_search(param, P_FPS, 0, param_fps, cfg_from_file.fps = index)
 			/* frame skip */
-			cfg_search(param, P_FSK, 0, param_fsk, cfg_from_file.frameskip = index);
+			cfg_search(param, P_FSK, 0, param_fsk, cfg_from_file.frameskip = index)
 			/* size */
-			cfg_search(param, P_SIZE, 1, param_size, cfg_from_file.scale = index);
+			cfg_search(param, P_SIZE, 1, param_size, cfg_from_file.scale = index)
 			/* overscan default */
-			cfg_search(param, P_OVERSCAN, 0, param_oscan, cfg_from_file.oscan_default = index);
+			cfg_search(param, P_OVERSCAN, 0, param_oscan, cfg_from_file.oscan_default = index)
 			/* filter */
-			cfg_search(param, P_FILTER, 0, param_filter, cfg_from_file.filter = index);
+			cfg_search(param, P_FILTER, 0, param_filter, cfg_from_file.filter = index)
 			/* ntsc format */
-			cfg_search(param, P_NTSCFORMAT, 0, param_ntsc, cfg_from_file.ntsc_format = index);
+			cfg_search(param, P_NTSCFORMAT, 0, param_ntsc, cfg_from_file.ntsc_format = index)
 			/* palette */
-			cfg_search(param, P_PALETTE, 0, param_palette, cfg_from_file.palette = index);
+			cfg_search(param, P_PALETTE, 0, param_palette, cfg_from_file.palette = index)
+			/* palette file */
+			cfg_file_search(param, P_PAL_FILE, palette_file)
 			/* rendering */
-			cfg_search(param, P_RENDER, 0, param_render, cfg_from_file.render = index);
+			cfg_search(param, P_RENDER, 0, param_render, cfg_from_file.render = index)
 			/* vsync */
-			cfg_search(param, P_VSYNC, 0, param_off_on, cfg_from_file.vsync = index);
+			cfg_search(param, P_VSYNC, 0, param_off_on, cfg_from_file.vsync = index)
 			/* pixel aspect ratio */
 			cfg_search(param, P_PIXEL_ASPECT_RATIO, 0, param_pixel_aspect_ratio,
-			        cfg_from_file.pixel_aspect_ratio = index);
+			        cfg_from_file.pixel_aspect_ratio = index)
 			/* pixel aspect ratio soft stretch */
 			cfg_search(param, P_PAR_SOFT_STRETCH, 0, param_no_yes,
-			        cfg_from_file.PAR_soft_stretch = index);
+			        cfg_from_file.PAR_soft_stretch = index)
 			/* interpolation */
-			cfg_search(param, P_INTERPOLATION, 0, param_no_yes, cfg_from_file.interpolation = index);
+			cfg_search(param, P_INTERPOLATION, 0, param_no_yes, cfg_from_file.interpolation = index)
 			/* text on screen */
-			cfg_search(param, P_TXT_ON_SCREEN, 0, param_no_yes, cfg_from_file.txt_on_screen = index);
+			cfg_search(param, P_TXT_ON_SCREEN, 0, param_no_yes, cfg_from_file.txt_on_screen = index)
 			/* overscan borders NTSC */
 			cfg_ovscan_search(param, P_OVERSCAN_BRD_NTSC, 0, 0)
 			/* overscan borders PAL */
@@ -201,39 +231,39 @@ void cfg_file_parse(void) {
 			cfg_search(param, P_STRETCH, 0, param_no_yes, cfg_from_file.stretch = !index);
 			/* audio */
 			cfg_search(param, P_AUDIO, 0, param_off_on, cfg_from_file.apu.channel[APU_MASTER] =
-			        index);
+			        index)
 			/* sample rate */
-			cfg_search(param, P_SAMPLERATE, 0, param_samplerate, cfg_from_file.samplerate = index);
+			cfg_search(param, P_SAMPLERATE, 0, param_samplerate, cfg_from_file.samplerate = index)
 			/* channels */
-			cfg_search(param, P_CHANNELS, 0, param_channels, cfg_from_file.channels = index);
+			cfg_search(param, P_CHANNELS, 0, param_channels, cfg_from_file.channels = index)
 			/* stereo delay */
-			cfg_double_search(param, P_STEREODELAY, cfg_from_file.stereo_delay, 5);
+			cfg_double_search(param, P_STEREODELAY, cfg_from_file.stereo_delay, 5)
 			/* audio quality */
 			cfg_search(param, P_AUDIO_QUALITY, 0, param_audio_quality,
-			        cfg_from_file.audio_quality = index);
+			        cfg_from_file.audio_quality = index)
 			/* master volume */
 			cfg_double_search(param_apu_channel, APU_MASTER, cfg_from_file.apu.volume[APU_MASTER],
-					0);
+					0)
 			/* square1 active and volume */
-			cfg_apu_channel_search(param_apu_channel, APU_S1, 0, param_off_on);
+			cfg_apu_channel_search(param_apu_channel, APU_S1, 0, param_off_on)
 			/* square2 active and volume */
-			cfg_apu_channel_search(param_apu_channel, APU_S2, 0, param_off_on);
+			cfg_apu_channel_search(param_apu_channel, APU_S2, 0, param_off_on)
 			/* triangle active and volume */
-			cfg_apu_channel_search(param_apu_channel, APU_TR, 0, param_off_on);
+			cfg_apu_channel_search(param_apu_channel, APU_TR, 0, param_off_on)
 			/* noise active and volume */
-			cfg_apu_channel_search(param_apu_channel, APU_NS, 0, param_off_on);
+			cfg_apu_channel_search(param_apu_channel, APU_NS, 0, param_off_on)
 			/* DMC active and volume */
-			cfg_apu_channel_search(param_apu_channel, APU_DMC, 0, param_off_on);
+			cfg_apu_channel_search(param_apu_channel, APU_DMC, 0, param_off_on)
 			/* extra active and volume */
-			cfg_apu_channel_search(param_apu_channel, APU_EXTRA, 0, param_off_on);
+			cfg_apu_channel_search(param_apu_channel, APU_EXTRA, 0, param_off_on)
 			/* swap duty cycles */
-			cfg_search(param, P_SWAP_DUTY, 0, param_no_yes, cfg_from_file.swap_duty = index);
+			cfg_search(param, P_SWAP_DUTY, 0, param_no_yes, cfg_from_file.swap_duty = index)
 			/* background pause */
-			cfg_search(param, P_BCK_PAUSE, 0, param_no_yes, cfg_from_file.bck_pause = index);
+			cfg_search(param, P_BCK_PAUSE, 0, param_no_yes, cfg_from_file.bck_pause = index)
 			/* game genie */
-			cfg_search(param, P_GAMEGENIE, 0, param_no_yes, cfg_from_file.gamegenie = index);
+			cfg_search(param, P_GAMEGENIE, 0, param_no_yes, cfg_from_file.gamegenie = index)
 			/* save on exit */
-			cfg_search(param, P_SAVEONEXIT, 0, param_no_yes, cfg_from_file.save_on_exit = index);
+			cfg_search(param, P_SAVEONEXIT, 0, param_no_yes, cfg_from_file.save_on_exit = index)
 		}
 	}
 
@@ -280,6 +310,8 @@ void cfg_file_save(void) {
 	write_param((_param *) param, fp, P_NTSCFORMAT, param_ntsc[cfg_from_file.ntsc_format].sname);
 	/* palette */
 	write_param((_param *) param, fp, P_PALETTE, param_palette[cfg_from_file.palette].sname);
+	/* palette file */
+	write_param((_param *) param, fp, P_PAL_FILE, cfg_from_file.palette_file);
 	/* rendering */
 	write_param((_param *) param, fp, P_RENDER, param_render[cfg_from_file.render].sname);
 	/* vsync */
@@ -367,17 +399,17 @@ void cfg_file_pgs_parse(void) {
 	while (fgets(line, sizeof(line), fp)) {
 		char key[MAXLEN], value[MAXLEN];
 		/* elimino gli spazi */
-		trim_space(line);
+		strip_space(line);
 		/* se la linea non inizia con # (commento) o '\n' allora la esamino */
 		if ((line[0] != '#') && (line[0] != '\n')) {
 			/* separo quello che viene prima dell'uguale... */
-			cfg_evaluate(line, key, "=");
+			cfg_evaluate(line, key, "=")
 			/* ...da quello che c'e' dopo */
-			cfg_evaluate(NULL, value, "\n");
+			cfg_evaluate(NULL, value, "\n")
 			/* last save slot */
-			cfg_search(param_pgs, PGS_SLOT, 0, param_slot, save_slot.slot = index);
+			cfg_search(param_pgs, PGS_SLOT, 0, param_slot, save_slot.slot = index)
 			/* overscan */
-			cfg_search(param_pgs, PGS_OVERSCAN, 0, param_oscan, cfg_from_file.oscan = index);
+			cfg_search(param_pgs, PGS_OVERSCAN, 0, param_oscan, cfg_from_file.oscan = index)
 		}
 	}
 
@@ -417,7 +449,7 @@ void cfg_file_input_parse(void) {
 	while (fgets(line, sizeof(line), fp)) {
 		char key[MAXLEN], value[MAXLEN];
 		/* elimino gli spazi */
-		trim_space(line);
+		strip_space(line);
 		/* se la linea non inizia con # (commento) o '\n' allora la esamino */
 		if ((line[0] != '#') && (line[0] != '\n')) {
 			/* separo quello che viene prima dell'uguale... */
@@ -442,33 +474,33 @@ void cfg_file_input_parse(void) {
 				}
 			}
 
-			cfg_input_search(param_input_p1k, port[PORT1], KEYBOARD);
-			cfg_input_search(param_input_p1j, port[PORT1], JOYSTICK);
+			cfg_input_search(param_input_p1k, port[PORT1], KEYBOARD)
+			cfg_input_search(param_input_p1j, port[PORT1], JOYSTICK)
 			cfg_int_search(param_turbo_delay_p1, 0, port[PORT1].turbo[TURBOA].frequency, 0,
-			        TURBO_BUTTON_DELAY_MAX);
+			        TURBO_BUTTON_DELAY_MAX)
 			cfg_int_search(param_turbo_delay_p1, 1, port[PORT1].turbo[TURBOB].frequency, 0,
-			        TURBO_BUTTON_DELAY_MAX);
+			        TURBO_BUTTON_DELAY_MAX)
 
-			cfg_input_search(param_input_p2k, port[PORT2], KEYBOARD);
-			cfg_input_search(param_input_p2j, port[PORT2], JOYSTICK);
+			cfg_input_search(param_input_p2k, port[PORT2], KEYBOARD)
+			cfg_input_search(param_input_p2j, port[PORT2], JOYSTICK)
 			cfg_int_search(param_turbo_delay_p2, 0, port[PORT2].turbo[TURBOA].frequency, 0,
-			        TURBO_BUTTON_DELAY_MAX);
+			        TURBO_BUTTON_DELAY_MAX)
 			cfg_int_search(param_turbo_delay_p2, 1, port[PORT2].turbo[TURBOB].frequency, 0,
-			        TURBO_BUTTON_DELAY_MAX);
+			        TURBO_BUTTON_DELAY_MAX)
 
-			cfg_input_search(param_input_p3k, port[PORT3], KEYBOARD);
-			cfg_input_search(param_input_p3j, port[PORT3], JOYSTICK);
+			cfg_input_search(param_input_p3k, port[PORT3], KEYBOARD)
+			cfg_input_search(param_input_p3j, port[PORT3], JOYSTICK)
 			cfg_int_search(param_turbo_delay_p3, 0, port[PORT3].turbo[TURBOA].frequency, 0,
-			        TURBO_BUTTON_DELAY_MAX);
+			        TURBO_BUTTON_DELAY_MAX)
 			cfg_int_search(param_turbo_delay_p3, 1, port[PORT3].turbo[TURBOB].frequency, 0,
-			        TURBO_BUTTON_DELAY_MAX);
+			        TURBO_BUTTON_DELAY_MAX)
 
-			cfg_input_search(param_input_p4k, port[PORT4], KEYBOARD);
-			cfg_input_search(param_input_p4j, port[PORT4], JOYSTICK);
+			cfg_input_search(param_input_p4k, port[PORT4], KEYBOARD)
+			cfg_input_search(param_input_p4j, port[PORT4], JOYSTICK)
 			cfg_int_search(param_turbo_delay_p4, 0, port[PORT4].turbo[TURBOA].frequency, 0,
-			        TURBO_BUTTON_DELAY_MAX);
+			        TURBO_BUTTON_DELAY_MAX)
 			cfg_int_search(param_turbo_delay_p4, 1, port[PORT4].turbo[TURBOB].frequency, 0,
-			        TURBO_BUTTON_DELAY_MAX);
+			        TURBO_BUTTON_DELAY_MAX)
 		}
 	}
 
@@ -734,7 +766,7 @@ void set_default(void) {
 void set_default_pgs(void) {
 	cfg_from_file.oscan = OSCAN_DEFAULT;
 }
-void trim_space(char *src) {
+void strip_space(char *src) {
 	const char *current = src;
 	char out[MAXLEN];
 	unsigned int i = 0, size = strlen(src);
@@ -748,6 +780,17 @@ void trim_space(char *src) {
 	}
 	out[i] = '\0';
 	strcpy(src, out);
+}
+char *trim_space(char *src) {
+	unsigned int i = 0, size = strlen(src);
+
+	while ((src != '\0') && (i < size)) {
+		if ((*src != ' ') && (*src != '\t')) {
+			break;
+		}
+		++src;
+	}
+	return (src);
 }
 void write_param(_param *prmtr, FILE *fp, BYTE prm, const char *value) {
 	if (prmtr[prm].comment1 != NULL) {

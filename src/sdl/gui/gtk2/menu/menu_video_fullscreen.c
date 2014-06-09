@@ -108,6 +108,6 @@ void menu_video_fullscreen_switch_stretch(void) {
 	cfg->stretch = !cfg->stretch;
 
 	if (cfg->fullscreen == FULLSCR) {
-		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE);
+		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 	}
 }

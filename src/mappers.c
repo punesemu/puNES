@@ -647,7 +647,7 @@ BYTE map_init(void) {
 void map_quit(void) {
 	/* se c'e' della PRG Ram battery packed la salvo in un file */
 	if (info.prg.ram.bat.banks) {
-		char prg_ram_file[1024], *fl, *last_dot;
+		char prg_ram_file[LENGTH_FILE_NAME_MID], *fl, *last_dot;
 		FILE *fp;
 
 		/* copio il nome del file nella variabile */
@@ -753,7 +753,7 @@ void map_prg_ram_init(void) {
 		prg.ram_plus_8k = &prg.ram_plus[0];
 		/* controllo se la rom ha una RAM PRG battery packed */
 		if (info.prg.ram.bat.banks && !tas.type) {
-			char prg_ram_file[1024], *fl, *last_dot;
+			char prg_ram_file[LENGTH_FILE_NAME_MID], *fl, *last_dot;
 			FILE *fp;
 
 			/* copio il nome del file nella variabile */

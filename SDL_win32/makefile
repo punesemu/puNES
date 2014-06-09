@@ -46,7 +46,7 @@ punes32.sdl.exe: $(OBJS) $(USER_OBJS)
 
 # Other Targets
 clean:
-	-$(RM) $(EXECUTABLES)$(OBJS)$(C_DEPS) punes32.sdl.exe
+	-$(RM) $(OBJS)$(C_DEPS)$(EXECUTABLES) punes32.sdl.exe
 	-@echo ' '
 
 pre-build:

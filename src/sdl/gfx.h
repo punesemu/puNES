@@ -69,7 +69,8 @@ SDL_Surface *surface_sdl;
 
 BYTE gfx_init(void);
 void gfx_set_render(BYTE render);
-void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE force_scale);
+void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE force_scale,
+		BYTE force_palette);
 void gfx_draw_screen(BYTE forced);
 void gfx_reset_video(void);
 void gfx_quit(void);

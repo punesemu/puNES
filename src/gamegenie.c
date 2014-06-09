@@ -9,6 +9,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/stat.h>
+#include "emu.h"
 #include "text.h"
 #include "gamegenie.h"
 
@@ -35,18 +36,14 @@ void gamegenie_reset(void) {
 	}
 }
 void gamegenie_check_rom_present(BYTE print_message) {
-	char gg_rom[1024];
-	struct stat status;
+	char gg_rom[LENGTH_FILE_NAME_MID];
 
 	sprintf(gg_rom, "%s" BIOS_FOLDER "/%s", info.base_folder, GGFILE);
 
 	gamegenie.rom_present = FALSE;
 
-	if (!(access(gg_rom, 0))) {
-		stat(gg_rom, &status);
-		if (status.st_mode & S_IFREG) {
-			gamegenie.rom_present = TRUE;
-		}
+	if (emu_file_exist(gg_rom) == EXIT_OK) {
+		gamegenie.rom_present = TRUE;
 	}
 
 	if (print_message && gamegenie.rom_present == FALSE) {

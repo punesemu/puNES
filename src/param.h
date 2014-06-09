@@ -84,7 +84,8 @@ enum {
 	P_OVERSCAN_BRD_NTSC,
 	P_OVERSCAN_BRD_PAL,
 	P_PAR_SOFT_STRETCH,
-	P_BCK_PAUSE
+	P_BCK_PAUSE,
+	P_PAL_FILE
 };
 enum {
 	PGS_SLOT,
@@ -343,6 +344,14 @@ static const _param param[] = {
 		NULL,
 		"    --background-pause                          : yes, no"
 	},
+	{
+		"palette file",
+		NULL,
+		"# possible values: [PATH/NAME]",
+		NULL,
+		NULL
+	},
+
 };
 static const _param param_pgs[] = {
 	{

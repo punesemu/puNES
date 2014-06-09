@@ -125,7 +125,7 @@ long __stdcall cfg_overscan_borders_messages(HWND hwnd, UINT msg, WPARAM wParam,
 					cfg->oscan = OSCAN_ON;
 					cfg_oscan.preview = (*cfg_oscan.borders);
 					overscan.borders = &cfg_oscan.preview;
-					gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE);
+					gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 					return (TRUE);
 				case ID_OSCAN_BRDS_DEFAULTS:
 					cfg_file_set_overscan_default(cfg_oscan.borders, cfg_oscan.mode + NTSC);
@@ -221,7 +221,7 @@ void cfg_overscan_borders_destory(HWND hwnd, INT_PTR result) {
 	}
 
 	if (cfg_oscan.force_set_mode == TRUE) {
-		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE);
+		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 	}
 
 	emu_pause(FALSE);

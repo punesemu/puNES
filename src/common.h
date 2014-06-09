@@ -41,6 +41,11 @@ enum reset_type {
 enum screen_dimension { SCR_LINES = 240, SCR_ROWS = 256 };
 enum type_of_system_info { HEADER, DATABASE };
 enum header_type { iNES_1_0, NES_2_0 };
+enum lenght_file_name_type {
+	LENGTH_FILE_NAME      = 512,
+	LENGTH_FILE_NAME_MID  = 1024,
+	LENGTH_FILE_NAME_LONG = 2048
+};
 
 #define LENGTH(x) (sizeof(x)/sizeof(*(x)))
 
@@ -51,9 +56,9 @@ enum header_type { iNES_1_0, NES_2_0 };
 #endif
 
 struct _info {
-	char base_folder[1024];
-	char rom_file[1024];
-	char load_rom_file[1024];
+	char base_folder[LENGTH_FILE_NAME_MID];
+	char rom_file[LENGTH_FILE_NAME_MID];
+	char load_rom_file[LENGTH_FILE_NAME_MID];
 	BYTE header;
 	BYTE machine[2];
 	struct _info_mapper {

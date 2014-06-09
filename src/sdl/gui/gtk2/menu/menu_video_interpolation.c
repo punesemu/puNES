@@ -49,5 +49,5 @@ void menu_video_interpolation_set(void) {
 
 	cfg->interpolation = !cfg->interpolation;
 
-	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE);
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 }

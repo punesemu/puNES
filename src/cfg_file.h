@@ -43,6 +43,8 @@ typedef struct {
 
 	_config_input input;
 	_config_apu apu;
+
+	char palette_file[LENGTH_FILE_NAME_LONG];
 } _config;
 
 _config cfg_from_file, *cfg;

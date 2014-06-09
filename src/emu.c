@@ -182,6 +182,17 @@ BYTE emu_make_dir(const char *fmt, ...) {
 	}
 	return (EXIT_OK);
 }
+BYTE emu_file_exist(const char *file) {
+	struct stat status;
+
+	if (!(access(file, 0))) {
+		stat(file, &status);
+		if (status.st_mode & S_IFREG) {
+			return (EXIT_OK);
+		}
+	}
+	return (EXIT_ERROR);
+}
 BYTE emu_load_rom(void) {
 	char ext[10], name_file[255];
 	BYTE recent_roms_permit_add = TRUE;
@@ -201,9 +212,9 @@ BYTE emu_load_rom(void) {
 	}
 
 	if (info.rom_file[0]) {
-		char save_rom_file[1024];
+		char save_rom_file[LENGTH_FILE_NAME_MID];
 
-		strncpy(save_rom_file, info.rom_file, 1024);
+		strncpy(save_rom_file, info.rom_file, LENGTH_FILE_NAME_MID);
 
 		save_rom_ext()
 
@@ -453,13 +464,17 @@ void emu_set_title(char *title) {
 	if (cfg->scale == X1) {
 		sprintf(title, "%s (%s", name, param_mode[machine.type].lname);
 	} else if (cfg->filter == NTSC_FILTER) {
-		sprintf(title, "%s (%s, %s, %s, %s", name, param_mode[machine.type].lname,
-		        param_size[cfg->scale].lname, param_ntsc[cfg->ntsc_format].lname,
-		        param_palette[cfg->palette].lname);
+		sprintf(title, "%s (%s, %s, %s, ", name, param_mode[machine.type].lname,
+		        param_size[cfg->scale].lname, param_ntsc[cfg->ntsc_format].lname);
 	} else {
-		sprintf(title, "%s (%s, %s, %s, %s", name, param_mode[machine.type].lname,
-		        param_size[cfg->scale].lname, param_filter[cfg->filter].lname,
-		        param_palette[cfg->palette].lname);
+		sprintf(title, "%s (%s, %s, %s, ", name, param_mode[machine.type].lname,
+		        param_size[cfg->scale].lname, param_filter[cfg->filter].lname);
+	}
+
+	if (strlen(cfg->palette_file) != 0) {
+		strcat(title, "extern");
+	} else {
+		strcat(title, param_palette[cfg->palette].lname);
 	}
 
 #if !defined (RELEASE)
@@ -616,11 +631,11 @@ BYTE emu_reset(BYTE type) {
 		overscan_set_mode(machine.type);
 
 		cfg_file_pgs_parse();
-		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE);
+		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 	}
 
 	if ((info.reset == CHANGE_MODE) && (overscan_set_mode(machine.type) == TRUE)) {
-		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE);
+		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 	}
 
 	chr_bank_1k_reset();

@@ -51,22 +51,18 @@ BYTE tas_file(char *ext, char *file) {
 
 		{
 			BYTE i;
-			char rom_ext[4][10] = { ".nes\0", ".NES\0", ".fds\0", ".FDS\0" };
+			const char rom_ext[4][10] = { ".nes\0", ".NES\0", ".fds\0", ".FDS\0" };
 
 			for (i = 0; i < LENGTH(rom_ext); i++) {
-				char rom_file[1024];
-				struct stat status;
+				char rom_file[LENGTH_FILE_NAME_MID];
 
 				strncpy(rom_file, info.rom_file, sizeof(rom_file));
 				strcat(rom_file, rom_ext[i]);
 
-				if (!(access(rom_file, 0))) {
-					stat(rom_file, &status);
-					if (status.st_mode & S_IFREG) {
-						strncpy(info.rom_file, rom_file, sizeof(info.rom_file));
-						found = TRUE;
-						break;
-					}
+				if (emu_file_exist(rom_file) == EXIT_OK) {
+					strncpy(info.rom_file, rom_file, sizeof(info.rom_file));
+					found = TRUE;
+					break;
 				}
 			}
 		}

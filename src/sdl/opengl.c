@@ -317,7 +317,7 @@ void opengl_effect_change(BYTE mode) {
 
 	opengl_init_effect();
 
-	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE);
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 }
 
 void opengl_text_clear(_txt_element *ele) {

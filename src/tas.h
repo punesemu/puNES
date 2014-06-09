@@ -22,7 +22,7 @@ typedef struct {
 } _tas_input_log;
 struct _tas {
 	FILE *fp;
-	char file[1024];
+	char file[LENGTH_FILE_NAME_MID];
 	uint8_t emulator;
 	uint8_t type;
 	uint8_t add_fake_frame;

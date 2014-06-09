@@ -156,16 +156,16 @@ void set_scale(int scale) {
 
 	switch (scale) {
 		case X1:
-			gfx_set_screen(X1, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE);
+			gfx_set_screen(X1, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 			return;
 		case X2:
-			gfx_set_screen(X2, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE);
+			gfx_set_screen(X2, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 			return;
 		case X3:
-			gfx_set_screen(X3, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE);
+			gfx_set_screen(X3, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 			return;
 		case X4:
-			gfx_set_screen(X4, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE);
+			gfx_set_screen(X4, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 			return;
 	}
 }

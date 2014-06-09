@@ -75,6 +75,7 @@ gboolean time_handler_redraw(void);
 void make_reset(int type);
 void file_open(void);
 gboolean main_win_delete_event(GtkWidget *widget, GdkEvent *event, gpointer data);
+void file_open_filter_add(GtkWidget *filechooser, const gchar *title, const gchar *pattern);
 void help_about(void);
 void change_rom(char *rom);
 

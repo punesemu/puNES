@@ -59,7 +59,7 @@ BYTE fds_load_rom(void) {
 			found = FALSE;
 
 			for (i = 0; i < LENGTH(rom_ext); i++) {
-				char rom_file[1024];
+				char rom_file[LENGTH_FILE_NAME_MID];
 
 				strncpy(rom_file, info.rom_file, sizeof(rom_file));
 				strcat(rom_file, rom_ext[i]);
@@ -128,7 +128,7 @@ BYTE fds_load_rom(void) {
 	return (EXIT_OK);
 }
 BYTE fds_load_bios(void) {
-	char bios_file[1024], *lastSlash;
+	char bios_file[LENGTH_FILE_NAME_MID], *lastSlash;
 	FILE *bios = NULL;
 
 	/*
@@ -390,7 +390,7 @@ void fds_disk_op(WORD type, BYTE side_to_insert) {
 }
 void fds_diff_op(BYTE mode, uint32_t position, WORD value) {
 	if (!fds.info.diff) {
-		char file[1024];
+		char file[LENGTH_FILE_NAME_MID];
 		char ext[10], *last_dot;
 
 		sprintf(file, "%s" DIFF_FOLDER "/%s", info.base_folder, basename(info.rom_file));

@@ -82,7 +82,6 @@ gboolean sock_key_release_event(GtkWidget *widget, GdkEventKey *event);
 gboolean mouse_button_press_release_event(GtkWidget *widget, GdkEventButton *event);
 gboolean mouse_motion_notify_event(GtkWidget *widget, GdkEventMotion *event);
 
-void file_open_filter_add(GtkWidget *filechooser, const gchar *title, const gchar *pattern);
 gboolean timeline_value_changed(GtkRange *range);
 gboolean timeline_button_press_release_event(GtkWidget *widget, GdkEventButton *event);
 gchar *timeline_format_value(GtkScale *scale, gdouble value);
@@ -486,7 +485,7 @@ void gui_fullscreen(void) {
 		/* disabilito le decorazioni */
 		gtk_window_set_decorated(GTK_WINDOW(main_win), FALSE);
 		/* abilito il fullscreen */
-		gfx_set_screen(NO_CHANGE, NO_CHANGE, FULLSCR, NO_CHANGE, FALSE);
+		gfx_set_screen(NO_CHANGE, NO_CHANGE, FULLSCR, NO_CHANGE, FALSE, FALSE);
 		/* nascondo il cursore, se serve */
 		if (!opengl.rotation && (input_zapper_is_connected((_port *) &port) == FALSE)) {
 			SDL_ShowCursor(SDL_DISABLE);
@@ -507,7 +506,7 @@ void gui_fullscreen(void) {
 		/* esco dal fullscreen */
 		gtk_window_unfullscreen(GTK_WINDOW(main_win));
 		/* ripristino i valori di scale ed esco dal fullscreen */
-		gfx_set_screen(gfx.scale_before_fscreen, NO_CHANGE, NO_FULLSCR, NO_CHANGE, FALSE);
+		gfx_set_screen(gfx.scale_before_fscreen, NO_CHANGE, NO_FULLSCR, NO_CHANGE, FALSE, FALSE);
 		/* riabilito la visualizzazione del puntatore */
 		SDL_ShowCursor(SDL_ENABLE);
 		/* blocco il ridimensionamento */

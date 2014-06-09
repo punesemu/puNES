@@ -156,7 +156,7 @@ void rendering_set(int rendering) {
 	opengl_effect_change(opengl.rotation);
 
 	gfx_reset_video();
-	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE);
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 
 	/* rispristino la posizione */
 	gtk_window_move(GTK_WINDOW(main_win), x, y);

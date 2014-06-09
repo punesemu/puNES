@@ -106,6 +106,7 @@ void set_stereo_delay(int stereo_delay);
 void set_audio_quality(BYTE quality);
 void set_bck_pause(void);
 void set_gamegenie(void);
+void set_palette(BYTE palette);
 
 double high_resolution_ms(void);
 void __stdcall time_handler_redraw(void);
@@ -115,6 +116,8 @@ void change_menuitem(BYTE check_or_enab, UINT type, UINT menuitem_id);
 void open_event(void);
 void make_reset(BYTE type);
 void change_rom(char *rom);
+void load_palette(void);
+void save_palette(void);
 
 void save_slot_incdec(BYTE mode);
 void save_slot_action(BYTE mode);
@@ -1261,22 +1264,27 @@ void gui_update(void) {
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_PALETTE_SONY);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_PALETTE_MONO);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_PALETTE_GREEN);
-	switch (cfg->palette) {
-		case PALETTE_PAL:
-			id = IDM_SET_PALETTE_PAL;
-			break;
-		case PALETTE_NTSC:
-			id = IDM_SET_PALETTE_NTSC;
-			break;
-		case PALETTE_SONY:
-			id = IDM_SET_PALETTE_SONY;
-			break;
-		case PALETTE_MONO:
-			id = IDM_SET_PALETTE_MONO;
-			break;
-		case PALETTE_GREEN:
-			id = IDM_SET_PALETTE_GREEN;
-			break;
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_PALETTE_LOAD);
+	if (strlen(cfg->palette_file) == 0) {
+		switch (cfg->palette) {
+			case PALETTE_PAL:
+				id = IDM_SET_PALETTE_PAL;
+				break;
+			case PALETTE_NTSC:
+				id = IDM_SET_PALETTE_NTSC;
+				break;
+			case PALETTE_SONY:
+				id = IDM_SET_PALETTE_SONY;
+				break;
+			case PALETTE_MONO:
+				id = IDM_SET_PALETTE_MONO;
+				break;
+			case PALETTE_GREEN:
+				id = IDM_SET_PALETTE_GREEN;
+				break;
+		}
+	} else {
+		id = IDM_SET_PALETTE_LOAD;
 	}
 	change_menuitem(CHECK, MF_CHECKED, id);
 
@@ -1434,7 +1442,7 @@ void gui_fullscreen(void) {
 		SetMenu(main_win, NULL);
 
 		/* abilito il fullscreen */
-		gfx_set_screen(NO_CHANGE, NO_CHANGE, FULLSCR, NO_CHANGE, FALSE);
+		gfx_set_screen(NO_CHANGE, NO_CHANGE, FULLSCR, NO_CHANGE, FALSE, FALSE);
 
 		/* disabilito la visualizzazione del puntatore */
 		if (input_zapper_is_connected((_port *) &port) == FALSE) {
@@ -1463,7 +1471,7 @@ void gui_fullscreen(void) {
 		SetMenu(main_win, main_menu);
 
 		/* ripristino i valori di scale ed esco dal fullscreen */
-		gfx_set_screen(gfx.scale_before_fscreen, NO_CHANGE, NO_FULLSCR, NO_CHANGE, FALSE);
+		gfx_set_screen(gfx.scale_before_fscreen, NO_CHANGE, NO_FULLSCR, NO_CHANGE, FALSE, FALSE);
 
 		/* riabilito la visualizzazione del puntatore */
 		if (input_zapper_is_connected((_port *) &port) == FALSE) {
@@ -1866,19 +1874,25 @@ long __stdcall main_win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 					set_filter(NTSC_FILTER);
 					break;
 				case IDM_SET_PALETTE_PAL:
-					gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, PALETTE_PAL, FALSE);
+					set_palette(PALETTE_PAL);
 					break;
 				case IDM_SET_PALETTE_NTSC:
-					gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, PALETTE_NTSC, FALSE);
+					set_palette(PALETTE_NTSC);
 					break;
 				case IDM_SET_PALETTE_SONY:
-					gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, PALETTE_SONY, FALSE);
+					set_palette(PALETTE_SONY);
 					break;
 				case IDM_SET_PALETTE_MONO:
-					gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, PALETTE_MONO, FALSE);
+					set_palette(PALETTE_MONO);
 					break;
 				case IDM_SET_PALETTE_GREEN:
-					gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, PALETTE_GREEN, FALSE);
+					set_palette(PALETTE_GREEN);
+					break;
+				case IDM_SET_PALETTE_LOAD:
+					load_palette();
+					break;
+				case IDM_SET_PALETTE_SAVE:
+					save_palette();
 					break;
 				case IDM_SET_RENDERING_SOFTWARE:
 					set_rendering(RENDER_SOFTWARE);
@@ -1900,7 +1914,7 @@ long __stdcall main_win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 				case IDM_SET_STRETCHFLSCR:
 					cfg->stretch = !cfg->stretch;
 					if (cfg->fullscreen == FULLSCR) {
-						gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE);
+						gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 					}
 					gui_update();
 					break;
@@ -2410,7 +2424,7 @@ void set_rendering(BYTE rendering) {
 	gfx_set_render(rendering);
 	cfg->render = rendering;
 
-	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE);
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 }
 void set_fps(BYTE fps) {
 	if (cfg->fps == fps) {
@@ -2444,7 +2458,7 @@ void set_vsync(void) {
 	/* switch vsync */
 	cfg->vsync = !cfg->vsync;
 
-	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE);
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 }
 void set_scale(BYTE scale) {
 	if (cfg->scale == scale) {
@@ -2459,16 +2473,16 @@ void set_scale(BYTE scale) {
 
 	switch (scale) {
 		case X1:
-			gfx_set_screen(X1, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE);
+			gfx_set_screen(X1, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 			break;
 		case X2:
-			gfx_set_screen(X2, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE);
+			gfx_set_screen(X2, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 			break;
 		case X3:
-			gfx_set_screen(X3, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE);
+			gfx_set_screen(X3, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 			break;
 		case X4:
-			gfx_set_screen(X4, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE);
+			gfx_set_screen(X4, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 			break;
 	}
 }
@@ -2479,7 +2493,7 @@ void set_pixel_aspect_ratio(BYTE par) {
 
 	cfg->pixel_aspect_ratio = par;
 
-	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE);
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 }
 void set_overscan(BYTE oscan) {
 	switch (oscan) {
@@ -2497,12 +2511,12 @@ void set_overscan(BYTE oscan) {
 			break;
 	}
 
-	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE);
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 }
 void set_interpolation(void) {
 	cfg->interpolation = !cfg->interpolation;
 
-	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE);
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 }
 void set_txt_on_screen(void) {
 	cfg->txt_on_screen = !cfg->txt_on_screen;
@@ -2510,54 +2524,54 @@ void set_txt_on_screen(void) {
 void set_par_soft_stretch(void) {
 	cfg->PAR_soft_stretch = !cfg->PAR_soft_stretch;
 
-	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE);
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 }
 void set_filter(BYTE filter) {
 	switch (filter) {
 		case NO_FILTER:
-			gfx_set_screen(NO_CHANGE, NO_FILTER, NO_CHANGE, NO_CHANGE, FALSE);
+			gfx_set_screen(NO_CHANGE, NO_FILTER, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 			break;
 		case PHOSPHOR:
-			gfx_set_screen(NO_CHANGE, PHOSPHOR, NO_CHANGE, NO_CHANGE, FALSE);
+			gfx_set_screen(NO_CHANGE, PHOSPHOR, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 			break;
 		case PHOSPHOR2:
-			gfx_set_screen(NO_CHANGE, PHOSPHOR2, NO_CHANGE, NO_CHANGE, FALSE);
+			gfx_set_screen(NO_CHANGE, PHOSPHOR2, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 			break;
 		case SCANLINE:
-			gfx_set_screen(NO_CHANGE, SCANLINE, NO_CHANGE, NO_CHANGE, FALSE);
+			gfx_set_screen(NO_CHANGE, SCANLINE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 			break;
 		case DBL:
-			gfx_set_screen(NO_CHANGE, DBL, NO_CHANGE, NO_CHANGE, FALSE);
+			gfx_set_screen(NO_CHANGE, DBL, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 			break;
 		case DARK_ROOM:
-			gfx_set_screen(NO_CHANGE, DARK_ROOM, NO_CHANGE, NO_CHANGE, FALSE);
+			gfx_set_screen(NO_CHANGE, DARK_ROOM, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 			break;
 		case CRT_CURVE:
-			gfx_set_screen(NO_CHANGE, CRT_CURVE, NO_CHANGE, NO_CHANGE, FALSE);
+			gfx_set_screen(NO_CHANGE, CRT_CURVE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 			break;
 		case CRT_NO_CURVE:
-			gfx_set_screen(NO_CHANGE, CRT_NO_CURVE, NO_CHANGE, NO_CHANGE, FALSE);
+			gfx_set_screen(NO_CHANGE, CRT_NO_CURVE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 			break;
 		case SCALE2X:
-			gfx_set_screen(X2, SCALE2X, NO_CHANGE, NO_CHANGE, FALSE);
+			gfx_set_screen(X2, SCALE2X, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 			break;
 		case SCALE3X:
-			gfx_set_screen(X3, SCALE3X, NO_CHANGE, NO_CHANGE, FALSE);
+			gfx_set_screen(X3, SCALE3X, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 			break;
 		case SCALE4X:
-			gfx_set_screen(X4, SCALE4X, NO_CHANGE, NO_CHANGE, FALSE);
+			gfx_set_screen(X4, SCALE4X, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 			break;
 		case HQ2X:
-			gfx_set_screen(X2, HQ2X, NO_CHANGE, NO_CHANGE, FALSE);
+			gfx_set_screen(X2, HQ2X, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 			break;
 		case HQ3X:
-			gfx_set_screen(X3, HQ3X, NO_CHANGE, NO_CHANGE, FALSE);
+			gfx_set_screen(X3, HQ3X, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 			break;
 		case HQ4X:
-			gfx_set_screen(X4, HQ4X, NO_CHANGE, NO_CHANGE, FALSE);
+			gfx_set_screen(X4, HQ4X, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 			break;
 		case NTSC_FILTER:
-			gfx_set_screen(NO_CHANGE, NTSC_FILTER, NO_CHANGE, NO_CHANGE, FALSE);
+			gfx_set_screen(NO_CHANGE, NTSC_FILTER, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 			if (cfg->filter == NTSC_FILTER) {
 				ntsc_set(cfg->ntsc_format, 0, 0, (BYTE *) palette_RGB, 0);
 				gui_update();
@@ -2615,6 +2629,10 @@ void set_gamegenie(void) {
 	}
 
 	gui_update();
+}
+void set_palette(BYTE palette) {
+	memset(cfg->palette_file, 0x00, sizeof(cfg->palette_file));
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, palette, FALSE, TRUE);
 }
 
 double high_resolution_ms(void) {
@@ -2703,7 +2721,7 @@ void change_menuitem(BYTE check_or_enab, UINT type, UINT menuitem_id) {
 }
 void open_event(void) {
 	OPENFILENAME ofn;
-	char file[1024];
+	char file[LENGTH_FILE_NAME_MID];
 
 	emu_pause(TRUE);
 
@@ -2808,6 +2826,96 @@ void change_rom(char *rom) {
 	make_reset(CHANGE_ROM);
 
 	gui_update();
+}
+void load_palette(void) {
+	OPENFILENAME ofn;
+	char file[LENGTH_FILE_NAME_MID];
+
+	emu_pause(TRUE);
+
+	switch (gui.version_os) {
+		case WIN_XP64:
+		case WIN_XP:
+			snd_stop();
+			break;
+	}
+
+	ZeroMemory(&ofn, sizeof(ofn));
+	ofn.lStructSize = sizeof(ofn);
+	ofn.hwndOwner = main_win;
+	ofn.lpstrFile = file;
+	ofn.lpstrFile[0] = '\0';
+	ofn.nMaxFile = sizeof(file);
+	ofn.lpstrFilter = "PAL files\0*.pal;*.PAL\0" "All files\0*.*\0";
+	ofn.nFilterIndex = 1;
+	ofn.lpstrFileTitle = NULL;
+	ofn.nMaxFileTitle = 0;
+	ofn.lpstrInitialDir = NULL;
+	ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+
+	if (GetOpenFileName(&ofn) == TRUE) {
+		if (emu_file_exist(ofn.lpstrFile) == EXIT_OK) {
+			memset(cfg->palette_file, 0x00, sizeof(cfg->palette_file));
+			strncpy(cfg->palette_file, ofn.lpstrFile, sizeof(cfg->palette_file) - 1);
+			gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, TRUE);
+		} else {
+			text_add_line_info(1, "[red]error on palette file");
+		}
+	}
+
+	gui_update();
+
+	SetFocus(frame_screen_nes);
+
+	switch (gui.version_os) {
+		case WIN_XP64:
+		case WIN_XP:
+			snd_start();
+			break;
+	}
+
+	emu_pause(FALSE);
+}
+void save_palette(void) {
+	OPENFILENAME ofn;
+	char file[LENGTH_FILE_NAME_MID];
+
+	emu_pause(TRUE);
+
+	switch (gui.version_os) {
+		case WIN_XP64:
+		case WIN_XP:
+			snd_stop();
+			break;
+	}
+
+	ZeroMemory(&ofn, sizeof(ofn));
+	ofn.lStructSize = sizeof(ofn);
+	ofn.hwndOwner = main_win;
+	ofn.lpstrFile = file;
+	ofn.lpstrFile[0] = '\0';
+	ofn.nMaxFile = sizeof(file);
+	ofn.lpstrFilter = "PAL files\0*.pal;*.PAL\0" "All files\0*.*\0";
+	ofn.nFilterIndex = 1;
+	ofn.lpstrFileTitle = NULL;
+	ofn.nMaxFileTitle = 0;
+	ofn.lpstrInitialDir = NULL;
+	ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_HIDEREADONLY | OFN_EXPLORER;
+
+	if (GetSaveFileName(&ofn) == TRUE) {
+		palette_save_on_file(ofn.lpstrFile);
+	}
+
+	SetFocus(frame_screen_nes);
+
+	switch (gui.version_os) {
+		case WIN_XP64:
+		case WIN_XP:
+			snd_start();
+			break;
+	}
+
+	emu_pause(FALSE);
 }
 
 void save_slot_incdec(BYTE mode) {

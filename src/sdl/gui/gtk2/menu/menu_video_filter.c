@@ -547,51 +547,51 @@ void set_filter(int filter) {
 
 	switch (filter) {
 		case NO_FILTER:
-			gfx_set_screen(NO_CHANGE, NO_FILTER, NO_CHANGE, NO_CHANGE, FALSE);
+			gfx_set_screen(NO_CHANGE, NO_FILTER, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 			return;
 		case PHOSPHOR:
-			gfx_set_screen(NO_CHANGE, PHOSPHOR, NO_CHANGE, NO_CHANGE, FALSE);
+			gfx_set_screen(NO_CHANGE, PHOSPHOR, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 			return;
 		case PHOSPHOR2:
-			gfx_set_screen(NO_CHANGE, PHOSPHOR2, NO_CHANGE, NO_CHANGE, FALSE);
+			gfx_set_screen(NO_CHANGE, PHOSPHOR2, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 			return;
 		case SCANLINE:
-			gfx_set_screen(NO_CHANGE, SCANLINE, NO_CHANGE, NO_CHANGE, FALSE);
+			gfx_set_screen(NO_CHANGE, SCANLINE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 			return;
 		case DBL:
-			gfx_set_screen(NO_CHANGE, DBL, NO_CHANGE, NO_CHANGE, FALSE);
+			gfx_set_screen(NO_CHANGE, DBL, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 			return;
 		case DARK_ROOM:
-			gfx_set_screen(NO_CHANGE, DARK_ROOM, NO_CHANGE, NO_CHANGE, FALSE);
+			gfx_set_screen(NO_CHANGE, DARK_ROOM, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 			return;
 		case CRT_CURVE:
-			gfx_set_screen(NO_CHANGE, CRT_CURVE, NO_CHANGE, NO_CHANGE, FALSE);
+			gfx_set_screen(NO_CHANGE, CRT_CURVE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 			return;
 		case CRT_NO_CURVE:
-			gfx_set_screen(NO_CHANGE, CRT_NO_CURVE, NO_CHANGE, NO_CHANGE, FALSE);
+			gfx_set_screen(NO_CHANGE, CRT_NO_CURVE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 			return;
 		case SCALE2X:
-			gfx_set_screen(X2, SCALE2X, NO_CHANGE, NO_CHANGE, FALSE);
+			gfx_set_screen(X2, SCALE2X, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 			return;
 		case SCALE3X:
-			gfx_set_screen(X3, SCALE3X, NO_CHANGE, NO_CHANGE, FALSE);
+			gfx_set_screen(X3, SCALE3X, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 			return;
 		case SCALE4X:
-			gfx_set_screen(X4, SCALE4X, NO_CHANGE, NO_CHANGE, FALSE);
+			gfx_set_screen(X4, SCALE4X, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 			return;
 		case HQ2X:
-			gfx_set_screen(X2, HQ2X, NO_CHANGE, NO_CHANGE, FALSE);
+			gfx_set_screen(X2, HQ2X, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 			return;
 		case HQ3X:
-			gfx_set_screen(X3, HQ3X, NO_CHANGE, NO_CHANGE, FALSE);
+			gfx_set_screen(X3, HQ3X, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 			return;
 		case HQ4X:
-			gfx_set_screen(X4, HQ4X, NO_CHANGE, NO_CHANGE, FALSE);
+			gfx_set_screen(X4, HQ4X, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 			return;
 		case MRGBNTSCCOM:
 		case MRGBNTSCSVD:
 		case MRGBNTSCRGB:
-			gfx_set_screen(NO_CHANGE, NTSC_FILTER, NO_CHANGE, NO_CHANGE, FALSE);
+			gfx_set_screen(NO_CHANGE, NTSC_FILTER, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 			/*
 			 * faccio il resto solo se lo switch del nuovo effetto
 			 * e' stato effettuato con successo.
