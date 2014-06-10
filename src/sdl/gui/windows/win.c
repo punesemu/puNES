@@ -1221,13 +1221,29 @@ void gui_update(void) {
 	change_menuitem(CHECK, MF_CHECKED, id);
 
 	/* Palette */
-	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_PALETTE_PAL);
-	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_PALETTE_NTSC);
-	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_PALETTE_SONY);
-	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_PALETTE_MONO);
-	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_PALETTE_GREEN);
-	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_PALETTE_LOAD);
-	if (strlen(cfg->palette_file) == 0) {
+	{
+		const char str[] = "[Select a file]";
+		HMENU menuPalette = GetSubMenu(GetSubMenu(GetSubMenu(main_menu, 2), 2), 8);
+		MENUITEMINFO menuitem;
+
+		menuitem.cbSize = sizeof(MENUITEMINFO);
+		menuitem.fMask = MIIM_STATE | MIIM_STRING;
+		if (strlen(cfg->palette_file) == 0) {
+			menuitem.fState = MFS_DISABLED;
+			menuitem.dwTypeData = (LPTSTR) str;
+		} else {
+			menuitem.fState = MFS_ENABLED;
+			menuitem.dwTypeData = basename(cfg->palette_file);
+		}
+		menuitem.cch = strlen(menuitem.dwTypeData);
+		SetMenuItemInfo(menuPalette, 6, TRUE, &menuitem);
+
+		change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_PALETTE_PAL);
+		change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_PALETTE_NTSC);
+		change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_PALETTE_SONY);
+		change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_PALETTE_MONO);
+		change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_PALETTE_GREEN);
+		change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_PALETTE_FILE);
 		switch (cfg->palette) {
 			case PALETTE_PAL:
 				id = IDM_SET_PALETTE_PAL;
@@ -1244,11 +1260,12 @@ void gui_update(void) {
 			case PALETTE_GREEN:
 				id = IDM_SET_PALETTE_GREEN;
 				break;
+			case PALETTE_FILE:
+				id = IDM_SET_PALETTE_FILE;
+				break;
 		}
-	} else {
-		id = IDM_SET_PALETTE_LOAD;
+		change_menuitem(CHECK, MF_CHECKED, id);
 	}
-	change_menuitem(CHECK, MF_CHECKED, id);
 
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_RENDERING_SOFTWARE);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_RENDERING_OPENGL);
@@ -1911,6 +1928,9 @@ long __stdcall main_win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 					break;
 				case IDM_SET_PALETTE_GREEN:
 					set_palette(PALETTE_GREEN);
+					break;
+				case IDM_SET_PALETTE_FILE:
+					set_palette(PALETTE_FILE);
 					break;
 				case IDM_SET_PALETTE_LOAD:
 					load_palette();
@@ -2697,7 +2717,6 @@ void set_gamegenie(void) {
 	gui_update();
 }
 void set_palette(BYTE palette) {
-	memset(cfg->palette_file, 0x00, sizeof(cfg->palette_file));
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, palette, FALSE, TRUE);
 }
 

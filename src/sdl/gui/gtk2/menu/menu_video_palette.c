@@ -5,12 +5,62 @@
  *      Author: fhorse
  */
 
+#include <libgen.h>
 #include "menu_video_palette.h"
 #include "param.h"
 #include "palette.h"
 #include "gfx.h"
 #include "cfg_file.h"
 #include "gui.h"
+
+#if defined (__SUNPRO_C)
+#pragma align 4 (loadpalette_icon_inline)
+#endif
+#if defined (__GNUC__)
+static const guint8 loadpalette_icon_inline[] __attribute__ ((__aligned__ (4))) =
+#else
+static const guint8 loadpalette_icon_inline[] =
+#endif
+{ ""
+  /* Pixbuf magic (0x47646b50) */
+  "GdkP"
+  /* length: header (24) + pixel_data (621) */
+  "\0\0\2\205"
+  /* pixdata_type (0x2010002) */
+  "\2\1\0\2"
+  /* rowstride (64) */
+  "\0\0\0@"
+  /* width (16) */
+  "\0\0\0\20"
+  /* height (16) */
+  "\0\0\0\20"
+  /* pixel_data: */
+  "\242\377\377\377\0\13r\304f\377p\302d\377n\277b\377k\274`\377h\270]\377"
+  "e\265[\377b\261X\375_\254U\352[\250R\267X\243OpT\237K\35\205\377\377"
+  "\377\0\14p\301d\377\260\333\246\377\257\332\246\377\255\331\243\377\253"
+  "\330\242\377\250\327\237\377\245\325\234\377\235\320\224\377\214\305"
+  "\203\377t\264l\377P\231G\260L\224D9\204\377\377\377\0\15m\276b\377\256"
+  "\332\245\377\254\330\242\377\252\330\241\377\247\326\236\377\245\325"
+  "\234\377\242\324\231\377\237\322\227\377\225\315\214\377\231\317\221"
+  "\377{\270s\377G\217@\260C\212<\35\203\377\377\377\0\15j\272_\377g\266"
+  "\\\377d\263Y\377`\256V\377]\252S\377Y\246P\377V\241M\377p\261h\377\220"
+  "\310\210\377\225\314\215\377\222\313\213\377d\245]\377\77\2058p\212\377"
+  "\377\377\0\6N\227F\217J\222B\342\210\303\201\377\205\304}\377u\263n\377"
+  ";\1775\267\213\377\377\377\0\5E\215>\217k\253d\377\206\304\177\377\201"
+  "\276y\3776z1\352\204\377\377\377\0\2[\250R\3X\243O{\205\377\377\377\0"
+  "\5A\207:\217g\250a\377\202\302{\377|\274v\3772u-\352\204\377\377\377"
+  "\0\2W\243N\237S\236K\322\204\377\377\377\0\6@\206:\217<\2016\342{\273"
+  "u\377w\275p\377i\253c\377.p*\267\203\377\377\377\0\15V\242M\223o\261"
+  "g\377k\255d\377K\224C\377G\217@\377C\212<\377@\2059\377Z\235T\377z\272"
+  "t\377\177\301y\377}\277w\377O\221J\377+k&p\202\377\377\377\0\16V\241"
+  "M\212n\260f\377\222\312\212\377\220\312\211\377\215\310\206\377\212\306"
+  "\203\377\207\305\200\377\204\303~\377\201\302{\377t\273m\377|\276v\377"
+  "]\240Y\377*k&\260'g#\35\202\377\377\377\0\15Q\234I\204j\254b\377\215"
+  "\310\205\377\213\307\205\377\210\306\202\377\206\304\177\377\202\302"
+  "|\377\200\301y\377x\271q\377e\250_\377N\221I\377*j%\260'f#9\204\377\377"
+  "\377\0\13I\221B\220b\244Z\377^\241X\377>\2037\377:~4\3776z1\3773u.\377"
+  "/q+\352,m(\267)i%p&f\"\35\206\377\377\377\0\2A\207:\234=\2027\322\216"
+  "\377\377\377\0\2<\2016\3""9}3x\213\377\377\377\0"};
 
 #if defined (__SUNPRO_C)
 #pragma align 4 (icon_inline)
@@ -165,7 +215,7 @@ void save_palette(void);
 static GtkWidget *check[NUMCHKS];
 
 void menu_video_palette(GtkWidget *video, GtkAccelGroup *accel_group) {
-	GtkWidget *menu, *palette, *pal_save;
+	GtkWidget *menu, *palette, *pal_load, *pal_save;
 
 	menu = gtk_menu_new();
 	palette = gtk_image_menu_item_new_with_mnemonic("_Palette");
@@ -180,8 +230,9 @@ void menu_video_palette(GtkWidget *video, GtkAccelGroup *accel_group) {
 	check[MPALETTESONY] = gtk_check_menu_item_new_with_mnemonic("S_ony CXA2025AS US");
 	check[MPALETTEMONO] = gtk_check_menu_item_new_with_mnemonic("_Monochrome");
 	check[MPALETTEGREEN] = gtk_check_menu_item_new_with_mnemonic("_Green");
-	check[MPALETTEFILE] = gtk_check_menu_item_new_with_mnemonic("_Load from file");
+	check[MPALETTEFILE] = gtk_check_menu_item_new_with_mnemonic("[Select a file]");
 	pal_save = gtk_image_menu_item_new_with_mnemonic("_Save to file");
+	pal_load = gtk_image_menu_item_new_with_mnemonic("_Load from file");
 
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), check[MPALETTEPAL]);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), check[MPALETTENTSC]);
@@ -190,8 +241,11 @@ void menu_video_palette(GtkWidget *video, GtkAccelGroup *accel_group) {
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), check[MPALETTEGREEN]);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), gtk_separator_menu_item_new());
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), check[MPALETTEFILE]);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), gtk_separator_menu_item_new());
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), pal_save);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), pal_load);
 
+	gw_image_from_inline(pal_load, loadpalette_icon_inline);
 	gw_image_from_inline(pal_save, savepalette_icon_inline);
 
 	g_signal_connect_swapped(G_OBJECT(check[MPALETTEPAL]), "activate", G_CALLBACK(set_palette),
@@ -204,27 +258,29 @@ void menu_video_palette(GtkWidget *video, GtkAccelGroup *accel_group) {
 	        GINT_TO_POINTER(3));
 	g_signal_connect_swapped(G_OBJECT(check[MPALETTEGREEN]), "activate", G_CALLBACK(set_palette),
 	        GINT_TO_POINTER(4));
-	g_signal_connect_swapped(G_OBJECT(check[MPALETTEFILE]), "activate", G_CALLBACK(load_palette),
-			NULL);
+	g_signal_connect_swapped(G_OBJECT(check[MPALETTEFILE]), "activate", G_CALLBACK(set_palette),
+			GINT_TO_POINTER(5));
 	g_signal_connect(G_OBJECT(pal_save), "activate", G_CALLBACK(save_palette), NULL);
+	g_signal_connect(G_OBJECT(pal_load), "activate", G_CALLBACK(load_palette), NULL);
 }
 void menu_video_palette_check(void) {
-	BYTE pf = FALSE;
 	int index;
 
 	if (strlen(cfg->palette_file) != 0) {
-		pf = TRUE;
+		gtk_label_set_text(GTK_LABEL(gtk_bin_get_child(GTK_BIN(check[MPALETTEFILE]))),
+				basename(cfg->palette_file));
+		gtk_widget_set_sensitive(check[MPALETTEFILE], TRUE);
+	} else {
+		gtk_label_set_text(GTK_LABEL(gtk_bin_get_child(GTK_BIN(check[MPALETTEFILE]))),
+				"[Select a file]");
+		gtk_widget_set_sensitive(check[MPALETTEFILE], FALSE);
 	}
 
 	for (index = MPALETTEPAL; index < NUMCHKS; index++) {
-		if ((cfg->palette == index) && (pf == FALSE)) {
+		if (cfg->palette == index) {
 			gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[index]), TRUE);
 		} else {
 			gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[index]), FALSE);
-		}
-
-		if (pf == TRUE) {
-			gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MPALETTEFILE]), TRUE);
 		}
 	}
 }
@@ -234,49 +290,7 @@ void set_palette(int palette) {
 		return;
 	}
 
-	memset(cfg->palette_file, 0x00, sizeof(cfg->palette_file));
-	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, palette, FALSE, TRUE);
-}
-void load_palette(void) {
-	GtkWidget *dialog;
-
-	if (gui_in_update) {
-		return;
-	}
-
-	emu_pause(TRUE);
-
-	dialog = gtk_file_chooser_dialog_new("Open File", GTK_WINDOW(main_win),
-			GTK_FILE_CHOOSER_ACTION_OPEN, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, GTK_STOCK_OPEN,
-			GTK_RESPONSE_ACCEPT, NULL);
-
-	file_open_filter_add(dialog, "PAL files", "*.pal;*.PAL");
-	file_open_filter_add(dialog, "All files", "*.*;");
-
-	//gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(dialog), gui.last_state_path);
-
-	g_timeout_redraw_start();
-
-	if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
-		char *file_name = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
-
-		if (emu_file_exist(file_name) == EXIT_OK) {
-			memset(cfg->palette_file, 0x00, sizeof(cfg->palette_file));
-			strncpy(cfg->palette_file, file_name, sizeof(cfg->palette_file) - 1);
-			gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, TRUE);
-		} else {
-			text_add_line_info(1, "[red]error on palette file");
-		}
-		g_free(file_name);
-	}
-
-	gui_update();
-
-	gtk_widget_destroy(dialog);
-
-	g_timeout_redraw_stop();
-
-	emu_pause(FALSE);
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, palette, FALSE, FALSE);
 }
 void save_palette(void) {
 	GtkWidget *dialog;
@@ -301,6 +315,46 @@ void save_palette(void) {
 		palette_save_on_file(filename);
 		g_free(filename);
 	}
+
+	gtk_widget_destroy(dialog);
+
+	g_timeout_redraw_stop();
+
+	emu_pause(FALSE);
+}
+void load_palette(void) {
+	GtkWidget *dialog;
+
+	if (gui_in_update) {
+		return;
+	}
+
+	emu_pause(TRUE);
+
+	dialog = gtk_file_chooser_dialog_new("Open File", GTK_WINDOW(main_win),
+			GTK_FILE_CHOOSER_ACTION_OPEN, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, GTK_STOCK_OPEN,
+			GTK_RESPONSE_ACCEPT, NULL);
+
+	file_open_filter_add(dialog, "PAL files", "*.pal;*.PAL");
+	file_open_filter_add(dialog, "All files", "*.*;");
+
+	g_timeout_redraw_start();
+
+	if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
+		char *file_name = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
+
+		if (emu_file_exist(file_name) == EXIT_OK) {
+			memset(cfg->palette_file, 0x00, sizeof(cfg->palette_file));
+			strncpy(cfg->palette_file, file_name, sizeof(cfg->palette_file) - 1);
+			gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, PALETTE_FILE, FALSE, TRUE);
+		} else {
+			text_add_line_info(1, "[red]error on palette file");
+		}
+
+		g_free(file_name);
+	}
+
+	gui_update();
 
 	gtk_widget_destroy(dialog);
 

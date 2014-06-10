@@ -196,9 +196,9 @@ static const _param param[] = {
 	{
 		"palette",
 		NULL,
-		"# possible values: pal, ntsc, sony, mono, green",
+		"# possible values: pal, ntsc, sony, mono, green, file",
 		NULL,
-		"-p, --palette             type of palette       : pal, ntsc, sony, mono, green"
+		"-p, --palette             type of palette       : pal, ntsc, sony, mono, green, file"
 	},
 	{
 		"save settings on exit",
@@ -597,7 +597,8 @@ static const _param param_palette[] = {
 	{"NTSC palette",      "ntsc" },
 	{"Sony CXA2025AS US", "sony" },
 	{"Monochrome",        "mono" },
-	{"Green",             "green"}
+	{"Green",             "green"},
+	{"Extern",            "file" }
 };
 #if defined (SDL)
 static const _param param_render[] = {

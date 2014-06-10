@@ -127,8 +127,9 @@
 #define IDM_SET_PALETTE_SONY        412
 #define IDM_SET_PALETTE_MONO        413
 #define IDM_SET_PALETTE_GREEN       414
-#define IDM_SET_PALETTE_LOAD        415
+#define IDM_SET_PALETTE_FILE        415
 #define IDM_SET_PALETTE_SAVE        416
+#define IDM_SET_PALETTE_LOAD        417
 
 #if defined (SDL)
 #define IDM_SET_RENDERING_SOFTWARE  420

@@ -13,6 +13,7 @@
 #include "cfg_file.h"
 #include "ppu.h"
 #include "overscan.h"
+#include "clock.h"
 #define _SHADERS_CODE_
 #include "shaders.h"
 #undef  _SHADERS_CODE_
@@ -561,35 +562,41 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 		palette = cfg->palette;
 	}
 	if ((palette != cfg->palette) || info.on_cfg || force_palette) {
-		BYTE error_palette_file = TRUE;
-
-		if (strlen(cfg->palette_file) != 0) {
-			if (palette_load_from_file(cfg->palette_file) == EXIT_ERROR) {
-				memset(cfg->palette_file, 0x00, sizeof(cfg->palette_file));
-				palette = cfg->palette;
-			} else {
-				ntsc_set(cfg->ntsc_format, FALSE, (BYTE *) palette_base_file, 0,
-						(BYTE *) palette_RGB);
-				error_palette_file = FALSE;
+		if (palette == PALETTE_FILE) {
+			if (strlen(cfg->palette_file) != 0) {
+				if (palette_load_from_file(cfg->palette_file) == EXIT_ERROR) {
+					memset(cfg->palette_file, 0x00, sizeof(cfg->palette_file));
+					text_add_line_info(1, "[red]error on palette file");
+					if (cfg->palette != PALETTE_FILE) {
+						palette = cfg->palette;
+					} else if (machine.type == NTSC) {
+						palette = PALETTE_NTSC;
+					} else {
+						palette = PALETTE_SONY;
+					}
+				} else {
+					ntsc_set(cfg->ntsc_format, FALSE, (BYTE *) palette_base_file, 0,
+							(BYTE *) palette_RGB);
+				}
 			}
 		}
 
-		if (error_palette_file == TRUE) {
-			switch (palette) {
-				case PALETTE_PAL:
-					ntsc_set(cfg->ntsc_format, FALSE, (BYTE *) palette_base_pal, 0,
-							(BYTE *) palette_RGB);
-					break;
-				case PALETTE_NTSC:
-					ntsc_set(cfg->ntsc_format, FALSE, 0, 0, (BYTE *) palette_RGB);
-					break;
-				case PALETTE_GREEN:
-					rgb_modifier(-0x20, 0x20, -0x20);
-					break;
-				default:
-					ntsc_set(cfg->ntsc_format, palette, 0, 0, (BYTE *) palette_RGB);
-					break;
-			}
+		switch (palette) {
+			case PALETTE_PAL:
+				ntsc_set(cfg->ntsc_format, FALSE, (BYTE *) palette_base_pal, 0,
+						(BYTE *) palette_RGB);
+				break;
+			case PALETTE_NTSC:
+				ntsc_set(cfg->ntsc_format, FALSE, 0, 0, (BYTE *) palette_RGB);
+				break;
+			case PALETTE_GREEN:
+				rgb_modifier(-0x20, 0x20, -0x20);
+				break;
+			case PALETTE_FILE:
+				break;
+			default:
+				ntsc_set(cfg->ntsc_format, palette, 0, 0, (BYTE *) palette_RGB);
+				break;
 		}
 
 		/* inizializzo in ogni caso la tabella YUV dell'hqx */

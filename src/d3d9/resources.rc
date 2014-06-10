@@ -210,8 +210,10 @@ BEGIN
 				MENUITEM "&Monochrome",           IDM_SET_PALETTE_MONO
 				MENUITEM "&Green",                IDM_SET_PALETTE_GREEN
 				MENUITEM SEPARATOR
-				MENUITEM "&Load from file",       IDM_SET_PALETTE_LOAD
+				MENUITEM "[Select a file]",       IDM_SET_PALETTE_FILE
+				MENUITEM SEPARATOR
 				MENUITEM "&Save to file",         IDM_SET_PALETTE_SAVE
+				MENUITEM "&Load from file",       IDM_SET_PALETTE_LOAD
 			END
 #if defined (SDL)
 			POPUP "&Effect"
