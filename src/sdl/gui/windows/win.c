@@ -2717,7 +2717,7 @@ void set_gamegenie(void) {
 	gui_update();
 }
 void set_palette(BYTE palette) {
-	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, palette, FALSE, TRUE);
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, palette, FALSE, FALSE);
 }
 
 double high_resolution_ms(void) {
