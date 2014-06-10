@@ -13,7 +13,7 @@
 #endif
 
 #define VER1        "0"
-#define VER2        "87"
+#define VER2        "88"
 #define VERSION     VER1 "." VER2 " WIP"
 #define NAME        "puNES"
 #define AUTHOR      "FHorse"
