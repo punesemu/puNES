@@ -15,7 +15,7 @@ enum dmc_types_of_dma { DMC_NORMAL, DMC_CPU_WRITE, DMC_R4014, DMC_NNL_DMA };
 enum apu_channels { APU_S1, APU_S2, APU_TR, APU_NS, APU_DMC, APU_EXTRA, APU_MASTER };
 enum apu_mode { APU_60HZ, APU_48HZ };
 
-#define apu_pre_amp 2
+#define apu_pre_amp 1.5f
 
 /* length counter */
 #define length_run(channel)\
