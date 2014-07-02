@@ -1139,7 +1139,6 @@ BYTE ppu_turn_on(void) {
 		/* riservo una zona di memoria per lo screen */
 		if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 			BYTE a;
-			WORD x, y;
 
 			if (screen.data) {
 				free(screen.data);
@@ -1157,6 +1156,21 @@ BYTE ppu_turn_on(void) {
 			for (a = 0; a < SCR_LINES; ++a) {
 				screen.line[a] = (WORD *) (screen.data + (a * SCR_ROWS));
 			}
+			/*
+			 * tabella di indici che puntano ad ogni
+			 * elemento dell'OAM (4 bytes ciascuno).
+			 */
+			for (a = 0; a < 64; ++a) {
+				oam.element[a] = &oam.data[(a * 4)];
+			}
+			for (a = 0; a < 8; ++a) {
+				oam.ele_plus[a] = &oam.plus[(a * 4)];
+			}
+		}
+		/* reinizializzazione completa della PPU */
+		{
+			WORD x, y;
+
 			/* inizializzo lo screen */
 			for (y = 0; y < SCR_LINES; y++) {
 				for (x = 0; x < SCR_ROWS; x++) {
@@ -1169,17 +1183,7 @@ BYTE ppu_turn_on(void) {
 			 * inerenti gli sprites.
 			 */
 			memset(oam.data, 0xFF, sizeof(oam.data));
-			/*
-			 * tabella di indici che puntano ad ogni
-			 * elemento dell'OAM (4 bytes ciascuno).
-			 */
-			for (a = 0; a < 64; ++a) {
-				oam.element[a] = &oam.data[(a * 4)];
-			}
 			memset(oam.plus, 0xFF, sizeof(oam.plus));
-			for (a = 0; a < 8; ++a) {
-				oam.ele_plus[a] = &oam.plus[(a * 4)];
-			}
 			/* inizializzo nametables */
 			memset(ntbl.data, 0x00, sizeof(ntbl.data));
 			/* e paletta dei colori */
