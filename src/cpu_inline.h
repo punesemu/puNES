@@ -443,23 +443,20 @@ static BYTE INLINE fds_rd_mem(WORD address, BYTE made_tick) {
 			/* bit 0  (timer irq) */
 			cpu.openbus |= fds.drive.irq_timer_high;
 			/* bit 1 (trasfer flag) */
-			cpu.openbus |= fds.drive.transfer_flag;
-			/* bit 2 e 3 non settati (??) */
+			cpu.openbus |= fds.drive.irq_disk_high;
+			/* bit 2 e 3 non settati */
 			/* TODO : bit 4 (CRC control : 0 passato, 1 errore) */
-			/* TODO : bit 5 (end of head) */
+			/* bit 5 non settato */
+			/* TODO : bit 6 (end of head) */
 			cpu.openbus |= fds.drive.end_of_head;
-			fds.drive.end_of_head = FALSE;
-
-			/* TODO : bit 6  (disk data read/write enable (1 when disk is readable/writable) */
-			/* azzero il transfer flag */
-			fds.drive.transfer_flag = FALSE;
+			//fds.drive.end_of_head = FALSE;
+			/* TODO : bit 7  (disk data read/write enable (1 when disk is readable/writable) */
 			/* devo disabilitare sia il timer IRQ ... */
 			fds.drive.irq_timer_high = FALSE;
 			irq.high &= ~FDS_TIMER_IRQ;
 			/* che il disk IRQ */
 			fds.drive.irq_disk_high = FALSE;
 			irq.high &= ~FDS_DISK_IRQ;
-
 #if !defined (RELEASE)
 			//fprintf(stderr, "0x%04X 0x%02X %d\n", address, cpu.openbus, irq.high);
 #endif
@@ -467,9 +464,6 @@ static BYTE INLINE fds_rd_mem(WORD address, BYTE made_tick) {
 		}
 		if (address == 0x4031) {
 			cpu.openbus = fds.drive.data_readed;
-			/* azzero il transfer flag */
-			fds.drive.transfer_flag = FALSE;
-
 #if !defined (RELEASE)
 			/*
 			fprintf(stderr, "0x%04X 0x%02X [0x%04X] 0x%04X %d %d %d\n", address, cpu.openbus,
@@ -477,11 +471,9 @@ static BYTE INLINE fds_rd_mem(WORD address, BYTE made_tick) {
 					fds.info.sides_size[fds.drive.side_inserted], irq.high);
 			*/
 #endif
-
 			/* devo disabilitare il disk IRQ */
 			fds.drive.irq_disk_high = FALSE;
 			irq.high &= ~FDS_DISK_IRQ;
-
 			return (TRUE);
 		}
 		if (address == 0x4032) {
@@ -501,7 +493,6 @@ static BYTE INLINE fds_rd_mem(WORD address, BYTE made_tick) {
 			} else if (!fds.drive.scan) {
 				cpu.openbus |= 0x02;
 			}
-
 #if !defined (RELEASE)
 			//fprintf(stderr, "0x%04X 0x%02X\n", address, cpu.openbus);
 #endif
@@ -518,7 +509,6 @@ static BYTE INLINE fds_rd_mem(WORD address, BYTE made_tick) {
 			 * +--------- Battery status (0: Good; 1: Voltage is low).
 			 */
 			cpu.openbus = fds.drive.data_external_connector & 0x80;
-
 			return (TRUE);
 		}
 	}
@@ -526,7 +516,6 @@ static BYTE INLINE fds_rd_mem(WORD address, BYTE made_tick) {
 		if ((address >= 0x4040) && (address <= 0x407F)) {
 			/* eseguo un tick hardware */
 			tick_hw(1);
-
 			/*
 			 * 7  bit  0  (read/write)
 			 * ---- ----
@@ -536,23 +525,18 @@ static BYTE INLINE fds_rd_mem(WORD address, BYTE made_tick) {
 			 * ++-------- Returns 01 on read, likely from open bus
 			 */
 			cpu.openbus = fds.snd.wave.data[address & 0x3F] | (cpu.openbus & 0xC0);
-
 			return (TRUE);
 		}
 		if (address == 0x4090) {
 			/* eseguo un tick hardware */
 			tick_hw(1);
-
 			cpu.openbus = (fds.snd.volume.gain & 0x3F) | (cpu.openbus & 0xC0);
-
 			return (TRUE);
 		}
 		if (address == 0x4092) {
 			/* eseguo un tick hardware */
 			tick_hw(1);
-
 			cpu.openbus = (fds.snd.sweep.gain & 0x3F) | (cpu.openbus & 0xC0);
-
 			return (TRUE);
 		}
 	}
@@ -700,6 +684,7 @@ static void cpu_wr_mem(WORD address, BYTE value) {
 			 * REX (DBZ)
 			 * 163
 			 * 164
+			 * 176
 			 * 28
 			 * 91
 			 * 31
@@ -1570,9 +1555,6 @@ static BYTE INLINE fds_wr_mem(WORD address, BYTE value) {
 		}
 		if (address == 0x4024) {
 			fds.drive.data_to_write = value;
-
-			fds.drive.transfer_flag = FALSE;
-
 			fds.drive.irq_disk_high = FALSE;
 			irq.high &= ~FDS_DISK_IRQ;
 			return (TRUE);
@@ -1625,7 +1607,6 @@ static BYTE INLINE fds_wr_mem(WORD address, BYTE value) {
 
 			fds.drive.irq_disk_high = FALSE;
 			irq.high &= ~FDS_DISK_IRQ;
-
 			return (TRUE);
 		}
 		if (address == 0x4026) {

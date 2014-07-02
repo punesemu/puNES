@@ -85,6 +85,11 @@ struct _fds {
 		BYTE enabled_snd_reg;
 		BYTE data_readed;
 		BYTE data_to_write;
+		/*
+		 * anche se continuo a salvarlo nel save_slot.c, questa
+		 * variabile non e' piu' utilizzata. quindi se servisse
+		 * potrebbe essere riciclata per qualche altra cosa.
+		 */
 		BYTE transfer_flag;
 		BYTE motor_on;
 		BYTE transfer_reset;

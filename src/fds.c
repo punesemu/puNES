@@ -276,7 +276,7 @@ void fds_disk_op(WORD type, BYTE side_to_insert) {
 	add_to_image(type, FDS_DISK_MEMSET, FDS_DISK_GAP, 28300 / 8);
 
 	for (position = 0; position < DISK_SIDE_SIZE;) {
-		BYTE block = buffer[position];
+		BYTE block = buffer[position], stop = FALSE;
 		uint32_t blength = 1;
 
 		switch (block) {
@@ -297,6 +297,26 @@ void fds_disk_op(WORD type, BYTE side_to_insert) {
 				/* il contenuto del file */
 				blength = length + 1;
 				break;
+			default:
+				/* nel caso il disco sia "sporco" */
+				stop = TRUE;
+				break;
+		}
+
+		/*
+		 * in "Tobidase Daisakusen (1987)(Square)(J).fds" esiste un file nascosto
+		 * esattamente dopo l'ultimo file "riconosciuto" dal file system.
+		 * Il vecchio controllo che facevo per riconoscere i dischi "sporchi"
+		 * si basava sul numero totale dei files che il file system si aspettava
+		 * ci fossero (fds.side.block_2.tot_files), quindi il file nascosto non
+		 * veniva mai letto, non permettendo l'avvio corretto dell'fds. Adesso il
+		 * controllo lo eseguo direttamente sul byte del blocco. Se non e' tra i
+		 * blocchi riconosciuti allora considero l'analisi del disco completa e
+		 * tralascio tutto quello che sta dopo (in questo modo funziona anche
+		 * "Akumajou Dracula v1.02 (1986)(Konami)(J).fds" il cui disco e' "sporco").
+		 */
+		if (stop == TRUE) {
+			break;
 		}
 
 		if (block) {
@@ -355,12 +375,6 @@ void fds_disk_op(WORD type, BYTE side_to_insert) {
 			add_to_image(type, FDS_DISK_MEMSET, FDS_DISK_GAP, 1016 / 8);
 		}
 		position += blength;
-
-		/* nel caso il disco sia "sporco" */
-		if ((fds.side.counted_files != 0xFFFF)
-		        && (fds.side.counted_files == fds.side.block_2.tot_files)) {
-			break;
-		}
 	}
 
 	if (size < DISK_SIDE_SIZE) {

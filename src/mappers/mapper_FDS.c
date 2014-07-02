@@ -58,13 +58,12 @@ void extcl_cpu_every_cycle_FDS(void) {
 			 * lato era piena di glitch grafici e questo perche' la generazione
 			 * dell'IRQ continuava anche quando ormai non era piu' necessaria.
 			 * Azzerando il registro di reload del counter una volta generato l'IRQ,
-			 * l'IRQ verrà nuovamente generato quando solo quando il reload verra'
+			 * l'IRQ verra' nuovamente generato quando solo quando il reload verra'
 			 * valorizzato attraverso i registri $4020 e $4021 e caricato nel contatore
 			 * attraverso la scrittura del $4022.
 			 */
 			fds.drive.irq_timer_reload = 0;
 		}
-
 		/* il solito delay */
 		fds.drive.irq_timer_delay = 1;
 	}
@@ -122,11 +121,9 @@ void extcl_cpu_every_cycle_FDS(void) {
 	 */
 	if (fds.drive.gap_ended) {
 		if (fds.drive.irq_disk_enabled) {
-			fds.drive.irq_disk_high = 0x01;
+			fds.drive.irq_disk_high = 0x02;
 			irq.high |= FDS_DISK_IRQ;
 		}
-
-		fds.drive.transfer_flag = TRUE;
 
 		if (!fds.drive.read_mode) {
 			uint32_t position = (fds.drive.disk_position - 2);
@@ -171,6 +168,7 @@ void extcl_cpu_every_cycle_FDS(void) {
 		fds.drive.gap_ended = FALSE;
 		fds.drive.delay = 900000;
 	} else {
+		fds.drive.end_of_head = FALSE;
 		/* il delay per riuscire a leggere i prossimi 8 bit */
 		fds.drive.delay = 149;
 	}
