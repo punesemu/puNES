@@ -371,7 +371,7 @@
 }
 
 void map_init_116(void) {
-	switch (info.mapper.from_db) {
+	switch (info.mapper.submapper) {
 		default:
 		case MAP116_TYPE_A:
 			EXTCL_CPU_WR_MEM(116_type_A);

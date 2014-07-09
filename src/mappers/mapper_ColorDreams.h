@@ -11,8 +11,8 @@
 #include "common.h"
 
 enum {
-	CD_NO_CONFLCT = 2,
-	BAD_KING_NEPT = 3,
+	CD_NO_CONFLCT,
+	BAD_KING_NEPT,
 };
 
 void map_init_ColorDreams(void);

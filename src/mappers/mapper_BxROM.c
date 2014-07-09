@@ -13,7 +13,7 @@ void map_init_BxROM(void) {
 		map_prg_rom_8k(4, 0, 0);
 	}
 
-	switch (info.mapper.from_db) {
+	switch (info.mapper.submapper) {
 		case BXROMBC:
 			EXTCL_CPU_WR_MEM(BxROM);
 			break;

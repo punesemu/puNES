@@ -10,7 +10,7 @@
 
 #include "common.h"
 
-enum { MAP83_REG0 = 2, MAP83_DGP };
+enum { MAP83_REG0, MAP83_DGP };
 
 struct _m83 {
 	BYTE is2kbank;

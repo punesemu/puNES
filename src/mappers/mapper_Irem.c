@@ -99,7 +99,7 @@ void extcl_cpu_wr_mem_Irem_G101(WORD address, BYTE value) {
 			irem_G101_prg_rom_update();
 			break;
 		case 0x9000:
-			if (info.mapper.from_db != G101B) {
+			if (info.mapper.submapper != G101B) {
 				if (value & 0x01) {
 					mirroring_H();
 				} else {

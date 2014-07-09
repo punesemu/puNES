@@ -10,7 +10,7 @@
 
 #include "common.h"
 
-enum { UXROM = 2, UNL1XROM, UNROM180, UNLROM, UNROM_BK2, BAD_INES_BOTBE };
+enum { UXROM, UNL1XROM, UNROM180, UNLROM, UNROM_BK2, BAD_INES_BOTBE };
 
 void map_init_UxROM(BYTE model);
 

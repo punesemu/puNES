@@ -10,8 +10,6 @@
 
 #include "common.h"
 
-enum { UNK_HORIZONTAL, UNK_VERTICAL };
-
 void map_init_0(void);
 void extcl_cpu_wr_mem_0(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_0(WORD address, BYTE openbus, BYTE before);

@@ -123,6 +123,7 @@
 #include "mappers/mapper_91.h"
 #include "mappers/mapper_105.h"
 #include "mappers/mapper_31.h"
+#include "mappers/mapper_BMCFK23C.h"
 /* UNIF */
 #include "mappers/mapper_A65AS.h"
 

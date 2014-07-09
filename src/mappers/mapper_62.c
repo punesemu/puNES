@@ -29,7 +29,7 @@ void extcl_cpu_wr_mem_62(WORD address, BYTE value) {
 	 * della rom "Super 700-in-1 [p1][!].nes" che non utilizza ne il mirroring
 	 * verticale ne quello orizzontale.
 	 */
-	if ((info.mapper.from_db == SUPER700IN1) && (address == 0x8790)) {
+	if ((info.mapper.submapper == SUPER700IN1) && (address == 0x8790)) {
 		mirroring_FSCR();
 	}
 

@@ -19,6 +19,9 @@
 
 enum flags { FL6, FL7, FL8, FL9, FL10, FL11, FL12, FL13, FL14, FL15, TOTAL_FL };
 
+void nes20_submapper(void);
+BYTE nes20_ram_size(BYTE mode);
+
 BYTE ines_load_rom(void) {
 	BYTE tmp, flags[TOTAL_FL];
 	FILE *fp;
@@ -67,11 +70,31 @@ BYTE ines_load_rom(void) {
 			/* NES 2.0 */
 			info.header = NES_2_0;
 
+			/*
+			 * visto che con il NES_2_0 non eseguo la ricerca nel
+			 * database inizializzo queste variabili.
+			 */
+			info.mirroring_db = info.id = DEFAULT;
+
 			info.mapper.id = ((flags[FL8] & 0x0F) << 8) | (flags[FL7] & 0xF0) | (flags[FL6] >> 4);
 			info.mapper.submapper = (flags[FL8] & 0xF0) >> 4;
 
+			/* Submapper number. Mappers not using submappers set this to zero. */
+			if (info.mapper.submapper == 0) {
+				info.mapper.submapper = DEFAULT;
+			}
+
+			nes20_submapper();
+
 			info.prg.rom.banks_16k |= ((flags[FL9] & 0x0F) << 8);
 			info.chr.rom.banks_8k |= ((flags[FL9] & 0xF0) << 4);
+
+			info.prg.ram.banks_8k_plus = nes20_ram_size(flags[FL10] & 0x0F);
+			info.prg.ram.bat.banks = nes20_ram_size(flags[FL10] >> 4);
+
+			if (info.prg.ram.bat.banks && !info.prg.ram.banks_8k_plus) {
+				info.prg.ram.banks_8k_plus = info.prg.ram.bat.banks;
+			}
 
 			tmp = flags[FL12] & 0x01;
 		} else {
@@ -80,6 +103,10 @@ BYTE ines_load_rom(void) {
 
 			info.mapper.id = (flags[FL7] & 0xF0) | (flags[FL6] >> 4);
 			info.prg.ram.bat.banks = (flags[FL6] & 0x02) >> 1;
+
+			if (info.prg.ram.bat.banks) {
+				info.prg.ram.banks_8k_plus = 1;
+			}
 
 			tmp = flags[FL9] & 0x01;
 		}
@@ -114,7 +141,7 @@ BYTE ines_load_rom(void) {
 		 */
 		mapper.write_vram = FALSE;
 
-		if (emu_search_in_database(fp)) {
+		if ((info.header != NES_2_0) && emu_search_in_database(fp)) {
 			fclose(fp);
 			return (EXIT_ERROR);
 		}
@@ -141,10 +168,6 @@ BYTE ines_load_rom(void) {
 		info.chr.rom.banks_1k = info.chr.rom.banks_4k * 4;
 
 		map_set_banks_max_prg_and_chr();
-
-		if (info.prg.ram.bat.banks) {
-			info.prg.ram.banks_8k_plus = 1;
-		}
 
 		/* alloco la PRG Ram */
 		if (!(prg.ram = (BYTE *) malloc(0x2000))) {
@@ -187,4 +210,51 @@ BYTE ines_load_rom(void) {
 	fclose(fp);
 
 	return (EXIT_OK);
+}
+
+void nes20_submapper(void) {
+	switch (info.mapper.id) {
+		case 3:
+			/* attivo il bus conflict */
+			info.id = CNROM_CNFL;
+			break;
+		case 78:
+			switch (info.mapper.submapper) {
+				case 3:
+					info.mapper.submapper = HOLYDIVER;
+					break;
+			}
+			break;
+	}
+}
+BYTE nes20_ram_size(BYTE mode) {
+	switch (mode) {
+		case 0:
+			return (0);
+		case 1:
+		case 2:
+		case 3:
+		case 4:
+		case 5:
+		case 6:
+		case 7:
+			return (1);
+		case 8:
+			return (2);
+		case 9:
+			return (4);
+		case 10:
+			return (8);
+		case 11:
+			return (16);
+		case 12:
+			return (32);
+		case 13:
+			return (64);
+		case 14:
+			return (128);
+		case 15:
+			return (0);
+	}
+	return (0);
 }

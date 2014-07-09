@@ -10,7 +10,7 @@
 
 #include "common.h"
 
-enum { TKSROM = 2, TLSROM, TQROM };
+enum { TKSROM, TLSROM, TQROM };
 
 struct _txrom {
 	BYTE delay;

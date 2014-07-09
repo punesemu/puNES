@@ -316,7 +316,7 @@ BYTE emu_search_in_database(FILE *fp) {
 	WORD i;
 
 	/* setto i default prima della ricerca */
-	info.machine[DATABASE] = info.mapper.from_db = info.id = DEFAULT;
+	info.machine[DATABASE] = info.mapper.submapper = info.mirroring_db = info.id = DEFAULT;
 
 	/* posiziono il puntatore del file */
 	if (info.trainer) {
@@ -346,9 +346,10 @@ BYTE emu_search_in_database(FILE *fp) {
 	for (i = 0; i < LENGTH(dblist); i++) {
 		if (!(memcmp(dblist[i].sha1sum, info.sha1sum.prg.string, 40))) {
 			info.mapper.id = dblist[i].mapper;
-			info.mapper.from_db = dblist[i].type;
+			info.mapper.submapper = dblist[i].submapper;
 			info.id = dblist[i].id;
 			info.machine[DATABASE] = dblist[i].machine;
+			info.mirroring_db = dblist[i].mirroring;
 			switch (info.mapper.id) {
 				case 2:
 					/*
@@ -412,10 +413,10 @@ BYTE emu_search_in_database(FILE *fp) {
 					}
 					break;
 			}
-			if (info.mapper.from_db == UNK_VERTICAL) {
+			if (info.mirroring_db == UNK_VERTICAL) {
 				mirroring_V();
 			}
-			if (info.mapper.from_db == UNK_HORIZONTAL) {
+			if (info.mirroring_db == UNK_HORIZONTAL) {
 				mirroring_H();
 			}
 			break;

@@ -10,7 +10,7 @@
 
 #include "common.h"
 
-enum { AMROM = 2, BAD_INES_WWFWE = 3, BBCARUNL = 4 };
+enum { AMROM, BAD_INES_WWFWE, BBCARUNL };
 
 void map_init_AxROM(void);
 void extcl_cpu_wr_mem_AxROM(WORD address, BYTE value);

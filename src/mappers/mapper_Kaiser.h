@@ -11,10 +11,10 @@
 #include "common.h"
 
 enum {
-	KS202 = 2,
-	KS7032 = 3,
-	KS7058 = 4,
-	KS7022 = 5
+	KS202,
+	KS7032,
+	KS7058,
+	KS7022
 };
 
 struct _ks202 {

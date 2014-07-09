@@ -10,11 +10,13 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
+enum m28_reg { INNERBNK, MODEBNK, OUTERBNK };
+
 static void INLINE nmt_setup_28(void);
 static void INLINE prg_setup_28(void);
+static BYTE INLINE calc_prg_bank_28(WORD address);
 
 BYTE static const inner_and[4] = { 0x01, 0x03, 0x07, 0x0F };
-BYTE static const outer_and[4] = { 0x7E, 0x7C, 0x78, 0x70 };
 
 void map_init_28(void) {
 	EXTCL_CPU_WR_MEM(28);
@@ -25,8 +27,8 @@ void map_init_28(void) {
 
 	if (info.reset >= HARD) {
 		memset(&m28, 0x00, sizeof(m28));
-		m28.prg[2] = 0x3F;
-		m28.prg[0] = 0x0F;
+		m28.prg[OUTERBNK] = 0x3F;
+		m28.prg[INNERBNK] = 0x0F;
 	}
 
 	info.mapper.extend_wr = TRUE;
@@ -42,6 +44,7 @@ void extcl_cpu_wr_mem_28(WORD address, BYTE value) {
 	if (address < 0x8000) {
 		return;
 	}
+
 	switch (m28.index) {
 		case 0: {
 			DBWORD bank;
@@ -65,7 +68,7 @@ void extcl_cpu_wr_mem_28(WORD address, BYTE value) {
 			return;
 		}
 		case 1:
-			m28.prg[0] = value & 0x0F;
+			m28.prg[INNERBNK] = value & 0x0F;
 			prg_setup_28();
 
 			if (!(m28.mirroring & 0x02)) {
@@ -74,14 +77,14 @@ void extcl_cpu_wr_mem_28(WORD address, BYTE value) {
 			}
 			return;
 		case 2:
-			m28.prg[1] = value & 0x3C;
+			m28.prg[MODEBNK] = value & 0x3C;
 			prg_setup_28();
 
 			m28.mirroring = value & 0x03;
 			nmt_setup_28();
 			return;
 		case 3:
-			m28.prg[2] = value & 0x3F;
+			m28.prg[OUTERBNK] = value & 0x3F;
 			prg_setup_28();
 			return;
 	}
@@ -117,33 +120,29 @@ static void INLINE nmt_setup_28(void) {
 	}
 }
 static void INLINE prg_setup_28(void) {
-	BYTE i = (m28.prg[1] & 0x30) >> 4, value;
+	BYTE value;
 
-	if (!(m28.prg[1] & 0x08)) {
-		value = (m28.prg[0] & (inner_and[i] >> 1)) | ((m28.prg[2] << 1) & outer_and[i]);
-		control_bank(info.prg.rom.max.banks_16k)
-		map_prg_rom_8k(2, 0, value);
-		value |= 1;
-		control_bank(info.prg.rom.max.banks_16k)
-		map_prg_rom_8k(2, 2, value);
-	} else {
-		value = (m28.prg[0] & inner_and[i]) | ((m28.prg[2] << 1) & outer_and[i]);
+	value = calc_prg_bank_28(0x8000);
+	control_bank(info.prg.rom.max.banks_16k)
+	map_prg_rom_8k(2, 0, value);
 
-		if (!(m28.prg[1] & 0x04)) {
-			control_bank(info.prg.rom.max.banks_16k)
-			map_prg_rom_8k(2, 2, value);
+	value = calc_prg_bank_28(0xC000);
+	control_bank(info.prg.rom.max.banks_16k)
+	map_prg_rom_8k(2, 2, value);
 
-			value = (m28.prg[2] << 1);
-			control_bank(info.prg.rom.max.banks_16k)
-			map_prg_rom_8k(2, 0, value);
-		} else {
-			control_bank(info.prg.rom.max.banks_16k)
-			map_prg_rom_8k(2, 0, value);
-
-			value = (m28.prg[2] << 1) | 1;
-			control_bank(info.prg.rom.max.banks_16k)
-			map_prg_rom_8k(2, 2, value);
-		}
-	}
 	map_prg_rom_8k_update();
+}
+static BYTE INLINE calc_prg_bank_28(WORD address) {
+	BYTE cpu_a14 = (address >> 14) & 0x01;
+	BYTE outer_bank = m28.prg[OUTERBNK] << 1;
+	BYTE bank_mode = m28.prg[MODEBNK] >> 2;
+	BYTE current_bank = m28.prg[INNERBNK];
+
+	if (((bank_mode ^ cpu_a14) & 0x03) == 0x02) {
+		bank_mode = 0;
+	}
+	if ((bank_mode & 0x02) == 0) {
+		current_bank = (current_bank << 1) | cpu_a14;
+	}
+	return (((current_bank ^ outer_bank) & inner_and[(bank_mode >> 2) & 0x03]) ^ outer_bank);
 }

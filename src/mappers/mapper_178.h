@@ -10,10 +10,7 @@
 
 #include "common.h"
 
-enum {
-	MAP178 = 2,
-	XINGJI = 3
-};
+enum { MAP178, XINGJI };
 
 struct _m178 {
 	BYTE reg;

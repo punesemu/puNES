@@ -10,7 +10,7 @@
 
 #include "common.h"
 
-enum { M215_MK3E = 2 };
+enum { M215_MK3E };
 
 struct _m215 {
 	BYTE reg[4];

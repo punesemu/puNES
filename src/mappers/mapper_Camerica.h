@@ -11,11 +11,11 @@
 #include "common.h"
 
 enum {
-	BF9093      = 2,
-	BF9096      = 3,
-	BF9097      = 4,
-	GOLDENFIVE  = 5,
-	PEGASUS4IN1 = 6
+	BF9093,
+	BF9096,
+	BF9097,
+	GOLDENFIVE,
+	PEGASUS4IN1
 };
 
 void map_init_Camerica(void);

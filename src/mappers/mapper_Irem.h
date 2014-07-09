@@ -11,13 +11,13 @@
 #include "common.h"
 
 enum {
-	G101 = 2,
-	G101A = 3,
-	G101B = 4,
-	H3000 = 5,
-	LROG017 = 6,
-	TAMS1 = 7,
-	MAJORLEAGUE = 8
+	G101,
+	G101A,
+	G101B,
+	H3000,
+	LROG017,
+	TAMS1,
+	MAJORLEAGUE
 };
 
 struct _irem_G101 {

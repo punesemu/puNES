@@ -185,12 +185,12 @@ void extcl_cpu_wr_mem_Jaleco_JF16(WORD address, BYTE value) {
 
 	if (save & 0x08) {
 		mirroring_SCR1();
-		if (info.mapper.from_db == HOLYDIVER) {
+		if (info.mapper.submapper == HOLYDIVER) {
 			mirroring_V();
 		}
 	} else {
 		mirroring_SCR0();
-		if (info.mapper.from_db == HOLYDIVER) {
+		if (info.mapper.submapper == HOLYDIVER) {
 			mirroring_H();
 		}
 	}

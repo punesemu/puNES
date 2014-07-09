@@ -21,7 +21,7 @@ void map_init_AxROM(void) {
 }
 void extcl_cpu_wr_mem_AxROM(WORD address, BYTE value) {
 	/* bus conflict */
-	if (info.mapper.from_db == AMROM) {
+	if (info.mapper.submapper == AMROM) {
 		value &= prg_rom_rd(address);
 	}
 

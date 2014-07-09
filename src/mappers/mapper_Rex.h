@@ -10,7 +10,7 @@
 
 #include "common.h"
 
-enum { DBZ = 2 };
+enum { DBZ };
 
 struct _rex_dbz {
 	WORD chr_rom_bank[8];

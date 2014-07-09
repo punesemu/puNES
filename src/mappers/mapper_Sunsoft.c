@@ -376,7 +376,7 @@ void extcl_cpu_wr_mem_Sunsoft_FM7(WORD address, BYTE value) {
 				case 0x0D:
 					fm7.irq_enable_trig = value & 0x01;
 					fm7.irq_enable_count = value & 0x80;
-					if (!fm7.irq_enable_count) {
+					if (!fm7.irq_enable_trig) {
 						irq.high &= ~EXT_IRQ;
 					}
 					return;
@@ -424,7 +424,6 @@ void extcl_cpu_wr_mem_Sunsoft_FM7(WORD address, BYTE value) {
 					fm7.square[index].volume = value & 0x0F;
 					return;
 				}
-
 			}
 			return;
 	}
@@ -474,6 +473,7 @@ BYTE extcl_save_mapper_Sunsoft_FM7(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 void extcl_cpu_every_cycle_Sunsoft_FM7(void) {
+#if defined (OLD_FM7_IRQ_HANDLER)
 	if (fm7.irq_delay && !(--fm7.irq_delay)) {
 		irq.high |= EXT_IRQ;
 	}
@@ -485,6 +485,29 @@ void extcl_cpu_every_cycle_Sunsoft_FM7(void) {
 	if (!(--fm7.irq_count) && fm7.irq_enable_trig) {
 		fm7.irq_delay = 1;
 	}
+# else
+	/*
+	 * nell'FM7 l'IRQ viene generato quando il contatore passa da 0x0000 a 0xFFFF.
+	 * Nella vecchia gestione utilizzavo il solito delay di un ciclo, ma a quanto pare
+	 * se lo genero quando a 0x0000, proprio per il famigerato delay con cui gira
+	 * l'emulatore compenso il fatto di non generarlo a 0xFFFF. Facendo cosi'
+	 * supero i test M69_P128K_C64K_S8K.nes e M69_P128K_C64K_W8K.nes del set
+	 * holydiverbatman-bin-0.01.7z
+	 */
+
+	/* questo lo lascio solo per i salvataggi effettuati prima della nuova gestione */
+	if (fm7.irq_delay && !(--fm7.irq_delay)) {
+		irq.high |= EXT_IRQ;
+	}
+
+	if (!fm7.irq_enable_count) {
+		return;
+	}
+
+	if (!(--fm7.irq_count) && fm7.irq_enable_trig) {
+		irq.high |= EXT_IRQ;
+	}
+#endif
 }
 void extcl_apu_tick_Sunsoft_FM7(void) {
 	fm7_square_tick(0)

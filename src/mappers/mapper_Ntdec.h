@@ -10,7 +10,7 @@
 
 #include "common.h"
 
-enum { ASDER = 2, FHERO };
+enum { ASDER, FHERO };
 
 struct _asder {
 	BYTE address;

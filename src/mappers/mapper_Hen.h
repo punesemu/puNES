@@ -10,11 +10,7 @@
 
 #include "common.h"
 
-enum {
-	HEN_177 = 2,
-	HEN_XJZB = 3,
-	HEN_FANKONG = 4
-};
+enum { HEN_177, HEN_XJZB, HEN_FANKONG };
 
 void map_init_Hen(BYTE model);
 

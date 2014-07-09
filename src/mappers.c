@@ -42,9 +42,9 @@ BYTE map_init(void) {
 			map_init_MMC1();
 			break;
 		case 2:
-			if (info.mapper.from_db == UNLROM) {
+			if (info.mapper.submapper == UNLROM) {
 				map_init_UxROM(UNLROM);
-			} else if (info.mapper.from_db == UNROM_BK2) {
+			} else if (info.mapper.submapper == UNROM_BK2) {
 				map_init_UxROM(UNROM_BK2);
 			} else {
 				map_init_UxROM(UXROM);
@@ -80,7 +80,7 @@ BYTE map_init(void) {
 			map_init_Waixing(WPSX);
 			break;
 		case 16: {
-			switch (info.mapper.from_db) {
+			switch (info.mapper.submapper) {
 				case E24C02:
 					map_init_Bandai(E24C02);
 					break;
@@ -100,15 +100,15 @@ BYTE map_init(void) {
 			map_init_Namco(N163);
 			break;
 		case 21:
-			map_init_VRC4(info.mapper.from_db == DEFAULT ? VRC4A : info.mapper.from_db);
+			map_init_VRC4(info.mapper.submapper == DEFAULT ? VRC4A : info.mapper.submapper);
 			break;
 		case 22:
 			map_init_VRC2(VRC2A);
 			break;
 		case 23:
-			if (info.mapper.from_db == VRC4BMC) {
+			if (info.mapper.submapper == VRC4BMC) {
 				map_init_VRC4BMC();
-			} else if (info.mapper.from_db == VRC4E) {
+			} else if (info.mapper.submapper == VRC4E) {
 				map_init_VRC4(VRC4E);
 			} else {
 				map_init_VRC2(VRC2B);
@@ -118,7 +118,7 @@ BYTE map_init(void) {
 			map_init_VRC6(VRC6A);
 			break;
 		case 25:
-			map_init_VRC4(info.mapper.from_db == DEFAULT ? VRC4B : info.mapper.from_db);
+			map_init_VRC4(info.mapper.submapper == DEFAULT ? VRC4B : info.mapper.submapper);
 			break;
 		case 26:
 			map_init_VRC6(VRC6B);
@@ -187,7 +187,7 @@ BYTE map_init(void) {
 			map_init_58();
 			break;
 		case 60:
-			if (info.mapper.from_db == MAP60_VT5201) {
+			if (info.mapper.submapper == MAP60_VT5201) {
 				map_init_60_vt5201();
 			} else {
 				map_init_60();
@@ -248,7 +248,7 @@ BYTE map_init(void) {
 			map_init_Ave(NINA06);
 			break;
 		case 80:
-			if (info.mapper.from_db == X1005B) {
+			if (info.mapper.submapper == X1005B) {
 				map_init_Taito(X1005B);
 			} else {
 				map_init_Taito(X1005A);
@@ -261,7 +261,7 @@ BYTE map_init(void) {
 			map_init_83();
 			break;
 		case 85:
-			if (info.mapper.from_db == VRC7A) {
+			if (info.mapper.submapper == VRC7A) {
 				map_init_VRC7(VRC7A);
 			} else {
 				map_init_VRC7(VRC7B);
@@ -334,7 +334,7 @@ BYTE map_init(void) {
 			map_init_Futuremedia();
 			break;
 		case 118:
-			if (info.mapper.from_db == TKSROM) {
+			if (info.mapper.submapper == TKSROM) {
 				map_init_TxROM(TKSROM);
 			} else {
 				map_init_TxROM(TLSROM);
@@ -441,19 +441,23 @@ BYTE map_init(void) {
 			map_init_Kaiser(KS7022);
 			break;
 		case 176:
-			map_init_176();
+			if (info.id == NOBMCFK23C) {
+				map_init_176();
+			} else {
+				map_init_BMCFK23C();
+			}
 			break;
 		case 177:
-			if (info.mapper.from_db != DEFAULT) {
+			if (info.mapper.submapper != DEFAULT) {
 				/* questa e' la mappers 179 in nestopia */
-				map_init_Hen(info.mapper.from_db);
+				map_init_Hen(info.mapper.submapper);
 			} else {
 				map_init_Hen(HEN_177);
 			}
 			break;
 		case 178:
-			if (info.mapper.from_db != DEFAULT) {
-				map_init_178(info.mapper.from_db);
+			if (info.mapper.submapper != DEFAULT) {
+				map_init_178(info.mapper.submapper);
 			} else {
 				map_init_178(MAP178);
 			}
@@ -580,7 +584,7 @@ BYTE map_init(void) {
 			map_init_231();
 			break;
 		case 232:
-			info.mapper.from_db = BF9096;
+			info.mapper.submapper = BF9096;
 			map_init_Camerica();
 			break;
 		case 233:

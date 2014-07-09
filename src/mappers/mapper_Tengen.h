@@ -10,7 +10,7 @@
 
 #include "common.h"
 
-enum { TRAMBO = 3, T800037, NOCNTPLUS };
+enum { TRAMBO, T800037, NOCNTPLUS };
 
 struct _tengen_rambo {
 	BYTE prg_mode;

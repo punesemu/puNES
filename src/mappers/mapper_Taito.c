@@ -17,7 +17,7 @@ BYTE type;
 void map_init_Taito(BYTE model) {
 	switch (model) {
 		case TC0190FMC: {
-			switch (info.mapper.from_db) {
+			switch (info.mapper.submapper) {
 				case TC0190FMCPAL16R4:
 					EXTCL_CPU_WR_MEM(Taito_TC0190FMCPAL16R4);
 					EXTCL_CPU_EVERY_CYCLE(MMC3);

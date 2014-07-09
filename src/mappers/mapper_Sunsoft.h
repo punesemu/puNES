@@ -11,7 +11,7 @@
 #include "common.h"
 
 enum {
-	SUN1 = 2,
+	SUN1,
 	SUN2A,
 	SUN2B,
 	SUN3,

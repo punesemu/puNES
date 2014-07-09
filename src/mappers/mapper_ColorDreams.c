@@ -20,7 +20,7 @@ void extcl_cpu_wr_mem_ColorDreams(WORD address, BYTE value) {
 	DBWORD chr_bank;
 
 	/* bus conflict */
-	if (info.mapper.from_db != CD_NO_CONFLCT) {
+	if (info.mapper.submapper != CD_NO_CONFLCT) {
 		save = value &= prg_rom_rd(address);
 	}
 

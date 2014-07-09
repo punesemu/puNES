@@ -11,7 +11,7 @@
 #include "common.h"
 
 enum {
-	WPSX = 2,
+	WPSX,
 	WTA,
 	WTB,
 	WTC,

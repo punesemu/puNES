@@ -208,7 +208,7 @@ void map_init_MMC5(void) {
 	info.mapper.extend_wr = TRUE;
 	irql2f.present = TRUE;
 
-	switch (info.mapper.from_db) {
+	switch (info.mapper.submapper) {
 		case EKROM:
 			info.prg.ram.banks_8k_plus = 1;
 			info.prg.ram.bat.banks = 1;

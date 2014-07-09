@@ -10,7 +10,7 @@
 
 #include "common.h"
 
-enum { SUPER700IN1 = 2 };
+enum { SUPER700IN1 };
 
 void map_init_62(void);
 void extcl_cpu_wr_mem_62(WORD address, BYTE value);

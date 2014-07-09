@@ -22,11 +22,11 @@ void map_init_CNROM(BYTE model) {
 	 * "Cybernoid - The Fighting Machine (U) [!].nes" vuole
 	 * la gestione del bus conflict per funzionare correttamente.
 	 */
-	if (info.id == CNROM_CYBERNOID) {
+	if (info.id == CNROM_CNFL) {
 		model = CNROM_CNFL;
 	}
 
-	if ((info.mapper.from_db >= CNROM_26CE27CE) && (info.mapper.from_db <= CNROM_26NCE27NCE)) {
+	if ((info.mapper.submapper >= CNROM_26CE27CE) && (info.mapper.submapper <= CNROM_26NCE27NCE)) {
 
 		EXTCL_RD_CHR(CNROM);
 		EXTCL_SAVE_MAPPER(CNROM);
@@ -36,7 +36,7 @@ void map_init_CNROM(BYTE model) {
 		memset(&cnrom_2627, 0x00, sizeof(cnrom_2627));
 		mask = 0x03;
 
-		switch (info.mapper.from_db) {
+		switch (info.mapper.submapper) {
 			case CNROM_26CE27CE:
 				state = 0x03;
 				break;

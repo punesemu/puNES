@@ -10,7 +10,7 @@
 
 #include "common.h"
 
-enum { NINA06 = 2, D1012 = 3, PUZZLEUNL = 4 };
+enum { NINA06, D1012, PUZZLEUNL };
 
 struct _ave_d1012 {
 	BYTE reg[3];

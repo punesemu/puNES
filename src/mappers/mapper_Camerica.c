@@ -9,7 +9,7 @@
 #include "mem_map.h"
 
 void map_init_Camerica(void) {
-	switch (info.mapper.from_db) {
+	switch (info.mapper.submapper) {
 		case BF9096:
 			EXTCL_CPU_WR_MEM(Camerica_BF9096);
 			break;

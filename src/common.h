@@ -46,6 +46,8 @@ enum lenght_file_name_type {
 	LENGTH_FILE_NAME_MID  = 1024,
 	LENGTH_FILE_NAME_LONG = 2048
 };
+enum forced_mirroring { UNK_HORIZONTAL, UNK_VERTICAL };
+
 
 #define LENGTH(x) (sizeof(x)/sizeof(*(x)))
 
@@ -66,8 +68,8 @@ struct _info {
 		BYTE submapper;
 		BYTE extend_wr;
 		BYTE extend_rd;
-		BYTE from_db;
 	} mapper;
+	BYTE mirroring_db;
 	BYTE portable;
 	BYTE id;
 	BYTE trainer;

@@ -42,7 +42,7 @@ void map_init_MMC3(void) {
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
 
-	switch (info.mapper.from_db) {
+	switch (info.mapper.submapper) {
 		case NAMCO3413:
 		case NAMCO3414:
 		case NAMCO3415:

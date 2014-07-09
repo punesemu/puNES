@@ -11,7 +11,7 @@
 #include "common.h"
 
 enum {
-	SA0036 = 2,
+	SA0036,
 	SA0037,
 	SA8259A,
 	SA8259B,

@@ -11,6 +11,10 @@
 void map_init_176(void) {
 	EXTCL_CPU_WR_MEM(176);
 
+	if (info.reset >= RESET) {
+		map_prg_rom_8k(4, 0, info.prg.rom.max.banks_32k);
+	}
+
 	info.mapper.extend_wr = TRUE;
 }
 void extcl_cpu_wr_mem_176(WORD address, BYTE value) {

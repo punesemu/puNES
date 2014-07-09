@@ -11,7 +11,7 @@
 #include "common.h"
 
 /* MMC4 */
-enum { BAD_INES_FWJ = 2 };
+enum { BAD_INES_FWJ };
 
 struct _mmc2and4 {
 	BYTE regs[4];

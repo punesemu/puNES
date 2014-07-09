@@ -10,7 +10,7 @@
 
 #include "common.h"
 
-enum { MAP60 = 2, MAP60_VT5201 };
+enum { MAP60, MAP60_VT5201 };
 
 struct _m60 {
 	BYTE index;

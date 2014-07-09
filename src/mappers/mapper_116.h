@@ -11,7 +11,7 @@
 #include "common.h"
 
 enum {
-	MAP116_TYPE_A = 2,
+	MAP116_TYPE_A,
 	MAP116_TYPE_B,
 	MAP116_TYPE_C
 };

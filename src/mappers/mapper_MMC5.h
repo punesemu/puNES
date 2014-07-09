@@ -12,7 +12,7 @@
 #include "common.h"
 #include "apu.h"
 
-enum { EKROM = 2, ELROM, ETROM, EWROM };
+enum { EKROM, ELROM, ETROM, EWROM };
 
 struct _mmc5 {
 	BYTE prg_mode;

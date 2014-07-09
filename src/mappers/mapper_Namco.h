@@ -11,7 +11,7 @@
 #include "common.h"
 
 enum {
-	N163 = 2,
+	N163,
 	N3416,
 	N3425,
 	N3433,

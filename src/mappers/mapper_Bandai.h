@@ -11,11 +11,11 @@
 #include "common.h"
 
 enum {
-	B161X02X74 = 2,
-	FCGx = 3,
-	E24C01 = 4,
-	E24C02 = 5,
-	DATACH = 6,
+	B161X02X74,
+	FCGx,
+	E24C01,
+	E24C02,
+	DATACH,
 	FAMICOMJUMPII = 100
 };
 

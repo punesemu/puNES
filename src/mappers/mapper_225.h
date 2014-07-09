@@ -10,7 +10,7 @@
 
 #include "common.h"
 
-enum { BMC52IN1 = 2 };
+enum { BMC52IN1 };
 
 void map_init_225(void);
 void extcl_cpu_wr_mem_225(WORD address, BYTE value);

@@ -11,7 +11,7 @@
 #include "common.h"
 
 enum {
-	MAP90 = 2,
+	MAP90,
 	MAP209,
 	MAP211
 };

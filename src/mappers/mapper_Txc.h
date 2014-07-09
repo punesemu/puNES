@@ -10,7 +10,7 @@
 
 #include "common.h"
 
-enum { TXCTW = 2, T22211A, T22211B, T22211C };
+enum { TXCTW, T22211A, T22211B, T22211C };
 
 struct _t22211x {
 	BYTE reg[4];

@@ -11,14 +11,14 @@
 #include "common.h"
 
 enum {
-	JF05      = 2,
-	JF11      = 3,
-	JF13      = 4,
-	JF16      = 5,
-	JF17      = 6,
-	JF19      = 7,
-	SS8806    = 8,
-	HOLYDIVER = 9
+	JF05,
+	JF11,
+	JF13,
+	JF16,
+	JF17,
+	JF19,
+	SS8806,
+	HOLYDIVER
 };
 enum {
 	JAJAMARU,

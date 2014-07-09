@@ -21,7 +21,7 @@ enum MMC1_regs { CTRL, CHR0, CHR1, PRG0 };
 
 #define chr_reg(reg)\
 	value = reg;\
-	switch (info.mapper.from_db) {\
+	switch (info.mapper.submapper) {\
 		case SNROM:\
 			/*\
 			 * 4bit0\
@@ -38,18 +38,18 @@ enum MMC1_regs { CTRL, CHR0, CHR1, PRG0 };
 		case SOROM: {\
 			BYTE bank = (reg & 0x08) >> 3;\
 			prg.ram_plus_8k = &prg.ram_plus[bank * 0x2000];\
-			mmc1.prg_upper = reg & 0x10;\
+			mmc1.prg_upper = (info.prg.rom.banks_16k > 0xF) ? reg & 0x10 : 0;\
 			value &= 0x01;\
 			break;\
 		}\
 		case SUROM:\
-			mmc1.prg_upper = reg & 0x10;\
+			mmc1.prg_upper = (info.prg.rom.banks_16k > 0xF) ? reg & 0x10 : 0;\
 			value &= 0x01;\
 			break;\
 		case SXROM: {\
 			BYTE bank = (reg & 0x0C) >> 2;\
 			prg.ram_plus_8k = &prg.ram_plus[bank * 0x2000];\
-			mmc1.prg_upper = reg & 0x10;\
+			mmc1.prg_upper = (info.prg.rom.banks_16k > 0xF) ? reg & 0x10 : 0;\
 			value &= 0x01;\
 			break;\
 		}\
@@ -71,7 +71,21 @@ void map_init_MMC1(void) {
 		mmc1.chr1 = 1;
 	}
 
-	switch (info.mapper.from_db) {
+	if (info.mapper.submapper == DEFAULT) {
+		if (((info.prg.rom.banks_8k == 16) || (info.prg.rom.banks_8k == 32)
+		        || (info.prg.rom.banks_8k == 64)) && (info.chr.rom.banks_8k <= 1)
+		        && ((info.prg.ram.banks_8k_plus == 4) || (info.prg.ram.bat.banks == 4))) {
+			info.mapper.submapper = SXROM;
+		} else if (info.prg.rom.banks_8k <= 32) {
+			if (info.chr.rom.banks_8k <= 1) {
+				info.mapper.submapper = SNROM;
+			}
+		} else {
+			info.mapper.submapper = SUROM;
+		}
+	}
+
+	switch (info.mapper.submapper) {
 		case SNROM:
 			/* SUROM usa 8k di PRG Ram */
 			info.prg.ram.banks_8k_plus = 1;
@@ -83,6 +97,8 @@ void map_init_MMC1(void) {
 		case SXROM:
 			/* SXROM usa 32k di PRG Ram */
 			info.prg.ram.banks_8k_plus = 4;
+			break;
+		default:
 			break;
 	}
 }
@@ -150,7 +166,7 @@ void extcl_cpu_wr_mem_MMC1(WORD address, BYTE value) {
 				break;
 			case PRG0:
 				mmc1.prg0 = mmc1.reg;
-				cpu.prg_ram_rd_active = (reg & 0x10 ? FALSE : TRUE);
+				cpu.prg_ram_rd_active = (mmc1.prg0 & 0x10 ? FALSE : TRUE);
 				cpu.prg_ram_wr_active = cpu.prg_ram_rd_active;
 				break;
 		}
