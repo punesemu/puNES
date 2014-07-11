@@ -26,7 +26,6 @@ enum {
 struct _waixing {
 	WORD prg_map[4];
 	WORD chr_map[8];
-	BYTE chr_ram[0x2000];
 	BYTE reg;
 	WORD ctrl[8];
 } waixing;

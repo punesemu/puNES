@@ -31,7 +31,7 @@ struct _irem_H3000 {
 	BYTE delay;
 } irem_H3000;
 struct _irem_LROG017 {
-	BYTE chr_ram[0x1800];
+	BYTE filler;
 } irem_LROG017;
 
 void map_init_Irem(BYTE model);

@@ -202,6 +202,8 @@ BYTE ines_load_rom(void) {
 				return (EXIT_ERROR);
 			}
 		}
+		/* la CHR ram extra */
+		memset(&chr.extra, 0x00, sizeof(chr.extra));
 	} else {
 		fprintf(stderr, "Format not supported.\n");
 		fclose(fp);

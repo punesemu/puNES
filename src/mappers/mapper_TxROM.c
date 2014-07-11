@@ -32,8 +32,8 @@
 		control_bank(3)\
 		txrom.chr[a][1] = value << 11;\
 		txrom.chr[b][1] = txrom.chr[a][1] | 0x400;\
-		chr.bank_1k[a] = &txrom.chr_ram[txrom.chr[a][1]];\
-		chr.bank_1k[b] = &txrom.chr_ram[txrom.chr[b][1]];\
+		chr.bank_1k[a] = &chr.extra.data[txrom.chr[a][1]];\
+		chr.bank_1k[b] = &chr.extra.data[txrom.chr[b][1]];\
 		return;\
 	} else {\
 		txrom.chr[a][0] = txrom.chr[b][0] = FALSE;\
@@ -47,7 +47,7 @@
 		txrom.chr[a][0] = TRUE;\
 		control_bank(7)\
 		txrom.chr[a][1] = value << 10;\
-		chr.bank_1k[a] = &txrom.chr_ram[txrom.chr[a][1]];\
+		chr.bank_1k[a] = &chr.extra.data[txrom.chr[a][1]];\
 		return;\
 	} else {\
 		txrom.chr[a][0] = txrom.chr[a][1] = FALSE;\
@@ -73,6 +73,9 @@ void map_init_TxROM(BYTE model) {
 			EXTCL_CPU_WR_MEM(TQROM);
 			EXTCL_WR_CHR(TQROM);
 
+			/* utilizza 0x2000 di CHR RAM extra */
+			map_chr_ram_extra_init(0x2000);
+
 			mapper.write_vram = FALSE;
 
 			irqA12_delay = 1;
@@ -94,8 +97,8 @@ void map_init_TxROM(BYTE model) {
 
 	if (info.reset >= HARD) {
 		memset(&txrom.chr, 0x00, sizeof(txrom.chr));
-		memset(&txrom.chr_ram, 0x00, sizeof(txrom.chr_ram));
 		memset(&mmc3, 0x00, sizeof(mmc3));
+		map_chr_ram_extra_reset();
 	}
 
 	memset(&irqA12, 0x00, sizeof(irqA12));
@@ -188,11 +191,11 @@ BYTE extcl_save_mapper_TxROM(BYTE mode, BYTE slot, FILE *fp) {
 
 			for (i = 0; i < LENGTH(txrom.chr); i++) {
 				if (txrom.chr[i][0]) {
-					chr.bank_1k[i] = &txrom.chr_ram[txrom.chr[i][1]];
+					chr.bank_1k[i] = &chr.extra.data[txrom.chr[i][1]];
 				}
 			}
 		}
-		save_slot_ele(mode, slot, txrom.chr_ram);
+		save_slot_mem(mode, slot, chr.extra.data, chr.extra.size, FALSE)
 	}
 	extcl_save_mapper_MMC3(mode, slot, fp);
 

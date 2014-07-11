@@ -710,7 +710,14 @@ void map_quit(void) {
 	if (chr.data) {
 		free(chr.data);
 	}
+	/* CHR extra */
+	if (chr.extra.data) {
+		free(chr.extra.data);
+		chr.extra.size = 0;
+	}
 	chr.data = NULL;
+	chr.extra.data = NULL;
+
 	memset(chr.bank_1k, 0, sizeof(chr.bank_1k));
 
 	mirroring_V();
@@ -799,20 +806,44 @@ void map_prg_ram_init(void) {
 	}
 }
 BYTE map_chr_ram_init(void) {
-	if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) && mapper.write_vram) {
-		if (chr.data) {
-			free(chr.data);
+	if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
+		if (mapper.write_vram) {
+			if (chr.data) {
+				free(chr.data);
+			}
+			/* alloco la CHR Rom */
+			if (!(chr.data = (BYTE *) malloc(chr_ram_size()))) {
+				fprintf(stderr, "Out of memory\n");
+				return (EXIT_ERROR);
+			}
+			chr_bank_1k_reset()
+			memset(chr.data, 0x00, chr_ram_size());
 		}
-		/* alloco la CHR Rom */
-		if (!(chr.data = (BYTE *) malloc(chr_ram_size()))) {
-			fprintf(stderr, "Out of memory\n");
-			return (EXIT_ERROR);
-		}
-		chr_bank_1k_reset()
-		memset(chr.data, 0x00, chr_ram_size());
 	}
 
 	return (EXIT_OK);
+}
+BYTE map_chr_ram_extra_init(uint32_t size) {
+	if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
+		if (chr.extra.data) {
+			free(chr.extra.data);
+			chr.extra.size = 0;
+		}
+		/* alloco la CHR Ram extra */
+		if (!(chr.extra.data = (BYTE *) malloc(size))) {
+			fprintf(stderr, "Out of memory\n");
+			return (EXIT_ERROR);
+		}
+		chr.extra.size = size;
+		memset(chr.extra.data, 0x00, chr.extra.size);
+	}
+
+	return (EXIT_OK);
+}
+void map_chr_ram_extra_reset(void) {
+	if (chr.extra.data) {
+		memset(chr.extra.data, 0x00, chr.extra.size);
+	}
 }
 void map_set_banks_max_prg_and_chr(void) {
 	info.prg.rom.max.banks_32k = (info.prg.rom.banks_16k == 1 ? 0 : (info.prg.rom.banks_16k >> 1) - 1);

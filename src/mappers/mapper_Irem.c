@@ -23,12 +23,12 @@
 	}\
 	map_prg_rom_8k_update()
 #define irem_LROG017_chr_ram()\
-	chr.bank_1k[2] = &irem_LROG017.chr_ram[0x0000];\
-	chr.bank_1k[3] = &irem_LROG017.chr_ram[0x0400];\
-	chr.bank_1k[4] = &irem_LROG017.chr_ram[0x0800];\
-	chr.bank_1k[5] = &irem_LROG017.chr_ram[0x0C00];\
-	chr.bank_1k[6] = &irem_LROG017.chr_ram[0x1000];\
-	chr.bank_1k[7] = &irem_LROG017.chr_ram[0x1400]
+	chr.bank_1k[2] = &chr.extra.data[0x0000];\
+	chr.bank_1k[3] = &chr.extra.data[0x0400];\
+	chr.bank_1k[4] = &chr.extra.data[0x0800];\
+	chr.bank_1k[5] = &chr.extra.data[0x0C00];\
+	chr.bank_1k[6] = &chr.extra.data[0x1000];\
+	chr.bank_1k[7] = &chr.extra.data[0x1400]
 
 void map_init_Irem(BYTE model) {
 	switch (model) {
@@ -69,13 +69,16 @@ void map_init_Irem(BYTE model) {
 			mapper.internal_struct[0] = (BYTE *) &irem_LROG017;
 			mapper.internal_struct_size[0] = sizeof(irem_LROG017);
 
+			/* utilizza 0x1800 di CHR RAM extra */
+			map_chr_ram_extra_init(0x1800);
+
 			if (info.reset >= HARD) {
 				memset(&irem_LROG017, 0x00, sizeof(irem_LROG017));
+				map_chr_ram_extra_reset();
 				map_prg_rom_8k(4, 0, 0);
 			}
 
 			irem_LROG017_chr_ram();
-
 			break;
 		case TAMS1:
 			EXTCL_CPU_WR_MEM(Irem_TAMS1);
@@ -213,7 +216,7 @@ void extcl_cpu_wr_mem_Irem_LROG017(WORD address, BYTE value) {
 	chr.bank_1k[1] = &chr.data[bank | 0x0400];
 }
 BYTE extcl_save_mapper_Irem_LROG017(BYTE mode, BYTE slot, FILE *fp) {
-	save_slot_ele(mode, slot, irem_LROG017.chr_ram);
+	save_slot_mem(mode, slot, chr.extra.data, chr.extra.size, FALSE)
 	if (mode == SAVE_SLOT_READ) {
 		irem_LROG017_chr_ram();
 	}

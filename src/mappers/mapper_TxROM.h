@@ -15,7 +15,6 @@ enum { TKSROM, TLSROM, TQROM };
 struct _txrom {
 	BYTE delay;
 	uint32_t chr[8][2];
-	BYTE chr_ram[0x2000];
 } txrom;
 
 void map_init_TxROM(BYTE model);

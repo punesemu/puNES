@@ -39,7 +39,6 @@ struct _m166 {
 
 	WORD prg_map[4];
 	WORD chr_map[8];
-	BYTE chr_ram[0x2000];
 } m116;
 
 void map_init_116(void);

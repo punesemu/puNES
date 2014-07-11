@@ -205,6 +205,9 @@ void tl_operation(BYTE mode, BYTE snap) {
 	if (mapper.write_vram) {
 		tl_on_mem(mode, chr.data, chr_ram_size());
 	}
+	if (chr.extra.size) {
+		tl_on_mem(mode, chr.extra.data, chr.extra.size);
+	}
 	tl_on_struct(mode, ntbl);
 	tl_on_struct(mode, palette);
 	tl_on_struct(mode, oam);

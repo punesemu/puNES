@@ -57,7 +57,7 @@ BYTE min, max;
 
 #define waixing_type_ACDE_chr_1k(a)\
 	if ((value >= min) && (value <= max)) {\
-		chr.bank_1k[a] = &waixing.chr_ram[(value - min) << 10];\
+		chr.bank_1k[a] = &chr.extra.data[(value - min) << 10];\
 	} else {\
 		chr.bank_1k[a] = &chr.data[value << 10];\
 	}
@@ -105,7 +105,7 @@ BYTE min, max;
 
 #define waixing_type_B_chr_1k(a)\
 	if (save & 0x80) {\
-		chr.bank_1k[a] = &waixing.chr_ram[value << 10];\
+		chr.bank_1k[a] = &chr.extra.data[value << 10];\
 	} else {\
 		chr.bank_1k[a] = &chr.data[value << 10];\
 	}
@@ -153,7 +153,7 @@ BYTE min, max;
 
 #define waixing_type_G_chr_1k(a)\
 	if (save < 8) {\
-		chr.bank_1k[a] = &waixing.chr_ram[save << 10];\
+		chr.bank_1k[a] = &chr.extra.data[save << 10];\
 	} else {\
 		chr.bank_1k[a] = &chr.data[value << 10];\
 	}
@@ -225,7 +225,7 @@ BYTE min, max;
 
 #define waixing_type_H_chr_1k(a)\
 	if (mapper.write_vram) {\
-		chr.bank_1k[a] = &waixing.chr_ram[(value & 0x07) << 10];\
+		chr.bank_1k[a] = &chr.extra.data[(value & 0x07) << 10];\
 	} else {\
 		control_bank(info.chr.rom.max.banks_1k)\
 		chr.bank_1k[a] = &chr.data[value << 10];\
@@ -345,10 +345,10 @@ BYTE min, max;
 {\
 	if (!v) {\
 		waixing.ctrl[a >> 2] = 0;\
-		chr.bank_1k[a] = &waixing.chr_ram[0];\
-		chr.bank_1k[a | 0x01] = &waixing.chr_ram[0x0400];\
-		chr.bank_1k[a | 0x02] = &waixing.chr_ram[0x0800];\
-		chr.bank_1k[a | 0x03] = &waixing.chr_ram[0x0C00];\
+		chr.bank_1k[a] = &chr.extra.data[0];\
+		chr.bank_1k[a | 0x01] = &chr.extra.data[0x0400];\
+		chr.bank_1k[a | 0x02] = &chr.extra.data[0x0800];\
+		chr.bank_1k[a | 0x03] = &chr.extra.data[0x0C00];\
 	} else {\
 		DBWORD bank = v << 12;\
 		waixing.ctrl[a >> 2] = 1;\
@@ -447,10 +447,14 @@ void map_init_Waixing(BYTE model) {
 			mapper.internal_struct[1] = (BYTE *) &mmc3;
 			mapper.internal_struct_size[1] = sizeof(mmc3);
 
+			/* utilizza 0x2000 di CHR RAM extra */
+			map_chr_ram_extra_init(0x2000);
+
 			if (info.reset >= HARD) {
 				memset(&mmc3, 0x00, sizeof(mmc3));
 				memset(&irqA12, 0x00, sizeof(irqA12));
 				memset(&waixing, 0x00, sizeof(waixing));
+				map_chr_ram_extra_reset();
 
 				{
 					BYTE i;
@@ -497,10 +501,14 @@ void map_init_Waixing(BYTE model) {
 			mapper.internal_struct[1] = (BYTE *) &mmc3;
 			mapper.internal_struct_size[1] = sizeof(mmc3);
 
+			/* utilizza 0x2000 di CHR RAM extra */
+			map_chr_ram_extra_init(0x2000);
+
 			if (info.reset >= HARD) {
 				memset(&mmc3, 0x00, sizeof(mmc3));
 				memset(&irqA12, 0x00, sizeof(irqA12));
 				memset(&waixing, 0x00, sizeof(waixing));
+				map_chr_ram_extra_reset();
 
 				{
 					BYTE i;
@@ -511,7 +519,7 @@ void map_init_Waixing(BYTE model) {
 						waixing.chr_map[i] = i;
 
 						if ((waixing.chr_map[i] >= min) && (waixing.chr_map[i] <= max)) {
-							chr.bank_1k[i] = &waixing.chr_ram[(waixing.chr_map[i] - min) << 10];
+							chr.bank_1k[i] = &chr.extra.data[(waixing.chr_map[i] - min) << 10];
 						}
 					}
 				}
@@ -535,10 +543,14 @@ void map_init_Waixing(BYTE model) {
 			mapper.internal_struct[1] = (BYTE *) &mmc3;
 			mapper.internal_struct_size[1] = sizeof(mmc3);
 
+			/* utilizza 0x2000 di CHR RAM extra */
+			map_chr_ram_extra_init(0x2000);
+
 			if (info.reset >= HARD) {
 				memset(&mmc3, 0x00, sizeof(mmc3));
 				memset(&irqA12, 0x00, sizeof(irqA12));
 				memset(&waixing, 0x00, sizeof(waixing));
+				map_chr_ram_extra_reset();
 
 				{
 					BYTE i;
@@ -549,7 +561,7 @@ void map_init_Waixing(BYTE model) {
 						waixing.chr_map[i] = i;
 
 						if (waixing.chr_map[i] < 8) {
-							chr.bank_1k[i] = &waixing.chr_ram[waixing.chr_map[i] << 10];
+							chr.bank_1k[i] = &chr.extra.data[waixing.chr_map[i] << 10];
 						}
 					}
 				}
@@ -572,10 +584,14 @@ void map_init_Waixing(BYTE model) {
 			mapper.internal_struct[1] = (BYTE *) &mmc3;
 			mapper.internal_struct_size[1] = sizeof(mmc3);
 
+			/* utilizza 0x2000 di CHR RAM extra */
+			map_chr_ram_extra_init(0x2000);
+
 			if (info.reset >= HARD) {
 				memset(&mmc3, 0x00, sizeof(mmc3));
 				memset(&irqA12, 0x00, sizeof(irqA12));
 				memset(&waixing, 0x00, sizeof(waixing));
+				map_chr_ram_extra_reset();
 
 				{
 					BYTE i, value;
@@ -591,7 +607,7 @@ void map_init_Waixing(BYTE model) {
 						waixing.chr_map[i] = i;
 
 						if (mapper.write_vram) {
-							chr.bank_1k[i] = &waixing.chr_ram[waixing.chr_map[i] << 10];
+							chr.bank_1k[i] = &chr.extra.data[waixing.chr_map[i] << 10];
 						}
 					}
 
@@ -618,10 +634,14 @@ void map_init_Waixing(BYTE model) {
 			mapper.internal_struct[1] = (BYTE *) &mmc3;
 			mapper.internal_struct_size[1] = sizeof(mmc3);
 
+			/* utilizza 0x2000 di CHR RAM extra */
+			map_chr_ram_extra_init(0x2000);
+
 			if (info.reset >= HARD) {
 				memset(&mmc3, 0x00, sizeof(mmc3));
 				memset(&irqA12, 0x00, sizeof(irqA12));
 				memset(&waixing, 0x00, sizeof(waixing));
+				map_chr_ram_extra_reset();
 
 				waixing.reg = 0xFD;
 
@@ -703,7 +723,7 @@ void extcl_cpu_wr_mem_Waixing_type_ACDE(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_Waixing_type_ACDE(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, waixing.chr_map);
-	save_slot_ele(mode, slot, waixing.chr_ram);
+	save_slot_mem(mode, slot, chr.extra.data, chr.extra.size, FALSE)
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	if (mode == SAVE_SLOT_READ) {
@@ -711,7 +731,7 @@ BYTE extcl_save_mapper_Waixing_type_ACDE(BYTE mode, BYTE slot, FILE *fp) {
 
 		for (i = 0; i < 8; i++) {
 			if ((waixing.chr_map[i] >= min) && (waixing.chr_map[i] <= max)) {
-				chr.bank_1k[i] = &waixing.chr_ram[(waixing.chr_map[i] - min) << 10];
+				chr.bank_1k[i] = &chr.extra.data[(waixing.chr_map[i] - min) << 10];
 			}
 		}
 	}
@@ -743,7 +763,7 @@ void extcl_cpu_wr_mem_Waixing_type_B(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_Waixing_type_B(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, waixing.chr_map);
-	save_slot_ele(mode, slot, waixing.chr_ram);
+	save_slot_mem(mode, slot, chr.extra.data, chr.extra.size, FALSE)
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	if (mode == SAVE_SLOT_READ) {
@@ -754,7 +774,7 @@ BYTE extcl_save_mapper_Waixing_type_B(BYTE mode, BYTE slot, FILE *fp) {
 				BYTE value = waixing.chr_map[i];
 
 				control_bank(info.chr.rom.max.banks_1k)
-				chr.bank_1k[i] = &waixing.chr_ram[value << 10];
+				chr.bank_1k[i] = &chr.extra.data[value << 10];
 			}
 		}
 	}
@@ -802,7 +822,7 @@ void extcl_cpu_wr_mem_Waixing_type_G(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_Waixing_type_G(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, waixing.chr_map);
-	save_slot_ele(mode, slot, waixing.chr_ram);
+	save_slot_mem(mode, slot, chr.extra.data, chr.extra.size, FALSE)
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	if (mode == SAVE_SLOT_READ) {
@@ -810,7 +830,7 @@ BYTE extcl_save_mapper_Waixing_type_G(BYTE mode, BYTE slot, FILE *fp) {
 
 		for (i = 0; i < 8; i++) {
 			if (waixing.chr_map[i] < 8) {
-				chr.bank_1k[i] = &waixing.chr_ram[waixing.chr_map[i] << 10];
+				chr.bank_1k[i] = &chr.extra.data[waixing.chr_map[i] << 10];
 			}
 		}
 	}
@@ -841,7 +861,7 @@ void extcl_cpu_wr_mem_Waixing_type_H(WORD address, BYTE value) {
 BYTE extcl_save_mapper_Waixing_type_H(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, waixing.prg_map);
 	save_slot_ele(mode, slot, waixing.chr_map);
-	save_slot_ele(mode, slot, waixing.chr_ram);
+	save_slot_mem(mode, slot, chr.extra.data, chr.extra.size, FALSE)
 	save_slot_ele(mode, slot, waixing.ctrl);
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
@@ -849,7 +869,7 @@ BYTE extcl_save_mapper_Waixing_type_H(BYTE mode, BYTE slot, FILE *fp) {
 		BYTE i;
 
 		for (i = 0; i < 8; i++) {
-			chr.bank_1k[i] = &waixing.chr_ram[waixing.chr_map[i] << 10];
+			chr.bank_1k[i] = &chr.extra.data[waixing.chr_map[i] << 10];
 		}
 	}
 
@@ -871,7 +891,7 @@ void extcl_cpu_wr_mem_Waixing_SH2(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_Waixing_SH2(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, waixing.chr_map);
-	save_slot_ele(mode, slot, waixing.chr_ram);
+	save_slot_mem(mode, slot, chr.extra.data, chr.extra.size, FALSE)
 	save_slot_ele(mode, slot, waixing.reg);
 	save_slot_ele(mode, slot, waixing.ctrl);
 	extcl_save_mapper_MMC3(mode, slot, fp);

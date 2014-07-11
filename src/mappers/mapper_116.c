@@ -444,10 +444,14 @@ void map_init_116(void) {
 			mapper.internal_struct[1] = (BYTE *) &mmc3;
 			mapper.internal_struct_size[1] = sizeof(mmc3);
 
+			/* utilizza 0x2000 di CHR RAM extra */
+			map_chr_ram_extra_init(0x2000);
+
 			if (info.reset >= HARD) {
 				memset(&mmc3, 0x00, sizeof(mmc3));
 				memset(&irqA12, 0x00, sizeof(irqA12));
 				memset(&m116, 0x00, sizeof(m116));
+				map_chr_ram_extra_reset();
 
 				{
 					BYTE i;
@@ -705,14 +709,14 @@ void extcl_cpu_wr_mem_116_type_B(WORD address, BYTE value) {
 		if (m116.mode != value) {
 			m116.mode = value;
 			if (value & 0x02) {
-				chr.bank_1k[0] = &m116.chr_ram[0 << 10];
-				chr.bank_1k[1] = &m116.chr_ram[1 << 10];
-				chr.bank_1k[2] = &m116.chr_ram[2 << 10];
-				chr.bank_1k[3] = &m116.chr_ram[3 << 10];
-				chr.bank_1k[4] = &m116.chr_ram[4 << 10];
-				chr.bank_1k[5] = &m116.chr_ram[5 << 10];
-				chr.bank_1k[6] = &m116.chr_ram[6 << 10];
-				chr.bank_1k[7] = &m116.chr_ram[7 << 10];
+				chr.bank_1k[0] = &chr.extra.data[0 << 10];
+				chr.bank_1k[1] = &chr.extra.data[1 << 10];
+				chr.bank_1k[2] = &chr.extra.data[2 << 10];
+				chr.bank_1k[3] = &chr.extra.data[3 << 10];
+				chr.bank_1k[4] = &chr.extra.data[4 << 10];
+				chr.bank_1k[5] = &chr.extra.data[5 << 10];
+				chr.bank_1k[6] = &chr.extra.data[6 << 10];
+				chr.bank_1k[7] = &chr.extra.data[7 << 10];
 			} else {
 				chr.bank_1k[0] = &chr.data[m116.chr_map[0] << 10];
 				chr.bank_1k[1] = &chr.data[m116.chr_map[1] << 10];
@@ -744,14 +748,14 @@ void extcl_cpu_wr_mem_116_type_B(WORD address, BYTE value) {
 BYTE extcl_save_mapper_116_type_B(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m116.mode);
 	save_slot_ele(mode, slot, m116.chr_map);
-	save_slot_ele(mode, slot, m116.chr_ram);
+	save_slot_mem(mode, slot, chr.extra.data, chr.extra.size, FALSE)
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	if ((mode == SAVE_SLOT_READ) && (m116.mode & 0x02)) {
 		BYTE i;
 
 		for (i = 0; i < 8; i++) {
-			chr.bank_1k[i] = &m116.chr_ram[i << 10];
+			chr.bank_1k[i] = &chr.extra.data[i << 10];
 		}
 	}
 

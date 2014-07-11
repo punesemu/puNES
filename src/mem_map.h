@@ -75,6 +75,10 @@ struct _prg {
 struct _chr {
 	BYTE *data;
 	BYTE *bank_1k[8];
+	struct _extra {
+		uint32_t size;
+		BYTE *data;
+	} extra;
 } chr;
 struct _nametables {
 	BYTE data[0x1000];

@@ -3430,7 +3430,7 @@ static const _dbelement dblist[] = {
 	/* Devil Man (J) [o1].nes */
 	{"13da54a3ab62a3eb2707517288d002d5a42691d1", 154, DEFAULT, DEFAULT, DEFAULT, DEFAULT},
 
-/* ----------------------------------------- 165 ------------------------------------------ */
+/* ------------------------------------ Waixing (SH2) ------------------------------------- */
 	/* Fire Emblem (Ch) [b1].nes */
 	{"8feaa4aa4571478cd158b6a5a4e395744f4d1ba6", 165, DEFAULT, DEFAULT, DEFAULT, UNK_VERTICAL},
 	/* Fire Emblem (Ch).nes */
@@ -3531,10 +3531,6 @@ static const _dbelement dblist[] = {
 	/* Thunder Warrior (Unl).nes */
 	{"94003e3c42ae7f582f91c72a58689171872391c9", 189, DEFAULT, DEFAULT, DEFAULT, DEFAULT},
 
-/* ------------------------------------ Netdec (FHERO)------------------------------------- */
-	/* Fighting Hero (Unl).nes */
-	{"aaa96009f28d397e79e3a918918340eaadb85c66", 193, DEFAULT, DEFAULT, DEFAULT, DEFAULT},
-
 /* ------------------------------------ Waixing (WTB) ------------------------------------- */
 	/* Sugoro Quest - Dice no Senshitachi (Ch) [o1].nes */
 	{"03b517beb21a3dd4556a8ab520994385bbf681d6", 191, DEFAULT, BAD_SUGOROQUEST, DEFAULT, DEFAULT},
@@ -3548,6 +3544,10 @@ static const _dbelement dblist[] = {
 	{"9c088fdbc7ba336197b208b88ff1c61fb962e117", 192, DEFAULT, DEFAULT, DEFAULT, DEFAULT},
 	/* Ying Lie Qun Xia Zhuan (Ch).nes */
 	{"428f5e052d242605834fcac14af66c22c5093297", 192, DEFAULT, DEFAULT, DEFAULT, DEFAULT},
+
+/* ------------------------------------ Netdec (FHERO)------------------------------------- */
+	/* Fighting Hero (Unl).nes */
+	{"aaa96009f28d397e79e3a918918340eaadb85c66", 193, DEFAULT, DEFAULT, DEFAULT, DEFAULT},
 
 /* ------------------------------------ Waixing (WTD) ------------------------------------- */
 	/* Dai-2-Ji - Super Robot Taisen (Ch) [a1].nes */
@@ -3617,7 +3617,7 @@ static const _dbelement dblist[] = {
 	/* Wai Xing Zhan Shi (Ch).nes */
 	{"9bdff9a19265d84979f43f0f6e925a735ddeb38b", 242, DEFAULT, DEFAULT, DEFAULT, DEFAULT},
 
-/* ------------------------------------- mapper 245 --------------------------------------- */
+/* ----------------------------------- Waixing (WTH) -------------------------------------- */
 	/* Ying Xiong Yuan Yi Jing Chuan Qi (Ch).nes */
 	{"c4df1dff6ad1f6194bff1e5333073edf0c178d7d", 245, DEFAULT, DEFAULT, DEFAULT, DEFAULT},
 	/* Yong Zhe Dou E Long - Dragon Quest V (Ch) [b1].nes */

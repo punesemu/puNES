@@ -35,26 +35,31 @@ typedef struct {
 	char board[15];
 	WORD ines_mapper;
 	WORD unif_mapper;
+	WORD id;
 } _unif_board;
 
 static const _unif_board unif_boards[] = {
-	{"NROM", 0 , NO_UNIF},
-	{"NROM-128", 0, NO_UNIF},
-	{"NROM-256", 0, NO_UNIF},
-	{"Sachen-74LS374N", 150, NO_UNIF},
-	{"A65AS", NO_INES , 0},
-	{"UOROM", 2 , NO_UNIF},
-	{"TC-U01-1.5M", 147, NO_UNIF},
-	{"SA-NROM", 143, NO_UNIF},
-	{"SLROM", 1, NO_UNIF},
-	{"22211", 132, NO_UNIF},
-	{"TLROM", 4, NO_UNIF},
-	{"TBROM", 4, NO_UNIF},
-	{"TKROM", 4, NO_UNIF},
-	{"Sachen-8259C", 139, NO_UNIF},
-	{"SA-016-1M", 146, NO_UNIF},
-	{"Sachen-8259D", 137, NO_UNIF},
-	{"ANROM", 7, NO_UNIF},
+	{"NROM", 0 , NO_UNIF, DEFAULT},
+	{"NROM-128", 0, NO_UNIF, DEFAULT},
+	{"NROM-256", 0, NO_UNIF, DEFAULT},
+	{"Sachen-74LS374N", 150, NO_UNIF, DEFAULT},
+	{"A65AS", NO_INES , 0, DEFAULT},
+	{"UOROM", 2 , NO_UNIF, DEFAULT},
+	{"TC-U01-1.5M", 147, NO_UNIF, DEFAULT},
+	{"SA-NROM", 143, NO_UNIF, DEFAULT},
+	{"SLROM", 1, NO_UNIF, DEFAULT},
+	{"22211", 132, NO_UNIF, DEFAULT},
+	{"TLROM", 4, NO_UNIF, DEFAULT},
+	{"TBROM", 4, NO_UNIF, DEFAULT},
+	{"TKROM", 4, NO_UNIF, DEFAULT},
+	{"Sachen-8259C", 139, NO_UNIF, DEFAULT},
+	{"SA-016-1M", 146, NO_UNIF, DEFAULT},
+	{"Sachen-8259D", 137, NO_UNIF, DEFAULT},
+	{"ANROM", 7, NO_UNIF, DEFAULT},
+
+	{"FK23C", 176, NO_UNIF, DEFAULT},
+	{"FK23CA", 176, NO_UNIF, BMCFK23C_1 | BMCFK23CA},
+
 	//{"NTBROM", 68, NO_UNIF},
 };
 
@@ -111,6 +116,7 @@ BYTE unif_load_rom(void) {
 	mirroring_H();
 	info.machine[HEADER] = NTSC;
 	info.prg.ram.bat.banks = 0;
+	info.mirroring_db = info.id = DEFAULT;
 
 	if (strncmp(unif.header.identification, "UNIF", 4) == 0) {
 		long position = ftell(fp);
@@ -211,6 +217,8 @@ BYTE unif_load_rom(void) {
 						return (EXIT_ERROR);
 					}
 				}
+				/* la CHR ram extra */
+				memset(&chr.extra, 0x00, sizeof(chr.extra));
 			}
 
 			while(fread(&unif.chunk, sizeof(unif.chunk), 1, fp)) {
@@ -306,6 +314,7 @@ BYTE unif_MAPR(FILE *fp, BYTE phase) {
 				} else {
 					info.mapper.id = unif_boards[i].ines_mapper;
 				}
+				info.id = unif_boards[i].id;
 				unif.internal_mapper = unif_boards[i].unif_mapper;
 				unif.finded = TRUE;
 				break;

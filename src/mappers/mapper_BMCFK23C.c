@@ -12,7 +12,7 @@
 #include "save_slot.h"
 
 static void prg_fix_BMCFK23CPW(BYTE value);
-static void prg_swap_BMCFK23CPW(WORD address, BYTE value);
+static void prg_swap_BMCFK23CPW(WORD address, WORD value);
 static void chr_fix_BMCFK23CPW(BYTE value);
 static void chr_swap_BMCFK23CCW(WORD address, WORD value);
 
@@ -30,11 +30,21 @@ void map_init_BMCFK23C(void) {
 	mapper.internal_struct[1] = (BYTE *) &mmc3;
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
+	if (info.id & BMCFK23CA) {
+		EXTCL_WR_CHR(BMCFK23C);
+		/* utilizza 0x2000 di CHR RAM extra */
+		map_chr_ram_extra_init(0x2000);
+	}
+
 	if (info.reset >= HARD) {
 		memset(&mmc3, 0x00, sizeof(mmc3));
 		memset(&irqA12, 0x00, sizeof(irqA12));
 		memset(&bmcfk23c, 0x00, sizeof(bmcfk23c));
+		map_chr_ram_extra_reset();
 	}
+
+	bmcfk23c.reg[0] = bmcfk23c.reg[1] = bmcfk23c.reg[2] = bmcfk23c.reg[3] = 0;
+	bmcfk23c.reg[4] = bmcfk23c.reg[5] = bmcfk23c.reg[6] = bmcfk23c.reg[7] = 0xFF;
 
 	bmcfk23c.mmc3[0] = 0;
 	bmcfk23c.mmc3[1] = 2;
@@ -45,8 +55,14 @@ void map_init_BMCFK23C(void) {
 	bmcfk23c.mmc3[6] = 0;
 	bmcfk23c.mmc3[7] = 1;
 
-	bmcfk23c.reg[0] = bmcfk23c.reg[1] = bmcfk23c.reg[2] = bmcfk23c.reg[3] = 0;
-	bmcfk23c.reg[4] = bmcfk23c.reg[5] = bmcfk23c.reg[6] = bmcfk23c.reg[7] = 0xFF;
+    bmcfk23c.chr_map[0] = DEFAULT;
+    bmcfk23c.chr_map[1] = DEFAULT;
+    bmcfk23c.chr_map[2] = DEFAULT;
+    bmcfk23c.chr_map[3] = DEFAULT;
+    bmcfk23c.chr_map[4] = DEFAULT;
+    bmcfk23c.chr_map[5] = DEFAULT;
+    bmcfk23c.chr_map[6] = DEFAULT;
+    bmcfk23c.chr_map[7] = DEFAULT;
 
 	{
 		BYTE prg_bonus = 0;
@@ -100,7 +116,9 @@ void extcl_cpu_wr_mem_BMCFK23C(WORD address, BYTE value) {
 		}
 		if (info.id & BMCFK23CA) {
 			if (bmcfk23c.reg[3] & 0x02) {
-				// hacky hacky! if someone wants extra banking, then for sure doesn't want mode 4 for it! (allow to run A version boards on normal mapper)
+				// hacky hacky! if someone wants extra banking
+				// then for sure doesn't want mode 4 for it! (allow to run A version
+				// boards on normal mapper)
 				bmcfk23c.reg[0] &= ~7;
 			}
 		}
@@ -108,7 +126,7 @@ void extcl_cpu_wr_mem_BMCFK23C(WORD address, BYTE value) {
 	}
 
 	if (address >= 0x8000) {
-		if (bmcfk23c.reg[0] & 0x40) {
+		if ((bmcfk23c.reg[0] & 0x40) && (address < 0xA000)) {
 			if (bmcfk23c.reg[0] & 0x30) {
 				bmcfk23c.unromchr = 0;
 			} else {
@@ -122,7 +140,7 @@ void extcl_cpu_wr_mem_BMCFK23C(WORD address, BYTE value) {
 				chr_fix_BMCFK23CPW(mmc3.bank_to_update);
 			} else if (address < 0xC000) {
 				/*
-				if (UNIFchrrama) {
+				//if (UNIFchrrama) {
 					// hacky... strange behaviour, must be bit scramble due to pcb layot restrictions
 					// check if it not interfer with other dumps
 					if (address == 0x8000) {
@@ -132,7 +150,7 @@ void extcl_cpu_wr_mem_BMCFK23C(WORD address, BYTE value) {
 							value = 0x46;
 						}
 					}
-				}
+				//}
 				*/
 				switch (address & 0xE001) {
 					case 0x8000:
@@ -183,25 +201,48 @@ void extcl_cpu_wr_mem_BMCFK23C(WORD address, BYTE value) {
 						}
 						return;
 					}
+					case 0xA000:
+						/*
+						 * secondo me il bit 7 ha una qualche funzione,
+						 * per il momento lo salvo.
+						 */
+						bmcfk23c.A000 = value;
+						break;
 					case 0xA001:
 						bmcfk23c.A001 = value;
 						return;
 				}
 				extcl_cpu_wr_mem_MMC3(address, value);
-				prg_fix_BMCFK23CPW(mmc3.bank_to_update);
+				//prg_fix_BMCFK23CPW(mmc3.bank_to_update);
 			} else {
 				extcl_cpu_wr_mem_MMC3(address, value);
 			}
 		}
 	}
 }
+void extcl_wr_chr_BMCFK23C(WORD address, BYTE value) {
+        BYTE slot = address >> 10;
+
+        if ((bmcfk23c.chr_map[slot] != DEFAULT) || (mapper.write_vram == TRUE)) {
+            chr.bank_1k[slot][address & 0x3FF] = value;
+        }
+}
 BYTE extcl_save_mapper_BMCFK23C(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, bmcfk23c.dipswitch);
 	save_slot_ele(mode, slot, bmcfk23c.unromchr);
+	save_slot_ele(mode, slot, bmcfk23c.A000);
 	save_slot_ele(mode, slot, bmcfk23c.A001);
 	save_slot_ele(mode, slot, bmcfk23c.reg);
 	save_slot_ele(mode, slot, bmcfk23c.mmc3);
+	save_slot_ele(mode, slot, bmcfk23c.chr_map);
 	extcl_save_mapper_MMC3(mode, slot, fp);
+
+	if (info.id & BMCFK23CA) {
+		save_slot_mem(mode, slot, chr.extra.data, chr.extra.size, FALSE)
+		if (mode == SAVE_SLOT_READ) {
+			chr_fix_BMCFK23CPW(mmc3.bank_to_update);
+		}
+	}
 
 	return (EXIT_OK);
 }
@@ -217,7 +258,7 @@ static void prg_fix_BMCFK23CPW(BYTE value) {
 	prg_swap_BMCFK23CPW(0xA000, bmcfk23c.mmc3[7]);
 	prg_swap_BMCFK23CPW(0xE000, ~0);
 }
-static void prg_swap_BMCFK23CPW(WORD address, BYTE value) {
+static void prg_swap_BMCFK23CPW(WORD address, WORD value) {
 	if ((bmcfk23c.reg[0] & 0x07) == 0x04) {
 		value = bmcfk23c.reg[1] >> 1;
 		control_bank(info.prg.rom.max.banks_32k)
@@ -229,10 +270,10 @@ static void prg_swap_BMCFK23CPW(WORD address, BYTE value) {
 		map_prg_rom_8k(2, 2, value);
 	} else {
 		if (bmcfk23c.reg[0] & 0x03) {
-			uint32_t blocksize = (6) - (bmcfk23c.reg[0] & 0x03);
-			uint32_t mask = (1 << blocksize) - 1;
+			WORD blocksize = 6 - (bmcfk23c.reg[0] & 0x03);
+			WORD mask = (1 << blocksize) - 1;
+
 			value &= mask;
-			//value &= 63; //? is this a good idea?
 			value |= (bmcfk23c.reg[1] << 1);
 		} else {
 			value &= bmcfk23c.prg_mask;
@@ -285,18 +326,29 @@ static void chr_swap_BMCFK23CCW(WORD address, WORD value) {
         chr.bank_1k[5] = &chr.data[bank | 0x1400];
         chr.bank_1k[6] = &chr.data[bank | 0x1800];
         chr.bank_1k[7] = &chr.data[bank | 0x1C00];
-	} else if (bmcfk23c.reg[0] & 0x20) {
-		//setta la chrram
-		// FIXME : da fare
-		//setchr1r(0x10, address, value);
 
-		//printf("NOOOOOOOOOOOOOOOO!\n");
+        bmcfk23c.chr_map[0] = DEFAULT;
+        bmcfk23c.chr_map[1] = DEFAULT;
+        bmcfk23c.chr_map[2] = DEFAULT;
+        bmcfk23c.chr_map[3] = DEFAULT;
+        bmcfk23c.chr_map[4] = DEFAULT;
+        bmcfk23c.chr_map[5] = DEFAULT;
+        bmcfk23c.chr_map[6] = DEFAULT;
+        bmcfk23c.chr_map[7] = DEFAULT;
+
+	} else if (bmcfk23c.reg[0] & 0x20) {
+		if (chr.extra.data) {
+			value &= 0x07;
+			chr.bank_1k[address >> 10] = &chr.extra.data[value << 10];
+			bmcfk23c.chr_map[address >> 10] = value;
+		}
 	} else {
 		WORD base = (bmcfk23c.reg[2] & 0x7F) << 3;
 
 		value |= base;
 		control_bank(info.chr.rom.max.banks_1k)
 		chr.bank_1k[address >> 10] = &chr.data[value << 10];
+        bmcfk23c.chr_map[address >> 10] = DEFAULT;
 
 		if (bmcfk23c.reg[3] & 0x02) {
 			WORD cbase = (mmc3.bank_to_update & 0x80) >> 5;
@@ -304,18 +356,22 @@ static void chr_swap_BMCFK23CCW(WORD address, WORD value) {
 			value = base | bmcfk23c.mmc3[0];
 			control_bank(info.chr.rom.max.banks_1k)
 			chr.bank_1k[cbase ^ 0x00] = &chr.data[value << 10];
+	        bmcfk23c.chr_map[cbase ^ 0x00] = DEFAULT;
 
 			value = base | bmcfk23c.reg[6];
 			control_bank(info.chr.rom.max.banks_1k)
 			chr.bank_1k[cbase ^ 0x01] = &chr.data[value << 10];
+	        bmcfk23c.chr_map[cbase ^ 0x01] = DEFAULT;
 
 			value = base | bmcfk23c.mmc3[1];
 			control_bank(info.chr.rom.max.banks_1k)
 			chr.bank_1k[cbase ^ 0x02] = &chr.data[value << 10];
+	        bmcfk23c.chr_map[cbase ^ 0x02] = DEFAULT;
 
 			value = base | bmcfk23c.reg[7];
 			control_bank(info.chr.rom.max.banks_1k)
 			chr.bank_1k[cbase ^ 0x03] = &chr.data[value << 10];
+	        bmcfk23c.chr_map[cbase ^ 0x03] = DEFAULT;
 		}
 	}
 }
