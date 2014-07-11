@@ -116,6 +116,7 @@ BYTE unif_load_rom(void) {
 	mirroring_H();
 	info.machine[HEADER] = NTSC;
 	info.prg.ram.bat.banks = 0;
+	info.mapper.submapper = DEFAULT;
 	info.mirroring_db = info.id = DEFAULT;
 
 	if (strncmp(unif.header.identification, "UNIF", 4) == 0) {
