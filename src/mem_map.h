@@ -59,11 +59,20 @@ enum mirroring_type {
 #define prg_ram_plus_size() info.prg.ram.banks_8k_plus << 13
 #define chr_ram_size() info.chr.rom.banks_8k << 13
 
+#define prg_chip(chip_rom) prg.chip[chip_rom].rom
+#define prg_chip_byte(chip_rom, index) prg_chip(chip_rom)[index]
+#define prg_chip_byte_pnt(chip_rom, index) &prg_chip_byte(chip_rom, index)
+#define prg_chip_size(chip_rom) prg.chip[chip_rom].size
+
 struct _mmcpu {
 	BYTE ram[0x800];   // Mirrored four times
 } mmcpu;
 struct _prg {
-	BYTE *rom;
+	struct _chip {
+		size_t size;
+		BYTE *rom;
+	} chip[8];
+
 	BYTE *rom_8k[4];   // 8k pages (0x2000)
 
 	BYTE *ram;         // Non Battery RAM
@@ -76,7 +85,7 @@ struct _chr {
 	BYTE *data;
 	BYTE *bank_1k[8];
 	struct _extra {
-		uint32_t size;
+		size_t size;
 		BYTE *data;
 	} extra;
 } chr;

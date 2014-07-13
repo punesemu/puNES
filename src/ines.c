@@ -177,13 +177,12 @@ BYTE ines_load_rom(void) {
 		}
 
 		/* alloco e carico la PRG Rom */
-		if ((prg.rom = (BYTE *) malloc(info.prg.rom.banks_16k * (16 * 1024)))) {
-			tmp = fread(&prg.rom[0], 16384, info.prg.rom.banks_16k, fp);
-		} else {
-			fprintf(stderr, "Out of memory\n");
+		if (map_prg_chip_malloc(0, info.prg.rom.banks_16k * (16 * 1024), 0x00) == EXIT_ERROR) {
 			fclose(fp);
 			return (EXIT_ERROR);
 		}
+
+		tmp = fread(prg_chip(0), 16384, info.prg.rom.banks_16k, fp);
 
 		/*
 		 * se e' settato mapper.write_vram, vuol dire

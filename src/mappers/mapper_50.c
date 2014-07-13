@@ -28,7 +28,7 @@ void map_init_50(void) {
 		mapper.rom_map_to[2] = 0;
 	}
 
-	prg_6000 = &prg.rom[info.prg.rom.max.banks_8k << 13];
+	prg_6000 = prg_chip_byte_pnt(0, info.prg.rom.max.banks_8k << 13);
 
 	mapper.rom_map_to[0] = 8;
 	mapper.rom_map_to[1] = 9;

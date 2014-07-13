@@ -33,8 +33,8 @@ enum interrupt_types {
 #define init_PC()\
 	/* valorizzo il PC con l'indirizzo iniziale */\
 	if (fds.info.enabled) {\
-		cpu.PC = (prg.rom[(INT_RESET + 1) & 0x1FFF] << 8) |\
-				prg.rom[INT_RESET & 0x1FFF];\
+		cpu.PC = (prg_chip_byte(0, (INT_RESET + 1) & 0x1FFF) << 8) |\
+				prg_chip_byte(0, INT_RESET & 0x1FFF);\
 	} else {\
 		cpu.PC = (prg.rom_8k[((INT_RESET + 1) >> 13) & 0x03][(INT_RESET + 1) & 0x1FFF] << 8)\
 				| prg.rom_8k[(INT_RESET >> 13) & 0x03][INT_RESET & 0x1FFF];\

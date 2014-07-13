@@ -47,7 +47,7 @@ enum lenght_file_name_type {
 	LENGTH_FILE_NAME_LONG = 2048
 };
 enum forced_mirroring { UNK_HORIZONTAL, UNK_VERTICAL };
-
+enum max_chips_rom { PRG_CHIPS_MAX = 8, CHR_CHIPS_MAX = 8 };
 
 #define LENGTH(x) (sizeof(x)/sizeof(*(x)))
 

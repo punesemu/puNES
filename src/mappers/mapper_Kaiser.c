@@ -36,7 +36,7 @@ void map_init_Kaiser(BYTE model) {
 
 			if (info.reset >= HARD) {
 				memset(&ks202, 0x00, sizeof(ks202));
-				ks202.prg_ram_rd = &prg.rom[0];
+				ks202.prg_ram_rd = prg_chip_byte_pnt(0, 0);
 			}
 			break;
 		case KS7058:
@@ -104,7 +104,7 @@ void extcl_cpu_wr_mem_Kaiser_ks202(WORD address, BYTE value) {
 				}
 				case 3:
 					control_bank(info.prg.rom.max.banks_8k)
-					ks202.prg_ram_rd = &prg.rom[value << 13];
+					ks202.prg_ram_rd = prg_chip_byte_pnt(0, value << 13);
 					break;
 			}
 
@@ -148,7 +148,7 @@ BYTE extcl_save_mapper_Kaiser_ks202(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, ks202.reload);
 	save_slot_ele(mode, slot, ks202.delay);
 	save_slot_ele(mode, slot, ks202.reg);
-	save_slot_pos(mode, slot, prg.rom, ks202.prg_ram_rd);
+	save_slot_pos(mode, slot, prg_chip(0), ks202.prg_ram_rd);
 
 	return (EXIT_OK);
 }

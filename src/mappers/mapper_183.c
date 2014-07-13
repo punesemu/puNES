@@ -129,7 +129,7 @@ BYTE extcl_cpu_rd_mem_183(WORD address, BYTE openbus, BYTE before) {
 		return (openbus);
 	}
 
-	return (prg.rom[address & 0x1FFF]);
+	return (prg_chip_byte(0, address & 0x1FFF));
 }
 BYTE extcl_save_mapper_183(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m183.enabled);

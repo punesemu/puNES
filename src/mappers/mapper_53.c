@@ -51,7 +51,7 @@ void extcl_cpu_wr_mem_53(WORD address, BYTE value) {
 
 	m53.prg_6000 = ((tmp << 1) | 0x0F) + 4;
 	_control_bank(m53.prg_6000, info.prg.rom.max.banks_8k)
-	prg_6000 = &prg.rom[m53.prg_6000 << 13];
+	prg_6000 = prg_chip_byte_pnt(0, m53.prg_6000 << 13);
 
 	value = (m53.reg[0] & 0x10) ? (tmp | (m53.reg[1] & 0x07)) + 2 : 0;
 	control_bank(info.prg.rom.max.banks_16k)
@@ -75,7 +75,7 @@ BYTE extcl_save_mapper_53(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m53.prg_6000);
 
 	if (mode == SAVE_SLOT_READ) {
-		prg_6000 = &prg.rom[m53.prg_6000 << 13];
+		prg_6000 = prg_chip_byte_pnt(0, m53.prg_6000 << 13);
 	}
 
 	return (EXIT_OK);

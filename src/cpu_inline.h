@@ -407,7 +407,7 @@ static BYTE INLINE fds_rd_mem(WORD address, BYTE made_tick) {
 			tick_hw(1);
 		}
 		/* leggo */
-		cpu.openbus = prg.rom[address & 0x1FFF];
+		cpu.openbus = prg_chip_byte(0, address & 0x1FFF);
 		return (TRUE);
 	}
 	if (address >= 0x6000) {

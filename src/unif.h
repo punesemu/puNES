@@ -28,10 +28,6 @@ struct _unif {
 		char id[4];
 		uint32_t length;
 	} chunk;
-	struct _unif_prg {
-		size_t size;
-		BYTE *pnt;
-	} prg;
 	struct _unif_chr {
 		size_t size;
 		BYTE *pnt;

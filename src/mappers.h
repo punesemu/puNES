@@ -126,6 +126,7 @@
 #include "mappers/mapper_BMCFK23C.h"
 /* UNIF */
 #include "mappers/mapper_A65AS.h"
+#include "mappers/mapper_malee.h"
 
 #define _control_bank(val, max)\
 	if (val > max) {\
@@ -161,14 +162,14 @@
 	prg.ram_battery = &prg.ram_plus[bank * 0x2000];\
 	if (fp) {\
 		/* ne leggo il contenuto */\
-		if (fread(&prg.ram_battery[0], info.prg.ram.bat.banks * 8192, 1, fp) < 1) {\
+		if (fread(&prg.ram_battery[0], info.prg.ram.bat.banks * 0x2000, 1, fp) < 1) {\
 			fprintf(stderr, "error on read battery memory\n");\
 		}\
 	}\
 }
 #define mapper_wr_battery_default()\
 	/* ci scrivo i dati */\
-	if (fwrite(&prg.ram_battery[0], info.prg.ram.bat.banks * 8192, 1, fp) < 1) {\
+	if (fwrite(&prg.ram_battery[0], info.prg.ram.bat.banks * 0x2000, 1, fp) < 1) {\
 		fprintf(stderr, "error on write battery memory\n");\
 	}
 
@@ -190,8 +191,9 @@ _mapper mapper;
 
 BYTE map_init(void);
 void map_quit(void);
-void map_prg_rom_8k_reset(void);
+BYTE map_prg_chip_malloc(BYTE index, size_t size, BYTE set_value);
 void map_prg_rom_8k(BYTE banks_8k, BYTE at, BYTE value);
+void map_prg_rom_8k_reset(void);
 void map_prg_rom_8k_update(void);
 void map_prg_ram_init(void);
 BYTE map_chr_ram_init(void);

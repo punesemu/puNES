@@ -37,7 +37,7 @@ BYTE extcl_cpu_rd_mem_Whirlwind(WORD address, BYTE openbus, BYTE before) {
 		return (openbus);
 	}
 
-	return (prg.rom[whirlwind.prg_ram + (address - 0x6000)]);
+	return (prg_chip_byte(0, whirlwind.prg_ram + (address - 0x6000)));
 }
 BYTE extcl_save_mapper_Whirlwind(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, whirlwind.prg_ram);

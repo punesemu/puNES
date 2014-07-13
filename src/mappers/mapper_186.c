@@ -26,7 +26,7 @@ void map_init_186(void) {
 
 	if (info.reset >= HARD) {
 		memset(&m186, 0x00, sizeof(m186));
-		m186.prg_ram_bank2 = &prg.rom[0];
+		m186.prg_ram_bank2 = prg_chip_byte_pnt(0, 0);
 		map_prg_rom_8k(2, 0, 0);
 		map_prg_rom_8k(2, 2, 0);
 	}
@@ -45,7 +45,7 @@ void extcl_cpu_wr_mem_186(WORD address, BYTE value) {
 		case 0x0000:
 			value >>= 6;
 			control_bank(info.prg.rom.max.banks_8k)
-			m186.prg_ram_bank2 = &prg.rom[value << 13];
+			m186.prg_ram_bank2 = prg_chip_byte_pnt(0, value << 13);
 			return;
 		case 0x0001:
 			control_bank(info.prg.rom.max.banks_16k)
@@ -84,7 +84,6 @@ BYTE extcl_cpu_rd_mem_186(WORD address, BYTE openbus, BYTE before) {
 	return (openbus);
 }
 BYTE extcl_save_mapper_186(BYTE mode, BYTE slot, FILE *fp) {
-	save_slot_pos(mode, slot, prg.rom, m186.prg_ram_bank2);
-
+	save_slot_pos(mode, slot, prg_chip(0), m186.prg_ram_bank2);
 	return (EXIT_OK);
 }

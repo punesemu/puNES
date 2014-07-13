@@ -533,7 +533,7 @@ BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 			uint32_t bank = mapper.rom_map_to[i] << 13;
 			save_slot_int(mode, slot, bank)
 		} else {
-			save_slot_pos(mode, slot, prg.rom, prg.rom_8k[i])
+			save_slot_pos(mode, slot, prg_chip(0), prg.rom_8k[i])
 		}
 	}
 	save_slot_int(mode, slot, mapper.write_vram)

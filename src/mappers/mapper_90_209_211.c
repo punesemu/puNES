@@ -445,7 +445,7 @@ static void INLINE prg_setup_90_209_211(void) {
 			map_prg_rom_8k(1, 3, value);
 			break;
 	}
-	m90_209_211.m6000.rom_8k = &prg.rom[m90_209_211.m6000.prg << 13];
+	m90_209_211.m6000.rom_8k = prg_chip_byte_pnt(0, m90_209_211.m6000.prg << 13);
 	map_prg_rom_8k_update();
 }
 static void INLINE chr_setup_90_209_211(void) {

@@ -638,6 +638,10 @@ BYTE map_init(void) {
 					/* BMC-A65AS */
 					map_init_A65AS();
 					break;
+				case 1:
+					/* BMC-MARIO1-MALEE2 */
+					map_init_malee();
+					break;
 			}
 			break;
 	}
@@ -690,8 +694,16 @@ void map_quit(void) {
 	info.prg.ram.bat.start = DEFAULT;
 
 	/* PRG */
-	if (prg.rom) {
-		free(prg.rom);
+	{
+		BYTE i;
+
+		for (i = 0; i < LENGTH(prg.chip); i++) {
+			if (prg.chip[i].rom) {
+				free(prg.chip[i].rom);
+				prg.chip[i].rom = NULL;
+				prg.chip[i].size = 0;
+			}
+		}
 	}
 	if (prg.ram) {
 		free(prg.ram);
@@ -699,7 +711,6 @@ void map_quit(void) {
 	if (prg.ram_plus) {
 		free(prg.ram_plus);
 	}
-	prg.rom = NULL;
 	memset(prg.rom_8k, 0x00, sizeof(prg.rom_8k));
 	prg.ram = NULL;
 	prg.ram_plus = NULL;
@@ -724,6 +735,24 @@ void map_quit(void) {
 
 	mapper.write_vram = FALSE;
 }
+
+BYTE map_prg_chip_malloc(BYTE index, size_t size, BYTE set_value) {
+	if (prg.chip[index].rom) {
+		free(prg.chip[index].rom);
+		prg.chip[index].rom = NULL;
+	}
+
+	prg.chip[index].size = size;
+
+	if ((prg.chip[index].rom = (BYTE *) malloc(size))) {
+		memset(prg.chip[index].rom, set_value, size);
+	} else {
+		fprintf(stderr, "Out of memory\n");
+		return (EXIT_ERROR);
+	}
+
+	return (EXIT_OK);
+}
 void map_prg_rom_8k(BYTE banks_8k, BYTE at, BYTE value) {
 	BYTE a;
 
@@ -746,7 +775,7 @@ void map_prg_rom_8k_update(void) {
 	BYTE i;
 
 	for (i = 0; i < 4; ++i) {
-		prg.rom_8k[i] = &prg.rom[mapper.rom_map_to[i] << 13];
+		prg.rom_8k[i] = prg_chip_byte_pnt(0, mapper.rom_map_to[i] << 13);
 	}
 }
 void map_prg_ram_init(void) {

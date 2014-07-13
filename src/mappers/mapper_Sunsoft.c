@@ -348,7 +348,7 @@ void extcl_cpu_wr_mem_Sunsoft_FM7(WORD address, BYTE value) {
 							cpu.prg_ram_wr_active = FALSE;
 							control_bank_with_AND(0x3F, info.prg.rom.max.banks_8k)
 							fm7.prg_ram_address = value << 13;
-							prg.ram_plus_8k = &prg.rom[fm7.prg_ram_address];
+							prg.ram_plus_8k = prg_chip_byte_pnt(0, fm7.prg_ram_address);
 							return;
 						case 0x40:
 							cpu.prg_ram_rd_active = FALSE;
@@ -445,7 +445,7 @@ BYTE extcl_save_mapper_Sunsoft_FM7(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, fm7.prg_ram_mode);
 	save_slot_ele(mode, slot, fm7.prg_ram_address);
 	if ((mode == SAVE_SLOT_READ) && !fm7.prg_ram_mode) {
-		prg.ram_plus_8k = &prg.rom[fm7.prg_ram_address];
+		prg.ram_plus_8k = prg_chip_byte_pnt(0, fm7.prg_ram_address);
 	}
 	save_slot_ele(mode, slot, fm7.irq_enable_trig);
 	save_slot_ele(mode, slot, fm7.irq_enable_count);

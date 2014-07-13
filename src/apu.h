@@ -214,7 +214,7 @@ enum apu_mode { APU_60HZ, APU_48HZ };
 			if (DMC.address < 0xE000) {\
 				DMC.buffer = prg.ram[DMC.address - 0x6000];\
 			} else {\
-				DMC.buffer = prg.rom[DMC.address & 0x1FFF];\
+				DMC.buffer = prg_chip_byte(0, DMC.address & 0x1FFF);\
 			}\
 		} else {\
 			DMC.buffer = prg_rom_rd(DMC.address);\

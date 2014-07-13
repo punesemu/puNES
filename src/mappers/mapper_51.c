@@ -65,7 +65,7 @@ void extcl_cpu_wr_mem_51(WORD address, BYTE value) {
 
 	m51.prg_6000 = m51.prg_6000 | (m51.bank << 2);
 	_control_bank(m51.prg_6000, info.prg.rom.max.banks_8k)
-	prg_6000 = &prg.rom[m51.prg_6000 << 13];
+	prg_6000 = prg_chip_byte_pnt(0, m51.prg_6000 << 13);
 
 	if (m51.mode == 0x03) {
 		mirroring_H();
@@ -86,7 +86,7 @@ BYTE extcl_save_mapper_51(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m51.prg_6000);
 
 	if (mode == SAVE_SLOT_READ) {
-		prg_6000 = &prg.rom[m51.prg_6000 << 13];
+		prg_6000 = prg_chip_byte_pnt(0, m51.prg_6000 << 13);
 	}
 
 	return (EXIT_OK);

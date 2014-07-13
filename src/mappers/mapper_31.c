@@ -53,6 +53,6 @@ static void INLINE sync_31(void) {
 	BYTE i;
 
 	for (i = 0; i < 8; ++i) {
-		m31.rom_4k[i] = &prg.rom[m31.regs[i] << 12];
+		m31.rom_4k[i] = prg_chip_byte_pnt(0, m31.regs[i] << 12);
 	}
 }

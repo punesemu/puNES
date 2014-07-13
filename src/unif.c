@@ -43,7 +43,6 @@ static const _unif_board unif_boards[] = {
 	{"NROM-128", 0, NO_UNIF, DEFAULT},
 	{"NROM-256", 0, NO_UNIF, DEFAULT},
 	{"Sachen-74LS374N", 150, NO_UNIF, DEFAULT},
-	{"A65AS", NO_INES , 0, DEFAULT},
 	{"UOROM", 2 , NO_UNIF, DEFAULT},
 	{"TC-U01-1.5M", 147, NO_UNIF, DEFAULT},
 	{"SA-NROM", 143, NO_UNIF, DEFAULT},
@@ -56,6 +55,9 @@ static const _unif_board unif_boards[] = {
 	{"SA-016-1M", 146, NO_UNIF, DEFAULT},
 	{"Sachen-8259D", 137, NO_UNIF, DEFAULT},
 	{"ANROM", 7, NO_UNIF, DEFAULT},
+
+	{"A65AS", NO_INES , 0, DEFAULT},
+	{"MARIO1-MALEE2", NO_INES , 1, DEFAULT},
 
 	{"FK23C", 176, NO_UNIF, DEFAULT},
 	{"FK23CA", 176, NO_UNIF, BMCFK23C_1 | BMCFK23CA},
@@ -126,12 +128,12 @@ BYTE unif_load_rom(void) {
 			fseek(fp, position, SEEK_SET);
 
 			if (phase == UNIF_READ) {
-				if (unif.prg.size == 0) {
+				if (prg_chip_size(0) == 0) {
 					fclose(fp);
 					return (EXIT_ERROR);
 				}
 
-				info.prg.rom.banks_16k = unif.prg.size / (16 * 1024);
+				info.prg.rom.banks_16k = prg_chip_size(0) / (16 * 1024);
 				info.chr.rom.banks_8k = unif.chr.size / (8 * 1024);
 
 
@@ -192,14 +194,8 @@ BYTE unif_load_rom(void) {
 					return (EXIT_ERROR);
 				}
 
-				/* alloco e carico la PRG Rom */
-				if ((prg.rom = (BYTE *) malloc(info.prg.rom.banks_16k * (16 * 1024)))) {
-					unif.prg.pnt = prg.rom;
-				} else {
-					fprintf(stderr, "Out of memory\n");
-					fclose(fp);
-					return (EXIT_ERROR);
-				}
+				/* imposto come default il mirroring verticale */
+				mirroring_V();
 
 				/*
 				 * se e' settato mapper.write_vram, vuol dire
@@ -226,7 +222,10 @@ BYTE unif_load_rom(void) {
 				if (strncmp(unif.chunk.id, "MAPR", 4) == 0) {
 					unif_MAPR(fp, phase);
 				} else if (strncmp(unif.chunk.id, "PRG", 3) == 0) {
-					unif_PRG(fp, phase);
+					if (unif_PRG(fp, phase) == EXIT_ERROR) {
+						fclose(fp);
+						return (EXIT_ERROR);
+					}
 				} else if (strncmp(unif.chunk.id, "CHR", 3) == 0) {
 					unif_CHR(fp, phase);
 				} else if (strncmp(unif.chunk.id, "PCK", 3) == 0) {
@@ -259,7 +258,6 @@ BYTE unif_load_rom(void) {
 			fclose(fp);
 			return (EXIT_ERROR);
 		}
-
 	} else {
 		fclose(fp);
 		return (EXIT_ERROR);
@@ -345,15 +343,21 @@ BYTE unif_NAME(FILE *fp, BYTE phase) {
 	return (EXIT_OK);
 }
 BYTE unif_PRG(FILE *fp, BYTE phase) {
+	int chip = atoi(unif.chunk.id + 3);
+
+	if (chip > LENGTH(prg.chip)) {
+		return (EXIT_ERROR);
+	}
+
 	if (phase == UNIF_COUNT) {
-		if (strncmp(unif.chunk.id, "PRG0", 4) == 0) {
-			unif.prg.size = unif.chunk.length;
-		}
-		//unif.prg.size += unif.chunk.length;
+		prg_chip_size(chip) = unif.chunk.length;
 		fseek(fp, unif.chunk.length, SEEK_CUR);
 	} else {
-		fread(unif.prg.pnt, unif.chunk.length, 1, fp);
-		unif.prg.pnt += unif.chunk.length;
+		/* alloco e carico la PRG Rom */
+		if (map_prg_chip_malloc(chip, prg_chip_size(chip), 0x00) == EXIT_ERROR) {
+			return (EXIT_ERROR);
+		}
+		fread(prg_chip(chip), prg_chip_size(chip), 1, fp);
 	}
 
 	return (EXIT_OK);

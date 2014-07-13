@@ -268,10 +268,7 @@ BYTE emu_load_rom(void) {
 		}
 
 		/* PRG Rom */
-		if ((prg.rom = (BYTE *) malloc(info.prg.rom.banks_16k * (16 * 1024)))) {
-			memset(prg.rom, 0xEA, info.prg.rom.banks_16k * (16 * 1024));
-		} else {
-			fprintf(stderr, "Out of memory\n");
+		if (map_prg_chip_malloc(0, info.prg.rom.banks_16k * (16 * 1024), 0xEA) == EXIT_ERROR) {
 			return (EXIT_ERROR);
 		}
 
