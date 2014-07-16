@@ -75,33 +75,33 @@
 	value = mmc5.chr_type[slot];\
 	control_bank_with_AND(0x03FF, info.chr.rom.max.banks_8k)\
 	value <<= 13;\
-	chr.bank_1k[0] = &chr.data[value];\
-	chr.bank_1k[1] = &chr.data[value | 0x0400];\
-	chr.bank_1k[2] = &chr.data[value | 0x0800];\
-	chr.bank_1k[3] = &chr.data[value | 0x0C00];\
-	chr.bank_1k[4] = &chr.data[value | 0x1000];\
-	chr.bank_1k[5] = &chr.data[value | 0x1400];\
-	chr.bank_1k[6] = &chr.data[value | 0x1800];\
-	chr.bank_1k[7] = &chr.data[value | 0x1C00]
+	chr.bank_1k[0] = chr_chip_byte_pnt(0, value);\
+	chr.bank_1k[1] = chr_chip_byte_pnt(0, value | 0x0400);\
+	chr.bank_1k[2] = chr_chip_byte_pnt(0, value | 0x0800);\
+	chr.bank_1k[3] = chr_chip_byte_pnt(0, value | 0x0C00);\
+	chr.bank_1k[4] = chr_chip_byte_pnt(0, value | 0x1000);\
+	chr.bank_1k[5] = chr_chip_byte_pnt(0, value | 0x1400);\
+	chr.bank_1k[6] = chr_chip_byte_pnt(0, value | 0x1800);\
+	chr.bank_1k[7] = chr_chip_byte_pnt(0, value | 0x1C00)
 #define chr_4k_update(chr_type, slot, base)\
 	value = mmc5.chr_type[slot];\
 	control_bank_with_AND(0x03FF, info.chr.rom.max.banks_4k)\
 	value <<= 12;\
-	chr.bank_1k[base | 0] = &chr.data[value];\
-	chr.bank_1k[base | 1] = &chr.data[value | 0x0400];\
-	chr.bank_1k[base | 2] = &chr.data[value | 0x0800];\
-	chr.bank_1k[base | 3] = &chr.data[value | 0x0C00]
+	chr.bank_1k[base | 0] = chr_chip_byte_pnt(0, value);\
+	chr.bank_1k[base | 1] = chr_chip_byte_pnt(0, value | 0x0400);\
+	chr.bank_1k[base | 2] = chr_chip_byte_pnt(0, value | 0x0800);\
+	chr.bank_1k[base | 3] = chr_chip_byte_pnt(0, value | 0x0C00)
 #define chr_2k_update(chr_type, slot, base)\
 	value = mmc5.chr_type[slot];\
 	control_bank_with_AND(0x03FF, info.chr.rom.max.banks_2k)\
 	value <<= 11;\
-	chr.bank_1k[base | 0] = &chr.data[value];\
-	chr.bank_1k[base | 1] = &chr.data[value | 0x0400]
+	chr.bank_1k[base | 0] = chr_chip_byte_pnt(0, value);\
+	chr.bank_1k[base | 1] = chr_chip_byte_pnt(0, value | 0x0400)
 #define chr_1k_update(chr_type, slot, base)\
 	value = mmc5.chr_type[slot];\
 	control_bank_with_AND(0x03FF, info.chr.rom.max.banks_1k)\
 	value <<= 10;\
-	chr.bank_1k[base] = &chr.data[value]
+	chr.bank_1k[base] = chr_chip_byte_pnt(0, value)
 /* nametables **/
 #define nmt_update(bits, slot)\
 {\
@@ -617,7 +617,7 @@ BYTE extcl_rd_chr_MMC5(WORD address) {
 
 	/* sono nella regione di split? */
 	if (mmc5.split && mmc5.split_in_reg) {
-		return (chr.data[mmc5.split_bank + (address & 0x0FFF)]);
+		return (chr_chip_byte(0, mmc5.split_bank + (address & 0x0FFF)));
 	}
 
 	/* se non sono nella modalita' 1 esco normalmente */
@@ -629,7 +629,7 @@ BYTE extcl_rd_chr_MMC5(WORD address) {
 	control_bank(info.chr.rom.max.banks_4k)
 	index = ((value + mmc5.chr_high) << 12) + (address & 0x0FFF);
 
-	return (chr.data[index]);
+	return (chr_chip_byte(0, index));
 }
 BYTE extcl_rd_nmt_MMC5(WORD address) {
 	BYTE nmt = address >> 10;

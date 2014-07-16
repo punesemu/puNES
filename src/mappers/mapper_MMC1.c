@@ -249,10 +249,10 @@ static void INLINE swap_chr0_MMC1(void) {
 	if (mmc1.chr_mode) {
 		control_bank(info.chr.rom.max.banks_4k)
 		value <<= 12;
-		chr.bank_1k[0] = &chr.data[value];
-		chr.bank_1k[1] = &chr.data[value | 0x0400];
-		chr.bank_1k[2] = &chr.data[value | 0x0800];
-		chr.bank_1k[3] = &chr.data[value | 0x0C00];
+		chr.bank_1k[0] = chr_chip_byte_pnt(0, value);
+		chr.bank_1k[1] = chr_chip_byte_pnt(0, value | 0x0400);
+		chr.bank_1k[2] = chr_chip_byte_pnt(0, value | 0x0800);
+		chr.bank_1k[3] = chr_chip_byte_pnt(0, value | 0x0C00);
 		return;
 	}
 
@@ -268,14 +268,14 @@ static void INLINE swap_chr0_MMC1(void) {
 
 	control_bank_with_AND(0x1E, info.chr.rom.max.banks_4k)
 	value <<= 12;
-	chr.bank_1k[0] = &chr.data[value];
-	chr.bank_1k[1] = &chr.data[value | 0x0400];
-	chr.bank_1k[2] = &chr.data[value | 0x0800];
-	chr.bank_1k[3] = &chr.data[value | 0x0C00];
-	chr.bank_1k[4] = &chr.data[value | 0x1000];
-	chr.bank_1k[5] = &chr.data[value | 0x1400];
-	chr.bank_1k[6] = &chr.data[value | 0x1800];
-	chr.bank_1k[7] = &chr.data[value | 0x1C00];
+	chr.bank_1k[0] = chr_chip_byte_pnt(0, value);
+	chr.bank_1k[1] = chr_chip_byte_pnt(0, value | 0x0400);
+	chr.bank_1k[2] = chr_chip_byte_pnt(0, value | 0x0800);
+	chr.bank_1k[3] = chr_chip_byte_pnt(0, value | 0x0C00);
+	chr.bank_1k[4] = chr_chip_byte_pnt(0, value | 0x1000);
+	chr.bank_1k[5] = chr_chip_byte_pnt(0, value | 0x1400);
+	chr.bank_1k[6] = chr_chip_byte_pnt(0, value | 0x1800);
+	chr.bank_1k[7] = chr_chip_byte_pnt(0, value | 0x1C00);
 }
 static void INLINE swap_chr1_MMC1(void) {
 	if (mmc1.chr_mode) {
@@ -285,9 +285,9 @@ static void INLINE swap_chr1_MMC1(void) {
 
 		control_bank(info.chr.rom.max.banks_4k)
 		value <<= 12;
-		chr.bank_1k[4] = &chr.data[value];
-		chr.bank_1k[5] = &chr.data[value | 0x0400];
-		chr.bank_1k[6] = &chr.data[value | 0x0800];
-		chr.bank_1k[7] = &chr.data[value | 0x0C00];
+		chr.bank_1k[4] = chr_chip_byte_pnt(0, value);
+		chr.bank_1k[5] = chr_chip_byte_pnt(0, value | 0x0400);
+		chr.bank_1k[6] = chr_chip_byte_pnt(0, value | 0x0800);
+		chr.bank_1k[7] = chr_chip_byte_pnt(0, value | 0x0C00);
 	}
 }

@@ -59,7 +59,7 @@ BYTE min, max;
 	if ((value >= min) && (value <= max)) {\
 		chr.bank_1k[a] = &chr.extra.data[(value - min) << 10];\
 	} else {\
-		chr.bank_1k[a] = &chr.data[value << 10];\
+		chr.bank_1k[a] = chr_chip_byte_pnt(0, value << 10);\
 	}
 #define waixing_type_ACDE_8001()\
 {\
@@ -107,7 +107,7 @@ BYTE min, max;
 	if (save & 0x80) {\
 		chr.bank_1k[a] = &chr.extra.data[value << 10];\
 	} else {\
-		chr.bank_1k[a] = &chr.data[value << 10];\
+		chr.bank_1k[a] = chr_chip_byte_pnt(0, value << 10);\
 	}
 #define waixing_type_B_8001()\
 {\
@@ -155,7 +155,7 @@ BYTE min, max;
 	if (save < 8) {\
 		chr.bank_1k[a] = &chr.extra.data[save << 10];\
 	} else {\
-		chr.bank_1k[a] = &chr.data[value << 10];\
+		chr.bank_1k[a] = chr_chip_byte_pnt(0, value << 10);\
 	}
 #define Waixing_type_G_8001()\
 {\
@@ -228,7 +228,7 @@ BYTE min, max;
 		chr.bank_1k[a] = &chr.extra.data[(value & 0x07) << 10];\
 	} else {\
 		control_bank(info.chr.rom.max.banks_1k)\
-		chr.bank_1k[a] = &chr.data[value << 10];\
+		chr.bank_1k[a] = chr_chip_byte_pnt(0, value << 10);\
 	}
 #define waixing_type_H_prg_8k(vl)\
 	value = (vl & 0x3F) | ((waixing.ctrl[0] & 0x02) << 5)
@@ -352,10 +352,10 @@ BYTE min, max;
 	} else {\
 		DBWORD bank = v << 12;\
 		waixing.ctrl[a >> 2] = 1;\
-		chr.bank_1k[a] = &chr.data[bank];\
-		chr.bank_1k[a | 0x01] = &chr.data[bank | 0x0400];\
-		chr.bank_1k[a | 0x02] = &chr.data[bank | 0x0800];\
-		chr.bank_1k[a | 0x03] = &chr.data[bank | 0x0C00];\
+		chr.bank_1k[a] = chr_chip_byte_pnt(0, bank);\
+		chr.bank_1k[a | 0x01] = chr_chip_byte_pnt(0, bank | 0x0400);\
+		chr.bank_1k[a | 0x02] = chr_chip_byte_pnt(0, bank | 0x0800);\
+		chr.bank_1k[a | 0x03] = chr_chip_byte_pnt(0, bank | 0x0C00);\
 	}\
 }
 #define waixing_SH2_PPUFD()\

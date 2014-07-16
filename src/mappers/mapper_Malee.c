@@ -1,5 +1,5 @@
 /*
- * mapper_malee.c
+ * mapper_Malee.c
  *
  *  Created on: 11/lug/2014
  *      Author: fhorse
@@ -19,7 +19,7 @@ void map_init_malee(void) {
 }
 BYTE extcl_cpu_rd_mem_malee(WORD address, BYTE openbus, BYTE before) {
 	if ((address >= 0x6000) && (address <= 0x67FF)) {
-		return (prg.chip[1].rom[address & 0x07FF]);
+		return (map_prg_chip_rd_byte(1, openbus, address, 0x07FF));
 	}
 	return (openbus);
 }

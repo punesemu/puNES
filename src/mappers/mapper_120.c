@@ -25,7 +25,7 @@ void map_init_120(void) {
 
 	if (info.reset >= HARD) {
 		memset(&m120, 0x00, sizeof(m120));
-		m120.prg_ram_rd = prg_chip_byte_pnt(0, 0);
+		m120.prg_ram_rd = prg_chip(0);
 		map_prg_rom_8k(4, 0, 2);
 	}
 }

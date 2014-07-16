@@ -118,7 +118,7 @@ void extcl_cpu_wr_mem_183(WORD address, BYTE value) {
 
 				value = (m183.chr_rom_bank[slot] & (0xF0 >> shift)) | ((value & 0x0F) << shift);
 				control_bank(info.chr.rom.max.banks_1k)
-				chr.bank_1k[slot] = &chr.data[value << 10];
+				chr.bank_1k[slot] = chr_chip_byte_pnt(0, value << 10);
 				m183.chr_rom_bank[slot] = value;
 			}
 			return;

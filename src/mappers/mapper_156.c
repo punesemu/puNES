@@ -20,14 +20,14 @@ void extcl_cpu_wr_mem_156(WORD address, BYTE value) {
 		case 0xC002:
 		case 0xC003:
 			control_bank(info.chr.rom.max.banks_1k)
-			chr.bank_1k[address & 0x0007] = &chr.data[value << 10];
+			chr.bank_1k[address & 0x0007] = chr_chip_byte_pnt(0, value << 10);
 			return;
 		case 0xC008:
 		case 0xC009:
 		case 0xC00A:
 		case 0xC00B:
 			control_bank(info.chr.rom.max.banks_1k)
-			chr.bank_1k[(address & 0x000F) - 4] = &chr.data[value << 10];
+			chr.bank_1k[(address & 0x000F) - 4] = chr_chip_byte_pnt(0, value << 10);
 			return;
 		case 0xC010:
 			control_bank(info.prg.rom.max.banks_16k)

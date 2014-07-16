@@ -167,30 +167,30 @@ static void INLINE sync_83(void) {
 		value = m83.reg[0];
 		control_bank(info.chr.rom.max.banks_2k)
 		bank = value << 11;
-		chr.bank_1k[0] = &chr.data[bank];
-		chr.bank_1k[1] = &chr.data[bank | 0x0400];
+		chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);
+		chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);
 		value = m83.reg[1];
 		control_bank(info.chr.rom.max.banks_2k)
 		bank = value << 11;
-		chr.bank_1k[2] = &chr.data[bank];
-		chr.bank_1k[3] = &chr.data[bank | 0x0400];
+		chr.bank_1k[2] = chr_chip_byte_pnt(0, bank);
+		chr.bank_1k[3] = chr_chip_byte_pnt(0, bank | 0x0400);
 		value = m83.reg[6];
 		control_bank(info.chr.rom.max.banks_2k)
 		bank = value << 11;
-		chr.bank_1k[4] = &chr.data[bank];
-		chr.bank_1k[5] = &chr.data[bank | 0x0400];
+		chr.bank_1k[4] = chr_chip_byte_pnt(0, bank);
+		chr.bank_1k[5] = chr_chip_byte_pnt(0, bank | 0x0400);
 		value = m83.reg[7];
 		control_bank(info.chr.rom.max.banks_2k)
 		bank = value << 11;
-		chr.bank_1k[6] = &chr.data[bank];
-		chr.bank_1k[7] = &chr.data[bank | 0x0400];
+		chr.bank_1k[6] = chr_chip_byte_pnt(0, bank);
+		chr.bank_1k[7] = chr_chip_byte_pnt(0, bank | 0x0400);
 	} else {
 		BYTE i;
 
 		for (i = 0; i < 8; i++) {
 			value = ((m83.bank << 4) & 0x0300) | m83.reg[i];
 			control_bank(info.chr.rom.max.banks_1k)
-			chr.bank_1k[i] = &chr.data[value << 10];
+			chr.bank_1k[i] = chr_chip_byte_pnt(0, value << 10);
 		}
 	}
 	if (m83.mode & 0x40) {

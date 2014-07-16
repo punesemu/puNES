@@ -71,15 +71,15 @@ void extcl_cpu_wr_mem_MMC2and4(WORD address, BYTE value) {
 			return;
 	}
 	tmp = mmc2and4.regs[mmc2and4.latch0] << 12;
-	chr.bank_1k[0] = &chr.data[tmp];
-	chr.bank_1k[1] = &chr.data[tmp | 0x0400];
-	chr.bank_1k[2] = &chr.data[tmp | 0x0800];
-	chr.bank_1k[3] = &chr.data[tmp | 0x0C00];
+	chr.bank_1k[0] = chr_chip_byte_pnt(0, tmp);
+	chr.bank_1k[1] = chr_chip_byte_pnt(0, tmp | 0x0400);
+	chr.bank_1k[2] = chr_chip_byte_pnt(0, tmp | 0x0800);
+	chr.bank_1k[3] = chr_chip_byte_pnt(0, tmp | 0x0C00);
 	tmp = mmc2and4.regs[mmc2and4.latch1] << 12;
-	chr.bank_1k[4] = &chr.data[tmp];
-	chr.bank_1k[5] = &chr.data[tmp | 0x0400];
-	chr.bank_1k[6] = &chr.data[tmp | 0x0800];
-	chr.bank_1k[7] = &chr.data[tmp | 0x0C00];
+	chr.bank_1k[4] = chr_chip_byte_pnt(0, tmp);
+	chr.bank_1k[5] = chr_chip_byte_pnt(0, tmp | 0x0400);
+	chr.bank_1k[6] = chr_chip_byte_pnt(0, tmp | 0x0800);
+	chr.bank_1k[7] = chr_chip_byte_pnt(0, tmp | 0x0C00);
 }
 BYTE extcl_save_mapper_MMC2and4(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, mmc2and4.regs);
@@ -117,8 +117,8 @@ void extcl_after_rd_chr_MMC2and4(WORD address) {
 			return;
 	}
 	value <<= 12;
-	chr.bank_1k[0 | bank] = &chr.data[value];
-	chr.bank_1k[1 | bank] = &chr.data[value | 0x0400];
-	chr.bank_1k[2 | bank] = &chr.data[value | 0x0800];
-	chr.bank_1k[3 | bank] = &chr.data[value | 0x0C00];
+	chr.bank_1k[0 | bank] = chr_chip_byte_pnt(0, value);
+	chr.bank_1k[1 | bank] = chr_chip_byte_pnt(0, value | 0x0400);
+	chr.bank_1k[2 | bank] = chr_chip_byte_pnt(0, value | 0x0800);
+	chr.bank_1k[3 | bank] = chr_chip_byte_pnt(0, value | 0x0C00);
 }

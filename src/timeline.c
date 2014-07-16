@@ -203,7 +203,7 @@ void tl_operation(BYTE mode, BYTE snap) {
 	}
 	tl_on_struct(mode, chr);
 	if (mapper.write_vram) {
-		tl_on_mem(mode, chr.data, chr_ram_size());
+		tl_on_mem(mode, chr_chip(0), chr_ram_size());
 	}
 	if (chr.extra.size) {
 		tl_on_mem(mode, chr.extra.data, chr.extra.size);

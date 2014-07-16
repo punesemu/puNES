@@ -697,11 +697,11 @@ void map_quit(void) {
 	{
 		BYTE i;
 
-		for (i = 0; i < LENGTH(prg.chip); i++) {
-			if (prg.chip[i].rom) {
-				free(prg.chip[i].rom);
-				prg.chip[i].rom = NULL;
-				prg.chip[i].size = 0;
+		for (i = 0; i < MAX_CHIPS; i++) {
+			if (prg_chip(i)) {
+				free(prg_chip(i));
+				prg_chip(i) = NULL;
+				prg_chip_size(i) = 0;
 			}
 		}
 	}
@@ -718,15 +718,22 @@ void map_quit(void) {
 	prg.ram_battery = NULL;
 
 	/* CHR */
-	if (chr.data) {
-		free(chr.data);
+	{
+		BYTE i;
+
+		for (i = 0; i < MAX_CHIPS; i++) {
+			if (chr_chip(i)) {
+				free(chr_chip(i));
+				chr_chip(i) = NULL;
+				chr_chip_size(i) = 0;
+			}
+		}
 	}
 	/* CHR extra */
 	if (chr.extra.data) {
 		free(chr.extra.data);
 		chr.extra.size = 0;
 	}
-	chr.data = NULL;
 	chr.extra.data = NULL;
 
 	memset(chr.bank_1k, 0, sizeof(chr.bank_1k));
@@ -737,15 +744,15 @@ void map_quit(void) {
 }
 
 BYTE map_prg_chip_malloc(BYTE index, size_t size, BYTE set_value) {
-	if (prg.chip[index].rom) {
-		free(prg.chip[index].rom);
-		prg.chip[index].rom = NULL;
+	if (prg_chip(index)) {
+		free(prg_chip(index));
+		prg_chip(index) = NULL;
 	}
 
-	prg.chip[index].size = size;
+	prg_chip_size(index) = size;
 
-	if ((prg.chip[index].rom = (BYTE *) malloc(size))) {
-		memset(prg.chip[index].rom, set_value, size);
+	if ((prg_chip(index) = (BYTE *) malloc(size))) {
+		memset(prg_chip(index), set_value, size);
 	} else {
 		fprintf(stderr, "Out of memory\n");
 		return (EXIT_ERROR);
@@ -753,7 +760,13 @@ BYTE map_prg_chip_malloc(BYTE index, size_t size, BYTE set_value) {
 
 	return (EXIT_OK);
 }
-void map_prg_rom_8k(BYTE banks_8k, BYTE at, BYTE value) {
+BYTE map_prg_chip_rd_byte(BYTE index, BYTE openbus, WORD address, WORD mask) {
+	if (prg_chip(index)) {
+		return (prg_chip_byte(1, address & mask));
+	}
+	return (openbus);
+}
+void map_prg_rom_8k(BYTE banks_8k, BYTE at, WORD value) {
 	BYTE a;
 
 	/* se cerco di switchare 32k ma ho solo un banco da 16k esco */
@@ -834,19 +847,35 @@ void map_prg_ram_init(void) {
 		memcpy(here + 0x1000, &trainer.data, sizeof(trainer.data));
 	}
 }
+BYTE map_chr_chip_malloc(BYTE index, size_t size, BYTE set_value) {
+	if (chr_chip(index)) {
+		free(chr_chip(index));
+		chr_chip(index) = NULL;
+	}
+
+	chr_chip_size(index) = size;
+	chr.chip[index].size = size;
+
+	if ((chr_chip(index) = (BYTE *) malloc(size))) {
+		memset(chr_chip(index), set_value, size);
+	} else {
+		fprintf(stderr, "Out of memory\n");
+		return (EXIT_ERROR);
+	}
+
+	return (EXIT_OK);
+}
 BYTE map_chr_ram_init(void) {
 	if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP))) {
 		if (mapper.write_vram) {
-			if (chr.data) {
-				free(chr.data);
+			if (chr_chip(0)) {
+				free(chr_chip(0));
 			}
 			/* alloco la CHR Rom */
-			if (!(chr.data = (BYTE *) malloc(chr_ram_size()))) {
-				fprintf(stderr, "Out of memory\n");
+			if (map_chr_chip_malloc(0, chr_ram_size(), 0x00) == EXIT_ERROR) {
 				return (EXIT_ERROR);
 			}
 			chr_bank_1k_reset()
-			memset(chr.data, 0x00, chr_ram_size());
 		}
 	}
 

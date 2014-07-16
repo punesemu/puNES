@@ -49,7 +49,7 @@ void extcl_cpu_wr_mem_Futuremedia(WORD address, BYTE value) {
 		case 0xA006:
 		case 0xA007:
 			control_bank(info.chr.rom.max.banks_1k)
-			chr.bank_1k[address & 0x0007] = &chr.data[value << 10];
+			chr.bank_1k[address & 0x0007] = chr_chip_byte_pnt(0, value << 10);
 			return;
 		case 0xC001:
 			irqA12.reload = value;

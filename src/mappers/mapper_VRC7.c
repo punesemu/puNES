@@ -78,35 +78,35 @@ void extcl_cpu_wr_mem_VRC7(WORD address, BYTE value) {
 			return;
 		case 0xA000:
 			control_bank(info.chr.rom.max.banks_1k)
-			chr.bank_1k[0] = &chr.data[value << 10];
+			chr.bank_1k[0] = chr_chip_byte_pnt(0, value << 10);
 			return;
 		case 0xA001:
 			control_bank(info.chr.rom.max.banks_1k)
-			chr.bank_1k[1] = &chr.data[value << 10];
+			chr.bank_1k[1] = chr_chip_byte_pnt(0, value << 10);
 			return;
 		case 0xB000:
 			control_bank(info.chr.rom.max.banks_1k)
-			chr.bank_1k[2] = &chr.data[value << 10];
+			chr.bank_1k[2] = chr_chip_byte_pnt(0, value << 10);
 			return;
 		case 0xB001:
 			control_bank(info.chr.rom.max.banks_1k)
-			chr.bank_1k[3] = &chr.data[value << 10];
+			chr.bank_1k[3] = chr_chip_byte_pnt(0, value << 10);
 			return;
 		case 0xC000:
 			control_bank(info.chr.rom.max.banks_1k)
-			chr.bank_1k[4] = &chr.data[value << 10];
+			chr.bank_1k[4] = chr_chip_byte_pnt(0, value << 10);
 			return;
 		case 0xC001:
 			control_bank(info.chr.rom.max.banks_1k)
-			chr.bank_1k[5] = &chr.data[value << 10];
+			chr.bank_1k[5] = chr_chip_byte_pnt(0, value << 10);
 			return;
 		case 0xD000:
 			control_bank(info.chr.rom.max.banks_1k)
-			chr.bank_1k[6] = &chr.data[value << 10];
+			chr.bank_1k[6] = chr_chip_byte_pnt(0, value << 10);
 			return;
 		case 0xD001:
 			control_bank(info.chr.rom.max.banks_1k)
-			chr.bank_1k[7] = &chr.data[value << 10];
+			chr.bank_1k[7] = chr_chip_byte_pnt(0, value << 10);
 			return;
 		case 0xE000: {
 			switch (value & 0x03) {

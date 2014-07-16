@@ -120,7 +120,7 @@ void extcl_cpu_wr_mem_Irem_G101(WORD address, BYTE value) {
 			break;
 		case 0xB000:
 			control_bank(info.chr.rom.max.banks_1k)
-			chr.bank_1k[address & 0x0007] = &chr.data[value << 10];
+			chr.bank_1k[address & 0x0007] = chr_chip_byte_pnt(0, value << 10);
 			break;
 	}
 }
@@ -166,7 +166,7 @@ void extcl_cpu_wr_mem_Irem_H3000(WORD address, BYTE value) {
 		}
 		case 0xB000:
 			control_bank(info.chr.rom.max.banks_1k)
-			chr.bank_1k[address & 0x0007] = &chr.data[value << 10];
+			chr.bank_1k[address & 0x0007] = chr_chip_byte_pnt(0, value << 10);
 			break;
 		case 0xA000:
 			control_bank(info.prg.rom.max.banks_8k)
@@ -212,8 +212,8 @@ void extcl_cpu_wr_mem_Irem_LROG017(WORD address, BYTE value) {
 	value = save >> 4;
 	control_bank(info.chr.rom.max.banks_2k)
 	bank = value << 11;
-	chr.bank_1k[0] = &chr.data[bank];
-	chr.bank_1k[1] = &chr.data[bank | 0x0400];
+	chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);
+	chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);
 }
 BYTE extcl_save_mapper_Irem_LROG017(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_mem(mode, slot, chr.extra.data, chr.extra.size, FALSE)

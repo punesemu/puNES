@@ -33,7 +33,7 @@
 #define kasing_chr_1k_update(slot)\
 {\
 	WORD tmp = (kasing.chr_high << 8) & 0x0100;\
-	chr.bank_1k[slot] = &chr.data[(tmp | kasing.chr_rom_bank[slot]) << 10];\
+	chr.bank_1k[slot] = chr_chip_byte_pnt(0, (tmp | kasing.chr_rom_bank[slot]) << 10);\
 }
 #define kasing_intercept_8001_chr(slot, val)\
 {\

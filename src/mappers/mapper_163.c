@@ -53,14 +53,14 @@ void extcl_cpu_wr_mem_163(WORD address, BYTE value) {
 			/* CHR */
 			if (!(m163.chr = value & 0x80) && (ppu.screen_y < 128)) {
 				m163.chr_mode = 0;
-				chr.bank_1k[0] = &chr.data[0x0000];
-				chr.bank_1k[1] = &chr.data[0x0400];
-				chr.bank_1k[2] = &chr.data[0x0800];
-				chr.bank_1k[3] = &chr.data[0x0C00];
-				chr.bank_1k[4] = &chr.data[0x1000];
-				chr.bank_1k[5] = &chr.data[0x1400];
-				chr.bank_1k[6] = &chr.data[0x1800];
-				chr.bank_1k[7] = &chr.data[0x1C00];
+				chr.bank_1k[0] = chr_chip_byte_pnt(0, 0x0000);
+				chr.bank_1k[1] = chr_chip_byte_pnt(0, 0x0400);
+				chr.bank_1k[2] = chr_chip_byte_pnt(0, 0x0800);
+				chr.bank_1k[3] = chr_chip_byte_pnt(0, 0x0C00);
+				chr.bank_1k[4] = chr_chip_byte_pnt(0, 0x1000);
+				chr.bank_1k[5] = chr_chip_byte_pnt(0, 0x1400);
+				chr.bank_1k[6] = chr_chip_byte_pnt(0, 0x1800);
+				chr.bank_1k[7] = chr_chip_byte_pnt(0, 0x1C00);
 			}
 
 			/* PRG */
@@ -105,24 +105,24 @@ void extcl_ppu_update_screen_y_163(void) {
 	if (m163.chr && r2001.visible && !r2002.vblank) {
 		if (ppu.screen_y == 240) {
 			m163.chr_mode = 1;
-			chr.bank_1k[0] = &chr.data[0x0000];
-			chr.bank_1k[1] = &chr.data[0x0400];
-			chr.bank_1k[2] = &chr.data[0x0800];
-			chr.bank_1k[3] = &chr.data[0x0C00];
-			chr.bank_1k[4] = &chr.data[0x0000];
-			chr.bank_1k[5] = &chr.data[0x0400];
-			chr.bank_1k[6] = &chr.data[0x0800];
-			chr.bank_1k[7] = &chr.data[0x0C00];
+			chr.bank_1k[0] = chr_chip_byte_pnt(0, 0x0000);
+			chr.bank_1k[1] = chr_chip_byte_pnt(0, 0x0400);
+			chr.bank_1k[2] = chr_chip_byte_pnt(0, 0x0800);
+			chr.bank_1k[3] = chr_chip_byte_pnt(0, 0x0C00);
+			chr.bank_1k[4] = chr_chip_byte_pnt(0, 0x0000);
+			chr.bank_1k[5] = chr_chip_byte_pnt(0, 0x0400);
+			chr.bank_1k[6] = chr_chip_byte_pnt(0, 0x0800);
+			chr.bank_1k[7] = chr_chip_byte_pnt(0, 0x0C00);
 		} else if (ppu.screen_y == 128) {
 			m163.chr_mode = 2;
-			chr.bank_1k[0] = &chr.data[0x1000];
-			chr.bank_1k[1] = &chr.data[0x1400];
-			chr.bank_1k[2] = &chr.data[0x1800];
-			chr.bank_1k[3] = &chr.data[0x1C00];
-			chr.bank_1k[4] = &chr.data[0x1000];
-			chr.bank_1k[5] = &chr.data[0x1400];
-			chr.bank_1k[6] = &chr.data[0x1800];
-			chr.bank_1k[7] = &chr.data[0x1C00];
+			chr.bank_1k[0] = chr_chip_byte_pnt(0, 0x1000);
+			chr.bank_1k[1] = chr_chip_byte_pnt(0, 0x1400);
+			chr.bank_1k[2] = chr_chip_byte_pnt(0, 0x1800);
+			chr.bank_1k[3] = chr_chip_byte_pnt(0, 0x1C00);
+			chr.bank_1k[4] = chr_chip_byte_pnt(0, 0x1000);
+			chr.bank_1k[5] = chr_chip_byte_pnt(0, 0x1400);
+			chr.bank_1k[6] = chr_chip_byte_pnt(0, 0x1800);
+			chr.bank_1k[7] = chr_chip_byte_pnt(0, 0x1C00);
 		}
 	}
 }
@@ -137,34 +137,34 @@ BYTE extcl_save_mapper_163(BYTE mode, BYTE slot, FILE *fp) {
 	if (mode == SAVE_SLOT_READ) {
 		switch(m163.chr_mode) {
 			case 0:
-				chr.bank_1k[0] = &chr.data[0x0000];
-				chr.bank_1k[1] = &chr.data[0x0400];
-				chr.bank_1k[2] = &chr.data[0x0800];
-				chr.bank_1k[3] = &chr.data[0x0C00];
-				chr.bank_1k[4] = &chr.data[0x1000];
-				chr.bank_1k[5] = &chr.data[0x1400];
-				chr.bank_1k[6] = &chr.data[0x1800];
-				chr.bank_1k[7] = &chr.data[0x1C00];
+				chr.bank_1k[0] = chr_chip_byte_pnt(0, 0x0000);
+				chr.bank_1k[1] = chr_chip_byte_pnt(0, 0x0400);
+				chr.bank_1k[2] = chr_chip_byte_pnt(0, 0x0800);
+				chr.bank_1k[3] = chr_chip_byte_pnt(0, 0x0C00);
+				chr.bank_1k[4] = chr_chip_byte_pnt(0, 0x1000);
+				chr.bank_1k[5] = chr_chip_byte_pnt(0, 0x1400);
+				chr.bank_1k[6] = chr_chip_byte_pnt(0, 0x1800);
+				chr.bank_1k[7] = chr_chip_byte_pnt(0, 0x1C00);
 				break;
 			case 1:
-				chr.bank_1k[0] = &chr.data[0x0000];
-				chr.bank_1k[1] = &chr.data[0x0400];
-				chr.bank_1k[2] = &chr.data[0x0800];
-				chr.bank_1k[3] = &chr.data[0x0C00];
-				chr.bank_1k[4] = &chr.data[0x0000];
-				chr.bank_1k[5] = &chr.data[0x0400];
-				chr.bank_1k[6] = &chr.data[0x0800];
-				chr.bank_1k[7] = &chr.data[0x0C00];
+				chr.bank_1k[0] = chr_chip_byte_pnt(0, 0x0000);
+				chr.bank_1k[1] = chr_chip_byte_pnt(0, 0x0400);
+				chr.bank_1k[2] = chr_chip_byte_pnt(0, 0x0800);
+				chr.bank_1k[3] = chr_chip_byte_pnt(0, 0x0C00);
+				chr.bank_1k[4] = chr_chip_byte_pnt(0, 0x0000);
+				chr.bank_1k[5] = chr_chip_byte_pnt(0, 0x0400);
+				chr.bank_1k[6] = chr_chip_byte_pnt(0, 0x0800);
+				chr.bank_1k[7] = chr_chip_byte_pnt(0, 0x0C00);
 				break;
 			case 2:
-				chr.bank_1k[0] = &chr.data[0x1000];
-				chr.bank_1k[1] = &chr.data[0x1400];
-				chr.bank_1k[2] = &chr.data[0x1800];
-				chr.bank_1k[3] = &chr.data[0x1C00];
-				chr.bank_1k[4] = &chr.data[0x1000];
-				chr.bank_1k[5] = &chr.data[0x1400];
-				chr.bank_1k[6] = &chr.data[0x1800];
-				chr.bank_1k[7] = &chr.data[0x1C00];
+				chr.bank_1k[0] = chr_chip_byte_pnt(0, 0x1000);
+				chr.bank_1k[1] = chr_chip_byte_pnt(0, 0x1400);
+				chr.bank_1k[2] = chr_chip_byte_pnt(0, 0x1800);
+				chr.bank_1k[3] = chr_chip_byte_pnt(0, 0x1C00);
+				chr.bank_1k[4] = chr_chip_byte_pnt(0, 0x1000);
+				chr.bank_1k[5] = chr_chip_byte_pnt(0, 0x1400);
+				chr.bank_1k[6] = chr_chip_byte_pnt(0, 0x1800);
+				chr.bank_1k[7] = chr_chip_byte_pnt(0, 0x1C00);
 				break;
 		}
 	}

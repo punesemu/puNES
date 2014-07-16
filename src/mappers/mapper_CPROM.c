@@ -17,10 +17,10 @@ void map_init_CPROM(void) {
 	map_set_banks_max_prg_and_chr();
 
 	if (info.reset >= HARD) {
-		chr.bank_1k[4] = &chr.data[0x0000];
-		chr.bank_1k[5] = &chr.data[0x0400];
-		chr.bank_1k[6] = &chr.data[0x0800];
-		chr.bank_1k[7] = &chr.data[0x0C00];
+		chr.bank_1k[4] = chr_chip_byte_pnt(0, 0x0000);
+		chr.bank_1k[5] = chr_chip_byte_pnt(0, 0x0400);
+		chr.bank_1k[6] = chr_chip_byte_pnt(0, 0x0800);
+		chr.bank_1k[7] = chr_chip_byte_pnt(0, 0x0C00);
 	}
 
 	EXTCL_CPU_WR_MEM(CPROM);
@@ -33,8 +33,8 @@ void extcl_cpu_wr_mem_CPROM(WORD address, BYTE value) {
 
 	control_bank_with_AND(0x03, info.chr.rom.max.banks_4k)
 	bank = value << 12;
-	chr.bank_1k[4] = &chr.data[bank];
-	chr.bank_1k[5] = &chr.data[bank | 0x0400];
-	chr.bank_1k[6] = &chr.data[bank | 0x0800];
-	chr.bank_1k[7] = &chr.data[bank | 0x0C00];
+	chr.bank_1k[4] = chr_chip_byte_pnt(0, bank);
+	chr.bank_1k[5] = chr_chip_byte_pnt(0, bank | 0x0400);
+	chr.bank_1k[6] = chr_chip_byte_pnt(0, bank | 0x0800);
+	chr.bank_1k[7] = chr_chip_byte_pnt(0, bank | 0x0C00);
 }

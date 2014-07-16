@@ -15,7 +15,7 @@
 #define m219_chr_1k(a, b)\
 	value = m219.reg[2] | ((save >> 1) & a);\
 	control_bank(info.chr.rom.max.banks_1k)\
-	chr.bank_1k[b] = &chr.data[value << 10]
+	chr.bank_1k[b] = chr_chip_byte_pnt(0, value << 10)
 
 void map_init_219(void) {
 	EXTCL_CPU_WR_MEM(219);

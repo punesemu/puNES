@@ -35,20 +35,20 @@ void extcl_cpu_wr_mem_91(WORD address, BYTE value) {
 
 		switch (address & 0x0003) {
 			case 0:
-				chr.bank_1k[0] = &chr.data[bank];
-				chr.bank_1k[1] = &chr.data[bank | 0x0400];
+				chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);
+				chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);
 				return;
 			case 1:
-				chr.bank_1k[2] = &chr.data[bank];
-				chr.bank_1k[3] = &chr.data[bank | 0x0400];
+				chr.bank_1k[2] = chr_chip_byte_pnt(0, bank);
+				chr.bank_1k[3] = chr_chip_byte_pnt(0, bank | 0x0400);
 				return;
 			case 2:
-				chr.bank_1k[4] = &chr.data[bank];
-				chr.bank_1k[5] = &chr.data[bank | 0x0400];
+				chr.bank_1k[4] = chr_chip_byte_pnt(0, bank);
+				chr.bank_1k[5] = chr_chip_byte_pnt(0, bank | 0x0400);
 				return;
 			case 3:
-				chr.bank_1k[6] = &chr.data[bank];
-				chr.bank_1k[7] = &chr.data[bank | 0x0400];
+				chr.bank_1k[6] = chr_chip_byte_pnt(0, bank);
+				chr.bank_1k[7] = chr_chip_byte_pnt(0, bank | 0x0400);
 				return;
 		}
 	}

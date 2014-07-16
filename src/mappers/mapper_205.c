@@ -21,7 +21,7 @@
 		WORD bank;\
 		m205_chr_1k(m205.chr_map[i]);\
 		_control_bank(bank, info.chr.rom.max.banks_1k)\
-		chr.bank_1k[i] = &chr.data[bank << 10];\
+		chr.bank_1k[i] = chr_chip_byte_pnt(0, bank << 10);\
 	}\
 }
 #define m205_prg_8k_update()\
@@ -91,8 +91,8 @@
 			m205_chr_1k(value);\
 			bank &= 0xFFE;\
 			_control_bank(bank, info.chr.rom.max.banks_1k)\
-			chr.bank_1k[mmc3.chr_rom_cfg] = &chr.data[bank << 10];\
-			chr.bank_1k[mmc3.chr_rom_cfg | 0x01] = &chr.data[(bank + 1) << 10];\
+			chr.bank_1k[mmc3.chr_rom_cfg] = chr_chip_byte_pnt(0, bank << 10);\
+			chr.bank_1k[mmc3.chr_rom_cfg | 0x01] = chr_chip_byte_pnt(0, (bank + 1) << 10);\
 			return;\
 		case 1:\
 			m205.chr_map[mmc3.chr_rom_cfg | 0x02] = value;\
@@ -100,32 +100,32 @@
 			m205_chr_1k(value);\
 			bank &= 0xFFE;\
 			_control_bank(bank, info.chr.rom.max.banks_1k)\
-			chr.bank_1k[mmc3.chr_rom_cfg | 0x02] = &chr.data[bank << 10];\
-			chr.bank_1k[mmc3.chr_rom_cfg | 0x03] = &chr.data[(bank + 1) << 10];\
+			chr.bank_1k[mmc3.chr_rom_cfg | 0x02] = chr_chip_byte_pnt(0, bank << 10);\
+			chr.bank_1k[mmc3.chr_rom_cfg | 0x03] = chr_chip_byte_pnt(0, (bank + 1) << 10);\
 			return;\
 		case 2:\
 			m205.chr_map[mmc3.chr_rom_cfg ^ 0x04] = value;\
 			m205_chr_1k(value);\
 			_control_bank(bank, info.chr.rom.max.banks_1k)\
-			chr.bank_1k[mmc3.chr_rom_cfg ^ 0x04] = &chr.data[bank << 10];\
+			chr.bank_1k[mmc3.chr_rom_cfg ^ 0x04] = chr_chip_byte_pnt(0, bank << 10);\
 			return;\
 		case 3:\
 			m205.chr_map[(mmc3.chr_rom_cfg ^ 0x04) | 0x01] = value;\
 			m205_chr_1k(value);\
 			_control_bank(bank, info.chr.rom.max.banks_1k)\
-			chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x01] = &chr.data[bank << 10];\
+			chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x01] = chr_chip_byte_pnt(0, bank << 10);\
 			return;\
 		case 4:\
 			m205.chr_map[(mmc3.chr_rom_cfg ^ 0x04) | 0x02] = value;\
 			m205_chr_1k(value);\
 			_control_bank(bank, info.chr.rom.max.banks_1k)\
-			chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x02] = &chr.data[bank << 10];\
+			chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x02] = chr_chip_byte_pnt(0, bank << 10);\
 			return;\
 		case 5:\
 			m205.chr_map[(mmc3.chr_rom_cfg ^ 0x04) | 0x03] = value;\
 			m205_chr_1k(value);\
 			_control_bank(bank, info.chr.rom.max.banks_1k)\
-			chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x03] = &chr.data[bank << 10];\
+			chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x03] = chr_chip_byte_pnt(0, bank << 10);\
 			return;\
 		case 6:\
 			m205.prg_map[mmc3.prg_rom_cfg] = value;\

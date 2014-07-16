@@ -26,7 +26,7 @@ void map_init_186(void) {
 
 	if (info.reset >= HARD) {
 		memset(&m186, 0x00, sizeof(m186));
-		m186.prg_ram_bank2 = prg_chip_byte_pnt(0, 0);
+		m186.prg_ram_bank2 = prg_chip(0);
 		map_prg_rom_8k(2, 0, 0);
 		map_prg_rom_8k(2, 2, 0);
 	}

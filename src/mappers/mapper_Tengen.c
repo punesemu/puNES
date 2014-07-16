@@ -71,14 +71,14 @@ enum {
 			tengen_rambo_chr_2k_control(1, 2);\
 		}\
 	}\
-	chr.bank_1k[0] = &chr.data[bank[0] << 10];\
-	chr.bank_1k[1] = &chr.data[bank[1] << 10];\
-	chr.bank_1k[2] = &chr.data[bank[2] << 10];\
-	chr.bank_1k[3] = &chr.data[bank[3] << 10];\
-	chr.bank_1k[4] = &chr.data[bank[4] << 10];\
-	chr.bank_1k[5] = &chr.data[bank[5] << 10];\
-	chr.bank_1k[6] = &chr.data[bank[6] << 10];\
-	chr.bank_1k[7] = &chr.data[bank[7] << 10];\
+	chr.bank_1k[0] = chr_chip_byte_pnt(0, bank[0] << 10);\
+	chr.bank_1k[1] = chr_chip_byte_pnt(0, bank[1] << 10);\
+	chr.bank_1k[2] = chr_chip_byte_pnt(0, bank[2] << 10);\
+	chr.bank_1k[3] = chr_chip_byte_pnt(0, bank[3] << 10);\
+	chr.bank_1k[4] = chr_chip_byte_pnt(0, bank[4] << 10);\
+	chr.bank_1k[5] = chr_chip_byte_pnt(0, bank[5] << 10);\
+	chr.bank_1k[6] = chr_chip_byte_pnt(0, bank[6] << 10);\
+	chr.bank_1k[7] = chr_chip_byte_pnt(0, bank[7] << 10);\
 }
 #define tengen_rambo_chr_1k_control(chr_1k, bank_1k)\
 	value = tengen_rambo.chr[chr_1k];\

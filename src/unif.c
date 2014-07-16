@@ -35,32 +35,34 @@ typedef struct {
 	char board[15];
 	WORD ines_mapper;
 	WORD unif_mapper;
+	BYTE submapper;
 	WORD id;
 } _unif_board;
 
 static const _unif_board unif_boards[] = {
-	{"NROM", 0 , NO_UNIF, DEFAULT},
-	{"NROM-128", 0, NO_UNIF, DEFAULT},
-	{"NROM-256", 0, NO_UNIF, DEFAULT},
-	{"Sachen-74LS374N", 150, NO_UNIF, DEFAULT},
-	{"UOROM", 2 , NO_UNIF, DEFAULT},
-	{"TC-U01-1.5M", 147, NO_UNIF, DEFAULT},
-	{"SA-NROM", 143, NO_UNIF, DEFAULT},
-	{"SLROM", 1, NO_UNIF, DEFAULT},
-	{"22211", 132, NO_UNIF, DEFAULT},
-	{"TLROM", 4, NO_UNIF, DEFAULT},
-	{"TBROM", 4, NO_UNIF, DEFAULT},
-	{"TKROM", 4, NO_UNIF, DEFAULT},
-	{"Sachen-8259C", 139, NO_UNIF, DEFAULT},
-	{"SA-016-1M", 146, NO_UNIF, DEFAULT},
-	{"Sachen-8259D", 137, NO_UNIF, DEFAULT},
-	{"ANROM", 7, NO_UNIF, DEFAULT},
+	{"NROM", 0 , NO_UNIF, DEFAULT, DEFAULT},
+	{"NROM-128", 0, NO_UNIF, DEFAULT, DEFAULT},
+	{"NROM-256", 0, NO_UNIF, DEFAULT, DEFAULT},
+	{"Sachen-74LS374N", 150, NO_UNIF, DEFAULT, DEFAULT},
+	{"UOROM", 2 , NO_UNIF, DEFAULT, DEFAULT},
+	{"TC-U01-1.5M", 147, NO_UNIF, DEFAULT, DEFAULT},
+	{"SA-NROM", 143, NO_UNIF, DEFAULT, DEFAULT},
+	{"SLROM", 1, NO_UNIF, DEFAULT, DEFAULT},
+	{"22211", 132, NO_UNIF, DEFAULT, DEFAULT},
+	{"TLROM", 4, NO_UNIF, DEFAULT, DEFAULT},
+	{"TBROM", 4, NO_UNIF, DEFAULT, DEFAULT},
+	{"TKROM", 4, NO_UNIF, DEFAULT, DEFAULT},
+	{"Sachen-8259C", 139, NO_UNIF, DEFAULT, DEFAULT},
+	{"SA-016-1M", 146, NO_UNIF, DEFAULT, DEFAULT},
+	{"Sachen-8259D", 137, NO_UNIF, DEFAULT, DEFAULT},
+	{"ANROM", 7, NO_UNIF, DEFAULT, DEFAULT},
 
-	{"A65AS", NO_INES , 0, DEFAULT},
-	{"MARIO1-MALEE2", NO_INES , 1, DEFAULT},
+	{"A65AS", NO_INES , 0, DEFAULT, DEFAULT},
+	{"MARIO1-MALEE2", NO_INES , 1, DEFAULT, DEFAULT},
 
-	{"FK23C", 176, NO_UNIF, DEFAULT},
-	{"FK23CA", 176, NO_UNIF, BMCFK23C_1 | BMCFK23CA},
+	{"FK23C", 176, NO_UNIF, DEFAULT, DEFAULT},
+	{"FK23CA", 176, NO_UNIF, DEFAULT, BMCFK23C_1 | BMCFK23CA},
+	{"D1038", 60, NO_UNIF, MAP60_VT5201, DEFAULT},
 
 	//{"NTBROM", 68, NO_UNIF},
 };
@@ -124,6 +126,8 @@ BYTE unif_load_rom(void) {
 	if (strncmp(unif.header.identification, "UNIF", 4) == 0) {
 		long position = ftell(fp);
 
+		info.format = UNIF_FORMAT;
+
 		for (phase = UNIF_COUNT; phase <= UNIF_READ; phase++) {
 			fseek(fp, position, SEEK_SET);
 
@@ -134,7 +138,7 @@ BYTE unif_load_rom(void) {
 				}
 
 				info.prg.rom.banks_16k = prg_chip_size(0) / (16 * 1024);
-				info.chr.rom.banks_8k = unif.chr.size / (8 * 1024);
+				info.chr.rom.banks_8k = chr_chip_size(0) / (8 * 1024);
 
 
 
@@ -194,26 +198,6 @@ BYTE unif_load_rom(void) {
 					return (EXIT_ERROR);
 				}
 
-				/* imposto come default il mirroring verticale */
-				mirroring_V();
-
-				/*
-				 * se e' settato mapper.write_vram, vuol dire
-				 * che la rom non ha CHR Rom e che quindi la CHR Ram
-				 * la trattero' nell'inizializzazione della mapper
-				 * (perche' alcune mapper ne hanno 16k, altre 8k).
-				 */
-				if (mapper.write_vram == FALSE) {
-					/* alloco la CHR Rom */
-					if ((chr.data = (BYTE *) malloc(info.chr.rom.banks_8k * (8 * 1024)))) {
-						unif.chr.pnt = chr.data;
-						chr_bank_1k_reset();
-					} else {
-						fprintf(stderr, "Out of memory\n");
-						fclose(fp);
-						return (EXIT_ERROR);
-					}
-				}
 				/* la CHR ram extra */
 				memset(&chr.extra, 0x00, sizeof(chr.extra));
 			}
@@ -227,7 +211,10 @@ BYTE unif_load_rom(void) {
 						return (EXIT_ERROR);
 					}
 				} else if (strncmp(unif.chunk.id, "CHR", 3) == 0) {
-					unif_CHR(fp, phase);
+					if (unif_CHR(fp, phase) == EXIT_ERROR) {
+						fclose(fp);
+						return (EXIT_ERROR);
+					}
 				} else if (strncmp(unif.chunk.id, "PCK", 3) == 0) {
 					fseek(fp, unif.chunk.length, SEEK_CUR);
 				} else if (strncmp(unif.chunk.id, "CCK", 3) == 0) {
@@ -313,6 +300,7 @@ BYTE unif_MAPR(FILE *fp, BYTE phase) {
 				} else {
 					info.mapper.id = unif_boards[i].ines_mapper;
 				}
+				info.mapper.submapper = unif_boards[i].submapper;
 				info.id = unif_boards[i].id;
 				unif.internal_mapper = unif_boards[i].unif_mapper;
 				unif.finded = TRUE;
@@ -345,7 +333,7 @@ BYTE unif_NAME(FILE *fp, BYTE phase) {
 BYTE unif_PRG(FILE *fp, BYTE phase) {
 	int chip = atoi(unif.chunk.id + 3);
 
-	if (chip > LENGTH(prg.chip)) {
+	if (chip >= MAX_CHIPS) {
 		return (EXIT_ERROR);
 	}
 
@@ -363,12 +351,23 @@ BYTE unif_PRG(FILE *fp, BYTE phase) {
 	return (EXIT_OK);
 }
 BYTE unif_CHR(FILE *fp, BYTE phase) {
+	int chip = atoi(unif.chunk.id + 3);
+
+	if (chip >= MAX_CHIPS) {
+		return (EXIT_ERROR);
+	}
 	if (phase == UNIF_COUNT) {
-		unif.chr.size += unif.chunk.length;
+		chr_chip_size(chip) = unif.chunk.length;
 		fseek(fp, unif.chunk.length, SEEK_CUR);
 	} else {
-		fread(unif.chr.pnt, unif.chunk.length, 1, fp);
-		//unif.chr.pnt += unif.chunk.length;
+		/* alloco e carico la PRG Rom */
+		if (map_chr_chip_malloc(chip, chr_chip_size(chip), 0x00) == EXIT_ERROR) {
+			return (EXIT_ERROR);
+		}
+		fread(chr_chip(chip), chr_chip_size(chip), 1, fp);
+		if (chip == 0) {
+			chr_bank_1k_reset();
+		}
 	}
 
 	return (EXIT_OK);

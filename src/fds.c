@@ -105,6 +105,8 @@ BYTE fds_load_rom(void) {
 		rewind(fds.info.fp);
 	}
 
+	info.format = FDS_FORMAT;
+
 	/* conto le dimensioni dei vari sides */
 	for (i = 0; i < fds.info.total_sides; i++) {
 		fds_disk_op(FDS_DISK_COUNT, i);

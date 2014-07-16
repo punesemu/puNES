@@ -18,25 +18,25 @@
 	control_bank(chr_ram_4k_max)\
 	b161x02x74.chr_rom_bank = value;\
 	bank = value << 12;\
-	chr.bank_1k[0] = &chr.data[bank];\
-	chr.bank_1k[1] = &chr.data[bank | 0x0400];\
-	chr.bank_1k[2] = &chr.data[bank | 0x0800];\
-	chr.bank_1k[3] = &chr.data[bank | 0x0C00];\
+	chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);\
+	chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);\
+	chr.bank_1k[2] = chr_chip_byte_pnt(0, bank | 0x0800);\
+	chr.bank_1k[3] = chr_chip_byte_pnt(0, bank | 0x0C00);\
 	value = (save & 0x04) | 0x03;\
 	control_bank(chr_ram_4k_max)\
 	bank = value << 12;\
-	chr.bank_1k[4] = &chr.data[bank];\
-	chr.bank_1k[5] = &chr.data[bank | 0x0400];\
-	chr.bank_1k[6] = &chr.data[bank | 0x0800];\
-	chr.bank_1k[7] = &chr.data[bank | 0x0C00]
+	chr.bank_1k[4] = chr_chip_byte_pnt(0, bank);\
+	chr.bank_1k[5] = chr_chip_byte_pnt(0, bank | 0x0400);\
+	chr.bank_1k[6] = chr_chip_byte_pnt(0, bank | 0x0800);\
+	chr.bank_1k[7] = chr_chip_byte_pnt(0, bank | 0x0C00)
 #define b16x02x74_r2006(adr)\
 {\
 	const BYTE value = (b161x02x74.chr_rom_bank & 0x04) | ((adr >> 8) & 0x03);\
 	const DBWORD bank = value << 12;\
-	chr.bank_1k[0] = &chr.data[bank];\
-	chr.bank_1k[1] = &chr.data[bank | 0x0400];\
-	chr.bank_1k[2] = &chr.data[bank | 0x0800];\
-	chr.bank_1k[3] = &chr.data[bank | 0x0C00];\
+	chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);\
+	chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);\
+	chr.bank_1k[2] = chr_chip_byte_pnt(0, bank | 0x0800);\
+	chr.bank_1k[3] = chr_chip_byte_pnt(0, bank | 0x0C00);\
 }
 
 #define datach_set_scl(scl) e24C0x_set(scl, FCGX.e1.sda, &FCGX.e1)
@@ -227,7 +227,7 @@ void extcl_cpu_wr_mem_Bandai_FCGX(WORD address, BYTE value) {
 			}
 			if (!mapper.write_vram) {
 				control_bank(info.chr.rom.max.banks_1k)
-				chr.bank_1k[slot] = &chr.data[value << 10];
+				chr.bank_1k[slot] = chr_chip_byte_pnt(0, value << 10);
 			}
 			return;
 		}

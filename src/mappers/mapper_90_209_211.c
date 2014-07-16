@@ -25,7 +25,7 @@ static void INLINE irq_clock_count_90_209_211(void);
 #define nmt_rom_90_209_211(index)\
 	value = m90_209_211.nmt.reg[index];\
 	control_bank(info.chr.rom.max.banks_1k)\
-	ntbl.bank_1k[index] = &chr.data[value << 10];\
+	ntbl.bank_1k[index] = chr_chip_byte_pnt(0, value << 10);\
 	m90_209_211.nmt.write[index] = FALSE
 #define nmt_ram_90_209_211(index)\
 	value = m90_209_211.nmt.reg[index] & 0x01;\
@@ -478,86 +478,86 @@ static void INLINE chr_setup_90_209_211(void) {
 			value = chr_90_209_211(0);
 			control_bank(info.chr.rom.max.banks_8k)
 			bank = value << 13;
-			chr.bank_1k[0] = &chr.data[bank];
-			chr.bank_1k[1] = &chr.data[bank | 0x0400];
-			chr.bank_1k[2] = &chr.data[bank | 0x0800];
-			chr.bank_1k[3] = &chr.data[bank | 0x0C00];
-			chr.bank_1k[4] = &chr.data[bank | 0x1000];
-			chr.bank_1k[5] = &chr.data[bank | 0x1400];
-			chr.bank_1k[6] = &chr.data[bank | 0x1800];
-			chr.bank_1k[7] = &chr.data[bank | 0x1C00];
+			chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);
+			chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);
+			chr.bank_1k[2] = chr_chip_byte_pnt(0, bank | 0x0800);
+			chr.bank_1k[3] = chr_chip_byte_pnt(0, bank | 0x0C00);
+			chr.bank_1k[4] = chr_chip_byte_pnt(0, bank | 0x1000);
+			chr.bank_1k[5] = chr_chip_byte_pnt(0, bank | 0x1400);
+			chr.bank_1k[6] = chr_chip_byte_pnt(0, bank | 0x1800);
+			chr.bank_1k[7] = chr_chip_byte_pnt(0, bank | 0x1C00);
 			break;
 		case 0x08:
 			value = chr_90_209_211(m90_209_211.chr.latch[0]);
 			control_bank(info.chr.rom.max.banks_4k)
 			bank = value << 12;
-			chr.bank_1k[0] = &chr.data[bank];
-			chr.bank_1k[1] = &chr.data[bank | 0x0400];
-			chr.bank_1k[2] = &chr.data[bank | 0x0800];
-			chr.bank_1k[3] = &chr.data[bank | 0x0C00];
+			chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);
+			chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);
+			chr.bank_1k[2] = chr_chip_byte_pnt(0, bank | 0x0800);
+			chr.bank_1k[3] = chr_chip_byte_pnt(0, bank | 0x0C00);
 			value = chr_90_209_211(m90_209_211.chr.latch[1]);
 			control_bank(info.chr.rom.max.banks_4k)
 			bank = value << 12;
-			chr.bank_1k[4] = &chr.data[bank];
-			chr.bank_1k[5] = &chr.data[bank | 0x0400];
-			chr.bank_1k[6] = &chr.data[bank | 0x0800];
-			chr.bank_1k[7] = &chr.data[bank | 0x0C00];
+			chr.bank_1k[4] = chr_chip_byte_pnt(0, bank);
+			chr.bank_1k[5] = chr_chip_byte_pnt(0, bank | 0x0400);
+			chr.bank_1k[6] = chr_chip_byte_pnt(0, bank | 0x0800);
+			chr.bank_1k[7] = chr_chip_byte_pnt(0, bank | 0x0C00);
 			break;
 		case 0x10:
 			value = chr_90_209_211(0);
 			control_bank(info.chr.rom.max.banks_2k)
 			bank = value << 11;
-			chr.bank_1k[0] = &chr.data[bank];
-			chr.bank_1k[1] = &chr.data[bank | 0x0400];
+			chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);
+			chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);
 			value = chr_90_209_211(2);
 			control_bank(info.chr.rom.max.banks_2k)
 			bank = value << 11;
-			chr.bank_1k[2] = &chr.data[bank];
-			chr.bank_1k[3] = &chr.data[bank | 0x0400];
+			chr.bank_1k[2] = chr_chip_byte_pnt(0, bank);
+			chr.bank_1k[3] = chr_chip_byte_pnt(0, bank | 0x0400);
 			value = chr_90_209_211(4);
 			control_bank(info.chr.rom.max.banks_2k)
 			bank = value << 11;
-			chr.bank_1k[4] = &chr.data[bank];
-			chr.bank_1k[5] = &chr.data[bank | 0x0400];
+			chr.bank_1k[4] = chr_chip_byte_pnt(0, bank);
+			chr.bank_1k[5] = chr_chip_byte_pnt(0, bank | 0x0400);
 			value = chr_90_209_211(6);
 			control_bank(info.chr.rom.max.banks_2k)
 			bank = value << 11;
-			chr.bank_1k[6] = &chr.data[bank];
-			chr.bank_1k[7] = &chr.data[bank | 0x0400];
+			chr.bank_1k[6] = chr_chip_byte_pnt(0, bank);
+			chr.bank_1k[7] = chr_chip_byte_pnt(0, bank | 0x0400);
 			break;
 		case 0x18:
 			value = chr_90_209_211(0);
 			control_bank(info.chr.rom.max.banks_1k)
 			bank = value << 10;
-			chr.bank_1k[0] = &chr.data[bank];
+			chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);
 			value = chr_90_209_211(1);
 			control_bank(info.chr.rom.max.banks_1k)
 			bank = value << 10;
-			chr.bank_1k[1] = &chr.data[bank];
+			chr.bank_1k[1] = chr_chip_byte_pnt(0, bank);
 			value = chr_90_209_211(2);
 			control_bank(info.chr.rom.max.banks_1k)
 			bank = value << 10;
-			chr.bank_1k[2] = &chr.data[bank];
+			chr.bank_1k[2] = chr_chip_byte_pnt(0, bank);
 			value = chr_90_209_211(3);
 			control_bank(info.chr.rom.max.banks_1k)
 			bank = value << 10;
-			chr.bank_1k[3] = &chr.data[bank];
+			chr.bank_1k[3] = chr_chip_byte_pnt(0, bank);
 			value = chr_90_209_211(4);
 			control_bank(info.chr.rom.max.banks_1k)
 			bank = value << 10;
-			chr.bank_1k[4] = &chr.data[bank];
+			chr.bank_1k[4] = chr_chip_byte_pnt(0, bank);
 			value = chr_90_209_211(5);
 			control_bank(info.chr.rom.max.banks_1k)
 			bank = value << 10;
-			chr.bank_1k[5] = &chr.data[bank];
+			chr.bank_1k[5] = chr_chip_byte_pnt(0, bank);
 			value = chr_90_209_211(6);
 			control_bank(info.chr.rom.max.banks_1k)
 			bank = value << 10;
-			chr.bank_1k[6] = &chr.data[bank];
+			chr.bank_1k[6] = chr_chip_byte_pnt(0, bank);
 			value = chr_90_209_211(7);
 			control_bank(info.chr.rom.max.banks_1k)
 			bank = value << 10;
-			chr.bank_1k[7] = &chr.data[bank];
+			chr.bank_1k[7] = chr_chip_byte_pnt(0, bank);
 			break;
 	}
 }

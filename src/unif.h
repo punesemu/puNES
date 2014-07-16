@@ -28,10 +28,6 @@ struct _unif {
 		char id[4];
 		uint32_t length;
 	} chunk;
-	struct _unif_chr {
-		size_t size;
-		BYTE *pnt;
-	} chr;
 } unif;
 
 BYTE unif_load_rom(void);

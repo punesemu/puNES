@@ -110,34 +110,34 @@ void extcl_cpu_wr_mem_Taito_TC0190FMC(WORD address, BYTE value) {
 		case 0x8002:
 			control_bank(info.chr.rom.max.banks_2k)
 			bank = value << 11;
-			chr.bank_1k[0] = &chr.data[bank];
-			chr.bank_1k[1] = &chr.data[bank | 0x0400];
+			chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);
+			chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);
 			return;
 		case 0x8003:
 			control_bank(info.chr.rom.max.banks_2k)
 			bank = value << 11;
-			chr.bank_1k[2] = &chr.data[bank];
-			chr.bank_1k[3] = &chr.data[bank | 0x0400];
+			chr.bank_1k[2] = chr_chip_byte_pnt(0, bank);
+			chr.bank_1k[3] = chr_chip_byte_pnt(0, bank | 0x0400);
 			return;
 		case 0xA000:
 			control_bank(info.chr.rom.max.banks_1k)
 			bank = value << 10;
-			chr.bank_1k[4] = &chr.data[bank];
+			chr.bank_1k[4] = chr_chip_byte_pnt(0, bank);
 			return;
 		case 0xA001:
 			control_bank(info.chr.rom.max.banks_1k)
 			bank = value << 10;
-			chr.bank_1k[5] = &chr.data[bank];
+			chr.bank_1k[5] = chr_chip_byte_pnt(0, bank);
 			return;
 		case 0xA002:
 			control_bank(info.chr.rom.max.banks_1k)
 			bank = value << 10;
-			chr.bank_1k[6] = &chr.data[bank];
+			chr.bank_1k[6] = chr_chip_byte_pnt(0, bank);
 			return;
 		case 0xA003:
 			control_bank(info.chr.rom.max.banks_1k)
 			bank = value << 10;
-			chr.bank_1k[7] = &chr.data[bank];
+			chr.bank_1k[7] = chr_chip_byte_pnt(0, bank);
 			return;
 	}
 }
@@ -159,34 +159,34 @@ void extcl_cpu_wr_mem_Taito_TC0190FMCPAL16R4(WORD address, BYTE value) {
 		case 0x8002:
 			control_bank(info.chr.rom.max.banks_2k)
 			bank = value << 11;
-			chr.bank_1k[0] = &chr.data[bank];
-			chr.bank_1k[1] = &chr.data[bank | 0x0400];
+			chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);
+			chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);
 			return;
 		case 0x8003:
 			control_bank(info.chr.rom.max.banks_2k)
 			bank = value << 11;
-			chr.bank_1k[2] = &chr.data[bank];
-			chr.bank_1k[3] = &chr.data[bank | 0x0400];
+			chr.bank_1k[2] = chr_chip_byte_pnt(0, bank);
+			chr.bank_1k[3] = chr_chip_byte_pnt(0, bank | 0x0400);
 			return;
 		case 0xA000:
 			control_bank(info.chr.rom.max.banks_1k)
 			bank = value << 10;
-			chr.bank_1k[4] = &chr.data[bank];
+			chr.bank_1k[4] = chr_chip_byte_pnt(0, bank);
 			return;
 		case 0xA001:
 			control_bank(info.chr.rom.max.banks_1k)
 			bank = value << 10;
-			chr.bank_1k[5] = &chr.data[bank];
+			chr.bank_1k[5] = chr_chip_byte_pnt(0, bank);
 			return;
 		case 0xA002:
 			control_bank(info.chr.rom.max.banks_1k)
 			bank = value << 10;
-			chr.bank_1k[6] = &chr.data[bank];
+			chr.bank_1k[6] = chr_chip_byte_pnt(0, bank);
 			return;
 		case 0xA003:
 			control_bank(info.chr.rom.max.banks_1k)
 			bank = value << 10;
-			chr.bank_1k[7] = &chr.data[bank];
+			chr.bank_1k[7] = chr_chip_byte_pnt(0, bank);
 			return;
 		case 0xC000:
 			irqA12.latch = (0x100 - value) & 0xFF;
@@ -246,8 +246,8 @@ void extcl_cpu_wr_mem_Taito_X1005(WORD address, BYTE value) {
 			value >>= 1;
 			control_bank(info.chr.rom.max.banks_2k)
 			bank = value << 11;
-			chr.bank_1k[slot] = &chr.data[bank];
-			chr.bank_1k[slot | 0x01] = &chr.data[bank | 0x0400];
+			chr.bank_1k[slot] = chr_chip_byte_pnt(0, bank);
+			chr.bank_1k[slot | 0x01] = chr_chip_byte_pnt(0, bank | 0x0400);
 			return;
 		}
 		case 0x7EF2:
@@ -260,7 +260,7 @@ void extcl_cpu_wr_mem_Taito_X1005(WORD address, BYTE value) {
 				}
 			}
 			control_bank(info.chr.rom.max.banks_1k)
-			chr.bank_1k[(address & 0x0007) + 2] = &chr.data[value << 10];
+			chr.bank_1k[(address & 0x0007) + 2] = chr_chip_byte_pnt(0, value << 10);
 			return;
 		case 0x7EF6:
 			if (type == X1005A) {
@@ -355,8 +355,8 @@ void extcl_cpu_wr_mem_Taito_X1017(WORD address, BYTE value) {
 				const BYTE chr_1k = slot << 1;
 				const DBWORD bank = value << 11;
 
-				chr.bank_1k[chr_1k | tmp] = &chr.data[bank];
-				chr.bank_1k[(chr_1k + 1) | tmp] = &chr.data[bank | 0x0400];
+				chr.bank_1k[chr_1k | tmp] = chr_chip_byte_pnt(0, bank);
+				chr.bank_1k[(chr_1k + 1) | tmp] = chr_chip_byte_pnt(0, bank | 0x0400);
 				taito_X1017.chr[slot] = value;
 			}
 			return;
@@ -372,9 +372,9 @@ void extcl_cpu_wr_mem_Taito_X1017(WORD address, BYTE value) {
 				const DBWORD bank = value << 10;
 
 				if (taito_X1017.control & 0x02) {
-					chr.bank_1k[slot - 2] = &chr.data[bank];
+					chr.bank_1k[slot - 2] = chr_chip_byte_pnt(0, bank);
 				} else {
-					chr.bank_1k[slot + 2] = &chr.data[bank];
+					chr.bank_1k[slot + 2] = chr_chip_byte_pnt(0, bank);
 				}
 				taito_X1017.chr[slot] = value;
 			}
@@ -390,29 +390,29 @@ void extcl_cpu_wr_mem_Taito_X1017(WORD address, BYTE value) {
 				if (value & 0x02) {
 					DBWORD bank;
 
-					chr.bank_1k[0] = &chr.data[taito_X1017.chr[2] << 10];
-					chr.bank_1k[1] = &chr.data[taito_X1017.chr[3] << 10];
-					chr.bank_1k[2] = &chr.data[taito_X1017.chr[4] << 10];
-					chr.bank_1k[3] = &chr.data[taito_X1017.chr[5] << 10];
+					chr.bank_1k[0] = chr_chip_byte_pnt(0, taito_X1017.chr[2] << 10);
+					chr.bank_1k[1] = chr_chip_byte_pnt(0, taito_X1017.chr[3] << 10);
+					chr.bank_1k[2] = chr_chip_byte_pnt(0, taito_X1017.chr[4] << 10);
+					chr.bank_1k[3] = chr_chip_byte_pnt(0, taito_X1017.chr[5] << 10);
 					bank = taito_X1017.chr[0] << 11;
-					chr.bank_1k[4] = &chr.data[bank];
-					chr.bank_1k[5] = &chr.data[bank | 0x0400];
+					chr.bank_1k[4] = chr_chip_byte_pnt(0, bank);
+					chr.bank_1k[5] = chr_chip_byte_pnt(0, bank | 0x0400);
 					bank = taito_X1017.chr[1] << 11;
-					chr.bank_1k[6] = &chr.data[bank];
-					chr.bank_1k[7] = &chr.data[bank | 0x0400];
+					chr.bank_1k[6] = chr_chip_byte_pnt(0, bank);
+					chr.bank_1k[7] = chr_chip_byte_pnt(0, bank | 0x0400);
 				} else {
 					DBWORD bank;
 
 					bank = taito_X1017.chr[0] << 11;
-					chr.bank_1k[0] = &chr.data[bank];
-					chr.bank_1k[1] = &chr.data[bank | 0x0400];
+					chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);
+					chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);
 					bank = taito_X1017.chr[1] << 11;
-					chr.bank_1k[2] = &chr.data[bank];
-					chr.bank_1k[3] = &chr.data[bank | 0x0400];
-					chr.bank_1k[4] = &chr.data[taito_X1017.chr[2] << 10];
-					chr.bank_1k[5] = &chr.data[taito_X1017.chr[3] << 10];
-					chr.bank_1k[6] = &chr.data[taito_X1017.chr[4] << 10];
-					chr.bank_1k[7] = &chr.data[taito_X1017.chr[5] << 10];
+					chr.bank_1k[2] = chr_chip_byte_pnt(0, bank);
+					chr.bank_1k[3] = chr_chip_byte_pnt(0, bank | 0x0400);
+					chr.bank_1k[4] = chr_chip_byte_pnt(0, taito_X1017.chr[2] << 10);
+					chr.bank_1k[5] = chr_chip_byte_pnt(0, taito_X1017.chr[3] << 10);
+					chr.bank_1k[6] = chr_chip_byte_pnt(0, taito_X1017.chr[4] << 10);
+					chr.bank_1k[7] = chr_chip_byte_pnt(0, taito_X1017.chr[5] << 10);
 				}
 				taito_X1017.control = value;
 			}

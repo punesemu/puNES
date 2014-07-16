@@ -538,10 +538,10 @@ BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 	}
 	save_slot_int(mode, slot, mapper.write_vram)
 	if (mapper.write_vram) {
-		save_slot_mem(mode, slot, chr.data, chr_ram_size(), FALSE)
+		save_slot_mem(mode, slot, chr_chip(0), chr_ram_size(), FALSE)
 	}
 	for (i = 0; i < LENGTH(chr.bank_1k); i++) {
-		save_slot_pos(mode, slot, chr.data, chr.bank_1k[i])
+		save_slot_pos(mode, slot, chr_chip(0), chr.bank_1k[i])
 	}
 	save_slot_ele(mode, slot, ntbl.data)
 	for (i = 0; i < LENGTH(ntbl.bank_1k); i++) {

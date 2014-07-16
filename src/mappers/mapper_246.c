@@ -38,8 +38,8 @@ void extcl_cpu_wr_mem_246(WORD address, BYTE value) {
 	slot = (reg - 4) << 1;
 	control_bank(info.chr.rom.max.banks_2k)
 	bank = value << 11;
-	chr.bank_1k[slot] = &chr.data[bank];
-	chr.bank_1k[slot + 1] = &chr.data[bank | 0x0400];
+	chr.bank_1k[slot] = chr_chip_byte_pnt(0, bank);
+	chr.bank_1k[slot + 1] = chr_chip_byte_pnt(0, bank | 0x0400);
 }
 BYTE extcl_cpu_rd_mem_246(WORD address, BYTE openbus, BYTE before) {
 	if ((address < 0x6000) || (address > 0x67FF)) {

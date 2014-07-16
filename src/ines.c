@@ -64,11 +64,11 @@ BYTE ines_load_rom(void) {
 		info.prg.rom.banks_16k = fgetc(fp);
 		info.chr.rom.banks_8k = fgetc(fp);
 
-		tmp = fread(&flags[0], TOTAL_FL, 1, fp);
+		fread(&flags[0], TOTAL_FL, 1, fp);
 
 		if ((flags[FL7] & 0x0C) == 0x08) {
 			/* NES 2.0 */
-			info.header = NES_2_0;
+			info.format = NES_2_0;
 
 			/*
 			 * visto che con il NES_2_0 non eseguo la ricerca nel
@@ -99,7 +99,7 @@ BYTE ines_load_rom(void) {
 			tmp = flags[FL12] & 0x01;
 		} else {
 			/* iNES 1.0 */
-			info.header = iNES_1_0;
+			info.format = iNES_1_0;
 
 			info.mapper.id = (flags[FL7] & 0xF0) | (flags[FL6] >> 4);
 			info.prg.ram.bat.banks = (flags[FL6] & 0x02) >> 1;
@@ -141,13 +141,13 @@ BYTE ines_load_rom(void) {
 		 */
 		mapper.write_vram = FALSE;
 
-		if ((info.header != NES_2_0) && emu_search_in_database(fp)) {
+		if ((info.format != NES_2_0) && emu_search_in_database(fp)) {
 			fclose(fp);
 			return (EXIT_ERROR);
 		}
 
 		if (info.trainer) {
-			tmp = fread(&trainer.data, sizeof(trainer.data), 1, fp);
+			fread(&trainer.data, sizeof(trainer.data), 1, fp);
 		} else {
 			memset(&trainer.data, 0x00, sizeof(trainer.data));
 		}
@@ -177,12 +177,12 @@ BYTE ines_load_rom(void) {
 		}
 
 		/* alloco e carico la PRG Rom */
-		if (map_prg_chip_malloc(0, info.prg.rom.banks_16k * (16 * 1024), 0x00) == EXIT_ERROR) {
+		if (map_prg_chip_malloc(0, info.prg.rom.banks_16k * 0x4000, 0x00) == EXIT_ERROR) {
 			fclose(fp);
 			return (EXIT_ERROR);
 		}
 
-		tmp = fread(prg_chip(0), 16384, info.prg.rom.banks_16k, fp);
+		fread(prg_chip(0), 16384, info.prg.rom.banks_16k, fp);
 
 		/*
 		 * se e' settato mapper.write_vram, vuol dire
@@ -192,14 +192,13 @@ BYTE ines_load_rom(void) {
 		 */
 		if (mapper.write_vram == FALSE) {
 			/* alloco la CHR Rom */
-			if ((chr.data = (BYTE *) malloc(info.chr.rom.banks_8k * (8 * 1024)))) {
-				tmp = fread(&chr.data[0], 8192, info.chr.rom.banks_8k, fp);
-				chr_bank_1k_reset();
-			} else {
-				fprintf(stderr, "Out of memory\n");
+			if (map_chr_chip_malloc(0, info.chr.rom.banks_8k * 0x2000, 0x00) == EXIT_ERROR) {
 				fclose(fp);
 				return (EXIT_ERROR);
 			}
+
+			fread(chr_chip(0), 0x2000, info.chr.rom.banks_8k, fp);
+			chr_bank_1k_reset();
 		}
 		/* la CHR ram extra */
 		memset(&chr.extra, 0x00, sizeof(chr.extra));

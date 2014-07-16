@@ -36,7 +36,7 @@ void map_init_Kaiser(BYTE model) {
 
 			if (info.reset >= HARD) {
 				memset(&ks202, 0x00, sizeof(ks202));
-				ks202.prg_ram_rd = prg_chip_byte_pnt(0, 0);
+				ks202.prg_ram_rd = prg_chip(0);
 			}
 			break;
 		case KS7058:
@@ -128,7 +128,7 @@ void extcl_cpu_wr_mem_Kaiser_ks202(WORD address, BYTE value) {
 				case 0x0C00:
 					value = save;
 					control_bank(info.chr.rom.max.banks_1k)
-					chr.bank_1k[address & 0x0007] = &chr.data[value << 10];
+					chr.bank_1k[address & 0x0007] = chr_chip_byte_pnt(0, value << 10);
 					break;
 			}
 			return;
@@ -174,18 +174,18 @@ void extcl_cpu_wr_mem_Kaiser_ks7058(WORD address, BYTE value) {
 		case 0xF000:
 			control_bank(info.chr.rom.max.banks_4k)
 			bank = value << 12;
-			chr.bank_1k[0] = &chr.data[bank];
-			chr.bank_1k[1] = &chr.data[bank | 0x0400];
-			chr.bank_1k[2] = &chr.data[bank | 0x0800];
-			chr.bank_1k[3] = &chr.data[bank | 0x0C00];
+			chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);
+			chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);
+			chr.bank_1k[2] = chr_chip_byte_pnt(0, bank | 0x0800);
+			chr.bank_1k[3] = chr_chip_byte_pnt(0, bank | 0x0C00);
 			return;
 		case 0xF080:
 			control_bank(info.chr.rom.max.banks_4k)
 			bank = value << 12;
-			chr.bank_1k[4] = &chr.data[bank];
-			chr.bank_1k[5] = &chr.data[bank | 0x0400];
-			chr.bank_1k[6] = &chr.data[bank | 0x0800];
-			chr.bank_1k[7] = &chr.data[bank | 0x0C00];
+			chr.bank_1k[4] = chr_chip_byte_pnt(0, bank);
+			chr.bank_1k[5] = chr_chip_byte_pnt(0, bank | 0x0400);
+			chr.bank_1k[6] = chr_chip_byte_pnt(0, bank | 0x0800);
+			chr.bank_1k[7] = chr_chip_byte_pnt(0, bank | 0x0C00);
 			return;
 	}
 }
@@ -217,14 +217,14 @@ BYTE extcl_cpu_rd_mem_Kaiser_ks7022(WORD address, BYTE openbus, BYTE before) {
 		value = ks7022.reg;
 		control_bank(info.chr.rom.max.banks_8k)
 		bank = value << 13;
-		chr.bank_1k[0] = &chr.data[bank];
-		chr.bank_1k[1] = &chr.data[bank | 0x0400];
-		chr.bank_1k[2] = &chr.data[bank | 0x0800];
-		chr.bank_1k[3] = &chr.data[bank | 0x0C00];
-		chr.bank_1k[4] = &chr.data[bank | 0x1000];
-		chr.bank_1k[5] = &chr.data[bank | 0x1400];
-		chr.bank_1k[6] = &chr.data[bank | 0x1800];
-		chr.bank_1k[7] = &chr.data[bank | 0x1C00];
+		chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);
+		chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);
+		chr.bank_1k[2] = chr_chip_byte_pnt(0, bank | 0x0800);
+		chr.bank_1k[3] = chr_chip_byte_pnt(0, bank | 0x0C00);
+		chr.bank_1k[4] = chr_chip_byte_pnt(0, bank | 0x1000);
+		chr.bank_1k[5] = chr_chip_byte_pnt(0, bank | 0x1400);
+		chr.bank_1k[6] = chr_chip_byte_pnt(0, bank | 0x1800);
+		chr.bank_1k[7] = chr_chip_byte_pnt(0, bank | 0x1C00);
 
 		return (prg_rom_rd(address));
 	}

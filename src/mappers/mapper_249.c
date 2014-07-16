@@ -114,7 +114,7 @@ void extcl_cpu_wr_mem_249(WORD address, BYTE value) {
 				}
 				m249_chr_1k(m249.chr_map[i])
 				control_bank(info.chr.rom.max.banks_1k)
-				chr.bank_1k[i] = &chr.data[value << 10];
+				chr.bank_1k[i] = chr_chip_byte_pnt(0, value << 10);
 			}
 
 			map_prg_rom_8k_update();
@@ -162,40 +162,40 @@ void extcl_cpu_wr_mem_249(WORD address, BYTE value) {
 					m249.chr_map[mmc3.chr_rom_cfg | 0x01] = value + 1;
 					m249_chr_1k(value)
 					control_bank_with_AND(0xFE, info.chr.rom.max.banks_1k)
-					chr.bank_1k[mmc3.chr_rom_cfg] = &chr.data[value << 10];
-					chr.bank_1k[mmc3.chr_rom_cfg | 0x01] = &chr.data[(value + 1) << 10];
+					chr.bank_1k[mmc3.chr_rom_cfg] = chr_chip_byte_pnt(0, value << 10);
+					chr.bank_1k[mmc3.chr_rom_cfg | 0x01] = chr_chip_byte_pnt(0, (value + 1) << 10);
 					return;
 				case 1:
 					m249.chr_map[mmc3.chr_rom_cfg | 0x02] = value;
 					m249.chr_map[mmc3.chr_rom_cfg | 0x03] = value + 1;
 					m249_chr_1k(value)
 					control_bank_with_AND(0xFE, info.chr.rom.max.banks_1k)
-					chr.bank_1k[mmc3.chr_rom_cfg | 0x02] = &chr.data[value << 10];
-					chr.bank_1k[mmc3.chr_rom_cfg | 0x03] = &chr.data[(value + 1) << 10];
+					chr.bank_1k[mmc3.chr_rom_cfg | 0x02] = chr_chip_byte_pnt(0, value << 10);
+					chr.bank_1k[mmc3.chr_rom_cfg | 0x03] = chr_chip_byte_pnt(0, (value + 1) << 10);
 					return;
 				case 2:
 					m249.chr_map[mmc3.chr_rom_cfg ^ 0x04] = value;
 					m249_chr_1k(value)
 					control_bank(info.chr.rom.max.banks_1k)
-					chr.bank_1k[mmc3.chr_rom_cfg ^ 0x04] = &chr.data[value << 10];
+					chr.bank_1k[mmc3.chr_rom_cfg ^ 0x04] = chr_chip_byte_pnt(0, value << 10);
 					return;
 				case 3:
 					m249.chr_map[(mmc3.chr_rom_cfg ^ 0x04) | 0x01] = value;
 					m249_chr_1k(value)
 					control_bank(info.chr.rom.max.banks_1k)
-					chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x01] = &chr.data[value << 10];
+					chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x01] = chr_chip_byte_pnt(0, value << 10);
 					return;
 				case 4:
 					m249.chr_map[(mmc3.chr_rom_cfg ^ 0x04) | 0x02] = value;
 					m249_chr_1k(value)
 					control_bank(info.chr.rom.max.banks_1k)
-					chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x02] = &chr.data[value << 10];
+					chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x02] = chr_chip_byte_pnt(0, value << 10);
 					return;
 				case 5:
 					m249.chr_map[(mmc3.chr_rom_cfg ^ 0x04) | 0x03] = value;
 					m249_chr_1k(value)
 					control_bank(info.chr.rom.max.banks_1k)
-					chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x03] = &chr.data[value << 10];
+					chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x03] = chr_chip_byte_pnt(0, value << 10);
 					return;
 				case 6:
 					m249.prg_map[mmc3.prg_rom_cfg] = value;

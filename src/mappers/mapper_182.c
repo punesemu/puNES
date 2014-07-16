@@ -48,13 +48,13 @@ void extcl_cpu_wr_mem_182(WORD address, BYTE value) {
 					value >>= 1;
 					control_bank(info.chr.rom.max.banks_2k)
 					bank = value << 11;
-					chr.bank_1k[mmc3.chr_rom_cfg] = &chr.data[bank];
-					chr.bank_1k[mmc3.chr_rom_cfg | 0x01] = &chr.data[bank | 0x0400];
+					chr.bank_1k[mmc3.chr_rom_cfg] = chr_chip_byte_pnt(0, bank);
+					chr.bank_1k[mmc3.chr_rom_cfg | 0x01] = chr_chip_byte_pnt(0, bank | 0x0400);
 					break;
 				}
 				case 1:
 					control_bank(info.chr.rom.max.banks_1k)
-					chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x01] = &chr.data[value << 10];
+					chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x01] = chr_chip_byte_pnt(0, value << 10);
 					break;
 				case 2: {
 					DBWORD bank;
@@ -62,13 +62,13 @@ void extcl_cpu_wr_mem_182(WORD address, BYTE value) {
 					value >>= 1;
 					control_bank(info.chr.rom.max.banks_2k)
 					bank = value << 11;
-					chr.bank_1k[mmc3.chr_rom_cfg | 0x02] = &chr.data[bank];
-					chr.bank_1k[mmc3.chr_rom_cfg | 0x03] = &chr.data[bank | 0x0400];
+					chr.bank_1k[mmc3.chr_rom_cfg | 0x02] = chr_chip_byte_pnt(0, bank);
+					chr.bank_1k[mmc3.chr_rom_cfg | 0x03] = chr_chip_byte_pnt(0, bank | 0x0400);
 					break;
 				}
 				case 3:
 					control_bank(info.chr.rom.max.banks_1k)
-					chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x03] = &chr.data[value << 10];
+					chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x03] = chr_chip_byte_pnt(0, value << 10);
 					break;
 				case 4:
 					control_bank(info.prg.rom.max.banks_8k)
@@ -82,11 +82,11 @@ void extcl_cpu_wr_mem_182(WORD address, BYTE value) {
 					break;
 				case 6:
 					control_bank(info.chr.rom.max.banks_1k)
-					chr.bank_1k[mmc3.chr_rom_cfg ^ 0x04] = &chr.data[value << 10];
+					chr.bank_1k[mmc3.chr_rom_cfg ^ 0x04] = chr_chip_byte_pnt(0, value << 10);
 					break;
 				case 7:
 					control_bank(info.chr.rom.max.banks_1k)
-					chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x02] = &chr.data[value << 10];
+					chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x02] = chr_chip_byte_pnt(0, value << 10);
 					break;
 			}
 			return;

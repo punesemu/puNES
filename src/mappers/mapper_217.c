@@ -78,35 +78,35 @@
 			m217_chr_1k(value)\
 			bank &= 0xFFE;\
 			_control_bank(bank, info.chr.rom.max.banks_1k)\
-			chr.bank_1k[mmc3.chr_rom_cfg] = &chr.data[bank << 10];\
-			chr.bank_1k[mmc3.chr_rom_cfg | 0x01] = &chr.data[(bank + 1) << 10];\
+			chr.bank_1k[mmc3.chr_rom_cfg] = chr_chip_byte_pnt(0, bank << 10);\
+			chr.bank_1k[mmc3.chr_rom_cfg | 0x01] = chr_chip_byte_pnt(0, (bank + 1) << 10);\
 			return;\
 		case 1:\
 			m217_chr_1k(value)\
 			bank &= 0xFFE;\
 			_control_bank(bank, info.chr.rom.max.banks_1k)\
-			chr.bank_1k[mmc3.chr_rom_cfg | 0x02] = &chr.data[bank << 10];\
-			chr.bank_1k[mmc3.chr_rom_cfg | 0x03] = &chr.data[(bank + 1) << 10];\
+			chr.bank_1k[mmc3.chr_rom_cfg | 0x02] = chr_chip_byte_pnt(0, bank << 10);\
+			chr.bank_1k[mmc3.chr_rom_cfg | 0x03] = chr_chip_byte_pnt(0, (bank + 1) << 10);\
 			return;\
 		case 2:\
 			m217_chr_1k(value)\
 			_control_bank(bank, info.chr.rom.max.banks_1k)\
-			chr.bank_1k[mmc3.chr_rom_cfg ^ 0x04] = &chr.data[bank << 10];\
+			chr.bank_1k[mmc3.chr_rom_cfg ^ 0x04] = chr_chip_byte_pnt(0, bank << 10);\
 			return;\
 		case 3:\
 			m217_chr_1k(value)\
 			_control_bank(bank, info.chr.rom.max.banks_1k)\
-			chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x01] = &chr.data[bank << 10];\
+			chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x01] = chr_chip_byte_pnt(0, bank << 10);\
 			return;\
 		case 4:\
 			m217_chr_1k(value)\
 			_control_bank(bank, info.chr.rom.max.banks_1k)\
-			chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x02] = &chr.data[bank << 10];\
+			chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x02] = chr_chip_byte_pnt(0, bank << 10);\
 			return;\
 		case 5:\
 			m217_chr_1k(value)\
 			_control_bank(bank, info.chr.rom.max.banks_1k)\
-			chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x03] = &chr.data[bank << 10];\
+			chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x03] = chr_chip_byte_pnt(0, bank << 10);\
 			return;\
 		case 6:\
 			m217_prg_8k(value)\

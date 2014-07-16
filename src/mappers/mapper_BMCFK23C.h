@@ -19,7 +19,7 @@ struct _bmcfk23c {
 	BYTE A001;
 	BYTE reg[8];
 	BYTE mmc3[8];
-	BYTE chr_map[8];
+	WORD chr_map[8];
 	/* questo posso tranquillamente non salvarlo */
 	BYTE prg_mask;
 } bmcfk23c;

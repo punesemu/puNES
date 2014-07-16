@@ -32,8 +32,8 @@
 	DBWORD bank;\
 	control_bank(info.chr.rom.max.banks_2k)\
 	bank = value << 11;\
-	chr.bank_1k[slot] = &chr.data[bank];\
-	chr.bank_1k[slot + 1] = &chr.data[bank | 0x400];\
+	chr.bank_1k[slot] = chr_chip_byte_pnt(0, bank);\
+	chr.bank_1k[slot + 1] = chr_chip_byte_pnt(0, bank | 0x400);\
 }
 #define s4_mirroring()\
 	if (!s4.mode) {\
@@ -54,20 +54,20 @@
 	} else {\
 		switch (s4.mirroring & 0x03) {\
 		case 0:\
-			ntbl.bank_1k[0] = ntbl.bank_1k[2] = &chr.data[s4.chr_nmt[0]];\
-			ntbl.bank_1k[1] = ntbl.bank_1k[3] = &chr.data[s4.chr_nmt[1]];\
+			ntbl.bank_1k[0] = ntbl.bank_1k[2] = chr_chip_byte_pnt(0, s4.chr_nmt[0]);\
+			ntbl.bank_1k[1] = ntbl.bank_1k[3] = chr_chip_byte_pnt(0, s4.chr_nmt[1]);\
 			break;\
 		case 1:\
-			ntbl.bank_1k[0] = ntbl.bank_1k[1] = &chr.data[s4.chr_nmt[0]];\
-			ntbl.bank_1k[2] = ntbl.bank_1k[3] = &chr.data[s4.chr_nmt[1]];\
+			ntbl.bank_1k[0] = ntbl.bank_1k[1] = chr_chip_byte_pnt(0, s4.chr_nmt[0]);\
+			ntbl.bank_1k[2] = ntbl.bank_1k[3] = chr_chip_byte_pnt(0, s4.chr_nmt[1]);\
 			break;\
 		case 2:\
-			ntbl.bank_1k[0] = ntbl.bank_1k[1] = &chr.data[s4.chr_nmt[0]];\
-			ntbl.bank_1k[2] = ntbl.bank_1k[3] = &chr.data[s4.chr_nmt[0]];\
+			ntbl.bank_1k[0] = ntbl.bank_1k[1] = chr_chip_byte_pnt(0, s4.chr_nmt[0]);\
+			ntbl.bank_1k[2] = ntbl.bank_1k[3] = chr_chip_byte_pnt(0, s4.chr_nmt[0]);\
 			break;\
 		case 3:\
-			ntbl.bank_1k[0] = ntbl.bank_1k[1] = &chr.data[s4.chr_nmt[1]];\
-			ntbl.bank_1k[2] = ntbl.bank_1k[3] = &chr.data[s4.chr_nmt[1]];\
+			ntbl.bank_1k[0] = ntbl.bank_1k[1] = chr_chip_byte_pnt(0, s4.chr_nmt[1]);\
+			ntbl.bank_1k[2] = ntbl.bank_1k[3] = chr_chip_byte_pnt(0, s4.chr_nmt[1]);\
 			break;\
 		}\
 	}
@@ -162,18 +162,18 @@ void extcl_cpu_wr_mem_Sunsoft_S1(WORD address, BYTE value) {
 
 		control_bank_with_AND(0x0F, info.chr.rom.max.banks_4k)
 		bank = value << 12;
-		chr.bank_1k[0] = &chr.data[bank];
-		chr.bank_1k[1] = &chr.data[bank | 0x0400];
-		chr.bank_1k[2] = &chr.data[bank | 0x0800];
-		chr.bank_1k[3] = &chr.data[bank | 0x0C00];
+		chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);
+		chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);
+		chr.bank_1k[2] = chr_chip_byte_pnt(0, bank | 0x0800);
+		chr.bank_1k[3] = chr_chip_byte_pnt(0, bank | 0x0C00);
 
 		value = save >> 4;
 		control_bank(info.chr.rom.max.banks_4k)
 		bank = value << 12;
-		chr.bank_1k[4] = &chr.data[bank];
-		chr.bank_1k[5] = &chr.data[bank | 0x0400];
-		chr.bank_1k[6] = &chr.data[bank | 0x0800];
-		chr.bank_1k[7] = &chr.data[bank | 0x0C00];
+		chr.bank_1k[4] = chr_chip_byte_pnt(0, bank);
+		chr.bank_1k[5] = chr_chip_byte_pnt(0, bank | 0x0400);
+		chr.bank_1k[6] = chr_chip_byte_pnt(0, bank | 0x0800);
+		chr.bank_1k[7] = chr_chip_byte_pnt(0, bank | 0x0C00);
 
 	}
 }
@@ -198,14 +198,14 @@ void extcl_cpu_wr_mem_Sunsoft_S2(WORD address, BYTE value) {
 	value = ((save & 0x80) >> 4) | (save & 0x07);
 	control_bank(info.chr.rom.max.banks_8k)
 	bank = value << 13;
-	chr.bank_1k[0] = &chr.data[bank];
-	chr.bank_1k[1] = &chr.data[bank | 0x0400];
-	chr.bank_1k[2] = &chr.data[bank | 0x0800];
-	chr.bank_1k[3] = &chr.data[bank | 0x0C00];
-	chr.bank_1k[4] = &chr.data[bank | 0x1000];
-	chr.bank_1k[5] = &chr.data[bank | 0x1400];
-	chr.bank_1k[6] = &chr.data[bank | 0x1800];
-	chr.bank_1k[7] = &chr.data[bank | 0x1C00];
+	chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);
+	chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);
+	chr.bank_1k[2] = chr_chip_byte_pnt(0, bank | 0x0800);
+	chr.bank_1k[3] = chr_chip_byte_pnt(0, bank | 0x0C00);
+	chr.bank_1k[4] = chr_chip_byte_pnt(0, bank | 0x1000);
+	chr.bank_1k[5] = chr_chip_byte_pnt(0, bank | 0x1400);
+	chr.bank_1k[6] = chr_chip_byte_pnt(0, bank | 0x1800);
+	chr.bank_1k[7] = chr_chip_byte_pnt(0, bank | 0x1C00);
 }
 
 void extcl_cpu_wr_mem_Sunsoft_S3(WORD address, BYTE value) {
@@ -336,7 +336,7 @@ void extcl_cpu_wr_mem_Sunsoft_FM7(WORD address, BYTE value) {
 				case 0x06:
 				case 0x07:
 					control_bank(info.chr.rom.max.banks_1k)
-					chr.bank_1k[bank] = &chr.data[value << 10];
+					chr.bank_1k[bank] = chr_chip_byte_pnt(0, value << 10);
 					return;
 				case 0x08: {
 					fm7.prg_ram_mode = value & 0x40;

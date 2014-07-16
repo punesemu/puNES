@@ -15,7 +15,7 @@
 #define chr_rom_1k_update(slot, mask, shift)\
 	value = (vrc4.chr_rom_bank[slot] & mask) | ((value & 0x0F) << shift);\
 	control_bank(info.chr.rom.max.banks_1k)\
-	chr.bank_1k[slot] = &chr.data[value << 10];\
+	chr.bank_1k[slot] = chr_chip_byte_pnt(0, value << 10);\
 	vrc4.chr_rom_bank[slot] = value
 
 BYTE type;

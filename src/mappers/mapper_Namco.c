@@ -18,7 +18,7 @@
 	map_prg_rom_8k(1, slot, value);\
 	map_prg_rom_8k_update()
 #define _n163_nmt_update(slot)\
-	ntbl.bank_1k[slot] = &chr.data[n163.nmt_bank[slot][1]]
+	ntbl.bank_1k[slot] = chr_chip_byte_pnt(0, n163.nmt_bank[slot][1])
 #define n163_nmt_update(slot)\
 	if (hardwired) {\
 		return;\
@@ -207,35 +207,35 @@ void extcl_cpu_wr_mem_Namco_163(WORD address, BYTE value) {
 		}
 		case 0x8000:
 			control_bank(info.chr.rom.max.banks_1k)
-			chr.bank_1k[0] = &chr.data[value << 10];
+			chr.bank_1k[0] = chr_chip_byte_pnt(0, value << 10);
 			return;
 		case 0x8800:
 			control_bank(info.chr.rom.max.banks_1k)
-			chr.bank_1k[1] = &chr.data[value << 10];
+			chr.bank_1k[1] = chr_chip_byte_pnt(0, value << 10);
 			return;
 		case 0x9000:
 			control_bank(info.chr.rom.max.banks_1k)
-			chr.bank_1k[2] = &chr.data[value << 10];
+			chr.bank_1k[2] = chr_chip_byte_pnt(0, value << 10);
 			return;
 		case 0x9800:
 			control_bank(info.chr.rom.max.banks_1k)
-			chr.bank_1k[3] = &chr.data[value << 10];
+			chr.bank_1k[3] = chr_chip_byte_pnt(0, value << 10);
 			return;
 		case 0xA000:
 			control_bank(info.chr.rom.max.banks_1k)
-			chr.bank_1k[4] = &chr.data[value << 10];
+			chr.bank_1k[4] = chr_chip_byte_pnt(0, value << 10);
 			return;
 		case 0xA800:
 			control_bank(info.chr.rom.max.banks_1k)
-			chr.bank_1k[5] = &chr.data[value << 10];
+			chr.bank_1k[5] = chr_chip_byte_pnt(0, value << 10);
 			return;
 		case 0xB000:
 			control_bank(info.chr.rom.max.banks_1k)
-			chr.bank_1k[6] = &chr.data[value << 10];
+			chr.bank_1k[6] = chr_chip_byte_pnt(0, value << 10);
 			return;
 		case 0xB800:
 			control_bank(info.chr.rom.max.banks_1k)
-			chr.bank_1k[7] = &chr.data[value << 10];
+			chr.bank_1k[7] = chr_chip_byte_pnt(0, value << 10);
 			return;
 		case 0xC000:
 			n163_nmt_update(0)
@@ -372,8 +372,8 @@ void extcl_cpu_wr_mem_Namco_3425(WORD address, BYTE value) {
 					value >>= 1;
 					control_bank(info.chr.rom.max.banks_2k)
 					bank = value << 11;
-					chr.bank_1k[slot] = &chr.data[bank];
-					chr.bank_1k[slot | 0x01] = &chr.data[bank | 0x400];
+					chr.bank_1k[slot] = chr_chip_byte_pnt(0, bank);
+					chr.bank_1k[slot | 0x01] = chr_chip_byte_pnt(0, bank | 0x400);
 					return;
 				}
 				case 0x02:
@@ -383,7 +383,7 @@ void extcl_cpu_wr_mem_Namco_3425(WORD address, BYTE value) {
 					n3425_nmt_update()
 					value |= 0x40;
 					control_bank(info.chr.rom.max.banks_1k)
-					chr.bank_1k[n3425.bank_to_update + 2] = &chr.data[value << 10];
+					chr.bank_1k[n3425.bank_to_update + 2] = chr_chip_byte_pnt(0, value << 10);
 					return;
 				case 0x06:
 					control_bank(info.prg.rom.max.banks_8k)
@@ -423,8 +423,8 @@ void extcl_cpu_wr_mem_Namco_3446(WORD address, BYTE value) {
 
 					control_bank(info.chr.rom.max.banks_2k)
 					bank = value << 11;
-					chr.bank_1k[slot] = &chr.data[bank];
-					chr.bank_1k[slot | 0x01] = &chr.data[bank | 0x400];
+					chr.bank_1k[slot] = chr_chip_byte_pnt(0, bank);
+					chr.bank_1k[slot | 0x01] = chr_chip_byte_pnt(0, bank | 0x400);
 					return;
 				}
 				case 0x06:
