@@ -33,9 +33,9 @@ T abs(T value)
     return value < 0 ? -value : value;
 }
 
-const uint32_t redMask   = 0xff000000;
-const uint32_t greenMask = 0x00ff0000;
-const uint32_t blueMask  = 0x0000ff00;
+const uint32_t redMask   = 0xff0000;
+const uint32_t greenMask = 0x00ff00;
+const uint32_t blueMask  = 0x0000ff;
 
 template <unsigned int N, unsigned int M> inline
 void alphaBlend(uint32_t& dst, uint32_t col) //blend color over destination with opacity N / M
@@ -43,9 +43,11 @@ void alphaBlend(uint32_t& dst, uint32_t col) //blend color over destination with
     static_assert(N < 256, "possible overflow of (col & redMask) * N");
     static_assert(M < 256, "possible overflow of (col & redMask  ) * N + (dst & redMask  ) * (M - N)");
     static_assert(0 < N && N < M, "");
+
     dst = (redMask   & ((col & redMask  ) * N + (dst & redMask  ) * (M - N)) / M) | //this works because 8 upper bits are free
           (greenMask & ((col & greenMask) * N + (dst & greenMask) * (M - N)) / M) |
-          (blueMask  & ((col & blueMask ) * N + (dst & blueMask ) * (M - N)) / M);
+          (blueMask  & ((col & blueMask ) * N + (dst & blueMask ) * (M - N)) / M) |
+          (col & 0xFF000000);
 }
 
 
