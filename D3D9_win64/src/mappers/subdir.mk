@@ -75,6 +75,7 @@ C_SRCS += \
 ../src/mappers/mapper_Agci.c \
 ../src/mappers/mapper_Ave.c \
 ../src/mappers/mapper_AxROM.c \
+../src/mappers/mapper_BMCFK23C.c \
 ../src/mappers/mapper_Bandai.c \
 ../src/mappers/mapper_BxROM.c \
 ../src/mappers/mapper_CNROM.c \
@@ -97,6 +98,7 @@ C_SRCS += \
 ../src/mappers/mapper_MMC3.c \
 ../src/mappers/mapper_MMC5.c \
 ../src/mappers/mapper_Magic.c \
+../src/mappers/mapper_Malee.c \
 ../src/mappers/mapper_Namco.c \
 ../src/mappers/mapper_Ntdec.c \
 ../src/mappers/mapper_Rcm.c \
@@ -191,6 +193,7 @@ OBJS += \
 ./src/mappers/mapper_Agci.o \
 ./src/mappers/mapper_Ave.o \
 ./src/mappers/mapper_AxROM.o \
+./src/mappers/mapper_BMCFK23C.o \
 ./src/mappers/mapper_Bandai.o \
 ./src/mappers/mapper_BxROM.o \
 ./src/mappers/mapper_CNROM.o \
@@ -213,6 +216,7 @@ OBJS += \
 ./src/mappers/mapper_MMC3.o \
 ./src/mappers/mapper_MMC5.o \
 ./src/mappers/mapper_Magic.o \
+./src/mappers/mapper_Malee.o \
 ./src/mappers/mapper_Namco.o \
 ./src/mappers/mapper_Ntdec.o \
 ./src/mappers/mapper_Rcm.o \
@@ -307,6 +311,7 @@ C_DEPS += \
 ./src/mappers/mapper_Agci.d \
 ./src/mappers/mapper_Ave.d \
 ./src/mappers/mapper_AxROM.d \
+./src/mappers/mapper_BMCFK23C.d \
 ./src/mappers/mapper_Bandai.d \
 ./src/mappers/mapper_BxROM.d \
 ./src/mappers/mapper_CNROM.d \
@@ -329,6 +334,7 @@ C_DEPS += \
 ./src/mappers/mapper_MMC3.d \
 ./src/mappers/mapper_MMC5.d \
 ./src/mappers/mapper_Magic.d \
+./src/mappers/mapper_Malee.d \
 ./src/mappers/mapper_Namco.d \
 ./src/mappers/mapper_Ntdec.d \
 ./src/mappers/mapper_Rcm.d \

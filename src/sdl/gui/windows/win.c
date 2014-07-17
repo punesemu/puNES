@@ -1085,10 +1085,16 @@ void gui_update(void) {
 		change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_HQ2X);
 		change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_HQ3X);
 		change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_HQ4X);
+		change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_XBRZ2X);
+		change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_XBRZ3X);
+		change_menuitem(ENAB, MF_GRAYED, IDM_SET_FILTER_XBRZ4X);
 	} else {
 		change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_HQ2X);
 		change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_HQ3X);
 		change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_HQ4X);
+		change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_XBRZ2X);
+		change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_XBRZ3X);
+		change_menuitem(ENAB, MF_ENABLED, IDM_SET_FILTER_XBRZ4X);
 	}
 	{
 		HMENU menu_to_change;
@@ -1158,6 +1164,9 @@ void gui_update(void) {
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_HQ2X);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_HQ3X);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_HQ4X);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_XBRZ2X);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_XBRZ3X);
+	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_XBRZ4X);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_RGBNTSCCOM);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_RGBNTSCSVD);
 	change_menuitem(CHECK, MF_UNCHECKED, IDM_SET_FILTER_RGBNTSCRGB);
@@ -1203,6 +1212,15 @@ void gui_update(void) {
 			break;
 		case HQ4X:
 			id = IDM_SET_FILTER_HQ4X;
+			break;
+		case XBRZ2X:
+			id = IDM_SET_FILTER_XBRZ2X;
+			break;
+		case XBRZ3X:
+			id = IDM_SET_FILTER_XBRZ3X;
+			break;
+		case XBRZ4X:
+			id = IDM_SET_FILTER_XBRZ4X;
 			break;
 		case NTSC_FILTER:
 			switch (cfg->ntsc_format) {
@@ -1901,6 +1919,15 @@ long __stdcall main_win_proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 					break;
 				case IDM_SET_FILTER_HQ4X:
 					set_filter(HQ4X);
+					break;
+				case IDM_SET_FILTER_XBRZ2X:
+					set_filter(XBRZ2X);
+					break;
+				case IDM_SET_FILTER_XBRZ3X:
+					set_filter(XBRZ3X);
+					break;
+				case IDM_SET_FILTER_XBRZ4X:
+					set_filter(XBRZ4X);
 					break;
 				case IDM_SET_FILTER_RGBNTSCCOM:
 					cfg->ntsc_format = COMPOSITE;
@@ -2650,6 +2677,15 @@ void set_filter(BYTE filter) {
 			break;
 		case HQ4X:
 			gfx_set_screen(X4, HQ4X, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
+			break;
+		case XBRZ2X:
+			gfx_set_screen(X2, XBRZ2X, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
+			break;
+		case XBRZ3X:
+			gfx_set_screen(X3, XBRZ3X, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
+			break;
+		case XBRZ4X:
+			gfx_set_screen(X4, XBRZ4X, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 			break;
 		case NTSC_FILTER:
 			gfx_set_screen(NO_CHANGE, NTSC_FILTER, NO_CHANGE, NO_CHANGE, FALSE, FALSE);

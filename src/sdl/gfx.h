@@ -23,6 +23,7 @@
 #include "filters/video/hqx.h"
 #include "filters/video/bilinear.h"
 #include "filters/video/ntsc.h"
+#include "filters/video/xBRZ.h"
 
 enum render_type { RENDER_SOFTWARE, RENDER_OPENGL, RENDER_GLSL };
 enum scale_type { X1 = 1, X2, X3, X4 };
@@ -43,8 +44,11 @@ enum filters_type {
 	CRT_CURVE,
 	CRT_NO_CURVE,
 	PHOSPHOR2,
-	DARK_ROOM
+	DARK_ROOM,
 	/* glsl shaders end */
+	XBRZ2X,
+	XBRZ3X,
+	XBRZ4X
 };
 enum fullscreen_type { NO_FULLSCR, FULLSCR };
 enum overcan_type { OSCAN_OFF, OSCAN_ON, OSCAN_DEFAULT, OSCAN_DEFAULT_OFF, OSCAN_DEFAULT_ON };

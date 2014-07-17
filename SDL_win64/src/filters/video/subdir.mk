@@ -12,7 +12,8 @@ C_SRCS += \
 ../src/filters/video/nes_ntsc.c \
 ../src/filters/video/ntsc.c \
 ../src/filters/video/scale.c \
-../src/filters/video/scale2x.c 
+../src/filters/video/scale2x.c \
+../src/filters/video/xBRZ.c 
 
 OBJS += \
 ./src/filters/video/bilinear.o \
@@ -23,7 +24,8 @@ OBJS += \
 ./src/filters/video/nes_ntsc.o \
 ./src/filters/video/ntsc.o \
 ./src/filters/video/scale.o \
-./src/filters/video/scale2x.o 
+./src/filters/video/scale2x.o \
+./src/filters/video/xBRZ.o 
 
 C_DEPS += \
 ./src/filters/video/bilinear.d \
@@ -34,7 +36,8 @@ C_DEPS += \
 ./src/filters/video/nes_ntsc.d \
 ./src/filters/video/ntsc.d \
 ./src/filters/video/scale.d \
-./src/filters/video/scale2x.d 
+./src/filters/video/scale2x.d \
+./src/filters/video/xBRZ.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

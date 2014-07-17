@@ -470,6 +470,11 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 			case HQ4X:
 				gfx.filter = hqNx;
 				break;
+			case XBRZ2X:
+			case XBRZ3X:
+			case XBRZ4X:
+				gfx.filter = xBRZ;
+				break;
 			case NTSC_FILTER:
 				gfx.filter = ntsc_surface;
 				/*
@@ -511,11 +516,13 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 	}
 	if ((scale != cfg->scale) || info.on_cfg || force_scale) {
 
-#define ctrl_filter_scale(scalexf, hqxf)\
+#define ctrl_filter_scale(scalexf, hqxf, xbrzxf)\
 	if ((filter >= SCALE2X) && (filter <= SCALE4X)) {\
 		filter = scalexf;\
 	} else  if ((filter >= HQ2X) && (filter <= HQ4X)) {\
 		filter = hqxf;\
+	} else  if ((filter >= XBRZ2X) && (filter <= XBRZ4X)) {\
+		filter = xbrzxf;\
 	}
 
 		switch (scale) {
@@ -532,17 +539,17 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 				set_mode = TRUE;
 				break;
 			case X2:
-				ctrl_filter_scale(SCALE2X, HQ2X)
+				ctrl_filter_scale(SCALE2X, HQ2X, XBRZ2X)
 				ntsc_width(width, ntsc_width_pixel[scale], TRUE);
 				set_mode = TRUE;
 				break;
 			case X3:
-				ctrl_filter_scale(SCALE3X, HQ3X)
+				ctrl_filter_scale(SCALE3X, HQ3X, XBRZ3X)
 				ntsc_width(width, ntsc_width_pixel[scale], TRUE);
 				set_mode = TRUE;
 				break;
 			case X4:
-				ctrl_filter_scale(SCALE4X, HQ4X)
+				ctrl_filter_scale(SCALE4X, HQ4X, XBRZ4X)
 				ntsc_width(width, ntsc_width_pixel[scale], TRUE);
 				set_mode = TRUE;
 				break;
@@ -712,6 +719,9 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 			case HQ2X:
 			case HQ3X:
 			case HQ4X:
+			case XBRZ2X:
+			case XBRZ3X:
+			case XBRZ4X:
 			case NTSC_FILTER:
 				PSS();
 				break;

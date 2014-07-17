@@ -9,13 +9,7 @@
 #define COMMON_H_
 
 #include <stdint.h>
-
-typedef unsigned char BYTE;
-typedef unsigned short WORD;
-typedef unsigned int DBWORD;
-typedef signed char SBYTE;
-typedef signed short SWORD;
-typedef signed int SDBWORD;
+#include "tpdef.h"
 
 #define BIOS_FOLDER    "/bios"
 #define DIFF_FOLDER    "/diff"

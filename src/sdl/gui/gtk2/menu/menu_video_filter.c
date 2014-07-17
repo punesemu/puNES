@@ -274,6 +274,63 @@ static const guint8 crt_icon_inline[] =
   "\203\24\24\24\377\1:::\377\202\377\377\377\0\1""888\235\214:::\377\1"
   "444^\241\377\377\377\0"};
 
+#ifdef __SUNPRO_C
+#pragma align 4 (xbrz_icon_inline)
+#endif
+#ifdef __GNUC__
+static const guint8 xbrz_icon_inline[] __attribute__ ((__aligned__ (4))) =
+#else
+static const guint8 xbrz_icon_inline[] =
+#endif
+{ ""
+  /* Pixbuf magic (0x47646b50) */
+  "GdkP"
+  /* length: header (24) + pixel_data (739) */
+  "\0\0\2\373"
+  /* pixdata_type (0x2010002) */
+  "\2\1\0\2"
+  /* rowstride (64) */
+  "\0\0\0@"
+  /* width (16) */
+  "\0\0\0\20"
+  /* height (16) */
+  "\0\0\0\20"
+  /* pixel_data: */
+  "\207\0\0\0\0\2\325\221r\325\325\224z\322\215\0\0\0\0\4\312wOE\364\343"
+  "\260\377\364\333\220\377\312uVB\214\0\0\0\0\4\324\220z\340\377\366k\377"
+  "\377\352>\377\323\212`\340\213\0\0\0\0\6\313tR3\352\303\216\377\377\364"
+  "P\377\377\360I\377\347\266U\377\312|`0\210\0\0\0\0\12\310p;\34\304e0"
+  "4\314|e\325\377\373\206\377\376\344\77\377\377\345Q\377\377\352R\377"
+  "\313yS\325\305f84\310p:\35\203\0\0\0\0\77\322\203W\226\320\206g\272\332"
+  "\245\223\332\347\302\276\372\354\316\312\377\367\352\272\377\377\353"
+  "A\377\376\344P\377\376\337P\377\377\342D\377\366\332\206\377\354\317"
+  "\310\377\347\306\272\371\332\250\221\331\321\213i\273\322\206V\226\332"
+  "\235}\377\377\377\305\377\377\377\221\377\377\372Z\377\377\365L\377\377"
+  "\357G\377\375\344J\377\376\343P\377\376\340R\377\376\334M\377\377\342"
+  "N\377\377\343T\377\377\342c\377\377\353\201\377\377\377\307\377\332\235"
+  "y\377\315zST\344\266A\377\377\377\77\377\375\356H\377\375\346L\377\375"
+  "\346P\377\376\347W\377\376\344W\377\376\341X\377\376\337X\377\376\333"
+  "Y\377\376\324G\377\377\324\77\377\377\3338\377\340\2215\377\316|RT\0"
+  "\0\0\0\310q`k\343\263X\377\377\377R\377\377\354\\\377\375\351O\377\375"
+  "\340C\377\375\3310\377\375\317\26\377\375\306\7\377\375\270\0\377\377"
+  "\267\0\377\377\273\0\377\313P\0\377\2512\30k\203\0\0\0\0\14\315}is\337"
+  "\246K\377\377\351\27\377\374\326\10\377\373\315\0\377\375\305\0\377\374"
+  "\303\0\377\375\276\0\377\375\273\0\377\377\277\1\377\331k\12\377\231"
+  "\26\4s\205\0\0\0\0\12\245\40\22\261\374\335\2\377\375\322\0\377\374\314"
+  "\0\377\374\310\1\377\374\303\1\377\375\275\1\377\377\272\2\377\377\263"
+  "\2\377\235\35\15\257\206\0\0\0\0\12\263B)\274\377\354\21\377\374\317"
+  "\0\377\374\312\2\377\375\310\1\377\376\303\1\377\375\272\1\377\376\266"
+  "\3\377\377\274\4\377\263@\27\273\206\0\0\0\0\12\304b#\335\377\343\0\377"
+  "\373\316\1\377\377\327\0\377\377\322\0\377\377\315\0\377\377\307\0\377"
+  "\375\262\3\377\377\271\3\377\303O\20\332\205\0\0\0\0\14\240\31\4'\326"
+  "\214%\377\377\361\2\377\377\343\0\377\364\262\3\377\275H\13\377\275J"
+  "\13\377\366\243\4\377\377\304\1\377\377\303\2\377\325j\16\377\240$\14"
+  "%\204\0\0\0\0\5\235\15\6H\355\303!\377\375\331\2\377\312^\10\377\242"
+  "\36\16\236\202\0\0\0\0\5\242\"\16\236\312V\11\377\375\255\4\377\354\220"
+  "\15\377\235\36\15F\204\0\0\0\0\4\250,\10>\275[\26\377\2604\15\242\242"
+  "\40\17#\204\0\0\0\0\4\242'\16#\2602\15\242\275L\13\377\2500\15>\202\0"
+  "\0\0\0"};
+
 enum {
 	MNO_FILTER,
 	MSCALE2X,
@@ -282,6 +339,9 @@ enum {
 	MHQ2X,
 	MHQ3X,
 	MHQ4X,
+	MXBRZ2X,
+	MXBRZ3X,
+	MXBRZ4X,
 	MRGBNTSC,
 	MPHOSPHOR,
 	MPHOSPHOR2,
@@ -302,7 +362,7 @@ void set_filter(int filter);
 static GtkWidget *check[NUMCHKS];
 
 void menu_video_filter(GtkWidget *video, GtkAccelGroup *accel_group) {
-	GtkWidget *menu[2], *filter, *scalex, *hqx, *ntsc;
+	GtkWidget *menu[2], *filter, *scalex, *hqx, *xBRZx, *ntsc;
 
 	menu[0] = gtk_menu_new();
 	filter = gtk_image_menu_item_new_with_mnemonic("Fi_lter");
@@ -406,6 +466,30 @@ void menu_video_filter(GtkWidget *video, GtkAccelGroup *accel_group) {
 	g_signal_connect_swapped(G_OBJECT(check[MHQ4X]), "activate",
 			G_CALLBACK(set_filter), GINT_TO_POINTER(HQ4X));
 
+	/* Settings/Video/Filters/xBRZ */
+	menu[1] = gtk_menu_new();
+	xBRZx = gtk_image_menu_item_new_with_mnemonic("_xBRZ");
+
+	gtk_menu_item_set_submenu(GTK_MENU_ITEM(xBRZx), menu[1]);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu[0]), xBRZx);
+
+	gw_image_from_inline(xBRZx, xbrz_icon_inline);
+
+	check[MXBRZ2X] = gtk_check_menu_item_new_with_mnemonic("xBRZ _2X");
+	check[MXBRZ3X] = gtk_check_menu_item_new_with_mnemonic("xBRZ _3X");
+	check[MXBRZ4X] = gtk_check_menu_item_new_with_mnemonic("xBRZ _4X");
+
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu[1]), check[MXBRZ2X]);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu[1]), check[MXBRZ3X]);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu[1]), check[MXBRZ4X]);
+
+	g_signal_connect_swapped(G_OBJECT(check[MXBRZ2X]), "activate",
+			G_CALLBACK(set_filter), GINT_TO_POINTER(XBRZ2X));
+	g_signal_connect_swapped(G_OBJECT(check[MXBRZ3X]), "activate",
+			G_CALLBACK(set_filter), GINT_TO_POINTER(XBRZ3X));
+	g_signal_connect_swapped(G_OBJECT(check[MXBRZ4X]), "activate",
+			G_CALLBACK(set_filter), GINT_TO_POINTER(XBRZ4X));
+
 	/* Settings/Video/Filters/NTSC */
 	menu[1] = gtk_menu_new();
 	ntsc = gtk_image_menu_item_new_with_mnemonic("N_TSC");
@@ -438,10 +522,16 @@ void menu_video_filter_check(void) {
 		gtk_widget_set_sensitive(check[MHQ2X], FALSE);
 		gtk_widget_set_sensitive(check[MHQ3X], FALSE);
 		gtk_widget_set_sensitive(check[MHQ4X], FALSE);
+		gtk_widget_set_sensitive(check[MXBRZ2X], FALSE);
+		gtk_widget_set_sensitive(check[MXBRZ3X], FALSE);
+		gtk_widget_set_sensitive(check[MXBRZ4X], FALSE);
 	} else {
 		gtk_widget_set_sensitive(check[MHQ2X], TRUE);
 		gtk_widget_set_sensitive(check[MHQ3X], TRUE);
 		gtk_widget_set_sensitive(check[MHQ4X], TRUE);
+		gtk_widget_set_sensitive(check[MXBRZ2X], TRUE);
+		gtk_widget_set_sensitive(check[MXBRZ3X], TRUE);
+		gtk_widget_set_sensitive(check[MXBRZ4X], TRUE);
 	}
 
 	if (opengl.glsl.compliant && opengl.glsl.enabled) {
@@ -467,6 +557,9 @@ void menu_video_filter_check(void) {
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MHQ2X]), FALSE);
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MHQ3X]), FALSE);
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MHQ4X]), FALSE);
+	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MXBRZ2X]), FALSE);
+	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MXBRZ3X]), FALSE);
+	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MXBRZ4X]), FALSE);
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MRGBNTSCCOM]), FALSE);
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MRGBNTSCSVD]), FALSE);
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(check[MRGBNTSCRGB]), FALSE);
@@ -521,6 +614,15 @@ void menu_video_filter_check(void) {
 			break;
 		case HQ4X:
 			index = MHQ4X;
+			break;
+		case XBRZ2X:
+			index = MXBRZ2X;
+			break;
+		case XBRZ3X:
+			index = MXBRZ3X;
+			break;
+		case XBRZ4X:
+			index = MXBRZ4X;
 			break;
 		case NTSC_FILTER: {
 			switch (cfg->ntsc_format) {
@@ -587,6 +689,15 @@ void set_filter(int filter) {
 			return;
 		case HQ4X:
 			gfx_set_screen(X4, HQ4X, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
+			return;
+		case XBRZ2X:
+			gfx_set_screen(X2, XBRZ2X, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
+			return;
+		case XBRZ3X:
+			gfx_set_screen(X3, XBRZ3X, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
+			return;
+		case XBRZ4X:
+			gfx_set_screen(X4, XBRZ4X, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 			return;
 		case MRGBNTSCCOM:
 		case MRGBNTSCSVD:

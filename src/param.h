@@ -176,12 +176,13 @@ static const _param param[] = {
 		"filter",
 		NULL,
 		"# possible values: none, scale2x, scale3x, scale4x, hq2x, hq3x, hq4x,\n"
-		"#                  ntsc, phosphor, scanline, dbl, crtcurve, crtnocurve,\n"
-		"#                  phosphor2, dark_room",
+		"#                  xbrz2x, xbrz3x, xbrz4x, ntsc, phosphor, scanline,\n"
+		"#                  dbl, crtcurve, crtnocurve, phosphor2, dark_room",
 		NULL,
 		"-i, --filter              filter to apply       : nofilter, scale2x,\n"
 		"                                                  scale3x, scale4x, hq2x,\n"
-		"                                                  hq3x, hq4x, ntsc, phosphor,\n"
+		"                                                  hq3x, hq4x, xbrz2x, xbrz3x,"
+		"                                                  xbrz4x,ntsc, phosphor,\n"
 		"                                                  scanline, dbl, crtcurve,\n"
 		"                                                  crtnocurve, phosphor2,\n"
 		"                                                  dark_room"
@@ -586,6 +587,9 @@ static const _param param_filter[] = {
 	{"CRTNOCURVE", "crtnocurve"},
 	{"Phosphor2",  "phosphor2" },
 	{"DarkRoom",   "darkroom"  },
+	{"xBRZ 2x",    "xbrz2x"    },
+	{"xBRZ 3x",    "xbrz3x"    },
+	{"xBRZ 4x",    "xbrz4x"    },
 };
 static const _param param_ntsc[] = {
 	{"Composite", "composite"},

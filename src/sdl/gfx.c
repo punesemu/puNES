@@ -274,23 +274,19 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 			case SCALE2X:
 			case SCALE3X:
 			case SCALE4X:
-				gfx.filter = scaleNx;
-				/*
-				 * se sto passando dal filtro ntsc ad un'altro, devo
-				 * ricalcolare la larghezza del video mode quindi
-				 * forzo il controllo del fattore di scala.
-				 */
-				if (cfg->filter == NTSC_FILTER) {
-					/* forzo il controllo del fattore di scale */
-					force_scale = TRUE;
-					/* indico che devo cambiare il video mode */
-					set_mode = TRUE;
-				}
-				break;
 			case HQ2X:
 			case HQ3X:
 			case HQ4X:
-				gfx.filter = hqNx;
+			case XBRZ2X:
+			case XBRZ3X:
+			case XBRZ4X:
+				if ((filter >= SCALE2X) && (filter <= SCALE4X)) {
+					gfx.filter = scaleNx;
+				} else  if ((filter >= HQ2X) && (filter <= HQ4X)) {
+					gfx.filter = hqNx;
+				} else  if ((filter >= XBRZ2X) && (filter <= XBRZ4X)) {
+					gfx.filter = xBRZ;
+				}
 				/*
 				 * se sto passando dal filtro ntsc ad un'altro, devo
 				 * ricalcolare la larghezza del video mode quindi
@@ -344,11 +340,13 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 	}
 	if ((scale != cfg->scale) || info.on_cfg || force_scale) {
 
-#define ctrl_filter_scale(scalexf, hqxf)\
+#define ctrl_filter_scale(scalexf, hqxf, xbrzxf)\
 	if ((filter >= SCALE2X) && (filter <= SCALE4X)) {\
 		filter = scalexf;\
 	} else  if ((filter >= HQ2X) && (filter <= HQ4X)) {\
 		filter = hqxf;\
+	} else  if ((filter >= XBRZ2X) && (filter <= XBRZ4X)) {\
+		filter = xbrzxf;\
 	}
 
 		switch (scale) {
@@ -368,17 +366,17 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 				set_mode = TRUE;
 				break;
 			case X2:
-				ctrl_filter_scale(SCALE2X, HQ2X)
+				ctrl_filter_scale(SCALE2X, HQ2X, XBRZ2X)
 				ntsc_width(width, ntsc_width_pixel[scale], TRUE);
 				set_mode = TRUE;
 				break;
 			case X3:
-				ctrl_filter_scale(SCALE3X, HQ3X)
+				ctrl_filter_scale(SCALE3X, HQ3X, XBRZ3X)
 				ntsc_width(width, ntsc_width_pixel[scale], TRUE);
 				set_mode = TRUE;
 				break;
 			case X4:
-				ctrl_filter_scale(SCALE4X, HQ4X)
+				ctrl_filter_scale(SCALE4X, HQ4X, XBRZ4X)
 				ntsc_width(width, ntsc_width_pixel[scale], TRUE);
 				set_mode = TRUE;
 				break;
@@ -633,6 +631,9 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 				case HQ2X:
 				case HQ3X:
 				case HQ4X:
+				case XBRZ2X:
+				case XBRZ3X:
+				case XBRZ4X:
 				case NTSC_FILTER:
 					PSS();
 					break;

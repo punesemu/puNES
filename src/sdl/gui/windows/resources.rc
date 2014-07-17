@@ -195,6 +195,12 @@ BEGIN
 					MENUITEM "Hq&3x",             IDM_SET_FILTER_HQ3X
 					MENUITEM "Hq&4x",             IDM_SET_FILTER_HQ4X
 				END
+				POPUP "&xBRZ"
+				BEGIN
+					MENUITEM "xBRZ &2x",          IDM_SET_FILTER_XBRZ2X
+					MENUITEM "xBRZ &3x",          IDM_SET_FILTER_XBRZ3X
+					MENUITEM "xBRZ &4x",          IDM_SET_FILTER_XBRZ4X
+				END
 				POPUP "N&TSC"
 				BEGIN
 					MENUITEM "&Composite",        IDM_SET_FILTER_RGBNTSCCOM

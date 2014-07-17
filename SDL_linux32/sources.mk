@@ -22,5 +22,6 @@ src/sdl/glew \
 src/mappers \
 src/l7zip \
 src/filters/video \
+src/filters/video/xBRZ \
 src/filters/audio \
 

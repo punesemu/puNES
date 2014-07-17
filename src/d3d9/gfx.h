@@ -21,6 +21,7 @@
 #include "filters/video/scale2x.h"
 #include "filters/video/ntsc.h"
 #include "filters/video/hqx.h"
+#include "filters/video/xBRZ.h"
 
 enum render_type { RENDER_SOFTWARE, RENDER_HLSL };
 enum fullscreen_type { NO_FULLSCR, FULLSCR };
@@ -41,7 +42,10 @@ enum filters_type {
 	CRT_CURVE,
 	CRT_NO_CURVE,
 	PHOSPHOR2,
-	DARK_ROOM
+	DARK_ROOM,
+	XBRZ2X,
+	XBRZ3X,
+	XBRZ4X
 };
 enum overcan_type { OSCAN_OFF, OSCAN_ON, OSCAN_DEFAULT, OSCAN_DEFAULT_OFF, OSCAN_DEFAULT_ON };
 enum gfx_info_type { CURRENT, NO_OVERSCAN, MONITOR, VIDEO_MODE };
