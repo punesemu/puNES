@@ -68,7 +68,7 @@ static const _unif_board unif_boards[] = {
 };
 
 BYTE unif_load_rom(void) {
-	BYTE tmp, phase;
+	BYTE phase;
 	FILE *fp;
 
 	{
@@ -109,10 +109,12 @@ BYTE unif_load_rom(void) {
 		fp = gamegenie_load_rom(fp);
 	}
 
-	phase = tmp = 0;
+	phase = 0;
 	memset(&unif, 0x00, sizeof(unif));
 
-	tmp = fread(&unif.header, sizeof(unif.header), 1, fp);
+	if (!(fread(&unif.header, sizeof(unif.header), 1, fp))) {
+		;
+	}
 
 	phase = UNIF_COUNT;
 
@@ -267,9 +269,13 @@ BYTE unif_MAPR(FILE *fp, BYTE phase) {
 	memset(&unif.board[0], 0x00, sizeof(unif.board));
 
 	if (unif.chunk.length < sizeof(unif.board)) {
-		fread(&unif.board[0], unif.chunk.length, 1, fp);
+		if (!(fread(&unif.board[0], unif.chunk.length, 1, fp))) {
+			;
+		}
 	} else {
-		fread(&unif.board[0], (sizeof(unif.board) - 1), 1, fp);
+		if (!(fread(&unif.board[0], (sizeof(unif.board) - 1), 1, fp))) {
+			;
+		}
 		fseek(fp, unif.chunk.length - (sizeof(unif.board) - 1), SEEK_CUR);
 	}
 
@@ -320,9 +326,13 @@ BYTE unif_NAME(FILE *fp, BYTE phase) {
 	memset(&unif.name[0], 0x00, sizeof(unif.name));
 
 	if (unif.chunk.length < sizeof(unif.name)) {
-		fread(&unif.name[0], unif.chunk.length, 1, fp);
+		if (!(fread(&unif.name[0], unif.chunk.length, 1, fp))) {
+			;
+		}
 	} else {
-		fread(&unif.name[0], (sizeof(unif.name) - 1), 1, fp);
+		if (!(fread(&unif.name[0], (sizeof(unif.name) - 1), 1, fp))) {
+			;
+		}
 		fseek(fp, unif.chunk.length - (sizeof(unif.name) - 1), SEEK_CUR);
 	}
 
@@ -345,7 +355,9 @@ BYTE unif_PRG(FILE *fp, BYTE phase) {
 		if (map_prg_chip_malloc(chip, prg_chip_size(chip), 0x00) == EXIT_ERROR) {
 			return (EXIT_ERROR);
 		}
-		fread(prg_chip(chip), prg_chip_size(chip), 1, fp);
+		if (!(fread(prg_chip(chip), prg_chip_size(chip), 1, fp))) {
+			;
+		}
 	}
 
 	return (EXIT_OK);
@@ -364,7 +376,9 @@ BYTE unif_CHR(FILE *fp, BYTE phase) {
 		if (map_chr_chip_malloc(chip, chr_chip_size(chip), 0x00) == EXIT_ERROR) {
 			return (EXIT_ERROR);
 		}
-		fread(chr_chip(chip), chr_chip_size(chip), 1, fp);
+		if (!(fread(chr_chip(chip), chr_chip_size(chip), 1, fp))) {
+			;
+		}
 		if (chip == 0) {
 			chr_bank_1k_reset();
 		}
@@ -384,7 +398,9 @@ BYTE unif_TVCI(FILE *fp, BYTE phase) {
 		return (EXIT_ERROR);
 	}
 
-	fread(&tv, unif.chunk.length, 1, fp);
+	if (!(fread(&tv, unif.chunk.length, 1, fp))) {
+		;
+	}
 
 	switch (tv) {
 		default:
@@ -407,7 +423,9 @@ BYTE unif_BATR(FILE *fp, BYTE phase) {
 	}
 
 	batr = 0;
-	fread(&batr, unif.chunk.length, 1, fp);
+	if (!(fread(&batr, unif.chunk.length, 1, fp))) {
+		;
+	}
 
 	info.prg.ram.bat.banks = batr & 0x01;
 
@@ -422,7 +440,9 @@ BYTE unif_MIRR(FILE *fp, BYTE phase) {
 	}
 
 	mirr = 0;
-	fread(&mirr, unif.chunk.length, 1, fp);
+	if (!(fread(&mirr, unif.chunk.length, 1, fp))) {
+		;
+	}
 
 	switch (mirr) {
 		default:

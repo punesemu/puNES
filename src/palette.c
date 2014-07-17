@@ -27,7 +27,9 @@ void palette_save_on_file(char *file) {
 		return;
 	}
 
-	fwrite((BYTE *) palette_RGB, 64 * 3, 1, fp);
+	if (!(fwrite((BYTE *) palette_RGB, 64 * 3, 1, fp))) {
+		;
+	}
 
 	fclose(fp);
 }
@@ -41,16 +43,18 @@ BYTE palette_load_from_file(char *file) {
 		return (EXIT_ERROR);
 	}
 
-    fseek(fp, 0, SEEK_END);
+	fseek(fp, 0, SEEK_END);
 
-    if (ftell(fp) < (64 * 3)) {
+	if (ftell(fp) < (64 * 3)) {
 		fprintf(stderr, "ERROR: read file %s\n", file);
-    	fclose(fp);
+		fclose(fp);
 		return (EXIT_ERROR);
-    }
+	}
 
-    rewind(fp);
-    fread((BYTE *) palette_base_file, 64 * 3, 1, fp);
+	rewind(fp);
+	if (!(fread((BYTE *) palette_base_file, 64 * 3, 1, fp))) {
+		;
+	}
 
 	fclose(fp);
 

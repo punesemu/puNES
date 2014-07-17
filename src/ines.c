@@ -64,7 +64,9 @@ BYTE ines_load_rom(void) {
 		info.prg.rom.banks_16k = fgetc(fp);
 		info.chr.rom.banks_8k = fgetc(fp);
 
-		fread(&flags[0], TOTAL_FL, 1, fp);
+		if (!(fread(&flags[0], TOTAL_FL, 1, fp))) {
+			;
+		}
 
 		if ((flags[FL7] & 0x0C) == 0x08) {
 			/* NES 2.0 */
@@ -147,7 +149,9 @@ BYTE ines_load_rom(void) {
 		}
 
 		if (info.trainer) {
-			fread(&trainer.data, sizeof(trainer.data), 1, fp);
+			if (!(fread(&trainer.data, sizeof(trainer.data), 1, fp))) {
+				;
+			}
 		} else {
 			memset(&trainer.data, 0x00, sizeof(trainer.data));
 		}
@@ -182,7 +186,9 @@ BYTE ines_load_rom(void) {
 			return (EXIT_ERROR);
 		}
 
-		fread(prg_chip(0), 16384, info.prg.rom.banks_16k, fp);
+		if (!(fread(prg_chip(0), 16384, info.prg.rom.banks_16k, fp))) {
+			;
+		}
 
 		/*
 		 * se e' settato mapper.write_vram, vuol dire
@@ -197,7 +203,9 @@ BYTE ines_load_rom(void) {
 				return (EXIT_ERROR);
 			}
 
-			fread(chr_chip(0), 0x2000, info.chr.rom.banks_8k, fp);
+			if (!(fread(chr_chip(0), 0x2000, info.chr.rom.banks_8k, fp))) {
+				;
+			}
 			chr_bank_1k_reset();
 		}
 		/* la CHR ram extra */

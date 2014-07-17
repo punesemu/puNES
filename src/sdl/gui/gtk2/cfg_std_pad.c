@@ -360,7 +360,9 @@ void cfg_std_pad_js_press_event(void) {
 
 	/* svuoto il buffer iniziale */
 	for (i = 0; i < 10; i++) {
-		read(fd, &jse, size);
+		if (read(fd, &jse, size) < 0) {
+			;
+		}
 	}
 
 	while (cfg_std_pad.wait_js_input == TRUE) {
