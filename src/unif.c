@@ -9,12 +9,10 @@
 #include <string.h>
 #include <stdlib.h>
 #include "unif.h"
-//#include "fds.h"
 #include "mem_map.h"
 #include "mappers.h"
 #include "emu.h"
 #include "cfg_file.h"
-//#include "clock.h"
 #include "gamegenie.h"
 
 enum unif_phase_type { UNIF_COUNT, UNIF_READ };
