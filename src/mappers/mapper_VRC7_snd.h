@@ -8,6 +8,7 @@
 #ifndef MAPPER_VRC7_SND_H_
 #define MAPPER_VRC7_SND_H_
 
+#include <stdio.h>
 #include "common.h"
 
 void opll_reset(uint32_t clk, uint32_t rate);

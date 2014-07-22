@@ -7,6 +7,7 @@
 
 #include "snd.h"
 #include "emu.h"
+#include "info.h"
 #include "cfg_file.h"
 #include "audio_quality.h"
 #include "fps.h"

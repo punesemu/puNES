@@ -5,11 +5,11 @@
  *      Author: fhorse
  */
 
-#include <stdlib.h>
 #include <string.h>
 #include <math.h>
 #include <float.h>
 #include "mappers.h"
+#include "info.h"
 #include "mem_map.h"
 #include "cpu.h"
 #include "save_slot.h"

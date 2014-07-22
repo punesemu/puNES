@@ -8,7 +8,6 @@
 #ifndef MAPPER_105_H_
 #define MAPPER_105_H_
 
-#include <stdio.h>
 #include "common.h"
 
 struct m105 {

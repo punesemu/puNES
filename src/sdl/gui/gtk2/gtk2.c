@@ -13,6 +13,7 @@
 #include <sys/time.h>
 #include <string.h>
 #include <libgen.h>
+#include "info.h"
 #include "gtk2.h"
 #include "icon.h"
 #include "overscan.h"

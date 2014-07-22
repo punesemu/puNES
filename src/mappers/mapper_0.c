@@ -5,7 +5,6 @@
  *      Author: fhorse
  */
 
-#include <stdio.h>
 #include <string.h>
 #include "mappers.h"
 #include "mem_map.h"

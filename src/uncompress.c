@@ -7,6 +7,7 @@
 
 #include <libgen.h>
 #include "uncompress.h"
+#include "info.h"
 #include "gamegenie.h"
 #include "l7zip/l7z.h"
 #define __GUI_BASE__

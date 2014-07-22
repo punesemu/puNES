@@ -8,7 +8,6 @@
 #ifndef JOYSTICK_H_
 #define JOYSTICK_H_
 
-#include "common.h"
 #include "input.h"
 
 #define name_to_jsv(name) js_from_name(name, jsv_list, LENGTH(jsv_list))

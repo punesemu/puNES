@@ -5,9 +5,9 @@
  *      Author: fhorse
  */
 
-#include <stdlib.h>
 #include "input.h"
 #include "clock.h"
+#include "info.h"
 #include "ppu.h"
 #include "palette.h"
 #define __GUI_BASE__

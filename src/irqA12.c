@@ -5,7 +5,6 @@
  *      Author: fhorse
  */
 
-#include <stdio.h>
 #include "mem_map.h"
 #include "ppu_inline.h"
 #include "irqA12.h"

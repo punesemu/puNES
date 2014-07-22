@@ -12,7 +12,6 @@
 #endif
 #include "win.h"
 #include <libgen.h>
-#include <stdlib.h>
 #include <commctrl.h>
 #include "uncompress_selection.h"
 #include "uncompress.h"

@@ -5,8 +5,10 @@
  *      Author: fhorse
  */
 
+#if defined (D3D9)
 #include <stdio.h>
 #include <stdlib.h>
+#endif
 #include "ntsc.h"
 #include "overscan.h"
 

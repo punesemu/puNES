@@ -7,7 +7,6 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include <stdio.h>
 #include <zmq.h>
 #include "zeromq.h"
 #define __GUI_BASE__

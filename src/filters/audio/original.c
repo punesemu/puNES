@@ -17,6 +17,7 @@
 #include "clock.h"
 #include "fps.h"
 #include "original.h"
+#include "info.h"
 
 #define mixer_cut_and_high() mixer *= 45
 

@@ -5,9 +5,9 @@
  *      Author: fhorse
  */
 
-#include <stdio.h>
 #include <string.h>
 #include "mappers.h"
+#include "info.h"
 #include "mem_map.h"
 #include "cpu.h"
 #include "ppu.h"

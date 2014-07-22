@@ -8,7 +8,6 @@
 #ifndef IRQL2F_H_
 #define IRQL2F_H_
 
-#include "common.h"
 #include "cpu.h"
 #include "ppu.h"
 

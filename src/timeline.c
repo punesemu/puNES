@@ -5,10 +5,9 @@
  *      Author: fhorse
  */
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include "timeline.h"
+#include "info.h"
 #include "mem_map.h"
 #include "clock.h"
 #include "cpu.h"

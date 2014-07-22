@@ -9,7 +9,6 @@
 #define CPU_INLINE_H_
 
 #include <stdlib.h>
-#include <stdio.h>
 #include "clock.h"
 #include "cpu.h"
 #include "input.h"
@@ -22,6 +21,7 @@
 #include "tas.h"
 #include "fds.h"
 #include "gamegenie.h"
+#include "info.h"
 
 #define mod_cycles_op(op, vl) cpu.cycles op vl
 #define r2006_during_rendering()\

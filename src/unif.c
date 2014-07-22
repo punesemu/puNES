@@ -5,10 +5,10 @@
  *      Author: fhorse
  */
 
-#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include "unif.h"
+#include "info.h"
 #include "mem_map.h"
 #include "mappers.h"
 #include "emu.h"

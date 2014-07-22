@@ -37,6 +37,7 @@
 #include <string.h>
 #include <stdio.h>
 #include "sha1.h"
+#include "common.h"
 
 /*
  * 32-bit integer manipulation macros (big endian)

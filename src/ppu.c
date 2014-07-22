@@ -5,10 +5,12 @@
  *      Author: fhorse
  */
 
-#include <string.h>
-#include <stdio.h>
+#if defined (D3D9)
 #include <stdlib.h>
+#endif
+#include <string.h>
 #include "cpu.h"
+#include "info.h"
 #include "clock.h"
 #include "mem_map.h"
 #include "ppu_inline.h"

@@ -10,6 +10,7 @@
 #include "menu_file.h"
 #include "recent_roms.h"
 #include "uncompress.h"
+#include "info.h"
 
 #if defined (__SUNPRO_C)
 #pragma align 4 (open_icon_inline)

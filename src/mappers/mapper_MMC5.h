@@ -8,8 +8,6 @@
 #ifndef MAPPER_MMC5_H_
 #define MAPPER_MMC5_H_
 
-#include <stdio.h>
-#include "common.h"
 #include "apu.h"
 
 enum { EKROM, ELROM, ETROM, EWROM };

@@ -22,8 +22,9 @@
 #ifndef HQX_INLINE_H_
 #define HQX_INLINE_H_
 
+#if defined (D3D9)
 #include <stdlib.h>
-#include <stdint.h>
+#endif
 #include "common.h"
 
 #define MASK_2     0x0000FF00

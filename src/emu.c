@@ -22,6 +22,7 @@
 #include <libgen.h>
 #include "main.h"
 #include "emu.h"
+#include "info.h"
 #define __GUI_BASE__
 #define __GUI_SND__
 #include "gui.h"
@@ -429,6 +430,7 @@ BYTE emu_search_in_database(FILE *fp) {
 			fprintf(stderr, "Out of memory\n");
 			return (EXIT_ERROR);
 		}
+
 		/* leggo dal file la CHR Rom */
 		if (fread(&sha1chr[0], (8 * 1024), info.chr.rom.banks_8k, fp) < info.chr.rom.banks_8k) {
 			fprintf(stderr, "Error on read chr\n");

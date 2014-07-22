@@ -8,6 +8,7 @@
 #include <SDL.h>
 #include <SDL_audio.h>
 #include <SDL_thread.h>
+#include "info.h"
 #include "snd.h"
 #include "clock.h"
 #include "fps.h"

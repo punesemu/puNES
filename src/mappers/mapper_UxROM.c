@@ -5,9 +5,9 @@
  *      Author: fhorse
  */
 
-#include <stdio.h>
-#include "mem_map.h"
 #include "mappers.h"
+#include "info.h"
+#include "mem_map.h"
 
 void map_init_UxROM(BYTE model) {
 	switch (model) {

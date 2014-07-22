@@ -20,7 +20,7 @@
 #include <cstdint> //uint32_t
 #include <limits>
 #include "config.h"
-#include "tpdef.h"
+#include "common.h"
 
 namespace xbrz
 {

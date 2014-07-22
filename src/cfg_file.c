@@ -22,6 +22,7 @@
 #include "input.h"
 #include "gamegenie.h"
 #include "audio_quality.h"
+#include "info.h"
 
 #define INIFILE NAME  ".cfg"
 #define INPUTFILE     "input.cfg"

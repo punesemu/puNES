@@ -5,11 +5,11 @@
  *      Author: fhorse
  */
 
-#include <stdio.h>
 #include <string.h>
 #include <unistd.h>
 #include <sys/stat.h>
 #include "emu.h"
+#include "info.h"
 #include "text.h"
 #include "gamegenie.h"
 

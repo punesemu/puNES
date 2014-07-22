@@ -7,7 +7,6 @@
 
 #include <libgen.h>
 #include <string.h>
-#include <stdlib.h>
 #include <unistd.h>
 #include <sys/stat.h>
 #include "save_slot.h"
@@ -28,6 +27,7 @@
 #include "text.h"
 #include "fds.h"
 #include "gamegenie.h"
+#include "info.h"
 
 #define SAVE_VERSION 13
 

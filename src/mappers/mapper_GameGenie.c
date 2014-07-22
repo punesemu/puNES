@@ -6,6 +6,7 @@
  */
 
 #include "mappers.h"
+#include "info.h"
 #include "gamegenie.h"
 
 void map_init_GameGenie(void) {

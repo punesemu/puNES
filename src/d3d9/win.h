@@ -18,7 +18,6 @@
 #include "resources.h"
 #include "keyboard.h"
 #include "joystick.h"
-#include "common.h"
 #include "emu.h"
 
 #define	WIN_EIGHTP1 63

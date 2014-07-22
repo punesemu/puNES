@@ -8,7 +8,6 @@
 #ifndef MAPPER_MMC1_H_
 #define MAPPER_MMC1_H_
 
-#include <stdio.h>
 #include "common.h"
 
 enum MMC1_types { SNROM, SOROM, SUROM, SXROM };

@@ -19,6 +19,7 @@
 #include "clock.h"
 #include "fps.h"
 #include "blip_buf.h"
+#include "info.h"
 
 enum bl2_misc { master_vol = 65536 / 15 , volume_fator = 1, min_period = 20 };
 enum bl2_group { PULSE, TND, EXTRA };

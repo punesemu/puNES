@@ -5,8 +5,8 @@
  *      Author: fhorse
  */
 
-#include <stdio.h>
 #include "mem_map.h"
+#include "info.h"
 #include "mappers.h"
 
 void map_init_GxROM(void) {

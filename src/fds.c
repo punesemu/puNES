@@ -5,9 +5,9 @@
  *      Author: fhorse
  */
 
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <stdlib.h>
 #include <libgen.h>
 #include "fds.h"
 #include "cpu.h"
@@ -16,6 +16,7 @@
 #include "text.h"
 #include "emu.h"
 #include "clock.h"
+#include "info.h"
 
 #define BIOSFILE "disksys.rom"
 #define DIFFVERSION 1

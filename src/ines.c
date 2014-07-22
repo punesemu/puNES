@@ -6,8 +6,8 @@
  */
 
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
 #include "ines.h"
 #include "fds.h"
 #include "mem_map.h"
@@ -16,6 +16,7 @@
 #include "cfg_file.h"
 #include "clock.h"
 #include "gamegenie.h"
+#include "info.h"
 
 enum flags { FL6, FL7, FL8, FL9, FL10, FL11, FL12, FL13, FL14, FL15, TOTAL_FL };
 

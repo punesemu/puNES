@@ -6,6 +6,7 @@
  */
 
 #include "mappers.h"
+#include "info.h"
 #include "mem_map.h"
 
 void map_init_246(void) {

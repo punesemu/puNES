@@ -5,8 +5,8 @@
  *      Author: fhorse
  */
 
-#include <stdlib.h>
 #include "mappers.h"
+#include "info.h"
 #include "mem_map.h"
 #include "save_slot.h"
 

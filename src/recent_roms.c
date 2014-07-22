@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include "recent_roms.h"
+#include "info.h"
 #include "cfg_file.h"
 #include "gamegenie.h"
 

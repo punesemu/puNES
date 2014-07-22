@@ -12,6 +12,7 @@
 #include <strings.h>
 #include "l7z.h"
 #include "lib7zip.h"
+#include "info.h"
 
 struct _l7z {
 	BYTE present;

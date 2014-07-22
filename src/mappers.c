@@ -5,11 +5,11 @@
  *      Author: fhorse
  */
 
-#include <stdlib.h>
-#include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include <libgen.h>
 #include "mappers.h"
+#include "info.h"
 #include "mem_map.h"
 #include "irqA12.h"
 #include "irql2f.h"

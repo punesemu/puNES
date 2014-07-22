@@ -9,6 +9,7 @@
 #include <d3d9.h>
 #include <d3dx9shader.h>
 #include "emu.h"
+#include "info.h"
 #include "gfx.h"
 #include "cfg_file.h"
 #include "ppu.h"

@@ -5,15 +5,16 @@
  *      Author: fhorse
  */
 
-#include <string.h>
 #include <stdio.h>
-#include <libgen.h>
 #include <stdlib.h>
+#include <string.h>
+#include <libgen.h>
 #include <unistd.h>
 #include <sys/stat.h>
 #include "tas.h"
 #include "text.h"
 #include "emu.h"
+#include "info.h"
 
 #define tas_set_data_port_ctrlstd(prt, dt)\
 		prt.data[dt] = tas.il[tas.index].prt[dt]

@@ -5,6 +5,7 @@
  *      Author: fhorse
  */
 
+#include "info.h"
 #include "emu.h"
 #include "cpu.h"
 #include "gfx.h"

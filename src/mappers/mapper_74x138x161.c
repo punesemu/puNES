@@ -6,6 +6,7 @@
  */
 
 #include "mappers.h"
+#include "info.h"
 #include "mem_map.h"
 
 void map_init_74x138x161(void) {

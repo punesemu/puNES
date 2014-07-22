@@ -8,6 +8,7 @@
 #ifndef MEM_MAP_H_
 #define MEM_MAP_H_
 
+#include <stdio.h>
 #include "common.h"
 
 /* i vari mirroring */

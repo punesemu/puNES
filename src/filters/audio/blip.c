@@ -19,6 +19,7 @@
 #include "clock.h"
 #include "fps.h"
 #include "blip_buf.h"
+#include "info.h"
 
 enum bl_misc { master_vol = 65536 / 15 , volume_fator = 4, min_period = 20 };
 enum bl_extern { BL_EXT0 = 5, BL_EXT1, BL_EXT2 };

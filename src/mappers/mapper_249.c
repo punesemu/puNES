@@ -7,11 +7,10 @@
 
 #include <string.h>
 #include "mappers.h"
+#include "info.h"
 #include "mem_map.h"
 #include "irqA12.h"
 #include "save_slot.h"
-
-#include "cpu.h"
 
 #define m249_swap_chr_bank_1k(src, dst)\
 {\

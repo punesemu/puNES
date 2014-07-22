@@ -5,7 +5,6 @@
  *      Author: fhorse
  */
 
-#include <stdio.h>
 #include "external_calls.h"
 
 void extcl_init(void) {

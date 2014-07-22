@@ -16,7 +16,6 @@
 
 #include <math.h>
 #include <float.h>
-#include <stdio.h>
 #include "mapper_VRC7_snd.h"
 #include "save_slot.h"
 

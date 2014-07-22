@@ -8,7 +8,6 @@
 #ifndef CFG_FILE_H_
 #define CFG_FILE_H_
 
-#include "common.h"
 #include "apu.h"
 #include "input.h"
 #include "overscan.h"

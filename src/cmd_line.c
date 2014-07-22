@@ -8,6 +8,7 @@
 #include <getopt.h>
 #include <string.h>
 #include <libgen.h>
+#include "info.h"
 #include "cmd_line.h"
 #include "cfg_file.h"
 #include "version.h"

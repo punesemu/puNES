@@ -10,6 +10,7 @@
 #include "clock.h"
 #include "text.h"
 #include "param.h"
+#include "info.h"
 
 #if defined (__SUNPRO_C)
 #pragma align 4 (icon_inline)

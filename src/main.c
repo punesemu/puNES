@@ -8,6 +8,7 @@
 #include <string.h>
 #include "main.h"
 #include "emu.h"
+#include "info.h"
 #include "mem_map.h"
 #include "gfx.h"
 #include "text.h"
