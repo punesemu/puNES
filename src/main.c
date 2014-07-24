@@ -16,9 +16,7 @@
 #include "cmd_line.h"
 #include "timeline.h"
 #include "version.h"
-#define __GUI_BASE__
 #include "gui.h"
-#undef __GUI_BASE__
 #include "gamegenie.h"
 #include "recent_roms.h"
 #include "uncompress.h"

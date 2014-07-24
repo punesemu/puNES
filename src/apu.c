@@ -10,9 +10,7 @@
 #include "ppu.h"
 #include "cpu.h"
 #include "clock.h"
-#define __GUI_SND__
-#include "gui.h"
-#undef __GUI_SND__
+#include "snd.h"
 #include "mem_map.h"
 #include "fds.h"
 #include "cfg_file.h"

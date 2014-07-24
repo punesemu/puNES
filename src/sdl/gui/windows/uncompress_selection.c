@@ -24,7 +24,9 @@ struct _uncompress_selection_data {
 	int selected;
 } uncompress_selection;
 
-int uncompress_selection_dialog(HWND hwnd) {
+int uncompress_selection_dialog(void *udata) {
+	HWND hwnd = (HWND) udata;
+
 	memset(&uncompress_selection, 0x00, sizeof(uncompress_selection));
 
 	/* disabilito la gestiore del docus della finestra principale */

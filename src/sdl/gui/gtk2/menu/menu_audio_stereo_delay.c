@@ -8,9 +8,7 @@
 #include "menu_audio_stereo_delay.h"
 #include "param.h"
 #include "cfg_file.h"
-#define __GUI_SND__
-#include "gui.h"
-#undef __GUI_SND__
+#include "snd.h"
 
 #if defined (__SUNPRO_C)
 #pragma align 4 (icon_inline)

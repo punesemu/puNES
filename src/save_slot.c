@@ -20,9 +20,7 @@
 #include "irql2f.h"
 #include "timeline.h"
 #include "gfx.h"
-#define __GUI_BASE__
 #include "gui.h"
-#undef __GUI_BASE__
 #include "tas.h"
 #include "text.h"
 #include "fds.h"

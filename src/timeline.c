@@ -18,9 +18,7 @@
 #include "irql2f.h"
 #include "fds.h"
 #include "gfx.h"
-#define __GUI_BASE__
 #include "gui.h"
-#undef __GUI_BASE__
 
 enum timeline_mode { TL_SAVE, TL_READ, TL_COUNT };
 

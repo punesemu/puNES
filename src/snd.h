@@ -23,6 +23,11 @@ enum snd_factor_type { SND_FACTOR_SPEED, SND_FACTOR_NORMAL, SND_FACTOR_SLOW };
 	}
 
 typedef struct {
+#if defined (MINGW32) || defined (MINGW64)
+	void *xa2buffer;
+	void *xa2source;
+	SWORD *silence;
+#endif
 	SWORD *start;
 	SBYTE *end;
 
@@ -34,24 +39,24 @@ typedef struct {
 	void *lock;
 } _callback_data;
 struct _snd {
+#if defined (GTK)
+	void *dev;
+	SWORD last_sample;
+	WORD freq;
+#endif
 	BYTE opened;
 	BYTE brk;
 
 	WORD samples;
 	DBWORD samplerate;
 
-	SWORD last_sample;
-
 	DBWORD cycles;
 	DBWORD out_of_sync;
-
-	WORD freq;
 
 	double frequency;
 	double factor;
 
 	void *cache;
-	void *dev;
 
 	struct _position {
 		DBWORD current;

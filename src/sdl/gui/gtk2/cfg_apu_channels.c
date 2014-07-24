@@ -6,12 +6,9 @@
  */
 
 #include <string.h>
-#define __GUI_BASE__
-#define __GUI_SND__
 #include "gui.h"
-#undef __GUI_SND__
-#undef __GUI_BASE__
 #include "apu.h"
+#include "snd.h"
 #include "cfg_file.h"
 
 void apu_channels_check(void);

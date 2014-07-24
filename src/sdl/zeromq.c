@@ -9,10 +9,7 @@
 #include <string.h>
 #include <zmq.h>
 #include "zeromq.h"
-#define __GUI_BASE__
 #include "gui.h"
-#undef __GUI_BASE__
-
 #include "version.h"
 
 #define chat(...) netplay_display_message(CHAT, 0, __VA_ARGS__)

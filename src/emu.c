@@ -23,11 +23,8 @@
 #include "main.h"
 #include "emu.h"
 #include "info.h"
-#define __GUI_BASE__
-#define __GUI_SND__
 #include "gui.h"
-#undef __GUI_SND__
-#undef __GUI_BASE__
+#include "snd.h"
 #include "clock.h"
 #include "cpu.h"
 #include "mem_map.h"

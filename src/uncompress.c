@@ -10,11 +10,7 @@
 #include "info.h"
 #include "gamegenie.h"
 #include "l7zip/l7z.h"
-#define __GUI_BASE__
-#define __GUI_UNCOMPRESS_SELECTION__
 #include "gui.h"
-#undef __GUI_UNCOMPRESS_SELECTION__
-#undef __GUI_BASE__
 
 #define MINIZ_NO_ARCHIVE_WRITING_APIS
 #define MINIZ_NO_TIME

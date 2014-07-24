@@ -5,29 +5,9 @@
  *      Author: fhorse
  */
 
-#if defined (__GUI_BASE__)
 #if defined (MINGW32) || defined (MINGW64)
 #include "gui/windows/win.h"
 #endif
 #if defined (GTK)
 #include "gui/gtk2/gtk2.h"
 #endif
-#endif /* __GUI_BASE__ */
-
-#if defined (__GUI_SND__)
-#if defined (MINGW32) || defined (MINGW64)
-#include "gui/windows/snd.h"
-#endif
-#if defined (GTK)
-#include "gui/gtk2/snd.h"
-#endif
-#endif /* __GUI_SND__ */
-
-#if defined (__GUI_UNCOMPRESS_SELECTION__)
-#if defined (MINGW32) || defined (MINGW64)
-#include "gui/windows/uncompress_selection.h"
-#endif
-#if defined (GTK)
-#include "gui/gtk2/uncompress_selection.h"
-#endif
-#endif /* __GUI_UNCOMPRESS_SELECTION__ */

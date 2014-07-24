@@ -583,7 +583,7 @@ void gui_reset_video(void) {
 	return;
 }
 int gui_uncompress_selection_dialog(void) {
-	return (uncompress_selection_dialog());
+	return (uncompress_selection_dialog(NULL));
 }
 
 double high_resolution_ms(void) {

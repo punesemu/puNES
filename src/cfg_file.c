@@ -7,11 +7,8 @@
 
 #include <libgen.h>
 #include "cfg_file.h"
-#define __GUI_BASE__
-#define __GUI_SND__
 #include "gui.h"
-#undef __GUI_SND__
-#undef __GUI_BASE__
+#include "snd.h"
 #include "version.h"
 #include "clock.h"
 #include "gfx.h"

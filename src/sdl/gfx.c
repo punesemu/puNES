@@ -14,9 +14,7 @@
 #include "input.h"
 #include "ppu.h"
 #include "version.h"
-#define __GUI_BASE__
 #include "gui.h"
-#undef __GUI_BASE__
 #include "text.h"
 #define __STATICPAL__
 #include "palette.h"

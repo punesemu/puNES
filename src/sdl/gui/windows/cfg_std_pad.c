@@ -8,9 +8,7 @@
 #if defined (MINGW32)
 #define _WIN32_IE 0x0300
 #endif
-#define __GUI_BASE__
 #include "gui.h"
-#undef __GUI_BASE__
 #include <commctrl.h>
 #include <richedit.h>
 #include <regstr.h>

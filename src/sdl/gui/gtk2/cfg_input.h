@@ -9,9 +9,7 @@
 #define CFG_INPUT_H_
 
 #include "common.h"
-#define __GUI_BASE__
 #include "gui.h"
-#undef __GUI_BASE__
 #include "cfg_file.h"
 
 typedef struct {

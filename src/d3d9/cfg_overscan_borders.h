@@ -9,9 +9,7 @@
 #define CFG_OVERSCAN_BORDERS_H_
 
 #include "common.h"
-#define __GUI_BASE__
 #include "gui.h"
-#undef __GUI_BASE__
 
 void cfg_overscan_borders_dialog(HWND hwnd);
 

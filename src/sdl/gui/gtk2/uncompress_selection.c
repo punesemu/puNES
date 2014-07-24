@@ -7,9 +7,7 @@
 
 #include <libgen.h>
 #include <string.h>
-#define __GUI_BASE__
 #include "gui.h"
-#undef __GUI_BASE__
 #include "uncompress.h"
 
 void uncompress_selection_treeview_init(void);
