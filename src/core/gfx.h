@@ -1,12 +1,12 @@
 /*
  * gfx.h
  *
- *  Created on: 01/mar/2013
+ *  Created on: 07/apr/2010
  *      Author: fhorse
  */
 
 /* definizione funzione virtuale */
-#ifndef gfx_filter_function
+#if !defined (gfx_filter_function)
 #define gfx_filter_function(name)\
 	void name(WORD *screen, WORD **screen_index, uint32_t *palette, BYTE bpp, uint32_t pitch,\
 	void *pix, WORD rows, WORD lines, WORD width, WORD height, BYTE factor)
@@ -19,11 +19,10 @@
 #include "text.h"
 #include "filters/video/scale.h"
 #include "filters/video/scale2x.h"
-#include "filters/video/ntsc.h"
 #include "filters/video/hqx.h"
+#include "filters/video/ntsc.h"
 #include "filters/video/xBRZ.h"
 
-enum render_type { RENDER_SOFTWARE, RENDER_HLSL };
 enum fullscreen_type { NO_FULLSCR, FULLSCR };
 enum scale_type { X1 = 1, X2, X3, X4 };
 enum par_type { PAR11, PAR54, PAR87 };
@@ -36,6 +35,7 @@ enum filters_type {
 	HQ3X,
 	HQ4X,
 	NTSC_FILTER,
+	/* shaders */
 	PHOSPHOR,
 	SCANLINE,
 	DBL,
@@ -43,6 +43,7 @@ enum filters_type {
 	CRT_NO_CURVE,
 	PHOSPHOR2,
 	DARK_ROOM,
+	/* shaders end */
 	XBRZ2X,
 	XBRZ3X,
 	XBRZ4X
@@ -51,34 +52,50 @@ enum overcan_type { OSCAN_OFF, OSCAN_ON, OSCAN_DEFAULT, OSCAN_DEFAULT_OFF, OSCAN
 enum gfx_info_type { CURRENT, NO_OVERSCAN, MONITOR, VIDEO_MODE };
 enum no_change { NO_CHANGE = 255 };
 
+#if defined (SDL)
+#include <SDL.h>
+
+enum render_type { RENDER_SOFTWARE, RENDER_OPENGL, RENDER_GLSL };
+
+SDL_Surface *surface_sdl;
+
+void gfx_reset_video(void);
+
+SDL_Surface *gfx_create_RGB_surface(SDL_Surface *src, uint32_t width, uint32_t height);
+double sdl_get_ms(void);
+int (*flip)(SDL_Surface *surface);
+#elif defined (D3D9)
+enum render_type { RENDER_SOFTWARE, RENDER_HLSL };
+
 typedef struct {
 	float l, r;
 	float t, b;
 } _texcoords;
+
+void gfx_control_change_monitor(void *monitor);
+#endif
 struct _gfx {
 	BYTE scale_before_fscreen;
 	BYTE bit_per_pixel;
-
 	WORD rows;
 	WORD lines;
-
 	SDBWORD w[4];
 	SDBWORD h[4];
-
 	float w_pr;
 	float h_pr;
 	float pixel_aspect_ratio;
-
 	gfx_filter_function((*filter));
-
+#if defined (SDL)
+	BYTE opengl;
+#elif defined (D3D9)
 	struct {
 		BYTE compliant;
 		BYTE enabled;
 		BYTE used;
 		BYTE param;
 	} hlsl;
-
 	_texcoords quadcoords;
+#endif
 } gfx;
 
 BYTE gfx_init(void);
@@ -86,7 +103,6 @@ void gfx_set_render(BYTE render);
 void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE force_scale,
 		BYTE force_palette);
 void gfx_draw_screen(BYTE forced);
-void gfx_control_change_monitor(void *monitor);
 void gfx_quit(void);
 
 void gfx_text_create_surface(_txt_element *ele);
