@@ -13,11 +13,14 @@ EXECUTABLES :=
 
 # Every subdirectory with source files must be described here
 SUBDIRS := \
-src \
-src/mappers \
-src/l7zip \
-src/filters/video \
-src/filters/video/xBRZ \
-src/filters/audio \
-src/d3d9 \
+src/video/d3d9 \
+src/gui/windows \
+src/gui/windows/d3d9 \
+src/core \
+src/core/mappers \
+src/core/filters/video \
+src/core/filters/audio \
+src/c++/xBRZ \
+src/c++/l7zip \
+src/audio/xaudio \
 

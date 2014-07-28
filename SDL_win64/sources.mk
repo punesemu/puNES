@@ -13,14 +13,16 @@ EXECUTABLES :=
 
 # Every subdirectory with source files must be described here
 SUBDIRS := \
-src \
-src/sdl \
-src/sdl/openGL \
-src/sdl/gui/windows \
-src/sdl/glew \
-src/mappers \
-src/l7zip \
-src/filters/video \
-src/filters/video/xBRZ \
-src/filters/audio \
+src/video/sdl \
+src/video/sdl/openGL \
+src/video/sdl/glew \
+src/gui/windows \
+src/gui/windows/sdl \
+src/core \
+src/core/mappers \
+src/core/filters/video \
+src/core/filters/audio \
+src/c++/xBRZ \
+src/c++/l7zip \
+src/audio/xaudio \
 

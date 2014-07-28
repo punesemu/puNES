@@ -8,17 +8,18 @@ RM := rm -rf
 
 # All of the sources participating in the build are defined here
 -include sources.mk
--include src/sdl/openGL/subdir.mk
--include src/sdl/gui/gtk2/menu/subdir.mk
--include src/sdl/gui/gtk2/subdir.mk
--include src/sdl/glew/subdir.mk
--include src/sdl/subdir.mk
--include src/mappers/subdir.mk
--include src/l7zip/subdir.mk
--include src/filters/video/xBRZ/subdir.mk
--include src/filters/video/subdir.mk
--include src/filters/audio/subdir.mk
--include src/subdir.mk
+-include src/video/sdl/openGL/subdir.mk
+-include src/video/sdl/glew/subdir.mk
+-include src/video/sdl/subdir.mk
+-include src/gui/gtk2/menu/subdir.mk
+-include src/gui/gtk2/subdir.mk
+-include src/core/mappers/subdir.mk
+-include src/core/filters/video/subdir.mk
+-include src/core/filters/audio/subdir.mk
+-include src/core/subdir.mk
+-include src/c++/xBRZ/subdir.mk
+-include src/c++/l7zip/subdir.mk
+-include src/audio/sdl/subdir.mk
 -include subdir.mk
 -include objects.mk
 
