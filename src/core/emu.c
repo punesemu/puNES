@@ -346,6 +346,12 @@ BYTE emu_search_in_database(FILE *fp) {
 			info.machine[DATABASE] = dblist[i].machine;
 			info.mirroring_db = dblist[i].mirroring;
 			switch (info.mapper.id) {
+				case 1:
+					/* Fix per Famicom Wars (J) [!] che ha l'header INES errato */
+					if (info.id == BAD_YOSHI_U) {
+						info.chr.rom.banks_8k = 4;
+					}
+					break;
 				case 2:
 					/*
 					 * Fix per "Best of the Best - Championship Karate (E) [!].nes"
