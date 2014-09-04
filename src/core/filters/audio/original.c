@@ -131,8 +131,11 @@ void audio_quality_apu_tick_original(void) {
 			mixer_cut_and_high();
 		}
 
-		/* mono or left*/
+		/* mono o canale sinistro */
 		(*cache->write++) = mixer;
+
+		/* incremento il contatore dei bytes disponibili */
+		cache->bytes_available += sizeof(*cache->write);
 
 		/* stereo */
 		if (cfg->channels == STEREO) {
@@ -140,6 +143,10 @@ void audio_quality_apu_tick_original(void) {
 			snd.channel.ptr[CH_LEFT][snd.channel.pos] = mixer;
 			/* scrivo nel frame audio il canale destro ritardato rispetto al canale sinistro */
 			(*cache->write++) = snd.channel.ptr[CH_RIGHT][snd.channel.pos];
+
+			/* incremento il contatore dei bytes disponibili */
+			cache->bytes_available += sizeof(*cache->write);
+
 			/* swappo i buffers dei canali */
 			if (++snd.channel.pos >= snd.channel.max_pos) {
 				SWORD *swap = snd.channel.ptr[CH_RIGHT];

@@ -311,8 +311,11 @@ void audio_quality_end_frame_blip2(void) {
 		for (i = 0; i < count; i++) {
 			SWORD data = (sample[i] * apu_pre_amp) * cfg->apu.volume[APU_MASTER];
 
-			/* mono or left*/
+			/* mono o canale sinistro */
 			(*cache->write++) = data;
+
+			/* incremento il contatore dei bytes disponibili */
+			cache->bytes_available += sizeof(*cache->write);
 
 			/* stereo */
 			if (cfg->channels == STEREO) {
@@ -320,6 +323,10 @@ void audio_quality_end_frame_blip2(void) {
 				snd.channel.ptr[CH_LEFT][snd.channel.pos] = data;
 				/* scrivo nel nel frame audio il canale destro ritardato di un frame */
 				(*cache->write++) = snd.channel.ptr[CH_RIGHT][snd.channel.pos];
+
+				/* incremento il contatore dei bytes disponibili */
+				cache->bytes_available += sizeof(*cache->write);
+
 				/* swappo i buffers dei canali */
 				if (++snd.channel.pos >= snd.channel.max_pos) {
 					SWORD *swap = snd.channel.ptr[CH_RIGHT];

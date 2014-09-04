@@ -24,7 +24,7 @@ BYTE snd_init(void) {
 		return (EXIT_ERROR);
 	}
 
-	memset(&snd, 0x00, sizeof(snd));
+	memset(&snd, 0x00, sizeof(_snd));
 
 	snd_apu_tick = NULL;
 	snd_end_frame = NULL;
@@ -47,7 +47,7 @@ BYTE snd_start(void) {
 	/* come prima cosa blocco eventuali riproduzioni */
 	snd_stop();
 
-	memset(&snd, 0, sizeof(snd));
+	memset(&snd, 0, sizeof(_snd));
 
 	dev = (SDL_AudioSpec *) malloc(sizeof(SDL_AudioSpec));
 	memset(dev, 0, sizeof(SDL_AudioSpec));
@@ -163,15 +163,11 @@ BYTE snd_start(void) {
 	snd_frequency(snd_factor[apu.type][SND_FACTOR_SPEED])
 
 	{
-		DBWORD total_buffer_size;
-
 		/* dimensione in bytes del buffer */
-		total_buffer_size = snd.buffer.size * snd.buffer.count * sizeof(*cache->write);
+		DBWORD total_buffer_size = snd.buffer.size * snd.buffer.count * sizeof(*cache->write);
 
 		/* alloco il buffer in memoria */
-		cache->start = (SWORD *) malloc(total_buffer_size);
-
-		if (!cache->start) {
+		if (!(cache->start = (SWORD *) malloc(total_buffer_size))) {
 			fprintf(stderr, "Unable to allocate audio buffers\n");
 			snd_stop();
 			return (EXIT_ERROR);
@@ -186,7 +182,7 @@ BYTE snd_start(void) {
 		/* creo il lock */
 		cache->lock = SDL_CreateMutex();
 		/* azzero completamente il buffer */
-		memset(cache->start, 0, total_buffer_size);
+		memset(cache->start, 0x00, total_buffer_size);
 
 		/* punto all'inizio del frame di scrittura */
 		snd.pos.current = snd.pos.last = 0;

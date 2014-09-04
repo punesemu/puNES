@@ -55,7 +55,7 @@ static IXAudio2VoiceCallbackVtbl callbacks_vtable = {
 static IXAudio2VoiceCallback callbacks = { &callbacks_vtable };
 
 BYTE snd_init(void) {
-	memset(&snd, 0x00, sizeof(snd));
+	memset(&snd, 0x00, sizeof(_snd));
 	memset(&xaudio2, 0x00, sizeof(xaudio2));
 
 	snd_apu_tick = NULL;
@@ -78,7 +78,7 @@ BYTE snd_start(void) {
 	/* come prima cosa blocco eventuali riproduzioni */
 	snd_stop();
 
-	memset(&snd, 0x00, sizeof(snd));
+	memset(&snd, 0x00, sizeof(_snd));
 	memset(&xaudio2, 0x00, sizeof(xaudio2));
 
 	cache = (_callback_data *) malloc(sizeof(_callback_data));
@@ -214,8 +214,7 @@ BYTE snd_start(void) {
 		//printf("total_buffer_size : %d\n", total_buffer_size);
 
 		/* alloco il buffer in memoria */
-		cache->start = (SWORD *) malloc(total_buffer_size);
-		if (!cache->start) {
+		if (!(cache->start = (SWORD *) malloc(total_buffer_size))) {
 			MessageBox(NULL,
 				"ATTENTION: Unable to allocate audio buffers.\n",
 				"Error!",
@@ -223,8 +222,7 @@ BYTE snd_start(void) {
 			return (EXIT_ERROR);
 		}
 
-		cache->silence = (SWORD *) malloc(snd.buffer.size * sizeof(*cache->write));
-		if (!cache->silence) {
+		if (!(cache->silence = (SWORD *) malloc(snd.buffer.size * sizeof(*cache->write)))) {
 			MessageBox(NULL,
 				"ATTENTION: Unable to allocate silence buffer.\n",
 				"Error!",
@@ -255,7 +253,7 @@ BYTE snd_start(void) {
 		/* punto all'inizio del frame di scrittura */
 		snd.pos.current = snd.pos.last = 0;
 
-		/* Submit the next filled buffer */
+		/* azzero completamente il buffer */
 		memset(&xaudio2.buffer, 0x00, sizeof(xaudio2.buffer));
 
 		xaudio2.buffer.AudioBytes = snd.buffer.size * sizeof(*cache->write);

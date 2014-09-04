@@ -26,8 +26,9 @@ typedef struct {
 #if defined (MINGW32) || defined (MINGW64)
 	void *xa2buffer;
 	void *xa2source;
-	SWORD *silence;
 #endif
+	SWORD *silence;
+
 	SWORD *start;
 	SBYTE *end;
 
@@ -36,9 +37,11 @@ typedef struct {
 
 	SWORD filled;
 
+	uint32_t bytes_available;
+
 	void *lock;
 } _callback_data;
-struct _snd {
+typedef struct {
 #if defined (GTK)
 	void *dev;
 	SWORD last_sample;
@@ -78,7 +81,9 @@ struct _snd {
 		DBWORD size;
 		DBWORD count;
 	} buffer;
-} snd;
+} _snd;
+
+_snd snd;
 
 static const double snd_factor[3][3] = {
 	//{ 0.967f, 0.998f, 1.1f }, { 0.967f, 1.0f, 1.1f }, { 0.967f, 1.0f, 1.1f }
