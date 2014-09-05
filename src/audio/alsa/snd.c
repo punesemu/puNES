@@ -153,9 +153,9 @@ BYTE snd_start(void) {
 		/* dimensione in bytes del buffer */
 		DBWORD total_buffer_size = snd.buffer.size * snd.buffer.count * sizeof(*cache->write);
 
-		printf("snd.buffer.size   : %d\n", snd.buffer.size);
-		printf("snd.buffer.count  : %d\n", snd.buffer.count);
-		printf("total_buffer_size : %d\n", total_buffer_size);
+		//printf("snd.buffer.size   : %d\n", snd.buffer.size);
+		//printf("snd.buffer.count  : %d\n", snd.buffer.count);
+		//printf("total_buffer_size : %d\n", total_buffer_size);
 
 		/* alloco il buffer in memoria */
 		if (!(cache->start = (SWORD *) malloc(total_buffer_size))) {
@@ -337,6 +337,10 @@ void snd_quit(void) {
     }
 
 	snd_stop();
+
+#if !defined (RELEASE)
+	fprintf(stderr, "\n");
+#endif
 }
 
 static BYTE set_hwparams(void) {
@@ -487,10 +491,10 @@ void *alsa_loop_thread(void *data) {
 			}
 		}
 
+		snd_lock_cache(NULL);
+
 		avail = (avail > alsa.psize ? alsa.psize : avail);
 		len = avail * cfg->channels * sizeof(*cache->write);
-
-		snd_lock_cache(NULL);
 
 #if !defined (RELEASE)
 		/**/
