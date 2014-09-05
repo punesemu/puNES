@@ -87,7 +87,7 @@ BYTE uncomp_name_file(_uncomp_file_data *file) {
 }
 
 void uncomp_remove(void) {
-	if (gamegenie.phase == GG_LOAD_ROM) {
+	if ((gamegenie.phase == GG_LOAD_ROM) || (gamegenie.phase == GG_LOAD_GAMEGENIE)) {
 		return;
 	}
 
