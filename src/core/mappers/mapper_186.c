@@ -37,7 +37,7 @@ void extcl_cpu_wr_mem_186(WORD address, BYTE value) {
 	}
 
 	if (address > 0x43FF) {
-		prg.ram[address & 0x0BFF] = value;
+		prg.ram.data[address & 0x0BFF] = value;
 		return;
 	}
 
@@ -73,7 +73,7 @@ BYTE extcl_cpu_rd_mem_186(WORD address, BYTE openbus, BYTE before) {
 	}
 
 	if (address < 0x4F00) {
-		return (prg.ram[address & 0x1FFF]);
+		return (prg.ram.data[address & 0x1FFF]);
 	}
 
 	/* mi mancano informazioni per far funzionare questa mapper */

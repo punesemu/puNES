@@ -705,14 +705,15 @@ void map_quit(void) {
 			}
 		}
 	}
-	if (prg.ram) {
-		free(prg.ram);
+	if (prg.ram.data) {
+		free(prg.ram.data);
 	}
+	memset(&prg.ram, 0x00, sizeof(prg.ram));
+
 	if (prg.ram_plus) {
 		free(prg.ram_plus);
 	}
 	memset(prg.rom_8k, 0x00, sizeof(prg.rom_8k));
-	prg.ram = NULL;
 	prg.ram_plus = NULL;
 	prg.ram_plus_8k = NULL;
 	prg.ram_battery = NULL;
@@ -838,7 +839,7 @@ void map_prg_ram_init(void) {
 		}
 	}
 	if (info.trainer) {
-		BYTE *here = prg.ram;
+		BYTE *here = prg.ram.data;
 
 		if (prg.ram_plus) {
 			here = prg.ram_plus;
@@ -846,6 +847,25 @@ void map_prg_ram_init(void) {
 
 		memcpy(here + 0x1000, &trainer.data, sizeof(trainer.data));
 	}
+}
+BYTE map_prg_ram_malloc(WORD size) {
+	prg.ram.size = size;
+
+	if (!(prg.ram.data = (BYTE *) malloc(prg.ram.size))) {
+		fprintf(stderr, "Out of memory\n");
+		return (EXIT_ERROR);
+	}
+
+	return (EXIT_OK);
+}
+void map_prg_ram_memset(void) {
+	int value = 0x00;
+
+	if (info.mapper.id == FDS_MAPPER) {
+		value = 0xEA;
+	}
+
+	memset(prg.ram.data, value, prg.ram.size);
 }
 BYTE map_chr_chip_malloc(BYTE index, size_t size, BYTE set_value) {
 	if (chr_chip(index)) {

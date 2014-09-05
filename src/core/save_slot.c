@@ -492,11 +492,7 @@ BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 
 	/* mem map */
 	save_slot_ele(mode, slot, mmcpu.ram)
-	if (info.mapper.id == FDS_MAPPER) {
-		save_slot_mem(mode, slot, prg.ram, 0x8000, FALSE)
-	} else {
-		save_slot_mem(mode, slot, prg.ram, 0x2000, FALSE)
-	}
+	save_slot_mem(mode, slot, prg.ram.data, prg.ram.size, FALSE)
 	if (mode == SAVE_SLOT_READ) {
 		save_slot_int(mode, slot, tmp)
 		if (tmp) {

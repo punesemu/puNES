@@ -1032,7 +1032,8 @@ void cpu_turn_on(void) {
 			mmcpu.ram[0x008] = 0xF7;
 			mmcpu.ram[0x009] = 0xEF;
 			mmcpu.ram[0x00A] = 0xDF;
-			mmcpu.ram[0x00B] = 0xBF;
+			//mmcpu.ram[0x00B] = 0xBF;
+			mmcpu.ram[0x00F] = 0xBF;
 
 			/*
 			 * questo workaround serve solo per
@@ -1042,8 +1043,9 @@ void cpu_turn_on(void) {
 				mmcpu.ram[0x004] = 0x00;
 			}
 		}
+
 		/* reset della PRG Ram */
-		memset(prg.ram, 0x00, sizeof(prg.ram));
+		map_prg_ram_memset();
 	} else {
 		cpu.SP -= 0x03;
 		cpu.SR |= 0x04;

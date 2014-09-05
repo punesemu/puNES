@@ -260,8 +260,7 @@ BYTE emu_load_rom(void) {
 		info.chr.rom.banks_1k = info.chr.rom.banks_4k * 4;
 
 		/* PRG Ram */
-		if (!(prg.ram = (BYTE *) malloc(0x2000))) {
-			fprintf(stderr, "Out of memory\n");
+		if (map_prg_ram_malloc(0x2000) != EXIT_OK) {
 			return (EXIT_ERROR);
 		}
 

@@ -82,7 +82,10 @@ struct _prg {
 
 	BYTE *rom_8k[4];   // 8k pages (0x2000)
 
-	BYTE *ram;         // Non Battery RAM
+	struct _prg_ram_chip { // Non Battery RAM
+		size_t size;
+		BYTE *data;
+	} ram;
 
 	BYTE *ram_plus;    // PRG Ram extra
 	BYTE *ram_plus_8k;

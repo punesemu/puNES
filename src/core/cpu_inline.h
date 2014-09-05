@@ -183,7 +183,7 @@ static BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 		if (cpu.prg_ram_rd_active) {
 			if (address < 0x6000) {
 				/* leggo */
-				cpu.openbus = prg.ram[address & 0x1FFF];
+				cpu.openbus = prg.ram.data[address & 0x1FFF];
 			} else {
 				/*
 				 * se la rom ha una PRG Ram extra allora
@@ -191,7 +191,7 @@ static BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 				 * Ram normale.
 				 */
 				if (!prg.ram_plus) {
-					cpu.openbus = prg.ram[address & 0x1FFF];
+					cpu.openbus = prg.ram.data[address & 0x1FFF];
 				} else {
 					cpu.openbus = prg.ram_plus_8k[address & 0x1FFF];
 				}
@@ -416,7 +416,7 @@ static BYTE INLINE fds_rd_mem(WORD address, BYTE made_tick) {
 			tick_hw(1);
 		}
 		/* leggo */
-		cpu.openbus = prg.ram[address - 0x6000];
+		cpu.openbus = prg.ram.data[address - 0x6000];
 		return (TRUE);
 	}
 	if (fds.drive.enabled_dsk_reg && ((address >= 0x4030) && (address <= 0x4033))) {
@@ -657,7 +657,7 @@ static void cpu_wr_mem(WORD address, BYTE value) {
 		if (cpu.prg_ram_wr_active) {
 			if (address < 0x6000) {
 				/* scrivo */
-				prg.ram[address & 0x1FFF] = value;
+				prg.ram.data[address & 0x1FFF] = value;
 			} else {
 				/*
 				 * se la rom ha una PRG Ram extra allora
@@ -665,7 +665,7 @@ static void cpu_wr_mem(WORD address, BYTE value) {
 				 * normale.
 				 */
 				if (!prg.ram_plus) {
-					prg.ram[address & 0x1FFF] = value;
+					prg.ram.data[address & 0x1FFF] = value;
 				} else {
 					prg.ram_plus_8k[address & 0x1FFF] = value;
 				}
@@ -1480,7 +1480,7 @@ static BYTE INLINE fds_wr_mem(WORD address, BYTE value) {
 		/* eseguo un tick hardware */
 		tick_hw(1);
 		/* scrivo */
-		prg.ram[address - 0x6000] = value;
+		prg.ram.data[address - 0x6000] = value;
 		return (TRUE);
 	}
 	if ((address >= 0x4020) && (address <= 0x4026)) {

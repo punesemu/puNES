@@ -119,14 +119,11 @@ BYTE fds_load_rom(void) {
 	fds.info.enabled = TRUE;
 
 	/* Prg Ram */
-	if ((prg.ram = (BYTE *) malloc(0x8000))) {
-		memset(prg.ram, 0xEA, 0x8000);
-	} else {
-		fprintf(stderr, "Out of memory\n");
+	if (map_prg_ram_malloc(0x8000) != EXIT_OK) {
 		return (EXIT_ERROR);
 	}
 
-	info.mapper.id = 0x1000;
+	info.mapper.id = FDS_MAPPER;
 
 	return (EXIT_OK);
 }

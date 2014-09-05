@@ -316,7 +316,7 @@ void extcl_cpu_wr_mem_Sunsoft_FM7(WORD address, BYTE value) {
 			if (cpu.prg_ram_wr_active) {
 				return;
 			}
-			prg.ram[address & 0x1FFF] = value;
+			prg.ram.data[address & 0x1FFF] = value;
 			return;
 		case 0x6000:
 			return;
@@ -434,7 +434,7 @@ BYTE extcl_cpu_rd_mem_Sunsoft_FM7(WORD address, BYTE openbus, BYTE before) {
 	}
 
 	if (address < 0x6000) {
-		return (prg.ram[address & 0x1FFF]);
+		return (prg.ram.data[address & 0x1FFF]);
 	}
 
 	return (openbus);

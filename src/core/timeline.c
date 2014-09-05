@@ -190,11 +190,7 @@ void tl_operation(BYTE mode, BYTE snap) {
 	/* mem map */
 	tl_on_struct(mode, mmcpu);
 	tl_on_struct(mode, prg);
-	if (info.mapper.id == FDS_MAPPER) {
-		tl_on_mem(mode, prg.ram, 0x8000);
-	} else {
-		tl_on_mem(mode, prg.ram, 0x2000);
-	}
+	tl_on_mem(mode, prg.ram.data, prg.ram.size);
 	if (prg.ram_plus) {
 		tl_on_mem(mode, prg.ram_plus, prg_ram_plus_size());
 	}

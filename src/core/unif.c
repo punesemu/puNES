@@ -192,8 +192,7 @@ BYTE unif_load_rom(void) {
 				}
 
 				/* alloco la PRG Ram */
-				if (!(prg.ram = (BYTE *) malloc(0x2000))) {
-					fprintf(stderr, "Out of memory\n");
+				if (map_prg_ram_malloc(0x2000) != EXIT_OK) {
 					fclose(fp);
 					return (EXIT_ERROR);
 				}
