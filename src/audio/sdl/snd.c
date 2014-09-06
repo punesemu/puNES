@@ -241,16 +241,17 @@ void snd_output(void *udata, BYTE *stream, int len) {
 
 #if !defined (RELEASE)
 	/*
-	fprintf(stderr, "snd : %d %d %d %d %2d %d %f %f %4s\r",
-			len,
-			snd.buffer.count,
-			snd.brk,
-			fps.total_frames_skipped,
-			cache->filled,
-			snd.out_of_sync,
-			snd.frequency,
-			machine.ms_frame,
-			"");
+	fprintf(stderr, "snd : %7d %d %d %d %7d %d %d %f %f %4s\r",
+		len,
+		snd.buffer.count,
+		snd.brk,
+		fps.total_frames_skipped,
+		cache->bytes_available,
+		cache->filled,
+		snd.out_of_sync,
+		snd.frequency,
+		machine.ms_frame,
+		"");
 	*/
 #endif
 
@@ -273,6 +274,8 @@ void snd_output(void *udata, BYTE *stream, int len) {
 		if ((cache->read += len) >= cache->end) {
 			cache->read = (SBYTE *) cache->start;
 		}
+
+		cache->bytes_available -= len;
 
 		/* decremento il numero dei frames pieni */
 		cache->filled -= (((len / cfg->channels) / sizeof(*cache->write)) / snd.samples);

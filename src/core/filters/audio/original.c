@@ -89,6 +89,8 @@ void audio_quality_apu_tick_original(void) {
 		return;
 	}
 
+	snd_lock_cache(cache);
+
 	/*
 	 * se la posizione e' maggiore o uguale al numero
 	 * di samples che compongono il frame, vuol dire che
@@ -97,8 +99,6 @@ void audio_quality_apu_tick_original(void) {
 	if (snd.pos.current >= snd.samples) {
 		/* azzero posizione e contatore dei cicli del frame audio */
 		snd.pos.current = snd.cycles = 0;
-
-		snd_lock_cache(cache);
 
 		/* incremento il contatore dei frames pieni non ancora 'riprodotti' */
 		if (++cache->filled >= (SDBWORD) snd.buffer.count) {
@@ -110,8 +110,6 @@ void audio_quality_apu_tick_original(void) {
 		} else if (cache->filled < 3) {
 			snd_frequency(snd_factor[apu.type][SND_FACTOR_NORMAL])
 		}
-
-		snd_unlock_cache(cache);
 	}
 
 	{
@@ -133,7 +131,6 @@ void audio_quality_apu_tick_original(void) {
 
 		/* mono o canale sinistro */
 		(*cache->write++) = mixer;
-
 		/* incremento il contatore dei bytes disponibili */
 		cache->bytes_available += sizeof(*cache->write);
 
@@ -143,7 +140,6 @@ void audio_quality_apu_tick_original(void) {
 			snd.channel.ptr[CH_LEFT][snd.channel.pos] = mixer;
 			/* scrivo nel frame audio il canale destro ritardato rispetto al canale sinistro */
 			(*cache->write++) = snd.channel.ptr[CH_RIGHT][snd.channel.pos];
-
 			/* incremento il contatore dei bytes disponibili */
 			cache->bytes_available += sizeof(*cache->write);
 
@@ -169,6 +165,8 @@ void audio_quality_apu_tick_original(void) {
 
 		snd.pos.last = snd.pos.current;
 	}
+
+	snd_unlock_cache(cache);
 }
 
 /* --------------------------------------------------------------------------------------- */

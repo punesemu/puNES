@@ -24,5 +24,5 @@ src/core/filters/video \
 src/core/filters/audio \
 src/c++/xBRZ \
 src/c++/l7zip \
-src/audio/sdl \
+src/audio/alsa \
 

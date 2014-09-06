@@ -244,12 +244,13 @@ void audio_quality_end_frame_blip(void) {
 			}
 		}
 
+		snd_lock_cache(cache);
+
 		for (i = 0; i < count; i++) {
 			SWORD data = (temp[i] * apu_pre_amp) * cfg->apu.volume[APU_MASTER];
 
 			/* mono o canale sinistro */
 			(*cache->write++) = data;
-
 			/* incremento il contatore dei bytes disponibili */
 			cache->bytes_available += sizeof(*cache->write);
 
@@ -259,7 +260,6 @@ void audio_quality_end_frame_blip(void) {
 				snd.channel.ptr[CH_LEFT][snd.channel.pos] = data;
 				/* scrivo nel nel frame audio il canale destro ritardato di un frame */
 				(*cache->write++) = snd.channel.ptr[CH_RIGHT][snd.channel.pos];
-
 				/* incremento il contatore dei bytes disponibili */
 				cache->bytes_available += sizeof(*cache->write);
 
@@ -286,8 +286,6 @@ void audio_quality_end_frame_blip(void) {
 			if (++snd.pos.current >= snd.samples) {
 				snd.pos.current = 0;
 
-				snd_lock_cache(cache);
-
 				/* incremento il contatore dei frames pieni non ancora 'riprodotti' */
 				if (++cache->filled >= (SDBWORD) snd.buffer.count) {
 					snd.brk = TRUE;
@@ -298,10 +296,10 @@ void audio_quality_end_frame_blip(void) {
 				} else if (cache->filled < 3) {
 					snd_frequency(snd_factor[apu.type][SND_FACTOR_NORMAL])
 				}
-
-				snd_unlock_cache(cache);
 			}
 		}
+
+		snd_unlock_cache(cache);
 	}
 }
 

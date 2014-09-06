@@ -19,7 +19,7 @@ RM := rm -rf
 -include src/core/subdir.mk
 -include src/c++/xBRZ/subdir.mk
 -include src/c++/l7zip/subdir.mk
--include src/audio/sdl/subdir.mk
+-include src/audio/alsa/subdir.mk
 -include subdir.mk
 -include objects.mk
 

@@ -432,11 +432,12 @@ static void STDMETHODCALLTYPE OnBufferEnd(THIS_ void *data) {
 
 #if !defined RELEASE
 	/*
-	fprintf(stderr, "snd : %d %d %d %d %2d %d %f %f %4s\r",
+	fprintf(stderr, "snd : %7d %d %d %d %7d %d %d %f %f %4s\r",
 			buffer->AudioBytes,
 			snd.buffer.count,
 			snd.brk,
 			fps.total_frames_skipped,
+			cache->bytes_available,
 			cache->filled,
 			snd.out_of_sync,
 			snd.frequency,
@@ -460,6 +461,8 @@ static void STDMETHODCALLTYPE OnBufferEnd(THIS_ void *data) {
 		if ((cache->read += len) >= cache->end) {
 			cache->read = (SBYTE *) cache->start;
 		}
+
+		cache->bytes_available -= len;
 
 		cache->filled--;
 
