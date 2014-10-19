@@ -22,8 +22,23 @@ RM := rm -rf
 -include objects.mk
 
 ifneq ($(MAKECMDGOALS),clean)
+ifneq ($(strip $(C++_DEPS)),)
+-include $(C++_DEPS)
+endif
 ifneq ($(strip $(C_DEPS)),)
 -include $(C_DEPS)
+endif
+ifneq ($(strip $(CC_DEPS)),)
+-include $(CC_DEPS)
+endif
+ifneq ($(strip $(CPP_DEPS)),)
+-include $(CPP_DEPS)
+endif
+ifneq ($(strip $(CXX_DEPS)),)
+-include $(CXX_DEPS)
+endif
+ifneq ($(strip $(C_UPPER_DEPS)),)
+-include $(C_UPPER_DEPS)
 endif
 endif
 
@@ -40,15 +55,15 @@ main-build: punes32.d3d9.exe
 # Tool invocations
 punes32.d3d9.exe: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
-	@echo 'Invoking: Cross GCC Linker'
-	i686-mingw32-g++ -L"/home/fhorse/sviluppo/personale/punes/misc/lib/win32" -L/home/fhorse/sviluppo/personale/punes/misc/DXSDK/Lib/x86 -Wl,-subsystem,console -static-libgcc -static-libstdc++ -o "punes32.d3d9.exe" $(OBJS) $(USER_OBJS) $(LIBS)
+	@echo 'Invoking: Cross G++ Linker'
+	i686-mingw32-g++ -L"/home/fhorse/sviluppo/personale/punes/misc/lib/win32" -L"/home/fhorse/sviluppo/personale/punes/misc/DXSDK/Lib/x86" -Wl,-subsystem,console -static-libgcc -static-libstdc++ -o "punes32.d3d9.exe" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 	$(MAKE) --no-print-directory post-build
 
 # Other Targets
 clean:
-	-$(RM) $(OBJS)$(C_DEPS)$(EXECUTABLES) punes32.d3d9.exe
+	-$(RM) $(C++_DEPS)$(OBJS)$(C_DEPS)$(CC_DEPS)$(CPP_DEPS)$(EXECUTABLES)$(CXX_DEPS)$(C_UPPER_DEPS) punes32.d3d9.exe
 	-@echo ' '
 
 pre-build:

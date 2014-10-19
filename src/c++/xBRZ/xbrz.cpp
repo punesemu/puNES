@@ -13,7 +13,7 @@
 // * do so, delete this exception statement from your version.                *
 // ****************************************************************************
 
-#include "xbrz.h"
+#include <c++/xBRZ/xbrz.h>
 #include <cassert>
 #include <algorithm>
 

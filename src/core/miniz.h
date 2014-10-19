@@ -3058,6 +3058,7 @@ static void mz_zip_time_to_dos_time(time_t time, mz_uint16 *pDOS_time, mz_uint16
 #endif
 
 #ifndef MINIZ_NO_STDIO
+/*
 static mz_bool mz_zip_get_file_modified_time(const char *pFilename, mz_uint16 *pDOS_time, mz_uint16 *pDOS_date)
 {
 #ifdef MINIZ_NO_TIME
@@ -3071,6 +3072,7 @@ static mz_bool mz_zip_get_file_modified_time(const char *pFilename, mz_uint16 *p
 #endif // #ifdef MINIZ_NO_TIME
   return MZ_TRUE;
 }
+*/
 
 #ifndef MINIZ_NO_TIME
 static mz_bool mz_zip_set_file_times(const char *pFilename, time_t access_time, time_t modified_time)
