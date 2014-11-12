@@ -76,7 +76,7 @@ BYTE snd_start(void) {
 	/* se il thread del loop e' gia' in funzione lo metto in pausa */
 	if (loop.action == AT_RUN) {
 		loop.action = AT_PAUSE;
-		gui_sleep(50);
+		gui_sleep(200);
 
 		snd_lock_cache(NULL);
 	}
@@ -283,7 +283,7 @@ void snd_unlock_cache(_callback_data *cache) {
 }
 void snd_stop(void) {
 	snd.opened = FALSE;
-	gui_sleep(50);
+	gui_sleep(100);
 
 	if (snd.cache) {
 		_callback_data *cache = (_callback_data *) snd.cache;
@@ -468,11 +468,11 @@ void *alsa_loop_thread(void *data) {
 	while (TRUE) {
 		_callback_data *cache = (_callback_data *) th->cache;
 
-		if ((th->action == AT_PAUSE) || (snd.opened == FALSE)) {
+		if (th->action == AT_STOP) {
+			break;
+		} else if ((th->action == AT_PAUSE) || (snd.opened == FALSE)) {
 			gui_sleep(10);
 			continue;
-		} else if (th->action == AT_STOP) {
-			break;
 		}
 
 		if ((rc = snd_pcm_wait(th->alsa->handle , 100)) < 0) {
@@ -497,7 +497,7 @@ void *alsa_loop_thread(void *data) {
 		len = avail * cfg->channels * sizeof(*cache->write);
 
 #if !defined (RELEASE)
-		/**/
+		/*
 		fprintf(stderr, "snd : %7d %d %d %d %7d %d %d %f %f %4s\r",
 				//avail,
 				len,
@@ -510,7 +510,7 @@ void *alsa_loop_thread(void *data) {
 				snd.frequency,
 				machine.ms_frame,
 				"");
-		/**/
+		*/
 #endif
 
 		if (info.no_rom) {
