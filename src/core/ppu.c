@@ -313,7 +313,7 @@ void ppu_tick(WORD cycles_cpu) {
 								//flag_bg = TRUE;
 								/* recupero i 2 bit LSB del pixel */
 								color_bg = (tile_render.l_byte & 0x01)
-								        | (tile_render.h_byte & 0x02);
+									| (tile_render.h_byte & 0x02);
 								/*
 								 * shifto di un bit (leggi un pixel) i
 								 * due bitmap buffers
@@ -873,10 +873,10 @@ void ppu_tick(WORD cycles_cpu) {
 							sprite_plus[spr_ev.tmp_spr_plus].l_byte = ppu_rd_mem(ppu.spr_adr);
 							/* salvo i secondi 8 bit del tile dello sprite */
 							sprite_plus[spr_ev.tmp_spr_plus].h_byte = (ppu_rd_mem(
-							        ppu.spr_adr | 0x08) << 1);
+								ppu.spr_adr | 0x08) << 1);
 						} else {
 							sprite_plus[spr_ev.tmp_spr_plus].l_byte = inv_chr[ppu_rd_mem(
-							        ppu.spr_adr)];
+								ppu.spr_adr)];
 							/* salvo i secondi 8 bit del tile dello sprite */
 							sprite_plus[spr_ev.tmp_spr_plus].h_byte =
 									(inv_chr[ppu_rd_mem(ppu.spr_adr | 0x08)] << 1);

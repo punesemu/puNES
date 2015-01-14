@@ -1,0 +1,141 @@
+/****************************************************************************
+** Meta object code from reading C++ file 'settingsObject.hpp'
+**
+** Created by: The Qt Meta Object Compiler version 63 (Qt 4.8.6)
+**
+** WARNING! All changes made in this file will be lost!
+*****************************************************************************/
+
+#include "/home/fhorse/sviluppo/personale/punes/l64np/../src/gui/settingsObject.hpp"
+#if !defined(Q_MOC_OUTPUT_REVISION)
+#error "The header file 'settingsObject.hpp' doesn't include <QObject>."
+#elif Q_MOC_OUTPUT_REVISION != 63
+#error "This file was generated using the moc from 4.8.6. It"
+#error "cannot be used with the include files from this version of Qt."
+#error "(The moc has changed too much.)"
+#endif
+
+QT_BEGIN_MOC_NAMESPACE
+static const uint qt_meta_data_settingsObject[] = {
+
+ // content:
+       6,       // revision
+       0,       // classname
+       0,    0, // classinfo
+       0,    0, // methods
+       0,    0, // properties
+       0,    0, // enums/sets
+       0,    0, // constructors
+       0,       // flags
+       0,       // signalCount
+
+       0        // eod
+};
+
+static const char qt_meta_stringdata_settingsObject[] = {
+    "settingsObject\0"
+};
+
+void settingsObject::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+{
+    Q_UNUSED(_o);
+    Q_UNUSED(_id);
+    Q_UNUSED(_c);
+    Q_UNUSED(_a);
+}
+
+const QMetaObjectExtraData settingsObject::staticMetaObjectExtraData = {
+    0,  qt_static_metacall 
+};
+
+const QMetaObject settingsObject::staticMetaObject = {
+    { &QSettings::staticMetaObject, qt_meta_stringdata_settingsObject,
+      qt_meta_data_settingsObject, &staticMetaObjectExtraData }
+};
+
+#ifdef Q_NO_DATA_RELOCATION
+const QMetaObject &settingsObject::getStaticMetaObject() { return staticMetaObject; }
+#endif //Q_NO_DATA_RELOCATION
+
+const QMetaObject *settingsObject::metaObject() const
+{
+    return QObject::d_ptr->metaObject ? QObject::d_ptr->metaObject : &staticMetaObject;
+}
+
+void *settingsObject::qt_metacast(const char *_clname)
+{
+    if (!_clname) return 0;
+    if (!strcmp(_clname, qt_meta_stringdata_settingsObject))
+        return static_cast<void*>(const_cast< settingsObject*>(this));
+    return QSettings::qt_metacast(_clname);
+}
+
+int settingsObject::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+{
+    _id = QSettings::qt_metacall(_c, _id, _a);
+    if (_id < 0)
+        return _id;
+    return _id;
+}
+static const uint qt_meta_data_setObject[] = {
+
+ // content:
+       6,       // revision
+       0,       // classname
+       0,    0, // classinfo
+       0,    0, // methods
+       0,    0, // properties
+       0,    0, // enums/sets
+       0,    0, // constructors
+       0,       // flags
+       0,       // signalCount
+
+       0        // eod
+};
+
+static const char qt_meta_stringdata_setObject[] = {
+    "setObject\0"
+};
+
+void setObject::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+{
+    Q_UNUSED(_o);
+    Q_UNUSED(_id);
+    Q_UNUSED(_c);
+    Q_UNUSED(_a);
+}
+
+const QMetaObjectExtraData setObject::staticMetaObjectExtraData = {
+    0,  qt_static_metacall 
+};
+
+const QMetaObject setObject::staticMetaObject = {
+    { &settingsObject::staticMetaObject, qt_meta_stringdata_setObject,
+      qt_meta_data_setObject, &staticMetaObjectExtraData }
+};
+
+#ifdef Q_NO_DATA_RELOCATION
+const QMetaObject &setObject::getStaticMetaObject() { return staticMetaObject; }
+#endif //Q_NO_DATA_RELOCATION
+
+const QMetaObject *setObject::metaObject() const
+{
+    return QObject::d_ptr->metaObject ? QObject::d_ptr->metaObject : &staticMetaObject;
+}
+
+void *setObject::qt_metacast(const char *_clname)
+{
+    if (!_clname) return 0;
+    if (!strcmp(_clname, qt_meta_stringdata_setObject))
+        return static_cast<void*>(const_cast< setObject*>(this));
+    return settingsObject::qt_metacast(_clname);
+}
+
+int setObject::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+{
+    _id = settingsObject::qt_metacall(_c, _id, _a);
+    if (_id < 0)
+        return _id;
+    return _id;
+}
+QT_END_MOC_NAMESPACE

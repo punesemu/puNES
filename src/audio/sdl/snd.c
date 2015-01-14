@@ -13,9 +13,9 @@
 #include "clock.h"
 #include "fps.h"
 #include "apu.h"
-#include "gui.h"
-#include "cfg_file.h"
+#include "conf.h"
 #include "audio_quality.h"
+#include "gui.h"
 
 BYTE snd_init(void) {
 	/* inizializzo il comparto audio dell'sdl */
@@ -61,7 +61,7 @@ BYTE snd_start(void) {
 		double latency = 200.0f;
  		double sample_latency;
 
-#if defined (MINGW32) || defined (MINGW64)
+#if defined (__WIN32__)
  		/*
  		 * Anche se ormai non uso più l'SDL per l'audio nella versione windows,
  		 * conservo i parametri con cui arginavo il problema del delay audio

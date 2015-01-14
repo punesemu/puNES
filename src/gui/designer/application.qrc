@@ -1,0 +1,51 @@
+<RCC>
+  <qresource prefix="icon">
+    <file>icons/input.png</file>
+    <file>icons/about.png</file>
+    <file>icons/state_dec.png</file>
+    <file>icons/state_inc.png</file>
+    <file>icons/save_settings.png</file>
+    <file>icons/input_config.png</file>
+    <file>icons/apu_channels.png</file>
+    <file>icons/quality.png</file>
+    <file>icons/stereo_delay.png</file>
+    <file>icons/channels.png</file>
+    <file>icons/samplerate.png</file>
+    <file>icons/fullscreen.png</file>
+    <file>icons/load.png</file>
+    <file>icons/effect.png</file>
+    <file>icons/save.png</file>
+    <file>icons/palette.png</file>
+    <file>icons/overscan_set_borders.png</file>
+    <file>icons/audio.png</file>
+    <file>icons/filter.png</file>
+    <file>icons/overscan_default.png</file>
+    <file>icons/overscan.png</file>
+    <file>icons/pixel_aspect_ratio.png</file>
+    <file>icons/scale.png</file>
+    <file>icons/frameskip.png</file>
+    <file>icons/fps.png</file>
+    <file>icons/rendering.png</file>
+    <file>icons/video.png</file>
+    <file>icons/mode.png</file>
+    <file>icons/switch_sides.png</file>
+    <file>icons/eject.png</file>
+    <file>icons/disk_side.png</file>
+    <file>icons/hard_reset.png</file>
+    <file>icons/soft_reset.png</file>
+    <file>icons/nes_file.png</file>
+    <file>icons/fm2_file.png</file>
+    <file>icons/fds_file.png</file>
+    <file>icons/application.png</file>
+    <file>icons/exit.png</file>
+    <file>icons/recent_roms.png</file>
+    <file>icons/open.png</file>
+  </qresource>
+  <qresource prefix="pics">
+    <file>pics/Nes_controller.png</file>
+    <file>pics/pushpin.png</file>
+  </qresource>
+  <qresource prefix="tr">
+    <file>translations/it.qm</file>
+  </qresource>
+</RCC>

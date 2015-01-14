@@ -11,7 +11,7 @@
 #include "mappers.h"
 #include "mappers/mapper_VRC7_snd.h"
 #include "fds.h"
-#include "cfg_file.h"
+#include "conf.h"
 #include "clock.h"
 #include "fps.h"
 #include "original.h"
@@ -210,7 +210,7 @@ SWORD mixer_original_Sunsoft_FM7(SWORD mixer) {
 }
 SWORD mixer_original_VRC6(SWORD mixer) {
 	mixer += extra_out(
-	        (((vrc6.S3.output << 1) + (vrc6.S4.output << 1) + (vrc6.saw.output / 5)) << 2));
+		(((vrc6.S3.output << 1) + (vrc6.S4.output << 1) + (vrc6.saw.output / 5)) << 2));
 
 	mixer_cut_and_high();
 

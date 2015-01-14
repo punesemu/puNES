@@ -11,7 +11,7 @@
 #include "emu.h"
 #include "info.h"
 #include "gfx.h"
-#include "cfg_file.h"
+#include "conf.h"
 #include "ppu.h"
 #include "overscan.h"
 #include "clock.h"
@@ -129,7 +129,7 @@ INLINE void d3d9_draw_texture_text(void);
 static BYTE ntsc_width_pixel[5] = {0, 0, 7, 10, 14};
 
 BYTE gfx_init(void) {
-	/* casi particolari provenienti dal cfg_file_parse() e cmd_line_parse() */
+	/* casi particolari provenienti dal settings_file_parse() e cmd_line_parse() */
 	if ((cfg->scale == X1) && (cfg->filter != NO_FILTER)) {
 		cfg->scale = X2;
 	}
@@ -361,7 +361,7 @@ BYTE gfx_init(void) {
 		return (EXIT_ERROR);
 	}
 
-	/* casi particolari provenienti dal cfg_file_parse() e cmd_line_parse()*/
+	/* casi particolari provenienti dal settings_file_parse() e cmd_line_parse()*/
 	if (cfg->fullscreen == FULLSCR) {
 		gfx.scale_before_fscreen = cfg->scale;
 	}
@@ -636,7 +636,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 	gfx.pixel_aspect_ratio = 1.0f;
 
 	/* Pixel Aspect Ratio */
-	if (fullscreen && (cfg->filter == NTSC_FILTER)) {
+	if (cfg->filter == NTSC_FILTER) {
 		gfx.pixel_aspect_ratio = 1.0f;
 	} else {
 		switch (cfg->pixel_aspect_ratio) {
@@ -766,18 +766,13 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 			gfx.w[VIDEO_MODE] -= brd;
 		}
 
-		ShowWindow(gui_main_window_id(), SW_HIDE);
-
 		/* faccio quello che serve prima del setvideo */
 		gui_set_video_mode();
 
 		if (d3d9_create_context() == EXIT_ERROR) {
 			fprintf(stderr, "Unable to initialize d3d context\n");
-			ShowWindow(gui_main_window_id(), SW_NORMAL);
 			return;
 		}
-
-		ShowWindow(gui_main_window_id(), SW_NORMAL);
 	}
 
 	d3d9_adjust_coords();
@@ -1293,7 +1288,7 @@ void d3d9_adjust_vertex_buffer(_texture *texture, FLOAT factor) {
 		texture->quadcoords.b = h_quad;
 
 		/* con flags intendo sia il fullscreen che il futuro resize */
-		if (cfg->fullscreen && cfg->stretch) {
+		if (cfg->fullscreen && !cfg->stretch) {
 			FLOAT ratio_surface = w_quad / h_quad;
 			FLOAT ratio_frame = (FLOAT) gfx.w[CURRENT] / (FLOAT) gfx.h[CURRENT];
 

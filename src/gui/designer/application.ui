@@ -1,0 +1,1654 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>mainWindow</class>
+ <widget class="QMainWindow" name="mainWindow">
+  <property name="windowModality">
+   <enum>Qt::NonModal</enum>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>304</width>
+    <height>312</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>0</width>
+    <height>0</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>16777215</width>
+    <height>16777215</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string notr="true">FHorse</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="application.qrc">
+    <normaloff>:/icon/icons/application.png</normaloff>:/icon/icons/application.png</iconset>
+  </property>
+  <widget class="QWidget" name="centralwidget"/>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>304</width>
+     <height>26</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu_File">
+    <property name="tearOffEnabled">
+     <bool>false</bool>
+    </property>
+    <property name="title">
+     <string>&amp;File</string>
+    </property>
+    <widget class="QMenu" name="menu_Recent_Roms">
+     <property name="title">
+      <string>&amp;Recent Roms</string>
+     </property>
+     <property name="icon">
+      <iconset resource="application.qrc">
+       <normaloff>:/icon/icons/recent_roms.png</normaloff>:/icon/icons/recent_roms.png</iconset>
+     </property>
+    </widget>
+    <addaction name="action_Open"/>
+    <addaction name="menu_Recent_Roms"/>
+    <addaction name="separator"/>
+    <addaction name="action_Quit"/>
+   </widget>
+   <widget class="QMenu" name="menu_NES">
+    <property name="title">
+     <string>&amp;NES</string>
+    </property>
+    <widget class="QMenu" name="menu_Disk_Side">
+     <property name="title">
+      <string>&amp;Disk Side</string>
+     </property>
+     <property name="icon">
+      <iconset resource="application.qrc">
+       <normaloff>:/icon/icons/disk_side.png</normaloff>:/icon/icons/disk_side.png</iconset>
+     </property>
+     <addaction name="action_Disk_1_side_A"/>
+     <addaction name="action_Disk_1_side_B"/>
+     <addaction name="action_Disk_2_side_A"/>
+     <addaction name="action_Disk_2_side_B"/>
+     <addaction name="action_Disk_3_side_A"/>
+     <addaction name="action_Disk_3_side_B"/>
+     <addaction name="action_Disk_4_side_A"/>
+     <addaction name="action_Disk_4_side_B"/>
+     <addaction name="separator"/>
+     <addaction name="action_Switch_sides"/>
+    </widget>
+    <addaction name="action_Hard_Reset"/>
+    <addaction name="action_Soft_Reset"/>
+    <addaction name="separator"/>
+    <addaction name="menu_Disk_Side"/>
+    <addaction name="action_Eject_Insert_Disk"/>
+   </widget>
+   <widget class="QMenu" name="menu_Settings">
+    <property name="title">
+     <string>&amp;Settings</string>
+    </property>
+    <widget class="QMenu" name="menu_Mode">
+     <property name="title">
+      <string>&amp;Mode</string>
+     </property>
+     <property name="icon">
+      <iconset resource="application.qrc">
+       <normaloff>:/icon/icons/mode.png</normaloff>:/icon/icons/mode.png</iconset>
+     </property>
+     <addaction name="action_PAL"/>
+     <addaction name="action_NTSC"/>
+     <addaction name="action_Dendy"/>
+     <addaction name="action_Mode_Auto"/>
+    </widget>
+    <widget class="QMenu" name="menu_Video">
+     <property name="title">
+      <string>&amp;Video</string>
+     </property>
+     <property name="icon">
+      <iconset resource="application.qrc">
+       <normaloff>:/icon/icons/video.png</normaloff>:/icon/icons/video.png</iconset>
+     </property>
+     <widget class="QMenu" name="menu_Rendering">
+      <property name="title">
+       <string>&amp;Rendering</string>
+      </property>
+      <property name="icon">
+       <iconset resource="application.qrc">
+        <normaloff>:/icon/icons/rendering.png</normaloff>:/icon/icons/rendering.png</iconset>
+      </property>
+      <addaction name="action_Rend0"/>
+      <addaction name="action_Rend1"/>
+      <addaction name="action_Rend2"/>
+     </widget>
+     <widget class="QMenu" name="menu_FPS">
+      <property name="title">
+       <string>&amp;FPS</string>
+      </property>
+      <property name="icon">
+       <iconset resource="application.qrc">
+        <normaloff>:/icon/icons/fps.png</normaloff>:/icon/icons/fps.png</iconset>
+      </property>
+      <addaction name="action_FPS_Default"/>
+      <addaction name="separator"/>
+      <addaction name="action_FPS_60"/>
+      <addaction name="action_FPS_59"/>
+      <addaction name="action_FPS_58"/>
+      <addaction name="action_FPS_57"/>
+      <addaction name="action_FPS_56"/>
+      <addaction name="action_FPS_55"/>
+      <addaction name="action_FPS_54"/>
+      <addaction name="action_FPS_53"/>
+      <addaction name="action_FPS_52"/>
+      <addaction name="action_FPS_51"/>
+      <addaction name="action_FPS_50"/>
+      <addaction name="action_FPS_49"/>
+      <addaction name="action_FPS_48"/>
+      <addaction name="action_FPS_47"/>
+      <addaction name="action_FPS_46"/>
+      <addaction name="action_FPS_45"/>
+      <addaction name="action_FPS_44"/>
+     </widget>
+     <widget class="QMenu" name="menu_Frame_skip">
+      <property name="title">
+       <string>Fra&amp;me skip</string>
+      </property>
+      <property name="icon">
+       <iconset resource="application.qrc">
+        <normaloff>:/icon/icons/frameskip.png</normaloff>:/icon/icons/frameskip.png</iconset>
+      </property>
+      <addaction name="action_Fsk_Default"/>
+      <addaction name="separator"/>
+      <addaction name="action_Fsk_1"/>
+      <addaction name="action_Fsk_2"/>
+      <addaction name="action_Fsk_3"/>
+      <addaction name="action_Fsk_4"/>
+      <addaction name="action_Fsk_5"/>
+      <addaction name="action_Fsk_6"/>
+      <addaction name="action_Fsk_7"/>
+      <addaction name="action_Fsk_8"/>
+      <addaction name="action_Fsk_9"/>
+     </widget>
+     <widget class="QMenu" name="menu_Scale">
+      <property name="title">
+       <string>&amp;Scale</string>
+      </property>
+      <property name="icon">
+       <iconset resource="application.qrc">
+        <normaloff>:/icon/icons/scale.png</normaloff>:/icon/icons/scale.png</iconset>
+      </property>
+      <addaction name="action_1x"/>
+      <addaction name="action_2x"/>
+      <addaction name="action_3x"/>
+      <addaction name="action_4x"/>
+     </widget>
+     <widget class="QMenu" name="menu_Pixel_Aspect_Ratio">
+      <property name="title">
+       <string>Pixel Aspect Ra&amp;tio</string>
+      </property>
+      <property name="icon">
+       <iconset resource="application.qrc">
+        <normaloff>:/icon/icons/pixel_aspect_ratio.png</normaloff>:/icon/icons/pixel_aspect_ratio.png</iconset>
+      </property>
+      <addaction name="action_PAR_11"/>
+      <addaction name="action_PAR_54"/>
+      <addaction name="action_PAR_87"/>
+      <addaction name="separator"/>
+      <addaction name="action_PAR_Soft_Stretch"/>
+     </widget>
+     <widget class="QMenu" name="menu_Overscan">
+      <property name="title">
+       <string>&amp;Overscan</string>
+      </property>
+      <property name="icon">
+       <iconset resource="application.qrc">
+        <normaloff>:/icon/icons/overscan.png</normaloff>:/icon/icons/overscan.png</iconset>
+      </property>
+      <widget class="QMenu" name="menu_Oscan_Default_Value">
+       <property name="title">
+        <string>De&amp;fault value</string>
+       </property>
+       <property name="icon">
+        <iconset resource="application.qrc">
+         <normaloff>:/icon/icons/overscan_default.png</normaloff>:/icon/icons/overscan_default.png</iconset>
+       </property>
+       <addaction name="action_Oscan_Def_On"/>
+       <addaction name="action_Oscan_Def_Off"/>
+      </widget>
+      <addaction name="action_Oscan_Default"/>
+      <addaction name="separator"/>
+      <addaction name="action_Oscan_On"/>
+      <addaction name="action_Oscan_Off"/>
+      <addaction name="separator"/>
+      <addaction name="menu_Oscan_Default_Value"/>
+      <addaction name="separator"/>
+      <addaction name="action_Oscan_Set_Borders"/>
+     </widget>
+     <widget class="QMenu" name="menu_Filter">
+      <property name="title">
+       <string>Fi&amp;lter</string>
+      </property>
+      <property name="icon">
+       <iconset resource="application.qrc">
+        <normaloff>:/icon/icons/filter.png</normaloff>:/icon/icons/filter.png</iconset>
+      </property>
+      <addaction name="action_No_Filter"/>
+      <addaction name="action_Scale2X"/>
+      <addaction name="action_Scale3X"/>
+      <addaction name="action_Scale4X"/>
+      <addaction name="action_Hq2X"/>
+      <addaction name="action_Hq3X"/>
+      <addaction name="action_Hq4X"/>
+      <addaction name="action_xBRZ_2X"/>
+      <addaction name="action_xBRZ_3X"/>
+      <addaction name="action_xBRZ_4X"/>
+      <addaction name="action_NTSC_Composite"/>
+      <addaction name="action_NTSC_SVideo"/>
+      <addaction name="action_NTSC_RGB"/>
+      <addaction name="action_Phosphor"/>
+      <addaction name="action_Phosphor2"/>
+      <addaction name="action_Scanline"/>
+      <addaction name="action_DBL"/>
+      <addaction name="action_Dark_Room"/>
+      <addaction name="action_CRT_With_Curve"/>
+      <addaction name="action_CRT_Without_Curve"/>
+     </widget>
+     <widget class="QMenu" name="menu_Palette">
+      <property name="title">
+       <string>&amp;Palette</string>
+      </property>
+      <property name="icon">
+       <iconset resource="application.qrc">
+        <normaloff>:/icon/icons/palette.png</normaloff>:/icon/icons/palette.png</iconset>
+      </property>
+      <addaction name="action_Palette_PAL"/>
+      <addaction name="action_Palette_NTSC"/>
+      <addaction name="action_Sony_CXA2025AS_US"/>
+      <addaction name="action_Monochrome"/>
+      <addaction name="action_Green"/>
+      <addaction name="separator"/>
+      <addaction name="action_Palette_File"/>
+      <addaction name="separator"/>
+      <addaction name="action_Palette_Save_File"/>
+      <addaction name="action_Palette_Load_File"/>
+     </widget>
+     <widget class="QMenu" name="menu_Effect">
+      <property name="title">
+       <string>&amp;Effect</string>
+      </property>
+      <property name="icon">
+       <iconset resource="application.qrc">
+        <normaloff>:/icon/icons/effect.png</normaloff>:/icon/icons/effect.png</iconset>
+      </property>
+      <addaction name="action_Cube"/>
+     </widget>
+     <addaction name="menu_Rendering"/>
+     <addaction name="menu_FPS"/>
+     <addaction name="menu_Frame_skip"/>
+     <addaction name="separator"/>
+     <addaction name="menu_Scale"/>
+     <addaction name="menu_Pixel_Aspect_Ratio"/>
+     <addaction name="menu_Overscan"/>
+     <addaction name="menu_Filter"/>
+     <addaction name="menu_Palette"/>
+     <addaction name="menu_Effect"/>
+     <addaction name="separator"/>
+     <addaction name="action_VSync"/>
+     <addaction name="action_Interpolation"/>
+     <addaction name="action_Text_on_screen"/>
+     <addaction name="separator"/>
+     <addaction name="action_Fullscreen"/>
+     <addaction name="action_Stretch_in_fullscreen"/>
+    </widget>
+    <widget class="QMenu" name="menu_Audio">
+     <property name="title">
+      <string>&amp;Audio</string>
+     </property>
+     <property name="icon">
+      <iconset resource="application.qrc">
+       <normaloff>:/icon/icons/audio.png</normaloff>:/icon/icons/audio.png</iconset>
+     </property>
+     <widget class="QMenu" name="menu_Sample_rate">
+      <property name="title">
+       <string>&amp;Sample rate</string>
+      </property>
+      <property name="icon">
+       <iconset resource="application.qrc">
+        <normaloff>:/icon/icons/samplerate.png</normaloff>:/icon/icons/samplerate.png</iconset>
+      </property>
+      <addaction name="action_Sample_rate_48000"/>
+      <addaction name="action_Sample_rate_44100"/>
+      <addaction name="action_Sample_rate_22050"/>
+      <addaction name="action_Sample_rate_11025"/>
+     </widget>
+     <widget class="QMenu" name="menu_Channels">
+      <property name="title">
+       <string>&amp;Channels</string>
+      </property>
+      <property name="icon">
+       <iconset resource="application.qrc">
+        <normaloff>:/icon/icons/channels.png</normaloff>:/icon/icons/channels.png</iconset>
+      </property>
+      <widget class="QMenu" name="menu_Stereo_delay">
+       <property name="title">
+        <string>S&amp;tereo delay</string>
+       </property>
+       <property name="icon">
+        <iconset resource="application.qrc">
+         <normaloff>:/icon/icons/stereo_delay.png</normaloff>:/icon/icons/stereo_delay.png</iconset>
+       </property>
+       <addaction name="action_Stereo_delay_5"/>
+       <addaction name="action_Stereo_delay_10"/>
+       <addaction name="action_Stereo_delay_15"/>
+       <addaction name="action_Stereo_delay_20"/>
+       <addaction name="action_Stereo_delay_25"/>
+       <addaction name="action_Stereo_delay_30"/>
+       <addaction name="action_Stereo_delay_35"/>
+       <addaction name="action_Stereo_delay_40"/>
+       <addaction name="action_Stereo_delay_45"/>
+       <addaction name="action_Stereo_delay_50"/>
+       <addaction name="action_Stereo_delay_55"/>
+       <addaction name="action_Stereo_delay_60"/>
+       <addaction name="action_Stereo_delay_65"/>
+       <addaction name="action_Stereo_delay_70"/>
+       <addaction name="action_Stereo_delay_75"/>
+       <addaction name="action_Stereo_delay_80"/>
+       <addaction name="action_Stereo_delay_85"/>
+       <addaction name="action_Stereo_delay_90"/>
+       <addaction name="action_Stereo_delay_95"/>
+       <addaction name="action_Stereo_delay_100"/>
+      </widget>
+      <addaction name="action_Mono"/>
+      <addaction name="action_Stereo"/>
+      <addaction name="separator"/>
+      <addaction name="menu_Stereo_delay"/>
+     </widget>
+     <widget class="QMenu" name="menu_Audio_Quality">
+      <property name="title">
+       <string>&amp;Quality</string>
+      </property>
+      <property name="icon">
+       <iconset resource="application.qrc">
+        <normaloff>:/icon/icons/quality.png</normaloff>:/icon/icons/quality.png</iconset>
+      </property>
+      <addaction name="action_Audio_Quality_Low"/>
+      <addaction name="action_Audio_Quality_High"/>
+     </widget>
+     <addaction name="menu_Sample_rate"/>
+     <addaction name="menu_Channels"/>
+     <addaction name="menu_Audio_Quality"/>
+     <addaction name="action_APU_channels"/>
+     <addaction name="separator"/>
+     <addaction name="action_Swap_Duty_Cycles"/>
+     <addaction name="action_Audio_Enable"/>
+    </widget>
+    <widget class="QMenu" name="menu_Input">
+     <property name="title">
+      <string>&amp;Input</string>
+     </property>
+     <property name="icon">
+      <iconset resource="application.qrc">
+       <normaloff>:/icon/icons/input.png</normaloff>:/icon/icons/input.png</iconset>
+     </property>
+     <addaction name="action_Input_Config"/>
+    </widget>
+    <addaction name="menu_Mode"/>
+    <addaction name="separator"/>
+    <addaction name="menu_Video"/>
+    <addaction name="menu_Audio"/>
+    <addaction name="menu_Input"/>
+    <addaction name="separator"/>
+    <addaction name="action_Pause_when_in_background"/>
+    <addaction name="action_Game_Genie"/>
+    <addaction name="action_Save_settings_on_exit"/>
+    <addaction name="separator"/>
+    <addaction name="action_Save_settings"/>
+   </widget>
+   <widget class="QMenu" name="menu_State">
+    <property name="title">
+     <string>S&amp;tate</string>
+    </property>
+    <addaction name="action_Save_state"/>
+    <addaction name="action_Load_state"/>
+    <addaction name="separator"/>
+    <addaction name="action_Increment_slot"/>
+    <addaction name="action_Decrement_slot"/>
+    <addaction name="separator"/>
+    <addaction name="action_State_Slot_0"/>
+    <addaction name="action_State_Slot_1"/>
+    <addaction name="action_State_Slot_2"/>
+    <addaction name="action_State_Slot_3"/>
+    <addaction name="action_State_Slot_4"/>
+    <addaction name="action_State_Slot_5"/>
+   </widget>
+   <widget class="QMenu" name="menu_Help">
+    <property name="title">
+     <string>&amp;Help</string>
+    </property>
+    <addaction name="action_About"/>
+   </widget>
+   <addaction name="menu_File"/>
+   <addaction name="menu_NES"/>
+   <addaction name="menu_Settings"/>
+   <addaction name="menu_State"/>
+   <addaction name="menu_Help"/>
+  </widget>
+  <action name="action_Open">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="application.qrc">
+     <normaloff>:/icon/icons/open.png</normaloff>:/icon/icons/open.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Open</string>
+   </property>
+  </action>
+  <action name="action_Quit">
+   <property name="icon">
+    <iconset resource="application.qrc">
+     <normaloff>:/icon/icons/exit.png</normaloff>:/icon/icons/exit.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Quit</string>
+   </property>
+  </action>
+  <action name="action_Hard_Reset">
+   <property name="icon">
+    <iconset resource="application.qrc">
+     <normaloff>:/icon/icons/hard_reset.png</normaloff>:/icon/icons/hard_reset.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Hard Reset</string>
+   </property>
+  </action>
+  <action name="action_Soft_Reset">
+   <property name="icon">
+    <iconset resource="application.qrc">
+     <normaloff>:/icon/icons/soft_reset.png</normaloff>:/icon/icons/soft_reset.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Soft Reset</string>
+   </property>
+  </action>
+  <action name="action_Eject_Insert_Disk">
+   <property name="icon">
+    <iconset resource="application.qrc">
+     <normaloff>:/icon/icons/eject.png</normaloff>:/icon/icons/eject.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Eject/Insert Disk</string>
+   </property>
+  </action>
+  <action name="action_Disk_1_side_A">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Disk 1 side A</string>
+   </property>
+  </action>
+  <action name="action_Disk_1_side_B">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Disk 1 side B</string>
+   </property>
+  </action>
+  <action name="action_Disk_2_side_A">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Disk 2 side A</string>
+   </property>
+  </action>
+  <action name="action_Disk_2_side_B">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Disk 2 side B</string>
+   </property>
+  </action>
+  <action name="action_Disk_3_side_A">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Disk 3 side A</string>
+   </property>
+  </action>
+  <action name="action_Disk_3_side_B">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Disk 3 side B</string>
+   </property>
+  </action>
+  <action name="action_Disk_4_side_A">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Disk 4 side A</string>
+   </property>
+  </action>
+  <action name="action_Disk_4_side_B">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Disk 4 side B</string>
+   </property>
+  </action>
+  <action name="action_Switch_sides">
+   <property name="icon">
+    <iconset resource="application.qrc">
+     <normaloff>:/icon/icons/switch_sides.png</normaloff>:/icon/icons/switch_sides.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Switch sides</string>
+   </property>
+  </action>
+  <action name="action_PAL">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;PAL</string>
+   </property>
+  </action>
+  <action name="action_NTSC">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;NTSC</string>
+   </property>
+  </action>
+  <action name="action_Dendy">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Dendy</string>
+   </property>
+  </action>
+  <action name="action_Mode_Auto">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Auto</string>
+   </property>
+  </action>
+  <action name="action_Rend0">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string notr="true">Rend0</string>
+   </property>
+   <property name="visible">
+    <bool>false</bool>
+   </property>
+  </action>
+  <action name="action_Rend1">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string notr="true">Rend1</string>
+   </property>
+   <property name="visible">
+    <bool>false</bool>
+   </property>
+  </action>
+  <action name="action_Rend2">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string notr="true">Rend2</string>
+   </property>
+   <property name="visible">
+    <bool>false</bool>
+   </property>
+  </action>
+  <action name="action_FPS_Default">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Default</string>
+   </property>
+  </action>
+  <action name="action_FPS_60">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>60</string>
+   </property>
+  </action>
+  <action name="action_FPS_59">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>59</string>
+   </property>
+  </action>
+  <action name="action_FPS_58">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>58</string>
+   </property>
+  </action>
+  <action name="action_FPS_57">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>57</string>
+   </property>
+  </action>
+  <action name="action_FPS_56">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>56</string>
+   </property>
+  </action>
+  <action name="action_FPS_55">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>55</string>
+   </property>
+  </action>
+  <action name="action_FPS_54">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>54</string>
+   </property>
+  </action>
+  <action name="action_FPS_53">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>53</string>
+   </property>
+  </action>
+  <action name="action_FPS_52">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>52</string>
+   </property>
+  </action>
+  <action name="action_FPS_51">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>51</string>
+   </property>
+  </action>
+  <action name="action_FPS_50">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>50</string>
+   </property>
+  </action>
+  <action name="action_FPS_49">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>49</string>
+   </property>
+  </action>
+  <action name="action_FPS_48">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>48</string>
+   </property>
+  </action>
+  <action name="action_FPS_47">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>47</string>
+   </property>
+  </action>
+  <action name="action_FPS_46">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>46</string>
+   </property>
+  </action>
+  <action name="action_FPS_45">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>45</string>
+   </property>
+  </action>
+  <action name="action_FPS_44">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>44</string>
+   </property>
+  </action>
+  <action name="action_Fsk_Default">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Default</string>
+   </property>
+  </action>
+  <action name="action_Fsk_1">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>1</string>
+   </property>
+  </action>
+  <action name="action_Fsk_2">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>2</string>
+   </property>
+  </action>
+  <action name="action_Fsk_3">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>3</string>
+   </property>
+  </action>
+  <action name="action_Fsk_4">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>4</string>
+   </property>
+  </action>
+  <action name="action_Fsk_5">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>5</string>
+   </property>
+  </action>
+  <action name="action_Fsk_6">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>6</string>
+   </property>
+  </action>
+  <action name="action_Fsk_7">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>7</string>
+   </property>
+  </action>
+  <action name="action_Fsk_8">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>8</string>
+   </property>
+  </action>
+  <action name="action_Fsk_9">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>9</string>
+   </property>
+  </action>
+  <action name="action_1x">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string notr="true">&amp;1x</string>
+   </property>
+  </action>
+  <action name="action_2x">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string notr="true">&amp;2x</string>
+   </property>
+  </action>
+  <action name="action_3x">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string notr="true">&amp;3x</string>
+   </property>
+  </action>
+  <action name="action_4x">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string notr="true">&amp;4x</string>
+   </property>
+  </action>
+  <action name="action_PAR_11">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string notr="true">&amp;1:1</string>
+   </property>
+  </action>
+  <action name="action_PAR_54">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string notr="true">&amp;5:4</string>
+   </property>
+  </action>
+  <action name="action_PAR_87">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string notr="true">&amp;8:7 (NTSC TV)</string>
+   </property>
+  </action>
+  <action name="action_PAR_Soft_Stretch">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string notr="true">Soft stretch</string>
+   </property>
+  </action>
+  <action name="action_Oscan_Default">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Default</string>
+   </property>
+  </action>
+  <action name="action_Oscan_On">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;On</string>
+   </property>
+  </action>
+  <action name="action_Oscan_Off">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>O&amp;ff</string>
+   </property>
+  </action>
+  <action name="action_Oscan_Def_On">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;On</string>
+   </property>
+  </action>
+  <action name="action_Oscan_Def_Off">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>O&amp;ff</string>
+   </property>
+  </action>
+  <action name="action_Oscan_Set_Borders">
+   <property name="icon">
+    <iconset resource="application.qrc">
+     <normaloff>:/icon/icons/overscan_set_borders.png</normaloff>:/icon/icons/overscan_set_borders.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Set borders</string>
+   </property>
+  </action>
+  <action name="action_No_Filter">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;No Filter</string>
+   </property>
+  </action>
+  <action name="action_Phosphor">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Phosphor</string>
+   </property>
+  </action>
+  <action name="action_Phosphor2">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>P&amp;hosphor2</string>
+   </property>
+  </action>
+  <action name="action_Scanline">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>S&amp;canline</string>
+   </property>
+  </action>
+  <action name="action_DBL">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;DBL</string>
+   </property>
+  </action>
+  <action name="action_Dark_Room">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Dark R&amp;oom</string>
+   </property>
+  </action>
+  <action name="action_CRT_With_Curve">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>CRT With &amp;Curve</string>
+   </property>
+  </action>
+  <action name="action_CRT_Without_Curve">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>CRT &amp;Without Curve</string>
+   </property>
+  </action>
+  <action name="action_Scale2X">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Scale&amp;2X</string>
+   </property>
+  </action>
+  <action name="action_Scale3X">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Scale&amp;3X</string>
+   </property>
+  </action>
+  <action name="action_Scale4X">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Scale&amp;4X</string>
+   </property>
+  </action>
+  <action name="action_Hq2X">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Hq&amp;2X</string>
+   </property>
+  </action>
+  <action name="action_Hq3X">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Hq&amp;3X</string>
+   </property>
+  </action>
+  <action name="action_Hq4X">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Hq&amp;4X</string>
+   </property>
+  </action>
+  <action name="action_xBRZ_2X">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>xBRZ &amp;2X</string>
+   </property>
+  </action>
+  <action name="action_xBRZ_3X">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>xBRZ &amp;3X</string>
+   </property>
+  </action>
+  <action name="action_xBRZ_4X">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>xBRZ &amp;4X</string>
+   </property>
+  </action>
+  <action name="action_NTSC_Composite">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>NTSC &amp;Composite</string>
+   </property>
+  </action>
+  <action name="action_NTSC_SVideo">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>NTSC &amp;S-Video</string>
+   </property>
+  </action>
+  <action name="action_NTSC_RGB">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>NTSC &amp;RGB</string>
+   </property>
+  </action>
+  <action name="action_Palette_PAL">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;PAL</string>
+   </property>
+  </action>
+  <action name="action_Palette_NTSC">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;NTSC</string>
+   </property>
+  </action>
+  <action name="action_Sony_CXA2025AS_US">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>S&amp;ony CXA2025AS US</string>
+   </property>
+  </action>
+  <action name="action_Monochrome">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Monochrome</string>
+   </property>
+  </action>
+  <action name="action_Green">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Green</string>
+   </property>
+  </action>
+  <action name="action_Palette_File">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string notr="true">[Select a file]</string>
+   </property>
+  </action>
+  <action name="action_Palette_Save_File">
+   <property name="icon">
+    <iconset resource="application.qrc">
+     <normaloff>:/icon/icons/save.png</normaloff>:/icon/icons/save.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Save to file</string>
+   </property>
+  </action>
+  <action name="action_Palette_Load_File">
+   <property name="icon">
+    <iconset resource="application.qrc">
+     <normaloff>:/icon/icons/load.png</normaloff>:/icon/icons/load.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Load from file</string>
+   </property>
+  </action>
+  <action name="actionShaders">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Shaders</string>
+   </property>
+  </action>
+  <action name="action_Cube">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Cube</string>
+   </property>
+  </action>
+  <action name="action_VSync">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;VSync</string>
+   </property>
+  </action>
+  <action name="action_Interpolation">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Interpolation</string>
+   </property>
+  </action>
+  <action name="action_Text_on_screen">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Te&amp;xt on screen</string>
+   </property>
+  </action>
+  <action name="action_Fullscreen">
+   <property name="icon">
+    <iconset resource="application.qrc">
+     <normaloff>:/icon/icons/fullscreen.png</normaloff>:/icon/icons/fullscreen.png</iconset>
+   </property>
+   <property name="text">
+    <string>F&amp;ullscreen</string>
+   </property>
+  </action>
+  <action name="action_Stretch_in_fullscreen">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>S&amp;tretch in fullscreen</string>
+   </property>
+  </action>
+  <action name="action_Sample_rate_44100">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;44100</string>
+   </property>
+  </action>
+  <action name="action_Sample_rate_48000">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>4&amp;8000</string>
+   </property>
+  </action>
+  <action name="action_Sample_rate_22050">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;22050</string>
+   </property>
+  </action>
+  <action name="action_Sample_rate_11025">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;11025</string>
+   </property>
+  </action>
+  <action name="action_Mono">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Mono</string>
+   </property>
+  </action>
+  <action name="action_Stereo">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Stereo</string>
+   </property>
+  </action>
+  <action name="action_Stereo_delay_5">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>5%</string>
+   </property>
+  </action>
+  <action name="action_Stereo_delay_10">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>10%</string>
+   </property>
+  </action>
+  <action name="action_Stereo_delay_15">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>15%</string>
+   </property>
+  </action>
+  <action name="action_Stereo_delay_20">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>20%</string>
+   </property>
+  </action>
+  <action name="action_Stereo_delay_25">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>25%</string>
+   </property>
+  </action>
+  <action name="action_Stereo_delay_30">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>30% (Default)</string>
+   </property>
+  </action>
+  <action name="action_Stereo_delay_35">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>35%</string>
+   </property>
+  </action>
+  <action name="action_Stereo_delay_40">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>40%</string>
+   </property>
+  </action>
+  <action name="action_Stereo_delay_45">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>45%</string>
+   </property>
+  </action>
+  <action name="action_Stereo_delay_50">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>50%</string>
+   </property>
+  </action>
+  <action name="action_Stereo_delay_55">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>55%</string>
+   </property>
+  </action>
+  <action name="action_Stereo_delay_60">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>60%</string>
+   </property>
+  </action>
+  <action name="action_Stereo_delay_65">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>65%</string>
+   </property>
+  </action>
+  <action name="action_Stereo_delay_70">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>70%</string>
+   </property>
+  </action>
+  <action name="action_Stereo_delay_75">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>75%</string>
+   </property>
+  </action>
+  <action name="action_Stereo_delay_80">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>80%</string>
+   </property>
+  </action>
+  <action name="action_Stereo_delay_85">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>85%</string>
+   </property>
+  </action>
+  <action name="action_Stereo_delay_90">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>90%</string>
+   </property>
+  </action>
+  <action name="action_Stereo_delay_95">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>95%</string>
+   </property>
+  </action>
+  <action name="action_Stereo_delay_100">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>100%</string>
+   </property>
+  </action>
+  <action name="action_Audio_Quality_Low">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Low</string>
+   </property>
+  </action>
+  <action name="action_Audio_Quality_High">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;High</string>
+   </property>
+  </action>
+  <action name="action_APU_channels">
+   <property name="icon">
+    <iconset resource="application.qrc">
+     <normaloff>:/icon/icons/apu_channels.png</normaloff>:/icon/icons/apu_channels.png</iconset>
+   </property>
+   <property name="text">
+    <string>A&amp;PU channels</string>
+   </property>
+  </action>
+  <action name="action_Swap_Duty_Cycles">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>S&amp;wap Duty Cycles</string>
+   </property>
+  </action>
+  <action name="action_Audio_Enable">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Enable</string>
+   </property>
+  </action>
+  <action name="action_Input_Config">
+   <property name="icon">
+    <iconset resource="application.qrc">
+     <normaloff>:/icon/icons/input_config.png</normaloff>:/icon/icons/input_config.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Config</string>
+   </property>
+  </action>
+  <action name="action_Pause_when_in_background">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Pause when &amp;in background</string>
+   </property>
+  </action>
+  <action name="action_Game_Genie">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Game Genie</string>
+   </property>
+  </action>
+  <action name="action_Save_settings">
+   <property name="icon">
+    <iconset resource="application.qrc">
+     <normaloff>:/icon/icons/save_settings.png</normaloff>:/icon/icons/save_settings.png</iconset>
+   </property>
+   <property name="text">
+    <string>Save se&amp;ttings</string>
+   </property>
+  </action>
+  <action name="action_Save_settings_on_exit">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Save settings on e&amp;xit</string>
+   </property>
+  </action>
+  <action name="action_Save_state">
+   <property name="icon">
+    <iconset resource="application.qrc">
+     <normaloff>:/icon/icons/save.png</normaloff>:/icon/icons/save.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Save state</string>
+   </property>
+  </action>
+  <action name="action_Load_state">
+   <property name="icon">
+    <iconset resource="application.qrc">
+     <normaloff>:/icon/icons/load.png</normaloff>:/icon/icons/load.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Load state</string>
+   </property>
+  </action>
+  <action name="action_Increment_slot">
+   <property name="icon">
+    <iconset resource="application.qrc">
+     <normaloff>:/icon/icons/state_inc.png</normaloff>:/icon/icons/state_inc.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Increment slot</string>
+   </property>
+  </action>
+  <action name="action_Decrement_slot">
+   <property name="icon">
+    <iconset resource="application.qrc">
+     <normaloff>:/icon/icons/state_dec.png</normaloff>:/icon/icons/state_dec.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Decrement slot</string>
+   </property>
+  </action>
+  <action name="action_State_Slot_0">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Slot &amp;0</string>
+   </property>
+  </action>
+  <action name="action_State_Slot_1">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Slot &amp;1</string>
+   </property>
+  </action>
+  <action name="action_State_Slot_2">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Slot &amp;2</string>
+   </property>
+  </action>
+  <action name="action_State_Slot_3">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Slot &amp;3</string>
+   </property>
+  </action>
+  <action name="action_State_Slot_4">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Slot &amp;4</string>
+   </property>
+  </action>
+  <action name="action_State_Slot_5">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Slot &amp;5</string>
+   </property>
+  </action>
+  <action name="action_About">
+   <property name="icon">
+    <iconset resource="application.qrc">
+     <normaloff>:/icon/icons/about.png</normaloff>:/icon/icons/about.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;About</string>
+   </property>
+  </action>
+ </widget>
+ <resources>
+  <include location="application.qrc"/>
+ </resources>
+ <connections/>
+</ui>

@@ -61,7 +61,7 @@ void extcl_cpu_wr_mem_219(WORD address, BYTE value) {
 				map_prg_rom_8k(2, 0, value);
 
 				value = ((value >> 5) & 0x01) | ((value >> 3) & 0x02) | ((value >> 1) & 0x04)
-				        		| ((value << 1) & 0x08);
+					 		| ((value << 1) & 0x08);
 				control_bank(info.prg.rom.max.banks_8k)
 				map_prg_rom_8k(2, 2, value);
 

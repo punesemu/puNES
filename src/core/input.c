@@ -16,8 +16,7 @@
 #include "overscan.h"
 #include "fps.h"
 #include "tas.h"
-#include "cfg_file.h"
-#include "param.h"
+#include "conf.h"
 #if defined (SDL)
 #include "opengl.h"
 #endif
@@ -208,7 +207,7 @@ BYTE input_wr_reg_standard(BYTE value) {
 		}
 	}
 
-	/* restiruisco il nuovo valore del $4016 */
+	/* restituisco il nuovo valore del $4016 */
 	return(value & 0x01);
 }
 BYTE input_rd_reg_standard(BYTE openbus, WORD **screen_index, BYTE nport) {
@@ -349,16 +348,16 @@ BYTE input_rd_reg_four_score(BYTE openbus, WORD **screen_index, BYTE nport) {
 BYTE input_rd_reg_zapper(BYTE openbus, WORD **screen_index, BYTE nport) {
 	int x_zapper = -1, y_zapper = -1;
 	int x_rect, y_rect;
-	int gx = gui.x, gy = gui.y;
+	int gx = mouse.x, gy = mouse.y;
 	int count = 0;
 
 	port[nport].zapper &= ~0x10;
 
-	if (gui.left_button) {
+	if (mouse.left) {
 		port[nport].zapper |= 0x10;
 	}
 
-	if (!gui.right_button) {
+	if (mouse.right) {
 #if defined (SDL)
 		if (gfx.opengl) {
 			int l = (int) opengl.quadcoords.l;
@@ -403,7 +402,7 @@ BYTE input_rd_reg_zapper(BYTE openbus, WORD **screen_index, BYTE nport) {
 	}
 
 	if (!r2002.vblank && r2001.visible && (ppu.frame_y > machine.vint_lines)
-	        && (ppu.screen_y < SCR_LINES)) {
+		&& (ppu.screen_y < SCR_LINES)) {
 		for (y_rect = (y_zapper - 8); y_rect < (y_zapper + 8); y_rect++) {
 			if (y_rect < 0) {
 				continue;

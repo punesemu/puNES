@@ -83,7 +83,13 @@ enum save_slot_mode { SAVE_SLOT_SAVE, SAVE_SLOT_READ, SAVE_SLOT_COUNT };
 	save_slot_ele(mode, slot, square.length.halt);\
 	save_slot_ele(mode, slot, square.output)
 
-struct _save_slot {
+#if defined (__cplusplus)
+#define EXTERNC extern "C"
+#else
+#define EXTERNC
+#endif
+
+EXTERNC struct _save_slot {
 	uint32_t version;
 	DBWORD slot;
 	BYTE state[SAVE_SLOTS];
@@ -92,11 +98,13 @@ struct _save_slot {
 	BYTE preview_start;
 } save_slot;
 
-BYTE save_slot_save(void);
-BYTE save_slot_load(void);
-void save_slot_preview(BYTE slot);
-void save_slot_count_load(void);
-BYTE save_slot_element_struct(BYTE mode, BYTE slot, uintptr_t *src, DBWORD size, FILE *fp,
-        BYTE preview);
+EXTERNC BYTE save_slot_save(void);
+EXTERNC BYTE save_slot_load(void);
+EXTERNC void save_slot_preview(BYTE slot);
+EXTERNC void save_slot_count_load(void);
+EXTERNC BYTE save_slot_element_struct(BYTE mode, BYTE slot, uintptr_t *src, DBWORD size, FILE *fp,
+		BYTE preview);
+
+#undef EXTERNC
 
 #endif /* SAVE_SLOT_H_ */

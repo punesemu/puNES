@@ -21,13 +21,21 @@ typedef struct {
 	BYTE right;
 } _overscan_borders;
 
-struct overscan {
+#if defined (__cplusplus)
+#define EXTERNC extern "C"
+#else
+#define EXTERNC
+#endif
+
+EXTERNC struct overscan {
 	BYTE enabled;
 	_overscan_borders *borders;
 } overscan;
 
-_overscan_borders overscan_borders[2];
+EXTERNC _overscan_borders overscan_borders[2];
 
-BYTE overscan_set_mode(BYTE mode);
+EXTERNC BYTE overscan_set_mode(BYTE mode);
+
+#undef EXTERNC
 
 #endif /* OVERSCAN_H_ */

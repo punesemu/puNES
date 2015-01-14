@@ -181,7 +181,7 @@ void l7z_quit(void) {
 BYTE l7z_present(void) {
 	return (l7z.present);
 }
-BYTE l7z_control_ext(char *ext) {
+BYTE l7z_control_ext(const char *ext) {
 	WStringArray exts;
 
 	if (!l7z.lib.GetSupportedExts(exts)) {

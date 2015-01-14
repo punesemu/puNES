@@ -408,7 +408,7 @@ void extcl_cpu_wr_mem_Sunsoft_FM7(WORD address, BYTE value) {
 					BYTE index = fm7.snd_reg >> 1;
 
 					fm7.square[index].frequency = (fm7.square[index].frequency & 0x00FF)
-					        | ((value & 0x0F) << 8);
+						| ((value & 0x0F) << 8);
 					return;
 				}
 				case 0x07:

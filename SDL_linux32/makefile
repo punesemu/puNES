@@ -11,8 +11,8 @@ RM := rm -rf
 -include src/video/sdl/openGL/subdir.mk
 -include src/video/sdl/glew/subdir.mk
 -include src/video/sdl/subdir.mk
--include src/gui/gtk2/menu/subdir.mk
--include src/gui/gtk2/subdir.mk
+-include src/gui/linux/subdir.mk
+-include src/gui/subdir.mk
 -include src/core/mappers/subdir.mk
 -include src/core/filters/video/subdir.mk
 -include src/core/filters/audio/subdir.mk
@@ -58,7 +58,7 @@ main-build: punes32
 punes32: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: Cross G++ Linker'
-	i686-pc-linux-gnu-g++ -L/usr/i686-pc-linux-gnu/usr/lib -L"/home/fhorse/sviluppo/personale/punes/misc/lib/linux32" -o "punes32" $(OBJS) $(USER_OBJS) $(LIBS)
+	i686-pc-linux-gnu-g++ -L/usr/i686-pc-linux-gnu/usr/lib -L/usr/i686-pc-linux-gnu/usr/lib/qt4 -L"/home/fhorse/sviluppo/personale/punes/misc/lib/linux32" -o "punes32" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 

@@ -9,16 +9,52 @@
 #include <string.h>
 #include <libgen.h>
 #include "info.h"
+#include "settings.h"
 #include "cmd_line.h"
-#include "cfg_file.h"
+#include "conf.h"
 #include "version.h"
 #include "gfx.h"
 #include "gui.h"
-#define __CMDLINE__
-#include "param.h"
-#undef  __CMDLINE__
+
+#define set_int(ind) settings_val_to_int(ind, optarg)
+#define set_double(rnd) settings_val_to_double(rnd, optarg)
+#define set_oscan(set, ind) settings_val_to_oscan(set, &overscan_borders[ind], optarg)
 
 void usage(char *name);
+
+static const char *opt_short = "m:f:k:s:o:i:n:p:r:v:e:j:u:t:a:l:c:d:q:g:Vh?";
+static const struct option opt_long[] = {
+	{ "mode",               required_argument, NULL, 'm'},
+	{ "fps",                required_argument, NULL, 'f'},
+	{ "frameskip",          required_argument, NULL, 'k'},
+	{ "size",               required_argument, NULL, 's'},
+	{ "overscan",           required_argument, NULL, 'o'},
+	{ "filter",             required_argument, NULL, 'i'},
+	{ "ntsc-format",        required_argument, NULL, 'n'},
+	{ "palette",            required_argument, NULL, 'p'},
+	{ "rendering",          required_argument, NULL, 'r'},
+	{ "vsync",              required_argument, NULL, 'v'},
+	{ "pixel-aspect-ratio", required_argument, NULL, 'e'},
+	{ "interpolation",      required_argument, NULL, 'j'},
+	{ "fullscreen",         required_argument, NULL, 'u'},
+	{ "stretch-fullscreen", required_argument, NULL, 't'},
+	{ "audio",              required_argument, NULL, 'a'},
+	{ "samplerate",         required_argument, NULL, 'l'},
+	{ "channels",           required_argument, NULL, 'c'},
+	{ "stereo-delay",       required_argument, NULL, 'd'},
+	{ "audio-quality",      required_argument, NULL, 'q'},
+	{ "swap-duty",          required_argument, NULL,  0 },
+	{ "gamegenie",          required_argument, NULL, 'g'},
+	{ "help",               no_argument,       NULL, 'h'},
+	{ "version",            no_argument,       NULL, 'V'},
+	{ "portable",           no_argument,       NULL,  0 },
+	{ "txt-on-screen",      required_argument, NULL,  0 },
+	{ "overscan-brd-ntsc",  required_argument, NULL,  0 },
+	{ "overscan-brd-pal",   required_argument, NULL,  0 },
+	{ "par-soft-stretch",   required_argument, NULL,  0 },
+	{ "background-pause",   required_argument, NULL,  0 },
+	{ 0,                    0,                 0,     0 }
+};
 
 BYTE cmd_line_parse(int argc, char **argv) {
 	int longIndex = 0, opt = 0;
@@ -29,36 +65,35 @@ BYTE cmd_line_parse(int argc, char **argv) {
 			case 0:
 				/* long options */
 				if (!(strcmp(opt_long[longIndex].name, "swap-duty"))) {
-					param_search(0, optarg, param_no_yes, cfg_from_file.swap_duty = index);
+					cfg_from_file.swap_duty = set_int(SET_SWAP_DUTY);
 				} else if (!(strcmp(opt_long[longIndex].name, "portable"))) {
 					/* l'ho gia' controllato quindi qui non faccio niente */
-					;
 				} else if (!(strcmp(opt_long[longIndex].name, "txt-on-screen"))) {
-					param_search(0, optarg, param_no_yes, cfg_from_file.txt_on_screen = index);
+					cfg_from_file.txt_on_screen = set_int(SET_TEXT_ON_SCREEN);
 				} else if (!(strcmp(opt_long[longIndex].name, "overscan-brd-ntsc"))) {
-					param_ovscan_search(optarg, 0);
+					set_oscan(SET_OVERSCAN_BRD_NTSC, 0);
 				} else if (!(strcmp(opt_long[longIndex].name, "overscan-brd-pal"))) {
-					param_ovscan_search(optarg, 1);
+					set_oscan(SET_OVERSCAN_BRD_PAL, 1);
 				} else if (!(strcmp(opt_long[longIndex].name, "par-soft-stretch"))) {
-					param_search(0, optarg, param_no_yes, cfg_from_file.PAR_soft_stretch = index);
+					cfg_from_file.PAR_soft_stretch = set_int(SET_PAR_SOFT_STRETCH);
 				} else if (!(strcmp(opt_long[longIndex].name, "background-pause"))) {
-					param_search(0, optarg, param_no_yes, cfg_from_file.bck_pause = index);
+					cfg_from_file.bck_pause = set_int(SET_BCK_PAUSE);
 				}
 				break;
 			case 'a':
-				param_search(0, optarg, param_off_on, cfg_from_file.apu.channel[APU_MASTER] = index);
+				cfg_from_file.apu.channel[APU_MASTER] = set_int(SET_AUDIO);
 				break;
 			case 'c':
-				param_search(0, optarg, param_channels, cfg_from_file.channels = index);
+				cfg_from_file.channels = set_int(SET_CHANNELS);
 				break;
 			case 'd':
-				param_double_search(optarg, cfg_from_file.stereo_delay, 5);
+				cfg_from_file.stereo_delay = set_double(5);
 				break;
 			case 'f':
-				param_search(0, optarg, param_fps, cfg_from_file.fps = index);
+				cfg_from_file.fps = set_int(SET_FPS);
 				break;
 			case 'g':
-				param_search(0, optarg, param_no_yes, cfg_from_file.gamegenie = index);
+				cfg_from_file.gamegenie = set_int(SET_GAMEGENIE);
 				break;
 			case 'h':
 			case '?':
@@ -74,52 +109,51 @@ BYTE cmd_line_parse(int argc, char **argv) {
 				break;
 			}
 			case 'k':
-				param_search(0, optarg, param_fsk, cfg_from_file.frameskip = index);
+				cfg_from_file.frameskip = set_int(SET_FRAMESKIP);
 				break;
 			case 'i':
-				param_search(0, optarg, param_filter, cfg_from_file.filter = index);
+				cfg_from_file.filter = set_int(SET_FILTER);
 				break;
 			case 'l':
-				param_search(0, optarg, param_samplerate, cfg_from_file.samplerate = index);
+				cfg_from_file.samplerate = set_int(SET_SAMPLERATE);
 				break;
 			case 'm':
-				param_search(0, optarg, param_mode, cfg_from_file.mode = index);
+				cfg_from_file.mode = set_int(SET_MODE);
 				break;
 			case 'n':
-				param_search(0, optarg, param_ntsc, cfg_from_file.ntsc_format = index);
+				cfg_from_file.ntsc_format = set_int(SET_NTSC_FORMAT);
 				break;
 			case 'o':
-				param_search(0, optarg, param_oscan, cfg_from_file.oscan = index);
+				cfg_from_file.oscan = set_int(SET_OVERSCAN_DEFAULT);
 				break;
 			case 'p':
-				param_search(0, optarg, param_ntsc, cfg_from_file.palette = index);
+				cfg_from_file.palette = set_int(SET_PALETTE);
 				break;
 			case 'q':
-				param_search(0, optarg, param_audio_quality, cfg_from_file.audio_quality = index);
+				cfg_from_file.audio_quality = set_int(SET_AUDIO_QUALITY);
 				break;
 			case 'r':
-				param_search(0, optarg, param_render, cfg_from_file.render = index);
+				cfg_from_file.render = set_int(SET_RENDERING);
 				gfx_set_render(cfg_from_file.render);
 				break;
 			case 's':
-				param_search(1, optarg, param_size, cfg_from_file.scale = index);
+				cfg_from_file.scale = set_int(SET_SCALE);
 				gfx.scale_before_fscreen = cfg_from_file.scale;
 				break;
 			case 't':
-				param_search(0, optarg, param_no_yes, cfg_from_file.stretch = !index);
+				cfg_from_file.stretch = !set_int(SET_STRETCH_FULLSCREEN);
 				break;
 			case 'u':
-				param_search(0, optarg, param_no_yes, cfg_from_file.fullscreen = index);
+				cfg_from_file.fullscreen = set_int(SET_FULLSCREEN);
 				break;
 			case 'v':
-				param_search(0, optarg, param_off_on, cfg_from_file.vsync = index);
+				cfg_from_file.vsync = set_int(SET_VSYNC);
 				break;
 			case 'e':
-				param_search(0, optarg, param_pixel_aspect_ratio,
-						cfg_from_file.pixel_aspect_ratio = index);
+				cfg_from_file.pixel_aspect_ratio = set_int(SET_PAR);
 				break;
 			case 'j':
-				param_search(0, optarg, param_no_yes, cfg_from_file.interpolation = index);
+				cfg_from_file.interpolation = set_int(SET_INTERPOLATION);
 				break;
 			default:
 				break;
@@ -132,7 +166,7 @@ BYTE cmd_line_parse(int argc, char **argv) {
 BYTE cmd_line_check_portable(int argc, char **argv) {
 	int opt;
 
-#if defined (MINGW32) || defined (MINGW64)
+#if defined (__WIN32__)
 	if (!(strncmp(argv[0] + (strlen(argv[0]) - 6), "_p", 2))) {
 #else
 	if (!(strcmp(argv[0] + (strlen(argv[0]) - 2), "_p"))) {
@@ -187,32 +221,32 @@ void usage(char *name) {
 
 	usage_string = (char *) malloc(1024 * 8);
 	sprintf(usage_string, istructions, name,
-			param[P_MODE].help,
-			param[P_FPS].help,
-	        param[P_FSK].help,
-	        param[P_SIZE].help,
-			param[P_PIXEL_ASPECT_RATIO].help,
-			param[P_PAR_SOFT_STRETCH].help,
-	        param[P_OVERSCAN].help,
-	        param[P_FILTER].help,
-	        param[P_NTSCFORMAT].help,
-	        param[P_PALETTE].help,
-			param[P_RENDER].help,
-			param[P_VSYNC].help,
-			param[P_INTERPOLATION].help,
-			param[P_TXT_ON_SCREEN].help,
-			param[P_OVERSCAN_BRD_NTSC].help,
-			param[P_OVERSCAN_BRD_PAL].help,
-			param[P_FSCREEN].help,
-			param[P_STRETCH].help,
-			param[P_AUDIO].help,
-			param[P_SAMPLERATE].help,
-			param[P_CHANNELS].help,
-			param[P_STEREODELAY].help,
-			param[P_AUDIO_QUALITY].help,
-			param[P_SWAP_DUTY].help,
-			param[P_BCK_PAUSE].help,
-			param[P_GAMEGENIE].help
+			main_cfg[SET_MODE].hlp,
+			main_cfg[SET_FPS].hlp,
+			main_cfg[SET_FRAMESKIP].hlp,
+			main_cfg[SET_SCALE].hlp,
+			main_cfg[SET_PAR].hlp,
+			main_cfg[SET_PAR_SOFT_STRETCH].hlp,
+			main_cfg[SET_OVERSCAN_DEFAULT].hlp,
+			main_cfg[SET_FILTER].hlp,
+			main_cfg[SET_NTSC_FORMAT].hlp,
+			main_cfg[SET_PALETTE].hlp,
+			main_cfg[SET_RENDERING].hlp,
+			main_cfg[SET_VSYNC].hlp,
+			main_cfg[SET_INTERPOLATION].hlp,
+			main_cfg[SET_TEXT_ON_SCREEN].hlp,
+			main_cfg[SET_OVERSCAN_BRD_NTSC].hlp,
+			main_cfg[SET_OVERSCAN_BRD_PAL].hlp,
+			main_cfg[SET_FULLSCREEN].hlp,
+			main_cfg[SET_STRETCH_FULLSCREEN].hlp,
+			main_cfg[SET_AUDIO].hlp,
+			main_cfg[SET_SAMPLERATE].hlp,
+			main_cfg[SET_CHANNELS].hlp,
+			main_cfg[SET_STEREO_DELAY].hlp,
+			main_cfg[SET_AUDIO_QUALITY].hlp,
+			main_cfg[SET_SWAP_DUTY].hlp,
+			main_cfg[SET_BCK_PAUSE].hlp,
+			main_cfg[SET_GAMEGENIE].hlp
 	);
 	gui_print_usage(usage_string);
 	free(usage_string);

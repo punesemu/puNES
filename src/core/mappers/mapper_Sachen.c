@@ -277,7 +277,7 @@ void extcl_cpu_wr_mem_Sachen_sa8259x(WORD address, BYTE value) {
 							chr.bank_1k[2] = chr_chip_byte_pnt(0, bank);
 
 							value = (sa8259.reg[3] & 0x07) | ((sa8259.reg[4] << 2) & 0x10)
-							        		| ((sa8259.reg[6] << 3) & 0x08);
+									| ((sa8259.reg[6] << 3) & 0x08);
 							control_bank(info.chr.rom.max.banks_1k)
 							bank = value << 10;
 							chr.bank_1k[3] = chr_chip_byte_pnt(0, bank);

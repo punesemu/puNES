@@ -19,7 +19,13 @@ enum timeline_misc {
 	TL_SNAPS = TL_SNAPS_TOT - 1
 };
 
-struct _timeline {
+#if defined (__cplusplus)
+#define EXTERNC extern "C"
+#else
+#define EXTERNC
+#endif
+
+EXTERNC struct _timeline {
 	BYTE *start;
 	BYTE *snaps[TL_SNAPS_TOT];
 	SWORD snap;
@@ -33,10 +39,12 @@ struct _timeline {
 	BYTE key;
 } tl;
 
-BYTE timeline_init(void);
-void timeline_snap(BYTE mode);
-void timeline_preview(BYTE snap);
-void timeline_back(BYTE mode, BYTE snap);
-void timeline_quit(void);
+EXTERNC BYTE timeline_init(void);
+EXTERNC void timeline_snap(BYTE mode);
+EXTERNC void timeline_preview(BYTE snap);
+EXTERNC void timeline_back(BYTE mode, BYTE snap);
+EXTERNC void timeline_quit(void);
+
+#undef EXTERNC
 
 #endif /* TIMELINE_H_ */

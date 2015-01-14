@@ -19,7 +19,7 @@
 #include "tas.h"
 #include "input.h"
 #include "fds.h"
-#include "cfg_file.h"
+#include "conf.h"
 
 enum txt_fade { FADE_SPEED = 4 };
 
@@ -32,11 +32,11 @@ enum txt_fade { FADE_SPEED = 4 };
 	strcat(ele->text, ch)
 
 static char txt_tags[][10] = {
-	"[normal]", "[red]",	"[yellow]",	"[green]",
-	"[cyan]"  ,	"[brown]",	"[blue]"  ,	"[black]",
-	"[font8]" , "[font12]",	"[left]"  ,	"[right]",
-	"[up]"    ,	"[down]",	"[select]",	"[start]",
-	"[a]"     ,	"[b]"   ,	"[floppy]"
+	"[normal]", "[red]",	"[yellow]", "[green]",
+	"[cyan]",   "[brown]",	"[blue]",   "[black]",
+	"[font8]",  "[font12]",	"[left]",   "[right]",
+	"[up]",     "[down]",	"[select]", "[start]",
+	"[a]",      "[b]"   ,	"[floppy]"
 };
 
 static void INLINE rendering(_txt_element *txt);
@@ -89,7 +89,7 @@ void text_init(void) {
 	}
 }
 void text_add_line(int type, int factor, int font, int alpha, int start_x, int start_y, int x,
-        int y, const char *fmt, ...) {
+	int y, const char *fmt, ...) {
 	uint8_t i, shift_line = !text.info.index;
 	_txt_element *ele = NULL;
 	va_list ap;
@@ -308,11 +308,11 @@ void text_rendering(BYTE render) {
 			int length;
 			if (tas.lag_frame) {
 				sprintf(ele->text, "%d/%d [red]%d[normal]", tas.frame, tas.total,
-				        tas.total_lag_frames);
+					tas.total_lag_frames);
 				length = strlen(ele->text) - 13;
 			} else {
 				sprintf(ele->text, "%d/%d [green]%d[normal]", tas.frame, tas.total,
-				        tas.total_lag_frames);
+					tas.total_lag_frames);
 				length = strlen(ele->text) - 15;
 			}
 
@@ -490,7 +490,7 @@ static void INLINE rendering(_txt_element *ele) {
 	if (ele->start_y >= TXT_CENTER) {
 		if (ele->start_y == TXT_CENTER) {
 			surface_rect.y = ((text.h - (ele->factor * font_size[ch_font][1])) >> 1)
-			        + ele->y;
+				+ ele->y;
 		} else if (ele->start_y == TXT_UP) {
 			surface_rect.y = 8 + ele->y;
 		} else if (ele->start_y == TXT_DOWN) {

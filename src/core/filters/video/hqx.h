@@ -26,7 +26,13 @@
 #include "gfx.h"
 #include "palette.h"
 
-struct _hqx {
+#if defined (__cplusplus)
+#define EXTERNC extern "C"
+#else
+#define EXTERNC
+#endif
+
+EXTERNC struct _hqx {
 	WORD sx;
 	WORD sy;
 	WORD startx;
@@ -35,10 +41,12 @@ struct _hqx {
 	WORD dst_rows;
 } hqnx;
 
-void hqx_init(void);
-gfx_filter_function(hqNx);
-void hq2x_32_rb(WORD *screen, void *pix, uint32_t *palette);
-void hq3x_32_rb(WORD *screen, void *pix, uint32_t *palette);
-void hq4x_32_rb(WORD *screen, void *pix, uint32_t *palette);
+EXTERNC void hqx_init(void);
+EXTERNC gfx_filter_function(hqNx);
+EXTERNC void hq2x_32_rb(WORD *screen, void *pix, uint32_t *palette);
+EXTERNC void hq3x_32_rb(WORD *screen, void *pix, uint32_t *palette);
+EXTERNC void hq4x_32_rb(WORD *screen, void *pix, uint32_t *palette);
+
+#undef EXTERNC
 
 #endif

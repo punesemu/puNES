@@ -27,7 +27,7 @@ src/video/sdl \
 src/video/sdl/openGL \
 src/video/sdl/glew \
 src/gui/windows \
-src/gui/windows/sdl \
+src/gui \
 src/core \
 src/core/mappers \
 src/core/filters/video \

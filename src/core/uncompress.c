@@ -149,7 +149,7 @@ BYTE uncomp_zip_control_in_archive(void) {
 
 		if ((mode == UNCOMP_CTRL_FILE_COUNT_ROMS) && (uncomp.files_founded > 0)) {
 			uncomp.file = (_uncomp_file_data *) malloc(
-			        uncomp.files_founded * sizeof(_uncomp_file_data));
+				uncomp.files_founded * sizeof(_uncomp_file_data));
 		}
 	}
 
@@ -170,7 +170,7 @@ BYTE uncomp_zip_file_from_archive(_uncomp_file_data *file) {
 	mz_zip_reader_get_filename(&zip_archive, file->num, uncomp.buffer, sizeof(uncomp.buffer));
 
 	snprintf(uncomp.uncompress_file, sizeof(uncomp.uncompress_file), "%s" TMP_FOLDER "/%s",
-	        info.base_folder, basename(uncomp.buffer));
+		info.base_folder, basename(uncomp.buffer));
 
 	if (mz_zip_reader_extract_to_file(&zip_archive, file->num, uncomp.uncompress_file, 0)) {
 		strncpy(uncomp.compress_archive, info.rom_file, sizeof(uncomp.compress_archive));

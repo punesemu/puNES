@@ -73,8 +73,8 @@ void map_init_MMC1(void) {
 
 	if (info.mapper.submapper == DEFAULT) {
 		if (((info.prg.rom.banks_8k == 16) || (info.prg.rom.banks_8k == 32)
-		        || (info.prg.rom.banks_8k == 64)) && (info.chr.rom.banks_8k <= 1)
-		        && ((info.prg.ram.banks_8k_plus == 4) || (info.prg.ram.bat.banks == 4))) {
+			|| (info.prg.rom.banks_8k == 64)) && (info.chr.rom.banks_8k <= 1)
+			&& ((info.prg.ram.banks_8k_plus == 4) || (info.prg.ram.bat.banks == 4))) {
 			info.mapper.submapper = SXROM;
 		} else if (info.prg.rom.banks_8k <= 32) {
 			if (info.chr.rom.banks_8k <= 1) {

@@ -38,7 +38,14 @@ enum fds_misc {
 	FDS_DISK_CRC_CHAR1 = 0x0155,
 	FDS_DISK_CRC_CHAR2 = 0x01AA
 };
-struct _fds {
+
+#if defined (__cplusplus)
+#define EXTERNC extern "C"
+#else
+#define EXTERNC
+#endif
+
+EXTERNC struct _fds {
 	/* generali */
 	struct {
 		BYTE enabled;
@@ -165,11 +172,13 @@ struct _fds {
 	} snd;
 } fds;
 
-void fds_init(void);
-void fds_quit(void);
-BYTE fds_load_rom(void);
-BYTE fds_load_bios(void);
-void fds_disk_op(WORD type, BYTE side_to_insert);
-void fds_diff_op(BYTE mode, uint32_t position, WORD value);
+EXTERNC void fds_init(void);
+EXTERNC void fds_quit(void);
+EXTERNC BYTE fds_load_rom(void);
+EXTERNC BYTE fds_load_bios(void);
+EXTERNC void fds_disk_op(WORD type, BYTE side_to_insert);
+EXTERNC void fds_diff_op(BYTE mode, uint32_t position, WORD value);
+
+#undef EXTERNC
 
 #endif /* FDS_H_ */

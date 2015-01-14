@@ -8,14 +8,14 @@
 #ifndef XBRZ_H_
 #define XBRZ_H_
 
+#include "common.h"
+#include "gfx.h"
+
 #if defined (__cplusplus)
 #define EXTERNC extern "C"
 #else
 #define EXTERNC
 #endif
-
-#include "common.h"
-#include "gfx.h"
 
 void xBRZ_init(void);
 gfx_filter_function(xBRZ);

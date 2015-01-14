@@ -8,7 +8,7 @@
 #include "opengl.h"
 #include "gfx.h"
 #include "ppu.h"
-#include "cfg_file.h"
+#include "conf.h"
 #include "openGL/no_effect.h"
 #include "openGL/cube3d.h"
 #define _SHADERS_CODE_
@@ -95,7 +95,7 @@ void sdl_create_surface_gl(SDL_Surface *src, WORD width, WORD height, BYTE flags
 		opengl.quadcoords.t = h_quad;
 
 		/* con flags intendo sia il fullscreen che il futuro resize */
-		if (flags && cfg->stretch) {
+		if (flags && !cfg->stretch) {
 			GLfloat ratio_surface = w_quad / h_quad;
 			GLfloat ratio_frame = (GLfloat) width / (GLfloat) height;
 

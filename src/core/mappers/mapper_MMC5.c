@@ -648,15 +648,15 @@ BYTE extcl_rd_nmt_MMC5(WORD address) {
 			mmc5.split_in_reg = FALSE;
 
 			if (((mmc5.split_side == SPLIT_LEFT) && (mmc5.split_x <= mmc5.split_st_tile))
-			        || ((mmc5.split_side == SPLIT_RIGHT) && (mmc5.split_x >= mmc5.split_st_tile))) {
+				|| ((mmc5.split_side == SPLIT_RIGHT) && (mmc5.split_x >= mmc5.split_st_tile))) {
 
 				mmc5.split_tile = ((mmc5.split_y & 0xF8) << 2) | mmc5.split_x;
 
 				mmc5.split_in_reg = TRUE;
 
 				return (filler_attrib[(mmc5.ext_ram[0x3C0 | (mmc5.split_tile >> 4 & 0x38)
-				        | (mmc5.split_tile >> 2 & 0x7)]
-				        >> ((mmc5.split_tile >> 4 & 0x4) | (mmc5.split_tile & 0x2))) & 0x3]);
+					| (mmc5.split_tile >> 2 & 0x7)]
+					>> ((mmc5.split_tile >> 4 & 0x4) | (mmc5.split_tile & 0x2))) & 0x3]);
 			}
 		}
 		/* tile */

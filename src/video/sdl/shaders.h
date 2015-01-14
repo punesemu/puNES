@@ -56,7 +56,15 @@ typedef struct {
 	} loc;
 } _shader;
 
-_shader shader;
+#if defined (__cplusplus)
+#define EXTERNC extern "C"
+#else
+#define EXTERNC
+#endif
+
+EXTERNC _shader shader;
+
+#undef EXTERNC
 
 #endif /* SHADERS_H_ */
 

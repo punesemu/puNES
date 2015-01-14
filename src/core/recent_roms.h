@@ -21,11 +21,19 @@ typedef struct {
 	char current[RECENT_ROMS_LINE];
 } _recent_roms;
 
-_recent_roms recent_roms_list;
+#if defined (__cplusplus)
+#define EXTERNC extern "C"
+#else
+#define EXTERNC
+#endif
 
-void recent_roms_init(void);
-void recent_roms_add(char *rom);
-void recent_roms_parse(void);
-void recent_roms_save(void);
+EXTERNC _recent_roms recent_roms_list;
+
+EXTERNC void recent_roms_init(void);
+EXTERNC void recent_roms_add(char *rom);
+EXTERNC void recent_roms_parse(void);
+EXTERNC void recent_roms_save(void);
+
+#undef EXTERNC
 
 #endif /* RECENT_ROMS_H_ */

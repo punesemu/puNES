@@ -11,8 +11,8 @@ RM := rm -rf
 -include src/video/sdl/openGL/subdir.mk
 -include src/video/sdl/glew/subdir.mk
 -include src/video/sdl/subdir.mk
--include src/gui/windows/sdl/subdir.mk
 -include src/gui/windows/subdir.mk
+-include src/gui/subdir.mk
 -include src/core/mappers/subdir.mk
 -include src/core/filters/video/subdir.mk
 -include src/core/filters/audio/subdir.mk
@@ -58,7 +58,7 @@ main-build: punes32.sdl.exe
 punes32.sdl.exe: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: Cross G++ Linker'
-	i686-mingw32-g++ -L"/home/fhorse/sviluppo/personale/punes/misc/lib/win32" -Wl,-subsystem,console -static-libgcc -static-libstdc++ -o "punes32.sdl.exe" $(OBJS) $(USER_OBJS) $(LIBS)
+	i686-w64-mingw32-g++ -L/usr/i686-w64-mingw32/usr/lib/qt4 -L"/home/fhorse/sviluppo/personale/punes/misc/lib/win32" -Wl,-subsystem,console -static-libgcc -static-libstdc++ -o "punes32.sdl.exe" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 

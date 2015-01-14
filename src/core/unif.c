@@ -12,7 +12,7 @@
 #include "mem_map.h"
 #include "mappers.h"
 #include "emu.h"
-#include "cfg_file.h"
+#include "conf.h"
 #include "gamegenie.h"
 
 enum unif_phase_type { UNIF_COUNT, UNIF_READ };
@@ -172,7 +172,7 @@ BYTE unif_load_rom(void) {
 #if !defined (RELEASE)
 				fprintf(stderr, "unif format\n");
 				fprintf(stderr, "mapper %u\n8k rom = %u\n4k vrom = %u\n", info.mapper.id,
-				        info.prg.rom.banks_16k * 2, info.chr.rom.banks_8k * 2);
+					info.prg.rom.banks_16k * 2, info.chr.rom.banks_8k * 2);
 				fprintf(stderr, "sha1prg = %40s\n", info.sha1sum.prg.string);
 				fprintf(stderr, "sha1chr = %40s\n", info.sha1sum.chr.string);
 #endif

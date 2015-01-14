@@ -128,10 +128,10 @@ void extcl_cpu_wr_mem_105(WORD address, BYTE value) {
 			case CHR0:
 				m105.prg.reg[0] = (m105.reg & 0x06) >> 1;
 				m105.prg.upper = m105.reg & 0x08;
-		        /*
-		         * questo bit, oltre a controllare l'irq e' usato anche
-		         * per sbloccare lo swap del prg.
-		         */
+				/*
+				 * questo bit, oltre a controllare l'irq e' usato anche
+				 * per sbloccare lo swap del prg.
+				 */
 				if (!m105.irq.reg && (m105.reg & 0x10)) {
 					/* sblocco lo swap della prg */
 					m105.prg.locked = FALSE;
@@ -139,7 +139,7 @@ void extcl_cpu_wr_mem_105(WORD address, BYTE value) {
 				if ((m105.irq.reg = m105.reg & 0x10)) {
 					m105.irq.count = 0;
 					irq.high &= ~EXT_IRQ;
-		        }
+				}
 				break;
 			case CHR1:
 				break;

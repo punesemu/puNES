@@ -23,7 +23,7 @@ enum snd_factor_type { SND_FACTOR_SPEED, SND_FACTOR_NORMAL, SND_FACTOR_SLOW };
 	}
 
 typedef struct {
-#if defined (MINGW32) || defined (MINGW64)
+#if defined (__WIN32__)
 	void *xa2buffer;
 	void *xa2source;
 #endif
@@ -42,7 +42,7 @@ typedef struct {
 	void *lock;
 } _callback_data;
 typedef struct {
-#if defined (GTK)
+#if defined (SDLSOUND)
 	void *dev;
 	SWORD last_sample;
 	WORD freq;
@@ -83,23 +83,31 @@ typedef struct {
 	} buffer;
 } _snd;
 
-_snd snd;
-
 static const double snd_factor[3][3] = {
 	//{ 0.967f, 0.998f, 1.1f }, { 0.967f, 1.0f, 1.1f }, { 0.967f, 1.0f, 1.1f }
 	{ 0.967f, 0.998f, 1.1f }, { 0.960f, 0.992f, 1.1f }, { 0.960f, 0.992f, 1.1f }
 };
 
-BYTE snd_init(void);
-BYTE snd_start(void);
-void snd_output(void *udata, BYTE *stream, int len);
-void snd_lock_cache(_callback_data *cache);
-void snd_unlock_cache(_callback_data *cache);
-void snd_stop(void);
-void snd_quit(void);
-void snd_stereo_delay(void);
+#if defined (__cplusplus)
+#define EXTERNC extern "C"
+#else
+#define EXTERNC
+#endif
 
-void (*snd_apu_tick)(void);
-void (*snd_end_frame)(void);
+EXTERNC _snd snd;
+
+EXTERNC BYTE snd_init(void);
+EXTERNC BYTE snd_start(void);
+EXTERNC void snd_output(void *udata, BYTE *stream, int len);
+EXTERNC void snd_lock_cache(_callback_data *cache);
+EXTERNC void snd_unlock_cache(_callback_data *cache);
+EXTERNC void snd_stop(void);
+EXTERNC void snd_quit(void);
+EXTERNC void snd_stereo_delay(void);
+
+EXTERNC void (*snd_apu_tick)(void);
+EXTERNC void (*snd_end_frame)(void);
+
+#undef EXTERNC
 
 #endif /* SND_H_ */

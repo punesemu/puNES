@@ -93,6 +93,14 @@ static const _machine machinedb[] = {
 	}
 };
 
-_machine machine;
+#if defined (__cplusplus)
+#define EXTERNC extern "C"
+#else
+#define EXTERNC
+#endif
+
+EXTERNC _machine machine;
+
+#undef EXTERNC
 
 #endif /* CLOCK_H_ */

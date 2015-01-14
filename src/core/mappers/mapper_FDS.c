@@ -267,7 +267,7 @@ void extcl_apu_tick_FDS(void) {
 			fds.snd.wave.counter += 65536;
 
 			level = (fds.snd.volume.gain < 32 ? fds.snd.volume.gain : 32)
-			        * volume_wave[fds.snd.wave.volume];
+				* volume_wave[fds.snd.wave.volume];
 
 			/* valore massimo dell'output (63 * (39 * 32)) = 78624 */
 			/*fds.snd.main.output = (fds.snd.wave.data[fds.snd.wave.index] * level) >> 4;*/

@@ -13,7 +13,7 @@
 #include "mem_map.h"
 #include "mappers.h"
 #include "emu.h"
-#include "cfg_file.h"
+#include "conf.h"
 #include "clock.h"
 #include "gamegenie.h"
 #include "info.h"

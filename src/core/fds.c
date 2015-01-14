@@ -124,6 +124,7 @@ BYTE fds_load_rom(void) {
 	}
 
 	info.mapper.id = FDS_MAPPER;
+	info.machine[HEADER] = NTSC;
 
 	return (EXIT_OK);
 }
@@ -144,7 +145,7 @@ BYTE fds_load_bios(void) {
 	/* copio il nome del file nella variabile */
 	strcpy(bios_file, info.rom_file);
 	/* rintraccio l'ultimo '.' nel nome */
-#if defined (MINGW32) || defined (MINGW64)
+#if defined (__WIN32__)
 	if ((lastSlash = strrchr(bios_file, '\\'))) {
 		(*(lastSlash + 1)) = 0x00;
 	}

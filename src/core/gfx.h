@@ -52,18 +52,24 @@ enum overcan_type { OSCAN_OFF, OSCAN_ON, OSCAN_DEFAULT, OSCAN_DEFAULT_OFF, OSCAN
 enum gfx_info_type { CURRENT, NO_OVERSCAN, MONITOR, VIDEO_MODE };
 enum no_change { NO_CHANGE = 255 };
 
+#if defined (__cplusplus)
+#define EXTERNC extern "C"
+#else
+#define EXTERNC
+#endif
+
 #if defined (SDL)
 #include <SDL.h>
 
 enum render_type { RENDER_SOFTWARE, RENDER_OPENGL, RENDER_GLSL };
 
-SDL_Surface *surface_sdl;
+EXTERNC SDL_Surface *surface_sdl;
 
-void gfx_reset_video(void);
+EXTERNC void gfx_reset_video(void);
 
-SDL_Surface *gfx_create_RGB_surface(SDL_Surface *src, uint32_t width, uint32_t height);
-double sdl_get_ms(void);
-int (*flip)(SDL_Surface *surface);
+EXTERNC SDL_Surface *gfx_create_RGB_surface(SDL_Surface *src, uint32_t width, uint32_t height);
+EXTERNC double sdl_get_ms(void);
+EXTERNC int (*flip)(SDL_Surface *surface);
 #elif defined (D3D9)
 enum render_type { RENDER_SOFTWARE, RENDER_HLSL };
 
@@ -72,9 +78,10 @@ typedef struct {
 	float t, b;
 } _texcoords;
 
-void gfx_control_change_monitor(void *monitor);
+EXTERNC void gfx_control_change_monitor(void *monitor);
 #endif
-struct _gfx {
+
+EXTERNC struct _gfx {
 	BYTE scale_before_fscreen;
 	BYTE bit_per_pixel;
 	WORD rows;
@@ -98,18 +105,20 @@ struct _gfx {
 #endif
 } gfx;
 
-BYTE gfx_init(void);
-void gfx_set_render(BYTE render);
-void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE force_scale,
+EXTERNC BYTE gfx_init(void);
+EXTERNC void gfx_set_render(BYTE render);
+EXTERNC void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE force_scale,
 		BYTE force_palette);
-void gfx_draw_screen(BYTE forced);
-void gfx_quit(void);
+EXTERNC void gfx_draw_screen(BYTE forced);
+EXTERNC void gfx_quit(void);
 
-void gfx_text_create_surface(_txt_element *ele);
-void gfx_text_release_surface(_txt_element *ele);
-void gfx_text_rect_fill(_txt_element *ele, _rect *rect, uint32_t color);
-void gfx_text_reset(void);
-void gfx_text_clear(_txt_element *ele);
-void gfx_text_blit(_txt_element *ele, _rect *rect);
+EXTERNC void gfx_text_create_surface(_txt_element *ele);
+EXTERNC void gfx_text_release_surface(_txt_element *ele);
+EXTERNC void gfx_text_rect_fill(_txt_element *ele, _rect *rect, uint32_t color);
+EXTERNC void gfx_text_reset(void);
+EXTERNC void gfx_text_clear(_txt_element *ele);
+EXTERNC void gfx_text_blit(_txt_element *ele, _rect *rect);
+
+#undef EXTERNC
 
 #endif /* GFX_H_ */

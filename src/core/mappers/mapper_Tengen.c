@@ -177,7 +177,7 @@ void extcl_cpu_wr_mem_Tengen_Rambo(WORD address, BYTE value) {
 				case 0x05:
 					if ((type == T800037) && (tengen_rambo.chr_mode & 0x80)) {
 						ntbl.bank_1k[tengen_rambo.reg_index - 2] = &ntbl.data[((value >> 7) ^ 0x01)
-						        << 10];
+							<< 10];
 					}
 					control_bank(info.chr.rom.max.banks_1k)
 					if (tengen_rambo.chr[tengen_rambo.reg_index] != value) {

@@ -13,7 +13,7 @@
 #include "mappers/mapper_VRC7_snd.h"
 #include "fds.h"
 #include "blip2.h"
-#include "cfg_file.h"
+#include "conf.h"
 #include "clock.h"
 #include "fps.h"
 #include "blip_buf.h"

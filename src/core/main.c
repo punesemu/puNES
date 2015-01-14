@@ -9,10 +9,11 @@
 #include "main.h"
 #include "emu.h"
 #include "info.h"
+#include "settings.h"
 #include "mem_map.h"
 #include "gfx.h"
 #include "text.h"
-#include "cfg_file.h"
+#include "conf.h"
 #include "cmd_line.h"
 #include "timeline.h"
 #include "version.h"
@@ -21,12 +22,10 @@
 #include "recent_roms.h"
 #include "uncompress.h"
 
-#if defined (MINGW32) || defined (MINGW64)
+#if defined (__WIN32__)
 int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine, int iCmdShow) {
 	int argc = __argc;
 	char **argv = (char **)__argv;
-
-	gui.main_hinstance = hInstance;
 #else
 int main(int argc, char **argv) {
 #endif
@@ -95,18 +94,11 @@ int main(int argc, char **argv) {
 	 * tratto il file di configurazione ed
 	 * i parametri passati dalla riga di comando.
 	 */
-	cfg_file_init();
-	cfg_file_parse();
+	settings_init();
 	optind = cmd_line_parse(argc, argv);
 
 	if (argc == optind) {
-#if !defined (DEBUG)
-		//if(!info.gui) {
-		//	strcpy(info.rom_file, "rom.nes");
-		//}
-#else
 		//strcpy(info.rom_file, "/home/fhorse/sviluppo/personale/roms/85/Lagrange Point (J).nes");
-#endif
 	} else {
 		strcpy(info.rom_file, argv[optind]);
 	}

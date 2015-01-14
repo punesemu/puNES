@@ -76,30 +76,38 @@ typedef struct {
 	_port *port[PORT_MAX];
 } _array_pointers_port;
 
-_r4016 r4016;
-_port port[PORT_MAX];
-_four_score four_score[PORT2 + 1];
+#if defined (__cplusplus)
+#define EXTERNC extern "C"
+#else
+#define EXTERNC
+#endif
 
-void input_init(void);
+EXTERNC _r4016 r4016;
+EXTERNC _port port[PORT_MAX];
+EXTERNC _four_score four_score[PORT2 + 1];
 
-BYTE input_rd_reg_disabled(BYTE openbus, WORD **screen_index, BYTE nport);
+EXTERNC void input_init(void);
 
-BYTE input_decode_event_standard(BYTE mode, DBWORD event, BYTE type, _port *port);
-void input_add_event_standard(BYTE index);
-BYTE input_wr_reg_standard(BYTE value);
-BYTE input_rd_reg_standard(BYTE openbus, WORD **screen_index, BYTE nport);
+EXTERNC BYTE input_rd_reg_disabled(BYTE openbus, WORD **screen_index, BYTE nport);
 
-BYTE input_rd_reg_famicon_expansion(BYTE openbus, WORD **screen_index, BYTE nport);
+EXTERNC BYTE input_decode_event_standard(BYTE mode, DBWORD event, BYTE type, _port *port);
+EXTERNC void input_add_event_standard(BYTE index);
+EXTERNC BYTE input_wr_reg_standard(BYTE value);
+EXTERNC BYTE input_rd_reg_standard(BYTE openbus, WORD **screen_index, BYTE nport);
 
-BYTE input_wr_reg_four_score(BYTE value);
-BYTE input_rd_reg_four_score(BYTE openbus, WORD **screen_index, BYTE nport);
+EXTERNC BYTE input_rd_reg_famicon_expansion(BYTE openbus, WORD **screen_index, BYTE nport);
 
-BYTE input_rd_reg_zapper(BYTE openbus, WORD **screen_index, BYTE nport);
-BYTE input_zapper_is_connected(_port *array);
+EXTERNC BYTE input_wr_reg_four_score(BYTE value);
+EXTERNC BYTE input_rd_reg_four_score(BYTE openbus, WORD **screen_index, BYTE nport);
 
-BYTE (*input_decode_event[PORT_MAX])(BYTE mode, DBWORD event, BYTE type, _port *port);
-void (*input_add_event[PORT_MAX])(BYTE index);
-BYTE (*input_wr_reg)(BYTE value);
-BYTE (*input_rd_reg[PORT2 + 1])(BYTE openbus, WORD **screen_index, BYTE nport);
+EXTERNC BYTE input_rd_reg_zapper(BYTE openbus, WORD **screen_index, BYTE nport);
+EXTERNC BYTE input_zapper_is_connected(_port *array);
+
+EXTERNC BYTE (*input_decode_event[PORT_MAX])(BYTE mode, DBWORD event, BYTE type, _port *port);
+EXTERNC void (*input_add_event[PORT_MAX])(BYTE index);
+EXTERNC BYTE (*input_wr_reg)(BYTE value);
+EXTERNC BYTE (*input_rd_reg[PORT2 + 1])(BYTE openbus, WORD **screen_index, BYTE nport);
+
+#undef EXTERNC
 
 #endif /* INPUT_H_ */

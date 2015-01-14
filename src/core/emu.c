@@ -23,7 +23,7 @@
 #include "main.h"
 #include "emu.h"
 #include "info.h"
-#include "gui.h"
+#include "settings.h"
 #include "snd.h"
 #include "clock.h"
 #include "cpu.h"
@@ -38,8 +38,7 @@
 #include "database.h"
 #include "input.h"
 #include "version.h"
-#include "param.h"
-#include "cfg_file.h"
+#include "conf.h"
 #include "save_slot.h"
 #include "timeline.h"
 #include "tas.h"
@@ -53,6 +52,7 @@
 #include "opengl.h"
 #endif
 #include "uncompress.h"
+#include "gui.h"
 
 #define recent_roms_add_wrap()\
 	if (recent_roms_permit_add == TRUE) {\
@@ -81,7 +81,7 @@ BYTE emu_loop(void) {
 	 * thread su un singolo core,le prestazioni migliorano
 	 * notevolmente. In questo caso setto l'uso del core 0.
 	 */
-//#if defined (MINGW32) || defined (MINGW64)
+//#if defined (__WIN32__)
 //	guiSetThreadAffinity(0);
 //#endif
 
@@ -168,7 +168,7 @@ BYTE emu_make_dir(const char *fmt, ...) {
 			return (EXIT_ERROR);
 		}
 	} else {
-#if defined (MINGW32) || defined (MINGW64)
+#if defined (__WIN32__)
 		if (mkdir(path)) {
 			return (EXIT_ERROR);
 		}
@@ -333,7 +333,7 @@ BYTE emu_search_in_database(FILE *fp) {
 	}
 	/* calcolo l'sha1 della PRG Rom */
 	sha1_csum(sha1prg, info.prg.rom.banks_16k * (16 * 1024), info.sha1sum.prg.value,
-	        info.sha1sum.prg.string, LOWER);
+		info.sha1sum.prg.string, LOWER);
 	/* libero la memoria */
 	free(sha1prg);
 	/* cerco nel database */
@@ -441,7 +441,7 @@ BYTE emu_search_in_database(FILE *fp) {
 		}
 		/* calcolo l'sha1 della CHR Rom */
 		sha1_csum(sha1chr, info.chr.rom.banks_8k * (8 * 1024), info.sha1sum.chr.value,
-		        info.sha1sum.chr.string, LOWER);
+			info.sha1sum.chr.string, LOWER);
 		/* libero la memoria */
 		free(sha1chr);
 	}
@@ -464,19 +464,19 @@ void emu_set_title(char *title) {
 	}
 
 	if (cfg->scale == X1) {
-		sprintf(title, "%s (%s", name, param_mode[machine.type].lname);
+		sprintf(title, "%s (%s", name, opt_mode[machine.type].lname);
 	} else if (cfg->filter == NTSC_FILTER) {
-		sprintf(title, "%s (%s, %s, %s, ", name, param_mode[machine.type].lname,
-		        param_size[cfg->scale].lname, param_ntsc[cfg->ntsc_format].lname);
+		sprintf(title, "%s (%s, %s, %s, ", name, opt_mode[machine.type].lname,
+			opt_scale[cfg->scale - 1].sname, opt_ntsc[cfg->ntsc_format].lname);
 	} else {
-		sprintf(title, "%s (%s, %s, %s, ", name, param_mode[machine.type].lname,
-		        param_size[cfg->scale].lname, param_filter[cfg->filter].lname);
+		sprintf(title, "%s (%s, %s, %s, ", name, opt_mode[machine.type].lname,
+			opt_scale[cfg->scale - 1].sname, opt_filter[cfg->filter].lname);
 	}
 
 	if (strlen(cfg->palette_file) != 0) {
 		strcat(title, "extern");
 	} else {
-		strcat(title, param_palette[cfg->palette].lname);
+		strcat(title, opt_palette[cfg->palette].lname);
 	}
 
 #if !defined (RELEASE)
@@ -489,7 +489,7 @@ void emu_set_title(char *title) {
 
 	if (cfg->scale != X1) {
 		strcat(title, ", ");
-		strcat(title, param_render[cfg->render].lname);
+		strcat(title, opt_rend[cfg->render].lname);
 	}
 
 	strcat(title, ")");
@@ -531,7 +531,7 @@ BYTE emu_turn_on(void) {
 	/* ...nonche' dei puntatori alla PRG Rom... */
 	map_prg_rom_8k_reset();
 
-	cfg_file_pgs_parse();
+	settings_pgs_parse();
 
 	/* APU */
 	apu_turn_on();
@@ -632,7 +632,8 @@ BYTE emu_reset(BYTE type) {
 
 		overscan_set_mode(machine.type);
 
-		cfg_file_pgs_parse();
+		settings_pgs_parse();
+
 		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 	}
 
@@ -718,7 +719,7 @@ WORD emu_round_WORD(WORD number, WORD round) {
 }
 void emu_quit(BYTE exit_code) {
 	if (cfg->save_on_exit) {
-		cfg_file_save();
+		settings_save();
 	}
 
 	map_quit();

@@ -105,7 +105,7 @@ void extcl_cpu_wr_mem_Txc_t22211x(WORD address, BYTE value) {
 
 		if (type == T22211B) {
 			value = (((save ^ t22211x.reg[2]) >> 3) & 0x02)
-			        | (((save ^ t22211x.reg[2]) >> 5) & 0x01);
+				| (((save ^ t22211x.reg[2]) >> 5) & 0x01);
 		} else {
 			value = t22211x.reg[2];
 		}

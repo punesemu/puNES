@@ -8,10 +8,10 @@
 #include <string.h>
 #include "fps.h"
 #include "clock.h"
-#include "gui.h"
 #include "snd.h"
 #include "ppu.h"
-#include "cfg_file.h"
+#include "conf.h"
+#include "gui.h"
 
 void fps_init(void) {
 	switch (cfg->fps) {

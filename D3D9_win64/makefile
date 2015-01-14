@@ -9,8 +9,8 @@ RM := rm -rf
 # All of the sources participating in the build are defined here
 -include sources.mk
 -include src/video/d3d9/subdir.mk
--include src/gui/windows/d3d9/subdir.mk
 -include src/gui/windows/subdir.mk
+-include src/gui/subdir.mk
 -include src/core/mappers/subdir.mk
 -include src/core/filters/video/subdir.mk
 -include src/core/filters/audio/subdir.mk
@@ -56,7 +56,7 @@ main-build: punes64.d3d9.exe
 punes64.d3d9.exe: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: Cross G++ Linker'
-	x86_64-w64-mingw32-g++ -L"/home/fhorse/sviluppo/personale/punes/misc/lib/win64" -Wl,-subsystem,console -static-libgcc -static-libstdc++ -o "punes64.d3d9.exe" $(OBJS) $(USER_OBJS) $(LIBS)
+	x86_64-w64-mingw32-g++ -L/usr/x86_64-w64-mingw32/usr/lib/qt4 -L"/home/fhorse/sviluppo/personale/punes/misc/lib/win64" -Wl,-subsystem,console -static-libgcc -static-libstdc++ -o "punes64.d3d9.exe" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 

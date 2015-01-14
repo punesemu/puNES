@@ -10,7 +10,7 @@
 #include "common.h"
 #include "palette.h"
 
-void palette_save_on_file(char *file) {
+void palette_save_on_file(const char *file) {
 	const char pext[] = ".pal";
 	char name[LENGTH_FILE_NAME_LONG], *ext;
 	FILE *fp;
@@ -33,7 +33,7 @@ void palette_save_on_file(char *file) {
 
 	fclose(fp);
 }
-BYTE palette_load_from_file(char *file) {
+BYTE palette_load_from_file(const char *file) {
 	FILE *fp;
 
 	memset((BYTE *) palette_base_file, 0x00, 64 * 3);

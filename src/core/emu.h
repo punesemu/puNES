@@ -11,17 +11,25 @@
 #include <stdio.h>
 #include "common.h"
 
-BYTE emu_loop(void);
-BYTE emu_make_dir(const char *fmt, ...);
-BYTE emu_file_exist(const char *file);
-BYTE emu_load_rom(void);
-BYTE emu_search_in_database(FILE *fp);
-void emu_set_title(char *title);
-BYTE emu_turn_on(void);
-void emu_pause(BYTE mode);
-BYTE emu_reset(BYTE type);
-WORD emu_round_WORD(WORD number, WORD round);
-void emu_quit(BYTE exit_code);
+#if defined (__cplusplus)
+#define EXTERNC extern "C"
+#else
+#define EXTERNC
+#endif
+
+EXTERNC BYTE emu_loop(void);
+EXTERNC BYTE emu_make_dir(const char *fmt, ...);
+EXTERNC BYTE emu_file_exist(const char *file);
+EXTERNC BYTE emu_load_rom(void);
+EXTERNC BYTE emu_search_in_database(FILE *fp);
+EXTERNC void emu_set_title(char *title);
+EXTERNC BYTE emu_turn_on(void);
+EXTERNC void emu_pause(BYTE mode);
+EXTERNC BYTE emu_reset(BYTE type);
+EXTERNC WORD emu_round_WORD(WORD number, WORD round);
+EXTERNC void emu_quit(BYTE exit_code);
+
+#undef EXTERNC
 
 #endif /* EMU_H_ */
 

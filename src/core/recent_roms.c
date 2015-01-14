@@ -10,7 +10,7 @@
 #include <unistd.h>
 #include "recent_roms.h"
 #include "info.h"
-#include "cfg_file.h"
+#include "conf.h"
 #include "gamegenie.h"
 
 #define RECENT_ROMS_FILE "recent.cfg"

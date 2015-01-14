@@ -11,7 +11,7 @@
 #include "info.h"
 #include "snd.h"
 #include "clock.h"
-#include "cfg_file.h"
+#include "conf.h"
 #include "fps.h"
 #include "audio_quality.h"
 #include "gui.h"

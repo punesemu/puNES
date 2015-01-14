@@ -10,7 +10,13 @@
 
 #include "common.h"
 
-struct _info {
+#if defined (__cplusplus)
+#define EXTERNC extern "C"
+#else
+#define EXTERNC
+#endif
+
+EXTERNC struct _info {
 	char base_folder[LENGTH_FILE_NAME_MID];
 	char rom_file[LENGTH_FILE_NAME_MID];
 	char load_rom_file[LENGTH_FILE_NAME_MID];
@@ -83,5 +89,7 @@ struct _info {
 	BYTE r2002_race_condition_disabled;
 	BYTE r4014_precise_timing_disabled;
 } info;
+
+#undef EXTERNC
 
 #endif /* INFO_H_ */

@@ -37,7 +37,13 @@ enum fps_values {
 		fps.ms = machine.ms_frame;\
 	}
 
-struct _fps {
+#if defined (__cplusplus)
+#define EXTERNC extern "C"
+#else
+#define EXTERNC
+#endif
+
+EXTERNC struct _fps {
 	uint8_t counter;
 	uint8_t frames_before_skip;
 	uint8_t max_frames_skipped;
@@ -52,9 +58,11 @@ struct _fps {
 	double nominal;
 } fps;
 
-void fps_init(void);
-void fps_fast_forward(void);
-void fps_normalize(void);
-void fps_frameskip(void);
+EXTERNC void fps_init(void);
+EXTERNC void fps_fast_forward(void);
+EXTERNC void fps_normalize(void);
+EXTERNC void fps_frameskip(void);
+
+#undef EXTERNC
 
 #endif /* FPS_H_ */

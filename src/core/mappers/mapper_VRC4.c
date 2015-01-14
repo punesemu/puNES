@@ -62,7 +62,7 @@ void extcl_cpu_wr_mem_VRC4(WORD address, BYTE value) {
 		address &= 0xF000;
 	} else {
 		address = (address & 0xF000)
-		        | table_VRC4[type][(address & mask_VRC4[type]) >> shift_VRC4[type]];
+			| table_VRC4[type][(address & mask_VRC4[type]) >> shift_VRC4[type]];
 	}
 
 	switch (address) {

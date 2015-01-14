@@ -48,60 +48,68 @@
 /* snd */
 #define EXTCL_SND_START(n) extcl_snd_start = extcl_snd_start_##n
 
-void extcl_init(void);
+#if defined (__cplusplus)
+#define EXTERNC extern "C"
+#else
+#define EXTERNC
+#endif
+
+EXTERNC void extcl_init(void);
 
 /* mappers */
-void (*extcl_cpu_wr_mem)(WORD address, BYTE value);
-BYTE (*extcl_cpu_rd_mem)(WORD address, BYTE openbus, BYTE before);
-BYTE (*extcl_save_mapper)(BYTE mode, BYTE slot, FILE *fp);
+EXTERNC void (*extcl_cpu_wr_mem)(WORD address, BYTE value);
+EXTERNC BYTE (*extcl_cpu_rd_mem)(WORD address, BYTE openbus, BYTE before);
+EXTERNC BYTE (*extcl_save_mapper)(BYTE mode, BYTE slot, FILE *fp);
 
 /* CPU */
-void (*extcl_cpu_every_cycle)(void);
+EXTERNC void (*extcl_cpu_every_cycle)(void);
 /* viene chiamata ogni volta si scrive qualcosa nel registro $4016 */
-void (*extcl_cpu_wr_r4016)(BYTE value);
+EXTERNC void (*extcl_cpu_wr_r4016)(BYTE value);
 
 /* PPU */
 /* viene chiamata sempre, ad ogni ciclo della PPU */
-void (*extcl_ppu_000_to_34x)(void);
+EXTERNC void (*extcl_ppu_000_to_34x)(void);
 /*
  * viene chiamata se (!r2002.vblank && (ppu.screen_y < SCR_LINES))
  * quindi per essere sicuri di essere durante il rendering della PPU
  * nella funzione devo controllare anche se r2001.visible non e' a zero.
  */
-void (*extcl_ppu_000_to_255)(void);
+EXTERNC void (*extcl_ppu_000_to_255)(void);
 /*
  * vengono chiamate solo se la PPU e' in fase di rendering
  * (!r2002.vblank && r2001.visible && (ppu.screen_y < SCR_LINES))
  */
-void (*extcl_ppu_256_to_319)(void);
-void (*extcl_ppu_320_to_34x)(void);
+EXTERNC void (*extcl_ppu_256_to_319)(void);
+EXTERNC void (*extcl_ppu_320_to_34x)(void);
 /* viene chiamata ogni volta viene modificato ppu.screen_y */
-void (*extcl_ppu_update_screen_y)(void);
+EXTERNC void (*extcl_ppu_update_screen_y)(void);
 /* viene chiamata dopo ogni cambiamento del $2006 in cpu_inline.h */
-void (*extcl_update_r2006)(WORD old_r2006);
+EXTERNC void (*extcl_update_r2006)(WORD old_r2006);
 /* vengono chiamate in ppu_inline.h */
-void (*extcl_rd_ppu)(WORD address);
-BYTE (*extcl_rd_nmt)(WORD address);
-BYTE (*extcl_rd_chr)(WORD address);
+EXTERNC void (*extcl_rd_ppu)(WORD address);
+EXTERNC BYTE (*extcl_rd_nmt)(WORD address);
+EXTERNC BYTE (*extcl_rd_chr)(WORD address);
 /* viene chiamata dopo il FETCHB e dopo il fetch dello sprite */
-void (*extcl_after_rd_chr)(WORD address);
+EXTERNC void (*extcl_after_rd_chr)(WORD address);
 /* viene chiamato quando si tenta di scrivere nella Nametable Ram */
-void (*extcl_wr_nmt)(WORD address, BYTE value);
+EXTERNC void (*extcl_wr_nmt)(WORD address, BYTE value);
 /* viene chiamato quando si tenta di scrivere nella CHR Ram */
-void (*extcl_wr_chr)(WORD address, BYTE value);
+EXTERNC void (*extcl_wr_chr)(WORD address, BYTE value);
 
 /* APU */
-void (*extcl_length_clock)(void);
-void (*extcl_envelope_clock)(void);
-void (*extcl_apu_tick)(void);
+EXTERNC void (*extcl_length_clock)(void);
+EXTERNC void (*extcl_envelope_clock)(void);
+EXTERNC void (*extcl_apu_tick)(void);
 
 /* irqA12 */
-void (*extcl_irq_A12_clock)(void);
+EXTERNC void (*extcl_irq_A12_clock)(void);
 
 /* battery */
-void (*extcl_battery_io)(BYTE mode, FILE *fp);
+EXTERNC void (*extcl_battery_io)(BYTE mode, FILE *fp);
 
 /* snd */
-void (*extcl_snd_start)(WORD samplarate);
+EXTERNC void (*extcl_snd_start)(WORD samplarate);
+
+#undef EXTERNC
 
 #endif /* EXTERNAL_CALLS_H_ */

@@ -829,7 +829,7 @@ void extcl_cpu_wr_mem_116_type_C(WORD address, BYTE value) {
 		address = ((((address & 0x02) | (address >> 10)) >> 1) + 2) & 0x07;
 
 		m116.mode0.chr[address] = (m116.mode0.chr[address] & (0xF0 >> offset))
-		        | ((value & 0x0F) << offset);
+			| ((value & 0x0F) << offset);
 
 		_control_bank(m116.mode0.chr[address], info.chr.rom.max.banks_1k)
 		chr.bank_1k[address] = chr_chip_byte_pnt(0, m116.mode0.chr[address] << 10);

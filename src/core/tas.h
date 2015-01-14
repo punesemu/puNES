@@ -8,6 +8,7 @@
 #ifndef TAS_H_
 #define TAS_H_
 
+#include <stdio.h>
 #include "common.h"
 #include "input.h"
 
@@ -20,7 +21,14 @@ typedef struct {
 	BYTE state;
 	BYTE port[PORT_MAX][8];
 } _tas_input_log;
-struct _tas {
+
+#if defined (__cplusplus)
+#define EXTERNC extern "C"
+#else
+#define EXTERNC
+#endif
+
+EXTERNC struct _tas {
 	FILE *fp;
 	char file[LENGTH_FILE_NAME_MID];
 	uint8_t emulator;
@@ -37,15 +45,17 @@ struct _tas {
 	_tas_input_log il[TAS_CACHE];
 } tas;
 
-BYTE tas_file(char *ext, char *file);
-void tas_quit(void);
+EXTERNC BYTE tas_file(char *ext, char *file);
+EXTERNC void tas_quit(void);
 
-void tas_header_FM2(char *file);
-void tas_read_FM2(void);
-void tas_frame_FM2(void);
+EXTERNC void tas_header_FM2(char *file);
+EXTERNC void tas_read_FM2(void);
+EXTERNC void tas_frame_FM2(void);
 
-void (*tas_header)(char *file);
-void (*tas_read)(void);
-void (*tas_frame)(void);
+EXTERNC void (*tas_header)(char *file);
+EXTERNC void (*tas_read)(void);
+EXTERNC void (*tas_frame)(void);
+
+#undef EXTERNC
 
 #endif /* TAS_H_ */

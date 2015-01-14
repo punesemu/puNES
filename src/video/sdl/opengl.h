@@ -22,7 +22,14 @@ typedef struct {
 	GLfloat l, r;
 	GLfloat t, b;
 } _texcoords;
-struct _opengl {
+
+#if defined (__cplusplus)
+#define EXTERNC extern "C"
+#else
+#define EXTERNC
+#endif
+
+EXTERNC struct _opengl {
 	BYTE rotation;
 
 	BYTE supported;
@@ -58,32 +65,33 @@ struct _opengl {
 	float y_diff;
 } opengl;
 
-void sdl_init_gl(void);
-void sdl_quit_gl(void);
-void sdl_create_surface_gl(SDL_Surface *src, WORD width, WORD height, BYTE flags);
+EXTERNC void sdl_init_gl(void);
+EXTERNC void sdl_quit_gl(void);
+EXTERNC void sdl_create_surface_gl(SDL_Surface *src, WORD width, WORD height, BYTE flags);
 
-void opengl_create_texture(_texture *texture, uint32_t width, uint32_t height, uint8_t pow);
-void opengl_update_scr_texture(SDL_Surface *surface, uint8_t generate_mipmap);
-BYTE opengl_update_txt_texture(uint8_t generate_mipmap);
+EXTERNC void opengl_create_texture(_texture *texture, uint32_t width, uint32_t height, uint8_t pow);
+EXTERNC void opengl_update_scr_texture(SDL_Surface *surface, uint8_t generate_mipmap);
+EXTERNC BYTE opengl_update_txt_texture(uint8_t generate_mipmap);
 
+EXTERNC void opengl_effect_change(BYTE mode);
 
-void opengl_effect_change(BYTE mode);
+EXTERNC void opengl_text_clear(_txt_element *ele);
+EXTERNC void opengl_text_blit(_txt_element *ele, _rect *rect);
 
-void opengl_text_clear(_txt_element *ele);
-void opengl_text_blit(_txt_element *ele, _rect *rect);
+EXTERNC int opengl_flip(SDL_Surface *surface);
+EXTERNC int opengl_power_of_two(int base);
 
-int opengl_flip(SDL_Surface *surface);
-int opengl_power_of_two(int base);
+EXTERNC void glew_init(void);
 
-void glew_init(void);
-
-void glsl_shaders_init(_shader *shd);
-void glsl_delete_shaders(_shader *shd);
+EXTERNC void glsl_shaders_init(_shader *shd);
+EXTERNC void glsl_delete_shaders(_shader *shd);
 
 /* funzioni virtuali */
-void (*opengl_init_effect)(void);
-void (*opengl_set_effect)(SDL_Surface *src);
-void (*opengl_unset_effect)(void);
-void (*opengl_draw_scene)(SDL_Surface *surface);
+EXTERNC void (*opengl_init_effect)(void);
+EXTERNC void (*opengl_set_effect)(SDL_Surface *src);
+EXTERNC void (*opengl_unset_effect)(void);
+EXTERNC void (*opengl_draw_scene)(SDL_Surface *surface);
+
+#undef EXTERNC
 
 #endif /* OPENGL_H_ */

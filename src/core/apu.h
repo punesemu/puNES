@@ -527,19 +527,26 @@ typedef struct {
 /* */ BYTE clocked;                                     /* */
 /* ------------------------------------------------------- */
 }  _apuDMC;
-struct _nla_table {
+
+#if defined (__cplusplus)
+#define EXTERNC extern "C"
+#else
+#define EXTERNC
+#endif
+
+EXTERNC struct _nla_table {
 	SWORD pulse[32];
 	SWORD tnd[203];
 } nla_table;
 
-_apu apu;
-_r4011 r4011;
-_r4015 r4015;
-_r4017 r4017;
-_apuSquare S1, S2;
-_apuTriangle TR;
-_apuNoise NS;
-_apuDMC DMC;
+EXTERNC _apu apu;
+EXTERNC _r4011 r4011;
+EXTERNC _r4015 r4015;
+EXTERNC _r4017 r4017;
+EXTERNC _apuSquare S1, S2;
+EXTERNC _apuTriangle TR;
+EXTERNC _apuNoise NS;
+EXTERNC _apuDMC DMC;
 
 /* apuPeriod[mode][type][cycles] */
 static const WORD apuPeriod[2][3][7] = {
@@ -643,7 +650,9 @@ static const WORD dmc_rate[3][16] = {
 	}
 };
 
-void apu_tick(SWORD cycles_cpu, BYTE *hwtick);
-void apu_turn_on(void);
+EXTERNC void apu_tick(SWORD cycles_cpu, BYTE *hwtick);
+EXTERNC void apu_turn_on(void);
+
+#undef EXTERNC
 
 #endif /* APU_H_ */

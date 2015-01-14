@@ -9,6 +9,7 @@
 #include "emu.h"
 #include "cpu.h"
 #include "gfx.h"
+#include "sdl_wid.h"
 #include "overscan.h"
 #include "clock.h"
 #include "input.h"
@@ -20,23 +21,8 @@
 #include "palette.h"
 #undef  __STATICPAL__
 #include "opengl.h"
-#include "cfg_file.h"
+#include "conf.h"
 
-#if defined (MINGW64)
-#define sdl_wid()\
-	if (info.gui) {\
-		char SDL_windowhack[50];\
-		sprintf(SDL_windowhack, "SDL_WINDOWID=%I64u", (uint64_t) gui_emu_frame_id());\
-		SDL_putenv(SDL_windowhack);\
-	}
-#else
-#define sdl_wid()\
-	if (info.gui) {\
-		char SDL_windowhack[50];\
-		sprintf(SDL_windowhack, "SDL_WINDOWID=%i", (int) gui_emu_frame_id());\
-		SDL_putenv(SDL_windowhack);\
-	}
-#endif
 #define ntsc_width(wdt, a, flag)\
 {\
 	wdt = 0;\
@@ -80,7 +66,7 @@ static BYTE ntsc_width_pixel[5] = {0, 0, 7, 10, 14};
 BYTE gfx_init(void) {
 	const SDL_VideoInfo *video_info;
 
-	/* casi particolari provenienti dal cfg_file_parse() e cmd_line_parse() */
+	/* casi particolari provenienti dal settings_file_parse() e cmd_line_parse() */
 	if ((cfg->scale == X1) && (cfg->filter != NO_FILTER)) {
 		cfg->scale = X2;
 	}
@@ -90,6 +76,12 @@ BYTE gfx_init(void) {
 		return (EXIT_ERROR);
 	}
 
+#if defined (__WIN64__)
+	sprintf(SDL_windowhack, "SDL_WINDOWID=%I64u", (uint64_t) gui_emu_frame_id());
+#else
+	sprintf(SDL_windowhack, "SDL_WINDOWID=%i", (int) gui_emu_frame_id());
+#endif
+
 	sdl_wid();
 
 	/* inizializzazione SDL */
@@ -97,6 +89,8 @@ BYTE gfx_init(void) {
 		fprintf(stderr, "SDL initialization failed: %s\n", SDL_GetError());
 		return (EXIT_ERROR);
 	}
+
+	gui_after_set_video_mode();
 
 	video_info = SDL_GetVideoInfo();
 
@@ -136,7 +130,8 @@ BYTE gfx_init(void) {
 	} else {
 		opengl.supported = TRUE;
 	}
-	/* casi particolari provenienti dal cfg_file_parse() e cmd_line_parse()*/
+
+	/* casi particolari provenienti dal settings_file_parse() e cmd_line_parse()*/
 	if (cfg->fullscreen == FULLSCR) {
 		if (!gfx.opengl) {
 			cfg->fullscreen = NO_FULLSCR;
@@ -434,7 +429,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 
 			/* Pixel Aspect Ratio */
 			{
-				if (fullscreen && (cfg->filter == NTSC_FILTER)) {
+				if (cfg->filter == NTSC_FILTER) {
 					gfx.pixel_aspect_ratio = 1.0f;
 				} else {
 					switch (cfg->pixel_aspect_ratio) {
@@ -472,10 +467,12 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 		 * nella versione a 32 bit (GTK) dopo un gfx_reset_video,
 		 * se non lo faccio anche qui, crasha tutto.
 		 */
-		sdl_wid();
+		//sdl_wid();
 
 		/* inizializzo la superfice video */
 		surface_sdl = SDL_SetVideoMode(gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE], 0, flags);
+
+		gui_after_set_video_mode();
 
 		/* in caso di errore */
 		if (!surface_sdl) {
@@ -704,6 +701,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 		info.on_cfg = FALSE;
 	}
 }
+
 void gfx_draw_screen(BYTE forced) {
 	if (!forced && (info.no_rom || info.pause)) {
 		if (++info.pause_frames_drawscreen == 4) {
@@ -769,9 +767,11 @@ void gfx_reset_video(void) {
 	}
 	opengl.surface_gl = NULL;
 
-	sdl_wid();
+	//sdl_wid();
 	SDL_QuitSubSystem(SDL_INIT_VIDEO);
 	SDL_InitSubSystem(SDL_INIT_VIDEO);
+
+	gui_after_set_video_mode();
 }
 void gfx_quit(void) {
 	if (palette_win) {

@@ -8,7 +8,7 @@
 #include "snd.h"
 #include "emu.h"
 #include "info.h"
-#include "cfg_file.h"
+#include "conf.h"
 #include "audio_quality.h"
 #include "fps.h"
 #include "clock.h"
@@ -35,7 +35,6 @@ static void STDMETHODCALLTYPE OnLoopEnd(THIS_ void *data);
 static void STDMETHODCALLTYPE OnVoiceError(THIS_ void* data, HRESULT Error);
 
 struct _xaudio2 {
-	BYTE coinitialize;
 	IXAudio2 *engine;
 	IXAudio2MasteringVoice *master;
 	IXAudio2SourceVoice *source;
@@ -115,21 +114,6 @@ BYTE snd_start(void) {
 		sample_latency = latency * (double) snd.samplerate * (double) cfg->channels / 1000.0f;
 		snd.buffer.count = sample_latency / snd.buffer.size;
  	}
-
-//#if defined (MINGW64)
-	if (CoInitializeEx(NULL, COINIT_MULTITHREADED) != S_OK) {
-//#else
-// 	if (CoInitializeEx(NULL, COINIT_APARTMENTTHREADED) != S_OK) {
-//#endif
-		xaudio2.coinitialize = FALSE;
-		MessageBox(NULL,
-			"ATTENTION: Unable to initialize COM interface.",
-			"Error!",
-			MB_ICONEXCLAMATION | MB_OK);
-		return (EXIT_ERROR);
-	} else {
-		xaudio2.coinitialize = TRUE;
-	}
 
 	if (XAudio2Create(&xaudio2.engine, 0, XAUDIO2_DEFAULT_PROCESSOR) != S_OK) {
 		MessageBox(NULL,
@@ -361,11 +345,6 @@ void snd_stop(void) {
 	if (xaudio2.engine) {
 		IXAudio2_Release(xaudio2.engine);
 		xaudio2.engine = NULL;
-	}
-
-	if (xaudio2.coinitialize == TRUE) {
-		CoUninitialize();
-		xaudio2.coinitialize = FALSE;
 	}
 
 	if (snd.cache) {

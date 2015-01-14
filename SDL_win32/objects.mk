@@ -2,7 +2,7 @@
 # Automatically-generated file. Do not edit!
 ################################################################################
 
-USER_OBJS :=
+USER_OBJS := /tmp/buildBefore/resources.o
 
-LIBS := -lSDL -lwinmm -lgdi32 -lopengl32 -lcomdlg32 -lcomctl32 -lole32 -ld3d9 -ldinput8 -ldxguid -ldxerr8 -l7zip -loleaut32 -luuid
+LIBS := -lSDL -lQtGui -lQtCore -l7zip -lopengl32 -lwinmm -luuid -lole32 -lws2_32 -ladvapi32 -lshell32 -luser32 -lkernel32 -lgdi32 -loleaut32 -lcomdlg32 -limm32 -lwinspool
 

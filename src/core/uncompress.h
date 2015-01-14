@@ -25,11 +25,16 @@ typedef struct {
 	char ext[10];
 	BYTE id;
 } _format_supported;
-
 typedef struct {
 	uint32_t num;
 	BYTE format;
 } _uncomp_file_data;
+
+#if defined (__cplusplus)
+#define EXTERNC extern "C"
+#else
+#define EXTERNC
+#endif
 
 static const _format_supported format_supported[] = {
 	{ ".nes", FMT_NES },
@@ -37,7 +42,7 @@ static const _format_supported format_supported[] = {
 	//{ ".fm2", FMT_FM2 }
 };
 
-struct _uncomp {
+EXTERNC struct _uncomp {
 	int files_founded;
 	_uncomp_file_data *file;
 	char compress_archive[LENGTH_FILE_NAME_MID];
@@ -45,10 +50,12 @@ struct _uncomp {
 	char buffer[LENGTH_FILE_NAME_MID];
 } uncomp;
 
-BYTE uncomp_init(void);
-void uncomp_quit(void);
-BYTE uncomp_ctrl(char *ext);
-BYTE uncomp_name_file(_uncomp_file_data *file);
-void uncomp_remove(void);
+EXTERNC BYTE uncomp_init(void);
+EXTERNC void uncomp_quit(void);
+EXTERNC BYTE uncomp_ctrl(char *ext);
+EXTERNC BYTE uncomp_name_file(_uncomp_file_data *file);
+EXTERNC void uncomp_remove(void);
+
+#undef EXTERNC
 
 #endif /* UNCOMPRESS_H_ */

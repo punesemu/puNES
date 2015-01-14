@@ -344,7 +344,7 @@ static BYTE INLINE ppu_rd_reg(WORD address) {
 	}
 
 #if defined (DEBUG)
-	fprintf(stderr, "Alert: Attempt to read PPU port %04X\n", address);
+	//fprintf(stderr, "Alert: Attempt to read PPU port %04X\n", address);
 #endif
 
 	/* ppu open bus */
@@ -393,8 +393,8 @@ static BYTE INLINE apu_rd_reg(WORD address) {
 			irq.high &= ~APU_IRQ;
 		}
 #if defined (DEBUG)
-	} else {
-		fprintf(stderr, "Alert: Attempt to read APU port %04X\n", address);
+	//} else {
+	//	fprintf(stderr, "Alert: Attempt to read APU port %04X\n", address);
 #endif
 	}
 
@@ -1177,7 +1177,7 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 
 #if defined (DEBUG)
 	/* non si puo' scrivere nel registro $2002 */
-	fprintf(stderr, "Alert: Attempt to write PPU port %04X\n", address);
+	//fprintf(stderr, "Alert: Attempt to write PPU port %04X\n", address);
 #endif
 
 	/* open bus */

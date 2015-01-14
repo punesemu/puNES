@@ -1,0 +1,66 @@
+/*
+ * dlgStdPad.hpp
+ *
+ *  Created on: 08/dic/2014
+ *      Author: fhorse
+ */
+
+#ifndef DLGSTDPAD_HPP_
+#define DLGSTDPAD_HPP_
+
+#include <QtCore/QtGlobal>
+#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
+#include <QtGui/QDialog>
+#else
+#include <QtWidgets/QDialog>
+#endif
+#include "dlgStdPad.hh"
+#include "dlgInput.hpp"
+
+class dlgStdPad : public QDialog, public Ui::Standard_Pad {
+		Q_OBJECT
+
+	private:
+		struct _data {
+			QPushButton *bp;
+
+			int wait_js_input;
+
+			bool no_other_buttons;
+			bool in_sequence;
+			bool force_exit_in_sequence;
+
+			BYTE vbutton;
+
+			_cfg_port cfg;
+		} data;
+
+	public:
+		dlgStdPad(_cfg_port *cfg_port, QWidget *parent);
+		~dlgStdPad();
+
+	protected:
+		bool eventFilter(QObject *obj, QEvent *event);
+
+	private:
+		void update_dialog(void);
+		void combo_id_init(void);
+		void setEnable_tab_buttons(int type, bool mode);
+		void disable_tab_and_other(int type, int vbutton);
+		void info_entry_print(int type, QString txt);
+		void js_press_event(void);
+		void td_update_label(int type, int value);
+
+	private slots:
+		void s_combobox_joy_activated(int index);
+		void s_input_clicked(bool checked);
+		void s_unset_clicked(bool checked);
+		void s_in_sequence_clicked(bool checked);
+		void s_unset_all_clicked(bool checked);
+		void s_defaults_clicked(bool checked);
+		void s_slider_td_value_changed(int value);
+		void s_apply_clicked(bool checked);
+		void s_discard_clicked(bool checked);
+};
+
+#endif /* DLGSTDPAD_HPP_ */

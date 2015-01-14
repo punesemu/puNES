@@ -10,7 +10,7 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include "save_slot.h"
-#include "cfg_file.h"
+#include "conf.h"
 #include "mem_map.h"
 #include "cpu.h"
 #include "ppu.h"

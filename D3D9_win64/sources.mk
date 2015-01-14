@@ -25,7 +25,7 @@ C_UPPER_DEPS :=
 SUBDIRS := \
 src/video/d3d9 \
 src/gui/windows \
-src/gui/windows/d3d9 \
+src/gui \
 src/core \
 src/core/mappers \
 src/core/filters/video \

@@ -234,28 +234,28 @@ typedef struct {
 	_slot slot[6 * 2];
 } _opll;
 
-static void     INLINE slot_reset(_slot *slot, int type);
-static void     INLINE make_tables(uint32_t c, uint32_t r);
-static void     INLINE internal_refresh(void);
-static void     INLINE set_instrument(uint8_t i, uint8_t inst);
-static void     INLINE update_ampm(void);
-static int32_t  INLINE min(int32_t i, int32_t j);
-static int32_t  INLINE lin2db(double d);
+static void INLINE slot_reset(_slot *slot, int type);
+static void INLINE make_tables(uint32_t c, uint32_t r);
+static void INLINE internal_refresh(void);
+static void INLINE set_instrument(uint8_t i, uint8_t inst);
+static void INLINE update_ampm(void);
+static int32_t INLINE min(int32_t i, int32_t j);
+static int32_t INLINE lin2db(double d);
 static uint32_t INLINE calc_eg_dphase(_slot * slot);
-static void     INLINE slot_on(_slot *slot);
-static void     INLINE slot_off(_slot *slot);
-static void     INLINE key_on(int32_t i);
-static void     INLINE key_off(int32_t i);
-static void     INLINE set_sustine(int32_t c, int32_t sustine);
-static void     INLINE set_volume(int32_t c, int32_t volume);
-static void     INLINE set_fnumber(int32_t c, int32_t fnum);
-static void     INLINE set_block(int32_t c, int32_t block);
-static void     INLINE update_key_status(void);
-static int32_t  INLINE calc(void);
-static void     INLINE calc_phase(_slot *slot, int32_t lfo);
-static void     INLINE calc_envelope(_slot *slot, int32_t lfo);
-static int32_t  INLINE calc_slot_car(_slot *slot, int32_t fm);
-static int32_t  INLINE calc_slot_mod(_slot *slot);
+static void INLINE slot_on(_slot *slot);
+static void INLINE slot_off(_slot *slot);
+static void INLINE key_on(int32_t i);
+static void INLINE key_off(int32_t i);
+static void INLINE set_sustine(int32_t c, int32_t sustine);
+static void INLINE set_volume(int32_t c, int32_t volume);
+static void INLINE set_fnumber(int32_t c, int32_t fnum);
+static void INLINE set_block(int32_t c, int32_t block);
+static void INLINE update_key_status(void);
+static int32_t INLINE calc(void);
+static void INLINE calc_phase(_slot *slot, int32_t lfo);
+static void INLINE calc_envelope(_slot *slot, int32_t lfo);
+static int32_t INLINE calc_slot_car(_slot *slot, int32_t fm);
+static int32_t INLINE calc_slot_mod(_slot *slot);
 
 static const unsigned char default_inst[15][8] = {
 	{0x03, 0x21, 0x04, 0x06, 0x8D, 0xF2, 0x42, 0x17}, // Violin
@@ -665,7 +665,7 @@ static void INLINE make_tables(uint32_t c, uint32_t r) {
 		}
 		for (i = 0; i < PG_WIDTH / 2; i++) {
 			waveform[fullsintable][PG_WIDTH / 2 + i] = (uint16_t) (DB_MUTE + DB_MUTE
-			        + waveform[fullsintable][i]);
+				+ waveform[fullsintable][i]);
 		}
 		for (i = 0; i < PG_WIDTH / 2; i++) {
 			waveform[halfsintable][i] = waveform[fullsintable][i];
@@ -1058,7 +1058,7 @@ static int32_t INLINE calc_slot_car(_slot *slot, int32_t fm) {
 		slot->output[0] = 0;
 	} else {
 		slot->output[0] = DB2LIN_TABLE[slot->sintbl[(slot->pgout + wave2_8pi(fm)) & (PG_WIDTH - 1)]
-		        + slot->egout];
+			+ slot->egout];
 	}
 
 	return (slot->output[1] + slot->output[0]) >> 1;
@@ -1074,7 +1074,7 @@ static int32_t INLINE calc_slot_mod(_slot *slot) {
 	} else if (slot->patch.FB != 0) {
 		fm = wave2_4pi(slot->feedback) >> (7 - slot->patch.FB);
 		slot->output[0] = DB2LIN_TABLE[slot->sintbl[(slot->pgout + fm) & (PG_WIDTH - 1)]
-		        + slot->egout];
+			+ slot->egout];
 	} else {
 		slot->output[0] = DB2LIN_TABLE[slot->sintbl[slot->pgout] + slot->egout];
 	}

@@ -89,7 +89,13 @@ typedef struct {
 #endif
 } _txt_element;
 
-struct _text {
+#if defined (__cplusplus)
+#define EXTERNC extern "C"
+#else
+#define EXTERNC
+#endif
+
+EXTERNC struct _text {
 #if defined (SDL)
 	SDL_Surface *surface;
 #endif
@@ -116,15 +122,17 @@ struct _text {
 	} fds;
 } text;
 
-uint32_t txt_table[TXT_BLACK + 1];
+EXTERNC uint32_t txt_table[TXT_BLACK + 1];
 
-void text_init(void);
-void text_add_line(int type, int factor, int font, int alpha, int start_x, int start_y, int x,
-        int y, const char *fmt, ...);
-void text_rendering(BYTE render);
-void text_quit(void);
+EXTERNC void text_init(void);
+EXTERNC void text_add_line(int type, int factor, int font, int alpha, int start_x, int start_y,
+		int x, int y, const char *fmt, ...);
+EXTERNC void text_rendering(BYTE render);
+EXTERNC void text_quit(void);
 
-void (*text_clear)(_txt_element *ele);
-void (*text_blit)(_txt_element *ele, _rect *rect);
+EXTERNC void (*text_clear)(_txt_element *ele);
+EXTERNC void (*text_blit)(_txt_element *ele, _rect *rect);
+
+#undef EXTERNC
 
 #endif /* TEXT_H_ */
