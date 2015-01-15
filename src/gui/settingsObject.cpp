@@ -818,7 +818,7 @@ void setObject::cpy_val_to_char(int index, char *dst, int length) {
 	if (val.at(index).isEmpty() || val.at(index).isNull()) {
 		return;
 	}
-	strncpy(dst, qPrintable(val.at(index).toUtf8()), length - 1);
+	strncpy(dst, qPrintable(val.at(index)), length - 1);
 }
 void setObject::double_to_val(int index, double value) {
 	val.replace(index, QString().setNum((int) (value * 100.0f)));
