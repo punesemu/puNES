@@ -133,7 +133,6 @@ void sdl_create_surface_gl(SDL_Surface *src, WORD width, WORD height, BYTE flags
 		}
 	}
 
-
 	opengl_create_texture(&opengl.text, opengl.screen.w * opengl.factor,
 	        opengl.screen.h * opengl.factor, NO_POWER_OF_TWO);
 

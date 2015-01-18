@@ -834,14 +834,18 @@ void gfx_text_blit(_txt_element *ele, _rect *rect) {
 }
 
 SDL_Surface *gfx_create_RGB_surface(SDL_Surface *src, uint32_t width, uint32_t height) {
-	SDL_Surface *new_surface;
+	SDL_Surface *new_surface, *tmp;
 
-	new_surface = SDL_DisplayFormatAlpha(SDL_CreateRGBSurface(src->flags, width, height,
+	tmp = SDL_CreateRGBSurface(src->flags, width, height,
 			src->format->BitsPerPixel, src->format->Rmask, src->format->Gmask,
-			src->format->Bmask, src->format->Amask));
+			src->format->Bmask, src->format->Amask);
+
+	new_surface = SDL_DisplayFormatAlpha(tmp);
 
 	memset(new_surface->pixels, 0,
 	        new_surface->w * new_surface->h * new_surface->format->BytesPerPixel);
+
+	SDL_FreeSurface(tmp);
 
 	return (new_surface);
 }
