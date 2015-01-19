@@ -64,13 +64,10 @@ void sbarWidget::update_width(int w) {
 	setFixedWidth(w);
 
 	w -= (2 + 2);
-	w -= (timeline->isVisible() ? timeline->width() + 2 + 2 + 2 : 0);
-	w -= (state->isVisible() ? state->width() + 2 + 2 + 2 : 0);
+	w -= (timeline->isVisible() ? timeline->sizeHint().width() + 2 + 2 + 2 : 0);
+	w -= (state->isVisible() ? state->sizeHint().width() + 2 + 2 + 2 : 0);
 
 	spacer->setFixedWidth(w);
-}
-void sbarWidget::update_width() {
-	update_width(width());
 }
 
 // -------------------------------- Slot Box ------------------------------------------

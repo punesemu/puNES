@@ -133,7 +133,6 @@ class sbarWidget: public QStatusBar {
 
 		void update_statusbar();
 		void update_width(int w);
-		void update_width();
 };
 
 #endif /* SBARWIDGET_HPP_ */
