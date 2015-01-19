@@ -2349,6 +2349,8 @@ static const _dbelement dblist[] = {
 	{"bc04da4fdc19de7983b87b42cd54daefa17feb08", 4, DEFAULT, DEFAULT, PAL, DEFAULT},
 	/* Shadowgate (Sw) [o1].nes */
 	{"0e429a553a32aebbd9d88377014f2956dda7b1a1", 4, DEFAULT, DEFAULT, PAL, DEFAULT},
+	/* high-hopes.nes */
+	{"c3c7ef2dbc3f4e0fa56fe461a6088541ef1b74d8", 4, DEFAULT, DEFAULT, PAL, DEFAULT},
 
 /* --------------------------------------- MMC5 ------------------------------------------- */
 	/* Gemfire (U) [!].nes */
@@ -3104,6 +3106,8 @@ static const _dbelement dblist[] = {
 	{"2dc2c795421a5db2427c460f35828a23beba9274", 85, VRC7A, DEFAULT, DEFAULT, DEFAULT},
 	/* Lagrange Point (J).nes */
 	{"c87e7e6a68dd9c7e24652cd2c7d390a14e8adf04", 85, VRC7A, DEFAULT, DEFAULT, DEFAULT},
+	/* Lagrange Point (J).nes (English patch 1.01 by Aeon Genesis)*/
+	{"4bbdd562584f2c5736024ac19995397b4edff1f9", 85, VRC7A, DEFAULT, DEFAULT, DEFAULT},
 
 /* ------------------------------------ Jaleco (JF05) ------------------------------------- */
 	/* Argus (J) [!].nes */
