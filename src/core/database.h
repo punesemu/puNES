@@ -3106,6 +3106,8 @@ static const _dbelement dblist[] = {
 	{"2dc2c795421a5db2427c460f35828a23beba9274", 85, VRC7A, DEFAULT, DEFAULT, DEFAULT},
 	/* Lagrange Point (J).nes */
 	{"c87e7e6a68dd9c7e24652cd2c7d390a14e8adf04", 85, VRC7A, DEFAULT, DEFAULT, DEFAULT},
+	/* Lagrange Point (J).nes (English patch 1.00 by Aeon Genesis)*/
+	{"e808ebc015a94a38dcb0eaa9383267beb4cf08ea", 85, VRC7A, DEFAULT, DEFAULT, DEFAULT},
 	/* Lagrange Point (J).nes (English patch 1.01 by Aeon Genesis)*/
 	{"4bbdd562584f2c5736024ac19995397b4edff1f9", 85, VRC7A, DEFAULT, DEFAULT, DEFAULT},
 
