@@ -50,9 +50,11 @@ BYTE extcl_save_mapper_31(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 static void INLINE sync_31(void) {
-	BYTE i;
+	BYTE i, value;
 
 	for (i = 0; i < 8; ++i) {
-		m31.rom_4k[i] = prg_chip_byte_pnt(0, m31.regs[i] << 12);
+		value = m31.regs[i];
+		control_bank(info.prg.rom.max.banks_4k);
+		m31.rom_4k[i] = prg_chip_byte_pnt(0, value << 12);
 	}
 }
