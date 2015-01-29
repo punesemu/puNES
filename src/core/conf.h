@@ -29,6 +29,7 @@ typedef struct {
 	BYTE filter;
 	BYTE ntsc_format;
 	BYTE palette;
+	BYTE disable_swap_emphasis_pal;
 	BYTE vsync;
 	BYTE stretch;
 	BYTE oscan;

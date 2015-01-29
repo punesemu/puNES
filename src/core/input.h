@@ -20,6 +20,7 @@
 
 enum controller_modes { CTRL_MODE_NES, CTRL_MODE_FAMICOM, CTRL_MODE_FOUR_SCORE };
 enum controller_types { CTRL_DISABLED, CTRL_STANDARD, CTRL_ZAPPER };
+enum pad_types { CTRL_PAD_ORIGINAL, CTRL_PAD_3RD_PARTY };
 enum controller_buttons {
 	BUT_A,
 	BUT_B,
@@ -61,6 +62,7 @@ typedef struct {
 	BYTE type;
 	BYTE joy_id;
 	/* standard controller */
+	BYTE type_pad;
 	BYTE index;
 	BYTE data[24];
 	DBWORD input[2][24];

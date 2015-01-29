@@ -145,7 +145,6 @@ static BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 		}
 		/* Controller port 1 */
 		if (address == 0x4016) {
-
 			tas.lag_frame = FALSE;
 			/* eseguo un tick hardware */
 			tick_hw(1);
@@ -747,7 +746,7 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 		 * se l'nmi e' attivo quando scrivo nel registro r2000
 		 * deve essere eseguito nell'istruzione successiva.
 		 * L'ho notato con "baxter,zugzwang-adventuresoflolo.fm2"
-		 * al tas.frame 53762. Se non c'è questo vengono generati
+		 * al tas.frame 53762. Se non c'e' questo vengono generati
 		 * 2 nmi nello stesso frame, perche' il primo frame e' generato
 		 * proprio nella scrittura di questo registro e la mancata
 		 * esecuzione dell'istruzione successiva pone le condizioni
@@ -1104,7 +1103,7 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 	if (address == 0x4014) {
 		/*
 		 * se durante l'ultimo ciclo dell'istruzione
-		 * e' stata richiesto un IRQ, deve essere ritardato
+		 * e' stato richiesto un IRQ, deve essere ritardato
 		 * all'istruzione successiva.
 		 */
 		if (irq.high && !cpu.cycles && !irq.before) {

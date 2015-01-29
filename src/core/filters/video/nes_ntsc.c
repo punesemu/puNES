@@ -3,6 +3,8 @@
 #include "nes_ntsc.h"
 #include "gfx.h"
 #include "overscan.h"
+#include "conf.h"
+#include "clock.h"
 
 /* Copyright (C) 2006-2007 Shay Green. This module is free software; you
 can redistribute it and/or modify it under the terms of the GNU Lesser
@@ -469,6 +471,24 @@ void nes_ntsc_init(nes_ntsc_t* ntsc, nes_ntsc_setup_t const* setup) {
 		merge_fields = 1;
 
 	for (entry = 0; entry < nes_ntsc_palette_size; entry++) {
+		/* ------------------ START ------------------
+		 * nelle macchine PAL e Dandy i bits di
+		 * enfatizzazione del rosso e del verde sono
+		 * invertiti.
+		 * -------------------------------------------
+		 */
+		int pointer = entry;
+
+		if ((cfg->disable_swap_emphasis_pal == FALSE)
+				&& ((machine.type == PAL) || (machine.type == DENDY))) {
+			if ((entry > 0x3F) && (entry < 0x80)) {
+				pointer = entry + 0x40;
+			} else if ((entry > 0x7F) && (entry < 0xC0)) {
+				pointer = entry - 0x40;
+			}
+		}
+		/* ------------------- END ------------------- */
+
 		/* Base 64-color generation */
 		static float const lo_levels[4] = { -0.12f, 0.00f, 0.31f, 0.72f };
 		static float const hi_levels[4] = { 0.40f, 0.68f, 1.00f, 1.00f };
@@ -573,7 +593,8 @@ void nes_ntsc_init(nes_ntsc_t* ntsc, nes_ntsc_setup_t const* setup) {
 				nes_ntsc_rgb_t rgb = PACK_RGB( r, g, (b < 0x3E0 ? b: 0x3E0) );
 
 				if (setup->palette_out)
-					RGB_PALETTE_OUT( rgb, &setup->palette_out [entry * 3]);
+					RGB_PALETTE_OUT( rgb, &setup->palette_out [pointer * 3]);
+					//RGB_PALETTE_OUT( rgb, &setup->palette_out [entry * 3]);
 
 				if (ntsc) {
 					nes_ntsc_rgb_t* kernel = ntsc->table[entry];

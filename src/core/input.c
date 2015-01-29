@@ -81,13 +81,17 @@ void input_init(void) {
 		port[a].index = port[a].zapper = 0;
 
 		{
-			BYTE b;
+			BYTE b, state = RELEASED;
+
+			if (port[a].type_pad == CTRL_PAD_ORIGINAL) {
+				state = PRESSED;
+			}
 
 			for (b = 0; b < 24; b++) {
 				if (b < 8) {
 					port[a].data[b] = RELEASED;
 				} else {
-					port[a].data[b] = PRESSED;
+					port[a].data[b] = state;
 				}
 			}
 		}
@@ -96,7 +100,6 @@ void input_init(void) {
 
 BYTE input_rd_reg_disabled(BYTE openbus, WORD **screen_index, BYTE nport) {
 	return (openbus);
-	/*return (0x80);*/
 }
 
 static void INLINE input_turbo_buttons_control_standard(_port *port) {
@@ -227,7 +230,7 @@ BYTE input_rd_reg_standard(BYTE openbus, WORD **screen_index, BYTE nport) {
 	/*
  	 * se avviene un DMA del DMC all'inizio
  	 * dell'istruzione di lettura del registro,
- 	 * avverrano due letture.
+ 	 * avverranno due letture.
  	 */
 	if (!info.r4016_dmc_double_read_disabled && (DMC.dma_cycle == 2)) {
 		_input_rd()

@@ -28,6 +28,11 @@ screenWidget::screenWidget(QWidget *parent, mainWindow *mw) : QWidget(parent) {
 
 	mwin = mw;
 
+#if defined (SDL) && defined (__WIN32__)
+	// applico un sfondo nero
+	parent->setStyleSheet("background-color: black");
+#endif
+
 	// se non faccio questa chiamata, la versione SDL crasha all'avvio
 	winId();
 

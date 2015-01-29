@@ -58,6 +58,7 @@ class dlgStdPad : public QDialog, public Ui::Standard_Pad {
 		void s_in_sequence_clicked(bool checked);
 		void s_unset_all_clicked(bool checked);
 		void s_defaults_clicked(bool checked);
+		void s_combobox_controller_type_activated(int index);
 		void s_slider_td_value_changed(int value);
 		void s_apply_clicked(bool checked);
 		void s_discard_clicked(bool checked);

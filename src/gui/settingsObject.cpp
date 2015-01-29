@@ -714,6 +714,7 @@ void setObject::to_cfg(QString group) {
 		int_to_val(SET_NTSC_FORMAT, cfg_from_file.ntsc_format);
 		int_to_val(SET_PALETTE, cfg_from_file.palette);
 		char_to_val(SET_FILE_PALETTE, cfg_from_file.palette_file);
+		int_to_val(SET_SWAP_EMPHASIS_PAL, cfg_from_file.disable_swap_emphasis_pal);
 		int_to_val(SET_VSYNC, cfg_from_file.vsync);
 		int_to_val(SET_INTERPOLATION, cfg_from_file.interpolation);
 		int_to_val(SET_TEXT_ON_SCREEN, cfg_from_file.txt_on_screen);
@@ -769,6 +770,7 @@ void setObject::fr_cfg(QString group) {
 		cfg_from_file.palette = val_to_int(SET_PALETTE);
 		cpy_val_to_char(SET_FILE_PALETTE, cfg_from_file.palette_file,
 				sizeof(cfg_from_file.palette_file));
+		cfg_from_file.disable_swap_emphasis_pal = val_to_int(SET_SWAP_EMPHASIS_PAL);
 		cfg_from_file.vsync = val_to_int(SET_VSYNC);
 		cfg_from_file.interpolation = val_to_int(SET_INTERPOLATION);
 		cfg_from_file.txt_on_screen = val_to_int(SET_TEXT_ON_SCREEN);
@@ -1063,6 +1065,8 @@ void inpObject::set_all_input_default(_config_input *config_input, _array_pointe
 				break;
 		}
 
+		port->type_pad = CTRL_PAD_ORIGINAL;
+
 		port->turbo[TURBOA].frequency = TURBO_BUTTON_DELAY_DEFAULT;
 		port->turbo[TURBOB].frequency = TURBO_BUTTON_DELAY_DEFAULT;
 		set_kbd_joy_default(port, i, KEYBOARD);
@@ -1076,6 +1080,7 @@ void inpObject::setup() {
 void inpObject::to_cfg(QString group) {
 	if ((group == "port 1") || (group == "all")) {
 		int_to_val(SET_INP_P1_CONTROLLER, port[PORT1].type);
+		int_to_val(SET_INP_P1_PAD_TYPE, port[PORT1].type_pad);
 		kbd_wr(SET_INP_P1K_A, PORT1);
 		joy_wr(SET_INP_P1J_A, PORT1);
 		joyid_int_to_val(SET_INP_P1J_ID, PORT1);
@@ -1085,6 +1090,7 @@ void inpObject::to_cfg(QString group) {
 
 	if ((group == "port 2") || (group == "all")) {
 		int_to_val(SET_INP_P2_CONTROLLER, port[PORT2].type);
+		int_to_val(SET_INP_P2_PAD_TYPE, port[PORT2].type_pad);
 		kbd_wr(SET_INP_P2K_A, PORT2);
 		joy_wr(SET_INP_P2J_A, PORT2);
 		joyid_int_to_val(SET_INP_P2J_ID, PORT2);
@@ -1094,6 +1100,7 @@ void inpObject::to_cfg(QString group) {
 
 	if ((group == "port 3") || (group == "all")) {
 		int_to_val(SET_INP_P3_CONTROLLER, port[PORT3].type);
+		int_to_val(SET_INP_P3_PAD_TYPE, port[PORT3].type_pad);
 		kbd_wr(SET_INP_P3K_A, PORT3);
 		joy_wr(SET_INP_P3J_A, PORT3);
 		joyid_int_to_val(SET_INP_P3J_ID, PORT3);
@@ -1103,6 +1110,7 @@ void inpObject::to_cfg(QString group) {
 
 	if ((group == "port 4") || (group == "all")) {
 		int_to_val(SET_INP_P4_CONTROLLER, port[PORT4].type);
+		int_to_val(SET_INP_P4_PAD_TYPE, port[PORT4].type_pad);
 		kbd_wr(SET_INP_P4K_A, PORT4);
 		joy_wr(SET_INP_P4J_A, PORT4);
 		joyid_int_to_val(SET_INP_P4J_ID, PORT4);
@@ -1123,6 +1131,7 @@ void inpObject::to_cfg(QString group) {
 void inpObject::fr_cfg(QString group) {
 	if ((group == "port 1") || (group == "all")) {
 		port[PORT1].type = val_to_int(SET_INP_P1_CONTROLLER);
+		port[PORT1].type_pad = val_to_int(SET_INP_P1_PAD_TYPE);
 		kbd_rd(SET_INP_P1K_A, PORT1);
 		joy_rd(SET_INP_P1J_A, PORT1);
 		port[PORT1].joy_id = joyid_val_to_int(SET_INP_P1J_ID);
@@ -1132,6 +1141,7 @@ void inpObject::fr_cfg(QString group) {
 
 	if ((group == "port 2") || (group == "all")) {
 		port[PORT2].type = val_to_int(SET_INP_P2_CONTROLLER);
+		port[PORT2].type_pad = val_to_int(SET_INP_P2_PAD_TYPE);
 		kbd_rd(SET_INP_P2K_A, PORT2);
 		joy_rd(SET_INP_P2J_A, PORT2);
 		port[PORT2].joy_id = joyid_val_to_int(SET_INP_P2J_ID);
@@ -1141,6 +1151,7 @@ void inpObject::fr_cfg(QString group) {
 
 	if ((group == "port 3") || (group == "all")) {
 		port[PORT3].type = val_to_int(SET_INP_P3_CONTROLLER);
+		port[PORT3].type_pad = val_to_int(SET_INP_P3_PAD_TYPE);
 		kbd_rd(SET_INP_P3K_A, PORT3);
 		joy_rd(SET_INP_P3J_A, PORT3);
 		port[PORT3].joy_id = joyid_val_to_int(SET_INP_P3J_ID);
@@ -1150,6 +1161,7 @@ void inpObject::fr_cfg(QString group) {
 
 	if ((group == "port 4") || (group == "all")) {
 		port[PORT4].type = val_to_int(SET_INP_P4_CONTROLLER);
+		port[PORT4].type_pad = val_to_int(SET_INP_P4_PAD_TYPE);
 		kbd_rd(SET_INP_P4K_A, PORT4);
 		joy_rd(SET_INP_P4J_A, PORT4);
 		port[PORT4].joy_id = joyid_val_to_int(SET_INP_P4J_ID);

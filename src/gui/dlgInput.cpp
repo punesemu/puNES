@@ -25,6 +25,8 @@ dlgInput::dlgInput(QWidget *parent = 0) : QDialog(parent) {
 
 	setupUi(this);
 
+	setFont(parent->font());
+
 	comboBox_cm->addItem(trUtf8("NES"));
 	comboBox_cm->addItem(trUtf8("Famicom"));
 	comboBox_cm->addItem(trUtf8("Four Score"));

@@ -64,6 +64,7 @@ enum set_element {
 	SET_NTSC_FORMAT,
 	SET_PALETTE,
 	SET_FILE_PALETTE,
+	SET_SWAP_EMPHASIS_PAL,
 	SET_VSYNC,
 	SET_INTERPOLATION,
 	SET_TEXT_ON_SCREEN,
@@ -90,6 +91,7 @@ enum pgs_element {
 };
 enum inp_element {
 	SET_INP_P1_CONTROLLER,
+	SET_INP_P1_PAD_TYPE,
 	SET_INP_P1K_A,
 	SET_INP_P1K_B,
 	SET_INP_P1K_SELECT,
@@ -115,6 +117,7 @@ enum inp_element {
 	SET_INP_P1_TURBOB_DELAY,
 
 	SET_INP_P2_CONTROLLER,
+	SET_INP_P2_PAD_TYPE,
 	SET_INP_P2K_A,
 	SET_INP_P2K_B,
 	SET_INP_P2K_SELECT,
@@ -140,6 +143,7 @@ enum inp_element {
 	SET_INP_P2_TURBOB_DELAY,
 
 	SET_INP_P3_CONTROLLER,
+	SET_INP_P3_PAD_TYPE,
 	SET_INP_P3K_A,
 	SET_INP_P3K_B,
 	SET_INP_P3K_SELECT,
@@ -165,6 +169,7 @@ enum inp_element {
 	SET_INP_P3_TURBOB_DELAY,
 
 	SET_INP_P4_CONTROLLER,
+	SET_INP_P4_PAD_TYPE,
 	SET_INP_P4K_A,
 	SET_INP_P4K_B,
 	SET_INP_P4K_SELECT,
@@ -365,6 +370,10 @@ static const _opt opt_controller_mode[] = {
 	{NULL, "famicom",    CTRL_MODE_FAMICOM},
 	{NULL, "four score", CTRL_MODE_FOUR_SCORE}
 };
+static const _opt opt_pad_type[] = {
+	{NULL, "original", CTRL_PAD_ORIGINAL},
+	{NULL, "3rdparty", CTRL_PAD_3RD_PARTY}
+};
 
 static const _settings main_cfg[] = {
 	{"shortcuts", "open",                     "Alt+O",      NULL, NULL, {0, NULL}},
@@ -511,6 +520,13 @@ static const _settings main_cfg[] = {
 		{0, NULL}
 	},
 	{
+		"video", "disable swap emphasis PAL-Dendy", "no",
+		"# possible values: yes, no",
+		"    --swap-emphasis       disable swap emphasis : yes, no" NEWLINE
+		"                          in PAL/Dendy mode",
+		{LENGTH(opt_no_yes), opt_no_yes}
+	},
+	{
 		"video", "vsync", "on",
 		"# possible values: on, off",
 		"-v, --vsync               use of vsync          : on, off",
@@ -648,6 +664,12 @@ static const _settings inp_cfg[] = {
 		NULL,
 		{LENGTH(opt_controller), opt_controller}
 	},
+	{
+		"port 1", "pad 1 type", "original",
+		"# possible values: original, 3rdparty",
+		NULL,
+		{LENGTH(opt_pad_type), opt_pad_type}
+	},
 	{"port 1", "P1K A",       "S",           "# player 1 keyboard", NULL, {0, NULL}},
 	{"port 1", "P1K B",       "A",           NULL, NULL, {0, NULL}},
 	{"port 1", "P1K Select",  "Z",           NULL, NULL, {0, NULL}},
@@ -676,6 +698,12 @@ static const _settings inp_cfg[] = {
 		"# possible values: disable, standard, zapper",
 		NULL,
 		{LENGTH(opt_controller), opt_controller}
+	},
+	{
+		"port 2", "pad 2 type", "original",
+		"# possible values: original, 3rdparty",
+		NULL,
+		{LENGTH(opt_pad_type), opt_pad_type}
 	},
 	{"port 2", "P2K A",       "PgDown",      "# player 2 keyboard", NULL, {0, NULL}},
 	{"port 2", "P2K B",       "End",         NULL, NULL, {0, NULL}},
@@ -706,6 +734,12 @@ static const _settings inp_cfg[] = {
 		NULL,
 		{LENGTH(opt_controller) - 1, opt_controller}
 	},
+	{
+		"port 3", "pad 3 type", "original",
+		"# possible values: original, 3rdparty",
+		NULL,
+		{LENGTH(opt_pad_type), opt_pad_type}
+	},
 	{"port 3", "P3K A",       "NULL",        "# player 3 keyboard", NULL, {0, NULL}},
 	{"port 3", "P3K B",       "NULL",        NULL, NULL, {0, NULL}},
 	{"port 3", "P3K Select",  "NULL",        NULL, NULL, {0, NULL}},
@@ -734,6 +768,12 @@ static const _settings inp_cfg[] = {
 		"# possible values: disable, standard",
 		NULL,
 		{LENGTH(opt_controller) - 1, opt_controller}
+	},
+	{
+		"port 4", "pad 4 type", "original",
+		"# possible values: original, 3rdparty",
+		NULL,
+		{LENGTH(opt_pad_type), opt_pad_type}
 	},
 	{"port 4", "P4K A",       "NULL",        "# player 4 keyboard", NULL, {0, NULL}},
 	{"port 4", "P4K B",       "NULL",        NULL, NULL, {0, NULL}},

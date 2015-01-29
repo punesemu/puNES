@@ -15,6 +15,8 @@ dlgApuChannels::dlgApuChannels(QWidget *parent = 0) : QDialog(parent) {
 
 	setupUi(this);
 
+	setFont(parent->font());
+
 	horizontalSlider_Master->setRange(0, 100);
 	horizontalSlider_Square1->setRange(0, 100);
 	horizontalSlider_Square2->setRange(0, 100);

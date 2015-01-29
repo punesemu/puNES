@@ -25,17 +25,19 @@ static const char std_pad_button[10][15] = {
 };
 
 dlgStdPad::dlgStdPad(_cfg_port *cfg_port, QWidget *parent = 0) : QDialog(parent) {
+	QFont f9, f8;
+
+	f9.setPointSize(9);
+	f9.setWeight(QFont::Light);
+	f8.setPointSize(8);
+	f8.setWeight(QFont::Light);
+
 	memset(&data, 0x00, sizeof(data));
 	memcpy(&data.cfg, cfg_port, sizeof(_cfg_port));
 
 	setupUi(this);
 
-	if (font().pointSize() > 10) {
-		QFont font;
-
-		font.setPointSize(10);
-		setFont(font);
-	}
+	setFont(parent->font());
 
 	groupBox_controller->setTitle(trUtf8("Controller %1 : Standard Pad").arg(cfg_port->id));
 	tabWidget->setCurrentIndex(0);
@@ -44,14 +46,10 @@ dlgStdPad::dlgStdPad(_cfg_port *cfg_port, QWidget *parent = 0) : QDialog(parent)
 	for (int a = KEYBOARD; a <= JOYSTICK; a++) {
 		QPlainTextEdit *txt;
 		QPushButton *bt;
-		QFont f9, f8;
-
-		f9.setPointSize(9);
-		f8.setPointSize(8);
 
 		txt = findChild<QPlainTextEdit *>("plainTextEdit_" + SPT(a) + "_info");
 
-		if (txt->font().pointSize() > f9.pointSize()) {
+		if (txt->font().pointSize() > 9) {
 			txt->setFont(f9);
 		}
 
@@ -74,10 +72,10 @@ dlgStdPad::dlgStdPad(_cfg_port *cfg_port, QWidget *parent = 0) : QDialog(parent)
 			bt = findChild<QPushButton *>("pushButton_" + SPT(a) + "_" + SPB(b));
 			unset = findChild<QPushButton *>("pushButton_" + SPT(a) + "_unset_" + SPB(b));
 
-			if (bt->font().pointSize() > f9.pointSize()) {
+			if (bt->font().pointSize() > 9) {
 				bt->setFont(f9);
 			}
-			if (unset->font().pointSize() > f9.pointSize()) {
+			if (unset->font().pointSize() > 8) {
 				unset->setFont(f8);
 			}
 
@@ -94,6 +92,14 @@ dlgStdPad::dlgStdPad(_cfg_port *cfg_port, QWidget *parent = 0) : QDialog(parent)
 			connect(bt, SIGNAL(clicked(bool)), this, SLOT(s_input_clicked(bool)));
 			connect(unset, SIGNAL(clicked(bool)), this, SLOT(s_unset_clicked(bool)));
 		}
+	}
+
+	{
+		comboBox_Controller_type->addItem(trUtf8("Original"));
+		comboBox_Controller_type->addItem(trUtf8("3rd-party"));
+		comboBox_Controller_type->setCurrentIndex(data.cfg.port.type_pad);
+		connect(comboBox_Controller_type, SIGNAL(activated(int)), this,
+				SLOT(s_combobox_controller_type_activated(int)));
 	}
 
 	for (int i = TURBOA; i <= TURBOB; i++) {
@@ -169,8 +175,8 @@ void dlgStdPad::update_dialog(void) {
 	pushButton_joy_Unset_all->setEnabled(mode);
 	pushButton_joy_Defaults->setEnabled(mode);
 
-	//turbo delay
-	groupBox_Turbo_delay->setEnabled(true);
+	// misc
+	groupBox_Misc->setEnabled(true);
 }
 void dlgStdPad::combo_id_init(void) {
 	BYTE disabled_line = 0, count = 0, current_line = name_to_jsn("NULL");
@@ -255,8 +261,8 @@ void dlgStdPad::disable_tab_and_other(int type, int vbutton) {
 	findChild<QPushButton *>("pushButton_" + SPT(type) + "_Unset_all")->setEnabled(false);
 	findChild<QPushButton *>("pushButton_" + SPT(type) + "_Defaults")->setEnabled(false);
 
-	//turbo delay
-	groupBox_Turbo_delay->setEnabled(false);
+	// misc
+	groupBox_Misc->setEnabled(false);
 }
 void dlgStdPad::info_entry_print(int type, QString txt) {
 	findChild<QPlainTextEdit *>("plainTextEdit_" + SPT(type) + "_info")->setPlainText(txt);
@@ -414,9 +420,9 @@ void dlgStdPad::s_unset_clicked(bool checked) {
 void dlgStdPad::s_in_sequence_clicked(bool checked) {
 	int type = QVariant(qobject_cast<QPushButton *>(sender())->property("myType")).toInt();
 	static int order[MAX_STD_PAD_BUTTONS] = {
-		UP, DOWN, LEFT, RIGHT,
+		UP,     DOWN,  LEFT,  RIGHT,
 		SELECT, START, BUT_A, BUT_B,
-		TRB_A, TRB_B,
+		TRB_A,  TRB_B,
 	};
 
 	info_entry_print(type, "");
@@ -466,6 +472,19 @@ void dlgStdPad::s_defaults_clicked(bool checked) {
 		} else {
 			bt->setText(jsv_to_name(data.cfg.port.input[type][i]));
 		}
+	}
+}
+void dlgStdPad::s_combobox_controller_type_activated(int index) {
+	BYTE state = RELEASED;
+
+	data.cfg.port.type_pad = index;
+
+	if (data.cfg.port.type_pad == CTRL_PAD_ORIGINAL) {
+		state = PRESSED;
+	}
+
+	for (int b = 8; b < 24; b++) {
+		data.cfg.port.data[b] = state;
 	}
 }
 void dlgStdPad::s_slider_td_value_changed(int value) {

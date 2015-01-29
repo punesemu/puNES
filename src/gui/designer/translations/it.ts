@@ -8,15 +8,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>active</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>volume</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Master</source>
+        <source>Channels</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -24,11 +16,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Square 2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Triangle</source>
+        <source>DMC</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -36,11 +24,27 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>DMC</source>
+        <source>Square 2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Extra</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Master</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Triangle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>active</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>volume</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -61,10 +65,6 @@
     </message>
     <message>
         <source>Discard</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Channels</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -138,10 +138,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Defaults</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Up</source>
         <translation type="unfinished"></translation>
     </message>
@@ -155,6 +151,10 @@
     </message>
     <message>
         <source>Down</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Defaults</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -245,15 +245,27 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Turbo Delay</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Apply</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Discard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Misc</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Controller type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Turbo B Delay</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Turbo A Delay</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -332,24 +344,32 @@
         <source>No usable device</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Original</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>3rd-party</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>mainWindow</name>
     <message>
         <source>&amp;Open</source>
-        <translation>&amp;Apri</translation>
+        <translation type="unfinished">&amp;Apri</translation>
     </message>
     <message>
         <source>&amp;Recent Roms</source>
-        <translation>&amp;Roms Recenti</translation>
+        <translation type="unfinished">&amp;Roms Recenti</translation>
     </message>
     <message>
         <source>&amp;Quit</source>
-        <translation>&amp;Esci</translation>
+        <translation type="unfinished">&amp;Esci</translation>
     </message>
     <message>
         <source>&amp;File</source>
-        <translation>&amp;File</translation>
+        <translation type="unfinished">&amp;File</translation>
     </message>
     <message>
         <source>All supported formats</source>
@@ -378,6 +398,58 @@
     <message>
         <source>Open File</source>
         <translation>Apri File</translation>
+    </message>
+    <message>
+        <source>&amp;Insert disk</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Eject disk</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Eject/_Insert disk</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Software</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;OpenGL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OpenGL &amp;GLSL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;HLSL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GLSL &amp;soft stretch</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>HLSL &amp;soft stretch</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>[Select a file]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Palette files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save palette on file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open palette file</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&amp;Hard Reset</source>
@@ -428,26 +500,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;NES</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Disk Side</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Insert disk</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Eject disk</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Eject/_Insert disk</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>&amp;PAL</source>
         <translation type="unfinished"></translation>
     </message>
@@ -464,259 +516,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Settings</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Mode</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Video</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Rendering</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Software</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;OpenGL</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>OpenGL &amp;GLSL</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Default</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;FPS</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Fra&amp;me skip</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;HLSL</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Scale</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Pixel Aspect Ra&amp;tio</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>GLSL &amp;soft stretch</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>HLSL &amp;soft stretch</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Default</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;On</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>O&amp;ff</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Set borders</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Overscan</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>De&amp;fault value</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;No Filter</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Fi&amp;lter</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Phosphor</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>P&amp;hosphor2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>S&amp;canline</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;DBL</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Dark R&amp;oom</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Scale&amp;2X</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Scale&amp;3X</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Scale&amp;4X</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Hq&amp;2X</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Hq&amp;3X</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Hq&amp;4X</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>xBRZ &amp;2X</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>xBRZ &amp;3X</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>xBRZ &amp;4X</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>S&amp;ony CXA2025AS US</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Monochrome</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Green</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>[Select a file]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Save to file</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Load from file</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Palette</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>CRT With &amp;Curve</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>CRT &amp;Without Curve</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>NTSC &amp;Composite</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>NTSC &amp;S-Video</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>NTSC &amp;RGB</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Shaders</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Palette files</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Save palette on file</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Open palette file</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Cube</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Effect</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;VSync</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Interpolation</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Te&amp;xt on screen</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>F&amp;ullscreen</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>S&amp;tretch in fullscreen</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Sample rate</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Mono</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Stereo</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Channels</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -824,6 +624,150 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>&amp;Default</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;On</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>O&amp;ff</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Set borders</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;No Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Phosphor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>P&amp;hosphor2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>S&amp;canline</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;DBL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Dark R&amp;oom</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>CRT With &amp;Curve</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>CRT &amp;Without Curve</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Scale&amp;2X</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Scale&amp;3X</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Scale&amp;4X</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hq&amp;2X</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hq&amp;3X</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hq&amp;4X</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>xBRZ &amp;2X</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>xBRZ &amp;3X</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>xBRZ &amp;4X</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>NTSC &amp;Composite</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>NTSC &amp;S-Video</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>NTSC &amp;RGB</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>S&amp;ony CXA2025AS US</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Monochrome</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Green</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Save to file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Load from file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Shaders</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Cube</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;VSync</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Interpolation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Te&amp;xt on screen</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>F&amp;ullscreen</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>S&amp;tretch in fullscreen</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>&amp;44100</source>
         <translation type="unfinished"></translation>
     </message>
@@ -837,6 +781,14 @@
     </message>
     <message>
         <source>&amp;11025</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Mono</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Stereo</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -920,19 +872,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>S&amp;tereo delay</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>&amp;Low</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&amp;High</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Quality</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -948,15 +892,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Audio</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>&amp;Config</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Input</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -992,10 +928,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>S&amp;tate</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Slot &amp;0</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1024,7 +956,99 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>&amp;NES</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Disk Side</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Video</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Rendering</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;FPS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fra&amp;me skip</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Scale</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pixel Aspect Ra&amp;tio</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Overscan</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>De&amp;fault value</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fi&amp;lter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Palette</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Effect</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Audio</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Sample rate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Channels</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>S&amp;tereo delay</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Quality</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Input</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>S&amp;tate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>&amp;Help</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Disable Red and Green emphasis swap for PAL/Dendy</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

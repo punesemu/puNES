@@ -140,7 +140,7 @@ enum apu_mode { APU_60HZ, APU_48HZ };
 	}
 #define dmc_output()\
 	DMC.output = DMC.counter & 0x7F
-/* ticket */
+/* tick */
 #define square_tick(square, swap)\
 	if (!(--square.frequency)) {\
 		square_output(square, swap)\

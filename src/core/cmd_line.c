@@ -44,6 +44,7 @@ static const struct option opt_long[] = {
 	{ "stereo-delay",       required_argument, NULL, 'd'},
 	{ "audio-quality",      required_argument, NULL, 'q'},
 	{ "swap-duty",          required_argument, NULL,  0 },
+	{ "swap-emphasis",      required_argument, NULL,  0 },
 	{ "gamegenie",          required_argument, NULL, 'g'},
 	{ "help",               no_argument,       NULL, 'h'},
 	{ "version",            no_argument,       NULL, 'V'},
@@ -66,6 +67,8 @@ BYTE cmd_line_parse(int argc, char **argv) {
 				/* long options */
 				if (!(strcmp(opt_long[longIndex].name, "swap-duty"))) {
 					cfg_from_file.swap_duty = set_int(SET_SWAP_DUTY);
+				} else if (!(strcmp(opt_long[longIndex].name, "swap-emphasis"))) {
+					cfg_from_file.disable_swap_emphasis_pal = set_int(SET_SWAP_EMPHASIS_PAL);
 				} else if (!(strcmp(opt_long[longIndex].name, "portable"))) {
 					/* l'ho gia' controllato quindi qui non faccio niente */
 				} else if (!(strcmp(opt_long[longIndex].name, "txt-on-screen"))) {
@@ -217,6 +220,7 @@ void usage(char *name) {
 			"%s\n"
 			"%s\n"
 			"%s\n"
+			"%s\n"
 	};
 
 	usage_string = (char *) malloc(1024 * 8);
@@ -232,6 +236,7 @@ void usage(char *name) {
 			main_cfg[SET_NTSC_FORMAT].hlp,
 			main_cfg[SET_PALETTE].hlp,
 			main_cfg[SET_RENDERING].hlp,
+			main_cfg[SET_SWAP_EMPHASIS_PAL].hlp,
 			main_cfg[SET_VSYNC].hlp,
 			main_cfg[SET_INTERPOLATION].hlp,
 			main_cfg[SET_TEXT_ON_SCREEN].hlp,

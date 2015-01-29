@@ -307,6 +307,7 @@
      <addaction name="menu_Palette"/>
      <addaction name="menu_Effect"/>
      <addaction name="separator"/>
+     <addaction name="action_Disable_emphasis_swap_PAL"/>
      <addaction name="action_VSync"/>
      <addaction name="action_Interpolation"/>
      <addaction name="action_Text_on_screen"/>
@@ -1644,6 +1645,14 @@
    </property>
    <property name="text">
     <string>&amp;About</string>
+   </property>
+  </action>
+  <action name="action_Disable_emphasis_swap_PAL">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Disable Red and Green emphasis swap for PAL/Dendy</string>
    </property>
   </action>
  </widget>

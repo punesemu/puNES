@@ -18,6 +18,8 @@ dlgUncomp::dlgUncomp(QWidget *parent = 0) : QDialog(parent) {
 
 	setupUi(this);
 
+	setFont(parent->font());
+
 	//tableWidget_Selection->setStyleSheet("QTreeView {selection-background-color: red;}");
 
 	for (int i = 0; i < uncomp.files_founded; i++) {

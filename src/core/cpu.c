@@ -604,7 +604,7 @@ void cpu_exe_op(void) {
 	if (cpu.opcode & 0x300) {
 		tick_hw(1);
 	} else {
-		/* memorizzo il codeop attuale */
+		/* memorizzo l'opcode attuale */
 		cpu.opcode = _RDP;
 	}
 

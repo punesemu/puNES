@@ -28,6 +28,8 @@ dlgOverscanBorders::dlgOverscanBorders(QWidget *parent = 0) : QDialog(parent) {
 
 	setupUi(this);
 
+	setFont(parent->font());
+
 	frame->setFrameStyle(QFrame::Panel | QFrame::Sunken);
 
 	{

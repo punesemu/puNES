@@ -91,6 +91,7 @@ class mainWindow: public QMainWindow {
 		void s_set_other_filter();
 		void s_set_ntsc_filter();
 		void s_set_palette();
+		void s_set_disable_emphasis_pal();
 		void s_save_palette();
 		void s_load_palette();
 		void s_set_vsync();

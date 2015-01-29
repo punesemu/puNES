@@ -60,17 +60,22 @@ mainWindow::mainWindow(Ui::mainWindow *u) : QMainWindow() {
 	for (int i = 0; i < SET_MAX_NUM_SC; i++) {
 		shortcut[i] = new QShortcut(this);
 	}
+
+	{
+		QFont actual;
+
+		if (font().pointSize() > 10) {
+			actual.setPointSize(10);
+		} else {
+			actual.setPointSize(font().pointSize());
+		}
+		actual.setWeight(QFont::Light);
+		setFont(actual);
+	}
 }
 mainWindow::~mainWindow() {}
 void mainWindow::setup() {
 	QActionGroup *grp;
-
-#if defined (__linux__)
-	// ogni tanto la menubar cambia la propria altezza
-	// arbitrariamente (quando passo dallo schermo intero a finestra per esempio),
-	// percio' la fisso a quella iniziale.
-	ui->menubar->setFixedSize(QSize(ui->menubar->width(), ui->menubar->height()));
-#endif
 
 	setup_video_rendering();
 
@@ -746,6 +751,7 @@ void mainWindow::update_menu_settings() {
 		ui->action_Stretch_in_fullscreen->setEnabled(false);
 	}
 #endif
+	ui->action_Disable_emphasis_swap_PAL->setChecked(cfg->disable_swap_emphasis_pal);
 	ui->action_VSync->setChecked(cfg->vsync);
 	ui->action_Interpolation->setChecked(cfg->interpolation);
 	ui->action_Text_on_screen->setChecked(cfg->txt_on_screen);
@@ -1081,6 +1087,7 @@ void mainWindow::connect_menu_signals() {
 	delete (ui->menu_Effect);
 #endif
 	// Settings/Video/[VSync, Interpolation, Text on screen, Fullscreen, Stretch in fullscreen]
+	connect_action(ui->action_Disable_emphasis_swap_PAL, SLOT(s_set_disable_emphasis_pal()));
 	connect_action(ui->action_VSync, SLOT(s_set_vsync()));
 	connect_action(ui->action_Interpolation, SLOT(s_set_interpolation()));
 	connect_action(ui->action_Text_on_screen, SLOT(s_set_txt_on_screen()));
@@ -1460,7 +1467,11 @@ void mainWindow::s_set_mode() {
 	if (reset) {
 		text_add_line_info(1, "switched to [green]%s", opt_mode[machine.type].lname);
 		make_reset(CHANGE_MODE);
-		gui_update();
+		/*
+		 * per lo swap dell'emphasis del rosso e del verde in caso di PAL e DENDY
+		 * ricreo la paletta quando cambio regione.
+		 */
+		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, TRUE);
 	}
 }
 void mainWindow::s_set_rendering() {
@@ -1567,6 +1578,10 @@ void mainWindow::s_set_palette() {
 	int palette = QVariant(qobject_cast<QObject *>(sender())->property("myValue")).toInt();
 
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, palette, FALSE, FALSE);
+}
+void mainWindow::s_set_disable_emphasis_pal() {
+	cfg->disable_swap_emphasis_pal = !cfg->disable_swap_emphasis_pal;
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, TRUE);
 }
 void mainWindow::s_save_palette() {
 	QStringList filters;
