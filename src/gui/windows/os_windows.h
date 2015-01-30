@@ -103,7 +103,7 @@ void gui_sleep(double ms) {
 		Sleep(ms);
 	}
 }
-HWND gui_emu_frame_id(void) {
+HWND gui_screen_id(void) {
 	HWND wid = (HWND) qt.screen->winId();
 
 	return (wid);

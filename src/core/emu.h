@@ -17,7 +17,7 @@
 #define EXTERNC
 #endif
 
-EXTERNC BYTE emu_loop(void);
+EXTERNC BYTE emu_frame(void);
 EXTERNC BYTE emu_make_dir(const char *fmt, ...);
 EXTERNC BYTE emu_file_exist(const char *file);
 EXTERNC BYTE emu_load_rom(void);

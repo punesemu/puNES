@@ -1099,7 +1099,7 @@ BYTE d3d9_create_device(UINT width, UINT height) {
 	ZeroMemory(&d3dpp, sizeof(D3DPRESENT_PARAMETERS));
 	d3dpp.Windowed = TRUE;
 	d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
-	d3dpp.hDeviceWindow = gui_emu_frame_id();
+	d3dpp.hDeviceWindow = gui_screen_id();
 	d3dpp.BackBufferCount = 2;
 	d3dpp.BackBufferFormat = d3d9.adapter->display_mode.Format;
 	d3dpp.BackBufferWidth = width;
@@ -1117,7 +1117,7 @@ BYTE d3d9_create_device(UINT width, UINT height) {
 	if (IDirect3D9_CreateDevice(d3d9.d3d,
 			d3d9.adapter->id,
 			D3DDEVTYPE_HAL,
-			gui_emu_frame_id(),
+			gui_screen_id(),
 			d3d9.adapter->flags | D3DCREATE_MULTITHREADED | D3DCREATE_FPU_PRESERVE,
 			&d3dpp,
 			&d3d9.adapter->dev) != D3D_OK) {

@@ -12,6 +12,7 @@
 #include "tas.h"
 #include "version.h"
 #include "conf.h"
+#include "clock.h"
 #include "timeline.h"
 #include "save_slot.h"
 #include "mainWindow.hpp"
@@ -62,29 +63,26 @@ void gui_start(void) {
 
 	gui.start = TRUE;
 
-	qApp->exec();
-}
-void gui_event(void) {
-	gui_flush();
-
-	if (info.no_rom | info.pause) {
-		return;
-	}
-
-	if (tas.type) {
-		tas_frame();
-		return;
-	}
-
+	/*
+	 * questi settaggi prima li facevo nell'emu_loop prima di avviare
+	 * il loop.
+	 */
 	{
-		BYTE i;
+		/*
+		 * ho notato che (sotto windows, per linux ho visto
+		 * un lieve peggioramento) settandol'affinity di questo
+		 * thread su un singolo core,le prestazioni migliorano
+		 * notevolmente. In questo caso setto l'uso del core 0.
+		 */
+		//#if defined (__WIN32__)
+		//	guiSetThreadAffinity(0);
+		//#endif
 
-		for (i = PORT1; i < PORT_MAX; i++) {
-			if (input_add_event[i]) {
-				input_add_event[i](i);
-			}
-		}
+		fps.second_start = gui_get_ms();
+		fps.next_frame = gui_get_ms() + machine.ms_frame;
 	}
+
+	qApp->exec();
 }
 
 void gui_set_video_mode(void) {
@@ -121,7 +119,6 @@ void gui_update(void) {
 	qt.mwin->update_window();
 
 	gui.in_update = FALSE;
-	gui_flush();
 }
 
 void gui_fullscreen(void) {
@@ -140,6 +137,8 @@ void gui_save_slot(BYTE slot) {
 }
 
 void gui_flush(void) {
+	qApp->flush();
+	qApp->sendPostedEvents();
 	qApp->processEvents();
 }
 void gui_print_usage(char *usage) {

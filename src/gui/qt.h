@@ -62,7 +62,6 @@ EXTERNC struct _mouse {
 EXTERNC void gui_quit(void);
 EXTERNC BYTE gui_create(void);
 EXTERNC void gui_start(void);
-EXTERNC void gui_event(void);
 
 EXTERNC void gui_set_video_mode(void);
 
@@ -87,9 +86,9 @@ EXTERNC double (*gui_get_ms)(void);
 EXTERNC void gui_init(int argc, char **argv);
 EXTERNC void gui_sleep(double ms);
 #if defined (__WIN32__)
-EXTERNC HWND gui_emu_frame_id(void);
+EXTERNC HWND gui_screen_id(void);
 #else
-EXTERNC int gui_emu_frame_id(void);
+EXTERNC int gui_screen_id(void);
 #endif
 
 //EXTERNC void gui_add_event(void *funct, void *args);

@@ -68,86 +68,77 @@
 		strcpy(ext, strrchr(name_file, '.'));\
 	}
 
-BYTE emu_loop(void) {
-
+BYTE emu_frame(void) {
 #if defined (DEBUG)
-	WORD PCBREAK = 0xDA5A;
-	PCBREAK = 0xEC06;
+	WORD PCBREAK = 0xA930;
 #endif
 
-	/*
-	 * ho notato che (sotto windows, per linux ho visto
-	 * un lieve peggioramento) settandol'affinity di questo
-	 * thread su un singolo core,le prestazioni migliorano
-	 * notevolmente. In questo caso setto l'uso del core 0.
-	 */
-//#if defined (__WIN32__)
-//	guiSetThreadAffinity(0);
-//#endif
+	tas.lag_frame = TRUE;
 
-	fps.second_start = gui_get_ms();
-
-	fps.next_frame = gui_get_ms() + machine.ms_frame;
-
-	for (;;) {
-		tas.lag_frame = TRUE;
-
-		/* controllo se ci sono eventi dalla tastiera */
-		gui_event();
-
-		/* gestione uscita */
-		if (info.stop == TRUE) {
-			emu_quit(EXIT_SUCCESS);
-		}
-
-		/* eseguo un frame dell'emulatore */
-		if (!(info.no_rom | info.pause)) {
-
-			/* riprendo a far correre la CPU */
-			info.execute_cpu = TRUE;
-
-			while (info.execute_cpu == TRUE) {
-#if defined (DEBUG)
-				if (cpu.PC == PCBREAK) {
-					BYTE pippo = 5;
-					pippo = pippo + 1;
-				}
-#endif
-				/* eseguo CPU, PPU e APU */
-				cpu_exe_op();
-			}
-
-			if (gamegenie.phase == GG_LOAD_ROM) {
-				emu_reset(CHANGE_ROM);
-				gamegenie.phase = GG_FINISH;
-			}
-
-			if (tas.lag_frame) {
-				tas.total_lag_frames++;
-			}
-
-			if (snd_end_frame) {
-				snd_end_frame();
-			}
-
-#if defined (DEBUG)
-			gfx_draw_screen(TRUE);
-#else
-			gfx_draw_screen(FALSE);
-#endif
-
-			if (!tas.type && (++tl.frames == tl.frames_snap)) {
-				timeline_snap(TL_NORMAL);
-			}
-
-			r4011.frames++;
-		} else {
-			gfx_draw_screen(FALSE);
-		}
-
-		/* gestione frameskip e calcolo fps */
-		fps_frameskip();
+	/* gestione uscita */
+	if (info.stop == TRUE) {
+		emu_quit(EXIT_SUCCESS);
 	}
+
+	/* eseguo un frame dell'emulatore */
+	if (!(info.no_rom | info.pause)) {
+		/* controllo se ci sono eventi di input */
+		if (tas.type) {
+			tas_frame();
+		} else {
+			BYTE i;
+
+			for (i = PORT1; i < PORT_MAX; i++) {
+				if (input_add_event[i]) {
+					input_add_event[i](i);
+				}
+			}
+		}
+
+		/* riprendo a far correre la CPU */
+		info.execute_cpu = TRUE;
+
+		while (info.execute_cpu == TRUE) {
+#if defined (DEBUG)
+			if (cpu.PC == PCBREAK) {
+				BYTE pippo = 5;
+				pippo = pippo + 1;
+			}
+#endif
+			/* eseguo CPU, PPU e APU */
+			cpu_exe_op();
+		}
+
+		if (gamegenie.phase == GG_LOAD_ROM) {
+			emu_reset(CHANGE_ROM);
+			gamegenie.phase = GG_FINISH;
+		}
+
+		if (tas.lag_frame) {
+			tas.total_lag_frames++;
+		}
+
+		if (snd_end_frame) {
+			snd_end_frame();
+		}
+
+#if defined (DEBUG)
+		gfx_draw_screen(TRUE);
+#else
+		gfx_draw_screen(FALSE);
+#endif
+
+		if (!tas.type && (++tl.frames == tl.frames_snap)) {
+			timeline_snap(TL_NORMAL);
+		}
+
+		r4011.frames++;
+	} else {
+		gfx_draw_screen(FALSE);
+	}
+
+	/* gestione frameskip e calcolo fps */
+	fps_frameskip();
 	return (EXIT_OK);
 }
 BYTE emu_make_dir(const char *fmt, ...) {

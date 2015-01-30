@@ -1255,19 +1255,20 @@ void mainWindow::s_set_fullscreen() {
 #endif
 
 	if ((cfg->fullscreen == NO_FULLSCR) || (cfg->fullscreen == NO_CHANGE)) {
-		// applico un sfondo nero
-		setStyleSheet("background-color: black");
+		int screenNumber = QApplication::desktop()->screenNumber(this);
+
 		// salvo il valore dello scale prima del fullscreen
 		gfx.scale_before_fscreen = cfg->scale;
+
 		// salvo la risoluzione del monitor in uso
+		gfx.w[MONITOR] = QApplication::desktop()->screenGeometry(screenNumber).width();
+		gfx.h[MONITOR] = QApplication::desktop()->screenGeometry(screenNumber).height();
+
 #if defined (__WIN32__)
 		// su alcuni windows, se setto il gfx.w[MONITOR] alla dimensione
 		// del desktop, l'immagine a video ha dei glitch grafici marcati
-		gfx.w[MONITOR] = QApplication::desktop()->screenGeometry().width() - 1;
-#else
-		gfx.w[MONITOR] = QApplication::desktop()->screenGeometry().width();
+		gfx.w[MONITOR]--;
 #endif
-		gfx.h[MONITOR] = QApplication::desktop()->screenGeometry().height();
 		// salvo la posizione
 		position = pos();
 		// nascondo il menu
@@ -1293,8 +1294,6 @@ void mainWindow::s_set_fullscreen() {
 		}
 #endif
 	} else {
-		// ripristino lo sfondo di default
-		setStyleSheet("");
 		// ribilito la toolbar
 		statusbar->show();
 		// ribilito il menu
@@ -1319,7 +1318,7 @@ void mainWindow::s_set_fullscreen() {
 	gui_flush();
 }
 void mainWindow::s_loop() {
-	emu_loop();
+	emu_frame();
 }
 void mainWindow::s_open() {
 	QStringList filters;

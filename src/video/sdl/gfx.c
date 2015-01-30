@@ -77,9 +77,9 @@ BYTE gfx_init(void) {
 	}
 
 #if defined (__WIN64__)
-	sprintf(SDL_windowhack, "SDL_WINDOWID=%I64u", (uint64_t) gui_emu_frame_id());
+	sprintf(SDL_windowhack, "SDL_WINDOWID=%I64u", (uint64_t) gui_screen_id());
 #else
-	sprintf(SDL_windowhack, "SDL_WINDOWID=%i", (int) gui_emu_frame_id());
+	sprintf(SDL_windowhack, "SDL_WINDOWID=%i", (int) gui_screen_id());
 #endif
 
 	sdl_wid();

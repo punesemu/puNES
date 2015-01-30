@@ -16,6 +16,8 @@ int __nsleep(const struct timespec *req, struct timespec *rem);
 void gui_init(int argc, char **argv) {
 	static int zero = 0;
 
+	//setenv("QT_NO_GLIB", "1", 1);
+
 	memset(&gui, 0, sizeof(gui));
 	memset(&qt, 0, sizeof(qt));
 
@@ -90,7 +92,7 @@ void gui_sleep(double ms) {
 	req.tv_nsec = ms * 1000000L;
 	__nsleep(&req, &rem);
 }
-int gui_emu_frame_id(void) {
+int gui_screen_id(void) {
 	int wid = qt.screen->winId();
 
 	return (wid);
