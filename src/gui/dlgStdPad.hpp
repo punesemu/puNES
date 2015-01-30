@@ -43,6 +43,7 @@ class dlgStdPad : public QDialog, public Ui::Standard_Pad {
 		bool eventFilter(QObject *obj, QEvent *event);
 
 	private:
+		bool keypressEvent(QEvent *event);
 		void update_dialog(void);
 		void combo_id_init(void);
 		void setEnable_tab_buttons(int type, bool mode);

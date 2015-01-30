@@ -167,7 +167,8 @@ void dlgInput::s_setup_clicked(bool checked) {
 			dlgStdPad *dlg = new dlgStdPad(cfg_port, this);
 
 			hide();
-			dlg->show();
+			dlg->exec();
+			show();
 			break;
 	}
 }

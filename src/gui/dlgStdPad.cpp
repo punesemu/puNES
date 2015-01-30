@@ -307,44 +307,9 @@ bool dlgStdPad::eventFilter(QObject *obj, QEvent *event) {
 				data.in_sequence = false;
 				data.no_other_buttons = false;
 				data.vbutton = 0;
-				qobject_cast<dlgInput *>(parent())->show();
 				break;
-			case QEvent::KeyPress: {
-				QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
-				int type, vbutton;
-
-				if (data.no_other_buttons == false) {
-					return (true);
-				}
-
-				type = data.vbutton / MAX_STD_PAD_BUTTONS;
-				vbutton = data.vbutton - (type * MAX_STD_PAD_BUTTONS);
-
-				if (type == KEYBOARD) {
-					if (keyEvent->key() != Qt::Key_Escape) {
-						data.cfg.port.input[type][vbutton] = inpObject::kbd_keyval_decode(keyEvent);
-					}
-					data.bp->setText(
-					        inpObject::kbd_keyval_to_name(data.cfg.port.input[type][vbutton]));
-				} else {
-					// quando sto configurando il joystick, l'unico input da tastiera
-					// che accetto e' l'escape.
-					if (keyEvent->key() == Qt::Key_Escape) {
-						data.bp->setText(jsv_to_name(data.cfg.port.input[type][vbutton]));
-					} else {
-						return (true);
-					}
-				}
-
-				info_entry_print(type, "");
-				update_dialog();
-
-				data.wait_js_input = FALSE;
-				data.no_other_buttons = false;
-				data.vbutton = 0;
-
-				return (true);
-			}
+			case QEvent::KeyPress:
+				return (keypressEvent(event));
 			default:
 				break;
 		}
@@ -355,7 +320,7 @@ bool dlgStdPad::eventFilter(QObject *obj, QEvent *event) {
 		switch (event->type()) {
 			case QEvent::KeyPress:
 				if (data.no_other_buttons == true) {
-					return (this->eventFilter(this, event));
+					return (keypressEvent(event));
 				}
 				break;
 			default:
@@ -364,6 +329,42 @@ bool dlgStdPad::eventFilter(QObject *obj, QEvent *event) {
 	}
 
 	return (QObject::eventFilter(obj, event));
+}
+bool dlgStdPad::keypressEvent(QEvent *event) {
+	QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+	int type, vbutton;
+
+	if (data.no_other_buttons == false) {
+		return (true);
+	}
+
+	type = data.vbutton / MAX_STD_PAD_BUTTONS;
+	vbutton = data.vbutton - (type * MAX_STD_PAD_BUTTONS);
+
+	if (type == KEYBOARD) {
+		if (keyEvent->key() != Qt::Key_Escape) {
+			data.cfg.port.input[type][vbutton] = inpObject::kbd_keyval_decode(keyEvent);
+		}
+		data.bp->setText(
+		        inpObject::kbd_keyval_to_name(data.cfg.port.input[type][vbutton]));
+	} else {
+		// quando sto configurando il joystick, l'unico input da tastiera
+		// che accetto e' l'escape.
+		if (keyEvent->key() == Qt::Key_Escape) {
+			data.bp->setText(jsv_to_name(data.cfg.port.input[type][vbutton]));
+		} else {
+			return (true);
+		}
+	}
+
+	info_entry_print(type, "");
+	update_dialog();
+
+	data.wait_js_input = FALSE;
+	data.no_other_buttons = false;
+	data.vbutton = 0;
+
+	return (true);
 }
 void dlgStdPad::s_combobox_joy_activated(int index) {
 	unsigned int id = qobject_cast<QComboBox *>(sender())->itemData(index).toInt();
