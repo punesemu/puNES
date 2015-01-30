@@ -352,6 +352,8 @@ DBWORD js_from_name(const char *name, const _js_element *list, const DBWORD leng
 int js_read_in_dialog(int dev, int *dt, DBWORD *value, int max_joystick) {
 	static const DWORD sensibility = (PLUS / 100) * 35;
 	int rc = EXIT_OK;
+	JOYINFOEX joy_info;
+	JOYCAPS joy_caps;
 
 #define adjust_axis_joy(info)\
 	if (joy_info.info != CENTER) {\
@@ -372,9 +374,6 @@ int js_read_in_dialog(int dev, int *dt, DBWORD *value, int max_joystick) {
 	(*dt) = TRUE;
 
 	while ((*dt) == TRUE) {
-		JOYINFOEX joy_info;
-		JOYCAPS joy_caps;
-
 		rc = EXIT_ERROR;
 
 		joyGetDevCaps(dev, &joy_caps, sizeof(joy_caps));
@@ -387,6 +386,15 @@ int js_read_in_dialog(int dev, int *dt, DBWORD *value, int max_joystick) {
 			adjust_axis_joy(dwYpos)
 			adjust_axis_joy(dwZpos)
 			adjust_axis_joy(dwRpos)
+
+			if ((*value) && (!joy_info.dwButtons)
+			        && ((joy_caps.wCaps & JOYCAPS_HASPOV) && (joy_info.dwPOV == JOY_POVCENTERED))
+			        && (joy_info.dwXpos == CENTER) && (joy_info.dwYpos == CENTER)
+			        && ((joy_caps.wCaps & JOYCAPS_HASZ) && (joy_info.dwZpos == CENTER))
+			        && ((joy_caps.wCaps & JOYCAPS_HASR) && (joy_info.dwRpos == CENTER))) {
+				rc = EXIT_OK;
+				break;
+			}
 
 			// esamino i pulsanti
 			if (joy_info.dwButtons) {
@@ -403,8 +411,7 @@ int js_read_in_dialog(int dev, int *dt, DBWORD *value, int max_joystick) {
 				}
 
 				if ((*value)) {
-					rc = EXIT_OK;
-					break;
+					continue;
 				}
 			}
 
@@ -435,8 +442,7 @@ int js_read_in_dialog(int dev, int *dt, DBWORD *value, int max_joystick) {
 			}
 
 			if ((*value)) {
-				rc = EXIT_OK;
-				break;
+				continue;
 			}
 		}
 		gui_flush();

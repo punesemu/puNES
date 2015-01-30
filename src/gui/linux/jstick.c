@@ -220,6 +220,10 @@ int js_read_in_dialog(int dev, int *dt, DBWORD *value, int max_joystick) {
 
 		if (read(fd, &jse, size) == size) {
 			if (jse.value == CENTER) {
+				 if ((*value)) {
+					rc = EXIT_OK;
+					break;
+				}
 				continue;
 			}
 			jse.type &= ~JS_EVENT_INIT;
@@ -238,8 +242,6 @@ int js_read_in_dialog(int dev, int *dt, DBWORD *value, int max_joystick) {
 			} else {
 				continue;
 			}
-			rc = EXIT_OK;
-			break;
 		}
 		gui_flush();
 		gui_sleep(30);
