@@ -21,8 +21,10 @@
 #include "dlgUncomp.hpp"
 #include <QtCore/QtGlobal>
 #if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
+#include <QtGui/QDesktopWidget>
 #include <QtGui/QMessageBox>
 #else
+#include <QtWidgets/QDesktopWidget>
 #include <QtWidgets/QMessageBox>
 #endif
 #include "gui.h"
@@ -51,6 +53,19 @@ BYTE gui_create(void) {
 	qt.screen = new screenWidget(qt.ui->centralwidget, qt.mwin);
 
 	qt.mwin->setup();
+
+	{
+		int screenNumber = qApp->desktop()->screenNumber(qt.mwin);
+
+		if (cfg->last_pos.x > qApp->desktop()->screenGeometry(screenNumber).width()) {
+			cfg->last_pos.x = 0;
+		}
+		if (cfg->last_pos.y > qApp->desktop()->screenGeometry(screenNumber).height()) {
+			cfg->last_pos.x = 0;
+		}
+		qt.mwin->move(QPoint(cfg->last_pos.x, cfg->last_pos.y));
+	}
+
 	qt.mwin->show();
 
 	return (EXIT_OK);

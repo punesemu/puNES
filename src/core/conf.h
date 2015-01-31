@@ -45,6 +45,11 @@ typedef struct {
 	_config_apu apu;
 
 	char palette_file[LENGTH_FILE_NAME_LONG];
+
+	struct _last_pos {
+		int x;
+		int y;
+	} last_pos;
 } _config;
 
 #if defined (__cplusplus)

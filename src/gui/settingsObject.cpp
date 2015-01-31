@@ -731,8 +731,9 @@ void setObject::to_cfg(QString group) {
 		int_to_val(SET_AUDIO, cfg_from_file.apu.channel[APU_MASTER]);
 	}
 
-	if ((group == "last open path") || (group == "all")) {
-		char_to_val(SET_OPEN_PATH, gui.last_open_path);
+	if ((group == "GUI") || (group == "all")) {
+		char_to_val(SET_GUI_OPEN_PATH, gui.last_open_path);
+		val.replace(SET_GUI_LAST_POSITION, lastpos_val());
 	}
 
 	if ((group == "apu channels") || (group == "all")) {
@@ -787,8 +788,9 @@ void setObject::fr_cfg(QString group) {
 		cfg_from_file.apu.channel[APU_MASTER] = val_to_int(SET_AUDIO);
 	}
 
-	if ((group == "last open path") || (group == "all")) {
-		cpy_val_to_char(SET_OPEN_PATH, gui.last_open_path, sizeof(gui.last_open_path));
+	if ((group == "GUI") || (group == "all")) {
+		cpy_val_to_char(SET_GUI_OPEN_PATH, gui.last_open_path, sizeof(gui.last_open_path));
+		lastpos_val_to_int(SET_GUI_LAST_POSITION);
 	}
 
 	if ((group == "apu channels") || (group == "all")) {
@@ -827,6 +829,22 @@ void setObject::double_to_val(int index, double value) {
 }
 void setObject::char_to_val(int index, char *src) {
 	val.replace(index, src);
+}
+void setObject::lastpos_val_to_int(int index) {
+	QStringList splitted = QString(val.at(index)).split(",");
+
+	if (splitted.count() >= 1) {
+		cfg->last_pos.x = splitted.at(0).toInt();
+	}
+	if (splitted.count() >= 2) {
+		cfg->last_pos.y = splitted.at(1).toInt();
+	}
+
+	val.replace(index, lastpos_val());
+}
+QString setObject::lastpos_val() {
+	return (QString("%1,").arg(cfg->last_pos.x) +
+			QString("%1").arg(cfg->last_pos.y));
 }
 void setObject::oscan_val_to_int(int index, _overscan_borders *ob) {
 	if (index == SET_OVERSCAN_BRD_NTSC) {

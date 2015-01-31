@@ -54,6 +54,7 @@ mainWindow::mainWindow(Ui::mainWindow *u) : QMainWindow() {
 	setWindowFlags(windowFlags() & ~Qt::WindowMaximizeButtonHint);
 	setStatusBar(statusbar);
 
+	connect(this, SIGNAL(fullscreen(bool)), this, SLOT(s_fullscreen(bool)));
 	connect(timer_draw, SIGNAL(timeout()), this, SLOT(s_timer_redraw()));
 
 	// creo gli shortcuts
@@ -270,6 +271,15 @@ void mainWindow::state_save_slot_set(int slot) {
 }
 bool mainWindow::eventFilter(QObject *obj, QEvent *event) {
 	if (event->type() == QEvent::Close) {
+		// in linux non posso spostare tramite le qt una finestra da un monitor
+		// ad un'altro, quindi salvo la posizione solo se sono sul monitor 0;
+		if ((cfg->fullscreen == NO_FULLSCR) && (qApp->desktop()->screenNumber(this) == 0)) {
+			cfg->last_pos.x = pos().x();
+			cfg->last_pos.y = pos().y();
+		}
+
+		settings_GUI_wr();
+
 		info.stop = TRUE;
 	} else if (event->type() == QEvent::WindowActivate) {
 		if ((cfg->bck_pause == TRUE) && (gui.main_win_lfp == TRUE)) {
@@ -1244,6 +1254,11 @@ void mainWindow::set_filter(int filter) {
 			return;
 	}
 }
+void mainWindow::s_set_effect() {
+#if defined (SDL)
+	opengl_effect_change(!opengl.rotation);
+#endif
+}
 void mainWindow::s_set_fullscreen() {
 	if (gui.in_update) {
 		return;
@@ -1255,31 +1270,23 @@ void mainWindow::s_set_fullscreen() {
 #endif
 
 	if ((cfg->fullscreen == NO_FULLSCR) || (cfg->fullscreen == NO_CHANGE)) {
-		int screenNumber = QApplication::desktop()->screenNumber(this);
+		int screenNumber = qApp->desktop()->screenNumber(this);
 
-		// salvo il valore dello scale prima del fullscreen
-		gfx.scale_before_fscreen = cfg->scale;
-
-		// salvo la risoluzione del monitor in uso
-		gfx.w[MONITOR] = QApplication::desktop()->screenGeometry(screenNumber).width();
-		gfx.h[MONITOR] = QApplication::desktop()->screenGeometry(screenNumber).height();
-
-#if defined (__WIN32__)
+		gfx.w[MONITOR] = qApp->desktop()->screenGeometry(screenNumber).width();
+		gfx.h[MONITOR] = qApp->desktop()->screenGeometry(screenNumber).height();
+#if defined (SDL) && defined (__WIN32__)
 		// su alcuni windows, se setto il gfx.w[MONITOR] alla dimensione
 		// del desktop, l'immagine a video ha dei glitch grafici marcati
 		gfx.w[MONITOR]--;
 #endif
-		// salvo la posizione
+
+		gfx.scale_before_fscreen = cfg->scale;
 		position = pos();
-		// nascondo il menu
-		menuWidget()->hide();
-		// nascondo la toolbar
-		statusbar->hide();
-		// abilito il fullscreen dello screen
+
+		menuWidget()->setVisible(false);
+		statusbar->setVisible(false);
 		gfx_set_screen(NO_CHANGE, NO_CHANGE, FULLSCR, NO_CHANGE, FALSE, FALSE);
-		// indico alle qt che sono in fullscreen
-		showFullScreen();
-		// disabilito la visualizzazione del puntatore
+
 #if defined (SDL)
 		if ((input_zapper_is_connected((_port *) &port) == FALSE) && !opengl.rotation) {
 #if defined (__WIN32__)
@@ -1293,29 +1300,38 @@ void mainWindow::s_set_fullscreen() {
 			QApplication::setOverrideCursor(Qt::BlankCursor);
 		}
 #endif
+
+		// su alcune macchine, il fullscreen non avviene perche'
+		// la dimensione della finestra e' fissa e le qt non riescono
+		// a sbloccarla.
+		setMinimumSize(QSize(0,0));
+		setMaximumSize(QSize(16777215,16777215));
+
+		emit fullscreen(true);
 	} else {
-		// ribilito la toolbar
-		statusbar->show();
-		// ribilito il menu
-		menuWidget()->show();
-		// esco dal fullscreen delle QT
-		showNormal();
-		// ripristino i valori di scale ed esco dal fullscreen dello scrren
+		emit fullscreen(false);
+
+		menuWidget()->setVisible(true);
+		statusbar->setVisible(true);
 		gfx_set_screen(gfx.scale_before_fscreen, NO_CHANGE, NO_FULLSCR, NO_CHANGE, FALSE, FALSE);
-		// riabilito la visualizzazione del puntatore
+
 #if defined (SDL) && defined (__linux__)
 		SDL_ShowCursor(SDL_ENABLE);
 #else
 		QApplication::restoreOverrideCursor();
 #endif
-		// riposiziono la finestra nella posizione prima del fullscreen
+
 		move(position);
 	}
 
-	// setto il focus
 	gui_set_focus();
-
-	gui_flush();
+}
+void mainWindow::s_fullscreen(bool state) {
+	if (state == true) {
+		QWidget::showFullScreen();
+	} else {
+		QWidget::showNormal();
+	}
 }
 void mainWindow::s_loop() {
 	emu_frame();
@@ -1368,8 +1384,6 @@ void mainWindow::s_open() {
 		change_rom(qPrintable(fileinfo.absoluteFilePath()));
 		strncpy(gui.last_open_path, qPrintable(fileinfo.absolutePath()),
 				sizeof(gui.last_open_path));
-
-		settings_last_open_path_wr();
 	}
 
 	emu_pause(FALSE);
@@ -1644,11 +1658,6 @@ void mainWindow::s_load_palette() {
 
 	emu_pause(FALSE);
 }
-void mainWindow::s_set_effect() {
-#if defined (SDL)
-	opengl_effect_change(!opengl.rotation);
-#endif
-}
 void mainWindow::s_set_vsync() {
 	cfg->vsync = !cfg->vsync;
 
@@ -1843,3 +1852,4 @@ void mainWindow::s_help() {
 void mainWindow::s_timer_redraw() {
 	gfx_draw_screen(TRUE);
 }
+

@@ -76,6 +76,8 @@ class setObject : public settingsObject {
 		void channel_default(int index);
 		void channel_val_to_int(int index);
 		QString channel_val(int index);
+		void lastpos_val_to_int(int index);
+		QString lastpos_val();
 		void oscan_val_to_int(int index, _overscan_borders *ob);
 		QString oscan_val(_overscan_borders *ob);
 };

@@ -48,6 +48,9 @@ class mainWindow: public QMainWindow {
 		void change_rom(const char *rom);
 		void state_save_slot_set(int slot);
 
+	signals:
+		void fullscreen(bool state);
+
 	protected:
 		bool eventFilter(QObject *obj, QEvent *event);
 
@@ -72,6 +75,7 @@ class mainWindow: public QMainWindow {
 		void s_set_fullscreen();
 
 	private slots:
+		void s_fullscreen(bool state);
 		void s_loop();
 		void s_open();
 		void s_open_recent_roms();

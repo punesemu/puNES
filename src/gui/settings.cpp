@@ -37,8 +37,8 @@ void settings_save(void) {
 void *settings_sc_ks(int index) {
 	return (s.set->val_to_qstring_pntr(index));
 }
-void settings_last_open_path_wr(void) {
-	s.set->wr("last open path");
+void settings_GUI_wr(void) {
+	s.set->wr("GUI");
 }
 void settings_set_overscan_default(_overscan_borders *ob, BYTE mode) {
 	s.set->oscan_default(ob, mode);

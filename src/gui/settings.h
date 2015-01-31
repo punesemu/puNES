@@ -76,7 +76,8 @@ enum set_element {
 	SET_AUDIO_QUALITY,
 	SET_SWAP_DUTY,
 	SET_AUDIO,
-	SET_OPEN_PATH,
+	SET_GUI_OPEN_PATH,
+	SET_GUI_LAST_POSITION,
 	SET_APU_MASTER,
 	SET_APU_SQUARE1,
 	SET_APU_SQUARE2,
@@ -593,8 +594,14 @@ static const _settings main_cfg[] = {
 		{LENGTH(opt_off_on), opt_off_on}
 	},
 	{
-		"last open path", "path", NULL,
+		"GUI", "last open path", NULL,
 		"# possible values: [PATH]",
+		NULL,
+		{0, NULL}
+	},
+	{
+		"GUI", "last position of window", "0,0",
+		"# possible values: [X],[Y]",
 		NULL,
 		{0, NULL}
 	},
@@ -829,7 +836,7 @@ static const _list_settings list_settings[] = {
 EXTERNC void settings_init(void);
 EXTERNC void settings_save(void);
 EXTERNC void *settings_sc_ks(int index);
-EXTERNC void settings_last_open_path_wr(void);
+EXTERNC void settings_GUI_wr(void);
 EXTERNC void settings_set_overscan_default(_overscan_borders *ob, BYTE mode);
 EXTERNC int settings_val_to_int(int index, const char *buffer);
 EXTERNC double settings_val_to_double(WORD round, const char *buffer);
