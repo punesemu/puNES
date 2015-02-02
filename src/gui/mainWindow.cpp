@@ -1328,9 +1328,9 @@ void mainWindow::s_set_fullscreen() {
 }
 void mainWindow::s_fullscreen(bool state) {
 	if (state == true) {
-		QWidget::showFullScreen();
+		showFullScreen();
 	} else {
-		QWidget::showNormal();
+		showNormal();
 	}
 }
 void mainWindow::s_loop() {
