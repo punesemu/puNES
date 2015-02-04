@@ -70,7 +70,6 @@ enum ppu_color_mode { PPU_CM_GRAYSCALE = 0x30, PPU_CM_NORMAL = 0x3F };
 	ppu.bck_adr = r2000bck | ((ppu_rd_mem(0x2000 | (r2006vl & 0x0FFF)) << 4)\
 		| ((r2006vl & 0x7000) >> 12))
 #define r2006_inc()\
-{\
 	WORD tile_y;\
 	/* controllo se fine Y e' uguale a 7 */\
 	if ((r2006.value & 0x7000) == 0x7000) {\
@@ -92,10 +91,8 @@ enum ppu_color_mode { PPU_CM_GRAYSCALE = 0x30, PPU_CM_NORMAL = 0x3F };
 	} else {\
 		/* incremento di 1 fine Y */\
 		r2006.value += 0x1000;\
-	}\
-}
-#define r2006_end_scanline()\
-	r2006.value = (r2006.value & 0xFBE0) | (ppu.tmp_vram & 0x041F)
+	}
+#define r2006_end_scanline() r2006.value = (r2006.value & 0xFBE0) | (ppu.tmp_vram & 0x041F)
 
 typedef struct {
 	WORD frame_x;
@@ -117,6 +114,8 @@ typedef struct {
 		BYTE prev;
 		BYTE first_of_tick;
 	} sf;
+
+	WORD radr;
 }  _ppu;
 typedef struct {
 	WORD *data;

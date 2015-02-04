@@ -14,7 +14,6 @@
 #include "input.h"
 #include "mappers.h"
 #include "ppu_inline.h"
-#include "ppu.h"
 #include "apu.h"
 #include "irqA12.h"
 #include "irql2f.h"
@@ -25,9 +24,7 @@
 
 #define mod_cycles_op(op, vl) cpu.cycles op vl
 #define r2006_during_rendering()\
-{\
-	if (!r2002.vblank && r2001.visible &&\
-		(ppu.frame_y > machine.vint_lines) &&\
+	if (!r2002.vblank && r2001.visible && (ppu.frame_y > machine.vint_lines) &&\
 		(ppu.screen_y < SCR_LINES)) {\
 		if (r2000.r2006_inc == 32) {\
 			r2006_inc();\
@@ -36,8 +33,7 @@
 		}\
 	} else {\
 		r2006.value += r2000.r2006_inc;\
-	}\
-}
+	}
 #define ppu_openbus_wr(bit) ppu_openbus.bit = ppu.frames
 #define ppu_openbus_wr_all()\
 	ppu_openbus_wr(bit0);\
@@ -596,6 +592,18 @@ static void cpu_wr_mem(WORD address, BYTE value) {
 				return;
 			}
 
+			if (address == 0x2007) {
+				/* solo se sono nella fase di rendering */
+				if (!r2002.vblank && r2001.visible && (ppu.frame_y > machine.vint_lines)
+				        && (ppu.screen_y < SCR_LINES)) {
+					/* scrivo */
+					ppu_wr_reg(address, value);
+					/* eseguo un tick hardware */
+					tick_hw(1);
+					return;
+				}
+			}
+
 			/* eseguo un tick hardware */
 			tick_hw(1);
 			/* scrivo */
@@ -1075,18 +1083,30 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 		ppu.openbus = value;
 		ppu_openbus_wr_all();
 
-		ppu_wr_mem(r2006.value, value);
-		/*
-		 * e' stato scoperto che anche se normalmente
-		 * durante il rendering, scrittura e lettura del
-		 * $2007 non viene mai fatto per non modificare
-		 * il $2006, un gioco lo fa (Young Indiana Jones
-		 * Chronicles, The (U) [!].nes) e quando avviene,
-		 * l'incremento del $2006 avviene proprio come
-		 * nel ciclo 253 della ppu se r2000.r2006_inc e'
-		 * uguale a 32.
-		 */
-		r2006_during_rendering();
+		if (!r2002.vblank && r2001.visible && (ppu.frame_y > machine.vint_lines)
+		        && (ppu.screen_y < SCR_LINES)) {
+			ppu_wr_mem(ppu.radr, ppu.radr & 0x00FF);
+
+			if ((r2006.value & 0x7000) == 0x7000) {
+				WORD tile_y;
+
+				r2006.value &= 0x0FFF;
+				tile_y = (r2006.value & 0x03E0);
+				if (tile_y == 0x03A0) {
+					r2006.value ^= 0x0BA0;
+				} else if (tile_y == 0x03E0) {
+					r2006.value ^= 0x03E0;
+				} else {
+					r2006.value += 0x20;\
+				}
+			} else {
+				r2006.value += 0x1000;
+			}
+			r2006.value++;
+		} else {
+			ppu_wr_mem(r2006.value, value);
+			r2006.value += r2000.r2006_inc;
+		}
 
 		if (extcl_update_r2006) {
 			 /*

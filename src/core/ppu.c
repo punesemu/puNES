@@ -24,21 +24,20 @@ enum overflow_sprite { OVERFLOW_SPR = 3 };
 
 #define fetch_at()\
 {\
-	BYTE shift_at;\
-	WORD tmp;\
-	tmp = ((r2006.value & 0x0380) >> 4) | ((r2006.value & 0x001C) >> 2);\
-	tmp = ppu_rd_mem(0x23C0 | (r2006.value & 0x0C00) | tmp);\
+	BYTE shift_at, tmp;\
+	ppu.radr = ((r2006.value & 0x0380) >> 4) | ((r2006.value & 0x001C) >> 2);\
+	ppu.radr = 0x23C0 | (r2006.value & 0x0C00) | ppu.radr;\
+	tmp = ppu_rd_mem(ppu.radr);\
 	shift_at = ((r2006.value & 0x40) >> 4) | (r2006.value & 0x02);\
-	tile_fetch.attrib = (tile_fetch.attrib >> 8)\
-		| (((tmp >> shift_at) & 0x03) << 8);\
+	tile_fetch.attrib = (tile_fetch.attrib >> 8) | (((tmp >> shift_at) & 0x03) << 8);\
 }
 #define fetch_lb(r2000bck, r2006vl)\
+	ppu.radr = 0x2000 | ((r2006.race.ctrl ? r2006.race.value : r2006.value) & 0x0FFF);\
 	ppu_bck_adr(r2000bck, r2006vl);\
-	tile_fetch.l_byte = (tile_fetch.l_byte >> 8)\
-		| (inv_chr[ppu_rd_mem(ppu.bck_adr)] << 8);
+	tile_fetch.l_byte = (tile_fetch.l_byte >> 8) | (inv_chr[ppu_rd_mem(ppu.bck_adr)] << 8);
 #define fetch_hb()\
-	tile_fetch.h_byte = (tile_fetch.h_byte >> 8)\
-		| (inv_chr[ppu_rd_mem(ppu.bck_adr | 0x0008)] << 8);\
+	ppu.radr = ppu.bck_adr | 0x0008;\
+	tile_fetch.h_byte = (tile_fetch.h_byte >> 8) | (inv_chr[ppu_rd_mem(ppu.radr)] << 8);\
 	((r2006.value & 0x1F) == 0x1F) ? (r2006.value ^= 0x041F) : (r2006.value++);
 #define ppu_ticket()\
 	ppu.cycles -= machine.ppu_divide;\
@@ -46,11 +45,7 @@ enum overflow_sprite { OVERFLOW_SPR = 3 };
 	nmi.cpu_cycles_from_last_nmi++;\
 	/* deve essere azzerato alla fine di ogni ciclo PPU */\
 	r2006.changed_from_op = 0;
-#define put_pixel(clr)\
-{\
-	WORD pixel = r2001.emphasis | clr;\
-	screen.line[ppu.screen_y][ppu.frame_x] = pixel;\
-}
+#define put_pixel(clr) screen.line[ppu.screen_y][ppu.frame_x] = r2001.emphasis | clr;
 #define put_emphasis(clr) put_pixel((palette.color[clr] & r2001.color_mode))
 #define put_bg put_emphasis(color_bg)
 #define put_sp put_emphasis(color_sp | 0x10)
@@ -267,27 +262,7 @@ void ppu_tick(WORD cycles_cpu) {
 								 * questo controllo.
 								 */
 								if (r2006.changed_from_op != 253) {
-									/* controllo se fine Y e' uguale a 7 */
-									if ((r2006.value & 0x7000) == 0x7000) {
-										/* azzero il fine Y */
-										r2006.value &= 0x0FFF;
-										/* isolo il tile Y */
-										tile_y = (r2006.value & 0x03E0);
-										/* quindi lo esamino */
-										if (tile_y == 0x03A0) {
-											/* nel caso di 29 */
-											r2006.value ^= 0x0BA0;
-										} else if (tile_y == 0x03E0) {
-											/* nel caso di 31 */
-											r2006.value ^= 0x03E0;
-										} else {
-											/* incremento tile Y */
-											r2006.value += 0x20;
-										}
-									} else {
-										/* incremento di 1 fine Y */
-										r2006.value += 0x1000;
-									}
+									r2006_inc()
 								}
 								/*
 								 * alla fine di ogni scanline
@@ -508,7 +483,7 @@ void ppu_tick(WORD cycles_cpu) {
 										 * We've since discovered that not only are
 										 * sprites 0 and 1 temporarily replaced with
 										 * the pair that OAMADDR&0xF8 points to, but
-										 * it's permanent: the pair that OAMADDR&0xF8
+										 * it's permanent: the pair that OAMADDR & 0xF8
 										 * points to is copied to the first 8 bytes of
 										 * OAM when rendering starts.
 										 * The difference should only show up with a game
@@ -857,6 +832,15 @@ void ppu_tick(WORD cycles_cpu) {
 				}
 				/* controllo se ci sono sprite per la (scanline+1) */
 				if (spr_ev.tmp_spr_plus < spr_ev.count_plus) {
+					if (spr_ev.timing == 0) {
+						ppu.radr = 0x2000 | (r2006.value & 0xFFF);
+					} else if (spr_ev.timing == 2) {
+						ppu.radr = 0x2000 | (r2006.value & 0xFFF);
+					} else if (spr_ev.timing == 4) {
+						ppu.radr = ppu.spr_adr;
+					} else if (spr_ev.timing == 6) {
+						ppu.radr = ppu.spr_adr | 0x0008;
+					}
 					/*
 					 * utilizzo pixelTile come contatore di cicli per
 					 * esaminare uno sprite ogni 8 cicli.
@@ -969,6 +953,10 @@ void ppu_tick(WORD cycles_cpu) {
 					 */
 					extcl_after_rd_chr(ppu.bck_adr);
 				}
+			} else if (ppu.frame_x == 337) {
+				ppu.radr = 0x2000 | (r2006.value & 0x0FFF);
+			} else if (ppu.frame_x == 339) {
+				ppu.radr = 0x2000 | (r2006.value & 0x0FFF);
 			}
 		}
 
