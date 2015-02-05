@@ -926,11 +926,11 @@ void mainWindow::shortcuts() {
 	connect_shortcut(ui->action_Soft_Reset, SET_SC_SOFT_RESET, SLOT(s_make_reset()));
 	connect_shortcut(ui->action_Switch_sides, SET_SC_SWITCH_SIDES, SLOT(s_disk_side()));
 	connect_shortcut(ui->action_Eject_Insert_Disk, SET_SC_EJECT_DISK, SLOT(s_eject_disk()));
-	// Settings/Video/Scale
-	//connect_shortcut(ui->action_1x, SET_SC_SCALE_1X, SLOT(s_set_scale()));
-	//connect_shortcut(ui->action_2x, SET_SC_SCALE_2X, SLOT(s_set_scale()));
-	//connect_shortcut(ui->action_3x, SET_SC_SCALE_3X, SLOT(s_set_scale()));
-	//connect_shortcut(ui->action_4x, SET_SC_SCALE_4X, SLOT(s_set_scale()));
+	// Settings/Mode
+	connect_shortcut(ui->action_PAL, SET_SC_MODE_PAL, SLOT(s_set_mode()));
+	connect_shortcut(ui->action_NTSC, SET_SC_MODE_NTSC, SLOT(s_set_mode()));
+	connect_shortcut(ui->action_Dendy, SET_SC_MODE_DENDY, SLOT(s_set_mode()));
+	connect_shortcut(ui->action_Mode_Auto, SET_SC_MODE_AUTO, SLOT(s_set_mode()));
 	// Settings/Video/Scale
 	connect_shortcut(ui->action_1x, SET_SC_SCALE_1X);
 	connect_shortcut(ui->action_2x, SET_SC_SCALE_2X);
