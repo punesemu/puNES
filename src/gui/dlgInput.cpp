@@ -81,13 +81,11 @@ void dlgInput::update_dialog(void) {
 	for (int i = PORT1; i < PORT_MAX; i++) {
 		ctrl_in = &data.port[i];
 
-		QComboBox *cb = findChild<QComboBox *>(
-				QString("comboBox_cp%1").arg(ctrl_in->id));
-		QPushButton *pb = findChild<QPushButton *>(
-				QString("pushButton_cp%1").arg(ctrl_in->id));
+		QComboBox *cb = findChild<QComboBox *>(QString("comboBox_cp%1").arg(ctrl_in->id));
+		QPushButton *pb = findChild<QPushButton *>(QString("pushButton_cp%1").arg(ctrl_in->id));
 
 		cb->setCurrentIndex(ctrl_in->port.type);
-		pb->disconnect(pb, SIGNAL(clicked(bool)));
+		disconnect(pb, SIGNAL(clicked(bool)), this, SLOT(s_setup_clicked(bool)));
 
 		switch (ctrl_in->port.type) {
 			case CTRL_DISABLED:
