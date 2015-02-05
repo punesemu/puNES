@@ -643,12 +643,6 @@ double setObject::val_to_double(WORD round, const char *buffer) {
 
 	return (ret);
 }
-void *setObject::val_to_qstring_pntr(int index) {
-	static QString rc;
-
-	rc = val.at(index);
-	return ((void *) &rc);
-}
 double setObject::val_to_double(int index, WORD round) {
 	return (val_to_double(round, val.at(index).toLocal8Bit().data()));
 }
@@ -691,8 +685,6 @@ void setObject::setup() {
 	text_add_line_info(1, "configuration [green]loaded");
 }
 void setObject::to_cfg(QString group) {
-	if ((group == "shortcuts") || (group == "all")) {}
-
 	if ((group == "system") || (group == "all")) {
 		int_to_val(SET_MODE, cfg_from_file.mode);
 		int_to_val(SET_BCK_PAUSE, cfg_from_file.bck_pause);
@@ -747,8 +739,6 @@ void setObject::to_cfg(QString group) {
 	}
 }
 void setObject::fr_cfg(QString group) {
-	if ((group == "shortcuts") || (group == "all")) {}
-
 	if ((group == "system") || (group == "all")) {
 		cfg_from_file.mode = val_to_int(SET_MODE);
 		cfg_from_file.bck_pause = val_to_int(SET_BCK_PAUSE);
@@ -1091,6 +1081,12 @@ void inpObject::set_all_input_default(_config_input *config_input, _array_pointe
 		set_kbd_joy_default(port, i, JOYSTICK);
 	}
 }
+void *inpObject::val_to_qstring_pntr(int index) {
+	static QString rc;
+
+	rc = val.at(index);
+	return ((void *) &rc);
+}
 void inpObject::setup() {
 	rd();
 	wr();
@@ -1141,9 +1137,11 @@ void inpObject::to_cfg(QString group) {
 		int_to_val(SET_INP_LEFTRIGHT, cfg_from_file.input.permit_updown_leftright);
 	}
 
-	if ((group == "special key") || (group == "all")) {
-		val.replace(SET_INP_TIMELINE_KEY, kbd_keyval_to_name(gui.key.tl));
-		val.replace(SET_INP_DOUBLE_SPEED_KEY, kbd_keyval_to_name(gui.key.speed));
+	if ((group == "shortcuts") || (group == "all")) {}
+
+	if ((group == "special keys") || (group == "all")) {
+		val.replace(SET_INP_SK_TIMELINE_KEY, kbd_keyval_to_name(gui.key.tl));
+		val.replace(SET_INP_SK_DOUBLE_SPEED_KEY, kbd_keyval_to_name(gui.key.speed));
 	}
 }
 void inpObject::fr_cfg(QString group) {
@@ -1192,9 +1190,11 @@ void inpObject::fr_cfg(QString group) {
 		cfg_from_file.input.permit_updown_leftright = val_to_int(SET_INP_LEFTRIGHT);
 	}
 
-	if ((group == "special key") || (group == "all")) {
-		gui.key.tl = kbd_val_to_int(SET_INP_TIMELINE_KEY);
-		gui.key.speed = kbd_val_to_int(SET_INP_DOUBLE_SPEED_KEY);
+	if ((group == "shortcuts") || (group == "all")) {}
+
+	if ((group == "special keys") || (group == "all")) {
+		gui.key.tl = kbd_val_to_int(SET_INP_SK_TIMELINE_KEY);
+		gui.key.speed = kbd_val_to_int(SET_INP_SK_DOUBLE_SPEED_KEY);
 	}
 }
 int inpObject::kbd_val_to_int(int index) {

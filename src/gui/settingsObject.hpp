@@ -56,7 +56,6 @@ class setObject : public settingsObject {
 		setObject(Format f, QString file, int list_ele);
 		~setObject();
 		double val_to_double(WORD round, const char *buffer);
-		void *val_to_qstring_pntr(int index);
 		void oscan_val_to_int(int index, _overscan_borders *ob, const char *buffer);
 		void oscan_default(_overscan_borders *ob, BYTE mode);
 
@@ -101,6 +100,7 @@ class inpObject : public settingsObject {
 		static DBWORD kbd_keyval_decode(QKeyEvent *keyEvent);
 		void set_kbd_joy_default(_port *port, int index, int mode);
 		void set_all_input_default(_config_input *config_input, _array_pointers_port *array);
+		void *val_to_qstring_pntr(int index);
 
 	protected:
 		void setup();

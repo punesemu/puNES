@@ -35,7 +35,7 @@ void settings_save(void) {
 	s.inp->wr();
 }
 void *settings_sc_ks(int index) {
-	return (s.set->val_to_qstring_pntr(index));
+	return (s.inp->val_to_qstring_pntr(index));
 }
 void settings_GUI_wr(void) {
 	s.set->wr("GUI");

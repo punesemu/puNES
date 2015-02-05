@@ -919,42 +919,50 @@ void mainWindow::shortcuts() {
 	 */
 
 	// File
-	connect_shortcut(ui->action_Open, SET_SC_OPEN, SLOT(s_open()));
-	connect_shortcut(ui->action_Quit, SET_SC_QUIT, SLOT(s_quit()));
+	connect_shortcut(ui->action_Open, SET_INP_SC_OPEN, SLOT(s_open()));
+	connect_shortcut(ui->action_Quit, SET_INP_SC_QUIT, SLOT(s_quit()));
 	// NES
-	connect_shortcut(ui->action_Hard_Reset, SET_SC_HARD_RESET, SLOT(s_make_reset()));
-	connect_shortcut(ui->action_Soft_Reset, SET_SC_SOFT_RESET, SLOT(s_make_reset()));
-	connect_shortcut(ui->action_Switch_sides, SET_SC_SWITCH_SIDES, SLOT(s_disk_side()));
-	connect_shortcut(ui->action_Eject_Insert_Disk, SET_SC_EJECT_DISK, SLOT(s_eject_disk()));
+	connect_shortcut(ui->action_Hard_Reset, SET_INP_SC_HARD_RESET, SLOT(s_make_reset()));
+	connect_shortcut(ui->action_Soft_Reset, SET_INP_SC_SOFT_RESET, SLOT(s_make_reset()));
+	connect_shortcut(ui->action_Switch_sides, SET_INP_SC_SWITCH_SIDES, SLOT(s_disk_side()));
+	connect_shortcut(ui->action_Eject_Insert_Disk, SET_INP_SC_EJECT_DISK, SLOT(s_eject_disk()));
 	// Settings/Mode
-	connect_shortcut(ui->action_PAL, SET_SC_MODE_PAL, SLOT(s_set_mode()));
-	connect_shortcut(ui->action_NTSC, SET_SC_MODE_NTSC, SLOT(s_set_mode()));
-	connect_shortcut(ui->action_Dendy, SET_SC_MODE_DENDY, SLOT(s_set_mode()));
-	connect_shortcut(ui->action_Mode_Auto, SET_SC_MODE_AUTO, SLOT(s_set_mode()));
+	connect_shortcut(ui->action_PAL, SET_INP_SC_MODE_PAL, SLOT(s_set_mode()));
+	connect_shortcut(ui->action_NTSC, SET_INP_SC_MODE_NTSC, SLOT(s_set_mode()));
+	connect_shortcut(ui->action_Dendy, SET_INP_SC_MODE_DENDY, SLOT(s_set_mode()));
+	connect_shortcut(ui->action_Mode_Auto, SET_INP_SC_MODE_AUTO, SLOT(s_set_mode()));
 	// Settings/Video/Scale
-	connect_shortcut(ui->action_1x, SET_SC_SCALE_1X);
-	connect_shortcut(ui->action_2x, SET_SC_SCALE_2X);
-	connect_shortcut(ui->action_3x, SET_SC_SCALE_3X);
-	connect_shortcut(ui->action_4x, SET_SC_SCALE_4X);
+	connect_shortcut(ui->action_1x, SET_INP_SC_SCALE_1X);
+	connect_shortcut(ui->action_2x, SET_INP_SC_SCALE_2X);
+	connect_shortcut(ui->action_3x, SET_INP_SC_SCALE_3X);
+	connect_shortcut(ui->action_4x, SET_INP_SC_SCALE_4X);
 #if defined (SDL)
 	// Settings/Video/Effect
-	connect_shortcut(ui->action_Cube, SET_SC_EFFECT_CUBE, SLOT(s_set_effect()));
+	connect_shortcut(ui->action_Cube, SET_INP_SC_EFFECT_CUBE, SLOT(s_set_effect()));
 #endif
 	// Settings/Video/[Interpolation, Fullscreen, Stretch in fullscreen]
-	connect_shortcut(ui->action_Interpolation, SET_SC_INTERPOLATION, SLOT(s_set_interpolation()));
-	connect_shortcut(ui->action_Fullscreen, SET_SC_FULLSCREEN, SLOT(s_set_fullscreen()));
-	connect_shortcut(ui->action_Stretch_in_fullscreen, SET_SC_STRETCH_FULLSCREEN,
-			SLOT(s_set_stretch()));
+	connect_shortcut(ui->action_Interpolation, SET_INP_SC_INTERPOLATION,
+			SLOT(s_set_interpolation()));
+	connect_shortcut(ui->action_Fullscreen, SET_INP_SC_FULLSCREEN,
+			SLOT(s_set_fullscreen()));
+	connect_shortcut(ui->action_Stretch_in_fullscreen,
+			SET_INP_SC_STRETCH_FULLSCREEN, SLOT(s_set_stretch()));
 	// Settings/Audio/Enable
-	connect_shortcut(ui->action_Audio_Enable, SET_SC_AUDIO_ENABLE, SLOT(s_set_audio_enable()));
+	connect_shortcut(ui->action_Audio_Enable, SET_INP_SC_AUDIO_ENABLE,
+			SLOT(s_set_audio_enable()));
 	// Settings/Save settings
-	connect_shortcut(ui->action_Save_settings, SET_SC_SAVE_SETTINGS, SLOT(s_save_settings()));
+	connect_shortcut(ui->action_Save_settings, SET_INP_SC_SAVE_SETTINGS,
+			SLOT(s_save_settings()));
 	// State/[Save state, Load state]
-	connect_shortcut(ui->action_Save_state, SET_SC_SAVE_STATE, SLOT(s_state_save_slot_action()));
-	connect_shortcut(ui->action_Load_state, SET_SC_LOAD_STATE, SLOT(s_state_save_slot_action()));
+	connect_shortcut(ui->action_Save_state, SET_INP_SC_SAVE_STATE,
+			SLOT(s_state_save_slot_action()));
+	connect_shortcut(ui->action_Load_state, SET_INP_SC_LOAD_STATE,
+			SLOT(s_state_save_slot_action()));
 	// State/[Incremente slot, Decrement slot]
-	connect_shortcut(ui->action_Increment_slot, SET_SC_INC_SLOT, SLOT(s_state_save_slot_incdec()));
-	connect_shortcut(ui->action_Decrement_slot, SET_SC_DEC_SLOT, SLOT(s_state_save_slot_incdec()));
+	connect_shortcut(ui->action_Increment_slot, SET_INP_SC_INC_SLOT,
+			SLOT(s_state_save_slot_incdec()));
+	connect_shortcut(ui->action_Decrement_slot, SET_INP_SC_DEC_SLOT,
+			SLOT(s_state_save_slot_incdec()));
 }
 void mainWindow::connect_shortcut(QAction *action, int index) {
 	QString *sc = (QString *)settings_sc_ks(index);
