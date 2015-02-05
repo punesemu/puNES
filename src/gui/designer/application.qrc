@@ -46,6 +46,6 @@
     <file>pics/pushpin.png</file>
   </qresource>
   <qresource prefix="tr">
-    <file>translations/it.qm</file>
+    <file>translations/it_IT.qm</file>
   </qresource>
 </RCC>

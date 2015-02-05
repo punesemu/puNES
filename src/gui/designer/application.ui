@@ -1001,7 +1001,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>P&amp;hosphor2</string>
+    <string>&amp;Phosphor2</string>
    </property>
   </action>
   <action name="action_Scanline">
@@ -1033,7 +1033,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>CRT With &amp;Curve</string>
+    <string>&amp;CRT With Curve</string>
    </property>
   </action>
   <action name="action_CRT_Without_Curve">
@@ -1041,7 +1041,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>CRT &amp;Without Curve</string>
+    <string>&amp;CRT Without Curve</string>
    </property>
   </action>
   <action name="action_Scale2X">
@@ -1049,7 +1049,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Scale&amp;2X</string>
+    <string>&amp;Scale2X</string>
    </property>
   </action>
   <action name="action_Scale3X">
@@ -1057,7 +1057,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Scale&amp;3X</string>
+    <string>&amp;Scale3X</string>
    </property>
   </action>
   <action name="action_Scale4X">
@@ -1065,7 +1065,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Scale&amp;4X</string>
+    <string>&amp;Scale4X</string>
    </property>
   </action>
   <action name="action_Hq2X">
@@ -1073,7 +1073,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Hq&amp;2X</string>
+    <string>&amp;Hq2X</string>
    </property>
   </action>
   <action name="action_Hq3X">
@@ -1081,7 +1081,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Hq&amp;3X</string>
+    <string>&amp;Hq3X</string>
    </property>
   </action>
   <action name="action_Hq4X">
@@ -1089,7 +1089,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Hq&amp;4X</string>
+    <string>&amp;Hq4X</string>
    </property>
   </action>
   <action name="action_xBRZ_2X">
@@ -1097,7 +1097,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>xBRZ &amp;2X</string>
+    <string>&amp;xBRZ 2X</string>
    </property>
   </action>
   <action name="action_xBRZ_3X">
@@ -1105,7 +1105,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>xBRZ &amp;3X</string>
+    <string>&amp;xBRZ 3X</string>
    </property>
   </action>
   <action name="action_xBRZ_4X">
@@ -1113,7 +1113,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>xBRZ &amp;4X</string>
+    <string>&amp;xBRZ 4X</string>
    </property>
   </action>
   <action name="action_NTSC_Composite">
@@ -1121,7 +1121,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>NTSC &amp;Composite</string>
+    <string>&amp;NTSC Composite</string>
    </property>
   </action>
   <action name="action_NTSC_SVideo">
@@ -1129,7 +1129,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>NTSC &amp;S-Video</string>
+    <string>&amp;NTSC S-Video</string>
    </property>
   </action>
   <action name="action_NTSC_RGB">
@@ -1137,7 +1137,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>NTSC &amp;RGB</string>
+    <string>&amp;NTSC RGB</string>
    </property>
   </action>
   <action name="action_Palette_PAL">

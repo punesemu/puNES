@@ -47,7 +47,7 @@ BYTE gui_create(void) {
 	qt.mwin = new mainWindow(qt.ui);
 	qt.tr = new QTranslator();
 
-	qt.tr->load("it", ":/tr/translations");
+	qt.tr->load("it_IT", ":/tr/translations");
 	qt.app->installTranslator(qt.tr);
 	qt.app->setStyle(new pStyle());
 
