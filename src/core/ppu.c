@@ -248,8 +248,6 @@ void ppu_tick(WORD cycles_cpu) {
 							 * l'indirizzo, puntera' alla attribut table.
 							 */
 							if (ppu.frame_x == 253) {
-								WORD tile_y;
-
 								/*
 								 * se il $2006 viene aggiornato (tramite istruzione)
 								 * proprio al ciclo 253 della PPU, questo incremento
