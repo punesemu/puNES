@@ -19,6 +19,7 @@
 #include "screenWidget.hpp"
 #include "sbarWidget.hpp"
 #include "dlgUncomp.hpp"
+#include "pStyle.hpp"
 #include <QtCore/QtGlobal>
 #if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
 #include <QtGui/QDesktopWidget>
@@ -48,6 +49,7 @@ BYTE gui_create(void) {
 
 	qt.tr->load("it", ":/tr/translations");
 	qt.app->installTranslator(qt.tr);
+	qt.app->setStyle(new pStyle());
 
 	qt.ui->setupUi(qt.mwin);
 	qt.screen = new screenWidget(qt.ui->centralwidget, qt.mwin);
