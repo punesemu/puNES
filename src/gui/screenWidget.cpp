@@ -43,6 +43,8 @@ screenWidget::screenWidget(QWidget *parent, mainWindow *mw) : QWidget(parent) {
 	setFocusPolicy(Qt::StrongFocus);
 	setFocus(Qt::ActiveWindowFocusReason);
 
+	setMouseTracking(true);
+
 	installEventFilter(this);
 }
 screenWidget::~screenWidget() {}
@@ -147,6 +149,7 @@ bool screenWidget::eventFilter(QObject *obj, QEvent *event) {
 
 		mouse.x = mouseEvent->x();
 		mouse.y = mouseEvent->y();
+
 #if defined (SDL)
 		if (mouse.left && opengl.rotation) {
 			opengl.x_rotate = (mouseEvent->y() + opengl.y_diff) / slow_factor;

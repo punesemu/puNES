@@ -360,7 +360,7 @@ BYTE input_rd_reg_zapper(BYTE openbus, WORD **screen_index, BYTE nport) {
 		port[nport].zapper |= 0x10;
 	}
 
-	if (mouse.right) {
+	if (!mouse.right) {
 #if defined (SDL)
 		if (gfx.opengl) {
 			int l = (int) opengl.quadcoords.l;
