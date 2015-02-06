@@ -1285,8 +1285,6 @@ int inpObject::tb_delay_val_to_int(int index) {
 
 // ----------------------------------------- I/O------------------------------------------
 
-#include <QtCore/QDebug>
-
 bool rd_cfg_file(QIODevice &device, QSettings::SettingsMap &map) {
 	QTextStream in(&device);
 	const _list_settings *cfg = &list_settings[s.list];
