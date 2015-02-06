@@ -24,6 +24,7 @@ class settingsObject : public QSettings {
 
 	protected:
 		const _list_settings *set;
+		int listEle;
 
 	public:
 		settingsObject(Format f, QString file, int list_ele);

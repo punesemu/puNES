@@ -844,6 +844,10 @@ static const _list_settings list_settings[] = {
 #define EXTERNC
 #endif
 
+EXTERNC struct _cfg_data {
+	BYTE list;
+} cfg_data;
+
 EXTERNC void settings_init(void);
 EXTERNC void settings_save(void);
 EXTERNC void *settings_sc_ks(int index);

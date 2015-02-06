@@ -7,7 +7,7 @@
 
 #include <QtCore/QStringList>
 #include <QtCore/QTextStream>
-#include "settingsObject.hpp"
+#include "settingsObject.moc"
 #include "clock.h"
 #include "save_slot.h"
 #include "conf.h"
@@ -521,7 +521,8 @@ static const struct _kvTable {
 
 settingsObject::settingsObject(Format f, QString file, int list_ele) :
 		QSettings(QString(info.base_folder) + file, f) {
-	set = &list_settings[list_ele];
+	listEle = list_ele;
+	set = &list_settings[listEle];
 
 	for (int i = 0; i < set->count; i++) {
 		val << "";
@@ -533,6 +534,8 @@ void settingsObject::wr() {
 }
 void settingsObject::wr(QString group) {
 	to_cfg(group);
+
+	cfg_data.list = listEle;
 
 	for (int i = 0; i < set->count; i++) {
 		if (group == "all") {
@@ -1282,6 +1285,9 @@ int inpObject::tb_delay_val_to_int(int index) {
 
 bool rd_cfg_file(QIODevice &device, QSettings::SettingsMap &map) {
 	QTextStream in(&device);
+	const _list_settings *cfg;
+
+	cfg = &list_settings[cfg_data.list];
 
 	in.setCodec("UTF-8");
 
@@ -1304,19 +1310,13 @@ bool rd_cfg_file(QIODevice &device, QSettings::SettingsMap &map) {
 			QString group, key, value;
 			bool key_is_good = false;
 
-			for (unsigned int a = 0; a < LENGTH(list_settings); a++) {
-				const _list_settings *ele = &list_settings[a];
-
-				if (!key_is_good) {
-					for (int b = 0; b < ele->count; b++) {
-						// elimino eventuali spazi finali
-						key = QString(splitted.at(0)).replace(QRegExp("\\s*$"), "");
-						if (key == QString(ele->cfg[b].key)) {
-							group = QString(ele->cfg[b].grp);
-							key_is_good = true;
-							break;
-						}
-					}
+			for (int b = 0; b < cfg->count; b++) {
+				// elimino eventuali spazi finali
+				key = QString(splitted.at(0)).replace(QRegExp("\\s*$"), "");
+				if (key == QString(cfg->cfg[b].key)) {
+					group = QString(cfg->cfg[b].grp);
+					key_is_good = true;
+					break;
 				}
 			}
 
@@ -1335,8 +1335,10 @@ bool wr_cfg_file(QIODevice &device, const QSettings::SettingsMap &map) {
 	QTextStream out(&device);
 	QSettings::SettingsMap::const_iterator iter = map.begin();
 	QString group;
-	const _list_settings *cfg = NULL;
+	const _list_settings *cfg;
 	int count_grp = 0;
+
+	cfg = &list_settings[cfg_data.list];
 
 	out.setCodec("UTF-8");
 
@@ -1346,23 +1348,6 @@ bool wr_cfg_file(QIODevice &device, const QSettings::SettingsMap &map) {
 			QString key = splitted.at(1);
 
 			if (group != splitted.at(0)) {
-				if (!cfg) {
-					bool key_is_good = false;
-
-					for (unsigned int a = 0; a < LENGTH(list_settings); a++) {
-						const _list_settings *ele = &list_settings[a];
-
-						if (!key_is_good) {
-							for (int b = 0; b < ele->count; b++) {
-								if (key == QString(ele->cfg[b].key)) {
-									cfg = ele;
-									key_is_good = true;
-									break;
-								}
-							}
-						}
-					}
-				}
 				group = splitted.at(0);
 				if (count_grp > 0) {
 					out << NEWLINE;

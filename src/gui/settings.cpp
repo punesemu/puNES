@@ -5,7 +5,7 @@
  *      Author: fhorse
  */
 
-#include "settingsObject.moc"
+#include "settingsObject.hpp"
 #include <QtCore/QFileInfo>
 #include "conf.h"
 
@@ -27,7 +27,9 @@ void settings_init(void) {
 	memset(&s, 0x00, sizeof(_emu_settings));
 
 	s.cfg = QSettings::registerFormat("cfg", rd_cfg_file, wr_cfg_file);
+	cfg_data.list = LSET_SET;
 	s.set = new setObject(s.cfg, QString(CFGFILENAME), LSET_SET);
+	cfg_data.list = LSET_INP;
 	s.inp = new inpObject(s.cfg, QString(INPFILENAME), LSET_INP);
 }
 void settings_save(void) {
@@ -68,6 +70,7 @@ void settings_pgs_parse(void) {
 		s.pgs = NULL;
 	}
 
+	cfg_data.list = LSET_PGS;
 	s.pgs = new pgsObject(s.cfg, PGSFILENAME, LSET_PGS);
 }
 void settings_pgs_save(void) {
