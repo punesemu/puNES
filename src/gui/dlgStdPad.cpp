@@ -40,7 +40,7 @@ dlgStdPad::dlgStdPad(_cfg_port *cfg_port, QWidget *parent = 0) : QDialog(parent)
 	setFont(parent->font());
 
 	groupBox_controller->setTitle(trUtf8("Controller %1 : Standard Pad").arg(cfg_port->id));
-	tabWidget->setCurrentIndex(0);
+	tabWidget->setCurrentIndex(JOYSTICK);
 	combo_id_init();
 
 	for (int a = KEYBOARD; a <= JOYSTICK; a++) {

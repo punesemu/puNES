@@ -348,12 +348,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../dlgStdPad.hh" line="1074"/>
+        <location filename="../../dlgStdPad.hh" line="1109"/>
         <source>Joystick</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../dlgStdPad.hh" line="1109"/>
+        <location filename="../../dlgStdPad.hh" line="1074"/>
         <source>Keyboard</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1318,55 +1318,55 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="1345"/>
+        <location filename="../../mainWindow.cpp" line="1353"/>
         <source>All supported formats</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="1346"/>
+        <location filename="../../mainWindow.cpp" line="1354"/>
         <source>Compressed files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="1347"/>
+        <location filename="../../mainWindow.cpp" line="1355"/>
         <source>Nes rom files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="1348"/>
+        <location filename="../../mainWindow.cpp" line="1356"/>
         <source>FDS image files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="1349"/>
+        <location filename="../../mainWindow.cpp" line="1357"/>
         <source>TAS movie files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="1350"/>
-        <location filename="../../mainWindow.cpp" line="1606"/>
-        <location filename="../../mainWindow.cpp" line="1634"/>
+        <location filename="../../mainWindow.cpp" line="1358"/>
+        <location filename="../../mainWindow.cpp" line="1614"/>
+        <location filename="../../mainWindow.cpp" line="1642"/>
         <source>All files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="1376"/>
+        <location filename="../../mainWindow.cpp" line="1384"/>
         <source>Open File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="1605"/>
-        <location filename="../../mainWindow.cpp" line="1633"/>
+        <location filename="../../mainWindow.cpp" line="1613"/>
+        <location filename="../../mainWindow.cpp" line="1641"/>
         <source>Palette files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="1613"/>
+        <location filename="../../mainWindow.cpp" line="1621"/>
         <source>Save palette on file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="1641"/>
+        <location filename="../../mainWindow.cpp" line="1649"/>
         <source>Open palette file</source>
         <translation type="unfinished"></translation>
     </message>
