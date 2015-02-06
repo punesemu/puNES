@@ -122,6 +122,14 @@ class inpObject : public settingsObject {
 		int tb_delay_val_to_int(int index);
 };
 
+typedef struct {
+	QSettings::Format cfg;
+	setObject *set;
+	pgsObject *pgs;
+	inpObject *inp;
+	BYTE list;
+} _emu_settings;
+
 #if defined (__cplusplus)
 #define EXTERNC extern "C"
 #else

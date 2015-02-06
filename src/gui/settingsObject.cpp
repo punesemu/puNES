@@ -19,6 +19,8 @@
 #include <X11/keysymdef.h>
 #endif
 
+extern _emu_settings s;
+
 static const struct _kvSpecials {
 	quint32 native;
 	Qt::KeyboardModifiers modifiers;
@@ -535,7 +537,7 @@ void settingsObject::wr() {
 void settingsObject::wr(QString group) {
 	to_cfg(group);
 
-	cfg_data.list = listEle;
+	s.list = listEle;
 
 	for (int i = 0; i < set->count; i++) {
 		if (group == "all") {
@@ -1283,11 +1285,11 @@ int inpObject::tb_delay_val_to_int(int index) {
 
 // ----------------------------------------- I/O------------------------------------------
 
+#include <QtCore/QDebug>
+
 bool rd_cfg_file(QIODevice &device, QSettings::SettingsMap &map) {
 	QTextStream in(&device);
-	const _list_settings *cfg;
-
-	cfg = &list_settings[cfg_data.list];
+	const _list_settings *cfg = &list_settings[s.list];
 
 	in.setCodec("UTF-8");
 
@@ -1335,10 +1337,8 @@ bool wr_cfg_file(QIODevice &device, const QSettings::SettingsMap &map) {
 	QTextStream out(&device);
 	QSettings::SettingsMap::const_iterator iter = map.begin();
 	QString group;
-	const _list_settings *cfg;
+	const _list_settings *cfg  = &list_settings[s.list];
 	int count_grp = 0;
-
-	cfg = &list_settings[cfg_data.list];
 
 	out.setCodec("UTF-8");
 
