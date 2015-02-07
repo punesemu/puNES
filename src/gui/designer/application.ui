@@ -1206,14 +1206,6 @@
     <string>&amp;Load from file</string>
    </property>
   </action>
-  <action name="actionShaders">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>Shaders</string>
-   </property>
-  </action>
   <action name="action_Cube">
    <property name="checkable">
     <bool>true</bool>
@@ -1652,7 +1644,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Disable Red and Green emphasis swap for PAL/Dendy</string>
+    <string>&amp;Disable Red and Green emphasis swap for PAL/Dendy</string>
    </property>
   </action>
  </widget>
