@@ -302,6 +302,7 @@ bool mainWindow::eventFilter(QObject *obj, QEvent *event) {
 	} else if (event->type() == QEvent::LanguageChange) {
 		ui->retranslateUi(this);
 		shortcuts(1);
+		update_window();
 #if defined (SDL)
 		ui->action_Cube->setText(tr("&Cube"));
 		ui->menu_Effect->setTitle(tr("&Effect"));
@@ -375,11 +376,13 @@ void mainWindow::setup_video_rendering() {
 #endif
 }
 void mainWindow::update_menu_nes() {
+	QString *sc = (QString *)settings_sc_ks(SET_INP_SC_EJECT_DISK);
+
 	if (fds.info.enabled) {
 		if (fds.drive.disk_ejected) {
-			ui->action_Eject_Insert_Disk->setText(tr("&Insert disk"));
+			ui->action_Eject_Insert_Disk->setText(tr("&Insert disk") + '\t' + (QString) (*sc));
 		} else {
-			ui->action_Eject_Insert_Disk->setText(tr("&Eject disk"));
+			ui->action_Eject_Insert_Disk->setText(tr("&Eject disk") + '\t' + (QString) (*sc));
 		}
 
 		ui->menu_Disk_Side->setEnabled(true);
@@ -393,7 +396,7 @@ void mainWindow::update_menu_nes() {
 		ctrl_disk_side(ui->action_Disk_4_side_B);
 		ui->action_Eject_Insert_Disk->setEnabled(true);
 	} else {
-		ui->action_Eject_Insert_Disk->setText(tr("&Eject/Insert disk"));
+		ui->action_Eject_Insert_Disk->setText(tr("&Eject/Insert disk") + '\t' + (QString) (*sc));
 		ui->menu_Disk_Side->setEnabled(false);
 		ui->action_Eject_Insert_Disk->setEnabled(false);
 	}
@@ -972,7 +975,7 @@ void mainWindow::update_menu_state() {
 	}
 }
 void mainWindow::ctrl_disk_side(QAction *action) {
-	int side = action->data().toInt();
+	int side = QVariant(action->property("myValue")).toInt();
 
 	if (side < fds.info.total_sides) {
 		action->setEnabled(true);
@@ -1527,6 +1530,8 @@ void mainWindow::s_eject_disk() {
 	} else {
 		fds_disk_op(FDS_DISK_INSERT, 0);
 	}
+
+	update_menu_nes();
 }
 void mainWindow::s_set_mode() {
 	int mode = QVariant(qobject_cast<QObject *>(sender())->property("myValue")).toInt();
