@@ -349,32 +349,32 @@ void mainWindow::set_language(int lang) {
 	cfg->language = lang;
 }
 void mainWindow::setup_video_rendering() {
-	ui->action_Rend0->setText(trUtf8("&Software"));
+	ui->action_Rend0->setText(tr("&Software"));
 	ui->action_Rend0->setEnabled(true);
 	ui->action_Rend0->setVisible(true);
 #if defined (SDL)
-	ui->action_Rend1->setText(trUtf8("&OpenGL"));
+	ui->action_Rend1->setText(tr("&OpenGL"));
 	ui->action_Rend1->setEnabled(true);
 	ui->action_Rend1->setVisible(true);
-	ui->action_Rend2->setText(trUtf8("OpenGL &GLSL"));
+	ui->action_Rend2->setText(tr("OpenGL &GLSL"));
 	ui->action_Rend2->setEnabled(true);
 	ui->action_Rend2->setVisible(true);
 
-	ui->action_PAR_Soft_Stretch->setText(trUtf8("GLSL &soft stretch"));
+	ui->action_PAR_Soft_Stretch->setText(tr("GLSL &soft stretch"));
 #elif defined (D3D9)
-	ui->action_Rend1->setText(trUtf8("&HLSL"));
+	ui->action_Rend1->setText(tr("&HLSL"));
 	ui->action_Rend1->setEnabled(true);
 	ui->action_Rend1->setVisible(true);
 
-	ui->action_PAR_Soft_Stretch->setText(trUtf8("HLSL &soft stretch"));
+	ui->action_PAR_Soft_Stretch->setText(tr("HLSL &soft stretch"));
 #endif
 }
 void mainWindow::update_menu_nes() {
 	if (fds.info.enabled) {
 		if (fds.drive.disk_ejected) {
-			ui->action_Eject_Insert_Disk->setText(trUtf8("&Insert disk"));
+			ui->action_Eject_Insert_Disk->setText(tr("&Insert disk"));
 		} else {
-			ui->action_Eject_Insert_Disk->setText(trUtf8("&Eject disk"));
+			ui->action_Eject_Insert_Disk->setText(tr("&Eject disk"));
 		}
 
 		ui->menu_Disk_Side->setEnabled(true);
@@ -388,7 +388,7 @@ void mainWindow::update_menu_nes() {
 		ctrl_disk_side(ui->action_Disk_4_side_B);
 		ui->action_Eject_Insert_Disk->setEnabled(true);
 	} else {
-		ui->action_Eject_Insert_Disk->setText(trUtf8("&Eject/Insert disk"));
+		ui->action_Eject_Insert_Disk->setText(tr("&Eject/Insert disk"));
 		ui->menu_Disk_Side->setEnabled(false);
 		ui->action_Eject_Insert_Disk->setEnabled(false);
 	}
@@ -768,7 +768,7 @@ void mainWindow::update_menu_settings() {
 		ui->action_Palette_File->setText(QFileInfo(cfg->palette_file).baseName());
 		ui->action_Palette_File->setEnabled(true);
 	} else {
-		ui->action_Palette_File->setText(trUtf8("[Select a file]"));
+		ui->action_Palette_File->setText(tr("[Select a file]"));
 		ui->action_Palette_File->setEnabled(false);
 	}
 
@@ -1421,12 +1421,12 @@ void mainWindow::s_open() {
 
 	emu_pause(TRUE);
 
-	filters.append(trUtf8("All supported formats"));
-	filters.append(trUtf8("Compressed files"));
-	filters.append(trUtf8("Nes rom files"));
-	filters.append(trUtf8("FDS image files"));
-	filters.append(trUtf8("TAS movie files"));
-	filters.append(trUtf8("All files"));
+	filters.append(tr("All supported formats"));
+	filters.append(tr("Compressed files"));
+	filters.append(tr("Nes rom files"));
+	filters.append(tr("FDS image files"));
+	filters.append(tr("TAS movie files"));
+	filters.append(tr("All files"));
 
 	/* potrei essere entrato con il CTRL+O */
 	tl.key = FALSE;
@@ -1452,7 +1452,7 @@ void mainWindow::s_open() {
 
 	gui_timeout_redraw_start();
 
-	file = QFileDialog::getOpenFileName(this, trUtf8("Open File"), gui.last_open_path,
+	file = QFileDialog::getOpenFileName(this, tr("Open File"), gui.last_open_path,
 		filters.join(";;"));
 
 	gui_timeout_redraw_stop();
@@ -1681,15 +1681,15 @@ void mainWindow::s_save_palette() {
 
 	emu_pause(TRUE);
 
-	filters.append(trUtf8("Palette files"));
-	filters.append(trUtf8("All files"));
+	filters.append(tr("Palette files"));
+	filters.append(tr("All files"));
 
 	filters[0].append(" (*.pal *.PAL)");
 	filters[1].append(" (*.*)");
 
 	gui_timeout_redraw_start();
 
-	file = QFileDialog::getSaveFileName(this, trUtf8("Save palette on file"),
+	file = QFileDialog::getSaveFileName(this, tr("Save palette on file"),
 			QString(opt_palette[cfg->palette].lname).replace(" ", "_"),
 			filters.join(";;"));
 
@@ -1709,15 +1709,15 @@ void mainWindow::s_load_palette() {
 
 	emu_pause(TRUE);
 
-	filters.append(trUtf8("Palette files"));
-	filters.append(trUtf8("All files"));
+	filters.append(tr("Palette files"));
+	filters.append(tr("All files"));
 
 	filters[0].append(" (*.pal *.PAL)");
 	filters[1].append(" (*.*)");
 
 	gui_timeout_redraw_start();
 
-	file = QFileDialog::getOpenFileName(this, trUtf8("Open palette file"),
+	file = QFileDialog::getOpenFileName(this, tr("Open palette file"),
 			QFileInfo(cfg->palette_file).dir().absolutePath(), filters.join(";;"));
 
 	gui_timeout_redraw_stop();

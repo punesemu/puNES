@@ -33,8 +33,8 @@ dlgOverscanBorders::dlgOverscanBorders(QWidget *parent = 0) : QDialog(parent) {
 	frame->setFrameStyle(QFrame::Panel | QFrame::Sunken);
 
 	{
-		comboBox_Mode->addItem(trUtf8("NTSC"));
-		comboBox_Mode->addItem(trUtf8("PAL/Dendy"));
+		comboBox_Mode->addItem(tr("NTSC"));
+		comboBox_Mode->addItem(tr("PAL/Dendy"));
 
 		if (machine.type == NTSC) {
 			data.mode = 0;

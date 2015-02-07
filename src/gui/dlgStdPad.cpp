@@ -39,7 +39,7 @@ dlgStdPad::dlgStdPad(_cfg_port *cfg_port, QWidget *parent = 0) : QDialog(parent)
 
 	setFont(parent->font());
 
-	groupBox_controller->setTitle(trUtf8("Controller %1 : Standard Pad").arg(cfg_port->id));
+	groupBox_controller->setTitle(tr("Controller %1 : Standard Pad").arg(cfg_port->id));
 	tabWidget->setCurrentIndex(JOYSTICK);
 	combo_id_init();
 
@@ -95,8 +95,8 @@ dlgStdPad::dlgStdPad(_cfg_port *cfg_port, QWidget *parent = 0) : QDialog(parent)
 	}
 
 	{
-		comboBox_Controller_type->addItem(trUtf8("Original"));
-		comboBox_Controller_type->addItem(trUtf8("3rd-party"));
+		comboBox_Controller_type->addItem(tr("Original"));
+		comboBox_Controller_type->addItem(tr("3rd-party"));
 		comboBox_Controller_type->setCurrentIndex(data.cfg.port.type_pad);
 		connect(comboBox_Controller_type, SIGNAL(activated(int)), this,
 				SLOT(s_combobox_controller_type_activated(int)));
@@ -181,7 +181,7 @@ void dlgStdPad::update_dialog(void) {
 void dlgStdPad::combo_id_init(void) {
 	BYTE disabled_line = 0, count = 0, current_line = name_to_jsn("NULL");
 
-	comboBox_kbd_ID->addItem(trUtf8("Keyboard"));
+	comboBox_kbd_ID->addItem(tr("Keyboard"));
 
 	for (int a = 0; a <= MAX_JOYSTICK; a++) {
 		BYTE id = a;
@@ -200,7 +200,7 @@ void dlgStdPad::combo_id_init(void) {
 			if (count == 0) {
 				break;
 			}
-			comboBox_joy_ID->addItem(trUtf8("Disabled"));
+			comboBox_joy_ID->addItem(tr("Disabled"));
 			id = name_to_jsn("NULL");
 			disabled_line = count;
 		}
@@ -210,7 +210,7 @@ void dlgStdPad::combo_id_init(void) {
 	}
 
 	if (count == 0) {
-		comboBox_joy_ID->addItem(trUtf8("No usable device"));
+		comboBox_joy_ID->addItem(tr("No usable device"));
 		tab_joy->setEnabled(false);
 	} else {
 		tab_joy->setEnabled(true);

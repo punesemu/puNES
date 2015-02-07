@@ -27,9 +27,9 @@ dlgInput::dlgInput(QWidget *parent = 0) : QDialog(parent) {
 
 	setFont(parent->font());
 
-	comboBox_cm->addItem(trUtf8("NES"));
-	comboBox_cm->addItem(trUtf8("Famicom"));
-	comboBox_cm->addItem(trUtf8("Four Score"));
+	comboBox_cm->addItem(tr("NES"));
+	comboBox_cm->addItem(tr("Famicom"));
+	comboBox_cm->addItem(tr("Four Score"));
 	comboBox_cm->setItemData(0, 0);
 	comboBox_cm->setItemData(1, 1);
 	comboBox_cm->setItemData(2, 2);
@@ -118,9 +118,9 @@ void dlgInput::combobox_cp_init(QComboBox *cb, _cfg_port *cfg_port) {
 		int type;
 		QString name;
 	} ctrl_list[] = {
-		{ CTRL_DISABLED, trUtf8("Disabled")     },
-		{ CTRL_STANDARD, trUtf8("Standard Pad") },
-		{ CTRL_ZAPPER,   trUtf8("Zapper")       }
+		{ CTRL_DISABLED, tr("Disabled")     },
+		{ CTRL_STANDARD, tr("Standard Pad") },
+		{ CTRL_ZAPPER,   tr("Zapper")       }
 	};
 
 	{

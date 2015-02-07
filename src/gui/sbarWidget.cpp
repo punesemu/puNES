@@ -181,16 +181,16 @@ stateWidget::stateWidget(Ui::mainWindow *u, QWidget *parent = 0) : QWidget(paren
 }
 stateWidget::~stateWidget() {}
 void stateWidget::retranslateUi() {
-	setToolTip(trUtf8("Save/Load Slot Box"));
+	setToolTip(tr("Save/Load Slot Box"));
 
 	for (int i = 0; i < SAVE_SLOTS; i++) {
-		slot->setItemText(i, trUtf8("Slot %1").arg(i));
+		slot->setItemText(i, tr("Slot %1").arg(i));
 	}
 
-	save->setText(trUtf8("Save"));
+	save->setText(tr("Save"));
 	save->setFixedWidth(QLabel(save->text()).sizeHint().width() + 12);
 
-	load->setText(trUtf8("Load"));
+	load->setText(tr("Load"));
 	load->setFixedWidth(QLabel(load->text()).sizeHint().width() + 12);
 
 #if defined (__linux__)
@@ -302,9 +302,9 @@ void timeLine::timeline_released(BYTE *type) {
 	timeline_update_label(snap);
 }
 void timeLine::retranslateUi() {
-	lab_timeline = "%1 " + trUtf8("sec");
+	lab_timeline = "%1 " + tr("sec");
 
-	setToolTip(trUtf8("Timeline"));
+	setToolTip(tr("Timeline"));
 
 	if (gui.start == FALSE) {
 		label->setText(lab_timeline.arg(0, DEC_LAB_TLINE));
@@ -312,7 +312,7 @@ void timeLine::retranslateUi() {
 		timeline_update_label(slider->value());
 	}
 
-	label->setFixedWidth(QLabel(trUtf8("-00 sec")).sizeHint().width());
+	label->setFixedWidth(QLabel(tr("-00 sec")).sizeHint().width());
 
 #if defined (__linux__)
 	setFixedWidth(vline->width() + SPACING +
