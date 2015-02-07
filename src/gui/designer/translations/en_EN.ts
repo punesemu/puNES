@@ -873,7 +873,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="305"/>
+        <location filename="../../mainWindow.cpp" line="306"/>
         <source>&amp;Cube</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1218,7 +1218,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="306"/>
+        <location filename="../../mainWindow.cpp" line="307"/>
         <source>&amp;Effect</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1268,105 +1268,105 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="356"/>
+        <location filename="../../mainWindow.cpp" line="357"/>
         <source>&amp;Software</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="360"/>
+        <location filename="../../mainWindow.cpp" line="361"/>
         <source>&amp;OpenGL</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="363"/>
+        <location filename="../../mainWindow.cpp" line="364"/>
         <source>OpenGL &amp;GLSL</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="367"/>
+        <location filename="../../mainWindow.cpp" line="368"/>
         <source>GLSL &amp;soft stretch</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="369"/>
+        <location filename="../../mainWindow.cpp" line="370"/>
         <source>&amp;HLSL</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="373"/>
+        <location filename="../../mainWindow.cpp" line="374"/>
         <source>HLSL &amp;soft stretch</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="379"/>
+        <location filename="../../mainWindow.cpp" line="380"/>
         <source>&amp;Insert disk</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="381"/>
+        <location filename="../../mainWindow.cpp" line="382"/>
         <source>&amp;Eject disk</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="395"/>
+        <location filename="../../mainWindow.cpp" line="396"/>
         <source>&amp;Eject/Insert disk</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="775"/>
+        <location filename="../../mainWindow.cpp" line="776"/>
         <source>[Select a file]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="1428"/>
+        <location filename="../../mainWindow.cpp" line="1436"/>
         <source>All supported formats</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="1429"/>
+        <location filename="../../mainWindow.cpp" line="1437"/>
         <source>Compressed files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="1430"/>
+        <location filename="../../mainWindow.cpp" line="1438"/>
         <source>Nes rom files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="1431"/>
+        <location filename="../../mainWindow.cpp" line="1439"/>
         <source>FDS image files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="1432"/>
+        <location filename="../../mainWindow.cpp" line="1440"/>
         <source>TAS movie files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="1433"/>
-        <location filename="../../mainWindow.cpp" line="1689"/>
-        <location filename="../../mainWindow.cpp" line="1717"/>
+        <location filename="../../mainWindow.cpp" line="1441"/>
+        <location filename="../../mainWindow.cpp" line="1697"/>
+        <location filename="../../mainWindow.cpp" line="1725"/>
         <source>All files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="1459"/>
+        <location filename="../../mainWindow.cpp" line="1467"/>
         <source>Open File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="1688"/>
-        <location filename="../../mainWindow.cpp" line="1716"/>
+        <location filename="../../mainWindow.cpp" line="1696"/>
+        <location filename="../../mainWindow.cpp" line="1724"/>
         <source>Palette files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="1696"/>
+        <location filename="../../mainWindow.cpp" line="1704"/>
         <source>Save palette on file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="1724"/>
+        <location filename="../../mainWindow.cpp" line="1732"/>
         <source>Open palette file</source>
         <translation type="unfinished"></translation>
     </message>

@@ -873,7 +873,7 @@
         <translation>&amp;Disabilita inversione dell&apos;emphasis Rosso e Verde per PAL/Dendy</translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="305"/>
+        <location filename="../../mainWindow.cpp" line="306"/>
         <source>&amp;Cube</source>
         <translation>&amp;Cubo</translation>
     </message>
@@ -1218,7 +1218,7 @@
         <translation>&amp;Palette</translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="306"/>
+        <location filename="../../mainWindow.cpp" line="307"/>
         <source>&amp;Effect</source>
         <translation>&amp;Effetto</translation>
     </message>
@@ -1268,105 +1268,105 @@
         <translation>&amp;Aiuto</translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="356"/>
+        <location filename="../../mainWindow.cpp" line="357"/>
         <source>&amp;Software</source>
         <translation>&amp;Software</translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="360"/>
+        <location filename="../../mainWindow.cpp" line="361"/>
         <source>&amp;OpenGL</source>
         <translation>&amp;OpenGL</translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="363"/>
+        <location filename="../../mainWindow.cpp" line="364"/>
         <source>OpenGL &amp;GLSL</source>
         <translation>OpenGL &amp;GLSL</translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="367"/>
+        <location filename="../../mainWindow.cpp" line="368"/>
         <source>GLSL &amp;soft stretch</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="369"/>
+        <location filename="../../mainWindow.cpp" line="370"/>
         <source>&amp;HLSL</source>
         <translation>&amp;HLSL</translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="373"/>
+        <location filename="../../mainWindow.cpp" line="374"/>
         <source>HLSL &amp;soft stretch</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="379"/>
+        <location filename="../../mainWindow.cpp" line="380"/>
         <source>&amp;Insert disk</source>
         <translation>&amp;Inserisci disco</translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="381"/>
+        <location filename="../../mainWindow.cpp" line="382"/>
         <source>&amp;Eject disk</source>
         <translation>&amp;Estrai disco</translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="395"/>
+        <location filename="../../mainWindow.cpp" line="396"/>
         <source>&amp;Eject/Insert disk</source>
         <translation>&amp;Estrai/Inserisci Disco</translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="775"/>
+        <location filename="../../mainWindow.cpp" line="776"/>
         <source>[Select a file]</source>
         <translation>[Seleziona un file]</translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="1428"/>
+        <location filename="../../mainWindow.cpp" line="1436"/>
         <source>All supported formats</source>
         <translation>Tutti i formati</translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="1429"/>
+        <location filename="../../mainWindow.cpp" line="1437"/>
         <source>Compressed files</source>
         <translation>Archivi compressi</translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="1430"/>
+        <location filename="../../mainWindow.cpp" line="1438"/>
         <source>Nes rom files</source>
         <translation>Rom NES</translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="1431"/>
+        <location filename="../../mainWindow.cpp" line="1439"/>
         <source>FDS image files</source>
         <translation>Immagini FDS</translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="1432"/>
+        <location filename="../../mainWindow.cpp" line="1440"/>
         <source>TAS movie files</source>
         <translation>film TAS</translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="1433"/>
-        <location filename="../../mainWindow.cpp" line="1689"/>
-        <location filename="../../mainWindow.cpp" line="1717"/>
+        <location filename="../../mainWindow.cpp" line="1441"/>
+        <location filename="../../mainWindow.cpp" line="1697"/>
+        <location filename="../../mainWindow.cpp" line="1725"/>
         <source>All files</source>
         <translation>Tutti i files</translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="1459"/>
+        <location filename="../../mainWindow.cpp" line="1467"/>
         <source>Open File</source>
         <translation>Carica File</translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="1688"/>
-        <location filename="../../mainWindow.cpp" line="1716"/>
+        <location filename="../../mainWindow.cpp" line="1696"/>
+        <location filename="../../mainWindow.cpp" line="1724"/>
         <source>Palette files</source>
         <translation>File della Paletta</translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="1696"/>
+        <location filename="../../mainWindow.cpp" line="1704"/>
         <source>Save palette on file</source>
         <translation>Salva Paletta su file</translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="1724"/>
+        <location filename="../../mainWindow.cpp" line="1732"/>
         <source>Open palette file</source>
         <translation>Carica Paletta da file</translation>
     </message>

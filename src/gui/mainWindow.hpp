@@ -63,9 +63,9 @@ class mainWindow: public QMainWindow {
 		void update_menu_settings();
 		void update_menu_state();
 		void ctrl_disk_side(QAction *action);
-		void shortcuts();
-		void connect_shortcut(QAction *action, int index);
-		void connect_shortcut(QAction *action, int index, const char *member);
+		void shortcuts(int type);
+		void connect_shortcut(int type, QAction *action, int index);
+		void connect_shortcut(int type, QAction *action, int index, const char *member);
 		void connect_menu_signals();
 		void connect_action(QAction *action, const char *member);
 		void connect_action(QAction *action, int value, const char *member);
