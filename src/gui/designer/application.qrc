@@ -51,6 +51,7 @@
   </qresource>
   <qresource prefix="tr">
     <file>translations/it_IT.qm</file>
+    <file>translations/qt_it.qm</file>
     <file>translations/en_EN.qm</file>
   </qresource>
 </RCC>

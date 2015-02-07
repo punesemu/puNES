@@ -40,6 +40,7 @@ class mainWindow: public QMainWindow {
 		QShortcut *shortcut[SET_MAX_NUM_SC];
 		QPoint position;
 		QTranslator *translator;
+		QTranslator *qtTranslator;
 
 	public:
 		mainWindow(Ui::mainWindow *u);

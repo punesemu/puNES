@@ -75,6 +75,7 @@ mainWindow::mainWindow(Ui::mainWindow *u) : QMainWindow() {
 	}
 
 	translator = new QTranslator();
+	qtTranslator = new QTranslator();
 }
 mainWindow::~mainWindow() {}
 void mainWindow::setup() {
@@ -348,6 +349,10 @@ void mainWindow::set_language(int lang) {
 	QLocale locale = QLocale(lng);
 	QLocale::setDefault(locale);
 
+	if (qtTranslator->load("qt_" + lng, dir)) {
+		printf("0\n");
+		qApp->installTranslator(qtTranslator);
+	}
 	if (translator->load(file, dir)) {
 		qApp->installTranslator(translator);
 	}
