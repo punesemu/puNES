@@ -312,18 +312,29 @@ void mainWindow::set_language(int lang) {
 		return;
 	}
 
-	// remove the old translator
 	qApp->removeTranslator(translator);
 
+	// solo per testare le nuove traduzioni
+	if (gui.start == FALSE) {
+		QFile ext(QString(info.base_folder) + "/test.qm");
+
+		if (ext.exists()) {
+			if (translator->load("test.qm", QString(info.base_folder))) {
+				qApp->installTranslator(translator);
+			}
+			return;
+		}
+	}
+
 	switch (lang) {
-		case LANG_ITALIAN:
+		case LNG_ITALIAN:
 			lng = "it";
 			file = "it_IT";
 			break;
-		//case LANG_RUSSIAN:
+		//case LNG_RUSSIAN:
 		//	lng = "ru";
 		//	break;
-		case LANG_ENGLISH:
+		case LNG_ENGLISH:
 		default:
 			break;
 	}
@@ -331,7 +342,6 @@ void mainWindow::set_language(int lang) {
 	QLocale locale = QLocale(lng);
 	QLocale::setDefault(locale);
 
-	// load the new translator
 	if (translator->load(file, dir)) {
 		qApp->installTranslator(translator);
 	}
@@ -919,13 +929,13 @@ void mainWindow::update_menu_settings() {
 	ui->action_Audio_Enable->setChecked(cfg->apu.channel[APU_MASTER]);
 	// Settings/Language
 	switch (cfg->language) {
-		case LANG_ENGLISH:
+		case LNG_ENGLISH:
 			ui->action_English->setChecked(true);
 			break;
-		case LANG_ITALIAN:
+		case LNG_ITALIAN:
 			ui->action_Italian->setChecked(true);
 			break;
-		case LANG_RUSSIAN:
+		case LNG_RUSSIAN:
 			ui->action_Russian->setChecked(true);
 			break;
 	}
@@ -1207,9 +1217,9 @@ void mainWindow::connect_menu_signals() {
 	// Settings/Input/Config
 	connect_action(ui->action_Input_Config, SLOT(s_set_input()));
 	// Settings/Langauge
-	connect_action(ui->action_English, LANG_ENGLISH, SLOT(s_set_language()));
-	connect_action(ui->action_Italian, LANG_ITALIAN, SLOT(s_set_language()));
-	connect_action(ui->action_Russian, LANG_RUSSIAN, SLOT(s_set_language()));
+	connect_action(ui->action_English, LNG_ENGLISH, SLOT(s_set_language()));
+	connect_action(ui->action_Italian, LNG_ITALIAN, SLOT(s_set_language()));
+	connect_action(ui->action_Russian, LNG_RUSSIAN, SLOT(s_set_language()));
 	// Settings/[Pause when in backgrounds, Game Genie, Save settings, Save settings on exit]
 	connect_action(ui->action_Pause_when_in_background, SLOT(s_set_pause()));
 	connect_action(ui->action_Game_Genie, SLOT(s_gamegenie_select()));

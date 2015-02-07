@@ -358,9 +358,9 @@ static const _opt opt_audio_quality[] = {
 	{NULL, "high", AQ_HIGH}
 };
 static const _opt opt_languages[] = {
-	{NULL, "english", LANG_ENGLISH},
-	{NULL, "italian", LANG_ITALIAN},
-	{NULL, "russian", LANG_RUSSIAN}
+	{NULL, "english", LNG_ENGLISH},
+	{NULL, "italian", LNG_ITALIAN},
+	{NULL, "russian", LNG_RUSSIAN}
 };
 
 static const _opt opt_slot_pgs[] = {

@@ -1268,105 +1268,105 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="342"/>
+        <location filename="../../mainWindow.cpp" line="352"/>
         <source>&amp;Software</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="346"/>
+        <location filename="../../mainWindow.cpp" line="356"/>
         <source>&amp;OpenGL</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="349"/>
+        <location filename="../../mainWindow.cpp" line="359"/>
         <source>OpenGL &amp;GLSL</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="353"/>
+        <location filename="../../mainWindow.cpp" line="363"/>
         <source>GLSL &amp;soft stretch</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="355"/>
+        <location filename="../../mainWindow.cpp" line="365"/>
         <source>&amp;HLSL</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="359"/>
+        <location filename="../../mainWindow.cpp" line="369"/>
         <source>HLSL &amp;soft stretch</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="365"/>
+        <location filename="../../mainWindow.cpp" line="375"/>
         <source>&amp;Insert disk</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="367"/>
+        <location filename="../../mainWindow.cpp" line="377"/>
         <source>&amp;Eject disk</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="381"/>
+        <location filename="../../mainWindow.cpp" line="391"/>
         <source>&amp;Eject/Insert disk</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="761"/>
+        <location filename="../../mainWindow.cpp" line="771"/>
         <source>[Select a file]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="1414"/>
+        <location filename="../../mainWindow.cpp" line="1424"/>
         <source>All supported formats</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="1415"/>
+        <location filename="../../mainWindow.cpp" line="1425"/>
         <source>Compressed files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="1416"/>
+        <location filename="../../mainWindow.cpp" line="1426"/>
         <source>Nes rom files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="1417"/>
+        <location filename="../../mainWindow.cpp" line="1427"/>
         <source>FDS image files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="1418"/>
+        <location filename="../../mainWindow.cpp" line="1428"/>
         <source>TAS movie files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="1419"/>
-        <location filename="../../mainWindow.cpp" line="1675"/>
-        <location filename="../../mainWindow.cpp" line="1703"/>
+        <location filename="../../mainWindow.cpp" line="1429"/>
+        <location filename="../../mainWindow.cpp" line="1685"/>
+        <location filename="../../mainWindow.cpp" line="1713"/>
         <source>All files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="1445"/>
+        <location filename="../../mainWindow.cpp" line="1455"/>
         <source>Open File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="1674"/>
-        <location filename="../../mainWindow.cpp" line="1702"/>
+        <location filename="../../mainWindow.cpp" line="1684"/>
+        <location filename="../../mainWindow.cpp" line="1712"/>
         <source>Palette files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="1682"/>
+        <location filename="../../mainWindow.cpp" line="1692"/>
         <source>Save palette on file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="1710"/>
+        <location filename="../../mainWindow.cpp" line="1720"/>
         <source>Open palette file</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1397,17 +1397,17 @@
 <context>
     <name>timeLine</name>
     <message>
-        <location filename="../../sbarWidget.cpp" line="315"/>
+        <location filename="../../sbarWidget.cpp" line="313"/>
         <source>sec</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../sbarWidget.cpp" line="317"/>
+        <location filename="../../sbarWidget.cpp" line="315"/>
         <source>Timeline</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../sbarWidget.cpp" line="319"/>
+        <location filename="../../sbarWidget.cpp" line="317"/>
         <source>-00 sec</source>
         <translation type="unfinished"></translation>
     </message>
