@@ -50,6 +50,7 @@ class timeLine: public QWidget {
 		timelineSlider *slider;
 		QLabel *label;
 		QString lab_timeline;
+		QFrame *vline;
 
 	public:
 		timeLine(QWidget *parent);

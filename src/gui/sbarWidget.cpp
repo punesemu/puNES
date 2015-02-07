@@ -244,7 +244,7 @@ timeLine::timeLine(QWidget *parent = 0) : QWidget(parent) {
 	setLayout(hbox);
 
 #if defined (__linux__)
-	QFrame *vline = new QFrame(this);
+	vline = new QFrame(this);
 	vline->setFrameShape(QFrame::VLine);
 	vline->setFrameShadow(QFrame::Plain);
 	vline->setFixedWidth(vline->sizeHint().width());
@@ -252,7 +252,6 @@ timeLine::timeLine(QWidget *parent = 0) : QWidget(parent) {
 #endif
 
 	label = new QLabel(this);
-	retranslateUi();
 	hbox->addWidget(label);
 
 	slider = new timelineSlider(this);
@@ -262,14 +261,7 @@ timeLine::timeLine(QWidget *parent = 0) : QWidget(parent) {
 	connect(slider, SIGNAL(sliderReleased()), this, SLOT(s_slider_released()));
 	hbox->addWidget(slider);
 
-#if defined (__linux__)
-	setFixedWidth(vline->width() + SPACING +
-			label->width() + SPACING +
-			slider->width());//+  (slider->sizeHandle() / 2));
-#else
-	setFixedWidth(label->width() + SPACING +
-			slider->width());// +  (slider->sizeHandle() / 2));
-#endif
+	retranslateUi();
 }
 timeLine::~timeLine() {}
 int timeLine::value() {
@@ -313,8 +305,23 @@ void timeLine::retranslateUi() {
 	lab_timeline = "%1 " + trUtf8("sec");
 
 	setToolTip(trUtf8("Timeline"));
-	label->setText(lab_timeline.arg(0, DEC_LAB_TLINE));
+
+	if (gui.start == FALSE) {
+		label->setText(lab_timeline.arg(0, DEC_LAB_TLINE));
+	} else {
+		timeline_update_label(slider->value());
+	}
+
 	label->setFixedWidth(QLabel(trUtf8("-00 sec")).sizeHint().width());
+
+#if defined (__linux__)
+	setFixedWidth(vline->width() + SPACING +
+			label->width() + SPACING +
+			slider->width());//+  (slider->sizeHandle() / 2));
+#else
+	setFixedWidth(label->width() + SPACING +
+			slider->width());// +  (slider->sizeHandle() / 2));
+#endif
 }
 void timeLine::timeline_update_label(int value) {
 	if (tl.button) {
