@@ -288,7 +288,7 @@
      </widget>
      <widget class="QMenu" name="menu_Effect">
       <property name="title">
-       <string>&amp;Effect</string>
+       <string notr="true">&amp;Effect</string>
       </property>
       <property name="icon">
        <iconset resource="application.qrc">
@@ -1225,7 +1225,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>&amp;Cube</string>
+    <string notr="true">&amp;Cube</string>
    </property>
   </action>
   <action name="action_VSync">

@@ -301,6 +301,10 @@ bool mainWindow::eventFilter(QObject *obj, QEvent *event) {
 		}
 	} else if (event->type() == QEvent::LanguageChange) {
 		ui->retranslateUi(this);
+#if defined (SDL)
+		ui->action_Cube->setText(tr("&Cube"));
+		ui->menu_Effect->setTitle(tr("&Effect"));
+#endif
 	}
 
 	return (QObject::eventFilter(obj, event));

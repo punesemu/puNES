@@ -4,82 +4,82 @@
 <context>
     <name>APU_channels</name>
     <message>
-        <location filename="../../dlgApuChannels.hh" line="378"/>
+        <location filename="../../dlgApuChannels.hh" line="377"/>
         <source>APU Channels</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../dlgApuChannels.hh" line="379"/>
+        <location filename="../../dlgApuChannels.hh" line="378"/>
         <source>Channels</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../dlgApuChannels.hh" line="380"/>
+        <location filename="../../dlgApuChannels.hh" line="379"/>
         <source>Square 1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../dlgApuChannels.hh" line="381"/>
+        <location filename="../../dlgApuChannels.hh" line="380"/>
         <source>DMC</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../dlgApuChannels.hh" line="382"/>
+        <location filename="../../dlgApuChannels.hh" line="381"/>
         <source>Noise</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../dlgApuChannels.hh" line="383"/>
+        <location filename="../../dlgApuChannels.hh" line="382"/>
         <source>Square 2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../dlgApuChannels.hh" line="384"/>
+        <location filename="../../dlgApuChannels.hh" line="383"/>
         <source>Extra</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../dlgApuChannels.hh" line="385"/>
+        <location filename="../../dlgApuChannels.hh" line="384"/>
         <source>Master</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../dlgApuChannels.hh" line="386"/>
+        <location filename="../../dlgApuChannels.hh" line="385"/>
         <source>Triangle</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../dlgApuChannels.hh" line="387"/>
+        <location filename="../../dlgApuChannels.hh" line="386"/>
         <source>active</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../dlgApuChannels.hh" line="388"/>
+        <location filename="../../dlgApuChannels.hh" line="387"/>
         <source>volume</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../dlgApuChannels.hh" line="389"/>
+        <location filename="../../dlgApuChannels.hh" line="388"/>
         <source>Active all</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../dlgApuChannels.hh" line="390"/>
+        <location filename="../../dlgApuChannels.hh" line="389"/>
         <source>Disable all</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../dlgApuChannels.hh" line="391"/>
+        <location filename="../../dlgApuChannels.hh" line="390"/>
         <source>Defaults</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../dlgApuChannels.hh" line="392"/>
+        <location filename="../../dlgApuChannels.hh" line="391"/>
         <source>Apply</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../dlgApuChannels.hh" line="393"/>
+        <location filename="../../dlgApuChannels.hh" line="392"/>
         <source>Discard</source>
         <translation type="unfinished"></translation>
     </message>
@@ -87,70 +87,70 @@
 <context>
     <name>Input_dialog</name>
     <message>
-        <location filename="../../dlgInput.hh" line="211"/>
+        <location filename="../../dlgInput.hh" line="210"/>
         <source>Input Configuration</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../dlgInput.hh" line="212"/>
+        <location filename="../../dlgInput.hh" line="211"/>
         <source>Controllers</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../dlgInput.hh" line="213"/>
+        <location filename="../../dlgInput.hh" line="212"/>
         <source>Controller Port 2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../dlgInput.hh" line="214"/>
-        <location filename="../../dlgInput.hh" line="217"/>
+        <location filename="../../dlgInput.hh" line="213"/>
+        <location filename="../../dlgInput.hh" line="216"/>
+        <location filename="../../dlgInput.hh" line="218"/>
         <location filename="../../dlgInput.hh" line="219"/>
-        <location filename="../../dlgInput.hh" line="220"/>
         <source>Setup</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../dlgInput.hh" line="215"/>
+        <location filename="../../dlgInput.hh" line="214"/>
         <source>Controller Port 3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../dlgInput.hh" line="216"/>
+        <location filename="../../dlgInput.hh" line="215"/>
         <source>Controller Port 4</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../dlgInput.hh" line="218"/>
+        <location filename="../../dlgInput.hh" line="217"/>
         <source>Controller Port 1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../dlgInput.hh" line="221"/>
+        <location filename="../../dlgInput.hh" line="220"/>
         <source>Controller Mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../dlgInput.hh" line="222"/>
+        <location filename="../../dlgInput.hh" line="221"/>
         <source>Default</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../dlgInput.hh" line="223"/>
+        <location filename="../../dlgInput.hh" line="222"/>
         <source>Apply</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../dlgInput.hh" line="224"/>
+        <location filename="../../dlgInput.hh" line="223"/>
         <source>Discard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../dlgInput.hh" line="225"/>
+        <location filename="../../dlgInput.hh" line="224"/>
         <source>Misc</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../dlgInput.hh" line="226"/>
+        <location filename="../../dlgInput.hh" line="225"/>
         <source>Permit &quot;Up + Down&quot; and &quot;Left + Right&quot; at the same time</source>
         <translation type="unfinished"></translation>
     </message>
@@ -158,52 +158,52 @@
 <context>
     <name>Set_borders</name>
     <message>
-        <location filename="../../dlgOverscanBorders.hh" line="195"/>
+        <location filename="../../dlgOverscanBorders.hh" line="194"/>
         <source>Set borders</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../dlgOverscanBorders.hh" line="196"/>
+        <location filename="../../dlgOverscanBorders.hh" line="195"/>
         <source>Overscan borders</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../dlgOverscanBorders.hh" line="197"/>
+        <location filename="../../dlgOverscanBorders.hh" line="196"/>
         <source>Preview</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../dlgOverscanBorders.hh" line="198"/>
+        <location filename="../../dlgOverscanBorders.hh" line="197"/>
         <source>Up</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../dlgOverscanBorders.hh" line="199"/>
+        <location filename="../../dlgOverscanBorders.hh" line="198"/>
         <source>Left</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../dlgOverscanBorders.hh" line="200"/>
+        <location filename="../../dlgOverscanBorders.hh" line="199"/>
         <source>Right</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../dlgOverscanBorders.hh" line="201"/>
+        <location filename="../../dlgOverscanBorders.hh" line="200"/>
         <source>Down</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../dlgOverscanBorders.hh" line="202"/>
+        <location filename="../../dlgOverscanBorders.hh" line="201"/>
         <source>Defaults</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../dlgOverscanBorders.hh" line="203"/>
+        <location filename="../../dlgOverscanBorders.hh" line="202"/>
         <source>Apply</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../dlgOverscanBorders.hh" line="204"/>
+        <location filename="../../dlgOverscanBorders.hh" line="203"/>
         <source>Discard</source>
         <translation type="unfinished"></translation>
     </message>
@@ -211,179 +211,179 @@
 <context>
     <name>Standard_Pad</name>
     <message>
-        <location filename="../../dlgStdPad.hh" line="1038"/>
+        <location filename="../../dlgStdPad.hh" line="1037"/>
         <source>Standard Pad</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../dlgStdPad.hh" line="1039"/>
+        <location filename="../../dlgStdPad.hh" line="1074"/>
+        <source>ID</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../dlgStdPad.hh" line="1040"/>
         <location filename="../../dlgStdPad.hh" line="1075"/>
-        <source>ID</source>
+        <source>Up</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../dlgStdPad.hh" line="1041"/>
         <location filename="../../dlgStdPad.hh" line="1076"/>
-        <source>Up</source>
+        <source>A</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../dlgStdPad.hh" line="1042"/>
         <location filename="../../dlgStdPad.hh" line="1077"/>
-        <source>A</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../dlgStdPad.hh" line="1043"/>
-        <location filename="../../dlgStdPad.hh" line="1078"/>
         <source>Down</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../../dlgStdPad.hh" line="1043"/>
         <location filename="../../dlgStdPad.hh" line="1044"/>
-        <location filename="../../dlgStdPad.hh" line="1045"/>
-        <location filename="../../dlgStdPad.hh" line="1052"/>
-        <location filename="../../dlgStdPad.hh" line="1054"/>
-        <location filename="../../dlgStdPad.hh" line="1060"/>
+        <location filename="../../dlgStdPad.hh" line="1051"/>
+        <location filename="../../dlgStdPad.hh" line="1053"/>
+        <location filename="../../dlgStdPad.hh" line="1059"/>
+        <location filename="../../dlgStdPad.hh" line="1061"/>
         <location filename="../../dlgStdPad.hh" line="1062"/>
-        <location filename="../../dlgStdPad.hh" line="1063"/>
-        <location filename="../../dlgStdPad.hh" line="1066"/>
+        <location filename="../../dlgStdPad.hh" line="1065"/>
+        <location filename="../../dlgStdPad.hh" line="1067"/>
         <location filename="../../dlgStdPad.hh" line="1068"/>
-        <location filename="../../dlgStdPad.hh" line="1069"/>
+        <location filename="../../dlgStdPad.hh" line="1078"/>
         <location filename="../../dlgStdPad.hh" line="1079"/>
-        <location filename="../../dlgStdPad.hh" line="1080"/>
-        <location filename="../../dlgStdPad.hh" line="1087"/>
-        <location filename="../../dlgStdPad.hh" line="1089"/>
-        <location filename="../../dlgStdPad.hh" line="1095"/>
+        <location filename="../../dlgStdPad.hh" line="1086"/>
+        <location filename="../../dlgStdPad.hh" line="1088"/>
+        <location filename="../../dlgStdPad.hh" line="1094"/>
+        <location filename="../../dlgStdPad.hh" line="1096"/>
         <location filename="../../dlgStdPad.hh" line="1097"/>
-        <location filename="../../dlgStdPad.hh" line="1098"/>
-        <location filename="../../dlgStdPad.hh" line="1101"/>
+        <location filename="../../dlgStdPad.hh" line="1100"/>
+        <location filename="../../dlgStdPad.hh" line="1102"/>
         <location filename="../../dlgStdPad.hh" line="1103"/>
-        <location filename="../../dlgStdPad.hh" line="1104"/>
         <source>unset</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../dlgStdPad.hh" line="1045"/>
+        <location filename="../../dlgStdPad.hh" line="1080"/>
+        <source>Left</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../dlgStdPad.hh" line="1046"/>
         <location filename="../../dlgStdPad.hh" line="1081"/>
-        <source>Left</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../dlgStdPad.hh" line="1047"/>
-        <location filename="../../dlgStdPad.hh" line="1082"/>
         <source>Start</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../../dlgStdPad.hh" line="1047"/>
         <location filename="../../dlgStdPad.hh" line="1048"/>
         <location filename="../../dlgStdPad.hh" line="1049"/>
-        <location filename="../../dlgStdPad.hh" line="1050"/>
-        <location filename="../../dlgStdPad.hh" line="1053"/>
+        <location filename="../../dlgStdPad.hh" line="1052"/>
+        <location filename="../../dlgStdPad.hh" line="1054"/>
         <location filename="../../dlgStdPad.hh" line="1055"/>
-        <location filename="../../dlgStdPad.hh" line="1056"/>
-        <location filename="../../dlgStdPad.hh" line="1059"/>
-        <location filename="../../dlgStdPad.hh" line="1064"/>
-        <location filename="../../dlgStdPad.hh" line="1067"/>
-        <location filename="../../dlgStdPad.hh" line="1070"/>
+        <location filename="../../dlgStdPad.hh" line="1058"/>
+        <location filename="../../dlgStdPad.hh" line="1063"/>
+        <location filename="../../dlgStdPad.hh" line="1066"/>
+        <location filename="../../dlgStdPad.hh" line="1069"/>
+        <location filename="../../dlgStdPad.hh" line="1082"/>
         <location filename="../../dlgStdPad.hh" line="1083"/>
         <location filename="../../dlgStdPad.hh" line="1084"/>
-        <location filename="../../dlgStdPad.hh" line="1085"/>
-        <location filename="../../dlgStdPad.hh" line="1088"/>
+        <location filename="../../dlgStdPad.hh" line="1087"/>
+        <location filename="../../dlgStdPad.hh" line="1089"/>
         <location filename="../../dlgStdPad.hh" line="1090"/>
-        <location filename="../../dlgStdPad.hh" line="1091"/>
-        <location filename="../../dlgStdPad.hh" line="1094"/>
-        <location filename="../../dlgStdPad.hh" line="1099"/>
-        <location filename="../../dlgStdPad.hh" line="1102"/>
-        <location filename="../../dlgStdPad.hh" line="1105"/>
+        <location filename="../../dlgStdPad.hh" line="1093"/>
+        <location filename="../../dlgStdPad.hh" line="1098"/>
+        <location filename="../../dlgStdPad.hh" line="1101"/>
+        <location filename="../../dlgStdPad.hh" line="1104"/>
         <source>PushButton</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../dlgStdPad.hh" line="1051"/>
-        <location filename="../../dlgStdPad.hh" line="1086"/>
+        <location filename="../../dlgStdPad.hh" line="1050"/>
+        <location filename="../../dlgStdPad.hh" line="1085"/>
         <source>Turbo B</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../dlgStdPad.hh" line="1056"/>
+        <location filename="../../dlgStdPad.hh" line="1091"/>
+        <source>Select</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../dlgStdPad.hh" line="1057"/>
         <location filename="../../dlgStdPad.hh" line="1092"/>
-        <source>Select</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../dlgStdPad.hh" line="1058"/>
-        <location filename="../../dlgStdPad.hh" line="1093"/>
         <source>Turbo A</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../dlgStdPad.hh" line="1061"/>
-        <location filename="../../dlgStdPad.hh" line="1096"/>
+        <location filename="../../dlgStdPad.hh" line="1060"/>
+        <location filename="../../dlgStdPad.hh" line="1095"/>
         <source>B</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../dlgStdPad.hh" line="1065"/>
-        <location filename="../../dlgStdPad.hh" line="1100"/>
+        <location filename="../../dlgStdPad.hh" line="1064"/>
+        <location filename="../../dlgStdPad.hh" line="1099"/>
         <source>Right</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../dlgStdPad.hh" line="1070"/>
+        <location filename="../../dlgStdPad.hh" line="1105"/>
+        <source>In sequence</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../dlgStdPad.hh" line="1071"/>
         <location filename="../../dlgStdPad.hh" line="1106"/>
-        <source>In sequence</source>
+        <source>Unset all</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../dlgStdPad.hh" line="1072"/>
         <location filename="../../dlgStdPad.hh" line="1107"/>
-        <source>Unset all</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../dlgStdPad.hh" line="1073"/>
-        <location filename="../../dlgStdPad.hh" line="1108"/>
         <source>Defaults</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../dlgStdPad.hh" line="1109"/>
+        <location filename="../../dlgStdPad.hh" line="1108"/>
         <source>Joystick</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../dlgStdPad.hh" line="1074"/>
+        <location filename="../../dlgStdPad.hh" line="1073"/>
         <source>Keyboard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../dlgStdPad.hh" line="1110"/>
+        <location filename="../../dlgStdPad.hh" line="1109"/>
         <source>Misc</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../dlgStdPad.hh" line="1111"/>
+        <location filename="../../dlgStdPad.hh" line="1110"/>
         <source>Controller type</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../dlgStdPad.hh" line="1112"/>
+        <location filename="../../dlgStdPad.hh" line="1111"/>
         <source>Turbo B Delay</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../dlgStdPad.hh" line="1113"/>
+        <location filename="../../dlgStdPad.hh" line="1112"/>
         <source>Turbo A Delay</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../dlgStdPad.hh" line="1114"/>
+        <location filename="../../dlgStdPad.hh" line="1113"/>
         <source>Apply</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../dlgStdPad.hh" line="1115"/>
+        <location filename="../../dlgStdPad.hh" line="1114"/>
         <source>Discard</source>
         <translation type="unfinished"></translation>
     </message>
@@ -391,22 +391,22 @@
 <context>
     <name>Uncompress_selection</name>
     <message>
-        <location filename="../../dlgUncomp.hh" line="85"/>
+        <location filename="../../dlgUncomp.hh" line="84"/>
         <source>Dialog</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../dlgUncomp.hh" line="86"/>
+        <location filename="../../dlgUncomp.hh" line="85"/>
         <source>OK</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../dlgUncomp.hh" line="87"/>
+        <location filename="../../dlgUncomp.hh" line="86"/>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../dlgUncomp.hh" line="89"/>
+        <location filename="../../dlgUncomp.hh" line="88"/>
         <source>Roms</source>
         <translation type="unfinished"></translation>
     </message>
@@ -493,377 +493,377 @@
 <context>
     <name>mainWindow</name>
     <message>
-        <location filename="../../application.hh" line="1057"/>
+        <location filename="../../application.hh" line="1058"/>
         <source>&amp;Open</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1058"/>
+        <location filename="../../application.hh" line="1059"/>
         <source>&amp;Quit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1059"/>
+        <location filename="../../application.hh" line="1060"/>
         <source>&amp;Hard Reset</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1060"/>
+        <location filename="../../application.hh" line="1061"/>
         <source>&amp;Soft Reset</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1061"/>
+        <location filename="../../application.hh" line="1062"/>
         <source>&amp;Eject/Insert Disk</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1062"/>
+        <location filename="../../application.hh" line="1063"/>
         <source>Disk 1 side A</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1063"/>
+        <location filename="../../application.hh" line="1064"/>
         <source>Disk 1 side B</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1064"/>
+        <location filename="../../application.hh" line="1065"/>
         <source>Disk 2 side A</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1065"/>
+        <location filename="../../application.hh" line="1066"/>
         <source>Disk 2 side B</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1066"/>
+        <location filename="../../application.hh" line="1067"/>
         <source>Disk 3 side A</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1067"/>
+        <location filename="../../application.hh" line="1068"/>
         <source>Disk 3 side B</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1068"/>
+        <location filename="../../application.hh" line="1069"/>
         <source>Disk 4 side A</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1069"/>
+        <location filename="../../application.hh" line="1070"/>
         <source>Disk 4 side B</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1070"/>
-        <source>&amp;Switch sides</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../../application.hh" line="1071"/>
-        <location filename="../../application.hh" line="1129"/>
-        <source>&amp;PAL</source>
+        <source>&amp;Switch sides</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../application.hh" line="1072"/>
         <location filename="../../application.hh" line="1130"/>
-        <source>&amp;NTSC</source>
+        <source>&amp;PAL</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../application.hh" line="1073"/>
-        <source>&amp;Dendy</source>
+        <location filename="../../application.hh" line="1131"/>
+        <source>&amp;NTSC</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../application.hh" line="1074"/>
-        <source>&amp;Auto</source>
+        <source>&amp;Dendy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../application.hh" line="1075"/>
-        <location filename="../../application.hh" line="1093"/>
-        <source>Default</source>
+        <source>&amp;Auto</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../application.hh" line="1076"/>
-        <source>60</source>
+        <location filename="../../application.hh" line="1094"/>
+        <source>Default</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../application.hh" line="1077"/>
-        <source>59</source>
+        <source>60</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../application.hh" line="1078"/>
-        <source>58</source>
+        <source>59</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../application.hh" line="1079"/>
-        <source>57</source>
+        <source>58</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../application.hh" line="1080"/>
-        <source>56</source>
+        <source>57</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../application.hh" line="1081"/>
-        <source>55</source>
+        <source>56</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../application.hh" line="1082"/>
-        <source>54</source>
+        <source>55</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../application.hh" line="1083"/>
-        <source>53</source>
+        <source>54</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../application.hh" line="1084"/>
-        <source>52</source>
+        <source>53</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../application.hh" line="1085"/>
-        <source>51</source>
+        <source>52</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../application.hh" line="1086"/>
-        <source>50</source>
+        <source>51</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../application.hh" line="1087"/>
-        <source>49</source>
+        <source>50</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../application.hh" line="1088"/>
-        <source>48</source>
+        <source>49</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../application.hh" line="1089"/>
-        <source>47</source>
+        <source>48</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../application.hh" line="1090"/>
-        <source>46</source>
+        <source>47</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../application.hh" line="1091"/>
-        <source>45</source>
+        <source>46</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../application.hh" line="1092"/>
+        <source>45</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../application.hh" line="1093"/>
         <source>44</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1094"/>
+        <location filename="../../application.hh" line="1095"/>
         <source>1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1095"/>
+        <location filename="../../application.hh" line="1096"/>
         <source>2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1096"/>
+        <location filename="../../application.hh" line="1097"/>
         <source>3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1097"/>
+        <location filename="../../application.hh" line="1098"/>
         <source>4</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1098"/>
+        <location filename="../../application.hh" line="1099"/>
         <source>5</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1099"/>
+        <location filename="../../application.hh" line="1100"/>
         <source>6</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1100"/>
+        <location filename="../../application.hh" line="1101"/>
         <source>7</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1101"/>
+        <location filename="../../application.hh" line="1102"/>
         <source>8</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1102"/>
+        <location filename="../../application.hh" line="1103"/>
         <source>9</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1103"/>
-        <source>&amp;Default</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../../application.hh" line="1104"/>
-        <location filename="../../application.hh" line="1106"/>
-        <source>&amp;On</source>
+        <source>&amp;Default</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../application.hh" line="1105"/>
         <location filename="../../application.hh" line="1107"/>
+        <source>&amp;On</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../application.hh" line="1106"/>
+        <location filename="../../application.hh" line="1108"/>
         <source>O&amp;ff</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1108"/>
+        <location filename="../../application.hh" line="1109"/>
         <source>&amp;Set borders</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1109"/>
+        <location filename="../../application.hh" line="1110"/>
         <source>&amp;No Filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1110"/>
+        <location filename="../../application.hh" line="1111"/>
         <source>&amp;Phosphor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1111"/>
+        <location filename="../../application.hh" line="1112"/>
         <source>&amp;Phosphor2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1112"/>
+        <location filename="../../application.hh" line="1113"/>
         <source>S&amp;canline</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1113"/>
+        <location filename="../../application.hh" line="1114"/>
         <source>&amp;DBL</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1114"/>
+        <location filename="../../application.hh" line="1115"/>
         <source>Dark R&amp;oom</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1115"/>
+        <location filename="../../application.hh" line="1116"/>
         <source>&amp;CRT With Curve</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1116"/>
+        <location filename="../../application.hh" line="1117"/>
         <source>&amp;CRT Without Curve</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1117"/>
+        <location filename="../../application.hh" line="1118"/>
         <source>&amp;Scale2X</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1118"/>
+        <location filename="../../application.hh" line="1119"/>
         <source>&amp;Scale3X</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1119"/>
+        <location filename="../../application.hh" line="1120"/>
         <source>&amp;Scale4X</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1120"/>
+        <location filename="../../application.hh" line="1121"/>
         <source>&amp;Hq2X</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1121"/>
+        <location filename="../../application.hh" line="1122"/>
         <source>&amp;Hq3X</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1122"/>
+        <location filename="../../application.hh" line="1123"/>
         <source>&amp;Hq4X</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1123"/>
+        <location filename="../../application.hh" line="1124"/>
         <source>&amp;xBRZ 2X</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1124"/>
+        <location filename="../../application.hh" line="1125"/>
         <source>&amp;xBRZ 3X</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1125"/>
+        <location filename="../../application.hh" line="1126"/>
         <source>&amp;xBRZ 4X</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1126"/>
+        <location filename="../../application.hh" line="1127"/>
         <source>&amp;NTSC Composite</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1127"/>
+        <location filename="../../application.hh" line="1128"/>
         <source>&amp;NTSC S-Video</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1128"/>
+        <location filename="../../application.hh" line="1129"/>
         <source>&amp;NTSC RGB</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1131"/>
+        <location filename="../../application.hh" line="1132"/>
         <source>S&amp;ony CXA2025AS US</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1132"/>
+        <location filename="../../application.hh" line="1133"/>
         <source>&amp;Monochrome</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1133"/>
+        <location filename="../../application.hh" line="1134"/>
         <source>&amp;Green</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1134"/>
+        <location filename="../../application.hh" line="1135"/>
         <source>&amp;Save to file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1135"/>
+        <location filename="../../application.hh" line="1136"/>
         <source>&amp;Load from file</source>
         <translation type="unfinished"></translation>
     </message>
@@ -873,7 +873,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1136"/>
+        <location filename="../../mainWindow.cpp" line="305"/>
         <source>&amp;Cube</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1218,155 +1218,155 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1206"/>
+        <location filename="../../mainWindow.cpp" line="306"/>
         <source>&amp;Effect</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1207"/>
+        <location filename="../../application.hh" line="1206"/>
         <source>&amp;Audio</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1208"/>
+        <location filename="../../application.hh" line="1207"/>
         <source>&amp;Sample rate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1209"/>
+        <location filename="../../application.hh" line="1208"/>
         <source>&amp;Channels</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1210"/>
+        <location filename="../../application.hh" line="1209"/>
         <source>S&amp;tereo delay</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1211"/>
+        <location filename="../../application.hh" line="1210"/>
         <source>&amp;Quality</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1212"/>
+        <location filename="../../application.hh" line="1211"/>
         <source>&amp;Input</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1213"/>
+        <location filename="../../application.hh" line="1212"/>
         <source>&amp;Language</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1214"/>
+        <location filename="../../application.hh" line="1213"/>
         <source>S&amp;tate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../application.hh" line="1215"/>
+        <location filename="../../application.hh" line="1214"/>
         <source>&amp;Help</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="352"/>
+        <location filename="../../mainWindow.cpp" line="356"/>
         <source>&amp;Software</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="356"/>
+        <location filename="../../mainWindow.cpp" line="360"/>
         <source>&amp;OpenGL</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="359"/>
+        <location filename="../../mainWindow.cpp" line="363"/>
         <source>OpenGL &amp;GLSL</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="363"/>
+        <location filename="../../mainWindow.cpp" line="367"/>
         <source>GLSL &amp;soft stretch</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="365"/>
+        <location filename="../../mainWindow.cpp" line="369"/>
         <source>&amp;HLSL</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="369"/>
+        <location filename="../../mainWindow.cpp" line="373"/>
         <source>HLSL &amp;soft stretch</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="375"/>
+        <location filename="../../mainWindow.cpp" line="379"/>
         <source>&amp;Insert disk</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="377"/>
+        <location filename="../../mainWindow.cpp" line="381"/>
         <source>&amp;Eject disk</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="391"/>
+        <location filename="../../mainWindow.cpp" line="395"/>
         <source>&amp;Eject/Insert disk</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="771"/>
+        <location filename="../../mainWindow.cpp" line="775"/>
         <source>[Select a file]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="1424"/>
+        <location filename="../../mainWindow.cpp" line="1428"/>
         <source>All supported formats</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="1425"/>
+        <location filename="../../mainWindow.cpp" line="1429"/>
         <source>Compressed files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="1426"/>
+        <location filename="../../mainWindow.cpp" line="1430"/>
         <source>Nes rom files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="1427"/>
+        <location filename="../../mainWindow.cpp" line="1431"/>
         <source>FDS image files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="1428"/>
+        <location filename="../../mainWindow.cpp" line="1432"/>
         <source>TAS movie files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="1429"/>
-        <location filename="../../mainWindow.cpp" line="1685"/>
-        <location filename="../../mainWindow.cpp" line="1713"/>
+        <location filename="../../mainWindow.cpp" line="1433"/>
+        <location filename="../../mainWindow.cpp" line="1689"/>
+        <location filename="../../mainWindow.cpp" line="1717"/>
         <source>All files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="1455"/>
+        <location filename="../../mainWindow.cpp" line="1459"/>
         <source>Open File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="1684"/>
-        <location filename="../../mainWindow.cpp" line="1712"/>
+        <location filename="../../mainWindow.cpp" line="1688"/>
+        <location filename="../../mainWindow.cpp" line="1716"/>
         <source>Palette files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="1692"/>
+        <location filename="../../mainWindow.cpp" line="1696"/>
         <source>Save palette on file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../mainWindow.cpp" line="1720"/>
+        <location filename="../../mainWindow.cpp" line="1724"/>
         <source>Open palette file</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1397,17 +1397,17 @@
 <context>
     <name>timeLine</name>
     <message>
-        <location filename="../../sbarWidget.cpp" line="313"/>
+        <location filename="../../sbarWidget.cpp" line="305"/>
         <source>sec</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../sbarWidget.cpp" line="315"/>
+        <location filename="../../sbarWidget.cpp" line="307"/>
         <source>Timeline</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../sbarWidget.cpp" line="317"/>
+        <location filename="../../sbarWidget.cpp" line="315"/>
         <source>-00 sec</source>
         <translation type="unfinished"></translation>
     </message>
