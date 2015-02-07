@@ -30,7 +30,7 @@
 // -------------------------------- Statusbar -----------------------------------------
 
 sbarWidget::sbarWidget(Ui::mainWindow *u, QWidget *parent) : QStatusBar(parent) {
-	setObjectName(QString::fromUtf8("statusbar"));
+	setObjectName("statusbar");
 	setSizeGripEnabled(false);
 
 	layout()->setContentsMargins(QMargins(0,0,0,0));
@@ -47,6 +47,8 @@ sbarWidget::sbarWidget(Ui::mainWindow *u, QWidget *parent) : QStatusBar(parent) 
 
 	timeline = new timeLine(this);
 	addWidget(timeline);
+
+	installEventFilter(this);
 }
 sbarWidget::~sbarWidget() {}
 void sbarWidget::update_statusbar() {
@@ -68,6 +70,19 @@ void sbarWidget::update_width(int w) {
 	w -= (state->isVisible() ? state->sizeHint().width() + 2 + 2 + 2 : 0);
 
 	spacer->setFixedWidth(w);
+}
+bool sbarWidget::eventFilter(QObject *obj, QEvent *event) {
+	if (event->type() == QEvent::MouseButtonPress) {
+		gui_set_focus();
+	} else if (event->type() == QEvent::LanguageChange) {
+		if (obj == this) {
+			state->retranslateUi();
+			timeline->retranslateUi();
+			update_width(gfx.w[VIDEO_MODE]);
+		}
+	}
+
+	return (QObject::eventFilter(obj, event));
 }
 
 // -------------------------------- Slot Box ------------------------------------------
@@ -91,7 +106,7 @@ slotComboBox::slotComboBox(QWidget *parent = 0) : QComboBox(parent) {
 	sid = new slotItemDelegate(this);
 
 	for (int i = 0; i < SAVE_SLOTS; i++) {
-		addItem(trUtf8("Slot %1").arg(i));
+		addItem(QString("Slot %1").arg(i));
 	}
 
 	installEventFilter(parent);
@@ -138,11 +153,10 @@ stateWidget::stateWidget(Ui::mainWindow *u, QWidget *parent = 0) : QWidget(paren
 	hbox->setMargin(0);
 	hbox->setSpacing(SPACING);
 
-	setToolTip(trUtf8("Save/Load Slot Box"));
 	setLayout(hbox);
 
 #if defined (__linux__)
-	QFrame *vline = new QFrame(this);
+	vline = new QFrame(this);
 	vline->setFrameShape(QFrame::VLine);
 	vline->setFrameShadow(QFrame::Plain);
 	vline->setFixedWidth(vline->sizeHint().width());
@@ -150,8 +164,6 @@ stateWidget::stateWidget(Ui::mainWindow *u, QWidget *parent = 0) : QWidget(paren
 #endif
 
 	save = new QPushButton(this);
-	save->setText(trUtf8("Save"));
-	save->setFixedWidth(QLabel(save->text()).sizeHint().width() + 12);
 	save->installEventFilter(this);
 	connect(save, SIGNAL(clicked(bool)), this, SLOT(s_save_clicked(bool)));
 	hbox->addWidget(save);
@@ -161,11 +173,25 @@ stateWidget::stateWidget(Ui::mainWindow *u, QWidget *parent = 0) : QWidget(paren
 	hbox->addWidget(slot);
 
 	load = new QPushButton(this);
-	load->setText(trUtf8("Load"));
-	load->setFixedWidth(QLabel(load->text()).sizeHint().width() + 12);
 	load->installEventFilter(this);
 	connect(load, SIGNAL(clicked(bool)), this, SLOT(s_load_clicked(bool)));
 	hbox->addWidget(load);
+
+	retranslateUi();
+}
+stateWidget::~stateWidget() {}
+void stateWidget::retranslateUi() {
+	setToolTip(trUtf8("Save/Load Slot Box"));
+
+	for (int i = 0; i < SAVE_SLOTS; i++) {
+		slot->setItemText(i, trUtf8("Slot %1").arg(i));
+	}
+
+	save->setText(trUtf8("Save"));
+	save->setFixedWidth(QLabel(save->text()).sizeHint().width() + 12);
+
+	load->setText(trUtf8("Load"));
+	load->setFixedWidth(QLabel(load->text()).sizeHint().width() + 12);
 
 #if defined (__linux__)
 	setFixedWidth(vline->width() + SPACING +
@@ -177,14 +203,6 @@ stateWidget::stateWidget(Ui::mainWindow *u, QWidget *parent = 0) : QWidget(paren
 			slot->sizeHint().width() + SPACING +
 			load->width());
 #endif
-}
-stateWidget::~stateWidget() {}
-bool stateWidget::eventFilter(QObject *obj, QEvent *event) {
-	if (event->type() == QEvent::MouseButtonPress) {
-		gui_set_focus();
-	}
-
-	return (QObject::eventFilter(obj, event));
 }
 void stateWidget::s_save_clicked(bool checked) {
 	ui->action_Save_state->trigger();
@@ -223,9 +241,6 @@ timeLine::timeLine(QWidget *parent = 0) : QWidget(parent) {
 	hbox->setMargin(0);
 	hbox->setSpacing(SPACING);
 
-	lab_timeline = "%1 " + trUtf8("sec");
-
-	setToolTip(trUtf8("Timeline"));
 	setLayout(hbox);
 
 #if defined (__linux__)
@@ -236,8 +251,8 @@ timeLine::timeLine(QWidget *parent = 0) : QWidget(parent) {
 	hbox->addWidget(vline);
 #endif
 
-	label = new QLabel(lab_timeline.arg(0, DEC_LAB_TLINE), this);
-	label->setFixedWidth(QLabel(trUtf8("-00 sec")).sizeHint().width());
+	label = new QLabel(this);
+	retranslateUi();
 	hbox->addWidget(label);
 
 	slider = new timelineSlider(this);
@@ -294,12 +309,12 @@ void timeLine::timeline_released(BYTE *type) {
 	emu_pause(FALSE);
 	timeline_update_label(snap);
 }
-bool timeLine::eventFilter(QObject *obj, QEvent *event) {
-	if (event->type() == QEvent::MouseButtonPress) {
-		gui_set_focus();
-	}
+void timeLine::retranslateUi() {
+	lab_timeline = "%1 " + trUtf8("sec");
 
-	return (QObject::eventFilter(obj, event));
+	setToolTip(trUtf8("Timeline"));
+	label->setText(lab_timeline.arg(0, DEC_LAB_TLINE));
+	label->setFixedWidth(QLabel(trUtf8("-00 sec")).sizeHint().width());
 }
 void timeLine::timeline_update_label(int value) {
 	if (tl.button) {

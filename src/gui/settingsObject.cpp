@@ -731,6 +731,7 @@ void setObject::to_cfg(QString group) {
 	if ((group == "GUI") || (group == "all")) {
 		char_to_val(SET_GUI_OPEN_PATH, gui.last_open_path);
 		val.replace(SET_GUI_LAST_POSITION, lastpos_val());
+		int_to_val(SET_GUI_LANGUAGE, cfg_from_file.language);
 	}
 
 	if ((group == "apu channels") || (group == "all")) {
@@ -786,6 +787,7 @@ void setObject::fr_cfg(QString group) {
 	if ((group == "GUI") || (group == "all")) {
 		cpy_val_to_char(SET_GUI_OPEN_PATH, gui.last_open_path, sizeof(gui.last_open_path));
 		lastpos_val_to_int(SET_GUI_LAST_POSITION);
+		cfg_from_file.language = val_to_int(SET_GUI_LANGUAGE);
 	}
 
 	if ((group == "apu channels") || (group == "all")) {

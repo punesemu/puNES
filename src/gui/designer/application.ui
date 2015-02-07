@@ -407,11 +407,25 @@
      </property>
      <addaction name="action_Input_Config"/>
     </widget>
+    <widget class="QMenu" name="menu_Language">
+     <property name="title">
+      <string>&amp;Language</string>
+     </property>
+     <property name="icon">
+      <iconset resource="application.qrc">
+       <normaloff>:/icon/icons/language.png</normaloff>:/icon/icons/language.png</iconset>
+     </property>
+     <addaction name="action_English"/>
+     <addaction name="action_Italian"/>
+     <addaction name="action_Russian"/>
+    </widget>
     <addaction name="menu_Mode"/>
     <addaction name="separator"/>
     <addaction name="menu_Video"/>
     <addaction name="menu_Audio"/>
     <addaction name="menu_Input"/>
+    <addaction name="separator"/>
+    <addaction name="menu_Language"/>
     <addaction name="separator"/>
     <addaction name="action_Pause_when_in_background"/>
     <addaction name="action_Game_Genie"/>
@@ -1645,6 +1659,42 @@
    </property>
    <property name="text">
     <string>&amp;Disable Red and Green emphasis swap for PAL/Dendy</string>
+   </property>
+  </action>
+  <action name="action_English">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="application.qrc">
+     <normaloff>:/icon/icons/flag_united_kingdom.png</normaloff>:/icon/icons/flag_united_kingdom.png</iconset>
+   </property>
+   <property name="text">
+    <string notr="true">&amp;English</string>
+   </property>
+  </action>
+  <action name="action_Italian">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="application.qrc">
+     <normaloff>:/icon/icons/flag_italy.png</normaloff>:/icon/icons/flag_italy.png</iconset>
+   </property>
+   <property name="text">
+    <string notr="true">&amp;Italian</string>
+   </property>
+  </action>
+  <action name="action_Russian">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="application.qrc">
+     <normaloff>:/icon/icons/flag_russia.png</normaloff>:/icon/icons/flag_russia.png</iconset>
+   </property>
+   <property name="text">
+    <string notr="true">&amp;Russian</string>
    </property>
   </action>
  </widget>

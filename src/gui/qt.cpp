@@ -38,15 +38,10 @@ struct _qt {
 	Ui::mainWindow *ui;
 	mainWindow *mwin;
 	screenWidget *screen;
-	QTranslator *tr;
 } qt;
 
 void gui_quit(void) {}
 BYTE gui_create(void) {
-	qt.tr = new QTranslator();
-	qt.tr->load("it_IT", ":/tr/translations");
-	qt.app->installTranslator(qt.tr);
-
 	qt.ui = new Ui::mainWindow;
 	qt.mwin = new mainWindow(qt.ui);
 

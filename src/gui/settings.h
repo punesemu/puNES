@@ -56,6 +56,7 @@ enum set_element {
 	SET_AUDIO,
 	SET_GUI_OPEN_PATH,
 	SET_GUI_LAST_POSITION,
+	SET_GUI_LANGUAGE,
 	SET_APU_MASTER,
 	SET_APU_SQUARE1,
 	SET_APU_SQUARE2,
@@ -356,6 +357,11 @@ static const _opt opt_audio_quality[] = {
 	{NULL, "low",  AQ_LOW},
 	{NULL, "high", AQ_HIGH}
 };
+static const _opt opt_languages[] = {
+	{NULL, "english", LANG_ENGLISH},
+	{NULL, "italian", LANG_ITALIAN},
+	{NULL, "russian", LANG_RUSSIAN}
+};
 
 static const _opt opt_slot_pgs[] = {
 	{NULL, "0", 0},
@@ -587,6 +593,12 @@ static const _settings main_cfg[] = {
 		"# possible values: [X],[Y]",
 		NULL,
 		{0, NULL}
+	},
+	{
+		"GUI", "language", "english",
+		"# possible values: english,italian,russian",
+		"    --language            GUI language          : english,italian,russian",
+		{LENGTH(opt_languages), opt_languages}
 	},
 	{
 		"apu channels", "master", "on,100",

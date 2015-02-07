@@ -40,6 +40,7 @@ typedef struct {
 	BYTE gamegenie;
 	BYTE txt_on_screen;
 	BYTE bck_pause;
+	WORD language;
 
 	_config_input input;
 	_config_apu apu;

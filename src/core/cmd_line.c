@@ -54,6 +54,7 @@ static const struct option opt_long[] = {
 	{ "overscan-brd-pal",   required_argument, NULL,  0 },
 	{ "par-soft-stretch",   required_argument, NULL,  0 },
 	{ "background-pause",   required_argument, NULL,  0 },
+	{ "language",           required_argument, NULL,  0 },
 	{ 0,                    0,                 0,     0 }
 };
 
@@ -81,6 +82,8 @@ BYTE cmd_line_parse(int argc, char **argv) {
 					cfg_from_file.PAR_soft_stretch = set_int(SET_PAR_SOFT_STRETCH);
 				} else if (!(strcmp(opt_long[longIndex].name, "background-pause"))) {
 					cfg_from_file.bck_pause = set_int(SET_BCK_PAUSE);
+				} else if (!(strcmp(opt_long[longIndex].name, "language"))) {
+					cfg_from_file.language = set_int(SET_GUI_LANGUAGE);
 				}
 				break;
 			case 'a':
@@ -221,6 +224,7 @@ void usage(char *name) {
 			"%s\n"
 			"%s\n"
 			"%s\n"
+			"%s\n"
 	};
 
 	usage_string = (char *) malloc(1024 * 8);
@@ -251,7 +255,8 @@ void usage(char *name) {
 			main_cfg[SET_AUDIO_QUALITY].hlp,
 			main_cfg[SET_SWAP_DUTY].hlp,
 			main_cfg[SET_BCK_PAUSE].hlp,
-			main_cfg[SET_GAMEGENIE].hlp
+			main_cfg[SET_GAMEGENIE].hlp,
+			main_cfg[SET_GUI_LANGUAGE].hlp
 	);
 	gui_print_usage(usage_string);
 	free(usage_string);

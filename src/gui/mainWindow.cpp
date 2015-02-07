@@ -73,6 +73,8 @@ mainWindow::mainWindow(Ui::mainWindow *u) : QMainWindow() {
 		actual.setWeight(QFont::Light);
 		setFont(actual);
 	}
+
+	translator = new QTranslator();
 }
 mainWindow::~mainWindow() {}
 void mainWindow::setup() {
@@ -238,6 +240,12 @@ void mainWindow::setup() {
 	grp->setExclusive(true);
 	grp->addAction(ui->action_Audio_Quality_Low);
 	grp->addAction(ui->action_Audio_Quality_High);
+	// Settings/Language
+	grp = new QActionGroup(this);
+	grp->setExclusive(true);
+	grp->addAction(ui->action_English);
+	grp->addAction(ui->action_Italian);
+	grp->addAction(ui->action_Russian);
 	// State
 	grp = new QActionGroup(this);
 	grp->setExclusive(true);
@@ -247,6 +255,8 @@ void mainWindow::setup() {
 	grp->addAction(ui->action_State_Slot_3);
 	grp->addAction(ui->action_State_Slot_4);
 	grp->addAction(ui->action_State_Slot_5);
+
+	set_language(cfg->language);
 }
 void mainWindow::update_window() {
 	// File
@@ -289,9 +299,44 @@ bool mainWindow::eventFilter(QObject *obj, QEvent *event) {
 		if ((cfg->bck_pause == TRUE) && (gui.main_win_lfp == TRUE)) {
 			emu_pause(TRUE);
 		}
+	} else if (event->type() == QEvent::LanguageChange) {
+		ui->retranslateUi(this);
 	}
 
 	return (QObject::eventFilter(obj, event));
+}
+void mainWindow::set_language(int lang) {
+	QString lng = "en", file = "en_EN", dir = ":/tr/translations";
+
+	if ((lang == cfg->language) && (gui.start == TRUE)) {
+		return;
+	}
+
+	// remove the old translator
+	qApp->removeTranslator(translator);
+
+	switch (lang) {
+		case LANG_ITALIAN:
+			lng = "it";
+			file = "it_IT";
+			break;
+		//case LANG_RUSSIAN:
+		//	lng = "ru";
+		//	break;
+		case LANG_ENGLISH:
+		default:
+			break;
+	}
+
+	QLocale locale = QLocale(lng);
+	QLocale::setDefault(locale);
+
+	// load the new translator
+	if (translator->load(file, dir)) {
+		qApp->installTranslator(translator);
+	}
+
+	cfg->language = lang;
 }
 void mainWindow::setup_video_rendering() {
 	ui->action_Rend0->setText(trUtf8("&Software"));
@@ -872,6 +917,18 @@ void mainWindow::update_menu_settings() {
 	// Settings/Audio/[Swap Duty Cycle, Enable]
 	ui->action_Swap_Duty_Cycles->setChecked(cfg->swap_duty);
 	ui->action_Audio_Enable->setChecked(cfg->apu.channel[APU_MASTER]);
+	// Settings/Language
+	switch (cfg->language) {
+		case LANG_ENGLISH:
+			ui->action_English->setChecked(true);
+			break;
+		case LANG_ITALIAN:
+			ui->action_Italian->setChecked(true);
+			break;
+		case LANG_RUSSIAN:
+			ui->action_Russian->setChecked(true);
+			break;
+	}
 	//Settings/[Pause when in backgrounds, Game Genie, Save settings on exit]
 	ui->action_Pause_when_in_background->setChecked(cfg->bck_pause);
 	ui->action_Game_Genie->setChecked(cfg->gamegenie);
@@ -1149,6 +1206,10 @@ void mainWindow::connect_menu_signals() {
 	connect_action(ui->action_Audio_Enable, SLOT(s_set_audio_enable()));
 	// Settings/Input/Config
 	connect_action(ui->action_Input_Config, SLOT(s_set_input()));
+	// Settings/Langauge
+	connect_action(ui->action_English, LANG_ENGLISH, SLOT(s_set_language()));
+	connect_action(ui->action_Italian, LANG_ITALIAN, SLOT(s_set_language()));
+	connect_action(ui->action_Russian, LANG_RUSSIAN, SLOT(s_set_language()));
 	// Settings/[Pause when in backgrounds, Game Genie, Save settings, Save settings on exit]
 	connect_action(ui->action_Pause_when_in_background, SLOT(s_set_pause()));
 	connect_action(ui->action_Game_Genie, SLOT(s_gamegenie_select()));
@@ -1761,6 +1822,11 @@ void mainWindow::s_set_audio_enable() {
 	}
 	gui_update();
 	emu_pause(FALSE);
+}
+void mainWindow::s_set_language() {
+	int lang = QVariant(qobject_cast<QObject *>(sender())->property("myValue")).toInt();
+
+	set_language(lang);
 }
 void mainWindow::s_set_input() {
 	dlgInput *dlg = new dlgInput(this);

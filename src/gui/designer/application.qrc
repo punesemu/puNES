@@ -1,5 +1,9 @@
 <RCC>
   <qresource prefix="icon">
+    <file>icons/flag_italy.png</file>
+    <file>icons/flag_russia.png</file>
+    <file>icons/flag_united_kingdom.png</file>
+    <file>icons/language.png</file>
     <file>icons/input.png</file>
     <file>icons/about.png</file>
     <file>icons/state_dec.png</file>
@@ -47,5 +51,6 @@
   </qresource>
   <qresource prefix="tr">
     <file>translations/it_IT.qm</file>
+    <file>translations/en_EN.qm</file>
   </qresource>
 </RCC>

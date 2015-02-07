@@ -58,9 +58,7 @@ class timeLine: public QWidget {
 		void setValue(int value, bool s_action);
 		void timeline_pressed(BYTE *type);
 		void timeline_released(BYTE *type);
-
-	protected:
-		bool eventFilter(QObject *obj, QEvent *event);
+		void retranslateUi();
 
 	private:
 		void timeline_update_label(int value);
@@ -105,13 +103,12 @@ class stateWidget: public QWidget {
 		QPushButton *save;
 		slotComboBox *slot;
 		QPushButton *load;
+		QFrame *vline;
 
 	public:
 		stateWidget(Ui::mainWindow *u, QWidget *parent);
 		~stateWidget();
-
-	protected:
-		bool eventFilter(QObject *obj, QEvent *event);
+		void retranslateUi();
 
 	private slots:
 		void s_save_clicked(bool checked);
@@ -130,9 +127,11 @@ class sbarWidget: public QStatusBar {
 	public:
 		sbarWidget(Ui::mainWindow *u, QWidget *parent);
 		~sbarWidget();
-
 		void update_statusbar();
 		void update_width(int w);
+
+	protected:
+		bool eventFilter(QObject *obj, QEvent *event);
 };
 
 #endif /* SBARWIDGET_HPP_ */

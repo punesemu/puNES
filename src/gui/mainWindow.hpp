@@ -39,6 +39,7 @@ class mainWindow: public QMainWindow {
 		Ui::mainWindow *ui;
 		QShortcut *shortcut[SET_MAX_NUM_SC];
 		QPoint position;
+		QTranslator *translator;
 
 	public:
 		mainWindow(Ui::mainWindow *u);
@@ -55,6 +56,7 @@ class mainWindow: public QMainWindow {
 		bool eventFilter(QObject *obj, QEvent *event);
 
 	private:
+		void set_language(int lang);
 		void setup_video_rendering();
 		void update_recent_roms();
 		void update_menu_nes();
@@ -109,6 +111,7 @@ class mainWindow: public QMainWindow {
 		void s_set_apu_channels();
 		void s_set_audio_swap_duty();
 		void s_set_audio_enable();
+		void s_set_language();
 		void s_set_input();
 		void s_set_pause();
 		void s_gamegenie_select();
