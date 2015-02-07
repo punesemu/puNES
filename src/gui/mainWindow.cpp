@@ -333,7 +333,7 @@ void mainWindow::update_menu_nes() {
 		ctrl_disk_side(ui->action_Disk_4_side_B);
 		ui->action_Eject_Insert_Disk->setEnabled(true);
 	} else {
-		ui->action_Eject_Insert_Disk->setText(trUtf8("&Eject/_Insert disk"));
+		ui->action_Eject_Insert_Disk->setText(trUtf8("&Eject/Insert disk"));
 		ui->menu_Disk_Side->setEnabled(false);
 		ui->action_Eject_Insert_Disk->setEnabled(false);
 	}

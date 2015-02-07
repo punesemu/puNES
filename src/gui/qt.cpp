@@ -43,12 +43,13 @@ struct _qt {
 
 void gui_quit(void) {}
 BYTE gui_create(void) {
-	qt.ui = new Ui::mainWindow;
-	qt.mwin = new mainWindow(qt.ui);
 	qt.tr = new QTranslator();
-
 	qt.tr->load("it_IT", ":/tr/translations");
 	qt.app->installTranslator(qt.tr);
+
+	qt.ui = new Ui::mainWindow;
+	qt.mwin = new mainWindow(qt.ui);
+
 	qt.app->setStyle(new pStyle());
 
 	qt.ui->setupUi(qt.mwin);
