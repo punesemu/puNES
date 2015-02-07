@@ -1953,4 +1953,3 @@ void mainWindow::s_help() {
 void mainWindow::s_timer_redraw() {
 	gfx_draw_screen(TRUE);
 }
-
