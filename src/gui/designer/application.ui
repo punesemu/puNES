@@ -100,7 +100,7 @@
    </widget>
    <widget class="QMenu" name="menu_Settings">
     <property name="title">
-     <string>&amp;Settings</string>
+     <string>Setti&amp;ngs</string>
     </property>
     <widget class="QMenu" name="menu_Mode">
      <property name="title">
@@ -1667,7 +1667,7 @@
    </property>
    <property name="icon">
     <iconset resource="application.qrc">
-     <normaloff>:/icon/icons/flag_united_kingdom.png</normaloff>:/icon/icons/flag_united_kingdom.png</iconset>
+     <normaloff>:/icon/icons/flag_english.png</normaloff>:/icon/icons/flag_english.png</iconset>
    </property>
    <property name="text">
     <string notr="true">&amp;English</string>
