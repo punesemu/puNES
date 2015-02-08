@@ -350,7 +350,6 @@ void mainWindow::set_language(int lang) {
 	QLocale::setDefault(locale);
 
 	if (qtTranslator->load("qt_" + lng, dir)) {
-		printf("0\n");
 		qApp->installTranslator(qtTranslator);
 	}
 	if (translator->load(file, dir)) {
@@ -1239,7 +1238,8 @@ void mainWindow::connect_menu_signals() {
 	// Settings/Langauge
 	connect_action(ui->action_English, LNG_ENGLISH, SLOT(s_set_language()));
 	connect_action(ui->action_Italian, LNG_ITALIAN, SLOT(s_set_language()));
-	connect_action(ui->action_Russian, LNG_RUSSIAN, SLOT(s_set_language()));
+	//connect_action(ui->action_Russian, LNG_RUSSIAN, SLOT(s_set_language()));
+	ui->menu_Language->removeAction(ui->action_Russian);
 	// Settings/[Pause when in backgrounds, Game Genie, Save settings, Save settings on exit]
 	connect_action(ui->action_Pause_when_in_background, SLOT(s_set_pause()));
 	connect_action(ui->action_Game_Genie, SLOT(s_gamegenie_select()));
