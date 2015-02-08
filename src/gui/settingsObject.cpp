@@ -1080,7 +1080,7 @@ void inpObject::set_all_input_default(_config_input *config_input, _array_pointe
 				break;
 		}
 
-		port->type_pad = CTRL_PAD_ORIGINAL;
+		port->type_pad = CTRL_PAD_AUTO;
 
 		port->turbo[TURBOA].frequency = TURBO_BUTTON_DELAY_DEFAULT;
 		port->turbo[TURBOB].frequency = TURBO_BUTTON_DELAY_DEFAULT;

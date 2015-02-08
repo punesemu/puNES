@@ -383,8 +383,9 @@ static const _opt opt_controller_mode[] = {
 	{NULL, "four score", CTRL_MODE_FOUR_SCORE}
 };
 static const _opt opt_pad_type[] = {
+	{NULL, "auto",     CTRL_PAD_AUTO},
 	{NULL, "original", CTRL_PAD_ORIGINAL},
-	{NULL, "3rdparty", CTRL_PAD_3RD_PARTY}
+	{NULL, "3rdparty", CTRL_PAD_3RD_PARTY},
 };
 
 static const _settings main_cfg[] = {
@@ -697,8 +698,8 @@ static const _settings inp_cfg[] = {
 		{LENGTH(opt_controller), opt_controller}
 	},
 	{
-		"port 1", "pad 1 type", "original",
-		"# possible values: original, 3rdparty",
+		"port 1", "pad 1 type", "auto",
+		"# possible values: auto, original, 3rdparty",
 		NULL,
 		{LENGTH(opt_pad_type), opt_pad_type}
 	},
@@ -732,8 +733,8 @@ static const _settings inp_cfg[] = {
 		{LENGTH(opt_controller), opt_controller}
 	},
 	{
-		"port 2", "pad 2 type", "original",
-		"# possible values: original, 3rdparty",
+		"port 2", "pad 2 type", "auto",
+		"# possible values: auto, original, 3rdparty",
 		NULL,
 		{LENGTH(opt_pad_type), opt_pad_type}
 	},
@@ -767,8 +768,8 @@ static const _settings inp_cfg[] = {
 		{LENGTH(opt_controller) - 1, opt_controller}
 	},
 	{
-		"port 3", "pad 3 type", "original",
-		"# possible values: original, 3rdparty",
+		"port 3", "pad 3 type", "auto",
+		"# possible values: auto, original, 3rdparty",
 		NULL,
 		{LENGTH(opt_pad_type), opt_pad_type}
 	},
@@ -802,8 +803,8 @@ static const _settings inp_cfg[] = {
 		{LENGTH(opt_controller) - 1, opt_controller}
 	},
 	{
-		"port 4", "pad 4 type", "original",
-		"# possible values: original, 3rdparty",
+		"port 4", "pad 4 type", "auto",
+		"# possible values: auto, original, 3rdparty",
 		NULL,
 		{LENGTH(opt_pad_type), opt_pad_type}
 	},

@@ -11,6 +11,7 @@
 #include "common.h"
 #include "input.h"
 #include "gui.h"
+#include "clock.h"
 
 #define SPT(ind) QString(std_pad_input_type[ind])
 #define SPB(ind) QString(std_pad_button[ind])
@@ -95,6 +96,7 @@ dlgStdPad::dlgStdPad(_cfg_port *cfg_port, QWidget *parent = 0) : QDialog(parent)
 	}
 
 	{
+		comboBox_Controller_type->addItem(tr("Auto"));
 		comboBox_Controller_type->addItem(tr("Original"));
 		comboBox_Controller_type->addItem(tr("3rd-party"));
 		comboBox_Controller_type->setCurrentIndex(data.cfg.port.type_pad);
@@ -480,7 +482,8 @@ void dlgStdPad::s_combobox_controller_type_activated(int index) {
 
 	data.cfg.port.type_pad = index;
 
-	if (data.cfg.port.type_pad == CTRL_PAD_ORIGINAL) {
+	if (((data.cfg.port.type_pad == CTRL_PAD_AUTO) && (machine.type != DENDY))
+			|| (data.cfg.port.type_pad == CTRL_PAD_ORIGINAL)) {
 		state = PRESSED;
 	}
 
