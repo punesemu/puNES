@@ -1,5 +1,4 @@
-#include <winuser.h>
-#include <afxres.h>
+#include <windows.h>
 #include "../../core/version.h"
 
 //CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "Application.manifest"
@@ -26,9 +25,10 @@ BEGIN
 			VALUE "ProductName",      NAME
 			VALUE "ProductVersion",   VER1 "." VER2
 		END
-		BLOCK "VarFileInfo"
-		BEGIN
-        	VALUE "Translation",
+	END
+	BLOCK "VarFileInfo"
+	BEGIN
+		VALUE "Translation",
 			// Arabic
 			0x0401, 1200,
 			0x0401, 1252,
@@ -149,7 +149,7 @@ BEGIN
 			// Belgian Dutch
 			0x0813, 1200,
 			0x0813, 1252,
-			// Norwegian ? Nynorsk		
+			// Norwegian ? Nynorsk
 			0x0814, 1200,
 			0x0814, 1252,
 			// Portuguese (Portugal)
@@ -164,6 +164,5 @@ BEGIN
 			// Swiss French
 			0x100C, 1200,
 			0x100C, 1252
-    	END
 	END
 END
