@@ -26,5 +26,144 @@ BEGIN
 			VALUE "ProductName",      NAME
 			VALUE "ProductVersion",   VER1 "." VER2
 		END
+		BLOCK "VarFileInfo"
+		BEGIN
+        	VALUE "Translation",
+			// Arabic
+			0x0401, 1200,
+			0x0401, 1252,
+			// Bulgarian
+			0x0402, 1200,
+			0x0402, 1252,
+			// Catalan
+			0x0403, 1200,
+			0x0403, 1252,
+			// Traditional Chinese
+			0x0404, 1200,
+			0x0404, 1252,
+			// Czech
+			0x0405, 1200,
+			0x0405, 1252,
+			// Danish
+			0x0406, 1200,
+			0x0406, 1252,
+			// German
+			0x0407, 1200,
+			0x0407, 1252,
+			// Greek
+			0x0408, 1200,
+			0x0408, 1252,
+			// U.S. English
+			0x0409, 1200,
+			0x0409, 1252,
+			// Castilian Spanish
+			0x040A, 1200,
+			0x040A, 1252,
+			// Finnish
+			0x040B, 1200,
+			0x040B, 1252,
+			// French
+			0x040C, 1200,
+			0x040C, 1252,
+			// Hebrew
+			0x040D, 1200,
+			0x040D, 1252,
+			// Hungarian
+			0x040E, 1200,
+			0x040E, 1252,
+			// Icelandic
+			0x040F, 1200,
+			0x040F, 1252,
+			// Italian
+			0x0410, 1200,
+			0x0410, 1252,
+			// Japanese
+			0x0411, 1200,
+			0x0411, 1252,
+			// Korean
+			0x0412, 1200,
+			0x0412, 1252,
+			// Dutch
+			0x0413, 1200,
+			0x0413, 1252,
+			// Norwegian ? Bokmal
+			0x0414, 1200,
+			0x0414, 1252,
+			// Polish
+			0x0415, 1200,
+			0x0415, 1252,
+			// Portuguese (Brazil)
+			0x0416, 1200,
+			0x0416, 1252,
+			// Rhaeto-Romanic
+			0x0417, 1200,
+			0x0417, 1252,
+			// Romanian
+			0x0418, 1200,
+			0x0418, 1252,
+			// Russian
+			0x0419, 1200,
+			0x0419, 1252,
+			// Croato-Serbian (Latin)
+			0x041A, 1200,
+			0x041A, 1252,
+			// Slovak
+			0x041B, 1200,
+			0x041B, 1252,
+			// Albanian
+			0x041C, 1200,
+			0x041C, 1252,
+			// Swedish
+			0x041D, 1200,
+			0x041D, 1252,
+			// Thai
+			0x041E, 1200,
+			0x041E, 1252,
+			// Turkish
+			0x041F, 1200,
+			0x041F, 1252,
+			// Urdu
+			0x0420, 1200,
+			0x0420, 1252,
+			// Bahasa
+			0x0421, 1200,
+			0x0421, 1252,
+			// Simplified Chinese
+			0x0804, 1200,
+			0x0804, 1252,
+			// Swiss German
+			0x0807, 1200,
+			0x0807, 1252,
+			// U.K. English
+			0x0809, 1200,
+			0x0809, 1252,
+			// Spanish (Mexico)
+			0x080A, 1200,
+			0x080A, 1252,
+			// Belgian French
+			0x080C, 1200,
+			0x080C, 1252,
+			// Swiss Italian
+			0x0810, 1200,
+			0x0810, 1252,
+			// Belgian Dutch
+			0x0813, 1200,
+			0x0813, 1252,
+			// Norwegian ? Nynorsk		
+			0x0814, 1200,
+			0x0814, 1252,
+			// Portuguese (Portugal)
+			0x0816, 1200,
+			0x0816, 1252,
+			// Serbo-Croatian (Cyrillic)
+			0x081A, 1200,
+			0x081A, 1252,
+			// Canadian French
+			0x0C0C, 1200,
+			0x0C0C, 1252,
+			// Swiss French
+			0x100C, 1200,
+			0x100C, 1252
+    	END
 	END
 END
