@@ -7,8 +7,8 @@
 IDI_MYICON ICON   "punes.ico"
 
 VS_VERSION_INFO VERSIONINFO
-FILEVERSION     VER1_INT,VER2_INT,0,0
-PRODUCTVERSION  VER1_INT,VER2_INT,0,0
+FILEVERSION     VER1_INT,VER2_INT
+PRODUCTVERSION  VER1_INT,VER2_INT
 FILEOS          VOS__WINDOWS32
 FILETYPE        VFT_APP
 BEGIN
@@ -18,13 +18,13 @@ BEGIN
 		BEGIN
 			VALUE "CompanyName",      AUTHOR
 			VALUE "FileDescription",  COMMENT
-			VALUE "FileVersion",      VER1 "." VER2 ".0.0"
+			VALUE "FileVersion",      VER1 "." VER2
 			VALUE "InternalName",     NAME
 			VALUE "LegalCopyright",   COPYRIGTH
 			VALUE "LegalTrademarks",  AUTHOR
 			VALUE "OriginalFilename", NAME ".exe"
 			VALUE "ProductName",      NAME
-			VALUE "ProductVersion",   VER1 "." VER2 ".0.0"
+			VALUE "ProductVersion",   VER1 "." VER2
 		END
 	END
 END
