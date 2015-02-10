@@ -532,22 +532,12 @@ settingsObject::settingsObject(Format f, QString file, int list_ele) :
 }
 settingsObject::~settingsObject() {}
 void settingsObject::wr() {
-	wr("all");
+	to_cfg("all");
+	wr_all_keys();
 }
 void settingsObject::wr(QString group) {
 	to_cfg(group);
-
-	s.list = listEle;
-
-	for (int i = 0; i < set->count; i++) {
-		if (group == "all") {
-			wr_key(i);
-		} else {
-			wr_key(group, i);
-		}
-	}
-
-	sync();
+	wr_all_keys();
 }
 int settingsObject::val_to_int(int index, const char *buffer) {
 	bool finded = false;
@@ -624,6 +614,15 @@ void settingsObject::wr_key(QString group, int index) {
 	if (QString(set->cfg[index].grp) == group) {
 		wr_key(index);
 	}
+}
+void settingsObject::wr_all_keys() {
+	s.list = listEle;
+
+	for (int i = 0; i < set->count; i++) {
+		wr_key(i);
+	}
+
+	sync();
 }
 
 // ------------------------------- Configurazioni ----------------------------------------

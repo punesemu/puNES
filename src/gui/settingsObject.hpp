@@ -48,6 +48,7 @@ class settingsObject : public QSettings {
 		void rd_key(QString group, int index);
 		void wr_key(int index);
 		void wr_key(QString group, int index);
+		void wr_all_keys();
 };
 
 class setObject : public settingsObject {

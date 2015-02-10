@@ -31,11 +31,11 @@ void settings_save(void) {
 	s.set->wr();
 	s.inp->wr();
 }
+void settings_save_GUI(void) {
+	s.set->wr("GUI");
+}
 void *settings_sc_ks(int index) {
 	return (s.inp->val_to_qstring_pntr(index));
-}
-void settings_GUI_wr(void) {
-	s.set->wr("GUI");
 }
 void settings_set_overscan_default(_overscan_borders *ob, BYTE mode) {
 	s.set->oscan_default(ob, mode);

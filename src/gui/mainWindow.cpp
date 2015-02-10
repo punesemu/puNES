@@ -289,7 +289,7 @@ bool mainWindow::eventFilter(QObject *obj, QEvent *event) {
 			cfg->last_pos.y = pos().y();
 		}
 
-		settings_GUI_wr();
+		settings_save_GUI();
 
 		info.stop = TRUE;
 	} else if (event->type() == QEvent::WindowActivate) {
