@@ -7,11 +7,13 @@
 
 #include "dlgUncomp.moc"
 #include <QtGui/QStandardItemModel>
+#include <QtCore/QFileInfo>
 #include "uncompress.h"
 #if defined (__WIN32__)
 #include <libgen.h>
 #endif
 #include "gui.h"
+#include "info.h"
 
 dlgUncomp::dlgUncomp(QWidget *parent = 0) : QDialog(parent) {
 	selected = UNCOMP_NO_FILE_SELECTED;
@@ -21,6 +23,8 @@ dlgUncomp::dlgUncomp(QWidget *parent = 0) : QDialog(parent) {
 	setFont(parent->font());
 
 	//tableWidget_Selection->setStyleSheet("QTreeView {selection-background-color: red;}");
+
+	setWindowTitle(QFileInfo(info.rom_file).fileName());
 
 	for (int i = 0; i < uncomp.files_founded; i++) {
 		if (uncomp_name_file(&uncomp.file[i]) == EXIT_OK) {
@@ -45,7 +49,6 @@ dlgUncomp::dlgUncomp(QWidget *parent = 0) : QDialog(parent) {
 	// la gui non e' ancora stata avviata.
 	if (gui.start == TRUE) {
 		emu_pause(TRUE);
-		gui_timeout_redraw_start();
 	}
 
 	setAttribute(Qt::WA_DeleteOnClose);
@@ -56,7 +59,6 @@ void dlgUncomp::closeEvent(QCloseEvent *e) {
 	gui.main_win_lfp = TRUE;
 
 	if (gui.start == TRUE) {
-		gui_timeout_redraw_stop();
 		emu_pause(FALSE);
 	}
 

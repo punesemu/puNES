@@ -202,12 +202,6 @@ void gui_after_set_video_mode(void) {
 void gui_set_focus(void) {
 	qt.screen->setFocus(Qt::ActiveWindowFocusReason);
 }
-void gui_timeout_redraw_start() {
-	qt.mwin->timer_draw->start(50);
-}
-void gui_timeout_redraw_stop() {
-	qt.mwin->timer_draw->stop();
-}
 
 #if defined (__WIN32__)
 #include "os_windows.h"

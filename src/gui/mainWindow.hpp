@@ -124,7 +124,6 @@ class mainWindow: public QMainWindow {
 		void s_state_save_file();
 		void s_state_load_file();
 		void s_help();
-		void s_timer_redraw();
 };
 
 #endif /* MAINWINDOW_HPP_ */

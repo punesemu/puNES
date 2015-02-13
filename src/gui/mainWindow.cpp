@@ -55,7 +55,6 @@ mainWindow::mainWindow(Ui::mainWindow *u) : QMainWindow() {
 	setStatusBar(statusbar);
 
 	connect(this, SIGNAL(fullscreen(bool)), this, SLOT(s_fullscreen(bool)));
-	connect(timer_draw, SIGNAL(timeout()), this, SLOT(s_timer_redraw()));
 
 	// creo gli shortcuts
 	for (int i = 0; i < SET_MAX_NUM_SC; i++) {
@@ -1484,12 +1483,8 @@ void mainWindow::s_open() {
 	filters[4].append(" (*.fm2 *.FM2)");
 	filters[5].append(" (*.*)");
 
-	gui_timeout_redraw_start();
-
 	file = QFileDialog::getOpenFileName(this, tr("Open File"), gui.last_open_path,
 		filters.join(";;"));
-
-	gui_timeout_redraw_stop();
 
 	if (file.isNull() == false) {
 		QFileInfo fileinfo(file);
@@ -1723,13 +1718,9 @@ void mainWindow::s_save_palette() {
 	filters[0].append(" (*.pal *.PAL)");
 	filters[1].append(" (*.*)");
 
-	gui_timeout_redraw_start();
-
 	file = QFileDialog::getSaveFileName(this, tr("Save palette on file"),
 			QString(opt_palette[cfg->palette].lname).replace(" ", "_"),
 			filters.join(";;"));
-
-	gui_timeout_redraw_stop();
 
 	if (file.isNull() == false) {
 		QFileInfo fileinfo(file);
@@ -1755,12 +1746,8 @@ void mainWindow::s_load_palette() {
 	filters[0].append(" (*.pal *.PAL)");
 	filters[1].append(" (*.*)");
 
-	gui_timeout_redraw_start();
-
 	file = QFileDialog::getOpenFileName(this, tr("Open palette file"),
 			QFileInfo(cfg->palette_file).dir().absolutePath(), filters.join(";;"));
-
-	gui_timeout_redraw_stop();
 
 	if (file.isNull() == false) {
 		QFileInfo fileinfo(file);
@@ -1948,8 +1935,6 @@ void mainWindow::s_state_save_file() {
 	filters[0].append(" (*.pns *.PNS)");
 	filters[1].append(" (*.*)");
 
-	gui_timeout_redraw_start();
-
 	/* game genie */
 	if (info.mapper.id == GAMEGENIE_MAPPER) {
 		fl = info.load_rom_file;
@@ -1959,8 +1944,6 @@ void mainWindow::s_state_save_file() {
 
 	file = QFileDialog::getSaveFileName(this, tr("Save state on file"),
 			QFileInfo(fl).baseName(), filters.join(";;"));
-
-	gui_timeout_redraw_stop();
 
 	if (file.isNull() == false) {
 		QFileInfo fileinfo(file);
@@ -1990,12 +1973,8 @@ void mainWindow::s_state_load_file() {
 	filters[0].append(" (*.pns *.PNS)");
 	filters[1].append(" (*.*)");
 
-	gui_timeout_redraw_start();
-
 	file = QFileDialog::getOpenFileName(this, tr("Open save state"),
 			QFileInfo(cfg->save_file).dir().absolutePath(), filters.join(";;"));
-
-	gui_timeout_redraw_stop();
 
 	if (file.isNull() == false) {
 		QFileInfo fileinfo(file);
@@ -2004,7 +1983,9 @@ void mainWindow::s_state_load_file() {
 			memset(cfg->save_file, 0x00, sizeof(cfg->save_file));
 			strncpy(cfg->save_file, qPrintable(fileinfo.absoluteFilePath()),
 			        sizeof(cfg->save_file) - 1);
-			save_slot_load(SAVE_SLOT_FILE);
+			if (save_slot_load(SAVE_SLOT_FILE) == EXIT_OK) {
+				settings_pgs_save();
+			}
 		}
 	}
 
@@ -2039,15 +2020,8 @@ void mainWindow::s_help() {
 	about->setStandardButtons(QMessageBox::Ok);
 	about->setDefaultButton(QMessageBox::Ok);
 
-	gui_timeout_redraw_start();
-
 	about->show();
 	about->exec();
 
-	gui_timeout_redraw_stop();
-
 	emu_pause(FALSE);
-}
-void mainWindow::s_timer_redraw() {
-	gfx_draw_screen(TRUE);
 }

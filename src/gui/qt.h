@@ -78,8 +78,6 @@ EXTERNC int gui_uncompress_selection_dialog();
 
 EXTERNC void gui_after_set_video_mode(void);
 EXTERNC void gui_set_focus(void);
-EXTERNC void gui_timeout_redraw_start(void);
-EXTERNC void gui_timeout_redraw_stop(void);
 
 EXTERNC double (*gui_get_ms)(void);
 
