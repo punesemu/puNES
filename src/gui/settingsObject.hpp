@@ -42,6 +42,8 @@ class settingsObject : public QSettings {
 		void rd(QString group);
 		int val_to_int(int index);
 		void int_to_val(int index, int value);
+		void cpy_val_to_char(int index, char *dst, int length);
+		void char_to_val(int index, char *src);
 
 	private:
 		void rd_key(int index);
@@ -69,9 +71,7 @@ class setObject : public settingsObject {
 
 	private:
 		double val_to_double(int index, WORD round);
-		void cpy_val_to_char(int index, char *dst, int length);
 		void double_to_val(int index, double value);
-		void char_to_val(int index, char *src);
 		int channel_convert_index(int index);
 		void channel_decode(int index, QString val);
 		void channel_default(int index);

@@ -957,6 +957,17 @@ void mainWindow::update_menu_settings() {
 	ui->action_Save_settings_on_exit->setChecked(cfg->save_on_exit);
 }
 void mainWindow::update_menu_state() {
+	bool state = false;
+
+	if (!(info.no_rom | info.pause)) {
+		state = true;
+	}
+
+	ui->action_Save_state->setEnabled(state);
+	ui->action_Load_state->setEnabled(state);
+	ui->action_State_Save_to_file->setEnabled(state);
+	ui->action_State_Load_from_file->setEnabled(state);
+
 	switch (save_slot.slot) {
 		case 0:
 			ui->action_State_Slot_0->setChecked(true);
@@ -1258,6 +1269,9 @@ void mainWindow::connect_menu_signals() {
 	connect_action(ui->action_State_Slot_3, 3, SLOT(s_state_save_slot_set()));
 	connect_action(ui->action_State_Slot_4, 4, SLOT(s_state_save_slot_set()));
 	connect_action(ui->action_State_Slot_5, 5, SLOT(s_state_save_slot_set()));
+	// State/[Save to file, Load from file]
+	connect_action(ui->action_State_Save_to_file, SLOT(s_state_save_file()));
+	connect_action(ui->action_State_Load_from_file, SLOT(s_state_load_file()));
 	// Help/About
 	connect_action(ui->action_About, SLOT(s_help()));
 }
@@ -1720,6 +1734,10 @@ void mainWindow::s_save_palette() {
 	if (file.isNull() == false) {
 		QFileInfo fileinfo(file);
 
+		if (fileinfo.suffix().isEmpty()) {
+			fileinfo.setFile(QString(file) + ".pal");
+		}
+
 		palette_save_on_file(qPrintable(fileinfo.absoluteFilePath()));
 	}
 
@@ -1887,10 +1905,10 @@ void mainWindow::s_state_save_slot_action() {
 	emu_pause(TRUE);
 
 	if (mode == SAVE) {
-		save_slot_save();
+		save_slot_save(save_slot.slot);
 		settings_pgs_save();
 	} else {
-		save_slot_load();
+		save_slot_load(save_slot.slot);
 	}
 
 	emu_pause(FALSE);
@@ -1916,6 +1934,81 @@ void mainWindow::s_state_save_slot_set() {
 	int slot = QVariant(qobject_cast<QObject *>(sender())->property("myValue")).toInt();
 
 	state_save_slot_set(slot);
+}
+void mainWindow::s_state_save_file() {
+	QStringList filters;
+	QString file;
+	char *fl;
+
+	emu_pause(TRUE);
+
+	filters.append(tr("Save states"));
+	filters.append(tr("All files"));
+
+	filters[0].append(" (*.pns *.PNS)");
+	filters[1].append(" (*.*)");
+
+	gui_timeout_redraw_start();
+
+	/* game genie */
+	if (info.mapper.id == GAMEGENIE_MAPPER) {
+		fl = info.load_rom_file;
+	} else {
+		fl = info.rom_file;
+	}
+
+	file = QFileDialog::getSaveFileName(this, tr("Save state on file"),
+			QFileInfo(fl).baseName(), filters.join(";;"));
+
+	gui_timeout_redraw_stop();
+
+	if (file.isNull() == false) {
+		QFileInfo fileinfo(file);
+
+		if (fileinfo.suffix().isEmpty()) {
+			fileinfo.setFile(QString(file) + ".pns");
+		}
+
+		memset(cfg->save_file, 0x00, sizeof(cfg->save_file));
+		strncpy(cfg->save_file, qPrintable(fileinfo.absoluteFilePath()),
+				sizeof(cfg->save_file) - 1);
+		save_slot_save(SAVE_SLOT_FILE);
+		settings_pgs_save();
+	}
+
+	emu_pause(FALSE);
+}
+void mainWindow::s_state_load_file() {
+	QStringList filters;
+	QString file;
+
+	emu_pause(TRUE);
+
+	filters.append(tr("Save states"));
+	filters.append(tr("All files"));
+
+	filters[0].append(" (*.pns *.PNS)");
+	filters[1].append(" (*.*)");
+
+	gui_timeout_redraw_start();
+
+	file = QFileDialog::getOpenFileName(this, tr("Open save state"),
+			QFileInfo(cfg->save_file).dir().absolutePath(), filters.join(";;"));
+
+	gui_timeout_redraw_stop();
+
+	if (file.isNull() == false) {
+		QFileInfo fileinfo(file);
+
+		if (fileinfo.exists()) {
+			memset(cfg->save_file, 0x00, sizeof(cfg->save_file));
+			strncpy(cfg->save_file, qPrintable(fileinfo.absoluteFilePath()),
+			        sizeof(cfg->save_file) - 1);
+			save_slot_load(SAVE_SLOT_FILE);
+		}
+	}
+
+	emu_pause(FALSE);
 }
 void mainWindow::s_help() {
 	QMessageBox *about = new QMessageBox(this);

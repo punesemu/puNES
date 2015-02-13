@@ -595,6 +595,16 @@ void settingsObject::int_to_val(int index, int value) {
 		}
 	}
 }
+void settingsObject::cpy_val_to_char(int index, char *dst, int length) {
+	memset(dst, 0x00, length);
+	if (val.at(index).isEmpty() || val.at(index).isNull()) {
+		return;
+	}
+	strncpy(dst, qPrintable(val.at(index)), length - 1);
+}
+void settingsObject::char_to_val(int index, char *src) {
+	val.replace(index, src);
+}
 void settingsObject::rd_key(int index) {
 	beginGroup(set->cfg[index].grp);
 	val.replace(index, value(set->cfg[index].key, set->cfg[index].def).toString());
@@ -813,18 +823,8 @@ void setObject::after_the_defaults() {
 
 	overscan.borders = &overscan_borders[0];
 }
-void setObject::cpy_val_to_char(int index, char *dst, int length) {
-	memset(dst, 0x00, length);
-	if (val.at(index).isEmpty() || val.at(index).isNull()) {
-		return;
-	}
-	strncpy(dst, qPrintable(val.at(index)), length - 1);
-}
 void setObject::double_to_val(int index, double value) {
 	val.replace(index, QString().setNum((int) (value * 100.0f)));
-}
-void setObject::char_to_val(int index, char *src) {
-	val.replace(index, src);
 }
 void setObject::lastpos_val_to_int(int index) {
 	QStringList splitted = QString(val.at(index)).split(",");
@@ -925,10 +925,12 @@ void pgsObject::setup() {
 }
 void pgsObject::to_cfg(QString group) {
 	int_to_val(SET_PGS_SLOT, save_slot.slot);
+	char_to_val(SET_PGS_FILE_SAVE, cfg_from_file.save_file);
 	int_to_val(SET_PGS_OVERSCAN, cfg_from_file.oscan);
 }
 void pgsObject::fr_cfg(QString group) {
 	save_slot.slot = val_to_int(SET_PGS_SLOT);
+	cpy_val_to_char(SET_PGS_FILE_SAVE, cfg_from_file.save_file, sizeof(cfg_from_file.save_file));
 	cfg_from_file.oscan = val_to_int(SET_PGS_OVERSCAN);
 }
 

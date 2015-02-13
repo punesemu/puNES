@@ -16,9 +16,21 @@
 #define EXTERNC
 #endif
 
+#define _rom_file char rom_file[LENGTH_FILE_NAME_MID]
+typedef struct {
+	struct _info_sha1sum_prg {
+		BYTE value[20];
+		char string[41];
+	} prg;
+	struct _info_sha1sum_chr {
+		BYTE value[20];
+		char string[41];
+	} chr;
+} _info_sh1sum;
+
 EXTERNC struct _info {
 	char base_folder[LENGTH_FILE_NAME_MID];
-	char rom_file[LENGTH_FILE_NAME_MID];
+	_rom_file;
 	char load_rom_file[LENGTH_FILE_NAME_MID];
 	BYTE format;
 	BYTE machine[2];
@@ -42,16 +54,7 @@ EXTERNC struct _info {
 	BYTE on_cfg;
 	BYTE pause_frames_drawscreen;
 	BYTE first_illegal_opcode;
-	struct _info_sh1sum {
-		struct _info_sha1sum_prg {
-			BYTE value[20];
-			char string[41];
-		} prg;
-		struct _info_sha1sum_chr {
-			BYTE value[20];
-			char string[41];
-		} chr;
-	} sha1sum;
+	_info_sh1sum sha1sum;
 	struct _info_chr {
 		struct _info_chr_rom {
 			WORD banks_8k;

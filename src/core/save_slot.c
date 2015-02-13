@@ -30,10 +30,10 @@
 #define SAVE_VERSION 13
 
 BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp);
-BYTE name_slot_file(char *file, BYTE slot);
+char *name_slot_file(BYTE slot);
 
-BYTE save_slot_save(void) {
-	char file[LENGTH_FILE_NAME];
+BYTE save_slot_save(BYTE slot) {
+	char *file;
 	FILE *fp;
 
 	/* game genie */
@@ -42,8 +42,12 @@ BYTE save_slot_save(void) {
 		return (EXIT_ERROR);
 	}
 
-	if (name_slot_file(file, save_slot.slot)) {
-		return (EXIT_ERROR);
+	if (slot < SAVE_SLOT_FILE) {
+		if ((file = name_slot_file(slot)) == NULL) {
+			return (EXIT_ERROR);
+		}
+	} else {
+		file = cfg->save_file;
 	}
 
 	if ((fp = fopen(file, "wb")) == NULL) {
@@ -51,18 +55,18 @@ BYTE save_slot_save(void) {
 		return (EXIT_ERROR);
 	}
 
-	slot_operation(SAVE_SLOT_SAVE, save_slot.slot, fp);
+	slot_operation(SAVE_SLOT_SAVE, slot, fp);
 	/* aggiorno la posizione della preview e il totalsize */
-	slot_operation(SAVE_SLOT_COUNT, save_slot.slot, fp);
+	slot_operation(SAVE_SLOT_COUNT, slot, fp);
 
-	save_slot.state[save_slot.slot] = TRUE;
+	save_slot.state[slot] = TRUE;
 
 	fclose(fp);
 
 	return (EXIT_OK);
 }
-BYTE save_slot_load(void) {
-	char file[LENGTH_FILE_NAME];
+BYTE save_slot_load(BYTE slot) {
+	char *file;
 	FILE *fp;
 
 	if (tas.type) {
@@ -78,8 +82,12 @@ BYTE save_slot_load(void) {
 		gamegenie.phase = GG_FINISH;
 	}
 
-	if (name_slot_file(file, save_slot.slot)) {
-		return (EXIT_ERROR);
+	if (slot < SAVE_SLOT_FILE) {
+		if ((file = name_slot_file(slot)) == NULL) {
+			return (EXIT_ERROR);
+		}
+	} else {
+		file = cfg->save_file;
 	}
 
 	if ((fp = fopen(file, "rb")) == NULL) {
@@ -94,9 +102,24 @@ BYTE save_slot_load(void) {
 	 */
 	timeline_snap(TL_SAVE_SLOT);
 
-	if (slot_operation(SAVE_SLOT_READ, save_slot.slot, fp)) {
+	if (slot == SAVE_SLOT_FILE) {
+		slot_operation(SAVE_SLOT_COUNT, slot, fp);
+
+		if (memcmp(info.sha1sum.prg.value, save_slot.sha1sum.prg.value,
+				sizeof(info.sha1sum.prg.value)) != 0) {
+			text_add_line_info(1, "[red]state file is not for this rom[normal]");
+			fprintf(stderr, "state file is not for this rom.\n");
+			timeline_back(TL_SAVE_SLOT, 0);
+			fclose(fp);
+			return (EXIT_ERROR);
+		}
+	}
+
+	if (slot_operation(SAVE_SLOT_READ, slot, fp)) {
 		fprintf(stderr, "error loading state, corrupted file.\n");
 		timeline_back(TL_SAVE_SLOT, 0);
+		fclose(fp);
+		return (EXIT_ERROR);
 	}
 
 	fclose(fp);
@@ -107,7 +130,7 @@ BYTE save_slot_load(void) {
 	return (EXIT_OK);
 }
 void save_slot_preview(BYTE slot) {
-	char file[LENGTH_FILE_NAME];
+	char *file;
 	FILE *fp;
 
 	if (!save_slot.preview_start) {
@@ -121,7 +144,7 @@ void save_slot_preview(BYTE slot) {
 		return;
 	}
 
-	if (name_slot_file(file, slot)) {
+	if ((file = name_slot_file(slot)) == NULL) {
 		memcpy(screen.data, tl.snaps[TL_SNAP_FREE] + tl.preview, screen_size());
 		gfx_draw_screen(TRUE);
 		return;
@@ -150,14 +173,14 @@ void save_slot_preview(BYTE slot) {
 	gfx_draw_screen(TRUE);
 }
 void save_slot_count_load(void) {
+	char *file;
 	BYTE i;
-	char file[LENGTH_FILE_NAME];
 
 	for (i = 0; i < SAVE_SLOTS; i++) {
 		save_slot.preview[i] = save_slot.tot_size[i] = 0;
 
 		save_slot.state[i] = FALSE;
-		name_slot_file(file, i);
+		file = name_slot_file(i);
 
 		if (emu_file_exist(file) == EXIT_OK) {
 			FILE *fp;
@@ -215,27 +238,35 @@ BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 	uint32_t tmp = 0;
 	WORD i = 0;
 
+	rewind(fp);
+
 	save_slot.version = SAVE_VERSION;
 
 	if (mode == SAVE_SLOT_COUNT) {
 		save_slot.tot_size[slot] = 0;
+
 		/*
 		 * forzo la lettura perche' devo sapere la
-		 * versione del file di salvataggio.
+		 * versione del file di salvataggio e le informazioni
+		 * della rom.
 		 */
 		save_slot_int(SAVE_SLOT_READ, slot, save_slot.version)
-	}
-
-	if (mode == SAVE_SLOT_READ) {
-		save_slot_int(mode, slot, save_slot.version)
-		i += sizeof(info.rom_file);
-		i += sizeof(info.sha1sum.prg.value);
-		i += sizeof(info.sha1sum.prg.string);
+		save_slot_ele(SAVE_SLOT_READ, slot, save_slot.rom_file)
+		save_slot_ele(SAVE_SLOT_READ, slot, save_slot.sha1sum.prg.value)
+		save_slot_ele(SAVE_SLOT_READ, slot, save_slot.sha1sum.prg.string)
 		if (save_slot.version >= 11) {
-			i += sizeof(info.sha1sum.chr.value);
-			i += sizeof(info.sha1sum.chr.string);
+			save_slot_ele(SAVE_SLOT_READ, slot, save_slot.sha1sum.chr.value)
+			save_slot_ele(SAVE_SLOT_READ, slot, save_slot.sha1sum.chr.string)
 		}
-		fseek(fp, i, SEEK_CUR);
+	} else if (mode == SAVE_SLOT_READ) {
+		save_slot_int(mode, slot, save_slot.version)
+		save_slot_ele(mode, slot, save_slot.rom_file)
+		save_slot_ele(mode, slot, save_slot.sha1sum.prg.value)
+		save_slot_ele(mode, slot, save_slot.sha1sum.prg.string)
+		if (save_slot.version >= 11) {
+			save_slot_ele(mode, slot, save_slot.sha1sum.chr.value)
+			save_slot_ele(mode, slot, save_slot.sha1sum.chr.string)
+		}
 	} else {
 		save_slot_int(mode, slot, save_slot.version)
 		save_slot_ele(mode, slot, info.rom_file)
@@ -707,10 +738,11 @@ BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-BYTE name_slot_file(char *file, BYTE slot) {
+char *name_slot_file(BYTE slot) {
+	static char file[LENGTH_FILE_NAME_LONG];
 	char ext[10], *last_dot, *fl;
 
-	memset(file, 0x00, LENGTH_FILE_NAME);
+	memset(file, 0x00, LENGTH_FILE_NAME_LONG);
 
 	/* game genie */
 	if (info.mapper.id == GAMEGENIE_MAPPER) {
@@ -720,7 +752,7 @@ BYTE name_slot_file(char *file, BYTE slot) {
 	}
 
 	if (!fl[0]) {
-		return (EXIT_ERROR);
+		return (NULL);
 	}
 
 	sprintf(file, "%s" SAVE_FOLDER "/%s", info.base_folder, basename(fl));
@@ -733,5 +765,5 @@ BYTE name_slot_file(char *file, BYTE slot) {
 	/* aggiungo l'estensione */
 	strcat(file, ext);
 
-	return (EXIT_OK);
+	return (file);
 }

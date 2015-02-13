@@ -46,6 +46,7 @@ typedef struct {
 	_config_apu apu;
 
 	char palette_file[LENGTH_FILE_NAME_LONG];
+	char save_file[LENGTH_FILE_NAME_LONG];
 
 	struct _last_pos {
 		int x;

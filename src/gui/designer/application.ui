@@ -449,6 +449,9 @@
     <addaction name="action_State_Slot_3"/>
     <addaction name="action_State_Slot_4"/>
     <addaction name="action_State_Slot_5"/>
+    <addaction name="separator"/>
+    <addaction name="action_State_Save_to_file"/>
+    <addaction name="action_State_Load_from_file"/>
    </widget>
    <widget class="QMenu" name="menu_Help">
     <property name="title">
@@ -1695,6 +1698,24 @@
    </property>
    <property name="text">
     <string notr="true">&amp;Russian</string>
+   </property>
+  </action>
+  <action name="action_State_Save_to_file">
+   <property name="icon">
+    <iconset resource="application.qrc">
+     <normaloff>:/icon/icons/save.png</normaloff>:/icon/icons/save.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Save to file</string>
+   </property>
+  </action>
+  <action name="action_State_Load_from_file">
+   <property name="icon">
+    <iconset resource="application.qrc">
+     <normaloff>:/icon/icons/load.png</normaloff>:/icon/icons/load.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Load from file</string>
    </property>
   </action>
  </widget>

@@ -11,19 +11,10 @@
 #include "palette.h"
 
 void palette_save_on_file(const char *file) {
-	const char pext[] = ".pal";
-	char name[LENGTH_FILE_NAME_LONG], *ext;
 	FILE *fp;
 
-	memset((BYTE *) name, 0x00, sizeof(name));
-	strncpy(name, file, sizeof(name) - 100);
-
-	if (((ext = strrchr(name, '.')) == NULL) || (strcasecmp(ext, pext) != 0)) {
-		strcat(name, pext);
-	}
-
-	if ((fp = fopen(name, "wb")) == NULL) {
-		fprintf(stderr, "ERROR: Impossible save palette file %s", name);
+	if ((fp = fopen(file, "wb")) == NULL) {
+		fprintf(stderr, "ERROR: Impossible save palette file %s", file);
 		return;
 	}
 

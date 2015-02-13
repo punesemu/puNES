@@ -121,6 +121,8 @@ class mainWindow: public QMainWindow {
 		void s_state_save_slot_action();
 		void s_state_save_slot_incdec();
 		void s_state_save_slot_set();
+		void s_state_save_file();
+		void s_state_load_file();
 		void s_help();
 		void s_timer_redraw();
 };

@@ -63,10 +63,11 @@ enum set_element {
 	SET_APU_TRIANGLE,
 	SET_APU_NOISE,
 	SET_APU_DMC,
-	SET_APU_EXTRA,
+	SET_APU_EXTRA
 };
 enum pgs_element {
 	SET_PGS_SLOT,
+	SET_PGS_FILE_SAVE,
 	SET_PGS_OVERSCAN
 };
 enum inp_element {
@@ -642,7 +643,7 @@ static const _settings main_cfg[] = {
 		"# possible values: [on, off],[0 - 100]",
 		NULL,
 		{0, NULL}
-	},
+	}
 };
 
 static const _settings pgs_cfg[] = {
@@ -653,11 +654,17 @@ static const _settings pgs_cfg[] = {
 		{LENGTH(opt_slot_pgs), opt_slot_pgs}
 	},
 	{
+		"state", "last save file used", NULL,
+		"# possible values: [PATH/NAME]",
+		NULL,
+		{0, NULL}
+	},
+	{
 		"video", "overscan", "default",
 		"# possible values: on, off, default",
 		NULL,
 		{LENGTH(opt_oscan), opt_oscan}
-	},
+	}
 };
 
 static const _settings inp_cfg[] = {

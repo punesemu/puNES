@@ -98,7 +98,7 @@ int main(int argc, char **argv) {
 	optind = cmd_line_parse(argc, argv);
 
 	if (argc == optind) {
-		//strcpy(info.rom_file, "/home/fhorse/sviluppo/personale/roms/85/Lagrange Point (J).nes");
+		;
 	} else {
 		strcpy(info.rom_file, argv[optind]);
 	}

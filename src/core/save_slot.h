@@ -10,8 +10,13 @@
 
 #include <stdio.h>
 #include "common.h"
+#include "info.h"
 
-enum save_slot_misc { SAVE_SLOTS = 6 };
+enum save_slot_misc {
+	SAVE_SLOTS = 6,
+	SAVE_SLOTS_TOTAL = SAVE_SLOTS + 1, // include anche lo slot per il file
+	SAVE_SLOT_FILE = SAVE_SLOTS
+};
 enum save_slot_mode { SAVE_SLOT_SAVE, SAVE_SLOT_READ, SAVE_SLOT_COUNT };
 
 #define save_slot_ele(mode, slot, src)\
@@ -92,14 +97,17 @@ enum save_slot_mode { SAVE_SLOT_SAVE, SAVE_SLOT_READ, SAVE_SLOT_COUNT };
 EXTERNC struct _save_slot {
 	uint32_t version;
 	DBWORD slot;
-	BYTE state[SAVE_SLOTS];
-	DBWORD tot_size[SAVE_SLOTS];
-	DBWORD preview[SAVE_SLOTS];
+	BYTE state[SAVE_SLOTS_TOTAL];
+	DBWORD tot_size[SAVE_SLOTS_TOTAL];
+	DBWORD preview[SAVE_SLOTS_TOTAL];
 	BYTE preview_start;
+
+	_rom_file;
+	_info_sh1sum sha1sum;
 } save_slot;
 
-EXTERNC BYTE save_slot_save(void);
-EXTERNC BYTE save_slot_load(void);
+EXTERNC BYTE save_slot_save(BYTE slot);
+EXTERNC BYTE save_slot_load(BYTE slot);
 EXTERNC void save_slot_preview(BYTE slot);
 EXTERNC void save_slot_count_load(void);
 EXTERNC BYTE save_slot_element_struct(BYTE mode, BYTE slot, uintptr_t *src, DBWORD size, FILE *fp,
