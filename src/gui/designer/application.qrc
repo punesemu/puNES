@@ -6,10 +6,10 @@
     <file>icons/flag_english.png</file>
     <file>icons/language.png</file>
     <file>icons/input.png</file>
+    <file>icons/save_state.png</file>
     <file>icons/about.png</file>
     <file>icons/state_dec.png</file>
     <file>icons/state_inc.png</file>
-    <file>icons/save_settings.png</file>
     <file>icons/input_config.png</file>
     <file>icons/apu_channels.png</file>
     <file>icons/quality.png</file>

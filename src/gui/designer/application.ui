@@ -1549,7 +1549,7 @@
   <action name="action_Save_settings">
    <property name="icon">
     <iconset resource="application.qrc">
-     <normaloff>:/icon/icons/save_settings.png</normaloff>:/icon/icons/save_settings.png</iconset>
+     <normaloff>:/icon/icons/save.png</normaloff>:/icon/icons/save.png</iconset>
    </property>
    <property name="text">
     <string>Save se&amp;ttings</string>
@@ -1566,10 +1566,10 @@
   <action name="action_Save_state">
    <property name="icon">
     <iconset resource="application.qrc">
-     <normaloff>:/icon/icons/save.png</normaloff>:/icon/icons/save.png</iconset>
+     <normaloff>:/icon/icons/save_state.png</normaloff>:/icon/icons/save_state.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Save state</string>
+    <string>S&amp;ave state</string>
    </property>
   </action>
   <action name="action_Load_state">
@@ -1578,7 +1578,7 @@
      <normaloff>:/icon/icons/load.png</normaloff>:/icon/icons/load.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Load state</string>
+    <string>L&amp;oad state</string>
    </property>
   </action>
   <action name="action_Increment_slot">
