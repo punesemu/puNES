@@ -207,12 +207,15 @@ void stateWidget::retranslateUi() {
 void stateWidget::s_save_clicked(bool checked) {
 	ui->action_Save_state->trigger();
 	update();
+	gui_set_focus();
 }
 void stateWidget::s_slot_activated(int index) {
 	save_slot.slot = index;
+	gui_set_focus();
 }
 void stateWidget::s_load_clicked(bool checked) {
 	ui->action_Load_state->trigger();
+	gui_set_focus();
 }
 
 // -------------------------------- Timeline -----------------------------------------
