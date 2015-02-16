@@ -26,13 +26,16 @@
 #define r2006_during_rendering()\
 	if (!r2002.vblank && r2001.visible && (ppu.frame_y > machine.vint_lines) &&\
 		(ppu.screen_y < SCR_LINES)) {\
-		if (r2000.r2006_inc == 32) {\
-			r2006_inc();\
-		} else {\
-			r2006.value++;\
-		}\
+		_r2006_during_rendering()\
 	} else {\
 		r2006.value += r2000.r2006_inc;\
+	}
+#define _r2006_during_rendering()\
+	r2006_inc()\
+	if ((r2006.value & 0x1F) == 0x1F) {\
+		r2006.value ^= 0x41F;\
+	} else {\
+		r2006.value++;\
 	}
 #define ppu_openbus_wr(bit) ppu_openbus.bit = ppu.frames
 #define ppu_openbus_wr_all()\
@@ -289,6 +292,7 @@ static BYTE INLINE ppu_rd_reg(WORD address) {
 			ppu_openbus_wr_all();
 			return (value);
 		}
+
 		while (repeat > 0) {
 			/* Read da $2007
 			 * When reading Address $0000 - $3EFF from $2007
@@ -590,18 +594,6 @@ static void cpu_wr_mem(WORD address, BYTE value) {
 				/* eseguo un tick hardware */
 				tick_hw(1);
 				return;
-			}
-
-			if (address == 0x2007) {
-				/* solo se sono nella fase di rendering */
-				if (!r2002.vblank && r2001.visible && (ppu.frame_y > machine.vint_lines)
-				        && (ppu.screen_y < SCR_LINES)) {
-					/* scrivo */
-					ppu_wr_reg(address, value);
-					/* eseguo un tick hardware */
-					tick_hw(1);
-					return;
-				}
 			}
 
 			/* eseguo un tick hardware */
@@ -1086,23 +1078,7 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 		if (!r2002.vblank && r2001.visible && (ppu.frame_y > machine.vint_lines)
 		        && (ppu.screen_y < SCR_LINES)) {
 			ppu_wr_mem(ppu.radr, ppu.radr & 0x00FF);
-
-			if ((r2006.value & 0x7000) == 0x7000) {
-				WORD tile_y;
-
-				r2006.value &= 0x0FFF;
-				tile_y = (r2006.value & 0x03E0);
-				if (tile_y == 0x03A0) {
-					r2006.value ^= 0x0BA0;
-				} else if (tile_y == 0x03E0) {
-					r2006.value ^= 0x03E0;
-				} else {
-					r2006.value += 0x20;\
-				}
-			} else {
-				r2006.value += 0x1000;
-			}
-			r2006.value++;
+			_r2006_during_rendering()
 		} else {
 			ppu_wr_mem(r2006.value, value);
 			r2006.value += r2000.r2006_inc;

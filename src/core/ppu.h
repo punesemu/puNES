@@ -70,9 +70,9 @@ enum ppu_color_mode { PPU_CM_GRAYSCALE = 0x30, PPU_CM_NORMAL = 0x3F };
 	ppu.bck_adr = r2000bck | ((ppu_rd_mem(0x2000 | (r2006vl & 0x0FFF)) << 4)\
 		| ((r2006vl & 0x7000) >> 12))
 #define r2006_inc()\
-	WORD tile_y;\
 	/* controllo se fine Y e' uguale a 7 */\
 	if ((r2006.value & 0x7000) == 0x7000) {\
+		WORD tile_y;\
 		/* azzero il fine Y */\
 		r2006.value &= 0x0FFF;\
 		/* isolo il tile Y */\
