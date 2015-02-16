@@ -567,16 +567,6 @@ static void cpu_wr_mem(WORD address, BYTE value) {
 		}
 		if (address < 0x4000) {
 			address &= 0x2007;
-
-			/* condizione riscontrata in "scanline.nes" */
-			if (address == 0x2001) {
-				if (ppu.sf.first_of_tick == TRUE) {
-					ppu_wr_reg(address, value);
-					tick_hw(1);
-					return;
-				}
-			}
-
 			/*
 			 * per riuscire a far funzionare contemporaneamente
 			 * Battletoads e Fighting Road (J) senza trick, devo

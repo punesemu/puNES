@@ -340,6 +340,7 @@ BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 	if (save_slot.version >= 13) {
 		save_slot_ele(mode, slot, ppu.sf.actual)
 		save_slot_ele(mode, slot, ppu.sf.prev)
+		/* questo byte ormai non serve piu' */
 		save_slot_ele(mode, slot, ppu.sf.first_of_tick)
 	}
 	/* ppu_openbus */

@@ -1085,7 +1085,6 @@ void ppu_tick(WORD cycles_cpu) {
 				/* azzero i numeri di cicli dall'nmi */
 				nmi.cpu_cycles_from_last_nmi = 0;
 			}
-			ppu.sf.first_of_tick = FALSE;
 		}
 		/*
 		 * azzero frameX, ed e' estremamente

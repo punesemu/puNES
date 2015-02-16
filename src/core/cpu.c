@@ -588,9 +588,6 @@ void cpu_exe_op(void) {
 		 * solo dopo avviarlo.
 		 */
 		if (!nmi.before || nmi.delay) {
-			if (ppu.sf.prev && (ppu.frame_x == 2)) {
-				ppu.sf.first_of_tick = TRUE;
-			}
 			nmi.delay = FALSE;
 		} else {
 			cpu.opcode = 0x100;

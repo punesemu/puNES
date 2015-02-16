@@ -112,6 +112,7 @@ typedef struct {
 	struct _short_frame {
 		BYTE actual;
 		BYTE prev;
+		/* questo byte non serve piu' */
 		BYTE first_of_tick;
 	} sf;
 
