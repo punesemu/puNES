@@ -116,7 +116,7 @@ typedef struct {
 		BYTE first_of_tick;
 	} sf;
 
-	WORD radr;
+	WORD rnd_adr;
 }  _ppu;
 typedef struct {
 	WORD *data;

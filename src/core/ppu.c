@@ -25,19 +25,19 @@ enum overflow_sprite { OVERFLOW_SPR = 3 };
 #define fetch_at()\
 {\
 	BYTE shift_at, tmp;\
-	ppu.radr = ((r2006.value & 0x0380) >> 4) | ((r2006.value & 0x001C) >> 2);\
-	ppu.radr = 0x23C0 | (r2006.value & 0x0C00) | ppu.radr;\
-	tmp = ppu_rd_mem(ppu.radr);\
+	ppu.rnd_adr = ((r2006.value & 0x0380) >> 4) | ((r2006.value & 0x001C) >> 2);\
+	ppu.rnd_adr = 0x23C0 | (r2006.value & 0x0C00) | ppu.rnd_adr;\
+	tmp = ppu_rd_mem(ppu.rnd_adr);\
 	shift_at = ((r2006.value & 0x40) >> 4) | (r2006.value & 0x02);\
 	tile_fetch.attrib = (tile_fetch.attrib >> 8) | (((tmp >> shift_at) & 0x03) << 8);\
 }
 #define fetch_lb(r2000bck, r2006vl)\
-	ppu.radr = 0x2000 | ((r2006.race.ctrl ? r2006.race.value : r2006.value) & 0x0FFF);\
+	ppu.rnd_adr = 0x2000 | ((r2006.race.ctrl ? r2006.race.value : r2006.value) & 0x0FFF);\
 	ppu_bck_adr(r2000bck, r2006vl);\
 	tile_fetch.l_byte = (tile_fetch.l_byte >> 8) | (inv_chr[ppu_rd_mem(ppu.bck_adr)] << 8);
 #define fetch_hb()\
-	ppu.radr = ppu.bck_adr | 0x0008;\
-	tile_fetch.h_byte = (tile_fetch.h_byte >> 8) | (inv_chr[ppu_rd_mem(ppu.radr)] << 8);\
+	ppu.rnd_adr = ppu.bck_adr | 0x0008;\
+	tile_fetch.h_byte = (tile_fetch.h_byte >> 8) | (inv_chr[ppu_rd_mem(ppu.rnd_adr)] << 8);\
 	((r2006.value & 0x1F) == 0x1F) ? (r2006.value ^= 0x041F) : (r2006.value++);
 #define ppu_ticket()\
 	ppu.cycles -= machine.ppu_divide;\
@@ -831,13 +831,13 @@ void ppu_tick(WORD cycles_cpu) {
 				/* controllo se ci sono sprite per la (scanline+1) */
 				if (spr_ev.tmp_spr_plus < spr_ev.count_plus) {
 					if (spr_ev.timing == 0) {
-						ppu.radr = 0x2000 | (r2006.value & 0xFFF);
+						ppu.rnd_adr = 0x2000 | (r2006.value & 0xFFF);
 					} else if (spr_ev.timing == 2) {
-						ppu.radr = 0x2000 | (r2006.value & 0xFFF);
+						ppu.rnd_adr = 0x2000 | (r2006.value & 0xFFF);
 					} else if (spr_ev.timing == 4) {
-						ppu.radr = ppu.spr_adr;
+						ppu.rnd_adr = ppu.spr_adr;
 					} else if (spr_ev.timing == 6) {
-						ppu.radr = ppu.spr_adr | 0x0008;
+						ppu.rnd_adr = ppu.spr_adr | 0x0008;
 					}
 					/*
 					 * utilizzo pixelTile come contatore di cicli per
@@ -952,9 +952,9 @@ void ppu_tick(WORD cycles_cpu) {
 					extcl_after_rd_chr(ppu.bck_adr);
 				}
 			} else if (ppu.frame_x == 337) {
-				ppu.radr = 0x2000 | (r2006.value & 0x0FFF);
+				ppu.rnd_adr = 0x2000 | (r2006.value & 0x0FFF);
 			} else if (ppu.frame_x == 339) {
-				ppu.radr = 0x2000 | (r2006.value & 0x0FFF);
+				ppu.rnd_adr = 0x2000 | (r2006.value & 0x0FFF);
 			}
 		}
 

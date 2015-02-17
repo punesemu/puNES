@@ -1067,7 +1067,7 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 
 		if (!r2002.vblank && r2001.visible && (ppu.frame_y > machine.vint_lines)
 		        && (ppu.screen_y < SCR_LINES)) {
-			ppu_wr_mem(ppu.radr, ppu.radr & 0x00FF);
+			ppu_wr_mem(ppu.rnd_adr, ppu.rnd_adr & 0x00FF);
 			_r2006_during_rendering()
 		} else {
 			ppu_wr_mem(r2006.value, value);

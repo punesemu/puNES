@@ -343,6 +343,9 @@ BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 		/* questo byte ormai non serve piu' */
 		save_slot_ele(mode, slot, ppu.sf.first_of_tick)
 	}
+	if (save_slot.version >= 14) {
+		save_slot_ele(mode, slot, ppu.rnd_adr)
+	}
 	/* ppu_openbus */
 	save_slot_ele(mode, slot, ppu_openbus.bit0)
 	save_slot_ele(mode, slot, ppu_openbus.bit1)
