@@ -13,20 +13,26 @@
 
 #define _irqA12_clock(function)\
 	if (irqA12.cycles > irqA12_min_cpu_cycles_prev_rising_edge) {\
+		BYTE *cnt = &irqA12.counter;\
+		BYTE *rld = &irqA12.reload;\
 		irqA12.cycles = 0;\
-		if (!irqA12.counter) {\
-			irqA12.counter = irqA12.latch;\
-			if (!irqA12.counter && (irqA12.reload == TRUE)) {\
+		if (irqA12.race.C001 == TRUE) {\
+			cnt = &irqA12.race.counter;\
+			rld = &irqA12.race.reload;\
+		}\
+		if (!(*cnt)) {\
+			(*cnt) = irqA12.latch;\
+			if (!(*cnt) && ((*rld) == TRUE)) {\
 				irqA12.save_counter = 1;\
 			}\
-			irqA12.reload = FALSE;\
+			(*rld) = FALSE;\
 		} else {\
-			irqA12.counter--;\
+			(*cnt)--;\
 		}\
-		if (!irqA12.counter && irqA12.save_counter && irqA12.enable) {\
+		if (!(*cnt) && irqA12.save_counter && irqA12.enable) {\
 			function;\
 		}\
-		irqA12.save_counter = irqA12.counter;\
+		irqA12.save_counter = (*cnt);\
 	}
 #define irqA12_irq_default()\
 	/*\
@@ -79,6 +85,12 @@ typedef struct {
 	WORD s_adr_old;
 
 	uint32_t cycles;
+
+	struct _race {
+		BYTE C001;
+		BYTE counter;
+		BYTE reload;
+	} race;
 } _irqA12;
 
 _irqA12 irqA12;

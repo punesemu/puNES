@@ -227,6 +227,17 @@ void extcl_cpu_wr_mem_MMC3(WORD address, BYTE value) {
 			irqA12.latch = value;
 			break;
 		case 0xC001:
+			/*
+			 * in "Downtown Special - Kunio-kun no Jidaigeki Dayo Zenin Shuugou! (J)"
+			 * avviene uno sfarfallio dell'ultima riga dello screen perche' avviene
+			 * una scrittura in questo registro nel momento esatto in cui avviene un
+			 * clock irqA12_SB() facendo gia' caricare il counter con il nuovo latch
+			 * cosa che invece dovrebbe avvenire nel clock successivo.
+			 */
+			irqA12.race.C001 = TRUE;
+			irqA12.race.reload = irqA12.reload;
+			irqA12.race.counter = irqA12.counter;
+
 			irqA12.reload = TRUE;
 			irqA12.counter = 0;
 			break;

@@ -636,6 +636,11 @@ BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 		if (save_slot.version >= 10) {
 			save_slot_ele(mode, slot, irqA12.cycles)
 		}
+		if (save_slot.version >= 14) {
+			save_slot_ele(mode, slot, irqA12.race.C001)
+			save_slot_ele(mode, slot, irqA12.race.counter)
+			save_slot_ele(mode, slot, irqA12.race.reload)
+		}
 	}
 
 	/* irql2f */

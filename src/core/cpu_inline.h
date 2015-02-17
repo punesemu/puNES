@@ -1762,6 +1762,7 @@ static void INLINE tick_hw(BYTE value) {
 
 		if (irqA12.present == TRUE) {
 			irqA12.cycles++;
+			irqA12.race.C001 = FALSE;
 		}
 	}
 }
