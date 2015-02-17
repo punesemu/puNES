@@ -277,8 +277,8 @@ void extcl_ppu_000_to_34x_Tengen_Rambo(void) {
 
 	irqA12_RS();
 }
-void extcl_update_r2006_Tengen_Rambo(WORD value_old) {
-	if (!(value_old & 0x1000) && (r2006.value & 0x1000)) {
+void extcl_update_r2006_Tengen_Rambo(WORD new_r2006, WORD old_r2006) {
+	if (!(old_r2006 & 0x1000) && (new_r2006 & 0x1000)) {
 		extcl_irq_A12_clock_Tengen_Rambo();
 	}
 }

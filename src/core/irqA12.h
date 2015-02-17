@@ -97,7 +97,7 @@ _irqA12 irqA12;
 /* questo non e' necessario salvarlo */
 BYTE irqA12_delay;
 
-void irqA12_IO(WORD value_old);
+void irqA12_IO(WORD value, WORD value_old);
 void irqA12_BS(void);
 void irqA12_SB(void);
 void irqA12_RS(void);

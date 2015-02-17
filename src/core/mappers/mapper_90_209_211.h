@@ -69,6 +69,6 @@ void extcl_wr_nmt_90_209_211(WORD address, BYTE value);
 void extcl_ppu_000_to_255_90_209_211(void);
 void extcl_ppu_256_to_319_90_209_211(void);
 void extcl_ppu_320_to_34x_90_209_211(void);
-void extcl_update_r2006_90_209_211(WORD old_r2006);
+void extcl_update_r2006_90_209_211(WORD new_r2006, WORD old_r2006);
 
 #endif /* MAPPER_90_209_211_H_ */

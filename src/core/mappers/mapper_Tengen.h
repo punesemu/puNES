@@ -29,7 +29,7 @@ void map_init_Tengen(BYTE model);
 void extcl_cpu_wr_mem_Tengen_Rambo(WORD address, BYTE value);
 BYTE extcl_save_mapper_Tengen_Rambo(BYTE mode, BYTE slot, FILE *fp);
 void extcl_ppu_000_to_34x_Tengen_Rambo(void);
-void extcl_update_r2006_Tengen_Rambo(WORD value_old);
+void extcl_update_r2006_Tengen_Rambo(WORD new_r2006, WORD old_r2006);
 void extcl_irq_A12_clock_Tengen_Rambo(void);
 void extcl_cpu_every_cycle_Tengen_Rambo(void);
 

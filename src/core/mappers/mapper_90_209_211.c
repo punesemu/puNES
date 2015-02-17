@@ -346,9 +346,9 @@ void extcl_ppu_256_to_319_90_209_211(void) {
 void extcl_ppu_320_to_34x_90_209_211(void) {
 	extcl_ppu_000_to_255_90_209_211();
 }
-void extcl_update_r2006_90_209_211(WORD old_r2006) {
+void extcl_update_r2006_90_209_211(WORD new_r2006, WORD old_r2006) {
 	if ((m90_209_211.irq.mode & 0x03) == 1) {
-		if ((r2006.value & 0x1000) > (old_r2006 & 0x1000)) {
+		if ((new_r2006 & 0x1000) > (old_r2006 & 0x1000)) {
 			irq_clock_prescaler_90_209_211();
 		}
 	}

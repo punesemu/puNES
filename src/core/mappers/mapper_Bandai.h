@@ -49,7 +49,7 @@ void map_init_Bandai(BYTE model);
 
 void extcl_cpu_wr_mem_Bandai_161x02x74(WORD address, BYTE value);
 BYTE extcl_save_mapper_Bandai_161x02x74(BYTE mode, BYTE slot, FILE *fp);
-void extcl_update_r2006_Bandai_161x02x74(WORD old_r2006);
+void extcl_update_r2006_Bandai_161x02x74(WORD new_r2006, WORD old_r2006);
 BYTE extcl_rd_nmt_Bandai_161x02x74(WORD address);
 
 void extcl_cpu_wr_mem_Bandai_FCGX(WORD address, BYTE value);

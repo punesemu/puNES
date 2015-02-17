@@ -9,8 +9,8 @@
 #include "ppu_inline.h"
 #include "irqA12.h"
 
-void irqA12_IO(WORD value_old) {
-	if (!(value_old & 0x1000) && (r2006.value & 0x1000)) {
+void irqA12_IO(WORD value, WORD value_old) {
+	if (!(value_old & 0x1000) && (value & 0x1000)) {
 		if (irqA12.cycles > irqA12_min_cpu_cycles_prev_rising_edge) {
 			irqA12.cycles = 0;
 			if (!extcl_irq_A12_clock) {

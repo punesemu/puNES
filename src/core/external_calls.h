@@ -84,7 +84,7 @@ EXTERNC void (*extcl_ppu_320_to_34x)(void);
 /* viene chiamata ogni volta viene modificato ppu.screen_y */
 EXTERNC void (*extcl_ppu_update_screen_y)(void);
 /* viene chiamata dopo ogni cambiamento del $2006 in cpu_inline.h */
-EXTERNC void (*extcl_update_r2006)(WORD old_r2006);
+EXTERNC void (*extcl_update_r2006)(WORD new_r2006, WORD old_r2006);
 /* vengono chiamate in ppu_inline.h */
 EXTERNC void (*extcl_rd_ppu)(WORD address);
 EXTERNC BYTE (*extcl_rd_nmt)(WORD address);

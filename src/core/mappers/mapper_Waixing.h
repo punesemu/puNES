@@ -51,7 +51,7 @@ BYTE extcl_save_mapper_Waixing_type_H(BYTE mode, BYTE slot, FILE *fp);
 
 void extcl_cpu_wr_mem_Waixing_SH2(WORD address, BYTE value);
 BYTE extcl_save_mapper_Waixing_SH2(BYTE mode, BYTE slot, FILE *fp);
-void extcl_update_r2006_Waixing_SH2(WORD old_r2006);
+void extcl_update_r2006_Waixing_SH2(WORD new_r2006, WORD old_r2006);
 void extcl_after_rd_chr_Waixing_SH2(WORD address);
 void extcl_wr_chr_Waixing_SH2(WORD address, BYTE value);
 

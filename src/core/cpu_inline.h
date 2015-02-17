@@ -336,7 +336,12 @@ static BYTE INLINE ppu_rd_reg(WORD address) {
 				 * Taito (TC0190FMCPAL16R4)
 				 * Tengen (Rambo)
 				 */
-				extcl_update_r2006(old_r2006);
+				if (!r2002.vblank && r2001.visible && (ppu.frame_y > machine.vint_lines) &&
+						(ppu.screen_y < SCR_LINES)) {
+					extcl_update_r2006(r2006.value & 0x2FFF, old_r2006);
+				} else {
+					extcl_update_r2006(r2006.value, old_r2006);
+				}
 			}
 		}
 		return (value);
@@ -1051,7 +1056,7 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 				 * Taito (TC0190FMCPAL16R4)
 				 * Tengen (Rambo)
 				 */
-				extcl_update_r2006(old_r2006);
+				extcl_update_r2006(r2006.value, old_r2006);
 			}
 		}
 
@@ -1082,7 +1087,7 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 			  * Taito (TC0190FMCPAL16R4)
 			  * Tengen (Rambo)
 			  */
-			extcl_update_r2006(old_r2006);
+			extcl_update_r2006(r2006.value, old_r2006);
 		}
 		return;
 	}

@@ -169,9 +169,9 @@ BYTE extcl_save_mapper_Bandai_161x02x74(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-void extcl_update_r2006_Bandai_161x02x74(WORD old_r2006) {
-	if ((r2006.value >= 0x2000) && ((r2006.value & 0x03FF) < 0x03C0)) {
-		b16x02x74_r2006(r2006.value)
+void extcl_update_r2006_Bandai_161x02x74(WORD new_r2006, WORD old_r2006) {
+	if ((new_r2006 >= 0x2000) && ((new_r2006 & 0x03FF) < 0x03C0)) {
+		b16x02x74_r2006(new_r2006)
 	}
 }
 BYTE extcl_rd_nmt_Bandai_161x02x74(WORD address) {

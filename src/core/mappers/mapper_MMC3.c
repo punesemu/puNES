@@ -278,8 +278,8 @@ void extcl_ppu_256_to_319_MMC3(void) {
 void extcl_ppu_320_to_34x_MMC3(void) {
 	irqA12_SB();
 }
-void extcl_update_r2006_MMC3(WORD old_r2006) {
-	irqA12_IO(old_r2006);
+void extcl_update_r2006_MMC3(WORD new_r2006, WORD old_r2006) {
+	irqA12_IO(new_r2006, old_r2006);
 }
 void extcl_irq_A12_clock_MMC3_alternate(void) {
 	if (!irqA12.counter) {
