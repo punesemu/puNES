@@ -115,7 +115,6 @@ typedef struct {
 		/* questo byte non serve piu' */
 		BYTE first_of_tick;
 	} sf;
-
 	WORD rnd_adr;
 }  _ppu;
 typedef struct {
