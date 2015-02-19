@@ -21,8 +21,11 @@
 #define VERSION     VER1 "." VER2 " WIP"
 #define NAME        "puNES"
 #define AUTHOR      "FHorse"
-#define COPYRIGTH   "(c) " AUTHOR " 2010 - 2015"
-#define COMMENT     "Nintendo Entertainment System Emulator"
+#define COMPILED    "02192015040945"
 #define WEBSITE     "http://forums.nesdev.com/viewtopic.php?f=3&amp;t=6928"
+
+#define COPYRIGTH   " 2015 by " AUTHOR
+#define COPYRANSI   "(C)" COPYRIGTH
+#define COPYRUTF8   "&#169;" COPYRIGTH
 
 #endif /* VERSION_H_ */

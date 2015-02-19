@@ -15,6 +15,7 @@
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QDesktopWidget>
 #endif
+#include <QtCore/QDateTime>
 #include <libgen.h>
 #include "mainWindow.moc"
 #include "dlgOverscanBorders.hpp"
@@ -1992,6 +1993,7 @@ void mainWindow::s_state_load_file() {
 	emu_pause(FALSE);
 }
 void mainWindow::s_help() {
+	QDateTime compiled = QDateTime::fromString(COMPILED, "MMddyyyyhhmmss");
 	QMessageBox *about = new QMessageBox(this);
 	QString text;
 
@@ -2007,13 +2009,15 @@ void mainWindow::s_help() {
 
 	text.append("<center><h2>" + QString(NAME) + " ");
 	if (info.portable) {
-		text.append(QString("Portable "));
+		text.append(tr("portable version"));
 	}
 	text.append(QString(VERSION) + "</h2></center>\n");
-	text.append("<center>" + QString(COMMENT) + "</center>");
+	text.append("<center>" + tr("Nintendo Entertainment System Emulator") + "</center>");
+	text.append("<center>" + tr("Compiled") + " " +
+			compiled.toString(Qt::DefaultLocaleShortDate) + "</center>");
 
 	about->setText(text);
-	about->setInformativeText("<center>" + QString(COPYRIGTH) + "</center>" + "\n" +
+	about->setInformativeText("<center>" + QString(COPYRUTF8) + "</center>" + "\n" +
 			"<center>" + "<a href=\"" + QString(WEBSITE) + "\">" + QString(WEBSITE) +
 			"</a>" + "</center>");
 
