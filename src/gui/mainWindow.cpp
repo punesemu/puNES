@@ -1917,11 +1917,13 @@ void mainWindow::s_state_save_slot_incdec() {
 		}
 	}
 	state_save_slot_set(new_slot);
+	update_window();
 }
 void mainWindow::s_state_save_slot_set() {
 	int slot = QVariant(qobject_cast<QObject *>(sender())->property("myValue")).toInt();
 
 	state_save_slot_set(slot);
+	update_window();
 }
 void mainWindow::s_state_save_file() {
 	QStringList filters;
