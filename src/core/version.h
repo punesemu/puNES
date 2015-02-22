@@ -15,13 +15,13 @@
 #define VER1        "0"
 #define VER1_INT    0
 
-#define VER2        "91"
-#define VER2_INT    91
+#define VER2        "92"
+#define VER2_INT    92
 
 #define VERSION     VER1 "." VER2 " WIP"
 #define NAME        "puNES"
 #define AUTHOR      "FHorse"
-#define COMPILED    "02192015101459"
+#define COMPILED    "02222015103010"
 #define WEBSITE     "http://forums.nesdev.com/viewtopic.php?f=3&amp;t=6928"
 
 #define COPYRIGTH   " 2015 by " AUTHOR
