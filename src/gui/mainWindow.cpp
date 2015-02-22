@@ -380,7 +380,7 @@ void mainWindow::setup_video_rendering() {
 #endif
 }
 void mainWindow::update_menu_nes() {
-	QString *sc = (QString *)settings_sc_ks(SET_INP_SC_EJECT_DISK);
+	QString *sc = (QString *)settings_inp_sc_ks(SET_INP_SC_EJECT_DISK);
 
 	if (fds.info.enabled) {
 		if (fds.drive.disk_ejected) {
@@ -1058,7 +1058,7 @@ void mainWindow::shortcuts(int type) {
 			SLOT(s_state_save_slot_incdec()));
 }
 void mainWindow::connect_shortcut(int type, QAction *action, int index) {
-	QString *sc = (QString *)settings_sc_ks(index);
+	QString *sc = (QString *)settings_inp_sc_ks(index);
 
 	if (type == 1) {
 		return;
@@ -1069,7 +1069,7 @@ void mainWindow::connect_shortcut(int type, QAction *action, int index) {
 	}
 }
 void mainWindow::connect_shortcut(int type, QAction *action, int index, const char *member) {
-	QString *sc = (QString *)settings_sc_ks(index);
+	QString *sc = (QString *)settings_inp_sc_ks(index);
 
 	if (sc->isEmpty() == false) {
 		if (type == 0) {

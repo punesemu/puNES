@@ -52,21 +52,26 @@ dlgInput::dlgInput(QWidget *parent = 0) : QDialog(parent) {
 	setAttribute(Qt::WA_DeleteOnClose);
 	setFixedSize(width(), height());
 
+	installEventFilter(this);
+
     /* disabilito la gestiore del docus della finestra principale */
 	gui.main_win_lfp = FALSE;
 
 	emu_pause(TRUE);
 }
 dlgInput::~dlgInput() {}
-void dlgInput::closeEvent(QCloseEvent *e) {
-	emu_pause(FALSE);
+bool dlgInput::eventFilter(QObject *obj, QEvent *event) {
+	if (event->type() == QEvent::Close) {
+		emu_pause(FALSE);
 
-	/* restituisco alla finestra principale la gestione del focus */
-	gui.main_win_lfp = TRUE;
+		/* restituisco alla finestra principale la gestione del focus */
+		gui.main_win_lfp = TRUE;
+	} else if (event->type() == QEvent::LanguageChange) {
+		Input_dialog::retranslateUi(this);
+		update_dialog();
+	}
 
-	QDialog::closeEvent(e);
-
-	delete (this);
+	return (QObject::eventFilter(obj, event));
 }
 void dlgInput::update_dialog(void) {
 	bool mode = true;
@@ -79,10 +84,20 @@ void dlgInput::update_dialog(void) {
 	}
 
 	for (int i = PORT1; i < PORT_MAX; i++) {
+		QString ctrl_name[3] = {
+			tr("Disabled"),
+			tr("Standard Pad"),
+			tr("Zapper")
+		};
+
 		ctrl_in = &data.port[i];
 
 		QComboBox *cb = findChild<QComboBox *>(QString("comboBox_cp%1").arg(ctrl_in->id));
 		QPushButton *pb = findChild<QPushButton *>(QString("pushButton_cp%1").arg(ctrl_in->id));
+
+		for (int i = 0 ; i < cb->count(); i++) {
+			cb->setItemText(i, ctrl_name[i]);
+		}
 
 		cb->setCurrentIndex(ctrl_in->port.type);
 		disconnect(pb, SIGNAL(clicked(bool)), this, SLOT(s_setup_clicked(bool)));
@@ -112,30 +127,28 @@ void dlgInput::update_dialog(void) {
 	}
 
 	checkBox_Permit_updown->setChecked(data.settings.permit_updown_leftright);
+
+	update_shortcut(ui->action_Open, SET_INP_SC_OPEN);
+	update_shortcut(ui->action_Quit, SET_INP_SC_QUIT);
 }
 void dlgInput::combobox_cp_init(QComboBox *cb, _cfg_port *cfg_port) {
-	static struct _ctrl_list_element {
-		int type;
-		QString name;
-	} ctrl_list[] = {
-		{ CTRL_DISABLED, tr("Disabled")     },
-		{ CTRL_STANDARD, tr("Standard Pad") },
-		{ CTRL_ZAPPER,   tr("Zapper")       }
+	static int ctrl_type[3] = {
+		CTRL_DISABLED,
+		CTRL_STANDARD,
+		CTRL_ZAPPER
 	};
 
-	{
-		int i, length = LENGTH(ctrl_list) - ((cfg_port->id - 1) >> 1);
+	int i, length = LENGTH(ctrl_type) - ((cfg_port->id - 1) >> 1);
 
-		for (i = 0; i < length; i++) {
-			QList<QVariant> type;
+	for (i = 0; i < length; i++) {
+		QList<QVariant> type;
 
-			type.append(ctrl_list[i].type);
-			type.append(cfg_port->id - 1);
-			type.append(QVariant::fromValue(static_cast<void *>(cfg_port)));
+		type.append(ctrl_type[i]);
+		type.append(cfg_port->id - 1);
+		type.append(QVariant::fromValue(static_cast<void *>(cfg_port)));
 
-			cb->addItem(ctrl_list[i].name);
-			cb->setItemData(i, QVariant(type));
-		}
+		cb->addItem("");
+		cb->setItemData(i, QVariant(type));
 	}
 
 	connect(cb, SIGNAL(activated(int)), this, SLOT(s_combobox_cp_activated(int)));

@@ -867,7 +867,7 @@ static const _list_settings list_settings[] = {
 EXTERNC void settings_init(void);
 EXTERNC void settings_save(void);
 EXTERNC void settings_save_GUI(void);
-EXTERNC void *settings_sc_ks(int index);
+EXTERNC void *settings_inp_sc_ks(int index);
 EXTERNC void settings_set_overscan_default(_overscan_borders *ob, BYTE mode);
 EXTERNC int settings_val_to_int(int index, const char *buffer);
 EXTERNC double settings_val_to_double(WORD round, const char *buffer);

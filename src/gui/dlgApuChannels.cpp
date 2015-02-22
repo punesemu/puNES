@@ -87,40 +87,46 @@ dlgApuChannels::dlgApuChannels(QWidget *parent = 0) : QDialog(parent) {
 	setAttribute(Qt::WA_DeleteOnClose);
 	setFixedSize(width(), height());
 
+	installEventFilter(this);
+
 	/* disabilito la gestiore del focus della finestra principale */
 	gui.main_win_lfp = FALSE;
 
 	data.save = FALSE;
 }
 dlgApuChannels::~dlgApuChannels() {}
-void dlgApuChannels::closeEvent(QCloseEvent *e) {
-	if (data.save == FALSE) {
-		bool control = false;
+bool dlgApuChannels::eventFilter(QObject *obj, QEvent *event) {
+	if (event->type() == QEvent::Close) {
+		if (data.save == FALSE) {
+			bool control = false;
 
-		emu_pause(TRUE);
+			emu_pause(TRUE);
 
-		if (cfg->apu.channel[APU_MASTER] != data.cfg_save.channel[APU_MASTER]) {
-			control = true;
-		}
-
-		memcpy(&cfg->apu, &data.cfg_save, sizeof(_config_apu));
-
-		if (control) {
-			if (cfg->apu.channel[APU_MASTER]) {
-				snd_start();
-			} else {
-				snd_stop();
+			if (cfg->apu.channel[APU_MASTER] != data.cfg_save.channel[APU_MASTER]) {
+				control = true;
 			}
-			gui_update();
+
+			memcpy(&cfg->apu, &data.cfg_save, sizeof(_config_apu));
+
+			if (control) {
+				if (cfg->apu.channel[APU_MASTER]) {
+					snd_start();
+				} else {
+					snd_stop();
+				}
+				gui_update();
+			}
+
+			emu_pause(FALSE);
 		}
 
-		emu_pause(FALSE);
+		/* restituisco alla finestra principale la gestione del focus */
+		gui.main_win_lfp = TRUE;
+	} else if (event->type() == QEvent::LanguageChange) {
+		APU_channels::retranslateUi(this);
 	}
 
-	/* restituisco alla finestra principale la gestione del focus */
-	gui.main_win_lfp = TRUE;
-
-	QDialog::closeEvent(e);
+	return (QObject::eventFilter(obj, event));
 }
 void dlgApuChannels::update_dialog(void) {
 	data.update = TRUE;

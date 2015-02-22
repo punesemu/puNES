@@ -36,7 +36,7 @@ class dlgInput : public QDialog, public Ui::Input_dialog {
 		~dlgInput();
 
 	private:
-		void closeEvent(QCloseEvent *e);
+		bool eventFilter(QObject *obj, QEvent *event);
 		void update_dialog();
 		void combobox_cp_init(QComboBox *cb, _cfg_port *cfg_port);
 

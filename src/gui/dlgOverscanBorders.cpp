@@ -71,6 +71,8 @@ dlgOverscanBorders::dlgOverscanBorders(QWidget *parent = 0) : QDialog(parent) {
 	setAttribute(Qt::WA_DeleteOnClose);
 	setFixedSize(width(), height());
 
+	installEventFilter(this);
+
 	/* disabilito la gestiore del focus della finestra principale */
 	gui.main_win_lfp = FALSE;
 
@@ -83,45 +85,47 @@ void dlgOverscanBorders::update_dialog(void) {
 	spinBox_Left->setValue(data.borders->left);
 	spinBox_Right->setValue(data.borders->right);
 }
-void dlgOverscanBorders::closeEvent(QCloseEvent *e) {
-	BYTE force;
+bool dlgOverscanBorders::eventFilter(QObject *obj, QEvent *event) {
+	if (event->type() == QEvent::Close) {
+		BYTE force;
 
-	/* aggiorno l'attuale tabella */
-	force = overscan_set_mode(machine.type);
+		/* aggiorno l'attuale tabella */
+		force = overscan_set_mode(machine.type);
 
-	/* ripristino il valore originario del parametro */
-	if (data.save_overscan != cfg->oscan) {
-		force = TRUE;
-		cfg->oscan = data.save_overscan;
-	}
+		/* ripristino il valore originario del parametro */
+		if (data.save_overscan != cfg->oscan) {
+			force = TRUE;
+			cfg->oscan = data.save_overscan;
+		}
 
-	/*
-	 * se le dimensioni dei bordi sono cambiati rispetto ai
-	 * valori di ingresso allora forzo il gfx_set_screen.
-	 */
-	{
-		BYTE i, *src = (BYTE *) &data.save_borders, *dst = (BYTE *) overscan.borders;
+		/*
+		 * se le dimensioni dei bordi sono cambiati rispetto ai
+		 * valori di ingresso allora forzo il gfx_set_screen.
+		 */
+		{
+			BYTE i, *src = (BYTE *) &data.save_borders, *dst = (BYTE *) overscan.borders;
 
-		for (i = 0; i < sizeof(_overscan_borders); i++) {
-			if ((*(src + i)) != (*(dst + i))) {
-				force = TRUE;
-				break;
+			for (i = 0; i < sizeof(_overscan_borders); i++) {
+				if ((*(src + i)) != (*(dst + i))) {
+					force = TRUE;
+					break;
+				}
 			}
 		}
+
+		if (force == TRUE) {
+			gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
+		}
+
+		emu_pause(FALSE);
+
+		/* restituisco alla finestra principale la gestione del focus */
+		gui.main_win_lfp = TRUE;
+	} else if (event->type() == QEvent::LanguageChange) {
+		Set_borders::retranslateUi(this);
 	}
 
-	if (force == TRUE) {
-		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
-	}
-
-	emu_pause(FALSE);
-
-	/* restituisco alla finestra principale la gestione del focus */
-	gui.main_win_lfp = TRUE;
-
-	QDialog::closeEvent(e);
-
-	delete (this);
+	return (QObject::eventFilter(obj, event));
 }
 void dlgOverscanBorders::s_combobox_activated(int index) {
 	data.mode = index;

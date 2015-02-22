@@ -34,9 +34,6 @@ void settings_save(void) {
 void settings_save_GUI(void) {
 	s.set->wr("GUI");
 }
-void *settings_sc_ks(int index) {
-	return (s.inp->val_to_qstring_pntr(index));
-}
 void settings_set_overscan_default(_overscan_borders *ob, BYTE mode) {
 	s.set->oscan_default(ob, mode);
 }
@@ -74,6 +71,9 @@ void settings_pgs_save(void) {
 	}
 }
 
+void *settings_inp_sc_ks(int index) {
+	return (s.inp->val_to_qstring_pntr(index));
+}
 void settings_inp_all_default(_config_input *config_input, _array_pointers_port *array) {
 	s.inp->set_all_input_default(config_input, array);
 }

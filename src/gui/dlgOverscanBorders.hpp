@@ -37,7 +37,7 @@ class dlgOverscanBorders : public QDialog, public Ui::Set_borders {
 		~dlgOverscanBorders();
 
 	private:
-		void closeEvent(QCloseEvent *e);
+		bool eventFilter(QObject *obj, QEvent *event);
 		void update_dialog();
 
 	private slots:

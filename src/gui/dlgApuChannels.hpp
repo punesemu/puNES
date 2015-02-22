@@ -32,7 +32,7 @@ class dlgApuChannels : public QDialog, public Ui::APU_channels {
 		~dlgApuChannels();
 
 	private:
-		void closeEvent(QCloseEvent *e);
+		bool eventFilter(QObject *obj, QEvent *event);
 		void update_dialog();
 
 	private slots:
