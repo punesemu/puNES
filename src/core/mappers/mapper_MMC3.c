@@ -200,26 +200,28 @@ void extcl_cpu_wr_mem_MMC3(WORD address, BYTE value) {
 			}
 			break;
 		case 0xA001: {
-			/*
-			 * 7  bit  0
-			 * ---- ----
-			 * RWxx xxxx
-			 * ||
-			 * |+-------- Write protection (0: allow writes; 1: deny writes)
-			 * +--------- Chip enable (0: disable chip; 1: enable chip)
-			 */
-			switch ((value & 0xC0) >> 6) {
-				case 0x00:
-				case 0x01:
-					cpu.prg_ram_rd_active = cpu.prg_ram_wr_active = FALSE;
-					break;
-				case 0x02:
-					cpu.prg_ram_rd_active = cpu.prg_ram_wr_active = TRUE;
-					break;
-				case 0x03:
-					cpu.prg_ram_rd_active = TRUE;
-					cpu.prg_ram_wr_active = FALSE;
-					break;
+			if (info.mapper.submapper != MMC6) {
+				/*
+				 * 7  bit  0
+				 * ---- ----
+				 * RWxx xxxx
+				 * ||
+				 * |+-------- Write protection (0: allow writes; 1: deny writes)
+				 * +--------- Chip enable (0: disable chip; 1: enable chip)
+				 */
+				switch ((value & 0xC0) >> 6) {
+					case 0x00:
+					case 0x01:
+						cpu.prg_ram_rd_active = cpu.prg_ram_wr_active = FALSE;
+						break;
+					case 0x02:
+						cpu.prg_ram_rd_active = cpu.prg_ram_wr_active = TRUE;
+						break;
+					case 0x03:
+						cpu.prg_ram_rd_active = TRUE;
+						cpu.prg_ram_wr_active = FALSE;
+						break;
+				}
 			}
 			break;
 		}

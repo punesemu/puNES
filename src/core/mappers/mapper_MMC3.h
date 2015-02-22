@@ -28,7 +28,8 @@ enum {
 	SMB2EREZA,
 	SMB2JSMB1,
 	RADRACER2,
-	MMC3_ALTERNATE
+	MMC3_ALTERNATE,
+	MMC6
 };
 
 struct _mmc3 {

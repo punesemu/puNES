@@ -2008,6 +2008,15 @@ static const _dbelement dblist[] = {
 	/* Super Mario Bros 2J + SMB1 Chars (Hack).nes */
 	{"3af18925766baa141dce6ab67ce011fa94d643f7", 4, DEFAULT, SMB2JSMB1, DEFAULT, DEFAULT},
 
+	/* Startropics (E) [!].nes */
+	{"eee6be294652cba02e7f29e3b22967030623abff", 4, MMC6, DEFAULT, PAL, DEFAULT},
+	/* Startropics (U) [b3].nes */
+	{"f53b55f6a9a2c6b8f4cf24c283a461d412354e4c", 4, MMC6, DEFAULT, DEFAULT, DEFAULT},
+	/* Startropics (U) [o3].nes */
+	{"224d96bf55391c7e9b651eb4d6a8f06faf6e29da", 4, MMC6, DEFAULT, DEFAULT, DEFAULT},
+	/* Startropics II - Zoda's Revenge (U) [o1].nes */
+	{"a185c8a6d01956d6d6c59910d27ce9507e4d2d5b", 4, MMC6, DEFAULT, DEFAULT, DEFAULT},
+
 	/* 5-MMC3.nes */
 	{"f8266c01494c0da28db89c405105274e71adaac0", 4, MMC3_ALTERNATE, DEFAULT, DEFAULT, DEFAULT},
 	/* 5-MMC3.nes */
@@ -2215,8 +2224,6 @@ static const _dbelement dblist[] = {
 	{"05a4b50d7e9cfcbf55094046c6667abc5a7b35f8", 4, DEFAULT, DEFAULT, PAL, DEFAULT},
 	/* Spider-Man - Return of the Sinister Six (E) [!].nes */
 	{"291f5dd81332075355637a00c47947f0c5359e3d", 4, DEFAULT, DEFAULT, PAL, DEFAULT},
-	/* Startropics (E) [!].nes */
-	{"eee6be294652cba02e7f29e3b22967030623abff", 4, DEFAULT, DEFAULT, PAL, DEFAULT},
 	/* Star Wars (E) [!].nes */
 	{"ef79978c46b87d86e9798a9eb6bb76a3cad545af", 4, DEFAULT, DEFAULT, PAL, DEFAULT},
 	/* Star Wars (E) [T+Por100%_Central de Traducoes].nes */
