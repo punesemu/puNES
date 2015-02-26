@@ -16,8 +16,6 @@
 #define SPT(ind) QString(std_pad_input_type[ind])
 #define SPB(ind) QString(std_pad_button[ind])
 
-enum std_pad_enum { MAX_JOYSTICK = 16 };
-
 static const char std_pad_input_type[2][4] = { "kbd", "joy" };
 static const char std_pad_button[10][15] = {
 	"A",      "B",     "Select", "Start",
@@ -117,7 +115,7 @@ dlgStdPad::dlgStdPad(_cfg_port *cfg_port, QWidget *parent = 0) : QDialog(parent)
 		td_update_label(i, data.cfg.port.turbo[i].frequency);
 	}
 
-	pushButton_Apply->setProperty("myPointer", QVariant::fromValue(static_cast<void *>(cfg_port)));
+	pushButton_Apply->setProperty("myPointer", QVariant::fromValue(((void *)cfg_port)));
 	connect(pushButton_Apply, SIGNAL(clicked(bool)), this, SLOT(s_apply_clicked(bool)));
 	connect(pushButton_Discard, SIGNAL(clicked(bool)), this, SLOT(s_discard_clicked(bool)));
 
@@ -130,7 +128,7 @@ dlgStdPad::dlgStdPad(_cfg_port *cfg_port, QWidget *parent = 0) : QDialog(parent)
 	installEventFilter(this);
 }
 dlgStdPad::~dlgStdPad() {}
-void dlgStdPad::update_dialog(void) {
+void dlgStdPad::update_dialog() {
 	bool mode = false;
 	unsigned int joyId;
 
@@ -180,7 +178,7 @@ void dlgStdPad::update_dialog(void) {
 	// misc
 	groupBox_Misc->setEnabled(true);
 }
-void dlgStdPad::combo_id_init(void) {
+void dlgStdPad::combo_id_init() {
 	BYTE disabled_line = 0, count = 0, current_line = name_to_jsn("NULL");
 
 	comboBox_kbd_ID->addItem(tr("Keyboard"));
@@ -269,7 +267,7 @@ void dlgStdPad::disable_tab_and_other(int type, int vbutton) {
 void dlgStdPad::info_entry_print(int type, QString txt) {
 	findChild<QPlainTextEdit *>("plainTextEdit_" + SPT(type) + "_info")->setPlainText(txt);
 }
-void dlgStdPad::js_press_event(void) {
+void dlgStdPad::js_press_event() {
 	unsigned int type, vbutton;
 	DBWORD value = 0;
 
@@ -277,7 +275,7 @@ void dlgStdPad::js_press_event(void) {
 	vbutton = data.vbutton - (type * MAX_STD_PAD_BUTTONS);
 
 	if (data.cfg.port.joy_id == name_to_jsn("NULL")) {
-		info_entry_print(type, "Select device first");
+		info_entry_print(type, tr("Select device first"));
 		update_dialog();
 		return;
 	}
@@ -333,7 +331,7 @@ bool dlgStdPad::eventFilter(QObject *obj, QEvent *event) {
 	return (QObject::eventFilter(obj, event));
 }
 bool dlgStdPad::keypressEvent(QEvent *event) {
-	QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+	QKeyEvent *keyEvent = ((QKeyEvent *)event);
 	int type, vbutton;
 
 	if (data.no_other_buttons == false) {
@@ -369,20 +367,20 @@ bool dlgStdPad::keypressEvent(QEvent *event) {
 	return (true);
 }
 void dlgStdPad::s_combobox_joy_activated(int index) {
-	unsigned int id = qobject_cast<QComboBox *>(sender())->itemData(index).toInt();
+	unsigned int id = ((QComboBox *)sender())->itemData(index).toInt();
 
 	data.cfg.port.joy_id = id;
 	update_dialog();
 }
 void dlgStdPad::s_input_clicked(bool checked) {
-	int vbutton = QVariant(qobject_cast<QPushButton *>(sender())->property("myVbutton")).toInt();
+	int vbutton = QVariant(((QPushButton *)sender())->property("myVbutton")).toInt();
 	int type;
 
 	if (data.no_other_buttons == true) {
 		return;
 	}
 
-	data.bp = qobject_cast<QPushButton *>(sender());
+	data.bp = ((QPushButton *)sender());
 	data.vbutton = vbutton;
 
 	type = vbutton / MAX_STD_PAD_BUTTONS;
@@ -396,20 +394,17 @@ void dlgStdPad::s_input_clicked(bool checked) {
 	data.bp->setFocus(Qt::ActiveWindowFocusReason);
 
 	if (type == KEYBOARD) {
-		info_entry_print(type,
-			"Press a key (ESC for the previous value \"" +
-			inpObject::kbd_keyval_to_name(data.cfg.port.input[type][vbutton]) + "\")"
-		);
+		info_entry_print(type, tr("Press a key (ESC for the previous value \"%1\")").arg(
+				inpObject::kbd_keyval_to_name(data.cfg.port.input[type][vbutton])));
+
 	} else {
-		info_entry_print(type,
-			"Press a key (ESC for the previous value \"" +
-			QString(jsv_to_name(data.cfg.port.input[type][vbutton])) + "\")"
-		);
+		info_entry_print(type, tr("Press a key (ESC for the previous value \"%1\")").arg(
+				QString(jsv_to_name(data.cfg.port.input[type][vbutton]))));
 		js_press_event();
 	}
 }
 void dlgStdPad::s_unset_clicked(bool checked) {
-	int vbutton = QVariant(qobject_cast<QPushButton *>(sender())->property("myVbutton")).toInt();
+	int vbutton = QVariant(((QPushButton *)sender())->property("myVbutton")).toInt();
 	int type;
 
 	type = vbutton / MAX_STD_PAD_BUTTONS;
@@ -421,7 +416,7 @@ void dlgStdPad::s_unset_clicked(bool checked) {
 	findChild<QPushButton *>("pushButton_" + SPT(type) + "_" + SPB(vbutton))->setText("NULL");
 }
 void dlgStdPad::s_in_sequence_clicked(bool checked) {
-	int type = QVariant(qobject_cast<QPushButton *>(sender())->property("myType")).toInt();
+	int type = QVariant(((QPushButton *)sender())->property("myType")).toInt();
 	static int order[MAX_STD_PAD_BUTTONS] = {
 		UP,     DOWN,  LEFT,  RIGHT,
 		SELECT, START, BUT_A, BUT_B,
@@ -452,7 +447,7 @@ void dlgStdPad::s_in_sequence_clicked(bool checked) {
 	update_dialog();
 }
 void dlgStdPad::s_unset_all_clicked(bool checked) {
-	int type = QVariant(qobject_cast<QPushButton *>(sender())->property("myType")).toInt();
+	int type = QVariant(((QPushButton *)sender())->property("myType")).toInt();
 
 	info_entry_print(type, "");
 
@@ -461,7 +456,7 @@ void dlgStdPad::s_unset_all_clicked(bool checked) {
 	}
 }
 void dlgStdPad::s_defaults_clicked(bool checked) {
-	int type = QVariant(qobject_cast<QPushButton *>(sender())->property("myType")).toInt();
+	int type = QVariant(((QPushButton *)sender())->property("myType")).toInt();
 
 	info_entry_print(type, "");
 
@@ -492,14 +487,14 @@ void dlgStdPad::s_combobox_controller_type_activated(int index) {
 	}
 }
 void dlgStdPad::s_slider_td_value_changed(int value) {
-	int type = QVariant(qobject_cast<QSlider *>(sender())->property("myTurbo")).toInt();
+	int type = QVariant(((QSlider *)sender())->property("myTurbo")).toInt();
 
 	data.cfg.port.turbo[type].frequency = value;
 	data.cfg.port.turbo[type].counter = 0;
 	td_update_label(type, value);
 }
 void dlgStdPad::s_apply_clicked(bool checked) {
-	_cfg_port *cfg_port = static_cast<_cfg_port *>(qobject_cast<QPushButton *>(sender())->property(
+	_cfg_port *cfg_port = ((_cfg_port *)((QPushButton *)sender())->property(
 		"myPointer").value<void *>());
 
 	memcpy(cfg_port, &data.cfg, sizeof(_cfg_port));

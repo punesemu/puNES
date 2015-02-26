@@ -44,12 +44,12 @@ class dlgStdPad : public QDialog, public Ui::Standard_Pad {
 
 	private:
 		bool keypressEvent(QEvent *event);
-		void update_dialog(void);
-		void combo_id_init(void);
+		void update_dialog();
+		void combo_id_init();
 		void setEnable_tab_buttons(int type, bool mode);
 		void disable_tab_and_other(int type, int vbutton);
 		void info_entry_print(int type, QString txt);
-		void js_press_event(void);
+		void js_press_event();
 		void td_update_label(int type, int value);
 
 	private slots:
