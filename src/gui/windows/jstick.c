@@ -349,11 +349,11 @@ DBWORD js_from_name(const char *name, const _js_element *list, const DBWORD leng
 	}
 	return (js);
 }
-int js_read_in_dialog(int dev, int *dt, DBWORD *value, int max_joystick) {
+DBWORD js_read_in_dialog(int dev, int fd) {
 	static const DWORD sensibility = (PLUS / 100) * 35;
-	int rc = EXIT_OK;
 	JOYINFOEX joy_info;
 	JOYCAPS joy_caps;
+	DBWORD value = 0;
 
 #define adjust_axis_joy(info)\
 	if (joy_info.info != CENTER) {\
@@ -366,91 +366,69 @@ int js_read_in_dialog(int dev, int *dt, DBWORD *value, int max_joystick) {
 		}\
 	}
 #define read_axis_joy(axis, info)\
-	(*value) = (axis << 1) + 1;\
+	value = (axis << 1) + 1;\
 	if (joy_info.info > CENTER) {\
-		(*value)++;\
+		value++;\
 	}
 
-	(*dt) = TRUE;
+	joyGetDevCaps(dev, &joy_caps, sizeof(joy_caps));
 
-	while ((*dt) == TRUE) {
-		rc = EXIT_ERROR;
+	joy_info.dwFlags = JOY_RETURNALL | JOY_RETURNCENTERED | JOY_RETURNPOV | JOY_USEDEADZONE;
+	joy_info.dwSize = sizeof(joy_info);
 
-		joyGetDevCaps(dev, &joy_caps, sizeof(joy_caps));
+	if (joyGetPosEx(dev, &joy_info) != JOYERR_NOERROR) {
+		return (value);
+	}
 
-		joy_info.dwFlags = JOY_RETURNALL | JOY_RETURNCENTERED | JOY_RETURNPOV | JOY_USEDEADZONE;
-		joy_info.dwSize = sizeof(joy_info);
+	adjust_axis_joy(dwXpos)
+	adjust_axis_joy(dwYpos)
+	adjust_axis_joy(dwZpos)
+	adjust_axis_joy(dwRpos)
 
-		if (joyGetPosEx(dev, &joy_info) == JOYERR_NOERROR) {
-			adjust_axis_joy(dwXpos)
-			adjust_axis_joy(dwYpos)
-			adjust_axis_joy(dwZpos)
-			adjust_axis_joy(dwRpos)
+	/* esamino i pulsanti */
+	if (joy_info.dwButtons) {
+		int i;
 
-			if ((*value) && (!joy_info.dwButtons)
-			        && ((joy_caps.wCaps & JOYCAPS_HASPOV) && (joy_info.dwPOV == JOY_POVCENTERED))
-			        && (joy_info.dwXpos == CENTER) && (joy_info.dwYpos == CENTER)
-			        && ((joy_caps.wCaps & JOYCAPS_HASZ) && (joy_info.dwZpos == CENTER))
-			        && ((joy_caps.wCaps & JOYCAPS_HASR) && (joy_info.dwRpos == CENTER))) {
-				rc = EXIT_OK;
-				break;
+		for (i = BUT_A; i < MAX_BUTTONS; i++) {
+			BYTE button = joy_info.dwButtons & 0x1;
+
+			if (button) {
+				value = i | 0x400;
+				return (value);
 			}
-
-			// esamino i pulsanti
-			if (joy_info.dwButtons) {
-				int i;
-
-				for (i = BUT_A; i < MAX_BUTTONS; i++) {
-					BYTE button = joy_info.dwButtons & 0x1;
-
-					if (button) {
-						(*value) = i | 0x400;
-						break;
-					}
-					joy_info.dwButtons >>= 1;
-				}
-
-				if ((*value)) {
-					continue;
-				}
-			}
-
-			// esamino gli assi
-			if ((joy_caps.wCaps & JOYCAPS_HASPOV) && (joy_info.dwPOV != JOY_POVCENTERED)) {
-				if (joy_info.dwPOV == JOY_POVFORWARD) {
-					(*value) = 0x100;
-				} else if (joy_info.dwPOV == JOY_POVRIGHT) {
-					(*value) = 0x101;
-				} else if (joy_info.dwPOV == JOY_POVBACKWARD) {
-					(*value) = 0x102;
-				} else if (joy_info.dwPOV == JOY_POVLEFT) {
-					(*value) = 0x103;
-				}
-			} else if (joy_info.dwXpos != CENTER) {
-				read_axis_joy(X, dwXpos);
-			} else if (joy_info.dwYpos != CENTER) {
-				read_axis_joy(Y, dwYpos);
-			} else if ((joy_caps.wCaps & JOYCAPS_HASZ) && (joy_info.dwZpos != CENTER)) {
-				read_axis_joy(Z, dwZpos);
-			} else if ((joy_caps.wCaps & JOYCAPS_HASR) && (joy_info.dwRpos != CENTER)) {
-				read_axis_joy(R, dwRpos);
-			} else if ((joy_caps.wCaps & JOYCAPS_HASU) && (joy_info.dwUpos)) {
-				// FIXME: non so bene come funzionano gli assi U e V
-				//read_axis_joy(U, dwUpos);
-			} else if ((joy_caps.wCaps & JOYCAPS_HASV) && (joy_info.dwVpos)) {
-				//read_axis_joy(V, dwVpos);
-			}
-
-			if ((*value)) {
-				continue;
-			}
+			joy_info.dwButtons >>= 1;
 		}
-		gui_flush();
-		gui_sleep(30);
 	}
+
+	/* esamino gli assi */
+	if ((joy_caps.wCaps & JOYCAPS_HASPOV) && (joy_info.dwPOV != JOY_POVCENTERED)) {
+		if (joy_info.dwPOV == JOY_POVFORWARD) {
+			value = 0x100;
+		} else if (joy_info.dwPOV == JOY_POVRIGHT) {
+			value = 0x101;
+		} else if (joy_info.dwPOV == JOY_POVBACKWARD) {
+			value = 0x102;
+		} else if (joy_info.dwPOV == JOY_POVLEFT) {
+			value = 0x103;
+		}
+	} else if (joy_info.dwXpos != CENTER) {
+		read_axis_joy(X, dwXpos);
+	} else if (joy_info.dwYpos != CENTER) {
+		read_axis_joy(Y, dwYpos);
+	} else if ((joy_caps.wCaps & JOYCAPS_HASZ) && (joy_info.dwZpos != CENTER)) {
+		read_axis_joy(Z, dwZpos);
+	} else if ((joy_caps.wCaps & JOYCAPS_HASR) && (joy_info.dwRpos != CENTER)) {
+		read_axis_joy(R, dwRpos);
+	} else if ((joy_caps.wCaps & JOYCAPS_HASU) && (joy_info.dwUpos)) {
+		/* FIXME: non so bene come funzionano gli assi U e V */
+		//read_axis_joy(U, dwUpos);
+	} else if ((joy_caps.wCaps & JOYCAPS_HASV) && (joy_info.dwVpos)) {
+		//read_axis_joy(V, dwVpos);
+	}
+
+	return (value);
 
 #undef adjust_axis_joy
 #undef read_axis_joy
 
-	return (rc);
 }

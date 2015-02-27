@@ -9,6 +9,7 @@
 #define DLGSTDPAD_HPP_
 
 #include <QtCore/QtGlobal>
+#include <QtCore/QTimer>
 #if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
 #include <QtGui/QDialog>
 #else
@@ -24,11 +25,20 @@ class dlgStdPad : public QDialog, public Ui::Standard_Pad {
 		struct _data {
 			QPushButton *bp;
 
-			int wait_js_input;
+			struct _joy {
+				int fd;
+				WORD value;
+				QTimer *timer;
+			} joy;
+
+			struct _seq {
+				bool active;
+				int type;
+				int counter;
+				QTimer *timer;
+			} seq;
 
 			bool no_other_buttons;
-			bool in_sequence;
-			bool force_exit_in_sequence;
 
 			BYTE vbutton;
 
@@ -61,6 +71,8 @@ class dlgStdPad : public QDialog, public Ui::Standard_Pad {
 		void s_defaults_clicked(bool checked);
 		void s_combobox_controller_type_activated(int index);
 		void s_slider_td_value_changed(int value);
+		void s_pad_joy_read_timer();
+		void s_pad_in_sequence_timer();
 		void s_apply_clicked(bool checked);
 		void s_discard_clicked(bool checked);
 };

@@ -187,67 +187,35 @@ DBWORD js_from_name(const char *name, const _js_element *list, const DBWORD leng
 	}
 	return (js);
 }
-int js_read_in_dialog(int dev, int *dt, DBWORD *value, int max_joystick) {
+DBWORD js_read_in_dialog(int dev, int fd) {
 	static const WORD sensibility = (PLUS / 100) * 75;
-	char device[30];
-	int i, fd, rc = EXIT_OK;;
 	_js_event jse;
 	ssize_t size = sizeof(jse);
+	DBWORD value;
 
-	(*value) = 0;
+	memset(&jse, 0x00, size);
 
-	sprintf(device, "%s%d", JS_DEV_PATH, dev);
-
-	if ((fd = open(device, O_RDONLY | O_NONBLOCK)) < 0) {
-		return (EXIT_ERROR);
-	}
-
-	for (i = 0; i < max_joystick; i++) {
-		if (read(fd, &jse, size) < 0) {}
-	}
-
-	// svuoto il buffer iniziale
-	for (i = 0; i < 10; i++) {
-		if (read(fd, &jse, size) < 0) {}
-	}
-
-	(*dt) = TRUE;
-
-	while ((*dt) == TRUE) {
-		rc = EXIT_ERROR;
-
-		memset(&jse, 0x00, size);
-
-		if (read(fd, &jse, size) == size) {
-			if (jse.value == CENTER) {
-				 if ((*value)) {
-					rc = EXIT_OK;
-					break;
-				}
-				continue;
-			}
-			jse.type &= ~JS_EVENT_INIT;
-
-			if ((jse.type == JS_EVENT_AXIS) && jse.value) {
-				if (((jse.value < CENTER) ? (jse.value * -1) : jse.value) > sensibility) {
-					(*value) = (jse.number << 1) + 1;
-					if (jse.value > CENTER) {
-						(*value)++;
-					}
-				} else {
-					continue;
-				}
-			} else if ((jse.type == JS_EVENT_BUTTON) && jse.value) {
-				(*value) = jse.number | 0x400;
-			} else {
-				continue;
-			}
+	if (read(fd, &jse, size) == size) {
+		if (jse.value == CENTER) {
+			return (0);
 		}
-		gui_flush();
-		gui_sleep(30);
+		jse.type &= ~JS_EVENT_INIT;
+
+		if ((jse.type == JS_EVENT_AXIS) && jse.value) {
+			if (((jse.value < CENTER) ? (jse.value * -1) : jse.value) > sensibility) {
+				value = (jse.number << 1) + 1;
+				if (jse.value > CENTER) {
+					value++;
+				}
+			} else {
+				return (0);
+			}
+		} else if ((jse.type == JS_EVENT_BUTTON) && jse.value) {
+			value = jse.number | 0x400;
+		} else {
+			return (0);
+		}
 	}
 
-	close(fd);
-
-	return (rc);
+	return (value);
 }

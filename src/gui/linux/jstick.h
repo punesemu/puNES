@@ -97,7 +97,7 @@ EXTERNC char *js_name_device(int dev);
 EXTERNC BYTE js_read_event(_js_event *event, _js *joy);
 EXTERNC char *js_to_name(const DBWORD val, const _js_element *list, const DBWORD length);
 EXTERNC DBWORD js_from_name(const char *name, const _js_element *list, const DBWORD lenght);
-EXTERNC int js_read_in_dialog(int dev, int *dt, DBWORD *value, int max_joystick);
+EXTERNC DBWORD js_read_in_dialog(int dev, int fd);
 
 #undef EXTERNC
 

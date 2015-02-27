@@ -5,6 +5,10 @@
  *      Author: fhorse
  */
 
+#if defined (__linux__)
+#include <unistd.h>
+#include <fcntl.h>
+#endif
 #include "dlgStdPad.moc"
 #include "settingsObject.hpp"
 #include "dlgInput.hpp"
@@ -125,6 +129,12 @@ dlgStdPad::dlgStdPad(_cfg_port *cfg_port, QWidget *parent = 0) : QDialog(parent)
 	setFocusPolicy(Qt::StrongFocus);
 	groupBox_controller->setFocus(Qt::ActiveWindowFocusReason);
 
+	data.joy.timer = new QTimer(this);
+	connect(data.joy.timer, SIGNAL(timeout()), this, SLOT(s_pad_joy_read_timer()));
+
+	data.seq.timer = new QTimer(this);
+	connect(data.seq.timer, SIGNAL(timeout()), this, SLOT(s_pad_in_sequence_timer()));
+
 	installEventFilter(this);
 }
 dlgStdPad::~dlgStdPad() {}
@@ -132,7 +142,7 @@ void dlgStdPad::update_dialog() {
 	bool mode = false;
 	unsigned int joyId;
 
-	if (data.in_sequence == true) {
+	if (data.seq.active == true) {
 		return;
 	}
 
@@ -268,11 +278,9 @@ void dlgStdPad::info_entry_print(int type, QString txt) {
 	findChild<QPlainTextEdit *>("plainTextEdit_" + SPT(type) + "_info")->setPlainText(txt);
 }
 void dlgStdPad::js_press_event() {
-	unsigned int type, vbutton;
-	DBWORD value = 0;
+	unsigned int type;
 
 	type = data.vbutton / MAX_STD_PAD_BUTTONS;
-	vbutton = data.vbutton - (type * MAX_STD_PAD_BUTTONS);
 
 	if (data.cfg.port.joy_id == name_to_jsn("NULL")) {
 		info_entry_print(type, tr("Select device first"));
@@ -280,18 +288,38 @@ void dlgStdPad::js_press_event() {
 		return;
 	}
 
-	if (js_read_in_dialog(data.cfg.port.joy_id, &data.wait_js_input, &value, MAX_JOYSTICK)
-			== EXIT_OK) {
-		data.cfg.port.input[type][vbutton] = value;
-		data.bp->setText(jsv_to_name(value));
+#if defined (__linux__)
+	{
+		_js_event jse;
+		ssize_t size = sizeof(jse);
+		char device[30];
+
+		::sprintf(device, "%s%d", JS_DEV_PATH, data.cfg.port.joy_id);
+		data.joy.fd = ::open(device, O_RDONLY | O_NONBLOCK);
+
+		if (data.joy.fd < 0) {
+			info_entry_print(type, tr("Error on open device %s").arg(device));
+			update_dialog();
+			return;
+		}
+
+		for (int i = 0; i < MAX_JOYSTICK; i++) {
+			if (::read(data.joy.fd, &jse, size) < 0) {
+				info_entry_print(type, tr("Error on reading controllers configurations"));
+			}
+		}
+
+		/* svuoto il buffer iniziale */
+		for (int i = 0; i < 10; i++) {
+			if (::read(data.joy.fd, &jse, size) < 0) {
+				;
+			}
+		}
 	}
+#endif
 
-	info_entry_print(type, "");
-	update_dialog();
-
-	data.wait_js_input = FALSE;
-	data.no_other_buttons = false;
-	data.vbutton = 0;
+	data.joy.value = 0;
+    data.joy.timer->start(150);
 }
 void dlgStdPad::td_update_label(int type, int value) {
 	QLabel *label = findChild<QLabel *>("label_value_slider_" + SPB(type + TRB_A));
@@ -302,9 +330,9 @@ bool dlgStdPad::eventFilter(QObject *obj, QEvent *event) {
 	if (obj == this) {
 		switch (event->type()) {
 			case QEvent::Close:
-				data.wait_js_input = FALSE;
-				data.force_exit_in_sequence = true;
-				data.in_sequence = false;
+				data.joy.timer->stop();
+				data.seq.timer->stop();
+				data.seq.active = false;
 				data.no_other_buttons = false;
 				data.vbutton = 0;
 				break;
@@ -360,7 +388,6 @@ bool dlgStdPad::keypressEvent(QEvent *event) {
 	info_entry_print(type, "");
 	update_dialog();
 
-	data.wait_js_input = FALSE;
 	data.no_other_buttons = false;
 	data.vbutton = 0;
 
@@ -416,35 +443,12 @@ void dlgStdPad::s_unset_clicked(bool checked) {
 	findChild<QPushButton *>("pushButton_" + SPT(type) + "_" + SPB(vbutton))->setText("NULL");
 }
 void dlgStdPad::s_in_sequence_clicked(bool checked) {
-	int type = QVariant(((QPushButton *)sender())->property("myType")).toInt();
-	static int order[MAX_STD_PAD_BUTTONS] = {
-		UP,     DOWN,  LEFT,  RIGHT,
-		SELECT, START, BUT_A, BUT_B,
-		TRB_A,  TRB_B,
-	};
+	data.seq.type = QVariant(((QPushButton *)sender())->property("myType")).toInt();
 
-	info_entry_print(type, "");
-	data.in_sequence = true;
-
-	for (int i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
-		QPushButton *bt;
-
-		if (data.force_exit_in_sequence == true) {
-			return;
-		}
-
-		bt = findChild<QPushButton *>("pushButton_" + SPT(type) + "_" + SPB(order[i]));
-		bt->setEnabled(true);
-		bt->click();
-
-		while (data.no_other_buttons == true) {
-			gui_flush();
-			gui_sleep(30);
-		}
-	}
-
-	data.in_sequence = false;
-	update_dialog();
+	info_entry_print(data.seq.type, "");
+	data.seq.active = true;
+	data.seq.counter = -1;
+	data.seq.timer->start(150);
 }
 void dlgStdPad::s_unset_all_clicked(bool checked) {
 	int type = QVariant(((QPushButton *)sender())->property("myType")).toInt();
@@ -493,6 +497,57 @@ void dlgStdPad::s_slider_td_value_changed(int value) {
 	data.cfg.port.turbo[type].counter = 0;
 	td_update_label(type, value);
 }
+void dlgStdPad::s_pad_joy_read_timer() {
+	DBWORD value = js_read_in_dialog(data.cfg.port.joy_id, data.joy.fd);
+
+	if (data.joy.value && !value) {
+		unsigned int type, vbutton;
+
+#if defined (__linux__)
+		::close(data.joy.fd);
+#endif
+
+		type = data.vbutton / MAX_STD_PAD_BUTTONS;
+		vbutton = data.vbutton - (type * MAX_STD_PAD_BUTTONS);
+
+		info_entry_print(type, "");
+		data.cfg.port.input[type][vbutton] = data.joy.value;
+		data.bp->setText(jsv_to_name(data.joy.value));
+		data.joy.timer->stop();
+
+		update_dialog();
+
+		data.no_other_buttons = false;
+		data.vbutton = 0;
+	}
+
+	data.joy.value = value;
+}
+void dlgStdPad::s_pad_in_sequence_timer() {
+	QPushButton *bt;
+	static int order[MAX_STD_PAD_BUTTONS] = {
+		UP,     DOWN,  LEFT,  RIGHT,
+		SELECT, START, BUT_A, BUT_B,
+		TRB_A,  TRB_B,
+	};
+
+
+	if (data.no_other_buttons == true) {
+		return;
+	}
+
+	if (++data.seq.counter == MAX_STD_PAD_BUTTONS) {
+		data.seq.timer->stop();
+		data.seq.active = false;
+		update_dialog();
+		return;
+	}
+
+	bt = findChild<QPushButton *>(
+			"pushButton_" + SPT(data.seq.type) + "_" + SPB(order[data.seq.counter]));
+	bt->setEnabled(true);
+	bt->click();
+}
 void dlgStdPad::s_apply_clicked(bool checked) {
 	_cfg_port *cfg_port = ((_cfg_port *)((QPushButton *)sender())->property(
 		"myPointer").value<void *>());
@@ -504,3 +559,5 @@ void dlgStdPad::s_apply_clicked(bool checked) {
 void dlgStdPad::s_discard_clicked(bool checked) {
 	close();
 }
+
+
