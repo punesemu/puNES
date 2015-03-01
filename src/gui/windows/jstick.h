@@ -124,6 +124,7 @@ EXTERNC char *js_name_device(int index);
 EXTERNC char *js_to_name(const DBWORD val, const _js_element *list, const DBWORD length);
 EXTERNC DBWORD js_from_name(const char *name, const _js_element *list, const DBWORD lenght);
 EXTERNC DBWORD js_read_in_dialog(int dev, int fd);
+EXTERNC DBWORD js_shcut_read(_js *joy, int id);
 
 #undef EXTERNC
 

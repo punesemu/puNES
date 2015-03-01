@@ -17,6 +17,54 @@
 #include "input.h"
 #include "gui.h"
 
+#define _js_start(jid, op)\
+	if (jid == name_to_jsn("NULL")) {\
+		op;\
+	}\
+	if (!joy->fd) {\
+		if (++joy->open_try == 300) {\
+			joy->open_try = 0;\
+			js_open(joy);\
+		}\
+		op;\
+	}
+#define _js_control()\
+	if ((jse.type & JS_EVENT_INIT) == JS_EVENT_INIT) {\
+		continue;\
+	}\
+	if (jse.type == JS_EVENT_AXIS) {\
+		BYTE axis = jse.number & 0x0F;\
+		if ((jse.value < (CENTER + sensibility)) && (jse.value > (CENTER - sensibility))) {\
+			jse.value = CENTER;\
+		}\
+		if ((jse.value < (joy->last_value[axis] + sensibility))\
+				&& (jse.value > (joy->last_value[axis] - sensibility))) {\
+			continue;\
+		}\
+		if (jse.value) {\
+			mode = PRESSED;\
+			value = (jse.number << 1) + 1;\
+			if (jse.value > 0) {\
+				value++;\
+			}\
+			joy->last[axis] = value;\
+		} else {\
+			mode = RELEASED;\
+			value = joy->last[axis];\
+			joy->last[axis] = 0;\
+		}\
+		joy->last_value[axis] = jse.value;\
+	} else if (jse.type == JS_EVENT_BUTTON) {\
+		value = jse.number | 0x400;\
+		if (jse.value == 0) {\
+			mode = RELEASED;\
+		} else if (jse.value == 1) {\
+			mode = PRESSED;\
+		} else {\
+			value = 0;\
+		}\
+	}
+
 void js_init(void) {
 	BYTE i;
 
@@ -47,57 +95,10 @@ void js_control(_js *joy, _port *port) {
 	DBWORD value = 0;
 	BYTE mode = 0;
 
-	if (port->joy_id == name_to_jsn("NULL")) {
-		return;
-	}
-
-	if (!joy->fd) {
-		if (++joy->open_try == 300) {
-			joy->open_try = 0;
-			js_open(joy);
-		}
-		return;
-	}
+	_js_start(port->joy_id, return)
 
 	while (!js_read_event(&jse, joy)) {
-		if ((jse.type & JS_EVENT_INIT) == JS_EVENT_INIT) {
-			continue;
-		}
-
-		if (jse.type == JS_EVENT_AXIS) {
-			BYTE axis = jse.number & 0x000F;
-
-			if ((jse.value < (CENTER + sensibility)) && (jse.value > (CENTER - sensibility))) {
-				jse.value = CENTER;
-			}
-			if ((jse.value < (joy->last_value[axis] + sensibility))
-					&& (jse.value > (joy->last_value[axis] - sensibility))) {
-				continue;
-			}
-
-			if (jse.value) {
-				mode = PRESSED;
-				value = (jse.number << 1) + 1;
-				if (jse.value > 0) {
-					value++;
-				}
-				joy->last[axis] = value;
-			} else {
-				mode = RELEASED;
-				value = joy->last[axis];
-				joy->last[axis] = 0;
-			}
-			joy->last_value[axis] = jse.value;
-		} else if (jse.type == JS_EVENT_BUTTON) {
-			value = jse.number | 0x400;
-			if (jse.value == 0) {
-				mode = RELEASED;
-			} else if (jse.value == 1) {
-				mode = PRESSED;
-			} else {
-				value = 0;
-			}
-		}
+		_js_control()
 
 		if (value && joy->input_decode_event) {
 			joy->input_decode_event(mode, value, JOYSTICK, port);
@@ -195,7 +196,7 @@ DBWORD js_read_in_dialog(int dev, int fd) {
 
 	memset(&jse, 0x00, size);
 
-	if (read(fd, &jse, size) == size) {
+	while(read(fd, &jse, size) == size) {
 		if (jse.value == CENTER) {
 			return (0);
 		}
@@ -208,14 +209,37 @@ DBWORD js_read_in_dialog(int dev, int fd) {
 					value++;
 				}
 			} else {
-				return (0);
+				continue;
 			}
 		} else if ((jse.type == JS_EVENT_BUTTON) && jse.value) {
 			value = jse.number | 0x400;
 		} else {
-			return (0);
+			continue;
 		}
+		break;
 	}
 
 	return (value);
 }
+DBWORD js_shcut_read(_js *joy, int id) {
+	static const SWORD sensibility = (PLUS / 100) * 50;
+	DBWORD value = 0;
+	BYTE mode = 0;
+	_js_event jse;
+
+	_js_start(id, return (0))
+
+	while (!js_read_event(&jse, joy)) {
+		_js_control()
+
+		if (value && (mode == RELEASED)) {
+			return (value);
+		}
+
+		break;
+	}
+
+	return (0);
+}
+
+
