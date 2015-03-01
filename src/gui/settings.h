@@ -98,6 +98,8 @@ enum inp_element {
 	SET_INP_SC_INC_SLOT,
 	SET_INP_SC_DEC_SLOT,
 
+	SET_INP_SC_JOYSTICK_ID,
+
 	SET_INP_SK_TIMELINE_KEY,
 	SET_INP_SK_DOUBLE_SPEED_KEY,
 
@@ -209,7 +211,7 @@ enum inp_element {
 	SET_INP_LEFTRIGHT
 };
 
-enum set_num_shortcut { SET_MAX_NUM_SC = SET_INP_SC_DEC_SLOT + 1 };
+enum set_num_shortcut { SET_MAX_NUM_SC = SET_INP_SC_JOYSTICK_ID };
 
 enum list_settings_element {
 	LSET_SET,
@@ -668,35 +670,37 @@ static const _settings pgs_cfg[] = {
 };
 
 static const _settings inp_cfg[] = {
-	{"shortcuts", "open",                     "Alt+O",      NULL, NULL, {0, NULL}},
-	{"shortcuts", "quit",                     "Alt+Q",      NULL, NULL, {0, NULL}},
-	{"shortcuts", "hard reset",               "F11",        NULL, NULL, {0, NULL}},
-	{"shortcuts", "soft reset",               "F12",        NULL, NULL, {0, NULL}},
-	{"shortcuts", "switch sides",             "Alt+S",      NULL, NULL, {0, NULL}},
-	{"shortcuts", "eject disk",               "Alt+E",      NULL, NULL, {0, NULL}},
-	{"shortcuts", "mode pal",                 "F6",         NULL, NULL, {0, NULL}},
-	{"shortcuts", "mode ntsc",                "F7",         NULL, NULL, {0, NULL}},
-	{"shortcuts", "mode dendy",               "F8",         NULL, NULL, {0, NULL}},
-	{"shortcuts", "mode auto",                "F9",         NULL, NULL, {0, NULL}},
-	{"shortcuts", "scale 1x",                 "Alt+1",      NULL, NULL, {0, NULL}},
-	{"shortcuts", "scale 2x",                 "Alt+2",      NULL, NULL, {0, NULL}},
-	{"shortcuts", "scale 3x",                 "Alt+3",      NULL, NULL, {0, NULL}},
-	{"shortcuts", "scale 4x",                 "Alt+4",      NULL, NULL, {0, NULL}},
+	{"shortcuts", "open",                     "Alt+O,NULL",      NULL, NULL, {0, NULL}},
+	{"shortcuts", "quit",                     "Alt+Q,NULL",      NULL, NULL, {0, NULL}},
+	{"shortcuts", "hard reset",               "F11,NULL",        NULL, NULL, {0, NULL}},
+	{"shortcuts", "soft reset",               "F12,NULL",        NULL, NULL, {0, NULL}},
+	{"shortcuts", "switch sides",             "Alt+S,NULL",      NULL, NULL, {0, NULL}},
+	{"shortcuts", "eject disk",               "Alt+E,NULL",      NULL, NULL, {0, NULL}},
+	{"shortcuts", "mode pal",                 "F6,NULL",         NULL, NULL, {0, NULL}},
+	{"shortcuts", "mode ntsc",                "F7,NULL",         NULL, NULL, {0, NULL}},
+	{"shortcuts", "mode dendy",               "F8,NULL",         NULL, NULL, {0, NULL}},
+	{"shortcuts", "mode auto",                "F9,NULL",         NULL, NULL, {0, NULL}},
+	{"shortcuts", "scale 1x",                 "Alt+1,NULL",      NULL, NULL, {0, NULL}},
+	{"shortcuts", "scale 2x",                 "Alt+2,NULL",      NULL, NULL, {0, NULL}},
+	{"shortcuts", "scale 3x",                 "Alt+3,NULL",      NULL, NULL, {0, NULL}},
+	{"shortcuts", "scale 4x",                 "Alt+4,NULL",      NULL, NULL, {0, NULL}},
 #if defined (SDL)
-	{"shortcuts", "cube effect",              "ALt+R",      NULL, NULL, {0, NULL}},
+	{"shortcuts", "cube effect",              "ALt+R,NULL",      NULL, NULL, {0, NULL}},
 #endif
-	{"shortcuts", "video interpolation",      "0",          NULL, NULL, {0, NULL}},
-	{"shortcuts", "video fullscreen",         "Alt+Return", NULL, NULL, {0, NULL}},
-	{"shortcuts", "video stretch fullscreen", "Alt+P",      NULL, NULL, {0, NULL}},
-	{"shortcuts", "audio enable",             "Alt+A",      NULL, NULL, {0, NULL}},
-	{"shortcuts", "save settings",            "Alt+W",      NULL, NULL, {0, NULL}},
-	{"shortcuts", "save state",               "F1",         NULL, NULL, {0, NULL}},
-	{"shortcuts", "load state",               "F4",         NULL, NULL, {0, NULL}},
-	{"shortcuts", "increment state slot",     "F2",         NULL, NULL, {0, NULL}},
-	{"shortcuts", "decrement state slot",     "F3",         NULL, NULL, {0, NULL}},
+	{"shortcuts", "video interpolation",      "0,NULL",          NULL, NULL, {0, NULL}},
+	{"shortcuts", "video fullscreen",         "Alt+Return,NULL", NULL, NULL, {0, NULL}},
+	{"shortcuts", "video stretch fullscreen", "Alt+P,NULL",      NULL, NULL, {0, NULL}},
+	{"shortcuts", "audio enable",             "Alt+A,NULL",      NULL, NULL, {0, NULL}},
+	{"shortcuts", "save settings",            "Alt+W,NULL",      NULL, NULL, {0, NULL}},
+	{"shortcuts", "save state",               "F1,NULL",         NULL, NULL, {0, NULL}},
+	{"shortcuts", "load state",               "F4,NULL",         NULL, NULL, {0, NULL}},
+	{"shortcuts", "increment state slot",     "F2,NULL",         NULL, NULL, {0, NULL}},
+	{"shortcuts", "decrement state slot",     "F3,NULL",         NULL, NULL, {0, NULL}},
 
-	{"special keys", "timeline key",          "LCtrl",      NULL, NULL, {0, NULL}},
-	{"special keys", "double speed key",      "LShift",     NULL, NULL, {0, NULL}},
+	{"shortcuts", "joystick Id",              "NULL",            NULL, NULL, {0, NULL}},
+
+	{"special keys", "timeline key",          "LCtrl",           NULL, NULL, {0, NULL}},
+	{"special keys", "double speed key",      "LShift",          NULL, NULL, {0, NULL}},
 
 	{
 		"port 1", "controller 1", "standard",
@@ -867,7 +871,6 @@ static const _list_settings list_settings[] = {
 EXTERNC void settings_init(void);
 EXTERNC void settings_save(void);
 EXTERNC void settings_save_GUI(void);
-EXTERNC void *settings_inp_sc_ks(int index);
 EXTERNC void settings_set_overscan_default(_overscan_borders *ob, BYTE mode);
 EXTERNC int settings_val_to_int(int index, const char *buffer);
 EXTERNC double settings_val_to_double(WORD round, const char *buffer);
@@ -876,6 +879,8 @@ EXTERNC void settings_val_to_oscan(int index, _overscan_borders *ob, const char 
 EXTERNC void settings_pgs_parse(void);
 EXTERNC void settings_pgs_save(void);
 
+EXTERNC void *settings_inp_rd_sc(int index, int type);
+EXTERNC void settings_inp_wr_sc(void *str, int index, int type);
 EXTERNC void settings_inp_all_default(_config_input *config_input, _array_pointers_port *array);
 EXTERNC void settings_inp_port_default(_port *port, int index, int mode);
 EXTERNC void settings_inp_save(void);

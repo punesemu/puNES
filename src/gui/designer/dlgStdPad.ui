@@ -65,6 +65,9 @@
       <height>326</height>
      </rect>
     </property>
+    <property name="toolTip">
+     <string/>
+    </property>
     <property name="currentIndex">
      <number>0</number>
     </property>
@@ -233,12 +236,19 @@
            </property>
            <property name="maximumSize">
             <size>
-             <width>40</width>
+             <width>30</width>
              <height>16777215</height>
             </size>
            </property>
+           <property name="toolTip">
+            <string>Unset</string>
+           </property>
            <property name="text">
-            <string>unset</string>
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="application.qrc">
+             <normaloff>:/icon/icons/trash.png</normaloff>:/icon/icons/trash.png</iconset>
            </property>
           </widget>
          </item>
@@ -252,12 +262,19 @@
            </property>
            <property name="maximumSize">
             <size>
-             <width>40</width>
+             <width>30</width>
              <height>16777215</height>
             </size>
            </property>
+           <property name="toolTip">
+            <string>Unset</string>
+           </property>
            <property name="text">
-            <string>unset</string>
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="application.qrc">
+             <normaloff>:/icon/icons/trash.png</normaloff>:/icon/icons/trash.png</iconset>
            </property>
           </widget>
          </item>
@@ -430,12 +447,19 @@
            </property>
            <property name="maximumSize">
             <size>
-             <width>40</width>
+             <width>30</width>
              <height>16777215</height>
             </size>
            </property>
+           <property name="toolTip">
+            <string>Unset</string>
+           </property>
            <property name="text">
-            <string>unset</string>
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="application.qrc">
+             <normaloff>:/icon/icons/trash.png</normaloff>:/icon/icons/trash.png</iconset>
            </property>
           </widget>
          </item>
@@ -474,12 +498,19 @@
            </property>
            <property name="maximumSize">
             <size>
-             <width>40</width>
+             <width>30</width>
              <height>16777215</height>
             </size>
            </property>
+           <property name="toolTip">
+            <string>Unset</string>
+           </property>
            <property name="text">
-            <string>unset</string>
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="application.qrc">
+             <normaloff>:/icon/icons/trash.png</normaloff>:/icon/icons/trash.png</iconset>
            </property>
           </widget>
          </item>
@@ -624,12 +655,19 @@
            </property>
            <property name="maximumSize">
             <size>
-             <width>40</width>
+             <width>30</width>
              <height>16777215</height>
             </size>
            </property>
+           <property name="toolTip">
+            <string>Unset</string>
+           </property>
            <property name="text">
-            <string>unset</string>
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="application.qrc">
+             <normaloff>:/icon/icons/trash.png</normaloff>:/icon/icons/trash.png</iconset>
            </property>
           </widget>
          </item>
@@ -671,12 +709,19 @@
            </property>
            <property name="maximumSize">
             <size>
-             <width>40</width>
+             <width>30</width>
              <height>16777215</height>
             </size>
            </property>
+           <property name="toolTip">
+            <string>Unset</string>
+           </property>
            <property name="text">
-            <string>unset</string>
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="application.qrc">
+             <normaloff>:/icon/icons/trash.png</normaloff>:/icon/icons/trash.png</iconset>
            </property>
           </widget>
          </item>
@@ -690,12 +735,19 @@
            </property>
            <property name="maximumSize">
             <size>
-             <width>40</width>
+             <width>30</width>
              <height>16777215</height>
             </size>
            </property>
+           <property name="toolTip">
+            <string>Unset</string>
+           </property>
            <property name="text">
-            <string>unset</string>
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="application.qrc">
+             <normaloff>:/icon/icons/trash.png</normaloff>:/icon/icons/trash.png</iconset>
            </property>
           </widget>
          </item>
@@ -762,12 +814,19 @@
            </property>
            <property name="maximumSize">
             <size>
-             <width>40</width>
+             <width>30</width>
              <height>16777215</height>
             </size>
            </property>
+           <property name="toolTip">
+            <string>Unset</string>
+           </property>
            <property name="text">
-            <string>unset</string>
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="application.qrc">
+             <normaloff>:/icon/icons/trash.png</normaloff>:/icon/icons/trash.png</iconset>
            </property>
           </widget>
          </item>
@@ -806,12 +865,19 @@
            </property>
            <property name="maximumSize">
             <size>
-             <width>40</width>
+             <width>30</width>
              <height>16777215</height>
             </size>
            </property>
+           <property name="toolTip">
+            <string>Unset</string>
+           </property>
            <property name="text">
-            <string>unset</string>
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="application.qrc">
+             <normaloff>:/icon/icons/trash.png</normaloff>:/icon/icons/trash.png</iconset>
            </property>
           </widget>
          </item>
@@ -825,12 +891,19 @@
            </property>
            <property name="maximumSize">
             <size>
-             <width>40</width>
+             <width>30</width>
              <height>16777215</height>
             </size>
            </property>
+           <property name="toolTip">
+            <string>Unset</string>
+           </property>
            <property name="text">
-            <string>unset</string>
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="application.qrc">
+             <normaloff>:/icon/icons/trash.png</normaloff>:/icon/icons/trash.png</iconset>
            </property>
           </widget>
          </item>
@@ -1088,12 +1161,19 @@
            </property>
            <property name="maximumSize">
             <size>
-             <width>40</width>
+             <width>30</width>
              <height>16777215</height>
             </size>
            </property>
+           <property name="toolTip">
+            <string>Unset</string>
+           </property>
            <property name="text">
-            <string>unset</string>
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="application.qrc">
+             <normaloff>:/icon/icons/trash.png</normaloff>:/icon/icons/trash.png</iconset>
            </property>
           </widget>
          </item>
@@ -1107,12 +1187,19 @@
            </property>
            <property name="maximumSize">
             <size>
-             <width>40</width>
+             <width>30</width>
              <height>16777215</height>
             </size>
            </property>
+           <property name="toolTip">
+            <string>Unset</string>
+           </property>
            <property name="text">
-            <string>unset</string>
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="application.qrc">
+             <normaloff>:/icon/icons/trash.png</normaloff>:/icon/icons/trash.png</iconset>
            </property>
           </widget>
          </item>
@@ -1285,12 +1372,19 @@
            </property>
            <property name="maximumSize">
             <size>
-             <width>40</width>
+             <width>30</width>
              <height>16777215</height>
             </size>
            </property>
+           <property name="toolTip">
+            <string>Unset</string>
+           </property>
            <property name="text">
-            <string>unset</string>
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="application.qrc">
+             <normaloff>:/icon/icons/trash.png</normaloff>:/icon/icons/trash.png</iconset>
            </property>
           </widget>
          </item>
@@ -1329,12 +1423,19 @@
            </property>
            <property name="maximumSize">
             <size>
-             <width>40</width>
+             <width>30</width>
              <height>16777215</height>
             </size>
            </property>
+           <property name="toolTip">
+            <string>Unset</string>
+           </property>
            <property name="text">
-            <string>unset</string>
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="application.qrc">
+             <normaloff>:/icon/icons/trash.png</normaloff>:/icon/icons/trash.png</iconset>
            </property>
           </widget>
          </item>
@@ -1479,12 +1580,19 @@
            </property>
            <property name="maximumSize">
             <size>
-             <width>40</width>
+             <width>30</width>
              <height>16777215</height>
             </size>
            </property>
+           <property name="toolTip">
+            <string>Unset</string>
+           </property>
            <property name="text">
-            <string>unset</string>
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="application.qrc">
+             <normaloff>:/icon/icons/trash.png</normaloff>:/icon/icons/trash.png</iconset>
            </property>
           </widget>
          </item>
@@ -1526,12 +1634,19 @@
            </property>
            <property name="maximumSize">
             <size>
-             <width>40</width>
+             <width>30</width>
              <height>16777215</height>
             </size>
            </property>
+           <property name="toolTip">
+            <string>Unset</string>
+           </property>
            <property name="text">
-            <string>unset</string>
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="application.qrc">
+             <normaloff>:/icon/icons/trash.png</normaloff>:/icon/icons/trash.png</iconset>
            </property>
           </widget>
          </item>
@@ -1545,12 +1660,19 @@
            </property>
            <property name="maximumSize">
             <size>
-             <width>40</width>
+             <width>30</width>
              <height>16777215</height>
             </size>
            </property>
+           <property name="toolTip">
+            <string>Unset</string>
+           </property>
            <property name="text">
-            <string>unset</string>
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="application.qrc">
+             <normaloff>:/icon/icons/trash.png</normaloff>:/icon/icons/trash.png</iconset>
            </property>
           </widget>
          </item>
@@ -1617,12 +1739,19 @@
            </property>
            <property name="maximumSize">
             <size>
-             <width>40</width>
+             <width>30</width>
              <height>16777215</height>
             </size>
            </property>
+           <property name="toolTip">
+            <string>Unset</string>
+           </property>
            <property name="text">
-            <string>unset</string>
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="application.qrc">
+             <normaloff>:/icon/icons/trash.png</normaloff>:/icon/icons/trash.png</iconset>
            </property>
           </widget>
          </item>
@@ -1661,12 +1790,19 @@
            </property>
            <property name="maximumSize">
             <size>
-             <width>40</width>
+             <width>30</width>
              <height>16777215</height>
             </size>
            </property>
+           <property name="toolTip">
+            <string>Unset</string>
+           </property>
            <property name="text">
-            <string>unset</string>
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="application.qrc">
+             <normaloff>:/icon/icons/trash.png</normaloff>:/icon/icons/trash.png</iconset>
            </property>
           </widget>
          </item>
@@ -1680,12 +1816,19 @@
            </property>
            <property name="maximumSize">
             <size>
-             <width>40</width>
+             <width>30</width>
              <height>16777215</height>
             </size>
            </property>
+           <property name="toolTip">
+            <string>Unset</string>
+           </property>
            <property name="text">
-            <string>unset</string>
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="application.qrc">
+             <normaloff>:/icon/icons/trash.png</normaloff>:/icon/icons/trash.png</iconset>
            </property>
           </widget>
          </item>

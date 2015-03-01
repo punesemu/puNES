@@ -316,10 +316,12 @@ void dlgStdPad::js_press_event() {
 			}
 		}
 	}
-#endif
-
+	data.joy.value = 0;
+    data.joy.timer->start(30);
+#elif defined (__WIN32__)
 	data.joy.value = 0;
     data.joy.timer->start(150);
+#endif
 }
 void dlgStdPad::td_update_label(int type, int value) {
 	QLabel *label = findChild<QLabel *>("label_value_slider_" + SPB(type + TRB_A));
@@ -333,6 +335,12 @@ bool dlgStdPad::eventFilter(QObject *obj, QEvent *event) {
 				data.joy.timer->stop();
 				data.seq.timer->stop();
 				data.seq.active = false;
+#if defined (__linux__)
+				if (data.joy.fd) {
+					::close(data.joy.fd);
+					data.joy.fd = 0;
+				}
+#endif
 				data.no_other_buttons = false;
 				data.vbutton = 0;
 				break;
@@ -505,6 +513,7 @@ void dlgStdPad::s_pad_joy_read_timer() {
 
 #if defined (__linux__)
 		::close(data.joy.fd);
+		data.joy.fd = 0;
 #endif
 
 		type = data.vbutton / MAX_STD_PAD_BUTTONS;
@@ -559,5 +568,3 @@ void dlgStdPad::s_apply_clicked(bool checked) {
 void dlgStdPad::s_discard_clicked(bool checked) {
 	close();
 }
-
-

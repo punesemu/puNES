@@ -59,7 +59,6 @@ punes32.d3d9.exe: $(OBJS) $(USER_OBJS)
 	i686-w64-mingw32-g++ -L/usr/i686-w64-mingw32/usr/lib/qt4 -L"/home/fhorse/sviluppo/personale/punes/misc/lib/win32" -Wl,-subsystem,console -static-libgcc -static-libstdc++ -o "punes32.d3d9.exe" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
-	$(MAKE) --no-print-directory post-build
 
 # Other Targets
 clean:
@@ -70,11 +69,7 @@ pre-build:
 	-/home/fhorse/sviluppo/personale/bin/buildBefore -q
 	-@echo ' '
 
-post-build:
-	-../../bin/build_increment
-	-@echo ' '
-
 .PHONY: all clean dependents
-.SECONDARY: main-build pre-build post-build
+.SECONDARY: main-build pre-build
 
 -include ../makefile.targets

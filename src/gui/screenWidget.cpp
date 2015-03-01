@@ -67,7 +67,7 @@ bool screenWidget::eventFilter(QObject *obj, QEvent *event) {
 	static DBWORD keyval;
 
 	if (event->type() == QEvent::KeyPress) {
-		keyEvent = static_cast<QKeyEvent *>(event);
+		keyEvent = ((QKeyEvent *)event);
 		keyval = inpObject::kbd_keyval_decode(keyEvent);
 
 		if (keyval == gui.key.tl) {
@@ -103,7 +103,7 @@ bool screenWidget::eventFilter(QObject *obj, QEvent *event) {
 			}
 		}
 	} else if (event->type() == QEvent::KeyRelease) {
-		keyEvent = static_cast<QKeyEvent *>(event);
+		keyEvent = ((QKeyEvent *)event);
 		keyval = inpObject::kbd_keyval_decode(keyEvent);
 
 		if (keyval == gui.key.tl) {
@@ -125,7 +125,7 @@ bool screenWidget::eventFilter(QObject *obj, QEvent *event) {
 			}
 		}
 	} else if (event->type() == QEvent::MouseButtonPress) {
-		mouseEvent = static_cast<QMouseEvent *>(event);
+		mouseEvent = ((QMouseEvent *)event);
 
 		if (mouseEvent->button() == Qt::LeftButton) {
 #if defined (SDL)
@@ -137,7 +137,7 @@ bool screenWidget::eventFilter(QObject *obj, QEvent *event) {
 			mouse.right = TRUE;
 		}
 	} else if (event->type() == QEvent::MouseButtonRelease) {
-		mouseEvent = static_cast<QMouseEvent *>(event);
+		mouseEvent = ((QMouseEvent *)event);
 
 		if (mouseEvent->button() == Qt::LeftButton) {
 			mouse.left = FALSE;
@@ -145,7 +145,7 @@ bool screenWidget::eventFilter(QObject *obj, QEvent *event) {
 			mouse.right = FALSE;
 		}
 	} else if (event->type() == QEvent::MouseMove) {
-		mouseEvent = static_cast<QMouseEvent *>(event);
+		mouseEvent = ((QMouseEvent *)event);
 
 		mouse.x = mouseEvent->x();
 		mouse.y = mouseEvent->y();

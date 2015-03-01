@@ -16,6 +16,10 @@
 #include <QtWidgets/QDesktopWidget>
 #endif
 #include <QtCore/QDateTime>
+#if defined (__linux__)
+#include <unistd.h>
+#include <fcntl.h>
+#endif
 #include <libgen.h>
 #include "mainWindow.moc"
 #include "dlgOverscanBorders.hpp"
@@ -74,6 +78,11 @@ mainWindow::mainWindow(Ui::mainWindow *u) : QMainWindow() {
 		setFont(actual);
 	}
 
+	shcjoy.timer = new QTimer(this);
+	connect(shcjoy.timer, SIGNAL(timeout()), this, SLOT(s_shcjoy_read_timer()));
+
+	shcjoy_start();
+
 	translator = new QTranslator();
 	qtTranslator = new QTranslator();
 }
@@ -85,7 +94,7 @@ void mainWindow::setup() {
 
 	connect_menu_signals();
 
-	shortcuts(0);
+	shortcuts();
 
 	// NES
 	grp = new QActionGroup(this);
@@ -282,6 +291,8 @@ void mainWindow::state_save_slot_set(int slot) {
 }
 bool mainWindow::eventFilter(QObject *obj, QEvent *event) {
 	if (event->type() == QEvent::Close) {
+		shcjoy_stop();
+
 		// in linux non posso spostare tramite le qt una finestra da un monitor
 		// ad un'altro, quindi salvo la posizione solo se sono sul monitor 0;
 		if ((cfg->fullscreen == NO_FULLSCR) && (qApp->desktop()->screenNumber(this) == 0)) {
@@ -302,7 +313,7 @@ bool mainWindow::eventFilter(QObject *obj, QEvent *event) {
 		}
 	} else if (event->type() == QEvent::LanguageChange) {
 		ui->retranslateUi(this);
-		shortcuts(1);
+		shortcuts();
 		update_window();
 #if defined (SDL)
 		ui->action_Cube->setText(tr("&Cube"));
@@ -380,13 +391,13 @@ void mainWindow::setup_video_rendering() {
 #endif
 }
 void mainWindow::update_menu_nes() {
-	QString *sc = (QString *)settings_inp_sc_ks(SET_INP_SC_EJECT_DISK);
+	QString *sc = (QString *)settings_inp_rd_sc(SET_INP_SC_EJECT_DISK, KEYBOARD);
 
 	if (fds.info.enabled) {
 		if (fds.drive.disk_ejected) {
-			ui->action_Eject_Insert_Disk->setText(tr("&Insert disk") + '\t' + (QString) (*sc));
+			ui->action_Eject_Insert_Disk->setText(tr("&Insert disk") + '\t' + ((QString)*sc));
 		} else {
-			ui->action_Eject_Insert_Disk->setText(tr("&Eject disk") + '\t' + (QString) (*sc));
+			ui->action_Eject_Insert_Disk->setText(tr("&Eject disk") + '\t' + ((QString)*sc));
 		}
 
 		ui->menu_Disk_Side->setEnabled(true);
@@ -400,7 +411,7 @@ void mainWindow::update_menu_nes() {
 		ctrl_disk_side(ui->action_Disk_4_side_B);
 		ui->action_Eject_Insert_Disk->setEnabled(true);
 	} else {
-		ui->action_Eject_Insert_Disk->setText(tr("&Eject/Insert disk") + '\t' + (QString) (*sc));
+		ui->action_Eject_Insert_Disk->setText(tr("&Eject/Insert disk") + '\t' + ((QString)*sc));
 		ui->menu_Disk_Side->setEnabled(false);
 		ui->action_Eject_Insert_Disk->setEnabled(false);
 	}
@@ -1001,88 +1012,118 @@ void mainWindow::ctrl_disk_side(QAction *action) {
 		action->setChecked(true);
 	}
 }
-void mainWindow::shortcuts(int type) {
+void mainWindow::shortcuts() {
 	/*
 	 * se non voglio che gli shortcut funzionino durante il fullscreen, basta
 	 * utilizzare lo shortcut associato al QAction. In questo modo quando nascondero'
 	 * la barra del menu, automaticamente questi saranno disabilitati.
 	 */
 
-	// type = 0 ; associa shortcut e setta il testo
-	// type = 1 ; setta solo il testo
-
 	// File
-	connect_shortcut(type, ui->action_Open, SET_INP_SC_OPEN, SLOT(s_open()));
-	connect_shortcut(type, ui->action_Quit, SET_INP_SC_QUIT, SLOT(s_quit()));
+	connect_shortcut(ui->action_Open, SET_INP_SC_OPEN, SLOT(s_open()));
+	connect_shortcut(ui->action_Quit, SET_INP_SC_QUIT, SLOT(s_quit()));
 	// NES
-	connect_shortcut(type, ui->action_Hard_Reset, SET_INP_SC_HARD_RESET, SLOT(s_make_reset()));
-	connect_shortcut(type, ui->action_Soft_Reset, SET_INP_SC_SOFT_RESET, SLOT(s_make_reset()));
-	connect_shortcut(type, ui->action_Switch_sides, SET_INP_SC_SWITCH_SIDES, SLOT(s_disk_side()));
-	connect_shortcut(type, ui->action_Eject_Insert_Disk, SET_INP_SC_EJECT_DISK, SLOT(s_eject_disk()));
+	connect_shortcut(ui->action_Hard_Reset, SET_INP_SC_HARD_RESET, SLOT(s_make_reset()));
+	connect_shortcut(ui->action_Soft_Reset, SET_INP_SC_SOFT_RESET, SLOT(s_make_reset()));
+	connect_shortcut(ui->action_Switch_sides, SET_INP_SC_SWITCH_SIDES, SLOT(s_disk_side()));
+	connect_shortcut(ui->action_Eject_Insert_Disk, SET_INP_SC_EJECT_DISK, SLOT(s_eject_disk()));
 	// Settings/Mode
-	connect_shortcut(type, ui->action_PAL, SET_INP_SC_MODE_PAL, SLOT(s_set_mode()));
-	connect_shortcut(type, ui->action_NTSC, SET_INP_SC_MODE_NTSC, SLOT(s_set_mode()));
-	connect_shortcut(type, ui->action_Dendy, SET_INP_SC_MODE_DENDY, SLOT(s_set_mode()));
-	connect_shortcut(type, ui->action_Mode_Auto, SET_INP_SC_MODE_AUTO, SLOT(s_set_mode()));
+	connect_shortcut(ui->action_PAL, SET_INP_SC_MODE_PAL, SLOT(s_set_mode()));
+	connect_shortcut(ui->action_NTSC, SET_INP_SC_MODE_NTSC, SLOT(s_set_mode()));
+	connect_shortcut(ui->action_Dendy, SET_INP_SC_MODE_DENDY, SLOT(s_set_mode()));
+	connect_shortcut(ui->action_Mode_Auto, SET_INP_SC_MODE_AUTO, SLOT(s_set_mode()));
 	// Settings/Video/Scale
-	connect_shortcut(type, ui->action_1x, SET_INP_SC_SCALE_1X);
-	connect_shortcut(type, ui->action_2x, SET_INP_SC_SCALE_2X);
-	connect_shortcut(type, ui->action_3x, SET_INP_SC_SCALE_3X);
-	connect_shortcut(type, ui->action_4x, SET_INP_SC_SCALE_4X);
+	connect_shortcut(ui->action_1x, SET_INP_SC_SCALE_1X);
+	connect_shortcut(ui->action_2x, SET_INP_SC_SCALE_2X);
+	connect_shortcut(ui->action_3x, SET_INP_SC_SCALE_3X);
+	connect_shortcut(ui->action_4x, SET_INP_SC_SCALE_4X);
 #if defined (SDL)
 	// Settings/Video/Effect
-	connect_shortcut(type, ui->action_Cube, SET_INP_SC_EFFECT_CUBE, SLOT(s_set_effect()));
+	connect_shortcut(ui->action_Cube, SET_INP_SC_EFFECT_CUBE, SLOT(s_set_effect()));
 #endif
 	// Settings/Video/[Interpolation, Fullscreen, Stretch in fullscreen]
-	connect_shortcut(type, ui->action_Interpolation, SET_INP_SC_INTERPOLATION,
+	connect_shortcut(ui->action_Interpolation, SET_INP_SC_INTERPOLATION,
 			SLOT(s_set_interpolation()));
-	connect_shortcut(type, ui->action_Fullscreen, SET_INP_SC_FULLSCREEN,
+	connect_shortcut(ui->action_Fullscreen, SET_INP_SC_FULLSCREEN,
 			SLOT(s_set_fullscreen()));
-	connect_shortcut(type, ui->action_Stretch_in_fullscreen,
-			SET_INP_SC_STRETCH_FULLSCREEN, SLOT(s_set_stretch()));
+	connect_shortcut(ui->action_Stretch_in_fullscreen, SET_INP_SC_STRETCH_FULLSCREEN,
+			SLOT(s_set_stretch()));
 	// Settings/Audio/Enable
-	connect_shortcut(type, ui->action_Audio_Enable, SET_INP_SC_AUDIO_ENABLE,
+	connect_shortcut(ui->action_Audio_Enable, SET_INP_SC_AUDIO_ENABLE,
 			SLOT(s_set_audio_enable()));
 	// Settings/Save settings
-	connect_shortcut(type, ui->action_Save_settings, SET_INP_SC_SAVE_SETTINGS,
+	connect_shortcut(ui->action_Save_settings, SET_INP_SC_SAVE_SETTINGS,
 			SLOT(s_save_settings()));
 	// State/[Save state, Load state]
-	connect_shortcut(type, ui->action_Save_state, SET_INP_SC_SAVE_STATE,
+	connect_shortcut(ui->action_Save_state, SET_INP_SC_SAVE_STATE,
 			SLOT(s_state_save_slot_action()));
-	connect_shortcut(type, ui->action_Load_state, SET_INP_SC_LOAD_STATE,
+	connect_shortcut(ui->action_Load_state, SET_INP_SC_LOAD_STATE,
 			SLOT(s_state_save_slot_action()));
 	// State/[Incremente slot, Decrement slot]
-	connect_shortcut(type, ui->action_Increment_slot, SET_INP_SC_INC_SLOT,
+	connect_shortcut(ui->action_Increment_slot, SET_INP_SC_INC_SLOT,
 			SLOT(s_state_save_slot_incdec()));
-	connect_shortcut(type, ui->action_Decrement_slot, SET_INP_SC_DEC_SLOT,
+	connect_shortcut(ui->action_Decrement_slot, SET_INP_SC_DEC_SLOT,
 			SLOT(s_state_save_slot_incdec()));
 }
-void mainWindow::connect_shortcut(int type, QAction *action, int index) {
-	QString *sc = (QString *)settings_inp_sc_ks(index);
+void mainWindow::shcjoy_start() {
+	shcjoy_stop();
 
-	if (type == 1) {
+	if (cfg->input.shcjoy_id == name_to_jsn("NULL")) {
 		return;
 	}
+
+	for (int i = 0; i < SET_MAX_NUM_SC; i++) {
+		shcjoy.shortcut[i] =name_to_jsv((QString(*(QString * )settings_inp_rd_sc(i +
+				SET_INP_SC_OPEN, JOYSTICK)).toLocal8Bit().data()));
+	}
+
+	memset(&shcjoy.joy, 0x00, sizeof(_js));
+
+#if defined (__linux__)
+	::sprintf(shcjoy.joy.dev, "%s%d", JS_DEV_PATH, cfg->input.shcjoy_id);
+	shcjoy.joy.fd = ::open(shcjoy.joy.dev, O_RDONLY | O_NONBLOCK);
+#elif defined (__WIN32__)
+	::sprintf(shcjoy.joy.dev, "%s", jsn_to_name(cfg->input.shcjoy_id));
+#endif
+
+	shcjoy.enabled = true;
+	shcjoy.timer->start(13);
+}
+void mainWindow::shcjoy_stop() {
+	shcjoy.enabled = false;
+	shcjoy.timer->stop();
+
+#if defined (__linux__)
+	if (shcjoy.joy.fd) {
+		::close(shcjoy.joy.fd);
+		shcjoy.joy.fd = 0;
+	}
+#endif
+}
+void mainWindow::connect_shortcut(QAction *action, int index) {
+	QString *sc = (QString *)settings_inp_rd_sc(index, KEYBOARD);
 
 	if (sc->isEmpty() == false) {
 		action->setShortcut(QKeySequence((QString)(*sc)));
 	}
 }
-void mainWindow::connect_shortcut(int type, QAction *action, int index, const char *member) {
-	QString *sc = (QString *)settings_inp_sc_ks(index);
+void mainWindow::connect_shortcut(QAction *action, int index, const char *member) {
+	QString *sc = (QString *)settings_inp_rd_sc(index, KEYBOARD);
 
 	if (sc->isEmpty() == false) {
-		if (type == 0) {
-			QVariant value = action->property("myValue");
+		QStringList text = action->text().remove('&').split('\t');
+		QVariant value = action->property("myValue");
 
-			shortcut[index]->setKey(QKeySequence((QString)(*sc)));
-			if (!value.isNull()) {
-				shortcut[index]->setProperty("myValue", value);
-			}
-			connect(shortcut[index], SIGNAL(activated()), this, member);
+		shortcut[index]->setKey(QKeySequence((QString)(*sc)));
+		if (!value.isNull()) {
+			shortcut[index]->setProperty("myValue", value);
 		}
+		// disconnetto il vecchio (se presente)
+		disconnect(shortcut[index], SIGNAL(activated()), this, member);
+		// connetto il nuovo
+		connect(shortcut[index], SIGNAL(activated()), this, member);
 
-		action->setText(action->text() + '\t' + (QString)(*sc));
+		action->setText(text.at(0) + '\t' + (QString)(*sc));
 	}
 }
 void mainWindow::connect_menu_signals() {
@@ -1498,7 +1539,7 @@ void mainWindow::s_open() {
 	emu_pause(FALSE);
 }
 void mainWindow::s_open_recent_roms() {
-	int index = QVariant(qobject_cast<QObject *>(sender())->property("myValue")).toInt();
+	int index = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
 	emu_pause(TRUE);
 
@@ -1517,12 +1558,12 @@ void mainWindow::s_quit() {
 	close();
 }
 void mainWindow::s_make_reset() {
-	int type = QVariant(qobject_cast<QObject *>(sender())->property("myValue")).toInt();
+	int type = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
 	make_reset(type);
 }
 void mainWindow::s_disk_side() {
-	int side = QVariant(qobject_cast<QObject *>(sender())->property("myValue")).toInt();
+	int side = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
 	if (side == 0xFFF) {
 		side = fds.drive.side_inserted;
@@ -1549,7 +1590,7 @@ void mainWindow::s_eject_disk() {
 	update_menu_nes();
 }
 void mainWindow::s_set_mode() {
-	int mode = QVariant(qobject_cast<QObject *>(sender())->property("myValue")).toInt();
+	int mode = QVariant(((QObject *)sender())->property("myValue")).toInt();
 	bool reset = true;
 
 	if (mode == cfg->mode) {
@@ -1599,7 +1640,7 @@ void mainWindow::s_set_mode() {
 	}
 }
 void mainWindow::s_set_rendering() {
-	int rendering = QVariant(qobject_cast<QObject *>(sender())->property("myValue")).toInt();
+	int rendering = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
 	if (cfg->render == rendering) {
 		return;
@@ -1617,7 +1658,7 @@ void mainWindow::s_set_rendering() {
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 }
 void mainWindow::s_set_fps() {
-	int fps = QVariant(qobject_cast<QObject *>(sender())->property("myValue")).toInt();
+	int fps = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
 	if (cfg->fps == fps) {
 		return;
@@ -1629,7 +1670,7 @@ void mainWindow::s_set_fps() {
 	emu_pause(FALSE);
 }
 void mainWindow::s_set_fsk() {
-	int fsk = QVariant(qobject_cast<QObject *>(sender())->property("myValue")).toInt();
+	int fsk = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
 	if (cfg->frameskip == fsk) {
 		return;
@@ -1642,12 +1683,12 @@ void mainWindow::s_set_fsk() {
 	}
 }
 void mainWindow::s_set_scale() {
-	int scale = QVariant(qobject_cast<QObject *>(sender())->property("myValue")).toInt();
+	int scale = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
 	gfx_set_screen(scale, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 }
 void mainWindow::s_set_par() {
-	int par = QVariant(qobject_cast<QObject *>(sender())->property("myValue")).toInt();
+	int par = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
 	if (cfg->pixel_aspect_ratio == par) {
 		return;
@@ -1663,7 +1704,7 @@ void mainWindow::s_set_par_stretch() {
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 }
 void mainWindow::s_set_overscan() {
-	int oscan = QVariant(qobject_cast<QObject *>(sender())->property("myValue")).toInt();
+	int oscan = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
 	switch (oscan) {
 		case OSCAN_ON:
@@ -1688,18 +1729,18 @@ void mainWindow::s_set_overscan_borders() {
 	dlg->show();
 }
 void mainWindow::s_set_other_filter() {
-	int filter = QVariant(qobject_cast<QObject *>(sender())->property("myValue")).toInt();
+	int filter = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
 	set_filter(filter);
 }
 void mainWindow::s_set_ntsc_filter() {
-	int filter = QVariant(qobject_cast<QObject *>(sender())->property("myValue")).toInt();
+	int filter = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
 	cfg->ntsc_format = filter;
 	set_filter(NTSC_FILTER);
 }
 void mainWindow::s_set_palette() {
-	int palette = QVariant(qobject_cast<QObject *>(sender())->property("myValue")).toInt();
+	int palette = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, palette, FALSE, FALSE);
 }
@@ -1791,7 +1832,7 @@ void mainWindow::s_set_stretch() {
 	}
 }
 void mainWindow::s_set_samplerate() {
-	int samplerate = QVariant(qobject_cast<QObject *>(sender())->property("myValue")).toInt();
+	int samplerate = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
 	if (cfg->samplerate == samplerate) {
 		return;
@@ -1804,7 +1845,7 @@ void mainWindow::s_set_samplerate() {
 	emu_pause(FALSE);
 }
 void mainWindow::s_set_channels() {
-	int channels = QVariant(qobject_cast<QObject *>(sender())->property("myValue")).toInt();
+	int channels = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
 	if (cfg->channels == channels) {
 		return;
@@ -1817,7 +1858,7 @@ void mainWindow::s_set_channels() {
 	emu_pause(FALSE);
 }
 void mainWindow::s_set_stereo_delay() {
-	double delay = qobject_cast<QAction *>(sender())->data().toDouble() / 100.f;
+	double delay = ((QAction *)sender())->data().toDouble() / 100.f;
 
 	if (cfg->stereo_delay == delay) {
 		return;
@@ -1828,7 +1869,7 @@ void mainWindow::s_set_stereo_delay() {
 	gui_update();
 }
 void mainWindow::s_set_audio_quality() {
-	int quality = QVariant(qobject_cast<QObject *>(sender())->property("myValue")).toInt();
+	int quality = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
 	if (cfg->audio_quality == quality) {
 		return;
@@ -1862,7 +1903,7 @@ void mainWindow::s_set_audio_enable() {
 	emu_pause(FALSE);
 }
 void mainWindow::s_set_language() {
-	int lang = QVariant(qobject_cast<QObject *>(sender())->property("myValue")).toInt();
+	int lang = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
 	set_language(lang);
 }
@@ -1888,7 +1929,7 @@ void mainWindow::s_save_settings() {
 	settings_save();
 }
 void mainWindow::s_state_save_slot_action() {
-	int mode = QVariant(qobject_cast<QObject *>(sender())->property("myValue")).toInt();
+	int mode = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
 	emu_pause(TRUE);
 
@@ -1902,7 +1943,7 @@ void mainWindow::s_state_save_slot_action() {
 	emu_pause(FALSE);
 }
 void mainWindow::s_state_save_slot_incdec() {
-	int mode = QVariant(qobject_cast<QObject *>(sender())->property("myValue")).toInt();
+	int mode = QVariant(((QObject *)sender())->property("myValue")).toInt();
 	BYTE new_slot;
 
 	if (mode == INC) {
@@ -1920,7 +1961,7 @@ void mainWindow::s_state_save_slot_incdec() {
 	update_window();
 }
 void mainWindow::s_state_save_slot_set() {
-	int slot = QVariant(qobject_cast<QObject *>(sender())->property("myValue")).toInt();
+	int slot = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
 	state_save_slot_set(slot);
 	update_window();
@@ -2030,4 +2071,98 @@ void mainWindow::s_help() {
 	about->exec();
 
 	emu_pause(FALSE);
+}
+void mainWindow::s_shcjoy_read_timer() {
+	if (shcjoy.enabled == false) {
+		return;
+	}
+
+	if ((shcjoy.value = js_shcut_read(&shcjoy.joy, cfg->input.shcjoy_id)) > 0) {
+		int index;
+
+		//printf("AAA : %d\n", shcjoy.value);
+
+		for (index = 0; index < SET_MAX_NUM_SC; index++) {
+			if (shcjoy.value == shcjoy.shortcut[index]) {
+				break;
+			}
+		}
+
+		switch (index + SET_INP_SC_OPEN) {
+			case SET_INP_SC_OPEN:
+				ui->action_Open->trigger();
+				break;
+			case SET_INP_SC_QUIT:
+				ui->action_Quit->trigger();
+				break;
+			case SET_INP_SC_HARD_RESET:
+				ui->action_Hard_Reset->trigger();
+				break;
+			case SET_INP_SC_SOFT_RESET:
+				ui->action_Soft_Reset->trigger();
+				break;
+			case SET_INP_SC_SWITCH_SIDES:
+				ui->action_Switch_sides->trigger();
+				break;
+			case SET_INP_SC_EJECT_DISK:
+				ui->action_Eject_Insert_Disk->trigger();
+				break;
+			case SET_INP_SC_MODE_PAL:
+				ui->action_PAL->trigger();
+				break;
+			case SET_INP_SC_MODE_NTSC:
+				ui->action_NTSC->trigger();
+				break;
+			case SET_INP_SC_MODE_DENDY:
+				ui->action_Dendy->trigger();
+				break;
+			case SET_INP_SC_MODE_AUTO:
+				ui->action_Mode_Auto->trigger();
+				break;
+			case SET_INP_SC_SCALE_1X:
+				ui->action_1x->trigger();
+				break;
+			case SET_INP_SC_SCALE_2X:
+				ui->action_2x->trigger();
+				break;
+			case SET_INP_SC_SCALE_3X:
+				ui->action_3x->trigger();
+				break;
+			case SET_INP_SC_SCALE_4X:
+				ui->action_4x->trigger();
+				break;
+#if defined (SDL)
+			case SET_INP_SC_EFFECT_CUBE:
+				ui->action_Cube->trigger();
+				break;
+#endif
+			case SET_INP_SC_INTERPOLATION:
+				ui->action_Interpolation->trigger();
+				break;
+			case SET_INP_SC_FULLSCREEN:
+				ui->action_Fullscreen->trigger();
+				break;
+			case SET_INP_SC_STRETCH_FULLSCREEN:
+				ui->action_Stretch_in_fullscreen->trigger();
+				break;
+			case SET_INP_SC_AUDIO_ENABLE:
+				ui->action_Audio_Enable->trigger();
+				break;
+			case SET_INP_SC_SAVE_SETTINGS:
+				ui->action_Save_settings->trigger();
+				break;
+			case SET_INP_SC_SAVE_STATE:
+				ui->action_Save_state->trigger();
+				break;
+			case SET_INP_SC_LOAD_STATE:
+				ui->action_Load_state->trigger();
+				break;
+			case SET_INP_SC_INC_SLOT:
+				ui->action_Increment_slot->trigger();
+				break;
+			case SET_INP_SC_DEC_SLOT:
+				ui->action_Decrement_slot->trigger();
+				break;
+		}
+	}
 }

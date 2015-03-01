@@ -1089,11 +1089,17 @@ void inpObject::set_all_input_default(_config_input *config_input, _array_pointe
 		set_kbd_joy_default(port, i, JOYSTICK);
 	}
 }
-void *inpObject::val_to_qstring_pntr(int index) {
-	static QString rc;
+void *inpObject::sc_val_to_qstring_pntr(int index, int type) {
+	static QString str;
 
-	rc = val.at(index);
-	return ((void *) &rc);
+	str = val.at(index).split(",").at(type);;
+	return ((void *)&str);
+}
+void inpObject::sc_qstring_pntr_to_val(void *str, int index, int type) {
+	QStringList split = val.at(index).split(",");
+
+	split.replace(type, (QString(*(QString *)str)));
+	val.replace(index, QString("%1,%2").arg(split.at(KEYBOARD), split.at(JOYSTICK)));
 }
 void inpObject::setup() {
 	rd();
@@ -1105,7 +1111,7 @@ void inpObject::to_cfg(QString group) {
 		int_to_val(SET_INP_P1_PAD_TYPE, port[PORT1].type_pad);
 		kbd_wr(SET_INP_P1K_A, PORT1);
 		joy_wr(SET_INP_P1J_A, PORT1);
-		joyid_int_to_val(SET_INP_P1J_ID, PORT1);
+		joyid_int_to_val(SET_INP_P1J_ID, port[PORT1].joy_id);
 		val.replace(SET_INP_P1_TURBOA_DELAY, QString::number(port[PORT1].turbo[TURBOA].frequency));
 		val.replace(SET_INP_P1_TURBOB_DELAY, QString::number(port[PORT1].turbo[TURBOB].frequency));
 	}
@@ -1115,7 +1121,7 @@ void inpObject::to_cfg(QString group) {
 		int_to_val(SET_INP_P2_PAD_TYPE, port[PORT2].type_pad);
 		kbd_wr(SET_INP_P2K_A, PORT2);
 		joy_wr(SET_INP_P2J_A, PORT2);
-		joyid_int_to_val(SET_INP_P2J_ID, PORT2);
+		joyid_int_to_val(SET_INP_P2J_ID, port[PORT2].joy_id);
 		val.replace(SET_INP_P2_TURBOA_DELAY, QString::number(port[PORT2].turbo[TURBOA].frequency));
 		val.replace(SET_INP_P2_TURBOB_DELAY, QString::number(port[PORT2].turbo[TURBOB].frequency));
 	}
@@ -1125,7 +1131,7 @@ void inpObject::to_cfg(QString group) {
 		int_to_val(SET_INP_P3_PAD_TYPE, port[PORT3].type_pad);
 		kbd_wr(SET_INP_P3K_A, PORT3);
 		joy_wr(SET_INP_P3J_A, PORT3);
-		joyid_int_to_val(SET_INP_P3J_ID, PORT3);
+		joyid_int_to_val(SET_INP_P3J_ID, port[PORT3].joy_id);
 		val.replace(SET_INP_P3_TURBOA_DELAY, QString::number(port[PORT3].turbo[TURBOA].frequency));
 		val.replace(SET_INP_P3_TURBOB_DELAY, QString::number(port[PORT3].turbo[TURBOB].frequency));
 	}
@@ -1135,7 +1141,7 @@ void inpObject::to_cfg(QString group) {
 		int_to_val(SET_INP_P4_PAD_TYPE, port[PORT4].type_pad);
 		kbd_wr(SET_INP_P4K_A, PORT4);
 		joy_wr(SET_INP_P4J_A, PORT4);
-		joyid_int_to_val(SET_INP_P4J_ID, PORT4);
+		joyid_int_to_val(SET_INP_P4J_ID, port[PORT4].joy_id);
 		val.replace(SET_INP_P4_TURBOA_DELAY, QString::number(port[PORT4].turbo[TURBOA].frequency));
 		val.replace(SET_INP_P4_TURBOB_DELAY, QString::number(port[PORT4].turbo[TURBOB].frequency));
 	}
@@ -1145,7 +1151,9 @@ void inpObject::to_cfg(QString group) {
 		int_to_val(SET_INP_LEFTRIGHT, cfg_from_file.input.permit_updown_leftright);
 	}
 
-	if ((group == "shortcuts") || (group == "all")) {}
+	if ((group == "shortcuts") || (group == "all")) {
+		joyid_int_to_val(SET_INP_SC_JOYSTICK_ID, cfg_from_file.input.shcjoy_id);
+	}
 
 	if ((group == "special keys") || (group == "all")) {
 		val.replace(SET_INP_SK_TIMELINE_KEY, kbd_keyval_to_name(gui.key.tl));
@@ -1198,7 +1206,18 @@ void inpObject::fr_cfg(QString group) {
 		cfg_from_file.input.permit_updown_leftright = val_to_int(SET_INP_LEFTRIGHT);
 	}
 
-	if ((group == "shortcuts") || (group == "all")) {}
+	if ((group == "shortcuts") || (group == "all")) {
+		cfg_from_file.input.shcjoy_id = joyid_val_to_int(SET_INP_SC_JOYSTICK_ID);
+
+		// converto nel nuovo formato
+		for (int i = SET_INP_SC_OPEN; i < SET_INP_SC_OPEN + SET_MAX_NUM_SC; i++) {
+			QStringList split = val.at(i).split(",");
+
+			if (split.count() < 2) {
+				val.replace(i, QString("%1,%2").arg(split.at(KEYBOARD), "NULL"));
+			}
+		}
+	}
 
 	if ((group == "special keys") || (group == "all")) {
 		gui.key.tl = kbd_val_to_int(SET_INP_SK_TIMELINE_KEY);
@@ -1267,8 +1286,8 @@ int inpObject::joyid_val_to_int(int index) {
 
 	return (name_to_jsn(val.at(index).toLocal8Bit().data()));
 }
-void inpObject::joyid_int_to_val(int index, int pIndex) {
-	val.replace(index, jsn_to_name(port[pIndex].joy_id));
+void inpObject::joyid_int_to_val(int index, int id) {
+	val.replace(index, jsn_to_name(id));
 }
 int inpObject::tb_delay_val_to_int(int index) {
 	int ret;

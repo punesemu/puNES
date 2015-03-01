@@ -37,6 +37,7 @@ enum controller_buttons {
 enum turbo_buttons { TURBOA, TURBOB };
 enum input_types { KEYBOARD, JOYSTICK };
 enum button_states { RELEASED = 0x00, PRESSED = 0x01 };
+enum input_max_values { MAX_JOYSTICK = 16 };
 
 enum port_controllers {
 	PORT1,
@@ -49,6 +50,7 @@ enum port_controllers {
 typedef struct {
 	BYTE permit_updown_leftright;
 	BYTE controller_mode;
+	BYTE shcjoy_id;
 } _config_input;
 typedef struct {
 	BYTE value;

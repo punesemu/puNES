@@ -144,7 +144,7 @@ void dlgOverscanBorders::s_default_clicked(bool checked) {
 	update_dialog();
 }
 void dlgOverscanBorders::s_spinbox_value_changed(int i) {
-	QString txt = qobject_cast<QSpinBox *>(sender())->objectName();
+	QString txt = ((QSpinBox *)sender())->objectName();
 
 	if (txt == "spinBox_Up") {
 		data.borders->up = i;

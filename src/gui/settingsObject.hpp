@@ -102,7 +102,8 @@ class inpObject : public settingsObject {
 		static DBWORD kbd_keyval_decode(QKeyEvent *keyEvent);
 		void set_kbd_joy_default(_port *port, int index, int mode);
 		void set_all_input_default(_config_input *config_input, _array_pointers_port *array);
-		void *val_to_qstring_pntr(int index);
+		void *sc_val_to_qstring_pntr(int index, int type);
+		void sc_qstring_pntr_to_val(void *str, int index, int type);
 
 	protected:
 		void setup();
@@ -119,7 +120,7 @@ class inpObject : public settingsObject {
 		void joy_rd(int index, int pIndex);
 		void joy_wr(int index, int pIndex);
 		int joyid_val_to_int(int index);
-		void joyid_int_to_val(int index, int pIndex);
+		void joyid_int_to_val(int index, int id);
 		int tb_delay_val_to_int(int index);
 };
 

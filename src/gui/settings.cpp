@@ -71,8 +71,11 @@ void settings_pgs_save(void) {
 	}
 }
 
-void *settings_inp_sc_ks(int index) {
-	return (s.inp->val_to_qstring_pntr(index));
+void *settings_inp_rd_sc(int index, int type) {
+	return (s.inp->sc_val_to_qstring_pntr(index, type));
+}
+void settings_inp_wr_sc(void *str, int index, int type) {
+	s.inp->sc_qstring_pntr_to_val(str, index, type);
 }
 void settings_inp_all_default(_config_input *config_input, _array_pointers_port *array) {
 	s.inp->set_all_input_default(config_input, array);

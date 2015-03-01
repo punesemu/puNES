@@ -51,7 +51,6 @@ EXTERNC struct _gui {
 		DBWORD speed;
 	} key;
 } gui;
-
 EXTERNC struct _mouse {
 	int x;
 	int y;

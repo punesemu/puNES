@@ -27,6 +27,7 @@
 #include "sbarWidget.hpp"
 #include "application.hh"
 #include "settings.h"
+#include "jstick.h"
 
 class mainWindow: public QMainWindow {
 		Q_OBJECT
@@ -34,9 +35,18 @@ class mainWindow: public QMainWindow {
 	public:
 		sbarWidget *statusbar;
 		QTimer *timer_draw;
+		Ui::mainWindow *ui;
+
+		struct _shcjoy {
+			bool enabled;
+			QTimer *timer;
+			_js joy;
+			DBWORD value;
+			DBWORD shortcut[SET_MAX_NUM_SC];
+		} shcjoy;
+
 
 	private:
-		Ui::mainWindow *ui;
 		QShortcut *shortcut[SET_MAX_NUM_SC];
 		QPoint position;
 		QTranslator *translator;
@@ -49,6 +59,9 @@ class mainWindow: public QMainWindow {
 		void update_window();
 		void change_rom(const char *rom);
 		void state_save_slot_set(int slot);
+		void shortcuts();
+		void shcjoy_start();
+		void shcjoy_stop();
 
 	signals:
 		void fullscreen(bool state);
@@ -64,9 +77,8 @@ class mainWindow: public QMainWindow {
 		void update_menu_settings();
 		void update_menu_state();
 		void ctrl_disk_side(QAction *action);
-		void shortcuts(int type);
-		void connect_shortcut(int type, QAction *action, int index);
-		void connect_shortcut(int type, QAction *action, int index, const char *member);
+		void connect_shortcut(QAction *action, int index);
+		void connect_shortcut(QAction *action, int index, const char *member);
 		void connect_menu_signals();
 		void connect_action(QAction *action, const char *member);
 		void connect_action(QAction *action, int value, const char *member);
@@ -124,6 +136,7 @@ class mainWindow: public QMainWindow {
 		void s_state_save_file();
 		void s_state_load_file();
 		void s_help();
+		void s_shcjoy_read_timer();
 };
 
 #endif /* MAINWINDOW_HPP_ */

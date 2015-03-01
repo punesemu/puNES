@@ -21,7 +21,7 @@
 #define VERSION     VER1 "." VER2 " WIP"
 #define NAME        "puNES"
 #define AUTHOR      "FHorse"
-#define COMPILED    "02222015103010"
+#define COMPILED    "03012015165600"
 #define WEBSITE     "http://forums.nesdev.com/viewtopic.php?f=3&amp;t=6928"
 
 #define COPYRIGTH   " 2015 by " AUTHOR

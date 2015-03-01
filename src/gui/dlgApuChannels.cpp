@@ -150,7 +150,7 @@ void dlgApuChannels::update_dialog(void) {
 	data.update = FALSE;
 }
 void dlgApuChannels::s_checkbox_state_changed(int state) {
-	int index = QVariant(qobject_cast<QCheckBox *>(sender())->property("myIndex")).toInt();
+	int index = QVariant(((QCheckBox *)sender())->property("myIndex")).toInt();
 
 	if (data.update == TRUE) {
 		return;
@@ -172,12 +172,12 @@ void dlgApuChannels::s_checkbox_state_changed(int state) {
 	}
 }
 void dlgApuChannels::s_slider_value_changed(int value) {
-	int index = QVariant(qobject_cast<QSlider *>(sender())->property("myIndex")).toInt();
+	int index = QVariant(((QSlider *)sender())->property("myIndex")).toInt();
 
 	cfg->apu.volume[index] = (double) value / 100.0f;
 }
 void dlgApuChannels::s_toggle_all_clicked(bool checked) {
-	int mode = QVariant(qobject_cast<QPushButton *>(sender())->property("myIndex")).toInt();
+	int mode = QVariant(((QPushButton *)sender())->property("myIndex")).toInt();
 	BYTE i;
 
 	if (mode == 2) {

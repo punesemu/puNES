@@ -124,9 +124,9 @@ void slotComboBox::paintEvent(QPaintEvent *event) {
 	// disegno il testo
 	if (!save_slot.state[currentIndex()]) {
 		painter.setPen(Qt::gray);
-		qobject_cast<const stateWidget *>(parent())->load->setEnabled(false);
+		((const stateWidget *)parent())->load->setEnabled(false);
 	} else {
-		qobject_cast<const stateWidget *>(parent())->load->setEnabled(true);
+		((const stateWidget *)parent())->load->setEnabled(true);
 	}
 
 	QCommonStyle cstyle;
