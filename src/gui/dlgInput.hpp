@@ -34,6 +34,7 @@ class dlgInput : public QDialog, public Ui::Input_dialog {
 			QStringList text[2];
 
 			QPushButton *bp;
+			QBrush bckColor;
 
 			struct _joy {
 				int fd;

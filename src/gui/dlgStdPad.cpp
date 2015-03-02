@@ -298,7 +298,7 @@ void dlgStdPad::js_press_event() {
 		data.joy.fd = ::open(device, O_RDONLY | O_NONBLOCK);
 
 		if (data.joy.fd < 0) {
-			info_entry_print(type, tr("Error on open device %s").arg(device));
+			info_entry_print(type, tr("Error on open device %1").arg(device));
 			update_dialog();
 			return;
 		}

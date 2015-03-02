@@ -286,6 +286,8 @@ void dlgInput::setup_shortcuts(void) {
 	populate_shortcut(parentMain->ui->action_Increment_slot, SET_INP_SC_INC_SLOT);
 	populate_shortcut(parentMain->ui->action_Decrement_slot, SET_INP_SC_DEC_SLOT);
 
+	shcut.bckColor = tableWidget_Shortcuts->item(0, 0)->background();
+
 	if (plainTextEdit_input_info->font().pointSize() > 9) {
 		plainTextEdit_input_info->setFont(f9);
 	}
@@ -357,6 +359,8 @@ void dlgInput::update_groupbox_shortcuts(int mode, int type, int row) {
 				label_joy_ID->setEnabled(joy_mode);
 				comboBox_joy_ID->setEnabled(joy_mode);
 
+				tableWidget_Shortcuts->item(i, 0)->setBackground(shcut.bckColor);
+
 				widget = tableWidget_Shortcuts->cellWidget(i, 1);
 				widget->setEnabled(true);
 				widget->findChild<QPushButton *>("value")->setEnabled(true);
@@ -389,6 +393,10 @@ void dlgInput::update_groupbox_shortcuts(int mode, int type, int row) {
 
 				label_joy_ID->setEnabled(false);
 				comboBox_joy_ID->setEnabled(false);
+
+				if (row == i) {
+					tableWidget_Shortcuts->item(i, 0)->setBackground(Qt::cyan);
+				}
 
 				if ((type == KEYBOARD) && (row == i)) {
 					widget = tableWidget_Shortcuts->cellWidget(i, 1);
@@ -618,7 +626,7 @@ void dlgInput::s_shortcut_clicked(bool checked) {
 		shcut.joy.fd = ::open(device, O_RDONLY | O_NONBLOCK);
 
 		if (shcut.joy.fd < 0) {
-			info_entry_print(tr("Error on open device %s").arg(device));
+			info_entry_print(tr("Error on open device %1").arg(device));
 			update_dialog();
 			return;
 		}
@@ -680,8 +688,8 @@ void dlgInput::s_joy_read_timer() {
 	shcut.joy.value = value;
 }
 void dlgInput::s_button_timeout() {
-	info_entry_print(tr("Press a key (ESC for the previous value) - timeout in %2").arg(
-			shcut.timeout.seconds--));
+	info_entry_print(tr("Press a key (ESC for the previous value \"%1\") - timeout in %2").arg(
+			shcut.text[shcut.type].at(shcut.row), QString::number(shcut.timeout.seconds--)));
 
 	if (shcut.timeout.seconds < 0) {
 		QKeyEvent *event = new QKeyEvent(QEvent::KeyPress, Qt::Key_Escape, Qt::NoModifier);
