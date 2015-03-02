@@ -29,6 +29,8 @@
 #include "settings.h"
 #include "jstick.h"
 
+#define parentMain ((mainWindow *)parent())
+
 class mainWindow: public QMainWindow {
 		Q_OBJECT
 
@@ -36,7 +38,6 @@ class mainWindow: public QMainWindow {
 		sbarWidget *statusbar;
 		QTimer *timer_draw;
 		Ui::mainWindow *ui;
-
 		struct _shcjoy {
 			bool enabled;
 			QTimer *timer;
@@ -44,7 +45,6 @@ class mainWindow: public QMainWindow {
 			DBWORD value;
 			DBWORD shortcut[SET_MAX_NUM_SC];
 		} shcjoy;
-
 
 	private:
 		QShortcut *shortcut[SET_MAX_NUM_SC];

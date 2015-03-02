@@ -6,6 +6,7 @@
  */
 
 #include "dlgOverscanBorders.moc"
+#include "mainWindow.hpp"
 #include "settings.h"
 #include "conf.h"
 #include "clock.h"
@@ -86,7 +87,9 @@ void dlgOverscanBorders::update_dialog(void) {
 	spinBox_Right->setValue(data.borders->right);
 }
 bool dlgOverscanBorders::eventFilter(QObject *obj, QEvent *event) {
-	if (event->type() == QEvent::Close) {
+	if (event->type() == QEvent::Show) {
+		parentMain->ui->action_Oscan_Set_Borders->setEnabled(false);
+	} else if (event->type() == QEvent::Close) {
 		BYTE force;
 
 		/* aggiorno l'attuale tabella */
@@ -121,6 +124,8 @@ bool dlgOverscanBorders::eventFilter(QObject *obj, QEvent *event) {
 
 		/* restituisco alla finestra principale la gestione del focus */
 		gui.main_win_lfp = TRUE;
+
+		parentMain->ui->action_Oscan_Set_Borders->setEnabled(true);
 	} else if (event->type() == QEvent::LanguageChange) {
 		Set_borders::retranslateUi(this);
 	}

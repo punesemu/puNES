@@ -6,6 +6,7 @@
  */
 
 #include "dlgApuChannels.moc"
+#include "mainWindow.hpp"
 #include "snd.h"
 #include "gui.h"
 
@@ -96,7 +97,9 @@ dlgApuChannels::dlgApuChannels(QWidget *parent = 0) : QDialog(parent) {
 }
 dlgApuChannels::~dlgApuChannels() {}
 bool dlgApuChannels::eventFilter(QObject *obj, QEvent *event) {
-	if (event->type() == QEvent::Close) {
+	if (event->type() == QEvent::Show) {
+		parentMain->ui->action_APU_channels->setEnabled(false);
+	} else if (event->type() == QEvent::Close) {
 		if (data.save == FALSE) {
 			bool control = false;
 
@@ -122,6 +125,8 @@ bool dlgApuChannels::eventFilter(QObject *obj, QEvent *event) {
 
 		/* restituisco alla finestra principale la gestione del focus */
 		gui.main_win_lfp = TRUE;
+
+		parentMain->ui->action_APU_channels->setEnabled(true);
 	} else if (event->type() == QEvent::LanguageChange) {
 		APU_channels::retranslateUi(this);
 	}

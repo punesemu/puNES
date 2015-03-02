@@ -18,8 +18,6 @@
 #endif
 #include "gui.h"
 
-#define main ((mainWindow *)parent())
-
 enum dlg_input_shcut_mode { UPDATE_ALL, BUTTON_PRESSED, NO_ACTION = 255 };
 
 dlgInput::dlgInput(QWidget *parent = 0) : QDialog(parent) {
@@ -79,6 +77,9 @@ dlgInput::~dlgInput() {}
 bool dlgInput::eventFilter(QObject *obj, QEvent *event) {
 	if (obj == this) {
 		switch (event->type()) {
+			case QEvent::Show:
+				parentMain->ui->action_Input_Config->setEnabled(false);
+				break;
 			case QEvent::Close:
 				shcut.timeout.timer->stop();
 				shcut.joy.timer->stop();
@@ -88,7 +89,7 @@ bool dlgInput::eventFilter(QObject *obj, QEvent *event) {
 					shcut.joy.fd = 0;
 				}
 #endif
-				main->shcjoy_start();
+				parentMain->shcjoy_start();
 
 				emu_pause(FALSE);
 
@@ -96,6 +97,8 @@ bool dlgInput::eventFilter(QObject *obj, QEvent *event) {
 				gui.main_win_lfp = TRUE;
 
 				shcut.no_other_buttons = false;
+
+				parentMain->ui->action_Input_Config->setEnabled(true);
 				break;
 			case QEvent::LanguageChange:
 				Input_dialog::retranslateUi(this);
@@ -186,32 +189,32 @@ void dlgInput::update_dialog() {
 		comboBox_joy_ID->setItemText(comboBox_joy_ID->count() - 1, tr("No usable device"));
 	}
 
-	update_text_shortcut(main->ui->action_Open, SET_INP_SC_OPEN);
-	update_text_shortcut(main->ui->action_Quit, SET_INP_SC_QUIT);
-	update_text_shortcut(main->ui->action_Hard_Reset, SET_INP_SC_HARD_RESET);
-	update_text_shortcut(main->ui->action_Soft_Reset, SET_INP_SC_SOFT_RESET);
-	update_text_shortcut(main->ui->action_Switch_sides, SET_INP_SC_SWITCH_SIDES);
-	update_text_shortcut(main->ui->action_Eject_Insert_Disk, SET_INP_SC_EJECT_DISK);
-	update_text_shortcut(main->ui->action_PAL, SET_INP_SC_MODE_PAL);
-	update_text_shortcut(main->ui->action_NTSC, SET_INP_SC_MODE_NTSC);
-	update_text_shortcut(main->ui->action_Dendy, SET_INP_SC_MODE_DENDY);
-	update_text_shortcut(main->ui->action_Mode_Auto, SET_INP_SC_MODE_AUTO);
-	update_text_shortcut(main->ui->action_1x, SET_INP_SC_SCALE_1X);
-	update_text_shortcut(main->ui->action_2x, SET_INP_SC_SCALE_2X);
-	update_text_shortcut(main->ui->action_3x, SET_INP_SC_SCALE_3X);
-	update_text_shortcut(main->ui->action_4x, SET_INP_SC_SCALE_4X);
+	update_text_shortcut(parentMain->ui->action_Open, SET_INP_SC_OPEN);
+	update_text_shortcut(parentMain->ui->action_Quit, SET_INP_SC_QUIT);
+	update_text_shortcut(parentMain->ui->action_Hard_Reset, SET_INP_SC_HARD_RESET);
+	update_text_shortcut(parentMain->ui->action_Soft_Reset, SET_INP_SC_SOFT_RESET);
+	update_text_shortcut(parentMain->ui->action_Switch_sides, SET_INP_SC_SWITCH_SIDES);
+	update_text_shortcut(parentMain->ui->action_Eject_Insert_Disk, SET_INP_SC_EJECT_DISK);
+	update_text_shortcut(parentMain->ui->action_PAL, SET_INP_SC_MODE_PAL);
+	update_text_shortcut(parentMain->ui->action_NTSC, SET_INP_SC_MODE_NTSC);
+	update_text_shortcut(parentMain->ui->action_Dendy, SET_INP_SC_MODE_DENDY);
+	update_text_shortcut(parentMain->ui->action_Mode_Auto, SET_INP_SC_MODE_AUTO);
+	update_text_shortcut(parentMain->ui->action_1x, SET_INP_SC_SCALE_1X);
+	update_text_shortcut(parentMain->ui->action_2x, SET_INP_SC_SCALE_2X);
+	update_text_shortcut(parentMain->ui->action_3x, SET_INP_SC_SCALE_3X);
+	update_text_shortcut(parentMain->ui->action_4x, SET_INP_SC_SCALE_4X);
 #if defined (SDL)
-	update_text_shortcut(main->ui->action_Cube, SET_INP_SC_EFFECT_CUBE);
+	update_text_shortcut(parentMain->ui->action_Cube, SET_INP_SC_EFFECT_CUBE);
 #endif
-	update_text_shortcut(main->ui->action_Interpolation, SET_INP_SC_INTERPOLATION);
-	update_text_shortcut(main->ui->action_Fullscreen, SET_INP_SC_FULLSCREEN);
-	update_text_shortcut(main->ui->action_Stretch_in_fullscreen, SET_INP_SC_STRETCH_FULLSCREEN);
-	update_text_shortcut(main->ui->action_Audio_Enable, SET_INP_SC_AUDIO_ENABLE);
-	update_text_shortcut(main->ui->action_Save_settings, SET_INP_SC_SAVE_SETTINGS);
-	update_text_shortcut(main->ui->action_Save_state, SET_INP_SC_SAVE_STATE);
-	update_text_shortcut(main->ui->action_Load_state, SET_INP_SC_LOAD_STATE);
-	update_text_shortcut(main->ui->action_Increment_slot, SET_INP_SC_INC_SLOT);
-	update_text_shortcut(main->ui->action_Decrement_slot, SET_INP_SC_DEC_SLOT);
+	update_text_shortcut(parentMain->ui->action_Interpolation, SET_INP_SC_INTERPOLATION);
+	update_text_shortcut(parentMain->ui->action_Fullscreen, SET_INP_SC_FULLSCREEN);
+	update_text_shortcut(parentMain->ui->action_Stretch_in_fullscreen, SET_INP_SC_STRETCH_FULLSCREEN);
+	update_text_shortcut(parentMain->ui->action_Audio_Enable, SET_INP_SC_AUDIO_ENABLE);
+	update_text_shortcut(parentMain->ui->action_Save_settings, SET_INP_SC_SAVE_SETTINGS);
+	update_text_shortcut(parentMain->ui->action_Save_state, SET_INP_SC_SAVE_STATE);
+	update_text_shortcut(parentMain->ui->action_Load_state, SET_INP_SC_LOAD_STATE);
+	update_text_shortcut(parentMain->ui->action_Increment_slot, SET_INP_SC_INC_SLOT);
+	update_text_shortcut(parentMain->ui->action_Decrement_slot, SET_INP_SC_DEC_SLOT);
 
 	pushButton_Default->setEnabled(true);
 }
@@ -243,7 +246,7 @@ void dlgInput::setup_shortcuts(void) {
 	f9.setPointSize(9);
 	f9.setWeight(QFont::Light);
 
-	main->shcjoy_stop();
+	parentMain->shcjoy_stop();
 
 	shcut.joy.fd = 0;
 	shcut.no_other_buttons = false;
@@ -256,32 +259,32 @@ void dlgInput::setup_shortcuts(void) {
 
 	combo_joy_id_init();
 
-	populate_shortcut(main->ui->action_Open, SET_INP_SC_OPEN);
-	populate_shortcut(main->ui->action_Quit, SET_INP_SC_QUIT);
-	populate_shortcut(main->ui->action_Hard_Reset, SET_INP_SC_HARD_RESET);
-	populate_shortcut(main->ui->action_Soft_Reset, SET_INP_SC_SOFT_RESET);
-	populate_shortcut(main->ui->action_Switch_sides, SET_INP_SC_SWITCH_SIDES);
-	populate_shortcut(main->ui->action_Eject_Insert_Disk, SET_INP_SC_EJECT_DISK);
-	populate_shortcut(main->ui->action_PAL, SET_INP_SC_MODE_PAL);
-	populate_shortcut(main->ui->action_NTSC, SET_INP_SC_MODE_NTSC);
-	populate_shortcut(main->ui->action_Dendy, SET_INP_SC_MODE_DENDY);
-	populate_shortcut(main->ui->action_Mode_Auto, SET_INP_SC_MODE_AUTO);
-	populate_shortcut(main->ui->action_1x, SET_INP_SC_SCALE_1X);
-	populate_shortcut(main->ui->action_2x, SET_INP_SC_SCALE_2X);
-	populate_shortcut(main->ui->action_3x, SET_INP_SC_SCALE_3X);
-	populate_shortcut(main->ui->action_4x, SET_INP_SC_SCALE_4X);
+	populate_shortcut(parentMain->ui->action_Open, SET_INP_SC_OPEN);
+	populate_shortcut(parentMain->ui->action_Quit, SET_INP_SC_QUIT);
+	populate_shortcut(parentMain->ui->action_Hard_Reset, SET_INP_SC_HARD_RESET);
+	populate_shortcut(parentMain->ui->action_Soft_Reset, SET_INP_SC_SOFT_RESET);
+	populate_shortcut(parentMain->ui->action_Switch_sides, SET_INP_SC_SWITCH_SIDES);
+	populate_shortcut(parentMain->ui->action_Eject_Insert_Disk, SET_INP_SC_EJECT_DISK);
+	populate_shortcut(parentMain->ui->action_PAL, SET_INP_SC_MODE_PAL);
+	populate_shortcut(parentMain->ui->action_NTSC, SET_INP_SC_MODE_NTSC);
+	populate_shortcut(parentMain->ui->action_Dendy, SET_INP_SC_MODE_DENDY);
+	populate_shortcut(parentMain->ui->action_Mode_Auto, SET_INP_SC_MODE_AUTO);
+	populate_shortcut(parentMain->ui->action_1x, SET_INP_SC_SCALE_1X);
+	populate_shortcut(parentMain->ui->action_2x, SET_INP_SC_SCALE_2X);
+	populate_shortcut(parentMain->ui->action_3x, SET_INP_SC_SCALE_3X);
+	populate_shortcut(parentMain->ui->action_4x, SET_INP_SC_SCALE_4X);
 #if defined (SDL)
-	populate_shortcut(main->ui->action_Cube, SET_INP_SC_EFFECT_CUBE);
+	populate_shortcut(parentMain->ui->action_Cube, SET_INP_SC_EFFECT_CUBE);
 #endif
-	populate_shortcut(main->ui->action_Interpolation, SET_INP_SC_INTERPOLATION);
-	populate_shortcut(main->ui->action_Fullscreen, SET_INP_SC_FULLSCREEN);
-	populate_shortcut(main->ui->action_Stretch_in_fullscreen, SET_INP_SC_STRETCH_FULLSCREEN);
-	populate_shortcut(main->ui->action_Audio_Enable, SET_INP_SC_AUDIO_ENABLE);
-	populate_shortcut(main->ui->action_Save_settings, SET_INP_SC_SAVE_SETTINGS);
-	populate_shortcut(main->ui->action_Save_state, SET_INP_SC_SAVE_STATE);
-	populate_shortcut(main->ui->action_Load_state, SET_INP_SC_LOAD_STATE);
-	populate_shortcut(main->ui->action_Increment_slot, SET_INP_SC_INC_SLOT);
-	populate_shortcut(main->ui->action_Decrement_slot, SET_INP_SC_DEC_SLOT);
+	populate_shortcut(parentMain->ui->action_Interpolation, SET_INP_SC_INTERPOLATION);
+	populate_shortcut(parentMain->ui->action_Fullscreen, SET_INP_SC_FULLSCREEN);
+	populate_shortcut(parentMain->ui->action_Stretch_in_fullscreen, SET_INP_SC_STRETCH_FULLSCREEN);
+	populate_shortcut(parentMain->ui->action_Audio_Enable, SET_INP_SC_AUDIO_ENABLE);
+	populate_shortcut(parentMain->ui->action_Save_settings, SET_INP_SC_SAVE_SETTINGS);
+	populate_shortcut(parentMain->ui->action_Save_state, SET_INP_SC_SAVE_STATE);
+	populate_shortcut(parentMain->ui->action_Load_state, SET_INP_SC_LOAD_STATE);
+	populate_shortcut(parentMain->ui->action_Increment_slot, SET_INP_SC_INC_SLOT);
+	populate_shortcut(parentMain->ui->action_Decrement_slot, SET_INP_SC_DEC_SLOT);
 
 	if (plainTextEdit_input_info->font().pointSize() > 9) {
 		plainTextEdit_input_info->setFont(f9);
@@ -725,7 +728,7 @@ void dlgInput::s_apply_clicked(bool checked) {
 		}
 	}
 
-	main->shortcuts();
+	parentMain->shortcuts();
 
 	// Faccio l'update del menu per i casi dello zapper e degli effetti
 	gui_update();
