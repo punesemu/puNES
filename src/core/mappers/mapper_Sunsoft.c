@@ -376,9 +376,7 @@ void extcl_cpu_wr_mem_Sunsoft_FM7(WORD address, BYTE value) {
 				case 0x0D:
 					fm7.irq_enable_trig = value & 0x01;
 					fm7.irq_enable_count = value & 0x80;
-					if (!fm7.irq_enable_trig) {
-						irq.high &= ~EXT_IRQ;
-					}
+					irq.high &= ~EXT_IRQ;
 					return;
 				case 0x0E:
 					fm7.irq_count = (fm7.irq_count & 0xFF00) | value;
