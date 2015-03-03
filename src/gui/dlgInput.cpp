@@ -706,6 +706,16 @@ void dlgInput::s_default_clicked(bool checked) {
 
 	settings_inp_all_default(&data.settings, &array);
 
+	data.settings.shcjoy_id = name_to_jsn("NULL");
+	comboBox_joy_ID->setCurrentIndex(comboBox_joy_ID->count() - 1);
+	for (int i = 0; i < SET_MAX_NUM_SC; i++) {
+		shcut.text[KEYBOARD].replace(i,
+				QString(inp_cfg[i + SET_INP_SC_OPEN].def).split(",").at(KEYBOARD));
+		shcut.text[JOYSTICK].replace(i,
+				QString(inp_cfg[i + SET_INP_SC_OPEN].def).split(",").at(JOYSTICK));
+	}
+
+	update_groupbox_shortcuts(UPDATE_ALL, NO_ACTION, NO_ACTION);
 	update_dialog();
 }
 void dlgInput::s_apply_clicked(bool checked) {
