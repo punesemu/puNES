@@ -449,6 +449,10 @@
     <addaction name="action_State_Slot_3"/>
     <addaction name="action_State_Slot_4"/>
     <addaction name="action_State_Slot_5"/>
+    <addaction name="action_State_Slot_6"/>
+    <addaction name="action_State_Slot_7"/>
+    <addaction name="action_State_Slot_8"/>
+    <addaction name="action_State_Slot_9"/>
     <addaction name="separator"/>
     <addaction name="action_State_Save_to_file"/>
     <addaction name="action_State_Load_from_file"/>
@@ -1716,6 +1720,38 @@
    </property>
    <property name="text">
     <string>&amp;Load from file</string>
+   </property>
+  </action>
+  <action name="action_State_Slot_6">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Slot &amp;6</string>
+   </property>
+  </action>
+  <action name="action_State_Slot_7">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Slot &amp;7</string>
+   </property>
+  </action>
+  <action name="action_State_Slot_8">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Slot &amp;8</string>
+   </property>
+  </action>
+  <action name="action_State_Slot_9">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Slot &amp;9</string>
    </property>
   </action>
  </widget>

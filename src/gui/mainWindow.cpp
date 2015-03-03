@@ -265,6 +265,10 @@ void mainWindow::setup() {
 	grp->addAction(ui->action_State_Slot_3);
 	grp->addAction(ui->action_State_Slot_4);
 	grp->addAction(ui->action_State_Slot_5);
+	grp->addAction(ui->action_State_Slot_6);
+	grp->addAction(ui->action_State_Slot_7);
+	grp->addAction(ui->action_State_Slot_8);
+	grp->addAction(ui->action_State_Slot_9);
 
 	set_language(cfg->language);
 }
@@ -287,6 +291,9 @@ void mainWindow::change_rom(const char *rom) {
 	gui_update();
 }
 void mainWindow::state_save_slot_set(int slot, bool on_video) {
+	if (!info.rom_file[0]) {
+		return;
+	}
 	save_slot.slot = slot;
 	if (on_video == true) {
 		text_save_slot(SAVE_SLOT_INCDEC);
@@ -1001,6 +1008,18 @@ void mainWindow::update_menu_state() {
 		case 5:
 			ui->action_State_Slot_5->setChecked(true);
 			break;
+		case 6:
+			ui->action_State_Slot_6->setChecked(true);
+			break;
+		case 7:
+			ui->action_State_Slot_7->setChecked(true);
+			break;
+		case 8:
+			ui->action_State_Slot_8->setChecked(true);
+			break;
+		case 9:
+			ui->action_State_Slot_9->setChecked(true);
+			break;
 	}
 }
 void mainWindow::ctrl_disk_side(QAction *action) {
@@ -1313,6 +1332,10 @@ void mainWindow::connect_menu_signals() {
 	connect_action(ui->action_State_Slot_3, 3, SLOT(s_state_save_slot_set()));
 	connect_action(ui->action_State_Slot_4, 4, SLOT(s_state_save_slot_set()));
 	connect_action(ui->action_State_Slot_5, 5, SLOT(s_state_save_slot_set()));
+	connect_action(ui->action_State_Slot_6, 6, SLOT(s_state_save_slot_set()));
+	connect_action(ui->action_State_Slot_7, 7, SLOT(s_state_save_slot_set()));
+	connect_action(ui->action_State_Slot_8, 8, SLOT(s_state_save_slot_set()));
+	connect_action(ui->action_State_Slot_9, 9, SLOT(s_state_save_slot_set()));
 	// State/[Save to file, Load from file]
 	connect_action(ui->action_State_Save_to_file, SLOT(s_state_save_file()));
 	connect_action(ui->action_State_Load_from_file, SLOT(s_state_load_file()));

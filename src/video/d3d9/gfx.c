@@ -1008,6 +1008,7 @@ void gfx_text_reset(void) {
 	txt_table[TXT_CYAN]   = D3DCOLOR_ARGB(0, 0   , 0xFF, 0xFF);
 	txt_table[TXT_BROWN]  = D3DCOLOR_ARGB(0, 0xEB, 0x89, 0x31);
 	txt_table[TXT_BLUE]   = D3DCOLOR_ARGB(0, 0x2D, 0x8D, 0xBD);
+	txt_table[TXT_GRAY]   = D3DCOLOR_ARGB(0, 0xA0, 0xA0, 0xA0);
 	txt_table[TXT_BLACK]  = D3DCOLOR_ARGB(0, 0   , 0   , 0   );
 }
 void gfx_text_clear(_txt_element *ele) {

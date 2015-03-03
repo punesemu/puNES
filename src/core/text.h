@@ -33,6 +33,7 @@ enum txt_tgs {
 	TXT_CYAN,
 	TXT_BROWN,
 	TXT_BLUE,
+	TXT_GRAY,
 	TXT_BLACK,
 	TXT_FONT_8,
 	TXT_FONT_12,

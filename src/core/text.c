@@ -34,10 +34,12 @@ enum txt_fade { FADE_SPEED = 4 };
 
 static char txt_tags[][10] = {
 	"[normal]", "[red]",	"[yellow]", "[green]",
-	"[cyan]",   "[brown]",	"[blue]",   "[black]",
-	"[font8]",  "[font12]",	"[left]",   "[right]",
-	"[up]",     "[down]",	"[select]", "[start]",
-	"[a]",      "[b]"   ,	"[floppy]"
+	"[cyan]",   "[brown]",	"[blue]",   "[gray]",
+	"[black]",
+	"[font8]",  "[font12]",
+	"[left]",   "[right]",	"[up]",     "[down]",
+	"[select]", "[start]",	"[a]",      "[b]",
+	"[floppy]"
 };
 
 static void INLINE fade_ele(_txt_element *ele, int velocity);
@@ -94,7 +96,7 @@ void text_init(void) {
 		// save slot
 		ele = &text.save_slot.slot;
 		ele->bck = TRUE;
-		ele->bck_color = TXT_BLUE;
+		ele->bck_color = TXT_BLACK;
 		ele->font = FONT_8X10;
 		ele->factor = 1;
 		ele->alpha[0] = 255;
@@ -247,7 +249,7 @@ void text_rendering(BYTE render) {
 					gfx_text_create_surface(ele);
 				}
 
-				fade_ele(ele, 6);
+				fade_ele(ele, 3);
 				pos_y -= font_size[ele->font][1] * ele->factor;
 				ele->start_x = 0;
 				ele->start_y = 0;
@@ -279,7 +281,7 @@ void text_rendering(BYTE render) {
 						gfx_text_create_surface(ele);
 					}
 
-					fade_ele(ele, 6);
+					fade_ele(ele, 3);
 					if ((cfg->scale != X1) && render){
 						rendering(ele);
 					}
@@ -420,9 +422,9 @@ void text_rendering(BYTE render) {
 					}
 				} else {
 					if (save_slot.state[i]) {
-						strcat(ele->text, "[blue]");
+						strcat(ele->text, "[cyan]");
 					} else {
-						strcat(ele->text, "[black]");
+						strcat(ele->text, "[gray]");
 					}
 				}
 				snprintf(number, sizeof(number), "%d", i);

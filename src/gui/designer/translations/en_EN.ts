@@ -1139,6 +1139,22 @@
         <source>Compiled</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Slot &amp;6</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Slot &amp;7</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Slot &amp;8</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Slot &amp;9</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>stateWidget</name>
