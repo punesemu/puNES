@@ -1518,7 +1518,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>&amp;Enable</string>
+    <string>&amp;Enable Audio</string>
    </property>
   </action>
   <action name="action_Input_Config">

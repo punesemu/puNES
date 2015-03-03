@@ -128,7 +128,7 @@ BYTE audio_quality_init_blip2(void) {
 	blip2.wave = blip_new(snd.samplerate / 10);
 
 	if (blip2.wave == NULL) {
-		 /* out of memory */
+		/* out of memory */
 		return (EXIT_ERROR);
 	}
 
