@@ -17,7 +17,7 @@ enum save_slot_misc {
 	SAVE_SLOTS_TOTAL = SAVE_SLOTS + 1, // include anche lo slot per il file
 	SAVE_SLOT_FILE = SAVE_SLOTS
 };
-enum save_slot_mode { SAVE_SLOT_SAVE, SAVE_SLOT_READ, SAVE_SLOT_COUNT };
+enum save_slot_mode { SAVE_SLOT_SAVE, SAVE_SLOT_READ, SAVE_SLOT_COUNT, SAVE_SLOT_INCDEC };
 
 #define save_slot_ele(mode, slot, src)\
 	if (save_slot_element_struct(mode, slot, (uintptr_t *) &src, sizeof(src), fp, FALSE)) {\

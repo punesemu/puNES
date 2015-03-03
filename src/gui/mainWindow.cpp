@@ -1936,8 +1936,10 @@ void mainWindow::s_state_save_slot_action() {
 	if (mode == SAVE) {
 		save_slot_save(save_slot.slot);
 		settings_pgs_save();
+		text_save_slot(SAVE_SLOT_SAVE);
 	} else {
 		save_slot_load(save_slot.slot);
+		text_save_slot(SAVE_SLOT_READ);
 	}
 
 	emu_pause(FALSE);
@@ -1958,6 +1960,7 @@ void mainWindow::s_state_save_slot_incdec() {
 		}
 	}
 	state_save_slot_set(new_slot);
+	text_save_slot(SAVE_SLOT_INCDEC);
 	update_window();
 }
 void mainWindow::s_state_save_slot_set() {

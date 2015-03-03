@@ -120,11 +120,16 @@ EXTERNC struct _text {
 	struct _txt_fds {
 		_txt_element floppy;
 	} fds;
+	struct _txt_save_slot {
+		BYTE operation;
+		_txt_element slot;
+	} save_slot;
 } text;
 
 EXTERNC uint32_t txt_table[TXT_BLACK + 1];
 
 EXTERNC void text_init(void);
+EXTERNC void text_save_slot(BYTE operation);
 EXTERNC void text_add_line(int type, int factor, int font, int alpha, int start_x, int start_y,
 		int x, int y, const char *fmt, ...);
 EXTERNC void text_rendering(BYTE render);
