@@ -419,7 +419,11 @@ void text_rendering(BYTE render) {
 						strcat(ele->text, "[normal]");
 					}
 				} else {
-					strcat(ele->text, "[blue]");
+					if (save_slot.state[i]) {
+						strcat(ele->text, "[blue]");
+					} else {
+						strcat(ele->text, "[black]");
+					}
 				}
 				snprintf(number, sizeof(number), "%d", i);
 				strcat(ele->text, number);
