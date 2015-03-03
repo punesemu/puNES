@@ -58,7 +58,7 @@ class mainWindow: public QMainWindow {
 		void setup();
 		void update_window();
 		void change_rom(const char *rom);
-		void state_save_slot_set(int slot);
+		void state_save_slot_set(int slot, bool on_video);
 		void shortcuts();
 		void shcjoy_start();
 		void shcjoy_stop();

@@ -22,6 +22,7 @@
 #include "ppu.h"
 #include "emu.h"
 #include "save_slot.h"
+#include "text.h"
 #include "gui.h"
 
 #define SPACING 2
@@ -211,6 +212,7 @@ void stateWidget::s_save_clicked(bool checked) {
 }
 void stateWidget::s_slot_activated(int index) {
 	save_slot.slot = index;
+	text_save_slot(SAVE_SLOT_INCDEC);
 	gui_set_focus();
 }
 void stateWidget::s_load_clicked(bool checked) {

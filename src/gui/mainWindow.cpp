@@ -286,8 +286,11 @@ void mainWindow::change_rom(const char *rom) {
 	make_reset(CHANGE_ROM);
 	gui_update();
 }
-void mainWindow::state_save_slot_set(int slot) {
+void mainWindow::state_save_slot_set(int slot, bool on_video) {
 	save_slot.slot = slot;
+	if (on_video == true) {
+		text_save_slot(SAVE_SLOT_INCDEC);
+	}
 }
 bool mainWindow::eventFilter(QObject *obj, QEvent *event) {
 	if (event->type() == QEvent::Close) {
@@ -1936,10 +1939,8 @@ void mainWindow::s_state_save_slot_action() {
 	if (mode == SAVE) {
 		save_slot_save(save_slot.slot);
 		settings_pgs_save();
-		text_save_slot(SAVE_SLOT_SAVE);
 	} else {
 		save_slot_load(save_slot.slot);
-		text_save_slot(SAVE_SLOT_READ);
 	}
 
 	emu_pause(FALSE);
@@ -1959,14 +1960,13 @@ void mainWindow::s_state_save_slot_incdec() {
 			new_slot = SAVE_SLOTS - 1;
 		}
 	}
-	state_save_slot_set(new_slot);
-	text_save_slot(SAVE_SLOT_INCDEC);
+	state_save_slot_set(new_slot, true);
 	update_window();
 }
 void mainWindow::s_state_save_slot_set() {
 	int slot = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
-	state_save_slot_set(slot);
+	state_save_slot_set(slot, true);
 	update_window();
 }
 void mainWindow::s_state_save_file() {

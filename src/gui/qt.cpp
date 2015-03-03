@@ -146,7 +146,7 @@ void gui_save_slot(BYTE slot) {
 	if (slot >= SAVE_SLOTS) {
 		slot = SAVE_SLOTS - 1;
 	}
-	qt.mwin->state_save_slot_set(slot);
+	qt.mwin->state_save_slot_set(slot, FALSE);
 }
 
 void gui_flush(void) {
