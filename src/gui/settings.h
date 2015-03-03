@@ -694,8 +694,8 @@ static const _settings inp_cfg[] = {
 	{"shortcuts", "save settings",            "Alt+W,NULL",      NULL, NULL, {0, NULL}},
 	{"shortcuts", "save state",               "F1,NULL",         NULL, NULL, {0, NULL}},
 	{"shortcuts", "load state",               "F4,NULL",         NULL, NULL, {0, NULL}},
-	{"shortcuts", "increment state slot",     "F2,NULL",         NULL, NULL, {0, NULL}},
-	{"shortcuts", "decrement state slot",     "F3,NULL",         NULL, NULL, {0, NULL}},
+	{"shortcuts", "increment state slot",     "F3,NULL",         NULL, NULL, {0, NULL}},
+	{"shortcuts", "decrement state slot",     "F2,NULL",         NULL, NULL, {0, NULL}},
 
 	{"shortcuts", "joystick Id",              "NULL",            NULL, NULL, {0, NULL}},
 
