@@ -297,6 +297,8 @@ void dlgInput::setup_shortcuts(void) {
 void dlgInput::combo_joy_id_init() {
 	BYTE disabled_line = 0, count = 0, current_line = name_to_jsn("NULL");
 
+	comboBox_joy_ID->clear();
+
 	for (int a = 0; a <= MAX_JOYSTICK; a++) {
 		BYTE id = a;
 
@@ -584,6 +586,10 @@ void dlgInput::s_setup_clicked(bool checked) {
 			hide();
 			dlg->exec();
 			show();
+
+			combo_joy_id_init();
+			update_groupbox_shortcuts(UPDATE_ALL, NO_ACTION, NO_ACTION);
+			update_dialog();
 			break;
 	}
 }

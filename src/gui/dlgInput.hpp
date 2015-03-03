@@ -47,7 +47,6 @@ class dlgInput : public QDialog, public Ui::Input_dialog {
 				QTimer *timer;
 			} timeout;
 
-
 			bool no_other_buttons;
 
 			BYTE type;
