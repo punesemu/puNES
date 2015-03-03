@@ -63,7 +63,9 @@ BYTE save_slot_save(BYTE slot) {
 
 	fclose(fp);
 
-	text_save_slot(SAVE_SLOT_SAVE);
+	if (slot < SAVE_SLOT_FILE) {
+		text_save_slot(SAVE_SLOT_SAVE);
+	}
 
 	return (EXIT_OK);
 }
@@ -126,7 +128,9 @@ BYTE save_slot_load(BYTE slot) {
 
 	fclose(fp);
 
-	text_save_slot(SAVE_SLOT_READ);
+	if (slot < SAVE_SLOT_FILE) {
+		text_save_slot(SAVE_SLOT_READ);
+	}
 
 	/* riavvio il timeline */
 	timeline_init();
