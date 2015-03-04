@@ -1103,7 +1103,9 @@ void mainWindow::shcjoy_start() {
 
 #if defined (__linux__)
 	::sprintf(shcjoy.joy.dev, "%s%d", JS_DEV_PATH, cfg->input.shcjoy_id);
-	shcjoy.joy.fd = ::open(shcjoy.joy.dev, O_RDONLY | O_NONBLOCK);
+	if ((shcjoy.joy.fd = ::open(shcjoy.joy.dev, O_RDONLY | O_NONBLOCK)) == -1) {
+		shcjoy.joy.fd = 0;
+	}
 #elif defined (__WIN32__)
 	::sprintf(shcjoy.joy.dev, "%s", jsn_to_name(cfg->input.shcjoy_id));
 #endif
@@ -2105,8 +2107,6 @@ void mainWindow::s_shcjoy_read_timer() {
 
 	if ((shcjoy.value = js_shcut_read(&shcjoy.joy, cfg->input.shcjoy_id)) > 0) {
 		int index;
-
-		//printf("AAA : %d\n", shcjoy.value);
 
 		for (index = 0; index < SET_MAX_NUM_SC; index++) {
 			if (shcjoy.value == shcjoy.shortcut[index]) {
