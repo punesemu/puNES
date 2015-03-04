@@ -224,13 +224,15 @@ void text_add_line(int type, int factor, int font, int alpha, int start_x, int s
 	}
 }
 void text_save_slot(BYTE operation) {
-	text.save_slot.operation = operation;
-	text.save_slot.slot.start = time(NULL);
-	text.save_slot.slot.enabled = TRUE;
-	text.save_slot.slot.alpha_start_fade = 255;
-	text.save_slot.slot.alpha[0] = text.save_slot.slot.alpha_start_fade;
-	text.save_slot.slot.alpha[1] = 170;
-	text.save_slot.slot.alpha[2] = 150;
+	if (cfg->fullscreen == FULLSCR) {
+		text.save_slot.operation = operation;
+		text.save_slot.slot.start = time(NULL);
+		text.save_slot.slot.enabled = TRUE;
+		text.save_slot.slot.alpha_start_fade = 255;
+		text.save_slot.slot.alpha[0] = text.save_slot.slot.alpha_start_fade;
+		text.save_slot.slot.alpha[1] = 170;
+		text.save_slot.slot.alpha[2] = 150;
+	}
 }
 void text_rendering(BYTE render) {
 	_txt_element *ele;
@@ -435,7 +437,7 @@ void text_rendering(BYTE render) {
 				gfx_text_create_surface(ele);
 			}
 
-			if (render) {
+			if ((cfg->fullscreen == FULLSCR) && render) {
 				rendering(ele);
 			}
 		}
@@ -443,11 +445,12 @@ void text_rendering(BYTE render) {
 
 }
 void text_quit(void) {
-	if (text.info.count) {
-		uint8_t i;
+	_txt_element *ele;
+	int i;
 
+	if (text.info.count) {
 		for (i = 0; i < TXT_MAX_LINES; i++) {
-			_txt_element *ele = text.info.lines[text.info.index][i];
+			ele = text.info.lines[text.info.index][i];
 
 			if (ele->enabled) {
 				gfx_text_release_surface(ele);
@@ -458,10 +461,9 @@ void text_quit(void) {
 	}
 
 	if (text.single.count) {
-		uint8_t i;
 
 		for (i = 0; i < TXT_MAX_LINES; i++) {
-			_txt_element *ele = text.single.lines[i];
+			ele = text.single.lines[i];
 
 			if (ele != NULL) {
 				gfx_text_release_surface(ele);
@@ -475,15 +477,14 @@ void text_quit(void) {
 	}
 
 	{
-		_txt_element *ele = &text.tas.counter_frames;
-		uint8_t i;
+		ele = &text.tas.counter_frames;
 
 		if (ele->surface) {
 			gfx_text_release_surface(ele);
 		}
 
 		for (i = 0; i < 4; i++) {
-			_txt_element *ele = text.tas.controllers;
+			ele = text.tas.controllers;
 
 			if (ele->surface) {
 				gfx_text_release_surface(ele);
@@ -492,7 +493,7 @@ void text_quit(void) {
 	}
 
 	{
-		_txt_element *ele = &text.fds.floppy;
+		ele = &text.save_slot.slot;
 
 		if (ele->surface) {
 			gfx_text_release_surface(ele);
