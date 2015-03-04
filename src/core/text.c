@@ -442,7 +442,6 @@ void text_rendering(BYTE render) {
 			}
 		}
 	}
-
 }
 void text_quit(void) {
 	_txt_element *ele;
