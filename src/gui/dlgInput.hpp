@@ -64,7 +64,7 @@ class dlgInput : public QDialog, public Ui::Input_dialog {
 		void setup_shortcuts();
 		void combo_joy_id_init();
 		void update_groupbox_shortcuts(int mode, int type, int row);
-		void populate_shortcut(QAction *action, int index);
+		void populate_shortcut(int index);
 		void update_text_shortcut(QAction *action, int index);
 		void info_entry_print(QString txt);
 		bool keypressEvent(QEvent *event);

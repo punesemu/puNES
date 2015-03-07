@@ -255,36 +255,10 @@ void dlgInput::setup_shortcuts(void) {
 		for (int b = 0; b < 2; b++) {
 			shcut.text[b] << "";
 		}
+		populate_shortcut(a + SET_INP_SC_OPEN);
 	}
 
 	combo_joy_id_init();
-
-	populate_shortcut(parentMain->ui->action_Open, SET_INP_SC_OPEN);
-	populate_shortcut(parentMain->ui->action_Quit, SET_INP_SC_QUIT);
-	populate_shortcut(parentMain->ui->action_Hard_Reset, SET_INP_SC_HARD_RESET);
-	populate_shortcut(parentMain->ui->action_Soft_Reset, SET_INP_SC_SOFT_RESET);
-	populate_shortcut(parentMain->ui->action_Switch_sides, SET_INP_SC_SWITCH_SIDES);
-	populate_shortcut(parentMain->ui->action_Eject_Insert_Disk, SET_INP_SC_EJECT_DISK);
-	populate_shortcut(parentMain->ui->action_PAL, SET_INP_SC_MODE_PAL);
-	populate_shortcut(parentMain->ui->action_NTSC, SET_INP_SC_MODE_NTSC);
-	populate_shortcut(parentMain->ui->action_Dendy, SET_INP_SC_MODE_DENDY);
-	populate_shortcut(parentMain->ui->action_Mode_Auto, SET_INP_SC_MODE_AUTO);
-	populate_shortcut(parentMain->ui->action_1x, SET_INP_SC_SCALE_1X);
-	populate_shortcut(parentMain->ui->action_2x, SET_INP_SC_SCALE_2X);
-	populate_shortcut(parentMain->ui->action_3x, SET_INP_SC_SCALE_3X);
-	populate_shortcut(parentMain->ui->action_4x, SET_INP_SC_SCALE_4X);
-#if defined (SDL)
-	populate_shortcut(parentMain->ui->action_Cube, SET_INP_SC_EFFECT_CUBE);
-#endif
-	populate_shortcut(parentMain->ui->action_Interpolation, SET_INP_SC_INTERPOLATION);
-	populate_shortcut(parentMain->ui->action_Fullscreen, SET_INP_SC_FULLSCREEN);
-	populate_shortcut(parentMain->ui->action_Stretch_in_fullscreen, SET_INP_SC_STRETCH_FULLSCREEN);
-	populate_shortcut(parentMain->ui->action_Audio_Enable, SET_INP_SC_AUDIO_ENABLE);
-	populate_shortcut(parentMain->ui->action_Save_settings, SET_INP_SC_SAVE_SETTINGS);
-	populate_shortcut(parentMain->ui->action_Save_state, SET_INP_SC_SAVE_STATE);
-	populate_shortcut(parentMain->ui->action_Load_state, SET_INP_SC_LOAD_STATE);
-	populate_shortcut(parentMain->ui->action_Increment_slot, SET_INP_SC_INC_SLOT);
-	populate_shortcut(parentMain->ui->action_Decrement_slot, SET_INP_SC_DEC_SLOT);
 
 	shcut.bckColor = tableWidget_Shortcuts->item(0, 0)->background();
 
@@ -425,7 +399,7 @@ void dlgInput::update_groupbox_shortcuts(int mode, int type, int row) {
 		}
 	}
 }
-void dlgInput::populate_shortcut(QAction *action, int index) {
+void dlgInput::populate_shortcut(int index) {
 	int row = index - SET_INP_SC_OPEN;
 	QTableWidgetItem *col;
 	QHBoxLayout *layout;
@@ -434,12 +408,11 @@ void dlgInput::populate_shortcut(QAction *action, int index) {
 
 	tableWidget_Shortcuts->insertRow(row);
 
-	/* action */
 	col = new QTableWidgetItem();
 	col->setTextAlignment(Qt::AlignCenter);
 	tableWidget_Shortcuts->setItem(row, 0, col);
 
-	/* keyboard */
+	// keyboard
 	shcut.text[KEYBOARD].replace(row, (QString(*(QString *)settings_inp_rd_sc(index, KEYBOARD))));
 	widget = new QWidget(this);
 	layout = new QHBoxLayout(this);
@@ -465,7 +438,7 @@ void dlgInput::populate_shortcut(QAction *action, int index) {
 	widget->setLayout(layout);
 	tableWidget_Shortcuts->setCellWidget(row, 1, widget);
 
-	/* joystick */
+	// joystick
 	shcut.text[JOYSTICK].replace(row, (QString(*(QString *)settings_inp_rd_sc(index, JOYSTICK))));
 	widget = new QWidget(this);
 	layout = new QHBoxLayout(this);

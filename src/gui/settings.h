@@ -211,7 +211,7 @@ enum inp_element {
 	SET_INP_LEFTRIGHT
 };
 
-enum set_num_shortcut { SET_MAX_NUM_SC = SET_INP_SC_JOYSTICK_ID };
+enum set_num_shortcut { SET_MAX_NUM_SC = SET_INP_SC_JOYSTICK_ID - SET_INP_SC_OPEN};
 
 enum list_settings_element {
 	LSET_SET,
