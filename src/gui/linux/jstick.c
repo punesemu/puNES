@@ -192,7 +192,7 @@ DBWORD js_read_in_dialog(int dev, int fd) {
 	static const WORD sensibility = (PLUS / 100) * 75;
 	_js_event jse;
 	ssize_t size = sizeof(jse);
-	DBWORD value;
+	DBWORD value = 0;
 
 	memset(&jse, 0x00, size);
 
