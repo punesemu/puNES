@@ -395,31 +395,43 @@ static BYTE set_hwparams(void) {
 	alsa.bsize = snd.samples * snd.buffer.count;
 
 	if ((rc = snd_pcm_hw_params_set_buffer_size(alsa.handle, params, alsa.bsize)) < 0) {
-		fprintf(stderr, "Unable to set buffer size for playback: %s\n", snd_strerror(rc));
-		return (EXIT_ERROR);
-	}
-	if ((rc = snd_pcm_hw_params_get_buffer_size(params, &size)) < 0) {
-		fprintf(stderr, "Unable to get buffer size for playback: %s\n", snd_strerror(rc));
-		return (EXIT_ERROR);
-	}
-	if (alsa.bsize != size) {
-		fprintf(stderr, "Buffer size don't match (requested %ld, get %ld)\n", alsa.bsize, size);
-		return (EXIT_ERROR);
+		fprintf(stderr, "Unable to set buffer size for playback: %s. Use the nearest.\n",
+				snd_strerror(rc));
+
+		printf("Buffer Size Request  : %ld\n", alsa.bsize);
+
+		if ((rc = snd_pcm_hw_params_set_buffer_size_near(alsa.handle, params, & alsa.bsize)) < 0) {
+			fprintf(stderr, "Unable to set buffer size for playback: %s\n", snd_strerror(rc));
+			return (EXIT_ERROR);
+		}
+
+		snd_pcm_hw_params_get_buffer_size_min(params, &size);
+		printf("Buffer Size Min      : %ld\n", size);
+		snd_pcm_hw_params_get_buffer_size_max(params, &size);
+		printf("Buffer Size Max      : %ld\n", size);
 	}
 	/* set the period size */
 	alsa.psize = (snd.samples / 2);
 
 	if ((rc = snd_pcm_hw_params_set_period_size(alsa.handle, params, alsa.psize, 0)) < 0) {
-		fprintf(stderr, "Unable to set period size for playback: %s\n", snd_strerror(rc));
-		return (EXIT_ERROR);
-	}
-	if ((rc = snd_pcm_hw_params_get_period_size(params, &size, &dir)) < 0) {
-		fprintf(stderr, "Unable to get period size for playback: %s\n", snd_strerror(rc));
-		return (EXIT_ERROR);
-	}
-	if (alsa.psize != size) {
-		fprintf(stderr, "Period size don't match (requested %ld, get %ld)\n", alsa.psize, size);
-		return (EXIT_ERROR);
+		fprintf(stderr, "Unable to set period size for playback: %s. Use the nearest\n",
+				snd_strerror(rc));
+
+		printf("Period Size Request  : %ld\n", alsa.psize);
+
+		alsa.psize = (snd.samples / 3) * 2;
+		dir = 0;
+
+		if ((rc = snd_pcm_hw_params_set_period_size_near(alsa.handle, params, &alsa.psize, &dir))
+				< 0) {
+			fprintf(stderr, "Unable to set period size for playback: %s\n", snd_strerror(rc));
+			return (EXIT_ERROR);
+		}
+
+		snd_pcm_hw_params_get_period_size_min(params, &size, &dir);
+		printf("Period Size Min      : %ld\n", size);
+		snd_pcm_hw_params_get_period_size_max(params, &size, &dir);
+		printf("Period Size Max      : %ld\n", size);
 	}
 	/* write the parameters to device */
 	if ((rc = snd_pcm_hw_params(alsa.handle, params)) < 0) {
@@ -493,13 +505,18 @@ void *alsa_loop_thread(void *data) {
 
 		snd_lock_cache(NULL);
 
+#if !defined (RELEASE)
+		//snd_pcm_sframes_t request = avail;
+#endif
+
 		avail = (avail > alsa.psize ? alsa.psize : avail);
 		len = avail * cfg->channels * sizeof(*cache->write);
 
 #if !defined (RELEASE)
 		/*
-		fprintf(stderr, "snd : %7d %d %d %d %7d %d %d %f %f %4s\r",
-				//avail,
+		fprintf(stderr, "snd : %7ld %7ld %d %d %d %7d %d %d %d %f %f %4s\r",
+				request,
+				avail,
 				len,
 				snd.buffer.count,
 				snd.brk,
