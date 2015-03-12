@@ -23,6 +23,7 @@ typedef signed int SDBWORD;
 #define SAVE_FOLDER    "/save"
 #define TMP_FOLDER     "/tmp"
 #define PRB_FOLDER     "/prb"
+#define CHEAT_FOLDER   "/cheat"
 
 #if !defined (FALSE)
 enum false_value { FALSE, TRUE };

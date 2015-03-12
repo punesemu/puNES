@@ -25,6 +25,7 @@
 #include <QtCore/QPoint>
 #include <QtGui/QCloseEvent>
 #include "sbarWidget.hpp"
+#include "cheatObject.hpp"
 #include "application.hh"
 #include "settings.h"
 #include "jstick.h"
@@ -35,6 +36,7 @@ class mainWindow: public QMainWindow {
 		Q_OBJECT
 
 	public:
+		cheatObject *chobj;
 		sbarWidget *statusbar;
 		QTimer *timer_draw;
 		Ui::mainWindow *ui;
@@ -53,7 +55,7 @@ class mainWindow: public QMainWindow {
 		QTranslator *qtTranslator;
 
 	public:
-		mainWindow(Ui::mainWindow *u);
+		mainWindow(Ui::mainWindow *u, cheatObject *cho);
 		~mainWindow();
 		void setup();
 		void update_window();
@@ -127,7 +129,7 @@ class mainWindow: public QMainWindow {
 		void s_set_language();
 		void s_set_input();
 		void s_set_pause();
-		void s_gamegenie_select();
+		void s_cheat_mode_select();
 		void s_set_save_on_exit();
 		void s_save_settings();
 		void s_state_save_slot_action();

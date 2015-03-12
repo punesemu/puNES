@@ -99,7 +99,7 @@ BYTE cmd_line_parse(int argc, char **argv) {
 				cfg_from_file.fps = set_int(SET_FPS);
 				break;
 			case 'g':
-				cfg_from_file.gamegenie = set_int(SET_GAMEGENIE);
+				cfg_from_file.cheat_mode = set_int(SET_CHEAT_MODE);
 				break;
 			case 'h':
 			case '?':
@@ -255,7 +255,7 @@ void usage(char *name) {
 			main_cfg[SET_AUDIO_QUALITY].hlp,
 			main_cfg[SET_SWAP_DUTY].hlp,
 			main_cfg[SET_BCK_PAUSE].hlp,
-			main_cfg[SET_GAMEGENIE].hlp,
+			main_cfg[SET_CHEAT_MODE].hlp,
 			main_cfg[SET_GUI_LANGUAGE].hlp
 	);
 	gui_print_usage(usage_string);

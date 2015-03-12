@@ -7,7 +7,7 @@
 
 #include "mappers.h"
 #include "info.h"
-#include "gamegenie.h"
+#include "cheat.h"
 
 void map_init_GameGenie(void) {
 	EXTCL_CPU_WR_MEM(GameGenie);

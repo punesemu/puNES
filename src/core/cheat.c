@@ -1,17 +1,18 @@
 /*
- * gamegenie.c
+ * cheat.c
  *
- *  Created on: 16/apr/2012
+ *  Created on: 09/mar/2015
  *      Author: fhorse
  */
 
 #include <string.h>
 #include <unistd.h>
 #include <sys/stat.h>
+#include "cheat.h"
+#include "gui.h"
 #include "emu.h"
 #include "info.h"
 #include "text.h"
-#include "gamegenie.h"
 
 #define GGFILE "gamegenie.rom"
 
@@ -79,4 +80,25 @@ FILE *gamegenie_load_rom(FILE *fp) {
 	gamegenie.phase = GG_EXECUTE;
 
 	return (fp_gg);
+}
+
+void cheatslist_init(void) {
+	gui_cheat_init();
+	memset (&cheats_list, 0x00, sizeof(cheats_list));
+}
+void cheatslist_read(void) {
+	cheatslist_quit();
+	gui_cheat_read_game_cheats();
+}
+void cheatslist_blank(void) {
+	if (cheats_list.gg.counter > 0) {
+		memset(&cheats_list.gg, 0x00, sizeof(_type_cheat));
+	}
+	if (cheats_list.ram.counter > 0) {
+		memset(&cheats_list.ram, 0x00, sizeof(_type_cheat));
+	}
+}
+void cheatslist_quit(void) {
+	gui_cheat_quit();
+	cheatslist_blank();
 }

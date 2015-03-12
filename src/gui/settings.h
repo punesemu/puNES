@@ -13,7 +13,7 @@
 #include "gfx.h"
 #include "fps.h"
 #include "snd.h"
-#include "gamegenie.h"
+#include "cheat.h"
 #include "audio_quality.h"
 #include "overscan.h"
 #include "input.h"
@@ -27,7 +27,7 @@
 enum set_element {
 	SET_MODE,
 	SET_BCK_PAUSE,
-	SET_GAMEGENIE,
+	SET_CHEAT_MODE,
 	SET_SAVE_SETTINGS_ON_EXIT,
 	SET_RENDERING,
 	SET_FPS,
@@ -360,6 +360,11 @@ static const _opt opt_audio_quality[] = {
 	{NULL, "low",  AQ_LOW},
 	{NULL, "high", AQ_HIGH}
 };
+static const _opt opt_cheat_mode[] = {
+	{NULL, "disabled",  NOCHEAT_MODE},
+	{NULL, "gamegenie", GAMEGENIE_MODE},
+	{NULL, "cheatslist", CHEATSLIST_MODE}
+};
 static const _opt opt_languages[] = {
 	{NULL, "english", LNG_ENGLISH},
 	{NULL, "italian", LNG_ITALIAN},
@@ -405,10 +410,10 @@ static const _settings main_cfg[] = {
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 	{
-		"system", "gamegenie", "no",
-		"# possible values: yes, no",
-		"-g, --gamegenie           active game genie     : yes, no",
-		{LENGTH(opt_no_yes), opt_no_yes}
+		"system", "cheat mode", "disabled",
+		"# possible values: disabled, gamegenie, cheatslist",
+		"-g, --cheat-mode          cheat mode            : disabled, gamegenie, cheatslist",
+		{LENGTH(opt_cheat_mode), opt_cheat_mode}
 	},
 	{
 		"system", "save settings on exit", "no",

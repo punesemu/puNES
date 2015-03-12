@@ -45,7 +45,7 @@
 #include "ines.h"
 #include "unif.h"
 #include "fds.h"
-#include "gamegenie.h"
+#include "cheat.h"
 #include "overscan.h"
 #include "recent_roms.h"
 #if defined (SDL)
@@ -294,6 +294,8 @@ BYTE emu_load_rom(void) {
 			break;
 	}
 
+	cheatslist_read();
+
 	return (EXIT_OK);
 }
 BYTE emu_search_in_database(FILE *fp) {
@@ -510,6 +512,8 @@ BYTE emu_turn_on(void) {
 	info.r2002_race_condition_disabled = FALSE;
 	info.r4016_dmc_double_read_disabled = FALSE;
 
+	cheatslist_init();
+
 	fds_init();
 
 	/* carico la rom in memoria */
@@ -715,6 +719,7 @@ void emu_quit(BYTE exit_code) {
 
 	map_quit();
 
+	cheatslist_quit();
 	fds_quit();
 	ppu_quit();
 	snd_quit();

@@ -18,7 +18,7 @@
 #include "timeline.h"
 #include "version.h"
 #include "gui.h"
-#include "gamegenie.h"
+#include "cheat.h"
 #include "recent_roms.h"
 #include "uncompress.h"
 
@@ -70,6 +70,10 @@ int main(int argc, char **argv) {
 	}
 	if (emu_make_dir("%s" TMP_FOLDER, info.base_folder)) {
 		fprintf(stderr, "error on create tmp folder\n");
+		return (EXIT_ERROR);
+	}
+	if (emu_make_dir("%s" CHEAT_FOLDER, info.base_folder)) {
+		fprintf(stderr, "error on create cheat folder\n");
 		return (EXIT_ERROR);
 	}
 

@@ -8,7 +8,7 @@
 #include <libgen.h>
 #include "uncompress.h"
 #include "info.h"
-#include "gamegenie.h"
+#include "cheat.h"
 #include "c++/l7zip/l7z.h"
 #include "gui.h"
 #define MINIZ_NO_ARCHIVE_WRITING_APIS

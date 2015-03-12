@@ -15,7 +15,7 @@
 #include "emu.h"
 #include "conf.h"
 #include "clock.h"
-#include "gamegenie.h"
+#include "cheat.h"
 #include "info.h"
 
 enum flags { FL6, FL7, FL8, FL9, FL10, FL11, FL12, FL13, FL14, FL15, TOTAL_FL };
@@ -57,7 +57,7 @@ BYTE ines_load_rom(void) {
 		}
 	}
 
-	if (cfg->gamegenie) {
+	if (cfg->cheat_mode == GAMEGENIE_MODE) {
 		fp = gamegenie_load_rom(fp);
 	}
 

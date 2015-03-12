@@ -19,8 +19,9 @@
 #include "irql2f.h"
 #include "tas.h"
 #include "fds.h"
-#include "gamegenie.h"
+#include "cheat.h"
 #include "info.h"
+#include "conf.h"
 
 #define mod_cycles_op(op, vl) cpu.cycles op vl
 #define r2006_during_rendering()\
@@ -60,6 +61,30 @@
 	ppu_openbus_rd(bit5, 0x20);\
 	ppu_openbus_rd(bit6, 0x40);\
 	ppu_openbus_rd(bit7, 0x80)
+#define cheat_cheatlist_gg_mode(lst, lng)\
+	if (lst.counter) {\
+		BYTE i;\
+		for (i = 0; i < lng; i++) {\
+			if (!lst.cheat[i].disabled && (lst.cheat[i].address == address)) {\
+				if (lst.cheat[i].enabled_compare) {\
+					if (lst.cheat[i].compare == cpu.openbus) {\
+						cpu.openbus = lst.cheat[i].replace;\
+					}\
+				} else {\
+					cpu.openbus = lst.cheat[i].replace;\
+				}\
+			}\
+		}\
+	}
+#define cheat_cheatlist_ram_mode(adr)\
+	if ((cfg->cheat_mode == CHEATSLIST_MODE) && cheats_list.ram.counter) {\
+		BYTE i;\
+		for (i = 0; i < cheats_list.ram.counter; i++) {\
+			if (cheats_list.ram.cheat[i].address == (adr)) {\
+				cpu.openbus = cheats_list.ram.cheat[i].replace;\
+			}\
+		}\
+	}
 
 static BYTE cpu_rd_mem(WORD address, BYTE made_tick);
 static BYTE INLINE ppu_rd_reg(WORD address);
@@ -97,19 +122,12 @@ static BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 			cpu.openbus = extcl_cpu_rd_mem(address, cpu.openbus, before);
 		}
 
-		if (gamegenie.counter) {
-			BYTE i;
-
-			for (i = 0; i < LENGTH(gamegenie.cheat); i++) {
-				if (!gamegenie.cheat[i].disabled &&  (gamegenie.cheat[i].address == address)) {
-					if (gamegenie.cheat[i].enabled_compare) {
-						if (gamegenie.cheat[i].compare == cpu.openbus) {
-							cpu.openbus = gamegenie.cheat[i].replace;
-						}
-					} else {
-						cpu.openbus = gamegenie.cheat[i].replace;
-					}
-				}
+		/* cheat */
+		if (cfg->cheat_mode != NOCHEAT_MODE) {
+			if (cfg->cheat_mode == GAMEGENIE_MODE) {
+				cheat_cheatlist_gg_mode(gamegenie, LENGTH(gamegenie.cheat))
+			} else if (cfg->cheat_mode == CHEATSLIST_MODE) {
+				cheat_cheatlist_gg_mode(cheats_list.gg, LENGTH(gamegenie.cheat))
 			}
 		}
 
@@ -124,6 +142,10 @@ static BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 			}
 			/* leggo */
 			cpu.openbus = mmcpu.ram[address & 0x7FF];
+
+			/* cheat */
+			cheat_cheatlist_ram_mode(address & 0x7FF);
+
 			return (cpu.openbus);
 		}
 		/* PPU */
@@ -209,6 +231,10 @@ static BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 			/* Mappers */
 			cpu.openbus = extcl_cpu_rd_mem(address, cpu.openbus, before);
 		}
+
+		/* cheat */
+		cheat_cheatlist_ram_mode(address & 0x1FFF);
+
 		return (cpu.openbus);
 	}
 

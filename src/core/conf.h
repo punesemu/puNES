@@ -37,7 +37,7 @@ typedef struct {
 	BYTE pixel_aspect_ratio;
 	BYTE PAR_soft_stretch;
 	BYTE interpolation;
-	BYTE gamegenie;
+	BYTE cheat_mode;
 	BYTE txt_on_screen;
 	BYTE bck_pause;
 	WORD language;

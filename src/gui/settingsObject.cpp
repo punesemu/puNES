@@ -702,7 +702,7 @@ void setObject::to_cfg(QString group) {
 	if ((group == "system") || (group == "all")) {
 		int_to_val(SET_MODE, cfg_from_file.mode);
 		int_to_val(SET_BCK_PAUSE, cfg_from_file.bck_pause);
-		int_to_val(SET_GAMEGENIE, cfg_from_file.gamegenie);
+		int_to_val(SET_CHEAT_MODE, cfg_from_file.cheat_mode);
 		int_to_val(SET_SAVE_SETTINGS_ON_EXIT, cfg_from_file.save_on_exit);
 	}
 
@@ -757,7 +757,7 @@ void setObject::fr_cfg(QString group) {
 	if ((group == "system") || (group == "all")) {
 		cfg_from_file.mode = val_to_int(SET_MODE);
 		cfg_from_file.bck_pause = val_to_int(SET_BCK_PAUSE);
-		cfg_from_file.gamegenie = val_to_int(SET_GAMEGENIE);
+		cfg_from_file.cheat_mode = val_to_int(SET_CHEAT_MODE);
 		cfg_from_file.save_on_exit = val_to_int(SET_SAVE_SETTINGS_ON_EXIT);
 	}
 
@@ -817,7 +817,7 @@ void setObject::after_the_defaults() {
 	save_slot.slot = 0;
 	cfg_from_file.oscan = OSCAN_DEFAULT;
 
-	if (cfg_from_file.gamegenie) {
+	if (cfg_from_file.cheat_mode == GAMEGENIE_MODE) {
 		gamegenie_check_rom_present(TRUE);
 	}
 

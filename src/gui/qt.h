@@ -78,6 +78,10 @@ EXTERNC int gui_uncompress_selection_dialog();
 EXTERNC void gui_after_set_video_mode(void);
 EXTERNC void gui_set_focus(void);
 
+EXTERNC void gui_cheat_init(void);
+EXTERNC void gui_cheat_read_game_cheats(void);
+EXTERNC void gui_cheat_quit(void);
+
 EXTERNC double (*gui_get_ms)(void);
 
 EXTERNC void gui_init(int argc, char **argv);

@@ -419,16 +419,26 @@
      <addaction name="action_Italian"/>
      <addaction name="action_Russian"/>
     </widget>
+    <widget class="QMenu" name="menuCheats">
+     <property name="title">
+      <string>Cheats</string>
+     </property>
+     <addaction name="action_Cheats_Disabled"/>
+     <addaction name="action_Game_Genie"/>
+     <addaction name="action_Cheats_List"/>
+     <addaction name="separator"/>
+     <addaction name="action_Cheats_Editor"/>
+    </widget>
     <addaction name="menu_Mode"/>
     <addaction name="separator"/>
     <addaction name="menu_Video"/>
     <addaction name="menu_Audio"/>
     <addaction name="menu_Input"/>
+    <addaction name="menuCheats"/>
     <addaction name="separator"/>
     <addaction name="menu_Language"/>
     <addaction name="separator"/>
     <addaction name="action_Pause_when_in_background"/>
-    <addaction name="action_Game_Genie"/>
     <addaction name="action_Save_settings_on_exit"/>
     <addaction name="separator"/>
     <addaction name="action_Save_settings"/>
@@ -1547,7 +1557,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>&amp;Game Genie</string>
+    <string>&amp;Game Genie Rom Mode</string>
    </property>
   </action>
   <action name="action_Save_settings">
@@ -1752,6 +1762,27 @@
    </property>
    <property name="text">
     <string>Slot &amp;9</string>
+   </property>
+  </action>
+  <action name="action_Cheats_List">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Cheats List Mode</string>
+   </property>
+  </action>
+  <action name="action_Cheats_Editor">
+   <property name="text">
+    <string>Cheats &amp;Editor</string>
+   </property>
+  </action>
+  <action name="action_Cheats_Disabled">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Disabled</string>
    </property>
   </action>
  </widget>

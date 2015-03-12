@@ -53,7 +53,7 @@ void settings_pgs_parse(void) {
 		return;
 	}
 
-	if (!info.rom_file[0]) {
+	if (info.no_rom) {
 		return;
 	}
 

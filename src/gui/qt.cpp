@@ -20,6 +20,7 @@
 #include "sbarWidget.hpp"
 #include "dlgUncomp.hpp"
 #include "pStyle.hpp"
+#include "cheatObject.hpp"
 #include <QtCore/QtGlobal>
 #if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
 #include <QtGui/QDesktopWidget>
@@ -38,12 +39,13 @@ struct _qt {
 	Ui::mainWindow *ui;
 	mainWindow *mwin;
 	screenWidget *screen;
+	cheatObject *chobj;
 } qt;
 
 void gui_quit(void) {}
 BYTE gui_create(void) {
 	qt.ui = new Ui::mainWindow;
-	qt.mwin = new mainWindow(qt.ui);
+	qt.mwin = new mainWindow(qt.ui, qt.chobj);
 
 	qt.app->setStyle(new pStyle());
 
@@ -201,6 +203,16 @@ void gui_after_set_video_mode(void) {
 }
 void gui_set_focus(void) {
 	qt.screen->setFocus(Qt::ActiveWindowFocusReason);
+}
+
+void gui_cheat_init(void) {
+	qt.chobj = new cheatObject(0);
+}
+void gui_cheat_read_game_cheats(void) {
+	qt.chobj->read_game_cheats();
+}
+void gui_cheat_quit(void) {
+	qt.chobj->save_game_cheats();
 }
 
 #if defined (__WIN32__)

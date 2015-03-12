@@ -13,7 +13,7 @@
 #include "mappers.h"
 #include "emu.h"
 #include "conf.h"
-#include "gamegenie.h"
+#include "cheat.h"
 
 enum unif_phase_type { UNIF_COUNT, UNIF_READ };
 
@@ -103,7 +103,7 @@ BYTE unif_load_rom(void) {
 		}
 	}
 
-	if (cfg->gamegenie) {
+	if (cfg->cheat_mode == GAMEGENIE_MODE) {
 		fp = gamegenie_load_rom(fp);
 	}
 

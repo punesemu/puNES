@@ -24,7 +24,7 @@
 #include "tas.h"
 #include "text.h"
 #include "fds.h"
-#include "gamegenie.h"
+#include "cheat.h"
 #include "info.h"
 
 #define SAVE_VERSION 13

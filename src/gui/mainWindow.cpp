@@ -25,9 +25,10 @@
 #include "dlgOverscanBorders.hpp"
 #include "dlgApuChannels.hpp"
 #include "dlgInput.hpp"
+//#include "dlgCheats.hpp"
 #include "common.h"
 #include "settings.h"
-#include "gamegenie.h"
+#include "cheat.h"
 #include "conf.h"
 #include "recent_roms.h"
 #include "fds.h"
@@ -47,10 +48,11 @@
 enum state_incdec_enum { INC, DEC };
 enum state_save_enum { SAVE, LOAD };
 
-mainWindow::mainWindow(Ui::mainWindow *u) : QMainWindow() {
+mainWindow::mainWindow(Ui::mainWindow *u, cheatObject *cho) : QMainWindow() {
 	ui = u;
 	statusbar = new sbarWidget(u, this);
 	timer_draw = new QTimer(this);
+	chobj = cho;
 
 	position.setX(100);
 	position.setY(100);
@@ -89,6 +91,8 @@ mainWindow::mainWindow(Ui::mainWindow *u) : QMainWindow() {
 mainWindow::~mainWindow() {}
 void mainWindow::setup() {
 	QActionGroup *grp;
+
+	chobj->setParent(this);
 
 	setup_video_rendering();
 
@@ -256,6 +260,13 @@ void mainWindow::setup() {
 	grp->addAction(ui->action_English);
 	grp->addAction(ui->action_Italian);
 	grp->addAction(ui->action_Russian);
+	// Settings/Cheat
+	grp = new QActionGroup(this);
+	grp->setExclusive(true);
+	grp->addAction(ui->action_Cheats_Disabled);
+	grp->addAction(ui->action_Game_Genie);
+	grp->addAction(ui->action_Cheats_List);
+
 	// State
 	grp = new QActionGroup(this);
 	grp->setExclusive(true);
@@ -291,7 +302,7 @@ void mainWindow::change_rom(const char *rom) {
 	gui_update();
 }
 void mainWindow::state_save_slot_set(int slot, bool on_video) {
-	if (!info.rom_file[0]) {
+	if (info.no_rom) {
 		return;
 	}
 	save_slot.slot = slot;
@@ -960,6 +971,20 @@ void mainWindow::update_menu_settings() {
 	// Settings/Audio/[Swap Duty Cycle, Enable]
 	ui->action_Swap_Duty_Cycles->setChecked(cfg->swap_duty);
 	ui->action_Audio_Enable->setChecked(cfg->apu.channel[APU_MASTER]);
+	// Settings/Cheats
+	ui->action_Cheats_Editor->setEnabled(false);
+	switch (cfg->cheat_mode) {
+		case NOCHEAT_MODE:
+			ui->action_Cheats_Disabled->setChecked(true);
+			break;
+		case GAMEGENIE_MODE:
+			ui->action_Game_Genie->setChecked(true);
+			break;
+		case CHEATSLIST_MODE:
+			ui->action_Cheats_List->setChecked(true);
+			ui->action_Cheats_Editor->setEnabled(true);
+			break;
+	}
 	// Settings/Language
 	switch (cfg->language) {
 		case LNG_ENGLISH:
@@ -972,9 +997,8 @@ void mainWindow::update_menu_settings() {
 			ui->action_Russian->setChecked(true);
 			break;
 	}
-	//Settings/[Pause when in backgrounds, Game Genie, Save settings on exit]
+	//Settings/[Pause when in backgrounds, Save settings on exit]
 	ui->action_Pause_when_in_background->setChecked(cfg->bck_pause);
-	ui->action_Game_Genie->setChecked(cfg->gamegenie);
 	ui->action_Save_settings_on_exit->setChecked(cfg->save_on_exit);
 }
 void mainWindow::update_menu_state() {
@@ -1316,9 +1340,12 @@ void mainWindow::connect_menu_signals() {
 	connect_action(ui->action_Italian, LNG_ITALIAN, SLOT(s_set_language()));
 	//connect_action(ui->action_Russian, LNG_RUSSIAN, SLOT(s_set_language()));
 	ui->menu_Language->removeAction(ui->action_Russian);
-	// Settings/[Pause when in backgrounds, Game Genie, Save settings, Save settings on exit]
+	// Settings/Cheats
+	connect_action(ui->action_Cheats_Disabled, NOCHEAT_MODE, SLOT(s_cheat_mode_select()));
+	connect_action(ui->action_Game_Genie, GAMEGENIE_MODE, SLOT(s_cheat_mode_select()));
+	connect_action(ui->action_Cheats_List, CHEATSLIST_MODE, SLOT(s_cheat_mode_select()));
+	// Settings/[Pause when in backgrounds, Save settings, Save settings on exit]
 	connect_action(ui->action_Pause_when_in_background, SLOT(s_set_pause()));
-	connect_action(ui->action_Game_Genie, SLOT(s_gamegenie_select()));
 	connect_action(ui->action_Save_settings, SLOT(s_save_settings()));
 	connect_action(ui->action_Save_settings_on_exit, SLOT(s_set_save_on_exit()));
 	// State/[Save state, Load State]
@@ -1353,7 +1380,7 @@ void mainWindow::connect_action(QAction *action, int value, const char *member) 
 }
 void mainWindow::make_reset(int type) {
 	if (type == HARD) {
-		if (cfg->gamegenie && gamegenie.rom_present) {
+		if ((cfg->cheat_mode == GAMEGENIE_MODE) && gamegenie.rom_present) {
 			if (info.mapper.id != GAMEGENIE_MAPPER) {
 				strcpy(info.load_rom_file, info.rom_file);
 			}
@@ -1943,12 +1970,31 @@ void mainWindow::s_set_input() {
 void mainWindow::s_set_pause() {
 	cfg->bck_pause = !cfg->bck_pause;
 }
-void mainWindow::s_gamegenie_select() {
-	cfg->gamegenie = !cfg->gamegenie;
+void mainWindow::s_cheat_mode_select() {
+	int mode = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
-	if (cfg->gamegenie) {
-		gamegenie_check_rom_present(TRUE);
+	if (cfg->cheat_mode == mode) {
+		return;
 	}
+
+	emu_pause(TRUE);
+	cfg->cheat_mode = mode;
+
+	switch (cfg->cheat_mode) {
+		case NOCHEAT_MODE:
+			cheatslist_blank();
+			break;
+		case GAMEGENIE_MODE:
+			cheatslist_blank();
+			gamegenie_check_rom_present(TRUE);
+			break;
+		case CHEATSLIST_MODE:
+			chobj->apply_cheats();
+			break;
+	}
+
+	gui_update();
+	emu_pause(FALSE);
 }
 void mainWindow::s_set_save_on_exit() {
 	cfg->save_on_exit = !cfg->save_on_exit;

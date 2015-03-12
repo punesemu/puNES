@@ -11,7 +11,7 @@
 #include "recent_roms.h"
 #include "info.h"
 #include "conf.h"
-#include "gamegenie.h"
+#include "cheat.h"
 
 #define RECENT_ROMS_FILE "recent.cfg"
 
