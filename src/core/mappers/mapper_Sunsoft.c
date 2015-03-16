@@ -136,10 +136,12 @@ void map_init_Sunsoft(BYTE model) {
 				memset(&fm7, 0x00, sizeof(fm7));
 			}
 
-			info.prg.ram.banks_8k_plus = 1;
+			if (info.format == iNES_1_0) {
+				info.prg.ram.banks_8k_plus = 1;
 
-			if ((info.id == BARCODEWORLD) || (info.id == DODGEDANPEI2)) {
-				info.prg.ram.bat.banks = 1;
+				if ((info.id == BARCODEWORLD) || (info.id == DODGEDANPEI2)) {
+					info.prg.ram.bat.banks = 1;
+				}
 			}
 
 			fm7.square[0].timer = 1;
@@ -351,14 +353,12 @@ void extcl_cpu_wr_mem_Sunsoft_FM7(WORD address, BYTE value) {
 							prg.ram_plus_8k = prg_chip_byte_pnt(0, fm7.prg_ram_address);
 							return;
 						case 0x40:
-							cpu.prg_ram_rd_active = FALSE;
-							cpu.prg_ram_wr_active = TRUE;
-							prg.ram_plus_8k = &prg.ram_plus[0];
-							return;
 						case 0xC0:
-							cpu.prg_ram_rd_active = TRUE;
+							cpu.prg_ram_rd_active = (value & 0x80) >> 7;
 							cpu.prg_ram_wr_active = TRUE;
-							prg.ram_plus_8k = &prg.ram_plus[0];
+							control_bank_with_AND(0x3F, info.prg.ram.banks_8k_plus - 1)
+							fm7.prg_ram_address = (value & 0x3F) << 13;
+							prg.ram_plus_8k = prg_chip_byte_pnt(0, fm7.prg_ram_address);
 							return;
 					}
 					return;
