@@ -60,6 +60,9 @@
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
      <property name="horizontalScrollBarPolicy">
       <enum>Qt::ScrollBarAsNeeded</enum>
      </property>
@@ -138,12 +141,9 @@
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QPushButton" name="pushButton_Clear_All_Cheats">
-        <property name="focusPolicy">
-         <enum>Qt::TabFocus</enum>
-        </property>
+       <widget class="QPushButton" name="pushButton_Hide_Show_Tools">
         <property name="text">
-         <string>Clear All</string>
+         <string>Hide Tools</string>
         </property>
        </widget>
       </item>
@@ -162,9 +162,9 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_Hide_Show_Tools">
+       <widget class="QPushButton" name="pushButton_Clear_All_Cheats">
         <property name="text">
-         <string>Hide Tools</string>
+         <string>Clear All</string>
         </property>
        </widget>
       </item>
@@ -369,28 +369,28 @@
        </rect>
       </property>
       <layout class="QGridLayout" name="gridLayout_Edit_Buttons">
-       <item row="1" column="0">
+       <item row="0" column="0">
         <widget class="QPushButton" name="pushButton_Submit_Cheat">
          <property name="text">
           <string>Submit</string>
          </property>
         </widget>
        </item>
-       <item row="1" column="1">
+       <item row="0" column="1">
         <widget class="QPushButton" name="pushButton_Cancel_Cheat">
          <property name="text">
           <string>Cancel</string>
          </property>
         </widget>
        </item>
-       <item row="0" column="0">
+       <item row="1" column="0">
         <widget class="QPushButton" name="pushButton_New_Cheat">
          <property name="text">
           <string>New</string>
          </property>
         </widget>
        </item>
-       <item row="0" column="1">
+       <item row="1" column="1">
         <widget class="QPushButton" name="pushButton_Remove_Cheat">
          <property name="text">
           <string>Remove</string>
@@ -426,11 +426,6 @@
   </widget>
  </widget>
  <tabstops>
-  <tabstop>tableWidget_Cheats</tabstop>
-  <tabstop>pushButton_Clear_All_Cheats</tabstop>
-  <tabstop>pushButton_Import_Cheats</tabstop>
-  <tabstop>pushButton_Export_Cheats</tabstop>
-  <tabstop>pushButton_Hide_Show_Tools</tabstop>
   <tabstop>lineEdit_Description</tabstop>
   <tabstop>radioButton_CPU_Ram</tabstop>
   <tabstop>radioButton_GG</tabstop>
@@ -438,12 +433,12 @@
   <tabstop>radioButton_ProAR</tabstop>
   <tabstop>lineEdit_ProAR</tabstop>
   <tabstop>checkBox_Compare</tabstop>
-  <tabstop>pushButton_New_Cheat</tabstop>
-  <tabstop>pushButton_Remove_Cheat</tabstop>
-  <tabstop>pushButton_Submit_Cheat</tabstop>
-  <tabstop>pushButton_Cancel_Cheat</tabstop>
   <tabstop>pushButton_Apply</tabstop>
   <tabstop>pushButton_Discard</tabstop>
+  <tabstop>pushButton_Hide_Show_Tools</tabstop>
+  <tabstop>pushButton_Import_Cheats</tabstop>
+  <tabstop>pushButton_Export_Cheats</tabstop>
+  <tabstop>pushButton_Clear_All_Cheats</tabstop>
  </tabstops>
  <resources/>
  <connections/>

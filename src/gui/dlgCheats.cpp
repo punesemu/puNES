@@ -528,30 +528,54 @@ void dlgCheats::s_remove_clicked(bool checked) {
 void dlgCheats::s_submit_clicked(bool checked) {
 	int i, current, submitted = true;
 	chl_map cheat;
+	int type;
 
 	cheat.insert("description", lineEdit_Description->text());
 
 	if (radioButton_CPU_Ram->isChecked()) {
 		cheat.insert("genie", "-");
 		cheat.insert("rocky", "-");
-		cheat.insert("address", hexSpinBox_Address->text());
-		cheat.insert("value", hexSpinBox_Value->text());
+		cheat.insert("address", "0x" + QString("%1").arg(hexSpinBox_Address->value(), 4, 16,
+				QChar('0')).toUpper());
+		cheat.insert("value", "0x" + QString("%1").arg(hexSpinBox_Value->value(), 2, 16,
+				QChar('0')).toUpper());
 		if (checkBox_Compare->isChecked()) {
 			cheat.insert("enabled_compare", "1");
-			cheat.insert("compare", hexSpinBox_Compare->text());
+			cheat.insert("compare", "0x" + QString("%1").arg(hexSpinBox_Compare->value(), 2, 16,
+					QChar('0')).toUpper());
 		} else {
 			cheat.insert("enabled_compare", "0");
 			cheat.insert("compare", "-");
 		}
+		type = 0;
 	} else if (radioButton_GG->isChecked()) {
 		cheat.insert("genie", lineEdit_GG->text());
 		cheat.insert("rocky", "-");
 		mod->complete_gg(&cheat);
+		type = 1;
 	} else if (radioButton_ProAR->isChecked()) {
 		cheat.insert("genie", "-");
 		cheat.insert("rocky", lineEdit_ProAR->text());
 		mod->complete_rocky(&cheat);
+		type = 3;
 	}
+
+	if (cheat.count() == 0) {
+		QMessageBox::warning(0, "Submit warning", "The code is invalid");
+		switch (type) {
+			case 0:
+				hexSpinBox_Address->setFocus();
+				break;
+			case 1:
+				lineEdit_GG->setFocus();
+				break;
+			case 2:
+				lineEdit_ProAR->setFocus();
+				break;
+		}
+		return;
+	}
+
 
 	if (new_mode == true) {
 		current = tableWidget_Cheats->rowCount();
@@ -613,6 +637,7 @@ void dlgCheats::s_discard_clicked(bool checked) {
 
 hexSpinBox::hexSpinBox(QWidget *parent, int dgts = 4) : QSpinBox(parent) {
 	digits = dgts;
+	no_prefix = false;
 
 	switch (digits) {
 		case 1:
@@ -630,21 +655,19 @@ hexSpinBox::hexSpinBox(QWidget *parent, int dgts = 4) : QSpinBox(parent) {
 			break;
 	}
 
+	setFocusPolicy(Qt::StrongFocus);
+
 	validator = new QRegExpValidator(QRegExp("[0-9A-Fa-f]{1,8}"), this);
 
 	installEventFilter(this);
 }
 hexSpinBox::~hexSpinBox() {}
 bool hexSpinBox::eventFilter(QObject *obj, QEvent *event) {
-	if (event->type() == QEvent::KeyPress) {
-		QKeyEvent *keyEvent = ((QKeyEvent *)event);
-	    if (keyEvent->key() == Qt::Key_Return) {
-	        qDebug() << "return pressed";
-	        return (true);
-	    }
-	} else
 	if (event->type() == QEvent::FocusIn) {
-		setFocusPolicy(Qt::StrongFocus);
+		no_prefix = true;
+		setValue(this->value());
+	} else if (event->type() == QEvent::FocusOut) {
+		no_prefix = false;
 	}
 
 	return (QObject::eventFilter(obj, event));
@@ -653,7 +676,11 @@ QValidator::State hexSpinBox::validate(QString &text, int &pos) const {
 	return (validator->validate(text, pos));
 }
 QString hexSpinBox::textFromValue(int value) const {
-	return (QString("0x" + QString("%1").arg(value, digits, 16, QChar('0')).toUpper()));
+	if (no_prefix == true) {
+		return (QString(QString("%1").arg(value, digits, 16, QChar('0')).toUpper()));
+	} else {
+		return (QString("0x" + QString("%1").arg(value, digits, 16, QChar('0')).toUpper()));
+	}
 }
 int hexSpinBox::valueFromText(const QString &text) const {
 	bool ok;

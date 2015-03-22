@@ -695,8 +695,6 @@ void setObject::setup() {
 	info.on_cfg = TRUE;
 
 	settingsObject::setup();
-
-	text_add_line_info(1, "configuration [green]loaded");
 }
 void setObject::to_cfg(QString group) {
 	if ((group == "system") || (group == "all")) {
@@ -919,7 +917,6 @@ void pgsObject::setup() {
 	rd();
 
 	if (QFile(fileName()).exists()) {
-		text_add_line_info(1, "pgs [green]loaded");
 		wr();
 	}
 }

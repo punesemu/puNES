@@ -25,6 +25,7 @@ class hexSpinBox: public QSpinBox {
 
 	private:
 		int digits;
+		bool no_prefix;
 
 	public:
 		hexSpinBox(QWidget *parent, int dgts);

@@ -16,6 +16,7 @@
 #include "cheatObject.moc"
 #include "info.h"
 #include "conf.h"
+#include "text.h"
 
 
 #include <QtCore/QDebug>
@@ -66,6 +67,8 @@ void cheatObject::clear_list() {
 	}
 }
 void cheatObject::apply_cheats() {
+	int tot = 0;
+
 	cheatslist_blank();
 
 	if (cheats.count() == 0) {
@@ -97,6 +100,14 @@ void cheatObject::apply_cheats() {
 				cheats_list.ram.counter++;
 			}
 		}
+	}
+
+	tot = cheats_list.rom.counter + cheats_list.ram.counter;
+
+	if (tot == 1) {
+		text_add_line_info(1, "[green]%d[normal] cheat active", tot);
+	} else if (tot > 1) {
+		text_add_line_info(1, "[green]%d[normal] cheats actives", tot);
 	}
 }
 bool cheatObject::is_equal(int index, chl_map *find, bool description) {
