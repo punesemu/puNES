@@ -86,19 +86,22 @@ void cheatslist_init(void) {
 	gui_cheat_init();
 	memset (&cheats_list, 0x00, sizeof(cheats_list));
 }
-void cheatslist_read(void) {
-	cheatslist_quit();
+void cheatslist_read_game_cheats(void) {
+	cheatslist_blank();
 	gui_cheat_read_game_cheats();
 }
+void cheatslist_save_game_cheats(void) {
+	gui_cheat_save_game_cheats();
+}
 void cheatslist_blank(void) {
-	if (cheats_list.gg.counter > 0) {
-		memset(&cheats_list.gg, 0x00, sizeof(_type_cheat));
+	if (cheats_list.rom.counter > 0) {
+		memset(&cheats_list.rom, 0x00, sizeof(_type_cheat));
 	}
 	if (cheats_list.ram.counter > 0) {
 		memset(&cheats_list.ram, 0x00, sizeof(_type_cheat));
 	}
 }
 void cheatslist_quit(void) {
-	gui_cheat_quit();
+	cheatslist_save_game_cheats();
 	cheatslist_blank();
 }

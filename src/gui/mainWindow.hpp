@@ -47,6 +47,7 @@ class mainWindow: public QMainWindow {
 			DBWORD value;
 			DBWORD shortcut[SET_MAX_NUM_SC];
 		} shcjoy;
+		QString last_import_cheat_path;
 
 	private:
 		QShortcut *shortcut[SET_MAX_NUM_SC];
@@ -130,6 +131,7 @@ class mainWindow: public QMainWindow {
 		void s_set_input();
 		void s_set_pause();
 		void s_cheat_mode_select();
+		void s_cheat_dialog();
 		void s_set_save_on_exit();
 		void s_save_settings();
 		void s_state_save_slot_action();

@@ -25,7 +25,7 @@
 #include "dlgOverscanBorders.hpp"
 #include "dlgApuChannels.hpp"
 #include "dlgInput.hpp"
-//#include "dlgCheats.hpp"
+#include "dlgCheats.hpp"
 #include "common.h"
 #include "settings.h"
 #include "cheat.h"
@@ -982,7 +982,9 @@ void mainWindow::update_menu_settings() {
 			break;
 		case CHEATSLIST_MODE:
 			ui->action_Cheats_List->setChecked(true);
-			ui->action_Cheats_Editor->setEnabled(true);
+			if (!info.no_rom) {
+				ui->action_Cheats_Editor->setEnabled(true);
+			}
 			break;
 	}
 	// Settings/Language
@@ -1335,15 +1337,16 @@ void mainWindow::connect_menu_signals() {
 	connect_action(ui->action_Audio_Enable, SLOT(s_set_audio_enable()));
 	// Settings/Input/Config
 	connect_action(ui->action_Input_Config, SLOT(s_set_input()));
+	// Settings/Cheats
+	connect_action(ui->action_Cheats_Disabled, NOCHEAT_MODE, SLOT(s_cheat_mode_select()));
+	connect_action(ui->action_Game_Genie, GAMEGENIE_MODE, SLOT(s_cheat_mode_select()));
+	connect_action(ui->action_Cheats_List, CHEATSLIST_MODE, SLOT(s_cheat_mode_select()));
+	connect_action(ui->action_Cheats_Editor, SLOT(s_cheat_dialog()));
 	// Settings/Langauge
 	connect_action(ui->action_English, LNG_ENGLISH, SLOT(s_set_language()));
 	connect_action(ui->action_Italian, LNG_ITALIAN, SLOT(s_set_language()));
 	//connect_action(ui->action_Russian, LNG_RUSSIAN, SLOT(s_set_language()));
 	ui->menu_Language->removeAction(ui->action_Russian);
-	// Settings/Cheats
-	connect_action(ui->action_Cheats_Disabled, NOCHEAT_MODE, SLOT(s_cheat_mode_select()));
-	connect_action(ui->action_Game_Genie, GAMEGENIE_MODE, SLOT(s_cheat_mode_select()));
-	connect_action(ui->action_Cheats_List, CHEATSLIST_MODE, SLOT(s_cheat_mode_select()));
 	// Settings/[Pause when in backgrounds, Save settings, Save settings on exit]
 	connect_action(ui->action_Pause_when_in_background, SLOT(s_set_pause()));
 	connect_action(ui->action_Save_settings, SLOT(s_save_settings()));
@@ -1995,6 +1998,11 @@ void mainWindow::s_cheat_mode_select() {
 
 	gui_update();
 	emu_pause(FALSE);
+}
+void mainWindow::s_cheat_dialog() {
+	dlgCheats *dlg = new dlgCheats(this, chobj);
+
+	dlg->exec();
 }
 void mainWindow::s_set_save_on_exit() {
 	cfg->save_on_exit = !cfg->save_on_exit;

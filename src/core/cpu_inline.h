@@ -61,7 +61,7 @@
 	ppu_openbus_rd(bit5, 0x20);\
 	ppu_openbus_rd(bit6, 0x40);\
 	ppu_openbus_rd(bit7, 0x80)
-#define cheat_cheatlist_gg_mode(lst, lng)\
+#define cheat_cheatlist_rom_mode(lst, lng)\
 	if (lst.counter) {\
 		BYTE i;\
 		for (i = 0; i < lng; i++) {\
@@ -125,9 +125,9 @@ static BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 		/* cheat */
 		if (cfg->cheat_mode != NOCHEAT_MODE) {
 			if (cfg->cheat_mode == GAMEGENIE_MODE) {
-				cheat_cheatlist_gg_mode(gamegenie, LENGTH(gamegenie.cheat))
+				cheat_cheatlist_rom_mode(gamegenie, LENGTH(gamegenie.cheat))
 			} else if (cfg->cheat_mode == CHEATSLIST_MODE) {
-				cheat_cheatlist_gg_mode(cheats_list.gg, LENGTH(gamegenie.cheat))
+				cheat_cheatlist_rom_mode(cheats_list.rom, cheats_list.rom.counter)
 			}
 		}
 

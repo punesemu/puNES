@@ -55,7 +55,7 @@ EXTERNC struct _gamegenie {
 	_cheat cheat[GG_CHEATS];
 } gamegenie;
 EXTERNC struct _cheats_list {
-	_type_cheat gg;
+	_type_cheat rom;
 	_type_cheat ram;
 } cheats_list;
 
@@ -65,7 +65,8 @@ EXTERNC void gamegenie_check_rom_present(BYTE print_message);
 EXTERNC FILE *gamegenie_load_rom(FILE *fp);
 
 EXTERNC void cheatslist_init(void);
-EXTERNC void cheatslist_read(void);
+EXTERNC void cheatslist_read_game_cheats(void);
+EXTERNC void cheatslist_save_game_cheats(void);
 EXTERNC void cheatslist_blank(void);
 EXTERNC void cheatslist_quit(void);
 

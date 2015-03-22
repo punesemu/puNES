@@ -12,13 +12,14 @@
 #include <QtXml/QXmlStreamReader>
 #include "cheat.h"
 
+typedef QMap<QString, QString> chl_map;
+typedef QList<chl_map> chl_list;
+
 class cheatObject : public QObject {
 		Q_OBJECT
 
 	public:
-		QList<QMap<QString, QString>> cheats;
-
-	private:
+		chl_list cheats;
 
 	public:
 		cheatObject(QObject *parent);
@@ -27,17 +28,24 @@ class cheatObject : public QObject {
 		void save_game_cheats();
 		void clear_list();
 		void apply_cheats();
+		bool is_equal(int index, chl_map *find, bool dscription);
+		int find_cheat(chl_map *find, bool description);
+		void import_XML(QString file_XML);
+		void import_CHT(QString file_CHT);
+		void save_XML(QString file_XML);
+		void complete_gg(chl_map *cheat);
+		void complete_rocky(chl_map *cheat);
+		void complete_ram(chl_map *cheat);
 
 	private:
-		void import_XML(QString fileXML);
-		void save_XML(QString fileXML);
+		void complete_from_code(chl_map *cheat, _cheat *ch);
+		bool decode_gg(QString code, _cheat *cheat);
+		bool decode_rocky(QString code, _cheat *cheat);
+		bool decode_ram(chl_map ch, _cheat *cheat);
+		QString encode_gg(_cheat *cheat);
 
-		bool gamegenie_decode(QString gamegenie_code, _cheat *cheat);
-		bool ram_decode(QMap<QString, QString> ch, _cheat *cheat);
-
-		QMap<QString, QString> parse_xml_cheat(QXmlStreamReader& xml);
-		void add_element_data_to_map(QXmlStreamReader& xml, QMap<QString, QString>& map) const;
+		chl_map parse_xml_cheat(QXmlStreamReader &xml);
+		void add_element_data_to_map(QXmlStreamReader &xml, chl_map &map) const;
 };
-
 
 #endif /* CHEATOBJECT_HPP_ */

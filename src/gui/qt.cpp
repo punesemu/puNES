@@ -211,7 +211,7 @@ void gui_cheat_init(void) {
 void gui_cheat_read_game_cheats(void) {
 	qt.chobj->read_game_cheats();
 }
-void gui_cheat_quit(void) {
+void gui_cheat_save_game_cheats(void) {
 	qt.chobj->save_game_cheats();
 }
 

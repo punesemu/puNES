@@ -189,6 +189,8 @@ BYTE emu_load_rom(void) {
 	elaborate_rom_file:
 	info.no_rom = FALSE;
 
+	cheatslist_save_game_cheats();
+
 	fds_quit();
 	map_quit();
 
@@ -294,7 +296,7 @@ BYTE emu_load_rom(void) {
 			break;
 	}
 
-	cheatslist_read();
+	cheatslist_read_game_cheats();
 
 	return (EXIT_OK);
 }

@@ -423,6 +423,10 @@
      <property name="title">
       <string>Cheats</string>
      </property>
+     <property name="icon">
+      <iconset resource="application.qrc">
+       <normaloff>:/icon/icons/cheat.png</normaloff>:/icon/icons/cheat.png</iconset>
+     </property>
      <addaction name="action_Cheats_Disabled"/>
      <addaction name="action_Game_Genie"/>
      <addaction name="action_Cheats_List"/>
@@ -1773,6 +1777,10 @@
    </property>
   </action>
   <action name="action_Cheats_Editor">
+   <property name="icon">
+    <iconset resource="application.qrc">
+     <normaloff>:/icon/icons/cheat_editor.png</normaloff>:/icon/icons/cheat_editor.png</iconset>
+   </property>
    <property name="text">
     <string>Cheats &amp;Editor</string>
    </property>
