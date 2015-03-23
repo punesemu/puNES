@@ -253,7 +253,7 @@
       <enum>QFrame::StyledPanel</enum>
      </property>
      <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
+      <enum>QFrame::Sunken</enum>
      </property>
      <widget class="QWidget" name="gridLayoutWidget_2">
       <property name="geometry">
@@ -273,7 +273,11 @@
         </widget>
        </item>
        <item row="2" column="1">
-        <widget class="QLineEdit" name="lineEdit_ProAR"/>
+        <widget class="QLineEdit" name="lineEdit_ProAR">
+         <property name="maxLength">
+          <number>8</number>
+         </property>
+        </widget>
        </item>
        <item row="2" column="0">
         <widget class="QRadioButton" name="radioButton_ProAR">
@@ -290,7 +294,11 @@
         </widget>
        </item>
        <item row="1" column="1">
-        <widget class="QLineEdit" name="lineEdit_GG"/>
+        <widget class="QLineEdit" name="lineEdit_GG">
+         <property name="maxLength">
+          <number>8</number>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -308,7 +316,7 @@
       <enum>QFrame::StyledPanel</enum>
      </property>
      <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
+      <enum>QFrame::Sunken</enum>
      </property>
      <widget class="QWidget" name="gridLayoutWidget">
       <property name="geometry">
@@ -357,7 +365,7 @@
       <enum>QFrame::StyledPanel</enum>
      </property>
      <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
+      <enum>QFrame::Sunken</enum>
      </property>
      <widget class="QWidget" name="gridLayoutWidget_3">
       <property name="geometry">

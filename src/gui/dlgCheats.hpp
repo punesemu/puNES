@@ -80,6 +80,7 @@ class dlgCheats : public QDialog, public Ui::Cheats {
 		void s_export_clicked(bool checked);
 		void s_clear_all_clicked(bool checked);
 		void s_grp_button_clicked(int id);
+		void s_linedit_to_upper(const QString &text);
 		void s_new_clicked(bool checked);
 		void s_remove_clicked(bool checked);
 		void s_submit_clicked(bool checked);

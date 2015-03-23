@@ -103,6 +103,8 @@ dlgCheats::dlgCheats(QWidget *parent = 0, cheatObject *c = 0) : QDialog(parent) 
 	connect(pushButton_Clear_All_Cheats, SIGNAL(clicked(bool)), this,
 			SLOT(s_clear_all_clicked(bool)));
 
+	connect(lineEdit_GG, SIGNAL(textEdited(const QString &)),
+			SLOT(s_linedit_to_upper(const QString &)));
 	connect(checkBox_Compare, SIGNAL(stateChanged(int)), this,
 			SLOT(s_active_compare_state_changed(int)));
 	connect(pushButton_New_Cheat, SIGNAL(clicked(bool)), this, SLOT(s_new_clicked(bool)));
@@ -333,41 +335,38 @@ void dlgCheats::set_type_cheat_checkbox(chl_map *cheat) {
 	if (new_mode == true) {
 		radioButton_CPU_Ram->setEnabled(true);
 		radioButton_GG->setEnabled(true);
-		lineEdit_GG->setEnabled(true);
 		radioButton_ProAR->setEnabled(true);
-		lineEdit_ProAR->setEnabled(true);
 
 		radioButton_CPU_Ram->click();
+		lineEdit_GG->setText("");
+		lineEdit_ProAR->setText("");
 		return;
 	}
 
 	if ((*cheat)["genie"] != "-") {
 		radioButton_CPU_Ram->setEnabled(false);
 		radioButton_GG->setEnabled(true);
-		lineEdit_GG->setEnabled(true);
 		radioButton_ProAR->setEnabled(false);
-		lineEdit_ProAR->setEnabled(false);
 
 		radioButton_GG->click();
 		lineEdit_GG->setText((*cheat)["genie"]);
+		lineEdit_ProAR->setText("");
 	} else if ((*cheat)["rocky"] != "-") {
 		radioButton_CPU_Ram->setEnabled(false);
 		radioButton_GG->setEnabled(false);
-		lineEdit_GG->setEnabled(false);
 		radioButton_ProAR->setEnabled(true);
-		lineEdit_ProAR->setEnabled(true);
 
 		radioButton_ProAR->click();
+		lineEdit_GG->setText("");
 		lineEdit_ProAR->setText((*cheat)["rocky"]);
 	} else {
 		radioButton_CPU_Ram->setEnabled(true);
 		radioButton_GG->setEnabled(false);
-		lineEdit_GG->setEnabled(false);
 		radioButton_ProAR->setEnabled(false);
-		lineEdit_ProAR->setEnabled(false);
 
 		radioButton_CPU_Ram->click();
 		lineEdit_GG->setText("");
+		lineEdit_ProAR->setText("");
 	}
 }
 void dlgCheats::set_edit_buttons() {
@@ -448,8 +447,8 @@ void dlgCheats::s_import_clicked(bool checked) {
 	filters.append(tr("CHT files"));
 
 	filters[0].append(" (*.xml *.XML *.cht *.CHT)");
-	filters[0].append(" (*.xml *.XML)");
-	filters[1].append(" (*.cht *.CHT)");
+	filters[1].append(" (*.xml *.XML)");
+	filters[2].append(" (*.cht *.CHT)");
 
 	file = QFileDialog::getOpenFileName(this, tr("Import Cheats"),
 			parentMain->last_import_cheat_path, filters.join(";;"));
@@ -502,6 +501,29 @@ void dlgCheats::s_grp_button_clicked(int id) {
 		frame_Raw_Value->setEnabled(false);
 		hexSpinBox_Address->setRange(0x8000, 0xFFFF);
 	}
+
+	switch(id) {
+		case 0:
+			lineEdit_GG->setEnabled(false);
+			lineEdit_ProAR->setEnabled(false);
+			break;
+		case 1:
+			lineEdit_GG->setEnabled(true);
+			lineEdit_ProAR->setEnabled(false);
+			break;
+		case 2:
+			lineEdit_GG->setEnabled(false);
+			lineEdit_ProAR->setEnabled(true);
+			break;
+	}
+}
+void dlgCheats::s_linedit_to_upper(const QString &text) {
+	QLineEdit *le = qobject_cast<QLineEdit *>(sender());
+
+	if (!le) {
+		return;
+	}
+	le->setText(text.toUpper());
 }
 void dlgCheats::s_new_clicked(bool checked) {
 	new_mode = true;
@@ -528,7 +550,7 @@ void dlgCheats::s_remove_clicked(bool checked) {
 void dlgCheats::s_submit_clicked(bool checked) {
 	int i, current, submitted = true;
 	chl_map cheat;
-	int type;
+	int type = 0;
 
 	cheat.insert("description", lineEdit_Description->text());
 
@@ -561,7 +583,7 @@ void dlgCheats::s_submit_clicked(bool checked) {
 	}
 
 	if (cheat.count() == 0) {
-		QMessageBox::warning(0, "Submit warning", "The code is invalid");
+		QMessageBox::warning(0, tr("Submit warning"), tr("The code is invalid"));
 		switch (type) {
 			case 0:
 				hexSpinBox_Address->setFocus();
@@ -597,7 +619,7 @@ void dlgCheats::s_submit_clicked(bool checked) {
 			mod->cheats.replace(current, cheat);
 			update_cheat_row(current, &cheat);
 		} else {
-			QMessageBox::warning(0, "Submit warning", "The cheat is already in the list");
+			QMessageBox::warning(0, tr("Submit warning"), tr("The cheat is already in the list"));
 			submitted = false;
 		}
 	}

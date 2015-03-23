@@ -91,7 +91,7 @@ void cheatObject::apply_cheats() {
 			}
 		} else if (cheat["rocky"] != "-") {
 			if ((cheat["enabled"].toInt() == 1) && (cheats_list.rom.counter <= CL_CHEATS)
-					&& (decode_rocky(cheat["genie"], rom) == EXIT_OK)) {
+					&& (decode_rocky(cheat["rocky"], rom) == EXIT_OK)) {
 				cheats_list.rom.counter++;
 			}
 		} else {
@@ -176,7 +176,7 @@ void cheatObject::import_XML(QString file_XML) {
 			}
 		}
 		if (xmlReader.hasError()) {
-			QMessageBox::critical(0, "Error on reading the file", xmlReader.errorString(),
+			QMessageBox::critical(0, tr("Error on reading the file"), xmlReader.errorString(),
 			        QMessageBox::Ok);
 		}
 		xmlReader.clear();
@@ -242,6 +242,7 @@ void cheatObject::import_CHT(QString file_CHT) {
 
 				decode_ram(cheat, &ch);
 				cheat.insert("genie", encode_gg(&ch));
+				cheat.insert("rocky", "-");
 			}
 
 			if (find_cheat(&cheat, true) == -1) {
@@ -260,7 +261,7 @@ void cheatObject::save_XML(QString file_XML) {
 	QFile *file = new QFile(file_XML);
 
 	if (!file->open(QIODevice::WriteOnly)) {
-		QMessageBox::warning(0, "Read only", "The file is in read only mode");
+		QMessageBox::warning(0, tr("Read only"), tr("The file is in read only mode"));
 	} else {
 		QXmlStreamWriter* xmlWriter = new QXmlStreamWriter(file);
 
