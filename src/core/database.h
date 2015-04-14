@@ -22,6 +22,8 @@ typedef struct {
 
 static const _dbelement dblist[] = {
 /* --------------------------------------- PD --------------------------------------------- */
+	/* full-palette-pal.nes */
+	{"98a08dfe9ade517c91efdb661754575603c14fb9", 0, DEFAULT, DEFAULT, PAL, DEFAULT},
 	/* 01.len_ctr.nes */
 	{"9245932519e89431ac1d5c7ce6e4383759e7b299", 0, DEFAULT, DEFAULT, PAL, DEFAULT},
 	/* 02.len_table.nes */
@@ -483,6 +485,9 @@ static const _dbelement dblist[] = {
 
 	/* Yoshi (U) [!].nes */
 	{"b5a7664905020635c4a41270105c201100e8fec3", 1, DEFAULT, BAD_YOSHI_U, DEFAULT, DEFAULT},
+
+	/* Iron Tank - The Invasion of Normandy (U) [!].nes */
+	{"1b8e9bab097a4345c67fc46fa13951847aabef12", 1, DEFAULT, DEFAULT, NTSC, DEFAULT},
 
 	/* Bard's Tale, The - Tales of the Unknown (J) [b1].nes */
 	{"2dcd37cc860793899a4ab305057af2e66e88aba1", 1, SNROM, DEFAULT, DEFAULT, DEFAULT},
