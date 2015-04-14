@@ -8,6 +8,7 @@
 #include <libgen.h>
 #include "uncompress.h"
 #include "info.h"
+#include "conf.h"
 #include "cheat.h"
 #include "c++/l7zip/l7z.h"
 #include "gui.h"
@@ -38,7 +39,7 @@ void uncomp_quit(void) {
 	uncomp_remove();
 }
 BYTE uncomp_ctrl(char *ext) {
-	if (gamegenie.phase == GG_LOAD_ROM) {
+	if ((cfg->cheat_mode == GAMEGENIE_MODE) && (gamegenie.phase == GG_LOAD_ROM)) {
 		return (EXIT_OK);
 	}
 
@@ -87,7 +88,8 @@ BYTE uncomp_name_file(_uncomp_file_data *file) {
 }
 
 void uncomp_remove(void) {
-	if ((gamegenie.phase == GG_LOAD_ROM) || (gamegenie.phase == GG_LOAD_GAMEGENIE)) {
+	if ((cfg->cheat_mode == GAMEGENIE_MODE) &&
+			((gamegenie.phase == GG_LOAD_ROM) || (gamegenie.phase == GG_LOAD_GAMEGENIE))) {
 		return;
 	}
 

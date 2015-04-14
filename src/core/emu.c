@@ -109,7 +109,7 @@ BYTE emu_frame(void) {
 			cpu_exe_op();
 		}
 
-		if (gamegenie.phase == GG_LOAD_ROM) {
+		if ((cfg->cheat_mode == GAMEGENIE_MODE) && (gamegenie.phase == GG_LOAD_ROM)) {
 			emu_reset(CHANGE_ROM);
 			gamegenie.phase = GG_FINISH;
 		}

@@ -36,7 +36,7 @@ void recent_roms_add(char *rom) {
 	int index = 0, rr_index = 1, count = 0;
 	_recent_roms rr_tmp;
 
-	if (gamegenie.phase == GG_LOAD_ROM) {
+	if ((cfg->cheat_mode == GAMEGENIE_MODE) && (gamegenie.phase == GG_LOAD_ROM)) {
 		return;
 	}
 
