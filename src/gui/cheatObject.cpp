@@ -18,15 +18,9 @@
 #include "conf.h"
 #include "text.h"
 
-
-#include <QtCore/QDebug>
-
-
-
+#define CHEAT_XML_VERSION "1.0"
 #define CHEATFILENAME QString(info.base_folder) + QString(CHEAT_FOLDER) + "/" +\
 	QFileInfo(info.rom_file).completeBaseName() + ".xml"
-
-#define CHEAT_XML_VERSION "1.0"
 
 cheatObject::cheatObject(QObject *parent = 0) : QObject(parent) {
 	clear_list();

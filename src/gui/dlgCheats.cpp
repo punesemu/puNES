@@ -19,11 +19,6 @@
 #include "mainWindow.hpp"
 #include "gui.h"
 
-
-
-
-#include <QtCore/QDebug>
-
 #define COLOR_GG    Qt::cyan
 #define COLOR_ROCKY Qt::yellow
 
