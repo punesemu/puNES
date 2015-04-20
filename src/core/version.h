@@ -21,8 +21,10 @@
 #define VERSION     VER1 "." VER2 " WIP"
 #define NAME        "puNES"
 #define AUTHOR      "FHorse"
-#define COMPILED    "04142015102750"
+#define COMPILED    "04202015111149"
 #define WEBSITE     "http://forums.nesdev.com/viewtopic.php?f=3&amp;t=6928"
+#define DONATE      "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=UN6ZAETM7HHTC"
+
 
 #define COPYRIGTH   " 2015 by " AUTHOR
 #define COPYRANSI   "(C)" COPYRIGTH

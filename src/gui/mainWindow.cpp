@@ -2142,9 +2142,15 @@ void mainWindow::s_help() {
 			compiled.toString(Qt::DefaultLocaleShortDate) + "</center>");
 
 	about->setText(text);
-	about->setInformativeText("<center>" + QString(COPYRUTF8) + "</center>" + "\n" +
-			"<center>" + "<a href=\"" + QString(WEBSITE) + "\">" + QString(WEBSITE) +
-			"</a>" + "</center>");
+
+	text = "<center>" + QString(COPYRUTF8) + "</center>\n";
+	text.append("<center><a href=\"" + QString(WEBSITE) + "\">" + QString(WEBSITE) + "</a></center>");
+	text.append("<center>" + QString("-") + "</center>\n");
+	text.append("<center>" + tr("If you like the emulator and you want to support it's development or would you pay for a beer at the programmer :") + "</center>\n");
+	text.append("<center><a href=\"" + QString(DONATE) + "\">" + "<img src=\":/pics/pics/btn_donate_SM.gif\">" + "</a></center>\n");
+	text.append("<center>" + tr("Anyway, thank you all for the love and the help.") + "</center>");
+
+	about->setInformativeText(text);
 
 	about->setStandardButtons(QMessageBox::Ok);
 	about->setDefaultButton(QMessageBox::Ok);

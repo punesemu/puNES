@@ -69,6 +69,97 @@
     </message>
 </context>
 <context>
+    <name>Cheats</name>
+    <message>
+        <source>Active</source>
+        <translation>Attivo</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>Indirizzo</translation>
+    </message>
+    <message>
+        <source>Value</source>
+        <translation>Valore</translation>
+    </message>
+    <message>
+        <source>Compare</source>
+        <translation>Confronto</translation>
+    </message>
+    <message>
+        <source>Description</source>
+        <translation>Descrizione</translation>
+    </message>
+    <message>
+        <source>Apply</source>
+        <translation>Applica</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Rimuovi</translation>
+    </message>
+    <message>
+        <source>Import</source>
+        <translation>Importa</translation>
+    </message>
+    <message>
+        <source>Export</source>
+        <translation>Esporta</translation>
+    </message>
+    <message>
+        <source>Discard</source>
+        <translation>Annulla</translation>
+    </message>
+    <message>
+        <source>Clear All</source>
+        <translation>Pulisci</translation>
+    </message>
+    <message>
+        <source>Game Genie</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>CPU Ram</source>
+        <translation>Ram CPU</translation>
+    </message>
+    <message>
+        <source>Pro Action Rocky</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Cheat Editor</source>
+        <translation>Editor</translation>
+    </message>
+    <message>
+        <source>Cheats</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Submit</source>
+        <translation>Convalida</translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation>Modifica</translation>
+    </message>
+    <message>
+        <source>Hide Tools</source>
+        <translation>Nascondi Tools</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Annulla</translation>
+    </message>
+    <message>
+        <source>New</source>
+        <translation>Nuovo</translation>
+    </message>
+    <message>
+        <source>Code</source>
+        <translation>Codice</translation>
+    </message>
+</context>
+<context>
     <name>Input_dialog</name>
     <message>
         <source>Input Configuration</source>
@@ -306,6 +397,68 @@
     <message>
         <source>Roms</source>
         <translation>Roms</translation>
+    </message>
+</context>
+<context>
+    <name>cheatObject</name>
+    <message>
+        <source>Error on reading the file</source>
+        <translation>Errore sulla lettura del file</translation>
+    </message>
+    <message>
+        <source>Read only</source>
+        <translation>Sola lettura</translation>
+    </message>
+    <message>
+        <source>The file is in read only mode</source>
+        <translation>Il file è in modalità di sola lettura</translation>
+    </message>
+</context>
+<context>
+    <name>dlgCheats</name>
+    <message>
+        <source>XML files</source>
+        <translation>Files XML</translation>
+    </message>
+    <message>
+        <source>All files</source>
+        <translation>Tutti i files</translation>
+    </message>
+    <message>
+        <source>Import Cheats</source>
+        <translation>Importa CHeats</translation>
+    </message>
+    <message>
+        <source>Export cheats on file</source>
+        <translation>Esporta Cheats su file</translation>
+    </message>
+    <message>
+        <source>CHT files</source>
+        <translation>Files CHT</translation>
+    </message>
+    <message>
+        <source>All supported formats</source>
+        <translation>Tutti i formati</translation>
+    </message>
+    <message>
+        <source>Show Tools</source>
+        <translation>Mostra Tools</translation>
+    </message>
+    <message>
+        <source>Hide Tools</source>
+        <translation>Nascondi Tools</translation>
+    </message>
+    <message>
+        <source>Submit warning</source>
+        <translation>Errore sulla convalida</translation>
+    </message>
+    <message>
+        <source>The code is invalid</source>
+        <translation>Il codice non è valido</translation>
+    </message>
+    <message>
+        <source>The cheat is already in the list</source>
+        <translation>Il cheat è già presente nella lista</translation>
     </message>
 </context>
 <context>
@@ -888,10 +1041,6 @@
         <translation>In &amp;pausa quando in background</translation>
     </message>
     <message>
-        <source>&amp;Game Genie</source>
-        <translation>&amp;Game Genie</translation>
-    </message>
-    <message>
         <source>Save se&amp;ttings</source>
         <translation>Salva confi&amp;gurazione</translation>
     </message>
@@ -1154,6 +1303,34 @@
     <message>
         <source>Slot &amp;9</source>
         <translation>Slot &amp;9</translation>
+    </message>
+    <message>
+        <source>&amp;Game Genie Rom Mode</source>
+        <translation>Rom &amp;Game Genie</translation>
+    </message>
+    <message>
+        <source>&amp;Cheats List Mode</source>
+        <translation>Lista &amp;Cheats</translation>
+    </message>
+    <message>
+        <source>Cheats &amp;Editor</source>
+        <translation>&amp;Editor</translation>
+    </message>
+    <message>
+        <source>Cheats</source>
+        <translation>Cheats</translation>
+    </message>
+    <message>
+        <source>&amp;Disabled</source>
+        <translation>&amp;Disabilitati</translation>
+    </message>
+    <message>
+        <source>Anyway, thank you all for the love and the help.</source>
+        <translation>In ogni caso, grazie a tutti per l&apos;affetto e l&apos;aiuto concessomi.</translation>
+    </message>
+    <message>
+        <source>If you like the emulator and you want to support it&apos;s development or would you pay for a beer at the programmer :</source>
+        <translation>Se ti piace l&apos;emulatore e vuoi supportarne lo sviluppo o ti andrebbe di offrire una birra al programmatore :</translation>
     </message>
 </context>
 <context>

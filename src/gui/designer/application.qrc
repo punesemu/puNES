@@ -4,6 +4,7 @@
     <file>icons/flag_russia.png</file>
     <file>icons/flag_united_kingdom.png</file>
     <file>icons/flag_english.png</file>
+    <file>icons/beer.png</file>
     <file>icons/language.png</file>
     <file>icons/cheat_editor.png</file>
     <file>icons/default.png</file>
@@ -52,6 +53,8 @@
   </qresource>
   <qresource prefix="pics">
     <file>pics/Nes_controller.png</file>
+    <file>pics/btn_donate_SM.gif</file>
+    <file>pics/btn_donateCC_LG.gif</file>
     <file>pics/pushpin.png</file>
   </qresource>
   <qresource prefix="tr">

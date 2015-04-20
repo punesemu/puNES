@@ -69,6 +69,97 @@
     </message>
 </context>
 <context>
+    <name>Cheats</name>
+    <message>
+        <source>Active</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Value</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Compare</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Description</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Apply</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Import</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Discard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clear All</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Game Genie</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>CPU Ram</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pro Action Rocky</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cheat Editor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cheats</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Submit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hide Tools</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Code</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>Input_dialog</name>
     <message>
         <source>Input Configuration</source>
@@ -305,6 +396,68 @@
     </message>
     <message>
         <source>Roms</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>cheatObject</name>
+    <message>
+        <source>Error on reading the file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Read only</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The file is in read only mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>dlgCheats</name>
+    <message>
+        <source>XML files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>All files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Import Cheats</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export cheats on file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>CHT files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>All supported formats</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show Tools</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hide Tools</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Submit warning</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The code is invalid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The cheat is already in the list</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -888,10 +1041,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Game Genie</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Save se&amp;ttings</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1153,6 +1302,34 @@
     </message>
     <message>
         <source>Slot &amp;9</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Game Genie Rom Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Cheats List Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cheats &amp;Editor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cheats</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Disabled</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Anyway, thank you all for the love and the help.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>If you like the emulator and you want to support it&apos;s development or would you pay for a beer at the programmer :</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
