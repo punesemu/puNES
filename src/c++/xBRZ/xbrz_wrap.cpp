@@ -9,5 +9,9 @@
 
 extern "C" void xbrz_scale(BYTE factor, const WORD *src, uint32_t *trg, uint32_t *palette,
 		int no_overscan_width, int startx, int width, int height) {
+#if defined (D3D9)
+	xbrz::scale(factor, src, trg, palette, no_overscan_width, startx, width, height, xbrz::ColorFormat::ARGB);
+#elif defined (SDL)
 	xbrz::scale(factor, src, trg, palette, no_overscan_width, startx, width, height, xbrz::ColorFormat::RGB);
+#endif
 }
