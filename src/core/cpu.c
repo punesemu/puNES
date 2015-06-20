@@ -153,7 +153,7 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 #define BRC(flag, condition)\
 	WORD adr1 = (cpu.PC + 1);\
 	WORD adr0 = adr1 + (SBYTE) _RDX(cpu.PC, TRUE);\
-	if (!flag != condition) {\
+	if ((!flag) != condition) {\
 		/*\
 		 * A page boundary crossing occurs when the\
 		 * branch destination is on a different page\
