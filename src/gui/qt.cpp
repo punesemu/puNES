@@ -215,6 +215,17 @@ void gui_cheat_save_game_cheats(void) {
 	qt.chobj->save_game_cheats();
 }
 
+void gui_cursor_init(void) {
+#if !defined (SDL)
+	qt.screen->cursor_init();
+#endif
+}
+void gui_cursor_set(void) {
+#if !defined (SDL)
+	qt.screen->cursor_set();
+#endif
+}
+
 #if defined (__WIN32__)
 #include "os_windows.h"
 #else

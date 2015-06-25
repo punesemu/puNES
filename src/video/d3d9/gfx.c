@@ -975,6 +975,14 @@ void gfx_quit(void) {
 	}
 }
 
+void gfx_cursor_init(void) {
+	gui_cursor_init();
+};
+void gfx_cursor_quit(void) {};
+void gfx_cursor_set(void) {
+	gui_cursor_set();
+};
+
 void gfx_text_create_surface(_txt_element *ele) {
 	ele->surface = malloc((ele->h * ele->w) * (gfx.bit_per_pixel / 8));
 }

@@ -312,10 +312,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>PushButton</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Turbo B</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1201,10 +1197,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;HLSL</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>HLSL &amp;soft stretch</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1330,6 +1322,22 @@
     </message>
     <message>
         <source>If you like the emulator and you want to support it&apos;s development or would you pay for a beer at the programmer :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;HLSL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;1:1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;5:4</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;8:7 (NTSC TV)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -167,8 +167,8 @@ BYTE fds_load_bios(void) {
 		goto fds_load_bios_founded;
 	}
 
-	text_add_line_info(1, "[red]bios rom not found");
-	fprintf(stderr, "bios rom not found\n");
+	text_add_line_info(1, "[red]'bios/disksys.rom' not found");
+	fprintf(stderr, "'bios/disksys.rom' not found\n");
 	return (EXIT_ERROR);
 
 	fds_load_bios_founded:

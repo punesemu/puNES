@@ -939,7 +939,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string notr="true">&amp;1:1</string>
+    <string>&amp;1:1</string>
    </property>
   </action>
   <action name="action_PAR_54">
@@ -947,7 +947,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string notr="true">&amp;5:4</string>
+    <string>&amp;5:4</string>
    </property>
   </action>
   <action name="action_PAR_87">
@@ -955,7 +955,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string notr="true">&amp;8:7 (NTSC TV)</string>
+    <string>&amp;8:7 (NTSC TV)</string>
    </property>
   </action>
   <action name="action_PAR_Soft_Stretch">

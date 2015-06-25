@@ -312,10 +312,6 @@
         <translation>Start</translation>
     </message>
     <message>
-        <source>PushButton</source>
-        <translation>PushButton</translation>
-    </message>
-    <message>
         <source>Turbo B</source>
         <translation>Turbo B</translation>
     </message>
@@ -1331,6 +1327,18 @@
     <message>
         <source>If you like the emulator and you want to support it&apos;s development or would you pay for a beer at the programmer :</source>
         <translation>Se ti piace l&apos;emulatore e vuoi supportarne lo sviluppo o ti andrebbe di offrire una birra al programmatore :</translation>
+    </message>
+    <message>
+        <source>&amp;1:1</source>
+        <translation>&amp;1:1</translation>
+    </message>
+    <message>
+        <source>&amp;5:4</source>
+        <translation>&amp;5:4</translation>
+    </message>
+    <message>
+        <source>&amp;8:7 (NTSC TV)</source>
+        <translation></translation>
     </message>
 </context>
 <context>

@@ -24,14 +24,14 @@ screenWidget::screenWidget(QWidget *parent, mainWindow *mw) : QWidget(parent) {
 #if defined (SDL) && defined (__WIN32__)
 	memset(&data, 0x00, sizeof(data));
 	data.qt = (WNDPROC)GetWindowLongPtr((HWND) winId(), GWLP_WNDPROC);
+
+	// applico un sfondo nero
+	parent->setStyleSheet("background-color: black");
+#elif !defined (SDL)
+	target = NULL;
 #endif
 
 	mwin = mw;
-
-#if defined (SDL) && defined (__WIN32__)
-	// applico un sfondo nero
-	parent->setStyleSheet("background-color: black");
-#endif
 
 	// se non faccio questa chiamata, la versione SDL crasha all'avvio
 	winId();
@@ -48,6 +48,40 @@ screenWidget::screenWidget(QWidget *parent, mainWindow *mw) : QWidget(parent) {
 	installEventFilter(this);
 }
 screenWidget::~screenWidget() {}
+#if defined (SDL) && defined (__WIN32__)
+void screenWidget::controlEventFilter() {
+	data.tmp = (WNDPROC)GetWindowLongPtr((HWND) winId(), GWLP_WNDPROC);
+
+	if ((data.tmp != data.sdl) && (data.tmp != data.qt)) {
+		data.sdl = data.tmp;
+	}
+
+	if (data.tmp != data.qt) {
+		SetWindowLongPtr((HWND) winId(), GWLP_WNDPROC, (LONG_PTR) data.qt);
+	}
+}
+#elif !defined (SDL)
+void screenWidget::cursor_init() {
+	target = new QCursor(QPixmap(":/pointers/pointers/target_32x32.xpm"), -1, -1);
+}
+void screenWidget::cursor_set() {
+	BYTE i, type = CTRL_STANDARD;
+
+	for (i = PORT1; i < PORT_MAX; i++) {
+		if (port[i].type == CTRL_ZAPPER) {
+			type = CTRL_ZAPPER;
+			break;
+		}
+	}
+
+	if (type == CTRL_ZAPPER) {
+		setCursor((*target));
+	} else {
+		unsetCursor();
+	}
+}
+#endif
+
 void screenWidget::dragEnterEvent(QDragEnterEvent *e) {
 	if (e->mimeData()->hasUrls()) {
 		e->acceptProposedAction();
@@ -160,16 +194,3 @@ bool screenWidget::eventFilter(QObject *obj, QEvent *event) {
 
 	return (QObject::eventFilter(obj, event));
 }
-#if defined (SDL) && defined (__WIN32__)
-void screenWidget::controlEventFilter() {
-	data.tmp = (WNDPROC)GetWindowLongPtr((HWND) winId(), GWLP_WNDPROC);
-
-	if ((data.tmp != data.sdl) && (data.tmp != data.qt)) {
-		data.sdl = data.tmp;
-	}
-
-	if (data.tmp != data.qt) {
-		SetWindowLongPtr((HWND) winId(), GWLP_WNDPROC, (LONG_PTR) data.qt);
-	}
-}
-#endif

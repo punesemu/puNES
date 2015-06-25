@@ -732,7 +732,7 @@ void dlgInput::s_apply_clicked(bool checked) {
 
 	settings_inp_save();
 
-	input_init();
+	input_init(SET_CURSOR);
 
 	js_quit();
 	js_init();

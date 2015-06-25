@@ -184,8 +184,18 @@ stateWidget::~stateWidget() {}
 void stateWidget::retranslateUi() {
 	setToolTip(tr("Save/Load Slot Box"));
 
-	for (int i = 0; i < SAVE_SLOTS; i++) {
-		slot->setItemText(i, tr("Slot %1").arg(i));
+	{
+		QStyle *pStyle = style();
+		QStyleOptionComboBox opt;
+
+		for (int i = 0; i < SAVE_SLOTS; i++) {
+			slot->setItemText(i, tr("Slot %1").arg(i));
+		}
+
+		opt.initFrom(this);
+		QRect rc = pStyle->subControlRect(QStyle::CC_ComboBox, &opt, QStyle::SC_ComboBoxArrow,
+				this);
+		slot->setFixedWidth(QLabel(slot->itemText(0)).sizeHint().width() + 12 + rc.width());
 	}
 
 	save->setText(tr("Save"));
@@ -197,11 +207,11 @@ void stateWidget::retranslateUi() {
 #if defined (__linux__)
 	setFixedWidth(vline->width() + SPACING +
 			save->width() + SPACING +
-			slot->sizeHint().width() + SPACING +
+			slot->width() + SPACING +
 			load->width());
 #else
 	setFixedWidth(save->width() + SPACING +
-			slot->sizeHint().width() + SPACING +
+			slot->width() + SPACING +
 			load->width());
 #endif
 }

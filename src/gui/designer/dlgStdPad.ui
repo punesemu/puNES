@@ -244,7 +244,7 @@
             <string>Unset</string>
            </property>
            <property name="text">
-            <string/>
+            <string notr="true"/>
            </property>
            <property name="icon">
             <iconset resource="application.qrc">
@@ -270,7 +270,7 @@
             <string>Unset</string>
            </property>
            <property name="text">
-            <string/>
+            <string notr="true"/>
            </property>
            <property name="icon">
             <iconset resource="application.qrc">
@@ -355,7 +355,7 @@
             </size>
            </property>
            <property name="text">
-            <string>PushButton</string>
+            <string notr="true">PushButton</string>
            </property>
           </widget>
          </item>
@@ -380,7 +380,7 @@
             </size>
            </property>
            <property name="text">
-            <string>PushButton</string>
+            <string notr="true">PushButton</string>
            </property>
           </widget>
          </item>
@@ -405,7 +405,7 @@
             </size>
            </property>
            <property name="text">
-            <string>PushButton</string>
+            <string notr="true">PushButton</string>
            </property>
           </widget>
          </item>
@@ -455,7 +455,7 @@
             <string>Unset</string>
            </property>
            <property name="text">
-            <string/>
+            <string notr="true"/>
            </property>
            <property name="icon">
             <iconset resource="application.qrc">
@@ -484,7 +484,7 @@
             </size>
            </property>
            <property name="text">
-            <string>PushButton</string>
+            <string notr="true">PushButton</string>
            </property>
           </widget>
          </item>
@@ -506,7 +506,7 @@
             <string>Unset</string>
            </property>
            <property name="text">
-            <string/>
+            <string notr="true"/>
            </property>
            <property name="icon">
             <iconset resource="application.qrc">
@@ -535,7 +535,7 @@
             </size>
            </property>
            <property name="text">
-            <string>PushButton</string>
+            <string notr="true">PushButton</string>
            </property>
           </widget>
          </item>
@@ -560,7 +560,7 @@
             </size>
            </property>
            <property name="text">
-            <string>PushButton</string>
+            <string notr="true">PushButton</string>
            </property>
           </widget>
          </item>
@@ -641,7 +641,7 @@
             </size>
            </property>
            <property name="text">
-            <string>PushButton</string>
+            <string notr="true">PushButton</string>
            </property>
           </widget>
          </item>
@@ -663,7 +663,7 @@
             <string>Unset</string>
            </property>
            <property name="text">
-            <string/>
+            <string notr="true"/>
            </property>
            <property name="icon">
             <iconset resource="application.qrc">
@@ -717,7 +717,7 @@
             <string>Unset</string>
            </property>
            <property name="text">
-            <string/>
+            <string notr="true"/>
            </property>
            <property name="icon">
             <iconset resource="application.qrc">
@@ -743,7 +743,7 @@
             <string>Unset</string>
            </property>
            <property name="text">
-            <string/>
+            <string notr="true"/>
            </property>
            <property name="icon">
             <iconset resource="application.qrc">
@@ -772,7 +772,7 @@
             </size>
            </property>
            <property name="text">
-            <string>PushButton</string>
+            <string notr="true">PushButton</string>
            </property>
           </widget>
          </item>
@@ -822,7 +822,7 @@
             <string>Unset</string>
            </property>
            <property name="text">
-            <string/>
+            <string notr="true"/>
            </property>
            <property name="icon">
             <iconset resource="application.qrc">
@@ -851,7 +851,7 @@
             </size>
            </property>
            <property name="text">
-            <string>PushButton</string>
+            <string notr="true">PushButton</string>
            </property>
           </widget>
          </item>
@@ -873,7 +873,7 @@
             <string>Unset</string>
            </property>
            <property name="text">
-            <string/>
+            <string notr="true"/>
            </property>
            <property name="icon">
             <iconset resource="application.qrc">
@@ -899,7 +899,7 @@
             <string>Unset</string>
            </property>
            <property name="text">
-            <string/>
+            <string notr="true"/>
            </property>
            <property name="icon">
             <iconset resource="application.qrc">
@@ -928,7 +928,7 @@
             </size>
            </property>
            <property name="text">
-            <string>PushButton</string>
+            <string notr="true">PushButton</string>
            </property>
           </widget>
          </item>
@@ -1169,7 +1169,7 @@
             <string>Unset</string>
            </property>
            <property name="text">
-            <string/>
+            <string notr="true"/>
            </property>
            <property name="icon">
             <iconset resource="application.qrc">
@@ -1195,7 +1195,7 @@
             <string>Unset</string>
            </property>
            <property name="text">
-            <string/>
+            <string notr="true"/>
            </property>
            <property name="icon">
             <iconset resource="application.qrc">
@@ -1280,7 +1280,7 @@
             </size>
            </property>
            <property name="text">
-            <string>PushButton</string>
+            <string notr="true">PushButton</string>
            </property>
           </widget>
          </item>
@@ -1305,7 +1305,7 @@
             </size>
            </property>
            <property name="text">
-            <string>PushButton</string>
+            <string notr="true">PushButton</string>
            </property>
           </widget>
          </item>
@@ -1330,7 +1330,7 @@
             </size>
            </property>
            <property name="text">
-            <string>PushButton</string>
+            <string notr="true">PushButton</string>
            </property>
           </widget>
          </item>
@@ -1380,7 +1380,7 @@
             <string>Unset</string>
            </property>
            <property name="text">
-            <string/>
+            <string notr="true"/>
            </property>
            <property name="icon">
             <iconset resource="application.qrc">
@@ -1409,7 +1409,7 @@
             </size>
            </property>
            <property name="text">
-            <string>PushButton</string>
+            <string notr="true">PushButton</string>
            </property>
           </widget>
          </item>
@@ -1431,7 +1431,7 @@
             <string>Unset</string>
            </property>
            <property name="text">
-            <string/>
+            <string notr="true"/>
            </property>
            <property name="icon">
             <iconset resource="application.qrc">
@@ -1460,7 +1460,7 @@
             </size>
            </property>
            <property name="text">
-            <string>PushButton</string>
+            <string notr="true">PushButton</string>
            </property>
           </widget>
          </item>
@@ -1485,7 +1485,7 @@
             </size>
            </property>
            <property name="text">
-            <string>PushButton</string>
+            <string notr="true">PushButton</string>
            </property>
           </widget>
          </item>
@@ -1566,7 +1566,7 @@
             </size>
            </property>
            <property name="text">
-            <string>PushButton</string>
+            <string notr="true">PushButton</string>
            </property>
           </widget>
          </item>
@@ -1588,7 +1588,7 @@
             <string>Unset</string>
            </property>
            <property name="text">
-            <string/>
+            <string notr="true"/>
            </property>
            <property name="icon">
             <iconset resource="application.qrc">
@@ -1642,7 +1642,7 @@
             <string>Unset</string>
            </property>
            <property name="text">
-            <string/>
+            <string notr="true"/>
            </property>
            <property name="icon">
             <iconset resource="application.qrc">
@@ -1668,7 +1668,7 @@
             <string>Unset</string>
            </property>
            <property name="text">
-            <string/>
+            <string notr="true"/>
            </property>
            <property name="icon">
             <iconset resource="application.qrc">
@@ -1697,7 +1697,7 @@
             </size>
            </property>
            <property name="text">
-            <string>PushButton</string>
+            <string notr="true">PushButton</string>
            </property>
           </widget>
          </item>
@@ -1747,7 +1747,7 @@
             <string>Unset</string>
            </property>
            <property name="text">
-            <string/>
+            <string notr="true"/>
            </property>
            <property name="icon">
             <iconset resource="application.qrc">
@@ -1776,7 +1776,7 @@
             </size>
            </property>
            <property name="text">
-            <string>PushButton</string>
+            <string notr="true">PushButton</string>
            </property>
           </widget>
          </item>
@@ -1798,7 +1798,7 @@
             <string>Unset</string>
            </property>
            <property name="text">
-            <string/>
+            <string notr="true"/>
            </property>
            <property name="icon">
             <iconset resource="application.qrc">
@@ -1824,7 +1824,7 @@
             <string>Unset</string>
            </property>
            <property name="text">
-            <string/>
+            <string notr="true"/>
            </property>
            <property name="icon">
             <iconset resource="application.qrc">
@@ -1853,7 +1853,7 @@
             </size>
            </property>
            <property name="text">
-            <string>PushButton</string>
+            <string notr="true">PushButton</string>
            </property>
           </widget>
          </item>

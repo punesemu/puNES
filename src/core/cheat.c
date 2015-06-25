@@ -48,8 +48,8 @@ void gamegenie_check_rom_present(BYTE print_message) {
 	}
 
 	if (print_message && gamegenie.rom_present == FALSE) {
-		text_add_line_info(1, "[red]Game Genie rom not found");
-		fprintf(stderr, "Game Genie rom not found\n");
+		text_add_line_info(1, "[red]'bios/gamegenie.rom' not found");
+		fprintf(stderr, "Game Genie rom 'bios/gamegenie.rom' not found\n");
 	}
 }
 FILE *gamegenie_load_rom(FILE *fp) {

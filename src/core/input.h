@@ -38,6 +38,7 @@ enum turbo_buttons { TURBOA, TURBOB };
 enum input_types { KEYBOARD, JOYSTICK };
 enum button_states { RELEASED = 0x00, PRESSED = 0x01 };
 enum input_max_values { MAX_JOYSTICK = 16 };
+enum input_set_cursor { NO_SET_CURSOR = FALSE, SET_CURSOR = TRUE};
 
 enum port_controllers {
 	PORT1,
@@ -90,7 +91,7 @@ EXTERNC _r4016 r4016;
 EXTERNC _port port[PORT_MAX];
 EXTERNC _four_score four_score[PORT2 + 1];
 
-EXTERNC void input_init(void);
+EXTERNC void input_init(BYTE set_cursor);
 
 EXTERNC BYTE input_rd_reg_disabled(BYTE openbus, WORD **screen_index, BYTE nport);
 

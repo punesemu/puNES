@@ -93,7 +93,7 @@ void tas_quit(void) {
 		}
 	}
 
-	input_init();
+	input_init(NO_SET_CURSOR);
 
 	tas.type = NOTAS;
 }

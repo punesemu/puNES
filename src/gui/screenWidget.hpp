@@ -30,6 +30,8 @@ class screenWidget: public QWidget {
 			LONG_PTR WINAPI (*sdl)(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 			LONG_PTR WINAPI (*tmp)(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 		} data;
+#elif !defined (SDL)
+		QCursor *target;
 #endif
 
 	public:
@@ -37,12 +39,16 @@ class screenWidget: public QWidget {
 		~screenWidget();
 #if defined (SDL) && defined (__WIN32__)
 		void controlEventFilter();
+#elif !defined (SDL)
+		void cursor_init();
+		void cursor_set();
 #endif
 
 	protected:
 		void dragEnterEvent(QDragEnterEvent *event);
 		void dropEvent(QDropEvent *event);
 		bool eventFilter(QObject *obj, QEvent *event);
+
 };
 
 #endif /* SCREENWIDGET_HPP_ */

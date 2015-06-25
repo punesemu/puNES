@@ -22,6 +22,8 @@
 #undef  __STATICPAL__
 #include "opengl.h"
 #include "conf.h"
+#include "gui/designer/pointers/target_32x32.xpm"
+#include "gui/designer/pointers/target_48x48.xpm"
 
 #define ntsc_width(wdt, a, flag)\
 {\
@@ -59,9 +61,16 @@
 	/* ed infine utilizzo la nuova */\
 	ntsc_set(cfg->ntsc_format, FALSE, 0, (BYTE *) palette_RGB,(BYTE *) palette_RGB)
 
+static SDL_Cursor *init_system_cursor(char *xpm[]);
+
 SDL_Surface *framebuffer;
 uint32_t *palette_win, software_flags;
 static BYTE ntsc_width_pixel[5] = {0, 0, 7, 10, 14};
+
+struct _cursor {
+	SDL_Cursor *target;
+	SDL_Cursor *org;
+} cursor;
 
 BYTE gfx_init(void) {
 	const SDL_VideoInfo *video_info;
@@ -782,10 +791,49 @@ void gfx_quit(void) {
 		SDL_FreeSurface(surface_sdl);
 	}
 
+	gfx_cursor_quit();
+
 	sdl_quit_gl();
 	ntsc_quit();
 	text_quit();
 	SDL_Quit();
+}
+
+void gfx_cursor_init(void) {
+	memset(&cursor, 0x00, sizeof(cursor));
+
+	cursor.org = SDL_GetCursor();
+
+	if ((cursor.target = init_system_cursor(target_32x32_xpm)) == NULL) {
+	//if ((cursor = init_system_cursor(target_48x48_xpm)) == NULL) {
+		cursor.target = cursor.org;
+		printf("SDL_Init failed: %s\n", SDL_GetError());
+	}
+
+	gfx_cursor_set();
+}
+void gfx_cursor_quit(void) {
+	if (cursor.target) {
+		SDL_FreeCursor(cursor.target);
+	}
+
+	SDL_FreeCursor(cursor.org);
+}
+void gfx_cursor_set(void) {
+	BYTE i, type = CTRL_STANDARD;
+
+	for (i = PORT1; i < PORT_MAX; i++) {
+		if (port[i].type == CTRL_ZAPPER) {
+			type = CTRL_ZAPPER;
+			break;
+		}
+	}
+
+	if (type == CTRL_ZAPPER) {
+		SDL_SetCursor(cursor.target);
+	} else {
+		SDL_SetCursor(cursor.org);
+	}
 }
 
 void gfx_text_create_surface(_txt_element *ele) {
@@ -853,4 +901,40 @@ SDL_Surface *gfx_create_RGB_surface(SDL_Surface *src, uint32_t width, uint32_t h
 
 double sdl_get_ms(void) {
 	return (SDL_GetTicks());
+}
+
+static SDL_Cursor *init_system_cursor(char *xpm[]) {
+	int srow, scol, ncol, none;
+	int i, row, col;
+
+	sscanf(xpm[0], "%d %d %d %d", &srow, &scol, &ncol, &none);
+
+	Uint8 data[(scol / 8) * srow];
+	Uint8 mask[(scol / 8) * srow];
+
+	i = -1;
+	for (row = 0; row < srow; ++row) {
+		for (col = 0; col < scol; ++col) {
+			if (col % 8) {
+				data[i] <<= 1;
+				mask[i] <<= 1;
+			} else {
+				++i;
+				data[i] = mask[i] = 0;
+			}
+			switch (xpm[(ncol + 1) + row][col]) {
+				case '+': // nero
+					data[i] |= 0x01;
+					mask[i] |= 0x01;
+					break;
+				case '.': // bianco
+					mask[i] |= 0x01;
+					break;
+				case ' ':
+					break;
+			}
+		}
+	}
+	//sscanf(xpm[(ncol + 1) + row], "%d,%d", &hot_x, &hot_y);
+	return (SDL_CreateCursor(data, mask, srow, scol, srow / 2, scol / 2));
 }

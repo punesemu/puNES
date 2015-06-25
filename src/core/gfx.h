@@ -109,8 +109,13 @@ EXTERNC BYTE gfx_init(void);
 EXTERNC void gfx_set_render(BYTE render);
 EXTERNC void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE force_scale,
 		BYTE force_palette);
+
 EXTERNC void gfx_draw_screen(BYTE forced);
 EXTERNC void gfx_quit(void);
+
+EXTERNC void gfx_cursor_init(void);
+EXTERNC void gfx_cursor_quit(void);
+EXTERNC void gfx_cursor_set(void);
 
 EXTERNC void gfx_text_create_surface(_txt_element *ele);
 EXTERNC void gfx_text_release_surface(_txt_element *ele);

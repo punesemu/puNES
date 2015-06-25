@@ -552,7 +552,7 @@ BYTE emu_turn_on(void) {
 	init_PC()
 
 	/* controller */
-	input_init();
+	input_init(NO_SET_CURSOR);
 
 	/* joystick */
 	js_init();
@@ -561,6 +561,9 @@ BYTE emu_turn_on(void) {
 	if (gfx_init()) {
 		return (EXIT_ERROR);
 	}
+
+	/* setto il cursore */
+	gfx_cursor_init();
 
 	/* fps */
 	fps_init();
@@ -671,7 +674,7 @@ BYTE emu_reset(BYTE type) {
 	}
 
 	/* controller */
-	input_init();
+	input_init(NO_SET_CURSOR);
 
 	if (timeline_init()) {
 		return (EXIT_ERROR);

@@ -57,9 +57,15 @@
     <file>pics/btn_donateCC_LG.gif</file>
     <file>pics/pushpin.png</file>
   </qresource>
+  <qresource prefix="pointers">
+    <file>pointers/target_32x32.xpm</file>
+    <file>pointers/target_48x48.xpm</file>
+  </qresource>
   <qresource prefix="tr">
     <file>translations/it_IT.qm</file>
     <file>translations/qt_it.qm</file>
     <file>translations/en_EN.qm</file>
+    <file>translations/ru_RU.qm</file>
+    <file>translations/qt_ru.qm</file>
   </qresource>
 </RCC>

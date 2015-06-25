@@ -23,7 +23,7 @@
 
 static void INLINE input_turbo_buttons_control_standard(_port *port);
 
-void input_init(void) {
+void input_init(BYTE set_cursor) {
 	BYTE a;
 
 	r4016.value = 0;
@@ -96,6 +96,10 @@ void input_init(void) {
 				}
 			}
 		}
+	}
+
+	if (set_cursor == TRUE) {
+		gfx_cursor_set();
 	}
 }
 

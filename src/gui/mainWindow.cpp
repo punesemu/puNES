@@ -336,9 +336,16 @@ bool mainWindow::eventFilter(QObject *obj, QEvent *event) {
 		ui->retranslateUi(this);
 		shortcuts();
 		update_window();
+		ui->action_Rend0->setText(tr("&Software"));
 #if defined (SDL)
+		ui->action_Rend1->setText(tr("&OpenGL"));
+		ui->action_Rend2->setText(tr("OpenGL &GLSL"));
+
 		ui->action_Cube->setText(tr("&Cube"));
 		ui->menu_Effect->setTitle(tr("&Effect"));
+#elif defined (D3D9)
+		ui->action_Rend1->setText(tr("&HLSL"));
+		ui->action_PAR_Soft_Stretch->setText(tr("HLSL &soft stretch"));
 #endif
 	}
 
@@ -370,9 +377,10 @@ void mainWindow::set_language(int lang) {
 			lng = "it";
 			file = "it_IT";
 			break;
-		//case LNG_RUSSIAN:
-		//	lng = "ru";
-		//	break;
+		case LNG_RUSSIAN:
+			lng = "ru";
+			file = "ru_RU";
+			break;
 		case LNG_ENGLISH:
 		default:
 			break;
@@ -1345,8 +1353,8 @@ void mainWindow::connect_menu_signals() {
 	// Settings/Langauge
 	connect_action(ui->action_English, LNG_ENGLISH, SLOT(s_set_language()));
 	connect_action(ui->action_Italian, LNG_ITALIAN, SLOT(s_set_language()));
-	//connect_action(ui->action_Russian, LNG_RUSSIAN, SLOT(s_set_language()));
-	ui->menu_Language->removeAction(ui->action_Russian);
+	connect_action(ui->action_Russian, LNG_RUSSIAN, SLOT(s_set_language()));
+	//ui->menu_Language->removeAction(ui->action_Russian);
 	// Settings/[Pause when in backgrounds, Save settings, Save settings on exit]
 	connect_action(ui->action_Pause_when_in_background, SLOT(s_set_pause()));
 	connect_action(ui->action_Save_settings, SLOT(s_save_settings()));
