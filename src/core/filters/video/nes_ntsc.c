@@ -485,6 +485,10 @@ void nes_ntsc_init(nes_ntsc_t* ntsc, nes_ntsc_setup_t const* setup) {
 				pointer = entry + 0x40;
 			} else if ((entry > 0x7F) && (entry < 0xC0)) {
 				pointer = entry - 0x40;
+			} else if ((entry > 0x13F) && (entry < 0x180)) {
+				pointer = entry + 0x40;
+			} else if ((entry > 0x17F) && (entry < 0x1C0)) {
+				pointer = entry - 0x40;
 			}
 		}
 		/* ------------------- END ------------------- */
