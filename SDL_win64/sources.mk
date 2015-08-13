@@ -23,16 +23,16 @@ C_UPPER_DEPS :=
 
 # Every subdirectory with source files must be described here
 SUBDIRS := \
-src/video/sdl \
-src/video/sdl/openGL \
-src/video/sdl/glew \
-src/gui/windows \
-src/gui \
-src/core \
-src/core/mappers \
-src/core/filters/video \
-src/core/filters/audio \
-src/c++/xBRZ \
-src/c++/l7zip \
 src/audio/xaudio \
+src/c++/l7zip \
+src/c++/xBRZ \
+src/core \
+src/core/filters/audio \
+src/core/filters/video \
+src/core/mappers \
+src/gui \
+src/gui/windows \
+src/video/sdl \
+src/video/sdl/glew \
+src/video/sdl/openGL \
 

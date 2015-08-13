@@ -50,7 +50,6 @@ typedef struct blipbuf_group _blipbuf_group;
 struct blipbuf_group {
 	int gain; /* overall volume of channel */
 	int time; /* clock time of next delta */
-	int phase; /* position within waveform */
 	int amp; /* current amplitude in delta buffer */
 	int period;
 	int min_period;
