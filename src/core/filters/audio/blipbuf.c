@@ -46,8 +46,6 @@ enum blbuf_extern { BLBUF_EXT0, BLBUF_EXT1, BLBUF_EXT2 };
 	}
 
 typedef struct blipbuf_group _blipbuf_group;
-typedef struct blipbuf_chan _blipbuf_chan;
-typedef struct blbuf _blbuf;
 
 struct blipbuf_group {
 	int gain; /* overall volume of channel */
