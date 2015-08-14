@@ -11,11 +11,16 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
-#define chr_rom_1k_update(slot, mask, shift)\
-	value = (vrc2.chr_rom_bank[slot] & mask) | (((value >> type) & 0x0F) << shift);\
+#define _chr_rom_1k_update(slot)\
 	control_bank(info.chr.rom.max.banks_1k)\
 	chr.bank_1k[slot] = chr_chip_byte_pnt(0, value << 10);\
 	vrc2.chr_rom_bank[slot] = value
+#define chr_rom_1k_low_update(slot, mask, shift)\
+	value = (vrc2.chr_rom_bank[slot] & mask) | (((value & 0x0F) >> type) << shift);\
+	_chr_rom_1k_update(slot)
+#define chr_rom_1k_high_update(slot, mask, shift)\
+	value = (vrc2.chr_rom_bank[slot] & mask) | ((value & 0x0F) << (shift - type));\
+	_chr_rom_1k_update(slot)
 
 BYTE type;
 
@@ -77,52 +82,52 @@ void extcl_cpu_wr_mem_VRC2(WORD address, BYTE value) {
 			map_prg_rom_8k_update();
 			return;
 		case 0xB000:
-			chr_rom_1k_update(0, 0xF0, 0);
+			chr_rom_1k_low_update(0, 0xF0, 0);
 			return;
 		case 0xB001:
-			chr_rom_1k_update(0, 0x0F, 4);
+			chr_rom_1k_high_update(0, 0x0F, 4);
 			return;
 		case 0xB002:
-			chr_rom_1k_update(1, 0xF0, 0);
+			chr_rom_1k_low_update(1, 0xF0, 0);
 			return;
 		case 0xB003:
-			chr_rom_1k_update(1, 0x0F, 4);
+			chr_rom_1k_high_update(1, 0x0F, 4);
 			return;
 		case 0xC000:
-			chr_rom_1k_update(2, 0xF0, 0);
+			chr_rom_1k_low_update(2, 0xF0, 0);
 			return;
 		case 0xC001:
-			chr_rom_1k_update(2, 0x0F, 4);
+			chr_rom_1k_high_update(2, 0x0F, 4);
 			return;
 		case 0xC002:
-			chr_rom_1k_update(3, 0xF0, 0);
+			chr_rom_1k_low_update(3, 0xF0, 0);
 			return;
 		case 0xC003:
-			chr_rom_1k_update(3, 0x0F, 4);
+			chr_rom_1k_high_update(3, 0x0F, 4);
 			return;
 		case 0xD000:
-			chr_rom_1k_update(4, 0xF0, 0);
+			chr_rom_1k_low_update(4, 0xF0, 0);
 			return;
 		case 0xD001:
-			chr_rom_1k_update(4, 0x0F, 4);
+			chr_rom_1k_high_update(4, 0x0F, 4);
 			return;
 		case 0xD002:
-			chr_rom_1k_update(5, 0xF0, 0);
+			chr_rom_1k_low_update(5, 0xF0, 0);
 			return;
 		case 0xD003:
-			chr_rom_1k_update(5, 0x0F, 4);
+			chr_rom_1k_high_update(5, 0x0F, 4);
 			return;
 		case 0xE000:
-			chr_rom_1k_update(6, 0xF0, 0);
+			chr_rom_1k_low_update(6, 0xF0, 0);
 			return;
 		case 0xE001:
-			chr_rom_1k_update(6, 0x0F, 4);
+			chr_rom_1k_high_update(6, 0x0F, 4);
 			return;
 		case 0xE002:
-			chr_rom_1k_update(7, 0xF0, 0);
+			chr_rom_1k_low_update(7, 0xF0, 0);
 			return;
 		case 0xE003:
-			chr_rom_1k_update(7, 0x0F, 4);
+			chr_rom_1k_high_update(7, 0x0F, 4);
 			return;
 		default:
 			return;
