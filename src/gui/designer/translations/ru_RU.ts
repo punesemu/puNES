@@ -17,11 +17,11 @@
     </message>
     <message>
         <source>DMC</source>
-        <translation>Дельта модуляция (DMC)</translation>
+        <translation>DMC</translation>
     </message>
     <message>
         <source>Noise</source>
-        <translation>Шумовой (Noise)</translation>
+        <translation>Noise</translation>
     </message>
     <message>
         <source>Square 2</source>
@@ -29,11 +29,11 @@
     </message>
     <message>
         <source>Extra</source>
-        <translation>Дополнительный (Extra)</translation>
+        <translation>Extra</translation>
     </message>
     <message>
         <source>Master</source>
-        <translation>Главный (Master)</translation>
+        <translation>Master</translation>
     </message>
     <message>
         <source>Triangle</source>
@@ -41,7 +41,7 @@
     </message>
     <message>
         <source>active</source>
-        <translation>включен</translation>
+        <translation>вкл/выкл</translation>
     </message>
     <message>
         <source>volume</source>
@@ -246,7 +246,7 @@
     </message>
     <message>
         <source>Preview</source>
-        <translation>Предварительный просмотр</translation>
+        <translation>Просмотр</translation>
     </message>
     <message>
         <source>Up</source>
@@ -289,7 +289,7 @@
     </message>
     <message>
         <source>ID</source>
-        <translation>Девайс</translation>
+        <translation>ID</translation>
     </message>
     <message>
         <source>Up</source>
@@ -337,7 +337,7 @@
     </message>
     <message>
         <source>Unset all</source>
-        <translation>Сброс всех</translation>
+        <translation>Сбросить все</translation>
     </message>
     <message>
         <source>Defaults</source>
@@ -392,7 +392,7 @@
     </message>
     <message>
         <source>Roms</source>
-        <translation>Ромы</translation>
+        <translation>РОМы</translation>
     </message>
 </context>
 <context>
@@ -454,7 +454,7 @@
     </message>
     <message>
         <source>The cheat is already in the list</source>
-        <translation>Этот чит уже прусутствует в списке</translation>
+        <translation>Этот чит уже присутствует в списке</translation>
     </message>
 </context>
 <context>
@@ -469,7 +469,7 @@
     </message>
     <message>
         <source>Four Score</source>
-        <translation>Акссесуар для игры вчетвером (Four Score)</translation>
+        <translation>Аксессуар для игры вчетвером (Four Score)</translation>
     </message>
     <message>
         <source>Disabled</source>
@@ -527,7 +527,7 @@
     </message>
     <message>
         <source>Auto</source>
-        <translation>Автоматически</translation>
+        <translation>Автовыбор</translation>
     </message>
     <message>
         <source>Original</source>
@@ -535,7 +535,7 @@
     </message>
     <message>
         <source>3rd-party</source>
-        <translation>&quot;Третьей стороны&quot;</translation>
+        <translation>Пиратский</translation>
     </message>
     <message>
         <source>Keyboard</source>
@@ -551,7 +551,7 @@
     </message>
     <message>
         <source>Select device first</source>
-        <translation>Сперва выберите устройтво</translation>
+        <translation>Сперва выберите устройство</translation>
     </message>
     <message>
         <source>Error on open device %1</source>
@@ -578,11 +578,11 @@
     </message>
     <message>
         <source>&amp;Hard Reset</source>
-        <translation>&amp;&quot;Жёсткий&quot; сброс</translation>
+        <translation>&amp;Питание</translation>
     </message>
     <message>
         <source>&amp;Soft Reset</source>
-        <translation>&amp;&quot;Мягкий&quot; сброс</translation>
+        <translation>&amp;Сброс</translation>
     </message>
     <message>
         <source>&amp;Eject/Insert Disk</source>
@@ -638,7 +638,7 @@
     </message>
     <message>
         <source>&amp;Auto</source>
-        <translation>&amp;Автоматически</translation>
+        <translation>&amp;Автовыбор</translation>
     </message>
     <message>
         <source>Default</source>
@@ -770,11 +770,11 @@
     </message>
     <message>
         <source>&amp;Phosphor</source>
-        <translation>&amp;Фосфор</translation>
+        <translation>&amp;Люминофор</translation>
     </message>
     <message>
         <source>&amp;Phosphor2</source>
-        <translation>&amp;Фосфор 2</translation>
+        <translation>&amp;Люминофор 2</translation>
     </message>
     <message>
         <source>S&amp;canline</source>
@@ -834,7 +834,7 @@
     </message>
     <message>
         <source>&amp;NTSC Composite</source>
-        <translation>&amp;NTSC композитный</translation>
+        <translation>&amp;NTSC Композитный</translation>
     </message>
     <message>
         <source>&amp;NTSC S-Video</source>
@@ -862,7 +862,7 @@
     </message>
     <message>
         <source>&amp;Load from file</source>
-        <translation>&amp;Загрузить сохранение из файла</translation>
+        <translation>&amp;Загрузить из файла</translation>
     </message>
     <message>
         <source>&amp;Enable Audio</source>
@@ -878,7 +878,7 @@
     </message>
     <message>
         <source>&amp;Disable Red and Green emphasis swap for PAL/Dendy</source>
-        <translation>&amp;Отключить своп красного и зелёного для PAL/Dendy</translation>
+        <translation>&amp;Правильная эмфаза красного и зелёного для PAL/Dendy</translation>
     </message>
     <message>
         <source>Setti&amp;ngs</source>
@@ -1026,7 +1026,7 @@
     </message>
     <message>
         <source>S&amp;wap Duty Cycles</source>
-        <translation>&amp;Своп скважности</translation>
+        <translation>&amp;Перепутать скважности</translation>
     </message>
     <message>
         <source>&amp;Config</source>
@@ -1042,15 +1042,15 @@
     </message>
     <message>
         <source>Save settings on e&amp;xit</source>
-        <translation>&amp;Сохранять настройки после выхода</translation>
+        <translation>&amp;Сохранять настройки при выходе</translation>
     </message>
     <message>
         <source>&amp;Increment slot</source>
-        <translation>&amp;Увеличить слот</translation>
+        <translation>&amp;Следующий слот</translation>
     </message>
     <message>
         <source>&amp;Decrement slot</source>
-        <translation>&amp;Уменьшить слот</translation>
+        <translation>&amp;Предыдущий слот</translation>
     </message>
     <message>
         <source>Slot &amp;0</source>
@@ -1086,7 +1086,7 @@
     </message>
     <message>
         <source>&amp;Recent Roms</source>
-        <translation>&amp;Последние ромы</translation>
+        <translation>&amp;Последние РОМы</translation>
     </message>
     <message>
         <source>&amp;NES</source>
@@ -1126,7 +1126,7 @@
     </message>
     <message>
         <source>&amp;Overscan</source>
-        <translation>&amp;Вылеты развёртки</translation>
+        <translation>&amp;Вылеты развёртки (Overscan)</translation>
     </message>
     <message>
         <source>De&amp;fault value</source>
@@ -1182,7 +1182,7 @@
     </message>
     <message>
         <source>&amp;Software</source>
-        <translation>&amp;Софтверный</translation>
+        <translation>&amp;Программный</translation>
     </message>
     <message>
         <source>&amp;OpenGL</source>
@@ -1230,7 +1230,7 @@
     </message>
     <message>
         <source>Nes rom files</source>
-        <translation>Ромы NES</translation>
+        <translation>РОМы NES</translation>
     </message>
     <message>
         <source>FDS image files</source>
@@ -1238,7 +1238,7 @@
     </message>
     <message>
         <source>TAS movie files</source>
-        <translation>Клипы TAS</translation>
+        <translation>Видео TAS</translation>
     </message>
     <message>
         <source>All files</source>
@@ -1262,7 +1262,7 @@
     </message>
     <message>
         <source>Save states</source>
-        <translation>Сохренения puNES</translation>
+        <translation>Сохранения puNES</translation>
     </message>
     <message>
         <source>Save state on file</source>
@@ -1302,7 +1302,7 @@
     </message>
     <message>
         <source>&amp;Game Genie Rom Mode</source>
-        <translation>&amp;Ром Game Genie</translation>
+        <translation>&amp;РОМ Game Genie</translation>
     </message>
     <message>
         <source>&amp;Cheats List Mode</source>
@@ -1338,7 +1338,7 @@
     </message>
     <message>
         <source>Anyway, thank you all for the love and the help.</source>
-        <translation>В любом случае, спасибо всем за поддержку и помощь.</translation>
+        <translation>В любом случае, спасибо всем за помощь и поддержку.</translation>
     </message>
 </context>
 <context>
