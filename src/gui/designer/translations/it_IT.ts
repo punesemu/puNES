@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="it_IT">
+<TS version="2.1" language="it_IT">
 <context>
     <name>APU_channels</name>
     <message>
@@ -1273,10 +1273,6 @@
         <translation>Carica stato da file</translation>
     </message>
     <message>
-        <source>portable version</source>
-        <translation>versione portatile</translation>
-    </message>
-    <message>
         <source>Nintendo Entertainment System Emulator</source>
         <translation>Emulatore di Nintendo Entertainment System</translation>
     </message>
@@ -1339,6 +1335,10 @@
     <message>
         <source>&amp;8:7 (NTSC TV)</source>
         <translation></translation>
+    </message>
+    <message>
+        <source>portable version</source>
+        <translation>versione portatile</translation>
     </message>
 </context>
 <context>

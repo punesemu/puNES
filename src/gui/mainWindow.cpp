@@ -2142,7 +2142,7 @@ void mainWindow::s_help() {
 
 	text.append("<center><h2>" + QString(NAME) + " ");
 	if (info.portable) {
-		text.append(tr("portable version"));
+		text.append(tr("portable version") + " ");
 	}
 	text.append(QString(VERSION) + "</h2></center>\n");
 	text.append("<center>" + tr("Nintendo Entertainment System Emulator") + "</center>");

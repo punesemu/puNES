@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="ru_RU">
+<TS version="2.1" language="ru_RU">
 <context>
     <name>APU_channels</name>
     <message>
@@ -1273,10 +1273,6 @@
         <translation>Открыть сохранение</translation>
     </message>
     <message>
-        <source>portable version</source>
-        <translation>портативная версия</translation>
-    </message>
-    <message>
         <source>Nintendo Entertainment System Emulator</source>
         <translation>Эмулятор Nintendo Entertainment System</translation>
     </message>
@@ -1339,6 +1335,10 @@
     <message>
         <source>Anyway, thank you all for the love and the help.</source>
         <translation>В любом случае, спасибо всем за помощь и поддержку.</translation>
+    </message>
+    <message>
+        <source>portable version</source>
+        <translation>портативная версия</translation>
     </message>
 </context>
 <context>

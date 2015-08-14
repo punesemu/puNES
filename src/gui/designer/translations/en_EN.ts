@@ -1269,10 +1269,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>portable version</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Nintendo Entertainment System Emulator</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1338,6 +1334,10 @@
     </message>
     <message>
         <source>&amp;8:7 (NTSC TV)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>portable version</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
