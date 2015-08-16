@@ -17,6 +17,9 @@
 #include "original.h"
 #include "info.h"
 
+#define _ch_gain(index, f) ((double) (f * cfg->apu.volume[index]))
+#define ch_gain_ptnd(index) _ch_gain(index, apu_pre_amp)
+
 #define mixer_cut_and_high() mixer *= 45
 
 SWORD (*extra_mixer_original)(SWORD mixer);
@@ -115,12 +118,7 @@ void audio_quality_apu_tick_original(void) {
 	{
 		SWORD mixer = 0;
 
-		//mixer += nla_table.pulse[S1.output + S2.output];
-		//mixer += nla_table.tnd[(TR.output * 3) + (NS.output * 2) + DMC.output];
-
-		mixer += nla_table.pulse[s1_out + s2_out];
-		mixer += nla_table.tnd[(tr_out * 3) + (ns_out * 2) + dmc_out];
-		mixer *= apu_pre_amp;
+		mixer = pulse_output() + tnd_output();
 		mixer *= cfg->apu.volume[APU_MASTER];
 
 		if (extra_mixer_original) {
@@ -175,11 +173,13 @@ void audio_quality_apu_tick_original(void) {
 SWORD mixer_original_FDS(SWORD mixer) {
 	mixer_cut_and_high();
 
-	//return (mixer + (fds.snd.main.output + (fds.snd.main.output >> 1)));
-	return (mixer + extra_out(fds.snd.main.output));
+	mixer += (extra_out(fds.snd.main.output) * ch_gain_ptnd(APU_EXTRA));
+	return (mixer);
 }
 SWORD mixer_original_MMC5(SWORD mixer) {
-	mixer += extra_out((((mmc5.S3.output + mmc5.S4.output) + mmc5.pcm.output) << 3));
+	mixer += ((SWORD) (extra_out(mmc5.S3.output) * ch_gain_ptnd(APU_EXTRA)) << 3);
+	mixer += ((SWORD) (extra_out(mmc5.S4.output) * ch_gain_ptnd(APU_EXTRA)) << 3);
+	mixer += ((SWORD) (extra_out(mmc5.pcm.output) * ch_gain_ptnd(APU_EXTRA)) << 3);
 
 	mixer_cut_and_high();
 
@@ -195,22 +195,25 @@ SWORD mixer_original_Namco_N163(SWORD mixer) {
 		}
 	}
 
-	mixer += extra_out(a);
+	mixer += (extra_out(a) * ch_gain_ptnd(APU_EXTRA));
 
 	mixer_cut_and_high();
 
 	return (mixer);
 }
 SWORD mixer_original_Sunsoft_FM7(SWORD mixer) {
-	mixer += extra_out(((fm7.square[0].output + fm7.square[1].output + fm7.square[2].output) << 3));
+	mixer += ((SWORD) (extra_out(fm7.square[0].output) * ch_gain_ptnd(APU_EXTRA)) << 3);
+	mixer += ((SWORD) (extra_out(fm7.square[1].output) * ch_gain_ptnd(APU_EXTRA)) << 3);
+	mixer += ((SWORD) (extra_out(fm7.square[2].output) * ch_gain_ptnd(APU_EXTRA)) << 3);
 
 	mixer_cut_and_high();
 
 	return (mixer);
 }
 SWORD mixer_original_VRC6(SWORD mixer) {
-	mixer += extra_out(
-		(((vrc6.S3.output << 1) + (vrc6.S4.output << 1) + (vrc6.saw.output / 5)) << 2));
+	mixer += ((SWORD) (extra_out(vrc6.S3.output << 1) * ch_gain_ptnd(APU_EXTRA)) << 2);
+	mixer += ((SWORD) (extra_out(vrc6.S4.output << 1) * ch_gain_ptnd(APU_EXTRA)) << 2);
+	mixer += ((SWORD) (extra_out(vrc6.saw.output / 5) * ch_gain_ptnd(APU_EXTRA)) << 2);
 
 	mixer_cut_and_high();
 
@@ -219,5 +222,6 @@ SWORD mixer_original_VRC6(SWORD mixer) {
 SWORD mixer_original_VRC7(SWORD mixer) {
 	mixer_cut_and_high();
 
-	return (mixer + extra_out((opll_calc() << 2)));
+	mixer += (extra_out((opll_calc() << 2)) * ch_gain_ptnd(APU_EXTRA));
+	return (mixer);
 }

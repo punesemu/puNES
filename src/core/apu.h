@@ -350,8 +350,12 @@ enum apu_mode { APU_60HZ, APU_48HZ };
 		nla_table.tnd[i] = (vl * t);\
 	}\
 }
+/*
 #define _apu_channel_volume_adjust(ch, index)\
 	((SWORD) (((double) (ch * cfg->apu.channel[index])) * cfg->apu.volume[index]))
+*/
+#define _apu_channel_volume_adjust(ch, index)\
+	(ch * cfg->apu.channel[index])
 #define s1_out\
 	_apu_channel_volume_adjust(S1.output, APU_S1)
 #define s2_out\
@@ -364,6 +368,13 @@ enum apu_mode { APU_60HZ, APU_48HZ };
 	_apu_channel_volume_adjust(DMC.output, APU_DMC)
 #define extra_out(out)\
 	_apu_channel_volume_adjust(out, APU_EXTRA)
+#define pulse_output()\
+	(nla_table.pulse[s1_out] * ch_gain_ptnd(APU_S1)) +\
+	(nla_table.pulse[s2_out] * ch_gain_ptnd(APU_S2))
+#define tnd_output()\
+	(nla_table.tnd[(tr_out * 3)] * ch_gain_ptnd(APU_TR)) +\
+	(nla_table.tnd[(ns_out * 2)] * ch_gain_ptnd(APU_NS)) +\
+	(nla_table.tnd[dmc_out] * ch_gain_ptnd(APU_DMC))
 
 typedef struct {
 	BYTE channel[APU_MASTER + 1];
