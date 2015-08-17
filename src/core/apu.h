@@ -350,10 +350,6 @@ enum apu_mode { APU_60HZ, APU_48HZ };
 		nla_table.tnd[i] = (vl * t);\
 	}\
 }
-/*
-#define _apu_channel_volume_adjust(ch, index)\
-	((SWORD) (((double) (ch * cfg->apu.channel[index])) * cfg->apu.volume[index]))
-*/
 #define _apu_channel_volume_adjust(ch, index)\
 	(ch * cfg->apu.channel[index])
 #define s1_out\
