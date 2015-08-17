@@ -213,6 +213,11 @@ static void INLINE ctrl_reg_MMC1(void) {
 static void INLINE swap_prg_rom_MMC1(void) {
 	BYTE value = mmc1.prg0;
 
+	/* SEROM, SHROM, SH1ROM use a fixed 32k PRG ROM with no banking support */
+	if (info.mapper.submapper == SEROM) {
+		return;
+	}
+
 	switch (mmc1.prg_mode) {
 		case 0:
 		case 1: {
