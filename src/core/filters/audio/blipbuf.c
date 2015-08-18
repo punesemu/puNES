@@ -21,8 +21,8 @@
 
 enum blbuf_misc { master_vol = 65536 / 15 };
 
-#define _ch_gain(index, f) (master_vol * ((double) (f * cfg->apu.volume[index] )) / 100)
-#define ch_gain_ptnd(index) _ch_gain(index, 1.2f)
+#define _ch_gain(index, f) (master_vol * ((double) (f * cfg->apu.volume[index])) / 100)
+#define ch_gain_ptnd(index) _ch_gain(index, 1.0f)
 #define ch_gain_ext(out, f) (extra_out(out) * _ch_gain(APU_EXTRA, f))
 
 #define _update_tick_blbuf(type, restart)\
