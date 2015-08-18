@@ -341,6 +341,8 @@ bool mainWindow::eventFilter(QObject *obj, QEvent *event) {
 		ui->action_Rend1->setText(tr("&OpenGL"));
 		ui->action_Rend2->setText(tr("OpenGL &GLSL"));
 
+		ui->action_PAR_Soft_Stretch->setText(tr("GLSL &soft stretch"));
+
 		ui->action_Cube->setText(tr("&Cube"));
 		ui->menu_Effect->setTitle(tr("&Effect"));
 #elif defined (D3D9)
