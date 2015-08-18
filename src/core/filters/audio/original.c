@@ -18,7 +18,7 @@
 #include "info.h"
 
 #define _ch_gain(index, f) ((double) (f * cfg->apu.volume[index]))
-#define ch_gain_ptnd(index) _ch_gain(index, apu_pre_amp)
+#define ch_gain_ptnd(index) _ch_gain(index, 1.0f)
 
 #define mixer_cut_and_high() mixer *= 45
 
@@ -211,9 +211,9 @@ SWORD mixer_original_Sunsoft_FM7(SWORD mixer) {
 	return (mixer);
 }
 SWORD mixer_original_VRC6(SWORD mixer) {
-	mixer += ((SWORD) (extra_out(vrc6.S3.output << 1) * ch_gain_ptnd(APU_EXTRA)) << 2);
-	mixer += ((SWORD) (extra_out(vrc6.S4.output << 1) * ch_gain_ptnd(APU_EXTRA)) << 2);
-	mixer += ((SWORD) (extra_out(vrc6.saw.output / 5) * ch_gain_ptnd(APU_EXTRA)) << 2);
+	mixer += ((SWORD) (extra_out(vrc6.S3.output) * ch_gain_ptnd(APU_EXTRA)) << 2);
+	mixer += ((SWORD) (extra_out(vrc6.S4.output) * ch_gain_ptnd(APU_EXTRA)) << 2);
+	mixer += ((SWORD) (extra_out((vrc6.saw.output / 5)) * ch_gain_ptnd(APU_EXTRA)) << 2);
 
 	mixer_cut_and_high();
 
