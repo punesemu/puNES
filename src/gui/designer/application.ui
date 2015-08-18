@@ -443,6 +443,7 @@
     <addaction name="menu_Language"/>
     <addaction name="separator"/>
     <addaction name="action_Pause_when_in_background"/>
+    <addaction name="action_Hide_the_mouse_cursor"/>
     <addaction name="action_Save_settings_on_exit"/>
     <addaction name="separator"/>
     <addaction name="action_Save_settings"/>
@@ -1791,6 +1792,14 @@
    </property>
    <property name="text">
     <string>&amp;Disabled</string>
+   </property>
+  </action>
+  <action name="action_Hide_the_mouse_cursor">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Hide the mouse cursor</string>
    </property>
   </action>
  </widget>

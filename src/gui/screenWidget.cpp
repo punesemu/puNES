@@ -65,19 +65,17 @@ void screenWidget::cursor_init() {
 	target = new QCursor(QPixmap(":/pointers/pointers/target_32x32.xpm"), -1, -1);
 }
 void screenWidget::cursor_set() {
-	BYTE i, type = CTRL_STANDARD;
-
-	for (i = PORT1; i < PORT_MAX; i++) {
-		if (port[i].type == CTRL_ZAPPER) {
-			type = CTRL_ZAPPER;
-			break;
-		}
-	}
-
-	if (type == CTRL_ZAPPER) {
+	if (input_zapper_is_connected((_port *) &port) == TRUE) {
 		setCursor((*target));
 	} else {
 		unsetCursor();
+	}
+}
+void screenWidget::cursor_hide(BYTE hide) {
+	if (hide == TRUE) {
+		setCursor(Qt::BlankCursor);
+	} else {
+		cursor_set();
 	}
 }
 #endif

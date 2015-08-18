@@ -225,6 +225,11 @@ void gui_cursor_set(void) {
 	qt.screen->cursor_set();
 #endif
 }
+void gui_cursor_hide(BYTE hide) {
+#if !defined (SDL)
+	qt.screen->cursor_hide(hide);
+#endif
+}
 
 #if defined (__WIN32__)
 #include "os_windows.h"

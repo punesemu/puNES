@@ -99,6 +99,8 @@ bool dlgInput::eventFilter(QObject *obj, QEvent *event) {
 				shcut.no_other_buttons = false;
 
 				parentMain->ui->action_Input_Config->setEnabled(true);
+
+				parentMain->visible_cursor();
 				break;
 			case QEvent::LanguageChange:
 				Input_dialog::retranslateUi(this);

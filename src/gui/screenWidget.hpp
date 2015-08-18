@@ -42,6 +42,7 @@ class screenWidget: public QWidget {
 #elif !defined (SDL)
 		void cursor_init();
 		void cursor_set();
+		void cursor_hide(BYTE hide);
 #endif
 
 	protected:

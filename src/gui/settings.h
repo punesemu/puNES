@@ -26,6 +26,7 @@
 
 enum set_element {
 	SET_MODE,
+	SET_HIDE_MOUSE_CURSOR,
 	SET_BCK_PAUSE,
 	SET_CHEAT_MODE,
 	SET_SAVE_SETTINGS_ON_EXIT,
@@ -402,6 +403,12 @@ static const _settings main_cfg[] = {
 		"# possible values: pal, ntsc, dendy, auto",
 		"-m, --mode                preferred mode        : pal, ntsc, dendy, auto",
 		{LENGTH(opt_mode), opt_mode}
+	},
+	{
+		"system", "hide mouse cursor", "no",
+		"# possible values: yes, no",
+		"    --hide-mouse-cursor                         : yes, no",
+		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 	{
 		"system", "pause when in background", "yes",

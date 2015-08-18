@@ -1158,6 +1158,21 @@ void mainWindow::shcjoy_stop() {
 	}
 #endif
 }
+void mainWindow::visible_cursor() {
+	if ((cfg->hide_mouse_cursor == TRUE) && (input_zapper_is_connected((_port *) &port) == FALSE)) {
+#if defined (SDL) && defined (__linux__)
+		SDL_ShowCursor(SDL_DISABLE);
+#else
+		gui_cursor_hide(TRUE);
+#endif
+	} else {
+#if defined (SDL) && defined (__linux__)
+		SDL_ShowCursor(SDL_ENABLE);
+#else
+		gui_cursor_hide(FALSE);
+#endif
+	}
+}
 void mainWindow::connect_shortcut(QAction *action, int index) {
 	QString *sc = (QString *)settings_inp_rd_sc(index, KEYBOARD);
 
@@ -1355,8 +1370,10 @@ void mainWindow::connect_menu_signals() {
 	connect_action(ui->action_Italian, LNG_ITALIAN, SLOT(s_set_language()));
 	connect_action(ui->action_Russian, LNG_RUSSIAN, SLOT(s_set_language()));
 	//ui->menu_Language->removeAction(ui->action_Russian);
-	// Settings/[Pause when in backgrounds, Save settings, Save settings on exit]
+	// Settings/[Pause when in backgrounds, Hide the mouse cursor,
+	//           Save settings, Save settings on exit]
 	connect_action(ui->action_Pause_when_in_background, SLOT(s_set_pause()));
+	connect_action(ui->action_Hide_the_mouse_cursor, SLOT(s_set_hide_mouse_cursor()));
 	connect_action(ui->action_Save_settings, SLOT(s_save_settings()));
 	connect_action(ui->action_Save_settings_on_exit, SLOT(s_set_save_on_exit()));
 	// State/[Save state, Load State]
@@ -1510,14 +1527,14 @@ void mainWindow::s_set_fullscreen() {
 #if defined (SDL)
 		if ((input_zapper_is_connected((_port *) &port) == FALSE) && !opengl.rotation) {
 #if defined (__WIN32__)
-			QApplication::setOverrideCursor(Qt::BlankCursor);
+			gui_cursor_hide(TRUE);
 #else
 			SDL_ShowCursor(SDL_DISABLE);
 #endif
 		}
 #else
 		if (input_zapper_is_connected((_port *) &port) == FALSE) {
-			QApplication::setOverrideCursor(Qt::BlankCursor);
+			gui_cursor_hide(TRUE);
 		}
 #endif
 
@@ -1535,11 +1552,7 @@ void mainWindow::s_set_fullscreen() {
 		statusbar->setVisible(true);
 		gfx_set_screen(gfx.scale_before_fscreen, NO_CHANGE, NO_FULLSCR, NO_CHANGE, FALSE, FALSE);
 
-#if defined (SDL) && defined (__linux__)
-		SDL_ShowCursor(SDL_ENABLE);
-#else
-		QApplication::restoreOverrideCursor();
-#endif
+		visible_cursor();
 
 		move(position);
 	}
@@ -1977,6 +1990,10 @@ void mainWindow::s_set_input() {
 	dlgInput *dlg = new dlgInput(this);
 
 	dlg->show();
+}
+void mainWindow::s_set_hide_mouse_cursor() {
+	cfg->hide_mouse_cursor = !cfg->hide_mouse_cursor;
+	visible_cursor();
 }
 void mainWindow::s_set_pause() {
 	cfg->bck_pause = !cfg->bck_pause;

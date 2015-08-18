@@ -39,6 +39,7 @@ typedef struct {
 	BYTE interpolation;
 	BYTE cheat_mode;
 	BYTE txt_on_screen;
+	BYTE hide_mouse_cursor;
 	BYTE bck_pause;
 	WORD language;
 
