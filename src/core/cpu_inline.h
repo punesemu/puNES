@@ -1042,16 +1042,20 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 			 */
 			ppu.tmp_vram = (ppu.tmp_vram & 0x7F00) | value;
 
-			/* condizione riscontrata in "scanline.nes" */
+			/*
+			 * condizione di race riscontrata in "scanline.nes" e
+			 * "Knight Rider (U) [!].nes" (i glitch grafici sotto la macchina
+			 * nell'introduzione sono presenti su hardware reale).
+			 *
+			 * P.s. la formula l'ho ottenuta dopo vari esperimenti
+			 */
 			if (ppu.frame_x < SCR_ROWS) {
 				if (!r2002.vblank && (ppu.screen_y < SCR_LINES)) {
 					if (ppu.frame_y > machine.vint_lines) {
 						if (r2001.visible) {
 							if ((ppu.pixel_tile >= 1) && (ppu.pixel_tile <= 3)) {
 								r2006.race.ctrl = TRUE;
-								r2006.race.value = r2006.value;
-								/* prove per Knight Rider (U) [!].nes */
-								//(ppu.pixel_tile == 3) r2006.race.value = (r2006.value & 0xF3FF) | (ppu.tmp_vram & 0x0B00);
+								r2006.race.value = (r2006.value & 0x7117) | (ppu.tmp_vram & 0x0A00);
 							}
 						}
 					}
