@@ -3124,6 +3124,8 @@ static const _dbelement dblist[] = {
 	{"4bbdd562584f2c5736024ac19995397b4edff1f9", 85, VRC7A, DEFAULT, DEFAULT, DEFAULT},
 	/* Lagrange Point (J).nes (English patch 1.01 by Aeon Genesis) */
 	{"dbc7ccafd0a2a43682c94697964642ac8d2d5d7d", 85, VRC7A, DEFAULT, DEFAULT, DEFAULT},
+	/* Lagrange Point (J) [eng 1.01 by Aeon Genesis].nes */
+	{"33c6c29404e1d3f01fa0059acb6949eb2bcd80f0", 85, VRC7A, DEFAULT, DEFAULT, DEFAULT},
 
 /* ------------------------------------ Jaleco (JF05) ------------------------------------- */
 	/* Argus (J) [!].nes */
