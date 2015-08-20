@@ -818,8 +818,6 @@ void gfx_cursor_quit(void) {
 	if (cursor.target) {
 		SDL_FreeCursor(cursor.target);
 	}
-
-	SDL_FreeCursor(cursor.org);
 }
 void gfx_cursor_set(void) {
 	if (input_zapper_is_connected((_port *) &port) == TRUE) {
