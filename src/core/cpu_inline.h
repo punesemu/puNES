@@ -1046,8 +1046,8 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 			 * condizione di race riscontrata in "scanline.nes" e
 			 * "Knight Rider (U) [!].nes" (i glitch grafici sotto la macchina
 			 * nell'introduzione sono presenti su hardware reale).
-			 *
-			 * P.s. la formula l'ho ottenuta dopo vari esperimenti
+			 * Anche "logo (E).nes" e "Ferrari - Grand Prix Challenge (U) [!].nes"
+			 * ne sono soggetti.
 			 */
 			if (ppu.frame_x < SCR_ROWS) {
 				if (!r2002.vblank && (ppu.screen_y < SCR_LINES)) {
@@ -1055,7 +1055,13 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 						if (r2001.visible) {
 							if ((ppu.pixel_tile >= 1) && (ppu.pixel_tile <= 3)) {
 								r2006.race.ctrl = TRUE;
-								r2006.race.value = (r2006.value & 0x7117) | (ppu.tmp_vram & 0x0A00);
+								//r2006.race.value = r2006.value;
+								/*
+								 * con questa "scanline.nes" ha la parte finale che
+								 * non funziona ma tutte le altre rom funzionano
+								 * correttamente.
+								 */
+								r2006.race.value = (r2006.value & 0x00FF) | (ppu.tmp_vram & 0xFF00);
 							}
 						}
 					}
