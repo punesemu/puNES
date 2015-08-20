@@ -85,6 +85,7 @@ EXTERNC void gui_cheat_save_game_cheats(void);
 EXTERNC void gui_cursor_init(void);
 EXTERNC void gui_cursor_set(void);
 EXTERNC void gui_cursor_hide(BYTE hide);
+EXTERNC void gui_visible_cursor(void);
 
 EXTERNC double (*gui_get_ms)(void);
 

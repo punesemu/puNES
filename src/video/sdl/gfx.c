@@ -811,6 +811,8 @@ void gfx_cursor_init(void) {
 	}
 
 	gfx_cursor_set();
+
+	gui_visible_cursor();
 }
 void gfx_cursor_quit(void) {
 	if (cursor.target) {
@@ -820,16 +822,7 @@ void gfx_cursor_quit(void) {
 	SDL_FreeCursor(cursor.org);
 }
 void gfx_cursor_set(void) {
-	BYTE i, type = CTRL_STANDARD;
-
-	for (i = PORT1; i < PORT_MAX; i++) {
-		if (port[i].type == CTRL_ZAPPER) {
-			type = CTRL_ZAPPER;
-			break;
-		}
-	}
-
-	if (type == CTRL_ZAPPER) {
+	if (input_zapper_is_connected((_port *) &port) == TRUE) {
 		SDL_SetCursor(cursor.target);
 	} else {
 		SDL_SetCursor(cursor.org);

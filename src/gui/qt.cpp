@@ -230,6 +230,10 @@ void gui_cursor_hide(BYTE hide) {
 	qt.screen->cursor_hide(hide);
 #endif
 }
+void gui_visible_cursor(void) {
+	qt.mwin->visible_cursor();
+}
+
 
 #if defined (__WIN32__)
 #include "os_windows.h"

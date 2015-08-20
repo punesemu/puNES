@@ -1009,8 +1009,9 @@ void mainWindow::update_menu_settings() {
 			ui->action_Russian->setChecked(true);
 			break;
 	}
-	//Settings/[Pause when in backgrounds, Save settings on exit]
+	//Settings/[Pause when in backgrounds, Hide the mouse cursor, Save settings on exit]
 	ui->action_Pause_when_in_background->setChecked(cfg->bck_pause);
+	ui->action_Hide_the_mouse_cursor->setChecked(cfg->hide_mouse_cursor);
 	ui->action_Save_settings_on_exit->setChecked(cfg->save_on_exit);
 }
 void mainWindow::update_menu_state() {
