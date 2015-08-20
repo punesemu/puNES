@@ -49,6 +49,7 @@
 #include "overscan.h"
 #include "recent_roms.h"
 #if defined (SDL)
+#include "sdl_wid.h"
 #include "opengl.h"
 #endif
 #include "uncompress.h"
@@ -79,6 +80,31 @@ BYTE emu_frame(void) {
 	if (info.stop == TRUE) {
 		emu_quit(EXIT_SUCCESS);
 	}
+
+#if defined (SDL)
+	/*
+	 * nella versione windows il SDL_QuitSubSystem(SDL_INIT_VIDEO) e il 
+	 * SDL_InitSubSystem(SDL_INIT_VIDEO) devono essere fatti nello stesso thread
+	 * in cui e' stato fatto il SDL_Init(), quindi eseguo tutte quelle
+	 * operazioni che necessitano il gfx_reet_video() qui.
+	 */
+	if (gfx.event_video) {
+		sdl_wid();
+
+		switch (gfx.event_video) {
+			case EV_RENDERING:
+				opengl_effect_change(opengl.rotation);
+				break;
+			case EV_VSYNC:
+				break;
+		}
+
+		gfx_reset_video();
+		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
+
+		gfx.event_video = FALSE;
+	}
+#endif
 
 	/* eseguo un frame dell'emulatore */
 	if (!(info.no_rom | info.pause)) {

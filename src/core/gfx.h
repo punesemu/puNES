@@ -62,6 +62,7 @@ enum no_change { NO_CHANGE = 255 };
 #include <SDL.h>
 
 enum render_type { RENDER_SOFTWARE, RENDER_OPENGL, RENDER_GLSL };
+enum event_video_type { EV_RENDERING = 1, EV_VSYNC };
 
 EXTERNC SDL_Surface *surface_sdl;
 
@@ -93,6 +94,7 @@ EXTERNC struct _gfx {
 	float pixel_aspect_ratio;
 	gfx_filter_function((*filter));
 #if defined (SDL)
+	BYTE event_video;
 	BYTE opengl;
 #elif defined (D3D9)
 	struct {
