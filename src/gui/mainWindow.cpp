@@ -37,7 +37,9 @@
 #include "save_slot.h"
 #include "version.h"
 #if defined (SDL)
+#include "sdl_wid.h"
 #include "opengl.h"
+#elif defined (D3D9)
 #endif
 #include "timeline.h"
 #include "c++/l7zip/l7z.h"
@@ -1730,10 +1732,12 @@ void mainWindow::s_set_rendering() {
 	cfg->render = rendering;
 
 #if defined (SDL)
-	gfx.event_video = EV_RENDERING;
-#else
-	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
+	sdl_wid();
+	opengl_effect_change(opengl.rotation);
+	gfx_reset_video();
 #endif
+
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 }
 void mainWindow::s_set_fps() {
 	int fps = QVariant(((QObject *)sender())->property("myValue")).toInt();
@@ -1888,10 +1892,11 @@ void mainWindow::s_set_vsync() {
 	cfg->vsync = !cfg->vsync;
 
 #if defined (SDL)
-	gfx.event_video = EV_VSYNC;
-#else
-	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
+	sdl_wid();
+	gfx_reset_video();
 #endif
+
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 }
 void mainWindow::s_set_interpolation() {
 	cfg->interpolation = !cfg->interpolation;
