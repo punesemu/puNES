@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="ru_RU">
+<TS version="2.0" language="ru_RU">
 <context>
     <name>APU_channels</name>
     <message>
@@ -1339,6 +1339,10 @@
     <message>
         <source>portable version</source>
         <translation>портативная версия</translation>
+    </message>
+    <message>
+        <source>Hide the mouse cursor</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
