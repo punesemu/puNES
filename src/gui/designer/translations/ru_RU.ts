@@ -41,11 +41,11 @@
     </message>
     <message>
         <source>active</source>
-        <translation>вкл/выкл</translation>
+        <translation>Включить</translation>
     </message>
     <message>
         <source>volume</source>
-        <translation>громкость</translation>
+        <translation>Громкость</translation>
     </message>
     <message>
         <source>Active all</source>
@@ -407,7 +407,7 @@
     </message>
     <message>
         <source>The file is in read only mode</source>
-        <translation>Файл находится в режиме только для чтения</translation>
+        <translation>Файл находится в режиме &quot;только для чтения&quot;</translation>
     </message>
 </context>
 <context>
@@ -778,7 +778,7 @@
     </message>
     <message>
         <source>S&amp;canline</source>
-        <translation>&amp;Чересстрочный</translation>
+        <translation>&amp;Сканлинии</translation>
     </message>
     <message>
         <source>&amp;DBL</source>
@@ -790,11 +790,11 @@
     </message>
     <message>
         <source>&amp;CRT With Curve</source>
-        <translation>&amp;Выпуклый ЭЛТ-монитор</translation>
+        <translation>&amp;Выпуклый ЭЛТ-дисплей</translation>
     </message>
     <message>
         <source>&amp;CRT Without Curve</source>
-        <translation>&amp;Плоский ЭЛТ-монитор</translation>
+        <translation>&amp;Плоский ЭЛТ-дисплей</translation>
     </message>
     <message>
         <source>&amp;Scale2X</source>
@@ -834,7 +834,7 @@
     </message>
     <message>
         <source>&amp;NTSC Composite</source>
-        <translation>&amp;NTSC Композитный</translation>
+        <translation>&amp;NTSC Композит</translation>
     </message>
     <message>
         <source>&amp;NTSC S-Video</source>
@@ -850,7 +850,7 @@
     </message>
     <message>
         <source>&amp;Monochrome</source>
-        <translation>&amp;Монохромная</translation>
+        <translation>&amp;Монохромная (Ч/Б)</translation>
     </message>
     <message>
         <source>&amp;Green</source>
@@ -898,11 +898,11 @@
     </message>
     <message>
         <source>Te&amp;xt on screen</source>
-        <translation>&amp;Текст эмулятора на дисплее (OSD)</translation>
+        <translation>&amp;Текст эмулятора на экране (OSD)</translation>
     </message>
     <message>
         <source>F&amp;ullscreen</source>
-        <translation>&amp;Во весь экран</translation>
+        <translation>&amp;Полноэкранный режим</translation>
     </message>
     <message>
         <source>S&amp;tretch in fullscreen</source>
@@ -1030,11 +1030,11 @@
     </message>
     <message>
         <source>&amp;Config</source>
-        <translation>&amp;Конфигурация</translation>
+        <translation>&amp;Настроить</translation>
     </message>
     <message>
         <source>Pause when &amp;in background</source>
-        <translation>&amp;Пауза, когда окно без фокуса</translation>
+        <translation>&amp;Пауза при неактивном окне</translation>
     </message>
     <message>
         <source>Save se&amp;ttings</source>
@@ -1118,11 +1118,11 @@
     </message>
     <message>
         <source>&amp;Scale</source>
-        <translation>&amp;Масштаб</translation>
+        <translation>&amp;Масштабирование</translation>
     </message>
     <message>
         <source>Pixel Aspect Ra&amp;tio</source>
-        <translation>&amp;Соотношение размеров пикселей</translation>
+        <translation>&amp;Соотношение сторон пикселей</translation>
     </message>
     <message>
         <source>&amp;Overscan</source>
@@ -1330,11 +1330,11 @@
     </message>
     <message>
         <source>If you like the emulator and you want to support it&apos;s development or would you pay for a beer at the programmer :</source>
-        <translation>Если вам понравился этот эмулятор и вы захотели поддержать его разработку, вы можете сделать пожертвование средств на пиво программисту: </translation>
+        <translation>Если вам понравился этот эмулятор, вы можете угостить программиста пивом:</translation>
     </message>
     <message>
         <source>Anyway, thank you all for the love and the help.</source>
-        <translation>В любом случае, спасибо всем за помощь и поддержку.</translation>
+        <translation>Спасибо всем за отзывы и поддержку.</translation>
     </message>
     <message>
         <source>portable version</source>
@@ -1342,7 +1342,7 @@
     </message>
     <message>
         <source>Hide the mouse cursor</source>
-        <translation type="unfinished"></translation>
+        <translation>Скрывать курсор мыши</translation>
     </message>
 </context>
 <context>
