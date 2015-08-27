@@ -22,8 +22,10 @@
 #undef  __STATICPAL__
 #include "opengl.h"
 #include "conf.h"
+#if !defined (__WIN32__)
 #include "gui/designer/pointers/target_32x32.xpm"
-#include "gui/designer/pointers/target_48x48.xpm"
+//#include "gui/designer/pointers/target_48x48.xpm"
+#endif
 
 #define ntsc_width(wdt, a, flag)\
 {\
@@ -61,16 +63,18 @@
 	/* ed infine utilizzo la nuova */\
 	ntsc_set(cfg->ntsc_format, FALSE, 0, (BYTE *) palette_RGB,(BYTE *) palette_RGB)
 
-static SDL_Cursor *init_system_cursor(char *xpm[]);
-
 SDL_Surface *framebuffer;
 uint32_t *palette_win, software_flags;
 static BYTE ntsc_width_pixel[5] = {0, 0, 7, 10, 14};
 
+#if !defined (__WIN32__)
 struct _cursor {
 	SDL_Cursor *target;
 	SDL_Cursor *org;
 } cursor;
+
+static SDL_Cursor *init_system_cursor(char *xpm[]);
+#endif
 
 BYTE gfx_init(void) {
 	const SDL_VideoInfo *video_info;
@@ -800,6 +804,10 @@ void gfx_quit(void) {
 }
 
 void gfx_cursor_init(void) {
+#if defined (__WIN32__)
+	gui_cursor_init();
+	gui_cursor_set();
+#else
 	memset(&cursor, 0x00, sizeof(cursor));
 
 	cursor.org = SDL_GetCursor();
@@ -811,20 +819,27 @@ void gfx_cursor_init(void) {
 	}
 
 	gfx_cursor_set();
-
+#endif
 	gui_visible_cursor();
 }
 void gfx_cursor_quit(void) {
+#if defined (__WIN32__)
+#else
 	if (cursor.target) {
 		SDL_FreeCursor(cursor.target);
 	}
+#endif
 }
 void gfx_cursor_set(void) {
+#if defined (__WIN32__)
+	gui_cursor_set();
+#else
 	if (input_zapper_is_connected((_port *) &port) == TRUE) {
 		SDL_SetCursor(cursor.target);
 	} else {
 		SDL_SetCursor(cursor.org);
 	}
+#endif
 }
 
 void gfx_text_create_surface(_txt_element *ele) {
@@ -894,6 +909,7 @@ double sdl_get_ms(void) {
 	return (SDL_GetTicks());
 }
 
+#if !defined (__WIN32__)
 static SDL_Cursor *init_system_cursor(char *xpm[]) {
 	int srow, scol, ncol, none;
 	int i, row, col;
@@ -929,3 +945,4 @@ static SDL_Cursor *init_system_cursor(char *xpm[]) {
 	//sscanf(xpm[(ncol + 1) + row], "%d,%d", &hot_x, &hot_y);
 	return (SDL_CreateCursor(data, mask, srow, scol, srow / 2, scol / 2));
 }
+#endif

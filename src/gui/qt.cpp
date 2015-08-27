@@ -216,24 +216,23 @@ void gui_cheat_save_game_cheats(void) {
 }
 
 void gui_cursor_init(void) {
-#if !defined (SDL)
+#if defined (__WIN32__)
 	qt.screen->cursor_init();
 #endif
 }
 void gui_cursor_set(void) {
-#if !defined (SDL)
+#if defined (__WIN32__)
 	qt.screen->cursor_set();
 #endif
 }
 void gui_cursor_hide(BYTE hide) {
-#if !defined (SDL)
+#if defined (__WIN32__)
 	qt.screen->cursor_hide(hide);
 #endif
 }
 void gui_visible_cursor(void) {
 	qt.mwin->visible_cursor();
 }
-
 
 #if defined (__WIN32__)
 #include "os_windows.h"

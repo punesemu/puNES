@@ -21,13 +21,14 @@
 #endif
 
 screenWidget::screenWidget(QWidget *parent, mainWindow *mw) : QWidget(parent) {
-#if defined (SDL) && defined (__WIN32__)
+#if defined (__WIN32__)
+#if defined (SDL)
 	memset(&data, 0x00, sizeof(data));
 	data.qt = (WNDPROC)GetWindowLongPtr((HWND) winId(), GWLP_WNDPROC);
 
 	// applico un sfondo nero
 	parent->setStyleSheet("background-color: black");
-#elif !defined (SDL)
+#endif
 	target = NULL;
 #endif
 
@@ -48,7 +49,8 @@ screenWidget::screenWidget(QWidget *parent, mainWindow *mw) : QWidget(parent) {
 	installEventFilter(this);
 }
 screenWidget::~screenWidget() {}
-#if defined (SDL) && defined (__WIN32__)
+#if defined (__WIN32__)
+#if defined (SDL)
 void screenWidget::controlEventFilter() {
 	data.tmp = (WNDPROC)GetWindowLongPtr((HWND) winId(), GWLP_WNDPROC);
 
@@ -60,7 +62,7 @@ void screenWidget::controlEventFilter() {
 		SetWindowLongPtr((HWND) winId(), GWLP_WNDPROC, (LONG_PTR) data.qt);
 	}
 }
-#elif !defined (SDL)
+#endif
 void screenWidget::cursor_init() {
 	target = new QCursor(QPixmap(":/pointers/pointers/target_32x32.xpm"), -1, -1);
 }

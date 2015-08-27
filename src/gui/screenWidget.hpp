@@ -24,22 +24,24 @@ class screenWidget: public QWidget {
 
 	private:
 		mainWindow *mwin;
-#if defined (SDL) && defined (__WIN32__)
+#if defined (__WIN32__)
+#if defined (SDL)
 		struct _data {
 			LONG_PTR WINAPI (*qt)(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 			LONG_PTR WINAPI (*sdl)(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 			LONG_PTR WINAPI (*tmp)(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 		} data;
-#elif !defined (SDL)
+#endif
 		QCursor *target;
 #endif
 
 	public:
 		screenWidget(QWidget *parent, mainWindow *mw);
 		~screenWidget();
-#if defined (SDL) && defined (__WIN32__)
+#if defined (__WIN32__)
+#if defined (SDL)
 		void controlEventFilter();
-#elif !defined (SDL)
+#endif
 		void cursor_init();
 		void cursor_set();
 		void cursor_hide(BYTE hide);
