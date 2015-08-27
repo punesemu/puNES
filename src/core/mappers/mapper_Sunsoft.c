@@ -356,9 +356,9 @@ void extcl_cpu_wr_mem_Sunsoft_FM7(WORD address, BYTE value) {
 						case 0xC0:
 							cpu.prg_ram_rd_active = (value & 0x80) >> 7;
 							cpu.prg_ram_wr_active = TRUE;
-							control_bank_with_AND(0x3F, info.prg.ram.banks_8k_plus - 1)
+							control_bank_with_AND(0x3F, (info.prg.ram.banks_8k_plus - 1))
 							fm7.prg_ram_address = (value & 0x3F) << 13;
-							prg.ram_plus_8k = prg_chip_byte_pnt(0, fm7.prg_ram_address);
+							prg.ram_plus_8k = &prg.ram_plus[fm7.prg_ram_address];
 							return;
 					}
 					return;
