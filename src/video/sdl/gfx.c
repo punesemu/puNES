@@ -26,7 +26,6 @@
 #include "gui/designer/pointers/target_32x32.xpm"
 //#include "gui/designer/pointers/target_48x48.xpm"
 #endif
-#include "gfx_functions_inline.h"
 
 #define ntsc_width(wdt, a, flag)\
 {\
@@ -890,6 +889,10 @@ void gfx_text_blit(_txt_element *ele, _rect *rect) {
 }
 
 #if defined (__WIN32__)
+#define __GFX_ALL_FUNC__
+#include "gfx_functions_inline.h"
+#undef __GFX_ALL_FUNC__
+
 void gfx_sdlwe_set(int type, int arg) {
 	sdlwe.event = type;
 	sdlwe.arg = arg;

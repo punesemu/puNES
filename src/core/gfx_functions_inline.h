@@ -10,16 +10,23 @@
 
 #include "common.h"
 
-INLINE void gfx_SWITCH_RENDERING(void);
-INLINE void gfx_MAKE_RESET(int type);
-INLINE void gfx_CHANGE_ROM(void);
-INLINE void gfx_SWITCH_MODE(void);
-INLINE void gfx_FORCE_SCALE(void);
-INLINE void gfx_SCALE(int scale);
-INLINE void gfx_FILTER(int filter);
-INLINE void gfx_VSYNC(void);
+#if defined (__GFX_FORCE_SCALE__) || defined (__GFX_ALL_FUNC__)
+static void INLINE gfx_FORCE_SCALE(void);
+static void INLINE gfx_FORCE_SCALE(void) {
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
+}
+#endif
 
-INLINE void gfx_SWITCH_RENDERING(void) {
+#if defined (__GFX_OTHERS_FUNC__) || defined (__GFX_ALL_FUNC__)
+static void INLINE gfx_SWITCH_RENDERING(void);
+static void INLINE gfx_MAKE_RESET(int type);
+static void INLINE gfx_CHANGE_ROM(void);
+static void INLINE gfx_SWITCH_MODE(void);
+static void INLINE gfx_SCALE(int scale);
+static void INLINE gfx_FILTER(int filter);
+static void INLINE gfx_VSYNC(void);
+
+static void INLINE gfx_SWITCH_RENDERING(void) {
 #if defined (SDL)
 	sdl_wid();
 	opengl_effect_change(opengl.rotation);
@@ -27,14 +34,14 @@ INLINE void gfx_SWITCH_RENDERING(void) {
 #endif
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 }
-INLINE void gfx_MAKE_RESET(int type) {
+static void INLINE gfx_MAKE_RESET(int type) {
 	gui_mainWindow_make_reset(type);
 }
-INLINE void gfx_CHANGE_ROM(void) {
+static void INLINE gfx_CHANGE_ROM(void) {
 	gui_mainWindow_make_reset(CHANGE_ROM);
 	gui_update();
 }
-INLINE void gfx_SWITCH_MODE(void) {
+static void INLINE gfx_SWITCH_MODE(void) {
 	gui_mainWindow_make_reset(CHANGE_MODE);
 	/*
 	 * per lo swap dell'emphasis del rosso e del verde in caso di PAL e DENDY
@@ -42,13 +49,10 @@ INLINE void gfx_SWITCH_MODE(void) {
 	 */
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, TRUE);
 }
-INLINE void gfx_FORCE_SCALE(void) {
-	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
-}
-INLINE void gfx_SCALE(int scale) {
+static void INLINE gfx_SCALE(int scale) {
 	gfx_set_screen(scale, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 }
-INLINE void gfx_FILTER(int filter) {
+static void INLINE gfx_FILTER(int filter) {
 	switch (filter) {
 		case NO_FILTER:
 			gfx_set_screen(NO_CHANGE, NO_FILTER, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
@@ -109,12 +113,13 @@ INLINE void gfx_FILTER(int filter) {
 			break;
 	}
 }
-INLINE void gfx_VSYNC(void) {
+static void INLINE gfx_VSYNC(void) {
 #if defined (SDL)
 	sdl_wid();
 	gfx_reset_video();
 #endif
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 }
+#endif
 
 #endif /* GFX_FUNCTIONS_INLINE_H_ */

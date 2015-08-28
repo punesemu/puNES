@@ -37,13 +37,19 @@
 #include "save_slot.h"
 #include "version.h"
 #if defined (SDL)
+#if defined (__linux__)
 #include "sdl_wid.h"
+#endif
 #include "opengl.h"
 #endif
 #include "timeline.h"
 #include "c++/l7zip/l7z.h"
 #include "gui.h"
+#if defined (__linux__) || defined (D3D9)
+#define __GFX_OTHERS_FUNC__
 #include "gfx_functions_inline.h"
+#undef __GFX_OTHERS_FUNC__
+#endif
 
 enum state_incdec_enum { INC, DEC };
 enum state_save_enum { SAVE, LOAD };

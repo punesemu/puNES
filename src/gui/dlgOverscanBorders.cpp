@@ -13,11 +13,11 @@
 #include "gfx.h"
 #include "emu.h"
 #include "gui.h"
-#if defined (SDL)
-#include "sdl_wid.h"
-#include "opengl.h"
-#endif
+#if defined (__linux__) || defined (D3D9)
+#define __GFX_FORCE_SCALE__
 #include "gfx_functions_inline.h"
+#undef __GFX_FORCE_SCALE__
+#endif
 
 dlgOverscanBorders::dlgOverscanBorders(QWidget *parent = 0) : QDialog(parent) {
 	memset(&data, 0x00, sizeof(data));
