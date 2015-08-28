@@ -26,6 +26,7 @@
 #include "gui/designer/pointers/target_32x32.xpm"
 //#include "gui/designer/pointers/target_48x48.xpm"
 #endif
+#include "gfx_functions_inline.h"
 
 #define ntsc_width(wdt, a, flag)\
 {\
@@ -887,6 +888,44 @@ void gfx_text_blit(_txt_element *ele, _rect *rect) {
 
 	SDL_BlitSurface(ele->surface, &src_rect, text.surface, rect);
 }
+
+#if defined (__WIN32__)
+void gfx_sdlwe_set(int type, int arg) {
+	sdlwe.event = type;
+	sdlwe.arg = arg;
+}
+void gfx_sdlwe_tick(void) {
+	if (sdlwe.event) {
+		switch (sdlwe.event) {
+			case SDLWIN_SWITCH_RENDERING:
+				gfx_SWITCH_RENDERING();
+				break;
+			case SDLWIN_MAKE_RESET:
+				gfx_MAKE_RESET(sdlwe.arg);
+				break;
+			case SDLWIN_CHANGE_ROM:
+				gfx_CHANGE_ROM();
+				break;
+			case SDLWIN_SWITCH_MODE:
+				gfx_SWITCH_MODE();
+				break;
+			case SDLWIN_FORCE_SCALE:
+				gfx_FORCE_SCALE();
+				break;
+			case SDLWIN_SCALE:
+				gfx_SCALE(sdlwe.arg);
+				break;
+			case SDLWIN_FILTER:
+				gfx_FILTER(sdlwe.arg);
+				break;
+			case SDLWIN_VSYNC:
+				gfx_VSYNC();
+				break;
+		}
+		sdlwe.event = sdlwe.arg = SDLWIN_NONE;
+	}
+}
+#endif
 
 SDL_Surface *gfx_create_RGB_surface(SDL_Surface *src, uint32_t width, uint32_t height) {
 	SDL_Surface *new_surface, *tmp;

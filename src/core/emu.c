@@ -73,6 +73,10 @@ BYTE emu_frame(void) {
 	WORD PCBREAK = 0xA930;
 #endif
 
+#if defined (SDL) && defined (__WIN32__)
+	gfx_sdlwe_tick();
+#endif
+
 	tas.lag_frame = TRUE;
 
 	/* gestione uscita */

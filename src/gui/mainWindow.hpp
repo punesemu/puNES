@@ -66,6 +66,7 @@ class mainWindow: public QMainWindow {
 		void shcjoy_start();
 		void shcjoy_stop();
 		void visible_cursor();
+		void make_reset(int type);
 
 	signals:
 		void fullscreen(bool state);
@@ -86,7 +87,6 @@ class mainWindow: public QMainWindow {
 		void connect_menu_signals();
 		void connect_action(QAction *action, const char *member);
 		void connect_action(QAction *action, int value, const char *member);
-		void make_reset(int type);
 		void set_filter(int filter);
 
 	public slots:

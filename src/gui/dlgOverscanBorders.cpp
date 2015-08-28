@@ -13,6 +13,11 @@
 #include "gfx.h"
 #include "emu.h"
 #include "gui.h"
+#if defined (SDL)
+#include "sdl_wid.h"
+#include "opengl.h"
+#endif
+#include "gfx_functions_inline.h"
 
 dlgOverscanBorders::dlgOverscanBorders(QWidget *parent = 0) : QDialog(parent) {
 	memset(&data, 0x00, sizeof(data));
@@ -117,7 +122,11 @@ bool dlgOverscanBorders::eventFilter(QObject *obj, QEvent *event) {
 		}
 
 		if (force == TRUE) {
-			gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
+#if defined (SDL) && defined (__WIN32__)
+			gfx_sdlwe_set(SDLWIN_FORCE_SCALE, SDLWIN_NONE);
+#else
+			gfx_FORCE_SCALE();
+#endif
 		}
 
 		emu_pause(FALSE);

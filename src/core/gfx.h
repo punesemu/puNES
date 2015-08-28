@@ -62,6 +62,24 @@ enum no_change { NO_CHANGE = 255 };
 #include <SDL.h>
 
 enum render_type { RENDER_SOFTWARE, RENDER_OPENGL, RENDER_GLSL };
+#if defined (__WIN32__)
+enum sdl_win_event_type {
+	SDLWIN_NONE,
+	SDLWIN_SWITCH_RENDERING,
+	SDLWIN_MAKE_RESET,
+	SDLWIN_CHANGE_ROM,
+	SDLWIN_SWITCH_MODE,
+	SDLWIN_FORCE_SCALE,
+	SDLWIN_SCALE,
+	SDLWIN_FILTER,
+	SDLWIN_VSYNC
+};
+
+EXTERNC struct {
+	int event;
+	int arg;
+} sdlwe;
+#endif
 
 EXTERNC SDL_Surface *surface_sdl;
 
@@ -123,6 +141,11 @@ EXTERNC void gfx_text_rect_fill(_txt_element *ele, _rect *rect, uint32_t color);
 EXTERNC void gfx_text_reset(void);
 EXTERNC void gfx_text_clear(_txt_element *ele);
 EXTERNC void gfx_text_blit(_txt_element *ele, _rect *rect);
+
+#if defined (SDL) && defined (__WIN32__)
+EXTERNC void gfx_sdlwe_set(int type, int arg);
+EXTERNC void gfx_sdlwe_tick(void);
+#endif
 
 #undef EXTERNC
 

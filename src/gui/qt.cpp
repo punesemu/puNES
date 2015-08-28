@@ -234,6 +234,10 @@ void gui_visible_cursor(void) {
 	qt.mwin->visible_cursor();
 }
 
+void gui_mainWindow_make_reset(BYTE type) {
+	qt.mwin->make_reset(type);
+}
+
 #if defined (__WIN32__)
 #include "os_windows.h"
 #else

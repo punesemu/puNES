@@ -87,6 +87,8 @@ EXTERNC void gui_cursor_set(void);
 EXTERNC void gui_cursor_hide(BYTE hide);
 EXTERNC void gui_visible_cursor(void);
 
+EXTERNC void gui_mainWindow_make_reset(BYTE type);
+
 EXTERNC double (*gui_get_ms)(void);
 
 EXTERNC void gui_init(int argc, char **argv);

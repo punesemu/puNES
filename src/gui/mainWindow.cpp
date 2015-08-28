@@ -39,11 +39,11 @@
 #if defined (SDL)
 #include "sdl_wid.h"
 #include "opengl.h"
-#elif defined (D3D9)
 #endif
 #include "timeline.h"
 #include "c++/l7zip/l7z.h"
 #include "gui.h"
+#include "gfx_functions_inline.h"
 
 enum state_incdec_enum { INC, DEC };
 enum state_save_enum { SAVE, LOAD };
@@ -298,8 +298,11 @@ void mainWindow::update_window() {
 void mainWindow::change_rom(const char *rom) {
 	strncpy(info.load_rom_file, rom, sizeof(info.load_rom_file));
 	gamegenie_reset();
-	make_reset(CHANGE_ROM);
-	gui_update();
+#if defined (SDL) && defined (__WIN32__)
+	gfx_sdlwe_set(SDLWIN_CHANGE_ROM, SDLWIN_NONE);
+#else
+	gfx_CHANGE_ROM();
+#endif
 }
 void mainWindow::state_save_slot_set(int slot, bool on_video) {
 	if (info.no_rom) {
@@ -1176,6 +1179,30 @@ void mainWindow::visible_cursor() {
 #endif
 	}
 }
+void mainWindow::make_reset(int type) {
+	if (type == HARD) {
+		if ((cfg->cheat_mode == GAMEGENIE_MODE) && gamegenie.rom_present) {
+			if (info.mapper.id != GAMEGENIE_MAPPER) {
+				strcpy(info.load_rom_file, info.rom_file);
+			}
+			gamegenie_reset();
+			type = CHANGE_ROM;
+		} else {
+			/*
+			 * se e' stato disabilitato il game genie quando ormai
+			 * e' gia' in esecuzione e si preme un reset, carico la rom.
+			 */
+			if (info.mapper.id == GAMEGENIE_MAPPER) {
+				gamegenie_reset();
+				type = CHANGE_ROM;
+			}
+		}
+	}
+
+	if (emu_reset(type)) {
+		s_quit();
+	}
+}
 void mainWindow::connect_shortcut(QAction *action, int index) {
 	QString *sc = (QString *)settings_inp_rd_sc(index, KEYBOARD);
 
@@ -1409,90 +1436,12 @@ void mainWindow::connect_action(QAction *action, int value, const char *member) 
 	action->setProperty("myValue", QVariant(value));
 	connect_action(action, member);
 }
-void mainWindow::make_reset(int type) {
-	if (type == HARD) {
-		if ((cfg->cheat_mode == GAMEGENIE_MODE) && gamegenie.rom_present) {
-			if (info.mapper.id != GAMEGENIE_MAPPER) {
-				strcpy(info.load_rom_file, info.rom_file);
-			}
-			gamegenie_reset();
-			type = CHANGE_ROM;
-		} else {
-			/*
-			 * se e' stato disabilitato il game genie quando ormai
-			 * e' gia' in esecuzione e si preme un reset, carico la rom.
-			 */
-			if (info.mapper.id == GAMEGENIE_MAPPER) {
-				gamegenie_reset();
-				type = CHANGE_ROM;
-			}
-		}
-	}
-
-	if (emu_reset(type)) {
-		s_quit();
-	}
-}
 void mainWindow::set_filter(int filter) {
-	switch (filter) {
-		case NO_FILTER:
-			gfx_set_screen(NO_CHANGE, NO_FILTER, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
-			return;
-		case PHOSPHOR:
-			gfx_set_screen(NO_CHANGE, PHOSPHOR, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
-			return;
-		case PHOSPHOR2:
-			gfx_set_screen(NO_CHANGE, PHOSPHOR2, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
-			return;
-		case SCANLINE:
-			gfx_set_screen(NO_CHANGE, SCANLINE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
-			return;
-		case DBL:
-			gfx_set_screen(NO_CHANGE, DBL, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
-			return;
-		case DARK_ROOM:
-			gfx_set_screen(NO_CHANGE, DARK_ROOM, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
-			return;
-		case CRT_CURVE:
-			gfx_set_screen(NO_CHANGE, CRT_CURVE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
-			return;
-		case CRT_NO_CURVE:
-			gfx_set_screen(NO_CHANGE, CRT_NO_CURVE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
-			return;
-		case SCALE2X:
-			gfx_set_screen(X2, SCALE2X, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
-			return;
-		case SCALE3X:
-			gfx_set_screen(X3, SCALE3X, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
-			return;
-		case SCALE4X:
-			gfx_set_screen(X4, SCALE4X, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
-			return;
-		case HQ2X:
-			gfx_set_screen(X2, HQ2X, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
-			return;
-		case HQ3X:
-			gfx_set_screen(X3, HQ3X, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
-			return;
-		case HQ4X:
-			gfx_set_screen(X4, HQ4X, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
-			return;
-		case XBRZ2X:
-			gfx_set_screen(X2, XBRZ2X, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
-			return;
-		case XBRZ3X:
-			gfx_set_screen(X3, XBRZ3X, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
-			return;
-		case XBRZ4X:
-			gfx_set_screen(X4, XBRZ4X, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
-			return;
-		case NTSC_FILTER:
-			gfx_set_screen(NO_CHANGE, NTSC_FILTER, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
-			if (cfg->filter == NTSC_FILTER) {
-				ntsc_set(cfg->ntsc_format, 0, 0, (BYTE *) palette_RGB, 0);
-			}
-			return;
-	}
+#if defined (SDL) && defined (__WIN32__)
+	gfx_sdlwe_set(SDLWIN_FILTER, filter);
+#else
+	gfx_FILTER(filter);
+#endif
 }
 void mainWindow::s_set_effect() {
 #if defined (SDL)
@@ -1642,7 +1591,11 @@ void mainWindow::s_quit() {
 void mainWindow::s_make_reset() {
 	int type = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
-	make_reset(type);
+#if defined (SDL) && defined (__WIN32__)
+	gfx_sdlwe_set(SDLWIN_MAKE_RESET, type);
+#else
+	gfx_MAKE_RESET(type);
+#endif
 }
 void mainWindow::s_disk_side() {
 	int side = QVariant(((QObject *)sender())->property("myValue")).toInt();
@@ -1713,12 +1666,11 @@ void mainWindow::s_set_mode() {
 
 	if (reset) {
 		text_add_line_info(1, "switched to [green]%s", opt_mode[machine.type].lname);
-		make_reset(CHANGE_MODE);
-		/*
-		 * per lo swap dell'emphasis del rosso e del verde in caso di PAL e DENDY
-		 * ricreo la paletta quando cambio regione.
-		 */
-		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, TRUE);
+#if defined (SDL) && defined (__WIN32__)
+		gfx_sdlwe_set(SDLWIN_SWITCH_MODE, SDLWIN_NONE);
+#else
+		gfx_SWITCH_MODE();
+#endif
 	}
 }
 void mainWindow::s_set_rendering() {
@@ -1731,13 +1683,11 @@ void mainWindow::s_set_rendering() {
 	gfx_set_render(rendering);
 	cfg->render = rendering;
 
-#if defined (SDL)
-	sdl_wid();
-	opengl_effect_change(opengl.rotation);
-	gfx_reset_video();
+#if defined (SDL) && defined (__WIN32__)
+	gfx_sdlwe_set(SDLWIN_SWITCH_RENDERING, SDLWIN_NONE);
+#else
+	gfx_SWITCH_RENDERING();
 #endif
-
-	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 }
 void mainWindow::s_set_fps() {
 	int fps = QVariant(((QObject *)sender())->property("myValue")).toInt();
@@ -1767,7 +1717,11 @@ void mainWindow::s_set_fsk() {
 void mainWindow::s_set_scale() {
 	int scale = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
-	gfx_set_screen(scale, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
+#if defined (SDL) && defined (__WIN32__)
+	gfx_sdlwe_set(SDLWIN_SCALE, scale);
+#else
+	gfx_SCALE(scale);
+#endif
 }
 void mainWindow::s_set_par() {
 	int par = QVariant(((QObject *)sender())->property("myValue")).toInt();
@@ -1891,14 +1845,18 @@ void mainWindow::s_load_palette() {
 void mainWindow::s_set_vsync() {
 	cfg->vsync = !cfg->vsync;
 
-#if defined (SDL)
-	sdl_wid();
-	gfx_reset_video();
+#if defined (SDL) && defined (__WIN32__)
+	gfx_sdlwe_set(SDLWIN_VSYNC, SDLWIN_NONE);
+#else
+	gfx_VSYNC();
 #endif
-
-	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 }
 void mainWindow::s_set_interpolation() {
+#if defined (SDL)
+	if (cfg->render == RENDER_SOFTWARE) {
+		return;
+	}
+#endif
 	cfg->interpolation = !cfg->interpolation;
 
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
