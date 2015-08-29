@@ -790,11 +790,11 @@
     </message>
     <message>
         <source>&amp;CRT With Curve</source>
-        <translation>&amp;Выпуклый ЭЛТ-дисплей</translation>
+        <translation>&amp;Выпуклый кинескоп</translation>
     </message>
     <message>
         <source>&amp;CRT Without Curve</source>
-        <translation>&amp;Плоский ЭЛТ-дисплей</translation>
+        <translation>&amp;Плоский кинескоп</translation>
     </message>
     <message>
         <source>&amp;Scale2X</source>
