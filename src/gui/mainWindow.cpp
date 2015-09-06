@@ -1904,7 +1904,7 @@ void mainWindow::s_set_channels() {
 	emu_pause(FALSE);
 }
 void mainWindow::s_set_stereo_delay() {
-	double delay = ((QAction *)sender())->data().toDouble() / 100.f;
+	double delay = QVariant(((QObject *)sender())->property("myValue")).toDouble() / 100.0f;
 
 	if (cfg->stereo_delay == delay) {
 		return;
