@@ -126,11 +126,11 @@ BYTE emu_frame(void) {
 			snd_end_frame();
 		}
 
-#if defined (DEBUG)
-		gfx_draw_screen(TRUE);
-#else
+//#if defined (DEBUG)
+//		gfx_draw_screen(TRUE);
+//#else
 		gfx_draw_screen(FALSE);
-#endif
+//#endif
 
 		if (!tas.type && (++tl.frames == tl.frames_snap)) {
 			timeline_snap(TL_NORMAL);

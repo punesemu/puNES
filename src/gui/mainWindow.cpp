@@ -36,6 +36,7 @@
 #include "text.h"
 #include "save_slot.h"
 #include "version.h"
+#include "audio/delay.h"
 #if defined (SDL)
 #if defined (__linux__)
 #include "sdl_wid.h"
@@ -231,7 +232,8 @@ void mainWindow::setup() {
 	grp = new QActionGroup(this);
 	grp->setExclusive(true);
 	grp->addAction(ui->action_Mono);
-	grp->addAction(ui->action_Stereo);
+	grp->addAction(ui->action_Stereo_Panning_Mode);
+	grp->addAction(ui->action_Stereo_Delay_Mode);
 	// Settings/Audio/Channels/Stereo delay
 	grp = new QActionGroup(this);
 	grp->setExclusive(true);
@@ -901,14 +903,18 @@ void mainWindow::update_menu_settings() {
 			break;
 	}
 	// Settings/Audio/Channels
-	switch (cfg->channels) {
-		case MONO:
+	switch (cfg->channels_mode) {
+		case CH_MONO:
 			ui->action_Mono->setChecked(true);
 			ui->menu_Stereo_delay->setEnabled(false);
 			break;
-		case STEREO:
-			ui->action_Stereo->setChecked(true);
+		case CH_STEREO_DELAY:
+			ui->action_Stereo_Delay_Mode->setChecked(true);
 			ui->menu_Stereo_delay->setEnabled(true);
+			break;
+		case CH_STEREO_PANNING:
+			ui->action_Stereo_Panning_Mode->setChecked(true);
+			ui->menu_Stereo_delay->setEnabled(false);
 			break;
 	}
 	// Settings/Audio/Channels/Stereo delay
@@ -1364,8 +1370,9 @@ void mainWindow::connect_menu_signals() {
 	connect_action(ui->action_Sample_rate_22050, S22050, SLOT(s_set_samplerate()));
 	connect_action(ui->action_Sample_rate_11025, S11025, SLOT(s_set_samplerate()));
 	// Settings/Audio/Channels
-	connect_action(ui->action_Mono, MONO, SLOT(s_set_channels()));
-	connect_action(ui->action_Stereo, STEREO, SLOT(s_set_channels()));
+	connect_action(ui->action_Mono, CH_MONO, SLOT(s_set_channels()));
+	connect_action(ui->action_Stereo_Panning_Mode, CH_STEREO_PANNING, SLOT(s_set_channels()));
+	connect_action(ui->action_Stereo_Delay_Mode, CH_STEREO_DELAY, SLOT(s_set_channels()));
 	// Settings/Audio/Channels/Stereo delay
 	connect_action(ui->action_Stereo_delay_5, 5, SLOT(s_set_stereo_delay()));
 	connect_action(ui->action_Stereo_delay_10, 10, SLOT(s_set_stereo_delay()));
@@ -1893,12 +1900,12 @@ void mainWindow::s_set_samplerate() {
 void mainWindow::s_set_channels() {
 	int channels = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
-	if (cfg->channels == channels) {
+	if (cfg->channels_mode == channels) {
 		return;
 	}
 
 	emu_pause(TRUE);
-	cfg->channels = channels;
+	cfg->channels_mode = channels;
 	snd_start();
 	gui_update();
 	emu_pause(FALSE);
@@ -1911,7 +1918,7 @@ void mainWindow::s_set_stereo_delay() {
 	}
 
 	cfg->stereo_delay = delay;
-	snd_stereo_delay();
+	ch_stereo_delay_set();
 	gui_update();
 }
 void mainWindow::s_set_audio_quality() {

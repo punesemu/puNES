@@ -32,10 +32,7 @@ enum fps_values {
 };
 
 #define fps_machine_ms(factor)\
-	if (fps.fast_forward == FALSE) {\
-		machine.ms_frame = (1000.0f / (double) machine.fps) * factor;\
-		fps.ms = machine.ms_frame;\
-	}
+	machine.ms_frame = fps.ms = (1000.0f / (double) machine.fps) * factor;
 
 #if defined (__cplusplus)
 #define EXTERNC extern "C"

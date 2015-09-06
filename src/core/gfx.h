@@ -17,11 +17,11 @@
 
 #include "common.h"
 #include "text.h"
-#include "filters/video/scale.h"
-#include "filters/video/scale2x.h"
-#include "filters/video/hqx.h"
-#include "filters/video/ntsc.h"
-#include "filters/video/xBRZ.h"
+#include "video/filters/scale.h"
+#include "video/filters/scale2x.h"
+#include "video/filters/hqx.h"
+#include "video/filters/ntsc.h"
+#include "video/filters/xBRZ.h"
 
 enum fullscreen_type { NO_FULLSCR, FULLSCR };
 enum scale_type { X1 = 1, X2, X3, X4 };

@@ -6,17 +6,18 @@
  */
 
 #include <string.h>
-#include "audio_quality.h"
 #include "apu.h"
 #include "snd.h"
 #include "mappers.h"
 #include "mappers/mapper_VRC7_snd.h"
 #include "fds.h"
-#include "blipbuf.h"
 #include "conf.h"
 #include "clock.h"
 #include "fps.h"
-#include "blip_buf.h"
+#include "audio/quality.h"
+#include "audio/channels.h"
+#include "audio/blip_buf.h"
+#include "audio/blipbuf.h"
 #include "info.h"
 
 enum blbuf_misc { master_vol = 65536 / 15 };
@@ -50,9 +51,6 @@ struct _blipbuf {
 
 	DBWORD counter;
 
-	BYTE min;
-	BYTE max;
-
 	SWORD output;
 	int delta;
 } blipbuf;
@@ -74,9 +72,6 @@ BYTE audio_quality_init_blipbuf(void) {
 	snd_end_frame = audio_quality_end_frame_blipbuf;
 
 	init_nla_table(502, 522)
-
-	blipbuf.max = ((snd.buffer.count >> 1) + 1);
-	blipbuf.min = (((snd.buffer.count >> 1) + 1) < 3 ? 3 : ((snd.buffer.count >> 1) + 1));
 
 	blipbuf.wave = blip_new(snd.samplerate / 10);
 
@@ -148,8 +143,6 @@ void audio_quality_apu_tick_blipbuf(void) {
 	blipbuf.counter++;
 }
 void audio_quality_end_frame_blipbuf(void) {
-	_callback_data *cache = (_callback_data *) snd.cache;
-
 	if (!blipbuf.wave) {
 		return;
 	}
@@ -170,70 +163,27 @@ void audio_quality_end_frame_blipbuf(void) {
 
 		blip_read_samples(blipbuf.wave, sample, count, 0);
 
-		if (snd.brk) {
-			if (cache->filled < 3) {
-				snd.brk = FALSE;
-			} else {
-				return;
-			}
+		if (snd_handler() == EXIT_ERROR) {
+			return;
 		}
 
-		snd_lock_cache(cache);
+		snd_lock_cache(SNDCACHE);
 
 		for (i = 0; i < count; i++) {
 			SWORD data = (sample[i] * apu_pre_amp) * cfg->apu.volume[APU_MASTER];
 
-			/* mono o canale sinistro */
-			(*cache->write++) = data;
-			/* incremento il contatore dei bytes disponibili */
-			cache->bytes_available += sizeof(*cache->write);
+			audio_channels_tick(data);
 
-			/* stereo */
-			if (cfg->channels == STEREO) {
-				/* salvo il dato nel buffer del canale sinistro */
-				snd.channel.ptr[CH_LEFT][snd.channel.pos] = data;
-				/* scrivo nel nel frame audio il canale destro ritardato di un frame */
-				(*cache->write++) = snd.channel.ptr[CH_RIGHT][snd.channel.pos];
-				/* incremento il contatore dei bytes disponibili */
-				cache->bytes_available += sizeof(*cache->write);
-
-				/* swappo i buffers dei canali */
-				if (++snd.channel.pos >= snd.channel.max_pos) {
-					SWORD *swap = snd.channel.ptr[CH_RIGHT];
-
-					snd.channel.ptr[CH_RIGHT] = snd.channel.ptr[CH_LEFT];
-					snd.channel.ptr[CH_LEFT] = swap;
-					snd.channel.pos = 0;
-				}
-
-				(*snd.channel.bck.write++) = data;
-
-				if (snd.channel.bck.write >= (SWORD *) snd.channel.bck.end) {
-					snd.channel.bck.write = snd.channel.bck.start;
-				}
-			}
-
-			if (cache->write >= (SWORD *) cache->end) {
-				cache->write = cache->start;
-			}
-
-			if (++snd.pos.current >= snd.samples) {
-				snd.pos.current = 0;
-
-				/* incremento il contatore dei frames pieni non ancora 'riprodotti' */
-				if (++cache->filled >= (SDBWORD) snd.buffer.count) {
-					snd.brk = TRUE;
-				} else if (cache->filled == 1) {
-					snd_frequency(snd_factor[apu.type][SND_FACTOR_SPEED])
-				} else if (cache->filled >= blipbuf.max) {
-					snd_frequency(snd_factor[apu.type][SND_FACTOR_SLOW])
-				} else if (cache->filled < blipbuf.min) {
-					snd_frequency(snd_factor[apu.type][SND_FACTOR_NORMAL])
-				}
+			if (SNDCACHE->write == (SWORD *) SNDCACHE->end) {
+				SNDCACHE->write = SNDCACHE->start;
 			}
 		}
 
-		snd_unlock_cache(cache);
+		if ((SNDCACHE->samples_available > snd.samples)) {
+			snd.buffer.start = TRUE;
+		}
+
+		snd_unlock_cache(SNDCACHE);
 	}
 }
 

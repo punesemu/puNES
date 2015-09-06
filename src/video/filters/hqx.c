@@ -5,7 +5,7 @@
  *      Author: fhorse
  */
 
-#include "hqx.h"
+#include "video/filters/hqx.h"
 #include "overscan.h"
 
 uint32_t RGBtoYUV[NUM_COLORS];

@@ -18,9 +18,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#include "hqx.h"
+#include "video/filters/hqx.h"
 #define _HQ3X_
-#include "hqx_inline.h"
+#include "video/filters/hqx_inline.h"
 #undef  _HQ3X_
 
 #define PIXEL00_1M  (*dp) = Interp1(wrgb[5], wrgb[1]);

@@ -14,7 +14,8 @@
 #include "fps.h"
 #include "snd.h"
 #include "cheat.h"
-#include "audio_quality.h"
+#include "audio/quality.h"
+#include "audio/channels.h"
 #include "overscan.h"
 #include "input.h"
 
@@ -49,6 +50,7 @@ enum set_element {
 	SET_TEXT_ON_SCREEN,
 	SET_FULLSCREEN,
 	SET_STRETCH_FULLSCREEN,
+	SET_AUDIO_BUFFER_FACTOR,
 	SET_SAMPLERATE,
 	SET_CHANNELS,
 	SET_STEREO_DELAY,
@@ -347,6 +349,24 @@ static const _opt opt_palette[] = {
 	{"Green"            , "green", PALETTE_GREEN},
 	{"Extern"           , "file" , PALETTE_FILE}
 };
+static const _opt opt_audio_buffer_factor[] = {
+	{NULL, "0"      , 0},
+	{NULL, "1"      , 1},
+	{NULL, "2"      , 2},
+	{NULL, "3"      , 3},
+	{NULL, "4"      , 4},
+	{NULL, "5"      , 5},
+	{NULL, "6"      , 6},
+	{NULL, "7"      , 7},
+	{NULL, "8"      , 8},
+	{NULL, "9"      , 9},
+	{NULL, "10"     , 10},
+	{NULL, "11"     , 11},
+	{NULL, "12"     , 12},
+	{NULL, "13"     , 13},
+	{NULL, "14"     , 14},
+	{NULL, "15"     , 15}
+};
 static const _opt opt_samplerate[] = {
 	{NULL, "48000", S48000},
 	{NULL, "44100", S44100},
@@ -354,8 +374,9 @@ static const _opt opt_samplerate[] = {
 	{NULL, "11025", S11025}
 };
 static const _opt opt_channels[] = {
-	{NULL,   "mono",   MONO},
-	{NULL,   "stereo", STEREO}
+	{NULL,   "mono",   CH_MONO},
+	{NULL,   "delay",  CH_STEREO_DELAY},
+	{NULL,   "pannig", CH_STEREO_PANNING},
 };
 static const _opt opt_audio_quality[] = {
 	{NULL, "low",  AQ_LOW},
@@ -563,15 +584,21 @@ static const _settings main_cfg[] = {
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 	{
+		"audio", "buffer factor", "1",
+		"# possible values: [0-15]",
+		"-b, --audio-buffer-factor buffer size factor    : [0-15]",
+		{LENGTH(opt_audio_buffer_factor), opt_audio_buffer_factor}
+	},
+	{
 		"audio", "sample rate", "44100",
 		"# possible values: 48000, 44100, 22050, 11025",
 		"-l, --samplerate          sample rate           : 48000, 44100, 22050, 11025",
 		{LENGTH(opt_samplerate), opt_samplerate}
 	},
 	{
-		"audio", "channels", "stereo",
-		"# possible values: mono, stereo",
-		"-c, --channels            audio channels        : mono, stereo",
+		"audio", "channels", "delay",
+		"# possible values: mono, delay, panning",
+		"-c, --channels            audio channels        : mono, delay, panning",
 		{LENGTH(opt_channels), opt_channels}
 	},
 	{

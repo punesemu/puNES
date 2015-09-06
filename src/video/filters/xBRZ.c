@@ -5,7 +5,7 @@
  *      Author: fhorse
  */
 
-#include "xBRZ.h"
+#include "video/filters/xBRZ.h"
 #include "overscan.h"
 
 void xBRZ_init(void) {

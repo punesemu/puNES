@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #endif
-#include "ntsc.h"
+#include "video/filters/ntsc.h"
 #include "overscan.h"
 
 nes_ntsc_t *ntsc;

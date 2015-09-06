@@ -5,7 +5,7 @@
  *      Author: fhorse
  */
 
-#include "scale.h"
+#include "video/filters/scale.h"
 #include "overscan.h"
 
 #define X3(a) ((a << 1) + a)

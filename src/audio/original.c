@@ -5,22 +5,31 @@
  *      Author: fhorse
  */
 
-#include "audio_quality.h"
+#include <string.h>
 #include "apu.h"
 #include "snd.h"
+#include "audio/quality.h"
+#include "audio/channels.h"
+#include "audio/original.h"
 #include "mappers.h"
 #include "mappers/mapper_VRC7_snd.h"
 #include "fds.h"
 #include "conf.h"
 #include "clock.h"
 #include "fps.h"
-#include "original.h"
 #include "info.h"
 
 #define _ch_gain(index, f) ((double) (f * cfg->apu.volume[index]))
 #define ch_gain_ptnd(index) _ch_gain(index, 1.0f)
-
 #define mixer_cut_and_high() mixer *= 45
+
+struct _original {
+	DBWORD cycles;
+	struct {
+		DBWORD current;
+		DBWORD last;
+	} pos;
+} original;
 
 SWORD (*extra_mixer_original)(SWORD mixer);
 SWORD mixer_original_FDS(SWORD mixer);
@@ -32,8 +41,9 @@ SWORD mixer_original_VRC7(SWORD mixer);
 
 BYTE audio_quality_init_original(void) {
 	audio_quality_quit = audio_quality_quit_original;
-
 	snd_apu_tick = audio_quality_apu_tick_original;
+
+	memset(&original, 0x00, sizeof(original));
 
 	init_nla_table(502, 522)
 
@@ -74,46 +84,19 @@ void audio_quality_quit_original(void) {
 	return;
 }
 void audio_quality_apu_tick_original(void) {
-	_callback_data *cache = (_callback_data *) snd.cache;
-
 	if (!cfg->apu.channel[APU_MASTER]) {
 		return;
 	}
 
-	if (snd.brk == TRUE) {
-		if (cache->filled < 3) {
-			snd.brk = FALSE;
-		} else {
-			return;
-		}
-	}
-
-	if ((snd.pos.current = snd.cycles++ / snd.frequency) == snd.pos.last) {
+	if ((original.pos.current = original.cycles++ / snd.frequency) == original.pos.last) {
 		return;
 	}
 
-	snd_lock_cache(cache);
-
-	/*
-	 * se la posizione e' maggiore o uguale al numero
-	 * di samples che compongono il frame, vuol dire che
-	 * sono passato nel frame successivo.
-	 */
-	if (snd.pos.current >= snd.samples) {
-		/* azzero posizione e contatore dei cicli del frame audio */
-		snd.pos.current = snd.cycles = 0;
-
-		/* incremento il contatore dei frames pieni non ancora 'riprodotti' */
-		if (++cache->filled >= (SDBWORD) snd.buffer.count) {
-			snd.brk = TRUE;
-		} else if (cache->filled == 1) {
-			snd_frequency(snd_factor[apu.type][SND_FACTOR_SPEED])
-		} else if (cache->filled >= (SDBWORD) ((snd.buffer.count >> 1) + 1)) {
-			snd_frequency(snd_factor[apu.type][SND_FACTOR_SLOW])
-		} else if (cache->filled < 3) {
-			snd_frequency(snd_factor[apu.type][SND_FACTOR_NORMAL])
-		}
+	if (snd_handler() == EXIT_ERROR) {
+		return;
 	}
+
+	snd_lock_cache(SNDCACHE);
 
 	{
 		SWORD mixer = 0;
@@ -127,44 +110,22 @@ void audio_quality_apu_tick_original(void) {
 			mixer_cut_and_high();
 		}
 
-		/* mono o canale sinistro */
-		(*cache->write++) = mixer;
-		/* incremento il contatore dei bytes disponibili */
-		cache->bytes_available += sizeof(*cache->write);
+		audio_channels_tick(mixer);
 
-		/* stereo */
-		if (cfg->channels == STEREO) {
-			/* salvo il dato nel buffer del canale sinistro */
-			snd.channel.ptr[CH_LEFT][snd.channel.pos] = mixer;
-			/* scrivo nel frame audio il canale destro ritardato rispetto al canale sinistro */
-			(*cache->write++) = snd.channel.ptr[CH_RIGHT][snd.channel.pos];
-			/* incremento il contatore dei bytes disponibili */
-			cache->bytes_available += sizeof(*cache->write);
-
-			/* swappo i buffers dei canali */
-			if (++snd.channel.pos >= snd.channel.max_pos) {
-				SWORD *swap = snd.channel.ptr[CH_RIGHT];
-
-				snd.channel.ptr[CH_RIGHT] = snd.channel.ptr[CH_LEFT];
-				snd.channel.ptr[CH_LEFT] = swap;
-				snd.channel.pos = 0;
-			}
-
-			(*snd.channel.bck.write++) = mixer;
-
-			if (snd.channel.bck.write >= (SWORD *) snd.channel.bck.end) {
-				snd.channel.bck.write = snd.channel.bck.start;
-			}
+		if (SNDCACHE->write == (SWORD *) SNDCACHE->end) {
+			SNDCACHE->write = SNDCACHE->start;
 		}
 
-		if (cache->write >= (SWORD *) cache->end) {
-			cache->write = cache->start;
-		}
+		original.pos.last = original.pos.current;
 
-		snd.pos.last = snd.pos.current;
+		if (original.pos.current >= snd.samples) {
+			snd.buffer.start = TRUE;
+			// azzero posizione e contatore dei cicli del frame audio
+			original.pos.current = original.cycles = 0;
+		}
 	}
 
-	snd_unlock_cache(cache);
+	snd_unlock_cache(SNDCACHE);
 }
 
 /* --------------------------------------------------------------------------------------- */

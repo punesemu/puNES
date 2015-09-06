@@ -77,7 +77,9 @@ void fps_init(void) {
 
 	memset(&fps, 0, sizeof(fps));
 
-	fps_machine_ms(1.0)
+	if (fps.fast_forward == FALSE) {
+		fps_machine_ms(1.0)
+	}
 
 	fps.nominal = 1000.0f / machine.ms_frame;
 	fps.avarage = fps.nominal;

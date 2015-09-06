@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #endif
-#include "scale2x.h"
+#include "video/filters/scale2x.h"
 #include "overscan.h"
 
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))

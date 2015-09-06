@@ -8,9 +8,9 @@
 #ifndef NTSC_H_
 #define NTSC_H_
 
+#include "video/filters/nes_ntsc.h"
 #include "common.h"
 #include "gfx.h"
-#include "nes_ntsc.h"
 #include "palette.h"
 
 enum ntsc_mode { COMPOSITE, SVIDEO, RGBMODE };

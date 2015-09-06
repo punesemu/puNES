@@ -1,5 +1,5 @@
 /*
- * audio_quality.h
+ * quality.h
  *
  *  Created on: 30/lug/2012
  *      Author: fhorse

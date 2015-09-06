@@ -16,9 +16,10 @@ typedef struct {
 	BYTE save_on_exit;
 	BYTE mode;
 	BYTE samplerate;
-	BYTE channels;
+	BYTE channels_mode;
 	double stereo_delay;
 	BYTE audio_quality;
+	BYTE audio_buffer_factor;
 	BYTE swap_duty;
 	BYTE fps;
 	BYTE frameskip;

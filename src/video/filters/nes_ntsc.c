@@ -1,6 +1,6 @@
 /* nes_ntsc 0.2.2. http://www.slack.net/~ant/ */
 
-#include "nes_ntsc.h"
+#include "video/filters/nes_ntsc.h"
 #include "gfx.h"
 #include "overscan.h"
 #include "conf.h"

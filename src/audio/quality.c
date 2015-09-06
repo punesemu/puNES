@@ -6,10 +6,10 @@
  */
 
 #include <stddef.h>
-#include "audio_quality.h"
+#include "audio/quality.h"
 #include "snd.h"
-#include "filters/audio/original.h"
-#include "filters/audio/blipbuf.h"
+#include "audio/original.h"
+#include "audio/blipbuf.h"
 
 void audio_quality(BYTE quality) {
 	if (audio_quality_quit) {

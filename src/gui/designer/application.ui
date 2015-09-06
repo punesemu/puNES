@@ -374,7 +374,8 @@
        <addaction name="action_Stereo_delay_100"/>
       </widget>
       <addaction name="action_Mono"/>
-      <addaction name="action_Stereo"/>
+      <addaction name="action_Stereo_Panning_Mode"/>
+      <addaction name="action_Stereo_Delay_Mode"/>
       <addaction name="separator"/>
       <addaction name="menu_Stereo_delay"/>
      </widget>
@@ -1331,12 +1332,12 @@
     <string>&amp;Mono</string>
    </property>
   </action>
-  <action name="action_Stereo">
+  <action name="action_Stereo_Delay_Mode">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>&amp;Stereo</string>
+    <string>&amp;Stereo Delay</string>
    </property>
   </action>
   <action name="action_Stereo_delay_5">
@@ -1800,6 +1801,14 @@
    </property>
    <property name="text">
     <string>Hide the mouse cursor</string>
+   </property>
+  </action>
+  <action name="action_Stereo_Panning_Mode">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Stereo &amp;Panning</string>
    </property>
   </action>
  </widget>

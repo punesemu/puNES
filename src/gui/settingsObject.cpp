@@ -728,8 +728,9 @@ void setObject::to_cfg(QString group) {
 	}
 
 	if ((group == "audio") || (group == "all")) {
+		int_to_val(SET_AUDIO_BUFFER_FACTOR, cfg_from_file.audio_buffer_factor);
 		int_to_val(SET_SAMPLERATE, cfg_from_file.samplerate);
-		int_to_val(SET_CHANNELS, cfg_from_file.channels);
+		int_to_val(SET_CHANNELS, cfg_from_file.channels_mode);
 		double_to_val(SET_STEREO_DELAY, cfg_from_file.stereo_delay);
 		int_to_val(SET_AUDIO_QUALITY, cfg_from_file.audio_quality);
 		int_to_val(SET_SWAP_DUTY, cfg_from_file.swap_duty);
@@ -785,8 +786,9 @@ void setObject::fr_cfg(QString group) {
 	}
 
 	if ((group == "audio") || (group == "all")) {
+		cfg_from_file.audio_buffer_factor = val_to_int(SET_AUDIO_BUFFER_FACTOR);
 		cfg_from_file.samplerate = val_to_int(SET_SAMPLERATE);
-		cfg_from_file.channels = val_to_int(SET_CHANNELS);
+		cfg_from_file.channels_mode = val_to_int(SET_CHANNELS);
 		cfg_from_file.stereo_delay = val_to_double(SET_STEREO_DELAY, 5);
 		cfg_from_file.audio_quality = val_to_int(SET_AUDIO_QUALITY);
 		cfg_from_file.swap_duty = val_to_int(SET_SWAP_DUTY);
