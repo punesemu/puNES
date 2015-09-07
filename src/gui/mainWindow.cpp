@@ -221,6 +221,19 @@ void mainWindow::setup() {
 	grp->addAction(ui->action_Monochrome);
 	grp->addAction(ui->action_Green);
 	grp->addAction(ui->action_Palette_File);
+	// Settings/Audio/Buffer Size factor
+	grp = new QActionGroup(this);
+	grp->setExclusive(true);
+	grp->addAction(ui->action_Absf_0);
+	grp->addAction(ui->action_Absf_1);
+	grp->addAction(ui->action_Absf_2);
+	grp->addAction(ui->action_Absf_3);
+	grp->addAction(ui->action_Absf_4);
+	grp->addAction(ui->action_Absf_5);
+	grp->addAction(ui->action_Absf_6);
+	grp->addAction(ui->action_Absf_7);
+	grp->addAction(ui->action_Absf_8);
+	grp->addAction(ui->action_Absf_9);
 	// Settings/Audio/Samplerate
 	grp = new QActionGroup(this);
 	grp->setExclusive(true);
@@ -866,7 +879,6 @@ void mainWindow::update_menu_settings() {
 	}
 	ui->action_Cube->setChecked(opengl.rotation);
 #endif
-
 	// Settings/Video/[VSync, Interpolation, Text on screen]
 #if defined (SDL)
 	if (gfx.opengl) {
@@ -886,7 +898,39 @@ void mainWindow::update_menu_settings() {
 	ui->action_Interpolation->setChecked(cfg->interpolation);
 	ui->action_Text_on_screen->setChecked(cfg->txt_on_screen);
 	ui->action_Stretch_in_fullscreen->setChecked(cfg->stretch);
-
+	// Settings/Audio/Buffer Size factor
+	switch (cfg->audio_buffer_factor) {
+		case 0:
+			ui->action_Absf_0->setChecked(true);
+			break;
+		case 1:
+			ui->action_Absf_1->setChecked(true);
+			break;
+		case 2:
+			ui->action_Absf_2->setChecked(true);
+			break;
+		case 3:
+			ui->action_Absf_3->setChecked(true);
+			break;
+		case 4:
+			ui->action_Absf_4->setChecked(true);
+			break;
+		case 5:
+			ui->action_Absf_5->setChecked(true);
+			break;
+		case 6:
+			ui->action_Absf_6->setChecked(true);
+			break;
+		case 7:
+			ui->action_Absf_7->setChecked(true);
+			break;
+		case 8:
+			ui->action_Absf_8->setChecked(true);
+			break;
+		case 9:
+			ui->action_Absf_9->setChecked(true);
+			break;
+	}
 	// Settings/Audio/Samplerate
 	switch (cfg->samplerate) {
 		case S48000:
@@ -1364,6 +1408,17 @@ void mainWindow::connect_menu_signals() {
 	connect_action(ui->action_Text_on_screen, SLOT(s_set_txt_on_screen()));
 	connect_action(ui->action_Fullscreen, SLOT(s_set_fullscreen()));
 	connect_action(ui->action_Stretch_in_fullscreen, SLOT(s_set_stretch()));
+	// Settings/Audio/Buffer Size factor
+	connect_action(ui->action_Absf_0, 0, SLOT(s_set_audio_buffer_factor()));
+	connect_action(ui->action_Absf_1, 1, SLOT(s_set_audio_buffer_factor()));
+	connect_action(ui->action_Absf_2, 2, SLOT(s_set_audio_buffer_factor()));
+	connect_action(ui->action_Absf_3, 3, SLOT(s_set_audio_buffer_factor()));
+	connect_action(ui->action_Absf_4, 4, SLOT(s_set_audio_buffer_factor()));
+	connect_action(ui->action_Absf_5, 5, SLOT(s_set_audio_buffer_factor()));
+	connect_action(ui->action_Absf_6, 6, SLOT(s_set_audio_buffer_factor()));
+	connect_action(ui->action_Absf_7, 7, SLOT(s_set_audio_buffer_factor()));
+	connect_action(ui->action_Absf_8, 8, SLOT(s_set_audio_buffer_factor()));
+	connect_action(ui->action_Absf_9, 9, SLOT(s_set_audio_buffer_factor()));
 	// Settings/Audio/Samplerate
 	connect_action(ui->action_Sample_rate_48000, S48000, SLOT(s_set_samplerate()));
 	connect_action(ui->action_Sample_rate_44100, S44100, SLOT(s_set_samplerate()));
@@ -1883,6 +1938,19 @@ void mainWindow::s_set_stretch() {
 	if (cfg->fullscreen == FULLSCR) {
 		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 	}
+}
+void mainWindow::s_set_audio_buffer_factor() {
+	int factor = QVariant(((QObject *)sender())->property("myValue")).toInt();
+
+	if (cfg->audio_buffer_factor == factor) {
+		return;
+	}
+
+	emu_pause(TRUE);
+	cfg->audio_buffer_factor = factor;
+	snd_start();
+	gui_update();
+	emu_pause(FALSE);
 }
 void mainWindow::s_set_samplerate() {
 	int samplerate = QVariant(((QObject *)sender())->property("myValue")).toInt();

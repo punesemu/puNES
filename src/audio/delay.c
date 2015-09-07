@@ -13,9 +13,9 @@
 #include "conf.h"
 
 enum delay_channels { CH_LEFT, CH_RIGHT };
-enum delay_max_samples { DELAY_SAMPLES = 512 };
 
 struct _delay {
+	DBWORD samples;
 	DBWORD max_pos;
 	DBWORD pos;
 	SWORD *ptr[2];
@@ -35,11 +35,26 @@ BYTE ch_stereo_delay_init(void) {
 	audio_channels_quit = ch_stereo_delay_quit;
 	audio_channels_tick = ch_stereo_delay_tick;
 
-	delay.max_pos = DELAY_SAMPLES * cfg->stereo_delay;
+	switch (snd.samplerate) {
+		case 48000:
+			delay.samples = ((snd.samplerate / (11025 / 128)) * 8) / 2;
+			break;
+		case 44100:
+			delay.samples = (512 * 8) / 2;
+			break;
+		case 22050:
+			delay.samples = (256 * 8) / 2;
+			break;
+		case 11025:
+			delay.samples = (128 * 8) / 2;
+			break;
+	}
+
+	delay.max_pos = delay.samples * cfg->stereo_delay;
 	delay.pos = 0;
 
 	for (i = 0; i < 2; i++) {
-		DBWORD size = DELAY_SAMPLES * sizeof(*SNDCACHE->write);
+		DBWORD size = delay.samples * sizeof(*SNDCACHE->write);
 
 		delay.buf[i] = (SWORD *) malloc(size);
 		memset(delay.buf[i], 0x00, size);
@@ -48,7 +63,7 @@ BYTE ch_stereo_delay_init(void) {
 		delay.bck.start = (SWORD *) malloc(size * 2);
 		memset(delay.bck.start, 0x00, size * 2);
 		delay.bck.write = delay.bck.start;
-		delay.bck.middle = delay.bck.start + DELAY_SAMPLES;
+		delay.bck.middle = delay.bck.start + delay.samples;
 		delay.bck.end = (SBYTE *) delay.bck.start + (size * 2);
 	}
 
@@ -104,7 +119,7 @@ void ch_stereo_delay_set(void) {
 	SWORD *here;
 	int i;
 
-	delay.max_pos = DELAY_SAMPLES * cfg->stereo_delay;
+	delay.max_pos = delay.samples * cfg->stereo_delay;
 	delay.pos = 0;
 
 	for (i = 0; i < 2; i++) {

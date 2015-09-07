@@ -28,6 +28,8 @@ static BYTE set_hwparams(void);
 static BYTE set_swparams(void);
 void *alsa_loop_thread(void *data);
 void alsa_loop_in_pause(void);
+static int INLINE xrun_recovery(snd_pcm_t *handle, int err);
+static void INLINE wrbuf(snd_pcm_t *handle, void *buffer, snd_pcm_sframes_t avail);
 
 typedef struct {
 	snd_pcm_t *handle;
@@ -116,7 +118,7 @@ BYTE snd_start(void) {
 	alsa.psize = alsa.bsize / 3;
 
 	snd.samples = alsa.bsize * 2;
-	snd.frequency = ((fps.nominal * (double) machine.cpu_cycles_frame) / (double) snd.samplerate);
+	snd.frequency = machine.cpu_hz / (double) snd.samplerate;
 
 	{
 		// dimensione in bytes del buffer software
@@ -215,8 +217,7 @@ BYTE snd_start(void) {
 	snd_stop();
 	return (EXIT_ERROR);
 }
-void snd_output(void *udata, BYTE *stream, int len) {
-}
+void snd_output(void *udata, BYTE *stream, int len) {}
 void snd_lock_cache(_callback_data *cache) {
 	pthread_mutex_lock(&loop.lock);
 }
@@ -406,19 +407,16 @@ void *alsa_loop_thread(void *data) {
 		th->in_run = TRUE;
 
 		if ((rc = snd_pcm_wait(th->alsa->handle , 100)) < 0) {
-			fprintf(stderr, "poll failed (%s)\n", strerror(errno));
+			fprintf(stderr, "snd_pcm_wait() failed (%s)\n", snd_strerror(rc));
+			xrun_recovery(th->alsa->handle, rc);
 			continue;
 		}
 
 		// controllo quanti frames alsa sono richiesti
 		if ((avail = snd_pcm_avail_update(th->alsa->handle)) < 0) {
-			if (avail == -EPIPE) {
-				fprintf(stderr, "an xrun occured\n");
-				continue;
-			} else {
-				fprintf(stderr, "unknown ALSA avail update return value (%ld)\n", avail);
-				continue;
-			}
+			fprintf(stderr, "snd_pcm_avail_update() failed (%s)\n", snd_strerror(rc));
+			xrun_recovery(th->alsa->handle, avail);
+			continue;
 		}
 
 #if !defined (RELEASE)
@@ -430,15 +428,11 @@ void *alsa_loop_thread(void *data) {
 		avail = (avail > alsa.psize ? alsa.psize : avail);
 		len = avail * snd.channels * sizeof(*cache->write);
 
-		if ((info.no_rom) || (snd.buffer.start == FALSE) || (cache->bytes_available <= 0)) {
-			if ((rc = snd_pcm_writei(th->alsa->handle, (void *) cache->silence, avail)) < 0) {
-				fprintf(stderr, "write failed (%s)\n", snd_strerror(rc));
-			}
+		if ((info.no_rom | info.pause) || (snd.buffer.start == FALSE)) {
+			wrbuf(th->alsa->handle, (void *) cache->silence, avail);
 		} else if (cache->bytes_available <= 0) {
-			if ((rc = snd_pcm_writei(th->alsa->handle, (void *) cache->silence, avail)) < 0) {
-				fprintf(stderr, "write failed (%s)\n", snd_strerror(rc));
-			}
 			snd.out_of_sync++;
+			wrbuf(th->alsa->handle, (void *) cache->silence, avail);
 		} else {
 			if (cache->bytes_available < len) {
 				len = cache->bytes_available;
@@ -450,24 +444,15 @@ void *alsa_loop_thread(void *data) {
 				uint32_t l1 = 0, l2 = 0;
 
 				l1 = cache->end - cache->read;
-				if ((rc = snd_pcm_writei(th->alsa->handle, (void *) cache->read,
-						l1 / snd.channels / sizeof(*cache->write))) < 0) {
-					fprintf(stderr, "write failed (%s)\n", snd_strerror(rc));
-				}
-
+				wrbuf(th->alsa->handle, (void *) cache->read,
+						l1 / snd.channels / sizeof(*cache->write));
 				cache->read = (SBYTE *) cache->start;
 				l2 = len - l1;
-				if ((rc = snd_pcm_writei(th->alsa->handle, (void *) cache->read,
-						l2 / snd.channels / sizeof(*cache->write))) < 0) {
-					fprintf(stderr, "write failed (%s)\n", snd_strerror(rc));
-				}
-
+				wrbuf(th->alsa->handle, (void *) cache->read,
+						l2 / snd.channels / sizeof(*cache->write));
 				cache->read += l2;
 			} else {
-				if ((rc = snd_pcm_writei(th->alsa->handle, (void *) cache->read, avail)) < 0) {
-					fprintf(stderr, "write failed (%s)\n", snd_strerror(rc));
-				}
-
+				wrbuf(th->alsa->handle, (void *) cache->read, avail);
 				cache->read += len;
 			}
 
@@ -475,30 +460,25 @@ void *alsa_loop_thread(void *data) {
 				cache->read = (SBYTE *) cache->start;
 			}
 
-			//if ((th->alsa->bytes_written += len) > (snd.buffer.size * sizeof(*cache->write))) {
-			//	th->alsa->bytes_written -= (snd.buffer.size * sizeof(*cache->write));
-			//	cache->filled--;
-			//}
-
 			cache->bytes_available -= len;
 			cache->samples_available -= avail;
 		}
 
 #if !defined (RELEASE)
 		/**/
-		if ((gui_get_ms() - th->tick) >= 150.0f) {
-		th->tick = gui_get_ms();
-		fprintf(stderr, "snd : %5ld %5ld %d %5d %d %5d %5d %f %f %4s\r",
-				request,
-				avail,
-				len,
-				fps.total_frames_skipped,
-				cache->samples_available,
-				cache->bytes_available,
-				snd.out_of_sync,
-				snd.frequency,
-				machine.ms_frame,
-				"");
+		if ((gui_get_ms() - th->tick) >= 250.0f) {
+			th->tick = gui_get_ms();
+			fprintf(stderr, "snd : %5ld %5ld %d %5d %d %5d %5d %f %f %4s\r",
+					request,
+					avail,
+					len,
+					fps.total_frames_skipped,
+					cache->samples_available,
+					cache->bytes_available,
+					snd.out_of_sync,
+					snd.frequency,
+					machine.ms_frame,
+					"");
 		}
 		/**/
 #endif
@@ -515,5 +495,38 @@ void alsa_loop_in_pause(void) {
 		while (loop.in_run == TRUE) {
 			gui_sleep(10);
 		}
+	}
+}
+static int INLINE xrun_recovery(snd_pcm_t *handle, int err) {
+	if (err == -EPIPE) { // under-run
+		err = snd_pcm_prepare(handle);
+		if (err < 0) {
+			fprintf(stderr, "\n\nCan't recovery from underrun, prepare failed: %s\n",
+					snd_strerror(err));
+			info.stop = TRUE;
+			return (EXIT_ERROR);
+		}
+	} else if (err == -ESTRPIPE) {
+		while ((err = snd_pcm_resume(handle)) == -EAGAIN) {
+			sleep(1); // wait until the suspend flag is released
+		}
+
+		if (err < 0) {
+			err = snd_pcm_prepare(handle);
+			if (err < 0) {
+				fprintf(stderr, "\n\nCan't recovery from suspend, prepare failed: %s\n",
+						snd_strerror(err));
+				info.stop = TRUE;
+				return (EXIT_ERROR);
+			}
+		}
+	}
+	return (EXIT_OK);
+}
+static void INLINE wrbuf(snd_pcm_t *handle, void *buffer, snd_pcm_sframes_t avail) {
+	int rc;
+
+	if ((rc = snd_pcm_writei(handle, buffer,avail)) < 0) {
+		fprintf(stderr, "snd_pcm_writei failed (%s)\n", snd_strerror(rc));
 	}
 }

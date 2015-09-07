@@ -16,7 +16,7 @@ BYTE snd_handler(void) {
 		return (EXIT_ERROR);
 	} else if (fps.fast_forward == FALSE) {
 		if (SNDCACHE->bytes_available < snd.buffer.limit.low) {
-			snd_frequency(0.3f);
+			snd_frequency(0.7f);
 		} else if ((SNDCACHE->bytes_available > snd.buffer.limit.high)) {
 			snd_frequency(2.0f);
 		} else {

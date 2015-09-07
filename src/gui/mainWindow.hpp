@@ -121,6 +121,7 @@ class mainWindow: public QMainWindow {
 		void s_set_interpolation();
 		void s_set_txt_on_screen();
 		void s_set_stretch();
+		void s_set_audio_buffer_factor();
 		void s_set_samplerate();
 		void s_set_channels();
 		void s_set_stereo_delay();
