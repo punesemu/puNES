@@ -96,8 +96,7 @@ BYTE snd_start(void) {
 
 	audio_channels(cfg->channels_mode);
 
-	{
-		switch (cfg->samplerate) {
+	switch (cfg->samplerate) {
 		case S48000:
 			snd.samplerate = 48000;
 			break;
@@ -110,12 +109,15 @@ BYTE snd_start(void) {
 		case S11025:
 			snd.samplerate = 11025;
 			break;
-		}
 	}
 
-	// buffer hardware
-	alsa.bsize = (1024 + (512 * cfg->audio_buffer_factor));
-	alsa.psize = alsa.bsize / 3;
+	{
+		double factor = (1.0f / 48000.0f) * (double) snd.samplerate;
+
+		// buffer hardware
+		alsa.bsize = ((1024 * factor) + ((512 * factor) * cfg->audio_buffer_factor));
+		alsa.psize = alsa.bsize / 3;
+	}
 
 	snd.samples = alsa.bsize * 2;
 	snd.frequency = machine.cpu_hz / (double) snd.samplerate;
