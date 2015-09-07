@@ -27,7 +27,7 @@ void map_init_Whirlwind(void) {
 	}
 }
 void extcl_cpu_wr_mem_Whirlwind(WORD address, BYTE value) {
-	if (address == 0x8FFF) {
+	if ((address >= 0x8000) && (address <= 0x8FFF)) {
 		control_bank(info.prg.rom.max.banks_8k)
 		whirlwind.prg_ram = value << 13;
 	}
