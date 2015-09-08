@@ -116,7 +116,8 @@ BYTE snd_start(void) {
 
 		// buffer hardware
 		alsa.bsize = ((1024 * factor) + ((512 * factor) * cfg->audio_buffer_factor));
-		alsa.psize = alsa.bsize / 3;
+		alsa.psize = alsa.bsize / snd.channels;
+		//alsa.psize = alsa.bsize / 3;
 	}
 
 	snd.samples = alsa.bsize * 2;
@@ -219,7 +220,6 @@ BYTE snd_start(void) {
 	snd_stop();
 	return (EXIT_ERROR);
 }
-void snd_output(void *udata, BYTE *stream, int len) {}
 void snd_lock_cache(_callback_data *cache) {
 	pthread_mutex_lock(&loop.lock);
 }
@@ -433,8 +433,8 @@ void *alsa_loop_thread(void *data) {
 		if ((info.no_rom | info.pause) || (snd.buffer.start == FALSE)) {
 			wrbuf(th->alsa->handle, (void *) cache->silence, avail);
 		} else if (cache->bytes_available <= 0) {
-			snd.out_of_sync++;
 			wrbuf(th->alsa->handle, (void *) cache->silence, avail);
+			snd.out_of_sync++;
 		} else {
 			if (cache->bytes_available < len) {
 				len = cache->bytes_available;
@@ -467,10 +467,9 @@ void *alsa_loop_thread(void *data) {
 		}
 
 #if !defined (RELEASE)
-		/**/
 		if ((gui_get_ms() - th->tick) >= 250.0f) {
 			th->tick = gui_get_ms();
-			fprintf(stderr, "snd : %5ld %5ld %d %5d %d %5d %5d %f %f %4s\r",
+			fprintf(stderr, "snd : %6ld %6ld %d %6d %d %6d %6d %f %f %4s\r",
 					request,
 					avail,
 					len,
@@ -482,7 +481,6 @@ void *alsa_loop_thread(void *data) {
 					machine.ms_frame,
 					"");
 		}
-		/**/
 #endif
 
 		snd_unlock_cache(NULL);

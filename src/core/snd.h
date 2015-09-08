@@ -66,7 +66,6 @@ EXTERNC _snd snd;
 
 EXTERNC BYTE snd_init(void);
 EXTERNC BYTE snd_start(void);
-EXTERNC void snd_output(void *udata, BYTE *stream, int len);
 EXTERNC void snd_lock_cache(_callback_data *cache);
 EXTERNC void snd_unlock_cache(_callback_data *cache);
 EXTERNC void snd_stop(void);
