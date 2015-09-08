@@ -8,16 +8,16 @@ RM := rm -rf
 
 # All of the sources participating in the build are defined here
 -include sources.mk
+-include src/video/filters/subdir.mk
 -include src/video/d3d9/subdir.mk
 -include src/gui/windows/subdir.mk
 -include src/gui/subdir.mk
 -include src/core/mappers/subdir.mk
--include src/core/filters/video/subdir.mk
--include src/core/filters/audio/subdir.mk
 -include src/core/subdir.mk
 -include src/c++/xBRZ/subdir.mk
 -include src/c++/l7zip/subdir.mk
 -include src/audio/xaudio/subdir.mk
+-include src/audio/subdir.mk
 -include subdir.mk
 -include objects.mk
 

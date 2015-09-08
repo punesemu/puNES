@@ -24,14 +24,14 @@ C_UPPER_DEPS :=
 # Every subdirectory with source files must be described here
 SUBDIRS := \
 src/audio/alsa \
+src/audio \
 src/c++/l7zip \
 src/c++/xBRZ \
 src/core \
-src/core/filters/audio \
-src/core/filters/video \
 src/core/mappers \
 src/gui \
 src/gui/linux \
+src/video/filters \
 src/video/sdl \
 src/video/sdl/glew \
 src/video/sdl/openGL \
