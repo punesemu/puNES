@@ -35,15 +35,14 @@ enum blbuf_misc { master_vol = 65536 / 15 };
 #define update_tick_ptnd_blbuf(restart) _update_tick_blbuf(ptnd, restart)
 #define update_tick_extra_blbuf(restart) _update_tick_blbuf(extra, restart)
 
-typedef struct blipbuf_group _blipbuf_group;
-
-struct blipbuf_group {
+typedef struct {
 	int time; /* clock time of next delta */
 	int amp; /* current amplitude in delta buffer */
 	int period;
 	int min_period;
-};
-struct _blipbuf {
+} _blipbuf_group;
+
+static struct _blipbuf {
 	blip_buffer_t *wave;
 
 	_blipbuf_group ptnd;

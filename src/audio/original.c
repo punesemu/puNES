@@ -23,7 +23,7 @@
 #define ch_gain_ptnd(index) _ch_gain(index, 1.0f)
 #define mixer_cut_and_high() mixer *= 45
 
-struct _original {
+static struct _original {
 	DBWORD cycles;
 	struct {
 		DBWORD current;

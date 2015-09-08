@@ -14,7 +14,7 @@
 #include "lib7zip.h"
 #include "info.h"
 
-struct _l7z {
+static struct _l7z {
 	BYTE present;
 	C7ZipLibrary lib;
 } l7z;

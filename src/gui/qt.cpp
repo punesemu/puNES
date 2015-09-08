@@ -34,7 +34,7 @@
 #include "sdl_wid.h"
 #endif
 
-struct _qt {
+static struct _qt {
 	QApplication *app;
 	Ui::mainWindow *ui;
 	mainWindow *mwin;

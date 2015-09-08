@@ -86,7 +86,7 @@ typedef struct {
 	BOOL texture_square_only;
 	BOOL hlsl_compliant;
 } _d3d9_adapter;
-struct _d3d9 {
+static struct _d3d9 {
 	LPDIRECT3D9 d3d;
 
 	D3DXMATRIX world;

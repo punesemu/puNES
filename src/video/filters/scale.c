@@ -12,7 +12,7 @@
 #define put_pixel(type, p0, p1)\
 	*(type *) (dstpix + p0 + p1) = (type) pixel
 
-struct _scl {
+static struct _scl {
 	WORD sx;
 	WORD sy;
 	WORD oy;

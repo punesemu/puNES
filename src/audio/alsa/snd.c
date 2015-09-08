@@ -52,8 +52,8 @@ typedef struct {
 #endif
 } _thread;
 
-_thread loop;
-_alsa alsa;
+static _thread loop;
+static _alsa alsa;
 
 BYTE snd_init(void) {
 	memset(&snd, 0x00, sizeof(_snd));

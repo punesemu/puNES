@@ -38,7 +38,7 @@ static void STDMETHODCALLTYPE OnVoiceError(THIS_ void* data, HRESULT Error);
 
 static void INLINE wrbuf(IXAudio2SourceVoice *source, XAUDIO2_BUFFER *x2buf, const BYTE *buffer);
 
-struct _xaudio2 {
+static struct _xaudio2 {
 	BYTE opened;
 	IXAudio2 *engine;
 	IXAudio2MasteringVoice *master;

@@ -25,7 +25,7 @@ GLfloat matrix_distance[60] = {
 	-2.940f, -2.950f, -2.965f, -2.970f, -2.975f,
 	-2.980f, -2.985f, -2.990f, -2.995f, -3.000f
 };
-_shader color;
+static _shader color;
 
 void opengl_init_cube3d(void) {
 	memset (&color, 0, sizeof(_shader));

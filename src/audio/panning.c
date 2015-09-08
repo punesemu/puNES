@@ -12,7 +12,7 @@
 
 #define ANG 165.0f
 
-struct _panning {
+static struct _panning {
 	float angle;
 	float sq;
 	float cs;

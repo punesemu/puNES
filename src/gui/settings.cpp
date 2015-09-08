@@ -38,7 +38,7 @@ void settings_set_overscan_default(_overscan_borders *ob, BYTE mode) {
 	s.set->oscan_default(ob, mode);
 }
 int settings_val_to_int(int index, const char *buffer) {
-	return(s.set->val_to_int(index, buffer));
+	return (s.set->val_to_int(index, buffer));
 }
 double settings_val_to_double(WORD round, const char *buffer) {
 	return (s.set->val_to_double(round, buffer));

@@ -14,7 +14,7 @@
 
 enum delay_channels { CH_LEFT, CH_RIGHT };
 
-struct _delay {
+static struct _delay {
 	DBWORD samples;
 	DBWORD max_pos;
 	DBWORD pos;

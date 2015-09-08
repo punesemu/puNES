@@ -44,7 +44,7 @@
 #define put_pixel(type, pixel, p0, p1)\
 	*(type *) (dstpix + p0 + p1) = (type) palette[pixel]
 
-struct _scl2x {
+static struct _scl2x {
 	WORD sx;
 	WORD sy;
 	WORD oy;
@@ -53,8 +53,7 @@ struct _scl2x {
 	WORD rows;
 	WORD lines;
 } scl2x;
-
-struct _s4x_buffer {
+static struct _s4x_buffer {
 	uint32_t w, h;
 	uint32_t pitch;
 	uint32_t size;

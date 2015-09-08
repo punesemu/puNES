@@ -68,7 +68,7 @@ uint32_t *palette_win, software_flags;
 static BYTE ntsc_width_pixel[5] = {0, 0, 7, 10, 14};
 
 #if !defined (__WIN32__)
-struct _cursor {
+static struct _cursor {
 	SDL_Cursor *target;
 	SDL_Cursor *org;
 } cursor;

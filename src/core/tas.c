@@ -23,7 +23,7 @@
 		tas_read();\
 	}
 
-_port tas_port_bck[PORT_MAX];
+static _port tas_port_bck[PORT_MAX];
 
 BYTE tas_file(char *ext, char *file) {
 	if (!(strcasecmp(ext, ".fm2")) || !(strcasecmp(ext, ".FM2"))) {
