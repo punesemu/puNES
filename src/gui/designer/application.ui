@@ -394,6 +394,10 @@
       <property name="title">
        <string>&amp;Buffer Size factor</string>
       </property>
+      <property name="icon">
+       <iconset resource="application.qrc">
+        <normaloff>:/icon/icons/buffer_size.png</normaloff>:/icon/icons/buffer_size.png</iconset>
+      </property>
       <addaction name="action_Absf_0"/>
       <addaction name="action_Absf_1"/>
       <addaction name="action_Absf_2"/>
