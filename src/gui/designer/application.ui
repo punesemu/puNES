@@ -95,6 +95,8 @@
     <addaction name="action_Hard_Reset"/>
     <addaction name="action_Soft_Reset"/>
     <addaction name="separator"/>
+    <addaction name="action_Fast_Forward"/>
+    <addaction name="separator"/>
     <addaction name="menu_Disk_Side"/>
     <addaction name="action_Eject_Insert_Disk"/>
    </widget>
@@ -1909,6 +1911,14 @@
    </property>
    <property name="text">
     <string>9</string>
+   </property>
+  </action>
+  <action name="action_Fast_Forward">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Fast Forward</string>
    </property>
   </action>
  </widget>

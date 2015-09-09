@@ -470,6 +470,12 @@ void mainWindow::update_menu_nes() {
 		ui->menu_Disk_Side->setEnabled(false);
 		ui->action_Eject_Insert_Disk->setEnabled(false);
 	}
+
+	if (fps.fast_forward == TRUE) {
+		ui->action_Fast_Forward->setChecked(true);
+	} else {
+		ui->action_Fast_Forward->setChecked(false);
+	}
 }
 void mainWindow::update_recent_roms() {
 	if (recent_roms_list.count > 0) {
@@ -1145,6 +1151,7 @@ void mainWindow::shortcuts() {
 	connect_shortcut(ui->action_Soft_Reset, SET_INP_SC_SOFT_RESET, SLOT(s_make_reset()));
 	connect_shortcut(ui->action_Switch_sides, SET_INP_SC_SWITCH_SIDES, SLOT(s_disk_side()));
 	connect_shortcut(ui->action_Eject_Insert_Disk, SET_INP_SC_EJECT_DISK, SLOT(s_eject_disk()));
+	connect_shortcut(ui->action_Fast_Forward, SET_INP_SC_FAST_FORWARD, SLOT(s_fast_forward()));
 	// Settings/Mode
 	connect_shortcut(ui->action_PAL, SET_INP_SC_MODE_PAL, SLOT(s_set_mode()));
 	connect_shortcut(ui->action_NTSC, SET_INP_SC_MODE_NTSC, SLOT(s_set_mode()));
@@ -1302,6 +1309,7 @@ void mainWindow::connect_menu_signals() {
 	connect_action(ui->action_Disk_4_side_B, 7, SLOT(s_disk_side()));
 	connect_action(ui->action_Switch_sides, 0xFFF, SLOT(s_disk_side()));
 	connect_action(ui->action_Eject_Insert_Disk, SLOT(s_eject_disk()));
+	connect_action(ui->action_Fast_Forward, SLOT(s_fast_forward()));
 	// Settings/Mode
 	connect_action(ui->action_PAL, PAL, SLOT(s_set_mode()));
 	connect_action(ui->action_NTSC, NTSC, SLOT(s_set_mode()));
@@ -1691,6 +1699,13 @@ void mainWindow::s_eject_disk() {
 	}
 
 	update_menu_nes();
+}
+void mainWindow::s_fast_forward() {
+	if (fps.fast_forward == FALSE) {
+		fps_fast_forward();
+	} else {
+		fps_normalize();
+	}
 }
 void mainWindow::s_set_mode() {
 	int mode = QVariant(((QObject *)sender())->property("myValue")).toInt();
@@ -2232,90 +2247,95 @@ void mainWindow::s_shcjoy_read_timer() {
 		return;
 	}
 
-	if ((shcjoy.value = js_shcut_read(&shcjoy.joy, cfg->input.shcjoy_id)) > 0) {
+	if (js_shcut_read(&shcjoy.sch, &shcjoy.joy, cfg->input.shcjoy_id) == EXIT_OK) {
 		int index;
 
 		for (index = 0; index < SET_MAX_NUM_SC; index++) {
-			if (shcjoy.value == shcjoy.shortcut[index]) {
+			if (shcjoy.sch.value == shcjoy.shortcut[index]) {
 				break;
 			}
 		}
 
-		switch (index + SET_INP_SC_OPEN) {
-			case SET_INP_SC_OPEN:
-				ui->action_Open->trigger();
-				break;
-			case SET_INP_SC_QUIT:
-				ui->action_Quit->trigger();
-				break;
-			case SET_INP_SC_HARD_RESET:
-				ui->action_Hard_Reset->trigger();
-				break;
-			case SET_INP_SC_SOFT_RESET:
-				ui->action_Soft_Reset->trigger();
-				break;
-			case SET_INP_SC_SWITCH_SIDES:
-				ui->action_Switch_sides->trigger();
-				break;
-			case SET_INP_SC_EJECT_DISK:
-				ui->action_Eject_Insert_Disk->trigger();
-				break;
-			case SET_INP_SC_MODE_PAL:
-				ui->action_PAL->trigger();
-				break;
-			case SET_INP_SC_MODE_NTSC:
-				ui->action_NTSC->trigger();
-				break;
-			case SET_INP_SC_MODE_DENDY:
-				ui->action_Dendy->trigger();
-				break;
-			case SET_INP_SC_MODE_AUTO:
-				ui->action_Mode_Auto->trigger();
-				break;
-			case SET_INP_SC_SCALE_1X:
-				ui->action_1x->trigger();
-				break;
-			case SET_INP_SC_SCALE_2X:
-				ui->action_2x->trigger();
-				break;
-			case SET_INP_SC_SCALE_3X:
-				ui->action_3x->trigger();
-				break;
-			case SET_INP_SC_SCALE_4X:
-				ui->action_4x->trigger();
-				break;
+		if (shcjoy.sch.mode == RELEASED) {
+			switch (index + SET_INP_SC_OPEN) {
+				case SET_INP_SC_OPEN:
+					ui->action_Open->trigger();
+					break;
+				case SET_INP_SC_QUIT:
+					ui->action_Quit->trigger();
+					break;
+				case SET_INP_SC_HARD_RESET:
+					ui->action_Hard_Reset->trigger();
+					break;
+				case SET_INP_SC_SOFT_RESET:
+					ui->action_Soft_Reset->trigger();
+					break;
+				case SET_INP_SC_SWITCH_SIDES:
+					ui->action_Switch_sides->trigger();
+					break;
+				case SET_INP_SC_EJECT_DISK:
+					ui->action_Eject_Insert_Disk->trigger();
+					break;
+				case SET_INP_SC_FAST_FORWARD:
+					ui->action_Fast_Forward->trigger();
+					break;
+				case SET_INP_SC_MODE_PAL:
+					ui->action_PAL->trigger();
+					break;
+				case SET_INP_SC_MODE_NTSC:
+					ui->action_NTSC->trigger();
+					break;
+				case SET_INP_SC_MODE_DENDY:
+					ui->action_Dendy->trigger();
+					break;
+				case SET_INP_SC_MODE_AUTO:
+					ui->action_Mode_Auto->trigger();
+					break;
+				case SET_INP_SC_SCALE_1X:
+					ui->action_1x->trigger();
+					break;
+				case SET_INP_SC_SCALE_2X:
+					ui->action_2x->trigger();
+					break;
+				case SET_INP_SC_SCALE_3X:
+					ui->action_3x->trigger();
+					break;
+				case SET_INP_SC_SCALE_4X:
+					ui->action_4x->trigger();
+					break;
 #if defined (SDL)
-			case SET_INP_SC_EFFECT_CUBE:
-				ui->action_Cube->trigger();
-				break;
+				case SET_INP_SC_EFFECT_CUBE:
+					ui->action_Cube->trigger();
+					break;
 #endif
-			case SET_INP_SC_INTERPOLATION:
-				ui->action_Interpolation->trigger();
-				break;
-			case SET_INP_SC_FULLSCREEN:
-				ui->action_Fullscreen->trigger();
-				break;
-			case SET_INP_SC_STRETCH_FULLSCREEN:
-				ui->action_Stretch_in_fullscreen->trigger();
-				break;
-			case SET_INP_SC_AUDIO_ENABLE:
-				ui->action_Audio_Enable->trigger();
-				break;
-			case SET_INP_SC_SAVE_SETTINGS:
-				ui->action_Save_settings->trigger();
-				break;
-			case SET_INP_SC_SAVE_STATE:
-				ui->action_Save_state->trigger();
-				break;
-			case SET_INP_SC_LOAD_STATE:
-				ui->action_Load_state->trigger();
-				break;
-			case SET_INP_SC_INC_SLOT:
-				ui->action_Increment_slot->trigger();
-				break;
-			case SET_INP_SC_DEC_SLOT:
-				ui->action_Decrement_slot->trigger();
-				break;
-		}
+				case SET_INP_SC_INTERPOLATION:
+					ui->action_Interpolation->trigger();
+					break;
+				case SET_INP_SC_FULLSCREEN:
+					ui->action_Fullscreen->trigger();
+					break;
+				case SET_INP_SC_STRETCH_FULLSCREEN:
+					ui->action_Stretch_in_fullscreen->trigger();
+					break;
+				case SET_INP_SC_AUDIO_ENABLE:
+					ui->action_Audio_Enable->trigger();
+					break;
+				case SET_INP_SC_SAVE_SETTINGS:
+					ui->action_Save_settings->trigger();
+					break;
+				case SET_INP_SC_SAVE_STATE:
+					ui->action_Save_state->trigger();
+					break;
+				case SET_INP_SC_LOAD_STATE:
+					ui->action_Load_state->trigger();
+					break;
+				case SET_INP_SC_INC_SLOT:
+					ui->action_Increment_slot->trigger();
+					break;
+				case SET_INP_SC_DEC_SLOT:
+					ui->action_Decrement_slot->trigger();
+					break;
+			}
+		} else if (shcjoy.sch.mode == PRESSED) {}
 	}
 }

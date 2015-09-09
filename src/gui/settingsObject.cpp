@@ -1158,7 +1158,6 @@ void inpObject::to_cfg(QString group) {
 
 	if ((group == "special keys") || (group == "all")) {
 		val.replace(SET_INP_SK_TIMELINE_KEY, kbd_keyval_to_name(gui.key.tl));
-		val.replace(SET_INP_SK_DOUBLE_SPEED_KEY, kbd_keyval_to_name(gui.key.speed));
 	}
 }
 void inpObject::fr_cfg(QString group) {
@@ -1222,7 +1221,6 @@ void inpObject::fr_cfg(QString group) {
 
 	if ((group == "special keys") || (group == "all")) {
 		gui.key.tl = kbd_val_to_int(SET_INP_SK_TIMELINE_KEY);
-		gui.key.speed = kbd_val_to_int(SET_INP_SK_DOUBLE_SPEED_KEY);
 	}
 }
 int inpObject::kbd_val_to_int(int index) {

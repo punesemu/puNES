@@ -432,10 +432,13 @@ DBWORD js_read_in_dialog(int dev, int fd) {
 #undef read_axis_joy
 
 }
-DBWORD js_shcut_read(_js *joy, int id) {
+BYTE js_shcut_read(_js_sch *js_sch, _js *joy, int id) {
 	static const DWORD sensibility = (PLUS / 100) * 25;
 	WORD value = 0;
 	BYTE mode = 0;
+
+	js_sch->value = 0;
+	js_sch->mode = 255;
 
 #define js_elaborate_axis(axis, info)\
 	if ((joy->joy_info.info > (CENTER - sensibility))\
@@ -465,8 +468,10 @@ DBWORD js_shcut_read(_js *joy, int id) {
 			joy->last_axis[axis] = joy->joy_info.info;\
 		}\
 	}\
-	if (value && (mode == RELEASED)) {\
-		return (value);\
+	if (value) {\
+		js_sch->value = value;\
+		js_sch->mode = mode;\
+		return (EXIT_OK);\
 	}
 #define js_elaborate_pov(md, pov)\
 	mode = md;\
@@ -484,7 +489,7 @@ DBWORD js_shcut_read(_js *joy, int id) {
 	}
 
 	if (++joy->clock < JOY_MAX_FRAME_COUNT) {
-		return (0);
+		return (EXIT_ERROR);
 	}
 
 	joy->clock = 0;
@@ -494,12 +499,12 @@ DBWORD js_shcut_read(_js *joy, int id) {
 			joy->open_try = 0;
 			js_open(joy);
 		}
-		return (0);
+		return (EXIT_ERROR);
 	}
 
 	if (joyGetPosEx(joy->id, &joy->joy_info) != JOYERR_NOERROR) {
 		joy->present = FALSE;
-		return (0);
+		return (EXIT_ERROR);
 	}
 
 	/* esamino i pulsanti */
@@ -524,8 +529,10 @@ DBWORD js_shcut_read(_js *joy, int id) {
 					joy->last_buttons &= ~mask;
 				}
 				/* elaboro l'evento */
-				if (value && (mode == RELEASED)) {
-					return (value);
+				if (value) {
+					js_sch->value = value;
+					js_sch->mode = mode;
+					return (EXIT_OK);
 				}
 			}
 			mask <<= 1;
@@ -536,9 +543,18 @@ DBWORD js_shcut_read(_js *joy, int id) {
 	/*esamino i POV */
 	if ((joy->joy_caps.wCaps & JOYCAPS_HASPOV) && (joy->last_axis[POV] != joy->joy_info.dwPOV)) {
 		js_elaborate_pov(RELEASED, joy->last_axis[POV])
-		joy->last_axis[POV] = joy->joy_info.dwPOV;
 		if (value) {
-			return (value);
+			js_sch->value = value;
+			js_sch->mode = mode;
+		}
+		js_elaborate_pov(PRESSED, joy->joy_info.dwPOV)
+		joy->last_axis[POV] = joy->joy_info.dwPOV;
+		if (value && !js_sch->value) {
+			js_sch->value = value;
+			js_sch->mode = mode;
+		}
+		if (js_sch->value) {
+			return (EXIT_OK);
 		}
 	}
 	/*esamino gli assi */
@@ -562,7 +578,7 @@ DBWORD js_shcut_read(_js *joy, int id) {
 		//js_elaborate_axis(V, dwVpos)
 	}
 
-	return (0);
+	return (EXIT_ERROR);
 #undef js_elaborate_axis
 #undef js_elaborate_pov
 }

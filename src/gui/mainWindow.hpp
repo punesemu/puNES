@@ -44,7 +44,7 @@ class mainWindow: public QMainWindow {
 			bool enabled;
 			QTimer *timer;
 			_js joy;
-			DBWORD value;
+			_js_sch sch;
 			DBWORD shortcut[SET_MAX_NUM_SC];
 		} shcjoy;
 		QString last_import_cheat_path;
@@ -102,6 +102,7 @@ class mainWindow: public QMainWindow {
 		void s_make_reset();
 		void s_disk_side();
 		void s_eject_disk();
+		void s_fast_forward();
 		void s_set_mode();
 		void s_set_rendering();
 		void s_set_fps();

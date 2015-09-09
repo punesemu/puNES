@@ -80,6 +80,7 @@ enum inp_element {
 	SET_INP_SC_SOFT_RESET,
 	SET_INP_SC_SWITCH_SIDES,
 	SET_INP_SC_EJECT_DISK,
+	SET_INP_SC_FAST_FORWARD,
 	SET_INP_SC_MODE_PAL,
 	SET_INP_SC_MODE_NTSC,
 	SET_INP_SC_MODE_DENDY,
@@ -104,7 +105,6 @@ enum inp_element {
 	SET_INP_SC_JOYSTICK_ID,
 
 	SET_INP_SK_TIMELINE_KEY,
-	SET_INP_SK_DOUBLE_SPEED_KEY,
 
 	SET_INP_P1_CONTROLLER,
 	SET_INP_P1_PAD_TYPE,
@@ -715,6 +715,7 @@ static const _settings inp_cfg[] = {
 	{"shortcuts", "soft reset",               "F12,NULL",        NULL, NULL, {0, NULL}},
 	{"shortcuts", "switch sides",             "Alt+S,NULL",      NULL, NULL, {0, NULL}},
 	{"shortcuts", "eject disk",               "Alt+E,NULL",      NULL, NULL, {0, NULL}},
+	{"shortcuts", "fast forward",             "Tab,NULL",        NULL, NULL, {0, NULL}},
 	{"shortcuts", "mode pal",                 "F6,NULL",         NULL, NULL, {0, NULL}},
 	{"shortcuts", "mode ntsc",                "F7,NULL",         NULL, NULL, {0, NULL}},
 	{"shortcuts", "mode dendy",               "F8,NULL",         NULL, NULL, {0, NULL}},
@@ -739,7 +740,6 @@ static const _settings inp_cfg[] = {
 	{"shortcuts", "joystick Id",              "NULL",            NULL, NULL, {0, NULL}},
 
 	{"special keys", "timeline key",          "LCtrl",           NULL, NULL, {0, NULL}},
-	{"special keys", "double speed key",      "LShift",          NULL, NULL, {0, NULL}},
 
 	{
 		"port 1", "controller 1", "standard",

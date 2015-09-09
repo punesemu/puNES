@@ -109,9 +109,6 @@ bool screenWidget::eventFilter(QObject *obj, QEvent *event) {
 				mwin->statusbar->timeline->timeline_pressed(&tl.key);
 			}
 			return (true);
-		} else if (keyval == gui.key.speed) {
-			fps_fast_forward();
-			return (true);
 		} else if (keyval == Qt::Key_Left) {
 			if (tl.key) {
 				int snap = mwin->statusbar->timeline->value();
@@ -144,9 +141,6 @@ bool screenWidget::eventFilter(QObject *obj, QEvent *event) {
 			if (tl.key) {
 				mwin->statusbar->timeline->timeline_released(&tl.key);
 			}
-			return (true);
-		} else if (keyval == gui.key.speed) {
-			fps_normalize();
 			return (true);
 		}
 

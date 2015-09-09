@@ -221,25 +221,25 @@ DBWORD js_read_in_dialog(int dev, int fd) {
 
 	return (value);
 }
-DBWORD js_shcut_read(_js *joy, int id) {
+BYTE js_shcut_read(_js_sch *js_sch, _js *joy, int id) {
 	static const SWORD sensibility = (PLUS / 100) * 50;
 	DBWORD value = 0;
 	BYTE mode = 0;
 	_js_event jse;
 
-	_js_start(id, return (0))
+	_js_start(id, return (EXIT_ERROR))
 
 	while (!js_read_event(&jse, joy)) {
 		_js_control()
 
-		if (value && (mode == RELEASED)) {
-			return (value);
+		if (value) {
+			js_sch->value = value;
+			js_sch->mode = mode;
+			return (EXIT_OK);
 		}
 
 		break;
 	}
 
-	return (0);
+	return (EXIT_ERROR);
 }
-
-

@@ -48,7 +48,6 @@ EXTERNC struct _gui {
 
 	struct _key {
 		DBWORD tl;
-		DBWORD speed;
 	} key;
 } gui;
 EXTERNC struct _mouse {

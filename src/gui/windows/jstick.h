@@ -55,6 +55,10 @@ typedef struct {
 	DBWORD value;
 	char name[20];
 } _js_element;
+typedef struct {
+	DBWORD value;
+	BYTE mode;
+} _js_sch;
 
 #if defined (__cplusplus)
 #define EXTERNC extern "C"
@@ -124,7 +128,7 @@ EXTERNC char *js_name_device(int index);
 EXTERNC char *js_to_name(const DBWORD val, const _js_element *list, const DBWORD length);
 EXTERNC DBWORD js_from_name(const char *name, const _js_element *list, const DBWORD lenght);
 EXTERNC DBWORD js_read_in_dialog(int dev, int fd);
-EXTERNC DBWORD js_shcut_read(_js *joy, int id);
+EXTERNC BYTE js_shcut_read(_js_sch *js_sch, _js *joy, int id);
 
 #undef EXTERNC
 
