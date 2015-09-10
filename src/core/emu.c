@@ -77,6 +77,8 @@ BYTE emu_frame(void) {
 	gfx_sdlwe_tick();
 #endif
 
+	gui_control_visible_cursor();
+
 	tas.lag_frame = TRUE;
 
 	/* gestione uscita */

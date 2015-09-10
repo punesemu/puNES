@@ -299,19 +299,11 @@ void opengl_effect_change(BYTE mode) {
 		opengl_draw_scene = opengl_draw_scene_cube3d;
 
 		opengl.factor_distance = opengl.x_rotate = opengl.y_rotate = 0;
-
-		if (cfg->fullscreen == FULLSCR) {
-			SDL_ShowCursor(SDL_ENABLE);
-		}
 	} else {
 		opengl_init_effect = opengl_init_no_effect;
 		opengl_set_effect = opengl_set_no_effect;
 		opengl_unset_effect = opengl_unset_no_effect;
 		opengl_draw_scene = opengl_draw_scene_no_effect;
-
-		if (cfg->fullscreen == FULLSCR) {
-			SDL_ShowCursor(SDL_DISABLE);
-		}
 	}
 
 	opengl_init_effect();

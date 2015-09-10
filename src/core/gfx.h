@@ -134,6 +134,9 @@ EXTERNC void gfx_quit(void);
 EXTERNC void gfx_cursor_init(void);
 EXTERNC void gfx_cursor_quit(void);
 EXTERNC void gfx_cursor_set(void);
+#if defined (__linux__)
+EXTERNC void gfx_cursor_hide(BYTE hide);
+#endif
 
 EXTERNC void gfx_text_create_surface(_txt_element *ele);
 EXTERNC void gfx_text_release_surface(_txt_element *ele);

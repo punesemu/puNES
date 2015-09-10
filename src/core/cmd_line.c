@@ -86,8 +86,6 @@ BYTE cmd_line_parse(int argc, char **argv) {
 					set_oscan(SET_OVERSCAN_BRD_PAL, 1);
 				} else if (!(strcmp(opt_long[longIndex].name, "par-soft-stretch"))) {
 					set_int(cfg_from_file.PAR_soft_stretch, SET_PAR_SOFT_STRETCH);
-				} else if (!(strcmp(opt_long[longIndex].name, "hide-mouse-cursor"))) {
-					set_int(cfg_from_file.hide_mouse_cursor, SET_HIDE_MOUSE_CURSOR);
 				} else if (!(strcmp(opt_long[longIndex].name, "background-pause"))) {
 					set_int(cfg_from_file.bck_pause, SET_BCK_PAUSE);
 				} else if (!(strcmp(opt_long[longIndex].name, "language"))) {
@@ -243,7 +241,6 @@ void usage(char *name) {
 			"%s\n"
 			"%s\n"
 			"%s\n"
-			"%s\n"
 	};
 
 	usage_string = (char *) malloc(1024 * 8);
@@ -274,7 +271,6 @@ void usage(char *name) {
 			main_cfg[SET_STEREO_DELAY].hlp,
 			main_cfg[SET_AUDIO_QUALITY].hlp,
 			main_cfg[SET_SWAP_DUTY].hlp,
-			main_cfg[SET_HIDE_MOUSE_CURSOR].hlp,
 			main_cfg[SET_BCK_PAUSE].hlp,
 			main_cfg[SET_CHEAT_MODE].hlp,
 			main_cfg[SET_GUI_LANGUAGE].hlp

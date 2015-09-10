@@ -30,9 +30,36 @@
 #include <QtWidgets/QMessageBox>
 #endif
 #include "gui.h"
-#if defined (SDL) && defined (__WIN32__)
+#if defined (SDL)
+#include "opengl.h"
+#if defined (__WIN32__)
 #include "sdl_wid.h"
 #endif
+#endif
+
+class appEventFilter: public QObject {
+	public:
+		appEventFilter() : QObject() {};
+		~appEventFilter() {};
+
+		bool eventFilter(QObject* object, QEvent* event) {
+			if (event->type() == QEvent::MouseMove) {
+				if (mouse.hidden == TRUE) {
+#if defined (SDL)
+					if ((input_zapper_is_connected((_port *) &port) == TRUE) ||
+							(cfg->fullscreen != FULLSCR) || (opengl.rotation == TRUE)) {
+#else
+					if ((input_zapper_is_connected((_port *) &port) == TRUE) ||
+							(cfg->fullscreen != FULLSCR)) {
+#endif
+						gui_cursor_hide(FALSE);
+					}
+				}
+				mouse.timer = gui_get_ms();
+			}
+			return (QObject::eventFilter(object, event));
+		}
+};
 
 static struct _qt {
 	QApplication *app;
@@ -48,6 +75,7 @@ BYTE gui_create(void) {
 	qt.mwin = new mainWindow(qt.ui, qt.chobj);
 
 	qt.app->setStyle(new pStyle());
+	qt.app->installEventFilter(new appEventFilter());
 
 	qt.ui->setupUi(qt.mwin);
 	qt.screen = new screenWidget(qt.ui->centralwidget, qt.mwin);
@@ -67,6 +95,9 @@ BYTE gui_create(void) {
 	}
 
 	qt.mwin->show();
+
+	mouse.hidden = FALSE;
+	mouse.timer = gui_get_ms();
 
 	return (EXIT_OK);
 }
@@ -226,12 +257,15 @@ void gui_cursor_set(void) {
 #endif
 }
 void gui_cursor_hide(BYTE hide) {
+	mouse.hidden = hide;
 #if defined (__WIN32__)
 	qt.screen->cursor_hide(hide);
+#else
+	gfx_cursor_hide(hide);
 #endif
 }
-void gui_visible_cursor(void) {
-	qt.mwin->visible_cursor();
+void gui_control_visible_cursor(void) {
+	qt.mwin->control_visible_cursor();
 }
 
 void gui_mainWindow_make_reset(BYTE type) {

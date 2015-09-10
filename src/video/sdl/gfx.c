@@ -820,7 +820,6 @@ void gfx_cursor_init(void) {
 
 	gfx_cursor_set();
 #endif
-	gui_visible_cursor();
 }
 void gfx_cursor_quit(void) {
 #if defined (__WIN32__)
@@ -841,6 +840,15 @@ void gfx_cursor_set(void) {
 	}
 #endif
 }
+#if defined (__linux__)
+void gfx_cursor_hide(BYTE hide) {
+	if (hide == TRUE) {
+		SDL_ShowCursor(SDL_DISABLE);
+	} else {
+		SDL_ShowCursor(SDL_ENABLE);
+	}
+}
+#endif
 
 void gfx_text_create_surface(_txt_element *ele) {
 	ele->surface = gfx_create_RGB_surface(text.surface, ele->w, ele->h);

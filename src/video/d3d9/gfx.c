@@ -978,7 +978,6 @@ void gfx_quit(void) {
 void gfx_cursor_init(void) {
 	gui_cursor_init();
 	gui_cursor_set();
-	gui_visible_cursor();
 };
 void gfx_cursor_quit(void) {};
 void gfx_cursor_set(void) {

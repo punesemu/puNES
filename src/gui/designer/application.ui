@@ -462,7 +462,6 @@
     <addaction name="menu_Language"/>
     <addaction name="separator"/>
     <addaction name="action_Pause_when_in_background"/>
-    <addaction name="action_Hide_the_mouse_cursor"/>
     <addaction name="action_Save_settings_on_exit"/>
     <addaction name="separator"/>
     <addaction name="action_Save_settings"/>

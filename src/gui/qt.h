@@ -55,6 +55,13 @@ EXTERNC struct _mouse {
 	int y;
 	uint8_t left;
 	uint8_t right;
+
+	uint8_t hidden;
+#if defined (__linux__)
+	time_t timer;
+# else
+	double timer;
+#endif
 } mouse;
 
 EXTERNC void gui_quit(void);
@@ -84,7 +91,7 @@ EXTERNC void gui_cheat_save_game_cheats(void);
 EXTERNC void gui_cursor_init(void);
 EXTERNC void gui_cursor_set(void);
 EXTERNC void gui_cursor_hide(BYTE hide);
-EXTERNC void gui_visible_cursor(void);
+EXTERNC void gui_control_visible_cursor(void);
 
 EXTERNC void gui_mainWindow_make_reset(BYTE type);
 

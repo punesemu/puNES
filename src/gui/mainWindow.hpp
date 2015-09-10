@@ -65,7 +65,7 @@ class mainWindow: public QMainWindow {
 		void shortcuts();
 		void shcjoy_start();
 		void shcjoy_stop();
-		void visible_cursor();
+		void control_visible_cursor();
 		void make_reset(int type);
 
 	signals:
@@ -132,7 +132,6 @@ class mainWindow: public QMainWindow {
 		void s_set_audio_enable();
 		void s_set_language();
 		void s_set_input();
-		void s_set_hide_mouse_cursor();
 		void s_set_pause();
 		void s_cheat_mode_select();
 		void s_cheat_dialog();
