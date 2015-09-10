@@ -68,6 +68,8 @@ mainWindow::mainWindow(Ui::mainWindow *u, cheatObject *cho) : QMainWindow() {
 	setWindowFlags(windowFlags() & ~Qt::WindowMaximizeButtonHint);
 	setStatusBar(statusbar);
 
+	setWindowIcon(QIcon(":icon/icons/application.png"));
+
 	connect(this, SIGNAL(fullscreen(bool)), this, SLOT(s_fullscreen(bool)));
 
 	// creo gli shortcuts

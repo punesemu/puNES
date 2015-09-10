@@ -34,10 +34,6 @@
   <property name="windowTitle">
    <string notr="true">FHorse</string>
   </property>
-  <property name="windowIcon">
-   <iconset resource="application.qrc">
-    <normaloff>:/icon/icons/application.ico</normaloff>:/icon/icons/application.ico</iconset>
-  </property>
   <widget class="QWidget" name="centralwidget"/>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
