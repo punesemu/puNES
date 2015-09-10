@@ -109,6 +109,10 @@ bool screenWidget::eventFilter(QObject *obj, QEvent *event) {
 				mwin->statusbar->timeline->timeline_pressed(&tl.key);
 			}
 			return (true);
+#if !defined (RELEASE)
+		} else if (keyval == Qt::Key_Insert) {
+			info.snd_info = !info.snd_info;
+#endif
 		} else if (keyval == Qt::Key_Left) {
 			if (tl.key) {
 				int snap = mwin->statusbar->timeline->value();

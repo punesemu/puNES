@@ -372,15 +372,15 @@ static void STDMETHODCALLTYPE OnBufferEnd(THIS_ void *data) {
 #if !defined (RELEASE)
 	if ((gui_get_ms() - xaudio2.tick) >= 250.0f) {
 		xaudio2.tick = gui_get_ms();
-		fprintf(stderr, "snd : %6d %6d %6d %6d %d %f %f %4s\r",
-				buffer->AudioBytes,
-				fps.total_frames_skipped,
-				cache->samples_available,
-				cache->bytes_available,
-				snd.out_of_sync,
-				snd.frequency,
-				machine.ms_frame,
-				"");
+		if (info.snd_info == TRUE)
+		fprintf(stderr, "snd : %6d %6d %6d %6d %d %f %f\r",
+			buffer->AudioBytes,
+			fps.total_frames_skipped,
+			cache->samples_available,
+			cache->bytes_available,
+			snd.out_of_sync,
+			snd.frequency,
+			machine.ms_frame);
 	}
 #endif
 

@@ -469,17 +469,18 @@ void *alsa_loop_thread(void *data) {
 #if !defined (RELEASE)
 		if ((gui_get_ms() - th->tick) >= 250.0f) {
 			th->tick = gui_get_ms();
+			if (info.snd_info == TRUE)
 			fprintf(stderr, "snd : %6ld %6ld %d %6d %d %6d %6d %f %f %4s\r",
-					request,
-					avail,
-					len,
-					fps.total_frames_skipped,
-					cache->samples_available,
-					cache->bytes_available,
-					snd.out_of_sync,
-					snd.frequency,
-					machine.ms_frame,
-					"");
+				request,
+				avail,
+				len,
+				fps.total_frames_skipped,
+				cache->samples_available,
+				cache->bytes_available,
+				snd.out_of_sync,
+				snd.frequency,
+				machine.ms_frame,
+				" ");
 		}
 #endif
 

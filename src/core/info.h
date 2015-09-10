@@ -91,6 +91,10 @@ EXTERNC struct _info {
 	BYTE r4016_dmc_double_read_disabled;
 	BYTE r2002_race_condition_disabled;
 	BYTE r4014_precise_timing_disabled;
+
+#if !defined (RELEASE)
+	BYTE snd_info;
+#endif
 } info;
 
 #undef EXTERNC
