@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="icon">
+    <file>icons/application.ico</file>
     <file>icons/buffer_size.png</file>
     <file>icons/flag_italy.png</file>
     <file>icons/flag_russia.png</file>
@@ -47,7 +48,6 @@
     <file>icons/nes_file.png</file>
     <file>icons/fm2_file.png</file>
     <file>icons/fds_file.png</file>
-    <file>icons/application.png</file>
     <file>icons/exit.png</file>
     <file>icons/recent_roms.png</file>
     <file>icons/open.png</file>
