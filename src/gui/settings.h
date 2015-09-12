@@ -27,6 +27,7 @@
 
 enum set_element {
 	SET_MODE,
+	SET_FF_VELOCITY,
 	SET_BCK_PAUSE,
 	SET_CHEAT_MODE,
 	SET_SAVE_SETTINGS_ON_EXIT,
@@ -258,6 +259,12 @@ static const _opt opt_mode[] = {
 	{"PAL" ,  "pal"  , PAL},
 	{"Dendy", "dendy", DENDY}
 };
+static const _opt opt_ff_velocity[] = {
+	{NULL, "2x", FF_2X},
+	{NULL, "3x", FF_3X},
+	{NULL, "4x", FF_4X},
+	{NULL, "5x", FF_5X}
+};
 static const _opt opt_rend[] = {
 	{"Software", "software", RENDER_SOFTWARE},
 #if defined (SDL)
@@ -423,6 +430,12 @@ static const _settings main_cfg[] = {
 		"# possible values: pal, ntsc, dendy, auto",
 		"-m, --mode                preferred mode        : pal, ntsc, dendy, auto",
 		{LENGTH(opt_mode), opt_mode}
+	},
+	{
+		"system", "fast forward velocity", "2x",
+		"# possible values: 2x, 3x, 4x, 5x",
+		NULL,
+		{LENGTH(opt_ff_velocity), opt_ff_velocity}
 	},
 	{
 		"system", "pause when in background", "yes",

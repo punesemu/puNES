@@ -123,7 +123,7 @@ void audio_quality_quit_blipbuf(void) {
 	}
 }
 void audio_quality_apu_tick_blipbuf(void) {
-	if (!blipbuf.wave) {
+	if (!blipbuf.wave || !cfg->apu.channel[APU_MASTER] || fps.fast_forward) {
 		return;
 	}
 
@@ -142,7 +142,11 @@ void audio_quality_apu_tick_blipbuf(void) {
 	blipbuf.counter++;
 }
 void audio_quality_end_frame_blipbuf(void) {
-	if (!blipbuf.wave) {
+	if (!blipbuf.wave || !cfg->apu.channel[APU_MASTER] || fps.fast_forward) {
+		SNDCACHE->write = SNDCACHE->start;
+		SNDCACHE->read = (SBYTE *) SNDCACHE->start;
+		SNDCACHE->bytes_available = SNDCACHE->samples_available = 0;
+		snd.buffer.start = FALSE;
 		return;
 	}
 

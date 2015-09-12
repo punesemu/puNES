@@ -30,6 +30,7 @@ enum fps_values {
 	FPS_45,
 	FPS_44
 };
+enum ff_velocity_values { FF_2X = 2, FF_3X, FF_4X, FF_5X };
 
 #define fps_machine_ms(factor)\
 	machine.ms_frame = fps.ms = (1000.0f / (double) machine.fps) * factor;
@@ -41,11 +42,11 @@ enum fps_values {
 #endif
 
 EXTERNC struct _fps {
-	uint8_t counter;
-	uint8_t frames_before_skip;
-	uint8_t max_frames_skipped;
 	uint8_t fast_forward;
-	uint8_t frames_skipped;
+	int counter;
+	int frames_before_skip;
+	int max_frames_skipped;
+	int frames_skipped;
 	uint32_t total_frames_skipped;
 	double ms;
 	double next_frame;
@@ -54,6 +55,11 @@ EXTERNC struct _fps {
 	double avarage;
 	double nominal;
 } fps;
+EXTERNC struct _framerate {
+	uint32_t interval;
+	double value;
+	double last_time;
+} framerate;
 
 EXTERNC void fps_init(void);
 EXTERNC void fps_fast_forward(void);

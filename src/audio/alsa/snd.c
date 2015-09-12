@@ -430,7 +430,8 @@ void *alsa_loop_thread(void *data) {
 		avail = (avail > alsa.psize ? alsa.psize : avail);
 		len = avail * snd.channels * sizeof(*cache->write);
 
-		if ((info.no_rom | info.pause) || (snd.buffer.start == FALSE)) {
+		if ((info.no_rom | info.pause) || (snd.buffer.start == FALSE)
+				|| (fps.fast_forward == TRUE)) {
 			wrbuf(th->alsa->handle, (void *) cache->silence, avail);
 		} else if (cache->bytes_available <= 0) {
 			wrbuf(th->alsa->handle, (void *) cache->silence, avail);
@@ -470,7 +471,7 @@ void *alsa_loop_thread(void *data) {
 		if ((gui_get_ms() - th->tick) >= 250.0f) {
 			th->tick = gui_get_ms();
 			if (info.snd_info == TRUE)
-			fprintf(stderr, "snd : %6ld %6ld %d %6d %d %6d %6d %f %f %4s\r",
+			fprintf(stderr, "snd : %6ld %6ld %d %6d %d %6d %6d %f %3d %f %4s\r",
 				request,
 				avail,
 				len,
@@ -479,6 +480,7 @@ void *alsa_loop_thread(void *data) {
 				cache->bytes_available,
 				snd.out_of_sync,
 				snd.frequency,
+				(int) framerate.value,
 				machine.ms_frame,
 				" ");
 		}

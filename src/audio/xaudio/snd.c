@@ -350,7 +350,7 @@ static void STDMETHODCALLTYPE OnBufferEnd(THIS_ void *data) {
 
 	snd_lock_cache(cache);
 
-	if ((info.no_rom | info.pause) || (snd.buffer.start == FALSE)) {
+	if ((info.no_rom | info.pause) || (snd.buffer.start == FALSE) || (fps.fast_forward == TRUE)) {
 		wrbuf(source, buffer, (const BYTE *) cache->silence);
 	} else if (cache->bytes_available < len) {
 		wrbuf(source, buffer, (const BYTE *) cache->silence);
@@ -373,13 +373,14 @@ static void STDMETHODCALLTYPE OnBufferEnd(THIS_ void *data) {
 	if ((gui_get_ms() - xaudio2.tick) >= 250.0f) {
 		xaudio2.tick = gui_get_ms();
 		if (info.snd_info == TRUE)
-		fprintf(stderr, "snd : %6d %6d %6d %6d %d %f %f\r",
+		fprintf(stderr, "snd : %6d %6d %6d %6d %d %f %3d %f\r",
 			buffer->AudioBytes,
 			fps.total_frames_skipped,
 			cache->samples_available,
 			cache->bytes_available,
 			snd.out_of_sync,
 			snd.frequency,
+			(int) framerate.value,
 			machine.ms_frame);
 	}
 #endif

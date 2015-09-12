@@ -289,7 +289,13 @@ void mainWindow::setup() {
 	grp->addAction(ui->action_Cheats_Disabled);
 	grp->addAction(ui->action_Game_Genie);
 	grp->addAction(ui->action_Cheats_List);
-
+	// Settings/Fast Forward velocity
+	grp = new QActionGroup(this);
+	grp->setExclusive(true);
+	grp->addAction(ui->action_FF_2x);
+	grp->addAction(ui->action_FF_3x);
+	grp->addAction(ui->action_FF_4x);
+	grp->addAction(ui->action_FF_5x);
 	// State
 	grp = new QActionGroup(this);
 	grp->setExclusive(true);
@@ -524,7 +530,6 @@ void mainWindow::update_menu_settings() {
 	} else if (machine.type == DENDY) {
 		ui->action_Dendy->setChecked(true);
 	}
-
 	// Rendering
 #if defined (SDL)
 	if (opengl.supported) {
@@ -568,7 +573,6 @@ void mainWindow::update_menu_settings() {
 		ui->action_Rend0->setChecked(true);
 	}
 #endif
-
 	// FPS
 	switch (cfg->fps) {
 		case 0:
@@ -626,7 +630,6 @@ void mainWindow::update_menu_settings() {
 			ui->action_FPS_44->setChecked(true);
 			break;
 	}
-
 	// Frame skip
 	switch (cfg->frameskip) {
 		case 0:
@@ -660,7 +663,6 @@ void mainWindow::update_menu_settings() {
 			ui->action_Fsk_9->setChecked(true);
 			break;
 	}
-
 	// Scale
 	if (cfg->filter != NO_FILTER) {
 		ui->action_1x->setEnabled(false);
@@ -684,7 +686,6 @@ void mainWindow::update_menu_settings() {
 				break;
 		}
 	}
-
 	// Settings/Video/Pixel Aspect Ratio
 	switch (cfg->pixel_aspect_ratio) {
 		case PAR11:
@@ -719,7 +720,6 @@ void mainWindow::update_menu_settings() {
 	} else {
 		ui->action_PAR_Soft_Stretch->setEnabled(false);
 	}
-
 	// Settings/Video/Overscan
 	switch (cfg->oscan) {
 		case OSCAN_ON:
@@ -1062,6 +1062,21 @@ void mainWindow::update_menu_settings() {
 			if (!info.no_rom) {
 				ui->action_Cheats_Editor->setEnabled(true);
 			}
+			break;
+	}
+	// Settings/Fast Forward velocity
+	switch (cfg->ff_velocity) {
+		case FF_2X:
+			ui->action_FF_2x->setChecked(true);
+			break;
+		case FF_3X:
+			ui->action_FF_3x->setChecked(true);
+			break;
+		case FF_4X:
+			ui->action_FF_4x->setChecked(true);
+			break;
+		case FF_5X:
+			ui->action_FF_5x->setChecked(true);
 			break;
 	}
 	// Settings/Language
@@ -1471,6 +1486,11 @@ void mainWindow::connect_menu_signals() {
 	connect_action(ui->action_Game_Genie, GAMEGENIE_MODE, SLOT(s_cheat_mode_select()));
 	connect_action(ui->action_Cheats_List, CHEATSLIST_MODE, SLOT(s_cheat_mode_select()));
 	connect_action(ui->action_Cheats_Editor, SLOT(s_cheat_dialog()));
+	// Settings/Fast Forward velocity
+	connect_action(ui->action_FF_2x, FF_2X, SLOT(s_set_ff_velocity()));
+	connect_action(ui->action_FF_3x, FF_3X, SLOT(s_set_ff_velocity()));
+	connect_action(ui->action_FF_4x, FF_4X, SLOT(s_set_ff_velocity()));
+	connect_action(ui->action_FF_5x, FF_5X, SLOT(s_set_ff_velocity()));
 	// Settings/Langauge
 	connect_action(ui->action_English, LNG_ENGLISH, SLOT(s_set_language()));
 	connect_action(ui->action_Italian, LNG_ITALIAN, SLOT(s_set_language()));
@@ -2024,6 +2044,20 @@ void mainWindow::s_set_language() {
 	int lang = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
 	set_language(lang);
+}
+void mainWindow::s_set_ff_velocity() {
+	int velocity = QVariant(((QObject *)sender())->property("myValue")).toInt();
+
+	if (cfg->ff_velocity == velocity) {
+		return;
+	}
+
+	cfg->ff_velocity = velocity;
+	gui_update();
+
+	if (fps.fast_forward == TRUE) {
+		fps_fast_forward();
+	}
 }
 void mainWindow::s_set_input() {
 	dlgInput *dlg = new dlgInput(this);

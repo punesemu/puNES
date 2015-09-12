@@ -75,7 +75,8 @@ void fps_init(void) {
 			break;
 	}
 
-	memset(&fps, 0, sizeof(fps));
+	memset(&fps, 0x00, sizeof(fps));
+	memset(&framerate, 0x00, sizeof(framerate));
 
 	if (fps.fast_forward == FALSE) {
 		fps_machine_ms(1.0)
@@ -84,12 +85,14 @@ void fps_init(void) {
 	fps.nominal = 1000.0f / machine.ms_frame;
 	fps.avarage = fps.nominal;
 	fps_normalize();
+
+	framerate.interval = fps.nominal / 4;
 }
 void fps_fast_forward(void) {
 	fps.fast_forward = TRUE;
 	fps.frames_before_skip = 1;
-	fps.max_frames_skipped = machine.fps / 3;
-	fps.ms = (int) (1000 / (machine.fps * 2));
+	fps.max_frames_skipped = (machine.fps * cfg->ff_velocity) / 15;
+	fps.ms = (int) (1000 / (machine.fps * cfg->ff_velocity));
 }
 void fps_normalize(void) {
 	fps.frames_before_skip = 1;
@@ -106,6 +109,11 @@ void fps_frameskip(void) {
 	double frame_end;
 
 	frame_end = gui_get_ms();
+
+	if ((ppu.frames % framerate.interval) == 0) {
+		framerate.value = 1000.0f * ((double) framerate.interval / (frame_end - framerate.last_time));
+		framerate.last_time = frame_end;
+	}
 
 	ppu.skip_draw = FALSE;
 

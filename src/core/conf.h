@@ -23,6 +23,7 @@ typedef struct {
 	BYTE swap_duty;
 	BYTE fps;
 	BYTE frameskip;
+	BYTE ff_velocity;
 
 	BYTE render;
 	BYTE scale;

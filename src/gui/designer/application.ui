@@ -452,12 +452,26 @@
      <addaction name="separator"/>
      <addaction name="action_Cheats_Editor"/>
     </widget>
+    <widget class="QMenu" name="menuFast_Forward_velocity">
+     <property name="title">
+      <string>Fast Forward velocity</string>
+     </property>
+     <property name="icon">
+      <iconset resource="application.qrc">
+       <normaloff>:/icon/icons/fast_forward.png</normaloff>:/icon/icons/fast_forward.png</iconset>
+     </property>
+     <addaction name="action_FF_2x"/>
+     <addaction name="action_FF_3x"/>
+     <addaction name="action_FF_4x"/>
+     <addaction name="action_FF_5x"/>
+    </widget>
     <addaction name="menu_Mode"/>
     <addaction name="separator"/>
     <addaction name="menu_Video"/>
     <addaction name="menu_Audio"/>
     <addaction name="menu_Input"/>
     <addaction name="menuCheats"/>
+    <addaction name="menuFast_Forward_velocity"/>
     <addaction name="separator"/>
     <addaction name="menu_Language"/>
     <addaction name="separator"/>
@@ -1914,6 +1928,38 @@
    </property>
    <property name="text">
     <string>&amp;Fast Forward</string>
+   </property>
+  </action>
+  <action name="action_FF_2x">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;2x</string>
+   </property>
+  </action>
+  <action name="action_FF_3x">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;3x</string>
+   </property>
+  </action>
+  <action name="action_FF_4x">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;4x</string>
+   </property>
+  </action>
+  <action name="action_FF_5x">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;5x</string>
    </property>
   </action>
  </widget>

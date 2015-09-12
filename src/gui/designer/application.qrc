@@ -1,6 +1,7 @@
 <RCC>
   <qresource prefix="icon">
     <file>icons/buffer_size.png</file>
+    <file>icons/fast_forward.png</file>
     <file>icons/application.png</file>
     <file>icons/flag_italy.png</file>
     <file>icons/flag_russia.png</file>
