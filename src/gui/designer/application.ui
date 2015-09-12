@@ -452,7 +452,7 @@
      <addaction name="separator"/>
      <addaction name="action_Cheats_Editor"/>
     </widget>
-    <widget class="QMenu" name="menuFast_Forward_velocity">
+    <widget class="QMenu" name="menu_Fast_Forward_velocity">
      <property name="title">
       <string>Fast Forward velocity</string>
      </property>
@@ -471,7 +471,7 @@
     <addaction name="menu_Audio"/>
     <addaction name="menu_Input"/>
     <addaction name="menuCheats"/>
-    <addaction name="menuFast_Forward_velocity"/>
+    <addaction name="menu_Fast_Forward_velocity"/>
     <addaction name="separator"/>
     <addaction name="menu_Language"/>
     <addaction name="separator"/>
@@ -1935,7 +1935,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>&amp;2x</string>
+    <string>&amp;2x (Default)</string>
    </property>
   </action>
   <action name="action_FF_3x">
