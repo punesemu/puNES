@@ -57,11 +57,8 @@ EXTERNC struct _mouse {
 	uint8_t right;
 
 	uint8_t hidden;
-#if defined (__linux__)
-	time_t timer;
-# else
+
 	double timer;
-#endif
 } mouse;
 
 EXTERNC void gui_quit(void);
