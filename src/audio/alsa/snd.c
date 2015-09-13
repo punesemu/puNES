@@ -188,7 +188,7 @@ BYTE snd_start(void) {
 		loop.alsa = &alsa;
 		loop.action = AT_PAUSE;
 
-		/* creo il lock */
+		// creo il lock
 		if (pthread_mutex_init(&loop.lock, NULL) != 0) {
 			fprintf(stderr, "Unable to allocate the thread mutex\n");
 			goto snd_start_error;
@@ -310,7 +310,7 @@ static BYTE set_hwparams(void) {
 				snd_strerror(rc));
 		return (EXIT_ERROR);
 	}
-	/* set the stream rate */
+	// set the stream rate
 	rrate = snd.samplerate;
 
 	if ((rc = snd_pcm_hw_params_set_rate_near(alsa.handle, params, &rrate, 0)) < 0) {
@@ -507,7 +507,7 @@ static int INLINE xrun_recovery(snd_pcm_t *handle, int err) {
 	if (err == -EPIPE) { // under-run
 		err = snd_pcm_prepare(handle);
 		if (err < 0) {
-			fprintf(stderr, "\n\nCan't recovery from underrun, prepare failed: %s\n",
+			fprintf(stderr, "can't recovery from underrun, prepare failed: %s\n",
 					snd_strerror(err));
 			info.stop = TRUE;
 			return (EXIT_ERROR);
@@ -520,7 +520,7 @@ static int INLINE xrun_recovery(snd_pcm_t *handle, int err) {
 		if (err < 0) {
 			err = snd_pcm_prepare(handle);
 			if (err < 0) {
-				fprintf(stderr, "\n\nCan't recovery from suspend, prepare failed: %s\n",
+				fprintf(stderr, "can't recovery from suspend, prepare failed: %s\n",
 						snd_strerror(err));
 				info.stop = TRUE;
 				return (EXIT_ERROR);
