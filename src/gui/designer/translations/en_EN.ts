@@ -713,42 +713,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>3</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>4</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>5</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>6</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>7</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>8</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>9</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>&amp;Default</source>
         <translation type="unfinished"></translation>
     </message>
@@ -926,10 +890,6 @@
     </message>
     <message>
         <source>&amp;Mono</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Stereo</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1157,10 +1117,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>S&amp;tereo delay</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>&amp;Quality</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1305,10 +1261,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Cheats</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>&amp;Disabled</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1341,7 +1293,91 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Hide the mouse cursor</source>
+        <source>&amp;Stereo Delay</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Stereo &amp;Panning</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Buffer Size factor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Fast Forward</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;2x (Default)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;3x</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;4x</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;5x</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;4</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;5</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;6</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;7</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;8</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;9</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;0</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;1 (Default)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Fast Forward velocity</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Cheats</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Channels Delay</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -713,42 +713,6 @@
         <translation>44</translation>
     </message>
     <message>
-        <source>1</source>
-        <translation>1</translation>
-    </message>
-    <message>
-        <source>2</source>
-        <translation>2</translation>
-    </message>
-    <message>
-        <source>3</source>
-        <translation>3</translation>
-    </message>
-    <message>
-        <source>4</source>
-        <translation>4</translation>
-    </message>
-    <message>
-        <source>5</source>
-        <translation>5</translation>
-    </message>
-    <message>
-        <source>6</source>
-        <translation>6</translation>
-    </message>
-    <message>
-        <source>7</source>
-        <translation>7</translation>
-    </message>
-    <message>
-        <source>8</source>
-        <translation>8</translation>
-    </message>
-    <message>
-        <source>9</source>
-        <translation>9</translation>
-    </message>
-    <message>
         <source>&amp;Default</source>
         <translation>&amp;Default</translation>
     </message>
@@ -927,10 +891,6 @@
     <message>
         <source>&amp;Mono</source>
         <translation>&amp;Mono</translation>
-    </message>
-    <message>
-        <source>&amp;Stereo</source>
-        <translation>&amp;Stereo</translation>
     </message>
     <message>
         <source>5%</source>
@@ -1157,10 +1117,6 @@
         <translation>&amp;Canali</translation>
     </message>
     <message>
-        <source>S&amp;tereo delay</source>
-        <translation>Delay S&amp;tereo</translation>
-    </message>
-    <message>
         <source>&amp;Quality</source>
         <translation>&amp;Qualità</translation>
     </message>
@@ -1309,10 +1265,6 @@
         <translation>&amp;Editor</translation>
     </message>
     <message>
-        <source>Cheats</source>
-        <translation>Cheats</translation>
-    </message>
-    <message>
         <source>&amp;Disabled</source>
         <translation>&amp;Disabilitati</translation>
     </message>
@@ -1341,8 +1293,92 @@
         <translation>versione portatile</translation>
     </message>
     <message>
-        <source>Hide the mouse cursor</source>
-        <translation type="unfinished"></translation>
+        <source>&amp;Stereo Delay</source>
+        <translation>&amp;Stereo Ritardato</translation>
+    </message>
+    <message>
+        <source>Stereo &amp;Panning</source>
+        <translation>Stereo &amp;Panoramico</translation>
+    </message>
+    <message>
+        <source>&amp;Buffer Size factor</source>
+        <translation>Fattore dimensione &amp;buffer</translation>
+    </message>
+    <message>
+        <source>&amp;Fast Forward</source>
+        <translation>&amp;Fast Forward</translation>
+    </message>
+    <message>
+        <source>&amp;2x (Default)</source>
+        <translation>&amp;2x (Default)</translation>
+    </message>
+    <message>
+        <source>&amp;3x</source>
+        <translation>&amp;3x</translation>
+    </message>
+    <message>
+        <source>&amp;4x</source>
+        <translation>&amp;4x</translation>
+    </message>
+    <message>
+        <source>&amp;5x</source>
+        <translation>&amp;5x</translation>
+    </message>
+    <message>
+        <source>&amp;1</source>
+        <translation>&amp;1</translation>
+    </message>
+    <message>
+        <source>&amp;2</source>
+        <translation>&amp;2</translation>
+    </message>
+    <message>
+        <source>&amp;3</source>
+        <translation>&amp;3</translation>
+    </message>
+    <message>
+        <source>&amp;4</source>
+        <translation>&amp;4</translation>
+    </message>
+    <message>
+        <source>&amp;5</source>
+        <translation>&amp;5</translation>
+    </message>
+    <message>
+        <source>&amp;6</source>
+        <translation>&amp;6</translation>
+    </message>
+    <message>
+        <source>&amp;7</source>
+        <translation>&amp;7</translation>
+    </message>
+    <message>
+        <source>&amp;8</source>
+        <translation>&amp;8</translation>
+    </message>
+    <message>
+        <source>&amp;9</source>
+        <translation>&amp;9</translation>
+    </message>
+    <message>
+        <source>&amp;0</source>
+        <translation>&amp;0</translation>
+    </message>
+    <message>
+        <source>&amp;1 (Default)</source>
+        <translation>&amp;1 (Default)</translation>
+    </message>
+    <message>
+        <source>&amp;Fast Forward velocity</source>
+        <translation>Velocità &amp;Fast Forward</translation>
+    </message>
+    <message>
+        <source>&amp;Cheats</source>
+        <translation>&amp;Cheats</translation>
+    </message>
+    <message>
+        <source>&amp;Channels Delay</source>
+        <translation>Ritardo &amp;Canali</translation>
     </message>
 </context>
 <context>
