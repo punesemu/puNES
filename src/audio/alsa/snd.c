@@ -272,10 +272,13 @@ void snd_quit(void) {
 }
 
 static BYTE set_hwparams(void) {
-	snd_pcm_uframes_t size;
 	snd_pcm_hw_params_t *params = NULL;
 	unsigned int rrate;
-	int rc, dir;
+	int rc;
+#if !defined (RELEASE)
+	snd_pcm_uframes_t size;
+	int dir;
+#endif
 
 	snd_pcm_hw_params_alloca(&params);
 
