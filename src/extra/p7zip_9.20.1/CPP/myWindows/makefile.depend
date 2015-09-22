@@ -1,0 +1,32 @@
+myGetTickCount.o: myGetTickCount.cpp StdAfx.h config.h \
+ ../Common/MyWindows.h ../Common/MyGuidDef.h ../Common/Types.h
+mySplitCommandLine.o: mySplitCommandLine.cpp StdAfx.h config.h \
+ ../Common/MyWindows.h ../Common/MyGuidDef.h ../Common/Types.h \
+ ../Common/StringConvert.h ../Common/MyString.h ../Common/MyVector.h \
+ ../Common/Defs.h myPrivate.h
+myAddExeFlag.o: myAddExeFlag.cpp StdAfx.h config.h \
+ ../Common/MyWindows.h ../Common/MyGuidDef.h ../Common/Types.h \
+ myPrivate.h ../Common/StringConvert.h ../Common/MyString.h \
+ ../Common/MyVector.h ../Common/Defs.h
+test_emul.o: test_emul.cpp StdAfx.h config.h ../Common/MyWindows.h \
+ ../Common/MyGuidDef.h ../Common/Types.h ../Common/StringConvert.h \
+ ../Common/MyString.h ../Common/MyVector.h ../Common/Defs.h \
+ ../Common/StdOutStream.h ../Common/StringConvert.cpp \
+ ../Common/UTFConvert.cpp ../Common/UTFConvert.h \
+ ../Common/StdOutStream.cpp ../Common/IntToString.h \
+ ../Common/IntToString.cpp ../Windows/Synchronization.cpp \
+ ../Windows/Synchronization.h ../Windows/Defs.h \
+ ../Windows/../../C/Threads.h ../Windows/../../C/Types.h \
+ ../Windows/FileFind.cpp ../Windows/FileFind.h \
+ ../Windows/../Common/MyString.h ../Windows/FileName.h \
+ ../Windows/../Common/StringConvert.h myPrivate.h
+wine_date_and_time.o: wine_date_and_time.cpp config.h
+MyVector.o: ../Common/MyVector.cpp StdAfx.h config.h \
+ ../Common/MyWindows.h ../Common/MyGuidDef.h ../Common/Types.h \
+ ../Common/MyVector.h ../Common/Defs.h
+MyString.o: ../Common/MyString.cpp StdAfx.h config.h \
+ ../Common/MyWindows.h ../Common/MyGuidDef.h ../Common/Types.h \
+ ../Common/StringConvert.h ../Common/MyString.h ../Common/MyVector.h \
+ ../Common/Defs.h myPrivate.h
+MyWindows.o: ../Common/MyWindows.cpp StdAfx.h config.h \
+ ../Common/MyWindows.h ../Common/MyGuidDef.h ../Common/Types.h

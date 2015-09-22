@@ -1,0 +1,16 @@
+SRCS=\
+	../../UI/FileManager/PasswordDialog.cpp \
+	../../UI/FileManager/PasswordDialog_rc.cpp \
+	../../../Windows/Window.cpp \
+	../../../Windows/Control/Dialog.cpp \
+	../../../Windows/Control/Controls.cpp \
+	TestUI.cpp \
+
+SRCS_C=\
+	../../../../C/Threads.c
+
+include ../../../../makefile.rules
+
+TestUI.o : TestUI.cpp
+	$(CXX) $(CXXFLAGS) TestUI.cpp
+

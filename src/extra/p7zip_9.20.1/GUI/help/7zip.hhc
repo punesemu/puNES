@@ -1,0 +1,258 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<meta name="GENERATOR" content="Microsoft&reg; HTML Help Workshop 4.1">
+<!-- Sitemap 1.0 -->
+</HEAD><BODY>
+<OBJECT type="text/site properties">
+  <param name="ImageType" value="Folder">
+</OBJECT>
+<UL>
+  <LI> <OBJECT type="text/sitemap">
+    <param name="Name" value="7-Zip Start Page">
+    <param name="Local" value="start.htm">
+    </OBJECT>
+  <LI> <OBJECT type="text/sitemap">
+    <param name="Name" value="General Information">
+    <param name="Local" value="general/index.htm">
+    <param name="ImageNumber" value="1">
+    </OBJECT>
+  <UL>
+    <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="Supported formats">
+      <param name="Local" value="general/formats.htm">
+      </OBJECT>
+    <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="7z format">
+      <param name="Local" value="general/7z.htm">
+      </OBJECT>
+    <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="Performance">
+      <param name="Local" value="general/performance.htm">
+      </OBJECT>
+    <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="Frequently Asked Questions">
+      <param name="Local" value="general/faq.htm">
+      </OBJECT>
+    <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="License">
+      <param name="Local" value="general/license.htm">
+      </OBJECT>
+    <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="Thanks">
+      <param name="Local" value="general/thanks.htm">
+      </OBJECT>
+  </UL>
+  <LI> <OBJECT type="text/sitemap">
+    <param name="Name" value="File Manager">
+    <param name="Local" value="fm/index.htm">
+    <param name="ImageNumber" value="1">
+    </OBJECT>
+  <UL>
+    <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="Menu Items and Shortcut Keys">
+      <param name="Local" value="fm/Menu.htm">
+      </OBJECT>
+    <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="Options Dialog Box">
+      <param name="Local" value="fm/options.htm">
+      </OBJECT>
+    <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="Benchmark">
+      <param name="Local" value="fm/benchmark.htm">
+      </OBJECT>
+    <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="About Dialog Box">
+      <param name="Local" value="fm/about.htm">
+      </OBJECT>
+    <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="Plugins">
+      <param name="Local" value="fm/plugins/index.htm">
+      <param name="ImageNumber" value="1">
+      </OBJECT>
+    <UL>
+      <LI> <OBJECT type="text/sitemap">
+        <param name="Name" value="7-Zip">
+        <param name="Local" value="fm/plugins/7-zip/index.htm">
+        <param name="ImageNumber" value="1">
+        </OBJECT>
+      <UL>
+        <LI> <OBJECT type="text/sitemap">
+          <param name="Name" value="Add to Archive Dialog Box">
+          <param name="Local" value="fm/plugins/7-zip/add.htm">
+          </OBJECT>
+        <LI> <OBJECT type="text/sitemap">
+          <param name="Name" value="Extract Dialog Box">
+          <param name="Local" value="fm/plugins/7-zip/extract.htm">
+          </OBJECT>
+      </UL>
+    </UL>
+  </UL>
+  
+  <LI> <OBJECT type="text/sitemap">
+    <param name="Name" value="Command Line Version">
+    <param name="Local" value="cmdline/index.htm">
+    <param name="ImageNumber" value="1">
+    </OBJECT>
+  <UL>
+    <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="Syntax">
+      <param name="Local" value="cmdline/syntax.htm">
+      </OBJECT>
+    <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="Exit Codes">
+      <param name="Local" value="cmdline/exit_codes.htm">
+      </OBJECT>
+    <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="Commands">
+      <param name="Local" value="cmdline/commands/index.htm">
+      <param name="ImageNumber" value="1">
+      </OBJECT>
+    <UL>
+      <LI> <OBJECT type="text/sitemap">
+        <param name="Name" value="a (Add)">
+        <param name="Local" value="cmdline/commands/add.htm">
+        </OBJECT>
+      <LI> <OBJECT type="text/sitemap">
+        <param name="Name" value="b (Bench)">
+        <param name="Local" value="cmdline/commands/bench.htm">
+        </OBJECT>
+      <LI> <OBJECT type="text/sitemap">
+        <param name="Name" value="d (Delete)">
+        <param name="Local" value="cmdline/commands/delete.htm">
+        </OBJECT>
+      <LI> <OBJECT type="text/sitemap">
+        <param name="Name" value="e (Extract)">
+        <param name="Local" value="cmdline/commands/extract.htm">
+        </OBJECT>
+      <LI> <OBJECT type="text/sitemap">
+        <param name="Name" value="l (List)">
+        <param name="Local" value="cmdline/commands/list.htm">
+        </OBJECT>
+      <LI> <OBJECT type="text/sitemap">
+        <param name="Name" value="t (Test)">
+        <param name="Local" value="cmdline/commands/test.htm">
+        </OBJECT>
+      <LI> <OBJECT type="text/sitemap">
+        <param name="Name" value="u (Update)">
+        <param name="Local" value="cmdline/commands/update.htm">
+        </OBJECT>
+      <LI> <OBJECT type="text/sitemap">
+        <param name="Name" value="x (eXtract with full paths)">
+        <param name="Local" value="cmdline/commands/extract_full.htm">
+        </OBJECT>
+    </UL>
+    <LI> <OBJECT type="text/sitemap">
+      <param name="Name" value="Switches">
+      <param name="Local" value="cmdline/switches/index.htm">
+      <param name="ImageNumber" value="1">
+      </OBJECT>
+    <UL>
+      <LI> <OBJECT type="text/sitemap">
+        <param name="Name" value="-- (Stop switches parsing)">
+        <param name="Local" value="cmdline/switches/stop_switch.htm">
+        </OBJECT>
+      <LI> <OBJECT type="text/sitemap">
+        <param name="Name" value="-ai (Include archive filenames) switch">
+        <param name="Local" value="cmdline/switches/ar_include.htm">
+        </OBJECT>
+      <LI> <OBJECT type="text/sitemap">
+        <param name="Name" value="-an (Disable parsing of archive_name) switch">
+        <param name="Local" value="cmdline/switches/ar_no.htm">
+        </OBJECT>
+      <LI> <OBJECT type="text/sitemap">
+        <param name="Name" value="-ao (Overwrite mode)">
+        <param name="Local" value="cmdline/switches/overwrite.htm">
+        </OBJECT>
+      <LI> <OBJECT type="text/sitemap">
+        <param name="Name" value="-ax (Exclude archive filenames) switch">
+        <param name="Local" value="cmdline/switches/ar_exclude.htm">
+        </OBJECT>
+      <LI> <OBJECT type="text/sitemap">
+        <param name="Name" value="-i (Include filenames)">
+        <param name="Local" value="cmdline/switches/include.htm">
+        </OBJECT>
+      <LI> <OBJECT type="text/sitemap">
+        <param name="Name" value="-m (Set Compression Method)">
+        <param name="Local" value="cmdline/switches/method.htm">
+        </OBJECT>
+      <LI> <OBJECT type="text/sitemap">
+        <param name="Name" value="-o (Set Output directory)">
+        <param name="Local" value="cmdline/switches/output_dir.htm">
+        </OBJECT>
+      <LI> <OBJECT type="text/sitemap">
+        <param name="Name" value="-p (Set Password)">
+        <param name="Local" value="cmdline/switches/password.htm">
+        </OBJECT>
+      <LI> <OBJECT type="text/sitemap">
+        <param name="Name" value="-r (Recurse subdirectories)">
+        <param name="Local" value="cmdline/switches/recurse.htm">
+        </OBJECT>
+      <LI> <OBJECT type="text/sitemap">
+        <param name="Name" value="-scc (Set charset for console input/output)">
+        <param name="Local" value="cmdline/switches/scc.htm">
+        </OBJECT>
+      <LI> <OBJECT type="text/sitemap">
+        <param name="Name" value="-scs (Set charset for list files)">
+        <param name="Local" value="cmdline/switches/charset.htm">
+        </OBJECT>
+      <LI> <OBJECT type="text/sitemap">
+        <param name="Name" value="-seml (Send archive by email)">
+        <param name="Local" value="cmdline/switches/email.htm">
+        </OBJECT>
+      <LI> <OBJECT type="text/sitemap">
+        <param name="Name" value="-sfx (Create SFX archive)">
+        <param name="Local" value="cmdline/switches/sfx.htm">
+        </OBJECT>
+      <LI> <OBJECT type="text/sitemap">
+        <param name="Name" value="-si (Read data from StdIn)">
+        <param name="Local" value="cmdline/switches/stdin.htm">
+        </OBJECT>
+      <LI> <OBJECT type="text/sitemap">
+        <param name="Name" value="-so (Write data to StdOut)">
+        <param name="Local" value="cmdline/switches/stdout.htm">
+        </OBJECT>
+      <LI> <OBJECT type="text/sitemap">
+        <param name="Name" value="-slp (Set Large Pages mode)">
+        <param name="Local" value="cmdline/switches/large_pages.htm">
+        </OBJECT>
+      <LI> <OBJECT type="text/sitemap">
+        <param name="Name" value="-slt (Show technical information)">
+        <param name="Local" value="cmdline/switches/list_tech.htm">
+        </OBJECT>
+      <LI> <OBJECT type="text/sitemap">
+        <param name="Name" value="-ssc (Set Sensitive Case mode)">
+        <param name="Local" value="cmdline/switches/ssc.htm">
+        </OBJECT>
+      <LI> <OBJECT type="text/sitemap">
+        <param name="Name" value="-ssw (Compress files open for writing)">
+        <param name="Local" value="cmdline/switches/shared.htm">
+        </OBJECT>
+      <LI> <OBJECT type="text/sitemap">
+        <param name="Name" value="-t (Set Type of archive)">
+        <param name="Local" value="cmdline/switches/type.htm">
+        </OBJECT>
+      <LI> <OBJECT type="text/sitemap">
+        <param name="Name" value="-u (Update options)">
+        <param name="Local" value="cmdline/switches/update.htm">
+        </OBJECT>
+      <LI> <OBJECT type="text/sitemap">
+        <param name="Name" value="-v (Create Volumes)">
+        <param name="Local" value="cmdline/switches/volume.htm">
+        </OBJECT>
+      <LI> <OBJECT type="text/sitemap">
+        <param name="Name" value="-w (Set Working directory)">
+        <param name="Local" value="cmdline/switches/working_dir.htm">
+        </OBJECT>
+      <LI> <OBJECT type="text/sitemap">
+        <param name="Name" value="-x (Exclude filenames)">
+        <param name="Local" value="cmdline/switches/exclude.htm">
+        </OBJECT>
+      <LI> <OBJECT type="text/sitemap">
+        <param name="Name" value="-y (Assume Yes on all queries)">
+        <param name="Local" value="cmdline/switches/yes.htm">
+        </OBJECT>
+    </UL>
+  </UL>
+</UL>
+</BODY></HTML>

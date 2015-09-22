@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=puNES
+GenericName=Nintendo Entertaiment System emulator
+Comment=Nintendo Entertaiment System emulator
+Exec=punes
+Icon=punes
+Type=Application
+Categories=Game;Emulator;
+Encoding=UTF-8
+MimeType=application/x-nes;application/x-nes-rom

@@ -1,0 +1,998 @@
+In file included from /usr/include/wx-2.8/wx/platform.h:293,
+                 from /usr/include/wx-2.8/wx/defs.h:21,
+                 from /usr/include/wx-2.8/wx/wxprec.h:13,
+                 from BenchmarkDialog_rc.cpp:11:
+/usr/include/wx-2.8/wx/chkconf.h:23:30: error: wx/msw/chkconf.h: No such file or directory
+/usr/include/wx-2.8/wx/chkconf.h:95:9: error: #error "wxUSE_CRASHREPORT must be defined."
+In file included from /usr/include/wx-2.8/wx/defs.h:21,
+                 from /usr/include/wx-2.8/wx/wxprec.h:13,
+                 from BenchmarkDialog_rc.cpp:11:
+/usr/include/wx-2.8/wx/platform.h:540:33: error: wx/msw/libraries.h: No such file or directory
+In file included from /usr/include/wx-2.8/wx/wxprec.h:13,
+                 from BenchmarkDialog_rc.cpp:11:
+/usr/include/wx-2.8/wx/defs.h:2856:29: error: wx/msw/winundef.h: No such file or directory
+BenchmarkDialog_rc.cpp:15:2: error: #error 10
+In file included from /usr/include/wx-2.8/wx/event.h:22,
+                 from /usr/include/wx-2.8/wx/wx.h:25,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/cursor.h:20:31: error: wx/msw/cursor.h: No such file or directory
+In file included from /usr/include/wx-2.8/wx/utils.h:21,
+                 from /usr/include/wx-2.8/wx/cursor.h:41,
+                 from /usr/include/wx-2.8/wx/event.h:22,
+                 from /usr/include/wx-2.8/wx/wx.h:25,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/filefn.h:62:24: error: direct.h: No such file or directory
+/usr/include/wx-2.8/wx/filefn.h:63:21: error: dos.h: No such file or directory
+/usr/include/wx-2.8/wx/filefn.h:64:20: error: io.h: No such file or directory
+In file included from /usr/include/wx-2.8/wx/wx.h:26,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/app.h:562:32: error: wx/msw/app.h: No such file or directory
+In file included from /usr/include/wx-2.8/wx/window.h:24,
+                 from /usr/include/wx-2.8/wx/wx.h:36,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/font.h:229:29: error: wx/msw/font.h: No such file or directory
+In file included from /usr/include/wx-2.8/wx/window.h:25,
+                 from /usr/include/wx-2.8/wx/wx.h:36,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/colour.h:131:31: error: wx/msw/colour.h: No such file or directory
+In file included from /usr/include/wx-2.8/wx/window.h:26,
+                 from /usr/include/wx-2.8/wx/wx.h:36,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/region.h:222:31: error: wx/msw/region.h: No such file or directory
+In file included from /usr/include/wx-2.8/wx/window.h:33,
+                 from /usr/include/wx-2.8/wx/wx.h:36,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/palette.h:36:32: error: wx/msw/palette.h: No such file or directory
+In file included from /usr/include/wx-2.8/wx/window.h:37,
+                 from /usr/include/wx-2.8/wx/wx.h:36,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/accel.h:151:30: error: wx/msw/accel.h: No such file or directory
+In file included from /usr/include/wx-2.8/wx/wx.h:36,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/window.h:1462:31: error: wx/msw/window.h: No such file or directory
+In file included from /usr/include/wx-2.8/wx/wx.h:39,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/toplevel.h:317:33: error: wx/msw/toplevel.h: No such file or directory
+In file included from /usr/include/wx-2.8/wx/wx.h:40,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/frame.h:245:34: error: wx/msw/frame.h: No such file or directory
+In file included from /usr/include/wx-2.8/wx/wx.h:44,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/bitmap.h:209:31: error: wx/msw/bitmap.h: No such file or directory
+In file included from /usr/include/wx-2.8/wx/dc.h:26,
+                 from /usr/include/wx-2.8/wx/wx.h:48,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/brush.h:34:30: error: wx/msw/brush.h: No such file or directory
+In file included from /usr/include/wx-2.8/wx/dc.h:27,
+                 from /usr/include/wx-2.8/wx/wx.h:48,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/pen.h:20:24: error: wx/msw/pen.h: No such file or directory
+In file included from /usr/include/wx-2.8/wx/wx.h:48,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/dc.h:859:27: error: wx/msw/dc.h: No such file or directory
+In file included from /usr/include/wx-2.8/wx/wx.h:49,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/dcclient.h:20:29: error: wx/msw/dcclient.h: No such file or directory
+In file included from /usr/include/wx-2.8/wx/wx.h:50,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/dcmemory.h:54:29: error: wx/msw/dcmemory.h: No such file or directory
+In file included from /usr/include/wx-2.8/wx/wx.h:51,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/dcprint.h:22:28: error: wx/msw/dcprint.h: No such file or directory
+In file included from /usr/include/wx-2.8/wx/wx.h:52,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/dcscreen.h:20:29: error: wx/msw/dcscreen.h: No such file or directory
+In file included from /usr/include/wx-2.8/wx/button.h:46,
+                 from /usr/include/wx-2.8/wx/wx.h:53,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/control.h:99:32: error: wx/msw/control.h: No such file or directory
+In file included from /usr/include/wx-2.8/wx/wx.h:53,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/button.h:86:31: error: wx/msw/button.h: No such file or directory
+In file included from /usr/include/wx-2.8/wx/wx.h:54,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/menuitem.h:184:33: error: wx/msw/menuitem.h: No such file or directory
+In file included from /usr/include/wx-2.8/wx/wx.h:55,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/menu.h:536:29: error: wx/msw/menu.h: No such file or directory
+In file included from /usr/include/wx-2.8/wx/wx.h:59,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/icon.h:20:27: error: wx/msw/icon.h: No such file or directory
+In file included from /usr/include/wx-2.8/wx/wx.h:61,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/dialog.h:150:35: error: wx/msw/dialog.h: No such file or directory
+In file included from /usr/include/wx-2.8/wx/wx.h:62,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/timer.h:114:30: error: wx/msw/timer.h: No such file or directory
+In file included from /usr/include/wx-2.8/wx/wx.h:64,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/msgdlg.h:49:27: error: wx/msw/msgdlg.h: No such file or directory
+In file included from /usr/include/wx-2.8/wx/wx.h:66,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/dataobj.h:76:37: error: wx/msw/ole/dataform.h: No such file or directory
+/usr/include/wx-2.8/wx/dataobj.h:164:36: error: wx/msw/ole/dataobj.h: No such file or directory
+/usr/include/wx-2.8/wx/dataobj.h:504:37: error: wx/msw/ole/dataobj2.h: No such file or directory
+In file included from /usr/include/wx-2.8/wx/wx.h:70,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/bmpbuttn.h:105:33: error: wx/msw/bmpbuttn.h: No such file or directory
+In file included from /usr/include/wx-2.8/wx/wx.h:71,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/checkbox.h:136:33: error: wx/msw/checkbox.h: No such file or directory
+In file included from /usr/include/wx-2.8/wx/checklst.h:17,
+                 from /usr/include/wx-2.8/wx/wx.h:72,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/listbox.h:148:32: error: wx/msw/listbox.h: No such file or directory
+In file included from /usr/include/wx-2.8/wx/wx.h:72,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/checklst.h:46:33: error: wx/msw/checklst.h: No such file or directory
+In file included from /usr/include/wx-2.8/wx/wx.h:73,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/choice.h:71:31: error: wx/msw/choice.h: No such file or directory
+In file included from /usr/include/wx-2.8/wx/wx.h:74,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/scrolbar.h:62:33: error: wx/msw/scrolbar.h: No such file or directory
+In file included from /usr/include/wx-2.8/wx/wx.h:75,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/stattext.h:49:33: error: wx/msw/stattext.h: No such file or directory
+In file included from /usr/include/wx-2.8/wx/wx.h:76,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/statbmp.h:56:32: error: wx/msw/statbmp.h: No such file or directory
+In file included from /usr/include/wx-2.8/wx/wx.h:77,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/statbox.h:56:32: error: wx/msw/statbox.h: No such file or directory
+In file included from /usr/include/wx-2.8/wx/wx.h:79,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/radiobox.h:161:33: error: wx/msw/radiobox.h: No such file or directory
+In file included from /usr/include/wx-2.8/wx/wx.h:80,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/radiobut.h:41:33: error: wx/msw/radiobut.h: No such file or directory
+In file included from /usr/include/wx-2.8/wx/wx.h:81,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/textctrl.h:473:33: error: wx/msw/textctrl.h: No such file or directory
+In file included from /usr/include/wx-2.8/wx/wx.h:82,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/slider.h:128:33: error: wx/msw/slider95.h: No such file or directory
+In file included from /usr/include/wx-2.8/wx/wx.h:83,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/gauge.h:107:32: error: wx/msw/gauge95.h: No such file or directory
+In file included from /usr/include/wx-2.8/wx/wx.h:85,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/dirdlg.h:102:36: error: wx/generic/dirdlgg.h: No such file or directory
+In file included from /usr/include/wx-2.8/wx/wx.h:86,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/toolbar.h:74:34: error: wx/msw/tbar95.h: No such file or directory
+In file included from /usr/include/wx-2.8/wx/wx.h:87,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/combobox.h:79:33: error: wx/msw/combobox.h: No such file or directory
+In file included from /usr/include/wx-2.8/wx/wx.h:90,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/mdi.h:22:28: error: wx/msw/mdi.h: No such file or directory
+In file included from /usr/include/wx-2.8/wx/wx.h:91,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/statusbr.h:159:33: error: wx/msw/statbr95.h: No such file or directory
+In file included from /usr/include/wx-2.8/wx/wx.h:94,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/filedlg.h:206:28: error: wx/msw/filedlg.h: No such file or directory
+BenchmarkDialog_rc.cpp:30:2: error: #error 100
+In file included from /usr/include/wx-2.8/wx/wxprec.h:13,
+                 from BenchmarkDialog_rc.cpp:11:
+/usr/include/wx-2.8/wx/defs.h:2581: error: conflicting declaration ‘typedef void* WXHICON’
+/usr/include/wx-2.8/wx/defs.h:2390: error: ‘WXHICON’ has a previous declaration as ‘typedef struct wxOpaqueCIconHandle* WXHICON’
+/usr/include/wx-2.8/wx/defs.h:2600: error: conflicting declaration ‘typedef long unsigned int WXCOLORREF’
+/usr/include/wx-2.8/wx/defs.h:2372: error: ‘WXCOLORREF’ has a previous declaration as ‘typedef unsigned char WXCOLORREF [6]’
+/usr/include/wx-2.8/wx/defs.h:2611: error: conflicting declaration ‘typedef void* WXWidget’
+/usr/include/wx-2.8/wx/defs.h:2396: error: ‘WXWidget’ has a previous declaration as ‘typedef struct wxOpaqueControlRef* WXWidget’
+/usr/include/wx-2.8/wx/defs.h:2626: error: expected `)' before ‘*’ token
+In file included from /usr/include/wx-2.8/wx/event.h:22,
+                 from /usr/include/wx-2.8/wx/wx.h:25,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/cursor.h: In destructor ‘wxBusyCursorSuspender::~wxBusyCursorSuspender()’:
+/usr/include/wx-2.8/wx/cursor.h:74: error: invalid use of incomplete type ‘const struct wxCursor’
+/usr/include/wx-2.8/wx/gdicmn.h:33: error: forward declaration of ‘const struct wxCursor’
+In file included from /usr/include/wx-2.8/wx/wx.h:25,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/event.h: At global scope:
+/usr/include/wx-2.8/wx/event.h:921: error: field ‘m_cursor’ has incomplete type
+/usr/include/wx-2.8/wx/event.h: In constructor ‘wxSetCursorEvent::wxSetCursorEvent(wxCoord, wxCoord)’:
+/usr/include/wx-2.8/wx/event.h:900: error: class ‘wxSetCursorEvent’ does not have any field named ‘m_cursor’
+/usr/include/wx-2.8/wx/event.h: In copy constructor ‘wxSetCursorEvent::wxSetCursorEvent(const wxSetCursorEvent&)’:
+/usr/include/wx-2.8/wx/event.h:907: error: class ‘wxSetCursorEvent’ does not have any field named ‘m_cursor’
+/usr/include/wx-2.8/wx/event.h:907: error: ‘const class wxSetCursorEvent’ has no member named ‘m_cursor’
+/usr/include/wx-2.8/wx/event.h: In member function ‘void wxSetCursorEvent::SetCursor(const wxCursor&)’:
+/usr/include/wx-2.8/wx/event.h:913: error: ‘m_cursor’ was not declared in this scope
+/usr/include/wx-2.8/wx/event.h: In member function ‘const wxCursor& wxSetCursorEvent::GetCursor() const’:
+/usr/include/wx-2.8/wx/event.h:914: error: ‘m_cursor’ was not declared in this scope
+/usr/include/wx-2.8/wx/event.h: In member function ‘bool wxSetCursorEvent::HasCursor() const’:
+/usr/include/wx-2.8/wx/event.h:915: error: ‘m_cursor’ was not declared in this scope
+In file included from /usr/include/wx-2.8/wx/wx.h:26,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/app.h: In constructor ‘wxAppInitializer::wxAppInitializer(wxAppConsole* (*)())’:
+/usr/include/wx-2.8/wx/app.h:637: error: ‘wxApp’ has not been declared
+In file included from /usr/include/wx-2.8/wx/window.h:26,
+                 from /usr/include/wx-2.8/wx/wx.h:36,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/region.h: In member function ‘bool wxRegionBase::Intersect(const wxRect&)’:
+/usr/include/wx-2.8/wx/region.h:251: error: invalid use of incomplete type ‘struct wxRegion’
+/usr/include/wx-2.8/wx/gdicmn.h:38: error: forward declaration of ‘struct wxRegion’
+/usr/include/wx-2.8/wx/region.h: In member function ‘bool wxRegionBase::Subtract(const wxRect&)’:
+/usr/include/wx-2.8/wx/region.h:256: error: invalid use of incomplete type ‘struct wxRegion’
+/usr/include/wx-2.8/wx/gdicmn.h:38: error: forward declaration of ‘struct wxRegion’
+/usr/include/wx-2.8/wx/region.h: In member function ‘bool wxRegionBase::Xor(const wxRect&)’:
+/usr/include/wx-2.8/wx/region.h:261: error: invalid use of incomplete type ‘struct wxRegion’
+/usr/include/wx-2.8/wx/gdicmn.h:38: error: forward declaration of ‘struct wxRegion’
+/usr/include/wx-2.8/wx/region.h: In member function ‘bool wxRegionWithCombine::Combine(wxCoord, wxCoord, wxCoord, wxCoord, wxRegionOp)’:
+/usr/include/wx-2.8/wx/region.h:290: error: invalid use of incomplete type ‘struct wxRegion’
+/usr/include/wx-2.8/wx/gdicmn.h:38: error: forward declaration of ‘struct wxRegion’
+/usr/include/wx-2.8/wx/region.h: In member function ‘bool wxRegionWithCombine::Combine(const wxRect&, wxRegionOp)’:
+/usr/include/wx-2.8/wx/region.h:295: error: invalid use of incomplete type ‘struct wxRegion’
+/usr/include/wx-2.8/wx/gdicmn.h:38: error: forward declaration of ‘struct wxRegion’
+In file included from /usr/include/wx-2.8/wx/wx.h:36,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/window.h: At global scope:
+/usr/include/wx-2.8/wx/window.h:82: error: field ‘font’ has incomplete type
+/usr/include/wx-2.8/wx/window.h:85: error: field ‘colFg’ has incomplete type
+/usr/include/wx-2.8/wx/window.h:89: error: field ‘colBg’ has incomplete type
+/usr/include/wx-2.8/wx/window.h:1215: error: field ‘m_cursor’ has incomplete type
+/usr/include/wx-2.8/wx/window.h:1216: error: field ‘m_font’ has incomplete type
+/usr/include/wx-2.8/wx/window.h:1217: error: field ‘m_backgroundColour’ has incomplete type
+/usr/include/wx-2.8/wx/window.h:1218: error: field ‘m_foregroundColour’ has incomplete type
+/usr/include/wx-2.8/wx/window.h:1225: error: field ‘m_updateRegion’ has incomplete type
+/usr/include/wx-2.8/wx/window.h:1230: error: field ‘m_acceleratorTable’ has incomplete type
+/usr/include/wx-2.8/wx/window.h:1278: error: field ‘m_palette’ has incomplete type
+/usr/include/wx-2.8/wx/window.h: In member function ‘virtual void wxWindowBase::SetAcceleratorTable(const wxAcceleratorTable&)’:
+/usr/include/wx-2.8/wx/window.h:670: error: ‘m_acceleratorTable’ was not declared in this scope
+/usr/include/wx-2.8/wx/window.h: In member function ‘wxAcceleratorTable* wxWindowBase::GetAcceleratorTable()’:
+/usr/include/wx-2.8/wx/window.h:672: error: ‘m_acceleratorTable’ was not declared in this scope
+/usr/include/wx-2.8/wx/window.h: In member function ‘const wxRegion& wxWindowBase::GetUpdateRegion() const’:
+/usr/include/wx-2.8/wx/window.h:761: error: ‘m_updateRegion’ was not declared in this scope
+/usr/include/wx-2.8/wx/window.h: In member function ‘wxRegion& wxWindowBase::GetUpdateRegion()’:
+/usr/include/wx-2.8/wx/window.h:762: error: ‘m_updateRegion’ was not declared in this scope
+/usr/include/wx-2.8/wx/window.h: In member function ‘const wxCursor& wxWindowBase::GetCursor() const’:
+/usr/include/wx-2.8/wx/window.h:850: error: ‘m_cursor’ was not declared in this scope
+/usr/include/wx-2.8/wx/window.h: In member function ‘wxPalette wxWindowBase::GetPalette() const’:
+/usr/include/wx-2.8/wx/window.h:1127: error: return type ‘struct wxPalette’ is incomplete
+/usr/include/wx-2.8/wx/window.h:1127: error: ‘m_palette’ was not declared in this scope
+/usr/include/wx-2.8/wx/window.h: In member function ‘wxWindow* wxWindowBase::GetGrandParent() const’:
+/usr/include/wx-2.8/wx/window.h:1532: error: invalid use of incomplete type ‘struct wxWindow’
+../../../myWindows/StdAfx.h:58: error: forward declaration of ‘struct wxWindow’
+In file included from /usr/include/wx-2.8/wx/panel.h:15,
+                 from /usr/include/wx-2.8/wx/wx.h:38,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/generic/panelg.h: At global scope:
+/usr/include/wx-2.8/wx/generic/panelg.h:31: error: invalid use of incomplete type ‘struct wxWindow’
+../../../myWindows/StdAfx.h:58: error: forward declaration of ‘struct wxWindow’
+In file included from /usr/include/wx-2.8/wx/wx.h:39,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/toplevel.h:119: error: invalid use of incomplete type ‘struct wxWindow’
+../../../myWindows/StdAfx.h:58: error: forward declaration of ‘struct wxWindow’
+/usr/include/wx-2.8/wx/toplevel.h: In member function ‘virtual bool wxTopLevelWindowBase::IsActive()’:
+/usr/include/wx-2.8/wx/toplevel.h:183: error: ‘FindFocus’ was not declared in this scope
+/usr/include/wx-2.8/wx/toplevel.h: In member function ‘virtual bool wxTopLevelWindowBase::IsVisible() const’:
+/usr/include/wx-2.8/wx/toplevel.h:235: error: ‘IsShown’ was not declared in this scope
+/usr/include/wx-2.8/wx/toplevel.h: In member function ‘virtual void wxTopLevelWindowBase::DoGetScreenPosition(int*, int*) const’:
+/usr/include/wx-2.8/wx/toplevel.h:273: error: ‘DoGetPosition’ was not declared in this scope
+/usr/include/wx-2.8/wx/toplevel.h: At global scope:
+/usr/include/wx-2.8/wx/toplevel.h:353: error: expected class-name before ‘{’ token
+/usr/include/wx-2.8/wx/toplevel.h: In constructor ‘wxTopLevelWindow::wxTopLevelWindow()’:
+/usr/include/wx-2.8/wx/toplevel.h:356: error: ‘Init’ was not declared in this scope
+/usr/include/wx-2.8/wx/toplevel.h: In constructor ‘wxTopLevelWindow::wxTopLevelWindow(wxWindow*, wxWindowID, const wxString&, const wxPoint&, const wxSize&, long int, const wxString&)’:
+/usr/include/wx-2.8/wx/toplevel.h:365: error: ‘Init’ was not declared in this scope
+/usr/include/wx-2.8/wx/toplevel.h:366: error: ‘Create’ was not declared in this scope
+In file included from /usr/include/wx-2.8/wx/wx.h:44,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/bitmap.h: In member function ‘virtual wxColour wxBitmapBase::QuantizeColour(const wxColour&) const’:
+/usr/include/wx-2.8/wx/bitmap.h:194: error: return type ‘struct wxColour’ is incomplete
+In file included from /usr/include/wx-2.8/wx/wx.h:48,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/dc.h: At global scope:
+/usr/include/wx-2.8/wx/dc.h:835: error: field ‘m_pen’ has incomplete type
+/usr/include/wx-2.8/wx/dc.h:836: error: field ‘m_brush’ has incomplete type
+/usr/include/wx-2.8/wx/dc.h:837: error: field ‘m_backgroundBrush’ has incomplete type
+/usr/include/wx-2.8/wx/dc.h:838: error: field ‘m_textForegroundColour’ has incomplete type
+/usr/include/wx-2.8/wx/dc.h:839: error: field ‘m_textBackgroundColour’ has incomplete type
+/usr/include/wx-2.8/wx/dc.h:840: error: field ‘m_font’ has incomplete type
+/usr/include/wx-2.8/wx/dc.h:843: error: field ‘m_palette’ has incomplete type
+/usr/include/wx-2.8/wx/dc.h: In constructor ‘wxDCBase::wxDCBase()’:
+/usr/include/wx-2.8/wx/dc.h:121: error: class ‘wxDCBase’ does not have any field named ‘m_pen’
+/usr/include/wx-2.8/wx/dc.h:122: error: class ‘wxDCBase’ does not have any field named ‘m_brush’
+/usr/include/wx-2.8/wx/dc.h:123: error: class ‘wxDCBase’ does not have any field named ‘m_backgroundBrush’
+/usr/include/wx-2.8/wx/dc.h:124: error: class ‘wxDCBase’ does not have any field named ‘m_textForegroundColour’
+/usr/include/wx-2.8/wx/dc.h:125: error: class ‘wxDCBase’ does not have any field named ‘m_textBackgroundColour’
+/usr/include/wx-2.8/wx/dc.h:126: error: class ‘wxDCBase’ does not have any field named ‘m_font’
+/usr/include/wx-2.8/wx/dc.h:128: error: class ‘wxDCBase’ does not have any field named ‘m_palette’
+/usr/include/wx-2.8/wx/dc.h: In member function ‘wxBitmap wxDCBase::GetAsBitmap(const wxRect*) const’:
+/usr/include/wx-2.8/wx/dc.h:318: error: return type ‘struct wxBitmap’ is incomplete
+/usr/include/wx-2.8/wx/dc.h:319: error: invalid use of incomplete type ‘struct wxBitmap’
+/usr/include/wx-2.8/wx/gdicmn.h:30: error: forward declaration of ‘struct wxBitmap’
+/usr/include/wx-2.8/wx/dc.h: In member function ‘virtual const wxBrush& wxDCBase::GetBackground() const’:
+/usr/include/wx-2.8/wx/dc.h:528: error: ‘m_backgroundBrush’ was not declared in this scope
+/usr/include/wx-2.8/wx/dc.h: In member function ‘virtual const wxBrush& wxDCBase::GetBrush() const’:
+/usr/include/wx-2.8/wx/dc.h:529: error: ‘m_brush’ was not declared in this scope
+/usr/include/wx-2.8/wx/dc.h: In member function ‘virtual const wxFont& wxDCBase::GetFont() const’:
+/usr/include/wx-2.8/wx/dc.h:530: error: ‘m_font’ was not declared in this scope
+/usr/include/wx-2.8/wx/dc.h: In member function ‘virtual const wxPen& wxDCBase::GetPen() const’:
+/usr/include/wx-2.8/wx/dc.h:531: error: ‘m_pen’ was not declared in this scope
+/usr/include/wx-2.8/wx/dc.h: In member function ‘virtual const wxColour& wxDCBase::GetTextForeground() const’:
+/usr/include/wx-2.8/wx/dc.h:533: error: ‘m_textForegroundColour’ was not declared in this scope
+/usr/include/wx-2.8/wx/dc.h: In member function ‘virtual const wxColour& wxDCBase::GetTextBackground() const’:
+/usr/include/wx-2.8/wx/dc.h:534: error: ‘m_textBackgroundColour’ was not declared in this scope
+/usr/include/wx-2.8/wx/dc.h: In member function ‘virtual void wxDCBase::SetTextForeground(const wxColour&)’:
+/usr/include/wx-2.8/wx/dc.h:536: error: ‘m_textForegroundColour’ was not declared in this scope
+/usr/include/wx-2.8/wx/dc.h: In member function ‘virtual void wxDCBase::SetTextBackground(const wxColour&)’:
+/usr/include/wx-2.8/wx/dc.h:538: error: ‘m_textBackgroundColour’ was not declared in this scope
+/usr/include/wx-2.8/wx/dc.h: In member function ‘virtual wxBitmap wxDCBase::DoGetAsBitmap(const wxRect*) const’:
+/usr/include/wx-2.8/wx/dc.h:734: error: return type ‘struct wxBitmap’ is incomplete
+In file included from /usr/include/wx-2.8/wx/wx.h:48,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/dc.h: At global scope:
+/usr/include/wx-2.8/wx/dc.h:915: error: field ‘m_colFgOld’ has incomplete type
+/usr/include/wx-2.8/wx/dc.h: In constructor ‘wxDCTextColourChanger::wxDCTextColourChanger(wxDC&)’:
+/usr/include/wx-2.8/wx/dc.h:892: error: class ‘wxDCTextColourChanger’ does not have any field named ‘m_colFgOld’
+/usr/include/wx-2.8/wx/dc.h: In destructor ‘wxDCTextColourChanger::~wxDCTextColourChanger()’:
+/usr/include/wx-2.8/wx/dc.h:901: error: ‘m_colFgOld’ was not declared in this scope
+/usr/include/wx-2.8/wx/dc.h: In member function ‘void wxDCTextColourChanger::Set(const wxColour&)’:
+/usr/include/wx-2.8/wx/dc.h:907: error: ‘m_colFgOld’ was not declared in this scope
+/usr/include/wx-2.8/wx/dc.h: At global scope:
+/usr/include/wx-2.8/wx/dc.h:942: error: field ‘m_penOld’ has incomplete type
+/usr/include/wx-2.8/wx/dc.h: In constructor ‘wxDCPenChanger::wxDCPenChanger(wxDC&, const wxPen&)’:
+/usr/include/wx-2.8/wx/dc.h:928: error: class ‘wxDCPenChanger’ does not have any field named ‘m_penOld’
+/usr/include/wx-2.8/wx/dc.h: In destructor ‘wxDCPenChanger::~wxDCPenChanger()’:
+/usr/include/wx-2.8/wx/dc.h:935: error: ‘m_penOld’ was not declared in this scope
+/usr/include/wx-2.8/wx/dc.h: At global scope:
+/usr/include/wx-2.8/wx/dc.h:969: error: field ‘m_brushOld’ has incomplete type
+/usr/include/wx-2.8/wx/dc.h: In constructor ‘wxDCBrushChanger::wxDCBrushChanger(wxDC&, const wxBrush&)’:
+/usr/include/wx-2.8/wx/dc.h:955: error: class ‘wxDCBrushChanger’ does not have any field named ‘m_brushOld’
+/usr/include/wx-2.8/wx/dc.h: In destructor ‘wxDCBrushChanger::~wxDCBrushChanger()’:
+/usr/include/wx-2.8/wx/dc.h:962: error: ‘m_brushOld’ was not declared in this scope
+In file included from /usr/include/wx-2.8/wx/wx.h:50,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/dcmemory.h: In member function ‘void wxMemoryDCBase::SelectObject(wxBitmap&)’:
+/usr/include/wx-2.8/wx/dcmemory.h:35: error: invalid use of incomplete type ‘struct wxBitmap’
+/usr/include/wx-2.8/wx/gdicmn.h:30: error: forward declaration of ‘struct wxBitmap’
+/usr/include/wx-2.8/wx/dcmemory.h:36: error: invalid use of incomplete type ‘struct wxBitmap’
+/usr/include/wx-2.8/wx/gdicmn.h:30: error: forward declaration of ‘struct wxBitmap’
+In file included from /usr/include/wx-2.8/wx/mac/carbon/dcprint.h:16,
+                 from /usr/include/wx-2.8/wx/mac/dcprint.h:4,
+                 from /usr/include/wx-2.8/wx/dcprint.h:28,
+                 from /usr/include/wx-2.8/wx/wx.h:51,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/cmndata.h: At global scope:
+/usr/include/wx-2.8/wx/cmndata.h:49: error: field ‘m_dataColour’ has incomplete type
+/usr/include/wx-2.8/wx/cmndata.h:50: error: field ‘m_custColours’ has incomplete type
+/usr/include/wx-2.8/wx/cmndata.h: In member function ‘void wxColourData::SetColour(const wxColour&)’:
+/usr/include/wx-2.8/wx/cmndata.h:38: error: ‘m_dataColour’ was not declared in this scope
+/usr/include/wx-2.8/wx/cmndata.h: In member function ‘const wxColour& wxColourData::GetColour() const’:
+/usr/include/wx-2.8/wx/cmndata.h:39: error: ‘m_dataColour’ was not declared in this scope
+/usr/include/wx-2.8/wx/cmndata.h: In member function ‘wxColour& wxColourData::GetColour()’:
+/usr/include/wx-2.8/wx/cmndata.h:40: error: ‘m_dataColour’ was not declared in this scope
+/usr/include/wx-2.8/wx/cmndata.h: At global scope:
+/usr/include/wx-2.8/wx/cmndata.h:125: error: field ‘m_fontColour’ has incomplete type
+/usr/include/wx-2.8/wx/cmndata.h:129: error: field ‘m_initialFont’ has incomplete type
+/usr/include/wx-2.8/wx/cmndata.h:130: error: field ‘m_chosenFont’ has incomplete type
+/usr/include/wx-2.8/wx/cmndata.h: In copy constructor ‘wxFontData::wxFontData(const wxFontData&)’:
+/usr/include/wx-2.8/wx/cmndata.h:65: error: class ‘wxFontData’ does not have any field named ‘m_fontColour’
+/usr/include/wx-2.8/wx/cmndata.h:65: error: ‘const class wxFontData’ has no member named ‘m_fontColour’
+/usr/include/wx-2.8/wx/cmndata.h:69: error: class ‘wxFontData’ does not have any field named ‘m_initialFont’
+/usr/include/wx-2.8/wx/cmndata.h:69: error: ‘const class wxFontData’ has no member named ‘m_initialFont’
+/usr/include/wx-2.8/wx/cmndata.h:70: error: class ‘wxFontData’ does not have any field named ‘m_chosenFont’
+/usr/include/wx-2.8/wx/cmndata.h:70: error: ‘const class wxFontData’ has no member named ‘m_chosenFont’
+/usr/include/wx-2.8/wx/cmndata.h: In member function ‘wxFontData& wxFontData::operator=(const wxFontData&)’:
+/usr/include/wx-2.8/wx/cmndata.h:81: error: ‘m_fontColour’ was not declared in this scope
+/usr/include/wx-2.8/wx/cmndata.h:81: error: ‘const class wxFontData’ has no member named ‘m_fontColour’
+/usr/include/wx-2.8/wx/cmndata.h:85: error: ‘m_initialFont’ was not declared in this scope
+/usr/include/wx-2.8/wx/cmndata.h:85: error: ‘const class wxFontData’ has no member named ‘m_initialFont’
+/usr/include/wx-2.8/wx/cmndata.h:86: error: ‘m_chosenFont’ was not declared in this scope
+/usr/include/wx-2.8/wx/cmndata.h:86: error: ‘const class wxFontData’ has no member named ‘m_chosenFont’
+/usr/include/wx-2.8/wx/cmndata.h: In member function ‘void wxFontData::SetColour(const wxColour&)’:
+/usr/include/wx-2.8/wx/cmndata.h:97: error: ‘m_fontColour’ was not declared in this scope
+/usr/include/wx-2.8/wx/cmndata.h: In member function ‘const wxColour& wxFontData::GetColour() const’:
+/usr/include/wx-2.8/wx/cmndata.h:98: error: ‘m_fontColour’ was not declared in this scope
+/usr/include/wx-2.8/wx/cmndata.h: In member function ‘void wxFontData::SetInitialFont(const wxFont&)’:
+/usr/include/wx-2.8/wx/cmndata.h:106: error: ‘m_initialFont’ was not declared in this scope
+/usr/include/wx-2.8/wx/cmndata.h: In member function ‘wxFont wxFontData::GetInitialFont() const’:
+/usr/include/wx-2.8/wx/cmndata.h:107: error: return type ‘struct wxFont’ is incomplete
+/usr/include/wx-2.8/wx/cmndata.h:107: error: ‘m_initialFont’ was not declared in this scope
+/usr/include/wx-2.8/wx/cmndata.h: In member function ‘void wxFontData::SetChosenFont(const wxFont&)’:
+/usr/include/wx-2.8/wx/cmndata.h:109: error: ‘m_chosenFont’ was not declared in this scope
+/usr/include/wx-2.8/wx/cmndata.h: In member function ‘wxFont wxFontData::GetChosenFont() const’:
+/usr/include/wx-2.8/wx/cmndata.h:110: error: return type ‘struct wxFont’ is incomplete
+/usr/include/wx-2.8/wx/cmndata.h:110: error: ‘m_chosenFont’ was not declared in this scope
+In file included from /usr/include/wx-2.8/wx/button.h:46,
+                 from /usr/include/wx-2.8/wx/wx.h:53,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/control.h: At global scope:
+/usr/include/wx-2.8/wx/control.h:32: error: invalid use of incomplete type ‘struct wxWindow’
+../../../myWindows/StdAfx.h:58: error: forward declaration of ‘struct wxWindow’
+/usr/include/wx-2.8/wx/control.h: In member function ‘int wxControlBase::GetAlignment() const’:
+/usr/include/wx-2.8/wx/control.h:47: error: ‘m_windowStyle’ was not declared in this scope
+/usr/include/wx-2.8/wx/control.h: In member function ‘wxString wxControlBase::GetLabelText() const’:
+/usr/include/wx-2.8/wx/control.h:53: error: ‘GetLabel’ was not declared in this scope
+In file included from /usr/include/wx-2.8/wx/wx.h:53,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/button.h: At global scope:
+/usr/include/wx-2.8/wx/button.h:57: error: invalid use of incomplete type ‘struct wxControl’
+/usr/include/wx-2.8/wx/window.h:57: error: forward declaration of ‘struct wxControl’
+In file included from /usr/include/wx-2.8/wx/wx.h:55,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/menu.h: In member function ‘wxMenuItem* wxMenuBase::Append(int, const wxString&, const wxString&, wxItemKind)’:
+/usr/include/wx-2.8/wx/menu.h:67: error: incomplete type ‘wxMenuItem’ used in nested name specifier
+/usr/include/wx-2.8/wx/menu.h: In member function ‘wxMenuItem* wxMenuBase::AppendSubMenu(wxMenu*, const wxString&, const wxString&)’:
+/usr/include/wx-2.8/wx/menu.h:94: error: incomplete type ‘wxMenuItem’ used in nested name specifier
+/usr/include/wx-2.8/wx/menu.h: In member function ‘wxMenuItem* wxMenuBase::Insert(size_t, int, const wxString&, const wxString&, wxItemKind)’:
+/usr/include/wx-2.8/wx/menu.h:115: error: incomplete type ‘wxMenuItem’ used in nested name specifier
+/usr/include/wx-2.8/wx/menu.h: In member function ‘wxMenuItem* wxMenuBase::InsertSeparator(size_t)’:
+/usr/include/wx-2.8/wx/menu.h:121: error: incomplete type ‘wxMenuItem’ used in nested name specifier
+/usr/include/wx-2.8/wx/menu.h: In member function ‘wxMenuItem* wxMenuBase::Insert(size_t, int, const wxString&, wxMenu*, const wxString&)’:
+/usr/include/wx-2.8/wx/menu.h:149: error: incomplete type ‘wxMenuItem’ used in nested name specifier
+/usr/include/wx-2.8/wx/menu.h: In member function ‘wxMenuItem* wxMenuBase::Append(int, const wxString&, wxMenu*, const wxString&)’:
+/usr/include/wx-2.8/wx/menu.h:317: error: incomplete type ‘wxMenuItem’ used in nested name specifier
+/usr/include/wx-2.8/wx/menu.h: In member function ‘wxString wxMenuBase::GetLabelText(int) const’:
+/usr/include/wx-2.8/wx/menu.h:383: error: incomplete type ‘wxMenuItem’ used in nested name specifier
+/usr/include/wx-2.8/wx/menu.h: At global scope:
+/usr/include/wx-2.8/wx/menu.h:393: error: invalid use of incomplete type ‘struct wxWindow’
+../../../myWindows/StdAfx.h:58: error: forward declaration of ‘struct wxWindow’
+/usr/include/wx-2.8/wx/menu.h: In member function ‘virtual bool wxMenuBarBase::IsEnabled() const’:
+/usr/include/wx-2.8/wx/menu.h:466: error: incomplete type ‘wxWindow’ used in nested name specifier
+/usr/include/wx-2.8/wx/menu.h: In member function ‘virtual bool wxMenuBarBase::Enable(bool)’:
+/usr/include/wx-2.8/wx/menu.h:489: error: incomplete type ‘wxWindow’ used in nested name specifier
+/usr/include/wx-2.8/wx/menu.h: In member function ‘virtual void wxMenuBarBase::SetLabel(const wxString&)’:
+/usr/include/wx-2.8/wx/menu.h:490: error: incomplete type ‘wxWindow’ used in nested name specifier
+/usr/include/wx-2.8/wx/menu.h: In member function ‘virtual wxString wxMenuBarBase::GetLabel() const’:
+/usr/include/wx-2.8/wx/menu.h:491: error: incomplete type ‘wxWindow’ used in nested name specifier
+In file included from /usr/include/wx-2.8/wx/wx.h:62,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/timer.h: In member function ‘void wxTimerBase::SetOwner(wxEvtHandler*, int)’:
+/usr/include/wx-2.8/wx/timer.h:57: error: incomplete type ‘wxWindow’ used in nested name specifier
+/usr/include/wx-2.8/wx/timer.h: At global scope:
+/usr/include/wx-2.8/wx/timer.h:138: error: expected `)' before ‘&’ token
+/usr/include/wx-2.8/wx/timer.h:139: error: expected `)' before ‘&’ token
+/usr/include/wx-2.8/wx/timer.h:159: error: ISO C++ forbids declaration of ‘wxTimer’ with no type
+/usr/include/wx-2.8/wx/timer.h:159: error: expected ‘;’ before ‘&’ token
+/usr/include/wx-2.8/wx/timer.h: In member function ‘void wxTimerRunner::Start(int, bool)’:
+/usr/include/wx-2.8/wx/timer.h:147: error: ‘m_timer’ was not declared in this scope
+/usr/include/wx-2.8/wx/timer.h: In destructor ‘wxTimerRunner::~wxTimerRunner()’:
+/usr/include/wx-2.8/wx/timer.h:152: error: ‘m_timer’ was not declared in this scope
+In file included from /usr/include/wx-2.8/wx/wx.h:64,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/msgdlg.h: At global scope:
+/usr/include/wx-2.8/wx/msgdlg.h:71: error: ‘wxMessageBoxCaptionStr’ was not declared in this scope
+In file included from /usr/include/wx-2.8/wx/wx.h:66,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/dataobj.h:95: error: expected initializer before ‘&’ token
+/usr/include/wx-2.8/wx/dataobj.h:131: error: ‘wxDataFormat’ does not name a type
+/usr/include/wx-2.8/wx/dataobj.h:137: error: ‘wxDataFormat’ has not been declared
+/usr/include/wx-2.8/wx/dataobj.h:141: error: expected ‘,’ or ‘...’ before ‘&’ token
+/usr/include/wx-2.8/wx/dataobj.h:141: error: ISO C++ forbids declaration of ‘wxDataFormat’ with no type
+/usr/include/wx-2.8/wx/dataobj.h:145: error: expected ‘,’ or ‘...’ before ‘&’ token
+/usr/include/wx-2.8/wx/dataobj.h:145: error: ISO C++ forbids declaration of ‘wxDataFormat’ with no type
+/usr/include/wx-2.8/wx/dataobj.h:149: error: expected ‘,’ or ‘...’ before ‘&’ token
+/usr/include/wx-2.8/wx/dataobj.h:150: error: ISO C++ forbids declaration of ‘wxDataFormat’ with no type
+/usr/include/wx-2.8/wx/dataobj.h:156: error: expected ‘,’ or ‘...’ before ‘&’ token
+/usr/include/wx-2.8/wx/dataobj.h:156: error: ISO C++ forbids declaration of ‘wxDataFormat’ with no type
+/usr/include/wx-2.8/wx/dataobj.h:198: error: expected class-name before ‘{’ token
+/usr/include/wx-2.8/wx/dataobj.h:202: error: expected ‘,’ or ‘...’ before ‘&’ token
+/usr/include/wx-2.8/wx/dataobj.h:202: error: ISO C++ forbids declaration of ‘wxDataFormat’ with no type
+/usr/include/wx-2.8/wx/dataobj.h:208: error: ISO C++ forbids declaration of ‘wxDataFormat’ with no type
+/usr/include/wx-2.8/wx/dataobj.h:208: error: expected ‘;’ before ‘&’ token
+/usr/include/wx-2.8/wx/dataobj.h:209: error: expected `;' before ‘void’
+/usr/include/wx-2.8/wx/dataobj.h:209: error: expected ‘,’ or ‘...’ before ‘&’ token
+/usr/include/wx-2.8/wx/dataobj.h:209: error: ISO C++ forbids declaration of ‘wxDataFormat’ with no type
+/usr/include/wx-2.8/wx/dataobj.h:229: error: ‘wxDataFormat’ does not name a type
+/usr/include/wx-2.8/wx/dataobj.h:233: error: ‘wxDataFormat’ has not been declared
+/usr/include/wx-2.8/wx/dataobj.h:236: error: expected ‘,’ or ‘...’ before ‘&’ token
+/usr/include/wx-2.8/wx/dataobj.h:236: error: ISO C++ forbids declaration of ‘wxDataFormat’ with no type
+/usr/include/wx-2.8/wx/dataobj.h:238: error: expected ‘,’ or ‘...’ before ‘&’ token
+/usr/include/wx-2.8/wx/dataobj.h:239: error: ISO C++ forbids declaration of ‘wxDataFormat’ with no type
+/usr/include/wx-2.8/wx/dataobj.h:241: error: expected ‘,’ or ‘...’ before ‘&’ token
+/usr/include/wx-2.8/wx/dataobj.h:242: error: ISO C++ forbids declaration of ‘wxDataFormat’ with no type
+/usr/include/wx-2.8/wx/dataobj.h:247: error: ‘wxDataFormat’ does not name a type
+/usr/include/wx-2.8/wx/dataobj.h:231: error: ‘Get’ was not declared in this scope
+/usr/include/wx-2.8/wx/dataobj.h:234: error: ‘Get’ was not declared in this scope
+/usr/include/wx-2.8/wx/dataobj.h: In constructor ‘wxDataObjectSimple::wxDataObjectSimple(int)’:
+/usr/include/wx-2.8/wx/dataobj.h:203: error: class ‘wxDataObjectSimple’ does not have any field named ‘m_format’
+/usr/include/wx-2.8/wx/dataobj.h:203: error: ‘format’ was not declared in this scope
+/usr/include/wx-2.8/wx/dataobj.h: In member function ‘void wxDataObjectSimple::SetFormat(int)’:
+/usr/include/wx-2.8/wx/dataobj.h:209: error: ‘m_format’ was not declared in this scope
+/usr/include/wx-2.8/wx/dataobj.h:209: error: ‘format’ was not declared in this scope
+/usr/include/wx-2.8/wx/dataobj.h: In member function ‘virtual void wxDataObjectSimple::GetAllFormats(int*, wxDataObjectBase::Direction) const’:
+/usr/include/wx-2.8/wx/dataobj.h:235: error: ‘m_format’ was not declared in this scope
+/usr/include/wx-2.8/wx/dataobj.h: In member function ‘virtual bool wxDataObjectSimple::GetDataHere(int) const’:
+/usr/include/wx-2.8/wx/dataobj.h:240: error: ‘buf’ was not declared in this scope
+/usr/include/wx-2.8/wx/dataobj.h: In member function ‘virtual bool wxDataObjectSimple::SetData(int)’:
+/usr/include/wx-2.8/wx/dataobj.h:243: error: ‘len’ was not declared in this scope
+/usr/include/wx-2.8/wx/dataobj.h:243: error: ‘buf’ was not declared in this scope
+/usr/include/wx-2.8/wx/dataobj.h: At global scope:
+/usr/include/wx-2.8/wx/dataobj.h:265: error: expected class-name before ‘{’ token
+/usr/include/wx-2.8/wx/dataobj.h:280: error: ‘wxDataFormat’ does not name a type
+/usr/include/wx-2.8/wx/dataobj.h:284: error: ‘wxDataFormat’ does not name a type
+/usr/include/wx-2.8/wx/dataobj.h:286: error: ‘wxDataFormat’ has not been declared
+/usr/include/wx-2.8/wx/dataobj.h:287: error: expected ‘,’ or ‘...’ before ‘&’ token
+/usr/include/wx-2.8/wx/dataobj.h:287: error: ISO C++ forbids declaration of ‘wxDataFormat’ with no type
+/usr/include/wx-2.8/wx/dataobj.h:288: error: expected ‘,’ or ‘...’ before ‘&’ token
+/usr/include/wx-2.8/wx/dataobj.h:288: error: ISO C++ forbids declaration of ‘wxDataFormat’ with no type
+/usr/include/wx-2.8/wx/dataobj.h:289: error: expected ‘,’ or ‘...’ before ‘&’ token
+/usr/include/wx-2.8/wx/dataobj.h:289: error: ISO C++ forbids declaration of ‘wxDataFormat’ with no type
+/usr/include/wx-2.8/wx/dataobj.h:292: error: expected ‘,’ or ‘...’ before ‘&’ token
+/usr/include/wx-2.8/wx/dataobj.h:292: error: ISO C++ forbids declaration of ‘wxDataFormat’ with no type
+/usr/include/wx-2.8/wx/dataobj.h:294: error: expected ‘,’ or ‘...’ before ‘&’ token
+/usr/include/wx-2.8/wx/dataobj.h:294: error: ISO C++ forbids declaration of ‘wxDataFormat’ with no type
+/usr/include/wx-2.8/wx/dataobj.h:295: error: expected ‘,’ or ‘...’ before ‘&’ token
+/usr/include/wx-2.8/wx/dataobj.h:295: error: ISO C++ forbids declaration of ‘wxDataFormat’ with no type
+/usr/include/wx-2.8/wx/dataobj.h:300: error: expected ‘,’ or ‘...’ before ‘&’ token
+/usr/include/wx-2.8/wx/dataobj.h:300: error: ISO C++ forbids declaration of ‘wxDataFormat’ with no type
+/usr/include/wx-2.8/wx/dataobj.h:310: error: ‘wxDataFormat’ does not name a type
+/usr/include/wx-2.8/wx/dataobj.h:285: error: ‘Get’ was not declared in this scope
+/usr/include/wx-2.8/wx/dataobj.h:286: error: ‘Get’ was not declared in this scope
+/usr/include/wx-2.8/wx/dataobj.h:355: error: ‘Direction’ has not been declared
+/usr/include/wx-2.8/wx/dataobj.h:356: error: ‘wxDataFormat’ has not been declared
+/usr/include/wx-2.8/wx/dataobj.h:363: error: expected ‘,’ or ‘...’ before ‘&’ token
+/usr/include/wx-2.8/wx/dataobj.h:363: error: ISO C++ forbids declaration of ‘wxDataFormat’ with no type
+/usr/include/wx-2.8/wx/dataobj.h:364: error: expected ‘,’ or ‘...’ before ‘&’ token
+/usr/include/wx-2.8/wx/dataobj.h:364: error: ISO C++ forbids declaration of ‘wxDataFormat’ with no type
+/usr/include/wx-2.8/wx/dataobj.h:365: error: expected ‘,’ or ‘...’ before ‘&’ token
+/usr/include/wx-2.8/wx/dataobj.h:365: error: ISO C++ forbids declaration of ‘wxDataFormat’ with no type
+/usr/include/wx-2.8/wx/dataobj.h:355: error: ‘Get’ was not declared in this scope
+/usr/include/wx-2.8/wx/dataobj.h:357: error: ‘Get’ was not declared in this scope
+/usr/include/wx-2.8/wx/dataobj.h: In member function ‘virtual size_t wxTextDataObject::GetDataSize() const’:
+/usr/include/wx-2.8/wx/dataobj.h:359: error: ‘GetPreferredFormat’ was not declared in this scope
+/usr/include/wx-2.8/wx/dataobj.h: In member function ‘virtual bool wxTextDataObject::GetDataHere(void*) const’:
+/usr/include/wx-2.8/wx/dataobj.h:360: error: ‘GetPreferredFormat’ was not declared in this scope
+/usr/include/wx-2.8/wx/dataobj.h: In member function ‘virtual bool wxTextDataObject::SetData(size_t, const void*)’:
+/usr/include/wx-2.8/wx/dataobj.h:361: error: ‘GetPreferredFormat’ was not declared in this scope
+/usr/include/wx-2.8/wx/dataobj.h: At global scope:
+/usr/include/wx-2.8/wx/dataobj.h:411: error: field ‘m_bitmap’ has incomplete type
+/usr/include/wx-2.8/wx/dataobj.h: In constructor ‘wxBitmapDataObjectBase::wxBitmapDataObjectBase(const wxBitmap&)’:
+/usr/include/wx-2.8/wx/dataobj.h:401: error: class ‘wxBitmapDataObjectBase’ does not have any field named ‘m_bitmap’
+/usr/include/wx-2.8/wx/dataobj.h: In member function ‘virtual wxBitmap wxBitmapDataObjectBase::GetBitmap() const’:
+/usr/include/wx-2.8/wx/dataobj.h:407: error: return type ‘struct wxBitmap’ is incomplete
+/usr/include/wx-2.8/wx/dataobj.h:407: error: ‘m_bitmap’ was not declared in this scope
+/usr/include/wx-2.8/wx/dataobj.h: In member function ‘virtual void wxBitmapDataObjectBase::SetBitmap(const wxBitmap&)’:
+/usr/include/wx-2.8/wx/dataobj.h:408: error: ‘m_bitmap’ was not declared in this scope
+/usr/include/wx-2.8/wx/dataobj.h: At global scope:
+/usr/include/wx-2.8/wx/dataobj.h:449: error: expected ‘,’ or ‘...’ before ‘&’ token
+/usr/include/wx-2.8/wx/dataobj.h:449: error: ISO C++ forbids declaration of ‘wxDataFormat’ with no type
+/usr/include/wx-2.8/wx/dataobj.h:479: error: expected ‘,’ or ‘...’ before ‘&’ token
+/usr/include/wx-2.8/wx/dataobj.h:479: error: ISO C++ forbids declaration of ‘wxDataFormat’ with no type
+/usr/include/wx-2.8/wx/dataobj.h:483: error: expected ‘,’ or ‘...’ before ‘&’ token
+/usr/include/wx-2.8/wx/dataobj.h:483: error: ISO C++ forbids declaration of ‘wxDataFormat’ with no type
+/usr/include/wx-2.8/wx/dataobj.h:487: error: expected ‘,’ or ‘...’ before ‘&’ token
+/usr/include/wx-2.8/wx/dataobj.h:487: error: ISO C++ forbids declaration of ‘wxDataFormat’ with no type
+/usr/include/wx-2.8/wx/dataobj.h: In member function ‘virtual bool wxCustomDataObject::GetDataHere(int) const’:
+/usr/include/wx-2.8/wx/dataobj.h:485: error: ‘buf’ was not declared in this scope
+/usr/include/wx-2.8/wx/dataobj.h: In member function ‘virtual bool wxCustomDataObject::SetData(int)’:
+/usr/include/wx-2.8/wx/dataobj.h:489: error: ‘len’ was not declared in this scope
+/usr/include/wx-2.8/wx/dataobj.h:489: error: ‘buf’ was not declared in this scope
+In file included from /usr/include/wx-2.8/wx/wx.h:69,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/ctrlsub.h: At global scope:
+/usr/include/wx-2.8/wx/ctrlsub.h:175: error: invalid use of incomplete type ‘struct wxControl’
+/usr/include/wx-2.8/wx/window.h:57: error: forward declaration of ‘struct wxControl’
+/usr/include/wx-2.8/wx/ctrlsub.h: In member function ‘void wxControlWithItems::SetClientData(void*)’:
+/usr/include/wx-2.8/wx/ctrlsub.h:185: error: cannot call member function ‘void wxEvtHandler::SetClientData(void*)’ without object
+/usr/include/wx-2.8/wx/ctrlsub.h: In member function ‘void* wxControlWithItems::GetClientData() const’:
+/usr/include/wx-2.8/wx/ctrlsub.h:185: error: cannot call member function ‘void* wxEvtHandler::GetClientData() const’ without object
+/usr/include/wx-2.8/wx/ctrlsub.h: In member function ‘void wxControlWithItems::SetClientObject(wxClientData*)’:
+/usr/include/wx-2.8/wx/ctrlsub.h:185: error: cannot call member function ‘void wxEvtHandler::SetClientObject(wxClientData*)’ without object
+/usr/include/wx-2.8/wx/ctrlsub.h: In member function ‘wxClientData* wxControlWithItems::GetClientObject() const’:
+/usr/include/wx-2.8/wx/ctrlsub.h:185: error: cannot call member function ‘wxClientData* wxEvtHandler::GetClientObject() const’ without object
+In file included from /usr/include/wx-2.8/wx/wx.h:70,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/bmpbuttn.h: At global scope:
+/usr/include/wx-2.8/wx/bmpbuttn.h:30: error: expected class-name before ‘{’ token
+/usr/include/wx-2.8/wx/bmpbuttn.h:81: error: field ‘m_bmpNormal’ has incomplete type
+/usr/include/wx-2.8/wx/bmpbuttn.h:82: error: field ‘m_bmpSelected’ has incomplete type
+/usr/include/wx-2.8/wx/bmpbuttn.h:83: error: field ‘m_bmpFocus’ has incomplete type
+/usr/include/wx-2.8/wx/bmpbuttn.h:84: error: field ‘m_bmpDisabled’ has incomplete type
+/usr/include/wx-2.8/wx/bmpbuttn.h:85: error: field ‘m_bmpHover’ has incomplete type
+/usr/include/wx-2.8/wx/bmpbuttn.h: In member function ‘void wxBitmapButtonBase::SetBitmapLabel(const wxBitmap&)’:
+/usr/include/wx-2.8/wx/bmpbuttn.h:40: error: ‘m_bmpNormal’ was not declared in this scope
+/usr/include/wx-2.8/wx/bmpbuttn.h: In member function ‘void wxBitmapButtonBase::SetBitmapSelected(const wxBitmap&)’:
+/usr/include/wx-2.8/wx/bmpbuttn.h:42: error: ‘m_bmpSelected’ was not declared in this scope
+/usr/include/wx-2.8/wx/bmpbuttn.h: In member function ‘void wxBitmapButtonBase::SetBitmapFocus(const wxBitmap&)’:
+/usr/include/wx-2.8/wx/bmpbuttn.h:44: error: ‘m_bmpFocus’ was not declared in this scope
+/usr/include/wx-2.8/wx/bmpbuttn.h: In member function ‘void wxBitmapButtonBase::SetBitmapDisabled(const wxBitmap&)’:
+/usr/include/wx-2.8/wx/bmpbuttn.h:46: error: ‘m_bmpDisabled’ was not declared in this scope
+/usr/include/wx-2.8/wx/bmpbuttn.h: In member function ‘void wxBitmapButtonBase::SetBitmapHover(const wxBitmap&)’:
+/usr/include/wx-2.8/wx/bmpbuttn.h:48: error: ‘m_bmpHover’ was not declared in this scope
+/usr/include/wx-2.8/wx/bmpbuttn.h: In member function ‘const wxBitmap& wxBitmapButtonBase::GetBitmapLabel() const’:
+/usr/include/wx-2.8/wx/bmpbuttn.h:51: error: ‘m_bmpNormal’ was not declared in this scope
+/usr/include/wx-2.8/wx/bmpbuttn.h: In member function ‘const wxBitmap& wxBitmapButtonBase::GetBitmapSelected() const’:
+/usr/include/wx-2.8/wx/bmpbuttn.h:52: error: ‘m_bmpSelected’ was not declared in this scope
+/usr/include/wx-2.8/wx/bmpbuttn.h: In member function ‘const wxBitmap& wxBitmapButtonBase::GetBitmapFocus() const’:
+/usr/include/wx-2.8/wx/bmpbuttn.h:53: error: ‘m_bmpFocus’ was not declared in this scope
+/usr/include/wx-2.8/wx/bmpbuttn.h: In member function ‘const wxBitmap& wxBitmapButtonBase::GetBitmapDisabled() const’:
+/usr/include/wx-2.8/wx/bmpbuttn.h:54: error: ‘m_bmpDisabled’ was not declared in this scope
+/usr/include/wx-2.8/wx/bmpbuttn.h: In member function ‘const wxBitmap& wxBitmapButtonBase::GetBitmapHover() const’:
+/usr/include/wx-2.8/wx/bmpbuttn.h:55: error: ‘m_bmpHover’ was not declared in this scope
+/usr/include/wx-2.8/wx/bmpbuttn.h: In member function ‘wxBitmap& wxBitmapButtonBase::GetBitmapLabel()’:
+/usr/include/wx-2.8/wx/bmpbuttn.h:56: error: ‘m_bmpNormal’ was not declared in this scope
+/usr/include/wx-2.8/wx/bmpbuttn.h: In member function ‘wxBitmap& wxBitmapButtonBase::GetBitmapSelected()’:
+/usr/include/wx-2.8/wx/bmpbuttn.h:57: error: ‘m_bmpSelected’ was not declared in this scope
+/usr/include/wx-2.8/wx/bmpbuttn.h: In member function ‘wxBitmap& wxBitmapButtonBase::GetBitmapFocus()’:
+/usr/include/wx-2.8/wx/bmpbuttn.h:58: error: ‘m_bmpFocus’ was not declared in this scope
+/usr/include/wx-2.8/wx/bmpbuttn.h: In member function ‘wxBitmap& wxBitmapButtonBase::GetBitmapDisabled()’:
+/usr/include/wx-2.8/wx/bmpbuttn.h:59: error: ‘m_bmpDisabled’ was not declared in this scope
+/usr/include/wx-2.8/wx/bmpbuttn.h: In member function ‘wxBitmap& wxBitmapButtonBase::GetBitmapHover()’:
+/usr/include/wx-2.8/wx/bmpbuttn.h:60: error: ‘m_bmpHover’ was not declared in this scope
+/usr/include/wx-2.8/wx/bmpbuttn.h: In member function ‘virtual void wxBitmapButtonBase::SetLabel(const wxString&)’:
+/usr/include/wx-2.8/wx/bmpbuttn.h:73: error: incomplete type ‘wxWindow’ used in nested name specifier
+/usr/include/wx-2.8/wx/bmpbuttn.h: In member function ‘virtual void wxBitmapButtonBase::OnSetBitmap()’:
+/usr/include/wx-2.8/wx/bmpbuttn.h:78: error: ‘InvalidateBestSize’ was not declared in this scope
+/usr/include/wx-2.8/wx/bmpbuttn.h:78: error: ‘Refresh’ was not declared in this scope
+In file included from /usr/include/wx-2.8/wx/wx.h:71,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/checkbox.h: At global scope:
+/usr/include/wx-2.8/wx/checkbox.h:59: error: invalid use of incomplete type ‘struct wxControl’
+/usr/include/wx-2.8/wx/window.h:57: error: forward declaration of ‘struct wxControl’
+/usr/include/wx-2.8/wx/checkbox.h: In member function ‘bool wxCheckBoxBase::Is3State() const’:
+/usr/include/wx-2.8/wx/checkbox.h:102: error: ‘HasFlag’ was not declared in this scope
+/usr/include/wx-2.8/wx/checkbox.h: In member function ‘bool wxCheckBoxBase::Is3rdStateAllowedForUser() const’:
+/usr/include/wx-2.8/wx/checkbox.h:106: error: ‘HasFlag’ was not declared in this scope
+/usr/include/wx-2.8/wx/checkbox.h: In member function ‘virtual void wxCheckBoxBase::DoUpdateWindowUI(wxUpdateUIEvent&)’:
+/usr/include/wx-2.8/wx/checkbox.h:114: error: incomplete type ‘wxControl’ used in nested name specifier
+In file included from /usr/include/wx-2.8/wx/checklst.h:17,
+                 from /usr/include/wx-2.8/wx/wx.h:72,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/listbox.h: In member function ‘bool wxListBoxBase::HasMultipleSelection() const’:
+/usr/include/wx-2.8/wx/listbox.h:95: error: ‘m_windowStyle’ was not declared in this scope
+/usr/include/wx-2.8/wx/listbox.h: In member function ‘bool wxListBoxBase::IsSorted() const’:
+/usr/include/wx-2.8/wx/listbox.h:100: error: ‘m_windowStyle’ was not declared in this scope
+In file included from /usr/include/wx-2.8/wx/wx.h:72,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/checklst.h: At global scope:
+/usr/include/wx-2.8/wx/checklst.h:30: error: expected class-name before ‘{’ token
+In file included from /usr/include/wx-2.8/wx/wx.h:74,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/scrolbar.h:28: error: invalid use of incomplete type ‘struct wxControl’
+/usr/include/wx-2.8/wx/window.h:57: error: forward declaration of ‘struct wxControl’
+/usr/include/wx-2.8/wx/scrolbar.h: In member function ‘bool wxScrollBarBase::IsVertical() const’:
+/usr/include/wx-2.8/wx/scrolbar.h:47: error: ‘m_windowStyle’ was not declared in this scope
+In file included from /usr/include/wx-2.8/wx/wx.h:75,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/stattext.h: At global scope:
+/usr/include/wx-2.8/wx/stattext.h:24: error: invalid use of incomplete type ‘struct wxControl’
+/usr/include/wx-2.8/wx/window.h:57: error: forward declaration of ‘struct wxControl’
+In file included from /usr/include/wx-2.8/wx/wx.h:76,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/statbmp.h:27: error: invalid use of incomplete type ‘struct wxControl’
+/usr/include/wx-2.8/wx/window.h:57: error: forward declaration of ‘struct wxControl’
+/usr/include/wx-2.8/wx/statbmp.h: In member function ‘virtual wxIcon wxStaticBitmapBase::GetIcon() const’:
+/usr/include/wx-2.8/wx/statbmp.h:37: error: return type ‘struct wxIcon’ is incomplete
+/usr/include/wx-2.8/wx/statbmp.h:40: error: invalid use of incomplete type ‘struct wxIcon’
+/usr/include/wx-2.8/wx/gdicmn.h:35: error: forward declaration of ‘struct wxIcon’
+In file included from /usr/include/wx-2.8/wx/wx.h:77,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/statbox.h: At global scope:
+/usr/include/wx-2.8/wx/statbox.h:28: error: invalid use of incomplete type ‘struct wxControl’
+/usr/include/wx-2.8/wx/window.h:57: error: forward declaration of ‘struct wxControl’
+/usr/include/wx-2.8/wx/statbox.h: In member function ‘virtual void wxStaticBoxBase::GetBordersForSizer(int*, int*) const’:
+/usr/include/wx-2.8/wx/statbox.h:45: error: ‘GetLabel’ was not declared in this scope
+/usr/include/wx-2.8/wx/statbox.h:45: error: ‘GetCharHeight’ was not declared in this scope
+In file included from /usr/include/wx-2.8/wx/wx.h:81,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/textctrl.h: At global scope:
+/usr/include/wx-2.8/wx/textctrl.h:267: error: field ‘m_colText’ has incomplete type
+/usr/include/wx-2.8/wx/textctrl.h:268: error: field ‘m_colBack’ has incomplete type
+/usr/include/wx-2.8/wx/textctrl.h:269: error: field ‘m_font’ has incomplete type
+/usr/include/wx-2.8/wx/textctrl.h: In member function ‘void wxTextAttr::SetTextColour(const wxColour&)’:
+/usr/include/wx-2.8/wx/textctrl.h:222: error: ‘m_colText’ was not declared in this scope
+/usr/include/wx-2.8/wx/textctrl.h: In member function ‘void wxTextAttr::SetBackgroundColour(const wxColour&)’:
+/usr/include/wx-2.8/wx/textctrl.h:223: error: ‘m_colBack’ was not declared in this scope
+/usr/include/wx-2.8/wx/textctrl.h: In member function ‘void wxTextAttr::SetFont(const wxFont&, long int)’:
+/usr/include/wx-2.8/wx/textctrl.h:224: error: ‘m_font’ was not declared in this scope
+/usr/include/wx-2.8/wx/textctrl.h: In member function ‘bool wxTextAttr::HasTextColour() const’:
+/usr/include/wx-2.8/wx/textctrl.h:232: error: ‘m_colText’ was not declared in this scope
+/usr/include/wx-2.8/wx/textctrl.h: In member function ‘bool wxTextAttr::HasBackgroundColour() const’:
+/usr/include/wx-2.8/wx/textctrl.h:233: error: ‘m_colBack’ was not declared in this scope
+/usr/include/wx-2.8/wx/textctrl.h: In member function ‘bool wxTextAttr::HasFont() const’:
+/usr/include/wx-2.8/wx/textctrl.h:234: error: ‘m_font’ was not declared in this scope
+/usr/include/wx-2.8/wx/textctrl.h: In member function ‘const wxColour& wxTextAttr::GetTextColour() const’:
+/usr/include/wx-2.8/wx/textctrl.h:241: error: ‘m_colText’ was not declared in this scope
+/usr/include/wx-2.8/wx/textctrl.h: In member function ‘const wxColour& wxTextAttr::GetBackgroundColour() const’:
+/usr/include/wx-2.8/wx/textctrl.h:242: error: ‘m_colBack’ was not declared in this scope
+/usr/include/wx-2.8/wx/textctrl.h: In member function ‘const wxFont& wxTextAttr::GetFont() const’:
+/usr/include/wx-2.8/wx/textctrl.h:243: error: ‘m_font’ was not declared in this scope
+/usr/include/wx-2.8/wx/textctrl.h: At global scope:
+/usr/include/wx-2.8/wx/textctrl.h:289: error: invalid use of incomplete type ‘struct wxControl’
+/usr/include/wx-2.8/wx/window.h:57: error: forward declaration of ‘struct wxControl’
+/usr/include/wx-2.8/wx/textctrl.h: In member function ‘bool wxTextCtrlBase::IsSingleLine() const’:
+/usr/include/wx-2.8/wx/textctrl.h:318: error: ‘HasFlag’ was not declared in this scope
+In file included from /usr/include/wx-2.8/wx/wx.h:82,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/slider.h: At global scope:
+/usr/include/wx-2.8/wx/slider.h:55: error: invalid use of incomplete type ‘struct wxControl’
+/usr/include/wx-2.8/wx/window.h:57: error: forward declaration of ‘struct wxControl’
+/usr/include/wx-2.8/wx/slider.h: In member function ‘virtual int wxSliderBase::ValueInvertOrNot(int) const’:
+/usr/include/wx-2.8/wx/slider.h:111: error: ‘HasFlag’ was not declared in this scope
+In file included from /usr/include/wx-2.8/wx/wx.h:83,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/gauge.h: At global scope:
+/usr/include/wx-2.8/wx/gauge.h:51: error: invalid use of incomplete type ‘struct wxControl’
+/usr/include/wx-2.8/wx/window.h:57: error: forward declaration of ‘struct wxControl’
+/usr/include/wx-2.8/wx/gauge.h: In member function ‘bool wxGaugeBase::IsVertical() const’:
+/usr/include/wx-2.8/wx/gauge.h:78: error: ‘HasFlag’ was not declared in this scope
+In file included from /usr/include/wx-2.8/wx/wx.h:84,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/scrolwin.h: In member function ‘wxSize wxScrollHelper::GetTargetSize() const’:
+/usr/include/wx-2.8/wx/scrolwin.h:185: error: invalid use of incomplete type ‘struct wxWindow’
+../../../myWindows/StdAfx.h:58: error: forward declaration of ‘struct wxWindow’
+/usr/include/wx-2.8/wx/scrolwin.h: In constructor ‘wxScrolledWindow::wxScrolledWindow()’:
+/usr/include/wx-2.8/wx/scrolwin.h:274: error: no matching function for call to ‘wxScrollHelper::wxScrollHelper(wxScrolledWindow* const)’
+/usr/include/wx-2.8/wx/scrolwin.h:240: note: candidates are: wxScrollHelper::wxScrollHelper(const wxScrollHelper&)
+/usr/include/wx-2.8/wx/scrolwin.h:55: note:                 wxScrollHelper::wxScrollHelper(wxWindow*)
+/usr/include/wx-2.8/wx/scrolwin.h: In constructor ‘wxScrolledWindow::wxScrolledWindow(wxWindow*, wxWindowID, const wxPoint&, const wxSize&, long int, const wxString&)’:
+/usr/include/wx-2.8/wx/scrolwin.h:281: error: no matching function for call to ‘wxScrollHelper::wxScrollHelper(wxScrolledWindow* const)’
+/usr/include/wx-2.8/wx/scrolwin.h:240: note: candidates are: wxScrollHelper::wxScrollHelper(const wxScrollHelper&)
+/usr/include/wx-2.8/wx/scrolwin.h:55: note:                 wxScrollHelper::wxScrollHelper(wxWindow*)
+In file included from /usr/include/wx-2.8/wx/wx.h:85,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/dirdlg.h: At global scope:
+/usr/include/wx-2.8/wx/dirdlg.h:44: error: expected class-name before ‘{’ token
+/usr/include/wx-2.8/wx/dirdlg.h: In member function ‘bool wxDirDialogBase::Create(wxWindow*, const wxString&, const wxString&, long int, const wxPoint&, const wxSize&, const wxString&)’:
+/usr/include/wx-2.8/wx/dirdlg.h:69: error: ‘wxDialog’ has not been declared
+In file included from /usr/include/wx-2.8/wx/toolbar.h:67,
+                 from /usr/include/wx-2.8/wx/wx.h:86,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/tbarbase.h: At global scope:
+/usr/include/wx-2.8/wx/tbarbase.h:217: error: field ‘m_bmpNormal’ has incomplete type
+/usr/include/wx-2.8/wx/tbarbase.h:218: error: field ‘m_bmpDisabled’ has incomplete type
+/usr/include/wx-2.8/wx/tbarbase.h: In constructor ‘wxToolBarToolBase::wxToolBarToolBase(wxToolBarBase*, int, const wxString&, const wxBitmap&, const wxBitmap&, wxItemKind, wxObject*, const wxString&, const wxString&)’:
+/usr/include/wx-2.8/wx/tbarbase.h:82: error: ‘m_bmpNormal’ was not declared in this scope
+/usr/include/wx-2.8/wx/tbarbase.h:83: error: ‘m_bmpDisabled’ was not declared in this scope
+/usr/include/wx-2.8/wx/tbarbase.h: In constructor ‘wxToolBarToolBase::wxToolBarToolBase(wxToolBarBase*, wxControl*)’:
+/usr/include/wx-2.8/wx/tbarbase.h:98: error: invalid use of incomplete type ‘struct wxControl’
+/usr/include/wx-2.8/wx/window.h:57: error: forward declaration of ‘struct wxControl’
+/usr/include/wx-2.8/wx/tbarbase.h: In member function ‘const wxBitmap& wxToolBarToolBase::GetNormalBitmap() const’:
+/usr/include/wx-2.8/wx/tbarbase.h:144: error: ‘m_bmpNormal’ was not declared in this scope
+/usr/include/wx-2.8/wx/tbarbase.h: In member function ‘const wxBitmap& wxToolBarToolBase::GetDisabledBitmap() const’:
+/usr/include/wx-2.8/wx/tbarbase.h:145: error: ‘m_bmpDisabled’ was not declared in this scope
+/usr/include/wx-2.8/wx/tbarbase.h: In member function ‘wxObject* wxToolBarToolBase::GetClientData() const’:
+/usr/include/wx-2.8/wx/tbarbase.h:159: error: invalid use of incomplete type ‘struct wxControl’
+/usr/include/wx-2.8/wx/window.h:57: error: forward declaration of ‘struct wxControl’
+/usr/include/wx-2.8/wx/tbarbase.h: In member function ‘void wxToolBarToolBase::SetNormalBitmap(const wxBitmap&)’:
+/usr/include/wx-2.8/wx/tbarbase.h:176: error: ‘m_bmpNormal’ was not declared in this scope
+/usr/include/wx-2.8/wx/tbarbase.h: In member function ‘void wxToolBarToolBase::SetDisabledBitmap(const wxBitmap&)’:
+/usr/include/wx-2.8/wx/tbarbase.h:177: error: ‘m_bmpDisabled’ was not declared in this scope
+/usr/include/wx-2.8/wx/tbarbase.h: In member function ‘void wxToolBarToolBase::SetClientData(wxObject*)’:
+/usr/include/wx-2.8/wx/tbarbase.h:185: error: invalid use of incomplete type ‘struct wxControl’
+/usr/include/wx-2.8/wx/window.h:57: error: forward declaration of ‘struct wxControl’
+/usr/include/wx-2.8/wx/tbarbase.h: At global scope:
+/usr/include/wx-2.8/wx/tbarbase.h:238: error: invalid use of incomplete type ‘struct wxControl’
+/usr/include/wx-2.8/wx/window.h:57: error: forward declaration of ‘struct wxControl’
+/usr/include/wx-2.8/wx/tbarbase.h: In member function ‘bool wxToolBarBase::IsVertical() const’:
+/usr/include/wx-2.8/wx/tbarbase.h:423: error: ‘HasFlag’ was not declared in this scope
+In file included from /usr/include/wx-2.8/wx/wx.h:89,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/sizer.h: In member function ‘void wxSizerItem::SetMinSize(const wxSize&)’:
+/usr/include/wx-2.8/wx/sizer.h:292: error: invalid use of incomplete type ‘struct wxWindow’
+../../../myWindows/StdAfx.h:58: error: forward declaration of ‘struct wxWindow’
+In file included from /usr/include/wx-2.8/wx/wx.h:91,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/statusbr.h: At global scope:
+/usr/include/wx-2.8/wx/statusbr.h:41: error: invalid use of incomplete type ‘struct wxWindow’
+../../../myWindows/StdAfx.h:58: error: forward declaration of ‘struct wxWindow’
+In file included from /usr/include/wx-2.8/wx/choicdlg.h:17,
+                 from /usr/include/wx-2.8/wx/wx.h:92,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/generic/choicdgg.h:40: error: expected class-name before ‘{’ token
+/usr/include/wx-2.8/wx/generic/choicdgg.h: In member function ‘char* wxSingleChoiceDialog::GetSelectionClientData() const’:
+/usr/include/wx-2.8/wx/generic/choicdgg.h:141: error: ‘m_clientData’ was not declared in this scope
+In file included from /usr/include/wx-2.8/wx/generic/textdlgg.h:22,
+                 from /usr/include/wx-2.8/wx/textdlg.h:15,
+                 from /usr/include/wx-2.8/wx/wx.h:93,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/valtext.h: In member function ‘bool wxTextValidator::CheckValidator() const’:
+/usr/include/wx-2.8/wx/valtext.h:103: error: incomplete type ‘wxTextCtrl’ used in nested name specifier
+In file included from /usr/include/wx-2.8/wx/textdlg.h:15,
+                 from /usr/include/wx-2.8/wx/wx.h:93,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/generic/textdlgg.h: At global scope:
+/usr/include/wx-2.8/wx/generic/textdlgg.h:37: error: expected class-name before ‘{’ token
+/usr/include/wx-2.8/wx/generic/textdlgg.h: In member function ‘wxTextValidator* wxTextEntryDialog::GetTextValidator()’:
+/usr/include/wx-2.8/wx/generic/textdlgg.h:52: error: invalid use of incomplete type ‘struct wxTextCtrl’
+/usr/include/wx-2.8/wx/log.h:72: error: forward declaration of ‘struct wxTextCtrl’
+In file included from /usr/include/wx-2.8/wx/wx.h:94,
+                 from BenchmarkDialog_rc.cpp:25:
+/usr/include/wx-2.8/wx/filedlg.h: At global scope:
+/usr/include/wx-2.8/wx/filedlg.h:73: error: expected class-name before ‘{’ token
+/usr/include/wx-2.8/wx/filedlg.h: In member function ‘bool wxFileDialogBase::HasFdFlag(int) const’:
+/usr/include/wx-2.8/wx/filedlg.h:101: error: ‘HasFlag’ was not declared in this scope
+In file included from BenchmarkDialog_rc.cpp:35:
+../../../Windows/Control/DialogImpl.h: At global scope:
+../../../Windows/Control/DialogImpl.h:21: error: expected class-name before ‘{’ token
+../../../Windows/Control/DialogImpl.h:22: error: field ‘_timer’ has incomplete type
+../../../Windows/Control/DialogImpl.h: In member function ‘UINT_PTR NWindows::NControl::CModalDialogImpl::SetTimer(UINT_PTR, unsigned int)’:
+../../../Windows/Control/DialogImpl.h:55: error: ‘_timer’ was not declared in this scope
+../../../Windows/Control/DialogImpl.h: In member function ‘void NWindows::NControl::CModalDialogImpl::KillTimer(UINT_PTR)’:
+../../../Windows/Control/DialogImpl.h:60: error: ‘_timer’ was not declared in this scope
+BenchmarkDialog_rc.cpp: In constructor ‘CBenchmarkDialogImpl::CBenchmarkDialogImpl(NWindows::NControl::CModalDialog*, wxWindow*, int)’:
+BenchmarkDialog_rc.cpp:119: error: invalid use of incomplete type ‘struct wxButton’
+/usr/include/wx-2.8/wx/sizer.h:23: error: forward declaration of ‘struct wxButton’
+BenchmarkDialog_rc.cpp:120: error: invalid use of incomplete type ‘struct wxButton’
+/usr/include/wx-2.8/wx/sizer.h:23: error: forward declaration of ‘struct wxButton’
+BenchmarkDialog_rc.cpp:124: error: ‘wxComboBox’ was not declared in this scope
+BenchmarkDialog_rc.cpp:124: error: ‘chcDicoSize’ was not declared in this scope
+BenchmarkDialog_rc.cpp:124: error: expected type-specifier before ‘wxComboBox’
+BenchmarkDialog_rc.cpp:124: error: expected `;' before ‘wxComboBox’
+BenchmarkDialog_rc.cpp:127: error: ‘chcThread’ was not declared in this scope
+BenchmarkDialog_rc.cpp:127: error: expected type-specifier before ‘wxComboBox’
+BenchmarkDialog_rc.cpp:127: error: expected `;' before ‘wxComboBox’
+BenchmarkDialog_rc.cpp:134: error: expected type-specifier before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:134: error: expected `)' before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:134: error: invalid conversion from ‘int*’ to ‘int’
+BenchmarkDialog_rc.cpp:134: error:   initializing argument 1 of ‘wxSizerItem* wxSizer::Add(int, int, int, int, int, wxObject*)’
+BenchmarkDialog_rc.cpp:135: error: expected type-specifier before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:135: error: expected `)' before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:135: error: invalid conversion from ‘int*’ to ‘int’
+BenchmarkDialog_rc.cpp:135: error:   initializing argument 1 of ‘wxSizerItem* wxSizer::Add(int, int, int, int, int, wxObject*)’
+BenchmarkDialog_rc.cpp:138: error: expected type-specifier before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:138: error: expected `)' before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:138: error: invalid conversion from ‘int*’ to ‘int’
+BenchmarkDialog_rc.cpp:138: error:   initializing argument 1 of ‘wxSizerItem* wxSizer::Add(int, int, int, int, int, wxObject*)’
+BenchmarkDialog_rc.cpp:139: error: expected type-specifier before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:139: error: expected `)' before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:139: error: invalid conversion from ‘int*’ to ‘int’
+BenchmarkDialog_rc.cpp:139: error:   initializing argument 1 of ‘wxSizerItem* wxSizer::Add(int, int, int, int, int, wxObject*)’
+BenchmarkDialog_rc.cpp:142: error: expected type-specifier before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:142: error: expected `)' before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:142: error: invalid conversion from ‘int*’ to ‘int’
+BenchmarkDialog_rc.cpp:142: error:   initializing argument 1 of ‘wxSizerItem* wxSizer::Add(int, int, int, int, int, wxObject*)’
+BenchmarkDialog_rc.cpp:152: error: invalid use of incomplete type ‘struct wxStaticBox’
+/usr/include/wx-2.8/wx/sizer.h:788: error: forward declaration of ‘struct wxStaticBox’
+BenchmarkDialog_rc.cpp:154: error: expected type-specifier before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:154: error: expected `)' before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:154: error: invalid conversion from ‘int*’ to ‘int’
+BenchmarkDialog_rc.cpp:154: error:   initializing argument 1 of ‘wxSizerItem* wxSizer::Add(int, int, int, int, int, wxObject*)’
+BenchmarkDialog_rc.cpp:155: error: expected type-specifier before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:155: error: expected `)' before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:155: error: invalid conversion from ‘int*’ to ‘int’
+BenchmarkDialog_rc.cpp:155: error:   initializing argument 1 of ‘wxSizerItem* wxSizer::Add(int, int, int, int, int, wxObject*)’
+BenchmarkDialog_rc.cpp:156: error: expected type-specifier before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:156: error: expected `)' before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:156: error: invalid conversion from ‘int*’ to ‘int’
+BenchmarkDialog_rc.cpp:156: error:   initializing argument 1 of ‘wxSizerItem* wxSizer::Add(int, int, int, int, int, wxObject*)’
+BenchmarkDialog_rc.cpp:157: error: expected type-specifier before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:157: error: expected `)' before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:157: error: invalid conversion from ‘int*’ to ‘int’
+BenchmarkDialog_rc.cpp:157: error:   initializing argument 1 of ‘wxSizerItem* wxSizer::Add(int, int, int, int, int, wxObject*)’
+BenchmarkDialog_rc.cpp:158: error: expected type-specifier before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:158: error: expected `)' before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:158: error: invalid conversion from ‘int*’ to ‘int’
+BenchmarkDialog_rc.cpp:158: error:   initializing argument 1 of ‘wxSizerItem* wxSizer::Add(int, int, int, int, int, wxObject*)’
+BenchmarkDialog_rc.cpp:164: error: invalid use of incomplete type ‘struct wxStaticBox’
+/usr/include/wx-2.8/wx/sizer.h:788: error: forward declaration of ‘struct wxStaticBox’
+BenchmarkDialog_rc.cpp:166: error: expected type-specifier before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:166: error: expected `)' before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:166: error: invalid conversion from ‘int*’ to ‘int’
+BenchmarkDialog_rc.cpp:166: error:   initializing argument 1 of ‘wxSizerItem* wxSizer::Add(int, int, int, int, int, wxObject*)’
+BenchmarkDialog_rc.cpp:167: error: expected type-specifier before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:167: error: expected `)' before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:167: error: invalid conversion from ‘int*’ to ‘int’
+BenchmarkDialog_rc.cpp:167: error:   initializing argument 1 of ‘wxSizerItem* wxSizer::Add(int, int, int, int, int, wxObject*)’
+BenchmarkDialog_rc.cpp:168: error: expected type-specifier before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:168: error: expected `)' before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:168: error: invalid conversion from ‘int*’ to ‘int’
+BenchmarkDialog_rc.cpp:168: error:   initializing argument 1 of ‘wxSizerItem* wxSizer::Add(int, int, int, int, int, wxObject*)’
+BenchmarkDialog_rc.cpp:169: error: expected type-specifier before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:169: error: expected `)' before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:169: error: invalid conversion from ‘int*’ to ‘int’
+BenchmarkDialog_rc.cpp:169: error:   initializing argument 1 of ‘wxSizerItem* wxSizer::Add(int, int, int, int, int, wxObject*)’
+BenchmarkDialog_rc.cpp:170: error: expected type-specifier before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:170: error: expected `)' before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:170: error: invalid conversion from ‘int*’ to ‘int’
+BenchmarkDialog_rc.cpp:170: error:   initializing argument 1 of ‘wxSizerItem* wxSizer::Add(int, int, int, int, int, wxObject*)’
+BenchmarkDialog_rc.cpp:173: error: expected type-specifier before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:173: error: expected `)' before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:173: error: invalid conversion from ‘int*’ to ‘int’
+BenchmarkDialog_rc.cpp:173: error:   initializing argument 1 of ‘wxSizerItem* wxSizer::Add(int, int, int, int, int, wxObject*)’
+BenchmarkDialog_rc.cpp:174: error: expected type-specifier before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:174: error: expected `)' before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:174: error: invalid conversion from ‘int*’ to ‘int’
+BenchmarkDialog_rc.cpp:174: error:   initializing argument 1 of ‘wxSizerItem* wxSizer::Add(int, int, int, int, int, wxObject*)’
+BenchmarkDialog_rc.cpp:175: error: expected type-specifier before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:175: error: expected `)' before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:175: error: invalid conversion from ‘int*’ to ‘int’
+BenchmarkDialog_rc.cpp:175: error:   initializing argument 1 of ‘wxSizerItem* wxSizer::Add(int, int, int, int, int, wxObject*)’
+BenchmarkDialog_rc.cpp:176: error: expected type-specifier before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:176: error: expected `)' before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:176: error: invalid conversion from ‘int*’ to ‘int’
+BenchmarkDialog_rc.cpp:176: error:   initializing argument 1 of ‘wxSizerItem* wxSizer::Add(int, int, int, int, int, wxObject*)’
+BenchmarkDialog_rc.cpp:177: error: expected type-specifier before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:177: error: expected `)' before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:177: error: invalid conversion from ‘int*’ to ‘int’
+BenchmarkDialog_rc.cpp:177: error:   initializing argument 1 of ‘wxSizerItem* wxSizer::Add(int, int, int, int, int, wxObject*)’
+BenchmarkDialog_rc.cpp:184: error: invalid use of incomplete type ‘struct wxStaticBox’
+/usr/include/wx-2.8/wx/sizer.h:788: error: forward declaration of ‘struct wxStaticBox’
+BenchmarkDialog_rc.cpp:186: error: expected type-specifier before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:186: error: expected `)' before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:186: error: invalid conversion from ‘int*’ to ‘int’
+BenchmarkDialog_rc.cpp:186: error:   initializing argument 1 of ‘wxSizerItem* wxSizer::Add(int, int, int, int, int, wxObject*)’
+BenchmarkDialog_rc.cpp:187: error: expected type-specifier before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:187: error: expected `)' before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:187: error: invalid conversion from ‘int*’ to ‘int’
+BenchmarkDialog_rc.cpp:187: error:   initializing argument 1 of ‘wxSizerItem* wxSizer::Add(int, int, int, int, int, wxObject*)’
+BenchmarkDialog_rc.cpp:188: error: expected type-specifier before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:188: error: expected `)' before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:188: error: invalid conversion from ‘int*’ to ‘int’
+BenchmarkDialog_rc.cpp:188: error:   initializing argument 1 of ‘wxSizerItem* wxSizer::Add(int, int, int, int, int, wxObject*)’
+BenchmarkDialog_rc.cpp:189: error: expected type-specifier before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:189: error: expected `)' before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:189: error: invalid conversion from ‘int*’ to ‘int’
+BenchmarkDialog_rc.cpp:189: error:   initializing argument 1 of ‘wxSizerItem* wxSizer::Add(int, int, int, int, int, wxObject*)’
+BenchmarkDialog_rc.cpp:190: error: expected type-specifier before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:190: error: expected `)' before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:190: error: invalid conversion from ‘int*’ to ‘int’
+BenchmarkDialog_rc.cpp:190: error:   initializing argument 1 of ‘wxSizerItem* wxSizer::Add(int, int, int, int, int, wxObject*)’
+BenchmarkDialog_rc.cpp:193: error: expected type-specifier before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:193: error: expected `)' before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:193: error: invalid conversion from ‘int*’ to ‘int’
+BenchmarkDialog_rc.cpp:193: error:   initializing argument 1 of ‘wxSizerItem* wxSizer::Add(int, int, int, int, int, wxObject*)’
+BenchmarkDialog_rc.cpp:194: error: expected type-specifier before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:194: error: expected `)' before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:194: error: invalid conversion from ‘int*’ to ‘int’
+BenchmarkDialog_rc.cpp:194: error:   initializing argument 1 of ‘wxSizerItem* wxSizer::Add(int, int, int, int, int, wxObject*)’
+BenchmarkDialog_rc.cpp:195: error: expected type-specifier before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:195: error: expected `)' before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:195: error: invalid conversion from ‘int*’ to ‘int’
+BenchmarkDialog_rc.cpp:195: error:   initializing argument 1 of ‘wxSizerItem* wxSizer::Add(int, int, int, int, int, wxObject*)’
+BenchmarkDialog_rc.cpp:196: error: expected type-specifier before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:196: error: expected `)' before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:196: error: invalid conversion from ‘int*’ to ‘int’
+BenchmarkDialog_rc.cpp:196: error:   initializing argument 1 of ‘wxSizerItem* wxSizer::Add(int, int, int, int, int, wxObject*)’
+BenchmarkDialog_rc.cpp:197: error: expected type-specifier before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:197: error: expected `)' before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:197: error: invalid conversion from ‘int*’ to ‘int’
+BenchmarkDialog_rc.cpp:197: error:   initializing argument 1 of ‘wxSizerItem* wxSizer::Add(int, int, int, int, int, wxObject*)’
+BenchmarkDialog_rc.cpp:203: error: invalid use of incomplete type ‘struct wxStaticBox’
+/usr/include/wx-2.8/wx/sizer.h:788: error: forward declaration of ‘struct wxStaticBox’
+BenchmarkDialog_rc.cpp:204: error: expected type-specifier before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:204: error: expected `)' before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:204: error: invalid conversion from ‘int*’ to ‘int’
+BenchmarkDialog_rc.cpp:204: error:   initializing argument 1 of ‘wxSizerItem* wxSizer::Add(int, int, int, int, int, wxObject*)’
+BenchmarkDialog_rc.cpp:205: error: expected type-specifier before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:205: error: expected `)' before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:205: error: invalid conversion from ‘int*’ to ‘int’
+BenchmarkDialog_rc.cpp:205: error:   initializing argument 1 of ‘wxSizerItem* wxSizer::Add(int, int, int, int, int, wxObject*)’
+BenchmarkDialog_rc.cpp:206: error: expected type-specifier before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:206: error: expected `)' before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:206: error: invalid conversion from ‘int*’ to ‘int’
+BenchmarkDialog_rc.cpp:206: error:   initializing argument 1 of ‘wxSizerItem* wxSizer::Add(int, int, int, int, int, wxObject*)’
+BenchmarkDialog_rc.cpp:207: error: expected type-specifier before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:207: error: expected `)' before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:207: error: invalid conversion from ‘int*’ to ‘int’
+BenchmarkDialog_rc.cpp:207: error:   initializing argument 1 of ‘wxSizerItem* wxSizer::Add(int, int, int, int, int, wxObject*)’
+BenchmarkDialog_rc.cpp:213: error: expected type-specifier before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:213: error: expected `)' before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:213: error: invalid conversion from ‘int*’ to ‘int’
+BenchmarkDialog_rc.cpp:213: error:   initializing argument 1 of ‘wxSizerItem* wxSizer::Add(int, int, int, int, int, wxObject*)’
+BenchmarkDialog_rc.cpp:214: error: expected type-specifier before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:214: error: expected `)' before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:214: error: invalid conversion from ‘int*’ to ‘int’
+BenchmarkDialog_rc.cpp:214: error:   initializing argument 1 of ‘wxSizerItem* wxSizer::Add(int, int, int, int, int, wxObject*)’
+BenchmarkDialog_rc.cpp:215: error: expected type-specifier before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:215: error: expected `)' before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:215: error: invalid conversion from ‘int*’ to ‘int’
+BenchmarkDialog_rc.cpp:215: error:   initializing argument 1 of ‘wxSizerItem* wxSizer::Add(int, int, int, int, int, wxObject*)’
+BenchmarkDialog_rc.cpp:218: error: expected type-specifier before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:218: error: expected `)' before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:218: error: invalid conversion from ‘int*’ to ‘int’
+BenchmarkDialog_rc.cpp:218: error:   initializing argument 1 of ‘wxSizerItem* wxSizer::Add(int, int, int, int, int, wxObject*)’
+BenchmarkDialog_rc.cpp:219: error: expected type-specifier before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:219: error: expected `)' before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:219: error: invalid conversion from ‘int*’ to ‘int’
+BenchmarkDialog_rc.cpp:219: error:   initializing argument 1 of ‘wxSizerItem* wxSizer::Add(int, int, int, int, int, wxObject*)’
+BenchmarkDialog_rc.cpp:220: error: expected type-specifier before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:220: error: expected `)' before ‘wxStaticText’
+BenchmarkDialog_rc.cpp:220: error: invalid conversion from ‘int*’ to ‘int’
+BenchmarkDialog_rc.cpp:220: error:   initializing argument 1 of ‘wxSizerItem* wxSizer::Add(int, int, int, int, int, wxObject*)’
+BenchmarkDialog_rc.cpp:236: error: ‘CreateButtonSizer’ was not declared in this scope
+BenchmarkDialog_rc.cpp:240: error: ‘SetSizer’ was not declared in this scope
+BenchmarkDialog_rc.cpp:241: error: no matching function for call to ‘wxSizer::SetSizeHints(CBenchmarkDialogImpl* const)’
+/usr/include/wx-2.8/wx/sizer.h:572: note: candidates are: void wxSizer::SetSizeHints(wxWindow*)
+BenchmarkDialog_rc.cpp: At global scope:
+BenchmarkDialog_rc.cpp:257: error: ‘wxDialog’ has not been declared
+BenchmarkDialog_rc.cpp:258: error: invalid static_cast from type ‘void (NWindows::NControl::CModalDialogImpl::*)(wxTimerEvent&)’ to type ‘void (wxEvtHandler::*)(wxTimerEvent&)’
+BenchmarkDialog_rc.cpp:259: error: invalid static_cast from type ‘void (NWindows::NControl::CModalDialogImpl::*)(wxCommandEvent&)’ to type ‘void (wxEvtHandler::*)(wxCommandEvent&)’
+BenchmarkDialog_rc.cpp:260: error: invalid static_cast from type ‘void (NWindows::NControl::CModalDialogImpl::*)(wxCommandEvent&)’ to type ‘void (wxEvtHandler::*)(wxCommandEvent&)’
+BenchmarkDialog_rc.cpp:261: error: invalid static_cast from type ‘void (NWindows::NControl::CModalDialogImpl::*)(wxCommandEvent&)’ to type ‘void (wxEvtHandler::*)(wxCommandEvent&)’
+make: *** [BenchmarkDialog_rc.o] Error 1

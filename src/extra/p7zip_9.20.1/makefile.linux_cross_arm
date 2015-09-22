@@ -1,0 +1,22 @@
+#
+# makefile for Linux (CROSS ARM)
+#
+
+OPTFLAGS=-O
+
+ALLFLAGS=${OPTFLAGS} -pipe -s \
+    	-D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE \
+	-DNDEBUG -D_REENTRANT -DENV_UNIX \
+	-D_7ZIP_LARGE_PAGES \
+	$(LOCAL_FLAGS)
+
+CXX=/usr/bin/arm-linux-gnueabi-g++ $(ALLFLAGS)
+CC=/usr/bin/arm-linux-gnueabi-gcc $(ALLFLAGS)
+CC_SHARED=-fPIC -DPIC
+LINK_SHARED=-fPIC -DPIC -shared
+
+LOCAL_LIBS=-lpthread
+LOCAL_LIBS_DLL=$(LOCAL_LIBS) -ldl
+
+OBJ_CRC32=$(OBJ_CRC32_C)
+

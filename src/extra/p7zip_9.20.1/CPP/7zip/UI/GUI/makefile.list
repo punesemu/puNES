@@ -1,0 +1,136 @@
+SRCS=\
+	CompressDialog.cpp \
+	CompressDialog_rc.cpp \
+	ExtractDialog.cpp \
+	ExtractDialog_rc.cpp \
+	BenchmarkDialog.cpp \
+	BenchmarkDialog_rc.cpp \
+	ExtractGUI.cpp \
+	GUI.cpp \
+	wxGUI.cpp \
+	UpdateCallbackGUI.cpp \
+	UpdateGUI.cpp \
+	../Common/ArchiveCommandLine.cpp \
+	../Common/ArchiveExtractCallback.cpp \
+	../Common/ArchiveOpenCallback.cpp \
+	../Common/Bench.cpp \
+	../Common/DefaultName.cpp \
+	../Common/EnumDirItems.cpp \
+	../Common/Extract.cpp \
+	../Common/ExtractingFilePath.cpp \
+	../Common/LoadCodecs.cpp \
+	../Common/OpenArchive.cpp \
+	../Common/PropIDUtils.cpp \
+	../Common/SetProperties.cpp \
+	../Common/SortUtils.cpp \
+	../Common/TempFiles.cpp \
+	../Common/Update.cpp \
+	../Common/UpdateAction.cpp \
+	../Common/UpdateCallback.cpp \
+	../Common/UpdatePair.cpp \
+	../Common/UpdateProduce.cpp \
+	../Common/WorkDir.cpp \
+	../Common/ZipRegistry.cpp \
+	../Explorer/MyMessages.cpp \
+	../../UI/FileManager/FormatUtils.cpp \
+	../../UI/FileManager/ProgramLocation.cpp \
+	../../UI/FileManager/ProgressDialog2.cpp \
+	../../UI/FileManager/ProgressDialog2_rc.cpp \
+	../../UI/FileManager/MessagesDialog.cpp \
+	../../UI/FileManager/MessagesDialog_rc.cpp \
+	../../UI/FileManager/OverwriteDialog.cpp \
+	../../UI/FileManager/OverwriteDialog_rc.cpp \
+	../../UI/FileManager/PasswordDialog.cpp \
+	../../UI/FileManager/PasswordDialog_rc.cpp \
+	../../UI/FileManager/ExtractCallback.cpp \
+	../../UI/FileManager/SplitUtils.cpp \
+	../../UI/FileManager/StringUtils.cpp \
+	../../UI/FileManager/LangUtils.cpp \
+	../../Archive/Common/OutStreamWithCRC.cpp \
+	../../Common/CreateCoder.cpp \
+	../../Common/FilePathAutoRename.cpp \
+	../../Common/FileStreams.cpp \
+	../../Common/FilterCoder.cpp \
+	../../Common/ProgressUtils.cpp \
+	../../Common/StreamUtils.cpp \
+	../../Compress/CopyCoder.cpp \
+	../../../Common/CommandLineParser.cpp \
+	../../../Common/CRC.cpp \
+	../../../Common/IntToString.cpp \
+	../../../Common/Lang.cpp \
+	../../../Common/ListFileUtils.cpp \
+	../../../Common/MyString.cpp \
+	../../../Common/MyVector.cpp \
+	../../../Common/StringConvert.cpp \
+	../../../Common/StringToInt.cpp \
+	../../../Common/TextConfig.cpp \
+	../../../Common/UTFConvert.cpp \
+	../../../Common/Wildcard.cpp \
+	../../../Common/MyWindows.cpp \
+	../../../Windows/DLL.cpp \
+	../../../Windows/Error.cpp \
+	../../../Windows/FileDir.cpp \
+	../../../Windows/FileFind.cpp \
+	../../../Windows/FileIO.cpp \
+	../../../Windows/FileName.cpp \
+	../../../Windows/PropVariant.cpp \
+	../../../Windows/PropVariantConversions.cpp \
+	../../../Windows/Registry.cpp \
+	../../../Windows/Synchronization.cpp \
+	../../../Windows/Time.cpp \
+	../../../Windows/System.cpp \
+	../../../Windows/Window.cpp \
+	../../../Windows/Control/Dialog.cpp \
+	../../../Windows/Control/Controls.cpp \
+	../../../myWindows/wine_date_and_time.cpp \
+	../../../myWindows/wine_GetXXXDefaultLangID.cpp
+
+
+SRCS_OUT=\
+	../../UI/FileManager/HelpUtils.cpp \
+	../../UI/FileManager/OpenCallback.cpp \
+	../../UI/FileManager/RegistryUtils.cpp \
+	../../../Common/NewHandler.cpp \
+	../../../Windows/MemoryLock.cpp \
+	../../../Windows/Registry.cpp \
+	../../../Windows/ResourceString.cpp \
+	../../../Windows/Shell.cpp
+
+SRCS_C=\
+	../../../../C/7zCrc.c \
+	../../../../C/7zCrcOpt.c \
+	../../../../C/Alloc.c \
+	../../../../C/Threads.c
+
+include ../../../../makefile.rules
+
+CompressDialog.o : CompressDialog.cpp
+	$(CXX) $(CXXFLAGS) CompressDialog.cpp
+CompressDialog_rc.o : CompressDialog_rc.cpp
+	$(CXX) $(CXXFLAGS) CompressDialog_rc.cpp
+ExtractDialog.o : ExtractDialog.cpp
+	$(CXX) $(CXXFLAGS) ExtractDialog.cpp
+ExtractDialog_rc.o : ExtractDialog_rc.cpp
+	$(CXX) $(CXXFLAGS) ExtractDialog_rc.cpp
+BenchmarkDialog.o : BenchmarkDialog.cpp
+	$(CXX) $(CXXFLAGS) BenchmarkDialog.cpp
+BenchmarkDialog_rc.o : BenchmarkDialog_rc.cpp
+	$(CXX) $(CXXFLAGS) BenchmarkDialog_rc.cpp
+ExtractGUI.o : ExtractGUI.cpp
+	$(CXX) $(CXXFLAGS) ExtractGUI.cpp
+GUI.o : GUI.cpp
+	$(CXX) $(CXXFLAGS) GUI.cpp
+wxGUI.o : wxGUI.cpp
+	$(CXX) $(CXXFLAGS) wxGUI.cpp
+UpdateCallbackGUI.o : UpdateCallbackGUI.cpp
+	$(CXX) $(CXXFLAGS) UpdateCallbackGUI.cpp
+UpdateGUI.o : UpdateGUI.cpp
+	$(CXX) $(CXXFLAGS) UpdateGUI.cpp
+
+LzmaBench.o : ../../Compress/LZMA_Alone/LzmaBench.cpp
+	$(CXX) $(CXXFLAGS) ../../Compress/LZMA_Alone/LzmaBench.cpp
+
+
+MyMessages.o : ../Explorer/MyMessages.cpp
+	$(CXX) $(CXXFLAGS) ../Explorer/MyMessages.cpp
+

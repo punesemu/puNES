@@ -1,0 +1,20 @@
+#
+# makefile for OpenBSD (x86, PPC, alpha ...)
+#
+
+MYCFLAGS?=-O
+MYCXXFLAGS?=-O
+
+ALLFLAGS=-D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE \
+        -DNDEBUG -D_REENTRANT -DENV_UNIX -fPIC \
+        $(LOCAL_FLAGS)
+
+CXX=$(MYCXX) $(ALLFLAGS) $(MYCXXFLAGS)
+CC=$(MYCC) $(ALLFLAGS) $(MYCFLAGS)
+LINK_SHARED=-shared
+                                                                                                      
+LOCAL_LIBS=-lpthread
+LOCAL_LIBS_DLL=$(LOCAL_LIBS)
+
+OBJ_CRC32=$(OBJ_CRC32_C)
+

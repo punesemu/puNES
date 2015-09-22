@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+  <META http-equiv="Content-Type" content="text/html; charset=Windows-1252">
+  <TITLE>-o (set Output directory) switch</TITLE>
+  <LINK href="style.css" rel="stylesheet" type="text/css">
+</HEAD>
+
+<BODY>
+
+<H1>-t (set Type of archive) switch</H1>
+
+<P>Specifies the type of archive.</P>
+
+<H4>Syntax</H4>
+
+<PRE class="syntax">
+-t{archive_type}
+</PRE>
+
+<DL>
+  <DT>{archive_type}</DT>
+  <DD>Specifies the type of archive. It can be: *, 7z, split, zip, gzip, bzip2, tar, ... , or 
+    combination of them, like: mbr.vhd
+</DD>
+</DL>
+
+<P>If -t{archive_type} switch is not specified, 7-Zip uses extension of archive filename to 
+  detect the type of archive. If you create new archive, -t{archive_type} switch is not 
+  specified and there is no extension of archive, 7-Zip will create .7z archive.</P>
+
+<P>When you extract archive of some types that contains another 
+archive without compression (for example, MBR in VHD), 7-Zip can open both 
+levels in one step. If you want to open/extract just top 
+level archive, use <SPAN class="filename">-t*</SPAN> switch.</P>
+
+<P>Note: gzip or bzip2 formats support only one file per archive.
+If you want to compress more than one file to these formats,
+create a tar archive first, and then compress it with your selected format.</P>
+
+<H4>Example</H4>
+
+<PRE class="example">
+7z a -tzip archive.zip *.txt
+</PRE>
+
+<P>adds all <SPAN class="filename">*.txt</SPAN> files from current directory 
+to zip archive <SPAN class="filename">archive.zip</SPAN>.</P>
+
+<PRE class="example">
+7z t -t7z.split archive.7z.001
+</PRE>
+
+<P>tests all files in <SPAN class="filename">archive.7z.001</SPAN>. It also checks
+that archive is multivolume .7z archive.</P>
+
+<PRE class="example">
+7z x -tiso archive.iso
+</PRE>
+
+<P>extracts files from <SPAN class="filename">archive.iso</SPAN> open as ISO archive.
+
+<PRE class="example">
+7z x -tudf archive.iso
+</PRE>
+
+<P>extracts files from <SPAN class="filename">archive.iso</SPAN> open as UDF archive.
+
+
+<H4>Commands that can be used with this switch</H4>
+
+<P>
+  <A href="../commands/add.htm">a (Add)</A>,
+  <A href="../commands/delete.htm">d (Delete)</A>,
+  <A href="../commands/extract.htm">e (Extract)</A>,
+  <A href="../commands/list.htm">l (List)</A>,
+  <A href="../commands/test.htm">t (Test)</A>,
+  <A href="../commands/update.htm">u (Update)</A>,
+  <A href="../commands/extract_full.htm">x (Extract with full paths)</A>
+</P>
+
+</BODY>
+</HTML>

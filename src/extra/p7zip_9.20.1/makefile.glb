@@ -1,0 +1,39 @@
+
+RM=rm -f
+CFLAGS=-c -I. \
+-I../../../../C \
+-I../../../myWindows \
+-I../../../include_windows \
+-I../../..
+
+CXXFLAGS=-c -I. \
+-I../../../myWindows \
+-I../../../ \
+-I../../../include_windows
+
+DFLAGS=-MM -I. \
+-I../../../myWindows \
+-I../../../ \
+-I../../../include_windows
+
+all: $(PCH_NAME) $(PROG)
+
+$(PROG): $(OBJS)
+	$(CXX) $(LOCAL_SHARED) -o $(PROG) $(LDFLAGS) $(OBJS) $(LIBS)
+
+include makefile.list
+include makefile.depend
+
+depend:
+	rm -f makefile.depend
+	$(CXX) $(DFLAGS) $(SRCS) > makefile.depend
+
+clean:
+	-@$(RM) $(PROG) core *.exe *.o *~ .*.swp *.orig *.gch $(PROGS)
+	-@$(RM) -fr SunWS_cache/ 
+	-@$(RM) -r .inslog2 pchdir/ tca.map ir.out
+	-@$(RM) make.log tags 1 2
+
+# CRC32, ASM version
+7zCrcT8U.o : ../../../../Asm/$(CPU)/7zCrcT8U.asm
+	$(ASM) ../../../../Asm/$(CPU)/7zCrcT8U.asm -o 7zCrcT8U.o

@@ -1,0 +1,158 @@
+SRCS=\
+ ../../../myWindows/wine_date_and_time.cpp \
+ ../../../myWindows/myAddExeFlag.cpp \
+ ../../../myWindows/mySplitCommandLine.cpp \
+ \
+ ../../UI/Console/BenchCon.cpp \
+ ../../UI/Console/ConsoleClose.cpp \
+ ../../UI/Console/ExtractCallbackConsole.cpp \
+ ../../UI/Console/List.cpp \
+ ../../UI/Console/Main.cpp \
+ ../../UI/Console/MainAr.cpp \
+ ../../UI/Console/OpenCallbackConsole.cpp \
+ ../../UI/Console/PercentPrinter.cpp \
+ ../../UI/Console/UpdateCallbackConsole.cpp \
+ ../../UI/Console/UserInputUtils.cpp \
+ \
+ ../../../Common/CommandLineParser.cpp \
+ ../../../Common/CRC.cpp \
+ ../../../Common/IntToString.cpp \
+ ../../../Common/ListFileUtils.cpp \
+ ../../../Common/StdInStream.cpp \
+ ../../../Common/StdOutStream.cpp \
+ ../../../Common/MyString.cpp \
+ ../../../Common/MyWindows.cpp \
+ ../../../Common/StringConvert.cpp \
+ ../../../Common/StringToInt.cpp \
+ ../../../Common/UTFConvert.cpp \
+ ../../../Common/MyVector.cpp \
+ ../../../Common/Wildcard.cpp \
+ \
+ ../../../Windows/Error.cpp \
+ ../../../Windows/FileDir.cpp \
+ ../../../Windows/FileFind.cpp \
+ ../../../Windows/FileIO.cpp \
+ ../../../Windows/FileName.cpp \
+ ../../../Windows/PropVariant.cpp \
+ ../../../Windows/PropVariantConversions.cpp \
+ ../../../Windows/Synchronization.cpp \
+ ../../../Windows/System.cpp \
+ ../../../Windows/Time.cpp \
+ \
+ ../../Common/CreateCoder.cpp \
+ ../../Common/CWrappers.cpp \
+ ../../Common/FilePathAutoRename.cpp \
+ ../../Common/FileStreams.cpp \
+ ../../Common/FilterCoder.cpp \
+ ../../Common/InBuffer.cpp \
+ ../../Common/InOutTempBuffer.cpp \
+ ../../Common/LimitedStreams.cpp \
+ ../../Common/LockedStream.cpp \
+ ../../Common/MethodId.cpp \
+ ../../Common/MethodProps.cpp \
+ ../../Common/OffsetStream.cpp \
+ ../../Common/OutBuffer.cpp \
+ ../../Common/OutMemStream.cpp \
+ ../../Common/ProgressUtils.cpp \
+ ../../Common/StreamBinder.cpp \
+ ../../Common/StreamObjects.cpp \
+ ../../Common/StreamUtils.cpp \
+ ../../Common/VirtThread.cpp \
+ \
+ ../../UI/Common/ArchiveCommandLine.cpp \
+ ../../UI/Common/ArchiveExtractCallback.cpp \
+ ../../UI/Common/ArchiveOpenCallback.cpp \
+ ../../UI/Common/Bench.cpp \
+ ../../UI/Common/DefaultName.cpp \
+ ../../UI/Common/EnumDirItems.cpp \
+ ../../UI/Common/Extract.cpp \
+ ../../UI/Common/ExtractingFilePath.cpp \
+ ../../UI/Common/LoadCodecs.cpp \
+ ../../UI/Common/OpenArchive.cpp \
+ ../../UI/Common/PropIDUtils.cpp \
+ ../../UI/Common/SetProperties.cpp \
+ ../../UI/Common/SortUtils.cpp \
+ ../../UI/Common/TempFiles.cpp \
+ ../../UI/Common/Update.cpp \
+ ../../UI/Common/UpdateAction.cpp \
+ ../../UI/Common/UpdateCallback.cpp \
+ ../../UI/Common/UpdatePair.cpp \
+ ../../UI/Common/UpdateProduce.cpp \
+ \
+ ../../Archive/ZHandler.cpp \
+ ../../Archive/LzmaHandler.cpp \
+ ../../Archive/SplitHandler.cpp \
+ ../../Archive/XzHandler.cpp \
+ \
+ ../../Archive/Common/CoderMixer2.cpp \
+ ../../Archive/Common/CoderMixer2MT.cpp \
+ ../../Archive/Common/CrossThreadProgress.cpp \
+ ../../Archive/Common/DummyOutStream.cpp \
+ ../../Archive/Common/HandlerOut.cpp \
+ ../../Archive/Common/InStreamWithCRC.cpp \
+ ../../Archive/Common/ItemNameUtils.cpp \
+ ../../Archive/Common/MultiStream.cpp \
+ ../../Archive/Common/OutStreamWithCRC.cpp \
+ ../../Archive/Common/ParseProperties.cpp \
+ \
+ ../../Archive/7z/7zCompressionMode.cpp \
+ ../../Archive/7z/7zDecode.cpp \
+ ../../Archive/7z/7zEncode.cpp \
+ ../../Archive/7z/7zExtract.cpp \
+ ../../Archive/7z/7zFolderInStream.cpp \
+ ../../Archive/7z/7zFolderOutStream.cpp \
+ ../../Archive/7z/7zHandler.cpp \
+ ../../Archive/7z/7zHandlerOut.cpp \
+ ../../Archive/7z/7zHeader.cpp \
+ ../../Archive/7z/7zIn.cpp \
+ ../../Archive/7z/7zOut.cpp \
+ ../../Archive/7z/7zProperties.cpp \
+ ../../Archive/7z/7zSpecStream.cpp \
+ ../../Archive/7z/7zUpdate.cpp \
+ ../../Archive/7z/7zRegister.cpp \
+ \
+ ../../Compress/Bcj2Coder.cpp \
+ ../../Compress/Bcj2Register.cpp \
+ ../../Compress/BcjCoder.cpp \
+ ../../Compress/BcjRegister.cpp \
+ ../../Compress/BranchCoder.cpp \
+ ../../Compress/BranchMisc.cpp \
+ ../../Compress/BranchRegister.cpp \
+ ../../Compress/ByteSwap.cpp \
+ ../../Compress/CopyCoder.cpp \
+ ../../Compress/CopyRegister.cpp \
+ ../../Compress/DeltaFilter.cpp \
+ ../../Compress/Lzma2Decoder.cpp \
+ ../../Compress/Lzma2Encoder.cpp \
+ ../../Compress/Lzma2Register.cpp \
+ ../../Compress/LzmaDecoder.cpp \
+ ../../Compress/LzmaEncoder.cpp \
+ ../../Compress/LzmaRegister.cpp 
+
+SRCS_C=\
+ ../../../../C/7zStream.c \
+ ../../../../C/Alloc.c \
+ ../../../../C/Bra.c \
+ ../../../../C/Bra86.c \
+ ../../../../C/BraIA64.c \
+ ../../../../C/Delta.c \
+ ../../../../C/Lzma2Dec.c \
+ ../../../../C/Lzma2Enc.c \
+ ../../../../C/LzmaDec.c \
+ ../../../../C/LzmaEnc.c \
+ ../../../../C/LzFind.c \
+ ../../../../C/LzFindMt.c \
+ ../../../../C/MtCoder.c \
+ ../../../../C/Sha256.c \
+ ../../../../C/Threads.c \
+ ../../../../C/Xz.c \
+ ../../../../C/XzCrc64.c \
+ ../../../../C/XzDec.c \
+ ../../../../C/XzEnc.c \
+ ../../../../C/XzIn.c \
+
+include ../../../../makefile.rules
+
+Main.o : ../../UI/Console/Main.cpp
+	$(CXX) $(CXXFLAGS) ../../UI/Console/Main.cpp
+

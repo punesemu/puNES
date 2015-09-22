@@ -1,0 +1,240 @@
+SRCS=\
+ClassDefs.cpp \
+../Agent/Agent.cpp \
+../Agent/AgentOut.cpp \
+../Agent/AgentProxy.cpp \
+../Agent/ArchiveFolder.cpp \
+../Agent/ArchiveFolderOpen.cpp \
+../Agent/ArchiveFolderOut.cpp \
+../Agent/UpdateCallbackAgent.cpp \
+	App.cpp \
+	wxFM.cpp \
+	FM.cpp \
+	FM_rc.cpp \
+	OpenCallback.cpp \
+	MyLoadMenu.cpp \
+	Panel.cpp \
+	PanelCrc.cpp \
+	PanelCopy.cpp \
+	PanelItems.cpp \
+	PanelListNotify.cpp \
+	PanelFolderChange.cpp \
+	PanelItemOpen.cpp \
+	PanelMenu.cpp \
+	PanelOperations.cpp \
+	PanelSelect.cpp \
+	PanelSort.cpp \
+	PanelSplitFile.cpp \
+	PropertyName.cpp \
+	RegistryUtils.cpp \
+	ViewSettings.cpp \
+	UpdateCallback100.cpp \
+	RegistryAssociations.cpp \
+	FileFolderPluginOpen.cpp \
+	RootFolder.cpp \
+	FSDrives.cpp \
+	FSFolder.cpp \
+	FSFolderCopy.cpp \
+	FormatUtils.cpp \
+	SysIconUtils.cpp \
+	TextPairs.cpp \
+	../Common/ArchiveName.cpp \
+	../Common/CompressCall.cpp \
+	../Common/WorkDir.cpp \
+	ExtractCallback.cpp \
+	ProgramLocation.cpp \
+	CopyDialog.cpp \
+	CopyDialog_rc.cpp \
+	ListViewDialog.cpp \
+	ListViewDialog_rc.cpp \
+	SplitDialog.cpp \
+	SplitDialog_rc.cpp \
+	SplitUtils.cpp \
+	StringUtils.cpp \
+	ProgressDialog2.cpp \
+	ProgressDialog2_rc.cpp \
+	MessagesDialog.cpp \
+	MessagesDialog_rc.cpp \
+	ComboDialog.cpp \
+	ComboDialog_rc.cpp \
+	OverwriteDialog.cpp \
+	OverwriteDialog_rc.cpp \
+	PasswordDialog.cpp \
+	PasswordDialog_rc.cpp \
+	../Common/ArchiveExtractCallback.cpp \
+	../Common/ArchiveOpenCallback.cpp \
+	../Common/DefaultName.cpp \
+	../Common/EnumDirItems.cpp \
+	../Common/LoadCodecs.cpp \
+	../Common/OpenArchive.cpp \
+	../Common/ZipRegistry.cpp \
+	../Common/ExtractingFilePath.cpp \
+	../Common/PropIDUtils.cpp \
+	../Common/SortUtils.cpp \
+	../Common/UpdateAction.cpp \
+	../Common/UpdateCallback.cpp \
+	../Common/UpdatePair.cpp \
+	../Common/UpdateProduce.cpp \
+	../../Archive/Common/OutStreamWithCRC.cpp \
+	../../Common/FilePathAutoRename.cpp \
+	../../Common/FileStreams.cpp \
+	../../Common/ProgressUtils.cpp \
+	../../Common/StreamUtils.cpp \
+	../../../Common/TextConfig.cpp \
+	../../../Common/UTFConvert.cpp \
+	../../Compress/CopyCoder.cpp \
+	../../../Common/MyString.cpp \
+	../../../Common/MyVector.cpp \
+	../../../Common/StringConvert.cpp \
+	../../../Common/StringToInt.cpp \
+	../../../Common/IntToString.cpp \
+	../../../Common/MyWindows.cpp \
+	../../../Common/Wildcard.cpp \
+	../../../Windows/DLL.cpp \
+	../../../Windows/Error.cpp \
+	../../../Windows/FileDir.cpp \
+	../../../Windows/FileFind.cpp \
+	../../../Windows/FileIO.cpp \
+	../../../Windows/FileName.cpp \
+	../../../Windows/PropVariant.cpp \
+	../../../Windows/PropVariantConversions.cpp \
+	../../../Windows/Registry.cpp \
+	../../../Windows/Synchronization.cpp \
+	../../../Windows/Time.cpp \
+	../../../Windows/Clipboard.cpp \
+	../../../Windows/System.cpp \
+	../../../Windows/Window.cpp \
+	../../../Windows/Control/Dialog.cpp \
+	../../../Windows/Control/Controls.cpp \
+	../../../Windows/Control/Window2.cpp \
+	LangUtils.cpp \
+	../../../Common/Lang.cpp \
+	../../../Common/CRC.cpp \
+	../../../myWindows/wine_date_and_time.cpp \
+	../../../myWindows/wine_GetXXXDefaultLangID.cpp
+
+SRCS_OUT=\
+	OpenCallbackGUI.cpp \
+	UpdateCallbackGUI.cpp \
+	UpdateGUI.cpp \
+	../Common/ArchiveCommandLine.cpp \
+	../Common/Extract.cpp \
+	../Common/SetProperties.cpp \
+	../Common/TempFiles.cpp \
+	../Common/Update.cpp \
+	../Explorer/MyMessages.cpp \
+	../../../Common/CommandLineParser.cpp \
+	../../../Common/ListFileUtils.cpp \
+	../../../myWindows/myGetTickCount.cpp \
+
+
+SRCS_C=\
+	../../../../C/7zCrc.c \
+	../../../../C/7zCrcOpt.c \
+	../../../../C/Alloc.c \
+	../../../../C/Sha256.c \
+	../../../../C/Sort.c \
+	../../../../C/Threads.c
+
+##############################################################
+ClassDefs.o : ClassDefs.cpp
+	$(CXX) $(CXXFLAGS) ClassDefs.cpp
+Agent.o : ../Agent/Agent.cpp
+	$(CXX) $(CXXFLAGS) ../Agent/Agent.cpp
+AgentOut.o : ../Agent/AgentOut.cpp
+	$(CXX) $(CXXFLAGS) ../Agent/AgentOut.cpp
+AgentProxy.o : ../Agent/AgentProxy.cpp
+	$(CXX) $(CXXFLAGS) ../Agent/AgentProxy.cpp
+ArchiveFolder.o : ../Agent/ArchiveFolder.cpp
+	$(CXX) $(CXXFLAGS) ../Agent/ArchiveFolder.cpp
+ArchiveFolderOpen.o : ../Agent/ArchiveFolderOpen.cpp
+	$(CXX) $(CXXFLAGS) ../Agent/ArchiveFolderOpen.cpp
+ArchiveFolderOut.o : ../Agent/ArchiveFolderOut.cpp
+	$(CXX) $(CXXFLAGS) ../Agent/ArchiveFolderOut.cpp
+UpdateCallbackAgent.o : ../Agent/UpdateCallbackAgent.cpp
+	$(CXX) $(CXXFLAGS) ../Agent/UpdateCallbackAgent.cpp
+##############################################################
+
+CompressDialog.o : CompressDialog.cpp
+	$(CXX) $(CXXFLAGS) CompressDialog.cpp
+CompressDialog_rc.o : CompressDialog_rc.cpp
+	$(CXX) $(CXXFLAGS) CompressDialog_rc.cpp
+ExtractDialog.o : ExtractDialog.cpp
+	$(CXX) $(CXXFLAGS) ExtractDialog.cpp
+ExtractDialog_rc.o : ExtractDialog_rc.cpp
+	$(CXX) $(CXXFLAGS) ExtractDialog_rc.cpp
+BenchmarkDialog.o : BenchmarkDialog.cpp
+	$(CXX) $(CXXFLAGS) BenchmarkDialog.cpp
+BenchmarkDialog_rc.o : BenchmarkDialog_rc.cpp
+	$(CXX) $(CXXFLAGS) BenchmarkDialog_rc.cpp
+ExtractGUI.o : ExtractGUI.cpp
+	$(CXX) $(CXXFLAGS) ExtractGUI.cpp
+App.o : App.cpp
+	$(CXX) $(CXXFLAGS) App.cpp
+wxFM.o : wxFM.cpp
+	$(CXX) $(CXXFLAGS) wxFM.cpp
+FM.o : FM.cpp
+	$(CXX) $(CXXFLAGS) FM.cpp
+FM_rc.o : FM_rc.cpp
+	$(CXX) $(CXXFLAGS) FM_rc.cpp
+OpenCallback.o : OpenCallback.cpp
+	$(CXX) $(CXXFLAGS) OpenCallback.cpp
+MyLoadMenu.o : MyLoadMenu.cpp
+	$(CXX) $(CXXFLAGS) MyLoadMenu.cpp
+Panel.o : Panel.cpp
+	$(CXX) $(CXXFLAGS) Panel.cpp
+PanelCrc.o : PanelCrc.cpp
+	$(CXX) $(CXXFLAGS) PanelCrc.cpp
+PanelCopy.o : PanelCopy.cpp
+	$(CXX) $(CXXFLAGS) PanelCopy.cpp
+PanelItems.o : PanelItems.cpp
+	$(CXX) $(CXXFLAGS) PanelItems.cpp
+PanelListNotify.o : PanelListNotify.cpp
+	$(CXX) $(CXXFLAGS) PanelListNotify.cpp
+PanelFolderChange.o : PanelFolderChange.cpp
+	$(CXX) $(CXXFLAGS) PanelFolderChange.cpp
+PanelItemOpen.o : PanelItemOpen.cpp
+	$(CXX) $(CXXFLAGS) PanelItemOpen.cpp
+PanelMenu.o : PanelMenu.cpp
+	$(CXX) $(CXXFLAGS) PanelMenu.cpp
+PanelOperations.o : PanelOperations.cpp
+	$(CXX) $(CXXFLAGS) PanelOperations.cpp
+PanelSelect.o : PanelSelect.cpp
+	$(CXX) $(CXXFLAGS) PanelSelect.cpp
+PanelSort.o : PanelSort.cpp
+	$(CXX) $(CXXFLAGS) PanelSort.cpp
+PanelSplitFile.o : PanelSplitFile.cpp
+	$(CXX) $(CXXFLAGS) PanelSplitFile.cpp
+PropertyName.o : PropertyName.cpp
+	$(CXX) $(CXXFLAGS) PropertyName.cpp
+RegistryUtils.o : RegistryUtils.cpp
+	$(CXX) $(CXXFLAGS) RegistryUtils.cpp
+UpdateCallback100.o : UpdateCallback100.cpp
+	$(CXX) $(CXXFLAGS) UpdateCallback100.cpp
+ViewSettings.o : ViewSettings.cpp
+	$(CXX) $(CXXFLAGS) ViewSettings.cpp
+RegistryAssociations.o : RegistryAssociations.cpp
+	$(CXX) $(CXXFLAGS) RegistryAssociations.cpp
+FileFolderPluginOpen.o : FileFolderPluginOpen.cpp
+	$(CXX) $(CXXFLAGS) FileFolderPluginOpen.cpp
+RootFolder.o : RootFolder.cpp
+	$(CXX) $(CXXFLAGS) RootFolder.cpp
+FSDrives.o : FSDrives.cpp
+	$(CXX) $(CXXFLAGS) FSDrives.cpp
+FSFolder.o : FSFolder.cpp
+	$(CXX) $(CXXFLAGS) FSFolder.cpp
+FSFolderCopy.o : FSFolderCopy.cpp
+	$(CXX) $(CXXFLAGS) FSFolderCopy.cpp
+SysIconUtils.o : SysIconUtils.cpp
+	$(CXX) $(CXXFLAGS) SysIconUtils.cpp
+TextPairs.o : TextPairs.cpp
+	$(CXX) $(CXXFLAGS) TextPairs.cpp
+OpenCallbackGUI.o : OpenCallbackGUI.cpp
+	$(CXX) $(CXXFLAGS) OpenCallbackGUI.cpp
+UpdateCallbackGUI.o : UpdateCallbackGUI.cpp
+	$(CXX) $(CXXFLAGS) UpdateCallbackGUI.cpp
+UpdateGUI.o : UpdateGUI.cpp
+	$(CXX) $(CXXFLAGS) UpdateGUI.cpp
+
+include ../../../../makefile.rules
+

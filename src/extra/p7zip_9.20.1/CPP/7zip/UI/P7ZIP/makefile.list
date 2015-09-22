@@ -1,0 +1,10 @@
+SRCS=\
+	wxP7ZIP.cpp
+	
+	
+SRCS_C=
+
+include ../../../../makefile.rules
+
+wxP7ZIP.o : wxP7ZIP.cpp
+	$(CXX) $(CXXFLAGS) wxP7ZIP.cpp

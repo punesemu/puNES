@@ -1,0 +1,23 @@
+SRCS=\
+../../../myWindows/wine_date_and_time.cpp \
+../../../Windows/DLL.cpp \
+../../../Windows/FileDir.cpp \
+../../../Windows/FileFind.cpp \
+../../../Windows/FileIO.cpp \
+../../../Windows/FileName.cpp \
+../../../Windows/PropVariant.cpp \
+../../../Windows/PropVariantConversions.cpp \
+../../../Common/IntToString.cpp \
+../../../Common/MyWindows.cpp \
+../../../Common/MyString.cpp \
+../../../Common/StringConvert.cpp \
+../../../Common/UTFConvert.cpp \
+../../../Common/MyVector.cpp \
+../../../Common/Wildcard.cpp \
+../../Common/FileStreams.cpp \
+./Client7z.cpp
+
+include ../../../../makefile.rules
+
+Client7z.o : ./Client7z.cpp
+	$(CXX) $(CXXFLAGS) ./Client7z.cpp

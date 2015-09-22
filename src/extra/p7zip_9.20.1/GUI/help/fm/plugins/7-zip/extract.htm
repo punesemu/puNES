@@ -1,0 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+  <META http-equiv="Content-Type" content="text/html; charset=Windows-1252">
+  <TITLE>Extract Dialog Box</TITLE>
+  <LINK href="style.css" rel="stylesheet" type="text/css">
+</HEAD>
+
+<BODY>
+
+<H1>Extract Dialog Box</H1>
+
+<P>Allows you to specify options for extracting files from archive.</P>
+
+<H4>How to run this dialog box</H4>
+<P>There are two ways to run this dialog</P>
+<UL>
+  <LI>To extract all files from an archive:
+    <OL>
+      <LI>In Windows Explorer or in 7-Zip, right-click the archive file.</LI>
+      <LI>Point to <B>7-Zip</B>, and then click <B>Extract files...</B>.</LI>
+    </OL>
+  </LI>
+
+  <LI>To extract specified files from an archive opened in the browsing window:
+    <OL>
+      <LI>Open archive with 7-Zip.</LI>
+      <LI>Select items to extract.</LI>
+      <LI>Right-click items and then click <B>Copy To...</B>.</LI>
+    </OL>
+  </LI>
+</UL>
+
+
+<H4>Parameters</H4>
+<DL>
+  <DT>Extract to</DT>
+  <DD>Provides a space for you to specify an output folder.
+     You can click &quot;<B>...</B>&quot; button to display &quot;Browse for folder&quot;
+     dialog box that you can use to locate output folder.</DD>
+
+  <DT>Path mode</DT>
+  <DD>
+    <P>Specify extract mode:</P>
+    <TABLE>
+      <TR> <TH>Value</TH> <TH>Meaning</TH> </TR>
+      <TR> <TD>Full pathnames</TD> <TD>Extract files with full pathnames.</TD> </TR>
+      <TR> <TD>No pathnmes</TD> <TD>Extract files without folder paths.</TD> </TR>
+    </TABLE>
+  </DD>
+
+  <DT>Overwrite mode</DT>
+  <DD>
+    <P>Specify overwrite mode for files that already present on disk:</P>
+    <TABLE>
+      <TR> <TH>Value</TH> <TH>Meaning</TH> </TR>
+      <TR> <TD>Ask before overwrite</TD> <TD>Ask before overwriting existing files.</TD> </TR>
+      <TR> <TD>Overwrite without prompt</TD> <TD>Overwrite existing files without prompt.</TD> </TR>
+      <TR> <TD>Skip existing files</TD> <TD>Skip extracting of existing files.</TD> </TR>
+      <TR> <TD>Auto rename</TD> <TD>Rename extracted files, if a file with the same name already exists.
+                        For example, file document.txt will be renamed to document_1.txt.</TD> </TR>
+      <TR> <TD>Auto rename existing files</TD> <TD>Rename existing files, if a file with the same name already exists.
+                        For example, file document.txt will be renamed to document_1.txt.</TD> </TR>
+    </TABLE>
+  </DD>
+
+  <DT>Files</DT>
+  <DD>
+    <P>Specifies files for extracting:</P>
+    <TABLE>
+      <TR> <TH>Value</TH> <TH>Meaning</TH> </TR>
+      <TR> <TD>Selected files</TD> <TD>Extract only files that are selected in the main window.</TD> </TR>
+      <TR> <TD>All files</TD> <TD>Extract all files.</TD> </TR>
+    </TABLE>
+  </DD>
+
+  <DT>Password</DT>
+  <DD>
+    <P>Specifies a password for encrypted archives.</P>
+  </DD>
+</DL>
+<UL>
+
+</BODY>
+</HTML>

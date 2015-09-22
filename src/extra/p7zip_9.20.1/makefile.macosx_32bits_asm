@@ -1,0 +1,23 @@
+
+OPTFLAGS=-O
+
+# don't use -DNDEBUG in order to use MacOSX wxWidgets
+
+ALLFLAGS=${OPTFLAGS}  \
+	-mmacosx-version-min=10.4 -arch i386 \
+	-DENV_MACOSX \
+    	-D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE \
+	-D_REENTRANT -DENV_UNIX \
+	$(LOCAL_FLAGS)
+
+CXX=c++ $(ALLFLAGS)
+CC=cc $(ALLFLAGS)
+LINK_SHARED=-bundle
+ASM=nasm -f macho 
+
+LOCAL_LIBS=-framework CoreFoundation
+LOCAL_LIBS_DLL=$(LOCAL_LIBS)
+
+CPU=x86
+OBJ_CRC32=$(OBJ_CRC32_x86)
+

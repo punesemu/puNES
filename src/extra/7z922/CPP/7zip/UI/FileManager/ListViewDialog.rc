@@ -1,0 +1,14 @@
+#include "ListViewDialogRes.h"
+#include "../../GuiCommon.rc"
+
+#define xc 320
+#define yc 240
+
+IDD_DIALOG_LISTVIEW  MY_RESIZE_DIALOG
+CAPTION "ListView"
+{
+  CONTROL  "List1", IDC_LISTVIEW_LIST, "SysListView32", LVS_REPORT | LVS_SHOWSELALWAYS |
+            LVS_AUTOARRANGE | LVS_NOCOLUMNHEADER | WS_BORDER | WS_TABSTOP,
+            m, m, xc, yc - bys - m
+  OK_CANCEL
+}
