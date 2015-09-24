@@ -96,7 +96,7 @@ AM_CONDITIONAL(PRECOMP_QT4, test "x$path_qt4_inc" != xno -a "x$path_qt4_inc" != 
 				 "x$path_qt4_bin" != xno -a "x$path_qt4_bin" != x)
 AM_CONDITIONAL(PRECOMP_SDL, test "x$path_sdl_inc" != xno -a "x$path_sdl_inc" != x -o \
 				 "x$path_sdl_lib" != xno -a "x$path_sdl_lib" != x)
-AM_CONDITIONAL(COMPILE_LIB7ZIP, test "x$path_7zip_lib" = xno)
+AM_CONDITIONAL(COMPILE_LIB7ZIP, test "x$path_7zip_lib" = xno -o "x$path_7zip_lib" = x)
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_CHECK_HEADER_STDBOOL
@@ -289,8 +289,7 @@ AM_COND_IF([COMPILE_LIB7ZIP],[
 	],[
 		export P7ZIP_SOURCE_DIR="${TOP_SRCDIR}/src/extra/${LIB7ZIP_P7ZIP}"
 	])
-	#AC_CONFIG_COMMANDS_PRE([
-	#])
+	#AC_CONFIG_COMMANDS_PRE([])
 	AC_CONFIG_SUBDIRS([src/extra/lib7zip-1.6.5])
 	LIB7ZIP_LIBS="${TOP_BUILDDIR}src/extra/${LIB7ZIP_SRC}/Lib7Zip/lib7zip.a"
 ],[

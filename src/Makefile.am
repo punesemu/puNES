@@ -20,8 +20,5 @@ punes_LDADD = \
 	video/libvideo.a \
 	c++/libcplus.a \
 	gui/libgui.a \
-	audio/libaudio.a
-
-if COMPILE_LIB7ZIP
-punes_LDADD += $(LIB7ZIP_LIBS)
-endif
+	audio/libaudio.a \
+	$(LIB7ZIP_LIBS)
