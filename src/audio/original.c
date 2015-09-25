@@ -85,7 +85,7 @@ void audio_quality_quit_original(void) {
 }
 void audio_quality_apu_tick_original(void) {
 	if (!cfg->apu.channel[APU_MASTER] || fps.fast_forward) {
-		if (SNDCACHE) {
+		if (snd.cache) {
 			SNDCACHE->write = SNDCACHE->start;
 			SNDCACHE->read = (SBYTE *) SNDCACHE->start;
 			SNDCACHE->bytes_available = SNDCACHE->samples_available = 0;
