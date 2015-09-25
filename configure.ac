@@ -22,9 +22,9 @@ AM_PROG_AR
 AC_ARG_WITH([d3d9], AS_HELP_STRING([--with-d3d9], [Build with support for D3D9 (only windows) @<:@default: yes@:>@]), [with_d3d9=$withval], [with_d3d9=yes])
 AC_ARG_WITH([opengl], AS_HELP_STRING([--with-opengl], [Build with support for OpenGL (only windows) @<:@default: no@:>@)]), [with_opengl=$withval], [with_opengl=no])
 AC_ARG_WITH([dsdk], AS_HELP_STRING([--with-dsdk=path], [Path for DSDK (only windows)]), [path_dsdk=${with_dsdk}], [with_dsdk=no])
-AC_ARG_WITH([qt4-include], AS_HELP_STRING([--with-qt4_include=@<:@PATH@:>@], [Force path for QT4 include]), [path_qt4_inc=${with_qt4_include}], [path_qt4_inc=no])
-AC_ARG_WITH([qt4-lib], AS_HELP_STRING([--with-qt4-lib=@<:@PATH@:>@], [Force path for QT4 libs]), [path_qt4_lib=${with_qt4_lib}], [path_qt4_lib=no])
-AC_ARG_WITH([qt4-bin], AS_HELP_STRING([--with-qt4-bin=@<:@PATH@:>@], [Force path for QT4 binaries]), [path_qt4_bin=${with_qt4_bin}], [path_qt4_bin=no])
+AC_ARG_WITH([qt-include], AS_HELP_STRING([--with-qt-include=@<:@PATH@:>@], [Force path for QT include]), [path_qt_inc=${with_qt_include}], [path_qt_inc=no])
+AC_ARG_WITH([qt-lib], AS_HELP_STRING([--with-qt-lib=@<:@PATH@:>@], [Force path for QT libs]), [path_qt_lib=${with_qt_lib}], [path_qt_lib=no])
+AC_ARG_WITH([qt-bin], AS_HELP_STRING([--with-qt-bin=@<:@PATH@:>@], [Force path for QT binaries]), [path_qt_bin=${with_qt_bin}], [path_qt_bin=no])
 AC_ARG_WITH([sdl-include], AS_HELP_STRING([--with-sdl-include=@<:@PATH@:>@], [Force path for SDL include]), [path_sdl_inc=${with_sdl_include}], [path_sdl_inc=no])
 AC_ARG_WITH([sdl-lib], AS_HELP_STRING([--with-sdl-lib=@<:@PATH@:>@], [Force path for SDL libs]), [path_sdl_lib=${with_sdl_lib}], [path_sdl_lib=no])
 AC_ARG_WITH([lib7zip-precomp], AS_HELP_STRING([--with-lib7zip-precomp=@<:@PATH@:>@], [Use precompiled Lib7zip located in @<:@PATH@:>@]), [path_7zip_lib=${with_lib7zip_precomp}], [path_7zip_lib=no])
@@ -91,9 +91,9 @@ AM_CONDITIONAL(LINUX, test "x$linux" = xyes)
 AM_CONDITIONAL(WINDOWS, test "x$windows" = xyes)
 AM_CONDITIONAL(WITH_D3D9, test "x$with_d3d9" = xyes)
 AM_CONDITIONAL(WITH_OPENGL, test "x$with_opengl" = xyes)
-AM_CONDITIONAL(PRECOMP_QT4, test "x$path_qt4_inc" != xno -a "x$path_qt4_inc" != x -o \
-				 "x$path_qt4_lib" != xno -a "x$path_qt4_lib" != x -o \
-				 "x$path_qt4_bin" != xno -a "x$path_qt4_bin" != x)
+AM_CONDITIONAL(PRECOMP_QT, test "x$path_qt_inc" != xno -a "x$path_qt_inc" != x -o \
+				"x$path_qt_lib" != xno -a "x$path_qt_lib" != x -o \
+				"x$path_qt_bin" != xno -a "x$path_qt_bin" != x)
 AM_CONDITIONAL(PRECOMP_SDL, test "x$path_sdl_inc" != xno -a "x$path_sdl_inc" != x -o \
 				 "x$path_sdl_lib" != xno -a "x$path_sdl_lib" != x)
 AM_CONDITIONAL(COMPILE_LIB7ZIP, test "x$path_7zip_lib" = xno -o "x$path_7zip_lib" = x)
@@ -152,50 +152,50 @@ AM_COND_IF([WINDOWS],[
 	AC_MSG_RESULT(yes)
 ])
 
-AM_COND_IF([PRECOMP_QT4],[
-	AC_MSG_CHECKING([if QT4 include path is present])
-	AS_IF([test "x$path_qt4_inc" = xno -o "x$path_qt4_inc" = x],[
-		AC_MSG_ERROR([Needed QT4 include path])
+AM_COND_IF([PRECOMP_QT],[
+	AC_MSG_CHECKING([if QT include path is present])
+	AS_IF([test "x$path_qt_inc" = xno -o "x$path_qt_inc" = x],[
+		AC_MSG_ERROR([Needed QT include path])
 	])
-	QT4_CFLAGS="-I${path_qt4_inc} -I${path_qt4_inc}/QtCore -I${path_qt4_inc}/QtGui"
+	QT4_CFLAGS="-I${path_qt_inc} -I${path_qt_inc}/QtCore -I${path_qt_inc}/QtGui"
 	AC_SUBST([QT4_CFLAGS])
 	AC_MSG_RESULT(yes)
 
-	AC_MSG_CHECKING([if QT4 binaries path is present])
-	AS_IF([test "x$path_qt4_bin" = xno -o "x$path_qt4_bin" = x],[
-		AC_MSG_ERROR([Needed QT4 binaries path])
+	AC_MSG_CHECKING([if QT binaries path is present])
+	AS_IF([test "x$path_qt_bin" = xno -o "x$path_qt_bin" = x],[
+		AC_MSG_ERROR([Needed QT binaries path])
 	])
 	AC_MSG_RESULT(yes)
 
-	AC_MSG_CHECKING([if QT4 lib path is present])
-	AS_IF([test "x$path_qt4_lib" = xno -o "x$path_qt4_lib" = x],[
-		AC_MSG_ERROR([Needed QT4 lib path])
+	AC_MSG_CHECKING([if QT lib path is present])
+	AS_IF([test "x$path_qt_lib" = xno -o "x$path_qt_lib" = x],[
+		AC_MSG_ERROR([Needed QT lib path])
 	])
-	QT4_LIBS="-L${path_qt4_lib} -lQtGui -lQtCore"
+	QT4_LIBS="-L${path_qt_lib} -lQtGui -lQtCore"
 	AC_SUBST([QT4_LIBS])
 	AC_MSG_RESULT(yes)
 
-	AC_CHECK_TOOLS(MOC, [moc-qt4 moc], [no], [$path_qt4_bin])
+	AC_CHECK_TOOLS(MOC, [moc-qt4 moc], [no], [$path_qt_bin])
 	AS_IF([test "x$MOC" = xno],[
-		AC_MSG_ERROR([Qt 4 binaries moc not found])
+		AC_MSG_ERROR([Qt binaries moc not found])
 	],[
-		MOC=$path_qt4_bin/$MOC
+		MOC=$path_qt_bin/$MOC
 		AC_SUBST([MOC])
 	])
 
-	AC_CHECK_TOOLS(UIC, [uic-qt4 uic], [no], [$path_qt4_bin])
+	AC_CHECK_TOOLS(UIC, [uic-qt4 uic], [no], [$path_qt_bin])
 	AS_IF([test "x$UIC" = xno],[
 		AC_MSG_ERROR([Qt 4 binaries uic not found])
 	],[
-		UIC=$path_qt4_bin/$UIC
+		UIC=$path_qt_bin/$UIC
 		AC_SUBST([UIC])
 	])
 
-	AC_CHECK_TOOLS(RCC, [rcc],[no], [$path_qt4_bin])
+	AC_CHECK_TOOLS(RCC, [rcc],[no], [$path_qt_bin])
 	AS_IF([test "x$RCC" = xno],[
 		AC_MSG_ERROR([Qt 4 binaries rcc not found])
 	],[
-		RCC=$path_qt4_bin/$RCC
+		RCC=$path_qt_bin/$RCC
 		AC_SUBST([RCC])
 	])
 ],[
