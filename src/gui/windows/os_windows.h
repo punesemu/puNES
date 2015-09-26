@@ -18,12 +18,10 @@ double high_resolution_ms(void);
 Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin);
 #endif
 
-void gui_init(int argc, char **argv) {
-	static int zero = 0;
-
+void gui_init(int *argc, char **argv) {
 	memset(&qt, 0, sizeof(qt));
 
-	qt.app = new QApplication(zero, NULL);
+	qt.app = new QApplication((*argc), argv);
 
 	info.gui = TRUE;
 	gui.in_update = FALSE;

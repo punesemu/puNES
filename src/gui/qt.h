@@ -94,7 +94,7 @@ EXTERNC void gui_mainWindow_make_reset(BYTE type);
 
 EXTERNC double (*gui_get_ms)(void);
 
-EXTERNC void gui_init(int argc, char **argv);
+EXTERNC void gui_init(int *argc, char **argv);
 EXTERNC void gui_sleep(double ms);
 #if defined (__WIN32__)
 EXTERNC HWND gui_screen_id(void);

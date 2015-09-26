@@ -41,7 +41,7 @@ int main(int argc, char **argv) {
 		info.portable = FALSE;
 	}
 
-	gui_init(argc, argv);
+	gui_init(&argc, argv);
 
 	/* controllo l'esistenza della directory principale */
 	if (emu_make_dir(info.base_folder)) {

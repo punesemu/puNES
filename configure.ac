@@ -29,6 +29,8 @@ AC_ARG_WITH([sdl-include], AS_HELP_STRING([--with-sdl-include=@<:@PATH@:>@], [Fo
 AC_ARG_WITH([sdl-lib], AS_HELP_STRING([--with-sdl-lib=@<:@PATH@:>@], [Force path for SDL libs]), [path_sdl_lib=${with_sdl_lib}], [path_sdl_lib=no])
 AC_ARG_WITH([lib7zip-precomp], AS_HELP_STRING([--with-lib7zip-precomp=@<:@PATH@:>@], [Use precompiled Lib7zip located in @<:@PATH@:>@]), [path_7zip_lib=${with_lib7zip_precomp}], [path_7zip_lib=no])
 
+AC_ARG_ENABLE([qt5], AS_HELP_STRING([--enable-qt5], [Use QT5 instead of QT4]), [HAVE_QT5=yes], [HAVE_QT5=no])
+
 TOP_SRCDIR="$srcdir"
 AS_CASE(["${TOP_SRCDIR}"],
 	[[\/]*],[
@@ -89,6 +91,7 @@ AS_CASE(["$host_os"],
 
 AM_CONDITIONAL(LINUX, test "x$linux" = xyes)
 AM_CONDITIONAL(WINDOWS, test "x$windows" = xyes)
+AM_CONDITIONAL(ENAB_QT5, test "x$enable_qt5" = xyes)
 AM_CONDITIONAL(WITH_D3D9, test "x$with_d3d9" = xyes)
 AM_CONDITIONAL(WITH_OPENGL, test "x$with_opengl" = xyes)
 AM_CONDITIONAL(PRECOMP_QT, test "x$path_qt_inc" != xno -a "x$path_qt_inc" != x -o \
@@ -157,8 +160,7 @@ AM_COND_IF([PRECOMP_QT],[
 	AS_IF([test "x$path_qt_inc" = xno -o "x$path_qt_inc" = x],[
 		AC_MSG_ERROR([Needed QT include path])
 	])
-	QT4_CFLAGS="-I${path_qt_inc} -I${path_qt_inc}/QtCore -I${path_qt_inc}/QtGui"
-	AC_SUBST([QT4_CFLAGS])
+	QT_CFLAGS="-I${path_qt_inc}"
 	AC_MSG_RESULT(yes)
 
 	AC_MSG_CHECKING([if QT binaries path is present])
@@ -171,45 +173,87 @@ AM_COND_IF([PRECOMP_QT],[
 	AS_IF([test "x$path_qt_lib" = xno -o "x$path_qt_lib" = x],[
 		AC_MSG_ERROR([Needed QT lib path])
 	])
-	QT4_LIBS="-L${path_qt_lib} -lQtGui -lQtCore"
-	AC_SUBST([QT4_LIBS])
 	AC_MSG_RESULT(yes)
 
-	AC_CHECK_TOOLS(MOC, [moc-qt4 moc], [no], [$path_qt_bin])
-	AS_IF([test "x$MOC" = xno],[
-		AC_MSG_ERROR([Qt binaries moc not found])
+	AM_COND_IF([ENAB_QT5],[
+		AM_COND_IF([WINDOWS],[
+			QT_LIBS="-L${path_qt_lib} -lQt5Widgets -lqwindows -lQtGui -lQtCore -lqtharfbuzzng"
+		],[
+			QT_LIBS="-L${path_qt_lib} -lQt5Widgets -lQtGui -lQtCore"
+		])
+		AC_CHECK_TOOLS(MOC, [moc-qt5 moc], [no], [$path_qt_bin])
+		AC_CHECK_TOOLS(UIC, [uic-qt5 uic], [no], [$path_qt_bin])
+		AC_CHECK_TOOLS(RCC, [rcc-qt5 rcc], [no], [$path_qt_bin])
 	],[
+		QT_LIBS="-L${path_qt_lib} -lQtGui -lQtCore"
+		AC_CHECK_TOOLS(MOC, [moc-qt4 moc], [no], [$path_qt_bin])
+		AC_CHECK_TOOLS(UIC, [uic-qt4 uic], [no], [$path_qt_bin])
+		AC_CHECK_TOOLS(RCC, [rcc-qt4 rcc], [no], [$path_qt_bin])
+	])
+
+	AS_IF([test "x$MOC" != xno],[
 		MOC=$path_qt_bin/$MOC
 		AC_SUBST([MOC])
 	])
-
-	AC_CHECK_TOOLS(UIC, [uic-qt4 uic], [no], [$path_qt_bin])
-	AS_IF([test "x$UIC" = xno],[
-		AC_MSG_ERROR([Qt 4 binaries uic not found])
-	],[
+	AS_IF([test "x$UIC" != xno],[
 		UIC=$path_qt_bin/$UIC
 		AC_SUBST([UIC])
 	])
-
-	AC_CHECK_TOOLS(RCC, [rcc],[no], [$path_qt_bin])
-	AS_IF([test "x$RCC" = xno],[
-		AC_MSG_ERROR([Qt 4 binaries rcc not found])
-	],[
+	AS_IF([test "x$RCC" != xno],[
 		RCC=$path_qt_bin/$RCC
 		AC_SUBST([RCC])
 	])
+
+	my_CPPFLAGS+=" ${QT_CFLAGS}"
+	my_LIBS+=" ${QT_LIBS}"
+
 ],[
-	PKG_CHECK_MODULES(QT4, [QtCore >= 4.6.0 QtGui >= 4.6.0], [
-		AC_CHECK_TOOLS(MOC, [moc-qt4 moc])
-		AC_CHECK_TOOLS(UIC, [uic-qt4 uic])
-		AC_CHECK_TOOLS(RCC, [rcc])
+	AM_COND_IF([ENAB_QT5],[
+		PKG_CHECK_MODULES(QT5, [Qt5Core >= 5.0.0 Qt5Gui >= 5.0.0 Qt5Widgets >= 5.0.0], [
+			QT5_PREFIX="`$PKG_CONFIG --variable=host_bins Qt5Core`"
+			AC_CHECK_TOOLS(MOC, [moc-qt5 moc], no, [$QT5_PREFIX])
+			AC_CHECK_TOOLS(UIC, [uic-qt5 uic], no, [$QT5_PREFIX])
+			AC_CHECK_TOOLS(RCC, [rcc-qt5 rcc], no, [$QT5_PREFIX])
+			AS_IF([test "x$MOC" != xno],[
+				MOC=$QT5_PREFIX/$MOC
+				AC_SUBST([MOC])
+			])
+			AS_IF([test "x$UIC" != xno],[
+				UIC=$QT5_PREFIX/$UIC
+				AC_SUBST([UIC])
+			])
+			AS_IF([test "x$RCC" != xno],[
+				RCC=$QT5_PREFIX/$RCC
+				AC_SUBST([RCC])
+			])
+		],[
+			AC_MSG_ERROR([Qt5 library not found])
+		])
+
+		my_CPPFLAGS+=" ${QT5_CFLAGS}"
+		my_LIBS+=" ${QT5_LIBS}"
 	],[
-		AC_MSG_ERROR([Qt 4 library not found])
+		PKG_CHECK_MODULES(QT4, [QtCore >= 4.6.0 QtGui >= 4.6.0], [
+			AC_CHECK_TOOLS(MOC, [moc-qt4 moc])
+			AC_CHECK_TOOLS(UIC, [uic-qt4 uic])
+			AC_CHECK_TOOLS(RCC, [rcc-qt4 rcc])
+		],[
+			AC_MSG_ERROR([Qt4 library not found])
+		])
+
+		my_CPPFLAGS+=" ${QT4_CFLAGS}"
+		my_LIBS+=" ${QT4_LIBS}"
 	])
 ])
-
-my_CPPFLAGS+=" ${QT4_CFLAGS}"
-my_LIBS+=" ${QT4_LIBS}"
+AS_IF([test "x$MOC" = xno],[
+	AC_MSG_ERROR([Could not find moc binaries])
+])
+AS_IF([test "x$UIC" = xno],[
+	AC_MSG_ERROR([Could not find uic binaries])
+])
+AS_IF([test "x$RCC" = xno],[
+	AC_MSG_ERROR([Could not find rcc binaries])
+])
 
 AM_COND_IF([WITH_OPENGL],[
 	AM_COND_IF([PRECOMP_SDL],[

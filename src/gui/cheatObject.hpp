@@ -9,7 +9,11 @@
 #define CHEATOBJECT_HPP_
 
 #include <QtCore/QMap>
+#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
 #include <QtXml/QXmlStreamReader>
+#else
+#include <QtCore/QXmlStreamReader>
+#endif
 #include "cheat.h"
 
 typedef QMap<QString, QString> chl_map;

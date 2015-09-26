@@ -70,6 +70,11 @@ libgui_a_SOURCES += \
 	linux/jstick.c \
 	linux/jstick.h \
 	linux/os_linux.h
+
+if ENAB_QT5
+AM_CXXFLAGS = -fPIC
+endif
+
 endif
 
 if WINDOWS

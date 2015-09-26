@@ -13,15 +13,13 @@
 double high_resolution_ms(void);
 int __nsleep(const struct timespec *req, struct timespec *rem);
 
-void gui_init(int argc, char **argv) {
-	static int zero = 0;
-
+void gui_init(int *argc, char **argv) {
 	//setenv("QT_NO_GLIB", "1", 1);
 
 	memset(&gui, 0, sizeof(gui));
 	memset(&qt, 0, sizeof(qt));
 
-	qt.app = new QApplication(zero, NULL);
+	qt.app = new QApplication((*argc), argv);
 
 	info.gui = TRUE;
 	gui.in_update = FALSE;

@@ -9,11 +9,12 @@
 #define DLGCHEATS_HPP_
 
 #include <QtCore/QtGlobal>
-#include <QtXml/QXmlStreamReader>
 #if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
+#include <QtXml/QXmlStreamReader>
 #include <QtGui/QDialog>
 #include <QtGui/QSpinBox>
 #else
+#include <QtCore/QXmlStreamReader>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QSpinBox>
 #endif

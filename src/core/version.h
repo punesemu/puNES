@@ -15,13 +15,18 @@
 #define VER1        "0"
 #define VER1_INT    0
 
-#define VER2        "97"
-#define VER2_INT    97
+#define VER2        "98"
+#define VER2_INT    98
 
+#if defined (RELEASE)
+#define VERSION     VER1 "." VER2
+#else
 #define VERSION     VER1 "." VER2 " WIP"
+#endif
+
 #define NAME        "puNES"
 #define AUTHOR      "FHorse"
-#define COMPILED    "09122015194603"
+#define COMPILED    "09202015030817"
 #define WEBSITE     "http://forums.nesdev.com/viewtopic.php?f=3&amp;t=6928"
 #define DONATE      "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=QPPXNRL5NAHDC"
 
