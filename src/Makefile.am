@@ -1,5 +1,9 @@
 SUBDIRS = audio c++ core gui video extra
 
+if ENAB_QT5
+AM_CXXFLAGS = -fPIC
+endif
+
 if HAVE_WINDRES
 ico_stuff = gui/windows/resources.rc
 endif

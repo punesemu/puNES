@@ -8,9 +8,9 @@
 #ifndef VERSION_H_
 #define VERSION_H_
 
-#if !defined (RELEASE)
-#include "build.h"
-#endif
+//#if !defined (RELEASE)
+//#include "build.h"
+//#endif
 
 #define VER1        "0"
 #define VER1_INT    0
