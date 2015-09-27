@@ -140,7 +140,7 @@ AS_IF([test "x$PKG_CONFIG" = "xno"],[
 # Checks for header files.
 AC_CHECK_HEADERS([fcntl.h float.h inttypes.h limits.h stddef.h stdint.h stdlib.h string.h strings.h sys/ioctl.h sys/time.h unistd.h utime.h])
 
-AX_CXX_COMPILE_STDCXX_11
+AX_CXX_COMPILE_STDCXX_11([noext])
 
 OLD_CFLAGS="$CFLAGS"
 OLD_LIBS="$LIBS"

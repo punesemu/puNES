@@ -1,16 +1,25 @@
 diff -upr lib7zip-1.6.5.org/configure.ac lib7zip-1.6.5/configure.ac
 --- lib7zip-1.6.5.org/configure.ac	2013-04-13 16:56:39.000000000 +0200
-+++ lib7zip-1.6.5/configure.ac	2015-09-21 03:03:57.000000000 +0200
-@@ -12,7 +12,7 @@ AC_C_INLINE
++++ lib7zip-1.6.5/configure.ac	2015-09-27 17:42:27.000000000 +0200
+@@ -1,6 +1,6 @@
+ AC_INIT([lib7zip], [1.6.5], [jingnan.si@gmail.com])
+ AC_CONFIG_SRCDIR(Lib7Zip/lib7zip.h)
+-AM_INIT_AUTOMAKE([-Wall -Werror foreign])
++AM_INIT_AUTOMAKE([-Wall -Werror subdir-objects foreign])
+ AC_CONFIG_MACRO_DIR([m4])
+ 
+ AC_CANONICAL_HOST
+@@ -12,7 +12,8 @@ AC_C_INLINE
  AC_HEADER_STDBOOL
  
  AC_PROG_RANLIB
 -LT_INIT([dlopen win32-dll])
++AM_PROG_AR
 +#LT_INIT([dlopen win32-dll])
  
  AC_LANG(C++)
  
-@@ -60,7 +60,6 @@ AC_CONFIG_FILES([
+@@ -60,7 +61,6 @@ AC_CONFIG_FILES([
  	Makefile
  	includes/Makefile
  	Lib7Zip/Makefile
