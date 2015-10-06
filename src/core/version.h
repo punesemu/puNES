@@ -37,7 +37,7 @@
 
 #define NAME        "puNES"
 #define AUTHOR      "FHorse"
-#define COMPILED    "09202015030817"
+#define COMPILED    "10062015192717"
 #define WEBSITE     "http://forums.nesdev.com/viewtopic.php?f=3&amp;t=6928"
 #define DONATE      "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=QPPXNRL5NAHDC"
 
