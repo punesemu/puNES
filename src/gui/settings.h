@@ -391,17 +391,17 @@ static const _opt opt_samplerate[] = {
 	{NULL, "11025", S11025}
 };
 static const _opt opt_channels[] = {
-	{NULL,   "mono",   CH_MONO},
-	{NULL,   "delay",  CH_STEREO_DELAY},
-	{NULL,   "pannig", CH_STEREO_PANNING},
+	{NULL,   "mono",    CH_MONO},
+	{NULL,   "delay",   CH_STEREO_DELAY},
+	{NULL,   "panning", CH_STEREO_PANNING},
 };
 static const _opt opt_audio_quality[] = {
 	{NULL, "low",  AQ_LOW},
 	{NULL, "high", AQ_HIGH}
 };
 static const _opt opt_cheat_mode[] = {
-	{NULL, "disabled",  NOCHEAT_MODE},
-	{NULL, "gamegenie", GAMEGENIE_MODE},
+	{NULL, "disabled",   NOCHEAT_MODE},
+	{NULL, "gamegenie",  GAMEGENIE_MODE},
 	{NULL, "cheatslist", CHEATSLIST_MODE}
 };
 static const _opt opt_languages[] = {
