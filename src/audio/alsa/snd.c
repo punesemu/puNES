@@ -65,10 +65,12 @@ typedef struct {
 
 static _thread loop;
 static _alsa alsa;
+static _callback_data cbd;
 
 BYTE snd_init(void) {
 	memset(&snd, 0x00, sizeof(_snd));
 	memset(&alsa, 0x00, sizeof(_alsa));
+	memset(&cbd, 0x00, sizeof(_callback_data));
 	memset(&loop, 0x00, sizeof(_thread));
 
 	snd_apu_tick = NULL;
@@ -82,7 +84,6 @@ BYTE snd_init(void) {
 	return (EXIT_OK);
 }
 BYTE snd_start(void) {
-	_callback_data *cache;
 	int rc;
 
 	if (!cfg->apu.channel[APU_MASTER]) {
@@ -100,10 +101,8 @@ BYTE snd_start(void) {
 
 	memset(&snd, 0x00, sizeof(_snd));
 	memset(&alsa, 0x00, sizeof(_alsa));
-
-	cache = (_callback_data *) malloc(sizeof(_callback_data));
-	memset(cache, 0x00, sizeof(_callback_data));
-	snd.cache = cache;
+	memset(&cbd, 0x00, sizeof(_callback_data));
+	snd.cache = &cbd;
 
 	audio_channels(cfg->channels_mode);
 
@@ -136,7 +135,7 @@ BYTE snd_start(void) {
 
 	{
 		// dimensione in bytes del buffer software
-		snd.buffer.size = (alsa.bsize * snd.channels * sizeof(*cache->write)) * 5;
+		snd.buffer.size = (alsa.bsize * snd.channels * sizeof(*cbd.write)) * 5;
 
 		snd.buffer.limit.low = (snd.buffer.size / 100) * 25;
 		snd.buffer.limit.high = (snd.buffer.size / 100) * 55;
@@ -147,33 +146,33 @@ BYTE snd_start(void) {
 #endif
 
 		// alloco il buffer in memoria
-		if (!(cache->start = (SWORD *) malloc(snd.buffer.size))) {
+		if (!(cbd.start = (SWORD *) malloc(snd.buffer.size))) {
 			fprintf(stderr, "Unable to allocate audio buffers\n");
 			goto snd_start_error;
 		}
 
-		if (!(cache->silence = (SWORD *) malloc(snd.buffer.size))) {
+		if (!(cbd.silence = (SWORD *) malloc(snd.buffer.size))) {
 			fprintf(stderr, "Unable to allocate silence buffer\n");
 			goto snd_start_error;
 		}
 
 		// inizializzo il frame di scrittura
-		cache->write = cache->start;
+		cbd.write = cbd.start;
 		// inizializzo il frame di lettura
-		cache->read = (SBYTE *) cache->start;
+		cbd.read = (SBYTE *) cbd.start;
 		// punto alla fine del buffer
-		cache->end = cache->read + snd.buffer.size;
+		cbd.end = cbd.read + snd.buffer.size;
 		// creo il lock
 		if (pthread_mutex_init(&loop.lock, NULL) != 0) {
 			fprintf(stderr, "Unable to allocate the mutex\n");
 			goto snd_start_error;
 		}
 		// azzero completamente i buffers
-		memset(cache->start, 0x00, snd.buffer.size);
+		memset(cbd.start, 0x00, snd.buffer.size);
 		// azzero completamente il buffer del silenzio
-		memset(cache->silence, 0x00, snd.buffer.size);
+		memset(cbd.silence, 0x00, snd.buffer.size);
 
-		cache->lock = (void *) &loop.lock;
+		cbd.lock = (void *) &loop.lock;
 	}
 
 	if (extcl_snd_start) {
@@ -213,7 +212,7 @@ BYTE snd_start(void) {
 		}
 	}
 
-	loop.cache = cache;
+	loop.cache = &cbd;
 
 	if ((rc = snd_pcm_prepare(alsa.handle)) < 0) {
 		fprintf(stderr, "cannot prepare audio interface for use (%s)\n", snd_strerror(rc));
@@ -249,7 +248,6 @@ void snd_stop(void) {
 			free(SNDCACHE->silence);
 		}
 
-		free(snd.cache);
 		snd.cache = NULL;
 	}
 

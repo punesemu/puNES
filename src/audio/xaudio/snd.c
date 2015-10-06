@@ -32,12 +32,13 @@
 
 #if defined (THIS)
 #undef THIS
-#define THIS IXAudio2VoiceCallback *callback
 #endif
 #if defined (THIS_)
 #undef THIS_
-#define THIS_ IXAudio2VoiceCallback *callback,
 #endif
+
+#define THIS IXAudio2VoiceCallback *callback
+#define THIS_ IXAudio2VoiceCallback *callback,
 
 static void STDMETHODCALLTYPE OnVoiceProcessPassStart(THIS_ UINT32 b);
 static void STDMETHODCALLTYPE OnVoiceProcessPassEnd(THIS);
@@ -60,7 +61,6 @@ static struct _xaudio2 {
 	double tick;
 #endif
 } xaudio2;
-
 static IXAudio2VoiceCallbackVtbl callbacks_vtable = {
 	OnVoiceProcessPassStart,
 	OnVoiceProcessPassEnd,
@@ -71,10 +71,12 @@ static IXAudio2VoiceCallbackVtbl callbacks_vtable = {
 	OnVoiceError
 };
 static IXAudio2VoiceCallback callbacks = { &callbacks_vtable };
+static _callback_data cbd;
 
 BYTE snd_init(void) {
 	memset(&snd, 0x00, sizeof(_snd));
 	memset(&xaudio2, 0x00, sizeof(xaudio2));
+	memset(&cbd, 0x00, sizeof(_callback_data));
 
 	snd_apu_tick = NULL;
 	snd_end_frame = NULL;
@@ -87,8 +89,7 @@ BYTE snd_init(void) {
 	return (EXIT_OK);
 }
 BYTE snd_start(void) {
-	_callback_data *cache;
-	int bsize, psize;
+	int psamples;
 
 	if (!cfg->apu.channel[APU_MASTER]) {
 		return (EXIT_OK);
@@ -99,10 +100,8 @@ BYTE snd_start(void) {
 
 	memset(&snd, 0x00, sizeof(_snd));
 	memset(&xaudio2, 0x00, sizeof(xaudio2));
-
-	cache = (_callback_data *) malloc(sizeof(_callback_data));
-	memset(cache, 0x00, sizeof(_callback_data));
-	snd.cache = cache;
+	memset(&cbd, 0x00, sizeof(_callback_data));
+	snd.cache = &cbd;
 
 	audio_channels(cfg->channels_mode);
 
@@ -171,12 +170,10 @@ BYTE snd_start(void) {
 	{
 		double factor = (1.0f / 48000.0f) * (double) snd.samplerate;
 
-		// buffer hardware
-		bsize = ((1024 * factor) + ((512 * factor) * cfg->audio_buffer_factor));
-		psize = bsize / snd.channels;
+		psamples = ((1024 * factor) + ((512 * factor) * cfg->audio_buffer_factor));
 	}
 
-	snd.samples = bsize * 2;
+	snd.samples = psamples * 2;
 	snd.frequency = machine.cpu_hz / (double) snd.samplerate;
 
 	xaudio2.opened = TRUE;
@@ -187,7 +184,7 @@ BYTE snd_start(void) {
 
 	{
 		// dimensione in bytes del buffer
-		snd.buffer.size = (bsize * snd.channels * sizeof(*cache->write)) * 5;
+		snd.buffer.size = (psamples * snd.channels * sizeof(*cbd.write)) * 5;
 
 		snd.buffer.limit.low = (snd.buffer.size / 100) * 25;
 		snd.buffer.limit.high = (snd.buffer.size / 100) * 55;
@@ -198,7 +195,7 @@ BYTE snd_start(void) {
 #endif
 
 		// alloco il buffer in memoria
-		if (!(cache->start = (SWORD *) malloc(snd.buffer.size))) {
+		if (!(cbd.start = (SWORD *) malloc(snd.buffer.size))) {
 			MessageBox(NULL,
 				"ATTENTION: Unable to allocate audio buffers.\n",
 				"Error!",
@@ -206,7 +203,7 @@ BYTE snd_start(void) {
 			return (EXIT_ERROR);
 		}
 
-		if (!(cache->silence = (SWORD *) malloc(snd.buffer.size))) {
+		if (!(cbd.silence = (SWORD *) malloc(snd.buffer.size))) {
 			MessageBox(NULL,
 				"ATTENTION: Unable to allocate silence buffer.\n",
 				"Error!",
@@ -215,11 +212,11 @@ BYTE snd_start(void) {
 		}
 
 		// inizializzo il frame di scrittura
-		cache->write = cache->start;
+		cbd.write = cbd.start;
 		// inizializzo il frame di lettura
-		cache->read = (SBYTE *) cache->start;
+		cbd.read = (SBYTE *) cbd.start;
 		// punto alla fine del buffer
-		cache->end = cache->read + snd.buffer.size;
+		cbd.end = cbd.read + snd.buffer.size;
 		// creo il lock
 		if ((xaudio2.semaphore = CreateSemaphore(NULL, 1, 2, NULL)) == NULL) {
 			MessageBox(NULL,
@@ -229,28 +226,29 @@ BYTE snd_start(void) {
 			return (EXIT_ERROR);
 		}
 		// azzero completamente i buffers
-		memset(cache->start, 0x00, snd.buffer.size);
+		memset(cbd.start, 0x00, snd.buffer.size);
 		// azzero completamente il buffer del silenzio
-		memset(cache->silence, 0x00, snd.buffer.size);
+		memset(cbd.silence, 0x00, snd.buffer.size);
 
-		// azzero completamente il buffer
+		// azzero completamente la struttura XAUDIO2_BUFFER
 		memset(&xaudio2.buffer, 0x00, sizeof(xaudio2.buffer));
 
-		xaudio2.buffer.AudioBytes = bsize * snd.channels * sizeof(*cache->write);
-		xaudio2.buffer.pAudioData = (const BYTE *) cache->read;
+		xaudio2.buffer.AudioBytes = psamples * sizeof(*cbd.write) * snd.channels;
+		//xaudio2.buffer.pAudioData = (const BYTE *) cbd.read;
+		xaudio2.buffer.pAudioData = (const BYTE *) cbd.silence;
 		xaudio2.buffer.PlayBegin = 0;
-		xaudio2.buffer.PlayLength = psize * snd.channels;
+		xaudio2.buffer.PlayLength = psamples;
 		xaudio2.buffer.LoopBegin = 0;
 		xaudio2.buffer.LoopLength = 0;
 		xaudio2.buffer.LoopCount = 0;
 		xaudio2.buffer.pContext = snd.cache;
 
-		cache->xa2buffer = &xaudio2.buffer;
-		cache->xa2source = xaudio2.source;
-		cache->lock = &xaudio2.semaphore;
+		cbd.xa2buffer = &xaudio2.buffer;
+		cbd.xa2source = xaudio2.source;
+		cbd.lock = xaudio2.semaphore;
 
 		if (IXAudio2SourceVoice_SubmitSourceBuffer(xaudio2.source,
-		        (const XAUDIO2_BUFFER *) cache->xa2buffer, NULL) != S_OK) {
+		        (const XAUDIO2_BUFFER *) cbd.xa2buffer, NULL) != S_OK) {
 			MessageBox(NULL,
 				"ATTENTION: Unable to set sound engine.\n",
 				"Error!",
@@ -329,7 +327,6 @@ void snd_stop(void) {
 	        xaudio2.semaphore = NULL;
 	    }
 
-		free(snd.cache);
 		snd.cache = NULL;
 	}
 
@@ -408,3 +405,6 @@ static void INLINE wrbuf(IXAudio2SourceVoice *source, XAUDIO2_BUFFER *x2buf, con
 		fprintf(stderr, "Unable to submit source buffer\n");
 	}
 }
+
+#undef THIS
+#undef THIS_
