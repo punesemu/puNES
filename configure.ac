@@ -19,17 +19,62 @@ AC_PROG_CXX
 AC_PROG_RANLIB
 AM_PROG_AR
 
-AC_ARG_WITH([d3d9], AS_HELP_STRING([--with-d3d9], [Build with support for D3D9 (only windows) @<:@default: yes@:>@]), [with_d3d9=$withval], [with_d3d9=yes])
-AC_ARG_WITH([opengl], AS_HELP_STRING([--with-opengl], [Build with support for OpenGL (only windows) @<:@default: no@:>@)]), [with_opengl=$withval], [with_opengl=no])
-AC_ARG_WITH([dsdk], AS_HELP_STRING([--with-dsdk=path], [Path for DSDK (only windows)]), [path_dsdk=${with_dsdk}], [with_dsdk=no])
-AC_ARG_WITH([qt-include], AS_HELP_STRING([--with-qt-include=@<:@PATH@:>@], [Force path for QT include]), [path_qt_inc=${with_qt_include}], [path_qt_inc=no])
-AC_ARG_WITH([qt-lib], AS_HELP_STRING([--with-qt-lib=@<:@PATH@:>@], [Force path for QT libs]), [path_qt_lib=${with_qt_lib}], [path_qt_lib=no])
-AC_ARG_WITH([qt-bin], AS_HELP_STRING([--with-qt-bin=@<:@PATH@:>@], [Force path for QT binaries]), [path_qt_bin=${with_qt_bin}], [path_qt_bin=no])
-AC_ARG_WITH([sdl-include], AS_HELP_STRING([--with-sdl-include=@<:@PATH@:>@], [Force path for SDL include]), [path_sdl_inc=${with_sdl_include}], [path_sdl_inc=no])
-AC_ARG_WITH([sdl-lib], AS_HELP_STRING([--with-sdl-lib=@<:@PATH@:>@], [Force path for SDL libs]), [path_sdl_lib=${with_sdl_lib}], [path_sdl_lib=no])
-AC_ARG_WITH([lib7zip-precomp], AS_HELP_STRING([--with-lib7zip-precomp=@<:@PATH@:>@], [Use precompiled Lib7zip located in @<:@PATH@:>@]), [path_7zip_lib=${with_lib7zip_precomp}], [path_7zip_lib=no])
+AC_ARG_WITH([d3d9],
+	AS_HELP_STRING([--with-d3d9],
+		[Build with support for D3D9 (only windows) @<:@default: yes@:>@]
+	),
+	[with_d3d9=$withval], [with_d3d9=yes])
+AC_ARG_WITH([opengl],
+	AS_HELP_STRING([--with-opengl],
+		[Build with support for OpenGL (only windows) @<:@default: no@:>@)]
+	),
+	[with_opengl=$withval],[with_opengl=no])
+AC_ARG_WITH([dsdk],
+	AS_HELP_STRING([--with-dsdk=path],
+		[Path for DSDK (only windows)]
+	),
+	[path_dsdk=${with_dsdk}], [with_dsdk=no])
+AC_ARG_WITH([qt-include],
+	AS_HELP_STRING([--with-qt-include=@<:@PATH@:>@],
+		[Force path for QT include]
+	),
+	[path_qt_inc=${with_qt_include}], [path_qt_inc=no])
+AC_ARG_WITH([qt-lib],
+	AS_HELP_STRING([--with-qt-lib=@<:@PATH@:>@],
+		[Force path for QT libs]
+	),
+	[path_qt_lib=${with_qt_lib}], [path_qt_lib=no])
+AC_ARG_WITH([qt-bin],
+	AS_HELP_STRING([--with-qt-bin=@<:@PATH@:>@],
+		[Force path for QT binaries]
+	),
+	[path_qt_bin=${with_qt_bin}], [path_qt_bin=no])
+AC_ARG_WITH([sdl-include],
+	AS_HELP_STRING([--with-sdl-include=@<:@PATH@:>@],
+		[Force path for SDL include]
+	),
+	[path_sdl_inc=${with_sdl_include}], [path_sdl_inc=no])
+AC_ARG_WITH([sdl-lib],
+	AS_HELP_STRING([--with-sdl-lib=@<:@PATH@:>@],
+		[Force path for SDL libs]
+	),
+	[path_sdl_lib=${with_sdl_lib}], [path_sdl_lib=no])
+AC_ARG_WITH([lib7zip-precomp],
+	AS_HELP_STRING([--with-lib7zip-precomp=@<:@PATH@:>@],
+		[Use precompiled Lib7zip located in @<:@PATH@:>@]
+	),
+	[path_7zip_lib=${with_lib7zip_precomp}], [path_7zip_lib=no])
 
-AC_ARG_ENABLE([qt5], AS_HELP_STRING([--enable-qt5], [Use QT5 instead of QT4]), [HAVE_QT5=yes], [HAVE_QT5=no])
+AC_ARG_ENABLE([release],
+	AS_HELP_STRING([--disable-release],
+		[Disable release version @<:@default: no@:>@]
+	),
+	[enable_release=$enableval], [enable_release=yes])
+AC_ARG_ENABLE([qt5],
+	AS_HELP_STRING([--enable-qt5],
+		[Use QT5 instead of QT4]
+	),
+	[enable_qt5=$enableval], [enable_qt5=no])
 
 TOP_SRCDIR="$srcdir"
 AS_CASE(["${TOP_SRCDIR}"],
@@ -89,17 +134,24 @@ AS_CASE(["$host_os"],
 	]
 )
 
-AM_CONDITIONAL(LINUX, test "x$linux" = xyes)
-AM_CONDITIONAL(WINDOWS, test "x$windows" = xyes)
-AM_CONDITIONAL(ENAB_QT5, test "x$enable_qt5" = xyes)
-AM_CONDITIONAL(WITH_D3D9, test "x$with_d3d9" = xyes)
-AM_CONDITIONAL(WITH_OPENGL, test "x$with_opengl" = xyes)
-AM_CONDITIONAL(PRECOMP_QT, test "x$path_qt_inc" != xno -a "x$path_qt_inc" != x -o \
-				"x$path_qt_lib" != xno -a "x$path_qt_lib" != x -o \
-				"x$path_qt_bin" != xno -a "x$path_qt_bin" != x)
-AM_CONDITIONAL(PRECOMP_SDL, test "x$path_sdl_inc" != xno -a "x$path_sdl_inc" != x -o \
-				 "x$path_sdl_lib" != xno -a "x$path_sdl_lib" != x)
-AM_CONDITIONAL(COMPILE_LIB7ZIP, test "x$path_7zip_lib" = xno -o "x$path_7zip_lib" = x)
+AM_CONDITIONAL(LINUX,[test "x$linux" = xyes])
+AM_CONDITIONAL(WINDOWS,[test "x$windows" = xyes])
+AM_CONDITIONAL(ENAB_RELEASE,[test "x$enable_release" = xyes])
+AM_CONDITIONAL(ENAB_QT5,[test "x$enable_qt5" = xyes])
+AM_CONDITIONAL(WITH_D3D9,[test "x$with_d3d9" = xyes])
+AM_CONDITIONAL(WITH_OPENGL,[test "x$with_opengl" = xyes])
+AM_CONDITIONAL(PRECOMP_QT,[\
+	test \
+	"x$path_qt_inc" != xno -a "x$path_qt_inc" != x -o \
+	"x$path_qt_lib" != xno -a "x$path_qt_lib" != x -o \
+	"x$path_qt_bin" != xno -a "x$path_qt_bin" != x \
+])
+AM_CONDITIONAL(PRECOMP_SDL,[\
+	test \
+	"x$path_sdl_inc" != xno -a "x$path_sdl_inc" != x -o \
+	"x$path_sdl_lib" != xno -a "x$path_sdl_lib" != x \
+])
+AM_CONDITIONAL(COMPILE_LIB7ZIP,[test "x$path_7zip_lib" = xno -o "x$path_7zip_lib" = x])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_CHECK_HEADER_STDBOOL
@@ -144,6 +196,10 @@ AX_CXX_COMPILE_STDCXX_11([noext])
 
 OLD_CFLAGS="$CFLAGS"
 OLD_LIBS="$LIBS"
+
+AM_COND_IF([ENAB_RELEASE],[
+	my_CPPFLAGS+=" -DRELEASE"
+]);
 
 # Checks for libraries.
 AM_COND_IF([WINDOWS],[
@@ -321,7 +377,7 @@ AS_CASE(["$host_os"],
 		WINDRES=no
 	]
 )
-AM_CONDITIONAL(HAVE_WINDRES, test x$WINDRES != xno)
+AM_CONDITIONAL(HAVE_WINDRES, [test x$WINDRES != xno])
 AC_SUBST(WINDRES)
 
 LIB7ZIP_SRC="lib7zip-1.6.5"
@@ -343,7 +399,12 @@ AC_SUBST(LIB7ZIP_LIBS)
 
 # The End
 AM_COND_IF([WINDOWS],[
-	my_LDFLAGS+=" -Wl,-subsystem,console -static-libgcc -static-libstdc++"
+	AM_COND_IF([ENAB_RELEASE],[
+		my_LDFLAGS+=" -Wl,-subsystem,windows"
+	],[
+		my_LDFLAGS+=" -Wl,-subsystem,console"
+	])
+	my_LDFLAGS+=" -static-libgcc -static-libstdc++"
 	my_LIBS+=" -lwinmm -luuid -lole32 -lws2_32 -ladvapi32 -lshell32 -luser32 -lkernel32 -lgdi32 -loleaut32 -lcomdlg32 -limm32 -lwinspool"
 ])
 AM_COND_IF([LINUX],[
