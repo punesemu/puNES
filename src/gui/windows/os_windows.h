@@ -21,6 +21,7 @@
 
 #include <windowsx.h>
 #include <shlobj.h>
+#include "VersionHelpers.h"
 
 double high_resolution_ms(void);
 
@@ -38,14 +39,22 @@ void gui_init(int *argc, char **argv) {
 	gui.in_update = FALSE;
 	gui.main_win_lfp = TRUE;
 
-	{
-		OSVERSIONINFO win_info;
+	info.gui = TRUE;
 
-		info.gui = TRUE;
-		ZeroMemory(&win_info, sizeof(OSVERSIONINFO));
-		win_info.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
-		GetVersionEx(&win_info);
-		gui.version_os = ((win_info.dwMajorVersion * 10) | win_info.dwMinorVersion);
+	if (IsWindows10OrGreater()) {
+		gui.version_os = WIN_TEN;
+	} else if (IsWindows8Point1OrGreater()) {
+		gui.version_os = WIN_EIGHTP1;
+	} else if (IsWindows8OrGreater()) {
+		gui.version_os = WIN_EIGHT;
+	} else if (IsWindows7SP1OrGreater() || IsWindows7OrGreater()) {
+		gui.version_os = WIN_SEVEN;
+	} else if (IsWindowsVistaSP2OrGreater() || IsWindowsVistaSP1OrGreater()
+			|| IsWindowsVistaOrGreater()) {
+		gui.version_os = WIN_VISTA;
+	} else if (IsWindowsXPSP3OrGreater() || IsWindowsXPSP2OrGreater()
+			|| IsWindowsXPSP1OrGreater() || IsWindowsXPOrGreater()) {
+		gui.version_os = WIN_XP;
 	}
 
 	/*
@@ -68,7 +77,6 @@ void gui_init(int *argc, char **argv) {
 				// FIXME : non funziona sotto wingw
 				//SHGetKnownFolderPath(FOLDERID_Documents, KF_FLAG_CREATE, NULL, &gui.home);
 				//break;
-			case WIN_XP64:
 			case WIN_XP:
 			default:
 				SHGetFolderPath(NULL, CSIDL_PERSONAL, NULL, 0, gui.home);

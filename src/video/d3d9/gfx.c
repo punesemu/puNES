@@ -387,7 +387,6 @@ BYTE gfx_init(void) {
 	}
 
 	switch (gui.version_os) {
-		case WIN_XP64:
 		case WIN_XP:
 			d3d9.text_linear = D3DTEXF_NONE;
 			break;
