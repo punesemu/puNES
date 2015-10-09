@@ -398,6 +398,7 @@ bool dlgStdPad::keypressEvent(QEvent *event) {
 		// quando sto configurando il joystick, l'unico input da tastiera
 		// che accetto e' l'escape.
 		if (keyEvent->key() == Qt::Key_Escape) {
+			data.joy.timer->stop();
 			data.bp->setText(jsv_to_name(data.cfg.port.input[type][vbutton]));
 		} else {
 			return (true);

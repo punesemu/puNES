@@ -533,6 +533,7 @@ bool dlgInput::keypressEvent(QEvent *event) {
 		if (keyEvent->key() != Qt::Key_Escape) {
 			return (true);
 		}
+		shcut.joy.timer->stop();
 	}
 
 	shcut.timeout.timer->stop();
