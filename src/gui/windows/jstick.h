@@ -51,16 +51,32 @@ enum {
 enum { MAX_BUTTONS = 32 };
 
 typedef struct {
+	struct {
+		BYTE X;
+		BYTE Y;
+		BYTE Z;
+		BYTE R;
+		BYTE U;
+		BYTE V;
+	} axis_with_CENTER_equal_to_0;
+} _js_special_case;
+typedef struct {
 	char dev[30];
 	DBWORD id;
 	BYTE present;
+
 	BYTE open_try;
 	BYTE clock;
+
 	DWORD last_axis[MAXAXIS];
 	DWORD last_buttons;
+
 	JOYINFOEX joy_info;
 	JOYCAPS joy_caps;
+
 	BYTE (*input_decode_event)(BYTE mode, DBWORD event, BYTE type, _port *port);
+
+	_js_special_case jsc;
 } _js;
 typedef struct {
 	DBWORD value;
@@ -135,7 +151,7 @@ EXTERNC void js_control(_js *joy, _port *port);
 EXTERNC void js_close(_js *joy);
 EXTERNC void js_quit(void);
 EXTERNC BYTE js_is_connected(int dev);
-EXTERNC char *js_name_device(int index);
+EXTERNC char *js_name_device(int dev);
 EXTERNC char *js_to_name(const DBWORD val, const _js_element *list, const DBWORD length);
 EXTERNC DBWORD js_from_name(const char *name, const _js_element *list, const DBWORD lenght);
 EXTERNC DBWORD js_read_in_dialog(int dev, int fd);
