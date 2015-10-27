@@ -22,7 +22,6 @@
 #include "common.h"
 
 enum {
-	CNROM,
 	CNROM_CNFL,
 	CNROM_26CE27CE,
 	CNROM_26CE27NCE,
@@ -34,7 +33,7 @@ struct _cnrom_2627 {
 	BYTE chr_rd_enable;
 } cnrom_2627;
 
-void map_init_CNROM(BYTE model);
+void map_init_CNROM();
 void extcl_cpu_wr_mem_CNROM(WORD address, BYTE value);
 BYTE extcl_save_mapper_CNROM(BYTE mode, BYTE slot, FILE *fp);
 BYTE extcl_rd_chr_CNROM(WORD address);

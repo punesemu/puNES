@@ -22,9 +22,9 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
-BYTE type, mask, state;
+BYTE mask, state;
 
-void map_init_CNROM(BYTE model) {
+void map_init_CNROM() {
 	EXTCL_CPU_WR_MEM(CNROM);
 
 	mask = state = 0x00;
@@ -33,12 +33,8 @@ void map_init_CNROM(BYTE model) {
 	 * "Cybernoid - The Fighting Machine (U) [!].nes" vuole
 	 * la gestione del bus conflict per funzionare correttamente.
 	 */
-	if (info.id == CNROM_CNFL) {
-		model = CNROM_CNFL;
-	}
 
-	if ((info.mapper.submapper >= CNROM_26CE27CE) && (info.mapper.submapper <= CNROM_26NCE27NCE)) {
-
+	if ((info.id >= CNROM_26CE27CE) && (info.id <= CNROM_26NCE27NCE)) {
 		EXTCL_RD_CHR(CNROM);
 		EXTCL_SAVE_MAPPER(CNROM);
 		mapper.internal_struct[0] = (BYTE *) &cnrom_2627;
@@ -47,7 +43,7 @@ void map_init_CNROM(BYTE model) {
 		memset(&cnrom_2627, 0x00, sizeof(cnrom_2627));
 		mask = 0x03;
 
-		switch (info.mapper.submapper) {
+		switch (info.id) {
 			case CNROM_26CE27CE:
 				state = 0x03;
 				break;
@@ -62,14 +58,12 @@ void map_init_CNROM(BYTE model) {
 				break;
 		}
 	}
-
-	type = model;
 }
 void extcl_cpu_wr_mem_CNROM(WORD address, BYTE value) {
 	DBWORD bank;
 
-	if (type == CNROM_CNFL) {
-		/* bus conflict */
+	/* bus conflict */
+	if (info.mapper.submapper == CNROM_CNFL) {
 		value &= prg_rom_rd(address);
 	}
 

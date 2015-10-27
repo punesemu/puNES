@@ -233,9 +233,38 @@ BYTE ines_load_rom(void) {
 
 void nes20_submapper(void) {
 	switch (info.mapper.id) {
+		case 2:
+			switch (info.mapper.submapper) {
+				case 0:
+				case 1:
+					info.mapper.submapper = UNLROM;
+					break;
+				case 2:
+					info.mapper.submapper = UXROM;
+					break;
+			}
+			break;
 		case 3:
-			/* attivo il bus conflict */
-			info.id = CNROM_CNFL;
+			switch (info.mapper.submapper) {
+				case 0:
+				case 1:
+					info.mapper.submapper = DEFAULT;
+					break;
+				case 2:
+					info.mapper.submapper = CNROM_CNFL;
+					break;
+			}
+			break;
+		case 7:
+			switch (info.mapper.submapper) {
+				case 0:
+				case 1:
+					info.mapper.submapper = DEFAULT;
+					break;
+				case 2:
+					info.mapper.submapper = AMROM;
+					break;
+			}
 			break;
 		case 78:
 			switch (info.mapper.submapper) {

@@ -62,7 +62,7 @@ BYTE map_init(void) {
 			}
 			break;
 		case 3:
-			map_init_CNROM(CNROM);
+			map_init_CNROM();
 			break;
 		case 4:
 			map_init_MMC3();
@@ -486,7 +486,8 @@ BYTE map_init(void) {
 			map_init_Sunsoft(SUN1);
 			break;
 		case 185:
-			map_init_CNROM(CNROM_CNFL);
+			info.mapper.submapper = CNROM_CNFL;
+			map_init_CNROM();
 			break;
 		case 186:
 			map_init_186();
