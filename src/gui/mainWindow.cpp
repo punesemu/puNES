@@ -490,6 +490,12 @@ void mainWindow::update_menu_nes() {
 		ui->action_Eject_Insert_Disk->setEnabled(false);
 	}
 
+	if (info.pause_from_gui == TRUE) {
+		ui->action_Pause->setChecked(true);
+	} else {
+		ui->action_Pause->setChecked(false);
+	}
+
 	if (fps.fast_forward == TRUE) {
 		ui->action_Fast_Forward->setChecked(true);
 	} else {
@@ -1178,6 +1184,7 @@ void mainWindow::shortcuts() {
 	connect_shortcut(ui->action_Soft_Reset, SET_INP_SC_SOFT_RESET, SLOT(s_make_reset()));
 	connect_shortcut(ui->action_Switch_sides, SET_INP_SC_SWITCH_SIDES, SLOT(s_disk_side()));
 	connect_shortcut(ui->action_Eject_Insert_Disk, SET_INP_SC_EJECT_DISK, SLOT(s_eject_disk()));
+	connect_shortcut(ui->action_Pause, SET_INP_SC_PAUSE, SLOT(s_pause()));
 	connect_shortcut(ui->action_Fast_Forward, SET_INP_SC_FAST_FORWARD, SLOT(s_fast_forward()));
 	// Settings/Mode
 	connect_shortcut(ui->action_PAL, SET_INP_SC_MODE_PAL, SLOT(s_set_mode()));
@@ -1291,6 +1298,12 @@ void mainWindow::make_reset(int type) {
 	if (emu_reset(type)) {
 		s_quit();
 	}
+
+	/*
+	 * dopo un reset la pause e' automaticamente disabilitata quindi faccio
+	 * un aggiornamento del submenu NES per avere la voce correttamente settata.
+	 */
+	update_menu_nes();
 }
 void mainWindow::connect_shortcut(QAction *action, int index) {
 	QString *sc = (QString *)settings_inp_rd_sc(index, KEYBOARD);
@@ -1335,6 +1348,7 @@ void mainWindow::connect_menu_signals() {
 	connect_action(ui->action_Disk_4_side_B, 7, SLOT(s_disk_side()));
 	connect_action(ui->action_Switch_sides, 0xFFF, SLOT(s_disk_side()));
 	connect_action(ui->action_Eject_Insert_Disk, SLOT(s_eject_disk()));
+	connect_action(ui->action_Pause, SLOT(s_pause()));
 	connect_action(ui->action_Fast_Forward, SLOT(s_fast_forward()));
 	// Settings/Mode
 	connect_action(ui->action_PAL, PAL, SLOT(s_set_mode()));
@@ -1507,7 +1521,7 @@ void mainWindow::connect_menu_signals() {
 	connect_action(ui->action_Italian, LNG_ITALIAN, SLOT(s_set_language()));
 	connect_action(ui->action_Russian, LNG_RUSSIAN, SLOT(s_set_language()));
 	// Settings/[Pause when in backgrounds, Save settings, Save settings on exit]
-	connect_action(ui->action_Pause_when_in_background, SLOT(s_set_pause()));
+	connect_action(ui->action_Pause_when_in_background, SLOT(s_set_pause_in_background()));
 	connect_action(ui->action_Save_settings, SLOT(s_save_settings()));
 	connect_action(ui->action_Save_settings_on_exit, SLOT(s_set_save_on_exit()));
 	// State/[Save state, Load State]
@@ -1710,6 +1724,15 @@ void mainWindow::s_eject_disk() {
 		fds_disk_op(FDS_DISK_INSERT, 0);
 	}
 
+	update_menu_nes();
+}
+void mainWindow::s_pause() {
+	if (info.pause_from_gui == FALSE) {
+		info.pause_from_gui = TRUE;
+	} else {
+		info.pause_from_gui = FALSE;
+	}
+	emu_pause(info.pause_from_gui);
 	update_menu_nes();
 }
 void mainWindow::s_fast_forward() {
@@ -2075,7 +2098,7 @@ void mainWindow::s_set_input() {
 
 	dlg->show();
 }
-void mainWindow::s_set_pause() {
+void mainWindow::s_set_pause_in_background() {
 	cfg->bck_pause = !cfg->bck_pause;
 }
 void mainWindow::s_cheat_mode_select() {
@@ -2298,6 +2321,9 @@ void mainWindow::s_shcjoy_read_timer() {
 					break;
 				case SET_INP_SC_EJECT_DISK:
 					ui->action_Eject_Insert_Disk->trigger();
+					break;
+				case SET_INP_SC_PAUSE:
+					ui->action_Pause->trigger();
 					break;
 				case SET_INP_SC_FAST_FORWARD:
 					ui->action_Fast_Forward->trigger();

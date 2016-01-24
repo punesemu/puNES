@@ -206,6 +206,7 @@ void dlgInput::update_dialog() {
 	update_text_shortcut(parentMain->ui->action_Soft_Reset, SET_INP_SC_SOFT_RESET);
 	update_text_shortcut(parentMain->ui->action_Switch_sides, SET_INP_SC_SWITCH_SIDES);
 	update_text_shortcut(parentMain->ui->action_Eject_Insert_Disk, SET_INP_SC_EJECT_DISK);
+	update_text_shortcut(parentMain->ui->action_Pause, SET_INP_SC_PAUSE);
 	update_text_shortcut(parentMain->ui->action_Fast_Forward, SET_INP_SC_FAST_FORWARD);
 	update_text_shortcut(parentMain->ui->action_PAL, SET_INP_SC_MODE_PAL);
 	update_text_shortcut(parentMain->ui->action_NTSC, SET_INP_SC_MODE_NTSC);

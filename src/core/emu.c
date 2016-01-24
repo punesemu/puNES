@@ -603,13 +603,9 @@ BYTE emu_turn_on(void) {
 void emu_pause(BYTE mode) {
 	if (mode == TRUE) {
 		info.pause = TRUE;
-		return;
-	}
-
-	if (mode == FALSE) {
+	} else if (info.pause_from_gui == FALSE) {
 		info.pause = FALSE;
 		fps.next_frame = gui_get_ms();
-		return;
 	}
 }
 BYTE emu_reset(BYTE type) {
@@ -673,6 +669,7 @@ BYTE emu_reset(BYTE type) {
 
 	if (info.no_rom) {
 		info.reset = FALSE;
+		info.pause_from_gui = FALSE;
 
 		emu_pause(FALSE);
 
@@ -709,6 +706,7 @@ BYTE emu_reset(BYTE type) {
 	}
 
 	info.reset = FALSE;
+	info.pause_from_gui = FALSE;
 
 	emu_pause(FALSE);
 

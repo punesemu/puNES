@@ -62,6 +62,7 @@ EXTERNC struct _info {
 	BYTE no_rom;
 	BYTE uncompress_rom;
 	BYTE pause;
+	BYTE pause_from_gui;
 	BYTE on_cfg;
 	BYTE pause_frames_drawscreen;
 	BYTE first_illegal_opcode;

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="it_IT">
+<TS version="2.1" language="it_IT">
 <context>
     <name>APU_channels</name>
     <message>
@@ -1379,6 +1379,10 @@
     <message>
         <source>&amp;Channels Delay</source>
         <translation>Ritardo &amp;Canali</translation>
+    </message>
+    <message>
+        <source>&amp;Pause</source>
+        <translation>&amp;Pausa</translation>
     </message>
 </context>
 <context>

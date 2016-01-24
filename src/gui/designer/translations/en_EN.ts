@@ -1380,6 +1380,10 @@
         <source>&amp;Channels Delay</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>&amp;Pause</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>stateWidget</name>
