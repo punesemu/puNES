@@ -786,8 +786,8 @@ void gfx_reset_video(void) {
 	if (opengl.surface_gl) {
 		SDL_FreeSurface(opengl.surface_gl);
 	}
-	if (opengl.screen.data) {
-		glDeleteTextures(1, &opengl.screen.data);
+	if (opengl.screen.id) {
+		glDeleteTextures(1, &opengl.screen.id);
 	}
 	opengl.surface_gl = NULL;
 

@@ -55,12 +55,12 @@ void sdl_quit_gl(void) {
 		SDL_FreeSurface(opengl.surface_gl);
 	}
 
-	if (opengl.screen.data) {
-		glDeleteTextures(1, &opengl.screen.data);
+	if (opengl.screen.id) {
+		glDeleteTextures(1, &opengl.screen.id);
 	}
 
-	if (opengl.text.data) {
-		glDeleteTextures(1, &opengl.text.data);
+	if (opengl.text.id) {
+		glDeleteTextures(1, &opengl.text.id);
 	}
 
 	if (opengl_unset_effect) {
@@ -158,6 +158,8 @@ void sdl_create_surface_gl(SDL_Surface *src, WORD width, WORD height, BYTE flags
 }
 
 void opengl_create_texture(_texture *texture, uint32_t width, uint32_t height, uint8_t pow) {
+	GLfloat clr_color[4] = { 0, 0, 0, 0 };
+
 	switch (opengl.surface_gl->format->BitsPerPixel) {
 		case 16:
 			texture->format_internal = GL_RGB5;
@@ -196,51 +198,61 @@ void opengl_create_texture(_texture *texture, uint32_t width, uint32_t height, u
 
 	glEnable(GL_TEXTURE_2D);
 
-	if (texture->data) {
-		glDeleteTextures(1, &texture->data);
+	if (texture->id) {
+		glDeleteTextures(1, &texture->id);
 	}
 
-	glGenTextures(1, &texture->data);
-	glBindTexture(GL_TEXTURE_2D, texture->data);
+	glGenTextures(1, &texture->id);
+	glBindTexture(GL_TEXTURE_2D, texture->id);
 
 	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 	{
-		GLfloat color[4] = { 0, 0, 0, 0 };
-
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-		glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, color);
+		glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, clr_color);
 	}
 
-	if (opengl.glew && !GLEW_VERSION_3_1) {
+	if (opengl.glew && !GLEW_VERSION_3_0) {
 		glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
 	}
 
-	{
-		/* per sicurezza creo una superficie piu' grande del necessario */
-		SDL_Surface *blank = gfx_create_RGB_surface(opengl.surface_gl, texture->w * 2,
-		        texture->h * 2);
+	// creo la texture nella GPU
+	glTexImage2D(GL_TEXTURE_2D, 0, texture->format_internal, texture->w, texture->h, 0,
+			texture->format, texture->type, NULL);
 
-		memset(blank->pixels, 0, blank->w * blank->h * blank->format->BytesPerPixel);
-
-		glTexImage2D(GL_TEXTURE_2D, 0, texture->format_internal, texture->w, texture->h, 0,
-				texture->format, texture->type, blank->pixels);
-
-		SDL_FreeSurface(blank);
-	}
-
-	if (opengl.glew && GLEW_VERSION_3_1) {
+	if (opengl.glew && GLEW_VERSION_3_0) {
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 
+	// pulisco la texture
+	if (opengl.glew && GLEW_VERSION_3_0) {
+		GLuint fbo;
+
+		glGenFramebuffers(1, &fbo);
+		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture->id, 0);
+		glDrawBuffer(GL_COLOR_ATTACHMENT0);
+		glClearBufferfv(GL_COLOR, 0, clr_color);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		glDeleteFramebuffers(1, &fbo);
+	} else {
+		int size = texture->w * texture->h * 4;
+		GLubyte emptyData[size];
+
+		memset (emptyData, 0x00, size);
+		glTexImage2D(GL_TEXTURE_2D, 0, texture->format_internal, texture->w, texture->h, 0,
+				texture->format, texture->type, &emptyData[0]);
+	}
+
 	glDisable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, 0);
 }
 void opengl_update_scr_texture(SDL_Surface *surface, uint8_t generate_mipmap) {
-	glBindTexture(GL_TEXTURE_2D, opengl.screen.data);
+	glBindTexture(GL_TEXTURE_2D, opengl.screen.id);
 
-	if (generate_mipmap && opengl.glew && !GLEW_VERSION_3_1) {
+	if (generate_mipmap && opengl.glew && !GLEW_VERSION_3_0) {
 		glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
 	}
 
@@ -251,7 +263,7 @@ void opengl_update_scr_texture(SDL_Surface *surface, uint8_t generate_mipmap) {
 
 	glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
 
-	if (generate_mipmap && opengl.glew && GLEW_VERSION_3_1) {
+	if (generate_mipmap && opengl.glew && GLEW_VERSION_3_0) {
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 
@@ -280,12 +292,12 @@ BYTE opengl_update_txt_texture(uint8_t generate_mipmap) {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	glBindTexture(GL_TEXTURE_2D, opengl.text.data);
+	glBindTexture(GL_TEXTURE_2D, opengl.text.id);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	if (generate_mipmap && opengl.glew && !GLEW_VERSION_3_1) {
+	if (generate_mipmap && opengl.glew && !GLEW_VERSION_3_0) {
 		glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
@@ -328,7 +340,7 @@ void opengl_text_clear(_txt_element *ele) {
 	}
 
 	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, opengl.text.data);
+	glBindTexture(GL_TEXTURE_2D, opengl.text.id);
 
 	glPixelStorei(GL_UNPACK_ROW_LENGTH, ele->w);
 
@@ -345,7 +357,7 @@ void opengl_text_blit(_txt_element *ele, _rect *rect) {
 	}
 
 	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, opengl.text.data);
+	glBindTexture(GL_TEXTURE_2D, opengl.text.id);
 
 	glPixelStorei(GL_UNPACK_ROW_LENGTH, rect->w);
 
@@ -382,6 +394,8 @@ void glew_init(void) {
 	if (opengl.supported){
 		GLenum err;
 
+		glewExperimental = GL_TRUE;
+
 		if ((err = glewInit()) != GLEW_OK) {
 			fprintf(stderr, "INFO: %s\n", glewGetErrorString(err));
 			opengl.glew = FALSE;
@@ -397,10 +411,10 @@ void glew_init(void) {
 				opengl.glsl.enabled = FALSE;
 			}
 
-			if (GLEW_VERSION_3_1) {
-				fprintf(stderr, "INFO: OpenGL 3.1 supported.\n");
+			if (GLEW_VERSION_3_0) {
+				fprintf(stderr, "INFO: OpenGL 3.0 supported.\n");
 			} else {
-				fprintf(stderr, "INFO: OpenGL 3.1 not supported.\n");
+				fprintf(stderr, "INFO: OpenGL 3.0 not supported.\n");
 			}
 		}
 	}
@@ -490,7 +504,7 @@ void glsl_shaders_init(_shader *shd) {
 
 	if ((shd->loc.texture.scr = glGetUniformLocation(shd->prg, "texture_scr")) >= 0) {
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, opengl.screen.data);
+		glBindTexture(GL_TEXTURE_2D, opengl.screen.id);
 		glUniform1i(shd->loc.texture.scr, 0);
 	}
 

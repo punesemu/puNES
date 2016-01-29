@@ -31,7 +31,7 @@ enum shader_type {
 };
 
 typedef struct {
-	GLuint data;
+	GLuint id;
 	GLenum format;
 	GLenum type;
 	GLint format_internal;
