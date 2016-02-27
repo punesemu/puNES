@@ -46,18 +46,67 @@ enum filters_type {
 	HQ3X,
 	HQ4X,
 	NTSC_FILTER,
-	/* shaders */
-	PHOSPHOR,
-	SCANLINE,
-	DBL,
-	CRT_CURVE,
-	CRT_NO_CURVE,
-	PHOSPHOR2,
-	DARK_ROOM,
-	/* shaders end */
 	XBRZ2X,
 	XBRZ3X,
-	XBRZ4X
+	XBRZ4X,
+	FUTURE_USE0,
+	FUTURE_USE1,
+	FUTURE_USE2,
+	FUTURE_USE3,
+	FUTURE_USE4,
+	FUTURE_USE5,
+	FUTURE_USE6,
+	FUTURE_USE7,
+	FUTURE_USE8,
+	FUTURE_USE9,
+	FUTURE_USE10,
+	FUTURE_USE11,
+	FUTURE_USE12,
+	FUTURE_USE13,
+	FUTURE_USE14,
+	/* shaders */
+	FLTSHDSTART,
+	sh_anti_aliasing_advanced_aa = FLTSHDSTART,
+	sh_anti_aliasing_fx_aa,
+	sh_anti_aliasing_fxaa_edge_detect,
+	sh_cgp_tvout_tvout_ntsc_2phase_composite,
+	sh_cgp_tvout_tvout_ntsc_256px_svideo,
+	sh_cgp_2xbr_crt_hyllian,
+	sh_cgp_2xbr_jinc2_sharper_hybrid,
+	sh_crt_gtuv50,
+	sh_crt_4xbr_hybrid_crt,
+	sh_crt_crt_caligari,
+	sh_crt_crt_cgwg_fast,
+	sh_crt_crt_easymode,
+	sh_crt_crt_easymode_halation,
+	sh_crt_crt_geom,
+	sh_crt_crtglow_gauss,
+	sh_crt_crtglow_gauss_ntsc_3phase,
+	sh_crt_crt_hyllian,
+	sh_crt_crt_lottes,
+	sh_crt_crt_reverse_aa,
+	sh_crt_dotmask,
+	sh_eagle_super_eagle,
+	sh_hunterk_borders_1080p_bigblur,
+	sh_hunterk_borders_1080p_color_grid,
+	sh_hunterk_borders_1080p_mudlord,
+	sh_hunterk_borders_1080p_shiny_iterations,
+	sh_hunterk_borders_1080p_snow,
+	sh_hunterk_borders_1080p_voronoi,
+	sh_hunterk_borders_1080p_water,
+	sh_hunterk_handheld_nds,
+	sh_hunterk_hqx_hq3x,
+	sh_hunterk_motionblur_motionblur_simple,
+	sh_motionblur_feedback,
+	sh_mudlord_emboss,
+	sh_mudlord_mud_mudlord,
+	sh_mudlord_noise_mudlord,
+	sh_mudlord_oldtv,
+	sh_waterpaint_water,
+
+	sh_test,
+	FLTSHDSTOP = sh_waterpaint_water
+	/* shaders end */
 };
 enum overcan_type { OSCAN_OFF, OSCAN_ON, OSCAN_DEFAULT, OSCAN_DEFAULT_OFF, OSCAN_DEFAULT_ON };
 enum gfx_info_type { CURRENT, NO_OVERSCAN, MONITOR, VIDEO_MODE };
@@ -72,7 +121,7 @@ enum no_change { NO_CHANGE = 255 };
 #if defined (SDL)
 #include <SDL.h>
 
-enum render_type { RENDER_SOFTWARE, RENDER_OPENGL, RENDER_GLSL };
+enum render_type { RENDER_SOFTWARE, RENDER_GLSL };
 #if defined (__WIN32__)
 enum sdl_win_event_type {
 	SDLWIN_NONE,
@@ -86,7 +135,7 @@ enum sdl_win_event_type {
 	SDLWIN_VSYNC
 };
 
-EXTERNC struct {
+EXTERNC struct _sdlwe {
 	int event;
 	int arg;
 } sdlwe;
@@ -102,7 +151,7 @@ EXTERNC int (*flip)(SDL_Surface *surface);
 #elif defined (D3D9)
 enum render_type { RENDER_SOFTWARE, RENDER_HLSL };
 
-typedef struct {
+typedef struct _texcoords {
 	float l, r;
 	float t, b;
 } _texcoords;
@@ -136,8 +185,8 @@ EXTERNC struct _gfx {
 
 EXTERNC BYTE gfx_init(void);
 EXTERNC void gfx_set_render(BYTE render);
-EXTERNC void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE force_scale,
-		BYTE force_palette);
+EXTERNC void gfx_set_screen(BYTE scale, DBWORD filter, BYTE fullscreen, BYTE palette,
+		BYTE force_scale, BYTE force_palette);
 
 EXTERNC void gfx_draw_screen(BYTE forced);
 EXTERNC void gfx_quit(void);

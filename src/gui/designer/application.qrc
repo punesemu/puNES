@@ -1,5 +1,7 @@
 <RCC>
   <qresource prefix="icon">
+    <file>shaders/lut/hunterk/hqx/hq3x.png</file>
+    <file>icons/cpu_filter.png</file>
     <file>icons/buffer_size.png</file>
     <file>icons/fast_forward.png</file>
     <file>icons/application.png</file>
@@ -52,6 +54,10 @@
     <file>icons/exit.png</file>
     <file>icons/recent_roms.png</file>
     <file>icons/open.png</file>
+  </qresource>
+  <qresource prefix="shaders">
+    <file>shaders/lut/hunterk/borders/1080p/border-1080p.png</file>
+    <file>shaders/lut/hunterk/hqx/hq3x.png</file>
   </qresource>
   <qresource prefix="pics">
     <file>pics/Nes_controller.png</file>

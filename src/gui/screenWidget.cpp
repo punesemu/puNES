@@ -171,10 +171,6 @@ bool screenWidget::eventFilter(QObject *obj, QEvent *event) {
 		mouseEvent = ((QMouseEvent *)event);
 
 		if (mouseEvent->button() == Qt::LeftButton) {
-#if defined (SDL)
-			opengl.x_diff = mouseEvent->x() - (opengl.y_rotate * slow_factor);
-			opengl.y_diff = -mouseEvent->y() + (opengl.x_rotate * slow_factor);
-#endif
 			mouse.left = TRUE;
 		} else if (mouseEvent->button() == Qt::RightButton) {
 			mouse.right = TRUE;
@@ -192,13 +188,6 @@ bool screenWidget::eventFilter(QObject *obj, QEvent *event) {
 
 		mouse.x = mouseEvent->x();
 		mouse.y = mouseEvent->y();
-
-#if defined (SDL)
-		if (mouse.left && opengl.rotation) {
-			opengl.x_rotate = (mouseEvent->y() + opengl.y_diff) / slow_factor;
-			opengl.y_rotate = (mouseEvent->x() - opengl.x_diff) / slow_factor;
-		}
-#endif
 	}
 
 	return (QObject::eventFilter(obj, event));

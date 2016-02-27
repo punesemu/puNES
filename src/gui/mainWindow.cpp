@@ -143,7 +143,6 @@ void mainWindow::setup() {
 	grp->setExclusive(true);
 	grp->addAction(ui->action_Rend0);
 	grp->addAction(ui->action_Rend1);
-	grp->addAction(ui->action_Rend2);
 	// Settings/Video/FPS
 	grp = new QActionGroup(this);
 	grp->setExclusive(true);
@@ -202,17 +201,10 @@ void mainWindow::setup() {
 	grp->setExclusive(true);
 	grp->addAction(ui->action_Oscan_Def_On);
 	grp->addAction(ui->action_Oscan_Def_Off);
-	// Settings/Video/Filter
+	// Settings/Video/Software Filters
 	grp = new QActionGroup(this);
 	grp->setExclusive(true);
 	grp->addAction(ui->action_No_Filter);
-	grp->addAction(ui->action_Phosphor);
-	grp->addAction(ui->action_Phosphor2);
-	grp->addAction(ui->action_Scanline);
-	grp->addAction(ui->action_DBL);
-	grp->addAction(ui->action_Dark_Room);
-	grp->addAction(ui->action_CRT_With_Curve);
-	grp->addAction(ui->action_CRT_Without_Curve);
 	grp->addAction(ui->action_Scale2X);
 	grp->addAction(ui->action_Scale3X);
 	grp->addAction(ui->action_Scale4X);
@@ -225,7 +217,46 @@ void mainWindow::setup() {
 	grp->addAction(ui->action_NTSC_Composite);
 	grp->addAction(ui->action_NTSC_SVideo);
 	grp->addAction(ui->action_NTSC_RGB);
-	// Settings/Video/Filter
+	// Settings/Video/Shaders
+	grp->addAction(ui->action_shader_test);
+
+	grp->addAction(ui->action_anti_aliasing_advanced_aa);
+	grp->addAction(ui->action_anti_aliasing_fxaa_edge_detect);
+	grp->addAction(ui->action_cgp_tvout_tvout_ntsc_2phase_composite);
+	grp->addAction(ui->action_cgp_tvout_tvout_ntsc_256px_svideo);
+	grp->addAction(ui->action_cgp_2xbr_crt_hyllian);
+	grp->addAction(ui->action_cgp_2xbr_jinc2_sharper_hybrid);
+	grp->addAction(ui->action_crt_gtu_v050);
+	grp->addAction(ui->action_crt_4xbr_hybrid_crt);
+	grp->addAction(ui->action_crt_crt_caligari);
+	grp->addAction(ui->action_crt_crt_cgwg_fast);
+	grp->addAction(ui->action_crt_crt_easymode);
+	grp->addAction(ui->action_crt_crt_easymode_halation);
+	grp->addAction(ui->action_crt_crt_geom);
+	grp->addAction(ui->action_crt_crtglow_gauss);
+	grp->addAction(ui->action_crt_crtglow_gauss_ntsc_3phase);
+	grp->addAction(ui->action_crt_crt_hyllian);
+	grp->addAction(ui->action_crt_crt_lottes);
+	grp->addAction(ui->action_crt_crt_reverse_aa);
+	grp->addAction(ui->action_crt_dotmask);
+	grp->addAction(ui->action_eagle_super_eagle);
+	grp->addAction(ui->action_hunterk_borders_1080p_bigblur);
+	grp->addAction(ui->action_hunterk_borders_1080p_color_grid);
+	grp->addAction(ui->action_hunterk_borders_1080p_mudlord);
+	grp->addAction(ui->action_hunterk_borders_1080p_shiny_iterations);
+	grp->addAction(ui->action_hunterk_borders_1080p_snow);
+	grp->addAction(ui->action_hunterk_borders_1080p_voronoi);
+	grp->addAction(ui->action_hunterk_borders_1080p_water);
+	grp->addAction(ui->action_hunterk_handheld_nds);
+	grp->addAction(ui->action_hunterk_hqx_hq3x);
+	grp->addAction(ui->action_hunterk_motionblur_motionblur_simple);
+	grp->addAction(ui->action_motionblur_feedback);
+	grp->addAction(ui->action_mudlord_emboss);
+	grp->addAction(ui->action_mudlord_mud_mudlord);
+	grp->addAction(ui->action_mudlord_noise_mudlord);
+	grp->addAction(ui->action_mudlord_oldtv);
+	grp->addAction(ui->action_waterpaint_water);
+	// Settings/Video/Palette
 	grp = new QActionGroup(this);
 	grp->setExclusive(true);
 	grp->addAction(ui->action_Palette_PAL);
@@ -381,13 +412,8 @@ bool mainWindow::eventFilter(QObject *obj, QEvent *event) {
 		update_window();
 		ui->action_Rend0->setText(tr("&Software"));
 #if defined (SDL)
-		ui->action_Rend1->setText(tr("&OpenGL"));
-		ui->action_Rend2->setText(tr("OpenGL &GLSL"));
-
+		ui->action_Rend1->setText(tr("OpenGL &GLSL"));
 		ui->action_PAR_Soft_Stretch->setText(tr("GLSL &soft stretch"));
-
-		ui->action_Cube->setText(tr("&Cube"));
-		ui->menu_Effect->setTitle(tr("&Effect"));
 #elif defined (D3D9)
 		ui->action_Rend1->setText(tr("&HLSL"));
 		ui->action_PAR_Soft_Stretch->setText(tr("HLSL &soft stretch"));
@@ -448,12 +474,9 @@ void mainWindow::setup_video_rendering() {
 	ui->action_Rend0->setEnabled(true);
 	ui->action_Rend0->setVisible(true);
 #if defined (SDL)
-	ui->action_Rend1->setText(tr("&OpenGL"));
+	ui->action_Rend1->setText(tr("OpenGL &GLSL"));
 	ui->action_Rend1->setEnabled(true);
 	ui->action_Rend1->setVisible(true);
-	ui->action_Rend2->setText(tr("OpenGL &GLSL"));
-	ui->action_Rend2->setEnabled(true);
-	ui->action_Rend2->setVisible(true);
 
 	ui->action_PAR_Soft_Stretch->setText(tr("GLSL &soft stretch"));
 #elif defined (D3D9)
@@ -516,7 +539,7 @@ void mainWindow::update_recent_roms() {
 				break;
 			}
 
-			sprintf(description, "%s", basename(recent_roms_list.item[i]));
+			::sprintf(description, "%s", basename(recent_roms_list.item[i]));
 			action->setText(description);
 
 			ext = strrchr(description, '.');
@@ -555,27 +578,10 @@ void mainWindow::update_menu_settings() {
 		ui->action_Rend1->setEnabled(false);
 	}
 
-	if (opengl.glsl.compliant) {
-		ui->action_Rend2->setEnabled(true);
+	if (opengl.supported && gfx.opengl) {
+		ui->action_Rend1->setChecked(true);
 	} else {
-		ui->action_Rend2->setEnabled(false);
-	}
-
-	{
-		QAction *tmp;
-
-		if (!gfx.opengl) {
-			tmp = ui->action_Rend0;
-		} else {
-			if (!opengl.glsl.compliant) {
-				tmp = ui->action_Rend1;
-			} else if (!opengl.glsl.enabled) {
-				tmp = ui->action_Rend1;
-			} else {
-				tmp = ui->action_Rend2;
-			}
-		}
-		tmp->setChecked(true);
+		ui->action_Rend0->setChecked(true);
 	}
 #elif defined (D3D9)
 	if (gfx.hlsl.compliant) {
@@ -723,7 +729,7 @@ void mainWindow::update_menu_settings() {
 		ui->menu_Pixel_Aspect_Ratio->setEnabled(false);
 	}
 
-	if ((opengl.glsl.compliant == TRUE) && (opengl.glsl.enabled == TRUE)
+	if ((opengl.supported && gfx.opengl)
 #elif defined (D3D9)
 	if ((gfx.hlsl.compliant == TRUE) && (gfx.hlsl.enabled == TRUE)
 #endif
@@ -757,7 +763,7 @@ void mainWindow::update_menu_settings() {
 			ui->action_Oscan_Def_Off->setChecked(true);
 			break;
 	}
-	// Settings/Video/Filter
+	// Settings/Video/Software Filters
 	{
 		bool state;
 
@@ -773,23 +779,6 @@ void mainWindow::update_menu_settings() {
 		ui->action_xBRZ_2X->setEnabled(state);
 		ui->action_xBRZ_3X->setEnabled(state);
 		ui->action_xBRZ_4X->setEnabled(state);
-
-		if (opengl.glsl.compliant && opengl.glsl.enabled && (cfg->scale != X1)) {
-#elif defined (D3D9)
-		if (gfx.hlsl.enabled && (cfg->scale != X1)) {
-#endif
-			state = true;
-		} else {
-			state = false;
-		}
-		ui->action_Phosphor->setEnabled(state);
-		ui->action_Phosphor2->setEnabled(state);
-		ui->action_Scanline->setEnabled(state);
-		ui->action_DBL->setEnabled(state);
-		ui->action_Dark_Room->setEnabled(state);
-		ui->action_CRT_With_Curve->setEnabled(state);
-		ui->action_CRT_Without_Curve->setEnabled(state);
-
 		if (cfg->scale != X1) {
 			state = true;
 		} else {
@@ -798,31 +787,60 @@ void mainWindow::update_menu_settings() {
 		ui->action_NTSC_Composite->setEnabled(state);
 		ui->action_NTSC_SVideo->setEnabled(state);
 		ui->action_NTSC_RGB->setEnabled(state);
+
+		// Settings/Video/Shaders
+		if (gfx.opengl && (cfg->scale != X1)) {
+#elif defined (D3D9)
+		if (gfx.hlsl.enabled && (cfg->scale != X1)) {
+#endif
+			state = true;
+		} else {
+			state = false;
+		}
+		ui->menu_Shaders->setEnabled(state);
+
+		ui->action_shader_test->setEnabled(state);
+
+		ui->action_anti_aliasing_advanced_aa->setEnabled(state);
+		ui->action_anti_aliasing_fxaa_edge_detect->setEnabled(state);
+		ui->action_cgp_tvout_tvout_ntsc_2phase_composite->setEnabled(state);
+		ui->action_cgp_tvout_tvout_ntsc_256px_svideo->setEnabled(state);
+		ui->action_cgp_2xbr_crt_hyllian->setEnabled(state);
+		ui->action_cgp_2xbr_jinc2_sharper_hybrid->setEnabled(state);
+		ui->action_crt_gtu_v050->setEnabled(state);
+		ui->action_crt_4xbr_hybrid_crt->setEnabled(state);
+		ui->action_crt_crt_caligari->setEnabled(state);
+		ui->action_crt_crt_cgwg_fast->setEnabled(state);
+		ui->action_crt_crt_easymode->setEnabled(state);
+		ui->action_crt_crt_easymode_halation->setEnabled(state);
+		ui->action_crt_crt_geom->setEnabled(state);
+		ui->action_crt_crtglow_gauss->setEnabled(state);
+		ui->action_crt_crtglow_gauss_ntsc_3phase->setEnabled(state);
+		ui->action_crt_crt_hyllian->setEnabled(state);
+		ui->action_crt_crt_lottes->setEnabled(state);
+		ui->action_crt_crt_reverse_aa->setEnabled(state);
+		ui->action_crt_dotmask->setEnabled(state);
+		ui->action_eagle_super_eagle->setEnabled(state);
+		ui->action_hunterk_borders_1080p_bigblur->setEnabled(state);
+		ui->action_hunterk_borders_1080p_color_grid->setEnabled(state);
+		ui->action_hunterk_borders_1080p_mudlord->setEnabled(state);
+		ui->action_hunterk_borders_1080p_shiny_iterations->setEnabled(state);
+		ui->action_hunterk_borders_1080p_snow->setEnabled(state);
+		ui->action_hunterk_borders_1080p_voronoi->setEnabled(state);
+		ui->action_hunterk_borders_1080p_water->setEnabled(state);
+		ui->action_hunterk_handheld_nds->setEnabled(state);
+		ui->action_hunterk_hqx_hq3x->setEnabled(state);
+		ui->action_hunterk_motionblur_motionblur_simple->setEnabled(state);
+		ui->action_motionblur_feedback->setEnabled(state);
+		ui->action_mudlord_emboss->setEnabled(state);
+		ui->action_mudlord_mud_mudlord->setEnabled(state);
+		ui->action_mudlord_noise_mudlord->setEnabled(state);
+		ui->action_mudlord_oldtv->setEnabled(state);
+		ui->action_waterpaint_water->setEnabled(state);
 	}
 	switch (cfg->filter) {
 		case NO_FILTER:
 			ui->action_No_Filter->setChecked(true);
-			break;
-		case PHOSPHOR:
-			ui->action_Phosphor->setChecked(true);
-			break;
-		case PHOSPHOR2:
-			ui->action_Phosphor2->setChecked(true);
-			break;
-		case SCANLINE:
-			ui->action_Scanline->setChecked(true);
-			break;
-		case DBL:
-			ui->action_DBL->setChecked(true);
-			break;
-		case DARK_ROOM:
-			ui->action_Dark_Room->setChecked(true);
-			break;
-		case CRT_CURVE:
-			ui->action_CRT_With_Curve->setChecked(true);
-			break;
-		case CRT_NO_CURVE:
-			ui->action_CRT_Without_Curve->setChecked(true);
 			break;
 		case SCALE2X:
 			ui->action_Scale2X->setChecked(true);
@@ -864,6 +882,119 @@ void mainWindow::update_menu_settings() {
 					break;
 			}
 			break;
+
+		case sh_test:
+			ui->action_shader_test->setChecked(true);
+			break;
+
+		case sh_anti_aliasing_advanced_aa:
+			ui->action_anti_aliasing_advanced_aa->setChecked(true);
+			break;
+		case sh_anti_aliasing_fxaa_edge_detect:
+			ui->action_anti_aliasing_fxaa_edge_detect->setChecked(true);
+			break;
+		case sh_cgp_tvout_tvout_ntsc_2phase_composite:
+			ui->action_cgp_tvout_tvout_ntsc_2phase_composite->setChecked(true);
+			break;
+		case sh_cgp_tvout_tvout_ntsc_256px_svideo:
+			ui->action_cgp_tvout_tvout_ntsc_256px_svideo->setChecked(true);
+			break;
+		case sh_cgp_2xbr_crt_hyllian:
+			ui->action_cgp_2xbr_crt_hyllian->setChecked(true);
+			break;
+		case sh_cgp_2xbr_jinc2_sharper_hybrid:
+			ui->action_cgp_2xbr_jinc2_sharper_hybrid->setChecked(true);
+			break;
+		case sh_crt_gtuv50:
+			ui->action_crt_gtu_v050->setChecked(true);
+			break;
+		case sh_crt_4xbr_hybrid_crt:
+			ui->action_crt_4xbr_hybrid_crt->setChecked(true);
+			break;
+		case sh_crt_crt_caligari:
+			ui->action_crt_crt_caligari->setChecked(true);
+			break;
+		case sh_crt_crt_cgwg_fast:
+			ui->action_crt_crt_cgwg_fast->setChecked(true);
+			break;
+		case sh_crt_crt_easymode:
+			ui->action_crt_crt_easymode->setChecked(true);
+			break;
+		case sh_crt_crt_easymode_halation:
+			ui->action_crt_crt_easymode_halation->setChecked(true);
+			break;
+		case sh_crt_crt_geom:
+			ui->action_crt_crt_geom->setChecked(true);
+			break;
+		case sh_crt_crtglow_gauss:
+			ui->action_crt_crtglow_gauss->setChecked(true);
+			break;
+		case sh_crt_crtglow_gauss_ntsc_3phase:
+			ui->action_crt_crtglow_gauss_ntsc_3phase->setChecked(true);
+			break;
+		case sh_crt_crt_hyllian:
+			ui->action_crt_crt_hyllian->setChecked(true);
+			break;
+		case sh_crt_crt_lottes:
+			ui->action_crt_crt_lottes->setChecked(true);
+			break;
+		case sh_crt_crt_reverse_aa:
+			ui->action_crt_crt_reverse_aa->setChecked(true);
+			break;
+		case sh_crt_dotmask:
+			ui->action_crt_dotmask->setChecked(true);
+			break;
+		case sh_eagle_super_eagle:
+			ui->action_eagle_super_eagle->setChecked(true);
+			break;
+		case sh_hunterk_borders_1080p_bigblur:
+			ui->action_hunterk_borders_1080p_bigblur->setChecked(true);
+			break;
+		case sh_hunterk_borders_1080p_color_grid:
+			ui->action_hunterk_borders_1080p_color_grid->setChecked(true);
+			break;
+		case sh_hunterk_borders_1080p_mudlord:
+			ui->action_hunterk_borders_1080p_mudlord->setChecked(true);
+			break;
+		case sh_hunterk_borders_1080p_shiny_iterations:
+			ui->action_hunterk_borders_1080p_shiny_iterations->setChecked(true);
+			break;
+		case sh_hunterk_borders_1080p_snow:
+			ui->action_hunterk_borders_1080p_snow->setChecked(true);
+			break;
+		case sh_hunterk_borders_1080p_voronoi:
+			ui->action_hunterk_borders_1080p_voronoi->setChecked(true);
+			break;
+		case sh_hunterk_borders_1080p_water:
+			ui->action_hunterk_borders_1080p_water->setChecked(true);
+			break;
+		case sh_hunterk_handheld_nds:
+			ui->action_hunterk_handheld_nds->setChecked(true);
+			break;
+		case sh_hunterk_hqx_hq3x:
+			ui->action_hunterk_hqx_hq3x->setChecked(true);
+			break;
+		case sh_hunterk_motionblur_motionblur_simple:
+			ui->action_hunterk_motionblur_motionblur_simple->setChecked(true);
+			break;
+		case sh_motionblur_feedback:
+			ui->action_motionblur_feedback->setChecked(true);
+			break;
+		case sh_mudlord_emboss:
+			ui->action_mudlord_emboss->setChecked(true);
+			break;
+		case sh_mudlord_mud_mudlord:
+			ui->action_mudlord_mud_mudlord->setChecked(true);
+			break;
+		case sh_mudlord_noise_mudlord:
+			ui->action_mudlord_noise_mudlord->setChecked(true);
+			break;
+		case sh_mudlord_oldtv:
+			ui->action_mudlord_oldtv->setChecked(true);
+			break;
+		case sh_waterpaint_water:
+			ui->action_waterpaint_water->setChecked(true);
+			break;
 		}
 	}
 	// Settings/Video/Palette
@@ -895,15 +1026,6 @@ void mainWindow::update_menu_settings() {
 			ui->action_Palette_File->setChecked(true);
 			break;
 	}
-	// Settings/Video/Effect
-#if defined (SDL)
-	if (gfx.opengl && (input_zapper_is_connected((_port *) &port) == FALSE)) {
-		ui->menu_Effect->setEnabled(true);
-	} else {
-		ui->menu_Effect->setEnabled(false);
-	}
-	ui->action_Cube->setChecked(opengl.rotation);
-#endif
 	// Settings/Video/[VSync, Interpolation, Text on screen]
 #if defined (SDL)
 	if (gfx.opengl) {
@@ -1196,10 +1318,6 @@ void mainWindow::shortcuts() {
 	connect_shortcut(ui->action_2x, SET_INP_SC_SCALE_2X);
 	connect_shortcut(ui->action_3x, SET_INP_SC_SCALE_3X);
 	connect_shortcut(ui->action_4x, SET_INP_SC_SCALE_4X);
-#if defined (SDL)
-	// Settings/Video/Effect
-	connect_shortcut(ui->action_Cube, SET_INP_SC_EFFECT_CUBE, SLOT(s_set_effect()));
-#endif
 	// Settings/Video/[Interpolation, Fullscreen, Stretch in fullscreen]
 	connect_shortcut(ui->action_Interpolation, SET_INP_SC_INTERPOLATION,
 			SLOT(s_set_interpolation()));
@@ -1263,11 +1381,6 @@ void mainWindow::shcjoy_stop() {
 }
 void mainWindow::control_visible_cursor() {
 	if ((mouse.hidden == FALSE) && (input_zapper_is_connected((_port *) &port) == FALSE)) {
-#if defined (SDL)
-		if (opengl.rotation == TRUE) {
-			return;
-		}
-#endif
 		if (cfg->fullscreen == FULLSCR) {
 			gui_cursor_hide(TRUE);
 		} else if ((gui_get_ms() - mouse.timer) >= 2000) {
@@ -1358,8 +1471,7 @@ void mainWindow::connect_menu_signals() {
 	// Settings/Video/Rendering
 	connect_action(ui->action_Rend0, RENDER_SOFTWARE, SLOT(s_set_rendering()));
 #if defined (SDL)
-	connect_action(ui->action_Rend1, RENDER_OPENGL, SLOT(s_set_rendering()));
-	connect_action(ui->action_Rend2, RENDER_GLSL, SLOT(s_set_rendering()));
+	connect_action(ui->action_Rend1, RENDER_GLSL, SLOT(s_set_rendering()));
 #elif defined (D3D9)
 	connect_action(ui->action_Rend1, RENDER_HLSL, SLOT(s_set_rendering()));
 #endif
@@ -1411,15 +1523,8 @@ void mainWindow::connect_menu_signals() {
 	connect_action(ui->action_Oscan_Def_On, OSCAN_DEFAULT_ON, SLOT(s_set_overscan()));
 	connect_action(ui->action_Oscan_Def_Off, OSCAN_DEFAULT_OFF, SLOT(s_set_overscan()));
 	connect_action(ui->action_Oscan_Set_Borders, SLOT(s_set_overscan_borders()));
-	// Settings/Video/Filter
+	// Settings/Video/Software Filters
 	connect_action(ui->action_No_Filter, NO_FILTER, SLOT(s_set_other_filter()));
-	connect_action(ui->action_Phosphor, PHOSPHOR, SLOT(s_set_other_filter()));
-	connect_action(ui->action_Phosphor2, PHOSPHOR2, SLOT(s_set_other_filter()));
-	connect_action(ui->action_Scanline, SCANLINE, SLOT(s_set_other_filter()));
-	connect_action(ui->action_DBL, DBL, SLOT(s_set_other_filter()));
-	connect_action(ui->action_Dark_Room, DARK_ROOM, SLOT(s_set_other_filter()));
-	connect_action(ui->action_CRT_With_Curve, CRT_CURVE, SLOT(s_set_other_filter()));
-	connect_action(ui->action_CRT_Without_Curve, CRT_NO_CURVE, SLOT(s_set_other_filter()));
 	connect_action(ui->action_Scale2X, SCALE2X, SLOT(s_set_other_filter()));
 	connect_action(ui->action_Scale3X, SCALE3X, SLOT(s_set_other_filter()));
 	connect_action(ui->action_Scale4X, SCALE4X, SLOT(s_set_other_filter()));
@@ -1432,6 +1537,82 @@ void mainWindow::connect_menu_signals() {
 	connect_action(ui->action_NTSC_Composite, COMPOSITE, SLOT(s_set_ntsc_filter()));
 	connect_action(ui->action_NTSC_SVideo, SVIDEO, SLOT(s_set_ntsc_filter()));
 	connect_action(ui->action_NTSC_RGB, RGBMODE, SLOT(s_set_ntsc_filter()));
+	// Settings/Video/Shaders
+	connect_action(ui->action_shader_test,
+			sh_test, SLOT(s_set_other_filter()));
+
+	connect_action(ui->action_anti_aliasing_advanced_aa,
+			sh_anti_aliasing_advanced_aa, SLOT(s_set_other_filter()));
+	connect_action(ui->action_anti_aliasing_fxaa_edge_detect,
+			sh_anti_aliasing_fxaa_edge_detect, SLOT(s_set_other_filter()));
+	connect_action(ui->action_cgp_tvout_tvout_ntsc_2phase_composite,
+			sh_cgp_tvout_tvout_ntsc_2phase_composite, SLOT(s_set_other_filter()));
+	connect_action(ui->action_cgp_tvout_tvout_ntsc_256px_svideo,
+			sh_cgp_tvout_tvout_ntsc_256px_svideo, SLOT(s_set_other_filter()));
+	connect_action(ui->action_cgp_2xbr_crt_hyllian,
+			sh_cgp_2xbr_crt_hyllian, SLOT(s_set_other_filter()));
+	connect_action(ui->action_cgp_2xbr_jinc2_sharper_hybrid,
+			sh_cgp_2xbr_jinc2_sharper_hybrid, SLOT(s_set_other_filter()));
+	connect_action(ui->action_crt_gtu_v050,
+			sh_crt_gtuv50, SLOT(s_set_other_filter()));
+	connect_action(ui->action_crt_4xbr_hybrid_crt,
+			sh_crt_4xbr_hybrid_crt, SLOT(s_set_other_filter()));
+	connect_action(ui->action_crt_crt_caligari,
+			sh_crt_crt_caligari, SLOT(s_set_other_filter()));
+	connect_action(ui->action_crt_crt_cgwg_fast,
+			sh_crt_crt_cgwg_fast, SLOT(s_set_other_filter()));
+	connect_action(ui->action_crt_crt_easymode,
+			sh_crt_crt_easymode, SLOT(s_set_other_filter()));
+	connect_action(ui->action_crt_crt_easymode_halation,
+			sh_crt_crt_easymode_halation, SLOT(s_set_other_filter()));
+	connect_action(ui->action_crt_crt_geom,
+			sh_crt_crt_geom, SLOT(s_set_other_filter()));
+	connect_action(ui->action_crt_crtglow_gauss,
+			sh_crt_crtglow_gauss, SLOT(s_set_other_filter()));
+	connect_action(ui->action_crt_crtglow_gauss_ntsc_3phase,
+			sh_crt_crtglow_gauss_ntsc_3phase, SLOT(s_set_other_filter()));
+	connect_action(ui->action_crt_crt_hyllian,
+			sh_crt_crt_hyllian, SLOT(s_set_other_filter()));
+	connect_action(ui->action_crt_crt_lottes,
+			sh_crt_crt_lottes, SLOT(s_set_other_filter()));
+	connect_action(ui->action_crt_crt_reverse_aa,
+			sh_crt_crt_reverse_aa, SLOT(s_set_other_filter()));
+	connect_action(ui->action_crt_dotmask,
+			sh_crt_dotmask, SLOT(s_set_other_filter()));
+	connect_action(ui->action_eagle_super_eagle,
+			sh_eagle_super_eagle, SLOT(s_set_other_filter()));
+	connect_action(ui->action_hunterk_borders_1080p_bigblur,
+			sh_hunterk_borders_1080p_bigblur, SLOT(s_set_other_filter()));
+	connect_action(ui->action_hunterk_borders_1080p_color_grid,
+			sh_hunterk_borders_1080p_color_grid, SLOT(s_set_other_filter()));
+	connect_action(ui->action_hunterk_borders_1080p_mudlord,
+			sh_hunterk_borders_1080p_mudlord, SLOT(s_set_other_filter()));
+	connect_action(ui->action_hunterk_borders_1080p_shiny_iterations,
+			sh_hunterk_borders_1080p_shiny_iterations, SLOT(s_set_other_filter()));
+	connect_action(ui->action_hunterk_borders_1080p_snow,
+			sh_hunterk_borders_1080p_snow, SLOT(s_set_other_filter()));
+	connect_action(ui->action_hunterk_borders_1080p_voronoi,
+			sh_hunterk_borders_1080p_voronoi, SLOT(s_set_other_filter()));
+	connect_action(ui->action_hunterk_borders_1080p_water,
+			sh_hunterk_borders_1080p_water, SLOT(s_set_other_filter()));
+	connect_action(ui->action_hunterk_handheld_nds,
+			sh_hunterk_handheld_nds, SLOT(s_set_other_filter()));
+	connect_action(ui->action_hunterk_hqx_hq3x,
+			sh_hunterk_hqx_hq3x, SLOT(s_set_other_filter()));
+	connect_action(ui->action_hunterk_motionblur_motionblur_simple,
+			sh_hunterk_motionblur_motionblur_simple, SLOT(s_set_other_filter()));
+	connect_action(ui->action_motionblur_feedback,
+			sh_motionblur_feedback, SLOT(s_set_other_filter()));
+	connect_action(ui->action_mudlord_emboss,
+			sh_mudlord_emboss, SLOT(s_set_other_filter()));
+	connect_action(ui->action_mudlord_mud_mudlord,
+			sh_mudlord_mud_mudlord, SLOT(s_set_other_filter()));
+	connect_action(ui->action_mudlord_noise_mudlord,
+			sh_mudlord_noise_mudlord, SLOT(s_set_other_filter()));
+	connect_action(ui->action_mudlord_oldtv,
+			sh_mudlord_oldtv, SLOT(s_set_other_filter()));
+	connect_action(ui->action_waterpaint_water,
+			sh_waterpaint_water, SLOT(s_set_other_filter()));
 	// Settings/Video/Palette
 	connect_action(ui->action_Palette_PAL, PALETTE_PAL, SLOT(s_set_palette()));
 	connect_action(ui->action_Palette_NTSC, PALETTE_NTSC, SLOT(s_set_palette()));
@@ -1441,14 +1622,6 @@ void mainWindow::connect_menu_signals() {
 	connect_action(ui->action_Palette_File, PALETTE_FILE, SLOT(s_set_palette()));
 	connect_action(ui->action_Palette_Save_File, SLOT(s_save_palette()));
 	connect_action(ui->action_Palette_Load_File, SLOT(s_load_palette()));
-	// Settings/Video/Effect
-#if defined (SDL)
-	connect_action(ui->action_Cube, SLOT(s_set_effect()));
-#elif defined (D3D9)
-	ui->menu_Effect->removeAction(ui->action_Cube);
-	delete (ui->action_Cube);
-	delete (ui->menu_Effect);
-#endif
 	// Settings/Video/[VSync, Interpolation, Text on screen, Fullscreen, Stretch in fullscreen]
 	connect_action(ui->action_Disable_emphasis_swap_PAL, SLOT(s_set_disable_emphasis_pal()));
 	connect_action(ui->action_VSync, SLOT(s_set_vsync()));
@@ -1559,11 +1732,6 @@ void mainWindow::set_filter(int filter) {
 	gfx_sdlwe_set(SDLWIN_FILTER, filter);
 #else
 	gfx_FILTER(filter);
-#endif
-}
-void mainWindow::s_set_effect() {
-#if defined (SDL)
-	opengl_effect_change(!opengl.rotation);
 #endif
 }
 void mainWindow::s_set_fullscreen() {
@@ -2352,11 +2520,6 @@ void mainWindow::s_shcjoy_read_timer() {
 				case SET_INP_SC_SCALE_4X:
 					ui->action_4x->trigger();
 					break;
-#if defined (SDL)
-				case SET_INP_SC_EFFECT_CUBE:
-					ui->action_Cube->trigger();
-					break;
-#endif
 				case SET_INP_SC_INTERPOLATION:
 					ui->action_Interpolation->trigger();
 					break;

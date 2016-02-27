@@ -19,7 +19,7 @@
 #ifndef SETTINGSOBJECT_HPP_
 #define SETTINGSOBJECT_HPP_
 
-#include <gui/settings.h>
+#include "settings.h"
 #include <QtCore/QSettings>
 #include <QtCore/QFile>
 #include <QtGui/QKeySequence>

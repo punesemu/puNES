@@ -43,6 +43,8 @@
 #include "gui.h"
 #if defined (SDL)
 #include "opengl.h"
+#include <QtGui/QImage>
+#include <QtOpenGL/QGLWidget>
 #if defined (__WIN32__)
 #include "sdl_wid.h"
 #endif
@@ -56,13 +58,8 @@ class appEventFilter: public QObject {
 		bool eventFilter(QObject* object, QEvent* event) {
 			if (event->type() == QEvent::MouseMove) {
 				if (mouse.hidden == TRUE) {
-#if defined (SDL)
-					if ((input_zapper_is_connected((_port *) &port) == TRUE) ||
-							(cfg->fullscreen != FULLSCR) || (opengl.rotation == TRUE)) {
-#else
 					if ((input_zapper_is_connected((_port *) &port) == TRUE) ||
 							(cfg->fullscreen != FULLSCR)) {
-#endif
 						gui_cursor_hide(FALSE);
 					}
 				}
@@ -78,6 +75,7 @@ static struct _qt {
 	mainWindow *mwin;
 	screenWidget *screen;
 	cheatObject *chobj;
+	QImage qimage;
 } qt;
 
 void gui_quit(void) {}
@@ -282,6 +280,31 @@ void gui_control_visible_cursor(void) {
 void gui_mainWindow_make_reset(BYTE type) {
 	qt.mwin->make_reset(type);
 }
+
+#if defined (SDL)
+BYTE gui_load_lut(_lut *lut, const char *path) {
+	QImage tmp;
+
+	if (path && (::strlen(path) > 0)) {
+		tmp = QImage(path);
+	}
+
+	if (tmp.isNull()) {
+		lut->w = 0;
+		lut->h = 0;
+		lut->bits = NULL;
+		return (FALSE);
+	}
+
+	qt.qimage = tmp.convertToFormat(QImage::Format_ARGB32);
+
+	lut->w = qt.qimage.width();
+	lut->h = qt.qimage.height();
+	lut->bits = qt.qimage.bits();
+
+	return (TRUE);
+}
+#endif
 
 #if defined (__WIN32__)
 #include "os_windows.h"

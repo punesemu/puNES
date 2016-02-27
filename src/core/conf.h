@@ -39,7 +39,7 @@ typedef struct {
 	BYTE render;
 	BYTE scale;
 	BYTE fullscreen;
-	BYTE filter;
+	DBWORD filter;
 	BYTE ntsc_format;
 	BYTE palette;
 	BYTE disable_swap_emphasis_pal;

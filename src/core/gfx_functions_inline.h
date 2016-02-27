@@ -40,7 +40,6 @@ static void INLINE gfx_VSYNC(void);
 static void INLINE gfx_SWITCH_RENDERING(void) {
 #if defined (SDL)
 	sdl_wid();
-	opengl_effect_change(opengl.rotation);
 	gfx_reset_video();
 #endif
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
@@ -68,27 +67,6 @@ static void INLINE gfx_FILTER(int filter) {
 		case NO_FILTER:
 			gfx_set_screen(NO_CHANGE, NO_FILTER, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 			break;
-		case PHOSPHOR:
-			gfx_set_screen(NO_CHANGE, PHOSPHOR, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
-			break;
-		case PHOSPHOR2:
-			gfx_set_screen(NO_CHANGE, PHOSPHOR2, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
-			break;
-		case SCANLINE:
-			gfx_set_screen(NO_CHANGE, SCANLINE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
-			break;
-		case DBL:
-			gfx_set_screen(NO_CHANGE, DBL, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
-			break;
-		case DARK_ROOM:
-			gfx_set_screen(NO_CHANGE, DARK_ROOM, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
-			break;
-		case CRT_CURVE:
-			gfx_set_screen(NO_CHANGE, CRT_CURVE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
-			break;
-		case CRT_NO_CURVE:
-			gfx_set_screen(NO_CHANGE, CRT_NO_CURVE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
-			break;
 		case SCALE2X:
 			gfx_set_screen(X2, SCALE2X, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 			break;
@@ -107,6 +85,12 @@ static void INLINE gfx_FILTER(int filter) {
 		case HQ4X:
 			gfx_set_screen(X4, HQ4X, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 			break;
+		case NTSC_FILTER:
+			gfx_set_screen(NO_CHANGE, NTSC_FILTER, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
+			if (cfg->filter == NTSC_FILTER) {
+				ntsc_set(cfg->ntsc_format, 0, 0, (BYTE *) palette_RGB, 0);
+			}
+			break;
 		case XBRZ2X:
 			gfx_set_screen(X2, XBRZ2X, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 			break;
@@ -116,11 +100,9 @@ static void INLINE gfx_FILTER(int filter) {
 		case XBRZ4X:
 			gfx_set_screen(X4, XBRZ4X, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 			break;
-		case NTSC_FILTER:
-			gfx_set_screen(NO_CHANGE, NTSC_FILTER, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
-			if (cfg->filter == NTSC_FILTER) {
-				ntsc_set(cfg->ntsc_format, 0, 0, (BYTE *) palette_RGB, 0);
-			}
+		default:
+			// shaders
+			gfx_set_screen(NO_CHANGE, filter, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 			break;
 	}
 }

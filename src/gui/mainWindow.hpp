@@ -101,7 +101,6 @@ class mainWindow: public QMainWindow {
 		void set_filter(int filter);
 
 	public slots:
-		static void s_set_effect();
 		void s_set_fullscreen();
 
 	private slots:

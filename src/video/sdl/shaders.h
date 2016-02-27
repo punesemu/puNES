@@ -19,53 +19,82 @@
 #ifndef SHADERS_H_
 #define SHADERS_H_
 
-enum shader_type {
-	SHADER_COLOR,
-	SHADER_NO_FILTER,
-	SHADER_PHOSPHOR,
-	SHADER_SCANLINE,
-	SHADER_CRT,
-	SHADER_DONTBLOOM,
-	SHADER_TOTAL,
-	SHADER_NONE = 255
+#include "gfx.h"
+
+enum max_pass { MAX_PASS = 24, MAX_PREV = 7, MAX_PARAM = 128 };
+enum texture_wrap_type {
+	TEXTURE_WRAP_BORDER,
+	TEXTURE_WRAP_EDGE,
+	TEXTURE_WRAP_REPEAT,
+	TEXTURE_WRAP_MIRRORED_REPEAT
+};
+enum shader_scale_type {
+	SHADER_SCALE_INPUT,
+	SHADER_SCALE_ABSOLUTE,
+	SHADER_SCALE_VIEWPORT,
+	SHADER_SCALE_DEFAULT
 };
 
-typedef struct {
-	GLuint id;
-	GLenum format;
-	GLenum type;
-	GLint format_internal;
+typedef struct _xy_uint {
+	unsigned int x, y;
+} _xy_uint;
+typedef struct _xy_float {
+	float x, y;
+} _xy_float;
+typedef struct _wh_uint {
+	unsigned int w, h;
+} _wh_uint;
+typedef struct _shader_scale {
+	_xy_uint type;
+	_xy_float scale;
+	_xy_uint abs;
+} _shader_scale;
+typedef struct _shader_pass {
+	const char *code;
+	char path[LENGTH_FILE_NAME_LONG];
+	char alias[64];
 
-	GLfloat w;
-	GLfloat h;
-} _texture;
-typedef struct {
-	const GLchar *vertex;
-	const GLchar *fragment;
-} _shader_code;
-typedef struct {
-	GLuint prg;
-	GLuint vrt;
-	GLuint frg;
+	uint8_t mipmap_input;
+	uint8_t linear;
+	uint8_t fbo_flt;
+	uint8_t fbo_srgb;
+	uint8_t wrap;
+	int frame_count_mod;
 
-	GLuint id;
-	_shader_code *code;
+	_shader_scale sc;
+} _shader_pass;
+typedef struct _lut_pass {
+	char name[64];
+	char path[LENGTH_FILE_NAME_LONG];
 
-	struct {
-		struct {
-			GLint screen_emu;
-			GLint video_mode;
-			GLint texture;
-		} size;
-		struct {
-			GLint scr;
-		} texture;
-		GLint frame_counter;
-		GLint pixel_aspect_ratio;
-		GLint full_interpolation;
-		GLint param;
-	} loc;
-} _shader;
+	uint8_t mipmap;
+	uint8_t linear;
+	uint8_t wrap;
+} _lut_pass;
+typedef struct _param_shd {
+	char name[64];
+	char desc[64];
+
+	float value; //current
+	float initial;
+	float min;
+	float max;
+	float step;
+} _param_shd;
+typedef struct _shader_effect {
+	uint8_t pass;
+	uint8_t last_pass;
+	uint8_t running_pass;
+	_shader_pass sp[MAX_PASS + 1];
+
+	uint8_t luts;
+	_lut_pass lp[MAX_PASS];
+
+	uint8_t params;
+	_param_shd param[MAX_PARAM];
+
+	int8_t feedback_pass;
+} _shader_effect;
 
 #if defined (__cplusplus)
 #define EXTERNC extern "C"
@@ -73,20 +102,8 @@ typedef struct {
 #define EXTERNC
 #endif
 
-EXTERNC _shader shader;
+EXTERNC _shader_effect shader_effect;
 
 #undef EXTERNC
 
 #endif /* SHADERS_H_ */
-
-#if defined (_SHADERS_CODE_)
-static _shader_code shader_code[SHADER_TOTAL] = {
-#include "shaders/color.h"
-#include "shaders/no_filter.h"
-#include "shaders/phosphor.h"
-#include "shaders/scanline.h"
-#include "shaders/crt.h"
-#include "shaders/dbl.h"
-};
-#undef _SHADERS_CODE_
-#endif

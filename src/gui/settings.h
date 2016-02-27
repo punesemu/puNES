@@ -234,12 +234,12 @@ enum list_settings_element {
 	LSET_INP
 };
 
-typedef struct {
+typedef struct _opt {
 	const char *lname;
 	const char *sname;
 	int value;
 } _opt;
-typedef struct {
+typedef struct _settings {
 	const char *grp;
 	const char *key;
 	const char *def;
@@ -247,12 +247,12 @@ typedef struct {
 	const char *cmt;
 	const char *hlp;
 
-	struct {
+	struct _opts {
 		const int count;
 		const _opt *opt;
 	} opts;
 } _settings;
-typedef struct {
+typedef struct _list_settings {
 	const _settings *cfg;
 	const int count;
 } _list_settings;
@@ -280,7 +280,6 @@ static const _opt opt_ff_velocity[] = {
 static const _opt opt_rend[] = {
 	{"Software", "software", RENDER_SOFTWARE},
 #if defined (SDL)
-	{"OpenGL"  , "opengl"  , RENDER_OPENGL},
 	{"GLSL"    , "glsl"    , RENDER_GLSL}
 #elif defined (D3D9)
 	{"HLSL"    , "hlsl"    , RENDER_HLSL}
@@ -343,16 +342,218 @@ static const _opt opt_filter[] = {
 	{"Hq3X"      , "hq3x"      , HQ3X},
 	{"Hq4X"      , "hq4x"      , HQ4X},
 	{"NTSC"      , "ntsc"      , NTSC_FILTER},
-	{"Phoshpor"  , "phosphor"  , PHOSPHOR},
-	{"Scanline"  , "scanline"  , SCANLINE},
-	{"DBL"       , "dbl"       , DBL},
-	{"CRTCURVE"  , "crtcurve"  , CRT_CURVE},
-	{"CRTNOCURVE", "crtnocurve", CRT_NO_CURVE},
-	{"Phosphor2" , "phosphor2" , PHOSPHOR2},
-	{"DarkRoom"  , "darkroom"  , DARK_ROOM},
 	{"xBRZ 2x"   , "xbrz2x"    , XBRZ2X},
 	{"xBRZ 3x"   , "xbrz3x"    , XBRZ3X},
 	{"xBRZ 4x"   , "xbrz4x"    , XBRZ4X},
+	// per filtri CPU aggiuntivi futuri
+	{NULL        , NULL        , NO_FILTER},
+	{NULL        , NULL        , NO_FILTER},
+	{NULL        , NULL        , NO_FILTER},
+	{NULL        , NULL        , NO_FILTER},
+	{NULL        , NULL        , NO_FILTER},
+	{NULL        , NULL        , NO_FILTER},
+	{NULL        , NULL        , NO_FILTER},
+	{NULL        , NULL        , NO_FILTER},
+	{NULL        , NULL        , NO_FILTER},
+	{NULL        , NULL        , NO_FILTER},
+	{NULL        , NULL        , NO_FILTER},
+	{NULL        , NULL        , NO_FILTER},
+	{NULL        , NULL        , NO_FILTER},
+	{NULL        , NULL        , NO_FILTER},
+	{NULL        , NULL        , NO_FILTER},
+	// shaders
+	{
+		"Anti-aliasing Advenced AA",
+		"anti_aliasing_advanced_aa",
+		sh_anti_aliasing_advanced_aa
+	},
+	{
+		"Anti-aliasing FX AA",
+		"anti_aliasing_fx_aa",
+		sh_anti_aliasing_fx_aa
+	},
+	{
+		"Anti-aliasing FXAA Edge Detect",
+		"anti_aliasing_fxaa_edge_detect",
+		sh_anti_aliasing_fxaa_edge_detect
+	},
+	{
+		"Cgp TVout NTSC 2Phase Composite",
+		"cgp_tvout_tvout_ntsc_2phase_composite",
+		sh_cgp_tvout_tvout_ntsc_2phase_composite
+	},
+	{
+		"Cgp TVout NTSC 256px Svideo",
+		"cgp_tvout_tvout_ntsc_256px_svideo",
+		sh_cgp_tvout_tvout_ntsc_256px_svideo
+	},
+	{
+		"Cgp 2xbr CRT Hyllian",
+		"cgp_2xbr_crt_hyllian",
+		sh_cgp_2xbr_crt_hyllian
+	},
+	{
+		"Cgp 2xbr Jinc2 Sharper Hybrid",
+		"cgp_2xbr_jinc2_sharper_hybrid",
+		sh_cgp_2xbr_jinc2_sharper_hybrid
+	},
+	{
+		"CRT gtuv050",
+		"crt_gtuv50",
+		sh_crt_gtuv50
+	},
+	{
+		"CRT 4xbr Hybrid CRT",
+		"crt_4xbr_hybrid_crt",
+		sh_crt_4xbr_hybrid_crt
+	},
+	{
+		"CRT Caligari",
+		"crtcrtcaligari",
+		sh_crt_crt_caligari
+	},
+	{
+		"CRT CGWG Fast",
+		"crt_crt_cgwg_fast",
+		sh_crt_crt_cgwg_fast
+	},
+	{
+		"CRT Easymode",
+		"crt_crt_easymode",
+		sh_crt_crt_easymode
+	},
+	{
+		"CRT Easymode Halation",
+		"crt_crt_easymode_halation",
+		sh_crt_crt_easymode_halation
+	},
+	{
+		"CRT Geom",
+		"crt_crt_geom",
+		sh_crt_crt_geom
+	},
+	{
+		"CRTGLow Gauss",
+		"crt_crtglow_gauss",
+		sh_crt_crtglow_gauss
+	},
+	{
+		"CRTGLow Gauss NTSC 3Phase",
+		"crt_crtglow_gauss_ntsc_3phase",
+		sh_crt_crtglow_gauss_ntsc_3phase
+	},
+	{
+		"CRT Hyllian",
+		"crt_crt_hyllian",
+		sh_crt_crt_hyllian
+	},
+	{
+		"CRT Lottes",
+		"crt_crt_lottes",
+		sh_crt_crt_lottes
+	},
+	{
+		"CRT Reverse AA",
+		"crt_crt_reverse_aa",
+		sh_crt_crt_reverse_aa
+	},
+	{
+		"Dotmask",
+		"crt_dotmask",
+		sh_crt_dotmask
+	},
+	{
+		"Eagle Super Eagle",
+		"eagle_super_eagle",
+		sh_eagle_super_eagle
+	},
+	{
+		"Hunterk Borders 1080p Bigblur",
+		"hunterk_borders_1080p_bigblur",
+		sh_hunterk_borders_1080p_bigblur
+	},
+	{
+		"Hunterk Borders 1080p Color Grid",
+		"hunterk_borders_1080p_color_grid",
+		sh_hunterk_borders_1080p_color_grid
+	},
+	{
+		"Hunterk Borders 1080p Mudlord",
+		"hunterk_borders_1080p_mudlord",
+		sh_hunterk_borders_1080p_mudlord
+	},
+	{
+		"Hunterk Borders 1080p Shiny Iterations",
+		"hunterk_borders_1080p_shiny_iterations",
+		sh_hunterk_borders_1080p_shiny_iterations
+	},
+	{
+		"Hunterk Borders 1080p Snow",
+		"hunterk_borders_1080p_snow",
+		sh_hunterk_borders_1080p_snow
+	},
+	{
+		"Hunterk Borders 1080p Voronoi",
+		"hunterk_borders_1080p_voronoi",
+		sh_hunterk_borders_1080p_voronoi
+	},
+	{
+		"Hunterk Borders 1080p Water",
+		"hunterk_borders_1080p_water",
+		sh_hunterk_borders_1080p_water
+	},
+	{
+		"Hunterk Handheld NDS",
+		"hunterk_handheld_nds",
+		sh_hunterk_handheld_nds
+	},
+	{
+		"Hunterk Hq3X",
+		"hunterk_hqx_hq3x",
+		sh_hunterk_hqx_hq3x
+	},
+	{
+		"Hunterk Motionblur Simple",
+		"hunterk_motionblur_motionblur_simple",
+		sh_hunterk_motionblur_motionblur_simple
+	},
+	{
+		"Motionblur Feedback",
+		"motionblur_feedback",
+		sh_motionblur_feedback
+	},
+	{
+		"Mudlord Emboss",
+		"mudlord_emboss",
+		sh_mudlord_emboss
+	},
+	{
+		"Mudlord Mud",
+		"mudlord_mud_mudlord",
+		sh_mudlord_mud_mudlord
+	},
+	{
+		"Mudlord Noise",
+		"mudlord_noise_mudlord",
+		sh_mudlord_noise_mudlord
+	},
+	{
+		"Mudlord Oldtv",
+		"mudlord_oldtv",
+		sh_mudlord_oldtv
+	},
+	{
+		"Waterpaint Water",
+		"waterpaint_water",
+		sh_waterpaint_water
+	},
+
+	{
+		"Shader Test",
+		"shader_test",
+		sh_test
+	},
+
 };
 static const _opt opt_ntsc[] = {
 	{"Composite", "composite", COMPOSITE},
@@ -471,8 +672,8 @@ static const _settings main_cfg[] = {
 		"video", "rendering",
 #if defined (SDL)
 		 "glsl",
-		"# possible values: software, opengl, glsl",
-		"-r, --rendering           type of rendering     : software, opengl, glsl",
+		"# possible values: software, glsl",
+		"-r, --rendering           type of rendering     : software, glsl",
 #elif defined (D3D9)
 		 "hlsl",
 		"# possible values: software, hlsl",

@@ -38,6 +38,7 @@ libcore_a_SOURCES = \
 	main.h \
 	mappers.c \
 	mappers.h \
+	matrix.h \
 	mem_map.h \
 	miniz.h \
 	overscan.c \

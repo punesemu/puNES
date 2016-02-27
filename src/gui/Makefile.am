@@ -36,6 +36,8 @@ BUILT_SOURCES += \
 noinst_LIBRARIES = libgui.a
 libgui_a_SOURCES = \
 	application.hh \
+	cgp.cpp \
+	cgp.h \
 	cheatObject.cpp \
 	cheatObject.hpp \
 	dlgApuChannels.cpp \

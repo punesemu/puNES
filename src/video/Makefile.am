@@ -23,17 +23,14 @@ libvideo_a_SOURCES += \
 	sdl/opengl.c \
 	sdl/opengl.h \
 	sdl/sdl_wid.h \
-	sdl/shaders.h
+	sdl/shaders.c \
+	sdl/shaders.h \
+	sdl/shdcode.h
 libvideo_a_SOURCES += \
 	sdl/glew/glew.c \
 	sdl/glew/glew.h \
 	sdl/glew/glxew.h \
 	sdl/glew/wglew.h
-libvideo_a_SOURCES += \
-	sdl/openGL/cube3d.c \
-	sdl/openGL/cube3d.h \
-	sdl/openGL/no_effect.c \
-	sdl/openGL/no_effect.h
 libvideo_a_SOURCES += \
 	sdl/shaders/color.h \
 	sdl/shaders/crt.h \

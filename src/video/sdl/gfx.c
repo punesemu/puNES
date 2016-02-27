@@ -90,7 +90,7 @@ static SDL_Cursor *init_system_cursor(char *xpm[]);
 BYTE gfx_init(void) {
 	const SDL_VideoInfo *video_info;
 
-	/* casi particolari provenienti dal settings_file_parse() e cmd_line_parse() */
+	// casi particolari provenienti dal settings_file_parse() e cmd_line_parse()
 	if ((cfg->scale == X1) && (cfg->filter != NO_FILTER)) {
 		cfg->scale = X2;
 	}
@@ -108,7 +108,7 @@ BYTE gfx_init(void) {
 
 	sdl_wid();
 
-	/* inizializzazione SDL */
+	// inizializzazione video SDL
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
 		fprintf(stderr, "SDL initialization failed: %s\n", SDL_GetError());
 		return (EXIT_ERROR);
@@ -118,35 +118,28 @@ BYTE gfx_init(void) {
 
 	video_info = SDL_GetVideoInfo();
 
-	/*
-	 * modalita' video con profondita' di colore
-	 * inferiori a 15 bits non sono supportate.
-	 */
-	if (video_info->vfmt->BitsPerPixel < 15) {
-		fprintf(stderr, "Sorry but video mode at 256 color are not supported\n");
+	// modalita' video con profondita' di colore
+	// inferiori a 32 bits non sono supportate.
+	if (video_info->vfmt->BitsPerPixel < 32) {
+		fprintf(stderr, "Sorry but color depth less than 32 bits are not supported\n");
 		return (EXIT_ERROR);
 	}
 
-	/* il filtro hqx supporta solo i 32 bit di profondita' di colore */
-	if (((cfg->filter >= HQ2X) || (cfg->filter <= HQ4X)) && (video_info->vfmt->BitsPerPixel < 32)) {
-		cfg->filter = NO_FILTER;
-	}
-
-	/* controllo se e' disponibile l'accelerazione hardware */
+	// controllo se e' disponibile l'accelerazione hardware
 	if (video_info->hw_available) {
 		software_flags = SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_ASYNCBLIT;
 	} else {
 		software_flags = SDL_SWSURFACE | SDL_ASYNCBLIT;
 	}
 
-	/* per poter inizializzare il glew devo creare un contesto opengl prima */
+	// per poter inizializzare il glew devo creare un contesto opengl prima
 	if (!(surface_sdl = SDL_SetVideoMode(0, 0, 0, SDL_OPENGL))) {
 		opengl.supported = FALSE;
 
 		cfg->render = RENDER_SOFTWARE;
 		gfx_set_render(cfg->render);
 
-		if ((cfg->filter >= PHOSPHOR) && (cfg->filter <= CRT_NO_CURVE)) {
+		if ((cfg->filter >= FLTSHDSTART) && (cfg->filter <= FLTSHDSTOP)) {
 			cfg->filter = NO_FILTER;
 		}
 
@@ -155,7 +148,7 @@ BYTE gfx_init(void) {
 		opengl.supported = TRUE;
 	}
 
-	/* casi particolari provenienti dal settings_file_parse() e cmd_line_parse()*/
+	// casi particolari provenienti dal settings_file_parse() e cmd_line_parse()
 	if (cfg->fullscreen == FULLSCR) {
 		if (!gfx.opengl) {
 			cfg->fullscreen = NO_FULLSCR;
@@ -165,19 +158,24 @@ BYTE gfx_init(void) {
 	}
 	sdl_init_gl();
 
-	/*
-	 * inizializzo l'ntsc che utilizzero' non solo
-	 * come filtro ma anche nel gfx_set_screen() per
-	 * generare la paletta dei colori.
-	 */
+	if (opengl.supported == FALSE) {
+		cfg->render = RENDER_SOFTWARE;
+		gfx_set_render(cfg->render);
+
+		if ((cfg->filter >= FLTSHDSTART) && (cfg->filter <= FLTSHDSTOP)) {
+			cfg->filter = NO_FILTER;
+		}
+	}
+
+	// inizializzo l'ntsc che utilizzero' non solo
+	// come filtro ma anche nel gfx_set_screen() per
+	// generare la paletta dei colori.
 	if (ntsc_init(0, 0, 0, 0, 0) == EXIT_ERROR) {
 		return (EXIT_ERROR);
 	}
 
-	/*
-	 * mi alloco una zona di memoria dove conservare la
-	 * paletta nel formato di visualizzazione.
-	 */
+	// mi alloco una zona di memoria dove conservare la
+	// paletta nel formato di visualizzazione.
 	if (!(palette_win = (uint32_t *) malloc(NUM_COLORS * sizeof(uint32_t)))) {
 		fprintf(stderr, "Unable to allocate the palette\n");
 		return (EXIT_ERROR);
@@ -190,13 +188,11 @@ BYTE gfx_init(void) {
 		gui_fullscreen();
 	} else {
 		gfx_set_screen(cfg->scale, cfg->filter, NO_FULLSCR, cfg->palette, FALSE, FALSE);
-		/*
-		 * nella versione windows (non so in quella linux), sembra che
-		 * il VSync (con alcune schede video) non venga settato correttamente
-		 * al primo gfx_set_screen. E' necessario fare un gfx_reset_video
-		 * e poi nuovamente un gfx_set_screen. Nella versione linux il gui_reset_video()
-		 * non fa assolutamente nulla.
-		 */
+		// nella versione windows (non so in quella linux), sembra che
+		// il VSync (con alcune schede video) non venga settato correttamente
+		// al primo gfx_set_screen. E' necessario fare un gfx_reset_video
+		// e poi nuovamente un gfx_set_screen. Nella versione linux il gui_reset_video()
+		// non fa assolutamente nulla.
 		gui_reset_video();
 	}
 
@@ -211,20 +207,13 @@ void gfx_set_render(BYTE render) {
 	switch (render) {
 		case RENDER_SOFTWARE:
 			gfx.opengl = FALSE;
-			opengl.rotation = FALSE;
-			opengl.glsl.enabled = FALSE;
-			break;
-		case RENDER_OPENGL:
-			gfx.opengl = TRUE;
-			opengl.glsl.enabled = FALSE;
 			break;
 		case RENDER_GLSL:
 			gfx.opengl = TRUE;
-			opengl.glsl.enabled = TRUE;
 			break;
 	}
 }
-void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE force_scale,
+void gfx_set_screen(BYTE scale, DBWORD filter, BYTE fullscreen, BYTE palette, BYTE force_scale,
         BYTE force_palette) {
 	BYTE set_mode;
 	WORD width, height, w_for_pr, h_for_pr;
@@ -234,16 +223,14 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 	width = 0, height = 0;
 	w_for_pr = 0, h_for_pr = 0;
 
-	/*
-	 * l'ordine dei vari controlli non deve essere cambiato:
-	 * 0) overscan
-	 * 1) filtro
-	 * 2) fullscreen
-	 * 3) fattore di scala
-	 * 4) tipo di paletta (IMPORTANTE: dopo il SDL_SetVideoMode)
-	 */
+	// l'ordine dei vari controlli non deve essere cambiato:
+	// 0) overscan
+	// 1) filtro
+	// 2) fullscreen
+	// 3) fattore di scala
+	// 4) tipo di paletta (IMPORTANTE: dopo il SDL_SetVideoMode)
 
-	/* overscan */
+	// overscan
 	{
 		overscan.enabled = cfg->oscan;
 
@@ -266,26 +253,18 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 	}
 	if ((filter != cfg->filter) || info.on_cfg || force_scale) {
 		switch (filter) {
-			case PHOSPHOR:
-			case SCANLINE:
 			case NO_FILTER:
-			case DBL:
-			case CRT_CURVE:
-			case CRT_NO_CURVE:
-			case PHOSPHOR2:
-			case DARK_ROOM:
+			default:
 				gfx.filter = scale_surface;
-				/*
-				 * se sto passando dal filtro ntsc ad un'altro, devo
-				 * ricalcolare la larghezza del video mode quindi
-				 * forzo il controllo del fattore di scala.
-				 */
+				// se sto passando dal filtro ntsc ad un'altro, devo
+				// ricalcolare la larghezza del video mode quindi
+				// forzo il controllo del fattore di scala.
 				if (cfg->filter == NTSC_FILTER) {
-					/* devo reimpostare la larghezza del video mode */
+					// devo reimpostare la larghezza del video mode
 					scale = cfg->scale;
-					/* forzo il controllo del fattore di scale */
+					// forzo il controllo del fattore di scale
 					force_scale = TRUE;
-					/* indico che devo cambiare il video mode */
+					// indico che devo cambiare il video mode
 					set_mode = TRUE;
 				}
 				break;
@@ -305,54 +284,46 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 				} else  if ((filter >= XBRZ2X) && (filter <= XBRZ4X)) {
 					gfx.filter = xBRZ;
 				}
-				/*
-				 * se sto passando dal filtro ntsc ad un'altro, devo
-				 * ricalcolare la larghezza del video mode quindi
-				 * forzo il controllo del fattore di scala.
-				 */
+				// se sto passando dal filtro ntsc ad un'altro, devo
+				// ricalcolare la larghezza del video mode quindi
+				// forzo il controllo del fattore di scala.
 				if (cfg->filter == NTSC_FILTER) {
-					/* forzo il controllo del fattore di scale */
+					// forzo il controllo del fattore di scale
 					force_scale = TRUE;
-					/* indico che devo cambiare il video mode */
+					// indico che devo cambiare il video mode
 					set_mode = TRUE;
 				}
 				break;
 			case NTSC_FILTER:
 				gfx.filter = ntsc_surface;
-				/*
-				 * il fattore di scala deve essere gia' stato
-				 * inizializzato almeno una volta.
-				 */
+				// il fattore di scala deve essere gia' stato inizializzato almeno una volta
 				if (cfg->scale != NO_CHANGE) {
-					/* devo reimpostare la larghezza del video mode */
+					// devo reimpostare la larghezza del video mode
 					scale = cfg->scale;
 				} else if (scale == NO_CHANGE) {
-					/*
-					 * se scale e new_scale sono uguali a NO_CHANGE,
-					 * imposto un default.
-					 */
+					// se scale e new_scale sono uguali a NO_CHANGE, imposto un default
 					scale = X2;
 				}
-				/* forzo il controllo del fattore di scale */
+				// forzo il controllo del fattore di scale
 				force_scale = TRUE;
-				/* indico che devo cambiare il video mode */
+				// indico che devo cambiare il video mode
 				set_mode = TRUE;
 				break;
 		}
 	}
 
-	/* fullscreen */
+	// fullscreen
 	if (fullscreen == NO_CHANGE) {
 		fullscreen = cfg->fullscreen;
 	}
 	if ((fullscreen != cfg->fullscreen) || info.on_cfg) {
-		/* forzo il controllo del fattore di scale */
+		// forzo il controllo del fattore di scale
 		force_scale = TRUE;
-		/* indico che devo cambiare il video mode */
+		// indico che devo cambiare il video mode
 		set_mode = TRUE;
 	}
 
-	/* fattore di scala */
+	// fattore di scala
 	if (scale == NO_CHANGE) {
 		scale = cfg->scale;
 	}
@@ -369,15 +340,10 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 
 		switch (scale) {
 			case X1:
-				/*
-				 * il fattore di scala a 1 e' possibile
-				 * solo senza filtro.
-				 */
+				// il fattore di scala a 1 e' possibile  solo senza filtro
 				if (filter != NO_FILTER) {
-					/*
-					 * con un fattore di scala X1 effect deve essere
-					 * sempre impostato su scale_surface.
-					 */
+					// con un fattore di scala X1 effect deve essere
+					// sempre impostato su scale_surface.
 					gfx.filter = scale_surface;
 					return;
 				}
@@ -409,17 +375,15 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 		gfx.h[NO_OVERSCAN] = SCR_LINES * scale;
 	}
 
-	/*
-	 * cfg->scale e cfg->filter posso aggiornarli prima
-	 * del set_mode, mentre cfg->fullscreen e cfg->palette
-	 * devo farlo necessariamente dopo.
-	 */
-	/* salvo il nuovo fattore di scala */
+	// cfg->scale e cfg->filter posso aggiornarli prima
+	// del set_mode, mentre cfg->fullscreen e cfg->palette
+	// devo farlo necessariamente dopo.
+	// salvo il nuovo fattore di scala
 	cfg->scale = scale;
-	/* salvo ill nuovo filtro */
+	// salvo ill nuovo filtro
 	cfg->filter = filter;
 
-	/* devo eseguire un SDL_SetVideoMode? */
+	// devo eseguire un SDL_SetVideoMode?
 	if (set_mode) {
 		uint32_t flags = software_flags;
 
@@ -429,7 +393,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 		gfx.pixel_aspect_ratio = 1.0f;
 
 		if (gfx.opengl) {
-			flags = opengl.flags;
+			flags = opengl.sdl.flags;
 
 			SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 5);
 			SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 5);
@@ -441,9 +405,9 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 			//SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
 			//SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 32);
 
-			/* abilito il doublebuffering */
+			// abilito il doublebuffering
 			SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, TRUE);
-			/* abilito il vsync se e' necessario */
+			// abilito il vsync se e' necessario
 			SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, cfg->vsync);
 
 			if (fullscreen) {
@@ -451,7 +415,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 				gfx.h[VIDEO_MODE] = gfx.h[MONITOR];
 			}
 
-			/* Pixel Aspect Ratio */
+			// Pixel Aspect Ratio
 			{
 				if (cfg->filter == NTSC_FILTER) {
 					gfx.pixel_aspect_ratio = 1.0f;
@@ -484,21 +448,19 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 			}
 		}
 
-		/* faccio quello che serve prima del setvideo */
+		// faccio quello che serve prima del setvideo
 		gui_set_video_mode();
 
-		/*
-		 * nella versione a 32 bit (GTK) dopo un gfx_reset_video,
-		 * se non lo faccio anche qui, crasha tutto.
-		 */
+		// nella versione a 32 bit (GTK) dopo un gfx_reset_video,
+		// se non lo faccio anche qui, crasha tutto.
 		//sdl_wid();
 
-		/* inizializzo la superfice video */
+		// inizializzo la superfice video
 		surface_sdl = SDL_SetVideoMode(gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE], 0, flags);
 
 		gui_after_set_video_mode();
 
-		/* in caso di errore */
+		// in caso di errore
 		if (!surface_sdl) {
 			fprintf(stderr, "SDL_SetVideoMode failed : %s\n", SDL_GetError());
 			return;
@@ -507,14 +469,14 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 		gfx.bit_per_pixel = surface_sdl->format->BitsPerPixel;
 	}
 
-	/* interpolation */
+	// interpolation
 	if (gfx.opengl && cfg->interpolation) {
 		opengl.interpolation = TRUE;
 	} else {
 		opengl.interpolation = FALSE;
 	}
 
-	/* paletta */
+	// paletta
 	if (palette == NO_CHANGE) {
 		palette = cfg->palette;
 	}
@@ -556,13 +518,10 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 				break;
 		}
 
-		/* inizializzo in ogni caso la tabella YUV dell'hqx */
+		// inizializzo in ogni caso la tabella YUV dell'hqx
 		hqx_init();
 
-		/*
-		 * memorizzo i colori della paletta nel
-		 * formato di visualizzazione.
-		 */
+		//memorizzo i colori della paletta nel formato di visualizzazione
 		{
 			WORD i;
 
@@ -573,12 +532,12 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 		}
 	}
 
-	/* salvo il nuovo stato del fullscreen */
+	// salvo il nuovo stato del fullscreen
 	cfg->fullscreen = fullscreen;
-	/* salvo il nuovo tipo di paletta */
+	// salvo il nuovo tipo di paletta
 	cfg->palette = palette;
 
-	/* software rendering */
+	// software rendering
 	framebuffer = surface_sdl;
 	flip = SDL_Flip;
 
@@ -592,133 +551,54 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 	h_for_pr = gfx.h[VIDEO_MODE];
 
 	if (gfx.opengl) {
-		opengl.scale_force = FALSE;
+		DBWORD f = NO_FILTER;
 		opengl.scale = cfg->scale;
-		opengl.factor = X1;
-		opengl.PSS = FALSE;
-		opengl.glsl.shader_used = FALSE;
-		shader.id = SHADER_NONE;
-		opengl.glsl.param = 0;
+		opengl.PSS = ((gfx.pixel_aspect_ratio != 1.0f) && cfg->PAR_soft_stretch) ? TRUE : FALSE;
 
-		if ((opengl.glsl.compliant == TRUE) && (opengl.glsl.enabled == TRUE)) {
-
-#define PSS()\
-	opengl.PSS = ((gfx.pixel_aspect_ratio != 1.0f) && (cfg->PAR_soft_stretch == TRUE)) ? TRUE : FALSE
-#define glsl_up(e, s, p)\
-	opengl.glsl.shader_used = TRUE;\
-	shader.id = s;\
-	opengl.scale_force = TRUE;\
-	opengl.scale = X1;\
-	opengl.factor = cfg->scale;\
-	PSS();\
-	opengl.glsl.param = p;\
-	gfx.filter = e
-
-			glsl_delete_shaders(&shader);
-
-			switch (cfg->filter) {
-				case NO_FILTER:
-					glsl_up(scale_surface, SHADER_NO_FILTER, 0);
-					break;
-				case PHOSPHOR:
-					glsl_up(scale_surface, SHADER_PHOSPHOR, 0);
-					break;
-				case PHOSPHOR2:
-					glsl_up(scale_surface, SHADER_PHOSPHOR, 1);
-					break;
-				case SCANLINE:
-					glsl_up(scale_surface, SHADER_SCANLINE, 0);
-					break;
-				case DBL:
-					glsl_up(scale_surface, SHADER_DONTBLOOM, 0);
-					break;
-				case DARK_ROOM:
-					glsl_up(scale_surface, SHADER_DONTBLOOM, 1);
-					break;
-				case CRT_CURVE:
-					glsl_up(scale_surface, SHADER_CRT, 0);
-					/* niente interpolazione perche' gia fatta dallo shader stesso */
-					opengl.interpolation = opengl.PSS = FALSE;
-					break;
-				case CRT_NO_CURVE:
-					glsl_up(scale_surface, SHADER_CRT, 1);
-					/* niente interpolazione perche' gia fatta dallo shader stesso */
-					opengl.interpolation = opengl.PSS = FALSE;
-					break;
-				case SCALE2X:
-				case SCALE3X:
-				case SCALE4X:
-				case HQ2X:
-				case HQ3X:
-				case HQ4X:
-				case XBRZ2X:
-				case XBRZ3X:
-				case XBRZ4X:
-				case NTSC_FILTER:
-					PSS();
-					break;
-			}
-
-			/*
-			if (cfg->fullscreen) {
-				if ((cfg->filter >= SCALE2X) && (cfg->filter <= SCALE4X)) {
-					glsl_up(scaleNx, SHADER_NO_FILTER);
-					opengl.scale = X2;
-					opengl.factor = (float) cfg->scale / 2.0f;
-				} else if ((cfg->filter >= HQ2X) && (cfg->filter <= HQ4X)) {
-					glsl_up(hqNx, SHADER_NO_FILTER);
-					opengl.scale = X2;
-					opengl.factor = (float) cfg->scale / 2.0f;
-				}
-			}
-			*/
+		if ((filter == NO_FILTER) || (filter >= FLTSHDSTART)) {
+			opengl.scale = X1;
+			gfx.filter = scale_surface;
+			f = filter;
 		}
 
-		/* creo la superficie che utilizzero' come texture */
-		sdl_create_surface_gl(surface_sdl, gfx.w[CURRENT], gfx.h[CURRENT], cfg->fullscreen);
+		shaders_set(f);
 
-		/* opengl rendering */
-		framebuffer = opengl.surface_gl;
-		flip = opengl_flip;
+		// creo tutto il necessario per il rendering
+		if (sdl_setup_renderingl_gl(surface_sdl) == EXIT_ERROR) {
+			gfx.opengl = FALSE;
+		} else {
+			// opengl rendering
+			framebuffer = opengl.sdl.surface;
+			flip = opengl_flip;
 
-		text.surface = surface_sdl;
-		text_clear = opengl_text_clear;
-		text_blit = opengl_text_blit;
+			// gestione testo
+			text.surface = surface_sdl;
+			text_clear = opengl_text_clear;
+			text_blit = opengl_text_blit;
+			text.w = opengl.vp->w;
+			text.h = opengl.vp->h;
 
-		text.w = gfx.w[CURRENT];
-		text.h = gfx.h[CURRENT];
-
-		{
-			WORD r = (WORD) opengl.quadcoords.r;
-			WORD l = (WORD) opengl.quadcoords.l;
-			WORD t = (WORD) opengl.quadcoords.t;
-			WORD b = (WORD) opengl.quadcoords.b;
-
-			w_for_pr = r - l;
-			h_for_pr = t - b;
- 		}
+			w_for_pr = opengl.vp->w;
+			h_for_pr = opengl.vp->h;
+		}
 	}
 
-	/* questo controllo devo farlo necessariamente dopo il glew_init() */
-	if ((opengl.glsl.compliant == FALSE) || (opengl.glsl.enabled == FALSE)) {
-		if ((filter >= PHOSPHOR) && (filter <= CRT_NO_CURVE)) {
-			filter = NO_FILTER;
-			goto gfx_set_screen_start;
-		}
+	// questo controllo devo farlo necessariamente dopo il glew_init()
+	if (!gfx.opengl && (filter >= FLTSHDSTART)) {
+		filter = NO_FILTER;
+		goto gfx_set_screen_start;
 	}
 
 	gfx_text_reset();
 
-	/*
-	 * calcolo le proporzioni tra il disegnato a video (overscan e schermo
-	 * con le dimensioni per il filtro NTSC compresi) e quello che dovrebbe
-	 * essere (256 x 240). Mi serve per calcolarmi la posizione del puntatore
-	 * dello zapper.
-	 */
+	// calcolo le proporzioni tra il disegnato a video (overscan e schermo
+	// con le dimensioni per il filtro NTSC compresi) e quello che dovrebbe
+	// essere (256 x 240). Mi serve per calcolarmi la posizione del puntatore
+	// dello zapper.
 	gfx.w_pr = ((float) w_for_pr / gfx.w[CURRENT]) * ((float) gfx.w[NO_OVERSCAN] / SCR_ROWS);
 	gfx.h_pr = ((float) h_for_pr / gfx.h[CURRENT]) * ((float) gfx.h[NO_OVERSCAN] / SCR_LINES);
 
-	/* setto il titolo della finestra */
+	// setto il titolo della finestra
 	gui_update();
 
 	if (info.on_cfg == TRUE) {
@@ -737,9 +617,9 @@ void gfx_draw_screen(BYTE forced) {
 		}
 	}
 
-	/* se il frameskip me lo permette (o se forzato), disegno lo screen */
+	// se il frameskip me lo permette (o se forzato), disegno lo screen
 	if (forced || !ppu.skip_draw) {
-		/* applico l'effetto desiderato */
+		// applico l'effetto desiderato
 		if (gfx.opengl) {
 			gfx.filter(screen.data,
 					screen.line,
@@ -772,7 +652,7 @@ void gfx_draw_screen(BYTE forced) {
 			text_rendering(TRUE);
 		}
 
-		/* disegno a video */
+		// disegno a video
 		flip(framebuffer);
 	}
 }
@@ -782,14 +662,6 @@ void gfx_reset_video(void) {
 	}
 
 	surface_sdl = framebuffer = NULL;
-
-	if (opengl.surface_gl) {
-		SDL_FreeSurface(opengl.surface_gl);
-	}
-	if (opengl.screen.id) {
-		glDeleteTextures(1, &opengl.screen.id);
-	}
-	opengl.surface_gl = NULL;
 
 	//sdl_wid();
 	SDL_QuitSubSystem(SDL_INIT_VIDEO);

@@ -132,7 +132,6 @@
       </property>
       <addaction name="action_Rend0"/>
       <addaction name="action_Rend1"/>
-      <addaction name="action_Rend2"/>
      </widget>
      <widget class="QMenu" name="menu_FPS">
       <property name="title">
@@ -237,13 +236,13 @@
       <addaction name="separator"/>
       <addaction name="action_Oscan_Set_Borders"/>
      </widget>
-     <widget class="QMenu" name="menu_Filter">
+     <widget class="QMenu" name="menu_Software_Filters">
       <property name="title">
-       <string>Fi&amp;lter</string>
+       <string>Software Fi&amp;lters</string>
       </property>
       <property name="icon">
        <iconset resource="application.qrc">
-        <normaloff>:/icon/icons/filter.png</normaloff>:/icon/icons/filter.png</iconset>
+        <normaloff>:/icon/icons/cpu_filter.png</normaloff>:/icon/icons/cpu_filter.png</iconset>
       </property>
       <addaction name="action_No_Filter"/>
       <addaction name="action_Scale2X"/>
@@ -258,13 +257,136 @@
       <addaction name="action_NTSC_Composite"/>
       <addaction name="action_NTSC_SVideo"/>
       <addaction name="action_NTSC_RGB"/>
-      <addaction name="action_Phosphor"/>
-      <addaction name="action_Phosphor2"/>
-      <addaction name="action_Scanline"/>
-      <addaction name="action_DBL"/>
-      <addaction name="action_Dark_Room"/>
-      <addaction name="action_CRT_With_Curve"/>
-      <addaction name="action_CRT_Without_Curve"/>
+     </widget>
+     <widget class="QMenu" name="menu_Shaders">
+      <property name="title">
+       <string>S&amp;haders</string>
+      </property>
+      <property name="icon">
+       <iconset resource="application.qrc">
+        <normaloff>:/icon/icons/effect.png</normaloff>:/icon/icons/effect.png</iconset>
+      </property>
+      <widget class="QMenu" name="menu_crt">
+       <property name="title">
+        <string>crt</string>
+       </property>
+       <addaction name="action_crt_gtu_v050"/>
+       <addaction name="action_crt_4xbr_hybrid_crt"/>
+       <addaction name="action_crt_crt_caligari"/>
+       <addaction name="action_crt_crt_cgwg_fast"/>
+       <addaction name="action_crt_crt_easymode"/>
+       <addaction name="action_crt_crt_easymode_halation"/>
+       <addaction name="action_crt_crt_geom"/>
+       <addaction name="action_crt_crtglow_gauss"/>
+       <addaction name="action_crt_crtglow_gauss_ntsc_3phase"/>
+       <addaction name="action_crt_crt_hyllian"/>
+       <addaction name="action_crt_crt_lottes"/>
+       <addaction name="action_crt_crt_reverse_aa"/>
+       <addaction name="action_crt_dotmask"/>
+      </widget>
+      <widget class="QMenu" name="menu_mudlord">
+       <property name="title">
+        <string>mudlord</string>
+       </property>
+       <addaction name="action_mudlord_emboss"/>
+       <addaction name="action_mudlord_mud_mudlord"/>
+       <addaction name="action_mudlord_noise_mudlord"/>
+       <addaction name="action_mudlord_oldtv"/>
+      </widget>
+      <widget class="QMenu" name="menu_cgp">
+       <property name="title">
+        <string>cgp</string>
+       </property>
+       <widget class="QMenu" name="menu_cgp_tvout">
+        <property name="title">
+         <string>tvout</string>
+        </property>
+        <addaction name="action_cgp_tvout_tvout_ntsc_2phase_composite"/>
+        <addaction name="action_cgp_tvout_tvout_ntsc_256px_svideo"/>
+       </widget>
+       <addaction name="menu_cgp_tvout"/>
+       <addaction name="action_cgp_2xbr_crt_hyllian"/>
+       <addaction name="action_cgp_2xbr_jinc2_sharper_hybrid"/>
+      </widget>
+      <widget class="QMenu" name="menu_waterpaint">
+       <property name="title">
+        <string>waterpaint</string>
+       </property>
+       <addaction name="action_waterpaint_water"/>
+      </widget>
+      <widget class="QMenu" name="menu_eagle">
+       <property name="title">
+        <string>eagle</string>
+       </property>
+       <addaction name="action_eagle_super_eagle"/>
+      </widget>
+      <widget class="QMenu" name="menu_anti_aliasing">
+       <property name="title">
+        <string>anti-aliasing</string>
+       </property>
+       <addaction name="action_anti_aliasing_advanced_aa"/>
+       <addaction name="action_anti_aliasing_fxaa_edge_detect"/>
+      </widget>
+      <widget class="QMenu" name="menu_hunterk">
+       <property name="title">
+        <string>hunterk</string>
+       </property>
+       <widget class="QMenu" name="menu_hunterk_hqx">
+        <property name="title">
+         <string>hqx</string>
+        </property>
+        <addaction name="action_hunterk_hqx_hq3x"/>
+       </widget>
+       <widget class="QMenu" name="menu_hunterk_borders">
+        <property name="title">
+         <string>borders</string>
+        </property>
+        <widget class="QMenu" name="menu_hunterk_borders_1080p">
+         <property name="title">
+          <string>1080p</string>
+         </property>
+         <addaction name="action_hunterk_borders_1080p_bigblur"/>
+         <addaction name="action_hunterk_borders_1080p_color_grid"/>
+         <addaction name="action_hunterk_borders_1080p_mudlord"/>
+         <addaction name="action_hunterk_borders_1080p_shiny_iterations"/>
+         <addaction name="action_hunterk_borders_1080p_snow"/>
+         <addaction name="action_hunterk_borders_1080p_voronoi"/>
+         <addaction name="action_hunterk_borders_1080p_water"/>
+        </widget>
+        <addaction name="menu_hunterk_borders_1080p"/>
+       </widget>
+       <widget class="QMenu" name="menu_hunterk_motionblur">
+        <property name="title">
+         <string>motionblur</string>
+        </property>
+        <addaction name="action_hunterk_motionblur_motionblur_simple"/>
+       </widget>
+       <widget class="QMenu" name="menu_hunterk_handheld">
+        <property name="title">
+         <string>handheld</string>
+        </property>
+        <addaction name="action_hunterk_handheld_nds"/>
+       </widget>
+       <addaction name="menu_hunterk_borders"/>
+       <addaction name="menu_hunterk_handheld"/>
+       <addaction name="menu_hunterk_hqx"/>
+       <addaction name="menu_hunterk_motionblur"/>
+      </widget>
+      <widget class="QMenu" name="menu_motionblur">
+       <property name="title">
+        <string>motionblur</string>
+       </property>
+       <addaction name="action_motionblur_feedback"/>
+      </widget>
+      <addaction name="action_shader_test"/>
+      <addaction name="menu_anti_aliasing"/>
+      <addaction name="menu_cgp"/>
+      <addaction name="menu_crt"/>
+      <addaction name="menu_eagle"/>
+      <addaction name="menu_hunterk"/>
+      <addaction name="menu_motionblur"/>
+      <addaction name="menu_mudlord"/>
+      <addaction name="menu_waterpaint"/>
      </widget>
      <widget class="QMenu" name="menu_Palette">
       <property name="title">
@@ -285,16 +407,6 @@
       <addaction name="action_Palette_Save_File"/>
       <addaction name="action_Palette_Load_File"/>
      </widget>
-     <widget class="QMenu" name="menu_Effect">
-      <property name="title">
-       <string notr="true">&amp;Effect</string>
-      </property>
-      <property name="icon">
-       <iconset resource="application.qrc">
-        <normaloff>:/icon/icons/effect.png</normaloff>:/icon/icons/effect.png</iconset>
-      </property>
-      <addaction name="action_Cube"/>
-     </widget>
      <addaction name="menu_Rendering"/>
      <addaction name="menu_FPS"/>
      <addaction name="menu_Frame_skip"/>
@@ -302,9 +414,9 @@
      <addaction name="menu_Scale"/>
      <addaction name="menu_Pixel_Aspect_Ratio"/>
      <addaction name="menu_Overscan"/>
-     <addaction name="menu_Filter"/>
+     <addaction name="menu_Software_Filters"/>
+     <addaction name="menu_Shaders"/>
      <addaction name="menu_Palette"/>
-     <addaction name="menu_Effect"/>
      <addaction name="separator"/>
      <addaction name="action_Disable_emphasis_swap_PAL"/>
      <addaction name="action_VSync"/>
@@ -698,20 +810,6 @@
     <bool>false</bool>
    </property>
   </action>
-  <action name="action_Rend2">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string notr="true">Rend2</string>
-   </property>
-   <property name="visible">
-    <bool>false</bool>
-   </property>
-  </action>
   <action name="action_FPS_Default">
    <property name="checkable">
     <bool>true</bool>
@@ -1057,62 +1155,6 @@
     <string>&amp;No Filter</string>
    </property>
   </action>
-  <action name="action_Phosphor">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>&amp;Phosphor</string>
-   </property>
-  </action>
-  <action name="action_Phosphor2">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>&amp;Phosphor2</string>
-   </property>
-  </action>
-  <action name="action_Scanline">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>S&amp;canline</string>
-   </property>
-  </action>
-  <action name="action_DBL">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>&amp;DBL</string>
-   </property>
-  </action>
-  <action name="action_Dark_Room">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>Dark R&amp;oom</string>
-   </property>
-  </action>
-  <action name="action_CRT_With_Curve">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>&amp;CRT With Curve</string>
-   </property>
-  </action>
-  <action name="action_CRT_Without_Curve">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>&amp;CRT Without Curve</string>
-   </property>
-  </action>
   <action name="action_Scale2X">
    <property name="checkable">
     <bool>true</bool>
@@ -1273,14 +1315,6 @@
    </property>
    <property name="text">
     <string>&amp;Load from file</string>
-   </property>
-  </action>
-  <action name="action_Cube">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string notr="true">&amp;Cube</string>
    </property>
   </action>
   <action name="action_VSync">
@@ -1961,6 +1995,286 @@
    </property>
    <property name="text">
     <string>&amp;Pause</string>
+   </property>
+  </action>
+  <action name="actionCRT">
+   <property name="text">
+    <string>CRT</string>
+   </property>
+  </action>
+  <action name="action_crt_gtu_v050">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>gtu-v050</string>
+   </property>
+  </action>
+  <action name="action_crt_4xbr_hybrid_crt">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>4xbr-hybrid-crt</string>
+   </property>
+  </action>
+  <action name="action_crt_crt_geom">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>crt-geom</string>
+   </property>
+  </action>
+  <action name="action_crt_crt_hyllian">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>crt-hyllian</string>
+   </property>
+  </action>
+  <action name="action_mudlord_emboss">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>emboss</string>
+   </property>
+  </action>
+  <action name="action_mudlord_noise_mudlord">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>noise-mudlord</string>
+   </property>
+  </action>
+  <action name="action_mudlord_oldtv">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>oldtv</string>
+   </property>
+  </action>
+  <action name="action_cgp_2xbr_crt_hyllian">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>2xbr-crt-hyllian</string>
+   </property>
+  </action>
+  <action name="action_cgp_2xbr_jinc2_sharper_hybrid">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>2xbr-jinc2-sharper-hybrid</string>
+   </property>
+  </action>
+  <action name="action_waterpaint_water">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>water</string>
+   </property>
+  </action>
+  <action name="action_eagle_super_eagle">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>super-eagle</string>
+   </property>
+  </action>
+  <action name="action_anti_aliasing_advanced_aa">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>advanced-aa</string>
+   </property>
+  </action>
+  <action name="action_mudlord_mud_mudlord">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>mud-mudlord</string>
+   </property>
+  </action>
+  <action name="action_anti_aliasing_fxaa_edge_detect">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>fxaa-edge-detect</string>
+   </property>
+  </action>
+  <action name="action_cgp_tvout_tvout_ntsc_2phase_composite">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>tvout-ntsc-2phase-composite</string>
+   </property>
+  </action>
+  <action name="action_crt_crt_caligari">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>crt-caligari</string>
+   </property>
+  </action>
+  <action name="action_crt_crt_cgwg_fast">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>crt-cgwg-fast</string>
+   </property>
+  </action>
+  <action name="action_shader_test">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>test</string>
+   </property>
+  </action>
+  <action name="action_crt_crt_easymode">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>crt-easymode</string>
+   </property>
+  </action>
+  <action name="action_crt_crt_easymode_halation">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>crt-easymode-halation</string>
+   </property>
+  </action>
+  <action name="action_crt_crtglow_gauss">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>crtglow-gauss</string>
+   </property>
+  </action>
+  <action name="action_crt_crtglow_gauss_ntsc_3phase">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>crtglow-gauss-ntsc-3phase</string>
+   </property>
+  </action>
+  <action name="action_crt_crt_lottes">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>crt-lottes</string>
+   </property>
+  </action>
+  <action name="action_crt_crt_reverse_aa">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>crt-reverse-aa</string>
+   </property>
+  </action>
+  <action name="action_crt_dotmask">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>dotmask</string>
+   </property>
+  </action>
+  <action name="action_hunterk_hqx_hq3x">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>hq3x</string>
+   </property>
+  </action>
+  <action name="action_hunterk_borders_1080p_mudlord">
+   <property name="text">
+    <string>mudlord</string>
+   </property>
+  </action>
+  <action name="action_hunterk_borders_1080p_bigblur">
+   <property name="text">
+    <string>bigblur</string>
+   </property>
+  </action>
+  <action name="action_hunterk_borders_1080p_color_grid">
+   <property name="text">
+    <string>color-grid</string>
+   </property>
+  </action>
+  <action name="action_hunterk_borders_1080p_shiny_iterations">
+   <property name="text">
+    <string>shiny-iterations</string>
+   </property>
+  </action>
+  <action name="action_hunterk_borders_1080p_snow">
+   <property name="text">
+    <string>snow</string>
+   </property>
+  </action>
+  <action name="action_hunterk_borders_1080p_voronoi">
+   <property name="text">
+    <string>voronoi</string>
+   </property>
+  </action>
+  <action name="action_hunterk_borders_1080p_water">
+   <property name="text">
+    <string>water</string>
+   </property>
+  </action>
+  <action name="action_hunterk_motionblur_motionblur_simple">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>motionblur-simple</string>
+   </property>
+  </action>
+  <action name="action_cgp_tvout_tvout_ntsc_256px_svideo">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>tvout+ntsc-256px-svideo</string>
+   </property>
+  </action>
+  <action name="action_hunterk_handheld_nds">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>nds</string>
+   </property>
+  </action>
+  <action name="action_motionblur_feedback">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>feedback</string>
    </property>
   </action>
  </widget>

@@ -216,9 +216,6 @@ void dlgInput::update_dialog() {
 	update_text_shortcut(parentMain->ui->action_2x, SET_INP_SC_SCALE_2X);
 	update_text_shortcut(parentMain->ui->action_3x, SET_INP_SC_SCALE_3X);
 	update_text_shortcut(parentMain->ui->action_4x, SET_INP_SC_SCALE_4X);
-#if defined (SDL)
-	update_text_shortcut(parentMain->ui->action_Cube, SET_INP_SC_EFFECT_CUBE);
-#endif
 	update_text_shortcut(parentMain->ui->action_Interpolation, SET_INP_SC_INTERPOLATION);
 	update_text_shortcut(parentMain->ui->action_Fullscreen, SET_INP_SC_FULLSCREEN);
 	update_text_shortcut(parentMain->ui->action_Stretch_in_fullscreen, SET_INP_SC_STRETCH_FULLSCREEN);
@@ -712,12 +709,6 @@ void dlgInput::s_default_clicked(bool checked) {
 	update_dialog();
 }
 void dlgInput::s_apply_clicked(bool checked) {
-#if defined (SDL)
-	if (opengl.rotation && (input_zapper_is_connected((_port *) &data.port) == TRUE)) {
-		mainWindow::s_set_effect();
-	}
-#endif
-
 	memcpy(&cfg->input, &data.settings, sizeof(_config_input));
 
 	for (int i = PORT1; i < PORT_MAX; i++) {
