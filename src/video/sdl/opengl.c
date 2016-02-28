@@ -20,12 +20,10 @@
 #include "opengl.h"
 #include "ppu.h"
 #include "conf.h"
-
 #include "qt.h"
 #include "cgp.h"
 
 #define FHOPENGLGEST
-
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
 enum _texture_info {
@@ -628,7 +626,6 @@ static void shd_set_vertex_buffer(_vertex_buffer *vb, _texture_rect *rect) {
 
 	vb[1].s0 = x; vb[2].t0 = y;
 	vb[3].s0 = x; vb[3].t0 = y;
-
 }
 INLINE static void shd_set_params_text(_shader *shd) {
 	GLuint buffer_index = 0;
@@ -1009,6 +1006,9 @@ static BYTE tex_create(_texture *texture, GLuint index, GLuint clean) {
 
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture->id, 0);
 
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
 		fprintf(stderr, "INFO: Error on create FBO.\n");
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -1028,9 +1028,6 @@ static BYTE tex_create(_texture *texture, GLuint index, GLuint clean) {
 		snprintf(define, sizeof(define), "#define %s_ALIAS\n", sp->alias);
 		strncpy(opengl.alias_define, define, sizeof(opengl.alias_define));
 	}
-
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
 
 	return (EXIT_OK);
 }
