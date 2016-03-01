@@ -69,7 +69,6 @@ enum state_save_enum { SAVE, LOAD };
 mainWindow::mainWindow(Ui::mainWindow *u, cheatObject *cho) : QMainWindow() {
 	ui = u;
 	statusbar = new sbarWidget(u, this);
-	timer_draw = new QTimer(this);
 	chobj = cho;
 
 	position.setX(100);
@@ -1780,6 +1779,11 @@ void mainWindow::s_set_fullscreen() {
 	}
 
 	gui_set_focus();
+}
+void mainWindow::s_no_screensaver() {
+#if defined (__WIN32__)
+	SetThreadExecutionState(ES_DISPLAY_REQUIRED | ES_SYSTEM_REQUIRED | ES_CONTINUOUS);
+#endif
 }
 void mainWindow::s_fullscreen(bool state) {
 	if (state == true) {

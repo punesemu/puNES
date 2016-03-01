@@ -27,7 +27,9 @@
 #include "common.h"
 #include "emu.h"
 #include "jstick.h"
+#if defined (SDL)
 #include "opengl.h"
+#endif
 
 #if defined (__cplusplus)
 #define EXTERNC extern "C"

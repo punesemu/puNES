@@ -50,6 +50,15 @@
 #endif
 #endif
 
+static struct _qt {
+	QApplication *app;
+	Ui::mainWindow *ui;
+	mainWindow *mwin;
+	screenWidget *screen;
+	cheatObject *chobj;
+	QImage qimage;
+} qt;
+
 class appEventFilter: public QObject {
 	public:
 		appEventFilter() : QObject() {};
@@ -68,15 +77,6 @@ class appEventFilter: public QObject {
 			return (QObject::eventFilter(object, event));
 		}
 };
-
-static struct _qt {
-	QApplication *app;
-	Ui::mainWindow *ui;
-	mainWindow *mwin;
-	screenWidget *screen;
-	cheatObject *chobj;
-	QImage qimage;
-} qt;
 
 void gui_quit(void) {}
 BYTE gui_create(void) {
@@ -115,6 +115,15 @@ void gui_start(void) {
 
 	QObject::connect(timer, SIGNAL(timeout()), qt.mwin, SLOT(s_loop()));
 	timer->start();
+
+#if defined (__WIN32__)
+	{
+		QTimer *no_screensaver = new QTimer(qt.mwin);
+
+		QObject::connect(no_screensaver, SIGNAL(timeout()), qt.mwin, SLOT(s_no_screensaver()));
+		no_screensaver->start(1000 * 50);
+	}
+#endif
 
 	gui.start = TRUE;
 

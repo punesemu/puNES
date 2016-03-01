@@ -62,7 +62,6 @@ class screenWidget: public QWidget {
 		void dragEnterEvent(QDragEnterEvent *event);
 		void dropEvent(QDropEvent *event);
 		bool eventFilter(QObject *obj, QEvent *event);
-
 };
 
 #endif /* SCREENWIDGET_HPP_ */

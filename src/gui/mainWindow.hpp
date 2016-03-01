@@ -49,7 +49,6 @@ class mainWindow: public QMainWindow {
 	public:
 		cheatObject *chobj;
 		sbarWidget *statusbar;
-		QTimer *timer_draw;
 		Ui::mainWindow *ui;
 		struct _shcjoy {
 			bool enabled;
@@ -102,6 +101,7 @@ class mainWindow: public QMainWindow {
 
 	public slots:
 		void s_set_fullscreen();
+		void s_no_screensaver();
 
 	private slots:
 		void s_fullscreen(bool state);
