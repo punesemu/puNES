@@ -19,8 +19,6 @@
 #ifndef SHADERS_H_
 #define SHADERS_H_
 
-#include "gfx.h"
-
 enum max_pass { MAX_PASS = 24, MAX_PREV = 7, MAX_PARAM = 128 };
 enum texture_wrap_type {
 	TEXTURE_WRAP_BORDER,
