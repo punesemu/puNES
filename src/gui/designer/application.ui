@@ -130,8 +130,8 @@
        <iconset resource="application.qrc">
         <normaloff>:/icon/icons/rendering.png</normaloff>:/icon/icons/rendering.png</iconset>
       </property>
-      <addaction name="action_Rend0"/>
-      <addaction name="action_Rend1"/>
+      <addaction name="action_Rend_Software"/>
+      <addaction name="action_Rend_GLSL"/>
      </widget>
      <widget class="QMenu" name="menu_FPS">
       <property name="title">
@@ -378,6 +378,12 @@
        </property>
        <addaction name="action_motionblur_feedback"/>
       </widget>
+      <widget class="QMenu" name="menu_xbr">
+       <property name="title">
+        <string>xbr</string>
+       </property>
+       <addaction name="action_xbr_xbr_lv2_multipass"/>
+      </widget>
       <addaction name="action_shader_test"/>
       <addaction name="menu_anti_aliasing"/>
       <addaction name="menu_cgp"/>
@@ -387,6 +393,7 @@
       <addaction name="menu_motionblur"/>
       <addaction name="menu_mudlord"/>
       <addaction name="menu_waterpaint"/>
+      <addaction name="menu_xbr"/>
      </widget>
      <widget class="QMenu" name="menu_Palette">
       <property name="title">
@@ -782,32 +789,20 @@
     <string>&amp;Auto</string>
    </property>
   </action>
-  <action name="action_Rend0">
+  <action name="action_Rend_Software">
    <property name="checkable">
     <bool>true</bool>
    </property>
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
    <property name="text">
-    <string notr="true">Rend0</string>
-   </property>
-   <property name="visible">
-    <bool>false</bool>
+    <string>&amp;Software</string>
    </property>
   </action>
-  <action name="action_Rend1">
+  <action name="action_Rend_GLSL">
    <property name="checkable">
     <bool>true</bool>
    </property>
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
    <property name="text">
-    <string notr="true">Rend1</string>
-   </property>
-   <property name="visible">
-    <bool>false</bool>
+    <string>OpenGL &amp;GLSL</string>
    </property>
   </action>
   <action name="action_FPS_Default">
@@ -2211,36 +2206,57 @@
    </property>
   </action>
   <action name="action_hunterk_borders_1080p_mudlord">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>mudlord</string>
    </property>
   </action>
   <action name="action_hunterk_borders_1080p_bigblur">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>bigblur</string>
    </property>
   </action>
   <action name="action_hunterk_borders_1080p_color_grid">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>color-grid</string>
    </property>
   </action>
   <action name="action_hunterk_borders_1080p_shiny_iterations">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>shiny-iterations</string>
    </property>
   </action>
   <action name="action_hunterk_borders_1080p_snow">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>snow</string>
    </property>
   </action>
   <action name="action_hunterk_borders_1080p_voronoi">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>voronoi</string>
    </property>
   </action>
   <action name="action_hunterk_borders_1080p_water">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>water</string>
    </property>
@@ -2275,6 +2291,14 @@
    </property>
    <property name="text">
     <string>feedback</string>
+   </property>
+  </action>
+  <action name="action_xbr_xbr_lv2_multipass">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>xbr-lv2-multipass</string>
    </property>
   </action>
  </widget>

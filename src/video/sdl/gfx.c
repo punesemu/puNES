@@ -156,7 +156,7 @@ BYTE gfx_init(void) {
 			gfx.scale_before_fscreen = cfg->scale;
 		}
 	}
-	sdl_init_gl();
+	opengl_init();
 
 	if (opengl.supported == FALSE) {
 		cfg->render = RENDER_SOFTWARE;
@@ -421,6 +421,7 @@ void gfx_set_screen(BYTE scale, DBWORD filter, BYTE fullscreen, BYTE palette, BY
 					gfx.pixel_aspect_ratio = 1.0f;
 				} else {
 					switch (cfg->pixel_aspect_ratio) {
+						default:
 						case PAR11:
 							gfx.pixel_aspect_ratio = 1.0f;
 							break;
@@ -467,13 +468,6 @@ void gfx_set_screen(BYTE scale, DBWORD filter, BYTE fullscreen, BYTE palette, BY
 		}
 
 		gfx.bit_per_pixel = surface_sdl->format->BitsPerPixel;
-	}
-
-	// interpolation
-	if (gfx.opengl && cfg->interpolation) {
-		opengl.interpolation = TRUE;
-	} else {
-		opengl.interpolation = FALSE;
 	}
 
 	// paletta
@@ -553,7 +547,7 @@ void gfx_set_screen(BYTE scale, DBWORD filter, BYTE fullscreen, BYTE palette, BY
 	if (gfx.opengl) {
 		DBWORD f = NO_FILTER;
 		opengl.scale = cfg->scale;
-		opengl.PSS = ((gfx.pixel_aspect_ratio != 1.0f) && cfg->PAR_soft_stretch) ? TRUE : FALSE;
+		gfx.PSS = ((cfg->pixel_aspect_ratio != PAR11) && cfg->PAR_soft_stretch) ? TRUE : FALSE;
 
 		if ((filter == NO_FILTER) || (filter >= FLTSHDSTART)) {
 			opengl.scale = X1;
@@ -564,28 +558,37 @@ void gfx_set_screen(BYTE scale, DBWORD filter, BYTE fullscreen, BYTE palette, BY
 		shaders_set(f);
 
 		// creo tutto il necessario per il rendering
-		if (sdl_setup_renderingl_gl(surface_sdl) == EXIT_ERROR) {
-			gfx.opengl = FALSE;
-		} else {
-			// opengl rendering
-			framebuffer = opengl.sdl.surface;
-			flip = opengl_flip;
+		switch (opengl_context_create(surface_sdl)) {
+			case EXIT_ERROR:
+				fprintf(stderr, "Unable to initialize opengl context\n");
+				gfx.opengl = FALSE;
+				break;
+			case EXIT_ERROR_SHADER:
+				fprintf(stderr, "errors on shader, flip to no filter\n");
+				filter = NO_FILTER;
+				goto gfx_set_screen_start;
+			case EXIT_OK:
+				// opengl rendering
+				framebuffer = opengl.sdl.surface;
+				flip = opengl_flip;
 
-			// gestione testo
-			text.surface = surface_sdl;
-			text_clear = opengl_text_clear;
-			text_blit = opengl_text_blit;
-			text.w = opengl.vp->w;
-			text.h = opengl.vp->h;
+				// gestione testo
+				text.surface = surface_sdl;
+				text_clear = opengl_text_clear;
+				text_blit = opengl_text_blit;
+				text.w = surface_sdl->w;
+				text.h = surface_sdl->h;
 
-			w_for_pr = opengl.vp->w;
-			h_for_pr = opengl.vp->h;
+				w_for_pr = gfx.vp.w;
+				h_for_pr = gfx.vp.h;
+				break;
 		}
 	}
 
 	// questo controllo devo farlo necessariamente dopo il glew_init()
 	if (!gfx.opengl && (filter >= FLTSHDSTART)) {
 		filter = NO_FILTER;
+		force_scale = TRUE;
 		goto gfx_set_screen_start;
 	}
 
@@ -680,7 +683,7 @@ void gfx_quit(void) {
 
 	gfx_cursor_quit();
 
-	sdl_quit_gl();
+	opengl_context_delete();
 	ntsc_quit();
 	text_quit();
 	SDL_Quit();

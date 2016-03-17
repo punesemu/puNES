@@ -27,9 +27,6 @@
 #include "common.h"
 #include "emu.h"
 #include "jstick.h"
-#if defined (SDL)
-#include "opengl.h"
-#endif
 
 #if defined (__cplusplus)
 #define EXTERNC extern "C"
@@ -106,9 +103,7 @@ EXTERNC void gui_control_visible_cursor(void);
 
 EXTERNC void gui_mainWindow_make_reset(BYTE type);
 
-#if defined (SDL)
-EXTERNC BYTE gui_load_lut(_lut *lut, const char *path);
-#endif
+EXTERNC BYTE gui_load_lut(void *l, const char *path);
 
 EXTERNC double (*gui_get_ms)(void);
 

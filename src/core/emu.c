@@ -488,10 +488,12 @@ void emu_set_title(char *title) {
 	}
 #endif
 
+#if defined (SDL)
 	if (cfg->scale != X1) {
 		strcat(title, ", ");
 		strcat(title, opt_rend[cfg->render].lname);
 	}
+#endif
 
 	strcat(title, ")");
 }
@@ -720,6 +722,14 @@ WORD emu_round_WORD(WORD number, WORD round) {
 	} else {
 		return ((number - remainder) + round);
 	}
+}
+int emu_power_of_two(int base) {
+	int pot = 1;
+
+	while (pot < base) {
+		pot <<= 1;
+	}
+	return (pot);
 }
 void emu_quit(BYTE exit_code) {
 	if (cfg->save_on_exit) {

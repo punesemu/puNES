@@ -1,5 +1,7 @@
 /*
  *  Copyright (C) 2010-2016 Fabio Cavallo (aka FHorse)
+ *  for some codes :
+ *  Copyright (C) 2010-2015 The RetroArch team
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -14,31 +16,22 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *
  */
 
+#include <string.h>
+#include "d3d9.h"
 #include "gui.h"
-#include <d3d9.h>
-#include <d3dx9shader.h>
 #include "emu.h"
 #include "info.h"
-#include "gfx.h"
 #include "conf.h"
 #include "ppu.h"
 #include "overscan.h"
 #include "clock.h"
-#define _SHADERS_CODE_
-#include "shaders.h"
-#undef  _SHADERS_CODE_
 #define __STATICPAL__
 #include "palette.h"
 #undef  __STATICPAL__
 
-#define COMPILERSHADER_NOT_FOUND 0x8007007e
-#define ID3DXBuffer_GetBufferPointer(p) (p)->lpVtbl->GetBufferPointer(p)
-#define ID3DXBuffer_Release(p) (p)->lpVtbl->Release(p)
-#define ID3DXConstantTable_SetFloatArray(p,a,b,c,d) (p)->lpVtbl->SetFloatArray(p,a,b,c,d)
-#define ID3DXConstantTable_SetMatrix(p,a,b,c) (p)->lpVtbl->SetMatrix(p,a,b,c)
-#define ID3DXConstantTable_Release(p) (p)->lpVtbl->Release(p)
 #define D3D9_ADAPTER(i) (_d3d9_adapter *) ((BYTE *) d3d9.array + (i * sizeof(_d3d9_adapter)))
 #define ntsc_width(wdt, a, flag)\
 {\
@@ -75,72 +68,30 @@
 	}\
 	/* ed infine utilizzo la nuova */\
 	ntsc_set(cfg->ntsc_format, FALSE, 0, (BYTE *) palette_RGB,(BYTE *) palette_RGB)
-#define FVF (D3DFVF_XYZ | D3DFVF_TEX1)
 
-typedef struct {
-	FLOAT x, y, z;
-	FLOAT tu, tv;
-} vertex;
-typedef struct {
-	UINT id;
+static BYTE d3d9_device_create(UINT width, UINT height);
+static BYTE d3d9_context_create(void);
+static void d3d9_context_delete(void);
+static BYTE d3d9_texture_create(_texture *texture, UINT index);
+static BYTE d3d9_texture_simple_create(_texture_simple *texture, UINT w, UINT h, BOOL text);
+static BYTE d3d9_texture_lut_create(_lut *lut, UINT index);
+static void d3d9_surface_clean(LPDIRECT3DSURFACE9 *surface, UINT width, UINT height);
+static BYTE d3d9_shader_init(_shader *shd, const char *path, const char *code);
+static void d3d9_shader_delete(_shader *shd);
+static void d3d9_shader_uni_texture_clear(_shader_uniforms_tex *sut);
+static void d3d9_shader_uni_texture(_shader_uniforms_tex *sut, _shader_cgprg *prg, char *fmt, ...);
+static CGparameter d3d9_cg_find_param(CGparameter prm, const char *name);
+static BYTE d3d9_vertex_declaration_create(_shader *shd);
+static void d3d9_vertex_buffer_set(_shader *shd,  _viewport *vp, _texture_rect *prev);
+INLINE static void d3d9_viewport_set(DWORD x, DWORD y, DWORD w, DWORD h);
+INLINE D3DTEXTUREFILTERTYPE d3d9_shader_filter(UINT type);
+INLINE static void d3d9_shader_params_text_set(_shader *shd);
+INLINE static void d3d9_shader_param_set(const _texture *texture, UINT fcountmod, UINT fcount);
 
-	LPDIRECT3DDEVICE9 dev;
-	D3DDISPLAYMODE display_mode;
-
-	DWORD flags;
-
-	WORD bit_per_pixel;
-	WORD number_of_monitors;
-
-	BOOL auto_gen_mipmap;
-	BOOL dynamic_texture;
-	BOOL texture_square_only;
-	BOOL hlsl_compliant;
-} _d3d9_adapter;
-static struct _d3d9 {
-	LPDIRECT3D9 d3d;
-
-	D3DXMATRIX world;
-	D3DXMATRIX view;
-	D3DXMATRIX projection;
-
-	UINT adapters_on_system;
-	UINT adapters_in_use;
-	_d3d9_adapter *array, *adapter;
-
-	_texture screen;
-	_texture text;
-
-	_shader shader;
-
-	uint32_t *palette;
-
-	BOOL scale_force;
-	BOOL interpolation;
-	BOOL PSS;
-	BYTE scale;
-	FLOAT factor;
-	DWORD text_linear;
-} d3d9;
-
-void d3d9_set_adapter(_d3d9_adapter *adapter);
-BYTE d3d9_create_device(UINT width, UINT height);
-BYTE d3d9_create_context(void);
-void d3d9_release_context(void);
-void d3d9_adjust_coords(void);
-void d3d9_adjust_vertex_buffer(_texture *texture, FLOAT factor);
-BYTE d3d9_create_texture(_texture *texture, uint32_t width, uint32_t height);
-void d3d9_release_texture(_texture *texture);
-BYTE d3d9_create_shader(_shader *shd);
-void d3d9_release_shader(_shader *shd);
-int d3d9_power_of_two(int base);
-INLINE void d3d9_draw_texture_screen(void);
-INLINE void d3d9_draw_texture_text(void);
-
-static BYTE ntsc_width_pixel[5] = {0, 0, 7, 10, 14};
+static const BYTE ntsc_width_pixel[5] = {0, 0, 7, 10, 14};
 
 BYTE gfx_init(void) {
-	/* casi particolari provenienti dal settings_file_parse() e cmd_line_parse() */
+	// casi particolari provenienti dal settings_file_parse() e cmd_line_parse()
 	if ((cfg->scale == X1) && (cfg->filter != NO_FILTER)) {
 		cfg->scale = X2;
 	}
@@ -157,7 +108,7 @@ BYTE gfx_init(void) {
 		return (EXIT_ERROR);
 	}
 
-	/* mi passo in rassegna tutti gli adapter presenti sul sistema */
+	// mi passo in rassegna tutti gli adapter presenti sul sistema
 	d3d9.adapters_on_system = IDirect3D9_GetAdapterCount(d3d9.d3d);
 
 	if (!(d3d9.array = malloc(d3d9.adapters_on_system * sizeof(_d3d9_adapter)))) {
@@ -166,11 +117,11 @@ BYTE gfx_init(void) {
 	}
 
 	{
-#define dev_error(s) fprintf(stderr, "adapter %d : "s, dev->id)
-#define dev_info(s) printf("adapter %d : "s, dev->id)
-#define dev_info_args(s, ...) printf("adapter %d : "s, dev->id, __VA_ARGS__)
-
 		int adapt;
+
+#define dev_error(s) fprintf(stderr, "D3D9 adapter %d : "s, dev->id)
+#define dev_info(s) printf("D3D9 adapter %d : "s, dev->id)
+#define dev_info_args(s, ...) printf("D3D9 adapter %d : "s, dev->id, __VA_ARGS__)
 
 		for (adapt = 0; adapt < d3d9.adapters_on_system; adapt++) {
 			_d3d9_adapter *dev = D3D9_ADAPTER(d3d9.adapters_in_use);
@@ -194,7 +145,6 @@ BYTE gfx_init(void) {
 				continue;
 			}
 
-			/* 32 bit */
 			if ((dev->display_mode.Format == D3DFMT_X8R8G8B8)
 					|| (dev->display_mode.Format == D3DFMT_A8R8G8B8)) {
 				dev->bit_per_pixel = 32;
@@ -203,53 +153,14 @@ BYTE gfx_init(void) {
 				dev_error("video mode < 32 bits are not supported\n");
 				continue;
 			}
-			/* 24 bit */
-			//if (dev->display_mode.Format == D3DFMT_R8G8B8) {
-			//	dev->bit_per_pixel = 24;
-			//}
-			/* 16 bit */
-			//if ((dev->display_mode.Format == D3DFMT_A1R5G5B5)
-			//		|| (dev->display_mode.Format == D3DFMT_X1R5G5B5)) {
-			//	dev->bit_per_pixel = 16;
-			//}
-			/* 16 bit */
-			//if (dev->display_mode.Format == D3DFMT_R5G6B5) {
-			//	dev->bit_per_pixel = 16;
-			//}
-			//if (dev->bit_per_pixel < 16) {
-			//	dev_error("video mode < 16 bits are not supported\n");
-			//	continue;
-			//}
 
-			/* Check for hardware T&L */
+			// Check for hardware T&L
 			if (IDirect3D9_GetDeviceCaps(d3d9.d3d,
 					dev->id,
 					D3DDEVTYPE_HAL,
 					&d3dcaps) != D3D_OK) {
 				dev_error("unable to get device caps\n");
 				continue;
-			}
-
-			/* The driver is capable of automatically generating mipmaps */
-			/*
-		 	 * The resource will automatically generate mipmaps. See Automatic
-		 	 * Generation of Mipmaps (Direct3D 9). Automatic generation of mipmaps
-		 	 * is not supported for volume textures and depth stencil
-		 	 * surfaces/textures. This usage is not valid for a resource in
-		 	 * system memory (D3DPOOL_SYSTEMMEM).
-		 	 */
-			if ((d3dcaps.Caps2 & D3DCAPS2_CANAUTOGENMIPMAP) &&
-					(IDirect3D9_CheckDeviceFormat(d3d9.d3d,
-							dev->id,
-							D3DDEVTYPE_HAL,
-							dev->display_mode.Format,
-							D3DUSAGE_AUTOGENMIPMAP,
-							D3DRTYPE_TEXTURE,
-							dev->display_mode.Format) == D3D_OK)) {
-				dev->auto_gen_mipmap = TRUE;
-			} else {
-				dev->auto_gen_mipmap = FALSE;
-				dev_info("don't support automatic generation of mipmap\n");
 			}
 
 			if (d3dcaps.Caps2 & D3DCAPS2_DYNAMICTEXTURES) {
@@ -266,24 +177,20 @@ BYTE gfx_init(void) {
 				dev->texture_square_only = FALSE;
 			}
 
-			/*
-		 	 * Device can accelerate a memory copy from system memory to local video memory.
-		 	 * This cap guarantees that UpdateSurface and UpdateTexture calls will be hardware
-		 	 * accelerated. If this cap is absent, these calls will succeed but will be slower.
-		 	 */
+		 	// Device can accelerate a memory copy from system memory to local video memory.
+		 	// This cap guarantees that UpdateSurface and UpdateTexture calls will be hardware
+		 	// accelerated. If this cap is absent, these calls will succeed but will be slower.
 			if (!(d3dcaps.Caps3 & D3DCAPS3_COPY_TO_VIDMEM)) {
 				dev_info("don't support accelerated texture update\n");
 			}
 
 			if (d3dcaps.DevCaps & D3DDEVCAPS_HWTRANSFORMANDLIGHT) {
 				dev->flags = D3DCREATE_HARDWARE_VERTEXPROCESSING;
-				/*
-				 * se abilito il PURE DEVICE, non posso utilizzare il
-				 * IDirect3DDevice9_GetTransform quando uso le shaders.
-				 */
-				//if (d3dcaps.DevCaps & D3DDEVCAPS_PUREDEVICE) {
-				//	dev->flags |= D3DCREATE_PUREDEVICE;
-				//}
+				// se abilito il PURE DEVICE, non posso utilizzare il
+				// IDirect3DDevice9_GetTransform quando uso le shaders.
+				if (d3dcaps.DevCaps & D3DDEVCAPS_PUREDEVICE) {
+					dev->flags |= D3DCREATE_PUREDEVICE;
+				}
 			} else {
 				dev_info("don't support hardware accelaration\n");
 				dev->flags = D3DCREATE_SOFTWARE_VERTEXPROCESSING;
@@ -307,8 +214,8 @@ BYTE gfx_init(void) {
 			{
 				d3d9.adapter = dev;
 
-				/* per poter verificare se le shaders sono utilizzabili devo creare il dev d3d */
-				if (d3d9_create_device(1, 1) != EXIT_OK) {
+				// per poter verificare se le shaders sono utilizzabili devo creare il dev d3d
+				if (d3d9_device_create(1, 1) != EXIT_OK) {
 					continue;
 				}
 
@@ -318,17 +225,7 @@ BYTE gfx_init(void) {
 						(d3dcaps.VertexShaderVersion < D3DVS_VERSION(2, 0))) {
 					dev_info("don't support shaders >= 2.0\n");
 				} else {
-					_shader tmp;
-
-					memset(&tmp, 0x00, sizeof(_shader));
-
-					tmp.id = SHADER_COLOR;
-
-					if (d3d9_create_shader(&tmp) == EXIT_OK) {
-						dev->hlsl_compliant = TRUE;
-					}
-
-					d3d9_release_shader(&tmp);
+					dev->hlsl_compliant = TRUE;
 				}
 
 				if (dev->hlsl_compliant == FALSE) {
@@ -351,28 +248,30 @@ BYTE gfx_init(void) {
 		return (EXIT_ERROR);
 	}
 
-	d3d9_set_adapter(D3D9_ADAPTER(0));
+	d3d9.adapter = D3D9_ADAPTER(0);
+	if (d3d9.adapter->hlsl_compliant == FALSE) {
+		MessageBox(NULL, "Adapter is not hlsl compliant", "Error!", MB_ICONEXCLAMATION | MB_OK);
+		return (EXIT_ERROR);
+	}
 
-	/*
-	 * inizializzo l'ntsc che utilizzero' non solo
-	 * come filtro ma anche nel gfx_set_screen() per
-	 * generare la paletta dei colori.
-	 */
+	gfx.bit_per_pixel = d3d9.adapter->bit_per_pixel;
+
+	// inizializzo l'ntsc che utilizzero' non solo
+	// come filtro ma anche nel gfx_set_screen() per
+	// generare la paletta dei colori.
 	if (ntsc_init(0, 0, 0, 0, 0) == EXIT_ERROR) {
 		MessageBox(NULL, "Unable to initialize palette", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
 
-	/*
-	 * mi alloco una zona di memoria dove conservare la
-	 * paletta nel formato di visualizzazione.
-	 */
+	// mi alloco una zona di memoria dove conservare la
+	// paletta nel formato di visualizzazione.
 	if (!(d3d9.palette = malloc(NUM_COLORS * sizeof(uint32_t)))) {
 		MessageBox(NULL, "Unable to allocate the palette", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
 
-	/* casi particolari provenienti dal settings_file_parse() e cmd_line_parse()*/
+	// casi particolari provenienti dal settings_file_parse() e cmd_line_parse()
 	if (cfg->fullscreen == FULLSCR) {
 		gfx.scale_before_fscreen = cfg->scale;
 	}
@@ -386,30 +285,9 @@ BYTE gfx_init(void) {
 		gfx_set_screen(cfg->scale, cfg->filter, NO_FULLSCR, cfg->palette, FALSE, FALSE);
 	}
 
-	switch (gui.version_os) {
-		case WIN_XP:
-			d3d9.text_linear = D3DTEXF_NONE;
-			break;
-		default:
-			d3d9.text_linear = D3DTEXF_LINEAR;
-			break;
-	}
-
 	return (EXIT_OK);
 }
-void gfx_set_render(BYTE render) {
-	switch (render) {
-		case RENDER_SOFTWARE:
-			gfx.hlsl.enabled = FALSE;
-			gfx.hlsl.used = FALSE;
-			break;
-		case RENDER_HLSL:
-			gfx.hlsl.enabled = TRUE;
-			gfx.hlsl.used = FALSE;
-			break;
-	}
-}
-void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE force_scale,
+void gfx_set_screen(BYTE scale, DBWORD filter, BYTE fullscreen, BYTE palette, BYTE force_scale,
 		BYTE force_palette) {
 	BYTE set_mode;
 	WORD width, height;
@@ -420,16 +298,14 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 	width = 0, height = 0;
 	w_for_pr = 0, h_for_pr = 0;
 
-	/*
-	 * l'ordine dei vari controlli non deve essere cambiato:
-	 * 0) overscan
-	 * 1) filtro
-	 * 2) fullscreen
-	 * 3) fattore di scala
-	 * 4) tipo di paletta
-	 */
+	// l'ordine dei vari controlli non deve essere cambiato:
+	// 0) overscan
+	// 1) filtro
+	// 2) fullscreen
+	// 3) fattore di scala
+	// 4) tipo di paletta
 
-	/* overscan */
+	// overscan
 	{
 		overscan.enabled = cfg->oscan;
 
@@ -446,28 +322,21 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 		}
 	}
 
-	/* filtro */
+	// filtro
 	if (filter == NO_CHANGE) {
 		filter = cfg->filter;
 	}
+
 	if ((filter != cfg->filter) || info.on_cfg || force_scale) {
 		switch (filter) {
 			case NO_FILTER:
-			case PHOSPHOR:
-			case SCANLINE:
-			case DBL:
-			case CRT_CURVE:
-			case CRT_NO_CURVE:
-			case PHOSPHOR2:
-			case DARK_ROOM:
+			default:
 				gfx.filter = scale_surface;
-				/*
-				 * se sto passando dal filtro ntsc ad un'altro, devo
-				 * ricalcolare la larghezza del video mode quindi
-				 * forzo il controllo del fattore di scala.
-				 */
+				// se sto passando dal filtro ntsc ad un'altro, devo
+				// ricalcolare la larghezza del video mode quindi
+				// forzo il controllo del fattore di scala.
 				if (cfg->filter == NTSC_FILTER) {
-					/* devo reimpostare la larghezza del video mode */
+					// devo reimpostare la larghezza del video mode
 					scale = cfg->scale;
 				}
 				break;
@@ -488,40 +357,36 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 				break;
 			case NTSC_FILTER:
 				gfx.filter = ntsc_surface;
-				/*
-				 * il fattore di scala deve essere gia' stato
-				 * inizializzato almeno una volta.
-				 */
+				// il fattore di scala deve essere gia' stato
+				// inizializzato almeno una volta.
 				if (cfg->scale != NO_CHANGE) {
-					/* devo reimpostare la larghezza del video mode */
+					// devo reimpostare la larghezza del video mode
 					scale = cfg->scale;
 				} else if (scale == NO_CHANGE) {
-					/*
-					 * se scale e new_scale sono uguali a NO_CHANGE,
-					 * imposto un default.
-					 */
+					// se scale e new_scale sono uguali a NO_CHANGE,
+					// imposto un default.
 					scale = X2;
 				}
 				break;
 		}
-		/* forzo il controllo del fattore di scale */
+		// forzo il controllo del fattore di scale
 		force_scale = TRUE;
-		/* indico che devo cambiare il video mode */
+		// indico che devo cambiare il video mode
 		set_mode = TRUE;
 	}
 
-	/* fullscreen */
+	// fullscreen
 	if (fullscreen == NO_CHANGE) {
 		fullscreen = cfg->fullscreen;
 	}
 	if ((fullscreen != cfg->fullscreen) || info.on_cfg) {
-		/* forzo il controllo del fattore di scale */
+		// forzo il controllo del fattore di scale
 		force_scale = TRUE;
-		/* indico che devo cambiare il video mode */
+		// indico che devo cambiare il video mode
 		set_mode = TRUE;
 	}
 
-	/* fattore di scala */
+	// fattore di scala
 	if (scale == NO_CHANGE) {
 		scale = cfg->scale;
 	}
@@ -538,12 +403,10 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 
 		switch (scale) {
 			case X1:
-				/* il fattore di scala a 1 e' possibile solo senza filtro */
+				// il fattore di scala a 1 e' possibile solo senza filtro
 				if (filter != NO_FILTER) {
-					/*
-					 * con un fattore di scala X1 effect deve essere
-					 * sempre impostato su scale_surface.
-					 */
+					// con un fattore di scala X1 effect deve essere
+					// sempre impostato su scale_surface.
 					gfx.filter = scale_surface;
 					return;
 				}
@@ -575,7 +438,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 		gfx.h[NO_OVERSCAN] = SCR_LINES * scale;
 	}
 
-	/* paletta */
+	// paletta
 	if (palette == NO_CHANGE) {
 		palette = cfg->palette;
 	}
@@ -617,13 +480,10 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 				break;
 		}
 
-		/* inizializzo in ogni caso la tabella YUV dell'hqx */
+		// inizializzo in ogni caso la tabella YUV dell'hqx
 		hqx_init();
 
-		/*
-		 * memorizzo i colori della paletta nel
-		 * formato di visualizzazione.
-		 */
+		// memorizzo i colori della paletta nel formato di visualizzazione
 		{
 			WORD i;
 
@@ -634,22 +494,21 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 		}
 	}
 
-	/* salvo il nuovo fattore di scala */
+	// salvo il nuovo fattore di scala
 	cfg->scale = scale;
-	/* salvo ill nuovo filtro */
+	// salvo ill nuovo filtro
 	cfg->filter = filter;
-	/* salvo il nuovo stato del fullscreen */
+	// salvo il nuovo stato del fullscreen
 	cfg->fullscreen = fullscreen;
-	/* salvo il nuovo tipo di paletta */
+	// salvo il nuovo tipo di paletta
 	cfg->palette = palette;
 
-	gfx.pixel_aspect_ratio = 1.0f;
-
-	/* Pixel Aspect Ratio */
+	// Pixel Aspect Ratio
 	if (cfg->filter == NTSC_FILTER) {
 		gfx.pixel_aspect_ratio = 1.0f;
 	} else {
 		switch (cfg->pixel_aspect_ratio) {
+			default:
 			case PAR11:
 				gfx.pixel_aspect_ratio = 1.0f;
 				break;
@@ -662,96 +521,17 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 		}
 	}
 
-	/* interpolation */
-	if (cfg->interpolation) {
-		d3d9.interpolation = TRUE;
-	} else {
-		d3d9.interpolation = FALSE;
-	}
-
-	d3d9.scale_force = FALSE;
+	DBWORD f = NO_FILTER;
 	d3d9.scale = cfg->scale;
-	d3d9.factor = X1;
-	if (cfg->filter == NO_FILTER) {
-		d3d9.scale_force = TRUE;
+	gfx.PSS = ((cfg->pixel_aspect_ratio != PAR11) && cfg->PAR_soft_stretch) ? TRUE : FALSE;
+
+	if ((filter == NO_FILTER) || (filter >= FLTSHDSTART)) {
 		d3d9.scale = X1;
-		d3d9.factor = cfg->scale;
+		gfx.filter = scale_surface;
+		f = filter;
 	}
-	d3d9.shader.id = SHADER_NONE;
-	d3d9.PSS = FALSE;
-	gfx.hlsl.used = FALSE;
-	gfx.hlsl.param = 0;
 
-	if ((gfx.hlsl.compliant == TRUE) && (gfx.hlsl.enabled == TRUE)) {
-#define PSS()\
-	d3d9.PSS = ((gfx.pixel_aspect_ratio != 1.0f) && (cfg->PAR_soft_stretch == TRUE)) ? TRUE : FALSE
-#define hlsl_up(e, s, p)\
-	d3d9.shader.id = s;\
-	d3d9.scale_force = TRUE;\
-	d3d9.scale = X1;\
-	d3d9.factor = cfg->scale;\
-	gfx.hlsl.param = p;\
-	PSS();\
-	gfx.hlsl.used = TRUE;\
-	gfx.filter = e
-
-		switch (cfg->filter) {
-			case NO_FILTER:
-				hlsl_up(scale_surface, SHADER_NO_FILTER, 0);
-				break;
-			case PHOSPHOR:
-				hlsl_up(scale_surface, SHADER_PHOSPHOR, 0);
-				break;
-			case PHOSPHOR2:
-				hlsl_up(scale_surface, SHADER_PHOSPHOR, 1);
-				break;
-			case SCANLINE:
-				hlsl_up(scale_surface, SHADER_SCANLINE, 0);
-				break;
-			case DBL:
-				hlsl_up(scale_surface, SHADER_DONTBLOOM, 0);
-				break;
-			case DARK_ROOM:
-				hlsl_up(scale_surface, SHADER_DONTBLOOM, 1);
-				break;
-			case CRT_CURVE:
-				hlsl_up(scale_surface, SHADER_CRT, 0);
-				/* niente interpolazione perche' gia fatta dallo shader stesso */
-				d3d9.interpolation = d3d9.PSS = FALSE;
-				break;
-			case CRT_NO_CURVE:
-				hlsl_up(scale_surface, SHADER_CRT, 1);
-				/* niente interpolazione perche' gia fatta dallo shader stesso */
-				d3d9.interpolation = d3d9.PSS = FALSE;
-				break;
-			case SCALE2X:
-			case SCALE3X:
-			case SCALE4X:
-			case HQ2X:
-			case HQ3X:
-			case HQ4X:
-			case XBRZ2X:
-			case XBRZ3X:
-			case XBRZ4X:
-			case NTSC_FILTER:
-				PSS();
-				break;
-		}
-
-		/*
-		if (cfg->fullscreen) {
-			if ((cfg->filter >= SCALE2X) && (cfg->filter <= SCALE4X)) {
-				hlsl_up(scaleNx, SHADER_NO_FILTER);
-				d3d9.scale = X2;
-				d3d9.factor = (float) cfg->scale / 2.0f;
-			} else if ((cfg->filter >= HQ2X) && (cfg->filter <= HQ4X)) {
-				hlsl_up(hqNx, SHADER_NO_FILTER);
-				d3d9.scale = X2;
-				d3d9.factor = (float) cfg->scale / 2.0f;
-			}
-		}
-		*/
-	}
+	shaders_set(f);
 
 	if (set_mode) {
 		gfx.w[VIDEO_MODE] = width;
@@ -762,7 +542,7 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 			gfx.h[VIDEO_MODE] = gfx.h[MONITOR];
 		}
 
-		/* Pixel Aspect Ratio */
+		// Pixel Aspect Ratio
 		if (cfg->pixel_aspect_ratio && !fullscreen) {
 			float brd = 0;
 
@@ -776,50 +556,36 @@ void gfx_set_screen(BYTE scale, BYTE filter, BYTE fullscreen, BYTE palette, BYTE
 			gfx.w[VIDEO_MODE] -= brd;
 		}
 
-		/* faccio quello che serve prima del setvideo */
+		// faccio quello che serve prima del setvideo
 		gui_set_video_mode();
+	}
 
-		if (d3d9_create_context() == EXIT_ERROR) {
-			fprintf(stderr, "Unable to initialize d3d context\n");
+	switch (d3d9_context_create()) {
+		case EXIT_ERROR:
+			fprintf(stderr, "D3D9 : Unable to initialize d3d context\n");
 			return;
-		}
-	}
-
-	d3d9_adjust_coords();
-
-	text.w = gfx.w[CURRENT];
-	text.h = gfx.h[CURRENT];
-
-	{
-		WORD r = (WORD) gfx.quadcoords.r;
-		WORD l = (WORD) gfx.quadcoords.l;
-		WORD b = (WORD) gfx.quadcoords.b;
-		WORD t = (WORD) gfx.quadcoords.t;
-
-		w_for_pr = r - l;
-		h_for_pr = b - t;
-	}
-
-	/* questo controllo devo farlo necessariamente dopo il glew_init() */
-	if ((gfx.hlsl.compliant == FALSE) || (gfx.hlsl.enabled == FALSE)) {
-		if ((filter >= PHOSPHOR) && (filter <= CRT_NO_CURVE)) {
+		case EXIT_ERROR_SHADER:
+			fprintf(stderr, "CG : Error on loading the shaders, switch to \"No filter\"\n");
 			filter = NO_FILTER;
 			goto gfx_set_screen_start;
-		}
 	}
+
+	text.w = gfx.w[VIDEO_MODE];
+	text.h = gfx.h[VIDEO_MODE];
+
+	w_for_pr = gfx.vp.w;
+	h_for_pr = gfx.vp.h;
 
 	gfx_text_reset();
 
-	/*
-	 * calcolo le proporzioni tra il disegnato a video (overscan e schermo
-	 * con le dimensioni per il filtro NTSC compresi) e quello che dovrebbe
-	 * essere (256 x 240). Mi serve per calcolarmi la posizione del puntatore
-	 * dello zapper.
-	 */
+	// calcolo le proporzioni tra il disegnato a video (overscan e schermo
+	// con le dimensioni per il filtro NTSC compresi) e quello che dovrebbe
+	// essere (256 x 240). Mi serve per calcolarmi la posizione del puntatore
+	// dello zapper.
 	gfx.w_pr = ((float) w_for_pr / gfx.w[CURRENT]) * ((float) gfx.w[NO_OVERSCAN] / SCR_ROWS);
 	gfx.h_pr = ((float) h_for_pr / gfx.h[CURRENT]) * ((float) gfx.h[NO_OVERSCAN] / SCR_LINES);
 
-	/* setto il titolo della finestra */
+	// setto il titolo della finestra
 	gui_update();
 
 	if (info.on_cfg == TRUE) {
@@ -837,79 +603,141 @@ void gfx_draw_screen(BYTE forced) {
 		}
 	}
 
-	/* filtro e aggiornamento texture */
+	// filtro e aggiornamento texture
 	if (forced || !ppu.skip_draw) {
-		D3DLOCKED_RECT locked_rect;
+		const _texture_simple *scrtex = &d3d9.screen.tex[d3d9.screen.index];
+		LPDIRECT3DSURFACE9 back_buffer;
+		UINT i;
 
-		/* lock della surface in memoria */
-		IDirect3DSurface9_LockRect(d3d9.screen.surface.data, &locked_rect, NULL, D3DLOCK_DISCARD);
+		// screen
+		{
+			D3DLOCKED_RECT lrect;
 
-		/* applico l'effetto */
-		gfx.filter(screen.data,
-				screen.line,
-				d3d9.palette,
-				gfx.bit_per_pixel,
-				locked_rect.Pitch,
-				locked_rect.pBits,
-				gfx.rows,
-				gfx.lines,
-				d3d9.screen.surface.w,
-				d3d9.screen.surface.h,
-				d3d9.scale);
+			// lock della surface in memoria
+			IDirect3DSurface9_LockRect(scrtex->offscreen, &lrect, NULL, D3DLOCK_DISCARD);
+			// applico l'effetto
+			gfx.filter(screen.data,
+					screen.line,
+					d3d9.palette,
+					gfx.bit_per_pixel,
+					lrect.Pitch,
+					lrect.pBits,
+					gfx.rows,
+					gfx.lines,
+					scrtex->rect.base.w,
+					scrtex->rect.base.h,
+					d3d9.scale);
+			// unlock della surface in memoria
+			IDirect3DSurface9_UnlockRect(scrtex->offscreen);
+			// aggiorno la texture dello schermo
+			IDirect3DDevice9_UpdateSurface(d3d9.adapter->dev, scrtex->offscreen, NULL,
+					scrtex->map0, NULL);
+		}
 
-		/* unlock della surface in memoria */
-		IDirect3DSurface9_UnlockRect(d3d9.screen.surface.data);
+		IDirect3DDevice9_GetRenderTarget(d3d9.adapter->dev, 0, &back_buffer);
 
-		/* aggiorno la texture dello schermo*/
-		IDirect3DDevice9_UpdateSurface(d3d9.adapter->dev, d3d9.screen.surface.data, NULL,
-				d3d9.screen.map0, NULL);
+		// texture
+		for (i = 0; i < shader_effect.pass; i++) {
+			const _texture *texture = &d3d9.texture[i];
+			const _shader_pass *sp = &shader_effect.sp[i];
+			D3DTEXTUREFILTERTYPE filter = d3d9_shader_filter(sp->linear);
 
-		/* rendering del testo */
+			shader_effect.running_pass = i;
+
+			if (i == shader_effect.last_pass) {
+				IDirect3DDevice9_SetRenderTarget(d3d9.adapter->dev, 0, back_buffer);
+			} else {
+				IDirect3DDevice9_SetRenderTarget(d3d9.adapter->dev, 0, texture->map0);
+			}
+
+			// pulisco l'fbo
+			d3d9_viewport_set(0, 0, texture->rect.w, texture->rect.h);
+			IDirect3DDevice9_Clear(d3d9.adapter->dev, 0, NULL, D3DCLEAR_TARGET,	0, 1.0f, 0);
+
+			// ora setto il viewport corretto
+			d3d9_viewport_set(texture->vp.x, texture->vp.y, texture->vp.w, texture->vp.h);
+
+			cgD3D9BindProgram(texture->shader.prg.f);
+			cgD3D9BindProgram(texture->shader.prg.v);
+
+			if (i == 0) {
+				IDirect3DDevice9_SetTexture(d3d9.adapter->dev, 0,
+						(IDirect3DBaseTexture9 * ) scrtex->data);
+			} else {
+				IDirect3DDevice9_SetTexture(d3d9.adapter->dev, 0,
+						(IDirect3DBaseTexture9 * ) d3d9.texture[i - 1].data);
+			}
+
+			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0, D3DSAMP_MAGFILTER, filter);
+			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0, D3DSAMP_MINFILTER, filter);
+
+			IDirect3DDevice9_SetVertexDeclaration(d3d9.adapter->dev, texture->shader.vd);
+
+			d3d9_shader_param_set(texture, sp->frame_count_mod, ppu.frames);
+
+			IDirect3DDevice9_BeginScene(d3d9.adapter->dev);
+			IDirect3DDevice9_DrawPrimitive(d3d9.adapter->dev, D3DPT_TRIANGLESTRIP, 0, 2);
+			IDirect3DDevice9_EndScene(d3d9.adapter->dev);
+		}
+
+		IDirect3DSurface9_Release(back_buffer);
+
+		d3d9.screen.index = ((d3d9.screen.index + 1) % d3d9.screen.in_use);
+
+		if (d3d9.feedback.in_use) {
+			LPDIRECT3DTEXTURE9 data = d3d9.feedback.tex.data;
+			LPDIRECT3DSURFACE9 map0 = d3d9.feedback.tex.map0;
+
+			d3d9.feedback.tex.data = d3d9.texture[shader_effect.feedback_pass].data;
+			d3d9.feedback.tex.map0 = d3d9.texture[shader_effect.feedback_pass].map0;
+			d3d9.texture[shader_effect.feedback_pass].data = data;
+			d3d9.texture[shader_effect.feedback_pass].map0 = map0;
+		}
+
+		// rendering del testo
 		text_rendering(TRUE);
 
-		/* aggiorno la texture del testo */
+		// text
 		if (cfg->txt_on_screen && text.on_screen) {
-			IDirect3DDevice9_UpdateSurface(d3d9.adapter->dev, d3d9.text.surface.data, NULL,
-			        d3d9.text.map0, NULL);
+			// aggiorno la texture del testo
+			IDirect3DDevice9_UpdateSurface(d3d9.adapter->dev, d3d9.text.offscreen, NULL,
+					d3d9.text.map0, NULL);
+
+			d3d9_viewport_set(0, 0, d3d9.text.rect.w, d3d9.text.rect.h);
+
+			cgD3D9BindProgram(d3d9.text.shader.prg.f);
+			cgD3D9BindProgram(d3d9.text.shader.prg.v);
+
+			IDirect3DDevice9_SetTexture(d3d9.adapter->dev, 0,
+					(IDirect3DBaseTexture9 *) d3d9.text.data);
+
+			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0, D3DSAMP_MAGFILTER,
+					D3DTEXF_POINT);
+			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0, D3DSAMP_MINFILTER,
+					D3DTEXF_POINT);
+
+			IDirect3DDevice9_SetVertexDeclaration(d3d9.adapter->dev, d3d9.text.shader.vd);
+
+			d3d9_shader_params_text_set(&d3d9.text.shader);
+
+			IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_ALPHABLENDENABLE, TRUE);
+			IDirect3DDevice9_BeginScene(d3d9.adapter->dev);
+			IDirect3DDevice9_DrawPrimitive(d3d9.adapter->dev, D3DPT_TRIANGLESTRIP, 0, 2);
+			IDirect3DDevice9_EndScene(d3d9.adapter->dev);
+			IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_ALPHABLENDENABLE, FALSE);
 		}
 
-		/* pulisco la scena */
-		IDirect3DDevice9_Clear(d3d9.adapter->dev, 0, NULL, D3DCLEAR_TARGET,
-				D3DCOLOR_ARGB(255, 0, 0, 0), 1.0f, 0);
+		IDirect3DDevice9_SetTexture(d3d9.adapter->dev, 0, NULL);
 
-		/* inizio */
-		IDirect3DDevice9_BeginScene(d3d9.adapter->dev);
-
-		if (gfx.hlsl.used == TRUE) {
-			/* comunico con il vertex shader */
-			D3DXMATRIX world_view_projection;
-
-			D3DXMatrixMultiply(&world_view_projection, &d3d9.world, &d3d9.view);
-			D3DXMatrixMultiply(&world_view_projection, &world_view_projection, &d3d9.projection);
-
-			ID3DXConstantTable_SetMatrix(d3d9.shader.table_vrt, d3d9.adapter->dev,
-					"m_world_view_projection", &world_view_projection);
-		}
-
-		IDirect3DDevice9_SetFVF(d3d9.adapter->dev, FVF);
-
-		/* disegno la texture dello screen */
-		d3d9_draw_texture_screen();
-		/* disegno la texture del testo */
-		d3d9_draw_texture_text();
-
-		IDirect3DDevice9_EndScene(d3d9.adapter->dev);
-
+		// swap buffers
 		if (IDirect3DDevice9_Present(d3d9.adapter->dev, NULL, NULL, NULL, NULL)
 				== D3DERR_DEVICELOST) {
 			if (IDirect3DDevice9_TestCooperativeLevel(d3d9.adapter->dev)
 					== D3DERR_DEVICENOTRESET) {
 				emu_pause(TRUE);
 
-				if (d3d9_create_context() == EXIT_ERROR) {
-					fprintf(stderr, "Unable to initialize d3d context\n");
-				} else {
-					d3d9_adjust_coords();
+				if (d3d9_context_create() == EXIT_ERROR) {
+					fprintf(stderr, "D3D9 : Unable to initialize d3d context\n");
 				}
 
 				emu_pause(FALSE);
@@ -917,7 +745,7 @@ void gfx_draw_screen(BYTE forced) {
 		}
 	}
 }
-void gfx_control_change_monitor(void *monitor) {
+void gfx_control_changed_adapter(void *monitor) {
 	_d3d9_adapter *old_adapter = d3d9.adapter;
 	HMONITOR *in_use = monitor;
 	int i;
@@ -930,21 +758,17 @@ void gfx_control_change_monitor(void *monitor) {
 		_d3d9_adapter *adapter = D3D9_ADAPTER(i);
 
 		if ((*in_use) == IDirect3D9_GetAdapterMonitor(d3d9.d3d, adapter->id)) {
-			d3d9_release_context();
-
-			d3d9_set_adapter(adapter);
-			if (d3d9_create_context() == EXIT_OK) {
-				d3d9_adjust_coords();
+			d3d9.adapter = adapter;
+			if (d3d9_context_create() == EXIT_OK) {
 				return;
 			}
-			fprintf(stderr, "Unable to initialize new d3d context\n");
+			fprintf(stderr, "D3D9 : Unable to initialize new d3d context\n");
 
-			d3d9_set_adapter(old_adapter);
-			if (d3d9_create_context() == EXIT_OK) {
-				d3d9_adjust_coords();
+			d3d9.adapter = old_adapter;
+			if (d3d9_context_create() == EXIT_OK) {
 				return;
 			}
-			fprintf(stderr, "Unable to initialize old d3d context\n");
+			fprintf(stderr, "D3D9 : Unable to initialize old d3d context\n");
 			break;
 		}
 	}
@@ -958,7 +782,7 @@ void gfx_quit(void) {
 		d3d9.palette = NULL;
 	}
 
-	d3d9_release_context();
+	d3d9_context_delete();
 
 	{
 		int i;
@@ -1045,9 +869,8 @@ void gfx_text_clear(_txt_element *ele) {
 	dst.right = ele->x + ele->w;
 	dst.bottom = ele->y + ele->h;
 
-	if (IDirect3DSurface9_LockRect(d3d9.text.surface.data, &lock_dst, &dst,
-			D3DLOCK_DISCARD) != D3D_OK) {
-		printf("LockRect text surface error\n");
+	if (IDirect3DSurface9_LockRect(d3d9.text.offscreen, &lock_dst, &dst, D3DLOCK_DISCARD) != D3D_OK) {
+		printf("D3D9 : LockRect text surface error\n");
 		return;
 	}
 
@@ -1060,7 +883,7 @@ void gfx_text_clear(_txt_element *ele) {
 		pbits += lock_dst.Pitch / (gfx.bit_per_pixel / 8);
 	}
 
-	IDirect3DSurface9_UnlockRect(d3d9.text.surface.data);
+	IDirect3DSurface9_UnlockRect(d3d9.text.offscreen);
 }
 void gfx_text_blit(_txt_element *ele, _rect *rect) {
 	D3DLOCKED_RECT lock_dst;
@@ -1078,9 +901,8 @@ void gfx_text_blit(_txt_element *ele, _rect *rect) {
 	dst.right = rect->x + rect->w;
 	dst.bottom = rect->y + rect->h;
 
-	if (IDirect3DSurface9_LockRect(d3d9.text.surface.data, &lock_dst, &dst,
-	        D3DLOCK_DISCARD) != D3D_OK) {
-		printf("LockRect text surface error\n");
+	if (IDirect3DSurface9_LockRect(d3d9.text.offscreen, &lock_dst, &dst, D3DLOCK_DISCARD) != D3D_OK) {
+		printf("D3D9 : LockRect text surface error\n");
 		return;
 	}
 
@@ -1094,21 +916,10 @@ void gfx_text_blit(_txt_element *ele, _rect *rect) {
 		pdst += lock_dst.Pitch;
 	}
 
-	IDirect3DSurface9_UnlockRect(d3d9.text.surface.data);
+	IDirect3DSurface9_UnlockRect(d3d9.text.offscreen);
 }
 
-void d3d9_set_adapter(_d3d9_adapter *adapter) {
-	d3d9.adapter = adapter;
-
-	gfx.bit_per_pixel = d3d9.adapter->bit_per_pixel;
-	gfx.hlsl.compliant = d3d9.adapter->hlsl_compliant;
-
-	if (gfx.hlsl.compliant == FALSE) {
-		gfx_set_render(RENDER_SOFTWARE);
-		cfg->render = RENDER_SOFTWARE;
-	}
-}
-BYTE d3d9_create_device(UINT width, UINT height) {
+static BYTE d3d9_device_create(UINT width, UINT height) {
 	D3DPRESENT_PARAMETERS d3dpp;
 
 	if (d3d9.adapter->dev) {
@@ -1124,9 +935,6 @@ BYTE d3d9_create_device(UINT width, UINT height) {
 	d3dpp.BackBufferFormat = d3d9.adapter->display_mode.Format;
 	d3dpp.BackBufferWidth = width;
 	d3dpp.BackBufferHeight = height;
-	d3dpp.EnableAutoDepthStencil = TRUE;
-	d3dpp.AutoDepthStencilFormat = D3DFMT_D16;
-	d3dpp.MultiSampleQuality = D3DMULTISAMPLE_NONE;
 	if (cfg->vsync == TRUE) {
 		//d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;
 		d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_ONE;
@@ -1148,297 +956,395 @@ BYTE d3d9_create_device(UINT width, UINT height) {
 
 	return (EXIT_OK);
 }
-BYTE d3d9_create_context(void) {
-	d3d9_release_context();
+static BYTE d3d9_context_create(void) {
+	D3DXMATRIX identity;
+	WORD w, h;
+	UINT i;
 
-	if (d3d9_create_device(gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE]) == EXIT_ERROR) {
+	d3d9_context_delete();
+
+	if (d3d9_device_create(gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE]) == EXIT_ERROR) {
+		d3d9_context_delete();
 		return (EXIT_ERROR);
 	}
 
+	if ((d3d9.cgctx = cgCreateContext()) == NULL) {
+		d3d9_context_delete();
+		return (EXIT_ERROR);
+	}
+
+	cgD3D9SetDevice(d3d9.adapter->dev);
+
+	if ((cfg->filter == NO_FILTER) || (cfg->filter >= FLTSHDSTART)) {
+		w = gfx.rows;
+		h = gfx.lines;
+	} else {
+		w = gfx.w[CURRENT];
+		h = gfx.h[CURRENT];
+	}
+
+	D3DXMatrixIdentity(&identity);
+	IDirect3DDevice9_SetTransform(d3d9.adapter->dev, D3DTS_WORLD, &identity);
+	IDirect3DDevice9_SetTransform(d3d9.adapter->dev, D3DTS_VIEW, &identity);
+
+	// screen
+	d3d9_texture_simple_create(&d3d9.screen.tex[0], w, h, FALSE);
+
+	// lut (devo farlo prima di elaborare le shaders)
+	for (i = 0; i < shader_effect.luts; i++) {
+		if (d3d9_texture_lut_create(&d3d9.lut[i], i) == EXIT_ERROR) {
+			d3d9_context_delete();
+			return (EXIT_ERROR);
+		}
+	}
+
+	// devo precalcolarmi il viewport finale
 	{
-		{
-			WORD w, h;
+		_viewport *vp = &gfx.vp;
 
-			if (d3d9.scale_force) {
-				w = SCR_ROWS * d3d9.scale;
-				h = SCR_LINES * d3d9.scale;
+		vp->x = 0;
+		vp->y = 0;
+		vp->w = (FLOAT) gfx.w[VIDEO_MODE];
+		vp->h = (FLOAT) gfx.h[VIDEO_MODE];
+
+		// configuro l'aspect ratio del fullscreen
+		if (cfg->fullscreen && !cfg->stretch) {
+			FLOAT ratio_surface = ((FLOAT) gfx.rows / (FLOAT) gfx.lines) * gfx.pixel_aspect_ratio;
+			FLOAT ratio_frame = (FLOAT) gfx.w[VIDEO_MODE] / (FLOAT) gfx.h[VIDEO_MODE];
+			FLOAT delta;
+
+			if (ratio_frame > ratio_surface) {
+				delta = (ratio_surface / ratio_frame - 1.0f) / 2.0f + 0.5f;
+				vp->x = (int) roundf((FLOAT) gfx.w[VIDEO_MODE] * (0.5f - delta));
+				vp->w = (unsigned) roundf(2.0f * (FLOAT) gfx.w[VIDEO_MODE] * delta);
 			} else {
-				w = gfx.w[CURRENT];
-				h = gfx.h[CURRENT];
-			}
-
-			/* creo la texture principale */
-			if (d3d9_create_texture(&d3d9.screen, w, h) == EXIT_ERROR) {
-				MessageBox(NULL, "Unable to create main texture", "Error!",
-						MB_ICONEXCLAMATION | MB_OK);
-				return (EXIT_ERROR);
+				delta = (ratio_frame / ratio_surface - 1.0f) / 2.0f + 0.5f;
+				vp->y = (int) roundf((FLOAT) gfx.h[VIDEO_MODE] * (0.5f - delta));
+				vp->h = (unsigned) roundf(2.0f * (FLOAT) gfx.h[VIDEO_MODE] * delta);
 			}
 		}
-
-		IDirect3DDevice9_SetTexture(d3d9.adapter->dev, 0,
-				(IDirect3DBaseTexture9 *) d3d9.screen.data);
-
-		/* Aggiunto il supporto del "Border Color Texture Address Mode" */
-		IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
-				D3DSAMP_ADDRESSU, D3DTADDRESS_BORDER);
-		IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
-				D3DSAMP_ADDRESSV, D3DTADDRESS_BORDER);
-		IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
-				D3DSAMP_BORDERCOLOR, 0xFF000000);
-
-		IDirect3DDevice9_SetTextureStageState(d3d9.adapter->dev, 0,
-				D3DTSS_COLOROP, D3DTOP_MODULATE);
-		IDirect3DDevice9_SetTextureStageState(d3d9.adapter->dev, 0,
-				D3DTSS_ALPHAOP, D3DTOP_MODULATE);
-
-		/* abilito le operazioni di blending */
-		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_ALPHABLENDENABLE, TRUE);
-		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_BLENDOP, D3DBLENDOP_ADD);
-		// set the fixed render state
-		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_ZENABLE, D3DZB_FALSE);
-		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_FILLMODE, D3DFILL_SOLID);
-		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_SHADEMODE, D3DSHADE_FLAT);
-		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_ZWRITEENABLE, FALSE);
-		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_ALPHATESTENABLE, TRUE);
-		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_LASTPIXEL, TRUE);
-		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_CULLMODE, D3DCULL_NONE);
-		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_ZFUNC, D3DCMP_LESS);
-		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_ALPHAREF, 0);
-		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_ALPHAFUNC, D3DCMP_GREATER);
-		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_DITHERENABLE, FALSE);
-		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_FOGENABLE, FALSE);
-		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_SPECULARENABLE, FALSE);
-		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_STENCILENABLE, FALSE);
-		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_WRAP0, FALSE);
-		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_CLIPPING, TRUE);
-		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_LIGHTING, FALSE);
-		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_COLORVERTEX, TRUE);
-		/* imposto i parametri del blend */
-		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_DESTBLEND,
-				D3DBLEND_INVSRCALPHA);
 	}
 
+	// texture
+	for (i = 0; i < shader_effect.pass; i++) {
+		if (d3d9_texture_create(&d3d9.texture[i], i) == EXIT_ERROR) {
+			d3d9_context_delete();
+			return (EXIT_ERROR);
+		}
+	}
+
+	// non inizializzo le shader nel d3d9_texture_create perche' d3d9.alias_define
+	// viene costruita proprio durante il d3d9_texture_create e a me serve completa quando
+	// inizializzo le shaders.
+	for (i = 0; i < shader_effect.pass; i++) {
+		if (d3d9_shader_init(&d3d9.texture[i].shader, shader_effect.sp[i].path,
+				shader_effect.sp[i].code) == EXIT_ERROR) {
+			d3d9_context_delete();
+			return (EXIT_ERROR_SHADER);
+		}
+	}
+
+	// PREV (calcolo il numero di screen da utilizzare)
+	// deve essere fatto dopo il d3d9_shader_init().
+	for (i = 0; i < shader_effect.pass; i++) {
+		UINT a;
+
+		for (a = 0; a < LENGTH(d3d9.texture[i].shader.uni.prev); a++) {
+			if (d3d9.texture[i].shader.uni.prev[a].f.texture) {
+				if (d3d9.screen.in_use < (a + 1)) {
+					d3d9.screen.in_use = (a + 1);
+				}
+			}
+		}
+	}
+
+	d3d9.screen.in_use++;
+
+	// PREV
+	for (i = 1; i < d3d9.screen.in_use; i++) {
+		d3d9_texture_simple_create(&d3d9.screen.tex[i], w, h, FALSE);
+	}
+
+	// FEEDBACK
+	if ((shader_effect.feedback_pass >= 0) && (shader_effect.feedback_pass < shader_effect.pass)) {
+		d3d9.feedback.in_use = TRUE;
+
+		if (d3d9_texture_create(&d3d9.feedback.tex, shader_effect.feedback_pass) == EXIT_ERROR) {
+			d3d9_context_delete();
+			return (EXIT_ERROR);
+		}
+	}
+
+	// testo
 	{
-		D3DVIEWPORT9 vp = { 0, 0, gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE], 0.0f, 0.0f };
+		// setto il necessario per il blending
+		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_BLENDOP, D3DBLENDOP_ADD);
+		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 
-		D3DXMatrixOrthoOffCenterRH(&d3d9.projection, 0.0f, gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE],
-		        0.0f, 1.0f, -1.0f);
-		IDirect3DDevice9_SetTransform(d3d9.adapter->dev, D3DTS_PROJECTION, &d3d9.projection);
+		d3d9_texture_simple_create(&d3d9.text, gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE], TRUE);
 
-		IDirect3DDevice9_SetViewport(d3d9.adapter->dev, &vp);
-
-		IDirect3DDevice9_GetTransform(d3d9.adapter->dev, D3DTS_WORLD, &d3d9.world);
-		IDirect3DDevice9_GetTransform(d3d9.adapter->dev, D3DTS_VIEW, &d3d9.view);
-		IDirect3DDevice9_GetTransform(d3d9.adapter->dev, D3DTS_PROJECTION, &d3d9.projection);
+		if (d3d9_shader_init(&d3d9.text.shader, NULL, shader_code_blend()) == EXIT_ERROR) {
+			d3d9_context_delete();
+			return (EXIT_ERROR);
+		}
 	}
 
-	if (gfx.hlsl.enabled == TRUE) {
-		d3d9_create_shader(&d3d9.shader);
-	}
+	// setto tutto quello che mi serve per il rendering
+	for (i = 0; i < shader_effect.pass; i++) {
+		_texture *texture = &d3d9.texture[i];
+		_shader *shd = &texture->shader;
+		_texture_rect *prev = NULL;
 
-	if (d3d9_create_texture(&d3d9.text, gfx.w[CURRENT], gfx.h[CURRENT]) == EXIT_ERROR) {
-		MessageBox(NULL, "Unable to create text texture", "Error!", MB_ICONEXCLAMATION | MB_OK);
-		return (EXIT_ERROR);
+		if (i == 0) {
+			prev = &d3d9.screen.tex[0].rect;
+		} else {
+			prev = &d3d9.texture[i - 1].rect;
+		}
+
+		shd->info.video_size.x = (FLOAT) prev->base.w;
+		shd->info.video_size.y = (FLOAT) prev->base.h;
+		shd->info.texture_size.x = prev->w,
+		shd->info.texture_size.y = prev->h;
+		shd->info.output_size.x = (FLOAT) texture->vp.w;
+		shd->info.output_size.y = (FLOAT) texture->vp.h;
+
+		d3d9_vertex_buffer_set(shd, &texture->vp, prev);
 	}
 
 	return (EXIT_OK);
 }
-void d3d9_release_context(void) {
-	d3d9_release_shader(&d3d9.shader);
+static void d3d9_context_delete(void) {
+	UINT i;
 
-	d3d9_release_texture(&d3d9.screen);
-	d3d9_release_texture(&d3d9.text);
+	memset(d3d9.alias_define, 0x00, sizeof(d3d9.alias_define));
+
+	d3d9.screen.in_use = 0;
+	d3d9.screen.index = 0;
+
+	for (i = 0; i < LENGTH(d3d9.screen.tex); i++) {
+		_texture_simple *texture = &d3d9.screen.tex[i];
+		if (texture->offscreen) {
+			IDirect3DSurface9_Release(texture->offscreen);
+			texture->offscreen = NULL;
+		}
+		if (texture->map0) {
+			IDirect3DSurface9_Release(texture->map0);
+			texture->map0 = NULL;
+		}
+		if (texture->data) {
+			IDirect3DTexture9_Release(texture->data);
+			texture->data = NULL;
+		}
+		if (texture->shader.vd) {
+			IDirect3DVertexDeclaration9_Release(texture->shader.vd);
+			texture->shader.vd = NULL;
+		}
+		if (texture->shader.quad) {
+			IDirect3DVertexBuffer9_Release(texture->shader.quad);
+			texture->shader.quad = NULL;
+		}
+	}
+
+	{
+		if (d3d9.text.offscreen) {
+			IDirect3DSurface9_Release(d3d9.text.offscreen);
+			d3d9.text.offscreen = NULL;
+		}
+		if (d3d9.text.map0) {
+			IDirect3DSurface9_Release(d3d9.text.map0);
+			d3d9.text.map0 = NULL;
+		}
+		if (d3d9.text.data) {
+			IDirect3DTexture9_Release(d3d9.text.data);
+			d3d9.text.data = NULL;
+		}
+		if (d3d9.text.shader.vd) {
+			IDirect3DVertexDeclaration9_Release(d3d9.text.shader.vd);
+			d3d9.text.shader.vd = NULL;
+		}
+		if (d3d9.text.shader.quad) {
+			IDirect3DVertexBuffer9_Release(d3d9.text.shader.quad);
+			d3d9.text.shader.quad = NULL;
+		}
+		d3d9_shader_delete(&d3d9.text.shader);
+	}
+
+	{
+		d3d9.feedback.in_use = FALSE;
+
+		if (d3d9.feedback.tex.map0) {
+			IDirect3DSurface9_Release(d3d9.feedback.tex.map0);
+			d3d9.feedback.tex.map0 = NULL;
+		}
+		if (d3d9.feedback.tex.data) {
+			IDirect3DTexture9_Release(d3d9.feedback.tex.data);
+			d3d9.feedback.tex.data = NULL;
+		}
+		if (d3d9.feedback.tex.shader.quad) {
+			IDirect3DVertexBuffer9_Release(d3d9.feedback.tex.shader.quad);
+			d3d9.feedback.tex.shader.quad = NULL;
+		}
+		if (d3d9.feedback.tex.shader.vd) {
+			IDirect3DVertexDeclaration9_Release(d3d9.feedback.tex.shader.vd);
+			d3d9.feedback.tex.shader.vd = NULL;
+		}
+		d3d9_shader_delete(&d3d9.feedback.tex.shader);
+	}
+
+	for (i = 0; i < LENGTH(d3d9.texture); i++) {
+		_texture *texture = &d3d9.texture[i];
+
+		if (texture->map0) {
+			IDirect3DSurface9_Release(texture->map0);
+			texture->map0 = NULL;
+		}
+		if (texture->data) {
+			IDirect3DTexture9_Release(texture->data);
+			texture->data = NULL;
+		}
+		if (texture->shader.quad) {
+			IDirect3DVertexBuffer9_Release(texture->shader.quad);
+			texture->shader.quad = NULL;
+		}
+		if (texture->shader.vd) {
+			IDirect3DVertexDeclaration9_Release(texture->shader.vd);
+			texture->shader.vd = NULL;
+		}
+		d3d9_shader_delete(&d3d9.texture[i].shader);
+	}
+
+	for (i = 0; i < LENGTH(d3d9.lut); i++) {
+		if (d3d9.lut[i].data) {
+			IDirect3DTexture9_Release(d3d9.lut[i].data);
+			d3d9.lut[i].data = NULL;
+		}
+	}
+
+	if (d3d9.cgctx) {
+		cgD3D9UnloadAllPrograms();
+		cgD3D9SetDevice(NULL);
+		cgDestroyContext(d3d9.cgctx);
+		d3d9.cgctx = NULL;
+	}
 
 	if (d3d9.adapter && d3d9.adapter->dev) {
 		IDirect3DDevice9_Release(d3d9.adapter->dev);
 		d3d9.adapter->dev = NULL;
 	}
 }
-void d3d9_adjust_coords(void) {
-	d3d9_adjust_vertex_buffer(&d3d9.screen, d3d9.factor);
-	d3d9_adjust_vertex_buffer(&d3d9.text, 1.0f);
+static BYTE d3d9_texture_create(_texture *texture, UINT index) {
+	_shader_pass *sp = &shader_effect.sp[index];
+	_shader_scale *sc = &sp->sc;
+	const _texture_rect *prev;
+	_texture_rect *rect = &texture->rect;
+	_viewport *vp = &texture->vp;
 
-	gfx.quadcoords = d3d9.screen.quadcoords;
-
-	if (d3d9.shader.table_pxl != NULL) {
-		FLOAT sse[2], svm[2], st[2], fc, param, par, full_interpolation;
-
-		sse[0] = (FLOAT) SCR_ROWS;
-		sse[1] = (FLOAT) SCR_LINES;
-
-		if (overscan.enabled) {
-			sse[0] -= (FLOAT) (overscan.borders->left + overscan.borders->right);
-			sse[1] -= (FLOAT) (overscan.borders->up + overscan.borders->down);
-		}
-
-		svm[0] = gfx.quadcoords.r - gfx.quadcoords.l;
-		svm[1] = gfx.quadcoords.b - gfx.quadcoords.t;
-		st[0] = d3d9.screen.w;
-		st[1] = d3d9.screen.h;
-		fc = (FLOAT) ppu.frames;
-		param = gfx.hlsl.param;
-		par = gfx.pixel_aspect_ratio;
-		full_interpolation = d3d9.interpolation;
-
-		ID3DXConstantTable_SetFloatArray(d3d9.shader.table_pxl, d3d9.adapter->dev,
-				"size_screen_emu", (CONST FLOAT *) &sse, 2);
-		ID3DXConstantTable_SetFloatArray(d3d9.shader.table_pxl, d3d9.adapter->dev,
-				"size_video_mode", (CONST FLOAT *) &svm, 2);
-		ID3DXConstantTable_SetFloatArray(d3d9.shader.table_pxl, d3d9.adapter->dev,
-				"size_texture", (CONST FLOAT *) &st, 2);
-		ID3DXConstantTable_SetFloatArray(d3d9.shader.table_pxl, d3d9.adapter->dev,
-				"frame_counter", (CONST FLOAT *) &fc, 1);
-		ID3DXConstantTable_SetFloatArray(d3d9.shader.table_pxl, d3d9.adapter->dev,
-				"param", (CONST FLOAT *) &param, 1);
-		ID3DXConstantTable_SetFloatArray(d3d9.shader.table_pxl, d3d9.adapter->dev,
-				"pixel_aspect_ratio", (CONST FLOAT *) &par, 1);
-		ID3DXConstantTable_SetFloatArray(d3d9.shader.table_pxl, d3d9.adapter->dev,
-				"full_interpolation", (CONST FLOAT *) &full_interpolation, 1);
+	if (index == 0) {
+		prev = &d3d9.screen.tex[0].rect;
+	} else {
+		prev = &d3d9.texture[index - 1].rect;
 	}
-}
-void d3d9_adjust_vertex_buffer(_texture *texture, FLOAT factor) {
-	{
-		FLOAT w_quad = (FLOAT) gfx.w[VIDEO_MODE];
-		FLOAT h_quad = (FLOAT) gfx.h[VIDEO_MODE];
 
-		texture->quadcoords.l = 0.0f;
-		texture->quadcoords.r = w_quad;
-		texture->quadcoords.t = 0.0f;
-		texture->quadcoords.b = h_quad;
+	if (index == shader_effect.last_pass) {
+		sc->scale.x = 1.0f;
+		sc->scale.y = 1.0f;
+		sc->type.x = SHADER_SCALE_VIEWPORT;
+		sc->type.y = SHADER_SCALE_VIEWPORT;
+	}
 
-		/* con flags intendo sia il fullscreen che il futuro resize */
-		if (cfg->fullscreen && !cfg->stretch) {
-			FLOAT ratio_surface = w_quad / h_quad;
-			FLOAT ratio_frame = (FLOAT) gfx.w[CURRENT] / (FLOAT) gfx.h[CURRENT];
+#if defined FH_SHADERS_GEST
+	switch (sc->type.x) {
+		case SHADER_SCALE_DEFAULT:
+		case SHADER_SCALE_INPUT:
+			rect->base.w = (FLOAT) prev->base.w * sc->scale.x;
+			break;
+		case SHADER_SCALE_ABSOLUTE:
+			rect->base.w = sc->abs.x;
+			break;
+		case SHADER_SCALE_VIEWPORT:
+			rect->base.w = (FLOAT) gfx.vp.w * sc->scale.x;
+			break;
+	}
+	switch (sc->type.y) {
+		case SHADER_SCALE_DEFAULT:
+		case SHADER_SCALE_INPUT:
+			rect->base.h = (FLOAT) prev->base.h * sc->scale.y;
+			break;
+		case SHADER_SCALE_ABSOLUTE:
+			rect->base.h = sc->abs.y;
+			break;
+		case SHADER_SCALE_VIEWPORT:
+			rect->base.h = (FLOAT) gfx.vp.h * sc->scale.y;
+			break;
+	}
 
-			/*
-			 * se l'aspect ratio del frame e' maggiore di
-			 * quello della superficie allora devo agire
-			 * sull'altezza.
-			 */
-			if (ratio_frame > ratio_surface) {
-				FLOAT centering_factor = 0.0f;
+	rect->w = emu_power_of_two(rect->base.w);
+	rect->h = emu_power_of_two(rect->base.h);
+#else
+	switch (sc->type.x) {
+		case SHADER_SCALE_DEFAULT:
+		case SHADER_SCALE_INPUT:
+			rect->w = (FLOAT) prev->w * sc->scale.x;
+			rect->base.w = (FLOAT) prev->base.w * sc->scale.x;
+			break;
+		case SHADER_SCALE_ABSOLUTE:
+			rect->w = rect->base.w = sc->abs.x;
+			break;
+		case SHADER_SCALE_VIEWPORT:
+			rect->w = rect->base.w = (FLOAT) gfx.vp.w * sc->scale.x;
+			break;
+	}
+	switch (sc->type.y) {
+		case SHADER_SCALE_DEFAULT:
+		case SHADER_SCALE_INPUT:
+			rect->h = (FLOAT) prev->h * sc->scale.y;
+			rect->base.h = (FLOAT) prev->base.h * sc->scale.y;
+			break;
+		case SHADER_SCALE_ABSOLUTE:
+			rect->h = rect->base.h = sc->abs.y;
+			break;
+		case SHADER_SCALE_VIEWPORT:
+			rect->h = rect->base.h = (FLOAT) gfx.vp.h * sc->scale.y;
+			break;
+	}
 
-				h_quad = trunc((w_quad / ratio_frame) / gfx.pixel_aspect_ratio);
-				centering_factor = trunc(((FLOAT) gfx.h[VIDEO_MODE] - h_quad) / 2.0f);
+	rect->w = emu_power_of_two(rect->w);
+	rect->h = emu_power_of_two(rect->h);
+#endif
 
-				texture->quadcoords.l = 0.0f;
-				texture->quadcoords.r = w_quad;
-				texture->quadcoords.t = centering_factor;
-				texture->quadcoords.b = h_quad + centering_factor;
-			/*
-			 * se l'aspect ratio del frame e' minore di
-			 * quello della superficie allora devo agire
-			 * sulla larghezza.
-			 */
-			} else if (ratio_frame < ratio_surface) {
-				FLOAT centering_factor = 0.0f;
-
-				w_quad = trunc((h_quad * ratio_frame) * gfx.pixel_aspect_ratio);
-				centering_factor = trunc(((FLOAT) gfx.w[VIDEO_MODE] - w_quad) / 2.0f);
-
-				texture->quadcoords.l = centering_factor;
-				texture->quadcoords.r = w_quad + centering_factor;
-				texture->quadcoords.t = 0.0f;
-				texture->quadcoords.b = h_quad;
-			}
+	// se la scheda video supporta solo texture quadre allore devo crearle quadre
+	if (d3d9.adapter->texture_square_only == TRUE) {
+		if (rect->w < rect->h) {
+			rect->w = rect->h;
+		} else {
+			rect->h = rect->w;
 		}
 	}
 
-	{
-		void *tv_vertices;
-		_texcoords tc;
-
-		/*
-		 * l'aggiunta di quel 0.5f e' un semplice workaround per ovviare ad
-		 * un problema che nasce quando si usa una risoluzione a schermo intero
-		 * di 1920x1080 (o magari anche ad altre risoluzioni a 16:9 ma questo
-		 * non ho potuto verificarlo) in cui appare visibile la linea che separa
-		 * i due triangoil che formano la quad. Con questa piccola modifica il
-		 * problema scompare e non va ad alterae ne' la visualizzazione in finestra
-		 * ne' a schermo intero a qualsiasi altra risoluzione (almeno lo spero).
-		 */
-		/*
-		tc.l = 0.0f;
-		tc.r = ((FLOAT) gfx.w[CURRENT] + 0.5f) / (texture->w * factor);
-		tc.t = 0.0f;
-		tc.b = ((FLOAT) gfx.h[CURRENT] + 0.5f) / (texture->h * factor);
-		*/
-
-		tc.l = 0.0f;
-		tc.r = ((FLOAT) gfx.w[CURRENT]) / (texture->w * factor);
-		tc.t = 0.0f;
-		tc.b = ((FLOAT) gfx.h[CURRENT]) / (texture->h * factor);
-
-		vertex quad_vertices[] = {
-			{ texture->quadcoords.l, texture->quadcoords.b, 0.0f, tc.l, tc.b },
-			{ texture->quadcoords.l, texture->quadcoords.t, 0.0f, tc.l, tc.t },
-			{ texture->quadcoords.r, texture->quadcoords.t, 0.0f, tc.r, tc.t },
-			{ texture->quadcoords.r, texture->quadcoords.b, 0.0f, tc.r, tc.b }
-		};
-
-		/*
-		 * problema dell'infamous half-texel offset of D3D9 (corretto dalle D3D10 in poi) :
-		 * http://msdn.microsoft.com/en-us/library/bb219690%28VS.85%29.aspx
-		 */
-		{
-			int i;
-
-			for (i=0; i < LENGTH(quad_vertices); i++) {
-				quad_vertices[i].x -= 0.5f;
-				quad_vertices[i].y -= 0.5f;
-			}
-		}
-
-		IDirect3DVertexBuffer9_Lock(texture->quad, 0, 0, (void**) &tv_vertices, 0);
-		memcpy(tv_vertices, quad_vertices, sizeof(quad_vertices));
-		IDirect3DVertexBuffer9_Unlock(texture->quad);
+	if (index == shader_effect.last_pass) {
+		vp->x = gfx.vp.x;
+		vp->y = gfx.vp.y;
+		vp->w = gfx.vp.w;
+		vp->h = gfx.vp.h;
+	} else {
+		vp->x = 0;
+		vp->y = 0;
+		vp->w = rect->base.w;
+		vp->h = rect->base.h;
 	}
-}
-BYTE d3d9_create_texture(_texture *texture, uint32_t width, uint32_t height) {
-	DWORD usage = 0;
 
-	d3d9_release_texture(texture);
-
-	if (IDirect3DDevice9_CreateVertexBuffer(d3d9.adapter->dev,
-			4 * sizeof(vertex),
-			D3DUSAGE_WRITEONLY,
-			FVF,
-			D3DPOOL_DEFAULT,
-			&texture->quad,
-			NULL) != D3D_OK) {
+	if (IDirect3DDevice9_CreateVertexBuffer(d3d9.adapter->dev, sizeof(_vertex_buffer) * 4, 0, 0,
+			D3DPOOL_DEFAULT, &texture->shader.quad, NULL) != D3D_OK) {
 		MessageBox(NULL, "Unable to create the vertex buffer", "Error!",
 				MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
 
-	texture->w = d3d9_power_of_two(width);
-	texture->h = d3d9_power_of_two(height);
-
-	/* se la scheda video supporta solo texture quadre allore devo crearle quadre */
-	if (d3d9.adapter->texture_square_only == TRUE) {
-		if (texture->w < texture->h) {
-			texture->w = texture->h;
-		} else {
-			texture->h = texture->w;
-		}
-	}
-
-	if (d3d9.adapter->dynamic_texture == TRUE) {
-		usage |= D3DUSAGE_DYNAMIC;
-	}
-
-	if (d3d9.adapter->auto_gen_mipmap == TRUE) {
-		usage |= D3DUSAGE_AUTOGENMIPMAP;
-	}
-
 	if (IDirect3DDevice9_CreateTexture(d3d9.adapter->dev,
-			texture->w,
-			texture->h,
-			0,
-			usage,
-			D3DFMT_A8R8G8B8,
+			(UINT) rect->w, (UINT) rect->h, 1,
+			D3DUSAGE_RENDERTARGET,
+			sp->fbo_flt ? D3DFMT_A32B32G32R32F : D3DFMT_A8R8G8B8,
 			D3DPOOL_DEFAULT,
 			&texture->data,
 			NULL) != D3D_OK) {
@@ -1448,304 +1354,966 @@ BYTE d3d9_create_texture(_texture *texture, uint32_t width, uint32_t height) {
 	}
 
 	IDirect3DTexture9_GetSurfaceLevel(texture->data, 0, &texture->map0);
+	d3d9_surface_clean(&texture->map0, rect->w, rect->h);
 
-	/*
-	 * cancello la superficie map0 perche' alcuni driver (tipo intel) nella
-	 * versione per windows XP non mi passano una superficia "pulita" e inoltre
-	 * sembra che non fumzioni nemmeno il
-	 * IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0, D3DSAMP_BORDERCOLOR, 0xFF000000);
-	 */
-	{
-		D3DLOCKED_RECT lock_dst;
+	IDirect3DDevice9_SetTexture(d3d9.adapter->dev, 0, (IDirect3DBaseTexture9 *) texture->data);
+	IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0, D3DSAMP_ADDRESSU, D3DTADDRESS_BORDER);
+	IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0, D3DSAMP_ADDRESSV, D3DTADDRESS_BORDER);
+	IDirect3DDevice9_SetTexture(d3d9.adapter->dev, 0, NULL);
 
-		if (IDirect3DSurface9_LockRect(texture->map0, &lock_dst, NULL,
-				D3DLOCK_DISCARD) == D3D_OK) {
-			uint32_t *pbits;
-			int w, h;
+	if (sp->alias[0]) {
+		char define[128];
 
-			pbits = (uint32_t *) lock_dst.pBits;
+		snprintf(define, sizeof(define), "#define %s_ALIAS\n", sp->alias);
+		strncpy(d3d9.alias_define, define, sizeof(d3d9.alias_define));
+	}
 
-			for (h = 0; h < texture->h; h++) {
-				for (w = 0; w < texture->w; w++) {
-					(*(pbits + w)) = 0;
-				}
-				pbits += lock_dst.Pitch / (gfx.bit_per_pixel / 8);
-			}
+	return (EXIT_OK);
+}
+static BYTE d3d9_texture_simple_create(_texture_simple *texture, UINT w, UINT h, BOOL text) {
+	_texture_rect *rect = &texture->rect;
+	_shader *shd = &texture->shader;
+	_viewport vp = { 0, 0, w, h };
+	UINT flt;
 
-			IDirect3DSurface9_UnlockRect(texture->map0);
+	rect->base.w = w;
+	rect->base.h = h;
+
+	if (!text) {
+#if defined FH_SHADERS_GEST
+		rect->w = emu_power_of_two(rect->base.w);
+		rect->h = emu_power_of_two(rect->base.h);
+#else
+		// rect->w = 1024 e rect->h = 1024 sono
+		// le dimensioni che imposta retroarch
+		// ma su alcune shader l'effetto e' piu'
+		// sgranato ("mudlord/emboss.h" e
+		// "antialiasing/fx-aa.h" sono un esempio)
+		rect->w = 1024;
+		rect->h = 1024;
+#endif
+		flt = (cfg->interpolation || gfx.PSS) ? D3DTEXF_LINEAR : D3DTEXF_POINT;
+	} else {
+		rect->w = rect->base.w;
+		rect->h = rect->base.h;
+		flt = D3DTEXF_POINT;
+	}
+
+	// se la scheda video supporta solo texture quadre allore devo crearle quadre
+	if (d3d9.adapter->texture_square_only == TRUE) {
+		if (rect->w < rect->h) {
+			rect->w = rect->h;
+		} else {
+			rect->h = rect->w;
 		}
 	}
 
-	texture->surface.w = width;
-	texture->surface.h = height;
+	shd->info.video_size.x = (FLOAT) rect->base.w;
+	shd->info.video_size.y = (FLOAT) rect->base.h;
+	shd->info.texture_size.x = rect->w;
+	shd->info.texture_size.y = rect->h;
 
-	/* creo la superficie temporanea le cui dimensioni non devono essere "POWerate" */
+	if (IDirect3DDevice9_CreateVertexBuffer(d3d9.adapter->dev,
+			sizeof(_vertex_buffer) * 4,
+			D3DUSAGE_WRITEONLY,
+			0,
+			D3DPOOL_DEFAULT,
+			&texture->shader.quad,
+			NULL) != D3D_OK) {
+		MessageBox(NULL, "Unable to create the vertex buffer", "Error!",
+				MB_ICONEXCLAMATION | MB_OK);
+		return (EXIT_ERROR);
+	}
+
+	if (IDirect3DDevice9_CreateTexture(d3d9.adapter->dev,
+			(UINT) rect->w, (UINT) rect->h, 1,
+			d3d9.adapter->dynamic_texture ? D3DUSAGE_DYNAMIC : 0,
+			D3DFMT_A8R8G8B8,
+			D3DPOOL_DEFAULT,
+			&texture->data,
+			NULL) != D3D_OK) {
+		MessageBox(NULL, "Unable to create the texture", "Error!", MB_ICONEXCLAMATION | MB_OK);
+		return (EXIT_ERROR);
+	}
+
+	IDirect3DTexture9_GetSurfaceLevel(texture->data, 0, &texture->map0);
+	// cancello la superficie map0 perche' alcuni driver (tipo intel) nella
+	// versione per windows XP non mi passano una superficia "pulita" e inoltre
+	// sembra che non funzioni nemmeno il
+	// IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0, D3DSAMP_BORDERCOLOR, 0xFF000000);
+	d3d9_surface_clean(&texture->map0, rect->w, rect->h);
+
+	// creo la superficie temporanea le cui dimensioni non devono essere "POWerate"
 	if (IDirect3DDevice9_CreateOffscreenPlainSurface(d3d9.adapter->dev,
-			texture->surface.w,
-			texture->surface.h,
+			rect->base.w,
+			rect->base.h,
 			D3DFMT_A8R8G8B8,
 			D3DPOOL_SYSTEMMEM,
-			&texture->surface.data,
+			&texture->offscreen,
 			NULL) != D3D_OK) {
 		MessageBox(NULL, "Unable to create the memory surface", "Error!",
 				MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
 
-	/* cancello la superficie */
+	// cancello la superficie
+	d3d9_surface_clean(&texture->offscreen, rect->base.w, rect->base.h);
+
+	IDirect3DDevice9_SetTexture(d3d9.adapter->dev, 0, (IDirect3DBaseTexture9 *) texture->data);
+	IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0, D3DSAMP_ADDRESSU, D3DTADDRESS_BORDER);
+	IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0, D3DSAMP_ADDRESSV, D3DTADDRESS_BORDER);
+	IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0, D3DSAMP_MINFILTER, flt);
+	IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0, D3DSAMP_MAGFILTER, flt);
+	IDirect3DDevice9_SetTexture(d3d9.adapter->dev, 0, NULL);
+
+	d3d9_vertex_buffer_set(shd, &vp, rect);
+
+	return (EXIT_OK);
+}
+static BYTE d3d9_texture_lut_create(_lut *lut, UINT index) {
+	_lut_pass *lp = &shader_effect.lp[index];
+	LPDIRECT3DSURFACE9 map0, offscreen;
+	D3DLOCKED_RECT lrect;
+	UINT width, height;
+
+	if (gui_load_lut(lut, lp->path) == EXIT_ERROR) {
+		return (EXIT_ERROR);
+	}
+
+	width = lut->w;
+	height = lut->h;
+
+	lut->id = lp->name;
+	lut->filter = d3d9_shader_filter(lp->linear);
+
+	if (d3d9.adapter->texture_square_only == TRUE) {
+		if (width < height) {
+			width = height;
+		} else {
+			height = width;
+		}
+	}
+
+	if (IDirect3DDevice9_CreateTexture(d3d9.adapter->dev,
+			width, height, 1,
+			0,
+			D3DFMT_A8R8G8B8,
+			D3DPOOL_DEFAULT,
+			&lut->data,
+			NULL) != D3D_OK) {
+		MessageBox(NULL, "Unable to create the texture", "Error!",
+				MB_ICONEXCLAMATION | MB_OK);
+		return (EXIT_ERROR);
+	}
+
+	if (IDirect3DDevice9_CreateOffscreenPlainSurface(d3d9.adapter->dev,
+			lut->w, lut->h,
+			D3DFMT_A8R8G8B8,
+			D3DPOOL_SYSTEMMEM,
+			&offscreen,
+			NULL) != D3D_OK) {
+		MessageBox(NULL, "Unable to create the memory surface", "Error!",
+				MB_ICONEXCLAMATION | MB_OK);
+		return (EXIT_ERROR);
+	}
+
+	IDirect3DTexture9_GetSurfaceLevel(lut->data, 0, &map0);
+
+	if (IDirect3DSurface9_LockRect(offscreen, &lrect, NULL, D3DLOCK_DISCARD) != D3D_OK) {
+		if (map0) {
+			IDirect3DSurface9_Release(map0);
+		}
+		if (offscreen) {
+			IDirect3DSurface9_Release(offscreen);
+		}
+		return (EXIT_ERROR);
+	} else {
+		UINT w = 0, h = 0;
+		uint32_t *sbits = (uint32_t *) lut->bits;
+		uint32_t *dbits = (uint32_t *) lrect.pBits;
+
+		for (h = 0; h < lut->h; h++) {
+			for (w = 0; w < lut->w; w++) {
+				(*(dbits + w)) = (*(sbits + w));
+			}
+			sbits += lrect.Pitch / (gfx.bit_per_pixel / 8);
+			dbits += lrect.Pitch / (gfx.bit_per_pixel / 8);
+		}
+
+		IDirect3DSurface9_UnlockRect(offscreen);
+		IDirect3DDevice9_UpdateSurface(d3d9.adapter->dev, offscreen, NULL, map0, NULL);
+
+		IDirect3DDevice9_SetTexture(d3d9.adapter->dev, 0, (IDirect3DBaseTexture9 *) lut->data);
+		IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0, D3DSAMP_ADDRESSU, D3DTADDRESS_BORDER);
+		IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0, D3DSAMP_ADDRESSV, D3DTADDRESS_BORDER);
+		IDirect3DDevice9_SetTexture(d3d9.adapter->dev, 0, NULL);
+
+		IDirect3DSurface9_Release(map0);
+		IDirect3DSurface9_Release(offscreen);
+	}
+
+	return (EXIT_OK);
+}
+static void d3d9_surface_clean(LPDIRECT3DSURFACE9 *surface, UINT width, UINT height) {
+	D3DLOCKED_RECT lock_dst;
+
+	if (IDirect3DSurface9_LockRect((*surface), &lock_dst, NULL, D3DLOCK_DISCARD) == D3D_OK) {
+		uint32_t *pbits;
+		int w, h;
+
+		pbits = (uint32_t *) lock_dst.pBits;
+
+		for (h = 0; h < height; h++) {
+			for (w = 0; w < width; w++) {
+				(*(pbits + w)) = 0;
+			}
+			pbits += lock_dst.Pitch / (gfx.bit_per_pixel / 8);
+		}
+
+		IDirect3DSurface9_UnlockRect((*surface));
+	}
+}
+static BYTE d3d9_shader_init(_shader *shd, const char *path, const char *code) {
+	const char *list;
+	const char *argv[64];
+	const char **fopts = cgD3D9GetOptimalOptions(cgD3D9GetLatestPixelProfile());
+	const char **vopts = cgD3D9GetOptimalOptions(cgD3D9GetLatestVertexProfile());
+	UINT i, argc;
+
+	// fragment
 	{
-		D3DLOCKED_RECT lock_dst;
+		argc = 0;
+		//argv[argc++] = "-DPARAMETER_UNIFORM";
 
-		if (IDirect3DSurface9_LockRect(texture->surface.data, &lock_dst, NULL,
-				D3DLOCK_DISCARD) == D3D_OK) {
-			uint32_t *pbits;
-			int w, h;
+		if (d3d9.alias_define[0]) {
+			argv[argc++] = d3d9.alias_define;
+		}
+		for (i = 0; i < 64; i++) {
+			if (!fopts[i]) {
+				break;
+			}
+			argv[argc++] = fopts[i];
+		}
+		argv[argc] = NULL;
 
-			pbits = (uint32_t *) lock_dst.pBits;
+		if ((path == NULL) || !path[0]) {
+			shd->prg.f = cgCreateProgram(d3d9.cgctx, CG_SOURCE, code, cgD3D9GetLatestPixelProfile(),
+					"main_fragment", argv);
+		} else {
+			shd->prg.f = cgCreateProgramFromFile(d3d9.cgctx, CG_SOURCE, path,
+					cgD3D9GetLatestPixelProfile(), "main_fragment", argv);
+		}
+		if (!shd->prg.f && (list = cgGetLastListing(d3d9.cgctx))) {
+			printf("CG : fragment program errors :\n%s\n", list);
+		}
+	}
 
-			for (h = 0; h < texture->surface.h; h++) {
-				for (w = 0; w < texture->surface.w; w++) {
-					(*(pbits + w)) = 0;
-				}
-				pbits += lock_dst.Pitch / (gfx.bit_per_pixel / 8);
+	// vertex
+	{
+		argc = 0;
+		//argv[argc++] = "-DPARAMETER_UNIFORM";
+
+		if (d3d9.alias_define[0]) {
+			argv[argc++] = d3d9.alias_define;
+		}
+		for (i = 0; i < 64; i++) {
+			if (!vopts[i]) {
+				break;
+			}
+			argv[argc++] = vopts[i];
+		}
+		argv[argc] = NULL;
+
+		if ((path == NULL) || !path[0]) {
+			shd->prg.v = cgCreateProgram(d3d9.cgctx, CG_SOURCE, code,
+					cgD3D9GetLatestVertexProfile(), "main_vertex", argv);
+		} else {
+			shd->prg.v = cgCreateProgramFromFile(d3d9.cgctx, CG_SOURCE, path,
+					cgD3D9GetLatestVertexProfile(), "main_vertex", argv);
+		}
+		if (!shd->prg.v && (list = cgGetLastListing(d3d9.cgctx))) {
+			printf("CG : vertex program errors :\n%s\n", list);
+		}
+	}
+
+	if (!shd->prg.f || !shd->prg.v) {
+		fprintf(stderr, "CG : %s\n", cgGetErrorString(cgGetError()));
+		return (EXIT_ERROR);
+	}
+
+	if (cgD3D9LoadProgram(shd->prg.f, TRUE, 0) != D3D_OK) {
+		fprintf(stderr, "CG : Error on loading fragment program\n");
+		return (EXIT_ERROR);
+	}
+	if (cgD3D9LoadProgram(shd->prg.v, TRUE, 0) != D3D_OK) {
+		fprintf(stderr, "CG : Error on loading vertex program\n");
+		return (EXIT_ERROR);
+	}
+
+	shd->uni.mvp = cgGetNamedParameter(shd->prg.v, "modelViewProj");
+
+	shd->uni.v.video_size = cgGetNamedParameter(shd->prg.v, "IN.video_size");
+	shd->uni.f.video_size = cgGetNamedParameter(shd->prg.f, "IN.video_size");
+	shd->uni.v.texture_size = cgGetNamedParameter(shd->prg.v, "IN.texture_size");
+	shd->uni.f.texture_size = cgGetNamedParameter(shd->prg.f, "IN.texture_size");
+	shd->uni.v.output_size = cgGetNamedParameter(shd->prg.v, "IN.output_size");
+	shd->uni.f.output_size = cgGetNamedParameter(shd->prg.f, "IN.output_size");
+
+	shd->uni.v.frame_count = cgGetNamedParameter(shd->prg.v, "IN.frame_count");
+	shd->uni.f.frame_count = cgGetNamedParameter(shd->prg.f, "IN.frame_count");
+
+	shd->uni.v.frame_direction = cgGetNamedParameter(shd->prg.v, "IN.frame_direction");
+	shd->uni.f.frame_direction = cgGetNamedParameter(shd->prg.f, "IN.frame_direction");
+
+	if (d3d9_vertex_declaration_create(shd) == EXIT_ERROR) {
+		return (EXIT_ERROR);
+	}
+
+	for (i = 0; i < shader_effect.luts; i++) {
+		shd->uni.v.lut[i] = cgGetNamedParameter(shd->prg.v, d3d9.lut[i].id);
+		shd->uni.f.lut[i] = cgGetNamedParameter(shd->prg.f, d3d9.lut[i].id);
+	}
+
+	for (i = 0; i < shader_effect.params; i++) {
+		shd->uni.v.param[i] = cgGetNamedParameter(shd->prg.v, shader_effect.param[i].name);
+		shd->uni.f.param[i] = cgGetNamedParameter(shd->prg.f, shader_effect.param[i].name);
+	}
+
+	d3d9_shader_uni_texture_clear(&shd->uni.orig);
+	d3d9_shader_uni_texture(&shd->uni.orig, &shd->prg, "ORIG");
+
+	d3d9_shader_uni_texture_clear(&shd->uni.feedback);
+	d3d9_shader_uni_texture(&shd->uni.feedback, &shd->prg, "FEEDBACK");
+
+	for (i = 0; i < shader_effect.pass; i++) {
+		d3d9_shader_uni_texture_clear(&shd->uni.passprev[i]);
+
+		d3d9_shader_uni_texture(&shd->uni.passprev[i], &shd->prg, "PASS%u", i + 1);
+		d3d9_shader_uni_texture(&shd->uni.passprev[i], &shd->prg, "PASSPREV%u", i + 1);
+
+		if (shader_effect.sp[i].alias[0]) {
+			d3d9_shader_uni_texture(&shd->uni.passprev[i], &shd->prg, shader_effect.sp[i].alias);
+		}
+	}
+
+	d3d9_shader_uni_texture_clear(&shd->uni.prev[0]);
+	d3d9_shader_uni_texture(&shd->uni.prev[0], &shd->prg, "PREV");
+
+	for (i = 1; i < LENGTH(shd->uni.prev); i++) {
+		d3d9_shader_uni_texture_clear(&shd->uni.prev[i]);
+		d3d9_shader_uni_texture(&shd->uni.prev[i], &shd->prg, "PREV%u", i);
+	}
+
+	return (EXIT_OK);
+}
+static void d3d9_shader_delete(_shader *shd) {
+	if (shd->prg.f) {
+		cgDestroyProgram(shd->prg.f);
+	}
+	if (shd->prg.v) {
+		cgDestroyProgram(shd->prg.v);
+	}
+}
+static void d3d9_shader_uni_texture_clear(_shader_uniforms_tex *sut) {
+	sut->f.texture = NULL;
+	sut->v.video_size = NULL;
+	sut->f.video_size = NULL;
+	sut->v.texture_size = NULL;
+	sut->f.texture_size = NULL;
+	sut->v.tex_coord = NULL;
+}
+static void d3d9_shader_uni_texture(_shader_uniforms_tex *sut, _shader_cgprg *prg, char *fmt, ...) {
+	char type[50], buff[50];
+	va_list ap;
+
+	va_start(ap, fmt);
+	vsnprintf(type, sizeof(type), fmt, ap);
+	va_end(ap);
+
+	snprintf(buff, sizeof(buff), "%s%s", type, ".texture");
+	if (!sut->f.texture) {
+		sut->f.texture = cgGetNamedParameter(prg->f, buff);
+	}
+	snprintf(buff, sizeof(buff), "%s%s", type, ".video_size");
+	if (!sut->v.video_size) {
+		sut->v.video_size = cgGetNamedParameter(prg->v, buff);
+	}
+	if (!sut->f.video_size) {
+		sut->f.video_size = cgGetNamedParameter(prg->f, buff);
+	}
+	snprintf(buff, sizeof(buff), "%s%s", type, ".texture_size");
+	if (!sut->v.texture_size) {
+		sut->v.texture_size = cgGetNamedParameter(prg->v, buff);
+	}
+	if (!sut->f.texture_size) {
+		sut->f.texture_size = cgGetNamedParameter(prg->f, buff);
+	}
+	snprintf(buff, sizeof(buff), "%s%s", type, ".tex_coord");
+	if (!sut->v.tex_coord) {
+		sut->v.tex_coord = cgGetNamedParameter(prg->v, buff);
+	}
+}
+static BYTE d3d9_vertex_declaration_create(_shader *shd) {
+	UINT i, count, index, tex_index = 0;
+	CGparameter param;
+	BYTE texcoord[2] = { FALSE };
+	BYTE stream[4] = { FALSE };
+	BYTE indices[LENGTH(shd->attribs.attrib)] = { FALSE };
+	static const D3DVERTEXELEMENT9 end = D3DDECL_END();
+	D3DVERTEXELEMENT9 decl[MAXD3DDECLLENGTH];
+
+	if (cgD3D9GetVertexDeclaration(shd->prg.v, decl) == CG_FALSE) {
+		return (EXIT_ERROR);
+	}
+
+	for (count = 0; count < MAXD3DDECLLENGTH; count++) {
+		if (memcmp(&end, &decl[count], sizeof(end)) == 0) {
+			break;
+		}
+	}
+
+	if (!(param = d3d9_cg_find_param(cgGetFirstParameter(shd->prg.v, CG_PROGRAM), "POSITION"))) {
+		param = d3d9_cg_find_param(cgGetFirstParameter(shd->prg.v, CG_PROGRAM), "POSITION0");
+	}
+	if (param && (indices[cgGetParameterResourceIndex(param)] == FALSE)) {
+		stream[0] = TRUE;
+		index = cgGetParameterResourceIndex(param);
+		indices[index] = TRUE;
+		decl[index] = (D3DVERTEXELEMENT9) {
+			0, 0,
+			D3DDECLTYPE_FLOAT3,
+			D3DDECLMETHOD_DEFAULT,
+			D3DDECLUSAGE_POSITION, 0
+		};
+
+		printf("POSITION %d\n", index);
+	}
+
+	if (!(param = d3d9_cg_find_param(cgGetFirstParameter(shd->prg.v, CG_PROGRAM), "TEXCOORD"))) {
+		param = d3d9_cg_find_param(cgGetFirstParameter(shd->prg.v, CG_PROGRAM), "TEXCOORD0");
+	}
+	if (param && (indices[cgGetParameterResourceIndex(param)] == FALSE)) {
+		stream[1] = TRUE;
+		texcoord[0] = TRUE;
+		index = cgGetParameterResourceIndex(param);
+		indices[index]  = TRUE;
+		decl[index] = (D3DVERTEXELEMENT9) {
+			1, sizeof(float) * 3,
+			D3DDECLTYPE_FLOAT2,
+			D3DDECLMETHOD_DEFAULT,
+			D3DDECLUSAGE_TEXCOORD, 0
+		};
+
+		printf("TEXCOORD0 %d\n", index);
+	}
+
+	param = d3d9_cg_find_param(cgGetFirstParameter(shd->prg.v, CG_PROGRAM), "TEXCOORD1");
+	if (param && (indices[cgGetParameterResourceIndex(param)] == FALSE)) {
+		stream[2] = TRUE;
+		texcoord[1] = TRUE;
+		index = cgGetParameterResourceIndex(param);
+		indices[index]  = TRUE;
+		decl[index] = (D3DVERTEXELEMENT9) {
+			2, sizeof(float) * 5,
+			D3DDECLTYPE_FLOAT2,
+			D3DDECLMETHOD_DEFAULT,
+			D3DDECLUSAGE_TEXCOORD, 1
+		};
+
+		printf("TEXCOORD1 %d\n", index);
+	}
+
+	if (!(param = d3d9_cg_find_param(cgGetFirstParameter(shd->prg.v, CG_PROGRAM), "COLOR"))) {
+		param = d3d9_cg_find_param(cgGetFirstParameter(shd->prg.v, CG_PROGRAM), "COLOR0");
+	}
+	if (param && (indices[cgGetParameterResourceIndex(param)] == FALSE)) {
+		stream[3] = TRUE;
+		index = cgGetParameterResourceIndex(param);
+		indices[index] = TRUE;
+		decl[index] = (D3DVERTEXELEMENT9) {
+			3, sizeof(float) * 7,
+					D3DDECLTYPE_FLOAT4,
+					D3DDECLMETHOD_DEFAULT,
+					D3DDECLUSAGE_COLOR, 0
+		};
+
+		printf("COLOR %d\n", index);
+	}
+
+	// Stream {0, 1, 2, 3} might be already taken. Find first vacant stream
+	for (index = 0; index < 4; index++) {
+		if (stream[index] == FALSE) {
+			break;
+		}
+	}
+
+	// Find first vacant texcoord declaration
+	if (texcoord[0] && texcoord[1]) {
+		tex_index = 2;
+	} else if (texcoord[1] && !texcoord[0]) {
+		tex_index = 0;
+	} else if (texcoord[0] && !texcoord[1]) {
+		tex_index = 1;
+	}
+
+	shd->attribs.count = 0;
+
+	for (i = 0; i < count; i++) {
+		if (indices[i]) {
+			shd->attribs.attrib[shd->attribs.count++] = 0;
+		} else {
+			printf("push back %d %d %d %d\n", i, shd->attribs.count, index, tex_index);
+			shd->attribs.attrib[shd->attribs.count++] = index;
+			decl[i] = (D3DVERTEXELEMENT9) {
+				index, sizeof(float) * 3,
+				D3DDECLTYPE_FLOAT2,
+				D3DDECLMETHOD_DEFAULT,
+				D3DDECLUSAGE_TEXCOORD, tex_index
+			};
+			while ((++index < 4) && stream[index]) {
+				index++;
+			}
+			if ((++tex_index == 1) && texcoord[1]) {
+				tex_index++;
+			}
+		}
+	}
+
+	if (IDirect3DDevice9_CreateVertexDeclaration(d3d9.adapter->dev, decl, &shd->vd)) {
+		return (EXIT_ERROR);
+	}
+
+	return (EXIT_OK);
+}
+static void d3d9_vertex_buffer_set(_shader *shd, _viewport *vp, _texture_rect *prev) {
+	D3DXMATRIX proj, ortho, rot;
+	FLOAT u = (FLOAT) prev->base.w / prev->w;
+	FLOAT v = (FLOAT) prev->base.h / prev->h;
+	void *buffer;
+	const UINT rotation = 0;
+	UINT i;
+
+	shd->vb[0].x = 0.0f;
+	shd->vb[0].y = vp->h;
+	shd->vb[0].z = 0.5f;
+	shd->vb[0].u = 0.0f;
+	shd->vb[0].v = 0.0f;
+	shd->vb[0].lut_u = 0.0f;
+	shd->vb[0].lut_v = 0.0f;
+	shd->vb[0].r = 1.0f;
+	shd->vb[0].g = 1.0f;
+	shd->vb[0].b = 1.0f;
+	shd->vb[0].a = 1.0f;
+
+	shd->vb[1].x = vp->w;
+	shd->vb[1].y = vp->h;
+	shd->vb[1].z = 0.5f;
+	shd->vb[1].u = u;
+	shd->vb[1].v = 0.0f;
+	shd->vb[1].lut_u = 1.0f;
+	shd->vb[1].lut_v = 0.0f;
+	shd->vb[1].r = 1.0f;
+	shd->vb[1].g = 1.0f;
+	shd->vb[1].b = 1.0f;
+	shd->vb[1].a = 1.0f;
+
+	shd->vb[2].x = 0.0f;
+	shd->vb[2].y = 0.0f;
+	shd->vb[2].z = 0.5f;
+	shd->vb[2].u = 0.0f;
+	shd->vb[2].v = v;
+	shd->vb[2].lut_u = 0.0f;
+	shd->vb[2].lut_v = 1.0f;
+	shd->vb[2].r = 1.0f;
+	shd->vb[2].g = 1.0f;
+	shd->vb[2].b = 1.0f;
+	shd->vb[2].a = 1.0f;
+
+	shd->vb[3].x = vp->w;
+	shd->vb[3].y = 0.0f;
+	shd->vb[3].z = 0.5f;
+	shd->vb[3].u = u;
+	shd->vb[3].v = v;
+	shd->vb[3].lut_u = 1.0f;
+	shd->vb[3].lut_v = 1.0f;
+	shd->vb[3].r = 1.0f;
+	shd->vb[3].g = 1.0f;
+	shd->vb[3].b = 1.0f;
+	shd->vb[3].a = 1.0f;
+
+	// problema dell'infamous half-texel offset of D3D9 (corretto dalle D3D10 in poi) :
+	// http://msdn.microsoft.com/en-us/library/bb219690%28VS.85%29.aspx.
+	for (i = 0; i < 4; i++) {
+		shd->vb[i].x -= 0.5f;
+		shd->vb[i].y += 0.5f;
+	}
+
+	IDirect3DVertexBuffer9_Lock(shd->quad, 0, 0, (void**) &buffer, 0);
+	memcpy(buffer, shd->vb, sizeof(shd->vb));
+	IDirect3DVertexBuffer9_Unlock(shd->quad);
+
+	D3DXMatrixOrthoOffCenterLH(&ortho, 0, vp->w, 0, vp->h, 0, 1);
+	D3DXMatrixIdentity(&rot);
+	D3DXMatrixRotationZ(&rot, rotation * (M_PI / 2.0));
+
+	D3DXMatrixMultiply(&proj, &ortho, &rot);
+	D3DXMatrixTranspose(&shd->mvp, &proj);
+}
+static CGparameter d3d9_cg_find_param(CGparameter prm, const char *name) {
+	UINT i;
+	static const char *illegal[] = {
+		"IN.",
+		"ORIG.",
+		"PASS",
+		"PREV.",
+		"PREV1.", "PREV2.",
+		"PREV3.", "PREV4.",
+		"PREV5.", "PREV6.",
+	};
+
+	for (; prm; prm = cgGetNextParameter(prm)) {
+		const char *semantic = NULL;
+
+		if (cgGetParameterType(prm) == CG_STRUCT) {
+			CGparameter ret;
+
+			if ((ret = d3d9_cg_find_param(cgGetFirstStructParameter(prm), name))) {
+				return (ret);
+			}
+		}
+		if (cgGetParameterDirection(prm) != CG_IN || cgGetParameterVariability(prm) != CG_VARYING) {
+			continue;
+		}
+		if (!(semantic = cgGetParameterSemantic(prm))) {
+			continue;
+		}
+		if (strcmp(name, semantic) == 0) {
+			const char *pname = cgGetParameterName(prm);
+
+			if (!pname) {
+				return (NULL);
 			}
 
-			IDirect3DSurface9_UnlockRect(texture->surface.data);
-		}
-	}
-
-	return (EXIT_OK);
-}
-void d3d9_release_texture(_texture *texture) {
-	if (texture->surface.data) {
-		IDirect3DSurface9_Release(texture->surface.data);
-		texture->surface.data = NULL;
-	}
-
-	texture->surface.w = texture->surface.h = 0;
-
-	if (texture->map0) {
-		IDirect3DSurface9_Release(texture->map0);
-		texture->map0 = NULL;
-	}
-
-	if (texture->data) {
-		IDirect3DTexture9_Release(texture->data);
-		texture->data = NULL;
-	}
-
-	if (texture->quad) {
-		IDirect3DVertexBuffer9_Release(texture->quad);
-		texture->quad = NULL;
-	}
-
-	texture->w = texture->h = 0;
-}
-BYTE d3d9_create_shader(_shader *shd) {
-	DWORD flags = 0;
-
-	d3d9_release_shader(shd);
-
-	if (shd->id == SHADER_NONE) {
-		return (EXIT_OK);
-	}
-
-	shd->code = &shader_code[shd->id];
-
-#define release_buffer\
-	if (code != NULL) {\
-		ID3DXBuffer_Release(code);\
-	}\
-	if (buffer_errors != NULL) {\
-		ID3DXBuffer_Release(buffer_errors);\
-	}
-
-	/* vertex shader */
-	if (shd->code->vertex != NULL) {
-		LPD3DXBUFFER code = NULL, buffer_errors = NULL;
-		HRESULT hr;
-
-		hr = D3DXCompileShader(shd->code->vertex,
-				strlen(shd->code->vertex),
-				NULL,
-				NULL,
-				"Vs",
-				D3DXGetVertexShaderProfile(d3d9.adapter->dev),
-				flags,
-				&code,
-				&buffer_errors,
-				&shd->table_vrt);
-
-		switch (hr) {
-			case D3D_OK:
-				/* creo il vertex shader */
-				IDirect3DDevice9_CreateVertexShader(d3d9.adapter->dev,
-						(DWORD *) ID3DXBuffer_GetBufferPointer(code),
-						&shd->vrt);
-				release_buffer
-				break;
-			case COMPILERSHADER_NOT_FOUND:
-				MessageBox(NULL,
-						"ATTENTION: DirectX HLSL compiler installation are incomplete\n"
-						"or corrupted. Please reinstall the DirectX 10."	,
-						"Error!",
-						MB_ICONEXCLAMATION | MB_OK);
-				release_buffer
-				d3d9_release_shader(shd);
-				return (EXIT_ERROR);
-			default:
-				fprintf(stderr, "Vertex shader error : 0x%lx\n", hr);
-				if (buffer_errors) {
-					LPVOID errors = ID3DXBuffer_GetBufferPointer(buffer_errors);
-
-					fprintf(stderr, "Vertex shader compile error : %s\n", (const char *) errors);
-					ID3DXBuffer_Release(buffer_errors);
+			for (i = 0; i < LENGTH(illegal); i++) {
+				if (strstr(pname, illegal[i]) == pname) {
+					return (NULL);
 				}
-				release_buffer
-				d3d9_release_shader(shd);
-				break;
+			}
+
+			return (prm);
+		}
+	}
+	return (NULL);
+}
+INLINE static void d3d9_viewport_set(DWORD x, DWORD y, DWORD w, DWORD h) {
+	static D3DVIEWPORT9 vp;
+
+	vp.X = x;
+	vp.Y = y;
+	vp.Width = w;
+	vp.Height = h;
+	vp.MinZ = 0.0f;
+	vp.MaxZ = 1.0f;
+	IDirect3DDevice9_SetViewport(d3d9.adapter->dev, &vp);
+}
+INLINE D3DTEXTUREFILTERTYPE d3d9_shader_filter(UINT type) {
+	switch (type) {
+		case TEXTURE_LINEAR_ENAB:
+			return D3DTEXF_LINEAR;
+		case TEXTURE_LINEAR_DISAB:
+			return D3DTEXF_POINT;
+		default:
+			if (cfg->interpolation || gfx.PSS) {
+				return D3DTEXF_LINEAR;
+			}
+			return D3DTEXF_POINT;
+	}
+}
+INLINE static void d3d9_shader_params_text_set(_shader *shd) {
+	UINT i;
+
+	if (shd->uni.mvp) {
+		// posso tranquillamente utilizzare l'mvp dell'ultimo pass
+		cgD3D9SetUniformMatrix(shd->uni.mvp, &shd->mvp);
+	}
+
+	for (i = 0; i < 4; i++) {
+		IDirect3DDevice9_SetStreamSource(d3d9.adapter->dev, i, shd->quad, 0,
+				sizeof(_vertex_buffer));
+	}
+}
+INLINE static void d3d9_shader_param_set(const _texture *texture, UINT fcountmod, UINT fcount) {
+	const _shader *shd = &texture->shader;
+	UINT i, index;
+
+	if (shd->uni.mvp) {
+		cgD3D9SetUniformMatrix(shd->uni.mvp, &shd->mvp);
+	}
+
+	for (i = 0; i < 4; i++) {
+		IDirect3DDevice9_SetStreamSource(d3d9.adapter->dev, i, shd->quad, 0,
+				sizeof(_vertex_buffer));
+	}
+
+	// IN
+	{
+		// IN.video_size
+		if (shd->uni.v.video_size) {
+			cgD3D9SetUniform(shd->uni.v.video_size, &shd->info.video_size);
+		}
+		if (shd->uni.f.video_size) {
+			cgD3D9SetUniform(shd->uni.f.video_size, &shd->info.video_size);
+		}
+		// IN.texture_size
+		if (shd->uni.v.texture_size) {
+			cgD3D9SetUniform(shd->uni.v.texture_size, &shd->info.texture_size);
+		}
+		if (shd->uni.f.texture_size) {
+			cgD3D9SetUniform(shd->uni.f.texture_size, &shd->info.texture_size);
+		}
+		// IN.output_size
+		if (shd->uni.v.output_size) {
+			cgD3D9SetUniform(shd->uni.v.output_size, &shd->info.output_size);
+		}
+		if (shd->uni.f.output_size) {
+			cgD3D9SetUniform(shd->uni.f.output_size, &shd->info.output_size);
+		}
+		// IN.frame_count
+		{
+			FLOAT fc = (FLOAT) fcount;
+
+			if (fcountmod) {
+				fc = (FLOAT) (fcount % fcountmod);
+			}
+
+			if (shd->uni.v.frame_count) {
+				cgD3D9SetUniform(shd->uni.v.frame_count, &fc);
+			}
+			if (shd->uni.f.frame_count) {
+				cgD3D9SetUniform(shd->uni.f.frame_count, &fc);
+			}
+		}
+		// IN.frame_direction
+		{
+			FLOAT frame_direction = -1;
+
+			if (shd->uni.v.frame_direction) {
+				cgD3D9SetUniform(shd->uni.v.frame_direction, &frame_direction);
+			}
+			if (shd->uni.f.frame_direction) {
+				cgD3D9SetUniform(shd->uni.f.frame_direction, &frame_direction);
+			}
 		}
 	}
 
-	/* pixel shader */
-	if (shd->code->pixel != NULL) {
-		LPD3DXBUFFER code = NULL, buffer_errors = NULL;
-		HRESULT hr;
-
-		hr = D3DXCompileShader(shd->code->pixel,
-				strlen(shd->code->pixel),
-				NULL,
-				NULL,
-				"Ps",
-				D3DXGetPixelShaderProfile(d3d9.adapter->dev),
-				flags,
-				&code,
-				&buffer_errors,
-				&shd->table_pxl);
-
-		switch (hr) {
-			case D3D_OK:
-				/* creo il pixel shader */
-				IDirect3DDevice9_CreatePixelShader(d3d9.adapter->dev,
-						(DWORD *) ID3DXBuffer_GetBufferPointer(code),
-						&shd->pxl);
-				release_buffer
-				break;
-			case COMPILERSHADER_NOT_FOUND:
-				MessageBox(NULL,
-						"ATTENTION: DirectX HLSL compiler installation are incomplete\n"
-						"or corrupted. Please reinstall the DirectX 10."	,
-						"Error!",
-						MB_ICONEXCLAMATION | MB_OK);
-				release_buffer
-				d3d9_release_shader(shd);
-				return (EXIT_ERROR);
-			default:
-				fprintf(stderr, "Pixel shader error : 0x%lx\n", hr);
-				if (buffer_errors) {
-					LPVOID errors = ID3DXBuffer_GetBufferPointer(buffer_errors);
-
-					fprintf(stderr, "Pixel shader compile error : %s\n", (const char *) errors);
-					ID3DXBuffer_Release(buffer_errors);
-				}
-				release_buffer
-				d3d9_release_shader(shd);
-				break;
+	// param
+	for (i = 0; i < shader_effect.params; i++) {
+		if (shd->uni.v.param[i]) {
+			cgD3D9SetUniform(shd->uni.v.param[i], &shader_effect.param[i].value);
 		}
-
-#undef release_buffer
-
+		if (shd->uni.f.param[i]) {
+			cgD3D9SetUniform(shd->uni.f.param[i], &shader_effect.param[i].value);
+		}
 	}
 
-	return (EXIT_OK);
-}
-void d3d9_release_shader(_shader *shd) {
-	if (shd->vrt) {
-		IDirect3DDevice9_SetVertexShader(d3d9.adapter->dev, NULL);
-		IDirect3DVertexShader9_Release(shd->vrt);
-		shd->vrt = NULL;
-	}
-	if (shd->table_vrt) {
-		ID3DXConstantTable_Release(shd->table_vrt);
-		shd->table_vrt = NULL;
+	// lut
+	for (i = 0; i < shader_effect.luts; i++) {
+		_lut *lut = &d3d9.lut[i];
+		int bound_index = -1;
+
+		if (shd->uni.v.lut[i]) {
+			index = cgGetParameterResourceIndex(shd->uni.v.lut[i]);
+			bound_index = index;
+			IDirect3DDevice9_SetTexture(d3d9.adapter->dev, index,
+					(IDirect3DBaseTexture9 * ) lut->data);
+			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, index, D3DSAMP_MAGFILTER,
+					lut->filter);
+			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, index, D3DSAMP_MINFILTER,
+					lut->filter);
+			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, index, D3DSAMP_ADDRESSU,
+			        D3DTADDRESS_BORDER);
+			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, index, D3DSAMP_ADDRESSV,
+			        D3DTADDRESS_BORDER);
+		}
+		if (shd->uni.f.lut[i]) {
+			index = cgGetParameterResourceIndex(shd->uni.f.lut[i]);
+			if (index == bound_index) {
+				continue;
+			}
+			IDirect3DDevice9_SetTexture(d3d9.adapter->dev, index,
+					(IDirect3DBaseTexture9 * ) lut->data);
+			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, index, D3DSAMP_MAGFILTER,
+					lut->filter);
+			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, index, D3DSAMP_MINFILTER,
+					lut->filter);
+			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, index, D3DSAMP_ADDRESSU,
+			        D3DTADDRESS_BORDER);
+			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, index, D3DSAMP_ADDRESSV,
+			        D3DTADDRESS_BORDER);
+		}
 	}
 
-	if (shd->pxl) {
-		IDirect3DDevice9_SetPixelShader(d3d9.adapter->dev, NULL);
-		IDirect3DPixelShader9_Release(shd->pxl);
-		shd->pxl = NULL;
-	}
-	if (shd->table_pxl) {
-		ID3DXConstantTable_Release(shd->table_pxl);
-		shd->table_pxl = NULL;
-	}
-}
-int d3d9_power_of_two(int base) {
-	int pot = 1;
-
-	while (pot < base) {
-		pot <<= 1;
-	}
-	return (pot);
-}
-
-INLINE void d3d9_draw_texture_screen(void) {
-	/* se necessario utilizzo le shaders */
-	if (d3d9.shader.vrt) {
-		IDirect3DDevice9_SetVertexShader(d3d9.adapter->dev, d3d9.shader.vrt);
-	}
-	if (d3d9.shader.pxl) {
-		IDirect3DDevice9_SetPixelShader(d3d9.adapter->dev, d3d9.shader.pxl);
-	}
-
-	/* disegno la texture dello screen */
-	IDirect3DDevice9_SetTexture(d3d9.adapter->dev, 0,
-	        (IDirect3DBaseTexture9 * ) d3d9.screen.data);
-
-	if ((d3d9.interpolation == TRUE) || (d3d9.PSS == TRUE)) {
-		IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
-				D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
-		IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
-				D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
-		IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
-				D3DSAMP_MIPFILTER, D3DTEXF_NONE);
-	} else {
-		IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
-				D3DSAMP_MAGFILTER, D3DTEXF_NONE);
-		IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
-				D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
-		IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
-				D3DSAMP_MIPFILTER, D3DTEXF_NONE);
+	// ORIG
+	{
+		// ORIG.texture
+		if (shd->uni.orig.f.texture) {
+			index = cgGetParameterResourceIndex(shd->uni.orig.f.texture);
+			IDirect3DDevice9_SetTexture(d3d9.adapter->dev, index,
+					(IDirect3DBaseTexture9 * ) d3d9.screen.tex[d3d9.screen.index].data);
+			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, index, D3DSAMP_MAGFILTER,
+					D3DTEXF_POINT);
+			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, index, D3DSAMP_MINFILTER,
+					D3DTEXF_POINT);
+			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, index, D3DSAMP_ADDRESSU,
+					D3DTADDRESS_BORDER);
+			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, index, D3DSAMP_ADDRESSV,
+					D3DTADDRESS_BORDER);
+		}
+		// ORIG.video_size
+		if (shd->uni.orig.v.video_size) {
+			cgD3D9SetUniform(shd->uni.orig.v.video_size,
+					&d3d9.screen.tex[d3d9.screen.index].shader.info.video_size);
+		}
+		if (shd->uni.orig.f.video_size) {
+			cgD3D9SetUniform(shd->uni.orig.f.video_size,
+					&d3d9.screen.tex[d3d9.screen.index].shader.info.video_size);
+		}
+		// ORIG.texture_size
+		if (shd->uni.orig.v.texture_size) {
+			cgD3D9SetUniform(shd->uni.orig.v.texture_size,
+					&d3d9.screen.tex[d3d9.screen.index].shader.info.texture_size);
+		}
+		if (shd->uni.orig.f.texture_size) {
+			cgD3D9SetUniform(shd->uni.orig.f.texture_size,
+					&d3d9.screen.tex[d3d9.screen.index].shader.info.texture_size);
+		}
+		// ORIG.tex_coord
+		if (shd->uni.orig.v.tex_coord) {
+			IDirect3DDevice9_SetStreamSource(d3d9.adapter->dev,
+					shd->attribs.attrib[cgGetParameterResourceIndex(shd->uni.orig.v.tex_coord)],
+					d3d9.screen.tex[d3d9.screen.index].shader.quad, 0, sizeof(_vertex_buffer));
+		}
 	}
 
-	IDirect3DDevice9_SetStreamSource(d3d9.adapter->dev, 0, d3d9.screen.quad, 0,
-	        sizeof(vertex));
+	// FEEDBACK
+	if (d3d9.feedback.in_use) {
+		// FEEDBACK.texture
+		if (shd->uni.feedback.f.texture) {
+			D3DTEXTUREFILTERTYPE filter = d3d9_shader_filter(
+					shader_effect.sp[shader_effect.feedback_pass].linear);
 
-	IDirect3DDevice9_DrawPrimitive(d3d9.adapter->dev, D3DPT_TRIANGLEFAN, 0, 2);
-}
-INLINE void d3d9_draw_texture_text(void) {
-	if (!cfg->txt_on_screen || !text.on_screen) {
-		return;
+			index = cgGetParameterResourceIndex(shd->uni.feedback.f.texture);
+			IDirect3DDevice9_SetTexture(d3d9.adapter->dev, index,
+					(IDirect3DBaseTexture9 * ) d3d9.feedback.tex.data);
+			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, index, D3DSAMP_MAGFILTER,
+					filter);
+			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, index, D3DSAMP_MINFILTER,
+					filter);
+			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, index, D3DSAMP_ADDRESSU,
+					D3DTADDRESS_BORDER);
+			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, index, D3DSAMP_ADDRESSV,
+					D3DTADDRESS_BORDER);
+		}
+		// FEEDBACK.video_size
+		if (shd->uni.feedback.v.video_size) {
+			cgD3D9SetUniform(shd->uni.feedback.v.video_size,
+					&d3d9.texture[shader_effect.feedback_pass].shader.info.video_size);
+		}
+		if (shd->uni.feedback.f.video_size) {
+			cgD3D9SetUniform(shd->uni.feedback.f.video_size,
+					&d3d9.texture[shader_effect.feedback_pass].shader.info.video_size);
+		}
+		// FEEDBACK.texture_size
+		if (shd->uni.feedback.v.texture_size) {
+			cgD3D9SetUniform(shd->uni.feedback.v.texture_size,
+					&d3d9.texture[shader_effect.feedback_pass].shader.info.texture_size);
+		}
+		if (shd->uni.feedback.f.texture_size) {
+			cgD3D9SetUniform(shd->uni.feedback.f.texture_size,
+					&d3d9.texture[shader_effect.feedback_pass].shader.info.texture_size);
+		}
+		// FEEDBACK.tex_coord
+		if (shd->uni.feedback.v.tex_coord) {
+			IDirect3DDevice9_SetStreamSource(d3d9.adapter->dev,
+					shd->attribs.attrib[cgGetParameterResourceIndex(shd->uni.feedback.v.tex_coord)],
+					d3d9.texture[shader_effect.feedback_pass].shader.quad, 0,
+					sizeof(_vertex_buffer));
+		}
 	}
 
-	/* disabilito le shaders perche' non devono essere applicate al testo */
-	if (d3d9.shader.vrt) {
-		IDirect3DDevice9_SetVertexShader(d3d9.adapter->dev, NULL);
-	}
-	if (d3d9.shader.pxl) {
-		IDirect3DDevice9_SetPixelShader(d3d9.adapter->dev, NULL);
+	// PREV
+	{
+		INT circle_index = d3d9.screen.index - 1;
+
+		for (i = 0; i < (d3d9.screen.in_use - 1); i++) {
+			if (circle_index < 0) {
+				circle_index = d3d9.screen.in_use - 1;
+			}
+			// PREV[x].texture
+			if (shd->uni.prev[i].f.texture) {
+				index = cgGetParameterResourceIndex(shd->uni.prev[i].f.texture);
+				IDirect3DDevice9_SetTexture(d3d9.adapter->dev, index,
+						(IDirect3DBaseTexture9 *) d3d9.screen.tex[circle_index].data);
+				IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, index, D3DSAMP_MAGFILTER,
+						D3DTEXF_POINT);
+				IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, index, D3DSAMP_MINFILTER,
+						D3DTEXF_POINT);
+				IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, index, D3DSAMP_ADDRESSU,
+						D3DTADDRESS_BORDER);
+				IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, index, D3DSAMP_ADDRESSV,
+						D3DTADDRESS_BORDER);
+			}
+			// PREV[x].tex_coord
+			if (shd->uni.prev[i].v.tex_coord) {
+				IDirect3DDevice9_SetStreamSource(d3d9.adapter->dev,
+						shd->attribs.attrib[cgGetParameterResourceIndex(shd->uni.prev[i].v.tex_coord)],
+						d3d9.screen.tex[circle_index].shader.quad, 0, sizeof(_vertex_buffer));
+			}
+			circle_index--;
+		}
 	}
 
-	/* disegno la texture del testo */
-	IDirect3DDevice9_SetTexture(d3d9.adapter->dev, 0,
-	        (IDirect3DBaseTexture9 * ) d3d9.text.data);
-	IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
-			D3DSAMP_MAGFILTER, d3d9.text_linear);
-	IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
-			D3DSAMP_MINFILTER, d3d9.text_linear);
-	IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0,
-			D3DSAMP_MIPFILTER, D3DTEXF_NONE);
-	IDirect3DDevice9_SetStreamSource(d3d9.adapter->dev, 0, d3d9.text.quad, 0,
-	        sizeof(vertex));
-	IDirect3DDevice9_DrawPrimitive(d3d9.adapter->dev, D3DPT_TRIANGLEFAN, 0, 2);
+	// PASS
+	for (i = 0; i < shader_effect.running_pass; i++) {
+		UINT idx = (shader_effect.running_pass - 1) - i;
+
+		// PASS[x].texture
+		if (shd->uni.passprev[i].f.texture) {
+			D3DTEXTUREFILTERTYPE filter = d3d9_shader_filter(shader_effect.sp[idx].linear);
+
+			index = cgGetParameterResourceIndex(shd->uni.passprev[i].f.texture);
+			IDirect3DDevice9_SetTexture(d3d9.adapter->dev, index,
+					(IDirect3DBaseTexture9 *) d3d9.texture[idx].data);
+			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, index, D3DSAMP_MAGFILTER, filter);
+			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, index, D3DSAMP_MINFILTER, filter);
+			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, index, D3DSAMP_ADDRESSU,
+					D3DTADDRESS_BORDER);
+			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, index, D3DSAMP_ADDRESSV,
+					D3DTADDRESS_BORDER);
+		}
+		// PASS[x].video_size
+		if (shd->uni.passprev[i].v.video_size) {
+			cgD3D9SetUniform(shd->uni.passprev[i].v.video_size,
+					&d3d9.texture[idx].shader.info.video_size);
+		}
+		if (shd->uni.passprev[i].f.video_size) {
+			cgD3D9SetUniform(shd->uni.passprev[i].f.video_size,
+					&d3d9.texture[idx].shader.info.video_size);
+		}
+		// PASS[x].texture_size
+		if (shd->uni.passprev[i].v.texture_size) {
+			cgD3D9SetUniform(shd->uni.passprev[i].v.texture_size,
+					&d3d9.texture[idx].shader.info.texture_size);
+		}
+		if (shd->uni.passprev[i].f.texture_size) {
+			cgD3D9SetUniform(shd->uni.passprev[i].f.texture_size,
+					&d3d9.texture[idx].shader.info.texture_size);
+		}
+		// PASS[x].tex_coord
+		if (shd->uni.passprev[i].v.tex_coord) {
+			IDirect3DDevice9_SetStreamSource(d3d9.adapter->dev,
+					shd->attribs.attrib[cgGetParameterResourceIndex(shd->uni.passprev[i].v.tex_coord)],
+					d3d9.texture[idx + 1].shader.quad, 0, sizeof(_vertex_buffer));
+		}
+	}
 }

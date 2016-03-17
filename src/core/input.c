@@ -28,9 +28,6 @@
 #include "fps.h"
 #include "tas.h"
 #include "conf.h"
-#if defined (SDL)
-#include "opengl.h"
-#endif
 
 static void INLINE input_turbo_buttons_control_standard(_port *port);
 
@@ -379,20 +376,12 @@ BYTE input_rd_reg_zapper(BYTE openbus, WORD **screen_index, BYTE nport) {
 	if (!mouse.right) {
 #if defined (SDL)
 		if (gfx.opengl) {
-			int l = (int) opengl.vp->x;
-			int b = (int) opengl.vp->y;
-
-			gx -= l;
-			gy -= b;
+			gx -= gfx.vp.x;
+			gy -= gfx.vp.y;
 		}
 #elif defined (D3D9)
-		{
-			int l = (int) gfx.quadcoords.l;
-			int t = (int) gfx.quadcoords.t;
-
-			gx -= l;
-			gy -= t;
-		}
+		gx -= gfx.vp.x;
+		gy -= gfx.vp.y;
 #endif
 		x_zapper = gx / gfx.w_pr;
 		y_zapper = gy / gfx.h_pr;
@@ -471,5 +460,3 @@ BYTE input_zapper_is_connected(_port *array) {
 
 	return (FALSE);
 }
-
-

@@ -32,22 +32,23 @@
 #include "dlgUncomp.hpp"
 #include "pStyle.hpp"
 #include "cheatObject.hpp"
+#if defined (SDL)
+#include "opengl.h"
+#if defined (__WIN32__)
+#include "sdl_wid.h"
+#endif
+#elif defined (D3D9)
+#include "d3d9.h"
+#endif
+#include "gui.h"
 #include <QtCore/QtGlobal>
+#include <QtGui/QImage>
 #if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
 #include <QtGui/QDesktopWidget>
 #include <QtGui/QMessageBox>
 #else
 #include <QtWidgets/QDesktopWidget>
 #include <QtWidgets/QMessageBox>
-#endif
-#include "gui.h"
-#if defined (SDL)
-#include "opengl.h"
-#include <QtGui/QImage>
-#include <QtOpenGL/QGLWidget>
-#if defined (__WIN32__)
-#include "sdl_wid.h"
-#endif
 #endif
 
 static struct _qt {
@@ -115,15 +116,6 @@ void gui_start(void) {
 
 	QObject::connect(timer, SIGNAL(timeout()), qt.mwin, SLOT(s_loop()));
 	timer->start();
-
-#if defined (__WIN32__)
-	{
-		QTimer *no_screensaver = new QTimer(qt.mwin);
-
-		QObject::connect(no_screensaver, SIGNAL(timeout()), qt.mwin, SLOT(s_no_screensaver()));
-		no_screensaver->start(1000 * 50);
-	}
-#endif
 
 	gui.start = TRUE;
 
@@ -290,9 +282,9 @@ void gui_mainWindow_make_reset(BYTE type) {
 	qt.mwin->make_reset(type);
 }
 
-#if defined (SDL)
-BYTE gui_load_lut(_lut *lut, const char *path) {
+BYTE gui_load_lut(void *l, const char *path) {
 	QImage tmp;
+	_lut *lut = (_lut*) l;
 
 	if (path && (::strlen(path) > 0)) {
 		tmp = QImage(path);
@@ -302,7 +294,7 @@ BYTE gui_load_lut(_lut *lut, const char *path) {
 		lut->w = 0;
 		lut->h = 0;
 		lut->bits = NULL;
-		return (FALSE);
+		return (EXIT_ERROR);
 	}
 
 	qt.qimage = tmp.convertToFormat(QImage::Format_ARGB32);
@@ -311,9 +303,8 @@ BYTE gui_load_lut(_lut *lut, const char *path) {
 	lut->h = qt.qimage.height();
 	lut->bits = qt.qimage.bits();
 
-	return (TRUE);
+	return (EXIT_OK);
 }
-#endif
 
 #if defined (__WIN32__)
 #include "os_windows.h"

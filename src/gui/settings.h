@@ -42,7 +42,9 @@ enum set_element {
 	SET_BCK_PAUSE,
 	SET_CHEAT_MODE,
 	SET_SAVE_SETTINGS_ON_EXIT,
+#if defined (SDL)
 	SET_RENDERING,
+#endif
 	SET_FPS,
 	SET_FRAMESKIP,
 	SET_SCALE,
@@ -277,14 +279,12 @@ static const _opt opt_ff_velocity[] = {
 	{NULL, "4x", FF_4X},
 	{NULL, "5x", FF_5X}
 };
+#if defined (SDL)
 static const _opt opt_rend[] = {
 	{"Software", "software", RENDER_SOFTWARE},
-#if defined (SDL)
 	{"GLSL"    , "glsl"    , RENDER_GLSL}
-#elif defined (D3D9)
-	{"HLSL"    , "hlsl"    , RENDER_HLSL}
-#endif
 };
+#endif
 static const _opt opt_fps[] = {
 	{NULL, "default", FPS_DEFAULT},
 	{NULL, "60"     , FPS_60},
@@ -547,6 +547,11 @@ static const _opt opt_filter[] = {
 		"waterpaint_water",
 		sh_waterpaint_water
 	},
+	{
+		"XBR Pass2 Multilevel",
+		"xbr_xbr_lv2_multipass",
+		sh_xbr_xbr_lv2_multipass
+	},
 
 	{
 		"Shader Test",
@@ -668,19 +673,15 @@ static const _settings main_cfg[] = {
 		NULL,
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
+#if defined (SDL)
 	{
 		"video", "rendering",
-#if defined (SDL)
 		 "glsl",
 		"# possible values: software, glsl",
 		"-r, --rendering           type of rendering     : software, glsl",
-#elif defined (D3D9)
-		 "hlsl",
-		"# possible values: software, hlsl",
-		"-r, --rendering           type of rendering     : software, hlsl",
-#endif
 		{LENGTH(opt_rend), opt_rend}
 	},
+#endif
 	{
 		"video", "frames per second", "default",
 		"# possible values: default, 58, 57. ..., 45, 44",

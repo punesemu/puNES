@@ -137,11 +137,13 @@ void mainWindow::setup() {
 	grp->addAction(ui->action_NTSC);
 	grp->addAction(ui->action_Dendy);
 	grp->addAction(ui->action_Mode_Auto);
+#if defined (SDL)
 	// Settings/Video/Rendering
 	grp = new QActionGroup(this);
 	grp->setExclusive(true);
-	grp->addAction(ui->action_Rend0);
-	grp->addAction(ui->action_Rend1);
+	grp->addAction(ui->action_Rend_Software);
+	grp->addAction(ui->action_Rend_GLSL);
+#endif
 	// Settings/Video/FPS
 	grp = new QActionGroup(this);
 	grp->setExclusive(true);
@@ -255,6 +257,7 @@ void mainWindow::setup() {
 	grp->addAction(ui->action_mudlord_noise_mudlord);
 	grp->addAction(ui->action_mudlord_oldtv);
 	grp->addAction(ui->action_waterpaint_water);
+	grp->addAction(ui->action_xbr_xbr_lv2_multipass);
 	// Settings/Video/Palette
 	grp = new QActionGroup(this);
 	grp->setExclusive(true);
@@ -383,6 +386,49 @@ void mainWindow::state_save_slot_set(int slot, bool on_video) {
 		text_save_slot(SAVE_SLOT_INCDEC);
 	}
 }
+#if defined (__WIN32__)
+#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
+bool mainWindow::winEvent(MSG *msg, long *result) {
+#else
+bool mainWindow::nativeEventFilter(const QByteArray &eventType, void *message, long *result) {
+#endif
+
+#if (QT_VERSION > QT_VERSION_CHECK(5, 0, 0))
+	MSG *msg = (MSG *)message;
+#endif
+
+	switch (msg->message) {
+#if defined (D3D9)
+		case WM_ENTERSIZEMOVE:
+			break;
+		case WM_EXITSIZEMOVE: {
+			HMONITOR monitor = MonitorFromWindow(winId(), MONITOR_DEFAULTTOPRIMARY);
+
+			gfx_control_changed_adapter(&monitor);
+			break;
+		}
+#endif
+		case WM_SYSCOMMAND: {
+			switch (msg->wParam & 0xFFF0) {
+				// disabilito screensaver e spegnimento del monitor
+				case SC_MONITORPOWER:
+				case SC_SCREENSAVE:
+					SetThreadExecutionState(ES_DISPLAY_REQUIRED | ES_SYSTEM_REQUIRED);
+					(*result) = 0;
+					return (true);
+			}
+			break;
+		}
+		default:
+			break;
+	}
+#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
+	return QWidget::winEvent(msg, result);
+#else
+	return QWidget::nativeEventFilter(eventType, message, result);
+#endif
+}
+#endif
 bool mainWindow::eventFilter(QObject *obj, QEvent *event) {
 	if (event->type() == QEvent::Close) {
 		shcjoy_stop();
@@ -409,12 +455,9 @@ bool mainWindow::eventFilter(QObject *obj, QEvent *event) {
 		ui->retranslateUi(this);
 		shortcuts();
 		update_window();
-		ui->action_Rend0->setText(tr("&Software"));
 #if defined (SDL)
-		ui->action_Rend1->setText(tr("OpenGL &GLSL"));
 		ui->action_PAR_Soft_Stretch->setText(tr("GLSL &soft stretch"));
 #elif defined (D3D9)
-		ui->action_Rend1->setText(tr("&HLSL"));
 		ui->action_PAR_Soft_Stretch->setText(tr("HLSL &soft stretch"));
 #endif
 	}
@@ -469,20 +512,9 @@ void mainWindow::set_language(int lang) {
 	cfg->language = lang;
 }
 void mainWindow::setup_video_rendering() {
-	ui->action_Rend0->setText(tr("&Software"));
-	ui->action_Rend0->setEnabled(true);
-	ui->action_Rend0->setVisible(true);
 #if defined (SDL)
-	ui->action_Rend1->setText(tr("OpenGL &GLSL"));
-	ui->action_Rend1->setEnabled(true);
-	ui->action_Rend1->setVisible(true);
-
 	ui->action_PAR_Soft_Stretch->setText(tr("GLSL &soft stretch"));
 #elif defined (D3D9)
-	ui->action_Rend1->setText(tr("&HLSL"));
-	ui->action_Rend1->setEnabled(true);
-	ui->action_Rend1->setVisible(true);
-
 	ui->action_PAR_Soft_Stretch->setText(tr("HLSL &soft stretch"));
 #endif
 }
@@ -572,28 +604,19 @@ void mainWindow::update_menu_settings() {
 	// Rendering
 #if defined (SDL)
 	if (opengl.supported) {
-		ui->action_Rend1->setEnabled(true);
+		ui->action_Rend_GLSL->setEnabled(true);
 	} else {
-		ui->action_Rend1->setEnabled(false);
+		ui->action_Rend_GLSL->setEnabled(false);
 	}
 
 	if (opengl.supported && gfx.opengl) {
-		ui->action_Rend1->setChecked(true);
+		ui->action_Rend_GLSL->setChecked(true);
 	} else {
-		ui->action_Rend0->setChecked(true);
+		ui->action_Rend_Software->setChecked(true);
 	}
 #elif defined (D3D9)
-	if (gfx.hlsl.compliant) {
-		ui->action_Rend1->setEnabled(true);
-	} else {
-		ui->action_Rend1->setEnabled(false);
-	}
-
-	if ((gfx.hlsl.compliant == TRUE) && (gfx.hlsl.enabled == TRUE)) {
-		ui->action_Rend1->setChecked(true);
-	} else {
-		ui->action_Rend0->setChecked(true);
-	}
+	// nascondo il submenu rendering
+	ui->menu_Rendering->menuAction()->setVisible(false);
 #endif
 	// FPS
 	switch (cfg->fps) {
@@ -728,11 +751,10 @@ void mainWindow::update_menu_settings() {
 		ui->menu_Pixel_Aspect_Ratio->setEnabled(false);
 	}
 
-	if ((opengl.supported && gfx.opengl)
+	if ((opengl.supported && gfx.opengl) && (cfg->pixel_aspect_ratio != PAR11)) {
 #elif defined (D3D9)
-	if ((gfx.hlsl.compliant == TRUE) && (gfx.hlsl.enabled == TRUE)
+	if (cfg->pixel_aspect_ratio != PAR11) {
 #endif
-			&& (cfg->pixel_aspect_ratio != PAR11)) {
 		ui->action_PAR_Soft_Stretch->setEnabled(true);
 		if (cfg->PAR_soft_stretch == TRUE) {
 			ui->action_PAR_Soft_Stretch->setChecked(true);
@@ -767,17 +789,6 @@ void mainWindow::update_menu_settings() {
 		bool state;
 
 #if defined (SDL)
-		if (gfx.bit_per_pixel < 32) {
-			state = false;
-		} else {
-			state = true;
-		}
-		ui->action_Hq2X->setEnabled(state);
-		ui->action_Hq3X->setEnabled(state);
-		ui->action_Hq4X->setEnabled(state);
-		ui->action_xBRZ_2X->setEnabled(state);
-		ui->action_xBRZ_3X->setEnabled(state);
-		ui->action_xBRZ_4X->setEnabled(state);
 		if (cfg->scale != X1) {
 			state = true;
 		} else {
@@ -790,7 +801,7 @@ void mainWindow::update_menu_settings() {
 		// Settings/Video/Shaders
 		if (gfx.opengl && (cfg->scale != X1)) {
 #elif defined (D3D9)
-		if (gfx.hlsl.enabled && (cfg->scale != X1)) {
+		if (cfg->scale != X1) {
 #endif
 			state = true;
 		} else {
@@ -836,6 +847,7 @@ void mainWindow::update_menu_settings() {
 		ui->action_mudlord_noise_mudlord->setEnabled(state);
 		ui->action_mudlord_oldtv->setEnabled(state);
 		ui->action_waterpaint_water->setEnabled(state);
+		ui->action_xbr_xbr_lv2_multipass->setEnabled(state);
 	}
 	switch (cfg->filter) {
 		case NO_FILTER:
@@ -993,6 +1005,9 @@ void mainWindow::update_menu_settings() {
 			break;
 		case sh_waterpaint_water:
 			ui->action_waterpaint_water->setChecked(true);
+			break;
+		case sh_xbr_xbr_lv2_multipass:
+			ui->action_xbr_xbr_lv2_multipass->setChecked(true);
 			break;
 		}
 	}
@@ -1291,11 +1306,9 @@ void mainWindow::ctrl_disk_side(QAction *action) {
 	}
 }
 void mainWindow::shortcuts() {
-	/*
-	 * se non voglio che gli shortcut funzionino durante il fullscreen, basta
-	 * utilizzare lo shortcut associato al QAction. In questo modo quando nascondero'
-	 * la barra del menu, automaticamente questi saranno disabilitati.
-	 */
+	// se non voglio che gli shortcut funzionino durante il fullscreen, basta
+	// utilizzare lo shortcut associato al QAction. In questo modo quando nascondero'
+	// la barra del menu, automaticamente questi saranno disabilitati.
 
 	// File
 	connect_shortcut(ui->action_Open, SET_INP_SC_OPEN, SLOT(s_open()));
@@ -1467,12 +1480,10 @@ void mainWindow::connect_menu_signals() {
 	connect_action(ui->action_NTSC, NTSC, SLOT(s_set_mode()));
 	connect_action(ui->action_Dendy, DENDY, SLOT(s_set_mode()));
 	connect_action(ui->action_Mode_Auto, AUTO, SLOT(s_set_mode()));
-	// Settings/Video/Rendering
-	connect_action(ui->action_Rend0, RENDER_SOFTWARE, SLOT(s_set_rendering()));
 #if defined (SDL)
-	connect_action(ui->action_Rend1, RENDER_GLSL, SLOT(s_set_rendering()));
-#elif defined (D3D9)
-	connect_action(ui->action_Rend1, RENDER_HLSL, SLOT(s_set_rendering()));
+	// Settings/Video/Rendering
+	connect_action(ui->action_Rend_Software, RENDER_SOFTWARE, SLOT(s_set_rendering()));
+	connect_action(ui->action_Rend_GLSL, RENDER_GLSL, SLOT(s_set_rendering()));
 #endif
 	// Settings/Video/FPS
 	connect_action(ui->action_FPS_Default, FPS_DEFAULT, SLOT(s_set_fps()));
@@ -1612,6 +1623,8 @@ void mainWindow::connect_menu_signals() {
 			sh_mudlord_oldtv, SLOT(s_set_other_filter()));
 	connect_action(ui->action_waterpaint_water,
 			sh_waterpaint_water, SLOT(s_set_other_filter()));
+	connect_action(ui->action_xbr_xbr_lv2_multipass,
+			sh_xbr_xbr_lv2_multipass, SLOT(s_set_other_filter()));
 	// Settings/Video/Palette
 	connect_action(ui->action_Palette_PAL, PALETTE_PAL, SLOT(s_set_palette()));
 	connect_action(ui->action_Palette_NTSC, PALETTE_NTSC, SLOT(s_set_palette()));
@@ -1779,11 +1792,6 @@ void mainWindow::s_set_fullscreen() {
 	}
 
 	gui_set_focus();
-}
-void mainWindow::s_no_screensaver() {
-#if defined (__WIN32__)
-	SetThreadExecutionState(ES_DISPLAY_REQUIRED | ES_SYSTEM_REQUIRED | ES_CONTINUOUS);
-#endif
 }
 void mainWindow::s_fullscreen(bool state) {
 	if (state == true) {
@@ -1965,6 +1973,7 @@ void mainWindow::s_set_mode() {
 	}
 }
 void mainWindow::s_set_rendering() {
+#if defined (SDL)
 	int rendering = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
 	if (cfg->render == rendering) {
@@ -1974,10 +1983,11 @@ void mainWindow::s_set_rendering() {
 	gfx_set_render(rendering);
 	cfg->render = rendering;
 
-#if defined (SDL) && defined (__WIN32__)
+#if defined (__WIN32__)
 	gfx_sdlwe_set(SDLWIN_SWITCH_RENDERING, SDLWIN_NONE);
 #else
 	gfx_SWITCH_RENDERING();
+#endif
 #endif
 }
 void mainWindow::s_set_fps() {
@@ -2022,12 +2032,10 @@ void mainWindow::s_set_par() {
 	}
 
 	cfg->pixel_aspect_ratio = par;
-
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 }
 void mainWindow::s_set_par_stretch() {
 	cfg->PAR_soft_stretch = !cfg->PAR_soft_stretch;
-
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 }
 void mainWindow::s_set_overscan() {
@@ -2149,7 +2157,6 @@ void mainWindow::s_set_interpolation() {
 	}
 #endif
 	cfg->interpolation = !cfg->interpolation;
-
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 }
 void mainWindow::s_set_txt_on_screen() {

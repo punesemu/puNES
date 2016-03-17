@@ -269,7 +269,7 @@ void text_rendering(BYTE render) {
 				ele->x = pos_x;
 				ele->y = pos_y;
 
-				if ((cfg->scale != X1) && render){
+				if ((cfg->scale != X1) && render) {
 					rendering(ele);
 				}
 
@@ -295,7 +295,7 @@ void text_rendering(BYTE render) {
 					}
 
 					fade_ele(ele, 3);
-					if ((cfg->scale != X1) && render){
+					if ((cfg->scale != X1) && render) {
 						rendering(ele);
 					}
 				} else {

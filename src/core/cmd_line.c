@@ -47,7 +47,9 @@ static const struct option opt_long[] = {
 	{ "filter",             required_argument, NULL, 'i'},
 	{ "ntsc-format",        required_argument, NULL, 'n'},
 	{ "palette",            required_argument, NULL, 'p'},
+#if defined (SDL)
 	{ "rendering",          required_argument, NULL, 'r'},
+#endif
 	{ "vsync",              required_argument, NULL, 'v'},
 	{ "pixel-aspect-ratio", required_argument, NULL, 'e'},
 	{ "interpolation",      required_argument, NULL, 'j'},
@@ -158,10 +160,12 @@ BYTE cmd_line_parse(int argc, char **argv) {
 			case 'q':
 				set_int(cfg_from_file.audio_quality, SET_AUDIO_QUALITY);
 				break;
+#if defined (SDL)
 			case 'r':
 				set_int(cfg_from_file.render, SET_RENDERING);
 				gfx_set_render(cfg_from_file.render);
 				break;
+#endif
 			case 's':
 				set_int(cfg_from_file.scale, SET_SCALE);
 				gfx.scale_before_fscreen = cfg_from_file.scale;
@@ -266,7 +270,9 @@ void usage(char *name) {
 			main_cfg[SET_FILTER].hlp,
 			main_cfg[SET_NTSC_FORMAT].hlp,
 			main_cfg[SET_PALETTE].hlp,
+#if defined (SDL)
 			main_cfg[SET_RENDERING].hlp,
+#endif
 			main_cfg[SET_SWAP_EMPHASIS_PAL].hlp,
 			main_cfg[SET_VSYNC].hlp,
 			main_cfg[SET_INTERPOLATION].hlp,

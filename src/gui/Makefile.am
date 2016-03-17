@@ -1,5 +1,5 @@
 .hpp.moc :
-	if test ! -e $(@F) ; then $(MOC) -o $(@F) $^ ; else : ; fi
+	if test ! -e $(@F) ; then $(MOC) $(MOCDEFINES) $(CUSTOMDEFINES) -o $(@F) $^ ; else : ; fi
 
 .qrc.cpp :
 	if test ! -e $(@F) ; then $(RCC) -name resources -o $(@F) $^ ; else : ; fi

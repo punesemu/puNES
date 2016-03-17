@@ -23,7 +23,7 @@
 #include "input.h"
 #include "overscan.h"
 
-typedef struct {
+typedef struct _config {
 	BYTE save_on_exit;
 	BYTE mode;
 	BYTE samplerate;
@@ -36,7 +36,9 @@ typedef struct {
 	BYTE frameskip;
 	BYTE ff_velocity;
 
+#if defined (SDL)
 	BYTE render;
+#endif
 	BYTE scale;
 	BYTE fullscreen;
 	DBWORD filter;

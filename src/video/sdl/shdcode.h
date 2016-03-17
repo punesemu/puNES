@@ -85,6 +85,8 @@ enum shader_code_enum {
 	shc_waterpaint_water,
 	shc_windowed_jinc2_sharper,
 	shc_xbr_legacy_2xbr_v38c,
+	shc_xbr_xbr_lv2_multipass_xbr_lv2_c_pass0,
+	shc_xbr_xbr_lv2_multipass_xbr_lv2_pass1,
 };
 enum lut_code_enum {
 	lut_none,
@@ -159,6 +161,8 @@ static const _shader_code shader_code[] = {
 #include "shaders/waterpaint/water.h"
 #include "shaders/windowed/jinc2-sharper.h"
 #include "shaders/xbr/legacy/2xbr-v3.8c.h"
+#include "shaders/xbr/xbr-lv2-multipass/xbr-lv2-c-pass0.h"
+#include "shaders/xbr/xbr-lv2-multipass/xbr-lv2-pass1.h"
 };
 
 static const _shader_code lut_resource[] = {

@@ -28,7 +28,7 @@
 #endif
 
 #define _rom_file char rom_file[LENGTH_FILE_NAME_MID]
-typedef struct {
+typedef struct _info_sh1sum {
 	struct _info_sha1sum_prg {
 		BYTE value[20];
 		char string[41];

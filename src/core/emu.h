@@ -38,6 +38,7 @@ EXTERNC BYTE emu_turn_on(void);
 EXTERNC void emu_pause(BYTE mode);
 EXTERNC BYTE emu_reset(BYTE type);
 EXTERNC WORD emu_round_WORD(WORD number, WORD round);
+EXTERNC int emu_power_of_two(int base);
 EXTERNC void emu_quit(BYTE exit_code);
 
 #undef EXTERNC

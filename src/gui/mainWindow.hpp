@@ -82,6 +82,13 @@ class mainWindow: public QMainWindow {
 		void fullscreen(bool state);
 
 	protected:
+#if defined (__WIN32__)
+#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
+		bool winEvent(MSG *msg, long *result);
+#else
+		bool nativeEventFilter(const QByteArray &eventType, void *message, long *result);
+#endif
+#endif
 		bool eventFilter(QObject *obj, QEvent *event);
 
 	private:
@@ -101,7 +108,6 @@ class mainWindow: public QMainWindow {
 
 	public slots:
 		void s_set_fullscreen();
-		void s_no_screensaver();
 
 	private slots:
 		void s_fullscreen(bool state);

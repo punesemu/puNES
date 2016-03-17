@@ -96,31 +96,38 @@ AS_CASE(["${TOP_BUILDDIR}"],
 )
 
 my_CFLAGS="-ffast-math -fmessage-length=0 -finline-functions -Winline"
-my_CPPFLAGS="-Wall -ffast-math -I${TOP_SRCDIR}/src -I${TOP_SRCDIR}/src/gui -I${TOP_SRCDIR}/src/core"
+my_CPPFLAGS="-Wall -ffast-math -I${TOP_SRCDIR}/src -I${TOP_SRCDIR}/src/gui -I${TOP_SRCDIR}/src/core -I${TOP_SRCDIR}/src/video/shaders"
 my_CXXFLAGS="-fmessage-length=0 -finline-functions --param inline-unit-growth=200 --param large-function-growth=500"
 my_LDFLAGS=""
 my_LIBS=""
+CUSTOMDEFINES=""
+MOCDEFINES=""
 
 # verifico l'host
 AS_CASE(["$host_os"],
 	[linux*],[
-		my_CPPFLAGS+=" -DSDL -DGLEW_STATIC -I${TOP_SRCDIR}/src/gui/linux -I${TOP_SRCDIR}/src/video/sdl"
+		MOCDEFINES+=" -D__linux__"
+		CUSTOMDEFINES+=" -DSDL -DGLEW_STATIC"
+		my_CPPFLAGS+=" -I${TOP_SRCDIR}/src/gui/linux -I${TOP_SRCDIR}/src/video/sdl"
 		linux=yes
 		windows=no
 		with_d3d9=no
 		with_opengl=yes
 	],
 	[mingw32*],[
+		MOCDEFINES+=" -D__WIN32__"
 		my_CPPFLAGS+=" -I${TOP_SRCDIR}/src/gui/windows"
 		linux=no
 		windows=yes
 		AS_IF([test "x$with_opengl" = xyes],[
 			with_d3d9=no
-			my_CPPFLAGS+=" -DSDL -DGLEW_STATIC -I${TOP_SRCDIR}/src/video/sdl"
+			CUSTOMDEFINES+=" -DSDL -DGLEW_STATIC"
+			my_CPPFLAGS+=" -I${TOP_SRCDIR}/src/video/sdl"
 		])
 		AS_IF([test "x$with_d3d9" = xyes],[
 			with_opengl=no
-			my_CPPFLAGS+=" -DD3D9"
+			CUSTOMDEFINES+=" -DD3D9"
+			my_CPPFLAGS+=" -I${TOP_SRCDIR}/src/video/d3d9"
 			my_LIBS+=" -ld3d9"
 			AS_CASE(["$host_cpu"],
 				[i?86],[
@@ -130,6 +137,8 @@ AS_CASE(["$host_os"],
 					my_LIBS+=" -ld3dx9_41"
 				],
 			)
+			# aggiungo le librerie Cg Nvidia per le shaders
+			my_LIBS+=" -lcg -lcgD3D9"
 		])
 	]
 )
@@ -198,7 +207,7 @@ OLD_CFLAGS="$CFLAGS"
 OLD_LIBS="$LIBS"
 
 AM_COND_IF([ENAB_RELEASE],[
-	my_CPPFLAGS+=" -DRELEASE"
+	CUSTOMDEFINES+=" -DRELEASE"
 ]);
 
 # Checks for libraries.
@@ -411,8 +420,11 @@ AM_COND_IF([LINUX],[
 	my_LIBS+=" -ldl -lpthread"
 ])
 
-CFLAGS="$CFLAGS ${my_CPPFLAGS} ${my_CFLAGS}"
-CXXFLAGS="$CXXFLAGS ${my_CPPFLAGS} ${my_CXXFLAGS}"
+AC_SUBST(CUSTOMDEFINES)
+AC_SUBST(MOCDEFINES)
+
+CFLAGS="$CFLAGS ${CUSTOMDEFINES} ${my_CPPFLAGS} ${my_CFLAGS}"
+CXXFLAGS="$CXXFLAGS ${CUSTOMDEFINES} ${my_CPPFLAGS} ${my_CXXFLAGS}"
 LDFLAGS="$LDFLAGS ${my_LDFLAGS}"
 LIBS="$LIBS ${my_LIBS}"
 

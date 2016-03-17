@@ -21,7 +21,6 @@
 #include <QtCore/QTextStream>
 #include "cgp.h"
 #include "shaders.h"
-#include "opengl.h"
 
 void cgp_pragma_param(const char *code) {
 	QTextStream stream(code);

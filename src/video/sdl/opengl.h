@@ -21,11 +21,13 @@
 
 #include "glew/glew.h"
 #include <SDL.h>
+#include "shaders.h"
 #include "common.h"
 #include "gfx.h"
-#include "matrix.h"
-#include "shaders.h"
 
+typedef struct _math_matrix_4x4 {
+	float data[16];
+} _math_matrix_4x4;
 typedef struct _vertex_buffer {
 	// tex coords
 	GLfloat s0, t0;
@@ -95,17 +97,12 @@ typedef struct _texture_rect {
 	GLint w;
 	GLint h;
 	_wh_uint base;
-	_wh_uint max;
 } _texture_rect;
-typedef struct _texture_viewport {
-	GLint x, y;
-	GLint w, h;
-} _texture_viewport;
 typedef struct _texture {
 	GLuint id;
 	GLuint fbo;
 	_texture_rect rect;
-	_texture_viewport vp;
+	_viewport vp;
 	_shader shader;
 } _texture;
 typedef struct _texture_simple {
@@ -115,6 +112,8 @@ typedef struct _texture_simple {
 } _texture_simple;
 typedef struct _opengl {
 	BYTE supported;
+
+	_math_matrix_4x4 mvp;
 
 	struct _opengl_supported_fbo {
 		BYTE flt;
@@ -127,10 +126,6 @@ typedef struct _opengl {
 	} sdl;
 
 	GLfloat scale;
-	BYTE interpolation;
-	BYTE PSS;
-
-	_math_matrix_4x4 mvp;
 
 	char alias_define[1024];
 
@@ -148,7 +143,6 @@ typedef struct _opengl {
 	_texture_simple text;
 	_texture texture[MAX_PASS + 1];
 	_lut lut[MAX_PASS];
-	_texture_viewport *vp;
 } _opengl;
 
 #if defined (__cplusplus)
@@ -159,9 +153,9 @@ typedef struct _opengl {
 
 EXTERNC _opengl opengl;
 
-EXTERNC void sdl_init_gl(void);
-EXTERNC void sdl_quit_gl(void);
-EXTERNC BYTE sdl_setup_renderingl_gl(SDL_Surface *src);
+EXTERNC void opengl_init(void);
+EXTERNC BYTE opengl_context_create(SDL_Surface *src);
+EXTERNC void opengl_context_delete(void);
 
 EXTERNC void opengl_set_shader(GLuint shader);
 EXTERNC void opengl_draw_scene(SDL_Surface *surface);
