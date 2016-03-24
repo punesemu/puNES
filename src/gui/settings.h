@@ -55,6 +55,7 @@ enum set_element {
 	SET_OVERSCAN_BRD_PAL,
 	SET_FILTER,
 	SET_NTSC_FORMAT,
+	SET_FILE_SHADER,
 	SET_PALETTE,
 	SET_FILE_PALETTE,
 	SET_SWAP_EMPHASIS_PAL,
@@ -334,231 +335,44 @@ static const _opt opt_oscan[] = {
 	{NULL, "default", OSCAN_DEFAULT}
 };
 static const _opt opt_filter[] = {
-	{"no filter" , "none"      , NO_FILTER},
-	{"Scale2X"   , "scale2x"   , SCALE2X},
-	{"Scale3X"   , "scale3x"   , SCALE3X},
-	{"Scale4X"   , "scale4x"   , SCALE4X},
-	{"Hq2X"      , "hq2x"      , HQ2X},
-	{"Hq3X"      , "hq3x"      , HQ3X},
-	{"Hq4X"      , "hq4x"      , HQ4X},
-	{"NTSC"      , "ntsc"      , NTSC_FILTER},
-	{"xBRZ 2x"   , "xbrz2x"    , XBRZ2X},
-	{"xBRZ 3x"   , "xbrz3x"    , XBRZ3X},
-	{"xBRZ 4x"   , "xbrz4x"    , XBRZ4X},
+	{"no filter"            , "none"        , NO_FILTER},
+	{"Scale2X"              , "scale2x"     , SCALE2X},
+	{"Scale3X"              , "scale3x"     , SCALE3X},
+	{"Scale4X"              , "scale4x"     , SCALE4X},
+	{"Hq2X"                 , "hq2x"        , HQ2X},
+	{"Hq3X"                 , "hq3x"        , HQ3X},
+	{"Hq4X"                 , "hq4x"        , HQ4X},
+	{"NTSC"                 , "ntsc"        , NTSC_FILTER},
+	{"xBRZ 2x"              , "xbrz2x"      , XBRZ2X},
+	{"xBRZ 3x"              , "xbrz3x"      , XBRZ3X},
+	{"xBRZ 4x"              , "xbrz4x"      , XBRZ4X},
 	// per filtri CPU aggiuntivi futuri
-	{NULL        , NULL        , NO_FILTER},
-	{NULL        , NULL        , NO_FILTER},
-	{NULL        , NULL        , NO_FILTER},
-	{NULL        , NULL        , NO_FILTER},
-	{NULL        , NULL        , NO_FILTER},
-	{NULL        , NULL        , NO_FILTER},
-	{NULL        , NULL        , NO_FILTER},
-	{NULL        , NULL        , NO_FILTER},
-	{NULL        , NULL        , NO_FILTER},
-	{NULL        , NULL        , NO_FILTER},
-	{NULL        , NULL        , NO_FILTER},
-	{NULL        , NULL        , NO_FILTER},
-	{NULL        , NULL        , NO_FILTER},
-	{NULL        , NULL        , NO_FILTER},
-	{NULL        , NULL        , NO_FILTER},
+	{NULL                   , NULL          , NO_FILTER},
+	{NULL                   , NULL          , NO_FILTER},
+	{NULL                   , NULL          , NO_FILTER},
+	{NULL                   , NULL          , NO_FILTER},
+	{NULL                   , NULL          , NO_FILTER},
+	{NULL                   , NULL          , NO_FILTER},
+	{NULL                   , NULL          , NO_FILTER},
+	{NULL                   , NULL          , NO_FILTER},
+	{NULL                   , NULL          , NO_FILTER},
+	{NULL                   , NULL          , NO_FILTER},
+	{NULL                   , NULL          , NO_FILTER},
+	{NULL                   , NULL          , NO_FILTER},
+	{NULL                   , NULL          , NO_FILTER},
+	{NULL                   , NULL          , NO_FILTER},
+	{NULL                   , NULL          , NO_FILTER},
 	// shaders
-	{
-		"Anti-aliasing Advenced AA",
-		"anti_aliasing_advanced_aa",
-		sh_anti_aliasing_advanced_aa
-	},
-	{
-		"Anti-aliasing FX AA",
-		"anti_aliasing_fx_aa",
-		sh_anti_aliasing_fx_aa
-	},
-	{
-		"Anti-aliasing FXAA Edge Detect",
-		"anti_aliasing_fxaa_edge_detect",
-		sh_anti_aliasing_fxaa_edge_detect
-	},
-	{
-		"Cgp TVout NTSC 2Phase Composite",
-		"cgp_tvout_tvout_ntsc_2phase_composite",
-		sh_cgp_tvout_tvout_ntsc_2phase_composite
-	},
-	{
-		"Cgp TVout NTSC 256px Svideo",
-		"cgp_tvout_tvout_ntsc_256px_svideo",
-		sh_cgp_tvout_tvout_ntsc_256px_svideo
-	},
-	{
-		"Cgp 2xbr CRT Hyllian",
-		"cgp_2xbr_crt_hyllian",
-		sh_cgp_2xbr_crt_hyllian
-	},
-	{
-		"Cgp 2xbr Jinc2 Sharper Hybrid",
-		"cgp_2xbr_jinc2_sharper_hybrid",
-		sh_cgp_2xbr_jinc2_sharper_hybrid
-	},
-	{
-		"CRT gtuv050",
-		"crt_gtuv50",
-		sh_crt_gtuv50
-	},
-	{
-		"CRT 4xbr Hybrid CRT",
-		"crt_4xbr_hybrid_crt",
-		sh_crt_4xbr_hybrid_crt
-	},
-	{
-		"CRT Caligari",
-		"crtcrtcaligari",
-		sh_crt_crt_caligari
-	},
-	{
-		"CRT CGWG Fast",
-		"crt_crt_cgwg_fast",
-		sh_crt_crt_cgwg_fast
-	},
-	{
-		"CRT Easymode",
-		"crt_crt_easymode",
-		sh_crt_crt_easymode
-	},
-	{
-		"CRT Easymode Halation",
-		"crt_crt_easymode_halation",
-		sh_crt_crt_easymode_halation
-	},
-	{
-		"CRT Geom",
-		"crt_crt_geom",
-		sh_crt_crt_geom
-	},
-	{
-		"CRTGLow Gauss",
-		"crt_crtglow_gauss",
-		sh_crt_crtglow_gauss
-	},
-	{
-		"CRTGLow Gauss NTSC 3Phase",
-		"crt_crtglow_gauss_ntsc_3phase",
-		sh_crt_crtglow_gauss_ntsc_3phase
-	},
-	{
-		"CRT Hyllian",
-		"crt_crt_hyllian",
-		sh_crt_crt_hyllian
-	},
-	{
-		"CRT Lottes",
-		"crt_crt_lottes",
-		sh_crt_crt_lottes
-	},
-	{
-		"CRT Reverse AA",
-		"crt_crt_reverse_aa",
-		sh_crt_crt_reverse_aa
-	},
-	{
-		"Dotmask",
-		"crt_dotmask",
-		sh_crt_dotmask
-	},
-	{
-		"Eagle Super Eagle",
-		"eagle_super_eagle",
-		sh_eagle_super_eagle
-	},
-	{
-		"Hunterk Borders 1080p Bigblur",
-		"hunterk_borders_1080p_bigblur",
-		sh_hunterk_borders_1080p_bigblur
-	},
-	{
-		"Hunterk Borders 1080p Color Grid",
-		"hunterk_borders_1080p_color_grid",
-		sh_hunterk_borders_1080p_color_grid
-	},
-	{
-		"Hunterk Borders 1080p Mudlord",
-		"hunterk_borders_1080p_mudlord",
-		sh_hunterk_borders_1080p_mudlord
-	},
-	{
-		"Hunterk Borders 1080p Shiny Iterations",
-		"hunterk_borders_1080p_shiny_iterations",
-		sh_hunterk_borders_1080p_shiny_iterations
-	},
-	{
-		"Hunterk Borders 1080p Snow",
-		"hunterk_borders_1080p_snow",
-		sh_hunterk_borders_1080p_snow
-	},
-	{
-		"Hunterk Borders 1080p Voronoi",
-		"hunterk_borders_1080p_voronoi",
-		sh_hunterk_borders_1080p_voronoi
-	},
-	{
-		"Hunterk Borders 1080p Water",
-		"hunterk_borders_1080p_water",
-		sh_hunterk_borders_1080p_water
-	},
-	{
-		"Hunterk Handheld NDS",
-		"hunterk_handheld_nds",
-		sh_hunterk_handheld_nds
-	},
-	{
-		"Hunterk Hq3X",
-		"hunterk_hqx_hq3x",
-		sh_hunterk_hqx_hq3x
-	},
-	{
-		"Hunterk Motionblur Simple",
-		"hunterk_motionblur_motionblur_simple",
-		sh_hunterk_motionblur_motionblur_simple
-	},
-	{
-		"Motionblur Feedback",
-		"motionblur_feedback",
-		sh_motionblur_feedback
-	},
-	{
-		"Mudlord Emboss",
-		"mudlord_emboss",
-		sh_mudlord_emboss
-	},
-	{
-		"Mudlord Mud",
-		"mudlord_mud_mudlord",
-		sh_mudlord_mud_mudlord
-	},
-	{
-		"Mudlord Noise",
-		"mudlord_noise_mudlord",
-		sh_mudlord_noise_mudlord
-	},
-	{
-		"Mudlord Oldtv",
-		"mudlord_oldtv",
-		sh_mudlord_oldtv
-	},
-	{
-		"Waterpaint Water",
-		"waterpaint_water",
-		sh_waterpaint_water
-	},
-	{
-		"XBR Pass2 Multilevel",
-		"xbr_xbr_lv2_multipass",
-		sh_xbr_xbr_lv2_multipass
-	},
-
-	{
-		"Shader Test",
-		"shader_test",
-		sh_test
-	},
-
+	{"CRT Dotmask"          , "crtdotmask"  , SHADER_CRTDOTMASK},
+	{"CRT Hyllian"          , "crthyllian"  , SHADER_CRTHYLLIAN},
+	{"CRT Scanlines"        , "crtscanlines", SHADER_CRTSCANLINES},
+	{"CRT With Curve"       , "crtcurve"    , SHADER_CRTWITHCURVE},
+	{"Emboss"               , "emboss"      , SHADER_EMBOSS},
+	{"Noise"                , "noise"       , SHADER_NOISE},
+	{"NTSC 2Phase Composite", "ntsc2phcomp" , SHADER_NTSC2PHASECOMPOSITE},
+	{"Old TV"               , "oldtv"       , SHADER_OLDTV},
+	{"Extern"               , "file"        , SHADER_FILE},
+	{"Test"                 , "test"        , SHADER_TEST},
 };
 static const _opt opt_ntsc[] = {
 	{"Composite", "composite", COMPOSITE},
@@ -737,15 +551,15 @@ static const _settings main_cfg[] = {
 	{
 		"video", "filter", "none",
 		"# possible values: none, scale2x, scale3x, scale4x, hq2x, hq3x, hq4x," NEWLINE
-		"#                  xbrz2x, xbrz3x, xbrz4x, ntsc, phosphor, scanline," NEWLINE
-		"#                  dbl, crtcurve, crtnocurve, phosphor2, dark_room",
+		"#                  xbrz2x, xbrz3x, xbrz4x, ntsc, crtdotmask, crthyllian," NEWLINE
+		"#                  crtscanlines, crtcurve, emboss, noise, ntsc2phcomp, oldtv",
 		"-i, --filter              filter to apply       : nofilter, scale2x," NEWLINE
 		"                                                  scale3x, scale4x, hq2x," NEWLINE
 		"                                                  hq3x, hq4x, xbrz2x, xbrz3x," NEWLINE
-		"                                                  xbrz4x,ntsc, phosphor," NEWLINE
-		"                                                  scanline, dbl, crtcurve," NEWLINE
-		"                                                  crtnocurve, phosphor2," NEWLINE
-		"                                                  dark_room",
+		"                                                  xbrz4x, ntsc, crtdotmask," NEWLINE
+		"                                                  crthyllian, crtscanlines," NEWLINE
+		"                                                  crtcurve, emboss, noise" NEWLINE
+		"                                                  ntsc2phcomp, oldtv, file",
 		{LENGTH(opt_filter), opt_filter}
 	},
 	{
@@ -753,6 +567,12 @@ static const _settings main_cfg[] = {
 		"# possible values: composite, svideo, rgb",
 		"-n, --ntsc-format         format of ntsc filter : composite, svideo, rgb",
 		{LENGTH(opt_ntsc), opt_ntsc}
+	},
+	{
+		"video", "shader file", NULL,
+		"# possible values: [PATH/NAME]",
+		NULL,
+		{0, NULL}
 	},
 	{
 		"video", "palette", "ntsc",

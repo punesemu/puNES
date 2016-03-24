@@ -219,45 +219,17 @@ void mainWindow::setup() {
 	grp->addAction(ui->action_NTSC_SVideo);
 	grp->addAction(ui->action_NTSC_RGB);
 	// Settings/Video/Shaders
-	grp->addAction(ui->action_shader_test);
+	grp->addAction(ui->action_Shader_Test);
 
-	grp->addAction(ui->action_anti_aliasing_advanced_aa);
-	grp->addAction(ui->action_anti_aliasing_fxaa_edge_detect);
-	grp->addAction(ui->action_cgp_tvout_tvout_ntsc_2phase_composite);
-	grp->addAction(ui->action_cgp_tvout_tvout_ntsc_256px_svideo);
-	grp->addAction(ui->action_cgp_2xbr_crt_hyllian);
-	grp->addAction(ui->action_cgp_2xbr_jinc2_sharper_hybrid);
-	grp->addAction(ui->action_crt_gtu_v050);
-	grp->addAction(ui->action_crt_4xbr_hybrid_crt);
-	grp->addAction(ui->action_crt_crt_caligari);
-	grp->addAction(ui->action_crt_crt_cgwg_fast);
-	grp->addAction(ui->action_crt_crt_easymode);
-	grp->addAction(ui->action_crt_crt_easymode_halation);
-	grp->addAction(ui->action_crt_crt_geom);
-	grp->addAction(ui->action_crt_crtglow_gauss);
-	grp->addAction(ui->action_crt_crtglow_gauss_ntsc_3phase);
-	grp->addAction(ui->action_crt_crt_hyllian);
-	grp->addAction(ui->action_crt_crt_lottes);
-	grp->addAction(ui->action_crt_crt_reverse_aa);
-	grp->addAction(ui->action_crt_dotmask);
-	grp->addAction(ui->action_eagle_super_eagle);
-	grp->addAction(ui->action_hunterk_borders_1080p_bigblur);
-	grp->addAction(ui->action_hunterk_borders_1080p_color_grid);
-	grp->addAction(ui->action_hunterk_borders_1080p_mudlord);
-	grp->addAction(ui->action_hunterk_borders_1080p_shiny_iterations);
-	grp->addAction(ui->action_hunterk_borders_1080p_snow);
-	grp->addAction(ui->action_hunterk_borders_1080p_voronoi);
-	grp->addAction(ui->action_hunterk_borders_1080p_water);
-	grp->addAction(ui->action_hunterk_handheld_nds);
-	grp->addAction(ui->action_hunterk_hqx_hq3x);
-	grp->addAction(ui->action_hunterk_motionblur_motionblur_simple);
-	grp->addAction(ui->action_motionblur_feedback);
-	grp->addAction(ui->action_mudlord_emboss);
-	grp->addAction(ui->action_mudlord_mud_mudlord);
-	grp->addAction(ui->action_mudlord_noise_mudlord);
-	grp->addAction(ui->action_mudlord_oldtv);
-	grp->addAction(ui->action_waterpaint_water);
-	grp->addAction(ui->action_xbr_xbr_lv2_multipass);
+	grp->addAction(ui->action_Shader_CRT_Dotmask);
+	grp->addAction(ui->action_Shader_CRT_Hyllian);
+	grp->addAction(ui->action_Shader_CRT_Scanlines);
+	grp->addAction(ui->action_Shader_CRT_With_Curve);
+	grp->addAction(ui->action_Shader_Emboss);
+	grp->addAction(ui->action_Shader_Noise);
+	grp->addAction(ui->action_Shader_NTSC_2Phase_Composite);
+	grp->addAction(ui->action_Shader_Old_TV);
+	grp->addAction(ui->action_Shader_File);
 	// Settings/Video/Palette
 	grp = new QActionGroup(this);
 	grp->setExclusive(true);
@@ -807,47 +779,30 @@ void mainWindow::update_menu_settings() {
 		} else {
 			state = false;
 		}
-		ui->menu_Shaders->setEnabled(state);
+		ui->menu_Shader->setEnabled(state);
 
-		ui->action_shader_test->setEnabled(state);
+		ui->action_Shader_Test->setEnabled(state);
 
-		ui->action_anti_aliasing_advanced_aa->setEnabled(state);
-		ui->action_anti_aliasing_fxaa_edge_detect->setEnabled(state);
-		ui->action_cgp_tvout_tvout_ntsc_2phase_composite->setEnabled(state);
-		ui->action_cgp_tvout_tvout_ntsc_256px_svideo->setEnabled(state);
-		ui->action_cgp_2xbr_crt_hyllian->setEnabled(state);
-		ui->action_cgp_2xbr_jinc2_sharper_hybrid->setEnabled(state);
-		ui->action_crt_gtu_v050->setEnabled(state);
-		ui->action_crt_4xbr_hybrid_crt->setEnabled(state);
-		ui->action_crt_crt_caligari->setEnabled(state);
-		ui->action_crt_crt_cgwg_fast->setEnabled(state);
-		ui->action_crt_crt_easymode->setEnabled(state);
-		ui->action_crt_crt_easymode_halation->setEnabled(state);
-		ui->action_crt_crt_geom->setEnabled(state);
-		ui->action_crt_crtglow_gauss->setEnabled(state);
-		ui->action_crt_crtglow_gauss_ntsc_3phase->setEnabled(state);
-		ui->action_crt_crt_hyllian->setEnabled(state);
-		ui->action_crt_crt_lottes->setEnabled(state);
-		ui->action_crt_crt_reverse_aa->setEnabled(state);
-		ui->action_crt_dotmask->setEnabled(state);
-		ui->action_eagle_super_eagle->setEnabled(state);
-		ui->action_hunterk_borders_1080p_bigblur->setEnabled(state);
-		ui->action_hunterk_borders_1080p_color_grid->setEnabled(state);
-		ui->action_hunterk_borders_1080p_mudlord->setEnabled(state);
-		ui->action_hunterk_borders_1080p_shiny_iterations->setEnabled(state);
-		ui->action_hunterk_borders_1080p_snow->setEnabled(state);
-		ui->action_hunterk_borders_1080p_voronoi->setEnabled(state);
-		ui->action_hunterk_borders_1080p_water->setEnabled(state);
-		ui->action_hunterk_handheld_nds->setEnabled(state);
-		ui->action_hunterk_hqx_hq3x->setEnabled(state);
-		ui->action_hunterk_motionblur_motionblur_simple->setEnabled(state);
-		ui->action_motionblur_feedback->setEnabled(state);
-		ui->action_mudlord_emboss->setEnabled(state);
-		ui->action_mudlord_mud_mudlord->setEnabled(state);
-		ui->action_mudlord_noise_mudlord->setEnabled(state);
-		ui->action_mudlord_oldtv->setEnabled(state);
-		ui->action_waterpaint_water->setEnabled(state);
-		ui->action_xbr_xbr_lv2_multipass->setEnabled(state);
+		ui->action_Shader_CRT_Dotmask->setEnabled(state);
+		ui->action_Shader_CRT_Hyllian->setEnabled(state);
+		ui->action_Shader_CRT_Scanlines->setEnabled(state);
+		ui->action_Shader_CRT_With_Curve->setEnabled(state);
+		ui->action_Shader_Emboss->setEnabled(state);
+		ui->action_Shader_Noise->setEnabled(state);
+		ui->action_Shader_NTSC_2Phase_Composite->setEnabled(state);
+		ui->action_Shader_Old_TV->setEnabled(state);
+		ui->action_Shader_File->setEnabled(state);
+		ui->action_Shader_Load_File->setEnabled(state);
+
+		if (state == true) {
+			if (strlen(cfg->shader_file) != 0) {
+				ui->action_Shader_File->setText(QFileInfo(cfg->shader_file).baseName());
+				ui->action_Shader_File->setEnabled(true);
+			} else {
+				ui->action_Shader_File->setText(tr("[Select a file]"));
+				ui->action_Shader_File->setEnabled(false);
+			}
+		}
 	}
 	switch (cfg->filter) {
 		case NO_FILTER:
@@ -893,121 +848,37 @@ void mainWindow::update_menu_settings() {
 					break;
 			}
 			break;
-
-		case sh_test:
-			ui->action_shader_test->setChecked(true);
+		case SHADER_CRTDOTMASK:
+			ui->action_Shader_CRT_Dotmask->setChecked(true);
+			break;
+		case SHADER_CRTHYLLIAN:
+			ui->action_Shader_CRT_Hyllian->setChecked(true);
+			break;
+		case SHADER_CRTSCANLINES:
+			ui->action_Shader_CRT_Scanlines->setChecked(true);
+			break;
+		case SHADER_CRTWITHCURVE:
+			ui->action_Shader_CRT_With_Curve->setChecked(true);
+			break;
+		case SHADER_EMBOSS:
+			ui->action_Shader_Emboss->setChecked(true);
+			break;
+		case SHADER_NOISE:
+			ui->action_Shader_Noise->setChecked(true);
+			break;
+		case SHADER_NTSC2PHASECOMPOSITE:
+			ui->action_Shader_NTSC_2Phase_Composite->setChecked(true);
+			break;
+		case SHADER_OLDTV:
+			ui->action_Shader_Old_TV->setChecked(true);
+			break;
+		case SHADER_FILE:
+			ui->action_Shader_File->setChecked(true);
 			break;
 
-		case sh_anti_aliasing_advanced_aa:
-			ui->action_anti_aliasing_advanced_aa->setChecked(true);
-			break;
-		case sh_anti_aliasing_fxaa_edge_detect:
-			ui->action_anti_aliasing_fxaa_edge_detect->setChecked(true);
-			break;
-		case sh_cgp_tvout_tvout_ntsc_2phase_composite:
-			ui->action_cgp_tvout_tvout_ntsc_2phase_composite->setChecked(true);
-			break;
-		case sh_cgp_tvout_tvout_ntsc_256px_svideo:
-			ui->action_cgp_tvout_tvout_ntsc_256px_svideo->setChecked(true);
-			break;
-		case sh_cgp_2xbr_crt_hyllian:
-			ui->action_cgp_2xbr_crt_hyllian->setChecked(true);
-			break;
-		case sh_cgp_2xbr_jinc2_sharper_hybrid:
-			ui->action_cgp_2xbr_jinc2_sharper_hybrid->setChecked(true);
-			break;
-		case sh_crt_gtuv50:
-			ui->action_crt_gtu_v050->setChecked(true);
-			break;
-		case sh_crt_4xbr_hybrid_crt:
-			ui->action_crt_4xbr_hybrid_crt->setChecked(true);
-			break;
-		case sh_crt_crt_caligari:
-			ui->action_crt_crt_caligari->setChecked(true);
-			break;
-		case sh_crt_crt_cgwg_fast:
-			ui->action_crt_crt_cgwg_fast->setChecked(true);
-			break;
-		case sh_crt_crt_easymode:
-			ui->action_crt_crt_easymode->setChecked(true);
-			break;
-		case sh_crt_crt_easymode_halation:
-			ui->action_crt_crt_easymode_halation->setChecked(true);
-			break;
-		case sh_crt_crt_geom:
-			ui->action_crt_crt_geom->setChecked(true);
-			break;
-		case sh_crt_crtglow_gauss:
-			ui->action_crt_crtglow_gauss->setChecked(true);
-			break;
-		case sh_crt_crtglow_gauss_ntsc_3phase:
-			ui->action_crt_crtglow_gauss_ntsc_3phase->setChecked(true);
-			break;
-		case sh_crt_crt_hyllian:
-			ui->action_crt_crt_hyllian->setChecked(true);
-			break;
-		case sh_crt_crt_lottes:
-			ui->action_crt_crt_lottes->setChecked(true);
-			break;
-		case sh_crt_crt_reverse_aa:
-			ui->action_crt_crt_reverse_aa->setChecked(true);
-			break;
-		case sh_crt_dotmask:
-			ui->action_crt_dotmask->setChecked(true);
-			break;
-		case sh_eagle_super_eagle:
-			ui->action_eagle_super_eagle->setChecked(true);
-			break;
-		case sh_hunterk_borders_1080p_bigblur:
-			ui->action_hunterk_borders_1080p_bigblur->setChecked(true);
-			break;
-		case sh_hunterk_borders_1080p_color_grid:
-			ui->action_hunterk_borders_1080p_color_grid->setChecked(true);
-			break;
-		case sh_hunterk_borders_1080p_mudlord:
-			ui->action_hunterk_borders_1080p_mudlord->setChecked(true);
-			break;
-		case sh_hunterk_borders_1080p_shiny_iterations:
-			ui->action_hunterk_borders_1080p_shiny_iterations->setChecked(true);
-			break;
-		case sh_hunterk_borders_1080p_snow:
-			ui->action_hunterk_borders_1080p_snow->setChecked(true);
-			break;
-		case sh_hunterk_borders_1080p_voronoi:
-			ui->action_hunterk_borders_1080p_voronoi->setChecked(true);
-			break;
-		case sh_hunterk_borders_1080p_water:
-			ui->action_hunterk_borders_1080p_water->setChecked(true);
-			break;
-		case sh_hunterk_handheld_nds:
-			ui->action_hunterk_handheld_nds->setChecked(true);
-			break;
-		case sh_hunterk_hqx_hq3x:
-			ui->action_hunterk_hqx_hq3x->setChecked(true);
-			break;
-		case sh_hunterk_motionblur_motionblur_simple:
-			ui->action_hunterk_motionblur_motionblur_simple->setChecked(true);
-			break;
-		case sh_motionblur_feedback:
-			ui->action_motionblur_feedback->setChecked(true);
-			break;
-		case sh_mudlord_emboss:
-			ui->action_mudlord_emboss->setChecked(true);
-			break;
-		case sh_mudlord_mud_mudlord:
-			ui->action_mudlord_mud_mudlord->setChecked(true);
-			break;
-		case sh_mudlord_noise_mudlord:
-			ui->action_mudlord_noise_mudlord->setChecked(true);
-			break;
-		case sh_mudlord_oldtv:
-			ui->action_mudlord_oldtv->setChecked(true);
-			break;
-		case sh_waterpaint_water:
-			ui->action_waterpaint_water->setChecked(true);
-			break;
-		case sh_xbr_xbr_lv2_multipass:
-			ui->action_xbr_xbr_lv2_multipass->setChecked(true);
+
+		case SHADER_TEST:
+			ui->action_Shader_Test->setChecked(true);
 			break;
 		}
 	}
@@ -1548,83 +1419,21 @@ void mainWindow::connect_menu_signals() {
 	connect_action(ui->action_NTSC_SVideo, SVIDEO, SLOT(s_set_ntsc_filter()));
 	connect_action(ui->action_NTSC_RGB, RGBMODE, SLOT(s_set_ntsc_filter()));
 	// Settings/Video/Shaders
-	connect_action(ui->action_shader_test,
-			sh_test, SLOT(s_set_other_filter()));
+	connect_action(ui->action_Shader_Test, SHADER_TEST, SLOT(s_set_other_filter()));
 
-	connect_action(ui->action_anti_aliasing_advanced_aa,
-			sh_anti_aliasing_advanced_aa, SLOT(s_set_other_filter()));
-	connect_action(ui->action_anti_aliasing_fxaa_edge_detect,
-			sh_anti_aliasing_fxaa_edge_detect, SLOT(s_set_other_filter()));
-	connect_action(ui->action_cgp_tvout_tvout_ntsc_2phase_composite,
-			sh_cgp_tvout_tvout_ntsc_2phase_composite, SLOT(s_set_other_filter()));
-	connect_action(ui->action_cgp_tvout_tvout_ntsc_256px_svideo,
-			sh_cgp_tvout_tvout_ntsc_256px_svideo, SLOT(s_set_other_filter()));
-	connect_action(ui->action_cgp_2xbr_crt_hyllian,
-			sh_cgp_2xbr_crt_hyllian, SLOT(s_set_other_filter()));
-	connect_action(ui->action_cgp_2xbr_jinc2_sharper_hybrid,
-			sh_cgp_2xbr_jinc2_sharper_hybrid, SLOT(s_set_other_filter()));
-	connect_action(ui->action_crt_gtu_v050,
-			sh_crt_gtuv50, SLOT(s_set_other_filter()));
-	connect_action(ui->action_crt_4xbr_hybrid_crt,
-			sh_crt_4xbr_hybrid_crt, SLOT(s_set_other_filter()));
-	connect_action(ui->action_crt_crt_caligari,
-			sh_crt_crt_caligari, SLOT(s_set_other_filter()));
-	connect_action(ui->action_crt_crt_cgwg_fast,
-			sh_crt_crt_cgwg_fast, SLOT(s_set_other_filter()));
-	connect_action(ui->action_crt_crt_easymode,
-			sh_crt_crt_easymode, SLOT(s_set_other_filter()));
-	connect_action(ui->action_crt_crt_easymode_halation,
-			sh_crt_crt_easymode_halation, SLOT(s_set_other_filter()));
-	connect_action(ui->action_crt_crt_geom,
-			sh_crt_crt_geom, SLOT(s_set_other_filter()));
-	connect_action(ui->action_crt_crtglow_gauss,
-			sh_crt_crtglow_gauss, SLOT(s_set_other_filter()));
-	connect_action(ui->action_crt_crtglow_gauss_ntsc_3phase,
-			sh_crt_crtglow_gauss_ntsc_3phase, SLOT(s_set_other_filter()));
-	connect_action(ui->action_crt_crt_hyllian,
-			sh_crt_crt_hyllian, SLOT(s_set_other_filter()));
-	connect_action(ui->action_crt_crt_lottes,
-			sh_crt_crt_lottes, SLOT(s_set_other_filter()));
-	connect_action(ui->action_crt_crt_reverse_aa,
-			sh_crt_crt_reverse_aa, SLOT(s_set_other_filter()));
-	connect_action(ui->action_crt_dotmask,
-			sh_crt_dotmask, SLOT(s_set_other_filter()));
-	connect_action(ui->action_eagle_super_eagle,
-			sh_eagle_super_eagle, SLOT(s_set_other_filter()));
-	connect_action(ui->action_hunterk_borders_1080p_bigblur,
-			sh_hunterk_borders_1080p_bigblur, SLOT(s_set_other_filter()));
-	connect_action(ui->action_hunterk_borders_1080p_color_grid,
-			sh_hunterk_borders_1080p_color_grid, SLOT(s_set_other_filter()));
-	connect_action(ui->action_hunterk_borders_1080p_mudlord,
-			sh_hunterk_borders_1080p_mudlord, SLOT(s_set_other_filter()));
-	connect_action(ui->action_hunterk_borders_1080p_shiny_iterations,
-			sh_hunterk_borders_1080p_shiny_iterations, SLOT(s_set_other_filter()));
-	connect_action(ui->action_hunterk_borders_1080p_snow,
-			sh_hunterk_borders_1080p_snow, SLOT(s_set_other_filter()));
-	connect_action(ui->action_hunterk_borders_1080p_voronoi,
-			sh_hunterk_borders_1080p_voronoi, SLOT(s_set_other_filter()));
-	connect_action(ui->action_hunterk_borders_1080p_water,
-			sh_hunterk_borders_1080p_water, SLOT(s_set_other_filter()));
-	connect_action(ui->action_hunterk_handheld_nds,
-			sh_hunterk_handheld_nds, SLOT(s_set_other_filter()));
-	connect_action(ui->action_hunterk_hqx_hq3x,
-			sh_hunterk_hqx_hq3x, SLOT(s_set_other_filter()));
-	connect_action(ui->action_hunterk_motionblur_motionblur_simple,
-			sh_hunterk_motionblur_motionblur_simple, SLOT(s_set_other_filter()));
-	connect_action(ui->action_motionblur_feedback,
-			sh_motionblur_feedback, SLOT(s_set_other_filter()));
-	connect_action(ui->action_mudlord_emboss,
-			sh_mudlord_emboss, SLOT(s_set_other_filter()));
-	connect_action(ui->action_mudlord_mud_mudlord,
-			sh_mudlord_mud_mudlord, SLOT(s_set_other_filter()));
-	connect_action(ui->action_mudlord_noise_mudlord,
-			sh_mudlord_noise_mudlord, SLOT(s_set_other_filter()));
-	connect_action(ui->action_mudlord_oldtv,
-			sh_mudlord_oldtv, SLOT(s_set_other_filter()));
-	connect_action(ui->action_waterpaint_water,
-			sh_waterpaint_water, SLOT(s_set_other_filter()));
-	connect_action(ui->action_xbr_xbr_lv2_multipass,
-			sh_xbr_xbr_lv2_multipass, SLOT(s_set_other_filter()));
+	connect_action(ui->action_Shader_CRT_Dotmask, SHADER_CRTDOTMASK, SLOT(s_set_other_filter()));
+	connect_action(ui->action_Shader_CRT_Hyllian, SHADER_CRTHYLLIAN, SLOT(s_set_other_filter()));
+	connect_action(ui->action_Shader_CRT_Scanlines, SHADER_CRTSCANLINES,
+			SLOT(s_set_other_filter()));
+	connect_action(ui->action_Shader_CRT_With_Curve, SHADER_CRTWITHCURVE,
+			SLOT(s_set_other_filter()));
+	connect_action(ui->action_Shader_Emboss, SHADER_EMBOSS, SLOT(s_set_other_filter()));
+	connect_action(ui->action_Shader_Noise, SHADER_NOISE, SLOT(s_set_other_filter()));
+	connect_action(ui->action_Shader_NTSC_2Phase_Composite, SHADER_NTSC2PHASECOMPOSITE,
+			SLOT(s_set_other_filter()));
+	connect_action(ui->action_Shader_Old_TV, SHADER_OLDTV, SLOT(s_set_other_filter()));
+	connect_action(ui->action_Shader_File, SHADER_FILE, SLOT(s_set_other_filter()));
+	connect_action(ui->action_Shader_Load_File, SLOT(s_load_shader()));
 	// Settings/Video/Palette
 	connect_action(ui->action_Palette_PAL, PALETTE_PAL, SLOT(s_set_palette()));
 	connect_action(ui->action_Palette_NTSC, PALETTE_NTSC, SLOT(s_set_palette()));
@@ -2073,6 +1882,36 @@ void mainWindow::s_set_ntsc_filter() {
 
 	cfg->ntsc_format = filter;
 	set_filter(NTSC_FILTER);
+}
+void mainWindow::s_load_shader() {
+	QStringList filters;
+	QString file;
+
+	emu_pause(TRUE);
+
+	filters.append(tr("Shaders files"));
+	filters.append(tr("All files"));
+
+	filters[0].append(" (*.cgp *.glslp)");
+	filters[1].append(" (*.*)");
+
+	file = QFileDialog::getOpenFileName(this, tr("Open Shader file"),
+			QFileInfo(cfg->shader_file).dir().absolutePath(), filters.join(";;"));
+
+	if (file.isNull() == false) {
+		QFileInfo fileinfo(file);
+
+		if (fileinfo.exists()) {
+			memset(cfg->shader_file, 0x00, sizeof(cfg->shader_file));
+			strncpy(cfg->shader_file, qPrintable(fileinfo.absoluteFilePath()),
+					sizeof(cfg->shader_file) - 1);
+			set_filter(SHADER_FILE);
+		} else {
+			text_add_line_info(1, "[red]error on shader file");
+		}
+	}
+
+	emu_pause(FALSE);
 }
 void mainWindow::s_set_palette() {
 	int palette = QVariant(((QObject *)sender())->property("myValue")).toInt();

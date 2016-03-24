@@ -1,5 +1,0 @@
-"// Higher value, more centered glow.\n"
-"// Lower values might need more taps.\n"
-"#define GLOW_FALLOFF 0.35\n"
-"#define TAPS 4\n"
-"\n"

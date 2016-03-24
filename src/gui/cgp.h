@@ -27,7 +27,8 @@
 #define EXTERNC
 #endif
 
-EXTERNC void cgp_pragma_param(const char *code);
+EXTERNC BYTE cgp_parse(const char *file);
+EXTERNC void cgp_pragma_param(char *code, const char *path);
 
 #undef EXTERNC
 

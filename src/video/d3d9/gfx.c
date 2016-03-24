@@ -292,6 +292,7 @@ void gfx_set_screen(BYTE scale, DBWORD filter, BYTE fullscreen, BYTE palette, BY
 	BYTE set_mode;
 	WORD width, height;
 	WORD w_for_pr, h_for_pr;
+	DBWORD old_filter = cfg->filter;
 
 	gfx_set_screen_start:
 	set_mode = FALSE;
@@ -521,53 +522,60 @@ void gfx_set_screen(BYTE scale, DBWORD filter, BYTE fullscreen, BYTE palette, BY
 		}
 	}
 
-	DBWORD f = NO_FILTER;
-	d3d9.scale = cfg->scale;
-	gfx.PSS = ((cfg->pixel_aspect_ratio != PAR11) && cfg->PAR_soft_stretch) ? TRUE : FALSE;
+	{
+		DBWORD f = NO_FILTER;
+		d3d9.scale = cfg->scale;
+		gfx.PSS = ((cfg->pixel_aspect_ratio != PAR11) && cfg->PAR_soft_stretch) ? TRUE : FALSE;
 
-	if ((filter == NO_FILTER) || (filter >= FLTSHDSTART)) {
-		d3d9.scale = X1;
-		gfx.filter = scale_surface;
-		f = filter;
-	}
-
-	shaders_set(f);
-
-	if (set_mode) {
-		gfx.w[VIDEO_MODE] = width;
-		gfx.h[VIDEO_MODE] = height;
-
-		if (fullscreen == TRUE) {
-			gfx.w[VIDEO_MODE] = gfx.w[MONITOR];
-			gfx.h[VIDEO_MODE] = gfx.h[MONITOR];
+		if ((filter == NO_FILTER) || (filter >= FLTSHDSTART)) {
+			d3d9.scale = X1;
+			gfx.filter = scale_surface;
+			f = filter;
 		}
 
-		// Pixel Aspect Ratio
-		if (cfg->pixel_aspect_ratio && !fullscreen) {
-			float brd = 0;
+		if (shaders_set(f) == EXIT_ERROR) {
+			memcpy(cfg->shader_file, gfx.last_shader_file, sizeof(cfg->shader_file));
+			filter = old_filter;
+			goto gfx_set_screen_start;
+		}
 
-			gfx.w[VIDEO_MODE] = (gfx.w[NO_OVERSCAN] * gfx.pixel_aspect_ratio);
+		if (set_mode) {
+			gfx.w[VIDEO_MODE] = width;
+			gfx.h[VIDEO_MODE] = height;
 
-			if (overscan.enabled) {
-				brd = (float) gfx.w[VIDEO_MODE] / (float) SCR_ROWS;
-				brd *= (overscan.borders->right + overscan.borders->left);
+			if (fullscreen == TRUE) {
+				gfx.w[VIDEO_MODE] = gfx.w[MONITOR];
+				gfx.h[VIDEO_MODE] = gfx.h[MONITOR];
 			}
 
-			gfx.w[VIDEO_MODE] -= brd;
+			// Pixel Aspect Ratio
+			if (cfg->pixel_aspect_ratio && !fullscreen) {
+				float brd = 0;
+
+				gfx.w[VIDEO_MODE] = (gfx.w[NO_OVERSCAN] * gfx.pixel_aspect_ratio);
+
+				if (overscan.enabled) {
+					brd = (float) gfx.w[VIDEO_MODE] / (float) SCR_ROWS;
+					brd *= (overscan.borders->right + overscan.borders->left);
+				}
+
+				gfx.w[VIDEO_MODE] -= brd;
+			}
+
+			// faccio quello che serve prima del setvideo
+			gui_set_video_mode();
 		}
 
-		// faccio quello che serve prima del setvideo
-		gui_set_video_mode();
-	}
-
-	switch (d3d9_context_create()) {
-		case EXIT_ERROR:
-			fprintf(stderr, "D3D9 : Unable to initialize d3d context\n");
-			return;
-		case EXIT_ERROR_SHADER:
-			fprintf(stderr, "CG : Error on loading the shaders, switch to \"No filter\"\n");
-			filter = NO_FILTER;
-			goto gfx_set_screen_start;
+		switch (d3d9_context_create()) {
+			case EXIT_ERROR:
+				fprintf(stderr, "D3D9 : Unable to initialize d3d context\n");
+				return;
+			case EXIT_ERROR_SHADER:
+				fprintf(stderr, "CG : Error on loading the shaders, switch to \"No filter\"\n");
+				memcpy(cfg->shader_file, gfx.last_shader_file, sizeof(cfg->shader_file));
+				filter = NO_FILTER;
+				goto gfx_set_screen_start;
+		}
 	}
 
 	text.w = gfx.w[VIDEO_MODE];
@@ -1111,6 +1119,8 @@ static BYTE d3d9_context_create(void) {
 
 		d3d9_vertex_buffer_set(shd, &texture->vp, prev);
 	}
+
+	memcpy(gfx.last_shader_file, cfg->shader_file, sizeof(gfx.last_shader_file));
 
 	return (EXIT_OK);
 }

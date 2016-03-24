@@ -43,10 +43,10 @@ static BYTE opengl_glew_init(void);
 static BYTE opengl_texture_create(_texture *texture, GLuint index, GLuint clean);
 static void opengl_texture_simple_create(_texture_simple *texture, GLuint w, GLuint h, BYTE text);
 static BYTE opengl_texture_lut_create(_lut *lut, GLuint index);
-static BYTE opengl_shader_init(_shader *shd, const GLchar *code);
+static BYTE opengl_shader_init(_shader *shd, GLchar *mem, const GLchar *path);
 static void opengl_shader_delete(_shader *shd);
 static void opengl_shader_print_log(GLuint obj, BYTE ret);
-char *opengl_shader_file2string(const char *path);
+static char *opengl_shader_file2string(const GLchar *path);
 static void opengl_shader_uni_texture_clear(_shader_uniforms_tex *sut);
 static void opengl_shader_uni_texture(_shader_uniforms_tex *uni, GLint prg, GLchar *fmt, ...);
 static GLint opengl_shader_get_uni(GLuint prog, const char *param);
@@ -165,7 +165,8 @@ BYTE opengl_context_create(SDL_Surface *src) {
 	// viene costruita proprio durante il opengl_texture_create e a me serve completa quando
 	// inizializzo le shaders.
 	for (i = 0; i < shader_effect.pass; i++) {
-		int rc = opengl_shader_init(&opengl.texture[i].shader, shader_effect.sp[i].code);
+		int rc = opengl_shader_init(&opengl.texture[i].shader, shader_effect.sp[i].code,
+				shader_effect.sp[i].path);
 
 		if (rc != EXIT_OK) {
 			opengl_context_delete();
@@ -198,7 +199,8 @@ BYTE opengl_context_create(SDL_Surface *src) {
 	if ((shader_effect.feedback_pass >= 0) && (shader_effect.feedback_pass < shader_effect.pass)) {
 		opengl.feedback.in_use = TRUE;
 
-		if (opengl_texture_create(&opengl.feedback.tex, shader_effect.feedback_pass, TRUE) == EXIT_ERROR) {
+		if (opengl_texture_create(&opengl.feedback.tex, shader_effect.feedback_pass, TRUE)
+				== EXIT_ERROR) {
 			opengl_context_delete();
 			return (EXIT_ERROR);
 		}
@@ -217,7 +219,7 @@ BYTE opengl_context_create(SDL_Surface *src) {
 		glBufferData(GL_ARRAY_BUFFER, sizeof(shd->vb), shd->vb, GL_STATIC_DRAW);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-		opengl_shader_init(shd, shader_code_blend());
+		opengl_shader_init(shd, shader_code_blend(), NULL);
 	}
 
 	for (i = 0; i < shader_effect.luts; i++) {
@@ -279,6 +281,8 @@ BYTE opengl_context_create(SDL_Surface *src) {
 	}
 
 	glFinish();
+
+	memcpy(gfx.last_shader_file, cfg->shader_file, sizeof(gfx.last_shader_file));
 
  	return (EXIT_OK);
 }
@@ -759,19 +763,27 @@ static BYTE opengl_texture_lut_create(_lut *lut, GLuint index) {
 
 	return (EXIT_OK);
 }
-static BYTE opengl_shader_init(_shader *shd, const GLchar *code) {
+static BYTE opengl_shader_init(_shader *shd, GLchar *code, const GLchar *path) {
 	const GLchar *src[3];
 	GLuint i, vrt, frg;
 	GLint success = 0;
 
-	if (code == NULL) {
+	if ((code == NULL) && ((path == NULL) || !path[0])) {
 		return (EXIT_ERROR_SHADER);
+	}
+
+	if (path && path[0]) {
+		code = opengl_shader_file2string(path);
 	}
 
 	// program
 	shd->prg = glCreateProgram();
 
 	if (!shd->prg) {
+		if (path && path[0] && code) {
+			free(code);
+			code = NULL;
+		}
 		return (EXIT_ERROR);
 	}
 
@@ -788,6 +800,10 @@ static BYTE opengl_shader_init(_shader *shd, const GLchar *code) {
 #endif
 	glGetShaderiv(vrt, GL_COMPILE_STATUS, &success);
 	if (success == GL_FALSE) {
+		if (path && path[0] && code) {
+			free(code);
+			code = NULL;
+		}
 		return (EXIT_ERROR_SHADER);
 	}
 	glAttachShader(shd->prg, vrt);
@@ -803,6 +819,10 @@ static BYTE opengl_shader_init(_shader *shd, const GLchar *code) {
 #endif
 	glGetShaderiv(vrt, GL_COMPILE_STATUS, &success);
 	if (success == GL_FALSE) {
+		if (path && path[0] && code) {
+			free(code);
+			code = NULL;
+		}
 		return (EXIT_ERROR_SHADER);
 	}
 	glAttachShader(shd->prg, frg);
@@ -812,6 +832,19 @@ static BYTE opengl_shader_init(_shader *shd, const GLchar *code) {
 #if !defined (RELEASE)
 	opengl_shader_print_log(shd->prg, TRUE);
 #endif
+	glGetProgramiv(shd->prg, GL_LINK_STATUS, &success);
+	if (success == GL_FALSE) {
+		if (path && path[0] && code) {
+			free(code);
+			code = NULL;
+		}
+		return (EXIT_ERROR_SHADER);
+	}
+
+	if (path && path[0] && code) {
+		free(code);
+		code = NULL;
+	}
 
 	glUseProgram(shd->prg);
 
@@ -914,14 +947,14 @@ static void opengl_shader_print_log(GLuint obj, BYTE ret) {
 		}
 	}
 }
-char *opengl_shader_file2string(const char *path) {
+static char *opengl_shader_file2string(const GLchar *path) {
 	FILE *fd;
 	long len, r;
 	char *str;
 
 	if (!(fd = fopen(path, "r"))) {
 		fprintf(stderr, "Can't open file '%s' for reading\n", path);
-		return NULL;
+		return (NULL);
 	}
 
 	fseek(fd, 0, SEEK_END);
@@ -933,7 +966,7 @@ char *opengl_shader_file2string(const char *path) {
 
 	if (!(str = (char *) malloc(len * sizeof(char)))) {
 		fprintf(stderr, "Can't malloc space for '%s'\n", path);
-		return NULL;
+		return (NULL);
 	}
 
 	r = fread(str, sizeof(char), len, fd);
@@ -942,7 +975,7 @@ char *opengl_shader_file2string(const char *path) {
 
 	fclose(fd);
 
-	return str;
+	return (str);
 }
 static void opengl_shader_uni_texture_clear(_shader_uniforms_tex *sut) {
 	sut->texture = -1;

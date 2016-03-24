@@ -177,9 +177,6 @@ typedef struct _d3d9 {
 
 EXTERNC _d3d9 d3d9;
 
-EXTERNC void shaders_set(int shader);
-EXTERNC const char *shader_code_blend(void);
-
 #undef EXTERNC
 
 #endif /* D3D9_H_ */

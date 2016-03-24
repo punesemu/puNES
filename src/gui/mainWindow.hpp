@@ -131,6 +131,7 @@ class mainWindow: public QMainWindow {
 		void s_set_overscan_borders();
 		void s_set_other_filter();
 		void s_set_ntsc_filter();
+		void s_load_shader();
 		void s_set_palette();
 		void s_set_disable_emphasis_pal();
 		void s_save_palette();

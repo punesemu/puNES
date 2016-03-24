@@ -71,47 +71,18 @@ enum filters_type {
 	FUTURE_USE14,
 	/* shaders */
 	FLTSHDSTART,
-	sh_anti_aliasing_advanced_aa = FLTSHDSTART,
-	sh_anti_aliasing_fx_aa,
-	sh_anti_aliasing_fxaa_edge_detect,
-	sh_cgp_tvout_tvout_ntsc_2phase_composite,
-	sh_cgp_tvout_tvout_ntsc_256px_svideo,
-	sh_cgp_2xbr_crt_hyllian,
-	sh_cgp_2xbr_jinc2_sharper_hybrid,
-	sh_crt_gtuv50,
-	sh_crt_4xbr_hybrid_crt,
-	sh_crt_crt_caligari,
-	sh_crt_crt_cgwg_fast,
-	sh_crt_crt_easymode,
-	sh_crt_crt_easymode_halation,
-	sh_crt_crt_geom,
-	sh_crt_crtglow_gauss,
-	sh_crt_crtglow_gauss_ntsc_3phase,
-	sh_crt_crt_hyllian,
-	sh_crt_crt_lottes,
-	sh_crt_crt_reverse_aa,
-	sh_crt_dotmask,
-	sh_eagle_super_eagle,
-	sh_hunterk_borders_1080p_bigblur,
-	sh_hunterk_borders_1080p_color_grid,
-	sh_hunterk_borders_1080p_mudlord,
-	sh_hunterk_borders_1080p_shiny_iterations,
-	sh_hunterk_borders_1080p_snow,
-	sh_hunterk_borders_1080p_voronoi,
-	sh_hunterk_borders_1080p_water,
-	sh_hunterk_handheld_nds,
-	sh_hunterk_hqx_hq3x,
-	sh_hunterk_motionblur_motionblur_simple,
-	sh_motionblur_feedback,
-	sh_mudlord_emboss,
-	sh_mudlord_mud_mudlord,
-	sh_mudlord_noise_mudlord,
-	sh_mudlord_oldtv,
-	sh_waterpaint_water,
-	sh_xbr_xbr_lv2_multipass,
+	SHADER_CRTDOTMASK = FLTSHDSTART,
+	SHADER_CRTHYLLIAN,
+	SHADER_CRTSCANLINES,
+	SHADER_CRTWITHCURVE,
+	SHADER_EMBOSS,
+	SHADER_NOISE,
+	SHADER_NTSC2PHASECOMPOSITE,
+	SHADER_OLDTV,
+	SHADER_FILE,
 
-	sh_test,
-	FLTSHDSTOP = sh_waterpaint_water
+	SHADER_TEST,
+	FLTSHDSTOP = SHADER_FILE,
 	/* shaders end */
 };
 enum overcan_type { OSCAN_OFF, OSCAN_ON, OSCAN_DEFAULT, OSCAN_DEFAULT_OFF, OSCAN_DEFAULT_ON };
@@ -159,6 +130,8 @@ EXTERNC struct _gfx {
 	_viewport vp;
 
 	gfx_filter_function((*filter));
+
+	char last_shader_file[LENGTH_FILE_NAME_LONG];
 } gfx;
 
 #if defined (SDL)

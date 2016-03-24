@@ -60,6 +60,7 @@ typedef struct _config {
 	_config_input input;
 	_config_apu apu;
 
+	char shader_file[LENGTH_FILE_NAME_LONG];
 	char palette_file[LENGTH_FILE_NAME_LONG];
 	char save_file[LENGTH_FILE_NAME_LONG];
 

@@ -217,6 +217,7 @@ void gfx_set_screen(BYTE scale, DBWORD filter, BYTE fullscreen, BYTE palette, BY
         BYTE force_palette) {
 	BYTE set_mode;
 	WORD width, height, w_for_pr, h_for_pr;
+	DBWORD old_filter = cfg->filter;
 
 	gfx_set_screen_start:
 	set_mode = FALSE;
@@ -555,7 +556,11 @@ void gfx_set_screen(BYTE scale, DBWORD filter, BYTE fullscreen, BYTE palette, BY
 			f = filter;
 		}
 
-		shaders_set(f);
+		if (shaders_set(f) == EXIT_ERROR) {
+			memcpy(cfg->shader_file, gfx.last_shader_file, sizeof(cfg->shader_file));
+			filter = old_filter;
+			goto gfx_set_screen_start;
+		}
 
 		// creo tutto il necessario per il rendering
 		switch (opengl_context_create(surface_sdl)) {
@@ -565,6 +570,7 @@ void gfx_set_screen(BYTE scale, DBWORD filter, BYTE fullscreen, BYTE palette, BY
 				break;
 			case EXIT_ERROR_SHADER:
 				fprintf(stderr, "errors on shader, flip to no filter\n");
+				memcpy(cfg->shader_file, gfx.last_shader_file, sizeof(cfg->shader_file));
 				filter = NO_FILTER;
 				goto gfx_set_screen_start;
 			case EXIT_OK:
