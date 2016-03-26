@@ -222,7 +222,6 @@ void mainWindow::setup() {
 	grp->addAction(ui->action_Shader_Test);
 
 	grp->addAction(ui->action_Shader_CRT_Dotmask);
-	grp->addAction(ui->action_Shader_CRT_Hyllian);
 	grp->addAction(ui->action_Shader_CRT_Scanlines);
 	grp->addAction(ui->action_Shader_CRT_With_Curve);
 	grp->addAction(ui->action_Shader_Emboss);
@@ -236,6 +235,8 @@ void mainWindow::setup() {
 	grp->addAction(ui->action_Palette_PAL);
 	grp->addAction(ui->action_Palette_NTSC);
 	grp->addAction(ui->action_Sony_CXA2025AS_US);
+	grp->addAction(ui->action_Firebrandx_Unsaturated);
+	grp->addAction(ui->action_Firebrandx_YUV);
 	grp->addAction(ui->action_Monochrome);
 	grp->addAction(ui->action_Green);
 	grp->addAction(ui->action_Palette_File);
@@ -784,7 +785,6 @@ void mainWindow::update_menu_settings() {
 		ui->action_Shader_Test->setEnabled(state);
 
 		ui->action_Shader_CRT_Dotmask->setEnabled(state);
-		ui->action_Shader_CRT_Hyllian->setEnabled(state);
 		ui->action_Shader_CRT_Scanlines->setEnabled(state);
 		ui->action_Shader_CRT_With_Curve->setEnabled(state);
 		ui->action_Shader_Emboss->setEnabled(state);
@@ -851,9 +851,6 @@ void mainWindow::update_menu_settings() {
 		case SHADER_CRTDOTMASK:
 			ui->action_Shader_CRT_Dotmask->setChecked(true);
 			break;
-		case SHADER_CRTHYLLIAN:
-			ui->action_Shader_CRT_Hyllian->setChecked(true);
-			break;
 		case SHADER_CRTSCANLINES:
 			ui->action_Shader_CRT_Scanlines->setChecked(true);
 			break;
@@ -900,6 +897,12 @@ void mainWindow::update_menu_settings() {
 			break;
 		case PALETTE_SONY:
 			ui->action_Sony_CXA2025AS_US->setChecked(true);
+			break;
+		case PALETTE_FRBX_UNSATURED:
+			ui->action_Firebrandx_Unsaturated->setChecked(true);
+			break;
+		case PALETTE_FRBX_YUV:
+			ui->action_Firebrandx_YUV->setChecked(true);
 			break;
 		case PALETTE_MONO:
 			ui->action_Monochrome->setChecked(true);
@@ -1422,7 +1425,6 @@ void mainWindow::connect_menu_signals() {
 	connect_action(ui->action_Shader_Test, SHADER_TEST, SLOT(s_set_other_filter()));
 
 	connect_action(ui->action_Shader_CRT_Dotmask, SHADER_CRTDOTMASK, SLOT(s_set_other_filter()));
-	connect_action(ui->action_Shader_CRT_Hyllian, SHADER_CRTHYLLIAN, SLOT(s_set_other_filter()));
 	connect_action(ui->action_Shader_CRT_Scanlines, SHADER_CRTSCANLINES,
 			SLOT(s_set_other_filter()));
 	connect_action(ui->action_Shader_CRT_With_Curve, SHADER_CRTWITHCURVE,
@@ -1438,6 +1440,8 @@ void mainWindow::connect_menu_signals() {
 	connect_action(ui->action_Palette_PAL, PALETTE_PAL, SLOT(s_set_palette()));
 	connect_action(ui->action_Palette_NTSC, PALETTE_NTSC, SLOT(s_set_palette()));
 	connect_action(ui->action_Sony_CXA2025AS_US, PALETTE_SONY, SLOT(s_set_palette()));
+	connect_action(ui->action_Firebrandx_Unsaturated, PALETTE_FRBX_UNSATURED, SLOT(s_set_palette()));
+	connect_action(ui->action_Firebrandx_YUV, PALETTE_FRBX_YUV, SLOT(s_set_palette()));
 	connect_action(ui->action_Monochrome, PALETTE_MONO, SLOT(s_set_palette()));
 	connect_action(ui->action_Green, PALETTE_GREEN, SLOT(s_set_palette()));
 	connect_action(ui->action_Palette_File, PALETTE_FILE, SLOT(s_set_palette()));

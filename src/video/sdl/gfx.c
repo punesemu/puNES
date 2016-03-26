@@ -28,9 +28,8 @@
 #include "version.h"
 #include "gui.h"
 #include "text.h"
-#define __STATICPAL__
 #include "palette.h"
-#undef  __STATICPAL__
+#include "paldef.h"
 #include "opengl.h"
 #include "conf.h"
 #if !defined (__WIN32__)
@@ -502,6 +501,14 @@ void gfx_set_screen(BYTE scale, DBWORD filter, BYTE fullscreen, BYTE palette, BY
 				break;
 			case PALETTE_NTSC:
 				ntsc_set(cfg->ntsc_format, FALSE, 0, 0, (BYTE *) palette_RGB);
+				break;
+			case PALETTE_FRBX_UNSATURED:
+				ntsc_set(cfg->ntsc_format, FALSE, (BYTE *) palette_firebrandx_unsaturated_v5, 0,
+						(BYTE *) palette_RGB);
+				break;
+			case PALETTE_FRBX_YUV:
+				ntsc_set(cfg->ntsc_format, FALSE, (BYTE *) palette_firebrandx_YUV_v3, 0,
+						(BYTE *) palette_RGB);
 				break;
 			case PALETTE_GREEN:
 				rgb_modifier(-0x20, 0x20, -0x20);

@@ -268,7 +268,6 @@
       </property>
       <addaction name="action_Shader_Test"/>
       <addaction name="action_Shader_CRT_Dotmask"/>
-      <addaction name="action_Shader_CRT_Hyllian"/>
       <addaction name="action_Shader_CRT_Scanlines"/>
       <addaction name="action_Shader_CRT_With_Curve"/>
       <addaction name="action_Shader_Emboss"/>
@@ -291,6 +290,8 @@
       <addaction name="action_Palette_PAL"/>
       <addaction name="action_Palette_NTSC"/>
       <addaction name="action_Sony_CXA2025AS_US"/>
+      <addaction name="action_Firebrandx_Unsaturated"/>
+      <addaction name="action_Firebrandx_YUV"/>
       <addaction name="action_Monochrome"/>
       <addaction name="action_Green"/>
       <addaction name="separator"/>
@@ -1885,14 +1886,6 @@
     <string>&amp;CRT With Curve</string>
    </property>
   </action>
-  <action name="action_Shader_CRT_Hyllian">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>CRT &amp;Hyllian</string>
-   </property>
-  </action>
   <action name="action_Shader_Emboss">
    <property name="checkable">
     <bool>true</bool>
@@ -1964,6 +1957,22 @@
    </property>
    <property name="text">
     <string>&amp;Load from file</string>
+   </property>
+  </action>
+  <action name="action_Firebrandx_YUV">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Firebrandx &amp;YUV</string>
+   </property>
+  </action>
+  <action name="action_Firebrandx_Unsaturated">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Firebrandx &amp;Unsaturated</string>
    </property>
   </action>
  </widget>

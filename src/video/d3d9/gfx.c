@@ -28,9 +28,8 @@
 #include "ppu.h"
 #include "overscan.h"
 #include "clock.h"
-#define __STATICPAL__
 #include "palette.h"
-#undef  __STATICPAL__
+#include "paldef.h"
 
 #define D3D9_ADAPTER(i) (_d3d9_adapter *) ((BYTE *) d3d9.array + (i * sizeof(_d3d9_adapter)))
 #define ntsc_width(wdt, a, flag)\
@@ -470,6 +469,14 @@ void gfx_set_screen(BYTE scale, DBWORD filter, BYTE fullscreen, BYTE palette, BY
 				break;
 			case PALETTE_NTSC:
 				ntsc_set(cfg->ntsc_format, FALSE, 0, 0, (BYTE *) palette_RGB);
+				break;
+			case PALETTE_FRBX_UNSATURED:
+				ntsc_set(cfg->ntsc_format, FALSE, (BYTE *) palette_firebrandx_unsaturated_v5, 0,
+						(BYTE *) palette_RGB);
+				break;
+			case PALETTE_FRBX_YUV:
+				ntsc_set(cfg->ntsc_format, FALSE, (BYTE *) palette_firebrandx_YUV_v3, 0,
+						(BYTE *) palette_RGB);
 				break;
 			case PALETTE_GREEN:
 				rgb_modifier(-0x20, 0x20, -0x20);
@@ -1002,7 +1009,7 @@ static BYTE d3d9_context_create(void) {
 	for (i = 0; i < shader_effect.luts; i++) {
 		if (d3d9_texture_lut_create(&d3d9.lut[i], i) == EXIT_ERROR) {
 			d3d9_context_delete();
-			return (EXIT_ERROR);
+			return (EXIT_ERROR_SHADER);
 		}
 	}
 
@@ -1017,18 +1024,15 @@ static BYTE d3d9_context_create(void) {
 
 		// configuro l'aspect ratio del fullscreen
 		if (cfg->fullscreen && !cfg->stretch) {
-			FLOAT ratio_surface = ((FLOAT) gfx.rows / (FLOAT) gfx.lines) * gfx.pixel_aspect_ratio;
+			FLOAT ratio_surface = ((FLOAT) gfx.rows  * gfx.pixel_aspect_ratio) / (FLOAT) gfx.lines;
 			FLOAT ratio_frame = (FLOAT) gfx.w[VIDEO_MODE] / (FLOAT) gfx.h[VIDEO_MODE];
-			FLOAT delta;
 
 			if (ratio_frame > ratio_surface) {
-				delta = (ratio_surface / ratio_frame - 1.0f) / 2.0f + 0.5f;
-				vp->x = (int) roundf((FLOAT) gfx.w[VIDEO_MODE] * (0.5f - delta));
-				vp->w = (unsigned) roundf(2.0f * (FLOAT) gfx.w[VIDEO_MODE] * delta);
+				vp->w = (int) ((FLOAT) gfx.h[VIDEO_MODE] * ratio_surface);
+				vp->x = (int) (((FLOAT) gfx.w[VIDEO_MODE] - (FLOAT) vp->w) * 0.5f);
 			} else {
-				delta = (ratio_frame / ratio_surface - 1.0f) / 2.0f + 0.5f;
-				vp->y = (int) roundf((FLOAT) gfx.h[VIDEO_MODE] * (0.5f - delta));
-				vp->h = (unsigned) roundf(2.0f * (FLOAT) gfx.h[VIDEO_MODE] * delta);
+				vp->h = (int) ((FLOAT) gfx.w[VIDEO_MODE] * ratio_surface);
+				vp->y = (int) (((FLOAT) gfx.h[VIDEO_MODE] - (FLOAT) vp->h) * 0.5f);
 			}
 		}
 	}

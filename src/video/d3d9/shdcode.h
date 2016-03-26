@@ -24,7 +24,6 @@ enum shader_code_enum {
 	shc_blend,
 	shc_crt_crt_caligari,
 	shc_crt_crt_geom,
-	shc_crt_crt_hyllian,
 	shc_crt_dotmask,
 	shc_crt_tvout_tweaks,
 	shc_misc_image_adjustment,
@@ -47,7 +46,6 @@ static const _shader_code shader_code[] = {
 #include "shaders/no_filter.h" // per le d3d9 il blend non viene fatto dalla shader
 #include "shaders/crt/crt-caligari.h"
 #include "shaders/crt/crt-geom.h"
-#include "shaders/crt/crt-hyllian.h"
 #include "shaders/crt/dotmask.h"
 #include "shaders/crt/tvout-tweaks.h"
 #include "shaders/misc/image-adjustment.h"

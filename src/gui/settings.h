@@ -364,7 +364,6 @@ static const _opt opt_filter[] = {
 	{NULL                   , NULL          , NO_FILTER},
 	// shaders
 	{"CRT Dotmask"          , "crtdotmask"  , SHADER_CRTDOTMASK},
-	{"CRT Hyllian"          , "crthyllian"  , SHADER_CRTHYLLIAN},
 	{"CRT Scanlines"        , "crtscanlines", SHADER_CRTSCANLINES},
 	{"CRT With Curve"       , "crtcurve"    , SHADER_CRTWITHCURVE},
 	{"Emboss"               , "emboss"      , SHADER_EMBOSS},
@@ -372,7 +371,7 @@ static const _opt opt_filter[] = {
 	{"NTSC 2Phase Composite", "ntsc2phcomp" , SHADER_NTSC2PHASECOMPOSITE},
 	{"Old TV"               , "oldtv"       , SHADER_OLDTV},
 	{"Extern"               , "file"        , SHADER_FILE},
-	{"Test"                 , "test"        , SHADER_TEST},
+	{"Test"                 , "test"        , SHADER_TEST}
 };
 static const _opt opt_ntsc[] = {
 	{"Composite", "composite", COMPOSITE},
@@ -380,12 +379,14 @@ static const _opt opt_ntsc[] = {
 	{"RGB"      , "rgb"      , RGBMODE}
 };
 static const _opt opt_palette[] = {
-	{"PAL palette"      , "pal"  , PALETTE_PAL},
-	{"NTSC palette"     , "ntsc" , PALETTE_NTSC},
-	{"Sony CXA2025AS US", "sony" , PALETTE_SONY},
-	{"Monochrome"       , "mono" , PALETTE_MONO},
-	{"Green"            , "green", PALETTE_GREEN},
-	{"Extern"           , "file" , PALETTE_FILE}
+	{"PAL palette"      , "pal"   , PALETTE_PAL},
+	{"NTSC palette"     , "ntsc"  , PALETTE_NTSC},
+	{"Sony CXA2025AS US", "sony"  , PALETTE_SONY},
+	{"Firebrandx YUV"   , "frbyuv", PALETTE_FRBX_YUV},
+	{"Firebrandx Unsat" , "frbuns", PALETTE_FRBX_UNSATURED},
+	{"Monochrome"       , "mono"  , PALETTE_MONO},
+	{"Green"            , "green" , PALETTE_GREEN},
+	{"Extern"           , "file"  , PALETTE_FILE}
 };
 static const _opt opt_audio_buffer_factor[] = {
 	{NULL, "0"      , 0},
@@ -550,16 +551,17 @@ static const _settings main_cfg[] = {
 	},
 	{
 		"video", "filter", "none",
-		"# possible values: none, scale2x, scale3x, scale4x, hq2x, hq3x, hq4x," NEWLINE
-		"#                  xbrz2x, xbrz3x, xbrz4x, ntsc, crtdotmask, crthyllian," NEWLINE
-		"#                  crtscanlines, crtcurve, emboss, noise, ntsc2phcomp, oldtv",
+		"# possible values: none, scale2x, scale3x, scale4x, hq2x, hq3x," NEWLINE
+		"#                  hq4x, xbrz2x, xbrz3x, xbrz4x, ntsc, crtdotmask, " NEWLINE
+		"#                  crtscanlines, crtcurve, emboss, noise, ntsc2phcomp" NEWLINE
+		"#                  oldtv, file",
 		"-i, --filter              filter to apply       : nofilter, scale2x," NEWLINE
 		"                                                  scale3x, scale4x, hq2x," NEWLINE
 		"                                                  hq3x, hq4x, xbrz2x, xbrz3x," NEWLINE
 		"                                                  xbrz4x, ntsc, crtdotmask," NEWLINE
-		"                                                  crthyllian, crtscanlines," NEWLINE
-		"                                                  crtcurve, emboss, noise" NEWLINE
-		"                                                  ntsc2phcomp, oldtv, file",
+		"                                                  crtscanlines, crtcurve," NEWLINE
+		"                                                  emboss, noise, ntsc2phcomp," NEWLINE
+		"                                                  oldtv, file",
 		{LENGTH(opt_filter), opt_filter}
 	},
 	{
@@ -576,8 +578,9 @@ static const _settings main_cfg[] = {
 	},
 	{
 		"video", "palette", "ntsc",
-		"# possible values: pal, ntsc, sony, mono, green, file",
-		"-p, --palette             type of palette       : pal, ntsc, sony, mono, green, file",
+		"# possible values: pal, ntsc, sony, frbyuv, frbuns, mono, green, file",
+		"-p, --palette             type of palette       : pal, ntsc, sony, frbyuv," NEWLINE
+		"                                                  frbuns, mono, green, file",
 		{LENGTH(opt_palette), opt_palette}
 	},
 	{

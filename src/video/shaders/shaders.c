@@ -64,11 +64,6 @@ BYTE shaders_set(int shader) {
 			sp->linear = TEXTURE_LINEAR_DISAB;
 			se_soft_stretch();
 			break;
-		case SHADER_CRTHYLLIAN:
-			shdpass();
-			sp->code = SHDCODE(shc_crt_crt_hyllian);
-			sp->linear = TEXTURE_LINEAR_DISAB;
-			break;
 		case SHADER_CRTSCANLINES:
 			shdpass();
 			sp->code = SHDCODE(shc_crt_crt_caligari);

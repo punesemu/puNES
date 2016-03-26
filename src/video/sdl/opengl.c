@@ -63,16 +63,16 @@ INLINE static void opengl_shader_params_set(const _shader *shd, GLuint fcountmod
 
 static const GLchar *uni_prefixes[] = { "", "ruby", };
 static const _vertex_buffer vb_upright[4] = {
-  { 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f },
-  { 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f },
-  { 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f },
-  { 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f },
+	{ 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f },
+	{ 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f },
+	{ 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f },
+	{ 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f },
 };
 static const _vertex_buffer vb_flipped[4] = {
-  { 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f },
-  { 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f },
-  { 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f },
-  { 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f },
+	{ 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f },
+	{ 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f },
+	{ 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f },
+	{ 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f },
 };
 
 void opengl_init(void) {
@@ -129,23 +129,21 @@ BYTE opengl_context_create(SDL_Surface *src) {
 
 		vp->x = 0;
 		vp->y = 0;
-		vp->w = (GLfloat) src->w;
-		vp->h = (GLfloat) src->h;
+		vp->w = src->w;
+		vp->h = src->h;
 
 		// configuro l'aspect ratio del fullscreen
 		if (cfg->fullscreen && !cfg->stretch) {
-			GLfloat ratio_surface = ((GLfloat) gfx.rows / (GLfloat) gfx.lines) * gfx.pixel_aspect_ratio;
+			GLfloat ratio_surface = (((GLfloat) gfx.rows * gfx.pixel_aspect_ratio)
+					/ (GLfloat) gfx.lines);
 			GLfloat ratio_frame = (GLfloat) src->w / (GLfloat) src->h;
-			GLfloat delta;
 
 			if (ratio_frame > ratio_surface) {
-				delta = (ratio_surface / ratio_frame - 1.0f) / 2.0f + 0.5f;
-				vp->x = (int) roundf((GLfloat) src->w * (0.5f - delta));
-				vp->w = (unsigned) roundf(2.0f * (GLfloat) src->w * delta);
+				vp->w = (int) ((GLfloat) src->h * ratio_surface);
+				vp->x = (int) (((GLfloat) src->w - (GLfloat) vp->w) * 0.5f);
 			} else {
-				delta = (ratio_frame / ratio_surface - 1.0f) / 2.0f + 0.5f;
-				vp->y = (int) roundf((GLfloat) src->h * (0.5f - delta));
-				vp->h = (unsigned) roundf(2.0f * (GLfloat) src->h * delta);
+				vp->h = (int) ((GLfloat) src->w * ratio_surface);
+				vp->y = (int) (((GLfloat) src->h - (GLfloat) vp->h) * 0.5f);
 			}
 		}
 	}
@@ -225,7 +223,7 @@ BYTE opengl_context_create(SDL_Surface *src) {
 	for (i = 0; i < shader_effect.luts; i++) {
 		if (opengl_texture_lut_create(&opengl.lut[i], i) == EXIT_ERROR) {
 			opengl_context_delete();
-			return (EXIT_ERROR);
+			return (EXIT_ERROR_SHADER);
 		}
 	}
 
