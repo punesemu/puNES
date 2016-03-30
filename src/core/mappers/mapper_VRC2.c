@@ -71,18 +71,14 @@ void extcl_cpu_wr_mem_VRC2(WORD address, BYTE value) {
 			map_prg_rom_8k_update();
 			return;
 		case 0x9000: {
-			switch (value & 0x03) {
+			// http://forums.nesdev.com/viewtopic.php?f=3&t=13473
+			// sembra che il VRC2 supporti solo il VH mirroring.
+			switch (value & 0x01) {
 				case 0:
 					mirroring_V();
 					break;
 				case 1:
 					mirroring_H();
-					break;
-				case 2:
-					mirroring_SCR0();
-					break;
-				case 3:
-					mirroring_SCR1();
 					break;
 			}
 			return;
