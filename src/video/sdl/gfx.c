@@ -565,7 +565,11 @@ void gfx_set_screen(BYTE scale, DBWORD filter, BYTE fullscreen, BYTE palette, BY
 
 		if (shaders_set(f) == EXIT_ERROR) {
 			memcpy(cfg->shader_file, gfx.last_shader_file, sizeof(cfg->shader_file));
-			filter = old_filter;
+			if (old_filter == filter) {
+				filter = NO_FILTER;
+			} else {
+				filter = old_filter;
+			}
 			goto gfx_set_screen_start;
 		}
 

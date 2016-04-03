@@ -36,7 +36,7 @@ class screenWidget: public QWidget {
 	private:
 		mainWindow *mwin;
 #if defined (__WIN32__)
-#if defined (SDL)
+#if defined (WITH_OPENGL)
 		struct _data {
 			LONG_PTR WINAPI (*qt)(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 			LONG_PTR WINAPI (*sdl)(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -50,7 +50,7 @@ class screenWidget: public QWidget {
 		screenWidget(QWidget *parent, mainWindow *mw);
 		~screenWidget();
 #if defined (__WIN32__)
-#if defined (SDL)
+#if defined (WITH_OPENGL)
 		void controlEventFilter();
 #endif
 		void cursor_init();

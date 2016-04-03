@@ -59,6 +59,8 @@ typedef struct _shader_scale {
 	_xy_uint abs;
 } _shader_scale;
 typedef struct _shader_pass {
+	uint8_t type;
+
 	char *code;
 	char path[LENGTH_FILE_NAME_LONG];
 	char alias[64];
@@ -92,6 +94,7 @@ typedef struct _param_shd {
 } _param_shd;
 typedef struct _shader_effect {
 	uint8_t type;
+
 	uint8_t pass;
 	uint8_t last_pass;
 	uint8_t running_pass;

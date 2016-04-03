@@ -47,7 +47,7 @@ static const struct option opt_long[] = {
 	{ "filter",             required_argument, NULL, 'i'},
 	{ "ntsc-format",        required_argument, NULL, 'n'},
 	{ "palette",            required_argument, NULL, 'p'},
-#if defined (SDL)
+#if defined (WITH_OPENGL)
 	{ "rendering",          required_argument, NULL, 'r'},
 #endif
 	{ "vsync",              required_argument, NULL, 'v'},
@@ -160,7 +160,7 @@ BYTE cmd_line_parse(int argc, char **argv) {
 			case 'q':
 				set_int(cfg_from_file.audio_quality, SET_AUDIO_QUALITY);
 				break;
-#if defined (SDL)
+#if defined (WITH_OPENGL)
 			case 'r':
 				set_int(cfg_from_file.render, SET_RENDERING);
 				gfx_set_render(cfg_from_file.render);
@@ -270,7 +270,7 @@ void usage(char *name) {
 			main_cfg[SET_FILTER].hlp,
 			main_cfg[SET_NTSC_FORMAT].hlp,
 			main_cfg[SET_PALETTE].hlp,
-#if defined (SDL)
+#if defined (WITH_OPENGL)
 			main_cfg[SET_RENDERING].hlp,
 #endif
 			main_cfg[SET_SWAP_EMPHASIS_PAL].hlp,

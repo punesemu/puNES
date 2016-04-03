@@ -16,7 +16,7 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#if defined (D3D9)
+#if defined (WITH_D3D9)
 #include <stdlib.h>
 #endif
 #include <string.h>

@@ -24,10 +24,12 @@
 #include "shaders.h"
 
 static bool cgp_value(QSettings *set, QString key, QString &value);
+static bool cgp_rd_file(QIODevice &device, QSettings::SettingsMap &map);
 
 BYTE cgp_parse(const char *file) {
-	QFileInfo fi(file);
+	static const QSettings::Format cfg = QSettings::registerFormat("cgp", cgp_rd_file, NULL);
 	QSettings *set;
+	QFileInfo fi(file);
 	QString key, value;
 	QStringList list;
 	_shader_effect se;
@@ -37,14 +39,24 @@ BYTE cgp_parse(const char *file) {
 	shader_se_set_default(&se);
 
 	if (QString::compare(fi.suffix(), "cgp", Qt::CaseInsensitive) == 0) {
+#if defined (WITH_OPENGL_CG) || defined (WITH_D3D9)
 		se.type = MS_CGP;
+# else
+		fprintf(stderr, "CGP: Shader format non supported.");
+		return (EXIT_ERROR);
+#endif
 	} else if (QString::compare(fi.suffix(), "glslp", Qt::CaseInsensitive) == 0) {
+#if defined (WITH_OPENGL)
 		se.type = MS_GLSLP;
+# else
+		fprintf(stderr, "CGP: Shader format non supported.");
+		return (EXIT_ERROR);
+#endif
 	} else {
 		return (EXIT_ERROR);
 	}
 
-	set = new QSettings(fi.canonicalFilePath(), QSettings::IniFormat);
+	set = new QSettings(fi.canonicalFilePath(), cfg);
 
 	// shaders
 	if (set->allKeys().contains("shaders", Qt::CaseInsensitive)) {
@@ -58,9 +70,12 @@ BYTE cgp_parse(const char *file) {
 	for (i = 0; i < se.pass; i++) {
 		_shader_pass *sp = &se.sp[i];
 
+		sp->type = se.type;
+
 		// shader
 		key.sprintf("shader%u", i);
 		if (cgp_value(set, key, value) == FALSE) {
+			value.replace('\\', '/');
 			::strncpy(sp->path,
 					qPrintable(QFileInfo(fi.absolutePath() + '/' + value).absoluteFilePath()),
 					sizeof(sp->path) - 1);
@@ -259,6 +274,7 @@ BYTE cgp_parse(const char *file) {
 
 			// path
 			if (cgp_value(set, ele, value) == FALSE) {
+				value.replace('\\', '/');
 				::strncpy(lp->path,
 						qPrintable(QFileInfo(fi.absolutePath() + '/' + value).absoluteFilePath()),
 						sizeof(lp->path) - 1);
@@ -358,7 +374,7 @@ void cgp_pragma_param(char *code, const char *path) {
 		::memset(&param, 0x00, sizeof(_param_shd));
 
 		if (line.startsWith("#pragma parameter")) {
-			QRegExp rx("\\d*\\.\\d+");
+			QRegExp rx("((\\d?)?\\.)?\\d+");
 			int i, count = 0, pos = 0;
 			bool finded;
 
@@ -370,6 +386,8 @@ void cgp_pragma_param(char *code, const char *path) {
 			if (count < 2) {
 				continue;
 			}
+
+			line = line.remove(QRegExp( "#pragma parameter.*\"" ) );
 
 			while ((pos = rx.indexIn(line, pos)) != -1) {
 				switch (count++) {
@@ -411,6 +429,8 @@ void cgp_pragma_param(char *code, const char *path) {
 					::memcpy(&shader_effect.param[shader_effect.params], &param,
 							sizeof(_param_shd));
 					shader_effect.params++;
+
+					fprintf(stderr, "CGP: Findend parameter %s = %f\n", param.name, param.value);
 				}
 			}
 		}
@@ -430,4 +450,35 @@ static bool cgp_value(QSettings *set, QString key, QString &value) {
 	}
 
 	return (TRUE);
+}
+static bool cgp_rd_file(QIODevice &device, QSettings::SettingsMap &map) {
+	QTextStream in(&device);
+
+	in.setCodec("UTF-8");
+
+	while (!in.atEnd()) {
+		QString line = in.readLine();
+
+		{
+			QByteArray ba = line.toLatin1();
+			char *start = ba.data();
+
+			if (((*start) == '#') || (ba.length() == 0)) {
+				continue;
+			}
+		}
+
+		QStringList splitted = line.split("=");
+		QString key, value;
+		key = QString(splitted.at(0)).replace(QRegExp("\\s*$"), "");
+		value = splitted.at(1).trimmed();
+		// rimuovo i commenti che possono esserci sulla riga
+		value = value.remove(QRegExp("#.*"));
+		value = value.remove('"');
+		value = value.trimmed();
+
+		map[key] = value;
+	}
+
+	return (true);
 }

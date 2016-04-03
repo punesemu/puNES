@@ -33,7 +33,7 @@
 #include "video/filters/hqx.h"
 #include "video/filters/ntsc.h"
 #include "video/filters/xBRZ.h"
-#if defined (SDL)
+#if defined (WITH_OPENGL)
 #include <SDL.h>
 #endif
 
@@ -79,15 +79,13 @@ enum filters_type {
 	SHADER_NTSC2PHASECOMPOSITE,
 	SHADER_OLDTV,
 	SHADER_FILE,
-
-	SHADER_TEST,
 	FLTSHDSTOP = SHADER_FILE,
 	/* shaders end */
 };
 enum overcan_type { OSCAN_OFF, OSCAN_ON, OSCAN_DEFAULT, OSCAN_DEFAULT_OFF, OSCAN_DEFAULT_ON };
 enum gfx_info_type { CURRENT, NO_OVERSCAN, MONITOR, VIDEO_MODE };
 enum no_change { NO_CHANGE = 255 };
-#if defined (SDL)
+#if defined (WITH_OPENGL)
 enum render_type { RENDER_SOFTWARE, RENDER_GLSL };
 #if defined (__WIN32__)
 enum sdl_win_event_type {
@@ -116,7 +114,7 @@ typedef struct _viewport {
 #endif
 
 EXTERNC struct _gfx {
-#if defined (SDL)
+#if defined (WITH_OPENGL)
 	BYTE opengl;
 #endif
 	BYTE PSS;
@@ -133,7 +131,7 @@ EXTERNC struct _gfx {
 	char last_shader_file[LENGTH_FILE_NAME_LONG];
 } gfx;
 
-#if defined (SDL)
+#if defined (WITH_OPENGL)
 EXTERNC SDL_Surface *surface_sdl;
 
 EXTERNC void gfx_set_render(BYTE render);
@@ -152,7 +150,7 @@ EXTERNC struct _sdlwe {
 EXTERNC void gfx_sdlwe_set(int type, int arg);
 EXTERNC void gfx_sdlwe_tick(void);
 #endif
-#elif defined (D3D9)
+#elif defined (WITH_D3D9)
 EXTERNC void gfx_control_changed_adapter(void *monitor);
 #endif
 

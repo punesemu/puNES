@@ -21,33 +21,84 @@
 
 #include "glew/glew.h"
 #include <SDL.h>
+#if defined (WITH_OPENGL_CG)
+#include <Cg/cg.h>
+#include <Cg/cgGL.h>
+#endif
 #include "shaders.h"
 #include "common.h"
 #include "gfx.h"
+
+#if defined (WITH_OPENGL_CG)
+typedef struct _shader_prg_cg {
+	CGprogram v, f;
+} _shader_prg_cg;
+typedef struct _shader_uniforms_prog_cg {
+	CGparameter video_size;
+	CGparameter output_size;
+	CGparameter texture_size;
+
+	CGparameter frame_count;
+	CGparameter frame_direction;
+
+	CGparameter lut[MAX_PASS];
+
+	CGparameter param[MAX_PARAM];
+} _shader_uniforms_prog_cg;
+typedef struct _shader_uniforms_tex_cg {
+	struct _vsut {
+		CGparameter video_size;
+		CGparameter texture_size;
+		CGparameter tex_coord;
+	} v;
+	struct _fsut {
+		CGparameter texture;
+		CGparameter video_size;
+		CGparameter texture_size;
+	} f;
+}  _shader_uniforms_tex_cg;
+typedef struct _shader_uniforms_cg {
+	CGparameter mvp;
+
+	CGparameter tex;
+	CGparameter lut_tex;
+	CGparameter color;
+	CGparameter vertex;
+
+	_shader_uniforms_prog_cg v;
+	_shader_uniforms_prog_cg f;
+
+	_shader_uniforms_tex_cg orig;
+	_shader_uniforms_tex_cg passprev[MAX_PASS];
+	_shader_uniforms_tex_cg prev[MAX_PREV];
+	_shader_uniforms_tex_cg feedback;
+} _shader_uniforms_cg;
+#endif
 
 typedef struct _math_matrix_4x4 {
 	float data[16];
 } _math_matrix_4x4;
 typedef struct _vertex_buffer {
-	// tex coords
-	GLfloat s0, t0;
 	// vertexes
 	GLfloat x, y;
 	// white_color
 	GLfloat c0, c1, c2, c3;
+	// tex coords
+	GLfloat s0, t0;
+	// lut tex coords
+	GLfloat luttx[2];
 	// orig tex coords
 	GLfloat origtx[2];
 	// feedback tex coords
 	GLfloat feedtx[2];
 	// passprev tex coords
 	GLfloat pptx[MAX_PASS * 2];
-	// lut tex coords
-	GLfloat luttx[2];
 } _vertex_buffer;
 typedef struct _lut {
 	GLuint id;
 	int w, h;
 	const unsigned char *bits;
+	const char *name;
 } _lut;
 typedef struct _shader_uniforms_tex {
 	int texture;
@@ -61,6 +112,7 @@ typedef struct _shader_uniforms {
 	int vertex_coord;
 	int COLOR;
 	int color;
+	int lut_tex_coord;
 
 	int input_size;
 	int output_size;
@@ -71,7 +123,6 @@ typedef struct _shader_uniforms {
 	int frame_direction;
 
 	int lut[MAX_PASS];
-	int lut_tex_coord;
 
 	int param[MAX_PARAM];
 
@@ -86,11 +137,22 @@ typedef struct _shader_info {
 	GLfloat texture_size[2];
 } _shader_info;
 typedef struct _shader {
-	GLuint prg;
+	GLuint type;
 	GLuint vbo;
 
+	struct _glslp {
+		GLuint prg;
+		_shader_uniforms uni;
+	} glslp;
+
+#if defined (WITH_OPENGL_CG)
+	struct _cgp {
+		_shader_prg_cg prg;
+		_shader_uniforms_cg uni;
+	} cgp;
+#endif
+
 	_vertex_buffer vb[4];
-	_shader_uniforms uni;
 	_shader_info info;
 } _shader;
 typedef struct _texture_rect {
@@ -112,8 +174,14 @@ typedef struct _texture_simple {
 } _texture_simple;
 typedef struct _opengl {
 	BYTE supported;
+	GLfloat scale;
 
 	_math_matrix_4x4 mvp;
+
+	struct _attribsarray {
+		GLuint count;
+		GLuint attrib[MAX_PASS + MAX_PREV + 1 + 1 + 4 + 4];
+	} attribs;
 
 	struct _opengl_supported_fbo {
 		BYTE flt;
@@ -124,10 +192,6 @@ typedef struct _opengl {
 		SDL_Surface *surface;
 		Uint32 flags;
 	} sdl;
-
-	GLfloat scale;
-
-	char alias_define[1024];
 
 	struct _screen {
 		GLint in_use;
@@ -143,6 +207,27 @@ typedef struct _opengl {
 	_texture_simple text;
 	_texture texture[MAX_PASS + 1];
 	_lut lut[MAX_PASS];
+
+#if defined (WITH_OPENGL_CG)
+	struct _cg {
+		CGcontext ctx;
+
+		struct _clientstate {
+			GLuint count;
+			CGparameter state[MAX_PASS + MAX_PREV + 1 + 1 + 4];
+		} states;
+
+		struct _textureparameter {
+			GLuint count;
+			CGparameter param[MAX_PASS + MAX_PREV + 4];
+		} params;
+
+		struct _profile_cg {
+			CGprofile v;
+			CGprofile f;
+		} profile;
+	} cg;
+#endif
 } _opengl;
 
 #if defined (__cplusplus)

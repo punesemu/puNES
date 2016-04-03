@@ -36,7 +36,7 @@ typedef struct _config {
 	BYTE frameskip;
 	BYTE ff_velocity;
 
-#if defined (SDL)
+#if defined (WITH_OPENGL)
 	BYTE render;
 #endif
 	BYTE scale;

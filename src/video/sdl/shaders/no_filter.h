@@ -1,8 +1,8 @@
 {
 "#if defined(VERTEX)\n"
-"attribute vec2 TexCoord;\n"
 "attribute vec2 VertexCoord;\n"
 "attribute vec4 Color;\n"
+"attribute vec2 TexCoord;\n"
 "uniform mat4 MVPMatrix;\n"
 "varying vec2 tex_coord;\n"
 "void main() {\n"

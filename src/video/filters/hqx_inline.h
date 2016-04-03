@@ -22,7 +22,7 @@
 #ifndef HQX_INLINE_H_
 #define HQX_INLINE_H_
 
-#if defined (D3D9)
+#if defined (WITH_D3D9)
 #include <stdlib.h>
 #endif
 #include "common.h"

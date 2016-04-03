@@ -24,7 +24,7 @@
 #include "mainWindow.hpp"
 #include "dlgStdPad.hpp"
 #include "emu.h"
-#if defined (SDL)
+#if defined (WITH_OPENGL)
 #include "opengl.h"
 #endif
 #include "gui.h"

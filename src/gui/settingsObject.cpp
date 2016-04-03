@@ -717,7 +717,7 @@ void setObject::to_cfg(QString group) {
 	}
 
 	if ((group == "video") || (group == "all")) {
-#if defined (SDL)
+#if defined (WITH_OPENGL)
 		int_to_val(SET_RENDERING, cfg_from_file.render);
 #endif
 		int_to_val(SET_FPS, cfg_from_file.fps);
@@ -777,7 +777,7 @@ void setObject::fr_cfg(QString group) {
 	}
 
 	if ((group == "video") || (group == "all")) {
-#if defined (SDL)
+#if defined (WITH_OPENGL)
 		cfg_from_file.render = val_to_int(SET_RENDERING);
 #endif
 		cfg_from_file.fps = val_to_int(SET_FPS);
@@ -833,7 +833,7 @@ void setObject::after_the_defaults() {
 	machine = machinedb[NTSC - 1];
 	gfx.scale_before_fscreen = cfg_from_file.scale;
 
-#if defined (SDL)
+#if defined (WITH_OPENGL)
 	gfx_set_render(cfg_from_file.render);
 #endif
 

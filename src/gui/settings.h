@@ -42,7 +42,7 @@ enum set_element {
 	SET_BCK_PAUSE,
 	SET_CHEAT_MODE,
 	SET_SAVE_SETTINGS_ON_EXIT,
-#if defined (SDL)
+#if defined (WITH_OPENGL)
 	SET_RENDERING,
 #endif
 	SET_FPS,
@@ -104,7 +104,7 @@ enum inp_element {
 	SET_INP_SC_SCALE_2X,
 	SET_INP_SC_SCALE_3X,
 	SET_INP_SC_SCALE_4X,
-#if defined (SDL)
+#if defined (WITH_OPENGL)
 	SET_INP_SC_EFFECT_CUBE,
 #endif
 	SET_INP_SC_INTERPOLATION,
@@ -280,7 +280,7 @@ static const _opt opt_ff_velocity[] = {
 	{NULL, "4x", FF_4X},
 	{NULL, "5x", FF_5X}
 };
-#if defined (SDL)
+#if defined (WITH_OPENGL)
 static const _opt opt_rend[] = {
 	{"Software", "software", RENDER_SOFTWARE},
 	{"GLSL"    , "glsl"    , RENDER_GLSL}
@@ -370,8 +370,7 @@ static const _opt opt_filter[] = {
 	{"Noise"                , "noise"       , SHADER_NOISE},
 	{"NTSC 2Phase Composite", "ntsc2phcomp" , SHADER_NTSC2PHASECOMPOSITE},
 	{"Old TV"               , "oldtv"       , SHADER_OLDTV},
-	{"Extern"               , "file"        , SHADER_FILE},
-	{"Test"                 , "test"        , SHADER_TEST}
+	{"Extern"               , "file"        , SHADER_FILE}
 };
 static const _opt opt_ntsc[] = {
 	{"Composite", "composite", COMPOSITE},
@@ -488,7 +487,7 @@ static const _settings main_cfg[] = {
 		NULL,
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
-#if defined (SDL)
+#if defined (WITH_OPENGL)
 	{
 		"video", "rendering",
 		 "glsl",
@@ -768,7 +767,7 @@ static const _settings inp_cfg[] = {
 	{"shortcuts", "scale 2x",                 "Alt+2,NULL",      NULL, NULL, {0, NULL}},
 	{"shortcuts", "scale 3x",                 "Alt+3,NULL",      NULL, NULL, {0, NULL}},
 	{"shortcuts", "scale 4x",                 "Alt+4,NULL",      NULL, NULL, {0, NULL}},
-#if defined (SDL)
+#if defined (WITH_OPENGL)
 	{"shortcuts", "cube effect",              "ALt+R,NULL",      NULL, NULL, {0, NULL}},
 #endif
 	{"shortcuts", "video interpolation",      "0,NULL",          NULL, NULL, {0, NULL}},

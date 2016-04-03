@@ -42,7 +42,7 @@ typedef struct _lut {
 
 	UINT w, h;
 	const unsigned char *bits;
-	const char *id;
+	const char *name;
 	D3DTEXTUREFILTERTYPE filter;
 } _lut;
 typedef struct _shader_uniforms_tex {
@@ -85,9 +85,9 @@ typedef struct _shader_info {
 	D3DXVECTOR2 texture_size;
 	D3DXVECTOR2 output_size;
 } _shader_info;
-typedef struct _shader_cgprg {
+typedef struct _shader_prg_cg {
 	CGprogram v, f;
-} _shader_cgprg;
+} _shader_prg_cg;
 typedef struct _shader {
 	struct _attribs {
 		UINT count;
@@ -98,7 +98,7 @@ typedef struct _shader {
 	LPDIRECT3DVERTEXBUFFER9 quad;
 	D3DXMATRIX mvp;
 
-	_shader_cgprg  prg;
+	_shader_prg_cg prg;
 	_vertex_buffer vb[4];
 	_shader_uniforms uni;
 	_shader_info info;
@@ -150,8 +150,6 @@ typedef struct _d3d9 {
 	uint32_t *palette;
 
 	BYTE scale;
-
-	char alias_define[1024];
 
 	struct _screen {
 		INT in_use;

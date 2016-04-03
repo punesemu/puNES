@@ -24,7 +24,7 @@
 #include "gfx.h"
 #include "emu.h"
 #include "gui.h"
-#if defined (__linux__) || defined (D3D9)
+#if defined (__linux__) || defined (WITH_D3D9)
 #define __GFX_FORCE_SCALE__
 #include "gfx_functions_inline.h"
 #undef __GFX_FORCE_SCALE__
@@ -133,7 +133,7 @@ bool dlgOverscanBorders::eventFilter(QObject *obj, QEvent *event) {
 		}
 
 		if (force == TRUE) {
-#if defined (SDL) && defined (__WIN32__)
+#if defined (WITH_OPENGL) && defined (__WIN32__)
 			gfx_sdlwe_set(SDLWIN_FORCE_SCALE, SDLWIN_NONE);
 #else
 			gfx_FORCE_SCALE();

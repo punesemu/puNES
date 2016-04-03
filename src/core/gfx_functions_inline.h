@@ -38,7 +38,7 @@ static void INLINE gfx_FILTER(int filter);
 static void INLINE gfx_VSYNC(void);
 
 static void INLINE gfx_SWITCH_RENDERING(void) {
-#if defined (SDL)
+#if defined (WITH_OPENGL)
 	sdl_wid();
 	gfx_reset_video();
 #endif
@@ -107,7 +107,7 @@ static void INLINE gfx_FILTER(int filter) {
 	}
 }
 static void INLINE gfx_VSYNC(void) {
-#if defined (SDL)
+#if defined (WITH_OPENGL)
 	sdl_wid();
 	gfx_reset_video();
 #endif

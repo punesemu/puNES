@@ -48,7 +48,7 @@
 #include "save_slot.h"
 #include "version.h"
 #include "audio/delay.h"
-#if defined (SDL)
+#if defined (WITH_OPENGL)
 #if defined (__linux__)
 #include "sdl_wid.h"
 #endif
@@ -57,7 +57,7 @@
 #include "timeline.h"
 #include "c++/l7zip/l7z.h"
 #include "gui.h"
-#if defined (__linux__) || defined (D3D9)
+#if defined (__linux__) || defined (WITH_D3D9)
 #define __GFX_OTHERS_FUNC__
 #include "gfx_functions_inline.h"
 #undef __GFX_OTHERS_FUNC__
@@ -137,7 +137,7 @@ void mainWindow::setup() {
 	grp->addAction(ui->action_NTSC);
 	grp->addAction(ui->action_Dendy);
 	grp->addAction(ui->action_Mode_Auto);
-#if defined (SDL)
+#if defined (WITH_OPENGL)
 	// Settings/Video/Rendering
 	grp = new QActionGroup(this);
 	grp->setExclusive(true);
@@ -219,8 +219,6 @@ void mainWindow::setup() {
 	grp->addAction(ui->action_NTSC_SVideo);
 	grp->addAction(ui->action_NTSC_RGB);
 	// Settings/Video/Shaders
-	grp->addAction(ui->action_Shader_Test);
-
 	grp->addAction(ui->action_Shader_CRT_Dotmask);
 	grp->addAction(ui->action_Shader_CRT_Scanlines);
 	grp->addAction(ui->action_Shader_CRT_With_Curve);
@@ -344,7 +342,7 @@ void mainWindow::update_window() {
 void mainWindow::change_rom(const char *rom) {
 	strncpy(info.load_rom_file, rom, sizeof(info.load_rom_file));
 	gamegenie_reset();
-#if defined (SDL) && defined (__WIN32__)
+#if defined (WITH_OPENGL) && defined (__WIN32__)
 	gfx_sdlwe_set(SDLWIN_CHANGE_ROM, SDLWIN_NONE);
 #else
 	gfx_CHANGE_ROM();
@@ -371,7 +369,7 @@ bool mainWindow::nativeEventFilter(const QByteArray &eventType, void *message, l
 #endif
 
 	switch (msg->message) {
-#if defined (D3D9)
+#if defined (WITH_D3D9)
 		case WM_ENTERSIZEMOVE:
 			break;
 		case WM_EXITSIZEMOVE: {
@@ -428,9 +426,9 @@ bool mainWindow::eventFilter(QObject *obj, QEvent *event) {
 		ui->retranslateUi(this);
 		shortcuts();
 		update_window();
-#if defined (SDL)
+#if defined (WITH_OPENGL)
 		ui->action_PAR_Soft_Stretch->setText(tr("GLSL &soft stretch"));
-#elif defined (D3D9)
+#elif defined (WITH_D3D9)
 		ui->action_PAR_Soft_Stretch->setText(tr("HLSL &soft stretch"));
 #endif
 	}
@@ -485,9 +483,9 @@ void mainWindow::set_language(int lang) {
 	cfg->language = lang;
 }
 void mainWindow::setup_video_rendering() {
-#if defined (SDL)
+#if defined (WITH_OPENGL)
 	ui->action_PAR_Soft_Stretch->setText(tr("GLSL &soft stretch"));
-#elif defined (D3D9)
+#elif defined (WITH_D3D9)
 	ui->action_PAR_Soft_Stretch->setText(tr("HLSL &soft stretch"));
 #endif
 }
@@ -575,7 +573,7 @@ void mainWindow::update_menu_settings() {
 		ui->action_Dendy->setChecked(true);
 	}
 	// Rendering
-#if defined (SDL)
+#if defined (WITH_OPENGL)
 	if (opengl.supported) {
 		ui->action_Rend_GLSL->setEnabled(true);
 	} else {
@@ -587,7 +585,7 @@ void mainWindow::update_menu_settings() {
 	} else {
 		ui->action_Rend_Software->setChecked(true);
 	}
-#elif defined (D3D9)
+#elif defined (WITH_D3D9)
 	// nascondo il submenu rendering
 	ui->menu_Rendering->menuAction()->setVisible(false);
 #endif
@@ -717,7 +715,7 @@ void mainWindow::update_menu_settings() {
 			break;
 	}
 
-#if defined (SDL)
+#if defined (WITH_OPENGL)
 	if (gfx.opengl) {
 		ui->menu_Pixel_Aspect_Ratio->setEnabled(true);
 	} else {
@@ -725,7 +723,7 @@ void mainWindow::update_menu_settings() {
 	}
 
 	if ((opengl.supported && gfx.opengl) && (cfg->pixel_aspect_ratio != PAR11)) {
-#elif defined (D3D9)
+#elif defined (WITH_D3D9)
 	if (cfg->pixel_aspect_ratio != PAR11) {
 #endif
 		ui->action_PAR_Soft_Stretch->setEnabled(true);
@@ -761,7 +759,7 @@ void mainWindow::update_menu_settings() {
 	{
 		bool state;
 
-#if defined (SDL)
+#if defined (WITH_OPENGL)
 		if (cfg->scale != X1) {
 			state = true;
 		} else {
@@ -773,7 +771,7 @@ void mainWindow::update_menu_settings() {
 
 		// Settings/Video/Shaders
 		if (gfx.opengl && (cfg->scale != X1)) {
-#elif defined (D3D9)
+#elif defined (WITH_D3D9)
 		if (cfg->scale != X1) {
 #endif
 			state = true;
@@ -781,8 +779,6 @@ void mainWindow::update_menu_settings() {
 			state = false;
 		}
 		ui->menu_Shader->setEnabled(state);
-
-		ui->action_Shader_Test->setEnabled(state);
 
 		ui->action_Shader_CRT_Dotmask->setEnabled(state);
 		ui->action_Shader_CRT_Scanlines->setEnabled(state);
@@ -872,11 +868,6 @@ void mainWindow::update_menu_settings() {
 		case SHADER_FILE:
 			ui->action_Shader_File->setChecked(true);
 			break;
-
-
-		case SHADER_TEST:
-			ui->action_Shader_Test->setChecked(true);
-			break;
 		}
 	}
 	// Settings/Video/Palette
@@ -915,7 +906,7 @@ void mainWindow::update_menu_settings() {
 			break;
 	}
 	// Settings/Video/[VSync, Interpolation, Text on screen]
-#if defined (SDL)
+#if defined (WITH_OPENGL)
 	if (gfx.opengl) {
 		ui->action_VSync->setEnabled(true);
 		ui->action_Interpolation->setEnabled(true);
@@ -1354,7 +1345,7 @@ void mainWindow::connect_menu_signals() {
 	connect_action(ui->action_NTSC, NTSC, SLOT(s_set_mode()));
 	connect_action(ui->action_Dendy, DENDY, SLOT(s_set_mode()));
 	connect_action(ui->action_Mode_Auto, AUTO, SLOT(s_set_mode()));
-#if defined (SDL)
+#if defined (WITH_OPENGL)
 	// Settings/Video/Rendering
 	connect_action(ui->action_Rend_Software, RENDER_SOFTWARE, SLOT(s_set_rendering()));
 	connect_action(ui->action_Rend_GLSL, RENDER_GLSL, SLOT(s_set_rendering()));
@@ -1422,8 +1413,6 @@ void mainWindow::connect_menu_signals() {
 	connect_action(ui->action_NTSC_SVideo, SVIDEO, SLOT(s_set_ntsc_filter()));
 	connect_action(ui->action_NTSC_RGB, RGBMODE, SLOT(s_set_ntsc_filter()));
 	// Settings/Video/Shaders
-	connect_action(ui->action_Shader_Test, SHADER_TEST, SLOT(s_set_other_filter()));
-
 	connect_action(ui->action_Shader_CRT_Dotmask, SHADER_CRTDOTMASK, SLOT(s_set_other_filter()));
 	connect_action(ui->action_Shader_CRT_Scanlines, SHADER_CRTSCANLINES,
 			SLOT(s_set_other_filter()));
@@ -1553,7 +1542,7 @@ void mainWindow::connect_action(QAction *action, int value, const char *member) 
 	connect_action(action, member);
 }
 void mainWindow::set_filter(int filter) {
-#if defined (SDL) && defined (__WIN32__)
+#if defined (WITH_OPENGL) && defined (__WIN32__)
 	gfx_sdlwe_set(SDLWIN_FILTER, filter);
 #else
 	gfx_FILTER(filter);
@@ -1563,7 +1552,7 @@ void mainWindow::s_set_fullscreen() {
 	if (gui.in_update) {
 		return;
 	}
-#if defined (SDL)
+#if defined (WITH_OPENGL)
 	if (!gfx.opengl) {
 		return;
 	}
@@ -1574,7 +1563,7 @@ void mainWindow::s_set_fullscreen() {
 
 		gfx.w[MONITOR] = qApp->desktop()->screenGeometry(screenNumber).width();
 		gfx.h[MONITOR] = qApp->desktop()->screenGeometry(screenNumber).height();
-#if defined (SDL) && defined (__WIN32__)
+#if defined (WITH_OPENGL) && defined (__WIN32__)
 		// su alcuni windows, se setto il gfx.w[MONITOR] alla dimensione
 		// del desktop, l'immagine a video ha dei glitch grafici marcati
 		gfx.w[MONITOR]--;
@@ -1686,7 +1675,7 @@ void mainWindow::s_quit() {
 void mainWindow::s_make_reset() {
 	int type = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
-#if defined (SDL) && defined (__WIN32__)
+#if defined (WITH_OPENGL) && defined (__WIN32__)
 	gfx_sdlwe_set(SDLWIN_MAKE_RESET, type);
 #else
 	gfx_MAKE_RESET(type);
@@ -1778,7 +1767,7 @@ void mainWindow::s_set_mode() {
 
 	if (reset) {
 		text_add_line_info(1, "switched to [green]%s", opt_mode[machine.type].lname);
-#if defined (SDL) && defined (__WIN32__)
+#if defined (WITH_OPENGL) && defined (__WIN32__)
 		gfx_sdlwe_set(SDLWIN_SWITCH_MODE, SDLWIN_NONE);
 #else
 		gfx_SWITCH_MODE();
@@ -1786,7 +1775,7 @@ void mainWindow::s_set_mode() {
 	}
 }
 void mainWindow::s_set_rendering() {
-#if defined (SDL)
+#if defined (WITH_OPENGL)
 	int rendering = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
 	if (cfg->render == rendering) {
@@ -1831,7 +1820,7 @@ void mainWindow::s_set_fsk() {
 void mainWindow::s_set_scale() {
 	int scale = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
-#if defined (SDL) && defined (__WIN32__)
+#if defined (WITH_OPENGL) && defined (__WIN32__)
 	gfx_sdlwe_set(SDLWIN_SCALE, scale);
 #else
 	gfx_SCALE(scale);
@@ -1896,7 +1885,13 @@ void mainWindow::s_load_shader() {
 	filters.append(tr("Shaders files"));
 	filters.append(tr("All files"));
 
+#if defined (WITH_OPENGL_CG)
 	filters[0].append(" (*.cgp *.glslp)");
+#elif defined (WITH_OPENGL)
+	filters[0].append(" (*.glslp)");
+#elif defined (WITH_D3D9)
+	filters[0].append(" (*.cgp)");
+#endif
 	filters[1].append(" (*.*)");
 
 	file = QFileDialog::getOpenFileName(this, tr("Open Shader file"),
@@ -1987,14 +1982,14 @@ void mainWindow::s_load_palette() {
 void mainWindow::s_set_vsync() {
 	cfg->vsync = !cfg->vsync;
 
-#if defined (SDL) && defined (__WIN32__)
+#if defined (WITH_OPENGL) && defined (__WIN32__)
 	gfx_sdlwe_set(SDLWIN_VSYNC, SDLWIN_NONE);
 #else
 	gfx_VSYNC();
 #endif
 }
 void mainWindow::s_set_interpolation() {
-#if defined (SDL)
+#if defined (WITH_OPENGL)
 	if (cfg->render == RENDER_SOFTWARE) {
 		return;
 	}

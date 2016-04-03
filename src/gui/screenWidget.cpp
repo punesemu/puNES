@@ -27,13 +27,13 @@
 #include "tas.h"
 #include "timeline.h"
 #include "gui.h"
-#if defined (SDL)
+#if defined (WITH_OPENGL)
 #include "opengl.h"
 #endif
 
 screenWidget::screenWidget(QWidget *parent, mainWindow *mw) : QWidget(parent) {
 #if defined (__WIN32__)
-#if defined (SDL)
+#if defined (WITH_OPENGL)
 	memset(&data, 0x00, sizeof(data));
 	data.qt = (WNDPROC)GetWindowLongPtr((HWND) winId(), GWLP_WNDPROC);
 
@@ -61,7 +61,7 @@ screenWidget::screenWidget(QWidget *parent, mainWindow *mw) : QWidget(parent) {
 }
 screenWidget::~screenWidget() {}
 #if defined (__WIN32__)
-#if defined (SDL)
+#if defined (WITH_OPENGL)
 void screenWidget::controlEventFilter() {
 	data.tmp = (WNDPROC)GetWindowLongPtr((HWND) winId(), GWLP_WNDPROC);
 

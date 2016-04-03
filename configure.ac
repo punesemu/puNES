@@ -29,6 +29,11 @@ AC_ARG_WITH([opengl],
 		[Build with support for OpenGL (only windows) @<:@default: no@:>@)]
 	),
 	[with_opengl=$withval],[with_opengl=no])
+AC_ARG_WITH([opengl-nvidia-cg],
+	AS_HELP_STRING([--with-opengl-nvidia-cg],
+		[Build with support for Nvidia CG Toolkit for OpenGL (only linux) @<:@default: yes@:>@)]
+	),
+	[with_opengl_nvidia_cg=$withval],[with_opengl_nvidia_cg=yes])
 AC_ARG_WITH([dsdk],
 	AS_HELP_STRING([--with-dsdk=path],
 		[Path for DSDK (only windows)]
@@ -107,7 +112,7 @@ MOCDEFINES=""
 AS_CASE(["$host_os"],
 	[linux*],[
 		MOCDEFINES+=" -D__linux__"
-		CUSTOMDEFINES+=" -DSDL -DGLEW_STATIC"
+		CUSTOMDEFINES+=" -DWITH_OPENGL -DGLEW_STATIC"
 		my_CPPFLAGS+=" -I${TOP_SRCDIR}/src/gui/linux -I${TOP_SRCDIR}/src/video/sdl"
 		linux=yes
 		windows=no
@@ -121,12 +126,16 @@ AS_CASE(["$host_os"],
 		windows=yes
 		AS_IF([test "x$with_opengl" = xyes],[
 			with_d3d9=no
-			CUSTOMDEFINES+=" -DSDL -DGLEW_STATIC"
+			with_opengl_nvidia_cg=yes
+			CUSTOMDEFINES+=" -DWITH_OPENGL -DWITH_OPENGL_CG -DGLEW_STATIC"
 			my_CPPFLAGS+=" -I${TOP_SRCDIR}/src/video/sdl"
+			# aggiungo le librerie Cg Nvidia per le shaders
+			my_LIBS+=" -lcg -lcgGL"
 		])
 		AS_IF([test "x$with_d3d9" = xyes],[
 			with_opengl=no
-			CUSTOMDEFINES+=" -DD3D9"
+			with_opengl_nvidia_cg=no
+			CUSTOMDEFINES+=" -DWITH_D3D9"
 			my_CPPFLAGS+=" -I${TOP_SRCDIR}/src/video/d3d9"
 			my_LIBS+=" -ld3d9"
 			AS_CASE(["$host_cpu"],
@@ -149,6 +158,7 @@ AM_CONDITIONAL(ENAB_RELEASE,[test "x$enable_release" = xyes])
 AM_CONDITIONAL(ENAB_QT5,[test "x$enable_qt5" = xyes])
 AM_CONDITIONAL(WITH_D3D9,[test "x$with_d3d9" = xyes])
 AM_CONDITIONAL(WITH_OPENGL,[test "x$with_opengl" = xyes])
+AM_CONDITIONAL(WITH_OPENGL_CG,[test "x$with_opengl_nvidia_cg" = xyes])
 AM_CONDITIONAL(PRECOMP_QT,[\
 	test \
 	"x$path_qt_inc" != xno -a "x$path_qt_inc" != x -o \
@@ -358,14 +368,16 @@ void blah(){
 #error "Only SDL 1.2 supported"
 #endif
 	;
-}
-		])],
-		AC_MSG_RESULT([yes]), [AC_MSG_RESULT([no])
-		AC_MSG_ERROR([Only libSDL 1.2.X supported])])
+}])
+			], [
+				AC_MSG_RESULT([yes])
+			], [
+				AC_MSG_RESULT([no])
+				AC_MSG_ERROR([Only libSDL 1.2.X supported])
+		])
 		CFLAGS="${OLD_CFLAGS}"
 		LIBS="${OLD_LIBS}"
 	])
-
 	AM_COND_IF([WINDOWS],[
 		my_LIBS+=" -lopengl32"
 	],[
@@ -374,6 +386,29 @@ void blah(){
 ])
 
 AM_COND_IF([LINUX],[
+	AM_COND_IF([WITH_OPENGL_CG],[
+		PKG_CHECK_MODULES(nvidia_cg_toolkit_pkgconfig, [nvidia-cg-toolkit-gl], [
+			CUSTOMDEFINES+=" -DWITH_OPENGL_CG"
+			my_CPPFLAGS+=" ${nvidia_cg_toolkit_pkgconfig_CFLAGS}"
+			my_LIBS+=" ${nvidia_cg_toolkit_pkgconfig_LIBS}"
+		],[
+			# Check if NVIDIA CG toolkit is present without pkg-config
+			AC_MSG_CHECKING([NVIDIA CG toolkit is present])
+			AC_COMPILE_IFELSE([AC_LANG_SOURCE([
+#include "Cg/cg.h"
+#include "Cg/cgGL.h"
+void blah(){
+	CGcontext cgx = cgCreateContext();
+}])
+			], [
+				AC_MSG_RESULT([yes])
+				CUSTOMDEFINES+=" -DWITH_OPENGL_CG"
+				my_LIBS+=" -lCg -lCgGL"
+			], [
+				AC_MSG_RESULT([no])
+			])
+		])
+	])
 	PKG_CHECK_MODULES(alsa, [alsa])
 	#my_CPPFLAGS+=" ${alsa_CFLAGS}"
 	my_LIBS+=" ${alsa_LIBS}"

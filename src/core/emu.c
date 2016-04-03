@@ -48,7 +48,7 @@
 #include "cheat.h"
 #include "overscan.h"
 #include "recent_roms.h"
-#if defined (SDL)
+#if defined (WITH_OPENGL)
 #include "opengl.h"
 #endif
 #include "uncompress.h"
@@ -73,7 +73,7 @@ BYTE emu_frame(void) {
 	WORD PCBREAK = 0xA930;
 #endif
 
-#if defined (SDL) && defined (__WIN32__)
+#if defined (WITH_OPENGL) && defined (__WIN32__)
 	gfx_sdlwe_tick();
 #endif
 
@@ -488,7 +488,7 @@ void emu_set_title(char *title) {
 	}
 #endif
 
-#if defined (SDL)
+#if defined (WITH_OPENGL)
 	if (cfg->scale != X1) {
 		strcat(title, ", ");
 		strcat(title, opt_rend[cfg->render].lname);

@@ -75,10 +75,10 @@ static BYTE d3d9_texture_create(_texture *texture, UINT index);
 static BYTE d3d9_texture_simple_create(_texture_simple *texture, UINT w, UINT h, BOOL text);
 static BYTE d3d9_texture_lut_create(_lut *lut, UINT index);
 static void d3d9_surface_clean(LPDIRECT3DSURFACE9 *surface, UINT width, UINT height);
-static BYTE d3d9_shader_init(_shader *shd, const char *path, const char *code);
+static BYTE d3d9_shader_init(UINT pass, _shader *shd, const char *path, const char *code);
 static void d3d9_shader_delete(_shader *shd);
 static void d3d9_shader_uni_texture_clear(_shader_uniforms_tex *sut);
-static void d3d9_shader_uni_texture(_shader_uniforms_tex *sut, _shader_cgprg *prg, char *fmt, ...);
+static void d3d9_shader_uni_texture(_shader_uniforms_tex *sut, _shader_prg_cg *prg, char *fmt, ...);
 static CGparameter d3d9_cg_find_param(CGparameter prm, const char *name);
 static BYTE d3d9_vertex_declaration_create(_shader *shd);
 static void d3d9_vertex_buffer_set(_shader *shd,  _viewport *vp, _texture_rect *prev);
@@ -542,7 +542,11 @@ void gfx_set_screen(BYTE scale, DBWORD filter, BYTE fullscreen, BYTE palette, BY
 
 		if (shaders_set(f) == EXIT_ERROR) {
 			memcpy(cfg->shader_file, gfx.last_shader_file, sizeof(cfg->shader_file));
-			filter = old_filter;
+			if (old_filter == filter) {
+				filter = NO_FILTER;
+			} else {
+				filter = old_filter;
+			}
 			goto gfx_set_screen_start;
 		}
 
@@ -1019,8 +1023,8 @@ static BYTE d3d9_context_create(void) {
 
 		vp->x = 0;
 		vp->y = 0;
-		vp->w = (FLOAT) gfx.w[VIDEO_MODE];
-		vp->h = (FLOAT) gfx.h[VIDEO_MODE];
+		vp->w = gfx.w[VIDEO_MODE];
+		vp->h = gfx.h[VIDEO_MODE];
 
 		// configuro l'aspect ratio del fullscreen
 		if (cfg->fullscreen && !cfg->stretch) {
@@ -1043,13 +1047,8 @@ static BYTE d3d9_context_create(void) {
 			d3d9_context_delete();
 			return (EXIT_ERROR);
 		}
-	}
 
-	// non inizializzo le shader nel d3d9_texture_create perche' d3d9.alias_define
-	// viene costruita proprio durante il d3d9_texture_create e a me serve completa quando
-	// inizializzo le shaders.
-	for (i = 0; i < shader_effect.pass; i++) {
-		if (d3d9_shader_init(&d3d9.texture[i].shader, shader_effect.sp[i].path,
+		if (d3d9_shader_init(i, &d3d9.texture[i].shader, shader_effect.sp[i].path,
 				shader_effect.sp[i].code) == EXIT_ERROR) {
 			d3d9_context_delete();
 			return (EXIT_ERROR_SHADER);
@@ -1096,7 +1095,7 @@ static BYTE d3d9_context_create(void) {
 
 		d3d9_texture_simple_create(&d3d9.text, gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE], TRUE);
 
-		if (d3d9_shader_init(&d3d9.text.shader, NULL, shader_code_blend()) == EXIT_ERROR) {
+		if (d3d9_shader_init(0, &d3d9.text.shader, NULL, shader_code_blend()) == EXIT_ERROR) {
 			d3d9_context_delete();
 			return (EXIT_ERROR);
 		}
@@ -1130,8 +1129,6 @@ static BYTE d3d9_context_create(void) {
 }
 static void d3d9_context_delete(void) {
 	UINT i;
-
-	memset(d3d9.alias_define, 0x00, sizeof(d3d9.alias_define));
 
 	d3d9.screen.in_use = 0;
 	d3d9.screen.index = 0;
@@ -1267,7 +1264,7 @@ static BYTE d3d9_texture_create(_texture *texture, UINT index) {
 		sc->type.y = SHADER_SCALE_VIEWPORT;
 	}
 
-#if defined FH_SHADERS_GEST
+#if defined (FH_SHADERS_GEST)
 	switch (sc->type.x) {
 		case SHADER_SCALE_DEFAULT:
 		case SHADER_SCALE_INPUT:
@@ -1375,13 +1372,6 @@ static BYTE d3d9_texture_create(_texture *texture, UINT index) {
 	IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0, D3DSAMP_ADDRESSV, D3DTADDRESS_BORDER);
 	IDirect3DDevice9_SetTexture(d3d9.adapter->dev, 0, NULL);
 
-	if (sp->alias[0]) {
-		char define[128];
-
-		snprintf(define, sizeof(define), "#define %s_ALIAS\n", sp->alias);
-		strncpy(d3d9.alias_define, define, sizeof(d3d9.alias_define));
-	}
-
 	return (EXIT_OK);
 }
 static BYTE d3d9_texture_simple_create(_texture_simple *texture, UINT w, UINT h, BOOL text) {
@@ -1394,7 +1384,7 @@ static BYTE d3d9_texture_simple_create(_texture_simple *texture, UINT w, UINT h,
 	rect->base.h = h;
 
 	if (!text) {
-#if defined FH_SHADERS_GEST
+#if defined (FH_SHADERS_GEST)
 		rect->w = emu_power_of_two(rect->base.w);
 		rect->h = emu_power_of_two(rect->base.h);
 #else
@@ -1497,7 +1487,7 @@ static BYTE d3d9_texture_lut_create(_lut *lut, UINT index) {
 	width = lut->w;
 	height = lut->h;
 
-	lut->id = lp->name;
+	lut->name = lp->name;
 	lut->filter = d3d9_shader_filter(lp->linear);
 
 	if (d3d9.adapter->texture_square_only == TRUE) {
@@ -1587,22 +1577,29 @@ static void d3d9_surface_clean(LPDIRECT3DSURFACE9 *surface, UINT width, UINT hei
 		IDirect3DSurface9_UnlockRect((*surface));
 	}
 }
-static BYTE d3d9_shader_init(_shader *shd, const char *path, const char *code) {
+static BYTE d3d9_shader_init(UINT pass, _shader *shd, const char *path, const char *code) {
 	const char *list;
-	const char *argv[64];
+	const char *argv[128];
 	const char **fopts = cgD3D9GetOptimalOptions(cgD3D9GetLatestPixelProfile());
 	const char **vopts = cgD3D9GetOptimalOptions(cgD3D9GetLatestVertexProfile());
+	char alias[MAX_PASS][128];
 	UINT i, argc;
 
 	// fragment
 	{
+		memset(alias, 0x00, sizeof(alias));
+
 		argc = 0;
 		//argv[argc++] = "-DPARAMETER_UNIFORM";
+		for (i = 0; i < pass; i++) {
+			_shader_pass *sp = &shader_effect.sp[i];
 
-		if (d3d9.alias_define[0]) {
-			argv[argc++] = d3d9.alias_define;
+			if (sp->alias[0]) {
+				snprintf(alias[i], 128, "-D%s_ALIAS", sp->alias);
+				argv[argc++] = alias[i];
+			}
 		}
-		for (i = 0; i < 64; i++) {
+		for (i = argc; i < 128; i++) {
 			if (!fopts[i]) {
 				break;
 			}
@@ -1611,8 +1608,8 @@ static BYTE d3d9_shader_init(_shader *shd, const char *path, const char *code) {
 		argv[argc] = NULL;
 
 		if ((path == NULL) || !path[0]) {
-			shd->prg.f = cgCreateProgram(d3d9.cgctx, CG_SOURCE, code, cgD3D9GetLatestPixelProfile(),
-					"main_fragment", argv);
+			shd->prg.f = cgCreateProgram(d3d9.cgctx, CG_SOURCE, code,
+					cgD3D9GetLatestPixelProfile(), "main_fragment", argv);
 		} else {
 			shd->prg.f = cgCreateProgramFromFile(d3d9.cgctx, CG_SOURCE, path,
 					cgD3D9GetLatestPixelProfile(), "main_fragment", argv);
@@ -1624,13 +1621,19 @@ static BYTE d3d9_shader_init(_shader *shd, const char *path, const char *code) {
 
 	// vertex
 	{
+		memset(alias, 0x00, sizeof(alias));
+
 		argc = 0;
 		//argv[argc++] = "-DPARAMETER_UNIFORM";
+		for (i = 0; i < pass; i++) {
+			_shader_pass *sp = &shader_effect.sp[i];
 
-		if (d3d9.alias_define[0]) {
-			argv[argc++] = d3d9.alias_define;
+			if (sp->alias[0]) {
+				snprintf(alias[i], 128, "-D%s_ALIAS", sp->alias);
+				argv[argc++] = alias[i];
+			}
 		}
-		for (i = 0; i < 64; i++) {
+		for (i = argc; i < 128; i++) {
 			if (!vopts[i]) {
 				break;
 			}
@@ -1665,6 +1668,9 @@ static BYTE d3d9_shader_init(_shader *shd, const char *path, const char *code) {
 	}
 
 	shd->uni.mvp = cgGetNamedParameter(shd->prg.v, "modelViewProj");
+	if (!shd->uni.mvp) {
+		shd->uni.mvp = cgGetNamedParameter(shd->prg.v, "IN.mvp_matrix");
+	}
 
 	shd->uni.v.video_size = cgGetNamedParameter(shd->prg.v, "IN.video_size");
 	shd->uni.f.video_size = cgGetNamedParameter(shd->prg.f, "IN.video_size");
@@ -1684,8 +1690,8 @@ static BYTE d3d9_shader_init(_shader *shd, const char *path, const char *code) {
 	}
 
 	for (i = 0; i < shader_effect.luts; i++) {
-		shd->uni.v.lut[i] = cgGetNamedParameter(shd->prg.v, d3d9.lut[i].id);
-		shd->uni.f.lut[i] = cgGetNamedParameter(shd->prg.f, d3d9.lut[i].id);
+		shd->uni.v.lut[i] = cgGetNamedParameter(shd->prg.v, d3d9.lut[i].name);
+		shd->uni.f.lut[i] = cgGetNamedParameter(shd->prg.f, d3d9.lut[i].name);
 	}
 
 	for (i = 0; i < shader_effect.params; i++) {
@@ -1695,18 +1701,22 @@ static BYTE d3d9_shader_init(_shader *shd, const char *path, const char *code) {
 
 	d3d9_shader_uni_texture_clear(&shd->uni.orig);
 	d3d9_shader_uni_texture(&shd->uni.orig, &shd->prg, "ORIG");
+	if (pass > 1) {
+		d3d9_shader_uni_texture(&shd->uni.orig, &shd->prg, "PASSPREV%u", pass);
+	}
 
 	d3d9_shader_uni_texture_clear(&shd->uni.feedback);
 	d3d9_shader_uni_texture(&shd->uni.feedback, &shd->prg, "FEEDBACK");
 
-	for (i = 0; i < shader_effect.pass; i++) {
+	for (i = 0; i < pass; i++) {
 		d3d9_shader_uni_texture_clear(&shd->uni.passprev[i]);
 
-		d3d9_shader_uni_texture(&shd->uni.passprev[i], &shd->prg, "PASS%u", i + 1);
-		d3d9_shader_uni_texture(&shd->uni.passprev[i], &shd->prg, "PASSPREV%u", i + 1);
+		d3d9_shader_uni_texture(&shd->uni.passprev[i], &shd->prg, "PASS%u", i);
+		d3d9_shader_uni_texture(&shd->uni.passprev[i], &shd->prg, "PASSPREV%u", pass - i);
 
 		if (shader_effect.sp[i].alias[0]) {
-			d3d9_shader_uni_texture(&shd->uni.passprev[i], &shd->prg, shader_effect.sp[i].alias);
+			d3d9_shader_uni_texture(&shd->uni.passprev[i], &shd->prg,
+			        shader_effect.sp[i].alias);
 		}
 	}
 
@@ -1723,9 +1733,11 @@ static BYTE d3d9_shader_init(_shader *shd, const char *path, const char *code) {
 static void d3d9_shader_delete(_shader *shd) {
 	if (shd->prg.f) {
 		cgDestroyProgram(shd->prg.f);
+		shd->prg.f = NULL;
 	}
 	if (shd->prg.v) {
 		cgDestroyProgram(shd->prg.v);
+		shd->prg.v = NULL;
 	}
 }
 static void d3d9_shader_uni_texture_clear(_shader_uniforms_tex *sut) {
@@ -1736,7 +1748,7 @@ static void d3d9_shader_uni_texture_clear(_shader_uniforms_tex *sut) {
 	sut->f.texture_size = NULL;
 	sut->v.tex_coord = NULL;
 }
-static void d3d9_shader_uni_texture(_shader_uniforms_tex *sut, _shader_cgprg *prg, char *fmt, ...) {
+static void d3d9_shader_uni_texture(_shader_uniforms_tex *sut, _shader_prg_cg *prg, char *fmt, ...) {
 	char type[50], buff[50];
 	va_list ap;
 
@@ -1800,7 +1812,7 @@ static BYTE d3d9_vertex_declaration_create(_shader *shd) {
 			D3DDECLUSAGE_POSITION, 0
 		};
 
-		printf("POSITION %d\n", index);
+		fprintf(stderr, "CG: semantic POSITION found (%d)\n", index);
 	}
 
 	if (!(param = d3d9_cg_find_param(cgGetFirstParameter(shd->prg.v, CG_PROGRAM), "TEXCOORD"))) {
@@ -1818,7 +1830,7 @@ static BYTE d3d9_vertex_declaration_create(_shader *shd) {
 			D3DDECLUSAGE_TEXCOORD, 0
 		};
 
-		printf("TEXCOORD0 %d\n", index);
+		fprintf(stderr, "CG: semantic TEXCOORD0 found (%d)\n", index);
 	}
 
 	param = d3d9_cg_find_param(cgGetFirstParameter(shd->prg.v, CG_PROGRAM), "TEXCOORD1");
@@ -1834,7 +1846,7 @@ static BYTE d3d9_vertex_declaration_create(_shader *shd) {
 			D3DDECLUSAGE_TEXCOORD, 1
 		};
 
-		printf("TEXCOORD1 %d\n", index);
+		fprintf(stderr, "CG: semantic TEXCOORD1 found (%d)\n", index);
 	}
 
 	if (!(param = d3d9_cg_find_param(cgGetFirstParameter(shd->prg.v, CG_PROGRAM), "COLOR"))) {
@@ -1851,7 +1863,7 @@ static BYTE d3d9_vertex_declaration_create(_shader *shd) {
 					D3DDECLUSAGE_COLOR, 0
 		};
 
-		printf("COLOR %d\n", index);
+		fprintf(stderr, "CG: semantic COLOR found (%d)\n", index);
 	}
 
 	// Stream {0, 1, 2, 3} might be already taken. Find first vacant stream
@@ -1876,7 +1888,9 @@ static BYTE d3d9_vertex_declaration_create(_shader *shd) {
 		if (indices[i]) {
 			shd->attribs.attrib[shd->attribs.count++] = 0;
 		} else {
-			printf("push back %d %d %d %d\n", i, shd->attribs.count, index, tex_index);
+			fprintf(stderr, "CG: attrib found (%d %d %d %d)\n", i, shd->attribs.count, index,
+					tex_index);
+
 			shd->attribs.attrib[shd->attribs.count++] = index;
 			decl[i] = (D3DVERTEXELEMENT9) {
 				index, sizeof(float) * 3,
@@ -2289,45 +2303,45 @@ INLINE static void d3d9_shader_param_set(const _texture *texture, UINT fcountmod
 
 	// PASS
 	for (i = 0; i < shader_effect.running_pass; i++) {
-		UINT idx = (shader_effect.running_pass - 1) - i;
+		UINT next = i + 1;
 
 		// PASS[x].texture
 		if (shd->uni.passprev[i].f.texture) {
-			D3DTEXTUREFILTERTYPE filter = d3d9_shader_filter(shader_effect.sp[idx].linear);
+			D3DTEXTUREFILTERTYPE filter = d3d9_shader_filter(shader_effect.sp[i].linear);
+			UINT resind = cgGetParameterResourceIndex(shd->uni.passprev[i].f.texture);
 
-			index = cgGetParameterResourceIndex(shd->uni.passprev[i].f.texture);
-			IDirect3DDevice9_SetTexture(d3d9.adapter->dev, index,
-					(IDirect3DBaseTexture9 *) d3d9.texture[idx].data);
-			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, index, D3DSAMP_MAGFILTER, filter);
-			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, index, D3DSAMP_MINFILTER, filter);
-			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, index, D3DSAMP_ADDRESSU,
+			IDirect3DDevice9_SetTexture(d3d9.adapter->dev, resind,
+					(IDirect3DBaseTexture9 *) d3d9.texture[i].data);
+			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, resind, D3DSAMP_MAGFILTER, filter);
+			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, resind, D3DSAMP_MINFILTER, filter);
+			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, resind, D3DSAMP_ADDRESSU,
 					D3DTADDRESS_BORDER);
-			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, index, D3DSAMP_ADDRESSV,
+			IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, resind, D3DSAMP_ADDRESSV,
 					D3DTADDRESS_BORDER);
 		}
 		// PASS[x].video_size
 		if (shd->uni.passprev[i].v.video_size) {
 			cgD3D9SetUniform(shd->uni.passprev[i].v.video_size,
-					&d3d9.texture[idx].shader.info.video_size);
+					&d3d9.texture[next].shader.info.video_size);
 		}
 		if (shd->uni.passprev[i].f.video_size) {
 			cgD3D9SetUniform(shd->uni.passprev[i].f.video_size,
-					&d3d9.texture[idx].shader.info.video_size);
+					&d3d9.texture[next].shader.info.video_size);
 		}
 		// PASS[x].texture_size
 		if (shd->uni.passprev[i].v.texture_size) {
 			cgD3D9SetUniform(shd->uni.passprev[i].v.texture_size,
-					&d3d9.texture[idx].shader.info.texture_size);
+					&d3d9.texture[next].shader.info.texture_size);
 		}
 		if (shd->uni.passprev[i].f.texture_size) {
 			cgD3D9SetUniform(shd->uni.passprev[i].f.texture_size,
-					&d3d9.texture[idx].shader.info.texture_size);
+					&d3d9.texture[next].shader.info.texture_size);
 		}
 		// PASS[x].tex_coord
 		if (shd->uni.passprev[i].v.tex_coord) {
 			IDirect3DDevice9_SetStreamSource(d3d9.adapter->dev,
 					shd->attribs.attrib[cgGetParameterResourceIndex(shd->uni.passprev[i].v.tex_coord)],
-					d3d9.texture[idx + 1].shader.quad, 0, sizeof(_vertex_buffer));
+					d3d9.texture[next].shader.quad, 0, sizeof(_vertex_buffer));
 		}
 	}
 }

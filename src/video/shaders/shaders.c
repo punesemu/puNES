@@ -120,15 +120,6 @@ BYTE shaders_set(int shader) {
 				return (EXIT_ERROR);
 			}
 			break;
-
-		case SHADER_TEST:
-			/*
-			shdpass();
-			sp->code = SHDCODE(shc_hunterk_motionblur_braid_rewind);
-			sp->linear = TEXTURE_LINEAR_DISAB;
-			*/
-			//se_soft_stretch();
-			break;
 	}
 
 	{
@@ -185,6 +176,7 @@ static void sp_set_default(_shader_pass *sp) {
 	_xy_float *scale = &sp->sc.scale;
 	_xy_uint *abs = &sp->sc.abs;
 
+	sp->type = MS_MEM;
 	sp->code = NULL;
 	memset(sp->path, 0x00, sizeof(sp->path));
 	memset(sp->alias, 0x00, sizeof(sp->alias));

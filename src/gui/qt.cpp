@@ -32,12 +32,12 @@
 #include "dlgUncomp.hpp"
 #include "pStyle.hpp"
 #include "cheatObject.hpp"
-#if defined (SDL)
+#if defined (WITH_OPENGL)
 #include "opengl.h"
 #if defined (__WIN32__)
 #include "sdl_wid.h"
 #endif
-#elif defined (D3D9)
+#elif defined (WITH_D3D9)
 #include "d3d9.h"
 #endif
 #include "gui.h"
@@ -222,7 +222,7 @@ void gui_print_usage(char *usage) {
 	box->exec();
 }
 void gui_reset_video(void) {
-#if defined (SDL) && defined (__WIN32__)
+#if defined (WITH_OPENGL) && defined (__WIN32__)
 	sdl_wid();
 	gfx_reset_video();
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
@@ -238,7 +238,7 @@ int gui_uncompress_selection_dialog(void) {
 }
 
 void gui_after_set_video_mode(void) {
-#if defined (SDL) && defined (__WIN32__)
+#if defined (WITH_OPENGL) && defined (__WIN32__)
 	qt.screen->controlEventFilter();
 #endif
 }

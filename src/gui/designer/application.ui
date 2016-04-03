@@ -266,7 +266,6 @@
        <iconset resource="application.qrc">
         <normaloff>:/icon/icons/effect.png</normaloff>:/icon/icons/effect.png</iconset>
       </property>
-      <addaction name="action_Shader_Test"/>
       <addaction name="action_Shader_CRT_Dotmask"/>
       <addaction name="action_Shader_CRT_Scanlines"/>
       <addaction name="action_Shader_CRT_With_Curve"/>
@@ -1924,14 +1923,6 @@
    </property>
    <property name="text">
     <string>CRT &amp;Scanlines</string>
-   </property>
-  </action>
-  <action name="action_Shader_Test">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>Test</string>
    </property>
   </action>
   <action name="action_Shader_CRT_Dotmask">
