@@ -578,7 +578,11 @@ void dlgInput::s_setup_clicked(bool checked) {
 	}
 }
 void dlgInput::s_checkbox_state_changed(int state) {
-	data.settings.permit_updown_leftright = state;
+	if (state) {
+		data.settings.permit_updown_leftright = true;
+	} else {
+		data.settings.permit_updown_leftright = false;
+	}
 }
 void dlgInput::s_combobox_joy_activated(int index) {
 	unsigned int id = ((QComboBox *)sender())->itemData(index).toInt();
