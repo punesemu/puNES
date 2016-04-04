@@ -381,11 +381,11 @@ static const _opt opt_palette[] = {
 	{"PAL palette"      , "pal"   , PALETTE_PAL},
 	{"NTSC palette"     , "ntsc"  , PALETTE_NTSC},
 	{"Sony CXA2025AS US", "sony"  , PALETTE_SONY},
-	{"Firebrandx YUV"   , "frbyuv", PALETTE_FRBX_YUV},
-	{"Firebrandx Unsat" , "frbuns", PALETTE_FRBX_UNSATURED},
 	{"Monochrome"       , "mono"  , PALETTE_MONO},
 	{"Green"            , "green" , PALETTE_GREEN},
-	{"Extern"           , "file"  , PALETTE_FILE}
+	{"Extern"           , "file"  , PALETTE_FILE},
+	{"Firebrandx Unsat" , "frbuns", PALETTE_FRBX_UNSATURED},
+	{"Firebrandx YUV"   , "frbyuv", PALETTE_FRBX_YUV}
 };
 static const _opt opt_audio_buffer_factor[] = {
 	{NULL, "0"      , 0},
