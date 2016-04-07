@@ -1592,9 +1592,10 @@ static BYTE d3d9_shader_init(UINT pass, _shader *shd, const char *path, const ch
 	// fragment
 	{
 		memset(alias, 0x00, sizeof(alias));
+		memset(argv, 0x00, sizeof(argv));
 
 		argc = 0;
-		//argv[argc++] = "-DPARAMETER_UNIFORM";
+		argv[argc++] = "-DPARAMETER_UNIFORM";
 		for (i = 0; i < pass; i++) {
 			_shader_pass *sp = &shader_effect.sp[i];
 
@@ -1603,11 +1604,15 @@ static BYTE d3d9_shader_init(UINT pass, _shader *shd, const char *path, const ch
 				argv[argc++] = alias[i];
 			}
 		}
-		for (i = argc; i < 128; i++) {
+		for (i = 0; i < 128; i++) {
 			if (!fopts[i]) {
 				break;
 			}
-			argv[argc++] = fopts[i];
+			argv[argc] = fopts[i];
+
+			if (argc++ == 126) {
+				break;
+			}
 		}
 		argv[argc] = NULL;
 
@@ -1626,9 +1631,10 @@ static BYTE d3d9_shader_init(UINT pass, _shader *shd, const char *path, const ch
 	// vertex
 	{
 		memset(alias, 0x00, sizeof(alias));
+		memset(argv, 0x00, sizeof(argv));
 
 		argc = 0;
-		//argv[argc++] = "-DPARAMETER_UNIFORM";
+		argv[argc++] = "-DPARAMETER_UNIFORM";
 		for (i = 0; i < pass; i++) {
 			_shader_pass *sp = &shader_effect.sp[i];
 
@@ -1637,11 +1643,15 @@ static BYTE d3d9_shader_init(UINT pass, _shader *shd, const char *path, const ch
 				argv[argc++] = alias[i];
 			}
 		}
-		for (i = argc; i < 128; i++) {
+		for (i = 0; i < 128; i++) {
 			if (!vopts[i]) {
 				break;
 			}
-			argv[argc++] = vopts[i];
+			argv[argc] = vopts[i];
+
+			if (argc++ == 126) {
+				break;
+			}
 		}
 		argv[argc] = NULL;
 
