@@ -665,13 +665,15 @@ void gfx_draw_screen(BYTE forced) {
 
 			if (i == shader_effect.last_pass) {
 				IDirect3DDevice9_SetRenderTarget(d3d9.adapter->dev, 0, back_buffer);
+				// pulisco l'intero schermo
+				d3d9_viewport_set(0, 0, gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE]);
 			} else {
 				IDirect3DDevice9_SetRenderTarget(d3d9.adapter->dev, 0, texture->map0);
+				// pulisco l'fbo
+				d3d9_viewport_set(0, 0, texture->rect.w, texture->rect.h);
 			}
-
-			// pulisco l'fbo
-			d3d9_viewport_set(0, 0, texture->rect.w, texture->rect.h);
-			IDirect3DDevice9_Clear(d3d9.adapter->dev, 0, NULL, D3DCLEAR_TARGET,	0, 1.0f, 0);
+			IDirect3DDevice9_Clear(d3d9.adapter->dev, 0, NULL, D3DCLEAR_TARGET,
+					D3DCOLOR_ARGB(255, 0, 0, 0), 1.0f, 0);
 
 			// ora setto il viewport corretto
 			d3d9_viewport_set(texture->vp.x, texture->vp.y, texture->vp.w, texture->vp.h);
@@ -1043,6 +1045,8 @@ static BYTE d3d9_context_create(void) {
 
 	// texture
 	for (i = 0; i < shader_effect.pass; i++) {
+		fprintf(stderr, "D3D9: Setting pass %d\n", i);
+
 		if (d3d9_texture_create(&d3d9.texture[i], i) == EXIT_ERROR) {
 			d3d9_context_delete();
 			return (EXIT_ERROR);
@@ -1365,6 +1369,8 @@ static BYTE d3d9_texture_create(_texture *texture, UINT index) {
 	}
 
 	IDirect3DTexture9_GetSurfaceLevel(texture->data, 0, &texture->map0);
+	// cancello la superficie map0 perche' alcuni driver (tipo intel) nella
+	// versione per windows XP non mi passano una superficia "pulita".
 	d3d9_surface_clean(&texture->map0, rect->w, rect->h);
 
 	IDirect3DDevice9_SetTexture(d3d9.adapter->dev, 0, (IDirect3DBaseTexture9 *) texture->data);
@@ -1442,9 +1448,7 @@ static BYTE d3d9_texture_simple_create(_texture_simple *texture, UINT w, UINT h,
 
 	IDirect3DTexture9_GetSurfaceLevel(texture->data, 0, &texture->map0);
 	// cancello la superficie map0 perche' alcuni driver (tipo intel) nella
-	// versione per windows XP non mi passano una superficia "pulita" e inoltre
-	// sembra che non funzioni nemmeno il
-	// IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0, D3DSAMP_BORDERCOLOR, 0xFF000000);
+	// versione per windows XP non mi passano una superficia "pulita".
 	d3d9_surface_clean(&texture->map0, rect->w, rect->h);
 
 	// creo la superficie temporanea le cui dimensioni non devono essere "POWerate"
