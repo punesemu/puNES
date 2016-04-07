@@ -463,21 +463,24 @@ static bool cgp_rd_file(QIODevice &device, QSettings::SettingsMap &map) {
 			QByteArray ba = line.toLatin1();
 			char *start = ba.data();
 
-			if (((*start) == '#') || (ba.length() == 0)) {
+			if (((*start) == '#') || ((*start) == '*') || (ba.length() == 0)) {
 				continue;
 			}
 		}
 
 		QStringList splitted = line.split("=");
 		QString key, value;
-		key = QString(splitted.at(0)).replace(QRegExp("\\s*$"), "");
-		value = splitted.at(1).trimmed();
-		// rimuovo i commenti che possono esserci sulla riga
-		value = value.remove(QRegExp("#.*"));
-		value = value.remove('"');
-		value = value.trimmed();
 
-		map[key] = value;
+		if (splitted.count() == 2) {
+			key = QString(splitted.at(0)).replace(QRegExp("\\s*$"), "");
+			value = splitted.at(1).trimmed();
+			// rimuovo i commenti che possono esserci sulla riga
+			value = value.remove(QRegExp("#.*"));
+			value = value.remove('"');
+			value = value.trimmed();
+
+			map[key] = value;
+		}
 	}
 
 	return (true);
