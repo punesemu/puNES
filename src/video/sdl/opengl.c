@@ -213,6 +213,8 @@ BYTE opengl_context_create(SDL_Surface *src) {
 	for (i = 0; i < shader_effect.pass; i++) {
 		int rc;
 
+		fprintf(stderr, "OPENGL: Setting pass %d\n", i);
+
 		if (opengl_texture_create(&opengl.texture[i], i, FALSE) == EXIT_ERROR) {
 			opengl_context_delete();
 			return (EXIT_ERROR);
@@ -454,6 +456,7 @@ void opengl_context_delete(void) {
 #endif
 }
 void opengl_draw_scene(SDL_Surface *surface) {
+	static GLuint prev_type = MS_MEM;
 	const _texture_simple *scrtex = &opengl.screen.tex[opengl.screen.index];
 	GLuint i;
 
@@ -502,6 +505,10 @@ void opengl_draw_scene(SDL_Surface *surface) {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min);
 		if (texture->shader.type == MS_CGP) {
 #if defined (WITH_OPENGL_CG)
+			if (prev_type != MS_CGP) {
+				glUseProgram(0);
+			}
+
 			if (texture->shader.cgp.prg.f && texture->shader.cgp.prg.v) {
 				cgGLBindProgram(texture->shader.cgp.prg.f);
 				cgGLBindProgram(texture->shader.cgp.prg.v);
@@ -530,8 +537,8 @@ void opengl_draw_scene(SDL_Surface *surface) {
 #endif
 		} else {
 			opengl_shader_glsl_disable_attrib();
-			glUseProgram(0);
 		}
+		prev_type = texture->shader.type;
 	}
 
 	opengl.screen.index = ((opengl.screen.index + 1) % opengl.screen.in_use);
@@ -552,14 +559,14 @@ void opengl_draw_scene(SDL_Surface *surface) {
 	}
 
 	glViewport(0, 0, opengl.text.rect.w, opengl.text.rect.h);
-	glUseProgram(opengl.text.shader.glslp.prg);
 	glBindTexture(GL_TEXTURE_2D, opengl.text.id);
+	glUseProgram(opengl.text.shader.glslp.prg);
 	opengl_shader_params_text_set(&opengl.text.shader);
 	glEnable(GL_BLEND);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	glDisable(GL_BLEND);
 	opengl_shader_glsl_disable_attrib();
-	glUseProgram(0);
+	prev_type = MS_MEM;
 }
 void opengl_text_clear(_txt_element *ele) {
 	if (!ele->blank) {
@@ -939,25 +946,23 @@ static char *opengl_shader_file2string(const GLchar *path) {
 	char *str;
 
 	if (!(fd = fopen(path, "r"))) {
-		fprintf(stderr, "Can't open file '%s' for reading\n", path);
+		fprintf(stderr, "OPENGL: Can't open file '%s' for reading\n", path);
 		return (NULL);
 	}
 
 	fseek(fd, 0, SEEK_END);
 	len = ftell(fd);
 
-	printf("File '%s' is %ld long\n", path, len);
-
 	fseek(fd, 0, SEEK_SET);
 
 	if (!(str = (char *) malloc(len * sizeof(char)))) {
-		fprintf(stderr, "Can't malloc space for '%s'\n", path);
+		fprintf(stderr, "OPENGL: Can't malloc space for '%s'\n", path);
 		return (NULL);
 	}
 
 	r = fread(str, sizeof(char), len, fd);
 
-	str[r - 1] = '\0'; /* Shader sources have to term with null */
+	str[r - 1] = '\0';
 
 	fclose(fd);
 

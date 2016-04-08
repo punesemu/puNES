@@ -576,11 +576,12 @@ void gfx_set_screen(BYTE scale, DBWORD filter, BYTE fullscreen, BYTE palette, BY
 		// creo tutto il necessario per il rendering
 		switch (opengl_context_create(surface_sdl)) {
 			case EXIT_ERROR:
-				fprintf(stderr, "Unable to initialize opengl context\n");
+				fprintf(stderr, "OPENGL: Unable to initialize opengl context\n");
 				gfx.opengl = FALSE;
 				break;
 			case EXIT_ERROR_SHADER:
-				fprintf(stderr, "errors on shader, flip to no filter\n");
+				text_add_line_info(1, "[red]errors[normal] on shader, switch to [green]'No filter'");
+				fprintf(stderr, "OPENGL: Error on loading the shaders, switch to \"No filter\"\n");
 				memcpy(cfg->shader_file, gfx.last_shader_file, sizeof(cfg->shader_file));
 				filter = NO_FILTER;
 				goto gfx_set_screen_start;

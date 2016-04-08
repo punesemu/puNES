@@ -579,10 +579,11 @@ void gfx_set_screen(BYTE scale, DBWORD filter, BYTE fullscreen, BYTE palette, BY
 
 		switch (d3d9_context_create()) {
 			case EXIT_ERROR:
-				fprintf(stderr, "D3D9 : Unable to initialize d3d context\n");
+				fprintf(stderr, "D3D9: Unable to initialize d3d context\n");
 				return;
 			case EXIT_ERROR_SHADER:
-				fprintf(stderr, "CG : Error on loading the shaders, switch to \"No filter\"\n");
+				text_add_line_info(1, "[red]errors[normal] on shader, switch to [green]'No filter'");
+				fprintf(stderr, "CG: Error on loading the shaders, switch to \"No filter\"\n");
 				memcpy(cfg->shader_file, gfx.last_shader_file, sizeof(cfg->shader_file));
 				filter = NO_FILTER;
 				goto gfx_set_screen_start;
