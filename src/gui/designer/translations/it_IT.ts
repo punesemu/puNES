@@ -733,32 +733,8 @@
         <translation>&amp;Nessun Filtro</translation>
     </message>
     <message>
-        <source>&amp;Phosphor</source>
-        <translation>&amp;Fosforo</translation>
-    </message>
-    <message>
-        <source>&amp;Phosphor2</source>
-        <translation>&amp;Fosforo2</translation>
-    </message>
-    <message>
-        <source>S&amp;canline</source>
-        <translation>S&amp;canline</translation>
-    </message>
-    <message>
-        <source>&amp;DBL</source>
-        <translation>&amp;DBL</translation>
-    </message>
-    <message>
-        <source>Dark R&amp;oom</source>
-        <translation>Stanza &amp;Oscura</translation>
-    </message>
-    <message>
         <source>&amp;CRT With Curve</source>
         <translation>&amp;CRT con Curvatura</translation>
-    </message>
-    <message>
-        <source>&amp;CRT Without Curve</source>
-        <translation>&amp;CRT senza Curvatura</translation>
     </message>
     <message>
         <source>&amp;Scale2X</source>
@@ -847,10 +823,6 @@
     <message>
         <source>Setti&amp;ngs</source>
         <translation>&amp;Configurazione</translation>
-    </message>
-    <message>
-        <source>&amp;Cube</source>
-        <translation>&amp;Cubo</translation>
     </message>
     <message>
         <source>&amp;VSync</source>
@@ -1093,16 +1065,8 @@
         <translation>&amp;Valore di Default</translation>
     </message>
     <message>
-        <source>Fi&amp;lter</source>
-        <translation>Fi&amp;ltro</translation>
-    </message>
-    <message>
         <source>&amp;Palette</source>
         <translation>&amp;Palette</translation>
-    </message>
-    <message>
-        <source>&amp;Effect</source>
-        <translation>&amp;Effetto</translation>
     </message>
     <message>
         <source>&amp;Audio</source>
@@ -1141,20 +1105,12 @@
         <translation>&amp;Software</translation>
     </message>
     <message>
-        <source>&amp;OpenGL</source>
-        <translation>&amp;OpenGL</translation>
-    </message>
-    <message>
         <source>OpenGL &amp;GLSL</source>
         <translation></translation>
     </message>
     <message>
         <source>GLSL &amp;soft stretch</source>
         <translation></translation>
-    </message>
-    <message>
-        <source>&amp;HLSL</source>
-        <translation>&amp;HLSL</translation>
     </message>
     <message>
         <source>HLSL &amp;soft stretch</source>
@@ -1383,6 +1339,54 @@
     <message>
         <source>&amp;Pause</source>
         <translation>&amp;Pausa</translation>
+    </message>
+    <message>
+        <source>Shaders files</source>
+        <translation>File per le shaders</translation>
+    </message>
+    <message>
+        <source>Open Shader file</source>
+        <translation>Apri file per le shaders</translation>
+    </message>
+    <message>
+        <source>&amp;Emboss</source>
+        <translation>&amp;Rilievo</translation>
+    </message>
+    <message>
+        <source>&amp;Noise</source>
+        <translation>R&amp;umore</translation>
+    </message>
+    <message>
+        <source>&amp;Old TV</source>
+        <translation>&amp;Vecchia TV</translation>
+    </message>
+    <message>
+        <source>NTSC 2&amp;Phase Composite</source>
+        <translation>NTSC 2&amp;Fasi Composito</translation>
+    </message>
+    <message>
+        <source>CRT &amp;Scanlines</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>CRT &amp;Dotmask</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Firebrandx &amp;YUV</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Firebrandx &amp;Unsaturated</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Software Fi&amp;lters</source>
+        <translation>Fi&amp;ltri Software</translation>
+    </message>
+    <message>
+        <source>S&amp;haders</source>
+        <translation></translation>
     </message>
 </context>
 <context>

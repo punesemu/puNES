@@ -733,31 +733,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Phosphor</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Phosphor2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>S&amp;canline</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;DBL</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Dark R&amp;oom</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>&amp;CRT With Curve</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;CRT Without Curve</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -846,10 +822,6 @@
     </message>
     <message>
         <source>Setti&amp;ngs</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Cube</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1093,15 +1065,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Fi&amp;lter</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>&amp;Palette</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Effect</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1138,10 +1102,6 @@
     </message>
     <message>
         <source>&amp;Software</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;OpenGL</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1273,10 +1233,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;HLSL</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>&amp;1:1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1382,6 +1338,54 @@
     </message>
     <message>
         <source>&amp;Pause</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Shaders files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open Shader file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Emboss</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Noise</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Old TV</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>NTSC 2&amp;Phase Composite</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>CRT &amp;Scanlines</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>CRT &amp;Dotmask</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Firebrandx &amp;YUV</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Firebrandx &amp;Unsaturated</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Software Fi&amp;lters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>S&amp;haders</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

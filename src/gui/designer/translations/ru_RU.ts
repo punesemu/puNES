@@ -733,32 +733,8 @@
         <translation>&amp;Без фильтра</translation>
     </message>
     <message>
-        <source>&amp;Phosphor</source>
-        <translation>&amp;Люминофор</translation>
-    </message>
-    <message>
-        <source>&amp;Phosphor2</source>
-        <translation>&amp;Люминофор 2</translation>
-    </message>
-    <message>
-        <source>S&amp;canline</source>
-        <translation>&amp;Сканлинии</translation>
-    </message>
-    <message>
-        <source>&amp;DBL</source>
-        <translation>&amp;DBL</translation>
-    </message>
-    <message>
-        <source>Dark R&amp;oom</source>
-        <translation>&amp;Затемнение</translation>
-    </message>
-    <message>
         <source>&amp;CRT With Curve</source>
         <translation>&amp;Выпуклый кинескоп</translation>
-    </message>
-    <message>
-        <source>&amp;CRT Without Curve</source>
-        <translation>&amp;Плоский кинескоп</translation>
     </message>
     <message>
         <source>&amp;Scale2X</source>
@@ -847,10 +823,6 @@
     <message>
         <source>Setti&amp;ngs</source>
         <translation>&amp;Настройки</translation>
-    </message>
-    <message>
-        <source>&amp;Cube</source>
-        <translation>&amp;Куб</translation>
     </message>
     <message>
         <source>&amp;VSync</source>
@@ -1093,16 +1065,8 @@
         <translation>&amp;Значение по умолчанию</translation>
     </message>
     <message>
-        <source>Fi&amp;lter</source>
-        <translation>&amp;Фильтр</translation>
-    </message>
-    <message>
         <source>&amp;Palette</source>
         <translation>&amp;Палитра</translation>
-    </message>
-    <message>
-        <source>&amp;Effect</source>
-        <translation>&amp;Эффект</translation>
     </message>
     <message>
         <source>&amp;Audio</source>
@@ -1141,20 +1105,12 @@
         <translation>&amp;Программный</translation>
     </message>
     <message>
-        <source>&amp;OpenGL</source>
-        <translation>&amp;OpenGL</translation>
-    </message>
-    <message>
         <source>OpenGL &amp;GLSL</source>
         <translation>OpenGL &amp;GLSL</translation>
     </message>
     <message>
         <source>GLSL &amp;soft stretch</source>
         <translation>GLSL &amp;сглаживание</translation>
-    </message>
-    <message>
-        <source>&amp;HLSL</source>
-        <translation>&amp;HLSL</translation>
     </message>
     <message>
         <source>HLSL &amp;soft stretch</source>
@@ -1382,7 +1338,55 @@
     </message>
     <message>
         <source>&amp;Pause</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Пауза</translation>
+    </message>
+    <message>
+        <source>Shaders files</source>
+        <translation>Файлы шейдеров</translation>
+    </message>
+    <message>
+        <source>Open Shader file</source>
+        <translation>Загрузить шейдер</translation>
+    </message>
+    <message>
+        <source>&amp;Emboss</source>
+        <translation>&amp;Тиснение</translation>
+    </message>
+    <message>
+        <source>&amp;Noise</source>
+        <translation>&amp;Шум</translation>
+    </message>
+    <message>
+        <source>&amp;Old TV</source>
+        <translation>&amp;Старый телевизор</translation>
+    </message>
+    <message>
+        <source>NTSC 2&amp;Phase Composite</source>
+        <translation>NTSC &amp;двухфазный композит</translation>
+    </message>
+    <message>
+        <source>CRT &amp;Scanlines</source>
+        <translation>ЭЛТ &amp;сканлайны</translation>
+    </message>
+    <message>
+        <source>CRT &amp;Dotmask</source>
+        <translation>ЭЛТ &amp;с точечной маской</translation>
+    </message>
+    <message>
+        <source>Firebrandx &amp;YUV</source>
+        <translation>Firebrandx &amp;YUV</translation>
+    </message>
+    <message>
+        <source>Firebrandx &amp;Unsaturated</source>
+        <translation>Firebrandx &amp;ненасыщенная</translation>
+    </message>
+    <message>
+        <source>Software Fi&amp;lters</source>
+        <translation>Программные фи&amp;льтры</translation>
+    </message>
+    <message>
+        <source>S&amp;haders</source>
+        <translation>Ш&amp;ейдеры</translation>
     </message>
 </context>
 <context>
