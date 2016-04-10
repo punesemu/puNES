@@ -68,6 +68,7 @@
 	/* ed infine utilizzo la nuova */\
 	ntsc_set(cfg->ntsc_format, FALSE, 0, (BYTE *) palette_RGB,(BYTE *) palette_RGB)
 
+static void d3d9_shader_cg_error_handler(void);
 static BYTE d3d9_device_create(UINT width, UINT height);
 static BYTE d3d9_context_create(void);
 static void d3d9_context_delete(void);
@@ -582,7 +583,7 @@ void gfx_set_screen(BYTE scale, DBWORD filter, BYTE fullscreen, BYTE palette, BY
 				fprintf(stderr, "D3D9: Unable to initialize d3d context\n");
 				return;
 			case EXIT_ERROR_SHADER:
-				text_add_line_info(1, "[red]errors[normal] on shader, switch to [green]'No filter'");
+				text_add_line_info(1, "[red]errors[normal] on shader, use [green]'No filter'");
 				fprintf(stderr, "CG: Error on loading the shaders, switch to \"No filter\"\n");
 				memcpy(cfg->shader_file, gfx.last_shader_file, sizeof(cfg->shader_file));
 				filter = NO_FILTER;
@@ -941,6 +942,16 @@ void gfx_text_blit(_txt_element *ele, _rect *rect) {
 	IDirect3DSurface9_UnlockRect(d3d9.text.offscreen);
 }
 
+void d3d9_shader_cg_error_handler(void) {
+	CGerror error = cgGetError();
+
+	if (error == (CGerror) cgD3D9Failed) {
+		fprintf(stderr, "D3D9: Error '%s' occurred.\n",
+				cgD3D9TranslateHRESULT(cgD3D9GetLastError()));
+	} else {
+		fprintf(stderr, "CG: Error '%s' occurred.\n", cgD3D9TranslateCGerror(error));
+	}
+}
 static BYTE d3d9_device_create(UINT width, UINT height) {
 	D3DPRESENT_PARAMETERS d3dpp;
 
@@ -994,6 +1005,8 @@ static BYTE d3d9_context_create(void) {
 		d3d9_context_delete();
 		return (EXIT_ERROR);
 	}
+
+	cgSetErrorCallback(d3d9_shader_cg_error_handler);
 
 	cgD3D9SetDevice(d3d9.adapter->dev);
 
@@ -1625,7 +1638,7 @@ static BYTE d3d9_shader_init(UINT pass, _shader *shd, const char *path, const ch
 					cgD3D9GetLatestPixelProfile(), "main_fragment", argv);
 		}
 		if (!shd->prg.f && (list = cgGetLastListing(d3d9.cgctx))) {
-			printf("CG : fragment program errors :\n%s\n", list);
+			printf("CG: fragment program errors :\n%s\n", list);
 		}
 	}
 
@@ -1664,21 +1677,21 @@ static BYTE d3d9_shader_init(UINT pass, _shader *shd, const char *path, const ch
 					cgD3D9GetLatestVertexProfile(), "main_vertex", argv);
 		}
 		if (!shd->prg.v && (list = cgGetLastListing(d3d9.cgctx))) {
-			printf("CG : vertex program errors :\n%s\n", list);
+			printf("CG: vertex program errors :\n%s\n", list);
 		}
 	}
 
 	if (!shd->prg.f || !shd->prg.v) {
-		fprintf(stderr, "CG : %s\n", cgGetErrorString(cgGetError()));
+		fprintf(stderr, "CG: %s\n", cgGetErrorString(cgGetError()));
 		return (EXIT_ERROR);
 	}
 
 	if (cgD3D9LoadProgram(shd->prg.f, TRUE, 0) != D3D_OK) {
-		fprintf(stderr, "CG : Error on loading fragment program\n");
+		fprintf(stderr, "CG: Error on loading fragment program\n");
 		return (EXIT_ERROR);
 	}
 	if (cgD3D9LoadProgram(shd->prg.v, TRUE, 0) != D3D_OK) {
-		fprintf(stderr, "CG : Error on loading vertex program\n");
+		fprintf(stderr, "CG: Error on loading vertex program\n");
 		return (EXIT_ERROR);
 	}
 
