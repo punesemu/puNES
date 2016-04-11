@@ -374,7 +374,7 @@ void cgp_pragma_param(char *code, const char *path) {
 		::memset(&param, 0x00, sizeof(_param_shd));
 
 		if (line.startsWith("#pragma parameter")) {
-			QRegExp rx("((\\d?)?\\.)?\\d+");
+			QRegExp rx("((-+))?((\\d?)?\\.)?\\d+");
 			int i, count = 0, pos = 0;
 			bool finded;
 
