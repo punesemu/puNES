@@ -127,7 +127,7 @@ BYTE cgp_parse(const char *file) {
 		// frame_count_mod
 		key.sprintf("frame_count_mod%u", i);
 		if (cgp_value(set, key, value) == FALSE) {
-			sp->frame_count_mod = value.toInt();
+			sp->frame_count_mod = value.toFloat();
 		}
 
 		// wrap_mode
@@ -203,11 +203,11 @@ BYTE cgp_parse(const char *file) {
 				key.sprintf("scale%u", i);
 				if (sc->type.x == SHADER_SCALE_ABSOLUTE) {
 					if (cgp_value(set, key, value) == FALSE) {
-						sc->abs.x = value.toInt();
+						sc->abs.x = value.toFloat();
 					} else {
 						key.sprintf("scale_x%u", i);
 						if (cgp_value(set, key, value) == FALSE) {
-							sc->abs.x = value.toInt();
+							sc->abs.x = value.toFloat();
 						}
 					}
 				} else {
@@ -225,11 +225,11 @@ BYTE cgp_parse(const char *file) {
 				key.sprintf("scale%u", i);
 				if (sc->type.y == SHADER_SCALE_ABSOLUTE) {
 					if (cgp_value(set, key, value) == FALSE) {
-						sc->abs.y = value.toInt();
+						sc->abs.y = value.toFloat();
 					} else {
 						key.sprintf("scale_y%u", i);
 						if (cgp_value(set, key, value) == FALSE) {
-							sc->abs.y = value.toInt();
+							sc->abs.y = value.toFloat();
 						}
 					}
 				} else {
@@ -476,6 +476,7 @@ static bool cgp_rd_file(QIODevice &device, QSettings::SettingsMap &map) {
 			value = splitted.at(1).trimmed();
 			// rimuovo i commenti che possono esserci sulla riga
 			value = value.remove(QRegExp("#.*"));
+			value = value.remove(QRegExp("//.*"));
 			value = value.remove('"');
 			value = value.trimmed();
 
