@@ -69,7 +69,7 @@ INLINE static void opengl_shader_glsl_params_set(const _shader *shd, GLuint fcou
 INLINE static void opengl_shader_glsl_disable_attrib(void);
 // cg
 #if defined (WITH_OPENGL_CG)
-#if defined (DEBUG)
+#if !defined (RELEASE)
 static void opengl_shader_cg_error_handler(CGcontext ctx, CGerror error, void *data);
 #endif
 static BYTE opengl_shader_cg_init(GLuint pass, _shader *shd, GLchar *code, const GLchar *path);
@@ -147,7 +147,7 @@ BYTE opengl_context_create(SDL_Surface *src) {
 			return (EXIT_ERROR);
 		}
 
-#if defined (DEBUG)
+#if !defined (RELEASE)
 		cgGLSetDebugMode(CG_TRUE);
 		cgSetErrorHandler(opengl_shader_cg_error_handler, NULL);
 #endif
@@ -1273,9 +1273,7 @@ static BYTE opengl_shader_glsl_init(GLuint pass, _shader *shd, GLchar *code, con
 
 	opengl_shader_uni_texture_clear(&shd->glslp.uni.orig);
 	opengl_shader_uni_texture(&shd->glslp.uni.orig, shd->glslp.prg, "Orig");
-	if (pass > 1) {
-		opengl_shader_uni_texture(&shd->glslp.uni.orig, shd->glslp.prg, "PassPrev%u", pass);
-	}
+	opengl_shader_uni_texture(&shd->glslp.uni.orig, shd->glslp.prg, "PassPrev%u", pass + 1);
 
 	opengl_shader_uni_texture_clear(&shd->glslp.uni.feedback);
 	opengl_shader_uni_texture(&shd->glslp.uni.feedback, shd->glslp.prg, "Feedback");
@@ -1283,13 +1281,13 @@ static BYTE opengl_shader_glsl_init(GLuint pass, _shader *shd, GLchar *code, con
 	for (i = 0; i < pass; i++) {
 		opengl_shader_uni_texture_clear(&shd->glslp.uni.passprev[i]);
 
-		opengl_shader_uni_texture(&shd->glslp.uni.passprev[i], shd->glslp.prg, "Pass%u", i);
+		opengl_shader_uni_texture(&shd->glslp.uni.passprev[i], shd->glslp.prg, "Pass%u", i + 1);
 		opengl_shader_uni_texture(&shd->glslp.uni.passprev[i], shd->glslp.prg, "PassPrev%u",
-		        pass - i);
+				pass - i);
 
 		if (shader_effect.sp[i].alias[0]) {
 			opengl_shader_uni_texture(&shd->glslp.uni.passprev[i], shd->glslp.prg,
-			        shader_effect.sp[i].alias);
+					shader_effect.sp[i].alias);
 		}
 	}
 
@@ -1494,6 +1492,7 @@ INLINE static void opengl_shader_glsl_params_set(const _shader *shd, GLuint fcou
 		}
 	}
 }
+// cg
 INLINE static void opengl_shader_glsl_disable_attrib(void) {
 	GLuint i;
 
@@ -1504,7 +1503,7 @@ INLINE static void opengl_shader_glsl_disable_attrib(void) {
 }
 // cg
 #if defined (WITH_OPENGL_CG)
-#if defined (DEBUG)
+#if !defined (RELEASE)
 static void opengl_shader_cg_error_handler(CGcontext ctx, CGerror error, void *data) {
 	switch (error) {
 		case CG_INVALID_PARAM_HANDLE_ERROR:
@@ -1671,9 +1670,7 @@ static BYTE opengl_shader_cg_init(GLuint pass, _shader *shd, GLchar *code, const
 
 	opengl_shader_cg_uni_texture_clear(&shd->cgp.uni.orig);
 	opengl_shader_cg_uni_texture(&shd->cgp.uni.orig, &shd->cgp.prg, "ORIG");
-	if (pass > 1) {
-		opengl_shader_cg_uni_texture(&shd->cgp.uni.orig, &shd->cgp.prg, "PASSPREV%u", pass);
-	}
+	opengl_shader_cg_uni_texture(&shd->cgp.uni.orig, &shd->cgp.prg, "PASSPREV%u", pass + 1);
 
 	opengl_shader_cg_uni_texture_clear(&shd->cgp.uni.feedback);
 	opengl_shader_cg_uni_texture(&shd->cgp.uni.feedback, &shd->cgp.prg, "FEEDBACK");
@@ -1681,7 +1678,7 @@ static BYTE opengl_shader_cg_init(GLuint pass, _shader *shd, GLchar *code, const
 	for (i = 0; i < pass; i++) {
 		opengl_shader_cg_uni_texture_clear(&shd->cgp.uni.passprev[i]);
 
-		opengl_shader_cg_uni_texture(&shd->cgp.uni.passprev[i], &shd->cgp.prg, "PASS%u", i);
+		opengl_shader_cg_uni_texture(&shd->cgp.uni.passprev[i], &shd->cgp.prg, "PASS%u", i + 1);
 		opengl_shader_cg_uni_texture(&shd->cgp.uni.passprev[i], &shd->cgp.prg, "PASSPREV%u",
 				pass - i);
 
@@ -1721,7 +1718,7 @@ static void opengl_shader_cg_clstate_ctrl(CGparameter *dst, CGparameter *param,
 	}
 }
 static void opengl_shader_cg_param2f_ctrl(CGparameter *dst, CGparameter *param,
-        const char *semantic) {
+		const char *semantic) {
 	if (!(*param)) {
 		return;
 	}

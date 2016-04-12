@@ -78,6 +78,7 @@ static BYTE d3d9_texture_lut_create(_lut *lut, UINT index);
 static void d3d9_surface_clean(LPDIRECT3DSURFACE9 *surface, UINT width, UINT height);
 static BYTE d3d9_shader_init(UINT pass, _shader *shd, const char *path, const char *code);
 static void d3d9_shader_delete(_shader *shd);
+static void d3d9_shader_uniform_ctrl(CGparameter *dst, CGparameter *param, const char *semantic);
 static void d3d9_shader_uni_texture_clear(_shader_uniforms_tex *sut);
 static void d3d9_shader_uni_texture(_shader_uniforms_tex *sut, _shader_prg_cg *prg, char *fmt, ...);
 static CGparameter d3d9_cg_find_param(CGparameter prm, const char *name);
@@ -942,7 +943,7 @@ void gfx_text_blit(_txt_element *ele, _rect *rect) {
 	IDirect3DSurface9_UnlockRect(d3d9.text.offscreen);
 }
 
-void d3d9_shader_cg_error_handler(void) {
+static void d3d9_shader_cg_error_handler(void) {
 	CGerror error = cgGetError();
 
 	if (error == (CGerror) cgD3D9Failed) {
@@ -1059,7 +1060,7 @@ static BYTE d3d9_context_create(void) {
 
 	// texture
 	for (i = 0; i < shader_effect.pass; i++) {
-		fprintf(stderr, "D3D9: Setting pass %d\n", i);
+		fprintf(stderr, "D3D9: Setting pass %d.\n", i);
 
 		if (d3d9_texture_create(&d3d9.texture[i], i) == EXIT_ERROR) {
 			d3d9_context_delete();
@@ -1112,6 +1113,8 @@ static BYTE d3d9_context_create(void) {
 		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 
 		d3d9_texture_simple_create(&d3d9.text, gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE], TRUE);
+
+		fprintf(stderr, "D3D9: Setting text pass.\n");
 
 		if (d3d9_shader_init(0, &d3d9.text.shader, NULL, shader_code_blend()) == EXIT_ERROR) {
 			d3d9_context_delete();
@@ -1729,9 +1732,7 @@ static BYTE d3d9_shader_init(UINT pass, _shader *shd, const char *path, const ch
 
 	d3d9_shader_uni_texture_clear(&shd->uni.orig);
 	d3d9_shader_uni_texture(&shd->uni.orig, &shd->prg, "ORIG");
-	if (pass > 1) {
-		d3d9_shader_uni_texture(&shd->uni.orig, &shd->prg, "PASSPREV%u", pass);
-	}
+	d3d9_shader_uni_texture(&shd->uni.orig, &shd->prg, "PASSPREV%u", pass + 1);
 
 	d3d9_shader_uni_texture_clear(&shd->uni.feedback);
 	d3d9_shader_uni_texture(&shd->uni.feedback, &shd->prg, "FEEDBACK");
@@ -1739,12 +1740,12 @@ static BYTE d3d9_shader_init(UINT pass, _shader *shd, const char *path, const ch
 	for (i = 0; i < pass; i++) {
 		d3d9_shader_uni_texture_clear(&shd->uni.passprev[i]);
 
-		d3d9_shader_uni_texture(&shd->uni.passprev[i], &shd->prg, "PASS%u", i);
+		d3d9_shader_uni_texture(&shd->uni.passprev[i], &shd->prg, "PASS%u", i + 1);
 		d3d9_shader_uni_texture(&shd->uni.passprev[i], &shd->prg, "PASSPREV%u", pass - i);
 
 		if (shader_effect.sp[i].alias[0]) {
 			d3d9_shader_uni_texture(&shd->uni.passprev[i], &shd->prg,
-			        shader_effect.sp[i].alias);
+					shader_effect.sp[i].alias);
 		}
 	}
 
@@ -1768,6 +1769,20 @@ static void d3d9_shader_delete(_shader *shd) {
 		shd->prg.v = NULL;
 	}
 }
+static void d3d9_shader_uniform_ctrl(CGparameter *dst, CGparameter *param, const char *semantic) {
+	static const FLOAT f2[2] = {1.0f, 1.0f};
+
+	if (!(*param)) {
+		return;
+	}
+
+	if (cgD3D9SetUniform((*param), &f2) != D3D_OK) {
+		(*dst) = 0;
+		fprintf(stderr, "CG: Parameter \"%s\" disabled.\n", semantic);
+	} else {
+		(*dst) = (*param);
+	}
+}
 static void d3d9_shader_uni_texture_clear(_shader_uniforms_tex *sut) {
 	sut->f.texture = NULL;
 	sut->v.video_size = NULL;
@@ -1777,6 +1792,7 @@ static void d3d9_shader_uni_texture_clear(_shader_uniforms_tex *sut) {
 	sut->v.tex_coord = NULL;
 }
 static void d3d9_shader_uni_texture(_shader_uniforms_tex *sut, _shader_prg_cg *prg, char *fmt, ...) {
+	CGparameter param;
 	char type[50], buff[50];
 	va_list ap;
 
@@ -1790,17 +1806,21 @@ static void d3d9_shader_uni_texture(_shader_uniforms_tex *sut, _shader_prg_cg *p
 	}
 	snprintf(buff, sizeof(buff), "%s%s", type, ".video_size");
 	if (!sut->v.video_size) {
-		sut->v.video_size = cgGetNamedParameter(prg->v, buff);
+		param = cgGetNamedParameter(prg->v, buff);
+		d3d9_shader_uniform_ctrl(&sut->v.video_size, &param, buff);
 	}
 	if (!sut->f.video_size) {
-		sut->f.video_size = cgGetNamedParameter(prg->f, buff);
+		param = cgGetNamedParameter(prg->f, buff);
+		d3d9_shader_uniform_ctrl(&sut->f.video_size, &param, buff);
 	}
 	snprintf(buff, sizeof(buff), "%s%s", type, ".texture_size");
 	if (!sut->v.texture_size) {
-		sut->v.texture_size = cgGetNamedParameter(prg->v, buff);
+		param = cgGetNamedParameter(prg->v, buff);
+		d3d9_shader_uniform_ctrl(&sut->v.texture_size, &param, buff);
 	}
 	if (!sut->f.texture_size) {
-		sut->f.texture_size = cgGetNamedParameter(prg->f, buff);
+		param = cgGetNamedParameter(prg->f, buff);
+		d3d9_shader_uniform_ctrl(&sut->f.texture_size, &param, buff);
 	}
 	snprintf(buff, sizeof(buff), "%s%s", type, ".tex_coord");
 	if (!sut->v.tex_coord) {
