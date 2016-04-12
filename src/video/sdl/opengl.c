@@ -1492,7 +1492,6 @@ INLINE static void opengl_shader_glsl_params_set(const _shader *shd, GLuint fcou
 		}
 	}
 }
-// cg
 INLINE static void opengl_shader_glsl_disable_attrib(void) {
 	GLuint i;
 
