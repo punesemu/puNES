@@ -155,6 +155,9 @@ BYTE map_init(void) {
 		case 38:
 			map_init_74x138x161();
 			break;
+		case 40:
+			map_init_40();
+			break;
 		case 41:
 			map_init_Caltron();
 			break;

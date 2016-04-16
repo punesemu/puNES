@@ -105,6 +105,7 @@
 #include "mappers/mapper_241.h"
 #include "mappers/mapper_244.h"
 #include "mappers/mapper_37.h"
+#include "mappers/mapper_40.h"
 #include "mappers/mapper_44.h"
 #include "mappers/mapper_45.h"
 #include "mappers/mapper_46.h"
