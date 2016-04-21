@@ -192,8 +192,8 @@ BYTE opengl_context_create(SDL_Surface *src) {
 
 		// configuro l'aspect ratio del fullscreen
 		if (cfg->fullscreen && !cfg->stretch) {
-			GLfloat ratio_surface = (((GLfloat) gfx.rows * gfx.pixel_aspect_ratio)
-					/ (GLfloat) gfx.lines);
+			GLfloat ratio_surface = (((GLfloat) (gfx.w[CURRENT] / cfg->scale)
+					* gfx.pixel_aspect_ratio) / (GLfloat) (gfx.h[CURRENT] / cfg->scale));
 			GLfloat ratio_frame = (GLfloat) src->w / (GLfloat) src->h;
 
 			if (ratio_frame > ratio_surface) {
@@ -204,6 +204,7 @@ BYTE opengl_context_create(SDL_Surface *src) {
 				vp->y = (int) (((GLfloat) src->h - (GLfloat) vp->h) * 0.5f);
 			}
 		}
+
 	}
 
 	// screen

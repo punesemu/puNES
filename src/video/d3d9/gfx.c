@@ -1045,7 +1045,8 @@ static BYTE d3d9_context_create(void) {
 
 		// configuro l'aspect ratio del fullscreen
 		if (cfg->fullscreen && !cfg->stretch) {
-			FLOAT ratio_surface = ((FLOAT) gfx.rows  * gfx.pixel_aspect_ratio) / (FLOAT) gfx.lines;
+			FLOAT ratio_surface = (((FLOAT)(gfx.w[CURRENT] / cfg->scale) * gfx.pixel_aspect_ratio)
+					/ (FLOAT)(gfx.h[CURRENT] / cfg->scale));
 			FLOAT ratio_frame = (FLOAT) gfx.w[VIDEO_MODE] / (FLOAT) gfx.h[VIDEO_MODE];
 
 			if (ratio_frame > ratio_surface) {
