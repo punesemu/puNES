@@ -41,7 +41,7 @@
 
 enum fullscreen_type { NO_FULLSCR, FULLSCR };
 enum scale_type { X1 = 1, X2, X3, X4 };
-enum par_type { PAR11, PAR54, PAR87 };
+enum par_type { PAR11, PAR54, PAR87, PAR118 };
 enum filters_type {
 	NO_FILTER,
 	SCALE2X,

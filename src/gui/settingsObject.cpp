@@ -737,6 +737,9 @@ void setObject::to_cfg(QString group) {
 		int_to_val(SET_VSYNC, cfg_from_file.vsync);
 		int_to_val(SET_INTERPOLATION, cfg_from_file.interpolation);
 		int_to_val(SET_TEXT_ON_SCREEN, cfg_from_file.txt_on_screen);
+#if defined (WITH_OPENGL)
+		int_to_val(SET_DISABLE_SRGB_FBO, cfg_from_file.disable_srgb_fbo);
+#endif
 		int_to_val(SET_FULLSCREEN, cfg_from_file.fullscreen);
 		int_to_val(SET_STRETCH_FULLSCREEN, cfg_from_file.stretch);
 	}
@@ -799,6 +802,9 @@ void setObject::fr_cfg(QString group) {
 		cfg_from_file.vsync = val_to_int(SET_VSYNC);
 		cfg_from_file.interpolation = val_to_int(SET_INTERPOLATION);
 		cfg_from_file.txt_on_screen = val_to_int(SET_TEXT_ON_SCREEN);
+#if defined (WITH_OPENGL)
+		cfg_from_file.disable_srgb_fbo = val_to_int(SET_DISABLE_SRGB_FBO);
+#endif
 		cfg_from_file.fullscreen = val_to_int(SET_FULLSCREEN);
 		cfg_from_file.stretch = val_to_int(SET_STRETCH_FULLSCREEN);
 	}

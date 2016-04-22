@@ -25,6 +25,7 @@
 #include "conf.h"
 #include "qt.h"
 #include "cgp.h"
+#include "info.h"
 
 #define MAT_ELEM_4X4(mat, r, c) ((mat).data[4 * (c) + (r)])
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
@@ -455,6 +456,8 @@ void opengl_context_delete(void) {
 		opengl.cg.ctx = NULL;
 	}
 #endif
+
+	info.sRGB_FBO_in_use = FALSE;
 }
 void opengl_draw_scene(SDL_Surface *surface) {
 	static GLuint prev_type = MS_MEM;
@@ -468,7 +471,7 @@ void opengl_draw_scene(SDL_Surface *surface) {
 			surface->pixels);
 	glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
 
-	if (opengl.supported_fbo.srgb) {
+	if (opengl.supported_fbo.srgb && !cfg->disable_srgb_fbo) {
 		glEnable(GL_FRAMEBUFFER_SRGB);
 	}
 
@@ -482,7 +485,7 @@ void opengl_draw_scene(SDL_Surface *surface) {
 
 		if (i == shader_effect.last_pass) {
 			fbo = 0;
-			if (opengl.supported_fbo.srgb) {
+			if (opengl.supported_fbo.srgb && !cfg->disable_srgb_fbo) {
 				glDisable(GL_FRAMEBUFFER_SRGB);
 			}
 		}
@@ -660,6 +663,10 @@ static BYTE opengl_texture_create(_texture *texture, GLuint index, GLuint clean)
 		sc->type.y = SHADER_SCALE_VIEWPORT;
 	}
 
+	if (sp->fbo_srgb && opengl.supported_fbo.srgb) {
+		info.sRGB_FBO_in_use = TRUE;
+	}
+
 #if defined (FH_SHADERS_GEST)
 	switch (sc->type.x) {
 		case SHADER_SCALE_DEFAULT:
@@ -757,7 +764,7 @@ static BYTE opengl_texture_create(_texture *texture, GLuint index, GLuint clean)
 	// creo la texture nella GPU
 	if (sp->fbo_flt && opengl.supported_fbo.flt) {
 		glTexImage2D(GL_TEXTURE_2D, 0, TI_F_INTFRM, rect->w, rect->h, 0, TI_FRM, TI_F_TYPE, NULL);
-	} else if (sp->fbo_srgb && opengl.supported_fbo.srgb) {
+	} else if (sp->fbo_srgb && opengl.supported_fbo.srgb && !cfg->disable_srgb_fbo) {
 		glTexImage2D(GL_TEXTURE_2D, 0, TI_S_INTFRM, rect->w, rect->h, 0, TI_FRM, TI_S_TYPE, NULL);
 	} else {
 		glTexImage2D(GL_TEXTURE_2D, 0, TI_INTFRM, rect->w, rect->h, 0, TI_FRM, TI_TYPE, NULL);

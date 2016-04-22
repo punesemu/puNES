@@ -191,6 +191,7 @@ void mainWindow::setup() {
 	grp->addAction(ui->action_PAR_11);
 	grp->addAction(ui->action_PAR_54);
 	grp->addAction(ui->action_PAR_87);
+	grp->addAction(ui->action_PAR_118);
 	// Settings/Video/Overscan
 	grp = new QActionGroup(this);
 	grp->setExclusive(true);
@@ -562,6 +563,8 @@ void mainWindow::update_recent_roms() {
 	}
 }
 void mainWindow::update_menu_settings() {
+	bool state;
+
 	// Mode
 	if (cfg->mode == AUTO) {
 		ui->action_Mode_Auto->setChecked(true);
@@ -713,17 +716,28 @@ void mainWindow::update_menu_settings() {
 		case PAR87:
 			ui->action_PAR_87->setChecked(true);
 			break;
+		case PAR118:
+			ui->action_PAR_118->setChecked(true);
+			break;
 	}
 
 #if defined (WITH_OPENGL)
-	if (gfx.opengl) {
-		ui->menu_Pixel_Aspect_Ratio->setEnabled(true);
+	if (gfx.opengl && (cfg->filter != NTSC_FILTER)) {
+		state = true;
 	} else {
-		ui->menu_Pixel_Aspect_Ratio->setEnabled(false);
+		state = false;
 	}
+	ui->menu_Pixel_Aspect_Ratio->setEnabled(state);
 
 	if ((opengl.supported && gfx.opengl) && (cfg->pixel_aspect_ratio != PAR11)) {
 #elif defined (WITH_D3D9)
+	if (cfg->filter != NTSC_FILTER) {
+		state = true;
+	} else {
+		state = false;
+	}
+	ui->menu_Pixel_Aspect_Ratio->setEnabled(state);
+
 	if (cfg->pixel_aspect_ratio != PAR11) {
 #endif
 		ui->action_PAR_Soft_Stretch->setEnabled(true);
@@ -756,48 +770,44 @@ void mainWindow::update_menu_settings() {
 			break;
 	}
 	// Settings/Video/Software Filters
-	{
-		bool state;
-
 #if defined (WITH_OPENGL)
-		if (cfg->scale != X1) {
-			state = true;
-		} else {
-			state = false;
-		}
-		ui->action_NTSC_Composite->setEnabled(state);
-		ui->action_NTSC_SVideo->setEnabled(state);
-		ui->action_NTSC_RGB->setEnabled(state);
+	if (cfg->scale != X1) {
+		state = true;
+	} else {
+		state = false;
+	}
+	ui->action_NTSC_Composite->setEnabled(state);
+	ui->action_NTSC_SVideo->setEnabled(state);
+	ui->action_NTSC_RGB->setEnabled(state);
 
-		// Settings/Video/Shaders
-		if (gfx.opengl && (cfg->scale != X1)) {
+	// Settings/Video/Shaders
+	if (gfx.opengl && (cfg->scale != X1)) {
 #elif defined (WITH_D3D9)
-		if (cfg->scale != X1) {
+	if (cfg->scale != X1) {
 #endif
-			state = true;
+		state = true;
+	} else {
+		state = false;
+	}
+	ui->menu_Shader->setEnabled(state);
+
+	ui->action_Shader_CRT_Dotmask->setEnabled(state);
+	ui->action_Shader_CRT_Scanlines->setEnabled(state);
+	ui->action_Shader_CRT_With_Curve->setEnabled(state);
+	ui->action_Shader_Emboss->setEnabled(state);
+	ui->action_Shader_Noise->setEnabled(state);
+	ui->action_Shader_NTSC_2Phase_Composite->setEnabled(state);
+	ui->action_Shader_Old_TV->setEnabled(state);
+	ui->action_Shader_File->setEnabled(state);
+	ui->action_Shader_Load_File->setEnabled(state);
+
+	if (state == true) {
+		if (strlen(cfg->shader_file) != 0) {
+			ui->action_Shader_File->setText(QFileInfo(cfg->shader_file).baseName());
+			ui->action_Shader_File->setEnabled(true);
 		} else {
-			state = false;
-		}
-		ui->menu_Shader->setEnabled(state);
-
-		ui->action_Shader_CRT_Dotmask->setEnabled(state);
-		ui->action_Shader_CRT_Scanlines->setEnabled(state);
-		ui->action_Shader_CRT_With_Curve->setEnabled(state);
-		ui->action_Shader_Emboss->setEnabled(state);
-		ui->action_Shader_Noise->setEnabled(state);
-		ui->action_Shader_NTSC_2Phase_Composite->setEnabled(state);
-		ui->action_Shader_Old_TV->setEnabled(state);
-		ui->action_Shader_File->setEnabled(state);
-		ui->action_Shader_Load_File->setEnabled(state);
-
-		if (state == true) {
-			if (strlen(cfg->shader_file) != 0) {
-				ui->action_Shader_File->setText(QFileInfo(cfg->shader_file).baseName());
-				ui->action_Shader_File->setEnabled(true);
-			} else {
-				ui->action_Shader_File->setText(tr("[Select a file]"));
-				ui->action_Shader_File->setEnabled(false);
-			}
+			ui->action_Shader_File->setText(tr("[Select a file]"));
+			ui->action_Shader_File->setEnabled(false);
 		}
 	}
 	switch (cfg->filter) {
@@ -905,24 +915,28 @@ void mainWindow::update_menu_settings() {
 			ui->action_Palette_File->setChecked(true);
 			break;
 	}
-	// Settings/Video/[VSync, Interpolation, Text on screen]
+	// Settings/Video/[VSync, Interpolation, Text on screen, Disable sRGB FBO]
 #if defined (WITH_OPENGL)
 	if (gfx.opengl) {
-		ui->action_VSync->setEnabled(true);
-		ui->action_Interpolation->setEnabled(true);
-		ui->action_Fullscreen->setEnabled(true);
-		ui->action_Stretch_in_fullscreen->setEnabled(true);
+		state = true;
 	} else {
-		ui->action_VSync->setEnabled(false);
-		ui->action_Interpolation->setEnabled(false);
-		ui->action_Fullscreen->setEnabled(false);
-		ui->action_Stretch_in_fullscreen->setEnabled(false);
+		state = false;
 	}
+	ui->action_VSync->setEnabled(state);
+	ui->action_Interpolation->setEnabled(state);
+	ui->action_Disable_sRGB_FBO->setEnabled(state);
+	ui->action_Fullscreen->setEnabled(state);
+	ui->action_Stretch_in_fullscreen->setEnabled(state);
+#else
+	ui->action_Disable_sRGB_FBO->setVisible(false);
 #endif
 	ui->action_Disable_emphasis_swap_PAL->setChecked(cfg->disable_swap_emphasis_pal);
 	ui->action_VSync->setChecked(cfg->vsync);
 	ui->action_Interpolation->setChecked(cfg->interpolation);
 	ui->action_Text_on_screen->setChecked(cfg->txt_on_screen);
+#if defined (WITH_OPENGL)
+	ui->action_Disable_sRGB_FBO->setChecked(cfg->disable_srgb_fbo);
+#endif
 	ui->action_Stretch_in_fullscreen->setChecked(cfg->stretch);
 	// Settings/Audio/Buffer Size factor
 	switch (cfg->audio_buffer_factor) {
@@ -1389,6 +1403,7 @@ void mainWindow::connect_menu_signals() {
 	connect_action(ui->action_PAR_11, PAR11, SLOT(s_set_par()));
 	connect_action(ui->action_PAR_54, PAR54, SLOT(s_set_par()));
 	connect_action(ui->action_PAR_87, PAR87, SLOT(s_set_par()));
+	connect_action(ui->action_PAR_118, PAR118, SLOT(s_set_par()));
 	connect_action(ui->action_PAR_Soft_Stretch, SLOT(s_set_par_stretch()));
 	// Settings/Video/Overscan
 	connect_action(ui->action_Oscan_Default, OSCAN_DEFAULT, SLOT(s_set_overscan()));
@@ -1441,6 +1456,9 @@ void mainWindow::connect_menu_signals() {
 	connect_action(ui->action_VSync, SLOT(s_set_vsync()));
 	connect_action(ui->action_Interpolation, SLOT(s_set_interpolation()));
 	connect_action(ui->action_Text_on_screen, SLOT(s_set_txt_on_screen()));
+#if defined (WITH_OPENGL)
+	connect_action(ui->action_Disable_sRGB_FBO, SLOT(s_set_disable_srgb_fbo()));
+#endif
 	connect_action(ui->action_Fullscreen, SLOT(s_set_fullscreen()));
 	connect_action(ui->action_Stretch_in_fullscreen, SLOT(s_set_stretch()));
 	// Settings/Audio/Buffer Size factor
@@ -2000,6 +2018,15 @@ void mainWindow::s_set_interpolation() {
 void mainWindow::s_set_txt_on_screen() {
 	cfg->txt_on_screen = !cfg->txt_on_screen;
 }
+#if defined (WITH_OPENGL)
+void mainWindow::s_set_disable_srgb_fbo() {
+	cfg->disable_srgb_fbo = !cfg->disable_srgb_fbo;
+
+	if (info.sRGB_FBO_in_use == TRUE) {
+		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
+	}
+}
+#endif
 void mainWindow::s_set_stretch() {
 	cfg->stretch = !cfg->stretch;
 

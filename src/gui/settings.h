@@ -62,6 +62,9 @@ enum set_element {
 	SET_VSYNC,
 	SET_INTERPOLATION,
 	SET_TEXT_ON_SCREEN,
+#if defined (WITH_OPENGL)
+	SET_DISABLE_SRGB_FBO,
+#endif
 	SET_FULLSCREEN,
 	SET_STRETCH_FULLSCREEN,
 	SET_AUDIO_BUFFER_FACTOR,
@@ -325,9 +328,10 @@ static const _opt opt_scale[] = {
 	{NULL, "4x", X4}
 };
 static const _opt opt_par[] = {
-	{NULL, "1:1", PAR11},
-	{NULL, "5:4", PAR54},
-	{NULL, "8:7", PAR87}
+	{NULL, "1:1" , PAR11},
+	{NULL, "5:4" , PAR54},
+	{NULL, "8:7" , PAR87},
+	{NULL, "11:8", PAR118}
 };
 static const _opt opt_oscan[] = {
 	{NULL, "off"    , OSCAN_OFF},
@@ -517,14 +521,14 @@ static const _settings main_cfg[] = {
 	},
 	{
 		"video", "pixel aspect ratio", "8:7",
-		"# possible values: 1:1, 5:4, 8:7",
-		"-e, --pixel-aspect-ratio  enable aspect ratio   : 1:1, 5:4, 8:7",
+		"# possible values: 1:1, 5:4, 8:7, 11:8",
+		"-e, --pixel-aspect-ratio  enable aspect ratio   : 1:1, 5:4, 8:7, 11:8",
 		{LENGTH(opt_par), opt_par}
 	},
 	{
 		"video", "pixel aspect ratio soft stretch", "yes",
 		"# possible values: yes, no",
-		"    --par-soft-stretch    improves the          : yes, no\n"
+		"    --par-soft-stretch    improves the          : yes, no" NEWLINE
 		"                          stretched image",
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
@@ -551,7 +555,7 @@ static const _settings main_cfg[] = {
 	{
 		"video", "filter", "none",
 		"# possible values: none, scale2x, scale3x, scale4x, hq2x, hq3x," NEWLINE
-		"#                  hq4x, xbrz2x, xbrz3x, xbrz4x, ntsc, crtdotmask, " NEWLINE
+		"#                  hq4x, xbrz2x, xbrz3x, xbrz4x, ntsc, crtdotmask," NEWLINE
 		"#                  crtscanlines, crtcurve, emboss, noise, ntsc2phcomp" NEWLINE
 		"#                  oldtv, file",
 		"-i, --filter              filter to apply       : nofilter, scale2x," NEWLINE
@@ -613,6 +617,16 @@ static const _settings main_cfg[] = {
 		"    --txt-on-screen       enable messages       : yes, no",
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
+#if defined (WITH_OPENGL)
+	{
+		"video", "disable sRGB FBO (Shaders)", "no",
+		"# possible values: yes, no",
+		"    --disable-srgb-fbo    disable in the        : yes, no" NEWLINE
+		"                          shaders the use of" NEWLINE
+		"                          sRGB FBO",
+		{LENGTH(opt_no_yes), opt_no_yes}
+	},
+#endif
 	{
 		"video", "fullscreen", "no",
 		"# possible values: yes, no",

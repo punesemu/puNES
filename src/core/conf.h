@@ -54,6 +54,9 @@ typedef struct _config {
 	BYTE interpolation;
 	BYTE cheat_mode;
 	BYTE txt_on_screen;
+#if defined (WITH_OPENGL)
+	BYTE disable_srgb_fbo;
+#endif
 	BYTE bck_pause;
 	WORD language;
 

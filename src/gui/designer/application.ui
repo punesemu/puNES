@@ -205,6 +205,7 @@
       <addaction name="action_PAR_11"/>
       <addaction name="action_PAR_54"/>
       <addaction name="action_PAR_87"/>
+      <addaction name="action_PAR_118"/>
       <addaction name="separator"/>
       <addaction name="action_PAR_Soft_Stretch"/>
      </widget>
@@ -314,6 +315,7 @@
      <addaction name="action_VSync"/>
      <addaction name="action_Interpolation"/>
      <addaction name="action_Text_on_screen"/>
+     <addaction name="action_Disable_sRGB_FBO"/>
      <addaction name="separator"/>
      <addaction name="action_Fullscreen"/>
      <addaction name="action_Stretch_in_fullscreen"/>
@@ -1964,6 +1966,22 @@
    </property>
    <property name="text">
     <string>Firebrandx &amp;Unsaturated</string>
+   </property>
+  </action>
+  <action name="action_Disable_sRGB_FBO">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Disable sRGB FBO</string>
+   </property>
+  </action>
+  <action name="action_PAR_118">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>11:8 (&amp;PAL TV)</string>
    </property>
   </action>
  </widget>

@@ -431,6 +431,9 @@ void gfx_set_screen(BYTE scale, DBWORD filter, BYTE fullscreen, BYTE palette, BY
 						case PAR87:
 							gfx.pixel_aspect_ratio = 8.0f / 7.0f;
 							break;
+						case PAR118:
+							gfx.pixel_aspect_ratio = 2950000.0f / 2128137.0f;
+							break;
 					}
 				}
 

@@ -66,6 +66,9 @@ EXTERNC struct _info {
 	BYTE on_cfg;
 	BYTE pause_frames_drawscreen;
 	BYTE first_illegal_opcode;
+#if defined (WITH_OPENGL)
+	BYTE sRGB_FBO_in_use;
+#endif
 	_info_sh1sum sha1sum;
 	struct _info_chr {
 		struct _info_chr_rom {

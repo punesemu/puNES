@@ -139,6 +139,9 @@ class mainWindow: public QMainWindow {
 		void s_set_vsync();
 		void s_set_interpolation();
 		void s_set_txt_on_screen();
+#if defined (WITH_OPENGL)
+		void s_set_disable_srgb_fbo();
+#endif
 		void s_set_stretch();
 		void s_set_audio_buffer_factor();
 		void s_set_samplerate();
