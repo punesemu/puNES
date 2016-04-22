@@ -107,6 +107,8 @@ enum inp_element {
 	SET_INP_SC_SCALE_2X,
 	SET_INP_SC_SCALE_3X,
 	SET_INP_SC_SCALE_4X,
+	SET_INP_SC_SCALE_5X,
+	SET_INP_SC_SCALE_6X,
 #if defined (WITH_OPENGL)
 	SET_INP_SC_EFFECT_CUBE,
 #endif
@@ -325,7 +327,9 @@ static const _opt opt_scale[] = {
 	{NULL, "1x", X1},
 	{NULL, "2x", X2},
 	{NULL, "3x", X3},
-	{NULL, "4x", X4}
+	{NULL, "4x", X4},
+	{NULL, "5x", X5},
+	{NULL, "6x", X6}
 };
 static const _opt opt_par[] = {
 	{NULL, "1:1" , PAR11},
@@ -350,9 +354,9 @@ static const _opt opt_filter[] = {
 	{"xBRZ 2x"              , "xbrz2x"      , XBRZ2X},
 	{"xBRZ 3x"              , "xbrz3x"      , XBRZ3X},
 	{"xBRZ 4x"              , "xbrz4x"      , XBRZ4X},
-	// per filtri CPU aggiuntivi futuri
-	{NULL                   , NULL          , NO_FILTER},
-	{NULL                   , NULL          , NO_FILTER},
+	{"xBRZ 5x"              , "xbrz5x"      , XBRZ5X},
+	{"xBRZ 6x"              , "xbrz6x"      , XBRZ6X},
+	// per filtri CPU futuri
 	{NULL                   , NULL          , NO_FILTER},
 	{NULL                   , NULL          , NO_FILTER},
 	{NULL                   , NULL          , NO_FILTER},
@@ -514,9 +518,11 @@ static const _settings main_cfg[] = {
 	},
 	{
 		"video", "size window", "2x",
-		"# possible values: 1x, 2x, 3x, 4x" NEWLINE
-		"# Note : 1x works only with \'filter=none\'",
-		"-s, --size                window size           : 1x, 2x, 3x, 4x",
+		"# possible values: 1x, 2x, 3x, 4x, 5x, 6x" NEWLINE
+		"# Note : 1x works only with \'filter=none\'" NEWLINE
+		"# and software filters ScaleXX, HqXX and NTSC" NEWLINE
+		"# don't supports 5x and 6x.",
+		"-s, --size                window size           : 1x, 2x, 3x, 4x, 5x, 6x",
 		{LENGTH(opt_scale), opt_scale}
 	},
 	{
@@ -555,16 +561,16 @@ static const _settings main_cfg[] = {
 	{
 		"video", "filter", "none",
 		"# possible values: none, scale2x, scale3x, scale4x, hq2x, hq3x," NEWLINE
-		"#                  hq4x, xbrz2x, xbrz3x, xbrz4x, ntsc, crtdotmask," NEWLINE
-		"#                  crtscanlines, crtcurve, emboss, noise, ntsc2phcomp" NEWLINE
-		"#                  oldtv, file",
+		"#                  hq4x, xbrz2x, xbrz3x, xbrz4x, xbrz5x, xbrz6x, ntsc," NEWLINE
+		"#                  crtdotmask, crtscanlines, crtcurve, emboss, noise," NEWLINE
+		"#                  ntsc2phcomp, oldtv, file",
 		"-i, --filter              filter to apply       : nofilter, scale2x," NEWLINE
 		"                                                  scale3x, scale4x, hq2x," NEWLINE
 		"                                                  hq3x, hq4x, xbrz2x, xbrz3x," NEWLINE
-		"                                                  xbrz4x, ntsc, crtdotmask," NEWLINE
-		"                                                  crtscanlines, crtcurve," NEWLINE
-		"                                                  emboss, noise, ntsc2phcomp," NEWLINE
-		"                                                  oldtv, file",
+		"                                                  xbrz4x, xbrz5x, xbrz6x, ntsc," NEWLINE
+		"                                                  crtdotmask, crtscanlines," NEWLINE
+		"                                                  crtcurve, emboss, noise," NEWLINE
+		"                                                  ntsc2phcomp, oldtv, file",
 		{LENGTH(opt_filter), opt_filter}
 	},
 	{
@@ -781,6 +787,8 @@ static const _settings inp_cfg[] = {
 	{"shortcuts", "scale 2x",                 "Alt+2,NULL",      NULL, NULL, {0, NULL}},
 	{"shortcuts", "scale 3x",                 "Alt+3,NULL",      NULL, NULL, {0, NULL}},
 	{"shortcuts", "scale 4x",                 "Alt+4,NULL",      NULL, NULL, {0, NULL}},
+	{"shortcuts", "scale 5x",                 "Alt+5,NULL",      NULL, NULL, {0, NULL}},
+	{"shortcuts", "scale 6x",                 "Alt+6,NULL",      NULL, NULL, {0, NULL}},
 #if defined (WITH_OPENGL)
 	{"shortcuts", "cube effect",              "ALt+R,NULL",      NULL, NULL, {0, NULL}},
 #endif

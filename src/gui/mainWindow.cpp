@@ -185,6 +185,8 @@ void mainWindow::setup() {
 	grp->addAction(ui->action_2x);
 	grp->addAction(ui->action_3x);
 	grp->addAction(ui->action_4x);
+	grp->addAction(ui->action_5x);
+	grp->addAction(ui->action_6x);
 	// Settings/Video/Pixel Aspect Ratio
 	grp = new QActionGroup(this);
 	grp->setExclusive(true);
@@ -216,6 +218,8 @@ void mainWindow::setup() {
 	grp->addAction(ui->action_xBRZ_2X);
 	grp->addAction(ui->action_xBRZ_3X);
 	grp->addAction(ui->action_xBRZ_4X);
+	grp->addAction(ui->action_xBRZ_5X);
+	grp->addAction(ui->action_xBRZ_6X);
 	grp->addAction(ui->action_NTSC_Composite);
 	grp->addAction(ui->action_NTSC_SVideo);
 	grp->addAction(ui->action_NTSC_RGB);
@@ -689,6 +693,15 @@ void mainWindow::update_menu_settings() {
 		ui->action_1x->setEnabled(true);
 	}
 
+	if (((cfg->filter >= SCALE2X) && (cfg->filter <= SCALE4X)) ||
+			((cfg->filter >= HQ2X) && (cfg->filter <= HQ4X)) || (cfg->filter == NTSC_FILTER)) {
+		ui->action_5x->setEnabled(false);
+		ui->action_6x->setEnabled(false);
+	} else {
+		ui->action_5x->setEnabled(true);
+		ui->action_6x->setEnabled(true);
+	}
+
 	if (cfg->fullscreen == NO_FULLSCR) {
 		switch (cfg->scale) {
 			case X1:
@@ -702,6 +715,12 @@ void mainWindow::update_menu_settings() {
 				break;
 			case X4:
 				ui->action_4x->setChecked(true);
+				break;
+			case X5:
+				ui->action_5x->setChecked(true);
+				break;
+			case X6:
+				ui->action_6x->setChecked(true);
 				break;
 		}
 	}
@@ -840,6 +859,12 @@ void mainWindow::update_menu_settings() {
 			break;
 		case XBRZ4X:
 			ui->action_xBRZ_4X->setChecked(true);
+			break;
+		case XBRZ5X:
+			ui->action_xBRZ_5X->setChecked(true);
+			break;
+		case XBRZ6X:
+			ui->action_xBRZ_6X->setChecked(true);
 			break;
 		case NTSC_FILTER: {
 			switch (cfg->ntsc_format) {
@@ -1209,6 +1234,8 @@ void mainWindow::shortcuts() {
 	connect_shortcut(ui->action_2x, SET_INP_SC_SCALE_2X);
 	connect_shortcut(ui->action_3x, SET_INP_SC_SCALE_3X);
 	connect_shortcut(ui->action_4x, SET_INP_SC_SCALE_4X);
+	connect_shortcut(ui->action_5x, SET_INP_SC_SCALE_5X);
+	connect_shortcut(ui->action_6x, SET_INP_SC_SCALE_6X);
 	// Settings/Video/[Interpolation, Fullscreen, Stretch in fullscreen]
 	connect_shortcut(ui->action_Interpolation, SET_INP_SC_INTERPOLATION,
 			SLOT(s_set_interpolation()));
@@ -1399,6 +1426,8 @@ void mainWindow::connect_menu_signals() {
 	connect_action(ui->action_2x, X2, SLOT(s_set_scale()));
 	connect_action(ui->action_3x, X3, SLOT(s_set_scale()));
 	connect_action(ui->action_4x, X4, SLOT(s_set_scale()));
+	connect_action(ui->action_5x, X5, SLOT(s_set_scale()));
+	connect_action(ui->action_6x, X6, SLOT(s_set_scale()));
 	// Settings/Video/Pixel Aspect Ratio
 	connect_action(ui->action_PAR_11, PAR11, SLOT(s_set_par()));
 	connect_action(ui->action_PAR_54, PAR54, SLOT(s_set_par()));
@@ -1424,6 +1453,8 @@ void mainWindow::connect_menu_signals() {
 	connect_action(ui->action_xBRZ_2X, XBRZ2X, SLOT(s_set_other_filter()));
 	connect_action(ui->action_xBRZ_3X, XBRZ3X, SLOT(s_set_other_filter()));
 	connect_action(ui->action_xBRZ_4X, XBRZ4X, SLOT(s_set_other_filter()));
+	connect_action(ui->action_xBRZ_5X, XBRZ5X, SLOT(s_set_other_filter()));
+	connect_action(ui->action_xBRZ_6X, XBRZ6X, SLOT(s_set_other_filter()));
 	connect_action(ui->action_NTSC_Composite, COMPOSITE, SLOT(s_set_ntsc_filter()));
 	connect_action(ui->action_NTSC_SVideo, SVIDEO, SLOT(s_set_ntsc_filter()));
 	connect_action(ui->action_NTSC_RGB, RGBMODE, SLOT(s_set_ntsc_filter()));
@@ -2395,6 +2426,12 @@ void mainWindow::s_shcjoy_read_timer() {
 					break;
 				case SET_INP_SC_SCALE_4X:
 					ui->action_4x->trigger();
+					break;
+				case SET_INP_SC_SCALE_5X:
+					ui->action_5x->trigger();
+					break;
+				case SET_INP_SC_SCALE_6X:
+					ui->action_6x->trigger();
 					break;
 				case SET_INP_SC_INTERPOLATION:
 					ui->action_Interpolation->trigger();

@@ -40,7 +40,7 @@
 #define FH_SHADERS_GEST
 
 enum fullscreen_type { NO_FULLSCR, FULLSCR };
-enum scale_type { X1 = 1, X2, X3, X4 };
+enum scale_type { X1 = 1, X2, X3, X4, X5, X6 };
 enum par_type { PAR11, PAR54, PAR87, PAR118 };
 enum filters_type {
 	NO_FILTER,
@@ -54,6 +54,8 @@ enum filters_type {
 	XBRZ2X,
 	XBRZ3X,
 	XBRZ4X,
+	XBRZ5X,
+	XBRZ6X,
 	FUTURE_USE0,
 	FUTURE_USE1,
 	FUTURE_USE2,
@@ -67,8 +69,6 @@ enum filters_type {
 	FUTURE_USE10,
 	FUTURE_USE11,
 	FUTURE_USE12,
-	FUTURE_USE13,
-	FUTURE_USE14,
 	/* shaders */
 	FLTSHDSTART,
 	SHADER_CRTDOTMASK = FLTSHDSTART,

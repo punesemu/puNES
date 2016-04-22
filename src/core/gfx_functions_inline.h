@@ -100,6 +100,12 @@ static void INLINE gfx_FILTER(int filter) {
 		case XBRZ4X:
 			gfx_set_screen(X4, XBRZ4X, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 			break;
+		case XBRZ5X:
+			gfx_set_screen(X5, XBRZ5X, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
+			break;
+		case XBRZ6X:
+			gfx_set_screen(X6, XBRZ6X, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
+			break;
 		default:
 			// shaders
 			gfx_set_screen(NO_CHANGE, filter, NO_CHANGE, NO_CHANGE, FALSE, FALSE);

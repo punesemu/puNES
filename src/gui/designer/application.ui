@@ -193,6 +193,8 @@
       <addaction name="action_2x"/>
       <addaction name="action_3x"/>
       <addaction name="action_4x"/>
+      <addaction name="action_5x"/>
+      <addaction name="action_6x"/>
      </widget>
      <widget class="QMenu" name="menu_Pixel_Aspect_Ratio">
       <property name="title">
@@ -255,6 +257,8 @@
       <addaction name="action_xBRZ_2X"/>
       <addaction name="action_xBRZ_3X"/>
       <addaction name="action_xBRZ_4X"/>
+      <addaction name="action_xBRZ_5X"/>
+      <addaction name="action_xBRZ_6X"/>
       <addaction name="action_NTSC_Composite"/>
       <addaction name="action_NTSC_SVideo"/>
       <addaction name="action_NTSC_RGB"/>
@@ -1982,6 +1986,38 @@
    </property>
    <property name="text">
     <string>11:8 (&amp;PAL TV)</string>
+   </property>
+  </action>
+  <action name="action_5x">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;5x</string>
+   </property>
+  </action>
+  <action name="action_6x">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;6x</string>
+   </property>
+  </action>
+  <action name="action_xBRZ_5X">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;xBRZ 5X</string>
+   </property>
+  </action>
+  <action name="action_xBRZ_6X">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;xBRZ 6X</string>
    </property>
   </action>
  </widget>

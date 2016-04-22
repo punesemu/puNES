@@ -277,11 +277,13 @@ void gfx_set_screen(BYTE scale, DBWORD filter, BYTE fullscreen, BYTE palette, BY
 			case XBRZ2X:
 			case XBRZ3X:
 			case XBRZ4X:
+			case XBRZ5X:
+			case XBRZ6X:
 				if ((filter >= SCALE2X) && (filter <= SCALE4X)) {
 					gfx.filter = scaleNx;
 				} else  if ((filter >= HQ2X) && (filter <= HQ4X)) {
 					gfx.filter = hqNx;
-				} else  if ((filter >= XBRZ2X) && (filter <= XBRZ4X)) {
+				} else  if ((filter >= XBRZ2X) && (filter <= XBRZ6X)) {
 					gfx.filter = xBRZ;
 				}
 				// se sto passando dal filtro ntsc ad un'altro, devo
@@ -329,13 +331,15 @@ void gfx_set_screen(BYTE scale, DBWORD filter, BYTE fullscreen, BYTE palette, BY
 	}
 	if ((scale != cfg->scale) || info.on_cfg || force_scale) {
 
-#define ctrl_filter_scale(scalexf, hqxf, xbrzxf)\
+#define ctrl_software_filter_scale(scalexf, hqxf, xbrzxf, ntsc)\
 	if ((filter >= SCALE2X) && (filter <= SCALE4X)) {\
 		filter = scalexf;\
-	} else  if ((filter >= HQ2X) && (filter <= HQ4X)) {\
+	} else if ((filter >= HQ2X) && (filter <= HQ4X)) {\
 		filter = hqxf;\
-	} else  if ((filter >= XBRZ2X) && (filter <= XBRZ4X)) {\
+	} else if ((filter >= XBRZ2X) && (filter <= XBRZ6X)) {\
 		filter = xbrzxf;\
+	} else if (filter == NTSC_FILTER) {\
+		filter = ntsc;\
 	}
 
 		switch (scale) {
@@ -350,17 +354,27 @@ void gfx_set_screen(BYTE scale, DBWORD filter, BYTE fullscreen, BYTE palette, BY
 				set_mode = TRUE;
 				break;
 			case X2:
-				ctrl_filter_scale(SCALE2X, HQ2X, XBRZ2X)
+				ctrl_software_filter_scale(SCALE2X, HQ2X, XBRZ2X, NTSC_FILTER)
 				ntsc_width(width, ntsc_width_pixel[scale], TRUE);
 				set_mode = TRUE;
 				break;
 			case X3:
-				ctrl_filter_scale(SCALE3X, HQ3X, XBRZ3X)
+				ctrl_software_filter_scale(SCALE3X, HQ3X, XBRZ3X, NTSC_FILTER)
 				ntsc_width(width, ntsc_width_pixel[scale], TRUE);
 				set_mode = TRUE;
 				break;
 			case X4:
-				ctrl_filter_scale(SCALE4X, HQ4X, XBRZ4X)
+				ctrl_software_filter_scale(SCALE4X, HQ4X, XBRZ4X, NTSC_FILTER)
+				ntsc_width(width, ntsc_width_pixel[scale], TRUE);
+				set_mode = TRUE;
+				break;
+			case X5:
+				ctrl_software_filter_scale(NO_FILTER, NO_FILTER, XBRZ5X, NO_FILTER)
+				ntsc_width(width, ntsc_width_pixel[scale], TRUE);
+				set_mode = TRUE;
+				break;
+			case X6:
+				ctrl_software_filter_scale(NO_FILTER, NO_FILTER, XBRZ6X, NO_FILTER)
 				ntsc_width(width, ntsc_width_pixel[scale], TRUE);
 				set_mode = TRUE;
 				break;
