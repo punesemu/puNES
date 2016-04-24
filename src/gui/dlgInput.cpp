@@ -206,8 +206,10 @@ void dlgInput::update_dialog() {
 	update_text_shortcut(parentMain->ui->action_Soft_Reset, SET_INP_SC_SOFT_RESET);
 	update_text_shortcut(parentMain->ui->action_Switch_sides, SET_INP_SC_SWITCH_SIDES);
 	update_text_shortcut(parentMain->ui->action_Eject_Insert_Disk, SET_INP_SC_EJECT_DISK);
+	update_text_shortcut(parentMain->ui->action_Fullscreen, SET_INP_SC_FULLSCREEN);
 	update_text_shortcut(parentMain->ui->action_Pause, SET_INP_SC_PAUSE);
 	update_text_shortcut(parentMain->ui->action_Fast_Forward, SET_INP_SC_FAST_FORWARD);
+	update_text_shortcut(parentMain->ui->action_Save_Screenshot, SET_INP_SC_SCREENSHOT);
 	update_text_shortcut(parentMain->ui->action_PAL, SET_INP_SC_MODE_PAL);
 	update_text_shortcut(parentMain->ui->action_NTSC, SET_INP_SC_MODE_NTSC);
 	update_text_shortcut(parentMain->ui->action_Dendy, SET_INP_SC_MODE_DENDY);
@@ -216,8 +218,9 @@ void dlgInput::update_dialog() {
 	update_text_shortcut(parentMain->ui->action_2x, SET_INP_SC_SCALE_2X);
 	update_text_shortcut(parentMain->ui->action_3x, SET_INP_SC_SCALE_3X);
 	update_text_shortcut(parentMain->ui->action_4x, SET_INP_SC_SCALE_4X);
+	update_text_shortcut(parentMain->ui->action_5x, SET_INP_SC_SCALE_5X);
+	update_text_shortcut(parentMain->ui->action_6x, SET_INP_SC_SCALE_6X);
 	update_text_shortcut(parentMain->ui->action_Interpolation, SET_INP_SC_INTERPOLATION);
-	update_text_shortcut(parentMain->ui->action_Fullscreen, SET_INP_SC_FULLSCREEN);
 	update_text_shortcut(parentMain->ui->action_Stretch_in_fullscreen, SET_INP_SC_STRETCH_FULLSCREEN);
 	update_text_shortcut(parentMain->ui->action_Audio_Enable, SET_INP_SC_AUDIO_ENABLE);
 	update_text_shortcut(parentMain->ui->action_Save_settings, SET_INP_SC_SAVE_SETTINGS);

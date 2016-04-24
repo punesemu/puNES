@@ -104,6 +104,7 @@ EXTERNC void gui_control_visible_cursor(void);
 EXTERNC void gui_mainWindow_make_reset(BYTE type);
 
 EXTERNC BYTE gui_load_lut(void *l, const char *path);
+EXTERNC void gui_save_screenshot(int w, int h, char *buffer, BYTE flip);
 
 EXTERNC double (*gui_get_ms)(void);
 

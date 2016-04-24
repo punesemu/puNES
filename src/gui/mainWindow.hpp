@@ -120,6 +120,7 @@ class mainWindow: public QMainWindow {
 		void s_eject_disk();
 		void s_pause();
 		void s_fast_forward();
+		void s_save_screenshot();
 		void s_set_mode();
 		void s_set_rendering();
 		void s_set_fps();

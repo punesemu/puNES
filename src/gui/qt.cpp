@@ -305,6 +305,33 @@ BYTE gui_load_lut(void *l, const char *path) {
 
 	return (EXIT_OK);
 }
+void gui_save_screenshot(int w, int h, char *buffer, BYTE flip) {
+	QString basename = QString(info.base_folder) + QString(SCRSHT_FOLDER) + "/"
+			+ QFileInfo(info.rom_file).completeBaseName();
+	QImage screenshot = QImage((uchar *)buffer, w, h, QImage::Format_RGB32);
+	QFile file;
+	uint count;
+
+	if (!info.rom_file[0]) {
+		return;
+	}
+
+	for (count = 1; count < 999999; count++) {
+		QString final = basename + QString("_%1.png").arg(count, 6, 'd', 0, '0');
+
+		if (QFileInfo(final).exists() == false) {
+			file.setFileName(final);
+			break;
+		}
+	}
+
+	if (flip) {
+		screenshot = screenshot.mirrored(false, true);
+	}
+
+	file.open(QIODevice::WriteOnly);
+	screenshot.save(&file, "PNG");
+}
 
 #if defined (__WIN32__)
 #include "os_windows.h"

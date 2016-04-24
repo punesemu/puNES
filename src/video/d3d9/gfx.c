@@ -92,6 +92,8 @@ INLINE static void d3d9_shader_param_set(const _texture *texture, UINT fcountmod
 static const BYTE ntsc_width_pixel[5] = {0, 0, 7, 10, 14};
 
 BYTE gfx_init(void) {
+	gfx.save_screenshot = FALSE;
+
 	// casi particolari provenienti dal settings_file_parse() e cmd_line_parse()
 	if ((cfg->scale == X1) && (cfg->filter != NO_FILTER)) {
 		cfg->scale = X2;
@@ -783,6 +785,33 @@ void gfx_draw_screen(BYTE forced) {
 
 				emu_pause(FALSE);
 			}
+		}
+
+		// screenshot
+		if (gfx.save_screenshot == TRUE) {
+			IDirect3DSurface9 *back_buffer, *surface;
+
+			if (IDirect3DDevice9_GetBackBuffer(d3d9.adapter->dev, 0, 0, D3DBACKBUFFER_TYPE_MONO,
+					&back_buffer) == D3D_OK) {
+				D3DSURFACE_DESC sd;
+
+				IDirect3DSurface9_GetDesc(back_buffer, &sd);
+
+				if (IDirect3DDevice9_CreateOffscreenPlainSurface(d3d9.adapter->dev, sd.Width,
+						sd.Height, sd.Format, D3DPOOL_SYSTEMMEM, &surface, NULL) == D3D_OK) {
+					if (IDirect3DDevice9_GetRenderTargetData(d3d9.adapter->dev, back_buffer,
+							surface) == D3D_OK) {
+						D3DLOCKED_RECT lrect;
+
+						IDirect3DSurface9_LockRect(surface, &lrect, NULL, D3DLOCK_DISCARD);
+						gui_save_screenshot(sd.Width, sd.Height, lrect.pBits, FALSE);
+						IDirect3DSurface9_UnlockRect(surface);
+					}
+					IDirect3DSurface9_Release(surface);
+				}
+				IDirect3DSurface9_Release(back_buffer);
+			}
+			gfx.save_screenshot = FALSE;
 		}
 	}
 }

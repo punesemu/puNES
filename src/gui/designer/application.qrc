@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="icon">
+    <file>icons/screenshot.png</file>
     <file>icons/cpu_filter.png</file>
     <file>icons/buffer_size.png</file>
     <file>icons/fast_forward.png</file>

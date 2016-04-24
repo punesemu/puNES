@@ -599,6 +599,18 @@ int opengl_flip(SDL_Surface *surface) {
 
 	return (0);
 }
+void opengl_screenshot(void) {
+	char *buffer;
+
+	glReadBuffer(GL_FRONT);
+	if ((buffer = malloc(opengl.text.rect.w * opengl.text.rect.h * 4)) == NULL) {
+		return;
+	}
+	glPixelStorei(GL_PACK_ALIGNMENT, 1);
+	glReadPixels(0, 0, opengl.text.rect.w, opengl.text.rect.h, GL_BGRA, GL_UNSIGNED_BYTE, buffer);
+	gui_save_screenshot(opengl.text.rect.w, opengl.text.rect.h, buffer, TRUE);
+	free(buffer);
+}
 
 static BYTE opengl_glew_init(void) {
 	if (opengl.supported){

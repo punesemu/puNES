@@ -1222,8 +1222,10 @@ void mainWindow::shortcuts() {
 	connect_shortcut(ui->action_Soft_Reset, SET_INP_SC_SOFT_RESET, SLOT(s_make_reset()));
 	connect_shortcut(ui->action_Switch_sides, SET_INP_SC_SWITCH_SIDES, SLOT(s_disk_side()));
 	connect_shortcut(ui->action_Eject_Insert_Disk, SET_INP_SC_EJECT_DISK, SLOT(s_eject_disk()));
+	connect_shortcut(ui->action_Fullscreen, SET_INP_SC_FULLSCREEN, SLOT(s_set_fullscreen()));
 	connect_shortcut(ui->action_Pause, SET_INP_SC_PAUSE, SLOT(s_pause()));
 	connect_shortcut(ui->action_Fast_Forward, SET_INP_SC_FAST_FORWARD, SLOT(s_fast_forward()));
+	connect_shortcut(ui->action_Save_Screenshot, SET_INP_SC_SCREENSHOT, SLOT(s_save_screenshot()));
 	// Settings/Mode
 	connect_shortcut(ui->action_PAL, SET_INP_SC_MODE_PAL, SLOT(s_set_mode()));
 	connect_shortcut(ui->action_NTSC, SET_INP_SC_MODE_NTSC, SLOT(s_set_mode()));
@@ -1236,19 +1238,15 @@ void mainWindow::shortcuts() {
 	connect_shortcut(ui->action_4x, SET_INP_SC_SCALE_4X);
 	connect_shortcut(ui->action_5x, SET_INP_SC_SCALE_5X);
 	connect_shortcut(ui->action_6x, SET_INP_SC_SCALE_6X);
-	// Settings/Video/[Interpolation, Fullscreen, Stretch in fullscreen]
+	// Settings/Video/[Interpolation, Stretch in fullscreen]
 	connect_shortcut(ui->action_Interpolation, SET_INP_SC_INTERPOLATION,
 			SLOT(s_set_interpolation()));
-	connect_shortcut(ui->action_Fullscreen, SET_INP_SC_FULLSCREEN,
-			SLOT(s_set_fullscreen()));
 	connect_shortcut(ui->action_Stretch_in_fullscreen, SET_INP_SC_STRETCH_FULLSCREEN,
 			SLOT(s_set_stretch()));
 	// Settings/Audio/Enable
-	connect_shortcut(ui->action_Audio_Enable, SET_INP_SC_AUDIO_ENABLE,
-			SLOT(s_set_audio_enable()));
+	connect_shortcut(ui->action_Audio_Enable, SET_INP_SC_AUDIO_ENABLE, SLOT(s_set_audio_enable()));
 	// Settings/Save settings
-	connect_shortcut(ui->action_Save_settings, SET_INP_SC_SAVE_SETTINGS,
-			SLOT(s_save_settings()));
+	connect_shortcut(ui->action_Save_settings, SET_INP_SC_SAVE_SETTINGS, SLOT(s_save_settings()));
 	// State/[Save state, Load state]
 	connect_shortcut(ui->action_Save_state, SET_INP_SC_SAVE_STATE,
 			SLOT(s_state_save_slot_action()));
@@ -1773,6 +1771,9 @@ void mainWindow::s_fast_forward() {
 		fps_normalize();
 	}
 	update_menu_nes();
+}
+void mainWindow::s_save_screenshot() {
+	gfx.save_screenshot = true;
 }
 void mainWindow::s_set_mode() {
 	int mode = QVariant(((QObject *)sender())->property("myValue")).toInt();
@@ -2397,11 +2398,17 @@ void mainWindow::s_shcjoy_read_timer() {
 				case SET_INP_SC_EJECT_DISK:
 					ui->action_Eject_Insert_Disk->trigger();
 					break;
+				case SET_INP_SC_FULLSCREEN:
+					ui->action_Fullscreen->trigger();
+					break;
 				case SET_INP_SC_PAUSE:
 					ui->action_Pause->trigger();
 					break;
 				case SET_INP_SC_FAST_FORWARD:
 					ui->action_Fast_Forward->trigger();
+					break;
+				case SET_INP_SC_SCREENSHOT:
+					ui->action_Save_Screenshot->trigger();
 					break;
 				case SET_INP_SC_MODE_PAL:
 					ui->action_PAL->trigger();
@@ -2435,9 +2442,6 @@ void mainWindow::s_shcjoy_read_timer() {
 					break;
 				case SET_INP_SC_INTERPOLATION:
 					ui->action_Interpolation->trigger();
-					break;
-				case SET_INP_SC_FULLSCREEN:
-					ui->action_Fullscreen->trigger();
 					break;
 				case SET_INP_SC_STRETCH_FULLSCREEN:
 					ui->action_Stretch_in_fullscreen->trigger();

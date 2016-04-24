@@ -118,6 +118,7 @@ EXTERNC struct _gfx {
 	BYTE opengl;
 #endif
 	BYTE PSS;
+	BYTE save_screenshot;
 	BYTE scale_before_fscreen;
 	BYTE bit_per_pixel;
 	WORD rows, lines;

@@ -89,6 +89,8 @@ static SDL_Cursor *init_system_cursor(char *xpm[]);
 BYTE gfx_init(void) {
 	const SDL_VideoInfo *video_info;
 
+	gfx.save_screenshot = FALSE;
+
 	// casi particolari provenienti dal settings_file_parse() e cmd_line_parse()
 	if ((cfg->scale == X1) && (cfg->filter != NO_FILTER)) {
 		cfg->scale = X2;
@@ -692,6 +694,16 @@ void gfx_draw_screen(BYTE forced) {
 
 		// disegno a video
 		flip(framebuffer);
+
+		// screenshot
+		if (gfx.save_screenshot == TRUE) {
+			if (gfx.opengl) {
+				opengl_screenshot();
+			} else {
+				gui_save_screenshot(framebuffer->w, framebuffer->h, framebuffer->pixels, FALSE);
+			}
+			gfx.save_screenshot = FALSE;
+		}
 	}
 }
 void gfx_reset_video(void) {

@@ -248,6 +248,8 @@ EXTERNC void opengl_text_clear(_txt_element *ele);
 EXTERNC void opengl_text_blit(_txt_element *ele, _rect *rect);
 EXTERNC int opengl_flip(SDL_Surface *surface);
 
+EXTERNC void opengl_screenshot(void);
+
 #undef EXTERNC
 
 #endif /* OPENGL_H_ */

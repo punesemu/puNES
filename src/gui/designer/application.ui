@@ -91,8 +91,10 @@
     <addaction name="action_Hard_Reset"/>
     <addaction name="action_Soft_Reset"/>
     <addaction name="separator"/>
+    <addaction name="action_Fullscreen"/>
     <addaction name="action_Pause"/>
     <addaction name="action_Fast_Forward"/>
+    <addaction name="action_Save_Screenshot"/>
     <addaction name="separator"/>
     <addaction name="menu_Disk_Side"/>
     <addaction name="action_Eject_Insert_Disk"/>
@@ -320,8 +322,6 @@
      <addaction name="action_Interpolation"/>
      <addaction name="action_Text_on_screen"/>
      <addaction name="action_Disable_sRGB_FBO"/>
-     <addaction name="separator"/>
-     <addaction name="action_Fullscreen"/>
      <addaction name="action_Stretch_in_fullscreen"/>
     </widget>
     <widget class="QMenu" name="menu_Audio">
@@ -2018,6 +2018,15 @@
    </property>
    <property name="text">
     <string>&amp;xBRZ 6X</string>
+   </property>
+  </action>
+  <action name="action_Save_Screenshot">
+   <property name="icon">
+    <iconset resource="application.qrc">
+     <normaloff>:/icon/icons/screenshot.png</normaloff>:/icon/icons/screenshot.png</iconset>
+   </property>
+   <property name="text">
+    <string>Save Screenshot</string>
    </property>
   </action>
  </widget>

@@ -88,6 +88,10 @@ int main(int argc, char **argv) {
 		fprintf(stderr, "error on create cheat folder\n");
 		return (EXIT_ERROR);
 	}
+	if (emu_make_dir("%s" SCRSHT_FOLDER, info.base_folder)) {
+		fprintf(stderr, "error on create screenshot folder\n");
+		return (EXIT_ERROR);
+	}
 
 #if defined (__NETPLAY__)
 	netplay_init();
