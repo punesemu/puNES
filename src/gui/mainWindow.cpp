@@ -520,6 +520,14 @@ void mainWindow::update_menu_nes() {
 		ui->action_Eject_Insert_Disk->setEnabled(false);
 	}
 
+#if defined (WITH_OPENGL)
+	if (gfx.opengl) {
+		ui->action_Fullscreen->setEnabled(true);
+	} else {
+		ui->action_Fullscreen->setEnabled(false);
+	}
+#endif
+
 	if (info.pause_from_gui == TRUE) {
 		ui->action_Pause->setChecked(true);
 	} else {
@@ -950,7 +958,6 @@ void mainWindow::update_menu_settings() {
 	ui->action_VSync->setEnabled(state);
 	ui->action_Interpolation->setEnabled(state);
 	ui->action_Disable_sRGB_FBO->setEnabled(state);
-	ui->action_Fullscreen->setEnabled(state);
 	ui->action_Stretch_in_fullscreen->setEnabled(state);
 #else
 	ui->action_Disable_sRGB_FBO->setVisible(false);
@@ -1377,8 +1384,10 @@ void mainWindow::connect_menu_signals() {
 	connect_action(ui->action_Disk_4_side_B, 7, SLOT(s_disk_side()));
 	connect_action(ui->action_Switch_sides, 0xFFF, SLOT(s_disk_side()));
 	connect_action(ui->action_Eject_Insert_Disk, SLOT(s_eject_disk()));
+	connect_action(ui->action_Fullscreen, SLOT(s_set_fullscreen()));
 	connect_action(ui->action_Pause, SLOT(s_pause()));
 	connect_action(ui->action_Fast_Forward, SLOT(s_fast_forward()));
+	connect_action(ui->action_Save_Screenshot, SLOT(s_save_screenshot()));
 	// Settings/Mode
 	connect_action(ui->action_PAL, PAL, SLOT(s_set_mode()));
 	connect_action(ui->action_NTSC, NTSC, SLOT(s_set_mode()));
@@ -1488,7 +1497,6 @@ void mainWindow::connect_menu_signals() {
 #if defined (WITH_OPENGL)
 	connect_action(ui->action_Disable_sRGB_FBO, SLOT(s_set_disable_srgb_fbo()));
 #endif
-	connect_action(ui->action_Fullscreen, SLOT(s_set_fullscreen()));
 	connect_action(ui->action_Stretch_in_fullscreen, SLOT(s_set_stretch()));
 	// Settings/Audio/Buffer Size factor
 	connect_action(ui->action_Absf_0, 0, SLOT(s_set_audio_buffer_factor()));
