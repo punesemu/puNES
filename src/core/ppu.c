@@ -29,6 +29,7 @@
 #include "mappers.h"
 #include "irqA12.h"
 #include "irql2f.h"
+#include "conf.h"
 
 enum scanline_cycles { SHORT_SLINE_CYCLES = 340, SLINE_CYCLES };
 enum overflow_sprite { OVERFLOW_SPR = 3 };
@@ -60,6 +61,73 @@ enum overflow_sprite { OVERFLOW_SPR = 3 };
 #define put_emphasis(clr) put_pixel((palette.color[clr] & r2001.color_mode))
 #define put_bg put_emphasis(color_bg)
 #define put_sp put_emphasis(color_sp | 0x10)
+#define examine_sprites(senv, sp, vis, ty)\
+	/* esamino se ci sono sprite da renderizzare */\
+	for (a = 0; a < senv.count; a++) {\
+		/*\
+		 * per essercene, la differenza tra frameX e la\
+		 * cordinata X dello sprite deve essere\
+		 * inferiore a 8 (per questo uso il WORD, per\
+		 * avere risultati unsigned).\
+		 */\
+		if ((WORD) (ppu.frame_x - sp[a].x_C) < 8) {\
+			/*\
+			 * se il bit 2 del $2001 e' a 0 vuol dire\
+			 * che e' abilitato il clipping degli sprite\
+			 * (in poche parole non vengono disegnati i\
+			 * primi 8 pixel dello screen).\
+			 */\
+			if (r2001.spr_clipping || (ppu.frame_x >= 8)) {\
+				/* indico che uno sprite e' stato trovato */\
+				/*flag_sp = TRUE;*/\
+				/*\
+				 * nel caso il colore dello sprite\
+				 * sia a zero vuol dire che nessuno\
+				 * sprite e' stato ancora trovato e\
+				 * quindi devo disegnare quello\
+				 * attualmente in esame (sprite\
+				 * intendo).\
+				 */\
+				if (!color_sp) {\
+					color_sp = ((sp[a].l_byte & 0x01) | (sp[a].h_byte & 0x02));\
+					/*\
+					 * se i 2 bit LSB del colore non sono uguali a\
+					 * 0, vuol dire che il pixel non e' trasparente\
+					 * e quindi vi aggiungo i 2 bit MSB.\
+					 */\
+					if (color_sp) {\
+						color_sp |= ((sp[a].attrib & 0x03) << 2);\
+						/* questo sprite non e' invisibile */\
+						vis = a;\
+						unlimited_spr = ty;\
+					}\
+				}\
+			}\
+			/*\
+			 * shifto di un bit i due bitmap buffers di ogni\
+			 * sprite della scanlines, compresi quelli non\
+			 * visibili.\
+			 */\
+			sp[a].l_byte >>= 1;\
+			sp[a].h_byte >>= 1;\
+		}\
+	}
+#define get_sprites(elp, spenv, spl, sadr)\
+	/*\
+	 * significato bit 6 del byte degli attributi:\
+	 *  0 -> no flip orizzontale\
+	 *  1 -> si flip orizzontale\
+	 */\
+	if (oam.elp[spenv.tmp_spr_plus][AT] & 0x40) {\
+		/* salvo i primi 8 bit del tile dello sprite */\
+		spl[spenv.tmp_spr_plus].l_byte = ppu_rd_mem(sadr);\
+		/* salvo i secondi 8 bit del tile dello sprite */\
+		spl[spenv.tmp_spr_plus].h_byte = (ppu_rd_mem(sadr | 0x08) << 1);\
+	} else {\
+		spl[spenv.tmp_spr_plus].l_byte = inv_chr[ppu_rd_mem(sadr)];\
+		/* salvo i secondi 8 bit del tile dello sprite */\
+		spl[spenv.tmp_spr_plus].h_byte = (inv_chr[ppu_rd_mem(sadr | 0x08)] << 1);\
+	}
 
 static const BYTE inv_chr[256] = {
 	0x00, 0x80, 0x40, 0xC0, 0x20, 0xA0, 0x60, 0xE0,
@@ -194,7 +262,8 @@ void ppu_tick(WORD cycles_cpu) {
 						 * che eventualmente potra' essere
 						 * renderizzato (mi serve per il multiplexer).
 						 */
-						BYTE color_bg = 0, color_sp = 0, visible_spr = 0;
+						BYTE color_bg = 0, color_sp = 0;
+						BYTE unlimited_spr = FALSE, visible_spr = 0, visible_spr_unl = 0;
 						//BYTE flag_sp = FALSE, flag_bg = FALSE;
 
 /* -------------------------- FETCH DATI PER TILE SUCCESSIVO --------------------------------- */
@@ -316,7 +385,7 @@ void ppu_tick(WORD cycles_cpu) {
 									 * per opera dello scrolling durante il
 									 * rendering degli 8 pixel a video posso
 									 * passare da uno tile al successivo. Se la
-									 * somma tra pixelTile e fineX e' inferiore
+									 * somma tra pixel_tile e fine_x e' inferiore
 									 * a 7 sono ancora nel tile corrente,
 									 * altrimenti sono nel tile successivo.
 									 */
@@ -337,55 +406,10 @@ void ppu_tick(WORD cycles_cpu) {
 						if (r2001.spr_visible) {
 							BYTE a;
 
-							/* esamino se ci sono sprite da renderizzare */
-							for (a = 0; a < spr_ev.count; a++) {
-								/*
-								 * per essercene, la differenza tra frameX e la
-								 * cordinata X dello sprite deve essere
-								 * inferiore a 8 (per questo uso il WORD, per
-								 * avere risultati unsigned).
-								 */
-								if ((WORD) (ppu.frame_x - sprite[a].x_C) < 8) {
-									/*
-									 * se il bit 2 del $2001 e' a 0 vuol dire
-									 * che e' abilitato il clipping degli sprite
-									 * (in poche parole non vengono disegnati i
-									 * primi 8 pixel dello screen).
-									 */
-									if (r2001.spr_clipping || (ppu.frame_x >= 8)) {
-										/* indico che uno sprite e' stato trovato */
-										//flag_sp = TRUE;
-										/*
-										 * nel caso il colore dello sprite
-										 * sia a zero vuol dire che nessuno
-										 * sprite e' stato ancora trovato e
-										 * quindi devo disegnare quello
-										 * attualmente in esame (sprite
-										 * intendo).
-										 */
-										if (!color_sp) {
-											color_sp = ((sprite[a].l_byte & 0x01)
-													| (sprite[a].h_byte & 0x02));
-											/*
-											 * se i 2 bit LSB del colore non sono uguali a
-											 * 0, vuol dire che il pixel non e' trasparente
-											 * e quindi vi aggiungo i 2 bit MSB.
-											 */
-											if (color_sp) {
-												color_sp |= ((sprite[a].attrib & 0x03) << 2);
-												/* questo sprite non e' invisibile */
-												visible_spr = a;
-											}
-										}
-									}
-									/*
-									 * shifto di un bit i due bitmap buffers di ogni
-									 * sprite della scanlines, compresi quelli non
-									 * visibili.
-									 */
-									sprite[a].l_byte >>= 1;
-									sprite[a].h_byte >>= 1;
-								}
+							examine_sprites(spr_ev, sprite, visible_spr, FALSE)
+
+							if (cfg->unlimited_sprites == TRUE) {
+								examine_sprites(spr_ev_unl, sprite_unl, visible_spr_unl, TRUE)
 							}
 						}
 /* ------------------------------------ MULTIPLEXER ------------------------------------------ */
@@ -411,36 +435,44 @@ void ppu_tick(WORD cycles_cpu) {
 							 */
 							put_sp
 						} else {
-							if (sprite[visible_spr].attrib & 0x20) {
-								/*
-								 * se non lo sono tutti e due, controllo la
-								 * profondita' dello sprite e se e' settata su
-								 * "dietro il background" utilizzo il colore
-								 * dello sfondo.
+							if (unlimited_spr == FALSE) {
+								if (sprite[visible_spr].attrib & 0x20) {
+									/*
+									 * se non lo sono tutti e due, controllo la
+									 * profondita' dello sprite e se e' settata su
+									 * "dietro il background" utilizzo il colore
+									 * dello sfondo.
+									 */
+									put_bg
+								} else {
+									/* altrimenti quello dello sprite */
+									put_sp
+								}
+								/* -- HIT OBJECT #0 FLAG --
+								 *
+								 * per sapere se sono nella condizione di
+								 * "Sprite 0 Hit" devo controllare:
+								 * 1) se 'Sprite 0 Hit' e' gia' settato
+								 * 2) se sto trattando lo sprite #0
+								 * 3) che non stia renderizzando l'ultimo pixel
+								 *    visibile (il 255 appunto) della scanline
+								 * Note:
+								 * implementato il controllo del pixel 255
+								 * la demo scroll.nes spesso mi sporca
+								 * la parte finale dello screen dove sono
+								 * posizionate le informazioni su tipo di
+								 * sistema (pal o nes e frequenza di aggiornamento).
 								 */
-								put_bg
+								if (!r2002.sprite0_hit && !sprite[visible_spr].number
+										&& (ppu.frame_x != 255)) {
+									r2002.sprite0_hit = 0x40;
+								}
 							} else {
-								/* altrimenti quello dello sprite */
-								put_sp
-							}
-							/* -- HIT OBJECT #0 FLAG --
-							 *
-							 * per sapere se sono nella condizione di
-							 * "Sprite 0 Hit" devo controllare:
-							 * 1) se 'Sprite 0 Hit' e' gia' settato
-							 * 2) se sto trattando lo sprite #0
-							 * 3) che non stia renderizzando l'ultimo pixel
-							 *    visibile (il 255 appunto) della scanline
-							 * Note:
-							 * implementato il controllo del pixel 255
-							 * la demo scroll.nes spesso mi sporca
-							 * la parte finale dello screen dove sono
-							 * posizionate le informazioni su tipo di
-							 * sistema (pal o nes e frequenza di aggiornamento).
-							 */
-							if (!r2002.sprite0_hit && !sprite[visible_spr].number
-									&& (ppu.frame_x != 255)) {
-								r2002.sprite0_hit = 0x40;
+								if (sprite_unl[visible_spr_unl].attrib & 0x20) {
+									put_bg
+								} else {
+									put_sp
+								}
 							}
 						}
 
@@ -453,10 +485,9 @@ void ppu_tick(WORD cycles_cpu) {
 								 * inizializzo i vari indici
 								 *
 								 * Note:
-								 * imposto indexByte e index ai
-								 * loro valori massimi solo perche'
-								 * nel 64° ciclo, come prima cosa
-								 * li incremento azzerandoli.
+								 * imposto index al suo valore massimo
+								 * solo perche' nel 64° ciclo, come prima
+								 * cosa lo incremento azzerandolo.
 								 */
 								spr_ev.timing = 0;
 								spr_ev.real = 0;
@@ -592,7 +623,7 @@ void ppu_tick(WORD cycles_cpu) {
 											spr_ev.phase = 3;
 											/*
 											 * inizilizzo le variabili che
-											 * mi serviranno. byteOAM = 3
+											 * mi serviranno. byte_OAM = 3
 											 * perche' verra' aumentata e quindi
 											 * riportata a 0 nel primo ciclo
 											 * della fase 3.
@@ -600,6 +631,42 @@ void ppu_tick(WORD cycles_cpu) {
 											spr_ev.evaluate = FALSE;
 											spr_ev.byte_OAM = 3;
 											spr_ev.index_plus = 0;
+
+											// unlimited sprites
+											if (cfg->unlimited_sprites == TRUE) {
+												BYTE t2004;
+
+												spr_ev_unl.index = spr_ev.index + 1;
+												spr_ev_unl.count_plus = 0;
+
+												for (; spr_ev_unl.index < 64; spr_ev_unl.index++) {
+													t2004 = oam.element[spr_ev_unl.index][YC];
+
+													spr_ev_unl.range = ppu.screen_y - t2004;
+
+													if ((t2004 <= 0xEF)
+															&& (spr_ev_unl.range < r2000.size_spr)) {
+
+														oam.ele_plus_unl[spr_ev_unl.count_plus][YC] =
+																oam.element[spr_ev_unl.index][YC];
+														oam.ele_plus_unl[spr_ev_unl.count_plus][TL] =
+																oam.element[spr_ev_unl.index][TL];
+														oam.ele_plus_unl[spr_ev_unl.count_plus][AT] =
+																oam.element[spr_ev_unl.index][AT];
+														oam.ele_plus_unl[spr_ev_unl.count_plus][XC] =
+																oam.element[spr_ev_unl.index][XC];
+														sprite_plus_unl[spr_ev_unl.count_plus].number =
+																spr_ev_unl.index;
+														sprite_plus_unl[spr_ev_unl.count_plus].flip_v =
+																spr_ev_unl.range;
+
+														spr_ev_unl.count_plus++;
+													}
+												}
+												if (spr_ev_unl.count_plus) {
+													spr_ev_unl.evaluate = TRUE;
+												}
+											}
 										} else {
 											/*
 											 * index_plus non superera'
@@ -632,7 +699,6 @@ void ppu_tick(WORD cycles_cpu) {
 										}
 										/* in caso di overflow dell'indice degli sprite ... */
 										if (++spr_ev.index == 64) {
-											spr_ev.timing = 1;
 											/* ...azzero l'indice... */
 											spr_ev.index = 0;
 											/* ...e passo alla fase 4... */
@@ -851,29 +917,12 @@ void ppu_tick(WORD cycles_cpu) {
 						ppu.rnd_adr = ppu.spr_adr | 0x0008;
 					}
 					/*
-					 * utilizzo pixelTile come contatore di cicli per
+					 * utilizzo spr_ev.timing come contatore di cicli per
 					 * esaminare uno sprite ogni 8 cicli.
 					 */
 					if (!spr_ev.timing) {
 						ppu_spr_adr(spr_ev.tmp_spr_plus);
-						/*
-						 * significato bit 6 del byte degli attributi:
-						 *  0 -> no flip orizzontale
-						 *  1 -> si flip orizzontale
-						 */
-						if (oam.ele_plus[spr_ev.tmp_spr_plus][AT] & 0x40) {
-							/* salvo i primi 8 bit del tile dello sprite */
-							sprite_plus[spr_ev.tmp_spr_plus].l_byte = ppu_rd_mem(ppu.spr_adr);
-							/* salvo i secondi 8 bit del tile dello sprite */
-							sprite_plus[spr_ev.tmp_spr_plus].h_byte = (ppu_rd_mem(
-								ppu.spr_adr | 0x08) << 1);
-						} else {
-							sprite_plus[spr_ev.tmp_spr_plus].l_byte = inv_chr[ppu_rd_mem(
-								ppu.spr_adr)];
-							/* salvo i secondi 8 bit del tile dello sprite */
-							sprite_plus[spr_ev.tmp_spr_plus].h_byte =
-									(inv_chr[ppu_rd_mem(ppu.spr_adr | 0x08)] << 1);
-						}
+						get_sprites(ele_plus, spr_ev, sprite_plus, ppu.spr_adr)
 						r2004.value = oam.ele_plus[spr_ev.tmp_spr_plus][YC];
 						if (extcl_after_rd_chr) {
 							/*
@@ -893,7 +942,20 @@ void ppu_tick(WORD cycles_cpu) {
 						/* passo al prossimo sprite */
 						spr_ev.timing = 0;
 						/* incremento l'indice temporaneo degli sprites */
-						spr_ev.tmp_spr_plus++;
+						if (++spr_ev.tmp_spr_plus == 8) {
+							// unlimited sprites
+							if ((cfg->unlimited_sprites == TRUE) && (spr_ev_unl.evaluate == TRUE)) {
+								for (spr_ev_unl.tmp_spr_plus = 0;
+										spr_ev_unl.tmp_spr_plus < spr_ev_unl.count_plus;
+										spr_ev_unl.tmp_spr_plus++) {
+									WORD spr_adr;
+
+									_ppu_spr_adr(spr_ev_unl.tmp_spr_plus, ele_plus_unl, sprite_plus_unl, spr_adr)
+									get_sprites(ele_plus_unl, spr_ev_unl, sprite_plus_unl, spr_adr)
+								}
+								spr_ev_unl.evaluate = FALSE;
+							}
+						}
 					}
 				} else {
 					if (!spr_ev.timing) {
@@ -1062,6 +1124,27 @@ void ppu_tick(WORD cycles_cpu) {
 				sprite[a].l_byte = sprite_plus[a].l_byte;
 				sprite[a].h_byte = sprite_plus[a].h_byte;
 			}
+			// unlimited sprites
+			if (cfg->unlimited_sprites == TRUE) {
+				spr_ev_unl.count = spr_ev_unl.count_plus;
+				/* azzero l'indice per la (scanline+1) */
+				spr_ev_unl.count_plus = 0;
+				/*
+				 * sposto il buffer degli sprites della scanline
+				 * successiva (scanline+1) nel buffer di quella
+				 * che sto per trattare.
+				 */
+				for (a = 0; a < spr_ev_unl.count; a++) {
+					sprite_unl[a].y_C = oam.ele_plus_unl[a][YC];
+					sprite_unl[a].tile = oam.ele_plus_unl[a][TL];
+					sprite_unl[a].attrib = oam.ele_plus_unl[a][AT];
+					sprite_unl[a].x_C = oam.ele_plus_unl[a][XC];
+					sprite_unl[a].number = sprite_plus_unl[a].number;
+					sprite_unl[a].flip_v = sprite_plus_unl[a].flip_v;
+					sprite_unl[a].l_byte = sprite_plus_unl[a].l_byte;
+					sprite_unl[a].h_byte = sprite_plus_unl[a].h_byte;
+				}
+			}
 		}
 
 		/*
@@ -1121,6 +1204,9 @@ BYTE ppu_turn_on(void) {
 		memset(&spr_ev, 0x00, sizeof(spr_ev));
 		memset(&sprite, 0x00, sizeof(sprite));
 		memset(&sprite_plus, 0x00, sizeof(sprite_plus));
+		memset(&spr_ev_unl, 0x00, sizeof(spr_ev_unl));
+		memset(&sprite_unl, 0x00, sizeof(sprite_unl));
+		memset(&sprite_plus_unl, 0x00, sizeof(sprite_plus_unl));
 		memset(&tile_render, 0x00, sizeof(tile_render));
 		memset(&tile_fetch, 0x00, sizeof(tile_fetch));
 		/*
@@ -1164,6 +1250,9 @@ BYTE ppu_turn_on(void) {
 			for (a = 0; a < 8; ++a) {
 				oam.ele_plus[a] = &oam.plus[(a * 4)];
 			}
+			for (a = 0; a < 56; ++a) {
+				oam.ele_plus_unl[a] = &oam.plus_unl[(a * 4)];
+			}
 		}
 		/* reinizializzazione completa della PPU */
 		{
@@ -1182,6 +1271,7 @@ BYTE ppu_turn_on(void) {
 			 */
 			memset(oam.data, 0xFF, sizeof(oam.data));
 			memset(oam.plus, 0xFF, sizeof(oam.plus));
+			memset(oam.plus_unl, 0xFF, sizeof(oam.plus_unl));
 			/* inizializzo nametables */
 			memset(ntbl.data, 0x00, sizeof(ntbl.data));
 			/* e paletta dei colori */

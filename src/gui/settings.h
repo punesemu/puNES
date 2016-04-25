@@ -39,6 +39,7 @@
 enum set_element {
 	SET_MODE,
 	SET_FF_VELOCITY,
+	SET_UNLIMITED_SPRITES,
 	SET_BCK_PAUSE,
 	SET_CHEAT_MODE,
 	SET_SAVE_SETTINGS_ON_EXIT,
@@ -474,6 +475,12 @@ static const _settings main_cfg[] = {
 		"# possible values: 2x, 3x, 4x, 5x",
 		NULL,
 		{LENGTH(opt_ff_velocity), opt_ff_velocity}
+	},
+	{
+		"system", "unlimited sprites", "no",
+		"# possible values: yes, no",
+		"    --unlimited-sprites                         : yes, no",
+		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 	{
 		"system", "pause when in background", "yes",

@@ -127,6 +127,9 @@ struct _oam {
 	BYTE *element[64];
 	BYTE plus[32];
 	BYTE *ele_plus[8];
+	// unlimited sprites
+	BYTE plus_unl[224];
+	BYTE *ele_plus_unl[56];
 } oam;
 
 #endif /* MEM_MAP_H_ */

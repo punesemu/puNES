@@ -25,7 +25,7 @@ enum ppu_sprite_byte { YC, TL, AT, XC };
 enum ppu_color_mode { PPU_CM_GRAYSCALE = 0x30, PPU_CM_NORMAL = 0x3F };
 
 #define screen_size() (SCR_LINES * SCR_ROWS) * sizeof(WORD)
-#define ppu_spr_adr(sprite)\
+#define _ppu_spr_adr(sprite, epl, spl, sadr)\
 {\
 	BYTE flip_v;\
 	/*\
@@ -33,12 +33,12 @@ enum ppu_color_mode { PPU_CM_GRAYSCALE = 0x30, PPU_CM_NORMAL = 0x3F };
 	 *  0 -> no flip verticale\
 	 *  1 -> si flip verticale\
 	 */\
-	if (oam.ele_plus[sprite][AT] & 0x80) {\
+	if (oam.epl[sprite][AT] & 0x80) {\
 		/* flip verticale */\
-		flip_v = ~sprite_plus[sprite].flip_v;\
+		flip_v = ~spl[sprite].flip_v;\
 	} else {\
 		/* no flip verticale */\
-		flip_v = sprite_plus[sprite].flip_v;\
+		flip_v = spl[sprite].flip_v;\
 	}\
 	/*\
 	 * significato bit 5 del $2000:\
@@ -63,20 +63,21 @@ enum ppu_color_mode { PPU_CM_GRAYSCALE = 0x30, PPU_CM_NORMAL = 0x3F };
 		 * caso di flip verticale sara' l'esatto contrario,\
 		 * dispari per i primi 8x8 e pari per i secondi 8x8.\
 		 */\
-		ppu.spr_adr = (oam.ele_plus[sprite][TL] & 0xFE) | ((flip_v & 0x08) >> 3);\
+		sadr = (oam.epl[sprite][TL] & 0xFE) | ((flip_v & 0x08) >> 3);\
 		/* recupero la posizione nella vram del tile */\
-		ppu.spr_adr = ((oam.ele_plus[sprite][TL] & 0x01) << 12) | (ppu.spr_adr << 4);\
+		sadr = ((oam.epl[sprite][TL] & 0x01) << 12) | (sadr << 4);\
 	} else {\
 		/* -- 8x8 --\
 		 *\
 		 * sprite_plus[x].tile = numero del tile nella vram.\
 		 */\
 		/* recupero la posizione nella vram del tile */\
-		ppu.spr_adr = r2000.spt_adr | (oam.ele_plus[sprite][TL] << 4);\
+		sadr = r2000.spt_adr | (oam.epl[sprite][TL] << 4);\
 	}\
 	/* aggiungo la cordinata Y dello sprite */\
-	ppu.spr_adr += (flip_v & 0x07);\
+	sadr += (flip_v & 0x07);\
 }
+#define ppu_spr_adr(sprite) _ppu_spr_adr(sprite, ele_plus, sprite_plus, ppu.spr_adr)
 #define ppu_bck_adr(r2000bck, r2006vl)\
 	ppu.bck_adr = r2000bck | ((ppu_rd_mem(0x2000 | (r2006vl & 0x0FFF)) << 4)\
 		| ((r2006vl & 0x7000) >> 12))
@@ -230,6 +231,8 @@ _r2006 r2006;
 _r2xxx r2003, r2004, r2007;
 _spr_evaluate spr_ev;
 _spr sprite[8], sprite_plus[8];
+_spr_evaluate spr_ev_unl;
+_spr sprite_unl[56], sprite_plus_unl[56];
 _tile tile_render, tile_fetch;
 
 void ppu_tick(WORD cycles_cpu);

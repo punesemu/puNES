@@ -155,6 +155,7 @@ class mainWindow: public QMainWindow {
 		void s_set_language();
 		void s_set_ff_velocity();
 		void s_set_input();
+		void s_set_unlimited_sprites();
 		void s_set_pause_in_background();
 		void s_cheat_mode_select();
 		void s_cheat_dialog();

@@ -1155,7 +1155,8 @@ void mainWindow::update_menu_settings() {
 			ui->action_Russian->setChecked(true);
 			break;
 	}
-	//Settings/[Pause when in backgrounds, Save settings on exit]
+	//Settings/[Unlimited sprites, Pause when in backgrounds, Save settings on exit]
+	ui->action_Unlimited_sprites->setChecked(cfg->unlimited_sprites);
 	ui->action_Pause_when_in_background->setChecked(cfg->bck_pause);
 	ui->action_Save_settings_on_exit->setChecked(cfg->save_on_exit);
 }
@@ -1562,7 +1563,9 @@ void mainWindow::connect_menu_signals() {
 	connect_action(ui->action_English, LNG_ENGLISH, SLOT(s_set_language()));
 	connect_action(ui->action_Italian, LNG_ITALIAN, SLOT(s_set_language()));
 	connect_action(ui->action_Russian, LNG_RUSSIAN, SLOT(s_set_language()));
-	// Settings/[Pause when in backgrounds, Save settings, Save settings on exit]
+	// Settings/[Unlimited sprites, Pause when in backgrounds, Save settings,
+	//           Save settings on exit]
+	connect_action(ui->action_Unlimited_sprites, SLOT(s_set_unlimited_sprites()));
 	connect_action(ui->action_Pause_when_in_background, SLOT(s_set_pause_in_background()));
 	connect_action(ui->action_Save_settings, SLOT(s_save_settings()));
 	connect_action(ui->action_Save_settings_on_exit, SLOT(s_set_save_on_exit()));
@@ -2181,6 +2184,9 @@ void mainWindow::s_set_input() {
 	dlgInput *dlg = new dlgInput(this);
 
 	dlg->show();
+}
+void mainWindow::s_set_unlimited_sprites() {
+	cfg->unlimited_sprites = !cfg->unlimited_sprites;
 }
 void mainWindow::s_set_pause_in_background() {
 	cfg->bck_pause = !cfg->bck_pause;

@@ -486,6 +486,7 @@
     <addaction name="separator"/>
     <addaction name="menu_Language"/>
     <addaction name="separator"/>
+    <addaction name="action_Unlimited_sprites"/>
     <addaction name="action_Pause_when_in_background"/>
     <addaction name="action_Save_settings_on_exit"/>
     <addaction name="separator"/>
@@ -2027,6 +2028,14 @@
    </property>
    <property name="text">
     <string>Save Screenshot</string>
+   </property>
+  </action>
+  <action name="action_Unlimited_sprites">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Unlimited sprites</string>
    </property>
   </action>
  </widget>
