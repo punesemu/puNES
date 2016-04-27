@@ -39,7 +39,6 @@
 enum set_element {
 	SET_MODE,
 	SET_FF_VELOCITY,
-	SET_UNLIMITED_SPRITES,
 	SET_BCK_PAUSE,
 	SET_CHEAT_MODE,
 	SET_SAVE_SETTINGS_ON_EXIT,
@@ -84,7 +83,10 @@ enum set_element {
 	SET_APU_TRIANGLE,
 	SET_APU_NOISE,
 	SET_APU_DMC,
-	SET_APU_EXTRA
+	SET_APU_EXTRA,
+	SET_HIDE_SPRITES,
+	SET_HIDE_BACKGROUND,
+	SET_UNLIMITED_SPRITES,
 };
 enum pgs_element {
 	SET_PGS_SLOT,
@@ -120,6 +122,9 @@ enum inp_element {
 	SET_INP_SC_LOAD_STATE,
 	SET_INP_SC_INC_SLOT,
 	SET_INP_SC_DEC_SLOT,
+	SET_INP_SC_UNLIMITED_SPRITES,
+	SET_INP_SC_HIDE_SPRITES,
+	SET_INP_SC_HIDE_BACKGROUND,
 
 	SET_INP_SC_JOYSTICK_ID,
 
@@ -477,12 +482,6 @@ static const _settings main_cfg[] = {
 		{LENGTH(opt_ff_velocity), opt_ff_velocity}
 	},
 	{
-		"system", "unlimited sprites", "no",
-		"# possible values: yes, no",
-		"    --unlimited-sprites                         : yes, no",
-		{LENGTH(opt_no_yes), opt_no_yes}
-	},
-	{
 		"system", "pause when in background", "yes",
 		"# possible values: yes, no",
 		"    --background-pause                          : yes, no",
@@ -751,6 +750,24 @@ static const _settings main_cfg[] = {
 		"# possible values: [on, off],[0 - 100]",
 		NULL,
 		{0, NULL}
+	},
+	{
+		"ppu", "hide sprites", "no",
+		"# possible values: yes, no",
+		"    --hdie-sprites                              : yes, no",
+		{LENGTH(opt_no_yes), opt_no_yes}
+	},
+	{
+		"ppu", "hide background", "no",
+		"# possible values: yes, no",
+		"    --hide-background                           : yes, no",
+		{LENGTH(opt_no_yes), opt_no_yes}
+	},
+	{
+		"ppu", "unlimited sprites", "no",
+		"# possible values: yes, no",
+		"    --unlimited-sprites                         : yes, no",
+		{LENGTH(opt_no_yes), opt_no_yes}
 	}
 };
 
@@ -804,6 +821,9 @@ static const _settings inp_cfg[] = {
 	{"shortcuts", "load state",               "F4,NULL",         NULL, NULL, {0, NULL}},
 	{"shortcuts", "increment state slot",     "F3,NULL",         NULL, NULL, {0, NULL}},
 	{"shortcuts", "decrement state slot",     "F2,NULL",         NULL, NULL, {0, NULL}},
+	{"shortcuts", "unlimited sprites",        "Alt+U,NULL",      NULL, NULL, {0, NULL}},
+	{"shortcuts", "hide sprites",             "Alt+V,NULL",      NULL, NULL, {0, NULL}},
+	{"shortcuts", "hide background",          "Alt+B,NULL",      NULL, NULL, {0, NULL}},
 
 	{"shortcuts", "joystick Id",              "NULL",            NULL, NULL, {0, NULL}},
 

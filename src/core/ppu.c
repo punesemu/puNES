@@ -427,13 +427,21 @@ void ppu_tick(WORD cycles_cpu) {
 							 * se il colore dello sprite e' trasparente,
 							 * utilizzo quello del background.
 							 */
-							put_bg
+							if (cfg->hide_background) {
+								put_pixel(palette.color[0]);
+							} else {
+								put_bg
+							}
 						} else if (!color_bg) {
 							/*
 							 * se invece e' il colore del background ad essere
 							 * trasparente, utilizzo quello dello sprite.
 							 */
-							put_sp
+							if (cfg->hide_sprites) {
+								put_pixel(palette.color[0]);
+							} else {
+								put_sp
+							}
 						} else {
 							if (unlimited_spr == FALSE) {
 								if (sprite[visible_spr].attrib & 0x20) {
@@ -443,10 +451,26 @@ void ppu_tick(WORD cycles_cpu) {
 									 * "dietro il background" utilizzo il colore
 									 * dello sfondo.
 									 */
-									put_bg
+									if (cfg->hide_background) {
+										if (cfg->hide_sprites) {
+											put_pixel(palette.color[0]);
+										} else {
+											put_sp
+										}
+									} else {
+										put_bg
+									}
 								} else {
 									/* altrimenti quello dello sprite */
-									put_sp
+									if (cfg->hide_sprites) {
+										if (cfg->hide_background) {
+											put_pixel(palette.color[0]);
+										} else {
+											put_bg
+										}
+									} else {
+										put_sp
+									}
 								}
 								/* -- HIT OBJECT #0 FLAG --
 								 *
@@ -469,9 +493,25 @@ void ppu_tick(WORD cycles_cpu) {
 								}
 							} else {
 								if (sprite_unl[visible_spr_unl].attrib & 0x20) {
-									put_bg
+									if (cfg->hide_background) {
+										if (cfg->hide_sprites) {
+											put_pixel(palette.color[0]);
+										} else {
+											put_sp
+										}
+									} else {
+										put_bg
+									}
 								} else {
-									put_sp
+									if (cfg->hide_sprites) {
+										if (cfg->hide_background) {
+											put_pixel(palette.color[0]);
+										} else {
+											put_bg
+										}
+									} else {
+										put_sp
+									}
 								}
 							}
 						}

@@ -711,7 +711,6 @@ void setObject::to_cfg(QString group) {
 	if ((group == "system") || (group == "all")) {
 		int_to_val(SET_MODE, cfg_from_file.mode);
 		int_to_val(SET_FF_VELOCITY, cfg_from_file.ff_velocity);
-		int_to_val(SET_UNLIMITED_SPRITES, cfg_from_file.unlimited_sprites);
 		int_to_val(SET_BCK_PAUSE, cfg_from_file.bck_pause);
 		int_to_val(SET_CHEAT_MODE, cfg_from_file.cheat_mode);
 		int_to_val(SET_SAVE_SETTINGS_ON_EXIT, cfg_from_file.save_on_exit);
@@ -770,12 +769,18 @@ void setObject::to_cfg(QString group) {
 		val.replace(SET_APU_DMC, channel_val(SET_APU_DMC));
 		val.replace(SET_APU_EXTRA, channel_val(SET_APU_EXTRA));
 	}
+
+	if ((group == "ppu") || (group == "all")) {
+		int_to_val(SET_HIDE_SPRITES, cfg_from_file.hide_sprites);
+		int_to_val(SET_HIDE_BACKGROUND, cfg_from_file.hide_background);
+		int_to_val(SET_UNLIMITED_SPRITES, cfg_from_file.unlimited_sprites);
+	}
+
 }
 void setObject::fr_cfg(QString group) {
 	if ((group == "system") || (group == "all")) {
 		cfg_from_file.mode = val_to_int(SET_MODE);
 		cfg_from_file.ff_velocity = val_to_int(SET_FF_VELOCITY);
-		cfg_from_file.unlimited_sprites = val_to_int(SET_UNLIMITED_SPRITES);
 		cfg_from_file.bck_pause = val_to_int(SET_BCK_PAUSE);
 		cfg_from_file.cheat_mode = val_to_int(SET_CHEAT_MODE);
 		cfg_from_file.save_on_exit = val_to_int(SET_SAVE_SETTINGS_ON_EXIT);
@@ -835,6 +840,12 @@ void setObject::fr_cfg(QString group) {
 		channel_val_to_int(SET_APU_NOISE);
 		channel_val_to_int(SET_APU_DMC);
 		channel_val_to_int(SET_APU_EXTRA);
+	}
+
+	if ((group == "ppu") || (group == "all")) {
+		cfg_from_file.hide_sprites = val_to_int(SET_HIDE_SPRITES);
+		cfg_from_file.hide_background = val_to_int(SET_HIDE_BACKGROUND);
+		cfg_from_file.unlimited_sprites = val_to_int(SET_UNLIMITED_SPRITES);
 	}
 }
 void setObject::after_the_defaults() {

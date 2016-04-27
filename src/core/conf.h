@@ -35,6 +35,8 @@ typedef struct _config {
 	BYTE fps;
 	BYTE frameskip;
 	BYTE ff_velocity;
+	BYTE hide_sprites;
+	BYTE hide_background;
 	BYTE unlimited_sprites;
 #if defined (WITH_OPENGL)
 	BYTE render;

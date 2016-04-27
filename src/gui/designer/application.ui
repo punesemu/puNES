@@ -476,6 +476,18 @@
      <addaction name="action_FF_4x"/>
      <addaction name="action_FF_5x"/>
     </widget>
+    <widget class="QMenu" name="menu_PPU">
+     <property name="title">
+      <string>&amp;PPU</string>
+     </property>
+     <property name="icon">
+      <iconset resource="application.qrc">
+       <normaloff>:/icon/icons/ppu.png</normaloff>:/icon/icons/ppu.png</iconset>
+     </property>
+     <addaction name="action_Unlimited_sprites"/>
+     <addaction name="action_Hide_sprites"/>
+     <addaction name="action_Hide_background"/>
+    </widget>
     <addaction name="menu_Mode"/>
     <addaction name="separator"/>
     <addaction name="menu_Video"/>
@@ -483,10 +495,10 @@
     <addaction name="menu_Input"/>
     <addaction name="menu_Cheats"/>
     <addaction name="menu_Fast_Forward_velocity"/>
+    <addaction name="menu_PPU"/>
     <addaction name="separator"/>
     <addaction name="menu_Language"/>
     <addaction name="separator"/>
-    <addaction name="action_Unlimited_sprites"/>
     <addaction name="action_Pause_when_in_background"/>
     <addaction name="action_Save_settings_on_exit"/>
     <addaction name="separator"/>
@@ -1978,7 +1990,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Disable sRGB FBO</string>
+    <string>Disable sRGB F&amp;BO</string>
    </property>
   </action>
   <action name="action_PAR_118">
@@ -2027,7 +2039,7 @@
      <normaloff>:/icon/icons/screenshot.png</normaloff>:/icon/icons/screenshot.png</iconset>
    </property>
    <property name="text">
-    <string>Save Screenshot</string>
+    <string>Save Screens&amp;hot</string>
    </property>
   </action>
   <action name="action_Unlimited_sprites">
@@ -2036,6 +2048,22 @@
    </property>
    <property name="text">
     <string>&amp;Unlimited sprites</string>
+   </property>
+  </action>
+  <action name="action_Hide_sprites">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Hide &amp;sprites</string>
+   </property>
+  </action>
+  <action name="action_Hide_background">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Hide &amp;background</string>
    </property>
   </action>
  </widget>

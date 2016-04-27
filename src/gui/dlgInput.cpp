@@ -228,6 +228,9 @@ void dlgInput::update_dialog() {
 	update_text_shortcut(parentMain->ui->action_Load_state, SET_INP_SC_LOAD_STATE);
 	update_text_shortcut(parentMain->ui->action_Increment_slot, SET_INP_SC_INC_SLOT);
 	update_text_shortcut(parentMain->ui->action_Decrement_slot, SET_INP_SC_DEC_SLOT);
+	update_text_shortcut(parentMain->ui->action_Unlimited_sprites, SET_INP_SC_UNLIMITED_SPRITES);
+	update_text_shortcut(parentMain->ui->action_Hide_sprites, SET_INP_SC_HIDE_SPRITES);
+	update_text_shortcut(parentMain->ui->action_Hide_background, SET_INP_SC_HIDE_BACKGROUND);
 
 	pushButton_Default->setEnabled(true);
 }

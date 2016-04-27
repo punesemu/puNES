@@ -1143,6 +1143,12 @@ void mainWindow::update_menu_settings() {
 			ui->action_FF_5x->setChecked(true);
 			break;
 	}
+
+	// Settings/PPU
+	ui->action_Hide_sprites->setChecked(cfg->hide_sprites);
+	ui->action_Hide_background->setChecked(cfg->hide_background);
+	ui->action_Unlimited_sprites->setChecked(cfg->unlimited_sprites);
+
 	// Settings/Language
 	switch (cfg->language) {
 		case LNG_ENGLISH:
@@ -1155,8 +1161,7 @@ void mainWindow::update_menu_settings() {
 			ui->action_Russian->setChecked(true);
 			break;
 	}
-	//Settings/[Unlimited sprites, Pause when in backgrounds, Save settings on exit]
-	ui->action_Unlimited_sprites->setChecked(cfg->unlimited_sprites);
+	//Settings/[Pause when in backgrounds, Save settings on exit]
 	ui->action_Pause_when_in_background->setChecked(cfg->bck_pause);
 	ui->action_Save_settings_on_exit->setChecked(cfg->save_on_exit);
 }
@@ -1265,6 +1270,11 @@ void mainWindow::shortcuts() {
 			SLOT(s_state_save_slot_incdec()));
 	connect_shortcut(ui->action_Decrement_slot, SET_INP_SC_DEC_SLOT,
 			SLOT(s_state_save_slot_incdec()));
+	connect_shortcut(ui->action_Unlimited_sprites, SET_INP_SC_UNLIMITED_SPRITES,
+			SLOT(s_set_unlimited_sprites()));
+	connect_shortcut(ui->action_Hide_sprites, SET_INP_SC_HIDE_SPRITES, SLOT(s_set_hide_sprites()));
+	connect_shortcut(ui->action_Hide_background, SET_INP_SC_HIDE_BACKGROUND,
+			SLOT(s_set_hide_background()));
 }
 void mainWindow::shcjoy_start() {
 	shcjoy_stop();
@@ -1559,13 +1569,15 @@ void mainWindow::connect_menu_signals() {
 	connect_action(ui->action_FF_3x, FF_3X, SLOT(s_set_ff_velocity()));
 	connect_action(ui->action_FF_4x, FF_4X, SLOT(s_set_ff_velocity()));
 	connect_action(ui->action_FF_5x, FF_5X, SLOT(s_set_ff_velocity()));
+	// Settings/PPU
+	connect_action(ui->action_Hide_sprites, SLOT(s_set_hide_sprites()));
+	connect_action(ui->action_Hide_background, SLOT(s_set_hide_background()));
+	connect_action(ui->action_Unlimited_sprites, SLOT(s_set_unlimited_sprites()));
 	// Settings/Langauge
 	connect_action(ui->action_English, LNG_ENGLISH, SLOT(s_set_language()));
 	connect_action(ui->action_Italian, LNG_ITALIAN, SLOT(s_set_language()));
 	connect_action(ui->action_Russian, LNG_RUSSIAN, SLOT(s_set_language()));
-	// Settings/[Unlimited sprites, Pause when in backgrounds, Save settings,
-	//           Save settings on exit]
-	connect_action(ui->action_Unlimited_sprites, SLOT(s_set_unlimited_sprites()));
+	// Settings/[Pause when in backgrounds, Save settings, Save settings on exit]
 	connect_action(ui->action_Pause_when_in_background, SLOT(s_set_pause_in_background()));
 	connect_action(ui->action_Save_settings, SLOT(s_save_settings()));
 	connect_action(ui->action_Save_settings_on_exit, SLOT(s_set_save_on_exit()));
@@ -2185,6 +2197,12 @@ void mainWindow::s_set_input() {
 
 	dlg->show();
 }
+void mainWindow::s_set_hide_sprites() {
+	cfg->hide_sprites = !cfg->hide_sprites;
+}
+void mainWindow::s_set_hide_background() {
+	cfg->hide_background = !cfg->hide_background;
+}
 void mainWindow::s_set_unlimited_sprites() {
 	cfg->unlimited_sprites = !cfg->unlimited_sprites;
 }
@@ -2475,8 +2493,14 @@ void mainWindow::s_shcjoy_read_timer() {
 				case SET_INP_SC_INC_SLOT:
 					ui->action_Increment_slot->trigger();
 					break;
-				case SET_INP_SC_DEC_SLOT:
-					ui->action_Decrement_slot->trigger();
+				case SET_INP_SC_UNLIMITED_SPRITES:
+					ui->action_Unlimited_sprites->trigger();
+					break;
+				case SET_INP_SC_HIDE_SPRITES:
+					ui->action_Hide_sprites->trigger();
+					break;
+				case SET_INP_SC_HIDE_BACKGROUND:
+					ui->action_Hide_background->trigger();
 					break;
 			}
 		} else if (shcjoy.sch.mode == PRESSED) {}
