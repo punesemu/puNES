@@ -1388,6 +1388,46 @@
         <source>S&amp;haders</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Disable sRGB F&amp;BO</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>11:8 (&amp;PAL TV)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;6x</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;xBRZ 5X</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;xBRZ 6X</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save Screens&amp;hot</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Unlimited sprites</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hide &amp;sprites</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hide &amp;background</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;PPU</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>stateWidget</name>

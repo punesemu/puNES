@@ -1388,6 +1388,46 @@
         <source>S&amp;haders</source>
         <translation>Ш&amp;ейдеры</translation>
     </message>
+    <message>
+        <source>11:8 (&amp;PAL TV)</source>
+        <translation>11:8 (&amp;PAL TV)</translation>
+    </message>
+    <message>
+        <source>&amp;6x</source>
+        <translation>&amp;6x</translation>
+    </message>
+    <message>
+        <source>&amp;xBRZ 5X</source>
+        <translation>&amp;xBRZ 5X</translation>
+    </message>
+    <message>
+        <source>&amp;xBRZ 6X</source>
+        <translation>&amp;xBRZ 6X</translation>
+    </message>
+    <message>
+        <source>&amp;Unlimited sprites</source>
+        <translation>&amp;Снять ограничение на спрайты</translation>
+    </message>
+    <message>
+        <source>Disable sRGB F&amp;BO</source>
+        <translation>Запретить sRGB F&amp;BO</translation>
+    </message>
+    <message>
+        <source>Save Screens&amp;hot</source>
+        <translation>Скрин&amp;шот</translation>
+    </message>
+    <message>
+        <source>Hide &amp;sprites</source>
+        <translation>Скрыть &amp;спрайты</translation>
+    </message>
+    <message>
+        <source>Hide &amp;background</source>
+        <translation>Скрыть &amp;бэкграунд</translation>
+    </message>
+    <message>
+        <source>&amp;PPU</source>
+        <translation>&amp;PPU</translation>
+    </message>
 </context>
 <context>
     <name>stateWidget</name>

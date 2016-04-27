@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="it_IT">
+<TS version="2.0" language="it_IT">
 <context>
     <name>APU_channels</name>
     <message>
@@ -1387,6 +1387,46 @@
     <message>
         <source>S&amp;haders</source>
         <translation></translation>
+    </message>
+    <message>
+        <source>Disable sRGB F&amp;BO</source>
+        <translation>Disabilita sRGB F&amp;BO</translation>
+    </message>
+    <message>
+        <source>11:8 (&amp;PAL TV)</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>&amp;6x</source>
+        <translation>&amp;6x</translation>
+    </message>
+    <message>
+        <source>&amp;xBRZ 5X</source>
+        <translation>&amp;xBRZ 5X</translation>
+    </message>
+    <message>
+        <source>&amp;xBRZ 6X</source>
+        <translation>&amp;xBRZ 6X</translation>
+    </message>
+    <message>
+        <source>Save Screens&amp;hot</source>
+        <translation>Salva Screens&amp;hot</translation>
+    </message>
+    <message>
+        <source>&amp;Unlimited sprites</source>
+        <translation>Sprites Illi&amp;mitati</translation>
+    </message>
+    <message>
+        <source>Hide &amp;sprites</source>
+        <translation>Nascondi &amp;sprites</translation>
+    </message>
+    <message>
+        <source>Hide &amp;background</source>
+        <translation>Nascondi &amp;background</translation>
+    </message>
+    <message>
+        <source>&amp;PPU</source>
+        <translation>&amp;PPU</translation>
     </message>
 </context>
 <context>
