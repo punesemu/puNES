@@ -2199,12 +2199,15 @@ void mainWindow::s_set_input() {
 }
 void mainWindow::s_set_hide_sprites() {
 	cfg->hide_sprites = !cfg->hide_sprites;
+	update_menu_settings();
 }
 void mainWindow::s_set_hide_background() {
 	cfg->hide_background = !cfg->hide_background;
+	update_menu_settings();
 }
 void mainWindow::s_set_unlimited_sprites() {
 	cfg->unlimited_sprites = !cfg->unlimited_sprites;
+	update_menu_settings();
 }
 void mainWindow::s_set_pause_in_background() {
 	cfg->bck_pause = !cfg->bck_pause;
