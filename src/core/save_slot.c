@@ -67,6 +67,9 @@ BYTE save_slot_save(BYTE slot) {
 	}
 
 	slot_operation(SAVE_SLOT_SAVE, slot, fp);
+
+	fflush(fp);
+
 	/* aggiorno la posizione della preview e il totalsize */
 	slot_operation(SAVE_SLOT_COUNT, slot, fp);
 
