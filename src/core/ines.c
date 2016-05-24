@@ -28,6 +28,7 @@
 #include "clock.h"
 #include "cheat.h"
 #include "info.h"
+#include "vs_system.h"
 
 enum flags { FL6, FL7, FL8, FL9, FL10, FL11, FL12, FL13, FL14, FL15, TOTAL_FL };
 
@@ -111,6 +112,9 @@ BYTE ines_load_rom(void) {
 			}
 
 			tmp = flags[FL12] & 0x01;
+
+			vs_system.ppu = flags[FL13] & 0x0F;
+			vs_system.special_mode.type = (flags[FL13] >> 4) & 0x0F;
 		} else {
 			/* iNES 1.0 */
 			info.format = iNES_1_0;
@@ -158,6 +162,68 @@ BYTE ines_load_rom(void) {
 		if ((info.format != NES_2_0) && emu_search_in_database(fp)) {
 			fclose(fp);
 			return (EXIT_ERROR);
+		}
+
+		// gestione Vs. System
+		if ((info.mapper.id != 99) && !vs_system.ppu && !vs_system.special_mode.type) {
+			vs_system.enabled = FALSE;
+			vs_system.special_mode.r5e0x = NULL;
+			vs_system.special_mode.index = 0;
+			vs_system.rc2c05.enabled = FALSE;
+		} else {
+			vs_system.enabled = TRUE;
+
+			switch(vs_system.ppu) {
+				case RP2C03B:
+				case RP2C03G:
+				case RP2C04:
+				case RP2C04_0002:
+				case RP2C04_0003:
+				case RP2C04_0004:
+				case RC2C03B:
+				case RC2C03C:
+				default:
+					vs_system.rc2c05.enabled = FALSE;
+					vs_system.rc2c05.r2002 = 0x00;
+					break;
+				case RC2C05_01:
+					vs_system.rc2c05.enabled = TRUE;
+					vs_system.rc2c05.r2002 = 0x1B;
+					break;
+				case RC2C05_02:
+					vs_system.rc2c05.enabled = TRUE;
+					vs_system.rc2c05.r2002 = 0x3D;
+					break;
+				case RC2C05_03:
+					vs_system.rc2c05.enabled = TRUE;
+					vs_system.rc2c05.r2002 = 0x1C;
+					break;
+				case RC2C05_04:
+					vs_system.rc2c05.enabled = TRUE;
+					vs_system.rc2c05.r2002 = 0x1B;
+					break;
+				case RC2C05_05:
+					vs_system.rc2c05.enabled = TRUE;
+					vs_system.rc2c05.r2002 = 0x00;
+					break;
+			}
+
+			switch(vs_system.special_mode.type) {
+				case VS_SM_Normal:
+				default:
+					vs_system.special_mode.r5e0x = NULL;
+					break;
+				case VS_SM_RBI_Baseball:
+					vs_system.special_mode.r5e0x = (BYTE *) &vs_protection_data[1][0];
+					break;
+				case VS_SM_TKO_Boxing:
+					vs_system.special_mode.r5e0x = (BYTE *) &vs_protection_data[0][0];
+					break;
+				case VS_SM_Super_Xevious:
+					vs_system.special_mode.r5e0x = NULL;
+					break;
+			}
+			vs_system.special_mode.index = 0;
 		}
 
 		if (info.trainer) {

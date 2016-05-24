@@ -91,7 +91,8 @@ enum set_element {
 enum pgs_element {
 	SET_PGS_SLOT,
 	SET_PGS_FILE_SAVE,
-	SET_PGS_OVERSCAN
+	SET_PGS_OVERSCAN,
+	SET_PGS_DIPSWITCH
 };
 enum inp_element {
 	SET_INP_SC_OPEN,
@@ -125,6 +126,7 @@ enum inp_element {
 	SET_INP_SC_UNLIMITED_SPRITES,
 	SET_INP_SC_HIDE_SPRITES,
 	SET_INP_SC_HIDE_BACKGROUND,
+	SET_INP_SC_INSERT_COIN,
 
 	SET_INP_SC_JOYSTICK_ID,
 
@@ -789,6 +791,12 @@ static const _settings pgs_cfg[] = {
 		"# possible values: on, off, default",
 		NULL,
 		{LENGTH(opt_oscan), opt_oscan}
+	},
+	{
+		"system", "dipswitch", "65280",
+		"# possible values: [it depends on the mapper]",
+		NULL,
+		{0, NULL}
 	}
 };
 
@@ -824,6 +832,7 @@ static const _settings inp_cfg[] = {
 	{"shortcuts", "unlimited sprites",        "Alt+U,NULL",      NULL, NULL, {0, NULL}},
 	{"shortcuts", "hide sprites",             "Alt+V,NULL",      NULL, NULL, {0, NULL}},
 	{"shortcuts", "hide background",          "Alt+B,NULL",      NULL, NULL, {0, NULL}},
+	{"shortcuts", "insert coin",              "8,NULL",          NULL, NULL, {0, NULL}},
 
 	{"shortcuts", "joystick Id",              "NULL",            NULL, NULL, {0, NULL}},
 

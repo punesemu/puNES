@@ -63,6 +63,7 @@ enum lenght_file_name_type {
 enum forced_mirroring { UNK_HORIZONTAL, UNK_VERTICAL };
 enum max_chips_rom { MAX_CHIPS = 8 };
 enum languages { LNG_ENGLISH, LNG_ITALIAN, LNG_RUSSIAN };
+enum database_mode { NODIPSWITCH = 0xFF00, NOEXTRA = 0x0000, VSZAPPER = 0x0001 };
 
 #define LENGTH(x) (sizeof(x)/sizeof(*(x)))
 

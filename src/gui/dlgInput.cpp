@@ -79,9 +79,6 @@ dlgInput::dlgInput(QWidget *parent = 0) : QDialog(parent) {
 
 	installEventFilter(this);
 
-    /* disabilito la gestiore del docus della finestra principale */
-	gui.main_win_lfp = FALSE;
-
 	emu_pause(TRUE);
 }
 dlgInput::~dlgInput() {}
@@ -103,9 +100,6 @@ bool dlgInput::eventFilter(QObject *obj, QEvent *event) {
 				parentMain->shcjoy_start();
 
 				emu_pause(FALSE);
-
-				/* restituisco alla finestra principale la gestione del focus */
-				gui.main_win_lfp = TRUE;
 
 				shcut.no_other_buttons = false;
 
@@ -204,6 +198,7 @@ void dlgInput::update_dialog() {
 	update_text_shortcut(parentMain->ui->action_Quit, SET_INP_SC_QUIT);
 	update_text_shortcut(parentMain->ui->action_Hard_Reset, SET_INP_SC_HARD_RESET);
 	update_text_shortcut(parentMain->ui->action_Soft_Reset, SET_INP_SC_SOFT_RESET);
+	update_text_shortcut(parentMain->ui->action_Insert_Coin, SET_INP_SC_INSERT_COIN);
 	update_text_shortcut(parentMain->ui->action_Switch_sides, SET_INP_SC_SWITCH_SIDES);
 	update_text_shortcut(parentMain->ui->action_Eject_Insert_Disk, SET_INP_SC_EJECT_DISK);
 	update_text_shortcut(parentMain->ui->action_Fullscreen, SET_INP_SC_FULLSCREEN);

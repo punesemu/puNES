@@ -26,10 +26,13 @@
 #include "clock.h"
 #include "timeline.h"
 #include "save_slot.h"
+#include "vs_system.h"
 #include "mainWindow.hpp"
 #include "screenWidget.hpp"
 #include "sbarWidget.hpp"
 #include "dlgUncomp.hpp"
+#include "dlgVsSystem.hpp"
+#include "dlgApuChannels.hpp"
 #include "pStyle.hpp"
 #include "cheatObject.hpp"
 #if defined (WITH_OPENGL)
@@ -58,6 +61,10 @@ static struct _qt {
 	screenWidget *screen;
 	cheatObject *chobj;
 	QImage qimage;
+
+	// controlli esterni
+	dlgVsSystem *vssystem;
+	dlgApuChannels *apuch;
 } qt;
 
 class appEventFilter: public QObject {
@@ -105,6 +112,10 @@ BYTE gui_create(void) {
 	}
 
 	qt.mwin->show();
+
+	memset(&ext_win, 0x00, sizeof(ext_win));
+	qt.vssystem = new dlgVsSystem(qt.mwin);
+	qt.apuch = new dlgApuChannels(qt.mwin);
 
 	mouse.hidden = FALSE;
 	mouse.timer = gui_get_ms();
@@ -237,10 +248,25 @@ int gui_uncompress_selection_dialog(void) {
 	return (gui.dlg_rc);
 }
 
+void gui_control_pause_bck(WORD type) {
+	if (type == QEvent::WindowActivate) {
+		if ((cfg->bck_pause == TRUE) && (++gui.main_win_lfp == 1)) {
+			emu_pause(FALSE);
+		}
+	} else if (type == QEvent::WindowDeactivate) {
+		if ((cfg->bck_pause == TRUE) && (--gui.main_win_lfp == 0)) {
+			emu_pause(TRUE);
+		}
+	}
+}
+
 void gui_after_set_video_mode(void) {
 #if defined (WITH_OPENGL) && defined (__WIN32__)
 	qt.screen->controlEventFilter();
 #endif
+}
+void gui_active_window(void) {
+	qt.screen->activateWindow();
 }
 void gui_set_focus(void) {
 	qt.screen->setFocus(Qt::ActiveWindowFocusReason);
@@ -280,6 +306,42 @@ void gui_control_visible_cursor(void) {
 
 void gui_mainWindow_make_reset(BYTE type) {
 	qt.mwin->make_reset(type);
+}
+
+void gui_external_control_windows_show(void) {
+	if (ext_win.vs_system && (cfg->fullscreen != FULLSCR)) {
+		qt.vssystem->update_dialog();
+		qt.vssystem->show();
+	} else {
+		qt.vssystem->hide();
+	}
+	if (ext_win.apu_channels && (cfg->fullscreen != FULLSCR)) {
+		qt.apuch->update_dialog();
+		qt.apuch->show();
+	} else {
+		qt.apuch->hide();
+	}
+
+	gui_update();
+	gui_flush();
+	gui_external_control_windows_update_pos();
+	gui_active_window();
+	gui_set_focus();
+}
+void gui_external_control_windows_update_pos(void) {
+	int y = 0;
+
+	y = qt.vssystem->update_pos(y);
+	y = qt.apuch->update_pos(y);
+}
+
+void gui_vs_system_update_dialog(void) {
+	qt.vssystem->update_dialog();
+}
+void gui_vs_system_insert_coin(void) {
+	if (vs_system.enabled == TRUE) {
+		qt.vssystem->insert_coin(1);
+	}
 }
 
 BYTE gui_load_lut(void *l, const char *path) {

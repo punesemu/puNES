@@ -42,6 +42,7 @@ libcore_a_SOURCES = \
 	miniz.h \
 	overscan.c \
 	overscan.h \
+	paldef.h \
 	palette.h \
 	ppu.c \
 	ppu.h \
@@ -64,7 +65,8 @@ libcore_a_SOURCES = \
 	uncompress_selection.h \
 	unif.c \
 	unif.h \
-	version.h
+	version.h\
+	vs_system.h
 
 libcore_a_SOURCES += \
 	mappers/mapper_0.c \

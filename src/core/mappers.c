@@ -247,6 +247,7 @@ BYTE map_init(void) {
 			map_init_Waixing(WTA);
 			break;
 		case 75:
+		case 151:
 			map_init_VRC1();
 			break;
 		case 76:
@@ -414,6 +415,7 @@ BYTE map_init(void) {
 		case 150:
 			map_init_Sachen(SA74374B);
 			break;
+		// la mapper 151 la tratto come la 75
 		case 152:
 			map_init_74x161x161x32(IC74X161X161X32B);
 			break;
@@ -537,10 +539,7 @@ BYTE map_init(void) {
 		case 206:
 			map_init_Namco(N3416);
 			break;
-		/*
-		 * la mapper 207 la tratto come mapper 80
-		 * case 207:
-		 */
+		// la mapper 207 la tratto come mapper 80
 		case 208:
 			map_init_208();
 			break;
@@ -786,7 +785,7 @@ void map_prg_rom_8k(BYTE banks_8k, BYTE at, WORD value) {
 	BYTE a;
 
 	/* se cerco di switchare 32k ma ho solo un banco da 16k esco */
-	if ((banks_8k == 4) && !info.prg.rom.max.banks_32k) {
+	if ((banks_8k == 4) && (info.prg.rom.banks_16k <= 1)) {
 		return;
 	}
 

@@ -16,8 +16,8 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef DLGAPUCHANNELS_HPP_
-#define DLGAPUCHANNELS_HPP_
+#ifndef DLGVSSYSTEM_HPP_
+#define DLGVSSYSTEM_HPP_
 
 #include <QtCore/QtGlobal>
 #if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
@@ -25,27 +25,30 @@
 #else
 #include <QtWidgets/QDialog>
 #endif
-#include "dlgApuChannels.hh"
+#include "dlgVsSystem.hh"
 
-class dlgApuChannels : public QDialog, public Ui::APU_channels {
+class dlgVsSystem : public QDialog, public Ui::Vs_System {
 		Q_OBJECT
 
-	private:
+	public:
 		bool in_update;
 
 	public:
-		dlgApuChannels(QWidget *parent);
-		~dlgApuChannels();
-		int update_pos(int startY);
-		void update_dialog();
+		dlgVsSystem(QWidget *parent);
+		~dlgVsSystem();
 
-	private:
+	protected:
 		bool eventFilter(QObject *obj, QEvent *event);
 
+	public:
+		int update_pos(int startY);
+		void update_dialog();
+		void insert_coin(int index);
+
 	private slots:
-		void s_checkbox_state_changed(int state);
-		void s_slider_value_changed(int value);
-		void s_toggle_all_clicked(bool checked);
+		void s_coins_clicked(bool checked);
+		void s_ds_changed(int state);
+		void s_defaults_clicked(bool checked);
 };
 
-#endif /* DLGAPUCHANNELS_HPP_ */
+#endif /* DLGVSSYSTEM_HPP_ */

@@ -17,17 +17,23 @@
  */
 
 #include "dlgApuChannels.moc"
+#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
+#include <QtGui/QDesktopWidget>
+#else
+#include <QtWidgets/QDesktopWidget>
+#endif
 #include "mainWindow.hpp"
 #include "snd.h"
+#include "conf.h"
 #include "gui.h"
 
 dlgApuChannels::dlgApuChannels(QWidget *parent = 0) : QDialog(parent) {
-	memset(&data, 0x00, sizeof(data));
-	memcpy(&data.cfg_save, &cfg->apu, sizeof(_config_apu));
+	in_update = false;
 
 	setupUi(this);
 
 	setFont(parent->font());
+	setStyleSheet(tools_stylesheet());
 
 	horizontalSlider_Master->setRange(0, 100);
 	horizontalSlider_Square1->setRange(0, 100);
@@ -91,61 +97,43 @@ dlgApuChannels::dlgApuChannels(QWidget *parent = 0) : QDialog(parent) {
 	connect(pushButton_Disable_all, SIGNAL(clicked(bool)), this, SLOT(s_toggle_all_clicked(bool)));
 	connect(pushButton_Defaults, SIGNAL(clicked(bool)), this, SLOT(s_toggle_all_clicked(bool)));
 
-	update_dialog();
-
-	connect(pushButton_Apply, SIGNAL(clicked(bool)), this, SLOT(s_apply_clicked(bool)));
-	connect(pushButton_Discard, SIGNAL(clicked(bool)), this, SLOT(s_discard_clicked(bool)));
+	setWindowFlags(Qt::Dialog | Qt::FramelessWindowHint);
 
 	setAttribute(Qt::WA_DeleteOnClose);
 	setFixedSize(width(), height());
 
 	installEventFilter(this);
-
-	/* disabilito la gestiore del focus della finestra principale */
-	gui.main_win_lfp = FALSE;
-
-	data.save = FALSE;
 }
 dlgApuChannels::~dlgApuChannels() {}
+int dlgApuChannels::update_pos(int startY) {
+	int screenNumber = qApp->desktop()->screenNumber(parentWidget());
+	int x = parentWidget()->pos().x() + parentWidget()->frameGeometry().width();
+	int y = parentWidget()->geometry().y() + startY;
+
+	if ((parentWidget()->pos().x() + parentWidget()->frameGeometry().width()
+			+ frameGeometry().width() - qApp->desktop()->screenGeometry(screenNumber).left())
+			> qApp->desktop()->screenGeometry(screenNumber).width()) {
+		x = parentWidget()->pos().x() - frameGeometry().width();
+	}
+	move(QPoint(x, y));
+
+	if (isHidden() == true) {
+		return (0);
+	}
+
+	return (frameGeometry().height());
+}
 bool dlgApuChannels::eventFilter(QObject *obj, QEvent *event) {
-	if (event->type() == QEvent::Show) {
-		parentMain->ui->action_APU_channels->setEnabled(false);
-	} else if (event->type() == QEvent::Close) {
-		if (data.save == FALSE) {
-			bool control = false;
-
-			emu_pause(TRUE);
-
-			if (cfg->apu.channel[APU_MASTER] != data.cfg_save.channel[APU_MASTER]) {
-				control = true;
-			}
-
-			memcpy(&cfg->apu, &data.cfg_save, sizeof(_config_apu));
-
-			if (control) {
-				if (cfg->apu.channel[APU_MASTER]) {
-					snd_start();
-				} else {
-					snd_stop();
-				}
-				gui_update();
-			}
-
-			emu_pause(FALSE);
-		}
-
-		/* restituisco alla finestra principale la gestione del focus */
-		gui.main_win_lfp = TRUE;
-
-		parentMain->ui->action_APU_channels->setEnabled(true);
-	} else if (event->type() == QEvent::LanguageChange) {
+	if (event->type() == QEvent::LanguageChange) {
 		APU_channels::retranslateUi(this);
 	}
+
+	gui_control_pause_bck(event->type());
 
 	return (QObject::eventFilter(obj, event));
 }
 void dlgApuChannels::update_dialog(void) {
-	data.update = TRUE;
+	in_update = true;
 
 	checkBox_Master->setChecked(cfg->apu.channel[APU_MASTER]);
 	checkBox_Square1->setChecked(cfg->apu.channel[APU_S1]);
@@ -163,12 +151,12 @@ void dlgApuChannels::update_dialog(void) {
 	horizontalSlider_DMC->setValue(cfg->apu.volume[APU_DMC] * 100);
 	horizontalSlider_Extra->setValue(cfg->apu.volume[APU_EXTRA] * 100);
 
-	data.update = FALSE;
+	in_update = false;
 }
 void dlgApuChannels::s_checkbox_state_changed(int state) {
 	int index = QVariant(((QCheckBox *)sender())->property("myIndex")).toInt();
 
-	if (data.update == TRUE) {
+	if (in_update == true) {
 		return;
 	}
 
@@ -212,11 +200,4 @@ void dlgApuChannels::s_toggle_all_clicked(bool checked) {
 	}
 
 	update_dialog();
-}
-void dlgApuChannels::s_apply_clicked(bool checked) {
-	data.save = TRUE;
-	close();
-}
-void dlgApuChannels::s_discard_clicked(bool checked) {
-	close();
 }

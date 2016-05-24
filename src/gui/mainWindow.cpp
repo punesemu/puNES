@@ -48,6 +48,7 @@
 #include "save_slot.h"
 #include "version.h"
 #include "audio/delay.h"
+#include "vs_system.h"
 #if defined (WITH_OPENGL)
 #if defined (__linux__)
 #include "sdl_wid.h"
@@ -339,6 +340,8 @@ void mainWindow::update_window() {
 	update_menu_nes();
 	// Settings
 	update_menu_settings();
+	// Tools
+	update_menu_tools();
 	// State
 	update_menu_state();
 
@@ -419,14 +422,6 @@ bool mainWindow::eventFilter(QObject *obj, QEvent *event) {
 		settings_save_GUI();
 
 		info.stop = TRUE;
-	} else if (event->type() == QEvent::WindowActivate) {
-		if ((cfg->bck_pause == TRUE) && (gui.main_win_lfp == TRUE)) {
-			emu_pause(FALSE);
-		}
-	} else if (event->type() == QEvent::WindowDeactivate) {
-		if ((cfg->bck_pause == TRUE) && (gui.main_win_lfp == TRUE)) {
-			emu_pause(TRUE);
-		}
 	} else if (event->type() == QEvent::LanguageChange) {
 		ui->retranslateUi(this);
 		shortcuts();
@@ -436,7 +431,17 @@ bool mainWindow::eventFilter(QObject *obj, QEvent *event) {
 #elif defined (WITH_D3D9)
 		ui->action_PAR_Soft_Stretch->setText(tr("HLSL &soft stretch"));
 #endif
+	} else if (event->type() == QEvent::Move) {
+		if (gui.start == TRUE) {
+			gui_external_control_windows_update_pos();
+		}
+	} else if (event->type() == QEvent::Resize) {
+		if (gui.start == TRUE) {
+			gui_external_control_windows_update_pos();
+		}
 	}
+
+	gui_control_pause_bck(event->type());
 
 	return (QObject::eventFilter(obj, event));
 }
@@ -496,6 +501,12 @@ void mainWindow::setup_video_rendering() {
 }
 void mainWindow::update_menu_nes() {
 	QString *sc = (QString *)settings_inp_rd_sc(SET_INP_SC_EJECT_DISK, KEYBOARD);
+
+	if (vs_system.enabled == TRUE) {
+		ui->action_Insert_Coin->setEnabled(true);
+	} else {
+		ui->action_Insert_Coin->setEnabled(false);
+	}
 
 	if (fds.info.enabled) {
 		if (fds.drive.disk_ejected) {
@@ -1165,6 +1176,10 @@ void mainWindow::update_menu_settings() {
 	ui->action_Pause_when_in_background->setChecked(cfg->bck_pause);
 	ui->action_Save_settings_on_exit->setChecked(cfg->save_on_exit);
 }
+void mainWindow::update_menu_tools() {
+	ui->action_Vs_System->setChecked(ext_win.vs_system);
+	ui->action_APU_channels->setChecked(ext_win.apu_channels);
+}
 void mainWindow::update_menu_state() {
 	bool state = false;
 
@@ -1233,6 +1248,7 @@ void mainWindow::shortcuts() {
 	// NES
 	connect_shortcut(ui->action_Hard_Reset, SET_INP_SC_HARD_RESET, SLOT(s_make_reset()));
 	connect_shortcut(ui->action_Soft_Reset, SET_INP_SC_SOFT_RESET, SLOT(s_make_reset()));
+	connect_shortcut(ui->action_Insert_Coin, SET_INP_SC_INSERT_COIN, SLOT(s_insert_coin()));
 	connect_shortcut(ui->action_Switch_sides, SET_INP_SC_SWITCH_SIDES, SLOT(s_disk_side()));
 	connect_shortcut(ui->action_Eject_Insert_Disk, SET_INP_SC_EJECT_DISK, SLOT(s_eject_disk()));
 	connect_shortcut(ui->action_Fullscreen, SET_INP_SC_FULLSCREEN, SLOT(s_set_fullscreen()));
@@ -1385,6 +1401,7 @@ void mainWindow::connect_menu_signals() {
 	// NES
 	connect_action(ui->action_Hard_Reset, HARD, SLOT(s_make_reset()));
 	connect_action(ui->action_Soft_Reset, RESET, SLOT(s_make_reset()));
+	connect_action(ui->action_Insert_Coin, SLOT(s_insert_coin()));
 	connect_action(ui->action_Disk_1_side_A, 0, SLOT(s_disk_side()));
 	connect_action(ui->action_Disk_1_side_B, 1, SLOT(s_disk_side()));
 	connect_action(ui->action_Disk_2_side_A, 2, SLOT(s_disk_side()));
@@ -1399,6 +1416,11 @@ void mainWindow::connect_menu_signals() {
 	connect_action(ui->action_Pause, SLOT(s_pause()));
 	connect_action(ui->action_Fast_Forward, SLOT(s_fast_forward()));
 	connect_action(ui->action_Save_Screenshot, SLOT(s_save_screenshot()));
+
+	// Tools
+	connect_action(ui->action_Vs_System, SLOT(s_set_vs_window()));
+	connect_action(ui->action_APU_channels, SLOT(s_set_apu_channels()));
+
 	// Settings/Mode
 	connect_action(ui->action_PAL, PAL, SLOT(s_set_mode()));
 	connect_action(ui->action_NTSC, NTSC, SLOT(s_set_mode()));
@@ -1554,7 +1576,6 @@ void mainWindow::connect_menu_signals() {
 	connect_action(ui->action_Audio_Quality_Low, AQ_LOW, SLOT(s_set_audio_quality()));
 	connect_action(ui->action_Audio_Quality_High, AQ_HIGH, SLOT(s_set_audio_quality()));
 	// Settings/Audio/[APU_channels, Swap Duty Cycles, enable]
-	connect_action(ui->action_APU_channels, SLOT(s_set_apu_channels()));
 	connect_action(ui->action_Swap_Duty_Cycles, SLOT(s_set_audio_swap_duty()));
 	connect_action(ui->action_Audio_Enable, SLOT(s_set_audio_enable()));
 	// Settings/Input/Config
@@ -1577,7 +1598,8 @@ void mainWindow::connect_menu_signals() {
 	connect_action(ui->action_English, LNG_ENGLISH, SLOT(s_set_language()));
 	connect_action(ui->action_Italian, LNG_ITALIAN, SLOT(s_set_language()));
 	connect_action(ui->action_Russian, LNG_RUSSIAN, SLOT(s_set_language()));
-	// Settings/[Pause when in backgrounds, Save settings, Save settings on exit]
+	// Settings/[Hide_external_control_window, Pause when in backgrounds,
+	//           Save settings, Save settings on exit]
 	connect_action(ui->action_Pause_when_in_background, SLOT(s_set_pause_in_background()));
 	connect_action(ui->action_Save_settings, SLOT(s_save_settings()));
 	connect_action(ui->action_Save_settings_on_exit, SLOT(s_set_save_on_exit()));
@@ -1663,6 +1685,7 @@ void mainWindow::s_set_fullscreen() {
 		move(position);
 	}
 
+	gui_external_control_windows_show();
 	gui_set_focus();
 }
 void mainWindow::s_fullscreen(bool state) {
@@ -1751,6 +1774,9 @@ void mainWindow::s_make_reset() {
 	gfx_MAKE_RESET(type);
 #endif
 }
+void mainWindow::s_insert_coin() {
+	gui_vs_system_insert_coin();
+}
 void mainWindow::s_disk_side() {
 	int side = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
@@ -1779,11 +1805,8 @@ void mainWindow::s_eject_disk() {
 	update_menu_nes();
 }
 void mainWindow::s_pause() {
-	if (info.pause_from_gui == FALSE) {
-		info.pause_from_gui = TRUE;
-	} else {
-		info.pause_from_gui = FALSE;
-	}
+	info.pause_from_gui = !info.pause_from_gui;
+
 	emu_pause(info.pause_from_gui);
 	update_menu_nes();
 }
@@ -1797,6 +1820,14 @@ void mainWindow::s_fast_forward() {
 }
 void mainWindow::s_save_screenshot() {
 	gfx.save_screenshot = true;
+}
+void mainWindow::s_set_vs_window() {
+	ext_win.vs_system = !ext_win.vs_system;
+	gui_external_control_windows_show();
+}
+void mainWindow::s_set_apu_channels() {
+	ext_win.apu_channels = !ext_win.apu_channels;
+	gui_external_control_windows_show();
 }
 void mainWindow::s_set_mode() {
 	int mode = QVariant(((QObject *)sender())->property("myValue")).toInt();
@@ -2152,11 +2183,6 @@ void mainWindow::s_set_audio_quality() {
 	gui_update();
 	emu_pause(FALSE);
 }
-void mainWindow::s_set_apu_channels() {
-	dlgApuChannels *dlg = new dlgApuChannels(this);
-
-	dlg->show();
-}
 void mainWindow::s_set_audio_swap_duty() {
 	emu_pause(TRUE);
 	cfg->swap_duty = !cfg->swap_duty;
@@ -2426,6 +2452,9 @@ void mainWindow::s_shcjoy_read_timer() {
 					break;
 				case SET_INP_SC_SOFT_RESET:
 					ui->action_Soft_Reset->trigger();
+					break;
+				case SET_INP_SC_INSERT_COIN:
+					ui->action_Insert_Coin->trigger();
 					break;
 				case SET_INP_SC_SWITCH_SIDES:
 					ui->action_Switch_sides->trigger();

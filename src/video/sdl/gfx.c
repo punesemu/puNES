@@ -32,6 +32,7 @@
 #include "paldef.h"
 #include "opengl.h"
 #include "conf.h"
+#include "vs_system.h"
 #if !defined (__WIN32__)
 #include "gui/designer/pointers/target_32x32.xpm"
 //#include "gui/designer/pointers/target_48x48.xpm"
@@ -537,6 +538,39 @@ void gfx_set_screen(BYTE scale, DBWORD filter, BYTE fullscreen, BYTE palette, BY
 			default:
 				ntsc_set(cfg->ntsc_format, palette, 0, 0, (BYTE *) palette_RGB);
 				break;
+		}
+
+		if (vs_system.enabled) {
+			switch (vs_system.ppu) {
+				case RP2C03B:
+				case RP2C03G:
+					break;
+				case RP2C04:
+					ntsc_set(cfg->ntsc_format, FALSE, (BYTE *) palette_RP2C04_0001, 0,
+					        (BYTE *) palette_RGB);
+					break;
+				case RP2C04_0002:
+					ntsc_set(cfg->ntsc_format, FALSE, (BYTE *) palette_RP2C04_0002, 0,
+					        (BYTE *) palette_RGB);
+					break;
+				case RP2C04_0003:
+					ntsc_set(cfg->ntsc_format, FALSE, (BYTE *) palette_RP2C04_0003, 0,
+					        (BYTE *) palette_RGB);
+					break;
+				case RP2C04_0004:
+					ntsc_set(cfg->ntsc_format, FALSE, (BYTE *) palette_RP2C04_0004, 0,
+					        (BYTE *) palette_RGB);
+					break;
+				case RC2C03B:
+				case RC2C03C:
+				case RC2C05_01:
+				case RC2C05_02:
+				case RC2C05_03:
+				case RC2C05_04:
+				case RC2C05_05:
+				default:
+					break;
+			}
 		}
 
 		// inizializzo in ogni caso la tabella YUV dell'hqx

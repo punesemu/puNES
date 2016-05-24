@@ -119,6 +119,11 @@ EXTERNC BYTE input_rd_reg_four_score(BYTE openbus, WORD **screen_index, BYTE npo
 EXTERNC BYTE input_rd_reg_zapper(BYTE openbus, WORD **screen_index, BYTE nport);
 EXTERNC BYTE input_zapper_is_connected(_port *array);
 
+EXTERNC BYTE input_wr_reg_vs(BYTE value);
+EXTERNC BYTE input_rd_reg_vs_disabled(BYTE openbus, WORD **screen_index, BYTE nport);
+EXTERNC BYTE input_rd_reg_vs_standard(BYTE openbus, WORD **screen_index, BYTE nport);
+EXTERNC BYTE input_rd_reg_vs_zapper(BYTE openbus, WORD **screen_index, BYTE nport);
+
 EXTERNC BYTE (*input_decode_event[PORT_MAX])(BYTE mode, DBWORD event, BYTE type, _port *port);
 EXTERNC void (*input_add_event[PORT_MAX])(BYTE index);
 EXTERNC BYTE (*input_wr_reg)(BYTE value);

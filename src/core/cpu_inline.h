@@ -33,6 +33,8 @@
 #include "cheat.h"
 #include "info.h"
 #include "conf.h"
+#include "vs_system.h"
+#include "qt.h"
 
 #define mod_cycles_op(op, vl) cpu.cycles op vl
 #define r2006_during_rendering()\
@@ -210,11 +212,37 @@ static BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 		if (made_tick) {
 			tick_hw(1);
 		}
+
 		/* controllo se e' consentita la lettura dalla PRG Ram */
 		if (cpu.prg_ram_rd_active) {
 			if (address < 0x6000) {
 				/* leggo */
 				cpu.openbus = prg.ram.data[address & 0x1FFF];
+
+				// Vs System
+				if ((vs_system.enabled) && (address >= 0x4020)) {
+					if ((address & 0x4020) == 0x4020) {
+						vs_system_r4020_clock(rd, before)
+					}
+					if (vs_system.special_mode.r5e0x) {
+						if (address == 0x5E00) {
+							vs_system.special_mode.index = 0;
+						} else if (address == 0x5E01) {
+							cpu.openbus = vs_system.special_mode.r5e0x[(vs_system.special_mode.index++) & 0x1F];
+						}
+					} else if (vs_system.special_mode.type == VS_SM_Super_Xevious) {
+						if (address == 0x54FF) {
+							cpu.openbus = 0x05;
+						} else if (address == 0x5678) {
+							cpu.openbus = vs_system.special_mode.index ? 0x00 : 0x01;
+						} else if (address == 0x578F) {
+							cpu.openbus = vs_system.special_mode.index ? 0xD1 : 0x89;
+						} else if (address == 0x5567) {
+							vs_system.special_mode.index ^= 1;
+							cpu.openbus = vs_system.special_mode.index ? 0x37 : 0x3E;
+						}
+					}
+				}
 			} else {
 				/*
 				 * se la rom ha una PRG Ram extra allora
@@ -222,7 +250,12 @@ static BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 				 * Ram normale.
 				 */
 				if (!prg.ram_plus) {
-					cpu.openbus = prg.ram.data[address & 0x1FFF];
+					// Vs. System
+					if ((vs_system.enabled == TRUE) && vs_system.shared_mem) {
+						cpu.openbus = prg.ram.data[address & 0x07FF];
+					} else {
+						cpu.openbus = prg.ram.data[address & 0x1FFF];
+					}
 				} else {
 					cpu.openbus = prg.ram_plus_8k[address & 0x1FFF];
 				}
@@ -298,6 +331,12 @@ static BYTE INLINE ppu_rd_reg(WORD address) {
 		ppu_openbus_wr(bit5);
 		ppu_openbus_wr(bit6);
 		ppu_openbus_wr(bit7);
+
+		// Vs. System
+		if (vs_system.rc2c05.enabled) {
+			value = (value & 0xE0) | vs_system.rc2c05.r2002;
+		}
+
 		return (value);
 	}
 	if (address == 0x2004) {
@@ -609,6 +648,16 @@ static void cpu_wr_mem(WORD address, BYTE value) {
 		}
 		if (address < 0x4000) {
 			address &= 0x2007;
+
+			// Vs. System
+			if (vs_system.rc2c05.enabled) {
+				if (address == 0x2000) {
+					address = 0x2001;
+				} else if (address == 0x2001) {
+					address = 0x2000;
+				}
+			}
+
 			/*
 			 * per riuscire a far funzionare contemporaneamente
 			 * Battletoads e Fighting Road (J) senza trick, devo
@@ -687,6 +736,12 @@ static void cpu_wr_mem(WORD address, BYTE value) {
 		/* controllo se e' attiva la PRG Ram */
 		if (cpu.prg_ram_wr_active) {
 			if (address < 0x6000) {
+				// Vs System
+				if (vs_system.enabled) {
+					if ((address >= 0x4020) && ((address & 0x4020) == 0x4020)) {
+						vs_system_r4020_clock(wr, value)
+					}
+				}
 				/* scrivo */
 				prg.ram.data[address & 0x1FFF] = value;
 			} else {
@@ -696,7 +751,12 @@ static void cpu_wr_mem(WORD address, BYTE value) {
 				 * normale.
 				 */
 				if (!prg.ram_plus) {
-					prg.ram.data[address & 0x1FFF] = value;
+					// Vs. System
+					if ((vs_system.enabled == TRUE) && vs_system.shared_mem) {
+						prg.ram.data[address & 0x07FF] = value;
+					} else {
+						prg.ram.data[address & 0x1FFF] = value;
+					}
 				} else {
 					prg.ram_plus_8k[address & 0x1FFF] = value;
 				}
@@ -1815,6 +1875,23 @@ static void INLINE tick_hw(BYTE value) {
 		if (irqA12.present == TRUE) {
 			irqA12.cycles++;
 			irqA12.race.C001 = FALSE;
+		}
+
+		if (vs_system.enabled == TRUE) {
+			if (vs_system.coins.left) {
+				vs_system.coins.left--;
+			}
+			if (vs_system.coins.right) {
+				vs_system.coins.right--;
+			}
+			if (vs_system.coins.service) {
+				vs_system.coins.service--;
+			}
+			if (++vs_system.watchdog.timer == vs_system.watchdog.next) {
+				vs_system.watchdog.reset = TRUE;
+			}
+			vs_system_r4020_timer(rd)
+			vs_system_r4020_timer(wr)
 		}
 	}
 }

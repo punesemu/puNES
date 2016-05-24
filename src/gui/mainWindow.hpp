@@ -97,6 +97,7 @@ class mainWindow: public QMainWindow {
 		void update_recent_roms();
 		void update_menu_nes();
 		void update_menu_settings();
+		void update_menu_tools();
 		void update_menu_state();
 		void ctrl_disk_side(QAction *action);
 		void connect_shortcut(QAction *action, int index);
@@ -116,11 +117,14 @@ class mainWindow: public QMainWindow {
 		void s_open_recent_roms();
 		void s_quit();
 		void s_make_reset();
+		void s_insert_coin();
 		void s_disk_side();
 		void s_eject_disk();
 		void s_pause();
 		void s_fast_forward();
 		void s_save_screenshot();
+		void s_set_vs_window();
+		void s_set_apu_channels();
 		void s_set_mode();
 		void s_set_rendering();
 		void s_set_fps();
@@ -149,7 +153,6 @@ class mainWindow: public QMainWindow {
 		void s_set_channels();
 		void s_set_stereo_delay();
 		void s_set_audio_quality();
-		void s_set_apu_channels();
 		void s_set_audio_swap_duty();
 		void s_set_audio_enable();
 		void s_set_language();

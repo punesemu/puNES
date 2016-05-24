@@ -139,6 +139,11 @@ BYTE emu_frame(void) {
 		}
 
 		r4011.frames++;
+
+		if (vs_system.enabled & vs_system.watchdog.reset) {
+			vs_system.watchdog.reset = FALSE;
+			emu_reset(RESET);
+		}
 	} else {
 		gfx_draw_screen(FALSE);
 	}
@@ -312,6 +317,7 @@ BYTE emu_search_in_database(FILE *fp) {
 
 	/* setto i default prima della ricerca */
 	info.machine[DATABASE] = info.mapper.submapper = info.mirroring_db = info.id = DEFAULT;
+	vs_system.ppu = vs_system.special_mode.type = DEFAULT;
 
 	/* posiziono il puntatore del file */
 	if (info.trainer) {
@@ -345,6 +351,10 @@ BYTE emu_search_in_database(FILE *fp) {
 			info.id = dblist[i].id;
 			info.machine[DATABASE] = dblist[i].machine;
 			info.mirroring_db = dblist[i].mirroring;
+			vs_system.ppu = dblist[i].vs_ppu;
+			vs_system.special_mode.type = dblist[i].vs_sm;
+			info.default_dipswitches = dblist[i].dipswitches;
+			info.extra_from_db = dblist[i].extra;
 			switch (info.mapper.id) {
 				case 1:
 					/* Fix per Famicom Wars (J) [!] che ha l'header INES errato */
@@ -423,6 +433,11 @@ BYTE emu_search_in_database(FILE *fp) {
 			break;
 		}
 	}
+
+	if ((vs_system.ppu == DEFAULT) && (vs_system.special_mode.type == DEFAULT)) {
+		vs_system.ppu = vs_system.special_mode.type = 0;
+	}
+
 	/* calcolo anche l'sha1 della CHR rom */
 	if (info.chr.rom.banks_8k) {
 		BYTE *sha1chr;
@@ -517,6 +532,9 @@ BYTE emu_turn_on(void) {
 	memset(&palette, 0x00, sizeof(palette));
 	memset(&oam, 0x00, sizeof(oam));
 	memset(&screen, 0x00, sizeof(screen));
+	memset(&vs_system, 0x00, sizeof(vs_system));
+
+	vs_system.watchdog.next = vs_system_wd_next();
 
 	info.r4014_precise_timing_disabled = FALSE;
 	info.r2002_race_condition_disabled = FALSE;
@@ -597,6 +615,15 @@ BYTE emu_turn_on(void) {
 		}
 	}
 
+	ext_win.vs_system = vs_system.enabled;
+	if (vs_system.enabled == TRUE) {
+		if ((cfg->dipswitch == 0xFF00) && (info.default_dipswitches != 0xFF00)) {
+			cfg->dipswitch = info.default_dipswitches;
+		}
+	}
+
+	gui_external_control_windows_show();
+
 	info.reset = FALSE;
 
 	/* The End */
@@ -604,9 +631,14 @@ BYTE emu_turn_on(void) {
 }
 void emu_pause(BYTE mode) {
 	if (mode == TRUE) {
-		info.pause = TRUE;
-	} else if (info.pause_from_gui == FALSE) {
-		info.pause = FALSE;
+		info.pause++;
+	} else {
+		if (--info.pause == 0xFFFF) {
+			info.pause = 0;
+		}
+	}
+
+	if (!info.pause) {
 		fps.next_frame = gui_get_ms();
 	}
 }
@@ -634,11 +666,13 @@ BYTE emu_reset(BYTE type) {
 			return (EXIT_ERROR);
 		}
 
+		ext_win.vs_system = vs_system.enabled;
+
 		overscan_set_mode(machine.type);
 
 		settings_pgs_parse();
 
-		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
+		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, TRUE);
 	}
 
 	if ((info.reset == CHANGE_MODE) && (overscan_set_mode(machine.type) == TRUE)) {
@@ -671,7 +705,10 @@ BYTE emu_reset(BYTE type) {
 
 	if (info.no_rom) {
 		info.reset = FALSE;
-		info.pause_from_gui = FALSE;
+		if (info.pause_from_gui == TRUE) {
+			info.pause_from_gui = FALSE;
+			emu_pause(FALSE);
+		}
 
 		emu_pause(FALSE);
 
@@ -679,7 +716,7 @@ BYTE emu_reset(BYTE type) {
 	}
 
 	/* controller */
-	input_init(NO_SET_CURSOR);
+	input_init(SET_CURSOR);
 
 	if (timeline_init()) {
 		return (EXIT_ERROR);
@@ -707,8 +744,27 @@ BYTE emu_reset(BYTE type) {
 		}
 	}
 
+	if (vs_system.enabled == TRUE) {
+		if (type >= HARD) {
+			vs_system.shared_mem = 0;
+		}
+		if ((cfg->dipswitch == 0xFF00) && (info.default_dipswitches != 0xFF00)) {
+			cfg->dipswitch = info.default_dipswitches;
+		}
+	}
+	memset(&vs_system.watchdog, 0x00, sizeof(vs_system.watchdog));
+	memset(&vs_system.r4020, 0x00, sizeof(vs_system.r4020));
+	memset(&vs_system.coins, 0x00, sizeof(vs_system.coins));
+	vs_system.watchdog.next = vs_system_wd_next();
+
+	gui_external_control_windows_show();
+
 	info.reset = FALSE;
-	info.pause_from_gui = FALSE;
+
+	if (info.pause_from_gui == TRUE) {
+		info.pause_from_gui = FALSE;
+		emu_pause(FALSE);
+	}
 
 	emu_pause(FALSE);
 

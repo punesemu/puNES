@@ -61,7 +61,7 @@ EXTERNC struct _info {
 	BYTE gui;
 	BYTE no_rom;
 	BYTE uncompress_rom;
-	BYTE pause;
+	WORD pause;
 	BYTE pause_from_gui;
 	BYTE on_cfg;
 	BYTE pause_frames_drawscreen;
@@ -106,6 +106,8 @@ EXTERNC struct _info {
 	BYTE r4016_dmc_double_read_disabled;
 	BYTE r2002_race_condition_disabled;
 	BYTE r4014_precise_timing_disabled;
+	WORD default_dipswitches;
+	WORD extra_from_db;
 
 #if !defined (RELEASE)
 	BYTE snd_info;

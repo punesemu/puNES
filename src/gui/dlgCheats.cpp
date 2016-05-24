@@ -134,17 +134,11 @@ dlgCheats::dlgCheats(QWidget *parent = 0, cheatObject *c = 0) : QDialog(parent) 
 	s_item_selection_changed();
 
 	emu_pause(TRUE);
-
-	/* disabilito la gestiore del focus della finestra principale */
-	gui.main_win_lfp = FALSE;
 }
 dlgCheats::~dlgCheats() {}
 bool dlgCheats::eventFilter(QObject *obj, QEvent *event) {
 	if (event->type() == QEvent::Close) {
 		org->apply_cheats();
-
-		/* restituisco alla finestra principale la gestione del focus */
-		gui.main_win_lfp = TRUE;
 
 		emu_pause(FALSE);
 	} else if (event->type() == QEvent::LanguageChange) {

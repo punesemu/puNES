@@ -37,7 +37,7 @@ void extcl_cpu_wr_r4016_Vs(BYTE value) {
 
 	value &= 0x04;
 	control_bank(info.prg.rom.max.banks_8k)
-	map_prg_rom_8k(2, 0, value);
+	map_prg_rom_8k(1, 0, value);
 	map_prg_rom_8k_update();
 
 	value = save >> 2;

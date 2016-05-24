@@ -91,13 +91,15 @@
     <addaction name="action_Hard_Reset"/>
     <addaction name="action_Soft_Reset"/>
     <addaction name="separator"/>
-    <addaction name="action_Fullscreen"/>
-    <addaction name="action_Pause"/>
-    <addaction name="action_Fast_Forward"/>
-    <addaction name="action_Save_Screenshot"/>
+    <addaction name="action_Insert_Coin"/>
     <addaction name="separator"/>
     <addaction name="menu_Disk_Side"/>
     <addaction name="action_Eject_Insert_Disk"/>
+    <addaction name="separator"/>
+    <addaction name="action_Fullscreen"/>
+    <addaction name="action_Save_Screenshot"/>
+    <addaction name="action_Pause"/>
+    <addaction name="action_Fast_Forward"/>
    </widget>
    <widget class="QMenu" name="menu_Settings">
     <property name="title">
@@ -422,7 +424,6 @@
      <addaction name="menu_Sample_rate"/>
      <addaction name="menu_Channels"/>
      <addaction name="menu_Audio_Quality"/>
-     <addaction name="action_APU_channels"/>
      <addaction name="separator"/>
      <addaction name="action_Swap_Duty_Cycles"/>
      <addaction name="action_Audio_Enable"/>
@@ -534,9 +535,17 @@
     </property>
     <addaction name="action_About"/>
    </widget>
+   <widget class="QMenu" name="menu_Tools">
+    <property name="title">
+     <string>Tools</string>
+    </property>
+    <addaction name="action_Vs_System"/>
+    <addaction name="action_APU_channels"/>
+   </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_NES"/>
    <addaction name="menu_Settings"/>
+   <addaction name="menu_Tools"/>
    <addaction name="menu_State"/>
    <addaction name="menu_Help"/>
   </widget>
@@ -1482,9 +1491,8 @@
    </property>
   </action>
   <action name="action_APU_channels">
-   <property name="icon">
-    <iconset resource="application.qrc">
-     <normaloff>:/icon/icons/apu_channels.png</normaloff>:/icon/icons/apu_channels.png</iconset>
+   <property name="checkable">
+    <bool>true</bool>
    </property>
    <property name="text">
     <string>A&amp;PU channels</string>
@@ -2064,6 +2072,23 @@
    </property>
    <property name="text">
     <string>Hide &amp;background</string>
+   </property>
+  </action>
+  <action name="action_Insert_Coin">
+   <property name="icon">
+    <iconset resource="application.qrc">
+     <normaloff>:/icon/icons/insert_coin.png</normaloff>:/icon/icons/insert_coin.png</iconset>
+   </property>
+   <property name="text">
+    <string>Insert Coin</string>
+   </property>
+  </action>
+  <action name="action_Vs_System">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Vs System Controls</string>
    </property>
   </action>
  </widget>

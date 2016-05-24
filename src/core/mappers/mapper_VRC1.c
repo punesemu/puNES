@@ -22,6 +22,10 @@
 
 void map_init_VRC1(void) {
 	EXTCL_CPU_WR_MEM(VRC1);
+
+	if (info.mapper.id == 151) {
+		mirroring_FSCR();
+	}
 }
 void extcl_cpu_wr_mem_VRC1(WORD address, BYTE value) {
 	DBWORD bank;
@@ -45,10 +49,12 @@ void extcl_cpu_wr_mem_VRC1(WORD address, BYTE value) {
 			chr.bank_1k[5] = chr_chip_byte_pnt(0, bank | 0x0400);
 			chr.bank_1k[6] = chr_chip_byte_pnt(0, bank | 0x0800);
 			chr.bank_1k[7] = chr_chip_byte_pnt(0, bank | 0x0C00);
-			if (value & 0x01) {
-				mirroring_H();
-			} else {
-				mirroring_V();
+			if (info.mapper.id != 151) {
+				if (value & 0x01) {
+					mirroring_H();
+				} else {
+					mirroring_V();
+				}
 			}
 			return;
 		case 0xA000:

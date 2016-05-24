@@ -28,6 +28,19 @@
 #include "emu.h"
 #include "jstick.h"
 
+#define tools_stylesheet()\
+	"QGroupBox {"\
+	"	border-radius: 10px;"\
+	"	border: 1px solid black;"\
+	"	border: 2px groove gray;"\
+	"	font-weight: bold;"\
+	"}"\
+	"QGroupBox::title {"\
+	"	subcontrol-origin: margin;"\
+	"	subcontrol-position: top center;"\
+	"	padding: 0 0px;"\
+	"}"
+
 #if defined (__cplusplus)
 #define EXTERNC extern "C"
 #else
@@ -71,6 +84,10 @@ EXTERNC struct _mouse {
 
 	double timer;
 } mouse;
+EXTERNC struct _external_windows {
+	uint8_t vs_system;
+	uint8_t apu_channels;
+} ext_win;
 
 EXTERNC void gui_quit(void);
 EXTERNC BYTE gui_create(void);
@@ -89,7 +106,10 @@ EXTERNC void gui_print_usage(char *usage);
 EXTERNC void gui_reset_video(void);
 EXTERNC int gui_uncompress_selection_dialog();
 
+EXTERNC void gui_control_pause_bck(WORD type);
+
 EXTERNC void gui_after_set_video_mode(void);
+EXTERNC void gui_active_window(void);
 EXTERNC void gui_set_focus(void);
 
 EXTERNC void gui_cheat_init(void);
@@ -102,6 +122,12 @@ EXTERNC void gui_cursor_hide(BYTE hide);
 EXTERNC void gui_control_visible_cursor(void);
 
 EXTERNC void gui_mainWindow_make_reset(BYTE type);
+
+EXTERNC void gui_external_control_windows_show(void);
+EXTERNC void gui_external_control_windows_update_pos(void);
+
+EXTERNC void gui_vs_system_update_dialog(void);
+EXTERNC void gui_vs_system_insert_coin(void);
 
 EXTERNC BYTE gui_load_lut(void *l, const char *path);
 EXTERNC void gui_save_screenshot(int w, int h, char *buffer, BYTE flip);

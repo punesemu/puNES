@@ -61,6 +61,7 @@ typedef struct _config {
 #endif
 	BYTE bck_pause;
 	WORD language;
+	WORD dipswitch;
 
 	_config_input input;
 	_config_apu apu;

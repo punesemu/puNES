@@ -90,9 +90,6 @@ dlgOverscanBorders::dlgOverscanBorders(QWidget *parent = 0) : QDialog(parent) {
 
 	installEventFilter(this);
 
-	/* disabilito la gestiore del focus della finestra principale */
-	gui.main_win_lfp = FALSE;
-
 	emu_pause(TRUE);
 }
 dlgOverscanBorders::~dlgOverscanBorders() {}
@@ -141,9 +138,6 @@ bool dlgOverscanBorders::eventFilter(QObject *obj, QEvent *event) {
 		}
 
 		emu_pause(FALSE);
-
-		/* restituisco alla finestra principale la gestione del focus */
-		gui.main_win_lfp = TRUE;
 
 		parentMain->ui->action_Oscan_Set_Borders->setEnabled(true);
 	} else if (event->type() == QEvent::LanguageChange) {

@@ -554,6 +554,10 @@ int settingsObject::val_to_int(int index, const char *buffer) {
 	bool finded = false;
 	int a;
 
+	if (set->cfg[index].opts.count == 0) {
+		return (QString(buffer).toInt());
+	}
+
 	for (a = 0; a < set->cfg[index].opts.count; a++) {
 		if (QString(buffer) == QString(set->cfg[index].opts.opt[a].sname)) {
 			finded = true;
@@ -599,6 +603,11 @@ int settingsObject::val_to_int(int index) {
 	return (value);
 }
 void settingsObject::int_to_val(int index, int value) {
+	if (set->cfg[index].opts.count == 0) {
+		val.replace(index, QString("%1").arg(value));
+		return;
+	}
+
 	for (int i = 0; i < set->cfg[index].opts.count; i++) {
 		if (set->cfg[index].opts.opt[i].value == value) {
 			val.replace(index, set->cfg[index].opts.opt[i].sname);
@@ -968,11 +977,13 @@ void pgsObject::to_cfg(QString group) {
 	int_to_val(SET_PGS_SLOT, save_slot.slot);
 	char_to_val(SET_PGS_FILE_SAVE, cfg_from_file.save_file);
 	int_to_val(SET_PGS_OVERSCAN, cfg_from_file.oscan);
+	int_to_val(SET_PGS_DIPSWITCH, cfg_from_file.dipswitch);
 }
 void pgsObject::fr_cfg(QString group) {
 	save_slot.slot = val_to_int(SET_PGS_SLOT);
 	cpy_val_to_char(SET_PGS_FILE_SAVE, cfg_from_file.save_file, sizeof(cfg_from_file.save_file));
 	cfg_from_file.oscan = val_to_int(SET_PGS_OVERSCAN);
+	cfg_from_file.dipswitch = val_to_int(SET_PGS_DIPSWITCH);
 }
 
 // ----------------------------------------- Input ---------------------------------------

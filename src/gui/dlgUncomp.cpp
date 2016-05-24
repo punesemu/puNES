@@ -53,9 +53,6 @@ dlgUncomp::dlgUncomp(QWidget *parent = 0) : QDialog(parent) {
 	vbox->addWidget(tableWidget_Selection);
 	vbox->addWidget(horizontalLayoutWidget);
 
-	// disabilito la gestiore del focus della finestra principale
-	gui.main_win_lfp = FALSE;
-
 	// se l'archivio compresso e' caricato da riga di comando,
 	// la gui non e' ancora stata avviata.
 	if (gui.start == TRUE) {
@@ -66,9 +63,6 @@ dlgUncomp::dlgUncomp(QWidget *parent = 0) : QDialog(parent) {
 }
 dlgUncomp::~dlgUncomp() {}
 void dlgUncomp::closeEvent(QCloseEvent *e) {
-	// restituisco alla finestra principale la gestione del focus
-	gui.main_win_lfp = TRUE;
-
 	if (gui.start == TRUE) {
 		emu_pause(FALSE);
 	}

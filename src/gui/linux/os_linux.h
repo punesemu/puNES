@@ -34,7 +34,7 @@ void gui_init(int *argc, char **argv) {
 
 	info.gui = TRUE;
 	gui.in_update = FALSE;
-	gui.main_win_lfp = TRUE;
+	gui.main_win_lfp = 0;
 
 	/*
 	// cerco il numero dei cores

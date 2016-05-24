@@ -15,6 +15,7 @@ BUILT_SOURCES = \
 	dlgOverscanBorders.moc \
 	dlgStdPad.moc \
 	dlgUncomp.moc \
+	dlgVsSystem.moc \
 	mainWindow.moc \
 	pStyle.moc \
 	sbarWidget.moc \
@@ -31,6 +32,7 @@ BUILT_SOURCES += \
 	designer/dlgStdPad.hh \
 	designer/dlgCheats.hh \
 	designer/dlgUncomp.hh \
+	designer/dlgVsSystem.hh \
 	designer/dlgInput.hh
 
 noinst_LIBRARIES = libgui.a
@@ -52,6 +54,8 @@ libgui_a_SOURCES = \
 	dlgStdPad.hpp \
 	dlgUncomp.cpp \
 	dlgUncomp.hpp \
+	dlgVsSystem.cpp \
+	dlgVsSystem.hpp \
 	mainWindow.cpp \
 	mainWindow.hpp \
 	pStyle.cpp \
