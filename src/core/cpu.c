@@ -636,7 +636,7 @@ void cpu_exe_op(void) {
 	 * 07-nmi_on_timing.nes. Non ho trovato informazioni su quando
 	 * effettivamente questa situazione avvenga.
 	 */
-	if (nmi.high && !nmi.frame_x && (ppu.frame_y == machine.vint_lines)) {
+	if (nmi.high && !nmi.frame_x && (ppu.frame_y == ppu_sclines.vint)) {
 		nmi.high = nmi.delay = FALSE;
 	}
 	/*
@@ -1013,14 +1013,14 @@ void cpu_turn_on(void) {
 		 */
 		cpu.SR = 0x34;
 
+		tas.total_lag_frames = 0;
+
 		if (tas.type && (tas.emulator == FCEUX)) {
 			unsigned int x;
 
 			for (x = 0; x < sizeof(mmcpu.ram); x++) {
 				mmcpu.ram[x] = (x & 0x04) ? 0xFF : 0x00;
 			}
-
-			tas.total_lag_frames = 0;
 		} else {
 			/*
 			 * reset della ram

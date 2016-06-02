@@ -151,7 +151,7 @@ typedef struct _d3d9 {
 
 	BYTE scale;
 
-	struct _screen {
+	struct _d3d9_screen {
 		INT in_use;
 		UINT index;
 		_texture_simple tex[MAX_PREV + 1];

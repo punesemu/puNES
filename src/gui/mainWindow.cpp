@@ -44,6 +44,7 @@
 #include "recent_roms.h"
 #include "fds.h"
 #include "clock.h"
+#include "ppu.h"
 #include "text.h"
 #include "save_slot.h"
 #include "version.h"
@@ -1159,6 +1160,7 @@ void mainWindow::update_menu_settings() {
 	ui->action_Hide_sprites->setChecked(cfg->hide_sprites);
 	ui->action_Hide_background->setChecked(cfg->hide_background);
 	ui->action_Unlimited_sprites->setChecked(cfg->unlimited_sprites);
+	ui->action_PPU_Overclock->setChecked(cfg->ppu_overclock);
 
 	// Settings/Language
 	switch (cfg->language) {
@@ -1286,11 +1288,6 @@ void mainWindow::shortcuts() {
 			SLOT(s_state_save_slot_incdec()));
 	connect_shortcut(ui->action_Decrement_slot, SET_INP_SC_DEC_SLOT,
 			SLOT(s_state_save_slot_incdec()));
-	connect_shortcut(ui->action_Unlimited_sprites, SET_INP_SC_UNLIMITED_SPRITES,
-			SLOT(s_set_unlimited_sprites()));
-	connect_shortcut(ui->action_Hide_sprites, SET_INP_SC_HIDE_SPRITES, SLOT(s_set_hide_sprites()));
-	connect_shortcut(ui->action_Hide_background, SET_INP_SC_HIDE_BACKGROUND,
-			SLOT(s_set_hide_background()));
 }
 void mainWindow::shcjoy_start() {
 	shcjoy_stop();
@@ -1420,6 +1417,7 @@ void mainWindow::connect_menu_signals() {
 	// Tools
 	connect_action(ui->action_Vs_System, SLOT(s_set_vs_window()));
 	connect_action(ui->action_APU_channels, SLOT(s_set_apu_channels()));
+	connect_action(ui->action_PPU_Hacks, SLOT(s_set_ppu_hacks()));
 
 	// Settings/Mode
 	connect_action(ui->action_PAL, PAL, SLOT(s_set_mode()));
@@ -1594,6 +1592,7 @@ void mainWindow::connect_menu_signals() {
 	connect_action(ui->action_Hide_sprites, SLOT(s_set_hide_sprites()));
 	connect_action(ui->action_Hide_background, SLOT(s_set_hide_background()));
 	connect_action(ui->action_Unlimited_sprites, SLOT(s_set_unlimited_sprites()));
+	connect_action(ui->action_PPU_Overclock, SLOT(s_set_ppu_overclock()));
 	// Settings/Langauge
 	connect_action(ui->action_English, LNG_ENGLISH, SLOT(s_set_language()));
 	connect_action(ui->action_Italian, LNG_ITALIAN, SLOT(s_set_language()));
@@ -1827,6 +1826,10 @@ void mainWindow::s_set_vs_window() {
 }
 void mainWindow::s_set_apu_channels() {
 	ext_win.apu_channels = !ext_win.apu_channels;
+	gui_external_control_windows_show();
+}
+void mainWindow::s_set_ppu_hacks() {
+	ext_win.ppu_hacks = !ext_win.ppu_hacks;
 	gui_external_control_windows_show();
 }
 void mainWindow::s_set_mode() {
@@ -2196,6 +2199,7 @@ void mainWindow::s_set_audio_enable() {
 	} else {
 		snd_stop();
 	}
+	gui_apu_channels_update_dialog();
 	gui_update();
 	emu_pause(FALSE);
 }
@@ -2225,15 +2229,26 @@ void mainWindow::s_set_input() {
 }
 void mainWindow::s_set_hide_sprites() {
 	cfg->hide_sprites = !cfg->hide_sprites;
+	gui_ppu_hacks_update_dialog();
 	update_menu_settings();
 }
 void mainWindow::s_set_hide_background() {
 	cfg->hide_background = !cfg->hide_background;
+	gui_ppu_hacks_update_dialog();
 	update_menu_settings();
 }
 void mainWindow::s_set_unlimited_sprites() {
 	cfg->unlimited_sprites = !cfg->unlimited_sprites;
+	gui_ppu_hacks_update_dialog();
 	update_menu_settings();
+}
+void mainWindow::s_set_ppu_overclock() {
+	emu_pause(TRUE);
+	cfg->ppu_overclock = !cfg->ppu_overclock;
+	gui_ppu_hacks_update_dialog();
+	update_menu_settings();
+	ppu_overclock(TRUE);
+	emu_pause(FALSE);
 }
 void mainWindow::s_set_pause_in_background() {
 	cfg->bck_pause = !cfg->bck_pause;
@@ -2524,15 +2539,6 @@ void mainWindow::s_shcjoy_read_timer() {
 					break;
 				case SET_INP_SC_INC_SLOT:
 					ui->action_Increment_slot->trigger();
-					break;
-				case SET_INP_SC_UNLIMITED_SPRITES:
-					ui->action_Unlimited_sprites->trigger();
-					break;
-				case SET_INP_SC_HIDE_SPRITES:
-					ui->action_Hide_sprites->trigger();
-					break;
-				case SET_INP_SC_HIDE_BACKGROUND:
-					ui->action_Hide_background->trigger();
 					break;
 			}
 		} else if (shcjoy.sch.mode == PRESSED) {}

@@ -92,7 +92,11 @@ enum pgs_element {
 	SET_PGS_SLOT,
 	SET_PGS_FILE_SAVE,
 	SET_PGS_OVERSCAN,
-	SET_PGS_DIPSWITCH
+	SET_PGS_DIPSWITCH,
+	SET_PGS_PPU_OVERCLOCK,
+	SET_PGS_PPU_OVERCLOCK_7BIT,
+	SET_PGS_PPU_OVERCLOCK_VB_SCLINE,
+	SET_PGS_PPU_OVERCLOCK_PR_SCLINE
 };
 enum inp_element {
 	SET_INP_SC_OPEN,
@@ -123,9 +127,6 @@ enum inp_element {
 	SET_INP_SC_LOAD_STATE,
 	SET_INP_SC_INC_SLOT,
 	SET_INP_SC_DEC_SLOT,
-	SET_INP_SC_UNLIMITED_SPRITES,
-	SET_INP_SC_HIDE_SPRITES,
-	SET_INP_SC_HIDE_BACKGROUND,
 	SET_INP_SC_INSERT_COIN,
 
 	SET_INP_SC_JOYSTICK_ID,
@@ -797,6 +798,30 @@ static const _settings pgs_cfg[] = {
 		"# possible values: [it depends on the mapper]",
 		NULL,
 		{0, NULL}
+	},
+	{
+		"system", "ppu overclock", "no",
+		"# possible values: yes, no",
+		NULL,
+		{LENGTH(opt_no_yes), opt_no_yes}
+	},
+	{
+		"system", "disable 7bit sample control", "no",
+		"# possible values: yes, no",
+		NULL,
+		{LENGTH(opt_no_yes), opt_no_yes}
+	},
+	{
+		"system", "extra vblank scanlines", "0",
+		"# possible values: [0 - 1000]",
+		NULL,
+		{0, NULL}
+	},
+	{
+		"system", "extra postrender scanlines", "0",
+		"# possible values: [0 - 1000]",
+		NULL,
+		{0, NULL}
 	}
 };
 
@@ -829,9 +854,6 @@ static const _settings inp_cfg[] = {
 	{"shortcuts", "load state",               "F4,NULL",         NULL, NULL, {0, NULL}},
 	{"shortcuts", "increment state slot",     "F3,NULL",         NULL, NULL, {0, NULL}},
 	{"shortcuts", "decrement state slot",     "F2,NULL",         NULL, NULL, {0, NULL}},
-	{"shortcuts", "unlimited sprites",        "Alt+U,NULL",      NULL, NULL, {0, NULL}},
-	{"shortcuts", "hide sprites",             "Alt+V,NULL",      NULL, NULL, {0, NULL}},
-	{"shortcuts", "hide background",          "Alt+B,NULL",      NULL, NULL, {0, NULL}},
 	{"shortcuts", "insert coin",              "8,NULL",          NULL, NULL, {0, NULL}},
 
 	{"shortcuts", "joystick Id",              "NULL",            NULL, NULL, {0, NULL}},

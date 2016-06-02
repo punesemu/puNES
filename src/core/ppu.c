@@ -170,7 +170,7 @@ void ppu_tick(WORD cycles_cpu) {
 
 	while (ppu.cycles >= machine.ppu_divide) {
 		/* controllo se sono all'inizio della dummy line */
-		if (ppu.frame_y == machine.vint_lines) {
+		if (ppu.frame_y == ppu_sclines.vint) {
 			/*
 			 * disabilito il vblank al ciclo 0 della scanline,
 			 * a differenza dell'abilitazione del vblank che
@@ -250,7 +250,7 @@ void ppu_tick(WORD cycles_cpu) {
 					extcl_ppu_000_to_255();
 				}
 				/* controllo di non essere nella dummy line */
-				if (ppu.frame_y > machine.vint_lines) {
+				if (ppu.frame_y > ppu_sclines.vint) {
 					/*
 					 * controllo se background o sprites (basta
 					 * solo uno dei due) siano visibili.
@@ -1042,7 +1042,7 @@ void ppu_tick(WORD cycles_cpu) {
 				extcl_ppu_320_to_34x();
 			}
 			if (ppu.frame_x == 323) {
-				if (ppu.frame_y == machine.vint_lines) {
+				if (ppu.frame_y == ppu_sclines.vint) {
 					/*
 					 * all'inizio di ogni frame reinizializzo
 					 * l'indirizzo della PPU.
@@ -1108,29 +1108,35 @@ void ppu_tick(WORD cycles_cpu) {
 		 *
 		 *        NTSC                             PAL                            Dendy
 		 * frameY  | |  screenY            frameY  | |  screenY            frameY  | |  screenY
-		 * --------------------            --------------------            --------------------
-		 * |0                0|            |0                0|            |0                0|
-		 * |.                .|   VBLANK   |.                .|   VBLANK   |.                .|
-		 * |.                .|            |.                .|            |19               0|
-		 * |19               0|            |69               0|            --------------------
-		 * --------------------            -------------------- dummy line-|20               0|
-		 * |20               0| dummy line |70               0|/           --------------------
-		 * --------------------            --------------------            |21               0|
-		 * |21               0|            |71               0|   screen   |.                .|
-		 * |.                .|   screen   |.                .| (rendering)|260            239|
+		 * --------------------            --------------------            ---------V----------
+		 * |ovb     V        0| ovclock vb |ovb      V       0| ovclock vb |ovb     B        0|
+		 * ---------B----------            ----------B---------            ---------L----------
+		 * |ovb+0   L        0|            |ovb+0    L       0|            |ovb+0   A        0|
+		 * |.       A        .|   VBLANK   |.        A       .|   VBLANK   |.       N        .|
+		 * |.       N        .|            |.        N       .|            |ovb+19  K        0|
+		 * |ovb+19  K        0|            |ovb+69   K       0|            --------------------
+		 * --------------------            -------------------- dummy line-|ovb+20           0|
+		 * |ovb+20           0| dummy line |ovb+70           0|/           --------------------
+		 * --------------------            --------------------            |ovb+21           0|
+		 * |ovb+21           0|            |ovb+71           0|   screen   |.                .|
+		 * |.                .|   screen   |.                .| (rendering)|ovb+260        239|
 		 * |.                .| (rendering)|.                .|            --------------------
-		 * |260            239|            |310            239|            |261            240|
+		 * |ovb+260        239|            |ovb+310        239|            |ovb+261        240|
 		 * --------------------            --------------------            |.                .|
-		 * |261            240| PPU ferma  |311            240| PPU ferma  |311            290|
+		 * |ovb+261        240| PPU ferma  |ovb+311        240| PPU ferma  |ovb+311        290|
 		 * --------------------            --------------------            --------------------
-		 * Totale 262 scanlines            Totale 312 scanlines            Totale 312 scanlines
+		 * Tot. ovb+262 sclines            Tot. ovb+312 sclines            Tot. ovb+312 sclines
+		 * --------------------            --------------------            --------------------
+		 * |ovb+262        240| ovclock pr |ovb+312        240| ovclock pr |ovb+312        290|
+		 * --------------------            --------------------            --------------------
+		 *
 		 */
 		/* controllo di essere nel range [dummy...rendering screen] */
-		if ((ppu.frame_y >= machine.vint_lines) && (ppu.screen_y < SCR_LINES)) {
+		if ((ppu.frame_y >= ppu_sclines.vint) && (ppu.screen_y < SCR_LINES)) {
 			BYTE a;
 
 			/* verifico di non trattare la dummy line */
-			if (ppu.frame_y > machine.vint_lines) {
+			if (ppu.frame_y > ppu_sclines.vint) {
 				/* incremento il contatore delle scanline renderizzate */
 				ppu.screen_y++;
 				if (extcl_ppu_update_screen_y) {
@@ -1198,7 +1204,11 @@ void ppu_tick(WORD cycles_cpu) {
 		ppu.sline_cycles = SLINE_CYCLES;
 
 		/* controllo se ho completato il frame */
-		if (ppu.frame_y == machine.total_lines) {
+		if (ppu.frame_y >= ppu_sclines.total) {
+			// aggiorno il numero delle scanlines
+			ppu_overclock_update();
+			// azzero il flag del DMC dell'overclock
+			overclock.DMC_in_use = FALSE;
 			/* incremento il contatore dei frames */
 			ppu.frames++;
 			/* azzero frame_y */
@@ -1220,6 +1230,10 @@ void ppu_tick(WORD cycles_cpu) {
 				nmi.cpu_cycles_from_last_nmi = 0;
 			}
 		}
+
+		// controllo se sono nelle scanlines extra
+		ppu_overclock_control()
+
 		/*
 		 * azzero frameX, ed e' estremamente
 		 * importante che lo faccia esattamente
@@ -1231,6 +1245,10 @@ void ppu_tick(WORD cycles_cpu) {
 	}
 }
 BYTE ppu_turn_on(void) {
+	// nel primo frame l'overclocking e' sempre disabilitato
+	overclock.DMC_in_use = TRUE;
+	ppu_overclock(FALSE);
+
 	if (info.reset >= HARD) {
 		memset(&ppu, 0x00, sizeof(ppu));
 		memset(&ppu_openbus, 0x00, sizeof(ppu_openbus));
@@ -1254,7 +1272,7 @@ BYTE ppu_turn_on(void) {
 		 * funziona correttamente (altrimenti avviato il gioco
 		 * la parte di sotto si sporca e non appaiono sprites).
 		 */
-		ppu.frame_y = machine.vint_lines + 1;
+		ppu.frame_y = ppu_sclines.vint + 1;
 		ppu.sline_cycles = SLINE_CYCLES;
 		r2000.r2006_inc = 1;
 		r2000.size_spr = 8;
@@ -1324,7 +1342,7 @@ BYTE ppu_turn_on(void) {
 		memset(&r2007, 0x00, sizeof(r2007));
 
 		ppu.frame_x = ppu.screen_y = ppu.pixel_tile = 0;
-		ppu.frame_y = machine.vint_lines + 1;
+		ppu.frame_y = ppu_sclines.vint + 1;
 		ppu.tmp_vram = ppu.fine_x = 0;
 		ppu.spr_adr = ppu.bck_adr = 0;
 		ppu.sline_cycles = SLINE_CYCLES;
@@ -1342,4 +1360,21 @@ void ppu_quit(void) {
 	if (screen.data) {
 		free(screen.data);
 	}
+}
+void ppu_overclock(BYTE reset_dmc_in_use) {
+	if (reset_dmc_in_use) {
+		overclock.DMC_in_use = FALSE;
+	}
+
+	overclock.sclines.vb = 0;
+	overclock.sclines.pr = 0;
+
+	if (cfg->ppu_overclock) {
+		overclock.sclines.vb = cfg->extra_vb_scanlines;
+		overclock.sclines.pr = cfg->extra_pr_scanlines;
+	}
+
+	overclock.sclines.total = overclock.sclines.vb + overclock.sclines.pr;
+	ppu_overclock_update();
+	ppu_overclock_control();
 }

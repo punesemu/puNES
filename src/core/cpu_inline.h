@@ -38,7 +38,7 @@
 
 #define mod_cycles_op(op, vl) cpu.cycles op vl
 #define r2006_during_rendering()\
-	if (!r2002.vblank && r2001.visible && (ppu.frame_y > machine.vint_lines) &&\
+	if (!r2002.vblank && r2001.visible && (ppu.frame_y > ppu_sclines.vint) &&\
 		(ppu.screen_y < SCR_LINES)) {\
 		_r2006_during_rendering()\
 	} else {\
@@ -412,7 +412,7 @@ static BYTE INLINE ppu_rd_reg(WORD address) {
 				 * Taito (TC0190FMCPAL16R4)
 				 * Tengen (Rambo)
 				 */
-				if (!r2002.vblank && r2001.visible && (ppu.frame_y > machine.vint_lines) &&
+				if (!r2002.vblank && r2001.visible && (ppu.frame_y > ppu_sclines.vint) &&
 						(ppu.screen_y < SCR_LINES)) {
 					extcl_update_r2006(r2006.value & 0x2FFF, old_r2006);
 				} else {
@@ -858,7 +858,7 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 		/* condizione riscontrata in "scanline.nes" */
 		if (ppu.frame_x < SCR_ROWS) {
 			if (!r2002.vblank && (ppu.screen_y < SCR_LINES)) {
-				if (ppu.frame_y > machine.vint_lines) {
+				if (ppu.frame_y > ppu_sclines.vint) {
 					if (r2001.visible) {
 						if (ppu.pixel_tile == 3) {
 							r2000.race.ctrl = TRUE;
@@ -1122,7 +1122,7 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 			 */
 			if (ppu.frame_x < SCR_ROWS) {
 				if (!r2002.vblank && (ppu.screen_y < SCR_LINES)) {
-					if (ppu.frame_y > machine.vint_lines) {
+					if (ppu.frame_y > ppu_sclines.vint) {
 						if (r2001.visible) {
 							if ((ppu.pixel_tile >= 1) && (ppu.pixel_tile <= 3)) {
 								r2006.race.ctrl = TRUE;
@@ -1177,7 +1177,7 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 		ppu.openbus = value;
 		ppu_openbus_wr_all();
 
-		if (!r2002.vblank && r2001.visible && (ppu.frame_y > machine.vint_lines)
+		if (!r2002.vblank && r2001.visible && (ppu.frame_y > ppu_sclines.vint)
 		        && (ppu.screen_y < SCR_LINES)) {
 			ppu_wr_mem(ppu.rnd_adr, ppu.rnd_adr & 0x00FF);
 			_r2006_during_rendering()
@@ -1453,15 +1453,35 @@ static void INLINE apu_wr_reg(WORD address, BYTE value) {
 
 				r4011.cycles = r4011.frames = 0;
 				r4011.value = value;
+
+				if (cfg->ppu_overclock && !cfg->ppu_overclock_dmc_control_disabled && value) {
+					overclock.DMC_in_use = TRUE;
+					ppu_sclines.total = machine.total_lines;
+					ppu_sclines.vint = machine.vint_lines;
+					ppu_overclock_control()
+				}
+
 				return;
 			}
 			if (address == 0x4012) {
 				DMC.address_start = (value << 6) | 0xC000;
+
+				if (cfg->ppu_overclock && !cfg->ppu_overclock_dmc_control_disabled && value) {
+					overclock.DMC_in_use = FALSE;
+					ppu_overclock_update();
+					ppu_overclock_control()
+				}
 				return;
 			}
 			if (address == 0x4013) {
 				/* sample length */
 				DMC.length = (value << 4) | 0x01;
+
+				if (cfg->ppu_overclock && !cfg->ppu_overclock_dmc_control_disabled && value) {
+					overclock.DMC_in_use = FALSE;
+					ppu_overclock_update();
+					ppu_overclock_control()
+				}
 				return;
 			}
 			return;
@@ -1839,7 +1859,11 @@ static void INLINE tick_hw(BYTE value) {
 		nmi.before = nmi.high;
 		irq.before = irq.high;
 		ppu_tick(1);
-		apu_tick(1, &value);
+
+		if (overclock.in_extra_sclines == FALSE) {
+			apu_tick(1, &value);
+		}
+
 		if (extcl_cpu_every_cycle) {
 			/*
 			 * utilizzato dalle mappers :

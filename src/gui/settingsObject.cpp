@@ -978,12 +978,20 @@ void pgsObject::to_cfg(QString group) {
 	char_to_val(SET_PGS_FILE_SAVE, cfg_from_file.save_file);
 	int_to_val(SET_PGS_OVERSCAN, cfg_from_file.oscan);
 	int_to_val(SET_PGS_DIPSWITCH, cfg_from_file.dipswitch);
+	int_to_val(SET_PGS_PPU_OVERCLOCK, cfg_from_file.ppu_overclock);
+	int_to_val(SET_PGS_PPU_OVERCLOCK_7BIT, cfg_from_file.ppu_overclock_dmc_control_disabled);
+	int_to_val(SET_PGS_PPU_OVERCLOCK_VB_SCLINE, cfg_from_file.extra_vb_scanlines);
+	int_to_val(SET_PGS_PPU_OVERCLOCK_PR_SCLINE, cfg_from_file.extra_pr_scanlines);
 }
 void pgsObject::fr_cfg(QString group) {
 	save_slot.slot = val_to_int(SET_PGS_SLOT);
 	cpy_val_to_char(SET_PGS_FILE_SAVE, cfg_from_file.save_file, sizeof(cfg_from_file.save_file));
 	cfg_from_file.oscan = val_to_int(SET_PGS_OVERSCAN);
 	cfg_from_file.dipswitch = val_to_int(SET_PGS_DIPSWITCH);
+	cfg_from_file.ppu_overclock = val_to_int(SET_PGS_PPU_OVERCLOCK);
+	cfg_from_file.ppu_overclock_dmc_control_disabled = val_to_int(SET_PGS_PPU_OVERCLOCK_7BIT);
+	cfg_from_file.extra_vb_scanlines = val_to_int(SET_PGS_PPU_OVERCLOCK_VB_SCLINE);
+	cfg_from_file.extra_pr_scanlines = val_to_int(SET_PGS_PPU_OVERCLOCK_PR_SCLINE);
 }
 
 // ----------------------------------------- Input ---------------------------------------

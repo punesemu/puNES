@@ -62,6 +62,10 @@ typedef struct _config {
 	BYTE bck_pause;
 	WORD language;
 	WORD dipswitch;
+	BYTE ppu_overclock;
+	BYTE ppu_overclock_dmc_control_disabled;
+	WORD extra_vb_scanlines;
+	WORD extra_pr_scanlines;
 
 	_config_input input;
 	_config_apu apu;

@@ -122,6 +122,7 @@ BYTE emu_frame(void) {
 
 		if (tas.lag_frame) {
 			tas.total_lag_frames++;
+			gui_ppu_hacks_lag_counter_update();
 		}
 
 		if (snd_end_frame) {
@@ -533,6 +534,8 @@ BYTE emu_turn_on(void) {
 	memset(&oam, 0x00, sizeof(oam));
 	memset(&screen, 0x00, sizeof(screen));
 	memset(&vs_system, 0x00, sizeof(vs_system));
+
+	cfg->extra_vb_scanlines = cfg->extra_pr_scanlines = 0;
 
 	vs_system.watchdog.next = vs_system_wd_next();
 

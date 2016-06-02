@@ -485,9 +485,10 @@
       <iconset resource="application.qrc">
        <normaloff>:/icon/icons/ppu.png</normaloff>:/icon/icons/ppu.png</iconset>
      </property>
-     <addaction name="action_Unlimited_sprites"/>
      <addaction name="action_Hide_sprites"/>
      <addaction name="action_Hide_background"/>
+     <addaction name="action_Unlimited_sprites"/>
+     <addaction name="action_PPU_Overclock"/>
     </widget>
     <addaction name="menu_Mode"/>
     <addaction name="separator"/>
@@ -541,6 +542,7 @@
     </property>
     <addaction name="action_Vs_System"/>
     <addaction name="action_APU_channels"/>
+    <addaction name="action_PPU_Hacks"/>
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_NES"/>
@@ -2089,6 +2091,22 @@
    </property>
    <property name="text">
     <string>Vs System Controls</string>
+   </property>
+  </action>
+  <action name="action_PPU_Hacks">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>PPU Hacks</string>
+   </property>
+  </action>
+  <action name="action_PPU_Overclock">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>PPU Overclock</string>
    </property>
   </action>
  </widget>

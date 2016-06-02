@@ -193,7 +193,7 @@ typedef struct _opengl {
 		Uint32 flags;
 	} sdl;
 
-	struct _screen {
+	struct _opengl_screen {
 		GLint in_use;
 		GLuint index;
 		_texture_simple tex[MAX_PREV + 1];

@@ -433,7 +433,7 @@ BYTE input_rd_reg_zapper(BYTE openbus, WORD **screen_index, BYTE nport) {
 		return (port[nport].zapper |= 0x08);
 	}
 
-	if (!r2002.vblank && r2001.visible && (ppu.frame_y > machine.vint_lines)
+	if (!r2002.vblank && r2001.visible && (ppu.frame_y > ppu_sclines.vint)
 		&& (ppu.screen_y < SCR_LINES)) {
 		for (y_rect = (y_zapper - 8); y_rect < (y_zapper + 8); y_rect++) {
 			if (y_rect < 0) {
@@ -567,7 +567,7 @@ BYTE input_rd_reg_vs_zapper(BYTE openbus, WORD **screen_index, BYTE nport) {
 	if ((x_zapper <= 0) || (x_zapper >= SCR_ROWS) || (y_zapper <= 0) || (y_zapper >= SCR_LINES)) {
 		light = 0;
 	} else {
-		if (!r2002.vblank && r2001.visible && (ppu.frame_y > machine.vint_lines)
+		if (!r2002.vblank && r2001.visible && (ppu.frame_y > ppu_sclines.vint)
 				&& (ppu.screen_y < SCR_LINES)) {
 			for (y_rect = (y_zapper - 8); y_rect < (y_zapper + 8); y_rect++) {
 				if (y_rect < 0) {

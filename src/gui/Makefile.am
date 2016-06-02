@@ -13,6 +13,7 @@ BUILT_SOURCES = \
 	dlgCheats.moc \
 	dlgInput.moc \
 	dlgOverscanBorders.moc \
+	dlgPPUHacks.moc \
 	dlgStdPad.moc \
 	dlgUncomp.moc \
 	dlgVsSystem.moc \
@@ -33,6 +34,7 @@ BUILT_SOURCES += \
 	designer/dlgCheats.hh \
 	designer/dlgUncomp.hh \
 	designer/dlgVsSystem.hh \
+	designer/dlgPPUHacks.hh \
 	designer/dlgInput.hh
 
 noinst_LIBRARIES = libgui.a
@@ -50,6 +52,8 @@ libgui_a_SOURCES = \
 	dlgInput.hpp \
 	dlgOverscanBorders.cpp \
 	dlgOverscanBorders.hpp \
+	dlgPPUHacks.cpp \
+	dlgPPUHacks.hpp \
 	dlgStdPad.cpp \
 	dlgStdPad.hpp \
 	dlgUncomp.cpp \

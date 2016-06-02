@@ -105,8 +105,17 @@ enum ppu_color_mode { PPU_CM_GRAYSCALE = 0x30, PPU_CM_NORMAL = 0x3F };
 		r2006.value += 0x1000;\
 	}
 #define r2006_end_scanline() r2006.value = (r2006.value & 0xFBE0) | (ppu.tmp_vram & 0x041F)
+#define ppu_overclock_update()\
+	ppu_sclines.total = machine.total_lines + (overclock.DMC_in_use ? 0 : overclock.sclines.total);\
+	ppu_sclines.vint = machine.vint_lines + (overclock.DMC_in_use ? 0 : overclock.sclines.vb)
+#define ppu_overclock_control()\
+	overclock.in_extra_sclines = TRUE;\
+	if ((ppu.frame_y >= (overclock.DMC_in_use ? 0 : overclock.sclines.vb))\
+			&& (ppu.frame_y <= (ppu_sclines.vint + SCR_LINES) + 1)) {\
+		overclock.in_extra_sclines = FALSE;\
+	}
 
-typedef struct {
+typedef struct _ppu {
 	WORD frame_x;
 	WORD frame_y;
 	BYTE fine_x;
@@ -129,11 +138,11 @@ typedef struct {
 	} sf;
 	WORD rnd_adr;
 }  _ppu;
-typedef struct {
+typedef struct _screen {
 	WORD *data;
 	WORD *line[SCR_LINES];
 } _screen;
-typedef struct {
+typedef struct _ppu_openbus {
 	int32_t bit0;
 	int32_t bit1;
 	int32_t bit2;
@@ -143,10 +152,10 @@ typedef struct {
 	int32_t bit6;
 	int32_t bit7;
 } _ppu_openbus;
-typedef struct {
+typedef struct _r2xxx {
 	BYTE value;
 } _r2xxx;
-typedef struct {
+typedef struct _r2000 {
 	BYTE value;
 	BYTE nmi_enable;
 	BYTE size_spr;
@@ -158,7 +167,7 @@ typedef struct {
 		WORD value;
 	} race;
 } _r2000;
-typedef struct {
+typedef struct _r2001 {
 	BYTE value;
 	WORD emphasis;
 	BYTE visible;
@@ -172,13 +181,13 @@ typedef struct {
 		WORD value;
 	} race;
 } _r2001;
-typedef struct {
+typedef struct _r2002 {
 	BYTE vblank;
 	BYTE sprite0_hit;
 	BYTE sprite_overflow;
 	BYTE toggle;
 } _r2002;
-typedef struct {
+typedef struct _r2006 {
 	WORD value;
 	WORD changed_from_op;
 	struct _r2006_race {
@@ -186,7 +195,7 @@ typedef struct {
 		WORD value;
 	} race;
 } _r2006;
-typedef struct {
+typedef struct _spr_evaluate {
 	WORD range;
 	BYTE count;
 	BYTE count_plus;
@@ -199,7 +208,7 @@ typedef struct {
 	BYTE phase;
 	BYTE real;
 } _spr_evaluate;
-typedef struct {
+typedef struct _spr {
 	BYTE y_C;
 	BYTE tile;
 	BYTE attrib;
@@ -215,28 +224,51 @@ typedef struct {
  * sempre trattati due tiles alla volta, altrimenti
  * sarebbero stati sufficienti BYTE e WORD.
  */
-typedef struct {
+typedef struct _tile {
 	WORD attrib;
 	WORD l_byte;
 	DBWORD h_byte;
 } _tile;
 
-_ppu ppu;
-_screen screen;
-_ppu_openbus ppu_openbus;
-_r2000 r2000;
-_r2001 r2001;
-_r2002 r2002;
-_r2006 r2006;
-_r2xxx r2003, r2004, r2007;
-_spr_evaluate spr_ev;
-_spr sprite[8], sprite_plus[8];
-_spr_evaluate spr_ev_unl;
-_spr sprite_unl[56], sprite_plus_unl[56];
-_tile tile_render, tile_fetch;
+#if defined (__cplusplus)
+#define EXTERNC extern "C"
+#else
+#define EXTERNC
+#endif
 
-void ppu_tick(WORD cycles_cpu);
-BYTE ppu_turn_on(void);
-void ppu_quit(void);
+EXTERNC struct _ppu_sclines {
+	WORD vint;
+	WORD total;
+} ppu_sclines;
+EXTERNC struct _overclock {
+	BYTE in_extra_sclines;
+	BYTE DMC_in_use;
+	struct _extra_sclines {
+		WORD vb;
+		WORD pr;
+		WORD total;
+	} sclines;
+} overclock;
+
+EXTERNC _ppu ppu;
+EXTERNC _screen screen;
+EXTERNC _ppu_openbus ppu_openbus;
+EXTERNC _r2000 r2000;
+EXTERNC _r2001 r2001;
+EXTERNC _r2002 r2002;
+EXTERNC _r2006 r2006;
+EXTERNC _r2xxx r2003, r2004, r2007;
+EXTERNC _spr_evaluate spr_ev;
+EXTERNC _spr sprite[8], sprite_plus[8];
+EXTERNC _spr_evaluate spr_ev_unl;
+EXTERNC _spr sprite_unl[56], sprite_plus_unl[56];
+EXTERNC _tile tile_render, tile_fetch;
+
+EXTERNC void ppu_tick(WORD cycles_cpu);
+EXTERNC BYTE ppu_turn_on(void);
+EXTERNC void ppu_quit(void);
+EXTERNC void ppu_overclock(BYTE reset_dmc_in_use);
+
+#undef EXTERNC
 
 #endif /* PPU_H_ */

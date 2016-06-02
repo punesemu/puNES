@@ -125,6 +125,7 @@ class mainWindow: public QMainWindow {
 		void s_save_screenshot();
 		void s_set_vs_window();
 		void s_set_apu_channels();
+		void s_set_ppu_hacks();
 		void s_set_mode();
 		void s_set_rendering();
 		void s_set_fps();
@@ -161,6 +162,7 @@ class mainWindow: public QMainWindow {
 		void s_set_hide_sprites();
 		void s_set_hide_background();
 		void s_set_unlimited_sprites();
+		void s_set_ppu_overclock();
 		void s_set_pause_in_background();
 		void s_cheat_mode_select();
 		void s_cheat_dialog();

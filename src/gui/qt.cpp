@@ -33,6 +33,7 @@
 #include "dlgUncomp.hpp"
 #include "dlgVsSystem.hpp"
 #include "dlgApuChannels.hpp"
+#include "dlgPPUHacks.hpp"
 #include "pStyle.hpp"
 #include "cheatObject.hpp"
 #if defined (WITH_OPENGL)
@@ -65,6 +66,7 @@ static struct _qt {
 	// controlli esterni
 	dlgVsSystem *vssystem;
 	dlgApuChannels *apuch;
+	dlgPPUHacks *ppuhacks;
 } qt;
 
 class appEventFilter: public QObject {
@@ -116,6 +118,7 @@ BYTE gui_create(void) {
 	memset(&ext_win, 0x00, sizeof(ext_win));
 	qt.vssystem = new dlgVsSystem(qt.mwin);
 	qt.apuch = new dlgApuChannels(qt.mwin);
+	qt.ppuhacks = new dlgPPUHacks(qt.mwin);
 
 	mouse.hidden = FALSE;
 	mouse.timer = gui_get_ms();
@@ -321,6 +324,12 @@ void gui_external_control_windows_show(void) {
 	} else {
 		qt.apuch->hide();
 	}
+	if (ext_win.ppu_hacks && (cfg->fullscreen != FULLSCR)) {
+		qt.ppuhacks->update_dialog();
+		qt.ppuhacks->show();
+	} else {
+		qt.ppuhacks->hide();
+	}
 
 	gui_update();
 	gui_flush();
@@ -329,10 +338,11 @@ void gui_external_control_windows_show(void) {
 	gui_set_focus();
 }
 void gui_external_control_windows_update_pos(void) {
-	int y = 0;
+	unsigned int y = 0;
 
-	y = qt.vssystem->update_pos(y);
-	y = qt.apuch->update_pos(y);
+	y += qt.vssystem->update_pos(y);
+	y += qt.apuch->update_pos(y);
+	y += qt.ppuhacks->update_pos(y);
 }
 
 void gui_vs_system_update_dialog(void) {
@@ -341,6 +351,19 @@ void gui_vs_system_update_dialog(void) {
 void gui_vs_system_insert_coin(void) {
 	if (vs_system.enabled == TRUE) {
 		qt.vssystem->insert_coin(1);
+	}
+}
+
+void gui_apu_channels_update_dialog(void) {
+	qt.apuch->update_dialog();
+}
+
+void gui_ppu_hacks_update_dialog(void) {
+	qt.ppuhacks->update_dialog();
+}
+void gui_ppu_hacks_lag_counter_update(void) {
+	if (ext_win.ppu_hacks && (cfg->fullscreen != FULLSCR)) {
+		qt.ppuhacks->lag_counter_update();
 	}
 }
 

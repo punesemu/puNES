@@ -87,6 +87,7 @@ EXTERNC struct _mouse {
 EXTERNC struct _external_windows {
 	uint8_t vs_system;
 	uint8_t apu_channels;
+	uint8_t ppu_hacks;
 } ext_win;
 
 EXTERNC void gui_quit(void);
@@ -128,6 +129,11 @@ EXTERNC void gui_external_control_windows_update_pos(void);
 
 EXTERNC void gui_vs_system_update_dialog(void);
 EXTERNC void gui_vs_system_insert_coin(void);
+
+EXTERNC void gui_apu_channels_update_dialog(void);
+
+EXTERNC void gui_ppu_hacks_update_dialog(void);
+EXTERNC void gui_ppu_hacks_lag_counter_update(void);
 
 EXTERNC BYTE gui_load_lut(void *l, const char *path);
 EXTERNC void gui_save_screenshot(int w, int h, char *buffer, BYTE flip);
