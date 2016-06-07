@@ -106,12 +106,20 @@ enum ppu_color_mode { PPU_CM_GRAYSCALE = 0x30, PPU_CM_NORMAL = 0x3F };
 	}
 #define r2006_end_scanline() r2006.value = (r2006.value & 0xFBE0) | (ppu.tmp_vram & 0x041F)
 #define ppu_overclock_update()\
-	ppu_sclines.total = machine.total_lines + (overclock.DMC_in_use ? 0 : overclock.sclines.total);\
-	ppu_sclines.vint = machine.vint_lines + (overclock.DMC_in_use ? 0 : overclock.sclines.vb)
+	if (overclock.DMC_in_use) {\
+		ppu_sclines.total = machine.total_lines;\
+		ppu_sclines.frame = machine.total_lines;\
+		ppu_sclines.vint = machine.vint_lines;\
+		ppu_sclines.vint_extra = 0;\
+	} else {\
+		ppu_sclines.total = machine.total_lines + overclock.sclines.total;\
+		ppu_sclines.frame = machine.total_lines + overclock.sclines.vb;\
+		ppu_sclines.vint = machine.vint_lines + overclock.sclines.vb;\
+		ppu_sclines.vint_extra = overclock.sclines.vb;\
+	}
 #define ppu_overclock_control()\
 	overclock.in_extra_sclines = TRUE;\
-	if ((ppu.frame_y >= (overclock.DMC_in_use ? 0 : overclock.sclines.vb))\
-			&& (ppu.frame_y <= (ppu_sclines.vint + SCR_LINES) + 1)) {\
+	if ((ppu.frame_y >= ppu_sclines.vint_extra) && (ppu.frame_y < ppu_sclines.frame)) {\
 		overclock.in_extra_sclines = FALSE;\
 	}
 
@@ -237,8 +245,10 @@ typedef struct _tile {
 #endif
 
 EXTERNC struct _ppu_sclines {
-	WORD vint;
 	WORD total;
+	WORD frame;
+	WORD vint;
+	WORD vint_extra;
 } ppu_sclines;
 EXTERNC struct _overclock {
 	BYTE in_extra_sclines;
