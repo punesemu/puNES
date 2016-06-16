@@ -656,6 +656,10 @@ BYTE map_init(void) {
 					/* BMC-MARIO1-MALEE2 */
 					map_init_malee();
 					break;
+				case 2:
+					/* NES-TF1021 */
+					map_init_TF1201();
+					break;
 			}
 			break;
 	}

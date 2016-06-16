@@ -66,12 +66,13 @@ static const _unif_board unif_boards[] = {
 	{"Sachen-8259D", 137, NO_UNIF, DEFAULT, DEFAULT},
 	{"ANROM", 7, NO_UNIF, DEFAULT, DEFAULT},
 
-	{"A65AS", NO_INES , 0, DEFAULT, DEFAULT},
-	{"MARIO1-MALEE2", NO_INES , 1, DEFAULT, DEFAULT},
-
 	{"FK23C", 176, NO_UNIF, DEFAULT, DEFAULT},
 	{"FK23CA", 176, NO_UNIF, DEFAULT, BMCFK23C_1 | BMCFK23CA},
 	{"D1038", 60, NO_UNIF, MAP60_VT5201, DEFAULT},
+
+	{"A65AS", NO_INES , 0, DEFAULT, DEFAULT},
+	{"MARIO1-MALEE2", NO_INES , 1, DEFAULT, DEFAULT},
+	{"TF1201", NO_INES , 2, DEFAULT, DEFAULT},
 
 	//{"NTBROM", 68, NO_UNIF},
 };
@@ -151,13 +152,6 @@ BYTE unif_load_rom(void) {
 				info.prg.rom.banks_16k = prg_chip_size(0) / (16 * 1024);
 				info.chr.rom.banks_8k = chr_chip_size(0) / (8 * 1024);
 
-
-
-
-
-
-
-
 				// TODO : questo e' tutto da rifare
 				/*
 				 * inizializzo qui il writeVRAM per la mapper 96 perche'
@@ -171,14 +165,6 @@ BYTE unif_load_rom(void) {
 				//	fclose(fp);
 				//	return (EXIT_ERROR);
 				//}
-
-
-
-
-
-
-
-
 
 #if !defined (RELEASE)
 				fprintf(stderr, "unif format\n");

@@ -139,6 +139,7 @@
 /* UNIF */
 #include "mappers/mapper_A65AS.h"
 #include "mappers/mapper_Malee.h"
+#include "mappers/mapper_TF1201.h"
 
 #define _control_bank(val, max)\
 	if (val > max) {\
