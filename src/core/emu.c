@@ -139,6 +139,12 @@ BYTE emu_frame(void) {
 			timeline_snap(TL_NORMAL);
 		}
 
+		if (cfg->save_battery_ram_file && (++info.bat_ram_frames >= info.bat_ram_frames_snap)) {
+			// faccio anche un refresh del file della battery ram
+			info.bat_ram_frames = 0;
+			map_prg_ram_battery_save();
+		}
+
 		r4011.frames++;
 
 		if (vs_system.enabled & vs_system.watchdog.reset) {
@@ -627,6 +633,8 @@ BYTE emu_turn_on(void) {
 
 	gui_external_control_windows_show();
 
+	info.bat_ram_frames_snap = machine.fps * (60 * 3);
+
 	info.reset = FALSE;
 
 	/* The End */
@@ -761,6 +769,8 @@ BYTE emu_reset(BYTE type) {
 	vs_system.watchdog.next = vs_system_wd_next();
 
 	gui_external_control_windows_show();
+
+	info.bat_ram_frames = 0;
 
 	info.reset = FALSE;
 

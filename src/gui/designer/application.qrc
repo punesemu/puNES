@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="icon">
+    <file>icons/home.png</file>
     <file>icons/insert_coin.png</file>
     <file>icons/ppu.png</file>
     <file>icons/screenshot.png</file>

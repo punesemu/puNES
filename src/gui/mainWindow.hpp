@@ -115,6 +115,7 @@ class mainWindow: public QMainWindow {
 		void s_loop();
 		void s_open();
 		void s_open_recent_roms();
+		void s_open_working_folder();
 		void s_quit();
 		void s_make_reset();
 		void s_insert_coin();
@@ -163,6 +164,7 @@ class mainWindow: public QMainWindow {
 		void s_set_hide_background();
 		void s_set_unlimited_sprites();
 		void s_set_ppu_overclock();
+		void s_set_save_battery_ram_file();
 		void s_set_pause_in_background();
 		void s_cheat_mode_select();
 		void s_cheat_dialog();

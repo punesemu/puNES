@@ -39,46 +39,47 @@ void usage(char *name);
 
 static const char *opt_short = "m:f:k:s:o:i:n:p:r:v:e:j:u:t:a:b:l:c:d:q:g:Vh?";
 static const struct option opt_long[] = {
-	{ "mode",               required_argument, NULL, 'm'},
-	{ "fps",                required_argument, NULL, 'f'},
-	{ "frameskip",          required_argument, NULL, 'k'},
-	{ "size",               required_argument, NULL, 's'},
-	{ "overscan",           required_argument, NULL, 'o'},
-	{ "filter",             required_argument, NULL, 'i'},
-	{ "ntsc-format",        required_argument, NULL, 'n'},
-	{ "palette",            required_argument, NULL, 'p'},
+	{ "mode",                  required_argument, NULL, 'm'},
+	{ "fps",                   required_argument, NULL, 'f'},
+	{ "frameskip",             required_argument, NULL, 'k'},
+	{ "size",                  required_argument, NULL, 's'},
+	{ "overscan",              required_argument, NULL, 'o'},
+	{ "filter",                required_argument, NULL, 'i'},
+	{ "ntsc-format",           required_argument, NULL, 'n'},
+	{ "palette",               required_argument, NULL, 'p'},
 #if defined (WITH_OPENGL)
-	{ "rendering",          required_argument, NULL, 'r'},
+	{ "rendering",             required_argument, NULL, 'r'},
 #endif
-	{ "vsync",              required_argument, NULL, 'v'},
-	{ "pixel-aspect-ratio", required_argument, NULL, 'e'},
-	{ "interpolation",      required_argument, NULL, 'j'},
-	{ "fullscreen",         required_argument, NULL, 'u'},
-	{ "stretch-fullscreen", required_argument, NULL, 't'},
-	{ "audio",              required_argument, NULL, 'a'},
-	{ "audio-buffer-factor",required_argument, NULL, 'b'},
-	{ "samplerate",         required_argument, NULL, 'l'},
-	{ "channels",           required_argument, NULL, 'c'},
-	{ "stereo-delay",       required_argument, NULL, 'd'},
-	{ "audio-quality",      required_argument, NULL, 'q'},
-	{ "swap-duty",          required_argument, NULL,  0 },
-	{ "swap-emphasis",      required_argument, NULL,  0 },
-	{ "gamegenie",          required_argument, NULL, 'g'},
-	{ "help",               no_argument,       NULL, 'h'},
-	{ "version",            no_argument,       NULL, 'V'},
-	{ "portable",           no_argument,       NULL,  0 },
-	{ "txt-on-screen",      required_argument, NULL,  0 },
+	{ "vsync",                 required_argument, NULL, 'v'},
+	{ "pixel-aspect-ratio",    required_argument, NULL, 'e'},
+	{ "interpolation",         required_argument, NULL, 'j'},
+	{ "fullscreen",            required_argument, NULL, 'u'},
+	{ "stretch-fullscreen",    required_argument, NULL, 't'},
+	{ "audio",                 required_argument, NULL, 'a'},
+	{ "audio-buffer-factor",   required_argument, NULL, 'b'},
+	{ "samplerate",            required_argument, NULL, 'l'},
+	{ "channels",              required_argument, NULL, 'c'},
+	{ "stereo-delay",          required_argument, NULL, 'd'},
+	{ "audio-quality",         required_argument, NULL, 'q'},
+	{ "swap-duty",             required_argument, NULL,  0 },
+	{ "swap-emphasis",         required_argument, NULL,  0 },
+	{ "gamegenie",             required_argument, NULL, 'g'},
+	{ "help",                  no_argument,       NULL, 'h'},
+	{ "version",               no_argument,       NULL, 'V'},
+	{ "portable",              no_argument,       NULL,  0 },
+	{ "txt-on-screen",         required_argument, NULL,  0 },
 #if defined (WITH_OPENGL)
-	{ "disable-srgb-fbo",   required_argument, NULL,  0 },
+	{ "disable-srgb-fbo",      required_argument, NULL,  0 },
 #endif
-	{ "overscan-brd-ntsc",  required_argument, NULL,  0 },
-	{ "overscan-brd-pal",   required_argument, NULL,  0 },
-	{ "par-soft-stretch",   required_argument, NULL,  0 },
-	{ "hide-sprites",       required_argument, NULL,  0 },
-	{ "hide-background",    required_argument, NULL,  0 },
-	{ "unlimited-sprites",  required_argument, NULL,  0 },
-	{ "background-pause",   required_argument, NULL,  0 },
-	{ "language",           required_argument, NULL,  0 },
+	{ "overscan-brd-ntsc",     required_argument, NULL,  0 },
+	{ "overscan-brd-pal",      required_argument, NULL,  0 },
+	{ "par-soft-stretch",      required_argument, NULL,  0 },
+	{ "hide-sprites",          required_argument, NULL,  0 },
+	{ "hide-background",       required_argument, NULL,  0 },
+	{ "unlimited-sprites",     required_argument, NULL,  0 },
+	{ "background-pause",      required_argument, NULL,  0 },
+	{ "save-battery-ram-file", required_argument, NULL,  0 },
+	{ "language",              required_argument, NULL,  0 },
 	{ 0,                    0,                 0,     0 }
 };
 
@@ -114,6 +115,8 @@ BYTE cmd_line_parse(int argc, char **argv) {
 					set_int(cfg_from_file.hide_background, SET_HIDE_BACKGROUND);
 				} else if (!(strcmp(opt_long[longIndex].name, "unlimited-sprites"))) {
 					set_int(cfg_from_file.unlimited_sprites, SET_UNLIMITED_SPRITES);
+				} else if (!(strcmp(opt_long[longIndex].name, "save-battery-ram-file"))) {
+					set_int(cfg_from_file.save_battery_ram_file, SET_BATTERY_RAM_FILE_EVEY_TOT);
 				} else if (!(strcmp(opt_long[longIndex].name, "background-pause"))) {
 					set_int(cfg_from_file.bck_pause, SET_BCK_PAUSE);
 				} else if (!(strcmp(opt_long[longIndex].name, "language"))) {
@@ -273,6 +276,7 @@ void usage(char *name) {
 			"%s\n"
 			"%s\n"
 			"%s\n"
+			"%s\n"
 #if defined (WITH_OPENGL)
 			"%s\n"
 			"%s\n"
@@ -315,6 +319,7 @@ void usage(char *name) {
 			main_cfg[SET_HIDE_SPRITES].hlp,
 			main_cfg[SET_HIDE_BACKGROUND].hlp,
 			main_cfg[SET_UNLIMITED_SPRITES].hlp,
+			main_cfg[SET_BATTERY_RAM_FILE_EVEY_TOT].hlp,
 			main_cfg[SET_BCK_PAUSE].hlp,
 			main_cfg[SET_CHEAT_MODE].hlp,
 			main_cfg[SET_GUI_LANGUAGE].hlp

@@ -671,38 +671,7 @@ BYTE map_init(void) {
 	return (EXIT_OK);
 }
 void map_quit(void) {
-	/* se c'e' della PRG Ram battery packed la salvo in un file */
-	if (info.prg.ram.bat.banks) {
-		char prg_ram_file[LENGTH_FILE_NAME_MID], *fl, *last_dot;
-		FILE *fp;
-
-		/* copio il nome del file nella variabile */
-		if (info.uncompress_rom == TRUE) {
-			fl = uncomp.uncompress_file;
-		} else {
-			fl = info.rom_file;
-		}
-
-		sprintf(prg_ram_file, "%s" PRB_FOLDER "/%s", info.base_folder, basename(fl));
-
-		/* rintraccio l'ultimo '.' nel nome */
-		last_dot = strrchr(prg_ram_file, '.');
-		/* elimino l'estensione */
-		*last_dot = 0x00;
-		/* aggiungo l'estensione prb */
-		strcat(prg_ram_file, ".prb");
-		/* apro il file */
-		fp = fopen(prg_ram_file, "wb");
-		if (fp) {
-			if (extcl_battery_io) {
-				extcl_battery_io(WR_BAT, fp);
-			} else {
-				mapper_wr_battery_default();
-			}
-			/* chiudo */
-			fclose(fp);
-		}
-	}
+	map_prg_ram_battery_save();
 
 	info.id = 0;
 	memset(&info.mapper, 0x00, sizeof(info.mapper));
@@ -884,6 +853,44 @@ void map_prg_ram_memset(void) {
 	}
 
 	memset(prg.ram.data, value, prg.ram.size);
+}
+void map_prg_ram_battery_save(void) {
+	/* se c'e' della PRG Ram battery packed la salvo in un file */
+	if (info.prg.ram.bat.banks) {
+		char prg_ram_file[LENGTH_FILE_NAME_MID], *fl, *last_dot;
+		FILE *fp;
+
+		/* copio il nome del file nella variabile */
+		if (info.uncompress_rom == TRUE) {
+			fl = uncomp.uncompress_file;
+		} else {
+			fl = info.rom_file;
+		}
+
+		sprintf(prg_ram_file, "%s" PRB_FOLDER "/%s", info.base_folder, basename(fl));
+
+		/* rintraccio l'ultimo '.' nel nome */
+		last_dot = strrchr(prg_ram_file, '.');
+		/* elimino l'estensione */
+		*last_dot = 0x00;
+		/* aggiungo l'estensione prb */
+		strcat(prg_ram_file, ".prb");
+		/* apro il file */
+		fp = fopen(prg_ram_file, "wb");
+		if (fp) {
+			if (extcl_battery_io) {
+				extcl_battery_io(WR_BAT, fp);
+			} else {
+				mapper_wr_battery_default();
+			}
+
+			/* forzo la scrittura del file */
+			fflush(fp);
+
+			/* chiudo */
+			fclose(fp);
+		}
+	}
 }
 BYTE map_chr_chip_malloc(BYTE index, size_t size, BYTE set_value) {
 	if (chr_chip(index)) {

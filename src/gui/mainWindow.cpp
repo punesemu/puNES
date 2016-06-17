@@ -27,6 +27,8 @@
 #include <QtWidgets/QDesktopWidget>
 #endif
 #include <QtCore/QDateTime>
+#include <QtCore/QUrl>
+#include <QtGui/QDesktopServices>
 #if defined (__linux__)
 #include <unistd.h>
 #include <fcntl.h>
@@ -1174,7 +1176,8 @@ void mainWindow::update_menu_settings() {
 			ui->action_Russian->setChecked(true);
 			break;
 	}
-	//Settings/[Pause when in backgrounds, Save settings on exit]
+	//Settings/[Save battery RAM file every 3 min., Pause when in backgrounds, Save settings on exit]
+	ui->action_Save_battery_RAM_file_every_tot->setChecked(cfg->save_battery_ram_file);
 	ui->action_Pause_when_in_background->setChecked(cfg->bck_pause);
 	ui->action_Save_settings_on_exit->setChecked(cfg->save_on_exit);
 }
@@ -1394,6 +1397,7 @@ void mainWindow::connect_shortcut(QAction *action, int index, const char *member
 void mainWindow::connect_menu_signals() {
 	// File
 	connect_action(ui->action_Open, SLOT(s_open()));
+	connect_action(ui->action_Open_working_folder, SLOT(s_open_working_folder()));
 	connect_action(ui->action_Quit, SLOT(s_quit()));
 	// NES
 	connect_action(ui->action_Hard_Reset, HARD, SLOT(s_make_reset()));
@@ -1597,11 +1601,13 @@ void mainWindow::connect_menu_signals() {
 	connect_action(ui->action_English, LNG_ENGLISH, SLOT(s_set_language()));
 	connect_action(ui->action_Italian, LNG_ITALIAN, SLOT(s_set_language()));
 	connect_action(ui->action_Russian, LNG_RUSSIAN, SLOT(s_set_language()));
-	// Settings/[Hide_external_control_window, Pause when in backgrounds,
-	//           Save settings, Save settings on exit]
+	// Settings/[Save battery RAM file every 3 min., Pause when in backgrounds,
+	//           Save settings on exit, Save settings]
+	connect_action(ui->action_Save_battery_RAM_file_every_tot,
+			SLOT(s_set_save_battery_ram_file()));
 	connect_action(ui->action_Pause_when_in_background, SLOT(s_set_pause_in_background()));
-	connect_action(ui->action_Save_settings, SLOT(s_save_settings()));
 	connect_action(ui->action_Save_settings_on_exit, SLOT(s_set_save_on_exit()));
+	connect_action(ui->action_Save_settings, SLOT(s_save_settings()));
 	// State/[Save state, Load State]
 	connect_action(ui->action_Save_state, SAVE, SLOT(s_state_save_slot_action()));
 	connect_action(ui->action_Load_state, LOAD, SLOT(s_state_save_slot_action()));
@@ -1760,6 +1766,9 @@ void mainWindow::s_open_recent_roms() {
 	}
 
 	emu_pause(FALSE);
+}
+void mainWindow::s_open_working_folder() {
+	QDesktopServices::openUrl(QUrl(info.base_folder));
 }
 void mainWindow::s_quit() {
 	close();
@@ -2249,6 +2258,13 @@ void mainWindow::s_set_ppu_overclock() {
 	update_menu_settings();
 	ppu_overclock(TRUE);
 	emu_pause(FALSE);
+}
+void mainWindow::s_set_save_battery_ram_file() {
+	if (!cfg->save_battery_ram_file) {
+		info.bat_ram_frames = 0;
+	}
+
+	cfg->save_battery_ram_file = !cfg->save_battery_ram_file;
 }
 void mainWindow::s_set_pause_in_background() {
 	cfg->bck_pause = !cfg->bck_pause;

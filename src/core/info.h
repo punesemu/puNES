@@ -108,6 +108,8 @@ EXTERNC struct _info {
 	BYTE r4014_precise_timing_disabled;
 	WORD default_dipswitches;
 	WORD extra_from_db;
+	DBWORD bat_ram_frames;
+	DBWORD bat_ram_frames_snap;
 
 #if !defined (RELEASE)
 	BYTE snd_info;

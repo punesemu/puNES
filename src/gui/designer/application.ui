@@ -63,6 +63,8 @@
     <addaction name="action_Open"/>
     <addaction name="menu_Recent_Roms"/>
     <addaction name="separator"/>
+    <addaction name="action_Open_working_folder"/>
+    <addaction name="separator"/>
     <addaction name="action_Quit"/>
    </widget>
    <widget class="QMenu" name="menu_NES">
@@ -501,6 +503,7 @@
     <addaction name="separator"/>
     <addaction name="menu_Language"/>
     <addaction name="separator"/>
+    <addaction name="action_Save_battery_RAM_file_every_tot"/>
     <addaction name="action_Pause_when_in_background"/>
     <addaction name="action_Save_settings_on_exit"/>
     <addaction name="separator"/>
@@ -2107,6 +2110,23 @@
    </property>
    <property name="text">
     <string>PPU Overclock</string>
+   </property>
+  </action>
+  <action name="action_Save_battery_RAM_file_every_tot">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Save battery RAM file every 3 min.</string>
+   </property>
+  </action>
+  <action name="action_Open_working_folder">
+   <property name="icon">
+    <iconset resource="application.qrc">
+     <normaloff>:/icon/icons/home.png</normaloff>:/icon/icons/home.png</iconset>
+   </property>
+   <property name="text">
+    <string>Open working folder</string>
    </property>
   </action>
  </widget>

@@ -212,6 +212,7 @@ void map_prg_rom_8k_update(void);
 void map_prg_ram_init(void);
 BYTE map_prg_ram_malloc(WORD size);
 void map_prg_ram_memset(void);
+void map_prg_ram_battery_save(void);
 BYTE map_chr_chip_malloc(BYTE index, size_t size, BYTE set_value);
 BYTE map_chr_ram_init(void);
 BYTE map_chr_ram_extra_init(uint32_t size);

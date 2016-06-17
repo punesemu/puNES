@@ -66,6 +66,7 @@ typedef struct _config {
 	BYTE ppu_overclock_dmc_control_disabled;
 	WORD extra_vb_scanlines;
 	WORD extra_pr_scanlines;
+	BYTE save_battery_ram_file;
 
 	_config_input input;
 	_config_apu apu;
