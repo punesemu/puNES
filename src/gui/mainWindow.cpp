@@ -2258,6 +2258,7 @@ void mainWindow::s_set_ppu_overclock() {
 	update_menu_settings();
 	ppu_overclock(TRUE);
 	emu_pause(FALSE);
+	settings_pgs_save();
 }
 void mainWindow::s_set_save_battery_ram_file() {
 	if (!cfg->save_battery_ram_file) {

@@ -8,10 +8,6 @@
         <translation>Каналы APU</translation>
     </message>
     <message>
-        <source>Channels</source>
-        <translation>Каналы</translation>
-    </message>
-    <message>
         <source>Square 1</source>
         <translation>Square 1</translation>
     </message>
@@ -58,14 +54,6 @@
     <message>
         <source>Defaults</source>
         <translation>По умолчанию</translation>
-    </message>
-    <message>
-        <source>Apply</source>
-        <translation>Применить</translation>
-    </message>
-    <message>
-        <source>Discard</source>
-        <translation>Отменить</translation>
     </message>
 </context>
 <context>
@@ -235,6 +223,57 @@
     </message>
 </context>
 <context>
+    <name>PPU_Hacks</name>
+    <message>
+        <source>Dialog</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>PPU Hacks</source>
+        <translation>Хаки PPU</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Sprites and background&lt;/b&gt;</source>
+        <translation>&lt;b&gt;Спрайты и фон&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>Hide Sprites</source>
+        <translation>Скрыть спрайты</translation>
+    </message>
+    <message>
+        <source>Hide Background</source>
+        <translation>Скрыть фон</translation>
+    </message>
+    <message>
+        <source>Unlimited Sprites</source>
+        <translation>Снять лимит на спрайты</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Overclock&lt;/b&gt;</source>
+        <translation>&lt;b&gt;Оверклок&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>Enable Extra Scanlines</source>
+        <translation>Дополнительные строки</translation>
+    </message>
+    <message>
+        <source>Disable 7bit Sample Control</source>
+        <translation>Оверклок 7-битных семплов</translation>
+    </message>
+    <message>
+        <source>VBlank Lines</source>
+        <translation>Строки VBlank</translation>
+    </message>
+    <message>
+        <source>Postrender Lines</source>
+        <translation>Строки пострендера</translation>
+    </message>
+    <message>
+        <source>Reset Lag Counter</source>
+        <translation>Сброс счётчика лага</translation>
+    </message>
+</context>
+<context>
     <name>Set_borders</name>
     <message>
         <source>Set borders</source>
@@ -393,6 +432,69 @@
     <message>
         <source>Roms</source>
         <translation>РОМы</translation>
+    </message>
+</context>
+<context>
+    <name>Vs_System</name>
+    <message>
+        <source>Vs System Controls</source>
+        <translation>Управление VS System</translation>
+    </message>
+    <message>
+        <source>Left Coin</source>
+        <translation>Левая монета</translation>
+    </message>
+    <message>
+        <source>Right Coin</source>
+        <translation>Правая монета</translation>
+    </message>
+    <message>
+        <source>Service Coin</source>
+        <translation>Сервисная монета</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Coin Counter&lt;/b&gt;</source>
+        <translation>&lt;b&gt;Счётчик монет&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Dip Switches&lt;/b&gt;</source>
+        <translation>&lt;b&gt;DIP-переключатели&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>4</source>
+        <translation>4</translation>
+    </message>
+    <message>
+        <source>5</source>
+        <translation>5</translation>
+    </message>
+    <message>
+        <source>6</source>
+        <translation>6</translation>
+    </message>
+    <message>
+        <source>7</source>
+        <translation>7</translation>
+    </message>
+    <message>
+        <source>8</source>
+        <translation>8</translation>
+    </message>
+    <message>
+        <source>3</source>
+        <translation>3</translation>
+    </message>
+    <message>
+        <source>2</source>
+        <translation>2</translation>
+    </message>
+    <message>
+        <source>1</source>
+        <translation>1</translation>
+    </message>
+    <message>
+        <source>Defaults Game Dip Switches</source>
+        <translation>По умолчанию для игры</translation>
     </message>
 </context>
 <context>
@@ -1406,7 +1508,7 @@
     </message>
     <message>
         <source>&amp;Unlimited sprites</source>
-        <translation>&amp;Снять ограничение на спрайты</translation>
+        <translation>&amp;Снять лимит на спрайты</translation>
     </message>
     <message>
         <source>Disable sRGB F&amp;BO</source>
@@ -1422,11 +1524,39 @@
     </message>
     <message>
         <source>Hide &amp;background</source>
-        <translation>Скрыть &amp;бэкграунд</translation>
+        <translation>Скрыть &amp;фон</translation>
     </message>
     <message>
         <source>&amp;PPU</source>
         <translation>&amp;PPU</translation>
+    </message>
+    <message>
+        <source>Insert Coin</source>
+        <translation>Вставить монету</translation>
+    </message>
+    <message>
+        <source>Vs System Controls</source>
+        <translation>VS System</translation>
+    </message>
+    <message>
+        <source>PPU Hacks</source>
+        <translation>Хаки PPU</translation>
+    </message>
+    <message>
+        <source>&amp;Save battery RAM file every 3 min.</source>
+        <translation>&amp;Сохранять SRAM каждые 3 мин.</translation>
+    </message>
+    <message>
+        <source>&amp;PPU Overclock</source>
+        <translation>&amp;Оверклок</translation>
+    </message>
+    <message>
+        <source>&amp;Open working folder</source>
+        <translation>Открыть &amp;рабочую папку</translation>
+    </message>
+    <message>
+        <source>T&amp;ools</source>
+        <translation>&amp;Инструменты</translation>
     </message>
 </context>
 <context>

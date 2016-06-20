@@ -75,6 +75,12 @@ void settings_pgs_parse(void) {
 
 	s.list = LSET_PGS;
 	s.pgs = new pgsObject(s.cfg, PGSFILENAME, LSET_PGS);
+
+	if (cfg->ppu_overclock) {
+		text_add_line_info(1,
+				"overclock enabled [font8]([green]VB[normal] [cyan]%d,[green]PR[normal] [cyan]%d[normal])",
+				cfg->extra_vb_scanlines, cfg->extra_pr_scanlines);
+	}
 }
 void settings_pgs_save(void) {
 	if (s.pgs) {

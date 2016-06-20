@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="it_IT">
+<TS version="2.1" language="it_IT">
 <context>
     <name>APU_channels</name>
     <message>
         <source>APU Channels</source>
         <translation>Canali APU</translation>
-    </message>
-    <message>
-        <source>Channels</source>
-        <translation>Canali</translation>
     </message>
     <message>
         <source>Square 1</source>
@@ -58,14 +54,6 @@
     <message>
         <source>Defaults</source>
         <translation>Defaults</translation>
-    </message>
-    <message>
-        <source>Apply</source>
-        <translation>Applica</translation>
-    </message>
-    <message>
-        <source>Discard</source>
-        <translation>Annulla</translation>
     </message>
 </context>
 <context>
@@ -235,6 +223,57 @@
     </message>
 </context>
 <context>
+    <name>PPU_Hacks</name>
+    <message>
+        <source>Dialog</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>PPU Hacks</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Sprites and background&lt;/b&gt;</source>
+        <translation>&lt;b&gt;Sprites e background&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>Hide Sprites</source>
+        <translation>Nascondi Sprites</translation>
+    </message>
+    <message>
+        <source>Hide Background</source>
+        <translation>Nascondi Background</translation>
+    </message>
+    <message>
+        <source>Unlimited Sprites</source>
+        <translation>Sprites Illimitati</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Overclock&lt;/b&gt;</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Enable Extra Scanlines</source>
+        <translation>Abilita Extra Scanlines</translation>
+    </message>
+    <message>
+        <source>Disable 7bit Sample Control</source>
+        <translation>No Controllo del Sample 7bit</translation>
+    </message>
+    <message>
+        <source>VBlank Lines</source>
+        <translation>Scanlines VBlank</translation>
+    </message>
+    <message>
+        <source>Postrender Lines</source>
+        <translation>Scanlines Postrender</translation>
+    </message>
+    <message>
+        <source>Reset Lag Counter</source>
+        <translation>Reset Contatatore Lag</translation>
+    </message>
+</context>
+<context>
     <name>Set_borders</name>
     <message>
         <source>Set borders</source>
@@ -393,6 +432,69 @@
     <message>
         <source>Roms</source>
         <translation>Roms</translation>
+    </message>
+</context>
+<context>
+    <name>Vs_System</name>
+    <message>
+        <source>Vs System Controls</source>
+        <translation>Controlli Vs System</translation>
+    </message>
+    <message>
+        <source>Left Coin</source>
+        <translation>Moneta Sinistra</translation>
+    </message>
+    <message>
+        <source>Right Coin</source>
+        <translation>Moneta Destra</translation>
+    </message>
+    <message>
+        <source>Service Coin</source>
+        <translation>Moneta di Servizio</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Coin Counter&lt;/b&gt;</source>
+        <translation>&lt;b&gt;Contatore Monete&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Dip Switches&lt;/b&gt;</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>4</source>
+        <translation>4</translation>
+    </message>
+    <message>
+        <source>5</source>
+        <translation>5</translation>
+    </message>
+    <message>
+        <source>6</source>
+        <translation>6</translation>
+    </message>
+    <message>
+        <source>7</source>
+        <translation>7</translation>
+    </message>
+    <message>
+        <source>8</source>
+        <translation>8</translation>
+    </message>
+    <message>
+        <source>3</source>
+        <translation>3</translation>
+    </message>
+    <message>
+        <source>2</source>
+        <translation>2</translation>
+    </message>
+    <message>
+        <source>1</source>
+        <translation>1</translation>
+    </message>
+    <message>
+        <source>Defaults Game Dip Switches</source>
+        <translation>Defaults Dip Switches Gioco</translation>
     </message>
 </context>
 <context>
@@ -1427,6 +1529,34 @@
     <message>
         <source>&amp;PPU</source>
         <translation>&amp;PPU</translation>
+    </message>
+    <message>
+        <source>Insert Coin</source>
+        <translation>Inserisci Moneta</translation>
+    </message>
+    <message>
+        <source>Vs System Controls</source>
+        <translation>Controlli Vs System</translation>
+    </message>
+    <message>
+        <source>PPU Hacks</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>&amp;Save battery RAM file every 3 min.</source>
+        <translation>&amp;Salva file della RAM non volatile ogni 3 min.</translation>
+    </message>
+    <message>
+        <source>&amp;PPU Overclock</source>
+        <translation>Overclock &amp;PPU</translation>
+    </message>
+    <message>
+        <source>&amp;Open working folder</source>
+        <translation>Apri &amp;directory di lavoro</translation>
+    </message>
+    <message>
+        <source>T&amp;ools</source>
+        <translation>&amp;Strumenti</translation>
     </message>
 </context>
 <context>

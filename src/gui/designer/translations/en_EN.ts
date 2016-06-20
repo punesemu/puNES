@@ -8,10 +8,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Channels</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Square 1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -59,19 +55,23 @@
         <source>Defaults</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Apply</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Discard</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>Cheats</name>
     <message>
+        <source>Cheat Editor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cheats</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Active</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Code</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -91,11 +91,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Apply</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Remove</source>
+        <source>Hide Tools</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -107,15 +103,19 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Discard</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Clear All</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Game Genie</source>
+        <source>Apply</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Discard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Edit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -127,23 +127,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Cheat Editor</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Cheats</source>
+        <source>Game Genie</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Submit</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Edit</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Hide Tools</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -155,7 +143,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Code</source>
+        <source>Remove</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -235,6 +223,57 @@
     </message>
 </context>
 <context>
+    <name>PPU_Hacks</name>
+    <message>
+        <source>Dialog</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>PPU Hacks</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Sprites and background&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hide Sprites</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hide Background</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unlimited Sprites</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Overclock&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enable Extra Scanlines</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Disable 7bit Sample Control</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>VBlank Lines</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Postrender Lines</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reset Lag Counter</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>Set_borders</name>
     <message>
         <source>Set borders</source>
@@ -284,10 +323,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Unset</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>ID</source>
         <translation type="unfinished"></translation>
     </message>
@@ -301,6 +336,10 @@
     </message>
     <message>
         <source>Down</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unset</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -344,11 +383,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Joystick</source>
+        <source>Keyboard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Keyboard</source>
+        <source>Joystick</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -392,6 +431,69 @@
     </message>
     <message>
         <source>Roms</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Vs_System</name>
+    <message>
+        <source>Vs System Controls</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Left Coin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Right Coin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Service Coin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Coin Counter&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Dip Switches&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>4</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>5</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>6</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>7</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>8</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Defaults Game Dip Switches</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -569,6 +671,110 @@
 <context>
     <name>mainWindow</name>
     <message>
+        <source>GLSL &amp;soft stretch</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>HLSL &amp;soft stretch</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Insert disk</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Eject disk</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Eject/Insert disk</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>[Select a file]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>All supported formats</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Compressed files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Nes rom files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>FDS image files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>TAS movie files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>All files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Palette files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save palette on file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open palette file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save states</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save state on file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open save state</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Nintendo Entertainment System Emulator</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Compiled</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Anyway, thank you all for the love and the help.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>If you like the emulator and you want to support it&apos;s development or would you pay for a beer at the programmer :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>portable version</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Shaders files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open Shader file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>&amp;Open</source>
         <translation type="unfinished"></translation>
     </message>
@@ -638,6 +844,14 @@
     </message>
     <message>
         <source>&amp;Auto</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Software</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OpenGL &amp;GLSL</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -717,6 +931,54 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>&amp;1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;4</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;5</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;6</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;7</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;8</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;9</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;1:1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;5:4</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;8:7 (NTSC TV)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>&amp;On</source>
         <translation type="unfinished"></translation>
     </message>
@@ -730,10 +992,6 @@
     </message>
     <message>
         <source>&amp;No Filter</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;CRT With Curve</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -805,26 +1063,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Enable Audio</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>S&amp;ave state</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>L&amp;oad state</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Disable Red and Green emphasis swap for PAL/Dendy</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Setti&amp;ngs</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>&amp;VSync</source>
         <translation type="unfinished"></translation>
     </message>
@@ -862,6 +1100,10 @@
     </message>
     <message>
         <source>&amp;Mono</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Stereo Delay</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -961,6 +1203,10 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>&amp;Enable Audio</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>&amp;Config</source>
         <translation type="unfinished"></translation>
     </message>
@@ -969,11 +1215,23 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>&amp;Game Genie Rom Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Save se&amp;ttings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Save settings on e&amp;xit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>S&amp;ave state</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>L&amp;oad state</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1013,183 +1271,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;File</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Recent Roms</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;NES</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Disk Side</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Mode</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Video</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Rendering</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;FPS</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Fra&amp;me skip</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Scale</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Pixel Aspect Ra&amp;tio</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Overscan</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>De&amp;fault value</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Palette</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Audio</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Sample rate</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Channels</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Quality</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Input</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Language</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>S&amp;tate</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Help</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Software</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>OpenGL &amp;GLSL</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>GLSL &amp;soft stretch</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>HLSL &amp;soft stretch</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Insert disk</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Eject disk</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Eject/Insert disk</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>[Select a file]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>All supported formats</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Compressed files</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Nes rom files</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>FDS image files</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>TAS movie files</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>All files</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Open File</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Palette files</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Save palette on file</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Open palette file</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Save states</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Save state on file</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Open save state</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Nintendo Entertainment System Emulator</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Compiled</source>
+        <source>&amp;Disable Red and Green emphasis swap for PAL/Dendy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1209,10 +1291,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Game Genie Rom Mode</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>&amp;Cheats List Mode</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1225,39 +1303,15 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Anyway, thank you all for the love and the help.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>If you like the emulator and you want to support it&apos;s development or would you pay for a beer at the programmer :</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;1:1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;5:4</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;8:7 (NTSC TV)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>portable version</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Stereo Delay</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Stereo &amp;Panning</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Buffer Size factor</source>
+        <source>&amp;0</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;1 (Default)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1281,71 +1335,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;3</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;4</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;5</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;6</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;7</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;8</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;9</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;0</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;1 (Default)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Fast Forward velocity</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Cheats</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Channels Delay</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>&amp;Pause</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Shaders files</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Open Shader file</source>
+        <source>&amp;CRT With Curve</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1378,14 +1372,6 @@
     </message>
     <message>
         <source>Firebrandx &amp;Unsaturated</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Software Fi&amp;lters</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>S&amp;haders</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1425,7 +1411,151 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Insert Coin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Vs System Controls</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>PPU Hacks</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;PPU Overclock</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Save battery RAM file every 3 min.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Open working folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Recent Roms</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;NES</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Disk Side</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Setti&amp;ngs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Video</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Rendering</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;FPS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fra&amp;me skip</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Scale</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pixel Aspect Ra&amp;tio</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Overscan</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>De&amp;fault value</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Software Fi&amp;lters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>S&amp;haders</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Palette</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Audio</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Sample rate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Channels</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Channels Delay</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Quality</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Buffer Size factor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Input</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Language</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Cheats</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Fast Forward velocity</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>&amp;PPU</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>S&amp;tate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Help</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>T&amp;ools</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

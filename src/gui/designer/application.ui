@@ -541,7 +541,7 @@
    </widget>
    <widget class="QMenu" name="menu_Tools">
     <property name="title">
-     <string>Tools</string>
+     <string>T&amp;ools</string>
     </property>
     <addaction name="action_Vs_System"/>
     <addaction name="action_APU_channels"/>
@@ -2109,7 +2109,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>PPU Overclock</string>
+    <string>&amp;PPU Overclock</string>
    </property>
   </action>
   <action name="action_Save_battery_RAM_file_every_tot">
@@ -2126,7 +2126,7 @@
      <normaloff>:/icon/icons/home.png</normaloff>:/icon/icons/home.png</iconset>
    </property>
    <property name="text">
-    <string>Open working folder</string>
+    <string>&amp;Open working folder</string>
    </property>
   </action>
  </widget>
