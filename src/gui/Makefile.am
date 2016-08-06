@@ -7,6 +7,9 @@
 .ui.hh :
 	if test ! -e $(@F) ; then $(UIC) -o $(@F) $^ ; else : ; fi
 
+clean-local:
+	rm -f *.{cpp,hh,moc}
+
 BUILT_SOURCES = \
 	cheatObject.moc \
 	dlgApuChannels.moc \
