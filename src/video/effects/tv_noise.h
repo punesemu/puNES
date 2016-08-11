@@ -16,13 +16,10 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef EMU_H_
-#define EMU_H_
+#ifndef TV_NOISE_H_
+#define TV_NOISE_H_
 
-#include <stdio.h>
 #include "common.h"
-
-#define emu_irand(x) ((unsigned int)((x) * emu_drand()))
 
 #if defined (__cplusplus)
 #define EXTERNC extern "C"
@@ -30,21 +27,14 @@
 #define EXTERNC
 #endif
 
-EXTERNC BYTE emu_frame(void);
-EXTERNC BYTE emu_make_dir(const char *fmt, ...);
-EXTERNC BYTE emu_file_exist(const char *file);
-EXTERNC BYTE emu_load_rom(void);
-EXTERNC BYTE emu_search_in_database(FILE *fp);
-EXTERNC void emu_set_title(char *title);
-EXTERNC BYTE emu_turn_on(void);
-EXTERNC void emu_pause(BYTE mode);
-EXTERNC BYTE emu_reset(BYTE type);
-EXTERNC WORD emu_round_WORD(WORD number, WORD round);
-EXTERNC int emu_power_of_two(int base);
-EXTERNC double emu_drand(void);
-EXTERNC void emu_quit(BYTE exit_code);
+EXTERNC struct _turn_off {
+	uint32_t *palette;
+} turn_off;
+
+EXTERNC BYTE tv_noise_init(void);
+EXTERNC void tv_noise_quit(void);
+EXTERNC void tv_noise_effect(void);
 
 #undef EXTERNC
 
-#endif /* EMU_H_ */
-
+#endif /* TV_NOISE_H_ */

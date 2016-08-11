@@ -357,7 +357,7 @@ static BYTE INLINE ppu_rd_reg(WORD address) {
 		if (DMC.dma_cycle == 2) {
 			repeat = 3;
 		} else if (cpu.double_rd) {
-			WORD random = (WORD) rand() % 10;
+			WORD random = (WORD) emu_irand(10);
 			value = ppu_rd_mem(r2006.value - (r2000.r2006_inc << 1));
 			if (random > 5) {
 				r2007.value = ppu_rd_mem(r2006.value);

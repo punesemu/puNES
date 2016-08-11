@@ -1,5 +1,7 @@
 <RCC>
   <qresource prefix="icon">
+    <file>icons/turn_off.png</file>
+    <file>icons/turn_on.png</file>
     <file>icons/home.png</file>
     <file>icons/insert_coin.png</file>
     <file>icons/ppu.png</file>

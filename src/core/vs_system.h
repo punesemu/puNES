@@ -45,9 +45,9 @@ enum vs_system_special_mode {
 #define VSOFFTIME 38000
 
 #define vs_system_wd_next() (machine.cpu_cycles_frame * machine.fps) + \
-	(((machine.cpu_cycles_frame * machine.fps) / 1000.0) * ((rand() % 100) + 214));
+	(((machine.cpu_cycles_frame * machine.fps) / 1000.0) * (emu_irand(100) + 214));
 #define vs_system_cn_next() ((machine.cpu_cycles_frame * machine.fps) / 1000.0) * \
-	((rand() % 28) + 50);
+	(emu_irand(28) + 50);
 #define vs_system_r4020_clock(type, val)\
 	if (vs_system.r4020.type.actual.value != (val & 0x01)) {\
 		vs_system.r4020.type.old.value = vs_system.r4020.type.actual.value;\

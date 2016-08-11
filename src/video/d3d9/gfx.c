@@ -31,6 +31,8 @@
 #include "palette.h"
 #include "paldef.h"
 #include "vs_system.h"
+#include "video/effects/pause.h"
+#include "video/effects/tv_noise.h"
 
 #define D3D9_ADAPTER(i) (_d3d9_adapter *) ((BYTE *) d3d9.array + (i * sizeof(_d3d9_adapter)))
 #define ntsc_width(wdt, a, flag)\
@@ -47,27 +49,6 @@
 		}\
 	}\
 }
-#define change_color(index, color, operation)\
-	tmp = palette_RGB[index].color + operation;\
-	palette_RGB[index].color = (tmp < 0 ? 0 : (tmp > 0xFF ? 0xFF : tmp))
-#define rgb_modifier(red, green, blue)\
-	/* prima ottengo la paletta monocromatica */\
-	ntsc_set(cfg->ntsc_format, PALETTE_MONO, 0, 0, (BYTE *) palette_RGB);\
-	/* quindi la modifico */\
-	{\
-		WORD i;\
-		SWORD tmp;\
-		for (i = 0; i < NUM_COLORS; i++) {\
-			/* rosso */\
-			change_color(i, r, red);\
-			/* green */\
-			change_color(i, g, green);\
-			/* blue */\
-			change_color(i, b, blue);\
-		}\
-	}\
-	/* ed infine utilizzo la nuova */\
-	ntsc_set(cfg->ntsc_format, FALSE, 0, (BYTE *) palette_RGB,(BYTE *) palette_RGB)
 
 static void d3d9_shader_cg_error_handler(void);
 static BYTE d3d9_device_create(UINT width, UINT height);
@@ -270,8 +251,18 @@ BYTE gfx_init(void) {
 
 	// mi alloco una zona di memoria dove conservare la
 	// paletta nel formato di visualizzazione.
-	if (!(d3d9.palette = malloc(NUM_COLORS * sizeof(uint32_t)))) {
+	if (!(gfx.palette = malloc(NUM_COLORS * sizeof(uint32_t)))) {
 		MessageBox(NULL, "Unable to allocate the palette", "Error!", MB_ICONEXCLAMATION | MB_OK);
+		return (EXIT_ERROR);
+	}
+
+	if (pause_init() == EXIT_ERROR) {
+		MessageBox(NULL, "pause initialization failed", "Error!", MB_ICONEXCLAMATION | MB_OK);
+		return (EXIT_ERROR);
+	}
+
+	if (tv_noise_init() == EXIT_ERROR) {
+		MessageBox(NULL, "tv_noise initialization failed", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
 
@@ -490,7 +481,7 @@ void gfx_set_screen(BYTE scale, DBWORD filter, BYTE fullscreen, BYTE palette, BY
 				ntsc_set(cfg->ntsc_format, FALSE, 0, 0, (BYTE *) palette_RGB);
 				break;
 			case PALETTE_FRBX_UNSATURED:
-				ntsc_set(cfg->ntsc_format, FALSE, (BYTE *) palette_firebrandx_unsaturated_v5, 0,
+				ntsc_set(cfg->ntsc_format, FALSE, (BYTE *) palette_firebrandx_unsaturated_v6, 0,
 						(BYTE *) palette_RGB);
 				break;
 			case PALETTE_FRBX_YUV:
@@ -498,7 +489,7 @@ void gfx_set_screen(BYTE scale, DBWORD filter, BYTE fullscreen, BYTE palette, BY
 						(BYTE *) palette_RGB);
 				break;
 			case PALETTE_GREEN:
-				rgb_modifier(-0x20, 0x20, -0x20);
+				rgb_modifier(palette_RGB, 0x00, -0x20, 0x20, -0x20);
 				break;
 			case PALETTE_FILE:
 				break;
@@ -548,8 +539,7 @@ void gfx_set_screen(BYTE scale, DBWORD filter, BYTE fullscreen, BYTE palette, BY
 			WORD i;
 
 			for (i = 0; i < NUM_COLORS; i++) {
-				d3d9.palette[i] =
-						D3DCOLOR_ARGB(255, palette_RGB[i].r, palette_RGB[i].g, palette_RGB[i].b);
+				gfx.palette[i] = gfx_color(255, palette_RGB[i].r, palette_RGB[i].g, palette_RGB[i].b);
 			}
 		}
 	}
@@ -668,13 +658,26 @@ void gfx_set_screen(BYTE scale, DBWORD filter, BYTE fullscreen, BYTE palette, BY
 	}
 }
 void gfx_draw_screen(BYTE forced) {
-	if (!forced && (info.no_rom || info.pause)) {
-		if (++info.pause_frames_drawscreen == 4) {
-			info.pause_frames_drawscreen = 0;
-			forced = TRUE;
-		} else {
-			text_rendering(FALSE);
-			return;
+	uint32_t *palette = gfx.palette;
+
+	if (!forced) {
+		if (info.no_rom | info.turn_off) {
+			palette = turn_off.palette;
+
+			if (++info.pause_frames_drawscreen == 2) {
+				tv_noise_effect();
+				info.pause_frames_drawscreen = 0;
+				forced = TRUE;
+			} else if (text.on_screen) {
+				forced = TRUE;
+			}
+		} else if (info.pause) {
+			palette = pause.palette;
+
+			if ((++info.pause_frames_drawscreen == 15) || text.on_screen) {
+				info.pause_frames_drawscreen = 0;
+				forced = TRUE;
+			}
 		}
 	}
 
@@ -693,7 +696,7 @@ void gfx_draw_screen(BYTE forced) {
 			// applico l'effetto
 			gfx.filter(screen.data,
 					screen.line,
-					d3d9.palette,
+					palette,
 					gfx.bit_per_pixel,
 					lrect.Pitch,
 					lrect.pBits,
@@ -878,12 +881,15 @@ void gfx_control_changed_adapter(void *monitor) {
 	}
 }
 void gfx_quit(void) {
+	pause_quit();
+	tv_noise_quit();
+
 	ntsc_quit();
 	text_quit();
 
-	if (d3d9.palette) {
-		free(d3d9.palette);
-		d3d9.palette = NULL;
+	if (gfx.palette) {
+		free(gfx.palette);
+		gfx.palette = NULL;
 	}
 
 	d3d9_context_delete();
@@ -911,6 +917,10 @@ void gfx_quit(void) {
 		free(d3d9.array);
 		d3d9.array = d3d9.adapter = NULL;
 	}
+}
+
+uint32_t gfx_color(BYTE a, BYTE r, BYTE g, BYTE b) {
+	return (D3DCOLOR_ARGB(a, r, g, b));
 }
 
 void gfx_cursor_init(void) {

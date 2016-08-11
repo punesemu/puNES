@@ -54,6 +54,7 @@
 #include "uncompress.h"
 #include "gui.h"
 
+#define RS_SCALE (1.0f / (1.0f + RAND_MAX))
 #define recent_roms_add_wrap()\
 	if (recent_roms_permit_add == TRUE) {\
 		recent_roms_permit_add = FALSE;\
@@ -87,7 +88,7 @@ BYTE emu_frame(void) {
 	}
 
 	/* eseguo un frame dell'emulatore */
-	if (!(info.no_rom | info.pause)) {
+	if (!(info.no_rom | info.turn_off | info.pause)) {
 		/* controllo se ci sono eventi di input */
 		if (tas.type) {
 			tas_frame();
@@ -654,6 +655,10 @@ void emu_pause(BYTE mode) {
 	}
 }
 BYTE emu_reset(BYTE type) {
+	if (info.turn_off && (type <= HARD)) {
+		return (EXIT_OK);
+	}
+
 	emu_pause(TRUE);
 
 	info.reset = type;
@@ -799,6 +804,14 @@ int emu_power_of_two(int base) {
 		pot <<= 1;
 	}
 	return (pot);
+}
+double emu_drand(void) {
+	double d;
+
+	do {
+		d = (((rand() * RS_SCALE) + rand()) * RS_SCALE + rand()) * RS_SCALE;
+	} while (d >= 1); // Round off
+	return (d);
 }
 void emu_quit(BYTE exit_code) {
 	if (cfg->save_on_exit) {

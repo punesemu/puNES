@@ -358,7 +358,7 @@ static void STDMETHODCALLTYPE OnBufferEnd(THIS_ void *data) {
 
 	snd_lock_cache(cache);
 
-	if ((info.no_rom | info.pause) || (snd.buffer.start == FALSE) || (fps.fast_forward == TRUE)) {
+	if ((info.no_rom | info.turn_off | info.pause) || (snd.buffer.start == FALSE) || (fps.fast_forward == TRUE)) {
 		wrbuf(source, buffer, (const BYTE *) cache->silence);
 	} else if (cache->bytes_available < len) {
 		wrbuf(source, buffer, (const BYTE *) cache->silence);

@@ -56,7 +56,7 @@ void js_init(void) {
 		}
 
 		sprintf(js[i].dev, "%s", jsn_to_name(port[i].joy_id));
-		js[i].open_try = (BYTE) (rand() % 110);
+		js[i].open_try = (BYTE) emu_irand(110);
 		js[i].clock = i & 0x01;
 		js[i].input_decode_event = input_decode_event[i];
 

@@ -196,6 +196,7 @@ void dlgInput::update_dialog() {
 
 	update_text_shortcut(parentMain->ui->action_Open, SET_INP_SC_OPEN);
 	update_text_shortcut(parentMain->ui->action_Quit, SET_INP_SC_QUIT);
+	update_text_shortcut(parentMain->ui->action_Turn_Off, SET_INP_SC_TURN_OFF);
 	update_text_shortcut(parentMain->ui->action_Hard_Reset, SET_INP_SC_HARD_RESET);
 	update_text_shortcut(parentMain->ui->action_Soft_Reset, SET_INP_SC_SOFT_RESET);
 	update_text_shortcut(parentMain->ui->action_Insert_Coin, SET_INP_SC_INSERT_COIN);

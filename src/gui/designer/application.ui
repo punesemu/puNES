@@ -90,6 +90,7 @@
      <addaction name="separator"/>
      <addaction name="action_Switch_sides"/>
     </widget>
+    <addaction name="action_Turn_Off"/>
     <addaction name="action_Hard_Reset"/>
     <addaction name="action_Soft_Reset"/>
     <addaction name="separator"/>
@@ -2127,6 +2128,15 @@
    </property>
    <property name="text">
     <string>&amp;Open working folder</string>
+   </property>
+  </action>
+  <action name="action_Turn_Off">
+   <property name="icon">
+    <iconset resource="application.qrc">
+     <normaloff>:/icon/icons/turn_off.png</normaloff>:/icon/icons/turn_off.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Turn Off</string>
    </property>
   </action>
  </widget>

@@ -59,6 +59,7 @@ EXTERNC struct _info {
 	BYTE reset;
 	BYTE execute_cpu;
 	BYTE gui;
+	BYTE turn_off;
 	BYTE no_rom;
 	BYTE uncompress_rom;
 	WORD pause;

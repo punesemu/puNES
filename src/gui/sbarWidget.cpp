@@ -64,7 +64,7 @@ sbarWidget::sbarWidget(Ui::mainWindow *u, QWidget *parent) : QStatusBar(parent) 
 }
 sbarWidget::~sbarWidget() {}
 void sbarWidget::update_statusbar() {
-	if (info.no_rom) {
+	if (info.no_rom | info.turn_off) {
 		state->setEnabled(false);
 		timeline->setEnabled(false);
 	} else {

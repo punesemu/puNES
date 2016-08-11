@@ -442,7 +442,7 @@ void *alsa_loop_thread(void *data) {
 		avail = (avail > alsa.psize ? alsa.psize : avail);
 		len = avail * snd.channels * sizeof(*cache->write);
 
-		if ((info.no_rom | info.pause) || (snd.buffer.start == FALSE)
+		if ((info.no_rom | info.turn_off | info.pause) || (snd.buffer.start == FALSE)
 				|| (fps.fast_forward == TRUE)) {
 			wrbuf(th->alsa->handle, (void *) cache->silence, avail);
 		} else if (cache->bytes_available <= 0) {

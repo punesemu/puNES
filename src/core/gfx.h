@@ -38,6 +38,27 @@
 #endif
 
 #define FH_SHADERS_GEST
+#define change_color(plt, blck, index, color, operation)\
+	tmp = plt[index].color + operation;\
+	plt[index].color = (tmp < 0 ? blck : (tmp > 0xFF ? 0xFF : tmp))
+#define rgb_modifier(plt, blck, red, green, blue)\
+	/* prima ottengo la paletta monocromatica */\
+	ntsc_set(cfg->ntsc_format, PALETTE_MONO, 0, 0, (BYTE *) plt);\
+	/* quindi la modifico */\
+	{\
+		WORD i;\
+		SWORD tmp;\
+		for (i = 0; i < NUM_COLORS; i++) {\
+			/* rosso */\
+			change_color(plt, blck, i, r, red);\
+			/* green */\
+			change_color(plt, blck, i, g, green);\
+			/* blue */\
+			change_color(plt, blck, i, b, blue);\
+		}\
+	}\
+	/* ed infine utilizzo la nuova */\
+	ntsc_set(cfg->ntsc_format, FALSE, 0, (BYTE *) plt,(BYTE *) plt)
 
 enum fullscreen_type { NO_FULLSCR, FULLSCR };
 enum scale_type { X1 = 1, X2, X3, X4, X5, X6 };
@@ -127,6 +148,8 @@ EXTERNC struct _gfx {
 	float pixel_aspect_ratio;
 	_viewport vp;
 
+	uint32_t *palette;
+
 	gfx_filter_function((*filter));
 
 	char last_shader_file[LENGTH_FILE_NAME_LONG];
@@ -162,6 +185,8 @@ EXTERNC void gfx_set_screen(BYTE scale, DBWORD filter, BYTE fullscreen, BYTE pal
 
 EXTERNC void gfx_draw_screen(BYTE forced);
 EXTERNC void gfx_quit(void);
+
+EXTERNC uint32_t gfx_color(BYTE alpha, BYTE r, BYTE g, BYTE b);
 
 EXTERNC void gfx_cursor_init(void);
 EXTERNC void gfx_cursor_quit(void);

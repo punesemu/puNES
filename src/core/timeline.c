@@ -98,7 +98,7 @@ void timeline_snap(BYTE mode) {
 	BYTE snap = 0;
 
 	/* se non ci sono rom caricate, non faccio niente */
-	if (info.no_rom) {
+	if (info.no_rom | info.turn_off) {
 		return;
 	}
 

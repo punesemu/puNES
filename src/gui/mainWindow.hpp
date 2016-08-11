@@ -117,6 +117,7 @@ class mainWindow: public QMainWindow {
 		void s_open_recent_roms();
 		void s_open_working_folder();
 		void s_quit();
+		void s_turn_on_off();
 		void s_make_reset();
 		void s_insert_coin();
 		void s_disk_side();

@@ -16,35 +16,33 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef EMU_H_
-#define EMU_H_
+#include <stdlib.h>
+#include <math.h>
+#include "pause.h"
+#include "conf.h"
+#include "gfx.h"
+#include "video/filters/ntsc.h"
 
-#include <stdio.h>
-#include "common.h"
+BYTE pause_init(void) {
+	_color_RGB pRGB[NUM_COLORS];
+	WORD i;
 
-#define emu_irand(x) ((unsigned int)((x) * emu_drand()))
+	if (!(pause.palette = (uint32_t *) malloc(NUM_COLORS * sizeof(uint32_t)))) {
+		fprintf(stderr, "Unable to allocate the palette\n");
+		return (EXIT_ERROR);
+	}
 
-#if defined (__cplusplus)
-#define EXTERNC extern "C"
-#else
-#define EXTERNC
-#endif
+	rgb_modifier(pRGB, 0x1A, -0x0A, -0x0A, -0x30);
 
-EXTERNC BYTE emu_frame(void);
-EXTERNC BYTE emu_make_dir(const char *fmt, ...);
-EXTERNC BYTE emu_file_exist(const char *file);
-EXTERNC BYTE emu_load_rom(void);
-EXTERNC BYTE emu_search_in_database(FILE *fp);
-EXTERNC void emu_set_title(char *title);
-EXTERNC BYTE emu_turn_on(void);
-EXTERNC void emu_pause(BYTE mode);
-EXTERNC BYTE emu_reset(BYTE type);
-EXTERNC WORD emu_round_WORD(WORD number, WORD round);
-EXTERNC int emu_power_of_two(int base);
-EXTERNC double emu_drand(void);
-EXTERNC void emu_quit(BYTE exit_code);
+	for (i = 0; i < NUM_COLORS; i++) {
+		pause.palette[i] = gfx_color(255, pRGB[i].r, pRGB[i].g, pRGB[i].b);
+	}
 
-#undef EXTERNC
-
-#endif /* EMU_H_ */
-
+	return (EXIT_OK);
+}
+void pause_quit(void) {
+	if (pause.palette) {
+		free(pause.palette);
+		pause.palette = NULL;
+	}
+}

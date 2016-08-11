@@ -1,5 +1,9 @@
 noinst_LIBRARIES = libvideo.a
 libvideo_a_SOURCES = \
+	effects/pause.c \
+	effects/pause.h \
+	effects/tv_noise.c \
+	effects/tv_noise.h \
 	filters/hq2x.c \
 	filters/hq3x.c \
 	filters/hq4x.c \

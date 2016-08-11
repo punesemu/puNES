@@ -360,7 +360,7 @@ void mainWindow::change_rom(const char *rom) {
 #endif
 }
 void mainWindow::state_save_slot_set(int slot, bool on_video) {
-	if (info.no_rom) {
+	if (info.no_rom | info.turn_off) {
 		return;
 	}
 	save_slot.slot = slot;
@@ -503,13 +503,37 @@ void mainWindow::setup_video_rendering() {
 #endif
 }
 void mainWindow::update_menu_nes() {
-	QString *sc = (QString *)settings_inp_rd_sc(SET_INP_SC_EJECT_DISK, KEYBOARD);
+	QString *sc = (QString *)settings_inp_rd_sc(SET_INP_SC_TURN_OFF, KEYBOARD);
+
+	if (info.turn_off) {
+		ui->action_Turn_Off->setText(tr("&Turn On") + '\t' + ((QString)*sc));
+		ui->action_Turn_Off->setIcon(QIcon(":/icon/icons/turn_on.png"));
+	} else {
+		ui->action_Turn_Off->setText(tr("&Turn Off") + '\t' + ((QString)*sc));
+		ui->action_Turn_Off->setIcon(QIcon(":/icon/icons/turn_off.png"));
+	}
+
+	if (info.no_rom) {
+		ui->action_Turn_Off->setEnabled(false);
+	} else {
+		ui->action_Turn_Off->setEnabled(true);
+	}
+
+	if (info.no_rom | info.turn_off) {
+		ui->action_Hard_Reset->setEnabled(false);
+		ui->action_Soft_Reset->setEnabled(false);
+	} else {
+		ui->action_Hard_Reset->setEnabled(true);
+		ui->action_Soft_Reset->setEnabled(true);
+	}
 
 	if (vs_system.enabled == TRUE) {
 		ui->action_Insert_Coin->setEnabled(true);
 	} else {
 		ui->action_Insert_Coin->setEnabled(false);
 	}
+
+	sc = (QString *)settings_inp_rd_sc(SET_INP_SC_EJECT_DISK, KEYBOARD);
 
 	if (fds.info.enabled) {
 		if (fds.drive.disk_ejected) {
@@ -1188,7 +1212,7 @@ void mainWindow::update_menu_tools() {
 void mainWindow::update_menu_state() {
 	bool state = false;
 
-	if (!(info.no_rom | info.pause)) {
+	if (!(info.no_rom | info.turn_off | info.pause)) {
 		state = true;
 	}
 
@@ -1251,6 +1275,7 @@ void mainWindow::shortcuts() {
 	connect_shortcut(ui->action_Open, SET_INP_SC_OPEN, SLOT(s_open()));
 	connect_shortcut(ui->action_Quit, SET_INP_SC_QUIT, SLOT(s_quit()));
 	// NES
+	connect_shortcut(ui->action_Turn_Off, SET_INP_SC_TURN_OFF, SLOT(s_turn_on_off()));
 	connect_shortcut(ui->action_Hard_Reset, SET_INP_SC_HARD_RESET, SLOT(s_make_reset()));
 	connect_shortcut(ui->action_Soft_Reset, SET_INP_SC_SOFT_RESET, SLOT(s_make_reset()));
 	connect_shortcut(ui->action_Insert_Coin, SET_INP_SC_INSERT_COIN, SLOT(s_insert_coin()));
@@ -1400,6 +1425,7 @@ void mainWindow::connect_menu_signals() {
 	connect_action(ui->action_Open_working_folder, SLOT(s_open_working_folder()));
 	connect_action(ui->action_Quit, SLOT(s_quit()));
 	// NES
+	connect_action(ui->action_Turn_Off, SLOT(s_turn_on_off()));
 	connect_action(ui->action_Hard_Reset, HARD, SLOT(s_make_reset()));
 	connect_action(ui->action_Soft_Reset, RESET, SLOT(s_make_reset()));
 	connect_action(ui->action_Insert_Coin, SLOT(s_insert_coin()));
@@ -1773,6 +1799,20 @@ void mainWindow::s_open_working_folder() {
 void mainWindow::s_quit() {
 	close();
 }
+void mainWindow::s_turn_on_off() {
+	info.turn_off = !info.turn_off;
+	info.pause_frames_drawscreen = 0;
+
+	if (!info.turn_off) {
+#if defined (WITH_OPENGL) && defined (__WIN32__)
+		gfx_sdlwe_set(SDLWIN_MAKE_RESET, HARD);
+#else
+		gfx_MAKE_RESET(HARD);
+#endif
+	}
+
+	update_menu_nes();
+}
 void mainWindow::s_make_reset() {
 	int type = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
@@ -1814,6 +1854,7 @@ void mainWindow::s_eject_disk() {
 }
 void mainWindow::s_pause() {
 	info.pause_from_gui = !info.pause_from_gui;
+	info.pause_frames_drawscreen = 0;
 
 	emu_pause(info.pause_from_gui);
 	update_menu_nes();
@@ -2478,6 +2519,9 @@ void mainWindow::s_shcjoy_read_timer() {
 					break;
 				case SET_INP_SC_QUIT:
 					ui->action_Quit->trigger();
+					break;
+				case SET_INP_SC_TURN_OFF:
+					ui->action_Turn_Off->trigger();
 					break;
 				case SET_INP_SC_HARD_RESET:
 					ui->action_Hard_Reset->trigger();

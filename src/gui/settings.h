@@ -102,8 +102,10 @@ enum pgs_element {
 enum inp_element {
 	SET_INP_SC_OPEN,
 	SET_INP_SC_QUIT,
+	SET_INP_SC_TURN_OFF,
 	SET_INP_SC_HARD_RESET,
 	SET_INP_SC_SOFT_RESET,
+	SET_INP_SC_INSERT_COIN,
 	SET_INP_SC_SWITCH_SIDES,
 	SET_INP_SC_EJECT_DISK,
 	SET_INP_SC_FULLSCREEN,
@@ -128,7 +130,6 @@ enum inp_element {
 	SET_INP_SC_LOAD_STATE,
 	SET_INP_SC_INC_SLOT,
 	SET_INP_SC_DEC_SLOT,
-	SET_INP_SC_INSERT_COIN,
 
 	SET_INP_SC_JOYSTICK_ID,
 
@@ -835,8 +836,10 @@ static const _settings pgs_cfg[] = {
 static const _settings inp_cfg[] = {
 	{"shortcuts", "open",                     "Alt+O,NULL",      NULL, NULL, {0, NULL}},
 	{"shortcuts", "quit",                     "Alt+Q,NULL",      NULL, NULL, {0, NULL}},
+	{"shortcuts", "turn off",                 "Alt+R,NULL",      NULL, NULL, {0, NULL}},
 	{"shortcuts", "hard reset",               "F11,NULL",        NULL, NULL, {0, NULL}},
 	{"shortcuts", "soft reset",               "F12,NULL",        NULL, NULL, {0, NULL}},
+	{"shortcuts", "insert coin",              "8,NULL",          NULL, NULL, {0, NULL}},
 	{"shortcuts", "switch sides",             "Alt+S,NULL",      NULL, NULL, {0, NULL}},
 	{"shortcuts", "eject disk",               "Alt+E,NULL",      NULL, NULL, {0, NULL}},
 	{"shortcuts", "video fullscreen",         "Alt+Return,NULL", NULL, NULL, {0, NULL}},
@@ -861,7 +864,6 @@ static const _settings inp_cfg[] = {
 	{"shortcuts", "load state",               "F4,NULL",         NULL, NULL, {0, NULL}},
 	{"shortcuts", "increment state slot",     "F3,NULL",         NULL, NULL, {0, NULL}},
 	{"shortcuts", "decrement state slot",     "F2,NULL",         NULL, NULL, {0, NULL}},
-	{"shortcuts", "insert coin",              "8,NULL",          NULL, NULL, {0, NULL}},
 
 	{"shortcuts", "joystick Id",              "NULL",            NULL, NULL, {0, NULL}},
 

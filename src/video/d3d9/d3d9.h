@@ -147,8 +147,6 @@ typedef struct _d3d9 {
 	UINT adapters_in_use;
 	_d3d9_adapter *array, *adapter;
 
-	uint32_t *palette;
-
 	BYTE scale;
 
 	struct _d3d9_screen {
