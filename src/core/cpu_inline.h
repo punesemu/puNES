@@ -1653,6 +1653,23 @@ static BYTE INLINE fds_wr_mem(WORD address, BYTE value) {
 
 			fds.drive.irq_timer_enabled = value & 0x02;
 			fds.drive.irq_timer_counter = fds.drive.irq_timer_reload;
+			if (!fds.drive.irq_timer_reload_enabled) {
+				/*
+				 * con l'FDS "Kaettekita Mario Bros. (1988)(Nintendo)(J).fds"
+				 * accadeva che, scelta una qualsiasi modalita' di gioco dal
+				 * menu iniziale, veniva visualizzato un intermezzo simpatico
+				 * (casuale tra tre disponibili), prima di arrivare alla richiesta
+				 * del cambio di lato del floppy. Con due di questi intermezzi
+				 * (quelli che utilizzavano l'IRQ timer) la richiesta di cambio di
+				 * lato era piena di glitch grafici e questo perche' la generazione
+				 * dell'IRQ continuava anche quando ormai non era piu' necessaria.
+				 * Azzerando il registro di reload del counter una volta generato l'IRQ,
+				 * l'IRQ verra' nuovamente generato solo quando il reload verra'
+				 * valorizzato attraverso i registri $4020 e $4021 e caricato nel contatore
+				 * attraverso la scrittura del $4022.
+				 */
+				fds.drive.irq_timer_reload = 0;
+			}
 			fds.drive.irq_timer_high = FALSE;
 			irq.high &= ~FDS_TIMER_IRQ;
 			return (TRUE);
@@ -1727,7 +1744,6 @@ static BYTE INLINE fds_wr_mem(WORD address, BYTE value) {
 			return (TRUE);
 		}
 		if (address == 0x4026) {
-
 			if (!fds.drive.enabled_dsk_reg) {
 				return (TRUE);
 			}

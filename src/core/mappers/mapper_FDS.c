@@ -59,21 +59,6 @@ void extcl_cpu_every_cycle_FDS(void) {
 			fds.drive.irq_timer_counter = fds.drive.irq_timer_reload;
 		} else {
 			fds.drive.irq_timer_enabled = FALSE;
-			/*
-			 * con l'FDS "Kaettekita Mario Bros. (1988)(Nintendo)(J).fds"
-			 * accadeva che, scelta uan qualsiasi modalita' di gioco dal
-			 * menu iniziale, veniva visualizzato un intermezzo simpatico
-			 * (casuale tra tre disponibili), prima di arrivare alla richiesta
-			 * del cambio di lato del floppy. Con due di questi intermezzi
-			 * (quelli che utilizzavano l'IRQ timer) la richiesta di cambio di
-			 * lato era piena di glitch grafici e questo perche' la generazione
-			 * dell'IRQ continuava anche quando ormai non era piu' necessaria.
-			 * Azzerando il registro di reload del counter una volta generato l'IRQ,
-			 * l'IRQ verra' nuovamente generato quando solo quando il reload verra'
-			 * valorizzato attraverso i registri $4020 e $4021 e caricato nel contatore
-			 * attraverso la scrittura del $4022.
-			 */
-			fds.drive.irq_timer_reload = 0;
 		}
 		/* il solito delay */
 		fds.drive.irq_timer_delay = 1;
