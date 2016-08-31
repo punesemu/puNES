@@ -1404,7 +1404,7 @@ void mainWindow::connect_shortcut(QAction *action, int index, const char *member
 	QString *sc = (QString *)settings_inp_rd_sc(index, KEYBOARD);
 
 	if (sc->isEmpty() == false) {
-		QStringList text = action->text().remove('&').split('\t');
+		QStringList text = action->text().split('\t');
 		QVariant value = action->property("myValue");
 
 		shortcut[index]->setKey(QKeySequence((QString)(*sc)));
