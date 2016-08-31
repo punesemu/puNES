@@ -1555,8 +1555,16 @@
         <translation>Apri &amp;directory di lavoro</translation>
     </message>
     <message>
-        <source>T&amp;ools</source>
-        <translation>&amp;Strumenti</translation>
+        <source>&amp;Turn On</source>
+        <translation>&amp;Accensione</translation>
+    </message>
+    <message>
+        <source>&amp;Turn Off</source>
+        <translation>Spe&amp;gnimento</translation>
+    </message>
+    <message>
+        <source>Too&amp;ls</source>
+        <translation>Str&amp;umenti</translation>
     </message>
 </context>
 <context>

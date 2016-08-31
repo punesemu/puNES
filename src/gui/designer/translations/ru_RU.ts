@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="ru_RU">
+<TS version="2.1" language="ru_RU">
 <context>
     <name>APU_channels</name>
     <message>
@@ -1555,7 +1555,15 @@
         <translation>Открыть &amp;рабочую папку</translation>
     </message>
     <message>
-        <source>T&amp;ools</source>
+        <source>&amp;Turn On</source>
+        <translation>Включи&amp;ть</translation>
+    </message>
+    <message>
+        <source>&amp;Turn Off</source>
+        <translation>Выключи&amp;ть</translation>
+    </message>
+    <message>
+        <source>Too&amp;ls</source>
         <translation>&amp;Инструменты</translation>
     </message>
 </context>

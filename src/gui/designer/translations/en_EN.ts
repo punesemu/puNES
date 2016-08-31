@@ -1555,7 +1555,15 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>T&amp;ools</source>
+        <source>&amp;Turn On</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Turn Off</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Too&amp;ls</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -542,7 +542,7 @@
    </widget>
    <widget class="QMenu" name="menu_Tools">
     <property name="title">
-     <string>T&amp;ools</string>
+     <string>Too&amp;ls</string>
     </property>
     <addaction name="action_Vs_System"/>
     <addaction name="action_APU_channels"/>
