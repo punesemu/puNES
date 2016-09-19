@@ -19,6 +19,8 @@
 #ifndef VERSION_H_
 #define VERSION_H_
 
+#include "compiled.h"
+
 #define VER1        "0"
 #define VER1_INT    0
 

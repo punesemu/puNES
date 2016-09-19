@@ -9,7 +9,7 @@ ico_stuff = gui/windows/resources.rc
 endif
 
 .rc.o:
-	$(WINDRES) -o $@ $<
+	$(WINDRES) -I.. -o $@ $<
 
 bin_PROGRAMS = punes
 
