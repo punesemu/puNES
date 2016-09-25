@@ -240,6 +240,13 @@ void extcl_cpu_wr_mem_Tengen_Rambo(WORD address, BYTE value) {
 			return;
 		case 0xC000:
 			irqA12.latch = value;
+
+			if (tengen_rambo.irq_mode == A12_MODE) {
+				if (ppu.frame_y <= ppu_sclines.vint) {
+					tengen_rambo.irq_plus_clock = 0;
+				}
+			}
+
 			return;
 		case 0xC001: {
 			irqA12.reload = TRUE;
@@ -267,7 +274,6 @@ void extcl_cpu_wr_mem_Tengen_Rambo(WORD address, BYTE value) {
 					tengen_rambo.irq_plus_clock = 1;
 				}
 			}
-
 			return;
 		}
 		case 0xE000:
@@ -336,12 +342,12 @@ void extcl_cpu_every_cycle_Tengen_Rambo(void) {
 
 static void INLINE irq_clock_Tengen_Rambo(int delay) {
 	if (irqA12.reload == TRUE) {
-		irqA12.counter = irqA12.latch + tengen_rambo.irq_plus_clock;
+		irqA12.counter = irqA12.latch + tengen_rambo.irq_plus_clock + 1;
 		irqA12.reload = FALSE;
-		return;
+		tengen_rambo.irq_plus_clock = 0;
 	} else if (!irqA12.counter) {
-		irqA12.counter = irqA12.latch;
-		return;
+		irqA12.counter = irqA12.latch + 1;
+		tengen_rambo.irq_plus_clock = 0;
 	}
 
 	if (!(--irqA12.counter) && irqA12.enable) {
