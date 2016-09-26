@@ -3413,6 +3413,14 @@ static const _dbelement dblist[] = {
 	/* Famicom Jump II - Saikyou no 7 Nin (J) [o1].nes */
 	{"1d7417d31e19b590afceb6a8a6e7b9cab9f9b475", 153, FCGx, FAMICOMJUMPII, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
+/* ----------------------------------------- 155 ------------------------------------------ */
+	/* Money Game, The (J).nes */
+	{"b4b93631b86bf3863058375718be43c59a37dd65", 155, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Tatakae!! Rahmen Man - Sakuretsu Choujin 102 Gei (J) [b2].nes */
+	{"d6f525b61b75e0f4662adfd957625a7e5a180662", 155, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Tatakae!! Rahmen Man - Sakuretsu Choujin 102 Gei (J) [!].nes */
+	{"4ea4bc91ff74142a51efe3dd79d0c9ed48e784f3", 155, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+
 /* ----------------------------------------- 156 ------------------------------------------ */
 	/* Buzz and Waldog (Prototype) [!].nes */
 	{"ef47319e0a953de35e2b96e8113056c3caaf3d01", 156, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},

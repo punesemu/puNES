@@ -21,7 +21,7 @@
 
 #include "common.h"
 
-enum MMC1_types { SNROM, SOROM, SUROM, SXROM, SEROM = 5, BAD_YOSHI_U = 20 };
+enum MMC1_types { SNROM, SOROM, SUROM, SXROM, SEROM = 5, SKROM = 6, BAD_YOSHI_U = 20 };
 
 struct _mmc1 {
 	BYTE reg;

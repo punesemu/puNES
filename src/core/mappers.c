@@ -426,6 +426,10 @@ BYTE map_init(void) {
 		case 154:
 			map_init_Namco(N3453);
 			break;
+		case 155:
+			info.mapper.submapper = SKROM;
+			map_init_MMC1();
+			break;
 		case 156:
 			map_init_156();
 			break;

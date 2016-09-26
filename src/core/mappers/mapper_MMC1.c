@@ -109,6 +109,11 @@ void map_init_MMC1(void) {
 			/* SXROM usa 32k di PRG Ram */
 			info.prg.ram.banks_8k_plus = 4;
 			break;
+		case SKROM:
+			/* SKROM usa 8k di PRG Ram */
+			info.prg.ram.banks_8k_plus = 1;
+			cpu.prg_ram_wr_active = cpu.prg_ram_rd_active = TRUE;
+			break;
 		default:
 			break;
 	}
@@ -177,6 +182,11 @@ void extcl_cpu_wr_mem_MMC1(WORD address, BYTE value) {
 				break;
 			case PRG0:
 				mmc1.prg0 = mmc1.reg;
+
+				if (info.mapper.submapper == SKROM) {
+					break;
+				}
+
 				cpu.prg_ram_rd_active = (mmc1.prg0 & 0x10 ? FALSE : TRUE);
 				cpu.prg_ram_wr_active = cpu.prg_ram_rd_active;
 				break;
