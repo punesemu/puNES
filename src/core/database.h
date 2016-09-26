@@ -1876,6 +1876,8 @@ static const _dbelement dblist[] = {
 /* ------------------------------------- CNROM -------------------------------------------- */
 	/* Cybernoid - The Fighting Machine (U) [o2].nes */
 	{"2b2dacd2dd74a6be31dafad273fa4a34c5785fe7", 3, CNROM_CNFL, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Tetris (Bulletproof) (Japan).nes */
+	{"269bd17cfb0b32c0db67922e9a6f03908a32b2da", 3, DEFAULT, BAD_INES_TETRIS_BPS, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Alpha Mission (E) [!].nes */
 	{"1293d08a7a5690aeb08f15b5e4ecec7703b9668b", 3, DEFAULT, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Athletic World (E) [!].nes */

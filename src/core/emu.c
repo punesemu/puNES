@@ -380,6 +380,16 @@ BYTE emu_search_in_database(FILE *fp) {
 						info.chr.rom.banks_8k = 0;
 					}
 					break;
+				case 3:
+					/*
+					 * Fix per "Tetris (Bulletproof) (Japan).nes"
+					 * che ha l'header INES non corretto.
+					 */
+					if (info.id == BAD_INES_TETRIS_BPS) {
+						info.prg.rom.banks_16k = 2;
+						info.chr.rom.banks_8k = 2;
+					}
+					break;
 				case 7:
 					/*
 					 * Fix per "WWF Wrestlemania (E) [!].nes"
