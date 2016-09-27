@@ -370,6 +370,9 @@ BYTE map_init(void) {
 		case 133:
 			map_init_Sachen(SA72008);
 			break;
+		case 134:
+			map_init_134();
+			break;
 		case 136:
 			map_init_Sachen(TCU02);
 			break;
