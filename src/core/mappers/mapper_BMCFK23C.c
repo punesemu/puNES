@@ -138,13 +138,31 @@ void extcl_cpu_wr_mem_BMCFK23C(WORD address, BYTE value) {
 	}
 
 	if (address >= 0x8000) {
-		if ((bmcfk23c.reg[0] & 0x40) && (address < 0xA000)) {
-			if (bmcfk23c.reg[0] & 0x30) {
-				bmcfk23c.unromchr = 0;
-			} else {
-				bmcfk23c.unromchr = value & 0x03;
+		BYTE mask;
+
+		if (bmcfk23c.reg[0] & 0x40) {
+			switch (address & 0xF003) {
+				case 0xA000:
+				case 0xA001:
+				case 0xE000:
+				case 0xE001:
+					extcl_cpu_wr_mem_MMC3(address, value);
+					return;
+				default:
+					mask = address & 0x03;
+
+					if (bmcfk23c.reg[0] & 0x10) {
+						mask = (address >> 2) & 0x03;
+					}
+					break;
+			}
+			if (bmcfk23c.unromchr != (value & mask)) {
+				bmcfk23c.unromchr = value & mask;
 				chr_fix_BMCFK23CPW(mmc3.bank_to_update);
 			}
+
+
+
 		} else {
 			if ((address == 0x8001) && ((bmcfk23c.reg[3] & 0x02) && (mmc3.bank_to_update & 0x08))) {
 				bmcfk23c.reg[4 | (mmc3.bank_to_update & 0x03)] = value;
@@ -332,36 +350,26 @@ static void chr_swap_BMCFK23CCW(WORD address, WORD value) {
 	DBWORD bank;
 
 	if (bmcfk23c.reg[0] & 0x40) {
-	value = bmcfk23c.reg[2] | bmcfk23c.unromchr;
-	control_bank(info.chr.rom.max.banks_8k)
-	bank = value << 13;
-	chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);
-	chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);
-	chr.bank_1k[2] = chr_chip_byte_pnt(0, bank | 0x0800);
-	chr.bank_1k[3] = chr_chip_byte_pnt(0, bank | 0x0C00);
-	chr.bank_1k[4] = chr_chip_byte_pnt(0, bank | 0x1000);
-	chr.bank_1k[5] = chr_chip_byte_pnt(0, bank | 0x1400);
-	chr.bank_1k[6] = chr_chip_byte_pnt(0, bank | 0x1800);
-	chr.bank_1k[7] = chr_chip_byte_pnt(0, bank | 0x1C00);
+		value = bmcfk23c.reg[2] | bmcfk23c.unromchr;
+		control_bank(info.chr.rom.max.banks_8k)
+		bank = value << 13;
+		chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);
+		chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);
+		chr.bank_1k[2] = chr_chip_byte_pnt(0, bank | 0x0800);
+		chr.bank_1k[3] = chr_chip_byte_pnt(0, bank | 0x0C00);
+		chr.bank_1k[4] = chr_chip_byte_pnt(0, bank | 0x1000);
+		chr.bank_1k[5] = chr_chip_byte_pnt(0, bank | 0x1400);
+		chr.bank_1k[6] = chr_chip_byte_pnt(0, bank | 0x1800);
+		chr.bank_1k[7] = chr_chip_byte_pnt(0, bank | 0x1C00);
 
-	chr.bank_1k[0] = &chr.extra.data[bank];
-	chr.bank_1k[1] = &chr.extra.data[bank| 0x0400];
-	chr.bank_1k[2] = &chr.extra.data[bank| 0x0800];
-	chr.bank_1k[3] = &chr.extra.data[bank| 0x0C00];
-	chr.bank_1k[4] = &chr.extra.data[bank| 0x1000];
-	chr.bank_1k[5] = &chr.extra.data[bank| 0x1400];
-	chr.bank_1k[6] = &chr.extra.data[bank| 0x1800];
-	chr.bank_1k[7] = &chr.extra.data[bank| 0x1C00];
-
-	bmcfk23c.chr_map[0] = 0xFFFF;
-	bmcfk23c.chr_map[1] = 0xFFFF;
-	bmcfk23c.chr_map[2] = 0xFFFF;
-	bmcfk23c.chr_map[3] = 0xFFFF;
-	bmcfk23c.chr_map[4] = 0xFFFF;
-	bmcfk23c.chr_map[5] = 0xFFFF;
-	bmcfk23c.chr_map[6] = 0xFFFF;
-	bmcfk23c.chr_map[7] = 0xFFFF;
-
+		bmcfk23c.chr_map[0] = 0xFFFF;
+		bmcfk23c.chr_map[1] = 0xFFFF;
+		bmcfk23c.chr_map[2] = 0xFFFF;
+		bmcfk23c.chr_map[3] = 0xFFFF;
+		bmcfk23c.chr_map[4] = 0xFFFF;
+		bmcfk23c.chr_map[5] = 0xFFFF;
+		bmcfk23c.chr_map[6] = 0xFFFF;
+		bmcfk23c.chr_map[7] = 0xFFFF;
 	} else if (bmcfk23c.reg[0] & 0x20) {
 		if (chr.extra.data) {
 			value &= 0x07;
