@@ -95,7 +95,6 @@ void extcl_cpu_wr_mem_114(WORD address, BYTE value) {
 			extcl_cpu_wr_mem_MMC3(0xA000, value);
 			return;
 		case 0xA000:
-		case 0xA001:
 			value = (value & 0xC0) | vlu114[value & 0x07];
 			m114.mmc3_ctrl_change = TRUE;
 			extcl_cpu_wr_mem_MMC3(0x8000, value);
@@ -113,13 +112,19 @@ void extcl_cpu_wr_mem_114(WORD address, BYTE value) {
 				m114_prg_rom_backup();
 			}
 			return;
+		case 0xA001:
+			irqA12.latch = value;
+			return;
 		case 0xC000:
-		case 0xC001:
 			if (m114.mmc3_ctrl_change && (!m114.prg_rom_switch || (mmc3.bank_to_update < 6))) {
 				m114.mmc3_ctrl_change = FALSE;
 				extcl_cpu_wr_mem_MMC3(0x8001, value);
 				m114_prg_rom_backup();
 			}
+			return;
+		case 0xC001:
+			irqA12.reload = TRUE;
+			irqA12.counter = 0;
 			return;
 		case 0xE000:
 			irqA12.enable = FALSE;
@@ -127,9 +132,6 @@ void extcl_cpu_wr_mem_114(WORD address, BYTE value) {
 			return;
 		case 0xE001:
 			irqA12.enable = TRUE;
-			irqA12.latch = value;
-			irqA12.reload = TRUE;
-			irqA12.counter = 0;
 			return;
 	}
 }
