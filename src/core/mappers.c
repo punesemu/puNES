@@ -667,6 +667,10 @@ BYTE map_init(void) {
 					/* NES-TF1021 */
 					map_init_TF1201();
 					break;
+				case 3:
+					/* NES-EH8813A */
+					map_init_EH8813A();
+					break;
 			}
 			break;
 	}
