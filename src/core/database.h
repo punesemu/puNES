@@ -3345,6 +3345,10 @@ static const _dbelement dblist[] = {
 	/* Youkai Kurabu (J) [o1].nes */
 	{"7227a9aa0baf11d324f55280c1c1ddc2d46bebd3", 140, JF11, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
+/* ------------------------------------ Sachen (SA8259A) ---------------------------------- */
+	/* Q Boy (Sachen) [!].nes */
+	{"568bf236fb3085b8bd522fbd2c18c7831e3a2dd1", 141, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+
 /* ------------------------------------- Agci --------------------------------------------- */
 	/* Death Race (AGCI) [!].nes */
 	{"d33248186697e488021358369e6407b5d85526fc", 144, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
