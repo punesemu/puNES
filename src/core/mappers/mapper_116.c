@@ -93,6 +93,7 @@
 			m116_A_update_prg_mode1()\
 			break;\
 		case 2:\
+		case 3:\
 			m116_A_update_prg_mode2()\
 			break;\
 	}
@@ -139,6 +140,7 @@
 			m116_A_update_chr_mode1()\
 			break;\
 		case 2:\
+		case 3:\
 			m116_A_update_chr_mode2()\
 			break;\
 	}
@@ -178,6 +180,7 @@
 			m116_A_update_mirroring_mode1()\
 			break;\
 		case 2:\
+		case 3:\
 			m116_A_update_mirroring_mode2()\
 			break;\
 		default:\
@@ -406,7 +409,10 @@ void map_init_116(void) {
 				m116.mode0.prg[0] = 0x00;
 				m116.mode0.prg[1] = 0x01;
 				m116.mode0.nmt = 0;
-				for (i = 0; i < 8; ++i) {
+				for (i = 0; i < 4; ++i) {
+					m116.mode0.chr[i] = 0xFF;
+				}
+				for (i = 4; i < 8; ++i) {
 					m116.mode0.chr[i] = i;
 				}
 
@@ -524,7 +530,6 @@ void map_init_116(void) {
 			irqA12.present = TRUE;
 			irqA12_delay = 1;
 			break;
-
 	}
 }
 
@@ -535,10 +540,10 @@ void extcl_cpu_wr_mem_116_type_A(WORD address, BYTE value) {
 		return;
 	}
 
-	if ((address < 0x6000) && (address & 0x0100)) {
+	if ((address < 0x8000) && ((address & 0x4100) == 0x4100)) {
 		if (m116.mode != value) {
 			m116.mode = value;
-			if ((value & 0x01) != 1) {
+			if ((value & 0x03) != 1) {
 				irqA12.enable = FALSE;
 				irq.high &= ~EXT_IRQ;
 			}
@@ -578,14 +583,17 @@ void extcl_cpu_wr_mem_116_type_A(WORD address, BYTE value) {
 			case 0x0B:
 			case 0x0C:
 			case 0x0D:
-			case 0x0E:
-				value = (value & 0x0F) << ((address << 1) & 0x04);
-				reg = (((address - 0xB000) >> 11) & 0x06) | (address & 0x01);
+			case 0x0E: {
+				BYTE shift = ((address & 0x01) << 2);
+
+                reg = ((((address & 0x02) | (address >> 10)) >> 1) + 2) & 0x07;
+                value = (m116.mode0.chr[reg] & (0xF0 >> shift)) | ((value & 0x0F) << shift);
 				if (m116.mode0.chr[reg] != value) {
 					m116.mode0.chr[reg] = value;
 					m116_A_update_chr_mode0()
 				}
 				return;
+			}
 			case 0x0F:
 				return;
 		}
@@ -649,48 +657,32 @@ void extcl_cpu_wr_mem_116_type_A(WORD address, BYTE value) {
 		}
 	}
 	/* MMC1 mode */
-	if (mode == 2) {
-		switch (reg) {
-			case 0x08:
-			case 0x09:
-			case 0x0A:
-			case 0x0B:
-			case 0x0C:
-			case 0x0D:
-			case 0x0E:
-			case 0x0F:
-				if (!(value & 0x80)) {
-					m116.mode2.buffer |= (value & 0x01) << m116.mode2.shifter++;
-					if (m116.mode2.shifter != 5) {
-						return;
-					}
-					m116.mode2.shifter = 0;
-					value = m116.mode2.buffer;
-					m116.mode2.buffer = 0;
-
-					reg = (address >> 13) & 0x03;
-
-					if (m116.mode2.reg[reg] != value) {
-						m116.mode2.reg[reg] = value;
-
-						m116_A_update_prg_mode2();
-						m116_A_update_chr_mode2();
-						m116_A_update_mirroring_mode2();
-					}
-				} else {
-					m116.mode2.buffer = 0;
-					m116.mode2.shifter = 0;
-
-					if ((m116.mode2.reg[0] & (0x04 | 0x08)) != (0x04 | 0x08)) {
-						m116.mode2.reg[0] |= (0x04 | 0x08);
-
-						m116_A_update_prg_mode2();
-						m116_A_update_chr_mode2();
-						m116_A_update_mirroring_mode2();
-					}
-				}
+	if (mode & 0x02) {
+		if (!(value & 0x80)) {
+			m116.mode2.buffer |= (value & 0x01) << m116.mode2.shifter++;
+			if (m116.mode2.shifter != 5) {
 				return;
+			}
+			value = m116.mode2.buffer;
+			m116.mode2.shifter = m116.mode2.buffer = 0;
+
+			reg = (address >> 13) & 0x03;
+
+			if (m116.mode2.reg[reg] != value) {
+				m116.mode2.reg[reg] = value;
+				m116_A_update_prg_mode2();
+				m116_A_update_chr_mode2();
+				m116_A_update_mirroring_mode2();
+			}
+		} else {
+			m116.mode2.buffer = 0;
+			m116.mode2.shifter = 0;
+			m116.mode2.reg[0] |= (0x04 | 0x08);
+			m116_A_update_prg_mode2();
+			m116_A_update_chr_mode2();
+			m116_A_update_mirroring_mode2();
 		}
+		return;
 	}
 }
 BYTE extcl_save_mapper_116_type_A(BYTE mode, BYTE slot, FILE *fp) {
