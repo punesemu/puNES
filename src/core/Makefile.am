@@ -99,6 +99,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_183.h \
 	mappers/mapper_186.c \
 	mappers/mapper_186.h \
+	mappers/mapper_187.c \
+	mappers/mapper_187.h \
 	mappers/mapper_200.c \
 	mappers/mapper_200.h \
 	mappers/mapper_201.c \

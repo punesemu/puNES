@@ -20,28 +20,54 @@
 #include "mappers.h"
 #include "info.h"
 #include "mem_map.h"
-#include "cpu.h"
 #include "irqA12.h"
 #include "save_slot.h"
 
-#define m121_swap_8k_prg()\
-	if (m121.reg[0]) {\
-		value = m121.reg[0];\
-		control_bank(info.prg.rom.max.banks_8k)\
-		map_prg_rom_8k(1, 2, value);\
-	} else {\
-		mapper.rom_map_to[2] = m121.bck[1];\
-	}\
-	if (m121.reg[1]) {\
-		value = m121.reg[1];\
-		control_bank(info.prg.rom.max.banks_8k)\
-		map_prg_rom_8k(1, 3, value);\
-	} else {\
-		mapper.rom_map_to[3] = info.prg.rom.max.banks_8k;\
-	}\
-	map_prg_rom_8k_update()
+static void INLINE m121_update_reg(void);
+static void INLINE m121_update_prg(void);
+static void INLINE m121_update_chr(void);
 
-static const BYTE vlu121[4] = { 0x00, 0x83, 0x42, 0x00 };
+#define m121_8000()\
+	if (mmc3.prg_rom_cfg != old_prg_rom_cfg) {\
+		mapper.rom_map_to[2] = m121.prg_map[0];\
+		mapper.rom_map_to[0] = m121.prg_map[2];\
+		m121.prg_map[0] = mapper.rom_map_to[0];\
+		m121.prg_map[2] = mapper.rom_map_to[2];\
+		m121.prg_map[mmc3.prg_rom_cfg ^ 0x02] = info.prg.rom.max.banks_8k_before_last;\
+	}
+#define m121_8001()\
+	switch (mmc3.bank_to_update) {\
+		case 0:\
+			control_bank_with_AND(0xFE, info.chr.rom.max.banks_1k)\
+			m121.chr_map[mmc3.chr_rom_cfg] = value;\
+			m121.chr_map[mmc3.chr_rom_cfg | 0x01] = value + 1;\
+			break;\
+		case 1:\
+			control_bank_with_AND(0xFE, info.chr.rom.max.banks_1k)\
+			m121.chr_map[mmc3.chr_rom_cfg | 0x02] = value;\
+			m121.chr_map[mmc3.chr_rom_cfg | 0x03] = value + 1;\
+			break;\
+		case 2:\
+			m121.chr_map[mmc3.chr_rom_cfg ^ 0x04] = value;\
+			break;\
+		case 3:\
+			m121.chr_map[(mmc3.chr_rom_cfg ^ 0x04) | 0x01] = value;\
+			break;\
+		case 4:\
+			m121.chr_map[(mmc3.chr_rom_cfg ^ 0x04) | 0x02] = value;\
+			break;\
+		case 5:\
+			m121.chr_map[(mmc3.chr_rom_cfg ^ 0x04) | 0x03] = value;\
+			break;\
+		case 6:\
+			m121.prg_map[mmc3.prg_rom_cfg] = value;\
+			break;\
+		case 7:\
+			m121.prg_map[1] = value;\
+			break;\
+	}
+
+static const BYTE vlu121[4] = { 0x83, 0x83, 0x42, 0x00 };
 
 void map_init_121(void) {
 	EXTCL_CPU_WR_MEM(121);
@@ -58,116 +84,189 @@ void map_init_121(void) {
 	mapper.internal_struct[1] = (BYTE *) &mmc3;
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
-	info.mapper.extend_wr = TRUE;
+	memset(&m121, 0x00, sizeof(m121));
+	memset(&mmc3, 0x00, sizeof(mmc3));
+	memset(&irqA12, 0x00, sizeof(irqA12));
 
-	if (info.reset >= HARD) {
-		memset(&m121, 0x00, sizeof(m121));
-		memset(&mmc3, 0x00, sizeof(mmc3));
+	{
+		BYTE i;
 
-		m121.bck[0] = mapper.rom_map_to[0];
-		m121.bck[1] = mapper.rom_map_to[2];
+		map_prg_rom_8k_reset();
+		chr_bank_1k_reset()
+
+		for (i = 0; i < 8; i++) {
+			if (i < 4) {
+				m121.prg_map[i] = mapper.rom_map_to[i];
+			}
+			m121.chr_map[i] = i;
+		}
 	}
 
-	memset(&irqA12, 0x00, sizeof(irqA12));
+	if (info.reset >= HARD) {
+		m121.reg[3] = 0x80;
+	}
+
+	info.mapper.extend_wr = TRUE;
+	info.mapper.extend_rd = TRUE;
 
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
 }
 void extcl_cpu_wr_mem_121(WORD address, BYTE value) {
 	if (address >= 0x8000) {
-		const BYTE prg_rom_cfg = (value & 0x40) >> 5;
-
-		extcl_cpu_wr_mem_MMC3(address, value);
+		BYTE old_prg_rom_cfg = mmc3.prg_rom_cfg;
 
 		switch (address & 0xE003) {
-			case 0x8000: {
-				if (mmc3.prg_rom_cfg != prg_rom_cfg) {
-					mapper.rom_map_to[2] = m121.bck[0];
-					mapper.rom_map_to[0] = m121.bck[1];
-					m121.bck[0] = mapper.rom_map_to[0];
-					m121.bck[1] = mapper.rom_map_to[2];
-				}
-				m121_swap_8k_prg();
-				break;
-			}
+			case 0x8000:
+				extcl_cpu_wr_mem_MMC3(address, value);
+				m121_8000()
+				m121_update_prg();
+				return;
 			case 0x8001:
-				if (mmc3.bank_to_update == 6) {
-					if (mmc3.prg_rom_cfg) {
-						control_bank(info.prg.rom.max.banks_8k)
-						m121.bck[1] = value;
-					} else {
-						control_bank(info.prg.rom.max.banks_8k)
-						m121.bck[0] = value;
-					}
+				extcl_cpu_wr_mem_MMC3(address, value);
+				m121_8001()
+				m121.reg[6] = ((value & 0x01) << 5) | ((value & 0x02) << 3) | ((value & 0x04) << 1)
+							| ((value & 0x08) >> 1) | ((value & 0x10) >> 3) | ((value & 0x20) >> 5);
+				if (!m121.reg[7]) {
+					m121_update_reg();
 				}
-				m121_swap_8k_prg();
-				break;
+				m121_update_prg();
+				m121_update_chr();
+				return;
 			case 0x8003:
-				switch (value) {
-					case 0x20:
-						m121.reg[1] = 0x13;
-						break;
-					case 0x29:
-						m121.reg[1] = 0x1B;
-						break;
-					case 0x28:
-						m121.reg[0] = 0x0C;
-						break;
-					case 0x26:
-						m121.reg[1] = 0x08;
-						break;
-					case 0xAB:
-						m121.reg[1] = 0x07;
-						break;
-					case 0xEC:
-					case 0xEF:
-						m121.reg[1] = 0x0D;
-						break;
-					case 0xFF:
-						m121.reg[1] = 0x09;
-						break;
-					default:
-						m121.reg[0] = m121.reg[1] = 0;
-						break;
-				}
-				m121_swap_8k_prg();
-				break;
+				extcl_cpu_wr_mem_MMC3(0x8000, value);
+				m121_8000()
+				m121.reg[5] = value;
+				m121_update_reg();
+				m121_update_prg();
+				return;
+			default:
+				extcl_cpu_wr_mem_MMC3(address, value);
+				return;
+		}
+	}
+
+	if ((address >= 0x5000) && (address <= 0x5FFF)) {
+		m121.reg[4] = vlu121[value & 0x03];
+		if ((address & 0x5180) == 0x5180) {
+			m121.reg[3] = value;
+			m121_update_prg();
+			m121_update_chr();
 		}
 		return;
 	}
-
-	if ((address < 0x5000) || (address > 0x5FFF)) {
-		return;
-	}
-
-	m121.reg[2] = vlu121[value & 0x03];
-	return;
 }
 BYTE extcl_cpu_rd_mem_121(WORD address, BYTE openbus, BYTE before) {
 	if ((address < 0x5000) || (address > 0x5FFF)) {
 		return (openbus);
 	}
 
-	return (m121.reg[2]);
+	return (m121.reg[4]);
 }
 BYTE extcl_save_mapper_121(BYTE mode, BYTE slot, FILE *fp) {
-	if (save_slot.version < 6) {
-		if (mode == SAVE_SLOT_READ) {
-			BYTE old_prg_rom_bank[2], i;
-
-			save_slot_ele(mode, slot, old_prg_rom_bank)
-
-			for (i = 0; i < 2; i++) {
-				m121.bck[i] = old_prg_rom_bank[i];
-			}
-		} else if (mode == SAVE_SLOT_COUNT) {
-			save_slot.tot_size[slot] += sizeof(BYTE) * 2;
-		}
-	} else {
-		save_slot_ele(mode, slot, m121.bck);
-	}
 	save_slot_ele(mode, slot, m121.reg);
+	save_slot_ele(mode, slot, m121.prg_map);
+	save_slot_ele(mode, slot, m121.chr_map);
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	return (EXIT_OK);
+}
+
+static void INLINE m121_update_reg(void) {
+	switch (m121.reg[5] & 0x3F) {
+		case 0x20:
+			m121.reg[7] = 1;
+			m121.reg[0] = m121.reg[6];
+			break;
+		case 0x29:
+			m121.reg[7] = 1;
+			m121.reg[0] = m121.reg[6];
+			break;
+		case 0x26:
+			m121.reg[7] = 0;
+			m121.reg[0] = m121.reg[6];
+			break;
+		case 0x2B:
+			m121.reg[7] = 1;
+			m121.reg[0] = m121.reg[6];
+			break;
+		case 0x2C:
+			m121.reg[7] = 1;
+			if (m121.reg[6]) {
+				m121.reg[0] = m121.reg[6];
+			}
+			break;
+		case 0x3C:
+		case 0x3F:
+			m121.reg[7] = 1;
+			m121.reg[0] = m121.reg[6];
+			break;
+		case 0x28:
+			m121.reg[7] = 0;
+			m121.reg[1] = m121.reg[6];
+			break;
+		case 0x2A:
+			m121.reg[7] = 0;
+			m121.reg[2] = m121.reg[6];
+			break;
+		case 0x2F:
+			break;
+		default:
+			m121.reg[5] = 0;
+			break;
+	}
+}
+static void INLINE m121_update_prg(void) {
+	BYTE value;
+
+	if (m121.reg[5] & 0x3F) {
+		value = (m121.prg_map[mmc3.prg_rom_cfg] & 0x1F) | ((m121.reg[3] & 0x80) >> 2);
+		control_bank(info.prg.rom.max.banks_8k)
+		map_prg_rom_8k(1, mmc3.prg_rom_cfg, value);
+
+		value = m121.reg[2] | ((m121.reg[3] & 0x80) >> 2);
+		control_bank(info.prg.rom.max.banks_8k)
+		map_prg_rom_8k(1, 1, value);
+
+		value = m121.reg[1] | ((m121.reg[3] & 0x80) >> 2);
+		control_bank(info.prg.rom.max.banks_8k)
+		map_prg_rom_8k(1, 2, value);
+
+		value = m121.reg[0] | ((m121.reg[3] & 0x80) >> 2);
+		control_bank(info.prg.rom.max.banks_8k)
+		map_prg_rom_8k(1, 3, value);
+	} else {
+		value = (m121.prg_map[0] & 0x1F) | ((m121.reg[3] & 0x80) >> 2);
+		control_bank(info.prg.rom.max.banks_8k)
+		map_prg_rom_8k(1, 0, value);
+
+		value = (m121.prg_map[1] & 0x1F) | ((m121.reg[3] & 0x80) >> 2);
+		control_bank(info.prg.rom.max.banks_8k)
+		map_prg_rom_8k(1, 1, value);
+
+		value = (m121.prg_map[2] & 0x1F) | ((m121.reg[3] & 0x80) >> 2);
+		control_bank(info.prg.rom.max.banks_8k)
+		map_prg_rom_8k(1, 2, value);
+
+		value = (m121.prg_map[3] & 0x1F) | ((m121.reg[3] & 0x80) >> 2);
+		control_bank(info.prg.rom.max.banks_8k)
+		map_prg_rom_8k(1, 3, value);
+	}
+	map_prg_rom_8k_update();
+}
+static void INLINE m121_update_chr(void) {
+	BYTE i;
+	WORD value;
+
+	for (i = 0; i < 8; i++) {
+		value = m121.chr_map[i];
+
+		if (prg.chip[0].size == chr.chip[0].size) {
+			value = value | ((m121.reg[3] & 0x80) << 1);
+		} else if ((i & 0x04) == mmc3.chr_rom_cfg) {
+			value = value | 0x100;
+		}
+		control_bank(info.chr.rom.max.banks_1k)
+		chr.bank_1k[i] = chr_chip_byte_pnt(0, value << 10);
+	}
 }

@@ -220,10 +220,8 @@ void extcl_cpu_wr_mem_134(WORD address, BYTE value) {
 }
 BYTE extcl_save_mapper_134(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m134.reg);
-	if (save_slot.version >= 5) {
-		save_slot_ele(mode, slot, m134.prg_map);
-		save_slot_ele(mode, slot, m134.chr_map);
-	}
+	save_slot_ele(mode, slot, m134.prg_map);
+	save_slot_ele(mode, slot, m134.chr_map);
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	return (EXIT_OK);

@@ -3286,6 +3286,8 @@ static const _dbelement dblist[] = {
 	{"32436a43d3c371ab7aa6bb5165f60ca5c006a60e", 116, MAP116_TYPE_B, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Samurai Spirits (Rex Soft).nes */
 	{"648dc9e5f3b4228aeb9d424f0ae4047cd946a736", 116, MAP116_TYPE_C, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Somari (NT-616) (Unl) [!].nes */
+	{"983250eb5b1ae54e7c78873e05c83dafc123f0b3", 116, MAP116_TYPE_A, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* ----------------------------------- Futuremedia ---------------------------------------- */
 	/* Crayon Shin-Chan (Ch) [!].nes */
@@ -3328,6 +3330,16 @@ static const _dbelement dblist[] = {
 	{"f7aeaa0c72bc1e659e1318a20192c4d69636e39a", 119, DEFAULT, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Pin Bot (U) [o3].nes */
 	{"703e41d4c1a4716b324dece6df2ce12a847f082c", 119, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+
+/* ---------------------------------------- 121 ------------------------------------------- */
+	/* Super Sonic 5 (1997) (Unl) [!].nes */
+	{"5a19f9e7565f7074dd2b041652c551e06937a1d3", 121, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Sonic 3D Blast 6 (Unl) [f1].nes */
+	{"f132093a6874859b30c9d4daefe1f58b2860e68b", 121, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Sonic 3D Blast 6 (Unl).nes */
+	{"c576df6ed9f825740760350155e85743d06784b1", 121, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Street Fighter Zero 2 '97 (Unl) [!].nes */
+	{"806588fc93c772f3b28977cfa3e57a287e721ef9", 121, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* ---------------------------------- Txc (T22211A) --------------------------------------- */
 	/* Qi Wang - Chinese Chess (MGC-001) (Ch) [!].nes */
@@ -3585,6 +3597,10 @@ static const _dbelement dblist[] = {
 	{"b596ada2076a8a86fc41b2f1cad06ff807488fcc", 189, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Master Fighter II (Unl) [!].nes */
 	{"ec1d596ae83ad93ffd82f07b470633632cf9bad5", 189, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Street Fighter II - The World Warrior (Unl) [a2].nes */
+	{"9462a5a066c936135d66d20a9d6ba1537aeb1ed4", 189, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Street Fighter II - The World Warrior (Unl) [!].nes */
+	{"771a31ecbf6c743783fda3f8dfe91f70e7e6c033", 189, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Thunder Warrior (Unl).nes */
 	{"94003e3c42ae7f582f91c72a58689171872391c9", 189, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 

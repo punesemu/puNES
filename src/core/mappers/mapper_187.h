@@ -16,20 +16,20 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef MAPPER_121_H_
-#define MAPPER_121_H_
+#ifndef MAPPER_187_H_
+#define MAPPER_187_H_
 
 #include "common.h"
 
-struct _m121 {
+struct _m187 {
 	BYTE reg[8];
 	WORD prg_map[4];
 	WORD chr_map[8];
-} m121;
+} m187;
 
-void map_init_121(void);
-void extcl_cpu_wr_mem_121(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_121(WORD address, BYTE openbus, BYTE before);
-BYTE extcl_save_mapper_121(BYTE mode, BYTE slot, FILE *fp);
+void map_init_187(void);
+void extcl_cpu_wr_mem_187(WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_187(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_save_mapper_187(BYTE mode, BYTE slot, FILE *fp);
 
-#endif /* MAPPER_121_H_ */
+#endif /* MAPPER_187_H_ */
