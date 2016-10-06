@@ -22,7 +22,7 @@
 #include "common.h"
 
 struct _m205 {
-	BYTE reg;
+	BYTE reg[2];
 	WORD prg_map[4];
 	WORD chr_map[8];
 } m205;

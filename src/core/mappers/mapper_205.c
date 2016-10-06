@@ -23,137 +23,50 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-#define m205_chr_1k(vl) bank = (m205.reg << 3) | vl
-#define m205_prg_8k(vl) value = m205.reg | (vl & ((m205.reg & 0x20) ? 0x0F : 0x1F))
-#define m205_chr_1k_update()\
-{\
-	BYTE i;\
-	for (i = 0; i < 8; i++) {\
-		WORD bank;\
-		m205_chr_1k(m205.chr_map[i]);\
-		_control_bank(bank, info.chr.rom.max.banks_1k)\
-		chr.bank_1k[i] = chr_chip_byte_pnt(0, bank << 10);\
-	}\
-}
-#define m205_prg_8k_update()\
-{\
-	BYTE i;\
-	for (i = 0; i < 4; i++) {\
-		m205_prg_8k(m205.prg_map[i]);\
-		control_bank(info.prg.rom.max.banks_8k)\
-		map_prg_rom_8k(1, i, value);\
-	}\
-	map_prg_rom_8k_update();\
-}
-#define m205_swap_chr_bank_1k(src, dst)\
-{\
-	BYTE *chr_bank_1k = chr.bank_1k[src];\
-	chr.bank_1k[src] = chr.bank_1k[dst];\
-	chr.bank_1k[dst] = chr_bank_1k;\
-	WORD map = m205.chr_map[src];\
-	m205.chr_map[src] = m205.chr_map[dst];\
-	m205.chr_map[dst] = map;\
-}
+static void INLINE m205_update_prg(void);
+static void INLINE m205_update_chr(void);
+
+#define m205_chr_1k(vl) value = ((m205.reg[0] & 0x30) << 3) | vl
+#define m205_prg_8k(vl) value = (m205.reg[0] & 0x30) | (vl & ((m205.reg[0] & 0xC0) ? 0x0F : 0x1F))
 #define m205_8000()\
-{\
-	const BYTE chr_rom_cfg_old = mmc3.chr_rom_cfg;\
-	const BYTE prg_rom_cfg_old = mmc3.prg_rom_cfg;\
-	mmc3.bank_to_update = value & 0x07;\
-	mmc3.prg_rom_cfg = (value & 0x40) >> 5;\
-	mmc3.chr_rom_cfg = (value & 0x80) >> 5;\
-	/*\
-	 * se il tipo di configurazione della chr cambia,\
-	 * devo swappare i primi 4 banchi con i secondi\
-	 * quattro.\
-	 */\
-	if (mmc3.chr_rom_cfg != chr_rom_cfg_old) {\
-		m205_swap_chr_bank_1k(0, 4)\
-		m205_swap_chr_bank_1k(1, 5)\
-		m205_swap_chr_bank_1k(2, 6)\
-		m205_swap_chr_bank_1k(3, 7)\
-	}\
-	if (mmc3.prg_rom_cfg != prg_rom_cfg_old) {\
-		WORD p0 = mapper.rom_map_to[0];\
-		WORD p2 = mapper.rom_map_to[2];\
-		mapper.rom_map_to[0] = p2;\
-		mapper.rom_map_to[2] = p0;\
-		p0 = m205.prg_map[0];\
-		p2 = m205.prg_map[2];\
-		m205.prg_map[0] = p2;\
-		m205.prg_map[2] = p0;\
+	if (mmc3.prg_rom_cfg != old_prg_rom_cfg) {\
+		mapper.rom_map_to[2] = m205.prg_map[0];\
+		mapper.rom_map_to[0] = m205.prg_map[2];\
+		m205.prg_map[0] = mapper.rom_map_to[0];\
+		m205.prg_map[2] = mapper.rom_map_to[2];\
 		m205.prg_map[mmc3.prg_rom_cfg ^ 0x02] = info.prg.rom.max.banks_8k_before_last;\
-		/*\
-		 * prg_rom_cfg 0x00 : $C000 - $DFFF fisso al penultimo banco\
-		 * prg_rom_cfg 0x02 : $8000 - $9FFF fisso al penultimo banco\
-		 */\
-		m205_prg_8k(info.prg.rom.max.banks_8k_before_last);\
-		control_bank(info.prg.rom.max.banks_8k)\
-		map_prg_rom_8k(1, mmc3.prg_rom_cfg ^ 0x02, value);\
-		map_prg_rom_8k_update();\
-	}\
-}
+	}
 #define m205_8001()\
-{\
-	WORD bank;\
 	switch (mmc3.bank_to_update) {\
 		case 0:\
+			control_bank_with_AND(0xFE, info.chr.rom.max.banks_1k)\
 			m205.chr_map[mmc3.chr_rom_cfg] = value;\
 			m205.chr_map[mmc3.chr_rom_cfg | 0x01] = value + 1;\
-			m205_chr_1k(value);\
-			bank &= 0xFFE;\
-			_control_bank(bank, info.chr.rom.max.banks_1k)\
-			chr.bank_1k[mmc3.chr_rom_cfg] = chr_chip_byte_pnt(0, bank << 10);\
-			chr.bank_1k[mmc3.chr_rom_cfg | 0x01] = chr_chip_byte_pnt(0, (bank + 1) << 10);\
-			return;\
+			break;\
 		case 1:\
+			control_bank_with_AND(0xFE, info.chr.rom.max.banks_1k)\
 			m205.chr_map[mmc3.chr_rom_cfg | 0x02] = value;\
 			m205.chr_map[mmc3.chr_rom_cfg | 0x03] = value + 1;\
-			m205_chr_1k(value);\
-			bank &= 0xFFE;\
-			_control_bank(bank, info.chr.rom.max.banks_1k)\
-			chr.bank_1k[mmc3.chr_rom_cfg | 0x02] = chr_chip_byte_pnt(0, bank << 10);\
-			chr.bank_1k[mmc3.chr_rom_cfg | 0x03] = chr_chip_byte_pnt(0, (bank + 1) << 10);\
-			return;\
+			break;\
 		case 2:\
 			m205.chr_map[mmc3.chr_rom_cfg ^ 0x04] = value;\
-			m205_chr_1k(value);\
-			_control_bank(bank, info.chr.rom.max.banks_1k)\
-			chr.bank_1k[mmc3.chr_rom_cfg ^ 0x04] = chr_chip_byte_pnt(0, bank << 10);\
-			return;\
+			break;\
 		case 3:\
 			m205.chr_map[(mmc3.chr_rom_cfg ^ 0x04) | 0x01] = value;\
-			m205_chr_1k(value);\
-			_control_bank(bank, info.chr.rom.max.banks_1k)\
-			chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x01] = chr_chip_byte_pnt(0, bank << 10);\
-			return;\
+			break;\
 		case 4:\
 			m205.chr_map[(mmc3.chr_rom_cfg ^ 0x04) | 0x02] = value;\
-			m205_chr_1k(value);\
-			_control_bank(bank, info.chr.rom.max.banks_1k)\
-			chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x02] = chr_chip_byte_pnt(0, bank << 10);\
-			return;\
+			break;\
 		case 5:\
 			m205.chr_map[(mmc3.chr_rom_cfg ^ 0x04) | 0x03] = value;\
-			m205_chr_1k(value);\
-			_control_bank(bank, info.chr.rom.max.banks_1k)\
-			chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x03] = chr_chip_byte_pnt(0, bank << 10);\
-			return;\
+			break;\
 		case 6:\
 			m205.prg_map[mmc3.prg_rom_cfg] = value;\
-			m205_prg_8k(value);\
-			control_bank(info.prg.rom.max.banks_8k)\
-			map_prg_rom_8k(1, mmc3.prg_rom_cfg, value);\
-			map_prg_rom_8k_update();\
-			return;\
+			break;\
 		case 7:\
 			m205.prg_map[1] = value;\
-			m205_prg_8k(value);\
-			control_bank(info.prg.rom.max.banks_8k)\
-			map_prg_rom_8k(1, 1, value);\
-			map_prg_rom_8k_update();\
-			return;\
-	}\
-}
+			break;\
+	}
 
 void map_init_205(void) {
 	EXTCL_CPU_WR_MEM(205);
@@ -173,10 +86,8 @@ void map_init_205(void) {
 	memset(&irqA12, 0x00, sizeof(irqA12));
 	memset(&m205, 0x00, sizeof(m205));
 
-	m205.reg = 1;
-
 	{
-		BYTE value, i;
+		BYTE i;
 
 		map_prg_rom_8k_reset();
 		chr_bank_1k_reset()
@@ -188,8 +99,8 @@ void map_init_205(void) {
 			m205.chr_map[i] = i;
 		}
 
-		m205_prg_8k_update()
-		m205_chr_1k_update()
+		m205_update_prg();
+		m205_update_chr();
 	}
 
 	info.mapper.extend_wr = TRUE;
@@ -198,39 +109,87 @@ void map_init_205(void) {
 	irqA12_delay = 1;
 }
 void extcl_cpu_wr_mem_205(WORD address, BYTE value) {
-	if (address > 0x7FFF) {
+	if (address >= 0x8000) {
+		BYTE old_prg_rom_cfg = mmc3.prg_rom_cfg;
+
 		switch (address & 0xE001) {
 			case 0x8000:
+				extcl_cpu_wr_mem_MMC3(address, value);
 				m205_8000()
+				m205_update_prg();
 				return;
 			case 0x8001:
+				extcl_cpu_wr_mem_MMC3(address, value);
 				m205_8001()
-				break;
+				m205_update_prg();
+				m205_update_chr();
+				return;
+			default:
+				extcl_cpu_wr_mem_MMC3(address, value);
+				return;
 		}
-		extcl_cpu_wr_mem_MMC3(address, value);
-		return;
 	}
 
 	if (address < 0x6000) {
 		return;
 	}
 
-	value = (value << 4) & 0x30;
+	if (address < 0x7000) {
+		if (m205.reg[1] == 0) {
+			m205.reg[0] = (value << 4) & 0xF0;
+			m205.reg[1] = address & 0x80;
+			m205_update_prg();
+			m205_update_chr();
+		}
+		return;
+	}
 
-	if (m205.reg != value) {
-		m205.reg = value;
-
-		m205_prg_8k_update()
-		m205_chr_1k_update()
+	if (address < 0x8000) {
+		if (m205.reg[1] == 0) {
+			m205.reg[0] = value & 0xF0;
+			m205_update_prg();
+			m205_update_chr();
+		}
+		return;
 	}
 }
 BYTE extcl_save_mapper_205(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m205.reg);
-	if (save_slot.version >= 5) {
-		save_slot_ele(mode, slot, m205.prg_map);
-		save_slot_ele(mode, slot, m205.chr_map);
-	}
+	save_slot_ele(mode, slot, m205.prg_map);
+	save_slot_ele(mode, slot, m205.chr_map);
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	return (EXIT_OK);
+}
+
+static void INLINE m205_update_prg(void) {
+	BYTE value;
+
+	m205_prg_8k(m205.prg_map[0]);
+	control_bank(info.prg.rom.max.banks_8k)
+	map_prg_rom_8k(1, 0, value);
+
+	m205_prg_8k(m205.prg_map[1]);
+	control_bank(info.prg.rom.max.banks_8k)
+	map_prg_rom_8k(1, 1, value);
+
+	m205_prg_8k(m205.prg_map[2]);
+	control_bank(info.prg.rom.max.banks_8k)
+	map_prg_rom_8k(1, 2, value);
+
+	m205_prg_8k(m205.prg_map[3]);
+	control_bank(info.prg.rom.max.banks_8k)
+	map_prg_rom_8k(1, 3, value);
+
+	map_prg_rom_8k_update();
+}
+static void INLINE m205_update_chr(void) {
+	BYTE i;
+	WORD value;
+
+	for (i = 0; i < 8; i++) {
+		m205_chr_1k(m205.chr_map[i]);
+		control_bank(info.chr.rom.max.banks_1k)
+		chr.bank_1k[i] = chr_chip_byte_pnt(0, value << 10);
+	}
 }
