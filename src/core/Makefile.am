@@ -221,6 +221,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_AxROM.h \
 	mappers/mapper_Bandai.c \
 	mappers/mapper_Bandai.h \
+	mappers/mapper_BMC11160.c \
+	mappers/mapper_BMC11160.h \
 	mappers/mapper_BMCFK23C.c \
 	mappers/mapper_BMCFK23C.h \
 	mappers/mapper_BxROM.c \
