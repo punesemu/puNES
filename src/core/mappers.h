@@ -146,6 +146,7 @@
 #include "mappers/mapper_EH8813A.h"
 #include "mappers/mapper_BMC11160.h"
 #include "mappers/mapper_BMCG146.h"
+#include "mappers/mapper_BMC12IN1.h"
 
 #define _control_bank(val, max)\
 	if (val > max) {\
