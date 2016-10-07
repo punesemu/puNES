@@ -697,6 +697,10 @@ BYTE map_init(void) {
 					// NES-T-262
 					map_init_T262();
 					break;
+				case 9:
+					// NES-BS-5
+					map_init_BS5();
+					break;
 			}
 			break;
 	}
