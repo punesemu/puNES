@@ -225,6 +225,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_BMC11160.h \
 	mappers/mapper_BMCFK23C.c \
 	mappers/mapper_BMCFK23C.h \
+	mappers/mapper_BMCG146.c \
+	mappers/mapper_BMCG146.h \
 	mappers/mapper_BxROM.c \
 	mappers/mapper_BxROM.h \
 	mappers/mapper_Caltron.c \
