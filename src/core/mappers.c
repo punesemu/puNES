@@ -662,36 +662,40 @@ BYTE map_init(void) {
 		case UNIF_MAPPER:
 			switch (unif.internal_mapper) {
 				case 0:
-					/* BMC-A65AS */
+					// BMC-A65AS
 					map_init_A65AS();
 					break;
 				case 1:
-					/* BMC-MARIO1-MALEE2 */
+					// BMC-MARIO1-MALEE2
 					map_init_malee();
 					break;
 				case 2:
-					/* NES-TF1021 */
+					// NES-TF1021
 					map_init_TF1201();
 					break;
 				case 3:
-					/* NES-EH8813A */
+					// NES-EH8813A
 					map_init_EH8813A();
 					break;
 				case 4:
-					/* NES-11160 */
+					// NES-11160
 					map_init_BMC11160();
 					break;
 				case 5:
-					/* NES-G-146 */
+					// NES-G-146
 					map_init_BMCG146();
 					break;
 				case 6:
-					/* NES-12-IN-1 */
+					// NES-12-IN-1
 					map_init_BMC12IN1();
 					break;
 				case 7:
-					/* NES-411120-C */
+					// NES-411120-C
 					map_init_BMC411120C();
+					break;
+				case 8:
+					// NES-T-262
+					map_init_T262();
 					break;
 			}
 			break;

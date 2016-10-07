@@ -289,6 +289,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_Sachen.h \
 	mappers/mapper_Sunsoft.c \
 	mappers/mapper_Sunsoft.h \
+	mappers/mapper_T262.c \
+	mappers/mapper_T262.h \
 	mappers/mapper_Taito.c \
 	mappers/mapper_Taito.h \
 	mappers/mapper_Tengen.c \
