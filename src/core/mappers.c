@@ -689,6 +689,10 @@ BYTE map_init(void) {
 					/* NES-12-IN-1 */
 					map_init_BMC12IN1();
 					break;
+				case 7:
+					/* NES-411120-C */
+					map_init_BMC411120C();
+					break;
 			}
 			break;
 	}
