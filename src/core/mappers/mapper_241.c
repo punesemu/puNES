@@ -29,7 +29,7 @@ void map_init_241(void) {
 	}
 }
 void extcl_cpu_wr_mem_241(WORD address, BYTE value) {
-	control_bank(info.prg.rom.max.banks_32k)
+	control_bank(info.prg.rom[0].max.banks_32k)
 	map_prg_rom_8k(4, 0, value);
 	map_prg_rom_8k_update();
 }

@@ -150,6 +150,7 @@
 #include "mappers/mapper_BMC411120C.h"
 #include "mappers/mapper_T262.h"
 #include "mappers/mapper_BS5.h"
+#include "mappers/mapper_UNIF8157.h"
 
 #define _control_bank(val, max)\
 	if (val > max) {\
@@ -163,13 +164,6 @@
 	control_bank(max)\
 }
 #define prg_rom_rd(address) prg.rom_8k[(address >> 13) & 0x03][address & 0x1FFF]
-#define chr_bank_1k_reset()\
-{\
-	BYTE bank1k;\
-	for (bank1k = 0; bank1k < 8; ++bank1k) {\
-		chr.bank_1k[bank1k] = chr_chip_byte_pnt(0, bank1k * 0x0400);\
-	}\
-}
 #define mapper_rd_battery_default()\
 {\
 	BYTE bank;\
@@ -195,6 +189,7 @@
 	if (fwrite(&prg.ram_battery[0], info.prg.ram.bat.banks * 0x2000, 1, fp) < 1) {\
 		fprintf(stderr, "error on write battery memory\n");\
 	}
+#define map_prg_rom_8k(banks_8k, at, value) map_prg_rom_8k_chip(banks_8k, at, value, 0)
 
 enum { RD_BAT, WR_BAT };
 
@@ -216,7 +211,7 @@ BYTE map_init(void);
 void map_quit(void);
 BYTE map_prg_chip_malloc(BYTE index, size_t size, BYTE set_value);
 BYTE map_prg_chip_rd_byte(BYTE index, BYTE openbus, WORD address, WORD mask);
-void map_prg_rom_8k(BYTE banks_8k, BYTE at, WORD value);
+void map_prg_rom_8k_chip(BYTE banks_8k, BYTE at, WORD value, BYTE chip);
 void map_prg_rom_8k_reset(void);
 void map_prg_rom_8k_update(void);
 void map_prg_ram_init(void);
@@ -224,9 +219,11 @@ BYTE map_prg_ram_malloc(WORD size);
 void map_prg_ram_memset(void);
 void map_prg_ram_battery_save(void);
 BYTE map_chr_chip_malloc(BYTE index, size_t size, BYTE set_value);
+void map_chr_bank_1k_reset(void);
 BYTE map_chr_ram_init(void);
 BYTE map_chr_ram_extra_init(uint32_t size);
 void map_chr_ram_extra_reset(void);
-void map_set_banks_max_prg_and_chr(void);
+void map_set_banks_max_prg(BYTE chip);
+void map_set_banks_max_chr(BYTE chip);
 
 #endif /* MAPPERS_H_ */

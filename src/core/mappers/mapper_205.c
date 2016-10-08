@@ -34,17 +34,17 @@ static void INLINE m205_update_chr(void);
 		mapper.rom_map_to[0] = m205.prg_map[2];\
 		m205.prg_map[0] = mapper.rom_map_to[0];\
 		m205.prg_map[2] = mapper.rom_map_to[2];\
-		m205.prg_map[mmc3.prg_rom_cfg ^ 0x02] = info.prg.rom.max.banks_8k_before_last;\
+		m205.prg_map[mmc3.prg_rom_cfg ^ 0x02] = info.prg.rom[0].max.banks_8k_before_last;\
 	}
 #define m205_8001()\
 	switch (mmc3.bank_to_update) {\
 		case 0:\
-			control_bank_with_AND(0xFE, info.chr.rom.max.banks_1k)\
+			control_bank_with_AND(0xFE, info.chr.rom[0].max.banks_1k)\
 			m205.chr_map[mmc3.chr_rom_cfg] = value;\
 			m205.chr_map[mmc3.chr_rom_cfg | 0x01] = value + 1;\
 			break;\
 		case 1:\
-			control_bank_with_AND(0xFE, info.chr.rom.max.banks_1k)\
+			control_bank_with_AND(0xFE, info.chr.rom[0].max.banks_1k)\
 			m205.chr_map[mmc3.chr_rom_cfg | 0x02] = value;\
 			m205.chr_map[mmc3.chr_rom_cfg | 0x03] = value + 1;\
 			break;\
@@ -90,7 +90,7 @@ void map_init_205(void) {
 		BYTE i;
 
 		map_prg_rom_8k_reset();
-		chr_bank_1k_reset()
+		map_chr_bank_1k_reset();
 
 		for (i = 0; i < 8; i++) {
 			if (i < 4) {
@@ -166,19 +166,19 @@ static void INLINE m205_update_prg(void) {
 	BYTE value;
 
 	m205_prg_8k(m205.prg_map[0]);
-	control_bank(info.prg.rom.max.banks_8k)
+	control_bank(info.prg.rom[0].max.banks_8k)
 	map_prg_rom_8k(1, 0, value);
 
 	m205_prg_8k(m205.prg_map[1]);
-	control_bank(info.prg.rom.max.banks_8k)
+	control_bank(info.prg.rom[0].max.banks_8k)
 	map_prg_rom_8k(1, 1, value);
 
 	m205_prg_8k(m205.prg_map[2]);
-	control_bank(info.prg.rom.max.banks_8k)
+	control_bank(info.prg.rom[0].max.banks_8k)
 	map_prg_rom_8k(1, 2, value);
 
 	m205_prg_8k(m205.prg_map[3]);
-	control_bank(info.prg.rom.max.banks_8k)
+	control_bank(info.prg.rom[0].max.banks_8k)
 	map_prg_rom_8k(1, 3, value);
 
 	map_prg_rom_8k_update();
@@ -189,7 +189,7 @@ static void INLINE m205_update_chr(void) {
 
 	for (i = 0; i < 8; i++) {
 		m205_chr_1k(m205.chr_map[i]);
-		control_bank(info.chr.rom.max.banks_1k)
+		control_bank(info.chr.rom[0].max.banks_1k)
 		chr.bank_1k[i] = chr_chip_byte_pnt(0, value << 10);
 	}
 }

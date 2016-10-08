@@ -50,7 +50,7 @@ void extcl_cpu_wr_mem_178(WORD address, BYTE value) {
 			return;
 		case 0x4801:
 			value = m178.reg = (m178.reg & 0x0C) | ((value >> 1) & 0x03);
-			control_bank(info.prg.rom.max.banks_32k)
+			control_bank(info.prg.rom[0].max.banks_32k)
 			map_prg_rom_8k(4, 0, value);
 			map_prg_rom_8k_update();
 			return;
@@ -59,7 +59,7 @@ void extcl_cpu_wr_mem_178(WORD address, BYTE value) {
 			return;
 		case 0x8000:
 			if (type == XINGJI) {
-				control_bank(info.prg.rom.max.banks_32k)
+				control_bank(info.prg.rom[0].max.banks_32k)
 				map_prg_rom_8k(4, 0, value);
 				map_prg_rom_8k_update();
 			}

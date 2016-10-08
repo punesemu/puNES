@@ -48,7 +48,7 @@ void extcl_cpu_wr_mem_183(WORD address, BYTE value) {
 		case 0x8801:
 		case 0x8802:
 		case 0x8803:
-			control_bank(info.prg.rom.max.banks_8k)
+			control_bank(info.prg.rom[0].max.banks_8k)
 			map_prg_rom_8k(1, 0, value);
 			map_prg_rom_8k_update();
 			return;
@@ -76,7 +76,7 @@ void extcl_cpu_wr_mem_183(WORD address, BYTE value) {
 		case 0xA001:
 		case 0xA002:
 		case 0xA003:
-			control_bank(info.prg.rom.max.banks_8k)
+			control_bank(info.prg.rom[0].max.banks_8k)
 			map_prg_rom_8k(1, 2, value);
 			map_prg_rom_8k_update();
 			return;
@@ -84,7 +84,7 @@ void extcl_cpu_wr_mem_183(WORD address, BYTE value) {
 		case 0xA801:
 		case 0xA802:
 		case 0xA803:
-			control_bank(info.prg.rom.max.banks_8k)
+			control_bank(info.prg.rom[0].max.banks_8k)
 			map_prg_rom_8k(1, 1, value);
 			map_prg_rom_8k_update();
 			return;
@@ -128,7 +128,7 @@ void extcl_cpu_wr_mem_183(WORD address, BYTE value) {
 				const BYTE slot = (((address - 0x3000) >> 1 | (address << 7)) & 0x1C00) >> 10;
 
 				value = (m183.chr_rom_bank[slot] & (0xF0 >> shift)) | ((value & 0x0F) << shift);
-				control_bank(info.chr.rom.max.banks_1k)
+				control_bank(info.chr.rom[0].max.banks_1k)
 				chr.bank_1k[slot] = chr_chip_byte_pnt(0, value << 10);
 				m183.chr_rom_bank[slot] = value;
 			}

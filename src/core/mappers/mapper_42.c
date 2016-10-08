@@ -30,7 +30,7 @@ void map_init_42(void) {
 	mapper.internal_struct[0] = (BYTE *) &m42;
 	mapper.internal_struct_size[0] = sizeof(m42);
 
-	map_prg_rom_8k(4, 0, (info.prg.rom.banks_16k >> 1) - 1);
+	map_prg_rom_8k(4, 0, (info.prg.rom[0].banks_16k >> 1) - 1);
 	m42.prg_8k_6000 = prg_chip_byte_pnt(0, 0 << 13);
 }
 void extcl_cpu_wr_mem_42(WORD address, BYTE value) {
@@ -38,7 +38,7 @@ void extcl_cpu_wr_mem_42(WORD address, BYTE value) {
 		case 0x8000: {
 			DBWORD bank;
 
-			control_bank(info.chr.rom.max.banks_8k)
+			control_bank(info.chr.rom[0].max.banks_8k)
 			bank = value << 13;
 			chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);
 			chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);
@@ -51,7 +51,7 @@ void extcl_cpu_wr_mem_42(WORD address, BYTE value) {
 			return;
 		}
 		case 0xE000:
-			control_bank(info.prg.rom.max.banks_8k)
+			control_bank(info.prg.rom[0].max.banks_8k)
 			m42.rom_map_to = value;
 			m42.prg_8k_6000 = prg_chip_byte_pnt(0, value << 13);
 			return;

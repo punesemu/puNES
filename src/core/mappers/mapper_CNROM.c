@@ -76,7 +76,7 @@ void extcl_cpu_wr_mem_CNROM(WORD address, BYTE value) {
 		value &= ~mask;
 	}
 
-	control_bank(info.chr.rom.max.banks_8k)
+	control_bank(info.chr.rom[0].max.banks_8k)
 	bank = value << 13;
 
 	chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);

@@ -34,12 +34,12 @@ void map_init_Whirlwind(void) {
 	if (info.reset >= HARD) {
 		memset(&whirlwind, 0x00, sizeof(whirlwind));
 
-		map_prg_rom_8k(4, 0, info.prg.rom.max.banks_32k);
+		map_prg_rom_8k(4, 0, info.prg.rom[0].max.banks_32k);
 	}
 }
 void extcl_cpu_wr_mem_Whirlwind(WORD address, BYTE value) {
 	if ((address >= 0x8000) && (address <= 0x8FFF)) {
-		control_bank(info.prg.rom.max.banks_8k)
+		control_bank(info.prg.rom[0].max.banks_8k)
 		whirlwind.prg_ram = value << 13;
 	}
 }

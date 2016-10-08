@@ -22,11 +22,12 @@
 
 void map_init_CPROM(void) {
 	/* forzo i numeri di banchi della chr rom */
-	info.chr.rom.banks_8k = 2;
-	info.chr.rom.banks_4k = 4;
-	info.chr.rom.banks_1k = 16;
+	info.chr.rom[0].banks_8k = 2;
+	info.chr.rom[0].banks_4k = 4;
+	info.chr.rom[0].banks_1k = 16;
 	/* quindi setto nuovamente i valori massimi dei banchi */
-	map_set_banks_max_prg_and_chr();
+	map_set_banks_max_prg(0);
+	map_set_banks_max_chr(0);
 
 	if (info.reset >= HARD) {
 		chr.bank_1k[4] = chr_chip_byte_pnt(0, 0x0000);
@@ -43,7 +44,7 @@ void extcl_cpu_wr_mem_CPROM(WORD address, BYTE value) {
 	/* bus conflict */
 	value &= prg_rom_rd(address);
 
-	control_bank_with_AND(0x03, info.chr.rom.max.banks_4k)
+	control_bank_with_AND(0x03, info.chr.rom[0].max.banks_4k)
 	bank = value << 12;
 	chr.bank_1k[4] = chr_chip_byte_pnt(0, bank);
 	chr.bank_1k[5] = chr_chip_byte_pnt(0, bank | 0x0400);

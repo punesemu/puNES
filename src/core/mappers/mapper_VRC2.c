@@ -23,7 +23,7 @@
 #include "save_slot.h"
 
 #define _chr_rom_1k_update(slot)\
-	control_bank(info.chr.rom.max.banks_1k)\
+	control_bank(info.chr.rom[0].max.banks_1k)\
 	chr.bank_1k[slot] = chr_chip_byte_pnt(0, value << 10);\
 	vrc2.chr_rom_bank[slot] = value
 #define chr_rom_1k_low_update(slot, mask, shift)\
@@ -66,7 +66,7 @@ void extcl_cpu_wr_mem_VRC2(WORD address, BYTE value) {
 
 	switch (address) {
 		case 0x8000:
-			control_bank_with_AND(0x0F, info.prg.rom.max.banks_8k)
+			control_bank_with_AND(0x0F, info.prg.rom[0].max.banks_8k)
 			map_prg_rom_8k(1, 0, value);
 			map_prg_rom_8k_update();
 			return;
@@ -84,7 +84,7 @@ void extcl_cpu_wr_mem_VRC2(WORD address, BYTE value) {
 			return;
 		}
 		case 0xA000:
-			control_bank_with_AND(0x0F, info.prg.rom.max.banks_8k)
+			control_bank_with_AND(0x0F, info.prg.rom[0].max.banks_8k)
 			map_prg_rom_8k(1, 1, value);
 			map_prg_rom_8k_update();
 			return;

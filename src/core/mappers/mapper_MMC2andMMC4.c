@@ -35,7 +35,7 @@ void map_init_MMC2and4(void) {
 
 		/* MMC2 */
 		if (info.mapper.id == 9) {
-			mapper.rom_map_to[1] = info.prg.rom.banks_8k - 3;
+			mapper.rom_map_to[1] = info.prg.rom[0].banks_8k - 3;
 		}
 	}
 }
@@ -48,29 +48,29 @@ void extcl_cpu_wr_mem_MMC2and4(WORD address, BYTE value) {
 		case 0xA000:
 			if (info.mapper.id == 9) {
 				/* MMC2 */
-				control_bank_with_AND(0x0F, info.prg.rom.max.banks_8k)
+				control_bank_with_AND(0x0F, info.prg.rom[0].max.banks_8k)
 				map_prg_rom_8k(1, 0, value);
 			} else {
 				/* MMC4 */
-				control_bank_with_AND(0x0F, info.prg.rom.max.banks_16k)
+				control_bank_with_AND(0x0F, info.prg.rom[0].max.banks_16k)
 				map_prg_rom_8k(2, 0, value);
 			}
 			map_prg_rom_8k_update();
 			return;
 		case 0xB000:
-			control_bank_with_AND(0x1F, info.chr.rom.max.banks_4k)
+			control_bank_with_AND(0x1F, info.chr.rom[0].max.banks_4k)
 			mmc2and4.regs[0] = value;
 			break;
 		case 0xC000:
-			control_bank_with_AND(0x1F, info.chr.rom.max.banks_4k)
+			control_bank_with_AND(0x1F, info.chr.rom[0].max.banks_4k)
 			mmc2and4.regs[1] = value;
 			break;
 		case 0xD000:
-			control_bank_with_AND(0x1F, info.chr.rom.max.banks_4k)
+			control_bank_with_AND(0x1F, info.chr.rom[0].max.banks_4k)
 			mmc2and4.regs[2] = value;
 			break;
 		case 0xE000:
-			control_bank_with_AND(0x1F, info.chr.rom.max.banks_4k)
+			control_bank_with_AND(0x1F, info.chr.rom[0].max.banks_4k)
 			mmc2and4.regs[3] = value;
 			break;
 		case 0xF000:

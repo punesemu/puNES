@@ -42,7 +42,7 @@ void extcl_cpu_wr_mem_91(WORD address, BYTE value) {
 	if (address <= 0x6FFF) {
 		DBWORD bank;
 
-		control_bank(info.chr.rom.max.banks_2k)
+		control_bank(info.chr.rom[0].max.banks_2k)
 		bank = value << 11;
 
 		switch (address & 0x0003) {
@@ -67,12 +67,12 @@ void extcl_cpu_wr_mem_91(WORD address, BYTE value) {
 	if (address < 0x7FFF) {
 		switch (address & 0x0003) {
 			case 0:
-				control_bank(info.prg.rom.max.banks_8k)
+				control_bank(info.prg.rom[0].max.banks_8k)
 				map_prg_rom_8k(1, 0, value);
 				map_prg_rom_8k_update();
 				return;
 			case 1:
-				control_bank(info.prg.rom.max.banks_8k)
+				control_bank(info.prg.rom[0].max.banks_8k)
 				map_prg_rom_8k(1, 1, value);
 				map_prg_rom_8k_update();
 				return;

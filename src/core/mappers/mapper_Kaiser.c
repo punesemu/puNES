@@ -108,13 +108,13 @@ void extcl_cpu_wr_mem_Kaiser_ks202(WORD address, BYTE value) {
 				case 1:
 				case 2: {
 					value = (mapper.rom_map_to[slot] & 0x10) | (value & 0x0F);
-					control_bank(info.prg.rom.max.banks_8k)
+					control_bank(info.prg.rom[0].max.banks_8k)
 					map_prg_rom_8k(1, slot, value);
 					map_prg_rom_8k_update();
 					break;
 				}
 				case 3:
-					control_bank(info.prg.rom.max.banks_8k)
+					control_bank(info.prg.rom[0].max.banks_8k)
 					ks202.prg_ram_rd = prg_chip_byte_pnt(0, value << 13);
 					break;
 			}
@@ -124,7 +124,7 @@ void extcl_cpu_wr_mem_Kaiser_ks202(WORD address, BYTE value) {
 					address &= 0x0003;
 					if (address < 3) {
 						value = (save & 0x10) | (mapper.rom_map_to[address] & 0x0F);
-						control_bank(info.prg.rom.max.banks_8k)
+						control_bank(info.prg.rom[0].max.banks_8k)
 						map_prg_rom_8k(1, address, value);
 						map_prg_rom_8k_update();
 					}
@@ -138,7 +138,7 @@ void extcl_cpu_wr_mem_Kaiser_ks202(WORD address, BYTE value) {
 					break;
 				case 0x0C00:
 					value = save;
-					control_bank(info.chr.rom.max.banks_1k)
+					control_bank(info.chr.rom[0].max.banks_1k)
 					chr.bank_1k[address & 0x0007] = chr_chip_byte_pnt(0, value << 10);
 					break;
 			}
@@ -183,7 +183,7 @@ void extcl_cpu_wr_mem_Kaiser_ks7058(WORD address, BYTE value) {
 
 	switch (address & 0xF080) {
 		case 0xF000:
-			control_bank(info.chr.rom.max.banks_4k)
+			control_bank(info.chr.rom[0].max.banks_4k)
 			bank = value << 12;
 			chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);
 			chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);
@@ -191,7 +191,7 @@ void extcl_cpu_wr_mem_Kaiser_ks7058(WORD address, BYTE value) {
 			chr.bank_1k[3] = chr_chip_byte_pnt(0, bank | 0x0C00);
 			return;
 		case 0xF080:
-			control_bank(info.chr.rom.max.banks_4k)
+			control_bank(info.chr.rom[0].max.banks_4k)
 			bank = value << 12;
 			chr.bank_1k[4] = chr_chip_byte_pnt(0, bank);
 			chr.bank_1k[5] = chr_chip_byte_pnt(0, bank | 0x0400);
@@ -220,13 +220,13 @@ BYTE extcl_cpu_rd_mem_Kaiser_ks7022(WORD address, BYTE openbus, BYTE before) {
 		BYTE value = ks7022.reg;
 		DBWORD bank;
 
-		control_bank(info.prg.rom.max.banks_16k)
+		control_bank(info.prg.rom[0].max.banks_16k)
 		map_prg_rom_8k(2, 0, value);
 		map_prg_rom_8k(2, 2, value);
 		map_prg_rom_8k_update();
 
 		value = ks7022.reg;
-		control_bank(info.chr.rom.max.banks_8k)
+		control_bank(info.chr.rom[0].max.banks_8k)
 		bank = value << 13;
 		chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);
 		chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);

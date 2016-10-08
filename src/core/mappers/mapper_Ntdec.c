@@ -28,13 +28,13 @@
 	}
 #define asder_chr_2k_update(shift, slot, slot1, slot2)\
 	new_value = ((chr_high << shift) & 0x0080) | asder.reg[slot];\
-	asder_chr_ctrl_bank(new_value, info.chr.rom.max.banks_2k)\
+	asder_chr_ctrl_bank(new_value, info.chr.rom[0].max.banks_2k)\
 	bank = new_value << 11;\
 	chr.bank_1k[slot1] = chr_chip_byte_pnt(0, bank);\
 	chr.bank_1k[slot2] = chr_chip_byte_pnt(0, bank | 0x0400)
 #define asder_chr_1k_update(shift, slot)\
 	new_value = ((chr_high << shift) & 0x0100) | asder.reg[slot];\
-	asder_chr_ctrl_bank(new_value, info.chr.rom.max.banks_1k)\
+	asder_chr_ctrl_bank(new_value, info.chr.rom[0].max.banks_1k)\
 	bank = new_value << 10;\
 	chr.bank_1k[slot] = chr_chip_byte_pnt(0, bank)
 
@@ -57,7 +57,7 @@ void map_init_Ntdec(BYTE model) {
 			info.mapper.extend_wr = TRUE;
 
 			if (info.reset >= HARD) {
-				map_prg_rom_8k(4, 0, info.prg.rom.max.banks_32k);
+				map_prg_rom_8k(4, 0, info.prg.rom[0].max.banks_32k);
 			}
 			break;
 	}
@@ -74,7 +74,7 @@ void extcl_cpu_wr_mem_Ntdec_asder(WORD address, BYTE value) {
 			switch (asder.address) {
 				case 0:
 				case 1:
-					control_bank(info.prg.rom.max.banks_8k)
+					control_bank(info.prg.rom[0].max.banks_8k)
 					map_prg_rom_8k(1, asder.address, value);
 					map_prg_rom_8k_update();
 					return;
@@ -133,7 +133,7 @@ void extcl_cpu_wr_mem_Ntdec_fhero(WORD address, BYTE value) {
 			DBWORD bank;
 
 			value >>= 2;
-			control_bank(info.chr.rom.max.banks_4k)
+			control_bank(info.chr.rom[0].max.banks_4k)
 			bank = value << 12;
 			chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);
 			chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);
@@ -145,7 +145,7 @@ void extcl_cpu_wr_mem_Ntdec_fhero(WORD address, BYTE value) {
 			DBWORD bank;
 
 			value >>= 1;
-			control_bank(info.chr.rom.max.banks_2k)
+			control_bank(info.chr.rom[0].max.banks_2k)
 			bank = value << 11;
 			chr.bank_1k[4] = chr_chip_byte_pnt(0, bank);
 			chr.bank_1k[5] = chr_chip_byte_pnt(0, bank | 0x0400);
@@ -155,14 +155,14 @@ void extcl_cpu_wr_mem_Ntdec_fhero(WORD address, BYTE value) {
 			DBWORD bank;
 
 			value >>= 1;
-			control_bank(info.chr.rom.max.banks_2k)
+			control_bank(info.chr.rom[0].max.banks_2k)
 			bank = value << 11;
 			chr.bank_1k[6] = chr_chip_byte_pnt(0, bank);
 			chr.bank_1k[7] = chr_chip_byte_pnt(0, bank | 0x0400);
 			return;
 		}
 		case 3:
-			control_bank(info.prg.rom.max.banks_8k)
+			control_bank(info.prg.rom[0].max.banks_8k)
 			map_prg_rom_8k(1, 0, value);
 			map_prg_rom_8k_update();
 			return;

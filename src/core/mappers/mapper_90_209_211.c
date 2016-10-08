@@ -35,7 +35,7 @@ static void INLINE irq_clock_count_90_209_211(void);
 	((m90_209_211.chr.low[index] | (m90_209_211.chr.high[index] << 8)) & mask) | base
 #define nmt_rom_90_209_211(index)\
 	value = m90_209_211.nmt.reg[index];\
-	control_bank(info.chr.rom.max.banks_1k)\
+	control_bank(info.chr.rom[0].max.banks_1k)\
 	ntbl.bank_1k[index] = chr_chip_byte_pnt(0, value << 10);\
 	m90_209_211.nmt.write[index] = FALSE
 #define nmt_ram_90_209_211(index)\
@@ -372,87 +372,87 @@ static void INLINE prg_setup_90_209_211(void) {
 		case 0:
 			/* prg rom da 8k al 0x6000 */
 			value = (((m90_209_211.prg[3] << 2) + 3) & 0x3F) | bankmode;
-			control_bank(info.prg.rom.max.banks_8k)
+			control_bank(info.prg.rom[0].max.banks_8k)
 			m90_209_211.m6000.prg = value;
 			/* prg rom switch normale */
 			value = 0x0F | ((m90_209_211.mode[3] & 0x06) << 3);
-			control_bank(info.prg.rom.max.banks_32k)
+			control_bank(info.prg.rom[0].max.banks_32k)
 			map_prg_rom_8k(4, 0, value);
 			break;
 		case 1:
 			/* prg rom da 8k al 0x6000 */
 			value = (((m90_209_211.prg[3] << 1) + 1) & 0x3F) | bankmode;
-			control_bank(info.prg.rom.max.banks_8k)
+			control_bank(info.prg.rom[0].max.banks_8k)
 			m90_209_211.m6000.prg = value;
 			/* prg rom switch normale */
 			value = (m90_209_211.prg[1] & 0x1F) | ((m90_209_211.mode[3] & 0x06) << 4);
-			control_bank(info.prg.rom.max.banks_16k)
+			control_bank(info.prg.rom[0].max.banks_16k)
 			map_prg_rom_8k(2, 0, value);
 			value = 0x1F | ((m90_209_211.mode[3] & 0x06) << 4);
-			control_bank(info.prg.rom.max.banks_16k)
+			control_bank(info.prg.rom[0].max.banks_16k)
 			map_prg_rom_8k(2, 2, value);
 			break;
 		case 3: // bit reversion
 		case 2:
 			/* prg rom da 8k al 0x6000 */
 			value = (m90_209_211.prg[3] & 0x3F) | bankmode;
-			control_bank(info.prg.rom.max.banks_8k)
+			control_bank(info.prg.rom[0].max.banks_8k)
 			m90_209_211.m6000.prg = value;
 			/* prg rom switch normale */
 			value = (m90_209_211.prg[0] & 0x3F) | bankmode;
-			control_bank(info.prg.rom.max.banks_8k)
+			control_bank(info.prg.rom[0].max.banks_8k)
 			map_prg_rom_8k(1, 0, value);
 			value = (m90_209_211.prg[1] & 0x3F) | bankmode;
-			control_bank(info.prg.rom.max.banks_8k)
+			control_bank(info.prg.rom[0].max.banks_8k)
 			map_prg_rom_8k(1, 1, value);
 			value = (m90_209_211.prg[2] & 0x3F) | bankmode;
-			control_bank(info.prg.rom.max.banks_8k)
+			control_bank(info.prg.rom[0].max.banks_8k)
 			map_prg_rom_8k(1, 2, value);
 			value = 0x3F | bankmode;
-			control_bank(info.prg.rom.max.banks_8k)
+			control_bank(info.prg.rom[0].max.banks_8k)
 			map_prg_rom_8k(1, 3, value);
 			break;
 		case 4:
 			/* prg rom da 8k al 0x6000 */
 			value = (((m90_209_211.prg[3] << 2) + 3) & 0x3F) | bankmode;
-			control_bank(info.prg.rom.max.banks_8k)
+			control_bank(info.prg.rom[0].max.banks_8k)
 			m90_209_211.m6000.prg = value;
 			/* prg rom switch normale */
 			value = (m90_209_211.prg[3] & 0x0F) | ((m90_209_211.mode[3] & 0x06) << 3);
-			control_bank(info.prg.rom.max.banks_32k)
+			control_bank(info.prg.rom[0].max.banks_32k)
 			map_prg_rom_8k(4, 0, value);
 			break;
 		case 5:
 			/* prg rom da 8k al 0x6000 */
 			value = (((m90_209_211.prg[3] << 1) + 1) & 0x3F) | bankmode;
-			control_bank(info.prg.rom.max.banks_8k)
+			control_bank(info.prg.rom[0].max.banks_8k)
 			m90_209_211.m6000.prg = value;
 			/* prg rom switch normale */
 			value = (m90_209_211.prg[1] & 0x1F) | ((m90_209_211.mode[3] & 0x06) << 4);
-			control_bank(info.prg.rom.max.banks_16k)
+			control_bank(info.prg.rom[0].max.banks_16k)
 			map_prg_rom_8k(2, 0, value);
 			value = (m90_209_211.prg[3] & 0x1F) | ((m90_209_211.mode[3] & 0x06) << 4);
-			control_bank(info.prg.rom.max.banks_16k)
+			control_bank(info.prg.rom[0].max.banks_16k)
 			map_prg_rom_8k(2, 2, value);
 			break;
 		case 7: // bit reversion
 		case 6:
 			/* prg rom da 8k al 0x6000 */
 			value = (m90_209_211.prg[3] & 0x3F) | bankmode;
-			control_bank(info.prg.rom.max.banks_8k)
+			control_bank(info.prg.rom[0].max.banks_8k)
 			m90_209_211.m6000.prg = value;
 			/* prg rom switch normale */
 			value = (m90_209_211.prg[0] & 0x3F) | bankmode;
-			control_bank(info.prg.rom.max.banks_8k)
+			control_bank(info.prg.rom[0].max.banks_8k)
 			map_prg_rom_8k(1, 0, value);
 			value = (m90_209_211.prg[1] & 0x3F) | bankmode;
-			control_bank(info.prg.rom.max.banks_8k)
+			control_bank(info.prg.rom[0].max.banks_8k)
 			map_prg_rom_8k(1, 1, value);
 			value = (m90_209_211.prg[2] & 0x3F) | bankmode;
-			control_bank(info.prg.rom.max.banks_8k)
+			control_bank(info.prg.rom[0].max.banks_8k)
 			map_prg_rom_8k(1, 2, value);
 			value = (m90_209_211.prg[3] & 0x3F) | bankmode;
-			control_bank(info.prg.rom.max.banks_8k)
+			control_bank(info.prg.rom[0].max.banks_8k)
 			map_prg_rom_8k(1, 3, value);
 			break;
 	}
@@ -487,7 +487,7 @@ static void INLINE chr_setup_90_209_211(void) {
 	switch (m90_209_211.mode[0] & 0x18) {
 		case 0x00:
 			value = chr_90_209_211(0);
-			control_bank(info.chr.rom.max.banks_8k)
+			control_bank(info.chr.rom[0].max.banks_8k)
 			bank = value << 13;
 			chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);
 			chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);
@@ -500,14 +500,14 @@ static void INLINE chr_setup_90_209_211(void) {
 			break;
 		case 0x08:
 			value = chr_90_209_211(m90_209_211.chr.latch[0]);
-			control_bank(info.chr.rom.max.banks_4k)
+			control_bank(info.chr.rom[0].max.banks_4k)
 			bank = value << 12;
 			chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);
 			chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);
 			chr.bank_1k[2] = chr_chip_byte_pnt(0, bank | 0x0800);
 			chr.bank_1k[3] = chr_chip_byte_pnt(0, bank | 0x0C00);
 			value = chr_90_209_211(m90_209_211.chr.latch[1]);
-			control_bank(info.chr.rom.max.banks_4k)
+			control_bank(info.chr.rom[0].max.banks_4k)
 			bank = value << 12;
 			chr.bank_1k[4] = chr_chip_byte_pnt(0, bank);
 			chr.bank_1k[5] = chr_chip_byte_pnt(0, bank | 0x0400);
@@ -516,57 +516,57 @@ static void INLINE chr_setup_90_209_211(void) {
 			break;
 		case 0x10:
 			value = chr_90_209_211(0);
-			control_bank(info.chr.rom.max.banks_2k)
+			control_bank(info.chr.rom[0].max.banks_2k)
 			bank = value << 11;
 			chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);
 			chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);
 			value = chr_90_209_211(2);
-			control_bank(info.chr.rom.max.banks_2k)
+			control_bank(info.chr.rom[0].max.banks_2k)
 			bank = value << 11;
 			chr.bank_1k[2] = chr_chip_byte_pnt(0, bank);
 			chr.bank_1k[3] = chr_chip_byte_pnt(0, bank | 0x0400);
 			value = chr_90_209_211(4);
-			control_bank(info.chr.rom.max.banks_2k)
+			control_bank(info.chr.rom[0].max.banks_2k)
 			bank = value << 11;
 			chr.bank_1k[4] = chr_chip_byte_pnt(0, bank);
 			chr.bank_1k[5] = chr_chip_byte_pnt(0, bank | 0x0400);
 			value = chr_90_209_211(6);
-			control_bank(info.chr.rom.max.banks_2k)
+			control_bank(info.chr.rom[0].max.banks_2k)
 			bank = value << 11;
 			chr.bank_1k[6] = chr_chip_byte_pnt(0, bank);
 			chr.bank_1k[7] = chr_chip_byte_pnt(0, bank | 0x0400);
 			break;
 		case 0x18:
 			value = chr_90_209_211(0);
-			control_bank(info.chr.rom.max.banks_1k)
+			control_bank(info.chr.rom[0].max.banks_1k)
 			bank = value << 10;
 			chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);
 			value = chr_90_209_211(1);
-			control_bank(info.chr.rom.max.banks_1k)
+			control_bank(info.chr.rom[0].max.banks_1k)
 			bank = value << 10;
 			chr.bank_1k[1] = chr_chip_byte_pnt(0, bank);
 			value = chr_90_209_211(2);
-			control_bank(info.chr.rom.max.banks_1k)
+			control_bank(info.chr.rom[0].max.banks_1k)
 			bank = value << 10;
 			chr.bank_1k[2] = chr_chip_byte_pnt(0, bank);
 			value = chr_90_209_211(3);
-			control_bank(info.chr.rom.max.banks_1k)
+			control_bank(info.chr.rom[0].max.banks_1k)
 			bank = value << 10;
 			chr.bank_1k[3] = chr_chip_byte_pnt(0, bank);
 			value = chr_90_209_211(4);
-			control_bank(info.chr.rom.max.banks_1k)
+			control_bank(info.chr.rom[0].max.banks_1k)
 			bank = value << 10;
 			chr.bank_1k[4] = chr_chip_byte_pnt(0, bank);
 			value = chr_90_209_211(5);
-			control_bank(info.chr.rom.max.banks_1k)
+			control_bank(info.chr.rom[0].max.banks_1k)
 			bank = value << 10;
 			chr.bank_1k[5] = chr_chip_byte_pnt(0, bank);
 			value = chr_90_209_211(6);
-			control_bank(info.chr.rom.max.banks_1k)
+			control_bank(info.chr.rom[0].max.banks_1k)
 			bank = value << 10;
 			chr.bank_1k[6] = chr_chip_byte_pnt(0, bank);
 			value = chr_90_209_211(7);
-			control_bank(info.chr.rom.max.banks_1k)
+			control_bank(info.chr.rom[0].max.banks_1k)
 			bank = value << 10;
 			chr.bank_1k[7] = chr_chip_byte_pnt(0, bank);
 			break;

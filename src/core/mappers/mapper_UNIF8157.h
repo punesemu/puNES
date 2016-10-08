@@ -16,41 +16,18 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include "mappers.h"
-#include "info.h"
-#include "mem_map.h"
+#ifndef MAPPER_UNIF8157_H_
+#define MAPPER_UNIF8157_H_
 
-void map_init_A65AS(void) {
-	EXTCL_CPU_WR_MEM(A65AS);
-}
-void extcl_cpu_wr_mem_A65AS(WORD address, BYTE value) {
-	if (value & 0x80) {
-		if (value & 0x20) {
-			mirroring_SCR1();
-		} else {
-			mirroring_SCR0();
-		}
-	} else {
-		if (value & 0x08) {
-			mirroring_H();
-		} else {
-			mirroring_V();
-		}
-	}
+#include "common.h"
 
-	if (value & 0x40) {
-		value >>= 1;
-		control_bank_with_AND(0x0F, info.prg.rom[0].max.banks_32k)
-		map_prg_rom_8k(4, 0, value);
-	} else {
-		BYTE save = value;
+struct _unif8157 {
+	WORD reg;
+} unif8157;
 
-		value = ((save & 0x30) >> 1) | (save & 0x07);
-		control_bank(info.prg.rom[0].max.banks_16k)
-		map_prg_rom_8k(2, 0, value);
-		value = ((save & 0x30) >> 1) | 0x07;
-		control_bank(info.prg.rom[0].max.banks_16k)
-		map_prg_rom_8k(2, 2, value);
-	}
-	map_prg_rom_8k_update();
-}
+void map_init_UNIF8157(void);
+void extcl_cpu_wr_mem_UNIF8157(WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_UNIF8157(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_save_mapper_UNIF8157(BYTE mode, BYTE slot, FILE *fp);
+
+#endif /* MAPPER_UNIF8157_H_ */

@@ -72,6 +72,8 @@ EXTERNC struct _info {
 #endif
 	_info_sh1sum sha1sum;
 	struct _info_chr {
+		WORD chips;
+		WORD max_chips;
 		struct _info_chr_rom {
 			WORD banks_8k;
 			WORD banks_4k;
@@ -82,9 +84,11 @@ EXTERNC struct _info {
 				WORD banks_2k;
 				WORD banks_1k;
 			} max;
-		} rom;
+		} rom[MAX_CHIPS];
 	} chr;
 	struct _info_prg {
+		WORD chips;
+		WORD max_chips;
 		struct _info_prg_rom {
 			WORD banks_16k;
 			WORD banks_8k;
@@ -95,7 +99,7 @@ EXTERNC struct _info {
 				WORD banks_8k_before_last;
 				WORD banks_4k;
 			} max;
-		} rom;
+		} rom[MAX_CHIPS];
 		struct _info_prg_ram {
 			BYTE banks_8k_plus;
 			struct _info_prg_ram_bat {

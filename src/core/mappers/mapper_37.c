@@ -33,7 +33,7 @@
 	for (i = 0; i < 8; i++) {\
 		WORD bank;\
 		m37_chr_1k(m37.chr_map[i]);\
-		_control_bank(bank, info.chr.rom.max.banks_1k)\
+		_control_bank(bank, info.chr.rom[0].max.banks_1k)\
 		chr.bank_1k[i] = chr_chip_byte_pnt(0, bank << 10);\
 	}\
 }
@@ -42,7 +42,7 @@
 	BYTE i;\
 	for (i = 0; i < 4; i++) {\
 		m37_prg_8k(m37.prg_map[i]);\
-		control_bank(info.prg.rom.max.banks_8k)\
+		control_bank(info.prg.rom[0].max.banks_8k)\
 		map_prg_rom_8k(1, i, value);\
 	}\
 	map_prg_rom_8k_update();\
@@ -83,13 +83,13 @@
 		p2 = m37.prg_map[2];\
 		m37.prg_map[0] = p2;\
 		m37.prg_map[2] = p0;\
-		m37.prg_map[mmc3.prg_rom_cfg ^ 0x02] = info.prg.rom.max.banks_8k_before_last;\
+		m37.prg_map[mmc3.prg_rom_cfg ^ 0x02] = info.prg.rom[0].max.banks_8k_before_last;\
 		/*\
 		 * prg_rom_cfg 0x00 : $C000 - $DFFF fisso al penultimo banco\
 		 * prg_rom_cfg 0x02 : $8000 - $9FFF fisso al penultimo banco\
 		 */\
-		m37_prg_8k(info.prg.rom.max.banks_8k_before_last);\
-		control_bank(info.prg.rom.max.banks_8k)\
+		m37_prg_8k(info.prg.rom[0].max.banks_8k_before_last);\
+		control_bank(info.prg.rom[0].max.banks_8k)\
 		map_prg_rom_8k(1, mmc3.prg_rom_cfg ^ 0x02, value);\
 		map_prg_rom_8k_update();\
 	}\
@@ -103,7 +103,7 @@
 			m37.chr_map[mmc3.chr_rom_cfg | 0x01] = value + 1;\
 			m37_chr_1k(value);\
 			bank &= 0xFFE;\
-			_control_bank(bank, info.chr.rom.max.banks_1k)\
+			_control_bank(bank, info.chr.rom[0].max.banks_1k)\
 			chr.bank_1k[mmc3.chr_rom_cfg] = chr_chip_byte_pnt(0, bank << 10);\
 			chr.bank_1k[mmc3.chr_rom_cfg | 0x01] = chr_chip_byte_pnt(0, (bank + 1) << 10);\
 			return;\
@@ -112,45 +112,45 @@
 			m37.chr_map[mmc3.chr_rom_cfg | 0x03] = value + 1;\
 			m37_chr_1k(value);\
 			bank &= 0xFFE;\
-			_control_bank(bank, info.chr.rom.max.banks_1k)\
+			_control_bank(bank, info.chr.rom[0].max.banks_1k)\
 			chr.bank_1k[mmc3.chr_rom_cfg | 0x02] = chr_chip_byte_pnt(0, bank << 10);\
 			chr.bank_1k[mmc3.chr_rom_cfg | 0x03] = chr_chip_byte_pnt(0, (bank + 1) << 10);\
 			return;\
 		case 2:\
 			m37.chr_map[mmc3.chr_rom_cfg ^ 0x04] = value;\
 			m37_chr_1k(value);\
-			_control_bank(bank, info.chr.rom.max.banks_1k)\
+			_control_bank(bank, info.chr.rom[0].max.banks_1k)\
 			chr.bank_1k[mmc3.chr_rom_cfg ^ 0x04] = chr_chip_byte_pnt(0, bank << 10);\
 			return;\
 		case 3:\
 			m37.chr_map[(mmc3.chr_rom_cfg ^ 0x04) | 0x01] = value;\
 			m37_chr_1k(value);\
-			_control_bank(bank, info.chr.rom.max.banks_1k)\
+			_control_bank(bank, info.chr.rom[0].max.banks_1k)\
 			chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x01] = chr_chip_byte_pnt(0, bank << 10);\
 			return;\
 		case 4:\
 			m37.chr_map[(mmc3.chr_rom_cfg ^ 0x04) | 0x02] = value;\
 			m37_chr_1k(value);\
-			_control_bank(bank, info.chr.rom.max.banks_1k)\
+			_control_bank(bank, info.chr.rom[0].max.banks_1k)\
 			chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x02] = chr_chip_byte_pnt(0, bank << 10);\
 			return;\
 		case 5:\
 			m37.chr_map[(mmc3.chr_rom_cfg ^ 0x04) | 0x03] = value;\
 			m37_chr_1k(value);\
-			_control_bank(bank, info.chr.rom.max.banks_1k)\
+			_control_bank(bank, info.chr.rom[0].max.banks_1k)\
 			chr.bank_1k[(mmc3.chr_rom_cfg ^ 0x04) | 0x03] = chr_chip_byte_pnt(0, bank << 10);\
 			return;\
 		case 6:\
 			m37.prg_map[mmc3.prg_rom_cfg] = value;\
 			m37_prg_8k(value);\
-			control_bank(info.prg.rom.max.banks_8k)\
+			control_bank(info.prg.rom[0].max.banks_8k)\
 			map_prg_rom_8k(1, mmc3.prg_rom_cfg, value);\
 			map_prg_rom_8k_update();\
 			return;\
 		case 7:\
 			m37.prg_map[1] = value;\
 			m37_prg_8k(value);\
-			control_bank(info.prg.rom.max.banks_8k)\
+			control_bank(info.prg.rom[0].max.banks_8k)\
 			map_prg_rom_8k(1, 1, value);\
 			map_prg_rom_8k_update();\
 			return;\
@@ -179,7 +179,7 @@ void map_init_37(void) {
 		BYTE value, i;
 
 		map_prg_rom_8k_reset();
-		chr_bank_1k_reset()
+		map_chr_bank_1k_reset();
 
 		for (i = 0; i < 8; i++) {
 			if (i < 4) {

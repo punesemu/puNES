@@ -42,13 +42,13 @@ void extcl_cpu_wr_mem_46(WORD address, BYTE value) {
 
 	if (address >= 0x8000) {
 		value = (m46.prg & 0x1E) | (save & 0x01);
-		control_bank(info.prg.rom.max.banks_32k)
+		control_bank(info.prg.rom[0].max.banks_32k)
 		map_prg_rom_8k(4, 0, value);
 		map_prg_rom_8k_update();
 		m46.prg = value;
 
 		value = (m46.chr & 0x78) | ((save >> 4) & 0x07);
-		control_bank(info.chr.rom.max.banks_8k)
+		control_bank(info.chr.rom[0].max.banks_8k)
 		bank = value << 13;
 		chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);
 		chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);
@@ -65,13 +65,13 @@ void extcl_cpu_wr_mem_46(WORD address, BYTE value) {
 
 	if (address >= 0x6000) {
 		value = (m46.prg & 0x01) | ((save << 1) & 0x1E);
-		control_bank(info.prg.rom.max.banks_32k)
+		control_bank(info.prg.rom[0].max.banks_32k)
 		map_prg_rom_8k(4, 0, value);
 		map_prg_rom_8k_update();
 		m46.prg = value;
 
 		value = (m46.chr & 0x07) | ((save >> 1) & 0x78);
-		control_bank(info.chr.rom.max.banks_8k)
+		control_bank(info.chr.rom[0].max.banks_8k)
 		bank = value << 13;
 		chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);
 		chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);

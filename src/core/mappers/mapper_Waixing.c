@@ -61,7 +61,7 @@ BYTE min, max;
 		 * prg_rom_cfg 0x00 : $C000 - $DFFF fisso al penultimo banco\
 		 * prg_rom_cfg 0x02 : $8000 - $9FFF fisso al penultimo banco\
 		 */\
-		map_prg_rom_8k(1, mmc3.prg_rom_cfg ^ 0x02, info.prg.rom.max.banks_8k_before_last);\
+		map_prg_rom_8k(1, mmc3.prg_rom_cfg ^ 0x02, info.prg.rom[0].max.banks_8k_before_last);\
 		map_prg_rom_8k_update();\
 	}\
 }
@@ -78,7 +78,7 @@ BYTE min, max;
 		case 0:\
 			waixing.chr_map[mmc3.chr_rom_cfg] = value;\
 			waixing.chr_map[mmc3.chr_rom_cfg | 0x01] = value + 1;\
-			control_bank_with_AND(0xFE, info.chr.rom.max.banks_1k)\
+			control_bank_with_AND(0xFE, info.chr.rom[0].max.banks_1k)\
 			waixing_type_ACDE_chr_1k(mmc3.chr_rom_cfg)\
 			value++;\
 			waixing_type_ACDE_chr_1k(mmc3.chr_rom_cfg | 0x01)\
@@ -86,29 +86,29 @@ BYTE min, max;
 		case 1:\
 			waixing.chr_map[mmc3.chr_rom_cfg | 0x02] = value;\
 			waixing.chr_map[mmc3.chr_rom_cfg | 0x03] = value + 1;\
-			control_bank_with_AND(0xFE, info.chr.rom.max.banks_1k)\
+			control_bank_with_AND(0xFE, info.chr.rom[0].max.banks_1k)\
 			waixing_type_ACDE_chr_1k(mmc3.chr_rom_cfg | 0x02)\
 			value++;\
 			waixing_type_ACDE_chr_1k(mmc3.chr_rom_cfg | 0x03)\
 			return;\
 		case 2:\
 			waixing.chr_map[mmc3.chr_rom_cfg ^ 0x04] = value;\
-			control_bank(info.chr.rom.max.banks_1k)\
+			control_bank(info.chr.rom[0].max.banks_1k)\
 			waixing_type_ACDE_chr_1k(mmc3.chr_rom_cfg ^ 0x04)\
 			return;\
 		case 3:\
 			waixing.chr_map[(mmc3.chr_rom_cfg ^ 0x04) | 0x01] = value;\
-			control_bank(info.chr.rom.max.banks_1k)\
+			control_bank(info.chr.rom[0].max.banks_1k)\
 			waixing_type_ACDE_chr_1k((mmc3.chr_rom_cfg ^ 0x04) | 0x01)\
 			return;\
 		case 4:\
 			waixing.chr_map[(mmc3.chr_rom_cfg ^ 0x04) | 0x02] = value;\
-			control_bank(info.chr.rom.max.banks_1k)\
+			control_bank(info.chr.rom[0].max.banks_1k)\
 			waixing_type_ACDE_chr_1k((mmc3.chr_rom_cfg ^ 0x04) | 0x02)\
 			return;\
 		case 5:\
 			waixing.chr_map[(mmc3.chr_rom_cfg ^ 0x04) | 0x03] = value;\
-			control_bank(info.chr.rom.max.banks_1k)\
+			control_bank(info.chr.rom[0].max.banks_1k)\
 			waixing_type_ACDE_chr_1k((mmc3.chr_rom_cfg ^ 0x04) | 0x03)\
 			return;\
 	}\
@@ -126,7 +126,7 @@ BYTE min, max;
 		case 0:\
 			waixing.chr_map[mmc3.chr_rom_cfg] = save;\
 			waixing.chr_map[mmc3.chr_rom_cfg | 0x01] = save + 1;\
-			control_bank_with_AND(0xFE, info.chr.rom.max.banks_1k)\
+			control_bank_with_AND(0xFE, info.chr.rom[0].max.banks_1k)\
 			waixing_type_B_chr_1k(mmc3.chr_rom_cfg)\
 			value++;\
 			waixing_type_B_chr_1k(mmc3.chr_rom_cfg | 0x01)\
@@ -134,29 +134,29 @@ BYTE min, max;
 		case 1:\
 			waixing.chr_map[mmc3.chr_rom_cfg | 0x02] = save;\
 			waixing.chr_map[mmc3.chr_rom_cfg | 0x03] = save + 1;\
-			control_bank_with_AND(0xFE, info.chr.rom.max.banks_1k)\
+			control_bank_with_AND(0xFE, info.chr.rom[0].max.banks_1k)\
 			waixing_type_B_chr_1k(mmc3.chr_rom_cfg | 0x02)\
 			value++;\
 			waixing_type_B_chr_1k(mmc3.chr_rom_cfg | 0x03)\
 			return;\
 		case 2:\
 			waixing.chr_map[mmc3.chr_rom_cfg ^ 0x04] = save;\
-			control_bank(info.chr.rom.max.banks_1k)\
+			control_bank(info.chr.rom[0].max.banks_1k)\
 			waixing_type_B_chr_1k(mmc3.chr_rom_cfg ^ 0x04)\
 			return;\
 		case 3:\
 			waixing.chr_map[(mmc3.chr_rom_cfg ^ 0x04) | 0x01] = save;\
-			control_bank(info.chr.rom.max.banks_1k)\
+			control_bank(info.chr.rom[0].max.banks_1k)\
 			waixing_type_B_chr_1k((mmc3.chr_rom_cfg ^ 0x04) | 0x01)\
 			return;\
 		case 4:\
 			waixing.chr_map[(mmc3.chr_rom_cfg ^ 0x04) | 0x02] = save;\
-			control_bank(info.chr.rom.max.banks_1k)\
+			control_bank(info.chr.rom[0].max.banks_1k)\
 			waixing_type_B_chr_1k((mmc3.chr_rom_cfg ^ 0x04) | 0x02)\
 			return;\
 		case 5:\
 			waixing.chr_map[(mmc3.chr_rom_cfg ^ 0x04) | 0x03] = save;\
-			control_bank(info.chr.rom.max.banks_1k)\
+			control_bank(info.chr.rom[0].max.banks_1k)\
 			waixing_type_B_chr_1k((mmc3.chr_rom_cfg ^ 0x04) | 0x03)\
 			return;\
 	}\
@@ -173,62 +173,62 @@ BYTE min, max;
 	switch (mmc3.bank_to_update) {\
 		case 0:\
 			waixing.chr_map[0] = value;\
-			control_bank(info.chr.rom.max.banks_1k)\
+			control_bank(info.chr.rom[0].max.banks_1k)\
 			waixing_type_G_chr_1k(0)\
 			return;\
 		case 1:\
 			waixing.chr_map[2] = value;\
-			control_bank(info.chr.rom.max.banks_1k)\
+			control_bank(info.chr.rom[0].max.banks_1k)\
 			waixing_type_G_chr_1k(2)\
 			return;\
 		case 2:\
 			waixing.chr_map[4] = value;\
-			control_bank(info.chr.rom.max.banks_1k)\
+			control_bank(info.chr.rom[0].max.banks_1k)\
 			waixing_type_G_chr_1k(4)\
 			return;\
 		case 3:\
 			waixing.chr_map[5] = value;\
-			control_bank(info.chr.rom.max.banks_1k)\
+			control_bank(info.chr.rom[0].max.banks_1k)\
 			waixing_type_G_chr_1k(5)\
 			return;\
 		case 4:\
 			waixing.chr_map[6] = value;\
-			control_bank(info.chr.rom.max.banks_1k)\
+			control_bank(info.chr.rom[0].max.banks_1k)\
 			waixing_type_G_chr_1k(6)\
 			return;\
 		case 5:\
 			waixing.chr_map[7] = value;\
-			control_bank(info.chr.rom.max.banks_1k)\
+			control_bank(info.chr.rom[0].max.banks_1k)\
 			waixing_type_G_chr_1k(7)\
 			return;\
 		case 6:\
-			control_bank(info.prg.rom.max.banks_8k)\
+			control_bank(info.prg.rom[0].max.banks_8k)\
 			map_prg_rom_8k(1, 0, value);\
 			map_prg_rom_8k_update();\
 			return;\
 		case 7:\
-			control_bank(info.prg.rom.max.banks_8k)\
+			control_bank(info.prg.rom[0].max.banks_8k)\
 			map_prg_rom_8k(1, 1, value);\
 			map_prg_rom_8k_update();\
 			return;\
 		case 8:\
-			control_bank(info.prg.rom.max.banks_8k)\
+			control_bank(info.prg.rom[0].max.banks_8k)\
 			map_prg_rom_8k(1, 2, value);\
 			map_prg_rom_8k_update();\
 			return;\
 		case 9:\
-			control_bank(info.prg.rom.max.banks_8k)\
+			control_bank(info.prg.rom[0].max.banks_8k)\
 			map_prg_rom_8k(1, 3, value);\
 			map_prg_rom_8k_update();\
 			return;\
 		case 10:\
 			waixing.chr_map[1] = value;\
-			control_bank(info.chr.rom.max.banks_1k)\
+			control_bank(info.chr.rom[0].max.banks_1k)\
 			waixing_type_G_chr_1k(1)\
 			return;\
 		case 11:\
 			waixing.chr_map[3] = value;\
-			control_bank(info.chr.rom.max.banks_1k)\
+			control_bank(info.chr.rom[0].max.banks_1k)\
 			waixing_type_G_chr_1k(3)\
 			return;\
 	}\
@@ -238,7 +238,7 @@ BYTE min, max;
 	if (mapper.write_vram) {\
 		chr.bank_1k[a] = &chr.extra.data[(value & 0x07) << 10];\
 	} else {\
-		control_bank(info.chr.rom.max.banks_1k)\
+		control_bank(info.chr.rom[0].max.banks_1k)\
 		chr.bank_1k[a] = chr_chip_byte_pnt(0, value << 10);\
 	}
 #define waixing_type_H_prg_8k(vl)\
@@ -248,7 +248,7 @@ BYTE min, max;
 	BYTE i;\
 	for (i = 0; i < 4; i++) {\
 		waixing_type_H_prg_8k(waixing.prg_map[i]);\
-		control_bank(info.prg.rom.max.banks_8k)\
+		control_bank(info.prg.rom[0].max.banks_8k)\
 		map_prg_rom_8k(1, i, value);\
 	}\
 	map_prg_rom_8k_update();\
@@ -280,13 +280,13 @@ BYTE min, max;
 		p2 = waixing.prg_map[2];\
 		waixing.prg_map[0] = p2;\
 		waixing.prg_map[2] = p0;\
-		waixing.prg_map[mmc3.prg_rom_cfg ^ 0x02] = info.prg.rom.max.banks_8k_before_last;\
+		waixing.prg_map[mmc3.prg_rom_cfg ^ 0x02] = info.prg.rom[0].max.banks_8k_before_last;\
 		/*\
 		 * prg_rom_cfg 0x00 : $C000 - $DFFF fisso al penultimo banco\
 		 * prg_rom_cfg 0x02 : $8000 - $9FFF fisso al penultimo banco\
 		 */\
-		waixing_type_H_prg_8k(info.prg.rom.max.banks_8k_before_last);\
-		control_bank(info.prg.rom.max.banks_8k)\
+		waixing_type_H_prg_8k(info.prg.rom[0].max.banks_8k_before_last);\
+		control_bank(info.prg.rom[0].max.banks_8k)\
 		map_prg_rom_8k(1, mmc3.prg_rom_cfg ^ 0x02, value);\
 		map_prg_rom_8k_update();\
 	}\
@@ -338,14 +338,14 @@ BYTE min, max;
 		case 6:\
 			waixing.prg_map[mmc3.prg_rom_cfg] = value;\
 			waixing_type_H_prg_8k(value);\
-			control_bank(info.prg.rom.max.banks_8k)\
+			control_bank(info.prg.rom[0].max.banks_8k)\
 			map_prg_rom_8k(1, mmc3.prg_rom_cfg, value);\
 			map_prg_rom_8k_update();\
 			return;\
 		case 7:\
 			waixing.prg_map[1] = value;\
 			waixing_type_H_prg_8k(value);\
-			control_bank(info.prg.rom.max.banks_8k)\
+			control_bank(info.prg.rom[0].max.banks_8k)\
 			map_prg_rom_8k(1, 1, value);\
 			map_prg_rom_8k_update();\
 			return;\
@@ -402,7 +402,7 @@ BYTE min, max;
 		 * prg_rom_cfg 0x00 : $C000 - $DFFF fisso al penultimo banco\
 		 * prg_rom_cfg 0x02 : $8000 - $9FFF fisso al penultimo banco\
 		 */\
-		map_prg_rom_8k(1, mmc3.prg_rom_cfg ^ 0x02, info.prg.rom.max.banks_8k_before_last);\
+		map_prg_rom_8k(1, mmc3.prg_rom_cfg ^ 0x02, info.prg.rom[0].max.banks_8k_before_last);\
 		map_prg_rom_8k_update();\
 	}\
 }
@@ -411,24 +411,24 @@ BYTE min, max;
 	switch (mmc3.bank_to_update) {\
 		case 0:\
 			waixing.chr_map[0] = value >> 2;\
-			_control_bank(waixing.chr_map[0], info.chr.rom.max.banks_4k)\
+			_control_bank(waixing.chr_map[0], info.chr.rom[0].max.banks_4k)\
 			waixing_SH2_PPUFD()\
 			return;\
 		case 1:\
 			waixing.chr_map[1] = value >> 2;\
-			_control_bank(waixing.chr_map[1], info.chr.rom.max.banks_4k)\
+			_control_bank(waixing.chr_map[1], info.chr.rom[0].max.banks_4k)\
 			waixing_SH2_PPUFE()\
 			return;\
 		case 2:\
 			waixing.chr_map[2] = value >> 2;\
-			_control_bank(waixing.chr_map[2], info.chr.rom.max.banks_4k)\
+			_control_bank(waixing.chr_map[2], info.chr.rom[0].max.banks_4k)\
 			waixing_SH2_PPUFD()\
 			return;\
 		case 3:\
 			return;\
 		case 4:\
 			waixing.chr_map[4] = value >> 2;\
-			_control_bank(waixing.chr_map[4], info.chr.rom.max.banks_4k)\
+			_control_bank(waixing.chr_map[4], info.chr.rom[0].max.banks_4k)\
 			waixing_SH2_PPUFE()\
 			return;\
 		case 5:\
@@ -470,7 +470,7 @@ void map_init_Waixing(BYTE model) {
 				{
 					BYTE i;
 
-					chr_bank_1k_reset()
+					map_chr_bank_1k_reset();
 
 					for (i = 0; i < 8; i++) {
 						waixing.chr_map[i] = i;
@@ -524,7 +524,7 @@ void map_init_Waixing(BYTE model) {
 				{
 					BYTE i;
 
-					chr_bank_1k_reset()
+					map_chr_bank_1k_reset();
 
 					for (i = 0; i < 8; i++) {
 						waixing.chr_map[i] = i;
@@ -566,7 +566,7 @@ void map_init_Waixing(BYTE model) {
 				{
 					BYTE i;
 
-					chr_bank_1k_reset()
+					map_chr_bank_1k_reset();
 
 					for (i = 0; i < 8; i++) {
 						waixing.chr_map[i] = i;
@@ -608,7 +608,7 @@ void map_init_Waixing(BYTE model) {
 					BYTE i, value;
 
 					map_prg_rom_8k_reset();
-					chr_bank_1k_reset()
+					map_chr_bank_1k_reset();
 
 					for (i = 0; i < 8; i++) {
 						if (i < 4) {
@@ -660,7 +660,7 @@ void map_init_Waixing(BYTE model) {
 				waixing.ctrl[1] = 1;
 
 				map_prg_rom_8k_reset();
-				chr_bank_1k_reset()
+				map_chr_bank_1k_reset();
 
 				waixing.chr_map[0] = 0;
 				waixing.chr_map[1] = 0;
@@ -689,27 +689,27 @@ void extcl_cpu_wr_mem_Waixing_PSx(WORD address, BYTE value) {
 
 	switch (address & 0x0003) {
 		case 0x0000:
-			control_bank(info.prg.rom.max.banks_16k)
+			control_bank(info.prg.rom[0].max.banks_16k)
 			map_prg_rom_8k(2, 0, value);
 			value++;
-			control_bank(info.prg.rom.max.banks_16k)
+			control_bank(info.prg.rom[0].max.banks_16k)
 			map_prg_rom_8k(2, 2, value);
 			break;
 		case 0x0001:
-			control_bank(info.prg.rom.max.banks_16k)
+			control_bank(info.prg.rom[0].max.banks_16k)
 			map_prg_rom_8k(2, 0, value);
-			map_prg_rom_8k(2, 2, info.prg.rom.max.banks_16k);
+			map_prg_rom_8k(2, 2, info.prg.rom[0].max.banks_16k);
 			break;
 		case 0x0002:
 			value = (value << 1) | swap;
-			control_bank(info.prg.rom.max.banks_8k)
+			control_bank(info.prg.rom[0].max.banks_8k)
 			map_prg_rom_8k(1, 0, value);
 			map_prg_rom_8k(1, 1, value);
 			map_prg_rom_8k(1, 2, value);
 			map_prg_rom_8k(1, 3, value);
 			break;
 		case 0x0003:
-			control_bank(info.prg.rom.max.banks_16k)
+			control_bank(info.prg.rom[0].max.banks_16k)
 			map_prg_rom_8k(2, 0, value);
 			map_prg_rom_8k(2, 2, value);
 			break;
@@ -784,7 +784,7 @@ BYTE extcl_save_mapper_Waixing_type_B(BYTE mode, BYTE slot, FILE *fp) {
 			if (waixing.chr_map[i] & 0x80) {
 				BYTE value = waixing.chr_map[i];
 
-				control_bank(info.chr.rom.max.banks_1k)
+				control_bank(info.chr.rom[0].max.banks_1k)
 				chr.bank_1k[i] = &chr.extra.data[value << 10];
 			}
 		}

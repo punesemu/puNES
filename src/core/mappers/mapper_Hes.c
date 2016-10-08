@@ -26,7 +26,7 @@ void map_init_Hes(void) {
 	info.mapper.extend_wr = TRUE;
 
 	if (info.reset >= HARD) {
-		if (info.prg.rom.max.banks_32k != 0xFFFF) {
+		if (info.prg.rom[0].max.banks_32k != 0xFFFF) {
 			map_prg_rom_8k(4, 0, 0);
 		}
 	}
@@ -46,15 +46,15 @@ void extcl_cpu_wr_mem_Hes(WORD address, BYTE value) {
 			mirroring_H();
 		}
 
-		if (info.prg.rom.max.banks_32k != 0xFFFF) {
+		if (info.prg.rom[0].max.banks_32k != 0xFFFF) {
 			value = (value >> 3) & 0x07;
-			control_bank(info.prg.rom.max.banks_32k)
+			control_bank(info.prg.rom[0].max.banks_32k)
 			map_prg_rom_8k(4, 0, value);
 			map_prg_rom_8k_update();
 		}
 
 		value = ((save >> 3) & 0x08) | (save & 0x07);
-		control_bank(info.chr.rom.max.banks_8k)
+		control_bank(info.chr.rom[0].max.banks_8k)
 		bank = value << 13;
 		chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);
 		chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);

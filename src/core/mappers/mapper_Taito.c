@@ -109,44 +109,44 @@ void extcl_cpu_wr_mem_Taito_TC0190FMC(WORD address, BYTE value) {
 			} else {
 				mirroring_V();
 			}
-			control_bank_with_AND(0x3F, info.prg.rom.max.banks_8k)
+			control_bank_with_AND(0x3F, info.prg.rom[0].max.banks_8k)
 			map_prg_rom_8k(1, 0, value);
 			map_prg_rom_8k_update();
 			return;
 		case 0x8001:
-			control_bank_with_AND(0x3F, info.prg.rom.max.banks_8k)
+			control_bank_with_AND(0x3F, info.prg.rom[0].max.banks_8k)
 			map_prg_rom_8k(1, 1, value);
 			map_prg_rom_8k_update();
 			return;
 		case 0x8002:
-			control_bank(info.chr.rom.max.banks_2k)
+			control_bank(info.chr.rom[0].max.banks_2k)
 			bank = value << 11;
 			chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);
 			chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);
 			return;
 		case 0x8003:
-			control_bank(info.chr.rom.max.banks_2k)
+			control_bank(info.chr.rom[0].max.banks_2k)
 			bank = value << 11;
 			chr.bank_1k[2] = chr_chip_byte_pnt(0, bank);
 			chr.bank_1k[3] = chr_chip_byte_pnt(0, bank | 0x0400);
 			return;
 		case 0xA000:
-			control_bank(info.chr.rom.max.banks_1k)
+			control_bank(info.chr.rom[0].max.banks_1k)
 			bank = value << 10;
 			chr.bank_1k[4] = chr_chip_byte_pnt(0, bank);
 			return;
 		case 0xA001:
-			control_bank(info.chr.rom.max.banks_1k)
+			control_bank(info.chr.rom[0].max.banks_1k)
 			bank = value << 10;
 			chr.bank_1k[5] = chr_chip_byte_pnt(0, bank);
 			return;
 		case 0xA002:
-			control_bank(info.chr.rom.max.banks_1k)
+			control_bank(info.chr.rom[0].max.banks_1k)
 			bank = value << 10;
 			chr.bank_1k[6] = chr_chip_byte_pnt(0, bank);
 			return;
 		case 0xA003:
-			control_bank(info.chr.rom.max.banks_1k)
+			control_bank(info.chr.rom[0].max.banks_1k)
 			bank = value << 10;
 			chr.bank_1k[7] = chr_chip_byte_pnt(0, bank);
 			return;
@@ -158,44 +158,44 @@ void extcl_cpu_wr_mem_Taito_TC0190FMCPAL16R4(WORD address, BYTE value) {
 
 	switch (address & 0xF003) {
 		case 0x8000:
-			control_bank_with_AND(0x3F, info.prg.rom.max.banks_8k)
+			control_bank_with_AND(0x3F, info.prg.rom[0].max.banks_8k)
 			map_prg_rom_8k(1, 0, value);
 			map_prg_rom_8k_update();
 			return;
 		case 0x8001:
-			control_bank_with_AND(0x3F, info.prg.rom.max.banks_8k)
+			control_bank_with_AND(0x3F, info.prg.rom[0].max.banks_8k)
 			map_prg_rom_8k(1, 1, value);
 			map_prg_rom_8k_update();
 			return;
 		case 0x8002:
-			control_bank(info.chr.rom.max.banks_2k)
+			control_bank(info.chr.rom[0].max.banks_2k)
 			bank = value << 11;
 			chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);
 			chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);
 			return;
 		case 0x8003:
-			control_bank(info.chr.rom.max.banks_2k)
+			control_bank(info.chr.rom[0].max.banks_2k)
 			bank = value << 11;
 			chr.bank_1k[2] = chr_chip_byte_pnt(0, bank);
 			chr.bank_1k[3] = chr_chip_byte_pnt(0, bank | 0x0400);
 			return;
 		case 0xA000:
-			control_bank(info.chr.rom.max.banks_1k)
+			control_bank(info.chr.rom[0].max.banks_1k)
 			bank = value << 10;
 			chr.bank_1k[4] = chr_chip_byte_pnt(0, bank);
 			return;
 		case 0xA001:
-			control_bank(info.chr.rom.max.banks_1k)
+			control_bank(info.chr.rom[0].max.banks_1k)
 			bank = value << 10;
 			chr.bank_1k[5] = chr_chip_byte_pnt(0, bank);
 			return;
 		case 0xA002:
-			control_bank(info.chr.rom.max.banks_1k)
+			control_bank(info.chr.rom[0].max.banks_1k)
 			bank = value << 10;
 			chr.bank_1k[6] = chr_chip_byte_pnt(0, bank);
 			return;
 		case 0xA003:
-			control_bank(info.chr.rom.max.banks_1k)
+			control_bank(info.chr.rom[0].max.banks_1k)
 			bank = value << 10;
 			chr.bank_1k[7] = chr_chip_byte_pnt(0, bank);
 			return;
@@ -255,7 +255,7 @@ void extcl_cpu_wr_mem_Taito_X1005(WORD address, BYTE value) {
 				}
 			}
 			value >>= 1;
-			control_bank(info.chr.rom.max.banks_2k)
+			control_bank(info.chr.rom[0].max.banks_2k)
 			bank = value << 11;
 			chr.bank_1k[slot] = chr_chip_byte_pnt(0, bank);
 			chr.bank_1k[slot | 0x01] = chr_chip_byte_pnt(0, bank | 0x0400);
@@ -270,7 +270,7 @@ void extcl_cpu_wr_mem_Taito_X1005(WORD address, BYTE value) {
 					mirroring_SCR0();
 				}
 			}
-			control_bank(info.chr.rom.max.banks_1k)
+			control_bank(info.chr.rom[0].max.banks_1k)
 			chr.bank_1k[(address & 0x0007) + 2] = chr_chip_byte_pnt(0, value << 10);
 			return;
 		case 0x7EF6:
@@ -286,17 +286,17 @@ void extcl_cpu_wr_mem_Taito_X1005(WORD address, BYTE value) {
 			taito_X1005.enable = value;
 			return;
 		case 0x7EFA:
-			control_bank(info.prg.rom.max.banks_8k)
+			control_bank(info.prg.rom[0].max.banks_8k)
 			map_prg_rom_8k(1, 0, value);
 			map_prg_rom_8k_update();
 			return;
 		case 0x7EFC:
-			control_bank(info.prg.rom.max.banks_8k)
+			control_bank(info.prg.rom[0].max.banks_8k)
 			map_prg_rom_8k(1, 1, value);
 			map_prg_rom_8k_update();
 			return;
 		case 0x7EFE:
-			control_bank(info.prg.rom.max.banks_8k)
+			control_bank(info.prg.rom[0].max.banks_8k)
 			map_prg_rom_8k(1, 2, value);
 			map_prg_rom_8k_update();
 			return;
@@ -360,7 +360,7 @@ void extcl_cpu_wr_mem_Taito_X1017(WORD address, BYTE value) {
 			BYTE slot = address & 0x0001;
 
 			value >>= 1;
-			control_bank(info.chr.rom.max.banks_2k)
+			control_bank(info.chr.rom[0].max.banks_2k)
 			if (taito_X1017.chr[slot] != value) {
 				const BYTE tmp = (taito_X1017.control & 0x02) << 1;
 				const BYTE chr_1k = slot << 1;
@@ -378,7 +378,7 @@ void extcl_cpu_wr_mem_Taito_X1017(WORD address, BYTE value) {
 		case 0x7EF5: {
 			BYTE slot = address & 0x0007;
 
-			control_bank(info.chr.rom.max.banks_1k)
+			control_bank(info.chr.rom[0].max.banks_1k)
 			if (taito_X1017.chr[slot] != value) {
 				const DBWORD bank = value << 10;
 
@@ -430,19 +430,19 @@ void extcl_cpu_wr_mem_Taito_X1017(WORD address, BYTE value) {
 			return;
 		case 0x7EFA:
 			value >>= 2;
-			control_bank(info.prg.rom.max.banks_8k)
+			control_bank(info.prg.rom[0].max.banks_8k)
 			map_prg_rom_8k(1, 0, value);
 			map_prg_rom_8k_update();
 			return;
 		case 0x7EFB:
 			value >>= 2;
-			control_bank(info.prg.rom.max.banks_8k)
+			control_bank(info.prg.rom[0].max.banks_8k)
 			map_prg_rom_8k(1, 1, value);
 			map_prg_rom_8k_update();
 			return;
 		case 0x7EFC:
 			value >>= 2;
-			control_bank(info.prg.rom.max.banks_8k)
+			control_bank(info.prg.rom[0].max.banks_8k)
 			map_prg_rom_8k(1, 2, value);
 			map_prg_rom_8k_update();
 			return;

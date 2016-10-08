@@ -25,11 +25,11 @@
 #define m221_prg_16k_swap()\
 	value = ((m221.reg[0] >> 1) & 0x38) | ((m221.reg[0] & 0x01) ? (m221.reg[0] & 0x80) ?\
 		m221.reg[1] : (m221.reg[1] & 0x06) : m221.reg[1]);\
-	control_bank(info.prg.rom.max.banks_16k)\
+	control_bank(info.prg.rom[0].max.banks_16k)\
 	map_prg_rom_8k(2, 0, value);\
 	value = ((m221.reg[0] >> 1) & 0x38) | ((m221.reg[0] & 0x01) ? (m221.reg[0] & 0x80) ?\
 		0x07 : (m221.reg[1] & 0x06) | 0x1 : m221.reg[1]);\
-	control_bank(info.prg.rom.max.banks_16k)\
+	control_bank(info.prg.rom[0].max.banks_16k)\
 	map_prg_rom_8k(2, 2, value)
 
 void map_init_221(void) {

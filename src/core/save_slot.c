@@ -38,7 +38,7 @@
 #include "cheat.h"
 #include "info.h"
 
-#define SAVE_VERSION 13
+#define SAVE_VERSION 14
 
 BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp);
 char *name_slot_file(BYTE slot);
@@ -579,20 +579,36 @@ BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 			save_slot_int(mode, slot, tmp)
 		}
 	}
+
+	// e' fondamentale che il salvataggio avvenga qui
+	if (save_slot.version >= 14) {
+		save_slot_ele(mode, slot, prg.rom_chip)
+	}
 	for (i = 0; i < LENGTH(prg.rom_8k); i++) {
 		if (mode == SAVE_SLOT_SAVE) {
 			uint32_t bank = mapper.rom_map_to[i] << 13;
 			save_slot_int(mode, slot, bank)
 		} else {
-			save_slot_pos(mode, slot, prg_chip(0), prg.rom_8k[i])
+			if (save_slot.version >= 14) {
+				save_slot_pos(mode, slot, prg_chip(prg.rom_chip[i]), prg.rom_8k[i])
+			} else {
+				save_slot_pos(mode, slot, prg_chip(0), prg.rom_8k[i])
+			}
 		}
 	}
 	save_slot_int(mode, slot, mapper.write_vram)
 	if (mapper.write_vram) {
 		save_slot_mem(mode, slot, chr_chip(0), chr_ram_size(), FALSE)
 	}
+	if (save_slot.version >= 14) {
+		save_slot_ele(mode, slot, chr.rom_chip)
+	}
 	for (i = 0; i < LENGTH(chr.bank_1k); i++) {
-		save_slot_pos(mode, slot, chr_chip(0), chr.bank_1k[i])
+		if (save_slot.version >= 14) {
+			save_slot_pos(mode, slot, chr_chip(chr.rom_chip[i]), chr.bank_1k[i])
+		} else {
+			save_slot_pos(mode, slot, chr_chip(0), chr.bank_1k[i])
+		}
 	}
 	save_slot_ele(mode, slot, ntbl.data)
 	for (i = 0; i < LENGTH(ntbl.bank_1k); i++) {

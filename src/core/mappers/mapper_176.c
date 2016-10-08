@@ -24,7 +24,7 @@ void map_init_176(void) {
 	EXTCL_CPU_WR_MEM(176);
 
 	if (info.reset >= RESET) {
-		map_prg_rom_8k(4, 0, info.prg.rom.max.banks_32k);
+		map_prg_rom_8k(4, 0, info.prg.rom[0].max.banks_32k);
 	}
 
 	info.mapper.extend_wr = TRUE;
@@ -33,14 +33,14 @@ void extcl_cpu_wr_mem_176(WORD address, BYTE value) {
 	switch (address) {
 		case 0x5FF1:
 			value >>= 1;
-			control_bank(info.prg.rom.max.banks_32k)
+			control_bank(info.prg.rom[0].max.banks_32k)
 			map_prg_rom_8k(4, 0, value);
 			map_prg_rom_8k_update();
 			return;
 		case 0x5FF2: {
 			DBWORD bank;
 
-			control_bank(info.chr.rom.max.banks_8k)
+			control_bank(info.chr.rom[0].max.banks_8k)
 			bank = value << 13;
 			chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);
 			chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);

@@ -24,12 +24,12 @@
 #include "save_slot.h"
 
 #define irem_G101_prg_rom_update()\
-	control_bank(info.prg.rom.max.banks_8k)\
+	control_bank(info.prg.rom[0].max.banks_8k)\
 	if (!irem_G101.prg_mode) {\
 		map_prg_rom_8k(1, 0, value);\
-		map_prg_rom_8k(1, 2, info.prg.rom.max.banks_8k_before_last);\
+		map_prg_rom_8k(1, 2, info.prg.rom[0].max.banks_8k_before_last);\
 	} else {\
-		map_prg_rom_8k(1, 0, info.prg.rom.max.banks_8k_before_last);\
+		map_prg_rom_8k(1, 0, info.prg.rom[0].max.banks_8k_before_last);\
 		map_prg_rom_8k(1, 2, value);\
 	}\
 	map_prg_rom_8k_update()
@@ -53,9 +53,9 @@ void map_init_Irem(BYTE model) {
 				memset(&irem_G101, 0x00, sizeof(irem_G101));
 
 				mapper.rom_map_to[0] = 0;
-				mapper.rom_map_to[1] = info.prg.rom.max.banks_8k;
-				mapper.rom_map_to[2] = info.prg.rom.max.banks_8k_before_last;
-				mapper.rom_map_to[3] = info.prg.rom.max.banks_8k;
+				mapper.rom_map_to[1] = info.prg.rom[0].max.banks_8k;
+				mapper.rom_map_to[2] = info.prg.rom[0].max.banks_8k_before_last;
+				mapper.rom_map_to[3] = info.prg.rom[0].max.banks_8k;
 
 				if (info.id == MAJORLEAGUE) {
 					mirroring_SCR0();
@@ -95,7 +95,7 @@ void map_init_Irem(BYTE model) {
 			EXTCL_CPU_WR_MEM(Irem_TAMS1);
 
 			if (info.reset >= HARD) {
-				map_prg_rom_8k(2, 0, info.prg.rom.max.banks_16k);
+				map_prg_rom_8k(2, 0, info.prg.rom[0].max.banks_16k);
 				map_prg_rom_8k(2, 2, 0);
 			}
 			break;
@@ -125,12 +125,12 @@ void extcl_cpu_wr_mem_Irem_G101(WORD address, BYTE value) {
 			irem_G101_prg_rom_update();
 			break;
 		case 0xA000:
-			control_bank(info.prg.rom.max.banks_8k)
+			control_bank(info.prg.rom[0].max.banks_8k)
 			map_prg_rom_8k(1, 1, value);
 			map_prg_rom_8k_update();
 			break;
 		case 0xB000:
-			control_bank(info.chr.rom.max.banks_1k)
+			control_bank(info.chr.rom[0].max.banks_1k)
 			chr.bank_1k[address & 0x0007] = chr_chip_byte_pnt(0, value << 10);
 			break;
 	}
@@ -145,7 +145,7 @@ BYTE extcl_save_mapper_Irem_G101(BYTE mode, BYTE slot, FILE *fp) {
 void extcl_cpu_wr_mem_Irem_H3000(WORD address, BYTE value) {
 	switch (address & 0xF000) {
 		case 0x8000:
-			control_bank(info.prg.rom.max.banks_8k)
+			control_bank(info.prg.rom[0].max.banks_8k)
 			map_prg_rom_8k(1, 0, value);
 			map_prg_rom_8k_update();
 			break;
@@ -176,16 +176,16 @@ void extcl_cpu_wr_mem_Irem_H3000(WORD address, BYTE value) {
 			break;
 		}
 		case 0xB000:
-			control_bank(info.chr.rom.max.banks_1k)
+			control_bank(info.chr.rom[0].max.banks_1k)
 			chr.bank_1k[address & 0x0007] = chr_chip_byte_pnt(0, value << 10);
 			break;
 		case 0xA000:
-			control_bank(info.prg.rom.max.banks_8k)
+			control_bank(info.prg.rom[0].max.banks_8k)
 			map_prg_rom_8k(1, 1, value);
 			map_prg_rom_8k_update();
 			break;
 		case 0xC000:
-			control_bank(info.prg.rom.max.banks_8k)
+			control_bank(info.prg.rom[0].max.banks_8k)
 			map_prg_rom_8k(1, 2, value);
 			map_prg_rom_8k_update();
 			break;
@@ -216,12 +216,12 @@ void extcl_cpu_wr_mem_Irem_LROG017(WORD address, BYTE value) {
 	const BYTE save = value &= prg_rom_rd(address);
 	DBWORD bank;
 
-	control_bank_with_AND(0x0F, info.prg.rom.max.banks_32k)
+	control_bank_with_AND(0x0F, info.prg.rom[0].max.banks_32k)
 	map_prg_rom_8k(4, 0, value);
 	map_prg_rom_8k_update();
 
 	value = save >> 4;
-	control_bank(info.chr.rom.max.banks_2k)
+	control_bank(info.chr.rom[0].max.banks_2k)
 	bank = value << 11;
 	chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);
 	chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);
@@ -256,7 +256,7 @@ void extcl_cpu_wr_mem_Irem_TAMS1(WORD address, BYTE value) {
 		mirroring_H();
 	}
 
-	control_bank(info.prg.rom.max.banks_16k)
+	control_bank(info.prg.rom[0].max.banks_16k)
 	map_prg_rom_8k(2, 2, value);
 	map_prg_rom_8k_update();
 }

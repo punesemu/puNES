@@ -43,12 +43,12 @@ void extcl_cpu_wr_mem_226(WORD address, BYTE value) {
 
 	if (m226.reg[0] & 0x20) {
 		value = (bank << 1) | (m226.reg[0] & 0x01);
-		control_bank(info.prg.rom.max.banks_16k)
+		control_bank(info.prg.rom[0].max.banks_16k)
 		map_prg_rom_8k(2, 0, value);
 		map_prg_rom_8k(2, 2, value);
 	} else {
 		value = bank;
-		control_bank(info.prg.rom.max.banks_32k)
+		control_bank(info.prg.rom[0].max.banks_32k)
 		map_prg_rom_8k(4, 0, value);
 	}
 	map_prg_rom_8k_update();

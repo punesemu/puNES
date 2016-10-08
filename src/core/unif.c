@@ -81,6 +81,7 @@ static const _unif_board unif_boards[] = {
 	{"411120-C", NO_INES, 7, DEFAULT, DEFAULT},
 	{"T-262", NO_INES, 8, DEFAULT, DEFAULT},
 	{"BS-5", NO_INES, 9, DEFAULT, DEFAULT},
+	{"8157", NO_INES, 10, DEFAULT, DEFAULT},
 
 	//{"NTBROM", 68, NO_UNIF},
 };
@@ -157,40 +158,13 @@ BYTE unif_load_rom(void) {
 					return (EXIT_ERROR);
 				}
 
-				info.prg.rom.banks_16k = prg_chip_size(0) / (16 * 1024);
-				info.chr.rom.banks_8k = chr_chip_size(0) / (8 * 1024);
-
-				// TODO : questo e' tutto da rifare
-				/*
-				 * inizializzo qui il writeVRAM per la mapper 96 perche'
-				 * e' l'unica mapper che utilizza 32k di CHR Ram e che
-				 * si permette anche il lusso di swappare. Quindi imposto
-				 * a FALSE qui in modo da poter cambiare impostazione nel
-				 * emu_search_in_database.
-				 */
-				//mapper.write_vram = FALSE;
-				//if (emu_search_in_database(fp)) {
-				//	fclose(fp);
-				//	return (EXIT_ERROR);
-				//}
-
 #if !defined (RELEASE)
 				fprintf(stderr, "unif format\n");
-				fprintf(stderr, "mapper %u\n8k rom = %u\n4k vrom = %u\n", info.mapper.id,
-					info.prg.rom.banks_16k * 2, info.chr.rom.banks_8k * 2);
-				fprintf(stderr, "sha1prg = %40s\n", info.sha1sum.prg.string);
-				fprintf(stderr, "sha1chr = %40s\n", info.sha1sum.chr.string);
+				fprintf(stderr, "mapper %u\n", info.mapper.id);
 #endif
 
-				if (!info.chr.rom.banks_8k) {
-					mapper.write_vram = TRUE;
-					info.chr.rom.banks_8k = 1;
-				}
-				info.prg.rom.banks_8k = info.prg.rom.banks_16k * 2;
-				info.chr.rom.banks_4k = info.chr.rom.banks_8k * 2;
-				info.chr.rom.banks_1k = info.chr.rom.banks_4k * 4;
-
-				map_set_banks_max_prg_and_chr();
+				info.chr.rom[0].banks_8k = 0;
+				info.prg.chips = info.chr.chips = 0;
 
 				if (info.prg.ram.bat.banks) {
 					info.prg.ram.banks_8k_plus = 1;
@@ -244,6 +218,16 @@ BYTE unif_load_rom(void) {
 				}
 			}
 		}
+
+		if (!info.chr.rom[0].banks_8k) {
+			mapper.write_vram = TRUE;
+			info.chr.rom[0].banks_8k = 1;
+			info.chr.rom[0].banks_4k = info.chr.rom[0].banks_8k * 2;
+			info.chr.rom[0].banks_1k = info.chr.rom[0].banks_4k * 4;
+		}
+
+		info.prg.max_chips = info.prg.chips - 1;
+		info.chr.max_chips = info.chr.chips - 1;
 
 		if (unif.finded == FALSE) {
 			fclose(fp);
@@ -360,6 +344,13 @@ BYTE unif_PRG(FILE *fp, BYTE phase) {
 		if (!(fread(prg_chip(chip), prg_chip_size(chip), 1, fp))) {
 			;
 		}
+		info.prg.rom[chip].banks_16k = prg_chip_size(chip) / (16 * 1024);
+		info.prg.rom[chip].banks_8k = info.prg.rom[chip].banks_16k * 2;
+		map_set_banks_max_prg(chip);
+
+#if !defined (RELEASE)
+		fprintf(stderr, "PRG chip %d : 8k rom = %u\n", chip, info.prg.rom[chip].banks_16k * 2);
+#endif
 	}
 
 	return (EXIT_OK);
@@ -382,8 +373,16 @@ BYTE unif_CHR(FILE *fp, BYTE phase) {
 			;
 		}
 		if (chip == 0) {
-			chr_bank_1k_reset();
+			map_chr_bank_1k_reset();
 		}
+		info.chr.rom[chip].banks_8k = chr_chip_size(chip) / (8 * 1024);
+		info.chr.rom[chip].banks_4k = info.chr.rom[chip].banks_8k * 2;
+		info.chr.rom[chip].banks_1k = info.chr.rom[chip].banks_4k * 4;
+		map_set_banks_max_chr(chip);
+
+#if !defined (RELEASE)
+		fprintf(stderr, "CHR chip %d : 4k vrom = %u\n", chip, info.chr.rom[chip].banks_4k);
+#endif
 	}
 
 	return (EXIT_OK);

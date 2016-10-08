@@ -32,17 +32,17 @@ static void INLINE m187_update_chr(void);
 		mapper.rom_map_to[0] = m187.prg_map[2];\
 		m187.prg_map[0] = mapper.rom_map_to[0];\
 		m187.prg_map[2] = mapper.rom_map_to[2];\
-		m187.prg_map[mmc3.prg_rom_cfg ^ 0x02] = info.prg.rom.max.banks_8k_before_last;\
+		m187.prg_map[mmc3.prg_rom_cfg ^ 0x02] = info.prg.rom[0].max.banks_8k_before_last;\
 	}
 #define m187_8001()\
 	switch (mmc3.bank_to_update) {\
 		case 0:\
-			control_bank_with_AND(0xFE, info.chr.rom.max.banks_1k)\
+			control_bank_with_AND(0xFE, info.chr.rom[0].max.banks_1k)\
 			m187.chr_map[mmc3.chr_rom_cfg] = value;\
 			m187.chr_map[mmc3.chr_rom_cfg | 0x01] = value + 1;\
 			break;\
 		case 1:\
-			control_bank_with_AND(0xFE, info.chr.rom.max.banks_1k)\
+			control_bank_with_AND(0xFE, info.chr.rom[0].max.banks_1k)\
 			m187.chr_map[mmc3.chr_rom_cfg | 0x02] = value;\
 			m187.chr_map[mmc3.chr_rom_cfg | 0x03] = value + 1;\
 			break;\
@@ -91,7 +91,7 @@ void map_init_187(void) {
 		BYTE i;
 
 		map_prg_rom_8k_reset();
-		chr_bank_1k_reset()
+		map_chr_bank_1k_reset();
 
 		for (i = 0; i < 8; i++) {
 			if (i < 4) {
@@ -166,28 +166,28 @@ static void INLINE m187_update_prg(void) {
 			} else {
 				value = value >> 1;
 			}
-			control_bank(info.prg.rom.max.banks_32k)
+			control_bank(info.prg.rom[0].max.banks_32k)
 			map_prg_rom_8k(4, 0, value);
 		} else {
-			control_bank(info.prg.rom.max.banks_16k)
+			control_bank(info.prg.rom[0].max.banks_16k)
 			map_prg_rom_8k(2, 0, value);
 			map_prg_rom_8k(2, 2, value);
 		}
 	} else {
 		value = m187.prg_map[0];
-		control_bank(info.prg.rom.max.banks_8k)
+		control_bank(info.prg.rom[0].max.banks_8k)
 		map_prg_rom_8k(1, 0, value);
 
 		value = m187.prg_map[1];
-		control_bank(info.prg.rom.max.banks_8k)
+		control_bank(info.prg.rom[0].max.banks_8k)
 		map_prg_rom_8k(1, 1, value);
 
 		value = m187.prg_map[2];
-		control_bank(info.prg.rom.max.banks_8k)
+		control_bank(info.prg.rom[0].max.banks_8k)
 		map_prg_rom_8k(1, 2, value);
 
 		value = m187.prg_map[3];
-		control_bank(info.prg.rom.max.banks_8k)
+		control_bank(info.prg.rom[0].max.banks_8k)
 		map_prg_rom_8k(1, 3, value);
 	}
 	map_prg_rom_8k_update();
@@ -201,7 +201,7 @@ static void INLINE m187_update_chr(void) {
 		if ((i & 0x04) == mmc3.chr_rom_cfg) {
 			value = value | 0x100;
 		}
-		control_bank(info.chr.rom.max.banks_1k)
+		control_bank(info.chr.rom[0].max.banks_1k)
 		chr.bank_1k[i] = chr_chip_byte_pnt(0, value << 10);
 	}
 }

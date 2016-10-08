@@ -39,7 +39,7 @@ void map_init_EH8813A(void) {
 	}
 
 	map_prg_rom_8k(4, 0, 0);
-	chr_bank_1k_reset();
+	map_chr_bank_1k_reset();
 	mirroring_V();
 
 	info.mapper.extend_rd = TRUE;
@@ -51,7 +51,7 @@ void extcl_cpu_wr_mem_EH8813A(WORD address, BYTE value) {
 		eh88131a.address = address & 0x01FF;
 
 		value &= 0x0F;
-		control_bank(info.chr.rom.max.banks_8k)
+		control_bank(info.chr.rom[0].max.banks_8k)
 		bank = value << 13;
 		chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);
 		chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);
@@ -65,12 +65,12 @@ void extcl_cpu_wr_mem_EH8813A(WORD address, BYTE value) {
 		value = eh88131a.address & 0x07;
 
 		if (eh88131a.address & 0x80) {
-			control_bank(info.prg.rom.max.banks_16k)
+			control_bank(info.prg.rom[0].max.banks_16k)
 			map_prg_rom_8k(2, 0, value);
 			map_prg_rom_8k(2, 2, value);
 		} else {
 			value >>= 1;
-			control_bank(info.prg.rom.max.banks_32k)
+			control_bank(info.prg.rom[0].max.banks_32k)
 			map_prg_rom_8k(4, 0, value);
 		}
 		map_prg_rom_8k_update();

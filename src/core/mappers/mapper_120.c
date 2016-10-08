@@ -46,7 +46,7 @@ void extcl_cpu_wr_mem_120(WORD address, BYTE value) {
 	}
 
 	if ((address & 0xE3C0) == 0x41C0) {
-		control_bank_with_AND(0x07, info.prg.rom.max.banks_8k)
+		control_bank_with_AND(0x07, info.prg.rom[0].max.banks_8k)
 		m120.prg_ram_rd = prg_chip_byte_pnt(0, value << 13);
 	}
 }

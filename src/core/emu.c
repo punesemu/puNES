@@ -265,11 +265,11 @@ BYTE emu_load_rom(void) {
 		}
 	} else if (info.gui) {
 		/* impostazione primaria */
-		info.chr.rom.banks_8k = info.prg.rom.banks_16k = 1;
+		info.prg.rom[0].banks_16k = info.chr.rom[0].banks_8k = 1;
 
-		info.prg.rom.banks_8k = info.prg.rom.banks_16k * 2;
-		info.chr.rom.banks_4k = info.chr.rom.banks_8k * 2;
-		info.chr.rom.banks_1k = info.chr.rom.banks_4k * 4;
+		info.prg.rom[0].banks_8k = info.prg.rom[0].banks_16k * 2;
+		info.chr.rom[0].banks_4k = info.chr.rom[0].banks_8k * 2;
+		info.chr.rom[0].banks_1k = info.chr.rom[0].banks_4k * 4;
 
 		/* PRG Ram */
 		if (map_prg_ram_malloc(0x2000) != EXIT_OK) {
@@ -277,7 +277,7 @@ BYTE emu_load_rom(void) {
 		}
 
 		/* PRG Rom */
-		if (map_prg_chip_malloc(0, info.prg.rom.banks_16k * (16 * 1024), 0xEA) == EXIT_ERROR) {
+		if (map_prg_chip_malloc(0, info.prg.rom[0].banks_16k * (16 * 1024), 0xEA) == EXIT_ERROR) {
 			return (EXIT_ERROR);
 		}
 
@@ -335,19 +335,19 @@ BYTE emu_search_in_database(FILE *fp) {
 	}
 
 	/* mi alloco una zona di memoria dove leggere la PRG Rom */
-	sha1prg = (BYTE *) malloc(info.prg.rom.banks_16k * (16 * 1024));
+	sha1prg = (BYTE *) malloc(info.prg.rom[0].banks_16k * (16 * 1024));
 	if (!sha1prg) {
 		fprintf(stderr, "Out of memory\n");
 		return (EXIT_ERROR);
 	}
 	/* leggo dal file la PRG Rom */
-	if (fread(&sha1prg[0], (16 * 1024), info.prg.rom.banks_16k, fp) < info.prg.rom.banks_16k) {
+	if (fread(&sha1prg[0], (16 * 1024), info.prg.rom[0].banks_16k, fp) < info.prg.rom[0].banks_16k) {
 		fprintf(stderr, "Error on read prg\n");
 		free(sha1prg);
 		return (EXIT_ERROR);
 	}
 	/* calcolo l'sha1 della PRG Rom */
-	sha1_csum(sha1prg, info.prg.rom.banks_16k * (16 * 1024), info.sha1sum.prg.value,
+	sha1_csum(sha1prg, info.prg.rom[0].banks_16k * (16 * 1024), info.sha1sum.prg.value,
 		info.sha1sum.prg.string, LOWER);
 	/* libero la memoria */
 	free(sha1prg);
@@ -367,7 +367,7 @@ BYTE emu_search_in_database(FILE *fp) {
 				case 1:
 					/* Fix per Famicom Wars (J) [!] che ha l'header INES errato */
 					if (info.id == BAD_YOSHI_U) {
-						info.chr.rom.banks_8k = 4;
+						info.chr.rom[0].banks_8k = 4;
 					}
 					break;
 				case 2:
@@ -376,8 +376,8 @@ BYTE emu_search_in_database(FILE *fp) {
 					 * che ha l'header INES non corretto.
 					 */
 					if (info.id == BAD_INES_BOTBE) {
-						info.prg.rom.banks_16k = 16;
-						info.chr.rom.banks_8k = 0;
+						info.prg.rom[0].banks_16k = 16;
+						info.chr.rom[0].banks_8k = 0;
 					}
 					break;
 				case 3:
@@ -386,8 +386,8 @@ BYTE emu_search_in_database(FILE *fp) {
 					 * che ha l'header INES non corretto.
 					 */
 					if (info.id == BAD_INES_TETRIS_BPS) {
-						info.prg.rom.banks_16k = 2;
-						info.chr.rom.banks_8k = 2;
+						info.prg.rom[0].banks_16k = 2;
+						info.chr.rom[0].banks_8k = 2;
 					}
 					break;
 				case 7:
@@ -396,36 +396,36 @@ BYTE emu_search_in_database(FILE *fp) {
 					 * che ha l'header INES non corretto.
 					 */
 					if (info.id == BAD_INES_WWFWE) {
-						info.prg.rom.banks_16k = 8;
-						info.chr.rom.banks_8k = 0;
+						info.prg.rom[0].banks_16k = 8;
+						info.chr.rom[0].banks_8k = 0;
 					}
 					break;
 				case 10:
 					/* Fix per Famicom Wars (J) [!] che ha l'header INES errato */
 					if (info.id == BAD_INES_FWJ) {
-						info.chr.rom.banks_8k = 8;
+						info.chr.rom[0].banks_8k = 8;
 					}
 					break;
 				case 11:
 					/* Fix per King Neptune's Adventure (Color Dreams) [!]
 					 * che ha l'header INES errato */
 					if (info.id == BAD_KING_NEPT) {
-						info.prg.rom.banks_16k = 4;
-						info.chr.rom.banks_8k = 4;
+						info.prg.rom[0].banks_16k = 4;
+						info.chr.rom[0].banks_8k = 4;
 					}
 					break;
 				case 33:
 					if (info.id == BAD_INES_FLINJ) {
-						info.chr.rom.banks_8k = 32;
+						info.chr.rom[0].banks_8k = 32;
 					}
 					break;
 				case 96:
-					info.chr.rom.banks_8k = 4;
+					info.chr.rom[0].banks_8k = 4;
 					mapper.write_vram = TRUE;
 					break;
 				case 191:
 					if (info.id == BAD_SUGOROQUEST) {
-						info.chr.rom.banks_8k = 16;
+						info.chr.rom[0].banks_8k = 16;
 					}
 					break;
 				case 235:
@@ -437,8 +437,8 @@ BYTE emu_search_in_database(FILE *fp) {
 					 * 150-in-1 [a1][p1][!].nes ha lo stesso chsum del 260-in-1 [p1][b1].nes
 					 * ma ha un numero di prg_rom_16k_count di 127.
 					 */
-					if (!info.prg.rom.banks_16k) {
-						info.prg.rom.banks_16k = 256;
+					if (!info.prg.rom[0].banks_16k) {
+						info.prg.rom[0].banks_16k = 256;
 					}
 					break;
 			}
@@ -457,24 +457,24 @@ BYTE emu_search_in_database(FILE *fp) {
 	}
 
 	/* calcolo anche l'sha1 della CHR rom */
-	if (info.chr.rom.banks_8k) {
+	if (info.chr.rom[0].banks_8k) {
 		BYTE *sha1chr;
 
 		/* mi alloco una zona di memoria dove leggere la CHR Rom */
-		sha1chr = (BYTE *) malloc(info.chr.rom.banks_8k * (8 * 1024));
+		sha1chr = (BYTE *) malloc(info.chr.rom[0].banks_8k * (8 * 1024));
 		if (!sha1chr) {
 			fprintf(stderr, "Out of memory\n");
 			return (EXIT_ERROR);
 		}
 
 		/* leggo dal file la CHR Rom */
-		if (fread(&sha1chr[0], (8 * 1024), info.chr.rom.banks_8k, fp) < info.chr.rom.banks_8k) {
+		if (fread(&sha1chr[0], (8 * 1024), info.chr.rom[0].banks_8k, fp) < info.chr.rom[0].banks_8k) {
 			fprintf(stderr, "Error on read chr\n");
 			free(sha1chr);
 			return (EXIT_ERROR);
 		}
 		/* calcolo l'sha1 della CHR Rom */
-		sha1_csum(sha1chr, info.chr.rom.banks_8k * (8 * 1024), info.sha1sum.chr.value,
+		sha1_csum(sha1chr, info.chr.rom[0].banks_8k * (8 * 1024), info.sha1sum.chr.value,
 			info.sha1sum.chr.string, LOWER);
 		/* libero la memoria */
 		free(sha1chr);
@@ -705,7 +705,7 @@ BYTE emu_reset(BYTE type) {
 		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 	}
 
-	chr_bank_1k_reset();
+	map_chr_bank_1k_reset();
 
 	if (info.reset >= HARD) {
 		map_prg_rom_8k_reset();

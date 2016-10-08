@@ -38,17 +38,17 @@ void extcl_cpu_wr_mem_58(WORD address, BYTE value) {
 	}
 
 	value = tmp & ~((~address >> 6) & 0x01);
-	control_bank(info.prg.rom.max.banks_16k)
+	control_bank(info.prg.rom[0].max.banks_16k)
 	map_prg_rom_8k(2, 0, value);
 
 	value = tmp | ((~address >> 6) & 0x01);
-	control_bank(info.prg.rom.max.banks_16k)
+	control_bank(info.prg.rom[0].max.banks_16k)
 	map_prg_rom_8k(2, 2, value);
 
 	map_prg_rom_8k_update();
 
 	value = (address >> 3) & 0x07;
-	control_bank(info.chr.rom.max.banks_8k)
+	control_bank(info.chr.rom[0].max.banks_8k)
 	bank = value << 13;
 	chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);
 	chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);

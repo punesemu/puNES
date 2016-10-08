@@ -62,7 +62,7 @@ void extcl_cpu_wr_mem_40(WORD address, BYTE value) {
 			m40.enabled = TRUE;
 			return;
 		case 0xE000:
-			control_bank(info.prg.rom.max.banks_8k)
+			control_bank(info.prg.rom[0].max.banks_8k)
 			map_prg_rom_8k(1, 2, value);
 			map_prg_rom_8k_update();
 			return;

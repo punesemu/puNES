@@ -44,13 +44,13 @@ void extcl_cpu_wr_mem_BxROM(WORD address, BYTE value) {
 	/* bus conflict */
 	value &= prg_rom_rd(address);
 
-	control_bank_with_AND(0x0F, info.prg.rom.max.banks_32k)
+	control_bank_with_AND(0x0F, info.prg.rom[0].max.banks_32k)
 	map_prg_rom_8k(4, 0, value);
 	map_prg_rom_8k_update();
 }
 
 void extcl_cpu_wr_mem_BxROM_UNL(WORD address, BYTE value) {
-	control_bank_with_AND(0x3F, info.prg.rom.max.banks_32k)
+	control_bank_with_AND(0x3F, info.prg.rom[0].max.banks_32k)
 	map_prg_rom_8k(4, 0, value);
 	map_prg_rom_8k_update();
 }
@@ -58,8 +58,8 @@ void extcl_cpu_wr_mem_BxROM_UNL(WORD address, BYTE value) {
 void extcl_cpu_wr_mem_AveNina001(WORD address, BYTE value) {
 	DBWORD bank;
 
-	if ((address >= 0x8000) &&  (info.prg.rom.max.banks_32k > 1)) {
-		control_bank_with_AND(0x0F, info.prg.rom.max.banks_32k)
+	if ((address >= 0x8000) &&  (info.prg.rom[0].max.banks_32k > 1)) {
+		control_bank_with_AND(0x0F, info.prg.rom[0].max.banks_32k)
 		map_prg_rom_8k(4, 0, value);
 		map_prg_rom_8k_update();
 		return;
@@ -67,12 +67,12 @@ void extcl_cpu_wr_mem_AveNina001(WORD address, BYTE value) {
 
 	switch (address) {
 		case 0x7FFD:
-			control_bank_with_AND(0x01, info.prg.rom.max.banks_32k)
+			control_bank_with_AND(0x01, info.prg.rom[0].max.banks_32k)
 			map_prg_rom_8k(4, 0, value);
 			map_prg_rom_8k_update();
 			break;
 		case 0x7FFE:
-			control_bank_with_AND(0x1F, info.chr.rom.max.banks_4k)
+			control_bank_with_AND(0x1F, info.chr.rom[0].max.banks_4k)
 			bank = value << 12;
 			chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);
 			chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);
@@ -80,7 +80,7 @@ void extcl_cpu_wr_mem_AveNina001(WORD address, BYTE value) {
 			chr.bank_1k[3] = chr_chip_byte_pnt(0, bank | 0x0C00);
 			break;
 		case 0x7FFF:
-			control_bank_with_AND(0x1F, info.chr.rom.max.banks_4k)
+			control_bank_with_AND(0x1F, info.chr.rom[0].max.banks_4k)
 			bank = value << 12;
 			chr.bank_1k[4] = chr_chip_byte_pnt(0, bank);
 			chr.bank_1k[5] = chr_chip_byte_pnt(0, bank | 0x0400);

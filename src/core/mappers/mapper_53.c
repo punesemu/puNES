@@ -61,15 +61,15 @@ void extcl_cpu_wr_mem_53(WORD address, BYTE value) {
 	tmp = (m53.reg[0] << 3) & 0x78;
 
 	m53.prg_6000 = ((tmp << 1) | 0x0F) + 4;
-	_control_bank(m53.prg_6000, info.prg.rom.max.banks_8k)
+	_control_bank(m53.prg_6000, info.prg.rom[0].max.banks_8k)
 	prg_6000 = prg_chip_byte_pnt(0, m53.prg_6000 << 13);
 
 	value = (m53.reg[0] & 0x10) ? (tmp | (m53.reg[1] & 0x07)) + 2 : 0;
-	control_bank(info.prg.rom.max.banks_16k)
+	control_bank(info.prg.rom[0].max.banks_16k)
 	map_prg_rom_8k(2, 0, value);
 
 	value = (m53.reg[0] & 0x10) ? (tmp | (0xFF & 0x07)) + 2 : 1;
-	control_bank(info.prg.rom.max.banks_16k)
+	control_bank(info.prg.rom[0].max.banks_16k)
 	map_prg_rom_8k(2, 2, value);
 
 	map_prg_rom_8k_update();

@@ -83,7 +83,7 @@ WORD chr_ram_4k_max;
 BYTE type;
 
 void map_init_Bandai(BYTE model) {
-	chr_ram_4k_max = info.chr.rom.banks_4k - 1;
+	chr_ram_4k_max = info.chr.rom[0].banks_4k - 1;
 
 	switch (model) {
 		case B161X02X74:
@@ -125,8 +125,8 @@ void map_init_Bandai(BYTE model) {
 				memset(&FCGX, 0x00, sizeof(FCGX));
 				FCGX.e0.output = FCGX.e1.output = 0x10;
 
-				if (info.prg.rom.banks_16k >= 32) {
-					map_prg_rom_8k(2, 2, info.prg.rom.max.banks_16k);
+				if (info.prg.rom[0].banks_16k >= 32) {
+					map_prg_rom_8k(2, 2, info.prg.rom[0].max.banks_16k);
 				}
 			} else {
 				BYTE i;
@@ -169,7 +169,7 @@ void extcl_cpu_wr_mem_Bandai_161x02x74(WORD address, BYTE value) {
 	const BYTE save = value &= prg_rom_rd(address);
 	DBWORD bank;
 
-	control_bank_with_AND(0x03, info.prg.rom.max.banks_32k)
+	control_bank_with_AND(0x03, info.prg.rom[0].max.banks_32k)
 	map_prg_rom_8k(4, 0, value);
 	map_prg_rom_8k_update();
 
@@ -213,7 +213,7 @@ void extcl_cpu_wr_mem_Bandai_FCGX(WORD address, BYTE value) {
 		case 0x8007: {
 			const BYTE slot = address & 0x000F;
 
-			if (info.prg.rom.banks_16k >= 32) {
+			if (info.prg.rom[0].banks_16k >= 32) {
 				BYTE i;
 
 				FCGX.reg[slot] = value;
@@ -222,11 +222,11 @@ void extcl_cpu_wr_mem_Bandai_FCGX(WORD address, BYTE value) {
 					value |= (FCGX.reg[i] << 4) & 0x10;
 				}
 				value |= ((mapper.rom_map_to[0] >> 1) & 0x0F);
-				control_bank(info.prg.rom.max.banks_16k)
+				control_bank(info.prg.rom[0].max.banks_16k)
 				map_prg_rom_8k(2, 0, value);
 
 				value |= 0x0F;
-				control_bank(info.prg.rom.max.banks_16k)
+				control_bank(info.prg.rom[0].max.banks_16k)
 				map_prg_rom_8k(2, 2, value);
 
 				map_prg_rom_8k_update();
@@ -237,16 +237,16 @@ void extcl_cpu_wr_mem_Bandai_FCGX(WORD address, BYTE value) {
 				datach_set_scl((value << 2) & 0x20);
 			}
 			if (!mapper.write_vram) {
-				control_bank(info.chr.rom.max.banks_1k)
+				control_bank(info.chr.rom[0].max.banks_1k)
 				chr.bank_1k[slot] = chr_chip_byte_pnt(0, value << 10);
 			}
 			return;
 		}
 		case 0x8008:
-			if (info.prg.rom.banks_16k >= 32) {
+			if (info.prg.rom[0].banks_16k >= 32) {
 				value = ((mapper.rom_map_to[0] >> 1) & 0x10) | (value & 0x0F);
 			}
-			control_bank(info.prg.rom.max.banks_16k)
+			control_bank(info.prg.rom[0].max.banks_16k)
 			map_prg_rom_8k(2, 0, value);
 			map_prg_rom_8k_update();
 			return;

@@ -74,8 +74,8 @@ BYTE ines_load_rom(void) {
 	}
 
 	if ((fgetc(fp) == 'N') && (fgetc(fp) == 'E') && (fgetc(fp) == 'S') && (fgetc(fp) == '\32')) {
-		info.prg.rom.banks_16k = fgetc(fp);
-		info.chr.rom.banks_8k = fgetc(fp);
+		info.prg.rom[0].banks_16k = fgetc(fp);
+		info.chr.rom[0].banks_8k = fgetc(fp);
 
 		if (!(fread(&flags[0], TOTAL_FL, 1, fp))) {
 			;
@@ -101,8 +101,8 @@ BYTE ines_load_rom(void) {
 
 			nes20_submapper();
 
-			info.prg.rom.banks_16k |= ((flags[FL9] & 0x0F) << 8);
-			info.chr.rom.banks_8k |= ((flags[FL9] & 0xF0) << 4);
+			info.prg.rom[0].banks_16k |= ((flags[FL9] & 0x0F) << 8);
+			info.chr.rom[0].banks_8k |= ((flags[FL9] & 0xF0) << 4);
 
 			info.prg.ram.banks_8k_plus = nes20_ram_size(flags[FL10] & 0x0F);
 			info.prg.ram.bat.banks = nes20_ram_size(flags[FL10] >> 4);
@@ -236,25 +236,27 @@ BYTE ines_load_rom(void) {
 
 #if !defined (RELEASE)
 		fprintf(stderr, "mapper %u\n8k rom = %u\n4k vrom = %u\n", info.mapper.id,
-				info.prg.rom.banks_16k * 2, info.chr.rom.banks_8k * 2);
+				info.prg.rom[0].banks_16k * 2, info.chr.rom[0].banks_8k * 2);
 		fprintf(stderr, "sha1prg = %40s\n", info.sha1sum.prg.string);
 		fprintf(stderr, "sha1chr = %40s\n", info.sha1sum.chr.string);
 #endif
 
-		if (!info.chr.rom.banks_8k) {
+		if (!info.chr.rom[0].banks_8k) {
 			mapper.write_vram = TRUE;
 			if (info.format == NES_2_0) {
-				info.chr.rom.banks_8k = nes20_ram_size(flags[FL11] & 0x0F);
+				info.chr.rom[0].banks_8k = nes20_ram_size(flags[FL11] & 0x0F);
 			}
-			if (!info.chr.rom.banks_8k) {
-				info.chr.rom.banks_8k = 1;
+			if (!info.chr.rom[0].banks_8k) {
+				info.chr.rom[0].banks_8k = 1;
 			}
 		}
-		info.prg.rom.banks_8k = info.prg.rom.banks_16k * 2;
-		info.chr.rom.banks_4k = info.chr.rom.banks_8k * 2;
-		info.chr.rom.banks_1k = info.chr.rom.banks_4k * 4;
+		info.prg.rom[0].banks_8k = info.prg.rom[0].banks_16k * 2;
+		info.chr.rom[0].banks_4k = info.chr.rom[0].banks_8k * 2;
+		info.chr.rom[0].banks_1k = info.chr.rom[0].banks_4k * 4;
 
-		map_set_banks_max_prg_and_chr();
+		map_set_banks_max_prg(0);
+		map_set_banks_max_chr(0);
+		info.prg.chips = info.chr.chips = 0;
 
 		/* alloco la PRG Ram */
 		if (map_prg_ram_malloc(0x2000) != EXIT_OK) {
@@ -263,12 +265,12 @@ BYTE ines_load_rom(void) {
 		}
 
 		/* alloco e carico la PRG Rom */
-		if (map_prg_chip_malloc(0, info.prg.rom.banks_16k * 0x4000, 0x00) == EXIT_ERROR) {
+		if (map_prg_chip_malloc(0, info.prg.rom[0].banks_16k * 0x4000, 0x00) == EXIT_ERROR) {
 			fclose(fp);
 			return (EXIT_ERROR);
 		}
 
-		if (!(fread(prg_chip(0), 16384, info.prg.rom.banks_16k, fp))) {
+		if (!(fread(prg_chip(0), 16384, info.prg.rom[0].banks_16k, fp))) {
 			;
 		}
 
@@ -280,16 +282,20 @@ BYTE ines_load_rom(void) {
 		 */
 		if (mapper.write_vram == FALSE) {
 			/* alloco la CHR Rom */
-			if (map_chr_chip_malloc(0, info.chr.rom.banks_8k * 0x2000, 0x00) == EXIT_ERROR) {
+			if (map_chr_chip_malloc(0, info.chr.rom[0].banks_8k * 0x2000, 0x00) == EXIT_ERROR) {
 				fclose(fp);
 				return (EXIT_ERROR);
 			}
 
-			if (!(fread(chr_chip(0), 0x2000, info.chr.rom.banks_8k, fp))) {
+			if (!(fread(chr_chip(0), 0x2000, info.chr.rom[0].banks_8k, fp))) {
 				;
 			}
-			chr_bank_1k_reset();
+			map_chr_bank_1k_reset();
 		}
+
+		info.prg.max_chips = info.prg.chips - 1;
+		info.chr.max_chips = info.chr.chips - 1;
+
 		/* la CHR ram extra */
 		memset(&chr.extra, 0x00, sizeof(chr.extra));
 	} else {

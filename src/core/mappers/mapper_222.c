@@ -46,7 +46,7 @@ void map_init_222(void) {
 void extcl_cpu_wr_mem_222(WORD address, BYTE value) {
 	switch (address & 0xF003) {
 		case 0x8000:
-			control_bank(info.prg.rom.max.banks_8k)
+			control_bank(info.prg.rom[0].max.banks_8k)
 			map_prg_rom_8k(1, 0, value);
 			map_prg_rom_8k_update();
 			return;
@@ -58,40 +58,40 @@ void extcl_cpu_wr_mem_222(WORD address, BYTE value) {
 			}
 			return;
 		case 0xA000:
-			control_bank(info.prg.rom.max.banks_8k)
+			control_bank(info.prg.rom[0].max.banks_8k)
 			map_prg_rom_8k(1, 1, value);
 			map_prg_rom_8k_update();
 			return;
 		case 0xB000:
-			control_bank(info.chr.rom.max.banks_1k)
+			control_bank(info.chr.rom[0].max.banks_1k)
 			chr.bank_1k[0] = chr_chip_byte_pnt(0, value << 10);
 			return;
 		case 0xB002:
-			control_bank(info.chr.rom.max.banks_1k)
+			control_bank(info.chr.rom[0].max.banks_1k)
 			chr.bank_1k[1] = chr_chip_byte_pnt(0, value << 10);
 			return;
 		case 0xC000:
-			control_bank(info.chr.rom.max.banks_1k)
+			control_bank(info.chr.rom[0].max.banks_1k)
 			chr.bank_1k[2] = chr_chip_byte_pnt(0, value << 10);
 			return;
 		case 0xC002:
-			control_bank(info.chr.rom.max.banks_1k)
+			control_bank(info.chr.rom[0].max.banks_1k)
 			chr.bank_1k[3] = chr_chip_byte_pnt(0, value << 10);
 			return;
 		case 0xD000:
-			control_bank(info.chr.rom.max.banks_1k)
+			control_bank(info.chr.rom[0].max.banks_1k)
 			chr.bank_1k[4] = chr_chip_byte_pnt(0, value << 10);
 			return;
 		case 0xD002:
-			control_bank(info.chr.rom.max.banks_1k)
+			control_bank(info.chr.rom[0].max.banks_1k)
 			chr.bank_1k[5] = chr_chip_byte_pnt(0, value << 10);
 			return;
 		case 0xE000:
-			control_bank(info.chr.rom.max.banks_1k)
+			control_bank(info.chr.rom[0].max.banks_1k)
 			chr.bank_1k[6] = chr_chip_byte_pnt(0, value << 10);
 			return;
 		case 0xE002:
-			control_bank(info.chr.rom.max.banks_1k)
+			control_bank(info.chr.rom[0].max.banks_1k)
 			chr.bank_1k[7] = chr_chip_byte_pnt(0, value << 10);
 			return;
 		case 0xF000:

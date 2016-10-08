@@ -39,7 +39,7 @@ void map_init_50(void) {
 		mapper.rom_map_to[2] = 0;
 	}
 
-	prg_6000 = prg_chip_byte_pnt(0, info.prg.rom.max.banks_8k << 13);
+	prg_6000 = prg_chip_byte_pnt(0, info.prg.rom[0].max.banks_8k << 13);
 
 	mapper.rom_map_to[0] = 8;
 	mapper.rom_map_to[1] = 9;
@@ -58,7 +58,7 @@ void extcl_cpu_wr_mem_50(WORD address, BYTE value) {
 		}
 
 		value = (value & 0x08) | ((value << 2) & 0x04) | ((value >> 1) & 0x03);
-		control_bank(info.prg.rom.max.banks_8k)
+		control_bank(info.prg.rom[0].max.banks_8k)
 		map_prg_rom_8k(1, 2, value);
 		map_prg_rom_8k_update();
 		return;

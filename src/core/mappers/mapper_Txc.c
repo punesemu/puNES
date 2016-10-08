@@ -66,7 +66,7 @@ void map_init_Txc(BYTE model) {
 
 			if (info.reset >= HARD) {
 				memset(&t22211x, 0x00, sizeof(t22211x));
-				if (info.prg.rom.max.banks_32k != 0xFFFF) {
+				if (info.prg.rom[0].max.banks_32k != 0xFFFF) {
 					map_prg_rom_8k(4, 0, 0);
 				}
 			}
@@ -87,7 +87,7 @@ void extcl_cpu_wr_mem_Txc_tw(WORD address, BYTE value) {
 	}
 
 	value = (value >> 4) | value;
-	control_bank(info.prg.rom.max.banks_32k)
+	control_bank(info.prg.rom[0].max.banks_32k)
 	map_prg_rom_8k(4, 0, value);
 	map_prg_rom_8k_update();
 }
@@ -104,9 +104,9 @@ void extcl_cpu_wr_mem_Txc_t22211x(WORD address, BYTE value) {
 		return;
 	}
 
-	if (info.prg.rom.max.banks_32k != 0xFFFF) {
+	if (info.prg.rom[0].max.banks_32k != 0xFFFF) {
 		value = t22211x.reg[2] >> 2;
-		control_bank(info.prg.rom.max.banks_32k)
+		control_bank(info.prg.rom[0].max.banks_32k)
 		map_prg_rom_8k(4, 0, value);
 		map_prg_rom_8k_update();
 	}
@@ -121,7 +121,7 @@ void extcl_cpu_wr_mem_Txc_t22211x(WORD address, BYTE value) {
 			value = t22211x.reg[2];
 		}
 
-		control_bank(info.chr.rom.max.banks_8k)
+		control_bank(info.chr.rom[0].max.banks_8k)
 		bank = value << 13;
 
 		chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);

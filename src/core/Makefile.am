@@ -303,6 +303,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_Txc.h \
 	mappers/mapper_TxROM.c \
 	mappers/mapper_TxROM.h \
+	mappers/mapper_UNIF8157.c \
+	mappers/mapper_UNIF8157.h \
 	mappers/mapper_UxROM.c \
 	mappers/mapper_UxROM.h \
 	mappers/mapper_VRC1.c \

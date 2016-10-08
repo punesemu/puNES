@@ -32,19 +32,19 @@ void extcl_cpu_wr_mem_204(WORD address, BYTE value) {
 	DBWORD bank;
 
 	value = address & ~save;
-	control_bank(info.prg.rom.max.banks_16k)
+	control_bank(info.prg.rom[0].max.banks_16k)
 	map_prg_rom_8k(2, 0, value);
 	value = address | save;
-	control_bank(info.prg.rom.max.banks_16k)
+	control_bank(info.prg.rom[0].max.banks_16k)
 	map_prg_rom_8k(2, 2, value);
 	map_prg_rom_8k_update();
 
 	value = address & ~save;
 
-	if (value > info.chr.rom.max.banks_8k) {
-		value &= (info.chr.rom.max.banks_8k + 1);
-		if (value > info.chr.rom.max.banks_8k) {
-			value &= info.chr.rom.max.banks_8k;
+	if (value > info.chr.rom[0].max.banks_8k) {
+		value &= (info.chr.rom[0].max.banks_8k + 1);
+		if (value > info.chr.rom[0].max.banks_8k) {
+			value &= info.chr.rom[0].max.banks_8k;
 		}
 	}
 	bank = value << 13;
