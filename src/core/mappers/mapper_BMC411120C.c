@@ -29,7 +29,18 @@ static void INLINE bmc411120c_update_chr(void);
 
 #define bmc411120c_chr_1k(vl) value = vl | ((bmc411120c.reg & 0x03) << 7)
 #define bmc411120c_prg_8k(vl) value = ((bmc411120c.reg & 0x03) << 4) | (vl & 0x0F)
+#define bmc411120c_swap_chr_1k(a, b)\
+	chr1k = bmc411120c.chr_map[b];\
+	bmc411120c.chr_map[b] = bmc411120c.chr_map[a];\
+	bmc411120c.chr_map[a] = chr1k
 #define bmc411120c_8000()\
+	if (mmc3.chr_rom_cfg != old_chr_rom_cfg) {\
+		BYTE chr1k;\
+		bmc411120c_swap_chr_1k(0, 4);\
+		bmc411120c_swap_chr_1k(1, 5);\
+		bmc411120c_swap_chr_1k(2, 6);\
+		bmc411120c_swap_chr_1k(3, 7);\
+	}\
 	if (mmc3.prg_rom_cfg != old_prg_rom_cfg) {\
 		mapper.rom_map_to[2] = bmc411120c.prg_map[0];\
 		mapper.rom_map_to[0] = bmc411120c.prg_map[2];\
@@ -120,12 +131,14 @@ void map_init_BMC411120C(void) {
 void extcl_cpu_wr_mem_BMC411120C(WORD address, BYTE value) {
 	if (address >= 0x8000) {
 		BYTE old_prg_rom_cfg = mmc3.prg_rom_cfg;
+		BYTE old_chr_rom_cfg = mmc3.chr_rom_cfg;
 
 		switch (address & 0xE001) {
 			case 0x8000:
 				extcl_cpu_wr_mem_MMC3(address, value);
 				bmc411120c_8000()
 				bmc411120c_update_prg();
+				bmc411120c_update_chr();
 				return;
 			case 0x8001:
 				extcl_cpu_wr_mem_MMC3(address, value);

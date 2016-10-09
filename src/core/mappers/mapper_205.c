@@ -28,7 +28,18 @@ static void INLINE m205_update_chr(void);
 
 #define m205_chr_1k(vl) value = ((m205.reg[0] & 0x30) << 3) | vl
 #define m205_prg_8k(vl) value = (m205.reg[0] & 0x30) | (vl & ((m205.reg[0] & 0xC0) ? 0x0F : 0x1F))
+#define m205_swap_chr_1k(a, b)\
+	chr1k = m205.chr_map[b];\
+	m205.chr_map[b] = m205.chr_map[a];\
+	m205.chr_map[a] = chr1k
 #define m205_8000()\
+	if (mmc3.chr_rom_cfg != old_chr_rom_cfg) {\
+		BYTE chr1k;\
+		m205_swap_chr_1k(0, 4);\
+		m205_swap_chr_1k(1, 5);\
+		m205_swap_chr_1k(2, 6);\
+		m205_swap_chr_1k(3, 7);\
+	}\
 	if (mmc3.prg_rom_cfg != old_prg_rom_cfg) {\
 		mapper.rom_map_to[2] = m205.prg_map[0];\
 		mapper.rom_map_to[0] = m205.prg_map[2];\
@@ -111,12 +122,14 @@ void map_init_205(void) {
 void extcl_cpu_wr_mem_205(WORD address, BYTE value) {
 	if (address >= 0x8000) {
 		BYTE old_prg_rom_cfg = mmc3.prg_rom_cfg;
+		BYTE old_chr_rom_cfg = mmc3.chr_rom_cfg;
 
 		switch (address & 0xE001) {
 			case 0x8000:
 				extcl_cpu_wr_mem_MMC3(address, value);
 				m205_8000()
 				m205_update_prg();
+				m205_update_chr();
 				return;
 			case 0x8001:
 				extcl_cpu_wr_mem_MMC3(address, value);

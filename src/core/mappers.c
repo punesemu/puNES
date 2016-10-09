@@ -705,6 +705,10 @@ BYTE map_init(void) {
 					// NES-8157
 					map_init_UNIF8157();
 					break;
+				case 11:
+					// NES-830118C
+					map_init_BMC830118C();
+					break;
 			}
 			break;
 	}
