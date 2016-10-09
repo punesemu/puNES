@@ -85,6 +85,7 @@ static const _unif_board unif_boards[] = {
 	{"830118C", NO_INES, 11, DEFAULT, DEFAULT},
 	{"8237", NO_INES, 12, DEFAULT, DEFAULT},
 	{"8237A", NO_INES, 13, DEFAULT, DEFAULT},
+	{"NTD-03", NO_INES, 14, DEFAULT, DEFAULT},
 
 	//{"NTBROM", 68, NO_UNIF},
 };
