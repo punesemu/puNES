@@ -16,17 +16,21 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef MAPPER_T262_H_
-#define MAPPER_T262_H_
+#ifndef MAPPER_UNIF8237_H_
+#define MAPPER_UNIF8237_H_
 
 #include "common.h"
 
-struct _t262 {
-	BYTE reg[5];
-} t262;
+enum _unif8237_type { U8237, U8237A };
 
-void map_init_T262(void);
-void extcl_cpu_wr_mem_T262(WORD address, BYTE value);
-BYTE extcl_save_mapper_T262(BYTE mode, BYTE slot, FILE *fp);
+struct _unif8237 {
+	BYTE reg[4];
+	WORD prg_map[4];
+	WORD chr_map[8];
+} unif8237;
 
-#endif /* MAPPER_T262_H_ */
+void map_init_UNIF8237(BYTE model);
+void extcl_cpu_wr_mem_UNIF8237(WORD address, BYTE value);
+BYTE extcl_save_mapper_UNIF8237(BYTE mode, BYTE slot, FILE *fp);
+
+#endif /* MAPPER_UNIF8237_H_ */

@@ -40,6 +40,7 @@ void extcl_cpu_wr_mem_T262(WORD address, BYTE value) {
 		t262.reg[1] = address & 0x80;
 		t262.reg[2] = address & 0x02;
 		t262.reg[3] = (address & 0x2000) >> 13;
+		t262.reg[4] = address & 0x01;
 	}
 	t262_update(value);
 }
@@ -56,7 +57,7 @@ static void INLINE t262_update(BYTE value) {
 	control_bank(info.prg.rom[0].max.banks_16k)
 	map_prg_rom_8k(2, 0, value);
 
-	value = t262.reg[0] | (t262.reg[1] ? bank : 7);
+	value = t262.reg[0] | (t262.reg[1] ? bank | t262.reg[4] : 7);
 	control_bank(info.prg.rom[0].max.banks_16k)
 	map_prg_rom_8k(2, 2, value);
 
