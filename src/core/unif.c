@@ -71,6 +71,7 @@ static const _unif_board unif_boards[] = {
 	{"TEK90", 90, NO_UNIF, DEFAULT, DEFAULT},
 	{"Sachen-8259A", 141, NO_UNIF, DEFAULT, DEFAULT},
 	{"42in1ResetSwitch", 226, NO_UNIF, DEFAULT, DEFAULT},
+	{"CNROM", 3, NO_UNIF, DEFAULT, DEFAULT},
 
 	{"A65AS", NO_INES, 0, DEFAULT, DEFAULT},
 	{"MARIO1-MALEE2", NO_INES, 1, DEFAULT, DEFAULT},
