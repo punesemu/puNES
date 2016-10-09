@@ -41,7 +41,7 @@ enum {
 	NO_UNIF = 65535,
 };
 typedef struct {
-	char board[15];
+	char board[50];
 	WORD ines_mapper;
 	WORD unif_mapper;
 	BYTE submapper;
@@ -70,6 +70,7 @@ static const _unif_board unif_boards[] = {
 	{"D1038", 60, NO_UNIF, MAP60_VT5201, DEFAULT},
 	{"TEK90", 90, NO_UNIF, DEFAULT, DEFAULT},
 	{"Sachen-8259A", 141, NO_UNIF, DEFAULT, DEFAULT},
+	{"42in1ResetSwitch", 226, NO_UNIF, DEFAULT, DEFAULT},
 
 	{"A65AS", NO_INES, 0, DEFAULT, DEFAULT},
 	{"MARIO1-MALEE2", NO_INES, 1, DEFAULT, DEFAULT},

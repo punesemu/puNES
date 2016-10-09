@@ -41,7 +41,7 @@ void extcl_cpu_wr_mem_BMCNTD03(WORD address, BYTE value) {
 	map_prg_rom_8k_update();
 
 	value = ((address & 0x0300) >> 5) | (address & 0x07);
-	control_bank(info.chr.rom[0].max.banks_2k)
+	control_bank(info.chr.rom[0].max.banks_8k)
 	bank = value << 13;
 	chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);
 	chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);

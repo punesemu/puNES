@@ -33,5 +33,6 @@ BYTE extcl_save_mapper_60(BYTE mode, BYTE slot, FILE *fp);
 
 void map_init_60_vt5201(void);
 void extcl_cpu_wr_mem_60_vt5201(WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_60_vt5201(WORD address, BYTE openbus, BYTE before);
 
 #endif /* MAPPER_60_H_ */
