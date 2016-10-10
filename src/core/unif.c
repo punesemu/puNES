@@ -27,6 +27,7 @@
 #include "cheat.h"
 
 enum unif_phase_type { UNIF_COUNT, UNIF_READ };
+enum unif_no_types { NO_INES = 65535, NO_UNIF = 65535 };
 
 BYTE unif_MAPR(FILE *fp, BYTE phase);
 BYTE unif_NAME(FILE *fp, BYTE phase);
@@ -36,10 +37,6 @@ BYTE unif_TVCI(FILE *fp, BYTE phase);
 BYTE unif_BATR(FILE *fp, BYTE phase);
 BYTE unif_MIRR(FILE *fp, BYTE phase);
 
-enum {
-	NO_INES = 65535,
-	NO_UNIF = 65535,
-};
 typedef struct {
 	char board[50];
 	WORD ines_mapper;
@@ -88,6 +85,7 @@ static const _unif_board unif_boards[] = {
 	{"8237", NO_INES, 12, DEFAULT, DEFAULT},
 	{"8237A", NO_INES, 13, DEFAULT, DEFAULT},
 	{"NTD-03", NO_INES, 14, DEFAULT, DEFAULT},
+	{"Ghostbusters63in1", NO_INES, 15, DEFAULT, DEFAULT},
 
 	//{"NTBROM", 68, NO_UNIF},
 };
@@ -166,7 +164,6 @@ BYTE unif_load_rom(void) {
 
 #if !defined (RELEASE)
 				fprintf(stderr, "unif format\n");
-				fprintf(stderr, "mapper %u\n", info.mapper.id);
 #endif
 
 				info.chr.rom[0].banks_8k = 0;
@@ -306,6 +303,10 @@ BYTE unif_MAPR(FILE *fp, BYTE phase) {
 			}
 		}
 	}
+
+#if !defined (RELEASE)
+	fprintf(stderr, "internal unif mapper : %u\n", unif.internal_mapper);
+#endif
 
 	return (EXIT_OK);
 }

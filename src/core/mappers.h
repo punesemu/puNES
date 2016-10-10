@@ -154,6 +154,7 @@
 #include "mappers/mapper_BMC830118C.h"
 #include "mappers/mapper_UNIF8237.h"
 #include "mappers/mapper_BMCNTD03.h"
+#include "mappers/mapper_BMCGhostbusters63in1.h"
 
 #define _control_bank(val, max)\
 	if (val > max) {\

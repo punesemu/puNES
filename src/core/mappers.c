@@ -721,6 +721,10 @@ BYTE map_init(void) {
 					// NES-NTD-03
 					map_init_BMCNTD03();
 					break;
+				case 15:
+					// NES-Ghostbusters63in1
+					map_init_BMCGHOSTBUSTERS63IN1();
+					break;
 			}
 			break;
 	}

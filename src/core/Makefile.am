@@ -233,6 +233,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_BMCFK23C.h \
 	mappers/mapper_BMCG146.c \
 	mappers/mapper_BMCG146.h \
+	mappers/mapper_BMCGhostbusters63in1.c \
+	mappers/mapper_BMCGhostbusters63in1.h \
 	mappers/mapper_BMCNTD03.c \
 	mappers/mapper_BMCNTD03.h \
 	mappers/mapper_BS5.c \

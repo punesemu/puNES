@@ -59,7 +59,6 @@ BYTE extcl_cpu_rd_mem_UNIF8157(WORD address, BYTE openbus, BYTE before) {
 	}
 	return (openbus);
 }
-
 BYTE extcl_save_mapper_UNIF8157(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, unif8157.reg);
 
