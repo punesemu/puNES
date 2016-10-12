@@ -36,6 +36,7 @@ BYTE unif_CHR(FILE *fp, BYTE phase);
 BYTE unif_TVCI(FILE *fp, BYTE phase);
 BYTE unif_BATR(FILE *fp, BYTE phase);
 BYTE unif_MIRR(FILE *fp, BYTE phase);
+BYTE unif_DINF(FILE *fp, BYTE phase);
 
 typedef struct {
 	char board[50];
@@ -87,6 +88,8 @@ static const _unif_board unif_boards[] = {
 	{"NTD-03", NO_INES, 14, DEFAULT, DEFAULT},
 	{"Ghostbusters63in1", NO_INES, 15, DEFAULT, DEFAULT},
 	{"64in1NoRepeat", NO_INES, 16, DEFAULT, DEFAULT},
+	{"70in1", NO_INES, 17, DEFAULT, DEFAULT},
+	{"70in1B", NO_INES, 18, DEFAULT, DEFAULT},
 
 	//{"NTBROM", 68, NO_UNIF},
 };
@@ -208,7 +211,10 @@ BYTE unif_load_rom(void) {
 				} else if (strncmp(unif.chunk.id, "READ", 4) == 0) {
 					fseek(fp, unif.chunk.length, SEEK_CUR);
 				} else if (strncmp(unif.chunk.id, "DINF", 4) == 0) {
-					fseek(fp, unif.chunk.length, SEEK_CUR);
+					if (unif_DINF(fp, phase) == EXIT_ERROR) {
+						fclose(fp);
+						return (EXIT_ERROR);
+					}
 				} else if (strncmp(unif.chunk.id, "TVCI", 4) == 0) {
 					unif_TVCI(fp, phase);
 				} else if (strncmp(unif.chunk.id, "CTRL", 4) == 0) {
@@ -312,24 +318,34 @@ BYTE unif_MAPR(FILE *fp, BYTE phase) {
 	return (EXIT_OK);
 }
 BYTE unif_NAME(FILE *fp, BYTE phase) {
+	static size_t length;
+
 	if (phase == UNIF_COUNT) {
-		fseek(fp, unif.chunk.length, SEEK_CUR);
+		char buf = 0;
+
+		length = 0;
+		while (fread(&buf, 1, 1, fp)) {
+			if (buf == 0) {
+				break;
+			}
+			length++;
+		}
+		length++;
 		return (EXIT_OK);
 	}
 
 	memset(&unif.name[0], 0x00, sizeof(unif.name));
 
-	if (unif.chunk.length < sizeof(unif.name)) {
-		if (!(fread(&unif.name[0], unif.chunk.length, 1, fp))) {
+	if (length < sizeof(unif.name)) {
+		if (!(fread(&unif.name[0], length, 1, fp))) {
 			;
 		}
 	} else {
 		if (!(fread(&unif.name[0], (sizeof(unif.name) - 1), 1, fp))) {
 			;
 		}
-		fseek(fp, unif.chunk.length - (sizeof(unif.name) - 1), SEEK_CUR);
+		fseek(fp, length - (sizeof(unif.name) - 1), SEEK_CUR);
 	}
-
 	printf("name : %s\n", unif.name);
 
 	return (EXIT_OK);
@@ -471,6 +487,30 @@ BYTE unif_MIRR(FILE *fp, BYTE phase) {
 			mirroring_FSCR();
 			break;
 	}
+
+	return (EXIT_OK);
+}
+BYTE unif_DINF(FILE *fp, BYTE phase) {
+	char *months[12] = {
+		"January",   "February", "March",    "April",
+		"May",       "June",     "July",     "August",
+	    "September", "October",  "November", "December"
+	};
+
+	if (phase == UNIF_COUNT) {
+		fseek(fp, 204, SEEK_CUR);
+		return (EXIT_OK);
+	}
+
+	if (fread(&unif.dumped, 1, 204, fp) != 204) {
+		return (EXIT_ERROR);
+	}
+
+	unif.dumped.by[99] = 0;
+	unif.dumped.with[99] = 0;
+
+	printf("dumped by %s with %s on %s %d, %d\n", unif.dumped.by, unif.dumped.with,
+			months[(unif.dumped.month - 1) % 12], unif.dumped.day, unif.dumped.year);
 
 	return (EXIT_OK);
 }

@@ -16,38 +16,20 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef UNIF_H_
-#define UNIF_H_
+#ifndef MAPPER_BMC70IN1_H_
+#define MAPPER_BMC70IN1_H_
 
 #include "common.h"
 
-enum { UNIF_MAPPER = 0x1002 };
+enum _bmc70in1_type { BMC70IN1, BMC70IN1B };
 
-struct _unif {
-	BYTE finded;
-	WORD internal_mapper;
-	char board[64];
-	char *stripped_board;
-	char name[256];
+struct _bmc70in1 {
+	WORD reg[3];
+} bmc70in1;
 
-	struct _dumped {
-		char by[100];
-		BYTE day;
-		BYTE month;
-		WORD year;
-		char with[100];
-	} dumped;
-	struct _header {
-		char identification[4];
-		uint32_t revision;
-		BYTE expansion[24];
-	} header;
-	struct _chunk {
-		char id[4];
-		uint32_t length;
-	} chunk;
-} unif;
+void map_init_BMC70IN1(BYTE type);
+void extcl_cpu_wr_mem_BMC70IN1(WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_BMC70IN1(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_save_mapper_BMC70IN1(BYTE mode, BYTE slot, FILE *fp);
 
-BYTE unif_load_rom(void);
-
-#endif /* UNIF_H_ */
+#endif /* MAPPER_BMC70IN1_H_ */
