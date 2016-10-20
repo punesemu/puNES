@@ -157,6 +157,7 @@
 #include "mappers/mapper_BMCGhostbusters63in1.h"
 #include "mappers/mapper_BMC64IN1NOREPEAT.h"
 #include "mappers/mapper_BMC70IN1.h"
+#include "mappers/mapper_H2288.h"
 
 #define _control_bank(val, max)\
 	if (val > max) {\

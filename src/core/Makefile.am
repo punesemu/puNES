@@ -265,6 +265,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_GameGenie.h \
 	mappers/mapper_GxROM.c \
 	mappers/mapper_GxROM.h \
+	mappers/mapper_H2288.c \
+	mappers/mapper_H2288.h \
 	mappers/mapper_Hen.c \
 	mappers/mapper_Hen.h \
 	mappers/mapper_Hes.c \

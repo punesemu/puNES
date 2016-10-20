@@ -90,6 +90,7 @@ static const _unif_board unif_boards[] = {
 	{"64in1NoRepeat", NO_INES, 16, DEFAULT, DEFAULT},
 	{"70in1", NO_INES, 17, DEFAULT, DEFAULT},
 	{"70in1B", NO_INES, 18, DEFAULT, DEFAULT},
+	{"H2288", NO_INES, 19, DEFAULT, DEFAULT},
 
 	//{"NTBROM", 68, NO_UNIF},
 };

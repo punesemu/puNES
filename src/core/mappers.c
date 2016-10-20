@@ -737,6 +737,10 @@ BYTE map_init(void) {
 					// NES-70in1
 					map_init_BMC70IN1(BMC70IN1B);
 					break;
+				case 19:
+					// NES-H2288
+					map_init_H2288();
+					break;
 			}
 			break;
 	}

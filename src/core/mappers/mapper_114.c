@@ -34,8 +34,6 @@
 	mapper.rom_map_to[2] = m114.prg_rom_bank[2];\
 	mapper.rom_map_to[3] = m114.prg_rom_bank[3]
 
-static const BYTE vlu114[8] = {0, 3, 1, 5, 6, 7, 2, 4};
-
 void map_init_114(void) {
 	EXTCL_CPU_WR_MEM(114);
 	EXTCL_SAVE_MAPPER(114);

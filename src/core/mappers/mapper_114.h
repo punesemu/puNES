@@ -27,6 +27,8 @@ struct _m114 {
 	WORD prg_rom_bank[4];
 } m114;
 
+static const BYTE vlu114[8] = {0, 3, 1, 5, 6, 7, 2, 4};
+
 void map_init_114(void);
 void extcl_cpu_wr_mem_114(WORD address, BYTE value);
 BYTE extcl_save_mapper_114(BYTE mode, BYTE slot, FILE *fp);
