@@ -741,6 +741,10 @@ BYTE map_init(void) {
 					// NES-H2288
 					map_init_H2288();
 					break;
+				case 20:
+					// NES-KOF97
+					map_init_KOF97();
+					break;
 			}
 			break;
 	}

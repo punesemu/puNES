@@ -279,6 +279,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_Kaiser.h \
 	mappers/mapper_Kasing.c \
 	mappers/mapper_Kasing.h \
+	mappers/mapper_KOF97.c \
+	mappers/mapper_KOF97.h \
 	mappers/mapper_Magic.c \
 	mappers/mapper_Magic.h \
 	mappers/mapper_Malee.c \
