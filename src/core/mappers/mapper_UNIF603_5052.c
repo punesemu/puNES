@@ -18,14 +18,16 @@
 
 #include <string.h>
 #include "mappers.h"
+#include "info.h"
 #include "irqA12.h"
+#include "save_slot.h"
 
-#define kof97_fix_value() value = (value & 0xD8) | ((value & 0x20) >> 4) |\
-	((value & 0x04) << 3) | ((value & 0x02) >> 1) | ((value & 0x01) << 2)
+static const BYTE unif603_5052_vlu[4] = { 0x00, 0x02, 0x02, 0x03 };
 
-void map_init_KOF97(void) {
-	EXTCL_CPU_WR_MEM(KOF97);
-	EXTCL_SAVE_MAPPER(KOF97);
+void map_init_UNIF603_5052(void) {
+	EXTCL_CPU_WR_MEM(UNIF603_5052);
+	EXTCL_CPU_RD_MEM(UNIF603_5052);
+	EXTCL_SAVE_MAPPER(UNIF603_5052);
 	EXTCL_CPU_EVERY_CYCLE(MMC3);
 	EXTCL_PPU_000_TO_34X(MMC3);
 	EXTCL_PPU_000_TO_255(MMC3);
@@ -38,36 +40,31 @@ void map_init_KOF97(void) {
 	memset(&mmc3, 0x00, sizeof(mmc3));
 	memset(&irqA12, 0x00, sizeof(irqA12));
 
+	info.mapper.extend_wr = TRUE;
+	info.mapper.extend_rd = TRUE;
+
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
 }
-void extcl_cpu_wr_mem_KOF97(WORD address, BYTE value) {
-	if (address == 0x9000) {
-		address = 0x8001;
-	} else if (address == 0xA000) {
-		address = 0x8000;
-	} else if (address == 0xD000) {
-		address = 0xC001;
-	} else if (address == 0xF000) {
-		address = 0xE001;
+void extcl_cpu_wr_mem_UNIF603_5052(WORD address, BYTE value) {
+	if (address >= 0x8000) {
+		extcl_cpu_wr_mem_MMC3(address, value);
+		return;
 	}
 
-	switch (address & 0xE001) {
-		case 0x8000:
-		case 0x8001:
-		case 0xC000:
-		case 0xC001:
-		case 0xE000:
-		case 0xE001:
-			kof97_fix_value();
-			extcl_cpu_wr_mem_MMC3(address, value);
-			return;
-		default:
-			extcl_cpu_wr_mem_MMC3(address, value);
-			return;
+	if ((address >= 0x4020) && (address <= 0x7FFF)) {
+		unif603_5052.reg = unif603_5052_vlu[value & 0x03];
+		return;
 	}
 }
-BYTE extcl_save_mapper_KOF97(BYTE mode, BYTE slot, FILE *fp) {
+BYTE extcl_cpu_rd_mem_UNIF603_5052(WORD address, BYTE openbus, BYTE before) {
+	if ((address >= 0x4020) && (address <= 0x7FFF)) {
+		return (unif603_5052.reg);
+	}
+	return (openbus);
+}
+BYTE extcl_save_mapper_UNIF603_5052(BYTE mode, BYTE slot, FILE *fp) {
+	save_slot_ele(mode, slot, unif603_5052.reg);
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	return (EXIT_OK);

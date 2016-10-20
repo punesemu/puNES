@@ -745,6 +745,10 @@ BYTE map_init(void) {
 					// NES-KOF97
 					map_init_KOF97();
 					break;
+				case 21:
+					// NES-603-5052
+					map_init_UNIF603_5052();
+					break;
 			}
 			break;
 	}
