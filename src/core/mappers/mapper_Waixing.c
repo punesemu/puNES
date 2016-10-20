@@ -727,6 +727,22 @@ void extcl_cpu_wr_mem_Waixing_type_ACDE(WORD address, BYTE value) {
 		case 0x8001:
 			waixing_type_ACDE_8001()
 			break;
+		case 0xA000:
+			switch (value & 0x03) {
+				case 0:
+					mirroring_V();
+					return;
+				case 1:
+					mirroring_H();
+					return;
+				case 2:
+					mirroring_SCR0();
+					return;
+				case 3:
+					mirroring_SCR1();
+					return;
+			}
+			return;
 		case 0xA001:
 			return;
 	}
