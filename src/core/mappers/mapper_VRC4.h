@@ -21,7 +21,7 @@
 
 #include "common.h"
 
-enum { VRC4A, VRC4B, VRC4C, VRC4D, VRC4E, VRC4BMC };
+enum { VRC4A, VRC4B, VRC4C, VRC4D, VRC4E, VRC4BMC, VRC4T230 };
 
 struct _vrc4 {
 	BYTE chr_rom_bank[8];
@@ -41,5 +41,8 @@ void extcl_cpu_every_cycle_VRC4(void);
 
 void map_init_VRC4BMC(void);
 void extcl_cpu_wr_mem_VRC4BMC(WORD address, BYTE value);
+
+void map_init_VRC4T230(void);
+void extcl_cpu_wr_mem_VRC4T230(WORD address, BYTE value);
 
 #endif /* MAPPER_VRC4_H_ */

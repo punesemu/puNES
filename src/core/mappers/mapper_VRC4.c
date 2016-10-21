@@ -231,10 +231,6 @@ void map_init_VRC4BMC(void) {
 	EXTCL_CPU_WR_MEM(VRC4BMC);
 }
 void extcl_cpu_wr_mem_VRC4BMC(WORD address, BYTE value) {
-	if (address < 0x6000) {
-		return;
-	}
-
 	if ((address >= 0x8000) && (address <= 0x8FFF)) {
 		value = (mapper.rom_map_to[0] & 0x20) | (value & 0x1F);
 		control_bank(info.prg.rom[0].max.banks_8k)
@@ -265,6 +261,53 @@ void extcl_cpu_wr_mem_VRC4BMC(WORD address, BYTE value) {
 		map_prg_rom_8k(1, 2, value);
 
 		value = (mapper.rom_map_to[3] & 0x1F) | save ;
+		control_bank(info.prg.rom[0].max.banks_8k)
+		map_prg_rom_8k(1, 3, value);
+
+		map_prg_rom_8k_update();
+		return;
+	}
+
+	extcl_cpu_wr_mem_VRC4(address, value);
+}
+
+void map_init_VRC4T230(void) {
+	map_init_VRC4(VRC4E);
+
+	EXTCL_CPU_WR_MEM(VRC4T230);
+}
+void extcl_cpu_wr_mem_VRC4T230(WORD address, BYTE value) {
+	if ((address >= 0x8000) && (address <= 0x8FFF)) {
+		return;
+	}
+	if ((address >= 0xA000) && (address <= 0xAFFF)) {
+		value = (mapper.rom_map_to[0] & 0x20) | ((value & 0x1F) << 1);
+		control_bank(info.prg.rom[0].max.banks_8k)
+		map_prg_rom_8k(1, vrc4.swap_mode, value);
+
+		value = value | 0x01;
+		control_bank(info.prg.rom[0].max.banks_8k)
+		map_prg_rom_8k(1, 1, value);
+
+		map_prg_rom_8k_update();
+		return;
+	}
+	if ((address >= 0xB000) && (address <= 0xEFFF)) {
+		BYTE save = value << 2 & 0x20;
+
+		value = (mapper.rom_map_to[0] & 0x3F) | save ;
+		control_bank(info.prg.rom[0].max.banks_8k)
+		map_prg_rom_8k(1, 0, value);
+
+		value = (mapper.rom_map_to[1] & 0x3F) | save ;
+		control_bank(info.prg.rom[0].max.banks_8k)
+		map_prg_rom_8k(1, 1, value);
+
+		value = (mapper.rom_map_to[2] & 0x3F) | save ;
+		control_bank(info.prg.rom[0].max.banks_8k)
+		map_prg_rom_8k(1, 2, value);
+
+		value = (mapper.rom_map_to[3] & 0x3F) | save ;
 		control_bank(info.prg.rom[0].max.banks_8k)
 		map_prg_rom_8k(1, 3, value);
 
