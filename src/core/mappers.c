@@ -749,6 +749,10 @@ BYTE map_init(void) {
 					// NES-603-5052
 					map_init_UNIF603_5052();
 					break;
+				case 22:
+					// NES-CITYFIGHT
+					map_init_CITYFIGHT();
+					break;
 			}
 			break;
 	}

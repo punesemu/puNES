@@ -99,12 +99,10 @@
 		}\
 	}
 
-static BYTE cpu_rd_mem(WORD address, BYTE made_tick);
 static BYTE INLINE ppu_rd_reg(WORD address);
 static BYTE INLINE apu_rd_reg(WORD address);
 static BYTE INLINE fds_rd_mem(WORD address, BYTE made_tick);
 
-static void cpu_wr_mem(WORD address, BYTE value);
 static void INLINE ppu_wr_mem(WORD address, BYTE value);
 static void INLINE ppu_wr_reg(WORD address, BYTE value);
 static void INLINE apu_wr_reg(WORD address, BYTE value);
@@ -115,7 +113,7 @@ static void INLINE tick_hw(BYTE value);
 
 /* ------------------------------------ READ ROUTINE ------------------------------------------- */
 
-static BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
+BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 	if (fds.info.enabled) {
 		if (fds_rd_mem(address, made_tick)) {
 			return (cpu.openbus);
@@ -630,7 +628,7 @@ static BYTE INLINE fds_rd_mem(WORD address, BYTE made_tick) {
 }
 /* ------------------------------------ WRITE ROUTINE ------------------------------------------ */
 
-static void cpu_wr_mem(WORD address, BYTE value) {
+void cpu_wr_mem(WORD address, BYTE value) {
 	if (fds.info.enabled) {
 		if (fds_wr_mem(address, value)) {
 			return;

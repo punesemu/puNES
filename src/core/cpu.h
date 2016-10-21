@@ -115,5 +115,7 @@ _nmi nmi;
 
 void cpu_exe_op(void);
 void cpu_turn_on(void);
+BYTE cpu_rd_mem(WORD address, BYTE made_tick);
+void cpu_wr_mem(WORD address, BYTE value);
 
 #endif /* CPU_H_ */
