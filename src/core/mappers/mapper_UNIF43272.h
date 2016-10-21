@@ -16,26 +16,18 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef MAPPER_60_H_
-#define MAPPER_60_H_
+#ifndef MAPPER_UNIF43272_H_
+#define MAPPER_UNIF43272_H_
 
 #include "common.h"
 
-enum { MAP60, MAP60_VT5201 };
-
-struct _m60 {
-	BYTE index;
-	// per la variante vt5201
+struct _unif43272 {
 	WORD address;
-} m60;
+} unif43272;
 
-void map_init_60(void);
-void extcl_cpu_wr_mem_60(WORD address, BYTE value);
-BYTE extcl_save_mapper_60(BYTE mode, BYTE slot, FILE *fp);
+void map_init_UNIF43272(void);
+void extcl_cpu_wr_mem_UNIF43272(WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_UNIF43272(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_save_mapper_UNIF43272(BYTE mode, BYTE slot, FILE *fp);
 
-void map_init_60_vt5201(void);
-void extcl_cpu_wr_mem_60_vt5201(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_60_vt5201(WORD address, BYTE openbus, BYTE before);
-BYTE extcl_save_mapper_60_vt5201(BYTE mode, BYTE slot, FILE *fp);
-
-#endif /* MAPPER_60_H_ */
+#endif /* MAPPER_UNIF43272_H_ */

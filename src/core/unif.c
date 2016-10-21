@@ -71,6 +71,7 @@ static const _unif_board unif_boards[] = {
 	{"42in1ResetSwitch", 226, NO_UNIF, DEFAULT, DEFAULT},
 	{"CNROM", 3, NO_UNIF, DEFAULT, DEFAULT},
 	{"TFROM", 4, NO_UNIF, DEFAULT, DEFAULT},
+	{"T-230", 23, NO_UNIF, VRC4T230, DEFAULT},
 
 	{"A65AS", NO_INES, 0, DEFAULT, DEFAULT},
 	{"MARIO1-MALEE2", NO_INES, 1, DEFAULT, DEFAULT},
@@ -96,7 +97,7 @@ static const _unif_board unif_boards[] = {
 	{"603-5052", NO_INES, 21, DEFAULT, DEFAULT},
 	{"CITYFIGHT", NO_INES, 22, DEFAULT, DEFAULT},
 	{"BB", NO_INES, 23, DEFAULT, DEFAULT},
-	{"T-230", NO_INES, 24, DEFAULT, DEFAULT},
+	{"43272", NO_INES, 24, DEFAULT, DEFAULT},
 
 	//{"NTBROM", 68, NO_UNIF},
 };

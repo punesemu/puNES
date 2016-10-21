@@ -69,14 +69,15 @@ BYTE extcl_save_mapper_60(BYTE mode, BYTE slot, FILE *fp) {
 void map_init_60_vt5201(void) {
 	EXTCL_CPU_WR_MEM(60_vt5201);
 	EXTCL_CPU_RD_MEM(60_vt5201);
-	EXTCL_SAVE_MAPPER(60);
+	EXTCL_SAVE_MAPPER(60_vt5201);
 	mapper.internal_struct[0] = (BYTE *) &m60;
 	mapper.internal_struct_size[0] = sizeof(m60);
 
 	extcl_cpu_wr_mem_60_vt5201(0x0000, 0);
 
-	if (info.reset > HARD) {
+	if (info.reset >= HARD) {
 		m60.index = 0;
+		m60.address = 0;
 	} else if (info.reset == RESET) {
 		m60.index++;
 		m60.index = m60.index & 0x03;
@@ -86,6 +87,8 @@ void map_init_60_vt5201(void) {
 }
 void extcl_cpu_wr_mem_60_vt5201(WORD address, BYTE value) {
 	DBWORD bank;
+
+	m60.address = address;
 
 	if (address & 0x80) {
 		value = (address & 0x70) >> 4;
@@ -118,11 +121,17 @@ void extcl_cpu_wr_mem_60_vt5201(WORD address, BYTE value) {
 	}
 }
 BYTE extcl_cpu_rd_mem_60_vt5201(WORD address, BYTE openbus, BYTE before) {
-	if ((cpu.PC > 0x1FFF) || (address < 0x6000)) {
+	if (address < 0x6000) {
 		return (openbus);
 	}
-	if (address & 0x0100) {
+	if (m60.address & 0x0100) {
 		return (m60.index);
 	}
 	return (openbus);
+}
+BYTE extcl_save_mapper_60_vt5201(BYTE mode, BYTE slot, FILE *fp) {
+	save_slot_ele(mode, slot, m60.index);
+	save_slot_ele(mode, slot, m60.address);
+
+	return (EXIT_OK);
 }

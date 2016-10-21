@@ -174,7 +174,6 @@ static void INLINE h2288_update_prg(void) {
 			control_bank(info.prg.rom[0].max.banks_32k)
 			map_prg_rom_8k(4, 0, value);
 		} else {
-			value = value;
 			control_bank(info.prg.rom[0].max.banks_16k)
 			map_prg_rom_8k(2, 0, value);
 			map_prg_rom_8k(2, 2, value);

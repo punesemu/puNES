@@ -119,6 +119,8 @@ BYTE map_init(void) {
 		case 23:
 			if (info.mapper.submapper == VRC4BMC) {
 				map_init_VRC4BMC();
+			} else if (info.mapper.submapper == VRC4T230) {
+				map_init_VRC4T230();
 			} else if (info.mapper.submapper == VRC4E) {
 				map_init_VRC4(VRC4E);
 			} else {
@@ -753,9 +755,13 @@ BYTE map_init(void) {
 					// NES-CITYFIGHT
 					map_init_CITYFIGHT();
 					break;
+				case 23:
+					// NES-BB
+					map_init_BB();
+					break;
 				case 24:
-					// NES-T-230
-					map_init_VRC4T230();
+					// NES-43272
+					map_init_UNIF43272();
 					break;
 			}
 			break;
