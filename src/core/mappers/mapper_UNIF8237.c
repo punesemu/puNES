@@ -291,7 +291,6 @@ static void INLINE unif8237_update_prg(void) {
 		map_prg_rom_8k(1, 3, value);
 	}
 	map_prg_rom_8k_update();
-
 }
 static void INLINE unif8237_update_chr(void) {
 	BYTE i;

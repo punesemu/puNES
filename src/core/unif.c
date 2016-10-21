@@ -95,6 +95,7 @@ static const _unif_board unif_boards[] = {
 	{"KOF97", NO_INES, 20, DEFAULT, DEFAULT},
 	{"603-5052", NO_INES, 21, DEFAULT, DEFAULT},
 	{"CITYFIGHT", NO_INES, 22, DEFAULT, DEFAULT},
+	{"BB", NO_INES, 23, DEFAULT, DEFAULT},
 
 	//{"NTBROM", 68, NO_UNIF},
 };

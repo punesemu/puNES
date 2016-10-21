@@ -161,6 +161,7 @@
 #include "mappers/mapper_KOF97.h"
 #include "mappers/mapper_UNIF603_5052.h"
 #include "mappers/mapper_CITYFIGHT.h"
+#include "mappers/mapper_BB.h"
 
 #define _control_bank(val, max)\
 	if (val > max) {\

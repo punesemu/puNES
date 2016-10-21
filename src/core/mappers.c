@@ -753,6 +753,10 @@ BYTE map_init(void) {
 					// NES-CITYFIGHT
 					map_init_CITYFIGHT();
 					break;
+				case 23:
+					// NES-BB
+					map_init_BB();
+					break;
 			}
 			break;
 	}
