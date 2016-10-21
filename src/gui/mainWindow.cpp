@@ -1738,6 +1738,7 @@ void mainWindow::s_open() {
 	filters.append(tr("All supported formats"));
 	filters.append(tr("Compressed files"));
 	filters.append(tr("Nes rom files"));
+	filters.append(tr("UNIF rom files"));
 	filters.append(tr("FDS image files"));
 	filters.append(tr("TAS movie files"));
 	filters.append(tr("All files"));
@@ -1748,21 +1749,22 @@ void mainWindow::s_open() {
 	if (l7z_present() == TRUE) {
 		if ((l7z_control_ext("rar") == EXIT_OK)) {
 			filters[0].append(
-				" (*.zip *.ZIP *.7z *.7Z *.rar *.RAR *.nes *.NES *.fds *.FDS *.fm2 *.FM2)");
+				" (*.zip *.ZIP *.7z *.7Z *.rar *.RAR *.nes *.NES *.unf *.UNF *.unif *.UNIF *.fds *.FDS *.fm2 *.FM2)");
 			filters[1].append(" (*.zip *.ZIP *.7z *.7Z *.rar *.RAR)");
 		} else {
 			filters[0].append(" (*.zip *.ZIP *.7z *.7Z *.nes *.NES *.fds *.FDS *.fm2 *.FM2)");
 			filters[1].append(" (*.zip *.ZIP *.7z *.7Z)");
 		}
 	} else {
-		filters[0].append(" (*.zip *.ZIP *.nes *.NES *.fds *.FDS *.fm2 *.FM2)");
+		filters[0].append(" (*.zip *.ZIP *.nes *.NES *.unf *.UNF *.unif *.UNIF *.fds *.FDS *.fm2 *.FM2)");
 		filters[1].append(" (*.zip *.ZIP)");
 	}
 
 	filters[2].append(" (*.nes *.NES)");
-	filters[3].append(" (*.fds *.FDS)");
-	filters[4].append(" (*.fm2 *.FM2)");
-	filters[5].append(" (*.*)");
+	filters[3].append(" (*.unf *.UNF *.unif *.UNIF)");
+	filters[4].append(" (*.fds *.FDS)");
+	filters[5].append(" (*.fm2 *.FM2)");
+	filters[6].append(" (*.*)");
 
 	file = QFileDialog::getOpenFileName(this, tr("Open File"), gui.last_open_path,
 		filters.join(";;"));
