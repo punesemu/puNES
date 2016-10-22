@@ -41,7 +41,6 @@ void map_init_UNIF603_5052(void) {
 	memset(&irqA12, 0x00, sizeof(irqA12));
 
 	info.mapper.extend_wr = TRUE;
-	info.mapper.extend_rd = TRUE;
 
 	irqA12.present = TRUE;
 	irqA12_delay = 1;

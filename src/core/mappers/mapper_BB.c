@@ -42,8 +42,6 @@ void map_init_BB(void) {
 	}
 
 	bb_prg_6000 = prg_chip_byte_pnt(0, bb.reg << 13);
-
-	info.mapper.extend_rd = TRUE;
 }
 void extcl_cpu_wr_mem_BB(WORD address, BYTE value) {
 	BYTE save = value;
