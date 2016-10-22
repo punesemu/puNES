@@ -66,35 +66,35 @@ BYTE extcl_save_mapper_UNIF8157(BYTE mode, BYTE slot, FILE *fp) {
 }
 
 static void INLINE unif8157_update(BYTE value) {
-    BYTE base = ((unif8157.reg & 0x0060) | ((unif8157.reg & 0x0100) >> 1)) >> 2;
-    BYTE bank = (unif8157.reg & 0x001C) >> 2;
-    BYTE lbank = (unif8157.reg & 0x0200) ? 7 : ((unif8157.reg & 0x80) ? bank : 0);
+	BYTE base = ((unif8157.reg & 0x0060) | ((unif8157.reg & 0x0100) >> 1)) >> 2;
+	BYTE bank = (unif8157.reg & 0x001C) >> 2;
+	BYTE lbank = (unif8157.reg & 0x0200) ? 7 : ((unif8157.reg & 0x80) ? bank : 0);
 
-    if (prg.chip[1].rom) {
-    	base >>= 3;
-    	_control_bank(base, info.prg.max_chips)
+	if (prg.chip[1].rom) {
+		base >>= 3;
+		_control_bank(base, info.prg.max_chips)
 
 		value = bank;
-    	control_bank(info.prg.rom[base].max.banks_16k)
-    	map_prg_rom_8k_chip(2, 0, value, base);
+ 		control_bank(info.prg.rom[base].max.banks_16k)
+ 		map_prg_rom_8k_chip(2, 0, value, base);
 
-    	value = lbank;
-    	control_bank(info.prg.rom[base].max.banks_16k)
-    	map_prg_rom_8k_chip(2, 2, value, base);
-    } else {
-    	value = base | bank;
-    	control_bank(info.prg.rom[0].max.banks_16k)
-    	map_prg_rom_8k(2, 0, value);
+ 		value = lbank;
+ 		control_bank(info.prg.rom[base].max.banks_16k)
+ 		map_prg_rom_8k_chip(2, 2, value, base);
+	} else {
+		value = base | bank;
+		control_bank(info.prg.rom[0].max.banks_16k)
+	 	map_prg_rom_8k(2, 0, value);
 
-    	value = base | lbank;
-    	control_bank(info.prg.rom[0].max.banks_16k)
-    	map_prg_rom_8k(2, 2, value);
-    }
+ 		value = base | lbank;
+ 		control_bank(info.prg.rom[0].max.banks_16k)
+ 		map_prg_rom_8k(2, 2, value);
+	}
 	map_prg_rom_8k_update();
 
-    if (unif8157.reg & 0x02) {
-    	mirroring_H();
-    } else {
-    	mirroring_V();
-    }
+	if (unif8157.reg & 0x02) {
+		mirroring_H();
+	} else {
+		mirroring_V();
+	}
 }

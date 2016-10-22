@@ -763,6 +763,10 @@ BYTE map_init(void) {
 					// NES-43272
 					map_init_UNIF43272();
 					break;
+				case 25:
+					// NES-AC-08
+					map_init_AC08();
+					break;
 			}
 			break;
 	}

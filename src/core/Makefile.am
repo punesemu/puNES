@@ -211,6 +211,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_91.h \
 	mappers/mapper_A65AS.c \
 	mappers/mapper_A65AS.h \
+	mappers/mapper_AC08.c \
+	mappers/mapper_AC08.h \
 	mappers/mapper_Active.c \
 	mappers/mapper_Active.h \
 	mappers/mapper_Agci.c \
