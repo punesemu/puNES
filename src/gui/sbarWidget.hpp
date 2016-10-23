@@ -42,6 +42,19 @@
 #include "application.hh"
 #include "common.h"
 
+class infoStatusBar: public QWidget {
+	Q_OBJECT
+
+	private:
+		QHBoxLayout *hbox;
+		QLabel *label;
+
+	public:
+		infoStatusBar(QWidget *parent);
+		~infoStatusBar();
+		void update_label();
+};
+
 class timelineSlider: public QSlider {
 	Q_OBJECT
 
@@ -132,7 +145,7 @@ class sbarWidget: public QStatusBar {
 	Q_OBJECT
 
 	public:
-		QWidget *spacer;
+		infoStatusBar *infosb;
 		timeLine *timeline;
 		stateWidget *state;
 

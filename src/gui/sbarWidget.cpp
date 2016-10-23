@@ -24,6 +24,7 @@
 #include <QtWidgets/QStylePainter>
 #include <QtWidgets/QCommonStyle>
 #endif
+#include <QtCore/QFileInfo>
 #include <QtCore/QEvent>
 #include <QtGui/QPainter>
 #include "sbarWidget.moc"
@@ -51,8 +52,8 @@ sbarWidget::sbarWidget(Ui::mainWindow *u, QWidget *parent) : QStatusBar(parent) 
 
 	//setStyleSheet("QStatusBar::item { border: 1px solid; border-radius: 1px; } ");
 
-	spacer = new QWidget(this);
-	addWidget(spacer);
+	infosb = new infoStatusBar(this);
+	addWidget(infosb);
 
 	state = new stateWidget(u, this);
 	addWidget(state);
@@ -64,6 +65,8 @@ sbarWidget::sbarWidget(Ui::mainWindow *u, QWidget *parent) : QStatusBar(parent) 
 }
 sbarWidget::~sbarWidget() {}
 void sbarWidget::update_statusbar() {
+	infosb->update_label();
+
 	if (info.no_rom | info.turn_off) {
 		state->setEnabled(false);
 		timeline->setEnabled(false);
@@ -81,7 +84,7 @@ void sbarWidget::update_width(int w) {
 	w -= (timeline->isVisible() ? timeline->sizeHint().width() + 2 + 2 + 2 : 0);
 	w -= (state->isVisible() ? state->sizeHint().width() + 2 + 2 + 2 : 0);
 
-	spacer->setFixedWidth(w);
+	infosb->setFixedWidth(w);
 }
 bool sbarWidget::eventFilter(QObject *obj, QEvent *event) {
 	if (event->type() == QEvent::MouseButtonPress) {
@@ -95,6 +98,28 @@ bool sbarWidget::eventFilter(QObject *obj, QEvent *event) {
 	}
 
 	return (QObject::eventFilter(obj, event));
+}
+
+// ---------------------------------- Info --------------------------------------------
+
+infoStatusBar::infoStatusBar(QWidget *parent = 0) : QWidget(parent) {
+	hbox = new QHBoxLayout(this);
+	hbox->setContentsMargins(QMargins(0,0,0,0));
+	hbox->setMargin(0);
+	hbox->setSpacing(SPACING);
+
+	setLayout(hbox);
+
+	label = new QLabel(this);
+	hbox->addWidget(label);
+}
+infoStatusBar::~infoStatusBar() {}
+void infoStatusBar::update_label() {
+	if (info.no_rom | info.turn_off) {
+		label->setText("");
+	} else {
+		label->setText(QFileInfo(info.rom_file).fileName());
+	}
 }
 
 // -------------------------------- Slot Box ------------------------------------------
