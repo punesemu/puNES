@@ -778,6 +778,10 @@ BYTE map_init(void) {
 					// NES-MTECH01
 					map_init_MTECH01();
 					break;
+				case 28:
+					// NES-YOKO
+					map_init_YOKO();
+					break;
 			}
 			break;
 	}
