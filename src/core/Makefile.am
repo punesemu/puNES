@@ -267,6 +267,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_FDS.h \
 	mappers/mapper_Futuremedia.c \
 	mappers/mapper_Futuremedia.h \
+	mappers/mapper_FS304.c \
+	mappers/mapper_FS304.h \
 	mappers/mapper_GameGenie.c \
 	mappers/mapper_GameGenie.h \
 	mappers/mapper_GxROM.c \

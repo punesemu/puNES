@@ -447,6 +447,9 @@ BYTE map_init(void) {
 		case 159:
 			map_init_Bandai(E24C01);
 			break;
+		case 162:
+			map_init_FS304();
+			break;
 		case 163:
 			map_init_163();
 			break;
