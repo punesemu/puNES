@@ -247,7 +247,15 @@ BYTE ines_load_rom(void) {
 				info.chr.rom[0].banks_8k = nes20_ram_size(flags[FL11] & 0x0F);
 			}
 			if (!info.chr.rom[0].banks_8k) {
-				info.chr.rom[0].banks_8k = 1;
+				if (info.format == iNES_1_0) {
+					if (info.extra_from_db & CHRRAM32K) {
+						info.chr.rom[0].banks_8k = 4;
+					} else {
+						info.chr.rom[0].banks_8k = 1;
+					}
+				} else {
+					info.chr.rom[0].banks_8k = 1;
+				}
 			}
 		}
 		info.prg.rom[0].banks_8k = info.prg.rom[0].banks_16k * 2;
@@ -294,7 +302,9 @@ BYTE ines_load_rom(void) {
 		}
 
 		info.prg.max_chips = info.prg.chips - 1;
-		info.chr.max_chips = info.chr.chips - 1;
+		if (info.chr.chips > 0) {
+			info.chr.max_chips = info.chr.chips - 1;
+		}
 
 		/* la CHR ram extra */
 		memset(&chr.extra, 0x00, sizeof(chr.extra));

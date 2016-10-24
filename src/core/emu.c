@@ -419,10 +419,6 @@ BYTE emu_search_in_database(FILE *fp) {
 						info.chr.rom[0].banks_8k = 32;
 					}
 					break;
-				case 96:
-					info.chr.rom[0].banks_8k = 4;
-					mapper.write_vram = TRUE;
-					break;
 				case 191:
 					if (info.id == BAD_SUGOROQUEST) {
 						info.chr.rom[0].banks_8k = 16;

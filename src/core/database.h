@@ -3227,9 +3227,9 @@ static const _dbelement dblist[] = {
 
 /* ----------------------------------- Bandai 161x02x74 ----------------------------------- */
 	/* Oeka Kids - Anpanman no Hiragana Daisuki (J).nes */
-	{"32d71dd6c5a8d78a918fe1b9d6d6c4a570d9652d", 96, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	{"32d71dd6c5a8d78a918fe1b9d6d6c4a570d9652d", 96, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, CHRRAM32K},
 	/* Oeka Kids - Anpanman to Oekaki Shiyou!! (J).nes */
-	{"2d95c59ccd0b3faed4b4e3e61ac2859352d59594", 96, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	{"2d95c59ccd0b3faed4b4e3e61ac2859352d59594", 96, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, CHRRAM32K},
 
 /* ----------------------------------- Ntdec (ASDER) -------------------------------------- */
 	/* Chik Bik Ji Jin - Saam Gwok Ji (CN-20) (Tw) [!].nes */

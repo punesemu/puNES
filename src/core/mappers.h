@@ -168,6 +168,7 @@
 #include "mappers/mapper_KS7013B.h"
 #include "mappers/mapper_MTECH01.h"
 #include "mappers/mapper_YOKO.h"
+#include "mappers/mapper_SA_9602B.h"
 
 #define _control_bank(val, max)\
 	if (val > max) {\
@@ -208,7 +209,7 @@
 	}
 #define map_prg_rom_8k(banks_8k, at, value) map_prg_rom_8k_chip(banks_8k, at, value, 0)
 
-enum { RD_BAT, WR_BAT };
+enum mappers_op_battery { RD_BAT, WR_BAT };
 
 typedef struct {
 	BYTE mirroring;
@@ -228,7 +229,7 @@ BYTE map_init(void);
 void map_quit(void);
 BYTE map_prg_chip_malloc(BYTE index, size_t size, BYTE set_value);
 BYTE map_prg_chip_rd_byte(BYTE index, BYTE openbus, WORD address, WORD mask);
-void map_prg_rom_8k_chip(BYTE banks_8k, BYTE at, WORD value, BYTE chip);
+void map_prg_rom_8k_chip(BYTE banks_8k, BYTE at, WORD value, WORD chip);
 void map_prg_rom_8k_reset(void);
 void map_prg_rom_8k_update(void);
 void map_prg_ram_init(void);

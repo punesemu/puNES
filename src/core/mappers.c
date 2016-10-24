@@ -782,6 +782,10 @@ BYTE map_init(void) {
 					// NES-YOKO
 					map_init_YOKO();
 					break;
+				case 29:
+					// NES-SA-9602B
+					map_init_SA_9602B();
+					break;
 			}
 			break;
 	}
@@ -881,7 +885,7 @@ BYTE map_prg_chip_rd_byte(BYTE index, BYTE openbus, WORD address, WORD mask) {
 	}
 	return (openbus);
 }
-void map_prg_rom_8k_chip(BYTE banks_8k, BYTE at, WORD value, BYTE chip) {
+void map_prg_rom_8k_chip(BYTE banks_8k, BYTE at, WORD value, WORD chip) {
 	BYTE a;
 
 	/* se cerco di switchare 32k ma ho solo un banco da 16k esco */
