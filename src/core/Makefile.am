@@ -253,6 +253,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_Caltron.h \
 	mappers/mapper_Camerica.c \
 	mappers/mapper_Camerica.h \
+	mappers/mapper_CC_21.c \
+	mappers/mapper_CC_21.h \
 	mappers/mapper_CITYFIGHT.c \
 	mappers/mapper_CITYFIGHT.h \
 	mappers/mapper_CNROM.c \

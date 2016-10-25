@@ -56,11 +56,11 @@ void extcl_cpu_wr_mem_BMC70IN1(WORD address, BYTE value) {
 		bmc70in1.reg[0] = address & 0x30;
 		bmc70in1.reg[1] = address & 0x07;
 	} else {
-	    if (address & 0x20) {
-	    	mirroring_H();
-	    } else {
-	    	mirroring_V();
-	    }
+		if (address & 0x20) {
+			mirroring_H();
+		} else {
+			mirroring_V();
+		}
 
 		if (bmc70in1_type == BMC70IN1B) {
 			bmc70in1.reg[2] = (address & 0x03) << 3;
@@ -84,24 +84,24 @@ void extcl_cpu_wr_mem_BMC70IN1(WORD address, BYTE value) {
 	switch (bmc70in1.reg[0]) {
 		case 0x00:
 		case 0x10:
-	    	value = bmc70in1.reg[2] | bmc70in1.reg[1];
-	    	control_bank(info.prg.rom[0].max.banks_16k)
-	    	map_prg_rom_8k(2, 0, value);
+			value = bmc70in1.reg[2] | bmc70in1.reg[1];
+			control_bank(info.prg.rom[0].max.banks_16k)
+			map_prg_rom_8k(2, 0, value);
 
-	    	value = bmc70in1.reg[2] | 0x07;
-	    	control_bank(info.prg.rom[0].max.banks_16k)
-	    	map_prg_rom_8k(2, 2, value);
+			value = bmc70in1.reg[2] | 0x07;
+			control_bank(info.prg.rom[0].max.banks_16k)
+			map_prg_rom_8k(2, 2, value);
 			break;
 		case 0x20:
-	    	value = (bmc70in1.reg[2] | bmc70in1.reg[1]) >> 1;
-	    	control_bank(info.prg.rom[0].max.banks_32k)
-	    	map_prg_rom_8k(4, 0, value);
+			value = (bmc70in1.reg[2] | bmc70in1.reg[1]) >> 1;
+			control_bank(info.prg.rom[0].max.banks_32k)
+			map_prg_rom_8k(4, 0, value);
 			break;
 		case 0x30:
 			value = bmc70in1.reg[2] | bmc70in1.reg[1];
-	    	control_bank(info.prg.rom[0].max.banks_16k)
-	    	map_prg_rom_8k(2, 0, value);
-	    	map_prg_rom_8k(2, 2, value);
+			control_bank(info.prg.rom[0].max.banks_16k)
+			map_prg_rom_8k(2, 0, value);
+			map_prg_rom_8k(2, 2, value);
 			break;
 	}
 	map_prg_rom_8k_update();

@@ -167,8 +167,8 @@ static void INLINE cityfight_prg_update(void) {
 
 	if (!cityfight.reg[0]) {
 		value = cityfight.reg[1];
-    	control_bank(info.prg.rom[0].max.banks_8k)
-    	map_prg_rom_8k(1, 2, value);
+	control_bank(info.prg.rom[0].max.banks_8k)
+	map_prg_rom_8k(1, 2, value);
 	}
 
 	map_prg_rom_8k_update();

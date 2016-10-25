@@ -328,10 +328,10 @@ void dlgStdPad::js_press_event() {
 		}
 	}
 	data.joy.value = 0;
-    data.joy.timer->start(30);
+	data.joy.timer->start(30);
 #elif defined (__WIN32__)
 	data.joy.value = 0;
-    data.joy.timer->start(150);
+	data.joy.timer->start(150);
 #endif
 }
 void dlgStdPad::td_update_label(int type, int value) {
@@ -392,8 +392,7 @@ bool dlgStdPad::keypressEvent(QEvent *event) {
 		if (keyEvent->key() != Qt::Key_Escape) {
 			data.cfg.port.input[type][vbutton] = inpObject::kbd_keyval_decode(keyEvent);
 		}
-		data.bp->setText(
-		        inpObject::kbd_keyval_to_name(data.cfg.port.input[type][vbutton]));
+		data.bp->setText(inpObject::kbd_keyval_to_name(data.cfg.port.input[type][vbutton]));
 	} else {
 		// quando sto configurando il joystick, l'unico input da tastiera
 		// che accetto e' l'escape.

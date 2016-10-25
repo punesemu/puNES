@@ -500,7 +500,7 @@ bool dlgInput::keypressEvent(QEvent *event) {
 
 	if (shcut.type == KEYBOARD) {
 		if ((keyEvent->key() == Qt::Key_Control) || (keyEvent->key() == Qt::Key_Meta)  ||
-			(keyEvent->key() == Qt::Key_Alt)     || (keyEvent->key() == Qt::Key_AltGr) ||
+			(keyEvent->key() == Qt::Key_Alt) || (keyEvent->key() == Qt::Key_AltGr) ||
 			(keyEvent->key() == Qt::Key_Shift)) {
 			return (true);
 		}
@@ -606,8 +606,8 @@ void dlgInput::s_shortcut_clicked(bool checked) {
 	shcut.bp->setFocus(Qt::ActiveWindowFocusReason);
 
 	shcut.timeout.seconds = 5;
-    shcut.timeout.timer->start(1000);
-    s_button_timeout();
+	shcut.timeout.timer->start(1000);
+	s_button_timeout();
 
 	if (shcut.type == JOYSTICK) {
 #if defined (__linux__)

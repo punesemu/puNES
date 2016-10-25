@@ -25,8 +25,8 @@ void map_init_EH8813A(void) {
 	EXTCL_CPU_WR_MEM(EH8813A);
 	EXTCL_CPU_RD_MEM(EH8813A);
 	EXTCL_SAVE_MAPPER(EH8813A);
-    mapper.internal_struct[0] = (BYTE *) &eh88131a;
-    mapper.internal_struct_size[0] = sizeof(eh88131a);
+	mapper.internal_struct[0] = (BYTE *) &eh88131a;
+	mapper.internal_struct_size[0] = sizeof(eh88131a);
 
 	if (info.reset >= HARD) {
 		eh88131a.address = 0;
@@ -88,8 +88,8 @@ BYTE extcl_cpu_rd_mem_EH8813A(WORD address, BYTE openbus, BYTE before) {
 	return (prg_rom_rd(address));
 }
 BYTE extcl_save_mapper_EH8813A(BYTE mode, BYTE slot, FILE *fp) {
-        save_slot_ele(mode, slot, eh88131a.address);
-        save_slot_ele(mode, slot, eh88131a.hwmode);
+	save_slot_ele(mode, slot, eh88131a.address);
+	save_slot_ele(mode, slot, eh88131a.hwmode);
 
-        return (EXIT_OK);
+	return (EXIT_OK);
 }

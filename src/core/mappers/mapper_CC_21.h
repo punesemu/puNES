@@ -16,15 +16,12 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include "pStyle.moc"
+#ifndef MAPPER_CC_21_H_
+#define MAPPER_CC_21_H_
 
-pStyle::pStyle() : QProxyStyle() {}
-pStyle::~pStyle() {}
-int pStyle::styleHint(StyleHint hint, const QStyleOption* opt = 0, const QWidget* widget = 0,
-		QStyleHintReturn* returnData = 0) const {
-	if (hint == QStyle::SH_Menu_SloppySubMenus) {
-		return (0);
-	}
-	return (QProxyStyle::styleHint(hint, opt, widget, returnData));
-}
+#include "common.h"
 
+void map_init_CC_21(void);
+void extcl_cpu_wr_mem_CC_21(WORD address, BYTE value);
+
+#endif /* MAPPER_CC_21_H_ */

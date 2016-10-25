@@ -235,7 +235,7 @@ void save_slot_count_load(void) {
 	gui_save_slot(save_slot.slot);
 }
 BYTE save_slot_element_struct(BYTE mode, BYTE slot, uintptr_t *src, DBWORD size, FILE *fp,
-        BYTE preview) {
+		BYTE preview) {
 	DBWORD bytes;
 
 	switch (mode) {

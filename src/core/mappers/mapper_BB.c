@@ -70,7 +70,7 @@ void extcl_cpu_wr_mem_BB(WORD address, BYTE value) {
 }
 BYTE extcl_cpu_rd_mem_BB(WORD address, BYTE openbus, BYTE before) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-	    return (bb_prg_6000[address & 0x1FFF]);
+		return (bb_prg_6000[address & 0x1FFF]);
 	}
 	return (openbus);
 }

@@ -169,6 +169,7 @@
 #include "mappers/mapper_MTECH01.h"
 #include "mappers/mapper_YOKO.h"
 #include "mappers/mapper_SA_9602B.h"
+#include "mappers/mapper_CC_21.h"
 
 #define _control_bank(val, max)\
 	if (val > max) {\

@@ -586,8 +586,8 @@ void extcl_cpu_wr_mem_116_type_A(WORD address, BYTE value) {
 			case 0x0E: {
 				BYTE shift = ((address & 0x01) << 2);
 
-                reg = ((((address & 0x02) | (address >> 10)) >> 1) + 2) & 0x07;
-                value = (m116.mode0.chr[reg] & (0xF0 >> shift)) | ((value & 0x0F) << shift);
+				reg = ((((address & 0x02) | (address >> 10)) >> 1) + 2) & 0x07;
+				value = (m116.mode0.chr[reg] & (0xF0 >> shift)) | ((value & 0x0F) << shift);
 				if (m116.mode0.chr[reg] != value) {
 					m116.mode0.chr[reg] = value;
 					m116_A_update_chr_mode0()

@@ -2448,7 +2448,7 @@ void mainWindow::s_state_load_file() {
 		if (fileinfo.exists()) {
 			memset(cfg->save_file, 0x00, sizeof(cfg->save_file));
 			strncpy(cfg->save_file, qPrintable(fileinfo.absoluteFilePath()),
-			        sizeof(cfg->save_file) - 1);
+				sizeof(cfg->save_file) - 1);
 			if (save_slot_load(SAVE_SLOT_FILE) == EXIT_OK) {
 				settings_pgs_save();
 			}

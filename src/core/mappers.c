@@ -786,6 +786,10 @@ BYTE map_init(void) {
 					// NES-SA-9602B
 					map_init_SA_9602B();
 					break;
+				case 30:
+					// NES-CC-21
+					map_init_CC_21();
+					break;
 			}
 			break;
 	}
@@ -922,7 +926,7 @@ void map_prg_ram_init(void) {
 	 * e devono esserci banchi di PRG Ram extra allora li assegno.
 	 */
 	if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) && info.prg.ram.banks_8k_plus
-	        && !prg.ram_plus) {
+			&& !prg.ram_plus) {
 		/* alloco la memoria necessaria */
 		prg.ram_plus = (BYTE *) malloc(prg_ram_plus_size());
 		/* inizializzo */

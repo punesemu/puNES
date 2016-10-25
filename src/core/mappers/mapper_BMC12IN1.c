@@ -50,7 +50,7 @@ void extcl_cpu_wr_mem_BMC12IN1(WORD address, BYTE value) {
 			return;
 	}
 
-    base = (bmc12in1.reg[2] & 0x03) << 3;
+	base = (bmc12in1.reg[2] & 0x03) << 3;
 
 	if (bmc12in1.reg[2] & 0x08) {
 		value = base | (bmc12in1.reg[0] & 0x06);
@@ -69,7 +69,7 @@ void extcl_cpu_wr_mem_BMC12IN1(WORD address, BYTE value) {
 	}
 	map_prg_rom_8k_update();
 
-    value = (bmc12in1.reg[0] >> 3) | (base << 2);
+	value = (bmc12in1.reg[0] >> 3) | (base << 2);
 	control_bank(info.chr.rom[0].max.banks_4k)
 	bank = value << 12;
 	chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);
