@@ -21,9 +21,10 @@
 
 #include "common.h"
 
-enum { VRC4A, VRC4B, VRC4C, VRC4D, VRC4E, VRC4BMC, VRC4T230 };
+enum { VRC4A, VRC4B, VRC4C, VRC4D, VRC4E, VRC4UNL, VRC4BMC, VRC4T230 };
 
 struct _vrc4 {
+	WORD chr_rom_high_bank[8];
 	BYTE chr_rom_bank[8];
 	BYTE swap_mode;
 	BYTE irq_enabled;

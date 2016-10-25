@@ -23,21 +23,28 @@
 #include "cpu.h"
 #include "save_slot.h"
 
-#define chr_rom_1k_update(slot, mask, shift)\
+#define _chr_rom_1k_update(slot, mask, shift)\
 	value = (vrc4.chr_rom_bank[slot] & mask) | ((value & 0x0F) << shift);\
-	control_bank(info.chr.rom[0].max.banks_1k)\
-	chr.bank_1k[slot] = chr_chip_byte_pnt(0, value << 10);\
+	tmp = vrc4.chr_rom_high_bank[slot] | value;\
+	_control_bank(tmp, info.chr.rom[0].max.banks_1k)\
+	chr.bank_1k[slot] = chr_chip_byte_pnt(0, tmp << 10);\
 	vrc4.chr_rom_bank[slot] = value
+#define chr_rom_1k_update_high(slot)\
+	vrc4.chr_rom_high_bank[slot] = (value & 0x10) << 4;\
+	_chr_rom_1k_update(slot, 0x0F, 4)
+#define chr_rom_1k_update_low(slot)\
+	_chr_rom_1k_update(slot, 0xF0, 0)
 
 BYTE type;
 
-const BYTE shift_VRC4[5] = { 0x01, 0x00, 0x06, 0x02, 0x02 };
-const WORD mask_VRC4[5]  = { 0x0006, 0x0003, 0x00C0, 0x000C, 0x000C };
-const WORD table_VRC4[5][4] = {
+const BYTE shift_VRC4[6] = { 0x01, 0x00, 0x06, 0x02, 0x02, 0x00 };
+const WORD mask_VRC4[6]  = { 0x0006, 0x0003, 0x00C0, 0x000C, 0x000C, 0x0003 };
+const WORD table_VRC4[6][4] = {
 	{0x0000, 0x0001, 0x0002, 0x0003},
 	{0x0000, 0x0002, 0x0001, 0x0003},
 	{0x0000, 0x0001, 0x0002, 0x0003},
 	{0x0000, 0x0002, 0x0001, 0x0003},
+	{0x0000, 0x0001, 0x0002, 0x0003},
 	{0x0000, 0x0001, 0x0002, 0x0003},
 };
 
@@ -53,6 +60,7 @@ void map_init_VRC4(BYTE revision) {
 
 		memset(&vrc4, 0x00, sizeof(vrc4));
 		for (i = 0; i < 8; i++) {
+			vrc4.chr_rom_high_bank[i] = 0;
 			vrc4.chr_rom_bank[i] = i;
 		}
 	} else {
@@ -119,52 +127,52 @@ void extcl_cpu_wr_mem_VRC4(WORD address, BYTE value) {
 			}
 			return;
 		case 0xB000:
-			chr_rom_1k_update(0, 0xF0, 0);
+			chr_rom_1k_update_low(0);
 			return;
 		case 0xB001:
-			chr_rom_1k_update(0, 0x0F, 4);
+			chr_rom_1k_update_high(0);
 			return;
 		case 0xB002:
-			chr_rom_1k_update(1, 0xF0, 0);
+			chr_rom_1k_update_low(1);
 			return;
 		case 0xB003:
-			chr_rom_1k_update(1, 0x0F, 4);
+			chr_rom_1k_update_high(1);
 			return;
 		case 0xC000:
-			chr_rom_1k_update(2, 0xF0, 0);
+			chr_rom_1k_update_low(2);
 			return;
 		case 0xC001:
-			chr_rom_1k_update(2, 0x0F, 4);
+			chr_rom_1k_update_high(2);
 			return;
 		case 0xC002:
-			chr_rom_1k_update(3, 0xF0, 0);
+			chr_rom_1k_update_low(3);
 			return;
 		case 0xC003:
-			chr_rom_1k_update(3, 0x0F, 4);
+			chr_rom_1k_update_high(3);
 			return;
 		case 0xD000:
-			chr_rom_1k_update(4, 0xF0, 0);
+			chr_rom_1k_update_low(4);
 			return;
 		case 0xD001:
-			chr_rom_1k_update(4, 0x0F, 4);
+			chr_rom_1k_update_high(4);
 			return;
 		case 0xD002:
-			chr_rom_1k_update(5, 0xF0, 0);
+			chr_rom_1k_update_low(5);
 			return;
 		case 0xD003:
-			chr_rom_1k_update(5, 0x0F, 4);
+			chr_rom_1k_update_high(5);
 			return;
 		case 0xE000:
-			chr_rom_1k_update(6, 0xF0, 0);
+			chr_rom_1k_update_low(6);
 			return;
 		case 0xE001:
-			chr_rom_1k_update(6, 0x0F, 4);
+			chr_rom_1k_update_high(6);
 			return;
 		case 0xE002:
-			chr_rom_1k_update(7, 0xF0, 0);
+			chr_rom_1k_update_low(7);
 			return;
 		case 0xE003:
-			chr_rom_1k_update(7, 0x0F, 4);
+			chr_rom_1k_update_high(7);
 			return;
 		case 0xF000:
 			vrc4.irq_reload = (vrc4.irq_reload & 0xF0) | (value & 0x0F);
@@ -191,6 +199,9 @@ void extcl_cpu_wr_mem_VRC4(WORD address, BYTE value) {
 	}
 }
 BYTE extcl_save_mapper_VRC4(BYTE mode, BYTE slot, FILE *fp) {
+	if (save_slot.version >= 14) {
+		save_slot_ele(mode, slot, vrc4.chr_rom_high_bank);
+	}
 	save_slot_ele(mode, slot, vrc4.chr_rom_bank);
 	save_slot_ele(mode, slot, vrc4.swap_mode);
 	save_slot_ele(mode, slot, vrc4.irq_enabled);
