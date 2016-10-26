@@ -790,6 +790,10 @@ BYTE map_init(void) {
 					// NES-CC-21
 					map_init_CC_21();
 					break;
+				case 31:
+					// NES-LH32
+					map_init_LH32();
+					break;
 			}
 			break;
 	}

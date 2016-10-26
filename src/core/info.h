@@ -50,6 +50,7 @@ EXTERNC struct _info {
 		BYTE submapper;
 		BYTE extend_wr;
 		BYTE extend_rd;
+		BYTE ram_plus_op_controlled_by_mapper;
 	} mapper;
 	BYTE mirroring_db;
 	BYTE portable;

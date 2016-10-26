@@ -254,7 +254,7 @@ BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 					} else {
 						cpu.openbus = prg.ram.data[address & 0x1FFF];
 					}
-				} else {
+				} else if (info.mapper.ram_plus_op_controlled_by_mapper == FALSE) {
 					cpu.openbus = prg.ram_plus_8k[address & 0x1FFF];
 				}
 			}
@@ -755,7 +755,7 @@ void cpu_wr_mem(WORD address, BYTE value) {
 					} else {
 						prg.ram.data[address & 0x1FFF] = value;
 					}
-				} else {
+				} else if (info.mapper.ram_plus_op_controlled_by_mapper == FALSE) {
 					prg.ram_plus_8k[address & 0x1FFF] = value;
 				}
 			}

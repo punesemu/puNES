@@ -293,6 +293,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_KOF97.h \
 	mappers/mapper_KS7013B.c \
 	mappers/mapper_KS7013B.h \
+	mappers/mapper_LH32.c \
+	mappers/mapper_LH32.h \
 	mappers/mapper_Magic.c \
 	mappers/mapper_Magic.h \
 	mappers/mapper_Malee.c \
