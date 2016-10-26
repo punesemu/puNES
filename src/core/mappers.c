@@ -136,6 +136,9 @@ BYTE map_init(void) {
 		case 26:
 			map_init_VRC6(VRC6B);
 			break;
+		case 27:
+			map_init_VRC4(VRC4UNL);
+			break;
 		case 28:
 			map_init_28();
 			break;
