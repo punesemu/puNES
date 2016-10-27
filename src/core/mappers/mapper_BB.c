@@ -16,7 +16,6 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <string.h>
 #include "mappers.h"
 #include "mem_map.h"
 #include "info.h"
@@ -31,8 +30,6 @@ void map_init_BB(void) {
 	mapper.internal_struct[0] = (BYTE *) &bb;
 	mapper.internal_struct_size[0] = sizeof(bb);
 
-	memset(&bb, 0x00, sizeof(bb));
-
 	{
 		BYTE value = 0xFF;
 
@@ -41,6 +38,8 @@ void map_init_BB(void) {
 		map_prg_rom_8k_update();
 	}
 
+	bb.reg = 0xFF;
+	_control_bank(bb.reg, info.prg.rom[0].max.banks_8k)
 	bb_prg_6000 = prg_chip_byte_pnt(0, bb.reg << 13);
 }
 void extcl_cpu_wr_mem_BB(WORD address, BYTE value) {
