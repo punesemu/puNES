@@ -171,6 +171,7 @@
 #include "mappers/mapper_SA_9602B.h"
 #include "mappers/mapper_CC_21.h"
 #include "mappers/mapper_LH32.h"
+#include "mappers/mapper_NovelDiamond.h"
 
 #define _control_bank(val, max)\
 	if (val > max) {\

@@ -311,6 +311,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_MTECH01.h \
 	mappers/mapper_Namco.c \
 	mappers/mapper_Namco.h \
+	mappers/mapper_NovelDiamond.c \
+	mappers/mapper_NovelDiamond.h \
 	mappers/mapper_Ntdec.c \
 	mappers/mapper_Ntdec.h \
 	mappers/mapper_Rcm.c \
