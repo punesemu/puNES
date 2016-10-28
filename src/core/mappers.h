@@ -172,6 +172,7 @@
 #include "mappers/mapper_CC_21.h"
 #include "mappers/mapper_LH32.h"
 #include "mappers/mapper_NovelDiamond.h"
+#include "mappers/mapper_SL1632.h"
 
 #define _control_bank(val, max)\
 	if (val > max) {\
@@ -179,11 +180,13 @@
 	}
 #define control_bank(max)\
 	_control_bank(value, max)
-#define control_bank_with_AND(mask, max)\
+#define _control_bank_with_AND(val, mask, max)\
 {\
-	value &= mask;\
-	control_bank(max)\
+	val &= mask;\
+	_control_bank(val, max)\
 }
+#define control_bank_with_AND(mask, max)\
+	_control_bank_with_AND(value, mask, max)
 #define prg_rom_rd(address) prg.rom_8k[(address >> 13) & 0x03][address & 0x1FFF]
 #define mapper_rd_battery_default()\
 {\

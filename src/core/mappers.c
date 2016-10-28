@@ -801,6 +801,10 @@ BYTE map_init(void) {
 					// NES-NovelDiamond9999999in1
 					map_init_NovelDiamond();
 					break;
+				case 33:
+					// NES-SL1632
+					map_init_SL1632();
+					break;
 			}
 			break;
 	}
