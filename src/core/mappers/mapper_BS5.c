@@ -30,7 +30,7 @@ void map_init_BS5(void) {
 		BYTE i;
 
 		for (i = 0; i < 4; i++) {
-			mapper.rom_map_to[0] = info.prg.rom[0].banks_8k - 1;
+			mapper.rom_map_to[i] = info.prg.rom[0].banks_8k - 1;
 		}
 	}
 
