@@ -323,6 +323,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_SA_9602B.h \
 	mappers/mapper_Sachen.c \
 	mappers/mapper_Sachen.h \
+	mappers/mapper_SHERO.c \
+	mappers/mapper_SHERO.h \
 	mappers/mapper_SL1632.c \
 	mappers/mapper_SL1632.h \
 	mappers/mapper_Sunsoft.c \

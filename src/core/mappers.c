@@ -805,6 +805,10 @@ BYTE map_init(void) {
 					// NES-SL1632
 					map_init_SL1632();
 					break;
+				case 34:
+					// NES-SHERO
+					map_init_SHERO();
+					break;
 			}
 			break;
 	}
