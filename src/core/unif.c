@@ -116,6 +116,7 @@ static const _unif_board unif_boards[] = {
 	{"NovelDiamond9999999in1", NO_INES, 32, DEFAULT, DEFAULT, NOEXTRA},
 	{"SL1632", NO_INES, 33, DEFAULT, DEFAULT, NOEXTRA},
 	{"SHERO", NO_INES, 34, DEFAULT, DEFAULT, NOEXTRA},
+	{"SMB2J", NO_INES, 35, DEFAULT, DEFAULT, NOEXTRA},
 
 	//{"NTBROM", 68, NO_UNIF},
 };

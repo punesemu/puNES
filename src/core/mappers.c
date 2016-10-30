@@ -809,6 +809,10 @@ BYTE map_init(void) {
 					// NES-SHERO
 					map_init_SHERO();
 					break;
+				case 35:
+					// NES-SMB2J
+					map_init_UNIFSMB2J();
+					break;
 			}
 			break;
 	}
