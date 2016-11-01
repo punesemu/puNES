@@ -817,6 +817,10 @@ BYTE map_init(void) {
 					// NES-AX5705
 					map_init_AX5705();
 					break;
+				case 37:
+					// NES-GS-2004
+					map_init_GS_2004();
+					break;
 			}
 			break;
 	}

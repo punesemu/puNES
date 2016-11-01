@@ -35,7 +35,6 @@ void map_init_BB(void) {
 
 		control_bank(info.prg.rom[0].max.banks_32k)
 		map_prg_rom_8k(4, 0, value);
-		map_prg_rom_8k_update();
 	}
 
 	bb.reg = 0xFF;
