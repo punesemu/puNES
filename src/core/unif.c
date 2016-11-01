@@ -80,6 +80,7 @@ static const _unif_board unif_boards[] = {
 	{"SA-72007", 145, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
 	{"Sachen-8259B", 138, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
 	{"SuperHIK8in1", 45, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
+	{"Supervision16in1", 53, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
 
 	{"A65AS", NO_INES, 0, DEFAULT, DEFAULT, NOEXTRA},
 	{"MARIO1-MALEE2", NO_INES, 1, DEFAULT, DEFAULT, NOEXTRA},
@@ -118,8 +119,6 @@ static const _unif_board unif_boards[] = {
 	{"SHERO", NO_INES, 34, DEFAULT, DEFAULT, NOEXTRA},
 	{"SMB2J", NO_INES, 35, DEFAULT, DEFAULT, NOEXTRA},
 	{"AX5705", NO_INES, 36, DEFAULT, DEFAULT, NOEXTRA},
-
-	//{"NTBROM", 68, NO_UNIF},
 };
 
 BYTE unif_load_rom(void) {
