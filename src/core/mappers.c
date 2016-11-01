@@ -821,6 +821,10 @@ BYTE map_init(void) {
 					// NES-GS-2004
 					map_init_GS_2004();
 					break;
+				case 38:
+					// NES-GS-2013
+					map_init_GS_2013();
+					break;
 			}
 			break;
 	}

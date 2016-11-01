@@ -121,6 +121,7 @@ static const _unif_board unif_boards[] = {
 	{"SMB2J", NO_INES, 35, DEFAULT, DEFAULT, NOEXTRA},
 	{"AX5705", NO_INES, 36, DEFAULT, DEFAULT, NOEXTRA},
 	{"GS-2004", NO_INES, 37, DEFAULT, DEFAULT, NOEXTRA},
+	{"GS-2013", NO_INES, 38, DEFAULT, DEFAULT, NOEXTRA},
 };
 
 BYTE unif_load_rom(void) {
