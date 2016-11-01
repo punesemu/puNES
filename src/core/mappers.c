@@ -813,6 +813,10 @@ BYTE map_init(void) {
 					// NES-SMB2J
 					map_init_UNIFSMB2J();
 					break;
+				case 36:
+					// NES-AX5705
+					map_init_AX5705();
+					break;
 			}
 			break;
 	}

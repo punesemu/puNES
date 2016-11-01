@@ -175,6 +175,7 @@
 #include "mappers/mapper_SL1632.h"
 #include "mappers/mapper_SHERO.h"
 #include "mappers/mapper_UNIFSMB2J.h"
+#include "mappers/mapper_AX5705.h"
 
 #define _control_bank(val, max)\
 	if (val > max) {\
