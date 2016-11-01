@@ -103,16 +103,16 @@ void extcl_cpu_wr_mem_252(WORD address, BYTE value) {
 		}
 		case 0xF000:
 			m252.irq.reload = (m252.irq.reload & 0xF0) | (value & 0x0F);
-			irq.high &= ~EXT_IRQ;
 			return;
 		case 0xF004:
 			m252.irq.reload = (value << 4) | (m252.irq.reload & 0x0F);
-			irq.high &= ~EXT_IRQ;
 			return;
 		case 0xF008:
-			m252.irq.prescaler = 0;
 			m252.irq.active = value & 0x02;
-			m252.irq.count = m252.irq.reload;
+			if (m252.irq.active) {
+				m252.irq.prescaler = 0;
+				m252.irq.count = m252.irq.reload;
+			}
 			irq.high &= ~EXT_IRQ;
 			return;
 	}
@@ -139,17 +139,24 @@ void extcl_wr_chr_252(WORD address, BYTE value) {
 	}
 }
 void extcl_cpu_every_cycle_252(void) {
-	if (m252.irq.active) {
-		m252.irq.prescaler += 3;
-		if (m252.irq.prescaler >= 341) {
-			m252.irq.prescaler -= 341;
-			m252.irq.count++;
-			if (m252.irq.count & 0x100) {
-				irq.high |= EXT_IRQ;
-				m252.irq.count = m252.irq.reload;
-			}
-		}
+	if (!m252.irq.active) {
+		return;
 	}
+
+	if (m252.irq.prescaler < 338) {
+		m252.irq.prescaler += 3;
+		return;
+	}
+	m252.irq.prescaler -= 338;
+
+	if (m252.irq.count != 0xFF) {
+		m252.irq.count++;
+		return;
+	}
+
+	m252.irq.count = m252.irq.reload;
+	irq.delay = TRUE;
+	irq.high |= EXT_IRQ;
 }
 
 static void INLINE m252_update_chr_extra(void) {
