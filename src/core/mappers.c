@@ -825,6 +825,10 @@ BYTE map_init(void) {
 					// NES-GS-2013
 					map_init_GS_2013();
 					break;
+				case 39:
+					// NES-KS7012
+					map_init_KS7012();
+					break;
 			}
 			break;
 	}

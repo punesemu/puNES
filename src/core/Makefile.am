@@ -297,6 +297,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_Kasing.h \
 	mappers/mapper_KOF97.c \
 	mappers/mapper_KOF97.h \
+	mappers/mapper_KS7012.c \
+	mappers/mapper_KS7012.h \
 	mappers/mapper_KS7013B.c \
 	mappers/mapper_KS7013B.h \
 	mappers/mapper_LH32.c \

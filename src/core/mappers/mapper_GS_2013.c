@@ -19,7 +19,6 @@
 #include "mappers.h"
 #include "mem_map.h"
 #include "info.h"
-#include "save_slot.h"
 
 BYTE *gs_2013_prg_6000;
 

@@ -16,33 +16,12 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include "mappers.h"
-#include "mem_map.h"
-#include "info.h"
+#ifndef MAPPER_KS7012_H_
+#define MAPPER_KS7012_H_
 
-BYTE *gs_2004_prg_6000;
+#include "common.h"
 
-void map_init_GS_2004(void) {
-	EXTCL_CPU_WR_MEM(GS_2004);
-	EXTCL_CPU_RD_MEM(GS_2004);
+void map_init_KS7012(void);
+void extcl_cpu_wr_mem_KS7012(WORD address, BYTE value);
 
-	{
-		BYTE value = 0xFF;
-
-		control_bank(info.prg.rom[0].max.banks_32k)
-		map_prg_rom_8k(4, 0, value);
-	}
-
-	gs_2004_prg_6000 = prg_chip_byte_pnt(1, 0);
-}
-void extcl_cpu_wr_mem_GS_2004(WORD address, BYTE value) {
-	control_bank(info.prg.rom[0].max.banks_32k)
-	map_prg_rom_8k(4, 0, value);
-	map_prg_rom_8k_update();
-}
-BYTE extcl_cpu_rd_mem_GS_2004(WORD address, BYTE openbus, BYTE before) {
-	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		return (gs_2004_prg_6000[address & 0x1FFF]);
-	}
-	return (openbus);
-}
+#endif /* MAPPER_KS7012_H_ */
