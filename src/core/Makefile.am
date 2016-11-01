@@ -161,6 +161,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_246.h \
 	mappers/mapper_249.c \
 	mappers/mapper_249.h \
+	mappers/mapper_252.c \
+	mappers/mapper_252.h \
 	mappers/mapper_28.c \
 	mappers/mapper_28.h \
 	mappers/mapper_31.c \

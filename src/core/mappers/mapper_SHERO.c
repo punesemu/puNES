@@ -144,6 +144,7 @@ BYTE extcl_cpu_rd_mem_SHERO(WORD address, BYTE openbus, BYTE before) {
 BYTE extcl_save_mapper_SHERO(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, shero.reg);
 	save_slot_ele(mode, slot, shero.chr_map);
+	save_slot_mem(mode, slot, chr.extra.data, chr.extra.size, FALSE);
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	if (mode == SAVE_SLOT_READ) {
