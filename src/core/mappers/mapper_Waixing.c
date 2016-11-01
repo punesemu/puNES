@@ -687,7 +687,7 @@ void extcl_cpu_wr_mem_Waixing_PSx(WORD address, BYTE value) {
 
 	value &= 0x3F;
 
-	switch (address & 0x0003) {
+	switch (address & 0x1FFF) {
 		case 0x0000:
 			control_bank(info.prg.rom[0].max.banks_16k)
 			map_prg_rom_8k(2, 0, value);

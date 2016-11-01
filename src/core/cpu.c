@@ -1050,6 +1050,14 @@ void cpu_turn_on(void) {
 			if (info.mapper.id == 143) {
 				mmcpu.ram[0x004] = 0x00;
 			}
+
+			/*
+			 * questo workaround serve solo per
+			 * Doraemon (J) (PRG0) [hM15].nes
+			 */
+			if (info.mapper.id == 15) {
+				mmcpu.ram[0x018] = 0x00;
+			}
 		}
 
 		/* reset della PRG Ram */
