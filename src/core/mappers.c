@@ -667,6 +667,9 @@ BYTE map_init(void) {
 		case 253:
 			map_init_253();
 			break;
+		case 254:
+			map_init_254();
+			break;
 		default:
 			text_add_line_info(1, "[yellow]Mapper %d not supported", info.mapper.id);
 			fprintf(stderr, "Mapper not supported\n");
