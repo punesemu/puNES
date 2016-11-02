@@ -539,6 +539,9 @@ BYTE map_init(void) {
 		case 196:
 			map_init_196();
 			break;
+		case 197:
+			map_init_197();
+			break;
 		case 199:
 			map_init_Waixing(WTG);
 			break;

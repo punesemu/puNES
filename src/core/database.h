@@ -1932,6 +1932,9 @@ static const _dbelement dblist[] = {
 	{"41f6f581c7da9f90c18e0eb2442df7a6adbe3e76", 11, CD_NO_CONFLCT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* ------------------------------------- MMC3 --------------------------------------------- */
+	/* Summer Carnival '92 - Recca (U).nes */
+	{"4042bbe6e1ca346d5b56889dfc1cfe6124761333", 4, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+
 	/* Adventures of Tomley Kleene by Bob Rost (PD).nes */
 	{"d7bbb045df0e5baa6c35aeda82e99b447dd3d05e", 4, DEFAULT, DEFAULT, DEFAULT, UNK_VERTICAL, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Famista '94 (J) [hM04][b3].nes */
@@ -3631,6 +3634,14 @@ static const _dbelement dblist[] = {
 	{"2137ac90d5103a14b8390625a758bbe36f598502", 194, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* ------------------------------------ Waixing (WTE) ------------------------------------- */
+	/* Captain Tsubasa Vol. II - Super Striker (Ch) [a1].nes */
+	{"5d68a7c5f3053f052fa9acab1ce3fe181da4c6ba", 195, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Captain Tsubasa Vol. II - Super Striker (Ch) [a2].nes */
+	{"2b053e07fc9030355e73994bb3d8d4b6b05535fc", 195, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Captain Tsubasa Vol. II - Super Striker (Ch) [a3].nes */
+	{"b7256ad224f696eccf78423cd67ef9c1c1cfa72f", 195, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Captain Tsubasa Vol. II - Super Striker (Ch).nes */
+	{"baeff77afe81a3b1179091e83ae430d830cc0696", 195, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Captain Tsubasa Vol. II - Super Striker (J) [T+Chi20060406_Kanou].nes */
 	{"2ccd530f21a64fb0424f6a6f5e09639f5c7a1dfc", 195, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Chaos World (Ch) [a1].nes */
