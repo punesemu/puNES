@@ -518,6 +518,9 @@ BYTE map_init(void) {
 		case 187:
 			map_init_187();
 			break;
+		case 188:
+			map_init_188();
+			break;
 		case 189:
 			map_init_Txc(TXCTW);
 			break;

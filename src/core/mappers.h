@@ -146,6 +146,7 @@
 #include "mappers/mapper_250.h"
 #include "mappers/mapper_254.h"
 #include "mappers/mapper_197.h"
+#include "mappers/mapper_188.h"
 /* UNIF */
 #include "mappers/mapper_A65AS.h"
 #include "mappers/mapper_Malee.h"
