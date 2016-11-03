@@ -3868,13 +3868,18 @@ static const _dbelement dblist[] = {
 	//{"aaa62708b65196f3d0222cc5896ab47ed4b155cf", 99, DEFAULT, DEFAULT, DEFAULT, DEFAULT, RP2C03B, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* -------------------------------------- Game Genie -------------------------------------- */
-
 	/* Game Genie Decoder by Chris Covell (PD).nes */
 	{"8939d894f7569f9fadf2a04098010292662b14fd", GAMEGENIE_MAPPER, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Game Genie (Unl) (V1.5A) [o2].nes */
 	{"8bb0d98c4515cba77a805bc8b06788dd6ed6263c", GAMEGENIE_MAPPER, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Game Genie (Unl) (V1.5A) [o3].nes */
 	{"39ee2d598b084c88de7ac467ad65e4049c3db5e4", GAMEGENIE_MAPPER, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+
+/* ----------------------------------------- Unif ----------------------------------------- */
+	/* Mi Hun Che (Ch)(full copyrights)[!].nes */
+	{"5421c38840e5fbef1140f1f8cfe42b5dc7b8096c", UNIF_MAPPER, 30, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Mi Hun Che (Ch)(replaced copyrights)[p1][!].nes */
+	{"230f514c80b5dfbe6a86f3e24947ad34c0235835", UNIF_MAPPER, 30, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 };
 

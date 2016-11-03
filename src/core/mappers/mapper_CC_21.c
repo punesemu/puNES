@@ -34,10 +34,10 @@ void extcl_cpu_wr_mem_CC_21(WORD address, BYTE value) {
 		vl = value;
 	}
 
-	if (prg.chip[0].size == 8192) {
+	if (chr.chip[0].size == 8192) {
 		vl = vl & 0x01;
 		_control_bank(vl, info.chr.rom[0].max.banks_4k)
-		bank = vl << 13;
+		bank = vl << 12;
 		chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);
 		chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);
 		chr.bank_1k[2] = chr_chip_byte_pnt(0, bank | 0x0800);

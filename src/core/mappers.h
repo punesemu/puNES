@@ -22,6 +22,7 @@
 /* INES/NES2.0 */
 #include "common.h"
 #include "external_calls.h"
+#include "unif.h"
 #include "mappers/mapper_0.h"
 #include "mappers/mapper_MMC1.h"
 #include "mappers/mapper_MMC2andMMC4.h"

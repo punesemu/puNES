@@ -437,6 +437,10 @@ BYTE emu_search_in_database(FILE *fp) {
 						info.prg.rom[0].banks_16k = 256;
 					}
 					break;
+				case UNIF_MAPPER:
+					unif.internal_mapper = info.mapper.submapper;
+					break;
+
 			}
 			if (info.mirroring_db == UNK_VERTICAL) {
 				mirroring_V();
