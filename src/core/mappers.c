@@ -462,6 +462,9 @@ BYTE map_init(void) {
 		case 165:
 			map_init_Waixing(SH2);
 			break;
+		case 168:
+			map_init_168();
+			break;
 		case 171:
 			map_init_Kaiser(KS7058);
 			break;

@@ -34,7 +34,7 @@ void map_init_253(void) {
 	mapper.internal_struct_size[0] = sizeof(m253);
 
 	if (info.reset >= HARD) {
-        BYTE i;
+		BYTE i;
 
 		memset(&m253, 0x00, sizeof(m253));
 
