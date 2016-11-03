@@ -148,6 +148,8 @@
 #include "mappers/mapper_197.h"
 #include "mappers/mapper_188.h"
 #include "mappers/mapper_168.h"
+#include "mappers/mapper_167.h"
+#include "mappers/mapper_166.h"
 /* UNIF */
 #include "mappers/mapper_A65AS.h"
 #include "mappers/mapper_Malee.h"

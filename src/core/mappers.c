@@ -462,6 +462,12 @@ BYTE map_init(void) {
 		case 165:
 			map_init_Waixing(SH2);
 			break;
+		case 166:
+			map_init_166();
+			break;
+		case 167:
+			map_init_167();
+			break;
 		case 168:
 			map_init_168();
 			break;

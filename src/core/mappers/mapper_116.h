@@ -27,7 +27,7 @@ enum {
 	MAP116_TYPE_C
 };
 
-struct _m166 {
+struct _m116 {
 	BYTE mode;
 
 	struct {
