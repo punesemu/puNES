@@ -859,6 +859,10 @@ BYTE map_init(void) {
 					// NES-KS7012
 					map_init_KS7012();
 					break;
+				case 40:
+					// NES-KS7037
+					map_init_KS7037();
+					break;
 			}
 			break;
 	}
@@ -866,6 +870,9 @@ BYTE map_init(void) {
 	map_prg_ram_init();
 	if (map_chr_ram_init()) {
 		return (EXIT_ERROR);
+	}
+	if (extcl_after_mapper_init) {
+		extcl_after_mapper_init();
 	}
 	return (EXIT_OK);
 }

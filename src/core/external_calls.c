@@ -20,6 +20,7 @@
 
 void extcl_init(void) {
 	/* Mappers */
+	extcl_after_mapper_init = NULL;
 	extcl_cpu_wr_mem = NULL;
 	extcl_cpu_rd_mem = NULL;
 	extcl_save_mapper = NULL;

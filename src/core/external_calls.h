@@ -23,6 +23,7 @@
 #include "common.h"
 
 /* mappers */
+#define EXTCL_AFTER_MAPPER_INIT(n) extcl_after_mapper_init = extcl_after_mapper_init_##n
 #define EXTCL_CPU_WR_MEM(n) extcl_cpu_wr_mem = extcl_cpu_wr_mem_##n
 #define EXTCL_CPU_RD_MEM(n) extcl_cpu_rd_mem = extcl_cpu_rd_mem_##n
 #define EXTCL_SAVE_MAPPER(n) extcl_save_mapper = extcl_save_mapper_##n
@@ -68,6 +69,9 @@
 EXTERNC void extcl_init(void);
 
 /* mappers */
+/* viene chiamata dopo il map_init(), map_prg_ram_init() e map_chr_ram_init() */
+EXTERNC void (*extcl_after_mapper_init)(void);
+/* */
 EXTERNC void (*extcl_cpu_wr_mem)(WORD address, BYTE value);
 EXTERNC BYTE (*extcl_cpu_rd_mem)(WORD address, BYTE openbus, BYTE before);
 EXTERNC BYTE (*extcl_save_mapper)(BYTE mode, BYTE slot, FILE *fp);
