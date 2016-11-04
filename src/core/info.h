@@ -99,6 +99,7 @@ EXTERNC struct _info {
 				WORD banks_8k;
 				WORD banks_8k_before_last;
 				WORD banks_4k;
+				WORD banks_2k;
 			} max;
 		} rom[MAX_CHIPS];
 		struct _info_prg_ram {

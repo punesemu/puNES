@@ -20,7 +20,6 @@
 #include "mappers.h"
 #include "info.h"
 #include "mem_map.h"
-#include "irqA12.h"
 #include "save_slot.h"
 
 static void INLINE ks7037_update(void);
@@ -49,46 +48,43 @@ void extcl_after_mapper_init_KS7037(void) {
 	ks7037_update();
 }
 void extcl_cpu_wr_mem_KS7037(WORD address, BYTE value) {
-	if (address < 0x6000) {
-		return;
-	}
-	if ((address >= 0x6000) && (address <= 0x6FFF)) {
-		prg.ram_plus_8k[address & 0x0FFF] = value;
-		return;
-	}
-	if ((address >= 0x7000) && (address <= 0x7FFF)) {
-		return;
-	}
-	if ((address >= 0xA000) && (address <= 0xBFFF)) {
-		if (address >= 0xB000) {
+	switch (address & 0xF001) {
+		case 0x6000:
+		case 0x6001:
+			prg.ram_plus_8k[address & 0x0FFF] = value;
+			return;
+		case 0x7000:
+		case 0x7001:
+		case 0xA000:
+		case 0xA001:
+			return;
+		case 0xB000:
+		case 0xB001:
 			ks7037_prg_B000[address & 0x0FFF] = value;
-		}
-		return;
-	}
-
-	switch (address & 0xE001) {
+			return;
 		case 0x8000:
+		case 0x9000:
 			ks7037.ind = value & 0x07;
-			break;
+			return;
 		case 0x8001:
+		case 0x9001:
 			ks7037.reg[ks7037.ind] = value;
 			ks7037_update();
-			break;
+			return;
 	}
 }
 BYTE extcl_cpu_rd_mem_KS7037(WORD address, BYTE openbus, BYTE before) {
-	if ((address >= 0x6000) && (address <= 0x6FFF)) {
-		return (prg.ram_plus_8k[address & 0x0FFF]);
+	switch (address & 0xF000) {
+		case 0x6000:
+			return (prg.ram_plus_8k[address & 0x0FFF]);
+		case 0x7000:
+			return (ks7037_prg_7000[address & 0x0FFF]);
+		case 0xA000:
+			return (prg.rom_8k[1][address & 0x0FFF]);
+		case 0xB000:
+			return (ks7037_prg_B000[address & 0x0FFF]);
 	}
-	if ((address >= 0x7000) && (address <= 0x7FFF)) {
-		return (ks7037_prg_7000[address & 0x0FFF]);
-	}
-	if ((address >= 0xA000) && (address <= 0xAFFF)) {
-		return (prg.rom_8k[1][address & 0x0FFF]);
-	}
-	if ((address >= 0xB000) && (address <= 0xBFFF)) {
-		return (ks7037_prg_B000[address & 0x0FFF]);
-	}
+
 	return (openbus);
 }
 BYTE extcl_save_mapper_KS7037(BYTE mode, BYTE slot, FILE *fp) {
@@ -114,7 +110,7 @@ static void INLINE ks7037_update(void) {
 	value = ks7037.reg[6];
 	control_bank(info.prg.rom[0].max.banks_8k)
 	map_prg_rom_8k(1, 0, value);
-	prg.rom_8k[0] = prg_chip_byte_pnt(prg.rom_chip[0], value << 13);
+	prg.rom_8k[0] = prg_chip_byte_pnt(prg.rom_chip[0], mapper.rom_map_to[0] << 13);
 
 	// 0xA000
 	value = 0xFC;
@@ -128,7 +124,7 @@ static void INLINE ks7037_update(void) {
 	value = ks7037.reg[7];
 	control_bank(info.prg.rom[0].max.banks_8k)
 	map_prg_rom_8k(1, 2, value);
-	prg.rom_8k[2] = prg_chip_byte_pnt(prg.rom_chip[0], value << 13);
+	prg.rom_8k[2] = prg_chip_byte_pnt(prg.rom_chip[0], mapper.rom_map_to[2] << 13);
 
 	// mirroring
 	ntbl.bank_1k[0] = &ntbl.data[(ks7037.reg[2] & 0x01) * 0x400];

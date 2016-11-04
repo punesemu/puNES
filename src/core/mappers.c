@@ -863,6 +863,10 @@ BYTE map_init(void) {
 					// NES-KS7037
 					map_init_KS7037();
 					break;
+				case 41:
+					// NES-KS7057
+					map_init_KS7057();
+					break;
 			}
 			break;
 	}
@@ -1179,6 +1183,7 @@ void map_set_banks_max_prg(BYTE chip) {
 	info.prg.rom[chip].max.banks_8k = info.prg.rom[chip].banks_8k - 1;
 	info.prg.rom[chip].max.banks_8k_before_last = info.prg.rom[chip].banks_8k - 2;
 	info.prg.rom[chip].max.banks_4k = (info.prg.rom[chip].banks_8k << 1) - 1;
+	info.prg.rom[chip].max.banks_2k = (info.prg.rom[chip].banks_8k << 2) - 1;
 }
 void map_set_banks_max_chr(BYTE chip) {
 	info.chr.rom[chip].max.banks_8k = info.chr.rom[chip].banks_8k - 1;
