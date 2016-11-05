@@ -31,7 +31,7 @@ void map_init_KS7017(void) {
 	mapper.internal_struct[0] = (BYTE *) &ks7017;
 	mapper.internal_struct_size[0] = sizeof(ks7017);
 
-	memset(&ks7017, 0x00, sizeof(m252));
+	memset(&ks7017, 0x00, sizeof(ks7017));
 
 	{
 		BYTE value;
@@ -81,6 +81,9 @@ BYTE extcl_cpu_rd_mem_KS7017(WORD address, BYTE openbus, BYTE before) {
 }
 BYTE extcl_save_mapper_KS7017(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, ks7017.reg);
+	save_slot_ele(mode, slot, ks7017.irq.active);
+	save_slot_ele(mode, slot, ks7017.irq.count);
+	save_slot_ele(mode, slot, ks7017.irq.reload);
 
 	return (EXIT_OK);
 }
