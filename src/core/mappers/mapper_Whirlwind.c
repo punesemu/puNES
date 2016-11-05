@@ -22,6 +22,10 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
+static void INLINE whirlwind_6000_update(void);
+
+BYTE *whirlwind_prg_6000;
+
 void map_init_Whirlwind(void) {
 	EXTCL_CPU_WR_MEM(Whirlwind);
 	EXTCL_CPU_RD_MEM(Whirlwind);
@@ -36,22 +40,44 @@ void map_init_Whirlwind(void) {
 
 		map_prg_rom_8k(4, 0, info.prg.rom[0].max.banks_32k);
 	}
+
+	whirlwind_6000_update();
 }
 void extcl_cpu_wr_mem_Whirlwind(WORD address, BYTE value) {
-	if ((address >= 0x8000) && (address <= 0x8FFF)) {
-		control_bank(info.prg.rom[0].max.banks_8k)
-		whirlwind.prg_ram = value << 13;
+	switch (address & 0xF000) {
+		case 0x8000:
+		case 0xF000:
+			whirlwind.reg = value;
+			whirlwind_6000_update();
+			return;
 	}
 }
 BYTE extcl_cpu_rd_mem_Whirlwind(WORD address, BYTE openbus, BYTE before) {
-	if ((address < 0x6000) || (address > 0x7FFF)) {
-		return (openbus);
+	switch (address & 0xF000) {
+		case 0x6000:
+		case 0x7000:
+			return (whirlwind_prg_6000[address & 0x1FFF]);
 	}
+	return (openbus);
 
-	return (prg_chip_byte(0, whirlwind.prg_ram + (address - 0x6000)));
 }
 BYTE extcl_save_mapper_Whirlwind(BYTE mode, BYTE slot, FILE *fp) {
-	save_slot_ele(mode, slot, whirlwind.prg_ram);
+	save_slot_ele(mode, slot, whirlwind.reg);
+
+    if (mode == SAVE_SLOT_READ) {
+    	if (save_slot.version < 15) {
+    		whirlwind.reg >>= 13;
+    	}
+    	whirlwind_6000_update();
+	}
 
 	return (EXIT_OK);
+}
+
+static void INLINE whirlwind_6000_update(void) {
+	WORD value;
+
+	value = whirlwind.reg;
+	control_bank(info.prg.rom[0].max.banks_8k)
+	whirlwind_prg_6000 = prg_chip_byte_pnt(0, value << 13);
 }

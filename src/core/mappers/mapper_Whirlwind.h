@@ -22,7 +22,7 @@
 #include "common.h"
 
 struct _whirlwind {
-	uint32_t prg_ram;
+	uint32_t reg;
 } whirlwind;
 
 void map_init_Whirlwind(void);

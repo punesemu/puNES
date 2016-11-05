@@ -38,7 +38,7 @@
 #include "cheat.h"
 #include "info.h"
 
-#define SAVE_VERSION 14
+#define SAVE_VERSION 15
 
 BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp);
 char *name_slot_file(BYTE slot);
