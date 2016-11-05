@@ -2875,6 +2875,9 @@ static const _dbelement dblist[] = {
 	/* Teenage Mutant Ninja Turtles 2 - The Manhattan Project (J) [T+Kor_eastwind].nes */
 	{"4568f379dbe6e73df96466e332c90e88962674da", 25, VRC4D, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
+	/* World Hero (Unl)(TV System Select)[!].nes */
+	{"0b351c586130ad0ae6203144136b6e199fa5ae20", 27, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+
 /* --------------------------------------- Irem ------------------------------------------- */
 	/* Major League (J).nes */
 	{"31a87d67d66bb28d2b8e4134173b5e264737635f", 32, G101B, MAJORLEAGUE, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},

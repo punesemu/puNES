@@ -154,6 +154,9 @@ BYTE map_init(void) {
 		case 34:
 			map_init_BxROM();
 			break;
+		case 35:
+			map_init_SC_127();
+			break;
 		case 37:
 			map_init_37();
 			break;

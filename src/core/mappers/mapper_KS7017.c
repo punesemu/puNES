@@ -83,7 +83,6 @@ BYTE extcl_save_mapper_KS7017(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, ks7017.reg);
 	save_slot_ele(mode, slot, ks7017.irq.active);
 	save_slot_ele(mode, slot, ks7017.irq.count);
-	save_slot_ele(mode, slot, ks7017.irq.reload);
 
 	return (EXIT_OK);
 }

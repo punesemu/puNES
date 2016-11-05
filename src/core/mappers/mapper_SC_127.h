@@ -16,23 +16,22 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef MAPPER_KS7017_H_
-#define MAPPER_KS7017_H_
+#ifndef MAPPER_SC_127_H_
+#define MAPPER_SC_127_H_
 
 #include "common.h"
 
-struct _ks7017 {
-	BYTE reg;
-	struct _ks7017_irq {
+struct _sc127 {
+	struct _sc127_irq {
 		BYTE active;
 		WORD count;
 	} irq;
-} ks7017;
+} sc127;
 
-void map_init_KS7017(void);
-void extcl_cpu_wr_mem_KS7017(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_KS7017(WORD address, BYTE openbus, BYTE before);
-BYTE extcl_save_mapper_KS7017(BYTE mode, BYTE slot, FILE *fp);
-void extcl_cpu_every_cycle_KS7017(void);
+void map_init_SC_127(void);
+void extcl_cpu_wr_mem_SC_127(WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_SC_127(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_save_mapper_SC_127(BYTE mode, BYTE slot, FILE *fp);
+void extcl_ppu_256_to_319_SC_127(void);
 
-#endif /* MAPPER_KS7017_H_ */
+#endif /* MAPPER_SC_127_H_ */
