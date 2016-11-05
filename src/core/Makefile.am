@@ -329,6 +329,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_KS7037.h \
 	mappers/mapper_KS7057.c \
 	mappers/mapper_KS7057.h \
+	mappers/mapper_LH10.c \
+	mappers/mapper_LH10.h \
 	mappers/mapper_LH32.c \
 	mappers/mapper_LH32.h \
 	mappers/mapper_Magic.c \

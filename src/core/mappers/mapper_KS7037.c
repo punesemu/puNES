@@ -64,10 +64,18 @@ void extcl_cpu_wr_mem_KS7037(WORD address, BYTE value) {
 			return;
 		case 0x8000:
 		case 0x9000:
+		case 0xC000:
+		case 0xD000:
+		case 0xE000:
+		case 0xF000:
 			ks7037.ind = value & 0x07;
 			return;
 		case 0x8001:
 		case 0x9001:
+		case 0xC001:
+		case 0xD001:
+		case 0xE001:
+		case 0xF001:
 			ks7037.reg[ks7037.ind] = value;
 			ks7037_update();
 			return;
@@ -84,7 +92,6 @@ BYTE extcl_cpu_rd_mem_KS7037(WORD address, BYTE openbus, BYTE before) {
 		case 0xB000:
 			return (ks7037_prg_B000[address & 0x0FFF]);
 	}
-
 	return (openbus);
 }
 BYTE extcl_save_mapper_KS7037(BYTE mode, BYTE slot, FILE *fp) {

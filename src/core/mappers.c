@@ -875,6 +875,10 @@ BYTE map_init(void) {
 					// NES-KS7017
 					map_init_KS7017();
 					break;
+				case 44:
+					// NES-LH10
+					map_init_LH10();
+					break;
 			}
 			break;
 	}
