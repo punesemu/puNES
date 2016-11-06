@@ -162,6 +162,7 @@
 
 void map_init_45(void) {
 	EXTCL_CPU_WR_MEM(45);
+	EXTCL_CPU_RD_MEM(45);
 	EXTCL_SAVE_MAPPER(45);
 	EXTCL_CPU_EVERY_CYCLE(MMC3);
 	EXTCL_PPU_000_TO_34X(MMC3);
@@ -176,7 +177,15 @@ void map_init_45(void) {
 
 	memset(&mmc3, 0x00, sizeof(mmc3));
 	memset(&irqA12, 0x00, sizeof(irqA12));
-	memset(&m45, 0x00, sizeof(m45));
+
+	if (info.reset >= HARD) {
+		memset(&m45, 0x00, sizeof(m45));
+	} else if (info.reset == RESET) {
+		BYTE read = m45.read;
+
+		memset(&m45, 0x00, sizeof(m45));
+		m45.read = (read + 1) & 0x07;
+	}
 
 	{
 		BYTE value, i;
@@ -224,11 +233,24 @@ void extcl_cpu_wr_mem_45(WORD address, BYTE value) {
 		}
 	}
 }
+BYTE extcl_cpu_rd_mem_45(WORD address, BYTE openbus, BYTE before) {
+	if ((address >= 0x5000) && (address <= 0x5FFF)) {
+		WORD adr = 1 << (m45.read + 4);
+
+		if (address & (adr | (adr - 1))) {
+			return (openbus | 0x01);
+		}
+	}
+	return (openbus);
+}
 BYTE extcl_save_mapper_45(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m45.reg);
 	save_slot_ele(mode, slot, m45.index);
 	save_slot_ele(mode, slot, m45.prg_map);
 	save_slot_ele(mode, slot, m45.chr_map);
+	if (save_slot.version >= 15) {
+		save_slot_ele(mode, slot, m45.read);
+	}
 	extcl_save_mapper_MMC3(mode, slot, fp);
 
 	return (EXIT_OK);

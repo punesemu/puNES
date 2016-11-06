@@ -24,12 +24,14 @@
 struct _m45 {
 	BYTE reg[4];
 	BYTE index;
+	BYTE read;
 	WORD prg_map[4];
 	WORD chr_map[8];
 } m45;
 
 void map_init_45(void);
 void extcl_cpu_wr_mem_45(WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_45(WORD address, BYTE openbus, BYTE before);
 BYTE extcl_save_mapper_45(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPER_45_H_ */
