@@ -103,19 +103,21 @@
 			m45.chr_map[mmc3.chr_rom_cfg] = value;\
 			m45.chr_map[mmc3.chr_rom_cfg | 0x01] = value + 1;\
 			m45_chr_1k(value);\
-			bank &= 0xFFE;\
 			_control_bank(bank, info.chr.rom[0].max.banks_1k)\
 			chr.bank_1k[mmc3.chr_rom_cfg] = chr_chip_byte_pnt(0, bank << 10);\
-			chr.bank_1k[mmc3.chr_rom_cfg | 0x01] = chr_chip_byte_pnt(0, (bank + 1) << 10);\
+			m45_chr_1k((value + 1));\
+			_control_bank(bank, info.chr.rom[0].max.banks_1k)\
+			chr.bank_1k[mmc3.chr_rom_cfg | 0x01] = chr_chip_byte_pnt(0, bank << 10);\
 			return;\
 		case 1:\
 			m45.chr_map[mmc3.chr_rom_cfg | 0x02] = value;\
 			m45.chr_map[mmc3.chr_rom_cfg | 0x03] = value + 1;\
 			m45_chr_1k(value);\
-			bank &= 0xFFE;\
 			_control_bank(bank, info.chr.rom[0].max.banks_1k)\
 			chr.bank_1k[mmc3.chr_rom_cfg | 0x02] = chr_chip_byte_pnt(0, bank << 10);\
-			chr.bank_1k[mmc3.chr_rom_cfg | 0x03] = chr_chip_byte_pnt(0, (bank + 1) << 10);\
+			m45_chr_1k((value + 1));\
+			_control_bank(bank, info.chr.rom[0].max.banks_1k)\
+			chr.bank_1k[mmc3.chr_rom_cfg | 0x03] = chr_chip_byte_pnt(0, bank << 10);\
 			return;\
 		case 2:\
 			m45.chr_map[mmc3.chr_rom_cfg ^ 0x04] = value;\
@@ -199,7 +201,7 @@ void map_init_45(void) {
 	irqA12_delay = 1;
 }
 void extcl_cpu_wr_mem_45(WORD address, BYTE value) {
-	if (address > 0x7FFF) {
+	if (address >= 0x8000) {
 		switch (address & 0xE001) {
 			case 0x8000:
 				m45_8000()
