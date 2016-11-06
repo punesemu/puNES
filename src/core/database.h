@@ -3682,6 +3682,10 @@ static const _dbelement dblist[] = {
 	/* Mortal Kombat 3 Extra 60 (Unl) [!].nes */
 	{"dc1e114d59afcdb2cf2927b830d94f42dd0ea547", 215, DEFAULT, M215_MK3E, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
+/* ------------------------------------- mapper 219 --------------------------------------- */
+	/* Toy Story (Unl)[!].nes */
+	{"c9dc5e47cc22fe1c792ac194de033f8aa8e60a3e", 219, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+
 /* ------------------------------------- mapper 225 --------------------------------------- */
 	/* 52 Games [p1].nes */
 	{"512296fff80e4c6fc12a4c55c1af1854d12ab70d", 225, DEFAULT, BMC52IN1, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},

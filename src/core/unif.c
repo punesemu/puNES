@@ -130,6 +130,7 @@ static const _unif_board unif_boards[] = {
 	{"KS7016", NO_INES, 42, DEFAULT, DEFAULT, NOEXTRA},
 	{"KS7017", NO_INES, 43, DEFAULT, DEFAULT, NOEXTRA},
 	{"LH10", NO_INES, 44, DEFAULT, DEFAULT, NOEXTRA},
+	{"RT-01", NO_INES, 45, DEFAULT, DEFAULT, NOEXTRA},
 };
 
 BYTE unif_load_rom(void) {
@@ -267,7 +268,7 @@ BYTE unif_load_rom(void) {
 			}
 		}
 
-		if (!info.chr.rom[0].banks_8k) {
+		if (!info.chr.rom[0].banks_1k) {
 			mapper.write_vram = TRUE;
 			if (info.extra_from_db & CHRRAM32K) {
 				info.chr.rom[0].banks_8k = 4;
@@ -442,14 +443,15 @@ BYTE unif_CHR(FILE *fp, BYTE phase) {
 		if (!(fread(chr_chip(chip), chr_chip_size(chip), 1, fp))) {
 			;
 		}
+
+		info.chr.rom[chip].banks_8k = chr_chip_size(chip) / (8 * 1024);
+		info.chr.rom[chip].banks_4k = chr_chip_size(chip) / (4 * 1024);
+		info.chr.rom[chip].banks_1k = chr_chip_size(chip) / (1 * 1024);
+		map_set_banks_max_chr(chip);
+
 		if (chip == 0) {
 			map_chr_bank_1k_reset();
 		}
-		info.chr.rom[chip].banks_8k = chr_chip_size(chip) / (8 * 1024);
-		info.chr.rom[chip].banks_4k = info.chr.rom[chip].banks_8k * 2;
-		info.chr.rom[chip].banks_1k = info.chr.rom[chip].banks_4k * 4;
-		map_set_banks_max_chr(chip);
-
 #if !defined (RELEASE)
 		fprintf(stderr, "CHR chip %d : 4k vrom = %u\n", chip, info.chr.rom[chip].banks_4k);
 #endif

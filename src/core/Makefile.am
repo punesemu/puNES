@@ -359,6 +359,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_Rcm.h \
 	mappers/mapper_Rex.c \
 	mappers/mapper_Rex.h \
+	mappers/mapper_RT_01.c \
+	mappers/mapper_RT_01.h \
 	mappers/mapper_SA_9602B.c \
 	mappers/mapper_SA_9602B.h \
 	mappers/mapper_Sachen.c \
