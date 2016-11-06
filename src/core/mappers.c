@@ -889,6 +889,10 @@ BYTE map_init(void) {
 					// NES-RT-01
 					map_init_RT_01();
 					break;
+				case 46:
+					// NES-MALISB
+					map_init_MALISB();
+					break;
 			}
 			break;
 	}

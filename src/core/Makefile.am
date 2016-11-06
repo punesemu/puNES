@@ -339,6 +339,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_Magic.h \
 	mappers/mapper_Malee.c \
 	mappers/mapper_Malee.h \
+	mappers/mapper_MALISB.c \
+	mappers/mapper_MALISB.h \
 	mappers/mapper_MMC1.c \
 	mappers/mapper_MMC1.h \
 	mappers/mapper_MMC2andMMC4.c \

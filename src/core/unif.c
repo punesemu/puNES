@@ -131,6 +131,7 @@ static const _unif_board unif_boards[] = {
 	{"KS7017", NO_INES, 43, DEFAULT, DEFAULT, NOEXTRA},
 	{"LH10", NO_INES, 44, DEFAULT, DEFAULT, NOEXTRA},
 	{"RT-01", NO_INES, 45, DEFAULT, DEFAULT, NOEXTRA},
+	{"MALISB", NO_INES, 46, DEFAULT, DEFAULT, NOEXTRA},
 };
 
 BYTE unif_load_rom(void) {
