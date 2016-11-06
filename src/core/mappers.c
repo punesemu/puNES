@@ -375,6 +375,9 @@ BYTE map_init(void) {
 		case 121:
 			map_init_121();
 			break;
+		case 123:
+			map_init_H2288();
+			break;
 		case 132:
 			map_init_Txc(T22211A);
 			break;
@@ -779,8 +782,8 @@ BYTE map_init(void) {
 					map_init_BMC70IN1(BMC70IN1B);
 					break;
 				case 19:
-					// NES-H2288
-					map_init_H2288();
+					// NES-KS7032
+					map_init_KS7032();
 					break;
 				case 20:
 					// NES-KOF97
@@ -881,10 +884,6 @@ BYTE map_init(void) {
 				case 44:
 					// NES-LH10
 					map_init_LH10();
-					break;
-				case 45:
-					// NES-KS7032
-					map_init_KS7032();
 					break;
 			}
 			break;

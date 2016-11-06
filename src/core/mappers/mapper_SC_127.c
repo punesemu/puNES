@@ -21,6 +21,7 @@
 #include "info.h"
 #include "mem_map.h"
 #include "cpu.h"
+#include "ppu.h"
 #include "save_slot.h"
 
 void map_init_SC_127(void) {

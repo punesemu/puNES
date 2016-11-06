@@ -127,7 +127,7 @@ void extcl_cpu_wr_mem_H2288(WORD address, BYTE value) {
 
 		switch (address & 0xE001) {
 			case 0x8000:
-				extcl_cpu_wr_mem_MMC3(address, (value & 0xC0) | (vlu114[value & 7]));
+				extcl_cpu_wr_mem_MMC3(address, (value & 0xC0) | vlu114[value & 7]);
 				h2288_8000()
 				h2288_update_prg();
 				h2288_update_chr();
@@ -180,7 +180,7 @@ static void INLINE h2288_update_prg(void) {
 		}
 	} else {
 		h2288_prg_8k(h2288.prg_map[0]);
-		control_bank(info.prg.rom[0].max.banks_32k)
+		control_bank(info.prg.rom[0].max.banks_8k)
 		map_prg_rom_8k(1, 0, value);
 
 		h2288_prg_8k(h2288.prg_map[1]);

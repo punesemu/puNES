@@ -1058,6 +1058,14 @@ void cpu_turn_on(void) {
 			if (info.mapper.id == 15) {
 				mmcpu.ram[0x018] = 0x00;
 			}
+
+			/*
+			 * questo workaround serve solo per
+			 * Ultimate Mortal Kombat 3 14 people (Unl)[!].nes
+			 */
+			if (info.mapper.id == 123) {
+				mmcpu.ram[0x080] = 0x00;
+			}
 		}
 
 		/* reset della PRG Ram */
