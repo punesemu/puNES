@@ -89,7 +89,7 @@ BYTE extcl_save_mapper_SC_127(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 void extcl_ppu_256_to_319_SC_127(void) {
-	if ((ppu.frame_x != 300) || (!sc127.irq.active)) {
+	if ((ppu.frame_x != 288) || (!sc127.irq.active)) {
 		return;
 	}
 
