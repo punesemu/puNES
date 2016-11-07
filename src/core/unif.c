@@ -132,6 +132,7 @@ static const _unif_board unif_boards[] = {
 	{"LH10", NO_INES, 44, DEFAULT, DEFAULT, NOEXTRA},
 	{"RT-01", NO_INES, 45, DEFAULT, DEFAULT, NOEXTRA},
 	{"MALISB", NO_INES, 46, DEFAULT, DEFAULT, NOEXTRA},
+	{"BOY", NO_INES, 47, DEFAULT, DEFAULT, CHRRAM256K},
 };
 
 BYTE unif_load_rom(void) {
@@ -273,6 +274,8 @@ BYTE unif_load_rom(void) {
 			mapper.write_vram = TRUE;
 			if (info.extra_from_db & CHRRAM32K) {
 				info.chr.rom[0].banks_8k = 4;
+			} else if (info.extra_from_db & CHRRAM256K) {
+				info.chr.rom[0].banks_8k = 32;
 			} else {
 				info.chr.rom[0].banks_8k = 1;
 			}

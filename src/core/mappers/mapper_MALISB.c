@@ -80,6 +80,7 @@ static void INLINE malisb_update_chr(void);
 			malisb.prg_map[1] = value;\
 			break;\
 	}
+
 void map_init_MALISB(void) {
 	EXTCL_CPU_WR_MEM(MALISB);
 	EXTCL_SAVE_MAPPER(MALISB);
@@ -125,7 +126,7 @@ void extcl_cpu_wr_mem_MALISB(WORD address, BYTE value) {
 	if (address < 0xC000) {
 		address = (address & 0xFFFE) | ((address >> 2) & 0x01) | ((address >> 3) & 0x01);
 	} else {
-        address = (address & 0xFFFE) | ((address >> 3) & 0x01);
+		address = (address & 0xFFFE) | ((address >> 3) & 0x01);
 	}
 
 	switch (address & 0xE001) {
@@ -140,10 +141,6 @@ void extcl_cpu_wr_mem_MALISB(WORD address, BYTE value) {
 			malisb_8001()
 			malisb_update_prg();
 			malisb_update_chr();
-			return;
-		case 0xA000:
-		case 0xA001:
-			extcl_cpu_wr_mem_MMC3(address, value);
 			return;
 		default:
 			extcl_cpu_wr_mem_MMC3(address, value);

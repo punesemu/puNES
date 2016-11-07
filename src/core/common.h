@@ -67,7 +67,8 @@ enum database_mode {
 	NODIPSWITCH = 0xFF00,
 	NOEXTRA = 0x0000,
 	VSZAPPER = 0x0001,
-	CHRRAM32K = 0x0002
+	CHRRAM32K = 0x0002,
+	CHRRAM256K = 0x0004
 };
 
 #define LENGTH(x) (sizeof(x)/sizeof(*(x)))

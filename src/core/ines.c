@@ -250,6 +250,8 @@ BYTE ines_load_rom(void) {
 				if (info.format == iNES_1_0) {
 					if (info.extra_from_db & CHRRAM32K) {
 						info.chr.rom[0].banks_8k = 4;
+					} else if (info.extra_from_db & CHRRAM256K) {
+						info.chr.rom[0].banks_8k = 32;
 					} else {
 						info.chr.rom[0].banks_8k = 1;
 					}

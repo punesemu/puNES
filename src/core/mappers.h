@@ -199,6 +199,7 @@
 #include "mappers/mapper_KS7032.h"
 #include "mappers/mapper_RT_01.h"
 #include "mappers/mapper_MALISB.h"
+#include "mappers/mapper_BOY.h"
 
 #define _control_bank(val, max)\
 	if (val > max) {\
