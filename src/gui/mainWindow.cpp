@@ -1004,6 +1004,9 @@ void mainWindow::update_menu_settings() {
 	ui->action_VSync->setChecked(cfg->vsync);
 	ui->action_Interpolation->setChecked(cfg->interpolation);
 	ui->action_Text_on_screen->setChecked(cfg->txt_on_screen);
+	ui->action_Input_display->setChecked(cfg->input_display);
+	ui->action_Disable_TV_noise_emulation->setChecked(cfg->disable_tv_noise);
+	ui->action_Disable_sepia_color_on_pause->setChecked(cfg->disable_sepia_color);
 #if defined (WITH_OPENGL)
 	ui->action_Disable_sRGB_FBO->setChecked(cfg->disable_srgb_fbo);
 #endif
@@ -1555,6 +1558,9 @@ void mainWindow::connect_menu_signals() {
 	connect_action(ui->action_VSync, SLOT(s_set_vsync()));
 	connect_action(ui->action_Interpolation, SLOT(s_set_interpolation()));
 	connect_action(ui->action_Text_on_screen, SLOT(s_set_txt_on_screen()));
+	connect_action(ui->action_Input_display, SLOT(s_set_input_display()));
+	connect_action(ui->action_Disable_TV_noise_emulation, SLOT(s_set_disable_tv_noise()));
+	connect_action(ui->action_Disable_sepia_color_on_pause, SLOT(s_set_disable_sepia_pause()));
 #if defined (WITH_OPENGL)
 	connect_action(ui->action_Disable_sRGB_FBO, SLOT(s_set_disable_srgb_fbo()));
 #endif
@@ -2158,6 +2164,28 @@ void mainWindow::s_set_interpolation() {
 }
 void mainWindow::s_set_txt_on_screen() {
 	cfg->txt_on_screen = !cfg->txt_on_screen;
+}
+void mainWindow::s_set_input_display() {
+	cfg->input_display = !cfg->input_display;
+
+	if (!cfg->input_display) {
+		BYTE i;
+
+		for (i = 0; i < PORT_MAX; i++) {
+			_txt_element *ele = &text.tas.controllers[i];
+
+			if (ele->surface) {
+				text_clear(ele);
+				gfx_text_release_surface (ele);
+			}
+		}
+	}
+}
+void mainWindow::s_set_disable_tv_noise() {
+	cfg->disable_tv_noise = !cfg->disable_tv_noise;
+}
+void mainWindow::s_set_disable_sepia_pause() {
+	cfg->disable_sepia_color = !cfg->disable_sepia_color;
 }
 #if defined (WITH_OPENGL)
 void mainWindow::s_set_disable_srgb_fbo() {

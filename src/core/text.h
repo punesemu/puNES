@@ -145,6 +145,7 @@ EXTERNC void text_save_slot(BYTE operation);
 EXTERNC void text_add_line(int type, int factor, int font, int alpha, int start_x, int start_y,
 		int x, int y, const char *fmt, ...);
 EXTERNC void text_rendering(BYTE render);
+EXTERNC void text_calculate_real_x_y(_txt_element *ele, int *x, int *y);
 EXTERNC void text_quit(void);
 
 EXTERNC void (*text_clear)(_txt_element *ele);

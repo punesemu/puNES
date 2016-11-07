@@ -54,6 +54,15 @@ void tv_noise_effect(void) {
 	BYTE direction = 1;
 	WORD x, y;
 
+	if (cfg->disable_tv_noise) {
+		for (y = 0; y < SCR_LINES; y++) {
+			for (x = 0; x < SCR_ROWS; x++) {
+				screen.line[y][x] = 0x0D;
+			}
+		}
+		return;
+	}
+
 	for (y = 0; y < SCR_LINES; y++) {
 		for (x = 0; x < SCR_ROWS; x++) {
 			WORD w = 7 + sin(x / 50000 + t0 / 7);

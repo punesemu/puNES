@@ -68,6 +68,9 @@ static const struct option opt_long[] = {
 	{ "version",               no_argument,       NULL, 'V'},
 	{ "portable",              no_argument,       NULL,  0 },
 	{ "txt-on-screen",         required_argument, NULL,  0 },
+	{ "input-display",         required_argument, NULL,  0 },
+	{ "disable-tv-noise",      required_argument, NULL,  0 },
+	{ "disable-sepia",         required_argument, NULL,  0 },
 #if defined (WITH_OPENGL)
 	{ "disable-srgb-fbo",      required_argument, NULL,  0 },
 #endif
@@ -99,6 +102,12 @@ BYTE cmd_line_parse(int argc, char **argv) {
 					/* l'ho gia' controllato quindi qui non faccio niente */
 				} else if (!(strcmp(opt_long[longIndex].name, "txt-on-screen"))) {
 					set_int(cfg_from_file.txt_on_screen, SET_TEXT_ON_SCREEN);
+				} else if (!(strcmp(opt_long[longIndex].name, "input-display"))) {
+					set_int(cfg_from_file.input_display, SET_INPUT_DISPLAY);
+				} else if (!(strcmp(opt_long[longIndex].name, "disable-tv-noise"))) {
+					set_int(cfg_from_file.disable_tv_noise, SET_DISABLE_TV_NOISE);
+				} else if (!(strcmp(opt_long[longIndex].name, "disable-sepia"))) {
+					set_int(cfg_from_file.disable_sepia_color, SET_DISABLE_SEPIA_PAUSE);
 #if defined (WITH_OPENGL)
 				} else if (!(strcmp(opt_long[longIndex].name, "disable-srgb-fbo"))) {
 					set_int(cfg_from_file.disable_srgb_fbo, SET_DISABLE_SRGB_FBO);
@@ -277,6 +286,9 @@ void usage(char *name) {
 			"%s\n"
 			"%s\n"
 			"%s\n"
+			"%s\n"
+			"%s\n"
+			"%s\n"
 #if defined (WITH_OPENGL)
 			"%s\n"
 			"%s\n"
@@ -302,6 +314,9 @@ void usage(char *name) {
 			main_cfg[SET_VSYNC].hlp,
 			main_cfg[SET_INTERPOLATION].hlp,
 			main_cfg[SET_TEXT_ON_SCREEN].hlp,
+			main_cfg[SET_INPUT_DISPLAY].hlp,
+			main_cfg[SET_DISABLE_TV_NOISE].hlp,
+			main_cfg[SET_DISABLE_SEPIA_PAUSE].hlp,
 #if defined (WITH_OPENGL)
 			main_cfg[SET_DISABLE_SRGB_FBO].hlp,
 #endif

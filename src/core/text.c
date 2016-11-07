@@ -87,7 +87,7 @@ void text_init(void) {
 		ele->y = 1 * font_size[ele->font][1];
 
 		// tas controllers
-		for (i = 0; i < 4; i++) {
+		for (i = 0; i < PORT_MAX; i++) {
 			ele = &text.tas.controllers[i];
 			ele->bck = TRUE;
 			ele->bck_color = TXT_BLUE;
@@ -344,19 +344,31 @@ void text_rendering(BYTE render) {
 				rendering(ele);
 			}
 		}
+	}
 
-		{
-			ele = &text.tas.controllers[0];
+	if (tas.type | cfg->input_display) {
+		uint8_t i;
+
+		for (i = 0; i < PORT_MAX; i++) {
+			ele = &text.tas.controllers[i];
+
+			if (port[i].type != CTRL_STANDARD) {
+				if (ele->surface) {
+					text_clear(ele);
+					gfx_text_release_surface(ele);
+				}
+				continue;
+			}
 
 			ele->text[0] = 0;
-			port_control(port[PORT1], UP, "[up]");
-			port_control(port[PORT1], DOWN, "[down]");
-			port_control(port[PORT1], LEFT, "[left]");
-			port_control(port[PORT1], RIGHT, "[right]");
-			port_control(port[PORT1], SELECT, "[select]");
-			port_control(port[PORT1], START, "[start]");
-			port_control(port[PORT1], BUT_A, "[a]");
-			port_control(port[PORT1], BUT_B, "[b]");
+			port_control(port[i], UP, "[up]");
+			port_control(port[i], DOWN, "[down]");
+			port_control(port[i], LEFT, "[left]");
+			port_control(port[i], RIGHT, "[right]");
+			port_control(port[i], SELECT, "[select]");
+			port_control(port[i], START, "[start]");
+			port_control(port[i], BUT_A, "[a]");
+			port_control(port[i], BUT_B, "[b]");
 
 			if (!ele->surface) {
 				gfx_text_create_surface(ele);
@@ -454,6 +466,34 @@ void text_rendering(BYTE render) {
 		}
 	}
 }
+void text_calculate_real_x_y(_txt_element *ele, int *x, int *y) {
+	(*x) = ele->x;
+	(*y) = ele->y;
+	if (ele->start_x >= TXT_CENTER) {
+		if (ele->start_x == TXT_CENTER) {
+			(*x) = ((text.w - ele->w) >> 1) + ele->x;
+		} else if (ele->start_x == TXT_LEFT) {
+			(*x) = 8 + ele->x;
+		} else if (ele->start_x == TXT_RIGHT) {
+			(*x) = ((text.w - 8) - ele->w) + ele->x;
+		}
+		if ((*x) < 0) {
+			(*x) = 0;
+		}
+	}
+	if (ele->start_y >= TXT_CENTER) {
+		if (ele->start_y == TXT_CENTER) {
+			(*y) = ((text.h - (ele->factor * font_size[ele->font][1])) >> 1) + ele->y;
+		} else if (ele->start_y == TXT_UP) {
+			(*y) = 8 + ele->y;
+		} else if (ele->start_y == TXT_DOWN) {
+			(*y) = ((text.h - 8) - font_size[ele->font][1]) + ele->y;
+		}
+		if ((*y) < 0) {
+			(*y) = 0;
+		}
+	}
+}
 void text_quit(void) {
 	_txt_element *ele;
 	int i;
@@ -493,7 +533,7 @@ void text_quit(void) {
 			gfx_text_release_surface(ele);
 		}
 
-		for (i = 0; i < 4; i++) {
+		for (i = 0; i < PORT_MAX; i++) {
 			ele = text.tas.controllers;
 
 			if (ele->surface) {
@@ -544,36 +584,15 @@ static void INLINE rendering(_txt_element *ele) {
 	font.x = 0;
 	font.w = ele->factor * font_size[ch_font][0];
 
-	surface_rect.x = ele->x;
-	surface_rect.y = ele->y;
-	surface_rect.w = ele->w;
-	surface_rect.h = ele->h;
+	{
+		int x, y;
 
-	if (ele->start_x >= TXT_CENTER) {
-		if (ele->start_x == TXT_CENTER) {
-			surface_rect.x = ((text.w - ele->w) >> 1) + ele->x;
-		} else if (ele->start_x == TXT_LEFT) {
-			surface_rect.x = 8 + ele->x;
-		} else if (ele->start_x == TXT_RIGHT) {
-			surface_rect.x = ((text.w - 8) - ele->w) + ele->x;
-		}
-		if (surface_rect.x < 0) {
-			surface_rect.x = 0;
-		}
-	}
+		text_calculate_real_x_y(ele, &x, &y);
 
-	if (ele->start_y >= TXT_CENTER) {
-		if (ele->start_y == TXT_CENTER) {
-			surface_rect.y = ((text.h - (ele->factor * font_size[ch_font][1])) >> 1)
-				+ ele->y;
-		} else if (ele->start_y == TXT_UP) {
-			surface_rect.y = 8 + ele->y;
-		} else if (ele->start_y == TXT_DOWN) {
-			surface_rect.y = ((text.h - 8) - font_size[ch_font][1]) + ele->y;
-		}
-		if (surface_rect.y < 0) {
-			surface_rect.y = 0;
-		}
+		surface_rect.x = x;
+		surface_rect.y = y;
+		surface_rect.w = ele->w;
+		surface_rect.h = ele->h;
 	}
 
 	color[0] = (ele->alpha[0] << 24) | txt_table[TXT_NORMAL];

@@ -573,14 +573,17 @@ void opengl_draw_scene(SDL_Surface *surface) {
 	prev_type = MS_MEM;
 }
 void opengl_text_clear(_txt_element *ele) {
+	int x, y;
+
 	if (!ele->blank) {
 		return;
 	}
 
+	text_calculate_real_x_y(ele, &x, &y);
+
 	glBindTexture(GL_TEXTURE_2D, opengl.text.id);
 	glPixelStorei(GL_UNPACK_ROW_LENGTH, ele->w);
-	glTexSubImage2D(GL_TEXTURE_2D, 0, ele->x, ele->y, ele->w, ele->h,
-			TI_FRM, TI_TYPE, ele->blank->pixels);
+	glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, ele->w, ele->h, TI_FRM, TI_TYPE, ele->blank->pixels);
 	glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
 }
 void opengl_text_blit(_txt_element *ele, _rect *rect) {

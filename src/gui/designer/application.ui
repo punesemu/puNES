@@ -322,10 +322,13 @@
      <addaction name="menu_Shader"/>
      <addaction name="menu_Palette"/>
      <addaction name="separator"/>
-     <addaction name="action_Disable_emphasis_swap_PAL"/>
      <addaction name="action_VSync"/>
      <addaction name="action_Interpolation"/>
      <addaction name="action_Text_on_screen"/>
+     <addaction name="action_Input_display"/>
+     <addaction name="action_Disable_emphasis_swap_PAL"/>
+     <addaction name="action_Disable_TV_noise_emulation"/>
+     <addaction name="action_Disable_sepia_color_on_pause"/>
      <addaction name="action_Disable_sRGB_FBO"/>
      <addaction name="action_Stretch_in_fullscreen"/>
     </widget>
@@ -2137,6 +2140,30 @@
    </property>
    <property name="text">
     <string>&amp;Turn Off</string>
+   </property>
+  </action>
+  <action name="action_Input_display">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Input displa&amp;y</string>
+   </property>
+  </action>
+  <action name="action_Disable_TV_noise_emulation">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Disable TV &amp;noise emulation when turned off</string>
+   </property>
+  </action>
+  <action name="action_Disable_sepia_color_on_pause">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Disable sepi&amp;a color on pause</string>
    </property>
   </action>
  </widget>

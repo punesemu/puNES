@@ -672,7 +672,9 @@ void gfx_draw_screen(BYTE forced) {
 				forced = TRUE;
 			}
 		} else if (info.pause) {
-			palette = pause.palette;
+			if (!cfg->disable_sepia_color) {
+				palette = pause.palette;
+			}
 
 			if ((++info.pause_frames_drawscreen == 15) || text.on_screen) {
 				info.pause_frames_drawscreen = 0;
@@ -972,16 +974,18 @@ void gfx_text_clear(_txt_element *ele) {
 	D3DLOCKED_RECT lock_dst;
 	RECT dst;
 	uint32_t *pbits;
-	int w, h;
+	int w, h, x, y;
 
 	if (!d3d9.text.data) {
 		return;
 	}
 
-	dst.left = ele->x;
-	dst.top = ele->y;
-	dst.right = ele->x + ele->w;
-	dst.bottom = ele->y + ele->h;
+	text_calculate_real_x_y(ele, &x, &y);
+
+	dst.left = x;
+	dst.top = y;
+	dst.right = x + ele->w;
+	dst.bottom = y + ele->h;
 
 	if (IDirect3DSurface9_LockRect(d3d9.text.offscreen, &lock_dst, &dst, D3DLOCK_DISCARD) != D3D_OK) {
 		printf("D3D9 : LockRect text surface error\n");

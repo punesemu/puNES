@@ -63,6 +63,9 @@ enum set_element {
 	SET_VSYNC,
 	SET_INTERPOLATION,
 	SET_TEXT_ON_SCREEN,
+	SET_INPUT_DISPLAY,
+	SET_DISABLE_TV_NOISE,
+	SET_DISABLE_SEPIA_PAUSE,
 #if defined (WITH_OPENGL)
 	SET_DISABLE_SRGB_FBO,
 #endif
@@ -636,6 +639,25 @@ static const _settings main_cfg[] = {
 		"video", "text on screen", "yes",
 		"# possible values: yes, no",
 		"    --txt-on-screen       enable messages       : yes, no",
+		{LENGTH(opt_no_yes), opt_no_yes}
+	},
+	{
+		"video", "input display", "no",
+		"# possible values: yes, no",
+		"    --input-display       enable input gui      : yes, no",
+		{LENGTH(opt_no_yes), opt_no_yes}
+	},
+	{
+		"video", "disable tv noise emulation", "no",
+		"# possible values: yes, no",
+		"    --disable-tv-noise    disable tv noise      : yes, no",
+		{LENGTH(opt_no_yes), opt_no_yes}
+	},
+	{
+		"video", "disable sepia color on pause", "no",
+		"# possible values: yes, no",
+		"    --disable-sepia       disable sepia color   : yes, no" NEWLINE
+		"                          during the pause",
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 #if defined (WITH_OPENGL)

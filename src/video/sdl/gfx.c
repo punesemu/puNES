@@ -685,7 +685,9 @@ void gfx_draw_screen(BYTE forced) {
 				forced = TRUE;
 			}
 		} else if (info.pause) {
-			palette = pause.palette;
+			if (!cfg->disable_sepia_color) {
+				palette = pause.palette;
+			}
 
 			if ((++info.pause_frames_drawscreen == 15) || text.on_screen) {
 				info.pause_frames_drawscreen = 0;
