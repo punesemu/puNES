@@ -44,9 +44,9 @@
 {\
 	wdt = 0;\
 	if (filter == NTSC_FILTER) {\
-		wdt = NES_NTSC_OUT_WIDTH(gfx.rows, a);\
+		wdt = NES_NTSC_OUT_WIDTH(SCR_ROWS, a);\
 		if (overscan.enabled) {\
-			wdt -= (a - nes_ntsc_in_chunk);\
+			wdt -= (a / nes_ntsc_in_chunk) * (overscan.borders->left + overscan.borders->right);\
 		}\
 		if (flag) {\
 			gfx.w[CURRENT] = wdt;\

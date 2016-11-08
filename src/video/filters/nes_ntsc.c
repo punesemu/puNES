@@ -629,18 +629,16 @@ void nes_ntsc_init(nes_ntsc_t* ntsc, nes_ntsc_setup_t const* setup) {
 		line_in  += 3;\
 		line_out += 7;\
 	}\
-	if (!overscan.enabled) {\
-		NES_NTSC_COLOR_IN( 0, nes_ntsc_black );\
-		NES_NTSC_RGB_OUT( 0, line_out [0], depth );\
-		NES_NTSC_RGB_OUT( 1, line_out [1], depth );\
-		NES_NTSC_COLOR_IN( 1, nes_ntsc_black );\
-		NES_NTSC_RGB_OUT( 2, line_out [2], depth );\
-		NES_NTSC_RGB_OUT( 3, line_out [3], depth );\
-		NES_NTSC_COLOR_IN( 2, nes_ntsc_black );\
-		NES_NTSC_RGB_OUT( 4, line_out [4], depth );\
-		NES_NTSC_RGB_OUT( 5, line_out [5], depth );\
-		NES_NTSC_RGB_OUT( 6, line_out [6], depth );\
-	}\
+	NES_NTSC_COLOR_IN( 0, nes_ntsc_black );\
+	NES_NTSC_RGB_OUT( 0, line_out [0], depth );\
+	NES_NTSC_RGB_OUT( 1, line_out [1], depth );\
+	NES_NTSC_COLOR_IN( 1, nes_ntsc_black );\
+	NES_NTSC_RGB_OUT( 2, line_out [2], depth );\
+	NES_NTSC_RGB_OUT( 3, line_out [3], depth );\
+	NES_NTSC_COLOR_IN( 2, nes_ntsc_black );\
+	NES_NTSC_RGB_OUT( 4, line_out [4], depth );\
+	NES_NTSC_RGB_OUT( 5, line_out [5], depth );\
+	NES_NTSC_RGB_OUT( 6, line_out [6], depth );\
 	burst_phase = (burst_phase + 1) % nes_ntsc_burst_count;\
 	input += in_row_width;\
 	rgb_out = (char*) rgb_out + out_pitch;\
@@ -648,26 +646,14 @@ void nes_ntsc_init(nes_ntsc_t* ntsc, nes_ntsc_setup_t const* setup) {
 void nes_ntscx2(nes_ntsc_t const* ntsc, NES_NTSC_IN_T const* input, long in_row_width,
 		int burst_phase, int in_width, int in_height, void* rgb_out, long out_pitch, int depth) {
 
-	int chunk_count = (in_width - 1) / nes_ntsc_in_chunk;
+	int chunk_count =
+			((in_width - (overscan.enabled ? overscan.borders->left : 0)) - 1) / nes_ntsc_in_chunk;
 	for (; in_height; --in_height) {
 		int n;
-		NES_NTSC_IN_T const* line_in = input;
+		NES_NTSC_IN_T const* line_in = input + (overscan.enabled ?  overscan.borders->left : 0);
 		NES_NTSC_BEGIN_ROW( ntsc, burst_phase, nes_ntsc_black, nes_ntsc_black,
 				NES_NTSC_ADJ_IN( *line_in ));
-
-		if (overscan.enabled) {
-			unsigned color_;
-
-			line_in += overscan.borders->left;
-
-			kernel0 = (color_ = (line_in[0]), NES_NTSC_ENTRY_( ktable, color_ ));
-			kernel1 = (color_ = (line_in[1]), NES_NTSC_ENTRY_( ktable, color_ ));
-			kernel2 = (color_ = (line_in[2]), NES_NTSC_ENTRY_( ktable, color_ ));
-
-			line_in += nes_ntsc_in_chunk;
-		} else {
-			++line_in;
-		}
+		++line_in;
 
 		switch (depth) {
 			case 15:
@@ -701,21 +687,19 @@ void nes_ntscx2(nes_ntsc_t const* ntsc, NES_NTSC_IN_T const* input, long in_row_
 		line_in  += 3;\
 		line_out += 10;\
 	}\
-	if (!overscan.enabled) {\
-		NES_NTSC_COLOR_IN( 0, nes_ntsc_black );\
-		NES_NTSC_RGB_OUT( 0, line_out [0], depth );\
-		NES_NTSC_RGB_OUT( 1, line_out [1], depth );\
-		NES_NTSC_RGB_OUT( 1, line_out [2], depth );\
-		NES_NTSC_COLOR_IN( 1, nes_ntsc_black );\
-		NES_NTSC_RGB_OUT( 2, line_out [3], depth );\
-		NES_NTSC_RGB_OUT( 3, line_out [4], depth );\
-		NES_NTSC_RGB_OUT( 3, line_out [5], depth );\
-		NES_NTSC_COLOR_IN( 2, nes_ntsc_black );\
-		NES_NTSC_RGB_OUT( 4, line_out [6], depth );\
-		NES_NTSC_RGB_OUT( 5, line_out [7], depth );\
-		NES_NTSC_RGB_OUT( 5, line_out [8], depth );\
-		NES_NTSC_RGB_OUT( 6, line_out [9], depth );\
-	}\
+	NES_NTSC_COLOR_IN( 0, nes_ntsc_black );\
+	NES_NTSC_RGB_OUT( 0, line_out [0], depth );\
+	NES_NTSC_RGB_OUT( 1, line_out [1], depth );\
+	NES_NTSC_RGB_OUT( 1, line_out [2], depth );\
+	NES_NTSC_COLOR_IN( 1, nes_ntsc_black );\
+	NES_NTSC_RGB_OUT( 2, line_out [3], depth );\
+	NES_NTSC_RGB_OUT( 3, line_out [4], depth );\
+	NES_NTSC_RGB_OUT( 3, line_out [5], depth );\
+	NES_NTSC_COLOR_IN( 2, nes_ntsc_black );\
+	NES_NTSC_RGB_OUT( 4, line_out [6], depth );\
+	NES_NTSC_RGB_OUT( 5, line_out [7], depth );\
+	NES_NTSC_RGB_OUT( 5, line_out [8], depth );\
+	NES_NTSC_RGB_OUT( 6, line_out [9], depth );\
 	burst_phase = (burst_phase + 1) % nes_ntsc_burst_count;\
 	input += in_row_width;\
 	rgb_out = (char*) rgb_out + out_pitch;\
@@ -723,26 +707,14 @@ void nes_ntscx2(nes_ntsc_t const* ntsc, NES_NTSC_IN_T const* input, long in_row_
 void nes_ntscx3(nes_ntsc_t const* ntsc, NES_NTSC_IN_T const* input, long in_row_width,
 		int burst_phase, int in_width, int in_height, void* rgb_out, long out_pitch, int depth) {
 
-	int chunk_count = (in_width - 1) / nes_ntsc_in_chunk;
+	int chunk_count =
+			((in_width - (overscan.enabled ? overscan.borders->left : 0)) - 1) / nes_ntsc_in_chunk;
 	for (; in_height; --in_height) {
 		int n;
-		NES_NTSC_IN_T const* line_in = input;
+		NES_NTSC_IN_T const* line_in = input + (overscan.enabled ?  overscan.borders->left : 0);
 		NES_NTSC_BEGIN_ROW( ntsc, burst_phase, nes_ntsc_black, nes_ntsc_black,
 				NES_NTSC_ADJ_IN( *line_in ));
-
-		if (overscan.enabled) {
-			unsigned color_;
-
-			line_in += overscan.borders->left;
-
-			kernel0 = (color_ = (line_in[0]), NES_NTSC_ENTRY_( ktable, color_ ));
-			kernel1 = (color_ = (line_in[1]), NES_NTSC_ENTRY_( ktable, color_ ));
-			kernel2 = (color_ = (line_in[2]), NES_NTSC_ENTRY_( ktable, color_ ));
-
-			line_in += nes_ntsc_in_chunk;
-		} else {
-			++line_in;
-		}
+		++line_in;
 
 		switch (depth) {
 			case 15:
@@ -780,25 +752,23 @@ void nes_ntscx3(nes_ntsc_t const* ntsc, NES_NTSC_IN_T const* input, long in_row_
 		line_in  += 3;\
 		line_out += 14;\
 	}\
-	if (!overscan.enabled) {\
-		NES_NTSC_COLOR_IN( 0, nes_ntsc_black );\
-		NES_NTSC_RGB_OUT( 0, line_out [0], depth );\
-		NES_NTSC_RGB_OUT( 0, line_out [1], depth );\
-		NES_NTSC_RGB_OUT( 1, line_out [2], depth );\
-		NES_NTSC_RGB_OUT( 1, line_out [3], depth );\
-		NES_NTSC_COLOR_IN( 1, nes_ntsc_black );\
-		NES_NTSC_RGB_OUT( 2, line_out [4], depth );\
-		NES_NTSC_RGB_OUT( 2, line_out [5], depth );\
-		NES_NTSC_RGB_OUT( 3, line_out [6], depth );\
-		NES_NTSC_RGB_OUT( 3, line_out [7], depth );\
-		NES_NTSC_COLOR_IN( 2, nes_ntsc_black );\
-		NES_NTSC_RGB_OUT( 4, line_out [8], depth );\
-		NES_NTSC_RGB_OUT( 4, line_out [9], depth );\
-		NES_NTSC_RGB_OUT( 5, line_out [10], depth );\
-		NES_NTSC_RGB_OUT( 5, line_out [11], depth );\
-		NES_NTSC_RGB_OUT( 6, line_out [12], depth );\
-		NES_NTSC_RGB_OUT( 6, line_out [13], depth );\
-	}\
+	NES_NTSC_COLOR_IN( 0, nes_ntsc_black );\
+	NES_NTSC_RGB_OUT( 0, line_out [0], depth );\
+	NES_NTSC_RGB_OUT( 0, line_out [1], depth );\
+	NES_NTSC_RGB_OUT( 1, line_out [2], depth );\
+	NES_NTSC_RGB_OUT( 1, line_out [3], depth );\
+	NES_NTSC_COLOR_IN( 1, nes_ntsc_black );\
+	NES_NTSC_RGB_OUT( 2, line_out [4], depth );\
+	NES_NTSC_RGB_OUT( 2, line_out [5], depth );\
+	NES_NTSC_RGB_OUT( 3, line_out [6], depth );\
+	NES_NTSC_RGB_OUT( 3, line_out [7], depth );\
+	NES_NTSC_COLOR_IN( 2, nes_ntsc_black );\
+	NES_NTSC_RGB_OUT( 4, line_out [8], depth );\
+	NES_NTSC_RGB_OUT( 4, line_out [9], depth );\
+	NES_NTSC_RGB_OUT( 5, line_out [10], depth );\
+	NES_NTSC_RGB_OUT( 5, line_out [11], depth );\
+	NES_NTSC_RGB_OUT( 6, line_out [12], depth );\
+	NES_NTSC_RGB_OUT( 6, line_out [13], depth );\
 	burst_phase = (burst_phase + 1) % nes_ntsc_burst_count;\
 	input += in_row_width;\
 	rgb_out = (char*) rgb_out + out_pitch;\
@@ -806,26 +776,14 @@ void nes_ntscx3(nes_ntsc_t const* ntsc, NES_NTSC_IN_T const* input, long in_row_
 void nes_ntscx4(nes_ntsc_t const* ntsc, NES_NTSC_IN_T const* input, long in_row_width,
 		int burst_phase, int in_width, int in_height, void* rgb_out, long out_pitch, int depth) {
 
-	int chunk_count = (in_width - 1) / nes_ntsc_in_chunk;
+	int chunk_count =
+			((in_width - (overscan.enabled ? overscan.borders->left : 0)) - 1) / nes_ntsc_in_chunk;
 	for (; in_height; --in_height) {
 		int n;
-		NES_NTSC_IN_T const* line_in = input;
+		NES_NTSC_IN_T const* line_in = input + (overscan.enabled ?  overscan.borders->left : 0);
 		NES_NTSC_BEGIN_ROW( ntsc, burst_phase, nes_ntsc_black, nes_ntsc_black,
 				NES_NTSC_ADJ_IN( *line_in ));
-
-		if (overscan.enabled) {
-			unsigned color_;
-
-			line_in += overscan.borders->left;
-
-			kernel0 = (color_ = (line_in[0]), NES_NTSC_ENTRY_( ktable, color_ ));
-			kernel1 = (color_ = (line_in[1]), NES_NTSC_ENTRY_( ktable, color_ ));
-			kernel2 = (color_ = (line_in[2]), NES_NTSC_ENTRY_( ktable, color_ ));
-
-			line_in += nes_ntsc_in_chunk;
-		} else {
-			++line_in;
-		}
+		++line_in;
 
 		switch (depth) {
 			case 15:

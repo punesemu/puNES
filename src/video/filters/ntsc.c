@@ -80,7 +80,7 @@ int burst_phase = 0;
 	*(type *) (out + (pitch << 1)) = *(type *) (out + ((pitch << 1) + pitch)) =\
 			((mixed >> 1) - (mixed >> 4 & mask_darken)) | mask_alpha;\
 }
-#define nes_ntsc(factor) nes_ntscx##factor(ntsc, screen, SCR_ROWS, burst_phase, rows, lines,\
+#define nes_ntsc(factor) nes_ntscx##factor(ntsc, screen, SCR_ROWS, burst_phase, SCR_ROWS, lines,\
 	pix, pitch, bpp)
 
 /*
