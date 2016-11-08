@@ -76,6 +76,7 @@ static void INLINE boy_update_chr(void);
 			boy.prg_map[1] = value;\
 			break;\
 	}
+
 void map_init_BOY(void) {
 	EXTCL_CPU_WR_MEM(BOY);
 	EXTCL_SAVE_MAPPER(BOY);

@@ -897,6 +897,10 @@ BYTE map_init(void) {
 					// NES-BOY
 					map_init_BOY();
 					break;
+				case 48:
+					// NES-8-IN-1
+					map_init_8_IN_1();
+					break;
 			}
 			break;
 	}

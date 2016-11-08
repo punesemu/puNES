@@ -1333,7 +1333,16 @@ BYTE ppu_turn_on(void) {
 			/* inizializzo nametables */
 			memset(ntbl.data, 0x00, sizeof(ntbl.data));
 			/* e paletta dei colori */
-			memset(palette.color, 0x3F, sizeof(palette.color));
+			// Super 8-in-1 (with Rockin' Kats)(Unl)[U][!].nes
+			// non inizializza tutti i colori della paletta lasciandone alcuni al
+			// valore impostato all'avvio o impostato da uno sei sottogiochi.
+			// Se inizializzo a 0x3F non si vedono alcuni sprites ma soprattutto
+			// non e' visibile la freccia del menu.
+			if ((info.mapper.id = UNIF_MAPPER) && (unif.internal_mapper == 48)) {
+				memset(palette.color, 0x00, sizeof(palette.color));
+			} else {
+				memset(palette.color, 0x3F, sizeof(palette.color));
+			}
 		}
 	} else {
 		memset(&r2000, 0x00, sizeof(r2000));

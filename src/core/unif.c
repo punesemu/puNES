@@ -133,6 +133,7 @@ static const _unif_board unif_boards[] = {
 	{"RT-01", NO_INES, 45, DEFAULT, DEFAULT, NOEXTRA},
 	{"MALISB", NO_INES, 46, DEFAULT, DEFAULT, NOEXTRA},
 	{"BOY", NO_INES, 47, DEFAULT, DEFAULT, CHRRAM256K},
+	{"8-IN-1", NO_INES, 48, DEFAULT, DEFAULT, CHRRAM256K},
 };
 
 BYTE unif_load_rom(void) {
