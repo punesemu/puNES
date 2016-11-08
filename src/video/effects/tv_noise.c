@@ -26,19 +26,26 @@
 #include "video/filters/ntsc.h"
 
 BYTE tv_noise_init(void) {
+	uint32_t *palette;
 	_color_RGB pRGB[NUM_COLORS];
 	WORD i;
 
-	if (!(turn_off.palette = (uint32_t *) malloc(NUM_COLORS * sizeof(uint32_t)))) {
+	if (!(turn_off.palette = malloc(NUM_COLORS * sizeof(uint32_t)))) {
+		fprintf(stderr, "Unable to allocate the palette\n");
+		return (EXIT_ERROR);
+	}
+	palette = (uint32_t *) turn_off.palette;
+
+	if (!(turn_off.ntsc = malloc(sizeof(nes_ntsc_t)))) {;
 		fprintf(stderr, "Unable to allocate the palette\n");
 		return (EXIT_ERROR);
 	}
 
-	rgb_modifier(pRGB, 0x1A, -0x20, -0x30, -0x20);
-	//rgb_modifier(pRGB, 0x00, -0x20, -0x20, -0x20);
+	rgb_modifier((nes_ntsc_t *) turn_off.ntsc, pRGB, 0x1A, -0x20, -0x30, -0x20);
+	//rgb_modifier((nes_ntsc_t *) turn_off.ntsc, pRGB, 0x00, -0x20, -0x20, -0x20);
 
 	for (i = 0; i < NUM_COLORS; i++) {
-		turn_off.palette[i] = gfx_color(255, pRGB[i].r, pRGB[i].g, pRGB[i].b);
+		palette[i] = gfx_color(255, pRGB[i].r, pRGB[i].g, pRGB[i].b);
 	}
 
 	return (EXIT_OK);
@@ -47,6 +54,10 @@ void tv_noise_quit(void) {
 	if (turn_off.palette) {
 		free(turn_off.palette);
 		turn_off.palette = NULL;
+	}
+	if (turn_off.ntsc) {
+		free(turn_off.ntsc);
+		turn_off.ntsc = NULL;
 	}
 }
 void tv_noise_effect(void) {

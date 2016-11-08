@@ -49,13 +49,13 @@ gfx_filter_function(scale_surface) {
 	}
 
 	if (factor == 1) {
-		scale_surface1x(screen_index, palette, bpp, pitch, pix);
+		scale_surface1x(screen_index, (uint32_t *) palette, bpp, pitch, pix);
 	} else if (factor == 2) {
-		scale_surface2x(screen_index, palette, bpp, pitch, pix);
+		scale_surface2x(screen_index, (uint32_t *) palette, bpp, pitch, pix);
 	} else if (factor == 3) {
-		scale_surface3x(screen_index, palette, bpp, pitch, pix);
+		scale_surface3x(screen_index, (uint32_t *) palette, bpp, pitch, pix);
 	} else if (factor == 4) {
-		scale_surface4x(screen_index, palette, bpp, pitch, pix);
+		scale_surface4x(screen_index, (uint32_t *) palette, bpp, pitch, pix);
 	}
 }
 void scale_surface1x(WORD **screen_index, uint32_t *palette, BYTE bpp, uint32_t pitch, void *pix) {

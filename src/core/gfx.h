@@ -19,7 +19,7 @@
 /* definizione funzione virtuale */
 #if !defined (gfx_filter_function)
 #define gfx_filter_function(name)\
-	void name(WORD *screen, WORD **screen_index, uint32_t *palette, BYTE bpp, uint32_t pitch,\
+	void name(WORD *screen, WORD **screen_index, void *palette, BYTE bpp, uint32_t pitch,\
 	void *pix, WORD rows, WORD lines, WORD width, WORD height, BYTE factor)
 #endif
 
@@ -41,9 +41,9 @@
 #define change_color(plt, blck, index, color, operation)\
 	tmp = plt[index].color + operation;\
 	plt[index].color = (tmp < 0 ? blck : (tmp > 0xFF ? 0xFF : tmp))
-#define rgb_modifier(plt, blck, red, green, blue)\
+#define rgb_modifier(ntscin, plt, blck, red, green, blue)\
 	/* prima ottengo la paletta monocromatica */\
-	ntsc_set(cfg->ntsc_format, PALETTE_MONO, 0, 0, (BYTE *) plt);\
+	ntsc_set(ntscin, cfg->ntsc_format, PALETTE_MONO, 0, 0, (BYTE *) plt);\
 	/* quindi la modifico */\
 	{\
 		WORD i;\
@@ -58,7 +58,7 @@
 		}\
 	}\
 	/* ed infine utilizzo la nuova */\
-	ntsc_set(cfg->ntsc_format, FALSE, 0, (BYTE *) plt,(BYTE *) plt)
+	ntsc_set(ntscin, cfg->ntsc_format, FALSE, 0, (BYTE *) plt,(BYTE *) plt)
 
 enum fullscreen_type { NO_FULLSCR, FULLSCR };
 enum scale_type { X1 = 1, X2, X3, X4, X5, X6 };

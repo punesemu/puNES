@@ -80,8 +80,8 @@ int burst_phase = 0;
 	*(type *) (out + (pitch << 1)) = *(type *) (out + ((pitch << 1) + pitch)) =\
 			((mixed >> 1) - (mixed >> 4 & mask_darken)) | mask_alpha;\
 }
-#define nes_ntsc(factor) nes_ntscx##factor(ntsc, screen, SCR_ROWS, burst_phase, SCR_ROWS, lines,\
-	pix, pitch, bpp)
+#define nes_ntsc(ntscin, factor) nes_ntscx##factor(ntscin, screen, SCR_ROWS, burst_phase, SCR_ROWS,\
+	lines, pix, pitch, bpp)
 
 /*
  * cio' che non utilizzo in questa funzione
@@ -95,16 +95,20 @@ gfx_filter_function(ntsc_surface) {
 		screen += (SCR_ROWS * overscan.borders->up);
 	}
 
+	if (palette == NULL) {
+		palette = (void *) ntsc;
+	}
+
 	if (factor == 1) {
 		return;
 	} else if (factor == 2) {
-		nes_ntsc(2);
+		nes_ntsc((nes_ntsc_t *) palette, 2);
 		adjust_output(DOUBLE)
 	} else if (factor == 3) {
-		nes_ntsc(3);
+		nes_ntsc((nes_ntsc_t *) palette, 3);
 		adjust_output(TRIPLE);
 	} else if (factor == 4) {
-		nes_ntsc(4);
+		nes_ntsc((nes_ntsc_t *) palette, 4);
 		adjust_output(QUADRUPLE)
 	}
 }
@@ -114,18 +118,22 @@ BYTE ntsc_init(BYTE effect, BYTE color, BYTE *palette_base, BYTE *palette_in, BY
 	format[SVIDEO] = nes_ntsc_svideo;
 	format[RGBMODE] = nes_ntsc_rgb;
 
-	ntsc = (nes_ntsc_t *) malloc(sizeof(nes_ntsc_t));
-	if (!ntsc) {
+	if (!(ntsc = (nes_ntsc_t *) malloc(sizeof(nes_ntsc_t)))) {
 		fprintf(stderr, "Out of memory\n");
 		return (EXIT_ERROR);
 	}
-	ntsc_set(effect, color, palette_base, palette_in, palette_out);
+	ntsc_set(NULL, effect, color, palette_base, palette_in, palette_out);
 	return (EXIT_OK);
 }
 void ntsc_quit(void) {
 	free(ntsc);
 }
-void ntsc_set(BYTE effect, BYTE color, BYTE *palette_base, BYTE *palette_in, BYTE *palette_out) {
+void ntsc_set(nes_ntsc_t *ntsc_in, BYTE effect, BYTE color, BYTE *palette_base, BYTE *palette_in,
+		BYTE *palette_out) {
+	if (!ntsc_in) {
+		ntsc_in = ntsc;
+	}
+
 	if (palette_base) {
 		format[effect].base_palette = (unsigned char *) palette_base;
 	} else {
@@ -167,5 +175,5 @@ void ntsc_set(BYTE effect, BYTE color, BYTE *palette_base, BYTE *palette_in, BYT
 		}
 	}
 
-	nes_ntsc_init(ntsc, &format[effect]);
+	nes_ntsc_init(ntsc_in, &format[effect]);
 }

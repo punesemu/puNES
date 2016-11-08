@@ -55,10 +55,10 @@ gfx_filter_function(hqNx) {
 	if (factor == 1) {
 		return;
 	} else if (factor == 2) {
-		hq2x_32_rb(screen, pix, palette);
+		hq2x_32_rb(screen, pix, (uint32_t *) palette);
 	} else if (factor == 3) {
-		hq3x_32_rb(screen, pix, palette);
+		hq3x_32_rb(screen, pix, (uint32_t *) palette);
 	} else if (factor == 4) {
-		hq4x_32_rb(screen, pix, palette);
+		hq4x_32_rb(screen, pix, (uint32_t *) palette);
 	}
 }

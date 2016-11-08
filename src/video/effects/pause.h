@@ -28,7 +28,8 @@
 #endif
 
 EXTERNC struct _pause {
-	uint32_t *palette;
+	void *palette;
+	void *ntsc;
 } pause;
 
 EXTERNC BYTE pause_init(void);

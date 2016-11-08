@@ -88,7 +88,7 @@ static void INLINE gfx_FILTER(int filter) {
 		case NTSC_FILTER:
 			gfx_set_screen(NO_CHANGE, NTSC_FILTER, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 			if (cfg->filter == NTSC_FILTER) {
-				ntsc_set(cfg->ntsc_format, 0, 0, (BYTE *) palette_RGB, 0);
+				ntsc_set(NULL, cfg->ntsc_format, 0, 0, (BYTE *) palette_RGB, 0);
 			}
 			break;
 		case XBRZ2X:

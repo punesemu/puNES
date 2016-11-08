@@ -36,8 +36,8 @@ EXTERNC gfx_filter_function(ntsc_surface);
 EXTERNC BYTE ntsc_init(BYTE effect, BYTE color, BYTE *palette_base, BYTE *palette_in,
 		BYTE *palette_out);
 EXTERNC void ntsc_quit(void);
-EXTERNC void ntsc_set(BYTE effect, BYTE color, BYTE *palette_base, BYTE *palette_in,
-		BYTE *palette_out);
+EXTERNC void ntsc_set(nes_ntsc_t *ntsc_in, BYTE effect, BYTE color, BYTE *palette_base,
+		BYTE *palette_in, BYTE *palette_out);
 
 #undef EXTERNC
 

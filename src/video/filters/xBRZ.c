@@ -30,7 +30,7 @@ gfx_filter_function(xBRZ) {
 	if (factor == 1) {
 		return;
 	} else {
-		xbrz_scale(factor, screen, (uint32_t *) pix, palette, SCR_ROWS,
+		xbrz_scale(factor, screen, (uint32_t *) pix, (uint32_t *) palette, SCR_ROWS,
 		        (overscan.enabled == TRUE ? overscan.borders->left : 0), rows, lines);
 	}
 }

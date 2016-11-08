@@ -93,9 +93,9 @@ gfx_filter_function(scaleNx) {
 	if (factor == 1) {
 		return;
 	} else if (factor == 2) {
-		scale2x(screen_index, palette, bpp, pitch, pix);
+		scale2x(screen_index, (uint32_t *) palette, bpp, pitch, pix);
 	} else if (factor == 3) {
-		scale3x(screen_index, palette, bpp, pitch, pix);
+		scale3x(screen_index, (uint32_t *) palette, bpp, pitch, pix);
 	} else if (factor == 4) {
 		scl4x_buffer.w = rows * 2;
 		scl4x_buffer.h = lines * 2;
@@ -111,7 +111,7 @@ gfx_filter_function(scaleNx) {
 		}
 		scl4x_buffer.size = scl4x_buffer.pitch * scl4x_buffer.h;
 
-		scale4x(screen_index, palette, bpp, pitch, pix);
+		scale4x(screen_index, (uint32_t *) palette, bpp, pitch, pix);
 	}
 }
 void scale2x(WORD **screen_index, uint32_t *palette, BYTE bpp, uint32_t pitch, void *pix) {

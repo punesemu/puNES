@@ -28,7 +28,8 @@
 #endif
 
 EXTERNC struct _turn_off {
-	uint32_t *palette;
+	void *palette;
+	void *ntsc;
 } turn_off;
 
 EXTERNC BYTE tv_noise_init(void);

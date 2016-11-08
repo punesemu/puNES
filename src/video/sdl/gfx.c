@@ -499,7 +499,7 @@ void gfx_set_screen(BYTE scale, DBWORD filter, BYTE fullscreen, BYTE palette, BY
 						palette = PALETTE_SONY;
 					}
 				} else {
-					ntsc_set(cfg->ntsc_format, FALSE, (BYTE *) palette_base_file, 0,
+					ntsc_set(NULL, cfg->ntsc_format, FALSE, (BYTE *) palette_base_file, 0,
 							(BYTE *) palette_RGB);
 				}
 			}
@@ -507,27 +507,27 @@ void gfx_set_screen(BYTE scale, DBWORD filter, BYTE fullscreen, BYTE palette, BY
 
 		switch (palette) {
 			case PALETTE_PAL:
-				ntsc_set(cfg->ntsc_format, FALSE, (BYTE *) palette_base_pal, 0,
+				ntsc_set(NULL, cfg->ntsc_format, FALSE, (BYTE *) palette_base_pal, 0,
 						(BYTE *) palette_RGB);
 				break;
 			case PALETTE_NTSC:
-				ntsc_set(cfg->ntsc_format, FALSE, 0, 0, (BYTE *) palette_RGB);
+				ntsc_set(NULL, cfg->ntsc_format, FALSE, 0, 0, (BYTE *) palette_RGB);
 				break;
 			case PALETTE_FRBX_UNSATURED:
-				ntsc_set(cfg->ntsc_format, FALSE, (BYTE *) palette_firebrandx_unsaturated_v6, 0,
+				ntsc_set(NULL, cfg->ntsc_format, FALSE, (BYTE *) palette_firebrandx_unsaturated_v6, 0,
 						(BYTE *) palette_RGB);
 				break;
 			case PALETTE_FRBX_YUV:
-				ntsc_set(cfg->ntsc_format, FALSE, (BYTE *) palette_firebrandx_YUV_v3, 0,
+				ntsc_set(NULL, cfg->ntsc_format, FALSE, (BYTE *) palette_firebrandx_YUV_v3, 0,
 						(BYTE *) palette_RGB);
 				break;
 			case PALETTE_GREEN:
-				rgb_modifier(palette_RGB, 0x00, -0x20, 0x20, -0x20);
+				rgb_modifier(NULL, palette_RGB, 0x00, -0x20, 0x20, -0x20);
 				break;
 			case PALETTE_FILE:
 				break;
 			default:
-				ntsc_set(cfg->ntsc_format, palette, 0, 0, (BYTE *) palette_RGB);
+				ntsc_set(NULL, cfg->ntsc_format, palette, 0, 0, (BYTE *) palette_RGB);
 				break;
 		}
 
@@ -537,19 +537,19 @@ void gfx_set_screen(BYTE scale, DBWORD filter, BYTE fullscreen, BYTE palette, BY
 				case RP2C03G:
 					break;
 				case RP2C04:
-					ntsc_set(cfg->ntsc_format, FALSE, (BYTE *) palette_RP2C04_0001, 0,
+					ntsc_set(NULL, cfg->ntsc_format, FALSE, (BYTE *) palette_RP2C04_0001, 0,
 					        (BYTE *) palette_RGB);
 					break;
 				case RP2C04_0002:
-					ntsc_set(cfg->ntsc_format, FALSE, (BYTE *) palette_RP2C04_0002, 0,
+					ntsc_set(NULL, cfg->ntsc_format, FALSE, (BYTE *) palette_RP2C04_0002, 0,
 					        (BYTE *) palette_RGB);
 					break;
 				case RP2C04_0003:
-					ntsc_set(cfg->ntsc_format, FALSE, (BYTE *) palette_RP2C04_0003, 0,
+					ntsc_set(NULL, cfg->ntsc_format, FALSE, (BYTE *) palette_RP2C04_0003, 0,
 					        (BYTE *) palette_RGB);
 					break;
 				case RP2C04_0004:
-					ntsc_set(cfg->ntsc_format, FALSE, (BYTE *) palette_RP2C04_0004, 0,
+					ntsc_set(NULL, cfg->ntsc_format, FALSE, (BYTE *) palette_RP2C04_0004, 0,
 					        (BYTE *) palette_RGB);
 					break;
 				case RC2C03B:
@@ -671,11 +671,21 @@ void gfx_set_screen(BYTE scale, DBWORD filter, BYTE fullscreen, BYTE palette, BY
 }
 
 void gfx_draw_screen(BYTE forced) {
-	uint32_t *palette = gfx.palette;
+	void *palette = NULL;
+
+	if (cfg->filter == NTSC_FILTER) {
+		palette = NULL;
+	} else {
+		palette = (void *) gfx.palette;
+	}
 
 	if (!forced) {
 		if (info.no_rom | info.turn_off) {
-			palette = turn_off.palette;
+			if (cfg->filter == NTSC_FILTER) {
+				palette = turn_off.ntsc;
+			} else {
+				palette = (void *) turn_off.palette;
+			}
 
 			if (++info.pause_frames_drawscreen == 2) {
 				tv_noise_effect();
@@ -686,7 +696,11 @@ void gfx_draw_screen(BYTE forced) {
 			}
 		} else if (info.pause) {
 			if (!cfg->disable_sepia_color) {
-				palette = pause.palette;
+				if (cfg->filter == NTSC_FILTER) {
+					palette = pause.ntsc;
+				} else {
+					palette = pause.palette;
+				}
 			}
 
 			if ((++info.pause_frames_drawscreen == 15) || text.on_screen) {
