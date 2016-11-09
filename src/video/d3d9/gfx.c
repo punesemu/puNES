@@ -1161,7 +1161,7 @@ static BYTE d3d9_context_create(void) {
 				vp->w = (int) ((FLOAT) gfx.h[VIDEO_MODE] * ratio_surface);
 				vp->x = (int) (((FLOAT) gfx.w[VIDEO_MODE] - (FLOAT) vp->w) * 0.5f);
 			} else {
-				vp->h = (int) ((FLOAT) gfx.w[VIDEO_MODE] * ratio_surface);
+				vp->h = (int) ((FLOAT) gfx.w[VIDEO_MODE] / ratio_surface);
 				vp->y = (int) (((FLOAT) gfx.h[VIDEO_MODE] - (FLOAT) vp->h) * 0.5f);
 			}
 		}

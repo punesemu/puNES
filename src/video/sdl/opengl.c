@@ -201,11 +201,10 @@ BYTE opengl_context_create(SDL_Surface *src) {
 				vp->w = (int) ((GLfloat) src->h * ratio_surface);
 				vp->x = (int) (((GLfloat) src->w - (GLfloat) vp->w) * 0.5f);
 			} else {
-				vp->h = (int) ((GLfloat) src->w * ratio_surface);
+				vp->h = (int) ((GLfloat) src->w / ratio_surface);
 				vp->y = (int) (((GLfloat) src->h - (GLfloat) vp->h) * 0.5f);
 			}
 		}
-
 	}
 
 	// screen
