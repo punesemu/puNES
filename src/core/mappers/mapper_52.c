@@ -24,9 +24,15 @@
 #include "save_slot.h"
 
 #define m52_chr_1k(vl)\
-	bank = ((((m52.reg >> 3) & 0x04) | ((m52.reg >> 1) & 0x02) |\
-		((m52.reg >> 6) & (m52.reg >> 4) & 0x01)) << 7) |\
-		(vl & (((m52.reg & 0x40) << 1) ^ 0xFF))
+	if (info.chr.rom[0].max.banks_4k == 255) {\
+		bank = ((((m52.reg >> 3) & 0x04) | ((m52.reg >> 1) & 0x02) |\
+			((m52.reg >> 6) & (m52.reg >> 4) & 0x01)) << 7) |\
+			(vl & (((m52.reg & 0x40) << 1) ^ 0xFF));\
+	} else {\
+		bank = ((((m52.reg >> 4) & 0x02) | (m52.reg & 0x04) |\
+			((m52.reg >> 6) & (m52.reg >> 4) & 0x01)) << 7) |\
+			(vl & (((m52.reg << 1) & 0x80) ^ 0xFF));\
+	}
 #define m52_prg_8k(vl)\
 	value = (((m52.reg & 0x06) | ((m52.reg >> 3) & m52.reg & 0x01)) << 4) |\
 		(vl & (((m52.reg << 1) & 0x10) ^ 0x1F))
@@ -201,27 +207,29 @@ void map_init_52(void) {
 	irqA12_delay = 1;
 }
 void extcl_cpu_wr_mem_52(WORD address, BYTE value) {
-	if (address > 0x7FFF) {
-		switch (address & 0xE001) {
-			case 0x8000:
-				m52_8000()
-				return;
-			case 0x8001:
-				m52_8001()
-				return;
-		}
-		extcl_cpu_wr_mem_MMC3(address, value);
-		return;
-	}
+	switch (address & 0xE001) {
+		case 0x4000 :
+		case 0x4001 :
+			return;
+		case 0x6000 :
+		case 0x6001 :
+			if (!m52.disabled) {
+				m52.disabled = value & 0x80;
+				m52.reg = value;
 
-	if (address >= 0x6000) {
-		if (!m52.disabled) {
-			m52.disabled = TRUE;
-			m52.reg = value;
-
-			m52_prg_8k_update()
-			m52_chr_1k_update()
-		}
+				m52_prg_8k_update()
+				m52_chr_1k_update()
+			}
+			return;
+		case 0x8000:
+			m52_8000()
+			return;
+		case 0x8001:
+			m52_8001()
+			return;
+		default:
+			extcl_cpu_wr_mem_MMC3(address, value);
+			return;
 	}
 }
 BYTE extcl_save_mapper_52(BYTE mode, BYTE slot, FILE *fp) {
