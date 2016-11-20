@@ -24,6 +24,7 @@
 #include "l7z.h"
 #include "lib7zip.h"
 #include "info.h"
+#include "gui.h"
 
 static struct _l7z {
 	BYTE present;
@@ -33,13 +34,20 @@ static struct _l7z {
 class in_stream: public C7ZipInStream {
 	private:
 		FILE * m_pFile;
+#if defined (__WIN32__)
+		wstring m_strFileName;
+#else
 		std::string m_strFileName;
+#endif
 		wstring m_strFileExt;
 		int m_nFileSize;
 	public:
+#if defined (__WIN32__)
+		in_stream(wstring file) : m_strFileName(file), m_strFileExt(L"7z") {
+#else
 		in_stream(std::string file) : m_strFileName(file), m_strFileExt(L"7z") {
-			//printf("file.c_str(): %s\n", file.c_str());
-			m_pFile = fopen(file.c_str(), "rb");
+#endif
+			m_pFile = ufopen(file.c_str(), uL("rb"));
 
 			if (m_pFile) {
 				fseek(m_pFile, 0, SEEK_END);
@@ -52,7 +60,7 @@ class in_stream: public C7ZipInStream {
 					pos++;
 
 					m_strFileExt = wstring(m_strFileName.c_str() + pos,
-					        (m_strFileName.c_str() + pos) + strlen(m_strFileName.c_str() + pos));
+							(m_strFileName.c_str() + pos) + ustrlen(m_strFileName.c_str() + pos));
 				}
 			}
 		}
@@ -116,12 +124,20 @@ class in_stream: public C7ZipInStream {
 class out_stream: public C7ZipOutStream {
 	private:
 		FILE * m_pFile;
+#if defined (__WIN32__)
+		wstring m_strFileName;
+#else
 		std::string m_strFileName;
+#endif
 		wstring m_strFileExt;
 		int m_nFileSize;
 	public:
+#if defined (__WIN32__)
+		out_stream(wstring file) : m_strFileName(file), m_strFileExt(L"7z") {
+#else
 		out_stream(std::string file) : m_strFileName(file), m_strFileExt(L"7z") {
-			m_pFile = fopen(file.c_str(), "wb");
+#endif
+			m_pFile = ufopen(file.c_str(), uL("wb"));
 			m_nFileSize = 0;
 		}
 
@@ -192,7 +208,7 @@ void l7z_quit(void) {
 BYTE l7z_present(void) {
 	return (l7z.present);
 }
-BYTE l7z_control_ext(const char *ext) {
+BYTE l7z_control_ext(const uTCHAR *ext) {
 	WStringArray exts;
 
 	if (!l7z.lib.GetSupportedExts(exts)) {
@@ -202,7 +218,16 @@ BYTE l7z_control_ext(const char *ext) {
 	for (size_t i = 0; i < exts.size(); i++) {
 		wstring l7zext = exts[i];
 
-		wcstombs((char *) &uncomp.buffer, l7zext.c_str(), sizeof(uncomp.buffer));
+#if defined (__WIN32__)
+		if (ustrlen(ext + 1) != ustrlen(uPTCHAR(l7zext.c_str()))) {
+			continue;
+		}
+
+		if (ustrcasecmp(uPTCHAR(ext + 1), uPTCHAR(l7zext.c_str())) == 0) {
+			return (EXIT_OK);
+		}
+#else
+		wcstombs((char *) uncomp.buffer, l7zext.c_str(), sizeof(uncomp.buffer) - 1);
 
 		if (strlen(ext + 1) != strlen(uncomp.buffer)) {
 			continue;
@@ -211,6 +236,7 @@ BYTE l7z_control_ext(const char *ext) {
 		if (strcasecmp(ext + 1, uncomp.buffer) == 0) {
 			return (EXIT_OK);
 		}
+#endif
 	}
 
 	return (EXIT_ERROR);
@@ -218,11 +244,10 @@ BYTE l7z_control_ext(const char *ext) {
 BYTE l7z_control_in_archive(void) {
 	C7ZipArchive *archive = NULL;
 	unsigned int a, mode, num_items = 0;
-
 	in_stream stream(info.rom_file);
 
 	if (!l7z.lib.OpenArchive(&stream, &archive)) {
-		fprintf(stderr, "open archive %s fail\n", info.rom_file);
+		ufprintf(stderr, uL("open archive " uPERCENTs " fail\n"), info.rom_file);
 		return (EXIT_ERROR);
 	}
 
@@ -239,7 +264,7 @@ BYTE l7z_control_in_archive(void) {
 				continue;
 			}
 
-			/* se e' una directory continuo */
+			// se e' una directory continuo
 			if (archive_item->IsDir()) {
 				continue;
 			}
@@ -248,15 +273,20 @@ BYTE l7z_control_in_archive(void) {
 			//       archive_item->GetFullPath().c_str(), archive_item->IsDir());
 
 			for (b = 0; b < LENGTH(format_supported); b++) {
-				char *ext;
+				uTCHAR *ext;
 
-				memset(&uncomp.buffer, 0x00, sizeof(uncomp.buffer));
-				wcstombs((char *) &uncomp.buffer, archive_item->GetFullPath().c_str(),
-				        sizeof(uncomp.buffer));
+				umemset(uncomp.buffer, 0x00, usizeof(uncomp.buffer));
+#if defined (__WIN32__)
+				ustrncpy(uncomp.buffer, archive_item->GetFullPath().c_str(),
+						usizeof(uncomp.buffer) - 1);
+#else
+				wcstombs((char *) uncomp.buffer, archive_item->GetFullPath().c_str(),
+						sizeof(uncomp.buffer) - 1);
+#endif
 
-				ext = strrchr(uncomp.buffer, '.');
+				ext = ustrrchr(uncomp.buffer, uL('.'));
 
-				if ((ext != NULL) && (strcasecmp(ext, format_supported[b].ext) == 0)) {
+				if ((ext != NULL) && (ustrcasecmp(ext, (uTCHAR *) format_supported[b].ext) == 0)) {
 					if (mode == UNCOMP_CTRL_FILE_SAVE_DATA) {
 						uncomp.file[uncomp.files_founded].num = archive_item->GetArchiveIndex();
 						uncomp.file[uncomp.files_founded].format = format_supported[b].id;
@@ -280,6 +310,7 @@ BYTE l7z_control_in_archive(void) {
 BYTE l7z_file_from_archive(_uncomp_file_data *file) {
 	C7ZipArchive *archive = NULL;
 	C7ZipArchiveItem *archive_item = NULL;
+	uTCHAR basename[255];
 	in_stream stream(info.rom_file);
 
 	if (!l7z.lib.OpenArchive(&stream, &archive)) {
@@ -291,11 +322,14 @@ BYTE l7z_file_from_archive(_uncomp_file_data *file) {
 		return (EXIT_ERROR);
 	}
 
-	wcstombs((char *) &uncomp.buffer, archive_item->GetFullPath().c_str(), sizeof(uncomp.buffer));
-
-	snprintf(uncomp.uncompress_file, sizeof(uncomp.uncompress_file), "%s" TMP_FOLDER "/%s",
-	        info.base_folder, basename(uncomp.buffer));
-
+#if defined (__WIN32__)
+	ustrncpy(uncomp.buffer, archive_item->GetFullPath().c_str(), usizeof(uncomp.buffer) - 1);
+#else
+	wcstombs((char *) uncomp.buffer, archive_item->GetFullPath().c_str(), sizeof(uncomp.buffer) - 1);
+#endif
+	gui_utf_basename(uncomp.buffer, basename, usizeof(basename));
+	usnprintf(uncomp.uncompress_file, usizeof(uncomp.uncompress_file),
+			uL("" uPERCENTs TMP_FOLDER "/" uPERCENTs),info.base_folder, basename);
 	out_stream o_stream(uncomp.uncompress_file);
 
 	if (!archive->Extract(archive_item, &o_stream)) {
@@ -304,8 +338,8 @@ BYTE l7z_file_from_archive(_uncomp_file_data *file) {
 		return (EXIT_ERROR);
 	}
 
-	strncpy(uncomp.compress_archive, info.rom_file, sizeof(uncomp.compress_archive));
-	strncpy(info.rom_file, uncomp.uncompress_file, sizeof(info.rom_file));
+	ustrncpy(uncomp.compress_archive, info.rom_file, usizeof(uncomp.compress_archive));
+	ustrncpy(info.rom_file, uncomp.uncompress_file, usizeof(info.rom_file));
 	info.uncompress_rom = TRUE;
 
 	delete(archive);
@@ -326,7 +360,12 @@ BYTE l7z_name_file_compress(_uncomp_file_data *file) {
 		return (EXIT_ERROR);
 	}
 
-	wcstombs((char *) &uncomp.buffer, archive_item->GetFullPath().c_str(), sizeof(uncomp.buffer));
+	umemset(uncomp.buffer, 0x00, usizeof(uncomp.buffer));
+#if defined (__WIN32__)
+	ustrncpy(uncomp.buffer, archive_item->GetFullPath().c_str(), usizeof(uncomp.buffer) - 1);
+# else
+	wcstombs((char *) uncomp.buffer, archive_item->GetFullPath().c_str(), usizeof(uncomp.buffer) - 1);
+#endif
 
 	delete(archive);
 

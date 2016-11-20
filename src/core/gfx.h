@@ -152,7 +152,7 @@ EXTERNC struct _gfx {
 
 	gfx_filter_function((*filter));
 
-	char last_shader_file[LENGTH_FILE_NAME_LONG];
+	uTCHAR last_shader_file[LENGTH_FILE_NAME_LONG];
 } gfx;
 
 #if defined (WITH_OPENGL)

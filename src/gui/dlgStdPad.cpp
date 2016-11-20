@@ -96,7 +96,7 @@ dlgStdPad::dlgStdPad(_cfg_port *cfg_port, QWidget *parent = 0) : QDialog(parent)
 			if (a == KEYBOARD) {
 				bt->setText(inpObject::kbd_keyval_to_name(data.cfg.port.input[a][b]));
 			} else {
-				bt->setText(jsv_to_name(data.cfg.port.input[a][b]));
+				bt->setText(uQString(jsv_to_name(data.cfg.port.input[a][b])));
 			}
 
 			bt->installEventFilter(this);
@@ -182,7 +182,7 @@ void dlgStdPad::update_dialog() {
 	label_joy_ID->setEnabled(mode);
 	comboBox_joy_ID->setEnabled(mode);
 
-	if ((comboBox_joy_ID->count() > 1) && (joyId != name_to_jsn("NULL"))) {
+	if ((comboBox_joy_ID->count() > 1) && (joyId != name_to_jsn(uL("NULL")))) {
 		mode = true;
 	} else {
 		mode = false;
@@ -200,7 +200,7 @@ void dlgStdPad::update_dialog() {
 	groupBox_Misc->setEnabled(true);
 }
 void dlgStdPad::combo_id_init() {
-	BYTE disabled_line = 0, count = 0, current_line = name_to_jsn("NULL");
+	BYTE disabled_line = 0, count = 0, current_line = name_to_jsn(uL("NULL"));
 
 	comboBox_kbd_ID->addItem(tr("Keyboard"));
 
@@ -216,13 +216,13 @@ void dlgStdPad::combo_id_init() {
 				current_line = count;
 			}
 
-			comboBox_joy_ID->addItem(QString("js%1: ").arg(id) + js_name_device(id));
+			comboBox_joy_ID->addItem(QString("js%1: ").arg(id) + uQString(js_name_device(id)));
 		} else {
 			if (count == 0) {
 				break;
 			}
 			comboBox_joy_ID->addItem(tr("Disabled"));
-			id = name_to_jsn("NULL");
+			id = name_to_jsn(uL("NULL"));
 			disabled_line = count;
 		}
 
@@ -238,8 +238,8 @@ void dlgStdPad::combo_id_init() {
 	}
 
 	if (count > 0) {
-		if (data.cfg.port.joy_id == name_to_jsn("NULL")
-				|| (current_line == name_to_jsn("NULL"))) {
+		if (data.cfg.port.joy_id == name_to_jsn(uL("NULL"))
+				|| (current_line == name_to_jsn(uL("NULL")))) {
 			comboBox_joy_ID->setCurrentIndex(disabled_line);
 		} else {
 			comboBox_joy_ID->setCurrentIndex(current_line);
@@ -293,7 +293,7 @@ void dlgStdPad::js_press_event() {
 
 	type = data.vbutton / MAX_STD_PAD_BUTTONS;
 
-	if (data.cfg.port.joy_id == name_to_jsn("NULL")) {
+	if (data.cfg.port.joy_id == name_to_jsn(uL("NULL"))) {
 		info_entry_print(type, tr("Select device first"));
 		update_dialog();
 		return;
@@ -398,7 +398,7 @@ bool dlgStdPad::keypressEvent(QEvent *event) {
 		// che accetto e' l'escape.
 		if (keyEvent->key() == Qt::Key_Escape) {
 			data.joy.timer->stop();
-			data.bp->setText(jsv_to_name(data.cfg.port.input[type][vbutton]));
+			data.bp->setText(uQString(jsv_to_name(data.cfg.port.input[type][vbutton])));
 		} else {
 			return (true);
 		}
@@ -445,7 +445,7 @@ void dlgStdPad::s_input_clicked(bool checked) {
 
 	} else {
 		info_entry_print(type, tr("Press a key (ESC for the previous value \"%1\")").arg(
-				QString(jsv_to_name(data.cfg.port.input[type][vbutton]))));
+				uQString(jsv_to_name(data.cfg.port.input[type][vbutton]))));
 		js_press_event();
 	}
 }
@@ -491,7 +491,7 @@ void dlgStdPad::s_defaults_clicked(bool checked) {
 		if (type == KEYBOARD) {
 			bt->setText(inpObject::kbd_keyval_to_name(data.cfg.port.input[type][i]));
 		} else {
-			bt->setText(jsv_to_name(data.cfg.port.input[type][i]));
+			bt->setText(uQString(jsv_to_name(data.cfg.port.input[type][i])));
 		}
 	}
 }
@@ -532,7 +532,7 @@ void dlgStdPad::s_pad_joy_read_timer() {
 
 		info_entry_print(type, "");
 		data.cfg.port.input[type][vbutton] = data.joy.value;
-		data.bp->setText(jsv_to_name(data.joy.value));
+		data.bp->setText(uQString(jsv_to_name(data.joy.value)));
 		data.joy.timer->stop();
 
 		update_dialog();

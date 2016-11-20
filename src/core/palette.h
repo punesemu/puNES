@@ -47,8 +47,8 @@ typedef struct {
 EXTERNC _color_RGB palette_base_file[64];
 EXTERNC _color_RGB palette_RGB[NUM_COLORS];
 
-EXTERNC void palette_save_on_file(const char *file);
-EXTERNC BYTE palette_load_from_file(const char *file);
+EXTERNC void palette_save_on_file(const uTCHAR *file);
+EXTERNC BYTE palette_load_from_file(const uTCHAR *file);
 
 #undef EXTERNC
 

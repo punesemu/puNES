@@ -21,7 +21,15 @@
 
 #include "common.h"
 
-BYTE cmd_line_parse(int argc, char **argv);
-BYTE cmd_line_check_portable(int argc, char **argv);
+#if defined (__cplusplus)
+#define EXTERNC extern "C"
+#else
+#define EXTERNC
+#endif
+
+EXTERNC void cmd_line_parse(int argc, uTCHAR **argv);
+EXTERNC BYTE cmd_line_check_portable(int argc, uTCHAR **argv);
+
+#undef EXTERNC
 
 #endif /* CMD_LINE_H_ */

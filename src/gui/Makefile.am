@@ -47,6 +47,8 @@ libgui_a_SOURCES = \
 	cgp.h \
 	cheatObject.cpp \
 	cheatObject.hpp \
+	cmd_line.cpp \
+	cmd_line.h \
 	dlgApuChannels.cpp \
 	dlgApuChannels.hpp \
 	dlgCheats.cpp \
@@ -69,6 +71,8 @@ libgui_a_SOURCES = \
 	pStyle.hpp \
 	qt.cpp \
 	qt.h \
+	recent_roms.cpp \
+	recent_roms.h \
 	sbarWidget.cpp \
 	sbarWidget.hpp \
 	screenWidget.cpp \
@@ -76,7 +80,9 @@ libgui_a_SOURCES = \
 	settings.cpp \
 	settings.h \
 	settingsObject.cpp \
-	settingsObject.hpp
+	settingsObject.hpp \
+	tas.cpp \
+	tas.h
 	
 if LINUX
 libgui_a_SOURCES += \

@@ -118,7 +118,7 @@ void infoStatusBar::update_label() {
 	if (info.no_rom | info.turn_off) {
 		label->setText("");
 	} else {
-		label->setText(QFileInfo(info.rom_file).fileName());
+		label->setText(QFileInfo(uQString(info.rom_file)).fileName());
 	}
 }
 

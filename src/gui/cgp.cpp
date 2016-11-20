@@ -26,10 +26,10 @@
 static bool cgp_value(QSettings *set, QString key, QString &value);
 static bool cgp_rd_file(QIODevice &device, QSettings::SettingsMap &map);
 
-BYTE cgp_parse(const char *file) {
+BYTE cgp_parse(const uTCHAR *file) {
 	static const QSettings::Format cfg = QSettings::registerFormat("cgp", cgp_rd_file, NULL);
 	QSettings *set;
-	QFileInfo fi(file);
+	QFileInfo fi(uQString(file));
 	QString key, value;
 	QStringList list;
 	_shader_effect se;
@@ -76,9 +76,9 @@ BYTE cgp_parse(const char *file) {
 		key.sprintf("shader%u", i);
 		if (cgp_value(set, key, value) == FALSE) {
 			value.replace('\\', '/');
-			::strncpy(sp->path,
-					qPrintable(QFileInfo(fi.absolutePath() + '/' + value).absoluteFilePath()),
-					sizeof(sp->path) - 1);
+			ustrncpy(sp->path,
+					uQStringCD(QFileInfo(fi.absolutePath() + '/' + value).absoluteFilePath()),
+					usizeof(sp->path) - 1);
 		} else {
 			delete(set);
 			return (EXIT_ERROR);
@@ -275,9 +275,9 @@ BYTE cgp_parse(const char *file) {
 			// path
 			if (cgp_value(set, ele, value) == FALSE) {
 				value.replace('\\', '/');
-				::strncpy(lp->path,
-						qPrintable(QFileInfo(fi.absolutePath() + '/' + value).absoluteFilePath()),
-						sizeof(lp->path) - 1);
+				ustrncpy(lp->path,
+						uQStringCD(QFileInfo(fi.absolutePath() + '/' + value).absoluteFilePath()),
+						usizeof(lp->path) - 1);
 			}
 
 			// mipmap
@@ -357,9 +357,9 @@ BYTE cgp_parse(const char *file) {
 
 	return (EXIT_OK);
 }
-void cgp_pragma_param(char *code, const char *path) {
+void cgp_pragma_param(char *code, const uTCHAR *path) {
 	QTextStream stream(code);
-	QFile file(path);
+	QFile file(uQString(path));
 	QString line;
 	_param_shd param;
 
@@ -459,13 +459,8 @@ static bool cgp_rd_file(QIODevice &device, QSettings::SettingsMap &map) {
 	while (!in.atEnd()) {
 		QString line = in.readLine();
 
-		{
-			QByteArray ba = line.toLatin1();
-			char *start = ba.data();
-
-			if (((*start) == '#') || ((*start) == '*') || (ba.length() == 0)) {
-				continue;
-			}
+		if (line.isEmpty() || line.startsWith("#") || line.startsWith("*")) {
+			continue;
 		}
 
 		QStringList splitted = line.split("=");

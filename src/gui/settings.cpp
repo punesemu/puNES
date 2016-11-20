@@ -22,7 +22,7 @@
 
 #define CFGFILENAME "/puNES.cfg"
 #define PGSFILENAME QString(PERGAME_FOLDER) + "/" +\
-	QFileInfo(info.rom_file).completeBaseName() + ".pgs"
+	QFileInfo(uQString(info.rom_file)).completeBaseName() + ".pgs"
 #define INPFILENAME "/input.cfg"
 
 _emu_settings s;
@@ -48,13 +48,13 @@ void settings_save_GUI(void) {
 void settings_set_overscan_default(_overscan_borders *ob, BYTE mode) {
 	s.set->oscan_default(ob, mode);
 }
-int settings_val_to_int(int index, const char *buffer) {
+int settings_val_to_int(int index, const uTCHAR *buffer) {
 	return (s.set->val_to_int(index, buffer));
 }
-double settings_val_to_double(WORD round, const char *buffer) {
+double settings_val_to_double(WORD round, const uTCHAR *buffer) {
 	return (s.set->val_to_double(round, buffer));
 }
-void settings_val_to_oscan(int index, _overscan_borders *ob, const char *buffer) {
+void settings_val_to_oscan(int index, _overscan_borders *ob, const uTCHAR *buffer) {
 	s.set->oscan_val_to_int(index, ob, buffer);
 }
 

@@ -23,19 +23,23 @@
 #include "cheat.h"
 #include "c++/l7zip/l7z.h"
 #include "gui.h"
+#if defined (__linux__)
 #define MINIZ_NO_ARCHIVE_WRITING_APIS
 #define MINIZ_NO_TIME
 #include "miniz.h"
 #undef MINIZ_NO_TIME
 #undef MINIZ_NO_ARCHIVE_WRITING_APIS
+#endif
 
 BYTE (*uncomp_control_in_archive)(void);
 BYTE (*uncomp_file_from_archive)(_uncomp_file_data *file);
 BYTE (*uncomp_name_file_compress)(_uncomp_file_data *file);
+#if defined (__linux__)
 /* zip */
 BYTE uncomp_zip_control_in_archive(void);
 BYTE uncomp_zip_file_from_archive(_uncomp_file_data *file);
 BYTE uncomp_zip_name_file_compress(_uncomp_file_data *file);
+#endif
 
 BYTE uncomp_init(void) {
 	l7z_init();
@@ -49,7 +53,7 @@ void uncomp_quit(void) {
 
 	uncomp_remove();
 }
-BYTE uncomp_ctrl(char *ext) {
+BYTE uncomp_ctrl(uTCHAR *ext) {
 	if ((cfg->cheat_mode == GAMEGENIE_MODE) && (gamegenie.phase == GG_LOAD_ROM)) {
 		return (EXIT_OK);
 	}
@@ -57,17 +61,19 @@ BYTE uncomp_ctrl(char *ext) {
 	/* azzero singolarmente i campi della struttura uncomp */
 	uncomp.files_founded = 0;
 	uncomp.file = NULL;
-	memset(&uncomp.compress_archive, 0x00, sizeof(uncomp.compress_archive));
-	memset(&uncomp.buffer, 0x00, sizeof(uncomp.buffer));
+	umemset(uncomp.compress_archive, 0x00, usizeof(uncomp.compress_archive));
+	umemset(uncomp.buffer, 0x00, usizeof(uncomp.buffer));
 
 	if ((l7z_present() == TRUE) && (l7z_control_ext(ext) == EXIT_OK)){
 		uncomp_control_in_archive = l7z_control_in_archive;
 		uncomp_file_from_archive = l7z_file_from_archive;
 		uncomp_name_file_compress = l7z_name_file_compress;
-	} else if (!strcasecmp(ext, ".zip")) {
+#if defined (__linux__)
+	} else if (!ustrcasecmp(ext, uL(".zip"))) {
 		uncomp_control_in_archive = uncomp_zip_control_in_archive;
 		uncomp_file_from_archive = uncomp_zip_file_from_archive;
 		uncomp_name_file_compress = uncomp_zip_name_file_compress;
+#endif
 	} else {
 		return (EXIT_OK);
 	}
@@ -110,13 +116,14 @@ void uncomp_remove(void) {
 	}
 
 	if (info.uncompress_rom == TRUE) {
-		remove(uncomp.uncompress_file);
-		memset(&uncomp.uncompress_file, 0x00, sizeof(uncomp.uncompress_file));
+		uremove(uncomp.uncompress_file);
+		umemset(uncomp.uncompress_file, 0x00, usizeof(uncomp.uncompress_file));
 	}
 
 	info.uncompress_rom = FALSE;
 }
 
+#if defined (__linux__)
 BYTE uncomp_zip_control_in_archive(void) {
 	mz_zip_archive zip_archive;
 	int a, mode;
@@ -141,7 +148,7 @@ BYTE uncomp_zip_control_in_archive(void) {
 				return (EXIT_ERROR);
 			}
 
-			/* se e' una directory continuo */
+			// se e' una directory continuo
 			if (mz_zip_reader_is_file_a_directory(&zip_archive, a)) {
 				continue;
 			}
@@ -215,3 +222,4 @@ BYTE uncomp_zip_name_file_compress(_uncomp_file_data *file) {
 
 	return (EXIT_OK);
 }
+#endif

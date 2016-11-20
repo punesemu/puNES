@@ -42,7 +42,7 @@ class settingsObject : public QSettings {
 		~settingsObject();
 		void wr();
 		void wr(QString group);
-		int val_to_int(int index, const char *buffer);
+		int val_to_int(int index, const uTCHAR *buffer);
 
 	protected:
 		virtual void setup();
@@ -53,8 +53,8 @@ class settingsObject : public QSettings {
 		void rd(QString group);
 		int val_to_int(int index);
 		void int_to_val(int index, int value);
-		void cpy_val_to_char(int index, char *dst, int length);
-		void char_to_val(int index, char *src);
+		void cpy_val_to_utchar(int index, uTCHAR *dst, int length);
+		void utchar_to_val(int index, uTCHAR *src);
 
 	private:
 		void rd_key(int index);
@@ -70,8 +70,8 @@ class setObject : public settingsObject {
 	public:
 		setObject(Format f, QString file, int list_ele);
 		~setObject();
-		double val_to_double(WORD round, const char *buffer);
-		void oscan_val_to_int(int index, _overscan_borders *ob, const char *buffer);
+		double val_to_double(WORD round, const uTCHAR *buffer);
+		void oscan_val_to_int(int index, _overscan_borders *ob, const uTCHAR *buffer);
 		void oscan_default(_overscan_borders *ob, BYTE mode);
 
 	protected:

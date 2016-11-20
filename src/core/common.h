@@ -20,6 +20,7 @@
 #define COMMON_H_
 
 #include <stdint.h>
+#include "unicode_def.h"
 
 typedef unsigned char BYTE;
 typedef unsigned short WORD;

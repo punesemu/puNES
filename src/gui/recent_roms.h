@@ -23,14 +23,7 @@
 
 enum recent_roms_misc {
 	RECENT_ROMS_MAX = 15,
-	RECENT_ROMS_LINE = 1024
 };
-
-typedef struct {
-	BYTE count;
-	char item[RECENT_ROMS_MAX][RECENT_ROMS_LINE];
-	char current[RECENT_ROMS_LINE];
-} _recent_roms;
 
 #if defined (__cplusplus)
 #define EXTERNC extern "C"
@@ -38,12 +31,15 @@ typedef struct {
 #define EXTERNC
 #endif
 
-EXTERNC _recent_roms recent_roms_list;
-
 EXTERNC void recent_roms_init(void);
-EXTERNC void recent_roms_add(char *rom);
+EXTERNC void recent_roms_add(uTCHAR *rom);
 EXTERNC void recent_roms_parse(void);
 EXTERNC void recent_roms_save(void);
+EXTERNC int recent_roms_count(void);
+EXTERNC const char *recent_roms_item(int index);
+EXTERNC int recent_roms_item_size(int index);
+EXTERNC const char *recent_roms_current(void);
+EXTERNC int recent_roms_current_size(void);
 
 #undef EXTERNC
 

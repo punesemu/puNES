@@ -6,8 +6,6 @@ libcore_a_SOURCES = \
 	cheat.c \
 	cheat.h \
 	clock.h \
-	cmd_line.c \
-	cmd_line.h \
 	common.h \
 	conf.h \
 	cpu.c \
@@ -47,15 +45,11 @@ libcore_a_SOURCES = \
 	ppu.c \
 	ppu.h \
 	ppu_inline.h \
-	recent_roms.c \
-	recent_roms.h \
 	save_slot.c \
 	save_slot.h \
 	sha1.c \
 	sha1.h \
 	snd.h \
-	tas.c \
-	tas.h \
 	text.c \
 	text.h \
 	timeline.c \

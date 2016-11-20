@@ -48,9 +48,9 @@ void gamegenie_reset(void) {
 	}
 }
 void gamegenie_check_rom_present(BYTE print_message) {
-	char gg_rom[LENGTH_FILE_NAME_MID];
+	uTCHAR gg_rom[LENGTH_FILE_NAME_MID];
 
-	sprintf(gg_rom, "%s" BIOS_FOLDER "/%s", info.base_folder, GGFILE);
+	usnprintf(gg_rom, usizeof(gg_rom), uL("" uPERCENTs BIOS_FOLDER "/" GGFILE), info.base_folder);
 
 	gamegenie.rom_present = FALSE;
 
@@ -72,17 +72,17 @@ FILE *gamegenie_load_rom(FILE *fp) {
 		return (fp_rom);
 	}
 
-	strncpy(info.load_rom_file, info.rom_file, sizeof(info.load_rom_file));
+	ustrncpy(info.load_rom_file, info.rom_file, usizeof(info.load_rom_file));
+	usnprintf(info.rom_file, usizeof(info.rom_file), uL("" uPERCENTs BIOS_FOLDER "/" GGFILE),
+			info.base_folder);
 
-	sprintf(info.rom_file, "%s" BIOS_FOLDER "/%s", info.base_folder, GGFILE);
-
-	if (!(fp_gg = fopen(info.rom_file, "rb"))) {
+	if (!(fp_gg = ufopen(info.rom_file, uL("rb")))) {
 		text_add_line_info(1, "[red]error loading Game Genie rom");
 		fprintf(stderr, "error loading Game Genie rom\n");
 
-		strncpy(info.rom_file, info.load_rom_file, sizeof(info.rom_file));
+		ustrncpy(info.rom_file, info.load_rom_file, usizeof(info.rom_file));
 
-		memset(info.load_rom_file, 0, sizeof(info.load_rom_file));
+		umemset(info.load_rom_file, 0, usizeof(info.load_rom_file));
 		return (fp_rom);
 	}
 

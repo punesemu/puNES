@@ -61,12 +61,12 @@
 		recent_roms_add(save_rom_file);\
 	}
 #define save_rom_ext()\
-	sprintf(name_file, "%s", basename(info.rom_file));\
-	if (strrchr(name_file, '.') == NULL) {\
-		strcpy(ext, ".nes");\
+	gui_utf_basename(info.rom_file, name_file, usizeof(name_file));\
+	if (ustrrchr(name_file, uL('.')) == NULL) {\
+		ustrncpy(ext, uL(".nes"), usizeof(ext));\
 	} else {\
 		/* salvo l'estensione del file */\
-		strcpy(ext, strrchr(name_file, '.'));\
+		ustrncpy(ext, ustrrchr(name_file, uL('.')), usizeof(ext));\
 	}
 
 BYTE emu_frame(void) {
@@ -160,18 +160,18 @@ BYTE emu_frame(void) {
 	fps_frameskip();
 	return (EXIT_OK);
 }
-BYTE emu_make_dir(const char *fmt, ...) {
-	static char path[512];
-	struct stat status;
+BYTE emu_make_dir(const uTCHAR *fmt, ...) {
+	static uTCHAR path[LENGTH_FILE_NAME_MID];
+	struct ustructstat status;
 	va_list ap;
 
 	va_start(ap, fmt);
-	vsnprintf(path, sizeof(path), fmt, ap);
+	uvsnprintf(path, usizeof(path), fmt, ap);
 	va_end(ap);
 
-	if (!(access(path, 0))) {
+	if (!(uaccess(path, 0))) {
 		/* se esiste controllo che sia una directory */
-		stat(path, &status);
+		ustat(path, &status);
 
 		if (!(status.st_mode & S_IFDIR)) {
 			/* non e' una directory */
@@ -179,7 +179,7 @@ BYTE emu_make_dir(const char *fmt, ...) {
 		}
 	} else {
 #if defined (__WIN32__)
-		if (mkdir(path)) {
+		if (_wmkdir(path)) {
 			return (EXIT_ERROR);
 		}
 #else
@@ -188,21 +188,51 @@ BYTE emu_make_dir(const char *fmt, ...) {
 		}
 #endif
 	}
+
 	return (EXIT_OK);
 }
-BYTE emu_file_exist(const char *file) {
-	struct stat status;
+BYTE emu_file_exist(const uTCHAR *file) {
+	struct ustructstat status;
 
-	if (!(access(file, 0))) {
-		stat(file, &status);
+	if (!(uaccess(file, 0))) {
+		ustat(file, &status);
 		if (status.st_mode & S_IFREG) {
 			return (EXIT_OK);
 		}
 	}
 	return (EXIT_ERROR);
 }
+char *emu_file2string(const uTCHAR *path) {
+	FILE *fd;
+	long len, r;
+	char *str;
+
+	if (!(fd = ufopen(path, uL("r")))) {
+		ufprintf(stderr, uL("OPENGL: Can't open file '" uPERCENTs "' for reading\n"), path);
+		return (NULL);
+	}
+
+	fseek(fd, 0, SEEK_END);
+	len = ftell(fd);
+
+	fseek(fd, 0, SEEK_SET);
+
+	if (!(str = (char *) malloc(len * sizeof(char)))) {
+		fclose(fd);
+		ufprintf(stderr, uL("OPENGL: Can't malloc space for '" uPERCENTs "'\n"), path);
+		return (NULL);
+	}
+
+	r = fread(str, sizeof(char), len, fd);
+
+	str[r - 1] = '\0';
+
+	fclose(fd);
+
+	return (str);
+}
 BYTE emu_load_rom(void) {
-	char ext[10], name_file[255];
+	uTCHAR ext[10], name_file[255];
 	BYTE recent_roms_permit_add = TRUE;
 
 	elaborate_rom_file:
@@ -217,14 +247,14 @@ BYTE emu_load_rom(void) {
 	uncomp_remove();
 
 	if (info.load_rom_file[0]) {
-		strncpy(info.rom_file, info.load_rom_file, sizeof(info.rom_file));
-		memset(info.load_rom_file, 0, sizeof(info.load_rom_file));
+		ustrncpy(info.rom_file, info.load_rom_file, usizeof(info.rom_file));
+		umemset(info.load_rom_file, 0, usizeof(info.load_rom_file));
 	}
 
 	if (info.rom_file[0]) {
-		char save_rom_file[LENGTH_FILE_NAME_MID];
+		uTCHAR save_rom_file[LENGTH_FILE_NAME_MID];
 
-		strncpy(save_rom_file, info.rom_file, LENGTH_FILE_NAME_MID);
+		ustrncpy(save_rom_file, info.rom_file, LENGTH_FILE_NAME_MID);
 
 		save_rom_ext()
 
@@ -234,13 +264,13 @@ BYTE emu_load_rom(void) {
 
 		save_rom_ext()
 
-		if (!strcasecmp(ext, ".fds")) {
+		if (!ustrcasecmp(ext, uL(".fds"))) {
 			if (fds_load_rom() == EXIT_ERROR) {
 				info.rom_file[0] = 0;
 				goto elaborate_rom_file;
 			}
 			recent_roms_add_wrap()
-		} else if (!strcasecmp(ext, ".fm2")) {
+		} else if (!ustrcasecmp(ext, uL(".fm2"))) {
 			tas_file(ext, info.rom_file);
 			if (!info.rom_file[0]) {
 				text_add_line_info(1, "[red]error loading rom");
@@ -262,6 +292,7 @@ BYTE emu_load_rom(void) {
 			}
 			accept_rom_file:
 			recent_roms_add_wrap()
+			info.turn_off = FALSE;
 		}
 	} else if (info.gui) {
 		/* impostazione primaria */
@@ -484,51 +515,55 @@ BYTE emu_search_in_database(FILE *fp) {
 
 	return (EXIT_OK);
 }
-void emu_set_title(char *title) {
-	char name[30];
+void emu_set_title(uTCHAR *title, int len) {
+	uTCHAR name[30];
 
 	if (!info.gui) {
-		sprintf(name, "%s v%s", NAME, VERSION);
+		usnprintf(name, usizeof(name), uL("" NAME " v" VERSION));
 	} else {
-		sprintf(name, "%s", NAME);
+		usnprintf(name, usizeof(name), uL("" NAME));
 	}
 
 	if (info.portable && (cfg->scale != X1)) {
-		strcat(name, "_p");
+		ustrcat(name, uL("_p"));
 	}
 
 	if (cfg->scale == X1) {
-		sprintf(title, "%s (%s", name, opt_mode[machine.type].lname);
+		usnprintf(title, len, uL("" uPERCENTs " (" uPERCENTs), name, opt_mode[machine.type].lname);
 	} else if (cfg->filter == NTSC_FILTER) {
-		sprintf(title, "%s (%s, %s, %s, ", name, opt_mode[machine.type].lname,
-			opt_scale[cfg->scale - 1].sname, opt_ntsc[cfg->ntsc_format].lname);
+		usnprintf(title, len,
+				uL("" uPERCENTs " (" uPERCENTs ", " uPERCENTs ", " uPERCENTs " "),
+				name, opt_mode[machine.type].lname,
+				opt_scale[cfg->scale - 1].sname, opt_ntsc[cfg->ntsc_format].lname);
 	} else {
-		sprintf(title, "%s (%s, %s, %s, ", name, opt_mode[machine.type].lname,
-			opt_scale[cfg->scale - 1].sname, opt_filter[cfg->filter].lname);
+		usnprintf(title, len,
+				uL("" uPERCENTs " (" uPERCENTs ", " uPERCENTs ", " uPERCENTs " "),
+				name, opt_mode[machine.type].lname,
+				opt_scale[cfg->scale - 1].sname, opt_filter[cfg->filter].lname);
 	}
 
-	if ((cfg->palette == PALETTE_FILE) && strlen(cfg->palette_file) != 0) {
-		strcat(title, "extern");
+	if ((cfg->palette == PALETTE_FILE) && ustrlen(cfg->palette_file) != 0) {
+		ustrcat(title, uL("extern"));
 	} else {
-		strcat(title, opt_palette[cfg->palette].lname);
+		ustrcat(title, opt_palette[cfg->palette].lname);
 	}
 
 #if !defined (RELEASE)
 	if (cfg->scale != X1) {
-		char mapper_id[10];
-		sprintf(mapper_id, ", %d", info.mapper.id);
-		strcat(title, mapper_id);
+		uTCHAR mapper_id[10];
+		usnprintf(mapper_id, usizeof(mapper_id), uL(", %d"), info.mapper.id);
+		ustrcat(title, mapper_id);
 	}
 #endif
 
 #if defined (WITH_OPENGL)
 	if (cfg->scale != X1) {
-		strcat(title, ", ");
-		strcat(title, opt_rend[cfg->render].lname);
+		ustrcat(title, uL(", "));
+		ustrcat(title, opt_rend[cfg->render].lname);
 	}
 #endif
 
-	strcat(title, ")");
+	ustrcat(title, uL(")"));
 }
 BYTE emu_turn_on(void) {
 	info.reset = POWER_UP;

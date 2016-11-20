@@ -50,8 +50,8 @@ enum {
 };
 enum { MAX_BUTTONS = 32 };
 
-typedef struct {
-	struct {
+typedef struct _js_special_case {
+	struct _axis_with_CENTER_equal_to_0 {
 		BYTE X;
 		BYTE Y;
 		BYTE Z;
@@ -60,8 +60,8 @@ typedef struct {
 		BYTE V;
 	} axis_with_CENTER_equal_to_0;
 } _js_special_case;
-typedef struct {
-	char dev[30];
+typedef struct _js {
+	uTCHAR dev[30];
 	DBWORD id;
 	BYTE present;
 
@@ -78,11 +78,11 @@ typedef struct {
 
 	_js_special_case jsc;
 } _js;
-typedef struct {
+typedef struct _js_element {
 	DBWORD value;
-	char name[20];
+	uTCHAR name[20];
 } _js_element;
-typedef struct {
+typedef struct _js_sch {
 	DBWORD value;
 	BYTE mode;
 } _js_sch;
@@ -94,53 +94,53 @@ typedef struct {
 #endif
 
 static const _js_element jsn_list[] = {
-	{ 0xFF,         "NULL"         },
-	{ JOYSTICKID1,  "JOYSTICKID1"  },
-	{ JOYSTICKID2,  "JOYSTICKID2"  },
-	{ JOYSTICKID3,  "JOYSTICKID3"  },
-	{ JOYSTICKID4,  "JOYSTICKID4"  },
-	{ JOYSTICKID5,  "JOYSTICKID5"  },
-	{ JOYSTICKID6,  "JOYSTICKID6"  },
-	{ JOYSTICKID7,  "JOYSTICKID7"  },
-	{ JOYSTICKID8,  "JOYSTICKID8"  },
-	{ JOYSTICKID9,  "JOYSTICKID9"  },
-	{ JOYSTICKID10, "JOYSTICKID10" },
-	{ JOYSTICKID11, "JOYSTICKID11" },
-	{ JOYSTICKID12, "JOYSTICKID12" },
-	{ JOYSTICKID13, "JOYSTICKID13" },
-	{ JOYSTICKID14, "JOYSTICKID14" },
-	{ JOYSTICKID15, "JOYSTICKID15" }
+	{ 0xFF,         uL("NULL")         },
+	{ JOYSTICKID1,  uL("JOYSTICKID1")  },
+	{ JOYSTICKID2,  uL("JOYSTICKID2")  },
+	{ JOYSTICKID3,  uL("JOYSTICKID3")  },
+	{ JOYSTICKID4,  uL("JOYSTICKID4")  },
+	{ JOYSTICKID5,  uL("JOYSTICKID5")  },
+	{ JOYSTICKID6,  uL("JOYSTICKID6")  },
+	{ JOYSTICKID7,  uL("JOYSTICKID7")  },
+	{ JOYSTICKID8,  uL("JOYSTICKID8")  },
+	{ JOYSTICKID9,  uL("JOYSTICKID9")  },
+	{ JOYSTICKID10, uL("JOYSTICKID10") },
+	{ JOYSTICKID11, uL("JOYSTICKID11") },
+	{ JOYSTICKID12, uL("JOYSTICKID12") },
+	{ JOYSTICKID13, uL("JOYSTICKID13") },
+	{ JOYSTICKID14, uL("JOYSTICKID14") },
+	{ JOYSTICKID15, uL("JOYSTICKID15") }
 };
 static const _js_element jsv_list[] = {
-	{ 0x000, "NULL"   },
-	{ 0x001, "JA0MIN" }, { 0x002, "JA0PLS" },
-	{ 0x003, "JA1MIN" }, { 0x004, "JA1PLS" },
-	{ 0x005, "JA2MIN" }, { 0x006, "JA2PLS" },
-	{ 0x007, "JA3MIN" }, { 0x008, "JA3PLS" },
-	{ 0x009, "JA4MIN" }, { 0x00A, "JA4PLS" },
-	{ 0x00B, "JA5MIN" }, { 0x00C, "JA5PLS" },
-	{ 0x00D, "JA6MIN" }, { 0x00E, "JA6PLS" },
-	{ 0x00F, "JA7MIN" }, { 0x010, "JA7PLS" },
-	{ 0x011, "JA8MIN" }, { 0x012, "JA8PLS" },
-	{ 0x013, "JA9MIN" }, { 0x014, "JA9PLS" },
-	{ 0x100, "JPOVF"  }, { 0x101, "JPOVR"  },
-	{ 0x102, "JPOVB"  }, { 0x103, "JPOVL"  },
-	{ 0x400, "JB0"    }, { 0x401, "JB1"    },
-	{ 0x402, "JB2"    }, { 0x403, "JB3"    },
-	{ 0x404, "JB4"    }, { 0x405, "JB5"    },
-	{ 0x406, "JB6"    }, { 0x407, "JB7"    },
-	{ 0x408, "JB8"    }, { 0x409, "JB9"    },
-	{ 0x40A, "JB10"   }, { 0x40B, "JB11"   },
-	{ 0x40C, "JB12"   }, { 0x40D, "JB13"   },
-	{ 0x40E, "JB14"   }, { 0x40F, "JB15"   },
-	{ 0x410, "JB16"   }, { 0x411, "JB17"   },
-	{ 0x412, "JB18"   }, { 0x413, "JB19"   },
-	{ 0x414, "JB20"   }, { 0x415, "JB21"   },
-	{ 0x416, "JB22"   }, { 0x417, "JB23"   },
-	{ 0x418, "JB24"   }, { 0x419, "JB25"   },
-	{ 0x41A, "JB26"   }, { 0x41B, "JB27"   },
-	{ 0x41C, "JB28"   }, { 0x41D, "JB29"   },
-	{ 0x41E, "JB30"   }, { 0x41F, "JB31"   }
+	{ 0x000, uL("NULL")   },
+	{ 0x001, uL("JA0MIN") }, { 0x002, uL("JA0PLS") },
+	{ 0x003, uL("JA1MIN") }, { 0x004, uL("JA1PLS") },
+	{ 0x005, uL("JA2MIN") }, { 0x006, uL("JA2PLS") },
+	{ 0x007, uL("JA3MIN") }, { 0x008, uL("JA3PLS") },
+	{ 0x009, uL("JA4MIN") }, { 0x00A, uL("JA4PLS") },
+	{ 0x00B, uL("JA5MIN") }, { 0x00C, uL("JA5PLS") },
+	{ 0x00D, uL("JA6MIN") }, { 0x00E, uL("JA6PLS") },
+	{ 0x00F, uL("JA7MIN") }, { 0x010, uL("JA7PLS") },
+	{ 0x011, uL("JA8MIN") }, { 0x012, uL("JA8PLS") },
+	{ 0x013, uL("JA9MIN") }, { 0x014, uL("JA9PLS") },
+	{ 0x100, uL("JPOVF")  }, { 0x101, uL("JPOVR")  },
+	{ 0x102, uL("JPOVB")  }, { 0x103, uL("JPOVL")  },
+	{ 0x400, uL("JB0")    }, { 0x401, uL("JB1")    },
+	{ 0x402, uL("JB2")    }, { 0x403, uL("JB3")    },
+	{ 0x404, uL("JB4")    }, { 0x405, uL("JB5")    },
+	{ 0x406, uL("JB6")    }, { 0x407, uL("JB7")    },
+	{ 0x408, uL("JB8")    }, { 0x409, uL("JB9")    },
+	{ 0x40A, uL("JB10")   }, { 0x40B, uL("JB11")   },
+	{ 0x40C, uL("JB12")   }, { 0x40D, uL("JB13")   },
+	{ 0x40E, uL("JB14")   }, { 0x40F, uL("JB15")   },
+	{ 0x410, uL("JB16")   }, { 0x411, uL("JB17")   },
+	{ 0x412, uL("JB18")   }, { 0x413, uL("JB19")   },
+	{ 0x414, uL("JB20")   }, { 0x415, uL("JB21")   },
+	{ 0x416, uL("JB22")   }, { 0x417, uL("JB23")   },
+	{ 0x418, uL("JB24")   }, { 0x419, uL("JB25")   },
+	{ 0x41A, uL("JB26")   }, { 0x41B, uL("JB27")   },
+	{ 0x41C, uL("JB28")   }, { 0x41D, uL("JB29")   },
+	{ 0x41E, uL("JB30")   }, { 0x41F, uL("JB31")   }
 };
 
 EXTERNC _js js[PORT_MAX];
@@ -151,9 +151,9 @@ EXTERNC void js_control(_js *joy, _port *port);
 EXTERNC void js_close(_js *joy);
 EXTERNC void js_quit(void);
 EXTERNC BYTE js_is_connected(int dev);
-EXTERNC char *js_name_device(int dev);
-EXTERNC char *js_to_name(const DBWORD val, const _js_element *list, const DBWORD length);
-EXTERNC DBWORD js_from_name(const char *name, const _js_element *list, const DBWORD lenght);
+EXTERNC uTCHAR *js_name_device(int dev);
+EXTERNC uTCHAR *js_to_name(const DBWORD val, const _js_element *list, const DBWORD length);
+EXTERNC DBWORD js_from_name(const uTCHAR *name, const _js_element *list, const DBWORD lenght);
 EXTERNC DBWORD js_read_in_dialog(int dev, int fd);
 EXTERNC BYTE js_shcut_read(_js_sch *js_sch, _js *joy, int id);
 

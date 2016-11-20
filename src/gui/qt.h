@@ -49,16 +49,16 @@
 
 EXTERNC struct _gui {
 #if defined (__WIN32__)
-	char home[MAX_PATH];
+	uTCHAR home[MAX_PATH];
 	DWORD version_os;
 	double frequency;
 	uint64_t counter_start;
 #else
-	const char *home;
+	const uTCHAR *home;
 	struct timeval counterStart;
 #endif
 
-	char last_open_path[LENGTH_FILE_NAME_MAX];
+	uTCHAR last_open_path[LENGTH_FILE_NAME_MAX];
 
 	//int8_t cpu_cores;
 
@@ -135,8 +135,13 @@ EXTERNC void gui_apu_channels_update_dialog(void);
 EXTERNC void gui_ppu_hacks_update_dialog(void);
 EXTERNC void gui_ppu_hacks_lag_counter_update(void);
 
-EXTERNC BYTE gui_load_lut(void *l, const char *path);
+EXTERNC BYTE gui_load_lut(void *l, const uTCHAR *path);
 EXTERNC void gui_save_screenshot(int w, int h, char *buffer, BYTE flip);
+
+EXTERNC void gui_utf_printf(const uTCHAR *fmt, ...);
+EXTERNC void gui_utf_dirname(uTCHAR *path, uTCHAR *dst, size_t len);
+EXTERNC void gui_utf_basename(uTCHAR *path, uTCHAR *dst, size_t len);
+EXTERNC int gui_utf_strcasecmp(uTCHAR *s0, uTCHAR *s1);
 
 EXTERNC double (*gui_get_ms)(void);
 

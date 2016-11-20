@@ -19,6 +19,7 @@
  *
  */
 
+#include <unistd.h>
 #include "common.h"
 #include "opengl.h"
 #include "ppu.h"
@@ -49,7 +50,6 @@ static void opengl_shader_delete(_shader *shd);
 #if !defined (RELEASE)
 static void opengl_shader_print_log(GLuint obj, BYTE ret);
 #endif
-static char *opengl_shader_file2string(const GLchar *path);
 static void opengl_shader_uni_texture_clear(_shader_uniforms_tex *sut);
 static void opengl_shader_uni_texture(_shader_uniforms_tex *uni, GLint prg, GLchar *fmt, ...);
 static GLint opengl_shader_get_uni(GLuint prog, const char *param);
@@ -64,7 +64,7 @@ INLINE void opengl_shader_filter(uint8_t linear, uint8_t mipmap, uint8_t interpo
 INLINE static void opengl_shader_params_text_set(_shader *shd);
 
 // glsl
-static BYTE opengl_shader_glsl_init(GLuint pass, _shader *shd, GLchar *code, const GLchar *path);
+static BYTE opengl_shader_glsl_init(GLuint pass, _shader *shd, GLchar *code, const uTCHAR *path);
 INLINE static void opengl_shader_glsl_params_set(const _shader *shd, GLuint fcountmod,
 		GLuint fcount);
 INLINE static void opengl_shader_glsl_disable_attrib(void);
@@ -73,7 +73,7 @@ INLINE static void opengl_shader_glsl_disable_attrib(void);
 #if !defined (RELEASE)
 static void opengl_shader_cg_error_handler(CGcontext ctx, CGerror error, void *data);
 #endif
-static BYTE opengl_shader_cg_init(GLuint pass, _shader *shd, GLchar *code, const GLchar *path);
+static BYTE opengl_shader_cg_init(GLuint pass, _shader *shd, GLchar *code, const uTCHAR *path);
 static void opengl_shader_cg_clstate_ctrl(CGparameter *dst, CGparameter *param,
         const char *semantic);
 static void opengl_shader_cg_param2f_ctrl(CGparameter *dst, CGparameter *param,
@@ -360,7 +360,7 @@ BYTE opengl_context_create(SDL_Surface *src) {
 
 	glFinish();
 
-	memcpy(gfx.last_shader_file, cfg->shader_file, sizeof(gfx.last_shader_file));
+	umemcpy(gfx.last_shader_file, cfg->shader_file, usizeof(gfx.last_shader_file));
 
  	return (EXIT_OK);
 }
@@ -962,34 +962,6 @@ static void opengl_shader_print_log(GLuint obj, BYTE ret) {
 	}
 }
 #endif
-static char *opengl_shader_file2string(const GLchar *path) {
-	FILE *fd;
-	long len, r;
-	char *str;
-
-	if (!(fd = fopen(path, "r"))) {
-		fprintf(stderr, "OPENGL: Can't open file '%s' for reading\n", path);
-		return (NULL);
-	}
-
-	fseek(fd, 0, SEEK_END);
-	len = ftell(fd);
-
-	fseek(fd, 0, SEEK_SET);
-
-	if (!(str = (char *) malloc(len * sizeof(char)))) {
-		fprintf(stderr, "OPENGL: Can't malloc space for '%s'\n", path);
-		return (NULL);
-	}
-
-	r = fread(str, sizeof(char), len, fd);
-
-	str[r - 1] = '\0';
-
-	fclose(fd);
-
-	return (str);
-}
 static void opengl_shader_uni_texture_clear(_shader_uniforms_tex *sut) {
 	sut->texture = -1;
 	sut->texture_size = -1;
@@ -1164,7 +1136,7 @@ INLINE static void opengl_shader_params_text_set(_shader *shd) {
 }
 
 // glsl
-static BYTE opengl_shader_glsl_init(GLuint pass, _shader *shd, GLchar *code, const GLchar *path) {
+static BYTE opengl_shader_glsl_init(GLuint pass, _shader *shd, GLchar *code, const uTCHAR *path) {
 	const GLchar *src[3];
 	char alias_define[MAX_PASS * 128];
 	GLuint i, vrt, frg;
@@ -1175,7 +1147,7 @@ static BYTE opengl_shader_glsl_init(GLuint pass, _shader *shd, GLchar *code, con
 	}
 
 	if (path && path[0]) {
-		code = opengl_shader_file2string(path);
+		code = emu_file2string(path);
 	}
 
 	// program
@@ -1540,11 +1512,25 @@ static void opengl_shader_cg_error_handler(CGcontext ctx, CGerror error, void *d
 	fprintf(stderr, "OPENGLCG: \"%s\"\n", cgGetErrorString(error));
 }
 #endif
-static BYTE opengl_shader_cg_init(GLuint pass, _shader *shd, GLchar *code, const GLchar *path) {
+static BYTE opengl_shader_cg_init(GLuint pass, _shader *shd, GLchar *code, const uTCHAR *path) {
 	const char *list;
 	const char *argv[64];
 	char alias[MAX_PASS][128];
+	uTCHAR base[LENGTH_FILE_NAME_MID];
+	uTCHAR dname[LENGTH_FILE_NAME_MID];
+	uTCHAR bname[LENGTH_FILE_NAME_MID];
 	GLuint i, argc;
+
+	if ((path != NULL) && path[0]) {
+		umemset(base, 0x00, usizeof(base));
+		if (ugetcwd(base, usizeof(base)) == NULL) { ; };
+
+		umemset(dname, 0x00, usizeof(dname));
+		gui_utf_dirname((uTCHAR *) path, dname, usizeof(dname) - 1);
+
+		umemset(bname, 0x00, usizeof(bname));
+		gui_utf_basename((uTCHAR *) path, bname, usizeof(bname) - 1);
+	}
 
 	memset(alias, 0x00, sizeof(alias));
 
@@ -1566,8 +1552,11 @@ static BYTE opengl_shader_cg_init(GLuint pass, _shader *shd, GLchar *code, const
 			shd->cgp.prg.f = cgCreateProgram(opengl.cg.ctx, CG_SOURCE, code, opengl.cg.profile.f,
 					"main_fragment", argv);
 		} else {
-			shd->cgp.prg.f = cgCreateProgramFromFile(opengl.cg.ctx, CG_SOURCE, path,
+			if (uchdir(dname) == -1) { ; }
+			shd->cgp.prg.f = cgCreateProgramFromFile(opengl.cg.ctx, CG_SOURCE, (const char *) bname,
 					opengl.cg.profile.f, "main_fragment", argv);
+
+			if (uchdir(base) == -1) { ; }
 		}
 		if (!shd->cgp.prg.f && (list = cgGetLastListing(opengl.cg.ctx))) {
 			printf("OPENGLCG: fragment program errors :\n%s\n", list);
@@ -1580,8 +1569,10 @@ static BYTE opengl_shader_cg_init(GLuint pass, _shader *shd, GLchar *code, const
 			shd->cgp.prg.v = cgCreateProgram(opengl.cg.ctx, CG_SOURCE, code, opengl.cg.profile.v,
 					"main_vertex", argv);
 		} else {
-			shd->cgp.prg.v = cgCreateProgramFromFile(opengl.cg.ctx, CG_SOURCE, path,
+			if (uchdir(dname)) { ; }
+			shd->cgp.prg.v = cgCreateProgramFromFile(opengl.cg.ctx, CG_SOURCE, (const char *) bname,
 					opengl.cg.profile.v, "main_vertex", argv);
+			if (uchdir(base)) { ; }
 		}
 		if (!shd->cgp.prg.v && (list = cgGetLastListing(opengl.cg.ctx))) {
 			printf("OPENGLCG: vertex program errors :\n%s\n", list);

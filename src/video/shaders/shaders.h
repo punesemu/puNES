@@ -62,7 +62,7 @@ typedef struct _shader_pass {
 	uint8_t type;
 
 	char *code;
-	char path[LENGTH_FILE_NAME_LONG];
+	uTCHAR path[LENGTH_FILE_NAME_LONG];
 	char alias[64];
 
 	uint8_t mipmap_input;
@@ -76,7 +76,7 @@ typedef struct _shader_pass {
 } _shader_pass;
 typedef struct _lut_pass {
 	char name[64];
-	char path[LENGTH_FILE_NAME_LONG];
+	uTCHAR path[LENGTH_FILE_NAME_LONG];
 
 	uint8_t mipmap;
 	uint8_t linear;

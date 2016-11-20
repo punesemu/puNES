@@ -38,13 +38,13 @@
 #include "cheat.h"
 #include "info.h"
 
-#define SAVE_VERSION 15
+#define SAVE_VERSION 16
 
 BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp);
-char *name_slot_file(BYTE slot);
+uTCHAR *name_slot_file(BYTE slot);
 
 BYTE save_slot_save(BYTE slot) {
-	char *file;
+	uTCHAR *file;
 	FILE *fp;
 
 	/* game genie */
@@ -61,7 +61,7 @@ BYTE save_slot_save(BYTE slot) {
 		file = cfg->save_file;
 	}
 
-	if ((fp = fopen(file, "wb")) == NULL) {
+	if ((fp = ufopen(file, uL("wb"))) == NULL) {
 		fprintf(stderr, "error on write save state\n");
 		return (EXIT_ERROR);
 	}
@@ -84,7 +84,7 @@ BYTE save_slot_save(BYTE slot) {
 	return (EXIT_OK);
 }
 BYTE save_slot_load(BYTE slot) {
-	char *file;
+	uTCHAR *file;
 	FILE *fp;
 
 	if (tas.type) {
@@ -108,7 +108,7 @@ BYTE save_slot_load(BYTE slot) {
 		file = cfg->save_file;
 	}
 
-	if ((fp = fopen(file, "rb")) == NULL) {
+	if ((fp = ufopen(file, uL("rb"))) == NULL) {
 		text_add_line_info(1, "[red]error[normal] loading state");
 		fprintf(stderr, "error loading state\n");
 		return (EXIT_ERROR);
@@ -152,7 +152,7 @@ BYTE save_slot_load(BYTE slot) {
 	return (EXIT_OK);
 }
 void save_slot_preview(BYTE slot) {
-	char *file;
+	uTCHAR *file;
 	FILE *fp;
 
 	if (!save_slot.preview_start) {
@@ -172,7 +172,7 @@ void save_slot_preview(BYTE slot) {
 		return;
 	}
 
-	if ((fp = fopen(file, "rb")) == NULL) {
+	if ((fp = ufopen(file, uL("rb"))) == NULL) {
 		memcpy(screen.data, tl.snaps[TL_SNAP_FREE] + tl.preview, screen_size());
 		gfx_draw_screen(TRUE);
 		fprintf(stderr, "error on load preview\n");
@@ -195,7 +195,7 @@ void save_slot_preview(BYTE slot) {
 	gfx_draw_screen(TRUE);
 }
 void save_slot_count_load(void) {
-	char *file;
+	uTCHAR *file;
 	BYTE i;
 
 	for (i = 0; i < SAVE_SLOTS; i++) {
@@ -209,7 +209,7 @@ void save_slot_count_load(void) {
 
 			save_slot.state[i] = TRUE;
 
-			if ((fp = fopen(file, "rb")) == NULL) {
+			if ((fp = ufopen(file, uL("rb"))) == NULL) {
 				continue;
 			}
 
@@ -273,7 +273,11 @@ BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 		 * della rom.
 		 */
 		save_slot_int(SAVE_SLOT_READ, slot, save_slot.version)
-		save_slot_ele(SAVE_SLOT_READ, slot, save_slot.rom_file)
+		if (save_slot.version < 16) {
+			_save_slot_ele(SAVE_SLOT_READ, slot, save_slot.rom_file, 1024)
+		} else {
+			save_slot_ele(SAVE_SLOT_READ, slot, save_slot.rom_file)
+		}
 		save_slot_ele(SAVE_SLOT_READ, slot, save_slot.sha1sum.prg.value)
 		save_slot_ele(SAVE_SLOT_READ, slot, save_slot.sha1sum.prg.string)
 		if (save_slot.version >= 11) {
@@ -282,7 +286,11 @@ BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 		}
 	} else if (mode == SAVE_SLOT_READ) {
 		save_slot_int(mode, slot, save_slot.version)
-		save_slot_ele(mode, slot, save_slot.rom_file)
+		if (save_slot.version < 16) {
+			_save_slot_ele(mode, slot, save_slot.rom_file, 1024)
+		} else {
+			save_slot_ele(mode, slot, save_slot.rom_file)
+		}
 		save_slot_ele(mode, slot, save_slot.sha1sum.prg.value)
 		save_slot_ele(mode, slot, save_slot.sha1sum.prg.string)
 		if (save_slot.version >= 11) {
@@ -291,7 +299,11 @@ BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 		}
 	} else {
 		save_slot_int(mode, slot, save_slot.version)
-		save_slot_ele(mode, slot, info.rom_file)
+		if (save_slot.version < 16) {
+			_save_slot_ele(mode, slot, info.rom_file, 1024)
+		} else {
+			save_slot_ele(mode, slot, info.rom_file)
+		}
 		save_slot_ele(mode, slot, info.sha1sum.prg.value)
 		save_slot_ele(mode, slot, info.sha1sum.prg.string)
 		if (save_slot.version >= 11) {
@@ -785,11 +797,11 @@ BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-char *name_slot_file(BYTE slot) {
-	static char file[LENGTH_FILE_NAME_LONG];
-	char ext[10], *last_dot, *fl;
+uTCHAR *name_slot_file(BYTE slot) {
+	static uTCHAR file[LENGTH_FILE_NAME_LONG];
+	uTCHAR ext[10], bname[255], *last_dot, *fl;
 
-	memset(file, 0x00, LENGTH_FILE_NAME_LONG);
+	umemset(file, 0x00, LENGTH_FILE_NAME_LONG);
 
 	/* game genie */
 	if (info.mapper.id == GAMEGENIE_MAPPER) {
@@ -802,15 +814,16 @@ char *name_slot_file(BYTE slot) {
 		return (NULL);
 	}
 
-	sprintf(file, "%s" SAVE_FOLDER "/%s", info.base_folder, basename(fl));
-	sprintf(ext, ".p%02d", slot);
+	gui_utf_basename(fl, bname, usizeof(bname));
+	usnprintf(file, usizeof(file), uL("" uPERCENTs SAVE_FOLDER "/" uPERCENTs), info.base_folder, bname);
+	usnprintf(ext, usizeof(ext), uL(".p%02d"), slot);
 
 	/* rintraccio l'ultimo '.' nel nome */
-	last_dot = strrchr(file, '.');
+	last_dot = ustrrchr(file, uL('.'));
 	/* elimino l'estensione */
 	*last_dot = 0x00;
 	/* aggiungo l'estensione */
-	strcat(file, ext);
+	ustrcat(file, ext);
 
 	return (file);
 }

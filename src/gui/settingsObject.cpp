@@ -533,7 +533,7 @@ static const struct _kvTable {
 // -------------------------------- Oggetto base -----------------------------------------
 
 settingsObject::settingsObject(Format f, QString file, int list_ele) :
-		QSettings(QString(info.base_folder) + file, f) {
+		QSettings(uQString(info.base_folder) + file, f) {
 	listEle = list_ele;
 	set = &list_settings[listEle];
 
@@ -550,16 +550,16 @@ void settingsObject::wr(QString group) {
 	to_cfg(group);
 	wr_all_keys();
 }
-int settingsObject::val_to_int(int index, const char *buffer) {
+int settingsObject::val_to_int(int index, const uTCHAR *buffer) {
 	bool finded = false;
 	int a;
 
 	if (set->cfg[index].opts.count == 0) {
-		return (QString(buffer).toInt());
+		return (uQString(buffer).toInt());
 	}
 
 	for (a = 0; a < set->cfg[index].opts.count; a++) {
-		if (QString(buffer) == QString(set->cfg[index].opts.opt[a].sname)) {
+		if (uQString(buffer) == uQString(set->cfg[index].opts.opt[a].sname)) {
 			finded = true;
 			break;
 		}
@@ -595,9 +595,9 @@ void settingsObject::rd(QString group) {
 int settingsObject::val_to_int(int index) {
 	int value;
 
-	if ((value = val_to_int(index, val.at(index).toLocal8Bit().data())) < 0) {
-		val.replace(index, set->cfg[index].def);
-		value = val_to_int(index, val.at(index).toLocal8Bit().data());
+	if ((value = val_to_int(index, uQStringCD(val.at(index)))) < 0) {
+		val.replace(index, uQString(set->cfg[index].def));
+		value = val_to_int(index, uQStringCD(val.at(index)));
 	}
 
 	return (value);
@@ -610,38 +610,38 @@ void settingsObject::int_to_val(int index, int value) {
 
 	for (int i = 0; i < set->cfg[index].opts.count; i++) {
 		if (set->cfg[index].opts.opt[i].value == value) {
-			val.replace(index, set->cfg[index].opts.opt[i].sname);
+			val.replace(index, uQString(set->cfg[index].opts.opt[i].sname));
 			break;
 		}
 	}
 }
-void settingsObject::cpy_val_to_char(int index, char *dst, int length) {
-	memset(dst, 0x00, length);
+void settingsObject::cpy_val_to_utchar(int index, uTCHAR *dst, int length) {
+	umemset(dst, 0x00, length);
 	if (val.at(index).isEmpty() || val.at(index).isNull()) {
 		return;
 	}
-	strncpy(dst, qPrintable(val.at(index)), length - 1);
+	ustrncpy(dst, uQStringCD(val.at(index)), length - 1);
 }
-void settingsObject::char_to_val(int index, char *src) {
-	val.replace(index, src);
+void settingsObject::utchar_to_val(int index, uTCHAR *src) {
+	val.replace(index, uQString(src).replace('\\', '/'));
 }
 void settingsObject::rd_key(int index) {
-	beginGroup(set->cfg[index].grp);
-	val.replace(index, value(set->cfg[index].key, set->cfg[index].def).toString());
+	beginGroup(uQString(set->cfg[index].grp));
+	val.replace(index, value(uQString(set->cfg[index].key), uQString(set->cfg[index].def)).toString());
 	endGroup();
 }
 void settingsObject::rd_key(QString group, int index) {
-	if (QString(set->cfg[index].grp) == group) {
+	if (uQString(set->cfg[index].grp) == group) {
 		rd_key(index);
 	}
 }
 void settingsObject::wr_key(int index) {
-	beginGroup(set->cfg[index].grp);
-	setValue(set->cfg[index].key, val.at(index));
+	beginGroup(uQString(set->cfg[index].grp));
+	setValue(uQString(set->cfg[index].key), val.at(index));
 	endGroup();
 }
 void settingsObject::wr_key(QString group, int index) {
-	if (QString(set->cfg[index].grp) == group) {
+	if (uQString(set->cfg[index].grp) == group) {
 		wr_key(index);
 	}
 }
@@ -661,8 +661,8 @@ setObject::setObject(Format f, QString file, int list_ele) : settingsObject(f, f
 	setup();
 }
 setObject::~setObject() {}
-double setObject::val_to_double(WORD round, const char *buffer) {
-	WORD value = atoi(buffer);
+double setObject::val_to_double(WORD round, const uTCHAR *buffer) {
+	WORD value = uQString(buffer).toInt();
 	double ret = 0;
 
 	if (round > 0) {
@@ -678,10 +678,10 @@ double setObject::val_to_double(WORD round, const char *buffer) {
 	return (ret);
 }
 double setObject::val_to_double(int index, WORD round) {
-	return (val_to_double(round, val.at(index).toLocal8Bit().data()));
+	return (val_to_double(round, uQStringCD(val.at(index))));
 }
-void setObject::oscan_val_to_int(int index, _overscan_borders *ob, const char *buffer) {
-	QStringList splitted = QString(buffer).split(",");
+void setObject::oscan_val_to_int(int index, _overscan_borders *ob, const uTCHAR *buffer) {
+	QStringList splitted = uQString(buffer).split(",");
 
 	if (splitted.count() >= 1) {
 		ob->up = splitted.at(0).toInt();
@@ -700,9 +700,9 @@ void setObject::oscan_default(_overscan_borders *ob, BYTE mode) {
 	QStringList def;
 
 	if (mode == NTSC) {
-		def = QString(set->cfg[SET_OVERSCAN_BRD_NTSC].def).split(",");
+		def = uQString(set->cfg[SET_OVERSCAN_BRD_NTSC].def).split(",");
 	} else {
-		def = QString(set->cfg[SET_OVERSCAN_BRD_PAL].def).split(",");
+		def = uQString(set->cfg[SET_OVERSCAN_BRD_PAL].def).split(",");
 	}
 
 	ob->up = def.at(0).toInt();
@@ -740,9 +740,9 @@ void setObject::to_cfg(QString group) {
 		val.replace(SET_OVERSCAN_BRD_PAL, oscan_val(&overscan_borders[1]));
 		int_to_val(SET_FILTER, cfg_from_file.filter);
 		int_to_val(SET_NTSC_FORMAT, cfg_from_file.ntsc_format);
-		char_to_val(SET_FILE_SHADER, cfg_from_file.shader_file);
+		utchar_to_val(SET_FILE_SHADER, cfg_from_file.shader_file);
 		int_to_val(SET_PALETTE, cfg_from_file.palette);
-		char_to_val(SET_FILE_PALETTE, cfg_from_file.palette_file);
+		utchar_to_val(SET_FILE_PALETTE, cfg_from_file.palette_file);
 		int_to_val(SET_SWAP_EMPHASIS_PAL, cfg_from_file.disable_swap_emphasis_pal);
 		int_to_val(SET_VSYNC, cfg_from_file.vsync);
 		int_to_val(SET_INTERPOLATION, cfg_from_file.interpolation);
@@ -768,7 +768,7 @@ void setObject::to_cfg(QString group) {
 	}
 
 	if ((group == "GUI") || (group == "all")) {
-		char_to_val(SET_GUI_OPEN_PATH, gui.last_open_path);
+		utchar_to_val(SET_GUI_OPEN_PATH, gui.last_open_path);
 		val.replace(SET_GUI_LAST_POSITION, lastpos_val());
 		int_to_val(SET_GUI_LANGUAGE, cfg_from_file.language);
 	}
@@ -814,11 +814,11 @@ void setObject::fr_cfg(QString group) {
 		oscan_val_to_int(SET_OVERSCAN_BRD_PAL, &overscan_borders[1]);
 		cfg_from_file.filter = val_to_int(SET_FILTER);
 		cfg_from_file.ntsc_format = val_to_int(SET_NTSC_FORMAT);
-		cpy_val_to_char(SET_FILE_SHADER, cfg_from_file.shader_file,
-				sizeof(cfg_from_file.shader_file));
+		cpy_val_to_utchar(SET_FILE_SHADER, cfg_from_file.shader_file,
+				usizeof(cfg_from_file.shader_file));
 		cfg_from_file.palette = val_to_int(SET_PALETTE);
-		cpy_val_to_char(SET_FILE_PALETTE, cfg_from_file.palette_file,
-				sizeof(cfg_from_file.palette_file));
+		cpy_val_to_utchar(SET_FILE_PALETTE, cfg_from_file.palette_file,
+				usizeof(cfg_from_file.palette_file));
 		cfg_from_file.disable_swap_emphasis_pal = val_to_int(SET_SWAP_EMPHASIS_PAL);
 		cfg_from_file.vsync = val_to_int(SET_VSYNC);
 		cfg_from_file.interpolation = val_to_int(SET_INTERPOLATION);
@@ -844,7 +844,7 @@ void setObject::fr_cfg(QString group) {
 	}
 
 	if ((group == "GUI") || (group == "all")) {
-		cpy_val_to_char(SET_GUI_OPEN_PATH, gui.last_open_path, sizeof(gui.last_open_path));
+		cpy_val_to_utchar(SET_GUI_OPEN_PATH, gui.last_open_path, usizeof(gui.last_open_path));
 		lastpos_val_to_int(SET_GUI_LAST_POSITION);
 		cfg_from_file.language = val_to_int(SET_GUI_LANGUAGE);
 	}
@@ -908,7 +908,7 @@ void setObject::oscan_val_to_int(int index, _overscan_borders *ob) {
 		oscan_default(ob, PAL);
 	}
 
-	oscan_val_to_int(index, ob, val.at(index).toLocal8Bit().data());
+	oscan_val_to_int(index, ob, uQStringCD(val.at(index)));
 
 	val.replace(index, oscan_val(ob));
 }
@@ -953,7 +953,7 @@ void setObject::channel_decode(int index, QString val) {
 	cfg_from_file.apu.volume[channel_convert_index(index)] = split.at(1).toDouble() / 100.0f;
 }
 void setObject::channel_default(int index) {
-	channel_decode(index, set->cfg[index].def);
+	channel_decode(index, uQString(set->cfg[index].def));
 }
 void setObject::channel_val_to_int(int index) {
 	QStringList splitted = val.at(index).split(",");
@@ -983,7 +983,7 @@ void pgsObject::setup() {
 }
 void pgsObject::to_cfg(QString group) {
 	int_to_val(SET_PGS_SLOT, save_slot.slot);
-	char_to_val(SET_PGS_FILE_SAVE, cfg_from_file.save_file);
+	utchar_to_val(SET_PGS_FILE_SAVE, cfg_from_file.save_file);
 	int_to_val(SET_PGS_OVERSCAN, cfg_from_file.oscan);
 	int_to_val(SET_PGS_DIPSWITCH, cfg_from_file.dipswitch);
 	int_to_val(SET_PGS_PPU_OVERCLOCK, cfg_from_file.ppu_overclock);
@@ -993,7 +993,7 @@ void pgsObject::to_cfg(QString group) {
 }
 void pgsObject::fr_cfg(QString group) {
 	save_slot.slot = val_to_int(SET_PGS_SLOT);
-	cpy_val_to_char(SET_PGS_FILE_SAVE, cfg_from_file.save_file, sizeof(cfg_from_file.save_file));
+	cpy_val_to_utchar(SET_PGS_FILE_SAVE, cfg_from_file.save_file, usizeof(cfg_from_file.save_file));
 	cfg_from_file.oscan = val_to_int(SET_PGS_OVERSCAN);
 	cfg_from_file.dipswitch = val_to_int(SET_PGS_DIPSWITCH);
 	cfg_from_file.ppu_overclock = val_to_int(SET_PGS_PPU_OVERCLOCK);
@@ -1028,7 +1028,7 @@ QString inpObject::kbd_keyval_to_name(const DBWORD value) {
 		return (QString(kvSpecials[index].name));
 	}
 
-	return (QKeySequence(value).toString(QKeySequence::PortableText));
+	return (QKeySequence(value).toString());
 }
 DBWORD inpObject::kbd_keyval_decode(QKeyEvent *keyEvent) {
 	DBWORD key = keyEvent->key();
@@ -1121,7 +1121,7 @@ void inpObject::set_kbd_joy_default(_port *port, int index, int mode) {
 
 	for (int i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
 		if (mode == KEYBOARD) {
-			port->input[KEYBOARD][i] = kbd_keyval_from_name(pIndex + i, set->cfg[pIndex + i].def);
+			port->input[KEYBOARD][i] = kbd_keyval_from_name(pIndex + i, uQString(set->cfg[pIndex + i].def));
 		} else {
 			port->input[JOYSTICK][i] = name_to_jsv(set->cfg[pIndex + i].def);
 		}
@@ -1137,15 +1137,15 @@ void inpObject::set_all_input_default(_config_input *config_input, _array_pointe
 		switch (i) {
 			case PORT1:
 				port->type = CTRL_STANDARD;
-				port->joy_id = name_to_jsn("JOYSTICKID1");
+				port->joy_id = name_to_jsn(uL("JOYSTICKID1"));
 				break;
 			case PORT2:
 				port->type = FALSE;
-				port->joy_id = name_to_jsn("JOYSTICKID2");
+				port->joy_id = name_to_jsn(uL("JOYSTICKID2"));
 				break;
 			default:
 				port->type = FALSE;
-				port->joy_id = name_to_jsn("NULL");
+				port->joy_id = name_to_jsn(uL("NULL"));
 				break;
 		}
 
@@ -1292,7 +1292,7 @@ void inpObject::fr_cfg(QString group) {
 }
 int inpObject::kbd_val_to_int(int index) {
 	if (val.at(index).isEmpty()) {
-		val.replace(index, set->cfg[index].def);
+		val.replace(index, uQString(set->cfg[index].def));
 	}
 
 	return (kbd_keyval_from_name(index, val.at(index)));
@@ -1323,17 +1323,17 @@ DBWORD inpObject::kbd_keyval_from_name(int index, QString name) {
 	DBWORD value = 0;
 
 	if ((name != "NULL") && !(value = kbd_name(name))) {
-		value = kbd_name(set->cfg[index].def);
+		value = kbd_name(uQString(set->cfg[index].def));
 	}
 
 	return (value);
 }
 int inpObject::joy_val_to_int(int index) {
 	if (val.at(index).isEmpty()) {
-		val.replace(index, set->cfg[index].def);
+		val.replace(index, uQString(set->cfg[index].def));
 	}
 
-	return (name_to_jsv(val.at(index).toLocal8Bit().data()));
+	return (name_to_jsv(uQStringCD(val.at(index))));
 }
 void inpObject::joy_rd(int index, int pIndex) {
 	for (int i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
@@ -1342,18 +1342,18 @@ void inpObject::joy_rd(int index, int pIndex) {
 }
 void inpObject::joy_wr(int index, int pIndex) {
 	for (int i = BUT_A; i < MAX_STD_PAD_BUTTONS; i++) {
-		val.replace(index + i, jsv_to_name(port[pIndex].input[JOYSTICK][i]));
+		val.replace(index + i, uQString(jsv_to_name(port[pIndex].input[JOYSTICK][i])));
 	}
 }
 int inpObject::joyid_val_to_int(int index) {
 	if (val.at(index).isEmpty()) {
-		val.replace(index, set->cfg[index].def);
+		val.replace(index, uQString(set->cfg[index].def));
 	}
 
-	return (name_to_jsn(val.at(index).toLocal8Bit().data()));
+	return (name_to_jsn(uQStringCD(val.at(index))));
 }
 void inpObject::joyid_int_to_val(int index, int id) {
-	val.replace(index, jsn_to_name(id));
+	val.replace(index, uQString(jsn_to_name(id)));
 }
 int inpObject::tb_delay_val_to_int(int index) {
 	int ret;
@@ -1380,17 +1380,10 @@ bool rd_cfg_file(QIODevice &device, QSettings::SettingsMap &map) {
 	in.setCodec("UTF-8");
 
 	while (!in.atEnd()) {
-		QString line = in.readLine();
+		QString line = in.readLine().remove("\n");
 
-		{
-			//QByteArray ba = line.toAscii();
-			QByteArray ba = line.toLatin1();
-			char *start = ba.data();
-			char *end = start + ba.length() - 1;
-
-			if (((*start) == '#') || (ba.length() == 0) ||(((*start) == '[') && ((*end) == ']'))) {
-				continue;
-			}
+		if (line.isEmpty() || line.startsWith("#") || (line.startsWith("[") && line.endsWith("]"))) {
+			continue;
 		}
 
 		{
@@ -1401,8 +1394,8 @@ bool rd_cfg_file(QIODevice &device, QSettings::SettingsMap &map) {
 			for (int b = 0; b < cfg->count; b++) {
 				// elimino eventuali spazi finali
 				key = QString(splitted.at(0)).replace(QRegExp("\\s*$"), "");
-				if (key == QString(cfg->cfg[b].key)) {
-					group = QString(cfg->cfg[b].grp);
+				if (key == uQString(cfg->cfg[b].key)) {
+					group = uQString(cfg->cfg[b].grp);
 					key_is_good = true;
 					break;
 				}
@@ -1427,6 +1420,7 @@ bool wr_cfg_file(QIODevice &device, const QSettings::SettingsMap &map) {
 	int count_grp = 0;
 
 	out.setCodec("UTF-8");
+	out.setGenerateByteOrderMark(false);
 
 	for (; iter != map.end(); ++iter) {
 		if (iter.key().isEmpty() == false) {
@@ -1443,9 +1437,9 @@ bool wr_cfg_file(QIODevice &device, const QSettings::SettingsMap &map) {
 			}
 
 			for (int i = 0; i < cfg->count; i++) {
-				if (key == QString(cfg->cfg[i].key)) {
-					if (cfg->cfg[i].cmt) {
-						out << cfg->cfg[i].cmt << NEWLINE;
+				if (key == uQString(cfg->cfg[i].key)) {
+					if (!uQString(cfg->cfg[i].cmt).isEmpty()) {
+						out << uQString(cfg->cfg[i].cmt) << NEWLINE;
 					}
 					break;
 				}

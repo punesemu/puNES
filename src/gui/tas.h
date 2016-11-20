@@ -28,7 +28,7 @@ enum tas_emulators { FCEUX, PUNES };
 /* NTSC : 960 / 60 = 16 secondi */
 enum tas_misc { TAS_CACHE = 960 };
 
-typedef struct {
+typedef struct _tas_input_log {
 	BYTE state;
 	BYTE port[PORT_MAX][8];
 } _tas_input_log;
@@ -41,7 +41,6 @@ typedef struct {
 
 EXTERNC struct _tas {
 	FILE *fp;
-	char file[LENGTH_FILE_NAME_MID];
 	uint8_t emulator;
 	uint8_t type;
 	uint8_t add_fake_frame;
@@ -56,14 +55,14 @@ EXTERNC struct _tas {
 	_tas_input_log il[TAS_CACHE];
 } tas;
 
-EXTERNC BYTE tas_file(char *ext, char *file);
+EXTERNC BYTE tas_file(uTCHAR *ext, uTCHAR *file);
 EXTERNC void tas_quit(void);
 
-EXTERNC void tas_header_FM2(char *file);
+EXTERNC void tas_header_FM2(uTCHAR *file);
 EXTERNC void tas_read_FM2(void);
 EXTERNC void tas_frame_FM2(void);
 
-EXTERNC void (*tas_header)(char *file);
+EXTERNC void (*tas_header)(uTCHAR *file);
 EXTERNC void (*tas_read)(void);
 EXTERNC void (*tas_frame)(void);
 

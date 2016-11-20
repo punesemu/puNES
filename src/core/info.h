@@ -27,7 +27,7 @@
 #define EXTERNC
 #endif
 
-#define _rom_file char rom_file[LENGTH_FILE_NAME_MID]
+#define _rom_file uTCHAR rom_file[LENGTH_FILE_NAME_MID]
 typedef struct _info_sh1sum {
 	struct _info_sha1sum_prg {
 		BYTE value[20];
@@ -40,9 +40,9 @@ typedef struct _info_sh1sum {
 } _info_sh1sum;
 
 EXTERNC struct _info {
-	char base_folder[LENGTH_FILE_NAME_MID];
+	uTCHAR base_folder[LENGTH_FILE_NAME_MID];
 	_rom_file;
-	char load_rom_file[LENGTH_FILE_NAME_MID];
+	uTCHAR load_rom_file[LENGTH_FILE_NAME_MID];
 	BYTE format;
 	BYTE machine[2];
 	struct _info_mapper {

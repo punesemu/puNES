@@ -350,8 +350,8 @@ void mainWindow::update_window() {
 
 	statusbar->update_statusbar();
 }
-void mainWindow::change_rom(const char *rom) {
-	strncpy(info.load_rom_file, rom, sizeof(info.load_rom_file));
+void mainWindow::change_rom(const uTCHAR *rom) {
+	ustrncpy(info.load_rom_file, rom, usizeof(info.load_rom_file));
 	gamegenie_reset();
 #if defined (WITH_OPENGL) && defined (__WIN32__)
 	gfx_sdlwe_set(SDLWIN_CHANGE_ROM, SDLWIN_NONE);
@@ -459,10 +459,10 @@ void mainWindow::set_language(int lang) {
 
 	// solo per testare le nuove traduzioni
 	if (gui.start == FALSE) {
-		QFile ext(QString(info.base_folder) + "/test.qm");
+		QFile ext(uQString(info.base_folder) + "/test.qm");
 
 		if (ext.exists()) {
-			if (translator->load("test.qm", QString(info.base_folder))) {
+			if (translator->load("test.qm", uQString(info.base_folder))) {
 				qApp->installTranslator(translator);
 			}
 			return;
@@ -579,28 +579,28 @@ void mainWindow::update_menu_nes() {
 	}
 }
 void mainWindow::update_recent_roms() {
-	if (recent_roms_list.count > 0) {
+	if (recent_roms_count() > 0) {
 		int i;
 
 		ui->menu_Recent_Roms->clear();
 
 		for (i = 0; i < RECENT_ROMS_MAX; i++) {
+			QString description = QString((const QChar *) recent_roms_item(i),
+					recent_roms_item_size(i));
+			QFileInfo rom(description);
 			QAction *action = new QAction(this);
-			char description[RECENT_ROMS_LINE], *ext;
 
-			if (recent_roms_list.item[i][0] == 0) {
+			if (description.isEmpty()) {
 				break;
 			}
 
-			::sprintf(description, "%s", basename(recent_roms_list.item[i]));
-			action->setText(description);
+			action->setText(QFileInfo(description).completeBaseName());
 
-			ext = strrchr(description, '.');
-			if (ext == NULL) {
+			if (rom.suffix().isEmpty()) {
 				action->setIcon(QIcon(":/icon/icons/nes_file.png"));
-			} else if (!(strcasecmp(ext, ".fds")) || !(strcasecmp(ext, ".FDS"))) {
+			} else if (!QString::compare(rom.suffix(), "fds", Qt::CaseInsensitive)) {
 				action->setIcon(QIcon(":/icon/icons/fds_file.png"));
-			} else if (!(strcasecmp(ext, ".fm2")) || !(strcasecmp(ext, ".FM2"))) {
+			} else if (!QString::compare(rom.suffix(), "fm2", Qt::CaseInsensitive)) {
 				action->setIcon(QIcon(":/icon/icons/fm2_file.png"));
 			} else {
 				action->setIcon(QIcon(":/icon/icons/nes_file.png"));
@@ -867,8 +867,8 @@ void mainWindow::update_menu_settings() {
 	ui->action_Shader_Load_File->setEnabled(state);
 
 	if (state == true) {
-		if (strlen(cfg->shader_file) != 0) {
-			ui->action_Shader_File->setText(QFileInfo(cfg->shader_file).baseName());
+		if (ustrlen(cfg->shader_file) != 0) {
+			ui->action_Shader_File->setText(QFileInfo(uQString(cfg->shader_file)).baseName());
 			ui->action_Shader_File->setEnabled(true);
 		} else {
 			ui->action_Shader_File->setText(tr("[Select a file]"));
@@ -952,8 +952,8 @@ void mainWindow::update_menu_settings() {
 		}
 	}
 	// Settings/Video/Palette
-	if (strlen(cfg->palette_file) != 0) {
-		ui->action_Palette_File->setText(QFileInfo(cfg->palette_file).baseName());
+	if (ustrlen(cfg->palette_file) != 0) {
+		ui->action_Palette_File->setText(QFileInfo(uQString(cfg->palette_file)).baseName());
 		ui->action_Palette_File->setEnabled(true);
 	} else {
 		ui->action_Palette_File->setText(tr("[Select a file]"));
@@ -1215,7 +1215,7 @@ void mainWindow::update_menu_tools() {
 void mainWindow::update_menu_state() {
 	bool state = false;
 
-	if (!(info.no_rom | info.turn_off | info.pause)) {
+	if (!(info.no_rom | info.turn_off)) {
 		state = true;
 	}
 
@@ -1323,24 +1323,25 @@ void mainWindow::shortcuts() {
 void mainWindow::shcjoy_start() {
 	shcjoy_stop();
 
-	if (cfg->input.shcjoy_id == name_to_jsn("NULL")) {
+	if (cfg->input.shcjoy_id == name_to_jsn(uL("NULL"))) {
 		return;
 	}
 
 	for (int i = 0; i < SET_MAX_NUM_SC; i++) {
-		shcjoy.shortcut[i] =name_to_jsv((QString(*(QString * )settings_inp_rd_sc(i +
-				SET_INP_SC_OPEN, JOYSTICK)).toLocal8Bit().data()));
+		shcjoy.shortcut[i] = name_to_jsv(uQStringCD(QString(*(QString *) settings_inp_rd_sc(i + SET_INP_SC_OPEN, JOYSTICK))));
 	}
 
 	memset(&shcjoy.joy, 0x00, sizeof(_js));
 
 #if defined (__linux__)
-	::sprintf(shcjoy.joy.dev, "%s%d", JS_DEV_PATH, cfg->input.shcjoy_id);
+	usnprintf(shcjoy.joy.dev, usizeof(shcjoy.joy.dev), uL("" JS_DEV_PATH "%d"),
+			cfg->input.shcjoy_id);
 	if ((shcjoy.joy.fd = ::open(shcjoy.joy.dev, O_RDONLY | O_NONBLOCK)) == -1) {
 		shcjoy.joy.fd = 0;
 	}
 #elif defined (__WIN32__)
-	::sprintf(shcjoy.joy.dev, "%s", jsn_to_name(cfg->input.shcjoy_id));
+	usnprintf(shcjoy.joy.dev, usizeof(shcjoy.joy.dev), uL("" uPERCENTs),
+			jsn_to_name(cfg->input.shcjoy_id));
 #endif
 
 	shcjoy.enabled = true;
@@ -1370,7 +1371,7 @@ void mainWindow::make_reset(int type) {
 	if (type == HARD) {
 		if ((cfg->cheat_mode == GAMEGENIE_MODE) && gamegenie.rom_present) {
 			if (info.mapper.id != GAMEGENIE_MAPPER) {
-				strcpy(info.load_rom_file, info.rom_file);
+				ustrncpy(info.load_rom_file, info.rom_file, usizeof(info.load_rom_file));
 			}
 			gamegenie_reset();
 			type = CHANGE_ROM;
@@ -1753,7 +1754,7 @@ void mainWindow::s_open() {
 	tl.key = FALSE;
 
 	if (l7z_present() == TRUE) {
-		if ((l7z_control_ext("rar") == EXIT_OK)) {
+		if ((l7z_control_ext(uL("rar")) == EXIT_OK)) {
 			filters[0].append(
 				" (*.zip *.ZIP *.7z *.7Z *.rar *.RAR *.nes *.NES *.unf *.UNF *.unif *.UNIF *.fds *.FDS *.fm2 *.FM2)");
 			filters[1].append(" (*.zip *.ZIP *.7z *.7Z *.rar *.RAR)");
@@ -1772,37 +1773,40 @@ void mainWindow::s_open() {
 	filters[5].append(" (*.fm2 *.FM2)");
 	filters[6].append(" (*.*)");
 
-	file = QFileDialog::getOpenFileName(this, tr("Open File"), gui.last_open_path,
+	file = QFileDialog::getOpenFileName(this, tr("Open File"), uQString(gui.last_open_path),
 		filters.join(";;"));
 
 	if (file.isNull() == false) {
 		QFileInfo fileinfo(file);
 
-		change_rom(qPrintable(fileinfo.absoluteFilePath()));
-		strncpy(gui.last_open_path, qPrintable(fileinfo.absolutePath()),
-				sizeof(gui.last_open_path));
+		change_rom(uQStringCD(fileinfo.absoluteFilePath()));
+
+		ustrncpy(gui.last_open_path, uQStringCD(fileinfo.absolutePath()),
+				usizeof(gui.last_open_path));
 	}
 
 	emu_pause(FALSE);
 }
 void mainWindow::s_open_recent_roms() {
 	int index = QVariant(((QObject *)sender())->property("myValue")).toInt();
+	QString current = QString((const QChar *) recent_roms_current(), recent_roms_current_size());
+	QString item = QString((const QChar *) recent_roms_item(index), recent_roms_item_size(index));
 
 	emu_pause(TRUE);
 
-	if (strncmp(recent_roms_list.current, recent_roms_list.item[index], RECENT_ROMS_LINE) != 0) {
-		change_rom(recent_roms_list.item[index]);
+	if (current != item) {
+		change_rom(uQStringCD(item));
 	} else {
 		/* se l'archivio e' compresso e contiene piu' di una rom allora lo carico */
 		if ((info.uncompress_rom == TRUE) && (uncomp.files_founded > 1)) {
-			change_rom(recent_roms_list.item[index]);
+			change_rom(uQStringCD(item));
 		}
 	}
 
 	emu_pause(FALSE);
 }
 void mainWindow::s_open_working_folder() {
-	QDesktopServices::openUrl(QUrl(info.base_folder));
+	QDesktopServices::openUrl(QUrl(uQString(info.base_folder)));
 }
 void mainWindow::s_quit() {
 	close();
@@ -1820,6 +1824,7 @@ void mainWindow::s_turn_on_off() {
 	}
 
 	update_menu_nes();
+	update_menu_state();
 }
 void mainWindow::s_make_reset() {
 	int type = QVariant(((QObject *)sender())->property("myValue")).toInt();
@@ -2060,15 +2065,15 @@ void mainWindow::s_load_shader() {
 	filters[1].append(" (*.*)");
 
 	file = QFileDialog::getOpenFileName(this, tr("Open Shader file"),
-			QFileInfo(cfg->shader_file).dir().absolutePath(), filters.join(";;"));
+			QFileInfo(uQString(cfg->shader_file)).dir().absolutePath(), filters.join(";;"));
 
 	if (file.isNull() == false) {
 		QFileInfo fileinfo(file);
 
 		if (fileinfo.exists()) {
-			memset(cfg->shader_file, 0x00, sizeof(cfg->shader_file));
-			strncpy(cfg->shader_file, qPrintable(fileinfo.absoluteFilePath()),
-					sizeof(cfg->shader_file) - 1);
+			umemset(cfg->shader_file, 0x00, usizeof(cfg->shader_file));
+			ustrncpy(cfg->shader_file, uQStringCD(fileinfo.absoluteFilePath()),
+					usizeof(cfg->shader_file) - 1);
 			set_filter(SHADER_FILE);
 		} else {
 			text_add_line_info(1, "[red]error on shader file");
@@ -2099,7 +2104,7 @@ void mainWindow::s_save_palette() {
 	filters[1].append(" (*.*)");
 
 	file = QFileDialog::getSaveFileName(this, tr("Save palette on file"),
-			QString(opt_palette[cfg->palette].lname).replace(" ", "_"),
+			uQString(opt_palette[cfg->palette].lname).replace(" ", "_"),
 			filters.join(";;"));
 
 	if (file.isNull() == false) {
@@ -2109,7 +2114,7 @@ void mainWindow::s_save_palette() {
 			fileinfo.setFile(QString(file) + ".pal");
 		}
 
-		palette_save_on_file(qPrintable(fileinfo.absoluteFilePath()));
+		palette_save_on_file(uQStringCD(fileinfo.absoluteFilePath()));
 	}
 
 	emu_pause(FALSE);
@@ -2127,15 +2132,15 @@ void mainWindow::s_load_palette() {
 	filters[1].append(" (*.*)");
 
 	file = QFileDialog::getOpenFileName(this, tr("Open palette file"),
-			QFileInfo(cfg->palette_file).dir().absolutePath(), filters.join(";;"));
+			QFileInfo(uQString(cfg->palette_file)).dir().absolutePath(), filters.join(";;"));
 
 	if (file.isNull() == false) {
 		QFileInfo fileinfo(file);
 
 		if (fileinfo.exists()) {
-			memset(cfg->palette_file, 0x00, sizeof(cfg->palette_file));
-			strncpy(cfg->palette_file, qPrintable(fileinfo.absoluteFilePath()),
-					sizeof(cfg->palette_file) - 1);
+			umemset(cfg->palette_file, 0x00, usizeof(cfg->palette_file));
+			ustrncpy(cfg->palette_file, uQStringCD(fileinfo.absoluteFilePath()),
+					usizeof(cfg->palette_file) - 1);
 			gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, PALETTE_FILE, FALSE, TRUE);
 		} else {
 			text_add_line_info(1, "[red]error on palette file");
@@ -2419,7 +2424,7 @@ void mainWindow::s_state_save_slot_set() {
 void mainWindow::s_state_save_file() {
 	QStringList filters;
 	QString file;
-	char *fl;
+	uTCHAR *fl;
 
 	emu_pause(TRUE);
 
@@ -2437,7 +2442,7 @@ void mainWindow::s_state_save_file() {
 	}
 
 	file = QFileDialog::getSaveFileName(this, tr("Save state on file"),
-			QFileInfo(fl).baseName(), filters.join(";;"));
+			QFileInfo(uQString(fl)).baseName(), filters.join(";;"));
 
 	if (file.isNull() == false) {
 		QFileInfo fileinfo(file);
@@ -2446,9 +2451,9 @@ void mainWindow::s_state_save_file() {
 			fileinfo.setFile(QString(file) + ".pns");
 		}
 
-		memset(cfg->save_file, 0x00, sizeof(cfg->save_file));
-		strncpy(cfg->save_file, qPrintable(fileinfo.absoluteFilePath()),
-				sizeof(cfg->save_file) - 1);
+		umemset(cfg->save_file, 0x00, usizeof(cfg->save_file));
+		ustrncpy(cfg->save_file, uQStringCD(fileinfo.absoluteFilePath()),
+				usizeof(cfg->save_file) - 1);
 		save_slot_save(SAVE_SLOT_FILE);
 		settings_pgs_save();
 	}
@@ -2468,15 +2473,15 @@ void mainWindow::s_state_load_file() {
 	filters[1].append(" (*.*)");
 
 	file = QFileDialog::getOpenFileName(this, tr("Open save state"),
-			QFileInfo(cfg->save_file).dir().absolutePath(), filters.join(";;"));
+			QFileInfo(uQString(cfg->save_file)).dir().absolutePath(), filters.join(";;"));
 
 	if (file.isNull() == false) {
 		QFileInfo fileinfo(file);
 
 		if (fileinfo.exists()) {
-			memset(cfg->save_file, 0x00, sizeof(cfg->save_file));
-			strncpy(cfg->save_file, qPrintable(fileinfo.absoluteFilePath()),
-				sizeof(cfg->save_file) - 1);
+			umemset(cfg->save_file, 0x00, usizeof(cfg->save_file));
+			ustrncpy(cfg->save_file, uQStringCD(fileinfo.absoluteFilePath()),
+				usizeof(cfg->save_file) - 1);
 			if (save_slot_load(SAVE_SLOT_FILE) == EXIT_OK) {
 				settings_pgs_save();
 			}

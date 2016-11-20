@@ -30,10 +30,12 @@ enum save_slot_misc {
 };
 enum save_slot_mode { SAVE_SLOT_SAVE, SAVE_SLOT_READ, SAVE_SLOT_COUNT, SAVE_SLOT_INCDEC };
 
-#define save_slot_ele(mode, slot, src)\
-	if (save_slot_element_struct(mode, slot, (uintptr_t *) &src, sizeof(src), fp, FALSE)) {\
+#define _save_slot_ele(mode, slot, src, size)\
+	if (save_slot_element_struct(mode, slot, (uintptr_t *) &src, size, fp, FALSE)) {\
 		return (EXIT_ERROR);\
 	}
+#define save_slot_ele(mode, slot, src)\
+	_save_slot_ele(mode, slot, src, sizeof(src))
 #define save_slot_mem(mode, slot, src, size, preview)\
 	if (save_slot_element_struct(mode, slot, (uintptr_t *) src, size, fp, preview)) {\
 		return (EXIT_ERROR);\

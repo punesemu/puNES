@@ -180,12 +180,12 @@ void gui_set_video_mode(void) {
 }
 
 void gui_update(void) {
-	char title[255];
+	uTCHAR title[255];
 
 	gui.in_update = TRUE;
 
-	emu_set_title(title);
-	qt.mwin->setWindowTitle(title);
+	emu_set_title(title, usizeof(title));
+	qt.mwin->setWindowTitle(uQString(title));
 	qt.mwin->update_window();
 
 	gui.in_update = FALSE;
@@ -367,12 +367,12 @@ void gui_ppu_hacks_lag_counter_update(void) {
 	}
 }
 
-BYTE gui_load_lut(void *l, const char *path) {
+BYTE gui_load_lut(void *l, const uTCHAR *path) {
 	QImage tmp;
 	_lut *lut = (_lut*) l;
 
-	if (path && (::strlen(path) > 0)) {
-		tmp = QImage(path);
+	if (path && (ustrlen(path) > 0)) {
+		tmp = QImage(uQString(path));
 	}
 
 	if (tmp.isNull()) {
@@ -391,8 +391,8 @@ BYTE gui_load_lut(void *l, const char *path) {
 	return (EXIT_OK);
 }
 void gui_save_screenshot(int w, int h, char *buffer, BYTE flip) {
-	QString basename = QString(info.base_folder) + QString(SCRSHT_FOLDER) + "/"
-			+ QFileInfo(info.rom_file).completeBaseName();
+	QString basename = QString(uQString(info.base_folder)) + QString(SCRSHT_FOLDER) + "/"
+			+ QFileInfo(uQString(info.rom_file)).completeBaseName();
 	QImage screenshot = QImage((uchar *)buffer, w, h, QImage::Format_RGB32);
 	QFile file;
 	uint count;
@@ -416,6 +416,33 @@ void gui_save_screenshot(int w, int h, char *buffer, BYTE flip) {
 
 	file.open(QIODevice::WriteOnly);
 	screenshot.save(&file, "PNG");
+}
+
+void gui_utf_printf(const uTCHAR *fmt, ...) {
+	static uTCHAR buffer[1024];
+	va_list ap;
+
+	va_start(ap, fmt);
+	uvsnprintf(buffer, usizeof(buffer), fmt, ap);
+	va_end(ap);
+
+	QString utf = uQString(buffer);
+	QMessageBox::warning(0, QString("%1").arg(utf.length()), utf);
+}
+void gui_utf_dirname(uTCHAR *path, uTCHAR *dst, size_t len) {
+	QString utf = uQString(path);
+
+	umemset(dst, 0x00, len);
+	ustrncpy(dst, uQStringCD(QFileInfo(utf).absolutePath()), len - 1);
+}
+void gui_utf_basename(uTCHAR *path, uTCHAR *dst, size_t len) {
+	QString utf = uQString(path);
+
+	umemset(dst, 0x00, len);
+	ustrncpy(dst, uQStringCD(QFileInfo(utf).fileName()), len - 1);
+}
+int gui_utf_strcasecmp(uTCHAR *s0, uTCHAR *s1) {
+	return (QString::compare(uQString(s0), uQString(s1), Qt::CaseInsensitive));
 }
 
 #if defined (__WIN32__)

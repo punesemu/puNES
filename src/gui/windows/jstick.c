@@ -17,6 +17,10 @@
  */
 
 #include "gui.h"
+#if defined (TEXT)
+#undef TEXT
+#define TEXT(string) L##string
+#endif
 #include <regstr.h>
 
 static INLINE void js_special_case(int dev, _js_special_case *jsc);
@@ -51,11 +55,11 @@ void js_init(void) {
 	for (i = PORT1; i < PORT_MAX; i++) {
 		memset(&js[i], 0x00, sizeof(_js));
 
-		if (port[i].joy_id == name_to_jsn("NULL")) {
+		if (port[i].joy_id == name_to_jsn(uL("NULL"))) {
 			continue;
 		}
 
-		sprintf(js[i].dev, "%s", jsn_to_name(port[i].joy_id));
+		usnprintf(js[i].dev, usizeof(js[i].dev), uL("" uPERCENTs), jsn_to_name(port[i].joy_id));
 		js[i].open_try = (BYTE) emu_irand(110);
 		js[i].clock = i & 0x01;
 		js[i].input_decode_event = input_decode_event[i];
@@ -68,12 +72,12 @@ void js_open(_js *joy) {
 
 	joy->present = FALSE;
 
-	if (!joy->dev[0] || !strcmp(joy->dev, "NULL")) {
+	if (!joy->dev[0] || !ustrcmp(joy->dev, uL("NULL"))) {
 		return;
 	}
 
 	for (index = 0; index < LENGTH(jsn_list); index++) {
-		if (!strcmp(joy->dev, jsn_list[index].name)) {
+		if (!ustrcmp(joy->dev, jsn_list[index].name)) {
 			joy->id = jsn_list[index].value;
 			joy->joy_info.dwFlags = JOY_RETURNALL | JOY_RETURNCENTERED | JOY_RETURNPOV
 				| JOY_USEDEADZONE;
@@ -283,28 +287,29 @@ BYTE js_is_connected(int dev) {
 
 	return (EXIT_OK);
 }
-char *js_name_device(int dev) {
-	static char name[512];
-	char rkey[256], rvalue[256], rname[256];
-	char *reg_key;
-	JOYCAPS caps;
+uTCHAR *js_name_device(int dev) {
+	static uTCHAR name[512];
+	uTCHAR rkey[256], rvalue[256], rname[256];
+	uTCHAR *reg_key;
+	JOYCAPSW caps;
 	HKEY topkey, key;
 	DWORD size;
 	LONG result;
 
-	joyGetDevCaps(dev, &caps, sizeof(caps));
+	joyGetDevCapsW(dev, &caps, sizeof(caps));
 
-	reg_key = (CHAR *) &caps.szRegKey;
+	reg_key = (uTCHAR *) &caps.szRegKey;
 
-	snprintf(rkey, sizeof(rkey), "%s\\%s\\%s", REGSTR_PATH_JOYCONFIG, reg_key, REGSTR_KEY_JOYCURR);
+	usnprintf(rkey, usizeof(rkey), uL("" uPERCENTs "\\" uPERCENTs "\\" uPERCENTs),
+			REGSTR_PATH_JOYCONFIG, reg_key, REGSTR_KEY_JOYCURR);
 
 	{
 		topkey = HKEY_LOCAL_MACHINE;
-		result = RegOpenKeyExA(topkey, rkey, 0, KEY_READ, &key);
+		result = RegOpenKeyExW(topkey, rkey, 0, KEY_READ, &key);
 
 		if (result != ERROR_SUCCESS) {
 			topkey = HKEY_CURRENT_USER;
-			result = RegOpenKeyExA(topkey, rkey, 0, KEY_READ, &key);
+			result = RegOpenKeyExW(topkey, rkey, 0, KEY_READ, &key);
 		}
 
 		if (result != ERROR_SUCCESS) {
@@ -314,9 +319,10 @@ char *js_name_device(int dev) {
 
 	/* trovo la chiave di registro delle proprieta' del joystick */
 	{
-		size = sizeof(rname);
-		snprintf(rvalue, sizeof(rvalue), "Joystick%d%s", dev + 1, REGSTR_VAL_JOYOEMNAME);
-		result = RegQueryValueExA(key, rvalue, 0, 0, (LPBYTE) rname, &size);
+		size = usizeof(rname);
+		usnprintf(rvalue, usizeof(rvalue), uL("Joystick%d" uPERCENTs), dev + 1,
+				REGSTR_VAL_JOYOEMNAME);
+		result = RegQueryValueExW(key, rvalue, 0, 0, (LPBYTE) rname, &size);
 		RegCloseKey(key);
 
 		if (result != ERROR_SUCCESS) {
@@ -326,8 +332,8 @@ char *js_name_device(int dev) {
 
 	/* apro la chiave di registro */
 	{
-		snprintf(rkey, sizeof(rkey), "%s\\%s", REGSTR_PATH_JOYOEM, rname);
-		result = RegOpenKeyExA(topkey, rkey, 0, KEY_READ, &key);
+		usnprintf(rkey, usizeof(rkey), uL("" uPERCENTs "\\" uPERCENTs), REGSTR_PATH_JOYOEM, rname);
+		result = RegOpenKeyExW(topkey, rkey, 0, KEY_READ, &key);
 
 		if (result != ERROR_SUCCESS) {
 			return (NULL);
@@ -336,44 +342,44 @@ char *js_name_device(int dev) {
 
 	/* trovo la dimensione della stringa del nome OEM */
 	{
-		size = sizeof(rvalue);
-		result = RegQueryValueExA(key, REGSTR_VAL_JOYOEMNAME, 0, 0, NULL, &size);
+		size = usizeof(rvalue);
+		result = RegQueryValueExW(key, REGSTR_VAL_JOYOEMNAME, 0, 0, NULL, &size);
 
 		if (result == ERROR_SUCCESS) {
-			memset(&name[0], 0x00, sizeof(name));
+			umemset(name, 0x00, usizeof(name));
 
-			if (size >= sizeof(name)) {
-				size = sizeof(name) - 1;
+			if (size >= usizeof(name)) {
+				size = usizeof(name) - 1;
 			}
 			/* leggo il nome OEM */
-			result = RegQueryValueExA(key, REGSTR_VAL_JOYOEMNAME, 0, 0, (LPBYTE) & name[0], &size);
+			result = RegQueryValueExW(key, REGSTR_VAL_JOYOEMNAME, 0, 0, (LPBYTE) &name[0], &size);
 		}
 	}
 
 	RegCloseKey(key);
 
-	return ((char *) name);
+	return ((uTCHAR *) name);
 }
-char *js_to_name(const DBWORD val, const _js_element *list, const DBWORD length) {
+uTCHAR *js_to_name(const DBWORD val, const _js_element *list, const DBWORD length) {
 	BYTE index;
-	static char str[20];
+	static uTCHAR str[20];
 
-	memset(str, 0, 20);
+	umemset(str, 0x00, usizeof(str));
 
 	for (index = 0; index < length; index++) {
 		if (val == list[index].value) {
-			strcpy(str, list[index].name);
-			return (str);
+			ustrncpy(str, list[index].name, usizeof(str));
+			return ((uTCHAR *) str);
 		}
 	}
-	return ((char *) list[0].name);
+	return ((uTCHAR *) list[0].name);
 }
-DBWORD js_from_name(const char *name, const _js_element *list, const DBWORD length) {
+DBWORD js_from_name(const uTCHAR *name, const _js_element *list, const DBWORD length) {
 	DBWORD js = 0;
 	BYTE index;
 
 	for (index = 0; index < length; index++) {
-		if (!strcmp(name, list[index].name)) {
+		if (!ustrcmp(name, list[index].name)) {
 			return (list[index].value);
 		}
 	}
@@ -643,10 +649,10 @@ BYTE js_shcut_read(_js_sch *js_sch, _js *joy, int id) {
 }
 
 static INLINE void js_special_case(int dev, _js_special_case *jsc) {
-	memset (jsc, 0x00, sizeof(_js_special_case));
+	memset(jsc, 0x00, sizeof(_js_special_case));
 
 	if ((gui.version_os == WIN_TEN) &&
-			(strcmp(js_name_device(dev), "Controller (Xbox One For Windows)") == 0)) {
+			(ustrcmp(js_name_device(dev), uL("Controller (Xbox One For Windows)")) == 0)) {
 		jsc->axis_with_CENTER_equal_to_0.Z = TRUE;
 		jsc->axis_with_CENTER_equal_to_0.R = TRUE;
 	}

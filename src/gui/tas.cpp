@@ -16,16 +16,13 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <libgen.h>
-#include <unistd.h>
-#include <sys/stat.h>
+#include <QtCore/QFileInfo>
+#include <QtCore/QTextStream>
 #include "tas.h"
 #include "text.h"
 #include "emu.h"
 #include "info.h"
+#include "gui.h"
 
 #define tas_set_data_port_ctrlstd(prt, dt)\
 		prt.data[dt] = tas.il[tas.index].prt[dt]
@@ -36,8 +33,10 @@
 
 static _port tas_port_bck[PORT_MAX];
 
-BYTE tas_file(char *ext, char *file) {
-	if (!(strcasecmp(ext, ".fm2")) || !(strcasecmp(ext, ".FM2"))) {
+BYTE tas_file(uTCHAR *ext, uTCHAR *file) {
+	QString extension = uQString(ext);
+
+	if (extension.compare(".fm2", Qt::CaseInsensitive) == 0) {
 		tas.type = FM2;
 		tas_header = tas_header_FM2;
 		tas_read = tas_read_FM2;
@@ -55,24 +54,19 @@ BYTE tas_file(char *ext, char *file) {
 			}
 		}
 
-		strncpy(tas.file, file, sizeof(tas.file));
-
-		tas.fp = fopen(tas.file, "r");
-
+		tas.fp = ufopen(file, uL("r"));
 		tas_header(file);
 
 		{
 			BYTE i;
-			const char rom_ext[4][10] = { ".nes\0", ".NES\0", ".fds\0", ".FDS\0" };
+			const QString rom_ext[4] = { ".nes", ".NES", ".fds", ".FDS" };
 
 			for (i = 0; i < LENGTH(rom_ext); i++) {
-				char rom_file[LENGTH_FILE_NAME_MID];
+				QString rom = uQString(info.rom_file) + rom_ext[i];
 
-				strncpy(rom_file, info.rom_file, sizeof(rom_file));
-				strcat(rom_file, rom_ext[i]);
-
-				if (emu_file_exist(rom_file) == EXIT_OK) {
-					strncpy(info.rom_file, rom_file, sizeof(info.rom_file));
+				if (QFileInfo(rom).exists()) {
+					umemset(info.rom_file, 0x00, usizeof(info.rom_file));
+					ustrncpy(info.rom_file, uQStringCD(rom), usizeof(info.rom_file) - 1);
 					found = TRUE;
 					break;
 				}
@@ -91,6 +85,7 @@ BYTE tas_file(char *ext, char *file) {
 void tas_quit(void) {
 	if (tas.fp) {
 		fclose(tas.fp);
+		tas.fp = NULL;
 	}
 
 	tas_header = NULL;
@@ -110,12 +105,10 @@ void tas_quit(void) {
 }
 
 void tas_frame_FM2(void) {
-	/* il primo frame */
+	// il primo frame
 	if (!tas.frame) {
-		/*
-		 * sembra proprio che il mio reset / powerup
-		 * duri un frame in meno rispetto all'fceux.
-		 */
+		// sembra proprio che il mio reset / powerup
+		// duri un frame in meno rispetto all'fceux.
 		if ((tas.emulator == FCEUX) && !tas.index) {
 			text_add_line_info(1, "enabled FCEUX compatible mode");
 			tas.add_fake_frame = TRUE;
@@ -130,10 +123,8 @@ void tas_frame_FM2(void) {
 			emu_reset(HARD);
 		}
 		tas.il[tas.index].state = 0;
-		/*
-		 * sembra proprio che il mio reset / powerup
-		 * duri un frame in meno rispetto all'fceux.
-		 */
+		// sembra proprio che il mio reset / powerup
+		// duri un frame in meno rispetto all'fceux.
 		if (tas.emulator == FCEUX) {
 			tas.add_fake_frame = TRUE;
 		}
@@ -150,11 +141,9 @@ void tas_frame_FM2(void) {
 		if (tas.frame == tas.total) {
 			text_add_line_single(4, FONT_12X10, 200, TXT_CENTER, TXT_CENTER, 0, 0, "The End");
 		} else if (tas.frame == tas.total + 1) {
-			/*
-			 * finito il video l'FCEUX lascia settato il primo frame non del film
-			 * ai valori dell'ultimo frame del film. Se non lo faccio,
-			 * aglar-marblemadness.fm2 non finira' il gioco.
-			 */
+			// finito il video l'FCEUX lascia settato il primo frame non del film
+			// ai valori dell'ultimo frame del film. Se non lo faccio,
+			// aglar-marblemadness.fm2 non finira' il gioco.
 			return;
 		} else {
 			tas_quit();
@@ -182,59 +171,50 @@ void tas_frame_FM2(void) {
 
 	tas_increment_index()
 }
-void tas_header_FM2(char *file) {
-	char line[256];
-	unsigned int start;
+void tas_header_FM2(uTCHAR *file) {
+	QString line;
+	QTextStream in(tas.fp);
+
+	in.setCodec("UTF-8");
 
 	tas.emulator = FCEUX;
 
-	while (fgets(line, sizeof(line), tas.fp)) {
-		char *key = 0, *value = 0;
+	while (in.atEnd() == false) {
+		QString key, value;
 
-		for (start = 0; start < strlen(line); start++) {
-			if ((line[start] == ' ') || (line[start] == '\t')) {
-				continue;
-			}
-			break;
-		}
+		// elimino spazi iniziali, tabulazioni e ritorno a capo
+		line = in.readLine().simplified();
 
-		if ((line[start] == '#') || (line[start] == '\r') || (line[start] == '\n')) {
+		if (line.isEmpty() || line.startsWith('#')) {
 			continue;
 		}
 
-		if (!(key = strtok(line + start, " "))) {
+		key = line.section(" ", 0, 0);
+		value = line.section(" ", 1);
+
+		if (!key.startsWith('|') && value.isEmpty()) {
 			continue;
 		}
 
-		if ((value = strtok(NULL, "\n"))) {
-			unsigned int i;
-
-			for (i = 0; i < strlen(value); i++) {
-				if (value[i] == '\r') {
-					value[i] = 0;
-				}
-			}
-		}
-
-		if (key[0] == '|') {
+		if (key.startsWith('|')) {
 			tas.total++;
-		} else if (strcasecmp(key, "emulator") == 0) {
-			if (strcasecmp(value, "punes") == 0) {
+		} else if (key.compare("emulator", Qt::CaseInsensitive) == 0) {
+			if (value.compare("punes", Qt::CaseInsensitive) == 0) {
 				tas.emulator = PUNES;
 			}
-		} else if (strcasecmp(key, "emuVersion") == 0) {
-			tas.emu_version = atoi(value);
-		} else if (strcasecmp(key, "punesStartFrame") == 0) {
-			tas.start_frame = atoi(value) + 1;
-		} else if (strcasecmp(key, "romFilename") == 0) {
-			//sprintf(info.rom_file, "%s/%s", dirname(file), value);
-			strcpy(info.rom_file, dirname(file));
-			strcat(info.rom_file, "/");
-			strcat(info.rom_file, value);
-		} else if (strcasecmp(key, "port0") == 0) {
-			port[PORT1].type = atoi(value);
-		} else if (strcasecmp(key, "port1") == 0) {
-			port[PORT2].type = atoi(value);
+		} else if (key.compare("emuVersion", Qt::CaseInsensitive) == 0) {
+			tas.emu_version = value.toInt();
+		} else if (key.compare("punesStartFrame", Qt::CaseInsensitive) == 0) {
+			tas.start_frame = value.toInt() + 1;
+		} else if (key.compare("romFilename", Qt::CaseInsensitive) == 0) {
+			QString rom = QFileInfo(uQString(file)).absolutePath() + "/" + value;
+
+			umemset(info.rom_file, 0x00, usizeof(info.rom_file));
+			ustrncpy(info.rom_file, uQStringCD(rom), usizeof(info.rom_file) - 1);
+		} else if (key.compare("port0", Qt::CaseInsensitive) == 0) {
+			port[PORT1].type = value.toInt();
+		} else if (key.compare("port1", Qt::CaseInsensitive) == 0) {
+			port[PORT2].type = value.toInt();
 		}
 	}
 
@@ -271,7 +251,7 @@ void tas_read_FM2(void) {
 
 		tas.il[tas.count].state = atoi(sep);
 
-		/* port1 */
+		// port1
 		{
 			BYTE a, b;
 

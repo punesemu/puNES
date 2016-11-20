@@ -40,14 +40,14 @@ enum GG_PHASE {
 	GG_LOAD_GAMEGENIE
 };
 
-typedef struct {
+typedef struct _cheat {
 	BYTE disabled;
 	BYTE enabled_compare;
 	WORD address;
 	BYTE replace;
 	BYTE compare;
 } _cheat;
-typedef struct {
+typedef struct _type_cheat {
 	int counter;
 	_cheat cheat[CL_CHEATS];
 } _type_cheat;

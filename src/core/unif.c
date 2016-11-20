@@ -142,27 +142,27 @@ BYTE unif_load_rom(void) {
 
 	{
 		BYTE i, found = TRUE;
-		static const char rom_ext[6][10] = {
-			".nes\0",  ".NES\0",
-			".unf\0",  ".UNF\0",
-			".unif\0", ".UNIF\0"
+		static const uTCHAR rom_ext[6][10] = {
+			uL(".nes\0"),  uL(".NES\0"),
+			uL(".unf\0"),  uL(".UNF\0"),
+			uL(".unif\0"), uL(".UNIF\0")
 		};
 
-		fp = fopen(info.rom_file, "rb");
+		fp = ufopen(info.rom_file, uL("rb"));
 
 		if (!fp) {
 			found = FALSE;
 
 			for (i = 0; i < LENGTH(rom_ext); i++) {
-				char rom_file[LENGTH_FILE_NAME_MID];
+				uTCHAR rom_file[LENGTH_FILE_NAME_MID];
 
-				strncpy(rom_file, info.rom_file, sizeof(rom_file));
-				strcat(rom_file, rom_ext[i]);
+				ustrncpy(rom_file, info.rom_file, usizeof(rom_file));
+				ustrcat(rom_file, rom_ext[i]);
 
-				fp = fopen(rom_file, "rb");
+				fp = ufopen(rom_file, uL("rb"));
 
 				if (fp) {
-					strncpy(info.rom_file, rom_file, sizeof(info.rom_file));
+					ustrncpy(info.rom_file, rom_file, usizeof(info.rom_file));
 					found = TRUE;
 					break;
 				}

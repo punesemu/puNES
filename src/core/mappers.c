@@ -28,6 +28,7 @@
 #include "text.h"
 #include "uncompress.h"
 #include "unif.h"
+#include "gui.h"
 
 BYTE map_init(void) {
 	BYTE i;
@@ -1049,7 +1050,7 @@ void map_prg_ram_init(void) {
 		prg.ram_plus_8k = &prg.ram_plus[0];
 		/* controllo se la rom ha una RAM PRG battery packed */
 		if (info.prg.ram.bat.banks && !tas.type) {
-			char prg_ram_file[LENGTH_FILE_NAME_MID], *fl, *last_dot;
+			uTCHAR prg_ram_file[LENGTH_FILE_NAME_MID], basename[255], *fl, *last_dot;
 			FILE *fp;
 
 			/* copio il nome del file nella variabile */
@@ -1059,16 +1060,18 @@ void map_prg_ram_init(void) {
 				fl = info.rom_file;
 			}
 
-			sprintf(prg_ram_file, "%s" PRB_FOLDER "/%s", info.base_folder, basename(fl));
+			gui_utf_basename(fl, basename, usizeof(basename));
+			usnprintf(prg_ram_file, usizeof(prg_ram_file),
+					uL("" uPERCENTs PRB_FOLDER "/" uPERCENTs), info.base_folder, basename);
 
 			/* rintraccio l'ultimo '.' nel nome */
-			last_dot = strrchr(prg_ram_file, '.');
+			last_dot = ustrrchr(prg_ram_file, uL('.'));
 			/* elimino l'estensione */
 			*last_dot = 0x00;
 			/* aggiungo l'estensione prb */
-			strcat(prg_ram_file, ".prb");
+			ustrcat(prg_ram_file, uL(".prb"));
 			/* provo ad aprire il file */
-			fp = fopen(prg_ram_file, "rb");
+			fp = ufopen(prg_ram_file, uL("rb"));
 			if (extcl_battery_io) {
 				extcl_battery_io(RD_BAT, fp);
 			} else {
@@ -1112,7 +1115,7 @@ void map_prg_ram_memset(void) {
 void map_prg_ram_battery_save(void) {
 	/* se c'e' della PRG Ram battery packed la salvo in un file */
 	if (info.prg.ram.bat.banks) {
-		char prg_ram_file[LENGTH_FILE_NAME_MID], *fl, *last_dot;
+		uTCHAR prg_ram_file[LENGTH_FILE_NAME_MID], basename[255], *fl, *last_dot;
 		FILE *fp;
 
 		/* copio il nome del file nella variabile */
@@ -1122,16 +1125,18 @@ void map_prg_ram_battery_save(void) {
 			fl = info.rom_file;
 		}
 
-		sprintf(prg_ram_file, "%s" PRB_FOLDER "/%s", info.base_folder, basename(fl));
+		gui_utf_basename(fl, basename, usizeof(basename));
+		usnprintf(prg_ram_file, usizeof(prg_ram_file),
+				uL("" uPERCENTs PRB_FOLDER "/" uPERCENTs), info.base_folder, basename);
 
 		/* rintraccio l'ultimo '.' nel nome */
-		last_dot = strrchr(prg_ram_file, '.');
+		last_dot = ustrrchr(prg_ram_file, uL('.'));
 		/* elimino l'estensione */
 		*last_dot = 0x00;
 		/* aggiungo l'estensione prb */
-		strcat(prg_ram_file, ".prb");
+		ustrcat(prg_ram_file, uL(".prb"));
 		/* apro il file */
-		fp = fopen(prg_ram_file, "wb");
+		fp = ufopen(prg_ram_file, uL("wb"));
 		if (fp) {
 			if (extcl_battery_io) {
 				extcl_battery_io(WR_BAT, fp);

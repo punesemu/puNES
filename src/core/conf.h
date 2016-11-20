@@ -74,9 +74,9 @@ typedef struct _config {
 	_config_input input;
 	_config_apu apu;
 
-	char shader_file[LENGTH_FILE_NAME_LONG];
-	char palette_file[LENGTH_FILE_NAME_LONG];
-	char save_file[LENGTH_FILE_NAME_LONG];
+	uTCHAR shader_file[LENGTH_FILE_NAME_LONG];
+	uTCHAR palette_file[LENGTH_FILE_NAME_LONG];
+	uTCHAR save_file[LENGTH_FILE_NAME_LONG];
 
 	struct _last_pos {
 		int x;

@@ -79,28 +79,24 @@ void gui_init(int *argc, char **argv) {
 				//break;
 			case WIN_XP:
 			default:
-				SHGetFolderPath(NULL, CSIDL_PERSONAL, NULL, 0, gui.home);
+				SHGetFolderPathW(NULL, CSIDL_PERSONAL, NULL, 0, (LPWSTR) gui.home);
 				break;
 		}
 
 		if (info.portable) {
-			char path[sizeof(info.base_folder)], *dname;
-			DWORD length = GetModuleFileName(NULL, (LPSTR) &path, sizeof(path));
+			uTCHAR path[usizeof(info.base_folder)];
+			DWORD length = GetModuleFileNameW(NULL, (LPWSTR) &path, usizeof(path));
 
 			if (length == 0) {
 				fprintf(stderr, "INFO: Error resolving exe path.\n");
 				info.portable = FALSE;
-			} else if (length == sizeof(info.base_folder)) {
+			} else if (length == usizeof(info.base_folder)) {
 				fprintf(stderr, "INFO: Path too long. Truncated.\n");
 				info.portable = FALSE;
 			}
-
-			dname = dirname(path);
-			strcpy(info.base_folder, dname);
-		}
-
-		if (!info.portable) {
-			sprintf(info.base_folder, "%s/%s", gui.home, NAME);
+			gui_utf_dirname(path, info.base_folder, usizeof(info.base_folder));
+		} else {
+			usnprintf(info.base_folder, usizeof(info.base_folder), uL("" uPERCENTs "/" NAME), gui.home);
 		}
 	}
 

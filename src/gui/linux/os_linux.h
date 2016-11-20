@@ -52,17 +52,16 @@ void gui_init(int *argc, char **argv) {
 
 		if (!gui.home) {
 			gui.home = QDir::homePath().toUtf8().constData();
-			//toStdString().c_str()
 		}
 
 		if (info.portable) {
-			char path[sizeof(info.base_folder)], *dname;
-			int length = readlink("/proc/self/exe", path, sizeof(path));
+			uTCHAR path[usizeof(info.base_folder)];
+			int length = readlink("/proc/self/exe", uPTCHAR(path), usizeof(path));
 
 			if (length < 0) {
 				fprintf(stderr, "INFO: Error resolving symlink /proc/self/exe.\n");
 				info.portable = FALSE;
-			} else if (length >= (signed int) sizeof(info.base_folder)) {
+			} else if (length >= (signed int) usizeof(info.base_folder)) {
 				fprintf(stderr, "INFO: Path too long. Truncated.\n");
 				info.portable = FALSE;
 			} else {
@@ -73,14 +72,10 @@ void gui_init(int *argc, char **argv) {
 				if (path[length] == '@') {
 					path[length] = 0;
 				}
-
-				dname = dirname(path);
-				strcpy(info.base_folder, dname);
+				gui_utf_dirname(path, info.base_folder, usizeof(info.base_folder));
 			}
-		}
-
-		if (!info.portable) {
-			sprintf(info.base_folder, "%s/.%s", gui.home, NAME);
+		} else {
+			usnprintf(info.base_folder, usizeof(info.base_folder), uL("" uPERCENTs "/." NAME), gui.home);
 		}
  	}
 

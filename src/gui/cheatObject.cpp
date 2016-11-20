@@ -30,8 +30,8 @@
 #include "text.h"
 
 #define CHEAT_XML_VERSION "1.0"
-#define CHEATFILENAME QString(info.base_folder) + QString(CHEAT_FOLDER) + "/" +\
-	QFileInfo(info.rom_file).completeBaseName() + ".xml"
+#define CHEATFILENAME uQString(info.base_folder) + QString(CHEAT_FOLDER) + "/" +\
+	QFileInfo(uQString(info.rom_file)).completeBaseName() + ".xml"
 
 cheatObject::cheatObject(QObject *parent = 0) : QObject(parent) {
 	clear_list();
@@ -195,6 +195,8 @@ void cheatObject::import_CHT(QString file_CHT) {
 	if (file->open(QIODevice::ReadOnly | QIODevice::Text)) {
 		QTextStream in(file);
 
+		in.setCodec("UTF-8");
+
 		while (!in.atEnd()) {
 			QStringList splitted = in.readLine().split(":");
 			chl_map cheat;
@@ -269,6 +271,8 @@ void cheatObject::save_XML(QString file_XML) {
 		QMessageBox::warning(0, tr("Read only"), tr("The file is in read only mode"));
 	} else {
 		QXmlStreamWriter* xmlWriter = new QXmlStreamWriter(file);
+
+		xmlWriter->setCodec("UTF-8");
 
 		xmlWriter->setAutoFormatting(true);
 

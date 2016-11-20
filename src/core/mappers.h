@@ -245,7 +245,7 @@
 
 enum mappers_op_battery { RD_BAT, WR_BAT };
 
-typedef struct {
+typedef struct _mapper {
 	BYTE mirroring;
 	BYTE write_vram;
 	WORD rom_map_to[4];

@@ -487,9 +487,9 @@ void gfx_set_screen(BYTE scale, DBWORD filter, BYTE fullscreen, BYTE palette, BY
 	}
 	if ((palette != cfg->palette) || info.on_cfg || force_palette) {
 		if (palette == PALETTE_FILE) {
-			if (strlen(cfg->palette_file) != 0) {
+			if (ustrlen(cfg->palette_file) != 0) {
 				if (palette_load_from_file(cfg->palette_file) == EXIT_ERROR) {
-					memset(cfg->palette_file, 0x00, sizeof(cfg->palette_file));
+					umemset(cfg->palette_file, 0x00, usizeof(cfg->palette_file));
 					text_add_line_info(1, "[red]error on palette file");
 					if (cfg->palette != PALETTE_FILE) {
 						palette = cfg->palette;
@@ -607,7 +607,7 @@ void gfx_set_screen(BYTE scale, DBWORD filter, BYTE fullscreen, BYTE palette, BY
 		}
 
 		if (shaders_set(f) == EXIT_ERROR) {
-			memcpy(cfg->shader_file, gfx.last_shader_file, sizeof(cfg->shader_file));
+			umemcpy(cfg->shader_file, gfx.last_shader_file, usizeof(cfg->shader_file));
 			if (old_filter == filter) {
 				filter = NO_FILTER;
 			} else {
@@ -625,7 +625,7 @@ void gfx_set_screen(BYTE scale, DBWORD filter, BYTE fullscreen, BYTE palette, BY
 			case EXIT_ERROR_SHADER:
 				text_add_line_info(1, "[red]errors[normal] on shader, use [green]'No filter'");
 				fprintf(stderr, "OPENGL: Error on loading the shaders, switch to \"No filter\"\n");
-				memcpy(cfg->shader_file, gfx.last_shader_file, sizeof(cfg->shader_file));
+				umemcpy(cfg->shader_file, gfx.last_shader_file, usizeof(cfg->shader_file));
 				filter = NO_FILTER;
 				goto gfx_set_screen_start;
 			case EXIT_OK:

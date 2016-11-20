@@ -16,8 +16,11 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include <locale.h>
 #include <string.h>
 #include "main.h"
+
+#include "../gui/cmd_line.h"
 #include "emu.h"
 #include "info.h"
 #include "settings.h"
@@ -25,7 +28,6 @@
 #include "gfx.h"
 #include "text.h"
 #include "conf.h"
-#include "cmd_line.h"
 #include "timeline.h"
 #include "version.h"
 #include "gui.h"
@@ -34,13 +36,13 @@
 #include "uncompress.h"
 
 #if defined (__WIN32__)
-int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine, int iCmdShow) {
-	int argc = __argc;
-	char **argv = (char **)__argv;
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine, int iCmdShow) {
+	int argc = 0;
+	uTCHAR **argv = CommandLineToArgvW(GetCommandLineW(), &argc);
 #else
 int main(int argc, char **argv) {
 #endif
-	BYTE optind;
+	setlocale(LC_CTYPE, "");
 
 	memset(&info, 0x00, sizeof(info));
 	info.no_rom = TRUE;
@@ -52,43 +54,43 @@ int main(int argc, char **argv) {
 		info.portable = FALSE;
 	}
 
-	gui_init(&argc, argv);
+	gui_init(&argc, (char **) argv);
 
 	/* controllo l'esistenza della directory principale */
-	if (emu_make_dir(info.base_folder)) {
+	if (emu_make_dir(uL("" uPERCENTs), info.base_folder)) {
 		fprintf(stderr, "error on create puNES folder\n");
 		return (EXIT_ERROR);
 	}
 	/* creo le sottocartelle */
-	if (emu_make_dir("%s" SAVE_FOLDER, info.base_folder)) {
+	if (emu_make_dir(uL("" uPERCENTs SAVE_FOLDER), info.base_folder)) {
 		fprintf(stderr, "error on create save folder\n");
 		return (EXIT_ERROR);
 	}
-	if (emu_make_dir("%s" PERGAME_FOLDER, info.base_folder)) {
+	if (emu_make_dir(uL("" uPERCENTs PERGAME_FOLDER), info.base_folder)) {
 		fprintf(stderr, "error on create psg folder\n");
 		return (EXIT_ERROR);
 	}
-	if (emu_make_dir("%s" BIOS_FOLDER, info.base_folder)) {
+	if (emu_make_dir(uL("" uPERCENTs BIOS_FOLDER), info.base_folder)) {
 		fprintf(stderr, "error on create bios folder\n");
 		return (EXIT_ERROR);
 	}
-	if (emu_make_dir("%s" DIFF_FOLDER, info.base_folder)) {
+	if (emu_make_dir(uL("" uPERCENTs DIFF_FOLDER), info.base_folder)) {
 		fprintf(stderr, "error on create diff folder\n");
 		return (EXIT_ERROR);
 	}
-	if (emu_make_dir("%s" PRB_FOLDER, info.base_folder)) {
+	if (emu_make_dir(uL("" uPERCENTs PRB_FOLDER), info.base_folder)) {
 		fprintf(stderr, "error on create prb folder\n");
 		return (EXIT_ERROR);
 	}
-	if (emu_make_dir("%s" TMP_FOLDER, info.base_folder)) {
+	if (emu_make_dir(uL("" uPERCENTs TMP_FOLDER), info.base_folder)) {
 		fprintf(stderr, "error on create tmp folder\n");
 		return (EXIT_ERROR);
 	}
-	if (emu_make_dir("%s" CHEAT_FOLDER, info.base_folder)) {
+	if (emu_make_dir(uL("" uPERCENTs CHEAT_FOLDER), info.base_folder)) {
 		fprintf(stderr, "error on create cheat folder\n");
 		return (EXIT_ERROR);
 	}
-	if (emu_make_dir("%s" SCRSHT_FOLDER, info.base_folder)) {
+	if (emu_make_dir(uL("" uPERCENTs SCRSHT_FOLDER), info.base_folder)) {
 		fprintf(stderr, "error on create screenshot folder\n");
 		return (EXIT_ERROR);
 	}
@@ -115,15 +117,9 @@ int main(int argc, char **argv) {
 	 * i parametri passati dalla riga di comando.
 	 */
 	settings_init();
-	optind = cmd_line_parse(argc, argv);
+	cmd_line_parse(argc, argv);
 
-	if (argc == optind) {
-		;
-	} else {
-		strcpy(info.rom_file, argv[optind]);
-	}
-
-	fprintf(stderr, "INFO: path %s\n", info.base_folder);
+	ufprintf(stderr, uL("INFO: path " uPERCENTs "\n"), info.base_folder);
 
 	recent_roms_init();
 	recent_roms_parse();

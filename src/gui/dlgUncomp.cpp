@@ -35,11 +35,11 @@ dlgUncomp::dlgUncomp(QWidget *parent = 0) : QDialog(parent) {
 
 	//tableWidget_Selection->setStyleSheet("QTreeView {selection-background-color: red;}");
 
-	setWindowTitle(QFileInfo(info.rom_file).fileName());
+	setWindowTitle(QFileInfo(uQString(info.rom_file)).fileName());
 
 	for (int i = 0; i < uncomp.files_founded; i++) {
 		if (uncomp_name_file(&uncomp.file[i]) == EXIT_OK) {
-			QTableWidgetItem *item = new QTableWidgetItem(basename(uncomp.buffer));
+			QTableWidgetItem *item = new QTableWidgetItem(QFileInfo(uQString(uncomp.buffer)).fileName());
 
 			tableWidget_Selection->insertRow(i);
 			tableWidget_Selection->setItem(i, 0, item);

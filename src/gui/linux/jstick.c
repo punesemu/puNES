@@ -29,7 +29,7 @@
 #include "gui.h"
 
 #define _js_start(jid, op)\
-	if (jid == name_to_jsn("NULL")) {\
+	if (jid == name_to_jsn(uL("NULL"))) {\
 		op;\
 	}\
 	if (!joy->fd) {\
@@ -82,19 +82,19 @@ void js_init(void) {
 	for (i = PORT1; i < PORT_MAX; i++) {
 		memset(&js[i], 0x00, sizeof(_js));
 
-		if (port[i].joy_id == name_to_jsn("NULL")) {
+		if (port[i].joy_id == name_to_jsn(uL("NULL"))) {
 			continue;
 		}
 
-		sprintf(js[i].dev, "%s%d", JS_DEV_PATH, port[i].joy_id);
+		usnprintf(js[i].dev, usizeof(js[i].dev), uL("" JS_DEV_PATH "%d"), port[i].joy_id);
 		js[i].input_decode_event = input_decode_event[i];
 		js_open(&js[i]);
 	}
 }
 void js_open(_js *joy) {
 	joy->fd = 0;
-	if (joy->dev[0] && strcmp(joy->dev, "NULL")) {
-		joy->fd = open(joy->dev, O_RDONLY | O_NONBLOCK);
+	if (joy->dev[0] && ustrcmp(joy->dev, uL("NULL"))) {
+		joy->fd = uopen(joy->dev, O_RDONLY | O_NONBLOCK);
 		if (joy->fd < 0) {
 			joy->fd = 0;
 		}
@@ -130,35 +130,35 @@ void js_quit(void) {
 	}
 }
 BYTE js_is_connected(int dev) {
-	char path_dev[30];
+	uTCHAR path_dev[30];
 	int fd;
 
-	snprintf(path_dev, sizeof(path_dev), "%s%d", JS_DEV_PATH, dev);
+	usnprintf(path_dev, usizeof(path_dev), uL("" JS_DEV_PATH "%d"), dev);
 
-	if ((fd = open(path_dev, O_RDONLY | O_NONBLOCK)) < 0) {
+	if ((fd = uopen(path_dev, O_RDONLY | O_NONBLOCK)) < 0) {
 		return (EXIT_ERROR);
 	}
 
 	close(fd);
 	return (EXIT_OK);
 }
-char *js_name_device(int dev) {
-	static char name[128];
-	char path_dev[30];
+uTCHAR *js_name_device(int dev) {
+	static uTCHAR name[128];
+	uTCHAR path_dev[30];
 	int fd;
 
-	memset(name, 0x00, sizeof(name));
+	umemset(name, 0x00, usizeof(name));
 
-	snprintf(path_dev, sizeof(path_dev), "%s%d", JS_DEV_PATH, dev);
-	fd = open(path_dev, O_RDONLY | O_NONBLOCK);
+	usnprintf(path_dev, usizeof(path_dev), uL("" JS_DEV_PATH "%d"), dev);
+	fd = uopen(path_dev, O_RDONLY | O_NONBLOCK);
 
-	if (ioctl(fd, JSIOCGNAME(sizeof(name)), name) < 0) {
-		strncpy(name, "Not connected", sizeof(name));
+	if (uioctl(fd, JSIOCGNAME(sizeof(name)), name) < 0) {
+		ustrncpy(name, uL("Not connected"), usizeof(name));
 	}
 
 	close(fd);
 
-	return(name);
+	return((uTCHAR *) name);
 }
 BYTE js_read_event(_js_event *event, _js *joy) {
 	SWORD bytes;
@@ -174,26 +174,26 @@ BYTE js_read_event(_js_event *event, _js *joy) {
 
 	return (EXIT_ERROR);
 }
-char *js_to_name(const DBWORD val, const _js_element *list, const DBWORD length) {
+uTCHAR *js_to_name(const DBWORD val, const _js_element *list, const DBWORD length) {
 	BYTE index;
-	static char str[20];
+	static uTCHAR str[20];
 
-	memset(str, 0, 20);
+	umemset(str, 0x00, usizeof(str));
 
 	for (index = 0; index < length; index++) {
 		if (val == list[index].value) {
-			strcpy(str, list[index].name);
-			return (str);
+			ustrncpy(str, list[index].name, usizeof(str));
+			return ((uTCHAR *) str);
 		}
 	}
-	return ((char *) list[0].name);
+	return ((uTCHAR *) list[0].name);
 }
-DBWORD js_from_name(const char *name, const _js_element *list, const DBWORD length) {
+DBWORD js_from_name(const uTCHAR *name, const _js_element *list, const DBWORD length) {
 	DBWORD js = 0;
 	BYTE index;
 
 	for (index = 0; index < length; index++) {
-		if (!strcmp(name, list[index].name)) {
+		if (!ustrcmp(name, list[index].name)) {
 			return (list[index].value);
 		}
 	}

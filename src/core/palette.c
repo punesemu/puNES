@@ -21,11 +21,11 @@
 #include "common.h"
 #include "palette.h"
 
-void palette_save_on_file(const char *file) {
+void palette_save_on_file(const uTCHAR *file) {
 	FILE *fp;
 
-	if ((fp = fopen(file, "wb")) == NULL) {
-		fprintf(stderr, "ERROR: Impossible save palette file %s", file);
+	if ((fp = ufopen(file, uL("wb"))) == NULL) {
+		ufprintf(stderr, uL("ERROR: Impossible save palette file " uPERCENTs "\n"), file);
 		return;
 	}
 
@@ -35,20 +35,20 @@ void palette_save_on_file(const char *file) {
 
 	fclose(fp);
 }
-BYTE palette_load_from_file(const char *file) {
+BYTE palette_load_from_file(const uTCHAR *file) {
 	FILE *fp;
 
 	memset((BYTE *) palette_base_file, 0x00, 64 * 3);
 
-	if ((fp = fopen(file, "rb")) == NULL) {
-		fprintf(stderr, "ERROR: open file %s\n", file);
+	if ((fp = ufopen(file, uL("rb"))) == NULL) {
+		ufprintf(stderr, uL("ERROR: open file " uPERCENTs "\n"), file);
 		return (EXIT_ERROR);
 	}
 
 	fseek(fp, 0, SEEK_END);
 
 	if (ftell(fp) < (64 * 3)) {
-		fprintf(stderr, "ERROR: read file %s\n", file);
+		ufprintf(stderr, uL("ERROR: read file " uPERCENTs "\n"), file);
 		fclose(fp);
 		return (EXIT_ERROR);
 	}

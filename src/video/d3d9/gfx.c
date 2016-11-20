@@ -58,7 +58,7 @@ static BYTE d3d9_texture_create(_texture *texture, UINT index);
 static BYTE d3d9_texture_simple_create(_texture_simple *texture, UINT w, UINT h, BOOL text);
 static BYTE d3d9_texture_lut_create(_lut *lut, UINT index);
 static void d3d9_surface_clean(LPDIRECT3DSURFACE9 *surface, UINT width, UINT height);
-static BYTE d3d9_shader_init(UINT pass, _shader *shd, const char *path, const char *code);
+static BYTE d3d9_shader_init(UINT pass, _shader *shd, const uTCHAR *path, const char *code);
 static void d3d9_shader_delete(_shader *shd);
 static void d3d9_shader_uniform_ctrl(CGparameter *dst, CGparameter *param, const char *semantic);
 static void d3d9_shader_uni_texture_clear(_shader_uniforms_tex *sut);
@@ -454,9 +454,9 @@ void gfx_set_screen(BYTE scale, DBWORD filter, BYTE fullscreen, BYTE palette, BY
 	}
 	if ((palette != cfg->palette) || info.on_cfg || force_palette) {
 		if (palette == PALETTE_FILE) {
-			if (strlen(cfg->palette_file) != 0) {
+			if (ustrlen(cfg->palette_file) != 0) {
 				if (palette_load_from_file(cfg->palette_file) == EXIT_ERROR) {
-					memset(cfg->palette_file, 0x00, sizeof(cfg->palette_file));
+					umemset(cfg->palette_file, 0x00, usizeof(cfg->palette_file));
 					text_add_line_info(1, "[red]error on palette file");
 					if (cfg->palette != PALETTE_FILE) {
 						palette = cfg->palette;
@@ -586,7 +586,7 @@ void gfx_set_screen(BYTE scale, DBWORD filter, BYTE fullscreen, BYTE palette, BY
 		}
 
 		if (shaders_set(f) == EXIT_ERROR) {
-			memcpy(cfg->shader_file, gfx.last_shader_file, sizeof(cfg->shader_file));
+			umemcpy(cfg->shader_file, gfx.last_shader_file, usizeof(cfg->shader_file));
 			if (old_filter == filter) {
 				filter = NO_FILTER;
 			} else {
@@ -629,7 +629,7 @@ void gfx_set_screen(BYTE scale, DBWORD filter, BYTE fullscreen, BYTE palette, BY
 			case EXIT_ERROR_SHADER:
 				text_add_line_info(1, "[red]errors[normal] on shader, use [green]'No filter'");
 				fprintf(stderr, "CG: Error on loading the shaders, switch to \"No filter\"\n");
-				memcpy(cfg->shader_file, gfx.last_shader_file, sizeof(cfg->shader_file));
+				umemcpy(cfg->shader_file, gfx.last_shader_file, usizeof(cfg->shader_file));
 				filter = NO_FILTER;
 				goto gfx_set_screen_start;
 		}
@@ -1253,7 +1253,7 @@ static BYTE d3d9_context_create(void) {
 		d3d9_vertex_buffer_set(shd, &texture->vp, prev);
 	}
 
-	memcpy(gfx.last_shader_file, cfg->shader_file, sizeof(gfx.last_shader_file));
+	umemcpy(gfx.last_shader_file, cfg->shader_file, usizeof(gfx.last_shader_file));
 
 	return (EXIT_OK);
 }
@@ -1707,13 +1707,31 @@ static void d3d9_surface_clean(LPDIRECT3DSURFACE9 *surface, UINT width, UINT hei
 		IDirect3DSurface9_UnlockRect((*surface));
 	}
 }
-static BYTE d3d9_shader_init(UINT pass, _shader *shd, const char *path, const char *code) {
+static BYTE d3d9_shader_init(UINT pass, _shader *shd, const uTCHAR *path, const char *code) {
 	const char *list;
 	const char *argv[128];
 	const char **fopts = cgD3D9GetOptimalOptions(cgD3D9GetLatestPixelProfile());
 	const char **vopts = cgD3D9GetOptimalOptions(cgD3D9GetLatestVertexProfile());
 	char alias[MAX_PASS][128];
+	uTCHAR base[LENGTH_FILE_NAME_MID];
+	uTCHAR dname[LENGTH_FILE_NAME_MID];
+	char bname[LENGTH_FILE_NAME_MID];
 	UINT i, argc;
+
+	if ((path != NULL) && path[0]) {
+		uTCHAR buffer[LENGTH_FILE_NAME_MID];
+
+		umemset(base, 0x00, usizeof(base));
+		if (ugetcwd(base, usizeof(base)) == NULL) { ; };
+
+		umemset(dname, 0x00, usizeof(dname));
+		gui_utf_dirname((uTCHAR *) path, dname, usizeof(buffer) - 1);
+
+		umemset(buffer, 0x00, usizeof(buffer));
+		gui_utf_basename((uTCHAR *) path, buffer, usizeof(buffer) - 1);
+		memset(bname, 0x00, sizeof(bname));
+		wcstombs(bname, buffer, sizeof(bname) - 1);
+	}
 
 	// fragment
 	{
@@ -1746,8 +1764,10 @@ static BYTE d3d9_shader_init(UINT pass, _shader *shd, const char *path, const ch
 			shd->prg.f = cgCreateProgram(d3d9.cgctx, CG_SOURCE, code,
 					cgD3D9GetLatestPixelProfile(), "main_fragment", argv);
 		} else {
-			shd->prg.f = cgCreateProgramFromFile(d3d9.cgctx, CG_SOURCE, path,
+			if (uchdir(dname) == -1) { ; }
+			shd->prg.f = cgCreateProgramFromFile(d3d9.cgctx, CG_SOURCE, bname,
 					cgD3D9GetLatestPixelProfile(), "main_fragment", argv);
+			if (uchdir(base) == -1) { ; }
 		}
 		if (!shd->prg.f && (list = cgGetLastListing(d3d9.cgctx))) {
 			printf("CG: fragment program errors :\n%s\n", list);
@@ -1785,8 +1805,10 @@ static BYTE d3d9_shader_init(UINT pass, _shader *shd, const char *path, const ch
 			shd->prg.v = cgCreateProgram(d3d9.cgctx, CG_SOURCE, code,
 					cgD3D9GetLatestVertexProfile(), "main_vertex", argv);
 		} else {
-			shd->prg.v = cgCreateProgramFromFile(d3d9.cgctx, CG_SOURCE, path,
+			if (uchdir(dname) == -1) { ; }
+			shd->prg.v = cgCreateProgramFromFile(d3d9.cgctx, CG_SOURCE, bname,
 					cgD3D9GetLatestVertexProfile(), "main_vertex", argv);
+			if (uchdir(base) == -1) { ; }
 		}
 		if (!shd->prg.v && (list = cgGetLastListing(d3d9.cgctx))) {
 			printf("CG: vertex program errors :\n%s\n", list);

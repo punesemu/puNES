@@ -28,6 +28,7 @@
 #include "emu.h"
 #include "clock.h"
 #include "info.h"
+#include "gui.h"
 
 #define BIOSFILE "disksys.rom"
 #define DIFFVERSION 1
@@ -63,23 +64,23 @@ BYTE fds_load_rom(void) {
 
 	{
 		BYTE found = TRUE;
-		char rom_ext[2][10] = { ".fds\0", ".FDS\0" };
+		uTCHAR rom_ext[2][10] = { uL(".fds\0"), uL(".FDS\0") };
 
-		fds.info.fp = fopen(info.rom_file, "rb");
+		fds.info.fp = ufopen(info.rom_file, uL("rb"));
 
 		if (!fds.info.fp) {
 			found = FALSE;
 
 			for (i = 0; i < LENGTH(rom_ext); i++) {
-				char rom_file[LENGTH_FILE_NAME_MID];
+				uTCHAR rom_file[LENGTH_FILE_NAME_MID];
 
-				strncpy(rom_file, info.rom_file, sizeof(rom_file));
-				strcat(rom_file, rom_ext[i]);
+				ustrncpy(rom_file, info.rom_file, usizeof(rom_file));
+				ustrcat(rom_file, rom_ext[i]);
 
-				fds.info.fp = fopen(rom_file, "rb");
+				fds.info.fp = ufopen(rom_file, uL("rb"));
 
 				if (fds.info.fp) {
-					strncpy(info.rom_file, rom_file, sizeof(info.rom_file));
+					ustrncpy(info.rom_file, rom_file, usizeof(info.rom_file));
 					found = TRUE;
 					break;
 				}
@@ -140,7 +141,7 @@ BYTE fds_load_rom(void) {
 	return (EXIT_OK);
 }
 BYTE fds_load_bios(void) {
-	char bios_file[LENGTH_FILE_NAME_MID], *lastSlash;
+	uTCHAR bios_file[LENGTH_FILE_NAME_MID], *lastSlash;
 	FILE *bios = NULL;
 
 	/*
@@ -149,32 +150,33 @@ BYTE fds_load_bios(void) {
 	 * 2) directory contenente il file fds
 	 * 3) directory puNES/bios
 	 */
-	if ((bios = fopen(BIOSFILE, "rb"))) {
+	if ((bios = ufopen(uL("" BIOSFILE), uL("rb")))) {
 		goto fds_load_bios_founded;
 	}
 
 	/* copio il nome del file nella variabile */
-	strcpy(bios_file, info.rom_file);
+	ustrncpy(bios_file, info.rom_file, usizeof(bios_file));
 	/* rintraccio l'ultimo '.' nel nome */
 #if defined (__WIN32__)
-	if ((lastSlash = strrchr(bios_file, '\\'))) {
+	if ((lastSlash = ustrrchr(bios_file, uL('\\')))) {
 		(*(lastSlash + 1)) = 0x00;
 	}
 #else
-	if ((lastSlash = strrchr(bios_file, '/'))) {
+	if ((lastSlash = ustrrchr(bios_file, uL('/')))) {
 		(*(lastSlash + 1)) = 0x00;
 	}
 #endif
 	/* aggiungo il nome del file */
-	strcat(bios_file, BIOSFILE);
+	ustrcat(bios_file, uL("" BIOSFILE));
 
-	if ((bios = fopen(bios_file, "rb"))) {
+	if ((bios = ufopen(bios_file, uL("rb")))) {
 		goto fds_load_bios_founded;
 	}
 
-	sprintf(bios_file, "%s" BIOS_FOLDER "/%s", info.base_folder, BIOSFILE);
+	usnprintf(bios_file, usizeof(bios_file), uL("" uPERCENTs BIOS_FOLDER "/" BIOSFILE),
+			info.base_folder);
 
-	if ((bios = fopen(bios_file, "rb"))) {
+	if ((bios = ufopen(bios_file, uL("rb")))) {
 		goto fds_load_bios_founded;
 	}
 
@@ -415,28 +417,30 @@ void fds_disk_op(WORD type, BYTE side_to_insert) {
 }
 void fds_diff_op(BYTE mode, uint32_t position, WORD value) {
 	if (!fds.info.diff) {
-		char file[LENGTH_FILE_NAME_MID];
-		char ext[10], *last_dot;
+		uTCHAR file[LENGTH_FILE_NAME_MID];
+		uTCHAR ext[10], basename[255], *last_dot;
 
-		sprintf(file, "%s" DIFF_FOLDER "/%s", info.base_folder, basename(info.rom_file));
-		sprintf(ext, ".dif");
+		gui_utf_basename(info.rom_file, basename, usizeof(basename));
+		usnprintf(file, usizeof(file), uL("" uPERCENTs DIFF_FOLDER "/" uPERCENTs),
+				info.base_folder, basename);
+		usnprintf(ext, usizeof(ext), uL("dif"));
 
 		/* rintraccio l'ultimo '.' nel nome */
-		last_dot = strrchr(file, '.');
+		last_dot = ustrrchr(file, uL('.'));
 		/* elimino l'estensione */
 		*last_dot = 0x00;
 		/* aggiungo l'estensione */
-		strcat(file, ext);
+		ustrcat(file, ext);
 
-		fds.info.diff = fopen(file, "r+b");
+		fds.info.diff = ufopen(file, uL("r+b"));
 
 		if ((mode == FDS_OP_WRITE) && !fds.info.diff) {
 			/* creo il file */
-			if ((fds.info.diff = fopen(file, "a+b"))) {
+			if ((fds.info.diff = ufopen(file, uL("a+b")))) {
 				/* lo chiudo */
 				fclose(fds.info.diff);
 				/* lo riapro in modalita' rb+ */
-				fds.info.diff = fopen(file, "r+b");
+				fds.info.diff = ufopen(file, uL("r+b"));
 			}
 		}
 	}

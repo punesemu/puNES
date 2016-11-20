@@ -100,7 +100,7 @@ void screenWidget::dragEnterEvent(QDragEnterEvent *e) {
 }
 void screenWidget::dropEvent(QDropEvent *e) {
 	foreach (const QUrl &url, e->mimeData()->urls()){
-		mwin->change_rom(qPrintable(url.toLocalFile()));
+		mwin->change_rom(uQStringCD(url.toLocalFile()));
 		activateWindow();
 		gui_set_focus();
 		break;

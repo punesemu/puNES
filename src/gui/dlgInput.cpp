@@ -278,7 +278,7 @@ void dlgInput::setup_shortcuts(void) {
 	update_groupbox_shortcuts(UPDATE_ALL, NO_ACTION, NO_ACTION);
 }
 void dlgInput::combo_joy_id_init() {
-	BYTE disabled_line = 0, count = 0, current_line = name_to_jsn("NULL");
+	BYTE disabled_line = 0, count = 0, current_line = name_to_jsn(uL("NULL"));
 
 	comboBox_joy_ID->clear();
 
@@ -294,13 +294,13 @@ void dlgInput::combo_joy_id_init() {
 				current_line = count;
 			}
 
-			comboBox_joy_ID->addItem(QString("js%1: ").arg(id) + js_name_device(id));
+			comboBox_joy_ID->addItem(QString("js%1: ").arg(id) + uQString(js_name_device(id)));
 		} else {
 			if (count == 0) {
 				break;
 			}
 			comboBox_joy_ID->addItem("Disabled");
-			id = name_to_jsn("NULL");
+			id = name_to_jsn(uL("NULL"));
 			disabled_line = count;
 		}
 
@@ -313,8 +313,8 @@ void dlgInput::combo_joy_id_init() {
 	}
 
 	if (count > 0) {
-		if (data.settings.shcjoy_id == name_to_jsn("NULL")
-				|| (current_line == name_to_jsn("NULL"))) {
+		if (data.settings.shcjoy_id == name_to_jsn(uL("NULL"))
+				|| (current_line == name_to_jsn(uL("NULL")))) {
 			comboBox_joy_ID->setCurrentIndex(disabled_line);
 		} else {
 			comboBox_joy_ID->setCurrentIndex(current_line);
@@ -355,7 +355,7 @@ void dlgInput::update_groupbox_shortcuts(int mode, int type, int row) {
 
 				joyId = comboBox_joy_ID->itemData(comboBox_joy_ID->currentIndex()).toInt();
 
-				if ((comboBox_joy_ID->count() > 1) && (joyId != name_to_jsn("NULL"))) {
+				if ((comboBox_joy_ID->count() > 1) && (joyId != name_to_jsn(uL("NULL")))) {
 					joy_mode = true;
 				} else {
 					joy_mode = false;
@@ -393,7 +393,7 @@ void dlgInput::update_groupbox_shortcuts(int mode, int type, int row) {
 
 				joyId = comboBox_joy_ID->itemData(comboBox_joy_ID->currentIndex()).toInt();
 
-				if ((comboBox_joy_ID->count() > 1) && (joyId != name_to_jsn("NULL"))) {
+				if ((comboBox_joy_ID->count() > 1) && (joyId != name_to_jsn(uL("NULL")))) {
 					if ((type == JOYSTICK) && (row == i)) {
 						widget = tableWidget_Shortcuts->cellWidget(i, 2);
 						widget->setEnabled(true);
@@ -648,7 +648,7 @@ void dlgInput::s_keyb_shortcut_default(bool checked) {
 	int row = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
 	shcut.text[KEYBOARD].replace(row,
-			QString(inp_cfg[row + SET_INP_SC_OPEN].def).split(",").at(KEYBOARD));
+			uQString(inp_cfg[row + SET_INP_SC_OPEN].def).split(",").at(KEYBOARD));
 	tableWidget_Shortcuts->cellWidget(row, 1)->findChild<QPushButton *>("value")->setText(
 			shcut.text[KEYBOARD].at(row));
 }
@@ -666,7 +666,7 @@ void dlgInput::s_joy_read_timer() {
 		::close(shcut.joy.fd);
 		shcut.joy.fd = 0;
 #endif
-		shcut.text[JOYSTICK].replace(shcut.row, jsv_to_name(shcut.joy.value));
+		shcut.text[JOYSTICK].replace(shcut.row, uQString(jsv_to_name(shcut.joy.value)));
 
 		shcut.timeout.timer->stop();
 		shcut.joy.timer->stop();
@@ -699,13 +699,13 @@ void dlgInput::s_default_clicked(bool checked) {
 
 	settings_inp_all_default(&data.settings, &array);
 
-	data.settings.shcjoy_id = name_to_jsn("NULL");
+	data.settings.shcjoy_id = name_to_jsn(uL("NULL"));
 	comboBox_joy_ID->setCurrentIndex(comboBox_joy_ID->count() - 1);
 	for (int i = 0; i < SET_MAX_NUM_SC; i++) {
 		shcut.text[KEYBOARD].replace(i,
-				QString(inp_cfg[i + SET_INP_SC_OPEN].def).split(",").at(KEYBOARD));
+				uQString(inp_cfg[i + SET_INP_SC_OPEN].def).split(",").at(KEYBOARD));
 		shcut.text[JOYSTICK].replace(i,
-				QString(inp_cfg[i + SET_INP_SC_OPEN].def).split(",").at(JOYSTICK));
+				uQString(inp_cfg[i + SET_INP_SC_OPEN].def).split(",").at(JOYSTICK));
 	}
 
 	update_groupbox_shortcuts(UPDATE_ALL, NO_ACTION, NO_ACTION);

@@ -255,17 +255,17 @@ enum list_settings_element {
 };
 
 typedef struct _opt {
-	const char *lname;
-	const char *sname;
+	const uTCHAR *lname;
+	const uTCHAR *sname;
 	int value;
 } _opt;
 typedef struct _settings {
-	const char *grp;
-	const char *key;
-	const char *def;
+	const uTCHAR *grp;
+	const uTCHAR *key;
+	const uTCHAR *def;
 
-	const char *cmt;
-	const char *hlp;
+	const uTCHAR *cmt;
+	const uTCHAR *hlp;
 
 	struct _opts {
 		const int count;
@@ -278,768 +278,767 @@ typedef struct _list_settings {
 } _list_settings;
 
 static const _opt opt_no_yes[] = {
-	{NULL, "no" , FALSE},
-	{NULL, "yes", TRUE}
+	{NULL, uL("no") , FALSE},
+	{NULL, uL("yes"), TRUE}
 };
 static const _opt opt_off_on[] = {
-	{NULL, "off", FALSE},
-	{NULL, "on" , TRUE},
+	{NULL, uL("off"), FALSE},
+	{NULL, uL("on") , TRUE},
 };
 static const _opt opt_mode[] = {
-	{"Auto",  "auto" , AUTO},
-	{"NTSC",  "ntsc" , NTSC},
-	{"PAL" ,  "pal"  , PAL},
-	{"Dendy", "dendy", DENDY}
+	{uL("Auto"),  uL("auto") , AUTO},
+	{uL("NTSC"),  uL("ntsc") , NTSC},
+	{uL("PAL") ,  uL("pal")  , PAL},
+	{uL("Dendy"), uL("dendy"), DENDY}
 };
 static const _opt opt_ff_velocity[] = {
-	{NULL, "2x", FF_2X},
-	{NULL, "3x", FF_3X},
-	{NULL, "4x", FF_4X},
-	{NULL, "5x", FF_5X}
+	{NULL, uL("2x"), FF_2X},
+	{NULL, uL("3x"), FF_3X},
+	{NULL, uL("4x"), FF_4X},
+	{NULL, uL("5x"), FF_5X}
 };
 #if defined (WITH_OPENGL)
 static const _opt opt_rend[] = {
-	{"Software", "software", RENDER_SOFTWARE},
-	{"GLSL"    , "glsl"    , RENDER_GLSL}
+	{uL("Software"), uL("software"), RENDER_SOFTWARE},
+	{uL("GLSL")    , uL("glsl")    , RENDER_GLSL}
 };
 #endif
 static const _opt opt_fps[] = {
-	{NULL, "default", FPS_DEFAULT},
-	{NULL, "60"     , FPS_60},
-	{NULL, "59"     , FPS_59},
-	{NULL, "58"     , FPS_58},
-	{NULL, "57"     , FPS_57},
-	{NULL, "56"     , FPS_56},
-	{NULL, "55"     , FPS_55},
-	{NULL, "54"     , FPS_54},
-	{NULL, "53"     , FPS_53},
-	{NULL, "52"     , FPS_52},
-	{NULL, "51"     , FPS_51},
-	{NULL, "50"     , FPS_50},
-	{NULL, "49"     , FPS_49},
-	{NULL, "48"     , FPS_48},
-	{NULL, "47"     , FPS_47},
-	{NULL, "46"     , FPS_46},
-	{NULL, "45"     , FPS_45},
-	{NULL, "44"     , FPS_44}
+	{NULL, uL("default"), FPS_DEFAULT},
+	{NULL, uL("60")     , FPS_60},
+	{NULL, uL("59")     , FPS_59},
+	{NULL, uL("58")     , FPS_58},
+	{NULL, uL("57")     , FPS_57},
+	{NULL, uL("56")     , FPS_56},
+	{NULL, uL("55")     , FPS_55},
+	{NULL, uL("54")     , FPS_54},
+	{NULL, uL("53")     , FPS_53},
+	{NULL, uL("52")     , FPS_52},
+	{NULL, uL("51")     , FPS_51},
+	{NULL, uL("50")     , FPS_50},
+	{NULL, uL("49")     , FPS_49},
+	{NULL, uL("48")     , FPS_48},
+	{NULL, uL("47")     , FPS_47},
+	{NULL, uL("46")     , FPS_46},
+	{NULL, uL("45")     , FPS_45},
+	{NULL, uL("44")     , FPS_44}
 };
 static const _opt opt_fsk[] = {
-	{NULL, "default", 0},
-	{NULL, "1"      , 1},
-	{NULL, "2"      , 2},
-	{NULL, "3"      , 3},
-	{NULL, "4"      , 4},
-	{NULL, "5"      , 5},
-	{NULL, "6"      , 6},
-	{NULL, "7"      , 7},
-	{NULL, "8"      , 8},
-	{NULL, "9"      , 9}
+	{NULL, uL("default"), 0},
+	{NULL, uL("1")      , 1},
+	{NULL, uL("2")      , 2},
+	{NULL, uL("3")      , 3},
+	{NULL, uL("4")      , 4},
+	{NULL, uL("5")      , 5},
+	{NULL, uL("6")      , 6},
+	{NULL, uL("7")      , 7},
+	{NULL, uL("8")      , 8},
+	{NULL, uL("9")      , 9}
 };
 static const _opt opt_scale[] = {
-	{NULL, "1x", X1},
-	{NULL, "2x", X2},
-	{NULL, "3x", X3},
-	{NULL, "4x", X4},
-	{NULL, "5x", X5},
-	{NULL, "6x", X6}
+	{NULL, uL("1x"), X1},
+	{NULL, uL("2x"), X2},
+	{NULL, uL("3x"), X3},
+	{NULL, uL("4x"), X4},
+	{NULL, uL("5x"), X5},
+	{NULL, uL("6x"), X6}
 };
 static const _opt opt_par[] = {
-	{NULL, "1:1" , PAR11},
-	{NULL, "5:4" , PAR54},
-	{NULL, "8:7" , PAR87},
-	{NULL, "11:8", PAR118}
+	{NULL, uL("1:1") , PAR11},
+	{NULL, uL("5:4") , PAR54},
+	{NULL, uL("8:7") , PAR87},
+	{NULL, uL("11:8"), PAR118}
 };
 static const _opt opt_oscan[] = {
-	{NULL, "off"    , OSCAN_OFF},
-	{NULL, "on"     , OSCAN_ON},
-	{NULL, "default", OSCAN_DEFAULT}
+	{NULL, uL("off")    , OSCAN_OFF},
+	{NULL, uL("on")     , OSCAN_ON},
+	{NULL, uL("default"), OSCAN_DEFAULT}
 };
 static const _opt opt_filter[] = {
-	{"no filter"            , "none"        , NO_FILTER},
-	{"Scale2X"              , "scale2x"     , SCALE2X},
-	{"Scale3X"              , "scale3x"     , SCALE3X},
-	{"Scale4X"              , "scale4x"     , SCALE4X},
-	{"Hq2X"                 , "hq2x"        , HQ2X},
-	{"Hq3X"                 , "hq3x"        , HQ3X},
-	{"Hq4X"                 , "hq4x"        , HQ4X},
-	{"NTSC"                 , "ntsc"        , NTSC_FILTER},
-	{"xBRZ 2x"              , "xbrz2x"      , XBRZ2X},
-	{"xBRZ 3x"              , "xbrz3x"      , XBRZ3X},
-	{"xBRZ 4x"              , "xbrz4x"      , XBRZ4X},
-	{"xBRZ 5x"              , "xbrz5x"      , XBRZ5X},
-	{"xBRZ 6x"              , "xbrz6x"      , XBRZ6X},
+	{uL("no filter")            , uL("none")        , NO_FILTER},
+	{uL("Scale2X")              , uL("scale2x")     , SCALE2X},
+	{uL("Scale3X")              , uL("scale3x")     , SCALE3X},
+	{uL("Scale4X")              , uL("scale4x")     , SCALE4X},
+	{uL("Hq2X")                 , uL("hq2x")        , HQ2X},
+	{uL("Hq3X")                 , uL("hq3x")        , HQ3X},
+	{uL("Hq4X")                 , uL("hq4x")        , HQ4X},
+	{uL("NTSC")                 , uL("ntsc")        , NTSC_FILTER},
+	{uL("xBRZ 2x")              , uL("xbrz2x")      , XBRZ2X},
+	{uL("xBRZ 3x")              , uL("xbrz3x")      , XBRZ3X},
+	{uL("xBRZ 4x")              , uL("xbrz4x")      , XBRZ4X},
+	{uL("xBRZ 5x")              , uL("xbrz5x")      , XBRZ5X},
+	{uL("xBRZ 6x")              , uL("xbrz6x")      , XBRZ6X},
 	// per filtri CPU futuri
-	{NULL                   , NULL          , NO_FILTER},
-	{NULL                   , NULL          , NO_FILTER},
-	{NULL                   , NULL          , NO_FILTER},
-	{NULL                   , NULL          , NO_FILTER},
-	{NULL                   , NULL          , NO_FILTER},
-	{NULL                   , NULL          , NO_FILTER},
-	{NULL                   , NULL          , NO_FILTER},
-	{NULL                   , NULL          , NO_FILTER},
-	{NULL                   , NULL          , NO_FILTER},
-	{NULL                   , NULL          , NO_FILTER},
-	{NULL                   , NULL          , NO_FILTER},
-	{NULL                   , NULL          , NO_FILTER},
-	{NULL                   , NULL          , NO_FILTER},
+	{NULL                       , NULL              , NO_FILTER},
+	{NULL                       , NULL              , NO_FILTER},
+	{NULL                       , NULL              , NO_FILTER},
+	{NULL                       , NULL              , NO_FILTER},
+	{NULL                       , NULL              , NO_FILTER},
+	{NULL                       , NULL              , NO_FILTER},
+	{NULL                       , NULL              , NO_FILTER},
+	{NULL                       , NULL              , NO_FILTER},
+	{NULL                       , NULL              , NO_FILTER},
+	{NULL                       , NULL              , NO_FILTER},
+	{NULL                       , NULL              , NO_FILTER},
+	{NULL                       , NULL              , NO_FILTER},
+	{NULL                       , NULL              , NO_FILTER},
 	// shaders
-	{"CRT Dotmask"          , "crtdotmask"  , SHADER_CRTDOTMASK},
-	{"CRT Scanlines"        , "crtscanlines", SHADER_CRTSCANLINES},
-	{"CRT With Curve"       , "crtcurve"    , SHADER_CRTWITHCURVE},
-	{"Emboss"               , "emboss"      , SHADER_EMBOSS},
-	{"Noise"                , "noise"       , SHADER_NOISE},
-	{"NTSC 2Phase Composite", "ntsc2phcomp" , SHADER_NTSC2PHASECOMPOSITE},
-	{"Old TV"               , "oldtv"       , SHADER_OLDTV},
-	{"Extern"               , "file"        , SHADER_FILE}
+	{uL("CRT Dotmask")          , uL("crtdotmask")  , SHADER_CRTDOTMASK},
+	{uL("CRT Scanlines")        , uL("crtscanlines"), SHADER_CRTSCANLINES},
+	{uL("CRT With Curve")       , uL("crtcurve")    , SHADER_CRTWITHCURVE},
+	{uL("Emboss")               , uL("emboss")      , SHADER_EMBOSS},
+	{uL("Noise")                , uL("noise")       , SHADER_NOISE},
+	{uL("NTSC 2Phase Composite"), uL("ntsc2phcomp") , SHADER_NTSC2PHASECOMPOSITE},
+	{uL("Old TV")               , uL("oldtv")       , SHADER_OLDTV},
+	{uL("Extern")               , uL("file")        , SHADER_FILE}
 };
 static const _opt opt_ntsc[] = {
-	{"Composite", "composite", COMPOSITE},
-	{"S-Video"  , "svideo"   , SVIDEO},
-	{"RGB"      , "rgb"      , RGBMODE}
+	{uL("Composite"), uL("composite"), COMPOSITE},
+	{uL("S-Video")  , uL("svideo")   , SVIDEO},
+	{uL("RGB")      , uL("rgb")      , RGBMODE}
 };
 static const _opt opt_palette[] = {
-	{"PAL palette"      , "pal"   , PALETTE_PAL},
-	{"NTSC palette"     , "ntsc"  , PALETTE_NTSC},
-	{"Sony CXA2025AS US", "sony"  , PALETTE_SONY},
-	{"Monochrome"       , "mono"  , PALETTE_MONO},
-	{"Green"            , "green" , PALETTE_GREEN},
-	{"Extern"           , "file"  , PALETTE_FILE},
-	{"Firebrandx Unsat" , "frbuns", PALETTE_FRBX_UNSATURED},
-	{"Firebrandx YUV"   , "frbyuv", PALETTE_FRBX_YUV}
+	{uL("PAL palette")      , uL("pal")   , PALETTE_PAL},
+	{uL("NTSC palette")     , uL("ntsc")  , PALETTE_NTSC},
+	{uL("Sony CXA2025AS US"), uL("sony")  , PALETTE_SONY},
+	{uL("Monochrome")       , uL("mono")  , PALETTE_MONO},
+	{uL("Green")            , uL("green") , PALETTE_GREEN},
+	{uL("Extern")           , uL("file")  , PALETTE_FILE},
+	{uL("Firebrandx Unsat") , uL("frbuns"), PALETTE_FRBX_UNSATURED},
+	{uL("Firebrandx YUV")   , uL("frbyuv"), PALETTE_FRBX_YUV}
 };
 static const _opt opt_audio_buffer_factor[] = {
-	{NULL, "0"      , 0},
-	{NULL, "1"      , 1},
-	{NULL, "2"      , 2},
-	{NULL, "3"      , 3},
-	{NULL, "4"      , 4},
-	{NULL, "5"      , 5},
-	{NULL, "6"      , 6},
-	{NULL, "7"      , 7},
-	{NULL, "8"      , 8},
-	{NULL, "9"      , 9},
-	{NULL, "10"     , 10},
-	{NULL, "11"     , 11},
-	{NULL, "12"     , 12},
-	{NULL, "13"     , 13},
-	{NULL, "14"     , 14},
-	{NULL, "15"     , 15}
+	{NULL, uL("0"),  0},
+	{NULL, uL("1"),  1},
+	{NULL, uL("2"),  2},
+	{NULL, uL("3"),  3},
+	{NULL, uL("4"),  4},
+	{NULL, uL("5"),  5},
+	{NULL, uL("6"),  6},
+	{NULL, uL("7"),  7},
+	{NULL, uL("8"),  8},
+	{NULL, uL("9"),  9},
+	{NULL, uL("10"), 10},
+	{NULL, uL("11"), 11},
+	{NULL, uL("12"), 12},
+	{NULL, uL("13"), 13},
+	{NULL, uL("14"), 14},
+	{NULL, uL("15"), 15}
 };
 static const _opt opt_samplerate[] = {
-	{NULL, "48000", S48000},
-	{NULL, "44100", S44100},
-	{NULL, "22050", S22050},
-	{NULL, "11025", S11025}
+	{NULL, uL("48000"), S48000},
+	{NULL, uL("44100"), S44100},
+	{NULL, uL("22050"), S22050},
+	{NULL, uL("11025"), S11025}
 };
 static const _opt opt_channels[] = {
-	{NULL,   "mono",    CH_MONO},
-	{NULL,   "delay",   CH_STEREO_DELAY},
-	{NULL,   "panning", CH_STEREO_PANNING},
+	{NULL, uL("mono"),    CH_MONO},
+	{NULL, uL("delay"),   CH_STEREO_DELAY},
+	{NULL, uL("panning"), CH_STEREO_PANNING},
 };
 static const _opt opt_audio_quality[] = {
-	{NULL, "low",  AQ_LOW},
-	{NULL, "high", AQ_HIGH}
+	{NULL, uL("low"),  AQ_LOW},
+	{NULL, uL("high"), AQ_HIGH}
 };
 static const _opt opt_cheat_mode[] = {
-	{NULL, "disabled",   NOCHEAT_MODE},
-	{NULL, "gamegenie",  GAMEGENIE_MODE},
-	{NULL, "cheatslist", CHEATSLIST_MODE}
+	{NULL, uL("disabled"),   NOCHEAT_MODE},
+	{NULL, uL("gamegenie"),  GAMEGENIE_MODE},
+	{NULL, uL("cheatslist"), CHEATSLIST_MODE}
 };
 static const _opt opt_languages[] = {
-	{NULL, "english", LNG_ENGLISH},
-	{NULL, "italian", LNG_ITALIAN},
-	{NULL, "russian", LNG_RUSSIAN}
+	{NULL, uL("english"), LNG_ENGLISH},
+	{NULL, uL("italian"), LNG_ITALIAN},
+	{NULL, uL("russian"), LNG_RUSSIAN}
 };
 
 static const _opt opt_slot_pgs[] = {
-	{NULL, "0", 0},
-	{NULL, "1", 1},
-	{NULL, "2", 2},
-	{NULL, "3", 3},
-	{NULL, "4", 4},
-	{NULL, "5", 5}
+	{NULL, uL("0"), 0},
+	{NULL, uL("1"), 1},
+	{NULL, uL("2"), 2},
+	{NULL, uL("3"), 3},
+	{NULL, uL("4"), 4},
+	{NULL, uL("5"), 5}
 };
 
 static const _opt opt_controller[] = {
-	{NULL, "disable",  CTRL_DISABLED},
-	{NULL, "standard", CTRL_STANDARD},
-	{NULL, "zapper",   CTRL_ZAPPER}
+	{NULL, uL("disable"),  CTRL_DISABLED},
+	{NULL, uL("standard"), CTRL_STANDARD},
+	{NULL, uL("zapper"),   CTRL_ZAPPER}
 };
 static const _opt opt_controller_mode[] = {
-	{NULL, "nes",        CTRL_MODE_NES},
-	{NULL, "famicom",    CTRL_MODE_FAMICOM},
-	{NULL, "four score", CTRL_MODE_FOUR_SCORE}
+	{NULL, uL("nes"),        CTRL_MODE_NES},
+	{NULL, uL("famicom"),    CTRL_MODE_FAMICOM},
+	{NULL, uL("four score"), CTRL_MODE_FOUR_SCORE}
 };
 static const _opt opt_pad_type[] = {
-	{NULL, "auto",     CTRL_PAD_AUTO},
-	{NULL, "original", CTRL_PAD_ORIGINAL},
-	{NULL, "3rdparty", CTRL_PAD_3RD_PARTY},
+	{NULL, uL("auto"),     CTRL_PAD_AUTO},
+	{NULL, uL("original"), CTRL_PAD_ORIGINAL},
+	{NULL, uL("3rdparty"), CTRL_PAD_3RD_PARTY},
 };
 
 static const _settings main_cfg[] = {
 	{
-		"system", "preferred mode", "auto",
-		"# possible values: pal, ntsc, dendy, auto",
-		"-m, --mode                preferred mode        : pal, ntsc, dendy, auto",
+		uL("system"), uL("preferred mode"), uL("auto"),
+		uL("# possible values: pal, ntsc, dendy, auto"),
+		uL("-m, --mode                preferred mode        : pal, ntsc, dendy, auto"),
 		{LENGTH(opt_mode), opt_mode}
 	},
 	{
-		"system", "fast forward velocity", "2x",
-		"# possible values: 2x, 3x, 4x, 5x",
+		uL("system"), uL("fast forward velocity"), uL("2x"),
+		uL("# possible values: 2x, 3x, 4x, 5x"),
 		NULL,
 		{LENGTH(opt_ff_velocity), opt_ff_velocity}
 	},
 	{
-		"system", "save battery ram file every 5 sec", "no",
-		"# possible values: yes, no",
+		uL("system"), uL("save battery ram file every 180 sec"), uL("no"),
+		uL("# possible values: yes, no"),
 		NULL,
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 	{
-		"system", "pause when in background", "yes",
-		"# possible values: yes, no",
-		"    --background-pause                          : yes, no",
+		uL("system"), uL("pause when in background"), uL("yes"),
+		uL("# possible values: yes, no"),
+		uL("    --background-pause                          : yes, no"),
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 	{
-		"system", "cheat mode", "disabled",
-		"# possible values: disabled, gamegenie, cheatslist",
-		"-g, --cheat-mode          cheat mode            : disabled, gamegenie, cheatslist",
+		uL("system"), uL("cheat mode"), uL("disabled"),
+		uL("# possible values: disabled, gamegenie, cheatslist"),
+		uL("-g, --cheat-mode          cheat mode            : disabled, gamegenie, cheatslist"),
 		{LENGTH(opt_cheat_mode), opt_cheat_mode}
 	},
 	{
-		"system", "save settings on exit", "no",
-		"# possible values: yes, no",
+		uL("system"), uL("save settings on exit"), uL("no"),
+		uL("# possible values: yes, no"),
 		NULL,
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 #if defined (WITH_OPENGL)
 	{
-		"video", "rendering",
-		 "glsl",
-		"# possible values: software, glsl",
-		"-r, --rendering           type of rendering     : software, glsl",
+		uL("video"), uL("rendering"), uL("glsl"),
+		uL("# possible values: software, glsl"),
+		uL("-r, --rendering           type of rendering     : software, glsl"),
 		{LENGTH(opt_rend), opt_rend}
 	},
 #endif
 	{
-		"video", "frames per second", "default",
-		"# possible values: default, 58, 57. ..., 45, 44",
-		"-f, --fps                 frames per second     : default, 60, ..., 44",
+		uL("video"), uL("frames per second"), uL("default"),
+		uL("# possible values: default, 58, 57. ..., 45, 44"),
+		uL("-f, --fps                 frames per second     : default, 60, ..., 44"),
 		{LENGTH(opt_fps), opt_fps}
 	},
 	{
-		"video", "frame skip", "default",
-		"# possible values: default, 1, ..., 9",
-		"-k, --frameskip           frames to skip        : default, 1, ..., 9",
+		uL("video"), uL("frame skip"), uL("default"),
+		uL("# possible values: default, 1, ..., 9"),
+		uL("-k, --frameskip           frames to skip        : default, 1, ..., 9"),
 		{LENGTH(opt_fsk), opt_fsk}
 	},
 	{
-		"video", "size window", "2x",
-		"# possible values: 1x, 2x, 3x, 4x, 5x, 6x" NEWLINE
-		"# Note : 1x works only with \'filter=none\'" NEWLINE
-		"# and software filters ScaleXX, HqXX and NTSC" NEWLINE
-		"# don't supports 5x and 6x.",
-		"-s, --size                window size           : 1x, 2x, 3x, 4x, 5x, 6x",
+		uL("video"), uL("size window"), uL("2x"),
+		uL("# possible values: 1x, 2x, 3x, 4x, 5x, 6x" NEWLINE)
+		uL("# Note : 1x works only with \'filter=none\'" NEWLINE)
+		uL("# and software filters ScaleXX, HqXX and NTSC" NEWLINE)
+		uL("# don't supports 5x and 6x."),
+		uL("-s, --size                window size           : 1x, 2x, 3x, 4x, 5x, 6x"),
 		{LENGTH(opt_scale), opt_scale}
 	},
 	{
-		"video", "pixel aspect ratio", "8:7",
-		"# possible values: 1:1, 5:4, 8:7, 11:8",
-		"-e, --pixel-aspect-ratio  enable aspect ratio   : 1:1, 5:4, 8:7, 11:8",
+		uL("video"), uL("pixel aspect ratio"), uL("8:7"),
+		uL("# possible values: 1:1, 5:4, 8:7, 11:8"),
+		uL("-e, --pixel-aspect-ratio  enable aspect ratio   : 1:1, 5:4, 8:7, 11:8"),
 		{LENGTH(opt_par), opt_par}
 	},
 	{
-		"video", "pixel aspect ratio soft stretch", "yes",
-		"# possible values: yes, no",
-		"    --par-soft-stretch    improves the          : yes, no" NEWLINE
-		"                          stretched image",
+		uL("video"), uL("pixel aspect ratio soft stretch"), uL("yes"),
+		uL("# possible values: yes, no"),
+		uL("    --par-soft-stretch    improves the          : yes, no" NEWLINE)
+		uL("                          stretched image"),
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 	{
-		"video", "overscan default", "off",
-		"# possible values: on, off",
-		"-o, --overscan            default overscan      : on, off",
+		uL("video"), uL("overscan default"), uL("off"),
+		uL("# possible values: on, off"),
+		uL("-o, --overscan            default overscan      : on, off"),
 		{LENGTH(opt_oscan), opt_oscan}
 	},
 	{
-		"video", "overscan bordes NTSC", "8,8,8,9",
-		"# possible values: 0-17" NEWLINE
-		"# format string  : [UP],[DOWN],[LEFT],[RIGHT]",
-		"    --overscan-brd-ntsc   borders in pixels     : [UP],[DOWN],[LEFT],[RIGHT]",
+		uL("video"), uL("overscan bordes NTSC"), uL("8,8,8,9"),
+		uL("# possible values: 0-17" NEWLINE)
+		uL("# format string  : [UP],[DOWN],[LEFT],[RIGHT]"),
+		uL("    --overscan-brd-ntsc   borders in pixels     : [UP],[DOWN],[LEFT],[RIGHT]"),
 		{0, NULL}
 	},
 	{
-		"video", "overscan bordes PAL", "8,8,8,9",
-		"# possible values: 0-17" NEWLINE
-		"# format string  : [UP],[DOWN],[LEFT],[RIGHT]",
-		"    --overscan-brd-pal    borders in pixels     : [UP],[DOWN],[LEFT],[RIGHT]",
+		uL("video"), uL("overscan bordes PAL"), uL("8,8,8,9"),
+		uL("# possible values: 0-17" NEWLINE)
+		uL("# format string  : [UP],[DOWN],[LEFT],[RIGHT]"),
+		uL("    --overscan-brd-pal    borders in pixels     : [UP],[DOWN],[LEFT],[RIGHT]"),
 		{0, NULL}
 	},
 	{
-		"video", "filter", "none",
-		"# possible values: none, scale2x, scale3x, scale4x, hq2x, hq3x," NEWLINE
-		"#                  hq4x, xbrz2x, xbrz3x, xbrz4x, xbrz5x, xbrz6x, ntsc," NEWLINE
-		"#                  crtdotmask, crtscanlines, crtcurve, emboss, noise," NEWLINE
-		"#                  ntsc2phcomp, oldtv, file",
-		"-i, --filter              filter to apply       : nofilter, scale2x," NEWLINE
-		"                                                  scale3x, scale4x, hq2x," NEWLINE
-		"                                                  hq3x, hq4x, xbrz2x, xbrz3x," NEWLINE
-		"                                                  xbrz4x, xbrz5x, xbrz6x, ntsc," NEWLINE
-		"                                                  crtdotmask, crtscanlines," NEWLINE
-		"                                                  crtcurve, emboss, noise," NEWLINE
-		"                                                  ntsc2phcomp, oldtv, file",
+		uL("video"), uL("filter"), uL("none"),
+		uL("# possible values: none, scale2x, scale3x, scale4x, hq2x, hq3x," NEWLINE)
+		uL("#                  hq4x, xbrz2x, xbrz3x, xbrz4x, xbrz5x, xbrz6x, ntsc," NEWLINE)
+		uL("#                  crtdotmask, crtscanlines, crtcurve, emboss, noise," NEWLINE)
+		uL("#                  ntsc2phcomp, oldtv, file"),
+		uL("-i, --filter              filter to apply       : nofilter, scale2x," NEWLINE)
+		uL("                                                  scale3x, scale4x, hq2x," NEWLINE)
+		uL("                                                  hq3x, hq4x, xbrz2x, xbrz3x," NEWLINE)
+		uL("                                                  xbrz4x, xbrz5x, xbrz6x, ntsc," NEWLINE)
+		uL("                                                  crtdotmask, crtscanlines," NEWLINE)
+		uL("                                                  crtcurve, emboss, noise," NEWLINE)
+		uL("                                                  ntsc2phcomp, oldtv, file"),
 		{LENGTH(opt_filter), opt_filter}
 	},
 	{
-		"video", "ntsc filter format", "composite",
-		"# possible values: composite, svideo, rgb",
-		"-n, --ntsc-format         format of ntsc filter : composite, svideo, rgb",
+		uL("video"), uL("ntsc filter format"), uL("composite"),
+		uL("# possible values: composite, svideo, rgb"),
+		uL("-n, --ntsc-format         format of ntsc filter : composite, svideo, rgb"),
 		{LENGTH(opt_ntsc), opt_ntsc}
 	},
 	{
-		"video", "shader file", NULL,
-		"# possible values: [PATH/NAME]",
+		uL("video"), uL("shader file"), NULL,
+		uL("# possible values: [PATH/NAME]"),
 		NULL,
 		{0, NULL}
 	},
 	{
-		"video", "palette", "ntsc",
-		"# possible values: pal, ntsc, sony, frbyuv, frbuns, mono, green, file",
-		"-p, --palette             type of palette       : pal, ntsc, sony, frbyuv," NEWLINE
-		"                                                  frbuns, mono, green, file",
+		uL("video"), uL("palette"), uL("ntsc"),
+		uL("# possible values: pal, ntsc, sony, frbyuv, frbuns, mono, green, file"),
+		uL("-p, --palette             type of palette       : pal, ntsc, sony, frbyuv," NEWLINE)
+		uL("                                                  frbuns, mono, green, file"),
 		{LENGTH(opt_palette), opt_palette}
 	},
 	{
-		"video", "palette file", NULL,
-		"# possible values: [PATH/NAME]",
+		uL("video"), uL("palette file"), NULL,
+		uL("# possible values: [PATH/NAME]"),
 		NULL,
 		{0, NULL}
 	},
 	{
-		"video", "disable swap emphasis PAL-Dendy", "no",
-		"# possible values: yes, no",
-		"    --swap-emphasis       disable swap emphasis : yes, no" NEWLINE
-		"                          in PAL/Dendy mode",
+		uL("video"), uL("disable swap emphasis PAL-Dendy"), uL("no"),
+		uL("# possible values: yes, no"),
+		uL("    --swap-emphasis       disable swap emphasis : yes, no" NEWLINE)
+		uL("                          in PAL/Dendy mode"),
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 	{
-		"video", "vsync", "on",
-		"# possible values: on, off",
-		"-v, --vsync               use of vsync          : on, off",
+		uL("video"), uL("vsync"), uL("on"),
+		uL("# possible values: on, off"),
+		uL("-v, --vsync               use of vsync          : on, off"),
 		{LENGTH(opt_off_on), opt_off_on}
 	},
 	{
-		"video", "interpolation", "no",
-		"# possible values: yes, no",
-		"-j, --interpolation       enable interpolation  : yes, no",
+		uL("video"), uL("interpolation"), uL("no"),
+		uL("# possible values: yes, no"),
+		uL("-j, --interpolation       enable interpolation  : yes, no"),
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 	{
-		"video", "text on screen", "yes",
-		"# possible values: yes, no",
-		"    --txt-on-screen       enable messages       : yes, no",
+		uL("video"), uL("text on screen"), uL("yes"),
+		uL("# possible values: yes, no"),
+		uL("    --txt-on-screen       enable messages       : yes, no"),
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 	{
-		"video", "input display", "no",
-		"# possible values: yes, no",
-		"    --input-display       enable input gui      : yes, no",
+		uL("video"), uL("input display"), uL("no"),
+		uL("# possible values: yes, no"),
+		uL("    --input-display       enable input gui      : yes, no"),
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 	{
-		"video", "disable tv noise emulation", "no",
-		"# possible values: yes, no",
-		"    --disable-tv-noise    disable tv noise      : yes, no",
+		uL("video"), uL("disable tv noise emulation"), uL("no"),
+		uL("# possible values: yes, no"),
+		uL("    --disable-tv-noise    disable tv noise      : yes, no"),
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 	{
-		"video", "disable sepia color on pause", "no",
-		"# possible values: yes, no",
-		"    --disable-sepia       disable sepia color   : yes, no" NEWLINE
-		"                          during the pause",
+		uL("video"), uL("disable sepia color on pause"), uL("no"),
+		uL("# possible values: yes, no"),
+		uL("    --disable-sepia       disable sepia color   : yes, no" NEWLINE)
+		uL("                          during the pause"),
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 #if defined (WITH_OPENGL)
 	{
-		"video", "disable sRGB FBO (Shaders)", "no",
-		"# possible values: yes, no",
-		"    --disable-srgb-fbo    disable in the        : yes, no" NEWLINE
-		"                          shaders the use of" NEWLINE
-		"                          sRGB FBO",
+		uL("video"), uL("disable sRGB FBO (Shaders)"), uL("no"),
+		uL("# possible values: yes, no"),
+		uL("    --disable-srgb-fbo    disable in the        : yes, no" NEWLINE)
+		uL("                          shaders the use of" NEWLINE)
+		uL("                          sRGB FBO"),
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 #endif
 	{
-		"video", "fullscreen", "no",
-		"# possible values: yes, no",
-		"-u, --fullscreen          no comment            : yes, no",
+		uL("video"), uL("fullscreen"), uL("no"),
+		uL("# possible values: yes, no"),
+		uL("-u, --fullscreen          no comment            : yes, no"),
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 	{
-		"video", "stretch in fullscreen", "no",
-		"# possible values: yes, no",
-		"-t, --stretch-fullscreen  stretch image         : yes, no",
+		uL("video"), uL("stretch in fullscreen"), uL("no"),
+		uL("# possible values: yes, no"),
+		uL("-t, --stretch-fullscreen  stretch image         : yes, no"),
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 	{
-		"audio", "buffer factor", "1",
-		"# possible values: [0-15]",
-		"-b, --audio-buffer-factor buffer size factor    : [0-15]",
+		uL("audio"), uL("buffer factor"), uL("1"),
+		uL("# possible values: [0-15]"),
+		uL("-b, --audio-buffer-factor buffer size factor    : [0-15]"),
 		{LENGTH(opt_audio_buffer_factor), opt_audio_buffer_factor}
 	},
 	{
-		"audio", "sample rate", "44100",
-		"# possible values: 48000, 44100, 22050, 11025",
-		"-l, --samplerate          sample rate           : 48000, 44100, 22050, 11025",
+		uL("audio"), uL("sample rate"), uL("44100"),
+		uL("# possible values: 48000, 44100, 22050, 11025"),
+		uL("-l, --samplerate          sample rate           : 48000, 44100, 22050, 11025"),
 		{LENGTH(opt_samplerate), opt_samplerate}
 	},
 	{
-		"audio", "channels", "delay",
-		"# possible values: mono, delay, panning",
-		"-c, --channels            audio channels        : mono, delay, panning",
+		uL("audio"), uL("channels"), uL("delay"),
+		uL("# possible values: mono, delay, panning"),
+		uL("-c, --channels            audio channels        : mono, delay, panning"),
 		{LENGTH(opt_channels), opt_channels}
 	},
 	{
-		"audio", "stereo delay", "30",
-		"# possible values: [5 - 100]",
-		"-d, --stereo-delay        stereo effect delay   : [5 - 100]",
+		uL("audio"), uL("stereo delay"), uL("30"),
+		uL("# possible values: [5 - 100]"),
+		uL("-d, --stereo-delay        stereo effect delay   : [5 - 100]"),
 		{0, NULL}
 	},
 	{
-		"audio", "audio quality", "high",
-		"# possible values: low, high",
-		"-q, --audio-quality       audio quality         : low, high",
+		uL("audio"), uL("audio quality"), uL("high"),
+		uL("# possible values: low, high"),
+		uL("-q, --audio-quality       audio quality         : low, high"),
 		{LENGTH(opt_audio_quality), opt_audio_quality}
 	},
 	{
-		"audio", "swap duty cycles (Famicom clone chip audio emulation)", "no",
-		"# possible values: yes, no",
-		"    --swap-duty           swap duty cycles      : yes, no",
+		uL("audio"), uL("swap duty cycles (Famicom clone chip audio emulation)"), uL("no"),
+		uL("# possible values: yes, no"),
+		uL("    --swap-duty           swap duty cycles      : yes, no"),
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 	{
-		"audio", "audio", "on",
-		"# possible values: on, off",
-		"-a, --audio                                     : on, off",
+		uL("audio"), uL("audio"), uL("on"),
+		uL("# possible values: on, off"),
+		uL("-a, --audio                                     : on, off"),
 		{LENGTH(opt_off_on), opt_off_on}
 	},
 	{
-		"GUI", "last open path", NULL,
-		"# possible values: [PATH]",
+		uL("GUI"), uL("last open path"), NULL,
+		uL("# possible values: [PATH]"),
 		NULL,
 		{0, NULL}
 	},
 	{
-		"GUI", "last position of window", "0,0",
-		"# possible values: [X],[Y]",
+		uL("GUI"), uL("last position of window"), uL("0,0"),
+		uL("# possible values: [X],[Y]"),
 		NULL,
 		{0, NULL}
 	},
 	{
-		"GUI", "language", "english",
-		"# possible values: english,italian,russian",
-		"    --language            GUI language          : english,italian,russian",
+		uL("GUI"), uL("language"), uL("english"),
+		uL("# possible values: english,italian,russian"),
+		uL("    --language            GUI language          : english,italian,russian"),
 		{LENGTH(opt_languages), opt_languages}
 	},
 	{
-		"apu channels", "master", "on,100",
-		"# possible values: [on, off],[0 - 100]",
+		uL("apu channels"), uL("master"), uL("on,100"),
+		uL("# possible values: [on, off],[0 - 100]"),
 		NULL,
 		{0, NULL}
 	},
 	{
-		"apu channels", "square1", "on,100",
-		"# possible values: [on, off],[0 - 100]",
+		uL("apu channels"), uL("square1"), uL("on,100"),
+		uL("# possible values: [on, off],[0 - 100]"),
 		NULL,
 		{0, NULL}
 	},
 	{
-		"apu channels", "square2", "on,100",
-		"# possible values: [on, off],[0 - 100]",
+		uL("apu channels"), uL("square2"), uL("on,100"),
+		uL("# possible values: [on, off],[0 - 100]"),
 		NULL,
 		{0, NULL}
 	},
 	{
-		"apu channels", "triangle", "on,100",
-		"# possible values: [on, off],[0 - 100]",
+		uL("apu channels"), uL("triangle"), uL("on,100"),
+		uL("# possible values: [on, off],[0 - 100]"),
 		NULL,
 		{0, NULL}
 	},
 	{
-		"apu channels", "noise", "on,100",
-		"# possible values: [on, off],[0 - 100]",
+		uL("apu channels"), uL("noise"), uL("on,100"),
+		uL("# possible values: [on, off],[0 - 100]"),
 		NULL,
 		{0, NULL}
 	},
 	{
-		"apu channels", "dmc", "on,100",
-		"# possible values: [on, off],[0 - 100]",
+		uL("apu channels"), uL("dmc"), uL("on,100"),
+		uL("# possible values: [on, off],[0 - 100]"),
 		NULL,
 		{0, NULL}
 	},
 	{
-		"apu channels", "extra", "on,100",
-		"# possible values: [on, off],[0 - 100]",
+		uL("apu channels"), uL("extra"), uL("on,100"),
+		uL("# possible values: [on, off],[0 - 100]"),
 		NULL,
 		{0, NULL}
 	},
 	{
-		"ppu", "hide sprites", "no",
-		"# possible values: yes, no",
-		"    --hdie-sprites                              : yes, no",
+		uL("ppu"), uL("hide sprites"), uL("no"),
+		uL("# possible values: yes, no"),
+		uL("    --hide-sprites                              : yes, no"),
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 	{
-		"ppu", "hide background", "no",
-		"# possible values: yes, no",
-		"    --hide-background                           : yes, no",
+		uL("ppu"), uL("hide background"), uL("no"),
+		uL("# possible values: yes, no"),
+		uL("    --hide-background                           : yes, no"),
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 	{
-		"ppu", "unlimited sprites", "no",
-		"# possible values: yes, no",
-		"    --unlimited-sprites                         : yes, no",
+		uL("ppu"), uL("unlimited sprites"), uL("no"),
+		uL("# possible values: yes, no"),
+		uL("    --unlimited-sprites                         : yes, no"),
 		{LENGTH(opt_no_yes), opt_no_yes}
 	}
 };
 
 static const _settings pgs_cfg[] = {
 	{
-		"state", "last save slot", "0",
-		"# possible values: 0, 1, 2, 3, 4, 5",
+		uL("state"), uL("last save slot"), uL("0"),
+		uL("# possible values: 0, 1, 2, 3, 4, 5"),
 		NULL,
 		{LENGTH(opt_slot_pgs), opt_slot_pgs}
 	},
 	{
-		"state", "last save file used", NULL,
-		"# possible values: [PATH/NAME]",
+		uL("state"), uL("last save file used"), NULL,
+		uL("# possible values: [PATH/NAME]"),
 		NULL,
 		{0, NULL}
 	},
 	{
-		"video", "overscan", "default",
-		"# possible values: on, off, default",
+		uL("video"), uL("overscan"), uL("default"),
+		uL("# possible values: on, off, default"),
 		NULL,
 		{LENGTH(opt_oscan), opt_oscan}
 	},
 	{
-		"system", "dipswitch", "65280",
-		"# possible values: [it depends on the mapper]",
+		uL("system"), uL("dipswitch"), uL("65280"),
+		uL("# possible values: [it depends on the mapper]"),
 		NULL,
 		{0, NULL}
 	},
 	{
-		"system", "ppu overclock", "no",
-		"# possible values: yes, no",
+		uL("system"), uL("ppu overclock"), uL("no"),
+		uL("# possible values: yes, no"),
 		NULL,
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 	{
-		"system", "disable 7bit sample control", "no",
-		"# possible values: yes, no",
+		uL("system"), uL("disable 7bit sample control"), uL("no"),
+		uL("# possible values: yes, no"),
 		NULL,
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 	{
-		"system", "extra vblank scanlines", "0",
-		"# possible values: [0 - 1000]",
+		uL("system"), uL("extra vblank scanlines"), uL("0"),
+		uL("# possible values: [0 - 1000]"),
 		NULL,
 		{0, NULL}
 	},
 	{
-		"system", "extra postrender scanlines", "0",
-		"# possible values: [0 - 1000]",
+		uL("system"), uL("extra postrender scanlines"), uL("0"),
+		uL("# possible values: [0 - 1000]"),
 		NULL,
 		{0, NULL}
 	}
 };
 
 static const _settings inp_cfg[] = {
-	{"shortcuts", "open",                     "Alt+O,NULL",      NULL, NULL, {0, NULL}},
-	{"shortcuts", "quit",                     "Alt+Q,NULL",      NULL, NULL, {0, NULL}},
-	{"shortcuts", "turn off",                 "Alt+R,NULL",      NULL, NULL, {0, NULL}},
-	{"shortcuts", "hard reset",               "F11,NULL",        NULL, NULL, {0, NULL}},
-	{"shortcuts", "soft reset",               "F12,NULL",        NULL, NULL, {0, NULL}},
-	{"shortcuts", "insert coin",              "8,NULL",          NULL, NULL, {0, NULL}},
-	{"shortcuts", "switch sides",             "Alt+S,NULL",      NULL, NULL, {0, NULL}},
-	{"shortcuts", "eject disk",               "Alt+E,NULL",      NULL, NULL, {0, NULL}},
-	{"shortcuts", "video fullscreen",         "Alt+Return,NULL", NULL, NULL, {0, NULL}},
-	{"shortcuts", "pause",                    "Pause,NULL",      NULL, NULL, {0, NULL}},
-	{"shortcuts", "fast forward",             "Tab,NULL",        NULL, NULL, {0, NULL}},
-	{"shortcuts", "save screenshot",          "Alt+X,NULL",      NULL, NULL, {0, NULL}},
-	{"shortcuts", "mode pal",                 "F6,NULL",         NULL, NULL, {0, NULL}},
-	{"shortcuts", "mode ntsc",                "F7,NULL",         NULL, NULL, {0, NULL}},
-	{"shortcuts", "mode dendy",               "F8,NULL",         NULL, NULL, {0, NULL}},
-	{"shortcuts", "mode auto",                "F9,NULL",         NULL, NULL, {0, NULL}},
-	{"shortcuts", "scale 1x",                 "Alt+1,NULL",      NULL, NULL, {0, NULL}},
-	{"shortcuts", "scale 2x",                 "Alt+2,NULL",      NULL, NULL, {0, NULL}},
-	{"shortcuts", "scale 3x",                 "Alt+3,NULL",      NULL, NULL, {0, NULL}},
-	{"shortcuts", "scale 4x",                 "Alt+4,NULL",      NULL, NULL, {0, NULL}},
-	{"shortcuts", "scale 5x",                 "Alt+5,NULL",      NULL, NULL, {0, NULL}},
-	{"shortcuts", "scale 6x",                 "Alt+6,NULL",      NULL, NULL, {0, NULL}},
-	{"shortcuts", "video interpolation",      "0,NULL",          NULL, NULL, {0, NULL}},
-	{"shortcuts", "video stretch fullscreen", "Alt+P,NULL",      NULL, NULL, {0, NULL}},
-	{"shortcuts", "audio enable",             "Alt+A,NULL",      NULL, NULL, {0, NULL}},
-	{"shortcuts", "save settings",            "Alt+W,NULL",      NULL, NULL, {0, NULL}},
-	{"shortcuts", "save state",               "F1,NULL",         NULL, NULL, {0, NULL}},
-	{"shortcuts", "load state",               "F4,NULL",         NULL, NULL, {0, NULL}},
-	{"shortcuts", "increment state slot",     "F3,NULL",         NULL, NULL, {0, NULL}},
-	{"shortcuts", "decrement state slot",     "F2,NULL",         NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("open"),                     uL("Alt+O,NULL"),      NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("quit"),                     uL("Alt+Q,NULL"),      NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("turn off"),                 uL("Alt+R,NULL"),      NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("hard reset"),               uL("F11,NULL"),        NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("soft reset"),               uL("F12,NULL"),        NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("insert coin"),              uL("8,NULL"),          NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("switch sides"),             uL("Alt+S,NULL"),      NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("eject disk"),               uL("Alt+E,NULL"),      NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("video fullscreen"),         uL("Alt+Return,NULL"), NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("pause"),                    uL("Pause,NULL"),      NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("fast forward"),             uL("Tab,NULL"),        NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("save screenshot"),          uL("Alt+X,NULL"),      NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("mode pal"),                 uL("F6,NULL"),         NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("mode ntsc"),                uL("F7,NULL"),         NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("mode dendy"),               uL("F8,NULL"),         NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("mode auto"),                uL("F9,NULL"),         NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("scale 1x"),                 uL("Alt+1,NULL"),      NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("scale 2x"),                 uL("Alt+2,NULL"),      NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("scale 3x"),                 uL("Alt+3,NULL"),      NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("scale 4x"),                 uL("Alt+4,NULL"),      NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("scale 5x"),                 uL("Alt+5,NULL"),      NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("scale 6x"),                 uL("Alt+6,NULL"),      NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("video interpolation"),      uL("0,NULL"),          NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("video stretch fullscreen"), uL("Alt+P,NULL"),      NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("audio enable"),             uL("Alt+A,NULL"),      NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("save settings"),            uL("Alt+W,NULL"),      NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("save state"),               uL("F1,NULL"),         NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("load state"),               uL("F4,NULL"),         NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("increment state slot"),     uL("F3,NULL"),         NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("decrement state slot"),     uL("F2,NULL"),         NULL, NULL, {0, NULL}},
 
-	{"shortcuts", "joystick Id",              "NULL",            NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("joystick Id"),              uL("NULL"),            NULL, NULL, {0, NULL}},
 
-	{"special keys", "timeline key",          "LCtrl",           NULL, NULL, {0, NULL}},
+	{uL("special keys"), uL("timeline key"),          uL("LCtrl"),           NULL, NULL, {0, NULL}},
 
 	{
-		"port 1", "controller 1", "standard",
-		"# possible values: disable, standard, zapper",
+		uL("port 1"), uL("controller 1"), uL("standard"),
+		uL("# possible values: disable, standard, zapper"),
 		NULL,
 		{LENGTH(opt_controller), opt_controller}
 	},
 	{
-		"port 1", "pad 1 type", "auto",
-		"# possible values: auto, original, 3rdparty",
+		uL("port 1"), uL("pad 1 type"), uL("auto"),
+		uL("# possible values: auto, original, 3rdparty"),
 		NULL,
 		{LENGTH(opt_pad_type), opt_pad_type}
 	},
-	{"port 1", "P1K A",       "S",           "# player 1 keyboard", NULL, {0, NULL}},
-	{"port 1", "P1K B",       "A",           NULL, NULL, {0, NULL}},
-	{"port 1", "P1K Select",  "Z",           NULL, NULL, {0, NULL}},
-	{"port 1", "P1K Start",   "X",           NULL, NULL, {0, NULL}},
-	{"port 1", "P1K Up",      "Up",          NULL, NULL, {0, NULL}},
-	{"port 1", "P1K Down",    "Down",        NULL, NULL, {0, NULL}},
-	{"port 1", "P1K Left",    "Left",        NULL, NULL, {0, NULL}},
-	{"port 1", "P1K Right",   "Right",       NULL, NULL, {0, NULL}},
-	{"port 1", "P1K TurboA",  "W",           NULL, NULL, {0, NULL}},
-	{"port 1", "P1K TurboB",  "Q",           NULL, NULL, {0, NULL}},
-	{"port 1", "P1J A",       "JB1",         "# player 1 joystick", NULL, {0, NULL}},
-	{"port 1", "P1J B",       "JB0",         NULL, NULL, {0, NULL}},
-	{"port 1", "P1J Select",  "JB8",         NULL, NULL, {0, NULL}},
-	{"port 1", "P1J Start",   "JB9",         NULL, NULL, {0, NULL}},
-	{"port 1", "P1J Up",      "JA1MIN",      NULL, NULL, {0, NULL}},
-	{"port 1", "P1J Down",    "JA1PLS",      NULL, NULL, {0, NULL}},
-	{"port 1", "P1J Left",    "JA0MIN",      NULL, NULL, {0, NULL}},
-	{"port 1", "P1J Right",   "JA0PLS",      NULL, NULL, {0, NULL}},
-	{"port 1", "P1J TurboA",  "JB2",         NULL, NULL, {0, NULL}},
-	{"port 1", "P1J TurboB",  "JB3",         NULL, NULL, {0, NULL}},
-	{"port 1", "P1J Id",      "JOYSTICKID1", NULL, NULL, {0, NULL}},
-	{"port 1", "P1 TA Delay", NULL,          NULL, NULL, {0, NULL}},
-	{"port 1", "P1 TB Delay", NULL,          NULL, NULL, {0, NULL}},
+	{uL("port 1"), uL("P1K A"),       uL("S"),           uL("# player 1 keyboard"), NULL, {0, NULL}},
+	{uL("port 1"), uL("P1K B"),       uL("A"),           NULL, NULL, {0, NULL}},
+	{uL("port 1"), uL("P1K Select"),  uL("Z"),           NULL, NULL, {0, NULL}},
+	{uL("port 1"), uL("P1K Start"),   uL("X"),           NULL, NULL, {0, NULL}},
+	{uL("port 1"), uL("P1K Up"),      uL("Up"),          NULL, NULL, {0, NULL}},
+	{uL("port 1"), uL("P1K Down"),    uL("Down"),        NULL, NULL, {0, NULL}},
+	{uL("port 1"), uL("P1K Left"),    uL("Left"),        NULL, NULL, {0, NULL}},
+	{uL("port 1"), uL("P1K Right"),   uL("Right"),       NULL, NULL, {0, NULL}},
+	{uL("port 1"), uL("P1K TurboA"),  uL("W"),           NULL, NULL, {0, NULL}},
+	{uL("port 1"), uL("P1K TurboB"),  uL("Q"),           NULL, NULL, {0, NULL}},
+	{uL("port 1"), uL("P1J A"),       uL("JB1"),         uL("# player 1 joystick"), NULL, {0, NULL}},
+	{uL("port 1"), uL("P1J B"),       uL("JB0"),         NULL, NULL, {0, NULL}},
+	{uL("port 1"), uL("P1J Select"),  uL("JB8"),         NULL, NULL, {0, NULL}},
+	{uL("port 1"), uL("P1J Start"),   uL("JB9"),         NULL, NULL, {0, NULL}},
+	{uL("port 1"), uL("P1J Up"),      uL("JA1MIN"),      NULL, NULL, {0, NULL}},
+	{uL("port 1"), uL("P1J Down"),    uL("JA1PLS"),      NULL, NULL, {0, NULL}},
+	{uL("port 1"), uL("P1J Left"),    uL("JA0MIN"),      NULL, NULL, {0, NULL}},
+	{uL("port 1"), uL("P1J Right"),   uL("JA0PLS"),      NULL, NULL, {0, NULL}},
+	{uL("port 1"), uL("P1J TurboA"),  uL("JB2"),         NULL, NULL, {0, NULL}},
+	{uL("port 1"), uL("P1J TurboB"),  uL("JB3"),         NULL, NULL, {0, NULL}},
+	{uL("port 1"), uL("P1J Id"),      uL("JOYSTICKID1"), NULL, NULL, {0, NULL}},
+	{uL("port 1"), uL("P1 TA Delay"), NULL,          NULL, NULL, {0, NULL}},
+	{uL("port 1"), uL("P1 TB Delay"), NULL,          NULL, NULL, {0, NULL}},
 	{
-		"port 2", "controller 2", "disable",
-		"# possible values: disable, standard, zapper",
+		uL("port 2"), uL("controller 2"), uL("disable"),
+		uL("# possible values: disable, standard, zapper"),
 		NULL,
 		{LENGTH(opt_controller), opt_controller}
 	},
 	{
-		"port 2", "pad 2 type", "auto",
-		"# possible values: auto, original, 3rdparty",
+		uL("port 2"), uL("pad 2 type"), uL("auto"),
+		uL("# possible values: auto, original, 3rdparty"),
 		NULL,
 		{LENGTH(opt_pad_type), opt_pad_type}
 	},
-	{"port 2", "P2K A",       "PgDown",      "# player 2 keyboard", NULL, {0, NULL}},
-	{"port 2", "P2K B",       "End",         NULL, NULL, {0, NULL}},
-	{"port 2", "P2K Select",  "Ins",         NULL, NULL, {0, NULL}},
-	{"port 2", "P2K Start",   "Del",         NULL, NULL, {0, NULL}},
-	{"port 2", "P2K Up",      "NumPad8",     NULL, NULL, {0, NULL}},
-	{"port 2", "P2K Down",    "NumPad2",     NULL, NULL, {0, NULL}},
-	{"port 2", "P2K Left",    "NumPad4",     NULL, NULL, {0, NULL}},
-	{"port 2", "P2K Right",   "NumPad6",     NULL, NULL, {0, NULL}},
-	{"port 2", "P2K TurboA",  "Home",        NULL, NULL, {0, NULL}},
-	{"port 2", "P2K TurboB",  "PgUp",        NULL, NULL, {0, NULL}},
-	{"port 2", "P2J A",       "JB1",         "# player 2 joystick", NULL, {0, NULL}},
-	{"port 2", "P2J B",       "JB0",         NULL, NULL, {0, NULL}},
-	{"port 2", "P2J Select",  "JB8",         NULL, NULL, {0, NULL}},
-	{"port 2", "P2J Start",   "JB9",         NULL, NULL, {0, NULL}},
-	{"port 2", "P2J Up",      "JA1MIN",      NULL, NULL, {0, NULL}},
-	{"port 2", "P2J Down",    "JA1PLS",      NULL, NULL, {0, NULL}},
-	{"port 2", "P2J Left",    "JA0MIN",      NULL, NULL, {0, NULL}},
-	{"port 2", "P2J Right",   "JA0PLS",      NULL, NULL, {0, NULL}},
-	{"port 2", "P2J TurboA",  "JB2",         NULL, NULL, {0, NULL}},
-	{"port 2", "P2J TurboB",  "JB3",         NULL, NULL, {0, NULL}},
-	{"port 2", "P2J Id",      "JOYSTICKID2", NULL, NULL, {0, NULL}},
-	{"port 2", "P2 TA Delay", NULL,          NULL, NULL, {0, NULL}},
-	{"port 2", "P2 TB Delay", NULL,          NULL, NULL, {0, NULL}},
+	{uL("port 2"), uL("P2K A"),       uL("PgDown"),      uL("# player 2 keyboard"), NULL, {0, NULL}},
+	{uL("port 2"), uL("P2K B"),       uL("End"),         NULL, NULL, {0, NULL}},
+	{uL("port 2"), uL("P2K Select"),  uL("Ins"),         NULL, NULL, {0, NULL}},
+	{uL("port 2"), uL("P2K Start"),   uL("Del"),         NULL, NULL, {0, NULL}},
+	{uL("port 2"), uL("P2K Up"),      uL("NumPad8"),     NULL, NULL, {0, NULL}},
+	{uL("port 2"), uL("P2K Down"),    uL("NumPad2"),     NULL, NULL, {0, NULL}},
+	{uL("port 2"), uL("P2K Left"),    uL("NumPad4"),     NULL, NULL, {0, NULL}},
+	{uL("port 2"), uL("P2K Right"),   uL("NumPad6"),     NULL, NULL, {0, NULL}},
+	{uL("port 2"), uL("P2K TurboA"),  uL("Home"),        NULL, NULL, {0, NULL}},
+	{uL("port 2"), uL("P2K TurboB"),  uL("PgUp"),        NULL, NULL, {0, NULL}},
+	{uL("port 2"), uL("P2J A"),       uL("JB1"),         uL("# player 2 joystick"), NULL, {0, NULL}},
+	{uL("port 2"), uL("P2J B"),       uL("JB0"),         NULL, NULL, {0, NULL}},
+	{uL("port 2"), uL("P2J Select"),  uL("JB8"),         NULL, NULL, {0, NULL}},
+	{uL("port 2"), uL("P2J Start"),   uL("JB9"),         NULL, NULL, {0, NULL}},
+	{uL("port 2"), uL("P2J Up"),      uL("JA1MIN"),      NULL, NULL, {0, NULL}},
+	{uL("port 2"), uL("P2J Down"),    uL("JA1PLS"),      NULL, NULL, {0, NULL}},
+	{uL("port 2"), uL("P2J Left"),    uL("JA0MIN"),      NULL, NULL, {0, NULL}},
+	{uL("port 2"), uL("P2J Right"),   uL("JA0PLS"),      NULL, NULL, {0, NULL}},
+	{uL("port 2"), uL("P2J TurboA"),  uL("JB2"),         NULL, NULL, {0, NULL}},
+	{uL("port 2"), uL("P2J TurboB"),  uL("JB3"),         NULL, NULL, {0, NULL}},
+	{uL("port 2"), uL("P2J Id"),      uL("JOYSTICKID2"), NULL, NULL, {0, NULL}},
+	{uL("port 2"), uL("P2 TA Delay"), NULL,          NULL, NULL, {0, NULL}},
+	{uL("port 2"), uL("P2 TB Delay"), NULL,          NULL, NULL, {0, NULL}},
 	{
-		"port 3", "controller 3", "disable",
-		"# possible values: disable, standard",
+		uL("port 3"), uL("controller 3"), uL("disable"),
+		uL("# possible values: disable, standard"),
 		NULL,
 		{LENGTH(opt_controller) - 1, opt_controller}
 	},
 	{
-		"port 3", "pad 3 type", "auto",
-		"# possible values: auto, original, 3rdparty",
+		uL("port 3"), uL("pad 3 type"), uL("auto"),
+		uL("# possible values: auto, original, 3rdparty"),
 		NULL,
 		{LENGTH(opt_pad_type), opt_pad_type}
 	},
-	{"port 3", "P3K A",       "NULL",        "# player 3 keyboard", NULL, {0, NULL}},
-	{"port 3", "P3K B",       "NULL",        NULL, NULL, {0, NULL}},
-	{"port 3", "P3K Select",  "NULL",        NULL, NULL, {0, NULL}},
-	{"port 3", "P3K Start",   "NULL",        NULL, NULL, {0, NULL}},
-	{"port 3", "P3K Up",      "NULL",        NULL, NULL, {0, NULL}},
-	{"port 3", "P3K Down",    "NULL",        NULL, NULL, {0, NULL}},
-	{"port 3", "P3K Left",    "NULL",        NULL, NULL, {0, NULL}},
-	{"port 3", "P3K Right",   "NULL",        NULL, NULL, {0, NULL}},
-	{"port 3", "P3K TurboA",  "NULL",        NULL, NULL, {0, NULL}},
-	{"port 3", "P3K TurboB",  "NULL",        NULL, NULL, {0, NULL}},
-	{"port 3", "P3J A",       "JB1",         "# player 3 joystick", NULL, {0, NULL}},
-	{"port 3", "P3J B",       "JB0",         NULL, NULL, {0, NULL}},
-	{"port 3", "P3J Select",  "JB8",         NULL, NULL, {0, NULL}},
-	{"port 3", "P3J Start",   "JB9",         NULL, NULL, {0, NULL}},
-	{"port 3", "P3J Up",      "JA1MIN",      NULL, NULL, {0, NULL}},
-	{"port 3", "P3J Down",    "JA1PLS",      NULL, NULL, {0, NULL}},
-	{"port 3", "P3J Left",    "JA0MIN",      NULL, NULL, {0, NULL}},
-	{"port 3", "P3J Right",   "JA0PLS",      NULL, NULL, {0, NULL}},
-	{"port 3", "P3J TurboA",  "JB2",         NULL, NULL, {0, NULL}},
-	{"port 3", "P3J TurboB",  "JB3",         NULL, NULL, {0, NULL}},
-	{"port 3", "P3J Id",      "NULL",        NULL, NULL, {0, NULL}},
-	{"port 3", "P3 TA Delay", NULL,          NULL, NULL, {0, NULL}},
-	{"port 3", "P3 TB Delay", NULL,          NULL, NULL, {0, NULL}},
+	{uL("port 3"), uL("P3K A"),       uL("NULL"),        uL("# player 3 keyboard"), NULL, {0, NULL}},
+	{uL("port 3"), uL("P3K B"),       uL("NULL"),        NULL, NULL, {0, NULL}},
+	{uL("port 3"), uL("P3K Select"),  uL("NULL"),        NULL, NULL, {0, NULL}},
+	{uL("port 3"), uL("P3K Start"),   uL("NULL"),        NULL, NULL, {0, NULL}},
+	{uL("port 3"), uL("P3K Up"),      uL("NULL"),        NULL, NULL, {0, NULL}},
+	{uL("port 3"), uL("P3K Down"),    uL("NULL"),        NULL, NULL, {0, NULL}},
+	{uL("port 3"), uL("P3K Left"),    uL("NULL"),        NULL, NULL, {0, NULL}},
+	{uL("port 3"), uL("P3K Right"),   uL("NULL"),        NULL, NULL, {0, NULL}},
+	{uL("port 3"), uL("P3K TurboA"),  uL("NULL"),        NULL, NULL, {0, NULL}},
+	{uL("port 3"), uL("P3K TurboB"),  uL("NULL"),        NULL, NULL, {0, NULL}},
+	{uL("port 3"), uL("P3J A"),       uL("JB1"),         uL("# player 3 joystick"), NULL, {0, NULL}},
+	{uL("port 3"), uL("P3J B"),       uL("JB0"),         NULL, NULL, {0, NULL}},
+	{uL("port 3"), uL("P3J Select"),  uL("JB8"),         NULL, NULL, {0, NULL}},
+	{uL("port 3"), uL("P3J Start"),   uL("JB9"),         NULL, NULL, {0, NULL}},
+	{uL("port 3"), uL("P3J Up"),      uL("JA1MIN"),      NULL, NULL, {0, NULL}},
+	{uL("port 3"), uL("P3J Down"),    uL("JA1PLS"),      NULL, NULL, {0, NULL}},
+	{uL("port 3"), uL("P3J Left"),    uL("JA0MIN"),      NULL, NULL, {0, NULL}},
+	{uL("port 3"), uL("P3J Right"),   uL("JA0PLS"),      NULL, NULL, {0, NULL}},
+	{uL("port 3"), uL("P3J TurboA"),  uL("JB2"),         NULL, NULL, {0, NULL}},
+	{uL("port 3"), uL("P3J TurboB"),  uL("JB3"),         NULL, NULL, {0, NULL}},
+	{uL("port 3"), uL("P3J Id"),      uL("NULL"),        NULL, NULL, {0, NULL}},
+	{uL("port 3"), uL("P3 TA Delay"), NULL,          NULL, NULL, {0, NULL}},
+	{uL("port 3"), uL("P3 TB Delay"), NULL,          NULL, NULL, {0, NULL}},
 	{
-		"port 4", "controller 4", "disable",
-		"# possible values: disable, standard",
+		uL("port 4"), uL("controller 4"), uL("disable"),
+		uL("# possible values: disable, standard"),
 		NULL,
 		{LENGTH(opt_controller) - 1, opt_controller}
 	},
 	{
-		"port 4", "pad 4 type", "auto",
-		"# possible values: auto, original, 3rdparty",
+		uL("port 4"), uL("pad 4 type"), uL("auto"),
+		uL("# possible values: auto, original, 3rdparty"),
 		NULL,
 		{LENGTH(opt_pad_type), opt_pad_type}
 	},
-	{"port 4", "P4K A",       "NULL",        "# player 4 keyboard", NULL, {0, NULL}},
-	{"port 4", "P4K B",       "NULL",        NULL, NULL, {0, NULL}},
-	{"port 4", "P4K Select",  "NULL",        NULL, NULL, {0, NULL}},
-	{"port 4", "P4K Start",   "NULL",        NULL, NULL, {0, NULL}},
-	{"port 4", "P4K Up",      "NULL",        NULL, NULL, {0, NULL}},
-	{"port 4", "P4K Down",    "NULL",        NULL, NULL, {0, NULL}},
-	{"port 4", "P4K Left",    "NULL",        NULL, NULL, {0, NULL}},
-	{"port 4", "P4K Right",   "NULL",        NULL, NULL, {0, NULL}},
-	{"port 4", "P4K TurboA",  "NULL",        NULL, NULL, {0, NULL}},
-	{"port 4", "P4K TurboB",  "NULL",        NULL, NULL, {0, NULL}},
-	{"port 4", "P4J A",       "JB1",         "# player 4 joystick", NULL, {0, NULL}},
-	{"port 4", "P4J B",       "JB0",         NULL, NULL, {0, NULL} },
-	{"port 4", "P4J Select",  "JB8",         NULL, NULL, {0, NULL}},
-	{"port 4", "P4J Start",   "JB9",         NULL, NULL, {0, NULL}},
-	{"port 4", "P4J Up",      "JA1MIN",      NULL, NULL, {0, NULL}},
-	{"port 4", "P4J Down",    "JA1PLS",      NULL, NULL, {0, NULL}},
-	{"port 4", "P4J Left",    "JA0MIN",      NULL, NULL, {0, NULL}},
-	{"port 4", "P4J Right",   "JA0PLS",      NULL, NULL, {0, NULL}},
-	{"port 4", "P4J TurboA",  "JB2",         NULL, NULL, {0, NULL}},
-	{"port 4", "P4J TurboB",  "JB3",         NULL, NULL, {0, NULL}},
-	{"port 4", "P4J Id",      "NULL",        NULL, NULL, {0, NULL}},
-	{"port 4", "P4 TA Delay", NULL,          NULL, NULL, {0, NULL}},
-	{"port 4", "P4 TB Delay", NULL,          NULL, NULL, {0, NULL}},
+	{uL("port 4"), uL("P4K A"),       uL("NULL"),        uL("# player 4 keyboard"), NULL, {0, NULL}},
+	{uL("port 4"), uL("P4K B"),       uL("NULL"),        NULL, NULL, {0, NULL}},
+	{uL("port 4"), uL("P4K Select"),  uL("NULL"),        NULL, NULL, {0, NULL}},
+	{uL("port 4"), uL("P4K Start"),   uL("NULL"),        NULL, NULL, {0, NULL}},
+	{uL("port 4"), uL("P4K Up"),      uL("NULL"),        NULL, NULL, {0, NULL}},
+	{uL("port 4"), uL("P4K Down"),    uL("NULL"),        NULL, NULL, {0, NULL}},
+	{uL("port 4"), uL("P4K Left"),    uL("NULL"),        NULL, NULL, {0, NULL}},
+	{uL("port 4"), uL("P4K Right"),   uL("NULL"),        NULL, NULL, {0, NULL}},
+	{uL("port 4"), uL("P4K TurboA"),  uL("NULL"),        NULL, NULL, {0, NULL}},
+	{uL("port 4"), uL("P4K TurboB"),  uL("NULL"),        NULL, NULL, {0, NULL}},
+	{uL("port 4"), uL("P4J A"),       uL("JB1"),         uL("# player 4 joystick"), NULL, {0, NULL}},
+	{uL("port 4"), uL("P4J B"),       uL("JB0"),         NULL, NULL, {0, NULL} },
+	{uL("port 4"), uL("P4J Select"),  uL("JB8"),         NULL, NULL, {0, NULL}},
+	{uL("port 4"), uL("P4J Start"),   uL("JB9"),         NULL, NULL, {0, NULL}},
+	{uL("port 4"), uL("P4J Up"),      uL("JA1MIN"),      NULL, NULL, {0, NULL}},
+	{uL("port 4"), uL("P4J Down"),    uL("JA1PLS"),      NULL, NULL, {0, NULL}},
+	{uL("port 4"), uL("P4J Left"),    uL("JA0MIN"),      NULL, NULL, {0, NULL}},
+	{uL("port 4"), uL("P4J Right"),   uL("JA0PLS"),      NULL, NULL, {0, NULL}},
+	{uL("port 4"), uL("P4J TurboA"),  uL("JB2"),         NULL, NULL, {0, NULL}},
+	{uL("port 4"), uL("P4J TurboB"),  uL("JB3"),         NULL, NULL, {0, NULL}},
+	{uL("port 4"), uL("P4J Id"),      uL("NULL"),        NULL, NULL, {0, NULL}},
+	{uL("port 4"), uL("P4 TA Delay"), NULL,          NULL, NULL, {0, NULL}},
+	{uL("port 4"), uL("P4 TB Delay"), NULL,          NULL, NULL, {0, NULL}},
 	{
-		"system", "controller mode", "nes",
-		"# possible values: nes, famicom, fourscore",
+		uL("system"), uL("controller mode"), uL("nes"),
+		uL("# possible values: nes, famicom, fourscore"),
 		NULL,
 		{LENGTH(opt_controller_mode), opt_controller_mode}
 	},
 	{
-		"system", "permit up+down left+right", "no",
-		"# possible values: yes, no",
+		uL("system"), uL("permit up+down left+right"), uL("no"),
+		uL("# possible values: yes, no"),
 		NULL,
 		{LENGTH(opt_no_yes), opt_no_yes}
 	}
@@ -1061,9 +1060,9 @@ EXTERNC void settings_init(void);
 EXTERNC void settings_save(void);
 EXTERNC void settings_save_GUI(void);
 EXTERNC void settings_set_overscan_default(_overscan_borders *ob, BYTE mode);
-EXTERNC int settings_val_to_int(int index, const char *buffer);
-EXTERNC double settings_val_to_double(WORD round, const char *buffer);
-EXTERNC void settings_val_to_oscan(int index, _overscan_borders *ob, const char *buffer);
+EXTERNC int settings_val_to_int(int index, const uTCHAR *buffer);
+EXTERNC double settings_val_to_double(WORD round, const uTCHAR *buffer);
+EXTERNC void settings_val_to_oscan(int index, _overscan_borders *ob, const uTCHAR *buffer);
 
 EXTERNC void settings_pgs_parse(void);
 EXTERNC void settings_pgs_save(void);
