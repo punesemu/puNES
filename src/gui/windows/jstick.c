@@ -23,8 +23,6 @@
 #endif
 #include <regstr.h>
 
-static INLINE void js_special_case(int dev, _js_special_case *jsc);
-
 enum joy_misc {
 	JOY_MAX_FRAME_COUNT = 3,
 	JOY_MAX_FRAME_COUNT_NO_PRESENT = 300 / JOY_MAX_FRAME_COUNT,
@@ -86,7 +84,6 @@ void js_open(_js *joy) {
 			if (joyGetPosEx(joy->id, &joy->joy_info) == JOYERR_NOERROR) {
 				joyGetDevCaps(joy->id, &joy->joy_caps, sizeof(joy->joy_caps));
 				joy->present = TRUE;
-				js_special_case(joy->id, &joy->jsc);
 			}
 		}
 	}
@@ -98,51 +95,33 @@ void js_control(_js *joy, _port *port) {
 	BYTE mode = 0;
 
 #define js_elaborate_axis(axs, info)\
-	if (joy->jsc.axis_with_CENTER_equal_to_0.axs == TRUE) {\
-		if (joy->joy_info.info > 0) {\
-			joy->joy_info.info = CENTER;\
+	if ((joy->joy_info.info > (CENTER - sensibility))\
+			&& (joy->joy_info.info < (CENTER + sensibility))) {\
+		joy->joy_info.info = CENTER;\
+	} else {\
+		DWORD diff = ((joy->joy_info.info < joy->last_axis[axs]) ?\
+				(joy->last_axis[axs] - joy->joy_info.info) :\
+				(joy->joy_info.info - joy->last_axis[axs]));\
+		if (diff < sensibility) {\
+			joy->joy_info.info = joy->last_axis[axs];\
 		}\
-		if ((joy->last_axis[axs] != joy->joy_info.info)) {\
-			value = (axs << 1) + 1;\
-			if (joy->joy_info.info == 0) {\
-				mode = RELEASED;\
-			} else {\
-				mode = PRESSED;\
-			}\
-			if (joy->input_decode_event) {\
-				joy->input_decode_event(mode, value, JOYSTICK, port);\
-			}\
+	}\
+	value = (axs << 1) + 1;\
+	if (joy->joy_info.info == CENTER) {\
+		mode = RELEASED;\
+		if (joy->last_axis[axs] > CENTER) {\
+			value++;\
+		}\
+		joy->last_axis[axs] = CENTER;\
+	} else  {\
+		mode = PRESSED;\
+		if (joy->joy_info.info > CENTER) {\
+			value++;\
 		}\
 		joy->last_axis[axs] = joy->joy_info.info;\
-	} else {\
-		if ((joy->joy_info.info > (CENTER - sensibility))\
-				&& (joy->joy_info.info < (CENTER + sensibility))) {\
-			joy->joy_info.info = CENTER;\
-		} else {\
-			DWORD diff = ((joy->joy_info.info < joy->last_axis[axs]) ?\
-					(joy->last_axis[axs] - joy->joy_info.info) :\
-					(joy->joy_info.info - joy->last_axis[axs]));\
-			if (diff < sensibility) {\
-				joy->joy_info.info = joy->last_axis[axs];\
-			}\
-		}\
-		value = (axs << 1) + 1;\
-		if (joy->joy_info.info == CENTER) {\
-			mode = RELEASED;\
-			if (joy->last_axis[axs] > CENTER) {\
-				value++;\
-			}\
-			joy->last_axis[axs] = CENTER;\
-		} else  {\
-			mode = PRESSED;\
-			if (joy->joy_info.info > CENTER) {\
-				value++;\
-			}\
-			joy->last_axis[axs] = joy->joy_info.info;\
-		}\
-		if (value && joy->input_decode_event) {\
-			joy->input_decode_event(mode, value, JOYSTICK, port);\
-		}\
+	}\
+	if (value && joy->input_decode_event) {\
+		joy->input_decode_event(mode, value, JOYSTICK, port);\
 	}
 #define js_elaborate_pov(md, pov)\
 	mode = md;\
@@ -387,27 +366,18 @@ DBWORD js_from_name(const uTCHAR *name, const _js_element *list, const DBWORD le
 }
 DBWORD js_read_in_dialog(int dev, int fd) {
 	static const DWORD sensibility = (PLUS / 100) * 35;
-	static _js_special_case jsc;
 	JOYINFOEX joy_info;
 	JOYCAPS joy_caps;
 	DBWORD value = 0;
 
 #define adjust_axis_joy(axs, info)\
-	if (jsc.axis_with_CENTER_equal_to_0.axs == TRUE) {\
-		if ((joy_info.info == 0) || (joy_info.info == CENTER)) {\
-			joy_info.info = CENTER;\
-		} else {\
+	if (joy_info.info != CENTER) {\
+		if (joy_info.info < (CENTER - sensibility)) {\
 			joy_info.info = MINUS;\
-		}\
-	} else {\
-		if (joy_info.info != CENTER) {\
-			if (joy_info.info < (CENTER - sensibility)) {\
-				joy_info.info = MINUS;\
-			} else if (joy_info.info > (CENTER + sensibility)) {\
-				joy_info.info = PLUS;\
-			} else {\
-				joy_info.info = CENTER;\
-			}\
+		} else if (joy_info.info > (CENTER + sensibility)) {\
+			joy_info.info = PLUS;\
+		} else {\
+			joy_info.info = CENTER;\
 		}\
 	}
 #define read_axis_joy(axs, info)\
@@ -424,8 +394,6 @@ DBWORD js_read_in_dialog(int dev, int fd) {
 	if (joyGetPosEx(dev, &joy_info) != JOYERR_NOERROR) {
 		return (value);
 	}
-
-	js_special_case(dev, &jsc);
 
 	adjust_axis_joy(X, dwXpos)
 	adjust_axis_joy(Y, dwYpos)
@@ -488,49 +456,31 @@ BYTE js_shcut_read(_js_sch *js_sch, _js *joy, int id) {
 	js_sch->mode = 255;
 
 #define js_elaborate_axis(axs, info)\
-	if (joy->jsc.axis_with_CENTER_equal_to_0.axs == TRUE) {\
-		if (joy->joy_info.info > 0) {\
-			joy->joy_info.info = CENTER;\
-		}\
-		if ((joy->last_axis[axs] != joy->joy_info.info)) {\
-			value = (axs << 1) + 1;\
-			if (joy->joy_info.info == 0) {\
-				mode = RELEASED;\
-			} else {\
-				mode = PRESSED;\
-			}\
-			if (joy->input_decode_event) {\
-				joy->input_decode_event(mode, value, JOYSTICK, port);\
-			}\
-		}\
-		joy->last_axis[axs] = joy->joy_info.info;\
+	if ((joy->joy_info.info > (CENTER - sensibility))\
+		&& (joy->joy_info.info < (CENTER + sensibility))) {\
+		joy->joy_info.info = CENTER;\
 	} else {\
-		if ((joy->joy_info.info > (CENTER - sensibility))\
-			&& (joy->joy_info.info < (CENTER + sensibility))) {\
-			joy->joy_info.info = CENTER;\
-		} else {\
-			DWORD diff = ((joy->joy_info.info < joy->last_axis[axs]) ?\
-				(joy->last_axis[axs] - joy->joy_info.info) :\
-				(joy->joy_info.info - joy->last_axis[axs]));\
-				if (diff < sensibility) {\
-					joy->joy_info.info = joy->last_axis[axs];\
-				}\
+		DWORD diff = ((joy->joy_info.info < joy->last_axis[axs]) ?\
+			(joy->last_axis[axs] - joy->joy_info.info) :\
+			(joy->joy_info.info - joy->last_axis[axs]));\
+		if (diff < sensibility) {\
+			joy->joy_info.info = joy->last_axis[axs];\
 		}\
-		if (joy->joy_info.info != joy->last_axis[axs]) {\
-			value = (axs << 1) + 1;\
-			if (joy->joy_info.info == CENTER) {\
-				mode = RELEASED;\
-				if (joy->last_axis[axs] > CENTER) {\
-					value++;\
-				}\
-				joy->last_axis[axs] = CENTER;\
-			} else  {\
-				mode = PRESSED;\
-				if (joy->joy_info.info > CENTER) {\
-					value++;\
-				}\
-				joy->last_axis[axs] = joy->joy_info.info;\
+	}\
+	if (joy->joy_info.info != joy->last_axis[axs]) {\
+		value = (axs << 1) + 1;\
+		if (joy->joy_info.info == CENTER) {\
+			mode = RELEASED;\
+			if (joy->last_axis[axs] > CENTER) {\
+				value++;\
 			}\
+			joy->last_axis[axs] = CENTER;\
+		} else  {\
+			mode = PRESSED;\
+			if (joy->joy_info.info > CENTER) {\
+				value++;\
+			}\
+			joy->last_axis[axs] = joy->joy_info.info;\
 		}\
 	}\
 	if (value) {\
@@ -646,14 +596,4 @@ BYTE js_shcut_read(_js_sch *js_sch, _js *joy, int id) {
 
 #undef js_elaborate_axis
 #undef js_elaborate_pov
-}
-
-static INLINE void js_special_case(int dev, _js_special_case *jsc) {
-	memset(jsc, 0x00, sizeof(_js_special_case));
-
-	if ((gui.version_os == WIN_TEN) &&
-			(ustrcmp(js_name_device(dev), uL("Controller (Xbox One For Windows)")) == 0)) {
-		jsc->axis_with_CENTER_equal_to_0.Z = TRUE;
-		jsc->axis_with_CENTER_equal_to_0.R = TRUE;
-	}
 }

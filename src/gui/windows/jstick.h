@@ -50,16 +50,6 @@ enum {
 };
 enum { MAX_BUTTONS = 32 };
 
-typedef struct _js_special_case {
-	struct _axis_with_CENTER_equal_to_0 {
-		BYTE X;
-		BYTE Y;
-		BYTE Z;
-		BYTE R;
-		BYTE U;
-		BYTE V;
-	} axis_with_CENTER_equal_to_0;
-} _js_special_case;
 typedef struct _js {
 	uTCHAR dev[30];
 	DBWORD id;
@@ -75,8 +65,6 @@ typedef struct _js {
 	JOYCAPS joy_caps;
 
 	BYTE (*input_decode_event)(BYTE mode, DBWORD event, BYTE type, _port *port);
-
-	_js_special_case jsc;
 } _js;
 typedef struct _js_element {
 	DBWORD value;
