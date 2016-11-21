@@ -8,7 +8,7 @@
 	if test ! -e $(@F) ; then $(UIC) -o $(@F) $^ ; else : ; fi
 
 clean-local:
-	rm -f *.{cpp,hh,moc}
+	rm -f application.cpp *.{hh,moc}
 
 BUILT_SOURCES = \
 	cheatObject.moc \
