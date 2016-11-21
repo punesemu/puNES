@@ -242,7 +242,7 @@ void mainWindow::setup() {
 	grp->addAction(ui->action_Palette_PAL);
 	grp->addAction(ui->action_Palette_NTSC);
 	grp->addAction(ui->action_Sony_CXA2025AS_US);
-	grp->addAction(ui->action_Firebrandx_Unsaturated);
+	grp->addAction(ui->action_Firebrandx_Nostalgia);
 	grp->addAction(ui->action_Firebrandx_YUV);
 	grp->addAction(ui->action_Monochrome);
 	grp->addAction(ui->action_Green);
@@ -970,8 +970,8 @@ void mainWindow::update_menu_settings() {
 		case PALETTE_SONY:
 			ui->action_Sony_CXA2025AS_US->setChecked(true);
 			break;
-		case PALETTE_FRBX_UNSATURED:
-			ui->action_Firebrandx_Unsaturated->setChecked(true);
+		case PALETTE_FRBX_NOSTALGIA:
+			ui->action_Firebrandx_Nostalgia->setChecked(true);
 			break;
 		case PALETTE_FRBX_YUV:
 			ui->action_Firebrandx_YUV->setChecked(true);
@@ -1547,7 +1547,7 @@ void mainWindow::connect_menu_signals() {
 	connect_action(ui->action_Palette_PAL, PALETTE_PAL, SLOT(s_set_palette()));
 	connect_action(ui->action_Palette_NTSC, PALETTE_NTSC, SLOT(s_set_palette()));
 	connect_action(ui->action_Sony_CXA2025AS_US, PALETTE_SONY, SLOT(s_set_palette()));
-	connect_action(ui->action_Firebrandx_Unsaturated, PALETTE_FRBX_UNSATURED, SLOT(s_set_palette()));
+	connect_action(ui->action_Firebrandx_Nostalgia, PALETTE_FRBX_NOSTALGIA, SLOT(s_set_palette()));
 	connect_action(ui->action_Firebrandx_YUV, PALETTE_FRBX_YUV, SLOT(s_set_palette()));
 	connect_action(ui->action_Monochrome, PALETTE_MONO, SLOT(s_set_palette()));
 	connect_action(ui->action_Green, PALETTE_GREEN, SLOT(s_set_palette()));

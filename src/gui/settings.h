@@ -404,7 +404,7 @@ static const _opt opt_palette[] = {
 	{uL("Monochrome")       , uL("mono")  , PALETTE_MONO},
 	{uL("Green")            , uL("green") , PALETTE_GREEN},
 	{uL("Extern")           , uL("file")  , PALETTE_FILE},
-	{uL("Firebrandx Unsat") , uL("frbuns"), PALETTE_FRBX_UNSATURED},
+	{uL("Firebrandx Nstlg") , uL("frbnst"), PALETTE_FRBX_NOSTALGIA},
 	{uL("Firebrandx YUV")   , uL("frbyuv"), PALETTE_FRBX_YUV}
 };
 static const _opt opt_audio_buffer_factor[] = {

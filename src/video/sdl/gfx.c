@@ -513,8 +513,8 @@ void gfx_set_screen(BYTE scale, DBWORD filter, BYTE fullscreen, BYTE palette, BY
 			case PALETTE_NTSC:
 				ntsc_set(NULL, cfg->ntsc_format, FALSE, 0, 0, (BYTE *) palette_RGB);
 				break;
-			case PALETTE_FRBX_UNSATURED:
-				ntsc_set(NULL, cfg->ntsc_format, FALSE, (BYTE *) palette_firebrandx_unsaturated_v6, 0,
+			case PALETTE_FRBX_NOSTALGIA:
+				ntsc_set(NULL, cfg->ntsc_format, FALSE, (BYTE *) palette_firebrandx_nostalgia_FBX, 0,
 						(BYTE *) palette_RGB);
 				break;
 			case PALETTE_FRBX_YUV:

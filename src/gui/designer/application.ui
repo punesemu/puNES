@@ -301,7 +301,7 @@
       <addaction name="action_Palette_PAL"/>
       <addaction name="action_Palette_NTSC"/>
       <addaction name="action_Sony_CXA2025AS_US"/>
-      <addaction name="action_Firebrandx_Unsaturated"/>
+      <addaction name="action_Firebrandx_Nostalgia"/>
       <addaction name="action_Firebrandx_YUV"/>
       <addaction name="action_Monochrome"/>
       <addaction name="action_Green"/>
@@ -1994,12 +1994,12 @@
     <string>Firebrandx &amp;YUV</string>
    </property>
   </action>
-  <action name="action_Firebrandx_Unsaturated">
+  <action name="action_Firebrandx_Nostalgia">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Firebrandx &amp;Unsaturated</string>
+    <string>Firebrandx No&amp;stalgia (FBX)</string>
    </property>
   </action>
   <action name="action_Disable_sRGB_FBO">
