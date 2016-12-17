@@ -162,6 +162,7 @@ class mainWindow: public QMainWindow {
 		void s_set_audio_swap_duty();
 		void s_set_audio_enable();
 		void s_set_language();
+		void s_set_disable_new_menu();
 		void s_set_ff_velocity();
 		void s_set_input();
 		void s_set_hide_sprites();

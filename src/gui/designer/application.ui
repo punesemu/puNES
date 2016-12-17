@@ -44,14 +44,14 @@
      <height>24</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menu_File">
+   <widget class="pMenu" name="menu_File">
     <property name="tearOffEnabled">
      <bool>false</bool>
     </property>
     <property name="title">
      <string>&amp;File</string>
     </property>
-    <widget class="QMenu" name="menu_Recent_Roms">
+    <widget class="pMenu" name="menu_Recent_Roms">
      <property name="title">
       <string>&amp;Recent Roms</string>
      </property>
@@ -67,11 +67,11 @@
     <addaction name="separator"/>
     <addaction name="action_Quit"/>
    </widget>
-   <widget class="QMenu" name="menu_NES">
+   <widget class="pMenu" name="menu_NES">
     <property name="title">
      <string>&amp;NES</string>
     </property>
-    <widget class="QMenu" name="menu_Disk_Side">
+    <widget class="pMenu" name="menu_Disk_Side">
      <property name="title">
       <string>&amp;Disk Side</string>
      </property>
@@ -104,11 +104,11 @@
     <addaction name="action_Pause"/>
     <addaction name="action_Fast_Forward"/>
    </widget>
-   <widget class="QMenu" name="menu_Settings">
+   <widget class="pMenu" name="menu_Settings">
     <property name="title">
      <string>Setti&amp;ngs</string>
     </property>
-    <widget class="QMenu" name="menu_Mode">
+    <widget class="pMenu" name="menu_Mode">
      <property name="title">
       <string>&amp;Mode</string>
      </property>
@@ -121,7 +121,7 @@
      <addaction name="action_Dendy"/>
      <addaction name="action_Mode_Auto"/>
     </widget>
-    <widget class="QMenu" name="menu_Video">
+    <widget class="pMenu" name="menu_Video">
      <property name="title">
       <string>&amp;Video</string>
      </property>
@@ -129,7 +129,7 @@
       <iconset resource="application.qrc">
        <normaloff>:/icon/icons/video.png</normaloff>:/icon/icons/video.png</iconset>
      </property>
-     <widget class="QMenu" name="menu_Rendering">
+     <widget class="pMenu" name="menu_Rendering">
       <property name="title">
        <string>&amp;Rendering</string>
       </property>
@@ -140,7 +140,7 @@
       <addaction name="action_Rend_Software"/>
       <addaction name="action_Rend_GLSL"/>
      </widget>
-     <widget class="QMenu" name="menu_FPS">
+     <widget class="pMenu" name="menu_FPS">
       <property name="title">
        <string>&amp;FPS</string>
       </property>
@@ -168,7 +168,7 @@
       <addaction name="action_FPS_45"/>
       <addaction name="action_FPS_44"/>
      </widget>
-     <widget class="QMenu" name="menu_Frame_skip">
+     <widget class="pMenu" name="menu_Frame_skip">
       <property name="title">
        <string>Fra&amp;me skip</string>
       </property>
@@ -188,7 +188,7 @@
       <addaction name="action_Fsk_8"/>
       <addaction name="action_Fsk_9"/>
      </widget>
-     <widget class="QMenu" name="menu_Scale">
+     <widget class="pMenu" name="menu_Scale">
       <property name="title">
        <string>&amp;Scale</string>
       </property>
@@ -203,7 +203,7 @@
       <addaction name="action_5x"/>
       <addaction name="action_6x"/>
      </widget>
-     <widget class="QMenu" name="menu_Pixel_Aspect_Ratio">
+     <widget class="pMenu" name="menu_Pixel_Aspect_Ratio">
       <property name="title">
        <string>Pixel Aspect Ra&amp;tio</string>
       </property>
@@ -218,7 +218,7 @@
       <addaction name="separator"/>
       <addaction name="action_PAR_Soft_Stretch"/>
      </widget>
-     <widget class="QMenu" name="menu_Overscan">
+     <widget class="pMenu" name="menu_Overscan">
       <property name="title">
        <string>&amp;Overscan</string>
       </property>
@@ -226,7 +226,7 @@
        <iconset resource="application.qrc">
         <normaloff>:/icon/icons/overscan.png</normaloff>:/icon/icons/overscan.png</iconset>
       </property>
-      <widget class="QMenu" name="menu_Oscan_Default_Value">
+      <widget class="pMenu" name="menu_Oscan_Default_Value">
        <property name="title">
         <string>De&amp;fault value</string>
        </property>
@@ -246,7 +246,7 @@
       <addaction name="separator"/>
       <addaction name="action_Oscan_Set_Borders"/>
      </widget>
-     <widget class="QMenu" name="menu_Software_Filters">
+     <widget class="pMenu" name="menu_Software_Filters">
       <property name="title">
        <string>Software Fi&amp;lters</string>
       </property>
@@ -270,7 +270,7 @@
       <addaction name="action_NTSC_SVideo"/>
       <addaction name="action_NTSC_RGB"/>
      </widget>
-     <widget class="QMenu" name="menu_Shader">
+     <widget class="pMenu" name="menu_Shader">
       <property name="title">
        <string>S&amp;haders</string>
       </property>
@@ -290,7 +290,7 @@
       <addaction name="separator"/>
       <addaction name="action_Shader_Load_File"/>
      </widget>
-     <widget class="QMenu" name="menu_Palette">
+     <widget class="pMenu" name="menu_Palette">
       <property name="title">
        <string>&amp;Palette</string>
       </property>
@@ -332,7 +332,7 @@
      <addaction name="action_Disable_sRGB_FBO"/>
      <addaction name="action_Stretch_in_fullscreen"/>
     </widget>
-    <widget class="QMenu" name="menu_Audio">
+    <widget class="pMenu" name="menu_Audio">
      <property name="title">
       <string>&amp;Audio</string>
      </property>
@@ -340,7 +340,7 @@
       <iconset resource="application.qrc">
        <normaloff>:/icon/icons/audio.png</normaloff>:/icon/icons/audio.png</iconset>
      </property>
-     <widget class="QMenu" name="menu_Sample_rate">
+     <widget class="pMenu" name="menu_Sample_rate">
       <property name="title">
        <string>&amp;Sample rate</string>
       </property>
@@ -353,7 +353,7 @@
       <addaction name="action_Sample_rate_22050"/>
       <addaction name="action_Sample_rate_11025"/>
      </widget>
-     <widget class="QMenu" name="menu_Channels">
+     <widget class="pMenu" name="menu_Channels">
       <property name="title">
        <string>&amp;Channels</string>
       </property>
@@ -361,7 +361,7 @@
        <iconset resource="application.qrc">
         <normaloff>:/icon/icons/channels.png</normaloff>:/icon/icons/channels.png</iconset>
       </property>
-      <widget class="QMenu" name="menu_Stereo_delay">
+      <widget class="pMenu" name="menu_Stereo_delay">
        <property name="title">
         <string>&amp;Channels Delay</string>
        </property>
@@ -396,7 +396,7 @@
       <addaction name="separator"/>
       <addaction name="menu_Stereo_delay"/>
      </widget>
-     <widget class="QMenu" name="menu_Audio_Quality">
+     <widget class="pMenu" name="menu_Audio_Quality">
       <property name="title">
        <string>&amp;Quality</string>
       </property>
@@ -407,7 +407,7 @@
       <addaction name="action_Audio_Quality_Low"/>
       <addaction name="action_Audio_Quality_High"/>
      </widget>
-     <widget class="QMenu" name="menu_Buffer_Size_factor">
+     <widget class="pMenu" name="menu_Buffer_Size_factor">
       <property name="title">
        <string>&amp;Buffer Size factor</string>
       </property>
@@ -434,7 +434,7 @@
      <addaction name="action_Swap_Duty_Cycles"/>
      <addaction name="action_Audio_Enable"/>
     </widget>
-    <widget class="QMenu" name="menu_Input">
+    <widget class="pMenu" name="menu_Input">
      <property name="title">
       <string>&amp;Input</string>
      </property>
@@ -444,7 +444,7 @@
      </property>
      <addaction name="action_Input_Config"/>
     </widget>
-    <widget class="QMenu" name="menu_Language">
+    <widget class="pMenu" name="menu_Language">
      <property name="title">
       <string>&amp;Language</string>
      </property>
@@ -456,7 +456,7 @@
      <addaction name="action_Italian"/>
      <addaction name="action_Russian"/>
     </widget>
-    <widget class="QMenu" name="menu_Cheats">
+    <widget class="pMenu" name="menu_Cheats">
      <property name="title">
       <string>&amp;Cheats</string>
      </property>
@@ -470,7 +470,7 @@
      <addaction name="separator"/>
      <addaction name="action_Cheats_Editor"/>
     </widget>
-    <widget class="QMenu" name="menu_Fast_Forward_velocity">
+    <widget class="pMenu" name="menu_Fast_Forward_velocity">
      <property name="title">
       <string>&amp;Fast Forward velocity</string>
      </property>
@@ -483,7 +483,7 @@
      <addaction name="action_FF_4x"/>
      <addaction name="action_FF_5x"/>
     </widget>
-    <widget class="QMenu" name="menu_PPU">
+    <widget class="pMenu" name="menu_PPU">
      <property name="title">
       <string>&amp;PPU</string>
      </property>
@@ -507,13 +507,14 @@
     <addaction name="separator"/>
     <addaction name="menu_Language"/>
     <addaction name="separator"/>
+    <addaction name="action_Disable_new_menu_management"/>
     <addaction name="action_Save_battery_RAM_file_every_tot"/>
     <addaction name="action_Pause_when_in_background"/>
     <addaction name="action_Save_settings_on_exit"/>
     <addaction name="separator"/>
     <addaction name="action_Save_settings"/>
    </widget>
-   <widget class="QMenu" name="menu_State">
+   <widget class="pMenu" name="menu_State">
     <property name="title">
      <string>S&amp;tate</string>
     </property>
@@ -537,13 +538,13 @@
     <addaction name="action_State_Save_to_file"/>
     <addaction name="action_State_Load_from_file"/>
    </widget>
-   <widget class="QMenu" name="menu_Help">
+   <widget class="pMenu" name="menu_Help">
     <property name="title">
      <string>&amp;Help</string>
     </property>
     <addaction name="action_About"/>
    </widget>
-   <widget class="QMenu" name="menu_Tools">
+   <widget class="pMenu" name="menu_Tools">
     <property name="title">
      <string>Too&amp;ls</string>
     </property>
@@ -2166,7 +2167,22 @@
     <string>Disable sepi&amp;a color on pause</string>
    </property>
   </action>
+  <action name="action_Disable_new_menu_management">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Disable new menu management</string>
+   </property>
+  </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>pMenu</class>
+   <extends>QMenu</extends>
+   <header>pMenu.hpp</header>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="application.qrc"/>
  </resources>

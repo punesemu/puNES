@@ -17,13 +17,28 @@
  */
 
 #include "pStyle.moc"
+#include "conf.h"
+#include "qt.h"
 
-pStyle::pStyle() : QProxyStyle() {}
+pStyle::pStyle() : QProxyStyle() {
+	newMenuMenagement = false;
+	newMenuAllowActiveAndDisabled = false;
+}
 pStyle::~pStyle() {}
 int pStyle::styleHint(StyleHint hint, const QStyleOption* opt = 0, const QWidget* widget = 0,
 		QStyleHintReturn* returnData = 0) const {
 	if (hint == QStyle::SH_Menu_SloppySubMenus) {
 		return (0);
+	}
+	if (!cfg->disable_new_menu && newMenuMenagement) {
+		if (hint == QStyle::SH_Menu_FlashTriggeredItem) {
+			return (0);
+		}
+		if (hint == QStyle::SH_Menu_AllowActiveAndDisabled) {
+			if (newMenuAllowActiveAndDisabled) {
+				return (1);
+			}
+		}
 	}
 	return (QProxyStyle::styleHint(hint, opt, widget, returnData));
 }

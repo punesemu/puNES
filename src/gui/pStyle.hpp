@@ -30,6 +30,10 @@ class pStyle: public QProxyStyle {
 		Q_OBJECT
 
 	public:
+		bool newMenuMenagement;
+		bool newMenuAllowActiveAndDisabled;
+
+	public:
 		pStyle();
 		~pStyle();
 

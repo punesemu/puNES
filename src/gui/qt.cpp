@@ -36,6 +36,7 @@
 #include "dlgPPUHacks.hpp"
 #include "pStyle.hpp"
 #include "cheatObject.hpp"
+#include "pMenu.hpp"
 #if defined (WITH_OPENGL)
 #include "opengl.h"
 #if defined (__WIN32__)
@@ -54,6 +55,9 @@
 #include <QtWidgets/QDesktopWidget>
 #include <QtWidgets/QMessageBox>
 #endif
+
+static void gui_pmenu_management(void);
+static void gui_enable_pmenu(QWidget *parent, QAction *action, QList<pMenu*> *pmenus);
 
 static struct _qt {
 	QApplication *app;
@@ -122,6 +126,8 @@ BYTE gui_create(void) {
 
 	mouse.hidden = FALSE;
 	mouse.timer = gui_get_ms();
+
+	gui_pmenu_management();
 
 	return (EXIT_OK);
 }
@@ -443,6 +449,68 @@ void gui_utf_basename(uTCHAR *path, uTCHAR *dst, size_t len) {
 }
 int gui_utf_strcasecmp(uTCHAR *s0, uTCHAR *s1) {
 	return (QString::compare(uQString(s0), uQString(s1), Qt::CaseInsensitive));
+}
+
+static void gui_pmenu_management(void) {
+	static QList<pMenu*> pmenus;
+	pmenus
+		<< qt.ui->menu_Settings
+		<< qt.ui->menu_Mode
+		<< qt.ui->menu_Video
+		<< qt.ui->menu_Rendering
+		<< qt.ui->menu_FPS
+		<< qt.ui->menu_Frame_skip
+		<< qt.ui->menu_Scale
+		<< qt.ui->menu_Pixel_Aspect_Ratio
+		<< qt.ui->menu_Overscan
+		<< qt.ui->menu_Oscan_Default_Value
+		<< qt.ui->menu_Software_Filters
+		<< qt.ui->menu_Shader
+		<< qt.ui->menu_Palette
+		<< qt.ui->menu_Audio
+		<< qt.ui->menu_Sample_rate
+		<< qt.ui->menu_Channels
+		<< qt.ui->menu_Stereo_delay
+		<< qt.ui->menu_Audio_Quality
+		<< qt.ui->menu_Buffer_Size_factor
+		<< qt.ui->menu_Input
+		<< qt.ui->menu_Language
+		<< qt.ui->menu_Cheats
+		<< qt.ui->menu_Fast_Forward_velocity
+		<< qt.ui->menu_PPU
+		<< qt.ui->menu_State;
+
+	static QList<QAction*> triggerAndHide;
+	triggerAndHide
+		<< qt.ui->action_Save_settings
+		<< qt.ui->action_Save_state
+		<< qt.ui->action_Load_state;
+
+	for (int i = 0; i < qt.ui->menubar->actions().count(); i++) {
+		gui_enable_pmenu(qt.ui->menubar, qt.ui->menubar->actions().at(i), &pmenus);
+	}
+	for (int i = 0; i < triggerAndHide.count(); i++) {
+		triggerAndHide.at(i)->setProperty("triggerAndHide", QVariant(true));
+	}
+
+	pmenus.clear();
+	triggerAndHide.clear();
+}
+static void gui_enable_pmenu(QWidget *parent, QAction *action, QList<pMenu*> *pmenus) {
+	pMenu *menu = qobject_cast<pMenu*>(action->menu());
+
+	if (menu) {
+		for (int i = 0; i < pmenus->count(); i++) {
+			if (pmenus->at(i) == menu) {
+				menu->setNewMenagement(true);
+			}
+		}
+		for (int i = 0; i < menu->actions().count(); i++) {
+			QAction *act = menu->actions().at(i);
+
+			gui_enable_pmenu(menu, act, pmenus);
+		}
+	}
 }
 
 #if defined (__WIN32__)

@@ -1,11 +1,55 @@
-.hpp.moc :
-	if test ! -e $(@F) ; then $(MOC) $(MOCDEFINES) $(CUSTOMDEFINES) -o $(@F) $^ ; else : ; fi
+application.cpp: designer/application.qrc
+	$(RCC) $< -name resources -o $@
 
-.qrc.cpp :
-	if test ! -e $(@F) ; then $(RCC) -name resources -o $(@F) $^ ; else : ; fi
+cheatObject.moc: cheatObject.hpp
+	$(MOC) $< $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
+dlgApuChannels.moc: dlgApuChannels.hpp
+	$(MOC) $< $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
+dlgCheats.moc: dlgCheats.hpp
+	$(MOC) $< $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
+dlgInput.moc: dlgInput.hpp
+	$(MOC) $< $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
+dlgOverscanBorders.moc: dlgOverscanBorders.hpp
+	$(MOC) $< $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
+dlgPPUHacks.moc: dlgPPUHacks.hpp
+	$(MOC) $< $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
+dlgStdPad.moc: dlgStdPad.hpp
+	$(MOC) $< $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
+dlgUncomp.moc: dlgUncomp.hpp
+	$(MOC) $< $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
+dlgVsSystem.moc: dlgVsSystem.hpp
+	$(MOC) $< $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
+mainWindow.moc: mainWindow.hpp
+	$(MOC) $< $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
+pMenu.moc: pMenu.hpp
+	$(MOC) $< $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
+pStyle.moc: pStyle.hpp
+	$(MOC) $< $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
+sbarWidget.moc: sbarWidget.hpp
+	$(MOC) $< $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
+screenWidget.moc: screenWidget.hpp
+	$(MOC) $< $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
+settingsObject.moc: settingsObject.hpp
+	$(MOC) $< $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 
-.ui.hh :
-	if test ! -e $(@F) ; then $(UIC) -o $(@F) $^ ; else : ; fi
+application.hh: designer/application.ui
+	$(UIC) $< -o $@
+dlgOverscanBorders.hh: designer/dlgOverscanBorders.ui
+	$(UIC) $< -o $@
+dlgApuChannels.hh: designer/dlgApuChannels.ui
+	$(UIC) $< -o $@
+dlgStdPad.hh: designer/dlgStdPad.ui
+	$(UIC) $< -o $@
+dlgCheats.hh: designer/dlgCheats.ui
+	$(UIC) $< -o $@
+dlgUncomp.hh: designer/dlgUncomp.ui
+	$(UIC) $< -o $@
+dlgVsSystem.hh: designer/dlgVsSystem.ui
+	$(UIC) $< -o $@
+dlgPPUHacks.hh: designer/dlgPPUHacks.ui
+	$(UIC) $< -o $@
+dlgInput.hh: designer/dlgInput.ui
+	$(UIC) $< -o $@
 
 clean-local:
 	rm -f application.cpp *.{hh,moc}
@@ -21,24 +65,25 @@ BUILT_SOURCES = \
 	dlgUncomp.moc \
 	dlgVsSystem.moc \
 	mainWindow.moc \
+	pMenu.moc \
 	pStyle.moc \
 	sbarWidget.moc \
 	screenWidget.moc \
 	settingsObject.moc
 
 BUILT_SOURCES += \
-	designer/application.cpp
+	application.cpp
 
 BUILT_SOURCES += \
-	designer/application.hh \
-	designer/dlgOverscanBorders.hh \
-	designer/dlgApuChannels.hh \
-	designer/dlgStdPad.hh \
-	designer/dlgCheats.hh \
-	designer/dlgUncomp.hh \
-	designer/dlgVsSystem.hh \
-	designer/dlgPPUHacks.hh \
-	designer/dlgInput.hh
+	application.hh \
+	dlgOverscanBorders.hh \
+	dlgApuChannels.hh \
+	dlgStdPad.hh \
+	dlgCheats.hh \
+	dlgUncomp.hh \
+	dlgVsSystem.hh \
+	dlgPPUHacks.hh \
+	dlgInput.hh
 
 noinst_LIBRARIES = libgui.a
 libgui_a_SOURCES = \
@@ -67,6 +112,8 @@ libgui_a_SOURCES = \
 	dlgVsSystem.hpp \
 	mainWindow.cpp \
 	mainWindow.hpp \
+	pMenu.cpp \
+	pMenu.hpp \
 	pStyle.cpp \
 	pStyle.hpp \
 	qt.cpp \

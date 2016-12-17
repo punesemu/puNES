@@ -532,12 +532,12 @@ void emu_set_title(uTCHAR *title, int len) {
 		usnprintf(title, len, uL("" uPERCENTs " (" uPERCENTs), name, opt_mode[machine.type].lname);
 	} else if (cfg->filter == NTSC_FILTER) {
 		usnprintf(title, len,
-				uL("" uPERCENTs " (" uPERCENTs ", " uPERCENTs ", " uPERCENTs " "),
+				uL("" uPERCENTs " (" uPERCENTs ", " uPERCENTs ", " uPERCENTs ", "),
 				name, opt_mode[machine.type].lname,
 				opt_scale[cfg->scale - 1].sname, opt_ntsc[cfg->ntsc_format].lname);
 	} else {
 		usnprintf(title, len,
-				uL("" uPERCENTs " (" uPERCENTs ", " uPERCENTs ", " uPERCENTs " "),
+				uL("" uPERCENTs " (" uPERCENTs ", " uPERCENTs ", " uPERCENTs ", "),
 				name, opt_mode[machine.type].lname,
 				opt_scale[cfg->scale - 1].sname, opt_filter[cfg->filter].lname);
 	}

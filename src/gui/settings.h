@@ -81,6 +81,7 @@ enum set_element {
 	SET_GUI_OPEN_PATH,
 	SET_GUI_LAST_POSITION,
 	SET_GUI_LANGUAGE,
+	SET_GUI_DISABLE_NEW_MENU,
 	SET_APU_MASTER,
 	SET_APU_SQUARE1,
 	SET_APU_SQUARE2,
@@ -740,6 +741,12 @@ static const _settings main_cfg[] = {
 		uL("# possible values: english,italian,russian"),
 		uL("    --language            GUI language          : english,italian,russian"),
 		{LENGTH(opt_languages), opt_languages}
+	},
+	{
+		uL("GUI"), uL("disable new menu management"), uL("no"),
+		uL("# possible values: yes, no"),
+		uL("    --disable-new-menu    disab. new menu manag.: yes, no"),
+		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 	{
 		uL("apu channels"), uL("master"), uL("on,100"),

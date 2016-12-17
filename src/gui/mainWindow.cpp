@@ -1203,7 +1203,9 @@ void mainWindow::update_menu_settings() {
 			ui->action_Russian->setChecked(true);
 			break;
 	}
-	//Settings/[Save battery RAM file every 3 min., Pause when in backgrounds, Save settings on exit]
+	//Settings/[Disable new menu management, Save battery RAM file every 3 min.,
+	//          Pause when in backgrounds, Save settings on exit]
+	ui->action_Disable_new_menu_management->setChecked(cfg->disable_new_menu);
 	ui->action_Save_battery_RAM_file_every_tot->setChecked(cfg->save_battery_ram_file);
 	ui->action_Pause_when_in_background->setChecked(cfg->bck_pause);
 	ui->action_Save_settings_on_exit->setChecked(cfg->save_on_exit);
@@ -1634,8 +1636,9 @@ void mainWindow::connect_menu_signals() {
 	connect_action(ui->action_English, LNG_ENGLISH, SLOT(s_set_language()));
 	connect_action(ui->action_Italian, LNG_ITALIAN, SLOT(s_set_language()));
 	connect_action(ui->action_Russian, LNG_RUSSIAN, SLOT(s_set_language()));
-	// Settings/[Save battery RAM file every 3 min., Pause when in backgrounds,
-	//           Save settings on exit, Save settings]
+	// Settings/[Disable new menu management, Save battery RAM file every 3 min.,
+	//           Pause when in backgrounds, Save settings on exit, Save settings]
+	connect_action(ui->action_Disable_new_menu_management, SLOT(s_set_disable_new_menu()));
 	connect_action(ui->action_Save_battery_RAM_file_every_tot,
 			SLOT(s_set_save_battery_ram_file()));
 	connect_action(ui->action_Pause_when_in_background, SLOT(s_set_pause_in_background()));
@@ -2292,6 +2295,9 @@ void mainWindow::s_set_language() {
 	int lang = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
 	set_language(lang);
+}
+void mainWindow::s_set_disable_new_menu() {
+	cfg->disable_new_menu = !cfg->disable_new_menu;
 }
 void mainWindow::s_set_ff_velocity() {
 	int velocity = QVariant(((QObject *)sender())->property("myValue")).toInt();
