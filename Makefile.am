@@ -1,5 +1,7 @@
 SUBDIRS = misc src
 
+ACLOCAL_AMFLAGS = -I m4
+
 all: pre-build
 
 pre-build:
