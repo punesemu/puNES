@@ -330,6 +330,7 @@
      <addaction name="action_Disable_TV_noise_emulation"/>
      <addaction name="action_Disable_sepia_color_on_pause"/>
      <addaction name="action_Disable_sRGB_FBO"/>
+     <addaction name="action_Fullscreen_in_window"/>
      <addaction name="action_Stretch_in_fullscreen"/>
     </widget>
     <widget class="pMenu" name="menu_Audio">
@@ -2173,6 +2174,14 @@
    </property>
    <property name="text">
     <string>&amp;Disable new menu management</string>
+   </property>
+  </action>
+  <action name="action_Fullscreen_in_window">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Fullscreen in &amp;window</string>
    </property>
   </action>
  </widget>

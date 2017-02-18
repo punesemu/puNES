@@ -542,10 +542,12 @@ void emu_set_title(uTCHAR *title, int len) {
 				opt_scale[cfg->scale - 1].sname, opt_filter[cfg->filter].lname);
 	}
 
-	if ((cfg->palette == PALETTE_FILE) && ustrlen(cfg->palette_file) != 0) {
-		ustrcat(title, uL("extern"));
-	} else {
-		ustrcat(title, opt_palette[cfg->palette].lname);
+	if (cfg->scale != X1) {
+		if ((cfg->palette == PALETTE_FILE) && ustrlen(cfg->palette_file) != 0) {
+			ustrcat(title, uL("extern"));
+		} else {
+			ustrcat(title, opt_palette[cfg->palette].lname);
+		}
 	}
 
 #if !defined (RELEASE)

@@ -153,6 +153,7 @@ class mainWindow: public QMainWindow {
 #if defined (WITH_OPENGL)
 		void s_set_disable_srgb_fbo();
 #endif
+		void s_set_fullscreen_in_window();
 		void s_set_stretch();
 		void s_set_audio_buffer_factor();
 		void s_set_samplerate();

@@ -96,6 +96,7 @@ static struct _cl_option {
 	{ "save-battery-ram-file", req_arg,  0 },
 	{ "language",              req_arg,  0 },
 	{ "disable-new-menu",      req_arg,  0 },
+	{ "fullscreen-window",     req_arg,  0 },
 };
 
 void cmd_line_parse(int argc, uTCHAR **argv) {
@@ -178,6 +179,8 @@ void cmd_line_parse(int argc, uTCHAR **argv) {
 					set_int(cfg_from_file.language, SET_GUI_LANGUAGE);
 				} else if (key == "disable-new-menu") {
 					set_int(cfg_from_file.disable_new_menu, SET_GUI_DISABLE_NEW_MENU);
+				} else if (key == "fullscreen-window") {
+					set_int(cfg_from_file.fullscreen_in_window, SET_FULLSCREEN_IN_WINDOW);
 				}
 				break;
 			case 'a':
@@ -329,6 +332,7 @@ static void usage(QString name) {
 			uL("" uPERCENTs "\n")
 			uL("" uPERCENTs "\n")
 			uL("" uPERCENTs "\n")
+			uL("" uPERCENTs "\n")
 #if defined (WITH_OPENGL)
 			uL("" uPERCENTs "\n")
 			uL("" uPERCENTs "\n")
@@ -363,6 +367,7 @@ static void usage(QString name) {
 			main_cfg[SET_OVERSCAN_BRD_NTSC].hlp,
 			main_cfg[SET_OVERSCAN_BRD_PAL].hlp,
 			main_cfg[SET_FULLSCREEN].hlp,
+			main_cfg[SET_FULLSCREEN_IN_WINDOW].hlp,
 			main_cfg[SET_STRETCH_FULLSCREEN].hlp,
 			main_cfg[SET_AUDIO].hlp,
 			main_cfg[SET_AUDIO_BUFFER_FACTOR].hlp,

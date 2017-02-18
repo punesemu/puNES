@@ -70,6 +70,7 @@ enum set_element {
 	SET_DISABLE_SRGB_FBO,
 #endif
 	SET_FULLSCREEN,
+	SET_FULLSCREEN_IN_WINDOW,
 	SET_STRETCH_FULLSCREEN,
 	SET_AUDIO_BUFFER_FACTOR,
 	SET_SAMPLERATE,
@@ -674,6 +675,14 @@ static const _settings main_cfg[] = {
 		uL("video"), uL("fullscreen"), uL("no"),
 		uL("# possible values: yes, no"),
 		uL("-u, --fullscreen          no comment            : yes, no"),
+		{LENGTH(opt_no_yes), opt_no_yes}
+	},
+	{
+		uL("video"), uL("fullscreen in window"), uL("no"),
+		uL("# possible values: yes, no"),
+		uL("    --fullscreen-window   the next fullscreen   : yes, no"  NEWLINE)
+		uL("                          will be performed by" NEWLINE)
+		uL("                          maximizing the window"),
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 	{

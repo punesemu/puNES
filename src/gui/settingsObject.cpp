@@ -754,6 +754,7 @@ void setObject::to_cfg(QString group) {
 		int_to_val(SET_DISABLE_SRGB_FBO, cfg_from_file.disable_srgb_fbo);
 #endif
 		int_to_val(SET_FULLSCREEN, cfg_from_file.fullscreen);
+		int_to_val(SET_FULLSCREEN_IN_WINDOW, cfg_from_file.fullscreen_in_window);
 		int_to_val(SET_STRETCH_FULLSCREEN, cfg_from_file.stretch);
 	}
 
@@ -831,6 +832,7 @@ void setObject::fr_cfg(QString group) {
 		cfg_from_file.disable_srgb_fbo = val_to_int(SET_DISABLE_SRGB_FBO);
 #endif
 		cfg_from_file.fullscreen = val_to_int(SET_FULLSCREEN);
+		cfg_from_file.fullscreen_in_window = val_to_int(SET_FULLSCREEN_IN_WINDOW);
 		cfg_from_file.stretch = val_to_int(SET_STRETCH_FULLSCREEN);
 	}
 

@@ -178,6 +178,9 @@ BYTE gfx_init(void) {
 		gfx_set_screen(cfg->scale, cfg->filter, NO_FULLSCR, cfg->palette, FALSE, FALSE);
 		cfg->fullscreen = NO_FULLSCR;
 		cfg->scale = gfx.scale_before_fscreen;
+		if (cfg->fullscreen_in_window) {
+			gui_flush();
+		}
 		gui_fullscreen();
 	} else {
 		gfx_set_screen(cfg->scale, cfg->filter, NO_FULLSCR, cfg->palette, FALSE, FALSE);

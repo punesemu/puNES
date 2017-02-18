@@ -177,8 +177,8 @@ void gui_set_video_mode(void) {
 	qt.screen->setFixedSize(QSize(gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE]));
 
 	qt.mwin->setFixedSize(QSize(qt.screen->width(),
-			qt.screen->height() +
 			(qt.ui->menubar->isHidden() ? 0 : qt.ui->menubar->sizeHint().height()) +
+			(qt.screen->height() + 2) +
 			(qt.mwin->statusbar->isHidden() ? 0 : qt.mwin->statusbar->sizeHint().height())));
 
 	qt.ui->menubar->setFixedWidth(gfx.w[VIDEO_MODE]);

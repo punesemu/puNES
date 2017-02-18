@@ -43,6 +43,7 @@ typedef struct _config {
 #endif
 	BYTE scale;
 	BYTE fullscreen;
+	BYTE fullscreen_in_window;
 	DBWORD filter;
 	BYTE ntsc_format;
 	BYTE palette;

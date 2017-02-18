@@ -60,7 +60,7 @@
 	/* ed infine utilizzo la nuova */\
 	ntsc_set(ntscin, cfg->ntsc_format, FALSE, 0, (BYTE *) plt,(BYTE *) plt)
 
-enum fullscreen_type { NO_FULLSCR, FULLSCR };
+enum fullscreen_type { NO_FULLSCR, FULLSCR, FULLSCR_IN_WINDOW };
 enum scale_type { X1 = 1, X2, X3, X4, X5, X6 };
 enum par_type { PAR11, PAR54, PAR87, PAR118 };
 enum filters_type {
@@ -141,6 +141,7 @@ EXTERNC struct _gfx {
 	BYTE PSS;
 	BYTE save_screenshot;
 	BYTE scale_before_fscreen;
+	BYTE type_of_fscreen_in_use;
 	BYTE bit_per_pixel;
 	WORD rows, lines;
 	SDBWORD w[4], h[4];

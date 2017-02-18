@@ -996,6 +996,7 @@ void mainWindow::update_menu_settings() {
 	ui->action_VSync->setEnabled(state);
 	ui->action_Interpolation->setEnabled(state);
 	ui->action_Disable_sRGB_FBO->setEnabled(state);
+	ui->action_Fullscreen_in_window->setEnabled(state);
 	ui->action_Stretch_in_fullscreen->setEnabled(state);
 #else
 	ui->action_Disable_sRGB_FBO->setVisible(false);
@@ -1010,6 +1011,7 @@ void mainWindow::update_menu_settings() {
 #if defined (WITH_OPENGL)
 	ui->action_Disable_sRGB_FBO->setChecked(cfg->disable_srgb_fbo);
 #endif
+	ui->action_Fullscreen_in_window->setChecked(cfg->fullscreen_in_window);
 	ui->action_Stretch_in_fullscreen->setChecked(cfg->stretch);
 	// Settings/Audio/Buffer Size factor
 	switch (cfg->audio_buffer_factor) {
@@ -1556,7 +1558,8 @@ void mainWindow::connect_menu_signals() {
 	connect_action(ui->action_Palette_File, PALETTE_FILE, SLOT(s_set_palette()));
 	connect_action(ui->action_Palette_Save_File, SLOT(s_save_palette()));
 	connect_action(ui->action_Palette_Load_File, SLOT(s_load_palette()));
-	// Settings/Video/[VSync, Interpolation, Text on screen, Fullscreen, Stretch in fullscreen]
+	// Settings/Video/[VSync, Interpolation, Text on screen, Fullscreen_in_window,
+	//                 Stretch in fullscreen]
 	connect_action(ui->action_Disable_emphasis_swap_PAL, SLOT(s_set_disable_emphasis_pal()));
 	connect_action(ui->action_VSync, SLOT(s_set_vsync()));
 	connect_action(ui->action_Interpolation, SLOT(s_set_interpolation()));
@@ -1567,6 +1570,7 @@ void mainWindow::connect_menu_signals() {
 #if defined (WITH_OPENGL)
 	connect_action(ui->action_Disable_sRGB_FBO, SLOT(s_set_disable_srgb_fbo()));
 #endif
+	connect_action(ui->action_Fullscreen_in_window, SLOT(s_set_fullscreen_in_window()));
 	connect_action(ui->action_Stretch_in_fullscreen, SLOT(s_set_stretch()));
 	// Settings/Audio/Buffer Size factor
 	connect_action(ui->action_Absf_0, 0, SLOT(s_set_audio_buffer_factor()));
@@ -1694,36 +1698,55 @@ void mainWindow::s_set_fullscreen() {
 	if ((cfg->fullscreen == NO_FULLSCR) || (cfg->fullscreen == NO_CHANGE)) {
 		int screenNumber = qApp->desktop()->screenNumber(this);
 
-		gfx.w[MONITOR] = qApp->desktop()->screenGeometry(screenNumber).width();
-		gfx.h[MONITOR] = qApp->desktop()->screenGeometry(screenNumber).height();
-#if defined (WITH_OPENGL) && defined (__WIN32__)
-		// su alcuni windows, se setto il gfx.w[MONITOR] alla dimensione
-		// del desktop, l'immagine a video ha dei glitch grafici marcati
-		gfx.w[MONITOR]--;
-#endif
-
 		gfx.scale_before_fscreen = cfg->scale;
 		position = pos();
 
-		menuWidget()->setVisible(false);
-		statusbar->setVisible(false);
-		gfx_set_screen(NO_CHANGE, NO_CHANGE, FULLSCR, NO_CHANGE, FALSE, FALSE);
+		if (cfg->fullscreen_in_window == TRUE) {
+			gfx.type_of_fscreen_in_use = FULLSCR_IN_WINDOW;
 
-		// su alcune macchine, il fullscreen non avviene perche'
-		// la dimensione della finestra e' fissa e le qt non riescono
-		// a sbloccarla.
-		setMinimumSize(QSize(0,0));
-		setMaximumSize(QSize(16777215,16777215));
+			gfx.w[MONITOR] = qApp->desktop()->availableGeometry(screenNumber).width()
+			        - (frameGeometry().width() - geometry().width());
+			gfx.h[MONITOR] = qApp->desktop()->availableGeometry(screenNumber).height()
+			        - (frameGeometry().height() - geometry().height())
+			        - ui->menubar->sizeHint().height() - 2 - statusbar->sizeHint().height();
 
-		emit fullscreen(true);
+			gfx_set_screen(NO_CHANGE, NO_CHANGE, FULLSCR, NO_CHANGE, FALSE, FALSE);
+			move(QPoint(0, 0));
+		} else {
+			gfx.type_of_fscreen_in_use = FULLSCR;
+
+			gfx.w[MONITOR] = qApp->desktop()->screenGeometry(screenNumber).width();
+			gfx.h[MONITOR] = qApp->desktop()->screenGeometry(screenNumber).height();
+	#if defined (WITH_OPENGL) && defined (__WIN32__)
+			// su alcuni windows, se setto il gfx.w[MONITOR] alla dimensione
+			// del desktop, l'immagine a video ha dei glitch grafici marcati
+			gfx.w[MONITOR]--;
+	#endif
+
+			menuWidget()->setVisible(false);
+			statusbar->setVisible(false);
+			gfx_set_screen(NO_CHANGE, NO_CHANGE, FULLSCR, NO_CHANGE, FALSE, FALSE);
+
+			// su alcune macchine, il fullscreen non avviene perche'
+			// la dimensione della finestra e' fissa e le qt non riescono
+			// a sbloccarla.
+			setMinimumSize(QSize(0, 0));
+			setMaximumSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
+
+			emit fullscreen(true);
+		}
 	} else {
-		emit fullscreen(false);
+		if (gfx.type_of_fscreen_in_use == FULLSCR) {
+			emit fullscreen(false);
 
-		menuWidget()->setVisible(true);
-		statusbar->setVisible(true);
+			menuWidget()->setVisible(true);
+			statusbar->setVisible(true);
+		}
+
 		gfx_set_screen(gfx.scale_before_fscreen, NO_CHANGE, NO_FULLSCR, NO_CHANGE, FALSE, FALSE);
-
 		move(position);
+
+		gfx.type_of_fscreen_in_use = NO_FULLSCR;
 	}
 
 	gui_external_control_windows_show();
@@ -2204,6 +2227,9 @@ void mainWindow::s_set_disable_srgb_fbo() {
 	}
 }
 #endif
+void mainWindow::s_set_fullscreen_in_window() {
+	cfg->fullscreen_in_window = !cfg->fullscreen_in_window;
+}
 void mainWindow::s_set_stretch() {
 	cfg->stretch = !cfg->stretch;
 
