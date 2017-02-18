@@ -2668,6 +2668,9 @@ void mainWindow::s_shcjoy_read_timer() {
 				case SET_INP_SC_INC_SLOT:
 					ui->action_Increment_slot->trigger();
 					break;
+				case SET_INP_SC_DEC_SLOT:
+					ui->action_Decrement_slot->trigger();
+					break;
 			}
 		} else if (shcjoy.sch.mode == PRESSED) {}
 	}
