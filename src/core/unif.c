@@ -38,7 +38,7 @@ BYTE unif_BATR(FILE *fp, BYTE phase);
 BYTE unif_MIRR(FILE *fp, BYTE phase);
 BYTE unif_DINF(FILE *fp, BYTE phase);
 
-typedef struct {
+typedef struct _unif_board {
 	char board[50];
 	WORD ines_mapper;
 	WORD unif_mapper;
@@ -134,6 +134,7 @@ static const _unif_board unif_boards[] = {
 	{"MALISB", NO_INES, 46, DEFAULT, DEFAULT, NOEXTRA},
 	{"BOY", NO_INES, 47, DEFAULT, DEFAULT, CHRRAM256K},
 	{"8-IN-1", NO_INES, 48, DEFAULT, DEFAULT, CHRRAM256K},
+	{"HP898F", NO_INES, 49, DEFAULT, DEFAULT, NOEXTRA},
 };
 
 BYTE unif_load_rom(void) {
@@ -332,7 +333,7 @@ BYTE unif_MAPR(FILE *fp, BYTE phase) {
 		unif.stripped_board = &unif.board[0];
 
 		for (i = 0; i < LENGTH(strip); i++) {
-			if (strncpy(unif.board, &strip[i][0], strlen(strip[i]))) {
+			if (strncmp(unif.board, &strip[i][0], strlen(strip[i])) == 0) {
 				unif.stripped_board += strlen(strip[i]);
 				break;
 			}

@@ -710,200 +710,204 @@ BYTE map_init(void) {
 		case UNIF_MAPPER:
 			switch (unif.internal_mapper) {
 				case 0:
-					// BMC-A65AS
+					// A65AS
 					map_init_A65AS();
 					break;
 				case 1:
-					// BMC-MARIO1-MALEE2
+					// MARIO1-MALEE2
 					map_init_malee();
 					break;
 				case 2:
-					// NES-TF1021
+					// TF1021
 					map_init_TF1201();
 					break;
 				case 3:
-					// NES-EH8813A
+					// EH8813A
 					map_init_EH8813A();
 					break;
 				case 4:
-					// NES-11160
+					// 11160
 					map_init_BMC11160();
 					break;
 				case 5:
-					// NES-G-146
+					// G-146
 					map_init_BMCG146();
 					break;
 				case 6:
-					// NES-12-IN-1
+					// 12-IN-1
 					map_init_BMC12IN1();
 					break;
 				case 7:
-					// NES-411120-C
+					// 411120-C
 					map_init_BMC411120C();
 					break;
 				case 8:
-					// NES-T-262
+					// T-262
 					map_init_T262();
 					break;
 				case 9:
-					// NES-BS-5
+					// BS-5
 					map_init_BS5();
 					break;
 				case 10:
-					// NES-8157
+					// 8157
 					map_init_UNIF8157();
 					break;
 				case 11:
-					// NES-830118C
+					// 830118C
 					map_init_BMC830118C();
 					break;
 				case 12:
-					// NES-8237
+					// 8237
 					map_init_UNIF8237(U8237);
 					break;
 				case 13:
-					// NES-8237A
+					// 8237A
 					map_init_UNIF8237(U8237A);
 					break;
 				case 14:
-					// NES-NTD-03
+					// NTD-03
 					map_init_BMCNTD03();
 					break;
 				case 15:
-					// NES-Ghostbusters63in1
+					// Ghostbusters63in1
 					map_init_BMCGHOSTBUSTERS63IN1();
 					break;
 				case 16:
-					// NES-64in1NoRepeat
+					// 64in1NoRepeat
 					map_init_BMC64IN1NOREPEAT();
 					break;
 				case 17:
-					// NES-70in1
+					// 70in1
 					map_init_BMC70IN1(BMC70IN1);
 					break;
 				case 18:
-					// NES-70in1
+					// 70in1
 					map_init_BMC70IN1(BMC70IN1B);
 					break;
 				case 19:
-					// NES-KS7032
+					// KS7032
 					map_init_KS7032();
 					break;
 				case 20:
-					// NES-KOF97
+					// KOF97
 					map_init_KOF97();
 					break;
 				case 21:
-					// NES-603-5052
+					// 603-5052
 					map_init_UNIF603_5052();
 					break;
 				case 22:
-					// NES-CITYFIGHT
+					// CITYFIGHT
 					map_init_CITYFIGHT();
 					break;
 				case 23:
-					// NES-BB
+					// BB
 					map_init_BB();
 					break;
 				case 24:
-					// NES-43272
+					// 43272
 					map_init_UNIF43272();
 					break;
 				case 25:
-					// NES-AC-08
+					// AC-08
 					map_init_AC08();
 					break;
 				case 26:
-					// NES-KS7013B
+					// KS7013B
 					map_init_KS7013B();
 					break;
 				case 27:
-					// NES-MTECH01
+					// MTECH01
 					map_init_MTECH01();
 					break;
 				case 28:
-					// NES-YOKO
+					// YOKO
 					map_init_YOKO();
 					break;
 				case 29:
-					// NES-SA-9602B
+					// SA-9602B
 					map_init_SA_9602B();
 					break;
 				case 30:
-					// NES-CC-21
+					// CC-21
 					map_init_CC_21();
 					break;
 				case 31:
-					// NES-LH32
+					// LH32
 					map_init_LH32();
 					break;
 				case 32:
-					// NES-NovelDiamond9999999in1
+					// NovelDiamond9999999in1
 					map_init_NovelDiamond();
 					break;
 				case 33:
-					// NES-SL1632
+					// SL1632
 					map_init_SL1632();
 					break;
 				case 34:
-					// NES-SHERO
+					// SHERO
 					map_init_SHERO();
 					break;
 				case 35:
-					// NES-SMB2J
+					// SMB2J
 					map_init_UNIFSMB2J();
 					break;
 				case 36:
-					// NES-AX5705
+					// AX5705
 					map_init_AX5705();
 					break;
 				case 37:
-					// NES-GS-2004
+					// GS-2004
 					map_init_GS_2004();
 					break;
 				case 38:
-					// NES-GS-2013
+					// GS-2013
 					map_init_GS_2013();
 					break;
 				case 39:
-					// NES-KS7012
+					// KS7012
 					map_init_KS7012();
 					break;
 				case 40:
-					// NES-KS7037
+					// KS7037
 					map_init_KS7037();
 					break;
 				case 41:
-					// NES-KS7057
+					// KS7057
 					map_init_KS7057();
 					break;
 				case 42:
-					// NES-KS7016
+					// KS7016
 					map_init_KS7016();
 					break;
 				case 43:
-					// NES-KS7017
+					// KS7017
 					map_init_KS7017();
 					break;
 				case 44:
-					// NES-LH10
+					// LH10
 					map_init_LH10();
 					break;
 				case 45:
-					// NES-RT-01
+					// RT-01
 					map_init_RT_01();
 					break;
 				case 46:
-					// NES-MALISB
+					// MALISB
 					map_init_MALISB();
 					break;
 				case 47:
-					// NES-BOY
+					// BOY
 					map_init_BOY();
 					break;
 				case 48:
-					// NES-8-IN-1
+					// 8-IN-1
 					map_init_8_IN_1();
+					break;
+				case 49:
+					// HP898F
+					map_init_BMCHP898F();
 					break;
 			}
 			break;

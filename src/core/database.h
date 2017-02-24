@@ -3660,6 +3660,10 @@ static const _dbelement dblist[] = {
 	/* Luo Ke Ren X (Sugoro Quest - Dice no Senshitachi) (Ch).nes */
 	{"f007a15c250297e1bd7d6287219fa94928afa759", 195, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
+/* ----------------------------------------- 196 ------------------------------------------ */
+	/* Street Fighter VI 16 Peoples (Unl)[!].nes */
+	{"462780b4cbb84364a107b1b37a6a5278eefc6cbf", 196, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+
 /* ------------------------------------ Waixing (WTG) ------------------------------------- */
 	/* Dragon Ball Z Gaiden - Saiya Jin Zetsumetsu Keikaku (Ch).nes */
 	{"bb8676d355ee581b065f5fd9823b96c3b926fc87", 199, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
