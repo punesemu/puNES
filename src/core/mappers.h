@@ -203,6 +203,7 @@
 #include "mappers/mapper_BOY.h"
 #include "mappers/mapper_8_IN_1.h"
 #include "mappers/mapper_BMCHP898F.h"
+#include "mappers/mapper_UNIF158B.h"
 
 #define _control_bank(val, max)\
 	if (val > max) {\

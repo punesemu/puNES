@@ -389,6 +389,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_Txc.h \
 	mappers/mapper_TxROM.c \
 	mappers/mapper_TxROM.h \
+	mappers/mapper_UNIF158B.c \
+	mappers/mapper_UNIF158B.h \
 	mappers/mapper_UNIF43272.c \
 	mappers/mapper_UNIF43272.h \
 	mappers/mapper_UNIF603_5052.c \

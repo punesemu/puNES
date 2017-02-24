@@ -909,6 +909,10 @@ BYTE map_init(void) {
 					// HP898F
 					map_init_BMCHP898F();
 					break;
+				case 50:
+					// 158B
+					map_init_UNIF158B();
+					break;
 			}
 			break;
 	}
