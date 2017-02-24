@@ -109,6 +109,7 @@ void fps_normalize(void) {
 	fps.frames_before_skip = 1;
 	if (cfg->frameskip == 0) {
 		fps.max_frames_skipped = machine.fps;
+		//fps.max_frames_skipped = 0;
 	} else {
 		fps.max_frames_skipped = cfg->frameskip;
 	}
@@ -151,6 +152,22 @@ void fps_frameskip(void) {
 	if ((diff = frame_end - fps.second_start) >= 1000.0f) {
 		fps.avarage = (fps.avarage + (double) fps.counter) / 2.0f;
 		fps.second_start = gui_get_ms() - (diff - 1000.0f);
+
+
+
+		/*
+		if (cfg->frameskip == 0) {
+			if (fps.avarage > machine.fps) {
+				fps.max_frames_skipped = fps.avarage - machine.fps;
+			} else {
+				fps.max_frames_skipped = machine.fps - fps.avarage;
+			}
+		}
+		*/
+		//printf("max_frames_skipped : %d %d %f %f\n", fps.total_frames_skipped, fps.max_frames_skipped, fps.avarage, framerate.value);
+
+
+
 		fps.counter = 0;
 	} else {
 		fps.counter++;

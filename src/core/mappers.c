@@ -540,6 +540,9 @@ BYTE map_init(void) {
 		case 189:
 			map_init_Txc(TXCTW);
 			break;
+		case 190:
+			map_init_190();
+			break;
 		case 191:
 			map_init_Waixing(WTB);
 			break;
