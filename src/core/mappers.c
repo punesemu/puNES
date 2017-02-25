@@ -913,6 +913,10 @@ BYTE map_init(void) {
 					// 158B
 					map_init_UNIF158B();
 					break;
+				case 51:
+					// 810544-C-A1
+					map_init_BMC810544CA1();
+					break;
 			}
 			break;
 	}

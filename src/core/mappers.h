@@ -204,6 +204,7 @@
 #include "mappers/mapper_8_IN_1.h"
 #include "mappers/mapper_BMCHP898F.h"
 #include "mappers/mapper_UNIF158B.h"
+#include "mappers/mapper_BMC810544CA1.h"
 
 #define _control_bank(val, max)\
 	if (val > max) {\

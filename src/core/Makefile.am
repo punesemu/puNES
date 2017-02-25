@@ -265,6 +265,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_BMCHP898F.h \
 	mappers/mapper_BMC64IN1NOREPEAT.c \
 	mappers/mapper_BMC64IN1NOREPEAT.h \
+	mappers/mapper_BMC810544CA1.c \
+	mappers/mapper_BMC810544CA1.h \
 	mappers/mapper_BMCNTD03.c \
 	mappers/mapper_BMCNTD03.h \
 	mappers/mapper_BOY.c \
