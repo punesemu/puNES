@@ -921,6 +921,10 @@ BYTE map_init(void) {
 					// KS7031
 					map_init_KS7031();
 					break;
+				case 53:
+					// DRAGONFIGHTER
+					map_init_DRAGONFIGHTER();
+					break;
 			}
 			break;
 	}

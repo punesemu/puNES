@@ -289,6 +289,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_ColorDreams.h \
 	mappers/mapper_CPROM.c \
 	mappers/mapper_CPROM.h \
+	mappers/mapper_DRAGONFIGHTER.c \
+	mappers/mapper_DRAGONFIGHTER.h \
 	mappers/mapper_EH8813A.c \
 	mappers/mapper_EH8813A.h \
 	mappers/mapper_FDS.c \
