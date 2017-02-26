@@ -917,6 +917,10 @@ BYTE map_init(void) {
 					// 810544-C-A1
 					map_init_BMC810544CA1();
 					break;
+				case 52:
+					// KS7031
+					map_init_KS7031();
+					break;
 			}
 			break;
 	}

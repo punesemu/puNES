@@ -1001,6 +1001,15 @@ void cpu_exe_op(void) {
 		tick_hw(cpu.cycles);
 	}
 }
+void cpu_init_PC(void) {
+	BYTE save_cheat_mode = cfg->cheat_mode;
+	BYTE save_cpu_openbus = cpu.openbus;
+
+	cfg->cheat_mode = NOCHEAT_MODE;
+	cpu.PC = (cpu_rd_mem(INT_RESET + 1, FALSE) << 8 | cpu_rd_mem(INT_RESET, FALSE));
+	cfg->cheat_mode = save_cheat_mode;
+	cpu.openbus = save_cpu_openbus;
+}
 void cpu_turn_on(void) {
 	if (info.reset >= HARD) {
 		memset(&cpu, 0x00, sizeof(cpu));

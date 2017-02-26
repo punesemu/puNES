@@ -632,7 +632,7 @@ BYTE emu_turn_on(void) {
 		return (EXIT_ERROR);
 	}
 
-	init_PC()
+	cpu_init_PC();
 
 	/* controller */
 	input_init(NO_SET_CURSOR);
@@ -764,7 +764,7 @@ BYTE emu_reset(BYTE type) {
 		return (EXIT_ERROR);
 	}
 
-	init_PC()
+	cpu_init_PC();
 
 	if (info.no_rom) {
 		info.reset = FALSE;

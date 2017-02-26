@@ -329,6 +329,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_KS7016.h \
 	mappers/mapper_KS7017.c \
 	mappers/mapper_KS7017.h \
+	mappers/mapper_KS7031.c \
+	mappers/mapper_KS7031.h \
 	mappers/mapper_KS7032.c \
 	mappers/mapper_KS7032.h \
 	mappers/mapper_KS7037.c \

@@ -137,6 +137,7 @@ static const _unif_board unif_boards[] = {
 	{"HP898F", NO_INES, 49, DEFAULT, DEFAULT, NOEXTRA},
 	{"158B", NO_INES, 50, DEFAULT, DEFAULT, NOEXTRA},
 	{"810544-C-A1", NO_INES, 51, DEFAULT, DEFAULT, NOEXTRA},
+	{"KS7031", NO_INES, 52, DEFAULT, DEFAULT, NOEXTRA},
 };
 
 BYTE unif_load_rom(void) {

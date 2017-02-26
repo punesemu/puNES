@@ -41,17 +41,8 @@ enum interrupt_types {
 	cpu.bf = cpu.SR & 0x10;\
 	cpu.of = cpu.SR & 0x40;\
 	cpu.sf = cpu.SR & 0x80
-#define init_PC()\
-	/* valorizzo il PC con l'indirizzo iniziale */\
-	if (fds.info.enabled) {\
-		cpu.PC = (prg_chip_byte(0, (INT_RESET + 1) & 0x1FFF) << 8) |\
-				prg_chip_byte(0, INT_RESET & 0x1FFF);\
-	} else {\
-		cpu.PC = (prg.rom_8k[((INT_RESET + 1) >> 13) & 0x03][(INT_RESET + 1) & 0x1FFF] << 8)\
-				| prg.rom_8k[(INT_RESET >> 13) & 0x03][INT_RESET & 0x1FFF];\
-	}
 
-typedef struct {
+typedef struct _cpu {
 	/* Processor Registers */
 	WORD PC; // Program Counter
 	BYTE SP; // Stack Pointer
@@ -93,13 +84,13 @@ typedef struct {
 	/* i cicli (senza aggiustamenti) impiegati dall'opcode */
 	WORD base_opcode_cycles;
 } _cpu;
-typedef struct {
+typedef struct _irq {
 	BYTE high;
 	BYTE delay;
 	BYTE before;
 	BYTE inhibit;
 } _irq;
-typedef struct {
+typedef struct _nmi {
 	BYTE high;
 	BYTE delay;
 	BYTE before;
@@ -114,6 +105,7 @@ _irq irq;
 _nmi nmi;
 
 void cpu_exe_op(void);
+void cpu_init_PC(void);
 void cpu_turn_on(void);
 BYTE cpu_rd_mem(WORD address, BYTE made_tick);
 void cpu_wr_mem(WORD address, BYTE value);
