@@ -383,6 +383,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_SL1632.h \
 	mappers/mapper_Sunsoft.c \
 	mappers/mapper_Sunsoft.h \
+	mappers/mapper_Super24in1.c \
+	mappers/mapper_Super24in1.h \
 	mappers/mapper_T262.c \
 	mappers/mapper_T262.h \
 	mappers/mapper_Taito.c \

@@ -925,6 +925,10 @@ BYTE map_init(void) {
 					// DRAGONFIGHTER
 					map_init_DRAGONFIGHTER();
 					break;
+				case 54:
+					// Super24in1SC03
+					map_init_Super24in1();
+					break;
 			}
 			break;
 	}

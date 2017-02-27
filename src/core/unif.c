@@ -139,6 +139,7 @@ static const _unif_board unif_boards[] = {
 	{"810544-C-A1", NO_INES, 51, DEFAULT, DEFAULT, NOEXTRA},
 	{"KS7031", NO_INES, 52, DEFAULT, DEFAULT, NOEXTRA},
 	{"DRAGONFIGHTER", NO_INES, 53, DEFAULT, DEFAULT, NOEXTRA},
+	{"Super24in1SC03", NO_INES, 54, DEFAULT, DEFAULT, NOEXTRA},
 };
 
 BYTE unif_load_rom(void) {
