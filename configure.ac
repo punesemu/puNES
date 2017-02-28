@@ -217,8 +217,12 @@ OLD_CFLAGS="$CFLAGS"
 OLD_LIBS="$LIBS"
 
 AM_COND_IF([ENAB_RELEASE],[
+	GIT="no"
 	CUSTOMDEFINES+=" -DRELEASE"
-]);
+	],[
+	AC_CHECK_TOOLS(GIT, [git], [no])
+])
+AM_CONDITIONAL(WITH_GIT,[test "x$GIT" != xno])
 
 # Checks for libraries.
 AM_COND_IF([WINDOWS],[

@@ -2542,6 +2542,9 @@ void mainWindow::s_help() {
 		text.append(tr("portable version") + " ");
 	}
 	text.append(QString(VERSION) + "</h2></center>\n");
+#if !defined (RELEASE)
+	text.append("<center><h4>[<font color='#800000'>Commit " + QString(GIT_COUNT_COMMITS) + "</font> " + "<a href=\"https://github.com/punesemu/puNES/commit/" + QString(GIT_LAST_COMMIT_HASH) + "\">" + QString(GIT_LAST_COMMIT) + "</a>]</h4></center>");
+#endif
 	text.append("<center>" + tr("Nintendo Entertainment System Emulator") + "</center>");
 	text.append("<center>" + tr("Compiled") + " " +
 			compiled.toString(Qt::DefaultLocaleShortDate) + "</center>");
