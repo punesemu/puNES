@@ -273,6 +273,9 @@ BYTE unif_load_rom(void) {
 					fseek(fp, unif.chunk.length, SEEK_CUR);
 				} else if (strncmp(unif.chunk.id, "MIRR", 4) == 0) {
 					unif_MIRR(fp, phase);
+				} else {
+					// ignoro il typo di chunk non riconosciuto
+					fseek(fp, unif.chunk.length, SEEK_CUR);
 				}
 			}
 		}
