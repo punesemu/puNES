@@ -2552,7 +2552,8 @@ void mainWindow::s_help() {
 	about->setText(text);
 
 	text = "<center>" + QString(COPYRUTF8) + "</center>\n";
-	text.append("<center><a href=\"" + QString(WEBSITE) + "\">" + QString(WEBSITE) + "</a></center>");
+	text.append("<center><a href=\"" + QString(GITHUB) + "\">" + "GitHub Page</a></center>");
+	text.append("<center><a href=\"" + QString(WEBSITE) + "\">" + "NesDev Forum</a></center>");
 	text.append("<center>" + QString("-") + "</center>\n");
 	text.append("<center>" + tr("If you like the emulator and you want to support it's development or would you pay for a beer at the programmer :") + "</center>\n");
 	text.append("<center><a href=\"" + QString(DONATE) + "\">" + "<img src=\":/pics/pics/btn_donate_SM.gif\">" + "</a></center>\n");
