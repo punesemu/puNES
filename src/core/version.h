@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2016 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@
 #define WEBSITE     "http://forums.nesdev.com/viewtopic.php?f=3&amp;t=6928"
 #define DONATE      "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=QPPXNRL5NAHDC"
 
-#define COPYRIGTH   " 2016 by " AUTHOR
+#define COPYRIGTH   " 2017 by " AUTHOR
 #define COPYRANSI   "(C)" COPYRIGTH
 #define COPYRUTF8   "&#169;" COPYRIGTH
 
