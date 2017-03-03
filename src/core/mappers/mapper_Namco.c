@@ -361,9 +361,9 @@ void extcl_apu_tick_Namco_163(void) {
 }
 
 void extcl_cpu_wr_mem_Namco_3425(WORD address, BYTE value) {
-	switch (address & 0x8001) {
+	switch (address & 0xA001) {
 		case 0x8000:
-			n3425.bank_to_update = value & 0x7;
+			n3425.bank_to_update = value & 0x07;
 			if (type == N3453) {
 				if (value & 0x40) {
 					mirroring_SCR1();
