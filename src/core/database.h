@@ -2797,6 +2797,10 @@ static const _dbelement dblist[] = {
 	{"0869930354f8f736a820cc1f62f17204e62948e7", 23, VRC4E, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Akumajou Special - Boku Dracula-kun (J) [T+Eng1.03_Vice].nes */
 	{"a372bfa21c48d6d289d1a0216df5382f5efb6e29", 23, VRC4E, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Akumajou Special - Boku Dracula-kun (J) [T-Eng1.03_Vice Translations][t1].nes */
+	{"4ea21ee1eb903539cc5b1b5b847eac5b0008bb3f", 23, VRC4E, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Akumajou Special - Boku Dracula-kun (J) [T+Eng1.04_Vice Translations].nes */
+	{"c384462009cb645d87455ca0b18bfb10dbf34027", 23, VRC4E, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Akumajou Special - Boku Dracula-kun (J) [T+EngR1_Kalas].nes */
 	{"c7209cfa6b7f13f949599f5e5b12fd92be99a926", 23, VRC4E, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Crisis Force (J) [b1].nes */
@@ -3839,6 +3843,11 @@ static const _dbelement dblist[] = {
 	//{"c88eb9d327f1ec3a6e24e28fd6332da2e8f2e6a4", 1, DEFAULT, DEFAULT, DEFAULT, DEFAULT, RP2C04, VS_SM_Super_Xevious, 0x0000, NOEXTRA},
 	/* Super Xevious - Gump no Nazo (VS).nes */
 	{"f169152ca55b93d4bc59e46b977f468e9461af18", 206, DEFAULT, DEFAULT, DEFAULT, DEFAULT, RP2C04, VS_SM_Super_Xevious, 0x0000, NOEXTRA},
+
+	/* arbib.nes */
+	//{"bd7a98e6f4f5110aed84c7729d6530d9e7243486", 99, DEFAULT, DEFAULT, DEFAULT, DEFAULT, RP2C04, DEFAULT, 0x0000, NOEXTRA},
+
+
 
 	                                       /* Vs Dual System non supportato */
 	/* Baseball (VS) (Player 1 Mode) [a1].nes */
