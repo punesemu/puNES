@@ -108,10 +108,17 @@ void cmd_line_parse(int argc, uTCHAR **argv) {
 		arg = uQString(argv[a]);
 		splitted = arg.split("=");
 		key = QString(splitted.at(0));
+		bool elaborate = false;
 
-		if (key.startsWith("--") || key.startsWith("-")) {
-			key = key.replace("-", "");
+		if (key.startsWith("--")) {
+			key.replace(0, 2, "");
+			elaborate = true;
+		} else if (key.startsWith("-")) {
+			key.replace(0, 1, "");
+			elaborate = true;
+		}
 
+		if (elaborate == true) {
 			for (unsigned int b = 0; b < LENGTH(opt_long); b++) {
 				if ((opt_long[b].lopt == key) || (opt_long[b].sopt == key)) {
 					skey = opt_long[b].sopt;
@@ -130,6 +137,7 @@ void cmd_line_parse(int argc, uTCHAR **argv) {
 						}
 					}
 					opt = (*((char *) skey.toLatin1().constData()));
+					break;
 				}
 			}
 		} else {
