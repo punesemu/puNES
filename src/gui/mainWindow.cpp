@@ -1933,8 +1933,12 @@ void mainWindow::s_update_output_devices() {
 		QAction *action = new QAction(this);
 
 		if (i == 0) {
+#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
 			description = QApplication::translate("mainWindow", "System Default", 0,
 					QApplication::UnicodeUTF8);
+#else
+			description = QApplication::translate("mainWindow", "System Default", Q_NULLPTR);
+#endif
 		} else if (i == 1) {
 			ui->menu_Output_Device->addSeparator();
 		}
