@@ -26,6 +26,7 @@
 #include "fps.h"
 #include "clock.h"
 #include "apu.h"
+#include "audio_outin_dev.h"
 #define INITGUID
 #include <XAudio2.h>
 #undef INITGUID
@@ -40,6 +41,12 @@
 #define THIS IXAudio2VoiceCallback *callback
 #define THIS_ IXAudio2VoiceCallback *callback,
 
+static int xaudio2_find_index_id(_snd_list_dev *list, uTCHAR *id, int size);
+static void xaudio2_device_add(_snd_list_dev *list, uTCHAR *id, uTCHAR *action);
+static void xaudio2_list_devices_quit(void);
+static void INLINE xaudio2_wrbuf(IXAudio2SourceVoice *source, XAUDIO2_BUFFER *x2buf,
+		const BYTE *buffer);
+
 static void STDMETHODCALLTYPE OnVoiceProcessPassStart(THIS_ UINT32 b);
 static void STDMETHODCALLTYPE OnVoiceProcessPassEnd(THIS);
 static void STDMETHODCALLTYPE OnStreamEnd(THIS);
@@ -47,8 +54,6 @@ static void STDMETHODCALLTYPE OnBufferStart(THIS_ void *data);
 static void STDMETHODCALLTYPE OnBufferEnd(THIS_ void* data);
 static void STDMETHODCALLTYPE OnLoopEnd(THIS_ void *data);
 static void STDMETHODCALLTYPE OnVoiceError(THIS_ void* data, HRESULT Error);
-
-static void INLINE wrbuf(IXAudio2SourceVoice *source, XAUDIO2_BUFFER *x2buf, const BYTE *buffer);
 
 static struct _xaudio2 {
 	BYTE opened;
@@ -80,6 +85,8 @@ BYTE snd_init(void) {
 
 	snd_apu_tick = NULL;
 	snd_end_frame = NULL;
+
+	snd_list_devices();
 
 	// apro e avvio la riproduzione
 	if (snd_start()) {
@@ -129,13 +136,25 @@ BYTE snd_start(void) {
 		return (EXIT_ERROR);
 	}
 
-	if (IXAudio2_CreateMasteringVoice(xaudio2.engine, &xaudio2.master, snd.channels,
-			snd.samplerate, 0, 0, NULL) != S_OK) {
-		MessageBox(NULL,
-			"ATTENTION: Unable to create XAudio2 master voice.",
-			"Error!",
-			MB_ICONEXCLAMATION | MB_OK);
-		return (EXIT_ERROR);
+	{
+		int index = xaudio2_find_index_id(&snd_list.playback, cfg->audio_output,
+		        usizeof(cfg->audio_output));
+
+		if (index == 0) {
+			if (IXAudio2_CreateMasteringVoice(xaudio2.engine, &xaudio2.master, snd.channels,
+					snd.samplerate, 0, 0, NULL) != S_OK) {
+				MessageBox(NULL, "ATTENTION: Unable to create XAudio2 master voice.", "Error!",
+				MB_ICONEXCLAMATION | MB_OK);
+				return (EXIT_ERROR);
+			}
+		} else {
+			if (IXAudio2_CreateMasteringVoice(xaudio2.engine, &xaudio2.master, snd.channels,
+					snd.samplerate, 0, index - 1, NULL) != S_OK) {
+				MessageBox(NULL, "ATTENTION: Unable to create XAudio2 master voice.", "Error!",
+				MB_ICONEXCLAMATION | MB_OK);
+				return (EXIT_ERROR);
+			}
+		}
 	}
 
 	{
@@ -168,9 +187,11 @@ BYTE snd_start(void) {
 	}
 
 	{
-		double factor = (1.0f / 48000.0f) * (double) snd.samplerate;
+		static int factor[10] = { 90, 80, 70, 60, 50, 40, 30, 20, 10, 5 };
 
-		psamples = ((1024 * factor) + ((512 * factor) * cfg->audio_buffer_factor));
+		// snd.samplarate / 50 = 20 ms
+		psamples = (snd.samplerate / factor[cfg->audio_buffer_factor]);
+		psamples *= 2;
 	}
 
 	snd.samples = psamples * 2;
@@ -341,6 +362,90 @@ void snd_stop(void) {
 void snd_quit(void) {
 	snd_stop();
 }
+void snd_list_devices(void) {
+	IXAudio2 *ixa2 = NULL;
+	UINT32 devcount = 0;
+	UINT32 i = 0;
+
+	xaudio2_list_devices_quit();
+
+	// Playback devices //
+	xaudio2_device_add(&snd_list.playback, uL("default"), uL("System Default"));
+
+	if (XAudio2Create(&ixa2, 0, XAUDIO2_DEFAULT_PROCESSOR) != S_OK) {
+		return;
+	}
+	if (IXAudio2_GetDeviceCount(ixa2, &devcount) != S_OK) {
+		IXAudio2_Release(ixa2);
+		return;
+	}
+
+	for (i = 0; i < devcount; i++) {
+		XAUDIO2_DEVICE_DETAILS details;
+
+		if (IXAudio2_GetDeviceDetails(ixa2, i, &details) == S_OK) {
+			if (ustrlen(details.DisplayName) == 0) {
+				continue;
+			}
+			xaudio2_device_add(&snd_list.playback, details.DeviceID, details.DisplayName);
+		}
+	}
+	IXAudio2_Release(ixa2);
+}
+
+static int xaudio2_find_index_id(_snd_list_dev *list, uTCHAR *id, int size) {
+	int i, index = -1;
+
+	for (i = 0; i < list->count; i++) {
+		if (ustrcmp(id, list->devices[i].id) == 0) {
+			index = i;
+			break;
+		}
+	}
+
+	if (index == -1) {
+		index = 0;
+		ustrncpy(id, uL("default"), size);
+	}
+
+	return (index);
+}
+static void xaudio2_device_add(_snd_list_dev *list, uTCHAR *id, uTCHAR *action) {
+	_snd_dev *dev, *devs;
+
+	if ((devs = (_snd_dev *) realloc(list->devices, (list->count + 1) * sizeof(_snd_dev)))) {
+		list->devices = devs;
+		dev = &list->devices[list->count];
+		ustrncpy(dev->id, id, usizeof(dev->id));
+		list->menu_device_add(action, dev->id);
+		list->count++;
+	}
+}
+static void xaudio2_list_devices_quit(void) {
+	outdev_init();
+	snd_list.playback.count = 0;
+	if (snd_list.playback.devices) {
+		free(snd_list.playback.devices);
+	}
+	snd_list.playback.devices = NULL;
+	snd_list.playback.menu_device_add = outdev_add;
+
+	indev_init();
+	snd_list.capture.count = 0;
+	if (snd_list.capture.devices) {
+		free(snd_list.capture.devices);
+	}
+	snd_list.capture.devices = NULL;
+	snd_list.capture.menu_device_add = indev_add;
+}
+static void INLINE xaudio2_wrbuf(IXAudio2SourceVoice *source, XAUDIO2_BUFFER *x2buf,
+		const BYTE *buffer) {
+	x2buf->pAudioData = buffer;
+
+	if(IXAudio2SourceVoice_SubmitSourceBuffer(source, x2buf, NULL) != S_OK) {
+		fprintf(stderr, "Unable to submit source buffer\n");
+	}
+}
 
 static void STDMETHODCALLTYPE OnVoiceProcessPassStart(THIS_ UINT32 b) {}
 static void STDMETHODCALLTYPE OnVoiceProcessPassEnd(THIS) {}
@@ -358,13 +463,14 @@ static void STDMETHODCALLTYPE OnBufferEnd(THIS_ void *data) {
 
 	snd_lock_cache(cache);
 
-	if ((info.no_rom | info.turn_off | info.pause) || (snd.buffer.start == FALSE) || (fps.fast_forward == TRUE)) {
-		wrbuf(source, buffer, (const BYTE *) cache->silence);
+	if ((info.no_rom | info.turn_off | info.pause) || (snd.buffer.start == FALSE)
+			|| (fps.fast_forward == TRUE)) {
+		xaudio2_wrbuf(source, buffer, (const BYTE *) cache->silence);
 	} else if (cache->bytes_available < len) {
-		wrbuf(source, buffer, (const BYTE *) cache->silence);
+		xaudio2_wrbuf(source, buffer, (const BYTE *) cache->silence);
 		snd.out_of_sync++;
 	} else {
-		wrbuf(source, buffer, (const BYTE *) cache->read);
+		xaudio2_wrbuf(source, buffer, (const BYTE *) cache->read);
 
 		cache->bytes_available -= len;
 		cache->samples_available -= (len / snd.channels / sizeof(*cache->write));
@@ -397,14 +503,6 @@ static void STDMETHODCALLTYPE OnBufferEnd(THIS_ void *data) {
 }
 static void STDMETHODCALLTYPE OnLoopEnd(THIS_ void *data) {}
 static void STDMETHODCALLTYPE OnVoiceError(THIS_ void* data, HRESULT Error) {}
-
-static void INLINE wrbuf(IXAudio2SourceVoice *source, XAUDIO2_BUFFER *x2buf, const BYTE *buffer) {
-	x2buf->pAudioData = buffer;
-
-	if(IXAudio2SourceVoice_SubmitSourceBuffer(source, x2buf, NULL) != S_OK) {
-		fprintf(stderr, "Unable to submit source buffer\n");
-	}
-}
 
 #undef THIS
 #undef THIS_

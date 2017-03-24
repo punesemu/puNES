@@ -80,6 +80,9 @@ typedef struct _config {
 	uTCHAR palette_file[LENGTH_FILE_NAME_LONG];
 	uTCHAR save_file[LENGTH_FILE_NAME_LONG];
 
+	uTCHAR audio_output[100];
+	uTCHAR audio_input[100];
+
 	struct _last_pos {
 		int x;
 		int y;

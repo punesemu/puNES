@@ -571,6 +571,9 @@ int settingsObject::val_to_int(int index, const uTCHAR *buffer) {
 
 	return (-1);
 }
+void settingsObject::cpy_utchar_to_val(int index, uTCHAR *src) {
+	val.replace(index, uQString(src).replace('\\', '/'));
+}
 void settingsObject::setup() {
 	rd();
 	after_the_defaults();
@@ -621,9 +624,6 @@ void settingsObject::cpy_val_to_utchar(int index, uTCHAR *dst, int length) {
 		return;
 	}
 	ustrncpy(dst, uQStringCD(val.at(index)), length - 1);
-}
-void settingsObject::utchar_to_val(int index, uTCHAR *src) {
-	val.replace(index, uQString(src).replace('\\', '/'));
 }
 void settingsObject::rd_key(int index) {
 	beginGroup(uQString(set->cfg[index].grp));
@@ -740,9 +740,9 @@ void setObject::to_cfg(QString group) {
 		val.replace(SET_OVERSCAN_BRD_PAL, oscan_val(&overscan_borders[1]));
 		int_to_val(SET_FILTER, cfg_from_file.filter);
 		int_to_val(SET_NTSC_FORMAT, cfg_from_file.ntsc_format);
-		utchar_to_val(SET_FILE_SHADER, cfg_from_file.shader_file);
+		cpy_utchar_to_val(SET_FILE_SHADER, cfg_from_file.shader_file);
 		int_to_val(SET_PALETTE, cfg_from_file.palette);
-		utchar_to_val(SET_FILE_PALETTE, cfg_from_file.palette_file);
+		cpy_utchar_to_val(SET_FILE_PALETTE, cfg_from_file.palette_file);
 		int_to_val(SET_SWAP_EMPHASIS_PAL, cfg_from_file.disable_swap_emphasis_pal);
 		int_to_val(SET_VSYNC, cfg_from_file.vsync);
 		int_to_val(SET_INTERPOLATION, cfg_from_file.interpolation);
@@ -759,6 +759,7 @@ void setObject::to_cfg(QString group) {
 	}
 
 	if ((group == "audio") || (group == "all")) {
+		cpy_utchar_to_val(SET_AUDIO_OUTPUT_DEVICE, cfg_from_file.audio_output);
 		int_to_val(SET_AUDIO_BUFFER_FACTOR, cfg_from_file.audio_buffer_factor);
 		int_to_val(SET_SAMPLERATE, cfg_from_file.samplerate);
 		int_to_val(SET_CHANNELS, cfg_from_file.channels_mode);
@@ -769,7 +770,7 @@ void setObject::to_cfg(QString group) {
 	}
 
 	if ((group == "GUI") || (group == "all")) {
-		utchar_to_val(SET_GUI_OPEN_PATH, gui.last_open_path);
+		cpy_utchar_to_val(SET_GUI_OPEN_PATH, gui.last_open_path);
 		val.replace(SET_GUI_LAST_POSITION, lastpos_val());
 		int_to_val(SET_GUI_LANGUAGE, cfg_from_file.language);
 		int_to_val(SET_GUI_DISABLE_NEW_MENU, cfg_from_file.disable_new_menu);
@@ -837,6 +838,8 @@ void setObject::fr_cfg(QString group) {
 	}
 
 	if ((group == "audio") || (group == "all")) {
+		cpy_val_to_utchar(SET_AUDIO_OUTPUT_DEVICE, cfg_from_file.audio_output,
+				usizeof(cfg_from_file.audio_output));
 		cfg_from_file.audio_buffer_factor = val_to_int(SET_AUDIO_BUFFER_FACTOR);
 		cfg_from_file.samplerate = val_to_int(SET_SAMPLERATE);
 		cfg_from_file.channels_mode = val_to_int(SET_CHANNELS);
@@ -987,7 +990,7 @@ void pgsObject::setup() {
 }
 void pgsObject::to_cfg(QString group) {
 	int_to_val(SET_PGS_SLOT, save_slot.slot);
-	utchar_to_val(SET_PGS_FILE_SAVE, cfg_from_file.save_file);
+	cpy_utchar_to_val(SET_PGS_FILE_SAVE, cfg_from_file.save_file);
 	int_to_val(SET_PGS_OVERSCAN, cfg_from_file.oscan);
 	int_to_val(SET_PGS_DIPSWITCH, cfg_from_file.dipswitch);
 	int_to_val(SET_PGS_PPU_OVERCLOCK, cfg_from_file.ppu_overclock);

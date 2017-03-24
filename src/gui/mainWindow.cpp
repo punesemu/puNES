@@ -44,6 +44,7 @@
 #include "cheat.h"
 #include "conf.h"
 #include "recent_roms.h"
+#include "audio_outin_dev.h"
 #include "fds.h"
 #include "clock.h"
 #include "ppu.h"
@@ -502,6 +503,40 @@ void mainWindow::setup_video_rendering() {
 	ui->action_PAR_Soft_Stretch->setText(tr("HLSL &soft stretch"));
 #endif
 }
+void mainWindow::update_recent_roms() {
+	if (recent_roms_count() > 0) {
+		int i;
+
+		ui->menu_Recent_Roms->clear();
+
+		for (i = 0; i < RECENT_ROMS_MAX; i++) {
+			QString description = QString((const QChar *) recent_roms_item(i),
+					recent_roms_item_size(i));
+			QFileInfo rom(description);
+			QAction *action = new QAction(this);
+
+			if (description.isEmpty()) {
+				break;
+			}
+
+			action->setText(QFileInfo(description).completeBaseName());
+
+			if (rom.suffix().isEmpty()) {
+				action->setIcon(QIcon(":/icon/icons/nes_file.png"));
+			} else if (!QString::compare(rom.suffix(), "fds", Qt::CaseInsensitive)) {
+				action->setIcon(QIcon(":/icon/icons/fds_file.png"));
+			} else if (!QString::compare(rom.suffix(), "fm2", Qt::CaseInsensitive)) {
+				action->setIcon(QIcon(":/icon/icons/fm2_file.png"));
+			} else {
+				action->setIcon(QIcon(":/icon/icons/nes_file.png"));
+			}
+
+			action->setProperty("myValue", QVariant(i));
+			ui->menu_Recent_Roms->addAction(action);
+			connect(action, SIGNAL(triggered()), this, SLOT(s_open_recent_roms()));
+		}
+	}
+}
 void mainWindow::update_menu_nes() {
 	QString *sc = (QString *)settings_inp_rd_sc(SET_INP_SC_TURN_OFF, KEYBOARD);
 
@@ -576,40 +611,6 @@ void mainWindow::update_menu_nes() {
 		ui->action_Fast_Forward->setChecked(true);
 	} else {
 		ui->action_Fast_Forward->setChecked(false);
-	}
-}
-void mainWindow::update_recent_roms() {
-	if (recent_roms_count() > 0) {
-		int i;
-
-		ui->menu_Recent_Roms->clear();
-
-		for (i = 0; i < RECENT_ROMS_MAX; i++) {
-			QString description = QString((const QChar *) recent_roms_item(i),
-					recent_roms_item_size(i));
-			QFileInfo rom(description);
-			QAction *action = new QAction(this);
-
-			if (description.isEmpty()) {
-				break;
-			}
-
-			action->setText(QFileInfo(description).completeBaseName());
-
-			if (rom.suffix().isEmpty()) {
-				action->setIcon(QIcon(":/icon/icons/nes_file.png"));
-			} else if (!QString::compare(rom.suffix(), "fds", Qt::CaseInsensitive)) {
-				action->setIcon(QIcon(":/icon/icons/fds_file.png"));
-			} else if (!QString::compare(rom.suffix(), "fm2", Qt::CaseInsensitive)) {
-				action->setIcon(QIcon(":/icon/icons/fm2_file.png"));
-			} else {
-				action->setIcon(QIcon(":/icon/icons/nes_file.png"));
-			}
-
-			action->setProperty("myValue", QVariant(i));
-			ui->menu_Recent_Roms->addAction(action);
-			connect(action, SIGNAL(triggered()), this, SLOT(s_open_recent_roms()));
-		}
 	}
 }
 void mainWindow::update_menu_settings() {
@@ -1572,6 +1573,8 @@ void mainWindow::connect_menu_signals() {
 #endif
 	connect_action(ui->action_Fullscreen_in_window, SLOT(s_set_fullscreen_in_window()));
 	connect_action(ui->action_Stretch_in_fullscreen, SLOT(s_set_stretch()));
+	// Settings/Audio/Output Device
+	connect(ui->menu_Output_Device, SIGNAL(aboutToShow()), this, SLOT(s_update_output_devices()));
 	// Settings/Audio/Buffer Size factor
 	connect_action(ui->action_Absf_0, 0, SLOT(s_set_audio_buffer_factor()));
 	connect_action(ui->action_Absf_1, 1, SLOT(s_set_audio_buffer_factor()));
@@ -1912,6 +1915,60 @@ void mainWindow::s_save_screenshot() {
 void mainWindow::s_set_vs_window() {
 	ext_win.vs_system = !ext_win.vs_system;
 	gui_external_control_windows_show();
+}
+void mainWindow::s_update_output_devices() {
+	QActionGroup *grp = new QActionGroup(this);
+	QString id = uQString(cfg->audio_output);
+	int i;
+
+	grp->setExclusive(true);
+
+	ui->menu_Output_Device->clear();
+
+	snd_list_devices();
+
+	for (i = 0; i < snd_list.playback.count; i++) {
+		QString description = QString((const QChar *) outdev_dev_item(i), outdev_dev_item_size(i));
+		QString id_new = QString((const QChar *) outdev_id_item(i), outdev_id_item_size(i));
+		QAction *action = new QAction(this);
+
+		if (i == 0) {
+			description = QApplication::translate("mainWindow", "System Default", 0,
+					QApplication::UnicodeUTF8);
+		} else if (i == 1) {
+			ui->menu_Output_Device->addSeparator();
+		}
+
+		if (description.isEmpty()) {
+			break;
+		}
+
+		action->setCheckable(true);
+		action->setText(description);
+		action->setProperty("myValue", QVariant(i));
+		action->setProperty("myId", QVariant(id_new));
+
+		grp->addAction(action);
+
+		ui->menu_Output_Device->addAction(action);
+		connect(action, SIGNAL(triggered()), this, SLOT(s_set_output_device()));
+
+		if (id == id_new) {
+			action->setChecked(true);
+		}
+	}
+}
+void mainWindow::s_set_output_device() {
+	int index = QVariant(((QObject *)sender())->property("myValue")).toInt();
+	QString id_new = QVariant(((QObject *)sender())->property("myId")).toString();
+	QString id = uQString(cfg->audio_output);
+
+	if (id != id_new) {
+		ustrncpy(cfg->audio_output, snd_list.playback.devices[index].id, usizeof(cfg->audio_output));
+		emu_pause(TRUE);
+		snd_start();
+		emu_pause(FALSE);
+	}
 }
 void mainWindow::s_set_apu_channels() {
 	ext_win.apu_channels = !ext_win.apu_channels;

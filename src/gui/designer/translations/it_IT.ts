@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="it_IT">
+<TS version="2.0" language="it_IT">
 <context>
     <name>APU_channels</name>
     <message>
@@ -1479,10 +1479,6 @@
         <translation></translation>
     </message>
     <message>
-        <source>Firebrandx &amp;Unsaturated</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Software Fi&amp;lters</source>
         <translation>Fi&amp;ltri Software</translation>
     </message>
@@ -1565,6 +1561,42 @@
     <message>
         <source>Too&amp;ls</source>
         <translation>Str&amp;umenti</translation>
+    </message>
+    <message>
+        <source>UNIF rom files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Firebrandx No&amp;stalgia (FBX)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Input displa&amp;y</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Disable TV &amp;noise emulation when turned off</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Disable sepi&amp;a color on pause</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Disable new menu management</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fullscreen in &amp;window</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Output &amp;Device</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>System Default</source>
+        <translation type="unfinished">Default di sistema</translation>
     </message>
 </context>
 <context>

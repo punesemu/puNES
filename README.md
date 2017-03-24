@@ -10,7 +10,7 @@ Nintendo Entertaiment System emulator
 WIP
 -----------
 always updated to the last commit:
-* Windows 32 bit : [SDL](https://dl.dropboxusercontent.com/u/21595068/punes32.wip.sdl.zip) - [D3D9](https://dl.dropboxusercontent.com/u/21595068/punes32.wip.d3d9.zip)
-* Windows 64 bit : [SDL](https://dl.dropboxusercontent.com/u/21595068/punes64.wip.sdl.zip) - [D3D9](https://dl.dropboxusercontent.com/u/21595068/punes64.wip.d3d9.zip)
-* Linux 32 bit : [SDL](https://dl.dropboxusercontent.com/u/21595068/punes32)
-* Linux 64 bit : [SDL](https://dl.dropboxusercontent.com/u/21595068/punes64)
+* Windows 32 bit : [SDL](https://www.dropbox.com/s/3b15hk5ad2mbepr/punes32.wip.sdl.zip?dl=0) - [D3D9](https://www.dropbox.com/s/avvmels3hi060zw/punes32.wip.d3d9.zip?dl=0)
+* Windows 64 bit : [SDL](https://www.dropbox.com/s/jki4udcrwwq3hym/punes64.wip.sdl.zip?dl=0) - [D3D9](https://www.dropbox.com/s/29bzoqvru983ix6/punes64.wip.d3d9.zip?dl=0)
+* Linux 32 bit : [SDL](https://www.dropbox.com/s/yt66qgzn2dukqj1/punes32?dl=0)
+* Linux 64 bit : [SDL](https://www.dropbox.com/s/5n74roezzf5a2qy/punes64?dl=0)

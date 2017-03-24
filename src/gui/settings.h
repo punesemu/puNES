@@ -72,6 +72,7 @@ enum set_element {
 	SET_FULLSCREEN,
 	SET_FULLSCREEN_IN_WINDOW,
 	SET_STRETCH_FULLSCREEN,
+	SET_AUDIO_OUTPUT_DEVICE,
 	SET_AUDIO_BUFFER_FACTOR,
 	SET_SAMPLERATE,
 	SET_CHANNELS,
@@ -692,6 +693,17 @@ static const _settings main_cfg[] = {
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 	{
+		uL("audio"), uL("output device"), uL("default"),
+#if defined(__linux__)
+		uL("# possible values: default, plughw:[x,x]"),
+		uL("    --audio-output-device                       : default, plughw:[x,x]"),
+# else
+		uL("# possible values: default, [DEVICEID]"),
+		uL("    --audio-output-device                       : default, [DEVICEID]"),
+#endif
+		{0, NULL}
+	},
+	{
 		uL("audio"), uL("buffer factor"), uL("1"),
 		uL("# possible values: [0-15]"),
 		uL("-b, --audio-buffer-factor buffer size factor    : [0-15]"),
@@ -1078,6 +1090,7 @@ EXTERNC void settings_save_GUI(void);
 EXTERNC void settings_set_overscan_default(_overscan_borders *ob, BYTE mode);
 EXTERNC int settings_val_to_int(int index, const uTCHAR *buffer);
 EXTERNC double settings_val_to_double(WORD round, const uTCHAR *buffer);
+EXTERNC void settings_cpy_utchar_to_val(int index, uTCHAR *buffer);
 EXTERNC void settings_val_to_oscan(int index, _overscan_borders *ob, const uTCHAR *buffer);
 
 EXTERNC void settings_pgs_parse(void);

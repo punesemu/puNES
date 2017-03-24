@@ -126,6 +126,8 @@ class mainWindow: public QMainWindow {
 		void s_fast_forward();
 		void s_save_screenshot();
 		void s_set_vs_window();
+		void s_update_output_devices();
+		void s_set_output_device();
 		void s_set_apu_channels();
 		void s_set_ppu_hacks();
 		void s_set_mode();

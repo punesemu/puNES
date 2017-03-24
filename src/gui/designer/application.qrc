@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="icon">
+    <file>icons/audio_output.png</file>
     <file>icons/turn_off.png</file>
     <file>icons/turn_on.png</file>
     <file>icons/home.png</file>

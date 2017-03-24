@@ -468,6 +468,7 @@ static void gui_pmenu_management(void) {
 		<< qt.ui->menu_Shader
 		<< qt.ui->menu_Palette
 		<< qt.ui->menu_Audio
+		<< qt.ui->menu_Output_Device
 		<< qt.ui->menu_Sample_rate
 		<< qt.ui->menu_Channels
 		<< qt.ui->menu_Stereo_delay
@@ -482,6 +483,9 @@ static void gui_pmenu_management(void) {
 
 	static QList<QAction*> triggerAndHide;
 	triggerAndHide
+		<< qt.ui->action_English
+		<< qt.ui->action_Italian
+		<< qt.ui->action_Russian
 		<< qt.ui->action_Save_settings
 		<< qt.ui->action_Save_state
 		<< qt.ui->action_Load_state;

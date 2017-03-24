@@ -39,6 +39,9 @@
 	int rc = settings_val_to_int(ind, oarg);\
 	if (rc >= 0) cfg = rc;\
 }
+#define set_cpy_utchar_to_val(cfg, ind)\
+	settings_cpy_utchar_to_val(ind, oarg);\
+	ustrncpy(cfg, oarg, usizeof(cfg) - 1)
 #define set_double(rnd)\
 	settings_val_to_double(rnd, oarg)
 #define set_oscan(set, ind)\
@@ -97,6 +100,7 @@ static struct _cl_option {
 	{ "language",              req_arg,  0 },
 	{ "disable-new-menu",      req_arg,  0 },
 	{ "fullscreen-window",     req_arg,  0 },
+	{ "audio-output-device",   req_arg,  0 },
 };
 
 void cmd_line_parse(int argc, uTCHAR **argv) {
@@ -189,6 +193,8 @@ void cmd_line_parse(int argc, uTCHAR **argv) {
 					set_int(cfg_from_file.disable_new_menu, SET_GUI_DISABLE_NEW_MENU);
 				} else if (key == "fullscreen-window") {
 					set_int(cfg_from_file.fullscreen_in_window, SET_FULLSCREEN_IN_WINDOW);
+				} else if (key == "audio-output-device") {
+					set_cpy_utchar_to_val(cfg_from_file.audio_output, SET_AUDIO_OUTPUT_DEVICE);
 				}
 				break;
 			case 'a':
@@ -341,6 +347,7 @@ static void usage(QString name) {
 			uL("" uPERCENTs "\n")
 			uL("" uPERCENTs "\n")
 			uL("" uPERCENTs "\n")
+			uL("" uPERCENTs "\n")
 #if defined (WITH_OPENGL)
 			uL("" uPERCENTs "\n")
 			uL("" uPERCENTs "\n")
@@ -377,6 +384,7 @@ static void usage(QString name) {
 			main_cfg[SET_FULLSCREEN].hlp,
 			main_cfg[SET_FULLSCREEN_IN_WINDOW].hlp,
 			main_cfg[SET_STRETCH_FULLSCREEN].hlp,
+			main_cfg[SET_AUDIO_OUTPUT_DEVICE].hlp,
 			main_cfg[SET_AUDIO].hlp,
 			main_cfg[SET_AUDIO_BUFFER_FACTOR].hlp,
 			main_cfg[SET_SAMPLERATE].hlp,

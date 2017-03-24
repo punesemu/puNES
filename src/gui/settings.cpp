@@ -54,6 +54,9 @@ int settings_val_to_int(int index, const uTCHAR *buffer) {
 double settings_val_to_double(WORD round, const uTCHAR *buffer) {
 	return (s.set->val_to_double(round, buffer));
 }
+void settings_cpy_utchar_to_val(int index, uTCHAR *buffer) {
+	s.set->cpy_utchar_to_val(index, buffer);
+}
 void settings_val_to_oscan(int index, _overscan_borders *ob, const uTCHAR *buffer) {
 	s.set->oscan_val_to_int(index, ob, buffer);
 }

@@ -27,6 +27,9 @@
 #include "audio/quality.h"
 #include "audio/channels.h"
 #include "gui.h"
+#include "audio_outin_dev.h"
+
+#define SND_LIST_DEVICES_V1
 
 enum alsa_thread_loop_actions {
 	AT_UNINITIALIZED,
@@ -35,20 +38,15 @@ enum alsa_thread_loop_actions {
 	AT_PAUSE
 };
 
-static BYTE set_hwparams(void);
-static BYTE set_swparams(void);
-void *alsa_loop_thread(void *data);
-void alsa_loop_in_pause(void);
-static int INLINE xrun_recovery(snd_pcm_t *handle, int err);
-static void INLINE wrbuf(snd_pcm_t *handle, void *buffer, snd_pcm_sframes_t avail);
-
-typedef struct {
+typedef struct _alsa {
 	snd_pcm_t *handle;
 
 	snd_pcm_uframes_t bsize;
 	snd_pcm_uframes_t psize;
+
+	snd_pcm_sframes_t (*snd_writei) (snd_pcm_t *pcm, const void *buffer, snd_pcm_uframes_t size);
 } _alsa;
-typedef struct {
+typedef struct _thread {
 	pthread_t thread;
 	pthread_mutex_t lock;
 
@@ -63,6 +61,20 @@ typedef struct {
 #endif
 } _thread;
 
+static int alsa_find_index_id(_snd_list_dev *list, uTCHAR *id, int size);
+static void alsa_enum_cards(_snd_list_dev *list, snd_pcm_stream_t stream);
+static void alsa_device_add(_snd_list_dev *list, uTCHAR *id, uTCHAR *action);
+static void alsa_list_devices_quit(void);
+#if defined (DEBUG)
+static void alsa_hwparams_print(snd_pcm_hw_params_t *hwp);
+#endif
+static BYTE alsa_hwparams_set(void);
+static BYTE alsa_swparams_set(void);
+static int INLINE alsa_xrun_recovery(snd_pcm_t *handle, int err);
+static void INLINE alsa_wrbuf(_alsa *handle, void *buffer, snd_pcm_sframes_t avail);
+void *alsa_loop_thread(void *data);
+void alsa_loop_in_pause(void);
+
 static _thread loop;
 static _alsa alsa;
 static _callback_data cbd;
@@ -75,6 +87,8 @@ BYTE snd_init(void) {
 
 	snd_apu_tick = NULL;
 	snd_end_frame = NULL;
+
+	snd_list_devices();
 
 	// apro e avvio la riproduzione
 	if (snd_start()) {
@@ -122,12 +136,33 @@ BYTE snd_start(void) {
 	}
 
 	{
-		double factor = (1.0f / 48000.0f) * (double) snd.samplerate;
+		static int factor[10] = { 90, 80, 70, 60, 50, 40, 30, 20, 10, 5 };
+		_snd_dev *dev = &snd_list.playback.devices[alsa_find_index_id(&snd_list.playback,
+				cfg->audio_output, usizeof(cfg->audio_output))];
+		int tries;
 
-		// buffer hardware
-		alsa.bsize = ((1024 * factor) + ((512 * factor) * cfg->audio_buffer_factor));
-		alsa.psize = alsa.bsize / snd.channels;
-		//alsa.psize = alsa.bsize / 3;
+		// snd.samplarate / 50 = 20 ms
+		alsa.psize = (snd.samplerate / factor[cfg->audio_buffer_factor]);
+
+		rc = snd_pcm_open(&alsa.handle, dev->id, SND_PCM_STREAM_PLAYBACK, 0);
+
+		for (tries = 0; (tries < 100) && (rc == -EBUSY); ++tries) {
+			gui_sleep(100);
+			rc = snd_pcm_open(&alsa.handle, dev->id, SND_PCM_STREAM_PLAYBACK, 0);
+		}
+
+		if (rc < 0) {
+			fprintf(stderr, "Playback open error: %s\n", snd_strerror(rc));
+			goto snd_start_error;
+		}
+
+		if (alsa_hwparams_set() != EXIT_OK) {
+			goto snd_start_error;
+		}
+
+		if (alsa_swparams_set() != EXIT_OK) {
+			goto snd_start_error;
+		}
 	}
 
 	snd.samples = alsa.bsize * 2;
@@ -135,14 +170,14 @@ BYTE snd_start(void) {
 
 	{
 		// dimensione in bytes del buffer software
-		snd.buffer.size = (alsa.bsize * snd.channels * sizeof(*cbd.write)) * 5;
+		snd.buffer.size = (alsa.bsize * snd.channels * sizeof(*cbd.write)) * 10;
 
 		snd.buffer.limit.low = (snd.buffer.size / 100) * 25;
 		snd.buffer.limit.high = (snd.buffer.size / 100) * 55;
 
 #if !defined (RELEASE)
-		printf("softw bsize : %-6d - %-6d\n", snd.buffer.size, snd.samples);
-		printf("softw limit : %-6d - %-6d\n", snd.buffer.limit.low, snd.buffer.limit.high);
+		printf("softw bsize    : %10d - %10d\n", snd.buffer.size, snd.samples);
+		printf("softw limit    : %10d - %10d\n", snd.buffer.limit.high, snd.buffer.limit.low);
 #endif
 
 		// alloco il buffer in memoria
@@ -182,17 +217,6 @@ BYTE snd_start(void) {
 	audio_channels_init_mode();
 
 	audio_quality(cfg->audio_quality);
-
-	if ((rc = snd_pcm_open(&alsa.handle, "default", SND_PCM_STREAM_PLAYBACK, 0)) < 0) {
-		fprintf(stderr, "Playback open error: %s\n", snd_strerror(rc));
-		goto snd_start_error;
-	}
-	if (set_hwparams() != EXIT_OK) {
-		goto snd_start_error;
-	}
-	if (set_swparams() != EXIT_OK) {
-		goto snd_start_error;
-	}
 
 	if (loop.action == AT_UNINITIALIZED) {
 		loop.alsa = &alsa;
@@ -275,19 +299,283 @@ void snd_quit(void) {
 
 	snd_stop();
 
+	alsa_list_devices_quit();
+
 #if !defined (RELEASE)
 	fprintf(stderr, "\n");
 #endif
 }
+#if !defined (SND_LIST_DEVICES_V2)
+void snd_list_devices(void) {
+	alsa_list_devices_quit();
 
-static BYTE set_hwparams(void) {
+	// Playback devices //
+	alsa_device_add(&snd_list.playback, uL("default"), uL("System Default"));
+	alsa_enum_cards(&snd_list.playback, SND_PCM_STREAM_PLAYBACK);
+
+	// Capture devices //
+	alsa_device_add(&snd_list.capture, uL("default"), uL("System Default"));
+	alsa_enum_cards(&snd_list.capture, SND_PCM_STREAM_CAPTURE);
+
+#if defined (DEBUG)
+	int i;
+
+	printf("PLAYBACK devices\n");
+	for (i = 0; i < snd_list.playback.count; i++) {
+		_snd_dev *dev = &snd_list.playback.devices[i];
+
+		printf(uL("  %3d : " uPERCENTs "\n"), i, dev->id);
+	}
+
+	printf("CAPTURE devices\n");
+	for (i = 0; i < snd_list.capture.count; i++) {
+		_snd_dev *dev = &snd_list.capture.devices[i];
+
+		printf(uL("  %3d : " uPERCENTs "\n"), i, dev->id);
+	}
+#endif
+}
+#else
+void snd_list_devices(void) {
+	void **pcm_hints;
+	int i;
+
+	alsa_list_devices_quit();
+
+	// Playback devices //
+	alsa_device_add(&snd_list.playback, uL("default"), uL("System Default"));
+
+	if (snd_device_name_hint(-1, "pcm", &pcm_hints) < 0) {
+		return;
+	}
+
+	{
+		uTCHAR buf[100];
+		void **pcm_str = pcm_hints;
+		static const uTCHAR *exclude[] = {
+			uL("null"),     uL("pulse"),
+			uL("default"),  uL("sysdefault"),
+			uL("surround")
+		};
+
+		for (; (*pcm_str); pcm_str++) {
+			uTCHAR *pcm_hint_name, *pcm_hint_name_strip;
+			uTCHAR *pcm_hint_ioid;
+			uTCHAR *pcm_hint_desc, *end;
+			BYTE is_good = TRUE;
+
+			if ((pcm_hint_name = snd_device_name_get_hint((*pcm_str), "NAME")) == NULL) {
+				continue;
+			}
+			if ((pcm_hint_ioid = snd_device_name_get_hint((*pcm_str), "IOID")) &&
+				(strcmp(pcm_hint_ioid, "Playback") != 0) &&
+				(strcmp(pcm_hint_ioid, "Output") != 0)) {
+				free(pcm_hint_name);
+				free(pcm_hint_ioid);
+				continue;
+			}
+
+			free(pcm_hint_ioid);
+
+			ustrncpy(buf, pcm_hint_name, usizeof(buf));
+
+			// examples : front:CARD=PCH,DEV=0
+			if ((pcm_hint_name_strip = ustrchr(buf, ':'))) {
+				(*pcm_hint_name_strip) = 0;
+			}
+
+			for (i = 0; i < LENGTH(exclude); i++) {
+				if (ustrncmp(exclude[i], buf, ustrlen(exclude[i])) == 0) {
+					is_good = FALSE;
+					break;
+				}
+			}
+
+			if (is_good == FALSE) {
+				free(pcm_hint_name);
+				continue;
+			}
+
+			umemset(buf, 0, usizeof(buf));
+
+			if ((pcm_hint_desc = snd_device_name_get_hint((*pcm_str), "DESC"))) {
+				if ((end = ustrchr(pcm_hint_desc, '\n'))) {
+					(*end) = '\0';
+				}
+				ustrncpy(buf, pcm_hint_desc, usizeof(buf));
+				free(pcm_hint_desc);
+			} else {
+				ustrncpy(buf, pcm_hint_name, usizeof(buf));
+			}
+
+			alsa_device_add(&snd_list.playback, pcm_hint_name, buf);
+
+		    free(pcm_hint_name);
+        }
+		snd_device_name_free_hint(pcm_hints);
+	}
+
+	// Capture devices //
+	alsa_device_add(&snd_list.capture, uL("default"), uL("System Default"));
+	alsa_enum_cards(&snd_list.capture, SND_PCM_STREAM_CAPTURE);
+
+#if defined (DEBUG)
+	printf("PLAYBACK devices\n");
+	for (i = 0; i < snd_list.playback.count; i++) {
+		_snd_dev *dev = &snd_list.playback.devices[i];
+
+		printf(uL("  %3d : " uPERCENTs "\n"), i, dev->id);
+	}
+
+	printf("CAPTURE devices\n");
+	for (i = 0; i < snd_list.capture.count; i++) {
+		_snd_dev *dev = &snd_list.capture.devices[i];
+
+		printf(uL("  %3d : " uPERCENTs "\n"), i, dev->id);
+	}
+#endif
+}
+#endif
+
+static int alsa_find_index_id(_snd_list_dev *list, uTCHAR *id, int size) {
+	int i, index = -1;
+
+	for (i = 0; i < list->count; i++) {
+		if (ustrcmp(id, list->devices[i].id) == 0) {
+			index = i;
+			break;
+		}
+	}
+
+	if (index == -1) {
+		index = 0;
+		ustrncpy(id, uL("default"), size);
+	}
+
+	return (index);
+}
+static void alsa_enum_cards(_snd_list_dev *list, snd_pcm_stream_t stream) {
+	int a = -1, b = -1;
+	uTCHAR buf[100];
+
+	while (!snd_card_next(&a) && (a != -1)) {
+		_snd_dev_id(ctl_id);
+		snd_ctl_card_info_t *cinfo;
+		snd_pcm_info_t *pinfo;
+		snd_ctl_t *ctl;
+		uTCHAR *card_name;
+
+		snd_card_get_name(a, &card_name);
+
+		usnprintf(ctl_id, usizeof(ctl_id), "hw:%d", a);
+		snd_ctl_open(&ctl, ctl_id, 0);
+		snd_ctl_card_info_alloca(&cinfo);
+		snd_ctl_card_info(ctl, cinfo);
+
+		snd_pcm_info_alloca(&pinfo);
+
+		while (!snd_ctl_pcm_next_device(ctl, &b) && (b >= 0)) {
+			_snd_dev_id(id);
+
+			usnprintf(id, sizeof(id), "plughw:%d,%d", a, b);
+
+			snd_pcm_info_set_device(pinfo, b);
+			snd_pcm_info_set_subdevice(pinfo, 0);
+
+			snd_pcm_info_set_stream(pinfo, stream);
+
+			if (snd_ctl_pcm_info(ctl, pinfo) < 0) {
+				continue;
+			}
+
+			usnprintf(buf, usizeof(buf), uL("" uPERCENTs " : " uPERCENTs), card_name, id);
+			alsa_device_add(list, id, buf);
+		}
+
+		snd_ctl_close(ctl);
+		free(card_name);
+	}
+
+}
+static void alsa_device_add(_snd_list_dev *list, uTCHAR *id, uTCHAR *action) {
+	_snd_dev *dev, *devs;
+
+	if ((devs = (_snd_dev *) realloc(list->devices, (list->count + 1) * sizeof(_snd_dev)))) {
+		list->devices = devs;
+		dev = &list->devices[list->count];
+		ustrncpy(dev->id, id, usizeof(dev->id));
+		list->menu_device_add(action, dev->id);
+		list->count++;
+	}
+}
+static void alsa_list_devices_quit(void) {
+	outdev_init();
+	snd_list.playback.count = 0;
+	if (snd_list.playback.devices) {
+		free(snd_list.playback.devices);
+	}
+	snd_list.playback.devices = NULL;
+	snd_list.playback.menu_device_add = outdev_add;
+
+	indev_init();
+	snd_list.capture.count = 0;
+	if (snd_list.capture.devices) {
+		free(snd_list.capture.devices);
+	}
+	snd_list.capture.devices = NULL;
+	snd_list.capture.menu_device_add = indev_add;
+}
+#if defined (DEBUG)
+static void alsa_hwparams_print(snd_pcm_hw_params_t *hwp) {
+	snd_pcm_uframes_t ufmin, ufmax;
+	unsigned int min, max;
+	int dir;
+
+	snd_pcm_hw_params_get_channels_min(hwp, &min);
+	snd_pcm_hw_params_get_channels_max(hwp, &max);
+	printf("channels       : %10d - %10d\n", min, max);
+
+	snd_pcm_hw_params_get_rate_min(hwp, &min, &dir);
+	snd_pcm_hw_params_get_rate_max(hwp, &max, &dir);
+	printf("rate           : %10d - %10d\n", min, max);
+
+	snd_pcm_hw_params_get_rate_resample(alsa.handle, hwp, &min);
+	printf("resample       : %10d\n", min);
+
+	snd_pcm_hw_params_get_export_buffer(alsa.handle, hwp, &min);
+	printf("export buffer  : %10d\n", min);
+
+	snd_pcm_hw_params_get_period_wakeup(alsa.handle, hwp, &min);
+	printf("period wakeup  : %10d\n", min);
+
+	snd_pcm_hw_params_get_period_time_min(hwp, &min, &dir);
+	snd_pcm_hw_params_get_period_time_max(hwp, &max, &dir);
+	printf("period time    : %10d - %10d\n", min, max);
+
+	snd_pcm_hw_params_get_period_size_min(hwp, &ufmin, &dir);
+	snd_pcm_hw_params_get_period_size_max(hwp, &ufmax, &dir);
+	printf("period size    : %10ld - %10ld\n", ufmin, ufmax);
+
+	snd_pcm_hw_params_get_periods_min(hwp, &min, &dir);
+	snd_pcm_hw_params_get_periods_max(hwp, &max, &dir);
+	printf("period         : %10d - %10d\n", min, max);
+
+	snd_pcm_hw_params_get_buffer_time_min(hwp, &min, &dir);
+	snd_pcm_hw_params_get_buffer_time_max(hwp, &max, &dir);
+	printf("buffer time    : %10d - %10d\n", min, max);
+
+	snd_pcm_hw_params_get_buffer_size_min(hwp, &ufmin);
+	snd_pcm_hw_params_get_buffer_size_max(hwp, &ufmax);
+	printf("buffer size    : %10ld - %10ld\n", ufmin, ufmax);
+
+	snd_pcm_hw_params_get_min_align(hwp, &ufmin);
+	printf("align          : %10ld\n", ufmin);
+}
+#endif
+static BYTE alsa_hwparams_set(void) {
 	snd_pcm_hw_params_t *params = NULL;
 	unsigned int rrate;
 	int rc;
-#if !defined (RELEASE)
-	snd_pcm_uframes_t size;
-	int dir;
-#endif
 
 	snd_pcm_hw_params_alloca(&params);
 
@@ -297,28 +585,45 @@ static BYTE set_hwparams(void) {
 				snd_strerror(rc));
 		return (EXIT_ERROR);
 	}
+
+#if defined (DEBUG)
+	printf("-- BEFORE --\n");
+	alsa_hwparams_print(params);
+	printf("\n");
+#endif
+
 	// anable hardware resampling
 	if ((rc = snd_pcm_hw_params_set_rate_resample(alsa.handle, params, 1)) < 0) {
 		fprintf(stderr, "Resampling setup failed for playback: %s\n", snd_strerror(rc));
 		return (EXIT_ERROR);
 	}
-	// set the interleaved read/write format
-	if ((rc = snd_pcm_hw_params_set_access(alsa.handle, params, SND_PCM_ACCESS_RW_INTERLEAVED))
+
+	// set the mmap/rw interleaved read/write format
+	alsa.snd_writei = snd_pcm_mmap_writei;
+
+	if ((rc = snd_pcm_hw_params_set_access(alsa.handle, params, SND_PCM_ACCESS_MMAP_INTERLEAVED))
 			< 0) {
-		fprintf(stderr, "Access type not available for playback: %s\n", snd_strerror(rc));
-		return (EXIT_ERROR);
+		if ((rc = snd_pcm_hw_params_set_access(alsa.handle, params, SND_PCM_ACCESS_RW_INTERLEAVED))
+		        < 0) {
+			fprintf(stderr, "Access type not available for playback: %s\n", snd_strerror(rc));
+			return (EXIT_ERROR);
+		}
+		alsa.snd_writei = snd_pcm_writei;
 	}
+
 	// set the sample format
 	if ((rc = snd_pcm_hw_params_set_format(alsa.handle, params, SND_PCM_FORMAT_S16)) < 0) {
 		fprintf(stderr, "Sample format not available for playback: %s\n", snd_strerror(rc));
 		return (EXIT_ERROR);
 	}
+
 	// set the channels
 	if ((rc = snd_pcm_hw_params_set_channels(alsa.handle, params, snd.channels)) < 0) {
 		fprintf(stderr, "Channels count (%i) not available for playbacks: %s\n", snd.channels,
 				snd_strerror(rc));
 		return (EXIT_ERROR);
 	}
+
 	// set the stream rate
 	rrate = snd.samplerate;
 
@@ -331,44 +636,36 @@ static BYTE set_hwparams(void) {
 		fprintf(stderr, "Rate doesn't match (requested %iHz, get %iHz)\n", snd.samplerate, rrate);
 		return (EXIT_ERROR);
 	}
-	// set the buffer size
-#if !defined (RELEASE)
-	printf("hardw bsize : %-6ld - ", alsa.bsize);
-#endif
-	if ((rc = snd_pcm_hw_params_set_buffer_size_near(alsa.handle, params, &alsa.bsize)) < 0) {
-		fprintf(stderr, "Unable to set buffer size for playback: %s\n", snd_strerror(rc));
-		return (EXIT_ERROR);
-	}
-#if !defined (RELEASE)
-	printf("%-6ld - ", alsa.bsize);
-	snd_pcm_hw_params_get_buffer_size_min(params, &size);
-	printf("%-6ld - ", size);
-	snd_pcm_hw_params_get_buffer_size_max(params, &size);
-	printf("%-6ld\n", size);
-#endif
+
 	// set the period size
-#if !defined (RELEASE)
-	printf("period Size : %-6ld - ", alsa.psize);
-#endif
 	if ((rc = snd_pcm_hw_params_set_period_size_near(alsa.handle, params, &alsa.psize, 0)) < 0) {
 		fprintf(stderr, "Unable to set period size for playback: %s\n", snd_strerror(rc));
 		return (EXIT_ERROR);
 	}
-#if !defined (RELEASE)
-	printf("%-6ld - ", alsa.psize);
-	snd_pcm_hw_params_get_period_size_min(params, &size, &dir);
-	printf("%-6ld - ", size);
-	snd_pcm_hw_params_get_period_size_max(params, &size, &dir);
-	printf("%-6ld\n", size);
+
+	// set the buffer size
+	alsa.bsize = alsa.psize * 3;
+
+	if ((rc = snd_pcm_hw_params_set_buffer_size_near(alsa.handle, params, &alsa.bsize)) < 0) {
+		fprintf(stderr, "Unable to set buffer size for playback: %s\n", snd_strerror(rc));
+		return (EXIT_ERROR);
+	}
+
+#if defined (DEBUG)
+	printf("-- AFTER --\n");
+	alsa_hwparams_print(params);
+	printf("\n");
 #endif
+
 	// write the parameters to device
 	if ((rc = snd_pcm_hw_params(alsa.handle, params)) < 0) {
 		fprintf(stderr, "Unable to set hw params for playback: %s\n", snd_strerror(rc));
 		return (EXIT_ERROR);
 	}
+
 	return (EXIT_OK);
 }
-static BYTE set_swparams(void) {
+static BYTE alsa_swparams_set(void) {
 	snd_pcm_sw_params_t *params = NULL;
 	int rc;
 
@@ -379,22 +676,58 @@ static BYTE set_swparams(void) {
 		fprintf(stderr, "Unable to determine current swparams for playback: %s\n", snd_strerror(rc));
 		return (EXIT_ERROR);
 	}
+
 	// start the transfer when the buffer is almost full
 	if ((rc = snd_pcm_sw_params_set_start_threshold(alsa.handle, params, alsa.psize)) < 0) {
 		fprintf(stderr, "Unable to set start threshold mode for playback: %s\n", snd_strerror(rc));
 		return (EXIT_ERROR);
 	}
+
 	// allow the transfer when at least period_size samples can be processed
 	if ((rc = snd_pcm_sw_params_set_avail_min(alsa.handle, params, alsa.psize)) < 0) {
 		fprintf(stderr, "Unable to set avail min for playback: %s\n", snd_strerror(rc));
 		return (EXIT_ERROR);
 	}
+
 	// write the parameters to the playback device
 	if ((rc = snd_pcm_sw_params(alsa.handle, params)) < 0) {
 		fprintf(stderr, "Unable to set sw params for playback: %s\n", snd_strerror(rc));
 		return (EXIT_ERROR);
 	}
 	return (EXIT_OK);
+}
+static int INLINE alsa_xrun_recovery(snd_pcm_t *handle, int err) {
+	if (err == -EPIPE) { // under-run
+		err = snd_pcm_prepare(handle);
+		if (err < 0) {
+			fprintf(stderr, "can't recovery from underrun, prepare failed: %s\n",
+					snd_strerror(err));
+			info.stop = TRUE;
+			return (EXIT_ERROR);
+		}
+	} else if (err == -ESTRPIPE) {
+		while ((err = snd_pcm_resume(handle)) == -EAGAIN) {
+			sleep(1); // wait until the suspend flag is released
+		}
+
+		if (err < 0) {
+			err = snd_pcm_prepare(handle);
+			if (err < 0) {
+				fprintf(stderr, "can't recovery from suspend, prepare failed: %s\n",
+						snd_strerror(err));
+				info.stop = TRUE;
+				return (EXIT_ERROR);
+			}
+		}
+	}
+	return (EXIT_OK);
+}
+static void INLINE alsa_wrbuf(_alsa *alsa, void *buffer, snd_pcm_sframes_t avail) {
+	int rc;
+
+	if ((rc = alsa->snd_writei(alsa->handle, buffer, avail)) < 0) {
+		fprintf(stderr, "snd_pcm_xxxx_writei failed (%s)\n", snd_strerror(rc));
+	}
 }
 void *alsa_loop_thread(void *data) {
 	_thread *th = (_thread *) data;
@@ -422,20 +755,16 @@ void *alsa_loop_thread(void *data) {
 
 		if ((rc = snd_pcm_wait(th->alsa->handle , 100)) < 0) {
 			fprintf(stderr, "snd_pcm_wait() failed (%s)\n", snd_strerror(rc));
-			xrun_recovery(th->alsa->handle, rc);
+			alsa_xrun_recovery(th->alsa->handle, rc);
 			continue;
 		}
 
 		// controllo quanti frames alsa sono richiesti
 		if ((avail = snd_pcm_avail_update(th->alsa->handle)) < 0) {
 			fprintf(stderr, "snd_pcm_avail_update() failed (%s)\n", snd_strerror(rc));
-			xrun_recovery(th->alsa->handle, avail);
+			alsa_xrun_recovery(th->alsa->handle, avail);
 			continue;
 		}
-
-#if !defined (RELEASE)
-		snd_pcm_sframes_t request = avail;
-#endif
 
 		snd_lock_cache(NULL);
 
@@ -444,9 +773,9 @@ void *alsa_loop_thread(void *data) {
 
 		if ((info.no_rom | info.turn_off | info.pause) || (snd.buffer.start == FALSE)
 				|| (fps.fast_forward == TRUE)) {
-			wrbuf(th->alsa->handle, (void *) cache->silence, avail);
+			alsa_wrbuf(th->alsa, (void *) cache->silence, avail);
 		} else if (cache->bytes_available <= 0) {
-			wrbuf(th->alsa->handle, (void *) cache->silence, avail);
+			alsa_wrbuf(th->alsa, (void *) cache->silence, avail);
 			snd.out_of_sync++;
 		} else {
 			if (cache->bytes_available < len) {
@@ -459,15 +788,15 @@ void *alsa_loop_thread(void *data) {
 				uint32_t l1 = 0, l2 = 0;
 
 				l1 = cache->end - cache->read;
-				wrbuf(th->alsa->handle, (void *) cache->read,
+				alsa_wrbuf(th->alsa, (void *) cache->read,
 						l1 / snd.channels / sizeof(*cache->write));
 				cache->read = (SBYTE *) cache->start;
 				l2 = len - l1;
-				wrbuf(th->alsa->handle, (void *) cache->read,
+				alsa_wrbuf(th->alsa, (void *) cache->read,
 						l2 / snd.channels / sizeof(*cache->write));
 				cache->read += l2;
 			} else {
-				wrbuf(th->alsa->handle, (void *) cache->read, avail);
+				alsa_wrbuf(th->alsa, (void *) cache->read, avail);
 				cache->read += len;
 			}
 
@@ -480,6 +809,8 @@ void *alsa_loop_thread(void *data) {
 		}
 
 #if !defined (RELEASE)
+		snd_pcm_sframes_t request = avail;
+
 		if ((gui_get_ms() - th->tick) >= 250.0f) {
 			th->tick = gui_get_ms();
 			if (info.snd_info == TRUE)
@@ -510,38 +841,5 @@ void alsa_loop_in_pause(void) {
 		while (loop.in_run == TRUE) {
 			gui_sleep(10);
 		}
-	}
-}
-static int INLINE xrun_recovery(snd_pcm_t *handle, int err) {
-	if (err == -EPIPE) { // under-run
-		err = snd_pcm_prepare(handle);
-		if (err < 0) {
-			fprintf(stderr, "can't recovery from underrun, prepare failed: %s\n",
-					snd_strerror(err));
-			info.stop = TRUE;
-			return (EXIT_ERROR);
-		}
-	} else if (err == -ESTRPIPE) {
-		while ((err = snd_pcm_resume(handle)) == -EAGAIN) {
-			sleep(1); // wait until the suspend flag is released
-		}
-
-		if (err < 0) {
-			err = snd_pcm_prepare(handle);
-			if (err < 0) {
-				fprintf(stderr, "can't recovery from suspend, prepare failed: %s\n",
-						snd_strerror(err));
-				info.stop = TRUE;
-				return (EXIT_ERROR);
-			}
-		}
-	}
-	return (EXIT_OK);
-}
-static void INLINE wrbuf(snd_pcm_t *handle, void *buffer, snd_pcm_sframes_t avail) {
-	int rc;
-
-	if ((rc = snd_pcm_writei(handle, buffer,avail)) < 0) {
-		fprintf(stderr, "snd_pcm_writei failed (%s)\n", snd_strerror(rc));
 	}
 }

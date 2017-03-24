@@ -54,6 +54,7 @@ typedef wchar_t uTCHAR;
 #define ustrrchr wcsrchr
 #define ustrcasecmp gui_utf_strcasecmp
 #define ustrcmp wcscmp
+#define ustrncmp wcsncmp
 #define ustrcat wcscat
 #define uremove _wremove
 #define uioctl
@@ -61,6 +62,7 @@ typedef wchar_t uTCHAR;
 #define uchdir _wchdir
 #define ugetcwd _wgetcwd
 #define umemcpy wmemcpy
+#define ustrchr wcschr
 
 // linux
 #else
@@ -92,6 +94,7 @@ typedef char uTCHAR;
 #define ustrrchr strrchr
 #define ustrcasecmp strcasecmp
 #define ustrcmp strcmp
+#define ustrncmp strncmp
 #define ustrcat strcat
 #define uremove remove
 #define uioctl ioctl
@@ -99,6 +102,7 @@ typedef char uTCHAR;
 #define uchdir chdir
 #define ugetcwd getcwd
 #define umemcpy memcpy
+#define ustrchr strchr
 
 #endif
 

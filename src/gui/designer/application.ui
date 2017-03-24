@@ -427,6 +427,16 @@
       <addaction name="action_Absf_8"/>
       <addaction name="action_Absf_9"/>
      </widget>
+     <widget class="pMenu" name="menu_Output_Device">
+      <property name="title">
+       <string>Output &amp;Device</string>
+      </property>
+      <property name="icon">
+       <iconset resource="application.qrc">
+        <normaloff>:/icon/icons/audio_output.png</normaloff>:/icon/icons/audio_output.png</iconset>
+      </property>
+     </widget>
+     <addaction name="menu_Output_Device"/>
      <addaction name="menu_Buffer_Size_factor"/>
      <addaction name="menu_Sample_rate"/>
      <addaction name="menu_Channels"/>

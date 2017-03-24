@@ -43,6 +43,7 @@ class settingsObject : public QSettings {
 		void wr();
 		void wr(QString group);
 		int val_to_int(int index, const uTCHAR *buffer);
+		void cpy_utchar_to_val(int index, uTCHAR *src);
 
 	protected:
 		virtual void setup();
@@ -54,7 +55,6 @@ class settingsObject : public QSettings {
 		int val_to_int(int index);
 		void int_to_val(int index, int value);
 		void cpy_val_to_utchar(int index, uTCHAR *dst, int length);
-		void utchar_to_val(int index, uTCHAR *src);
 
 	private:
 		void rd_key(int index);

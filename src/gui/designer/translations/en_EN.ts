@@ -1371,10 +1371,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Firebrandx &amp;Unsaturated</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Disable sRGB F&amp;BO</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1564,6 +1560,42 @@
     </message>
     <message>
         <source>Too&amp;ls</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>UNIF rom files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Firebrandx No&amp;stalgia (FBX)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Input displa&amp;y</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Disable TV &amp;noise emulation when turned off</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Disable sepi&amp;a color on pause</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Disable new menu management</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fullscreen in &amp;window</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Output &amp;Device</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>System Default</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
