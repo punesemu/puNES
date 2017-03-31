@@ -638,7 +638,7 @@ BYTE emu_turn_on(void) {
 	input_init(NO_SET_CURSOR);
 
 	/* joystick */
-	js_init();
+	js_init(TRUE);
 
 	/* gestione grafica */
 	if (gfx_init()) {
@@ -875,7 +875,7 @@ void emu_quit(BYTE exit_code) {
 
 	timeline_quit();
 
-	js_quit();
+	js_quit(TRUE);
 
 	uncomp_quit();
 

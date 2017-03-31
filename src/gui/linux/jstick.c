@@ -27,6 +27,7 @@
 #include "jstick.h"
 #include "input.h"
 #include "gui.h"
+#include "conf.h"
 
 #define _js_start(jid, op)\
 	if (jid == name_to_jsn(uL("NULL"))) {\
@@ -76,7 +77,10 @@
 		}\
 	}
 
-void js_init(void) {
+static void js_open(_js *joy);
+static void js_close(_js *joy);
+
+void js_init(BYTE first_time) {
 	BYTE i;
 
 	for (i = PORT1; i < PORT_MAX; i++) {
@@ -91,15 +95,14 @@ void js_init(void) {
 		js_open(&js[i]);
 	}
 }
-void js_open(_js *joy) {
-	joy->fd = 0;
-	if (joy->dev[0] && ustrcmp(joy->dev, uL("NULL"))) {
-		joy->fd = uopen(joy->dev, O_RDONLY | O_NONBLOCK);
-		if (joy->fd < 0) {
-			joy->fd = 0;
-		}
+void js_quit(BYTE last_time) {
+	BYTE i;
+
+	for (i = PORT1; i < PORT_MAX; i++) {
+		js_close(&js[i]);
 	}
 }
+void js_update_detected_devices(void) {}
 void js_control(_js *joy, _port *port) {
 	static const SWORD sensibility = (PLUS / 100) * 20;
 	_js_event jse;
@@ -116,19 +119,7 @@ void js_control(_js *joy, _port *port) {
 		}
 	}
 }
-void js_close(_js *joy) {
-	if (joy->fd) {
-		close(joy->fd);
-	}
-	joy->fd = 0;
-}
-void js_quit(void) {
-	BYTE i;
 
-	for (i = PORT1; i < PORT_MAX; i++) {
-		js_close(&js[i]);
-	}
-}
 BYTE js_is_connected(int dev) {
 	uTCHAR path_dev[30];
 	int fd;
@@ -141,6 +132,15 @@ BYTE js_is_connected(int dev) {
 
 	close(fd);
 	return (EXIT_OK);
+}
+BYTE js_is_this(BYTE dev, BYTE *id) {
+	return (dev == (*id));
+}
+BYTE js_is_null(BYTE *id) {
+	return ((*id) == name_to_jsn(uL("NULL")));
+}
+void js_set_id(BYTE *id, int dev) {
+	(*id) = dev;
 }
 uTCHAR *js_name_device(int dev) {
 	static uTCHAR name[128];
@@ -199,7 +199,7 @@ DBWORD js_from_name(const uTCHAR *name, const _js_element *list, const DBWORD le
 	}
 	return (js);
 }
-DBWORD js_read_in_dialog(int dev, int fd) {
+DBWORD js_read_in_dialog(BYTE *id, int fd) {
 	static const WORD sensibility = (PLUS / 100) * 75;
 	_js_event jse;
 	ssize_t size = sizeof(jse);
@@ -232,13 +232,28 @@ DBWORD js_read_in_dialog(int dev, int fd) {
 
 	return (value);
 }
-BYTE js_shcut_read(_js_sch *js_sch, _js *joy, int id) {
+
+void js_shcut_init(void) {
+	memset(&js_shcut, 0x00, sizeof(_js));
+	usnprintf(js_shcut.dev, usizeof(js_shcut.dev), uL("" JS_DEV_PATH "%d"), cfg->input.shcjoy_id);
+	if ((js_shcut.fd = open(js_shcut.dev, O_RDONLY | O_NONBLOCK)) == -1) {
+		js_shcut.fd = 0;
+	}
+}
+void js_shcut_stop(void) {
+	if (js_shcut.fd) {
+		close(js_shcut.fd);
+		js_shcut.fd = 0;
+	}
+}
+BYTE js_shcut_read(_js_sch *js_sch) {
 	static const SWORD sensibility = (PLUS / 100) * 50;
 	DBWORD value = 0;
 	BYTE mode = 0;
 	_js_event jse;
+	_js *joy = &js_shcut;
 
-	_js_start(id, return (EXIT_ERROR))
+	_js_start(cfg->input.shcjoy_id, return (EXIT_ERROR))
 
 	while (!js_read_event(&jse, joy)) {
 		_js_control()
@@ -253,4 +268,20 @@ BYTE js_shcut_read(_js_sch *js_sch, _js *joy, int id) {
 	}
 
 	return (EXIT_ERROR);
+}
+
+static void js_open(_js *joy) {
+	joy->fd = 0;
+	if (joy->dev[0] && ustrcmp(joy->dev, uL("NULL"))) {
+		joy->fd = uopen(joy->dev, O_RDONLY | O_NONBLOCK);
+		if (joy->fd < 0) {
+			joy->fd = 0;
+		}
+	}
+}
+static void js_close(_js *joy) {
+	if (joy->fd) {
+		close(joy->fd);
+	}
+	joy->fd = 0;
 }

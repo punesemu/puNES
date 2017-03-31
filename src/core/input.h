@@ -19,6 +19,11 @@
 #ifndef INPUT_H_
 #define INPUT_H_
 
+#if defined (__WIN32__)
+#define INITGUID
+#include <guiddef.h>
+#undef INITGUID
+#endif
 #include "common.h"
 
 #define SET_DECODE_EVENT(id, funct) input_decode_event[id] = funct
@@ -59,22 +64,31 @@ enum port_controllers {
 	PORT_MAX
 };
 
-typedef struct {
+typedef struct _config_input {
 	BYTE permit_updown_leftright;
 	BYTE controller_mode;
+#if defined (__WIN32__)
+	GUID shcjoy_id;
+#else
 	BYTE shcjoy_id;
+#endif
 } _config_input;
-typedef struct {
+typedef struct _r4016 {
 	BYTE value;
 } _r4016;
-typedef struct {
+typedef struct _turbo_button {
 	BYTE frequency;
 	BYTE active;
 	BYTE counter;
 } _turbo_button;
-typedef struct {
+typedef struct _port {
 	BYTE type;
+#if defined (__WIN32__)
+	GUID joy_id;
+#else
 	BYTE joy_id;
+#endif
+
 	/* standard controller */
 	BYTE type_pad;
 	BYTE index;
@@ -85,10 +99,10 @@ typedef struct {
 	/* zapper */
 	BYTE zapper;
 } _port;
-typedef struct {
+typedef struct _four_score {
 	BYTE count;
 } _four_score;
-typedef struct {
+typedef struct _array_pointers_port {
 	_port *port[PORT_MAX];
 } _array_pointers_port;
 

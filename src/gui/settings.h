@@ -914,7 +914,11 @@ static const _settings inp_cfg[] = {
 	{uL("shortcuts"), uL("increment state slot"),     uL("F3,NULL"),         NULL, NULL, {0, NULL}},
 	{uL("shortcuts"), uL("decrement state slot"),     uL("F2,NULL"),         NULL, NULL, {0, NULL}},
 
+#if defined (__WIN32__)
+	{uL("shortcuts"), uL("joystick GUID"),            uL("NULL"),            NULL, NULL, {0, NULL}},
+#else
 	{uL("shortcuts"), uL("joystick Id"),              uL("NULL"),            NULL, NULL, {0, NULL}},
+#endif
 
 	{uL("special keys"), uL("timeline key"),          uL("LCtrl"),           NULL, NULL, {0, NULL}},
 
@@ -948,11 +952,15 @@ static const _settings inp_cfg[] = {
 	{uL("port 1"), uL("P1J Down"),    uL("JA1PLS"),      NULL, NULL, {0, NULL}},
 	{uL("port 1"), uL("P1J Left"),    uL("JA0MIN"),      NULL, NULL, {0, NULL}},
 	{uL("port 1"), uL("P1J Right"),   uL("JA0PLS"),      NULL, NULL, {0, NULL}},
-	{uL("port 1"), uL("P1J TurboA"),  uL("JB2"),         NULL, NULL, {0, NULL}},
-	{uL("port 1"), uL("P1J TurboB"),  uL("JB3"),         NULL, NULL, {0, NULL}},
+	{uL("port 1"), uL("P1J TurboA"),  uL("JB3"),         NULL, NULL, {0, NULL}},
+	{uL("port 1"), uL("P1J TurboB"),  uL("JB2"),         NULL, NULL, {0, NULL}},
+#if defined (__WIN32__)
+	{uL("port 1"), uL("P1J GUID"),    uL("NULL"),        NULL, NULL, {0, NULL}},
+#else
 	{uL("port 1"), uL("P1J Id"),      uL("JOYSTICKID1"), NULL, NULL, {0, NULL}},
-	{uL("port 1"), uL("P1 TA Delay"), NULL,          NULL, NULL, {0, NULL}},
-	{uL("port 1"), uL("P1 TB Delay"), NULL,          NULL, NULL, {0, NULL}},
+#endif
+	{uL("port 1"), uL("P1 TA Delay"), NULL,              NULL, NULL, {0, NULL}},
+	{uL("port 1"), uL("P1 TB Delay"), NULL,              NULL, NULL, {0, NULL}},
 	{
 		uL("port 2"), uL("controller 2"), uL("disable"),
 		uL("# possible values: disable, standard, zapper"),
@@ -983,11 +991,15 @@ static const _settings inp_cfg[] = {
 	{uL("port 2"), uL("P2J Down"),    uL("JA1PLS"),      NULL, NULL, {0, NULL}},
 	{uL("port 2"), uL("P2J Left"),    uL("JA0MIN"),      NULL, NULL, {0, NULL}},
 	{uL("port 2"), uL("P2J Right"),   uL("JA0PLS"),      NULL, NULL, {0, NULL}},
-	{uL("port 2"), uL("P2J TurboA"),  uL("JB2"),         NULL, NULL, {0, NULL}},
-	{uL("port 2"), uL("P2J TurboB"),  uL("JB3"),         NULL, NULL, {0, NULL}},
+	{uL("port 2"), uL("P2J TurboA"),  uL("JB3"),         NULL, NULL, {0, NULL}},
+	{uL("port 2"), uL("P2J TurboB"),  uL("JB2"),         NULL, NULL, {0, NULL}},
+#if defined (__WIN32__)
+	{uL("port 2"), uL("P2J GUID"),    uL("NULL"),        NULL, NULL, {0, NULL}},
+#else
 	{uL("port 2"), uL("P2J Id"),      uL("JOYSTICKID2"), NULL, NULL, {0, NULL}},
-	{uL("port 2"), uL("P2 TA Delay"), NULL,          NULL, NULL, {0, NULL}},
-	{uL("port 2"), uL("P2 TB Delay"), NULL,          NULL, NULL, {0, NULL}},
+#endif
+	{uL("port 2"), uL("P2 TA Delay"), NULL,              NULL, NULL, {0, NULL}},
+	{uL("port 2"), uL("P2 TB Delay"), NULL,              NULL, NULL, {0, NULL}},
 	{
 		uL("port 3"), uL("controller 3"), uL("disable"),
 		uL("# possible values: disable, standard"),
@@ -1018,11 +1030,15 @@ static const _settings inp_cfg[] = {
 	{uL("port 3"), uL("P3J Down"),    uL("JA1PLS"),      NULL, NULL, {0, NULL}},
 	{uL("port 3"), uL("P3J Left"),    uL("JA0MIN"),      NULL, NULL, {0, NULL}},
 	{uL("port 3"), uL("P3J Right"),   uL("JA0PLS"),      NULL, NULL, {0, NULL}},
-	{uL("port 3"), uL("P3J TurboA"),  uL("JB2"),         NULL, NULL, {0, NULL}},
-	{uL("port 3"), uL("P3J TurboB"),  uL("JB3"),         NULL, NULL, {0, NULL}},
+	{uL("port 3"), uL("P3J TurboA"),  uL("JB3"),         NULL, NULL, {0, NULL}},
+	{uL("port 3"), uL("P3J TurboB"),  uL("JB2"),         NULL, NULL, {0, NULL}},
+#if defined (__WIN32__)
+	{uL("port 3"), uL("P3J GUID"),    uL("NULL"),        NULL, NULL, {0, NULL}},
+#else
 	{uL("port 3"), uL("P3J Id"),      uL("NULL"),        NULL, NULL, {0, NULL}},
-	{uL("port 3"), uL("P3 TA Delay"), NULL,          NULL, NULL, {0, NULL}},
-	{uL("port 3"), uL("P3 TB Delay"), NULL,          NULL, NULL, {0, NULL}},
+#endif
+	{uL("port 3"), uL("P3 TA Delay"), NULL,              NULL, NULL, {0, NULL}},
+	{uL("port 3"), uL("P3 TB Delay"), NULL,              NULL, NULL, {0, NULL}},
 	{
 		uL("port 4"), uL("controller 4"), uL("disable"),
 		uL("# possible values: disable, standard"),
@@ -1053,11 +1069,15 @@ static const _settings inp_cfg[] = {
 	{uL("port 4"), uL("P4J Down"),    uL("JA1PLS"),      NULL, NULL, {0, NULL}},
 	{uL("port 4"), uL("P4J Left"),    uL("JA0MIN"),      NULL, NULL, {0, NULL}},
 	{uL("port 4"), uL("P4J Right"),   uL("JA0PLS"),      NULL, NULL, {0, NULL}},
-	{uL("port 4"), uL("P4J TurboA"),  uL("JB2"),         NULL, NULL, {0, NULL}},
-	{uL("port 4"), uL("P4J TurboB"),  uL("JB3"),         NULL, NULL, {0, NULL}},
+	{uL("port 4"), uL("P4J TurboA"),  uL("JB3"),         NULL, NULL, {0, NULL}},
+	{uL("port 4"), uL("P4J TurboB"),  uL("JB2"),         NULL, NULL, {0, NULL}},
+#if defined (__WIN32__)
+	{uL("port 4"), uL("P4J GUID"),    uL("NULL"),        NULL, NULL, {0, NULL}},
+#else
 	{uL("port 4"), uL("P4J Id"),      uL("NULL"),        NULL, NULL, {0, NULL}},
-	{uL("port 4"), uL("P4 TA Delay"), NULL,          NULL, NULL, {0, NULL}},
-	{uL("port 4"), uL("P4 TB Delay"), NULL,          NULL, NULL, {0, NULL}},
+#endif
+	{uL("port 4"), uL("P4 TA Delay"), NULL,              NULL, NULL, {0, NULL}},
+	{uL("port 4"), uL("P4 TB Delay"), NULL,              NULL, NULL, {0, NULL}},
 	{
 		uL("system"), uL("controller mode"), uL("nes"),
 		uL("# possible values: nes, famicom, fourscore"),

@@ -67,6 +67,13 @@ typedef struct _js_sch {
 #define EXTERNC
 #endif
 
+static const _js_element jsn_list[] = {
+	{ 0x0FF,  uL("NULL")        },
+	{ 0x000,  uL("JOYSTICKID1") },
+	{ 0x001,  uL("JOYSTICKID2") },
+	{ 0x002,  uL("JOYSTICKID3") },
+	{ 0x003,  uL("JOYSTICKID4") },
+};
 static const _js_element jsv_list[] = {
 	{ 0x000, uL("NULL")   },
 	{ 0x001, uL("JA0MIN") }, { 0x002, uL("JA0PLS") },
@@ -92,28 +99,27 @@ static const _js_element jsv_list[] = {
 	{ 0x414, uL("JB20")   }, { 0x415, uL("JB21")   },
 	{ 0x416, uL("JB22")   }, { 0x417, uL("JB23")   },
 };
-static const _js_element jsn_list[] = {
-	{ 0x0FF,  uL("NULL")        },
-	{ 0x000,  uL("JOYSTICKID1") },
-	{ 0x001,  uL("JOYSTICKID2") },
-	{ 0x002,  uL("JOYSTICKID3") },
-	{ 0x003,  uL("JOYSTICKID4") },
-};
 
-EXTERNC _js js[PORT_MAX];
+EXTERNC _js js[PORT_MAX], js_shcut;;
 
-EXTERNC void js_init(void);
-EXTERNC void js_open(_js *joy);
+EXTERNC void js_init(BYTE first_time);
+EXTERNC void js_quit(BYTE last_time);
+EXTERNC void js_update_detected_devices(void);
 EXTERNC void js_control(_js *joy, _port *port);
-EXTERNC void js_close(_js *joy);
-EXTERNC void js_quit(void);
+
 EXTERNC BYTE js_is_connected(int dev);
+EXTERNC BYTE js_is_this(BYTE dev, BYTE *id);
+EXTERNC BYTE js_is_null(BYTE *id);
+EXTERNC void js_set_id(BYTE *id, int dev);
 EXTERNC uTCHAR *js_name_device(int dev);
 EXTERNC BYTE js_read_event(_js_event *event, _js *joy);
 EXTERNC uTCHAR *js_to_name(const DBWORD val, const _js_element *list, const DBWORD length);
 EXTERNC DBWORD js_from_name(const uTCHAR *name, const _js_element *list, const DBWORD lenght);
-EXTERNC DBWORD js_read_in_dialog(int dev, int fd);
-EXTERNC BYTE js_shcut_read(_js_sch *js_sch, _js *joy, int id);
+EXTERNC DBWORD js_read_in_dialog(BYTE *id, int fd);
+
+EXTERNC void js_shcut_init(void);
+EXTERNC void js_shcut_stop(void);
+EXTERNC BYTE js_shcut_read(_js_sch *js_sch);
 
 #undef EXTERNC
 

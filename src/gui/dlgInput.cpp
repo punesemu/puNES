@@ -80,6 +80,8 @@ dlgInput::dlgInput(QWidget *parent = 0) : QDialog(parent) {
 	installEventFilter(this);
 
 	emu_pause(TRUE);
+
+	js_update_detected_devices();
 }
 dlgInput::~dlgInput() {}
 bool dlgInput::eventFilter(QObject *obj, QEvent *event) {
@@ -108,6 +110,7 @@ bool dlgInput::eventFilter(QObject *obj, QEvent *event) {
 			case QEvent::LanguageChange:
 				Input_dialog::retranslateUi(this);
 				update_dialog();
+				break;
 			case QEvent::KeyPress:
 				return (keypressEvent(event));
 			default:
@@ -290,7 +293,7 @@ void dlgInput::combo_joy_id_init() {
 				continue;
 			}
 
-			if (id == data.settings.shcjoy_id) {
+			if (js_is_this(id, &data.settings.shcjoy_id)) {
 				current_line = count;
 			}
 
@@ -313,8 +316,7 @@ void dlgInput::combo_joy_id_init() {
 	}
 
 	if (count > 0) {
-		if (data.settings.shcjoy_id == name_to_jsn(uL("NULL"))
-				|| (current_line == name_to_jsn(uL("NULL")))) {
+		if (js_is_null(&data.settings.shcjoy_id) || (current_line == name_to_jsn(uL("NULL")))) {
 			comboBox_joy_ID->setCurrentIndex(disabled_line);
 		} else {
 			comboBox_joy_ID->setCurrentIndex(current_line);
@@ -586,7 +588,7 @@ void dlgInput::s_checkbox_state_changed(int state) {
 void dlgInput::s_combobox_joy_activated(int index) {
 	unsigned int id = ((QComboBox *)sender())->itemData(index).toInt();
 
-	data.settings.shcjoy_id = id;
+	js_set_id(&data.settings.shcjoy_id, id);
 	update_groupbox_shortcuts(UPDATE_ALL, NO_ACTION, NO_ACTION);
 }
 void dlgInput::s_shortcut_clicked(bool checked) {
@@ -659,7 +661,7 @@ void dlgInput::s_joy_shortcut_unset(bool checked) {
 	tableWidget_Shortcuts->cellWidget(row, 2)->findChild<QPushButton *>("value")->setText("NULL");
 }
 void dlgInput::s_joy_read_timer() {
-	DBWORD value = js_read_in_dialog(data.settings.shcjoy_id, shcut.joy.fd);
+	DBWORD value = js_read_in_dialog(&data.settings.shcjoy_id, shcut.joy.fd);
 
 	if (shcut.joy.value && !value) {
 #if defined (__linux__)
@@ -699,7 +701,8 @@ void dlgInput::s_default_clicked(bool checked) {
 
 	settings_inp_all_default(&data.settings, &array);
 
-	data.settings.shcjoy_id = name_to_jsn(uL("NULL"));
+	js_set_id(&data.settings.shcjoy_id, name_to_jsn(uL("NULL")));
+
 	comboBox_joy_ID->setCurrentIndex(comboBox_joy_ID->count() - 1);
 	for (int i = 0; i < SET_MAX_NUM_SC; i++) {
 		shcut.text[KEYBOARD].replace(i,
@@ -742,8 +745,8 @@ void dlgInput::s_apply_clicked(bool checked) {
 
 	input_init(SET_CURSOR);
 
-	js_quit();
-	js_init();
+	js_quit(FALSE);
+	js_init(FALSE);
 
 	close();
 }

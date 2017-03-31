@@ -26,6 +26,7 @@
 #include <QtCore/QStringList>
 #include <QtGui/QKeyEvent>
 #include "overscan.h"
+#include "gui.h"
 
 class settingsObject : public QSettings {
 		Q_OBJECT
@@ -132,10 +133,14 @@ class inpObject : public settingsObject {
 		void joy_wr(int index, int pIndex);
 		int joyid_val_to_int(int index);
 		void joyid_int_to_val(int index, int id);
+#if defined (__WIN32__)
+		void joyguid_val_to_guid(int index, GUID *guid);
+		void joyguid_guid_to_val(int index, GUID guid);
+#endif
 		int tb_delay_val_to_int(int index);
 };
 
-typedef struct {
+typedef struct _emu_settings {
 	QSettings::Format cfg;
 	setObject *set;
 	pgsObject *pgs;

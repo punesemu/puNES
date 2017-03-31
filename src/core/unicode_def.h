@@ -63,6 +63,7 @@ typedef wchar_t uTCHAR;
 #define ugetcwd _wgetcwd
 #define umemcpy wmemcpy
 #define ustrchr wcschr
+#define ustrdup _wcsdup
 
 // linux
 #else
@@ -103,6 +104,7 @@ typedef char uTCHAR;
 #define ugetcwd getcwd
 #define umemcpy memcpy
 #define ustrchr strchr
+#define ustrdup strdup
 
 #endif
 

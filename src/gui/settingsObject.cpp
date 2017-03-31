@@ -24,7 +24,6 @@
 #include "conf.h"
 #include "emu.h"
 #include "jstick.h"
-#include "gui.h"
 #if defined (__linux__)
 #define XK_MISCELLANY
 #include <X11/keysymdef.h>
@@ -1144,15 +1143,23 @@ void inpObject::set_all_input_default(_config_input *config_input, _array_pointe
 		switch (i) {
 			case PORT1:
 				port->type = CTRL_STANDARD;
+#if defined (__WIN32__)
+				js_set_id(&port->joy_id, name_to_jsn(uL("NULL")));
+#else
 				port->joy_id = name_to_jsn(uL("JOYSTICKID1"));
+#endif
 				break;
 			case PORT2:
 				port->type = FALSE;
+#if defined (__WIN32__)
+				js_set_id(&port->joy_id, name_to_jsn(uL("NULL")));
+#else
 				port->joy_id = name_to_jsn(uL("JOYSTICKID2"));
+#endif
 				break;
 			default:
 				port->type = FALSE;
-				port->joy_id = name_to_jsn(uL("NULL"));
+				js_set_id(&port->joy_id, name_to_jsn(uL("NULL")));
 				break;
 		}
 
@@ -1186,7 +1193,11 @@ void inpObject::to_cfg(QString group) {
 		int_to_val(SET_INP_P1_PAD_TYPE, port[PORT1].type_pad);
 		kbd_wr(SET_INP_P1K_A, PORT1);
 		joy_wr(SET_INP_P1J_A, PORT1);
+#if defined (__WIN32__)
+		joyguid_guid_to_val(SET_INP_P1J_ID, port[PORT1].joy_id);
+#else
 		joyid_int_to_val(SET_INP_P1J_ID, port[PORT1].joy_id);
+#endif
 		val.replace(SET_INP_P1_TURBOA_DELAY, QString::number(port[PORT1].turbo[TURBOA].frequency));
 		val.replace(SET_INP_P1_TURBOB_DELAY, QString::number(port[PORT1].turbo[TURBOB].frequency));
 	}
@@ -1196,7 +1207,11 @@ void inpObject::to_cfg(QString group) {
 		int_to_val(SET_INP_P2_PAD_TYPE, port[PORT2].type_pad);
 		kbd_wr(SET_INP_P2K_A, PORT2);
 		joy_wr(SET_INP_P2J_A, PORT2);
+#if defined (__WIN32__)
+		joyguid_guid_to_val(SET_INP_P2J_ID, port[PORT2].joy_id);
+#else
 		joyid_int_to_val(SET_INP_P2J_ID, port[PORT2].joy_id);
+#endif
 		val.replace(SET_INP_P2_TURBOA_DELAY, QString::number(port[PORT2].turbo[TURBOA].frequency));
 		val.replace(SET_INP_P2_TURBOB_DELAY, QString::number(port[PORT2].turbo[TURBOB].frequency));
 	}
@@ -1206,7 +1221,11 @@ void inpObject::to_cfg(QString group) {
 		int_to_val(SET_INP_P3_PAD_TYPE, port[PORT3].type_pad);
 		kbd_wr(SET_INP_P3K_A, PORT3);
 		joy_wr(SET_INP_P3J_A, PORT3);
+#if defined (__WIN32__)
+		joyguid_guid_to_val(SET_INP_P3J_ID, port[PORT3].joy_id);
+#else
 		joyid_int_to_val(SET_INP_P3J_ID, port[PORT3].joy_id);
+#endif
 		val.replace(SET_INP_P3_TURBOA_DELAY, QString::number(port[PORT3].turbo[TURBOA].frequency));
 		val.replace(SET_INP_P3_TURBOB_DELAY, QString::number(port[PORT3].turbo[TURBOB].frequency));
 	}
@@ -1216,7 +1235,11 @@ void inpObject::to_cfg(QString group) {
 		int_to_val(SET_INP_P4_PAD_TYPE, port[PORT4].type_pad);
 		kbd_wr(SET_INP_P4K_A, PORT4);
 		joy_wr(SET_INP_P4J_A, PORT4);
+#if defined (__WIN32__)
+		joyguid_guid_to_val(SET_INP_P4J_ID, port[PORT4].joy_id);
+#else
 		joyid_int_to_val(SET_INP_P4J_ID, port[PORT4].joy_id);
+#endif
 		val.replace(SET_INP_P4_TURBOA_DELAY, QString::number(port[PORT4].turbo[TURBOA].frequency));
 		val.replace(SET_INP_P4_TURBOB_DELAY, QString::number(port[PORT4].turbo[TURBOB].frequency));
 	}
@@ -1227,7 +1250,11 @@ void inpObject::to_cfg(QString group) {
 	}
 
 	if ((group == "shortcuts") || (group == "all")) {
+#if defined (__WIN32__)
+		joyguid_guid_to_val(SET_INP_SC_JOYSTICK_ID, cfg_from_file.input.shcjoy_id);
+#else
 		joyid_int_to_val(SET_INP_SC_JOYSTICK_ID, cfg_from_file.input.shcjoy_id);
+#endif
 	}
 
 	if ((group == "special keys") || (group == "all")) {
@@ -1240,7 +1267,11 @@ void inpObject::fr_cfg(QString group) {
 		port[PORT1].type_pad = val_to_int(SET_INP_P1_PAD_TYPE);
 		kbd_rd(SET_INP_P1K_A, PORT1);
 		joy_rd(SET_INP_P1J_A, PORT1);
+#if defined (__WIN32__)
+		joyguid_val_to_guid(SET_INP_P1J_ID, &port[PORT1].joy_id);
+#else
 		port[PORT1].joy_id = joyid_val_to_int(SET_INP_P1J_ID);
+#endif
 		port[PORT1].turbo[TURBOA].frequency = tb_delay_val_to_int(SET_INP_P1_TURBOA_DELAY);
 		port[PORT1].turbo[TURBOB].frequency = tb_delay_val_to_int(SET_INP_P1_TURBOB_DELAY);
 	}
@@ -1250,7 +1281,11 @@ void inpObject::fr_cfg(QString group) {
 		port[PORT2].type_pad = val_to_int(SET_INP_P2_PAD_TYPE);
 		kbd_rd(SET_INP_P2K_A, PORT2);
 		joy_rd(SET_INP_P2J_A, PORT2);
+#if defined (__WIN32__)
+		joyguid_val_to_guid(SET_INP_P2J_ID, &port[PORT2].joy_id);
+#else
 		port[PORT2].joy_id = joyid_val_to_int(SET_INP_P2J_ID);
+#endif
 		port[PORT2].turbo[TURBOA].frequency = tb_delay_val_to_int(SET_INP_P2_TURBOA_DELAY);
 		port[PORT2].turbo[TURBOB].frequency = tb_delay_val_to_int(SET_INP_P2_TURBOB_DELAY);
 	}
@@ -1260,7 +1295,11 @@ void inpObject::fr_cfg(QString group) {
 		port[PORT3].type_pad = val_to_int(SET_INP_P3_PAD_TYPE);
 		kbd_rd(SET_INP_P3K_A, PORT3);
 		joy_rd(SET_INP_P3J_A, PORT3);
+#if defined (__WIN32__)
+		joyguid_val_to_guid(SET_INP_P3J_ID, &port[PORT3].joy_id);
+#else
 		port[PORT3].joy_id = joyid_val_to_int(SET_INP_P3J_ID);
+#endif
 		port[PORT3].turbo[TURBOA].frequency = tb_delay_val_to_int(SET_INP_P3_TURBOA_DELAY);
 		port[PORT3].turbo[TURBOB].frequency = tb_delay_val_to_int(SET_INP_P3_TURBOB_DELAY);
 	}
@@ -1270,7 +1309,11 @@ void inpObject::fr_cfg(QString group) {
 		port[PORT4].type_pad = val_to_int(SET_INP_P4_PAD_TYPE);
 		kbd_rd(SET_INP_P4K_A, PORT4);
 		joy_rd(SET_INP_P4J_A, PORT4);
+#if defined (__WIN32__)
+		joyguid_val_to_guid(SET_INP_P4J_ID, &port[PORT4].joy_id);
+#else
 		port[PORT4].joy_id = joyid_val_to_int(SET_INP_P4J_ID);
+#endif
 		port[PORT4].turbo[TURBOA].frequency = tb_delay_val_to_int(SET_INP_P4_TURBOA_DELAY);
 		port[PORT4].turbo[TURBOB].frequency = tb_delay_val_to_int(SET_INP_P4_TURBOB_DELAY);
 	}
@@ -1281,7 +1324,11 @@ void inpObject::fr_cfg(QString group) {
 	}
 
 	if ((group == "shortcuts") || (group == "all")) {
+#if defined (__WIN32__)
+		joyguid_val_to_guid(SET_INP_SC_JOYSTICK_ID, &cfg_from_file.input.shcjoy_id);
+#else
 		cfg_from_file.input.shcjoy_id = joyid_val_to_int(SET_INP_SC_JOYSTICK_ID);
+#endif
 
 		// converto nel nuovo formato
 		for (int i = SET_INP_SC_OPEN; i < SET_INP_SC_OPEN + SET_MAX_NUM_SC; i++) {
@@ -1362,6 +1409,26 @@ int inpObject::joyid_val_to_int(int index) {
 void inpObject::joyid_int_to_val(int index, int id) {
 	val.replace(index, uQString(jsn_to_name(id)));
 }
+#if defined (__WIN32__)
+void inpObject::joyguid_val_to_guid(int index, GUID *guid) {
+	if (val.at(index).isEmpty()) {
+		val.replace(index, uQString(set->cfg[index].def));
+	}
+
+	CLSIDFromString(uQStringCD(val.at(index)), guid);
+}
+void inpObject::joyguid_guid_to_val(int index, GUID guid) {
+	if (js_is_null(&guid)) {
+		val.replace(index, uQString(uL("NULL")));
+	} else {
+		uTCHAR *buffer;
+
+		StringFromCLSID(guid, &buffer);
+		val.replace(index, uQString(buffer));
+		CoTaskMemFree(buffer);
+	}
+}
+#endif
 int inpObject::tb_delay_val_to_int(int index) {
 	int ret;
 

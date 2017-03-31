@@ -53,7 +53,6 @@ class mainWindow: public QMainWindow {
 		struct _shcjoy {
 			bool enabled;
 			QTimer *timer;
-			_js joy;
 			_js_sch sch;
 			DBWORD shortcut[SET_MAX_NUM_SC];
 		} shcjoy;

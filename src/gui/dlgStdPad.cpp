@@ -147,6 +147,8 @@ dlgStdPad::dlgStdPad(_cfg_port *cfg_port, QWidget *parent = 0) : QDialog(parent)
 	connect(data.seq.timer, SIGNAL(timeout()), this, SLOT(s_pad_in_sequence_timer()));
 
 	installEventFilter(this);
+
+	js_update_detected_devices();
 }
 dlgStdPad::~dlgStdPad() {}
 void dlgStdPad::update_dialog() {
@@ -212,7 +214,7 @@ void dlgStdPad::combo_id_init() {
 				continue;
 			}
 
-			if (id == data.cfg.port.joy_id) {
+			if (js_is_this(id, &data.cfg.port.joy_id)) {
 				current_line = count;
 			}
 
@@ -238,8 +240,7 @@ void dlgStdPad::combo_id_init() {
 	}
 
 	if (count > 0) {
-		if (data.cfg.port.joy_id == name_to_jsn(uL("NULL"))
-				|| (current_line == name_to_jsn(uL("NULL")))) {
+		if (js_is_null(&data.cfg.port.joy_id) || (current_line == name_to_jsn(uL("NULL")))) {
 			comboBox_joy_ID->setCurrentIndex(disabled_line);
 		} else {
 			comboBox_joy_ID->setCurrentIndex(current_line);
@@ -293,7 +294,7 @@ void dlgStdPad::js_press_event() {
 
 	type = data.vbutton / MAX_STD_PAD_BUTTONS;
 
-	if (data.cfg.port.joy_id == name_to_jsn(uL("NULL"))) {
+	if (js_is_null(&data.cfg.port.joy_id)) {
 		info_entry_print(type, tr("Select device first"));
 		update_dialog();
 		return;
@@ -415,7 +416,7 @@ bool dlgStdPad::keypressEvent(QEvent *event) {
 void dlgStdPad::s_combobox_joy_activated(int index) {
 	unsigned int id = ((QComboBox *)sender())->itemData(index).toInt();
 
-	data.cfg.port.joy_id = id;
+	js_set_id(&data.cfg.port.joy_id, id);
 	update_dialog();
 }
 void dlgStdPad::s_input_clicked(bool checked) {
@@ -517,7 +518,7 @@ void dlgStdPad::s_slider_td_value_changed(int value) {
 	td_update_label(type, value);
 }
 void dlgStdPad::s_pad_joy_read_timer() {
-	DBWORD value = js_read_in_dialog(data.cfg.port.joy_id, data.joy.fd);
+	DBWORD value = js_read_in_dialog(&data.cfg.port.joy_id, data.joy.fd);
 
 	if (data.joy.value && !value) {
 		unsigned int type, vbutton;

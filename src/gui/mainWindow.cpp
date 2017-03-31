@@ -1328,7 +1328,7 @@ void mainWindow::shortcuts() {
 void mainWindow::shcjoy_start() {
 	shcjoy_stop();
 
-	if (cfg->input.shcjoy_id == name_to_jsn(uL("NULL"))) {
+	if (js_is_null(&cfg->input.shcjoy_id)) {
 		return;
 	}
 
@@ -1336,18 +1336,7 @@ void mainWindow::shcjoy_start() {
 		shcjoy.shortcut[i] = name_to_jsv(uQStringCD(QString(*(QString *) settings_inp_rd_sc(i + SET_INP_SC_OPEN, JOYSTICK))));
 	}
 
-	memset(&shcjoy.joy, 0x00, sizeof(_js));
-
-#if defined (__linux__)
-	usnprintf(shcjoy.joy.dev, usizeof(shcjoy.joy.dev), uL("" JS_DEV_PATH "%d"),
-			cfg->input.shcjoy_id);
-	if ((shcjoy.joy.fd = ::open(shcjoy.joy.dev, O_RDONLY | O_NONBLOCK)) == -1) {
-		shcjoy.joy.fd = 0;
-	}
-#elif defined (__WIN32__)
-	usnprintf(shcjoy.joy.dev, usizeof(shcjoy.joy.dev), uL("" uPERCENTs),
-			jsn_to_name(cfg->input.shcjoy_id));
-#endif
+	js_shcut_init();
 
 	shcjoy.enabled = true;
 	shcjoy.timer->start(13);
@@ -1355,13 +1344,7 @@ void mainWindow::shcjoy_start() {
 void mainWindow::shcjoy_stop() {
 	shcjoy.enabled = false;
 	shcjoy.timer->stop();
-
-#if defined (__linux__)
-	if (shcjoy.joy.fd) {
-		::close(shcjoy.joy.fd);
-		shcjoy.joy.fd = 0;
-	}
-#endif
+	js_shcut_stop();
 }
 void mainWindow::control_visible_cursor() {
 	if ((mouse.hidden == FALSE) && (input_zapper_is_connected((_port *) &port) == FALSE)) {
@@ -2635,7 +2618,7 @@ void mainWindow::s_shcjoy_read_timer() {
 		return;
 	}
 
-	if (js_shcut_read(&shcjoy.sch, &shcjoy.joy, cfg->input.shcjoy_id) == EXIT_OK) {
+	if (js_shcut_read(&shcjoy.sch) == EXIT_OK) {
 		int index;
 
 		for (index = 0; index < SET_MAX_NUM_SC; index++) {
