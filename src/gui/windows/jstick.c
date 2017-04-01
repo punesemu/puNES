@@ -331,14 +331,13 @@ void js_init(BYTE first_time) {
 	int i;
 
 	if (first_time) {
-		HRESULT result;
 		HMODULE module;
 
 		memset(&jstick, 0x00, sizeof(jstick));
 
 		if (((module = LoadLibrary("XInput1_4.dll")) == NULL) &&
 				((module = LoadLibrary("XInput1_3.dll")) == NULL)) {
-			fprintf(stderr, "couldn't load XInput dll; proceeding with DInput only\n");
+			fprintf(stderr, "couldn't load XInput dll\n");
 			jstick.xinput_available = FALSE;
 		} else {
 			jstick.xinput_available = TRUE;
@@ -351,17 +350,14 @@ void js_init(BYTE first_time) {
 		}
 
 		if ((module = LoadLibrary("DINPUT8.dll")) == NULL) {
-			fprintf(stderr, "js_init fatal error: Couldn't load DINPUT8.dll\n");
+			fprintf(stderr, "couldn't load DINPUT8.dll\n");
 		} else {
 			HRESULT (WINAPI *DirectInput8Create_proc)(HINSTANCE, DWORD, REFIID, LPVOID *, LPUNKNOWN);
 
 			DirectInput8Create_proc = (HRESULT (WINAPI *)(HINSTANCE, DWORD, REFIID, LPVOID *, LPUNKNOWN))
 					GetProcAddress(module, "DirectInput8Create");
-			result = DirectInput8Create_proc(GetModuleHandle(NULL), DIRECTINPUT_VERSION,
+			DirectInput8Create_proc(GetModuleHandle(NULL), DIRECTINPUT_VERSION,
 					&IID_IDirectInput8W, (void **) &jstick.directInputInterface, NULL);
-			if (result != DI_OK) {
-				fprintf(stderr, "Warning: DirectInput8Create returned 0x%X\n", (UINT) result);
-			}
 		}
 
 		jstick.lock = CreateSemaphore(NULL, 1, 2, NULL);
@@ -1043,7 +1039,7 @@ static void js_detect_devices(void) {
 
 	if ((result = IDirectInput_EnumDevices(jstick.directInputInterface, DI8DEVCLASS_GAMECTRL,
 			cb_enum_dev, (void *) &raw, DIEDFL_ALLDEVICES)) != DI_OK) {
-		fprintf(stderr, "Warning: IDirectInput_EnumDevices returned 0x%X\n", (unsigned int) result);
+		fprintf(stderr, "IDirectInput_EnumDevices : 0x%X\n", (unsigned int) result);
 	}
 
 	if (raw.list) {
@@ -1119,27 +1115,25 @@ static void js_open(_jstick_device *jdev) {
 		DIPROPDWORD bufferSizeProp;
 		BYTE buffered = TRUE;
 
-		rc = IDirectInput8_CreateDevice(jstick.directInputInterface, &jdev->guid, &didevice, NULL);
-		if (rc != DI_OK) {
-			fprintf(stderr, "IDirectInput8_CreateDevice returned 0x%X\n", (unsigned int) rc);
+		if ((rc = IDirectInput8_CreateDevice(jstick.directInputInterface, &jdev->guid, &didevice,
+				NULL)) != DI_OK) {
+			fprintf(stderr, "IDirectInput8_CreateDevice : 0x%X\n", (unsigned int) rc);
 		}
-		rc = IDirectInputDevice8_QueryInterface(didevice, &IID_IDirectInputDevice8W,
-				(LPVOID * ) &di8device);
-		if (rc != DI_OK) {
-			fprintf(stderr, "IDirectInputDevice8_QueryInterface returned 0x%X\n", (unsigned int) rc);
+
+		if ((rc = IDirectInputDevice8_QueryInterface(didevice, &IID_IDirectInputDevice8W,
+				(LPVOID * ) &di8device)) != DI_OK) {
+			fprintf(stderr, "IDirectInputDevice8_QueryInterface : 0x%X\n", (unsigned int) rc);
 		}
 		IDirectInputDevice8_Release(didevice);
 
-		rc = IDirectInputDevice8_SetCooperativeLevel(di8device, GetActiveWindow(),
-				DISCL_NONEXCLUSIVE | DISCL_BACKGROUND);
-		if (rc != DI_OK) {
-			fprintf(stderr, "IDirectInputDevice8_SetCooperativeLevel returned 0x%X\n",
+		if ((rc = IDirectInputDevice8_SetCooperativeLevel(di8device, GetActiveWindow(),
+				DISCL_NONEXCLUSIVE | DISCL_BACKGROUND)) != DI_OK) {
+			fprintf(stderr, "IDirectInputDevice8_SetCooperativeLevel : 0x%X\n",
 					(unsigned int) rc);
 		}
 
-		rc = IDirectInputDevice8_SetDataFormat(di8device, &c_dfDIJoystick2);
-		if (rc != DI_OK) {
-			fprintf(stderr, "IDirectInputDevice8_SetDataFormat returned 0x%X\n", (unsigned int) rc);
+		if ((rc = IDirectInputDevice8_SetDataFormat(di8device, &c_dfDIJoystick2)) != DI_OK) {
+			fprintf(stderr, "IDirectInputDevice8_SetDataFormat : 0x%X\n", (unsigned int) rc);
 		}
 
 		bufferSizeProp.diph.dwSize = sizeof(DIPROPDWORD);
@@ -1152,7 +1146,7 @@ static void js_open(_jstick_device *jdev) {
 		if (rc == DI_POLLEDDEVICE) {
 			buffered = FALSE;
 		} else if (rc != DI_OK) {
-			fprintf(stderr, "IDirectInputDevice8_SetProperty returned 0x%X\n", (unsigned int) rc);
+			fprintf(stderr, "IDirectInputDevice8_SetProperty : 0x%X\n", (unsigned int) rc);
 		}
 
 		jdev->di8device = di8device;
@@ -1355,9 +1349,9 @@ static BOOL CALLBACK cb_enum_axes(LPCDIDEVICEOBJECTINSTANCEW instance, LPVOID co
 		range.lMin = JOY_AXIS_MIN;
 		range.lMax = JOY_AXIS_MAX;
 
-		rc = IDirectInputDevice8_SetProperty(jdev->di8device, DIPROP_RANGE, &range.diph);
-		if (rc != DI_OK) {
-			fprintf(stderr, "IDIrectInputDevice8_SetProperty returned 0x%X\n", (unsigned int) rc);
+		if ((rc = IDirectInputDevice8_SetProperty(jdev->di8device, DIPROP_RANGE, &range.diph))
+				!= DI_OK) {
+			fprintf(stderr, "IDIrectInputDevice8_SetProperty : 0x%X\n", (unsigned int) rc);
 		}
 
 		deadZone.diph.dwSize = sizeof(deadZone);
@@ -1365,10 +1359,9 @@ static BOOL CALLBACK cb_enum_axes(LPCDIDEVICEOBJECTINSTANCEW instance, LPVOID co
 		deadZone.diph.dwObj = instance->dwType;
 		deadZone.diph.dwHow = DIPH_BYID;
 		deadZone.dwData = 0;
-		rc = IDirectInputDevice8_SetProperty(jdev->di8device, DIPROP_DEADZONE,
-				&deadZone.diph);
-		if (rc != DI_OK) {
-			fprintf(stderr, "Warning: IDIrectInputDevice8_SetProperty returned 0x%X\n",
+		if ((rc = IDirectInputDevice8_SetProperty(jdev->di8device, DIPROP_DEADZONE,
+				&deadZone.diph)) != DI_OK) {
+			fprintf(stderr, "IDIrectInputDevice8_SetProperty : 0x%X\n",
 					(unsigned int) rc);
 		}
 	}
