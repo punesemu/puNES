@@ -51,6 +51,8 @@ dlgStdPad::dlgStdPad(_cfg_port *cfg_port, QWidget *parent = 0) : QDialog(parent)
 
 	setupUi(this);
 
+	js_update_detected_devices();
+
 	setFont(parent->font());
 
 	groupBox_controller->setTitle(tr("Controller %1 : Standard Pad").arg(cfg_port->id));
@@ -147,8 +149,6 @@ dlgStdPad::dlgStdPad(_cfg_port *cfg_port, QWidget *parent = 0) : QDialog(parent)
 	connect(data.seq.timer, SIGNAL(timeout()), this, SLOT(s_pad_in_sequence_timer()));
 
 	installEventFilter(this);
-
-	js_update_detected_devices();
 }
 dlgStdPad::~dlgStdPad() {}
 void dlgStdPad::update_dialog() {

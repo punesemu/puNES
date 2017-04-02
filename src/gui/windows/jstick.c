@@ -317,9 +317,11 @@ struct _jstick {
 	double ts_update_devices;
 
 	// DirectInput
+	HMODULE di8;
 	LPDIRECTINPUTW directInputInterface;
 
 	// XInput
+	HMODULE xinput;
 	BYTE xinput_available;
 	unsigned int xinput_player_index;
 	DWORD (WINAPI *XInputGetStateEx_proc)(DWORD dwUserIndex, XINPUT_STATE_EX *pState);
@@ -331,31 +333,29 @@ void js_init(BYTE first_time) {
 	int i;
 
 	if (first_time) {
-		HMODULE module;
-
 		memset(&jstick, 0x00, sizeof(jstick));
 
-		if (((module = LoadLibrary("XInput1_4.dll")) == NULL) &&
-				((module = LoadLibrary("XInput1_3.dll")) == NULL)) {
+		if (((jstick.xinput = LoadLibrary("XInput1_4.dll")) == NULL) &&
+				((jstick.xinput = LoadLibrary("XInput1_3.dll")) == NULL)) {
 			fprintf(stderr, "couldn't load XInput dll\n");
 			jstick.xinput_available = FALSE;
 		} else {
 			jstick.xinput_available = TRUE;
 			jstick.XInputGetStateEx_proc = (DWORD (WINAPI *)(DWORD, XINPUT_STATE_EX *))
-					GetProcAddress(module, (LPCSTR) 100);
+					GetProcAddress(jstick.xinput, (LPCSTR) 100);
 			jstick.XInputGetState_proc = (DWORD (WINAPI *)(DWORD, XINPUT_STATE *))
-					GetProcAddress(module, "XInputGetState");
+					GetProcAddress(jstick.xinput, "XInputGetState");
 			jstick.XInputGetCapabilities_proc = (DWORD (WINAPI *)(DWORD, DWORD, XINPUT_CAPABILITIES *))
-					GetProcAddress(module, "XInputGetCapabilities");
+					GetProcAddress(jstick.xinput, "XInputGetCapabilities");
 		}
 
-		if ((module = LoadLibrary("DINPUT8.dll")) == NULL) {
+		if ((jstick.di8 = LoadLibrary("DINPUT8.dll")) == NULL) {
 			fprintf(stderr, "couldn't load DINPUT8.dll\n");
 		} else {
 			HRESULT (WINAPI *DirectInput8Create_proc)(HINSTANCE, DWORD, REFIID, LPVOID *, LPUNKNOWN);
 
 			DirectInput8Create_proc = (HRESULT (WINAPI *)(HINSTANCE, DWORD, REFIID, LPVOID *, LPUNKNOWN))
-					GetProcAddress(module, "DirectInput8Create");
+					GetProcAddress(jstick.di8, "DirectInput8Create");
 			DirectInput8Create_proc(GetModuleHandle(NULL), DIRECTINPUT_VERSION,
 					&IID_IDirectInput8W, (void **) &jstick.directInputInterface, NULL);
 		}
@@ -380,9 +380,17 @@ void js_quit(BYTE last_time) {
 		js[i].jdev = NULL;
 	}
 
-	if (last_time && jstick.lock) {
-		CloseHandle(jstick.lock);
-		jstick.lock = NULL;
+	if (last_time) {
+		if (jstick.di8) {
+			FreeLibrary(jstick.di8);
+		}
+		if (jstick.xinput) {
+			FreeLibrary(jstick.xinput);
+		}
+		if (jstick.lock) {
+			CloseHandle(jstick.lock);
+			jstick.lock = NULL;
+		}
 	}
 }
 void js_update_detected_devices(void) {

@@ -42,6 +42,10 @@ dlgInput::dlgInput(QWidget *parent = 0) : QDialog(parent) {
 
 	setupUi(this);
 
+	emu_pause(TRUE);
+
+	js_update_detected_devices();
+
 	setFont(parent->font());
 
 	comboBox_cm->addItem(tr("NES"));
@@ -78,10 +82,6 @@ dlgInput::dlgInput(QWidget *parent = 0) : QDialog(parent) {
 	setFixedSize(width(), height());
 
 	installEventFilter(this);
-
-	emu_pause(TRUE);
-
-	js_update_detected_devices();
 }
 dlgInput::~dlgInput() {}
 bool dlgInput::eventFilter(QObject *obj, QEvent *event) {
