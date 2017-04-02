@@ -337,7 +337,7 @@ void js_init(BYTE first_time) {
 
 		if (((jstick.xinput = LoadLibrary("XInput1_4.dll")) == NULL) &&
 				((jstick.xinput = LoadLibrary("XInput1_3.dll")) == NULL)) {
-			fprintf(stderr, "couldn't load XInput dll\n");
+			fprintf(stderr, "XInput : failed to load XInput dll\n");
 			jstick.xinput_available = FALSE;
 		} else {
 			jstick.xinput_available = TRUE;
@@ -350,7 +350,7 @@ void js_init(BYTE first_time) {
 		}
 
 		if ((jstick.di8 = LoadLibrary("DINPUT8.dll")) == NULL) {
-			fprintf(stderr, "couldn't load DINPUT8.dll\n");
+			fprintf(stderr, "DirectInput8 : failed to load DINPUT8.dll\n");
 		} else {
 			HRESULT (WINAPI *DirectInput8Create_proc)(HINSTANCE, DWORD, REFIID, LPVOID *, LPUNKNOWN);
 

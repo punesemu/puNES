@@ -27,7 +27,6 @@
 #include "audio/quality.h"
 #include "audio/channels.h"
 #include "gui.h"
-#include "audio_outin_dev.h"
 
 #define SND_LIST_DEVICES_V1
 
@@ -63,8 +62,9 @@ typedef struct _thread {
 
 static int alsa_find_index_id(_snd_list_dev *list, uTCHAR *id, int size);
 static void alsa_enum_cards(_snd_list_dev *list, snd_pcm_stream_t stream);
-static void alsa_device_add(_snd_list_dev *list, uTCHAR *id, uTCHAR *action);
+static void alsa_device_add(_snd_list_dev *list, uTCHAR *id, uTCHAR *desc);
 static void alsa_list_devices_quit(void);
+static void alsa_list_devices_free(_snd_list_dev *list);
 #if defined (DEBUG)
 static void alsa_hwparams_print(snd_pcm_hw_params_t *hwp);
 #endif
@@ -144,11 +144,11 @@ BYTE snd_start(void) {
 		// snd.samplarate / 50 = 20 ms
 		alsa.psize = (snd.samplerate / factor[cfg->audio_buffer_factor]);
 
-		rc = snd_pcm_open(&alsa.handle, dev->id, SND_PCM_STREAM_PLAYBACK, 0);
+		rc = snd_pcm_open(&alsa.handle, (uTCHAR *) dev->id, SND_PCM_STREAM_PLAYBACK, 0);
 
 		for (tries = 0; (tries < 100) && (rc == -EBUSY); ++tries) {
 			gui_sleep(100);
-			rc = snd_pcm_open(&alsa.handle, dev->id, SND_PCM_STREAM_PLAYBACK, 0);
+			rc = snd_pcm_open(&alsa.handle, (uTCHAR *) dev->id, SND_PCM_STREAM_PLAYBACK, 0);
 		}
 
 		if (rc < 0) {
@@ -309,11 +309,11 @@ void snd_quit(void) {
 void snd_list_devices(void) {
 	alsa_list_devices_quit();
 
-	// Playback devices //
+	// Playback devices
 	alsa_device_add(&snd_list.playback, uL("default"), uL("System Default"));
 	alsa_enum_cards(&snd_list.playback, SND_PCM_STREAM_PLAYBACK);
 
-	// Capture devices //
+	// Capture devices
 	alsa_device_add(&snd_list.capture, uL("default"), uL("System Default"));
 	alsa_enum_cards(&snd_list.capture, SND_PCM_STREAM_CAPTURE);
 
@@ -324,14 +324,14 @@ void snd_list_devices(void) {
 	for (i = 0; i < snd_list.playback.count; i++) {
 		_snd_dev *dev = &snd_list.playback.devices[i];
 
-		printf(uL("  %3d : " uPERCENTs "\n"), i, dev->id);
+		printf(uL("  %3d : " uPERCENTs "\n"), i, (uTCHAR *) dev->id);
 	}
 
 	printf("CAPTURE devices\n");
 	for (i = 0; i < snd_list.capture.count; i++) {
 		_snd_dev *dev = &snd_list.capture.devices[i];
 
-		printf(uL("  %3d : " uPERCENTs "\n"), i, dev->id);
+		printf(uL("  %3d : " uPERCENTs "\n"), i, (uTCHAR *) dev->id);
 	}
 #endif
 }
@@ -342,7 +342,7 @@ void snd_list_devices(void) {
 
 	alsa_list_devices_quit();
 
-	// Playback devices //
+	// Playback devices
 	alsa_device_add(&snd_list.playback, uL("default"), uL("System Default"));
 
 	if (snd_device_name_hint(-1, "pcm", &pcm_hints) < 0) {
@@ -415,7 +415,7 @@ void snd_list_devices(void) {
 		snd_device_name_free_hint(pcm_hints);
 	}
 
-	// Capture devices //
+	// Capture devices
 	alsa_device_add(&snd_list.capture, uL("default"), uL("System Default"));
 	alsa_enum_cards(&snd_list.capture, SND_PCM_STREAM_CAPTURE);
 
@@ -436,12 +436,36 @@ void snd_list_devices(void) {
 #endif
 }
 #endif
+uTCHAR *snd_playback_device_desc(int dev) {
+	if (dev >= snd_list.playback.count) {
+		return (NULL);
+	}
+	return (snd_list.playback.devices[dev].desc);
+}
+uTCHAR *snd_playback_device_id(int dev) {
+	if (dev >= snd_list.playback.count) {
+		return (NULL);
+	}
+	return ((uTCHAR *) snd_list.playback.devices[dev].id);
+}
+uTCHAR *snd_capture_device_desc(int dev) {
+	if (dev >= snd_list.capture.count) {
+		return (NULL);
+	}
+	return (snd_list.capture.devices[dev].desc);
+}
+uTCHAR *snd_capture_device_id(int dev) {
+	if (dev >= snd_list.capture.count) {
+		return (NULL);
+	}
+	return ((uTCHAR *) snd_list.capture.devices[dev].id);
+}
 
 static int alsa_find_index_id(_snd_list_dev *list, uTCHAR *id, int size) {
 	int i, index = -1;
 
 	for (i = 0; i < list->count; i++) {
-		if (ustrcmp(id, list->devices[i].id) == 0) {
+		if (ustrcmp(id, (uTCHAR *) list->devices[i].id) == 0) {
 			index = i;
 			break;
 		}
@@ -459,7 +483,7 @@ static void alsa_enum_cards(_snd_list_dev *list, snd_pcm_stream_t stream) {
 	uTCHAR buf[100];
 
 	while (!snd_card_next(&a) && (a != -1)) {
-		_snd_dev_id(ctl_id);
+		uTCHAR ctl_id[20];
 		snd_ctl_card_info_t *cinfo;
 		snd_pcm_info_t *pinfo;
 		snd_ctl_t *ctl;
@@ -475,7 +499,7 @@ static void alsa_enum_cards(_snd_list_dev *list, snd_pcm_stream_t stream) {
 		snd_pcm_info_alloca(&pinfo);
 
 		while (!snd_ctl_pcm_next_device(ctl, &b) && (b >= 0)) {
-			_snd_dev_id(id);
+			uTCHAR id[20];
 
 			usnprintf(id, sizeof(id), "plughw:%d,%d", a, b);
 
@@ -497,33 +521,39 @@ static void alsa_enum_cards(_snd_list_dev *list, snd_pcm_stream_t stream) {
 	}
 
 }
-static void alsa_device_add(_snd_list_dev *list, uTCHAR *id, uTCHAR *action) {
+static void alsa_device_add(_snd_list_dev *list, uTCHAR *id, uTCHAR *desc) {
 	_snd_dev *dev, *devs;
 
 	if ((devs = (_snd_dev *) realloc(list->devices, (list->count + 1) * sizeof(_snd_dev)))) {
 		list->devices = devs;
 		dev = &list->devices[list->count];
-		ustrncpy(dev->id, id, usizeof(dev->id));
-		list->menu_device_add(action, dev->id);
+		dev->id = ustrdup(id);
+		dev->desc = ustrdup(desc);
 		list->count++;
 	}
 }
 static void alsa_list_devices_quit(void) {
-	outdev_init();
-	snd_list.playback.count = 0;
-	if (snd_list.playback.devices) {
-		free(snd_list.playback.devices);
-	}
-	snd_list.playback.devices = NULL;
-	snd_list.playback.menu_device_add = outdev_add;
+	alsa_list_devices_free(&snd_list.playback);
+	alsa_list_devices_free(&snd_list.capture);
+}
+static void alsa_list_devices_free(_snd_list_dev *list) {
+	if (list->devices) {
+		int i;
 
-	indev_init();
-	snd_list.capture.count = 0;
-	if (snd_list.capture.devices) {
-		free(snd_list.capture.devices);
+		for (i = 0; i < list->count; i++) {
+			_snd_dev *dev = &list->devices[i];
+
+			if (dev->id) {
+				free(dev->id);
+			}
+			if (dev->desc) {
+				free(dev->desc);
+			}
+		}
+		free(list->devices);
 	}
-	snd_list.capture.devices = NULL;
-	snd_list.capture.menu_device_add = indev_add;
+	list->count = 0;
+	list->devices = NULL;
 }
 #if defined (DEBUG)
 static void alsa_hwparams_print(snd_pcm_hw_params_t *hwp) {

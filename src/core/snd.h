@@ -25,19 +25,13 @@ enum samplerate_mode { S44100, S22050, S11025, S48000 };
 
 #define SNDCACHE ((_callback_data *) snd.cache)
 
-#if defined (__linux__)
-#define _snd_dev_id(n) uTCHAR n[20];
-#else
-#define _snd_dev_id(n) uTCHAR n[256];
-#endif
-
 typedef struct _snd_dev {
-	_snd_dev_id(id);
+	uTCHAR *desc;
+	void *id;
 } _snd_dev;
 typedef struct _snd_list_dev {
 	int count;
 	_snd_dev *devices;
-	void (*menu_device_add)(uTCHAR *dev, uTCHAR *id);
 } _snd_list_dev;
 typedef struct _callback_data {
 #if defined (__WIN32__)
@@ -99,7 +93,12 @@ EXTERNC void snd_lock_cache(_callback_data *cache);
 EXTERNC void snd_unlock_cache(_callback_data *cache);
 EXTERNC void snd_stop(void);
 EXTERNC void snd_quit(void);
+
 EXTERNC void snd_list_devices(void);
+EXTERNC uTCHAR *snd_playback_device_desc(int dev);
+EXTERNC uTCHAR *snd_playback_device_id(int dev);
+EXTERNC uTCHAR *snd_capture_device_desc(int dev);
+EXTERNC uTCHAR *snd_capture_device_id(int dev);
 
 EXTERNC BYTE snd_handler(void);
 

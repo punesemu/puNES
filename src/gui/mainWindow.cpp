@@ -44,7 +44,6 @@
 #include "cheat.h"
 #include "conf.h"
 #include "recent_roms.h"
-#include "audio_outin_dev.h"
 #include "fds.h"
 #include "clock.h"
 #include "ppu.h"
@@ -1911,8 +1910,8 @@ void mainWindow::s_update_output_devices() {
 	snd_list_devices();
 
 	for (i = 0; i < snd_list.playback.count; i++) {
-		QString description = QString((const QChar *) outdev_dev_item(i), outdev_dev_item_size(i));
-		QString id_new = QString((const QChar *) outdev_id_item(i), outdev_id_item_size(i));
+		QString description = uQString(snd_playback_device_desc(i));
+		QString id_new = uQString(snd_playback_device_id(i));
 		QAction *action = new QAction(this);
 
 		if (i == 0) {
@@ -1951,7 +1950,8 @@ void mainWindow::s_set_output_device() {
 	QString id = uQString(cfg->audio_output);
 
 	if (id != id_new) {
-		ustrncpy(cfg->audio_output, snd_list.playback.devices[index].id, usizeof(cfg->audio_output));
+		ustrncpy(cfg->audio_output, (uTCHAR *) snd_list.playback.devices[index].id,
+				usizeof(cfg->audio_output));
 		emu_pause(TRUE);
 		snd_start();
 		emu_pause(FALSE);

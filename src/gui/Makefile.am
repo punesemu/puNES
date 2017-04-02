@@ -88,8 +88,6 @@ BUILT_SOURCES += \
 noinst_LIBRARIES = libgui.a
 libgui_a_SOURCES = \
 	application.hh \
-	audio_outin_dev.cpp \
-	audio_outin_dev.h \
 	cgp.cpp \
 	cgp.h \
 	cheatObject.cpp \

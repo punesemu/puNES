@@ -26,9 +26,9 @@
 #include "fps.h"
 #include "clock.h"
 #include "apu.h"
-#include "audio_outin_dev.h"
 #define INITGUID
 #include <XAudio2.h>
+#include <dsound.h>
 #undef INITGUID
 
 #if defined (THIS)
@@ -41,9 +41,13 @@
 #define THIS IXAudio2VoiceCallback *callback
 #define THIS_ IXAudio2VoiceCallback *callback,
 
-static int xaudio2_find_index_id(_snd_list_dev *list, uTCHAR *id, int size);
-static void xaudio2_device_add(_snd_list_dev *list, uTCHAR *id, uTCHAR *action);
-static void xaudio2_list_devices_quit(void);
+static int  snd_list_find_index_id(_snd_list_dev *list, uTCHAR *id, int size);
+static void snd_list_device_add(_snd_list_dev *list, uTCHAR *id, GUID *guid, uTCHAR *desc);
+static void snd_list_devices_quit(void);
+static void snd_list_devices_free(_snd_list_dev *list);
+
+static BOOL CALLBACK cb_enum_capture_dev(LPGUID guid, LPCWSTR desc, LPCWSTR module, LPVOID data);
+
 static void INLINE xaudio2_wrbuf(IXAudio2SourceVoice *source, XAUDIO2_BUFFER *x2buf,
 		const BYTE *buffer);
 
@@ -54,6 +58,17 @@ static void STDMETHODCALLTYPE OnBufferStart(THIS_ void *data);
 static void STDMETHODCALLTYPE OnBufferEnd(THIS_ void* data);
 static void STDMETHODCALLTYPE OnLoopEnd(THIS_ void *data);
 static void STDMETHODCALLTYPE OnVoiceError(THIS_ void* data, HRESULT Error);
+
+
+
+static struct _directsound8 {
+	BYTE available;
+	HANDLE ds8;
+	HRESULT (WINAPI *DirectSoundCreate8_proc)(LPGUID, LPDIRECTSOUND*, LPUNKNOWN);
+	HRESULT (WINAPI *DirectSoundCaptureEnumerateW_proc)(LPDSENUMCALLBACKW, LPVOID);
+} ds8;
+
+
 
 static struct _xaudio2 {
 	BYTE opened;
@@ -81,10 +96,29 @@ static _callback_data cbd;
 BYTE snd_init(void) {
 	memset(&snd, 0x00, sizeof(_snd));
 	memset(&xaudio2, 0x00, sizeof(xaudio2));
+	memset(&ds8, 0x00, sizeof(ds8));
 	memset(&cbd, 0x00, sizeof(_callback_data));
 
 	snd_apu_tick = NULL;
 	snd_end_frame = NULL;
+
+	if ((ds8.ds8 = LoadLibrary("DSOUND.DLL")) == NULL) {
+		fprintf(stderr, "DirectSound: failed to load DSOUND.DLL\n");
+		ds8.available = FALSE;
+	} else {
+		ds8.available = TRUE;
+		if ((ds8.DirectSoundCreate8_proc = (HRESULT (WINAPI *)(LPGUID, LPDIRECTSOUND*,LPUNKNOWN))
+				GetProcAddress(ds8.ds8, "DirectSoundCreate8")) == NULL) {
+			ds8.available = FALSE;
+		}
+		if ((ds8.DirectSoundCaptureEnumerateW_proc = (HRESULT (WINAPI *)(LPDSENUMCALLBACKW, LPVOID))
+				GetProcAddress(ds8.ds8, "DirectSoundCaptureEnumerateW")) == NULL) {
+			ds8.available = FALSE;
+		}
+		if (ds8.available == FALSE) {
+			fprintf(stderr, "DirectSound: System doesn't appear to have DS8.");
+		}
+	}
 
 	snd_list_devices();
 
@@ -137,7 +171,7 @@ BYTE snd_start(void) {
 	}
 
 	{
-		int index = xaudio2_find_index_id(&snd_list.playback, cfg->audio_output,
+		int index = snd_list_find_index_id(&snd_list.playback, cfg->audio_output,
 		        usizeof(cfg->audio_output));
 
 		if (index == 0) {
@@ -313,6 +347,10 @@ void snd_unlock_cache(_callback_data *cache) {
 void snd_stop(void) {
 	xaudio2.opened = FALSE;
 
+    if (ds8.ds8) {
+    	FreeLibrary(ds8.ds8);
+    }
+
 	if (xaudio2.source) {
 		IXAudio2SourceVoice_Stop(xaudio2.source, 0, XAUDIO2_COMMIT_NOW);
 		IXAudio2SourceVoice_FlushSourceBuffers(xaudio2.source);
@@ -362,15 +400,16 @@ void snd_stop(void) {
 void snd_quit(void) {
 	snd_stop();
 }
+
 void snd_list_devices(void) {
 	IXAudio2 *ixa2 = NULL;
 	UINT32 devcount = 0;
 	UINT32 i = 0;
 
-	xaudio2_list_devices_quit();
+	snd_list_devices_quit();
 
-	// Playback devices //
-	xaudio2_device_add(&snd_list.playback, uL("default"), uL("System Default"));
+	// Playback devices
+	snd_list_device_add(&snd_list.playback, uL("default"), NULL, uL("System Default"));
 
 	if (XAudio2Create(&ixa2, 0, XAUDIO2_DEFAULT_PROCESSOR) != S_OK) {
 		return;
@@ -387,17 +426,53 @@ void snd_list_devices(void) {
 			if (ustrlen(details.DisplayName) == 0) {
 				continue;
 			}
-			xaudio2_device_add(&snd_list.playback, details.DeviceID, details.DisplayName);
+			snd_list_device_add(&snd_list.playback, details.DeviceID, NULL, details.DisplayName);
 		}
 	}
 	IXAudio2_Release(ixa2);
+
+	// Capture devices
+	if (ds8.available) {
+		snd_list_device_add(&snd_list.capture, uL("default"), NULL, uL("System Default"));
+
+		ds8.DirectSoundCaptureEnumerateW_proc(cb_enum_capture_dev, NULL);
+
+		for (i = 0; i < snd_list.capture.count; i++) {
+			wprintf(uL("%d : %s\n"), i, snd_list.capture.devices[i].desc);
+		}
+	}
+}
+uTCHAR *snd_playback_device_desc(int dev) {
+	if (dev >= snd_list.playback.count) {
+		return (NULL);
+	}
+	return (snd_list.playback.devices[dev].desc);
+}
+uTCHAR *snd_playback_device_id(int dev) {
+	if (dev >= snd_list.playback.count) {
+		return (NULL);
+	}
+	return ((uTCHAR *) snd_list.playback.devices[dev].id);
+}
+uTCHAR *snd_capture_device_desc(int dev) {
+	if (dev >= snd_list.capture.count) {
+		return (NULL);
+	}
+	return (snd_list.capture.devices[dev].desc);
+}
+uTCHAR *snd_capture_device_id(int dev) {
+	if (dev >= snd_list.capture.count) {
+		return (NULL);
+	}
+	return ((uTCHAR *) snd_list.capture.devices[dev].id);
 }
 
-static int xaudio2_find_index_id(_snd_list_dev *list, uTCHAR *id, int size) {
+
+static int snd_list_find_index_id(_snd_list_dev *list, uTCHAR *id, int size) {
 	int i, index = -1;
 
 	for (i = 0; i < list->count; i++) {
-		if (ustrcmp(id, list->devices[i].id) == 0) {
+		if (ustrcmp(id, (uTCHAR *) list->devices[i].id) == 0) {
 			index = i;
 			break;
 		}
@@ -410,34 +485,55 @@ static int xaudio2_find_index_id(_snd_list_dev *list, uTCHAR *id, int size) {
 
 	return (index);
 }
-static void xaudio2_device_add(_snd_list_dev *list, uTCHAR *id, uTCHAR *action) {
+static void snd_list_device_add(_snd_list_dev *list, uTCHAR *id, GUID *guid, uTCHAR *desc) {
 	_snd_dev *dev, *devs;
 
 	if ((devs = (_snd_dev *) realloc(list->devices, (list->count + 1) * sizeof(_snd_dev)))) {
 		list->devices = devs;
 		dev = &list->devices[list->count];
-		ustrncpy(dev->id, id, usizeof(dev->id));
-		list->menu_device_add(action, dev->id);
+		if (id) {
+			// playback
+			dev->id = ustrdup(id);
+		} else {
+			// capture
+			dev->id = malloc(sizeof(GUID));
+			memcpy(dev->id, guid, sizeof(GUID));
+		}
+		dev->desc = ustrdup(desc);
 		list->count++;
 	}
 }
-static void xaudio2_list_devices_quit(void) {
-	outdev_init();
-	snd_list.playback.count = 0;
-	if (snd_list.playback.devices) {
-		free(snd_list.playback.devices);
-	}
-	snd_list.playback.devices = NULL;
-	snd_list.playback.menu_device_add = outdev_add;
-
-	indev_init();
-	snd_list.capture.count = 0;
-	if (snd_list.capture.devices) {
-		free(snd_list.capture.devices);
-	}
-	snd_list.capture.devices = NULL;
-	snd_list.capture.menu_device_add = indev_add;
+static void snd_list_devices_quit(void) {
+	snd_list_devices_free(&snd_list.playback);
+	snd_list_devices_free(&snd_list.capture);
 }
+static void snd_list_devices_free(_snd_list_dev *list) {
+	if (list->devices) {
+		int i;
+
+		for (i = 0; i < list->count; i++) {
+			_snd_dev *dev = &list->devices[i];
+
+			if (dev->id) {
+				free(dev->id);
+			}
+			if (dev->desc) {
+				free(dev->desc);
+			}
+		}
+		free(list->devices);
+	}
+	list->count = 0;
+	list->devices = NULL;
+}
+
+static BOOL CALLBACK cb_enum_capture_dev(LPGUID guid, LPCWSTR desc, LPCWSTR module, LPVOID data) {
+	if ((guid != NULL) && (desc != NULL) && (ustrlen(desc) != 0)) {
+		snd_list_device_add(&snd_list.capture, NULL, guid, (uTCHAR *) desc);
+	}
+	return (TRUE);
+}
+
 static void INLINE xaudio2_wrbuf(IXAudio2SourceVoice *source, XAUDIO2_BUFFER *x2buf,
 		const BYTE *buffer) {
 	x2buf->pAudioData = buffer;
