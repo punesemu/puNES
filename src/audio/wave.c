@@ -21,6 +21,7 @@
 #include "wave.h"
 #include "snd.h"
 #include "info.h"
+#include "text.h"
 
 struct _wav {
 	FILE *outfile;
@@ -104,6 +105,8 @@ BYTE wave_open(uTCHAR *filename, int samples) {
 
 	info.wave_in_record = TRUE;
 
+	text_add_line_info(1, "start wav recording");
+
 	snd_playback_unlock(SNDCACHE);
 
 	return (EXIT_OK);
@@ -113,6 +116,12 @@ void wave_close(void) {
 
 	if (wav.outfile) {
 		long int actual_size;
+
+		// scrivo l'ultimo segmento
+		if (wav.count) {
+			wav.subchunk2size += fwrite(wav.buffer, 1, wav.count * snd.channels * (16 / 8),
+					wav.outfile);
+		}
 
 		actual_size = ftell(wav.outfile) - 8;
 
@@ -131,6 +140,8 @@ void wave_close(void) {
 
 		fclose(wav.outfile);
 		wav.outfile = NULL;
+
+		text_add_line_info(1, "stop wav recording");
 	}
 
 	if (wav.buffer) {

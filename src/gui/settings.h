@@ -892,7 +892,7 @@ static const _settings inp_cfg[] = {
 	{uL("shortcuts"), uL("insert coin"),              uL("8,NULL"),          NULL, NULL, {0, NULL}},
 	{uL("shortcuts"), uL("switch sides"),             uL("Alt+S,NULL"),      NULL, NULL, {0, NULL}},
 	{uL("shortcuts"), uL("eject disk"),               uL("Alt+E,NULL"),      NULL, NULL, {0, NULL}},
-	{uL("shortcuts"), uL("start/stop record WAV"),    uL("Alt+V,NULL"),      NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("start/stop WAV recording"), uL("Alt+V,NULL"),      NULL, NULL, {0, NULL}},
 	{uL("shortcuts"), uL("video fullscreen"),         uL("Alt+Return,NULL"), NULL, NULL, {0, NULL}},
 	{uL("shortcuts"), uL("pause"),                    uL("Pause,NULL"),      NULL, NULL, {0, NULL}},
 	{uL("shortcuts"), uL("fast forward"),             uL("Tab,NULL"),        NULL, NULL, {0, NULL}},

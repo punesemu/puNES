@@ -205,7 +205,7 @@ void dlgInput::update_dialog() {
 	update_text_shortcut(parentMain->ui->action_Insert_Coin, SET_INP_SC_INSERT_COIN);
 	update_text_shortcut(parentMain->ui->action_Switch_sides, SET_INP_SC_SWITCH_SIDES);
 	update_text_shortcut(parentMain->ui->action_Eject_Insert_Disk, SET_INP_SC_EJECT_DISK);
-	update_text_shortcut(parentMain->ui->action_Start_Stop_record_WAV, SET_INP_SC_WAV);
+	update_text_shortcut(parentMain->ui->action_Start_Stop_WAV_recording, SET_INP_SC_WAV);
 	update_text_shortcut(parentMain->ui->action_Fullscreen, SET_INP_SC_FULLSCREEN);
 	update_text_shortcut(parentMain->ui->action_Pause, SET_INP_SC_PAUSE);
 	update_text_shortcut(parentMain->ui->action_Fast_Forward, SET_INP_SC_FAST_FORWARD);

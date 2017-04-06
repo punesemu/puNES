@@ -557,11 +557,9 @@ void mainWindow::update_menu_nes() {
 	if (info.no_rom | info.turn_off) {
 		ui->action_Hard_Reset->setEnabled(false);
 		ui->action_Soft_Reset->setEnabled(false);
-		ui->action_Start_Stop_record_WAV->setEnabled(false);
 	} else {
 		ui->action_Hard_Reset->setEnabled(true);
 		ui->action_Soft_Reset->setEnabled(true);
-		ui->action_Start_Stop_record_WAV->setEnabled(true);
 	}
 
 	if (vs_system.enabled == TRUE) {
@@ -598,17 +596,17 @@ void mainWindow::update_menu_nes() {
 	sc = (QString *)settings_inp_rd_sc(SET_INP_SC_WAV, KEYBOARD);
 
 	if (info.no_rom | info.turn_off) {
-		ui->action_Start_Stop_record_WAV->setEnabled(false);
-		ui->action_Start_Stop_record_WAV->setText(tr("Start/STop record &WAV") + '\t' + ((QString)*sc));
-		ui->action_Start_Stop_record_WAV->setIcon(QIcon(":/icon/icons/wav_start.png"));
+		ui->action_Start_Stop_WAV_recording->setEnabled(false);
+		ui->action_Start_Stop_WAV_recording->setText(tr("Start/Stop &WAV recording") + '\t' + ((QString)*sc));
+		ui->action_Start_Stop_WAV_recording->setIcon(QIcon(":/icon/icons/wav_start.png"));
 	} else {
-		ui->action_Start_Stop_record_WAV->setEnabled(true);
+		ui->action_Start_Stop_WAV_recording->setEnabled(true);
 		if (info.wave_in_record) {
-			ui->action_Start_Stop_record_WAV->setText(tr("Stop record &WAV") + '\t' + ((QString)*sc));
-			ui->action_Start_Stop_record_WAV->setIcon(QIcon(":/icon/icons/wav_stop.png"));
+			ui->action_Start_Stop_WAV_recording->setText(tr("Stop &WAV recording") + '\t' + ((QString)*sc));
+			ui->action_Start_Stop_WAV_recording->setIcon(QIcon(":/icon/icons/wav_stop.png"));
 		} else {
-			ui->action_Start_Stop_record_WAV->setText(tr("Start record &WAV") + '\t' + ((QString)*sc));
-			ui->action_Start_Stop_record_WAV->setIcon(QIcon(":/icon/icons/wav_start.png"));
+			ui->action_Start_Stop_WAV_recording->setText(tr("Start &WAV recording") + '\t' + ((QString)*sc));
+			ui->action_Start_Stop_WAV_recording->setIcon(QIcon(":/icon/icons/wav_start.png"));
 		}
 	}
 
@@ -1308,7 +1306,7 @@ void mainWindow::shortcuts() {
 	connect_shortcut(ui->action_Insert_Coin, SET_INP_SC_INSERT_COIN, SLOT(s_insert_coin()));
 	connect_shortcut(ui->action_Switch_sides, SET_INP_SC_SWITCH_SIDES, SLOT(s_disk_side()));
 	connect_shortcut(ui->action_Eject_Insert_Disk, SET_INP_SC_EJECT_DISK, SLOT(s_eject_disk()));
-	connect_shortcut(ui->action_Start_Stop_record_WAV, SET_INP_SC_WAV, SLOT(s_start_stop_wave()));
+	connect_shortcut(ui->action_Start_Stop_WAV_recording, SET_INP_SC_WAV, SLOT(s_start_stop_wave()));
 	connect_shortcut(ui->action_Fullscreen, SET_INP_SC_FULLSCREEN, SLOT(s_set_fullscreen()));
 	connect_shortcut(ui->action_Pause, SET_INP_SC_PAUSE, SLOT(s_pause()));
 	connect_shortcut(ui->action_Fast_Forward, SET_INP_SC_FAST_FORWARD, SLOT(s_fast_forward()));
@@ -1451,7 +1449,7 @@ void mainWindow::connect_menu_signals() {
 	connect_action(ui->action_Disk_4_side_B, 7, SLOT(s_disk_side()));
 	connect_action(ui->action_Switch_sides, 0xFFF, SLOT(s_disk_side()));
 	connect_action(ui->action_Eject_Insert_Disk, SLOT(s_eject_disk()));
-	connect_action(ui->action_Start_Stop_record_WAV, SLOT(s_start_stop_wave()));
+	connect_action(ui->action_Start_Stop_WAV_recording, SLOT(s_start_stop_wave()));
 	connect_action(ui->action_Fullscreen, SLOT(s_set_fullscreen()));
 	connect_action(ui->action_Pause, SLOT(s_pause()));
 	connect_action(ui->action_Fast_Forward, SLOT(s_fast_forward()));
@@ -1927,7 +1925,7 @@ void mainWindow::s_start_stop_wave() {
 
 		emu_pause(FALSE);
 	} else {
-			wave_close();
+		wave_close();
 	}
 	update_menu_nes();
 }
@@ -2357,6 +2355,7 @@ void mainWindow::s_set_samplerate() {
 	}
 
 	emu_pause(TRUE);
+	wave_close();
 	cfg->samplerate = samplerate;
 	snd_playback_start();
 	gui_update();
@@ -2370,6 +2369,7 @@ void mainWindow::s_set_channels() {
 	}
 
 	emu_pause(TRUE);
+	wave_close();
 	cfg->channels_mode = channels;
 	snd_playback_start();
 	gui_update();
@@ -2709,7 +2709,7 @@ void mainWindow::s_shcjoy_read_timer() {
 					ui->action_Eject_Insert_Disk->trigger();
 					break;
 				case SET_INP_SC_WAV:
-					ui->action_Start_Stop_record_WAV->trigger();
+					ui->action_Start_Stop_WAV_recording->trigger();
 					break;
 				case SET_INP_SC_FULLSCREEN:
 					ui->action_Fullscreen->trigger();
