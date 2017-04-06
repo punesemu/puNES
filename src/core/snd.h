@@ -88,17 +88,19 @@ EXTERNC struct _snd_list {
 } snd_list;
 
 EXTERNC BYTE snd_init(void);
-EXTERNC BYTE snd_start(void);
-EXTERNC void snd_lock_cache(_callback_data *cache);
-EXTERNC void snd_unlock_cache(_callback_data *cache);
-EXTERNC void snd_stop(void);
 EXTERNC void snd_quit(void);
 
-EXTERNC void snd_list_devices(void);
+EXTERNC BYTE snd_playback_start(void);
+EXTERNC void snd_playback_lock(_callback_data *cache);
+EXTERNC void snd_playback_unlock(_callback_data *cache);
+EXTERNC void snd_playback_stop(void);
 EXTERNC uTCHAR *snd_playback_device_desc(int dev);
 EXTERNC uTCHAR *snd_playback_device_id(int dev);
+
 EXTERNC uTCHAR *snd_capture_device_desc(int dev);
 EXTERNC uTCHAR *snd_capture_device_id(int dev);
+
+EXTERNC void snd_list_devices(void);
 
 EXTERNC BYTE snd_handler(void);
 

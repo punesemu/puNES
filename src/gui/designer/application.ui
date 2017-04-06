@@ -99,6 +99,8 @@
     <addaction name="menu_Disk_Side"/>
     <addaction name="action_Eject_Insert_Disk"/>
     <addaction name="separator"/>
+    <addaction name="action_Start_Stop_record_WAV"/>
+    <addaction name="separator"/>
     <addaction name="action_Fullscreen"/>
     <addaction name="action_Save_Screenshot"/>
     <addaction name="action_Pause"/>
@@ -2192,6 +2194,15 @@
    </property>
    <property name="text">
     <string>Fullscreen in &amp;window</string>
+   </property>
+  </action>
+  <action name="action_Start_Stop_record_WAV">
+   <property name="icon">
+    <iconset resource="application.qrc">
+     <normaloff>:/icon/icons/wav_start.png</normaloff>:/icon/icons/wav_start.png</iconset>
+   </property>
+   <property name="text">
+    <string>Start/Stop record &amp;WAV</string>
    </property>
   </action>
  </widget>

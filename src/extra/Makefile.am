@@ -3,5 +3,5 @@ AM_MAKEFLAGS = -j1
 endif
 
 if COMPILE_LIB7ZIP
-SUBDIRS = lib7zip-1.6.5
+SUBDIRS = $(LIB7ZIP_SRC)
 endif

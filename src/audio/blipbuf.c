@@ -183,7 +183,7 @@ void audio_quality_end_frame_blipbuf(void) {
 			return;
 		}
 
-		snd_lock_cache(SNDCACHE);
+		snd_playback_lock(SNDCACHE);
 
 		for (i = 0; i < count; i++) {
 			SWORD data = (sample[i] * apu_pre_amp) * cfg->apu.volume[APU_MASTER];
@@ -199,7 +199,7 @@ void audio_quality_end_frame_blipbuf(void) {
 			snd.buffer.start = TRUE;
 		}
 
-		snd_unlock_cache(SNDCACHE);
+		snd_playback_unlock(SNDCACHE);
 	}
 }
 

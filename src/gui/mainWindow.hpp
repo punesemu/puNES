@@ -121,6 +121,7 @@ class mainWindow: public QMainWindow {
 		void s_insert_coin();
 		void s_disk_side();
 		void s_eject_disk();
+		void s_start_stop_wave();
 		void s_pause();
 		void s_fast_forward();
 		void s_save_screenshot();

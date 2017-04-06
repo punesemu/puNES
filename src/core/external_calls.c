@@ -49,5 +49,5 @@ void extcl_init(void) {
 	/* battery */
 	extcl_battery_io = NULL;
 	/* snd */
-	extcl_snd_start = NULL;
+	extcl_snd_playback_start = NULL;
 }

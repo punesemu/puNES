@@ -51,6 +51,7 @@
 #include "save_slot.h"
 #include "version.h"
 #include "audio/delay.h"
+#include "audio/wave.h"
 #include "vs_system.h"
 #if defined (WITH_OPENGL)
 #if defined (__linux__)
@@ -556,9 +557,11 @@ void mainWindow::update_menu_nes() {
 	if (info.no_rom | info.turn_off) {
 		ui->action_Hard_Reset->setEnabled(false);
 		ui->action_Soft_Reset->setEnabled(false);
+		ui->action_Start_Stop_record_WAV->setEnabled(false);
 	} else {
 		ui->action_Hard_Reset->setEnabled(true);
 		ui->action_Soft_Reset->setEnabled(true);
+		ui->action_Start_Stop_record_WAV->setEnabled(true);
 	}
 
 	if (vs_system.enabled == TRUE) {
@@ -590,6 +593,23 @@ void mainWindow::update_menu_nes() {
 		ui->action_Eject_Insert_Disk->setText(tr("&Eject/Insert disk") + '\t' + ((QString)*sc));
 		ui->menu_Disk_Side->setEnabled(false);
 		ui->action_Eject_Insert_Disk->setEnabled(false);
+	}
+
+	sc = (QString *)settings_inp_rd_sc(SET_INP_SC_WAV, KEYBOARD);
+
+	if (info.no_rom | info.turn_off) {
+		ui->action_Start_Stop_record_WAV->setEnabled(false);
+		ui->action_Start_Stop_record_WAV->setText(tr("Start/STop record &WAV") + '\t' + ((QString)*sc));
+		ui->action_Start_Stop_record_WAV->setIcon(QIcon(":/icon/icons/wav_start.png"));
+	} else {
+		ui->action_Start_Stop_record_WAV->setEnabled(true);
+		if (info.wave_in_record) {
+			ui->action_Start_Stop_record_WAV->setText(tr("Stop record &WAV") + '\t' + ((QString)*sc));
+			ui->action_Start_Stop_record_WAV->setIcon(QIcon(":/icon/icons/wav_stop.png"));
+		} else {
+			ui->action_Start_Stop_record_WAV->setText(tr("Start record &WAV") + '\t' + ((QString)*sc));
+			ui->action_Start_Stop_record_WAV->setIcon(QIcon(":/icon/icons/wav_start.png"));
+		}
 	}
 
 #if defined (WITH_OPENGL)
@@ -1288,6 +1308,7 @@ void mainWindow::shortcuts() {
 	connect_shortcut(ui->action_Insert_Coin, SET_INP_SC_INSERT_COIN, SLOT(s_insert_coin()));
 	connect_shortcut(ui->action_Switch_sides, SET_INP_SC_SWITCH_SIDES, SLOT(s_disk_side()));
 	connect_shortcut(ui->action_Eject_Insert_Disk, SET_INP_SC_EJECT_DISK, SLOT(s_eject_disk()));
+	connect_shortcut(ui->action_Start_Stop_record_WAV, SET_INP_SC_WAV, SLOT(s_start_stop_wave()));
 	connect_shortcut(ui->action_Fullscreen, SET_INP_SC_FULLSCREEN, SLOT(s_set_fullscreen()));
 	connect_shortcut(ui->action_Pause, SET_INP_SC_PAUSE, SLOT(s_pause()));
 	connect_shortcut(ui->action_Fast_Forward, SET_INP_SC_FAST_FORWARD, SLOT(s_fast_forward()));
@@ -1430,6 +1451,7 @@ void mainWindow::connect_menu_signals() {
 	connect_action(ui->action_Disk_4_side_B, 7, SLOT(s_disk_side()));
 	connect_action(ui->action_Switch_sides, 0xFFF, SLOT(s_disk_side()));
 	connect_action(ui->action_Eject_Insert_Disk, SLOT(s_eject_disk()));
+	connect_action(ui->action_Start_Stop_record_WAV, SLOT(s_start_stop_wave()));
 	connect_action(ui->action_Fullscreen, SLOT(s_set_fullscreen()));
 	connect_action(ui->action_Pause, SLOT(s_pause()));
 	connect_action(ui->action_Fast_Forward, SLOT(s_fast_forward()));
@@ -1876,6 +1898,39 @@ void mainWindow::s_eject_disk() {
 
 	update_menu_nes();
 }
+void mainWindow::s_start_stop_wave() {
+	if (info.wave_in_record == FALSE) {
+		QStringList filters;
+		QString file;
+
+		emu_pause(TRUE);
+
+		filters.append(tr("MS WAVE files"));
+		filters.append(tr("All files"));
+
+		filters[0].append(" (*.wav *.WAV)");
+		filters[1].append(" (*.*)");
+
+		file = QFileDialog::getSaveFileName(this, tr("Record sound"),
+				QFileInfo(uQString(info.rom_file)).completeBaseName(),
+				filters.join(";;"));
+
+		if (file.isNull() == false) {
+			QFileInfo fileinfo(file);
+
+			if (fileinfo.suffix().isEmpty()) {
+				fileinfo.setFile(QString(file) + ".wav");
+			}
+
+			wave_open(uQStringCD(fileinfo.absoluteFilePath()), snd.samplerate * 5);
+		}
+
+		emu_pause(FALSE);
+	} else {
+			wave_close();
+	}
+	update_menu_nes();
+}
 void mainWindow::s_pause() {
 	info.pause_from_gui = !info.pause_from_gui;
 	info.pause_frames_drawscreen = 0;
@@ -1953,7 +2008,7 @@ void mainWindow::s_set_output_device() {
 		ustrncpy(cfg->audio_output, (uTCHAR *) snd_list.playback.devices[index].id,
 				usizeof(cfg->audio_output));
 		emu_pause(TRUE);
-		snd_start();
+		snd_playback_start();
 		emu_pause(FALSE);
 	}
 }
@@ -2041,7 +2096,7 @@ void mainWindow::s_set_fps() {
 	cfg->fps = fps;
 	emu_pause(TRUE);
 	fps_init();
-	snd_start();
+	snd_playback_start();
 	emu_pause(FALSE);
 }
 void mainWindow::s_set_fsk() {
@@ -2290,7 +2345,7 @@ void mainWindow::s_set_audio_buffer_factor() {
 
 	emu_pause(TRUE);
 	cfg->audio_buffer_factor = factor;
-	snd_start();
+	snd_playback_start();
 	gui_update();
 	emu_pause(FALSE);
 }
@@ -2303,7 +2358,7 @@ void mainWindow::s_set_samplerate() {
 
 	emu_pause(TRUE);
 	cfg->samplerate = samplerate;
-	snd_start();
+	snd_playback_start();
 	gui_update();
 	emu_pause(FALSE);
 }
@@ -2316,7 +2371,7 @@ void mainWindow::s_set_channels() {
 
 	emu_pause(TRUE);
 	cfg->channels_mode = channels;
-	snd_start();
+	snd_playback_start();
 	gui_update();
 	emu_pause(FALSE);
 }
@@ -2353,9 +2408,9 @@ void mainWindow::s_set_audio_swap_duty() {
 void mainWindow::s_set_audio_enable() {
 	emu_pause(TRUE);
 	if ((cfg->apu.channel[APU_MASTER] = !cfg->apu.channel[APU_MASTER])) {
-		snd_start();
+		snd_playback_start();
 	} else {
-		snd_stop();
+		snd_playback_stop();
 	}
 	gui_apu_channels_update_dialog();
 	gui_update();
@@ -2652,6 +2707,9 @@ void mainWindow::s_shcjoy_read_timer() {
 					break;
 				case SET_INP_SC_EJECT_DISK:
 					ui->action_Eject_Insert_Disk->trigger();
+					break;
+				case SET_INP_SC_WAV:
+					ui->action_Start_Stop_record_WAV->trigger();
 					break;
 				case SET_INP_SC_FULLSCREEN:
 					ui->action_Fullscreen->trigger();

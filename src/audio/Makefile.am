@@ -16,7 +16,9 @@ libaudio_a_SOURCES = \
 	panning.c \
 	panning.h \
 	quality.c \
-	quality.h
+	quality.h \
+	wave.c \
+	wave.h
 
 if LINUX
 libaudio_a_SOURCES += \

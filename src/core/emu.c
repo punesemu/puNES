@@ -792,7 +792,7 @@ BYTE emu_reset(BYTE type) {
 	fps_init();
 
 	if (info.reset >= CHANGE_ROM) {
-		if (snd_start()) {
+		if (snd_playback_start()) {
 			return (EXIT_ERROR);
 		}
 	}

@@ -58,7 +58,7 @@
 #define EXTCL_BATTERY_IO(n) extcl_battery_io = extcl_battery_io_##n
 
 /* snd */
-#define EXTCL_SND_START(n) extcl_snd_start = extcl_snd_start_##n
+#define EXTCL_SND_PLAYBACK_START(n) extcl_snd_playback_start = extcl_snd_playback_start_##n
 
 #if defined (__cplusplus)
 #define EXTERNC extern "C"
@@ -123,7 +123,7 @@ EXTERNC void (*extcl_irq_A12_clock)(void);
 EXTERNC void (*extcl_battery_io)(BYTE mode, FILE *fp);
 
 /* snd */
-EXTERNC void (*extcl_snd_start)(WORD samplarate);
+EXTERNC void (*extcl_snd_playback_start)(WORD samplarate);
 
 #undef EXTERNC
 

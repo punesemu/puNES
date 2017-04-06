@@ -33,7 +33,7 @@
 #define BIOSFILE "disksys.rom"
 #define DIFFVERSION 1
 
-typedef struct {
+typedef struct _fds_diff_ele {
 	BYTE side;
 	WORD value;
 	uint32_t position;

@@ -113,7 +113,7 @@ void audio_quality_apu_tick_original(void) {
 		return;
 	}
 
-	snd_lock_cache(SNDCACHE);
+	snd_playback_lock(SNDCACHE);
 
 	{
 		SWORD mixer = 0;
@@ -142,7 +142,7 @@ void audio_quality_apu_tick_original(void) {
 		}
 	}
 
-	snd_unlock_cache(SNDCACHE);
+	snd_playback_unlock(SNDCACHE);
 }
 
 /* --------------------------------------------------------------------------------------- */

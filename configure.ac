@@ -443,6 +443,7 @@ AM_COND_IF([COMPILE_LIB7ZIP],[
 ],[
 	LIB7ZIP_LIBS="${path_7zip_lib}/lib7zip.a"
 ])
+AC_SUBST(LIB7ZIP_SRC)
 AC_SUBST(LIB7ZIP_LIBS)
 
 # The End

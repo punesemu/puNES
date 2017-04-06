@@ -168,9 +168,9 @@ void dlgApuChannels::s_checkbox_state_changed(int state) {
 
 	if (index == APU_MASTER) {
 		if (cfg->apu.channel[APU_MASTER]) {
-			snd_start();
+			snd_playback_start();
 		} else {
-			snd_stop();
+			snd_playback_stop();
 		}
 		gui_update();
 	}

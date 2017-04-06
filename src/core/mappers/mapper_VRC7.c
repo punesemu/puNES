@@ -38,7 +38,7 @@ void map_init_VRC7(BYTE revision) {
 	EXTCL_CPU_WR_MEM(VRC7);
 	EXTCL_SAVE_MAPPER(VRC7);
 	EXTCL_CPU_EVERY_CYCLE(VRC7);
-	EXTCL_SND_START(VRC7);
+	EXTCL_SND_PLAYBACK_START(VRC7);
 	mapper.internal_struct[0] = (BYTE *) &vrc7;
 	mapper.internal_struct_size[0] = sizeof(vrc7);
 
@@ -198,6 +198,6 @@ void extcl_cpu_every_cycle_VRC7(void) {
 	vrc7.count = vrc7.reload;
 	vrc7.delay = delay;
 }
-void extcl_snd_start_VRC7(WORD samplarate) {
+void extcl_snd_playback_start_VRC7(WORD samplarate) {
 	opll_reset(3579545, samplarate);
 }

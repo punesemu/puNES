@@ -26,6 +26,7 @@
 #include "fps.h"
 #include "clock.h"
 #include "apu.h"
+#include "wave.h"
 #define INITGUID
 #include <XAudio2.h>
 #include <dsound.h>
@@ -59,17 +60,12 @@ static void STDMETHODCALLTYPE OnBufferEnd(THIS_ void* data);
 static void STDMETHODCALLTYPE OnLoopEnd(THIS_ void *data);
 static void STDMETHODCALLTYPE OnVoiceError(THIS_ void* data, HRESULT Error);
 
-
-
 static struct _directsound8 {
 	BYTE available;
 	HANDLE ds8;
 	HRESULT (WINAPI *DirectSoundCreate8_proc)(LPGUID, LPDIRECTSOUND*, LPUNKNOWN);
 	HRESULT (WINAPI *DirectSoundCaptureEnumerateW_proc)(LPDSENUMCALLBACKW, LPVOID);
 } ds8;
-
-
-
 static struct _xaudio2 {
 	BYTE opened;
 	IXAudio2 *engine;
@@ -123,13 +119,17 @@ BYTE snd_init(void) {
 	snd_list_devices();
 
 	// apro e avvio la riproduzione
-	if (snd_start()) {
+	if (snd_playback_start()) {
 		return (EXIT_ERROR);
 	}
 
 	return (EXIT_OK);
 }
-BYTE snd_start(void) {
+void snd_quit(void) {
+	snd_playback_stop();
+}
+
+BYTE snd_playback_start(void) {
 	int psamples;
 
 	if (!cfg->apu.channel[APU_MASTER]) {
@@ -137,7 +137,7 @@ BYTE snd_start(void) {
 	}
 
 	// come prima cosa blocco eventuali riproduzioni
-	snd_stop();
+	snd_playback_stop();
 
 	memset(&snd, 0x00, sizeof(_snd));
 	memset(&xaudio2, 0x00, sizeof(xaudio2));
@@ -312,8 +312,8 @@ BYTE snd_start(void) {
 		}
 	}
 
-	if (extcl_snd_start) {
-		extcl_snd_start((WORD) snd.samplerate);
+	if (extcl_snd_playback_start) {
+		extcl_snd_playback_start((WORD) snd.samplerate);
 	}
 
 	audio_channels_init_mode();
@@ -338,13 +338,13 @@ BYTE snd_start(void) {
 
 	return (EXIT_OK);
 }
-void snd_lock_cache(_callback_data *cache) {
+void snd_playback_lock(_callback_data *cache) {
 	WaitForSingleObject((HANDLE **) cache->lock, INFINITE);
 }
-void snd_unlock_cache(_callback_data *cache) {
+void snd_playback_unlock(_callback_data *cache) {
 	ReleaseSemaphore((HANDLE **) cache->lock, 1, NULL);
 }
-void snd_stop(void) {
+void snd_playback_stop(void) {
 	xaudio2.opened = FALSE;
 
     if (ds8.ds8) {
@@ -397,8 +397,30 @@ void snd_stop(void) {
 		audio_quality_quit();
 	}
 }
-void snd_quit(void) {
-	snd_stop();
+uTCHAR *snd_playback_device_desc(int dev) {
+	if (dev >= snd_list.playback.count) {
+		return (NULL);
+	}
+	return (snd_list.playback.devices[dev].desc);
+}
+uTCHAR *snd_playback_device_id(int dev) {
+	if (dev >= snd_list.playback.count) {
+		return (NULL);
+	}
+	return ((uTCHAR *) snd_list.playback.devices[dev].id);
+}
+
+uTCHAR *snd_capture_device_desc(int dev) {
+	if (dev >= snd_list.capture.count) {
+		return (NULL);
+	}
+	return (snd_list.capture.devices[dev].desc);
+}
+uTCHAR *snd_capture_device_id(int dev) {
+	if (dev >= snd_list.capture.count) {
+		return (NULL);
+	}
+	return ((uTCHAR *) snd_list.capture.devices[dev].id);
 }
 
 void snd_list_devices(void) {
@@ -436,37 +458,8 @@ void snd_list_devices(void) {
 		snd_list_device_add(&snd_list.capture, uL("default"), NULL, uL("System Default"));
 
 		ds8.DirectSoundCaptureEnumerateW_proc(cb_enum_capture_dev, NULL);
-
-		for (i = 0; i < snd_list.capture.count; i++) {
-			wprintf(uL("%d : %s\n"), i, snd_list.capture.devices[i].desc);
-		}
 	}
 }
-uTCHAR *snd_playback_device_desc(int dev) {
-	if (dev >= snd_list.playback.count) {
-		return (NULL);
-	}
-	return (snd_list.playback.devices[dev].desc);
-}
-uTCHAR *snd_playback_device_id(int dev) {
-	if (dev >= snd_list.playback.count) {
-		return (NULL);
-	}
-	return ((uTCHAR *) snd_list.playback.devices[dev].id);
-}
-uTCHAR *snd_capture_device_desc(int dev) {
-	if (dev >= snd_list.capture.count) {
-		return (NULL);
-	}
-	return (snd_list.capture.devices[dev].desc);
-}
-uTCHAR *snd_capture_device_id(int dev) {
-	if (dev >= snd_list.capture.count) {
-		return (NULL);
-	}
-	return ((uTCHAR *) snd_list.capture.devices[dev].id);
-}
-
 
 static int snd_list_find_index_id(_snd_list_dev *list, uTCHAR *id, int size) {
 	int i, index = -1;
@@ -552,24 +545,27 @@ static void STDMETHODCALLTYPE OnBufferEnd(THIS_ void *data) {
 	IXAudio2SourceVoice *source = (IXAudio2SourceVoice *) cache->xa2source;
 	XAUDIO2_BUFFER *buffer = (XAUDIO2_BUFFER *) cache->xa2buffer;
 	WORD len = buffer->AudioBytes;
+	int avail = buffer->PlayLength;
 
 	if (xaudio2.opened == FALSE) {
 		return;
 	}
 
-	snd_lock_cache(cache);
+	snd_playback_lock(cache);
 
 	if ((info.no_rom | info.turn_off | info.pause) || (snd.buffer.start == FALSE)
 			|| (fps.fast_forward == TRUE)) {
 		xaudio2_wrbuf(source, buffer, (const BYTE *) cache->silence);
 	} else if (cache->bytes_available < len) {
+		wave_write(cache->silence, avail);
 		xaudio2_wrbuf(source, buffer, (const BYTE *) cache->silence);
 		snd.out_of_sync++;
 	} else {
+		wave_write((SWORD *) cache->read, avail);
 		xaudio2_wrbuf(source, buffer, (const BYTE *) cache->read);
 
 		cache->bytes_available -= len;
-		cache->samples_available -= (len / snd.channels / sizeof(*cache->write));
+		cache->samples_available -= avail;
 
 		// mi preparo per i prossimi frames da inviare, sempre
 	 	// che non abbia raggiunto la fine del buffer, nel
@@ -584,7 +580,7 @@ static void STDMETHODCALLTYPE OnBufferEnd(THIS_ void *data) {
 		xaudio2.tick = gui_get_ms();
 		if (info.snd_info == TRUE)
 		fprintf(stderr, "snd : %6d %6d %6d %6d %d %f %3d %f\r",
-			buffer->AudioBytes,
+			buffer->PlayLength,
 			fps.total_frames_skipped,
 			cache->samples_available,
 			cache->bytes_available,
@@ -595,7 +591,7 @@ static void STDMETHODCALLTYPE OnBufferEnd(THIS_ void *data) {
 	}
 #endif
 
-	snd_unlock_cache(cache);
+	snd_playback_unlock(cache);
 }
 static void STDMETHODCALLTYPE OnLoopEnd(THIS_ void *data) {}
 static void STDMETHODCALLTYPE OnVoiceError(THIS_ void* data, HRESULT Error) {}

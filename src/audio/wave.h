@@ -16,28 +16,21 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef MAPPER_VRC7_H_
-#define MAPPER_VRC7_H_
+#ifndef WAVE_H_
+#define WAVE_H_
 
 #include "common.h"
 
-enum { VRC7A, VRC7B };
+#if defined (__cplusplus)
+#define EXTERNC extern "C"
+#else
+#define EXTERNC
+#endif
 
-struct _vrc7 {
-	BYTE reg;
-	BYTE enabled;
-	BYTE reload;
-	BYTE mode;
-	BYTE acknowledge;
-	BYTE count;
-	BYTE delay;
-	WORD prescaler;
-} vrc7;
+EXTERNC BYTE wave_open(uTCHAR *filename, int samples);
+EXTERNC void wave_close(void);
+EXTERNC void wave_write(SWORD *data, int samples);
 
-void map_init_VRC7(BYTE revision);
-void extcl_cpu_wr_mem_VRC7(WORD address, BYTE value);
-BYTE extcl_save_mapper_VRC7(BYTE mode, BYTE slot, FILE *fp);
-void extcl_cpu_every_cycle_VRC7(void);
-void extcl_snd_playback_start_VRC7(WORD samplarate);
+#undef EXTERNC
 
-#endif /* MAPPER_VRC7_H_ */
+#endif /* WAVE_H_ */
