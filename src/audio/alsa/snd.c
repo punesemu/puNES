@@ -102,6 +102,9 @@ BYTE snd_init(void) {
 	return (EXIT_OK);
 }
 void snd_quit(void) {
+	// se e' in corso una registrazione, la concludo
+	wave_close();
+
 	if (loop.action != AT_UNINITIALIZED) {
 		loop.action = AT_STOP;
 
