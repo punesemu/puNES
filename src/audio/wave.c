@@ -112,7 +112,9 @@ BYTE wave_open(uTCHAR *filename, int samples) {
 	return (EXIT_OK);
 }
 void wave_close(void) {
-	snd_playback_lock(SNDCACHE);
+	if (SNDCACHE) {
+		snd_playback_lock(SNDCACHE);
+	}
 
 	if (wav.outfile) {
 		long int actual_size;
@@ -151,7 +153,9 @@ void wave_close(void) {
 
 	info.wave_in_record = FALSE;
 
-	snd_playback_unlock(SNDCACHE);
+	if (SNDCACHE) {
+		snd_playback_lock(SNDCACHE);
+	}
 }
 void wave_write(SWORD *data, int samples) {
 	SWORD *src = data;
