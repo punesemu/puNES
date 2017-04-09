@@ -154,7 +154,7 @@ void wave_close(void) {
 	info.wave_in_record = FALSE;
 
 	if (SNDCACHE) {
-		snd_playback_lock(SNDCACHE);
+		snd_playback_unlock(SNDCACHE);
 	}
 }
 void wave_write(SWORD *data, int samples) {
