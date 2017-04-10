@@ -1,1636 +1,1636 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="ru_RU">
-<context>
+<TS version="2.0" language="ru" sourcelanguage="en">
+  <context>
     <name>APU_channels</name>
     <message>
-        <source>APU Channels</source>
-        <translation>Каналы APU</translation>
+      <source>APU Channels</source>
+      <translation>Каналы APU</translation>
     </message>
     <message>
-        <source>Square 1</source>
-        <translation>Square 1</translation>
+      <source>Square 1</source>
+      <translation type="unfinished">Square 1</translation>
     </message>
     <message>
-        <source>DMC</source>
-        <translation>DMC</translation>
+      <source>DMC</source>
+      <translation type="unfinished">DMC</translation>
     </message>
     <message>
-        <source>Noise</source>
-        <translation>Noise</translation>
+      <source>Noise</source>
+      <translation type="unfinished">Noise</translation>
     </message>
     <message>
-        <source>Square 2</source>
-        <translation>Square 2</translation>
+      <source>Square 2</source>
+      <translation type="unfinished">Square 2</translation>
     </message>
     <message>
-        <source>Extra</source>
-        <translation>Extra</translation>
+      <source>Extra</source>
+      <translation type="unfinished">Extra</translation>
     </message>
     <message>
-        <source>Master</source>
-        <translation>Master</translation>
+      <source>Master</source>
+      <translation type="unfinished">Master</translation>
     </message>
     <message>
-        <source>Triangle</source>
-        <translation>Triangle</translation>
+      <source>Triangle</source>
+      <translation type="unfinished">Triangle</translation>
     </message>
     <message>
-        <source>active</source>
-        <translation>Включить</translation>
+      <source>active</source>
+      <translation>Включить</translation>
     </message>
     <message>
-        <source>volume</source>
-        <translation>Громкость</translation>
+      <source>volume</source>
+      <translation>Громкость</translation>
     </message>
     <message>
-        <source>Active all</source>
-        <translation>Включить все</translation>
+      <source>Active all</source>
+      <translation>Включить все</translation>
     </message>
     <message>
-        <source>Disable all</source>
-        <translation>Отключить все</translation>
+      <source>Disable all</source>
+      <translation>Отключить все</translation>
     </message>
     <message>
-        <source>Defaults</source>
-        <translation>По умолчанию</translation>
+      <source>Defaults</source>
+      <translation>По умолчанию</translation>
     </message>
-</context>
-<context>
+  </context>
+  <context>
     <name>Cheats</name>
     <message>
-        <source>Active</source>
-        <translation>Включен</translation>
+      <source>Cheat Editor</source>
+      <translation>Редактор читов</translation>
     </message>
     <message>
-        <source>Address</source>
-        <translation>Адрес</translation>
+      <source>Cheats</source>
+      <translation>Читы</translation>
     </message>
     <message>
-        <source>Value</source>
-        <translation>Значение</translation>
+      <source>Active</source>
+      <translation>Включен</translation>
     </message>
     <message>
-        <source>Compare</source>
-        <translation>Сравнить</translation>
+      <source>Code</source>
+      <translation>Код</translation>
     </message>
     <message>
-        <source>Description</source>
-        <translation>Описание</translation>
+      <source>Address</source>
+      <translation>Адрес</translation>
     </message>
     <message>
-        <source>Apply</source>
-        <translation>Применить</translation>
+      <source>Value</source>
+      <translation>Значение</translation>
     </message>
     <message>
-        <source>Remove</source>
-        <translation>Удалить</translation>
+      <source>Compare</source>
+      <translation>Сравнить</translation>
     </message>
     <message>
-        <source>Import</source>
-        <translation>Импорт</translation>
+      <source>Description</source>
+      <translation>Описание</translation>
     </message>
     <message>
-        <source>Export</source>
-        <translation>Экспорт</translation>
+      <source>Hide Tools</source>
+      <translation>Скрыть редактор</translation>
     </message>
     <message>
-        <source>Discard</source>
-        <translation>Отменить</translation>
+      <source>Import</source>
+      <translation>Импорт</translation>
     </message>
     <message>
-        <source>Clear All</source>
-        <translation>Очистить всё</translation>
+      <source>Export</source>
+      <translation>Экспорт</translation>
     </message>
     <message>
-        <source>Game Genie</source>
-        <translation>Game Genie</translation>
+      <source>Clear All</source>
+      <translation>Очистить всё</translation>
     </message>
     <message>
-        <source>CPU Ram</source>
-        <translation>CPU Ram</translation>
+      <source>Apply</source>
+      <translation>Применить</translation>
     </message>
     <message>
-        <source>Pro Action Rocky</source>
-        <translation>Pro Action Rocky</translation>
+      <source>Discard</source>
+      <translation>Отменить</translation>
     </message>
     <message>
-        <source>Cheat Editor</source>
-        <translation>Редактор читов</translation>
+      <source>Edit</source>
+      <translation>Редактор</translation>
     </message>
     <message>
-        <source>Cheats</source>
-        <translation>Читы</translation>
+      <source>CPU Ram</source>
+      <translation type="unfinished">CPU Ram</translation>
     </message>
     <message>
-        <source>Submit</source>
-        <translation>Добавить</translation>
+      <source>Pro Action Rocky</source>
+      <translation type="unfinished">Pro Action Rocky</translation>
     </message>
     <message>
-        <source>Edit</source>
-        <translation>Редактор</translation>
+      <source>Game Genie</source>
+      <translation type="unfinished">Game Genie</translation>
     </message>
     <message>
-        <source>Hide Tools</source>
-        <translation>Скрыть редактор</translation>
+      <source>Submit</source>
+      <translation>Добавить</translation>
     </message>
     <message>
-        <source>Cancel</source>
-        <translation>Отмена</translation>
+      <source>Cancel</source>
+      <translation>Отмена</translation>
     </message>
     <message>
-        <source>New</source>
-        <translation>Новый чит</translation>
+      <source>New</source>
+      <translation>Новый чит</translation>
     </message>
     <message>
-        <source>Code</source>
-        <translation>Код</translation>
+      <source>Remove</source>
+      <translation>Удалить</translation>
     </message>
-</context>
-<context>
+  </context>
+  <context>
     <name>Input_dialog</name>
     <message>
-        <source>Input Configuration</source>
-        <translation>Настройка управления</translation>
+      <source>Input Configuration</source>
+      <translation>Настройка управления</translation>
     </message>
     <message>
-        <source>Controllers</source>
-        <translation>Контроллеры</translation>
+      <source>Controllers</source>
+      <translation>Контроллеры</translation>
     </message>
     <message>
-        <source>Controller Port 2</source>
-        <translation>Порт контроллера №2</translation>
+      <source>Controller Port 2</source>
+      <translation>Порт контроллера №2</translation>
     </message>
     <message>
-        <source>Setup</source>
-        <translation>Настройка</translation>
+      <source>Setup</source>
+      <translation>Настройка</translation>
     </message>
     <message>
-        <source>Controller Port 3</source>
-        <translation>Порт контроллера №3</translation>
+      <source>Controller Port 3</source>
+      <translation>Порт контроллера №3</translation>
     </message>
     <message>
-        <source>Controller Port 4</source>
-        <translation>Порт контроллера №4</translation>
+      <source>Controller Port 4</source>
+      <translation>Порт контроллера №4</translation>
     </message>
     <message>
-        <source>Controller Port 1</source>
-        <translation>Порт контроллера №1</translation>
+      <source>Controller Port 1</source>
+      <translation>Порт контроллера №1</translation>
     </message>
     <message>
-        <source>Controller Mode</source>
-        <translation>Режим контроллера</translation>
+      <source>Controller Mode</source>
+      <translation>Режим контроллера</translation>
     </message>
     <message>
-        <source>Default</source>
-        <translation>По умолчанию</translation>
+      <source>Default</source>
+      <translation>По умолчанию</translation>
     </message>
     <message>
-        <source>Apply</source>
-        <translation>Применить</translation>
+      <source>Apply</source>
+      <translation>Применить</translation>
     </message>
     <message>
-        <source>Discard</source>
-        <translation>Отменить</translation>
+      <source>Discard</source>
+      <translation>Отменить</translation>
     </message>
     <message>
-        <source>Misc</source>
-        <translation>Разное</translation>
+      <source>Misc</source>
+      <translation>Разное</translation>
     </message>
     <message>
-        <source>Permit &quot;Up + Down&quot; and &quot;Left + Right&quot; at the same time</source>
-        <translation>Разрешить одновременное нажатие &quot;Вверх+Вниз&quot; и &quot;Вправо+Влево&quot;</translation>
+      <source>Permit &quot;Up + Down&quot; and &quot;Left + Right&quot; at the same time</source>
+      <translation>Разрешить одновременное нажатие &quot;Вверх+Вниз&quot; и &quot;Вправо+Влево&quot;</translation>
     </message>
     <message>
-        <source>Shortcuts</source>
-        <translation>Быстрый доступ</translation>
+      <source>Shortcuts</source>
+      <translation>Быстрый доступ</translation>
     </message>
     <message>
-        <source>Action</source>
-        <translation>Действие</translation>
+      <source>Action</source>
+      <translation>Действие</translation>
     </message>
     <message>
-        <source>Keyboard</source>
-        <translation>Клавиатура</translation>
+      <source>Keyboard</source>
+      <translation>Клавиатура</translation>
     </message>
     <message>
-        <source>Joystick</source>
-        <translation>Джойстик</translation>
+      <source>Joystick</source>
+      <translation>Джойстик</translation>
     </message>
     <message>
-        <source>Joystick ID</source>
-        <translation>Джойстик ID</translation>
+      <source>Joystick ID</source>
+      <translation>Джойстик ID</translation>
     </message>
-</context>
-<context>
+  </context>
+  <context>
     <name>PPU_Hacks</name>
     <message>
-        <source>Dialog</source>
-        <translation></translation>
+      <source>Dialog</source>
+      <translation type="unfinished">Dialog</translation>
     </message>
     <message>
-        <source>PPU Hacks</source>
-        <translation>Хаки PPU</translation>
+      <source>PPU Hacks</source>
+      <translation>Хаки PPU</translation>
     </message>
     <message>
-        <source>&lt;b&gt;Sprites and background&lt;/b&gt;</source>
-        <translation>&lt;b&gt;Спрайты и фон&lt;/b&gt;</translation>
+      <source>&lt;b&gt;Sprites and background&lt;/b&gt;</source>
+      <translation>&lt;b&gt;Спрайты и фон&lt;/b&gt;</translation>
     </message>
     <message>
-        <source>Hide Sprites</source>
-        <translation>Скрыть спрайты</translation>
+      <source>Hide Sprites</source>
+      <translation>Скрыть спрайты</translation>
     </message>
     <message>
-        <source>Hide Background</source>
-        <translation>Скрыть фон</translation>
+      <source>Hide Background</source>
+      <translation>Скрыть фон</translation>
     </message>
     <message>
-        <source>Unlimited Sprites</source>
-        <translation>Снять лимит на спрайты</translation>
+      <source>Unlimited Sprites</source>
+      <translation>Снять лимит на спрайты</translation>
     </message>
     <message>
-        <source>&lt;b&gt;Overclock&lt;/b&gt;</source>
-        <translation>&lt;b&gt;Оверклок&lt;/b&gt;</translation>
+      <source>&lt;b&gt;Overclock&lt;/b&gt;</source>
+      <translation>&lt;b&gt;Оверклок&lt;/b&gt;</translation>
     </message>
     <message>
-        <source>Enable Extra Scanlines</source>
-        <translation>Дополнительные строки</translation>
+      <source>Enable Extra Scanlines</source>
+      <translation>Дополнительные строки</translation>
     </message>
     <message>
-        <source>Disable 7bit Sample Control</source>
-        <translation>Оверклок 7-битных семплов</translation>
+      <source>Disable 7bit Sample Control</source>
+      <translation>Оверклок 7-битных семплов</translation>
     </message>
     <message>
-        <source>VBlank Lines</source>
-        <translation>Строки VBlank</translation>
+      <source>VBlank Lines</source>
+      <translation>Строки VBlank</translation>
     </message>
     <message>
-        <source>Postrender Lines</source>
-        <translation>Строки пострендера</translation>
+      <source>Postrender Lines</source>
+      <translation>Строки пострендера</translation>
     </message>
     <message>
-        <source>Reset Lag Counter</source>
-        <translation>Сброс счётчика лага</translation>
+      <source>Reset Lag Counter</source>
+      <translation>Сброс счётчика лага</translation>
     </message>
-</context>
-<context>
+  </context>
+  <context>
     <name>Set_borders</name>
     <message>
-        <source>Set borders</source>
-        <translation>Установить границы</translation>
+      <source>Set borders</source>
+      <translation>Установить границы</translation>
     </message>
     <message>
-        <source>Overscan borders</source>
-        <translation>Границы вылета развёртки</translation>
+      <source>Overscan borders</source>
+      <translation>Границы вылета развёртки</translation>
     </message>
     <message>
-        <source>Preview</source>
-        <translation>Просмотр</translation>
+      <source>Preview</source>
+      <translation>Просмотр</translation>
     </message>
     <message>
-        <source>Up</source>
-        <translation>Вверх</translation>
+      <source>Up</source>
+      <translation>Вверх</translation>
     </message>
     <message>
-        <source>Left</source>
-        <translation>Влево</translation>
+      <source>Left</source>
+      <translation>Влево</translation>
     </message>
     <message>
-        <source>Right</source>
-        <translation>Вправо</translation>
+      <source>Right</source>
+      <translation>Вправо</translation>
     </message>
     <message>
-        <source>Down</source>
-        <translation>Вниз</translation>
+      <source>Down</source>
+      <translation>Вниз</translation>
     </message>
     <message>
-        <source>Defaults</source>
-        <translation>По умолчанию</translation>
+      <source>Defaults</source>
+      <translation>По умолчанию</translation>
     </message>
     <message>
-        <source>Apply</source>
-        <translation>Применить</translation>
+      <source>Apply</source>
+      <translation>Применить</translation>
     </message>
     <message>
-        <source>Discard</source>
-        <translation>Отменить</translation>
+      <source>Discard</source>
+      <translation>Отменить</translation>
     </message>
-</context>
-<context>
+  </context>
+  <context>
     <name>Standard_Pad</name>
     <message>
-        <source>Standard Pad</source>
-        <translation>Стандартный контроллер</translation>
+      <source>Standard Pad</source>
+      <translation>Стандартный контроллер</translation>
     </message>
     <message>
-        <source>Unset</source>
-        <translation>Сброс</translation>
+      <source>ID</source>
+      <translation type="unfinished">ID</translation>
     </message>
     <message>
-        <source>ID</source>
-        <translation>ID</translation>
+      <source>Up</source>
+      <translation>Вверх</translation>
     </message>
     <message>
-        <source>Up</source>
-        <translation>Вверх</translation>
+      <source>A</source>
+      <translation type="unfinished">A</translation>
     </message>
     <message>
-        <source>A</source>
-        <translation>A</translation>
+      <source>Down</source>
+      <translation>Вниз</translation>
     </message>
     <message>
-        <source>Down</source>
-        <translation>Вниз</translation>
+      <source>Unset</source>
+      <translation>Сброс</translation>
     </message>
     <message>
-        <source>Left</source>
-        <translation>Влево</translation>
+      <source>Left</source>
+      <translation>Влево</translation>
     </message>
     <message>
-        <source>Start</source>
-        <translation>Start</translation>
+      <source>Start</source>
+      <translation type="unfinished">Start</translation>
     </message>
     <message>
-        <source>Turbo B</source>
-        <translation>Турбо B</translation>
+      <source>Turbo B</source>
+      <translation>Турбо B</translation>
     </message>
     <message>
-        <source>Select</source>
-        <translation>Select</translation>
+      <source>Select</source>
+      <translation type="unfinished">Select</translation>
     </message>
     <message>
-        <source>Turbo A</source>
-        <translation>Турбо A</translation>
+      <source>Turbo A</source>
+      <translation>Турбо A</translation>
     </message>
     <message>
-        <source>B</source>
-        <translation>B</translation>
+      <source>B</source>
+      <translation type="unfinished">B</translation>
     </message>
     <message>
-        <source>Right</source>
-        <translation>Вправо</translation>
+      <source>Right</source>
+      <translation>Вправо</translation>
     </message>
     <message>
-        <source>In sequence</source>
-        <translation>По порядку</translation>
+      <source>In sequence</source>
+      <translation>По порядку</translation>
     </message>
     <message>
-        <source>Unset all</source>
-        <translation>Сбросить все</translation>
+      <source>Unset all</source>
+      <translation>Сбросить все</translation>
     </message>
     <message>
-        <source>Defaults</source>
-        <translation>По умолчанию</translation>
+      <source>Defaults</source>
+      <translation>По умолчанию</translation>
     </message>
     <message>
-        <source>Joystick</source>
-        <translation>Джойстик</translation>
+      <source>Keyboard</source>
+      <translation>Клавиатура</translation>
     </message>
     <message>
-        <source>Keyboard</source>
-        <translation>Клавиатура</translation>
+      <source>Joystick</source>
+      <translation>Джойстик</translation>
     </message>
     <message>
-        <source>Misc</source>
-        <translation>Разное</translation>
+      <source>Misc</source>
+      <translation>Разное</translation>
     </message>
     <message>
-        <source>Controller type</source>
-        <translation>Тип контроллера</translation>
+      <source>Controller type</source>
+      <translation>Тип контроллера</translation>
     </message>
     <message>
-        <source>Turbo B Delay</source>
-        <translation>Задержка &quot;Турбо B&quot;</translation>
+      <source>Turbo B Delay</source>
+      <translation>Задержка &quot;Турбо B&quot;</translation>
     </message>
     <message>
-        <source>Turbo A Delay</source>
-        <translation>Задержка &quot;Турбо A&quot;</translation>
+      <source>Turbo A Delay</source>
+      <translation>Задержка &quot;Турбо A&quot;</translation>
     </message>
     <message>
-        <source>Apply</source>
-        <translation>Применить</translation>
+      <source>Apply</source>
+      <translation>Применить</translation>
     </message>
     <message>
-        <source>Discard</source>
-        <translation>Отменить</translation>
+      <source>Discard</source>
+      <translation>Отменить</translation>
     </message>
-</context>
-<context>
+  </context>
+  <context>
     <name>Uncompress_selection</name>
     <message>
-        <source>Unpacked archive</source>
-        <translation>Распакованный архив</translation>
+      <source>Unpacked archive</source>
+      <translation>Распакованный архив</translation>
     </message>
     <message>
-        <source>OK</source>
-        <translation>OK</translation>
+      <source>OK</source>
+      <translation type="unfinished">OK</translation>
     </message>
     <message>
-        <source>Cancel</source>
-        <translation>Отмена</translation>
+      <source>Cancel</source>
+      <translation>Отмена</translation>
     </message>
     <message>
-        <source>Roms</source>
-        <translation>РОМы</translation>
+      <source>Roms</source>
+      <translation>РОМы</translation>
     </message>
-</context>
-<context>
+  </context>
+  <context>
     <name>Vs_System</name>
     <message>
-        <source>Vs System Controls</source>
-        <translation>Управление VS System</translation>
+      <source>Vs System Controls</source>
+      <translation>Управление VS System</translation>
     </message>
     <message>
-        <source>Left Coin</source>
-        <translation>Левая монета</translation>
+      <source>Left Coin</source>
+      <translation>Левая монета</translation>
     </message>
     <message>
-        <source>Right Coin</source>
-        <translation>Правая монета</translation>
+      <source>Right Coin</source>
+      <translation>Правая монета</translation>
     </message>
     <message>
-        <source>Service Coin</source>
-        <translation>Сервисная монета</translation>
+      <source>Service Coin</source>
+      <translation>Сервисная монета</translation>
     </message>
     <message>
-        <source>&lt;b&gt;Coin Counter&lt;/b&gt;</source>
-        <translation>&lt;b&gt;Счётчик монет&lt;/b&gt;</translation>
+      <source>&lt;b&gt;Coin Counter&lt;/b&gt;</source>
+      <translation>&lt;b&gt;Счётчик монет&lt;/b&gt;</translation>
     </message>
     <message>
-        <source>&lt;b&gt;Dip Switches&lt;/b&gt;</source>
-        <translation>&lt;b&gt;DIP-переключатели&lt;/b&gt;</translation>
+      <source>&lt;b&gt;Dip Switches&lt;/b&gt;</source>
+      <translation>&lt;b&gt;DIP-переключатели&lt;/b&gt;</translation>
     </message>
     <message>
-        <source>4</source>
-        <translation>4</translation>
+      <source>4</source>
+      <translation type="unfinished">4</translation>
     </message>
     <message>
-        <source>5</source>
-        <translation>5</translation>
+      <source>5</source>
+      <translation type="unfinished">5</translation>
     </message>
     <message>
-        <source>6</source>
-        <translation>6</translation>
+      <source>6</source>
+      <translation type="unfinished">6</translation>
     </message>
     <message>
-        <source>7</source>
-        <translation>7</translation>
+      <source>7</source>
+      <translation type="unfinished">7</translation>
     </message>
     <message>
-        <source>8</source>
-        <translation>8</translation>
+      <source>8</source>
+      <translation type="unfinished">8</translation>
     </message>
     <message>
-        <source>3</source>
-        <translation>3</translation>
+      <source>3</source>
+      <translation type="unfinished">3</translation>
     </message>
     <message>
-        <source>2</source>
-        <translation>2</translation>
+      <source>2</source>
+      <translation type="unfinished">2</translation>
     </message>
     <message>
-        <source>1</source>
-        <translation>1</translation>
+      <source>1</source>
+      <translation type="unfinished">1</translation>
     </message>
     <message>
-        <source>Defaults Game Dip Switches</source>
-        <translation>По умолчанию для игры</translation>
+      <source>Defaults Game Dip Switches</source>
+      <translation>По умолчанию для игры</translation>
     </message>
-</context>
-<context>
+  </context>
+  <context>
     <name>cheatObject</name>
     <message>
-        <source>Error on reading the file</source>
-        <translation>Ошибка при чтении файла</translation>
+      <source>Error on reading the file</source>
+      <translation>Ошибка при чтении файла</translation>
     </message>
     <message>
-        <source>Read only</source>
-        <translation>Только для чтения</translation>
+      <source>Read only</source>
+      <translation>Только для чтения</translation>
     </message>
     <message>
-        <source>The file is in read only mode</source>
-        <translation>Файл находится в режиме &quot;только для чтения&quot;</translation>
+      <source>The file is in read only mode</source>
+      <translation>Файл находится в режиме &quot;только для чтения&quot;</translation>
     </message>
-</context>
-<context>
+  </context>
+  <context>
     <name>dlgCheats</name>
     <message>
-        <source>XML files</source>
-        <translation>XML-файлы</translation>
+      <source>XML files</source>
+      <translation>XML-файлы</translation>
     </message>
     <message>
-        <source>All files</source>
-        <translation>Все файлы</translation>
+      <source>All files</source>
+      <translation>Все файлы</translation>
     </message>
     <message>
-        <source>Import Cheats</source>
-        <translation>Импорт читов из файла</translation>
+      <source>Import Cheats</source>
+      <translation>Импорт читов из файла</translation>
     </message>
     <message>
-        <source>Export cheats on file</source>
-        <translation>Экспорт читов в файл</translation>
+      <source>Export cheats on file</source>
+      <translation>Экспорт читов в файл</translation>
     </message>
     <message>
-        <source>CHT files</source>
-        <translation>CHT-файлы</translation>
+      <source>CHT files</source>
+      <translation>CHT-файлы</translation>
     </message>
     <message>
-        <source>All supported formats</source>
-        <translation>Все поддерживаемые форматы</translation>
+      <source>All supported formats</source>
+      <translation>Все поддерживаемые форматы</translation>
     </message>
     <message>
-        <source>Show Tools</source>
-        <translation>Показать редактор</translation>
+      <source>Show Tools</source>
+      <translation>Показать редактор</translation>
     </message>
     <message>
-        <source>Hide Tools</source>
-        <translation>Скрыть редактор</translation>
+      <source>Hide Tools</source>
+      <translation>Скрыть редактор</translation>
     </message>
     <message>
-        <source>Submit warning</source>
-        <translation>Предупреждение</translation>
+      <source>Submit warning</source>
+      <translation>Предупреждение</translation>
     </message>
     <message>
-        <source>The code is invalid</source>
-        <translation>Недействительный код</translation>
+      <source>The code is invalid</source>
+      <translation>Недействительный код</translation>
     </message>
     <message>
-        <source>The cheat is already in the list</source>
-        <translation>Этот чит уже присутствует в списке</translation>
+      <source>The cheat is already in the list</source>
+      <translation>Этот чит уже присутствует в списке</translation>
     </message>
-</context>
-<context>
+  </context>
+  <context>
     <name>dlgInput</name>
     <message>
-        <source>NES</source>
-        <translation>NES</translation>
+      <source>NES</source>
+      <translation type="unfinished">NES</translation>
     </message>
     <message>
-        <source>Famicom</source>
-        <translation>Famicom</translation>
+      <source>Famicom</source>
+      <translation type="unfinished">Famicom</translation>
     </message>
     <message>
-        <source>Four Score</source>
-        <translation>Аксессуар для игры вчетвером (Four Score)</translation>
+      <source>Four Score</source>
+      <translation>Аксессуар для игры вчетвером (Four Score)</translation>
     </message>
     <message>
-        <source>Disabled</source>
-        <translation>Отключен</translation>
+      <source>Disabled</source>
+      <translation>Отключен</translation>
     </message>
     <message>
-        <source>Standard Pad</source>
-        <translation>Стандартный контроллер</translation>
+      <source>Standard Pad</source>
+      <translation>Стандартный контроллер</translation>
     </message>
     <message>
-        <source>Zapper</source>
-        <translation>Пистолет (Zapper)</translation>
+      <source>Zapper</source>
+      <translation>Пистолет (Zapper)</translation>
     </message>
     <message>
-        <source>No usable device</source>
-        <translation>Нет доступных устройств</translation>
+      <source>No usable device</source>
+      <translation>Нет доступных устройств</translation>
     </message>
     <message>
-        <source>Default</source>
-        <translation>По умолчанию</translation>
+      <source>Default</source>
+      <translation>По умолчанию</translation>
     </message>
     <message>
-        <source>Unset</source>
-        <translation>Сброс</translation>
+      <source>Unset</source>
+      <translation>Сброс</translation>
     </message>
     <message>
-        <source>Error on open device %1</source>
-        <translation>Ошибка открытия устройства: %1</translation>
+      <source>Error on open device %1</source>
+      <translation>Ошибка открытия устройства: %1</translation>
     </message>
     <message>
-        <source>Press a key (ESC for the previous value &quot;%1&quot;) - timeout in %2</source>
-        <translation>Нажмите клавишу (ESC для сохранения предыдущего значения &quot;%1&quot;) - %2</translation>
+      <source>Press a key (ESC for the previous value &quot;%1&quot;) - timeout in %2</source>
+      <translation>Нажмите клавишу (ESC для сохранения предыдущего значения &quot;%1&quot;) - %2</translation>
     </message>
     <message>
-        <source>Error on reading controllers configurations</source>
-        <translation>Ошибка при чтении конфигурации контроллеров</translation>
+      <source>Error on reading controllers configurations</source>
+      <translation>Ошибка при чтении конфигурации контроллеров</translation>
     </message>
-</context>
-<context>
+  </context>
+  <context>
     <name>dlgOverscanBorders</name>
     <message>
-        <source>NTSC</source>
-        <translation>NTSC</translation>
+      <source>NTSC</source>
+      <translation type="unfinished">NTSC</translation>
     </message>
     <message>
-        <source>PAL/Dendy</source>
-        <translation>PAL/Dendy</translation>
+      <source>PAL/Dendy</source>
+      <translation type="unfinished">PAL/Dendy</translation>
     </message>
-</context>
-<context>
+  </context>
+  <context>
     <name>dlgStdPad</name>
     <message>
-        <source>Controller %1 : Standard Pad</source>
-        <translation>Контроллер %1: Стандартный контроллер</translation>
+      <source>Controller %1 : Standard Pad</source>
+      <translation>Контроллер %1: Стандартный контроллер</translation>
     </message>
     <message>
-        <source>Auto</source>
-        <translation>Автовыбор</translation>
+      <source>Auto</source>
+      <translation>Автовыбор</translation>
     </message>
     <message>
-        <source>Original</source>
-        <translation>Оригинальный</translation>
+      <source>Original</source>
+      <translation>Оригинальный</translation>
     </message>
     <message>
-        <source>3rd-party</source>
-        <translation>Пиратский</translation>
+      <source>3rd-party</source>
+      <translation>Пиратский</translation>
     </message>
     <message>
-        <source>Keyboard</source>
-        <translation>Клавиатура</translation>
+      <source>Keyboard</source>
+      <translation>Клавиатура</translation>
     </message>
     <message>
-        <source>Disabled</source>
-        <translation>Отключен</translation>
+      <source>Disabled</source>
+      <translation>Отключен</translation>
     </message>
     <message>
-        <source>No usable device</source>
-        <translation>Нет доступных устройств</translation>
+      <source>No usable device</source>
+      <translation>Нет доступных устройств</translation>
     </message>
     <message>
-        <source>Select device first</source>
-        <translation>Сперва выберите устройство</translation>
+      <source>Select device first</source>
+      <translation>Сперва выберите устройство</translation>
     </message>
     <message>
-        <source>Error on open device %1</source>
-        <translation>Ошибка открытия устройства: %1</translation>
+      <source>Error on open device %1</source>
+      <translation>Ошибка открытия устройства: %1</translation>
     </message>
     <message>
-        <source>Error on reading controllers configurations</source>
-        <translation>Ошибка при чтении конфигурации контроллеров</translation>
+      <source>Error on reading controllers configurations</source>
+      <translation>Ошибка при чтении конфигурации контроллеров</translation>
     </message>
     <message>
-        <source>Press a key (ESC for the previous value &quot;%1&quot;)</source>
-        <translation>Нажмите клавишу (ESC для сохранения предыдущего значения &quot;%1&quot;)</translation>
+      <source>Press a key (ESC for the previous value &quot;%1&quot;)</source>
+      <translation>Нажмите клавишу (ESC для сохранения предыдущего значения &quot;%1&quot;)</translation>
     </message>
-</context>
-<context>
+  </context>
+  <context>
     <name>mainWindow</name>
     <message>
-        <source>&amp;Open</source>
-        <translation>&amp;Открыть</translation>
+      <source>GLSL &amp;soft stretch</source>
+      <translation>GLSL &amp;сглаживание</translation>
     </message>
     <message>
-        <source>&amp;Quit</source>
-        <translation>&amp;Выход</translation>
+      <source>HLSL &amp;soft stretch</source>
+      <translation>HLSL &amp;сглаживание</translation>
     </message>
     <message>
-        <source>&amp;Hard Reset</source>
-        <translation>&amp;Питание</translation>
+      <source>&amp;Insert disk</source>
+      <translation>&amp;Вставить дискету</translation>
     </message>
     <message>
-        <source>&amp;Soft Reset</source>
-        <translation>&amp;Сброс</translation>
+      <source>&amp;Eject disk</source>
+      <translation>В&amp;ынуть дискету</translation>
     </message>
     <message>
-        <source>&amp;Eject/Insert Disk</source>
-        <translation>&amp;Вставить/извлечь дискету</translation>
+      <source>&amp;Eject/Insert disk</source>
+      <translation>&amp;Вставить/вынуть дискету</translation>
     </message>
     <message>
-        <source>Disk 1 side A</source>
-        <translation>Дискета 1 сторона A</translation>
+      <source>[Select a file]</source>
+      <translation>[Выберите файл]</translation>
     </message>
     <message>
-        <source>Disk 1 side B</source>
-        <translation>Дискета 1 сторона B</translation>
+      <source>All supported formats</source>
+      <translation>Все поддерживаемые форматы</translation>
     </message>
     <message>
-        <source>Disk 2 side A</source>
-        <translation>Дискета 2 сторона A</translation>
+      <source>Compressed files</source>
+      <translation>Сжатые файлы</translation>
     </message>
     <message>
-        <source>Disk 2 side B</source>
-        <translation>Дискета 2 сторона B</translation>
+      <source>Nes rom files</source>
+      <translation>РОМы NES</translation>
     </message>
     <message>
-        <source>Disk 3 side A</source>
-        <translation>Дискета 3 сторона A</translation>
+      <source>FDS image files</source>
+      <translation>Образы дискет FDS</translation>
     </message>
     <message>
-        <source>Disk 3 side B</source>
-        <translation>Дискета 3 сторона B</translation>
+      <source>TAS movie files</source>
+      <translation>Видео TAS</translation>
     </message>
     <message>
-        <source>Disk 4 side A</source>
-        <translation>Дискета 4 сторона A</translation>
+      <source>All files</source>
+      <translation>Все файлы</translation>
     </message>
     <message>
-        <source>Disk 4 side B</source>
-        <translation>Дискета 4 сторона B</translation>
+      <source>Open File</source>
+      <translation>Открыть файл</translation>
     </message>
     <message>
-        <source>&amp;Switch sides</source>
-        <translation>&amp;Перевернуть дискету</translation>
+      <source>Palette files</source>
+      <translation>Файлы палитр</translation>
     </message>
     <message>
-        <source>&amp;PAL</source>
-        <translation>&amp;PAL</translation>
+      <source>Save palette on file</source>
+      <translation>Сохранить палитру в файл</translation>
     </message>
     <message>
-        <source>&amp;NTSC</source>
-        <translation>&amp;NTSC</translation>
+      <source>Open palette file</source>
+      <translation>Открыть файл палитры</translation>
     </message>
     <message>
-        <source>&amp;Dendy</source>
-        <translation>&amp;Dendy</translation>
+      <source>Save states</source>
+      <translation>Сохранения puNES</translation>
     </message>
     <message>
-        <source>&amp;Auto</source>
-        <translation>&amp;Автовыбор</translation>
+      <source>Save state on file</source>
+      <translation>Сохранить в файл</translation>
     </message>
     <message>
-        <source>Default</source>
-        <translation>По умолчанию</translation>
+      <source>Open save state</source>
+      <translation>Открыть сохранение</translation>
     </message>
     <message>
-        <source>60</source>
-        <translation>60</translation>
+      <source>Nintendo Entertainment System Emulator</source>
+      <translation>Эмулятор Nintendo Entertainment System</translation>
     </message>
     <message>
-        <source>59</source>
-        <translation>59</translation>
+      <source>Compiled</source>
+      <translation>Скомпилирован</translation>
     </message>
     <message>
-        <source>58</source>
-        <translation>58</translation>
+      <source>Anyway, thank you all for the love and the help.</source>
+      <translation>Спасибо всем за отзывы и поддержку.</translation>
     </message>
     <message>
-        <source>57</source>
-        <translation>57</translation>
+      <source>If you like the emulator and you want to support it&apos;s development or would you pay for a beer at the programmer :</source>
+      <translation>Если вам понравился этот эмулятор, вы можете угостить программиста пивом:</translation>
     </message>
     <message>
-        <source>56</source>
-        <translation>56</translation>
+      <source>portable version</source>
+      <translation>портативная версия</translation>
     </message>
     <message>
-        <source>55</source>
-        <translation>55</translation>
+      <source>Shaders files</source>
+      <translation>Файлы шейдеров</translation>
     </message>
     <message>
-        <source>54</source>
-        <translation>54</translation>
+      <source>Open Shader file</source>
+      <translation>Загрузить шейдер</translation>
     </message>
     <message>
-        <source>53</source>
-        <translation>53</translation>
+      <source>&amp;Open</source>
+      <translation>&amp;Открыть</translation>
     </message>
     <message>
-        <source>52</source>
-        <translation>52</translation>
+      <source>&amp;Quit</source>
+      <translation>&amp;Выход</translation>
     </message>
     <message>
-        <source>51</source>
-        <translation>51</translation>
+      <source>&amp;Hard Reset</source>
+      <translation>&amp;Питание</translation>
     </message>
     <message>
-        <source>50</source>
-        <translation>50</translation>
+      <source>&amp;Soft Reset</source>
+      <translation>&amp;Сброс</translation>
     </message>
     <message>
-        <source>49</source>
-        <translation>49</translation>
+      <source>&amp;Eject/Insert Disk</source>
+      <translation>&amp;Вставить/извлечь дискету</translation>
     </message>
     <message>
-        <source>48</source>
-        <translation>48</translation>
+      <source>Disk 1 side A</source>
+      <translation>Дискета 1 сторона A</translation>
     </message>
     <message>
-        <source>47</source>
-        <translation>47</translation>
+      <source>Disk 1 side B</source>
+      <translation>Дискета 1 сторона B</translation>
     </message>
     <message>
-        <source>46</source>
-        <translation>46</translation>
+      <source>Disk 2 side A</source>
+      <translation>Дискета 2 сторона A</translation>
     </message>
     <message>
-        <source>45</source>
-        <translation>45</translation>
+      <source>Disk 2 side B</source>
+      <translation>Дискета 2 сторона B</translation>
     </message>
     <message>
-        <source>44</source>
-        <translation>44</translation>
+      <source>Disk 3 side A</source>
+      <translation>Дискета 3 сторона A</translation>
     </message>
     <message>
-        <source>&amp;Default</source>
-        <translation>&amp;По умолчанию</translation>
+      <source>Disk 3 side B</source>
+      <translation>Дискета 3 сторона B</translation>
     </message>
     <message>
-        <source>&amp;On</source>
-        <translation>&amp;Вкл</translation>
+      <source>Disk 4 side A</source>
+      <translation>Дискета 4 сторона A</translation>
     </message>
     <message>
-        <source>O&amp;ff</source>
-        <translation>Вы&amp;кл</translation>
+      <source>Disk 4 side B</source>
+      <translation>Дискета 4 сторона B</translation>
     </message>
     <message>
-        <source>&amp;Set borders</source>
-        <translation>&amp;Установить границы</translation>
+      <source>&amp;Switch sides</source>
+      <translation>&amp;Перевернуть дискету</translation>
     </message>
     <message>
-        <source>&amp;No Filter</source>
-        <translation>&amp;Без фильтра</translation>
+      <source>&amp;PAL</source>
+      <translation type="unfinished">&amp;PAL</translation>
     </message>
     <message>
-        <source>&amp;CRT With Curve</source>
-        <translation>&amp;Выпуклый кинескоп</translation>
+      <source>&amp;NTSC</source>
+      <translation type="unfinished">&amp;NTSC</translation>
     </message>
     <message>
-        <source>&amp;Scale2X</source>
-        <translation>&amp;Scale2X</translation>
+      <source>&amp;Dendy</source>
+      <translation type="unfinished">&amp;Dendy</translation>
     </message>
     <message>
-        <source>&amp;Scale3X</source>
-        <translation>&amp;Scale3X</translation>
+      <source>&amp;Auto</source>
+      <translation>&amp;Автовыбор</translation>
     </message>
     <message>
-        <source>&amp;Scale4X</source>
-        <translation>&amp;Scale4X</translation>
+      <source>&amp;Software</source>
+      <translation>&amp;Программный</translation>
     </message>
     <message>
-        <source>&amp;Hq2X</source>
-        <translation>&amp;Hq2X</translation>
+      <source>OpenGL &amp;GLSL</source>
+      <translation type="unfinished">OpenGL &amp;GLSL</translation>
     </message>
     <message>
-        <source>&amp;Hq3X</source>
-        <translation>&amp;Hq3X</translation>
+      <source>Default</source>
+      <translation>По умолчанию</translation>
     </message>
     <message>
-        <source>&amp;Hq4X</source>
-        <translation>&amp;Hq4X</translation>
+      <source>60</source>
+      <translation type="unfinished">60</translation>
     </message>
     <message>
-        <source>&amp;xBRZ 2X</source>
-        <translation>&amp;xBRZ 2X</translation>
+      <source>59</source>
+      <translation type="unfinished">59</translation>
     </message>
     <message>
-        <source>&amp;xBRZ 3X</source>
-        <translation>&amp;xBRZ 3X</translation>
+      <source>58</source>
+      <translation type="unfinished">58</translation>
     </message>
     <message>
-        <source>&amp;xBRZ 4X</source>
-        <translation>&amp;xBRZ 4X</translation>
+      <source>57</source>
+      <translation type="unfinished">57</translation>
     </message>
     <message>
-        <source>&amp;NTSC Composite</source>
-        <translation>&amp;NTSC Композит</translation>
+      <source>56</source>
+      <translation type="unfinished">56</translation>
     </message>
     <message>
-        <source>&amp;NTSC S-Video</source>
-        <translation>&amp;NTSC S-Video</translation>
+      <source>55</source>
+      <translation type="unfinished">55</translation>
     </message>
     <message>
-        <source>&amp;NTSC RGB</source>
-        <translation>&amp;NTSC RGB</translation>
+      <source>54</source>
+      <translation type="unfinished">54</translation>
     </message>
     <message>
-        <source>S&amp;ony CXA2025AS US</source>
-        <translation>&amp;Sony CXA2025AS US</translation>
+      <source>53</source>
+      <translation type="unfinished">53</translation>
     </message>
     <message>
-        <source>&amp;Monochrome</source>
-        <translation>&amp;Монохромная (Ч/Б)</translation>
+      <source>52</source>
+      <translation type="unfinished">52</translation>
     </message>
     <message>
-        <source>&amp;Green</source>
-        <translation>З&amp;елёная</translation>
+      <source>51</source>
+      <translation type="unfinished">51</translation>
     </message>
     <message>
-        <source>&amp;Save to file</source>
-        <translation>&amp;Сохранить в файл</translation>
+      <source>50</source>
+      <translation type="unfinished">50</translation>
     </message>
     <message>
-        <source>&amp;Load from file</source>
-        <translation>&amp;Загрузить из файла</translation>
+      <source>49</source>
+      <translation type="unfinished">49</translation>
     </message>
     <message>
-        <source>&amp;Enable Audio</source>
-        <translation>&amp;Включить звук</translation>
+      <source>48</source>
+      <translation type="unfinished">48</translation>
     </message>
     <message>
-        <source>S&amp;ave state</source>
-        <translation>С&amp;охранить</translation>
+      <source>47</source>
+      <translation type="unfinished">47</translation>
     </message>
     <message>
-        <source>L&amp;oad state</source>
-        <translation>З&amp;агрузить</translation>
+      <source>46</source>
+      <translation type="unfinished">46</translation>
     </message>
     <message>
-        <source>&amp;Disable Red and Green emphasis swap for PAL/Dendy</source>
-        <translation>&amp;Правильная эмфаза красного и зелёного для PAL/Dendy</translation>
+      <source>45</source>
+      <translation type="unfinished">45</translation>
     </message>
     <message>
-        <source>Setti&amp;ngs</source>
-        <translation>&amp;Настройки</translation>
+      <source>44</source>
+      <translation type="unfinished">44</translation>
     </message>
     <message>
-        <source>&amp;VSync</source>
-        <translation>В&amp;ертикальная синхронизация</translation>
+      <source>&amp;Default</source>
+      <translation>&amp;По умолчанию</translation>
     </message>
     <message>
-        <source>&amp;Interpolation</source>
-        <translation>&amp;Интерполяция (сглаживание)</translation>
+      <source>&amp;1</source>
+      <translation type="unfinished">&amp;1</translation>
     </message>
     <message>
-        <source>Te&amp;xt on screen</source>
-        <translation>&amp;Текст эмулятора на экране (OSD)</translation>
+      <source>&amp;2</source>
+      <translation type="unfinished">&amp;2</translation>
     </message>
     <message>
-        <source>F&amp;ullscreen</source>
-        <translation>&amp;Полноэкранный режим</translation>
+      <source>&amp;3</source>
+      <translation type="unfinished">&amp;3</translation>
     </message>
     <message>
-        <source>S&amp;tretch in fullscreen</source>
-        <translation>Р&amp;астянуть изображение в полноэкранном режиме</translation>
+      <source>&amp;4</source>
+      <translation type="unfinished">&amp;4</translation>
     </message>
     <message>
-        <source>&amp;44100</source>
-        <translation>&amp;44100</translation>
+      <source>&amp;5</source>
+      <translation type="unfinished">&amp;5</translation>
     </message>
     <message>
-        <source>4&amp;8000</source>
-        <translation>4&amp;8000</translation>
+      <source>&amp;6</source>
+      <translation type="unfinished">&amp;6</translation>
     </message>
     <message>
-        <source>&amp;22050</source>
-        <translation>&amp;22050</translation>
+      <source>&amp;7</source>
+      <translation type="unfinished">&amp;7</translation>
     </message>
     <message>
-        <source>&amp;11025</source>
-        <translation>&amp;11025</translation>
+      <source>&amp;8</source>
+      <translation type="unfinished">&amp;8</translation>
     </message>
     <message>
-        <source>&amp;Mono</source>
-        <translation>&amp;Моно</translation>
+      <source>&amp;9</source>
+      <translation type="unfinished">&amp;9</translation>
     </message>
     <message>
-        <source>5%</source>
-        <translation>5%</translation>
+      <source>&amp;1:1</source>
+      <translation type="unfinished">&amp;1:1</translation>
     </message>
     <message>
-        <source>10%</source>
-        <translation>10%</translation>
+      <source>&amp;5:4</source>
+      <translation type="unfinished">&amp;5:4</translation>
     </message>
     <message>
-        <source>15%</source>
-        <translation>15%</translation>
+      <source>&amp;8:7 (NTSC TV)</source>
+      <translation type="unfinished">&amp;8:7 (NTSC TV)</translation>
     </message>
     <message>
-        <source>20%</source>
-        <translation>20%</translation>
+      <source>&amp;On</source>
+      <translation>&amp;Вкл</translation>
     </message>
     <message>
-        <source>25%</source>
-        <translation>25%</translation>
+      <source>O&amp;ff</source>
+      <translation>Вы&amp;кл</translation>
     </message>
     <message>
-        <source>30% (Default)</source>
-        <translation>30% (по умолчанию)</translation>
+      <source>&amp;Set borders</source>
+      <translation>&amp;Установить границы</translation>
     </message>
     <message>
-        <source>35%</source>
-        <translation>35%</translation>
+      <source>&amp;No Filter</source>
+      <translation>&amp;Без фильтра</translation>
     </message>
     <message>
-        <source>40%</source>
-        <translation>40%</translation>
+      <source>&amp;Scale2X</source>
+      <translation type="unfinished">&amp;Scale2X</translation>
     </message>
     <message>
-        <source>45%</source>
-        <translation>45%</translation>
+      <source>&amp;Scale3X</source>
+      <translation type="unfinished">&amp;Scale3X</translation>
     </message>
     <message>
-        <source>50%</source>
-        <translation>50%</translation>
+      <source>&amp;Scale4X</source>
+      <translation type="unfinished">&amp;Scale4X</translation>
     </message>
     <message>
-        <source>55%</source>
-        <translation>55%</translation>
+      <source>&amp;Hq2X</source>
+      <translation type="unfinished">&amp;Hq2X</translation>
     </message>
     <message>
-        <source>60%</source>
-        <translation>60%</translation>
+      <source>&amp;Hq3X</source>
+      <translation type="unfinished">&amp;Hq3X</translation>
     </message>
     <message>
-        <source>65%</source>
-        <translation>65%</translation>
+      <source>&amp;Hq4X</source>
+      <translation type="unfinished">&amp;Hq4X</translation>
     </message>
     <message>
-        <source>70%</source>
-        <translation>70%</translation>
+      <source>&amp;xBRZ 2X</source>
+      <translation type="unfinished">&amp;xBRZ 2X</translation>
     </message>
     <message>
-        <source>75%</source>
-        <translation>75%</translation>
+      <source>&amp;xBRZ 3X</source>
+      <translation type="unfinished">&amp;xBRZ 3X</translation>
     </message>
     <message>
-        <source>80%</source>
-        <translation>80%</translation>
+      <source>&amp;xBRZ 4X</source>
+      <translation type="unfinished">&amp;xBRZ 4X</translation>
     </message>
     <message>
-        <source>85%</source>
-        <translation>85%</translation>
+      <source>&amp;NTSC Composite</source>
+      <translation>&amp;NTSC Композит</translation>
     </message>
     <message>
-        <source>90%</source>
-        <translation>90%</translation>
+      <source>&amp;NTSC S-Video</source>
+      <translation type="unfinished">&amp;NTSC S-Video</translation>
     </message>
     <message>
-        <source>95%</source>
-        <translation>95%</translation>
+      <source>&amp;NTSC RGB</source>
+      <translation type="unfinished">&amp;NTSC RGB</translation>
     </message>
     <message>
-        <source>100%</source>
-        <translation>100%</translation>
+      <source>S&amp;ony CXA2025AS US</source>
+      <translation>&amp;Sony CXA2025AS US</translation>
     </message>
     <message>
-        <source>&amp;Low</source>
-        <translation>&amp;Низкое</translation>
+      <source>&amp;Monochrome</source>
+      <translation>&amp;Монохромная (Ч/Б)</translation>
     </message>
     <message>
-        <source>&amp;High</source>
-        <translation>&amp;Высокое</translation>
+      <source>&amp;Green</source>
+      <translation>З&amp;елёная</translation>
     </message>
     <message>
-        <source>A&amp;PU channels</source>
-        <translation>К&amp;аналы APU</translation>
+      <source>&amp;Save to file</source>
+      <translation>&amp;Сохранить в файл</translation>
     </message>
     <message>
-        <source>S&amp;wap Duty Cycles</source>
-        <translation>&amp;Перепутать скважности</translation>
+      <source>&amp;Load from file</source>
+      <translation>&amp;Загрузить из файла</translation>
     </message>
     <message>
-        <source>&amp;Config</source>
-        <translation>&amp;Настроить</translation>
+      <source>&amp;VSync</source>
+      <translation>В&amp;ертикальная синхронизация</translation>
     </message>
     <message>
-        <source>Pause when &amp;in background</source>
-        <translation>&amp;Пауза при неактивном окне</translation>
+      <source>&amp;Interpolation</source>
+      <translation>&amp;Интерполяция (сглаживание)</translation>
     </message>
     <message>
-        <source>Save se&amp;ttings</source>
-        <translation>&amp;Сохранить настройки</translation>
+      <source>Te&amp;xt on screen</source>
+      <translation>&amp;Текст эмулятора на экране (OSD)</translation>
     </message>
     <message>
-        <source>Save settings on e&amp;xit</source>
-        <translation>&amp;Сохранять настройки при выходе</translation>
+      <source>F&amp;ullscreen</source>
+      <translation>&amp;Полноэкранный режим</translation>
     </message>
     <message>
-        <source>&amp;Increment slot</source>
-        <translation>&amp;Следующий слот</translation>
+      <source>S&amp;tretch in fullscreen</source>
+      <translation>Р&amp;астянуть изображение в полноэкранном режиме</translation>
     </message>
     <message>
-        <source>&amp;Decrement slot</source>
-        <translation>&amp;Предыдущий слот</translation>
+      <source>&amp;44100</source>
+      <translation type="unfinished">&amp;44100</translation>
     </message>
     <message>
-        <source>Slot &amp;0</source>
-        <translation>Слот &amp;0</translation>
+      <source>4&amp;8000</source>
+      <translation type="unfinished">4&amp;8000</translation>
     </message>
     <message>
-        <source>Slot &amp;1</source>
-        <translation>Слот &amp;1</translation>
+      <source>&amp;22050</source>
+      <translation type="unfinished">&amp;22050</translation>
     </message>
     <message>
-        <source>Slot &amp;2</source>
-        <translation>Слот &amp;2</translation>
+      <source>&amp;11025</source>
+      <translation type="unfinished">&amp;11025</translation>
     </message>
     <message>
-        <source>Slot &amp;3</source>
-        <translation>Слот &amp;3</translation>
+      <source>&amp;Mono</source>
+      <translation>&amp;Моно</translation>
     </message>
     <message>
-        <source>Slot &amp;4</source>
-        <translation>Слот &amp;4</translation>
+      <source>&amp;Stereo Delay</source>
+      <translation>&amp;Задержка каналов</translation>
     </message>
     <message>
-        <source>Slot &amp;5</source>
-        <translation>Слот &amp;5</translation>
+      <source>5%</source>
+      <translation type="unfinished">5%</translation>
     </message>
     <message>
-        <source>&amp;About</source>
-        <translation>&amp;О программе</translation>
+      <source>10%</source>
+      <translation type="unfinished">10%</translation>
     </message>
     <message>
-        <source>&amp;File</source>
-        <translation>&amp;Файл</translation>
+      <source>15%</source>
+      <translation type="unfinished">15%</translation>
     </message>
     <message>
-        <source>&amp;Recent Roms</source>
-        <translation>&amp;Последние РОМы</translation>
+      <source>20%</source>
+      <translation type="unfinished">20%</translation>
     </message>
     <message>
-        <source>&amp;NES</source>
-        <translation>&amp;NES</translation>
+      <source>25%</source>
+      <translation type="unfinished">25%</translation>
     </message>
     <message>
-        <source>&amp;Disk Side</source>
-        <translation>&amp;Сторона дискеты</translation>
+      <source>30% (Default)</source>
+      <translation>30% (по умолчанию)</translation>
     </message>
     <message>
-        <source>&amp;Mode</source>
-        <translation>&amp;Режим</translation>
+      <source>35%</source>
+      <translation type="unfinished">35%</translation>
     </message>
     <message>
-        <source>&amp;Video</source>
-        <translation>&amp;Видео</translation>
+      <source>40%</source>
+      <translation type="unfinished">40%</translation>
     </message>
     <message>
-        <source>&amp;Rendering</source>
-        <translation>Метод &amp;рендеринга</translation>
+      <source>45%</source>
+      <translation type="unfinished">45%</translation>
     </message>
     <message>
-        <source>&amp;FPS</source>
-        <translation>&amp;FPS</translation>
+      <source>50%</source>
+      <translation type="unfinished">50%</translation>
     </message>
     <message>
-        <source>Fra&amp;me skip</source>
-        <translation>Проп&amp;уск кадров</translation>
+      <source>55%</source>
+      <translation type="unfinished">55%</translation>
     </message>
     <message>
-        <source>&amp;Scale</source>
-        <translation>&amp;Масштабирование</translation>
+      <source>60%</source>
+      <translation type="unfinished">60%</translation>
     </message>
     <message>
-        <source>Pixel Aspect Ra&amp;tio</source>
-        <translation>&amp;Соотношение сторон пикселей</translation>
+      <source>65%</source>
+      <translation type="unfinished">65%</translation>
     </message>
     <message>
-        <source>&amp;Overscan</source>
-        <translation>&amp;Вылеты развёртки (Overscan)</translation>
+      <source>70%</source>
+      <translation type="unfinished">70%</translation>
     </message>
     <message>
-        <source>De&amp;fault value</source>
-        <translation>&amp;Значение по умолчанию</translation>
+      <source>75%</source>
+      <translation type="unfinished">75%</translation>
     </message>
     <message>
-        <source>&amp;Palette</source>
-        <translation>&amp;Палитра</translation>
+      <source>80%</source>
+      <translation type="unfinished">80%</translation>
     </message>
     <message>
-        <source>&amp;Audio</source>
-        <translation>&amp;Звук</translation>
+      <source>85%</source>
+      <translation type="unfinished">85%</translation>
     </message>
     <message>
-        <source>&amp;Sample rate</source>
-        <translation>&amp;Частота дискретизации</translation>
+      <source>90%</source>
+      <translation type="unfinished">90%</translation>
     </message>
     <message>
-        <source>&amp;Channels</source>
-        <translation>&amp;Каналы</translation>
+      <source>95%</source>
+      <translation type="unfinished">95%</translation>
     </message>
     <message>
-        <source>&amp;Quality</source>
-        <translation>Ка&amp;чество</translation>
+      <source>100%</source>
+      <translation type="unfinished">100%</translation>
     </message>
     <message>
-        <source>&amp;Input</source>
-        <translation>&amp;Управление</translation>
+      <source>&amp;Low</source>
+      <translation>&amp;Низкое</translation>
     </message>
     <message>
-        <source>&amp;Language</source>
-        <translation>&amp;Язык</translation>
+      <source>&amp;High</source>
+      <translation>&amp;Высокое</translation>
     </message>
     <message>
-        <source>S&amp;tate</source>
-        <translation>&amp;Сохранение</translation>
+      <source>A&amp;PU channels</source>
+      <translation>К&amp;аналы APU</translation>
     </message>
     <message>
-        <source>&amp;Help</source>
-        <translation>&amp;Помощь</translation>
+      <source>S&amp;wap Duty Cycles</source>
+      <translation>&amp;Перепутать скважности</translation>
     </message>
     <message>
-        <source>&amp;Software</source>
-        <translation>&amp;Программный</translation>
+      <source>&amp;Enable Audio</source>
+      <translation>&amp;Включить звук</translation>
     </message>
     <message>
-        <source>OpenGL &amp;GLSL</source>
-        <translation>OpenGL &amp;GLSL</translation>
+      <source>&amp;Config</source>
+      <translation>&amp;Настроить</translation>
     </message>
     <message>
-        <source>GLSL &amp;soft stretch</source>
-        <translation>GLSL &amp;сглаживание</translation>
+      <source>Pause when &amp;in background</source>
+      <translation>&amp;Пауза при неактивном окне</translation>
     </message>
     <message>
-        <source>HLSL &amp;soft stretch</source>
-        <translation>HLSL &amp;сглаживание</translation>
+      <source>&amp;Game Genie Rom Mode</source>
+      <translation>&amp;РОМ Game Genie</translation>
     </message>
     <message>
-        <source>&amp;Insert disk</source>
-        <translation>&amp;Вставить дискету</translation>
+      <source>Save se&amp;ttings</source>
+      <translation>&amp;Сохранить настройки</translation>
     </message>
     <message>
-        <source>&amp;Eject disk</source>
-        <translation>В&amp;ынуть дискету</translation>
+      <source>Save settings on e&amp;xit</source>
+      <translation>&amp;Сохранять настройки при выходе</translation>
     </message>
     <message>
-        <source>&amp;Eject/Insert disk</source>
-        <translation>&amp;Вставить/вынуть дискету</translation>
+      <source>S&amp;ave state</source>
+      <translation>С&amp;охранить</translation>
     </message>
     <message>
-        <source>[Select a file]</source>
-        <translation>[Выберите файл]</translation>
+      <source>L&amp;oad state</source>
+      <translation>З&amp;агрузить</translation>
     </message>
     <message>
-        <source>All supported formats</source>
-        <translation>Все поддерживаемые форматы</translation>
+      <source>&amp;Increment slot</source>
+      <translation>&amp;Следующий слот</translation>
     </message>
     <message>
-        <source>Compressed files</source>
-        <translation>Сжатые файлы</translation>
+      <source>&amp;Decrement slot</source>
+      <translation>&amp;Предыдущий слот</translation>
     </message>
     <message>
-        <source>Nes rom files</source>
-        <translation>РОМы NES</translation>
+      <source>Slot &amp;0</source>
+      <translation>Слот &amp;0</translation>
     </message>
     <message>
-        <source>FDS image files</source>
-        <translation>Образы дискет FDS</translation>
+      <source>Slot &amp;1</source>
+      <translation>Слот &amp;1</translation>
     </message>
     <message>
-        <source>TAS movie files</source>
-        <translation>Видео TAS</translation>
+      <source>Slot &amp;2</source>
+      <translation>Слот &amp;2</translation>
     </message>
     <message>
-        <source>All files</source>
-        <translation>Все файлы</translation>
+      <source>Slot &amp;3</source>
+      <translation>Слот &amp;3</translation>
     </message>
     <message>
-        <source>Open File</source>
-        <translation>Открыть файл</translation>
+      <source>Slot &amp;4</source>
+      <translation>Слот &amp;4</translation>
     </message>
     <message>
-        <source>Palette files</source>
-        <translation>Файлы палитр</translation>
+      <source>Slot &amp;5</source>
+      <translation>Слот &amp;5</translation>
     </message>
     <message>
-        <source>Save palette on file</source>
-        <translation>Сохранить палитру в файл</translation>
+      <source>&amp;About</source>
+      <translation>&amp;О программе</translation>
     </message>
     <message>
-        <source>Open palette file</source>
-        <translation>Открыть файл палитры</translation>
+      <source>&amp;Disable Red and Green emphasis swap for PAL/Dendy</source>
+      <translation>&amp;Правильная эмфаза красного и зелёного для PAL/Dendy</translation>
     </message>
     <message>
-        <source>Save states</source>
-        <translation>Сохранения puNES</translation>
+      <source>Slot &amp;6</source>
+      <translation>Слот &amp;6</translation>
     </message>
     <message>
-        <source>Save state on file</source>
-        <translation>Сохранить в файл</translation>
+      <source>Slot &amp;7</source>
+      <translation>Слот &amp;7</translation>
     </message>
     <message>
-        <source>Open save state</source>
-        <translation>Открыть сохранение</translation>
+      <source>Slot &amp;8</source>
+      <translation>Слот &amp;8</translation>
     </message>
     <message>
-        <source>Nintendo Entertainment System Emulator</source>
-        <translation>Эмулятор Nintendo Entertainment System</translation>
+      <source>Slot &amp;9</source>
+      <translation>Слот &amp;9</translation>
     </message>
     <message>
-        <source>Compiled</source>
-        <translation>Скомпилирован</translation>
+      <source>&amp;Cheats List Mode</source>
+      <translation>&amp;Список читов</translation>
     </message>
     <message>
-        <source>Slot &amp;6</source>
-        <translation>Слот &amp;6</translation>
+      <source>Cheats &amp;Editor</source>
+      <translation>Редактор &amp;читов</translation>
     </message>
     <message>
-        <source>Slot &amp;7</source>
-        <translation>Слот &amp;7</translation>
+      <source>&amp;Disabled</source>
+      <translation>&amp;Отключены</translation>
     </message>
     <message>
-        <source>Slot &amp;8</source>
-        <translation>Слот &amp;8</translation>
+      <source>Stereo &amp;Panning</source>
+      <translation>&amp;Панорамирование</translation>
     </message>
     <message>
-        <source>Slot &amp;9</source>
-        <translation>Слот &amp;9</translation>
+      <source>&amp;0</source>
+      <translation type="unfinished">&amp;0</translation>
     </message>
     <message>
-        <source>&amp;Game Genie Rom Mode</source>
-        <translation>&amp;РОМ Game Genie</translation>
+      <source>&amp;1 (Default)</source>
+      <translation>&amp;1 (По умолчанию)</translation>
     </message>
     <message>
-        <source>&amp;Cheats List Mode</source>
-        <translation>&amp;Список читов</translation>
+      <source>&amp;Fast Forward</source>
+      <translation>&amp;Перемотка</translation>
     </message>
     <message>
-        <source>Cheats &amp;Editor</source>
-        <translation>Редактор &amp;читов</translation>
+      <source>&amp;2x (Default)</source>
+      <translation>&amp;2x</translation>
     </message>
     <message>
-        <source>&amp;Disabled</source>
-        <translation>&amp;Отключены</translation>
+      <source>&amp;3x</source>
+      <translation type="unfinished">&amp;3x</translation>
     </message>
     <message>
-        <source>&amp;1:1</source>
-        <translation>&amp;1:1</translation>
+      <source>&amp;4x</source>
+      <translation type="unfinished">&amp;4x</translation>
     </message>
     <message>
-        <source>&amp;5:4</source>
-        <translation>&amp;5:4</translation>
+      <source>&amp;5x</source>
+      <translation type="unfinished">&amp;5x</translation>
     </message>
     <message>
-        <source>&amp;8:7 (NTSC TV)</source>
-        <translation>&amp;8:7 (NTSC TV)</translation>
+      <source>&amp;Pause</source>
+      <translation>&amp;Пауза</translation>
     </message>
     <message>
-        <source>If you like the emulator and you want to support it&apos;s development or would you pay for a beer at the programmer :</source>
-        <translation>Если вам понравился этот эмулятор, вы можете угостить программиста пивом:</translation>
+      <source>&amp;CRT With Curve</source>
+      <translation>&amp;Выпуклый кинескоп</translation>
     </message>
     <message>
-        <source>Anyway, thank you all for the love and the help.</source>
-        <translation>Спасибо всем за отзывы и поддержку.</translation>
+      <source>&amp;Emboss</source>
+      <translation>&amp;Тиснение</translation>
     </message>
     <message>
-        <source>portable version</source>
-        <translation>портативная версия</translation>
+      <source>&amp;Noise</source>
+      <translation>&amp;Шум</translation>
     </message>
     <message>
-        <source>&amp;Stereo Delay</source>
-        <translation>&amp;Задержка каналов</translation>
+      <source>&amp;Old TV</source>
+      <translation>&amp;Старый телевизор</translation>
     </message>
     <message>
-        <source>Stereo &amp;Panning</source>
-        <translation>&amp;Панорамирование</translation>
+      <source>NTSC 2&amp;Phase Composite</source>
+      <translation>NTSC &amp;двухфазный композит</translation>
     </message>
     <message>
-        <source>&amp;Buffer Size factor</source>
-        <translation>&amp;Размер буфера</translation>
+      <source>CRT &amp;Scanlines</source>
+      <translation>ЭЛТ &amp;сканлайны</translation>
     </message>
     <message>
-        <source>&amp;Fast Forward</source>
-        <translation>&amp;Перемотка</translation>
+      <source>CRT &amp;Dotmask</source>
+      <translation>ЭЛТ &amp;с точечной маской</translation>
     </message>
     <message>
-        <source>&amp;2x (Default)</source>
-        <translation>&amp;2x</translation>
+      <source>Firebrandx &amp;YUV</source>
+      <translation type="unfinished">Firebrandx &amp;YUV</translation>
     </message>
     <message>
-        <source>&amp;3x</source>
-        <translation>&amp;3x</translation>
+      <source>Disable sRGB F&amp;BO</source>
+      <translation>Запретить sRGB F&amp;BO</translation>
     </message>
     <message>
-        <source>&amp;4x</source>
-        <translation>&amp;4x</translation>
+      <source>11:8 (&amp;PAL TV)</source>
+      <translation type="unfinished">11:8 (&amp;PAL TV)</translation>
     </message>
     <message>
-        <source>&amp;5x</source>
-        <translation>&amp;5x</translation>
+      <source>&amp;6x</source>
+      <translation type="unfinished">&amp;6x</translation>
     </message>
     <message>
-        <source>&amp;1</source>
-        <translation>&amp;1</translation>
+      <source>&amp;xBRZ 5X</source>
+      <translation type="unfinished">&amp;xBRZ 5X</translation>
     </message>
     <message>
-        <source>&amp;2</source>
-        <translation>&amp;2</translation>
+      <source>&amp;xBRZ 6X</source>
+      <translation type="unfinished">&amp;xBRZ 6X</translation>
     </message>
     <message>
-        <source>&amp;3</source>
-        <translation>&amp;3</translation>
+      <source>Save Screens&amp;hot</source>
+      <translation>Скрин&amp;шот</translation>
     </message>
     <message>
-        <source>&amp;4</source>
-        <translation>&amp;4</translation>
+      <source>&amp;Unlimited sprites</source>
+      <translation>&amp;Снять лимит на спрайты</translation>
     </message>
     <message>
-        <source>&amp;5</source>
-        <translation>&amp;5</translation>
+      <source>Hide &amp;sprites</source>
+      <translation>Скрыть &amp;спрайты</translation>
     </message>
     <message>
-        <source>&amp;6</source>
-        <translation>&amp;6</translation>
+      <source>Hide &amp;background</source>
+      <translation>Скрыть &amp;фон</translation>
     </message>
     <message>
-        <source>&amp;7</source>
-        <translation>&amp;7</translation>
+      <source>Insert Coin</source>
+      <translation>Вставить монету</translation>
     </message>
     <message>
-        <source>&amp;8</source>
-        <translation>&amp;8</translation>
+      <source>Vs System Controls</source>
+      <translation>VS System</translation>
     </message>
     <message>
-        <source>&amp;9</source>
-        <translation>&amp;9</translation>
+      <source>PPU Hacks</source>
+      <translation>Хаки PPU</translation>
     </message>
     <message>
-        <source>&amp;0</source>
-        <translation>&amp;0</translation>
+      <source>&amp;PPU Overclock</source>
+      <translation>&amp;Оверклок</translation>
     </message>
     <message>
-        <source>&amp;1 (Default)</source>
-        <translation>&amp;1 (По умолчанию)</translation>
+      <source>&amp;Save battery RAM file every 3 min.</source>
+      <translation>&amp;Сохранять SRAM каждые 3 мин.</translation>
     </message>
     <message>
-        <source>&amp;Fast Forward velocity</source>
-        <translation>&amp;Скорость перемотки</translation>
+      <source>&amp;Open working folder</source>
+      <translation>Открыть &amp;рабочую папку</translation>
     </message>
     <message>
-        <source>&amp;Cheats</source>
-        <translation>&amp;Читы</translation>
+      <source>&amp;File</source>
+      <translation>&amp;Файл</translation>
     </message>
     <message>
-        <source>&amp;Channels Delay</source>
-        <translation>&amp;Время задержки</translation>
+      <source>&amp;Recent Roms</source>
+      <translation>&amp;Последние РОМы</translation>
     </message>
     <message>
-        <source>&amp;Pause</source>
-        <translation>&amp;Пауза</translation>
+      <source>&amp;NES</source>
+      <translation type="unfinished">&amp;NES</translation>
     </message>
     <message>
-        <source>Shaders files</source>
-        <translation>Файлы шейдеров</translation>
+      <source>&amp;Disk Side</source>
+      <translation>&amp;Сторона дискеты</translation>
     </message>
     <message>
-        <source>Open Shader file</source>
-        <translation>Загрузить шейдер</translation>
+      <source>Setti&amp;ngs</source>
+      <translation>&amp;Настройки</translation>
     </message>
     <message>
-        <source>&amp;Emboss</source>
-        <translation>&amp;Тиснение</translation>
+      <source>&amp;Mode</source>
+      <translation>&amp;Режим</translation>
     </message>
     <message>
-        <source>&amp;Noise</source>
-        <translation>&amp;Шум</translation>
+      <source>&amp;Video</source>
+      <translation>&amp;Видео</translation>
     </message>
     <message>
-        <source>&amp;Old TV</source>
-        <translation>&amp;Старый телевизор</translation>
+      <source>&amp;Rendering</source>
+      <translation>Метод &amp;рендеринга</translation>
     </message>
     <message>
-        <source>NTSC 2&amp;Phase Composite</source>
-        <translation>NTSC &amp;двухфазный композит</translation>
+      <source>&amp;FPS</source>
+      <translation type="unfinished">&amp;FPS</translation>
     </message>
     <message>
-        <source>CRT &amp;Scanlines</source>
-        <translation>ЭЛТ &amp;сканлайны</translation>
+      <source>Fra&amp;me skip</source>
+      <translation>Проп&amp;уск кадров</translation>
     </message>
     <message>
-        <source>CRT &amp;Dotmask</source>
-        <translation>ЭЛТ &amp;с точечной маской</translation>
+      <source>&amp;Scale</source>
+      <translation>&amp;Масштабирование</translation>
     </message>
     <message>
-        <source>Firebrandx &amp;YUV</source>
-        <translation>Firebrandx &amp;YUV</translation>
+      <source>Pixel Aspect Ra&amp;tio</source>
+      <translation>&amp;Соотношение сторон пикселей</translation>
     </message>
     <message>
-        <source>Software Fi&amp;lters</source>
-        <translation>Программные фи&amp;льтры</translation>
+      <source>&amp;Overscan</source>
+      <translation>&amp;Вылеты развёртки (Overscan)</translation>
     </message>
     <message>
-        <source>S&amp;haders</source>
-        <translation>Ш&amp;ейдеры</translation>
+      <source>De&amp;fault value</source>
+      <translation>&amp;Значение по умолчанию</translation>
     </message>
     <message>
-        <source>11:8 (&amp;PAL TV)</source>
-        <translation>11:8 (&amp;PAL TV)</translation>
+      <source>Software Fi&amp;lters</source>
+      <translation>Программные фи&amp;льтры</translation>
     </message>
     <message>
-        <source>&amp;6x</source>
-        <translation>&amp;6x</translation>
+      <source>S&amp;haders</source>
+      <translation>Ш&amp;ейдеры</translation>
     </message>
     <message>
-        <source>&amp;xBRZ 5X</source>
-        <translation>&amp;xBRZ 5X</translation>
+      <source>&amp;Palette</source>
+      <translation>&amp;Палитра</translation>
     </message>
     <message>
-        <source>&amp;xBRZ 6X</source>
-        <translation>&amp;xBRZ 6X</translation>
+      <source>&amp;Audio</source>
+      <translation>&amp;Звук</translation>
     </message>
     <message>
-        <source>&amp;Unlimited sprites</source>
-        <translation>&amp;Снять лимит на спрайты</translation>
+      <source>&amp;Sample rate</source>
+      <translation>&amp;Частота дискретизации</translation>
     </message>
     <message>
-        <source>Disable sRGB F&amp;BO</source>
-        <translation>Запретить sRGB F&amp;BO</translation>
+      <source>&amp;Channels</source>
+      <translation>&amp;Каналы</translation>
     </message>
     <message>
-        <source>Save Screens&amp;hot</source>
-        <translation>Скрин&amp;шот</translation>
+      <source>&amp;Channels Delay</source>
+      <translation>&amp;Время задержки</translation>
     </message>
     <message>
-        <source>Hide &amp;sprites</source>
-        <translation>Скрыть &amp;спрайты</translation>
+      <source>&amp;Quality</source>
+      <translation>Ка&amp;чество</translation>
     </message>
     <message>
-        <source>Hide &amp;background</source>
-        <translation>Скрыть &amp;фон</translation>
+      <source>&amp;Buffer Size factor</source>
+      <translation>&amp;Размер буфера</translation>
     </message>
     <message>
-        <source>&amp;PPU</source>
-        <translation>&amp;PPU</translation>
+      <source>&amp;Input</source>
+      <translation>&amp;Управление</translation>
     </message>
     <message>
-        <source>Insert Coin</source>
-        <translation>Вставить монету</translation>
+      <source>&amp;Language</source>
+      <translation>&amp;Язык</translation>
     </message>
     <message>
-        <source>Vs System Controls</source>
-        <translation>VS System</translation>
+      <source>&amp;Cheats</source>
+      <translation>&amp;Читы</translation>
     </message>
     <message>
-        <source>PPU Hacks</source>
-        <translation>Хаки PPU</translation>
+      <source>&amp;Fast Forward velocity</source>
+      <translation>&amp;Скорость перемотки</translation>
     </message>
     <message>
-        <source>&amp;Save battery RAM file every 3 min.</source>
-        <translation>&amp;Сохранять SRAM каждые 3 мин.</translation>
+      <source>&amp;PPU</source>
+      <translation type="unfinished">&amp;PPU</translation>
     </message>
     <message>
-        <source>&amp;PPU Overclock</source>
-        <translation>&amp;Оверклок</translation>
+      <source>S&amp;tate</source>
+      <translation>&amp;Сохранение</translation>
     </message>
     <message>
-        <source>&amp;Open working folder</source>
-        <translation>Открыть &amp;рабочую папку</translation>
+      <source>&amp;Help</source>
+      <translation>&amp;Помощь</translation>
     </message>
     <message>
-        <source>&amp;Turn On</source>
-        <translation>Включи&amp;ть</translation>
+      <source>&amp;Turn On</source>
+      <translation>Включи&amp;ть</translation>
     </message>
     <message>
-        <source>&amp;Turn Off</source>
-        <translation>Выключи&amp;ть</translation>
+      <source>&amp;Turn Off</source>
+      <translation>Выключи&amp;ть</translation>
     </message>
     <message>
-        <source>Too&amp;ls</source>
-        <translation>&amp;Инструменты</translation>
+      <source>Too&amp;ls</source>
+      <translation>&amp;Инструменты</translation>
     </message>
     <message>
-        <source>UNIF rom files</source>
-        <translation type="unfinished"></translation>
+      <source>UNIF rom files</source>
+      <translation type="unfinished">UNIF rom files</translation>
     </message>
     <message>
-        <source>Firebrandx No&amp;stalgia (FBX)</source>
-        <translation type="unfinished"></translation>
+      <source>Firebrandx No&amp;stalgia (FBX)</source>
+      <translation type="unfinished">Firebrandx No&amp;stalgia (FBX)</translation>
     </message>
     <message>
-        <source>Input displa&amp;y</source>
-        <translation type="unfinished"></translation>
+      <source>Input displa&amp;y</source>
+      <translation type="unfinished">Input displa&amp;y</translation>
     </message>
     <message>
-        <source>Disable TV &amp;noise emulation when turned off</source>
-        <translation type="unfinished"></translation>
+      <source>Disable TV &amp;noise emulation when turned off</source>
+      <translation type="unfinished">Disable TV &amp;noise emulation when turned off</translation>
     </message>
     <message>
-        <source>Disable sepi&amp;a color on pause</source>
-        <translation type="unfinished"></translation>
+      <source>Disable sepi&amp;a color on pause</source>
+      <translation type="unfinished">Disable sepi&amp;a color on pause</translation>
     </message>
     <message>
-        <source>&amp;Disable new menu management</source>
-        <translation type="unfinished"></translation>
+      <source>&amp;Disable new menu management</source>
+      <translation type="unfinished">&amp;Disable new menu management</translation>
     </message>
     <message>
-        <source>Fullscreen in &amp;window</source>
-        <translation type="unfinished"></translation>
+      <source>Fullscreen in &amp;window</source>
+      <translation type="unfinished">Fullscreen in &amp;window</translation>
     </message>
     <message>
-        <source>Output &amp;Device</source>
-        <translation type="unfinished"></translation>
+      <source>Output &amp;Device</source>
+      <translation type="unfinished">Output &amp;Device</translation>
     </message>
     <message>
-        <source>System Default</source>
-        <translation type="unfinished"></translation>
+      <source>System Default</source>
+      <translation type="unfinished">System Default</translation>
     </message>
-</context>
-<context>
+  </context>
+  <context>
     <name>stateWidget</name>
     <message>
-        <source>Save/Load Slot Box</source>
-        <translation>Слоты сохранений</translation>
+      <source>Save/Load Slot Box</source>
+      <translation>Слоты сохранений</translation>
     </message>
     <message>
-        <source>Slot %1</source>
-        <translation>Слот %1</translation>
+      <source>Slot %1</source>
+      <translation>Слот %1</translation>
     </message>
     <message>
-        <source>Save</source>
-        <translation>Сохранить</translation>
+      <source>Save</source>
+      <translation>Сохранить</translation>
     </message>
     <message>
-        <source>Load</source>
-        <translation>Загрузить</translation>
+      <source>Load</source>
+      <translation>Загрузить</translation>
     </message>
-</context>
-<context>
+  </context>
+  <context>
     <name>timeLine</name>
     <message>
-        <source>sec</source>
-        <translation>сек</translation>
+      <source>sec</source>
+      <translation>сек</translation>
     </message>
     <message>
-        <source>Timeline</source>
-        <translation>Хронология</translation>
+      <source>Timeline</source>
+      <translation>Хронология</translation>
     </message>
     <message>
-        <source>-00 sec</source>
-        <translation>-00 сек</translation>
+      <source>-00 sec</source>
+      <translation>-00 сек</translation>
     </message>
-</context>
+  </context>
 </TS>
