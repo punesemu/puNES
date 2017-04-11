@@ -122,8 +122,8 @@ BYTE gfx_init(void) {
 		cfg->render = RENDER_SOFTWARE;
 		gfx_set_render(cfg->render);
 
-		if ((cfg->filter >= FLTSHDSTART) && (cfg->filter <= FLTSHDSTOP)) {
-			cfg->filter = NO_FILTER;
+		if ((cfg->shader > NO_SHADER) && (cfg->filter < SHADER_LAST)) {
+			cfg->shader = NO_SHADER;
 		}
 
 		fprintf(stderr, "INFO: OpenGL not supported.\n");
@@ -145,8 +145,8 @@ BYTE gfx_init(void) {
 		cfg->render = RENDER_SOFTWARE;
 		gfx_set_render(cfg->render);
 
-		if ((cfg->filter >= FLTSHDSTART) && (cfg->filter <= FLTSHDSTOP)) {
-			cfg->filter = NO_FILTER;
+		if ((cfg->shader > NO_SHADER) && (cfg->shader < SHADER_LAST)) {
+			cfg->shader = NO_SHADER;
 		}
 	}
 
@@ -175,7 +175,7 @@ BYTE gfx_init(void) {
 	}
 
 	if (cfg->fullscreen) {
-		gfx_set_screen(cfg->scale, cfg->filter, NO_FULLSCR, cfg->palette, FALSE, FALSE);
+		gfx_set_screen(cfg->scale, cfg->filter, cfg->shader, NO_FULLSCR, cfg->palette, FALSE, FALSE);
 		cfg->fullscreen = NO_FULLSCR;
 		cfg->scale = gfx.scale_before_fscreen;
 		if (cfg->fullscreen_in_window) {
@@ -183,7 +183,7 @@ BYTE gfx_init(void) {
 		}
 		gui_fullscreen();
 	} else {
-		gfx_set_screen(cfg->scale, cfg->filter, NO_FULLSCR, cfg->palette, FALSE, FALSE);
+		gfx_set_screen(cfg->scale, cfg->filter, cfg->shader, NO_FULLSCR, cfg->palette, FALSE, FALSE);
 		// nella versione windows (non so in quella linux), sembra che
 		// il VSync (con alcune schede video) non venga settato correttamente
 		// al primo gfx_set_screen. E' necessario fare un gfx_reset_video
@@ -209,11 +209,11 @@ void gfx_set_render(BYTE render) {
 			break;
 	}
 }
-void gfx_set_screen(BYTE scale, DBWORD filter, BYTE fullscreen, BYTE palette, BYTE force_scale,
-        BYTE force_palette) {
+void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, BYTE palette,
+		BYTE force_scale, BYTE force_palette) {
 	BYTE set_mode;
 	WORD width, height, w_for_pr, h_for_pr;
-	DBWORD old_filter = cfg->filter;
+	DBWORD old_shader = cfg->shader;
 
 	gfx_set_screen_start:
 	set_mode = FALSE;
@@ -311,6 +311,11 @@ void gfx_set_screen(BYTE scale, DBWORD filter, BYTE fullscreen, BYTE palette, BY
 		}
 	}
 
+	/* shader */
+	if (shader == NO_CHANGE) {
+		shader = cfg->shader;
+	}
+
 	// fullscreen
 	if (fullscreen == NO_CHANGE) {
 		fullscreen = cfg->fullscreen;
@@ -391,8 +396,10 @@ void gfx_set_screen(BYTE scale, DBWORD filter, BYTE fullscreen, BYTE palette, BY
 	// devo farlo necessariamente dopo.
 	// salvo il nuovo fattore di scala
 	cfg->scale = scale;
-	// salvo ill nuovo filtro
+	// salvo il nuovo filtro
 	cfg->filter = filter;
+	// salvo la nuova shader
+	cfg->shader = shader;
 
 	// devo eseguire un SDL_SetVideoMode?
 	if (set_mode) {
@@ -465,10 +472,6 @@ void gfx_set_screen(BYTE scale, DBWORD filter, BYTE fullscreen, BYTE palette, BY
 
 		// faccio quello che serve prima del setvideo
 		gui_set_video_mode();
-
-		// nella versione a 32 bit (GTK) dopo un gfx_reset_video,
-		// se non lo faccio anche qui, crasha tutto.
-		//sdl_wid();
 
 		// inizializzo la superfice video
 		surface_sdl = SDL_SetVideoMode(gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE], 0, flags);
@@ -599,22 +602,20 @@ void gfx_set_screen(BYTE scale, DBWORD filter, BYTE fullscreen, BYTE palette, BY
 	h_for_pr = gfx.h[VIDEO_MODE];
 
 	if (gfx.opengl) {
-		DBWORD f = NO_FILTER;
 		opengl.scale = cfg->scale;
 		gfx.PSS = ((cfg->pixel_aspect_ratio != PAR11) && cfg->PAR_soft_stretch) ? TRUE : FALSE;
 
-		if ((filter == NO_FILTER) || (filter >= FLTSHDSTART)) {
+		if (filter == NO_FILTER) {
 			opengl.scale = X1;
 			gfx.filter = scale_surface;
-			f = filter;
 		}
 
-		if (shaders_set(f) == EXIT_ERROR) {
+		if (shaders_set(shader) == EXIT_ERROR) {
 			umemcpy(cfg->shader_file, gfx.last_shader_file, usizeof(cfg->shader_file));
-			if (old_filter == filter) {
-				filter = NO_FILTER;
+			if (old_shader == shader) {
+				shader = NO_SHADER;
 			} else {
-				filter = old_filter;
+				shader = old_shader;
 			}
 			goto gfx_set_screen_start;
 		}
@@ -650,10 +651,8 @@ void gfx_set_screen(BYTE scale, DBWORD filter, BYTE fullscreen, BYTE palette, BY
 	}
 
 	// questo controllo devo farlo necessariamente dopo il glew_init()
-	if (!gfx.opengl && (filter >= FLTSHDSTART)) {
-		filter = NO_FILTER;
-		force_scale = TRUE;
-		goto gfx_set_screen_start;
+	if (!gfx.opengl && (shader > NO_SHADER)) {
+		shader = NO_SHADER;
 	}
 
 	gfx_text_reset();

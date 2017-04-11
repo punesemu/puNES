@@ -229,6 +229,8 @@ void mainWindow::setup() {
 	grp->addAction(ui->action_NTSC_SVideo);
 	grp->addAction(ui->action_NTSC_RGB);
 	// Settings/Video/Shaders
+	grp = new QActionGroup(this);
+	grp->addAction(ui->action_No_Shader);
 	grp->addAction(ui->action_Shader_CRT_Dotmask);
 	grp->addAction(ui->action_Shader_CRT_Scanlines);
 	grp->addAction(ui->action_Shader_CRT_With_Curve);
@@ -853,46 +855,6 @@ void mainWindow::update_menu_settings() {
 			break;
 	}
 	// Settings/Video/Software Filters
-#if defined (WITH_OPENGL)
-	if (cfg->scale != X1) {
-		state = true;
-	} else {
-		state = false;
-	}
-	ui->action_NTSC_Composite->setEnabled(state);
-	ui->action_NTSC_SVideo->setEnabled(state);
-	ui->action_NTSC_RGB->setEnabled(state);
-
-	// Settings/Video/Shaders
-	if (gfx.opengl && (cfg->scale != X1)) {
-#elif defined (WITH_D3D9)
-	if (cfg->scale != X1) {
-#endif
-		state = true;
-	} else {
-		state = false;
-	}
-	ui->menu_Shader->setEnabled(state);
-
-	ui->action_Shader_CRT_Dotmask->setEnabled(state);
-	ui->action_Shader_CRT_Scanlines->setEnabled(state);
-	ui->action_Shader_CRT_With_Curve->setEnabled(state);
-	ui->action_Shader_Emboss->setEnabled(state);
-	ui->action_Shader_Noise->setEnabled(state);
-	ui->action_Shader_NTSC_2Phase_Composite->setEnabled(state);
-	ui->action_Shader_Old_TV->setEnabled(state);
-	ui->action_Shader_File->setEnabled(state);
-	ui->action_Shader_Load_File->setEnabled(state);
-
-	if (state == true) {
-		if (ustrlen(cfg->shader_file) != 0) {
-			ui->action_Shader_File->setText(QFileInfo(uQString(cfg->shader_file)).baseName());
-			ui->action_Shader_File->setEnabled(true);
-		} else {
-			ui->action_Shader_File->setText(tr("[Select a file]"));
-			ui->action_Shader_File->setEnabled(false);
-		}
-	}
 	switch (cfg->filter) {
 		case NO_FILTER:
 			ui->action_No_Filter->setChecked(true);
@@ -943,6 +905,53 @@ void mainWindow::update_menu_settings() {
 					break;
 			}
 			break;
+		}
+	}
+#if defined (WITH_OPENGL)
+	if (cfg->scale != X1) {
+		state = true;
+	} else {
+		state = false;
+	}
+	ui->action_NTSC_Composite->setEnabled(state);
+	ui->action_NTSC_SVideo->setEnabled(state);
+	ui->action_NTSC_RGB->setEnabled(state);
+
+	// Settings/Video/Shaders
+	if (gfx.opengl && (cfg->scale != X1)) {
+#elif defined (WITH_D3D9)
+	if (cfg->scale != X1) {
+#endif
+		state = true;
+	} else {
+		state = false;
+	}
+	ui->menu_Shader->setEnabled(state);
+
+	ui->action_No_Shader->setEnabled(state);
+	ui->action_Shader_CRT_Dotmask->setEnabled(state);
+	ui->action_Shader_CRT_Scanlines->setEnabled(state);
+	ui->action_Shader_CRT_With_Curve->setEnabled(state);
+	ui->action_Shader_Emboss->setEnabled(state);
+	ui->action_Shader_Noise->setEnabled(state);
+	ui->action_Shader_NTSC_2Phase_Composite->setEnabled(state);
+	ui->action_Shader_Old_TV->setEnabled(state);
+	ui->action_Shader_File->setEnabled(state);
+	ui->action_Shader_Load_File->setEnabled(state);
+
+	if (state == true) {
+		if (ustrlen(cfg->shader_file) != 0) {
+			ui->action_Shader_File->setText(QFileInfo(uQString(cfg->shader_file)).baseName());
+			ui->action_Shader_File->setEnabled(true);
+		} else {
+			ui->action_Shader_File->setText(tr("[Select a file]"));
+			ui->action_Shader_File->setEnabled(false);
+		}
+	}
+	switch (cfg->shader) {
+		case NO_SHADER:
+			ui->action_No_Shader->setChecked(true);
+			break;
 		case SHADER_CRTDOTMASK:
 			ui->action_Shader_CRT_Dotmask->setChecked(true);
 			break;
@@ -967,7 +976,6 @@ void mainWindow::update_menu_settings() {
 		case SHADER_FILE:
 			ui->action_Shader_File->setChecked(true);
 			break;
-		}
 	}
 	// Settings/Video/Palette
 	if (ustrlen(cfg->palette_file) != 0) {
@@ -1522,33 +1530,32 @@ void mainWindow::connect_menu_signals() {
 	connect_action(ui->action_Oscan_Def_Off, OSCAN_DEFAULT_OFF, SLOT(s_set_overscan()));
 	connect_action(ui->action_Oscan_Set_Borders, SLOT(s_set_overscan_borders()));
 	// Settings/Video/Software Filters
-	connect_action(ui->action_No_Filter, NO_FILTER, SLOT(s_set_other_filter()));
-	connect_action(ui->action_Scale2X, SCALE2X, SLOT(s_set_other_filter()));
-	connect_action(ui->action_Scale3X, SCALE3X, SLOT(s_set_other_filter()));
-	connect_action(ui->action_Scale4X, SCALE4X, SLOT(s_set_other_filter()));
-	connect_action(ui->action_Hq2X, HQ2X, SLOT(s_set_other_filter()));
-	connect_action(ui->action_Hq3X, HQ3X, SLOT(s_set_other_filter()));
-	connect_action(ui->action_Hq4X, HQ4X, SLOT(s_set_other_filter()));
-	connect_action(ui->action_xBRZ_2X, XBRZ2X, SLOT(s_set_other_filter()));
-	connect_action(ui->action_xBRZ_3X, XBRZ3X, SLOT(s_set_other_filter()));
-	connect_action(ui->action_xBRZ_4X, XBRZ4X, SLOT(s_set_other_filter()));
-	connect_action(ui->action_xBRZ_5X, XBRZ5X, SLOT(s_set_other_filter()));
-	connect_action(ui->action_xBRZ_6X, XBRZ6X, SLOT(s_set_other_filter()));
+	connect_action(ui->action_No_Filter, NO_FILTER, SLOT(s_set_filter()));
+	connect_action(ui->action_Scale2X, SCALE2X, SLOT(s_set_filter()));
+	connect_action(ui->action_Scale3X, SCALE3X, SLOT(s_set_filter()));
+	connect_action(ui->action_Scale4X, SCALE4X, SLOT(s_set_filter()));
+	connect_action(ui->action_Hq2X, HQ2X, SLOT(s_set_filter()));
+	connect_action(ui->action_Hq3X, HQ3X, SLOT(s_set_filter()));
+	connect_action(ui->action_Hq4X, HQ4X, SLOT(s_set_filter()));
+	connect_action(ui->action_xBRZ_2X, XBRZ2X, SLOT(s_set_filter()));
+	connect_action(ui->action_xBRZ_3X, XBRZ3X, SLOT(s_set_filter()));
+	connect_action(ui->action_xBRZ_4X, XBRZ4X, SLOT(s_set_filter()));
+	connect_action(ui->action_xBRZ_5X, XBRZ5X, SLOT(s_set_filter()));
+	connect_action(ui->action_xBRZ_6X, XBRZ6X, SLOT(s_set_filter()));
 	connect_action(ui->action_NTSC_Composite, COMPOSITE, SLOT(s_set_ntsc_filter()));
 	connect_action(ui->action_NTSC_SVideo, SVIDEO, SLOT(s_set_ntsc_filter()));
 	connect_action(ui->action_NTSC_RGB, RGBMODE, SLOT(s_set_ntsc_filter()));
 	// Settings/Video/Shaders
-	connect_action(ui->action_Shader_CRT_Dotmask, SHADER_CRTDOTMASK, SLOT(s_set_other_filter()));
-	connect_action(ui->action_Shader_CRT_Scanlines, SHADER_CRTSCANLINES,
-			SLOT(s_set_other_filter()));
-	connect_action(ui->action_Shader_CRT_With_Curve, SHADER_CRTWITHCURVE,
-			SLOT(s_set_other_filter()));
-	connect_action(ui->action_Shader_Emboss, SHADER_EMBOSS, SLOT(s_set_other_filter()));
-	connect_action(ui->action_Shader_Noise, SHADER_NOISE, SLOT(s_set_other_filter()));
+	connect_action(ui->action_No_Shader, NO_SHADER, SLOT(s_set_shader()));
+	connect_action(ui->action_Shader_CRT_Dotmask, SHADER_CRTDOTMASK, SLOT(s_set_shader()));
+	connect_action(ui->action_Shader_CRT_Scanlines, SHADER_CRTSCANLINES, SLOT(s_set_shader()));
+	connect_action(ui->action_Shader_CRT_With_Curve, SHADER_CRTWITHCURVE, SLOT(s_set_shader()));
+	connect_action(ui->action_Shader_Emboss, SHADER_EMBOSS, SLOT(s_set_shader()));
+	connect_action(ui->action_Shader_Noise, SHADER_NOISE, SLOT(s_set_shader()));
 	connect_action(ui->action_Shader_NTSC_2Phase_Composite, SHADER_NTSC2PHASECOMPOSITE,
-			SLOT(s_set_other_filter()));
-	connect_action(ui->action_Shader_Old_TV, SHADER_OLDTV, SLOT(s_set_other_filter()));
-	connect_action(ui->action_Shader_File, SHADER_FILE, SLOT(s_set_other_filter()));
+			SLOT(s_set_shader()));
+	connect_action(ui->action_Shader_Old_TV, SHADER_OLDTV, SLOT(s_set_shader()));
+	connect_action(ui->action_Shader_File, SHADER_FILE, SLOT(s_set_shader()));
 	connect_action(ui->action_Shader_Load_File, SLOT(s_load_shader()));
 	// Settings/Video/Palette
 	connect_action(ui->action_Palette_PAL, PALETTE_PAL, SLOT(s_set_palette()));
@@ -1683,11 +1690,18 @@ void mainWindow::connect_action(QAction *action, int value, const char *member) 
 	action->setProperty("myValue", QVariant(value));
 	connect_action(action, member);
 }
-void mainWindow::set_filter(int filter) {
+void mainWindow::switch_filter(int filter) {
 #if defined (WITH_OPENGL) && defined (__WIN32__)
 	gfx_sdlwe_set(SDLWIN_FILTER, filter);
 #else
 	gfx_FILTER(filter);
+#endif
+}
+void mainWindow::switch_shader(int shader) {
+#if defined (WITH_OPENGL) && defined (__WIN32__)
+	gfx_sdlwe_set(SDLWIN_SHADER, shader);
+#else
+	gfx_SHADER(shader);
 #endif
 }
 void mainWindow::s_set_fullscreen() {
@@ -1715,7 +1729,7 @@ void mainWindow::s_set_fullscreen() {
 			        - (frameGeometry().height() - geometry().height())
 			        - ui->menubar->sizeHint().height() - 2 - statusbar->sizeHint().height();
 
-			gfx_set_screen(NO_CHANGE, NO_CHANGE, FULLSCR, NO_CHANGE, FALSE, FALSE);
+			gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, FULLSCR, NO_CHANGE, FALSE, FALSE);
 			move(QPoint(0, 0));
 		} else {
 			gfx.type_of_fscreen_in_use = FULLSCR;
@@ -1730,7 +1744,7 @@ void mainWindow::s_set_fullscreen() {
 
 			menuWidget()->setVisible(false);
 			statusbar->setVisible(false);
-			gfx_set_screen(NO_CHANGE, NO_CHANGE, FULLSCR, NO_CHANGE, FALSE, FALSE);
+			gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, FULLSCR, NO_CHANGE, FALSE, FALSE);
 
 			// su alcune macchine, il fullscreen non avviene perche'
 			// la dimensione della finestra e' fissa e le qt non riescono
@@ -1748,7 +1762,8 @@ void mainWindow::s_set_fullscreen() {
 			statusbar->setVisible(true);
 		}
 
-		gfx_set_screen(gfx.scale_before_fscreen, NO_CHANGE, NO_FULLSCR, NO_CHANGE, FALSE, FALSE);
+		gfx_set_screen(gfx.scale_before_fscreen, NO_CHANGE, NO_CHANGE, NO_FULLSCR, NO_CHANGE, FALSE,
+				FALSE);
 		move(position);
 
 		gfx.type_of_fscreen_in_use = NO_FULLSCR;
@@ -2127,11 +2142,11 @@ void mainWindow::s_set_par() {
 	}
 
 	cfg->pixel_aspect_ratio = par;
-	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 }
 void mainWindow::s_set_par_stretch() {
 	cfg->PAR_soft_stretch = !cfg->PAR_soft_stretch;
-	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 }
 void mainWindow::s_set_overscan() {
 	int oscan = QVariant(((QObject *)sender())->property("myValue")).toInt();
@@ -2151,23 +2166,29 @@ void mainWindow::s_set_overscan() {
 			break;
 	}
 
-	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 }
 void mainWindow::s_set_overscan_borders() {
 	dlgOverscanBorders *dlg = new dlgOverscanBorders(this);
 
 	dlg->show();
 }
-void mainWindow::s_set_other_filter() {
+void mainWindow::s_set_filter() {
 	int filter = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
-	set_filter(filter);
+	switch_filter(filter);
 }
+
 void mainWindow::s_set_ntsc_filter() {
 	int filter = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
 	cfg->ntsc_format = filter;
-	set_filter(NTSC_FILTER);
+	switch_filter(NTSC_FILTER);
+}
+void mainWindow::s_set_shader() {
+	int shader = QVariant(((QObject *)sender())->property("myValue")).toInt();
+
+	switch_shader(shader);
 }
 void mainWindow::s_load_shader() {
 	QStringList filters;
@@ -2197,7 +2218,7 @@ void mainWindow::s_load_shader() {
 			umemset(cfg->shader_file, 0x00, usizeof(cfg->shader_file));
 			ustrncpy(cfg->shader_file, uQStringCD(fileinfo.absoluteFilePath()),
 					usizeof(cfg->shader_file) - 1);
-			set_filter(SHADER_FILE);
+			switch_shader(SHADER_FILE);
 		} else {
 			text_add_line_info(1, "[red]error on shader file");
 		}
@@ -2208,11 +2229,11 @@ void mainWindow::s_load_shader() {
 void mainWindow::s_set_palette() {
 	int palette = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
-	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, palette, FALSE, FALSE);
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, palette, FALSE, FALSE);
 }
 void mainWindow::s_set_disable_emphasis_pal() {
 	cfg->disable_swap_emphasis_pal = !cfg->disable_swap_emphasis_pal;
-	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, TRUE);
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, TRUE);
 }
 void mainWindow::s_save_palette() {
 	QStringList filters;
@@ -2264,7 +2285,7 @@ void mainWindow::s_load_palette() {
 			umemset(cfg->palette_file, 0x00, usizeof(cfg->palette_file));
 			ustrncpy(cfg->palette_file, uQStringCD(fileinfo.absoluteFilePath()),
 					usizeof(cfg->palette_file) - 1);
-			gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, PALETTE_FILE, FALSE, TRUE);
+			gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, PALETTE_FILE, FALSE, TRUE);
 		} else {
 			text_add_line_info(1, "[red]error on palette file");
 		}
@@ -2288,7 +2309,7 @@ void mainWindow::s_set_interpolation() {
 	}
 #endif
 	cfg->interpolation = !cfg->interpolation;
-	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 }
 void mainWindow::s_set_txt_on_screen() {
 	cfg->txt_on_screen = !cfg->txt_on_screen;
@@ -2320,7 +2341,7 @@ void mainWindow::s_set_disable_srgb_fbo() {
 	cfg->disable_srgb_fbo = !cfg->disable_srgb_fbo;
 
 	if (info.sRGB_FBO_in_use == TRUE) {
-		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
+		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 	}
 }
 #endif
@@ -2331,7 +2352,7 @@ void mainWindow::s_set_stretch() {
 	cfg->stretch = !cfg->stretch;
 
 	if (cfg->fullscreen == FULLSCR) {
-		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
+		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 	}
 }
 void mainWindow::s_set_audio_buffer_factor() {

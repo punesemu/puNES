@@ -101,6 +101,7 @@ static struct _cl_option {
 	{ "disable-new-menu",      req_arg,  0 },
 	{ "fullscreen-window",     req_arg,  0 },
 	{ "audio-output-device",   req_arg,  0 },
+	{ "shader",                req_arg,  0 }
 };
 
 void cmd_line_parse(int argc, uTCHAR **argv) {
@@ -195,6 +196,8 @@ void cmd_line_parse(int argc, uTCHAR **argv) {
 					set_int(cfg_from_file.fullscreen_in_window, SET_FULLSCREEN_IN_WINDOW);
 				} else if (key == "audio-output-device") {
 					set_cpy_utchar_to_val(cfg_from_file.audio_output, SET_AUDIO_OUTPUT_DEVICE);
+				} else if (key == "shader") {
+					set_int(cfg_from_file.shader, SET_SHADER);
 				}
 				break;
 			case 'a':
@@ -348,6 +351,7 @@ static void usage(QString name) {
 			uL("" uPERCENTs "\n")
 			uL("" uPERCENTs "\n")
 			uL("" uPERCENTs "\n")
+			uL("" uPERCENTs "\n")
 #if defined (WITH_OPENGL)
 			uL("" uPERCENTs "\n")
 			uL("" uPERCENTs "\n")
@@ -365,6 +369,7 @@ static void usage(QString name) {
 			main_cfg[SET_OVERSCAN_DEFAULT].hlp,
 			main_cfg[SET_FILTER].hlp,
 			main_cfg[SET_NTSC_FORMAT].hlp,
+			main_cfg[SET_SHADER].hlp,
 			main_cfg[SET_PALETTE].hlp,
 #if defined (WITH_OPENGL)
 			main_cfg[SET_RENDERING].hlp,

@@ -735,11 +735,11 @@ BYTE emu_reset(BYTE type) {
 
 		settings_pgs_parse();
 
-		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, TRUE);
+		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, TRUE);
 	}
 
 	if ((info.reset == CHANGE_MODE) && (overscan_set_mode(machine.type) == TRUE)) {
-		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
+		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 	}
 
 	map_chr_bank_1k_reset();

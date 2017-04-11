@@ -77,22 +77,10 @@ enum filters_type {
 	XBRZ4X,
 	XBRZ5X,
 	XBRZ6X,
-	FUTURE_USE0,
-	FUTURE_USE1,
-	FUTURE_USE2,
-	FUTURE_USE3,
-	FUTURE_USE4,
-	FUTURE_USE5,
-	FUTURE_USE6,
-	FUTURE_USE7,
-	FUTURE_USE8,
-	FUTURE_USE9,
-	FUTURE_USE10,
-	FUTURE_USE11,
-	FUTURE_USE12,
-	/* shaders */
-	FLTSHDSTART,
-	SHADER_CRTDOTMASK = FLTSHDSTART,
+};
+enum shader_type {
+	NO_SHADER,
+	SHADER_CRTDOTMASK,
 	SHADER_CRTSCANLINES,
 	SHADER_CRTWITHCURVE,
 	SHADER_EMBOSS,
@@ -100,9 +88,9 @@ enum filters_type {
 	SHADER_NTSC2PHASECOMPOSITE,
 	SHADER_OLDTV,
 	SHADER_FILE,
-	FLTSHDSTOP = SHADER_FILE,
-	/* shaders end */
+	SHADER_LAST = SHADER_FILE,
 };
+
 enum overcan_type { OSCAN_OFF, OSCAN_ON, OSCAN_DEFAULT, OSCAN_DEFAULT_OFF, OSCAN_DEFAULT_ON };
 enum gfx_info_type { CURRENT, NO_OVERSCAN, MONITOR, VIDEO_MODE };
 enum no_change { NO_CHANGE = 255 };
@@ -118,6 +106,7 @@ enum sdl_win_event_type {
 	SDLWIN_FORCE_SCALE,
 	SDLWIN_SCALE,
 	SDLWIN_FILTER,
+	SDLWIN_SHADER,
 	SDLWIN_VSYNC
 };
 #endif
@@ -181,7 +170,7 @@ EXTERNC void gfx_control_changed_adapter(void *monitor);
 
 EXTERNC BYTE gfx_init(void);
 
-EXTERNC void gfx_set_screen(BYTE scale, DBWORD filter, BYTE fullscreen, BYTE palette,
+EXTERNC void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, BYTE palette,
 		BYTE force_scale, BYTE force_palette);
 
 EXTERNC void gfx_draw_screen(BYTE forced);

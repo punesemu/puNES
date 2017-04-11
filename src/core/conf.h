@@ -45,6 +45,7 @@ typedef struct _config {
 	BYTE fullscreen;
 	BYTE fullscreen_in_window;
 	DBWORD filter;
+	DBWORD shader;
 	BYTE ntsc_format;
 	BYTE palette;
 	BYTE disable_swap_emphasis_pal;

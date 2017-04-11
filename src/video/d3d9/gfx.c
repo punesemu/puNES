@@ -272,22 +272,22 @@ BYTE gfx_init(void) {
 	}
 
 	if (cfg->fullscreen) {
-		gfx_set_screen(cfg->scale, cfg->filter, NO_FULLSCR, cfg->palette, FALSE, FALSE);
+		gfx_set_screen(cfg->scale, cfg->filter, cfg->shader, NO_FULLSCR, cfg->palette, FALSE, FALSE);
 		cfg->fullscreen = NO_FULLSCR;
 		cfg->scale = gfx.scale_before_fscreen;
 		gui_fullscreen();
 	} else {
-		gfx_set_screen(cfg->scale, cfg->filter, NO_FULLSCR, cfg->palette, FALSE, FALSE);
+		gfx_set_screen(cfg->scale, cfg->filter, cfg->shader, NO_FULLSCR, cfg->palette, FALSE, FALSE);
 	}
 
 	return (EXIT_OK);
 }
-void gfx_set_screen(BYTE scale, DBWORD filter, BYTE fullscreen, BYTE palette, BYTE force_scale,
-		BYTE force_palette) {
+void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, BYTE palette,
+		BYTE force_scale, BYTE force_palette) {
 	BYTE set_mode;
 	WORD width, height;
 	WORD w_for_pr, h_for_pr;
-	DBWORD old_filter = cfg->filter;
+	DBWORD old_shader = cfg->shader;
 
 	gfx_set_screen_start:
 	set_mode = FALSE;
@@ -371,6 +371,11 @@ void gfx_set_screen(BYTE scale, DBWORD filter, BYTE fullscreen, BYTE palette, BY
 		force_scale = TRUE;
 		// indico che devo cambiare il video mode
 		set_mode = TRUE;
+	}
+
+	/* shader */
+	if (shader == NO_CHANGE) {
+		shader = cfg->shader;
 	}
 
 	// fullscreen
@@ -546,8 +551,10 @@ void gfx_set_screen(BYTE scale, DBWORD filter, BYTE fullscreen, BYTE palette, BY
 
 	// salvo il nuovo fattore di scala
 	cfg->scale = scale;
-	// salvo ill nuovo filtro
+	// salvo il nuovo filtro
 	cfg->filter = filter;
+	// salvo la nuova shader
+	cfg->shader = shader;
 	// salvo il nuovo stato del fullscreen
 	cfg->fullscreen = fullscreen;
 	// salvo il nuovo tipo di paletta
@@ -575,22 +582,20 @@ void gfx_set_screen(BYTE scale, DBWORD filter, BYTE fullscreen, BYTE palette, BY
 	}
 
 	{
-		DBWORD f = NO_FILTER;
 		d3d9.scale = cfg->scale;
 		gfx.PSS = ((cfg->pixel_aspect_ratio != PAR11) && cfg->PAR_soft_stretch) ? TRUE : FALSE;
 
-		if ((filter == NO_FILTER) || (filter >= FLTSHDSTART)) {
+		if (filter == NO_FILTER) {
 			d3d9.scale = X1;
 			gfx.filter = scale_surface;
-			f = filter;
 		}
 
-		if (shaders_set(f) == EXIT_ERROR) {
+		if (shaders_set(shader) == EXIT_ERROR) {
 			umemcpy(cfg->shader_file, gfx.last_shader_file, usizeof(cfg->shader_file));
-			if (old_filter == filter) {
-				filter = NO_FILTER;
+			if (old_shader == shader) {
+				shader = NO_SHADER;
 			} else {
-				filter = old_filter;
+				shader = old_shader;
 			}
 			goto gfx_set_screen_start;
 		}
@@ -1119,7 +1124,7 @@ static BYTE d3d9_context_create(void) {
 
 	cgD3D9SetDevice(d3d9.adapter->dev);
 
-	if ((cfg->filter == NO_FILTER) || (cfg->filter >= FLTSHDSTART)) {
+	if (cfg->filter == NO_FILTER) {
 		w = gfx.rows;
 		h = gfx.lines;
 	} else {

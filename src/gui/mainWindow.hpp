@@ -104,7 +104,8 @@ class mainWindow: public QMainWindow {
 		void connect_menu_signals();
 		void connect_action(QAction *action, const char *member);
 		void connect_action(QAction *action, int value, const char *member);
-		void set_filter(int filter);
+		void switch_filter(int filter);
+		void switch_shader(int shader);
 
 	public slots:
 		void s_set_fullscreen();
@@ -139,8 +140,9 @@ class mainWindow: public QMainWindow {
 		void s_set_par_stretch();
 		void s_set_overscan();
 		void s_set_overscan_borders();
-		void s_set_other_filter();
+		void s_set_filter();
 		void s_set_ntsc_filter();
+		void s_set_shader();
 		void s_load_shader();
 		void s_set_palette();
 		void s_set_disable_emphasis_pal();

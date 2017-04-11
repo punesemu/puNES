@@ -172,7 +172,7 @@ BYTE opengl_context_create(SDL_Surface *src) {
 	}
 #endif
 
-	if ((cfg->filter == NO_FILTER) || (cfg->filter >= FLTSHDSTART)) {
+	if (cfg->filter == NO_FILTER) {
 		w = gfx.rows;
 		h = gfx.lines;
 	} else {

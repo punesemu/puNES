@@ -56,6 +56,7 @@ enum set_element {
 	SET_OVERSCAN_BRD_PAL,
 	SET_FILTER,
 	SET_NTSC_FORMAT,
+	SET_SHADER,
 	SET_FILE_SHADER,
 	SET_PALETTE,
 	SET_FILE_PALETTE,
@@ -372,21 +373,14 @@ static const _opt opt_filter[] = {
 	{uL("xBRZ 4x")              , uL("xbrz4x")      , XBRZ4X},
 	{uL("xBRZ 5x")              , uL("xbrz5x")      , XBRZ5X},
 	{uL("xBRZ 6x")              , uL("xbrz6x")      , XBRZ6X},
-	// per filtri CPU futuri
-	{NULL                       , NULL              , NO_FILTER},
-	{NULL                       , NULL              , NO_FILTER},
-	{NULL                       , NULL              , NO_FILTER},
-	{NULL                       , NULL              , NO_FILTER},
-	{NULL                       , NULL              , NO_FILTER},
-	{NULL                       , NULL              , NO_FILTER},
-	{NULL                       , NULL              , NO_FILTER},
-	{NULL                       , NULL              , NO_FILTER},
-	{NULL                       , NULL              , NO_FILTER},
-	{NULL                       , NULL              , NO_FILTER},
-	{NULL                       , NULL              , NO_FILTER},
-	{NULL                       , NULL              , NO_FILTER},
-	{NULL                       , NULL              , NO_FILTER},
-	// shaders
+};
+static const _opt opt_ntsc[] = {
+	{uL("Composite"), uL("composite"), COMPOSITE},
+	{uL("S-Video")  , uL("svideo")   , SVIDEO},
+	{uL("RGB")      , uL("rgb")      , RGBMODE}
+};
+static const _opt opt_shader[] = {
+	{uL("no shader")            , uL("none")        , NO_SHADER},
 	{uL("CRT Dotmask")          , uL("crtdotmask")  , SHADER_CRTDOTMASK},
 	{uL("CRT Scanlines")        , uL("crtscanlines"), SHADER_CRTSCANLINES},
 	{uL("CRT With Curve")       , uL("crtcurve")    , SHADER_CRTWITHCURVE},
@@ -395,11 +389,6 @@ static const _opt opt_filter[] = {
 	{uL("NTSC 2Phase Composite"), uL("ntsc2phcomp") , SHADER_NTSC2PHASECOMPOSITE},
 	{uL("Old TV")               , uL("oldtv")       , SHADER_OLDTV},
 	{uL("Extern")               , uL("file")        , SHADER_FILE}
-};
-static const _opt opt_ntsc[] = {
-	{uL("Composite"), uL("composite"), COMPOSITE},
-	{uL("S-Video")  , uL("svideo")   , SVIDEO},
-	{uL("RGB")      , uL("rgb")      , RGBMODE}
 };
 static const _opt opt_palette[] = {
 	{uL("PAL palette")      , uL("pal")   , PALETTE_PAL},
@@ -582,16 +571,11 @@ static const _settings main_cfg[] = {
 	{
 		uL("video"), uL("filter"), uL("none"),
 		uL("# possible values: none, scale2x, scale3x, scale4x, hq2x, hq3x," NEWLINE)
-		uL("#                  hq4x, xbrz2x, xbrz3x, xbrz4x, xbrz5x, xbrz6x, ntsc," NEWLINE)
-		uL("#                  crtdotmask, crtscanlines, crtcurve, emboss, noise," NEWLINE)
-		uL("#                  ntsc2phcomp, oldtv, file"),
+		uL("#                  hq4x, xbrz2x, xbrz3x, xbrz4x, xbrz5x, xbrz6x, ntsc"),
 		uL("-i, --filter              filter to apply       : nofilter, scale2x," NEWLINE)
 		uL("                                                  scale3x, scale4x, hq2x," NEWLINE)
 		uL("                                                  hq3x, hq4x, xbrz2x, xbrz3x," NEWLINE)
-		uL("                                                  xbrz4x, xbrz5x, xbrz6x, ntsc," NEWLINE)
-		uL("                                                  crtdotmask, crtscanlines," NEWLINE)
-		uL("                                                  crtcurve, emboss, noise," NEWLINE)
-		uL("                                                  ntsc2phcomp, oldtv, file"),
+		uL("                                                  xbrz4x, xbrz5x, xbrz6x, ntsc"),
 		{LENGTH(opt_filter), opt_filter}
 	},
 	{
@@ -599,6 +583,15 @@ static const _settings main_cfg[] = {
 		uL("# possible values: composite, svideo, rgb"),
 		uL("-n, --ntsc-format         format of ntsc filter : composite, svideo, rgb"),
 		{LENGTH(opt_ntsc), opt_ntsc}
+	},
+	{
+		uL("video"), uL("shader"), uL("none"),
+		uL("# possible values: none, crtdotmask, crtscanlines, crtcurve, emboss, noise," NEWLINE)
+		uL("#                  ntsc2phcomp, oldtv, file"),
+		uL("    --shader              shader to apply       : none, crtdotmask, crtscanlines," NEWLINE)
+		uL("                                                  crtcurve, emboss, noise," NEWLINE)
+		uL("                                                  ntsc2phcomp, oldtv, file"),
+		{LENGTH(opt_shader), opt_shader}
 	},
 	{
 		uL("video"), uL("shader file"), NULL,

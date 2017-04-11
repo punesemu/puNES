@@ -245,7 +245,7 @@ void gui_reset_video(void) {
 #if defined (WITH_OPENGL) && defined (__WIN32__)
 	sdl_wid();
 	gfx_reset_video();
-	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 #endif
 }
 int gui_uncompress_selection_dialog(void) {

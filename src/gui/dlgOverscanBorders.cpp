@@ -156,7 +156,7 @@ void dlgOverscanBorders::s_preview_clicked(bool checked) {
 	cfg->oscan = OSCAN_ON;
 	data.preview = (*data.borders);
 	overscan.borders = &data.preview;
-	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 }
 void dlgOverscanBorders::s_default_clicked(bool checked) {
 	settings_set_overscan_default(data.borders, data.mode + NTSC);

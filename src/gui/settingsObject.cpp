@@ -739,6 +739,7 @@ void setObject::to_cfg(QString group) {
 		val.replace(SET_OVERSCAN_BRD_PAL, oscan_val(&overscan_borders[1]));
 		int_to_val(SET_FILTER, cfg_from_file.filter);
 		int_to_val(SET_NTSC_FORMAT, cfg_from_file.ntsc_format);
+		int_to_val(SET_SHADER, cfg_from_file.shader);
 		cpy_utchar_to_val(SET_FILE_SHADER, cfg_from_file.shader_file);
 		int_to_val(SET_PALETTE, cfg_from_file.palette);
 		cpy_utchar_to_val(SET_FILE_PALETTE, cfg_from_file.palette_file);
@@ -816,6 +817,7 @@ void setObject::fr_cfg(QString group) {
 		oscan_val_to_int(SET_OVERSCAN_BRD_PAL, &overscan_borders[1]);
 		cfg_from_file.filter = val_to_int(SET_FILTER);
 		cfg_from_file.ntsc_format = val_to_int(SET_NTSC_FORMAT);
+		cfg_from_file.shader = val_to_int(SET_SHADER);
 		cpy_val_to_utchar(SET_FILE_SHADER, cfg_from_file.shader_file,
 				usizeof(cfg_from_file.shader_file));
 		cfg_from_file.palette = val_to_int(SET_PALETTE);

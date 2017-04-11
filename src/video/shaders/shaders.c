@@ -53,7 +53,7 @@ BYTE shaders_set(int shader) {
 	shader_se_set_default(&shader_effect);
 
 	switch (shader) {
-		case NO_FILTER:
+		case NO_SHADER:
 			shdpass();
 			sp->code = SHDCODE(shc_no_filter);
 			se_soft_stretch();
