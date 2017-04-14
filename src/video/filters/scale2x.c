@@ -79,16 +79,9 @@ gfx_filter_function(scaleNx) {
 	scl2x.sx = 0;
 	scl2x.sy = 0;
 	scl2x.oy = 0;
-	scl2x.lines = lines;
-	scl2x.rows = rows;
+	scl2x.lines = SCR_LINES;
+	scl2x.rows = SCR_ROWS;
 	scl2x.startx = 0;
-
-	if (overscan.enabled) {
-		scl2x.sy += overscan.borders->up;
-		scl2x.lines += overscan.borders->up;
-		scl2x.rows += overscan.borders->left;
-		scl2x.startx = overscan.borders->left;
-	}
 
 	if (factor == 1) {
 		return;
@@ -97,8 +90,8 @@ gfx_filter_function(scaleNx) {
 	} else if (factor == 3) {
 		scale3x(screen_index, (uint32_t *) palette, bpp, pitch, pix);
 	} else if (factor == 4) {
-		scl4x_buffer.w = rows * 2;
-		scl4x_buffer.h = lines * 2;
+		scl4x_buffer.w = SCR_ROWS * 2;
+		scl4x_buffer.h = SCR_LINES * 2;
 
 		if ((bpp == 15) || (bpp == 16)) {
 			scl4x_buffer.pitch = scl4x_buffer.w * sizeof(uint16_t);

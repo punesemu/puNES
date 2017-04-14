@@ -39,18 +39,10 @@ void hqx_init(void) {
 gfx_filter_function(hqNx) {
 	hqnx.sx = 0;
 	hqnx.sy = 0;
-	hqnx.lines = lines;
-	hqnx.rows = rows;
+	hqnx.lines = SCR_LINES;
+	hqnx.rows = SCR_ROWS;
 	hqnx.dst_rows = width / factor;
 	hqnx.startx = 0;
-
-	if (overscan.enabled) {
-		hqnx.sy += overscan.borders->up;
-		hqnx.lines += overscan.borders->up;
-		hqnx.rows += overscan.borders->left;
-		hqnx.startx = overscan.borders->left;
-		screen += (SCR_ROWS * overscan.borders->up);
-	}
 
 	if (factor == 1) {
 		return;

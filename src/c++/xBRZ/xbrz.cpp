@@ -497,7 +497,7 @@ void blendPixel(const Kernel_3x3& ker,
 
 
 template <class Scaler, class ColorDistance> //scaler policy: see "Scaler2x" reference implementation
-void scaleImage(const WORD* src, uint32_t* trg, uint32_t* palette, int noOv, int startx, int srcWidth, int srcHeight, const xbrz::ScalerCfg& cfg, int yFirst, int yLast)
+void scaleImage(const WORD* src, uint32_t* trg, uint32_t* palette, int srcWidth, int srcHeight, const xbrz::ScalerCfg& cfg, int yFirst, int yLast)
 {
     yFirst = std::max(yFirst, 0);
     yLast  = std::min(yLast, srcHeight);
@@ -519,10 +519,10 @@ void scaleImage(const WORD* src, uint32_t* trg, uint32_t* palette, int noOv, int
     {
         const int y = yFirst - 1;
 
-        const WORD* s_m1 = (src + startx) + noOv * std::max(y - 1, 0);
-        const WORD* s_0  = (src + startx) + noOv * y; //center line
-        const WORD* s_p1 = (src + startx) + noOv * std::min(y + 1, srcHeight - 1);
-        const WORD* s_p2 = (src + startx) + noOv * std::min(y + 2, srcHeight - 1);
+        const WORD* s_m1 = src + srcWidth * std::max(y - 1, 0);
+        const WORD* s_0  = src + srcWidth * y; //center line
+        const WORD* s_p1 = src + srcWidth * std::min(y + 1, srcHeight - 1);
+        const WORD* s_p2 = src + srcWidth * std::min(y + 2, srcHeight - 1);
 
         for (int x = 0; x < srcWidth; ++x)
         {
@@ -572,10 +572,10 @@ void scaleImage(const WORD* src, uint32_t* trg, uint32_t* palette, int noOv, int
     {
         uint32_t* out = trg + Scaler::scale * y * trgWidth; //consider MT "striped" access
 
-        const WORD* s_m1 = (src + startx) + noOv * std::max(y - 1, 0);
-        const WORD* s_0  = (src + startx) + noOv * y; //center line
-        const WORD* s_p1 = (src + startx) + noOv * std::min(y + 1, srcHeight - 1);
-        const WORD* s_p2 = (src + startx) + noOv * std::min(y + 2, srcHeight - 1);
+        const WORD* s_m1 = src + srcWidth * std::max(y - 1, 0);
+        const WORD* s_0  = src + srcWidth * y; //center line
+        const WORD* s_p1 = src + srcWidth * std::min(y + 1, srcHeight - 1);
+        const WORD* s_p2 = src + srcWidth * std::min(y + 2, srcHeight - 1);
 
         unsigned char blend_xy1 = 0; //corner blending for current (x, y + 1) position
 
@@ -1087,7 +1087,7 @@ struct ColorGradientARGB
 }
 
 
-void xbrz::scale(BYTE factor, const WORD* src, uint32_t* trg, uint32_t* palette, int noOv, int startx, int srcWidth, int srcHeight, ColorFormat colFmt, const xbrz::ScalerCfg& cfg, int yFirst, int yLast)
+void xbrz::scale(BYTE factor, const WORD* src, uint32_t* trg, uint32_t* palette, int srcWidth, int srcHeight, ColorFormat colFmt, const xbrz::ScalerCfg& cfg, int yFirst, int yLast)
 {
     switch (colFmt)
     {
@@ -1095,15 +1095,15 @@ void xbrz::scale(BYTE factor, const WORD* src, uint32_t* trg, uint32_t* palette,
             switch (factor)
             {
                 case 2:
-                    return scaleImage<Scaler2x<ColorGradientARGB>, ColorDistanceARGB>(src, trg, palette, noOv, startx, srcWidth, srcHeight, cfg, yFirst, yLast);
+                    return scaleImage<Scaler2x<ColorGradientARGB>, ColorDistanceARGB>(src, trg, palette, srcWidth, srcHeight, cfg, yFirst, yLast);
                 case 3:
-                    return scaleImage<Scaler3x<ColorGradientARGB>, ColorDistanceARGB>(src, trg, palette, noOv, startx, srcWidth, srcHeight, cfg, yFirst, yLast);
+                    return scaleImage<Scaler3x<ColorGradientARGB>, ColorDistanceARGB>(src, trg, palette, srcWidth, srcHeight, cfg, yFirst, yLast);
                 case 4:
-                    return scaleImage<Scaler4x<ColorGradientARGB>, ColorDistanceARGB>(src, trg, palette, noOv, startx, srcWidth, srcHeight, cfg, yFirst, yLast);
+                    return scaleImage<Scaler4x<ColorGradientARGB>, ColorDistanceARGB>(src, trg, palette, srcWidth, srcHeight, cfg, yFirst, yLast);
                 case 5:
-                    return scaleImage<Scaler5x<ColorGradientARGB>, ColorDistanceARGB>(src, trg, palette, noOv, startx, srcWidth, srcHeight, cfg, yFirst, yLast);
+                    return scaleImage<Scaler5x<ColorGradientARGB>, ColorDistanceARGB>(src, trg, palette, srcWidth, srcHeight, cfg, yFirst, yLast);
                 case 6:
-                    return scaleImage<Scaler6x<ColorGradientARGB>, ColorDistanceARGB>(src, trg, palette, noOv, startx, srcWidth, srcHeight, cfg, yFirst, yLast);
+                    return scaleImage<Scaler6x<ColorGradientARGB>, ColorDistanceARGB>(src, trg, palette, srcWidth, srcHeight, cfg, yFirst, yLast);
             }
             break;
 
@@ -1111,15 +1111,15 @@ void xbrz::scale(BYTE factor, const WORD* src, uint32_t* trg, uint32_t* palette,
             switch (factor)
             {
                 case 2:
-                    return scaleImage<Scaler2x<ColorGradientRGB>, ColorDistanceRGB>(src, trg, palette, noOv, startx, srcWidth, srcHeight, cfg, yFirst, yLast);
+                    return scaleImage<Scaler2x<ColorGradientRGB>, ColorDistanceRGB>(src, trg, palette, srcWidth, srcHeight, cfg, yFirst, yLast);
                 case 3:
-                    return scaleImage<Scaler3x<ColorGradientRGB>, ColorDistanceRGB>(src, trg, palette, noOv, startx, srcWidth, srcHeight, cfg, yFirst, yLast);
+                    return scaleImage<Scaler3x<ColorGradientRGB>, ColorDistanceRGB>(src, trg, palette, srcWidth, srcHeight, cfg, yFirst, yLast);
                 case 4:
-                    return scaleImage<Scaler4x<ColorGradientRGB>, ColorDistanceRGB>(src, trg, palette, noOv, startx, srcWidth, srcHeight, cfg, yFirst, yLast);
+                    return scaleImage<Scaler4x<ColorGradientRGB>, ColorDistanceRGB>(src, trg, palette, srcWidth, srcHeight, cfg, yFirst, yLast);
                 case 5:
-                    return scaleImage<Scaler5x<ColorGradientRGB>, ColorDistanceRGB>(src, trg, palette, noOv, startx, srcWidth, srcHeight, cfg, yFirst, yLast);
+                    return scaleImage<Scaler5x<ColorGradientRGB>, ColorDistanceRGB>(src, trg, palette, srcWidth, srcHeight, cfg, yFirst, yLast);
                 case 6:
-                    return scaleImage<Scaler6x<ColorGradientRGB>, ColorDistanceRGB>(src, trg, palette, noOv, startx, srcWidth, srcHeight, cfg, yFirst, yLast);
+                    return scaleImage<Scaler6x<ColorGradientRGB>, ColorDistanceRGB>(src, trg, palette, srcWidth, srcHeight, cfg, yFirst, yLast);
             }
             break;
     }

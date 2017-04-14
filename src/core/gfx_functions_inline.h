@@ -29,7 +29,6 @@ static void INLINE gfx_FORCE_SCALE(void) {
 #endif
 
 #if defined (__GFX_OTHERS_FUNC__) || defined (__GFX_ALL_FUNC__)
-static void INLINE gfx_SWITCH_RENDERING(void);
 static void INLINE gfx_MAKE_RESET(int type);
 static void INLINE gfx_CHANGE_ROM(void);
 static void INLINE gfx_SWITCH_MODE(void);
@@ -38,13 +37,6 @@ static void INLINE gfx_FILTER(int filter);
 static void INLINE gfx_SHADER(int shader);
 static void INLINE gfx_VSYNC(void);
 
-static void INLINE gfx_SWITCH_RENDERING(void) {
-#if defined (WITH_OPENGL)
-	sdl_wid();
-	gfx_reset_video();
-#endif
-	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
-}
 static void INLINE gfx_MAKE_RESET(int type) {
 	gui_mainWindow_make_reset(type);
 }

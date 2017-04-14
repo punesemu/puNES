@@ -37,16 +37,9 @@ gfx_filter_function(scale_surface) {
 	scl.sx = 0;
 	scl.sy = 0;
 	scl.oy = 0;
-	scl.lines = lines;
-	scl.rows = rows;
+	scl.lines = SCR_LINES;
+	scl.rows = SCR_ROWS;
 	scl.startx = 0;
-
-	if (overscan.enabled) {
-		scl.sy += overscan.borders->up;
-		scl.lines += overscan.borders->up;
-		scl.rows += overscan.borders->left;
-		scl.startx = overscan.borders->left;
-	}
 
 	if (factor == 1) {
 		scale_surface1x(screen_index, (uint32_t *) palette, bpp, pitch, pix);

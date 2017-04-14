@@ -32,7 +32,7 @@ void xBRZ_init(void);
 gfx_filter_function(xBRZ);
 
 EXTERNC void xbrz_scale(BYTE factor, const WORD *src, uint32_t *trg, uint32_t *palette,
-        int no_overscan_width, int startx, int width, int height);
+        int width, int height);
 
 #undef EXTERNC
 

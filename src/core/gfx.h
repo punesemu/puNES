@@ -20,7 +20,7 @@
 #if !defined (gfx_filter_function)
 #define gfx_filter_function(name)\
 	void name(WORD *screen, WORD **screen_index, void *palette, BYTE bpp, uint32_t pitch,\
-	void *pix, WORD rows, WORD lines, WORD width, WORD height, BYTE factor)
+	void *pix, WORD width, WORD height, BYTE factor)
 #endif
 
 #ifndef GFX_H_
@@ -94,12 +94,9 @@ enum shader_type {
 enum overcan_type { OSCAN_OFF, OSCAN_ON, OSCAN_DEFAULT, OSCAN_DEFAULT_OFF, OSCAN_DEFAULT_ON };
 enum gfx_info_type { CURRENT, NO_OVERSCAN, MONITOR, VIDEO_MODE };
 enum no_change { NO_CHANGE = 255 };
-#if defined (WITH_OPENGL)
-enum render_type { RENDER_SOFTWARE, RENDER_GLSL };
-#if defined (__WIN32__)
+#if defined (WITH_OPENGL) && defined (__WIN32__)
 enum sdl_win_event_type {
 	SDLWIN_NONE,
-	SDLWIN_SWITCH_RENDERING,
 	SDLWIN_MAKE_RESET,
 	SDLWIN_CHANGE_ROM,
 	SDLWIN_SWITCH_MODE,
@@ -109,7 +106,6 @@ enum sdl_win_event_type {
 	SDLWIN_SHADER,
 	SDLWIN_VSYNC
 };
-#endif
 #endif
 
 typedef struct _viewport {
@@ -124,14 +120,12 @@ typedef struct _viewport {
 #endif
 
 EXTERNC struct _gfx {
-#if defined (WITH_OPENGL)
-	BYTE opengl;
-#endif
 	BYTE PSS;
 	BYTE save_screenshot;
 	BYTE scale_before_fscreen;
 	BYTE type_of_fscreen_in_use;
 	BYTE bit_per_pixel;
+	float x_width_pixel;
 	WORD rows, lines;
 	SDBWORD w[4], h[4];
 	float w_pr, h_pr;
@@ -148,12 +142,10 @@ EXTERNC struct _gfx {
 #if defined (WITH_OPENGL)
 EXTERNC SDL_Surface *surface_sdl;
 
-EXTERNC void gfx_set_render(BYTE render);
 EXTERNC void gfx_reset_video(void);
 
 EXTERNC SDL_Surface *gfx_create_RGB_surface(SDL_Surface *src, uint32_t width, uint32_t height);
 EXTERNC double sdl_get_ms(void);
-EXTERNC int (*flip)(SDL_Surface *surface);
 
 #if defined (__WIN32__)
 EXTERNC struct _sdlwe {

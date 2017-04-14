@@ -148,6 +148,7 @@ typedef struct _d3d9 {
 	_d3d9_adapter *array, *adapter;
 
 	BYTE scale;
+	float x_width_pixel;
 
 	struct _d3d9_screen {
 		INT in_use;

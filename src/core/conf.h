@@ -38,9 +38,6 @@ typedef struct _config {
 	BYTE hide_sprites;
 	BYTE hide_background;
 	BYTE unlimited_sprites;
-#if defined (WITH_OPENGL)
-	BYTE render;
-#endif
 	BYTE scale;
 	BYTE fullscreen;
 	BYTE fullscreen_in_window;
@@ -52,6 +49,7 @@ typedef struct _config {
 	BYTE vsync;
 	BYTE stretch;
 	BYTE oscan;
+	BYTE oscan_black_borders;
 	BYTE oscan_default;
 	BYTE pixel_aspect_ratio;
 	BYTE PAR_soft_stretch;

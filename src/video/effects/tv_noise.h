@@ -27,10 +27,10 @@
 #define EXTERNC
 #endif
 
-EXTERNC struct _turn_off {
+EXTERNC struct _turn_off_effect {
 	void *palette;
 	void *ntsc;
-} turn_off;
+} turn_off_effect;
 
 EXTERNC BYTE tv_noise_init(void);
 EXTERNC void tv_noise_quit(void);

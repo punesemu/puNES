@@ -726,14 +726,12 @@ void setObject::to_cfg(QString group) {
 	}
 
 	if ((group == "video") || (group == "all")) {
-#if defined (WITH_OPENGL)
-		int_to_val(SET_RENDERING, cfg_from_file.render);
-#endif
 		int_to_val(SET_FPS, cfg_from_file.fps);
 		int_to_val(SET_FRAMESKIP, cfg_from_file.frameskip);
 		int_to_val(SET_SCALE, cfg_from_file.scale);
 		int_to_val(SET_PAR, cfg_from_file.pixel_aspect_ratio);
 		int_to_val(SET_PAR_SOFT_STRETCH, cfg_from_file.PAR_soft_stretch);
+		int_to_val(SET_OVERSCAN_BLACK_BORDERS, cfg_from_file.oscan_black_borders);
 		int_to_val(SET_OVERSCAN_DEFAULT, cfg_from_file.oscan_default);
 		val.replace(SET_OVERSCAN_BRD_NTSC, oscan_val(&overscan_borders[0]));
 		val.replace(SET_OVERSCAN_BRD_PAL, oscan_val(&overscan_borders[1]));
@@ -804,14 +802,12 @@ void setObject::fr_cfg(QString group) {
 	}
 
 	if ((group == "video") || (group == "all")) {
-#if defined (WITH_OPENGL)
-		cfg_from_file.render = val_to_int(SET_RENDERING);
-#endif
 		cfg_from_file.fps = val_to_int(SET_FPS);
 		cfg_from_file.frameskip = val_to_int(SET_FRAMESKIP);
 		cfg_from_file.scale = val_to_int(SET_SCALE);
 		cfg_from_file.pixel_aspect_ratio = val_to_int(SET_PAR);
 		cfg_from_file.PAR_soft_stretch = val_to_int(SET_PAR_SOFT_STRETCH);
+		cfg_from_file.oscan_black_borders = val_to_int(SET_OVERSCAN_BLACK_BORDERS);
 		cfg_from_file.oscan_default = val_to_int(SET_OVERSCAN_DEFAULT);
 		oscan_val_to_int(SET_OVERSCAN_BRD_NTSC, &overscan_borders[0]);
 		oscan_val_to_int(SET_OVERSCAN_BRD_PAL, &overscan_borders[1]);
@@ -876,10 +872,6 @@ void setObject::fr_cfg(QString group) {
 void setObject::after_the_defaults() {
 	machine = machinedb[NTSC - 1];
 	gfx.scale_before_fscreen = cfg_from_file.scale;
-
-#if defined (WITH_OPENGL)
-	gfx_set_render(cfg_from_file.render);
-#endif
 
 	save_slot.slot = 0;
 	cfg_from_file.oscan = OSCAN_DEFAULT;

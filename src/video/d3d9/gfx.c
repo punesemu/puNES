@@ -35,20 +35,17 @@
 #include "video/effects/tv_noise.h"
 
 #define D3D9_ADAPTER(i) (_d3d9_adapter *) ((BYTE *) d3d9.array + (i * sizeof(_d3d9_adapter)))
-#define ntsc_width(wdt, a, flag)\
-{\
+#define ntsc_width(wdt, a)\
 	wdt = 0;\
 	if (filter == NTSC_FILTER) {\
 		wdt = NES_NTSC_OUT_WIDTH(SCR_ROWS, a);\
 		if (overscan.enabled) {\
-			wdt -= (a / nes_ntsc_in_chunk) * (overscan.borders->left + overscan.borders->right);\
+			wdt -= ((float) a / (float) nes_ntsc_in_chunk) *\
+					(overscan.borders->left + overscan.borders->right);\
 		}\
-		if (flag) {\
-			gfx.w[CURRENT] = wdt;\
-			gfx.w[NO_OVERSCAN] = (NES_NTSC_OUT_WIDTH(SCR_ROWS, a));\
-		}\
-	}\
-}
+		gfx.w[CURRENT] = wdt;\
+		gfx.w[NO_OVERSCAN] = NES_NTSC_OUT_WIDTH(SCR_ROWS, a);\
+	}
 
 static void d3d9_shader_cg_error_handler(void);
 static BYTE d3d9_device_create(UINT width, UINT height);
@@ -70,8 +67,6 @@ INLINE static void d3d9_viewport_set(DWORD x, DWORD y, DWORD w, DWORD h);
 INLINE D3DTEXTUREFILTERTYPE d3d9_shader_filter(UINT type);
 INLINE static void d3d9_shader_params_text_set(_shader *shd);
 INLINE static void d3d9_shader_param_set(const _texture *texture, UINT fcountmod, UINT fcount);
-
-static const BYTE ntsc_width_pixel[5] = {0, 0, 7, 10, 14};
 
 BYTE gfx_init(void) {
 	gfx.save_screenshot = FALSE;
@@ -286,13 +281,11 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 		BYTE force_scale, BYTE force_palette) {
 	BYTE set_mode;
 	WORD width, height;
-	WORD w_for_pr, h_for_pr;
 	DBWORD old_shader = cfg->shader;
 
 	gfx_set_screen_start:
 	set_mode = FALSE;
 	width = 0, height = 0;
-	w_for_pr = 0, h_for_pr = 0;
 
 	// l'ordine dei vari controlli non deve essere cambiato:
 	// 0) overscan
@@ -419,27 +412,27 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 				break;
 			case X2:
 				ctrl_software_filter_scale(SCALE2X, HQ2X, XBRZ2X, NTSC_FILTER)
-				ntsc_width(width, ntsc_width_pixel[scale], TRUE);
+				ntsc_width(width, ntsc_width_pixel[scale])
 				set_mode = TRUE;
 				break;
 			case X3:
 				ctrl_software_filter_scale(SCALE3X, HQ3X, XBRZ3X, NTSC_FILTER)
-				ntsc_width(width, ntsc_width_pixel[scale], TRUE);
+				ntsc_width(width, ntsc_width_pixel[scale])
 				set_mode = TRUE;
 				break;
 			case X4:
 				ctrl_software_filter_scale(SCALE4X, HQ4X, XBRZ4X, NTSC_FILTER)
-				ntsc_width(width, ntsc_width_pixel[scale], TRUE);
+				ntsc_width(width, ntsc_width_pixel[scale])
 				set_mode = TRUE;
 				break;
 			case X5:
 				ctrl_software_filter_scale(NO_FILTER, NO_FILTER, XBRZ5X, NO_FILTER)
-				ntsc_width(width, ntsc_width_pixel[scale], TRUE);
+				ntsc_width(width, ntsc_width_pixel[scale])
 				set_mode = TRUE;
 				break;
 			case X6:
 				ctrl_software_filter_scale(NO_FILTER, NO_FILTER, XBRZ6X, NO_FILTER)
-				ntsc_width(width, ntsc_width_pixel[scale], TRUE);
+				ntsc_width(width, ntsc_width_pixel[scale])
 				set_mode = TRUE;
 				break;
 		}
@@ -587,7 +580,15 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 
 		if (filter == NO_FILTER) {
 			d3d9.scale = X1;
+			d3d9.x_width_pixel = X1;
+			gfx.x_width_pixel = scale;
 			gfx.filter = scale_surface;
+		} else if (filter == NTSC_FILTER) {
+			d3d9.x_width_pixel = (float) ntsc_width_pixel[scale] / (float) nes_ntsc_in_chunk;
+			gfx.x_width_pixel = d3d9.x_width_pixel;
+		} else {
+			d3d9.x_width_pixel = scale;
+			gfx.x_width_pixel = scale;
 		}
 
 		if (shaders_set(shader) == EXIT_ERROR) {
@@ -601,26 +602,29 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 		}
 
 		if (set_mode) {
-			gfx.w[VIDEO_MODE] = width;
-			gfx.h[VIDEO_MODE] = height;
-
 			if (fullscreen == TRUE) {
 				gfx.w[VIDEO_MODE] = gfx.w[MONITOR];
 				gfx.h[VIDEO_MODE] = gfx.h[MONITOR];
+			} else if (cfg->oscan_black_borders) {
+				gfx.w[VIDEO_MODE] = gfx.w[NO_OVERSCAN];
+				gfx.h[VIDEO_MODE] = gfx.h[NO_OVERSCAN];
+			} else {
+				gfx.w[VIDEO_MODE] = width;
+				gfx.h[VIDEO_MODE] = height;
 			}
 
 			// Pixel Aspect Ratio
 			if (cfg->pixel_aspect_ratio && !fullscreen) {
-				float brd = 0;
-
 				gfx.w[VIDEO_MODE] = (gfx.w[NO_OVERSCAN] * gfx.pixel_aspect_ratio);
 
-				if (overscan.enabled) {
+				if (overscan.enabled && !cfg->oscan_black_borders) {
+					float brd = 0;
+
 					brd = (float) gfx.w[VIDEO_MODE] / (float) SCR_ROWS;
 					brd *= (overscan.borders->right + overscan.borders->left);
-				}
 
-				gfx.w[VIDEO_MODE] -= brd;
+					gfx.w[VIDEO_MODE] -= brd;
+				}
 			}
 
 			// faccio quello che serve prima del setvideo
@@ -632,10 +636,10 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 				fprintf(stderr, "D3D9: Unable to initialize d3d context\n");
 				return;
 			case EXIT_ERROR_SHADER:
-				text_add_line_info(1, "[red]errors[normal] on shader, use [green]'No filter'");
-				fprintf(stderr, "CG: Error on loading the shaders, switch to \"No filter\"\n");
+				text_add_line_info(1, "[red]errors[normal] on shader, use [green]'No shader'");
+				fprintf(stderr, "CG: Error on loading the shaders, switch to \"No shader\"\n");
 				umemcpy(cfg->shader_file, gfx.last_shader_file, usizeof(cfg->shader_file));
-				filter = NO_FILTER;
+				shader = NO_SHADER;
 				goto gfx_set_screen_start;
 		}
 	}
@@ -643,17 +647,19 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 	text.w = gfx.w[VIDEO_MODE];
 	text.h = gfx.h[VIDEO_MODE];
 
-	w_for_pr = gfx.vp.w;
-	h_for_pr = gfx.vp.h;
-
 	gfx_text_reset();
 
 	// calcolo le proporzioni tra il disegnato a video (overscan e schermo
 	// con le dimensioni per il filtro NTSC compresi) e quello che dovrebbe
 	// essere (256 x 240). Mi serve per calcolarmi la posizione del puntatore
 	// dello zapper.
-	gfx.w_pr = ((float) w_for_pr / gfx.w[CURRENT]) * ((float) gfx.w[NO_OVERSCAN] / SCR_ROWS);
-	gfx.h_pr = ((float) h_for_pr / gfx.h[CURRENT]) * ((float) gfx.h[NO_OVERSCAN] / SCR_LINES);
+	if (cfg->fullscreen) {
+		gfx.w_pr = (float) gfx.vp.w / (float) SCR_ROWS;
+		gfx.h_pr = (float) gfx.vp.h / (float) SCR_LINES;
+	} else {
+		gfx.w_pr = (float) (gfx.w[NO_OVERSCAN] * gfx.pixel_aspect_ratio) / (float) SCR_ROWS;
+		gfx.h_pr = (float) gfx.h[NO_OVERSCAN] / (float) SCR_LINES;
+	}
 
 	// setto il titolo della finestra
 	gui_update();
@@ -674,9 +680,9 @@ void gfx_draw_screen(BYTE forced) {
 	if (!forced) {
 		if (info.no_rom | info.turn_off) {
 			if (cfg->filter == NTSC_FILTER) {
-				palette = turn_off.ntsc;
+				palette = turn_off_effect.ntsc;
 			} else {
-				palette = (void *) turn_off.palette;
+				palette = (void *) turn_off_effect.palette;
 			}
 
 			if (++info.pause_frames_drawscreen == 2) {
@@ -689,9 +695,9 @@ void gfx_draw_screen(BYTE forced) {
 		} else if (info.pause) {
 			if (!cfg->disable_sepia_color) {
 				if (cfg->filter == NTSC_FILTER) {
-					palette = pause.ntsc;
+					palette = pause_effect.ntsc;
 				} else {
-					palette = pause.palette;
+					palette = pause_effect.palette;
 				}
 			}
 
@@ -721,16 +727,30 @@ void gfx_draw_screen(BYTE forced) {
 					gfx.bit_per_pixel,
 					lrect.Pitch,
 					lrect.pBits,
-					gfx.rows,
-					gfx.lines,
 					scrtex->rect.base.w,
 					scrtex->rect.base.h,
 					d3d9.scale);
 			// unlock della surface in memoria
 			IDirect3DSurface9_UnlockRect(scrtex->offscreen);
 			// aggiorno la texture dello schermo
-			IDirect3DDevice9_UpdateSurface(d3d9.adapter->dev, scrtex->offscreen, NULL,
-					scrtex->map0, NULL);
+			if (overscan.enabled) {
+				POINT point;
+				RECT rect;
+
+				rect.left = overscan.borders->left * d3d9.x_width_pixel;
+				rect.top = overscan.borders->up * d3d9.scale;
+				rect.right = scrtex->rect.base.w - (overscan.borders->right * d3d9.x_width_pixel);
+				rect.bottom = scrtex->rect.base.h - (overscan.borders->down * d3d9.scale);
+
+				point.x = rect.left;
+				point.y = rect.top;
+
+				IDirect3DDevice9_UpdateSurface(d3d9.adapter->dev, scrtex->offscreen, &rect,
+						scrtex->map0, &point);
+			} else {
+				IDirect3DDevice9_UpdateSurface(d3d9.adapter->dev, scrtex->offscreen, NULL,
+						scrtex->map0, NULL);
+			}
 		}
 
 		IDirect3DDevice9_GetRenderTarget(d3d9.adapter->dev, 0, &back_buffer);
@@ -756,7 +776,11 @@ void gfx_draw_screen(BYTE forced) {
 					D3DCOLOR_ARGB(255, 0, 0, 0), 1.0f, 0);
 
 			// ora setto il viewport corretto
-			d3d9_viewport_set(texture->vp.x, texture->vp.y, texture->vp.w, texture->vp.h);
+			if (cfg->fullscreen) {
+				d3d9_viewport_set(texture->vp.x, texture->vp.y, texture->vp.w, texture->vp.h);
+			} else {
+				d3d9_viewport_set(0, 0, texture->vp.w, texture->vp.h);
+			}
 
 			cgD3D9BindProgram(texture->shader.prg.f);
 			cgD3D9BindProgram(texture->shader.prg.v);
@@ -804,7 +828,11 @@ void gfx_draw_screen(BYTE forced) {
 			IDirect3DDevice9_UpdateSurface(d3d9.adapter->dev, d3d9.text.offscreen, NULL,
 					d3d9.text.map0, NULL);
 
-			d3d9_viewport_set(0, 0, d3d9.text.rect.w, d3d9.text.rect.h);
+			if (cfg->fullscreen) {
+				d3d9_viewport_set(0, 0, d3d9.text.rect.w, d3d9.text.rect.h);
+			} else {
+				d3d9_viewport_set(-gfx.vp.x, -gfx.vp.y, d3d9.text.rect.w, d3d9.text.rect.h);
+			}
 
 			cgD3D9BindProgram(d3d9.text.shader.prg.f);
 			cgD3D9BindProgram(d3d9.text.shader.prg.v);
@@ -831,17 +859,33 @@ void gfx_draw_screen(BYTE forced) {
 		IDirect3DDevice9_SetTexture(d3d9.adapter->dev, 0, NULL);
 
 		// swap buffers
-		if (IDirect3DDevice9_Present(d3d9.adapter->dev, NULL, NULL, NULL, NULL)
-				== D3DERR_DEVICELOST) {
-			if (IDirect3DDevice9_TestCooperativeLevel(d3d9.adapter->dev)
-					== D3DERR_DEVICENOTRESET) {
-				emu_pause(TRUE);
+		{
+			RECT viewp;
 
-				if (d3d9_context_create() == EXIT_ERROR) {
-					fprintf(stderr, "D3D9 : Unable to initialize d3d context\n");
+			if (cfg->fullscreen) {
+				viewp.left = 0;
+				viewp.top = 0;
+				viewp.right = gfx.w[VIDEO_MODE];
+				viewp.bottom = gfx.h[VIDEO_MODE];
+			} else {
+				viewp.left = -gfx.vp.x;
+				viewp.top = -gfx.vp.y;
+				viewp.right = gfx.w[VIDEO_MODE] + viewp.left;
+				viewp.bottom = gfx.h[VIDEO_MODE] + viewp.top;
+			}
+
+			if (IDirect3DDevice9_Present(d3d9.adapter->dev, &viewp, NULL, NULL, NULL)
+					== D3DERR_DEVICELOST) {
+				if (IDirect3DDevice9_TestCooperativeLevel(d3d9.adapter->dev)
+						== D3DERR_DEVICENOTRESET) {
+					emu_pause(TRUE);
+
+					if (d3d9_context_create() == EXIT_ERROR) {
+						fprintf(stderr, "D3D9 : Unable to initialize d3d context\n");
+					}
+
+					emu_pause(FALSE);
 				}
-
-				emu_pause(FALSE);
 			}
 		}
 
@@ -1076,9 +1120,9 @@ static BYTE d3d9_device_create(UINT width, UINT height) {
 
 	ZeroMemory(&d3dpp, sizeof(D3DPRESENT_PARAMETERS));
 	d3dpp.Windowed = TRUE;
-	d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
+	d3dpp.SwapEffect = D3DSWAPEFFECT_COPY;
 	d3dpp.hDeviceWindow = gui_screen_id();
-	d3dpp.BackBufferCount = 2;
+	d3dpp.BackBufferCount = 1;
 	d3dpp.BackBufferFormat = d3d9.adapter->display_mode.Format;
 	d3dpp.BackBufferWidth = width;
 	d3dpp.BackBufferHeight = height;
@@ -1110,7 +1154,17 @@ static BYTE d3d9_context_create(void) {
 
 	d3d9_context_delete();
 
-	if (d3d9_device_create(gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE]) == EXIT_ERROR) {
+	if (overscan.enabled && (!cfg->oscan_black_borders && !cfg->fullscreen)) {
+		// visto che lavorero' con texture piu' grandi del video mode
+		// setto un backbuffer piu' grande.
+		w = gfx.w[VIDEO_MODE] * 2;
+		h = gfx.h[VIDEO_MODE] * 2;
+	} else {
+		w = gfx.w[VIDEO_MODE];
+		h = gfx.h[VIDEO_MODE];
+	}
+
+	if (d3d9_device_create(w, h) == EXIT_ERROR) {
 		d3d9_context_delete();
 		return (EXIT_ERROR);
 	}
@@ -1125,11 +1179,11 @@ static BYTE d3d9_context_create(void) {
 	cgD3D9SetDevice(d3d9.adapter->dev);
 
 	if (cfg->filter == NO_FILTER) {
-		w = gfx.rows;
-		h = gfx.lines;
+		w = SCR_ROWS;
+		h = SCR_LINES;
 	} else {
-		w = gfx.w[CURRENT];
-		h = gfx.h[CURRENT];
+		w = gfx.w[NO_OVERSCAN];
+		h = gfx.h[NO_OVERSCAN];
 	}
 
 	D3DXMatrixIdentity(&identity);
@@ -1155,6 +1209,13 @@ static BYTE d3d9_context_create(void) {
 		vp->y = 0;
 		vp->w = gfx.w[VIDEO_MODE];
 		vp->h = gfx.h[VIDEO_MODE];
+
+		if (overscan.enabled && (!cfg->oscan_black_borders && !cfg->fullscreen)) {
+			vp->x = (-overscan.borders->left * gfx.x_width_pixel) * gfx.pixel_aspect_ratio;
+			vp->y = (-overscan.borders->up * cfg->scale);
+			vp->w = gfx.w[NO_OVERSCAN] * gfx.pixel_aspect_ratio;
+			vp->h = gfx.h[NO_OVERSCAN];
+		}
 
 		// configuro l'aspect ratio del fullscreen
 		if (cfg->fullscreen && !cfg->stretch) {

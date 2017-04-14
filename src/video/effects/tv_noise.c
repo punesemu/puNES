@@ -30,19 +30,19 @@ BYTE tv_noise_init(void) {
 	_color_RGB pRGB[NUM_COLORS];
 	WORD i;
 
-	if (!(turn_off.palette = malloc(NUM_COLORS * sizeof(uint32_t)))) {
+	if (!(turn_off_effect.palette = malloc(NUM_COLORS * sizeof(uint32_t)))) {
 		fprintf(stderr, "Unable to allocate the palette\n");
 		return (EXIT_ERROR);
 	}
-	palette = (uint32_t *) turn_off.palette;
+	palette = (uint32_t *) turn_off_effect.palette;
 
-	if (!(turn_off.ntsc = malloc(sizeof(nes_ntsc_t)))) {;
+	if (!(turn_off_effect.ntsc = malloc(sizeof(nes_ntsc_t)))) {;
 		fprintf(stderr, "Unable to allocate the palette\n");
 		return (EXIT_ERROR);
 	}
 
-	rgb_modifier((nes_ntsc_t *) turn_off.ntsc, pRGB, 0x1A, -0x20, -0x30, -0x20);
-	//rgb_modifier((nes_ntsc_t *) turn_off.ntsc, pRGB, 0x00, -0x20, -0x20, -0x20);
+	rgb_modifier((nes_ntsc_t *) turn_off_effect.ntsc, pRGB, 0x1A, -0x20, -0x30, -0x20);
+	//rgb_modifier((nes_ntsc_t *) turn_off_effect.ntsc, pRGB, 0x00, -0x20, -0x20, -0x20);
 
 	for (i = 0; i < NUM_COLORS; i++) {
 		palette[i] = gfx_color(255, pRGB[i].r, pRGB[i].g, pRGB[i].b);
@@ -51,13 +51,13 @@ BYTE tv_noise_init(void) {
 	return (EXIT_OK);
 }
 void tv_noise_quit(void) {
-	if (turn_off.palette) {
-		free(turn_off.palette);
-		turn_off.palette = NULL;
+	if (turn_off_effect.palette) {
+		free(turn_off_effect.palette);
+		turn_off_effect.palette = NULL;
 	}
-	if (turn_off.ntsc) {
-		free(turn_off.ntsc);
-		turn_off.ntsc = NULL;
+	if (turn_off_effect.ntsc) {
+		free(turn_off_effect.ntsc);
+		turn_off_effect.ntsc = NULL;
 	}
 }
 void tv_noise_effect(void) {

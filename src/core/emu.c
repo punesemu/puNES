@@ -558,13 +558,6 @@ void emu_set_title(uTCHAR *title, int len) {
 	}
 #endif
 
-#if defined (WITH_OPENGL)
-	if (cfg->scale != X1) {
-		ustrcat(title, uL(", "));
-		ustrcat(title, opt_rend[cfg->render].lname);
-	}
-#endif
-
 	ustrcat(title, uL(")"));
 }
 BYTE emu_turn_on(void) {

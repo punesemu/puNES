@@ -457,7 +457,6 @@ static void gui_pmenu_management(void) {
 		<< qt.ui->menu_Settings
 		<< qt.ui->menu_Mode
 		<< qt.ui->menu_Video
-		<< qt.ui->menu_Rendering
 		<< qt.ui->menu_FPS
 		<< qt.ui->menu_Frame_skip
 		<< qt.ui->menu_Scale

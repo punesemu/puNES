@@ -28,18 +28,18 @@ BYTE pause_init(void) {
 	_color_RGB pRGB[NUM_COLORS];
 	WORD i;
 
-	if (!(pause.palette = malloc(NUM_COLORS * sizeof(uint32_t)))) {
+	if (!(pause_effect.palette = malloc(NUM_COLORS * sizeof(uint32_t)))) {
 		fprintf(stderr, "Unable to allocate the palette\n");
 		return (EXIT_ERROR);
 	}
-	palette = (uint32_t *) pause.palette;
+	palette = (uint32_t *) pause_effect.palette;
 
-	if (!(pause.ntsc = malloc(sizeof(nes_ntsc_t)))) {;
+	if (!(pause_effect.ntsc = malloc(sizeof(nes_ntsc_t)))) {;
 		fprintf(stderr, "Unable to allocate the palette\n");
 		return (EXIT_ERROR);
 	}
 
-	rgb_modifier((nes_ntsc_t *) pause.ntsc, pRGB, 0x1A, -0x0A, -0x0A, -0x30);
+	rgb_modifier((nes_ntsc_t *) pause_effect.ntsc, pRGB, 0x1A, -0x0A, -0x0A, -0x30);
 
 	for (i = 0; i < NUM_COLORS; i++) {
 		palette[i] = gfx_color(255, pRGB[i].r, pRGB[i].g, pRGB[i].b);
@@ -48,12 +48,12 @@ BYTE pause_init(void) {
 	return (EXIT_OK);
 }
 void pause_quit(void) {
-	if (pause.palette) {
-		free(pause.palette);
-		pause.palette = NULL;
+	if (pause_effect.palette) {
+		free(pause_effect.palette);
+		pause_effect.palette = NULL;
 	}
-	if (pause.ntsc) {
-		free(pause.ntsc);
-		pause.ntsc = NULL;
+	if (pause_effect.ntsc) {
+		free(pause_effect.ntsc);
+		pause_effect.ntsc = NULL;
 	}
 }

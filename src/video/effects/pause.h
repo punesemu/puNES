@@ -27,10 +27,10 @@
 #define EXTERNC
 #endif
 
-EXTERNC struct _pause {
+EXTERNC struct _pause_effect {
 	void *palette;
 	void *ntsc;
-} pause;
+} pause_effect;
 
 EXTERNC BYTE pause_init(void);
 EXTERNC void pause_quit(void);

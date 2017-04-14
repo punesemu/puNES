@@ -398,33 +398,10 @@ BYTE input_rd_reg_zapper(BYTE openbus, WORD **screen_index, BYTE nport) {
 	}
 
 	if (!mouse.right) {
-#if defined (WITH_OPENGL)
-		if (gfx.opengl) {
-			gx -= gfx.vp.x;
-			gy -= gfx.vp.y;
-		}
-#elif defined (WITH_D3D9)
 		gx -= gfx.vp.x;
 		gy -= gfx.vp.y;
-#endif
-		x_zapper = gx / gfx.w_pr;
-		y_zapper = gy / gfx.h_pr;
-
-		if (overscan.enabled) {
-			x_zapper += overscan.borders->left;
-			y_zapper += overscan.borders->up;
-			/*
-			 * il filtro NTSC necessita di un'aggiustatina sia con
-			 * l'overscan abilitato che senza.
-			 */
-			if (cfg->filter == NTSC_FILTER) {
-				x_zapper += 1;
-			}
-		} else {
-			if (cfg->filter == NTSC_FILTER) {
-				x_zapper -= 1;
-			}
-		}
+		x_zapper = (float) gx / gfx.w_pr;
+		y_zapper = (float) gy / gfx.h_pr;
 	}
 
 	//fprintf(stderr, "x : %d (%d)    %d (%d)   \r", x_zapper, gui.x, y_zapper, gui.y);
@@ -535,33 +512,10 @@ BYTE input_rd_reg_vs_zapper(BYTE openbus, WORD **screen_index, BYTE nport) {
 	}
 
 	if (!mouse.right) {
-#if defined (WITH_OPENGL)
-		if (gfx.opengl) {
-			gx -= gfx.vp.x;
-			gy -= gfx.vp.y;
-		}
-#elif defined (WITH_D3D9)
 		gx -= gfx.vp.x;
 		gy -= gfx.vp.y;
-#endif
-		x_zapper = gx / gfx.w_pr;
-		y_zapper = gy / gfx.h_pr;
-
-		if (overscan.enabled) {
-			x_zapper += overscan.borders->left;
-			y_zapper += overscan.borders->up;
-			/*
-			 * il filtro NTSC necessita di un'aggiustatina sia con
-			 * l'overscan abilitato che senza.
-			 */
-			if (cfg->filter == NTSC_FILTER) {
-				x_zapper += 1;
-			}
-		} else {
-			if (cfg->filter == NTSC_FILTER) {
-				x_zapper -= 1;
-			}
-		}
+		x_zapper = (float) gx / gfx.w_pr;
+		y_zapper = (float) gy / gfx.h_pr;
 	}
 
 	if ((x_zapper <= 0) || (x_zapper >= SCR_ROWS) || (y_zapper <= 0) || (y_zapper >= SCR_LINES)) {

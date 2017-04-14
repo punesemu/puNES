@@ -142,13 +142,6 @@ void mainWindow::setup() {
 	grp->addAction(ui->action_NTSC);
 	grp->addAction(ui->action_Dendy);
 	grp->addAction(ui->action_Mode_Auto);
-#if defined (WITH_OPENGL)
-	// Settings/Video/Rendering
-	grp = new QActionGroup(this);
-	grp->setExclusive(true);
-	grp->addAction(ui->action_Rend_Software);
-	grp->addAction(ui->action_Rend_GLSL);
-#endif
 	// Settings/Video/FPS
 	grp = new QActionGroup(this);
 	grp->setExclusive(true);
@@ -612,14 +605,6 @@ void mainWindow::update_menu_nes() {
 		}
 	}
 
-#if defined (WITH_OPENGL)
-	if (gfx.opengl) {
-		ui->action_Fullscreen->setEnabled(true);
-	} else {
-		ui->action_Fullscreen->setEnabled(false);
-	}
-#endif
-
 	if (info.pause_from_gui == TRUE) {
 		ui->action_Pause->setChecked(true);
 	} else {
@@ -645,23 +630,6 @@ void mainWindow::update_menu_settings() {
 	} else if (machine.type == DENDY) {
 		ui->action_Dendy->setChecked(true);
 	}
-	// Rendering
-#if defined (WITH_OPENGL)
-	if (opengl.supported) {
-		ui->action_Rend_GLSL->setEnabled(true);
-	} else {
-		ui->action_Rend_GLSL->setEnabled(false);
-	}
-
-	if (opengl.supported && gfx.opengl) {
-		ui->action_Rend_GLSL->setChecked(true);
-	} else {
-		ui->action_Rend_Software->setChecked(true);
-	}
-#elif defined (WITH_D3D9)
-	// nascondo il submenu rendering
-	ui->menu_Rendering->menuAction()->setVisible(false);
-#endif
 	// FPS
 	switch (cfg->fps) {
 		case 0:
@@ -806,16 +774,6 @@ void mainWindow::update_menu_settings() {
 			break;
 	}
 
-#if defined (WITH_OPENGL)
-	if (gfx.opengl && (cfg->filter != NTSC_FILTER)) {
-		state = true;
-	} else {
-		state = false;
-	}
-	ui->menu_Pixel_Aspect_Ratio->setEnabled(state);
-
-	if ((opengl.supported && gfx.opengl) && (cfg->pixel_aspect_ratio != PAR11)) {
-#elif defined (WITH_D3D9)
 	if (cfg->filter != NTSC_FILTER) {
 		state = true;
 	} else {
@@ -824,7 +782,6 @@ void mainWindow::update_menu_settings() {
 	ui->menu_Pixel_Aspect_Ratio->setEnabled(state);
 
 	if (cfg->pixel_aspect_ratio != PAR11) {
-#endif
 		ui->action_PAR_Soft_Stretch->setEnabled(true);
 		if (cfg->PAR_soft_stretch == TRUE) {
 			ui->action_PAR_Soft_Stretch->setChecked(true);
@@ -835,6 +792,7 @@ void mainWindow::update_menu_settings() {
 		ui->action_PAR_Soft_Stretch->setEnabled(false);
 	}
 	// Settings/Video/Overscan
+	ui->action_Oscan_Black_Borders_in_Window->setChecked(cfg->oscan_black_borders);
 	switch (cfg->oscan) {
 		case OSCAN_ON:
 			ui->action_Oscan_On->setChecked(true);
@@ -907,7 +865,7 @@ void mainWindow::update_menu_settings() {
 			break;
 		}
 	}
-#if defined (WITH_OPENGL)
+
 	if (cfg->scale != X1) {
 		state = true;
 	} else {
@@ -918,14 +876,6 @@ void mainWindow::update_menu_settings() {
 	ui->action_NTSC_RGB->setEnabled(state);
 
 	// Settings/Video/Shaders
-	if (gfx.opengl && (cfg->scale != X1)) {
-#elif defined (WITH_D3D9)
-	if (cfg->scale != X1) {
-#endif
-		state = true;
-	} else {
-		state = false;
-	}
 	ui->menu_Shader->setEnabled(state);
 
 	ui->action_No_Shader->setEnabled(state);
@@ -1013,20 +963,6 @@ void mainWindow::update_menu_settings() {
 			break;
 	}
 	// Settings/Video/[VSync, Interpolation, Text on screen, Disable sRGB FBO]
-#if defined (WITH_OPENGL)
-	if (gfx.opengl) {
-		state = true;
-	} else {
-		state = false;
-	}
-	ui->action_VSync->setEnabled(state);
-	ui->action_Interpolation->setEnabled(state);
-	ui->action_Disable_sRGB_FBO->setEnabled(state);
-	ui->action_Fullscreen_in_window->setEnabled(state);
-	ui->action_Stretch_in_fullscreen->setEnabled(state);
-#else
-	ui->action_Disable_sRGB_FBO->setVisible(false);
-#endif
 	ui->action_Disable_emphasis_swap_PAL->setChecked(cfg->disable_swap_emphasis_pal);
 	ui->action_VSync->setChecked(cfg->vsync);
 	ui->action_Interpolation->setChecked(cfg->interpolation);
@@ -1036,6 +972,8 @@ void mainWindow::update_menu_settings() {
 	ui->action_Disable_sepia_color_on_pause->setChecked(cfg->disable_sepia_color);
 #if defined (WITH_OPENGL)
 	ui->action_Disable_sRGB_FBO->setChecked(cfg->disable_srgb_fbo);
+#else
+	ui->action_Disable_sRGB_FBO->setVisible(false);
 #endif
 	ui->action_Fullscreen_in_window->setChecked(cfg->fullscreen_in_window);
 	ui->action_Stretch_in_fullscreen->setChecked(cfg->stretch);
@@ -1473,11 +1411,6 @@ void mainWindow::connect_menu_signals() {
 	connect_action(ui->action_NTSC, NTSC, SLOT(s_set_mode()));
 	connect_action(ui->action_Dendy, DENDY, SLOT(s_set_mode()));
 	connect_action(ui->action_Mode_Auto, AUTO, SLOT(s_set_mode()));
-#if defined (WITH_OPENGL)
-	// Settings/Video/Rendering
-	connect_action(ui->action_Rend_Software, RENDER_SOFTWARE, SLOT(s_set_rendering()));
-	connect_action(ui->action_Rend_GLSL, RENDER_GLSL, SLOT(s_set_rendering()));
-#endif
 	// Settings/Video/FPS
 	connect_action(ui->action_FPS_Default, FPS_DEFAULT, SLOT(s_set_fps()));
 	connect_action(ui->action_FPS_60, FPS_60, SLOT(s_set_fps()));
@@ -1522,6 +1455,7 @@ void mainWindow::connect_menu_signals() {
 	connect_action(ui->action_PAR_118, PAR118, SLOT(s_set_par()));
 	connect_action(ui->action_PAR_Soft_Stretch, SLOT(s_set_par_stretch()));
 	// Settings/Video/Overscan
+	connect_action(ui->action_Oscan_Black_Borders_in_Window, SLOT(s_set_overscan_black_borders()));
 	connect_action(ui->action_Oscan_Default, OSCAN_DEFAULT, SLOT(s_set_overscan()));
 	connect_action(ui->action_Oscan_On, OSCAN_ON, SLOT(s_set_overscan()));
 	connect_action(ui->action_Oscan_Off, OSCAN_OFF, SLOT(s_set_overscan()));
@@ -1708,11 +1642,6 @@ void mainWindow::s_set_fullscreen() {
 	if (gui.in_update) {
 		return;
 	}
-#if defined (WITH_OPENGL)
-	if (!gfx.opengl) {
-		return;
-	}
-#endif
 
 	if ((cfg->fullscreen == NO_FULLSCR) || (cfg->fullscreen == NO_CHANGE)) {
 		int screenNumber = qApp->desktop()->screenNumber(this);
@@ -2082,24 +2011,6 @@ void mainWindow::s_set_mode() {
 #endif
 	}
 }
-void mainWindow::s_set_rendering() {
-#if defined (WITH_OPENGL)
-	int rendering = QVariant(((QObject *)sender())->property("myValue")).toInt();
-
-	if (cfg->render == rendering) {
-		return;
-	}
-
-	gfx_set_render(rendering);
-	cfg->render = rendering;
-
-#if defined (__WIN32__)
-	gfx_sdlwe_set(SDLWIN_SWITCH_RENDERING, SDLWIN_NONE);
-#else
-	gfx_SWITCH_RENDERING();
-#endif
-#endif
-}
 void mainWindow::s_set_fps() {
 	int fps = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
@@ -2147,6 +2058,12 @@ void mainWindow::s_set_par() {
 void mainWindow::s_set_par_stretch() {
 	cfg->PAR_soft_stretch = !cfg->PAR_soft_stretch;
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
+}
+void mainWindow::s_set_overscan_black_borders() {
+	cfg->oscan_black_borders = !cfg->oscan_black_borders;
+	if (overscan.enabled) {
+		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
+	}
 }
 void mainWindow::s_set_overscan() {
 	int oscan = QVariant(((QObject *)sender())->property("myValue")).toInt();
@@ -2303,11 +2220,6 @@ void mainWindow::s_set_vsync() {
 #endif
 }
 void mainWindow::s_set_interpolation() {
-#if defined (WITH_OPENGL)
-	if (cfg->render == RENDER_SOFTWARE) {
-		return;
-	}
-#endif
 	cfg->interpolation = !cfg->interpolation;
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 }

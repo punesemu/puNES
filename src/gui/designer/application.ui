@@ -131,17 +131,6 @@
       <iconset resource="application.qrc">
        <normaloff>:/icon/icons/video.png</normaloff>:/icon/icons/video.png</iconset>
      </property>
-     <widget class="pMenu" name="menu_Rendering">
-      <property name="title">
-       <string>&amp;Rendering</string>
-      </property>
-      <property name="icon">
-       <iconset resource="application.qrc">
-        <normaloff>:/icon/icons/rendering.png</normaloff>:/icon/icons/rendering.png</iconset>
-      </property>
-      <addaction name="action_Rend_Software"/>
-      <addaction name="action_Rend_GLSL"/>
-     </widget>
      <widget class="pMenu" name="menu_FPS">
       <property name="title">
        <string>&amp;FPS</string>
@@ -246,6 +235,8 @@
       <addaction name="separator"/>
       <addaction name="menu_Oscan_Default_Value"/>
       <addaction name="separator"/>
+      <addaction name="action_Oscan_Black_Borders_in_Window"/>
+      <addaction name="separator"/>
       <addaction name="action_Oscan_Set_Borders"/>
      </widget>
      <widget class="pMenu" name="menu_Software_Filters">
@@ -314,7 +305,6 @@
       <addaction name="action_Palette_Save_File"/>
       <addaction name="action_Palette_Load_File"/>
      </widget>
-     <addaction name="menu_Rendering"/>
      <addaction name="menu_FPS"/>
      <addaction name="menu_Frame_skip"/>
      <addaction name="separator"/>
@@ -724,22 +714,6 @@
    </property>
    <property name="text">
     <string>&amp;Auto</string>
-   </property>
-  </action>
-  <action name="action_Rend_Software">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>&amp;Software</string>
-   </property>
-  </action>
-  <action name="action_Rend_GLSL">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>OpenGL &amp;GLSL</string>
    </property>
   </action>
   <action name="action_FPS_Default">
@@ -2212,6 +2186,14 @@
    </property>
    <property name="text">
     <string>No Shade&amp;r</string>
+   </property>
+  </action>
+  <action name="action_Oscan_Black_Borders_in_Window">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Black borders in window</string>
    </property>
   </action>
  </widget>

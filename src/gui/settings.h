@@ -43,14 +43,12 @@ enum set_element {
 	SET_BCK_PAUSE,
 	SET_CHEAT_MODE,
 	SET_SAVE_SETTINGS_ON_EXIT,
-#if defined (WITH_OPENGL)
-	SET_RENDERING,
-#endif
 	SET_FPS,
 	SET_FRAMESKIP,
 	SET_SCALE,
 	SET_PAR,
 	SET_PAR_SOFT_STRETCH,
+	SET_OVERSCAN_BLACK_BORDERS,
 	SET_OVERSCAN_DEFAULT,
 	SET_OVERSCAN_BRD_NTSC,
 	SET_OVERSCAN_BRD_PAL,
@@ -302,12 +300,6 @@ static const _opt opt_ff_velocity[] = {
 	{NULL, uL("4x"), FF_4X},
 	{NULL, uL("5x"), FF_5X}
 };
-#if defined (WITH_OPENGL)
-static const _opt opt_rend[] = {
-	{uL("Software"), uL("software"), RENDER_SOFTWARE},
-	{uL("GLSL")    , uL("glsl")    , RENDER_GLSL}
-};
-#endif
 static const _opt opt_fps[] = {
 	{NULL, uL("default"), FPS_DEFAULT},
 	{NULL, uL("60")     , FPS_60},
@@ -506,14 +498,6 @@ static const _settings main_cfg[] = {
 		NULL,
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
-#if defined (WITH_OPENGL)
-	{
-		uL("video"), uL("rendering"), uL("glsl"),
-		uL("# possible values: software, glsl"),
-		uL("-r, --rendering           type of rendering     : software, glsl"),
-		{LENGTH(opt_rend), opt_rend}
-	},
-#endif
 	{
 		uL("video"), uL("frames per second"), uL("default"),
 		uL("# possible values: default, 58, 57. ..., 45, 44"),
@@ -547,6 +531,13 @@ static const _settings main_cfg[] = {
 		uL("    --par-soft-stretch    improves the          : yes, no" NEWLINE)
 		uL("                          stretched image"),
 		{LENGTH(opt_no_yes), opt_no_yes}
+	},
+	{
+		uL("video"), uL("overscan black borders in window"), uL("off"),
+		uL("# possible values: on, off"),
+		uL("    --overscan-blk-brd    enable black borders  : on, off" NEWLINE)
+		uL("                          in window mode"),
+		{LENGTH(opt_off_on), opt_off_on}
 	},
 	{
 		uL("video"), uL("overscan default"), uL("off"),

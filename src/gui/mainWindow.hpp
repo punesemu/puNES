@@ -132,12 +132,12 @@ class mainWindow: public QMainWindow {
 		void s_set_apu_channels();
 		void s_set_ppu_hacks();
 		void s_set_mode();
-		void s_set_rendering();
 		void s_set_fps();
 		void s_set_fsk();
 		void s_set_scale();
 		void s_set_par();
 		void s_set_par_stretch();
+		void s_set_overscan_black_borders();
 		void s_set_overscan();
 		void s_set_overscan_borders();
 		void s_set_filter();

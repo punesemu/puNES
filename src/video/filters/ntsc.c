@@ -81,7 +81,7 @@ int burst_phase = 0;
 			((mixed >> 1) - (mixed >> 4 & mask_darken)) | mask_alpha;\
 }
 #define nes_ntsc(ntscin, factor) nes_ntscx##factor(ntscin, screen, SCR_ROWS, burst_phase, SCR_ROWS,\
-	lines, pix, pitch, bpp)
+	SCR_LINES, pix, pitch, bpp)
 
 /*
  * cio' che non utilizzo in questa funzione
@@ -90,10 +90,6 @@ int burst_phase = 0;
  */
 gfx_filter_function(ntsc_surface) {
 	int y;
-
-	if (overscan.enabled) {
-		screen += (SCR_ROWS * overscan.borders->up);
-	}
 
 	if (palette == NULL) {
 		palette = (void *) ntsc;

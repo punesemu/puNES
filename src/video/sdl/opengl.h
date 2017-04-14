@@ -173,8 +173,8 @@ typedef struct _texture_simple {
 	_shader shader;
 } _texture_simple;
 typedef struct _opengl {
-	BYTE supported;
 	GLfloat scale;
+	GLfloat x_width_pixel;
 
 	_math_matrix_4x4 mvp;
 
@@ -190,7 +190,6 @@ typedef struct _opengl {
 
 	struct _opengl_sdl {
 		SDL_Surface *surface;
-		Uint32 flags;
 	} sdl;
 
 	struct _opengl_screen {
@@ -237,18 +236,6 @@ typedef struct _opengl {
 #endif
 
 EXTERNC _opengl opengl;
-
-EXTERNC void opengl_init(void);
-EXTERNC BYTE opengl_context_create(SDL_Surface *src);
-EXTERNC void opengl_context_delete(void);
-
-EXTERNC void opengl_set_shader(GLuint shader);
-EXTERNC void opengl_draw_scene(SDL_Surface *surface);
-EXTERNC void opengl_text_clear(_txt_element *ele);
-EXTERNC void opengl_text_blit(_txt_element *ele, _rect *rect);
-EXTERNC int opengl_flip(SDL_Surface *surface);
-
-EXTERNC void opengl_screenshot(void);
 
 #undef EXTERNC
 

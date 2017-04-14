@@ -26,7 +26,6 @@ libvideo_a_SOURCES = \
 if WITH_OPENGL
 libvideo_a_SOURCES += \
 	sdl/gfx.c \
-	sdl/opengl.c \
 	sdl/opengl.h \
 	sdl/sdl_wid.h \
 	sdl/shdcode.h \

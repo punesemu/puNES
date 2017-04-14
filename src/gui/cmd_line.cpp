@@ -62,9 +62,6 @@ static struct _cl_option {
 	{ "filter",                req_arg, "i"},
 	{ "ntsc-format",           req_arg, "n"},
 	{ "palette",               req_arg, "p"},
-#if defined (WITH_OPENGL)
-	{ "rendering",             req_arg, "r"},
-#endif
 	{ "vsync",                 req_arg, "v"},
 	{ "pixel-aspect-ratio",    req_arg, "e"},
 	{ "interpolation",         req_arg, "j"},
@@ -101,7 +98,8 @@ static struct _cl_option {
 	{ "disable-new-menu",      req_arg,  0 },
 	{ "fullscreen-window",     req_arg,  0 },
 	{ "audio-output-device",   req_arg,  0 },
-	{ "shader",                req_arg,  0 }
+	{ "shader",                req_arg,  0 },
+	{ "overscan-blk-brd",      req_arg,  0 }
 };
 
 void cmd_line_parse(int argc, uTCHAR **argv) {
@@ -198,6 +196,8 @@ void cmd_line_parse(int argc, uTCHAR **argv) {
 					set_cpy_utchar_to_val(cfg_from_file.audio_output, SET_AUDIO_OUTPUT_DEVICE);
 				} else if (key == "shader") {
 					set_int(cfg_from_file.shader, SET_SHADER);
+				} else if (key == "overscan-blk-brd") {
+					set_int(cfg_from_file.oscan_black_borders, SET_OVERSCAN_BLACK_BORDERS);
 				}
 				break;
 			case 'a':
@@ -255,12 +255,6 @@ void cmd_line_parse(int argc, uTCHAR **argv) {
 			case 'q':
 				set_int(cfg_from_file.audio_quality, SET_AUDIO_QUALITY);
 				break;
-#if defined (WITH_OPENGL)
-			case 'r':
-				set_int(cfg_from_file.render, SET_RENDERING);
-				gfx_set_render(cfg_from_file.render);
-				break;
-#endif
 			case 's':
 				set_int(cfg_from_file.scale, SET_SCALE);
 				gfx.scale_before_fscreen = cfg_from_file.scale;
@@ -352,8 +346,8 @@ static void usage(QString name) {
 			uL("" uPERCENTs "\n")
 			uL("" uPERCENTs "\n")
 			uL("" uPERCENTs "\n")
-#if defined (WITH_OPENGL)
 			uL("" uPERCENTs "\n")
+#if defined (WITH_OPENGL)
 			uL("" uPERCENTs "\n")
 #endif
 	};
@@ -366,14 +360,12 @@ static void usage(QString name) {
 			main_cfg[SET_SCALE].hlp,
 			main_cfg[SET_PAR].hlp,
 			main_cfg[SET_PAR_SOFT_STRETCH].hlp,
+			main_cfg[SET_OVERSCAN_BLACK_BORDERS].hlp,
 			main_cfg[SET_OVERSCAN_DEFAULT].hlp,
 			main_cfg[SET_FILTER].hlp,
 			main_cfg[SET_NTSC_FORMAT].hlp,
 			main_cfg[SET_SHADER].hlp,
 			main_cfg[SET_PALETTE].hlp,
-#if defined (WITH_OPENGL)
-			main_cfg[SET_RENDERING].hlp,
-#endif
 			main_cfg[SET_SWAP_EMPHASIS_PAL].hlp,
 			main_cfg[SET_VSYNC].hlp,
 			main_cfg[SET_INTERPOLATION].hlp,

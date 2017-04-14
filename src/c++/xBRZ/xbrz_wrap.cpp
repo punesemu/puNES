@@ -19,10 +19,10 @@
 #include "c++/xBRZ/xbrz.h"
 
 extern "C" void xbrz_scale(BYTE factor, const WORD *src, uint32_t *trg, uint32_t *palette,
-		int no_overscan_width, int startx, int width, int height) {
+		int width, int height) {
 #if defined (WITH_D3D9)
-	xbrz::scale(factor, src, trg, palette, no_overscan_width, startx, width, height, xbrz::ColorFormat::ARGB);
+	xbrz::scale(factor, src, trg, palette, width, height, xbrz::ColorFormat::ARGB);
 #elif defined (WITH_OPENGL)
-	xbrz::scale(factor, src, trg, palette, no_overscan_width, startx, width, height, xbrz::ColorFormat::RGB);
+	xbrz::scale(factor, src, trg, palette, width, height, xbrz::ColorFormat::RGB);
 #endif
 }
