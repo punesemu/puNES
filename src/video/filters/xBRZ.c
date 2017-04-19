@@ -17,15 +17,11 @@
  */
 
 #include "video/filters/xBRZ.h"
-#include "overscan.h"
 
 void xBRZ_init(void) {
 	;
 }
 gfx_filter_function(xBRZ) {
-	if (factor == 1) {
-		return;
-	} else {
-		xbrz_scale(factor, screen, (uint32_t *) pix, (uint32_t *) palette, SCR_ROWS, SCR_LINES);
-	}
+	xbrz_scale(gfx.filter.factor, screen, (uint32_t *) pix, (uint32_t *) palette, SCR_ROWS,
+			SCR_LINES);
 }

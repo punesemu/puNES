@@ -26,8 +26,6 @@
 
 enum ntsc_mode { COMPOSITE, SVIDEO, RGBMODE };
 
-static const BYTE ntsc_width_pixel[5] = {0, 0, 7, 10, 14};
-
 #if defined (__cplusplus)
 #define EXTERNC extern "C"
 #else

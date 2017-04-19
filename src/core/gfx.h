@@ -19,8 +19,8 @@
 /* definizione funzione virtuale */
 #if !defined (gfx_filter_function)
 #define gfx_filter_function(name)\
-	void name(WORD *screen, WORD **screen_index, void *palette, BYTE bpp, uint32_t pitch,\
-	void *pix, WORD width, WORD height, BYTE factor)
+	void name(WORD *screen, WORD **screen_index, void *palette, uint32_t pitch, void *pix,\
+	WORD width, WORD height)
 #endif
 
 #ifndef GFX_H_
@@ -92,7 +92,7 @@ enum shader_type {
 };
 
 enum overcan_type { OSCAN_OFF, OSCAN_ON, OSCAN_DEFAULT, OSCAN_DEFAULT_OFF, OSCAN_DEFAULT_ON };
-enum gfx_info_type { CURRENT, NO_OVERSCAN, MONITOR, VIDEO_MODE };
+enum gfx_info_type { CURRENT, NO_OVERSCAN, MONITOR, VIDEO_MODE, PASS0 };
 enum no_change { NO_CHANGE = 255 };
 #if defined (WITH_OPENGL) && defined (__WIN32__)
 enum sdl_win_event_type {
@@ -125,16 +125,20 @@ EXTERNC struct _gfx {
 	BYTE scale_before_fscreen;
 	BYTE type_of_fscreen_in_use;
 	BYTE bit_per_pixel;
-	float x_width_pixel;
+	float width_pixel;
 	WORD rows, lines;
-	SDBWORD w[4], h[4];
+	SDBWORD w[5], h[5];
 	float w_pr, h_pr;
 	float pixel_aspect_ratio;
 	_viewport vp;
 
 	uint32_t *palette;
 
-	gfx_filter_function((*filter));
+	struct _gfx_filter {
+		gfx_filter_function((*func));
+		BYTE factor;
+		float width_pixel;
+	} filter;
 
 	uTCHAR last_shader_file[LENGTH_FILE_NAME_LONG];
 } gfx;

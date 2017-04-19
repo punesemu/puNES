@@ -512,10 +512,7 @@ static const _settings main_cfg[] = {
 	},
 	{
 		uL("video"), uL("size window"), uL("2x"),
-		uL("# possible values: 1x, 2x, 3x, 4x, 5x, 6x" NEWLINE)
-		uL("# Note : 1x works only with \'filter=none\'" NEWLINE)
-		uL("# and software filters ScaleXX, HqXX and NTSC" NEWLINE)
-		uL("# don't supports 5x and 6x."),
+		uL("# possible values: 1x, 2x, 3x, 4x, 5x, 6x"),
 		uL("-s, --size                window size           : 1x, 2x, 3x, 4x, 5x, 6x"),
 		{LENGTH(opt_scale), opt_scale}
 	},

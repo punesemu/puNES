@@ -56,52 +56,9 @@ static void INLINE gfx_SCALE(int scale) {
 	gfx_set_screen(scale, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 }
 static void INLINE gfx_FILTER(int filter) {
-	switch (filter) {
-		case NO_FILTER:
-			gfx_set_screen(NO_CHANGE, NO_FILTER, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
-			break;
-		case SCALE2X:
-			gfx_set_screen(X2, SCALE2X, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
-			break;
-		case SCALE3X:
-			gfx_set_screen(X3, SCALE3X, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
-			break;
-		case SCALE4X:
-			gfx_set_screen(X4, SCALE4X, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
-			break;
-		case HQ2X:
-			gfx_set_screen(X2, HQ2X, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
-			break;
-		case HQ3X:
-			gfx_set_screen(X3, HQ3X, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
-			break;
-		case HQ4X:
-			gfx_set_screen(X4, HQ4X, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
-			break;
-		case NTSC_FILTER:
-			gfx_set_screen(NO_CHANGE, NTSC_FILTER, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
-			if (cfg->filter == NTSC_FILTER) {
-				ntsc_set(NULL, cfg->ntsc_format, 0, 0, (BYTE *) palette_RGB, 0);
-			}
-			break;
-		case XBRZ2X:
-			gfx_set_screen(X2, XBRZ2X, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
-			break;
-		case XBRZ3X:
-			gfx_set_screen(X3, XBRZ3X, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
-			break;
-		case XBRZ4X:
-			gfx_set_screen(X4, XBRZ4X, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
-			break;
-		case XBRZ5X:
-			gfx_set_screen(X5, XBRZ5X, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
-			break;
-		case XBRZ6X:
-			gfx_set_screen(X6, XBRZ6X, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
-			break;
-		default:
-			gfx_set_screen(NO_CHANGE, filter, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
-			break;
+	gfx_set_screen(NO_CHANGE, filter, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
+	if (cfg->filter == NTSC_FILTER) {
+		ntsc_set(NULL, cfg->ntsc_format, 0, 0, (BYTE *) palette_RGB, 0);
 	}
 }
 static void INLINE gfx_SHADER(int shader) {

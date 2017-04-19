@@ -173,9 +173,6 @@ typedef struct _texture_simple {
 	_shader shader;
 } _texture_simple;
 typedef struct _opengl {
-	GLfloat scale;
-	GLfloat x_width_pixel;
-
 	_math_matrix_4x4 mvp;
 
 	struct _attribsarray {

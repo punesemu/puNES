@@ -618,8 +618,6 @@ void mainWindow::update_menu_nes() {
 	}
 }
 void mainWindow::update_menu_settings() {
-	bool state;
-
 	// Mode
 	if (cfg->mode == AUTO) {
 		ui->action_Mode_Auto->setChecked(true);
@@ -721,21 +719,6 @@ void mainWindow::update_menu_settings() {
 			break;
 	}
 	// Scale
-	if (cfg->filter != NO_FILTER) {
-		ui->action_1x->setEnabled(false);
-	} else {
-		ui->action_1x->setEnabled(true);
-	}
-
-	if (((cfg->filter >= SCALE2X) && (cfg->filter <= SCALE4X)) ||
-			((cfg->filter >= HQ2X) && (cfg->filter <= HQ4X)) || (cfg->filter == NTSC_FILTER)) {
-		ui->action_5x->setEnabled(false);
-		ui->action_6x->setEnabled(false);
-	} else {
-		ui->action_5x->setEnabled(true);
-		ui->action_6x->setEnabled(true);
-	}
-
 	if (cfg->fullscreen == NO_FULLSCR) {
 		switch (cfg->scale) {
 			case X1:
@@ -775,11 +758,10 @@ void mainWindow::update_menu_settings() {
 	}
 
 	if (cfg->filter != NTSC_FILTER) {
-		state = true;
+		ui->menu_Pixel_Aspect_Ratio->setEnabled(true);
 	} else {
-		state = false;
+		ui->menu_Pixel_Aspect_Ratio->setEnabled(false);
 	}
-	ui->menu_Pixel_Aspect_Ratio->setEnabled(state);
 
 	if (cfg->pixel_aspect_ratio != PAR11) {
 		ui->action_PAR_Soft_Stretch->setEnabled(true);
@@ -865,38 +847,13 @@ void mainWindow::update_menu_settings() {
 			break;
 		}
 	}
-
-	if (cfg->scale != X1) {
-		state = true;
-	} else {
-		state = false;
-	}
-	ui->action_NTSC_Composite->setEnabled(state);
-	ui->action_NTSC_SVideo->setEnabled(state);
-	ui->action_NTSC_RGB->setEnabled(state);
-
 	// Settings/Video/Shaders
-	ui->menu_Shader->setEnabled(state);
-
-	ui->action_No_Shader->setEnabled(state);
-	ui->action_Shader_CRT_Dotmask->setEnabled(state);
-	ui->action_Shader_CRT_Scanlines->setEnabled(state);
-	ui->action_Shader_CRT_With_Curve->setEnabled(state);
-	ui->action_Shader_Emboss->setEnabled(state);
-	ui->action_Shader_Noise->setEnabled(state);
-	ui->action_Shader_NTSC_2Phase_Composite->setEnabled(state);
-	ui->action_Shader_Old_TV->setEnabled(state);
-	ui->action_Shader_File->setEnabled(state);
-	ui->action_Shader_Load_File->setEnabled(state);
-
-	if (state == true) {
-		if (ustrlen(cfg->shader_file) != 0) {
-			ui->action_Shader_File->setText(QFileInfo(uQString(cfg->shader_file)).baseName());
-			ui->action_Shader_File->setEnabled(true);
-		} else {
-			ui->action_Shader_File->setText(tr("[Select a file]"));
-			ui->action_Shader_File->setEnabled(false);
-		}
+	if (ustrlen(cfg->shader_file) != 0) {
+		ui->action_Shader_File->setText(QFileInfo(uQString(cfg->shader_file)).baseName());
+		ui->action_Shader_File->setEnabled(true);
+	} else {
+		ui->action_Shader_File->setText(tr("[Select a file]"));
+		ui->action_Shader_File->setEnabled(false);
 	}
 	switch (cfg->shader) {
 		case NO_SHADER:
@@ -2003,7 +1960,9 @@ void mainWindow::s_set_mode() {
 	machine = machinedb[mode - 1];
 
 	if (reset) {
-		text_add_line_info(1, "switched to [green]%s", opt_mode[machine.type].lname);
+		QString ascii = uQString(opt_mode[machine.type].lname);
+
+		text_add_line_info(1, "switched to [green]%s", ascii.toAscii().constData());
 #if defined (WITH_OPENGL) && defined (__WIN32__)
 		gfx_sdlwe_set(SDLWIN_SWITCH_MODE, SDLWIN_NONE);
 #else
@@ -2038,6 +1997,10 @@ void mainWindow::s_set_fsk() {
 }
 void mainWindow::s_set_scale() {
 	int scale = QVariant(((QObject *)sender())->property("myValue")).toInt();
+
+	if (cfg->fullscreen) {
+		return;
+	}
 
 #if defined (WITH_OPENGL) && defined (__WIN32__)
 	gfx_sdlwe_set(SDLWIN_SCALE, scale);

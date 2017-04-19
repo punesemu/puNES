@@ -35,17 +35,6 @@
 #include "video/effects/tv_noise.h"
 
 #define D3D9_ADAPTER(i) (_d3d9_adapter *) ((BYTE *) d3d9.array + (i * sizeof(_d3d9_adapter)))
-#define ntsc_width(wdt, a)\
-	wdt = 0;\
-	if (filter == NTSC_FILTER) {\
-		wdt = NES_NTSC_OUT_WIDTH(SCR_ROWS, a);\
-		if (overscan.enabled) {\
-			wdt -= ((float) a / (float) nes_ntsc_in_chunk) *\
-					(overscan.borders->left + overscan.borders->right);\
-		}\
-		gfx.w[CURRENT] = wdt;\
-		gfx.w[NO_OVERSCAN] = NES_NTSC_OUT_WIDTH(SCR_ROWS, a);\
-	}
 
 static void d3d9_shader_cg_error_handler(void);
 static BYTE d3d9_device_create(UINT width, UINT height);
@@ -70,11 +59,6 @@ INLINE static void d3d9_shader_param_set(const _texture *texture, UINT fcountmod
 
 BYTE gfx_init(void) {
 	gfx.save_screenshot = FALSE;
-
-	// casi particolari provenienti dal settings_file_parse() e cmd_line_parse()
-	if ((cfg->scale == X1) && (cfg->filter != NO_FILTER)) {
-		cfg->scale = X2;
-	}
 
 	if (gui_create() == EXIT_ERROR) {
 		MessageBox(NULL, "Gui initialization failed", "Error!", MB_ICONEXCLAMATION | MB_OK);
@@ -320,44 +304,32 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 		switch (filter) {
 			case NO_FILTER:
 			default:
-				gfx.filter = scale_surface;
-				// se sto passando dal filtro ntsc ad un'altro, devo
-				// ricalcolare la larghezza del video mode quindi
-				// forzo il controllo del fattore di scala.
-				if (cfg->filter == NTSC_FILTER) {
-					// devo reimpostare la larghezza del video mode
-					scale = cfg->scale;
-				}
+				gfx.filter.func = scale_surface;
+				gfx.filter.factor = X1;
 				break;
 			case SCALE2X:
 			case SCALE3X:
 			case SCALE4X:
-				gfx.filter = scaleNx;
+				gfx.filter.func = scaleNx;
+				gfx.filter.factor = filter + 1;
 				break;
 			case HQ2X:
 			case HQ3X:
 			case HQ4X:
-				gfx.filter = hqNx;
+				gfx.filter.func = hqNx;
+				gfx.filter.factor = filter - 2;
 				break;
 			case XBRZ2X:
 			case XBRZ3X:
 			case XBRZ4X:
 			case XBRZ5X:
 			case XBRZ6X:
-				gfx.filter = xBRZ;
+				gfx.filter.func = xBRZ;
+				gfx.filter.factor = filter - 6;
 				break;
 			case NTSC_FILTER:
-				gfx.filter = ntsc_surface;
-				// il fattore di scala deve essere gia' stato
-				// inizializzato almeno una volta.
-				if (cfg->scale != NO_CHANGE) {
-					// devo reimpostare la larghezza del video mode
-					scale = cfg->scale;
-				} else if (scale == NO_CHANGE) {
-					// se scale e new_scale sono uguali a NO_CHANGE,
-					// imposto un default.
-					scale = X2;
-				}
+				gfx.filter.func = ntsc_surface;
+				gfx.filter.factor = X2;
 				break;
 		}
 		// forzo il controllo del fattore di scale
@@ -387,63 +359,38 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 		scale = cfg->scale;
 	}
 	if ((scale != cfg->scale) || info.on_cfg || force_scale) {
-
-#define ctrl_software_filter_scale(scalexf, hqxf, xbrzxf, ntsc)\
-	if ((filter >= SCALE2X) && (filter <= SCALE4X)) {\
-		filter = scalexf;\
-	} else if ((filter >= HQ2X) && (filter <= HQ4X)) {\
-		filter = hqxf;\
-	} else if ((filter >= XBRZ2X) && (filter <= XBRZ6X)) {\
-		filter = xbrzxf;\
-	} else if (filter == NTSC_FILTER) {\
-		filter = ntsc;\
-	}
-
-		switch (scale) {
-			case X1:
-				// il fattore di scala a 1 e' possibile solo senza filtro
-				if (filter != NO_FILTER) {
-					// con un fattore di scala X1 effect deve essere
-					// sempre impostato su scale_surface.
-					gfx.filter = scale_surface;
-					return;
-				}
-				set_mode = TRUE;
-				break;
-			case X2:
-				ctrl_software_filter_scale(SCALE2X, HQ2X, XBRZ2X, NTSC_FILTER)
-				ntsc_width(width, ntsc_width_pixel[scale])
-				set_mode = TRUE;
-				break;
-			case X3:
-				ctrl_software_filter_scale(SCALE3X, HQ3X, XBRZ3X, NTSC_FILTER)
-				ntsc_width(width, ntsc_width_pixel[scale])
-				set_mode = TRUE;
-				break;
-			case X4:
-				ctrl_software_filter_scale(SCALE4X, HQ4X, XBRZ4X, NTSC_FILTER)
-				ntsc_width(width, ntsc_width_pixel[scale])
-				set_mode = TRUE;
-				break;
-			case X5:
-				ctrl_software_filter_scale(NO_FILTER, NO_FILTER, XBRZ5X, NO_FILTER)
-				ntsc_width(width, ntsc_width_pixel[scale])
-				set_mode = TRUE;
-				break;
-			case X6:
-				ctrl_software_filter_scale(NO_FILTER, NO_FILTER, XBRZ6X, NO_FILTER)
-				ntsc_width(width, ntsc_width_pixel[scale])
-				set_mode = TRUE;
-				break;
-		}
-		if (!width) {
+		if (filter == NTSC_FILTER) {
+			width = gfx.w[PASS0] = gfx.w[NO_OVERSCAN] = NES_NTSC_OUT_WIDTH(SCR_ROWS);
+			gfx.filter.width_pixel = (float) nes_ntsc_out_chunk / (float) nes_ntsc_in_chunk;
+			if (overscan.enabled) {
+				width -= ((float) (overscan.borders->left + overscan.borders->right) *
+						gfx.filter.width_pixel);
+			}
+			switch (scale) {
+				case X2:
+					gfx.width_pixel = gfx.filter.width_pixel;
+					break;
+				default:
+					width = ((float) width / 2.0f) * (float) scale;
+					gfx.w[NO_OVERSCAN] = ((float) gfx.w[NO_OVERSCAN] / 2.0f) * (float) scale;
+					gfx.width_pixel = (gfx.filter.width_pixel / 2.0f) * (float) scale;
+					break;
+			}
+		} else {
 			width = gfx.rows * scale;
-			gfx.w[CURRENT] = width;
 			gfx.w[NO_OVERSCAN] = SCR_ROWS * scale;
+			gfx.w[PASS0] = SCR_ROWS * gfx.filter.factor;
+			gfx.filter.width_pixel = gfx.filter.factor;
+			gfx.width_pixel = scale;
 		}
+		gfx.w[CURRENT] = width;
+
 		height = gfx.lines * scale;
 		gfx.h[CURRENT] = height;
 		gfx.h[NO_OVERSCAN] = SCR_LINES * scale;
+		gfx.h[PASS0] = SCR_LINES * gfx.filter.factor;
+
+		set_mode = TRUE;
 	}
 
 	// paletta
@@ -575,21 +522,7 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 	}
 
 	{
-		d3d9.scale = cfg->scale;
 		gfx.PSS = ((cfg->pixel_aspect_ratio != PAR11) && cfg->PAR_soft_stretch) ? TRUE : FALSE;
-
-		if (filter == NO_FILTER) {
-			d3d9.scale = X1;
-			d3d9.x_width_pixel = X1;
-			gfx.x_width_pixel = scale;
-			gfx.filter = scale_surface;
-		} else if (filter == NTSC_FILTER) {
-			d3d9.x_width_pixel = (float) ntsc_width_pixel[scale] / (float) nes_ntsc_in_chunk;
-			gfx.x_width_pixel = d3d9.x_width_pixel;
-		} else {
-			d3d9.x_width_pixel = scale;
-			gfx.x_width_pixel = scale;
-		}
 
 		if (shaders_set(shader) == EXIT_ERROR) {
 			umemcpy(cfg->shader_file, gfx.last_shader_file, usizeof(cfg->shader_file));
@@ -721,15 +654,13 @@ void gfx_draw_screen(BYTE forced) {
 			// lock della surface in memoria
 			IDirect3DSurface9_LockRect(scrtex->offscreen, &lrect, NULL, D3DLOCK_DISCARD);
 			// applico l'effetto
-			gfx.filter(screen.data,
+			gfx.filter.func(screen.data,
 					screen.line,
 					palette,
-					gfx.bit_per_pixel,
 					lrect.Pitch,
 					lrect.pBits,
 					scrtex->rect.base.w,
-					scrtex->rect.base.h,
-					d3d9.scale);
+					scrtex->rect.base.h);
 			// unlock della surface in memoria
 			IDirect3DSurface9_UnlockRect(scrtex->offscreen);
 			// aggiorno la texture dello schermo
@@ -737,10 +668,10 @@ void gfx_draw_screen(BYTE forced) {
 				POINT point;
 				RECT rect;
 
-				rect.left = overscan.borders->left * d3d9.x_width_pixel;
-				rect.top = overscan.borders->up * d3d9.scale;
-				rect.right = scrtex->rect.base.w - (overscan.borders->right * d3d9.x_width_pixel);
-				rect.bottom = scrtex->rect.base.h - (overscan.borders->down * d3d9.scale);
+				rect.left = overscan.borders->left * gfx.filter.width_pixel;
+				rect.top = overscan.borders->up * gfx.filter.factor;
+				rect.right = scrtex->rect.base.w - (overscan.borders->right * gfx.filter.width_pixel);
+				rect.bottom = scrtex->rect.base.h - (overscan.borders->down * gfx.filter.factor);
 
 				point.x = rect.left;
 				point.y = rect.top;
@@ -1178,13 +1109,8 @@ static BYTE d3d9_context_create(void) {
 
 	cgD3D9SetDevice(d3d9.adapter->dev);
 
-	if (cfg->filter == NO_FILTER) {
-		w = SCR_ROWS;
-		h = SCR_LINES;
-	} else {
-		w = gfx.w[NO_OVERSCAN];
-		h = gfx.h[NO_OVERSCAN];
-	}
+	w = gfx.w[PASS0];
+	h = gfx.h[PASS0];
 
 	D3DXMatrixIdentity(&identity);
 	IDirect3DDevice9_SetTransform(d3d9.adapter->dev, D3DTS_WORLD, &identity);
@@ -1211,7 +1137,7 @@ static BYTE d3d9_context_create(void) {
 		vp->h = gfx.h[VIDEO_MODE];
 
 		if (overscan.enabled && (!cfg->oscan_black_borders && !cfg->fullscreen)) {
-			vp->x = (-overscan.borders->left * gfx.x_width_pixel) * gfx.pixel_aspect_ratio;
+			vp->x = (-overscan.borders->left * gfx.width_pixel) * gfx.pixel_aspect_ratio;
 			vp->y = (-overscan.borders->up * cfg->scale);
 			vp->w = gfx.w[NO_OVERSCAN] * gfx.pixel_aspect_ratio;
 			vp->h = gfx.h[NO_OVERSCAN];

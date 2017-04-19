@@ -28,61 +28,6 @@ nes_ntsc_setup_t format[3];
 int merge_fields = 1;
 int burst_phase = 0;
 
-#define adjust_output(scale)\
-	for (y = ((height / factor) - 1); --y >= 0;) {\
-		unsigned char const *in = ((const unsigned char *) pix) + (y * pitch);\
-		unsigned char *out = ((unsigned char *) pix) + ((y * factor) * pitch);\
-		int n;\
-		for (n = width; n; --n) {\
-			switch (bpp) {\
-				case 15:\
-				case 16:\
-					scale(uint16_t, 0x0821, 0x18E3, 0x0000);\
-					break;\
-				case 24:\
-				case 32:\
-					scale(uint32_t, 0x00010101, 0x00030703, 0xFF000000);\
-					break;\
-			}\
-			in += bpp / 8;\
-			out += bpp / 8;\
-		}\
-	}
-#define DOUBLE(type, mask_low_bits, mask_darken, mask_alpha)\
-{\
-	unsigned prev = *(type *) in;\
-	unsigned next = *(type *) (in + pitch);\
-	/* mix rgb without losing low bits */\
-	unsigned mixed = prev + next + ((prev ^ next) & mask_low_bits);\
-	/* darken by 12% */\
-	*(type *) out = prev | mask_alpha;\
-	*(type *) (out + pitch) = ((mixed >> 1) - (mixed >> 4 & mask_darken)) | mask_alpha;\
-}
-#define TRIPLE(type, mask_low_bits, mask_darken, mask_alpha)\
-{\
-	unsigned prev = *(type *) in;\
-	unsigned next = *(type *) (in + pitch);\
-	/* mix rgb without losing low bits */\
-	unsigned mixed = prev + next + ((prev ^ next) & mask_low_bits);\
-	/* darken by 12% */\
-	*(type *) out = prev | mask_alpha;\
-	*(type *) (out + pitch) = ((mixed >> 1) - (mixed >> 2 & mask_darken)) | mask_alpha ;\
-	*(type *) (out + pitch + pitch) = ((mixed >> 1) - (mixed >> 4 & mask_darken)) | mask_alpha;\
-}
-#define QUADRUPLE(type, mask_low_bits, mask_darken, mask_alpha)\
-{\
-	unsigned prev = *(type *) in;\
-	unsigned next = *(type *) (in + pitch);\
-	/* mix rgb without losing low bits */\
-	unsigned mixed = prev + next + ((prev ^ next) & mask_low_bits);\
-	/* darken by 12% */\
-	*(type *) out = *(type *) (out + pitch) = prev | mask_alpha;\
-	*(type *) (out + (pitch << 1)) = *(type *) (out + ((pitch << 1) + pitch)) =\
-			((mixed >> 1) - (mixed >> 4 & mask_darken)) | mask_alpha;\
-}
-#define nes_ntsc(ntscin, factor) nes_ntscx##factor(ntscin, screen, SCR_ROWS, burst_phase, SCR_ROWS,\
-	SCR_LINES, pix, pitch, bpp)
-
 /*
  * cio' che non utilizzo in questa funzione
  * sono i parametri WORD **screen_index e
@@ -95,17 +40,27 @@ gfx_filter_function(ntsc_surface) {
 		palette = (void *) ntsc;
 	}
 
-	if (factor == 1) {
-		return;
-	} else if (factor == 2) {
-		nes_ntsc((nes_ntsc_t *) palette, 2);
-		adjust_output(DOUBLE)
-	} else if (factor == 3) {
-		nes_ntsc((nes_ntsc_t *) palette, 3);
-		adjust_output(TRIPLE);
-	} else if (factor == 4) {
-		nes_ntsc((nes_ntsc_t *) palette, 4);
-		adjust_output(QUADRUPLE)
+	nes_ntsc_blit((nes_ntsc_t *) palette, screen, SCR_ROWS, burst_phase, SCR_ROWS, SCR_LINES, pix,
+			pitch);
+
+	for (y = ((height / gfx.filter.factor) - 1); --y >= 0;) {
+		unsigned char const *in = ((const unsigned char *) pix) + (y * pitch);
+		unsigned char *out = ((unsigned char *) pix) + ((y * gfx.filter.factor) * pitch);
+		int n;
+
+		for (n = width; n; --n) {
+			unsigned prev = *(uint32_t *) in;
+			unsigned next = *(uint32_t *) (in + pitch);
+			/* mix rgb without losing low bits */
+			unsigned mixed = prev + next + ((prev ^ next) & 0x00010101);
+
+			/* darken by 12% */
+			*(uint32_t *) out = prev | 0xFF000000;
+			*(uint32_t *) (out + pitch) = ((mixed >> 1) - (mixed >> 4 & 0x00030703)) | 0xFF000000;
+
+			in += NES_NTSC_OUT_DEPTH / 8;
+			out += NES_NTSC_OUT_DEPTH / 8;
+		}
 	}
 }
 

@@ -60,38 +60,27 @@ void nes_ntsc_init( nes_ntsc_t* ntsc, nes_ntsc_setup_t const* setup );
 In_row_width is the number of pixels to get to the next input row. Out_pitch
 is the number of *bytes* to get to the next output row. Output pixel format
 is set by NES_NTSC_OUT_DEPTH (defaults to 16-bit RGB). */
-//void nes_ntsc_blit( nes_ntsc_t const* ntsc, NES_NTSC_IN_T const* nes_in,
-//		long in_row_width, int burst_phase, int in_width, int in_height,
-//		void* rgb_out, long out_pitch );
-void nes_ntscx2( nes_ntsc_t const* ntsc, NES_NTSC_IN_T const* nes_in,
+void nes_ntsc_blit( nes_ntsc_t const* ntsc, NES_NTSC_IN_T const* nes_in,
 		long in_row_width, int burst_phase, int in_width, int in_height,
-		void* rgb_out, long out_pitch, int depth );
-
-void nes_ntscx3( nes_ntsc_t const* ntsc, NES_NTSC_IN_T const* nes_in,
-		long in_row_width, int burst_phase, int in_width, int in_height,
-		void* rgb_out, long out_pitch, int depth );
-
-void nes_ntscx4( nes_ntsc_t const* ntsc, NES_NTSC_IN_T const* nes_in,
-		long in_row_width, int burst_phase, int in_width, int in_height,
-		void* rgb_out, long out_pitch, int depth );
+		void* rgb_out, long out_pitch );
 
 /* Number of output pixels written by blitter for given input width. Width might
 be rounded down slightly; use NES_NTSC_IN_WIDTH() on result to find rounded
 value. Guaranteed not to round 256 down at all. */
-#define NES_NTSC_OUT_WIDTH( in_width, nes_ntsc_out_chunk ) \
+#define NES_NTSC_OUT_WIDTH( in_width ) \
 	((((in_width) - 1) / nes_ntsc_in_chunk + 1) * nes_ntsc_out_chunk)
 
 /* Number of input pixels that will fit within given output width. Might be
 rounded down slightly; use NES_NTSC_OUT_WIDTH() on result to find rounded
 value. */
-#define NES_NTSC_IN_WIDTH( out_width, nes_ntsc_out_chunk ) \
+#define NES_NTSC_IN_WIDTH( out_width ) \
 	(((out_width) / nes_ntsc_out_chunk - 1) * nes_ntsc_in_chunk + 1)
 
 
 /* Interface for user-defined custom blitters */
 
 enum { nes_ntsc_in_chunk    = 3  }; /* number of input pixels read per chunk */
-//enum { nes_ntsc_out_chunk   = 7  }; /* number of output pixels generated per chunk */
+enum { nes_ntsc_out_chunk   = 7  }; /* number of output pixels generated per chunk */
 enum { nes_ntsc_black       = 15 }; /* palette index for black */
 enum { nes_ntsc_burst_count = 3  }; /* burst phase cycles through 0, 1, and 2 */
 

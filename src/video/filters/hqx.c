@@ -17,7 +17,6 @@
  */
 
 #include "video/filters/hqx.h"
-#include "overscan.h"
 
 uint32_t RGBtoYUV[NUM_COLORS];
 uint32_t YUV1, YUV2;
@@ -41,16 +40,14 @@ gfx_filter_function(hqNx) {
 	hqnx.sy = 0;
 	hqnx.lines = SCR_LINES;
 	hqnx.rows = SCR_ROWS;
-	hqnx.dst_rows = width / factor;
+	hqnx.dst_rows = width / gfx.filter.factor;
 	hqnx.startx = 0;
 
-	if (factor == 1) {
-		return;
-	} else if (factor == 2) {
+	if (gfx.filter.factor == 2) {
 		hq2x_32_rb(screen, pix, (uint32_t *) palette);
-	} else if (factor == 3) {
+	} else if (gfx.filter.factor == 3) {
 		hq3x_32_rb(screen, pix, (uint32_t *) palette);
-	} else if (factor == 4) {
+	} else if (gfx.filter.factor == 4) {
 		hq4x_32_rb(screen, pix, (uint32_t *) palette);
 	}
 }

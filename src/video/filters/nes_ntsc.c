@@ -2,7 +2,6 @@
 
 #include "video/filters/nes_ntsc.h"
 #include "gfx.h"
-#include "overscan.h"
 #include "conf.h"
 #include "clock.h"
 
@@ -99,11 +98,11 @@ void nes_ntsc_init( nes_ntsc_t* ntsc, nes_ntsc_setup_t const* setup )
 		if ( gamma < 0 )
 			gamma_factor = -gamma_factor;
 	}
-
+	
 	merge_fields = setup->merge_fields;
 	if ( setup->artifacts <= -1 && setup->fringing <= -1 )
 		merge_fields = 1;
-
+	
 	for ( entry = 0; entry < nes_ntsc_palette_size; entry++ )
 	{
 		/* ------------------ START ------------------
@@ -135,7 +134,7 @@ void nes_ntsc_init( nes_ntsc_t* ntsc, nes_ntsc_setup_t const* setup )
 		int level = entry >> 4 & 0x03;
 		float lo = lo_levels [level];
 		float hi = hi_levels [level];
-
+		
 		int color = entry & 0x0F;
 		if ( color == 0 )
 			lo = hi;
@@ -143,7 +142,7 @@ void nes_ntsc_init( nes_ntsc_t* ntsc, nes_ntsc_setup_t const* setup )
 			hi = lo;
 		if ( color > 0x0D )
 			hi = lo = 0.0f;
-
+		
 		{
 			/* phases [i] = cos( i * PI / 6 ) */
 			static float const phases [0x10 + 3] = {
@@ -154,13 +153,13 @@ void nes_ntsc_init( nes_ntsc_t* ntsc, nes_ntsc_setup_t const* setup )
 			};
 			#define TO_ANGLE_SIN( color )   phases [color]
 			#define TO_ANGLE_COS( color )   phases [(color) + 3]
-
+			
 			/* Convert raw waveform to YIQ */
 			float sat = (hi - lo) * 0.5f;
 			float i = TO_ANGLE_SIN( color ) * sat;
 			float q = TO_ANGLE_COS( color ) * sat;
 			float y = (hi + lo) * 0.5f;
-
+			
 			/* Optionally use base palette instead */
 			if ( setup->base_palette )
 			{
@@ -171,7 +170,7 @@ void nes_ntsc_init( nes_ntsc_t* ntsc, nes_ntsc_setup_t const* setup )
 				float b = to_float * in [2];
 				q = RGB_TO_YIQ( r, g, b, y, i );
 			}
-
+			
 			/* Apply color emphasis */
 			#ifdef NES_NTSC_EMPHASIS
 			{
@@ -180,7 +179,7 @@ void nes_ntsc_init( nes_ntsc_t* ntsc, nes_ntsc_setup_t const* setup )
 				{
 					static float const atten_mul = 0.79399f;
 					static float const atten_sub = 0.0782838f;
-
+					
 					if ( tint == 7 )
 					{
 						y = y * (atten_mul * 1.13f) - (atten_sub * 1.13f);
@@ -203,7 +202,7 @@ void nes_ntsc_init( nes_ntsc_t* ntsc, nes_ntsc_setup_t const* setup )
 				}
 			}
 			#endif
-
+			
 			/* Optionally use palette instead */
 			if ( setup->palette )
 			{
@@ -214,38 +213,38 @@ void nes_ntsc_init( nes_ntsc_t* ntsc, nes_ntsc_setup_t const* setup )
 				float b = to_float * in [2];
 				q = RGB_TO_YIQ( r, g, b, y, i );
 			}
-
+			
 			/* Apply brightness, contrast, and gamma */
 			y *= (float) setup->contrast * 0.5f + 1;
 			/* adjustment reduces error when using input palette */
 			y += (float) setup->brightness * 0.5f - 0.5f / 256;
-
+			
 			{
 				float r, g, b = YIQ_TO_RGB( y, i, q, default_decoder, float, r, g );
-
+				
 				/* fast approximation of n = pow( n, gamma ) */
 				r = (r * gamma_factor - gamma_factor) * r + r;
 				g = (g * gamma_factor - gamma_factor) * g + g;
 				b = (b * gamma_factor - gamma_factor) * b + b;
-
+				
 				q = RGB_TO_YIQ( r, g, b, y, i );
 			}
-
+			
 			i *= rgb_unit;
 			q *= rgb_unit;
 			y *= rgb_unit;
 			y += rgb_offset;
-
+			
 			/* Generate kernel */
 			{
 				int r, g, b = YIQ_TO_RGB( y, i, q, impl.to_rgb, int, r, g );
 				/* blue tends to overflow, so clamp it */
 				nes_ntsc_rgb_t rgb = PACK_RGB( r, g, (b < 0x3E0 ? b: 0x3E0) );
-
+				
 				if ( setup->palette_out )
 					RGB_PALETTE_OUT( rgb, &setup->palette_out [pointer * 3]);
-					//RGB_PALETTE_OUT( rgb, &setup->palette_out [entry * 3]);
-
+					//RGB_PALETTE_OUT( rgb, &setup->palette_out [entry * 3] );
+				
 				if ( ntsc )
 				{
 					nes_ntsc_rgb_t* kernel = ntsc->table [entry];
@@ -258,193 +257,60 @@ void nes_ntsc_init( nes_ntsc_t* ntsc, nes_ntsc_setup_t const* setup )
 		}
 	}
 }
+
 #ifndef NES_NTSC_NO_BLITTERS
-#define NTSCX2(type)\
-{\
-	type *restrict line_out = (type *) rgb_out;\
-	for ( n = chunk_count; n; --n )\
-	{\
-		NES_NTSC_COLOR_IN( 0, NES_NTSC_ADJ_IN( line_in [0] ) );\
-		NES_NTSC_RGB_OUT( 0, line_out [0], depth );\
-		NES_NTSC_RGB_OUT( 1, line_out [1], depth );\
-		NES_NTSC_COLOR_IN( 1, NES_NTSC_ADJ_IN( line_in [1] ) );\
-		NES_NTSC_RGB_OUT( 2, line_out [2], depth );\
-		NES_NTSC_RGB_OUT( 3, line_out [3], depth );\
-		NES_NTSC_COLOR_IN( 2, NES_NTSC_ADJ_IN( line_in [2] ) );\
-		NES_NTSC_RGB_OUT( 4, line_out [4], depth );\
-		NES_NTSC_RGB_OUT( 5, line_out [5], depth );\
-		NES_NTSC_RGB_OUT( 6, line_out [6], depth );\
-		line_in  += 3;\
-		line_out += 7;\
-	}\
-	NES_NTSC_COLOR_IN( 0, nes_ntsc_black );\
-	NES_NTSC_RGB_OUT( 0, line_out [0], depth );\
-	NES_NTSC_RGB_OUT( 1, line_out [1], depth );\
-	NES_NTSC_COLOR_IN( 1, nes_ntsc_black );\
-	NES_NTSC_RGB_OUT( 2, line_out [2], depth );\
-	NES_NTSC_RGB_OUT( 3, line_out [3], depth );\
-	NES_NTSC_COLOR_IN( 2, nes_ntsc_black );\
-	NES_NTSC_RGB_OUT( 4, line_out [4], depth );\
-	NES_NTSC_RGB_OUT( 5, line_out [5], depth );\
-	NES_NTSC_RGB_OUT( 6, line_out [6], depth );\
-	burst_phase = (burst_phase + 1) % nes_ntsc_burst_count;\
-	input += in_row_width;\
-	rgb_out = (char*) rgb_out + out_pitch;\
-}
-void nes_ntscx2( nes_ntsc_t const* ntsc, NES_NTSC_IN_T const* input, long in_row_width,
-		int burst_phase, int in_width, int in_height, void* rgb_out, long out_pitch, int depth ) {
 
+void nes_ntsc_blit( nes_ntsc_t const* ntsc, NES_NTSC_IN_T const* input, long in_row_width,
+		int burst_phase, int in_width, int in_height, void* rgb_out, long out_pitch )
+{
 	int chunk_count = (in_width - 1) / nes_ntsc_in_chunk;
 	for ( ; in_height; --in_height )
 	{
-		int n;
 		NES_NTSC_IN_T const* line_in = input;
 		NES_NTSC_BEGIN_ROW( ntsc, burst_phase,
 				nes_ntsc_black, nes_ntsc_black, NES_NTSC_ADJ_IN( *line_in ) );
-		++line_in;
-
-		switch (depth) {
-			case 15:
-			case 16:
-				NTSCX2(uint16_t)
-				break;
-			case 24:
-			case 32:
-				NTSCX2(uint32_t)
-				break;
-		}
-	}
-}
-#define NTSCX3(type)\
-{\
-	type *restrict line_out = (type *) rgb_out;\
-	for ( n = chunk_count; n; --n )\
-	{\
-		NES_NTSC_COLOR_IN( 0, NES_NTSC_ADJ_IN( line_in [0] ) );\
-		NES_NTSC_RGB_OUT( 0, line_out [0], depth );\
-		NES_NTSC_RGB_OUT( 1, line_out [1], depth );\
-		NES_NTSC_RGB_OUT( 1, line_out [2], depth );\
-		NES_NTSC_COLOR_IN( 1, NES_NTSC_ADJ_IN( line_in [1] ) );\
-		NES_NTSC_RGB_OUT( 2, line_out [3], depth );\
-		NES_NTSC_RGB_OUT( 3, line_out [4], depth );\
-		NES_NTSC_RGB_OUT( 3, line_out [5], depth );\
-		NES_NTSC_COLOR_IN( 2, NES_NTSC_ADJ_IN( line_in [2] ) );\
-		NES_NTSC_RGB_OUT( 4, line_out [6], depth );\
-		NES_NTSC_RGB_OUT( 5, line_out [7], depth );\
-		NES_NTSC_RGB_OUT( 5, line_out [8], depth );\
-		NES_NTSC_RGB_OUT( 6, line_out [9], depth );\
-		line_in  += 3;\
-		line_out += 10;\
-	}\
-	NES_NTSC_COLOR_IN( 0, nes_ntsc_black );\
-	NES_NTSC_RGB_OUT( 0, line_out [0], depth );\
-	NES_NTSC_RGB_OUT( 1, line_out [1], depth );\
-	NES_NTSC_RGB_OUT( 1, line_out [2], depth );\
-	NES_NTSC_COLOR_IN( 1, nes_ntsc_black );\
-	NES_NTSC_RGB_OUT( 2, line_out [3], depth );\
-	NES_NTSC_RGB_OUT( 3, line_out [4], depth );\
-	NES_NTSC_RGB_OUT( 3, line_out [5], depth );\
-	NES_NTSC_COLOR_IN( 2, nes_ntsc_black );\
-	NES_NTSC_RGB_OUT( 4, line_out [6], depth );\
-	NES_NTSC_RGB_OUT( 5, line_out [7], depth );\
-	NES_NTSC_RGB_OUT( 5, line_out [8], depth );\
-	NES_NTSC_RGB_OUT( 6, line_out [9], depth );\
-	burst_phase = (burst_phase + 1) % nes_ntsc_burst_count;\
-	input += in_row_width;\
-	rgb_out = (char*) rgb_out + out_pitch;\
-}
-void nes_ntscx3( nes_ntsc_t const* ntsc, NES_NTSC_IN_T const* input, long in_row_width,
-		int burst_phase, int in_width, int in_height, void* rgb_out, long out_pitch, int depth ) {
-
-	int chunk_count = (in_width - 1) / nes_ntsc_in_chunk;
-	for ( ; in_height; --in_height )
-	{
+		nes_ntsc_out_t* restrict line_out = (nes_ntsc_out_t*) rgb_out;
 		int n;
-		NES_NTSC_IN_T const* line_in = input;
-		NES_NTSC_BEGIN_ROW( ntsc, burst_phase,
-				nes_ntsc_black, nes_ntsc_black, NES_NTSC_ADJ_IN( *line_in ) );
 		++line_in;
-
-		switch (depth) {
-			case 15:
-			case 16:
-				NTSCX3(uint16_t)
-				break;
-			case 24:
-			case 32:
-				NTSCX3(uint32_t)
-				break;
+		
+		for ( n = chunk_count; n; --n )
+		{
+			/* order of input and output pixels must not be altered */
+			NES_NTSC_COLOR_IN( 0, NES_NTSC_ADJ_IN( line_in [0] ) );
+			NES_NTSC_RGB_OUT( 0, line_out [0], NES_NTSC_OUT_DEPTH );
+			NES_NTSC_RGB_OUT( 1, line_out [1], NES_NTSC_OUT_DEPTH );
+			
+			NES_NTSC_COLOR_IN( 1, NES_NTSC_ADJ_IN( line_in [1] ) );
+			NES_NTSC_RGB_OUT( 2, line_out [2], NES_NTSC_OUT_DEPTH );
+			NES_NTSC_RGB_OUT( 3, line_out [3], NES_NTSC_OUT_DEPTH );
+			
+			NES_NTSC_COLOR_IN( 2, NES_NTSC_ADJ_IN( line_in [2] ) );
+			NES_NTSC_RGB_OUT( 4, line_out [4], NES_NTSC_OUT_DEPTH );
+			NES_NTSC_RGB_OUT( 5, line_out [5], NES_NTSC_OUT_DEPTH );
+			NES_NTSC_RGB_OUT( 6, line_out [6], NES_NTSC_OUT_DEPTH );
+			
+			line_in  += 3;
+			line_out += 7;
 		}
+		
+		/* finish final pixels */
+		NES_NTSC_COLOR_IN( 0, nes_ntsc_black );
+		NES_NTSC_RGB_OUT( 0, line_out [0], NES_NTSC_OUT_DEPTH );
+		NES_NTSC_RGB_OUT( 1, line_out [1], NES_NTSC_OUT_DEPTH );
+		
+		NES_NTSC_COLOR_IN( 1, nes_ntsc_black );
+		NES_NTSC_RGB_OUT( 2, line_out [2], NES_NTSC_OUT_DEPTH );
+		NES_NTSC_RGB_OUT( 3, line_out [3], NES_NTSC_OUT_DEPTH );
+		
+		NES_NTSC_COLOR_IN( 2, nes_ntsc_black );
+		NES_NTSC_RGB_OUT( 4, line_out [4], NES_NTSC_OUT_DEPTH );
+		NES_NTSC_RGB_OUT( 5, line_out [5], NES_NTSC_OUT_DEPTH );
+		NES_NTSC_RGB_OUT( 6, line_out [6], NES_NTSC_OUT_DEPTH );
+		
+		burst_phase = (burst_phase + 1) % nes_ntsc_burst_count;
+		input += in_row_width;
+		rgb_out = (char*) rgb_out + out_pitch;
 	}
 }
-#define NTSCX4(type)\
-{\
-	type *restrict line_out = (type *) rgb_out;\
-	for ( n = chunk_count; n; --n )\
-	{\
-		NES_NTSC_COLOR_IN( 0, NES_NTSC_ADJ_IN( line_in [0] ) );\
-		NES_NTSC_RGB_OUT( 0, line_out [0], depth );\
-		NES_NTSC_RGB_OUT( 0, line_out [1], depth );\
-		NES_NTSC_RGB_OUT( 1, line_out [2], depth );\
-		NES_NTSC_RGB_OUT( 1, line_out [3], depth );\
-		NES_NTSC_COLOR_IN( 1, NES_NTSC_ADJ_IN( line_in [1] ) );\
-		NES_NTSC_RGB_OUT( 2, line_out [4], depth );\
-		NES_NTSC_RGB_OUT( 2, line_out [5], depth );\
-		NES_NTSC_RGB_OUT( 3, line_out [6], depth );\
-		NES_NTSC_RGB_OUT( 3, line_out [7], depth );\
-		NES_NTSC_COLOR_IN( 2, NES_NTSC_ADJ_IN( line_in [2] ) );\
-		NES_NTSC_RGB_OUT( 4, line_out [8], depth );\
-		NES_NTSC_RGB_OUT( 4, line_out [9], depth );\
-		NES_NTSC_RGB_OUT( 5, line_out [10], depth );\
-		NES_NTSC_RGB_OUT( 5, line_out [11], depth );\
-		NES_NTSC_RGB_OUT( 6, line_out [12], depth );\
-		NES_NTSC_RGB_OUT( 6, line_out [13], depth );\
-		line_in  += 3;\
-		line_out += 14;\
-	}\
-	NES_NTSC_COLOR_IN( 0, nes_ntsc_black );\
-	NES_NTSC_RGB_OUT( 0, line_out [0], depth );\
-	NES_NTSC_RGB_OUT( 0, line_out [1], depth );\
-	NES_NTSC_RGB_OUT( 1, line_out [2], depth );\
-	NES_NTSC_RGB_OUT( 1, line_out [3], depth );\
-	NES_NTSC_COLOR_IN( 1, nes_ntsc_black );\
-	NES_NTSC_RGB_OUT( 2, line_out [4], depth );\
-	NES_NTSC_RGB_OUT( 2, line_out [5], depth );\
-	NES_NTSC_RGB_OUT( 3, line_out [6], depth );\
-	NES_NTSC_RGB_OUT( 3, line_out [7], depth );\
-	NES_NTSC_COLOR_IN( 2, nes_ntsc_black );\
-	NES_NTSC_RGB_OUT( 4, line_out [8], depth );\
-	NES_NTSC_RGB_OUT( 4, line_out [9], depth );\
-	NES_NTSC_RGB_OUT( 5, line_out [10], depth );\
-	NES_NTSC_RGB_OUT( 5, line_out [11], depth );\
-	NES_NTSC_RGB_OUT( 6, line_out [12], depth );\
-	NES_NTSC_RGB_OUT( 6, line_out [13], depth );\
-	burst_phase = (burst_phase + 1) % nes_ntsc_burst_count;\
-	input += in_row_width;\
-	rgb_out = (char*) rgb_out + out_pitch;\
-}
-void nes_ntscx4( nes_ntsc_t const* ntsc, NES_NTSC_IN_T const* input, long in_row_width,
-		int burst_phase, int in_width, int in_height, void* rgb_out, long out_pitch, int depth ) {
 
-	int chunk_count = (in_width - 1) / nes_ntsc_in_chunk;
-	for ( ; in_height; --in_height )
-	{
-		int n;
-		NES_NTSC_IN_T const* line_in = input;
-		NES_NTSC_BEGIN_ROW( ntsc, burst_phase,
-				nes_ntsc_black, nes_ntsc_black, NES_NTSC_ADJ_IN( *line_in ));
-		++line_in;
-
-		switch (depth) {
-			case 15:
-			case 16:
-				NTSCX4(uint16_t)
-				break;
-			case 24:
-			case 32:
-				NTSCX4(uint32_t)
-				break;
-		}
-	}
-}
 #endif
