@@ -1962,7 +1962,7 @@ void mainWindow::s_set_mode() {
 	if (reset) {
 		QString ascii = uQString(opt_mode[machine.type].lname);
 
-		text_add_line_info(1, "switched to [green]%s", ascii.toAscii().constData());
+		text_add_line_info(1, "switched to [green]%s", ascii.toLatin1().constData());
 #if defined (WITH_OPENGL) && defined (__WIN32__)
 		gfx_sdlwe_set(SDLWIN_SWITCH_MODE, SDLWIN_NONE);
 #else
