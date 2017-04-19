@@ -1,0 +1,3 @@
+files:
+  - source: /src/gui/designer/translations/en_EN.ts
+    translation: /src/gui/designer/translations/%locale_with_underscore%.ts
