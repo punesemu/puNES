@@ -609,6 +609,10 @@
       <source>Error on reading controllers configurations</source>
       <translation type="unfinished">Error on reading controllers configurations</translation>
     </message>
+    <message>
+      <source>Start/Stop WAV</source>
+      <translation type="unfinished">Start/Stop WAV</translation>
+    </message>
   </context>
   <context>
     <name>dlgOverscanBorders</name>
@@ -845,14 +849,6 @@
     <message>
       <source>&amp;Auto</source>
       <translation type="unfinished">&amp;Auto</translation>
-    </message>
-    <message>
-      <source>&amp;Software</source>
-      <translation type="unfinished">&amp;Software</translation>
-    </message>
-    <message>
-      <source>OpenGL &amp;GLSL</source>
-      <translation type="unfinished">OpenGL &amp;GLSL</translation>
     </message>
     <message>
       <source>Default</source>
@@ -1459,10 +1455,6 @@
       <translation type="unfinished">&amp;Video</translation>
     </message>
     <message>
-      <source>&amp;Rendering</source>
-      <translation type="unfinished">&amp;Rendering</translation>
-    </message>
-    <message>
       <source>&amp;FPS</source>
       <translation type="unfinished">&amp;FPS</translation>
     </message>
@@ -1597,6 +1589,34 @@
     <message>
       <source>System Default</source>
       <translation type="unfinished">System Default</translation>
+    </message>
+    <message>
+      <source>Start/Stop &amp;WAV recording</source>
+      <translation type="unfinished">Start/Stop &amp;WAV recording</translation>
+    </message>
+    <message>
+      <source>Stop &amp;WAV recording</source>
+      <translation type="unfinished">Stop &amp;WAV recording</translation>
+    </message>
+    <message>
+      <source>Start &amp;WAV recording</source>
+      <translation type="unfinished">Start &amp;WAV recording</translation>
+    </message>
+    <message>
+      <source>MS WAVE files</source>
+      <translation type="unfinished">MS WAVE files</translation>
+    </message>
+    <message>
+      <source>Record sound</source>
+      <translation type="unfinished">Record sound</translation>
+    </message>
+    <message>
+      <source>No Shade&amp;r</source>
+      <translation type="unfinished">No Shade&amp;r</translation>
+    </message>
+    <message>
+      <source>&amp;Black borders in window</source>
+      <translation type="unfinished">&amp;Black borders in window</translation>
     </message>
   </context>
   <context>
