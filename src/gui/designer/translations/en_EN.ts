@@ -609,6 +609,10 @@
         <source>Error on reading controllers configurations</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Start/Stop WAV</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>dlgOverscanBorders</name>
@@ -844,14 +848,6 @@
     </message>
     <message>
         <source>&amp;Auto</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Software</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>OpenGL &amp;GLSL</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1459,10 +1455,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Rendering</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>&amp;FPS</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1596,6 +1588,34 @@
     </message>
     <message>
         <source>System Default</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Start/Stop &amp;WAV recording</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Stop &amp;WAV recording</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Start &amp;WAV recording</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MS WAVE files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Record sound</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No Shade&amp;r</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Black borders in window</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
