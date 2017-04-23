@@ -25,3 +25,7 @@ gfx_filter_function(xBRZ) {
 	xbrz_scale(gfx.filter.factor, screen, (uint32_t *) pix, (uint32_t *) palette, SCR_ROWS,
 			SCR_LINES);
 }
+gfx_filter_function(xBRZ_mt) {
+	xbrz_scale_mt(gfx.filter.factor, screen, (uint32_t *) pix, (uint32_t *) palette, SCR_ROWS,
+			SCR_LINES);
+}

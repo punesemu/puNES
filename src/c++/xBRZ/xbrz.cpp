@@ -13,10 +13,11 @@
 // * do so, delete this exception statement from your version.                *
 // ****************************************************************************
 
+#include <algorithm>
+#include "c++/xBRZ/xbrz_wrap.h"
 #include "c++/xBRZ/xbrz.h"
 #include <cassert>
 #include <cmath>
-#include <algorithm>
 #include <vector>
 
 namespace
@@ -1124,6 +1125,78 @@ void xbrz::scale(BYTE factor, const WORD* src, uint32_t* trg, uint32_t* palette,
             break;
     }
     assert(false);
+}
+
+
+#if defined (__WIN32__)
+	DWORD WINAPI xbrz::scale_mt(void *param)
+#elif defined (__linux__)
+    void *xbrz::scale_mt(void *param)
+#endif
+{
+    _xbrz_wrap *p = (_xbrz_wrap *) param;
+    int yFirst = (p->srcHeight / XBRZ_NUM_SLICE) + (p->srcHeight % 2);
+    uint32_t *output = p->trg;
+    int yLast = yFirst * (p->slice + 1);
+
+    output += yFirst * p->slice * p->factor * 4;
+    yFirst *= p->slice;
+
+    if ((p->slice + 1) == XBRZ_NUM_SLICE) {
+        yLast = p->srcHeight;
+    }
+
+    switch ((ColorFormat) p->colFmt)
+    {
+        case ColorFormat::ARGB:
+            switch (p->factor)
+            {
+                case 2:
+                    scaleImage<Scaler2x<ColorGradientARGB>, ColorDistanceARGB>(p->src, p->trg, p->palette, p->srcWidth, p->srcHeight, ScalerCfg(), yFirst, yLast);
+                    break;
+                case 3:
+                    scaleImage<Scaler3x<ColorGradientARGB>, ColorDistanceARGB>(p->src, p->trg, p->palette, p->srcWidth, p->srcHeight, ScalerCfg(), yFirst, yLast);
+                    break;
+                case 4:
+                    scaleImage<Scaler4x<ColorGradientARGB>, ColorDistanceARGB>(p->src, p->trg, p->palette, p->srcWidth, p->srcHeight, ScalerCfg(), yFirst, yLast);
+                    break;
+                case 5:
+                    scaleImage<Scaler5x<ColorGradientARGB>, ColorDistanceARGB>(p->src, p->trg, p->palette, p->srcWidth, p->srcHeight, ScalerCfg(), yFirst, yLast);
+                    break;
+                case 6:
+                    scaleImage<Scaler6x<ColorGradientARGB>, ColorDistanceARGB>(p->src, p->trg, p->palette, p->srcWidth, p->srcHeight, ScalerCfg(), yFirst, yLast);
+                    break;
+            }
+            break;
+
+        case ColorFormat::RGB:
+            switch (p->factor)
+            {
+                case 2:
+                    scaleImage<Scaler2x<ColorGradientRGB>, ColorDistanceRGB>(p->src, p->trg, p->palette, p->srcWidth, p->srcHeight, ScalerCfg(), yFirst, yLast);
+                    break;
+                case 3:
+                    scaleImage<Scaler3x<ColorGradientRGB>, ColorDistanceRGB>(p->src, p->trg, p->palette, p->srcWidth, p->srcHeight, ScalerCfg(), yFirst, yLast);
+                    break;
+                case 4:
+                    scaleImage<Scaler4x<ColorGradientRGB>, ColorDistanceRGB>(p->src, p->trg, p->palette, p->srcWidth, p->srcHeight, ScalerCfg(), yFirst, yLast);
+                    break;
+                case 5:
+                    scaleImage<Scaler5x<ColorGradientRGB>, ColorDistanceRGB>(p->src, p->trg, p->palette, p->srcWidth, p->srcHeight, ScalerCfg(), yFirst, yLast);
+                    break;
+                case 6:
+                    scaleImage<Scaler6x<ColorGradientRGB>, ColorDistanceRGB>(p->src, p->trg, p->palette, p->srcWidth, p->srcHeight, ScalerCfg(), yFirst, yLast);
+                    break;
+            }
+            break;
+    }
+    assert(false);
+
+#if defined (__WIN32__)
+    return (0);
+#elif defined (__linux__)
+    return (NULL);
+#endif
 }
 
 

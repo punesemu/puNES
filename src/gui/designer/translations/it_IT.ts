@@ -1618,6 +1618,26 @@
         <source>&amp;Black borders in window</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>&amp;xBRZ 2X MT</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;xBRZ 3X MT</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;xBRZ 4X MT</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;xBRZ 5X MT</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;xBRZ 6X MT</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>stateWidget</name>

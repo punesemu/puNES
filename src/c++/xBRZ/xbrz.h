@@ -18,6 +18,9 @@
 
 #include "common.h"
 #define NDEBUG
+#if defined (__WIN32__)
+#include "win.h"
+#endif
 
 #include <cstddef> //size_t
 #include <cstdint> //uint32_t
@@ -64,6 +67,12 @@ void scale(BYTE factor, //valid range: 2 - 6
            ColorFormat colFmt,
            const ScalerCfg& cfg = ScalerCfg(),
            int yFirst = 0, int yLast = std::numeric_limits<int>::max()); //slice of source image
+
+#if defined (__WIN32__)
+DWORD WINAPI scale_mt(void *param);
+#elif defined (__linux__)
+void *scale_mt(void *param);
+#endif
 
 void nearestNeighborScale(const uint32_t* src, int srcWidth, int srcHeight,
                           uint32_t* trg, int trgWidth, int trgHeight);

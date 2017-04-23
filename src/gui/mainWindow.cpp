@@ -218,6 +218,11 @@ void mainWindow::setup() {
 	grp->addAction(ui->action_xBRZ_4X);
 	grp->addAction(ui->action_xBRZ_5X);
 	grp->addAction(ui->action_xBRZ_6X);
+	grp->addAction(ui->action_xBRZ_2X_MT);
+	grp->addAction(ui->action_xBRZ_3X_MT);
+	grp->addAction(ui->action_xBRZ_4X_MT);
+	grp->addAction(ui->action_xBRZ_5X_MT);
+	grp->addAction(ui->action_xBRZ_6X_MT);
 	grp->addAction(ui->action_NTSC_Composite);
 	grp->addAction(ui->action_NTSC_SVideo);
 	grp->addAction(ui->action_NTSC_RGB);
@@ -832,6 +837,21 @@ void mainWindow::update_menu_settings() {
 		case XBRZ6X:
 			ui->action_xBRZ_6X->setChecked(true);
 			break;
+		case XBRZ2XMT:
+			ui->action_xBRZ_2X_MT->setChecked(true);
+			break;
+		case XBRZ3XMT:
+			ui->action_xBRZ_3X_MT->setChecked(true);
+			break;
+		case XBRZ4XMT:
+			ui->action_xBRZ_4X_MT->setChecked(true);
+			break;
+		case XBRZ5XMT:
+			ui->action_xBRZ_5X_MT->setChecked(true);
+			break;
+		case XBRZ6XMT:
+			ui->action_xBRZ_6X_MT->setChecked(true);
+			break;
 		case NTSC_FILTER: {
 			switch (cfg->ntsc_format) {
 				case COMPOSITE:
@@ -1433,6 +1453,11 @@ void mainWindow::connect_menu_signals() {
 	connect_action(ui->action_xBRZ_4X, XBRZ4X, SLOT(s_set_filter()));
 	connect_action(ui->action_xBRZ_5X, XBRZ5X, SLOT(s_set_filter()));
 	connect_action(ui->action_xBRZ_6X, XBRZ6X, SLOT(s_set_filter()));
+	connect_action(ui->action_xBRZ_2X_MT, XBRZ2XMT, SLOT(s_set_filter()));
+	connect_action(ui->action_xBRZ_3X_MT, XBRZ3XMT, SLOT(s_set_filter()));
+	connect_action(ui->action_xBRZ_4X_MT, XBRZ4XMT, SLOT(s_set_filter()));
+	connect_action(ui->action_xBRZ_5X_MT, XBRZ5XMT, SLOT(s_set_filter()));
+	connect_action(ui->action_xBRZ_6X_MT, XBRZ6XMT, SLOT(s_set_filter()));
 	connect_action(ui->action_NTSC_Composite, COMPOSITE, SLOT(s_set_ntsc_filter()));
 	connect_action(ui->action_NTSC_SVideo, SVIDEO, SLOT(s_set_ntsc_filter()));
 	connect_action(ui->action_NTSC_RGB, RGBMODE, SLOT(s_set_ntsc_filter()));

@@ -77,6 +77,11 @@ enum filters_type {
 	XBRZ4X,
 	XBRZ5X,
 	XBRZ6X,
+	XBRZ2XMT,
+	XBRZ3XMT,
+	XBRZ4XMT,
+	XBRZ5XMT,
+	XBRZ6XMT
 };
 enum shader_type {
 	NO_SHADER,

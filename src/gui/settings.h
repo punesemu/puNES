@@ -365,6 +365,11 @@ static const _opt opt_filter[] = {
 	{uL("xBRZ 4x")              , uL("xbrz4x")      , XBRZ4X},
 	{uL("xBRZ 5x")              , uL("xbrz5x")      , XBRZ5X},
 	{uL("xBRZ 6x")              , uL("xbrz6x")      , XBRZ6X},
+	{uL("xBRZ 2x MT")           , uL("xbrz2mtx")    , XBRZ2XMT},
+	{uL("xBRZ 3x MT")           , uL("xbrz3xmt")    , XBRZ3XMT},
+	{uL("xBRZ 4x MT")           , uL("xbrz4xmt")    , XBRZ4XMT},
+	{uL("xBRZ 5x MT")           , uL("xbrz5xmt")    , XBRZ5XMT},
+	{uL("xBRZ 6x MT")           , uL("xbrz6xmt")    , XBRZ6XMT},
 };
 static const _opt opt_ntsc[] = {
 	{uL("Composite"), uL("composite"), COMPOSITE},
@@ -559,11 +564,14 @@ static const _settings main_cfg[] = {
 	{
 		uL("video"), uL("filter"), uL("none"),
 		uL("# possible values: none, scale2x, scale3x, scale4x, hq2x, hq3x," NEWLINE)
-		uL("#                  hq4x, xbrz2x, xbrz3x, xbrz4x, xbrz5x, xbrz6x, ntsc"),
+		uL("#                  hq4x, xbrz2x, xbrz3x, xbrz4x, xbrz5x, xbrz6x," NEWLINE)
+		uL("#                  xbrz2xmt, xbrz3xmt, xbrz4xmt, xbrz5xmt, xbrz6xmt, ntsc"),
 		uL("-i, --filter              filter to apply       : nofilter, scale2x," NEWLINE)
 		uL("                                                  scale3x, scale4x, hq2x," NEWLINE)
 		uL("                                                  hq3x, hq4x, xbrz2x, xbrz3x," NEWLINE)
-		uL("                                                  xbrz4x, xbrz5x, xbrz6x, ntsc"),
+		uL("                                                  xbrz4x, xbrz5x, xbrz6x," NEWLINE)
+		uL("                                                  xbrz2xmt, xbrz3xmt, xbrz4xmt," NEWLINE)
+		uL("                                                  xbrz5xmt, xbrz6xmt, ntsc"),
 		{LENGTH(opt_filter), opt_filter}
 	},
 	{

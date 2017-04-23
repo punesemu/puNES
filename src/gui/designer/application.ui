@@ -259,6 +259,11 @@
       <addaction name="action_xBRZ_4X"/>
       <addaction name="action_xBRZ_5X"/>
       <addaction name="action_xBRZ_6X"/>
+      <addaction name="action_xBRZ_2X_MT"/>
+      <addaction name="action_xBRZ_3X_MT"/>
+      <addaction name="action_xBRZ_4X_MT"/>
+      <addaction name="action_xBRZ_5X_MT"/>
+      <addaction name="action_xBRZ_6X_MT"/>
       <addaction name="action_NTSC_Composite"/>
       <addaction name="action_NTSC_SVideo"/>
       <addaction name="action_NTSC_RGB"/>
@@ -2194,6 +2199,46 @@
    </property>
    <property name="text">
     <string>&amp;Black borders in window</string>
+   </property>
+  </action>
+  <action name="action_xBRZ_2X_MT">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;xBRZ 2X MT</string>
+   </property>
+  </action>
+  <action name="action_xBRZ_3X_MT">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;xBRZ 3X MT</string>
+   </property>
+  </action>
+  <action name="action_xBRZ_4X_MT">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;xBRZ 4X MT</string>
+   </property>
+  </action>
+  <action name="action_xBRZ_5X_MT">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;xBRZ 5X MT</string>
+   </property>
+  </action>
+  <action name="action_xBRZ_6X_MT">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;xBRZ 6X MT</string>
    </property>
   </action>
  </widget>

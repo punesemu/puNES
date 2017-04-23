@@ -327,6 +327,14 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 				gfx.filter.func = xBRZ;
 				gfx.filter.factor = filter - 6;
 				break;
+			case XBRZ2XMT:
+			case XBRZ3XMT:
+			case XBRZ4XMT:
+			case XBRZ5XMT:
+			case XBRZ6XMT:
+				gfx.filter.func = xBRZ_mt;
+				gfx.filter.factor = filter - 11;
+				break;
 			case NTSC_FILTER:
 				gfx.filter.func = ntsc_surface;
 				gfx.filter.factor = X2;

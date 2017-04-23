@@ -29,10 +29,13 @@
 #endif
 
 void xBRZ_init(void);
-gfx_filter_function(xBRZ);
-
 EXTERNC void xbrz_scale(BYTE factor, const WORD *src, uint32_t *trg, uint32_t *palette,
         int width, int height);
+EXTERNC void xbrz_scale_mt(BYTE factor, const WORD *src, uint32_t *trg, uint32_t *palette,
+        int width, int height);
+
+gfx_filter_function(xBRZ);
+gfx_filter_function(xBRZ_mt);
 
 #undef EXTERNC
 
