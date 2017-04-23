@@ -169,6 +169,8 @@ void ppu_tick(WORD cycles_cpu) {
 	ppu.cycles += (cycles_cpu * machine.cpu_divide);
 
 	while (ppu.cycles >= machine.ppu_divide) {
+		r2002.race.sprite_overflow = FALSE;
+
 		/* controllo se sono all'inizio della dummy line */
 		if (ppu.frame_y == ppu_sclines.vint) {
 			/*
@@ -775,6 +777,7 @@ void ppu_tick(WORD cycles_cpu) {
 														&& (spr_ev.range < r2000.size_spr)) {
 													/* setto il bit 5 (overflow) del $2002 */
 													r2002.sprite_overflow = 0x20;
+													r2002.race.sprite_overflow = TRUE;
 													/*
 													 * devo esaminare i 3 byte
 													 * consequenziali a questo.

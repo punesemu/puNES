@@ -291,7 +291,7 @@ static BYTE INLINE ppu_rd_reg(WORD address) {
 	ppu_openbus_rd_all();
 
 	if (address == 0x2002) {
-		/* Situazioni particolari */
+		/* Situazioni particolari --- */
 		if (!info.r2002_race_condition_disabled && !(ppu.frame_y | nmi.before)) {
 			/* situazione di contesa (race condition)
 			 *
@@ -316,7 +316,19 @@ static BYTE INLINE ppu_rd_reg(WORD address) {
 			 */
 			nmi.high = nmi.delay = FALSE;
 		}
-		value = r2002.vblank | r2002.sprite0_hit | r2002.sprite_overflow;
+		if ((ppu.frame_y == ppu_sclines.vint) && !ppu.frame_x) {
+			/* situazione di contesa (race condition)
+			 *
+			 * se la lettura avviene esattamente alla fine
+			 * del vblank allora i bit 5 e 6 verranno restituiti
+			 * a 0.
+			 */
+			r2002.sprite_overflow = r2002.sprite0_hit = FALSE;
+		}
+		/* -------------------------- */
+
+		value = r2002.vblank | r2002.sprite0_hit
+				| (r2002.race.sprite_overflow ? 0 : r2002.sprite_overflow);
 		/* azzero il VBlank */
 		r2002.vblank = FALSE;
 		/*

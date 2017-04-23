@@ -38,7 +38,7 @@
 #include "cheat.h"
 #include "info.h"
 
-#define SAVE_VERSION 16
+#define SAVE_VERSION 17
 
 BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp);
 uTCHAR *name_slot_file(BYTE slot);
@@ -418,6 +418,9 @@ BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, r2002.sprite0_hit)
 	save_slot_ele(mode, slot, r2002.sprite_overflow)
 	save_slot_ele(mode, slot, r2002.toggle)
+	if (save_slot.version >= 17) {
+		save_slot_ele(mode, slot, r2002.race.sprite_overflow)
+	}
 	/* r2003 */
 	save_slot_ele(mode, slot, r2003.value)
 	/* r2004 */

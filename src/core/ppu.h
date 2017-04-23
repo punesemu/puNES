@@ -194,6 +194,9 @@ typedef struct _r2002 {
 	BYTE sprite0_hit;
 	BYTE sprite_overflow;
 	BYTE toggle;
+	struct _r2002_race {
+		WORD sprite_overflow;
+	} race;
 } _r2002;
 typedef struct _r2006 {
 	WORD value;

@@ -69,11 +69,11 @@
 		ustrncpy(ext, ustrrchr(name_file, uL('.')), usizeof(ext));\
 	}
 
-BYTE emu_frame(void) {
 #if defined (DEBUG)
-	WORD PCBREAK = 0xA930;
+	WORD PCBREAK = 0xE58F;
 #endif
 
+BYTE emu_frame(void) {
 #if defined (WITH_OPENGL) && defined (__WIN32__)
 	gfx_sdlwe_tick();
 #endif
@@ -130,11 +130,11 @@ BYTE emu_frame(void) {
 			snd_end_frame();
 		}
 
-//#if defined (DEBUG)
-//		gfx_draw_screen(TRUE);
-//#else
+#if defined (DEBUG)
+		gfx_draw_screen(TRUE);
+#else
 		gfx_draw_screen(FALSE);
-//#endif
+#endif
 
 		if (!tas.type && (++tl.frames == tl.frames_snap)) {
 			timeline_snap(TL_NORMAL);
