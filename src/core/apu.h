@@ -346,9 +346,10 @@ enum apu_mode { APU_60HZ, APU_48HZ };
 	square.envelope.enabled = TRUE;\
 	/* timer (high 3 bits) */\
 	square.timer = (square.timer & 0x00FF) | ((value & 0x07) << 8);\
+	/*The correct behaviour is to reset the duty cycle sequencers but not the clock dividers*/\
+	/*square.frequency = 1;*/\
 	/* sequencer */\
-	square.sequencer = 0;\
-	square.frequency = 1
+	square.sequencer = 0
 #define init_nla_table(p, t)\
 {\
 	WORD i;\
@@ -362,7 +363,7 @@ enum apu_mode { APU_60HZ, APU_48HZ };
 	}\
 }
 #define _apu_channel_volume_adjust(ch, index)\
-	(ch * cfg->apu.channel[index])
+	((ch * cfg->apu.channel[index]) * ch_gain_ptnd(index))
 #define s1_out\
 	_apu_channel_volume_adjust(S1.output, APU_S1)
 #define s2_out\
@@ -373,21 +374,18 @@ enum apu_mode { APU_60HZ, APU_48HZ };
 	_apu_channel_volume_adjust(NS.output, APU_NS)
 #define dmc_out\
 	_apu_channel_volume_adjust(DMC.output, APU_DMC)
-#define extra_out(out)\
-	_apu_channel_volume_adjust(out, APU_EXTRA)
+#define extra_out(ch)\
+	(ch * cfg->apu.channel[APU_EXTRA])
 #define pulse_output()\
-	(nla_table.pulse[s1_out] * ch_gain_ptnd(APU_S1)) +\
-	(nla_table.pulse[s2_out] * ch_gain_ptnd(APU_S2))
+	nla_table.pulse[(int) (s1_out + s2_out)]
 #define tnd_output()\
-	(nla_table.tnd[(tr_out * 3)] * ch_gain_ptnd(APU_TR)) +\
-	(nla_table.tnd[(ns_out * 2)] * ch_gain_ptnd(APU_NS)) +\
-	(nla_table.tnd[dmc_out] * ch_gain_ptnd(APU_DMC))
+	nla_table.tnd[(int) ((tr_out  * 3) + (ns_out * 2) + dmc_out)]
 
-typedef struct {
+typedef struct _config_apu {
 	BYTE channel[APU_MASTER + 1];
 	double volume[APU_MASTER + 1];
 } _config_apu;
-typedef struct {
+typedef struct _apu {
 	BYTE mode;
 	BYTE type;
 	BYTE step;
@@ -395,16 +393,16 @@ typedef struct {
 	BYTE DMC;
 	SWORD cycles;
 } _apu;
-typedef struct {
+typedef struct _r4011 {
 	BYTE value;
 	DBWORD frames;
 	DBWORD cycles;
 	SWORD output;
 } _r4011;
-typedef struct {
+typedef struct _r4015 {
 	BYTE value;
 } _r4015;
-typedef struct {
+typedef struct _r4017 {
 	BYTE value;
 	struct _r4017_litter {
 		BYTE value;
@@ -412,14 +410,14 @@ typedef struct {
 	} jitter;
 	BYTE reset_frame_delay;
 } _r4017;
-typedef struct {
+typedef struct _envelope {
 	BYTE enabled;
 	BYTE divider;
 	BYTE counter;
 	BYTE constant_volume;
 	SBYTE delay;
 } _envelope;
-typedef struct {
+typedef struct _sweep {
 	BYTE enabled;
 	BYTE negate;
 	BYTE divider;
@@ -428,17 +426,17 @@ typedef struct {
 	BYTE silence;
 	SBYTE delay;
 } _sweep;
-typedef struct {
+typedef struct _length_counter {
 	BYTE value;
 	BYTE enabled;
 	BYTE halt;
 } _length_counter;
-typedef struct {
+typedef struct _linear_counter {
 	BYTE value;
 	BYTE reload;
 	BYTE halt;
 } _linear_counter;
-typedef struct {
+typedef struct _apuSquare {
 	/* timer */
 	DBWORD timer;
 	/* ogni quanti cicli devo generare un output */
@@ -464,7 +462,7 @@ typedef struct {
 /* */ BYTE clocked;                                     /* */
 /* ------------------------------------------------------- */
 } _apuSquare;
-typedef struct {
+typedef struct _apuTriangle {
 	/* timer */
 	DBWORD timer;
 	/* ogni quanti cicli devo generare un output */
@@ -484,7 +482,7 @@ typedef struct {
 /* */ BYTE clocked;                                     /* */
 /* ------------------------------------------------------- */
 } _apuTriangle;
-typedef struct {
+typedef struct _apuNoise {
 	/* timer */
 	DBWORD timer;
 	/* ogni quanti cicli devo generare un output */
@@ -510,7 +508,7 @@ typedef struct {
 /* */ BYTE clocked;                                     /* */
 /* ------------------------------------------------------- */
 } _apuNoise;
-typedef struct {
+typedef struct _apuDMC {
 	/* ogni quanti cicli devo generare un output */
 	WORD frequency;
 
@@ -618,17 +616,17 @@ static const BYTE length_table[32] = {
 
 static const BYTE square_duty[2][4][8] = {
 	{
-		{ 0,  1,  0,  0,  0,  0,  0,  0},
-		{ 0,  1,  1,  0,  0,  0,  0,  0},
-		{ 0,  1,  1,  1,  1,  0,  0,  0},
-		{ 1,  0,  0,  1,  1,  1,  1,  1}
+		{ 1,  0,  0,  0,  0,  0,  0,  0},
+		{ 1,  1,  0,  0,  0,  0,  0,  0},
+		{ 1,  1,  1,  1,  0,  0,  0,  0},
+		{ 0,  0,  1,  1,  1,  1,  1,  1}
 	},
 	{
-		{ 0,  1,  0,  0,  0,  0,  0,  0},
-		{ 0,  1,  1,  1,  1,  0,  0,  0},
-		{ 0,  1,  1,  0,  0,  0,  0,  0},
-		{ 1,  0,  0,  1,  1,  1,  1,  1}
-	}
+		{ 1,  0,  0,  0,  0,  0,  0,  0},
+		{ 1,  1,  1,  1,  0,  0,  0,  0},
+		{ 1,  1,  0,  0,  0,  0,  0,  0},
+		{ 0,  0,  1,  1,  1,  1,  1,  1}
+	},
 };
 
 static const BYTE triangle_duty[32] = {

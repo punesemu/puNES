@@ -33,9 +33,10 @@
 
 enum blbuf_misc { master_vol = 65536 / 15 };
 
-#define _ch_gain(index, f) (master_vol * ((double) (f * cfg->apu.volume[index])) / 100)
+#define _ch_gain(index, f) ((double) (f * cfg->apu.volume[index]))
 #define ch_gain_ptnd(index) _ch_gain(index, 1.0f)
-#define ch_gain_ext(out, f) (extra_out(out) * _ch_gain(APU_EXTRA, f))
+#define _ch_gain_ext(f) (master_vol * ((double) (f * cfg->apu.volume[APU_EXTRA])) / 100)
+#define ch_gain_ext(out, f) (extra_out(out) * _ch_gain_ext(f))
 
 #define _update_tick_blbuf(type, restart)\
 	blipbuf.delta = blipbuf.output - blipbuf.type.amp;\
@@ -81,7 +82,7 @@ BYTE audio_quality_init_blipbuf(void) {
 	snd_apu_tick = audio_quality_apu_tick_blipbuf;
 	snd_end_frame = audio_quality_end_frame_blipbuf;
 
-	init_nla_table(502, 522)
+	init_nla_table(500, 500)
 
 	blipbuf.wave = blip_new(snd.samplerate / 10);
 
@@ -140,7 +141,7 @@ void audio_quality_apu_tick_blipbuf(void) {
 
 	if (S1.clocked | S2.clocked | TR.clocked | NS.clocked | DMC.clocked ) {
 		S1.clocked = S2.clocked = TR.clocked = NS.clocked = DMC.clocked = FALSE;
-		blipbuf.output = pulse_output() + tnd_output();
+		blipbuf.output = (pulse_output() + tnd_output()) * (master_vol / 100);
 		update_tick_ptnd_blbuf(1);
 	} else {
 		blipbuf.ptnd.period++;

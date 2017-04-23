@@ -803,7 +803,7 @@ static void *alsa_playback_loop(void *data) {
 
 		if ((gui_get_ms() - th->tick) >= 250.0f) {
 			th->tick = gui_get_ms();
-			//if (info.snd_info == TRUE)
+			if (info.snd_info == TRUE)
 			fprintf(stderr, "snd : %6ld %6ld %d %6d %d %6d %6d %f %3d %f %4s\r",
 				request,
 				avail,
