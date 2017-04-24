@@ -26,6 +26,7 @@ void map_init_MMC2and4(void) {
 	EXTCL_CPU_WR_MEM(MMC2and4);
 	EXTCL_SAVE_MAPPER(MMC2and4);
 	EXTCL_AFTER_RD_CHR(MMC2and4);
+	EXTCL_UPDATE_R2006(MMC2and4);
 	mapper.internal_struct[0] = (BYTE *) &mmc2and4;
 	mapper.internal_struct_size[0] = sizeof(mmc2and4);
 
@@ -132,4 +133,7 @@ void extcl_after_rd_chr_MMC2and4(WORD address) {
 	chr.bank_1k[1 | bank] = chr_chip_byte_pnt(0, value | 0x0400);
 	chr.bank_1k[2 | bank] = chr_chip_byte_pnt(0, value | 0x0800);
 	chr.bank_1k[3 | bank] = chr_chip_byte_pnt(0, value | 0x0C00);
+}
+void extcl_update_r2006_MMC2and4(WORD new_r2006, WORD old_r2006) {
+	extcl_after_rd_chr_MMC2and4(new_r2006);
 }
