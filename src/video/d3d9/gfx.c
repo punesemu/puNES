@@ -1170,16 +1170,15 @@ static BYTE d3d9_context_create(void) {
 
 		// configuro l'aspect ratio del fullscreen
 		if (cfg->fullscreen && !cfg->stretch) {
-			FLOAT ratio_surface = (((FLOAT)(gfx.w[CURRENT] / cfg->scale) * gfx.pixel_aspect_ratio)
-					/ (FLOAT)(gfx.h[CURRENT] / cfg->scale));
-			FLOAT ratio_frame = (FLOAT) gfx.w[VIDEO_MODE] / (FLOAT) gfx.h[VIDEO_MODE];
+			float ratio_surface = (((float) SCR_ROWS * gfx.pixel_aspect_ratio) / (float) (SCR_LINES));
+			float ratio_frame = (float) gfx.w[VIDEO_MODE] / (float) gfx.h[VIDEO_MODE];
 
 			if (ratio_frame > ratio_surface) {
-				vp->w = (int) ((FLOAT) gfx.h[VIDEO_MODE] * ratio_surface);
-				vp->x = (int) (((FLOAT) gfx.w[VIDEO_MODE] - (FLOAT) vp->w) * 0.5f);
+				vp->w = (int) ((float) gfx.h[VIDEO_MODE] * ratio_surface);
+				vp->x = (int) (((float) gfx.w[VIDEO_MODE] - (float) vp->w) * 0.5f);
 			} else {
-				vp->h = (int) ((FLOAT) gfx.w[VIDEO_MODE] / ratio_surface);
-				vp->y = (int) (((FLOAT) gfx.h[VIDEO_MODE] - (FLOAT) vp->h) * 0.5f);
+				vp->h = (int) ((float) gfx.w[VIDEO_MODE] / ratio_surface);
+				vp->y = (int) (((float) gfx.h[VIDEO_MODE] - (float) vp->h) * 0.5f);
 			}
 		}
 	}
