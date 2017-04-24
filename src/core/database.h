@@ -2961,6 +2961,16 @@ static const _dbelement dblist[] = {
 	{"a6b1a2acae1e4034c5e048d1318541d67a86f17c", 34, BXROMBC, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Variable Width Font Demo v0.02 by Damian Yerrick+Blargg (PD).nes */
 	{"8ef30f9143876207c9862fbc03af353df416fce7", 34, BXROMBC, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Caesars Palace (U) [b1][o1].nes */
+	{"204988c8d9547839c83e8b4d856a696d18518978", 34, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Caesars Palace (U) [b2].nes */
+	{"2e6c5157bf7b62a1a6cd9c80dd20c8d689bbd879", 34, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* WWF WrestleMania Challenge (U) [b1][o1].nes */
+	{"a93a6e0039d119ae04c5fb803723b67468f0103b", 34, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* WWF WrestleMania Challenge (U) [b2].nes */
+	{"f1745a076053b5cf55a71390b1e5d12a99c08221", 34, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* WWF WrestleMania Challenge (U) [b3].nes */
+	{"5cad070d0926f25941556c5274b5ac9ce9d1c6ef", 34, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* ------------------------------------- mapper 37 ---------------------------------------- */
 	/* Super Mario Bros. + Tetris + Nintendo World Cup (E) [b1].nes */

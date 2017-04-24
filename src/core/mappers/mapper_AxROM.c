@@ -29,6 +29,8 @@ void map_init_AxROM(void) {
 
 	if (info.id == BBCARUNL) {
 		mirroring_SCR0();
+	} else {
+		mirroring_SCR1();
 	}
 }
 void extcl_cpu_wr_mem_AxROM(WORD address, BYTE value) {
