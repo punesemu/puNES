@@ -90,11 +90,6 @@ void map_init_MMC1(void) {
 		} else if (info.prg.rom[0].banks_8k <= 32) {
 			if (info.chr.rom[0].banks_8k <= 1) {
 				info.mapper.submapper = SNROM;
-			} else if (info.chr.rom[0].banks_8k == 16) {
-				info.mapper.submapper = SKROM;
-			} else if ((info.chr.rom[0].banks_8k == 2) || (info.chr.rom[0].banks_8k == 4) ||
-					(info.chr.rom[0].banks_8k == 8)) {
-				info.mapper.submapper = SJROM;
 			}
 		} else {
 			info.mapper.submapper = SUROM;
@@ -102,31 +97,21 @@ void map_init_MMC1(void) {
 	}
 
 	switch (info.mapper.submapper) {
-		case SUROM:
 		case SNROM:
-		case SJROM:
 			/* SUROM usa 8k di PRG Ram */
 			info.prg.ram.banks_8k_plus = 1;
-			info.prg.ram.bat.banks = 1;
-			info.prg.ram.bat.start = 0;
 			break;
 		case SOROM:
 			/* SOROM usa 16k di PRG Ram */
 			info.prg.ram.banks_8k_plus = 2;
-			info.prg.ram.bat.banks = 1;
-			info.prg.ram.bat.start = 1;
 			break;
 		case SXROM:
 			/* SXROM usa 32k di PRG Ram */
 			info.prg.ram.banks_8k_plus = 4;
-			info.prg.ram.bat.banks = 4;
-			info.prg.ram.bat.start = 0;
 			break;
 		case SKROM:
 			/* SKROM usa 8k di PRG Ram */
 			info.prg.ram.banks_8k_plus = 1;
-			info.prg.ram.bat.banks = 1;
-			info.prg.ram.bat.start = 0;
 			cpu.prg_ram_wr_active = cpu.prg_ram_rd_active = TRUE;
 			break;
 		default:
