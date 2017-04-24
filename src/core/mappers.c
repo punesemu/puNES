@@ -1109,7 +1109,18 @@ void map_prg_ram_init(void) {
 				fclose(fp);
 			}
 		}
+	} else if ((info.reset >= HARD) && info.prg.ram.banks_8k_plus) {
+		int i;
+
+		for (i = 0; i < info.prg.ram.banks_8k_plus; i++) {
+			if (info.prg.ram.bat.banks && (i >= info.prg.ram.bat.start)
+					&& (i < (info.prg.ram.bat.start + info.prg.ram.bat.banks))) {
+				continue;
+			}
+			memset(prg.ram_plus + (i * 0x2000), 0x00, 0x2000);
+		}
 	}
+
 	if (info.trainer) {
 		BYTE *here = prg.ram.data;
 
