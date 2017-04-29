@@ -154,10 +154,6 @@
       <translation>Configurazione Input</translation>
     </message>
     <message>
-      <source>Controllers</source>
-      <translation type="unfinished">Controllers</translation>
-    </message>
-    <message>
       <source>Controller Port 2</source>
       <translation>Porta Controller 2</translation>
     </message>
@@ -220,6 +216,14 @@
     <message>
       <source>Joystick ID</source>
       <translation type="unfinished">Joystick ID</translation>
+    </message>
+    <message>
+      <source>Ports</source>
+      <translation type="unfinished">Ports</translation>
+    </message>
+    <message>
+      <source>Expansion Port</source>
+      <translation type="unfinished">Expansion Port</translation>
     </message>
   </context>
   <context>
@@ -612,6 +616,14 @@
     <message>
       <source>Start/Stop WAV</source>
       <translation type="unfinished">Start/Stop WAV</translation>
+    </message>
+    <message>
+      <source>Snes Mouse</source>
+      <translation type="unfinished">Snes Mouse</translation>
+    </message>
+    <message>
+      <source>Arkanoid Paddle</source>
+      <translation type="unfinished">Arkanoid Paddle</translation>
     </message>
   </context>
   <context>
