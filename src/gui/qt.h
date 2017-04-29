@@ -74,7 +74,7 @@ EXTERNC struct _gui {
 		DBWORD tl;
 	} key;
 } gui;
-EXTERNC struct _mouse {
+EXTERNC struct _gui_mouse {
 	int x;
 	int y;
 	uint8_t left;
@@ -83,7 +83,7 @@ EXTERNC struct _mouse {
 	uint8_t hidden;
 
 	double timer;
-} mouse;
+} gmouse;
 EXTERNC struct _external_windows {
 	uint8_t vs_system;
 	uint8_t apu_channels;

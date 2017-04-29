@@ -745,7 +745,7 @@ void gfx_cursor_set(void) {
 #if defined (__WIN32__)
 	gui_cursor_set();
 #else
-	if (input_zapper_is_connected((_port *) &port) == TRUE) {
+	if (input_zapper_is_connected() == TRUE) {
 		SDL_SetCursor(cursor.target);
 	} else {
 		SDL_SetCursor(cursor.org);

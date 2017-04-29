@@ -80,13 +80,13 @@ class appEventFilter: public QObject {
 
 		bool eventFilter(QObject* object, QEvent* event) {
 			if (event->type() == QEvent::MouseMove) {
-				if (mouse.hidden == TRUE) {
-					if ((input_zapper_is_connected((_port *) &port) == TRUE) ||
+				if (gmouse.hidden == TRUE) {
+					if ((input_zapper_is_connected() == TRUE) ||
 							(cfg->fullscreen != FULLSCR)) {
 						gui_cursor_hide(FALSE);
 					}
 				}
-				mouse.timer = gui_get_ms();
+				gmouse.timer = gui_get_ms();
 			}
 			return (QObject::eventFilter(object, event));
 		}
@@ -124,8 +124,8 @@ BYTE gui_create(void) {
 	qt.apuch = new dlgApuChannels(qt.mwin);
 	qt.ppuhacks = new dlgPPUHacks(qt.mwin);
 
-	mouse.hidden = FALSE;
-	mouse.timer = gui_get_ms();
+	gmouse.hidden = FALSE;
+	gmouse.timer = gui_get_ms();
 
 	gui_pmenu_management();
 
@@ -302,7 +302,7 @@ void gui_cursor_set(void) {
 #endif
 }
 void gui_cursor_hide(BYTE hide) {
-	mouse.hidden = hide;
+	gmouse.hidden = hide;
 #if defined (__WIN32__)
 	qt.screen->cursor_hide(hide);
 #else

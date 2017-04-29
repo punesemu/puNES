@@ -154,10 +154,6 @@
         <translation>Настройка управления</translation>
     </message>
     <message>
-        <source>Controllers</source>
-        <translation>Контроллеры</translation>
-    </message>
-    <message>
         <source>Controller Port 2</source>
         <translation>Порт контроллера №2</translation>
     </message>
@@ -220,6 +216,14 @@
     <message>
         <source>Joystick ID</source>
         <translation>Джойстик ID</translation>
+    </message>
+    <message>
+        <source>Ports</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Expansion Port</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -611,6 +615,14 @@
     </message>
     <message>
         <source>Start/Stop WAV</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Snes Mouse</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Arkanoid Paddle</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

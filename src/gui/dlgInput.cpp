@@ -29,6 +29,11 @@
 #endif
 #include "gui.h"
 
+typedef struct _cb_ports {
+	QString desc;
+	int value;
+} _cb_ports;
+
 enum dlg_input_shcut_mode { UPDATE_ALL, BUTTON_PRESSED, NO_ACTION = 255 };
 
 dlgInput::dlgInput(QWidget *parent = 0) : QDialog(parent) {
@@ -56,10 +61,7 @@ dlgInput::dlgInput(QWidget *parent = 0) : QDialog(parent) {
 	comboBox_cm->setItemData(2, 2);
 	connect(comboBox_cm, SIGNAL(activated(int)), this, SLOT(s_combobox_cm_activated(int)));
 
-	combobox_cp_init(comboBox_cp1, &data.port[0]);
-	combobox_cp_init(comboBox_cp2, &data.port[1]);
-	combobox_cp_init(comboBox_cp3, &data.port[2]);
-	combobox_cp_init(comboBox_cp4, &data.port[3]);
+	combobox_cp_init();
 
 	connect(checkBox_Permit_updown, SIGNAL(stateChanged(int)), this,
 			SLOT(s_checkbox_state_changed(int)));
@@ -134,51 +136,84 @@ bool dlgInput::eventFilter(QObject *obj, QEvent *event) {
 	return (QObject::eventFilter(obj, event));
 }
 void dlgInput::update_dialog() {
-	bool mode = true;
 	_cfg_port *ctrl_in;
+	int index;
 
-	groupBox_Controllers->setEnabled(true);
+	groupBox_Ports->setEnabled(true);
 	groupBox_Misc->setEnabled(true);
 
+	// Controller Mode
 	comboBox_cm->setCurrentIndex(data.settings.controller_mode);
 
-	if (data.settings.controller_mode == CTRL_MODE_NES) {
-		mode = false;
+	// Expansion Port
+	for (index = 0; index < comboBox_exp->count(); index++) {
+		if (data.settings.expansion == comboBox_exp->itemData(index).toInt()) {
+			comboBox_exp->setCurrentIndex(index);
+		}
+	}
+	switch (data.settings.controller_mode) {
+		case CTRL_MODE_NES:
+		case CTRL_MODE_FOUR_SCORE:
+			comboBox_exp->setEnabled(false);
+			break;
+		case CTRL_MODE_FAMICOM:
+			comboBox_exp->setEnabled(true);
+			break;
 	}
 
+	// Ports
 	for (int i = PORT1; i < PORT_MAX; i++) {
-		QString ctrl_name[3] = {
-			tr("Disabled"),
-			tr("Standard Pad"),
-			tr("Zapper")
-		};
-
 		ctrl_in = &data.port[i];
-
 		QComboBox *cb = findChild<QComboBox *>(QString("comboBox_cp%1").arg(ctrl_in->id));
 		QPushButton *pb = findChild<QPushButton *>(QString("pushButton_cp%1").arg(ctrl_in->id));
+		bool mode = true, finded = false;
 
-		for (int i = 0 ; i < cb->count(); i++) {
-			cb->setItemText(i, ctrl_name[i]);
+		for (index = 0; index < cb->count(); index++) {
+			QList<QVariant> type = cb->itemData(index).toList();
+
+			if (ctrl_in->port.type == type.at(0).toInt()) {
+				finded = true;
+				break;
+			}
 		}
 
-		cb->setCurrentIndex(ctrl_in->port.type);
+		if (finded == false) {
+			ctrl_in->port.type = CTRL_DISABLED;
+			index = 0;
+		}
+
+		cb->setCurrentIndex(index);
 		disconnect(pb, SIGNAL(clicked(bool)), this, SLOT(s_setup_clicked(bool)));
 
 		switch (ctrl_in->port.type) {
 			case CTRL_DISABLED:
 			case CTRL_ZAPPER:
+			case CTRL_SNES_MOUSE:
+			case CTRL_ARKANOID_PADDLE:
 				pb->setEnabled(false);
 				break;
 			case CTRL_STANDARD:
 				pb->setEnabled(true);
-				pb->setProperty("myPointer", QVariant::fromValue(((void *)ctrl_in)));
+				pb->setProperty("myPointer", QVariant::fromValue(((void *) ctrl_in)));
 				connect(pb, SIGNAL(clicked(bool)), this, SLOT(s_setup_clicked(bool)));
 				break;
 		}
 
 		if ((i >= PORT3) && (i <= PORT4)) {
 			QLabel *lb = findChild<QLabel *>(QString("label_cp%1").arg(ctrl_in->id));
+
+			switch (data.settings.controller_mode) {
+				case CTRL_MODE_NES:
+					mode = false;
+					break;
+				case CTRL_MODE_FAMICOM:
+					if (data.settings.expansion != CTRL_STANDARD) {
+						mode = false;
+					}
+					break;
+				case CTRL_MODE_FOUR_SCORE:
+					break;
+			}
 
 			lb->setEnabled(mode);
 			cb->setEnabled(mode);
@@ -189,8 +224,10 @@ void dlgInput::update_dialog() {
 		}
 	}
 
+	// Misc
 	checkBox_Permit_updown->setChecked(data.settings.permit_updown_leftright);
 
+	// Shortcuts
 	if (comboBox_joy_ID->count() > 1) {
 		comboBox_joy_ID->setItemText(comboBox_joy_ID->count() - 1, tr("Disabled"));
 	} else {
@@ -231,27 +268,91 @@ void dlgInput::update_dialog() {
 
 	pushButton_Default->setEnabled(true);
 }
-void dlgInput::combobox_cp_init(QComboBox *cb, _cfg_port *cfg_port) {
-	static int ctrl_type[3] = {
-		CTRL_DISABLED,
-		CTRL_STANDARD,
-		CTRL_ZAPPER
-	};
+void dlgInput::combobox_cp_init(QComboBox *cb, _cfg_port *cfg_port, void *list, int length) {
+	_cb_ports *cbp = (_cb_ports *) list;
+	int i;
 
-	int i, length = LENGTH(ctrl_type) - ((cfg_port->id - 1) >> 1);
+	cb->clear();
 
 	for (i = 0; i < length; i++) {
 		QList<QVariant> type;
 
-		type.append(ctrl_type[i]);
+		type.append(cbp[i].value);
 		type.append(cfg_port->id - 1);
 		type.append(QVariant::fromValue(((void *)cfg_port)));
 
-		cb->addItem("");
+		cb->addItem(cbp[i].desc);
 		cb->setItemData(i, QVariant(type));
 	}
-
 	connect(cb, SIGNAL(activated(int)), this, SLOT(s_combobox_cp_activated(int)));
+}
+void dlgInput::combobox_cp_init() {
+	// NES-001
+	static const _cb_ports ctrl_mode_nes[] {
+		{ tr("Disabled"),        CTRL_DISABLED },
+		{ tr("Standard Pad"),    CTRL_STANDARD },
+		{ tr("Zapper"),          CTRL_ZAPPER   },
+		{ tr("Snes Mouse"),      CTRL_SNES_MOUSE },
+		{ tr("Arkanoid Paddle"), CTRL_ARKANOID_PADDLE }
+	};
+	// Famicom
+	static const _cb_ports ctrl_mode_famicom_expansion_port[] {
+		{ tr("Standard Pad"),    CTRL_STANDARD },
+		{ tr("Zapper"),          CTRL_ZAPPER   },
+		{ tr("Arkanoid Paddle"), CTRL_ARKANOID_PADDLE }
+	};
+	static const _cb_ports ctrl_mode_famicom_ports1[] {
+		{ tr("Disabled"),        CTRL_DISABLED },
+		{ tr("Standard Pad"),    CTRL_STANDARD },
+		{ tr("Snes Mouse"),      CTRL_SNES_MOUSE }
+	};
+	static const _cb_ports ctrl_mode_famicom_ports2[] {
+		{ tr("Disabled"),        CTRL_DISABLED },
+		{ tr("Standard Pad"),    CTRL_STANDARD },
+		{ tr("Snes Mouse"),      CTRL_SNES_MOUSE }
+	};
+	// Four Scoure
+	static const _cb_ports ctrl_mode_four_score[] {
+		{ tr("Disabled"),        CTRL_DISABLED },
+		{ tr("Standard Pad"),    CTRL_STANDARD }
+	};
+	_cb_ports *ctrl_port1, *ctrl_port2;
+	unsigned int i, length1, length2;
+
+	switch (data.settings.controller_mode) {
+		case CTRL_MODE_NES:
+			ctrl_port1 = (_cb_ports *) &ctrl_mode_nes;
+			ctrl_port2 = (_cb_ports *) &ctrl_mode_nes;
+			length1 = length2 = LENGTH(ctrl_mode_nes);
+			break;
+		case CTRL_MODE_FAMICOM:
+			ctrl_port1 = (_cb_ports *) &ctrl_mode_famicom_ports1;
+			ctrl_port2 = (_cb_ports *) &ctrl_mode_famicom_ports2;
+			length1 = LENGTH(ctrl_mode_famicom_ports1);
+			length2 = LENGTH(ctrl_mode_famicom_ports2);
+			break;
+		case CTRL_MODE_FOUR_SCORE:
+			ctrl_port1 = (_cb_ports *) &ctrl_mode_four_score;
+			ctrl_port2 = (_cb_ports *) &ctrl_mode_four_score;
+			length1 = length2 = LENGTH(ctrl_mode_four_score);
+			break;
+	}
+
+	// Expansion Port
+	comboBox_exp->clear();
+	for (i = 0; i < LENGTH(ctrl_mode_famicom_expansion_port); i++) {
+		comboBox_exp->addItem(ctrl_mode_famicom_expansion_port[i].desc);
+		comboBox_exp->setItemData(i, ctrl_mode_famicom_expansion_port[i].value);
+	}
+	connect(comboBox_exp, SIGNAL(activated(int)), this, SLOT(s_combobox_cexp_activated(int)));
+
+	// Ports
+	combobox_cp_init(comboBox_cp1, &data.port[0], ctrl_port1, length1);
+	combobox_cp_init(comboBox_cp2, &data.port[1], ctrl_port2, length2);
+	combobox_cp_init(comboBox_cp3, &data.port[2], (void *) ctrl_mode_four_score,
+			LENGTH(ctrl_mode_four_score));
+	combobox_cp_init(comboBox_cp4, &data.port[3], (void *) ctrl_mode_four_score,
+			LENGTH(ctrl_mode_four_score));
 }
 void dlgInput::setup_shortcuts(void) {
 	QFont f9;
@@ -375,7 +476,7 @@ void dlgInput::update_groupbox_shortcuts(int mode, int type, int row) {
 				QWidget *widget;
 				BYTE joyId;
 
-				groupBox_Controllers->setEnabled(false);
+				groupBox_Ports->setEnabled(false);
 				groupBox_Misc->setEnabled(false);
 				pushButton_Default->setEnabled(false);
 
@@ -554,6 +655,14 @@ void dlgInput::s_combobox_cm_activated(int index) {
 	int type = comboBox_cm->itemData(index).toInt();
 
 	data.settings.controller_mode = type;
+	combobox_cp_init();
+	update_dialog();
+}
+void dlgInput::s_combobox_cexp_activated(int index) {
+	int type = comboBox_exp->itemData(index).toInt();
+
+	data.settings.expansion = type;
+	combobox_cp_init();
 	update_dialog();
 }
 void dlgInput::s_combobox_cp_activated(int index) {

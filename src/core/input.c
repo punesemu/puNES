@@ -16,64 +16,53 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include <string.h>
 #include "input.h"
 #include "clock.h"
-#include "info.h"
-#include "ppu.h"
-#include "palette.h"
-#include "gui.h"
 #include "gfx.h"
-#include "apu.h"
-#include "overscan.h"
-#include "fps.h"
-#include "tas.h"
+#include "info.h"
 #include "conf.h"
 #include "vs_system.h"
+#include "input/famicom.h"
+#include "input/four_score.h"
+#include "input/standard.h"
+#include "input/zapper.h"
+#include "input/snes_mouse.h"
+#include "input/arkanoid.h"
 
-#define input_wr_standard()\
-	/* if (r4016.value && !(value & 0x01)) {*/\
-	if (r4016.value || (value & 0x01)) {\
-		BYTE i;\
-		for (i = PORT1; i < PORT_MAX; i++) {\
-			port[i].index = 0;\
-		}\
-	}
-#define input_rd_standard(np)\
-	value = port[np].data[port[np].index];\
-	if (!r4016.value) {\
-		port[np].index++;\
-	}
-#define input_rd_famicon()\
-	value = port[nport].data[port[nport].index];\
-	value |= (port[nport2].data[port[nport2].index] << 1);\
-	if (!r4016.value) {\
-		port[nport].index++;\
-		port[nport2].index++;\
-	}
-#define input_rd_four_score(np)\
-	value = port[np].data[four_score[nport].count & 0x07];
-
-static void INLINE input_turbo_buttons_control_standard(_port *port);
+#define SET_DECODE_EVENT(id, funct) input_decode_event[id] = funct
+#define SET_ADD_EVENT(id, funct) input_add_event[id] = funct
+#define SET_WR_REG(funct) input_wr_reg = funct
+#define SET_RD_REG(id, funct) input_rd_reg[id] = funct
 
 void input_init(BYTE set_cursor) {
 	BYTE a;
 
 	r4016.value = 0;
 
-	for (a = PORT1; a <= PORT2; a++) {
-		memset(&four_score[a], 0x00, sizeof(_four_score));
-	}
+	input_init_four_score();
+	input_init_zapper();
+	input_init_snes_mouse();
+	input_init_arkanoid();
 
 	if (vs_system.enabled == TRUE) {
-		SET_WR_REG(input_wr_reg_vs);
+		SET_WR_REG(input_wr_reg_standard_vs);
 	} else {
 		switch (cfg->input.controller_mode) {
 			case CTRL_MODE_NES:
-			case CTRL_MODE_FAMICOM:
 				SET_WR_REG(input_wr_reg_standard);
+				SET_RD_REG(PORT1, input_rd_reg_standard);
+				SET_RD_REG(PORT2, input_rd_reg_standard);
+				break;
+			case CTRL_MODE_FAMICOM:
+				SET_WR_REG(input_wr_reg_famicom);
+				SET_RD_REG(PORT1, input_rd_reg_famicom);
+				SET_RD_REG(PORT2, input_rd_reg_famicom);
 				break;
 			case CTRL_MODE_FOUR_SCORE:
 				SET_WR_REG(input_wr_reg_four_score);
+				SET_RD_REG(PORT1, input_rd_reg_four_score);
+				SET_RD_REG(PORT2, input_rd_reg_four_score);
 				break;
 		}
 	}
@@ -82,59 +71,42 @@ void input_init(BYTE set_cursor) {
 		if (vs_system.enabled == TRUE) {
 			if (info.extra_from_db & VSZAPPER) {
 				if (a == PORT1) {
+					SET_RD_REG(a, input_rd_reg_zapper_vs);
 					input_decode_event[a] = NULL;
 					input_add_event[a] = NULL;
-					SET_RD_REG(a, input_rd_reg_vs_zapper);
 				} else if (a == PORT2) {
+					SET_RD_REG(a, input_rd_reg_standard_vs);
 					SET_DECODE_EVENT(a, input_decode_event_standard);
 					SET_ADD_EVENT(a, input_add_event_standard);
-					SET_RD_REG(a, input_rd_reg_vs_standard);
 				}
 			} else {
 				if (a <= PORT2) {
+					SET_RD_REG(a, input_rd_reg_standard_vs);
 					SET_DECODE_EVENT(a, input_decode_event_standard);
 					SET_ADD_EVENT(a, input_add_event_standard);
-					SET_RD_REG(a, input_rd_reg_vs_standard);
 				}
 			}
 		} else {
 			switch (port[a].type) {
-				case CTRL_DISABLED:
-				default:
-					input_decode_event[a] = NULL;
-					input_add_event[a] = NULL;
-					if (a <= PORT2) {
-						SET_RD_REG(a, input_rd_reg_disabled);
-					}
-					break;
 				case CTRL_STANDARD:
 					SET_DECODE_EVENT(a, input_decode_event_standard);
 					SET_ADD_EVENT(a, input_add_event_standard);
-					if (a <= PORT2) {
-						switch (cfg->input.controller_mode) {
-							case CTRL_MODE_NES:
-								SET_RD_REG(a, input_rd_reg_standard);
-								break;
-							case CTRL_MODE_FAMICOM:
-								SET_RD_REG(a, input_rd_reg_famicon_expansion);
-								break;
-							case CTRL_MODE_FOUR_SCORE:
-								SET_RD_REG(a, input_rd_reg_four_score);
-								break;
-						}
-					}
 					break;
-				case CTRL_ZAPPER:
+				case CTRL_ARKANOID_PADDLE:
 					input_decode_event[a] = NULL;
 					input_add_event[a] = NULL;
-					if (a <= PORT2) {
-						SET_RD_REG(a, input_rd_reg_zapper);
-					}
+					break;
+				case CTRL_DISABLED:
+				case CTRL_ZAPPER:
+				case CTRL_SNES_MOUSE:
+				default:
+					input_decode_event[a] = NULL;
+					input_add_event[a] = NULL;
 					break;
 			}
 		}
 
-		port[a].index = port[a].zapper = 0;
+		port[a].index = 0;
 
 		{
 			BYTE b, state = RELEASED;
@@ -144,7 +116,7 @@ void input_init(BYTE set_cursor) {
 				state = PRESSED;
 			}
 
-			for (b = 0; b < 24; b++) {
+			for (b = 0; b < LENGTH(port[a].data); b++) {
 				if (b < 8) {
 					port[a].data[b] = RELEASED;
 				} else {
@@ -159,435 +131,3 @@ void input_init(BYTE set_cursor) {
 	}
 }
 
-BYTE input_rd_reg_disabled(BYTE openbus, WORD **screen_index, BYTE nport) {
-	return (openbus);
-}
-
-static void INLINE input_turbo_buttons_control_standard(_port *port) {
-	if (port->turbo[TURBOA].active) {
-		if (++port->turbo[TURBOA].counter == port->turbo[TURBOA].frequency) {
-			port->data[BUT_A] = PRESSED;
-		} else if (port->turbo[TURBOA].counter > port->turbo[TURBOA].frequency) {
-			port->data[BUT_A] = RELEASED;
-			port->turbo[TURBOA].counter = 0;
-		}
-	}
-	if (port->turbo[TURBOB].active) {
-		if (++port->turbo[TURBOB].counter == port->turbo[TURBOB].frequency) {
-			port->data[BUT_B] = PRESSED;
-		} else if (port->turbo[TURBOB].counter > port->turbo[TURBOB].frequency) {
-			port->data[BUT_B] = RELEASED;
-			port->turbo[TURBOB].counter = 0;
-		}
-	}
-}
-BYTE input_decode_event_standard(BYTE mode, DBWORD event, BYTE type, _port *port) {
-	if (tas.type) {
-		return (EXIT_OK);
-	} else if (event == port->input[type][BUT_A]) {
-		if (!port->turbo[TURBOA].active) {
-			port->data[BUT_A] = mode;
-		}
-		return (EXIT_OK);
-	} else if (event == port->input[type][BUT_B]) {
-		if (!port->turbo[TURBOB].active) {
-			port->data[BUT_B] = mode;
-		}
-		return (EXIT_OK);
-	} else if (event == port->input[type][SELECT]) {
-		port->data[SELECT] = mode;
-		return (EXIT_OK);
-	} else if (event == port->input[type][START]) {
-		port->data[START] = mode;
-		return (EXIT_OK);
-	} else if (event == port->input[type][UP]) {
-		port->data[UP] = mode;
-		/* non possono essere premuti contemporaneamente */
-		if ((cfg->input.permit_updown_leftright == FALSE) && (mode == PRESSED)) {
-			port->data[DOWN] = RELEASED;
-		}
-		return (EXIT_OK);
-	} else if (event == port->input[type][DOWN]) {
-		port->data[DOWN] = mode;
-		/* non possono essere premuti contemporaneamente */
-		if ((cfg->input.permit_updown_leftright == FALSE) && (mode == PRESSED)) {
-			port->data[UP] = RELEASED;
-		}
-		return (EXIT_OK);
-	} else if (event == port->input[type][LEFT]) {
-		port->data[LEFT] = mode;
-		/* non possono essere premuti contemporaneamente */
-		if ((cfg->input.permit_updown_leftright == FALSE) && (mode == PRESSED)) {
-			port->data[RIGHT] = RELEASED;
-		}
-		return (EXIT_OK);
-	} else if (event == port->input[type][RIGHT]) {
-		port->data[RIGHT] = mode;
-		/* non possono essere premuti contemporaneamente */
-		if ((cfg->input.permit_updown_leftright == FALSE) && (mode == PRESSED)) {
-			port->data[LEFT] = RELEASED;
-		}
-		return (EXIT_OK);
-	} else if (event == port->input[type][TRB_A]) {
-		if (mode == PRESSED) {
-			/*if (!(port->turbo[TURBOA].active = !port->turbo[TURBOA].active)) {
-				port->data[BUT_A] = RELEASED;
-				port->turbo[TURBOA].counter = 0;
-			}*/
-			port->turbo[TURBOA].active = TRUE;
-		} else {
-			port->turbo[TURBOA].active = FALSE;
-			port->data[BUT_A] = RELEASED;
-			port->turbo[TURBOA].counter = 0;
-		}
-		return (EXIT_OK);
-	} else if (event == port->input[type][TRB_B]) {
-		if (mode == PRESSED) {
-			/*if (!(port->turbo[TURBOB].active = !port->turbo[TURBOB].active)) {
-				port->data[BUT_B] = RELEASED;
-				port->turbo[TURBOB].counter = 0;
-			}*/
-			port->turbo[TURBOB].active = TRUE;
-		} else {
-			port->turbo[TURBOB].active = FALSE;
-			port->data[BUT_B] = RELEASED;
-			port->turbo[TURBOB].counter = 0;
-		}
-		return (EXIT_OK);
-	}
-	return (EXIT_ERROR);
-}
-void input_add_event_standard(BYTE index) {
-	js_control(&js[index], &port[index]);
-	input_turbo_buttons_control_standard(&port[index]);
-}
-BYTE input_wr_reg_standard(BYTE value) {
-	/* in caso di strobe azzero l'indice */
-	input_wr_standard()
-
-	/* restituisco il nuovo valore del $4016 */
-	return(value & 0x01);
-}
-BYTE input_rd_reg_standard(BYTE openbus, WORD **screen_index, BYTE nport) {
-	BYTE value;
-
-	/*
-	 * Se $4016 e' a 1 leggo solo lo stato del primo pulsante
-	 * del controller. Quando verra' scritto 0 nel $4016
-	 * riprendero' a leggere lo stato di tutti i pulsanti.
-	 */
-	input_rd_standard(nport)
-	/*
- 	 * se avviene un DMA del DMC all'inizio
- 	 * dell'istruzione di lettura del registro,
- 	 * avverranno due letture.
- 	 */
-	if (!info.r4016_dmc_double_read_disabled && (DMC.dma_cycle == 2)) {
-		input_rd_standard(nport)
-	}
-
-	/*
-	 * NES only, both $4016 and $4017:
-	 * 7  bit  0
-	 * ---- ----
-	 * OOOx xxxD
-	 * |||| ||||
-	 * |||| |||+- Serial controller data
-	 * |||+-+++-- Always 0
-	 * +++------- Open bus
-	 */
-	return((openbus & 0xE0) | value);
-}
-
-BYTE input_rd_reg_famicon_expansion(BYTE openbus, WORD **screen_index, BYTE nport) {
-	BYTE value, nport2 = nport + 2;
-
-	/*
-	 * Se $4016 e' a 1 leggo solo lo stato del primo pulsante
-	 * del controller. Quando verra' scritto 0 nel $4016
-	 * riprendero' a leggere lo stato di tutti i pulsanti.
-	 */
-	input_rd_famicon()
-	/*
- 	 * se avviene un DMA del DMC all'inizio
- 	 * dell'istruzione di lettura del registro,
- 	 * avverrano due letture.
- 	 */
-	if (!info.r4016_dmc_double_read_disabled && (DMC.dma_cycle == 2)) {
-		input_rd_famicon()
-	}
-
-	/*
-	 * Famicom $4016:
-	 * 7  bit  0
-	 * ---- ----
-	 * OOOx xMFD
-	 * |||| ||||
-	 * |||| |||+- Player 1 serial controller data
-	 * |||| ||+-- If connected to expansion port, player 3 serial controller data (0 otherwise)
-	 * |||| |+--- Microphone in controller 2 on traditional Famicom, 0 on AV Famicom
-	 * |||+-+---- Open bus on traditional Famicom, all 0s on AV Famicom
-	 * +++------- Open bus
-	 *
-	 * Famicom $4017:
-	 * 7  bit  0
-	 * ---- ----
-	 * OOOx xxFD
-	 * |||| ||||
-	 * |||| |||+- Player 2 serial controller data
-	 * |||| ||+-- If connected to expansion port, player 4 serial controller data (0 otherwise)
-	 * |||+-+++-- Returns 0 unless something is plugged into the Famicom expansion port
-	 * +++------- Open bus
-	 */
-	/* emulo un traditional Famicom */
-	/* visto che per ora non emulo alcun microfono metto tutto a 0 */
-	return((openbus & 0xF8) | value);
-}
-
-BYTE input_wr_reg_four_score(BYTE value) {
-	value &= 0x01;
-
-	if (!value) {
-		four_score[PORT1].count = 0;
-		four_score[PORT2].count = 0;
-	}
-
-	return(value);
-}
-BYTE input_rd_reg_four_score(BYTE openbus, WORD **screen_index, BYTE nport) {
-	BYTE value = 0, nport2 = nport + 2;
-
-	if (four_score[nport].count < 8) {
-		input_rd_four_score(nport)
-	} else if (four_score[nport].count < 16) {
-		input_rd_four_score(nport2)
-	} else if (four_score[nport].count < 20) {
-		value = (four_score[nport].count - 18) ^ nport;
-	}
-
-	++four_score[nport].count;
-
-	/*
-	 * Se $4016 e' a 1 leggo solo lo stato del primo pulsante
-	 * del controller. Quando verra' scritto 0 nel $4016
-	 * riprendero' a leggere lo stato di tutti i pulsanti.
-	 */
-	//input_rd_four_score(nport)
-	/*
- 	 * se avviene un DMA del DMC all'inizio
- 	 * dell'istruzione di lettura del registro,
- 	 * avverrano due letture.
- 	 */
-	//if (!info.r4016_dmc_double_read_disabled && (DMC.dma_cycle == 2)) {
-	//	input_rd_four_score(nport)
-	//}
-
-	return(value);
-}
-
-BYTE input_rd_reg_zapper(BYTE openbus, WORD **screen_index, BYTE nport) {
-	int x_zapper = -1, y_zapper = -1;
-	int x_rect, y_rect;
-	int gx = mouse.x, gy = mouse.y;
-	int count = 0;
-
-	port[nport].zapper &= ~0x10;
-
-	if (mouse.left) {
-		port[nport].zapper |= 0x10;
-	}
-
-	if (!mouse.right) {
-		gx -= gfx.vp.x;
-		gy -= gfx.vp.y;
-		x_zapper = (float) gx / gfx.w_pr;
-		y_zapper = (float) gy / gfx.h_pr;
-	}
-
-	//fprintf(stderr, "x : %d (%d)    %d (%d)   \r", x_zapper, gui.x, y_zapper, gui.y);
-
-	if ((x_zapper <= 0) || (x_zapper >= SCR_ROWS) || (y_zapper <= 0) || (y_zapper >= SCR_LINES)) {
-		return (port[nport].zapper |= 0x08);
-	}
-
-	if (!r2002.vblank && r2001.visible && (ppu.frame_y > ppu_sclines.vint)
-		&& (ppu.screen_y < SCR_LINES)) {
-		for (y_rect = (y_zapper - 8); y_rect < (y_zapper + 8); y_rect++) {
-			if (y_rect < 0) {
-				continue;
-			}
-			if (y_rect <= (ppu.screen_y - 18)) {
-				continue;
-			}
-			if (y_rect >= ppu.screen_y) {
-				break;
-			}
-			for (x_rect = (x_zapper - 8); x_rect < (x_zapper + 8); x_rect++) {
-				if (x_rect < 0) {
-					continue;
-				}
-				if (x_rect > 255) {
-					break;
-				}
-				{
-					int brightness;
-					_color_RGB color = palette_RGB[screen_index[y_rect][x_rect]];
-
-					brightness = (color.r * 0.299) + (color.g * 0.587) + (color.b * 0.114);
-					if (brightness > 0x80) {
-						count++;
-					}
-				}
-			}
-		}
-	}
-
-	port[nport].zapper &= ~0x08;
-
-	if (count < 0x40) {
-		port[nport].zapper |= 0x08;
-	}
-
-	return (port[nport].zapper);
-}
-BYTE input_zapper_is_connected(_port *array) {
-	BYTE i;
-
-	if (vs_system.enabled == TRUE) {
-		if (info.extra_from_db & VSZAPPER) {
-			return (TRUE);
-		}
-		return (FALSE);
-	}
-
-	for (i = PORT1; i < PORT_MAX; i++) {
-		if (array[i].type == CTRL_ZAPPER) {
-			return (TRUE);
-		}
-	}
-
-	return (FALSE);
-}
-
-BYTE input_wr_reg_vs(BYTE value) {
-	vs_system.shared_mem = value & 0x02;
-
-	/* in caso di strobe azzero l'indice */
-	input_wr_standard()
-
-	/* restituisco il nuovo valore del $4016 */
-	return(value & 0x01);
-}
-BYTE input_rd_reg_vs_disabled(BYTE openbus, WORD **screen_index, BYTE nport) {
-	BYTE value = openbus;
-
-	vs_system_r4016_r4017(nport);
-}
-BYTE input_rd_reg_vs_standard(BYTE openbus, WORD **screen_index, BYTE nport) {
-	BYTE value = 0, np = !nport;
-
-	// Se $4016 e' a 1 leggo solo lo stato del primo pulsante
-	// del controller. Quando verra' scritto 0 nel $4016
-	// riprendero' a leggere lo stato di tutti i pulsanti.
-	input_rd_standard(np)
-
-	// se avviene un DMA del DMC all'inizio
- 	// dell'istruzione di lettura del registro,
- 	// avverranno due letture.
-	if (!info.r4016_dmc_double_read_disabled && (DMC.dma_cycle == 2)) {
-		input_rd_standard(np)
-	}
-
-	vs_system_r4016_r4017(nport)
-}
-BYTE input_rd_reg_vs_zapper(BYTE openbus, WORD **screen_index, BYTE nport) {
-	int x_zapper = -1, y_zapper = -1;
-	int x_rect, y_rect;
-	int gx = mouse.x, gy = mouse.y;
-	int count = 0;
-	BYTE value, trigger = 0, light = 1;
-
-	if (mouse.left) {
-		trigger = 1;
-	}
-
-	if (!mouse.right) {
-		gx -= gfx.vp.x;
-		gy -= gfx.vp.y;
-		x_zapper = (float) gx / gfx.w_pr;
-		y_zapper = (float) gy / gfx.h_pr;
-	}
-
-	if ((x_zapper <= 0) || (x_zapper >= SCR_ROWS) || (y_zapper <= 0) || (y_zapper >= SCR_LINES)) {
-		light = 0;
-	} else {
-		if (!r2002.vblank && r2001.visible && (ppu.frame_y > ppu_sclines.vint)
-				&& (ppu.screen_y < SCR_LINES)) {
-			for (y_rect = (y_zapper - 8); y_rect < (y_zapper + 8); y_rect++) {
-				if (y_rect < 0) {
-					continue;
-				}
-				if (y_rect <= (ppu.screen_y - 18)) {
-					continue;
-				}
-				if (y_rect >= ppu.screen_y) {
-					break;
-				}
-				for (x_rect = (x_zapper - 8); x_rect < (x_zapper + 8); x_rect++) {
-					if (x_rect < 0) {
-						continue;
-					}
-					if (x_rect > 255) {
-						break;
-					}
-					{
-						int brightness;
-						_color_RGB color = palette_RGB[screen_index[y_rect][x_rect]];
-
-						brightness = (color.r * 0.299) + (color.g * 0.587) + (color.b * 0.114);
-						if (brightness > 0x80) {
-							count++;
-						}
-					}
-				}
-			}
-		}
-	}
-
-	if (count < 0x40) {
-		light = 0;
-	}
-
-	// Vs. System
-	// This Zapper communicates with the same protocol as the standard controller, returning an
-	// 8-bit report after being strobed: 0, 0, 0, 0, 1, 0, Light sense (inverted), Trigger
-	// The "light sense" status corresponds to Left and the "trigger" to Right, and Up is always
-	// pressed.
-	// Unlike the NES/Famicom Zapper, the Vs. Zapper's "light sense" is 1 when detecting
-	// and 0 when not detecting.
-	switch (port[nport].index) {
-		case 0:
-		case 1:
-		case 2:
-		case 3:
-		case 5:
-		default:
-			value = 0;
-			break;
-		case 4:
-			value = 1;
-			break;
-		case 6:
-			value = light;
-			break;
-		case 7:
-			value = trigger;
-			break;
-	}
-
-	if (!r4016.value) {
-		port[nport].index++;
-	}
-
-	vs_system_r4016_r4017(nport)
-}

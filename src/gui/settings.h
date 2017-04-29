@@ -141,6 +141,7 @@ enum inp_element {
 
 	SET_INP_SK_TIMELINE_KEY,
 
+	SET_INP_EXPANSION_PORT,
 	SET_INP_P1_CONTROLLER,
 	SET_INP_P1_PAD_TYPE,
 	SET_INP_P1K_A,
@@ -450,15 +451,21 @@ static const _opt opt_slot_pgs[] = {
 	{NULL, uL("5"), 5}
 };
 
-static const _opt opt_controller[] = {
-	{NULL, uL("disable"),  CTRL_DISABLED},
-	{NULL, uL("standard"), CTRL_STANDARD},
-	{NULL, uL("zapper"),   CTRL_ZAPPER}
-};
 static const _opt opt_controller_mode[] = {
 	{NULL, uL("nes"),        CTRL_MODE_NES},
 	{NULL, uL("famicom"),    CTRL_MODE_FAMICOM},
 	{NULL, uL("four score"), CTRL_MODE_FOUR_SCORE}
+};
+static const _opt opt_expansion[] = {
+	{NULL, uL("standard"),        CTRL_STANDARD},
+	{NULL, uL("arkanoid paddle"), CTRL_ARKANOID_PADDLE}
+};
+static const _opt opt_controller[] = {
+	{NULL, uL("disable"),    CTRL_DISABLED},
+	{NULL, uL("standard"),   CTRL_STANDARD},
+	{NULL, uL("zapper"),     CTRL_ZAPPER},
+	{NULL, uL("snes mouse"), CTRL_SNES_MOUSE},
+	{NULL, uL("arkanoid paddle"), CTRL_ARKANOID_PADDLE}
 };
 static const _opt opt_pad_type[] = {
 	{NULL, uL("auto"),     CTRL_PAD_AUTO},
@@ -912,10 +919,15 @@ static const _settings inp_cfg[] = {
 #endif
 
 	{uL("special keys"), uL("timeline key"),          uL("LCtrl"),           NULL, NULL, {0, NULL}},
-
+	{
+		uL("expansion port"), uL("expansion port"), uL("standard"),
+		uL("# possible values: standard, arkanoid paddle"),
+		NULL,
+		{LENGTH(opt_expansion), opt_expansion}
+	},
 	{
 		uL("port 1"), uL("controller 1"), uL("standard"),
-		uL("# possible values: disable, standard, zapper"),
+		uL("# possible values: disable, standard, zapper, snes mouse, arkanoid paddle"),
 		NULL,
 		{LENGTH(opt_controller), opt_controller}
 	},
@@ -954,7 +966,7 @@ static const _settings inp_cfg[] = {
 	{uL("port 1"), uL("P1 TB Delay"), NULL,              NULL, NULL, {0, NULL}},
 	{
 		uL("port 2"), uL("controller 2"), uL("disable"),
-		uL("# possible values: disable, standard, zapper"),
+		uL("# possible values: disable, standard, zapper, snes mouse, arkanoid paddle"),
 		NULL,
 		{LENGTH(opt_controller), opt_controller}
 	},

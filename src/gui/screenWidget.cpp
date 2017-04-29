@@ -78,7 +78,7 @@ void screenWidget::cursor_init() {
 	target = new QCursor(QPixmap(":/pointers/pointers/target_32x32.xpm"), -1, -1);
 }
 void screenWidget::cursor_set() {
-	if (input_zapper_is_connected((_port *) &port) == TRUE) {
+	if (input_zapper_is_connected() == TRUE) {
 		setCursor((*target));
 	} else {
 		unsetCursor();
@@ -171,23 +171,23 @@ bool screenWidget::eventFilter(QObject *obj, QEvent *event) {
 		mouseEvent = ((QMouseEvent *)event);
 
 		if (mouseEvent->button() == Qt::LeftButton) {
-			mouse.left = TRUE;
+			gmouse.left = TRUE;
 		} else if (mouseEvent->button() == Qt::RightButton) {
-			mouse.right = TRUE;
+			gmouse.right = TRUE;
 		}
 	} else if (event->type() == QEvent::MouseButtonRelease) {
 		mouseEvent = ((QMouseEvent *)event);
 
 		if (mouseEvent->button() == Qt::LeftButton) {
-			mouse.left = FALSE;
+			gmouse.left = FALSE;
 		} else if (mouseEvent->button() == Qt::RightButton) {
-			mouse.right = FALSE;
+			gmouse.right = FALSE;
 		}
 	} else if (event->type() == QEvent::MouseMove) {
 		mouseEvent = ((QMouseEvent *)event);
 
-		mouse.x = mouseEvent->x();
-		mouse.y = mouseEvent->y();
+		gmouse.x = mouseEvent->x();
+		gmouse.y = mouseEvent->y();
 	}
 
 	return (QObject::eventFilter(obj, event));

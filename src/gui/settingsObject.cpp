@@ -1182,6 +1182,10 @@ void inpObject::setup() {
 	wr();
 }
 void inpObject::to_cfg(QString group) {
+	if ((group == "expansion port") || (group == "all")) {
+		int_to_val(SET_INP_EXPANSION_PORT, cfg_from_file.input.expansion);
+	}
+
 	if ((group == "port 1") || (group == "all")) {
 		int_to_val(SET_INP_P1_CONTROLLER, port[PORT1].type);
 		int_to_val(SET_INP_P1_PAD_TYPE, port[PORT1].type_pad);
@@ -1256,6 +1260,10 @@ void inpObject::to_cfg(QString group) {
 	}
 }
 void inpObject::fr_cfg(QString group) {
+	if ((group == "expansion port") || (group == "all")) {
+		cfg_from_file.input.expansion = val_to_int(SET_INP_EXPANSION_PORT);
+	}
+
 	if ((group == "port 1") || (group == "all")) {
 		port[PORT1].type = val_to_int(SET_INP_P1_CONTROLLER);
 		port[PORT1].type_pad = val_to_int(SET_INP_P1_PAD_TYPE);

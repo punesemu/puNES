@@ -1288,10 +1288,10 @@ void mainWindow::shcjoy_stop() {
 	js_shcut_stop();
 }
 void mainWindow::control_visible_cursor() {
-	if ((mouse.hidden == FALSE) && (input_zapper_is_connected((_port *) &port) == FALSE)) {
+	if ((gmouse.hidden == FALSE) && (input_zapper_is_connected() == FALSE)) {
 		if (cfg->fullscreen == FULLSCR) {
 			gui_cursor_hide(TRUE);
-		} else if ((gui_get_ms() - mouse.timer) >= 2000) {
+		} else if ((gui_get_ms() - gmouse.timer) >= 2000) {
 			gui_cursor_hide(TRUE);
 		}
 	}

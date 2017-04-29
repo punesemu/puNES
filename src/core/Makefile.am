@@ -63,6 +63,21 @@ libcore_a_SOURCES = \
 	vs_system.h
 
 libcore_a_SOURCES += \
+	input/arkanoid.h \
+	input/arkanoid.c \
+	input/famicom.h \
+	input/famicom.c \
+	input/four_score.h \
+	input/four_score.c \
+	input/mouse.h \
+	input/snes_mouse.h \
+	input/snes_mouse.c \
+	input/standard.h \
+	input/standard.c \
+	input/zapper.h \
+	input/zapper.c
+
+libcore_a_SOURCES += \
 	mappers/mapper_0.c \
 	mappers/mapper_0.h \
 	mappers/mapper_105.c \

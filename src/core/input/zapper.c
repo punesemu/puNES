@@ -1,0 +1,207 @@
+/*
+ *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ */
+
+#include "input/zapper.h"
+#include "gui.h"
+#include "info.h"
+#include "conf.h"
+#include "ppu.h"
+#include "vs_system.h"
+#include "input/mouse.h"
+
+struct _zapper {
+	BYTE data;
+} zapper[PORT_MAX];
+
+void input_init_zapper(void) {
+	memset(&zapper, 0x00, sizeof(zapper));
+}
+void input_rd_zapper(BYTE *value, BYTE nport, WORD **screen_index) {
+	int x_zapper = -1, y_zapper = -1;
+	int x_rect, y_rect;
+	int count = 0;
+
+	zapper[nport].data &= ~0x10;
+
+	if (gmouse.left) {
+		zapper[nport].data |= 0x10;
+	}
+
+	if (!gmouse.right) {
+		input_read_mouse_coords(&x_zapper, &y_zapper);
+	}
+
+	if ((x_zapper <= 0) || (x_zapper >= SCR_ROWS) || (y_zapper <= 0) || (y_zapper >= SCR_LINES)) {
+		zapper[nport].data |= 0x08;
+		(*value) |= zapper[nport].data;
+		return;
+	}
+
+	if (!r2002.vblank && r2001.visible && (ppu.frame_y > ppu_sclines.vint)
+		&& (ppu.screen_y < SCR_LINES)) {
+		for (y_rect = (y_zapper - 8); y_rect < (y_zapper + 8); y_rect++) {
+			if (y_rect < 0) {
+				continue;
+			}
+			if (y_rect <= (ppu.screen_y - 18)) {
+				continue;
+			}
+			if (y_rect >= ppu.screen_y) {
+				break;
+			}
+			for (x_rect = (x_zapper - 8); x_rect < (x_zapper + 8); x_rect++) {
+				if (x_rect < 0) {
+					continue;
+				}
+				if (x_rect > 255) {
+					break;
+				}
+				{
+					int brightness;
+					_color_RGB color = palette_RGB[screen_index[y_rect][x_rect]];
+
+					brightness = (color.r * 0.299) + (color.g * 0.587) + (color.b * 0.114);
+					if (brightness > 0x80) {
+						count++;
+					}
+				}
+			}
+		}
+	}
+
+	zapper[nport].data &= ~0x08;
+
+	if (count < 0x40) {
+		zapper[nport].data |= 0x08;
+	}
+
+	(*value) |= zapper[nport].data;
+}
+
+BYTE input_rd_reg_zapper_vs(BYTE openbus, WORD **screen_index, BYTE nport) {
+	int x_zapper = -1, y_zapper = -1;
+	int x_rect, y_rect;
+	int count = 0;
+	BYTE value, trigger = 0, light = 1;
+
+	if (gmouse.left) {
+		trigger = 1;
+	}
+
+	if (!gmouse.right) {
+		input_read_mouse_coords(&x_zapper, &y_zapper);
+	}
+
+	if ((x_zapper <= 0) || (x_zapper >= SCR_ROWS) || (y_zapper <= 0) || (y_zapper >= SCR_LINES)) {
+		light = 0;
+	} else {
+		if (!r2002.vblank && r2001.visible && (ppu.frame_y > ppu_sclines.vint)
+				&& (ppu.screen_y < SCR_LINES)) {
+			for (y_rect = (y_zapper - 8); y_rect < (y_zapper + 8); y_rect++) {
+				if (y_rect < 0) {
+					continue;
+				}
+				if (y_rect <= (ppu.screen_y - 18)) {
+					continue;
+				}
+				if (y_rect >= ppu.screen_y) {
+					break;
+				}
+				for (x_rect = (x_zapper - 8); x_rect < (x_zapper + 8); x_rect++) {
+					if (x_rect < 0) {
+						continue;
+					}
+					if (x_rect > 255) {
+						break;
+					}
+					{
+						int brightness;
+						_color_RGB color = palette_RGB[screen_index[y_rect][x_rect]];
+
+						brightness = (color.r * 0.299) + (color.g * 0.587) + (color.b * 0.114);
+						if (brightness > 0x80) {
+							count++;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	if (count < 0x40) {
+		light = 0;
+	}
+
+	// Vs. System
+	// This Zapper communicates with the same protocol as the standard controller, returning an
+	// 8-bit report after being strobed: 0, 0, 0, 0, 1, 0, Light sense (inverted), Trigger
+	// The "light sense" status corresponds to Left and the "trigger" to Right, and Up is always
+	// pressed.
+	// Unlike the NES/Famicom Zapper, the Vs. Zapper's "light sense" is 1 when detecting
+	// and 0 when not detecting.
+	switch (port[nport].index) {
+		case 0:
+		case 1:
+		case 2:
+		case 3:
+		case 5:
+		default:
+			value = 0;
+			break;
+		case 4:
+			value = 1;
+			break;
+		case 6:
+			value = light;
+			break;
+		case 7:
+			value = trigger;
+			break;
+	}
+
+	if (!r4016.value) {
+		port[nport].index++;
+	}
+
+	vs_system_r4016_r4017(nport)
+}
+
+BYTE input_zapper_is_connected() {
+	BYTE i;
+
+	if (vs_system.enabled == TRUE) {
+		if (info.extra_from_db & VSZAPPER) {
+			return (TRUE);
+		}
+		return (FALSE);
+	}
+
+	if (cfg->input.controller_mode == CTRL_MODE_FAMICOM) {
+		if (cfg->input.expansion == CTRL_ZAPPER) {
+			return (TRUE);
+		}
+	} else {
+		for (i = PORT1; i < PORT_MAX; i++) {
+			if (port[i].type == CTRL_ZAPPER) {
+				return (TRUE);
+			}
+		}
+	}
+
+	return (FALSE);
+}

@@ -71,7 +71,8 @@ class dlgInput : public QDialog, public Ui::Input_dialog {
 	private:
 		bool eventFilter(QObject *obj, QEvent *event);
 		void update_dialog();
-		void combobox_cp_init(QComboBox *cb, _cfg_port *cfg_port);
+		void combobox_cp_init(QComboBox *cb, _cfg_port *cfg_port, void *list, int length);
+		void combobox_cp_init();
 		void setup_shortcuts();
 		void combo_joy_id_init();
 		void update_groupbox_shortcuts(int mode, int type, int row);
@@ -82,6 +83,7 @@ class dlgInput : public QDialog, public Ui::Input_dialog {
 
 	private slots:
 		void s_combobox_cm_activated(int index);
+		void s_combobox_cexp_activated(int index);
 		void s_combobox_cp_activated(int index);
 		void s_setup_clicked(bool checked);
 		void s_checkbox_state_changed(int state);

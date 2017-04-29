@@ -7,23 +7,23 @@
     <x>0</x>
     <y>0</y>
     <width>481</width>
-    <height>671</height>
+    <height>711</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Input Configuration</string>
   </property>
-  <widget class="QGroupBox" name="groupBox_Controllers">
+  <widget class="QGroupBox" name="groupBox_Ports">
    <property name="geometry">
     <rect>
      <x>10</x>
      <y>10</y>
      <width>461</width>
-     <height>181</height>
+     <height>221</height>
     </rect>
    </property>
    <property name="title">
-    <string>Controllers</string>
+    <string>Ports</string>
    </property>
    <property name="flat">
     <bool>true</bool>
@@ -34,21 +34,11 @@
       <x>0</x>
       <y>20</y>
       <width>461</width>
-      <height>161</height>
+      <height>201</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout">
-     <item row="1" column="1">
-      <widget class="QComboBox" name="comboBox_cp1">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0">
+     <item row="3" column="0">
       <widget class="QLabel" name="label_cp2">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
@@ -61,14 +51,14 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="2">
+     <item row="2" column="2">
       <widget class="QPushButton" name="pushButton_cp1">
        <property name="text">
         <string>Setup</string>
        </property>
       </widget>
      </item>
-     <item row="3" column="0">
+     <item row="4" column="0">
       <widget class="QLabel" name="label_cp3">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
@@ -81,7 +71,7 @@
        </property>
       </widget>
      </item>
-     <item row="4" column="0">
+     <item row="5" column="0">
       <widget class="QLabel" name="label_cp4">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
@@ -94,7 +84,7 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="1">
+     <item row="4" column="1">
       <widget class="QComboBox" name="comboBox_cp3">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -104,14 +94,14 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="2">
+     <item row="4" column="2">
       <widget class="QPushButton" name="pushButton_cp3">
        <property name="text">
         <string>Setup</string>
        </property>
       </widget>
      </item>
-     <item row="4" column="1">
+     <item row="5" column="1">
       <widget class="QComboBox" name="comboBox_cp4">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -121,7 +111,7 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="0">
+     <item row="2" column="0">
       <widget class="QLabel" name="label_cp1">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
@@ -134,14 +124,14 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="2">
+     <item row="3" column="2">
       <widget class="QPushButton" name="pushButton_cp2">
        <property name="text">
         <string>Setup</string>
        </property>
       </widget>
      </item>
-     <item row="2" column="1">
+     <item row="3" column="1">
       <widget class="QComboBox" name="comboBox_cp2">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -151,7 +141,7 @@
        </property>
       </widget>
      </item>
-     <item row="4" column="2">
+     <item row="5" column="2">
       <widget class="QPushButton" name="pushButton_cp4">
        <property name="text">
         <string>Setup</string>
@@ -181,6 +171,26 @@
        </property>
       </widget>
      </item>
+     <item row="2" column="1">
+      <widget class="QComboBox" name="comboBox_cp1">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QComboBox" name="comboBox_exp"/>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_exp">
+       <property name="text">
+        <string>Expansion Port</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </widget>
   </widget>
@@ -188,7 +198,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>630</y>
+     <y>670</y>
      <width>461</width>
      <height>31</height>
     </rect>
@@ -234,7 +244,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>190</y>
+     <y>230</y>
      <width>461</width>
      <height>61</height>
     </rect>
@@ -263,7 +273,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>250</y>
+     <y>290</y>
      <width>461</width>
      <height>371</height>
     </rect>
