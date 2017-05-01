@@ -142,7 +142,7 @@ bool screenWidget::eventFilter(QObject *obj, QEvent *event) {
 
 		if (!tas.type) {
 			for (BYTE i = PORT1; i < PORT_MAX; i++) {
-				if (input_decode_event[i] && (input_decode_event[i](PRESSED,
+				if (port_funct[i].input_decode_event && (port_funct[i].input_decode_event(PRESSED,
 						keyval, KEYBOARD, &port[i]) == EXIT_OK)) {
 					return (true);
 				}
@@ -161,7 +161,7 @@ bool screenWidget::eventFilter(QObject *obj, QEvent *event) {
 
 		if (!tas.type) {
 			for (BYTE i = PORT1; i < PORT_MAX; i++) {
-				if (input_decode_event[i] && (input_decode_event[i](RELEASED,
+				if (port_funct[i].input_decode_event && (port_funct[i].input_decode_event(RELEASED,
 						keyval, KEYBOARD, &port[i]) == EXIT_OK)) {
 					return (true);
 				}

@@ -31,7 +31,7 @@ struct _zapper {
 void input_init_zapper(void) {
 	memset(&zapper, 0x00, sizeof(zapper));
 }
-void input_rd_zapper(BYTE *value, BYTE nport, WORD **screen_index) {
+void input_rd_zapper(BYTE *value, BYTE nport, BYTE shift) {
 	int x_zapper = -1, y_zapper = -1;
 	int x_rect, y_rect;
 	int count = 0;
@@ -73,7 +73,7 @@ void input_rd_zapper(BYTE *value, BYTE nport, WORD **screen_index) {
 				}
 				{
 					int brightness;
-					_color_RGB color = palette_RGB[screen_index[y_rect][x_rect]];
+					_color_RGB color = palette_RGB[screen.line[y_rect][x_rect]];
 
 					brightness = (color.r * 0.299) + (color.g * 0.587) + (color.b * 0.114);
 					if (brightness > 0x80) {
@@ -93,11 +93,11 @@ void input_rd_zapper(BYTE *value, BYTE nport, WORD **screen_index) {
 	(*value) |= zapper[nport].data;
 }
 
-BYTE input_rd_reg_zapper_vs(BYTE openbus, WORD **screen_index, BYTE nport) {
+void input_rd_zapper_vs(BYTE *value, BYTE nport, BYTE shift) {
 	int x_zapper = -1, y_zapper = -1;
 	int x_rect, y_rect;
 	int count = 0;
-	BYTE value, trigger = 0, light = 1;
+	BYTE trigger = 0, light = 1;
 
 	if (gmouse.left) {
 		trigger = 1;
@@ -131,7 +131,7 @@ BYTE input_rd_reg_zapper_vs(BYTE openbus, WORD **screen_index, BYTE nport) {
 					}
 					{
 						int brightness;
-						_color_RGB color = palette_RGB[screen_index[y_rect][x_rect]];
+						_color_RGB color = palette_RGB[screen.line[y_rect][x_rect]];
 
 						brightness = (color.r * 0.299) + (color.g * 0.587) + (color.b * 0.114);
 						if (brightness > 0x80) {
@@ -161,24 +161,26 @@ BYTE input_rd_reg_zapper_vs(BYTE openbus, WORD **screen_index, BYTE nport) {
 		case 3:
 		case 5:
 		default:
-			value = 0;
+			(*value) = 0;
 			break;
 		case 4:
-			value = 1;
+			(*value) = 1;
 			break;
 		case 6:
-			value = light;
+			(*value) = light;
+			//fprintf(stderr, "LIGHT : %d %d\n", nport, count);
 			break;
 		case 7:
-			value = trigger;
+			(*value) = trigger;
+			//fprintf(stderr, "TRIGG : %d %d\n", nport, (*value));
 			break;
 	}
 
-	if (!r4016.value) {
-		port[nport].index++;
+	if (!(r4016.value & 0x01)) {
+		if (++port[nport].index >= 8) {
+			port[nport].index = 0;
+		}
 	}
-
-	vs_system_r4016_r4017(nport)
 }
 
 BYTE input_zapper_is_connected() {

@@ -90,6 +90,7 @@ BYTE ines_load_rom(void) {
 			 * database inizializzo queste variabili.
 			 */
 			info.mirroring_db = info.id = DEFAULT;
+			info.extra_from_db = 0;
 
 			info.mapper.id = ((flags[FL8] & 0x0F) << 8) | (flags[FL7] & 0xF0) | (flags[FL6] >> 4);
 			info.mapper.submapper = (flags[FL8] & 0xF0) >> 4;

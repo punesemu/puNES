@@ -91,7 +91,7 @@ void js_init(BYTE first_time) {
 		}
 
 		usnprintf(js[i].dev, usizeof(js[i].dev), uL("" JS_DEV_PATH "%d"), port[i].joy_id);
-		js[i].input_decode_event = input_decode_event[i];
+		js[i].input_decode_event = port_funct[i].input_decode_event;
 		js_open(&js[i]);
 	}
 }

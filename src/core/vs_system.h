@@ -66,37 +66,6 @@ enum vs_system_special_mode {
 			vs_system.r4020.type.old.timer = 0;\
 		}\
 	}
-#define vs_system_r4016_r4017(port)\
-	if (port == PORT1) {\
-		/*
-		 * port $4016
-		 * 7  bit  0
-		 * ---- ----
-		 * xCCD DSxB
-		 *  ||| || |
-		 *  ||| || +- Buttons for player 2 (A, B, 1, 3, Up, Down, Left, Right)
-		 *  ||| |+--- Service button (commonly inserts a credit)
-		 *  ||+-+---- DIP switches "2" and "1", respectively
-		 *  ++------- Coin inserted (read below)
-		 */\
-		return ((vs_system.coins.right ? 0x40 : 0x00) |\
-				(vs_system.coins.left ? 0x20 : 0x00) |\
-				((cfg->dipswitch & 0x03) << 3) |\
-				(vs_system.coins.service ? 0x04 : 0x00) |\
-				(value & 0x01));\
-	} else {\
-		/*
-		 * port $4017
-		 * 7  bit  0
-		 * ---- ----
-		 * DDDD DDxB
-		 * |||| || |
-		 * |||| || +- Buttons for player 1 (A, B, 2, 4, Up, Down, Left, Right)
-		 * ++++-++--- More DIP switches (7 down to 2)
-		 */\
-		vs_system.watchdog.timer = 0;\
-		return ((cfg->dipswitch & 0xFC) | (value & 0x01));\
-	}
 
 typedef struct _r4020_base {
 	DBWORD timer;

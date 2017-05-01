@@ -30,10 +30,6 @@ void input_init_snes_mouse(void) {
 	memset(&snes_mouse, 0x00, sizeof(snes_mouse));
 }
 void input_wr_snes_mouse(BYTE *value, BYTE nport) {
-	if (nport > PORT2) {
-		return;
-	}
-
 	if ((r4016.value & 0x01) && !((*value) & 0x01)) {
 		BYTE dx = 0x00, dy = 0x00;
 		int gx, gy;
@@ -77,11 +73,7 @@ void input_wr_snes_mouse(BYTE *value, BYTE nport) {
 	}
 }
 void input_rd_snes_mouse(BYTE *value, BYTE nport, BYTE shift) {
-	if (nport > PORT2) {
-		return;
-	}
-
-	(*value) |= ((snes_mouse[nport].latch & 0x80000000) >> 31) << shift;
+	(*value) |= ((snes_mouse[nport].latch & 0x80000000) >> 31);
 
 	if (r4016.value & 0x01) {
 		if (++snes_mouse[nport].sensitivity > 2) {

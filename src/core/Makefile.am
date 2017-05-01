@@ -70,10 +70,14 @@ libcore_a_SOURCES += \
 	input/four_score.h \
 	input/four_score.c \
 	input/mouse.h \
+	input/nes_001.h \
+	input/nes_001.c \
 	input/snes_mouse.h \
 	input/snes_mouse.c \
-	input/standard.h \
-	input/standard.c \
+	input/standard_controller.h \
+	input/standard_controller.c \
+	input/vs.h \
+	input/vs.c \
 	input/zapper.h \
 	input/zapper.c
 

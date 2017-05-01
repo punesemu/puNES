@@ -1078,7 +1078,7 @@ static void js_update_jdev(_js *joy, BYTE enable_decode, BYTE decode_index) {
 		joy->inited = TRUE;
 
 		if (enable_decode) {
-			joy->input_decode_event = input_decode_event[decode_index];
+			joy->input_decode_event = port_funct[decode_index].input_decode_event;
 		}
 	}
 }

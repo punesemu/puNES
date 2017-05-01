@@ -102,6 +102,12 @@ typedef struct _port {
 typedef struct _array_pointers_port {
 	_port *port[PORT_MAX];
 } _array_pointers_port;
+typedef struct _port_funct {
+	void (*input_wr)(BYTE *value, BYTE nport);
+	void (*input_rd)(BYTE *value, BYTE nport, BYTE shift);
+	void (*input_add_event)(BYTE index);
+	BYTE (*input_decode_event)(BYTE mode, DBWORD event, BYTE type, _port *port);
+} _port_funct;
 
 #if defined (__cplusplus)
 #define EXTERNC extern "C"
@@ -111,16 +117,17 @@ typedef struct _array_pointers_port {
 
 EXTERNC _r4016 r4016;
 EXTERNC _port port[PORT_MAX];
+EXTERNC _port_funct port_funct[PORT_MAX];
 
 EXTERNC void input_init(BYTE set_cursor);
+
+EXTERNC void input_wr_disabled(BYTE *value, BYTE nport);
+EXTERNC void input_rd_disabled(BYTE *value, BYTE nport, BYTE shift);
 
 EXTERNC BYTE input_zapper_is_connected();
 
 EXTERNC BYTE (*input_wr_reg)(BYTE value);
-EXTERNC BYTE (*input_rd_reg[2])(BYTE openbus, WORD **screen_index, BYTE nport);
-
-EXTERNC void (*input_add_event[PORT_MAX])(BYTE index);
-EXTERNC BYTE (*input_decode_event[PORT_MAX])(BYTE mode, DBWORD event, BYTE type, _port *port);
+EXTERNC BYTE (*input_rd_reg[2])(BYTE openbus, BYTE nport);
 
 #undef EXTERNC
 

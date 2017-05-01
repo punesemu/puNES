@@ -316,8 +316,8 @@ void dlgInput::combobox_cp_init() {
 		{ tr("Disabled"),        CTRL_DISABLED },
 		{ tr("Standard Pad"),    CTRL_STANDARD }
 	};
-	_cb_ports *ctrl_port1, *ctrl_port2;
-	unsigned int i, length1, length2;
+	_cb_ports *ctrl_port1 = NULL, *ctrl_port2 = NULL;
+	unsigned int i, length1 = 0, length2 = 0;
 
 	switch (data.settings.controller_mode) {
 		case CTRL_MODE_NES:

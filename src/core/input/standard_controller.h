@@ -16,19 +16,15 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef INPUT_STANDARD_H_
-#define INPUT_STANDARD_H_
+#ifndef INPUT_STANDARD_CONTROLLER_H_
+#define INPUT_STANDARD_CONTROLLER_H_
 
 #include "../input.h"
 
-BYTE input_wr_reg_standard(BYTE value);
-BYTE input_rd_reg_standard(BYTE openbus, WORD **screen_index, BYTE nport);
-void input_wr_standard(BYTE *value, BYTE nport);
+void input_wr_standard_controller(BYTE *value, BYTE nport);
+void input_rd_standard_controller(BYTE *value, BYTE nport, BYTE shift);
 
-BYTE input_wr_reg_standard_vs(BYTE value);
-BYTE input_rd_reg_standard_vs(BYTE openbus, WORD **screen_index, BYTE nport);
+void input_add_event_standard_controller(BYTE index);
+BYTE input_decode_event_standard_controller(BYTE mode, DBWORD event, BYTE type, _port *port);
 
-void input_add_event_standard(BYTE index);
-BYTE input_decode_event_standard(BYTE mode, DBWORD event, BYTE type, _port *port);
-
-#endif /* INPUT_STANDARD_H_ */
+#endif /* INPUT_STANDARD_CONTROLLER_H_ */

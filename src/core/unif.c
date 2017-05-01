@@ -25,6 +25,7 @@
 #include "emu.h"
 #include "conf.h"
 #include "cheat.h"
+#include "vs_system.h"
 
 enum unif_phase_type { UNIF_COUNT, UNIF_READ };
 enum unif_no_types { NO_INES = 65535, NO_UNIF = 65535 };
@@ -200,6 +201,8 @@ BYTE unif_load_rom(void) {
 	info.prg.ram.bat.banks = 0;
 	info.mapper.submapper = DEFAULT;
 	info.mirroring_db = info.id = DEFAULT;
+	info.extra_from_db = 0;
+	vs_system.enabled = FALSE;
 
 	if (strncmp(unif.header.identification, "UNIF", 4) == 0) {
 		long position = ftell(fp);

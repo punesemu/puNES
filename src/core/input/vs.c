@@ -16,66 +16,66 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include "input/famicom.h"
+#include "input/vs.h"
 #include "info.h"
-#include "apu.h"
+#include "conf.h"
+#include "vs_system.h"
 
-static void INLINE _input_rd_reg_famicom(BYTE *value, BYTE nport);
+static void INLINE _input_rd_reg_vs(BYTE *value, BYTE nport);
 
-BYTE input_wr_reg_famicom(BYTE value) {
+BYTE input_wr_reg_vs(BYTE value) {
+	vs_system.shared_mem = value & 0x02;
+
 	// in caso di strobe azzero l'indice
 	port_funct[PORT1].input_wr(&value, PORT1);
 	port_funct[PORT2].input_wr(&value, PORT2);
-	port_funct[PORT3].input_wr(&value, PORT3);
-	port_funct[PORT3].input_wr(&value, PORT4);
 
 	// restituisco il nuovo valore del $4016
 	return (value);
 }
-BYTE input_rd_reg_famicom_r4016(BYTE openbus, BYTE nport) {
+BYTE input_rd_reg_vs_r4016(BYTE openbus, BYTE nport) {
 	BYTE value = 0;
 
-	_input_rd_reg_famicom(&value, nport);
+	_input_rd_reg_vs(&value, !nport);
 
-	// Famicom $4016:
+	// port $4016
 	// 7  bit  0
 	// ---- ----
-	// oooo oMFD
-	// |||| ||||
-	// |||| |||+- Player 1 serial controller data
-	// |||| ||+-- If connected to expansion port (and available), player 3 serial controller data (0 otherwise)
-	// |||| |+--- Microphone in controller 2 on traditional Famicom, 0 on AV Famicom
-	// ++++-+---- Open bus
-	return ((openbus & 0xF8) | value);
+	// xCCD DSxB
+	//  ||| || |
+	//  ||| || +- Buttons for player 2 (A, B, 1, 3, Up, Down, Left, Right)
+	//  ||| |+--- Service button (commonly inserts a credit)
+	//  ||+-+---- DIP switches "2" and "1", respectively
+	//  ++------- Coin inserted (read below)
+	return ((vs_system.coins.right ? 0x40 : 0x00) |
+			(vs_system.coins.left ? 0x20 : 0x00) |
+			((cfg->dipswitch & 0x03) << 3) |
+			(vs_system.coins.service ? 0x04 : 0x00) |
+			(value & 0x01));
 }
-BYTE input_rd_reg_famicom_r4017(BYTE openbus, BYTE nport) {
+BYTE input_rd_reg_vs_r4017(BYTE openbus, BYTE nport) {
 	BYTE value = 0;
 
-	_input_rd_reg_famicom(&value, nport);
+	vs_system.watchdog.timer = 0;
+	_input_rd_reg_vs(&value, !nport);
 
-	// Famicom $4017:
+	// port $4017
 	// 7  bit  0
 	// ---- ----
-	// oooX XXFD
-	// |||| ||||
-	// |||| |||+- Player 2 serial controller data
-	// |||| ||+-- If connected to expansion port, player 4 serial controller data (0 otherwise)
-	// |||+-+++-- Returns 0 unless something is plugged into the Famicom expansion port
-	// +++------- Open bus
-	return ((openbus & 0xE0) | value);
+	// DDDD DDxB
+	// |||| || |
+	// |||| || +- Buttons for player 1 (A, B, 2, 4, Up, Down, Left, Right)
+	// ++++-++--- More DIP switches (7 down to 2)
+	return ((cfg->dipswitch & 0xFC) | (value & 0x01));
 }
 
-static void INLINE _input_rd_reg_famicom(BYTE *value, BYTE nport) {
-	(*value) = 0;
+static void INLINE _input_rd_reg_vs(BYTE *value, BYTE nport) {
 	port_funct[nport].input_rd(value, nport, 0);
-	port_funct[nport + 2].input_rd(value, nport + 2, 1);
 
 	// se avviene un DMA del DMC all'inizio
 	// dell'istruzione di lettura del registro,
 	// avverranno due letture.
 	if (!info.r4016_dmc_double_read_disabled && (DMC.dma_cycle == 2)) {
-		(*value) = 0;
 		port_funct[nport].input_rd(value, nport, 0);
-		port_funct[nport + 2].input_rd(value, nport + 2, 1);
 	}
 }

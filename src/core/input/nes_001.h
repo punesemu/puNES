@@ -16,13 +16,12 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef INPUT_FAMICON_H_
-#define INPUT_FAMICON_H_
+#ifndef INPUT_NES_001_H
+#define INPUT_NES_001_H
 
 #include "../input.h"
 
-BYTE input_wr_reg_famicom(BYTE value);
-BYTE input_rd_reg_famicom_r4016(BYTE openbus, BYTE nport);
-BYTE input_rd_reg_famicom_r4017(BYTE openbus, BYTE nport);
+BYTE input_wr_reg_nes_001(BYTE value);
+BYTE input_rd_reg_nes_001(BYTE openbus, BYTE nport);
 
-#endif /* INPUT_FAMICON_H_ */
+#endif /* INPUT_NES_001 */

@@ -21,7 +21,7 @@
 #define put_pixel(type, p0, p1)\
 	*(type *) (dstpix + p0 + p1) = (type) pixel
 
-void INLINE scale_surface1x(WORD **screen_index, uint32_t *palette, uint32_t pitch, void *pix);
+static void INLINE scale_surface1x(WORD **screen_index, uint32_t *palette, uint32_t pitch, void *pix);
 
 static struct _scl {
 	WORD sx;

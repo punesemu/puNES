@@ -37,7 +37,7 @@ BYTE input_wr_reg_four_score(BYTE value) {
 
 	return (value);
 }
-BYTE input_rd_reg_four_score(BYTE openbus, WORD **screen_index, BYTE nport) {
+BYTE input_rd_reg_four_score(BYTE openbus, BYTE nport) {
 	BYTE value = 0;
 
 	if (four_score[nport].count < 8) {

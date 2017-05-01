@@ -42,9 +42,7 @@ void input_init_arkanoid(void) {
 void input_wr_arkanoid(BYTE *value, BYTE nport) {
 	static const float ratio = (float) ark_rows / (float) ark_stop_x;
 
-	if (nport > PORT2) {
-		return;
-	}
+	nport &= 0x01;
 
 	if ((r4016.value & 0x01) && !((*value) & 0x01)) {;
 		int x, y;
@@ -65,18 +63,14 @@ void input_wr_arkanoid(BYTE *value, BYTE nport) {
 		arkanoid[nport].button = gmouse.left;
 	}
 }
-void input_rd_arkanoid(BYTE *value, BYTE nport) {
-	if (nport > PORT2) {
-		return;
-	}
-
+void input_rd_arkanoid(BYTE *value, BYTE nport, BYTE shift) {
 	if (cfg->input.controller_mode == CTRL_MODE_FAMICOM) {
-		if (nport == PORT1) {
+		if ((nport & 0x01) == PORT1) {
 			(*value) |= (arkanoid[0].button << 1);
 			return;
 		}
 
-		if (nport == PORT2) {
+		if ((nport & 0x01) == PORT2) {
 			(*value) |= (arkanoid[0].x & 0x80) >> 6;
 			arkanoid[0].x = (arkanoid[0].x << 1) & 0xFF;
 			return;

@@ -23,6 +23,6 @@
 
 void input_init_four_score(void);
 BYTE input_wr_reg_four_score(BYTE value);
-BYTE input_rd_reg_four_score(BYTE openbus, WORD **screen_index, BYTE nport);
+BYTE input_rd_reg_four_score(BYTE openbus, BYTE nport);
 
 #endif /* INPUT_FOUR_SCORE_H */

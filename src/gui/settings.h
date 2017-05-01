@@ -458,6 +458,7 @@ static const _opt opt_controller_mode[] = {
 };
 static const _opt opt_expansion[] = {
 	{NULL, uL("standard"),        CTRL_STANDARD},
+	{NULL, uL("zapper"),          CTRL_ZAPPER},
 	{NULL, uL("arkanoid paddle"), CTRL_ARKANOID_PADDLE}
 };
 static const _opt opt_controller[] = {
@@ -921,7 +922,7 @@ static const _settings inp_cfg[] = {
 	{uL("special keys"), uL("timeline key"),          uL("LCtrl"),           NULL, NULL, {0, NULL}},
 	{
 		uL("expansion port"), uL("expansion port"), uL("standard"),
-		uL("# possible values: standard, arkanoid paddle"),
+		uL("# possible values: standard, zapper, arkanoid paddle"),
 		NULL,
 		{LENGTH(opt_expansion), opt_expansion}
 	},

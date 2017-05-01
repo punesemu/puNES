@@ -96,8 +96,8 @@ BYTE emu_frame(void) {
 			BYTE i;
 
 			for (i = PORT1; i < PORT_MAX; i++) {
-				if (input_add_event[i]) {
-					input_add_event[i](i);
+				if (port_funct[i].input_add_event) {
+					port_funct[i].input_add_event(i);
 				}
 			}
 		}
@@ -356,6 +356,7 @@ BYTE emu_search_in_database(FILE *fp) {
 
 	/* setto i default prima della ricerca */
 	info.machine[DATABASE] = info.mapper.submapper = info.mirroring_db = info.id = DEFAULT;
+	info.extra_from_db = 0;
 	vs_system.ppu = vs_system.special_mode.type = DEFAULT;
 
 	/* posiziono il puntatore del file */

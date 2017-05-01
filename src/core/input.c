@@ -23,17 +23,23 @@
 #include "info.h"
 #include "conf.h"
 #include "vs_system.h"
+#include "input/nes_001.h"
 #include "input/famicom.h"
 #include "input/four_score.h"
-#include "input/standard.h"
+#include "input/vs.h"
+#include "input/standard_controller.h"
 #include "input/zapper.h"
 #include "input/snes_mouse.h"
 #include "input/arkanoid.h"
 
-#define SET_DECODE_EVENT(id, funct) input_decode_event[id] = funct
-#define SET_ADD_EVENT(id, funct) input_add_event[id] = funct
 #define SET_WR_REG(funct) input_wr_reg = funct
 #define SET_RD_REG(id, funct) input_rd_reg[id] = funct
+
+#define SET_WR(id, funct) port_funct[id].input_wr = funct
+#define SET_RD(id, funct) port_funct[id].input_rd = funct
+
+#define SET_DECODE_EVENT(id, funct) port_funct[id].input_decode_event = funct
+#define SET_ADD_EVENT(id, funct) port_funct[id].input_add_event = funct
 
 void input_init(BYTE set_cursor) {
 	BYTE a;
@@ -46,18 +52,21 @@ void input_init(BYTE set_cursor) {
 	input_init_arkanoid();
 
 	if (vs_system.enabled == TRUE) {
-		SET_WR_REG(input_wr_reg_standard_vs);
+		SET_WR_REG(input_wr_reg_vs);
+		SET_RD_REG(PORT1, input_rd_reg_vs_r4016);
+		SET_RD_REG(PORT2, input_rd_reg_vs_r4017);
 	} else {
 		switch (cfg->input.controller_mode) {
+			default:
 			case CTRL_MODE_NES:
-				SET_WR_REG(input_wr_reg_standard);
-				SET_RD_REG(PORT1, input_rd_reg_standard);
-				SET_RD_REG(PORT2, input_rd_reg_standard);
+				SET_WR_REG(input_wr_reg_nes_001);
+				SET_RD_REG(PORT1, input_rd_reg_nes_001);
+				SET_RD_REG(PORT2, input_rd_reg_nes_001);
 				break;
 			case CTRL_MODE_FAMICOM:
 				SET_WR_REG(input_wr_reg_famicom);
-				SET_RD_REG(PORT1, input_rd_reg_famicom);
-				SET_RD_REG(PORT2, input_rd_reg_famicom);
+				SET_RD_REG(PORT1, input_rd_reg_famicom_r4016);
+				SET_RD_REG(PORT2, input_rd_reg_famicom_r4017);
 				break;
 			case CTRL_MODE_FOUR_SCORE:
 				SET_WR_REG(input_wr_reg_four_score);
@@ -68,41 +77,81 @@ void input_init(BYTE set_cursor) {
 	}
 
 	for (a = PORT1; a < PORT_MAX; a++) {
+		SET_WR(a, input_wr_disabled);
+		SET_RD(a, input_rd_disabled);
+		SET_DECODE_EVENT(a, NULL);
+		SET_ADD_EVENT(a, NULL);
+
+		// VS SYSTEM
 		if (vs_system.enabled == TRUE) {
 			if (info.extra_from_db & VSZAPPER) {
-				if (a == PORT1) {
-					SET_RD_REG(a, input_rd_reg_zapper_vs);
-					input_decode_event[a] = NULL;
-					input_add_event[a] = NULL;
-				} else if (a == PORT2) {
-					SET_RD_REG(a, input_rd_reg_standard_vs);
-					SET_DECODE_EVENT(a, input_decode_event_standard);
-					SET_ADD_EVENT(a, input_add_event_standard);
+				switch (a) {
+					case PORT1:
+						SET_WR(a, input_wr_standard_controller);
+						SET_RD(a, input_rd_standard_controller);
+						SET_DECODE_EVENT(a, input_decode_event_standard_controller);
+						SET_ADD_EVENT(a, input_add_event_standard_controller);
+						break;
+					case PORT2:
+						SET_WR(a, input_wr_standard_controller);
+						SET_RD(a, input_rd_zapper_vs);
+						break;
+					default:
+						break;
 				}
 			} else {
-				if (a <= PORT2) {
-					SET_RD_REG(a, input_rd_reg_standard_vs);
-					SET_DECODE_EVENT(a, input_decode_event_standard);
-					SET_ADD_EVENT(a, input_add_event_standard);
+				switch (a) {
+					case PORT1:
+					case PORT2:
+						SET_WR(a, input_wr_standard_controller);
+						SET_RD(a, input_rd_standard_controller);
+						SET_DECODE_EVENT(a, input_decode_event_standard_controller);
+						SET_ADD_EVENT(a, input_add_event_standard_controller);
+						break;
+					default:
+						break;
 				}
 			}
 		} else {
-			switch (port[a].type) {
-				case CTRL_STANDARD:
-					SET_DECODE_EVENT(a, input_decode_event_standard);
-					SET_ADD_EVENT(a, input_add_event_standard);
-					break;
-				case CTRL_ARKANOID_PADDLE:
-					input_decode_event[a] = NULL;
-					input_add_event[a] = NULL;
-					break;
-				case CTRL_DISABLED:
-				case CTRL_ZAPPER:
-				case CTRL_SNES_MOUSE:
-				default:
-					input_decode_event[a] = NULL;
-					input_add_event[a] = NULL;
-					break;
+			// Famicom
+			if (cfg->input.controller_mode == CTRL_MODE_FAMICOM) {
+				switch (port[a].type) {
+					case CTRL_STANDARD:
+						SET_WR(a, input_wr_standard_controller);
+						SET_RD(a, input_rd_standard_controller);
+						SET_DECODE_EVENT(a, input_decode_event_standard_controller);
+						SET_ADD_EVENT(a, input_add_event_standard_controller);
+						break;
+					case CTRL_SNES_MOUSE:
+						SET_WR(a, input_wr_snes_mouse);
+						SET_RD(a, input_rd_snes_mouse);
+						break;
+					default:
+						break;
+				}
+			} else {
+				// NES-001 e Four Score
+				switch (port[a].type) {
+					case CTRL_STANDARD:
+						SET_WR(a, input_wr_standard_controller);
+						SET_RD(a, input_rd_standard_controller);
+						SET_DECODE_EVENT(a, input_decode_event_standard_controller);
+						SET_ADD_EVENT(a, input_add_event_standard_controller);
+						break;
+					case CTRL_ZAPPER:
+						SET_RD(a, input_rd_zapper);
+						break;
+					case CTRL_ARKANOID_PADDLE:
+						SET_WR(a, input_wr_arkanoid);
+						SET_RD(a, input_rd_arkanoid);
+						break;
+					case CTRL_SNES_MOUSE:
+						SET_WR(a, input_wr_snes_mouse);
+						SET_RD(a, input_rd_snes_mouse);
+						break;
+					default:
+						break;
+				}
 			}
 		}
 
@@ -126,8 +175,42 @@ void input_init(BYTE set_cursor) {
 		}
 	}
 
+	// Famicom expansion port
+	if (cfg->input.controller_mode == CTRL_MODE_FAMICOM) {
+		for (a = PORT3; a < PORT_MAX; a++) {
+			SET_WR(a, input_wr_disabled);
+			SET_RD(a, input_rd_disabled);
+			SET_DECODE_EVENT(a, NULL);
+			SET_ADD_EVENT(a, NULL);
+		}
+		switch (cfg->input.expansion) {
+			case CTRL_STANDARD:
+				for (a = PORT3; a < PORT_MAX; a++) {
+					if (port[a].type != CTRL_DISABLED) {
+						SET_WR(a, input_wr_standard_controller);
+						SET_RD(a, input_rd_standard_controller);
+						SET_DECODE_EVENT(a, input_decode_event_standard_controller);
+						SET_ADD_EVENT(a, input_add_event_standard_controller);
+					}
+				}
+				break;
+			case CTRL_ZAPPER:
+				SET_RD(PORT4, input_rd_zapper);
+				break;
+			case CTRL_ARKANOID_PADDLE:
+				SET_WR(PORT3, input_wr_arkanoid);
+				SET_RD(PORT3, input_rd_arkanoid);
+				SET_RD(PORT4, input_rd_arkanoid);
+				break;
+			default:
+				break;
+		}
+	}
+
 	if (set_cursor == TRUE) {
 		gfx_cursor_set();
 	}
 }
 
+void input_wr_disabled(BYTE *value, BYTE nport) {}
+void input_rd_disabled(BYTE *value, BYTE nport, BYTE shift) {}

@@ -54,9 +54,9 @@
 #define put_pixel(type, pixel, p0, p1)\
 	*(type *) (dstpix + p0 + p1) = (type) palette[pixel]
 
-void INLINE scale2x(WORD **screen_index, uint32_t *palette, uint32_t pitch, void *pix);
-void INLINE scale3x(WORD **screen_index, uint32_t *palette, uint32_t pitch, void *pix);
-void INLINE scale4x(WORD **screen_index, uint32_t *palette, uint32_t pitch, void *pix);
+static void INLINE scale2x(WORD **screen_index, uint32_t *palette, uint32_t pitch, void *pix);
+static void INLINE scale3x(WORD **screen_index, uint32_t *palette, uint32_t pitch, void *pix);
+static void INLINE scale4x(WORD **screen_index, uint32_t *palette, uint32_t pitch, void *pix);
 
 static struct _scl2x {
 	WORD sx;
