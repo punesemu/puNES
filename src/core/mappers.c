@@ -143,6 +143,9 @@ BYTE map_init(void) {
 		case 28:
 			map_init_28();
 			break;
+		case 30:
+			map_init_UxROM(UNROM_BK2);
+			break;
 		case 31:
 			map_init_31();
 			break;

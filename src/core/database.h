@@ -1712,8 +1712,6 @@ static const _dbelement dblist[] = {
 	{"1b143750dc8597372892ff4fa64c7e982b5e7cdb", 2, UNLROM, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Zoids 2 - Zenebas no Gyakushuu (J) [p1][hM02].nes */
 	{"e81966607afceca236779c63134ff5a9333c4638", 2, UNLROM, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
-	/* Battle Kid 2 - Mountain of Torment (U).nes */
-	{"dcd6870e0d5a79899dce11b975c8a16652fc7143", 2, UNROM_BK2, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Trog (U) [b1].nes */
 	{"13c3394f08f4bc6d3df83db92693bdac9d091766", 2, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Trog (U) [o1].nes */
@@ -2881,6 +2879,10 @@ static const _dbelement dblist[] = {
 
 	/* World Hero (Unl)(TV System Select)[!].nes */
 	{"0b351c586130ad0ae6203144136b6e199fa5ae20", 27, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+
+/* ------------------------------------- mapper 30 ---------------------------------------- */
+	/* Battle Kid 2 - Mountain of Torment (U).nes */
+	{"dcd6870e0d5a79899dce11b975c8a16652fc7143", 30, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* --------------------------------------- Irem ------------------------------------------- */
 	/* Major League (J).nes */

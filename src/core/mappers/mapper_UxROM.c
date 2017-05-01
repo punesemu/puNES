@@ -36,6 +36,8 @@ void map_init_UxROM(BYTE model) {
 			break;
 		case UNROM_BK2:
 			EXTCL_CPU_WR_MEM(UNROM_BK2);
+
+			map_chr_ram_extra_init(0x2000 * 4);
 			break;
 	}
 }
@@ -71,6 +73,24 @@ void extcl_cpu_wr_mem_UnlROM(WORD address, BYTE value) {
 }
 
 void extcl_cpu_wr_mem_UNROM_BK2(WORD address, BYTE value) {
+	if (value & 0x80) {
+		mirroring_SCR1();
+	}
+
+	{
+		DBWORD bank = ((value & 0x60) >> 5) << 13;
+
+		chr.bank_1k[0] = &chr.extra.data[bank];
+		chr.bank_1k[1] = &chr.extra.data[bank | 0x0400];
+		chr.bank_1k[2] = &chr.extra.data[bank | 0x0800];
+		chr.bank_1k[3] = &chr.extra.data[bank | 0x0C00];
+		chr.bank_1k[4] = &chr.extra.data[bank | 0x1000];
+		chr.bank_1k[5] = &chr.extra.data[bank | 0x1400];
+		chr.bank_1k[6] = &chr.extra.data[bank | 0x1800];
+		chr.bank_1k[7] = &chr.extra.data[bank | 0x1C00];
+	}
+
+	value &= 0x1F;
 	control_bank(info.prg.rom[0].max.banks_16k)
 	map_prg_rom_8k(2, 0, value);
 	map_prg_rom_8k_update();
