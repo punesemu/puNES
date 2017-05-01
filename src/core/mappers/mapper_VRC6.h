@@ -23,7 +23,7 @@
 
 enum { VRC6A, VRC6B };
 
-typedef struct {
+typedef struct _vrc6_square {
 	BYTE enabled;
 	BYTE duty;
 	BYTE step;
@@ -39,7 +39,7 @@ typedef struct {
 /* */ BYTE clocked;                                     /* */
 /* ------------------------------------------------------- */
 } _vrc6_square;
-typedef struct {
+typedef struct _vrc6_saw {
 	BYTE enabled;
 	BYTE accumulator;
 	BYTE step;
@@ -61,6 +61,8 @@ struct _vrc6 {
 	BYTE acknowledge;
 	BYTE count;
 	BYTE delay;
+	BYTE b003;
+	BYTE chr_map[8];
 	WORD prescaler;
 	_vrc6_square S3, S4;
 	_vrc6_saw saw;
