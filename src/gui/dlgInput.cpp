@@ -190,6 +190,7 @@ void dlgInput::update_dialog() {
 			case CTRL_ZAPPER:
 			case CTRL_SNES_MOUSE:
 			case CTRL_ARKANOID_PADDLE:
+			default:
 				pb->setEnabled(false);
 				break;
 			case CTRL_STANDARD:
@@ -297,9 +298,10 @@ void dlgInput::combobox_cp_init() {
 	};
 	// Famicom
 	static const _cb_ports ctrl_mode_famicom_expansion_port[] {
-		{ tr("Standard Pad"),    CTRL_STANDARD },
-		{ tr("Zapper"),          CTRL_ZAPPER   },
-		{ tr("Arkanoid Paddle"), CTRL_ARKANOID_PADDLE }
+		{ tr("Standard Pad"),     CTRL_STANDARD },
+		{ tr("Zapper"),           CTRL_ZAPPER   },
+		{ tr("Arkanoid Paddle"),  CTRL_ARKANOID_PADDLE },
+		{ tr("Oeka Kids Tablet"), CTRL_OEKA_KIDS_TABLET }
 	};
 	static const _cb_ports ctrl_mode_famicom_ports1[] {
 		{ tr("Disabled"),        CTRL_DISABLED },

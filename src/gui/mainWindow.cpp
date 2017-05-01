@@ -1288,7 +1288,7 @@ void mainWindow::shcjoy_stop() {
 	js_shcut_stop();
 }
 void mainWindow::control_visible_cursor() {
-	if ((gmouse.hidden == FALSE) && (input_zapper_is_connected() == FALSE)) {
+	if ((gmouse.hidden == FALSE) && (input_draw_target() == FALSE)) {
 		if (cfg->fullscreen == FULLSCR) {
 			gui_cursor_hide(TRUE);
 		} else if ((gui_get_ms() - gmouse.timer) >= 2000) {

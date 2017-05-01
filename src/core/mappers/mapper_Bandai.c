@@ -25,7 +25,7 @@
 #include "save_slot.h"
 
 #define b161x02x74_chr_4k_update()\
-	value = (save & 0x04) | b161x02x74.chr_rom_bank;\
+	value = (save & 0x04) | (b161x02x74.chr_rom_bank & 0x03);\
 	control_bank(chr_ram_4k_max)\
 	b161x02x74.chr_rom_bank = value;\
 	bank = value << 12;\
@@ -44,6 +44,7 @@
 {\
 	const BYTE value = (b161x02x74.chr_rom_bank & 0x04) | ((adr >> 8) & 0x03);\
 	const DBWORD bank = value << 12;\
+	b161x02x74.chr_rom_bank = value;\
 	chr.bank_1k[0] = chr_chip_byte_pnt(0, bank);\
 	chr.bank_1k[1] = chr_chip_byte_pnt(0, bank | 0x0400);\
 	chr.bank_1k[2] = chr_chip_byte_pnt(0, bank | 0x0800);\

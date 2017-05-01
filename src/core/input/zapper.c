@@ -182,28 +182,3 @@ void input_rd_zapper_vs(BYTE *value, BYTE nport, BYTE shift) {
 		}
 	}
 }
-
-BYTE input_zapper_is_connected() {
-	BYTE i;
-
-	if (vs_system.enabled == TRUE) {
-		if (info.extra_from_db & VSZAPPER) {
-			return (TRUE);
-		}
-		return (FALSE);
-	}
-
-	if (cfg->input.controller_mode == CTRL_MODE_FAMICOM) {
-		if (cfg->input.expansion == CTRL_ZAPPER) {
-			return (TRUE);
-		}
-	} else {
-		for (i = PORT1; i < PORT_MAX; i++) {
-			if (port[i].type == CTRL_ZAPPER) {
-				return (TRUE);
-			}
-		}
-	}
-
-	return (FALSE);
-}

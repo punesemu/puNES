@@ -457,9 +457,10 @@ static const _opt opt_controller_mode[] = {
 	{NULL, uL("four score"), CTRL_MODE_FOUR_SCORE}
 };
 static const _opt opt_expansion[] = {
-	{NULL, uL("standard"),        CTRL_STANDARD},
-	{NULL, uL("zapper"),          CTRL_ZAPPER},
-	{NULL, uL("arkanoid paddle"), CTRL_ARKANOID_PADDLE}
+	{NULL, uL("standard"),         CTRL_STANDARD},
+	{NULL, uL("zapper"),           CTRL_ZAPPER},
+	{NULL, uL("arkanoid paddle"),  CTRL_ARKANOID_PADDLE},
+	{NULL, uL("oeka kids tablet"), CTRL_OEKA_KIDS_TABLET}
 };
 static const _opt opt_controller[] = {
 	{NULL, uL("disable"),    CTRL_DISABLED},
@@ -922,7 +923,7 @@ static const _settings inp_cfg[] = {
 	{uL("special keys"), uL("timeline key"),          uL("LCtrl"),           NULL, NULL, {0, NULL}},
 	{
 		uL("expansion port"), uL("expansion port"), uL("standard"),
-		uL("# possible values: standard, zapper, arkanoid paddle"),
+		uL("# possible values: standard, zapper, arkanoid paddle, oeka kids tablet"),
 		NULL,
 		{LENGTH(opt_expansion), opt_expansion}
 	},

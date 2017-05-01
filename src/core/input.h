@@ -35,7 +35,8 @@ enum controller_types {
 	CTRL_STANDARD,
 	CTRL_ZAPPER,
 	CTRL_SNES_MOUSE,
-	CTRL_ARKANOID_PADDLE
+	CTRL_ARKANOID_PADDLE,
+	CTRL_OEKA_KIDS_TABLET
 };
 enum pad_types { CTRL_PAD_AUTO, CTRL_PAD_ORIGINAL, CTRL_PAD_3RD_PARTY };
 enum controller_buttons {
@@ -124,7 +125,7 @@ EXTERNC void input_init(BYTE set_cursor);
 EXTERNC void input_wr_disabled(BYTE *value, BYTE nport);
 EXTERNC void input_rd_disabled(BYTE *value, BYTE nport, BYTE shift);
 
-EXTERNC BYTE input_zapper_is_connected();
+EXTERNC BYTE input_draw_target();
 
 EXTERNC BYTE (*input_wr_reg)(BYTE value);
 EXTERNC BYTE (*input_rd_reg[2])(BYTE openbus, BYTE nport);

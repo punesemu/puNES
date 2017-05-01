@@ -78,7 +78,7 @@ void screenWidget::cursor_init() {
 	target = new QCursor(QPixmap(":/pointers/pointers/target_32x32.xpm"), -1, -1);
 }
 void screenWidget::cursor_set() {
-	if (input_zapper_is_connected() == TRUE) {
+	if (input_draw_target() == TRUE) {
 		setCursor((*target));
 	} else {
 		unsetCursor();

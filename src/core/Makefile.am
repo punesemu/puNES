@@ -72,6 +72,8 @@ libcore_a_SOURCES += \
 	input/mouse.h \
 	input/nes_001.h \
 	input/nes_001.c \
+	input/oeka_kids_tablet.h \
+	input/oeka_kids_tablet.c \
 	input/snes_mouse.h \
 	input/snes_mouse.c \
 	input/standard_controller.h \

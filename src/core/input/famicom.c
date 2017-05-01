@@ -27,7 +27,7 @@ BYTE input_wr_reg_famicom(BYTE value) {
 	port_funct[PORT1].input_wr(&value, PORT1);
 	port_funct[PORT2].input_wr(&value, PORT2);
 	port_funct[PORT3].input_wr(&value, PORT3);
-	port_funct[PORT3].input_wr(&value, PORT4);
+	port_funct[PORT4].input_wr(&value, PORT4);
 
 	// restituisco il nuovo valore del $4016
 	return (value);

@@ -31,6 +31,7 @@
 #include "input/zapper.h"
 #include "input/snes_mouse.h"
 #include "input/arkanoid.h"
+#include "input/oeka_kids_tablet.h"
 
 #define SET_WR_REG(funct) input_wr_reg = funct
 #define SET_RD_REG(id, funct) input_rd_reg[id] = funct
@@ -50,6 +51,7 @@ void input_init(BYTE set_cursor) {
 	input_init_zapper();
 	input_init_snes_mouse();
 	input_init_arkanoid();
+	input_init_oeka_kids_tablet();
 
 	if (vs_system.enabled == TRUE) {
 		SET_WR_REG(input_wr_reg_vs);
@@ -202,6 +204,10 @@ void input_init(BYTE set_cursor) {
 				SET_RD(PORT3, input_rd_arkanoid);
 				SET_RD(PORT4, input_rd_arkanoid);
 				break;
+			case CTRL_OEKA_KIDS_TABLET:
+				SET_WR(PORT4, input_wr_oeka_kids_tablet);
+				SET_RD(PORT4, input_rd_oeka_kids_tablet);
+				break;
 			default:
 				break;
 		}
@@ -214,3 +220,30 @@ void input_init(BYTE set_cursor) {
 
 void input_wr_disabled(BYTE *value, BYTE nport) {}
 void input_rd_disabled(BYTE *value, BYTE nport, BYTE shift) {}
+
+BYTE input_draw_target(void) {
+	BYTE i;
+
+	if (vs_system.enabled == TRUE) {
+		if (info.extra_from_db & VSZAPPER) {
+			return (TRUE);
+		}
+		return (FALSE);
+	}
+
+	if (cfg->input.controller_mode == CTRL_MODE_FAMICOM) {
+		switch (cfg->input.expansion) {
+			case CTRL_ZAPPER:
+			case CTRL_OEKA_KIDS_TABLET:
+				return (TRUE);
+		}
+	} else {
+		for (i = PORT1; i < PORT_MAX; i++) {
+			if (port[i].type == CTRL_ZAPPER) {
+				return (TRUE);
+			}
+		}
+	}
+
+	return (FALSE);
+}
