@@ -837,7 +837,7 @@ void ppu_tick(WORD cycles_cpu) {
 										 * alla fase 4 questo corrispondera' alla coordinata Y
 										 * dello sprite 0
 										 */
-										r2004.value = oam.element[spr_ev.real][spr_ev.byte_OAM];
+										r2004.value = oam.element[spr_ev.index][spr_ev.byte_OAM];
 										/* continuo a esaminare lo sprite */
 										spr_ev.timing++;
 									}
