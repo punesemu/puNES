@@ -34,6 +34,7 @@ void extcl_init(void) {
 	extcl_ppu_320_to_34x = NULL;
 	extcl_ppu_update_screen_y = NULL;
 	extcl_update_r2006 = NULL;
+	extcl_rd_r2007 = NULL;
 	extcl_after_rd_chr = NULL;
 	extcl_rd_ppu = NULL;
 	extcl_rd_nmt = NULL;

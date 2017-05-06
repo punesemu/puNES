@@ -39,6 +39,7 @@
 #define EXTCL_PPU_320_TO_34X(n) extcl_ppu_320_to_34x = extcl_ppu_320_to_34x_##n
 #define EXTCL_PPU_UPDATE_SCREEN_Y(n) extcl_ppu_update_screen_y = extcl_ppu_update_screen_y_##n
 #define EXTCL_UPDATE_R2006(n) extcl_update_r2006 = extcl_update_r2006_##n
+#define EXTCL_RD_R2007(n) extcl_rd_r2007 = extcl_rd_r2007_##n
 #define EXTCL_AFTER_RD_CHR(n) extcl_after_rd_chr = extcl_after_rd_chr_##n
 #define EXTCL_RD_PPU(n) extcl_rd_ppu = extcl_rd_ppu_##n
 #define EXTCL_RD_NMT(n) extcl_rd_nmt = extcl_rd_nmt_##n
@@ -85,14 +86,14 @@ EXTERNC void (*extcl_cpu_wr_r4016)(BYTE value);
 /* viene chiamata sempre, ad ogni ciclo della PPU */
 EXTERNC void (*extcl_ppu_000_to_34x)(void);
 /*
- * viene chiamata se (!r2002.vblank && (ppu.screen_y < SCR_LINES))
+ * viene chiamata se (!ppu.vblank && (ppu.screen_y < SCR_LINES))
  * quindi per essere sicuri di essere durante il rendering della PPU
  * nella funzione devo controllare anche se r2001.visible non e' a zero.
  */
 EXTERNC void (*extcl_ppu_000_to_255)(void);
 /*
  * vengono chiamate solo se la PPU e' in fase di rendering
- * (!r2002.vblank && r2001.visible && (ppu.screen_y < SCR_LINES))
+ * (!ppu.vblank && r2001.visible && (ppu.screen_y < SCR_LINES))
  */
 EXTERNC void (*extcl_ppu_256_to_319)(void);
 EXTERNC void (*extcl_ppu_320_to_34x)(void);
@@ -100,6 +101,8 @@ EXTERNC void (*extcl_ppu_320_to_34x)(void);
 EXTERNC void (*extcl_ppu_update_screen_y)(void);
 /* viene chiamata dopo ogni cambiamento del $2006 in cpu_inline.h */
 EXTERNC void (*extcl_update_r2006)(WORD new_r2006, WORD old_r2006);
+/* viene chiamata alla lettura del $2007 in cpu_inline.h */
+EXTERNC void (*extcl_rd_r2007)(void);
 /* vengono chiamate in ppu_inline.h */
 EXTERNC void (*extcl_rd_ppu)(WORD address);
 EXTERNC BYTE (*extcl_rd_nmt)(WORD address);

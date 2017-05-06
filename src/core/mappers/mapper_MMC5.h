@@ -71,6 +71,7 @@ BYTE extcl_cpu_rd_mem_MMC5(WORD address, BYTE openbus, BYTE before);
 BYTE extcl_save_mapper_MMC5(BYTE mode, BYTE slot, FILE *fp);
 void extcl_ppu_256_to_319_MMC5(void);
 void extcl_ppu_320_to_34x_MMC5(void);
+void extcl_rd_r2007_MMC5(void);
 void extcl_after_rd_chr_MMC5(WORD address);
 BYTE extcl_rd_chr_MMC5(WORD address);
 BYTE extcl_rd_nmt_MMC5(WORD address);
