@@ -114,7 +114,7 @@ BYTE extcl_cpu_rd_mem_163(WORD address, BYTE openbus, BYTE before) {
 	return (openbus);
 }
 void extcl_ppu_update_screen_y_163(void) {
-	if (m163.chr && r2001.visible && !r2002.vblank) {
+	if (m163.chr && r2001.visible && !ppu.vblank) {
 		if (ppu.screen_y == 240) {
 			m163.chr_mode = 1;
 			chr.bank_1k[0] = chr_chip_byte_pnt(0, 0x0000);

@@ -38,7 +38,7 @@
 
 #define mod_cycles_op(op, vl) cpu.cycles op vl
 #define r2006_during_rendering()\
-	if (!r2002.vblank && r2001.visible && (ppu.frame_y > ppu_sclines.vint) &&\
+	if (!ppu.vblank && r2001.visible && (ppu.frame_y > ppu_sclines.vint) &&\
 		(ppu.screen_y < SCR_LINES)) {\
 		_r2006_during_rendering()\
 	} else {\
@@ -350,11 +350,18 @@ static BYTE INLINE ppu_rd_reg(WORD address) {
 		return (value);
 	}
 	if (address == 0x2004) {
-		if ((!r2002.vblank && r2001.visible && (ppu.screen_y < SCR_LINES))) {
-			value = r2004.value;
+		value = oam.data[r2003.value];
+
+		if (ppu.vblank) {
+			if ((machine.type == PAL) && (ppu.frame_y > 23)) {
+				value = r2004.value;
+			}
 		} else {
-			value = oam.data[r2003.value];
+			if (r2001.visible && (ppu.screen_y < SCR_LINES)) {
+				value = r2004.value;
+			}
 		}
+
 		/* ppu open bus */
 		ppu.openbus = value;
 		ppu_openbus_wr_all();
@@ -422,7 +429,7 @@ static BYTE INLINE ppu_rd_reg(WORD address) {
 				 * Taito (TC0190FMCPAL16R4)
 				 * Tengen (Rambo)
 				 */
-				if (!r2002.vblank && r2001.visible && (ppu.frame_y > ppu_sclines.vint) &&
+				if (!ppu.vblank && r2001.visible && (ppu.frame_y > ppu_sclines.vint) &&
 						(ppu.screen_y < SCR_LINES)) {
 					extcl_update_r2006(r2006.value & 0x2FFF, old_r2006);
 				} else {
@@ -867,7 +874,7 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 
 		/* condizione riscontrata in "scanline.nes" */
 		if (ppu.frame_x < SCR_ROWS) {
-			if (!r2002.vblank && (ppu.screen_y < SCR_LINES)) {
+			if (!ppu.vblank && (ppu.screen_y < SCR_LINES)) {
 				if (ppu.frame_y > ppu_sclines.vint) {
 					if (r2001.visible) {
 						if (ppu.pixel_tile == 3) {
@@ -949,7 +956,7 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 		 * (premuto il tasto start due volte ed avviato il gioco, una riga
 		 * piu' scura sfarfalla nello schermo).
 		 */
-		if (!r2002.vblank && r2001.visible && (ppu.screen_y < SCR_LINES)) {
+		if (!ppu.vblank && r2001.visible && (ppu.screen_y < SCR_LINES)) {
 			if ((ppu.frame_x >= 253) && (ppu.frame_x <= 255)) {
 				r2006_end_scanline();
 			}
@@ -1131,7 +1138,7 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 			 * ne sono soggetti.
 			 */
 			if (ppu.frame_x < SCR_ROWS) {
-				if (!r2002.vblank && (ppu.screen_y < SCR_LINES)) {
+				if (!ppu.vblank && (ppu.screen_y < SCR_LINES)) {
 					if (ppu.frame_y > ppu_sclines.vint) {
 						if (r2001.visible) {
 							if ((ppu.pixel_tile >= 1) && (ppu.pixel_tile <= 3)) {
@@ -1187,7 +1194,7 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 		ppu.openbus = value;
 		ppu_openbus_wr_all();
 
-		if (!r2002.vblank && r2001.visible && (ppu.frame_y > ppu_sclines.vint)
+		if (!ppu.vblank && r2001.visible && (ppu.frame_y > ppu_sclines.vint)
 		        && (ppu.screen_y < SCR_LINES)) {
 			ppu_wr_mem(ppu.rnd_adr, ppu.rnd_adr & 0x00FF);
 			_r2006_during_rendering()

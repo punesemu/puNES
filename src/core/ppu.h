@@ -128,6 +128,7 @@ typedef struct _ppu {
 	WORD frame_y;
 	BYTE fine_x;
 	BYTE screen_y;
+	BYTE vblank;
 	WORD pixel_tile;
 	WORD sline_cycles;
 	WORD tmp_vram;

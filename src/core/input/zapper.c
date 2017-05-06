@@ -52,7 +52,7 @@ void input_rd_zapper(BYTE *value, BYTE nport, BYTE shift) {
 		return;
 	}
 
-	if (!r2002.vblank && r2001.visible && (ppu.frame_y > ppu_sclines.vint)
+	if (!ppu.vblank && r2001.visible && (ppu.frame_y > ppu_sclines.vint)
 		&& (ppu.screen_y < SCR_LINES)) {
 		for (y_rect = (y_zapper - 8); y_rect < (y_zapper + 8); y_rect++) {
 			if (y_rect < 0) {
@@ -110,7 +110,7 @@ void input_rd_zapper_vs(BYTE *value, BYTE nport, BYTE shift) {
 	if ((x_zapper <= 0) || (x_zapper >= SCR_ROWS) || (y_zapper <= 0) || (y_zapper >= SCR_LINES)) {
 		light = 0;
 	} else {
-		if (!r2002.vblank && r2001.visible && (ppu.frame_y > ppu_sclines.vint)
+		if (!ppu.vblank && r2001.visible && (ppu.frame_y > ppu_sclines.vint)
 				&& (ppu.screen_y < SCR_LINES)) {
 			for (y_rect = (y_zapper - 8); y_rect < (y_zapper + 8); y_rect++) {
 				if (y_rect < 0) {

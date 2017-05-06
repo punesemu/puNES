@@ -268,7 +268,7 @@ void extcl_cpu_wr_mem_Tengen_Rambo(WORD address, BYTE value) {
 				if (ppu.frame_y <= ppu_sclines.vint) {
 					tengen_rambo.irq_plus_clock = 1;
 				} else if ((ppu.frame_x > delay)
-						&& (ppu.frame_x < SCR_ROWS + delay) && !r2002.vblank
+						&& (ppu.frame_x < SCR_ROWS + delay) && !ppu.vblank
 						&& (ppu.screen_y < SCR_LINES) && (ppu.frame_y > ppu_sclines.vint)
 						&& r2001.visible) {
 					tengen_rambo.irq_plus_clock = 1;
