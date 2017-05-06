@@ -371,6 +371,14 @@ static BYTE INLINE ppu_rd_reg(WORD address) {
 		WORD old_r2006 = r2006.value;
 		BYTE repeat = 1;
 
+		/*
+		 * utilizzato dalle mappers :
+		 * MMC5
+		 */
+		if (extcl_rd_r2007) {
+			extcl_rd_r2007();
+		}
+
 		if (DMC.dma_cycle == 2) {
 			repeat = 3;
 		} else if (cpu.double_rd) {
