@@ -373,7 +373,7 @@ void mainWindow::state_save_slot_set(int slot, bool on_video) {
 #if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
 bool mainWindow::winEvent(MSG *msg, long *result) {
 #else
-bool mainWindow::nativeEventFilter(const QByteArray &eventType, void *message, long *result) {
+bool mainWindow::nativeEvent(const QByteArray &eventType, void *message, long *result) {
 #endif
 
 #if (QT_VERSION > QT_VERSION_CHECK(5, 0, 0))
@@ -408,7 +408,7 @@ bool mainWindow::nativeEventFilter(const QByteArray &eventType, void *message, l
 #if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
 	return QWidget::winEvent(msg, result);
 #else
-	return QWidget::nativeEventFilter(eventType, message, result);
+	return QWidget::nativeEvent(eventType, message, result);
 #endif
 }
 #endif

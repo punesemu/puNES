@@ -40,7 +40,7 @@ screenWidget::screenWidget(QWidget *parent, mainWindow *mw) : QWidget(parent) {
 	// applico un sfondo nero
 	parent->setStyleSheet("background-color: black");
 #endif
-	target = NULL;
+	target = nullptr;
 #endif
 
 	mwin = mw;

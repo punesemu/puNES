@@ -384,7 +384,7 @@ BYTE gui_load_lut(void *l, const uTCHAR *path) {
 	if (tmp.isNull()) {
 		lut->w = 0;
 		lut->h = 0;
-		lut->bits = NULL;
+		lut->bits = nullptr;
 		return (EXIT_ERROR);
 	}
 

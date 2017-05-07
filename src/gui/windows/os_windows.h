@@ -75,17 +75,17 @@ void gui_init(int *argc, char **argv) {
 			case WIN_SEVEN:
 			case WIN_VISTA:
 				// FIXME : non funziona sotto wingw
-				//SHGetKnownFolderPath(FOLDERID_Documents, KF_FLAG_CREATE, NULL, &gui.home);
+				//SHGetKnownFolderPath(FOLDERID_Documents, KF_FLAG_CREATE, nullptr, &gui.home);
 				//break;
 			case WIN_XP:
 			default:
-				SHGetFolderPathW(NULL, CSIDL_PERSONAL, NULL, 0, (LPWSTR) gui.home);
+				SHGetFolderPathW(nullptr, CSIDL_PERSONAL, nullptr, 0, (LPWSTR) gui.home);
 				break;
 		}
 
 		if (info.portable) {
 			uTCHAR path[usizeof(info.base_folder)];
-			DWORD length = GetModuleFileNameW(NULL, (LPWSTR) &path, usizeof(path));
+			DWORD length = GetModuleFileNameW(nullptr, (LPWSTR) &path, usizeof(path));
 
 			if (length == 0) {
 				fprintf(stderr, "INFO: Error resolving exe path.\n");

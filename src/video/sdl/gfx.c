@@ -849,6 +849,9 @@ void gfx_sdlwe_tick(void) {
 			case SDLWIN_VSYNC:
 				gfx_VSYNC();
 				break;
+			case SDLWIN_SHADER:
+				gfx_SHADER(sdlwe.arg);
+				break;
 		}
 		sdlwe.event = sdlwe.arg = SDLWIN_NONE;
 	}
@@ -1748,9 +1751,9 @@ static void opengl_shader_print_log(GLuint obj, BYTE ret) {
 		info_log[info_log_length] = 0;
 
 		if (info_log_length > 0) {
-			printf("OPENGL: %s", info_log);
+			fprintf(stderr, "OPENGL: %s", info_log);
 			if (ret == TRUE) {
-				printf("\n");
+				fprintf(stderr, "\n");
 			}
 		}
 	}
@@ -2312,8 +2315,27 @@ static BYTE opengl_shader_cg_init(GLuint pass, _shader *shd, GLchar *code, const
 	char alias[MAX_PASS][128];
 	uTCHAR base[LENGTH_FILE_NAME_MID];
 	uTCHAR dname[LENGTH_FILE_NAME_MID];
-	uTCHAR bname[LENGTH_FILE_NAME_MID];
 	GLuint i, argc;
+#if defined (__WIN32__)
+	char bname[LENGTH_FILE_NAME_MID];
+
+	if ((path != NULL) && path[0]) {
+		uTCHAR ubname[LENGTH_FILE_NAME_MID];
+
+		umemset(base, 0x00, usizeof(base));
+		if (ugetcwd(base, usizeof(base)) == NULL) { ; };
+
+		umemset(dname, 0x00, usizeof(dname));
+		gui_utf_dirname((uTCHAR *) path, dname, usizeof(dname) - 1);
+
+		umemset(ubname, 0x00, usizeof(ubname));
+		gui_utf_basename((uTCHAR *) path, ubname, usizeof(ubname) - 1);
+
+		memset(bname, 0x00, sizeof(bname));
+		wcstombs(bname, ubname, sizeof(bname) - 1);
+	}
+#else
+	uTCHAR bname[LENGTH_FILE_NAME_MID];
 
 	if ((path != NULL) && path[0]) {
 		umemset(base, 0x00, usizeof(base));
@@ -2325,6 +2347,7 @@ static BYTE opengl_shader_cg_init(GLuint pass, _shader *shd, GLchar *code, const
 		umemset(bname, 0x00, usizeof(bname));
 		gui_utf_basename((uTCHAR *) path, bname, usizeof(bname) - 1);
 	}
+#endif
 
 	memset(alias, 0x00, sizeof(alias));
 
@@ -2353,7 +2376,7 @@ static BYTE opengl_shader_cg_init(GLuint pass, _shader *shd, GLchar *code, const
 			if (uchdir(base) == -1) { ; }
 		}
 		if (!shd->cgp.prg.f && (list = cgGetLastListing(opengl.cg.ctx))) {
-			printf("OPENGLCG: fragment program errors :\n%s\n", list);
+			fprintf(stderr, "OPENGLCG: fragment program errors :\n%s\n", list);
 		}
 	}
 
@@ -2369,7 +2392,7 @@ static BYTE opengl_shader_cg_init(GLuint pass, _shader *shd, GLchar *code, const
 			if (uchdir(base)) { ; }
 		}
 		if (!shd->cgp.prg.v && (list = cgGetLastListing(opengl.cg.ctx))) {
-			printf("OPENGLCG: vertex program errors :\n%s\n", list);
+			fprintf(stderr, "OPENGLCG: vertex program errors :\n%s\n", list);
 		}
 	}
 

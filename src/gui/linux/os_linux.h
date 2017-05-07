@@ -79,7 +79,7 @@ void gui_init(int *argc, char **argv) {
 		}
  	}
 
-	gettimeofday(&gui.counterStart, NULL);
+	gettimeofday(&gui.counterStart, nullptr);
 	gui_get_ms = high_resolution_ms;
 }
 void gui_sleep(double ms) {
@@ -108,7 +108,7 @@ double high_resolution_ms(void) {
 	double elapsed_seconds;
 	double elapsed_useconds;
 
-	gettimeofday(&time, NULL);
+	gettimeofday(&time, nullptr);
 
 	elapsed_seconds  = time.tv_sec  - gui.counterStart.tv_sec;
 	elapsed_useconds = time.tv_usec - gui.counterStart.tv_usec;

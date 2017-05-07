@@ -85,7 +85,7 @@ class mainWindow: public QMainWindow {
 #if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
 		bool winEvent(MSG *msg, long *result);
 #else
-		bool nativeEventFilter(const QByteArray &eventType, void *message, long *result);
+		bool nativeEvent(const QByteArray &eventType, void *message, long *result);
 #endif
 #endif
 		bool eventFilter(QObject *obj, QEvent *event);
