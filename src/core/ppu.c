@@ -173,6 +173,47 @@ void ppu_tick(WORD cycles_cpu) {
 	while (ppu.cycles >= machine.ppu_divide) {
 		r2002.race.sprite_overflow = FALSE;
 
+		/* gestione della seconda scrittura del $2006 */
+		if (r2006.second_write.delay && (--r2006.second_write.delay == 0)) {
+			WORD old_r2006 = r2006.value;
+
+			ppu.tmp_vram = r2006.second_write.value;
+
+			/*
+			 * condizione di race riscontrata in "scanline.nes" e
+			 * "Knight Rider (U) [!].nes" (i glitch grafici sotto la macchina
+			 * nell'introduzione sono presenti su hardware reale).
+			 * Anche "logo (E).nes" e "Ferrari - Grand Prix Challenge (U) [!].nes"
+			 * ne sono soggetti.
+			 */
+			if (ppu.frame_x < SCR_ROWS) {
+				if (!ppu.vblank && (ppu.screen_y < SCR_LINES)) {
+					if (ppu.frame_y > ppu_sclines.vint) {
+						if (r2001.visible) {
+							if ((ppu.pixel_tile >= 1) && (ppu.pixel_tile <= 3)) {
+								r2006.race.ctrl = TRUE;
+								r2006.race.value = (r2006.value & 0x00FF) | (ppu.tmp_vram & 0xFF00);
+							}
+						}
+					}
+				}
+			}
+
+			/* aggiorno l'r2006 */
+			r2006.value = ppu.tmp_vram;
+
+			if (extcl_update_r2006) {
+				/*
+				 * utilizzato dalle mappers :
+				 * MMC3
+				 * Rex (DBZ)
+				 * Taito (TC0190FMCPAL16R4)
+				 * Tengen (Rambo)
+				 */
+				extcl_update_r2006(r2006.value, old_r2006);
+			}
+		}
+
 		/* controllo se sono all'inizio della dummy line */
 		if (ppu.frame_y == ppu_sclines.vint) {
 			/*
@@ -336,20 +377,14 @@ void ppu_tick(WORD cycles_cpu) {
 							 * l'indirizzo, puntera' alla attribut table.
 							 */
 							if (ppu.frame_x == 253) {
-								/*
-								 * se il $2006 viene aggiornato (tramite istruzione)
-								 * proprio al ciclo 253 della PPU, questo incremento
-								 * viene ignorato.
-								 * Rom interessata :
-								 * Cosmic Wars (J) [!].nes
-								 * (avviare la rom e non premere niente. Dopo la scritta
-								 * 260 iniziale e le esplosioni che seguono, si apre una
-								 * schermata con la parte centrale che saltella senza
-								 * questo controllo.
-								 */
-								if (r2006.changed_from_op != 253) {
-									r2006_inc()
-								}
+								r2006_inc()
+								//}
+
+
+
+
+
+
 								/*
 								 * alla fine di ogni scanline
 								 * reinizializzo il $2006.

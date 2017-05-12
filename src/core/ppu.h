@@ -201,7 +201,12 @@ typedef struct _r2002 {
 } _r2002;
 typedef struct _r2006 {
 	WORD value;
+	// ormai non più utilizzato
 	WORD changed_from_op;
+	struct _r2006_second_write {
+		BYTE delay;
+		WORD value;
+	} second_write;
 	struct _r2006_race {
 		WORD ctrl;
 		WORD value;

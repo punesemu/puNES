@@ -1105,8 +1105,6 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 		return;
 	}
 	if (address == 0x2006) {
-		WORD old_r2006 = r2006.value;
-
 		/* open bus */
 		ppu.openbus = value;
 		ppu_openbus_wr_all();
@@ -1136,60 +1134,12 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 			 * toggle = 0
 			 * addressVRAM = tmpAdrVRAM
 			 */
-			ppu.tmp_vram = (ppu.tmp_vram & 0x7F00) | value;
 
-			/*
-			 * condizione di race riscontrata in "scanline.nes" e
-			 * "Knight Rider (U) [!].nes" (i glitch grafici sotto la macchina
-			 * nell'introduzione sono presenti su hardware reale).
-			 * Anche "logo (E).nes" e "Ferrari - Grand Prix Challenge (U) [!].nes"
-			 * ne sono soggetti.
-			 */
-			if (ppu.frame_x < SCR_ROWS) {
-				if (!ppu.vblank && (ppu.screen_y < SCR_LINES)) {
-					if (ppu.frame_y > ppu_sclines.vint) {
-						if (r2001.visible) {
-							if ((ppu.pixel_tile >= 1) && (ppu.pixel_tile <= 3)) {
-								r2006.race.ctrl = TRUE;
-								//r2006.race.value = r2006.value;
-								/*
-								 * con questa "scanline.nes" ha la parte finale che
-								 * non funziona ma tutte le altre rom funzionano
-								 * correttamente.
-								 */
-								r2006.race.value = (r2006.value & 0x00FF) | (ppu.tmp_vram & 0xFF00);
-							}
-						}
-					}
-				}
-			}
-
-			/* aggiorno l'r2006 */
-			r2006.value = ppu.tmp_vram;
-			/*
-			 * se l'$2006 viene aggiornato proprio al
-			 * ciclo 253 della PPU, l'incremento che viene
-			 * fatto della PPU proprio al ciclo 253 viene
-			 * ignorato.
-			 * Rom interessata :
-			 * Cosmic Wars (J) [!].nes
-			 * (avviare la rom e non premere niente. Dopo la scritta
-			 * 260 iniziale e le esplosioni che seguono, si apre una
-			 * schermata con la parte centrale che saltella senza
-			 * questo controllo)
-			 */
-			r2006.changed_from_op = ppu.frame_x;
-
-			if (extcl_update_r2006) {
-				/*
-				 * utilizzato dalle mappers :
-				 * MMC3
-				 * Rex (DBZ)
-				 * Taito (TC0190FMCPAL16R4)
-				 * Tengen (Rambo)
-				 */
-				extcl_update_r2006(r2006.value, old_r2006);
-			}
+			// http://forums.nesdev.com/viewtopic.php?p=189463#p189463
+			// sembra che la seconda scrittura del $2006 avvenga con qualche
+			// ciclo ppu di ritardo.
+			r2006.second_write.value = (ppu.tmp_vram & 0x7F00) | value;
+			r2006.second_write.delay = 4;
 		}
 
 		r2002.toggle = !r2002.toggle;
