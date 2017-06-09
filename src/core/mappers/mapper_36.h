@@ -16,16 +16,18 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef MAPPER_HES_H_
-#define MAPPER_HES_H_
+#ifndef MAPPER_36_H_
+#define MAPPER_36_H_
 
 #include "common.h"
 
-enum hes_type {
-	BAD_INES_SWAUS = 40
-};
+struct _m36 {
+	BYTE regs[5];
+} m36;
 
-void map_init_Hes(void);
-void extcl_cpu_wr_mem_Hes(WORD address, BYTE value);
+void map_init_36(void);
+void extcl_cpu_wr_mem_36(WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_36(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_save_mapper_36(BYTE mode, BYTE slot, FILE *fp);
 
-#endif /* MAPPER_HES_H_ */
+#endif /* MAPPER_36_H_ */

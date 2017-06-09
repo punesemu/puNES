@@ -200,6 +200,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_28.h \
 	mappers/mapper_31.c \
 	mappers/mapper_31.h \
+	mappers/mapper_36.c \
+	mappers/mapper_36.h \
 	mappers/mapper_37.c \
 	mappers/mapper_37.h \
 	mappers/mapper_40.c \

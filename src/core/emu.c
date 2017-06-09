@@ -351,6 +351,8 @@ BYTE emu_load_rom(void) {
 	return (EXIT_OK);
 }
 BYTE emu_search_in_database(FILE *fp) {
+	size_t prg_banks_16k, chr_banks_8k;
+	long fseekfile;
 	BYTE *sha1prg;
 	WORD i;
 
@@ -361,10 +363,12 @@ BYTE emu_search_in_database(FILE *fp) {
 
 	/* posiziono il puntatore del file */
 	if (info.trainer) {
-		fseek(fp, (0x10 + sizeof(trainer.data)), SEEK_SET);
+		fseekfile = (0x10 + sizeof(trainer.data));
 	} else {
-		fseek(fp, 0x10, SEEK_SET);
+		fseekfile = 0x10;
 	}
+
+	fseek(fp, fseekfile, SEEK_SET);
 
 	/* mi alloco una zona di memoria dove leggere la PRG Rom */
 	sha1prg = (BYTE *) malloc(info.prg.rom[0].banks_16k * (16 * 1024));
@@ -373,16 +377,42 @@ BYTE emu_search_in_database(FILE *fp) {
 		return (EXIT_ERROR);
 	}
 	/* leggo dal file la PRG Rom */
-	if (fread(&sha1prg[0], (16 * 1024), info.prg.rom[0].banks_16k, fp) < info.prg.rom[0].banks_16k) {
-		fprintf(stderr, "Error on read prg\n");
-		free(sha1prg);
-		return (EXIT_ERROR);
+	if ((prg_banks_16k = fread(&sha1prg[0], (16 * 1024), info.prg.rom[0].banks_16k, fp))
+			< info.prg.rom[0].banks_16k) {
+		info.prg.rom[0].banks_16k = prg_banks_16k;
+		fseek(fp, fseekfile + (info.prg.rom[0].banks_16k *(16 * 1024)), SEEK_SET);
+		fprintf(stderr, "truncated PRG ROM\n");
 	}
 	/* calcolo l'sha1 della PRG Rom */
 	sha1_csum(sha1prg, info.prg.rom[0].banks_16k * (16 * 1024), info.sha1sum.prg.value,
-		info.sha1sum.prg.string, LOWER);
+			info.sha1sum.prg.string, LOWER);
 	/* libero la memoria */
 	free(sha1prg);
+
+	/* calcolo anche l'sha1 della CHR rom */
+	if (info.chr.rom[0].banks_8k) {
+		BYTE *sha1chr;
+
+		/* mi alloco una zona di memoria dove leggere la CHR Rom */
+		sha1chr = (BYTE *) malloc(info.chr.rom[0].banks_8k * (8 * 1024));
+		if (!sha1chr) {
+			fprintf(stderr, "Out of memory\n");
+			return (EXIT_ERROR);
+		}
+
+		/* leggo dal file la CHR Rom */
+		if ((chr_banks_8k = fread(&sha1chr[0], (8 * 1024), info.chr.rom[0].banks_8k, fp))
+				< info.chr.rom[0].banks_8k) {
+			info.chr.rom[0].banks_8k = chr_banks_8k;
+			fprintf(stderr, "truncated CHR ROM\n");
+		}
+		/* calcolo l'sha1 della CHR Rom */
+		sha1_csum(sha1chr, info.chr.rom[0].banks_8k * (8 * 1024), info.sha1sum.chr.value,
+			info.sha1sum.chr.string, LOWER);
+		/* libero la memoria */
+		free(sha1chr);
+	}
+
 	/* cerco nel database */
 	for (i = 0; i < LENGTH(dblist); i++) {
 		if (!(memcmp(dblist[i].sha1sum, info.sha1sum.prg.string, 40))) {
@@ -451,6 +481,12 @@ BYTE emu_search_in_database(FILE *fp) {
 						info.chr.rom[0].banks_8k = 32;
 					}
 					break;
+				case 113:
+					if (info.id == BAD_INES_SWAUS) {
+						info.prg.rom[0].banks_16k = 1;
+						info.chr.rom[0].banks_8k = 2;
+					}
+					break;
 				case 191:
 					if (info.id == BAD_SUGOROQUEST) {
 						info.chr.rom[0].banks_8k = 16;
@@ -488,29 +524,6 @@ BYTE emu_search_in_database(FILE *fp) {
 		vs_system.ppu = vs_system.special_mode.type = 0;
 	}
 
-	/* calcolo anche l'sha1 della CHR rom */
-	if (info.chr.rom[0].banks_8k) {
-		BYTE *sha1chr;
-
-		/* mi alloco una zona di memoria dove leggere la CHR Rom */
-		sha1chr = (BYTE *) malloc(info.chr.rom[0].banks_8k * (8 * 1024));
-		if (!sha1chr) {
-			fprintf(stderr, "Out of memory\n");
-			return (EXIT_ERROR);
-		}
-
-		/* leggo dal file la CHR Rom */
-		if (fread(&sha1chr[0], (8 * 1024), info.chr.rom[0].banks_8k, fp) < info.chr.rom[0].banks_8k) {
-			fprintf(stderr, "Error on read chr\n");
-			free(sha1chr);
-			return (EXIT_ERROR);
-		}
-		/* calcolo l'sha1 della CHR Rom */
-		sha1_csum(sha1chr, info.chr.rom[0].banks_8k * (8 * 1024), info.sha1sum.chr.value,
-			info.sha1sum.chr.string, LOWER);
-		/* libero la memoria */
-		free(sha1chr);
-	}
 	/* riposiziono il puntatore del file */
 	fseek(fp, 0x10, SEEK_SET);
 

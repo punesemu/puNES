@@ -153,6 +153,7 @@
 #include "mappers/mapper_166.h"
 #include "mappers/mapper_SC_127.h"
 #include "mappers/mapper_190.h"
+#include "mappers/mapper_36.h"
 /* UNIF */
 #include "mappers/mapper_A65AS.h"
 #include "mappers/mapper_Malee.h"

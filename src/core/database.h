@@ -248,6 +248,12 @@ static const _dbelement dblist[] = {
 	{"0b698ad2b7cfa855e01726226f221294a8a2d9ed", 0, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Ball Hack v.2_2001-03-21 by Knoxburry-Aneurysm (Balloon Fight Hack) [o1].nes */
 	{"c0a936c933185a73edde30f34160c61219a8bae0", 0, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Hidden Chinese Chess - An Qi (Asia) (NTSC) (Unl).nes */
+	//{"261d13eaeeba7b9893b1f9427ddf431618bf41c1", 0, DEFAULT, BAD_AN_QI, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Ms. Pac-Man (USA) (Unl).nes */
+	{"83057a9b6f6a3ea8fe59af149be4c71d9c319617", 0, DEFAULT, DEFAULT, DEFAULT, UNK_HORIZONTAL, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Mr. Happyface (Ms. Pac-Man Hack).nes */
+	{"2c77d3a31556035681ab369bee319b15663190a1", 0, DEFAULT, DEFAULT, DEFAULT, UNK_HORIZONTAL, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* -------------------------------------- MMC1 -------------------------------------------- */
 	/* Darkman (E) [!].nes */
@@ -1933,10 +1939,6 @@ static const _dbelement dblist[] = {
 	/* quantum_disco_brothers_by_wAMMA.nes */
 	{"2ab9a13a76f17546582ebe2c7ce7ed55713622bd", 3, DEFAULT, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
-/* ---------------------------------- Color Dreams ---------------------------------------- */
-	/* Free Fall (U) (Prototype) [!].nes */
-	{"41f6f581c7da9f90c18e0eb2442df7a6adbe3e76", 11, CD_NO_CONFLCT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
-
 /* ------------------------------------- MMC3 --------------------------------------------- */
 	/* Summer Carnival '92 - Recca (U).nes */
 	{"4042bbe6e1ca346d5b56889dfc1cfe6124761333", 4, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
@@ -2623,6 +2625,10 @@ static const _dbelement dblist[] = {
 	{"012a23b6fe872bcbcc42dfeb5835a7bfaf721fc6", 11, DEFAULT, BAD_KING_NEPT, DEFAULT, UNK_VERTICAL, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Kojiki_by_wAMMA.nes */
 	{"9becee07199b622408c0806d1dd1f510989b2488", 11, DEFAULT, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Free Fall (U) (Prototype) [!].nes */
+	{"41f6f581c7da9f90c18e0eb2442df7a6adbe3e76", 11, CD_NO_CONFLCT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Secret Scout in the Temple of Demise (USA) (Beta) (Unl).nes */
+	{"e667fe1a0eb044c8615042d31dea3b2913d813bb", 11, CD_NO_CONFLCT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* --------------------------------------- CPROM ------------------------------------------ */
 	/* Volshebnaya Palitra (R) [!].nes */
@@ -3290,6 +3296,8 @@ static const _dbelement dblist[] = {
 	{"294a82b061ce9c0908305777656f026b8474066a", 113, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Total Funpak (HES).nes */
 	{"17c721cab79fe83eb47a6fb1e53af1f65b851558", 113, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Sidewinder (Australia) (Unl).nes */
+	{"b1cc3ed04c610be18742a3fd78a8f27a597f8549", 113, DEFAULT, BAD_INES_SWAUS, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* --------------------------------------- 114 -------------------------------------------- */
 	/* Lion King, The (Unl) (Mapper 114).nes */
@@ -3383,6 +3391,14 @@ static const _dbelement dblist[] = {
 	/* Qi Wang - Chinese Chess (MGC-001) (Ch) [!].nes */
 	{"d293232ddbdeecd0d999652f02cb3ae2576cf251", 133, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
+/* ---------------------------------- Sachen (SA8259B) ------------------------------------ */
+	/* Silver Eagle (Sachen) [!].nes */
+	{"2a4dae7634943c9c86760a00e24d2bc70efb03d0", 138, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+
+/* ---------------------------------- Sachen (SA8259C) ------------------------------------ */
+	/* Hell Fighter (Asia) (PAL) (Unl).nes */
+	{"db8e5ff5ffd45517226611c3a577e89a1236e394", 139, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+
 /* ------------------------------------- Jaleco ------------------------------------------- */
 	/* Youkai Kurabu (J) [o1].nes */
 	{"7227a9aa0baf11d324f55280c1c1ddc2d46bebd3", 140, JF11, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
@@ -3390,10 +3406,50 @@ static const _dbelement dblist[] = {
 /* ------------------------------------ Sachen (SA8259A) ---------------------------------- */
 	/* Q Boy (Sachen) [!].nes */
 	{"568bf236fb3085b8bd522fbd2c18c7831e3a2dd1", 141, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Po Po Team (Sachen) [!].nes */
+	{"0514b2d5a70601cb895b40d577e60c350fc42438", 141, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Rockball (Sachen) [!].nes */
+	{"2f38e7cc617142cbdca1eafbc596840177e5d77d", 141, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Super Cartridge Ver 1 - 4 in 1 (Asia) (Unl).nes */
+	{"aa801e57925d74b83fe5abc3d294fe5aeb314817", 141, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Super Cartridge Ver 2 - 10 in 1 (Asia) (Unl).nes */
+	{"7227e6664d7a8e2f386b7bec0b098c1977ec8b54", 141, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Super Cartridge Ver 3 - 8 in 1 (Asia) (Unl).nes */
+	{"26cf676f1af40c0ff63c07e225a3f40a4c88a377", 141, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Super Cartridge Ver 4 - 6 in 1 (Asia) (Unl).nes */
+	{"138aa2df6a9369d14ec4fc7e7d491d3f2df1ea06", 141, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Super Cartridge Ver 5 - 7 in 1 (Asia) (Unl).nes */
+	{"d5303cbd082858070494775f29fea2877da64d56", 141, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Super Cartridge Ver 6 - 6 in 1 (Asia) (Unl).nes */
+	{"556085d9ef4977cdaa8da86afa359cb838f615fc", 141, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Super Cartridge Ver 7 - 4 in 1 (Asia) (Unl).nes */
+	{"d6f2111ebb31e11dfb94bdddfe6b8048653d55c0", 141, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Super Cartridge Ver 8 - 4 in 1 (Asia) (Unl).nes */
+	{"6b112db7b32511654dbcedf86baa54b7560b6dcf", 141, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Super Cartridge Ver 9 - 3 in 1 (Asia) (Unl).nes */
+	{"f0784b3ded01f16b252ad99594894a0f5e7989ad", 141, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Super Pang (Sachen) [!].nes */
+	{"769ba79eb7e3133aa692487f300333c618badb40", 141, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Super Pang 2 (Sachen) [!].nes */
+	{"41dc9fb7107f8130621da4def43d5b9e4aefe5bf", 141, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* ------------------------------------- Agci --------------------------------------------- */
 	/* Death Race (AGCI) [!].nes */
 	{"d33248186697e488021358369e6407b5d85526fc", 144, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+
+/* ------------------------------------ Sachen (SA72007) ---------------------------------- */
+	/* Sidewinder (Sachen) [!].nes */
+	{"248e11d7dba271a9fa047a357f9d532494969568", 145, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+
+/* ------------------------------------- Ave (NINA06) ------------------------------------- */
+	/* Metal Fighter (Asia) (Sachen) (Unl).nes */
+	{"5c92ee55b274b658725c358301d802c91d9aac12", 146, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Pyramid II (Sachen) [!].nes */
+	{"5ade95b4b28acf730258a23d37737bdfb001baba", 146, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Silent Assault (Sachen-Joy Van) [!].nes */
+	{"40bc04ea95570005fe6b4ac316a5bbe94c927d70", 146, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Twin Eagle (Asia) (PAL) (Unl).nes */
+	{"ff3cffbd148201fc104165eeea294d1421ac2d56", 146, DEFAULT, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* ------------------------------------ Sachen (SA0037) ----------------------------------- */
 	/* AV Soccer (Hacker) [!].nes */
@@ -3404,6 +3460,10 @@ static const _dbelement dblist[] = {
 	{"b48627517b149261e32d275d46e41f72f48d623a", 148, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Shisen Mahjong - Seifuku Hen (Sachen) [!].nes */
 	{"a9c6581ce2a59fb5409f2723567c5010714d069f", 148, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+
+/* ------------------------------------ Sachen (SA0036) ----------------------------------- */
+	/* Taiwan Mahjong 16 (Sachen) [!].nes */
+	{"cf16da11aa7a6b4fabc80a589e4fbd0738626a7a", 149, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* ----------------------------------- Sachen (SA74374B) ---------------------------------- */
 	/* 2-in-1 Cosmo Cop + Cyber Monster (Sachen) [!].nes */
@@ -3922,7 +3982,8 @@ static const _dbelement dblist[] = {
 	{"230f514c80b5dfbe6a86f3e24947ad34c0235835", UNIF_MAPPER, 30, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Super Car (Ch)(full copyrights)[!].nes */
 	{"31b3e7cfb2069ca9f52aa2f4c9ce295d722432cf", UNIF_MAPPER, 30, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
-
+	/* Street Heroes (Asia) (Unl).nes */
+	{"9500c52045909a239c21f15cdeda1782c7303f1e", UNIF_MAPPER, 34, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 };
 
 #endif /* DATABASE_H_ */
