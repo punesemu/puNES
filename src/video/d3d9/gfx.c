@@ -35,6 +35,14 @@
 #include "video/effects/tv_noise.h"
 
 #define D3D9_ADAPTER(i) (_d3d9_adapter *) ((BYTE *) d3d9.array + (i * sizeof(_d3d9_adapter)))
+#define _SCR_ROWS_BRD\
+	((float)  (SCR_ROWS - (overscan.borders->left + overscan.borders->right)) * gfx.pixel_aspect_ratio)
+#define _SCR_LINES_BRD\
+	(float) (SCR_LINES - (overscan.borders->up + overscan.borders->down))
+#define _SCR_ROWS_NOBRD\
+	((float) SCR_ROWS * gfx.pixel_aspect_ratio)
+#define _SCR_LINES_NOBRD\
+	(float) SCR_LINES
 
 static void d3d9_shader_cg_error_handler(void);
 static BYTE d3d9_device_create(UINT width, UINT height);
@@ -119,10 +127,7 @@ BYTE gfx_init(void) {
 			}
 
 			// Check for hardware T&L
-			if (IDirect3D9_GetDeviceCaps(d3d9.d3d,
-					dev->id,
-					D3DDEVTYPE_HAL,
-					&d3dcaps) != D3D_OK) {
+			if (IDirect3D9_GetDeviceCaps(d3d9.d3d, dev->id, D3DDEVTYPE_HAL, &d3dcaps) != D3D_OK) {
 				dev_error("unable to get device caps\n");
 				continue;
 			}
@@ -799,21 +804,7 @@ void gfx_draw_screen(BYTE forced) {
 
 		// swap buffers
 		{
-			RECT viewp;
-
-			if (cfg->fullscreen) {
-				viewp.left = 0;
-				viewp.top = 0;
-				viewp.right = gfx.w[VIDEO_MODE];
-				viewp.bottom = gfx.h[VIDEO_MODE];
-			} else {
-				viewp.left = -gfx.vp.x;
-				viewp.top = -gfx.vp.y;
-				viewp.right = gfx.w[VIDEO_MODE] + viewp.left;
-				viewp.bottom = gfx.h[VIDEO_MODE] + viewp.top;
-			}
-
-			if (IDirect3DDevice9_Present(d3d9.adapter->dev, &viewp, NULL, NULL, NULL)
+			if (IDirect3DDevice9_Present(d3d9.adapter->dev, &d3d9.viewp, NULL, NULL, NULL)
 					== D3DERR_DEVICELOST) {
 				if (IDirect3DDevice9_TestCooperativeLevel(d3d9.adapter->dev)
 						== D3DERR_DEVICENOTRESET) {
@@ -843,20 +834,21 @@ void gfx_draw_screen(BYTE forced) {
 								surface) == D3D_OK) {
 							D3DLOCKED_RECT lrect;
 
-							if (overscan.enabled && (!cfg->oscan_black_borders && !cfg->fullscreen)) {
-								IDirect3DSurface9 *osurface;
+							if (overscan.enabled && ((!cfg->fullscreen && !cfg->oscan_black_borders) ||
+									(cfg->fullscreen && !cfg->oscan_black_borders_fscr))) {
+								int w = d3d9.viewp.right - d3d9.viewp.left;
+								int h = d3d9.viewp.bottom - d3d9.viewp.top;
+								IDirect3DSurface9 *zone;
 
 								if (IDirect3DDevice9_CreateOffscreenPlainSurface(d3d9.adapter->dev,
-								        gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE], sd.Format,
-								        D3DPOOL_DEFAULT, &osurface, NULL) == D3D_OK) {
+								        w, h, sd.Format, D3DPOOL_DEFAULT, &zone, NULL) == D3D_OK) {
 									if (IDirect3DDevice9_UpdateSurface(d3d9.adapter->dev, surface,
-											&viewp, osurface, NULL) == D3D_OK) {
-										IDirect3DSurface9_LockRect(osurface, &lrect, NULL, 0);
-										gui_save_screenshot(gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE],
-										        lrect.pBits, FALSE);
-										IDirect3DSurface9_UnlockRect(osurface);
+											&d3d9.viewp, zone, NULL) == D3D_OK) {
+										IDirect3DSurface9_LockRect(zone, &lrect, NULL, 0);
+										gui_save_screenshot(w, h, lrect.pBits, FALSE);
+										IDirect3DSurface9_UnlockRect(zone);
 									}
-									IDirect3DSurface9_Release(osurface);
+									IDirect3DSurface9_Release(zone);
 								}
 							} else {
 								IDirect3DSurface9_LockRect(surface, &lrect, NULL, 0);
@@ -870,6 +862,7 @@ void gfx_draw_screen(BYTE forced) {
 				}
 				gfx.save_screenshot = FALSE;
 			}
+
 		}
 	}
 }
@@ -1169,17 +1162,52 @@ static BYTE d3d9_context_create(void) {
 		}
 
 		// configuro l'aspect ratio del fullscreen
-		if (cfg->fullscreen && !cfg->stretch) {
-			float ratio_surface = (((float) SCR_ROWS * gfx.pixel_aspect_ratio) / (float) (SCR_LINES));
-			float ratio_frame = (float) gfx.w[VIDEO_MODE] / (float) gfx.h[VIDEO_MODE];
+		if (cfg->fullscreen) {
+			if (!cfg->stretch) {
+				float ratio_frame = (float) gfx.w[VIDEO_MODE] / (float) gfx.h[VIDEO_MODE];
+				float ratio_surface;
 
-			if (ratio_frame > ratio_surface) {
-				vp->w = (int) ((float) gfx.h[VIDEO_MODE] * ratio_surface);
-				vp->x = (int) (((float) gfx.w[VIDEO_MODE] - (float) vp->w) * 0.5f);
-			} else {
-				vp->h = (int) ((float) gfx.w[VIDEO_MODE] / ratio_surface);
-				vp->y = (int) (((float) gfx.h[VIDEO_MODE] - (float) vp->h) * 0.5f);
+				if (overscan.enabled && (cfg->oscan_black_borders_fscr == FALSE)) {
+					ratio_surface = _SCR_ROWS_BRD / _SCR_LINES_BRD;
+				} else {
+					ratio_surface = _SCR_ROWS_NOBRD / _SCR_LINES_NOBRD;
+				}
+
+				if (ratio_frame > ratio_surface) {
+					vp->w = (int) ((float) gfx.h[VIDEO_MODE] * ratio_surface);
+					vp->x = (int) (((float) gfx.w[VIDEO_MODE] - (float) vp->w) * 0.5f);
+				} else {
+					vp->h = (int) ((float) gfx.w[VIDEO_MODE] / ratio_surface);
+					vp->y = (int) (((float) gfx.h[VIDEO_MODE] - (float) vp->h) * 0.5f);
+				}
 			}
+
+			if (overscan.enabled && (cfg->oscan_black_borders_fscr == FALSE)) {
+				float brd_l_x, brd_r_x, brd_u_y, brd_d_y;
+				float ratio_x, ratio_y;
+
+				ratio_x = (float) vp->w / _SCR_ROWS_NOBRD;
+				ratio_y = (float) vp->h / _SCR_LINES_NOBRD;
+				brd_l_x = (float) overscan.borders->left * ratio_x;
+				brd_r_x = (float) overscan.borders->right * ratio_x;
+				brd_u_y = (float) overscan.borders->up * ratio_y;
+				brd_d_y = (float) overscan.borders->down * ratio_y;
+
+				d3d9.viewp.left = brd_l_x;
+				d3d9.viewp.top = brd_u_y;
+				d3d9.viewp.right = gfx.w[VIDEO_MODE] - brd_r_x;
+				d3d9.viewp.bottom = gfx.h[VIDEO_MODE] - brd_d_y;
+			} else {
+				d3d9.viewp.left = 0;
+				d3d9.viewp.top = 0;
+				d3d9.viewp.right = gfx.w[VIDEO_MODE];
+				d3d9.viewp.bottom = gfx.h[VIDEO_MODE];
+			}
+		} else {
+			d3d9.viewp.left = -vp->x;
+			d3d9.viewp.top = -vp->y;
+			d3d9.viewp.right = gfx.w[VIDEO_MODE] + d3d9.viewp.left;
+			d3d9.viewp.bottom = gfx.h[VIDEO_MODE] + d3d9.viewp.top;
 		}
 	}
 

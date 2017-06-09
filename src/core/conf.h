@@ -50,6 +50,7 @@ typedef struct _config {
 	BYTE stretch;
 	BYTE oscan;
 	BYTE oscan_black_borders;
+	BYTE oscan_black_borders_fscr;
 	BYTE oscan_default;
 	BYTE pixel_aspect_ratio;
 	BYTE PAR_soft_stretch;

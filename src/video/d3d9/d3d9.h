@@ -158,6 +158,8 @@ typedef struct _d3d9 {
 		_texture tex;
 	} feedback;
 
+	RECT viewp;
+
 	_texture_simple text;
 	_texture texture[MAX_PASS + 1];
 	_lut lut[MAX_PASS];

@@ -198,6 +198,8 @@ void cmd_line_parse(int argc, uTCHAR **argv) {
 					set_int(cfg_from_file.shader, SET_SHADER);
 				} else if (key == "overscan-blk-brd") {
 					set_int(cfg_from_file.oscan_black_borders, SET_OVERSCAN_BLACK_BORDERS);
+				} else if (key == "overscan-blk-brd-f") {
+					set_int(cfg_from_file.oscan_black_borders_fscr, SET_OVERSCAN_BLACK_BORDERS_FSCR);
 				}
 				break;
 			case 'a':
@@ -347,6 +349,7 @@ static void usage(QString name) {
 			uL("" uPERCENTs "\n")
 			uL("" uPERCENTs "\n")
 			uL("" uPERCENTs "\n")
+			uL("" uPERCENTs "\n")
 #if defined (WITH_OPENGL)
 			uL("" uPERCENTs "\n")
 #endif
@@ -361,6 +364,7 @@ static void usage(QString name) {
 			main_cfg[SET_PAR].hlp,
 			main_cfg[SET_PAR_SOFT_STRETCH].hlp,
 			main_cfg[SET_OVERSCAN_BLACK_BORDERS].hlp,
+			main_cfg[SET_OVERSCAN_BLACK_BORDERS_FSCR].hlp,
 			main_cfg[SET_OVERSCAN_DEFAULT].hlp,
 			main_cfg[SET_FILTER].hlp,
 			main_cfg[SET_NTSC_FORMAT].hlp,

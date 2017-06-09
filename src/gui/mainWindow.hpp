@@ -138,6 +138,7 @@ class mainWindow: public QMainWindow {
 		void s_set_par();
 		void s_set_par_stretch();
 		void s_set_overscan_black_borders();
+		void s_set_overscan_black_borders_fscr();
 		void s_set_overscan();
 		void s_set_overscan_borders();
 		void s_set_filter();

@@ -46,6 +46,15 @@
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 #define BUFFER_VB_OFFSET(a, i) ((char *)&a + (i))
 
+#define _SCR_ROWS_BRD\
+	((float)  (SCR_ROWS - (overscan.borders->left + overscan.borders->right)) * gfx.pixel_aspect_ratio)
+#define _SCR_LINES_BRD\
+	(float) (SCR_LINES - (overscan.borders->up + overscan.borders->down))
+#define _SCR_ROWS_NOBRD\
+	((float) SCR_ROWS * gfx.pixel_aspect_ratio)
+#define _SCR_LINES_NOBRD\
+	(float) SCR_LINES
+
 enum _opengl_texture_format {
 	TI_INTFRM = GL_RGBA8,
 	TI_FRM = GL_BGRA,
@@ -59,7 +68,7 @@ enum _opengl_texture_format {
 static BYTE opengl_init(void);
 static BYTE opengl_context_create(SDL_Surface *src);
 static void opengl_context_delete(void);
-static void opengl_draw_scene(SDL_Surface *surface);
+INLINE static void opengl_draw_scene(SDL_Surface *surface);
 static void opengl_screenshot(void);
 
 static BYTE opengl_glew_init(void);
@@ -1010,17 +1019,41 @@ static BYTE opengl_context_create(SDL_Surface *src) {
 			vp->h = gfx.h[NO_OVERSCAN];
 		}
 
-		// configuro l'aspect ratio del fullscreen
-		if (cfg->fullscreen && !cfg->stretch) {
-			float ratio_surface = (((float) SCR_ROWS * gfx.pixel_aspect_ratio) / (float) (SCR_LINES));
-			float ratio_frame = (float) gfx.w[VIDEO_MODE] / (float) gfx.h[VIDEO_MODE];
+		if (cfg->fullscreen) {
+			if (!cfg->stretch) {
+				float ratio_frame = (float) gfx.w[VIDEO_MODE] / (float) gfx.h[VIDEO_MODE];
+				float ratio_surface;
 
-			if (ratio_frame > ratio_surface) {
-				vp->w = (int) ((float) src->h * ratio_surface);
-				vp->x = (int) (((float) src->w - (float) vp->w) * 0.5f);
-			} else {
-				vp->h = (int) ((float) src->w / ratio_surface);
-				vp->y = (int) (((float) src->h - (float) vp->h) * 0.5f);
+				if (overscan.enabled && (cfg->oscan_black_borders_fscr == FALSE)) {
+					ratio_surface = _SCR_ROWS_BRD / _SCR_LINES_BRD;
+				} else {
+					ratio_surface = _SCR_ROWS_NOBRD / _SCR_LINES_NOBRD;
+				}
+
+				if (ratio_frame > ratio_surface) {
+					vp->w = (int) ((float) src->h * ratio_surface);
+					vp->x = (int) (((float) src->w - (float) vp->w) * 0.5f);
+				} else {
+					vp->h = (int) ((float) src->w / ratio_surface);
+					vp->y = (int) (((float) src->h - (float) vp->h) * 0.5f);
+				}
+			}
+
+			if (overscan.enabled && (cfg->oscan_black_borders_fscr == FALSE)) {
+				float brd_l_x, brd_r_x, brd_u_y, brd_d_y;
+				float ratio_x, ratio_y;
+
+				ratio_x = (float) vp->w / _SCR_ROWS_NOBRD;
+				ratio_y = (float) vp->h / _SCR_LINES_NOBRD;
+				brd_l_x = (float) overscan.borders->left * ratio_x;
+				brd_r_x = (float) overscan.borders->right * ratio_x;
+				brd_u_y = (float) overscan.borders->up * ratio_y;
+				brd_d_y = (float) overscan.borders->down * ratio_y;
+
+				vp->x -= brd_l_x;
+				vp->y -= brd_d_y;
+				vp->w += brd_l_x + brd_r_x;
+				vp->h += brd_u_y + brd_d_y;
 			}
 		}
 	}
@@ -1276,7 +1309,7 @@ static void opengl_context_delete(void) {
 
 	info.sRGB_FBO_in_use = FALSE;
 }
-static void opengl_draw_scene(SDL_Surface *surface) {
+INLINE static void opengl_draw_scene(SDL_Surface *surface) {
 	static GLuint prev_type = MS_MEM;
 	const _texture_simple *scrtex = &opengl.screen.tex[opengl.screen.index];
 	GLuint offset_x = 0, offset_y = 0;

@@ -236,6 +236,7 @@
       <addaction name="menu_Oscan_Default_Value"/>
       <addaction name="separator"/>
       <addaction name="action_Oscan_Black_Borders_in_Window"/>
+      <addaction name="action_Oscan_Black_Borders_in_Fullscreen"/>
       <addaction name="separator"/>
       <addaction name="action_Oscan_Set_Borders"/>
      </widget>
@@ -2198,7 +2199,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>&amp;Black borders in window</string>
+    <string>&amp;Black borders in window mode</string>
    </property>
   </action>
   <action name="action_xBRZ_2X_MT">
@@ -2239,6 +2240,14 @@
    </property>
    <property name="text">
     <string>&amp;xBRZ 6X MT</string>
+   </property>
+  </action>
+  <action name="action_Oscan_Black_Borders_in_Fullscreen">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Black borders in fullscreen</string>
    </property>
   </action>
  </widget>

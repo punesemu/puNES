@@ -732,6 +732,7 @@ void setObject::to_cfg(QString group) {
 		int_to_val(SET_PAR, cfg_from_file.pixel_aspect_ratio);
 		int_to_val(SET_PAR_SOFT_STRETCH, cfg_from_file.PAR_soft_stretch);
 		int_to_val(SET_OVERSCAN_BLACK_BORDERS, cfg_from_file.oscan_black_borders);
+		int_to_val(SET_OVERSCAN_BLACK_BORDERS_FSCR, cfg_from_file.oscan_black_borders_fscr);
 		int_to_val(SET_OVERSCAN_DEFAULT, cfg_from_file.oscan_default);
 		val.replace(SET_OVERSCAN_BRD_NTSC, oscan_val(&overscan_borders[0]));
 		val.replace(SET_OVERSCAN_BRD_PAL, oscan_val(&overscan_borders[1]));
@@ -808,6 +809,7 @@ void setObject::fr_cfg(QString group) {
 		cfg_from_file.pixel_aspect_ratio = val_to_int(SET_PAR);
 		cfg_from_file.PAR_soft_stretch = val_to_int(SET_PAR_SOFT_STRETCH);
 		cfg_from_file.oscan_black_borders = val_to_int(SET_OVERSCAN_BLACK_BORDERS);
+		cfg_from_file.oscan_black_borders_fscr = val_to_int(SET_OVERSCAN_BLACK_BORDERS_FSCR);
 		cfg_from_file.oscan_default = val_to_int(SET_OVERSCAN_DEFAULT);
 		oscan_val_to_int(SET_OVERSCAN_BRD_NTSC, &overscan_borders[0]);
 		oscan_val_to_int(SET_OVERSCAN_BRD_PAL, &overscan_borders[1]);

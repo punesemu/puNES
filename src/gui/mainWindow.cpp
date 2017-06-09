@@ -780,6 +780,7 @@ void mainWindow::update_menu_settings() {
 	}
 	// Settings/Video/Overscan
 	ui->action_Oscan_Black_Borders_in_Window->setChecked(cfg->oscan_black_borders);
+	ui->action_Oscan_Black_Borders_in_Fullscreen->setChecked(cfg->oscan_black_borders_fscr);
 	switch (cfg->oscan) {
 		case OSCAN_ON:
 			ui->action_Oscan_On->setChecked(true);
@@ -1433,6 +1434,8 @@ void mainWindow::connect_menu_signals() {
 	connect_action(ui->action_PAR_Soft_Stretch, SLOT(s_set_par_stretch()));
 	// Settings/Video/Overscan
 	connect_action(ui->action_Oscan_Black_Borders_in_Window, SLOT(s_set_overscan_black_borders()));
+	connect_action(ui->action_Oscan_Black_Borders_in_Fullscreen,
+			SLOT(s_set_overscan_black_borders_fscr()));
 	connect_action(ui->action_Oscan_Default, OSCAN_DEFAULT, SLOT(s_set_overscan()));
 	connect_action(ui->action_Oscan_On, OSCAN_ON, SLOT(s_set_overscan()));
 	connect_action(ui->action_Oscan_Off, OSCAN_OFF, SLOT(s_set_overscan()));
@@ -2049,6 +2052,12 @@ void mainWindow::s_set_par_stretch() {
 }
 void mainWindow::s_set_overscan_black_borders() {
 	cfg->oscan_black_borders = !cfg->oscan_black_borders;
+	if (overscan.enabled) {
+		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
+	}
+}
+void mainWindow::s_set_overscan_black_borders_fscr() {
+	cfg->oscan_black_borders_fscr = !cfg->oscan_black_borders_fscr;
 	if (overscan.enabled) {
 		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 	}

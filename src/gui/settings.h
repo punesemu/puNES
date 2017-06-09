@@ -49,6 +49,7 @@ enum set_element {
 	SET_PAR,
 	SET_PAR_SOFT_STRETCH,
 	SET_OVERSCAN_BLACK_BORDERS,
+	SET_OVERSCAN_BLACK_BORDERS_FSCR,
 	SET_OVERSCAN_DEFAULT,
 	SET_OVERSCAN_BRD_NTSC,
 	SET_OVERSCAN_BRD_PAL,
@@ -548,6 +549,13 @@ static const _settings main_cfg[] = {
 		uL("# possible values: on, off"),
 		uL("    --overscan-blk-brd    enable black borders  : on, off" NEWLINE)
 		uL("                          in window mode"),
+		{LENGTH(opt_off_on), opt_off_on}
+	},
+	{
+		uL("video"), uL("overscan black borders in fullscreen"), uL("on"),
+		uL("# possible values: on, off"),
+		uL("    --overscan-blk-brd-f  enable black borders  : on, off" NEWLINE)
+		uL("                          in fullscreen"),
 		{LENGTH(opt_off_on), opt_off_on}
 	},
 	{
