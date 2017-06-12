@@ -21,7 +21,7 @@
 
 #include "common.h"
 
-enum { AMROM, BAD_INES_WWFWE, BBCARUNL };
+enum { AMROM, BAD_INES_WWFWE, BBCARUNL, CSPC10 };
 
 void map_init_AxROM(void);
 void extcl_cpu_wr_mem_AxROM(WORD address, BYTE value);

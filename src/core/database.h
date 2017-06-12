@@ -400,6 +400,8 @@ static const _dbelement dblist[] = {
 	{"e28ba80be814bb032bbe4647c1b2104f868dfa25", 1, DEFAULT, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Miracle Piano Teaching System, The (E) [!].nes */
 	{"ed961fe21ecce26b15c2722a91080da39f4e394d", 1, DEFAULT, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Miracle Piano Teaching System, The (France).nes */
+	{"b0eb752ae1c5d14280ec8c67bc88bbacdedf31a7", 1, DEFAULT, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* New Ghostbusters II (E) [!].nes */
 	{"3bb85626b3caa71c996a00bbe1f05e342f870c2f", 1, DEFAULT, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* New Ghostbusters II (E) [T+Rus_magic team].nes */
@@ -548,7 +550,7 @@ static const _dbelement dblist[] = {
 	/* Dynablaster (E) [!].nes */
 	{"31c720f9a75eb2d069244bd257aa23de6b5bce8b", 1, SNROM, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Elite by Ian Bell & David Braben (NTSC Hack).nes */
-	{"fcf9ff27f097892148eaec439ab79bc53164d751", 1, SNROM, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	{"fcf9ff27f097892148eaec439ab79bc53164d751", 1, SNROM, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Elite (E) [!].nes */
 	{"8d7ca48394996ef45ab1094b582d00ad7b028f21", 1, SNROM, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Easy Final Fantasy (FF1 Hack).nes */
@@ -1086,7 +1088,7 @@ static const _dbelement dblist[] = {
 	/* Mario Open Golf (J) (PRG1) [!].nes */
 	{"9a5628dfb31b4e8f07079a30b58100884b5590a9", 1, SNROM, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Mario Open Golf (PC10) [!].nes */
-	{"2d5ac7c65ce63d409b6e0b2e2185d81bc7c57c69", 1, SNROM, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	{"2d5ac7c65ce63d409b6e0b2e2185d81bc7c57c69", 1, SNROM, MOWPC10, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Spot (J).nes */
 	{"8b62b3fc95957f52d146e7bc3c90ab33c4005aec", 1, SNROM, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Spot (U) [!].nes */
@@ -2527,7 +2529,7 @@ static const _dbelement dblist[] = {
 	/* Captain SkyHawk (E) [!].nes */
 	{"5d940b2224946def3f9f9fad13d879170f3bf494", 7, AMROM, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Captain Skyhawk (PC10) [!].nes */
-	{"e12086a3f1a3b5e9ec035cb778505e43f501416a", 7, AMROM, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	{"e12086a3f1a3b5e9ec035cb778505e43f501416a", 7, AMROM, CSPC10, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Captain Skyhawk (U) (PRG0) [o1].nes */
 	{"92f0c3153d0dec1f78d61425f88fc6573b0f9be8", 7, AMROM, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Captain Skyhawk (U) (PRG1) [!].nes */
@@ -2891,6 +2893,9 @@ static const _dbelement dblist[] = {
 	/* Teenage Mutant Ninja Turtles 2 - The Manhattan Project (J) [T+Kor_eastwind].nes */
 	{"4568f379dbe6e73df96466e332c90e88962674da", 25, VRC4D, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
+	/* Gradius II (J) (VC).nes */
+	{"cf97e13a30b688eafdd0509b63e0228ea2185a25", 25, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+
 	/* World Hero (Unl)(TV System Select)[!].nes */
 	{"0b351c586130ad0ae6203144136b6e199fa5ae20", 27, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
@@ -3015,6 +3020,8 @@ static const _dbelement dblist[] = {
 	{"2338059ab6dc540e59283edee65714bcd94ac188", 66, DEFAULT, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Super Mario Bros. + Duck Hunt (E) [!].nes */
 	{"63db029e1e1ff3374c0b08b9df198018d4472716", 66, DEFAULT, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Mississippi Satsujin Jiken (J) [h2][o1].nes */
+	{"e0459af1bcd2a8510bc058c9c00bb5b4bf64c83b", 66, DEFAULT, GXROM_NOBC, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* ------------------------------------ Sunsoft S4 ---------------------------------------- */
 	/* Maharaja (J).nes */
@@ -3402,6 +3409,8 @@ static const _dbelement dblist[] = {
 /* ------------------------------------- Jaleco ------------------------------------------- */
 	/* Youkai Kurabu (J) [o1].nes */
 	{"7227a9aa0baf11d324f55280c1c1ddc2d46bebd3", 140, JF11, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Mississippi Satsujin Jiken (Japan) (Rev A).nes */
+	{"5505e239b1317816b3608f973bf46117084216cc", 140, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* ------------------------------------ Sachen (SA8259A) ---------------------------------- */
 	/* Q Boy (Sachen) [!].nes */
@@ -3665,6 +3674,8 @@ static const _dbelement dblist[] = {
 	{"54e0e88775338db1a902639ae36401af72d4b543", 185, DEFAULT, CNROM_26CE27CE, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* U-Wings (B-Wings Hack).nes */
 	{"52356eb55bfbb5c549ccbcc0e23cf1f873db83db", 185, DEFAULT, CNROM_26CE27CE, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Mighty Bomb Jack (Japan) (Rev A).nes */
+	{"8b4b3361f84c11dc77fdb84a33405e2439f8ea88", 185, DEFAULT, CNROM_26CE27NCE, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Mighty Bomb Jack (J) [o1].nes */
 	{"ae5cc14f59a7e484b3d05471a2c31d2273c9398d", 185, DEFAULT, CNROM_26CE27NCE, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Sansuu 1 Nen - Keisan Game (J).nes */

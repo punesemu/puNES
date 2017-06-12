@@ -21,7 +21,10 @@
 
 #include "common.h"
 
+enum gxrom_types { GXROM_NOBC = 20 };
+
 void map_init_GxROM(void);
 void extcl_cpu_wr_mem_GxROM(WORD address, BYTE value);
+void extcl_cpu_wr_mem_GxROM_noBC(WORD address, BYTE value);
 
 #endif /* MAPPER_GXROM_H_ */

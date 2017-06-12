@@ -190,7 +190,7 @@ void ppu_tick(WORD cycles_cpu) {
 				if (!ppu.vblank && (ppu.screen_y < SCR_LINES)) {
 					if (ppu.frame_y > ppu_sclines.vint) {
 						if (r2001.visible) {
-							if ((ppu.pixel_tile >= 1) && (ppu.pixel_tile <= 3)) {
+							if ((ppu.pixel_tile >= 0) && (ppu.pixel_tile <= 2)) {
 								r2006.race.ctrl = TRUE;
 								r2006.race.value = (r2006.value & 0x00FF) | (ppu.tmp_vram & 0xFF00);
 							}
@@ -1054,8 +1054,6 @@ void ppu_overclock(BYTE reset_dmc_in_use) {
 	ppu_overclock_update();
 	ppu_overclock_control();
 }
-
-
 
 static INLINE void ppu_oam_evaluation(void) {
 /* ------------------------------- CONTROLLO SPRITE SCANLINE+1 ------------------------------- */

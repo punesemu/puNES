@@ -430,6 +430,8 @@ BYTE emu_search_in_database(FILE *fp) {
 					/* Fix per Famicom Wars (J) [!] che ha l'header INES errato */
 					if (info.id == BAD_YOSHI_U) {
 						info.chr.rom[0].banks_8k = 4;
+					} else if (info.id == MOWPC10) {
+						info.chr.rom[0].banks_8k = 0;
 					}
 					break;
 				case 2:
@@ -459,6 +461,8 @@ BYTE emu_search_in_database(FILE *fp) {
 					 */
 					if (info.id == BAD_INES_WWFWE) {
 						info.prg.rom[0].banks_16k = 8;
+						info.chr.rom[0].banks_8k = 0;
+					} else if (info.id == CSPC10) {
 						info.chr.rom[0].banks_8k = 0;
 					}
 					break;
