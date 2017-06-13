@@ -314,6 +314,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_CPROM.h \
 	mappers/mapper_DRAGONFIGHTER.c \
 	mappers/mapper_DRAGONFIGHTER.h \
+	mappers/mapper_EDU2000.c \
+	mappers/mapper_EDU2000.h \
 	mappers/mapper_EH8813A.c \
 	mappers/mapper_EH8813A.h \
 	mappers/mapper_FDS.c \

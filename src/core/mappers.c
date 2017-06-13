@@ -935,6 +935,10 @@ BYTE map_init(void) {
 					// Super24in1SC03
 					map_init_Super24in1();
 					break;
+				case 55:
+					// EDU2000
+					map_init_EDU2000();
+					break;
 			}
 			break;
 	}

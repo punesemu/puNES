@@ -209,6 +209,7 @@
 #include "mappers/mapper_KS7031.h"
 #include "mappers/mapper_DRAGONFIGHTER.h"
 #include "mappers/mapper_Super24in1.h"
+#include "mappers/mapper_EDU2000.h"
 
 #define _control_bank(val, max)\
 	if (val > max) {\

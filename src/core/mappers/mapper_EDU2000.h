@@ -16,20 +16,19 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef MAPPER_LH10_H_
-#define MAPPER_LH10_H_
+#ifndef MAPPER_EDU2000_H_
+#define MAPPER_EDU2000_H_
 
 #include "common.h"
 
-struct _lh10 {
-	BYTE ind;
-	BYTE reg[8];
-} lh10;
+struct _edu2000 {
+	BYTE reg;
+	uint32_t prg_ram_address;
+} edu2000;
 
-void map_init_LH10(void);
-void extcl_after_mapper_init_LH10(void);
-void extcl_cpu_wr_mem_LH10(WORD address, BYTE value);
-BYTE extcl_cpu_rd_mem_LH10(WORD address, BYTE openbus, BYTE before);
-BYTE extcl_save_mapper_LH10(BYTE mode, BYTE slot, FILE *fp);
+void map_init_EDU2000(void);
+void extcl_cpu_wr_mem_EDU2000(WORD address, BYTE value);
+BYTE extcl_cpu_rd_mem_EDU2000(WORD address, BYTE openbus, BYTE before);
+BYTE extcl_save_mapper_EDU2000(BYTE mode, BYTE slot, FILE *fp);
 
-#endif /* MAPPER_LH10_H_ */
+#endif /* MAPPER_EDU200_H_ */
