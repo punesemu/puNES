@@ -129,6 +129,10 @@ void snd_quit(void) {
 	// se e' in corso una registrazione, la concludo
 	wave_close();
 
+	if (ds8.ds8) {
+		FreeLibrary(ds8.ds8);
+	}
+
 	snd_playback_stop();
 }
 
@@ -349,10 +353,6 @@ void snd_playback_unlock(_callback_data *cache) {
 }
 void snd_playback_stop(void) {
 	xaudio2.opened = FALSE;
-
-    if (ds8.ds8) {
-    	FreeLibrary(ds8.ds8);
-    }
 
 	if (xaudio2.source) {
 		IXAudio2SourceVoice_Stop(xaudio2.source, 0, XAUDIO2_COMMIT_NOW);
