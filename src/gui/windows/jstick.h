@@ -112,7 +112,7 @@ EXTERNC BYTE js_is_null(GUID *guid);
 EXTERNC void js_set_id(GUID *guid, int dev);
 EXTERNC uTCHAR *js_name_device(int dev);
 EXTERNC uTCHAR *js_to_name(const DBWORD val, const _js_element *list, const DBWORD length);
-EXTERNC DBWORD js_from_name(const uTCHAR *name, const _js_element *list, const DBWORD lenght);
+EXTERNC DBWORD js_from_name(const uTCHAR *name, const _js_element *list, const DBWORD length);
 EXTERNC DBWORD js_read_in_dialog(GUID *guid, int fd);
 
 EXTERNC void js_shcut_init(void);

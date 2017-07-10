@@ -25,7 +25,6 @@
 #include "fps.h"
 #include "snd.h"
 #include "cheat.h"
-#include "audio/quality.h"
 #include "audio/channels.h"
 #include "overscan.h"
 #include "input.h"
@@ -77,7 +76,6 @@ enum set_element {
 	SET_SAMPLERATE,
 	SET_CHANNELS,
 	SET_STEREO_DELAY,
-	SET_AUDIO_QUALITY,
 	SET_SWAP_DUTY,
 	SET_AUDIO,
 	SET_GUI_OPEN_PATH,
@@ -323,7 +321,8 @@ static const _opt opt_fps[] = {
 	{NULL, uL("44")     , FPS_44}
 };
 static const _opt opt_fsk[] = {
-	{NULL, uL("default"), 0},
+	{NULL, uL("default"), 255},
+	{NULL, uL("0"),       0},
 	{NULL, uL("1")      , 1},
 	{NULL, uL("2")      , 2},
 	{NULL, uL("3")      , 3},
@@ -428,10 +427,6 @@ static const _opt opt_channels[] = {
 	{NULL, uL("delay"),   CH_STEREO_DELAY},
 	{NULL, uL("panning"), CH_STEREO_PANNING},
 };
-static const _opt opt_audio_quality[] = {
-	{NULL, uL("low"),  AQ_LOW},
-	{NULL, uL("high"), AQ_HIGH}
-};
 static const _opt opt_cheat_mode[] = {
 	{NULL, uL("disabled"),   NOCHEAT_MODE},
 	{NULL, uL("gamegenie"),  GAMEGENIE_MODE},
@@ -521,8 +516,8 @@ static const _settings main_cfg[] = {
 	},
 	{
 		uL("video"), uL("frame skip"), uL("default"),
-		uL("# possible values: default, 1, ..., 9"),
-		uL("-k, --frameskip           frames to skip        : default, 1, ..., 9"),
+		uL("# possible values: default, 0, ..., 9"),
+		uL("-k, --frameskip           frames to skip        : default, 0, ..., 9"),
 		{LENGTH(opt_fsk), opt_fsk}
 	},
 	{
@@ -733,12 +728,6 @@ static const _settings main_cfg[] = {
 		uL("# possible values: [5 - 100]"),
 		uL("-d, --stereo-delay        stereo effect delay   : [5 - 100]"),
 		{0, NULL}
-	},
-	{
-		uL("audio"), uL("audio quality"), uL("high"),
-		uL("# possible values: low, high"),
-		uL("-q, --audio-quality       audio quality         : low, high"),
-		{LENGTH(opt_audio_quality), opt_audio_quality}
 	},
 	{
 		uL("audio"), uL("swap duty cycles (Famicom clone chip audio emulation)"), uL("no"),

@@ -152,6 +152,15 @@ void map_init_Sunsoft(BYTE model) {
 
 	type = model;
 }
+void map_init_NSF_Sunsoft(BYTE model) {
+	memset(&fm7, 0x00, sizeof(fm7));
+
+	fm7.square[0].timer = 1;
+	fm7.square[1].timer = 1;
+	fm7.square[2].timer = 1;
+
+	type = model;
+}
 
 void extcl_cpu_wr_mem_Sunsoft_S1(WORD address, BYTE value) {
 	if ((address < 0x6000) || (address > 0x7FFF)) {

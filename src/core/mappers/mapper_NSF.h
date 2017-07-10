@@ -16,36 +16,18 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <stddef.h>
-#include "audio/quality.h"
-#include "snd.h"
-#include "audio/original.h"
-#include "audio/blipbuf.h"
+#ifndef MAPPER_NSF_H_
+#define MAPPER_NSF_H_
 
-void audio_quality(BYTE quality) {
-	if (audio_quality_quit) {
-		audio_quality_quit();
-	}
+#include "common.h"
 
-	audio_quality_init = NULL;
-	audio_quality_quit = NULL;
+enum { NSF_MAPPER = 0x1003 };
 
-	snd_apu_tick = NULL;
-	snd_end_frame = NULL;
+void map_init_NSF(void);
+void extcl_snd_playback_start_NSF(WORD samplarate);
+BYTE extcl_save_mapper_NSF(BYTE mode, BYTE slot, FILE *fp);
+void extcl_length_clock_NSF(void);
+void extcl_envelope_clock_NSF(void);
+void extcl_apu_tick_NSF(void);
 
-	switch (quality) {
-		default:
-		case AQ_LOW:
-			audio_quality_init = audio_quality_init_original;
-			break;
-		case AQ_HIGH:
-			audio_quality_init = audio_quality_init_blipbuf;
-			break;
-	}
-
-	if (audio_quality_init()) {
-		/* fallback */
-		audio_quality_init = audio_quality_init_original;
-		audio_quality_init();
-	}
-}
+#endif /* MAPPER_NSF_H_ */

@@ -46,6 +46,8 @@ class dlgApuChannels : public QDialog, public Ui::APU_channels {
 		void s_checkbox_state_changed(int state);
 		void s_slider_value_changed(int value);
 		void s_toggle_all_clicked(bool checked);
+		void s_set_audio_swap_duty(int state);
+		void s_x_clicked(bool checked);
 };
 
 #endif /* DLGAPUCHANNELS_HPP_ */

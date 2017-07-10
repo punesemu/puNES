@@ -21,9 +21,10 @@
 
 #include "common.h"
 
-BYTE audio_quality_init_blipbuf(void);
-void audio_quality_quit_blipbuf(void);
-void audio_quality_apu_tick_blipbuf(void);
-void audio_quality_end_frame_blipbuf(void);
+BYTE audio_init_blipbuf(void);
+void audio_quit_blipbuf(void);
+void audio_apu_tick_blipbuf(void);
+void audio_end_frame_blipbuf(void);
+int audio_buffer_blipbuf(SWORD **buffer);
 
 #endif /* AUDIO_QUALITY_BLIPBUF_H_ */

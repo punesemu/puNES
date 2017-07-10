@@ -33,7 +33,6 @@
 
 static INLINE void ppu_oam_evaluation(void);
 
-enum scanline_cycles { SHORT_SLINE_CYCLES = 340, SLINE_CYCLES };
 enum overflow_sprite { OVERFLOW_SPR = 3 };
 
 #define fetch_at()\
@@ -378,13 +377,6 @@ void ppu_tick(WORD cycles_cpu) {
 							 */
 							if (ppu.frame_x == 253) {
 								r2006_inc()
-								//}
-
-
-
-
-
-
 								/*
 								 * alla fine di ogni scanline
 								 * reinizializzo il $2006.

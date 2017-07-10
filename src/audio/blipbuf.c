@@ -16,16 +16,17 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include <stdlib.h>
 #include <string.h>
 #include "apu.h"
 #include "snd.h"
 #include "mappers.h"
 #include "mappers/mapper_VRC7_snd.h"
 #include "fds.h"
+#include "nsf.h"
 #include "conf.h"
 #include "clock.h"
 #include "fps.h"
-#include "audio/quality.h"
 #include "audio/channels.h"
 #include "audio/blip_buf.h"
 #include "audio/blipbuf.h"
@@ -45,7 +46,7 @@ enum blbuf_misc { master_vol = 65536 / 15 };
 	blip_add_delta(blipbuf.wave, blipbuf.type.time, blipbuf.delta);\
 	blipbuf.type.period = restart
 #define update_tick_ptnd_blbuf(restart) _update_tick_blbuf(ptnd, restart)
-#define update_tick_extra_blbuf(restart) _update_tick_blbuf(extra, restart)
+#define update_tick_extra_blbuf(extra, restart) _update_tick_blbuf(extra, restart)
 
 typedef struct {
 	int time; /* clock time of next delta */
@@ -58,7 +59,17 @@ static struct _blipbuf {
 	blip_buffer_t *wave;
 
 	_blipbuf_group ptnd;
-	_blipbuf_group extra;
+	_blipbuf_group fds;
+	_blipbuf_group mmc5;
+	_blipbuf_group n163;
+	_blipbuf_group fm7;
+	_blipbuf_group vrc6;
+	_blipbuf_group vrc7;
+
+	struct _blipbuf_samples {
+		int count;
+		SWORD *data;
+	} samples;
 
 	DBWORD counter;
 
@@ -66,75 +77,110 @@ static struct _blipbuf {
 	int delta;
 } blipbuf;
 
-void (*extra_apu_tick_blipbuf)(void);
-void apu_tick_blipbuf_FDS(void);
-void apu_tick_blipbuf_MMC5(void);
-void apu_tick_blipbuf_Namco_N163(void);
-void apu_tick_blipbuf_Sunsoft_FM7(void);
-void apu_tick_blipbuf_VRC6(void);
-void apu_tick_blipbuf_VRC7(void);
+static void (*extra_apu_tick_blipbuf)(void);
+static void apu_tick_blipbuf_NSF(void);
+static void apu_tick_blipbuf_FDS(void);
+static void apu_tick_blipbuf_MMC5(void);
+static void apu_tick_blipbuf_Namco_N163(void);
+static void apu_tick_blipbuf_Sunsoft_FM7(void);
+static void apu_tick_blipbuf_VRC6(void);
+static void apu_tick_blipbuf_VRC7(void);
+static void (*extra_audio_end_frame_blipbuf)(void);
+static void extra_audio_end_frame_blipbuf_NSF(void);
+static void extra_audio_end_frame_blipbuf_FDS(void);
+static void extra_audio_end_frame_blipbuf_MMC5(void);
+static void extra_audio_end_frame_blipbuf_Namco_N163(void);
+static void extra_audio_end_frame_blipbuf_Sunsoft_FM7(void);
+static void extra_audio_end_frame_blipbuf_VRC6(void);
+static void extra_audio_end_frame_blipbuf_VRC7(void);
 
-BYTE audio_quality_init_blipbuf(void) {
+BYTE audio_init_blipbuf(void) {
 	memset(&blipbuf, 0, sizeof(blipbuf));
 
-	audio_quality_quit = audio_quality_quit_blipbuf;
-
-	snd_apu_tick = audio_quality_apu_tick_blipbuf;
-	snd_end_frame = audio_quality_end_frame_blipbuf;
+	snd_apu_tick = audio_apu_tick_blipbuf;
+	snd_end_frame = audio_end_frame_blipbuf;
 
 	init_nla_table(500, 500)
+
+	if (!(blipbuf.samples.data = (SWORD *) malloc(snd.samplerate))) {
+		return (EXIT_ERROR);
+	}
 
 	blipbuf.wave = blip_new(snd.samplerate / 10);
 
 	if (blipbuf.wave == NULL) {
-		/* out of memory */
+		free(blipbuf.samples.data);
+		blipbuf.samples.data = NULL;
 		return (EXIT_ERROR);
 	}
 
 	blip_set_rates(blipbuf.wave, machine.cpu_hz, snd.samplerate);
 
 	switch (info.mapper.id) {
+		case NSF_MAPPER:
+			extra_apu_tick_blipbuf = apu_tick_blipbuf_NSF;
+			extra_audio_end_frame_blipbuf = extra_audio_end_frame_blipbuf_NSF;
+			if (nsf.sound_chips.vrc7) {
+				blipbuf.vrc7.min_period = snd.frequency;
+			}
+			if (nsf.sound_chips.namco163) {
+				blipbuf.n163.min_period = snd.frequency;
+			}
+			break;
 		case FDS_MAPPER:
 			/* FDS */
 			extra_apu_tick_blipbuf = apu_tick_blipbuf_FDS;
+			extra_audio_end_frame_blipbuf = extra_audio_end_frame_blipbuf_FDS;
 			break;
 		case 5:
 			/* MMC5 */
 			extra_apu_tick_blipbuf = apu_tick_blipbuf_MMC5;
+			extra_audio_end_frame_blipbuf = extra_audio_end_frame_blipbuf_MMC5;
 			break;
 		case 19:
 			/* Namcot N163 */
 			extra_apu_tick_blipbuf = apu_tick_blipbuf_Namco_N163;
-			blipbuf.extra.min_period = snd.frequency;
+			extra_audio_end_frame_blipbuf = extra_audio_end_frame_blipbuf_Namco_N163;
+			blipbuf.n163.min_period = snd.frequency;
 			break;
 		case 69:
 			/* Sunsoft FM7 */
 			extra_apu_tick_blipbuf = apu_tick_blipbuf_Sunsoft_FM7;
+			extra_audio_end_frame_blipbuf = extra_audio_end_frame_blipbuf_Sunsoft_FM7;
 			break;
 		case 24:
 		case 26:
 			/* VRC6 */
 			extra_apu_tick_blipbuf = apu_tick_blipbuf_VRC6;
+			extra_audio_end_frame_blipbuf = extra_audio_end_frame_blipbuf_VRC6;
 			break;
 		case 85:
 			/* VRC7 */
 			extra_apu_tick_blipbuf = apu_tick_blipbuf_VRC7;
-			blipbuf.extra.min_period = snd.frequency;
+			extra_audio_end_frame_blipbuf = extra_audio_end_frame_blipbuf_VRC7;
+			blipbuf.vrc7.min_period = snd.frequency;
 			break;
 		default:
 			extra_apu_tick_blipbuf = NULL;
+			extra_audio_end_frame_blipbuf = NULL;
 			break;
 	}
 
 	return (EXIT_OK);
 }
-void audio_quality_quit_blipbuf(void) {
+void audio_quit_blipbuf(void) {
+	if (blipbuf.samples.data) {
+		free(blipbuf.samples.data);
+		blipbuf.samples.data = NULL;
+		blipbuf.samples.count = 0;
+	}
 	if (blipbuf.wave) {
 		blip_delete(blipbuf.wave);
 		blipbuf.wave = NULL;
 	}
+
 }
-void audio_quality_apu_tick_blipbuf(void) {
+void audio_apu_tick_blipbuf(void) {
 	if (!blipbuf.wave || !cfg->apu.channel[APU_MASTER] || fps.fast_forward) {
 		return;
 	}
@@ -153,7 +199,7 @@ void audio_quality_apu_tick_blipbuf(void) {
 
 	blipbuf.counter++;
 }
-void audio_quality_end_frame_blipbuf(void) {
+void audio_end_frame_blipbuf(void) {
 	if (!blipbuf.wave || !cfg->apu.channel[APU_MASTER] || fps.fast_forward) {
 		if (snd.cache) {
 			SNDCACHE->write = SNDCACHE->start;
@@ -167,18 +213,19 @@ void audio_quality_end_frame_blipbuf(void) {
 	blipbuf.ptnd.time -= blipbuf.counter;
 
 	// se esiste un canale extra allora...
-	if (extra_apu_tick_blipbuf) {
-		blipbuf.extra.time -= blipbuf.counter;
+	if (extra_audio_end_frame_blipbuf) {
+		extra_audio_end_frame_blipbuf();
 	}
 
 	blip_end_frame(blipbuf.wave, blipbuf.counter);
 	blipbuf.counter = 0;
 
 	{
-		int i, count = blip_samples_avail(blipbuf.wave);
-		short sample[count];
+		int i;
 
-		blip_read_samples(blipbuf.wave, sample, count, 0);
+		blipbuf.samples.count = blip_samples_avail(blipbuf.wave);
+
+		blip_read_samples(blipbuf.wave, (SWORD *) blipbuf.samples.data, blipbuf.samples.count, 0);
 
 		if (snd_handler() == EXIT_ERROR) {
 			return;
@@ -186,8 +233,8 @@ void audio_quality_end_frame_blipbuf(void) {
 
 		snd_playback_lock(SNDCACHE);
 
-		for (i = 0; i < count; i++) {
-			SWORD data = (sample[i] * apu_pre_amp) * cfg->apu.volume[APU_MASTER];
+		for (i = 0; i < blipbuf.samples.count; i++) {
+			SWORD data = (blipbuf.samples.data[i] * apu_pre_amp) * cfg->apu.volume[APU_MASTER];
 
 			audio_channels_tick(data);
 
@@ -203,67 +250,135 @@ void audio_quality_end_frame_blipbuf(void) {
 		snd_playback_unlock(SNDCACHE);
 	}
 }
+int audio_buffer_blipbuf(SWORD **buffer) {
+	(*buffer) = blipbuf.samples.data;
+	return (blipbuf.samples.count);
+}
 
 /* --------------------------------------------------------------------------------------- */
 /*                                    Extra APU Tick                                       */
 /* --------------------------------------------------------------------------------------- */
-void apu_tick_blipbuf_FDS(void) {
+static void apu_tick_blipbuf_NSF(void) {
+	if (nsf.sound_chips.vrc6) {
+		apu_tick_blipbuf_VRC6();
+	}
+	if (nsf.sound_chips.vrc7) {
+		apu_tick_blipbuf_VRC7();
+	}
+	if (nsf.sound_chips.fds) {
+		apu_tick_blipbuf_FDS();
+	}
+	if (nsf.sound_chips.mmc5) {
+		apu_tick_blipbuf_MMC5();
+	}
+	if (nsf.sound_chips.namco163) {
+		apu_tick_blipbuf_Namco_N163();
+	}
+	if (nsf.sound_chips.sunsoft5b) {
+		apu_tick_blipbuf_Sunsoft_FM7();
+	}
+}
+static void apu_tick_blipbuf_FDS(void) {
 	if (fds.snd.wave.clocked) {
 		fds.snd.wave.clocked = FALSE;
 		blipbuf.output = extra_out(fds.snd.main.output) * (1.0f * cfg->apu.volume[APU_EXTRA]);
-		update_tick_extra_blbuf(1);
+		update_tick_extra_blbuf(fds, 1);
 	} else {
-		blipbuf.extra.period++;
+		blipbuf.fds.period++;
 	}
 }
-void apu_tick_blipbuf_MMC5(void) {
+static void apu_tick_blipbuf_MMC5(void) {
 	if (mmc5.S3.clocked | mmc5.S4.clocked | mmc5.pcm.clocked) {
 		mmc5.S3.clocked = mmc5.S4.clocked = mmc5.pcm.clocked = FALSE;
 		blipbuf.output = ch_gain_ext(mmc5.S3.output, 10.0f) + ch_gain_ext(mmc5.S4.output, 10.0f) +
 				ch_gain_ext(mmc5.pcm.output, 2.0f);
-		update_tick_extra_blbuf(1);
+		update_tick_extra_blbuf(mmc5, 1);
 	} else {
-		blipbuf.extra.period++;
+		blipbuf.mmc5.period++;
 	}
 }
-void apu_tick_blipbuf_Namco_N163(void) {
+static void apu_tick_blipbuf_Namco_N163(void) {
 	BYTE i;
 
 	blipbuf.output = 0;
 
-	if (++blipbuf.extra.period == blipbuf.extra.min_period) {
+	if (++blipbuf.n163.period == blipbuf.n163.min_period) {
+		double gain = 2.5f / (8 - n163.snd_ch_start);
+
 		for (i = n163.snd_ch_start; i < 8; i++) {
 			if (n163.ch[i].active) {
-				blipbuf.output += ((n163.ch[i].output * 1.5) * (n163.ch[i].volume >> 2));
+				blipbuf.output += n163.ch[i].output * gain;
 			}
 		}
-		blipbuf.output = ch_gain_ext(blipbuf.output, 2.0f);
-		update_tick_extra_blbuf(0);
+		blipbuf.output = ch_gain_ext(blipbuf.output, 1.0f);
+		update_tick_extra_blbuf(n163, 0);
 	}
 }
-void apu_tick_blipbuf_Sunsoft_FM7(void) {
+static void apu_tick_blipbuf_Sunsoft_FM7(void) {
 	if (fm7.square[0].clocked | fm7.square[1].clocked | fm7.square[2].clocked) {
 		fm7.square[0].clocked = fm7.square[1].clocked = fm7.square[2].clocked = FALSE;
 		blipbuf.output = ch_gain_ext(fm7.square[0].output, 5.0f) +
 				ch_gain_ext(fm7.square[1].output, 5.0f) + ch_gain_ext(fm7.square[2].output, 5.0f);
-		update_tick_extra_blbuf(1);
+		update_tick_extra_blbuf(fm7, 1);
 	} else {
-		blipbuf.extra.period++;
+		blipbuf.fm7.period++;
 	}
 }
-void apu_tick_blipbuf_VRC6(void) {
+static void apu_tick_blipbuf_VRC6(void) {
 	if (vrc6.S3.clocked | vrc6.S4.clocked | vrc6.saw.clocked) {
 		vrc6.S3.clocked = vrc6.S4.clocked = vrc6.saw.clocked = FALSE;
 		blipbuf.output = ch_gain_ext(vrc6.S3.output, 5.0f) + ch_gain_ext(vrc6.S4.output, 5.0f) +
 				ch_gain_ext(vrc6.saw.output, 0.7f);
-		update_tick_extra_blbuf(1);
+		update_tick_extra_blbuf(vrc6, 1);
 	} else {
-		blipbuf.extra.period++;
+		blipbuf.vrc6.period++;
 	}
 }
-void apu_tick_blipbuf_VRC7(void) {
-	if (++blipbuf.extra.period == blipbuf.extra.min_period) {
+static void apu_tick_blipbuf_VRC7(void) {
+	if (++blipbuf.vrc7.period == blipbuf.vrc7.min_period) {
 		blipbuf.output = extra_out(opll_calc()) * (5.0f * cfg->apu.volume[APU_EXTRA]);
-		update_tick_extra_blbuf(0);
+		update_tick_extra_blbuf(vrc7, 0);
 	}
+}
+
+/* --------------------------------------------------------------------------------------- */
+/*                            Extra Audio QUality End Frame                                */
+/* --------------------------------------------------------------------------------------- */
+static void extra_audio_end_frame_blipbuf_NSF(void) {
+	if (nsf.sound_chips.vrc6) {
+		extra_audio_end_frame_blipbuf_VRC6();
+	}
+	if (nsf.sound_chips.vrc7) {
+		extra_audio_end_frame_blipbuf_VRC7();
+	}
+	if (nsf.sound_chips.fds) {
+		extra_audio_end_frame_blipbuf_FDS();
+	}
+	if (nsf.sound_chips.mmc5) {
+		extra_audio_end_frame_blipbuf_MMC5();
+	}
+	if (nsf.sound_chips.namco163) {
+		extra_audio_end_frame_blipbuf_Namco_N163();
+	}
+	if (nsf.sound_chips.sunsoft5b) {
+		extra_audio_end_frame_blipbuf_Sunsoft_FM7();
+	}
+}
+static void extra_audio_end_frame_blipbuf_FDS(void) {
+	blipbuf.fds.time -= blipbuf.counter;
+}
+static void extra_audio_end_frame_blipbuf_MMC5(void) {
+	blipbuf.mmc5.time -= blipbuf.counter;
+}
+static void extra_audio_end_frame_blipbuf_Namco_N163(void) {
+	blipbuf.n163.time -= blipbuf.counter;
+}
+static void extra_audio_end_frame_blipbuf_Sunsoft_FM7(void) {
+	blipbuf.fm7.time -= blipbuf.counter;
+}
+static void extra_audio_end_frame_blipbuf_VRC6(void) {
+	blipbuf.vrc6.time -= blipbuf.counter;
+}
+static void extra_audio_end_frame_blipbuf_VRC7(void) {
+	blipbuf.vrc7.time -= blipbuf.counter;
 }

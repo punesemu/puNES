@@ -109,6 +109,10 @@ class mainWindow: public QMainWindow {
 
 	public slots:
 		void s_set_fullscreen();
+		void s_set_vs_window();
+		void s_set_apu_channels();
+		void s_set_ppu_hacks();
+		void s_set_audio_swap_duty();
 
 	private slots:
 		void s_fullscreen(bool state);
@@ -126,11 +130,8 @@ class mainWindow: public QMainWindow {
 		void s_pause();
 		void s_fast_forward();
 		void s_save_screenshot();
-		void s_set_vs_window();
 		void s_update_output_devices();
 		void s_set_output_device();
-		void s_set_apu_channels();
-		void s_set_ppu_hacks();
 		void s_set_mode();
 		void s_set_fps();
 		void s_set_fsk();
@@ -164,8 +165,6 @@ class mainWindow: public QMainWindow {
 		void s_set_samplerate();
 		void s_set_channels();
 		void s_set_stereo_delay();
-		void s_set_audio_quality();
-		void s_set_audio_swap_duty();
 		void s_set_audio_enable();
 		void s_set_language();
 		void s_set_disable_new_menu();

@@ -128,6 +128,7 @@ BYTE fds_load_rom(void) {
 	/* inserisco il primo */
 	fds_disk_op(FDS_DISK_SELECT_AND_INSERT, 0);
 
+	info.cpu_rw_extern = TRUE;
 	fds.info.enabled = TRUE;
 
 	/* Prg Ram */

@@ -23,7 +23,10 @@
 #include "info.h"
 #include "conf.h"
 #include "vs_system.h"
+#include "nsf.h"
 #include "input/nes_001.h"
+#include "input/nsf_controller.h"
+#include "input/nsf_mouse.h"
 #include "input/famicom.h"
 #include "input/four_score.h"
 #include "input/vs.h"
@@ -52,8 +55,13 @@ void input_init(BYTE set_cursor) {
 	input_init_snes_mouse();
 	input_init_arkanoid();
 	input_init_oeka_kids_tablet();
+	input_init_nsf_mouse();
 
-	if (vs_system.enabled == TRUE) {
+	if (nsf.enabled == TRUE) {
+		SET_WR_REG(NULL);
+		SET_RD_REG(PORT1, NULL);
+		SET_RD_REG(PORT2, NULL);
+	} else if (vs_system.enabled == TRUE) {
 		SET_WR_REG(input_wr_reg_vs);
 		SET_RD_REG(PORT1, input_rd_reg_vs_r4016);
 		SET_RD_REG(PORT2, input_rd_reg_vs_r4017);
@@ -85,7 +93,17 @@ void input_init(BYTE set_cursor) {
 		SET_ADD_EVENT(a, NULL);
 
 		// VS SYSTEM
-		if (vs_system.enabled == TRUE) {
+		if (nsf.enabled == TRUE) {
+			switch (a) {
+				case PORT1:
+					SET_DECODE_EVENT(a, input_decode_event_nsf_controller);
+					SET_ADD_EVENT(a, input_add_event_nsf_controller);
+					break;
+				case PORT2:
+					SET_ADD_EVENT(a, input_add_event_nsf_mouse);
+					break;
+			}
+		} else if (vs_system.enabled == TRUE) {
 			if (info.extra_from_db & VSZAPPER) {
 				switch (a) {
 					case PORT1:

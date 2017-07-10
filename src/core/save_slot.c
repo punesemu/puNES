@@ -35,6 +35,7 @@
 #include "tas.h"
 #include "text.h"
 #include "fds.h"
+#include "nsf.h"
 #include "cheat.h"
 #include "info.h"
 
@@ -824,7 +825,12 @@ uTCHAR *name_slot_file(BYTE slot) {
 
 	gui_utf_basename(fl, bname, usizeof(bname));
 	usnprintf(file, usizeof(file), uL("" uPERCENTs SAVE_FOLDER "/" uPERCENTs), info.base_folder, bname);
-	usnprintf(ext, usizeof(ext), uL(".p%02d"), slot);
+
+	if (nsf.enabled) {
+		usnprintf(ext, usizeof(ext), uL(".n%02d"), slot);
+	} else {
+		usnprintf(ext, usizeof(ext), uL(".p%02d"), slot);
+	}
 
 	/* rintraccio l'ultimo '.' nel nome */
 	last_dot = ustrrchr(file, uL('.'));

@@ -34,7 +34,7 @@
 enum timeline_mode { TL_SAVE, TL_READ, TL_COUNT };
 
 #define tl_on_struct(mode, strct)\
-	switch(mode) {\
+	switch (mode) {\
 	case TL_SAVE:\
 		memcpy(tl.snaps[snap] + index, &strct, sizeof(strct));\
 		index += sizeof(strct);\
@@ -48,7 +48,7 @@ enum timeline_mode { TL_SAVE, TL_READ, TL_COUNT };
 		break;\
 	}
 #define tl_on_mem(mode, mem, size)\
-	switch(mode) {\
+	switch (mode) {\
 	case TL_SAVE:\
 		memcpy(tl.snaps[snap] + index, mem, size);\
 		index += size;\

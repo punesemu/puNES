@@ -20,7 +20,7 @@
 #include "emu.h"
 #include "info.h"
 #include "conf.h"
-#include "audio/quality.h"
+#include "audio/blipbuf.h"
 #include "audio/channels.h"
 #include "gui.h"
 #include "fps.h"
@@ -325,7 +325,7 @@ BYTE snd_playback_start(void) {
 
 	audio_channels_init_mode();
 
-	audio_quality(cfg->audio_quality);
+	audio_init_blipbuf();
 
 	if(IXAudio2_StartEngine(xaudio2.engine) != S_OK) {
 		MessageBox(NULL,
@@ -396,9 +396,7 @@ void snd_playback_stop(void) {
 		audio_channels_quit();
 	}
 
-	if (audio_quality_quit) {
-		audio_quality_quit();
-	}
+	audio_quit_blipbuf();
 }
 uTCHAR *snd_playback_device_desc(int dev) {
 	if (dev >= snd_list.playback.count) {
@@ -560,7 +558,6 @@ static void STDMETHODCALLTYPE OnBufferEnd(THIS_ void *data) {
 			|| (fps.fast_forward == TRUE)) {
 		xaudio2_wrbuf(source, buffer, (const BYTE *) cache->silence);
 	} else if (cache->bytes_available < len) {
-		wave_write(cache->silence, avail);
 		xaudio2_wrbuf(source, buffer, (const BYTE *) cache->silence);
 		snd.out_of_sync++;
 	} else {

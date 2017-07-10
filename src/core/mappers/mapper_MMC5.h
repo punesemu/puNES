@@ -66,6 +66,7 @@ struct _mmc5 {
 } mmc5;
 
 void map_init_MMC5(void);
+void map_init_NSF_MMC5(void);
 void extcl_cpu_wr_mem_MMC5(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_MMC5(WORD address, BYTE openbus, BYTE before);
 BYTE extcl_save_mapper_MMC5(BYTE mode, BYTE slot, FILE *fp);

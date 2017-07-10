@@ -984,7 +984,7 @@ void cpu_exe_op(void) {
 	case 0xF2: // JAM
 	default:
 		if (!info.no_rom && !info.first_illegal_opcode) {
-			fprintf(stderr, "Alert: PC = %04X, CODEOP = %02X \n", (cpu.PC - 1), cpu.opcode);
+			fprintf(stderr, "Alert: PC = 0x%04X, CODEOP = 0x%02X \n", (cpu.PC - 1), cpu.opcode);
 			text_add_line_info(1, "[red]Illegal Opcode 0x%02X at 0x%04X", cpu.opcode, (cpu.PC - 1));
 			info.first_illegal_opcode = TRUE;
 		}

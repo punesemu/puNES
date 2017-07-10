@@ -763,7 +763,6 @@ void setObject::to_cfg(QString group) {
 		int_to_val(SET_SAMPLERATE, cfg_from_file.samplerate);
 		int_to_val(SET_CHANNELS, cfg_from_file.channels_mode);
 		double_to_val(SET_STEREO_DELAY, cfg_from_file.stereo_delay);
-		int_to_val(SET_AUDIO_QUALITY, cfg_from_file.audio_quality);
 		int_to_val(SET_SWAP_DUTY, cfg_from_file.swap_duty);
 		int_to_val(SET_AUDIO, cfg_from_file.apu.channel[APU_MASTER]);
 	}
@@ -843,7 +842,6 @@ void setObject::fr_cfg(QString group) {
 		cfg_from_file.samplerate = val_to_int(SET_SAMPLERATE);
 		cfg_from_file.channels_mode = val_to_int(SET_CHANNELS);
 		cfg_from_file.stereo_delay = val_to_double(SET_STEREO_DELAY, 5);
-		cfg_from_file.audio_quality = val_to_int(SET_AUDIO_QUALITY);
 		cfg_from_file.swap_duty = val_to_int(SET_SWAP_DUTY);
 		cfg_from_file.apu.channel[APU_MASTER] = val_to_int(SET_AUDIO);
 	}

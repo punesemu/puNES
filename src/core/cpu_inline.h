@@ -30,6 +30,7 @@
 #include "irql2f.h"
 #include "tas.h"
 #include "fds.h"
+#include "nsf.h"
 #include "cheat.h"
 #include "info.h"
 #include "conf.h"
@@ -101,11 +102,13 @@
 
 static BYTE INLINE ppu_rd_reg(WORD address);
 static BYTE INLINE apu_rd_reg(WORD address);
+static void INLINE nsf_rd_mem(WORD address, BYTE made_tick);
 static BYTE INLINE fds_rd_mem(WORD address, BYTE made_tick);
 
 static void INLINE ppu_wr_mem(WORD address, BYTE value);
 static void INLINE ppu_wr_reg(WORD address, BYTE value);
 static void INLINE apu_wr_reg(WORD address, BYTE value);
+static void INLINE nsf_wr_mem(WORD address, BYTE value);
 static BYTE INLINE fds_wr_mem(WORD address, BYTE value);
 
 static WORD INLINE lend_word(WORD address, BYTE indirect, BYTE make_last_tick_hw);
@@ -114,9 +117,14 @@ static void INLINE tick_hw(BYTE value);
 /* ------------------------------------ READ ROUTINE ------------------------------------------- */
 
 BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
-	if (fds.info.enabled) {
-		if (fds_rd_mem(address, made_tick)) {
+	if (info.cpu_rw_extern) {
+		if (nsf.enabled) {
+			nsf_rd_mem(address, made_tick);
 			return (cpu.openbus);
+		} else if (fds.info.enabled) {
+			if (fds_rd_mem(address, made_tick)) {
+				return (cpu.openbus);
+			}
 		}
 	} else if (address >= 0x8000) {
 		/* PRG Rom */
@@ -505,6 +513,129 @@ static BYTE INLINE apu_rd_reg(WORD address) {
 
 	return (value);
 }
+static void INLINE nsf_rd_mem(WORD address, BYTE made_tick) {
+	// Rom
+	if (address >= 0x8000)  {
+		if (made_tick) {
+			tick_hw(1);
+		}
+		switch (address) {
+			case 0xFFFA:
+				if (nsf.routine.INT_NMI) {
+					nsf.routine.INT_NMI--;
+					if (nsf.state & NSF_CHANGE_SONG) {
+						cpu.openbus = 0x00;
+					} else {
+						cpu.openbus = 0x0E;
+					}
+					return;
+				}
+				break;
+			case 0xFFFB:
+				if (nsf.routine.INT_NMI) {
+					nsf.routine.INT_NMI--;
+					cpu.openbus = 0x25;
+					return;
+				}
+				break;
+			case 0xFFFC:
+				if (nsf.routine.INT_RESET) {
+					nsf.routine.INT_RESET--;
+					cpu.openbus = 0x08;
+					return;
+				}
+				break;
+			case 0xFFFD:
+				if (nsf.routine.INT_RESET) {
+					nsf.routine.INT_RESET--;
+					cpu.openbus = 0x25;
+					return;
+				}
+				break;
+		}
+		cpu.openbus = nsf_prg_rom_rd(address);
+		return;
+	}
+	// Ram
+	if (address >= 0x6000) {
+		if (made_tick) {
+			tick_hw(1);
+		}
+		if (nsf.sound_chips.fds) {
+			cpu.openbus = nsf_prg_rom_rd_6xxx(address);
+		} else {
+			cpu.openbus = prg.ram.data[address & 0x1FFF];
+		}
+		return;
+	}
+	// APU
+	if (address == 0x4015) {
+		cpu.openbus = apu_rd_reg(address);
+		tick_hw(1);
+		return;
+	}
+	// FDS
+	if (nsf.sound_chips.fds) {
+		if ((address >= 0x4040) && (address <= 0x407F)) {
+			fds_rd_mem(address, made_tick);
+			return;
+		}
+		if (address == 0x4090) {
+			fds_rd_mem(address, made_tick);
+			return;
+		}
+		if (address == 0x4092) {
+			fds_rd_mem(address, made_tick);
+			return;
+		}
+	}
+	// MMC5
+	if (nsf.sound_chips.mmc5) {
+		if ((address >= 0x5C00) && (address <= 0x5FF5)) {
+			address &= 0x03FF;
+			cpu.openbus = mmc5.ext_ram[address];
+			return;
+		}
+		switch (address) {
+			case 0x5015:
+			case 0x5205:
+			case 0x5206:
+				cpu.openbus = extcl_cpu_rd_mem_MMC5(address, cpu.openbus, cpu.openbus);
+				return;
+		}
+	}
+	// Namco 163
+	if (nsf.sound_chips.namco163 && (address == 0x4800)) {
+		cpu.openbus = extcl_cpu_rd_mem_Namco_163(address, cpu.openbus, cpu.openbus);
+		return;
+	}
+	// RAM
+	if (address < 0x2000) {
+		if (made_tick) {
+			tick_hw(1);
+		}
+		cpu.openbus = mmcpu.ram[address & 0x7FF];
+		return;
+	}
+	// NSF Player Routine
+	if ((address >= NSF_R_START) && (address <= NSF_R_END)) {
+		if (made_tick) {
+			tick_hw(1);
+		}
+
+		switch (address) {
+			case 0x2500:
+				nsf_init_tune();
+				break;
+			case NSF_R_PLAY_INST:
+				nsf.routine.prg[NSF_R_JMP_PLAY] = NSF_R_LOOP;
+				break;
+		}
+
+		cpu.openbus = nsf.routine.prg[address & NSF_R_MASK];
+		return;
+	}
+}
 static BYTE INLINE fds_rd_mem(WORD address, BYTE made_tick) {
 	if (address >= 0xE000) {
 		/* eseguo un tick hardware */
@@ -656,9 +787,14 @@ static BYTE INLINE fds_rd_mem(WORD address, BYTE made_tick) {
 /* ------------------------------------ WRITE ROUTINE ------------------------------------------ */
 
 void cpu_wr_mem(WORD address, BYTE value) {
-	if (fds.info.enabled) {
-		if (fds_wr_mem(address, value)) {
+	if (info.cpu_rw_extern) {
+		if (nsf.enabled) {
+			nsf_wr_mem(address, value);
 			return;
+		} else if (fds.info.enabled) {
+			if (fds_wr_mem(address, value)) {
+				return;
+			}
 		}
 	}
 
@@ -1417,31 +1553,28 @@ static void INLINE apu_wr_reg(WORD address, BYTE value) {
 				if (r4011.frames > 1) {
 					r4011.output = (value - save) >> 3;
 					DMC.counter = DMC.output = save + r4011.output;
-					//printf("1 4011 : 0x%X %d %d %d %d %d %d\n", value, save, DMC.counter,
-					//		DMC.output, r4011.output, r4011.cycles, r4011.frames);
 				} else {
 					DMC.counter = DMC.output = value;
-					//printf("2 4011 : 0x%X %d %d %d %d %d\n", value, save, DMC.counter, DMC.output,
-					//		r4011.cycles, r4011.frames);
 				}
 				DMC.clocked = TRUE;
 
 				r4011.cycles = r4011.frames = 0;
 				r4011.value = value;
 
-				if (cfg->ppu_overclock && !cfg->ppu_overclock_dmc_control_disabled && value) {
+				if (!nsf.enabled && cfg->ppu_overclock && !cfg->ppu_overclock_dmc_control_disabled
+						&& value) {
 					overclock.DMC_in_use = TRUE;
 					ppu_sclines.total = machine.total_lines;
 					ppu_sclines.vint = machine.vint_lines;
 					ppu_overclock_control()
 				}
-
 				return;
 			}
 			if (address == 0x4012) {
 				DMC.address_start = (value << 6) | 0xC000;
 
-				if (cfg->ppu_overclock && !cfg->ppu_overclock_dmc_control_disabled && value) {
+				if (!nsf.enabled && cfg->ppu_overclock && !cfg->ppu_overclock_dmc_control_disabled
+						&& value) {
 					overclock.DMC_in_use = FALSE;
 					ppu_overclock_update();
 					ppu_overclock_control()
@@ -1452,7 +1585,8 @@ static void INLINE apu_wr_reg(WORD address, BYTE value) {
 				/* sample length */
 				DMC.length = (value << 4) | 0x01;
 
-				if (cfg->ppu_overclock && !cfg->ppu_overclock_dmc_control_disabled && value) {
+				if (!nsf.enabled && cfg->ppu_overclock && !cfg->ppu_overclock_dmc_control_disabled
+						&& value) {
 					overclock.DMC_in_use = FALSE;
 					ppu_overclock_update();
 					ppu_overclock_control()
@@ -1560,6 +1694,162 @@ static void INLINE apu_wr_reg(WORD address, BYTE value) {
 #endif
 
 	return;
+}
+static void INLINE nsf_wr_mem(WORD address, BYTE value) {
+	// Ram
+	if (address >= 0x8000) {
+		tick_hw(1);
+
+		if (nsf.sound_chips.vrc6) {
+			switch (address) {
+				case 0x9000:
+				case 0x9001:
+				case 0x9002:
+				case 0x9003:
+				case 0xA000:
+				case 0xA001:
+				case 0xA002:
+				case 0xB000:
+				case 0xB001:
+				case 0xB002:
+					extcl_cpu_wr_mem_VRC6(address, value);
+					return;
+			}
+		}
+		if (nsf.sound_chips.vrc7) {
+			switch (address) {
+				case 0x9010:
+				case 0x9030:
+					extcl_cpu_wr_mem_VRC7(address, value);
+					return;
+			}
+		}
+		if (nsf.sound_chips.namco163 && (address == 0xF800)) {
+			extcl_cpu_wr_mem_Namco_163(address, value);
+			return;
+		}
+		if (nsf.sound_chips.sunsoft5b) {
+			switch (address) {
+				case 0xC000:
+				case 0xE000:
+					extcl_cpu_wr_mem_Sunsoft_FM7(address, value);
+					return;
+			}
+		}
+		if (nsf.sound_chips.fds) {
+			nsf.prg.rom_4k[(address >> 12) & 0x07][address & 0x0FFF] = value;
+			return;
+		}
+		return;
+	}
+	if (address >= 0x6000) {
+		tick_hw(1);
+		if (nsf.sound_chips.fds) {
+			nsf.prg.rom_4k_6xxx[(address >> 12) & 0x01][address & 0x0FFF] = value;
+			return;
+		}
+		prg.ram.data[address & 0x1FFF] = value;
+		return;
+	}
+	if (address < 0x2000) {
+		tick_hw(1);
+		mmcpu.ram[(address & 0x7FF)] = value;
+		return;
+	}
+	// APU
+	if (address == 0x4015) {
+		apu_wr_reg(address, value);
+		tick_hw(1);
+		return;
+	}
+	if (address <= 0x4017) {
+		tick_hw(1);
+		apu_wr_reg(address, value);
+		return;
+	}
+	// FDS
+	if (nsf.sound_chips.fds && (address >= 0x4040) && (address <= 0x408A)) {
+		fds_wr_mem(address, value);
+		return;
+	}
+	// MMC5
+	if (nsf.sound_chips.mmc5) {
+		if ((address >= 0x5C00) && (address <= 0x5FF5)) {
+			address &= 0x03FF;
+			mmc5.ext_ram[address] = value;
+			return;
+		}
+		switch (address) {
+			case 0x5000:
+			case 0x5001:
+			case 0x5002:
+			case 0x5003:
+			case 0x5004:
+			case 0x5005:
+			case 0x5006:
+			case 0x5007:
+			case 0x5008:
+			case 0x5009:
+			case 0x500A:
+			case 0x500B:
+			case 0x500C:
+			case 0x500D:
+			case 0x500E:
+			case 0x500F:
+			case 0x5010:
+			case 0x5011:
+			case 0x5012:
+			case 0x5013:
+			case 0x5014:
+			case 0x5015:
+			case 0x5205:
+			case 0x5206:
+				extcl_cpu_wr_mem_MMC5(address, value);
+				return;
+		}
+	}
+	// Namco 163
+	if (nsf.sound_chips.namco163 && (address == 0x4800)) {
+		extcl_cpu_wr_mem_Namco_163(address, value);
+	}
+	// Bankswitch
+	if (nsf.bankswitch.enabled && (address >= 0x5FF6) && (address <= 0x5FFF)) {
+		BYTE bank = address & 0x07;
+
+		tick_hw(1);
+
+		switch (address) {
+			case 0x5FF6:
+			case 0x5FF7:
+				if (nsf.sound_chips.fds) {
+					control_bank(nsf.prg.banks_4k)
+					bank = address & 0x01;
+					nsf.prg.rom_4k_6xxx[bank] = &prg.ram.data[bank << 12];
+					memcpy(nsf.prg.rom_4k_6xxx[bank], prg_chip_byte_pnt(0, value << 12), 0x1000);
+				}
+				return;
+			case 0x5FF8:
+			case 0x5FF9:
+			case 0x5FFA:
+			case 0x5FFB:
+			case 0x5FFC:
+			case 0x5FFD:
+			case 0x5FFE:
+			case 0x5FFF:
+				control_bank(nsf.prg.banks_4k)
+				if (nsf.sound_chips.fds) {
+					bank = address & 0x07;
+					nsf.prg.rom_4k[bank] = &prg.ram.data[(bank + 2) << 12];
+					memcpy(nsf.prg.rom_4k[bank], prg_chip_byte_pnt(0, value << 12), 0x1000);
+				} else {
+					bank = address & 0x07;
+					nsf.prg.rom_4k[bank] = prg_chip_byte_pnt(0, value << 12);
+				}
+				return;
+		}
+	}
+
+	tick_hw(1);
 }
 static BYTE INLINE fds_wr_mem(WORD address, BYTE value) {
 	if (address >= 0xE000) {
@@ -1846,6 +2136,20 @@ static WORD INLINE lend_word(WORD address, BYTE indirect, BYTE make_last_tick_hw
 }
 static void INLINE tick_hw(BYTE value) {
 	while (value > 0) {
+		if (nsf.enabled) {
+			if (nsf.made_tick) {
+				cpu.opcode_cycle++;
+				nmi.before = nmi.high;
+				irq.before = irq.high;
+				nsf_tick(1);
+
+				apu_tick(1, &value);
+				cpu.odd_cycle = !cpu.odd_cycle;
+				value--;
+				mod_cycles_op(-=, 1);
+			}
+			return;
+		}
 		cpu.opcode_cycle++;
 		nmi.before = nmi.high;
 		irq.before = irq.high;

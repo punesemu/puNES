@@ -11,12 +11,8 @@ libaudio_a_SOURCES = \
 	handler.c \
 	mono.c \
 	mono.h \
-	original.c \
-	original.h \
 	panning.c \
 	panning.h \
-	quality.c \
-	quality.h \
 	wave.c \
 	wave.h
 

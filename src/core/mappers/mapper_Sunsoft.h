@@ -73,6 +73,7 @@ struct sunsoft_fm7 {
 } fm7;
 
 void map_init_Sunsoft(BYTE model);
+void map_init_NSF_Sunsoft(BYTE model);
 
 void extcl_cpu_wr_mem_Sunsoft_S1(WORD address, BYTE value);
 

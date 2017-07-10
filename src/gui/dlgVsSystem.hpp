@@ -49,6 +49,7 @@ class dlgVsSystem : public QDialog, public Ui::Vs_System {
 		void s_coins_clicked(bool checked);
 		void s_ds_changed(int state);
 		void s_defaults_clicked(bool checked);
+		void s_x_clicked(bool checked);
 };
 
 #endif /* DLGVSSYSTEM_HPP_ */

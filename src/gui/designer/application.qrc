@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="icon">
+    <file>icons/nsf_file.png</file>
     <file>icons/wav_start.png</file>
     <file>icons/wav_stop.png</file>
     <file>icons/audio_output.png</file>

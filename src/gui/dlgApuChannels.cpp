@@ -35,6 +35,10 @@ dlgApuChannels::dlgApuChannels(QWidget *parent = 0) : QDialog(parent) {
 	setFont(parent->font());
 	setStyleSheet(tools_stylesheet());
 
+	QPushButton *close = new QPushButton(groupBox);
+	close->setGeometry(QRect(210, 5, 16, 16));
+	close->setText("x");
+
 	horizontalSlider_Master->setRange(0, 100);
 	horizontalSlider_Square1->setRange(0, 100);
 	horizontalSlider_Square2->setRange(0, 100);
@@ -97,6 +101,11 @@ dlgApuChannels::dlgApuChannels(QWidget *parent = 0) : QDialog(parent) {
 	connect(pushButton_Disable_all, SIGNAL(clicked(bool)), this, SLOT(s_toggle_all_clicked(bool)));
 	connect(pushButton_Defaults, SIGNAL(clicked(bool)), this, SLOT(s_toggle_all_clicked(bool)));
 
+	connect(checkBox_Swap_Duty_Cycles, SIGNAL(stateChanged(int)), this,
+			SLOT(s_set_audio_swap_duty(int)));
+
+	connect(close, SIGNAL(clicked(bool)), this, SLOT(s_x_clicked(bool)));
+
 	setWindowFlags(Qt::Dialog | Qt::FramelessWindowHint);
 
 	setAttribute(Qt::WA_DeleteOnClose);
@@ -151,6 +160,8 @@ void dlgApuChannels::update_dialog(void) {
 	horizontalSlider_DMC->setValue(cfg->apu.volume[APU_DMC] * 100);
 	horizontalSlider_Extra->setValue(cfg->apu.volume[APU_EXTRA] * 100);
 
+	checkBox_Swap_Duty_Cycles->setChecked(cfg->swap_duty);
+
 	in_update = false;
 }
 void dlgApuChannels::s_checkbox_state_changed(int state) {
@@ -200,4 +211,14 @@ void dlgApuChannels::s_toggle_all_clicked(bool checked) {
 	}
 
 	update_dialog();
+}
+void dlgApuChannels::s_set_audio_swap_duty(int state) {
+	if (in_update == true) {
+		return;
+	}
+
+	((mainWindow *) parent())->s_set_audio_swap_duty();
+}
+void dlgApuChannels::s_x_clicked(bool checked) {
+	((mainWindow *) parent())->s_set_apu_channels();
 }

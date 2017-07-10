@@ -72,7 +72,6 @@ static struct _cl_option {
 	{ "samplerate",            req_arg, "l"},
 	{ "channels",              req_arg, "c"},
 	{ "stereo-delay",          req_arg, "d"},
-	{ "audio-quality",         req_arg, "q"},
 	{ "swap-duty",             req_arg,  0 },
 	{ "swap-emphasis",         req_arg,  0 },
 	{ "gamegenie",             req_arg, "g"},
@@ -254,9 +253,6 @@ void cmd_line_parse(int argc, uTCHAR **argv) {
 			case 'p':
 				set_int(cfg_from_file.palette, SET_PALETTE);
 				break;
-			case 'q':
-				set_int(cfg_from_file.audio_quality, SET_AUDIO_QUALITY);
-				break;
 			case 's':
 				set_int(cfg_from_file.scale, SET_SCALE);
 				gfx.scale_before_fscreen = cfg_from_file.scale;
@@ -349,7 +345,6 @@ static void usage(QString name) {
 			uL("" uPERCENTs "\n")
 			uL("" uPERCENTs "\n")
 			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
 #if defined (WITH_OPENGL)
 			uL("" uPERCENTs "\n")
 #endif
@@ -391,7 +386,6 @@ static void usage(QString name) {
 			main_cfg[SET_SAMPLERATE].hlp,
 			main_cfg[SET_CHANNELS].hlp,
 			main_cfg[SET_STEREO_DELAY].hlp,
-			main_cfg[SET_AUDIO_QUALITY].hlp,
 			main_cfg[SET_SWAP_DUTY].hlp,
 			main_cfg[SET_HIDE_SPRITES].hlp,
 			main_cfg[SET_HIDE_BACKGROUND].hlp,

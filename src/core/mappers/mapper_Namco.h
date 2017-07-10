@@ -33,15 +33,15 @@ enum {
 	MINDSEEKER
 };
 
-typedef struct {
+typedef struct _n163_snd_ch {
 	BYTE enabled;
 	BYTE active;
 	WORD address;
 	DBWORD freq;
 	DBWORD cycles_reload;
 	DBWORD cycles;
-	BYTE length;
-	BYTE step;
+	WORD length;
+	WORD step;
 	WORD volume;
 	SWORD output;
 } _n163_snd_ch;
@@ -65,6 +65,7 @@ struct _n3446 {
 } n3446;
 
 void map_init_Namco(BYTE model);
+void map_init_NSF_Namco(BYTE model);
 
 void extcl_cpu_wr_mem_Namco_163(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_Namco_163(WORD address, BYTE openbus, BYTE before);

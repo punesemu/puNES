@@ -29,7 +29,6 @@ typedef struct _config {
 	BYTE samplerate;
 	BYTE channels_mode;
 	double stereo_delay;
-	BYTE audio_quality;
 	BYTE audio_buffer_factor;
 	BYTE swap_duty;
 	BYTE fps;

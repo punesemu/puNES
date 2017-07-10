@@ -47,6 +47,11 @@ void map_init_FDS(void) {
 	/* setto il flag di disabilitazione dell'irq */
 	irq.inhibit = cpu.im;
 }
+void map_init_NSF_FDS(void) {
+	memset(&fds, 0x00, sizeof(fds));
+
+	fds.drive.enabled_snd_reg = 0x02;
+}
 void extcl_cpu_every_cycle_FDS(void) {
 	WORD data;
 

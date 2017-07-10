@@ -16,23 +16,12 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef AUDIO_QUALITY_H_
-#define AUDIO_QUALITY_H_
+#ifndef NSF_MOUSE_H_
+#define NSF_MOUSE_H_
 
-#include "common.h"
+#include "../input.h"
 
-enum types_of_audio_quality { AQ_LOW, AQ_HIGH };
+void input_init_nsf_mouse(void);
+void input_add_event_nsf_mouse(BYTE index);
 
-#if defined (__cplusplus)
-#define EXTERNC extern "C"
-#else
-#define EXTERNC
-#endif
-
-EXTERNC void audio_quality(BYTE quality);
-EXTERNC BYTE (*audio_quality_init)(void);
-EXTERNC void (*audio_quality_quit)(void);
-
-#undef EXTERNC
-
-#endif /* AUDIO_QUALITY_H_ */
+#endif /* NSF_MOUSE_H_ */

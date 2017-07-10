@@ -55,7 +55,7 @@ enum reset_type {
 enum screen_dimension { SCR_LINES = 240, SCR_ROWS = 256 };
 enum type_of_system_info { HEADER, DATABASE };
 enum header_type { iNES_1_0, NES_2_0, UNIF_FORMAT, FDS_FORMAT };
-enum lenght_file_name_type {
+enum length_file_name_type {
 	LENGTH_FILE_NAME      = 512,
 	LENGTH_FILE_NAME_MID  = 1024,
 	LENGTH_FILE_NAME_LONG = 2048,

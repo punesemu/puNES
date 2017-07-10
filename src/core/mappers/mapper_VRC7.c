@@ -62,6 +62,16 @@ void map_init_VRC7(BYTE revision) {
 
 	type = revision;
 }
+void map_init_NSF_VRC7(BYTE revision) {
+	memset(&vrc7, 0x00, sizeof(vrc7));
+
+	mask = 0xF000;
+	if (revision == VRC7A) {
+		mask = 0xF020;
+	}
+
+	type = revision;
+}
 void extcl_cpu_wr_mem_VRC7(WORD address, BYTE value) {
 	address = (address & mask) | table_VRC7[type][(address & 0x0018) >> 3];
 

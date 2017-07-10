@@ -22,6 +22,7 @@
 #else
 #include <QtWidgets/QDesktopWidget>
 #endif
+#include "mainWindow.hpp"
 #include "info.h"
 #include "ppu.h"
 #include "tas.h"
@@ -45,6 +46,10 @@ dlgPPUHacks::dlgPPUHacks(QWidget *parent = 0) : QDialog(parent) {
 
 	setFont(parent->font());
 	setStyleSheet(tools_stylesheet());
+
+	QPushButton *close = new QPushButton(groupBox);
+	close->setGeometry(QRect(210, 5, 16, 16));
+	close->setText("x");
 
 	checkBox_Unlimited_Sprites->setProperty("myIndex", QVariant(0));
 	checkBox_Hide_Sprites->setProperty("myIndex", QVariant(1));
@@ -81,6 +86,8 @@ dlgPPUHacks::dlgPPUHacks(QWidget *parent = 0) : QDialog(parent) {
 	}
 	connect(pushButton_Reset_Lag_Counter, SIGNAL(clicked(bool)), this,
 			SLOT(lag_counter_reset_clicked(bool)));
+
+	connect(close, SIGNAL(clicked(bool)), this, SLOT(s_x_clicked(bool)));
 
 	setWindowFlags(Qt::Dialog | Qt::FramelessWindowHint);
 
@@ -224,4 +231,7 @@ void dlgPPUHacks::lag_counter_reset_clicked(bool checked) {
 
 	gui_active_window();
 	gui_set_focus();
+}
+void dlgPPUHacks::s_x_clicked(bool checked) {
+	((mainWindow *) parent())->s_set_ppu_hacks();
 }

@@ -227,6 +227,8 @@ enum apu_mode { APU_60HZ, APU_48HZ };
 			} else {\
 				DMC.buffer = prg_chip_byte(0, DMC.address & 0x1FFF);\
 			}\
+		} else if (nsf.enabled) {\
+			DMC.buffer = nsf_prg_rom_rd(DMC.address);\
 		} else {\
 			DMC.buffer = prg_rom_rd(DMC.address);\
 			if (info.mapper.extend_rd) {\
@@ -379,7 +381,7 @@ enum apu_mode { APU_60HZ, APU_48HZ };
 #define pulse_output()\
 	nla_table.pulse[(int) (s1_out + s2_out)]
 #define tnd_output()\
-	nla_table.tnd[(int) ((tr_out  * 3) + (ns_out * 2) + dmc_out)]
+	nla_table.tnd[(int) ((tr_out * 3) + (ns_out * 2) + dmc_out)]
 
 typedef struct _config_apu {
 	BYTE channel[APU_MASTER + 1];
@@ -606,7 +608,7 @@ static const WORD apuPeriod[2][3][7] = {
 	}
 };
 
-/* la tabella con i valori da caricare nel lenght counter del canale */
+/* la tabella con i valori da caricare nel length counter del canale */
 static const BYTE length_table[32] = {
 	0x0A, 0xFE, 0x14, 0x02, 0x28, 0x04, 0x50, 0x06,
 	0xA0, 0x08, 0x3C, 0x0A, 0x0E, 0x0C, 0x1A, 0x0E,

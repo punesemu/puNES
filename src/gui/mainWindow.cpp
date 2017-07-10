@@ -45,6 +45,7 @@
 #include "conf.h"
 #include "recent_roms.h"
 #include "fds.h"
+#include "nsf.h"
 #include "clock.h"
 #include "ppu.h"
 #include "text.h"
@@ -167,6 +168,7 @@ void mainWindow::setup() {
 	grp = new QActionGroup(this);
 	grp->setExclusive(true);
 	grp->addAction(ui->action_Fsk_Default);
+	grp->addAction(ui->action_Fsk_0);
 	grp->addAction(ui->action_Fsk_1);
 	grp->addAction(ui->action_Fsk_2);
 	grp->addAction(ui->action_Fsk_3);
@@ -297,11 +299,6 @@ void mainWindow::setup() {
 	grp->addAction(ui->action_Stereo_delay_90);
 	grp->addAction(ui->action_Stereo_delay_95);
 	grp->addAction(ui->action_Stereo_delay_100);
-	// Settings/Audio/Quality
-	grp = new QActionGroup(this);
-	grp->setExclusive(true);
-	grp->addAction(ui->action_Audio_Quality_Low);
-	grp->addAction(ui->action_Audio_Quality_High);
 	// Settings/Language
 	grp = new QActionGroup(this);
 	grp->setExclusive(true);
@@ -527,6 +524,8 @@ void mainWindow::update_recent_roms() {
 				action->setIcon(QIcon(":/icon/icons/fds_file.png"));
 			} else if (!QString::compare(rom.suffix(), "fm2", Qt::CaseInsensitive)) {
 				action->setIcon(QIcon(":/icon/icons/fm2_file.png"));
+			} else if (!QString::compare(rom.suffix(), "nsf", Qt::CaseInsensitive)) {
+				action->setIcon(QIcon(":/icon/icons/nsf_file.png"));
 			} else {
 				action->setIcon(QIcon(":/icon/icons/nes_file.png"));
 			}
@@ -616,10 +615,16 @@ void mainWindow::update_menu_nes() {
 		ui->action_Pause->setChecked(false);
 	}
 
-	if (fps.fast_forward == TRUE) {
-		ui->action_Fast_Forward->setChecked(true);
+	if (nsf.enabled == FALSE) {
+		ui->action_Fast_Forward->setEnabled(true);
+
+		if (fps.fast_forward == TRUE) {
+			ui->action_Fast_Forward->setChecked(true);
+		} else {
+			ui->action_Fast_Forward->setChecked(false);
+		}
 	} else {
-		ui->action_Fast_Forward->setChecked(false);
+		ui->action_Fast_Forward->setEnabled(false);
 	}
 }
 void mainWindow::update_menu_settings() {
@@ -692,8 +697,11 @@ void mainWindow::update_menu_settings() {
 	}
 	// Frame skip
 	switch (cfg->frameskip) {
-		case 0:
+		case 255:
 			ui->action_Fsk_Default->setChecked(true);
+			break;
+		case 0:
+			ui->action_Fsk_0->setChecked(true);
 			break;
 		case 1:
 			ui->action_Fsk_1->setChecked(true);
@@ -1085,15 +1093,6 @@ void mainWindow::update_menu_settings() {
 				break;
 		}
 	}
-	// Settings/Audio/Quality
-	switch (cfg->audio_quality) {
-		case AQ_LOW:
-			ui->action_Audio_Quality_Low->setChecked(true);
-			break;
-		case AQ_HIGH:
-			ui->action_Audio_Quality_High->setChecked(true);
-			break;
-	}
 	// Settings/Audio/[Swap Duty Cycle, Enable]
 	ui->action_Swap_Duty_Cycles->setChecked(cfg->swap_duty);
 	ui->action_Audio_Enable->setChecked(cfg->apu.channel[APU_MASTER]);
@@ -1157,6 +1156,7 @@ void mainWindow::update_menu_settings() {
 void mainWindow::update_menu_tools() {
 	ui->action_Vs_System->setChecked(ext_win.vs_system);
 	ui->action_APU_channels->setChecked(ext_win.apu_channels);
+	ui->action_PPU_Hacks->setChecked(ext_win.ppu_hacks);
 }
 void mainWindow::update_menu_state() {
 	bool state = false;
@@ -1289,7 +1289,7 @@ void mainWindow::shcjoy_stop() {
 	js_shcut_stop();
 }
 void mainWindow::control_visible_cursor() {
-	if ((gmouse.hidden == FALSE) && (input_draw_target() == FALSE)) {
+	if ((nsf.enabled == FALSE) && (gmouse.hidden == FALSE) && (input_draw_target() == FALSE)) {
 		if (cfg->fullscreen == FULLSCR) {
 			gui_cursor_hide(TRUE);
 		} else if ((gui_get_ms() - gmouse.timer) >= 2000) {
@@ -1409,7 +1409,8 @@ void mainWindow::connect_menu_signals() {
 	connect_action(ui->action_FPS_45, FPS_45, SLOT(s_set_fps()));
 	connect_action(ui->action_FPS_44, FPS_44, SLOT(s_set_fps()));
 	// Settings/Video/Frame skip
-	connect_action(ui->action_Fsk_Default, 0, SLOT(s_set_fsk()));
+	connect_action(ui->action_Fsk_Default, 255, SLOT(s_set_fsk()));
+	connect_action(ui->action_Fsk_0, 0, SLOT(s_set_fsk()));
 	connect_action(ui->action_Fsk_1, 1, SLOT(s_set_fsk()));
 	connect_action(ui->action_Fsk_2, 2, SLOT(s_set_fsk()));
 	connect_action(ui->action_Fsk_3, 3, SLOT(s_set_fsk()));
@@ -1544,9 +1545,6 @@ void mainWindow::connect_menu_signals() {
 	connect_action(ui->action_Stereo_delay_90, 90, SLOT(s_set_stereo_delay()));
 	connect_action(ui->action_Stereo_delay_95, 95, SLOT(s_set_stereo_delay()));
 	connect_action(ui->action_Stereo_delay_100, 100, SLOT(s_set_stereo_delay()));
-	// Settings/Audio/Quality
-	connect_action(ui->action_Audio_Quality_Low, AQ_LOW, SLOT(s_set_audio_quality()));
-	connect_action(ui->action_Audio_Quality_High, AQ_HIGH, SLOT(s_set_audio_quality()));
 	// Settings/Audio/[APU_channels, Swap Duty Cycles, enable]
 	connect_action(ui->action_Swap_Duty_Cycles, SLOT(s_set_audio_swap_duty()));
 	connect_action(ui->action_Audio_Enable, SLOT(s_set_audio_enable()));
@@ -1686,6 +1684,25 @@ void mainWindow::s_set_fullscreen() {
 	gui_external_control_windows_show();
 	gui_set_focus();
 }
+void mainWindow::s_set_vs_window() {
+	ext_win.vs_system = !ext_win.vs_system;
+	gui_external_control_windows_show();
+}
+void mainWindow::s_set_apu_channels() {
+	ext_win.apu_channels = !ext_win.apu_channels;
+	gui_external_control_windows_show();
+}
+void mainWindow::s_set_ppu_hacks() {
+	ext_win.ppu_hacks = !ext_win.ppu_hacks;
+	gui_external_control_windows_show();
+}
+void mainWindow::s_set_audio_swap_duty() {
+	emu_pause(TRUE);
+	cfg->swap_duty = !cfg->swap_duty;
+	gui_apu_channels_update_dialog();
+	gui_update();
+	emu_pause(FALSE);
+}
 void mainWindow::s_fullscreen(bool state) {
 	if (state == true) {
 		showFullScreen();
@@ -1707,6 +1724,7 @@ void mainWindow::s_open() {
 	filters.append(tr("Nes rom files"));
 	filters.append(tr("UNIF rom files"));
 	filters.append(tr("FDS image files"));
+	filters.append(tr("NSF rom files"));
 	filters.append(tr("TAS movie files"));
 	filters.append(tr("All files"));
 
@@ -1716,22 +1734,23 @@ void mainWindow::s_open() {
 	if (l7z_present() == TRUE) {
 		if ((l7z_control_ext(uL("rar")) == EXIT_OK)) {
 			filters[0].append(
-				" (*.zip *.ZIP *.7z *.7Z *.rar *.RAR *.nes *.NES *.unf *.UNF *.unif *.UNIF *.fds *.FDS *.fm2 *.FM2)");
+				" (*.zip *.ZIP *.7z *.7Z *.rar *.RAR *.nes *.NES *.unf *.UNF *.unif *.UNIF *.nsf *.NSF *.fds *.FDS *.fm2 *.FM2)");
 			filters[1].append(" (*.zip *.ZIP *.7z *.7Z *.rar *.RAR)");
 		} else {
-			filters[0].append(" (*.zip *.ZIP *.7z *.7Z *.nes *.NES *.fds *.FDS *.fm2 *.FM2)");
+			filters[0].append(" (*.zip *.ZIP *.7z *.7Z *.nes *.NES *.fds *.FDS *.nsf *.NSF *.fm2 *.FM2)");
 			filters[1].append(" (*.zip *.ZIP *.7z *.7Z)");
 		}
 	} else {
-		filters[0].append(" (*.zip *.ZIP *.nes *.NES *.unf *.UNF *.unif *.UNIF *.fds *.FDS *.fm2 *.FM2)");
+		filters[0].append(" (*.zip *.ZIP *.nes *.NES *.unf *.UNF *.unif *.UNIF *.fds *.FDS *.nsf *.NSF *.fm2 *.FM2)");
 		filters[1].append(" (*.zip *.ZIP)");
 	}
 
 	filters[2].append(" (*.nes *.NES)");
 	filters[3].append(" (*.unf *.UNF *.unif *.UNIF)");
 	filters[4].append(" (*.fds *.FDS)");
-	filters[5].append(" (*.fm2 *.FM2)");
-	filters[6].append(" (*.*)");
+	filters[5].append(" (*.nsf *.NSF)");
+	filters[6].append(" (*.fm2 *.FM2)");
+	filters[7].append(" (*.*)");
 
 	file = QFileDialog::getOpenFileName(this, tr("Open File"), uQString(gui.last_open_path),
 		filters.join(";;"));
@@ -1866,19 +1885,17 @@ void mainWindow::s_pause() {
 	update_menu_nes();
 }
 void mainWindow::s_fast_forward() {
-	if (fps.fast_forward == FALSE) {
-		fps_fast_forward();
-	} else {
-		fps_normalize();
+	if (nsf.enabled == FALSE) {
+		if (fps.fast_forward == FALSE) {
+			fps_fast_forward();
+		} else {
+			fps_normalize();
+		}
+		update_menu_nes();
 	}
-	update_menu_nes();
 }
 void mainWindow::s_save_screenshot() {
 	gfx.save_screenshot = true;
-}
-void mainWindow::s_set_vs_window() {
-	ext_win.vs_system = !ext_win.vs_system;
-	gui_external_control_windows_show();
 }
 void mainWindow::s_update_output_devices() {
 	QActionGroup *grp = new QActionGroup(this);
@@ -1938,14 +1955,6 @@ void mainWindow::s_set_output_device() {
 		snd_playback_start();
 		emu_pause(FALSE);
 	}
-}
-void mainWindow::s_set_apu_channels() {
-	ext_win.apu_channels = !ext_win.apu_channels;
-	gui_external_control_windows_show();
-}
-void mainWindow::s_set_ppu_hacks() {
-	ext_win.ppu_hacks = !ext_win.ppu_hacks;
-	gui_external_control_windows_show();
 }
 void mainWindow::s_set_mode() {
 	int mode = QVariant(((QObject *)sender())->property("myValue")).toInt();
@@ -2019,7 +2028,7 @@ void mainWindow::s_set_fsk() {
 
 	cfg->frameskip = fsk;
 
-	if (!fps.fast_forward) {
+	if (fps.fast_forward == FALSE) {
 		fps_normalize();
 	}
 }
@@ -2092,7 +2101,6 @@ void mainWindow::s_set_filter() {
 
 	switch_filter(filter);
 }
-
 void mainWindow::s_set_ntsc_filter() {
 	int filter = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
@@ -2316,25 +2324,6 @@ void mainWindow::s_set_stereo_delay() {
 	ch_stereo_delay_set();
 	gui_update();
 }
-void mainWindow::s_set_audio_quality() {
-	int quality = QVariant(((QObject *)sender())->property("myValue")).toInt();
-
-	if (cfg->audio_quality == quality) {
-		return;
-	}
-
-	emu_pause(TRUE);
-	cfg->audio_quality = quality;
-	audio_quality(cfg->audio_quality);
-	gui_update();
-	emu_pause(FALSE);
-}
-void mainWindow::s_set_audio_swap_duty() {
-	emu_pause(TRUE);
-	cfg->swap_duty = !cfg->swap_duty;
-	gui_update();
-	emu_pause(FALSE);
-}
 void mainWindow::s_set_audio_enable() {
 	emu_pause(TRUE);
 	if ((cfg->apu.channel[APU_MASTER] = !cfg->apu.channel[APU_MASTER])) {
@@ -2364,8 +2353,10 @@ void mainWindow::s_set_ff_velocity() {
 	cfg->ff_velocity = velocity;
 	gui_update();
 
-	if (fps.fast_forward == TRUE) {
-		fps_fast_forward();
+	if (nsf.enabled == FALSE) {
+		if (fps.fast_forward == TRUE) {
+			fps_fast_forward();
+		}
 	}
 }
 void mainWindow::s_set_input() {
@@ -2406,6 +2397,7 @@ void mainWindow::s_set_save_battery_ram_file() {
 }
 void mainWindow::s_set_pause_in_background() {
 	cfg->bck_pause = !cfg->bck_pause;
+	gui.main_win_lfp = cfg->bck_pause;
 }
 void mainWindow::s_cheat_mode_select() {
 	int mode = QVariant(((QObject *)sender())->property("myValue")).toInt();
@@ -2492,7 +2484,11 @@ void mainWindow::s_state_save_file() {
 	filters.append(tr("Save states"));
 	filters.append(tr("All files"));
 
-	filters[0].append(" (*.pns *.PNS)");
+	if (nsf.enabled) {
+		filters[0].append(" (*.nns *.NNS)");
+	} else {
+		filters[0].append(" (*.pns *.PNS)");
+	}
 	filters[1].append(" (*.*)");
 
 	/* game genie */
@@ -2509,7 +2505,11 @@ void mainWindow::s_state_save_file() {
 		QFileInfo fileinfo(file);
 
 		if (fileinfo.suffix().isEmpty()) {
-			fileinfo.setFile(QString(file) + ".pns");
+			if (nsf.enabled) {
+				fileinfo.setFile(QString(file) + ".nns");
+			} else {
+				fileinfo.setFile(QString(file) + ".pns");
+			}
 		}
 
 		umemset(cfg->save_file, 0x00, usizeof(cfg->save_file));
@@ -2530,7 +2530,11 @@ void mainWindow::s_state_load_file() {
 	filters.append(tr("Save states"));
 	filters.append(tr("All files"));
 
-	filters[0].append(" (*.pns *.PNS)");
+	if (nsf.enabled) {
+		filters[0].append(" (*.nns *.NNS)");
+	} else {
+		filters[0].append(" (*.pns *.PNS)");
+	}
 	filters[1].append(" (*.*)");
 
 	file = QFileDialog::getOpenFileName(this, tr("Open save state"),

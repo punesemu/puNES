@@ -69,6 +69,7 @@ EXTERNC struct _info {
 	BYTE pause_frames_drawscreen;
 	BYTE first_illegal_opcode;
 	BYTE wave_in_record;
+	BYTE cpu_rw_extern;
 #if defined (WITH_OPENGL)
 	BYTE sRGB_FBO_in_use;
 #endif

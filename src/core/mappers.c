@@ -707,6 +707,9 @@ BYTE map_init(void) {
 			EXTCL_CPU_WR_MEM(0);
 			break;
 		/* casi speciali */
+		case NSF_MAPPER:
+			map_init_NSF();
+			break;
 		case FDS_MAPPER:
 			map_init_FDS();
 			break;

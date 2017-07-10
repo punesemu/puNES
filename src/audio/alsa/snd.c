@@ -24,7 +24,7 @@
 #include "clock.h"
 #include "conf.h"
 #include "fps.h"
-#include "audio/quality.h"
+#include "audio/blipbuf.h"
 #include "audio/channels.h"
 #include "gui.h"
 #include "wave.h"
@@ -241,7 +241,7 @@ BYTE snd_playback_start(void) {
 
 	audio_channels_init_mode();
 
-	audio_quality(cfg->audio_quality);
+	audio_init_blipbuf();
 
 	if (loop.action == AT_UNINITIALIZED) {
 		loop.alsa = &alsa;
@@ -298,9 +298,7 @@ void snd_playback_stop(void) {
 		audio_channels_quit();
 	}
 
-	if (audio_quality_quit) {
-		audio_quality_quit();
-	}
+	audio_quit_blipbuf();
 
 	if (alsa.playback) {
 		snd_pcm_close(alsa.playback);
@@ -783,7 +781,6 @@ static void *alsa_playback_loop(void *data) {
 				|| (fps.fast_forward == TRUE)) {
 			alsa_wr_buf(th->alsa, (void *) cache->silence, avail);
 		} else if (cache->bytes_available < len) {
-			wave_write(cache->silence, avail);
 			alsa_wr_buf(th->alsa, (void *) cache->silence, avail);
 			snd.out_of_sync++;
 		} else {

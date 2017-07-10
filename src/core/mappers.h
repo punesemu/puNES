@@ -19,10 +19,11 @@
 #ifndef MAPPERS_H_
 #define MAPPERS_H_
 
-/* INES/NES2.0 */
 #include "common.h"
 #include "external_calls.h"
 #include "unif.h"
+#include "mappers/mapper_NSF.h"
+/* INES/NES2.0 */
 #include "mappers/mapper_0.h"
 #include "mappers/mapper_MMC1.h"
 #include "mappers/mapper_MMC2andMMC4.h"
@@ -258,8 +259,8 @@ typedef struct _mapper {
 	BYTE mirroring;
 	BYTE write_vram;
 	WORD rom_map_to[4];
-	BYTE *internal_struct[2];
-	WORD internal_struct_size[2];
+	BYTE *internal_struct[10];
+	WORD internal_struct_size[10];
 } _mapper;
 
 struct _trainer {

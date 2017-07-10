@@ -53,6 +53,7 @@ class dlgPPUHacks : public QDialog, public Ui::PPU_Hacks {
 		void ppu_overclock_pr_slines_changed(int i);
 		void ppu_overclock_slines_edit_finished();
 		void lag_counter_reset_clicked(bool checked);
+		void s_x_clicked(bool checked);
 };
 
 #endif /* DLGPPUHACKS_HPP_ */

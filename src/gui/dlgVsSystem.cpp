@@ -22,6 +22,7 @@
 #else
 #include <QtWidgets/QDesktopWidget>
 #endif
+#include "mainWindow.hpp"
 #include "info.h"
 #include "vs_system.h"
 #include "clock.h"
@@ -36,6 +37,10 @@ dlgVsSystem::dlgVsSystem(QWidget *parent = 0) : QDialog(parent) {
 
 	setFont(parent->font());
 	setStyleSheet(tools_stylesheet());
+
+	QPushButton *close = new QPushButton(groupBox_Vs_System);
+	close->setGeometry(QRect(210, 3, 16, 16));
+	close->setText("x");
 
 	pushButton_Left_Coin->setProperty("myIndex", QVariant(1));
 	pushButton_Right_Coin->setProperty("myIndex", QVariant(2));
@@ -63,6 +68,8 @@ dlgVsSystem::dlgVsSystem(QWidget *parent = 0) : QDialog(parent) {
 	connect(checkBox_ds6, SIGNAL(stateChanged(int)), this, SLOT(s_ds_changed(int)));
 	connect(checkBox_ds7, SIGNAL(stateChanged(int)), this, SLOT(s_ds_changed(int)));
 	connect(checkBox_ds8, SIGNAL(stateChanged(int)), this, SLOT(s_ds_changed(int)));
+
+	connect(close, SIGNAL(clicked(bool)), this, SLOT(s_x_clicked(bool)));
 
 	setWindowFlags(Qt::Dialog | Qt::FramelessWindowHint);
 
@@ -183,4 +190,7 @@ void dlgVsSystem::s_defaults_clicked(bool checked) {
 	settings_pgs_save();
 	gui_active_window();
 	gui_set_focus();
+}
+void dlgVsSystem::s_x_clicked(bool checked) {
+	((mainWindow *) parent())->s_set_vs_window();
 }

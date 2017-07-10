@@ -45,6 +45,7 @@
 #include "ines.h"
 #include "unif.h"
 #include "fds.h"
+#include "nsf.h"
 #include "cheat.h"
 #include "overscan.h"
 #include "recent_roms.h"
@@ -70,7 +71,9 @@
 	}
 
 #if defined (DEBUG)
-	WORD PCBREAK = 0xE58F;
+	//WORD PCBREAK = 0xC00B;
+	WORD PCBREAK = 0xC425;
+
 #endif
 
 BYTE emu_frame(void) {
@@ -89,6 +92,24 @@ BYTE emu_frame(void) {
 
 	/* eseguo un frame dell'emulatore */
 	if (!(info.no_rom | info.turn_off | info.pause)) {
+		if (nsf.state & (NSF_PAUSE | NSF_STOP)) {
+			BYTE i;
+
+			for (i = PORT1; i < PORT_MAX; i++) {
+				if (port_funct[i].input_add_event) {
+					port_funct[i].input_add_event(i);
+				}
+			}
+
+			nsf_main_screen_event();
+			nsf_effect();
+
+			gfx_draw_screen(TRUE);
+
+			fps_frameskip();
+			return (EXIT_OK);
+		}
+
 		/* controllo se ci sono eventi di input */
 		if (tas.type) {
 			tas_frame();
@@ -237,9 +258,11 @@ BYTE emu_load_rom(void) {
 
 	elaborate_rom_file:
 	info.no_rom = FALSE;
+	info.cpu_rw_extern = FALSE;
 
 	cheatslist_save_game_cheats();
 
+	nsf_quit();
 	fds_quit();
 	map_quit();
 
@@ -267,6 +290,14 @@ BYTE emu_load_rom(void) {
 		if (!ustrcasecmp(ext, uL(".fds"))) {
 			if (fds_load_rom() == EXIT_ERROR) {
 				info.rom_file[0] = 0;
+				goto elaborate_rom_file;
+			}
+			recent_roms_add_wrap()
+		} else if (!ustrcasecmp(ext, uL(".nsf"))) {
+			if (nsf_load_rom() == EXIT_ERROR) {;
+				info.rom_file[0] = 0;
+				text_add_line_info(1, "[red]error loading rom");
+				fprintf(stderr, "error loading rom\n");
 				goto elaborate_rom_file;
 			}
 			recent_roms_add_wrap()
@@ -346,7 +377,9 @@ BYTE emu_load_rom(void) {
 			break;
 	}
 
-	cheatslist_read_game_cheats();
+	if (nsf.enabled == FALSE) {
+		cheatslist_read_game_cheats();
+	}
 
 	return (EXIT_OK);
 }
@@ -610,6 +643,7 @@ BYTE emu_turn_on(void) {
 
 	cheatslist_init();
 
+	nsf_init();
 	fds_init();
 
 	/* carico la rom in memoria */
@@ -708,8 +742,12 @@ void emu_pause(BYTE mode) {
 		}
 	}
 
-	if (!info.pause) {
+	if (info.pause == 0) {
 		fps.next_frame = gui_get_ms();
+
+		if (nsf.enabled) {
+			nsf_reset_timers();
+		}
 	}
 }
 BYTE emu_reset(BYTE type) {
@@ -879,6 +917,7 @@ void emu_quit(BYTE exit_code) {
 	map_quit();
 
 	cheatslist_quit();
+	nsf_quit();
 	fds_quit();
 	ppu_quit();
 	snd_quit();

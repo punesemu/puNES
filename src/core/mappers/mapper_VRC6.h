@@ -69,6 +69,7 @@ struct _vrc6 {
 } vrc6;
 
 void map_init_VRC6(BYTE revision);
+void map_init_NSF_VRC6(BYTE revision);
 void extcl_cpu_wr_mem_VRC6(WORD address, BYTE value);
 BYTE extcl_save_mapper_VRC6(BYTE mode, BYTE slot, FILE *fp);
 void extcl_cpu_every_cycle_VRC6(void);

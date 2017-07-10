@@ -107,7 +107,7 @@ void fps_fast_forward(void) {
 }
 void fps_normalize(void) {
 	fps.frames_before_skip = 1;
-	if (cfg->frameskip == 0) {
+	if (cfg->frameskip == 255) {
 		fps.max_frames_skipped = machine.fps;
 	} else {
 		fps.max_frames_skipped = cfg->frameskip;

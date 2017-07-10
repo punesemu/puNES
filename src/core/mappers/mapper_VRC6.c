@@ -100,6 +100,17 @@ void map_init_VRC6(BYTE revision) {
 
 	type = revision;
 }
+void map_init_NSF_VRC6(BYTE revision) {
+	memset(&vrc6, 0x00, sizeof(vrc6));
+
+	vrc6.S3.timer = 1;
+	vrc6.S3.duty = 1;
+	vrc6.S4.timer = 1;
+	vrc6.S4.duty = 1;
+	vrc6.saw.timer = 1;
+
+	type = revision;
+}
 void extcl_cpu_wr_mem_VRC6(WORD address, BYTE value) {
 	address = (address & 0xF000) | table_VRC6[type][(address & 0x0003)];
 

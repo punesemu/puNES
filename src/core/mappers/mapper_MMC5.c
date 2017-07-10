@@ -245,6 +245,16 @@ void map_init_MMC5(void) {
 			break;
 	}
 }
+void map_init_NSF_MMC5(void) {
+	memset(&mmc5, 0x00, sizeof(mmc5));
+
+	mmc5.S3.frequency = 1;
+	mmc5.S4.frequency = 1;
+	mmc5.S3.length.enabled = 0;
+	mmc5.S3.length.value = 0;
+	mmc5.S4.length.enabled = 0;
+	mmc5.S4.length.value = 0;
+}
 void extcl_cpu_wr_mem_MMC5(WORD address, BYTE value) {
 	if (address < 0x5000) {
 		return;

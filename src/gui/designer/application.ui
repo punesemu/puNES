@@ -169,6 +169,7 @@
       </property>
       <addaction name="action_Fsk_Default"/>
       <addaction name="separator"/>
+      <addaction name="action_Fsk_0"/>
       <addaction name="action_Fsk_1"/>
       <addaction name="action_Fsk_2"/>
       <addaction name="action_Fsk_3"/>
@@ -396,17 +397,6 @@
       <addaction name="separator"/>
       <addaction name="menu_Stereo_delay"/>
      </widget>
-     <widget class="pMenu" name="menu_Audio_Quality">
-      <property name="title">
-       <string>&amp;Quality</string>
-      </property>
-      <property name="icon">
-       <iconset resource="application.qrc">
-        <normaloff>:/icon/icons/quality.png</normaloff>:/icon/icons/quality.png</iconset>
-      </property>
-      <addaction name="action_Audio_Quality_Low"/>
-      <addaction name="action_Audio_Quality_High"/>
-     </widget>
      <widget class="pMenu" name="menu_Buffer_Size_factor">
       <property name="title">
        <string>&amp;Buffer Size factor</string>
@@ -439,7 +429,6 @@
      <addaction name="menu_Buffer_Size_factor"/>
      <addaction name="menu_Sample_rate"/>
      <addaction name="menu_Channels"/>
-     <addaction name="menu_Audio_Quality"/>
      <addaction name="separator"/>
      <addaction name="action_Swap_Duty_Cycles"/>
      <addaction name="action_Audio_Enable"/>
@@ -1478,22 +1467,6 @@
     <string>100%</string>
    </property>
   </action>
-  <action name="action_Audio_Quality_Low">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>&amp;Low</string>
-   </property>
-  </action>
-  <action name="action_Audio_Quality_High">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>&amp;High</string>
-   </property>
-  </action>
   <action name="action_APU_channels">
    <property name="checkable">
     <bool>true</bool>
@@ -2248,6 +2221,14 @@
    </property>
    <property name="text">
     <string>Black borders in fullscreen</string>
+   </property>
+  </action>
+  <action name="action_Fsk_0">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;0</string>
    </property>
   </action>
  </widget>

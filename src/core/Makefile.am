@@ -12,6 +12,8 @@ libcore_a_SOURCES = \
 	cpu.h \
 	cpu_inline.h \
 	database.h \
+	draw_on_screen.h \
+	draw_on_screen.c \
 	emu.c \
 	emu.h \
 	external_calls.c \
@@ -38,6 +40,8 @@ libcore_a_SOURCES = \
 	mappers.h \
 	mem_map.h \
 	miniz.h \
+	nsf.c \
+	nsf.h \
 	overscan.c \
 	overscan.h \
 	paldef.h \
@@ -72,6 +76,10 @@ libcore_a_SOURCES += \
 	input/mouse.h \
 	input/nes_001.h \
 	input/nes_001.c \
+	input/nsf_controller.h \
+	input/nsf_controller.c \
+	input/nsf_mouse.h \
+	input/nsf_mouse.c \
 	input/oeka_kids_tablet.h \
 	input/oeka_kids_tablet.c \
 	input/snes_mouse.h \
@@ -388,6 +396,8 @@ libcore_a_SOURCES += \
 	mappers/mapper_Namco.h \
 	mappers/mapper_NovelDiamond.c \
 	mappers/mapper_NovelDiamond.h \
+	mappers/mapper_NSF.c \
+	mappers/mapper_NSF.h \
 	mappers/mapper_Ntdec.c \
 	mappers/mapper_Ntdec.h \
 	mappers/mapper_Rcm.c \

@@ -81,8 +81,7 @@ class appEventFilter: public QObject {
 		bool eventFilter(QObject* object, QEvent* event) {
 			if (event->type() == QEvent::MouseMove) {
 				if (gmouse.hidden == TRUE) {
-					if ((input_draw_target() == TRUE) ||
-							(cfg->fullscreen != FULLSCR)) {
+					if ((input_draw_target() == TRUE) || (cfg->fullscreen != FULLSCR)) {
 						gui_cursor_hide(FALSE);
 					}
 				}
@@ -471,7 +470,6 @@ static void gui_pmenu_management(void) {
 		<< qt.ui->menu_Sample_rate
 		<< qt.ui->menu_Channels
 		<< qt.ui->menu_Stereo_delay
-		<< qt.ui->menu_Audio_Quality
 		<< qt.ui->menu_Buffer_Size_factor
 		<< qt.ui->menu_Input
 		<< qt.ui->menu_Language

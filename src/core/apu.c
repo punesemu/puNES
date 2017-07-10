@@ -24,6 +24,7 @@
 #include "snd.h"
 #include "mem_map.h"
 #include "fds.h"
+#include "nsf.h"
 #include "conf.h"
 #include "mappers.h"
 #include "info.h"

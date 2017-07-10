@@ -16,13 +16,12 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef AUDIO_QUALITY_ORIGINAL_H_
-#define AUDIO_QUALITY_ORIGINAL_H_
+#ifndef NSF_CONTROLLER_H_
+#define NSF_CONTROLLER_H_
 
-#include "common.h"
+#include "../input.h"
 
-BYTE audio_quality_init_original(void);
-void audio_quality_quit_original(void);
-void audio_quality_apu_tick_original(void);
+void input_add_event_nsf_controller(BYTE index);
+BYTE input_decode_event_nsf_controller(BYTE mode, DBWORD event, BYTE type, _port *port);
 
-#endif /* AUDIO_QUALITY_ORIGINAL_H_ */
+#endif /* NSF_CONTROLLER_H_ */
