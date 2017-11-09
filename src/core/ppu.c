@@ -164,6 +164,12 @@ static const BYTE inv_chr[256] = {
 	0x0F, 0x8F, 0x4F, 0xCF, 0x2F, 0xAF, 0x6F, 0xEF,
 	0x1F, 0x9F, 0x5F, 0xDF, 0x3F, 0xBF, 0x7F, 0xFF
 };
+static const BYTE palette_init[0x20] = {
+	0x09, 0x01, 0x00, 0x01, 0x00, 0x02, 0x02, 0x0D,
+	0x08, 0x10, 0x08, 0x24, 0x00, 0x00, 0x04, 0x2C,
+	0x09, 0x01, 0x34, 0x03, 0x00, 0x04, 0x00, 0x14,
+	0x08, 0x3A, 0x00, 0x02, 0x00, 0x20, 0x2C, 0x08
+};
 
 void ppu_tick(void) {
 	/* aggiungo i cicli della cpu trascorsi */
@@ -1022,16 +1028,7 @@ BYTE ppu_turn_on(void) {
 			/* inizializzo nametables */
 			memset(ntbl.data, 0x00, sizeof(ntbl.data));
 			/* e paletta dei colori */
-			// Super 8-in-1 (with Rockin' Kats)(Unl)[U][!].nes
-			// non inizializza tutti i colori della paletta lasciandone alcuni al
-			// valore impostato all'avvio o impostato da uno sei sottogiochi.
-			// Se inizializzo a 0x3F non si vedono alcuni sprites ma soprattutto
-			// non e' visibile la freccia del menu.
-			if ((info.mapper.id == UNIF_MAPPER) && (unif.internal_mapper == 48)) {
-				memset(palette.color, 0x00, sizeof(palette.color));
-			} else {
-				memset(palette.color, 0x3F, sizeof(palette.color));
-			}
+			memcpy(palette.color, palette_init, sizeof(palette.color));
 		}
 	} else {
 		memset(&r2000, 0x00, sizeof(r2000));
