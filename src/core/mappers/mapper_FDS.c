@@ -55,21 +55,20 @@ void map_init_NSF_FDS(void) {
 void extcl_cpu_every_cycle_FDS(void) {
 	WORD data;
 
-	if (fds.drive.irq_timer_delay && !(--fds.drive.irq_timer_delay)) {
-		fds.drive.irq_timer_high = 0x01;
-		irq.high |= FDS_TIMER_IRQ;
-	}
-
 	/* IRQ handler */
-	if (fds.drive.irq_timer_enabled && fds.drive.irq_timer_counter &&
-			!(--fds.drive.irq_timer_counter)) {
-		if (fds.drive.irq_timer_reload_enabled) {
-			fds.drive.irq_timer_counter = fds.drive.irq_timer_reload;
-		} else {
-			fds.drive.irq_timer_enabled = FALSE;
+	if (fds.drive.enabled_dsk_reg && fds.drive.irq_timer_enabled) {
+		if (fds.drive.irq_timer_counter) {
+			fds.drive.irq_timer_counter--;
 		}
-		/* il solito delay */
-		fds.drive.irq_timer_delay = 1;
+		if (!fds.drive.irq_timer_counter) {
+			if (fds.drive.irq_timer_reload_enabled) {
+				fds.drive.irq_timer_counter = fds.drive.irq_timer_reload;
+			} else {
+				fds.drive.irq_timer_enabled = FALSE;
+			}
+			fds.drive.irq_timer_high = 0x01;
+			irq.high |= FDS_TIMER_IRQ;
+		}
 	}
 
 	/* no disco, no party */
