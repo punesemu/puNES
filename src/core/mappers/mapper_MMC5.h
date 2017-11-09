@@ -51,18 +51,18 @@ struct _mmc5 {
 	BYTE factor[2];
 	WORD product;
 	_apuSquare S3, S4;
-	struct {
+	struct _mmc5_pcm {
 		BYTE enabled;
 		BYTE output;
 		BYTE amp;
+	} pcm;
+	BYTE filler[50];
 
 	/* ------------------------------------------------------- */
 	/* questi valori non e' necessario salvarli nei savestates */
 	/* ------------------------------------------------------- */
 	/* */ BYTE clocked;                                     /* */
 	/* ------------------------------------------------------- */
-	} pcm;
-	BYTE filler[50];
 } mmc5;
 
 void map_init_MMC5(void);

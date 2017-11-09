@@ -284,7 +284,7 @@ EXTERNC _spr_evaluate spr_ev_unl;
 EXTERNC _spr sprite_unl[56], sprite_plus_unl[56];
 EXTERNC _tile tile_render, tile_fetch;
 
-EXTERNC void ppu_tick(WORD cycles_cpu);
+EXTERNC void ppu_tick(void);
 EXTERNC BYTE ppu_turn_on(void);
 EXTERNC void ppu_quit(void);
 EXTERNC void ppu_overclock(BYTE reset_dmc_in_use);

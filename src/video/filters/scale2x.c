@@ -21,6 +21,7 @@
 #include <stdlib.h>
 #endif
 #include "video/filters/scale2x.h"
+#include "ppu.h"
 
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
@@ -87,15 +88,15 @@ gfx_filter_function(scaleNx) {
 	scl2x.startx = 0;
 
 	if (gfx.filter.factor == 2) {
-		scale2x(screen_index, (uint32_t *) palette, pitch, pix);
+		scale2x(screen.line, (uint32_t *) palette, pitch, pix);
 	} else if (gfx.filter.factor == 3) {
-		scale3x(screen_index, (uint32_t *) palette, pitch, pix);
+		scale3x(screen.line, (uint32_t *) palette, pitch, pix);
 	} else if (gfx.filter.factor == 4) {
 		scl4x_buffer.w = SCR_ROWS * 2;
 		scl4x_buffer.h = SCR_LINES * 2;
 		scl4x_buffer.pitch = scl4x_buffer.w * sizeof(uint32_t);
 		scl4x_buffer.size = scl4x_buffer.pitch * scl4x_buffer.h;
-		scale4x(screen_index, (uint32_t *) palette, pitch, pix);
+		scale4x(screen.line, (uint32_t *) palette, pitch, pix);
 	}
 }
 void INLINE scale2x(WORD **screen_index, uint32_t *palette, uint32_t pitch, void *pix) {

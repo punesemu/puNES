@@ -137,27 +137,25 @@ enum apu_mode { APU_60HZ, APU_48HZ };
 	 * risultante e' troppo alta (oltre i 20 kHz,\
 	 * quindi non udibile), percio' la taglio.\
 	 */\
+	TR.output = triangle_duty[TR.sequencer];\
 	if (TR.timer < 2) {\
 		TR.output = triangle_duty[8];\
-	} else {\
-		TR.output = triangle_duty[TR.sequencer];\
 	}
 #define noise_output()\
 	envelope_volume(NS)\
+	NS.output = 0;\
 	if (NS.length.value && !(NS.shift & 0x0001)) {\
 		NS.output = NS.volume;\
-	} else {\
-		NS.output = 0;\
 	}
 #define dmc_output()\
 	DMC.output = DMC.counter & 0x7F
 /* tick */
-#define square_tick(square, swap)\
+#define square_tick(square, swap, type)\
 	if (!(--square.frequency)) {\
 		square_output(square, swap)\
 		square.frequency = (square.timer + 1) << 1;\
 		square.sequencer = (square.sequencer + 1) & 0x07;\
-		square.clocked = TRUE;\
+		type.clocked = TRUE;\
 	}
 #define triangle_tick()\
 	if (!(--TR.frequency)) {\
@@ -165,7 +163,7 @@ enum apu_mode { APU_60HZ, APU_48HZ };
 		if (TR.length.value && TR.linear.value) {\
 			TR.sequencer = (TR.sequencer + 1) & 0x1F;\
 			triangle_output()\
-			TR.clocked = TRUE;\
+			apu.clocked = TRUE;\
 		}\
 	}
 #define noise_tick()\
@@ -178,7 +176,7 @@ enum apu_mode { APU_60HZ, APU_48HZ };
 		NS.shift &= 0x7FFF;\
 		noise_output()\
 		NS.frequency = noise_timer[apu.type][NS.timer];\
-		NS.clocked = TRUE;\
+		apu.clocked = TRUE;\
 	}
 #define dmc_tick()\
 	if (!(--DMC.frequency)) {\
@@ -206,7 +204,7 @@ enum apu_mode { APU_60HZ, APU_48HZ };
 			}\
 		}\
 		DMC.frequency = dmc_rate[apu.type][DMC.rate_index];\
-		DMC.clocked = TRUE;\
+		apu.clocked = TRUE;\
 	}\
 	if (DMC.empty && DMC.remain) {\
 		BYTE tick = 4;\
@@ -394,6 +392,12 @@ typedef struct _apu {
 	BYTE length_clocked;
 	BYTE DMC;
 	SWORD cycles;
+
+	/* ------------------------------------------------------- */
+	/* questi valori non e' necessario salvarli nei savestates */
+	/* ------------------------------------------------------- */
+	/* */ BYTE clocked;                                     /* */
+	/* ------------------------------------------------------- */
 } _apu;
 typedef struct _r4011 {
 	BYTE value;
@@ -457,12 +461,6 @@ typedef struct _apuSquare {
 	_length_counter length;
 	/* output */
 	SWORD output;
-
-/* ------------------------------------------------------- */
-/* questi valori non e' necessario salvarli nei savestates */
-/* ------------------------------------------------------- */
-/* */ BYTE clocked;                                     /* */
-/* ------------------------------------------------------- */
 } _apuSquare;
 typedef struct _apuTriangle {
 	/* timer */
@@ -477,12 +475,6 @@ typedef struct _apuTriangle {
 	BYTE sequencer;
 	/* output */
 	SWORD output;
-
-/* ------------------------------------------------------- */
-/* questi valori non e' necessario salvarli nei savestates */
-/* ------------------------------------------------------- */
-/* */ BYTE clocked;                                     /* */
-/* ------------------------------------------------------- */
 } _apuTriangle;
 typedef struct _apuNoise {
 	/* timer */
@@ -503,12 +495,6 @@ typedef struct _apuNoise {
 	BYTE sequencer;
 	/* output */
 	SWORD output;
-
-/* ------------------------------------------------------- */
-/* questi valori non e' necessario salvarli nei savestates */
-/* ------------------------------------------------------- */
-/* */ BYTE clocked;                                     /* */
-/* ------------------------------------------------------- */
 } _apuNoise;
 typedef struct _apuDMC {
 	/* ogni quanti cicli devo generare un output */
@@ -538,12 +524,6 @@ typedef struct _apuDMC {
 
 	/* misc */
 	BYTE tick_type;
-
-/* ------------------------------------------------------- */
-/* questi valori non e' necessario salvarli nei savestates */
-/* ------------------------------------------------------- */
-/* */ BYTE clocked;                                     /* */
-/* ------------------------------------------------------- */
 }  _apuDMC;
 
 #if defined (__cplusplus)
@@ -668,7 +648,7 @@ static const WORD dmc_rate[3][16] = {
 	}
 };
 
-EXTERNC void apu_tick(SWORD cycles_cpu, BYTE *hwtick);
+EXTERNC void apu_tick(BYTE *hwtick);
 EXTERNC void apu_turn_on(void);
 
 #undef EXTERNC

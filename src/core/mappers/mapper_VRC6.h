@@ -32,12 +32,6 @@ typedef struct _vrc6_square {
 	WORD timer;
 	WORD frequency;
 	SWORD output;
-
-/* ------------------------------------------------------- */
-/* questi valori non e' necessario salvarli nei savestates */
-/* ------------------------------------------------------- */
-/* */ BYTE clocked;                                     /* */
-/* ------------------------------------------------------- */
 } _vrc6_square;
 typedef struct _vrc6_saw {
 	BYTE enabled;
@@ -47,13 +41,8 @@ typedef struct _vrc6_saw {
 	WORD timer;
 	WORD frequency;
 	SWORD output;
-
-/* ------------------------------------------------------- */
-/* questi valori non e' necessario salvarli nei savestates */
-/* ------------------------------------------------------- */
-/* */ BYTE clocked;                                     /* */
-/* ------------------------------------------------------- */
 } _vrc6_saw;
+
 struct _vrc6 {
 	BYTE enabled;
 	BYTE reload;
@@ -66,6 +55,12 @@ struct _vrc6 {
 	WORD prescaler;
 	_vrc6_square S3, S4;
 	_vrc6_saw saw;
+
+	/* ------------------------------------------------------- */
+	/* questi valori non e' necessario salvarli nei savestates */
+	/* ------------------------------------------------------- */
+	/* */ BYTE clocked;                                     /* */
+	/* ------------------------------------------------------- */
 } vrc6;
 
 void map_init_VRC6(BYTE revision);

@@ -21,6 +21,7 @@
 #include <stdlib.h>
 #endif
 #include "video/filters/ntsc.h"
+#include "ppu.h"
 #include "overscan.h"
 
 nes_ntsc_t *ntsc;
@@ -40,8 +41,8 @@ gfx_filter_function(ntsc_surface) {
 		palette = (void *) ntsc;
 	}
 
-	nes_ntsc_blit((nes_ntsc_t *) palette, screen, SCR_ROWS, burst_phase, SCR_ROWS, SCR_LINES, pix,
-			pitch);
+	nes_ntsc_blit((nes_ntsc_t *) palette, screen.data, SCR_ROWS, burst_phase, SCR_ROWS, SCR_LINES,
+			pix, pitch);
 
 	for (y = ((height / gfx.filter.factor) - 1); --y >= 0;) {
 		unsigned char const *in = ((const unsigned char *) pix) + (y * pitch);

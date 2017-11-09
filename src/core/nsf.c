@@ -358,7 +358,7 @@ void nsf_init_tune(void) {
 
 	nsf_reset_timers();
 }
-void nsf_tick(WORD cycles_cpu) {
+void nsf_tick(void) {
 	if (nsf.rate.count && (--nsf.rate.count == 0)) {
 		nsf.frames++;
 		nsf.rate.count = nsf.rate.reload;

@@ -19,8 +19,7 @@
 /* definizione funzione virtuale */
 #if !defined (gfx_filter_function)
 #define gfx_filter_function(name)\
-	void name(WORD *screen, WORD **screen_index, void *palette, uint32_t pitch, void *pix,\
-	WORD width, WORD height)
+	void name(void *palette, uint32_t pitch, void *pix, WORD width, WORD height)
 #endif
 
 #ifndef GFX_H_

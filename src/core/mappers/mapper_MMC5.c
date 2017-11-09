@@ -291,7 +291,7 @@ void extcl_cpu_wr_mem_MMC5(WORD address, BYTE value) {
 			if (mmc5.pcm.enabled) {
 				mmc5.pcm.output = mmc5.pcm.amp;
 			}
-			mmc5.pcm.clocked = TRUE;
+			mmc5.clocked = TRUE;
 			return;
 		case 0x5011:
 			mmc5.pcm.amp = value;
@@ -299,7 +299,7 @@ void extcl_cpu_wr_mem_MMC5(WORD address, BYTE value) {
 			if (mmc5.pcm.enabled) {
 				mmc5.pcm.output = mmc5.pcm.amp;
 			}
-			mmc5.pcm.clocked = TRUE;
+			mmc5.clocked = TRUE;
 			return;
 		case 0x5015:
 			if (!(mmc5.S3.length.enabled = value & 0x01)) {
@@ -713,8 +713,8 @@ void extcl_envelope_clock_MMC5(void) {
 	envelope_run(mmc5.S4)
 }
 void extcl_apu_tick_MMC5(void) {
-	square_tick(mmc5.S3, 0)
-	square_tick(mmc5.S4, 0)
+	square_tick(mmc5.S3, 0, mmc5)
+	square_tick(mmc5.S4, 0, mmc5)
 }
 
 static void INLINE prg_swap(void) {

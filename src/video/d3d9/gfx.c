@@ -667,9 +667,7 @@ void gfx_draw_screen(BYTE forced) {
 			// lock della surface in memoria
 			IDirect3DSurface9_LockRect(scrtex->offscreen, &lrect, NULL, D3DLOCK_DISCARD);
 			// applico l'effetto
-			gfx.filter.func(screen.data,
-					screen.line,
-					palette,
+			gfx.filter.func(palette,
 					lrect.Pitch,
 					lrect.pBits,
 					scrtex->rect.base.w,

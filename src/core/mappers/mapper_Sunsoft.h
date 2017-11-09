@@ -21,7 +21,7 @@
 
 #include "common.h"
 
-enum {
+enum sunsoft_types {
 	SUN1,
 	SUN2A,
 	SUN2B,
@@ -33,19 +33,13 @@ enum {
 	DODGEDANPEI2
 };
 
-typedef struct {
+typedef struct _square_fm7 {
 	BYTE disable;
 	BYTE step;
 	WORD frequency;
 	WORD timer;
 	WORD volume;
 	SWORD output;
-
-/* ------------------------------------------------------- */
-/* questi valori non e' necessario salvarli nei savestates */
-/* ------------------------------------------------------- */
-/* */ BYTE clocked;                                     /* */
-/* ------------------------------------------------------- */
 } _square_fm7;
 
 struct _sunsoft3 {
@@ -59,7 +53,7 @@ struct _sunsoft4 {
 	BYTE mode;
 	BYTE mirroring;
 } s4;
-struct sunsoft_fm7 {
+struct _sunsoft_fm7 {
 	BYTE address;
 	BYTE prg_ram_enable;
 	BYTE prg_ram_mode;
@@ -70,6 +64,12 @@ struct sunsoft_fm7 {
 	BYTE irq_delay;
 	BYTE snd_reg;
 	_square_fm7 square[3];
+
+	/* ------------------------------------------------------- */
+	/* questi valori non e' necessario salvarli nei savestates */
+	/* ------------------------------------------------------- */
+	/* */ BYTE clocked;                                     /* */
+	/* ------------------------------------------------------- */
 } fm7;
 
 void map_init_Sunsoft(BYTE model);

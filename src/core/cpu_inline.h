@@ -1556,7 +1556,7 @@ static void INLINE apu_wr_reg(WORD address, BYTE value) {
 				} else {
 					DMC.counter = DMC.output = value;
 				}
-				DMC.clocked = TRUE;
+				apu.clocked = TRUE;
 
 				r4011.cycles = r4011.frames = 0;
 				r4011.value = value;
@@ -2135,83 +2135,86 @@ static WORD INLINE lend_word(WORD address, BYTE indirect, BYTE make_last_tick_hw
 	return (newAdr);
 }
 static void INLINE tick_hw(BYTE value) {
-	while (value > 0) {
-		if (nsf.enabled) {
-			if (nsf.made_tick) {
-				cpu.opcode_cycle++;
-				nmi.before = nmi.high;
-				irq.before = irq.high;
-				nsf_tick(1);
+	tick_hw_start:
+	if (nsf.enabled) {
+		if (nsf.made_tick) {
+			cpu.opcode_cycle++;
+			nmi.before = nmi.high;
+			irq.before = irq.high;
+			nsf_tick();
 
-				apu_tick(1, &value);
-				cpu.odd_cycle = !cpu.odd_cycle;
-				value--;
-				mod_cycles_op(-=, 1);
-			}
-			return;
+			apu_tick(&value);
+			cpu.odd_cycle = !cpu.odd_cycle;
+			value--;
+			mod_cycles_op(-=, 1);
 		}
-		cpu.opcode_cycle++;
-		nmi.before = nmi.high;
-		irq.before = irq.high;
-		ppu_tick(1);
+		return;
+	}
+	cpu.opcode_cycle++;
+	nmi.before = nmi.high;
+	irq.before = irq.high;
+	ppu_tick();
 
-		if (overclock.in_extra_sclines == FALSE) {
-			apu_tick(1, &value);
+	if (overclock.in_extra_sclines == FALSE) {
+		apu_tick(&value);
+	}
+
+	if (extcl_cpu_every_cycle) {
+		/*
+		 * utilizzato dalle mappers :
+		 * 183
+		 * 222
+		 * Bandai (FCGX)
+		 * FDS
+		 * Futeremedia
+		 * Kaise (ks202)
+		 * Jaleco (SS8806)
+		 * Irem (H3000)
+		 * Namco (163)
+		 * Tengen (Rambo)
+		 * MMC3
+		 * VRC3
+		 * VRC4
+		 * VRC6
+		 * VRC7
+		 * Sunsoft (S3)
+		 * Sunsoft (FM7)
+		 * TxROM
+		 */
+		extcl_cpu_every_cycle();
+	}
+	cpu.odd_cycle = !cpu.odd_cycle;
+	value--;
+	mod_cycles_op(-=, 1);
+
+	r2000.race.ctrl = FALSE;
+	r2001.race.ctrl = FALSE;
+	r2006.race.ctrl = FALSE;
+
+	if (irqA12.present == TRUE) {
+		irqA12.cycles++;
+		irqA12.race.C001 = FALSE;
+	}
+
+	if (vs_system.enabled == TRUE) {
+		if (vs_system.coins.left) {
+			vs_system.coins.left--;
 		}
-
-		if (extcl_cpu_every_cycle) {
-			/*
-			 * utilizzato dalle mappers :
-			 * 183
-			 * 222
-			 * Bandai (FCGX)
-			 * FDS
-			 * Futeremedia
-			 * Kaise (ks202)
-			 * Jaleco (SS8806)
-			 * Irem (H3000)
-			 * Namco (163)
-			 * Tengen (Rambo)
-			 * MMC3
-			 * VRC3
-			 * VRC4
-			 * VRC6
-			 * VRC7
-			 * Sunsoft (S3)
-			 * Sunsoft (FM7)
-			 * TxROM
-			 */
-			extcl_cpu_every_cycle();
+		if (vs_system.coins.right) {
+			vs_system.coins.right--;
 		}
-		cpu.odd_cycle = !cpu.odd_cycle;
-		value--;
-		mod_cycles_op(-=, 1);
-
-		r2000.race.ctrl = FALSE;
-		r2001.race.ctrl = FALSE;
-		r2006.race.ctrl = FALSE;
-
-		if (irqA12.present == TRUE) {
-			irqA12.cycles++;
-			irqA12.race.C001 = FALSE;
+		if (vs_system.coins.service) {
+			vs_system.coins.service--;
 		}
-
-		if (vs_system.enabled == TRUE) {
-			if (vs_system.coins.left) {
-				vs_system.coins.left--;
-			}
-			if (vs_system.coins.right) {
-				vs_system.coins.right--;
-			}
-			if (vs_system.coins.service) {
-				vs_system.coins.service--;
-			}
-			if (++vs_system.watchdog.timer == vs_system.watchdog.next) {
-				vs_system.watchdog.reset = TRUE;
-			}
-			vs_system_r4020_timer(rd)
-			vs_system_r4020_timer(wr)
+		if (++vs_system.watchdog.timer == vs_system.watchdog.next) {
+			vs_system.watchdog.reset = TRUE;
 		}
+		vs_system_r4020_timer(rd)
+		vs_system_r4020_timer(wr)
+	}
+
+	if (value > 0) {
+		goto tick_hw_start;
 	}
 }
 /* --------------------------------------------------------------------------------------------- */

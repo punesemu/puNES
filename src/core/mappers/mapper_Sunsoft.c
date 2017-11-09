@@ -76,7 +76,7 @@
 	if (--fm7.square[sq].timer == 0) {\
 		fm7.square[sq].step = (fm7.square[sq].step + 1) & 0x1F;\
 		fm7.square[sq].timer = fm7.square[sq].frequency + 1;\
-		fm7.square[sq].clocked = TRUE;\
+		fm7.clocked = TRUE;\
 	}\
 	if (!fm7.square[sq].disable) {\
 		/*fm7.square[sq].output = -fm7.square[sq].volume * ((fm7.square[sq].step & 0x10) ? 2 : -2);*/\

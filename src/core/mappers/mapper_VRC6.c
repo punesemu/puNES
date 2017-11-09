@@ -49,7 +49,7 @@ static void INLINE vrc6_update_chr_and_mirroring(void);
 				vrc6.square.output = vrc6.square.volume;\
 			}\
 		}\
-		vrc6.square.clocked = TRUE;\
+		vrc6.clocked = TRUE;\
 	}\
 	if (!vrc6.square.enabled) {\
 		vrc6.square.output = 0;\
@@ -284,7 +284,7 @@ void extcl_apu_tick_VRC6(void) {
 
 	if (--vrc6.saw.timer == 0) {
 		vrc6.saw.timer = vrc6.saw.frequency + 1;
-		vrc6.saw.clocked = TRUE;
+		vrc6.clocked = TRUE;
 
 		if (vrc6.saw.step && !(vrc6.saw.step & 0x01)) {
 			vrc6.saw.internal += vrc6.saw.accumulator;

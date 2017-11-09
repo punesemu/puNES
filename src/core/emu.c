@@ -71,9 +71,7 @@
 	}
 
 #if defined (DEBUG)
-	//WORD PCBREAK = 0xC00B;
 	WORD PCBREAK = 0xC425;
-
 #endif
 
 BYTE emu_frame(void) {
@@ -711,8 +709,8 @@ BYTE emu_turn_on(void) {
 	{
 		BYTE i;
 		for (i = 0; i < 8; i++) {
-			ppu_tick(1);
-			apu_tick(1, NULL);
+			ppu_tick();
+			apu_tick(NULL);
 			cpu.odd_cycle = !cpu.odd_cycle;
 		}
 	}
@@ -850,8 +848,8 @@ BYTE emu_reset(BYTE type) {
 	{
 		BYTE i;
 		for (i = 0; i < 8; i++) {
-			ppu_tick(1);
-			apu_tick(1, NULL);
+			ppu_tick();
+			apu_tick(NULL);
 			cpu.odd_cycle = !cpu.odd_cycle;
 		}
 	}

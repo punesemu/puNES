@@ -665,9 +665,7 @@ void gfx_draw_screen(BYTE forced) {
 	// se il frameskip me lo permette (o se forzato), disegno lo screen
 	if (forced || !ppu.skip_draw) {
 		// applico l'effetto desiderato
-		gfx.filter.func(screen.data,
-				screen.line,
-				palette,
+		gfx.filter.func(palette,
 				opengl.sdl.surface->pitch,
 				opengl.sdl.surface->pixels,
 				opengl.sdl.surface->w,

@@ -185,8 +185,8 @@ void audio_apu_tick_blipbuf(void) {
 		return;
 	}
 
-	if (S1.clocked | S2.clocked | TR.clocked | NS.clocked | DMC.clocked ) {
-		S1.clocked = S2.clocked = TR.clocked = NS.clocked = DMC.clocked = FALSE;
+	if (apu.clocked) {
+		apu.clocked = FALSE;
 		blipbuf.output = (pulse_output() + tnd_output()) * (master_vol / 100);
 		update_tick_ptnd_blbuf(1);
 	} else {
@@ -288,8 +288,8 @@ static void apu_tick_blipbuf_FDS(void) {
 	}
 }
 static void apu_tick_blipbuf_MMC5(void) {
-	if (mmc5.S3.clocked | mmc5.S4.clocked | mmc5.pcm.clocked) {
-		mmc5.S3.clocked = mmc5.S4.clocked = mmc5.pcm.clocked = FALSE;
+	if (mmc5.clocked) {
+		mmc5.clocked = FALSE;
 		blipbuf.output = ch_gain_ext(mmc5.S3.output, 10.0f) + ch_gain_ext(mmc5.S4.output, 10.0f) +
 				ch_gain_ext(mmc5.pcm.output, 2.0f);
 		update_tick_extra_blbuf(mmc5, 1);
@@ -315,8 +315,8 @@ static void apu_tick_blipbuf_Namco_N163(void) {
 	}
 }
 static void apu_tick_blipbuf_Sunsoft_FM7(void) {
-	if (fm7.square[0].clocked | fm7.square[1].clocked | fm7.square[2].clocked) {
-		fm7.square[0].clocked = fm7.square[1].clocked = fm7.square[2].clocked = FALSE;
+	if (fm7.clocked) {
+		fm7.clocked = FALSE;
 		blipbuf.output = ch_gain_ext(fm7.square[0].output, 5.0f) +
 				ch_gain_ext(fm7.square[1].output, 5.0f) + ch_gain_ext(fm7.square[2].output, 5.0f);
 		update_tick_extra_blbuf(fm7, 1);
@@ -325,8 +325,8 @@ static void apu_tick_blipbuf_Sunsoft_FM7(void) {
 	}
 }
 static void apu_tick_blipbuf_VRC6(void) {
-	if (vrc6.S3.clocked | vrc6.S4.clocked | vrc6.saw.clocked) {
-		vrc6.S3.clocked = vrc6.S4.clocked = vrc6.saw.clocked = FALSE;
+	if (vrc6.clocked) {
+		vrc6.clocked = FALSE;
 		blipbuf.output = ch_gain_ext(vrc6.S3.output, 5.0f) + ch_gain_ext(vrc6.S4.output, 5.0f) +
 				ch_gain_ext(vrc6.saw.output, 0.7f);
 		update_tick_extra_blbuf(vrc6, 1);

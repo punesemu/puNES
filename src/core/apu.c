@@ -29,9 +29,9 @@
 #include "mappers.h"
 #include "info.h"
 
-void apu_tick(SWORD cycles_cpu, BYTE *hwtick) {
+void apu_tick(BYTE *hwtick) {
 	/* sottraggo il numero di cicli eseguiti */
-	apu.cycles -= cycles_cpu;
+	apu.cycles--;
 	/*
 	 * questo flag sara' a TRUE solo nel ciclo
 	 * in cui viene eseguito il length counter.
@@ -187,8 +187,8 @@ void apu_tick(SWORD cycles_cpu, BYTE *hwtick) {
 	 * eseguo un ticket per ogni canale
 	 * valorizzandone l'output.
 	 */
-	square_tick(S1, cfg->swap_duty)
-	square_tick(S2, cfg->swap_duty)
+	square_tick(S1, cfg->swap_duty, apu)
+	square_tick(S2, cfg->swap_duty, apu)
 	triangle_tick()
 	noise_tick()
 	dmc_tick()

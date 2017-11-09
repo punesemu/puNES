@@ -17,11 +17,12 @@
  */
 
 #include "video/filters/scale.h"
+#include "ppu.h"
 
 #define put_pixel(type, p0, p1)\
 	*(type *) (dstpix + p0 + p1) = (type) pixel
 
-static void INLINE scale_surface1x(WORD **screen_index, uint32_t *palette, uint32_t pitch, void *pix);
+static void INLINE scale_surface1x(uint32_t *palette, uint32_t pitch, void *pix);
 
 static struct _scl {
 	WORD sx;
@@ -41,9 +42,9 @@ gfx_filter_function(scale_surface) {
 	scl.rows = SCR_ROWS;
 	scl.startx = 0;
 
-	scale_surface1x(screen_index, (uint32_t *) palette, pitch, pix);
+	scale_surface1x((uint32_t *) palette, pitch, pix);
 }
-void INLINE scale_surface1x(WORD **screen_index, uint32_t *palette, uint32_t pitch, void *pix) {
+void INLINE scale_surface1x(uint32_t *palette, uint32_t pitch, void *pix) {
 	const uint32_t dstpitch = pitch;
 	uint8_t *dstpix = (uint8_t *) pix;
 	uint32_t TH0, TW0;
@@ -54,7 +55,7 @@ void INLINE scale_surface1x(WORD **screen_index, uint32_t *palette, uint32_t pit
 		scl.ox = 0;
 		/* loop per l'intera larghezza dell'immagine */
 		for (scl.sx = scl.startx; scl.sx < scl.rows; scl.sx++) {
-			pixel = palette[screen_index[scl.sy][scl.sx]];
+			pixel = palette[screen.line[scl.sy][scl.sx]];
 			/*
 			 * converto il colore nel formato corretto di visualizzazione
 			 * e riempio un rettangolo delle dimensioni del fattore di scala

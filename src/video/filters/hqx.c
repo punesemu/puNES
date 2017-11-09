@@ -17,6 +17,7 @@
  */
 
 #include "video/filters/hqx.h"
+#include "ppu.h"
 
 uint32_t RGBtoYUV[NUM_COLORS];
 uint32_t YUV1, YUV2;
@@ -44,10 +45,10 @@ gfx_filter_function(hqNx) {
 	hqnx.startx = 0;
 
 	if (gfx.filter.factor == 2) {
-		hq2x_32_rb(screen, pix, (uint32_t *) palette);
+		hq2x_32_rb(screen.data, pix, (uint32_t *) palette);
 	} else if (gfx.filter.factor == 3) {
-		hq3x_32_rb(screen, pix, (uint32_t *) palette);
+		hq3x_32_rb(screen.data, pix, (uint32_t *) palette);
 	} else if (gfx.filter.factor == 4) {
-		hq4x_32_rb(screen, pix, (uint32_t *) palette);
+		hq4x_32_rb(screen.data, pix, (uint32_t *) palette);
 	}
 }

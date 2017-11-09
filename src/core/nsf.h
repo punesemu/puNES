@@ -116,7 +116,7 @@ void nsf_init(void);
 void nsf_quit(void);
 BYTE nsf_load_rom(void);
 void nsf_init_tune(void);
-void nsf_tick(WORD cycles_cpu);
+void nsf_tick(void);
 void nsf_reset_prg(void);
 void nsf_reset_timers(void);
 
