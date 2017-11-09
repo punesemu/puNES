@@ -78,7 +78,7 @@ enum overflow_sprite { OVERFLOW_SPR = 3 };
 			 * (in poche parole non vengono disegnati i\
 			 * primi 8 pixel dello screen).\
 			 */\
-			if (r2001.spr_clipping || (ppu.frame_x >= 8)) {\
+			if ((ppu.frame_x >= 8) || r2001.spr_clipping) {\
 				/* indico che uno sprite e' stato trovato */\
 				/*flag_sp = TRUE;*/\
 				/*\
@@ -171,6 +171,11 @@ void ppu_tick(void) {
 
 	while (ppu.cycles >= machine.ppu_divide) {
 		r2002.race.sprite_overflow = FALSE;
+
+		/* gestione del delay del bit del grayscale */
+		if (r2001.grayscale_bit.delay && (--r2001.grayscale_bit.delay == 0)) {
+			r2001.color_mode = PPU_CM_GRAYSCALE;
+		}
 
 		/* gestione della seconda scrittura del $2006 */
 		if (r2006.second_write.delay && (--r2006.second_write.delay == 0)) {

@@ -1147,8 +1147,17 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 		/*
 		 * con il bit 0 settato viene indicata
 		 * la modalita' scale di grigio per l'output.
+		 * Sembra proprio che questo bit abbia effetto due pixel dopo essere stato settato
+		 * quindi al terzo pixel.
+		 * http://tasvideos.org/forum/viewtopic.php?p=440662&sid=6a9e6eadb7600425864d6c4e96170223#440662
+		 * nmi_sync test ros (demo_ntsc.nes e demo_pal.nes).
 		 */
-		(value & 0x01) ? (r2001.color_mode = PPU_CM_GRAYSCALE) : (r2001.color_mode = PPU_CM_NORMAL);
+		if (value & 0x01) {
+			r2001.grayscale_bit.delay = 2 + 1;
+		} else {
+			r2001.grayscale_bit.delay = 0;
+			r2001.color_mode = PPU_CM_NORMAL;
+		}
 		/* visibilita' del background */
 		r2001.bck_visible = value & 0x08;
 		/* visibilita' degli sprites */

@@ -39,7 +39,7 @@
 #include "cheat.h"
 #include "info.h"
 
-#define SAVE_VERSION 19
+#define SAVE_VERSION 20
 
 BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp);
 uTCHAR *name_slot_file(BYTE slot);
@@ -786,6 +786,10 @@ BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 		if (save_slot.version >= 19) {
 			save_slot_ele(mode, slot, r2006.second_write.delay)
 			save_slot_ele(mode, slot, r2006.second_write.value)
+		}
+
+		if (save_slot.version >= 20) {
+			save_slot_ele(mode, slot, r2001.grayscale_bit.delay)
 		}
 
 		/*

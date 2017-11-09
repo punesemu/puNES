@@ -190,6 +190,9 @@ typedef struct _r2001 {
 		WORD ctrl;
 		WORD value;
 	} race;
+	struct _r2001_grayscale_bit {
+		BYTE delay;
+	} grayscale_bit;
 } _r2001;
 typedef struct _r2002 {
 	BYTE vblank;
