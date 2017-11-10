@@ -246,7 +246,8 @@ enum inp_element {
 	SET_INP_P4_TURBOB_DELAY,
 
 	SET_INP_CONTROLLER_MODE,
-	SET_INP_LEFTRIGHT
+	SET_INP_LEFTRIGHT,
+	SET_INP_HIDE_ZAPPER_CURSOR
 };
 
 enum set_num_shortcut { SET_MAX_NUM_SC = SET_INP_SC_JOYSTICK_ID - SET_INP_SC_OPEN};
@@ -1088,6 +1089,12 @@ static const _settings inp_cfg[] = {
 	},
 	{
 		uL("system"), uL("permit up+down left+right"), uL("no"),
+		uL("# possible values: yes, no"),
+		NULL,
+		{LENGTH(opt_no_yes), opt_no_yes}
+	},
+	{
+		uL("system"), uL("hide zapper cursor"), uL("no"),
 		uL("# possible values: yes, no"),
 		NULL,
 		{LENGTH(opt_no_yes), opt_no_yes}

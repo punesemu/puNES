@@ -68,6 +68,7 @@ enum port_controllers {
 
 typedef struct _config_input {
 	BYTE permit_updown_leftright;
+	BYTE hide_zapper_cursor;
 	BYTE controller_mode;
 	BYTE expansion;
 #if defined (__WIN32__)

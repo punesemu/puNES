@@ -1129,6 +1129,7 @@ void inpObject::set_kbd_joy_default(_port *port, int index, int mode) {
 }
 void inpObject::set_all_input_default(_config_input *config_input, _array_pointers_port *array) {
 	config_input->permit_updown_leftright = FALSE;
+	config_input->hide_zapper_cursor = FALSE;
 	config_input->controller_mode = CTRL_MODE_NES;
 
 	for (int i = PORT1; i < PORT_MAX; i++) {
@@ -1245,6 +1246,7 @@ void inpObject::to_cfg(QString group) {
 	if ((group == "system") || (group == "all")) {
 		int_to_val(SET_INP_CONTROLLER_MODE, cfg_from_file.input.controller_mode);
 		int_to_val(SET_INP_LEFTRIGHT, cfg_from_file.input.permit_updown_leftright);
+		int_to_val(SET_INP_HIDE_ZAPPER_CURSOR, cfg_from_file.input.hide_zapper_cursor);
 	}
 
 	if ((group == "shortcuts") || (group == "all")) {
@@ -1323,6 +1325,7 @@ void inpObject::fr_cfg(QString group) {
 	if ((group == "system") || (group == "all")) {
 		cfg_from_file.input.controller_mode = val_to_int(SET_INP_CONTROLLER_MODE);
 		cfg_from_file.input.permit_updown_leftright = val_to_int(SET_INP_LEFTRIGHT);
+		cfg_from_file.input.hide_zapper_cursor = val_to_int(SET_INP_HIDE_ZAPPER_CURSOR);
 	}
 
 	if ((group == "shortcuts") || (group == "all")) {

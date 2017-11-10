@@ -243,7 +243,7 @@ BYTE input_draw_target(void) {
 	BYTE i;
 
 	if (vs_system.enabled == TRUE) {
-		if (info.extra_from_db & VSZAPPER) {
+		if ((info.extra_from_db & VSZAPPER) && (cfg->input.hide_zapper_cursor == FALSE)) {
 			return (TRUE);
 		}
 		return (FALSE);
@@ -252,12 +252,16 @@ BYTE input_draw_target(void) {
 	if (cfg->input.controller_mode == CTRL_MODE_FAMICOM) {
 		switch (cfg->input.expansion) {
 			case CTRL_ZAPPER:
+				if (cfg->input.hide_zapper_cursor == FALSE) {
+					return (TRUE);
+				}
+				return (FALSE);
 			case CTRL_OEKA_KIDS_TABLET:
 				return (TRUE);
 		}
 	} else {
 		for (i = PORT1; i < PORT_MAX; i++) {
-			if (port[i].type == CTRL_ZAPPER) {
+			if ((port[i].type == CTRL_ZAPPER) && (cfg->input.hide_zapper_cursor == FALSE)) {
 				return (TRUE);
 			}
 		}

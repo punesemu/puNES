@@ -64,7 +64,9 @@ dlgInput::dlgInput(QWidget *parent = 0) : QDialog(parent) {
 	combobox_cp_init();
 
 	connect(checkBox_Permit_updown, SIGNAL(stateChanged(int)), this,
-			SLOT(s_checkbox_state_changed(int)));
+			SLOT(s_checkbox_permit_updown_leftright_changed(int)));
+	connect(checkBox_Hide_Zapper_cursor, SIGNAL(stateChanged(int)), this,
+			SLOT(s_checkbox_hide_zapper_cursor_changed(int)));
 
 	setup_shortcuts();
 
@@ -227,6 +229,7 @@ void dlgInput::update_dialog() {
 
 	// Misc
 	checkBox_Permit_updown->setChecked(data.settings.permit_updown_leftright);
+	checkBox_Hide_Zapper_cursor->setChecked(data.settings.hide_zapper_cursor);
 
 	// Shortcuts
 	if (comboBox_joy_ID->count() > 1) {
@@ -694,11 +697,18 @@ void dlgInput::s_setup_clicked(bool checked) {
 			break;
 	}
 }
-void dlgInput::s_checkbox_state_changed(int state) {
+void dlgInput::s_checkbox_permit_updown_leftright_changed(int state) {
 	if (state) {
 		data.settings.permit_updown_leftright = true;
 	} else {
 		data.settings.permit_updown_leftright = false;
+	}
+}
+void dlgInput::s_checkbox_hide_zapper_cursor_changed(int state) {
+	if (state) {
+		data.settings.hide_zapper_cursor = true;
+	} else {
+		data.settings.hide_zapper_cursor = false;
 	}
 }
 void dlgInput::s_combobox_joy_activated(int index) {

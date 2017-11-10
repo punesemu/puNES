@@ -86,7 +86,8 @@ class dlgInput : public QDialog, public Ui::Input_dialog {
 		void s_combobox_cexp_activated(int index);
 		void s_combobox_cp_activated(int index);
 		void s_setup_clicked(bool checked);
-		void s_checkbox_state_changed(int state);
+		void s_checkbox_permit_updown_leftright_changed(int state);
+		void s_checkbox_hide_zapper_cursor_changed(int state);
 		void s_combobox_joy_activated(int index);
 		void s_shortcut_clicked(bool checked);
 		void s_keyb_shortcut_default(bool checked);
