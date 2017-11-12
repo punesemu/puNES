@@ -55,6 +55,14 @@
       <source>Defaults</source>
       <translation type="unfinished">Defaults</translation>
     </message>
+    <message>
+      <source>&lt;b&gt;Misc&lt;/b&gt;</source>
+      <translation type="unfinished">&lt;b&gt;Misc&lt;/b&gt;</translation>
+    </message>
+    <message>
+      <source>Swap Duty Cycles</source>
+      <translation type="unfinished">Swap Duty Cycles</translation>
+    </message>
   </context>
   <context>
     <name>Cheats</name>
@@ -224,6 +232,10 @@
     <message>
       <source>Expansion Port</source>
       <translation type="unfinished">Expansion Port</translation>
+    </message>
+    <message>
+      <source>Hide Zapper cursor</source>
+      <translation type="unfinished">Hide Zapper cursor</translation>
     </message>
   </context>
   <context>
@@ -624,6 +636,10 @@
     <message>
       <source>Arkanoid Paddle</source>
       <translation type="unfinished">Arkanoid Paddle</translation>
+    </message>
+    <message>
+      <source>Oeka Kids Tablet</source>
+      <translation type="unfinished">Oeka Kids Tablet</translation>
     </message>
   </context>
   <context>
@@ -1195,14 +1211,6 @@
       <translation type="unfinished">100%</translation>
     </message>
     <message>
-      <source>&amp;Low</source>
-      <translation>&amp;Bassa</translation>
-    </message>
-    <message>
-      <source>&amp;High</source>
-      <translation>&amp;Alta</translation>
-    </message>
-    <message>
       <source>A&amp;PU channels</source>
       <translation>Canali A&amp;PU</translation>
     </message>
@@ -1519,10 +1527,6 @@
       <translation>Ritardo &amp;Canali</translation>
     </message>
     <message>
-      <source>&amp;Quality</source>
-      <translation>&amp;Qualità</translation>
-    </message>
-    <message>
       <source>&amp;Buffer Size factor</source>
       <translation>Fattore dimensione &amp;buffer</translation>
     </message>
@@ -1627,10 +1631,6 @@
       <translation type="unfinished">No Shade&amp;r</translation>
     </message>
     <message>
-      <source>&amp;Black borders in window</source>
-      <translation type="unfinished">&amp;Black borders in window</translation>
-    </message>
-    <message>
       <source>&amp;xBRZ 2X MT</source>
       <translation type="unfinished">&amp;xBRZ 2X MT</translation>
     </message>
@@ -1649,6 +1649,18 @@
     <message>
       <source>&amp;xBRZ 6X MT</source>
       <translation type="unfinished">&amp;xBRZ 6X MT</translation>
+    </message>
+    <message>
+      <source>NSF rom files</source>
+      <translation type="unfinished">NSF rom files</translation>
+    </message>
+    <message>
+      <source>&amp;Black borders in window mode</source>
+      <translation type="unfinished">&amp;Black borders in window mode</translation>
+    </message>
+    <message>
+      <source>Black borders in &amp;fullscreen</source>
+      <translation type="unfinished">Black borders in &amp;fullscreen</translation>
     </message>
   </context>
   <context>
