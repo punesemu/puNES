@@ -2220,7 +2220,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Black borders in fullscreen</string>
+    <string>Black borders in &amp;fullscreen</string>
    </property>
   </action>
   <action name="action_Fsk_0">

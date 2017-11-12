@@ -55,6 +55,14 @@
         <source>Defaults</source>
         <translation>По умолчанию</translation>
     </message>
+    <message>
+        <source>&lt;b&gt;Misc&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Swap Duty Cycles</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Cheats</name>
@@ -223,6 +231,10 @@
     </message>
     <message>
         <source>Expansion Port</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hide Zapper cursor</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -623,6 +635,10 @@
     </message>
     <message>
         <source>Arkanoid Paddle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Oeka Kids Tablet</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1063,14 +1079,6 @@
         <translation>100%</translation>
     </message>
     <message>
-        <source>&amp;Low</source>
-        <translation>&amp;Низкое</translation>
-    </message>
-    <message>
-        <source>&amp;High</source>
-        <translation>&amp;Высокое</translation>
-    </message>
-    <message>
         <source>A&amp;PU channels</source>
         <translation>К&amp;аналы APU</translation>
     </message>
@@ -1193,10 +1201,6 @@
     <message>
         <source>&amp;Channels</source>
         <translation>&amp;Каналы</translation>
-    </message>
-    <message>
-        <source>&amp;Quality</source>
-        <translation>Ка&amp;чество</translation>
     </message>
     <message>
         <source>&amp;Input</source>
@@ -1627,10 +1631,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Black borders in window</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>&amp;xBRZ 2X MT</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1648,6 +1648,18 @@
     </message>
     <message>
         <source>&amp;xBRZ 6X MT</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>NSF rom files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Black borders in window mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Black borders in &amp;fullscreen</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

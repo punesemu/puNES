@@ -39,7 +39,7 @@
 #define GITHUB      "https://github.com/punesemu/puNES"
 #define DONATE      "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=QPPXNRL5NAHDC"
 
-#define COPYRIGTH   " 2017 by " AUTHOR
+#define COPYRIGTH   " 2018 by " AUTHOR
 #define COPYRANSI   "(C)" COPYRIGTH
 #define COPYRUTF8   "&#169;" COPYRIGTH
 

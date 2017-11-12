@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="it_IT">
+<TS version="2.1" language="it_IT">
 <context>
     <name>APU_channels</name>
     <message>
@@ -54,6 +54,14 @@
     <message>
         <source>Defaults</source>
         <translation>Defaults</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Misc&lt;/b&gt;</source>
+        <translation>&lt;b&gt;Altro&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <source>Swap Duty Cycles</source>
+        <translation>Inverti i Duty Cycles</translation>
     </message>
 </context>
 <context>
@@ -219,11 +227,15 @@
     </message>
     <message>
         <source>Ports</source>
-        <translation type="unfinished"></translation>
+        <translation>Porte</translation>
     </message>
     <message>
         <source>Expansion Port</source>
-        <translation type="unfinished"></translation>
+        <translation>Porta di Espansione</translation>
+    </message>
+    <message>
+        <source>Hide Zapper cursor</source>
+        <translation>Nascondi il cursore dello Zapper</translation>
     </message>
 </context>
 <context>
@@ -615,15 +627,19 @@
     </message>
     <message>
         <source>Start/Stop WAV</source>
-        <translation type="unfinished"></translation>
+        <translation>Avvia/Ferma WAV</translation>
     </message>
     <message>
         <source>Snes Mouse</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Arkanoid Paddle</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Oeka Kids Tablet</source>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -936,7 +952,7 @@
     </message>
     <message>
         <source>&amp;Disable Red and Green emphasis swap for PAL/Dendy</source>
-        <translation>&amp;Disabilita inversione dell&apos;emphasis Rosso e Verde per PAL/Dendy</translation>
+        <translation>Disabilita inversione dell&apos;emphasis Rosso e Verde per PAL/Dend&amp;y</translation>
     </message>
     <message>
         <source>Setti&amp;ngs</source>
@@ -1063,14 +1079,6 @@
         <translation>100%</translation>
     </message>
     <message>
-        <source>&amp;Low</source>
-        <translation>&amp;Bassa</translation>
-    </message>
-    <message>
-        <source>&amp;High</source>
-        <translation>&amp;Alta</translation>
-    </message>
-    <message>
         <source>A&amp;PU channels</source>
         <translation>Canali A&amp;PU</translation>
     </message>
@@ -1193,10 +1201,6 @@
     <message>
         <source>&amp;Channels</source>
         <translation>&amp;Canali</translation>
-    </message>
-    <message>
-        <source>&amp;Quality</source>
-        <translation>&amp;Qualità</translation>
     </message>
     <message>
         <source>&amp;Input</source>
@@ -1568,87 +1572,95 @@
     </message>
     <message>
         <source>UNIF rom files</source>
-        <translation type="unfinished"></translation>
+        <translation>Rom UNIF</translation>
     </message>
     <message>
         <source>Firebrandx No&amp;stalgia (FBX)</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Input displa&amp;y</source>
-        <translation type="unfinished"></translation>
+        <translation>Visuali&amp;zzazione dell&apos;input</translation>
     </message>
     <message>
         <source>Disable TV &amp;noise emulation when turned off</source>
-        <translation type="unfinished"></translation>
+        <translation>Disabilita l&apos;emulazio&amp;ne del rumore TV quando spento</translation>
     </message>
     <message>
         <source>Disable sepi&amp;a color on pause</source>
-        <translation type="unfinished"></translation>
+        <translation>Disabilita il &amp;colore seppia quando in pausa</translation>
     </message>
     <message>
         <source>&amp;Disable new menu management</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Disabilita la nuova gestione del menu</translation>
     </message>
     <message>
         <source>Fullscreen in &amp;window</source>
-        <translation type="unfinished"></translation>
+        <translation>Schermo intero in &amp;finestra</translation>
     </message>
     <message>
         <source>Output &amp;Device</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Dispositivo di Uscita</translation>
     </message>
     <message>
         <source>System Default</source>
-        <translation type="unfinished">Default di sistema</translation>
+        <translation>Valori di Default</translation>
     </message>
     <message>
         <source>Start/Stop &amp;WAV recording</source>
-        <translation type="unfinished"></translation>
+        <translation>Avvia/Ferma Registrazione &amp;WAV</translation>
     </message>
     <message>
         <source>Stop &amp;WAV recording</source>
-        <translation type="unfinished"></translation>
+        <translation>Ferma Registrazione &amp;WAV</translation>
     </message>
     <message>
         <source>Start &amp;WAV recording</source>
-        <translation type="unfinished"></translation>
+        <translation>Avvia Registrazione &amp;WAV</translation>
     </message>
     <message>
         <source>MS WAVE files</source>
-        <translation type="unfinished"></translation>
+        <translation>file MS WAVE</translation>
     </message>
     <message>
         <source>Record sound</source>
-        <translation type="unfinished"></translation>
+        <translation>Registra audio</translation>
     </message>
     <message>
         <source>No Shade&amp;r</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Black borders in window</source>
-        <translation type="unfinished"></translation>
+        <translation>Sen&amp;za Shader</translation>
     </message>
     <message>
         <source>&amp;xBRZ 2X MT</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>&amp;xBRZ 3X MT</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>&amp;xBRZ 4X MT</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>&amp;xBRZ 5X MT</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>&amp;xBRZ 6X MT</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
+    </message>
+    <message>
+        <source>NSF rom files</source>
+        <translation>Rom NSF</translation>
+    </message>
+    <message>
+        <source>&amp;Black borders in window mode</source>
+        <translation>&amp;Bordi neri in modalità finestra</translation>
+    </message>
+    <message>
+        <source>Black borders in &amp;fullscreen</source>
+        <translation>Bordi neri in modalità &amp;schermo intero</translation>
     </message>
 </context>
 <context>
