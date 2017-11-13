@@ -86,6 +86,10 @@ EXTERNC struct _fds {
 				uint32_t position;
 			} block_4;
 		} file[0xFF];
+		struct _fds_side_change {
+			BYTE new_side;
+			uint32_t delay;
+		} change;
 		WORD *data;
 		uint32_t counted_files;
 	} side;

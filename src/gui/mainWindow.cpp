@@ -1211,7 +1211,12 @@ void mainWindow::ctrl_disk_side(QAction *action) {
 	} else {
 		action->setEnabled(false);
 	}
-	if (side == fds.drive.side_inserted) {
+
+	if (fds.side.change.new_side == 0xFF) {
+		if (side == fds.drive.side_inserted) {
+			action->setChecked(true);
+		}
+	} else if (side == fds.side.change.new_side) {
 		action->setChecked(true);
 	}
 }
@@ -1821,9 +1826,9 @@ void mainWindow::s_disk_side() {
 	int side = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
 	if (side == 0xFFF) {
-		side = fds.drive.side_inserted;
-		if (++side >= fds.info.total_sides) {
-			side = 0;
+		side = fds.drive.side_inserted ^ 0x01;
+		if (side >= fds.info.total_sides) {
+			return;
 		}
 	}
 
@@ -1831,7 +1836,15 @@ void mainWindow::s_disk_side() {
 		return;
 	}
 
-	fds_disk_op(FDS_DISK_SELECT, side);
+	if (fds.drive.disk_ejected) {
+		fds.side.change.new_side = 0xFF;
+		fds.side.change.delay = 0;
+		fds_disk_op(FDS_DISK_SELECT, side);
+	} else {
+		fds.side.change.new_side = side;
+		fds.side.change.delay = 3000000;
+		fds_disk_op(FDS_DISK_EJECT, 0);
+	}
 
 	update_menu_nes();
 }

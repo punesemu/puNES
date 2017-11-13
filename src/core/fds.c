@@ -42,6 +42,8 @@ typedef struct _fds_diff_ele {
 void fds_init(void) {
 	memset(&fds, 0x00, sizeof(fds));
 
+	fds.side.change.new_side = 0xFF;
+
 	fds.drive.disk_ejected = TRUE;
 	fds.drive.motor_on = TRUE;
 	fds.drive.enabled_dsk_reg = 0x01;
@@ -249,9 +251,7 @@ void fds_disk_op(WORD type, BYTE side_to_insert) {
 #endif
 
 			fds.side.data = (WORD *) malloc(fds.info.sides_size[side_to_insert] * sizeof(WORD));
-
 			fds.side.counted_files = 0xFFFF;
-
 			break;
 	}
 
@@ -405,10 +405,12 @@ void fds_disk_op(WORD type, BYTE side_to_insert) {
 			break;
 		case FDS_DISK_SELECT_AND_INSERT:
 			type = FDS_DISK_INSERT;
+			fds.side.change.new_side = 0xFF;
 			fds.drive.side_inserted = side_to_insert;
 			fds_diff_op(FDS_OP_READ, 0, 0);
 			goto fds_disk_op_start;
 		case FDS_DISK_SELECT:
+			fds.side.change.new_side = 0xFF;
 			fds.drive.side_inserted = side_to_insert;
 			text_add_line_info(1, "Disk [cyan]%d [normal]side [cyan]%c [brown]selected",
 					(fds.drive.side_inserted / 2) + 1, (fds.drive.side_inserted & 0x01) + 'A');

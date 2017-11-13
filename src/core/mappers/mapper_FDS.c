@@ -71,6 +71,14 @@ void extcl_cpu_every_cycle_FDS(void) {
 		}
 	}
 
+	/* se c'e' un delay aspetto */
+	if (fds.side.change.delay > 0) {
+		if (!(--fds.side.change.delay)) {
+			fds_disk_op(FDS_DISK_SELECT_AND_INSERT, fds.side.change.new_side);
+		}
+		return;
+	}
+
 	/* no disco, no party */
 	if (fds.drive.disk_ejected) {
 		fds.drive.delay = 1000;
