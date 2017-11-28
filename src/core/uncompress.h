@@ -24,7 +24,9 @@
 enum uncomp_formats {
 	FMT_NES,
 	FMT_FDS,
-	FMT_FM2
+	FMT_FM2,
+	FMT_UNIF,
+	FMT_NSF
 };
 enum uncomp_misc {
 	UNCOMP_CTRL_FILE_COUNT_ROMS,
@@ -49,8 +51,11 @@ typedef struct _uncomp_file_data {
 
 static const _format_supported format_supported[] = {
 	{ uL(".nes"), FMT_NES },
-	{ uL(".fds"), FMT_FDS }
-	//{ uL(".fm2"), FMT_FM2 }
+	{ uL(".fds"), FMT_FDS },
+	//{ uL(".fm2"), FMT_FM2 },
+	{ uL(".unf"), FMT_UNIF },
+	{ uL(".unif"), FMT_UNIF },
+	{ uL(".nsf"), FMT_NSF }
 };
 
 EXTERNC struct _uncomp {
