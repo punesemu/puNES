@@ -39,7 +39,7 @@
 #include "cheat.h"
 #include "info.h"
 
-#define SAVE_VERSION 20
+#define SAVE_VERSION 21
 
 BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp);
 uTCHAR *name_slot_file(BYTE slot);
@@ -267,7 +267,6 @@ BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 
 	if (mode == SAVE_SLOT_COUNT) {
 		save_slot.tot_size[slot] = 0;
-
 		/*
 		 * forzo la lettura perche' devo sapere la
 		 * versione del file di salvataggio e le informazioni
@@ -276,6 +275,8 @@ BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 		save_slot_int(SAVE_SLOT_READ, slot, save_slot.version)
 		if (save_slot.version < 16) {
 			_save_slot_ele(SAVE_SLOT_READ, slot, save_slot.rom_file, 1024)
+		} else if (save_slot.version < 21) {
+			_save_slot_ele(SAVE_SLOT_READ, slot, save_slot.rom_file, (1024 * sizeof(uTCHAR)))
 		} else {
 			save_slot_ele(SAVE_SLOT_READ, slot, save_slot.rom_file)
 		}
@@ -289,6 +290,8 @@ BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 		save_slot_int(mode, slot, save_slot.version)
 		if (save_slot.version < 16) {
 			_save_slot_ele(mode, slot, save_slot.rom_file, 1024)
+		} else if (save_slot.version < 21) {
+			_save_slot_ele(mode, slot, save_slot.rom_file, (1024 * sizeof(uTCHAR)))
 		} else {
 			save_slot_ele(mode, slot, save_slot.rom_file)
 		}
@@ -302,6 +305,8 @@ BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 		save_slot_int(mode, slot, save_slot.version)
 		if (save_slot.version < 16) {
 			_save_slot_ele(mode, slot, info.rom_file, 1024)
+		} else if (save_slot.version < 21) {
+			_save_slot_ele(mode, slot, info.rom_file, (1024 * sizeof(uTCHAR)))
 		} else {
 			save_slot_ele(mode, slot, info.rom_file)
 		}

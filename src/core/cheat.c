@@ -48,7 +48,7 @@ void gamegenie_reset(void) {
 	}
 }
 void gamegenie_check_rom_present(BYTE print_message) {
-	uTCHAR gg_rom[LENGTH_FILE_NAME_MID];
+	uTCHAR gg_rom[LENGTH_FILE_NAME_LONG];
 
 	usnprintf(gg_rom, usizeof(gg_rom), uL("" uPERCENTs BIOS_FOLDER "/" GGFILE), info.base_folder);
 

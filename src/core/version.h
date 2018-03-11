@@ -24,8 +24,8 @@
 #define VER1        "0"
 #define VER1_INT    0
 
-#define VER2        "102"
-#define VER2_INT    102
+#define VER2        "103"
+#define VER2_INT    103
 
 #if defined (RELEASE)
 #define VERSION     VER1 "." VER2
@@ -39,7 +39,7 @@
 #define GITHUB      "https://github.com/punesemu/puNES"
 #define DONATE      "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=QPPXNRL5NAHDC"
 
-#define COPYRIGTH   " 2018 by " AUTHOR
+#define COPYRIGTH   " 2019 by " AUTHOR
 #define COPYRANSI   "(C)" COPYRIGTH
 #define COPYRUTF8   "&#169;" COPYRIGTH
 

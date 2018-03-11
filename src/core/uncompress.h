@@ -61,9 +61,9 @@ static const _format_supported format_supported[] = {
 EXTERNC struct _uncomp {
 	int files_founded;
 	_uncomp_file_data *file;
-	uTCHAR compress_archive[LENGTH_FILE_NAME_MID];
-	uTCHAR uncompress_file[LENGTH_FILE_NAME_MID];
-	uTCHAR buffer[LENGTH_FILE_NAME_MID];
+	uTCHAR compress_archive[LENGTH_FILE_NAME_LONG];
+	uTCHAR uncompress_file[LENGTH_FILE_NAME_LONG];
+	uTCHAR buffer[LENGTH_FILE_NAME_LONG];
 } uncomp;
 
 EXTERNC BYTE uncomp_init(void);

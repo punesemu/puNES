@@ -1090,7 +1090,7 @@ void map_prg_ram_init(void) {
 		prg.ram_plus_8k = &prg.ram_plus[0];
 		/* controllo se la rom ha una RAM PRG battery packed */
 		if (info.prg.ram.bat.banks && !tas.type) {
-			uTCHAR prg_ram_file[LENGTH_FILE_NAME_MID], basename[255], *fl, *last_dot;
+			uTCHAR prg_ram_file[LENGTH_FILE_NAME_LONG], basename[255], *fl, *last_dot;
 			FILE *fp;
 
 			/* copio il nome del file nella variabile */
@@ -1166,7 +1166,7 @@ void map_prg_ram_memset(void) {
 void map_prg_ram_battery_save(void) {
 	/* se c'e' della PRG Ram battery packed la salvo in un file */
 	if (info.prg.ram.bat.banks) {
-		uTCHAR prg_ram_file[LENGTH_FILE_NAME_MID], basename[255], *fl, *last_dot;
+		uTCHAR prg_ram_file[LENGTH_FILE_NAME_LONG], basename[255], *fl, *last_dot;
 		FILE *fp;
 
 		/* copio il nome del file nella variabile */
@@ -1280,9 +1280,9 @@ void map_set_banks_max_prg(BYTE chip) {
 	info.prg.rom[chip].max.banks_8k_before_last =\
 			(info.prg.rom[chip].banks_8k > 1) ? info.prg.rom[chip].banks_8k - 2 : 0;
 	info.prg.rom[chip].max.banks_4k =
-			(info.prg.rom[chip].banks_8k << 1) ? (info.prg.rom[chip].banks_8k << 1) - 1 : 0;
+			((info.prg.rom[chip].banks_8k << 1) != 0) ? (info.prg.rom[chip].banks_8k << 1) - 1 : 0;
 	info.prg.rom[chip].max.banks_2k =
-			(info.prg.rom[chip].banks_8k << 2) ? (info.prg.rom[chip].banks_8k << 2) - 1 : 0;
+			((info.prg.rom[chip].banks_8k << 2) != 0) ? (info.prg.rom[chip].banks_8k << 2) - 1 : 0;
 }
 void map_set_banks_max_chr(BYTE chip) {
 	info.chr.rom[chip].max.banks_8k =
@@ -1290,7 +1290,7 @@ void map_set_banks_max_chr(BYTE chip) {
 	info.chr.rom[chip].max.banks_4k =
 			info.chr.rom[chip].banks_4k ? info.chr.rom[chip].banks_4k - 1 : 0;
 	info.chr.rom[chip].max.banks_2k =
-			(info.chr.rom[chip].banks_1k >> 1) ? (info.chr.rom[chip].banks_1k >> 1) - 1 : 0;
+			((info.chr.rom[chip].banks_1k >> 1) != 0) ? (info.chr.rom[chip].banks_1k >> 1) - 1 : 0;
 	info.chr.rom[chip].max.banks_1k =
 			info.chr.rom[chip].banks_1k ? info.chr.rom[chip].banks_1k - 1 : 0;
 }

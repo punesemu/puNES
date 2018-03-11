@@ -144,7 +144,7 @@ BYTE fds_load_rom(void) {
 	return (EXIT_OK);
 }
 BYTE fds_load_bios(void) {
-	uTCHAR bios_file[LENGTH_FILE_NAME_MID], *lastSlash;
+	uTCHAR bios_file[LENGTH_FILE_NAME_LONG], *lastSlash;
 	FILE *bios = NULL;
 
 	/*
@@ -420,7 +420,7 @@ void fds_disk_op(WORD type, BYTE side_to_insert) {
 }
 void fds_diff_op(BYTE mode, uint32_t position, WORD value) {
 	if (!fds.info.diff) {
-		uTCHAR file[LENGTH_FILE_NAME_MID];
+		uTCHAR file[LENGTH_FILE_NAME_LONG];
 		uTCHAR ext[10], basename[255], *last_dot;
 
 		gui_utf_basename(info.rom_file, basename, usizeof(basename));
