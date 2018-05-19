@@ -759,6 +759,13 @@ static void *alsa_playback_loop(void *data) {
 
 		th->in_run = TRUE;
 
+		if (snd_pcm_state(th->alsa->playback) == SND_PCM_STATE_PREPARED) {
+			if ((rc = snd_pcm_start(th->alsa->playback)) < 0) {
+				fprintf(stderr, "snd_pcm_start() failed (%s)\n", snd_strerror(rc));
+				continue;
+			}
+		}
+
 		if ((rc = snd_pcm_wait(th->alsa->playback , 100)) < 0) {
 			fprintf(stderr, "snd_pcm_wait() failed (%s)\n", snd_strerror(rc));
 			alsa_xrun_recovery(th->alsa->playback, rc);
@@ -767,7 +774,7 @@ static void *alsa_playback_loop(void *data) {
 
 		// controllo quanti frames alsa sono richiesti
 		if ((avail = snd_pcm_avail_update(th->alsa->playback)) < 0) {
-			fprintf(stderr, "snd_pcm_avail_update() failed (%s)\n", snd_strerror(rc));
+			fprintf(stderr, "snd_pcm_avail_update() failed (%s)\n", snd_strerror(avail));
 			alsa_xrun_recovery(th->alsa->playback, avail);
 			continue;
 		}
@@ -860,5 +867,6 @@ static void INLINE alsa_wr_buf(_alsa *alsa, void *buffer, snd_pcm_sframes_t avai
 
 	if ((rc = alsa->snd_writei(alsa->playback, buffer, avail)) < 0) {
 		fprintf(stderr, "snd_pcm_xxxx_writei failed (%s)\n", snd_strerror(rc));
+		alsa_xrun_recovery(alsa->playback, rc);
 	}
 }
