@@ -288,23 +288,10 @@ AM_COND_IF([PRECOMP_QT],[
 
 ],[
 	AM_COND_IF([ENAB_QT5],[
-		PKG_CHECK_MODULES(QT5, [Qt5Core >= 5.0.0 Qt5Gui >= 5.0.0 Qt5Widgets >= 5.0.0], [
-			QT5_PREFIX="`$PKG_CONFIG --variable=host_bins Qt5Core`"
-			AC_CHECK_TOOLS(MOC, [moc-qt5 moc], no, [$QT5_PREFIX])
-			AC_CHECK_TOOLS(UIC, [uic-qt5 uic], no, [$QT5_PREFIX])
-			AC_CHECK_TOOLS(RCC, [rcc-qt5 rcc], no, [$QT5_PREFIX])
-			AS_IF([test "x$MOC" != xno],[
-				MOC=$QT5_PREFIX/$MOC
-				AC_SUBST([MOC])
-			])
-			AS_IF([test "x$UIC" != xno],[
-				UIC=$QT5_PREFIX/$UIC
-				AC_SUBST([UIC])
-			])
-			AS_IF([test "x$RCC" != xno],[
-				RCC=$QT5_PREFIX/$RCC
-				AC_SUBST([RCC])
-			])
+		PKG_CHECK_MODULES(QT5, [Qt5Core Qt5Gui Qt5Widgets], [
+			MOC="`$PKG_CONFIG --variable=host_bins Qt5Core`/moc"
+			RCC="`$PKG_CONFIG --variable=host_bins Qt5Core`/rcc"
+			UIC="`$PKG_CONFIG --variable=host_bins Qt5Core`/uic"
 		],[
 			AC_MSG_ERROR([Qt5 library not found])
 		])
@@ -312,10 +299,10 @@ AM_COND_IF([PRECOMP_QT],[
 		my_CPPFLAGS+=" ${QT5_CFLAGS}"
 		my_LIBS+=" ${QT5_LIBS}"
 	],[
-		PKG_CHECK_MODULES(QT4, [QtCore >= 4.6.0 QtGui >= 4.6.0], [
-			AC_CHECK_TOOLS(MOC, [moc-qt4 moc])
-			AC_CHECK_TOOLS(UIC, [uic-qt4 uic])
-			AC_CHECK_TOOLS(RCC, [rcc-qt4 rcc])
+		PKG_CHECK_MODULES(QT4, [QtCore >= 4.6.0, QtCore < 5.0.0, QtGui >= 4.6.0, QtGui < 5.0.0], [
+			MOC="`$PKG_CONFIG --variable=moc_location QtCore`"
+			UIC="`$PKG_CONFIG --variable=uic_location QtCore`"
+			RCC="`$PKG_CONFIG --variable=rcc_location QtCore`"
 		],[
 			AC_MSG_ERROR([Qt4 library not found])
 		])
