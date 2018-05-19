@@ -35,6 +35,7 @@ static BYTE INLINE ppu_rd_mem(WORD address) {
 	address &= 0x3FFF;
 
 	if (address < 0x2000) {
+		address &= 0x1FFF;
 		if (extcl_rd_chr) {
 			/*
 			 * utilizzato dalle mappers :

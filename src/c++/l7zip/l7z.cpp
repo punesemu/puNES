@@ -189,7 +189,7 @@ class out_stream: public C7ZipOutStream {
 };
 
 BYTE l7z_init(void) {
-	memset(&l7z, 0x00, sizeof(l7z));
+	l7z = {};
 
 	if (!l7z.lib.Initialize()) {
 		return (EXIT_ERROR);

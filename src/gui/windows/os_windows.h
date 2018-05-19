@@ -31,7 +31,7 @@ Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin);
 #endif
 
 void gui_init(int *argc, char **argv) {
-	memset(&qt, 0, sizeof(qt));
+	qt = {};
 
 	qt.app = new QApplication((*argc), argv);
 

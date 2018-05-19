@@ -64,10 +64,10 @@
 #define save_rom_ext()\
 	gui_utf_basename(info.rom_file, name_file, usizeof(name_file));\
 	if (ustrrchr(name_file, uL('.')) == NULL) {\
-		ustrncpy(ext, uL(".nes"), usizeof(ext));\
+		ustrncpy(ext, uL(".nes"), usizeof(ext) - 1);\
 	} else {\
 		/* salvo l'estensione del file */\
-		ustrncpy(ext, ustrrchr(name_file, uL('.')), usizeof(ext));\
+		ustrncpy(ext, ustrrchr(name_file, uL('.')), usizeof(ext) - 1);\
 	}
 
 #if defined (DEBUG)
@@ -273,9 +273,9 @@ BYTE emu_load_rom(void) {
 	}
 
 	if (info.rom_file[0]) {
-		uTCHAR save_rom_file[LENGTH_FILE_NAME_MID];
+		uTCHAR save_rom_file[LENGTH_FILE_NAME_LONG];
 
-		ustrncpy(save_rom_file, info.rom_file, LENGTH_FILE_NAME_MID);
+		ustrncpy(save_rom_file, info.rom_file, LENGTH_FILE_NAME_LONG);
 
 		save_rom_ext()
 

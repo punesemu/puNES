@@ -349,7 +349,7 @@ void mainWindow::update_window() {
 	statusbar->update_statusbar();
 }
 void mainWindow::change_rom(const uTCHAR *rom) {
-	ustrncpy(info.load_rom_file, rom, usizeof(info.load_rom_file));
+	ustrncpy(info.load_rom_file, rom, usizeof(info.load_rom_file) - 1);
 	gamegenie_reset();
 #if defined (WITH_OPENGL) && defined (__WIN32__)
 	gfx_sdlwe_set(SDLWIN_CHANGE_ROM, SDLWIN_NONE);
@@ -1766,7 +1766,7 @@ void mainWindow::s_open() {
 		change_rom(uQStringCD(fileinfo.absoluteFilePath()));
 
 		ustrncpy(gui.last_open_path, uQStringCD(fileinfo.absolutePath()),
-				usizeof(gui.last_open_path));
+				usizeof(gui.last_open_path) - 1);
 	}
 
 	emu_pause(FALSE);
@@ -1963,7 +1963,7 @@ void mainWindow::s_set_output_device() {
 
 	if (id != id_new) {
 		ustrncpy(cfg->audio_output, (uTCHAR *) snd_list.playback.devices[index].id,
-				usizeof(cfg->audio_output));
+				usizeof(cfg->audio_output) - 1);
 		emu_pause(TRUE);
 		snd_playback_start();
 		emu_pause(FALSE);

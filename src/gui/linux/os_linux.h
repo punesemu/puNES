@@ -28,7 +28,7 @@ void gui_init(int *argc, char **argv) {
 	//setenv("QT_NO_GLIB", "1", 1);
 
 	memset(&gui, 0, sizeof(gui));
-	memset(&qt, 0, sizeof(qt));
+	qt = {};
 
 	qt.app = new QApplication((*argc), argv);
 

@@ -108,9 +108,10 @@ BYTE nsf_load_rom(void) {
 			found = FALSE;
 
 			for (i = 0; i < LENGTH(rom_ext); i++) {
-				uTCHAR rom_file[LENGTH_FILE_NAME_MID];
+				uTCHAR rom_file[LENGTH_FILE_NAME_LONG];
 
-				ustrncpy(rom_file, info.rom_file, usizeof(rom_file));
+				umemset(rom_file, 0x00, usizeof(rom_file));
+				umemcpy(rom_file, info.rom_file, usizeof(rom_file) - 10 - 1);
 				ustrcat(rom_file, rom_ext[i]);
 
 				fp = ufopen(rom_file, uL("rb"));

@@ -1797,7 +1797,7 @@ static void opengl_shader_uni_texture_clear(_shader_uniforms_tex *sut) {
 	sut->tex_coord = -1;
 }
 static void opengl_shader_uni_texture(_shader_uniforms_tex *sut, GLint prg, GLchar *fmt, ...) {
-	char type[50], buff[50];
+	char type[50], buff[100];
 	va_list ap;
 
 	va_start(ap, fmt);
@@ -1824,7 +1824,7 @@ static void opengl_shader_uni_texture(_shader_uniforms_tex *sut, GLint prg, GLch
 static GLint opengl_shader_get_uni(GLuint prog, const char *param) {
 	GLuint i;
 	GLint loc;
-	char buff[50];
+	char buff[200];
 
 	for (i = 0; i < LENGTH(uni_prefixes); i++) {
 		snprintf(buff, sizeof(buff), "%s%s", uni_prefixes[i], param);
@@ -1839,7 +1839,7 @@ static GLint opengl_shader_get_uni(GLuint prog, const char *param) {
 static GLint opengl_shader_get_atr(GLuint prog, const char *param) {
 	GLuint i;
 	GLint loc;
-	char buff[50];
+	char buff[200];
 
 	for (i = 0; i < LENGTH(uni_prefixes); i++) {
 		snprintf(buff, sizeof(buff), "%s%s", uni_prefixes[i], param);
@@ -1989,7 +1989,7 @@ static BYTE opengl_shader_glsl_init(GLuint pass, _shader *shd, GLchar *code, con
 		return (EXIT_ERROR);
 	}
 
-	memset (alias_define, 0x00, sizeof(alias_define));
+	memset(alias_define, 0x00, sizeof(alias_define));
 
 	for (i = 0; i < pass; i++) {
 		_shader_pass *sp = &shader_effect.sp[i];
@@ -1998,7 +1998,7 @@ static BYTE opengl_shader_glsl_init(GLuint pass, _shader *shd, GLchar *code, con
 			char define[128];
 
 			snprintf(define, sizeof(define), "#define %s_ALIAS\n", sp->alias);
-			strncat(alias_define, define, sizeof(define));
+			strncat(alias_define, define, (size_t) sizeof(define));
 		}
 	}
 
@@ -2606,7 +2606,7 @@ static void opengl_shader_cg_uni_texture_clear(_shader_uniforms_tex_cg *sut) {
 static void opengl_shader_cg_uni_texture(_shader_uniforms_tex_cg *sut, _shader_prg_cg *prg,
 		char *fmt, ...) {
 	CGparameter param;
-	char type[50], buff[50];
+	char type[50], buff[100];
 	va_list ap;
 
 	va_start(ap, fmt);

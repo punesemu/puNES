@@ -1966,7 +1966,7 @@ static void d3d9_shader_uni_texture_clear(_shader_uniforms_tex *sut) {
 }
 static void d3d9_shader_uni_texture(_shader_uniforms_tex *sut, _shader_prg_cg *prg, char *fmt, ...) {
 	CGparameter param;
-	char type[50], buff[50];
+	char type[50], buff[100];
 	va_list ap;
 
 	va_start(ap, fmt);
