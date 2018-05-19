@@ -942,6 +942,10 @@ BYTE map_init(void) {
 					// EDU2000
 					map_init_EDU2000();
 					break;
+				case 56:
+					// DREAMTECH01
+					map_init_DREAMTECH01();
+					break;
 			}
 			break;
 	}
