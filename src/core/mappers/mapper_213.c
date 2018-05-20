@@ -30,9 +30,16 @@ void map_init_213(void) {
 void extcl_cpu_wr_mem_213(WORD address, BYTE value) {
 	DBWORD bank;
 
-	value = address >> 1;
-	control_bank(info.prg.rom[0].max.banks_32k)
-	map_prg_rom_8k(4, 0, value);
+	if (address & 0x0040) {
+		value = address & 0x07;
+		control_bank(info.prg.rom[0].max.banks_16k)
+		map_prg_rom_8k(2, 0, value);
+		map_prg_rom_8k(2, 2, value);
+	} else {
+		value = address >> 1;
+		control_bank(info.prg.rom[0].max.banks_32k)
+		map_prg_rom_8k(4, 0, value);
+	}
 	map_prg_rom_8k_update();
 
 	value = address >> 3;
@@ -46,4 +53,10 @@ void extcl_cpu_wr_mem_213(WORD address, BYTE value) {
 	chr.bank_1k[5] = chr_chip_byte_pnt(0, bank | 0x1400);
 	chr.bank_1k[6] = chr_chip_byte_pnt(0, bank | 0x1800);
 	chr.bank_1k[7] = chr_chip_byte_pnt(0, bank | 0x1C00);
+
+	if ((((address & 0x0001) ^ ((address >> 6) & 0x01)))) {
+		mirroring_H();
+	} else {
+		mirroring_V();
+	}
 }
