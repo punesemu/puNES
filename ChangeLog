@@ -1,0 +1,499 @@
+Changelog:
+0.102
+- I had forgotten in release v0.101 to add support for NSF and UNIF files in compressed archives.
+
+0.101
+- Now puNES is UTF-8 compatible.
+- Now puNES is a NSF player.
+- Added support for the mappers: 6, 27, 30, 35, 43, 123, 134, 151, 155, 162, 166, 167, 168, 187, 188, 190, 196, 197, 250, 252, 253, 254.
+- Added support for the UNIF mappers: TF1201, TEK90, EH8813A, Sachen-8259A, 11160, G-146, 12-IN-1, 411120-C, T-262, BS-5, 8157, 830118C, 8237, 8237A, NTD-03, 42in1ResetSwitch, CNROM, Ghostbusters63in1, 64in1NoRepeat, 70in1, 70in1B, H2288, KOF97, 603-5052, CITYFIGHT, TFROM, BB, T-230, 43272, AC-08, KS7013B, SA-72008, MTECH01, UNIF FS304, SA-70037, YOKO, SA-9602B, CC-21, LH32, NovelDiamond9999999in1, SL1632, SA-72007, Sachen-8259B, SHERO, SuperHIK8in1, SMB2J, AX5705, Supervision16in1, SA-0036, GS-2004, GS-2013, KS7012, KS7037, KS7016, KS7017, LH10, KS7032, SC-127, RT-01, MASLIB, BOY, 8-IN-1, HP898F, 158B, 810544-C-A1, KS7031, DRAGONFIGHTER, Super24in1SC03, VRC7.
+- Fixed mappers: 15, 45, 52, 60, 108, 116, 114, 121, 205, 219, MMC5, Tengen, Waixing.
+- Implemented auto eject and auto insert of fds disks when you switch side (ALT+S) or change disk.
+- Added support for multithreading in the xBRZ filter.
+- Added the option to select the output audio device.
+- Added "Fullscreen in window" options.
+- Added "Start/Stop record WAV" to record audio.
+- Added "Hide Zapper cursor" option.
+- Added the Overclocking option.
+- Added full support to XInput (Windows version). No more input lag and no more problem with any controller.
+- Added full support to Vs. System.
+- Eliminated the "Software" mode in OpenGL version.
+- Eliminated dependency from the "autoconf-archive" package.
+- Eliminated the Audio Low Quality option.
+- Separate management of software filters and shader. Many shaders give different results depending on the filter used because they have been designed for an input image of 256 * 240 pixels.
+- Separate management of the size of window and software filters.
+- Rewrote the overscan management.
+- Rewrote the input management and added support for SNES Mouse, Arkanoid Paddle and Oeka Kids Tablet.
+- Eliminated a lot of unnecessary code.
+- Fixed many many bugs and increased the accuracy of emulation.
+- Added other options and features that I don't remember now.
+
+0.100
+- Added support to mapper 40.
+- Fixed aspect ratio of NTSC software filters.
+- (OpenGL) Add the "Disable RGB FBO" option. Some older drivers of video cards do not support them properly altering the color palette with shaders.
+- Added the pixel aspect ratio of PAL TV.
+- Added "xBRZ 5x" and "xBRZ 6x" software filters.
+- Added the possibility to make screenshots (ALT+X) which will be automatically saved in the folder "screenshot" of the base directory.
+- Added "Unlimited sprites" (ALT+U) option.
+- Added "Hide sprites" (ALT+V) and "Hide background" (ALT+B) options.
+
+0.99
+- (Windows) Fixed bug that allows the monitor turned off during a game session.
+- Added "Pause" shortcut.
+- Better support for the submappers in NES 2.0.
+- Fix for recognize correctly the CHR RAM size with the NES 2.0.
+- Fixed saving of the option 'Permit "Up + Down" and "Left + Right"...' in the configuration file.
+- Added two new palettes (Thanks to Firebrandx for his work http://www.firebrandx.com/nespalette.html).
+- Fixed the mirroring in the VRC2 mapper.
+- Added the full support for the RetroArch's shaders (https://github.com/libretro/common-shaders).
+
+    OpenGL version support ".glslp" and ".cgp" (linux version need that is istalled the nvidia-cg-toolkit package) shaders.
+    D3D9 version support only ".cgp" shaders. Then, based on experience made in these months of development, in D3D9 version many shader ".cgp" do not work (such as CRT-royale), it seems that this shaders has been developed for the OpenGL version.
+
+
+0.98 (Bugfix release)
+- Windows: fixed a bug (introduced in the rewriting of the audio subsystem of version 0.97) that did not allow the correct synchronization between threads distorting the sound after a few minutes of use.
+- fixed a typo in the config file configuration for the "panning" option.
+- converted to autotools build system.
+- from now puNES is an open-source project (https://github.com/punesemu/puNES). Among the links now there will always be the source tarball of the latest release. I will continue to release binaries for Linux versions even though I do not think will serve much longer. At compile time, you can specify whether you want to use the QT5 instead of QT4 passing the "--enable-qt5" to configure.
+
+0.97
+- rewritten the audio stack to eliminate problems of lags and crackling.
+- added in the audio settings new option "Buffer Size factor". To a lower value corresponds to a smaller size buffer (less lag but most possible crackles on slower computers). The larger the buffer, the greater the lag but less chance of crackles.
+- added the "Stereo Panning" mode.
+- eliminated the setting "Hide the mouse cursor". Now the mouse cursor is hidden automatically after two seconds of inactivity of the mouse. Appears again to mouse movement.
+- updated the xBRZ to 1.4.
+- added the "Fast Forward" to the shortcuts (keyboard and joystick).
+- added an option to set the velocity of "Fast Forward".
+
+0.96 (Bugfix release)
+- correct all crashes in the SDL windows version caused by the porting to QT.
+- always in the SDL windows version fixed a bug that prevented to hide the mouse cursor.
+- fixed regression in Sunsoft FME-7 mapper that prevented the proper functioning (Dynamite Batman (Japan), Batman - Return of the Joker and other games now works again).
+
+0.95
+- The resampler reviewed and optimized. Now the sound quality is dramatically better and the audio output more accurate and correct.
+- Added a russian translation (many thx to EXL and Eugene.S).
+- Added an option ho hide the mouse cursor.
+- Added a new mouse cursor when using the Zapper.
+- Fixed APU volume sliders that did not work properly.
+- Correct identification of submapper for MMC1 (http://forums.nesdev.com/viewtopic.php?f=3&t=9350&start=90#p153298) and for the mapper 34 (http://forums.nesdev.com/viewtopic.php?f=3&t=9350&start=90#p153334).
+- Fixed a bug in the CHR banking registers of mapper VRC2A (http://forums.nesdev.com/viewtopic.php?f=3&t=6928&start=495#p153176).
+- Tons of others bugfixes.
+
+0.94 (Bigfix release)
+- fixed xBRZ in the D3D9 release.
+- Added the translated english version of "Lagrange Point" to the database.
+
+0.93
+- fixed a bug that does not allow to set properly some sound cards in linux version.
+- fixed the problem with big RAM on FME-7 (http://forums.nesdev.com/viewtopic.php?f=9&t=12467&p=142799).
+- update the xBRZ filter to version 1.3.
+- implemented a management window of cheats. You can import files CHT (FCEUX) and XML (Nestopia).
+I'm going to develop other tools including a debugger, an editor of RAM, a viewer NameTable and more. Given the lack of funds and time I do not know how long it will take but I'm a stubborn and headstrong. Anyone who wanted to support the project (or even offer a beer :wink:) with a donation, can do so through the "Donate" in the About window.
+
+0.92
+- A new icon (thx to Phil Pinsonneault).
+- Added the ability to configure the shortcuts and associate them with a button of the joystick.
+- Increased the number of save slots to 10.
+- Added, in fullscreen mode, an overlay that shows when you select, save or load a save state.
+- Fixed the display of the GUI when you increase or decrease the save slot.
+- Fixed the shortcuts for Inc/Dec save slot (in 0.91, for a mistake, F2 = Inc and F3 = Dec).
+- Fixed a bug that in rare circumstances did not allow the configuration of the joystick.
+- Implemented properly the behavior of the mapper FME-7 (http://forums.nesdev.com/viewtopic.php?f=2&t=12436&start=15#p142263).
+- Fixed the issue with Startropics e Startropics II.
+
+0.91 (Major release)
+- Completely rewritten GUI doing a complete porting to QT. Although user level this leads to a few visual changes, at the level of code management and development time has changed the world. Now I have to maintain a single codebase for all versions drastically reducing the time of development and maintaining a uniform GUI on both platforms. Add new functions is now much easier and faster.
+- Linux version now directly use the ALSA API for the audio.
+- Added the ability to save and load save states directly from the file.
+- Now the shortcuts are reconfigurable (although for now only by editing input.cfg).
+- Added the ability to translate the GUI (for now only English and Italian but if someone wants help...).
+- Fixed a lot of bugs and optimized the code making this version the faster and more precise than ever.
+Although tested on multiple computers (I thank all those who gave me a hand in recent months with testing and suggestions and especially Eugene.S, angrylion and Oldghost) it is possible that there are still bugs. Thanks in advance everyone who will report them to me.
+
+P.s. I recommend you to delete files "puNES.cfg" and "input.cfg" before launching this version.
+
+0.90
+- Fixed a lot of bugs in the mappers MMC1, FM7, 28, 176, 178, and FDS.
+- Full support for the format NES 2.0.
+- Implemented the filter xBRZ.
+- Implemented the UNIF mappers FK23C, FK23CA, D1038, MARIO1-MALEE2.
+Given the large amount of revised code, if someone were to find roms that worked properly with the 0.89 but not with this release, please contact me.
+
+0.89 (Bugfix release)
+In some circumstances, the audio could not be played correctly (crackling and pops). Fixed
+
+0.88
+Added the possibility to save and load the color palette to/from file. The file format is the same used by FCEUX:
+"Palette files are expected to Contain 64 8-bit RGB triplets (each in that order, red comes first in the triplet in the file, then green, then blue).".
+To experiment take a look at this post http://forums.nesdev.com/viewtopic.php?f=21&t=11281
+
+0.87 (Massive bugfix release)
+Fixed all the bugs that did not allow the proper functioning of many gamepads. Are now properly recognized all those tested (XBOX 360 controller, DualShock 2, DualShock 3, DualShock 4, Twin USB Joystick and many other [Thx to Kirkor and to the other "volunteers"]). Linux and Windows versions.
+Added support for the UNIF mappers : UOROM, TC-U01-1.5M, SA-NROM, SLROM, 22211, TLROM, TBROM, TKROM, Sachen-8259C, SA-016-1M, Sachen-8259D, ANROM.
+
+0.86
+Added sample rate of 48 kHz.
+Doubled the overall volume level.
+Starting to implement the UNIF (NROM, NROM-128, NROM-256, Sachen-74LS374N, A65AS) format and the Nes 2.0.
+Fixed obscure bug that occurred when the code was executed from RAM (Tetris 2 + BomBliss (J) [!].nes now works fine).
+Fixed all the bugs with the mapper 31 (2A03 Puritans works well now).
+
+0.85
+I continued to work hard on the synchronization between CPU/PPU and CPU/APU to make it more accurate. Now "Micro Machines (Camerica) [!]. nes" works without any graphical glitches also "Huge Insect (Sachen) [!].nes" finally works perfectly (http://forums.nesdev.com/viewtopic.php?f=3&t=465). Considering that the changes affecting the core of the emulator, I have tested many roms (tests and games) and it seems that everything is running smoothly, but if someone were to find some roms that gives problems with this release, please contact me. Thanks to x0000 for the help on the front of the CPU/APU.
+Fixed some bugs in the handling of compressed files with the game genie active (thx Chad).
+
+0.84
+Added an option to pause the emulator when it is in the background.
+Added the mapper 31 (2A03 Puritans Album http://rainwarrior.ca/projects/nes/2a03puritans.html).
+In the windows version fixed a bug that did not allow proper recognition of the keys with some keyboard layouts.
+Thanks to rom test "scanline.nes" I have corrected a timing issue between the CPU and PPU making it even more accurate, while with the test rom "dpcmletterbox.nes" I found and corrected an error in the management of the color pallete. If someone were to find some rom that worked with previous releases and with this not, please contact me.
+
+0.83
+Added the real TV NTSC pixel aspect ratio and the option to mitigate the effect of the stretch.
+Rewritten and cleaned up the code for the management of shaders (including some shaders like Phosphor).
+With compressed roms the Game Genie did not work. Fixed.
+With the portable version, if you tried to load a compressed rom, the emulator could crash. Fixed.
+
+0.82
+Correct Scale2x with Interpolation active in the SDL version.
+Added options to disable text on screen.
+Added the ability to set the size of the borders of the overscan.
+With the overscan active not passed the correct size of the virtual screen to the shader and this involved distortions (see, for example, the filter "CRT" with overscan active in the old version). Fixed.
+Fixed a bug in the management of the IRQ of the FDS and now "Kaettekita Mario Bros. (1988) (Nintendo) (J). Fds" is fully playable.
+D3D9:
+Fixed a serious bug that did not pass the correct size of the window of the emulator to the shader, producing undesirable results (such as, for example, with the scanlines filter).
+
+0.81
+Added option "TV Aspect Ratio" in the video settings that simulates the screen format of the old televisions (4:3).
+Added option "Interpolation" which enables, regardless of the type of filter used, the bilinear interpolation of the image.
+Set to "1" the default value for the delay of the turbo buttons.
+Fixed a memory leak in version D3D9.
+
+0.80
+Completed porting to DirectX. Both versions are now available for windows (SDL and D3D). I tried to share as much code as possible in order to make maintenance easier and this has led me to heavy internal changes so if someone finds some roms that worked with the previous version, can contact me. In addition, this revision work has brought to light many existing bugs that have been fixed (maybe replaced by others) for all versions (Linux and Windows). I stopped to make a list of all fixes some time ago so I can only advise you to download it, you will find it more stable and more efficient. A big thank you to all those who gave me a hand in the beta testing phase (Eugene.s, Kirkor, OldGhost, kaz321123, sedusg, Darkness Knight, mangamuscle and the other guys).
+
+0.79 (Bugfix release)
+In the Windows version, the implementation of the openbus in the reading of reg $4016 and $4017 I had introduced a bug that did not allow the correct reading of the pressure of the turbo buttons. Correct. (thx qinvhi)
+Always in the Windows version removed the input lag when using joysticks and gamepads. (thx kaz321123)
+Fixed a bug that did not allow for the proper handling of compressed archives with more than 100 roms.
+In preparation of the implementation of the header NES 2.0 I cleaned and reorganized the code of mappers. If someone were to find roms that worked with the previous version but not with this please contact me.
+
+0.78
+Implemented mappers 28, 42, 91, 105, 153.
+Implemented the openbus on the read from $4016 and $4017 (for improved accuracy).
+Improved handling of IRQ in the mapper 64 ("Hard Drivin.nes" now works correctly).
+Linux version:
+I've forgotten to implement the scrollbar in the window of uncompress roms (that only appears when there are more roms in the same archive). Fixed.
+Now the minimum version of supported gtk2 is 2.18, so the emulator can also run on older distributions (eg Ubuntu 10.10 or Linux Mint 9).
+Windows version:
+Fixed a bug in the management of the turbo buttons that did not allow proper operation.
+
+0.77 (Bugfix release)
+In compressed files were not handled correctly the long names of files. Fixed.
+In some circumstances, in the Win64 version, there might be an error loading the necessary dll. Fixed.
+Also in the windows version, it could happen that the list of files in the open rom dialog (Ctrl + O) was not updated when changing the filter. Fixed.
+(thanks to mangamuscle for all reports)
+
+0.76
+Added support for compressed archives.
+For the windows version is required the "7z.dll" (already included in the installation's zip).
+For the linux version is necessary that the package p7zip is installed in the system.
+Compressed archives supported : 7z, ZIP and RAR (in the linux version only if p7zip is istalled with RAR extension).
+If 7zip/p7zip library are not found, are managed natively just zip archives.
+
+0.75
+Implemented mappers 83, 90, 163, 164, 209, 211, 249.
+
+0.74
+Rewrite the GUI for the input configuration that now are more user friendly (at least for me). I've eliminated the check on the conflicts and if you want (for some reason) use the same keyboard/joystick configuration for all players, now you can (for me it was very useful to do so). Adde an option to permit "Up+Down" and "Left+Right".
+Added the support for 4 players (Famicom and Four Score).
+I forgot to add support for the roms with the trainer. Done. Now even the rom "Dragon Ball - Shen Long no Nazo (J) [hM34] [T + Eng1.11_TransBRC]" works.
+
+0.73 (Bugfix release)
+Fixed a problem with the simultaneous pressing of buttons A+B that was not handled correctly;
+
+0.72
+Added a menu that keeps track of the latest opened roms.
+Added the setting of the delay of the stereo effect.
+Added a new configuration window in which you can enable, disable, and adjust the volume of each APU channel.
+Added the setting of the sensitivity of the "TURBO A" and "TURBO B".
+
+0.71 (Bugfix release)
+In linux version the menu bar is not displayed correctly. Fixed.
+
+0.70
+Fixed some memory leaks (thanks to Valgrind).
+A restriction in the code of mapper UnROM prevented the start of the "Battle Kids 2 - Mountain of Torment". Fixed.
+*** Windows Version ***
+In this version I've rewritten from scratch the Audio stack. I abandoned the use of SDL replaced with the XAudio2 (DirectX). With this I hope I have permanently removed the audio lag problem experienced by many.
+Improved handling of reading from gamepads, now the sensitivity and accuracy are significantly better. Increased compatibility with many gamepad (thanks OldGhost).
+Fixed a bug which allowed the start of the screensaver during the game session.
+
+0.69
+MMC3A and MMC3C are now full implemented.
+Fixed a bug in MMC3 code and now the status bar in Mickey's Safari in Letterland is displayed correctly.
+Added an option in the Audio Settings that enables the sound output of a early Famicom-clone consoles (swaps the duty cycles 25% and 50%).
+Fixed a bug introduced in a previous version that did not allow the start of the "Batman - Return of the Joker".
+Added support for Windows 8.
+Added CLI option "--portable" for run puNES in portable mode (is no longer necessary to rename the executable even if it is still possible to do so for backwards compatibility).
+Fixed the display of the parameters of the command line in the Windows version.
+
+0.68 (bugfix release)
+Correct a bug introduced in version 0.66 that in some circumstances, did not allow the filling of the audio buffer in time, producing a sound skipping.
+
+0.67
+Correct the support for the D-pad in the Windows version (reported by Alterac).
+In the "Standard Pad" setup added a button (1 for Keyboard and 1 for Joystick) to unbind all buttons (suggested by Alterac).
+Implemented the support of Drag & Drop of roms directly in the emulator window to load them (suggested by thefox).
+Other small bugfixes.
+
+0.66
+Fixed some little bugs in the apu engine (sweep and triangle) and implemented the non-linearity and interaction between audio channels. Now (finally) the apu_mixer (http://wiki.nesdev.com/w/index.php/Emulator_tests) test roms works well in puNES (I hope).
+
+0.65 (bugfix relase)
+Fixed a small bug introduced in version 0.64.
+Adjusted slightly to stereo mode
+
+0.64
+Rewrite from scratch the audio subsytem and now there are two new options in the "Audio" menu, "Low" and "High" quality.
+"Low" is the old engine, "High" is the new engine. Just try to hear the difference.
+Fixed many bugs in APU emulation which is now much more accurate.
+Added the ability to have a portable version of the emulator. Just rename the executable:
+Linux:
+punes32 -> punes32_p
+punes64 -> punes64_p
+Windows
+punes32.exe -> punes32_p.exe
+punes64.exe -> punes64_p.exe
+When the executable becomes a portable version, it create and use the folder where is the exe as the root folder.
+
+0.63 (bugfix relase)
+Correct a pitch and envelope problem reported from Dwedit (thanks for your help and for your patience).
+Fixed a bug that could create sound skip and noise in the audio buffer.
+Correct a bug introduced in version 0.62 of win64 that did not allow the emulator to start correctly.
+Other small bugfixes.
+
+0.62
+Rewritten from scratch the OpenGL stack. Added new rendering mode "OpenGL GLSL" that use shaders for all filters (except for NTSC and HQ3x), of course if video card and its driver support it. In GLSL mode, add more filters. Many other bugfixes.
+
+0.61
+Added mappers 44, 45, 46, 47, 49, 50, 51, 52, 53, 57, 58, 60, 61, 62, 74, 116, 165, 191, 192, 194, 195, 199, 242, 245, 246.
+
+0.60
+Added Game Genie emulation. You need that the Game Genie rom (that should have the name "gamegenie.rom") is located in "$HOME/.puNES/bios" on linux or "$Documents$/puNES/bios" on Windows.
+Correct a bug in the frameskip code.
+
+0.59
+Added FDS audio channel emulation.
+
+0.58 (bugfix relase)
+Correct a crash with some fds roms (thx Gokun for reporting).
+Help Request:
+Any volunteers who wants draw a new icon? You will be rewarded with a nice cold beer :).
+If anyone is interested can contact me at this address <punes dot emulator at gmail dot com>
+
+0.57
+Added FDS emulation (read and write, not sound yet).You need of the FDS bios rom located in one of these folders:
+1) the working directory,
+2) the folder where is the fds file,
+3) "$HOME/.puNES/bios" on linux or "$Documents$/puNES/bios" on Windows.
+The bios file must be called "disksys.rom" and must have a size of 8192 bytes.
+Added mapper 37.
+Corrected some bugs in the cpu emulation discovered thanks to test roms made by Bisqwit
+(http://nesdev.com/bbs/viewtopic.php?t=8738 and http://nesdev.com/bbs/viewtopic.php?t=8757).
+Fixed a bug that in some circumstances, when attempting to load a save state, it crashed the emulator.
+
+0.56
+Added mappers 200, 201, 202, 203, 204, 205, 207, 212, 213, 214, 215, 216, 217, 222, 240, 241, 244.
+Correct a bug in the Windows version that did not allow proper configuration of some gamepads / joysticks.
+Other bugfixes.
+
+0.55 (bugfix release)
+Fixed another bug in the square emulation.
+Thanks to Eugene.s for the reporting.
+
+0.54 (bugfix release)
+I've forgotten to uncomment same code in new squares emulation that results in distorted sound. Correct.
+
+0.53 (massive bugfix release)
+Correct frequency pitch emulation in Dandy mode.
+Fixed all the bugs that were going to crash the emulator in the Windows version, now are really stable.
+Correct a lots of bugs in the apu emulation and now the sound is much more cleaner and precise.
+Rewrite from scratch the popping sound reducer.
+Thx Eugene.S for suggestions, feedback and patience.
+
+0.52
+Added Dendy Emulation.
+Implemented mappers 221, 225, 226, 227, 228, 229, 230, 231, 233, 234, 235.
+Implemented a sort of "FCEUX Compatibility mode" and now many other FM2 works well (at least several of the most recent).
+Bug Fixes.
+
+0.51
+Added initial support for FM2 files (tas movies). I tested the fm2 files found at http://tasvideos.org/Movies-Verified.html and they all work perfectly. The file must be in the same directory of rom to work properly.
+Added a system to display messages on screen.
+Bug fixes.
+
+0.50
+Implemented mappers VRC6 (24 and 26) and VRC7 (85) including their extra audio channels.
+Added extra audio on the mapper Sunsoft 5B (69).
+
+0.49
+Added emulation of Turbo A and Turbo B on Standard Controller.
+The Zapper coordinates, in some circumstances, could be read wrong, fixed.
+
+0.48
+More accurate Zapper emulation (thx tepples). Right button of mouse emulates the pointing of the Zapper outside the TV screen. So, to make a shoot offscreen, you must press the left mouse button while holding down the right.
+Added Bilinear filter.
+Rearranged the menu filter (Hint: reselect the desired filter and then save the configuration).
+Fixed many bugs in opengl codes (now, on fullscreen, aspect ratio is maintained properly).
+
+0.47
+Added Zapper emulation.
+Lots of bug fixes.
+
+0.46
+Added option to enable or disable the Vsync.
+Added Hqx (2x, 3x, 4x) video filter.
+Added a native version for windows 64bit.
+
+0.45
+Added the option to choose between mono or stereo (default from now) sound.
+OK, I admit, this release is an excuse to wish a happy new year to all you guys!!
+
+0.44 (bugfix release)
+I discovered that the fullscreen does not work properly in a multi-heads scenario. Fixed for both Windows and Linux (xinerama and multi-desktop).
+
+0.43
+Rewritten from scratch sdl sound and optimized most of the code. All this has led an increase in performance between 20 and 30 percent. Now everything is more responsive and fast even on slower computers.
+Added in video settings a "FPS" limiter and a "frame skip" menu to play with in order to find the best configuration for your PC.
+Added "Audio menu".
+Added fastforward key, when you press Shift on the keyboard, the emu runs at double speed.
+
+0.42
+Added a popping sound reducer for games (like Castelvania II, Batman, Ninja Gaiden 3) that have a drum imitation that causing a large jump in the output level for a short period of time through the register $4011 (thx to Eugene.s for the report and Tepples for the help).
+Added "Overscan" option in the video menu that reduce the visible scanline from 240 to 224 by cutting the first and the last 8 scanlines. This setting is specific for the rom in use. If you change it, will be remembered when you open them again. If you set to "Default", puNES will always use the setting checked in "Default value" menu.
+
+0.41 (bugfix release)
+In the previous release I have fixed many bugs but it is also true that others have been added, such as an annoying disturbance of sound that, under certain circumstances, could afflict the windows version. Fixed.
+
+0.40
+I'have rewritten from scratch the input system and now are supported 2 players, joysticks, it's possible redefine the button of the control pad and also I can implement the emulation of other input devices much more easily.
+Fixed various bugs .
+
+0.39
+Implemented mappers 114, 150, 176, 177, 178, 180, 182, 183, 186, 243.
+
+0.38
+Implemented mappers 56, 121, 132, 133, 136, 137, 138, 139, 141, 142, 143, 145, 146, 147, 149, 156, 171, 172, 173, 175, 184, 185, 189, 208.
+
+0.37
+Implemented mappers 16, 108, 112, 113, 115, 117, 118, 119, 120, 148, 158, 159, 193.
+
+0.36
+Fixed a bug in delta modulation channel (DMC) codes that now works well.
+Implemented mappers 69, 70, 76, 77, 79, 80, 82, 86, 88, 89, 93, 94, 95, 96, 97, 99, 107, 152, 154, 206.
+
+0.35
+Fixed a bug in the APU codes that produced a distorted sound in some games.
+Implemented mappers 12, 15, 38, 41, Namcot (19), Irem (32, 65), Tengen (64), Sunsoft (67, 68 ).
+
+0.34
+Implemented Jaleco mappers (18, 72, 78, 87, 92, 140), VRC1 (75), VRC2 (22 and 23), VRC3 (73) and VRC4 (21, 23, 25).
+
+0.33
+Implemented MMC5 mapper (5).
+
+0.32 (bugfix release)
+correct another bug in the save system. I have tested many roms and now everything (hopefully) works perfectly. Delete (for the last time [hopefully]) the directory "save" located in the folder "$HOME/.puNES" on linux or "$Documents$/puNES" on Windows.
+
+0.31
+for a bug in the save system, the file created on a 32bit machine was different from the one created on a 64bit and one created on a Linux system they could not be used on a Windows system. The error has been corrected but the saves already made are no longer usable. Delete the directory "save" located in the folder "$HOME/.puNES" on linux or "$Documents$/puNES" on Windows. To make better use of the combobox, the used slots will have a black text while the empty ones will have gray text, also passing the mouse over the used slots, will be automatically displayed a screenshot captured at the time of the save. For every laoded rom will always be remembered the last used slot.
+In the Windows version I'have redesigned the toolbar.
+
+0.30
+added a save/load state system with 6 slots.
+F1 = save state
+F2 = dec slot
+F3 = inc slot
+F4 = load state
+
+0.29 (bugfix release)
+correct some bugs and redesigned the timeline in the windows version.
+In the linux version i dropped the dependency with some libraries (such as the libpng 1.4) and this should make the emulator also run correctly on distributions like Ubuntu.
+
+0.28
+in this release I have implemented a "Timeline" bar. In the lower left corner there is now a bar with which you can go "back in time" up to a maximum of 60 seconds. Each tick corresponds to 5 seconds. If you don't want to use the mouse you can also use the keyboard. Pressing CTRL will pause the emulator and, while keeping CTRL pressed, you can move the bar with the left and right buttons.
+
+0.27
+I had forgotten to enable the save of configuration, fixed.
+I built an internal database to automatically recognize the rom type (PAL or NTSC). If the Mode is setting to "Auto", the emulator will try to recognize the rom otherwise it will use the preferred mode.
+
+0.26
+Added native GUI for Linux (GTK+2) and for Windows.
+Implemented Taito mapper (33).
+
+0.25
+Implemented Hard Reset (F11 key) and Soft Reset (F12 key).
+Implemented switch from PAL system and NTSC with F8 Key.
+Implemented PPU Open Bus and correct some bugs in DMC emulation.
+Implemented AxROM, BxROM, GxROM and CPROM mappers.
+I finally manage to pass all the Blargg's tests that I've found on the internet (including sprdma_and_dmc_dma.nes and sprdma_and_dmc_dma_512.nes).
+
+0.24
+Implemented emulation of mappers MMC2, MMC4, ColorDreams and Camerica.
+Correct a little bug and now "Time Lord (U) [!].nes" work without glitches.
+
+0.23
+Implemented the save on file for the PRG Ram battery packed.
+Rewrite MMC1 emulation and tested with all GoodNES MMC1 roms.
+Now work without glitches the MMC3 chinese roms that in the previous version had problems (Aladdin 2 (Unl), Bing Kuang Ji Dan Zi - Flighty Chicken (Ch), Chu Han Zheng Ba - The War Between Chu & Han (Ch) an many others).
+
+0.22
+Implemented all illegal opcode.
+Rewrite from scratch MMC3 emulation and now really work with every rom that I've tested (for two weeks I've tryed all 5118 MMC3 GoodNES roms including Blargg mmc3 test) except for few bootleg and some chinese roms (why??).
+Implemented fix for young indiana jones chronicles (thx James).
+
+0.21
+Correct some bugs in the MMC3 (NTSC and PAL) and now
+all the roms that I'have tried works well.
+
+0.20
+Implemented illegal opcode 0x80 for the "Beauty and the Beast (E) [!].nes" rom
+
+0.19
+complete APU emulation.
+This is my first attempt with sdl sound and perhaps there may be some bugs. For now, without the implementation of frameskip, the emulator has to work 100% for not having problems with sound skip and crackle.
+Changed the structure of the code and now the emu takes less than 100Kb.
+Correct many many many bugs.
+
+0.18:
+added AxROM (mapper 7) emulation.
+
+0.17:
+fixed another bug and now Incredible Crash Dummies run without problems.
+
+0.16:
+correct a couple of bugs in the mmc3 emulation.
+
+0.15:
+added MMC3 emulation.
+
+0.14:
+Correct a a bug in the controller routine (thanks Dwedit).
+
+0.13:
+Correct a little bug and now all cpu_interrupts_v2 test roms passed.
+
+0.12:
+Implemented reading of $2004 during the rendering.
+(thx to Quietust for the info and for the read2004.nes test rom).
+
+0.11:
+I worked hard on the CPU and PPU emulation and now many
+of test roms worked perfectly (thanks blargg).
+Added OpenGL support.
+Implemented APU Frame Interrupt (only this for now).
+Many bugs are gone.
