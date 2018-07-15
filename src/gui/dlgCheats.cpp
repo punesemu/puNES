@@ -25,6 +25,7 @@
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QFileDialog>
+#include <QtWidgets/QButtonGroup>
 #endif
 #include "dlgCheats.moc"
 #include "mainWindow.hpp"
