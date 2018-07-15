@@ -47,8 +47,7 @@ typedef struct _js {
 	BYTE inited;
 	GUID guid;
 	void *jdev;
-
-	BYTE (*input_decode_event)(BYTE mode, DBWORD event, BYTE type, _port *port);
+	BYTE (*input_decode_event)(BYTE mode, BYTE autorepeat, DBWORD event, BYTE type, _port *port);
 } _js;
 typedef struct _js_element {
 	DBWORD value;

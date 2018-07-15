@@ -26,6 +26,8 @@
 #include "clock.h"
 #include "save_slot.h"
 #include "gui.h"
+#include "conf.h"
+#include "draw_on_screen.h"
 
 void map_init_NSF(void) {
 	BYTE internal_struct = 0;
@@ -35,6 +37,7 @@ void map_init_NSF(void) {
 	EXTCL_LENGTH_CLOCK(NSF);
 	EXTCL_ENVELOPE_CLOCK(NSF);
 	EXTCL_APU_TICK(NSF);
+	EXTCL_AUDIO_SAMPLES_MOD(nsf);
 	mapper.internal_struct[internal_struct] = (BYTE *) &nsf;
 	mapper.internal_struct_size[internal_struct] = sizeof(nsf);
 	internal_struct++;
@@ -44,7 +47,34 @@ void map_init_NSF(void) {
 	nsf_reset_prg();
 
 	if (info.reset >= HARD) {
-		nsf.song.current = nsf.song.starting - 1;
+		if ((cfg->nsf_player_nsfe_playlist == TRUE) && (nsf.playlist.count > 0)) {
+			nsf.songs.current = nsf.playlist.starting;
+			nsf.playlist.index = 0;
+
+			nsf.scroll_info_nsf.index.count = 0;
+			nsf.scroll_info_nsf.index.start = 0;
+			memset(nsf.scroll_info_nsf.tags, 0x00, sizeof(nsf.scroll_info_nsf.tags));
+
+			nsf.scroll_title_song.index.count = 0;
+			nsf.scroll_title_song.index.start = 0;
+			memset(nsf.scroll_title_song.tags, 0x00, sizeof(nsf.scroll_title_song.tags));
+
+			nsf.curtain_title_song.index = 0;
+			nsf.curtain_title_song.pause = FALSE;
+			nsf.curtain_title_song.redraw.all = TRUE;
+			nsf.curtain_title_song.redraw.bottom = 0;
+			nsf.curtain_title_song.timer = nsf.curtain_title_song.reload.r1;
+			nsf.curtain_title_song.borders.bottom = 0;
+
+			nsf.curtain_info.index = 0;
+			nsf.curtain_info.pause = FALSE;
+			nsf.curtain_info.redraw.all = TRUE;
+			nsf.curtain_info.redraw.bottom = 0;
+			nsf.curtain_info.timer = nsf.curtain_info.reload.r1;
+			nsf.curtain_info.borders.bottom = 0;
+		} else {
+			nsf.songs.current = nsf.songs.starting - 1;
+		}
 	}
 
 	nsf.frames = 0;
@@ -54,6 +84,8 @@ void map_init_NSF(void) {
 
 	nsf.routine.INT_NMI = 2;
 	nsf.routine.INT_RESET = 2;
+
+	nsf.draw_mask = TRUE;
 
 	if (machine.type == NTSC) {
 		nsf.rate.reload = machine.cpu_hz / (1000000.0f / (double) nsf.play_speed.ntsc);
@@ -118,7 +150,7 @@ BYTE extcl_save_mapper_NSF(BYTE mode, BYTE slot, FILE *fp) {
 
 	save_slot_ele(mode, slot, nsf.rate.count);
 
-	save_slot_ele(mode, slot, nsf.song.current);
+	save_slot_ele(mode, slot, nsf.songs.current);
 
 	for (i = 0; i < LENGTH(nsf.prg.rom_4k); i++) {
 		if (nsf.sound_chips.fds) {
@@ -139,11 +171,34 @@ BYTE extcl_save_mapper_NSF(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, nsf.routine.INT_NMI);
 	save_slot_ele(mode, slot, nsf.routine.INT_RESET);
 
-	save_slot_ele(mode, slot, nsf.timers.buttons);
+	save_slot_ele(mode, slot, nsf.timers.button);
 	save_slot_ele(mode, slot, nsf.timers.total_rom);
 	save_slot_ele(mode, slot, nsf.timers.song);
+
+	if (save_slot.version >= 22) {
+		save_slot_ele(mode, slot, nsf.songs.started);
+
+		save_slot_ele(mode, slot, nsf.timers.fadeout);
+		save_slot_ele(mode, slot, nsf.timers.silence);
+
+		save_slot_ele(mode, slot, nsf.playlist.index);
+	}
+
 	if (mode == SAVE_SLOT_READ) {
+		nsf_reset_song_title();
 		nsf_reset_timers();
+
+		nsf.curtain_title_song.redraw.all = TRUE;
+		nsf.curtain_title_song.redraw.bottom = nsf.curtain_title_song.borders.bottom;
+		if (nsf.curtain_title_song.pause == TRUE) {
+			nsf.curtain_title_song.redraw.bottom = dospf(1);
+		}
+
+		nsf.curtain_info.redraw.all = TRUE;
+		nsf.curtain_info.redraw.bottom = nsf.curtain_info.borders.bottom;
+		if (nsf.curtain_info.pause == TRUE) {
+			nsf.curtain_info.redraw.bottom = dospf(1);
+		}
 	}
 
 	if (nsf.sound_chips.vrc6) {

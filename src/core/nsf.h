@@ -23,6 +23,11 @@
 #define nsf_prg_rom_rd(address) nsf.prg.rom_4k[(address >> 12) & 0x07][address & 0x0FFF]
 #define nsf_prg_rom_rd_6xxx(address) nsf.prg.rom_4k_6xxx[(address >> 12) & 0x01][address & 0x0FFF]
 
+enum nsf_mode {
+	NSF_NTSC_MODE,
+	NSF_PAL_MODE,
+	NSF_DUAL_MODE
+};
 enum nsf_states {
 	NSF_STOP = 0x01,
 	NSF_PLAY = 0x02,
@@ -30,6 +35,7 @@ enum nsf_states {
 	NSF_CHANGE_SONG = 0x10,
 	NSF_NEXT = 0x100,
 	NSF_PREV = 0x200,
+	NSF_RESTART_SONG = 0x400,
 };
 enum nsf_routine_bytes {
 	NSF_R_SONG = 1,
@@ -46,10 +52,79 @@ enum nsf_routine_bytes {
 	NSF_R_END = 0x2510,
 	NSF_R_MASK = 0x001F,
 };
+enum nsf_effect_types {
+	NSF_EFFECT_BARS,
+	NSF_EFFECT_RAW,
+	NSF_EFFECT_RAW_FULL,
+	NSF_EFFECT_HANNING,
+	NSF_EFFECT_HANNING_FULL,
+	NSF_EFFECTS
+};
 
-struct _nsf {
+typedef struct _nsf_info_song {
+	int32_t time;
+	int32_t fade;
+	char *track_label;
+} _nsf_info_song;
+typedef struct _nsf_text_scroll {
+	char buffer[2048];
+	char string[1024];
+	char tags[1024];
+	int rows;
+	double timer;
+	double reload;
+	struct _nsf_text_scroll_index {
+		int count;
+		int start;
+	} index;
+} _nsf_text_scroll;
+typedef struct _nsf_text_curtain_line {
+	char *text;
+	int length;
+} _nsf_text_curtain_line;
+typedef struct _nsf_text_curtain {
+	int x, y;
+	int count;
+	int index;
+	int rows;
+	BYTE pause;
+	double timer;
+	_nsf_text_curtain_line *line;
+	struct _nsf_text_curtain_borders {
+		int left;
+		int right;
+		int bottom;
+		int top;
+	} borders;
+	struct _nsf_text_curtain_reload {
+		double r1;
+		double r2;
+	} reload;
+	struct _nsf_redraw {
+		BYTE all;
+		int left;
+		int right;
+		int bottom;
+		int top;
+	} redraw;
+} _nsf_text_curtain;
+typedef struct _nsf_effect_coords {
+	int x1, x2;
+	int y1, y2;
+	int w, h;
+	int y_center;
+} _nsf_effect_coords;
+
+#if defined (__cplusplus)
+#define EXTERNC extern "C"
+#else
+#define EXTERNC
+#endif
+
+EXTERNC struct _nsf {
 	BYTE enabled;
 	BYTE version;
+	BYTE draw_mask;
 	BYTE type;
 	BYTE state;
 	BYTE made_tick;
@@ -63,18 +138,20 @@ struct _nsf {
 		BYTE total;
 		BYTE starting;
 		BYTE current;
-
 		BYTE started;
-	} song;
+	} songs;
 	struct _nsf_address {
 		WORD load;
 		WORD init;
 		WORD play;
 	} adr;
 	struct _nsf_info {
-		char name[32];
-		char artist[32];
-		char copyright[32];
+		char *track_label;
+		char *auth;
+		char *name;
+		char *artist;
+		char *copyright;
+		char *ripper;
 	} info;
 	struct _nsf_play_speed {
 		WORD ntsc;
@@ -103,28 +180,79 @@ struct _nsf {
 		BYTE INT_RESET;
 	} routine;
 	struct _nsf_timers {
-		double buttons[24];
+		BYTE update_only_diff;
+		double button[24];
 		double total_rom;
 		double song;
-		double last_tick;
+		double fadeout;
 		double silence;
-		double last_silence;
+		double last_tick;
+		double diff;
+		double effect;
 	} timers;
+	struct _nsf_playlist {
+		BYTE *data;
+		BYTE index;
+		BYTE starting;
+		uint32_t count;
+	} playlist;
+	struct _nsf_text {
+		BYTE *data;
+		BYTE index;
+		uint32_t count;
+	} text;
+	struct _nsf_options {
+		BYTE visual_duration;
+	} options;
+
+	_nsf_info_song *info_song;
+	_nsf_info_song current_song;
+	_nsf_effect_coords effect_coords;
+	_nsf_effect_coords effect_bars_coords;
+	_nsf_text_scroll scroll_info_nsf;
+	_nsf_text_scroll scroll_title_song;
+	_nsf_text_curtain curtain_title_song;
+	_nsf_text_curtain curtain_info;
 } nsf;
 
-void nsf_init(void);
-void nsf_quit(void);
-BYTE nsf_load_rom(void);
-void nsf_init_tune(void);
-void nsf_tick(void);
-void nsf_reset_prg(void);
-void nsf_reset_timers(void);
+#if defined _NSF_STATIC_
+EXTERNC static char nsf_default_label[4] = {"<?>"};
+EXTERNC static const BYTE nsf_routine[17] = {
+//	0     1
+	0xA9, 0x00,       // 0x2500 : LDA [current song]
+//	2     3
+	0xA2, 0x00,       // 0x2502 : LDX [PAL or NTSC]
+//	4     5     6
+	0x20, 0x00, 0x00, // 0x2504 : JSR [address init routine]
+//	7
+	0x78,             // 0x2507 : SEI
+//	8     9     10
+	0x4C, 0x0E, 0x25, // 0x2508 : JMP 0x250E
+//	11    12    13
+	0x20, 0x00, 0x00, // 0x250B : JSR [address play routine]
+//	14    15    16
+	0x4C, 0x00, 0x25  // 0x250E : JMP [0x250B / 0x250E]
+};
+#endif
 
-void nsf_main_screen(void);
-void nsf_main_screen_event(void);
+EXTERNC void nsf_init(void);
+EXTERNC void nsf_quit(void);
+EXTERNC BYTE nsf_load_rom(void);
+EXTERNC void nsf_after_load_rom(void);
+EXTERNC void nsf_init_tune(void);
+EXTERNC void nsf_tick(void);
+EXTERNC void nsf_reset_prg(void);
+EXTERNC void nsf_reset_timers(void);
+EXTERNC void nsf_reset_song_title(void);
+EXTERNC void extcl_audio_samples_mod_nsf(SWORD *samples, int count);
 
-int nsf_controls_mouse_in_buttons(int x_mouse, int y_mouse);
+EXTERNC void nsf_main_screen(void);
+EXTERNC void nsf_main_screen_event(void);
 
-void nsf_effect(void);
+EXTERNC void nsf_controls_mouse_in_gui(int x_mouse, int y_mouse);
+
+EXTERNC void nsf_effect(void);
+
+#undef EXTERNC
 
 #endif /* NSF_H_ */

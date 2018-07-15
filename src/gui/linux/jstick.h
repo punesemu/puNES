@@ -40,7 +40,7 @@ typedef struct _js {
 	WORD open_try;
 	SWORD last[16];
 	SWORD last_value[16];
-	BYTE (*input_decode_event)(BYTE mode, DBWORD event, BYTE type, _port *port);
+	BYTE (*input_decode_event)(BYTE mode, BYTE autorepeat, DBWORD event, BYTE type, _port *port);
 } _js;
 typedef struct _js_event {
 	/* event timestamp in milliseconds */

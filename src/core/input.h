@@ -108,7 +108,7 @@ typedef struct _port_funct {
 	void (*input_wr)(BYTE *value, BYTE nport);
 	void (*input_rd)(BYTE *value, BYTE nport, BYTE shift);
 	void (*input_add_event)(BYTE index);
-	BYTE (*input_decode_event)(BYTE mode, DBWORD event, BYTE type, _port *port);
+	BYTE (*input_decode_event)(BYTE mode, BYTE autorepeat, DBWORD event, BYTE type, _port *port);
 } _port_funct;
 
 #if defined (__cplusplus)

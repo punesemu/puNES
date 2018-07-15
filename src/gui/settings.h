@@ -28,6 +28,7 @@
 #include "audio/channels.h"
 #include "overscan.h"
 #include "input.h"
+#include "nsf.h"
 
 #if defined (__WIN32__)
 #define NEWLINE "\r\n"
@@ -92,6 +93,9 @@ enum set_element {
 	SET_HIDE_SPRITES,
 	SET_HIDE_BACKGROUND,
 	SET_UNLIMITED_SPRITES,
+	SET_NSF_PLAYER_EFFECT,
+	SET_NSF_PLAYER_NSFE_PLAYLIST,
+	SET_NSF_PLAYER_NSFE_FADEOUT,
 };
 enum pgs_element {
 	SET_PGS_SLOT,
@@ -437,6 +441,13 @@ static const _opt opt_languages[] = {
 	{NULL, uL("english"), LNG_ENGLISH},
 	{NULL, uL("italian"), LNG_ITALIAN},
 	{NULL, uL("russian"), LNG_RUSSIAN}
+};
+static const _opt opt_nsf_player_effect[] = {
+	{NULL, uL("bars"),     NSF_EFFECT_BARS},
+	{NULL, uL("raw"), NSF_EFFECT_RAW},
+	{NULL, uL("raw full"), NSF_EFFECT_RAW_FULL},
+	{NULL, uL("hanning"), NSF_EFFECT_HANNING},
+	{NULL, uL("hannig full"), NSF_EFFECT_HANNING_FULL}
 };
 
 static const _opt opt_slot_pgs[] = {
@@ -824,6 +835,24 @@ static const _settings main_cfg[] = {
 		uL("ppu"), uL("unlimited sprites"), uL("no"),
 		uL("# possible values: yes, no"),
 		uL("    --unlimited-sprites                         : yes, no"),
+		{LENGTH(opt_no_yes), opt_no_yes}
+	},
+	{
+		uL("player"), uL("effect"), uL("bars"),
+		uL("# possible values: bars, raw, raw full, hanning, hanning full"),
+		NULL,
+		{LENGTH(opt_nsf_player_effect), opt_nsf_player_effect}
+	},
+	{
+		uL("player"), uL("enable playlist"), uL("yes"),
+		uL("# possible values: yes, no"),
+		NULL,
+		{LENGTH(opt_no_yes), opt_no_yes}
+	},
+	{
+		uL("player"), uL("enable fadeout song"), uL("yes"),
+		uL("# possible values: yes, no"),
+		NULL,
 		{LENGTH(opt_no_yes), opt_no_yes}
 	}
 };

@@ -60,6 +60,8 @@
 
 /* snd */
 #define EXTCL_SND_PLAYBACK_START(n) extcl_snd_playback_start = extcl_snd_playback_start_##n
+/* audio */
+#define EXTCL_AUDIO_SAMPLES_MOD(n) extcl_audio_samples_mod = extcl_audio_samples_mod_##n
 
 #if defined (__cplusplus)
 #define EXTERNC extern "C"
@@ -127,6 +129,8 @@ EXTERNC void (*extcl_battery_io)(BYTE mode, FILE *fp);
 
 /* snd */
 EXTERNC void (*extcl_snd_playback_start)(WORD samplarate);
+/* audio */
+EXTERNC void (*extcl_audio_samples_mod)(SWORD *samples, int count);
 
 #undef EXTERNC
 

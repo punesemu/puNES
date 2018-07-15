@@ -51,4 +51,6 @@ void extcl_init(void) {
 	extcl_battery_io = NULL;
 	/* snd */
 	extcl_snd_playback_start = NULL;
+	/* audio */
+	extcl_audio_samples_mod = NULL;
 }

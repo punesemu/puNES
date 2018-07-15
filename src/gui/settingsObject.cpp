@@ -790,6 +790,11 @@ void setObject::to_cfg(QString group) {
 		int_to_val(SET_UNLIMITED_SPRITES, cfg_from_file.unlimited_sprites);
 	}
 
+	if ((group == "nsf player") || (group == "all")) {
+		int_to_val(SET_NSF_PLAYER_EFFECT, cfg_from_file.nsf_player_effect);
+		int_to_val(SET_NSF_PLAYER_NSFE_PLAYLIST, cfg_from_file.nsf_player_nsfe_playlist);
+		int_to_val(SET_NSF_PLAYER_NSFE_FADEOUT, cfg_from_file.nsf_player_nsfe_fadeout);
+	}
 }
 void setObject::fr_cfg(QString group) {
 	if ((group == "system") || (group == "all")) {
@@ -867,6 +872,12 @@ void setObject::fr_cfg(QString group) {
 		cfg_from_file.hide_sprites = val_to_int(SET_HIDE_SPRITES);
 		cfg_from_file.hide_background = val_to_int(SET_HIDE_BACKGROUND);
 		cfg_from_file.unlimited_sprites = val_to_int(SET_UNLIMITED_SPRITES);
+	}
+
+	if ((group == "nsf player") || (group == "all")) {
+		cfg_from_file.nsf_player_effect = val_to_int(SET_NSF_PLAYER_EFFECT);
+		cfg_from_file.nsf_player_nsfe_playlist = val_to_int(SET_NSF_PLAYER_NSFE_PLAYLIST);
+		cfg_from_file.nsf_player_nsfe_fadeout = val_to_int(SET_NSF_PLAYER_NSFE_FADEOUT);
 	}
 }
 void setObject::after_the_defaults() {

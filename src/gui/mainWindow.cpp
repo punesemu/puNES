@@ -526,6 +526,8 @@ void mainWindow::update_recent_roms() {
 				action->setIcon(QIcon(":/icon/icons/fm2_file.png"));
 			} else if (!QString::compare(rom.suffix(), "nsf", Qt::CaseInsensitive)) {
 				action->setIcon(QIcon(":/icon/icons/nsf_file.png"));
+			} else if (!QString::compare(rom.suffix(), "nsfe", Qt::CaseInsensitive)) {
+				action->setIcon(QIcon(":/icon/icons/nsf_file.png"));
 			} else {
 				action->setIcon(QIcon(":/icon/icons/nes_file.png"));
 			}
@@ -1730,6 +1732,7 @@ void mainWindow::s_open() {
 	filters.append(tr("UNIF rom files"));
 	filters.append(tr("FDS image files"));
 	filters.append(tr("NSF rom files"));
+	filters.append(tr("NSFE rom files"));
 	filters.append(tr("TAS movie files"));
 	filters.append(tr("All files"));
 
@@ -1739,14 +1742,14 @@ void mainWindow::s_open() {
 	if (l7z_present() == TRUE) {
 		if ((l7z_control_ext(uL("rar")) == EXIT_OK)) {
 			filters[0].append(
-				" (*.zip *.ZIP *.7z *.7Z *.rar *.RAR *.nes *.NES *.unf *.UNF *.unif *.UNIF *.nsf *.NSF *.fds *.FDS *.fm2 *.FM2)");
+				" (*.zip *.ZIP *.7z *.7Z *.rar *.RAR *.nes *.NES *.unf *.UNF *.unif *.UNIF *.nsf *.NSF *.nsfe *.NSFE *.fds *.FDS *.fm2 *.FM2)");
 			filters[1].append(" (*.zip *.ZIP *.7z *.7Z *.rar *.RAR)");
 		} else {
-			filters[0].append(" (*.zip *.ZIP *.7z *.7Z *.nes *.NES *.fds *.FDS *.nsf *.NSF *.fm2 *.FM2)");
+			filters[0].append(" (*.zip *.ZIP *.7z *.7Z *.nes *.NES *.fds *.FDS *.nsf *.NSF *.nsfe *.NSFE *.fm2 *.FM2)");
 			filters[1].append(" (*.zip *.ZIP *.7z *.7Z)");
 		}
 	} else {
-		filters[0].append(" (*.zip *.ZIP *.nes *.NES *.unf *.UNF *.unif *.UNIF *.fds *.FDS *.nsf *.NSF *.fm2 *.FM2)");
+		filters[0].append(" (*.zip *.ZIP *.nes *.NES *.unf *.UNF *.unif *.UNIF *.fds *.FDS *.nsf *.NSF *.nsfe *.NSFE *.fm2 *.FM2)");
 		filters[1].append(" (*.zip *.ZIP)");
 	}
 
@@ -1754,8 +1757,9 @@ void mainWindow::s_open() {
 	filters[3].append(" (*.unf *.UNF *.unif *.UNIF)");
 	filters[4].append(" (*.fds *.FDS)");
 	filters[5].append(" (*.nsf *.NSF)");
-	filters[6].append(" (*.fm2 *.FM2)");
-	filters[7].append(" (*.*)");
+	filters[6].append(" (*.nsfe *.NSFE)");
+	filters[7].append(" (*.fm2 *.FM2)");
+	filters[8].append(" (*.*)");
 
 	file = QFileDialog::getOpenFileName(this, tr("Open File"), uQString(gui.last_open_path),
 		filters.join(";;"));

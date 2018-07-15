@@ -233,6 +233,10 @@ void audio_end_frame_blipbuf(void) {
 
 		snd_playback_lock(SNDCACHE);
 
+		if (extcl_audio_samples_mod) {
+			extcl_audio_samples_mod(blipbuf.samples.data, blipbuf.samples.count);
+		}
+
 		for (i = 0; i < blipbuf.samples.count; i++) {
 			SWORD data = (blipbuf.samples.data[i] * apu_pre_amp) * cfg->apu.volume[APU_MASTER];
 

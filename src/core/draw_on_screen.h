@@ -74,16 +74,22 @@ enum dos_tgs {
 	DOS_TAGS
 };
 
-#define doscolor(clr) dos_table[clr]
+#define dos_text(x, y, ...) _dos_text(x, y, -1, -1, -1, -1, __VA_ARGS__);
 #define dospf(a) (a * 8)
+
+#if defined _DOS_STATIC_
+#define doscolor(clr) dos_table[clr]
 
 static WORD dos_table[] = {
 	0x0030, 0x0026, 0x0038, 0x002A,
 	0x002C, 0x0027, 0x0011, 0x0000,
 	0x000D
 };
+#endif
 
-void dos_text(int x, int y, const char *fmt, ...);
+void _dos_text(int x, int y, int l, int r, int b, int t, const char *fmt, ...);
+int dos_strlen(const char *fmt, ...);
+int dos_is_tag(const char *text, int *tag_founded);
 
 void dos_vline(int x, int y, int h, WORD color);
 void dos_hline(int x, int y, int w, WORD color);

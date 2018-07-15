@@ -71,6 +71,9 @@ typedef struct _config {
 	WORD extra_vb_scanlines;
 	WORD extra_pr_scanlines;
 	BYTE save_battery_ram_file;
+	BYTE nsf_player_effect;
+	BYTE nsf_player_nsfe_playlist;
+	BYTE nsf_player_nsfe_fadeout;
 
 	_config_input input;
 	_config_apu apu;

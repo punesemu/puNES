@@ -46,6 +46,7 @@
 #include "unif.h"
 #include "fds.h"
 #include "nsf.h"
+#include "nsfe.h"
 #include "cheat.h"
 #include "overscan.h"
 #include "recent_roms.h"
@@ -99,6 +100,7 @@ BYTE emu_frame(void) {
 				}
 			}
 
+			extcl_audio_samples_mod_nsf(NULL, 0);
 			nsf_main_screen_event();
 			nsf_effect();
 
@@ -293,6 +295,14 @@ BYTE emu_load_rom(void) {
 			recent_roms_add_wrap()
 		} else if (!ustrcasecmp(ext, uL(".nsf"))) {
 			if (nsf_load_rom() == EXIT_ERROR) {;
+				info.rom_file[0] = 0;
+				text_add_line_info(1, "[red]error loading rom");
+				fprintf(stderr, "error loading rom\n");
+				goto elaborate_rom_file;
+			}
+			recent_roms_add_wrap()
+		} else if (!ustrcasecmp(ext, uL(".nsfe"))) {
+			if (nsfe_load_rom() == EXIT_ERROR) {;
 				info.rom_file[0] = 0;
 				text_add_line_info(1, "[red]error loading rom");
 				fprintf(stderr, "error loading rom\n");
@@ -827,6 +837,10 @@ BYTE emu_reset(BYTE type) {
 
 	/* controller */
 	input_init(SET_CURSOR);
+
+	/* joystick */
+	js_quit(FALSE);
+	js_init(FALSE);
 
 	if (timeline_init()) {
 		return (EXIT_ERROR);

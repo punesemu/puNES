@@ -30,19 +30,19 @@ struct _unif {
 	char *stripped_board;
 	char name[256];
 
-	struct _dumped {
+	struct _unif_dumped {
 		char by[100];
 		BYTE day;
 		BYTE month;
 		WORD year;
 		char with[100];
 	} dumped;
-	struct _header {
+	struct _unif_header {
 		char identification[4];
 		uint32_t revision;
 		BYTE expansion[24];
 	} header;
-	struct _chunk {
+	struct _unif_chunk {
 		char id[4];
 		uint32_t length;
 	} chunk;

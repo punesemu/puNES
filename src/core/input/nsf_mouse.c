@@ -37,33 +37,8 @@ void input_add_event_nsf_mouse(BYTE index) {
 		if (nsf_mouse.pressed) {
 			return;
 		} else {
-			int button;
-
 			input_read_mouse_coords(&x, &y);
-
-			button = nsf_controls_mouse_in_buttons(x, y);
-
-			switch (button) {
-				case NSF_PREV:
-					port->data[LEFT] = PRESSED;
-					break;
-				case NSF_PLAY:
-					if (!(nsf.state & NSF_PLAY)) {
-						port->data[START] = PRESSED;
-					}
-					break;
-				case NSF_PAUSE:
-					if (nsf.state & NSF_PLAY) {
-						port->data[START] = PRESSED;
-					}
-					break;
-				case NSF_STOP:
-					port->data[BUT_A] = PRESSED;
-					break;
-				case NSF_NEXT:
-					port->data[RIGHT] = PRESSED;
-					break;
-			}
+			nsf_controls_mouse_in_gui(x, y);
 			nsf_mouse.pressed = TRUE;
 		}
 		return;
@@ -72,7 +47,7 @@ void input_add_event_nsf_mouse(BYTE index) {
 	if (nsf_mouse.pressed) {
 		port->data[LEFT] = RELEASED;
 		port->data[START] = RELEASED;
-		port->data[START] = RELEASED;
+		port->data[SELECT] = RELEASED;
 		port->data[BUT_A] = RELEASED;
 		port->data[RIGHT] = RELEASED;
 		nsf_mouse.pressed = FALSE;

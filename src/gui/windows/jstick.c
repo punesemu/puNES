@@ -1396,7 +1396,7 @@ static INLINE DBWORD js_update_button(_js *joy, _port *port, joy_states st, BYTE
 		//if (!state)
 		//	wprintf(uL("%d : %s %d\n"), st, jsv_to_name(event), (*mode));
 		if (joy->input_decode_event) {
-			joy->input_decode_event(value, event, JOYSTICK, port);
+			joy->input_decode_event(value, FALSE, event, JOYSTICK, port);
 		}
 	}
 	return (event);
@@ -1428,7 +1428,7 @@ static INLINE DBWORD js_update_axis_float(_js *joy, _port *port, joy_states st, 
 		//if (!state)
 		//	wprintf(uL("%d : %s %d\n"), st, jsv_to_name(event), (*mode));
 		if (joy->input_decode_event) {
-			joy->input_decode_event((*mode), event, JOYSTICK, port);
+			joy->input_decode_event((*mode), FALSE, event, JOYSTICK, port);
 		}
 		return (event);
 	}

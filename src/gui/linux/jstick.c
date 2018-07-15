@@ -115,7 +115,7 @@ void js_control(_js *joy, _port *port) {
 		_js_control()
 
 		if (value && joy->input_decode_event) {
-			joy->input_decode_event(mode, value, JOYSTICK, port);
+			joy->input_decode_event(mode, FALSE, value, JOYSTICK, port);
 		}
 	}
 }

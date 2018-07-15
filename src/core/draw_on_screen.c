@@ -19,7 +19,9 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <string.h>
+#define _DOS_STATIC_
 #include "draw_on_screen.h"
+#undef _DOS_STATIC_
 #include "draw_on_screen_font.h"
 #include "ppu.h"
 
@@ -43,7 +45,7 @@ static char dos_tags[][10] = {
 	"[s5b1]",    "[s5b2]",    "[fds1]",    "[fds2]"
 };
 
-void dos_text(int x, int y, const char *fmt, ...) {
+void _dos_text(int x, int y, int l, int r, int b, int t, const char *fmt, ...) {
 	va_list ap;
 	int i, length = 0, w = 0, pixels = 0;
 	char text[1024];
@@ -54,27 +56,8 @@ void dos_text(int x, int y, const char *fmt, ...) {
 	vsnprintf(text, sizeof(text), fmt, ap);
 	va_end(ap);
 
-	for (i = 0; i < strlen(text); i++) {
-		if (text[i] == '[') {
-			unsigned int tag, found = FALSE;
-
-			for (tag = 0; tag < LENGTH(dos_tags); tag++) {
-				int len = strlen(dos_tags[tag]);
-
-				if (strncmp(text + i, dos_tags[tag], len) == 0) {
-					i += (len - 1);
-					found = TRUE;
-					break;
-				}
-			}
-			if (found) {
-				continue;
-			}
-		}
-		w += 8;
-
-		length++;
-	}
+	length = dos_strlen(text);
+	w = length * 8;
 
 	if (x >= DOS_CENTER) {
 		if (x == DOS_CENTER) {
@@ -677,12 +660,22 @@ void dos_text(int x, int y, const char *fmt, ...) {
 
 				if ((y + y1) >= SCR_LINES) {
 					break;
-				}		
+				} else if ((t >= 0) && ((y + y1) < (y + t))) {
+					font_y++;
+					continue;
+				} else if ((b >= 0) && ((y + y1) > (y + b))) {
+					font_y++;
+					continue;
+				}
 
 				for (x1 = 0; x1 < 8; x1++) {
 					if ((x + x1) >= SCR_ROWS) {
 						break;
-					}		
+					} else if ((l >= 0) && ((x + x1) < (x + l))) {
+						continue;
+					} else if ((r >= 0) && ((x + x1) > (x + r))) {
+						continue;
+					}
 
 					if (list[x1] == '@') {
 						screen.line[y + y1][x + x1] = color;
@@ -700,6 +693,50 @@ void dos_text(int x, int y, const char *fmt, ...) {
 		x += 8;
 		i++;
 	}
+}
+int dos_strlen(const char *fmt, ...) {
+	va_list ap;
+	int i, length = 0, tmp, tag;
+	char text[1024];
+
+	va_start(ap, fmt);
+	vsnprintf(text, sizeof(text), fmt, ap);
+	va_end(ap);
+
+	for (i = 0; i < strlen(text); i++) {
+		if ((text[i] == '[') && ((tmp = dos_is_tag(text + i, &tag)) > 0)) {
+			i += (tmp - 1);
+			if (tag <= DOS_BACKGROUND_COLOR) {
+				continue;
+			}
+		}
+		length++;
+	}
+
+	return (length);
+}
+int dos_is_tag(const char *text, int *tag_founded) {
+	int len = 0;
+
+	if (text[0] == '[') {
+		unsigned int tag;
+		BYTE found = FALSE;
+
+		for (tag = 0; tag < LENGTH(dos_tags); tag++) {
+			len = strlen(dos_tags[tag]);
+
+			if (strncmp(text, dos_tags[tag], len) == 0) {
+				(*tag_founded) = tag;
+				found = TRUE;
+				break;
+			}
+		}
+		if (found == FALSE) {
+			len = 0;
+			(*tag_founded) = -1;
+		}
+	}
+	return (len);
 }
 
 void dos_vline(int x, int y, int h, WORD color) {

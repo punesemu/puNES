@@ -143,7 +143,7 @@ bool screenWidget::eventFilter(QObject *obj, QEvent *event) {
 		if (!tas.type) {
 			for (BYTE i = PORT1; i < PORT_MAX; i++) {
 				if (port_funct[i].input_decode_event && (port_funct[i].input_decode_event(PRESSED,
-						keyval, KEYBOARD, &port[i]) == EXIT_OK)) {
+						keyEvent->isAutoRepeat(), keyval, KEYBOARD, &port[i]) == EXIT_OK)) {
 					return (true);
 				}
 			}
@@ -162,12 +162,20 @@ bool screenWidget::eventFilter(QObject *obj, QEvent *event) {
 		if (!tas.type) {
 			for (BYTE i = PORT1; i < PORT_MAX; i++) {
 				if (port_funct[i].input_decode_event && (port_funct[i].input_decode_event(RELEASED,
-						keyval, KEYBOARD, &port[i]) == EXIT_OK)) {
+						keyEvent->isAutoRepeat(), keyval, KEYBOARD, &port[i]) == EXIT_OK)) {
 					return (true);
 				}
 			}
 		}
 	} else if (event->type() == QEvent::MouseButtonPress) {
+		mouseEvent = ((QMouseEvent *)event);
+
+		if (mouseEvent->button() == Qt::LeftButton) {
+			gmouse.left = TRUE;
+		} else if (mouseEvent->button() == Qt::RightButton) {
+			gmouse.right = TRUE;
+		}
+	} else if (event->type() == QEvent::MouseButtonDblClick) {
 		mouseEvent = ((QMouseEvent *)event);
 
 		if (mouseEvent->button() == Qt::LeftButton) {

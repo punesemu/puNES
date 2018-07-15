@@ -42,6 +42,8 @@ libcore_a_SOURCES = \
 	miniz.h \
 	nsf.c \
 	nsf.h \
+	nsfe.c \
+	nsfe.h \
 	overscan.c \
 	overscan.h \
 	paldef.h \
@@ -90,6 +92,11 @@ libcore_a_SOURCES += \
 	input/vs.c \
 	input/zapper.h \
 	input/zapper.c
+
+libcore_a_SOURCES += \
+	../extra/kiss_fft130/kiss_fft.c \
+	../extra/kiss_fft130/_kiss_fft_guts.h \
+	../extra/kiss_fft130/kiss_fft.h
 
 libcore_a_SOURCES += \
 	mappers/mapper_0.c \

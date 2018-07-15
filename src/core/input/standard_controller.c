@@ -43,7 +43,8 @@ void input_add_event_standard_controller(BYTE index) {
 	js_control(&js[index], &port[index]);
 	input_turbo_buttons_standard_controller(&port[index]);
 }
-BYTE input_decode_event_standard_controller(BYTE mode, DBWORD event, BYTE type, _port *port) {
+BYTE input_decode_event_standard_controller(BYTE mode, BYTE autorepeat, DBWORD event, BYTE type,
+		_port *port) {
 	if (tas.type) {
 		return (EXIT_OK);
 	} else if (event == port->input[type][BUT_A]) {
