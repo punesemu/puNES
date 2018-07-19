@@ -41,7 +41,7 @@ otherwise :
 ./configure --enable-qt5
 make
 ```
-the executable [`punes`] is in the `src` directory 
+the executable `punes` is in the `src` directory 
 ### Windows
 -----------
 #### Development Environment installation
@@ -120,4 +120,4 @@ the executable `punes.exe` is in the `src` directory but in order to run it you 
 * libwinpthread-1.dll
 * SDL.dll
 
-that you can find in the compressed files of the puNES releases.
+that you can download here : [`64bit`](https://www.dropbox.com/s/yt5bgacnwexdghs/puNES_x86_64_dlls.zip?dl=0) version or [`32bit`](https://www.dropbox.com/s/7afebuhjy06n9uh/puNES_i686_dlls.zip?dl=0) version.
