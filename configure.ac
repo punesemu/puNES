@@ -34,11 +34,6 @@ AC_ARG_WITH([opengl-nvidia-cg],
 		[Build with support for Nvidia CG Toolkit for OpenGL (only linux) @<:@default: yes@:>@)]
 	),
 	[with_opengl_nvidia_cg=$withval],[with_opengl_nvidia_cg=yes])
-AC_ARG_WITH([dsdk],
-	AS_HELP_STRING([--with-dsdk=path],
-		[Path for DSDK (only windows)]
-	),
-	[path_dsdk=${with_dsdk}], [with_dsdk=no])
 AC_ARG_WITH([qt-include],
 	AS_HELP_STRING([--with-qt-include=@<:@PATH@:>@],
 		[Force path for QT include]
@@ -129,8 +124,6 @@ AS_CASE(["$host_os"],
 			with_opengl_nvidia_cg=yes
 			CUSTOMDEFINES+=" -DWITH_OPENGL -DWITH_OPENGL_CG -DGLEW_STATIC"
 			my_CPPFLAGS+=" -I${TOP_SRCDIR}/src/video/sdl"
-			# aggiungo le librerie Cg Nvidia per le shaders
-			my_LIBS+=" -lcg -lcgGL"
 		])
 		AS_IF([test "x$with_d3d9" = xyes],[
 			with_opengl=no
@@ -146,8 +139,6 @@ AS_CASE(["$host_os"],
 					my_LIBS+=" -ld3dx9_41"
 				],
 			)
-			# aggiungo le librerie Cg Nvidia per le shaders
-			my_LIBS+=" -lcg -lcgD3D9"
 		])
 	]
 )
@@ -226,14 +217,25 @@ AM_CONDITIONAL(WITH_GIT,[test "x$GIT" != xno])
 
 # Checks for libraries.
 AM_COND_IF([WINDOWS],[
-	AC_MSG_CHECKING([if DSDK path is present])
-	AS_IF([test "x$with_dsdk" = xno],[
-		AC_MSG_ERROR([Needed DSDK root path])
+	# aggiungo path per include del DSDK
+	my_CPPFLAGS+=" -I${TOP_SRCDIR}/src/extra/windows/DSDK/Include -I${TOP_SRCDIR}/src/extra/windows/DSDK/vc10/include"
+	# aggiungo path per include e librerie del Toolkit Cg Nvidia
+	my_CPPFLAGS+=" -I${TOP_SRCDIR}/src/extra/windows/Cg/include"
+	AS_CASE(["$host_cpu"],
+		[i?86],[
+			my_LIBS+=" -L${TOP_SRCDIR}/src/extra/windows/Cg/lib"
+		],
+		[x86_64],[
+			my_LIBS+=" -L${TOP_SRCDIR}/src/extra/windows/Cg/lib.x64"
+		],
+	)
+	AS_IF([test "x$with_opengl" = xyes],[
+		my_LIBS+=" -lcg -lcgGL"
 	])
-	my_CPPFLAGS+=" -I${path_dsdk}/Include -I${path_dsdk}/vc10/include"
-	AC_MSG_RESULT(yes)
+	AS_IF([test "x$with_d3d9" = xyes],[
+		my_LIBS+=" -lcg -lcgD3D9"
+	])
 ])
-
 AM_COND_IF([PRECOMP_QT],[
 	AC_MSG_CHECKING([if QT include path is present])
 	AS_IF([test "x$path_qt_inc" = xno -o "x$path_qt_inc" = x],[
