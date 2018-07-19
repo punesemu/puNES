@@ -20,16 +20,12 @@ How to Compile
 
 ### Linux
 -----------
-
 #### Dependencies
-
 * Qt4 or Qt5
 * nvidia-cg
 * SDL 1.xx
 * alsa
-
 #### Compilation of puNES
-
 ```bash
 git clone https://github.com/punesemu/punes
 cd punes
@@ -46,12 +42,9 @@ otherwise :
 make
 ```
 the executable [`punes`] is in the `src` directory 
-
 ### Windows
 -----------
-
 #### Development Environment installation
-
 1) install MSYS2 (https://www.msys2.org/)
 2) open "MSYS2 MinGW 64-bit" shell (or 32 bit if you want compile the 32 bit version of puNES)
 ```bash
@@ -64,17 +57,13 @@ pacman -S base-devel git wget p7zip unzip
 pacman -S perl ruby python2 mingw-w64-i686-toolchain mingw-w64-x86_64-toolchain
 exit
 ```
-
 #### Dependencies
-
 4) open a new MSYS2 shell and download the necessary libraries
 ```bash
 wget http://download.qt.io/archive/qt/4.8/4.8.7/qt-everywhere-opensource-src-4.8.7.zip
 wget https://www.libsdl.org/release/SDL-1.2.15.zip
 ```
-
 #### Compilation of the Qt4 libraries
-
 5) unzip the sources
 ```bash
 unzip -o qt-everywhere-opensource-src-4.8.7.zip
@@ -93,9 +82,7 @@ make install
 cp -v $MINGW_PREFIX/lib/qt4/pkgconfig/* $MINGW_PREFIX/lib/pkgconfig/.
 cd ..
 ```
-
 #### Compilation of the SDL libraries
-
 8) with the SDL libraries it's a bit simpler
 ```bash
 unzip SDL-1.2.15.zip
@@ -105,9 +92,7 @@ make
 make install
 cd ..
 ```
-
 #### Compilation of puNES
-
 9) Now you have everything you need to compile correctly puNES
 ```bash
 git clone https://github.com/punesemu/punes
@@ -123,16 +108,12 @@ otherwise :
 ./configure --with-opengl
 ```
 the executable `punes.exe` is in the `src` directory but in order to run it you need the following dlls:
-
 ##### D3D9 version :
-
 * 7z.dl
 * cg.dll
 * cgD3D9.dll
 * libwinpthread-1.dll
-
 ##### OpenGL version :
-
 * 7z.dll
 * cg.dll
 * cgGL.dll
