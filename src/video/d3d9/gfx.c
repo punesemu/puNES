@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2017 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2019 Fabio Cavallo (aka FHorse)
  *  for some codes :
  *  Copyright (C) 2010-2015 The RetroArch team
  *
