@@ -434,31 +434,31 @@ AM_COND_IF([PRECOMP_QT], [
 				])
 			])
 		], [
-			AC_MSG_CHECKING([whether libQt5Widgets.a exists])
-			AS_IF([test -f ${path_qt_lib}/libQt5Widgets.a], [
+			AC_MSG_CHECKING([whether libQt5Widgets.so exists])
+			AS_IF([test -f ${path_qt_lib}/libQt5Widgets.so], [
 				AC_MSG_RESULT([yes])
 				QT_LIBS+=" -lQt5Widgets"
 			], [
 				AC_MSG_RESULT([no])
-				AC_MSG_ERROR([libQt5Widgets.a not found])
+				AC_MSG_ERROR([libQt5Widgets.so not found])
 			])
 
-			AC_MSG_CHECKING([whether libQt5Gui.a exists])
-			AS_IF([test -f ${path_qt_lib}/libQt5Gui.a], [
+			AC_MSG_CHECKING([whether libQt5Gui.so exists])
+			AS_IF([test -f ${path_qt_lib}/libQt5Gui.so], [
 				AC_MSG_RESULT([yes])
 				QT_LIBS+=" -lQt5Gui"
 			], [
 				AC_MSG_RESULT([no])
-				AC_MSG_ERROR([libQt5Gui.a not found])
+				AC_MSG_ERROR([libQt5Gui.so not found])
 			])
 
-			AC_MSG_CHECKING([whether libQt5Core.a exists])
-			AS_IF([test -f ${path_qt_lib}/libQt5Core.a], [
+			AC_MSG_CHECKING([whether libQt5Core.so exists])
+			AS_IF([test -f ${path_qt_lib}/libQt5Core.so], [
 				AC_MSG_RESULT([yes])
 				QT_LIBS+=" -lQt5Core"
 			], [
 				AC_MSG_RESULT([no])
-				AC_MSG_ERROR([libQt5Core.a not found])
+				AC_MSG_ERROR([libQt5Core.so not found])
 			])
 		])
 		
@@ -468,22 +468,42 @@ AM_COND_IF([PRECOMP_QT], [
 	], [
 		QT_LIBS="-L${path_qt_lib}"
 
-		AC_MSG_CHECKING([whether libQtGui.a exists])
-		AS_IF([test -f ${path_qt_lib}/libQtGui.a], [
-			AC_MSG_RESULT([yes])
-			QT_LIBS+=" -lQtGui"
-		], [
-			AC_MSG_RESULT([no])
-			AC_MSG_ERROR([libQtGui.a not found])
-		])
+		AM_COND_IF([WINDOWS], [
+			AC_MSG_CHECKING([whether libQtGui.a exists])
+			AS_IF([test -f ${path_qt_lib}/libQtGui.a], [
+				AC_MSG_RESULT([yes])
+				QT_LIBS+=" -lQtGui"
+			], [
+				AC_MSG_RESULT([no])
+				AC_MSG_ERROR([libQtGui.a not found])
+			])
 
-		AC_MSG_CHECKING([whether libQtCore.a exists])
-		AS_IF([test -f ${path_qt_lib}/libQtCore.a], [
-			AC_MSG_RESULT([yes])
-			QT_LIBS+=" -lQtCore"
+			AC_MSG_CHECKING([whether libQtCore.a exists])
+			AS_IF([test -f ${path_qt_lib}/libQtCore.a], [
+				AC_MSG_RESULT([yes])
+				QT_LIBS+=" -lQtCore"
+			], [
+				AC_MSG_RESULT([no])
+				AC_MSG_ERROR([libQtCore.a not found])
+			])
 		], [
-			AC_MSG_RESULT([no])
-			AC_MSG_ERROR([libQtCore.a not found])
+			AC_MSG_CHECKING([whether libQtGui.so exists])
+			AS_IF([test -f ${path_qt_lib}/libQtGui.so], [
+				AC_MSG_RESULT([yes])
+				QT_LIBS+=" -lQtGui"
+			], [
+				AC_MSG_RESULT([no])
+				AC_MSG_ERROR([libQtGui.so not found])
+			])
+
+			AC_MSG_CHECKING([whether libQtCore.so exists])
+			AS_IF([test -f ${path_qt_lib}/libQtCore.so], [
+				AC_MSG_RESULT([yes])
+				QT_LIBS+=" -lQtCore"
+			], [
+				AC_MSG_RESULT([no])
+				AC_MSG_ERROR([libQtCore.so not found])
+			])
 		])
 
 		AC_CHECK_TOOLS(MOC, [moc-qt4 moc], [no], [$path_qt_bin])
