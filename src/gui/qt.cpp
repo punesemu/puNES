@@ -54,6 +54,21 @@
 #else
 #include <QtWidgets/QDesktopWidget>
 #include <QtWidgets/QMessageBox>
+#if defined (__WIN32__)
+#include <QtCore/QtPlugin>
+#if defined (QT5_PLUGIN_QWINDOWSVISTASTYLE)
+Q_IMPORT_PLUGIN(QWindowsVistaStylePlugin)
+#endif
+#if defined (QT5_PLUGIN_QGIF)
+Q_IMPORT_PLUGIN(QGifPlugin)
+#endif
+#if defined (QT5_PLUGIN_QICO)
+Q_IMPORT_PLUGIN(QICOPlugin)
+#endif
+#if defined (QT5_PLUGIN_QJPEG)
+Q_IMPORT_PLUGIN(QJpegPlugin)
+#endif
+#endif
 #endif
 
 static void gui_pmenu_management(void);

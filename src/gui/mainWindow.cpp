@@ -382,7 +382,7 @@ bool mainWindow::nativeEvent(const QByteArray &eventType, void *message, long *r
 		case WM_ENTERSIZEMOVE:
 			break;
 		case WM_EXITSIZEMOVE: {
-			HMONITOR monitor = MonitorFromWindow(winId(), MONITOR_DEFAULTTOPRIMARY);
+			HMONITOR monitor = MonitorFromWindow((HWND)winId(), MONITOR_DEFAULTTOPRIMARY);
 
 			gfx_control_changed_adapter(&monitor);
 			break;
