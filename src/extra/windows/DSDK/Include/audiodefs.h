@@ -134,8 +134,8 @@ typedef const WAVEFORMATEXTENSIBLE *PCWAVEFORMATEXTENSIBLE, *LPCWAVEFORMATEXTENS
         short iCoef2;
     } ADPCMCOEFSET;
 
-    #pragma warning(push)
-    #pragma warning(disable:4200)  // Disable zero-sized array warnings
+    //#pragma warning(push)
+    //#pragma warning(disable:4200)  // Disable zero-sized array warnings
 
     typedef struct adpcmwaveformat_tag {
         WAVEFORMATEX wfx;
@@ -144,7 +144,7 @@ typedef const WAVEFORMATEXTENSIBLE *PCWAVEFORMATEXTENSIBLE, *LPCWAVEFORMATEXTENS
         ADPCMCOEFSET aCoef[];  // Always 7 coefficient pairs for MS ADPCM
     } ADPCMWAVEFORMAT;
 
-    #pragma warning(pop)
+    //#pragma warning(pop)
 
     #define WAVE_FORMAT_ADPCM 0x0002
 

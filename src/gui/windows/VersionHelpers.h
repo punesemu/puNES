@@ -29,11 +29,11 @@
 #define _WIN32_WINNT_WIN8                   0x0602
 #endif
 
-#ifdef _MSC_VER
-#pragma once
-#endif  // _MSC_VER
+//#ifdef _MSC_VER
+//#pragma once
+//#endif  // _MSC_VER
 
-#pragma region Application Family
+//#pragma region Application Family
 
 #if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 
@@ -187,6 +187,6 @@ IsWindowsServer()
 
 #endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */
 
-#pragma endregion
+//#pragma endregion
 
 #endif // _VERSIONHELPERS_H_INCLUDED_
