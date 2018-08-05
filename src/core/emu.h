@@ -19,8 +19,8 @@
 #ifndef EMU_H_
 #define EMU_H_
 
-#include <stdio.h>
 #include "common.h"
+#include "uncompress.h"
 
 #define emu_irand(x) ((unsigned int)((x) * emu_drand()))
 
@@ -35,7 +35,7 @@ EXTERNC BYTE emu_make_dir(const uTCHAR *fmt, ...);
 EXTERNC BYTE emu_file_exist(const uTCHAR *file);
 EXTERNC char *emu_file2string(const uTCHAR *path);
 EXTERNC BYTE emu_load_rom(void);
-EXTERNC BYTE emu_search_in_database(FILE *fp);
+EXTERNC BYTE emu_search_in_database(void *rom_mem);
 EXTERNC void emu_set_title(uTCHAR *title, int len);
 EXTERNC BYTE emu_turn_on(void);
 EXTERNC void emu_pause(BYTE mode);
@@ -43,6 +43,7 @@ EXTERNC BYTE emu_reset(BYTE type);
 EXTERNC WORD emu_round_WORD(WORD number, WORD round);
 EXTERNC int emu_power_of_two(int base);
 EXTERNC double emu_drand(void);
+EXTERNC uTCHAR *emu_ustrncpy(uTCHAR *dst, uTCHAR *src);
 EXTERNC void emu_quit(BYTE exit_code);
 
 #undef EXTERNC

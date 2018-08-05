@@ -26,6 +26,7 @@
 #include "draw_on_screen.h"
 #undef _DOS_STATIC_
 #include "nsfe.h"
+#include "rom_mem.h"
 #include "input/nsf_controller.h"
 #include "mem_map.h"
 #include "mappers.h"
@@ -43,6 +44,7 @@
 #include "gui.h"
 #include "audio/blipbuf.h"
 #include "snd.h"
+#include "patcher.h"
 #include "extra/kiss_fft130/kiss_fft.h"
 
 enum nsf_flags {
@@ -178,13 +180,14 @@ void nsf_quit(void) {
 	nsf_init();
 }
 BYTE nsf_load_rom(void) {
-	FILE *fp;
+	_rom_mem rom;
 
 	{
-		BYTE i, found = TRUE;
 		static const uTCHAR rom_ext[2][10] = { uL(".nsf\0"), uL(".NSF\0") };
+		BYTE i, found = TRUE;
+		FILE *fp;
 
-		fp = ufopen(info.rom_file, uL("rb"));
+		fp = ufopen(info.rom.file, uL("rb"));
 
 		if (!fp) {
 			found = FALSE;
@@ -193,13 +196,13 @@ BYTE nsf_load_rom(void) {
 				uTCHAR rom_file[LENGTH_FILE_NAME_LONG];
 
 				umemset(rom_file, 0x00, usizeof(rom_file));
-				umemcpy(rom_file, info.rom_file, usizeof(rom_file) - 10 - 1);
+				umemcpy(rom_file, info.rom.file, usizeof(rom_file) - 10 - 1);
 				ustrcat(rom_file, rom_ext[i]);
 
 				fp = ufopen(rom_file, uL("rb"));
 
 				if (fp) {
-					ustrncpy(info.rom_file, rom_file, usizeof(info.rom_file));
+					ustrncpy(info.rom.file, rom_file, usizeof(info.rom.file));
 					found = TRUE;
 					break;
 				}
@@ -209,12 +212,36 @@ BYTE nsf_load_rom(void) {
 		if (!found) {
 			return (EXIT_ERROR);
 		}
+
+		fseek(fp, 0L, SEEK_END);
+		rom.size = ftell(fp);
+		fseek(fp, 0L, SEEK_SET);
+
+		if ((rom.data = (BYTE *) malloc(rom.size)) == NULL) {
+			fclose(fp);
+			return (EXIT_ERROR);
+		}
+
+		if (fread(rom.data, 1, rom.size, fp) != rom.size) {
+			fclose(fp);
+			free(rom.data);
+			return (EXIT_ERROR);
+		}
+
+		fclose(fp);
 	}
 
-	if ((fgetc(fp) == 'N') && (fgetc(fp) == 'E') && (fgetc(fp) == 'S') && (fgetc(fp) == 'M')
-			&& (fgetc(fp) == '\32')) {
+	patcher_apply(&rom);
+
+	rom.position = 0;
+
+	if ((rom.data[rom.position++] == 'N') &&
+		(rom.data[rom.position++] == 'E') &&
+		(rom.data[rom.position++] == 'S') &&
+		(rom.data[rom.position++] == 'M') &&
+		(rom.data[rom.position++] == '\32')) {
 		BYTE tmp, flags[TOTAL_FL];
-		long len;
+		size_t len = rom.size;
 
 		info.format = NSF_FORMAT;
 
@@ -227,30 +254,28 @@ BYTE nsf_load_rom(void) {
 		nsf.info.copyright = &nsf_default_label[0];
 		nsf.info.ripper = &nsf_default_label[0];
 
-		fseek(fp, 0, SEEK_END);
-		len = ftell(fp);
-
 		if (len < NSF_HEADER_LENGTH) {
-			fclose(fp);
+			free(rom.data);
 			return (EXIT_ERROR);
 		}
 
 		len -= NSF_HEADER_LENGTH;
 
-		fseek(fp, 5, SEEK_SET);
-
-		if (fread(&flags[0], sizeof(flags), 1, fp)) {
-			nsf.version = flags[VERSION];
-			nsf.songs.total = flags[TOTAL_SONGS];
-			nsf.songs.starting = flags[STARTING_SONGS];
-			nsf.adr.load = (flags[LOAD_ADR_HI] << 8) | flags[LOAD_ADR_LO];
-			nsf.adr.init = (flags[INIT_ADR_HI] << 8) | flags[INIT_ADR_LO];
-			nsf.adr.play = (flags[PLAY_ADR_HI] << 8) | flags[PLAY_ADR_LO];
+		if (rom_mem_ctrl_memcpy(&flags[0], &rom, sizeof(flags)) == EXIT_ERROR) { 
+			free(rom.data);
+			return (EXIT_ERROR);
 		}
+
+		nsf.version = flags[VERSION];
+		nsf.songs.total = flags[TOTAL_SONGS];
+		nsf.songs.starting = flags[STARTING_SONGS];
+		nsf.adr.load = (flags[LOAD_ADR_HI] << 8) | flags[LOAD_ADR_LO];
+		nsf.adr.init = (flags[INIT_ADR_HI] << 8) | flags[INIT_ADR_LO];
+		nsf.adr.play = (flags[PLAY_ADR_HI] << 8) | flags[PLAY_ADR_LO];
 
 		if ((nsf.songs.total == 0) || (nsf.adr.load < 0x6000) || (nsf.adr.init < 0x6000)
 			|| (nsf.adr.play < 0x6000)) {
-			fclose(fp);
+			free(rom.data);
 			return (EXIT_ERROR);
 		}
 
@@ -270,7 +295,7 @@ BYTE nsf_load_rom(void) {
 
 			if (!(nsf.info.auth = (char *) malloc((32 + 1) * 4))) {
 				fprintf(stderr, "Out of memory\n");
-				fclose(fp);
+				free(rom.data);
 				return (EXIT_ERROR);
 			}
 
@@ -293,32 +318,40 @@ BYTE nsf_load_rom(void) {
 
 				memset(&buffer, 0x00, sizeof(buffer));
 
-				if (fread(&buffer, 32, 1, fp)) {
-					(*dst) = auth;
-					strncpy((*dst), buffer, (int) sizeof(buffer));
-					if ((*dst[0]) == 0) {
-						(*dst) = &nsf_default_label[0];
-					}
-					auth += (strlen(buffer) + 1);
+				if (rom_mem_ctrl_memcpy(&buffer, &rom, 32) == EXIT_ERROR) { 
+					free(rom.data);
+					return (EXIT_ERROR);
 				}
+
+				(*dst) = auth;
+				strncpy((*dst), buffer, (int) sizeof(buffer));
+				if ((*dst[0]) == 0) {
+					(*dst) = &nsf_default_label[0];
+				}
+				auth += (strlen(buffer) + 1);
 			}
 		}
 
-		nsf.play_speed.ntsc = fgetc(fp) | (fgetc(fp) << 8);
+		nsf.play_speed.ntsc = rom.data[rom.position++];
+		nsf.play_speed.ntsc |= (rom.data[rom.position++] << 8);
 
-		if (fread(&nsf.bankswitch.banks, sizeof(nsf.bankswitch.banks), 1, fp)) {
-			if (nsf.bankswitch.banks[0] | nsf.bankswitch.banks[1] | nsf.bankswitch.banks[2] |
-				nsf.bankswitch.banks[3] | nsf.bankswitch.banks[4] | nsf.bankswitch.banks[5] |
-				nsf.bankswitch.banks[6] | nsf.bankswitch.banks[7]) {
-				nsf.bankswitch.enabled = TRUE;
-			}
+		if (rom_mem_ctrl_memcpy(&nsf.bankswitch.banks, &rom, sizeof(nsf.bankswitch.banks)) == EXIT_ERROR) { 
+			free(rom.data);
+			return (EXIT_ERROR);
 		}
 
-		nsf.play_speed.pal = fgetc(fp) | (fgetc(fp) << 8);
+		if (nsf.bankswitch.banks[0] | nsf.bankswitch.banks[1] | nsf.bankswitch.banks[2] |
+			nsf.bankswitch.banks[3] | nsf.bankswitch.banks[4] | nsf.bankswitch.banks[5] |
+			nsf.bankswitch.banks[6] | nsf.bankswitch.banks[7]) {
+			nsf.bankswitch.enabled = TRUE;
+		}
 
-		nsf.type = fgetc(fp) & 0x03;
+		nsf.play_speed.pal = rom.data[rom.position++];
+		nsf.play_speed.pal |= (rom.data[rom.position++] << 8);
 
-		tmp = fgetc(fp);
+		nsf.type = rom.data[rom.position++] & 0x03;
+
+		tmp = rom.data[rom.position++];
 		nsf.sound_chips.vrc6 = tmp & 0x01;
 		nsf.sound_chips.vrc7 = tmp & 0x02;
 		nsf.sound_chips.fds = tmp & 0x04;
@@ -335,11 +368,15 @@ BYTE nsf_load_rom(void) {
 #endif
 
 		if (!nsf.sound_chips.fds && (nsf.adr.load < 0x8000)) {
-			fclose(fp);
+			free(rom.data);
 			return (EXIT_ERROR);
 		}
 
-		fseek(fp, 4, SEEK_CUR);
+		if ((rom.position + 4) > rom.size) {
+			free(rom.data);
+			return (EXIT_ERROR);
+		}
+		rom.position += 4;
 
 		{
 			switch (nsf.type & 0x03) {
@@ -373,7 +410,7 @@ BYTE nsf_load_rom(void) {
 			}
 
 			if (map_prg_ram_malloc(ram) != EXIT_OK) {
-				fclose(fp);
+				free(rom.data);
 				return (EXIT_ERROR);
 			}
 		}
@@ -391,14 +428,14 @@ BYTE nsf_load_rom(void) {
 			len_4k = nsf.prg.banks_4k * 0x1000;
 
 			if (map_prg_chip_malloc(0, len_4k, 0x00) == EXIT_ERROR) {
-				fclose(fp);
+				free(rom.data);
 				return (EXIT_ERROR);
 			}
 
 			memset(prg_chip(0), 0xF2, len_4k);
 
-			if (!(fread(prg_chip(0) + padding, len, 1, fp))) {
-				fclose(fp);
+			if (rom_mem_ctrl_memcpy(prg_chip(0) + padding, &rom, len) == EXIT_ERROR) {
+				free(rom.data);
 				return (EXIT_ERROR);
 			}
 
@@ -416,7 +453,7 @@ BYTE nsf_load_rom(void) {
 		info.mapper.id = NSF_MAPPER;
 		info.cpu_rw_extern = TRUE;
 
-		fclose(fp);
+		free(rom.data);
 	}
 
 	nsf_after_load_rom();

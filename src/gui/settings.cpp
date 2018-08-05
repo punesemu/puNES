@@ -22,7 +22,7 @@
 
 #define CFGFILENAME "/puNES.cfg"
 #define PGSFILENAME QString(PERGAME_FOLDER) + "/" +\
-	QFileInfo(uQString(info.rom_file)).completeBaseName() + ".pgs"
+	QFileInfo(uQString(info.rom.file)).completeBaseName() + ".pgs"
 #define INPFILENAME "/input.cfg"
 
 _emu_settings s;

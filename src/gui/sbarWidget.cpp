@@ -36,6 +36,9 @@
 #include "save_slot.h"
 #include "text.h"
 #include "gui.h"
+#include "conf.h"
+#include "cheat.h"
+#include "patcher.h"
 
 #define SPACING 2
 #define DEC_LAB_TLINE 3
@@ -115,10 +118,30 @@ infoStatusBar::infoStatusBar(QWidget *parent = 0) : QWidget(parent) {
 }
 infoStatusBar::~infoStatusBar() {}
 void infoStatusBar::update_label() {
+	BYTE patch = FALSE;
+	uTCHAR *rom;
+
+	if ((cfg->cheat_mode == GAMEGENIE_MODE) && (gamegenie.phase == GG_EXECUTE)) {
+		rom = gamegenie.rom;
+		if (gamegenie.patch) {
+			patch = TRUE;
+		}
+	} else {
+		rom = info.rom.file;
+	}
+
+	if (patcher.patched == TRUE) {
+		patch = TRUE;
+	}
+
 	if (info.no_rom | info.turn_off) {
 		label->setText("");
 	} else {
-		label->setText(QFileInfo(uQString(info.rom_file)).fileName());
+		if (patch == TRUE) {
+			label->setText("*" + QFileInfo(uQString(rom)).fileName());
+		} else {
+			label->setText(QFileInfo(uQString(rom)).fileName());
+		}
 	}
 }
 

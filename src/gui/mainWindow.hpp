@@ -93,7 +93,7 @@ class mainWindow: public QMainWindow {
 	private:
 		void set_language(int lang);
 		void setup_video_rendering();
-		void update_recent_roms();
+		void update_menu_file();
 		void update_menu_nes();
 		void update_menu_settings();
 		void update_menu_tools();
@@ -118,6 +118,7 @@ class mainWindow: public QMainWindow {
 		void s_fullscreen(bool state);
 		void s_loop();
 		void s_open();
+		void s_apply_ips_patch();
 		void s_open_recent_roms();
 		void s_open_working_folder();
 		void s_quit();

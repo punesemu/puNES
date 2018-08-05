@@ -49,6 +49,7 @@
 #include "clock.h"
 #include "ppu.h"
 #include "text.h"
+#include "patcher.h"
 #include "save_slot.h"
 #include "version.h"
 #include "audio/delay.h"
@@ -336,7 +337,7 @@ void mainWindow::setup() {
 }
 void mainWindow::update_window() {
 	// File
-	update_recent_roms();
+	update_menu_file();
 	// NES
 	update_menu_nes();
 	// Settings
@@ -349,8 +350,9 @@ void mainWindow::update_window() {
 	statusbar->update_statusbar();
 }
 void mainWindow::change_rom(const uTCHAR *rom) {
-	ustrncpy(info.load_rom_file, rom, usizeof(info.load_rom_file) - 1);
+	info.rom.from_load_menu = emu_ustrncpy(info.rom.from_load_menu, (uTCHAR *)rom);
 	gamegenie_reset();
+	gamegenie_free_paths();
 #if defined (WITH_OPENGL) && defined (__WIN32__)
 	gfx_sdlwe_set(SDLWIN_CHANGE_ROM, SDLWIN_NONE);
 #else
@@ -500,7 +502,14 @@ void mainWindow::setup_video_rendering() {
 	ui->action_PAR_Soft_Stretch->setText(tr("HLSL &soft stretch"));
 #endif
 }
-void mainWindow::update_recent_roms() {
+void mainWindow::update_menu_file() {
+	if (info.no_rom) {
+		ui->action_Apply_IPS_Patch->setEnabled(false);
+	} else {
+		ui->action_Apply_IPS_Patch->setEnabled(true);
+	}
+
+	// recent roms
 	if (recent_roms_count() > 0) {
 		int i;
 
@@ -1307,16 +1316,11 @@ void mainWindow::control_visible_cursor() {
 void mainWindow::make_reset(int type) {
 	if (type == HARD) {
 		if ((cfg->cheat_mode == GAMEGENIE_MODE) && gamegenie.rom_present) {
-			if (info.mapper.id != GAMEGENIE_MAPPER) {
-				ustrncpy(info.load_rom_file, info.rom_file, usizeof(info.load_rom_file));
-			}
 			gamegenie_reset();
 			type = CHANGE_ROM;
 		} else {
-			/*
-			 * se e' stato disabilitato il game genie quando ormai
-			 * e' gia' in esecuzione e si preme un reset, carico la rom.
-			 */
+			// se e' stato disabilitato il game genie quando ormai
+			// e' gia' in esecuzione e si preme un reset, carico la rom.
 			if (info.mapper.id == GAMEGENIE_MAPPER) {
 				gamegenie_reset();
 				type = CHANGE_ROM;
@@ -1338,7 +1342,10 @@ void mainWindow::connect_shortcut(QAction *action, int index) {
 	QString *sc = (QString *)settings_inp_rd_sc(index, KEYBOARD);
 
 	if (sc->isEmpty() == false) {
+		QStringList text = action->text().split('\t');
+
 		action->setShortcut(QKeySequence((QString)(*sc)));
+		action->setText(text.at(0) + '\t' + (QString)(*sc));
 	}
 }
 void mainWindow::connect_shortcut(QAction *action, int index, const char *member) {
@@ -1363,6 +1370,7 @@ void mainWindow::connect_shortcut(QAction *action, int index, const char *member
 void mainWindow::connect_menu_signals() {
 	// File
 	connect_action(ui->action_Open, SLOT(s_open()));
+	connect_action(ui->action_Apply_IPS_Patch, SLOT(s_apply_ips_patch()));
 	connect_action(ui->action_Open_working_folder, SLOT(s_open_working_folder()));
 	connect_action(ui->action_Quit, SLOT(s_quit()));
 	// NES
@@ -1741,8 +1749,7 @@ void mainWindow::s_open() {
 
 	if (l7z_present() == TRUE) {
 		if ((l7z_control_ext(uL("rar")) == EXIT_OK)) {
-			filters[0].append(
-				" (*.zip *.ZIP *.7z *.7Z *.rar *.RAR *.nes *.NES *.unf *.UNF *.unif *.UNIF *.nsf *.NSF *.nsfe *.NSFE *.fds *.FDS *.fm2 *.FM2)");
+			filters[0].append(" (*.zip *.ZIP *.7z *.7Z *.rar *.RAR *.nes *.NES *.unf *.UNF *.unif *.UNIF *.nsf *.NSF *.nsfe *.NSFE *.fds *.FDS *.fm2 *.FM2)");
 			filters[1].append(" (*.zip *.ZIP *.7z *.7Z *.rar *.RAR)");
 		} else {
 			filters[0].append(" (*.zip *.ZIP *.7z *.7Z *.nes *.NES *.fds *.FDS *.nsf *.NSF *.nsfe *.NSFE *.fm2 *.FM2)");
@@ -1768,9 +1775,55 @@ void mainWindow::s_open() {
 		QFileInfo fileinfo(file);
 
 		change_rom(uQStringCD(fileinfo.absoluteFilePath()));
+		ustrncpy(gui.last_open_path, uQStringCD(fileinfo.absolutePath()), usizeof(gui.last_open_path) - 1);
+	}
 
-		ustrncpy(gui.last_open_path, uQStringCD(fileinfo.absolutePath()),
-				usizeof(gui.last_open_path) - 1);
+	emu_pause(FALSE);
+}
+void mainWindow::s_apply_ips_patch() {
+	QStringList filters;
+	QString file;
+
+	emu_pause(TRUE);
+
+	filters.append(tr("All supported formats"));
+	filters.append(tr("Compressed files"));
+	filters.append(tr("IPS patch files"));
+	filters.append(tr("All files"));
+
+	if (l7z_present() == TRUE) {
+		if ((l7z_control_ext(uL("rar")) == EXIT_OK)) {
+			filters[0].append(" (*.zip *.ZIP *.7z *.7Z *.rar *.RAR *.ips *.IPS)");
+			filters[1].append(" (*.zip *.ZIP *.7z *.7Z *.rar *.RAR)");
+		} else {
+			filters[0].append(" (*.zip *.ZIP *.7z *.7Z *.ips *.IPS)");
+			filters[1].append(" (*.zip *.ZIP *.7z *.7Z)");
+		}
+	} else {
+		filters[0].append(" (*.zip *.ZIP *.ips *.IPS)");
+		filters[1].append(" (*.zip *.ZIP)");
+	}
+
+	filters[2].append(" (*.ips *.IPS)");
+	filters[3].append(" (*.*)");
+
+	file = QFileDialog::getOpenFileName(this, tr("Open IPS Patch"), uQString(gui.last_open_ips_path),
+		filters.join(";;"));
+
+	if (file.isNull() == false) {
+		QFileInfo fileinfo(file);
+
+		patcher_ctrl_if_exist(uQStringCD(fileinfo.absoluteFilePath()));
+
+		if (patcher.file) {
+			if ((cfg->cheat_mode == GAMEGENIE_MODE) && (gamegenie.phase == GG_EXECUTE)) {
+				change_rom(gamegenie.rom);
+			} else {
+				change_rom(info.rom.file);
+			}
+			ustrncpy(gui.last_open_ips_path, uQStringCD(fileinfo.absolutePath()),
+				usizeof(gui.last_open_ips_path) - 1);
+		}
 	}
 
 	emu_pause(FALSE);
@@ -1785,9 +1838,17 @@ void mainWindow::s_open_recent_roms() {
 	if (current != item) {
 		change_rom(uQStringCD(item));
 	} else {
-		/* se l'archivio e' compresso e contiene piu' di una rom allora lo carico */
-		if ((info.uncompress_rom == TRUE) && (uncomp.files_founded > 1)) {
-			change_rom(uQStringCD(item));
+		// se l'archivio e' compresso e contiene piu' di una rom allora lo carico
+		_uncompress_archive *archive;
+		BYTE rc;
+
+		archive = uncompress_archive_alloc(uQStringCD(item), &rc);
+
+		if (rc == UNCOMPRESS_EXIT_OK) {
+			if (archive->rom.count > 1) {
+				change_rom(uQStringCD(item));
+			}
+			uncompress_archive_free(archive);
 		}
 	}
 
@@ -1875,7 +1936,7 @@ void mainWindow::s_start_stop_wave() {
 		filters[1].append(" (*.*)");
 
 		file = QFileDialog::getSaveFileName(this, tr("Record sound"),
-				QFileInfo(uQString(info.rom_file)).completeBaseName(),
+				QFileInfo(uQString(info.rom.file)).completeBaseName(),
 				filters.join(";;"));
 
 		if (file.isNull() == false) {
@@ -2510,9 +2571,9 @@ void mainWindow::s_state_save_file() {
 
 	/* game genie */
 	if (info.mapper.id == GAMEGENIE_MAPPER) {
-		fl = info.load_rom_file;
+		fl = gamegenie.rom;
 	} else {
-		fl = info.rom_file;
+		fl = info.rom.file;
 	}
 
 	file = QFileDialog::getSaveFileName(this, tr("Save state on file"),
@@ -2605,7 +2666,7 @@ void mainWindow::s_help() {
 	text.append("<center><a href=\"" + QString(GITHUB) + "\">" + "GitHub Page</a></center>");
 	text.append("<center><a href=\"" + QString(WEBSITE) + "\">" + "NesDev Forum</a></center>");
 	text.append("<center>" + QString("-") + "</center>\n");
-	text.append("<center>" + tr("If you like the emulator and you want to support it's development or would you pay for a beer at the programmer :") + "</center>\n");
+	text.append("<center>" + tr("If you like the emulator and you want to support it's development or would you pay for a beer at the programmer") + "</center>\n");
 	text.append("<center><a href=\"" + QString(DONATE) + "\">" + "<img src=\":/pics/pics/btn_donate_SM.gif\">" + "</a></center>\n");
 	text.append("<center>" + tr("Anyway, thank you all for the love and the help.") + "</center>");
 

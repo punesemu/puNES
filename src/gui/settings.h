@@ -80,6 +80,7 @@ enum set_element {
 	SET_SWAP_DUTY,
 	SET_AUDIO,
 	SET_GUI_OPEN_PATH,
+	SET_GUI_OPEN_IPS_PATH,
 	SET_GUI_LAST_POSITION,
 	SET_GUI_LANGUAGE,
 	SET_GUI_DISABLE_NEW_MENU,
@@ -755,6 +756,12 @@ static const _settings main_cfg[] = {
 	},
 	{
 		uL("GUI"), uL("last open path"), NULL,
+		uL("# possible values: [PATH]"),
+		NULL,
+		{0, NULL}
+	},
+	{
+		uL("GUI"), uL("last open ips path"), NULL,
 		uL("# possible values: [PATH]"),
 		NULL,
 		{0, NULL}

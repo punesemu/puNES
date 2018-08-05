@@ -477,7 +477,7 @@ void dlgCheats::s_export_clicked(bool checked) {
 	filters[1].append(" (*.*)");
 
 	file = QFileDialog::getSaveFileName(this, tr("Export cheats on file"),
-			QFileInfo(uQString(info.rom_file)).completeBaseName() + ".xml", filters.join(";;"));
+			QFileInfo(uQString(info.rom.file)).completeBaseName() + ".xml", filters.join(";;"));
 
 	if (file.isNull() == false) {
 		QFileInfo fileinfo(file);

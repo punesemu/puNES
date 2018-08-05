@@ -16,23 +16,29 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include <stdio.h>
 #include <string.h>
 #include <unistd.h>
 #include <sys/stat.h>
 #include "cheat.h"
+#include "rom_mem.h"
 #include "gui.h"
 #include "emu.h"
 #include "info.h"
 #include "text.h"
+#include "patcher.h"
 
 #define GGFILE "gamegenie.rom"
 
 void gamegenie_init(void) {
-	gamegenie.rom_present = FALSE;
+	memset(&gamegenie, 0x00, sizeof(gamegenie));
 	gamegenie_reset();
 }
+void gamegenie_quit(void) {
+	gamegenie_free_paths();
+}
 void gamegenie_reset(void) {
-	BYTE i;
+	int i;
 
 	gamegenie.counter = 0;
 	gamegenie.phase = GG_LOAD_GAMEGENIE;
@@ -45,6 +51,16 @@ void gamegenie_reset(void) {
 		ch->address = 0xFFFF;
 		ch->compare = 0xFF;
 		ch->replace = 0xFF;
+	}
+}
+void gamegenie_free_paths(void) {
+	if (gamegenie.rom) {
+		free (gamegenie.rom);
+		gamegenie.rom = NULL;
+	}
+	if (gamegenie.patch) {
+		free (gamegenie.patch);
+		gamegenie.patch = NULL;
 	}
 }
 void gamegenie_check_rom_present(BYTE print_message) {
@@ -63,34 +79,64 @@ void gamegenie_check_rom_present(BYTE print_message) {
 		fprintf(stderr, "Game Genie rom 'bios/gamegenie.rom' not found\n");
 	}
 }
-FILE *gamegenie_load_rom(FILE *fp) {
-	FILE *fp_gg, *fp_rom = fp;
+void gamegenie_load_rom(void *rom_mem) {
+	_rom_mem *rom = (_rom_mem *)rom_mem;
+	BYTE *rom_gg;
+	size_t size;
+	FILE *fp;
 
 	gamegenie_check_rom_present(FALSE);
 
 	if ((gamegenie.phase == GG_LOAD_ROM) || !gamegenie.rom_present) {
-		return (fp_rom);
+		return;
 	}
 
-	ustrncpy(info.load_rom_file, info.rom_file, usizeof(info.load_rom_file));
-	usnprintf(info.rom_file, usizeof(info.rom_file), uL("" uPERCENTs BIOS_FOLDER "/" GGFILE),
-			info.base_folder);
+	if (info.rom.file[0] && (gamegenie.rom = emu_ustrncpy(gamegenie.rom, info.rom.file)) == NULL) {
+		return;
+	}
 
-	if (!(fp_gg = ufopen(info.rom_file, uL("rb")))) {
+	if (patcher.file && (gamegenie.patch = emu_ustrncpy(gamegenie.patch, patcher.file)) == NULL) {
+		gamegenie_free_paths();
+		return;
+	}
+
+	usnprintf(info.rom.file, usizeof(info.rom.file), uL("" uPERCENTs BIOS_FOLDER "/" GGFILE),
+		info.base_folder);
+
+	if (!(fp = ufopen(info.rom.file, uL("rb")))) {
 		text_add_line_info(1, "[red]error loading Game Genie rom");
 		fprintf(stderr, "error loading Game Genie rom\n");
-
-		ustrncpy(info.rom_file, info.load_rom_file, usizeof(info.rom_file));
-
-		umemset(info.load_rom_file, 0, usizeof(info.load_rom_file));
-		return (fp_rom);
+		ustrncpy(info.rom.file, gamegenie.rom, usizeof(info.rom.file));
+		gamegenie_free_paths();
+		return;
 	}
-
-	fclose(fp_rom);
 
 	gamegenie.phase = GG_EXECUTE;
 
-	return (fp_gg);
+	fseek(fp, 0L, SEEK_END);
+	size = ftell(fp);
+	fseek(fp, 0L, SEEK_SET);
+
+	if ((rom_gg = (BYTE *) malloc(size)) == NULL) {
+		fclose(fp);
+		ustrncpy(info.rom.file, gamegenie.rom, usizeof(info.rom.file));
+		gamegenie_free_paths();
+		return;
+	}
+
+	if (fread(rom_gg, 1, size, fp) != size) {
+		fclose(fp);
+		free(rom_gg);
+		ustrncpy(info.rom.file, gamegenie.rom, usizeof(info.rom.file));
+		gamegenie_free_paths();
+		return;
+	}
+
+	fclose(fp);
+	free(rom->data);
+
+	rom->data = rom_gg;
+	rom->size = size;
 }
 
 void cheatslist_init(void) {

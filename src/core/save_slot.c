@@ -261,7 +261,7 @@ BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 	uint32_t tmp = 0;
 	WORD i = 0;
 
-	rewind(fp);
+	fseek(fp, 0L, SEEK_SET);
 
 	save_slot.version = SAVE_VERSION;
 
@@ -304,11 +304,11 @@ BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 	} else {
 		save_slot_int(mode, slot, save_slot.version)
 		if (save_slot.version < 16) {
-			_save_slot_ele(mode, slot, info.rom_file, 1024)
+			_save_slot_ele(mode, slot, info.rom.file, 1024)
 		} else if (save_slot.version < 21) {
-			_save_slot_ele(mode, slot, info.rom_file, (1024 * sizeof(uTCHAR)))
+			_save_slot_ele(mode, slot, info.rom.file, (1024 * sizeof(uTCHAR)))
 		} else {
-			save_slot_ele(mode, slot, info.rom_file)
+			save_slot_ele(mode, slot, info.rom.file)
 		}
 		save_slot_ele(mode, slot, info.sha1sum.prg.value)
 		save_slot_ele(mode, slot, info.sha1sum.prg.string)
@@ -823,9 +823,9 @@ uTCHAR *name_slot_file(BYTE slot) {
 
 	/* game genie */
 	if (info.mapper.id == GAMEGENIE_MAPPER) {
-		fl = info.load_rom_file;
+		fl = gamegenie.rom;
 	} else {
-		fl = info.rom_file;
+		fl = info.rom.file;
 	}
 
 	if (!fl[0]) {

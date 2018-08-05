@@ -53,7 +53,8 @@ BYTE palette_load_from_file(const uTCHAR *file) {
 		return (EXIT_ERROR);
 	}
 
-	rewind(fp);
+	fseek(fp, 0L, SEEK_SET);
+
 	if (!(fread((BYTE *) palette_base_file, 64 * 3, 1, fp))) {
 		;
 	}

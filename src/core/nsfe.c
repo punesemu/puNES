@@ -18,6 +18,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "nsfe.h"
+#include "rom_mem.h"
 #define _NSF_STATIC_
 #include "nsf.h"
 #undef _NSF_STATIC_
@@ -26,6 +27,7 @@
 #include "mappers.h"
 #include "gui.h"
 #include "audio/blipbuf.h"
+#include "patcher.h"
 #include "external_calls.h"
 
 enum nsfe_phase_type { NSFE_COUNT, NSFE_READ };
@@ -43,15 +45,16 @@ enum nsfe_flags {
 	TOTAL_FL
 };
 
-BYTE nsfe_INFO(FILE *fp, BYTE phase);
-BYTE nsfe_DATA(FILE *fp, BYTE phase);
-BYTE nsfe_BANK(FILE *fp, BYTE phase);
-BYTE nsfe_plst(FILE *fp, BYTE phase);
-BYTE nsfe_time(FILE *fp, BYTE phase);
-BYTE nsfe_fade(FILE *fp, BYTE phase);
-BYTE nsfe_tlbl(FILE *fp, BYTE phase);
-BYTE nsfe_auth(FILE *fp, BYTE phase);
-BYTE nsfe_text(FILE *fp, BYTE phase);
+BYTE nsfe_NONE(_rom_mem *rom, BYTE phase);
+BYTE nsfe_INFO(_rom_mem *rom, BYTE phase);
+BYTE nsfe_DATA(_rom_mem *rom, BYTE phase);
+BYTE nsfe_BANK(_rom_mem *rom, BYTE phase);
+BYTE nsfe_plst(_rom_mem *rom, BYTE phase);
+BYTE nsfe_time(_rom_mem *rom, BYTE phase);
+BYTE nsfe_fade(_rom_mem *rom, BYTE phase);
+BYTE nsfe_tlbl(_rom_mem *rom, BYTE phase);
+BYTE nsfe_auth(_rom_mem *rom, BYTE phase);
+BYTE nsfe_text(_rom_mem *rom, BYTE phase);
 
 struct _nsfe {
 	struct _nsfe_chunk {
@@ -66,14 +69,15 @@ void nsfe_quit(void) {
 	extcl_audio_samples_mod = NULL;
 }
 BYTE nsfe_load_rom(void) {
+	_rom_mem rom;
 	BYTE phase;
-	FILE *fp;
 
 	{
-		BYTE i, found = TRUE;
 		static const uTCHAR rom_ext[2][10] = { uL(".nsfe\0"), uL(".NSFE\0") };
+		BYTE i, found = TRUE;
+		FILE *fp;
 
-		fp = ufopen(info.rom_file, uL("rb"));
+		fp = ufopen(info.rom.file, uL("rb"));
 
 		if (!fp) {
 			found = FALSE;
@@ -82,13 +86,13 @@ BYTE nsfe_load_rom(void) {
 				uTCHAR rom_file[LENGTH_FILE_NAME_LONG];
 
 				umemset(rom_file, 0x00, usizeof(rom_file));
-				umemcpy(rom_file, info.rom_file, usizeof(rom_file) - 10 - 1);
+				umemcpy(rom_file, info.rom.file, usizeof(rom_file) - 10 - 1);
 				ustrcat(rom_file, rom_ext[i]);
 
 				fp = ufopen(rom_file, uL("rb"));
 
 				if (fp) {
-					ustrncpy(info.rom_file, rom_file, usizeof(info.rom_file));
+					ustrncpy(info.rom.file, rom_file, usizeof(info.rom.file));
 					found = TRUE;
 					break;
 				}
@@ -98,11 +102,30 @@ BYTE nsfe_load_rom(void) {
 		if (!found) {
 			return (EXIT_ERROR);
 		}
+
+		fseek(fp, 0L, SEEK_END);
+		rom.size = ftell(fp);
+		fseek(fp, 0L, SEEK_SET);
+
+		if ((rom.data = (BYTE *) malloc(rom.size)) == NULL) {
+			fclose(fp);
+			return (EXIT_ERROR);
+		}
+
+		if (fread(rom.data, 1, rom.size, fp) != rom.size) {
+			fclose(fp);
+			free(rom.data);
+			return (EXIT_ERROR);
+		}
+
+		fclose(fp);
 	}
 
-	if ((fgetc(fp) == 'N') && (fgetc(fp) == 'S') && (fgetc(fp) == 'F') && (fgetc(fp) == 'E')) {
-		long position = ftell(fp);
+	patcher_apply(&rom);
 
+	rom.position = 0;
+
+	if (strncmp((char *)rom.data, "NSFE", 4) == 0) {
 		info.format = NSFE_FORMAT;
 
 		info.machine[DATABASE] = DEFAULT;
@@ -115,53 +138,67 @@ BYTE nsfe_load_rom(void) {
 		nsf.info.ripper = &nsf_default_label[0];
 
 		for (phase = NSFE_COUNT; phase <= NSFE_READ; phase++) {
-			fseek(fp, position, SEEK_SET);
+			rom.position = 4;
 
-			while(fread(&nsfe.chunk, sizeof(nsfe.chunk), 1, fp)) {
+			while ((rom.position + sizeof(nsfe.chunk)) <= rom.size) {
+				rom_mem_memcpy(&nsfe.chunk, &rom, sizeof(nsfe.chunk));
+
 				if (strncmp(nsfe.chunk.id, "INFO", 4) == 0) {
-					nsfe_INFO(fp, phase);
+					if (nsfe_INFO(&rom, phase) == EXIT_ERROR) {
+						free(rom.data);
+						return (EXIT_ERROR);
+					}
 				} else if (strncmp(nsfe.chunk.id, "DATA", 4) == 0) {
-					if (nsfe_DATA(fp, phase) == EXIT_ERROR) {
-						fclose(fp);
+					if (nsfe_DATA(&rom, phase) == EXIT_ERROR) {
+						free(rom.data);
 						return (EXIT_ERROR);
 					}
 				} else if (strncmp(nsfe.chunk.id, "NEND", 4) == 0) {
-					break;
+					if (nsfe_NONE(&rom, phase) == EXIT_ERROR) {
+						free(rom.data);
+						return (EXIT_ERROR);
+					}
 				} else if (strncmp(nsfe.chunk.id, "BANK", 4) == 0) {
-					nsfe_BANK(fp, phase);
+					if (nsfe_BANK(&rom, phase)) {
+						free(rom.data);
+						return (EXIT_ERROR);
+					}
 				} else if (strncmp(nsfe.chunk.id, "plst", 4) == 0) {
-					if (nsfe_plst(fp, phase) == EXIT_ERROR) {
-						fclose(fp);
+					if (nsfe_plst(&rom, phase) == EXIT_ERROR) {
+						free(rom.data);
 						return (EXIT_ERROR);
 					}
 				} else if (strncmp(nsfe.chunk.id, "time", 4) == 0) {
-					if (nsfe_time(fp, phase) == EXIT_ERROR) {
-						fclose(fp);
+					if (nsfe_time(&rom, phase) == EXIT_ERROR) {
+						free(rom.data);
 						return (EXIT_ERROR);
 					}
 				} else if (strncmp(nsfe.chunk.id, "fade", 4) == 0) {
-					if (nsfe_fade(fp, phase) == EXIT_ERROR) {
-						fclose(fp);
+					if (nsfe_fade(&rom, phase) == EXIT_ERROR) {
+						free(rom.data);
 						return (EXIT_ERROR);
 					}
 				} else if (strncmp(nsfe.chunk.id, "tlbl", 4) == 0) {
-					if (nsfe_tlbl(fp, phase) == EXIT_ERROR) {
-						fclose(fp);
+					if (nsfe_tlbl(&rom, phase) == EXIT_ERROR) {
+						free(rom.data);
 						return (EXIT_ERROR);
 					}
 				} else if (strncmp(nsfe.chunk.id, "auth", 4) == 0) {
-					if (nsfe_auth(fp, phase) == EXIT_ERROR) {
-						fclose(fp);
+					if (nsfe_auth(&rom, phase) == EXIT_ERROR) {
+						free(rom.data);
 						return (EXIT_ERROR);
 					}
 				} else if (strncmp(nsfe.chunk.id, "text", 4) == 0) {
-					if (nsfe_text(fp, phase) == EXIT_ERROR) {
-						fclose(fp);
+					if (nsfe_text(&rom, phase) == EXIT_ERROR) {
+						free(rom.data);
 						return (EXIT_ERROR);
 					}
 				} else {
 					// ignoro il typo di chunk non riconosciuto
-					fseek(fp, nsfe.chunk.length, SEEK_CUR);
+					if (nsfe_NONE(&rom, phase) == EXIT_ERROR) {
+						free(rom.data);
+						return (EXIT_ERROR);
+					}
 				}
 			}
 		}
@@ -194,7 +231,7 @@ BYTE nsfe_load_rom(void) {
 
 		if ((nsf.songs.total == 0) || (nsf.adr.load < 0x6000) || (nsf.adr.init < 0x6000)
 			|| (nsf.adr.play < 0x6000)) {
-			fclose(fp);
+			free(rom.data);
 			return (EXIT_ERROR);
 		}
 
@@ -209,7 +246,7 @@ BYTE nsfe_load_rom(void) {
 		nsf.songs.total--;
 
 		if (!nsf.sound_chips.fds && (nsf.adr.load < 0x8000)) {
-			fclose(fp);
+			free(rom.data);
 			return (EXIT_ERROR);
 		}
 
@@ -245,7 +282,7 @@ BYTE nsfe_load_rom(void) {
 			}
 
 			if (map_prg_ram_malloc(ram) != EXIT_OK) {
-				fclose(fp);
+				free(rom.data);
 				return (EXIT_ERROR);
 			}
 		}
@@ -265,40 +302,55 @@ BYTE nsfe_load_rom(void) {
 		info.mapper.id = NSF_MAPPER;
 		info.cpu_rw_extern = TRUE;
 	} else {
-		fclose(fp);
+		free(rom.data);
 		return (EXIT_ERROR);
 	}
 
-	fclose(fp);
+	free(rom.data);
 
 	nsf_after_load_rom();
 
 	return (EXIT_OK);
 }
 
-BYTE nsfe_INFO(FILE *fp, BYTE phase) {
+BYTE nsfe_NONE(_rom_mem *rom, BYTE phase) {
+	if (phase == NSFE_COUNT) {
+		if ((rom->position + nsfe.chunk.length) > rom->size) {
+			return (EXIT_ERROR);
+		}
+		rom->position += nsfe.chunk.length;
+		return (EXIT_OK);
+	}
+
+	rom->position += nsfe.chunk.length;
+
+	return (EXIT_OK);
+}
+BYTE nsfe_INFO(_rom_mem *rom, BYTE phase) {
 	BYTE flags[TOTAL_FL];
 
 	if (nsfe.chunk.length < TOTAL_FL) {
 		return (EXIT_ERROR);
 	}
 
-	if (fread(&flags[0], sizeof(flags), 1, fp)) {
-		nsf.songs.total = flags[TOTAL_SONGS];
-		nsf.songs.starting = flags[STARTING_SONGS] + 1;
-		nsf.adr.load = (flags[LOAD_ADR_HI] << 8) | flags[LOAD_ADR_LO];
-		nsf.adr.init = (flags[INIT_ADR_HI] << 8) | flags[INIT_ADR_LO];
-		nsf.adr.play = (flags[PLAY_ADR_HI] << 8) | flags[PLAY_ADR_LO];
-
-		nsf.type = flags[PAL_NTSC_BITS] & 0x03;
-
-		nsf.sound_chips.vrc6 = flags[EXTRA_SOUND_CHIPS] & 0x01;
-		nsf.sound_chips.vrc7 = flags[EXTRA_SOUND_CHIPS] & 0x02;
-		nsf.sound_chips.fds = flags[EXTRA_SOUND_CHIPS] & 0x04;
-		nsf.sound_chips.mmc5 = flags[EXTRA_SOUND_CHIPS] & 0x08;
-		nsf.sound_chips.namco163 = flags[EXTRA_SOUND_CHIPS] & 0x10;
-		nsf.sound_chips.sunsoft5b = flags[EXTRA_SOUND_CHIPS] & 0x20;
+	if (rom_mem_ctrl_memcpy(&flags[0], rom, sizeof(flags)) == EXIT_ERROR) {
+		return (EXIT_ERROR);
 	}
+
+	nsf.songs.total = flags[TOTAL_SONGS];
+	nsf.songs.starting = flags[STARTING_SONGS] + 1;
+	nsf.adr.load = (flags[LOAD_ADR_HI] << 8) | flags[LOAD_ADR_LO];
+	nsf.adr.init = (flags[INIT_ADR_HI] << 8) | flags[INIT_ADR_LO];
+	nsf.adr.play = (flags[PLAY_ADR_HI] << 8) | flags[PLAY_ADR_LO];
+
+	nsf.type = flags[PAL_NTSC_BITS] & 0x03;
+
+	nsf.sound_chips.vrc6 = flags[EXTRA_SOUND_CHIPS] & 0x01;
+	nsf.sound_chips.vrc7 = flags[EXTRA_SOUND_CHIPS] & 0x02;
+	nsf.sound_chips.fds = flags[EXTRA_SOUND_CHIPS] & 0x04;
+	nsf.sound_chips.mmc5 = flags[EXTRA_SOUND_CHIPS] & 0x08;
+	nsf.sound_chips.namco163 = flags[EXTRA_SOUND_CHIPS] & 0x10;
+	nsf.sound_chips.sunsoft5b = flags[EXTRA_SOUND_CHIPS] & 0x20;
 
 	if (!nsf.sound_chips.fds && (nsf.adr.load < 0x8000)) {
 		return (EXIT_ERROR);
@@ -314,12 +366,15 @@ BYTE nsfe_INFO(FILE *fp, BYTE phase) {
 
 	return (EXIT_OK);
 }
-BYTE nsfe_DATA(FILE *fp, BYTE phase) {
+BYTE nsfe_DATA(_rom_mem *rom, BYTE phase) {
 	int padding = nsf.adr.load & 0x0FFF;
 	int len_4k;
 
 	if (phase == NSFE_COUNT) {
-		fseek(fp, nsfe.chunk.length, SEEK_CUR);
+		if ((rom->position + nsfe.chunk.length) > rom->size) {
+			return (EXIT_ERROR);
+		}
+		rom->position += nsfe.chunk.length;
 		return (EXIT_OK);
 	}
 
@@ -337,41 +392,43 @@ BYTE nsfe_DATA(FILE *fp, BYTE phase) {
 
 	memset(prg_chip(0), 0xF2, len_4k);
 
-	if (!(fread(prg_chip(0) + padding, nsfe.chunk.length, 1, fp))) {
-		return (EXIT_ERROR);
-	}
+	rom_mem_memcpy(prg_chip(0) + padding, rom, nsfe.chunk.length);
 
 	nsf.prg.banks_4k--;
 
 	return (EXIT_OK);
 }
-BYTE nsfe_BANK(FILE *fp, BYTE phase) {
-	int len;
-
-	if (phase == NSFE_COUNT) {
-		fseek(fp, nsfe.chunk.length, SEEK_CUR);
-		return (EXIT_OK);
+BYTE nsfe_BANK(_rom_mem *rom, BYTE phase) {
+	if (nsfe.chunk.length > 8) {
+		nsfe.chunk.length = 8;
 	}
 
-	if (nsfe.chunk.length > 8) {
-		len = 8;
+	if (phase == NSFE_COUNT) {
+		if ((rom->position + nsfe.chunk.length) > rom->size) {
+			return (EXIT_ERROR);
+		}
+		rom->position += nsfe.chunk.length;
+		return (EXIT_OK);
 	}
 
 	memset(&nsf.bankswitch.banks[0], 0x00, sizeof(nsf.bankswitch.banks));
 
-	if (fread(&nsf.bankswitch.banks, len, 1, fp)) {
-		if (nsf.bankswitch.banks[0] | nsf.bankswitch.banks[1] | nsf.bankswitch.banks[2] |
-			nsf.bankswitch.banks[3] | nsf.bankswitch.banks[4] | nsf.bankswitch.banks[5] |
-			nsf.bankswitch.banks[6] | nsf.bankswitch.banks[7]) {
-			nsf.bankswitch.enabled = TRUE;
-		}
+	rom_mem_memcpy(&nsf.bankswitch.banks, rom, nsfe.chunk.length);
+
+	if (nsf.bankswitch.banks[0] | nsf.bankswitch.banks[1] | nsf.bankswitch.banks[2] |
+		nsf.bankswitch.banks[3] | nsf.bankswitch.banks[4] | nsf.bankswitch.banks[5] |
+		nsf.bankswitch.banks[6] | nsf.bankswitch.banks[7]) {
+		nsf.bankswitch.enabled = TRUE;
 	}
 
 	return (EXIT_OK);
 }
-BYTE nsfe_plst(FILE *fp, BYTE phase) {
+BYTE nsfe_plst(_rom_mem *rom, BYTE phase) {
 	if (phase == NSFE_COUNT) {
-		fseek(fp, nsfe.chunk.length, SEEK_CUR);
+		if ((rom->position + nsfe.chunk.length) > rom->size) {
+			return (EXIT_ERROR);
+		}
+		rom->position += nsfe.chunk.length;
 		return (EXIT_OK);
 	}
 
@@ -380,9 +437,7 @@ BYTE nsfe_plst(FILE *fp, BYTE phase) {
 		return (EXIT_ERROR);
 	}
 
-	if (!(fread(nsf.playlist.data, nsfe.chunk.length, 1, fp))) {
-		return (EXIT_ERROR);
-	}
+	rom_mem_memcpy(nsf.playlist.data, rom, nsfe.chunk.length);
 
 	nsf.playlist.index = 0;
 	nsf.playlist.count = nsfe.chunk.length;
@@ -390,11 +445,14 @@ BYTE nsfe_plst(FILE *fp, BYTE phase) {
 
 	return (EXIT_OK);
 }
-BYTE nsfe_time(FILE *fp, BYTE phase) {
+BYTE nsfe_time(_rom_mem *rom, BYTE phase) {
 	int i, total;
 
 	if (phase == NSFE_COUNT) {
-		fseek(fp, nsfe.chunk.length, SEEK_CUR);
+		if ((rom->position + nsfe.chunk.length) > rom->size) {
+			return (EXIT_ERROR);
+		}
+		rom->position += nsfe.chunk.length;
 		return (EXIT_OK);
 	}
 
@@ -407,21 +465,22 @@ BYTE nsfe_time(FILE *fp, BYTE phase) {
 	for (i = 0; i < total; i++) {
 		_nsf_info_song *song = &nsf.info_song[i];
 
-		if (!(fread(&song->time, 4, 1, fp))) {
-			return (EXIT_ERROR);
-		}
+		rom_mem_memcpy(&song->time, rom, 4);
 		nsfe.chunk.length -= 4;
 	}
 
-	fseek(fp, nsfe.chunk.length, SEEK_CUR);
+	rom->position += nsfe.chunk.length;
 
 	return (EXIT_OK);
 }
-BYTE nsfe_fade(FILE *fp, BYTE phase) {
+BYTE nsfe_fade(_rom_mem *rom, BYTE phase) {
 	int i, total;
 
 	if (phase == NSFE_COUNT) {
-		fseek(fp, nsfe.chunk.length, SEEK_CUR);
+		if ((rom->position + nsfe.chunk.length) > rom->size) {
+			return (EXIT_ERROR);
+		}
+		rom->position += nsfe.chunk.length;
 		return (EXIT_OK);
 	}
 
@@ -434,22 +493,23 @@ BYTE nsfe_fade(FILE *fp, BYTE phase) {
 	for (i = 0; i < total; i++) {
 		_nsf_info_song *song = &nsf.info_song[i];
 
-		if (!(fread(&song->fade, 4, 1, fp))) {
-			return (EXIT_ERROR);
-		}
+		rom_mem_memcpy(&song->fade, rom, 4);
 		nsfe.chunk.length -= 4;
 	}
 
-	fseek(fp, nsfe.chunk.length, SEEK_CUR);
+	rom->position += nsfe.chunk.length;
 
 	return (EXIT_OK);
 }
-BYTE nsfe_tlbl(FILE *fp, BYTE phase) {
+BYTE nsfe_tlbl(_rom_mem *rom, BYTE phase) {
 	int i, count;
 	char *src;
 
 	if (phase == NSFE_COUNT) {
-		fseek(fp, nsfe.chunk.length, SEEK_CUR);
+		if ((rom->position + nsfe.chunk.length) > rom->size) {
+			return (EXIT_ERROR);
+		}
+		rom->position += nsfe.chunk.length;
 		return (EXIT_OK);
 	}
 
@@ -460,9 +520,7 @@ BYTE nsfe_tlbl(FILE *fp, BYTE phase) {
 
 	memset(nsf.info.track_label, 0x00, nsfe.chunk.length);
 
-	if (!(fread(nsf.info.track_label, nsfe.chunk.length, 1, fp))) {
-		return (EXIT_ERROR);
-	}
+	rom_mem_memcpy(nsf.info.track_label, rom, nsfe.chunk.length);
 
 	i = 0;
 	src = nsf.info.track_label;
@@ -490,12 +548,15 @@ BYTE nsfe_tlbl(FILE *fp, BYTE phase) {
 
 	return (EXIT_OK);
 }
-BYTE nsfe_auth(FILE *fp, BYTE phase) {
+BYTE nsfe_auth(_rom_mem *rom, BYTE phase) {
 	int i, count;
 	char *src = NULL, **dst = NULL;
 
 	if (phase == NSFE_COUNT) {
-		fseek(fp, nsfe.chunk.length, SEEK_CUR);
+		if ((rom->position + nsfe.chunk.length) > rom->size) {
+			return (EXIT_ERROR);
+		}
+		rom->position += nsfe.chunk.length;
 		return (EXIT_OK);
 	}
 
@@ -504,9 +565,7 @@ BYTE nsfe_auth(FILE *fp, BYTE phase) {
 		return (EXIT_ERROR);
 	}
 
-	if (!(fread(nsf.info.auth, nsfe.chunk.length, 1, fp))) {
-		return (EXIT_ERROR);
-	}
+	rom_mem_memcpy(nsf.info.auth, rom, nsfe.chunk.length);
 
 	i = 0;
 	src = nsf.info.auth;
@@ -540,9 +599,12 @@ BYTE nsfe_auth(FILE *fp, BYTE phase) {
 
 	return (EXIT_OK);
 }
-BYTE nsfe_text(FILE *fp, BYTE phase) {
+BYTE nsfe_text(_rom_mem *rom, BYTE phase) {
 	if (phase == NSFE_COUNT) {
-		fseek(fp, nsfe.chunk.length, SEEK_CUR);
+		if ((rom->position + nsfe.chunk.length) > rom->size) {
+			return (EXIT_ERROR);
+		}
+		rom->position += nsfe.chunk.length;
 		return (EXIT_OK);
 	}
 
@@ -551,9 +613,7 @@ BYTE nsfe_text(FILE *fp, BYTE phase) {
 		return (EXIT_ERROR);
 	}
 
-	if (!(fread(nsf.text.data, nsfe.chunk.length, 1, fp))) {
-		return (EXIT_ERROR);
-	}
+	rom_mem_memcpy(nsf.text.data, rom, nsfe.chunk.length);
 
 	nsf.text.index = 0;
 	nsf.text.count = nsfe.chunk.length;

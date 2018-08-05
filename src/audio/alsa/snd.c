@@ -428,7 +428,7 @@ void snd_list_devices(void) {
 				continue;
 			}
 
-			umemset(buf, 0, usizeof(buf));
+			umemset(buf, 0x00, usizeof(buf));
 
 			if ((pcm_hint_desc = snd_device_name_get_hint((*pcm_str), "DESC"))) {
 				if ((end = ustrchr(pcm_hint_desc, '\n'))) {

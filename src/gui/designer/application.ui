@@ -63,6 +63,8 @@
     <addaction name="action_Open"/>
     <addaction name="menu_Recent_Roms"/>
     <addaction name="separator"/>
+    <addaction name="action_Apply_IPS_Patch"/>
+    <addaction name="separator"/>
     <addaction name="action_Open_working_folder"/>
     <addaction name="separator"/>
     <addaction name="action_Quit"/>
@@ -2229,6 +2231,15 @@
    </property>
    <property name="text">
     <string>&amp;0</string>
+   </property>
+  </action>
+  <action name="action_Apply_IPS_Patch">
+   <property name="icon">
+    <iconset resource="application.qrc">
+     <normaloff>:/icon/icons/patch.png</normaloff>:/icon/icons/patch.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Apply IPS Patch</string>
    </property>
   </action>
  </widget>

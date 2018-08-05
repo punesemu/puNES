@@ -115,7 +115,7 @@ EXTERNC struct _save_slot {
 	DBWORD preview[SAVE_SLOTS_TOTAL];
 	BYTE preview_start;
 
-	_rom_file;
+	uTCHAR rom_file[LENGTH_FILE_NAME_LONG];
 	_info_sh1sum sha1sum;
 } save_slot;
 

@@ -57,10 +57,10 @@ enum fds_misc {
 #endif
 
 EXTERNC struct _fds {
-	/* generali */
+	// generali
 	struct _fds_info {
 		BYTE enabled;
-		FILE *fp;
+		BYTE *data;
 		FILE *diff;
 		BYTE total_sides;
 		BYTE type;
@@ -68,7 +68,7 @@ EXTERNC struct _fds {
 		uint32_t sides_size[20];
 		BYTE last_operation;
 	} info;
-	/* side */
+	// side
 	struct _fds_side {
 		struct _fds_side_block_1 {
 			uint32_t position;
@@ -93,7 +93,7 @@ EXTERNC struct _fds {
 		WORD *data;
 		uint32_t counted_files;
 	} side;
-	/* le variabili da salvare nei savestate */
+	// le variabili da salvare nei savestate
 	struct _fds_drive {
 		uint32_t disk_position;
 		uint32_t delay;
@@ -132,7 +132,7 @@ EXTERNC struct _fds {
 		/* per usi futuri */
 		BYTE filler[30];
 	} drive;
-	/* snd */
+	// snd
 	struct _fds_snd {
 		struct _fds_snd_wave {
 			BYTE data[64];

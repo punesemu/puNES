@@ -143,8 +143,8 @@ void cmd_line_parse(int argc, uTCHAR **argv) {
 				}
 			}
 		} else {
-			umemset(info.rom_file, 0x00, usizeof(info.rom_file));
-			ustrncpy(info.rom_file, uQStringCD(key), usizeof(info.rom_file) - 1);
+			umemset(info.rom.file, 0x00, usizeof(info.rom.file));
+			ustrncpy(info.rom.file, uQStringCD(key), usizeof(info.rom.file) - 1);
 			continue;
 		}
 

@@ -769,6 +769,7 @@ void setObject::to_cfg(QString group) {
 
 	if ((group == "GUI") || (group == "all")) {
 		cpy_utchar_to_val(SET_GUI_OPEN_PATH, gui.last_open_path);
+		cpy_utchar_to_val(SET_GUI_OPEN_IPS_PATH, gui.last_open_ips_path);
 		val.replace(SET_GUI_LAST_POSITION, lastpos_val());
 		int_to_val(SET_GUI_LANGUAGE, cfg_from_file.language);
 		int_to_val(SET_GUI_DISABLE_NEW_MENU, cfg_from_file.disable_new_menu);
@@ -853,6 +854,7 @@ void setObject::fr_cfg(QString group) {
 
 	if ((group == "GUI") || (group == "all")) {
 		cpy_val_to_utchar(SET_GUI_OPEN_PATH, gui.last_open_path, usizeof(gui.last_open_path));
+		cpy_val_to_utchar(SET_GUI_OPEN_IPS_PATH, gui.last_open_ips_path, usizeof(gui.last_open_ips_path));
 		lastpos_val_to_int(SET_GUI_LAST_POSITION);
 		cfg_from_file.language = val_to_int(SET_GUI_LANGUAGE);
 		cfg_from_file.disable_new_menu = val_to_int(SET_GUI_DISABLE_NEW_MENU);
@@ -1180,7 +1182,7 @@ void inpObject::set_all_input_default(_config_input *config_input, _array_pointe
 void *inpObject::sc_val_to_qstring_pntr(int index, int type) {
 	static QString str;
 
-	str = val.at(index).split(",").at(type);;
+	str = val.at(index).split(",").at(type);
 	return ((void *)&str);
 }
 void inpObject::sc_qstring_pntr_to_val(void *str, int index, int type) {

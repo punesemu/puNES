@@ -22,6 +22,7 @@
 #include <libgen.h>
 #include "main.h"
 #include "emu.h"
+#include "rom_mem.h"
 #include "info.h"
 #include "settings.h"
 #include "snd.h"
@@ -47,6 +48,7 @@
 #include "fds.h"
 #include "nsf.h"
 #include "nsfe.h"
+#include "patcher.h"
 #include "cheat.h"
 #include "overscan.h"
 #include "recent_roms.h"
@@ -57,23 +59,14 @@
 #include "gui.h"
 
 #define RS_SCALE (1.0f / (1.0f + RAND_MAX))
-#define recent_roms_add_wrap()\
-	if (recent_roms_permit_add == TRUE) {\
-		recent_roms_permit_add = FALSE;\
-		recent_roms_add(save_rom_file);\
-	}
-#define save_rom_ext()\
-	gui_utf_basename(info.rom_file, name_file, usizeof(name_file));\
-	if (ustrrchr(name_file, uL('.')) == NULL) {\
-		ustrncpy(ext, uL(".nes"), usizeof(ext) - 1);\
-	} else {\
-		/* salvo l'estensione del file */\
-		ustrncpy(ext, ustrrchr(name_file, uL('.')), usizeof(ext) - 1);\
-	}
 
 #if defined (DEBUG)
 	WORD PCBREAK = 0xC425;
 #endif
+
+static BYTE emu_ctrl_if_rom_exist(void);
+static uTCHAR *emu_ctrl_rom_ext(uTCHAR *file);
+static void emu_recent_roms_add(BYTE *add);
 
 BYTE emu_frame(void) {
 #if defined (WITH_OPENGL) && defined (__WIN32__)
@@ -84,12 +77,12 @@ BYTE emu_frame(void) {
 
 	tas.lag_frame = TRUE;
 
-	/* gestione uscita */
+	// gestione uscita
 	if (info.stop == TRUE) {
 		emu_quit(EXIT_SUCCESS);
 	}
 
-	/* eseguo un frame dell'emulatore */
+	// eseguo un frame dell'emulatore
 	if (!(info.no_rom | info.turn_off | info.pause)) {
 		if (nsf.state & (NSF_PAUSE | NSF_STOP)) {
 			BYTE i;
@@ -110,7 +103,7 @@ BYTE emu_frame(void) {
 			return (EXIT_OK);
 		}
 
-		/* controllo se ci sono eventi di input */
+		// controllo se ci sono eventi di input
 		if (tas.type) {
 			tas_frame();
 		} else {
@@ -123,7 +116,7 @@ BYTE emu_frame(void) {
 			}
 		}
 
-		/* riprendo a far correre la CPU */
+		// riprendo a far correre la CPU
 		info.execute_cpu = TRUE;
 
 		while (info.execute_cpu == TRUE) {
@@ -133,7 +126,7 @@ BYTE emu_frame(void) {
 				pippo = pippo + 1;
 			}
 #endif
-			/* eseguo CPU, PPU e APU */
+			// eseguo CPU, PPU e APU
 			cpu_exe_op();
 		}
 
@@ -177,7 +170,7 @@ BYTE emu_frame(void) {
 		gfx_draw_screen(FALSE);
 	}
 
-	/* gestione frameskip e calcolo fps */
+	// gestione frameskip e calcolo fps
 	fps_frameskip();
 	return (EXIT_OK);
 }
@@ -191,11 +184,11 @@ BYTE emu_make_dir(const uTCHAR *fmt, ...) {
 	va_end(ap);
 
 	if (!(uaccess(path, 0))) {
-		/* se esiste controllo che sia una directory */
+		// se esiste controllo che sia una directory
 		ustat(path, &status);
 
 		if (!(status.st_mode & S_IFDIR)) {
-			/* non e' una directory */
+			// non e' una directory
 			return (EXIT_ERROR);
 		}
 	} else {
@@ -235,7 +228,6 @@ char *emu_file2string(const uTCHAR *path) {
 
 	fseek(fd, 0, SEEK_END);
 	len = ftell(fd);
-
 	fseek(fd, 0, SEEK_SET);
 
 	if (!(str = (char *) malloc(len * sizeof(char)))) {
@@ -253,7 +245,6 @@ char *emu_file2string(const uTCHAR *path) {
 	return (str);
 }
 BYTE emu_load_rom(void) {
-	uTCHAR ext[10], name_file[255];
 	BYTE recent_roms_permit_add = TRUE;
 
 	elaborate_rom_file:
@@ -266,87 +257,67 @@ BYTE emu_load_rom(void) {
 	fds_quit();
 	map_quit();
 
-	/* se necessario rimuovo la rom decompressa */
-	uncomp_remove();
-
-	if (info.load_rom_file[0]) {
-		ustrncpy(info.rom_file, info.load_rom_file, usizeof(info.rom_file));
-		umemset(info.load_rom_file, 0, usizeof(info.load_rom_file));
-	}
-
-	if (info.rom_file[0]) {
-		uTCHAR save_rom_file[LENGTH_FILE_NAME_LONG];
-
-		ustrncpy(save_rom_file, info.rom_file, LENGTH_FILE_NAME_LONG);
-
-		save_rom_ext()
-
-		if (uncomp_ctrl(ext) == EXIT_ERROR) {
-			return (EXIT_ERROR);
-		}
-
-		save_rom_ext()
+	if (info.rom.file[0]) {
+		uTCHAR *ext = emu_ctrl_rom_ext(info.rom.file);
 
 		if (!ustrcasecmp(ext, uL(".fds"))) {
 			if (fds_load_rom() == EXIT_ERROR) {
-				info.rom_file[0] = 0;
+				info.rom.file[0] = 0;
 				goto elaborate_rom_file;
 			}
-			recent_roms_add_wrap()
+			emu_recent_roms_add(&recent_roms_permit_add);
 		} else if (!ustrcasecmp(ext, uL(".nsf"))) {
 			if (nsf_load_rom() == EXIT_ERROR) {;
-				info.rom_file[0] = 0;
+				info.rom.file[0] = 0;
 				text_add_line_info(1, "[red]error loading rom");
 				fprintf(stderr, "error loading rom\n");
 				goto elaborate_rom_file;
 			}
-			recent_roms_add_wrap()
+			emu_recent_roms_add(&recent_roms_permit_add);
 		} else if (!ustrcasecmp(ext, uL(".nsfe"))) {
 			if (nsfe_load_rom() == EXIT_ERROR) {;
-				info.rom_file[0] = 0;
+				info.rom.file[0] = 0;
 				text_add_line_info(1, "[red]error loading rom");
 				fprintf(stderr, "error loading rom\n");
 				goto elaborate_rom_file;
 			}
-			recent_roms_add_wrap()
+			emu_recent_roms_add(&recent_roms_permit_add);
 		} else if (!ustrcasecmp(ext, uL(".fm2"))) {
-			tas_file(ext, info.rom_file);
-			if (!info.rom_file[0]) {
+			tas_file(ext, info.rom.file);
+			if (!info.rom.file[0]) {
 				text_add_line_info(1, "[red]error loading rom");
 				fprintf(stderr, "error loading rom\n");
 			}
-			recent_roms_add_wrap()
-			/* rielaboro il nome del file */
+			emu_recent_roms_add(&recent_roms_permit_add);
+			// rielaboro il nome del file
 			goto elaborate_rom_file;
 		} else {
-			/* carico la rom in memoria */
+			// carico la rom in memoria
 			if (ines_load_rom() == EXIT_OK) {
-				goto accept_rom_file;
-			}
-			if (unif_load_rom() == EXIT_ERROR) {
-				info.rom_file[0] = 0;
+				;
+			} else if (unif_load_rom() == EXIT_ERROR) {
+				info.rom.file[0] = 0;
 				text_add_line_info(1, "[red]error loading rom");
 				fprintf(stderr, "error loading rom\n");
 				goto elaborate_rom_file;
 			}
-			accept_rom_file:
-			recent_roms_add_wrap()
+			emu_recent_roms_add(&recent_roms_permit_add);
 			info.turn_off = FALSE;
 		}
 	} else if (info.gui) {
-		/* impostazione primaria */
+		// impostazione primaria
 		info.prg.rom[0].banks_16k = info.chr.rom[0].banks_8k = 1;
 
 		info.prg.rom[0].banks_8k = info.prg.rom[0].banks_16k * 2;
 		info.chr.rom[0].banks_4k = info.chr.rom[0].banks_8k * 2;
 		info.chr.rom[0].banks_1k = info.chr.rom[0].banks_4k * 4;
 
-		/* PRG Ram */
+		// PRG Ram
 		if (map_prg_ram_malloc(0x2000) != EXIT_OK) {
 			return (EXIT_ERROR);
 		}
 
-		/* PRG Rom */
+		// PRG Rom
 		if (map_prg_chip_malloc(0, info.prg.rom[0].banks_16k * (16 * 1024), 0xEA) == EXIT_ERROR) {
 			return (EXIT_ERROR);
 		}
@@ -354,7 +325,7 @@ BYTE emu_load_rom(void) {
 		info.no_rom = TRUE;
 	}
 
-	/* setto il tipo di sistema */
+	// setto il tipo di sistema
 	switch (cfg->mode) {
 		case AUTO:
 			switch (info.machine[DATABASE]) {
@@ -365,11 +336,9 @@ BYTE emu_load_rom(void) {
 					break;
 				case DEFAULT:
 					if (info.machine[HEADER] == info.machine[DATABASE]) {
-						/*
-						 * posso essere nella condizione
-						 * info.machine[DATABASE] == DEFAULT && info.machine[HEADER] == DEFAULT
-						 * solo quando avvio senza caricare nessuna rom.
-						 */
+						// posso essere nella condizione
+						// info.machine[DATABASE] == DEFAULT && info.machine[HEADER] == DEFAULT
+						// solo quando avvio senza caricare nessuna rom.
 						machine = machinedb[NTSC - 1];
 					} else {
 						machine = machinedb[info.machine[HEADER] - 1];
@@ -391,70 +360,46 @@ BYTE emu_load_rom(void) {
 
 	return (EXIT_OK);
 }
-BYTE emu_search_in_database(FILE *fp) {
-	size_t prg_banks_16k, chr_banks_8k;
-	long fseekfile;
-	BYTE *sha1prg;
+BYTE emu_search_in_database(void *rom_mem) {
+	_rom_mem *rom = (_rom_mem *)rom_mem;
+	size_t position;
 	WORD i;
 
-	/* setto i default prima della ricerca */
+	// setto i default prima della ricerca
 	info.machine[DATABASE] = info.mapper.submapper = info.mirroring_db = info.id = DEFAULT;
 	info.extra_from_db = 0;
 	vs_system.ppu = vs_system.special_mode.type = DEFAULT;
 
-	/* posiziono il puntatore del file */
+	// punto oltre l'header
 	if (info.trainer) {
-		fseekfile = (0x10 + sizeof(trainer.data));
+		position = (0x10 + sizeof(trainer.data));
 	} else {
-		fseekfile = 0x10;
+		position = 0x10;
 	}
 
-	fseek(fp, fseekfile, SEEK_SET);
-
-	/* mi alloco una zona di memoria dove leggere la PRG Rom */
-	sha1prg = (BYTE *) malloc(info.prg.rom[0].banks_16k * (16 * 1024));
-	if (!sha1prg) {
-		fprintf(stderr, "Out of memory\n");
-		return (EXIT_ERROR);
-	}
-	/* leggo dal file la PRG Rom */
-	if ((prg_banks_16k = fread(&sha1prg[0], (16 * 1024), info.prg.rom[0].banks_16k, fp))
-			< info.prg.rom[0].banks_16k) {
-		info.prg.rom[0].banks_16k = prg_banks_16k;
-		fseek(fp, fseekfile + (info.prg.rom[0].banks_16k *(16 * 1024)), SEEK_SET);
+	if ((position + (info.prg.rom[0].banks_16k * 0x4000)) > rom->size) {
+		info.prg.rom[0].banks_16k = (rom->size - position) / 0x4000;
 		fprintf(stderr, "truncated PRG ROM\n");
 	}
-	/* calcolo l'sha1 della PRG Rom */
-	sha1_csum(sha1prg, info.prg.rom[0].banks_16k * (16 * 1024), info.sha1sum.prg.value,
-			info.sha1sum.prg.string, LOWER);
-	/* libero la memoria */
-	free(sha1prg);
 
-	/* calcolo anche l'sha1 della CHR rom */
+	// calcolo l'sha1 della PRG Rom
+	sha1_csum(rom->data + position, 0x4000 * info.prg.rom[0].banks_16k, info.sha1sum.prg.value,
+		info.sha1sum.prg.string, LOWER);
+	position += (info.prg.rom[0].banks_16k * 0x4000);
+
 	if (info.chr.rom[0].banks_8k) {
-		BYTE *sha1chr;
-
-		/* mi alloco una zona di memoria dove leggere la CHR Rom */
-		sha1chr = (BYTE *) malloc(info.chr.rom[0].banks_8k * (8 * 1024));
-		if (!sha1chr) {
-			fprintf(stderr, "Out of memory\n");
-			return (EXIT_ERROR);
-		}
-
-		/* leggo dal file la CHR Rom */
-		if ((chr_banks_8k = fread(&sha1chr[0], (8 * 1024), info.chr.rom[0].banks_8k, fp))
-				< info.chr.rom[0].banks_8k) {
-			info.chr.rom[0].banks_8k = chr_banks_8k;
+		if ((position + (info.chr.rom[0].banks_8k * 0x2000)) > rom->size) {
+			info.chr.rom[0].banks_8k = (rom->size - position) / 0x2000;
 			fprintf(stderr, "truncated CHR ROM\n");
 		}
-		/* calcolo l'sha1 della CHR Rom */
-		sha1_csum(sha1chr, info.chr.rom[0].banks_8k * (8 * 1024), info.sha1sum.chr.value,
+
+		// calcolo anche l'sha1 della CHR rom
+		sha1_csum(rom->data + position, 0x2000 * info.chr.rom[0].banks_8k, info.sha1sum.chr.value,
 			info.sha1sum.chr.string, LOWER);
-		/* libero la memoria */
-		free(sha1chr);
+		position += (info.chr.rom[0].banks_8k * 0x2000);
 	}
 
-	/* cerco nel database */
+	// cerco nel database
 	for (i = 0; i < LENGTH(dblist); i++) {
 		if (!(memcmp(dblist[i].sha1sum, info.sha1sum.prg.string, 40))) {
 			info.mapper.id = dblist[i].mapper;
@@ -468,7 +413,7 @@ BYTE emu_search_in_database(FILE *fp) {
 			info.extra_from_db = dblist[i].extra;
 			switch (info.mapper.id) {
 				case 1:
-					/* Fix per Famicom Wars (J) [!] che ha l'header INES errato */
+					// Fix per Famicom Wars (J) [!] che ha l'header INES errato
 					if (info.id == BAD_YOSHI_U) {
 						info.chr.rom[0].banks_8k = 4;
 					} else if (info.id == MOWPC10) {
@@ -476,30 +421,24 @@ BYTE emu_search_in_database(FILE *fp) {
 					}
 					break;
 				case 2:
-					/*
-					 * Fix per "Best of the Best - Championship Karate (E) [!].nes"
-					 * che ha l'header INES non corretto.
-					 */
+					// Fix per "Best of the Best - Championship Karate (E) [!].nes"
+					// che ha l'header INES non corretto.
 					if (info.id == BAD_INES_BOTBE) {
 						info.prg.rom[0].banks_16k = 16;
 						info.chr.rom[0].banks_8k = 0;
 					}
 					break;
 				case 3:
-					/*
-					 * Fix per "Tetris (Bulletproof) (Japan).nes"
-					 * che ha l'header INES non corretto.
-					 */
+					// Fix per "Tetris (Bulletproof) (Japan).nes"
+					// che ha l'header INES non corretto.
 					if (info.id == BAD_INES_TETRIS_BPS) {
 						info.prg.rom[0].banks_16k = 2;
 						info.chr.rom[0].banks_8k = 2;
 					}
 					break;
 				case 7:
-					/*
-					 * Fix per "WWF Wrestlemania (E) [!].nes"
-					 * che ha l'header INES non corretto.
-					 */
+					// Fix per "WWF Wrestlemania (E) [!].nes"
+					// che ha l'header INES non corretto.
 					if (info.id == BAD_INES_WWFWE) {
 						info.prg.rom[0].banks_16k = 8;
 						info.chr.rom[0].banks_8k = 0;
@@ -508,14 +447,14 @@ BYTE emu_search_in_database(FILE *fp) {
 					}
 					break;
 				case 10:
-					/* Fix per Famicom Wars (J) [!] che ha l'header INES errato */
+					// Fix per Famicom Wars (J) [!] che ha l'header INES errato
 					if (info.id == BAD_INES_FWJ) {
 						info.chr.rom[0].banks_8k = 8;
 					}
 					break;
 				case 11:
-					/* Fix per King Neptune's Adventure (Color Dreams) [!]
-					 * che ha l'header INES errato */
+					// Fix per King Neptune's Adventure (Color Dreams) [!]
+					// che ha l'header INES errato
 					if (info.id == BAD_KING_NEPT) {
 						info.prg.rom[0].banks_16k = 4;
 						info.chr.rom[0].banks_8k = 4;
@@ -538,14 +477,12 @@ BYTE emu_search_in_database(FILE *fp) {
 					}
 					break;
 				case 235:
-					/*
-					 * 260-in-1 [p1][b1].nes ha un numero di prg_rom_16k_count
-					 * pari a 256 (0x100) ed essendo un BYTE (0xFF) quello che l'INES
-					 * utilizza per indicare in numero di 16k, nell'INES header sara'
-					 * presente 0.
-					 * 150-in-1 [a1][p1][!].nes ha lo stesso chsum del 260-in-1 [p1][b1].nes
-					 * ma ha un numero di prg_rom_16k_count di 127.
-					 */
+					// 260-in-1 [p1][b1].nes ha un numero di prg_rom_16k_count
+					// pari a 256 (0x100) ed essendo un BYTE (0xFF) quello che l'INES
+					// utilizza per indicare in numero di 16k, nell'INES header sara'
+					// presente 0.
+					// 150-in-1 [a1][p1][!].nes ha lo stesso chsum del 260-in-1 [p1][b1].nes
+					// ma ha un numero di prg_rom_16k_count di 127.
 					if (!info.prg.rom[0].banks_16k) {
 						info.prg.rom[0].banks_16k = 256;
 					}
@@ -568,9 +505,6 @@ BYTE emu_search_in_database(FILE *fp) {
 	if ((vs_system.ppu == DEFAULT) && (vs_system.special_mode.type == DEFAULT)) {
 		vs_system.ppu = vs_system.special_mode.type = 0;
 	}
-
-	/* riposiziono il puntatore del file */
-	fseek(fp, 0x10, SEEK_SET);
 
 	return (EXIT_OK);
 }
@@ -624,14 +558,12 @@ BYTE emu_turn_on(void) {
 
 	info.first_illegal_opcode = FALSE;
 
-	/*
-	 * per produrre una serie di numeri pseudo-random
-	 * ad ogni avvio del programma inizializzo il seed
-	 * con l'orologio.
-	 */
+	// per produrre una serie di numeri pseudo-random
+	// ad ogni avvio del programma inizializzo il seed
+	// con l'orologio.
 	srand(time(0));
 
-	/* l'inizializzazione della memmap della cpu e della ppu */
+	// l'inizializzazione della memmap della cpu e della ppu
 	memset(&mmcpu, 0x00, sizeof(mmcpu));
 	memset(&prg, 0x00, sizeof(prg));
 	memset(&chr, 0x00, sizeof(chr));
@@ -654,57 +586,59 @@ BYTE emu_turn_on(void) {
 	nsf_init();
 	fds_init();
 
-	/* carico la rom in memoria */
-	if (emu_load_rom()) {
-		return (EXIT_ERROR);
+	// carico la rom in memoria
+	{
+		emu_ctrl_if_rom_exist();
+
+		if (emu_load_rom()) {
+			return (EXIT_ERROR);
+		}
 	}
 
 	overscan_set_mode(machine.type);
 
-	/* ...nonche' dei puntatori alla PRG Rom... */
+	// ...nonche' dei puntatori alla PRG Rom...
 	map_prg_rom_8k_reset();
 
 	settings_pgs_parse();
 
-	/* APU */
+	// APU
 	apu_turn_on();
 
-	/* PPU */
+	// PPU
 	if (ppu_turn_on()) {
 		return (EXIT_ERROR);
 	}
 
-	/* CPU */
+	// CPU
 	cpu_turn_on();
 
-	/*
-	 * ...e inizializzazione della mapper (che
-	 * deve necessariamente seguire quella della PPU.
-	 */
+	// ...e inizializzazione della mapper (che
+	// deve necessariamente seguire quella della PPU.
 	if (map_init()) {
 		return (EXIT_ERROR);
 	}
 
 	cpu_init_PC();
 
-	/* controller */
+	// controller
 	input_init(NO_SET_CURSOR);
 
-	/* joystick */
+	// joystick
 	js_init(TRUE);
 
-	/* gestione grafica */
+	// gestione grafica
 	if (gfx_init()) {
 		return (EXIT_ERROR);
 	}
 
-	/* setto il cursore */
+	// setto il cursore
 	gfx_cursor_init();
 
-	/* fps */
+	// fps
 	fps_init();
 
-	/* gestione sonora */
+	// gestione sonora
 	if (snd_init()) {
 		return (EXIT_ERROR);
 	}
@@ -715,7 +649,7 @@ BYTE emu_turn_on(void) {
 
 	save_slot_count_load();
 
-	/* emulo i 9 cicli iniziali */
+	// emulo i 9 cicli iniziali
 	{
 		BYTE i;
 		for (i = 0; i < 8; i++) {
@@ -738,7 +672,7 @@ BYTE emu_turn_on(void) {
 
 	info.reset = FALSE;
 
-	/* The End */
+	// The End
 	return (EXIT_OK);
 }
 void emu_pause(BYTE mode) {
@@ -765,6 +699,13 @@ BYTE emu_reset(BYTE type) {
 
 	emu_pause(TRUE);
 
+	if (type == CHANGE_ROM) {
+		if (emu_ctrl_if_rom_exist() == EXIT_ERROR) {
+			emu_pause(FALSE);
+			return (EXIT_OK);
+		}
+	}
+
 	info.reset = type;
 
 	info.first_illegal_opcode = FALSE;
@@ -776,12 +717,12 @@ BYTE emu_reset(BYTE type) {
 		info.r2002_race_condition_disabled = FALSE;
 		info.r4016_dmc_double_read_disabled = FALSE;
 
-		/* se carico una rom durante un tas faccio un bel quit dal tas */
+		// se carico una rom durante un tas faccio un bel quit dal tas
 		if (tas.type != NOTAS) {
 			tas_quit();
 		}
 
-		/* carico la rom in memoria */
+		// carico la rom in memoria
 		if (emu_load_rom()) {
 			return (EXIT_ERROR);
 		}
@@ -805,18 +746,18 @@ BYTE emu_reset(BYTE type) {
 		map_prg_rom_8k_reset();
 	}
 
-	/* APU */
+	// APU
 	apu_turn_on();
 
-	/* PPU */
+	// PPU
 	if (ppu_turn_on()) {
 		return (EXIT_ERROR);
 	}
 
-	/* CPU */
+	// CPU
 	cpu_turn_on();
 
-	/* mapper */
+	// mapper
 	if (map_init()) {
 		return (EXIT_ERROR);
 	}
@@ -835,10 +776,10 @@ BYTE emu_reset(BYTE type) {
 		return (EXIT_OK);
 	}
 
-	/* controller */
+	// controller
 	input_init(SET_CURSOR);
 
-	/* joystick */
+	// joystick
 	js_quit(FALSE);
 	js_init(FALSE);
 
@@ -858,7 +799,7 @@ BYTE emu_reset(BYTE type) {
 		}
 	}
 
-	/* ritardo della CPU */
+	// ritardo della CPU
 	{
 		BYTE i;
 		for (i = 0; i < 8; i++) {
@@ -921,6 +862,19 @@ double emu_drand(void) {
 	} while (d >= 1); // Round off
 	return (d);
 }
+uTCHAR *emu_ustrncpy(uTCHAR *dst, uTCHAR *src) {
+	uint32_t size;
+
+	if (dst) {
+		free (dst);
+	}
+	size = ustrlen(src) + 1;
+	dst = (uTCHAR *)malloc(sizeof(uTCHAR) * size);
+	umemset(dst, 0x00, size);
+	ustrncpy(dst, src, size);
+
+	return (dst);
+}
 void emu_quit(BYTE exit_code) {
 	if (cfg->save_on_exit) {
 		settings_save();
@@ -939,9 +893,124 @@ void emu_quit(BYTE exit_code) {
 
 	js_quit(TRUE);
 
-	uncomp_quit();
+	gamegenie_quit();
+	uncompress_quit();
+	patcher_quit();
 
 	gui_quit();
 
 	exit(exit_code);
+}
+
+static BYTE emu_ctrl_if_rom_exist(void) {
+	uTCHAR file[LENGTH_FILE_NAME_LONG];
+	BYTE found = FALSE;
+
+	umemset(file, 0x00, usizeof(file));
+
+	if (info.rom.from_load_menu) {
+		ustrncpy(file, info.rom.from_load_menu, usizeof(file));
+		free (info.rom.from_load_menu);
+		info.rom.from_load_menu = NULL;
+	} else if (gamegenie.rom) {
+		ustrncpy(file, gamegenie.rom, usizeof(file));
+	} else {
+		ustrncpy(file, info.rom.file, usizeof(file));
+	}
+
+	if (file[0]) {
+		_uncompress_archive *archive;
+		BYTE rc;
+
+		archive = uncompress_archive_alloc(file, &rc);
+
+		if (rc == UNCOMPRESS_EXIT_OK) {
+			BYTE is_rom = FALSE, is_patch = FALSE;
+			uTCHAR *rom = NULL, *patch = NULL;
+
+			if (archive->rom.count > 0) {
+				is_rom = TRUE;
+			}
+			if (archive->patch.count > 0) {
+				is_patch = TRUE;
+			}
+			if ((is_patch == TRUE) && (is_rom == FALSE) && !info.rom.file[0]) {
+				is_patch = FALSE;
+			}
+			if (is_rom) {
+				switch ((rc = uncompress_archive_extract_file(archive,UNCOMPRESS_TYPE_ROM))) {
+					case UNCOMPRESS_EXIT_OK:
+						rom = uncompress_archive_extracted_file_name(archive, UNCOMPRESS_TYPE_ROM);
+						found = TRUE;
+						break;
+					case UNCOMPRESS_EXIT_ERROR_ON_UNCOMP:
+						break;
+					case UNCOMPRESS_EXIT_IS_COMP_BUT_NOT_SELECTED:
+					case UNCOMPRESS_EXIT_IS_COMP_BUT_NO_ITEMS:
+						rom = info.rom.file;
+						break;
+					default:
+						break;
+				}
+				if (rom) {
+					ustrncpy(file, rom, usizeof(file));
+				}
+			}
+			if (is_patch) {
+				switch ((rc = uncompress_archive_extract_file(archive,UNCOMPRESS_TYPE_PATCH))) {
+					case UNCOMPRESS_EXIT_OK:
+						patch = uncompress_archive_extracted_file_name(archive, UNCOMPRESS_TYPE_PATCH);
+						found = TRUE;
+						break;
+					case UNCOMPRESS_EXIT_ERROR_ON_UNCOMP:
+						break;
+					default:
+						is_patch = FALSE;
+						break;
+				}
+				if (patch) {
+					patcher.file = emu_ustrncpy(patcher.file, patch);
+				}
+			}
+			uncompress_archive_free(archive);
+		} else if (rc == UNCOMPRESS_EXIT_IS_NOT_COMP) {
+			found = TRUE;
+		}
+	}
+
+	if (found == FALSE) {
+		return (EXIT_ERROR);
+	}
+
+	umemset(info.rom.file, 0x00, usizeof(info.rom.file));
+	ustrncpy(info.rom.file, file, usizeof(info.rom.file));
+
+	if (patcher_ctrl_if_exist(NULL) == EXIT_OK) {
+		ufprintf(stderr, uL("patch file : " uPERCENTs "\n"), patcher.file);
+	}
+
+	return (EXIT_OK);
+}
+static uTCHAR *emu_ctrl_rom_ext(uTCHAR *file) {
+	static uTCHAR ext[10];
+	uTCHAR name_file[255], *last_dot;
+
+	gui_utf_basename(file, name_file, usizeof(name_file));
+
+	last_dot = ustrrchr(name_file, uL('.'));
+
+	if (last_dot == NULL) {
+		ustrncpy((uTCHAR *)ext, uL(".nes"), usizeof(ext) - 1);
+	} else {
+		// salvo l'estensione del file
+		ustrncpy((uTCHAR *)ext, last_dot, usizeof(ext) - 1);
+	}
+
+	return (ext);
+}
+static void emu_recent_roms_add(BYTE *add) {
+	if ((*add) == TRUE) {
+		(*add) = FALSE;
+		recent_roms_add();
+	}
 }

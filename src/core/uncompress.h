@@ -21,28 +21,56 @@
 
 #include "common.h"
 
-enum uncomp_formats {
-	FMT_NES,
-	FMT_FDS,
-	FMT_FM2,
-	FMT_UNIF,
-	FMT_NSF,
-	FMT_NSFE
+enum uncompress_type {
+	UNCOMPRESS_TYPE_ROM,
+	UNCOMPRESS_TYPE_PATCH,
+	UNCOMPRESS_TYPE_ALL
 };
-enum uncomp_misc {
-	UNCOMP_CTRL_FILE_COUNT_ROMS,
-	UNCOMP_CTRL_FILE_SAVE_DATA,
-	UNCOMP_NO_FILE_SELECTED = 0xFFFF
+enum uncompress_exit_states {
+	UNCOMPRESS_EXIT_OK = EXIT_OK,
+	UNCOMPRESS_EXIT_ERROR_ON_UNCOMP = EXIT_ERROR,
+	UNCOMPRESS_EXIT_IS_NOT_COMP,
+	UNCOMPRESS_EXIT_IS_COMP_BUT_NOT_SELECTED,
+	UNCOMPRESS_EXIT_IS_COMP_BUT_NO_ITEMS
+};
+enum uncompress_misc {
+	UNCOMPRESS_NO_FILE_SELECTED = 0xFFFF
 };
 
-typedef struct _format_supported {
-	uTCHAR ext[10];
-	BYTE id;
-} _format_supported;
-typedef struct _uncomp_file_data {
-	uint32_t num;
-	BYTE format;
-} _uncomp_file_data;
+typedef struct _uncompress_extension {
+	BYTE type;
+	uTCHAR e[10];
+} _uncompress_extension;
+
+typedef struct _uncompress_archive_item {
+	BYTE type;
+	uint32_t index;
+} _uncompress_archive_item;
+typedef struct _uncompress_archive_items_list {
+	uint32_t count;
+	_uncompress_archive_item *item;
+} _uncompress_archive_items_list;
+typedef struct _uncompress_archive_type_info {
+	uint32_t count;
+	uint32_t storage_index;
+} _uncompress_archive_type_info;
+typedef struct _uncompress_archive {
+	uTCHAR *file;
+	_uncompress_archive_items_list list;
+	_uncompress_archive_type_info rom;
+	_uncompress_archive_type_info patch;
+} _uncompress_archive;
+
+typedef struct _uncompress_storage_item {
+	BYTE type;
+	uTCHAR *archive;
+	uTCHAR *file;
+	uint32_t index;
+} _uncompress_storage_item;
+typedef struct _uncompress_storage {
+	uint32_t count;
+	_uncompress_storage_item *item;
+} _uncompress_storage;
 
 #if defined (__cplusplus)
 #define EXTERNC extern "C"
@@ -50,29 +78,32 @@ typedef struct _uncomp_file_data {
 #define EXTERNC
 #endif
 
-static const _format_supported format_supported[] = {
-	{ uL(".nes"), FMT_NES },
-	{ uL(".fds"), FMT_FDS },
-	//{ uL(".fm2"), FMT_FM2 },
-	{ uL(".unf"), FMT_UNIF },
-	{ uL(".unif"), FMT_UNIF },
-	{ uL(".nsf"), FMT_NSF },
-	{ uL(".nsfe"), FMT_NSFE }
+static const _uncompress_extension uncompress_exts[] = {
+	{ UNCOMPRESS_TYPE_ROM, uL(".nes")  },
+	{ UNCOMPRESS_TYPE_ROM, uL(".fds")  },
+	{ UNCOMPRESS_TYPE_ROM, uL(".unf")  },
+	{ UNCOMPRESS_TYPE_ROM, uL(".unif") },
+	{ UNCOMPRESS_TYPE_ROM, uL(".nsf")  },
+	{ UNCOMPRESS_TYPE_ROM, uL(".nsfe") },
+	{ UNCOMPRESS_TYPE_PATCH, uL(".ips") }
 };
+EXTERNC _uncompress_storage uncstorage;
 
-EXTERNC struct _uncomp {
-	int files_founded;
-	_uncomp_file_data *file;
-	uTCHAR compress_archive[LENGTH_FILE_NAME_LONG];
-	uTCHAR uncompress_file[LENGTH_FILE_NAME_LONG];
-	uTCHAR buffer[LENGTH_FILE_NAME_LONG];
-} uncomp;
+EXTERNC BYTE uncompress_init(void);
+EXTERNC void uncompress_quit(void);
 
-EXTERNC BYTE uncomp_init(void);
-EXTERNC void uncomp_quit(void);
-EXTERNC BYTE uncomp_ctrl(uTCHAR *ext);
-EXTERNC BYTE uncomp_name_file(_uncomp_file_data *file);
-EXTERNC void uncomp_remove(void);
+EXTERNC _uncompress_archive *uncompress_archive_alloc(uTCHAR *file, BYTE *rc);
+EXTERNC void uncompress_archive_free(_uncompress_archive *archive) ;
+EXTERNC uint32_t uncompress_archive_counter(_uncompress_archive *archive, BYTE type);
+EXTERNC BYTE uncompress_archive_extract_file(_uncompress_archive *archive, BYTE type);
+EXTERNC _uncompress_archive_item *uncompress_archive_find_item(_uncompress_archive *archive,
+	uint32_t selected, BYTE type);
+EXTERNC uTCHAR *uncompress_archive_extracted_file_name(_uncompress_archive *archive, BYTE type);
+EXTERNC uTCHAR *uncompress_archive_file_name(_uncompress_archive *archive, uint32_t selected, BYTE type);
+
+EXTERNC uTCHAR *uncompress_storage_archive_name(uTCHAR *file);
+EXTERNC uint32_t uncompress_storage_add_to_list(_uncompress_archive *archive,
+	_uncompress_archive_item *aitem, uTCHAR *file);
 
 #undef EXTERNC
 

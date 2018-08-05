@@ -19,7 +19,6 @@
 #ifndef CHEAT_H_
 #define CHEAT_H_
 
-#include <stdio.h>
 #include "common.h"
 #include "mappers/mapper_GameGenie.h"
 
@@ -59,6 +58,8 @@ typedef struct _type_cheat {
 #endif
 
 EXTERNC struct _gamegenie {
+	uTCHAR *rom;
+	uTCHAR *patch;
 	BYTE phase;
 	BYTE rom_present;
 	BYTE value;
@@ -71,9 +72,11 @@ EXTERNC struct _cheats_list {
 } cheats_list;
 
 EXTERNC void gamegenie_init(void);
+EXTERNC void gamegenie_quit(void);
 EXTERNC void gamegenie_reset(void);
+EXTERNC void gamegenie_free_paths(void);
 EXTERNC void gamegenie_check_rom_present(BYTE print_message);
-EXTERNC FILE *gamegenie_load_rom(FILE *fp);
+EXTERNC void gamegenie_load_rom(void *rom_mem);
 
 EXTERNC void cheatslist_init(void);
 EXTERNC void cheatslist_read_game_cheats(void);

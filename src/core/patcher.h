@@ -16,34 +16,27 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef DLGUNCOMP_HPP_
-#define DLGUNCOMP_HPP_
+#ifndef PATCHER_H_
+#define PATCHER_H_
 
-#include <QtCore/QtGlobal>
-#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-#include <QtGui/QDialog>
-#else
-#include <QtWidgets/QDialog>
-#endif
 #include "common.h"
-#include "dlgUncomp.hh"
 
-class dlgUncomp : public QDialog, public Ui::Uncompress_selection {
-		Q_OBJECT
+#if defined (__cplusplus)
+#define EXTERNC extern "C"
+#else
+#define EXTERNC
+#endif
 
-	private:
-		int selected;
+EXTERNC struct _patcher {
+	uTCHAR *file;
+	BYTE patched;
+} patcher;
 
-	public:
-		dlgUncomp(QWidget *parent, void *uncompress_archive, BYTE type);
-		~dlgUncomp();
+EXTERNC void patcher_init(void);
+EXTERNC void patcher_quit(void);
+EXTERNC BYTE patcher_ctrl_if_exist(uTCHAR *patch);
+EXTERNC void patcher_apply(void *rom_mem);
 
-	private:
-		void closeEvent(QCloseEvent *e);
+#undef EXTERNC
 
-	private slots:
-		void s_ok_clicked(bool checked);
-		void s_none_clicked(bool checked);
-};
-
-#endif /* DLGUNCOMP_HPP_ */
+#endif /* PATCHER_H_ */

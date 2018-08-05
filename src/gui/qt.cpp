@@ -262,8 +262,8 @@ void gui_reset_video(void) {
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 #endif
 }
-int gui_uncompress_selection_dialog(void) {
-	dlgUncomp *dlg = new dlgUncomp(qt.mwin);
+int gui_uncompress_selection_dialog(_uncompress_archive *archive, BYTE type) {
+	dlgUncomp *dlg = new dlgUncomp(qt.mwin, (void *)archive, type);
 
 	dlg->show();
 	dlg->exec();
@@ -412,12 +412,12 @@ BYTE gui_load_lut(void *l, const uTCHAR *path) {
 }
 void gui_save_screenshot(int w, int h, char *buffer, BYTE flip) {
 	QString basename = QString(uQString(info.base_folder)) + QString(SCRSHT_FOLDER) + "/"
-			+ QFileInfo(uQString(info.rom_file)).completeBaseName();
+			+ QFileInfo(uQString(info.rom.file)).completeBaseName();
 	QImage screenshot = QImage((uchar *)buffer, w, h, QImage::Format_RGB32);
 	QFile file;
 	uint count;
 
-	if (!info.rom_file[0]) {
+	if (!info.rom.file[0]) {
 		return;
 	}
 

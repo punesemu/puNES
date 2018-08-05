@@ -34,6 +34,7 @@
 #include "cheat.h"
 #include "recent_roms.h"
 #include "uncompress.h"
+#include "patcher.h"
 
 #if defined (__WIN32__)
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine, int iCmdShow) {
@@ -99,6 +100,8 @@ int main(int argc, char **argv) {
 	netplay_init();
 #endif
 
+	patcher_init();
+
 	gamegenie_init();
 
 	text_init();
@@ -124,7 +127,7 @@ int main(int argc, char **argv) {
 	recent_roms_init();
 	recent_roms_parse();
 
-	uncomp_init();
+	uncompress_init();
 
 	if (emu_turn_on()) {
 		emu_quit(EXIT_FAILURE);

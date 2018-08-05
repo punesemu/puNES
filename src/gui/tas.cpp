@@ -62,11 +62,11 @@ BYTE tas_file(uTCHAR *ext, uTCHAR *file) {
 			const QString rom_ext[4] = { ".nes", ".NES", ".fds", ".FDS" };
 
 			for (i = 0; i < LENGTH(rom_ext); i++) {
-				QString rom = uQString(info.rom_file) + rom_ext[i];
+				QString rom = uQString(info.rom.file) + rom_ext[i];
 
 				if (QFileInfo(rom).exists()) {
-					umemset(info.rom_file, 0x00, usizeof(info.rom_file));
-					ustrncpy(info.rom_file, uQStringCD(rom), usizeof(info.rom_file) - 1);
+					umemset(info.rom.file, 0x00, usizeof(info.rom.file));
+					ustrncpy(info.rom.file, uQStringCD(rom), usizeof(info.rom.file) - 1);
 					found = TRUE;
 					break;
 				}
@@ -76,7 +76,7 @@ BYTE tas_file(uTCHAR *ext, uTCHAR *file) {
 		if (found) {
 			tas_read();
 		} else {
-			info.rom_file[0] = 0;
+			info.rom.file[0] = 0;
 			tas_quit();
 		}
 	}
@@ -209,8 +209,8 @@ void tas_header_FM2(uTCHAR *file) {
 		} else if (key.compare("romFilename", Qt::CaseInsensitive) == 0) {
 			QString rom = QFileInfo(uQString(file)).absolutePath() + "/" + value;
 
-			umemset(info.rom_file, 0x00, usizeof(info.rom_file));
-			ustrncpy(info.rom_file, uQStringCD(rom), usizeof(info.rom_file) - 1);
+			umemset(info.rom.file, 0x00, usizeof(info.rom.file));
+			ustrncpy(info.rom.file, uQStringCD(rom), usizeof(info.rom.file) - 1);
 		} else if (key.compare("port0", Qt::CaseInsensitive) == 0) {
 			port[PORT1].type = value.toInt();
 		} else if (key.compare("port1", Qt::CaseInsensitive) == 0) {

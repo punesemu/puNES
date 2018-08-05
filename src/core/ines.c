@@ -20,6 +20,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "ines.h"
+#include "rom_mem.h"
 #include "fds.h"
 #include "mem_map.h"
 #include "mappers.h"
@@ -29,6 +30,7 @@
 #include "cheat.h"
 #include "info.h"
 #include "vs_system.h"
+#include "patcher.h"
 
 enum flags { FL6, FL7, FL8, FL9, FL10, FL11, FL12, FL13, FL14, FL15, TOTAL_FL };
 
@@ -37,13 +39,14 @@ BYTE nes20_ram_size(BYTE mode);
 
 BYTE ines_load_rom(void) {
 	BYTE tmp, flags[TOTAL_FL];
-	FILE *fp;
+	_rom_mem rom;
 
 	{
-		BYTE i, found = TRUE;
 		static const uTCHAR rom_ext[2][10] = { uL(".nes\0"), uL(".NES\0") };
+		BYTE i, found = TRUE;
+		FILE *fp;
 
-		fp = ufopen(info.rom_file, uL("rb"));
+		fp = ufopen(info.rom.file, uL("rb"));
 
 		if (!fp) {
 			found = FALSE;
@@ -52,13 +55,13 @@ BYTE ines_load_rom(void) {
 				uTCHAR rom_file[LENGTH_FILE_NAME_LONG];
 
 				umemset(rom_file, 0x00, usizeof(rom_file));
-				umemcpy(rom_file, info.rom_file, usizeof(rom_file) - 10 - 1);
+				umemcpy(rom_file, info.rom.file, usizeof(rom_file) - 10 - 1);
 				ustrcat(rom_file, rom_ext[i]);
 
 				fp = ufopen(rom_file, uL("rb"));
 
 				if (fp) {
-					ustrncpy(info.rom_file, rom_file, usizeof(info.rom_file));
+					ustrncpy(info.rom.file, rom_file, usizeof(info.rom.file));
 					found = TRUE;
 					break;
 				}
@@ -68,35 +71,58 @@ BYTE ines_load_rom(void) {
 		if (!found) {
 			return (EXIT_ERROR);
 		}
+
+		fseek(fp, 0L, SEEK_END);
+		rom.size = ftell(fp);
+		fseek(fp, 0L, SEEK_SET);
+
+		if ((rom.data = (BYTE *) malloc(rom.size)) == NULL) {
+			fclose(fp);
+			return (EXIT_ERROR);
+		}
+
+		if (fread(rom.data, 1, rom.size, fp) != rom.size) {
+			fclose(fp);
+			free(rom.data);
+			return (EXIT_ERROR);
+		}
+
+		fclose(fp);
 	}
 
 	if (cfg->cheat_mode == GAMEGENIE_MODE) {
-		fp = gamegenie_load_rom(fp);
+		gamegenie_load_rom(&rom);
 	}
 
-	if ((fgetc(fp) == 'N') && (fgetc(fp) == 'E') && (fgetc(fp) == 'S') && (fgetc(fp) == '\32')) {
-		info.prg.rom[0].banks_16k = fgetc(fp);
-		info.chr.rom[0].banks_8k = fgetc(fp);
+	patcher_apply(&rom);
 
-		if (!(fread(&flags[0], TOTAL_FL, 1, fp))) {
-			;
+	rom.position = 0;
+
+	if ((rom.data[rom.position++] == 'N') &&
+		(rom.data[rom.position++] == 'E') &&
+		(rom.data[rom.position++] == 'S') &&
+		(rom.data[rom.position++] == '\32')) {
+		info.prg.rom[0].banks_16k = rom.data[rom.position++];
+		info.chr.rom[0].banks_8k = rom.data[rom.position++];
+
+		if (rom_mem_ctrl_memcpy(&flags[0], &rom, TOTAL_FL) == EXIT_ERROR) { 
+			free(rom.data);
+			return (EXIT_ERROR);
 		}
 
 		if ((flags[FL7] & 0x0C) == 0x08) {
-			/* NES 2.0 */
+			// NES 2.0
 			info.format = NES_2_0;
 
-			/*
-			 * visto che con il NES_2_0 non eseguo la ricerca nel
-			 * database inizializzo queste variabili.
-			 */
+			// visto che con il NES_2_0 non eseguo la ricerca nel
+			// database inizializzo queste variabili.
 			info.mirroring_db = info.id = DEFAULT;
 			info.extra_from_db = 0;
 
 			info.mapper.id = ((flags[FL8] & 0x0F) << 8) | (flags[FL7] & 0xF0) | (flags[FL6] >> 4);
 			info.mapper.submapper = (flags[FL8] & 0xF0) >> 4;
 
-			/* Submapper number. Mappers not using submappers set this to zero. */
+			// Submapper number. Mappers not using submappers set this to zero.
 			if (info.mapper.submapper == 0) {
 				info.mapper.submapper = DEFAULT;
 			}
@@ -118,7 +144,7 @@ BYTE ines_load_rom(void) {
 			vs_system.ppu = flags[FL13] & 0x0F;
 			vs_system.special_mode.type = (flags[FL13] >> 4) & 0x0F;
 		} else {
-			/* iNES 1.0 */
+			// iNES 1.0
 			info.format = iNES_1_0;
 
 			info.mapper.id = (flags[FL7] & 0xF0) | (flags[FL6] >> 4);
@@ -152,17 +178,15 @@ BYTE ines_load_rom(void) {
 			}
 		}
 
-		/*
-		 * inizializzo qui il writeVRAM per la mapper 96 perche'
-		 * e' l'unica mapper che utilizza 32k di CHR Ram e che
-		 * si permette anche il lusso di swappare. Quindi imposto
-		 * a FALSE qui in modo da poter cambiare impostazione nel
-		 * emu_search_in_database.
-		 */
+		// inizializzo qui il writeVRAM per la mapper 96 perche'
+		// e' l'unica mapper che utilizza 32k di CHR Ram e che
+		// si permette anche il lusso di swappare. Quindi imposto
+		// a FALSE qui in modo da poter cambiare impostazione nel
+		// emu_search_in_database.
 		mapper.write_vram = FALSE;
 
-		if ((info.format != NES_2_0) && emu_search_in_database(fp)) {
-			fclose(fp);
+		if ((info.format != NES_2_0) && emu_search_in_database(&rom)) {
+			free(rom.data);
 			return (EXIT_ERROR);
 		}
 
@@ -229,8 +253,9 @@ BYTE ines_load_rom(void) {
 		}
 
 		if (info.trainer) {
-			if (!(fread(&trainer.data, sizeof(trainer.data), 1, fp))) {
-				;
+			if (rom_mem_ctrl_memcpy(&trainer.data, &rom, sizeof(trainer.data)) == EXIT_ERROR) { 
+				free(rom.data);
+				return (EXIT_ERROR);
 			}
 		} else {
 			memset(&trainer.data, 0x00, sizeof(trainer.data));
@@ -270,38 +295,39 @@ BYTE ines_load_rom(void) {
 		map_set_banks_max_chr(0);
 		info.prg.chips = info.chr.chips = 0;
 
-		/* alloco la PRG Ram */
+		// alloco la PRG Ram
 		if (map_prg_ram_malloc(0x2000) != EXIT_OK) {
-			fclose(fp);
+			free(rom.data);
 			return (EXIT_ERROR);
 		}
 
-		/* alloco e carico la PRG Rom */
+		// alloco e carico la PRG Rom
 		if (map_prg_chip_malloc(0, info.prg.rom[0].banks_16k * 0x4000, 0x00) == EXIT_ERROR) {
-			fclose(fp);
+			free(rom.data);
 			return (EXIT_ERROR);
 		}
 
-		if (!(fread(prg_chip(0), 16384, info.prg.rom[0].banks_16k, fp))) {
-			;
+		if (rom_mem_ctrl_memcpy(prg_chip(0), &rom, info.prg.rom[0].banks_16k * 0x4000) == EXIT_ERROR) { 
+			free(rom.data);
+			return (EXIT_ERROR);
 		}
 
-		/*
-		 * se e' settato mapper.write_vram, vuol dire
-		 * che la rom non ha CHR Rom e che quindi la CHR Ram
-		 * la trattero' nell'inizializzazione della mapper
-		 * (perche' alcune mapper ne hanno 16k, altre 8k).
-		 */
+		// se e' settato mapper.write_vram, vuol dire
+		// che la rom non ha CHR Rom e che quindi la CHR Ram
+		// la trattero' nell'inizializzazione della mapper
+		// (perche' alcune mapper ne hanno 16k, altre 8k).
 		if (mapper.write_vram == FALSE) {
-			/* alloco la CHR Rom */
+			// alloco la CHR Rom
 			if (map_chr_chip_malloc(0, info.chr.rom[0].banks_8k * 0x2000, 0x00) == EXIT_ERROR) {
-				fclose(fp);
+				free(rom.data);
 				return (EXIT_ERROR);
 			}
 
-			if (!(fread(chr_chip(0), 0x2000, info.chr.rom[0].banks_8k, fp))) {
-				;
+			if (rom_mem_ctrl_memcpy(chr_chip(0), &rom, info.chr.rom[0].banks_8k * 0x2000) == EXIT_ERROR) { 
+				free(rom.data);
+				return (EXIT_ERROR);
 			}
+
 			map_chr_bank_1k_reset();
 		}
 
@@ -310,15 +336,15 @@ BYTE ines_load_rom(void) {
 			info.chr.max_chips = info.chr.chips - 1;
 		}
 
-		/* la CHR ram extra */
+		// la CHR ram extra
 		memset(&chr.extra, 0x00, sizeof(chr.extra));
 	} else {
 		fprintf(stderr, "Format not supported.\n");
-		fclose(fp);
+		free(rom.data);
 		return (EXIT_ERROR);
 	}
-	fclose(fp);
 
+	free(rom.data);
 	return (EXIT_OK);
 }
 

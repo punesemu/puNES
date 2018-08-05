@@ -16,34 +16,19 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef DLGUNCOMP_HPP_
-#define DLGUNCOMP_HPP_
+#ifndef ROM_MEM_H_
+#define ROM_MEM_H_
 
-#include <QtCore/QtGlobal>
-#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-#include <QtGui/QDialog>
-#else
-#include <QtWidgets/QDialog>
-#endif
+#include <stddef.h>
 #include "common.h"
-#include "dlgUncomp.hh"
 
-class dlgUncomp : public QDialog, public Ui::Uncompress_selection {
-		Q_OBJECT
+typedef struct _rom_mem {
+	BYTE *data;
+	size_t size;
+	size_t position;
+} _rom_mem;
 
-	private:
-		int selected;
+void rom_mem_memcpy(void *dst, _rom_mem *rom, size_t increment);
+BYTE rom_mem_ctrl_memcpy(void *dst, _rom_mem *rom, size_t increment);
 
-	public:
-		dlgUncomp(QWidget *parent, void *uncompress_archive, BYTE type);
-		~dlgUncomp();
-
-	private:
-		void closeEvent(QCloseEvent *e);
-
-	private slots:
-		void s_ok_clicked(bool checked);
-		void s_none_clicked(bool checked);
-};
-
-#endif /* DLGUNCOMP_HPP_ */
+#endif /* ROM_MEM_H_ */

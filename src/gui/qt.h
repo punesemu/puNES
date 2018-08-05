@@ -59,6 +59,7 @@ EXTERNC struct _gui {
 #endif
 
 	uTCHAR last_open_path[LENGTH_FILE_NAME_MAX];
+	uTCHAR last_open_ips_path[LENGTH_FILE_NAME_MAX];
 
 	//int8_t cpu_cores;
 
@@ -105,7 +106,7 @@ EXTERNC void gui_save_slot(BYTE slot);
 EXTERNC void gui_flush(void);
 EXTERNC void gui_print_usage(char *usage);
 EXTERNC void gui_reset_video(void);
-EXTERNC int gui_uncompress_selection_dialog();
+EXTERNC int gui_uncompress_selection_dialog(_uncompress_archive *archive, BYTE type);
 
 EXTERNC void gui_control_pause_bck(WORD type);
 

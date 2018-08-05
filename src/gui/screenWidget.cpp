@@ -27,6 +27,8 @@
 #include "tas.h"
 #include "timeline.h"
 #include "gui.h"
+#include "patcher.h"
+#include "recent_roms.h"
 #if defined (WITH_OPENGL)
 #include "opengl.h"
 #endif
@@ -100,7 +102,68 @@ void screenWidget::dragEnterEvent(QDragEnterEvent *e) {
 }
 void screenWidget::dropEvent(QDropEvent *e) {
 	foreach (const QUrl &url, e->mimeData()->urls()){
-		mwin->change_rom(uQStringCD(url.toLocalFile()));
+		QFileInfo fileinfo(url.toLocalFile());
+		_uncompress_archive *archive;
+		BYTE is_rom = FALSE, is_patch = FALSE, rc;
+		uTCHAR *rom, *patch = NULL;
+
+		if ((cfg->cheat_mode == GAMEGENIE_MODE) && (gamegenie.phase == GG_EXECUTE)) {
+			rom = gamegenie.rom;
+		} else {
+			rom = info.rom.file;
+		}
+
+		archive = uncompress_archive_alloc(uQStringCD(fileinfo.absoluteFilePath()), &rc);
+
+		if (rc == UNCOMPRESS_EXIT_OK) {
+			if (archive->rom.count > 0) {
+				is_rom = TRUE;
+			}
+			if (archive->patch.count > 0) {
+				is_patch = TRUE;
+			}
+			if ((is_patch == TRUE) && (is_rom == FALSE) && !info.rom.file[0]) {
+				is_patch = FALSE;
+			}
+			if (is_rom) {
+				switch ((rc = uncompress_archive_extract_file(archive,UNCOMPRESS_TYPE_ROM))) {
+					case UNCOMPRESS_EXIT_OK:
+						rom = uncompress_archive_extracted_file_name(archive, UNCOMPRESS_TYPE_ROM);
+						break;
+					case UNCOMPRESS_EXIT_ERROR_ON_UNCOMP:
+						return;
+					default:
+						break;
+				}
+			}
+			if (is_patch) {
+				switch ((rc = uncompress_archive_extract_file(archive,UNCOMPRESS_TYPE_PATCH))) {
+					case UNCOMPRESS_EXIT_OK:
+						patch = uncompress_archive_extracted_file_name(archive, UNCOMPRESS_TYPE_PATCH);
+						break;
+					case UNCOMPRESS_EXIT_ERROR_ON_UNCOMP:
+						return;
+					default:
+						is_patch = FALSE;
+						break;
+				}
+			}
+			uncompress_archive_free(archive);
+		} else if (rc == UNCOMPRESS_EXIT_IS_NOT_COMP) {
+			 if ((fileinfo.suffix().toLower() == "ips") && info.rom.file[0]) {
+				is_patch = TRUE;
+				patch = uQStringCD(fileinfo.absoluteFilePath());
+			} else {
+				is_rom = TRUE;
+				rom = uQStringCD(fileinfo.absoluteFilePath());
+			}
+		}
+
+		if (is_patch) {
+			patcher.file = emu_ustrncpy(patcher.file, patch);
+		}
+
+		mwin->change_rom(rom);
 		activateWindow();
 		gui_set_focus();
 		break;

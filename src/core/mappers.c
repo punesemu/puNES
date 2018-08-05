@@ -1097,12 +1097,7 @@ void map_prg_ram_init(void) {
 			uTCHAR prg_ram_file[LENGTH_FILE_NAME_LONG], basename[255], *fl, *last_dot;
 			FILE *fp;
 
-			/* copio il nome del file nella variabile */
-			if (info.uncompress_rom == TRUE) {
-				fl = uncomp.uncompress_file;
-			} else {
-				fl = info.rom_file;
-			}
+			fl = info.rom.file;
 
 			gui_utf_basename(fl, basename, usizeof(basename));
 			usnprintf(prg_ram_file, usizeof(prg_ram_file),
@@ -1173,12 +1168,7 @@ void map_prg_ram_battery_save(void) {
 		uTCHAR prg_ram_file[LENGTH_FILE_NAME_LONG], basename[255], *fl, *last_dot;
 		FILE *fp;
 
-		/* copio il nome del file nella variabile */
-		if (info.uncompress_rom == TRUE) {
-			fl = uncomp.uncompress_file;
-		} else {
-			fl = info.rom_file;
-		}
+		fl = info.rom.file;
 
 		gui_utf_basename(fl, basename, usizeof(basename));
 		usnprintf(prg_ram_file, usizeof(prg_ram_file),

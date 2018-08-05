@@ -46,11 +46,15 @@ libcore_a_SOURCES = \
 	nsfe.h \
 	overscan.c \
 	overscan.h \
+	patcher.c \
+	patcher.h \
 	paldef.h \
 	palette.h \
 	ppu.c \
 	ppu.h \
 	ppu_inline.h \
+	rom_mem.c \
+	rom_mem.h \
 	save_slot.c \
 	save_slot.h \
 	sha1.c \

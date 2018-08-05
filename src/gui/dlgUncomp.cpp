@@ -26,8 +26,16 @@
 #include "gui.h"
 #include "info.h"
 
-dlgUncomp::dlgUncomp(QWidget *parent = 0) : QDialog(parent) {
-	selected = UNCOMP_NO_FILE_SELECTED;
+dlgUncomp::dlgUncomp(QWidget *parent = 0, void *uncompress_archive = NULL,
+	BYTE type = UNCOMPRESS_TYPE_ALL) : QDialog(parent) {
+	_uncompress_archive *archive = (_uncompress_archive *)uncompress_archive;
+	uint32_t index;
+
+	selected = UNCOMPRESS_NO_FILE_SELECTED;
+
+	if (archive == NULL) {
+		return;
+	}
 
 	setupUi(this);
 
@@ -35,23 +43,54 @@ dlgUncomp::dlgUncomp(QWidget *parent = 0) : QDialog(parent) {
 
 	//tableWidget_Selection->setStyleSheet("QTreeView {selection-background-color: red;}");
 
-	setWindowTitle(QFileInfo(uQString(info.rom_file)).fileName());
+	switch (type) {
+		case UNCOMPRESS_TYPE_ROM: {
+			QTableWidgetItem *header = new QTableWidgetItem(tr("Roms"));
 
-	for (int i = 0; i < uncomp.files_founded; i++) {
-		if (uncomp_name_file(&uncomp.file[i]) == EXIT_OK) {
-			QTableWidgetItem *item = new QTableWidgetItem(QFileInfo(uQString(uncomp.buffer)).fileName());
+			header->setTextAlignment(Qt::AlignHCenter);
+			tableWidget_Selection->setHorizontalHeaderItem(0, header);
 
-			tableWidget_Selection->insertRow(i);
-			tableWidget_Selection->setItem(i, 0, item);
+			setWindowTitle(tr("which ROM do you want to load?"));
+			break;
+		}
+		case UNCOMPRESS_TYPE_PATCH: {
+			QTableWidgetItem *header = new QTableWidgetItem(tr("Patches"));
+
+			header->setTextAlignment(Qt::AlignHCenter);
+			tableWidget_Selection->setHorizontalHeaderItem(0, header);
+
+			setWindowTitle(tr("which PATCH do you want to apply?"));
+			break;
+		}
+	}
+
+	index = 0;
+
+	for (unsigned int i = 0; i < uncompress_archive_counter(archive, type); i++) {
+		_uncompress_archive_item *aitem;
+		uTCHAR *file;
+
+		if ((aitem = uncompress_archive_find_item(archive, index, type)) == NULL) {
+			continue;
+		}
+
+		if ((file = uncompress_archive_file_name(archive, index, type))) {
+			QTableWidgetItem *item = new QTableWidgetItem(QFileInfo(uQString(file)).fileName());
+
+			tableWidget_Selection->insertRow(index);
+			tableWidget_Selection->setItem(index, 0, item);
+			index++;
 		}
 	}
 
 	connect(pushButton_Ok, SIGNAL(clicked(bool)), this, SLOT(s_ok_clicked(bool)));
-	connect(pushButton_Cancel, SIGNAL(clicked(bool)), this, SLOT(s_cancel_clicked(bool)));
+	connect(pushButton_None, SIGNAL(clicked(bool)), this, SLOT(s_none_clicked(bool)));
 
 	QVBoxLayout *vbox = new QVBoxLayout(this);
 	vbox->addWidget(tableWidget_Selection);
 	vbox->addWidget(horizontalLayoutWidget);
+
+	tableWidget_Selection->setCurrentCell(0, 0);
 
 	// se l'archivio compresso e' caricato da riga di comando,
 	// la gui non e' ancora stata avviata.
@@ -77,6 +116,6 @@ void dlgUncomp::s_ok_clicked(bool checked) {
 	selected = indexList.first().row();
 	close();
 }
-void dlgUncomp::s_cancel_clicked(bool checked) {
+void dlgUncomp::s_none_clicked(bool checked) {
 	close();
 }

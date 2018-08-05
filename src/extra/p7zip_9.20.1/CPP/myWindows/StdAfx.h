@@ -52,7 +52,9 @@ EXTERN_C_END
 
 /***************************/
 
+#ifndef CLASS_E_CLASSNOTAVAILABLE
 #define CLASS_E_CLASSNOTAVAILABLE        ((HRESULT)0x80040111L)
+#endif
 
 /************************* LastError *************************/
 inline DWORD WINAPI GetLastError(void) { return errno; }

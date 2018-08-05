@@ -19,6 +19,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "unif.h"
+#include "rom_mem.h"
 #include "info.h"
 #include "mem_map.h"
 #include "mappers.h"
@@ -26,18 +27,20 @@
 #include "conf.h"
 #include "cheat.h"
 #include "vs_system.h"
+#include "patcher.h"
 
 enum unif_phase_type { UNIF_COUNT, UNIF_READ };
 enum unif_no_types { NO_INES = 65535, NO_UNIF = 65535 };
 
-BYTE unif_MAPR(FILE *fp, BYTE phase);
-BYTE unif_NAME(FILE *fp, BYTE phase);
-BYTE unif_PRG(FILE *fp, BYTE phase);
-BYTE unif_CHR(FILE *fp, BYTE phase);
-BYTE unif_TVCI(FILE *fp, BYTE phase);
-BYTE unif_BATR(FILE *fp, BYTE phase);
-BYTE unif_MIRR(FILE *fp, BYTE phase);
-BYTE unif_DINF(FILE *fp, BYTE phase);
+BYTE unif_NONE(_rom_mem *rom, BYTE phase);
+BYTE unif_MAPR(_rom_mem *rom, BYTE phase);
+BYTE unif_NAME(_rom_mem *rom, BYTE phase);
+BYTE unif_PRG(_rom_mem *rom, BYTE phase);
+BYTE unif_CHR(_rom_mem *rom, BYTE phase);
+BYTE unif_TVCI(_rom_mem *rom, BYTE phase);
+BYTE unif_BATR(_rom_mem *rom, BYTE phase);
+BYTE unif_MIRR(_rom_mem *rom, BYTE phase);
+BYTE unif_DINF(_rom_mem *rom, BYTE phase);
 
 typedef struct _unif_board {
 	char board[50];
@@ -147,10 +150,11 @@ static const _unif_board unif_boards[] = {
 };
 
 BYTE unif_load_rom(void) {
+	_rom_mem rom;
 	BYTE phase;
-	FILE *fp;
 
 	{
+		FILE *fp;
 		BYTE i, found = TRUE;
 		static const uTCHAR rom_ext[6][10] = {
 			uL(".nes\0"),  uL(".NES\0"),
@@ -158,7 +162,7 @@ BYTE unif_load_rom(void) {
 			uL(".unif\0"), uL(".UNIF\0")
 		};
 
-		fp = ufopen(info.rom_file, uL("rb"));
+		fp = ufopen(info.rom.file, uL("rb"));
 
 		if (!fp) {
 			found = FALSE;
@@ -167,13 +171,13 @@ BYTE unif_load_rom(void) {
 				uTCHAR rom_file[LENGTH_FILE_NAME_LONG];
 
 				umemset(rom_file, 0x00, usizeof(rom_file));
-				umemcpy(rom_file, info.rom_file, usizeof(rom_file) - 10 - 1);
+				umemcpy(rom_file, info.rom.file, usizeof(rom_file) - 10 - 1);
 				ustrcat(rom_file, rom_ext[i]);
 
 				fp = ufopen(rom_file, uL("rb"));
 
 				if (fp) {
-					ustrncpy(info.rom_file, rom_file, usizeof(info.rom_file));
+					ustrncpy(info.rom.file, rom_file, usizeof(info.rom.file));
 					found = TRUE;
 					break;
 				}
@@ -183,22 +187,43 @@ BYTE unif_load_rom(void) {
 		if (!found) {
 			return (EXIT_ERROR);
 		}
+
+		fseek(fp, 0L, SEEK_END);
+		rom.size = ftell(fp);
+		fseek(fp, 0L, SEEK_SET);
+
+		if ((rom.data = (BYTE *) malloc(rom.size)) == NULL) {
+			fclose(fp);
+			return (EXIT_ERROR);
+		}
+
+		if (fread(rom.data, 1, rom.size, fp) != rom.size) {
+			fclose(fp);
+			free(rom.data);
+			return (EXIT_ERROR);
+		}
+
+		fclose(fp);
 	}
 
 	if (cfg->cheat_mode == GAMEGENIE_MODE) {
-		fp = gamegenie_load_rom(fp);
+		gamegenie_load_rom(&rom);
 	}
 
-	phase = 0;
+	patcher_apply(&rom);
+
+	rom.position = 0;
+
 	memset(&unif, 0x00, sizeof(unif));
 
-	if (!(fread(&unif.header, sizeof(unif.header), 1, fp))) {
-		;
+	if (rom_mem_ctrl_memcpy(&unif.header, &rom, sizeof(unif.header)) == EXIT_ERROR) { 
+		free(rom.data);
+		return (EXIT_ERROR);
 	}
 
 	phase = UNIF_COUNT;
 
-	/* setto dei default */
+	// setto i defaults
 	mirroring_H();
 	info.machine[HEADER] = NTSC;
 	info.prg.ram.bat.banks = 0;
@@ -208,16 +233,14 @@ BYTE unif_load_rom(void) {
 	vs_system.enabled = FALSE;
 
 	if (strncmp(unif.header.identification, "UNIF", 4) == 0) {
-		long position = ftell(fp);
-
 		info.format = UNIF_FORMAT;
 
 		for (phase = UNIF_COUNT; phase <= UNIF_READ; phase++) {
-			fseek(fp, position, SEEK_SET);
+			rom.position = sizeof(unif.header);
 
 			if (phase == UNIF_READ) {
 				if (prg_chip_size(0) == 0) {
-					fclose(fp);
+					free(rom.data);
 					return (EXIT_ERROR);
 				}
 
@@ -232,57 +255,95 @@ BYTE unif_load_rom(void) {
 					info.prg.ram.banks_8k_plus = 1;
 				}
 
-				/* alloco la PRG Ram */
+				// alloco la PRG Ram
 				if (map_prg_ram_malloc(0x2000) != EXIT_OK) {
-					fclose(fp);
+					free(rom.data);
 					return (EXIT_ERROR);
 				}
 
-				/* la CHR ram extra */
+				// la CHR ram extra
 				memset(&chr.extra, 0x00, sizeof(chr.extra));
 			}
 
-			while(fread(&unif.chunk, sizeof(unif.chunk), 1, fp)) {
+			while ((rom.position + sizeof(unif.chunk)) <= rom.size) {
+				rom_mem_memcpy(&unif.chunk, &rom, sizeof(unif.chunk));
+
 				if (strncmp(unif.chunk.id, "MAPR", 4) == 0) {
-					unif_MAPR(fp, phase);
+					if (unif_MAPR(&rom, phase) == EXIT_ERROR) {
+						free(rom.data);
+						return (EXIT_ERROR);
+					}
 				} else if (strncmp(unif.chunk.id, "PRG", 3) == 0) {
-					if (unif_PRG(fp, phase) == EXIT_ERROR) {
-						fclose(fp);
+					if (unif_PRG(&rom, phase) == EXIT_ERROR) {
+						free(rom.data);
 						return (EXIT_ERROR);
 					}
 				} else if (strncmp(unif.chunk.id, "CHR", 3) == 0) {
-					if (unif_CHR(fp, phase) == EXIT_ERROR) {
-						fclose(fp);
+					if (unif_CHR(&rom, phase) == EXIT_ERROR) {
+						free(rom.data);
 						return (EXIT_ERROR);
 					}
 				} else if (strncmp(unif.chunk.id, "PCK", 3) == 0) {
-					fseek(fp, unif.chunk.length, SEEK_CUR);
+					if (unif_NONE(&rom, phase) == EXIT_ERROR) {
+						free(rom.data);
+						return (EXIT_ERROR);
+					}
 				} else if (strncmp(unif.chunk.id, "CCK", 3) == 0) {
-					fseek(fp, unif.chunk.length, SEEK_CUR);
+					if (unif_NONE(&rom, phase) == EXIT_ERROR) {
+						free(rom.data);
+						return (EXIT_ERROR);
+					}
 				} else if (strncmp(unif.chunk.id, "NAME", 4) == 0) {
-					unif_NAME(fp, phase);
+					if (unif_NAME(&rom, phase) == EXIT_ERROR) {
+						free(rom.data);
+						return (EXIT_ERROR);
+					}
 				} else if (strncmp(unif.chunk.id, "WRTR", 4) == 0) {
-					fseek(fp, unif.chunk.length, SEEK_CUR);
+					if (unif_NONE(&rom, phase) == EXIT_ERROR) {
+						free(rom.data);
+						return (EXIT_ERROR);
+					}
 				} else if (strncmp(unif.chunk.id, "READ", 4) == 0) {
-					fseek(fp, unif.chunk.length, SEEK_CUR);
+					if (unif_NONE(&rom, phase) == EXIT_ERROR) {
+						free(rom.data);
+						return (EXIT_ERROR);
+					}
 				} else if (strncmp(unif.chunk.id, "DINF", 4) == 0) {
-					if (unif_DINF(fp, phase) == EXIT_ERROR) {
-						fclose(fp);
+					if (unif_DINF(&rom, phase) == EXIT_ERROR) {
+						free(rom.data);
 						return (EXIT_ERROR);
 					}
 				} else if (strncmp(unif.chunk.id, "TVCI", 4) == 0) {
-					unif_TVCI(fp, phase);
+					if (unif_TVCI(&rom, phase) == EXIT_ERROR) {
+						free(rom.data);
+						return (EXIT_ERROR);
+					}
 				} else if (strncmp(unif.chunk.id, "CTRL", 4) == 0) {
-					fseek(fp, unif.chunk.length, SEEK_CUR);
+					if (unif_NONE(&rom, phase) == EXIT_ERROR) {
+						free(rom.data);
+						return (EXIT_ERROR);
+					}
 				} else if (strncmp(unif.chunk.id, "BATR", 4) == 0) {
-					unif_BATR(fp, phase);
+					if (unif_BATR(&rom, phase) == EXIT_ERROR) {
+						free(rom.data);
+						return (EXIT_ERROR);
+					}
 				} else if (strncmp(unif.chunk.id, "VROR", 4) == 0) {
-					fseek(fp, unif.chunk.length, SEEK_CUR);
+					if (unif_NONE(&rom, phase) == EXIT_ERROR) {
+						free(rom.data);
+						return (EXIT_ERROR);
+					}
 				} else if (strncmp(unif.chunk.id, "MIRR", 4) == 0) {
-					unif_MIRR(fp, phase);
+					if(unif_MIRR(&rom, phase) == EXIT_ERROR) {
+						free(rom.data);
+						return (EXIT_ERROR);
+					}
 				} else {
-					// ignoro il typo di chunk non riconosciuto
-					fseek(fp, unif.chunk.length, SEEK_CUR);
+					// ignoro il tipo di chunk non riconosciuto
+					if (unif_NONE(&rom, phase) == EXIT_ERROR) {
+						free(rom.data);
+						return (EXIT_ERROR);
+					}
 				}
 			}
 		}
@@ -307,40 +368,51 @@ BYTE unif_load_rom(void) {
 		}
 
 		if (unif.finded == FALSE) {
-			fclose(fp);
+			free(rom.data);
 			return (EXIT_ERROR);
 		}
 	} else {
-		fclose(fp);
+		free(rom.data);
 		return (EXIT_ERROR);
 	}
 
-	fclose(fp);
+	free(rom.data);
 	return (EXIT_OK);
 }
+BYTE unif_NONE(_rom_mem *rom, BYTE phase) {
+	if (phase == UNIF_COUNT) {
+		if ((rom->position + unif.chunk.length) > rom->size) {
+			return (EXIT_ERROR);
+		}
+		rom->position += unif.chunk.length;
+		return (EXIT_OK);
+	}
 
-BYTE unif_MAPR(FILE *fp, BYTE phase) {
+	rom->position += unif.chunk.length;
+
+	return (EXIT_OK);
+}
+BYTE unif_MAPR(_rom_mem *rom, BYTE phase) {
 	static const char strip[][5] = {
 		"NES-", "UNL-", "HVC-", "BTL-", "BMC-"
 	};
 
 	if (phase == UNIF_COUNT) {
-		fseek(fp, unif.chunk.length, SEEK_CUR);
+		if ((rom->position + unif.chunk.length) > rom->size) {
+			return (EXIT_ERROR);
+		}
+		rom->position += unif.chunk.length;
 		return (EXIT_OK);
 	}
 
 	memset(&unif.board[0], 0x00, sizeof(unif.board));
 
 	if (unif.chunk.length < sizeof(unif.board)) {
-		if (!(fread(&unif.board[0], unif.chunk.length, 1, fp))) {
-			;
-		}
+		memcpy(&unif.board[0], rom->data + rom->position, unif.chunk.length);
 	} else {
-		if (!(fread(&unif.board[0], (sizeof(unif.board) - 1), 1, fp))) {
-			;
-		}
-		fseek(fp, unif.chunk.length - (sizeof(unif.board) - 1), SEEK_CUR);
+		memcpy(&unif.board[0], rom->data + rom->position, (sizeof(unif.board) - 1));
 	}
+	rom->position += unif.chunk.length;
 
 	{
 		static BYTE i;
@@ -385,19 +457,23 @@ BYTE unif_MAPR(FILE *fp, BYTE phase) {
 
 	return (EXIT_OK);
 }
-BYTE unif_NAME(FILE *fp, BYTE phase) {
+BYTE unif_NAME(_rom_mem *rom, BYTE phase) {
 	static size_t length;
 
 	if (phase == UNIF_COUNT) {
-		char buf = 0;
+		BYTE buf = 0;
 
 		length = 0;
-		while (fread(&buf, 1, 1, fp)) {
-			if (buf == 0) {
-				break;
+
+		while ((buf = rom->data[rom->position]) > 0) {
+			if ((rom->position + 1) < rom->size) {
+				rom->position++;
+				length++;
+				continue;
 			}
-			length++;
+			return (EXIT_ERROR);
 		}
+		rom->position++;
 		length++;
 		return (EXIT_OK);
 	}
@@ -405,20 +481,17 @@ BYTE unif_NAME(FILE *fp, BYTE phase) {
 	memset(&unif.name[0], 0x00, sizeof(unif.name));
 
 	if (length < sizeof(unif.name)) {
-		if (!(fread(&unif.name[0], length, 1, fp))) {
-			;
-		}
+		memcpy(&unif.name[0], rom->data + rom->position, length);
 	} else {
-		if (!(fread(&unif.name[0], (sizeof(unif.name) - 1), 1, fp))) {
-			;
-		}
-		fseek(fp, length - (sizeof(unif.name) - 1), SEEK_CUR);
+		memcpy(&unif.name[0], rom->data + rom->position, (sizeof(unif.name) - 1));
 	}
+	rom->position += length;
+
 	printf("name : %s\n", unif.name);
 
 	return (EXIT_OK);
 }
-BYTE unif_PRG(FILE *fp, BYTE phase) {
+BYTE unif_PRG(_rom_mem *rom, BYTE phase) {
 	int chip = atoi(unif.chunk.id + 3);
 
 	if (chip >= MAX_CHIPS) {
@@ -426,17 +499,21 @@ BYTE unif_PRG(FILE *fp, BYTE phase) {
 	}
 
 	if (phase == UNIF_COUNT) {
+		if ((rom->position + unif.chunk.length) > rom->size) {
+			return (EXIT_ERROR);
+		}
 		prg_chip_size(chip) = unif.chunk.length;
-		fseek(fp, unif.chunk.length, SEEK_CUR);
+		rom->position += unif.chunk.length;
+		return (EXIT_OK);
 	} else {
-		/* alloco e carico la PRG Rom */
+		// alloco e carico la PRG Rom
 		if (map_prg_chip_malloc(chip, prg_chip_size(chip), 0x00) == EXIT_ERROR) {
 			return (EXIT_ERROR);
 		}
-		if (!(fread(prg_chip(chip), prg_chip_size(chip), 1, fp))) {
-			;
-		}
-		info.prg.rom[chip].banks_16k = prg_chip_size(chip) / (16 * 1024);
+
+		rom_mem_memcpy(prg_chip(chip), rom, prg_chip_size(chip));
+
+		info.prg.rom[chip].banks_16k = prg_chip_size(chip) / 0x4000;
 		info.prg.rom[chip].banks_8k = info.prg.rom[chip].banks_16k * 2;
 		map_set_banks_max_prg(chip);
 
@@ -447,27 +524,31 @@ BYTE unif_PRG(FILE *fp, BYTE phase) {
 
 	return (EXIT_OK);
 }
-BYTE unif_CHR(FILE *fp, BYTE phase) {
+BYTE unif_CHR(_rom_mem *rom, BYTE phase) {
 	int chip = atoi(unif.chunk.id + 3);
 
 	if (chip >= MAX_CHIPS) {
 		return (EXIT_ERROR);
 	}
+
 	if (phase == UNIF_COUNT) {
+		if ((rom->position + unif.chunk.length) > rom->size) {
+			return (EXIT_ERROR);
+		}
 		chr_chip_size(chip) = unif.chunk.length;
-		fseek(fp, unif.chunk.length, SEEK_CUR);
+		rom->position += unif.chunk.length;
+		return (EXIT_OK);
 	} else {
 		/* alloco e carico la PRG Rom */
 		if (map_chr_chip_malloc(chip, chr_chip_size(chip), 0x00) == EXIT_ERROR) {
 			return (EXIT_ERROR);
 		}
-		if (!(fread(chr_chip(chip), chr_chip_size(chip), 1, fp))) {
-			;
-		}
 
-		info.chr.rom[chip].banks_8k = chr_chip_size(chip) / (8 * 1024);
-		info.chr.rom[chip].banks_4k = chr_chip_size(chip) / (4 * 1024);
-		info.chr.rom[chip].banks_1k = chr_chip_size(chip) / (1 * 1024);
+		rom_mem_memcpy(chr_chip(chip), rom, chr_chip_size(chip));
+
+		info.chr.rom[chip].banks_8k = chr_chip_size(chip) / 0x2000;
+		info.chr.rom[chip].banks_4k = chr_chip_size(chip) / 0x1000;
+		info.chr.rom[chip].banks_1k = chr_chip_size(chip) / 0x0400;
 		map_set_banks_max_chr(chip);
 
 		if (chip == 0) {
@@ -480,11 +561,14 @@ BYTE unif_CHR(FILE *fp, BYTE phase) {
 
 	return (EXIT_OK);
 }
-BYTE unif_TVCI(FILE *fp, BYTE phase) {
+BYTE unif_TVCI(_rom_mem *rom, BYTE phase) {
 	BYTE tv;
 
 	if (phase == UNIF_COUNT) {
-		fseek(fp, unif.chunk.length, SEEK_CUR);
+		if ((rom->position + unif.chunk.length) > rom->size) {
+			return (EXIT_ERROR);
+		}
+		rom->position += unif.chunk.length;
 		return (EXIT_OK);
 	}
 
@@ -492,9 +576,7 @@ BYTE unif_TVCI(FILE *fp, BYTE phase) {
 		return (EXIT_ERROR);
 	}
 
-	if (!(fread(&tv, unif.chunk.length, 1, fp))) {
-		;
-	}
+	rom_mem_memcpy(&tv, rom, unif.chunk.length);
 
 	switch (tv) {
 		default:
@@ -508,35 +590,39 @@ BYTE unif_TVCI(FILE *fp, BYTE phase) {
 
 	return (EXIT_OK);
 }
-BYTE unif_BATR(FILE *fp, BYTE phase) {
+BYTE unif_BATR(_rom_mem *rom, BYTE phase) {
 	BYTE batr;
 
 	if (phase == UNIF_COUNT) {
-		fseek(fp, unif.chunk.length, SEEK_CUR);
+		if ((rom->position + unif.chunk.length) > rom->size) {
+			return (EXIT_ERROR);
+		}
+		rom->position += unif.chunk.length;
 		return (EXIT_OK);
 	}
 
 	batr = 0;
-	if (!(fread(&batr, unif.chunk.length, 1, fp))) {
-		;
-	}
+
+	rom_mem_memcpy(&batr, rom, unif.chunk.length);
 
 	info.prg.ram.bat.banks = batr & 0x01;
 
 	return (EXIT_OK);
 }
-BYTE unif_MIRR(FILE *fp, BYTE phase) {
+BYTE unif_MIRR(_rom_mem *rom, BYTE phase) {
 	BYTE mirr;
 
 	if (phase == UNIF_COUNT) {
-		fseek(fp, unif.chunk.length, SEEK_CUR);
+		if ((rom->position + unif.chunk.length) > rom->size) {
+			return (EXIT_ERROR);
+		}
+		rom->position += unif.chunk.length;
 		return (EXIT_OK);
 	}
 
 	mirr = 0;
-	if (!(fread(&mirr, unif.chunk.length, 1, fp))) {
-		;
-	}
+
+	rom_mem_memcpy(&mirr, rom, unif.chunk.length);
 
 	switch (mirr) {
 		default:
@@ -559,27 +645,28 @@ BYTE unif_MIRR(FILE *fp, BYTE phase) {
 
 	return (EXIT_OK);
 }
-BYTE unif_DINF(FILE *fp, BYTE phase) {
+BYTE unif_DINF(_rom_mem *rom, BYTE phase) {
 	char *months[12] = {
 		"January",   "February", "March",    "April",
 		"May",       "June",     "July",     "August",
-	    "September", "October",  "November", "December"
+		"September", "October",  "November", "December"
 	};
 
 	if (phase == UNIF_COUNT) {
-		fseek(fp, 204, SEEK_CUR);
+		if ((rom->position + 204) > rom->size) {
+			return (EXIT_ERROR);
+		}
+		rom->position += 204;
 		return (EXIT_OK);
 	}
 
-	if (fread(&unif.dumped, 1, 204, fp) != 204) {
-		return (EXIT_ERROR);
-	}
+	rom_mem_memcpy(&unif.dumped, rom, 204);
 
 	unif.dumped.by[99] = 0;
 	unif.dumped.with[99] = 0;
 
 	printf("dumped by %s with %s on %s %d, %d\n", unif.dumped.by, unif.dumped.with,
-			months[(unif.dumped.month - 1) % 12], unif.dumped.day, unif.dumped.year);
+		months[(unif.dumped.month - 1) % 12], unif.dumped.day, unif.dumped.year);
 
 	return (EXIT_OK);
 }
