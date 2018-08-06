@@ -39,7 +39,13 @@ otherwise :
 ./configure --enable-qt5
 make
 ```
-the executable `punes` is in the `src` directory 
+the executable `punes` is in the `src` directory.
+#### Linux Debug version
+If you need the debug version then you need to replace the `./configure` command of the previous examples with the following:
+```bash
+CFLAGS="-g -DDEBUG" CXXFLAGS="-g -DDEBUG" ./configure --disable-release [...]
+```
+where `[...]` are the other necessary options listed above.
 ### Windows
 -----------
 #### Dependencies
@@ -148,3 +154,9 @@ the executable `punes.exe` is in the `src` directory but in order to run it you 
 * SDL.dll
 
 that you can download here : [`64bit`](https://www.dropbox.com/s/yt5bgacnwexdghs/puNES_x86_64_dlls.zip?dl=0) version or [`32bit`](https://www.dropbox.com/s/7afebuhjy06n9uh/puNES_i686_dlls.zip?dl=0) version.
+#### Windows Debug version
+If you need the debug version then you need to replace the `./configure` command of the previous examples with the following:
+```bash
+CFLAGS="-g -DDEBUG" CXXFLAGS="-g -DDEBUG" ./configure --disable-release [...]
+```
+where `[...]` are the other necessary options listed above.

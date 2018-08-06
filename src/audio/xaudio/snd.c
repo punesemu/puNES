@@ -27,6 +27,9 @@
 #include "clock.h"
 #include "apu.h"
 #include "wave.h"
+#if defined (DEBUG)
+#define __inline
+#endif
 #define INITGUID
 #include <XAudio2.h>
 #include <dsound.h>
