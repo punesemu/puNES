@@ -28,6 +28,11 @@
 #include "opengl.h"
 #endif
 #include "gui.h"
+#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
+#include <QtGui/QScrollBar>
+#else
+#include <QtWidgets/QScrollBar>
+#endif
 
 typedef struct _cb_ports {
 	QString desc;
@@ -64,9 +69,9 @@ dlgInput::dlgInput(QWidget *parent = 0) : QDialog(parent) {
 	combobox_cp_init();
 
 	connect(checkBox_Permit_updown, SIGNAL(stateChanged(int)), this,
-			SLOT(s_checkbox_permit_updown_leftright_changed(int)));
+		SLOT(s_checkbox_permit_updown_leftright_changed(int)));
 	connect(checkBox_Hide_Zapper_cursor, SIGNAL(stateChanged(int)), this,
-			SLOT(s_checkbox_hide_zapper_cursor_changed(int)));
+		SLOT(s_checkbox_hide_zapper_cursor_changed(int)));
 
 	setup_shortcuts();
 
@@ -83,7 +88,11 @@ dlgInput::dlgInput(QWidget *parent = 0) : QDialog(parent) {
 	connect(shcut.joy.timer, SIGNAL(timeout()), this, SLOT(s_joy_read_timer()));
 
 	setAttribute(Qt::WA_DeleteOnClose);
-	setFixedSize(width(), height());
+
+	s_resize_tableview_shortcuts();
+
+	adjustSize();
+	setFixedSize(size());
 
 	installEventFilter(this);
 }
@@ -355,9 +364,9 @@ void dlgInput::combobox_cp_init() {
 	combobox_cp_init(comboBox_cp1, &data.port[0], ctrl_port1, length1);
 	combobox_cp_init(comboBox_cp2, &data.port[1], ctrl_port2, length2);
 	combobox_cp_init(comboBox_cp3, &data.port[2], (void *) ctrl_mode_four_score,
-			LENGTH(ctrl_mode_four_score));
+		LENGTH(ctrl_mode_four_score));
 	combobox_cp_init(comboBox_cp4, &data.port[3], (void *) ctrl_mode_four_score,
-			LENGTH(ctrl_mode_four_score));
+		LENGTH(ctrl_mode_four_score));
 }
 void dlgInput::setup_shortcuts(void) {
 	QFont f9;
@@ -374,7 +383,7 @@ void dlgInput::setup_shortcuts(void) {
 		for (int b = 0; b < 2; b++) {
 			shcut.text[b] << "";
 		}
-		populate_shortcut(a + SET_INP_SC_OPEN);
+		populate_shortcut(a + SET_INP_SC_OPEN, NULL);
 	}
 
 	combo_joy_id_init();
@@ -383,6 +392,12 @@ void dlgInput::setup_shortcuts(void) {
 
 	if (plainTextEdit_input_info->font().pointSize() > 9) {
 		plainTextEdit_input_info->setFont(f9);
+	}
+
+	{
+		int h = plainTextEdit_input_info->fontMetrics().size(0, "IQygp").height() + 10;
+
+		plainTextEdit_input_info->setFixedHeight(h);
 	}
 
 	update_groupbox_shortcuts(UPDATE_ALL, NO_ACTION, NO_ACTION);
@@ -429,7 +444,7 @@ void dlgInput::combo_joy_id_init() {
 			comboBox_joy_ID->setCurrentIndex(current_line);
 		}
 		connect(comboBox_joy_ID, SIGNAL(activated(int)), this,
-				SLOT(s_combobox_joy_activated(int)));
+			SLOT(s_combobox_joy_activated(int)));
 	} else {
 		comboBox_joy_ID->setCurrentIndex(0);
 	}
@@ -517,7 +532,7 @@ void dlgInput::update_groupbox_shortcuts(int mode, int type, int row) {
 		}
 	}
 }
-void dlgInput::populate_shortcut(int index) {
+void dlgInput::populate_shortcut(int index, QString *string) {
 	int row = index - SET_INP_SC_OPEN;
 	QTableWidgetItem *col;
 	QHBoxLayout *layout;
@@ -531,21 +546,24 @@ void dlgInput::populate_shortcut(int index) {
 	tableWidget_Shortcuts->setItem(row, 0, col);
 
 	// keyboard
-	shcut.text[KEYBOARD].replace(row, (QString(*(QString *)settings_inp_rd_sc(index, KEYBOARD))));
+	if (string != NULL) {
+		shcut.text[KEYBOARD].replace(row, (*string));
+	} else {
+		shcut.text[KEYBOARD].replace(row, (QString(*(QString *)settings_inp_rd_sc(index, KEYBOARD))));
+	}
 	widget = new QWidget(this);
-	layout = new QHBoxLayout(this);
+	layout = new QHBoxLayout(widget);
 	btext = new QPushButton(this);
 	bicon = new QPushButton(this);
 	btext->setObjectName(QString::fromUtf8("value"));
+	btext->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
 	btext->setProperty("myValue", QVariant(row));
 	btext->setProperty("myType", QVariant(KEYBOARD));
 	btext->installEventFilter(this);
 	connect(btext, SIGNAL(clicked(bool)), this, SLOT(s_shortcut_clicked(bool)));
 	bicon->setObjectName(QString::fromUtf8("default"));
-	bicon->setIcon(QIcon(":/icon/icons/default.png"));
-	bicon->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-	bicon->setMinimumSize(0, 0);
-	bicon->setMaximumSize(30, btext->sizeHint().height());
+	bicon->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+	bicon->setIcon(QIcon(":/icon/icons/default.svg"));
 	bicon->setToolTip(tr("Default"));
 	bicon->setProperty("myValue", QVariant(row));
 	connect(bicon, SIGNAL(clicked(bool)), this, SLOT(s_keyb_shortcut_default(bool)));
@@ -553,25 +571,27 @@ void dlgInput::populate_shortcut(int index) {
 	layout->addWidget(bicon);
 	layout->setContentsMargins(0,0,0,0);
 	layout->setSpacing(0);
-	widget->setLayout(layout);
 	tableWidget_Shortcuts->setCellWidget(row, 1, widget);
 
 	// joystick
-	shcut.text[JOYSTICK].replace(row, (QString(*(QString *)settings_inp_rd_sc(index, JOYSTICK))));
+	if (string != NULL) {
+		shcut.text[JOYSTICK].replace(row, (*string));
+	} else {
+		shcut.text[JOYSTICK].replace(row, (QString(*(QString *)settings_inp_rd_sc(index, JOYSTICK))));
+	}
 	widget = new QWidget(this);
-	layout = new QHBoxLayout(this);
+	layout = new QHBoxLayout(widget);
 	btext = new QPushButton(this);
 	bicon = new QPushButton(this);
 	btext->setObjectName(QString::fromUtf8("value"));
+	btext->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
 	btext->setProperty("myValue", QVariant(row));
 	btext->setProperty("myType", QVariant(JOYSTICK));
 	btext->installEventFilter(this);
 	connect(btext, SIGNAL(clicked(bool)), this, SLOT(s_shortcut_clicked(bool)));
 	bicon->setObjectName(QString::fromUtf8("unset"));
-	bicon->setIcon(QIcon(":/icon/icons/trash.png"));
-	bicon->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-	bicon->setMinimumSize(0, 0);
-	bicon->setMaximumSize(30, btext->sizeHint().height());
+	bicon->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+	bicon->setIcon(QIcon(":/icon/icons/trash.svg"));
 	bicon->setToolTip(tr("Unset"));
 	bicon->setProperty("myValue", QVariant(row));
 	connect(bicon, SIGNAL(clicked(bool)), this, SLOT(s_joy_shortcut_unset(bool)));
@@ -579,7 +599,6 @@ void dlgInput::populate_shortcut(int index) {
 	layout->addWidget(bicon);
 	layout->setContentsMargins(0,0,0,0);
 	layout->setSpacing(0);
-	widget->setLayout(layout);
 	tableWidget_Shortcuts->setCellWidget(row, 2, widget);
 }
 void dlgInput::update_text_shortcut(QAction *action, int index) {
@@ -595,11 +614,11 @@ void dlgInput::update_text_shortcut(QAction *action, int index) {
 
 	/* keyboard */
 	tableWidget_Shortcuts->cellWidget(row, 1)->findChild<QPushButton *>("value")->setText(
-			shcut.text[KEYBOARD].at(row));
+		shcut.text[KEYBOARD].at(row));
 
 	/* joystick */
 	tableWidget_Shortcuts->cellWidget(row, 2)->findChild<QPushButton *>("value")->setText(
-			shcut.text[JOYSTICK].at(row));
+		shcut.text[JOYSTICK].at(row));
 }
 void dlgInput::info_entry_print(QString txt) {
 	plainTextEdit_input_info->setPlainText(txt);
@@ -655,6 +674,47 @@ bool dlgInput::keypressEvent(QEvent *event) {
 	shcut.no_other_buttons = false;
 
 	return (true);
+}
+void dlgInput::s_resize_tableview_shortcuts() {
+	QAction *p = new QAction(this);
+	QString text = " Ctrl+Alt+Backspace ";
+	int i, w, h;
+
+	#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
+	tableWidget_Shortcuts->horizontalHeader()->setResizeMode(QHeaderView::ResizeToContents);
+#else
+	tableWidget_Shortcuts->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+#endif
+
+	// creo uno shortucut fittizio per avere una width sufficientemente grande
+	for (i = 0; i < 2; i++) {
+		shcut.text[i] << "";
+	}
+	populate_shortcut(SET_MAX_NUM_SC + SET_INP_SC_OPEN, &text);
+
+	p->setText("test");
+	update_text_shortcut(p, SET_MAX_NUM_SC);
+
+	w = tableWidget_Shortcuts->verticalHeader()->width() + 2;
+	for (i = 0; i < tableWidget_Shortcuts->columnCount(); i++) {
+		w += tableWidget_Shortcuts->columnWidth(i);
+	}
+	w += tableWidget_Shortcuts->verticalScrollBar()->sizeHint().width() + 24;
+
+	h = tableWidget_Shortcuts->horizontalHeader()->height() + 2;
+	for (i = 0; i < 6; i++) {
+		h += tableWidget_Shortcuts->rowHeight(i);
+	}
+
+	tableWidget_Shortcuts->setMinimumSize(w, h);
+
+#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
+	tableWidget_Shortcuts->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+#else
+	tableWidget_Shortcuts->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+#endif
+
+	tableWidget_Shortcuts->removeRow(SET_MAX_NUM_SC);
 }
 void dlgInput::s_combobox_cm_activated(int index) {
 	int type = comboBox_cm->itemData(index).toInt();
@@ -776,9 +836,9 @@ void dlgInput::s_keyb_shortcut_default(bool checked) {
 	int row = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
 	shcut.text[KEYBOARD].replace(row,
-			uQString(inp_cfg[row + SET_INP_SC_OPEN].def).split(",").at(KEYBOARD));
+		uQString(inp_cfg[row + SET_INP_SC_OPEN].def).split(",").at(KEYBOARD));
 	tableWidget_Shortcuts->cellWidget(row, 1)->findChild<QPushButton *>("value")->setText(
-			shcut.text[KEYBOARD].at(row));
+		shcut.text[KEYBOARD].at(row));
 }
 void dlgInput::s_joy_shortcut_unset(bool checked) {
 	int row = QVariant(((QObject *)sender())->property("myValue")).toInt();
@@ -810,7 +870,7 @@ void dlgInput::s_joy_read_timer() {
 }
 void dlgInput::s_button_timeout() {
 	info_entry_print(tr("Press a key (ESC for the previous value \"%1\") - timeout in %2").arg(
-			shcut.text[shcut.type].at(shcut.row), QString::number(shcut.timeout.seconds--)));
+		shcut.text[shcut.type].at(shcut.row), QString::number(shcut.timeout.seconds--)));
 
 	if (shcut.timeout.seconds < 0) {
 		QKeyEvent *event = new QKeyEvent(QEvent::KeyPress, Qt::Key_Escape, Qt::NoModifier);
@@ -832,9 +892,9 @@ void dlgInput::s_default_clicked(bool checked) {
 	comboBox_joy_ID->setCurrentIndex(comboBox_joy_ID->count() - 1);
 	for (int i = 0; i < SET_MAX_NUM_SC; i++) {
 		shcut.text[KEYBOARD].replace(i,
-				uQString(inp_cfg[i + SET_INP_SC_OPEN].def).split(",").at(KEYBOARD));
+			uQString(inp_cfg[i + SET_INP_SC_OPEN].def).split(",").at(KEYBOARD));
 		shcut.text[JOYSTICK].replace(i,
-				uQString(inp_cfg[i + SET_INP_SC_OPEN].def).split(",").at(JOYSTICK));
+			uQString(inp_cfg[i + SET_INP_SC_OPEN].def).split(",").at(JOYSTICK));
 	}
 
 	update_groupbox_shortcuts(UPDATE_ALL, NO_ACTION, NO_ACTION);

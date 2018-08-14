@@ -106,6 +106,9 @@ mainWindow::mainWindow(Ui::mainWindow *u, cheatObject *cho) : QMainWindow() {
 		setFont(actual);
 	}
 
+	adjustSize();
+	setFixedSize(size());
+
 	shcjoy.timer = new QTimer(this);
 	connect(shcjoy.timer, SIGNAL(timeout()), this, SLOT(s_shcjoy_read_timer()));
 
@@ -528,17 +531,17 @@ void mainWindow::update_menu_file() {
 			action->setText(QFileInfo(description).completeBaseName());
 
 			if (rom.suffix().isEmpty()) {
-				action->setIcon(QIcon(":/icon/icons/nes_file.png"));
+				action->setIcon(QIcon(":/icon/icons/nes_file.svg"));
 			} else if (!QString::compare(rom.suffix(), "fds", Qt::CaseInsensitive)) {
-				action->setIcon(QIcon(":/icon/icons/fds_file.png"));
+				action->setIcon(QIcon(":/icon/icons/fds_file.svg"));
 			} else if (!QString::compare(rom.suffix(), "fm2", Qt::CaseInsensitive)) {
-				action->setIcon(QIcon(":/icon/icons/fm2_file.png"));
+				action->setIcon(QIcon(":/icon/icons/fm2_file.svg"));
 			} else if (!QString::compare(rom.suffix(), "nsf", Qt::CaseInsensitive)) {
-				action->setIcon(QIcon(":/icon/icons/nsf_file.png"));
+				action->setIcon(QIcon(":/icon/icons/nsf_file.svg"));
 			} else if (!QString::compare(rom.suffix(), "nsfe", Qt::CaseInsensitive)) {
-				action->setIcon(QIcon(":/icon/icons/nsf_file.png"));
+				action->setIcon(QIcon(":/icon/icons/nsf_file.svg"));
 			} else {
-				action->setIcon(QIcon(":/icon/icons/nes_file.png"));
+				action->setIcon(QIcon(":/icon/icons/nes_file.svg"));
 			}
 
 			action->setProperty("myValue", QVariant(i));
@@ -552,10 +555,10 @@ void mainWindow::update_menu_nes() {
 
 	if (info.turn_off) {
 		ui->action_Turn_Off->setText(tr("&Turn On") + '\t' + ((QString)*sc));
-		ui->action_Turn_Off->setIcon(QIcon(":/icon/icons/turn_on.png"));
+		ui->action_Turn_Off->setIcon(QIcon(":/icon/icons/turn_on.svg"));
 	} else {
 		ui->action_Turn_Off->setText(tr("&Turn Off") + '\t' + ((QString)*sc));
-		ui->action_Turn_Off->setIcon(QIcon(":/icon/icons/turn_off.png"));
+		ui->action_Turn_Off->setIcon(QIcon(":/icon/icons/turn_off.svg"));
 	}
 
 	if (info.no_rom) {
@@ -608,15 +611,15 @@ void mainWindow::update_menu_nes() {
 	if (info.no_rom | info.turn_off) {
 		ui->action_Start_Stop_WAV_recording->setEnabled(false);
 		ui->action_Start_Stop_WAV_recording->setText(tr("Start/Stop &WAV recording") + '\t' + ((QString)*sc));
-		ui->action_Start_Stop_WAV_recording->setIcon(QIcon(":/icon/icons/wav_start.png"));
+		ui->action_Start_Stop_WAV_recording->setIcon(QIcon(":/icon/icons/wav_start.svg"));
 	} else {
 		ui->action_Start_Stop_WAV_recording->setEnabled(true);
 		if (info.wave_in_record) {
 			ui->action_Start_Stop_WAV_recording->setText(tr("Stop &WAV recording") + '\t' + ((QString)*sc));
-			ui->action_Start_Stop_WAV_recording->setIcon(QIcon(":/icon/icons/wav_stop.png"));
+			ui->action_Start_Stop_WAV_recording->setIcon(QIcon(":/icon/icons/wav_stop.svg"));
 		} else {
 			ui->action_Start_Stop_WAV_recording->setText(tr("Start &WAV recording") + '\t' + ((QString)*sc));
-			ui->action_Start_Stop_WAV_recording->setIcon(QIcon(":/icon/icons/wav_start.png"));
+			ui->action_Start_Stop_WAV_recording->setIcon(QIcon(":/icon/icons/wav_start.svg"));
 		}
 	}
 

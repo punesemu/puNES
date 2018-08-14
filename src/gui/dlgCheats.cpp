@@ -57,42 +57,33 @@ dlgCheats::dlgCheats(QWidget *parent = 0, cheatObject *c = 0) : QDialog(parent) 
 
 	setFont(parent->font());
 
-	setAttribute(Qt::WA_DeleteOnClose);
-	setFixedSize(width(), height());
-
-	tableWidget_Cheats->verticalHeader()->setDefaultSectionSize(20);
-	tableWidget_Cheats->setColumnWidth(CR_ACTIVE, 60);
-	tableWidget_Cheats->setColumnWidth(CR_CODE, 90);
-	tableWidget_Cheats->setColumnWidth(CR_ADDRESS, 70);
-	tableWidget_Cheats->setColumnWidth(CR_VALUE, 60);
-	tableWidget_Cheats->setColumnWidth(CR_COMPARE, 80);
-	tableWidget_Cheats->setColumnWidth(CR_DESCRIPTION, 380);
 	tableWidget_Cheats->setColumnCount(tableWidget_Cheats->columnCount() + 1);
 	tableWidget_Cheats->setColumnHidden(CR_ENABLED_COMPARE, true);
 	tableWidget_Cheats->horizontalHeaderItem(CR_DESCRIPTION)->setTextAlignment(Qt::AlignLeft);
 
-	QButtonGroup *grp = new QButtonGroup(this);
-	grp->addButton(radioButton_CPU_Ram);
-	grp->setId(radioButton_CPU_Ram, 0);
-	grp->addButton(radioButton_GG);
-	grp->setId(radioButton_GG, 1);
-	grp->addButton(radioButton_ProAR);
-	grp->setId(radioButton_ProAR, 2);
-	connect(grp, SIGNAL(buttonClicked(int)), this, SLOT(s_grp_button_clicked(int)));
+	{
+		QButtonGroup *grp = new QButtonGroup(this);
+
+		grp->addButton(radioButton_CPU_Ram);
+		grp->setId(radioButton_CPU_Ram, 0);
+		grp->addButton(radioButton_GG);
+		grp->setId(radioButton_GG, 1);
+		grp->addButton(radioButton_ProAR);
+		grp->setId(radioButton_ProAR, 2);
+
+		connect(grp, SIGNAL(buttonClicked(int)), this, SLOT(s_grp_button_clicked(int)));
+	}
 
 	lineEdit_GG->setStyleSheet("QLineEdit{background: cyan;}");
 	lineEdit_ProAR->setStyleSheet("QLineEdit{background: yellow;}");
 
 	hexSpinBox_Address = new hexSpinBox(this, 4);
-	hexSpinBox_Address->setMinimumWidth(60);
 	gridLayout_Raw_Value->addWidget(hexSpinBox_Address, 0, 1);
 
 	hexSpinBox_Value = new hexSpinBox(this, 2);
-	hexSpinBox_Value->setMinimumWidth(60);
 	gridLayout_Raw_Value->addWidget(hexSpinBox_Value, 1, 1);
 
 	hexSpinBox_Compare = new hexSpinBox(this, 2);
-	hexSpinBox_Compare->setMinimumWidth(60);
 	gridLayout_Raw_Value->addWidget(hexSpinBox_Compare, 2, 1);
 
 	QWidget::setTabOrder(lineEdit_ProAR, hexSpinBox_Address);
@@ -100,31 +91,35 @@ dlgCheats::dlgCheats(QWidget *parent = 0, cheatObject *c = 0) : QDialog(parent) 
 	QWidget::setTabOrder(hexSpinBox_Value, hexSpinBox_Compare);
 
 	pushButton_Cancel_Cheat->setEnabled(false);
-	tools_height = groupBox_Edit->height();
-	hide_tools_widgets(true);
 
 	connect(tableWidget_Cheats, SIGNAL(itemSelectionChanged()), this,
-			SLOT(s_item_selection_changed()));
+		SLOT(s_item_selection_changed()));
 	connect(pushButton_Import_Cheats, SIGNAL(clicked(bool)), this, SLOT(s_import_clicked(bool)));
 	connect(pushButton_Export_Cheats, SIGNAL(clicked(bool)), this, SLOT(s_export_clicked(bool)));
 	connect(pushButton_Clear_All_Cheats, SIGNAL(clicked(bool)), this,
-			SLOT(s_clear_all_clicked(bool)));
+		SLOT(s_clear_all_clicked(bool)));
 
 	connect(lineEdit_GG, SIGNAL(textEdited(const QString &)),
-			SLOT(s_linedit_to_upper(const QString &)));
+		SLOT(s_linedit_to_upper(const QString &)));
 	connect(checkBox_Compare, SIGNAL(stateChanged(int)), this,
-			SLOT(s_active_compare_state_changed(int)));
+		SLOT(s_active_compare_state_changed(int)));
 	connect(pushButton_New_Cheat, SIGNAL(clicked(bool)), this, SLOT(s_new_clicked(bool)));
 	connect(pushButton_Remove_Cheat, SIGNAL(clicked(bool)), this, SLOT(s_remove_clicked(bool)));
 	connect(pushButton_Submit_Cheat, SIGNAL(clicked(bool)), this, SLOT(s_submit_clicked(bool)));
 	connect(pushButton_Cancel_Cheat, SIGNAL(clicked(bool)), this, SLOT(s_cancel_clicked(bool)));
 
 	connect(pushButton_Hide_Show_Tools, SIGNAL(clicked(bool)), this,
-			SLOT(s_hide_show_tools_clicked(bool)));
+		SLOT(s_hide_show_tools_clicked(bool)));
 	connect(pushButton_Apply, SIGNAL(clicked(bool)), this, SLOT(s_apply_clicked(bool)));
 	connect(pushButton_Discard, SIGNAL(clicked(bool)), this, SLOT(s_discard_clicked(bool)));
 
+	setAttribute(Qt::WA_DeleteOnClose);
+
+	adjustSize();
+
 	installEventFilter(this);
+
+	hide_tools_widgets(true);
 
 	populate_cheat_table();
 
@@ -140,7 +135,6 @@ dlgCheats::~dlgCheats() {}
 bool dlgCheats::eventFilter(QObject *obj, QEvent *event) {
 	if (event->type() == QEvent::Close) {
 		org->apply_cheats();
-
 		emu_pause(FALSE);
 	} else if (event->type() == QEvent::LanguageChange) {
 		Cheats::retranslateUi(this);
@@ -229,8 +223,7 @@ void dlgCheats::insert_cheat_row(int row) {
 	update_cheat_row(row, &cheat);
 }
 void dlgCheats::update_cheat_row(int row, chl_map *cheat) {
-	QCheckBox *active = tableWidget_Cheats->cellWidget(row, CR_ACTIVE)->findChild<QCheckBox*>(
-			"active");
+	QCheckBox *active = tableWidget_Cheats->cellWidget(row, CR_ACTIVE)->findChild<QCheckBox*>("active");
 
 	if ((*cheat)["enabled"].toInt() == 1) {
 		active->setChecked(true);
@@ -239,6 +232,7 @@ void dlgCheats::update_cheat_row(int row, chl_map *cheat) {
 		active->setChecked(false);
 		tableWidget_Cheats->item(row, CR_ACTIVE)->setText("0");
 	}
+	tableWidget_Cheats->resizeColumnToContents(CR_ACTIVE);
 
 	if ((*cheat)["genie"] != "-") {
 		tableWidget_Cheats->item(row, CR_CODE)->setText((*cheat)["genie"]);
@@ -249,32 +243,34 @@ void dlgCheats::update_cheat_row(int row, chl_map *cheat) {
 	} else {
 		tableWidget_Cheats->item(row, CR_CODE)->setText("-");
 	}
+	tableWidget_Cheats->resizeColumnToContents(CR_CODE);
 
 	tableWidget_Cheats->item(row, CR_ADDRESS)->setText((*cheat)["address"]);
+	tableWidget_Cheats->resizeColumnToContents(CR_ADDRESS);
+
 	tableWidget_Cheats->item(row, CR_VALUE)->setText((*cheat)["value"]);
+	tableWidget_Cheats->resizeColumnToContents(CR_VALUE);
+
 	tableWidget_Cheats->item(row, CR_COMPARE)->setText((*cheat)["compare"]);
+	tableWidget_Cheats->resizeColumnToContents(CR_COMPARE);
+
 	tableWidget_Cheats->item(row, CR_DESCRIPTION)->setText((*cheat)["description"]);
+	tableWidget_Cheats->resizeColumnToContents(CR_DESCRIPTION);
+
 	tableWidget_Cheats->item(row, CR_ENABLED_COMPARE)->setText((*cheat)["enabled_compare"]);
 }
 void dlgCheats::hide_tools_widgets(bool state) {
-	int delta;
-
 	if (groupBox_Edit->isHidden() == state) {
 		return;
 	}
 
 	if (state == true) {
-		delta = -tools_height;
 		pushButton_Hide_Show_Tools->setText(tr("Show Tools"));
 	} else {
-		delta = tools_height;
 		pushButton_Hide_Show_Tools->setText(tr("Hide Tools"));
 	}
 
 	groupBox_Edit->setHidden(state);
-	horizontalLayoutWidget_2->move(horizontalLayoutWidget_2->x(),
-			horizontalLayoutWidget_2->y() + delta);
-	setFixedHeight(height() + delta);
 }
 void dlgCheats::populate_edit_widgets(int row) {
 	chl_map cheat;
@@ -321,12 +317,10 @@ void dlgCheats::clear_edit_widgets() {
 }
 void dlgCheats::set_edit_widget() {
 	if ((new_mode == true) || (tableWidget_Cheats->currentRow() >= 0)) {
-		horizontalLayoutWidget_6->setEnabled(true);
 		frame_Type_Cheat->setEnabled(true);
 		frame_Raw_Value->setEnabled(true);
 		frame_Buttons->setEnabled(true);
 	} else {
-		horizontalLayoutWidget_6->setEnabled(false);
 		frame_Type_Cheat->setEnabled(false);
 		frame_Raw_Value->setEnabled(false);
 		frame_Buttons->setEnabled(true);
@@ -452,7 +446,7 @@ void dlgCheats::s_import_clicked(bool checked) {
 	filters[2].append(" (*.cht *.CHT)");
 
 	file = QFileDialog::getOpenFileName(this, tr("Import Cheats"),
-			parentMain->last_import_cheat_path, filters.join(";;"));
+		parentMain->last_import_cheat_path, filters.join(";;"));
 
 	if (file.isNull() == false) {
 		QFileInfo fileinfo(file);
@@ -477,7 +471,7 @@ void dlgCheats::s_export_clicked(bool checked) {
 	filters[1].append(" (*.*)");
 
 	file = QFileDialog::getSaveFileName(this, tr("Export cheats on file"),
-			QFileInfo(uQString(info.rom.file)).completeBaseName() + ".xml", filters.join(";;"));
+		QFileInfo(uQString(info.rom.file)).completeBaseName() + ".xml", filters.join(";;"));
 
 	if (file.isNull() == false) {
 		QFileInfo fileinfo(file);
@@ -559,13 +553,13 @@ void dlgCheats::s_submit_clicked(bool checked) {
 		cheat.insert("genie", "-");
 		cheat.insert("rocky", "-");
 		cheat.insert("address", "0x" + QString("%1").arg(hexSpinBox_Address->value(), 4, 16,
-				QChar('0')).toUpper());
+			QChar('0')).toUpper());
 		cheat.insert("value", "0x" + QString("%1").arg(hexSpinBox_Value->value(), 2, 16,
-				QChar('0')).toUpper());
+			QChar('0')).toUpper());
 		if (checkBox_Compare->isChecked()) {
 			cheat.insert("enabled_compare", "1");
 			cheat.insert("compare", "0x" + QString("%1").arg(hexSpinBox_Compare->value(), 2, 16,
-					QChar('0')).toUpper());
+				QChar('0')).toUpper());
 		} else {
 			cheat.insert("enabled_compare", "0");
 			cheat.insert("compare", "-");

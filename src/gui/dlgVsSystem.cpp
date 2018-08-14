@@ -38,10 +38,6 @@ dlgVsSystem::dlgVsSystem(QWidget *parent = 0) : QDialog(parent) {
 	setFont(parent->font());
 	setStyleSheet(tools_stylesheet());
 
-	QPushButton *close = new QPushButton(groupBox_Vs_System);
-	close->setGeometry(QRect(210, 3, 16, 16));
-	close->setText("x");
-
 	pushButton_Left_Coin->setProperty("myIndex", QVariant(1));
 	pushButton_Right_Coin->setProperty("myIndex", QVariant(2));
 	pushButton_Service_Coin->setProperty("myIndex", QVariant(3));
@@ -69,12 +65,49 @@ dlgVsSystem::dlgVsSystem(QWidget *parent = 0) : QDialog(parent) {
 	connect(checkBox_ds7, SIGNAL(stateChanged(int)), this, SLOT(s_ds_changed(int)));
 	connect(checkBox_ds8, SIGNAL(stateChanged(int)), this, SLOT(s_ds_changed(int)));
 
-	connect(close, SIGNAL(clicked(bool)), this, SLOT(s_x_clicked(bool)));
-
 	setWindowFlags(Qt::Dialog | Qt::FramelessWindowHint);
 
 	setAttribute(Qt::WA_DeleteOnClose);
-	setFixedSize(width(), height());
+
+	{
+		QFont f9;
+		int w, h;
+
+		f9.setPointSize(9);
+		f9.setWeight(QFont::Light);
+
+		if (plainTextEdit_Coin_Counter->font().pointSize() > 9) {
+			plainTextEdit_Coin_Counter->setFont(f9);
+		}
+
+		w = plainTextEdit_Coin_Counter->fontMetrics().size(0, "123456789012345678901234").width() + 10;
+		h = plainTextEdit_Coin_Counter->fontMetrics().size(0, "1234567890").height() + 10;
+
+		plainTextEdit_Coin_Counter->setFixedSize(w, h);
+	}
+
+	adjustSize();
+	setFixedSize(size());
+
+	{
+		QMargins vgbm = verticalLayout_groupBox_Vs_System->contentsMargins();
+		QMargins vdia = verticalLayout_Vs_System->contentsMargins();
+		QPushButton *close = new QPushButton(this);
+		int x, y, w, h;
+
+		w = close->fontMetrics().size(0, "x").width() + 10;
+		h = close->fontMetrics().size(0, "x").height() + 5;
+		x = normalGeometry().width() - w -	vdia.right() - 2 - vgbm.right();
+		y = vdia.top() + 2 + 1;
+
+		close->setGeometry(x, y, w, h);
+		close->setText("x");
+
+		connect(close, SIGNAL(clicked(bool)), this, SLOT(s_x_clicked(bool)));
+
+		vgbm.setTop(close->sizeHint().height() + 2);
+		verticalLayout_groupBox_Vs_System->setContentsMargins(vgbm);
+	}
 
 	installEventFilter(this);
 }
@@ -93,9 +126,8 @@ int dlgVsSystem::update_pos(int startY) {
 	int x = parentWidget()->pos().x() + parentWidget()->frameGeometry().width();
 	int y = parentWidget()->geometry().y() + startY;
 
-	if ((parentWidget()->pos().x() + parentWidget()->frameGeometry().width()
-			+ frameGeometry().width() - qApp->desktop()->screenGeometry(screenNumber).left())
-			> qApp->desktop()->screenGeometry(screenNumber).width()) {
+	if ((x + frameGeometry().width() - qApp->desktop()->screenGeometry(screenNumber).left()) >
+		qApp->desktop()->screenGeometry(screenNumber).width()) {
 		x = parentWidget()->pos().x() - frameGeometry().width();
 	}
 	move(QPoint(x, y));

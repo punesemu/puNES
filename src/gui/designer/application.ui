@@ -13,24 +13,6 @@
     <height>312</height>
    </rect>
   </property>
-  <property name="sizePolicy">
-   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-    <horstretch>0</horstretch>
-    <verstretch>0</verstretch>
-   </sizepolicy>
-  </property>
-  <property name="minimumSize">
-   <size>
-    <width>0</width>
-    <height>0</height>
-   </size>
-  </property>
-  <property name="maximumSize">
-   <size>
-    <width>16777215</width>
-    <height>16777215</height>
-   </size>
-  </property>
   <property name="windowTitle">
    <string notr="true">FHorse</string>
   </property>
@@ -41,7 +23,7 @@
      <x>0</x>
      <y>0</y>
      <width>304</width>
-     <height>24</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="pMenu" name="menu_File">
@@ -57,7 +39,7 @@
      </property>
      <property name="icon">
       <iconset resource="application.qrc">
-       <normaloff>:/icon/icons/recent_roms.png</normaloff>:/icon/icons/recent_roms.png</iconset>
+       <normaloff>:/icon/icons/recent_roms.svg</normaloff>:/icon/icons/recent_roms.svg</iconset>
      </property>
     </widget>
     <addaction name="action_Open"/>
@@ -79,7 +61,7 @@
      </property>
      <property name="icon">
       <iconset resource="application.qrc">
-       <normaloff>:/icon/icons/disk_side.png</normaloff>:/icon/icons/disk_side.png</iconset>
+       <normaloff>:/icon/icons/disk_side.svg</normaloff>:/icon/icons/disk_side.svg</iconset>
      </property>
      <addaction name="action_Disk_1_side_A"/>
      <addaction name="action_Disk_1_side_B"/>
@@ -118,7 +100,7 @@
      </property>
      <property name="icon">
       <iconset resource="application.qrc">
-       <normaloff>:/icon/icons/mode.png</normaloff>:/icon/icons/mode.png</iconset>
+       <normaloff>:/icon/icons/mode.svg</normaloff>:/icon/icons/mode.svg</iconset>
      </property>
      <addaction name="action_PAL"/>
      <addaction name="action_NTSC"/>
@@ -131,7 +113,7 @@
      </property>
      <property name="icon">
       <iconset resource="application.qrc">
-       <normaloff>:/icon/icons/video.png</normaloff>:/icon/icons/video.png</iconset>
+       <normaloff>:/icon/icons/video.svg</normaloff>:/icon/icons/video.svg</iconset>
      </property>
      <widget class="pMenu" name="menu_FPS">
       <property name="title">
@@ -139,7 +121,7 @@
       </property>
       <property name="icon">
        <iconset resource="application.qrc">
-        <normaloff>:/icon/icons/fps.png</normaloff>:/icon/icons/fps.png</iconset>
+        <normaloff>:/icon/icons/fps.svg</normaloff>:/icon/icons/fps.svg</iconset>
       </property>
       <addaction name="action_FPS_Default"/>
       <addaction name="separator"/>
@@ -167,7 +149,7 @@
       </property>
       <property name="icon">
        <iconset resource="application.qrc">
-        <normaloff>:/icon/icons/frameskip.png</normaloff>:/icon/icons/frameskip.png</iconset>
+        <normaloff>:/icon/icons/frameskip.svg</normaloff>:/icon/icons/frameskip.svg</iconset>
       </property>
       <addaction name="action_Fsk_Default"/>
       <addaction name="separator"/>
@@ -188,7 +170,7 @@
       </property>
       <property name="icon">
        <iconset resource="application.qrc">
-        <normaloff>:/icon/icons/scale.png</normaloff>:/icon/icons/scale.png</iconset>
+        <normaloff>:/icon/icons/scale.svg</normaloff>:/icon/icons/scale.svg</iconset>
       </property>
       <addaction name="action_1x"/>
       <addaction name="action_2x"/>
@@ -203,7 +185,7 @@
       </property>
       <property name="icon">
        <iconset resource="application.qrc">
-        <normaloff>:/icon/icons/pixel_aspect_ratio.png</normaloff>:/icon/icons/pixel_aspect_ratio.png</iconset>
+        <normaloff>:/icon/icons/pixel_aspect_ratio.svg</normaloff>:/icon/icons/pixel_aspect_ratio.svg</iconset>
       </property>
       <addaction name="action_PAR_11"/>
       <addaction name="action_PAR_54"/>
@@ -218,7 +200,7 @@
       </property>
       <property name="icon">
        <iconset resource="application.qrc">
-        <normaloff>:/icon/icons/overscan.png</normaloff>:/icon/icons/overscan.png</iconset>
+        <normaloff>:/icon/icons/overscan.svg</normaloff>:/icon/icons/overscan.svg</iconset>
       </property>
       <widget class="pMenu" name="menu_Oscan_Default_Value">
        <property name="title">
@@ -226,7 +208,7 @@
        </property>
        <property name="icon">
         <iconset resource="application.qrc">
-         <normaloff>:/icon/icons/overscan_default.png</normaloff>:/icon/icons/overscan_default.png</iconset>
+         <normaloff>:/icon/icons/overscan_default.svg</normaloff>:/icon/icons/overscan_default.svg</iconset>
        </property>
        <addaction name="action_Oscan_Def_On"/>
        <addaction name="action_Oscan_Def_Off"/>
@@ -249,7 +231,7 @@
       </property>
       <property name="icon">
        <iconset resource="application.qrc">
-        <normaloff>:/icon/icons/cpu_filter.png</normaloff>:/icon/icons/cpu_filter.png</iconset>
+        <normaloff>:/icon/icons/cpu_filter.svg</normaloff>:/icon/icons/cpu_filter.svg</iconset>
       </property>
       <addaction name="action_No_Filter"/>
       <addaction name="action_Scale2X"/>
@@ -278,7 +260,7 @@
       </property>
       <property name="icon">
        <iconset resource="application.qrc">
-        <normaloff>:/icon/icons/effect.png</normaloff>:/icon/icons/effect.png</iconset>
+        <normaloff>:/icon/icons/shader.svg</normaloff>:/icon/icons/shader.svg</iconset>
       </property>
       <addaction name="action_No_Shader"/>
       <addaction name="action_Shader_CRT_Dotmask"/>
@@ -299,7 +281,7 @@
       </property>
       <property name="icon">
        <iconset resource="application.qrc">
-        <normaloff>:/icon/icons/palette.png</normaloff>:/icon/icons/palette.png</iconset>
+        <normaloff>:/icon/icons/palette.svg</normaloff>:/icon/icons/palette.svg</iconset>
       </property>
       <addaction name="action_Palette_PAL"/>
       <addaction name="action_Palette_NTSC"/>
@@ -341,7 +323,7 @@
      </property>
      <property name="icon">
       <iconset resource="application.qrc">
-       <normaloff>:/icon/icons/audio.png</normaloff>:/icon/icons/audio.png</iconset>
+       <normaloff>:/icon/icons/audio.svg</normaloff>:/icon/icons/audio.svg</iconset>
      </property>
      <widget class="pMenu" name="menu_Sample_rate">
       <property name="title">
@@ -349,7 +331,7 @@
       </property>
       <property name="icon">
        <iconset resource="application.qrc">
-        <normaloff>:/icon/icons/samplerate.png</normaloff>:/icon/icons/samplerate.png</iconset>
+        <normaloff>:/icon/icons/samplerate.svg</normaloff>:/icon/icons/samplerate.svg</iconset>
       </property>
       <addaction name="action_Sample_rate_48000"/>
       <addaction name="action_Sample_rate_44100"/>
@@ -362,7 +344,7 @@
       </property>
       <property name="icon">
        <iconset resource="application.qrc">
-        <normaloff>:/icon/icons/channels.png</normaloff>:/icon/icons/channels.png</iconset>
+        <normaloff>:/icon/icons/channels.svg</normaloff>:/icon/icons/channels.svg</iconset>
       </property>
       <widget class="pMenu" name="menu_Stereo_delay">
        <property name="title">
@@ -370,7 +352,7 @@
        </property>
        <property name="icon">
         <iconset resource="application.qrc">
-         <normaloff>:/icon/icons/stereo_delay.png</normaloff>:/icon/icons/stereo_delay.png</iconset>
+         <normaloff>:/icon/icons/stereo_delay.svg</normaloff>:/icon/icons/stereo_delay.svg</iconset>
        </property>
        <addaction name="action_Stereo_delay_5"/>
        <addaction name="action_Stereo_delay_10"/>
@@ -405,7 +387,7 @@
       </property>
       <property name="icon">
        <iconset resource="application.qrc">
-        <normaloff>:/icon/icons/buffer_size.png</normaloff>:/icon/icons/buffer_size.png</iconset>
+        <normaloff>:/icon/icons/buffer_size.svg</normaloff>:/icon/icons/buffer_size.svg</iconset>
       </property>
       <addaction name="action_Absf_0"/>
       <addaction name="action_Absf_1"/>
@@ -424,7 +406,7 @@
       </property>
       <property name="icon">
        <iconset resource="application.qrc">
-        <normaloff>:/icon/icons/audio_output.png</normaloff>:/icon/icons/audio_output.png</iconset>
+        <normaloff>:/icon/icons/audio_output.svg</normaloff>:/icon/icons/audio_output.svg</iconset>
       </property>
      </widget>
      <addaction name="menu_Output_Device"/>
@@ -441,7 +423,7 @@
      </property>
      <property name="icon">
       <iconset resource="application.qrc">
-       <normaloff>:/icon/icons/input.png</normaloff>:/icon/icons/input.png</iconset>
+       <normaloff>:/icon/icons/input.svg</normaloff>:/icon/icons/input.svg</iconset>
      </property>
      <addaction name="action_Input_Config"/>
     </widget>
@@ -451,7 +433,7 @@
      </property>
      <property name="icon">
       <iconset resource="application.qrc">
-       <normaloff>:/icon/icons/language.png</normaloff>:/icon/icons/language.png</iconset>
+       <normaloff>:/icon/icons/language.svg</normaloff>:/icon/icons/language.svg</iconset>
      </property>
      <addaction name="action_English"/>
      <addaction name="action_Italian"/>
@@ -463,7 +445,7 @@
      </property>
      <property name="icon">
       <iconset resource="application.qrc">
-       <normaloff>:/icon/icons/cheat.png</normaloff>:/icon/icons/cheat.png</iconset>
+       <normaloff>:/icon/icons/cheat.svg</normaloff>:/icon/icons/cheat.svg</iconset>
      </property>
      <addaction name="action_Cheats_Disabled"/>
      <addaction name="action_Game_Genie"/>
@@ -477,7 +459,7 @@
      </property>
      <property name="icon">
       <iconset resource="application.qrc">
-       <normaloff>:/icon/icons/fast_forward.png</normaloff>:/icon/icons/fast_forward.png</iconset>
+       <normaloff>:/icon/icons/fast_forward.svg</normaloff>:/icon/icons/fast_forward.svg</iconset>
      </property>
      <addaction name="action_FF_2x"/>
      <addaction name="action_FF_3x"/>
@@ -490,7 +472,7 @@
      </property>
      <property name="icon">
       <iconset resource="application.qrc">
-       <normaloff>:/icon/icons/ppu.png</normaloff>:/icon/icons/ppu.png</iconset>
+       <normaloff>:/icon/icons/ppu.svg</normaloff>:/icon/icons/ppu.svg</iconset>
      </property>
      <addaction name="action_Hide_sprites"/>
      <addaction name="action_Hide_background"/>
@@ -566,7 +548,7 @@
    </property>
    <property name="icon">
     <iconset resource="application.qrc">
-     <normaloff>:/icon/icons/open.png</normaloff>:/icon/icons/open.png</iconset>
+     <normaloff>:/icon/icons/open.svg</normaloff>:/icon/icons/open.svg</iconset>
    </property>
    <property name="text">
     <string>&amp;Open</string>
@@ -575,7 +557,7 @@
   <action name="action_Quit">
    <property name="icon">
     <iconset resource="application.qrc">
-     <normaloff>:/icon/icons/exit.png</normaloff>:/icon/icons/exit.png</iconset>
+     <normaloff>:/icon/icons/exit.svg</normaloff>:/icon/icons/exit.svg</iconset>
    </property>
    <property name="text">
     <string>&amp;Quit</string>
@@ -584,7 +566,7 @@
   <action name="action_Hard_Reset">
    <property name="icon">
     <iconset resource="application.qrc">
-     <normaloff>:/icon/icons/hard_reset.png</normaloff>:/icon/icons/hard_reset.png</iconset>
+     <normaloff>:/icon/icons/hard_reset.svg</normaloff>:/icon/icons/hard_reset.svg</iconset>
    </property>
    <property name="text">
     <string>&amp;Hard Reset</string>
@@ -593,7 +575,7 @@
   <action name="action_Soft_Reset">
    <property name="icon">
     <iconset resource="application.qrc">
-     <normaloff>:/icon/icons/soft_reset.png</normaloff>:/icon/icons/soft_reset.png</iconset>
+     <normaloff>:/icon/icons/soft_reset.svg</normaloff>:/icon/icons/soft_reset.svg</iconset>
    </property>
    <property name="text">
     <string>&amp;Soft Reset</string>
@@ -602,7 +584,7 @@
   <action name="action_Eject_Insert_Disk">
    <property name="icon">
     <iconset resource="application.qrc">
-     <normaloff>:/icon/icons/eject.png</normaloff>:/icon/icons/eject.png</iconset>
+     <normaloff>:/icon/icons/eject.svg</normaloff>:/icon/icons/eject.svg</iconset>
    </property>
    <property name="text">
     <string>&amp;Eject/Insert Disk</string>
@@ -675,7 +657,7 @@
   <action name="action_Switch_sides">
    <property name="icon">
     <iconset resource="application.qrc">
-     <normaloff>:/icon/icons/switch_sides.png</normaloff>:/icon/icons/switch_sides.png</iconset>
+     <normaloff>:/icon/icons/switch_sides.svg</normaloff>:/icon/icons/switch_sides.svg</iconset>
    </property>
    <property name="text">
     <string>&amp;Switch sides</string>
@@ -1044,7 +1026,7 @@
   <action name="action_Oscan_Set_Borders">
    <property name="icon">
     <iconset resource="application.qrc">
-     <normaloff>:/icon/icons/overscan_set_borders.png</normaloff>:/icon/icons/overscan_set_borders.png</iconset>
+     <normaloff>:/icon/icons/overscan_set_borders.svg</normaloff>:/icon/icons/overscan_set_borders.svg</iconset>
    </property>
    <property name="text">
     <string>&amp;Set borders</string>
@@ -1205,7 +1187,7 @@
   <action name="action_Palette_Save_File">
    <property name="icon">
     <iconset resource="application.qrc">
-     <normaloff>:/icon/icons/save.png</normaloff>:/icon/icons/save.png</iconset>
+     <normaloff>:/icon/icons/save.svg</normaloff>:/icon/icons/save.svg</iconset>
    </property>
    <property name="text">
     <string>&amp;Save to file</string>
@@ -1214,7 +1196,7 @@
   <action name="action_Palette_Load_File">
    <property name="icon">
     <iconset resource="application.qrc">
-     <normaloff>:/icon/icons/load.png</normaloff>:/icon/icons/load.png</iconset>
+     <normaloff>:/icon/icons/load.svg</normaloff>:/icon/icons/load.svg</iconset>
    </property>
    <property name="text">
     <string>&amp;Load from file</string>
@@ -1247,7 +1229,7 @@
   <action name="action_Fullscreen">
    <property name="icon">
     <iconset resource="application.qrc">
-     <normaloff>:/icon/icons/fullscreen.png</normaloff>:/icon/icons/fullscreen.png</iconset>
+     <normaloff>:/icon/icons/fullscreen.svg</normaloff>:/icon/icons/fullscreen.svg</iconset>
    </property>
    <property name="text">
     <string>F&amp;ullscreen</string>
@@ -1496,7 +1478,7 @@
   <action name="action_Input_Config">
    <property name="icon">
     <iconset resource="application.qrc">
-     <normaloff>:/icon/icons/input_config.png</normaloff>:/icon/icons/input_config.png</iconset>
+     <normaloff>:/icon/icons/input_config.svg</normaloff>:/icon/icons/input_config.svg</iconset>
    </property>
    <property name="text">
     <string>&amp;Config</string>
@@ -1521,7 +1503,7 @@
   <action name="action_Save_settings">
    <property name="icon">
     <iconset resource="application.qrc">
-     <normaloff>:/icon/icons/save.png</normaloff>:/icon/icons/save.png</iconset>
+     <normaloff>:/icon/icons/save.svg</normaloff>:/icon/icons/save.svg</iconset>
    </property>
    <property name="text">
     <string>Save se&amp;ttings</string>
@@ -1538,7 +1520,7 @@
   <action name="action_Save_state">
    <property name="icon">
     <iconset resource="application.qrc">
-     <normaloff>:/icon/icons/save_state.png</normaloff>:/icon/icons/save_state.png</iconset>
+     <normaloff>:/icon/icons/save.svg</normaloff>:/icon/icons/save.svg</iconset>
    </property>
    <property name="text">
     <string>S&amp;ave state</string>
@@ -1547,7 +1529,7 @@
   <action name="action_Load_state">
    <property name="icon">
     <iconset resource="application.qrc">
-     <normaloff>:/icon/icons/load.png</normaloff>:/icon/icons/load.png</iconset>
+     <normaloff>:/icon/icons/load.svg</normaloff>:/icon/icons/load.svg</iconset>
    </property>
    <property name="text">
     <string>L&amp;oad state</string>
@@ -1556,7 +1538,7 @@
   <action name="action_Increment_slot">
    <property name="icon">
     <iconset resource="application.qrc">
-     <normaloff>:/icon/icons/state_inc.png</normaloff>:/icon/icons/state_inc.png</iconset>
+     <normaloff>:/icon/icons/state_inc.svg</normaloff>:/icon/icons/state_inc.svg</iconset>
    </property>
    <property name="text">
     <string>&amp;Increment slot</string>
@@ -1565,7 +1547,7 @@
   <action name="action_Decrement_slot">
    <property name="icon">
     <iconset resource="application.qrc">
-     <normaloff>:/icon/icons/state_dec.png</normaloff>:/icon/icons/state_dec.png</iconset>
+     <normaloff>:/icon/icons/state_dec.svg</normaloff>:/icon/icons/state_dec.svg</iconset>
    </property>
    <property name="text">
     <string>&amp;Decrement slot</string>
@@ -1622,7 +1604,7 @@
   <action name="action_About">
    <property name="icon">
     <iconset resource="application.qrc">
-     <normaloff>:/icon/icons/about.png</normaloff>:/icon/icons/about.png</iconset>
+     <normaloff>:/icon/icons/about.svg</normaloff>:/icon/icons/about.svg</iconset>
    </property>
    <property name="text">
     <string>&amp;About</string>
@@ -1642,7 +1624,7 @@
    </property>
    <property name="icon">
     <iconset resource="application.qrc">
-     <normaloff>:/icon/icons/flag_english.png</normaloff>:/icon/icons/flag_english.png</iconset>
+     <normaloff>:/icon/icons/flag_english.svg</normaloff>:/icon/icons/flag_english.svg</iconset>
    </property>
    <property name="text">
     <string notr="true">&amp;English</string>
@@ -1654,7 +1636,7 @@
    </property>
    <property name="icon">
     <iconset resource="application.qrc">
-     <normaloff>:/icon/icons/flag_italy.png</normaloff>:/icon/icons/flag_italy.png</iconset>
+     <normaloff>:/icon/icons/flag_italy.svg</normaloff>:/icon/icons/flag_italy.svg</iconset>
    </property>
    <property name="text">
     <string notr="true">&amp;Italian</string>
@@ -1666,7 +1648,7 @@
    </property>
    <property name="icon">
     <iconset resource="application.qrc">
-     <normaloff>:/icon/icons/flag_russia.png</normaloff>:/icon/icons/flag_russia.png</iconset>
+     <normaloff>:/icon/icons/flag_russia.svg</normaloff>:/icon/icons/flag_russia.svg</iconset>
    </property>
    <property name="text">
     <string notr="true">&amp;Russian</string>
@@ -1675,7 +1657,7 @@
   <action name="action_State_Save_to_file">
    <property name="icon">
     <iconset resource="application.qrc">
-     <normaloff>:/icon/icons/save.png</normaloff>:/icon/icons/save.png</iconset>
+     <normaloff>:/icon/icons/save.svg</normaloff>:/icon/icons/save.svg</iconset>
    </property>
    <property name="text">
     <string>&amp;Save to file</string>
@@ -1684,7 +1666,7 @@
   <action name="action_State_Load_from_file">
    <property name="icon">
     <iconset resource="application.qrc">
-     <normaloff>:/icon/icons/load.png</normaloff>:/icon/icons/load.png</iconset>
+     <normaloff>:/icon/icons/load.svg</normaloff>:/icon/icons/load.svg</iconset>
    </property>
    <property name="text">
     <string>&amp;Load from file</string>
@@ -1733,7 +1715,7 @@
   <action name="action_Cheats_Editor">
    <property name="icon">
     <iconset resource="application.qrc">
-     <normaloff>:/icon/icons/cheat_editor.png</normaloff>:/icon/icons/cheat_editor.png</iconset>
+     <normaloff>:/icon/icons/cheat_editor.svg</normaloff>:/icon/icons/cheat_editor.svg</iconset>
    </property>
    <property name="text">
     <string>Cheats &amp;Editor</string>
@@ -1839,6 +1821,10 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="icon">
+    <iconset resource="application.qrc">
+     <normaloff>:/icon/icons/fast_forward.svg</normaloff>:/icon/icons/fast_forward.svg</iconset>
+   </property>
    <property name="text">
     <string>&amp;Fast Forward</string>
    </property>
@@ -1878,6 +1864,10 @@
   <action name="action_Pause">
    <property name="checkable">
     <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="application.qrc">
+     <normaloff>:/icon/icons/pause.svg</normaloff>:/icon/icons/pause.svg</iconset>
    </property>
    <property name="text">
     <string>&amp;Pause</string>
@@ -1950,7 +1940,7 @@
   <action name="action_Shader_Load_File">
    <property name="icon">
     <iconset resource="application.qrc">
-     <normaloff>:/icon/icons/load.png</normaloff>:/icon/icons/load.png</iconset>
+     <normaloff>:/icon/icons/load.svg</normaloff>:/icon/icons/load.svg</iconset>
    </property>
    <property name="text">
     <string>&amp;Load from file</string>
@@ -2023,7 +2013,7 @@
   <action name="action_Save_Screenshot">
    <property name="icon">
     <iconset resource="application.qrc">
-     <normaloff>:/icon/icons/screenshot.png</normaloff>:/icon/icons/screenshot.png</iconset>
+     <normaloff>:/icon/icons/screenshot.svg</normaloff>:/icon/icons/screenshot.svg</iconset>
    </property>
    <property name="text">
     <string>Save Screens&amp;hot</string>
@@ -2056,7 +2046,7 @@
   <action name="action_Insert_Coin">
    <property name="icon">
     <iconset resource="application.qrc">
-     <normaloff>:/icon/icons/insert_coin.png</normaloff>:/icon/icons/insert_coin.png</iconset>
+     <normaloff>:/icon/icons/insert_coins.svg</normaloff>:/icon/icons/insert_coins.svg</iconset>
    </property>
    <property name="text">
     <string>Insert Coin</string>
@@ -2097,7 +2087,7 @@
   <action name="action_Open_working_folder">
    <property name="icon">
     <iconset resource="application.qrc">
-     <normaloff>:/icon/icons/home.png</normaloff>:/icon/icons/home.png</iconset>
+     <normaloff>:/icon/icons/home.svg</normaloff>:/icon/icons/home.svg</iconset>
    </property>
    <property name="text">
     <string>&amp;Open working folder</string>
@@ -2106,7 +2096,7 @@
   <action name="action_Turn_Off">
    <property name="icon">
     <iconset resource="application.qrc">
-     <normaloff>:/icon/icons/turn_off.png</normaloff>:/icon/icons/turn_off.png</iconset>
+     <normaloff>:/icon/icons/turn_off.svg</normaloff>:/icon/icons/turn_off.svg</iconset>
    </property>
    <property name="text">
     <string>&amp;Turn Off</string>
@@ -2155,7 +2145,7 @@
   <action name="action_Start_Stop_WAV_recording">
    <property name="icon">
     <iconset resource="application.qrc">
-     <normaloff>:/icon/icons/wav_start.png</normaloff>:/icon/icons/wav_start.png</iconset>
+     <normaloff>:/icon/icons/wav_start.svg</normaloff>:/icon/icons/wav_start.svg</iconset>
    </property>
    <property name="text">
     <string>Start/Stop &amp;WAV recording</string>
@@ -2236,7 +2226,7 @@
   <action name="action_Apply_IPS_Patch">
    <property name="icon">
     <iconset resource="application.qrc">
-     <normaloff>:/icon/icons/patch.png</normaloff>:/icon/icons/patch.png</iconset>
+     <normaloff>:/icon/icons/patch.svg</normaloff>:/icon/icons/patch.svg</iconset>
    </property>
    <property name="text">
     <string>&amp;Apply IPS Patch</string>

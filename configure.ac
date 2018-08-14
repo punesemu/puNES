@@ -80,8 +80,7 @@ TOP_SRCDIR="$srcdir"
 AS_CASE(["${TOP_SRCDIR}"],
 	[[\/]*], [
 		# Path is already absolute
-	],
-	[
+	], [
 		TOP_SRCDIR="${ac_pwd}/${TOP_SRCDIR}"
 	]
 )
@@ -89,8 +88,7 @@ TOP_BUILDDIR="$builddir"
 AS_CASE(["${TOP_BUILDDIR}"],
 	[[\/]*], [
 		# Path is already absolute
-	],
-	[
+	], [
 		TOP_BUILDDIR="${ac_pwd}/${TOP_BUILDDIR}"
 	]
 )
@@ -106,37 +104,37 @@ MOCDEFINES=""
 # verifico l'host
 AS_CASE(["$host_os"],
 	[linux*], [
-		MOCDEFINES+=" -D__linux__"
-		CUSTOMDEFINES+=" -DWITH_OPENGL -DGLEW_STATIC"
-		my_CPPFLAGS+=" -I${TOP_SRCDIR}/src/gui/linux -I${TOP_SRCDIR}/src/video/sdl"
+		MOCDEFINES="${MOCDEFINES} -D__linux__"
+		CUSTOMDEFINES="${CUSTOMDEFINES} -DWITH_OPENGL -DGLEW_STATIC"
+		my_CPPFLAGS="${my_CPPFLAGS} -I${TOP_SRCDIR}/src/gui/linux -I${TOP_SRCDIR}/src/video/sdl"
 		linux=yes
 		windows=no
 		with_d3d9=no
 		with_opengl=yes
 	],
 	[mingw32*], [
-		MOCDEFINES+=" -D__WIN32__"
-		my_CPPFLAGS+=" -I${TOP_SRCDIR}/src/gui/windows"
+		MOCDEFINES="${MOCDEFINES} -D__WIN32__"
+		my_CPPFLAGS="${my_CPPFLAGS} -I${TOP_SRCDIR}/src/gui/windows"
 		linux=no
 		windows=yes
 		AS_IF([test "x$with_opengl" = xyes], [
 			with_d3d9=no
 			with_opengl_nvidia_cg=yes
-			CUSTOMDEFINES+=" -DWITH_OPENGL -DWITH_OPENGL_CG -DGLEW_STATIC"
-			my_CPPFLAGS+=" -I${TOP_SRCDIR}/src/video/sdl"
+			CUSTOMDEFINES="${CUSTOMDEFINES} -DWITH_OPENGL -DWITH_OPENGL_CG -DGLEW_STATIC"
+			my_CPPFLAGS="${my_CPPFLAGS} -I${TOP_SRCDIR}/src/video/sdl"
 		])
 		AS_IF([test "x$with_d3d9" = xyes], [
 			with_opengl=no
 			with_opengl_nvidia_cg=no
-			CUSTOMDEFINES+=" -DWITH_D3D9"
-			my_CPPFLAGS+=" -I${TOP_SRCDIR}/src/video/d3d9"
-			my_LIBS+=" -ld3d9"
+			CUSTOMDEFINES="${CUSTOMDEFINES} -DWITH_D3D9"
+			my_CPPFLAGS="${my_CPPFLAGS} -I${TOP_SRCDIR}/src/video/d3d9"
+			my_LIBS="${my_LIBS} -ld3d9"
 			AS_CASE(["$host_cpu"],
 				[i?86], [
-					my_LIBS+=" -ld3dx9"
+					my_LIBS="${my_LIBS} -ld3dx9"
 				],
 				[x86_64], [
-					my_LIBS+=" -ld3dx9_41"
+					my_LIBS="${my_LIBS} -ld3dx9_41"
 				],
 			)
 		])
@@ -209,7 +207,7 @@ OLD_LIBS="$LIBS"
 
 AM_COND_IF([ENAB_RELEASE], [
 	GIT="no"
-	CUSTOMDEFINES+=" -DRELEASE"
+	CUSTOMDEFINES="${CUSTOMDEFINES} -DRELEASE"
 	], [
 	AC_CHECK_TOOLS(GIT, [git], [no])
 ])
@@ -218,22 +216,22 @@ AM_CONDITIONAL(WITH_GIT,[test "x$GIT" != xno])
 # Checks for libraries.
 AM_COND_IF([WINDOWS], [
 	# aggiungo path per include del DSDK
-	my_CPPFLAGS+=" -I${TOP_SRCDIR}/src/extra/windows/DSDK/Include -I${TOP_SRCDIR}/src/extra/windows/DSDK/vc10/include"
+	my_CPPFLAGS="${my_CPPFLAGS} -I${TOP_SRCDIR}/src/extra/windows/DSDK/Include -I${TOP_SRCDIR}/src/extra/windows/DSDK/vc10/include"
 	# aggiungo path per include e librerie del Toolkit Cg Nvidia
-	my_CPPFLAGS+=" -I${TOP_SRCDIR}/src/extra/windows/Cg/include"
+	my_CPPFLAGS="${my_CPPFLAGS} -I${TOP_SRCDIR}/src/extra/windows/Cg/include"
 	AS_CASE(["$host_cpu"],
 		[i?86], [
-			my_LIBS+=" -L${TOP_SRCDIR}/src/extra/windows/Cg/lib"
+			my_LIBS="${my_LIBS} -L${TOP_SRCDIR}/src/extra/windows/Cg/lib"
 		],
 		[x86_64], [
-			my_LIBS+=" -L${TOP_SRCDIR}/src/extra/windows/Cg/lib.x64"
+			my_LIBS="${my_LIBS} -L${TOP_SRCDIR}/src/extra/windows/Cg/lib.x64"
 		],
 	)
 	AS_IF([test "x$with_opengl" = xyes], [
-		my_LIBS+=" -lcg -lcgGL"
+		my_LIBS="${my_LIBS} -lcg -lcgGL"
 	])
 	AS_IF([test "x$with_d3d9" = xyes], [
-		my_LIBS+=" -lcg -lcgD3D9"
+		my_LIBS="${my_LIBS} -lcg -lcgD3D9"
 	])
 ])
 AM_COND_IF([PRECOMP_QT], [
@@ -263,13 +261,13 @@ AM_COND_IF([PRECOMP_QT], [
 			AC_MSG_CHECKING([whether QT5 Plugin QWindows exists])
 			AS_IF([test -f ${path_qt_lib}/plugins/platforms/libqwindows.a], [
 				AC_MSG_RESULT([yes])
-				CUSTOMDEFINES+=" -DQT5_PLUGIN_QWINDOWS"
-				QT_LIBS+=" ${path_qt_lib}/plugins/platforms/libqwindows.a" 
+				CUSTOMDEFINES="${CUSTOMDEFINES} -DQT5_PLUGIN_QWINDOWS"
+				QT_LIBS="${QT_LIBS} ${path_qt_lib}/plugins/platforms/libqwindows.a" 
 
 				AC_MSG_CHECKING([whether libQt5PlatformSupport.a exists])
 				AS_IF([test -f ${path_qt_lib}/libQt5PlatformSupport.a], [
 					AC_MSG_RESULT([yes])
-					QT_LIBS+=" -lQt5PlatformSupport" 
+					QT_LIBS="${QT_LIBS} -lQt5PlatformSupport" 
 				], [
 					AC_MSG_RESULT([no])
 				])
@@ -279,10 +277,10 @@ AM_COND_IF([PRECOMP_QT], [
 					AC_MSG_RESULT([yes])
 
 					AC_CHECK_LIB(dwmapi, main, [
-						QT_LIBS+=" -ldwmapi"
+						QT_LIBS="${QT_LIBS} -ldwmapi"
 					])
 
-					QT_LIBS+=" -lQt5EventDispatcherSupport" 
+					QT_LIBS="${QT_LIBS} -lQt5EventDispatcherSupport" 
 				], [
 					AC_MSG_RESULT([no])
 				])
@@ -290,7 +288,7 @@ AM_COND_IF([PRECOMP_QT], [
 				AC_MSG_CHECKING([whether libQt5FontDatabaseSupport.a exists])
 				AS_IF([test -f ${path_qt_lib}/libQt5FontDatabaseSupport.a], [
 					AC_MSG_RESULT([yes])
-					QT_LIBS+=" -lQt5FontDatabaseSupport" 
+					QT_LIBS="${QT_LIBS} -lQt5FontDatabaseSupport" 
 				], [
 					AC_MSG_RESULT([no])
 				])
@@ -298,7 +296,7 @@ AM_COND_IF([PRECOMP_QT], [
 				AC_MSG_CHECKING([whether libqtfreetype.a exists])
 				AS_IF([test -f ${path_qt_lib}/libqtfreetype.a], [
 					AC_MSG_RESULT([yes])
-					QT_LIBS+=" -lqtfreetype" 
+					QT_LIBS="${QT_LIBS} -lqtfreetype" 
 				], [
 					AC_MSG_RESULT([no])
 				])
@@ -306,7 +304,7 @@ AM_COND_IF([PRECOMP_QT], [
 				AC_MSG_CHECKING([whether libQt5ThemeSupport.a exists])
 				AS_IF([test -f ${path_qt_lib}/libQt5ThemeSupport.a], [
 					AC_MSG_RESULT([yes])
-					QT_LIBS+=" -lQt5ThemeSupport" 
+					QT_LIBS="${QT_LIBS} -lQt5ThemeSupport" 
 				], [
 					AC_MSG_RESULT([no])
 				])
@@ -318,11 +316,11 @@ AM_COND_IF([PRECOMP_QT], [
 			AC_MSG_CHECKING([whether QT5 Plugin QWindowsVistaStyle exists])
 			AS_IF([test -f ${path_qt_lib}/plugins/styles/libqwindowsvistastyle.a], [
 				AC_MSG_RESULT([yes])
-				CUSTOMDEFINES+=" -DQT5_PLUGIN_QWINDOWSVISTASTYLE"
-				QT_LIBS+=" ${path_qt_lib}/plugins/styles/libqwindowsvistastyle.a"
+				CUSTOMDEFINES="${CUSTOMDEFINES} -DQT_PLUGIN_QWINDOWSVISTASTYLE"
+				QT_LIBS="${QT_LIBS} ${path_qt_lib}/plugins/styles/libqwindowsvistastyle.a"
 	
 				AC_CHECK_LIB(uxtheme, main, [
-					QT_LIBS+=" -luxtheme"
+					QT_LIBS="${QT_LIBS} -luxtheme"
 				])
 			], [
 				AC_MSG_RESULT([no])
@@ -331,8 +329,8 @@ AM_COND_IF([PRECOMP_QT], [
 			AC_MSG_CHECKING([whether QT5 Plugin QGif exists])
 			AS_IF([test -f ${path_qt_lib}/plugins/imageformats/libqgif.a], [
 				AC_MSG_RESULT([yes])
-				CUSTOMDEFINES+=" -DQT5_PLUGIN_QGIF"
-				QT_LIBS+=" ${path_qt_lib}/plugins/imageformats/libqgif.a"
+				CUSTOMDEFINES="${CUSTOMDEFINES} -DQT_PLUGIN_QGIF"
+				QT_LIBS="${QT_LIBS} ${path_qt_lib}/plugins/imageformats/libqgif.a"
 			], [
 				AC_MSG_RESULT([no])
 			])
@@ -340,8 +338,8 @@ AM_COND_IF([PRECOMP_QT], [
 			AC_MSG_CHECKING([whether QT5 Plugin QICO exists])
 			AS_IF([test -f ${path_qt_lib}/plugins/imageformats/libqico.a], [
 				AC_MSG_RESULT([yes])
-				CUSTOMDEFINES+=" -DQT5_PLUGIN_QICO"
-				QT_LIBS+=" ${path_qt_lib}/plugins/imageformats/libqico.a"
+				CUSTOMDEFINES="${CUSTOMDEFINES} -DQT_PLUGIN_QICO"
+				QT_LIBS="${QT_LIBS} ${path_qt_lib}/plugins/imageformats/libqico.a"
 			], [
 				AC_MSG_RESULT([no])
 			])
@@ -349,16 +347,35 @@ AM_COND_IF([PRECOMP_QT], [
 			AC_MSG_CHECKING([whether QT5 Plugin QJpeg exists])
 			AS_IF([test -f ${path_qt_lib}/plugins/imageformats/libqjpeg.a], [
 				AC_MSG_RESULT([yes])
-				CUSTOMDEFINES+=" -DQT5_PLUGIN_QJPEG"
-				QT_LIBS+=" ${path_qt_lib}/plugins/imageformats/libqjpeg.a"
+				CUSTOMDEFINES="${CUSTOMDEFINES} -DQT_PLUGIN_QJPEG"
+				QT_LIBS="${QT_LIBS} ${path_qt_lib}/plugins/imageformats/libqjpeg.a"
 			], [
 				AC_MSG_RESULT([no])
+			])
+
+			AC_MSG_CHECKING([whether QT5 Plugin QSvg exists])
+			AS_IF([test -f ${path_qt_lib}/plugins/imageformats/libqsvg.a], [
+				AC_MSG_RESULT([yes])
+				CUSTOMDEFINES="${CUSTOMDEFINES} -DQT_PLUGIN_QSVG"
+				QT_LIBS="${QT_LIBS} ${path_qt_lib}/plugins/imageformats/libqsvg.a"
+			], [
+				AC_MSG_RESULT([no])
+				AC_MSG_ERROR([libqsvg.a not found])
+			])
+
+			AC_MSG_CHECKING([whether libQt5Svg.a exists])
+			AS_IF([test -f ${path_qt_lib}/libQt5Svg.a], [
+				AC_MSG_RESULT([yes])
+				QT_LIBS="${QT_LIBS} -lQt5Svg"
+			], [
+				AC_MSG_RESULT([no])
+				AC_MSG_ERROR([libQt5Svg.a not found])
 			])
 
 			AC_MSG_CHECKING([whether libQt5Widgets.a exists])
 			AS_IF([test -f ${path_qt_lib}/libQt5Widgets.a], [
 				AC_MSG_RESULT([yes])
-				QT_LIBS+=" -lQt5Widgets"
+				QT_LIBS="${QT_LIBS} -lQt5Widgets"
 			], [
 				AC_MSG_RESULT([no])
 				AC_MSG_ERROR([libQt5Widgets.a not found])
@@ -367,7 +384,7 @@ AM_COND_IF([PRECOMP_QT], [
 			AC_MSG_CHECKING([whether libQt5Gui.a exists])
 			AS_IF([test -f ${path_qt_lib}/libQt5Gui.a], [
 				AC_MSG_RESULT([yes])
-				QT_LIBS+=" -lQt5Gui"
+				QT_LIBS="${QT_LIBS} -lQt5Gui"
 			], [
 				AC_MSG_RESULT([no])
 				AC_MSG_ERROR([libQt5Gui.a not found])
@@ -376,34 +393,34 @@ AM_COND_IF([PRECOMP_QT], [
 			AC_MSG_CHECKING([whether libQt5Core.a exists])
 			AS_IF([test -f ${path_qt_lib}/libQt5Core.a], [
 				AC_MSG_RESULT([yes])
-				QT_LIBS+=" -lQt5Core"
+				QT_LIBS="${QT_LIBS} -lQt5Core"
 			], [
 				AC_MSG_RESULT([no])
 				AC_MSG_ERROR([libQt5Core.a not found])
 			])
 			
 			AC_CHECK_LIB(netapi32, main, [
-				QT_LIBS+=" -lnetapi32"
+				QT_LIBS="${QT_LIBS} -lnetapi32"
 			])
 
 			AC_CHECK_LIB(userenv, main, [
-				QT_LIBS+=" -luserenv"
+				QT_LIBS="${QT_LIBS} -luserenv"
 			])
 
 			AC_CHECK_LIB(version, main, [
-				QT_LIBS+=" -lversion"
+				QT_LIBS="${QT_LIBS} -lversion"
 			])
 
 			AC_MSG_CHECKING([whether libqtpcre.a exists])
 			AS_IF([test -f ${path_qt_lib}/libqtpcre.a], [
 				AC_MSG_RESULT([yes])
-				QT_LIBS+=" -lqtpcre"
+				QT_LIBS="${QT_LIBS} -lqtpcre"
 			], [
 				AC_MSG_RESULT([no])
 				AC_MSG_CHECKING([whether libqtpcre2.a exists])
 				AS_IF([test -f ${path_qt_lib}/libqtpcre2.a], [
 					AC_MSG_RESULT([yes])
-					QT_LIBS+=" -lqtpcre2"
+					QT_LIBS="${QT_LIBS} -lqtpcre2"
 				], [
 					AC_MSG_RESULT([no])
 					AC_MSG_ERROR([libqtpcre2 not found])
@@ -413,7 +430,7 @@ AM_COND_IF([PRECOMP_QT], [
 			AC_MSG_CHECKING([whether libqtlibpng.a exists])
 			AS_IF([test -f ${path_qt_lib}/libqtlibpng.a], [
 				AC_MSG_RESULT([yes])
-				QT_LIBS+=" -lqtlibpng"
+				QT_LIBS="${QT_LIBS} -lqtlibpng"
 			], [
 				AC_MSG_RESULT([no])
 			])
@@ -421,23 +438,32 @@ AM_COND_IF([PRECOMP_QT], [
 			AC_MSG_CHECKING([whether libqtharfbuzzng.a exists])
 			AS_IF([test -f ${path_qt_lib}/libqtharfbuzzng.a], [
 				AC_MSG_RESULT([yes])
-				QT_LIBS+=" -lqtharfbuzzng"
+				QT_LIBS="${QT_LIBS} -lqtharfbuzzng"
 			], [
 				AC_MSG_RESULT([no])
 				AC_MSG_CHECKING([whether libqtharfbuzz.a exists])
 				AS_IF([test -f ${path_qt_lib}/libqtharfbuzz.a], [
 					AC_MSG_RESULT([yes])
-					QT_LIBS+=" -lqtharfbuzz"
+					QT_LIBS="${QT_LIBS} -lqtharfbuzz"
 				], [
 					AC_MSG_RESULT([no])
 					AC_MSG_ERROR([libqharfbuzz not found])
 				])
 			])
 		], [
+			AC_MSG_CHECKING([whether libQt5Svg.so exists])
+			AS_IF([test -f ${path_qt_lib}/libQt5Svg.so], [
+				AC_MSG_RESULT([yes])
+				QT_LIBS="${QT_LIBS} -lQt5Svg"
+			], [
+				AC_MSG_RESULT([no])
+				AC_MSG_ERROR([libQt5Svg.so not found])
+			])
+		
 			AC_MSG_CHECKING([whether libQt5Widgets.so exists])
 			AS_IF([test -f ${path_qt_lib}/libQt5Widgets.so], [
 				AC_MSG_RESULT([yes])
-				QT_LIBS+=" -lQt5Widgets"
+				QT_LIBS="${QT_LIBS} -lQt5Widgets"
 			], [
 				AC_MSG_RESULT([no])
 				AC_MSG_ERROR([libQt5Widgets.so not found])
@@ -446,7 +472,7 @@ AM_COND_IF([PRECOMP_QT], [
 			AC_MSG_CHECKING([whether libQt5Gui.so exists])
 			AS_IF([test -f ${path_qt_lib}/libQt5Gui.so], [
 				AC_MSG_RESULT([yes])
-				QT_LIBS+=" -lQt5Gui"
+				QT_LIBS="${QT_LIBS} -lQt5Gui"
 			], [
 				AC_MSG_RESULT([no])
 				AC_MSG_ERROR([libQt5Gui.so not found])
@@ -455,7 +481,7 @@ AM_COND_IF([PRECOMP_QT], [
 			AC_MSG_CHECKING([whether libQt5Core.so exists])
 			AS_IF([test -f ${path_qt_lib}/libQt5Core.so], [
 				AC_MSG_RESULT([yes])
-				QT_LIBS+=" -lQt5Core"
+				QT_LIBS="${QT_LIBS} -lQt5Core"
 			], [
 				AC_MSG_RESULT([no])
 				AC_MSG_ERROR([libQt5Core.so not found])
@@ -469,10 +495,47 @@ AM_COND_IF([PRECOMP_QT], [
 		QT_LIBS="-L${path_qt_lib}"
 
 		AM_COND_IF([WINDOWS], [
+			AC_MSG_CHECKING([whether QT4 Plugin QICO exists])
+			AS_IF([test -f ${path_qt_lib}/plugins/imageformats/libqico.a], [
+				AC_MSG_RESULT([yes])
+				CUSTOMDEFINES="${CUSTOMDEFINES} -DQT_PLUGIN_QICO"
+				QT_LIBS="${QT_LIBS} ${path_qt_lib}/plugins/imageformats/libqico.a"
+			], [
+				AC_MSG_RESULT([no])
+			])
+
+			AC_MSG_CHECKING([whether QT4 Plugin QSvg exists])
+			AS_IF([test -f ${path_qt_lib}/plugins/imageformats/libqsvg.a], [
+				AC_MSG_RESULT([yes])
+				CUSTOMDEFINES="${CUSTOMDEFINES} -DQT_PLUGIN_QSVG"
+				QT_LIBS="${QT_LIBS} ${path_qt_lib}/plugins/imageformats/libqsvg.a"
+			], [
+				AC_MSG_RESULT([no])
+				AC_MSG_ERROR([libqsvg.a not found])
+			])
+		
+			AC_MSG_CHECKING([whether libQtSvg.a exists])
+			AS_IF([test -f ${path_qt_lib}/libQtSvg.a], [
+				AC_MSG_RESULT([yes])
+				QT_LIBS="${QT_LIBS} -lQtSvg"
+			], [
+				AC_MSG_RESULT([no])
+				AC_MSG_ERROR([libQtSvg.a not found])
+			])
+
+			AC_MSG_CHECKING([whether libQtXml.a exists])
+			AS_IF([test -f ${path_qt_lib}/libQtXml.a], [
+				AC_MSG_RESULT([yes])
+				QT_LIBS="${QT_LIBS} -lQtXml"
+			], [
+				AC_MSG_RESULT([no])
+				AC_MSG_ERROR([libQtXml.a not found])
+			])
+
 			AC_MSG_CHECKING([whether libQtGui.a exists])
 			AS_IF([test -f ${path_qt_lib}/libQtGui.a], [
 				AC_MSG_RESULT([yes])
-				QT_LIBS+=" -lQtGui"
+				QT_LIBS="${QT_LIBS} -lQtGui"
 			], [
 				AC_MSG_RESULT([no])
 				AC_MSG_ERROR([libQtGui.a not found])
@@ -481,16 +544,34 @@ AM_COND_IF([PRECOMP_QT], [
 			AC_MSG_CHECKING([whether libQtCore.a exists])
 			AS_IF([test -f ${path_qt_lib}/libQtCore.a], [
 				AC_MSG_RESULT([yes])
-				QT_LIBS+=" -lQtCore"
+				QT_LIBS="${QT_LIBS} -lQtCore"
 			], [
 				AC_MSG_RESULT([no])
 				AC_MSG_ERROR([libQtCore.a not found])
 			])
 		], [
+			AC_MSG_CHECKING([whether libQtSvg.so exists])
+			AS_IF([test -f ${path_qt_lib}/libQtSvg.so], [
+				AC_MSG_RESULT([yes])
+				QT_LIBS="${QT_LIBS} -lQtSvg"
+			], [
+				AC_MSG_RESULT([no])
+				AC_MSG_ERROR([libQtSvg.so not found])
+			])
+		
+			AC_MSG_CHECKING([whether libQtXml.so exists])
+			AS_IF([test -f ${path_qt_lib}/libQtXml.so], [
+				AC_MSG_RESULT([yes])
+				QT_LIBS="${QT_LIBS} -lQtXml"
+			], [
+				AC_MSG_RESULT([no])
+				AC_MSG_ERROR([libQtXml.so not found])
+			])
+		
 			AC_MSG_CHECKING([whether libQtGui.so exists])
 			AS_IF([test -f ${path_qt_lib}/libQtGui.so], [
 				AC_MSG_RESULT([yes])
-				QT_LIBS+=" -lQtGui"
+				QT_LIBS="${QT_LIBS} -lQtGui"
 			], [
 				AC_MSG_RESULT([no])
 				AC_MSG_ERROR([libQtGui.so not found])
@@ -499,7 +580,7 @@ AM_COND_IF([PRECOMP_QT], [
 			AC_MSG_CHECKING([whether libQtCore.so exists])
 			AS_IF([test -f ${path_qt_lib}/libQtCore.so], [
 				AC_MSG_RESULT([yes])
-				QT_LIBS+=" -lQtCore"
+				QT_LIBS="${QT_LIBS} -lQtCore"
 			], [
 				AC_MSG_RESULT([no])
 				AC_MSG_ERROR([libQtCore.so not found])
@@ -524,31 +605,34 @@ AM_COND_IF([PRECOMP_QT], [
 		AC_SUBST([RCC])
 	])
 
-	my_CPPFLAGS+=" ${QT_CFLAGS}"
-	my_LIBS+=" ${QT_LIBS}"
+	my_CPPFLAGS="${my_CPPFLAGS} ${QT_CFLAGS}"
+	my_LIBS="${my_LIBS} ${QT_LIBS}"
 ], [
 	AM_COND_IF([ENAB_QT5], [
-		PKG_CHECK_MODULES_STATIC(QT5, [Qt5Core Qt5Gui Qt5Widgets], [
-			MOC="`$PKG_CONFIG --variable=host_bins Qt5Core`/moc"
-			RCC="`$PKG_CONFIG --variable=host_bins Qt5Core`/rcc"
-			UIC="`$PKG_CONFIG --variable=host_bins Qt5Core`/uic"
-		], [
-			AC_MSG_ERROR([Qt5 library not found])
-		])
-
 		AM_COND_IF([WINDOWS], [
+			OLD_PKG_CONFIG="$PKG_CONFIG"
+			PKG_CONFIG="$PKG_CONFIG --static"
+			PKG_CHECK_MODULES(QT5, [Qt5Core Qt5Gui Qt5Widgets Qt5Svg], [
+				MOC="`$PKG_CONFIG --variable=host_bins Qt5Core`/moc"
+				RCC="`$PKG_CONFIG --variable=host_bins Qt5Core`/rcc"
+				UIC="`$PKG_CONFIG --variable=host_bins Qt5Core`/uic"
+			], [
+				AC_MSG_ERROR([Qt5 library not found])
+			])
+			PKG_CONFIG="$OLD_PKG_CONFIG"
+		
 			QT5LIBDIR="`$PKG_CONFIG --variable=libdir Qt5Core`"
 			
 			AC_MSG_CHECKING([whether QT5 Plugin QWindows exists])
 			AS_IF([test -f ${QT5LIBDIR}/plugins/platforms/libqwindows.a], [
 				AC_MSG_RESULT([yes])
-				CUSTOMDEFINES+=" -DQT5_PLUGIN_QWINDOWS"
-				my_LIBS+=" ${QT5LIBDIR}/plugins/platforms/libqwindows.a"
+				CUSTOMDEFINES="${CUSTOMDEFINES} -DQT5_PLUGIN_QWINDOWS"
+				my_LIBS="${my_LIBS} ${QT5LIBDIR}/plugins/platforms/libqwindows.a"
 				
 				AC_MSG_CHECKING([whether libQt5PlatformSupport.a exists])
 				AS_IF([test -f ${QT5LIBDIR}/libQt5PlatformSupport.a], [
 					AC_MSG_RESULT([yes])
-					my_LIBS+=" ${QT5LIBDIR}/libQt5PlatformSupport.a"
+					my_LIBS="${my_LIBS} ${QT5LIBDIR}/libQt5PlatformSupport.a"
 				], [
 					AC_MSG_RESULT([no])
 				])
@@ -556,7 +640,7 @@ AM_COND_IF([PRECOMP_QT], [
 				AC_MSG_CHECKING([whether libQt5EventDispatcherSupport.a exists])
 				AS_IF([test -f ${QT5LIBDIR}/libQt5EventDispatcherSupport.a], [
 					AC_MSG_RESULT([yes])
-					my_LIBS+=" ${QT5LIBDIR}/libQt5EventDispatcherSupport.a"
+					my_LIBS="${my_LIBS} ${QT5LIBDIR}/libQt5EventDispatcherSupport.a"
 				], [
 					AC_MSG_RESULT([no])
 				])
@@ -564,7 +648,7 @@ AM_COND_IF([PRECOMP_QT], [
 				AC_MSG_CHECKING([whether libQt5FontDatabaseSupport.a exists])
 				AS_IF([test -f ${QT5LIBDIR}/libQt5FontDatabaseSupport.a], [
 					AC_MSG_RESULT([yes])
-					my_LIBS+=" ${QT5LIBDIR}/libQt5FontDatabaseSupport.a"
+					my_LIBS="${my_LIBS} ${QT5LIBDIR}/libQt5FontDatabaseSupport.a"
 				], [
 					AC_MSG_RESULT([no])
 				])
@@ -572,7 +656,7 @@ AM_COND_IF([PRECOMP_QT], [
 				AC_MSG_CHECKING([whether libqtfreetype.a exists])
 				AS_IF([test -f ${QT5LIBDIR}/libqtfreetype.a], [
 					AC_MSG_RESULT([yes])
-					my_LIBS+=" ${QT5LIBDIR}/libqtfreetype.a"
+					my_LIBS="${my_LIBS} ${QT5LIBDIR}/libqtfreetype.a"
 				], [
 					AC_MSG_RESULT([no])
 				])
@@ -580,7 +664,7 @@ AM_COND_IF([PRECOMP_QT], [
 				AC_MSG_CHECKING([whether libQt5ThemeSupport.a exists])
 				AS_IF([test -f ${QT5LIBDIR}/libQt5ThemeSupport.a], [
 					AC_MSG_RESULT([yes])
-					my_LIBS+=" ${QT5LIBDIR}/libQt5ThemeSupport.a"
+					my_LIBS="${my_LIBS} ${QT5LIBDIR}/libQt5ThemeSupport.a"
 				], [
 					AC_MSG_RESULT([no])
 				])
@@ -592,11 +676,11 @@ AM_COND_IF([PRECOMP_QT], [
 			AC_MSG_CHECKING([whether QT5 Plugin QWindowsVistaStyle exists])
 			AS_IF([test -f ${QT5LIBDIR}/plugins/styles/libqwindowsvistastyle.a], [
 				AC_MSG_RESULT([yes])
-				CUSTOMDEFINES+=" -DQT5_PLUGIN_QWINDOWSVISTASTYLE"
-				my_LIBS+=" ${QT5LIBDIR}/plugins/styles/libqwindowsvistastyle.a"
+				CUSTOMDEFINES="${CUSTOMDEFINES} -DQT_PLUGIN_QWINDOWSVISTASTYLE"
+				my_LIBS="${my_LIBS} ${QT5LIBDIR}/plugins/styles/libqwindowsvistastyle.a"
 				
 				AC_CHECK_LIB(uxtheme, main, [
-					my_LIBS+=" -luxtheme"
+					my_LIBS="${my_LIBS} -luxtheme"
 				])
 			], [
 				AC_MSG_RESULT([no])
@@ -605,8 +689,8 @@ AM_COND_IF([PRECOMP_QT], [
 			AC_MSG_CHECKING([whether QT5 Plugin QGif exists])
 			AS_IF([test -f ${QT5LIBDIR}/plugins/imageformats/libqgif.a], [
 				AC_MSG_RESULT([yes])
-				CUSTOMDEFINES+=" -DQT5_PLUGIN_QGIF"
-				my_LIBS+=" ${QT5LIBDIR}/plugins/imageformats/libqgif.a"
+				CUSTOMDEFINES="${CUSTOMDEFINES} -DQT_PLUGIN_QGIF"
+				my_LIBS="${my_LIBS} ${QT5LIBDIR}/plugins/imageformats/libqgif.a"
 			], [
 				AC_MSG_RESULT([no])
 			])
@@ -614,8 +698,8 @@ AM_COND_IF([PRECOMP_QT], [
 			AC_MSG_CHECKING([whether QT5 Plugin QICO exists])
 			AS_IF([test -f ${QT5LIBDIR}/plugins/imageformats/libqico.a], [
 				AC_MSG_RESULT([yes])
-				CUSTOMDEFINES+=" -DQT5_PLUGIN_QICO"
-				my_LIBS+=" ${QT5LIBDIR}/plugins/imageformats/libqico.a"
+				CUSTOMDEFINES="${CUSTOMDEFINES} -DQT_PLUGIN_QICO"
+				my_LIBS="${my_LIBS} ${QT5LIBDIR}/plugins/imageformats/libqico.a"
 			], [
 				AC_MSG_RESULT([no])
 			])
@@ -623,17 +707,35 @@ AM_COND_IF([PRECOMP_QT], [
 			AC_MSG_CHECKING([whether QT5 Plugin QJpeg exists])
 			AS_IF([test -f ${QT5LIBDIR}/plugins/imageformats/libqjpeg.a], [
 				AC_MSG_RESULT([yes])
-				CUSTOMDEFINES+=" -DQT5_PLUGIN_QJPEG"
-				my_LIBS+=" ${QT5LIBDIR}/plugins/imageformats/libqjpeg.a"
+				CUSTOMDEFINES="${CUSTOMDEFINES} -DQT_PLUGIN_QJPEG"
+				my_LIBS="${my_LIBS} ${QT5LIBDIR}/plugins/imageformats/libqjpeg.a"
 			], [
 				AC_MSG_RESULT([no])
 			])
+
+			AC_MSG_CHECKING([whether QT5 Plugin QSvg exists])
+			AS_IF([test -f ${QT5LIBDIR}/plugins/imageformats/libqsvg.a], [
+				AC_MSG_RESULT([yes])
+				CUSTOMDEFINES="${CUSTOMDEFINES} -DQT_PLUGIN_QSVG"
+				my_LIBS="${my_LIBS} ${QT5LIBDIR}/plugins/imageformats/libqsvg.a"
+			], [
+				AC_MSG_RESULT([no])
+				AC_MSG_ERROR([libqsvg.a not found])
+			])
+		], [
+			PKG_CHECK_MODULES(QT5, [Qt5Core Qt5Gui Qt5Widgets Qt5Svg], [
+				MOC="`$PKG_CONFIG --variable=host_bins Qt5Core`/moc"
+				RCC="`$PKG_CONFIG --variable=host_bins Qt5Core`/rcc"
+				UIC="`$PKG_CONFIG --variable=host_bins Qt5Core`/uic"
+			], [
+				AC_MSG_ERROR([Qt5 library not found])
+			])
 		])
 	
-		my_CPPFLAGS+=" ${QT5_CFLAGS}"
-		my_LIBS+=" ${QT5_LIBS}"
+		my_CPPFLAGS="${my_CPPFLAGS} ${QT5_CFLAGS}"
+		my_LIBS="${my_LIBS} ${QT5_LIBS}"
 	], [
-		PKG_CHECK_MODULES(QT4, [QtCore >= 4.6.0, QtCore < 5.0.0, QtGui >= 4.6.0, QtGui < 5.0.0], [
+		PKG_CHECK_MODULES(QT4, [QtCore >= 4.6.0, QtCore < 5.0.0, QtGui >= 4.6.0, QtGui < 5.0.0, QtSvg >= 4.6.0, QtSvg < 5.0.0], [
 			MOC="`$PKG_CONFIG --variable=moc_location QtCore`"
 			UIC="`$PKG_CONFIG --variable=uic_location QtCore`"
 			RCC="`$PKG_CONFIG --variable=rcc_location QtCore`"
@@ -641,8 +743,31 @@ AM_COND_IF([PRECOMP_QT], [
 			AC_MSG_ERROR([Qt4 library not found])
 		])
 
-		my_CPPFLAGS+=" ${QT4_CFLAGS}"
-		my_LIBS+=" ${QT4_LIBS}"
+		AM_COND_IF([WINDOWS], [
+			QT4LIBDIR="`$PKG_CONFIG --variable=libdir QtCore`"
+			
+			AC_MSG_CHECKING([whether QT4 Plugin QICO exists])
+			AS_IF([test -f ${QT4LIBDIR}/plugins/imageformats/libqico.a], [
+				AC_MSG_RESULT([yes])
+				CUSTOMDEFINES="${CUSTOMDEFINES} -DQT_PLUGIN_QICO"
+				my_LIBS="${my_LIBS} ${QT4LIBDIR}/plugins/imageformats/libqico.a"
+			], [
+				AC_MSG_RESULT([no])
+			])
+
+			AC_MSG_CHECKING([whether QT4 Plugin QSvg exists])
+			AS_IF([test -f ${QT4LIBDIR}/plugins/imageformats/libqsvg.a], [
+				AC_MSG_RESULT([yes])
+				CUSTOMDEFINES="${CUSTOMDEFINES} -DQT_PLUGIN_QSVG"
+				my_LIBS="${my_LIBS} ${QT4LIBDIR}/plugins/imageformats/libqsvg.a"
+			], [
+				AC_MSG_RESULT([no])
+				AC_MSG_ERROR([libqsvg.a not found])
+			])
+		])
+
+		my_CPPFLAGS="${my_CPPFLAGS} ${QT4_CFLAGS}"
+		my_LIBS="${my_LIBS} ${QT4_LIBS}"
 	])
 ])
 AS_IF([test "x$MOC" = xno], [
@@ -673,14 +798,14 @@ AM_COND_IF([WITH_OPENGL], [
 		AC_SUBST([SDL_LIBS])
 		AC_MSG_RESULT(yes)
 
-		my_CPPFLAGS+=" ${SDL_CFLAGS}"
-		my_LIBS+=" ${SDL_LIBS}"
+		my_CPPFLAGS="${my_CPPFLAGS} ${SDL_CFLAGS}"
+		my_LIBS="${my_LIBS} ${SDL_LIBS}"
 	], [
 		SDL_VERSION=1.2.0
 		AM_PATH_SDL($SDL_VERSION, :, AC_MSG_ERROR([*** SDL version $SDL_VERSION not found!]))
 		#AM_PATH_SDL($SDL_VERSION, :, [PKG_CHECK_MODULES(sdl, [sdl])])
-		my_CPPFLAGS+=" ${SDL_CFLAGS}"
-		my_LIBS+=" ${SDL_LIBS}"
+		my_CPPFLAGS="${my_CPPFLAGS} ${SDL_CFLAGS}"
+		my_LIBS="${my_LIBS} ${SDL_LIBS}"
 
 		CFLAGS="$CFLAGS ${SDL_CFLAGS}"
 		LIBS="$LIBS ${SDL_LIBS}"
@@ -704,18 +829,18 @@ void blah(){
 		LIBS="${OLD_LIBS}"
 	])
 	AM_COND_IF([WINDOWS], [
-		my_LIBS+=" -lopengl32"
+		my_LIBS="${my_LIBS} -lopengl32"
 	], [
-		my_LIBS+=" -lGL"
+		my_LIBS="${my_LIBS} -lGL"
 	])
 ])
 
 AM_COND_IF([LINUX], [
 	AM_COND_IF([WITH_OPENGL_CG], [
 		PKG_CHECK_MODULES(nvidia_cg_toolkit_pkgconfig, [nvidia-cg-toolkit-gl], [
-			CUSTOMDEFINES+=" -DWITH_OPENGL_CG"
-			my_CPPFLAGS+=" ${nvidia_cg_toolkit_pkgconfig_CFLAGS}"
-			my_LIBS+=" ${nvidia_cg_toolkit_pkgconfig_LIBS}"
+			CUSTOMDEFINES="${CUSTOMDEFINES} -DWITH_OPENGL_CG"
+			my_CPPFLAGS="${my_CPPFLAGS} ${nvidia_cg_toolkit_pkgconfig_CFLAGS}"
+			my_LIBS="${my_LIBS} ${nvidia_cg_toolkit_pkgconfig_LIBS}"
 		], [
 			# Check if NVIDIA CG toolkit is present without pkg-config
 			AC_MSG_CHECKING([NVIDIA CG toolkit is present])
@@ -727,16 +852,16 @@ void blah(){
 }])
 			], [
 				AC_MSG_RESULT([yes])
-				CUSTOMDEFINES+=" -DWITH_OPENGL_CG"
-				my_LIBS+=" -lCg -lCgGL"
+				CUSTOMDEFINES="${CUSTOMDEFINES} -DWITH_OPENGL_CG"
+				my_LIBS="${my_LIBS} -lCg -lCgGL"
 			], [
 				AC_MSG_RESULT([no])
 			])
 		])
 	])
 	PKG_CHECK_MODULES(alsa, [alsa])
-	#my_CPPFLAGS+=" ${alsa_CFLAGS}"
-	my_LIBS+=" ${alsa_LIBS}"
+	#my_CPPFLAGS="${my_CPPFLAGS} ${alsa_CFLAGS}"
+	my_LIBS="${my_LIBS} ${alsa_LIBS}"
 ])
 
 AS_CASE(["$host_os"],
@@ -770,15 +895,15 @@ AC_SUBST(LIB7ZIP_LIBS)
 # The End
 AM_COND_IF([WINDOWS], [
 	AM_COND_IF([ENAB_RELEASE], [
-		my_LDFLAGS+=" -Wl,-subsystem,windows"
+		my_LDFLAGS="${my_LDFLAGS} -Wl,-subsystem,windows"
 	], [
-		my_LDFLAGS+=" -Wl,-subsystem,console"
+		my_LDFLAGS="${my_LDFLAGS} -Wl,-subsystem,console"
 	])
-	my_LDFLAGS+=" -static-libgcc -static-libstdc++"
-	my_LIBS+=" -lwinmm -luuid -lole32 -lws2_32 -ladvapi32 -lshell32 -luser32 -lkernel32 -lgdi32 -loleaut32 -lcomdlg32 -limm32 -lwinspool"
+	my_LDFLAGS="${my_LDFLAGS} -static-libgcc -static-libstdc++"
+	my_LIBS="${my_LIBS} -lwinmm -luuid -lole32 -lws2_32 -ladvapi32 -lshell32 -luser32 -lkernel32 -lgdi32 -loleaut32 -lcomdlg32 -limm32 -lwinspool"
 ])
 AM_COND_IF([LINUX], [
-	my_LIBS+=" -ldl -lpthread"
+	my_LIBS="${my_LIBS} -ldl -lpthread"
 ])
 
 AC_SUBST(CUSTOMDEFINES)

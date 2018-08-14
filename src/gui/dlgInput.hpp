@@ -76,12 +76,13 @@ class dlgInput : public QDialog, public Ui::Input_dialog {
 		void setup_shortcuts();
 		void combo_joy_id_init();
 		void update_groupbox_shortcuts(int mode, int type, int row);
-		void populate_shortcut(int index);
+		void populate_shortcut(int index, QString *string);
 		void update_text_shortcut(QAction *action, int index);
 		void info_entry_print(QString txt);
 		bool keypressEvent(QEvent *event);
 
 	private slots:
+		void s_resize_tableview_shortcuts();
 		void s_combobox_cm_activated(int index);
 		void s_combobox_cexp_activated(int index);
 		void s_combobox_cp_activated(int index);

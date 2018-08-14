@@ -27,6 +27,8 @@
 #include "input.h"
 #include "gui.h"
 #include "clock.h"
+#include <QtSvg/QSvgRenderer>
+#include <QtGui/QPainter>
 
 #define SPT(ind) QString(std_pad_input_type[ind])
 #define SPB(ind) QString(std_pad_button[ind])
@@ -39,12 +41,10 @@ static const char std_pad_button[10][15] = {
 };
 
 dlgStdPad::dlgStdPad(_cfg_port *cfg_port, QWidget *parent = 0) : QDialog(parent) {
-	QFont f9, f8;
+	QFont f9;
 
 	f9.setPointSize(9);
 	f9.setWeight(QFont::Light);
-	f8.setPointSize(8);
-	f8.setWeight(QFont::Light);
 
 	memset(&data, 0x00, sizeof(data));
 	memcpy(&data.cfg, cfg_port, sizeof(_cfg_port));
@@ -56,7 +56,7 @@ dlgStdPad::dlgStdPad(_cfg_port *cfg_port, QWidget *parent = 0) : QDialog(parent)
 	setFont(parent->font());
 
 	groupBox_controller->setTitle(tr("Controller %1 : Standard Pad").arg(cfg_port->id));
-	tabWidget->setCurrentIndex(JOYSTICK);
+	tabWidget_kbd_joy->setCurrentIndex(JOYSTICK);
 	combo_id_init();
 
 	for (int a = KEYBOARD; a <= JOYSTICK; a++) {
@@ -67,6 +67,12 @@ dlgStdPad::dlgStdPad(_cfg_port *cfg_port, QWidget *parent = 0) : QDialog(parent)
 
 		if (txt->font().pointSize() > 9) {
 			txt->setFont(f9);
+		}
+
+		{
+			int h = txt->fontMetrics().size(0, "IQygp").height() + 10;
+
+			txt->setFixedHeight(h);
 		}
 
 		bt = findChild<QPushButton *>("pushButton_" + SPT(a) + "_Sequence");
@@ -91,9 +97,6 @@ dlgStdPad::dlgStdPad(_cfg_port *cfg_port, QWidget *parent = 0) : QDialog(parent)
 			if (bt->font().pointSize() > 9) {
 				bt->setFont(f9);
 			}
-			if (unset->font().pointSize() > 8) {
-				unset->setFont(f8);
-			}
 
 			if (a == KEYBOARD) {
 				bt->setText(inpObject::kbd_keyval_to_name(data.cfg.port.input[a][b]));
@@ -109,6 +112,8 @@ dlgStdPad::dlgStdPad(_cfg_port *cfg_port, QWidget *parent = 0) : QDialog(parent)
 			connect(unset, SIGNAL(clicked(bool)), this, SLOT(s_unset_clicked(bool)));
 		}
 	}
+	
+	tabWidget_kbd_joy->adjustSize();
 
 	{
 		comboBox_Controller_type->addItem(tr("Auto"));
@@ -116,19 +121,17 @@ dlgStdPad::dlgStdPad(_cfg_port *cfg_port, QWidget *parent = 0) : QDialog(parent)
 		comboBox_Controller_type->addItem(tr("3rd-party"));
 		comboBox_Controller_type->setCurrentIndex(data.cfg.port.type_pad);
 		connect(comboBox_Controller_type, SIGNAL(activated(int)), this,
-				SLOT(s_combobox_controller_type_activated(int)));
+			SLOT(s_combobox_controller_type_activated(int)));
 	}
 
 	for (int i = TURBOA; i <= TURBOB; i++) {
 		QSlider *tb = findChild<QSlider *>("horizontalSlider_" + SPB(i + TRB_A));
-		QLabel *label = findChild<QLabel *>("label_value_slider_" + SPB(i + TRB_A));
 
 		tb->setRange(1, TURBO_BUTTON_DELAY_MAX);
 		tb->setProperty("myTurbo", QVariant(i));
 		tb->setValue(data.cfg.port.turbo[i].frequency);
 		connect(tb, SIGNAL(valueChanged(int)), this, SLOT(s_slider_td_value_changed(int)));
 
-		label->setFixedWidth(label->sizeHint().width());
 		td_update_label(i, data.cfg.port.turbo[i].frequency);
 	}
 
@@ -137,7 +140,9 @@ dlgStdPad::dlgStdPad(_cfg_port *cfg_port, QWidget *parent = 0) : QDialog(parent)
 	connect(pushButton_Discard, SIGNAL(clicked(bool)), this, SLOT(s_discard_clicked(bool)));
 
 	setAttribute(Qt::WA_DeleteOnClose);
-	setFixedSize(width(), height());
+
+	adjustSize();
+	setFixedSize(size());
 
 	setFocusPolicy(Qt::StrongFocus);
 	groupBox_controller->setFocus(Qt::ActiveWindowFocusReason);
@@ -159,8 +164,8 @@ void dlgStdPad::update_dialog() {
 		return;
 	}
 
-	tabWidget->setTabEnabled(KEYBOARD, true);
-	tabWidget->setTabEnabled(JOYSTICK, true);
+	tabWidget_kbd_joy->setTabEnabled(KEYBOARD, true);
+	tabWidget_kbd_joy->setTabEnabled(JOYSTICK, true);
 
 	// keyboard
 	label_kbd_ID->setEnabled(false);
@@ -263,7 +268,7 @@ void dlgStdPad::setEnable_tab_buttons(int type, bool mode) {
 }
 void dlgStdPad::disable_tab_and_other(int type, int vbutton) {
 	// altro tab
-	tabWidget->setTabEnabled(type == KEYBOARD ? JOYSTICK : KEYBOARD, false);
+	tabWidget_kbd_joy->setTabEnabled(type == KEYBOARD ? JOYSTICK : KEYBOARD, false);
 
 	// ID
 	findChild<QLabel *>("label_" + SPT(type) + "_ID")->setEnabled(false);
@@ -358,6 +363,23 @@ bool dlgStdPad::eventFilter(QObject *obj, QEvent *event) {
 				break;
 			case QEvent::KeyPress:
 				return (keypressEvent(event));
+			case QEvent::Show: {
+				QSvgRenderer svg(QString(":/pics/pics/Nes_controller.svg"));
+				float ratio = (float)svg.defaultSize().width() / (float)svg.defaultSize().height();
+				int w = image_pad->size().width();
+				int h = (float)w / ratio;
+
+				QImage image(w, h, QImage::Format_ARGB32);
+				image.fill(Qt::transparent);
+
+				QPainter painter(&image);
+				svg.render(&painter);
+
+				image_pad->resize(image.size());
+				image_pad->setPixmap(QPixmap::fromImage(image, Qt::ColorOnly));
+
+				break;
+			}
 			default:
 				break;
 		}

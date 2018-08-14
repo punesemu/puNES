@@ -57,7 +57,6 @@ class dlgCheats : public QDialog, public Ui::Cheats {
 		Q_OBJECT
 
 	private:
-		int tools_height;
 		bool new_mode;
 		cheatObject *mod, *org;
 		hexSpinBox *hexSpinBox_Address;

@@ -34,10 +34,8 @@ dlgOverscanBorders::dlgOverscanBorders(QWidget *parent = 0) : QDialog(parent) {
 	memset(&data, 0x00, sizeof(data));
 	memcpy(&data.overscan_borders, &overscan_borders, sizeof(overscan_borders));
 
-	/*
-	 * salvo sia il parametro dell'overscan
-	 * che il settaggio attuale dei bordi.
-	 */
+	// salvo sia il parametro dell'overscan
+	// che il settaggio attuale dei bordi.
 	data.save_overscan = cfg->oscan;
 	data.save_borders = (*overscan.borders);
 
@@ -86,7 +84,9 @@ dlgOverscanBorders::dlgOverscanBorders(QWidget *parent = 0) : QDialog(parent) {
 	connect(pushButton_Discard, SIGNAL(clicked(bool)), this, SLOT(s_discard_clicked(bool)));
 
 	setAttribute(Qt::WA_DeleteOnClose);
-	setFixedSize(width(), height());
+
+	adjustSize();
+	setFixedSize(size());
 
 	installEventFilter(this);
 
@@ -105,19 +105,17 @@ bool dlgOverscanBorders::eventFilter(QObject *obj, QEvent *event) {
 	} else if (event->type() == QEvent::Close) {
 		BYTE force;
 
-		/* aggiorno l'attuale tabella */
+		// aggiorno l'attuale tabella
 		force = overscan_set_mode(machine.type);
 
-		/* ripristino il valore originario del parametro */
+		// ripristino il valore originario del parametro
 		if (data.save_overscan != cfg->oscan) {
 			force = TRUE;
 			cfg->oscan = data.save_overscan;
 		}
 
-		/*
-		 * se le dimensioni dei bordi sono cambiati rispetto ai
-		 * valori di ingresso allora forzo il gfx_set_screen.
-		 */
+		// se le dimensioni dei bordi sono cambiati rispetto ai
+		// valori di ingresso allora forzo il gfx_set_screen.
 		{
 			BYTE i, *src = (BYTE *) &data.save_borders, *dst = (BYTE *) overscan.borders;
 

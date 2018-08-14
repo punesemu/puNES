@@ -32,12 +32,7 @@
 #include "gui.h"
 
 dlgPPUHacks::dlgPPUHacks(QWidget *parent = 0) : QDialog(parent) {
-	QFont f9;
-
 	in_update = false;
-
-	f9.setPointSize(9);
-	f9.setWeight(QFont::Light);
 
 	setupUi(this);
 
@@ -47,52 +42,83 @@ dlgPPUHacks::dlgPPUHacks(QWidget *parent = 0) : QDialog(parent) {
 	setFont(parent->font());
 	setStyleSheet(tools_stylesheet());
 
-	QPushButton *close = new QPushButton(groupBox);
-	close->setGeometry(QRect(210, 5, 16, 16));
-	close->setText("x");
-
 	checkBox_Unlimited_Sprites->setProperty("myIndex", QVariant(0));
 	checkBox_Hide_Sprites->setProperty("myIndex", QVariant(1));
 	checkBox_Hide_Background->setProperty("myIndex", QVariant(2));
 
 	connect(checkBox_Unlimited_Sprites, SIGNAL(stateChanged(int)), this,
-			SLOT(sprites_and_background_changed(int)));
+		SLOT(sprites_and_background_changed(int)));
 	connect(checkBox_Hide_Sprites, SIGNAL(stateChanged(int)), this,
-			SLOT(sprites_and_background_changed(int)));
+		SLOT(sprites_and_background_changed(int)));
 	connect(checkBox_Hide_Background, SIGNAL(stateChanged(int)), this,
-			SLOT(sprites_and_background_changed(int)));
+		SLOT(sprites_and_background_changed(int)));
 
 	connect(checkBox_PPU_Overclock, SIGNAL(stateChanged(int)), this,
-			SLOT(ppu_overclock_enabled_changed(int)));
+		SLOT(ppu_overclock_enabled_changed(int)));
 
 	connect(checkBox_Disable_DMC_Control, SIGNAL(stateChanged(int)), this,
-			SLOT(disable_dmc_control_changed(int)));
+		SLOT(disable_dmc_control_changed(int)));
 
 	connect(spinBox_VB_Slines, SIGNAL(valueChanged(int)), this,
-			SLOT(ppu_overclock_vb_slines_changed(int)));
+		SLOT(ppu_overclock_vb_slines_changed(int)));
 	connect(spinBox_Postrender_Slines, SIGNAL(valueChanged(int)), this,
-			SLOT(ppu_overclock_pr_slines_changed(int)));
+		SLOT(ppu_overclock_pr_slines_changed(int)));
 
 	connect(spinBox_VB_Slines, SIGNAL(editingFinished()), this,
-			SLOT(ppu_overclock_slines_edit_finished()));
+		SLOT(ppu_overclock_slines_edit_finished()));
 	connect(spinBox_Postrender_Slines, SIGNAL(editingFinished()), this,
-			SLOT(ppu_overclock_slines_edit_finished()));
+		SLOT(ppu_overclock_slines_edit_finished()));
 
-	if (pushButton_Reset_Lag_Counter->font().pointSize() > 9) {
-		pushButton_Reset_Lag_Counter->setFont(f9);
-	}
-	if (plainTextEdit_Lag_Counter->font().pointSize() > 9) {
-		plainTextEdit_Lag_Counter->setFont(f9);
-	}
 	connect(pushButton_Reset_Lag_Counter, SIGNAL(clicked(bool)), this,
-			SLOT(lag_counter_reset_clicked(bool)));
-
-	connect(close, SIGNAL(clicked(bool)), this, SLOT(s_x_clicked(bool)));
+		SLOT(lag_counter_reset_clicked(bool)));
 
 	setWindowFlags(Qt::Dialog | Qt::FramelessWindowHint);
 
 	setAttribute(Qt::WA_DeleteOnClose);
-	setFixedSize(width(), height());
+
+	{
+		QFont f9;
+		int w, h;
+
+		f9.setPointSize(9);
+		f9.setWeight(QFont::Light);
+
+		if (pushButton_Reset_Lag_Counter->font().pointSize() > 9) {
+			pushButton_Reset_Lag_Counter->setFont(f9);
+		}
+
+		if (plainTextEdit_Lag_Counter->font().pointSize() > 9) {
+			plainTextEdit_Lag_Counter->setFont(f9);
+		}
+
+		w = plainTextEdit_Lag_Counter->fontMetrics().size(0, "000000000").width() + 10;
+		h = plainTextEdit_Lag_Counter->fontMetrics().size(0, "1234567890").height() + 10;
+
+		plainTextEdit_Lag_Counter->setFixedSize(w, h);
+	}
+
+	adjustSize();
+	setFixedSize(size());
+
+	{
+		QMargins vgbm = verticalLayout_groupBox_PPU_Hacks->contentsMargins();
+		QMargins vdia = verticalLayout_PPU_Hacks->contentsMargins();
+		QPushButton *close = new QPushButton(this);
+		int x, y, w, h;
+
+		w = close->fontMetrics().size(0, "x").width() + 10;
+		h = close->fontMetrics().size(0, "x").height() + 5;
+		x = normalGeometry().width() - w -	vdia.right() - 2 - vgbm.right();
+		y = vdia.top() + 2 + 1;
+
+		close->setGeometry(x, y, w, h);
+		close->setText("x");
+
+		connect(close, SIGNAL(clicked(bool)), this, SLOT(s_x_clicked(bool)));
+
+		vgbm.setTop(close->sizeHint().height() + 2);
+		verticalLayout_groupBox_PPU_Hacks->setContentsMargins(vgbm);
+	}
 
 	installEventFilter(this);
 }
@@ -111,9 +137,8 @@ int dlgPPUHacks::update_pos(int startY) {
 	int x = parentWidget()->pos().x() + parentWidget()->frameGeometry().width();
 	int y = parentWidget()->geometry().y() + startY;
 
-	if ((parentWidget()->pos().x() + parentWidget()->frameGeometry().width()
-			+ frameGeometry().width() - qApp->desktop()->screenGeometry(screenNumber).left())
-			> qApp->desktop()->screenGeometry(screenNumber).width()) {
+	if ((x + frameGeometry().width() - qApp->desktop()->screenGeometry(screenNumber).left()) >
+		qApp->desktop()->screenGeometry(screenNumber).width()) {
 		x = parentWidget()->pos().x() - frameGeometry().width();
 	}
 	move(QPoint(x, y));

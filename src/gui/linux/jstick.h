@@ -100,7 +100,7 @@ static const _js_element jsv_list[] = {
 	{ 0x416, uL("JB22")   }, { 0x417, uL("JB23")   },
 };
 
-EXTERNC _js js[PORT_MAX], js_shcut;;
+EXTERNC _js js[PORT_MAX], js_shcut;
 
 EXTERNC void js_init(BYTE first_time);
 EXTERNC void js_quit(BYTE last_time);

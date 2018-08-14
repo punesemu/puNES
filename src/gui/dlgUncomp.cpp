@@ -43,23 +43,21 @@ dlgUncomp::dlgUncomp(QWidget *parent = 0, void *uncompress_archive = NULL,
 
 	//tableWidget_Selection->setStyleSheet("QTreeView {selection-background-color: red;}");
 
+	setWindowTitle(QFileInfo(uQString(archive->file)).fileName());
+
 	switch (type) {
 		case UNCOMPRESS_TYPE_ROM: {
-			QTableWidgetItem *header = new QTableWidgetItem(tr("Roms"));
+			QTableWidgetItem *header = new QTableWidgetItem(tr("which ROM do you want to load?"));
 
 			header->setTextAlignment(Qt::AlignHCenter);
 			tableWidget_Selection->setHorizontalHeaderItem(0, header);
-
-			setWindowTitle(tr("which ROM do you want to load?"));
 			break;
 		}
 		case UNCOMPRESS_TYPE_PATCH: {
-			QTableWidgetItem *header = new QTableWidgetItem(tr("Patches"));
+			QTableWidgetItem *header = new QTableWidgetItem(tr("which PATCH do you want to apply?"));
 
 			header->setTextAlignment(Qt::AlignHCenter);
 			tableWidget_Selection->setHorizontalHeaderItem(0, header);
-
-			setWindowTitle(tr("which PATCH do you want to apply?"));
 			break;
 		}
 	}
@@ -83,22 +81,18 @@ dlgUncomp::dlgUncomp(QWidget *parent = 0, void *uncompress_archive = NULL,
 		}
 	}
 
+	tableWidget_Selection->setCurrentCell(0, 0);
+
 	connect(pushButton_Ok, SIGNAL(clicked(bool)), this, SLOT(s_ok_clicked(bool)));
 	connect(pushButton_None, SIGNAL(clicked(bool)), this, SLOT(s_none_clicked(bool)));
 
-	QVBoxLayout *vbox = new QVBoxLayout(this);
-	vbox->addWidget(tableWidget_Selection);
-	vbox->addWidget(horizontalLayoutWidget);
-
-	tableWidget_Selection->setCurrentCell(0, 0);
+	setAttribute(Qt::WA_DeleteOnClose);
 
 	// se l'archivio compresso e' caricato da riga di comando,
 	// la gui non e' ancora stata avviata.
 	if (gui.start == TRUE) {
 		emu_pause(TRUE);
 	}
-
-	setAttribute(Qt::WA_DeleteOnClose);
 }
 dlgUncomp::~dlgUncomp() {}
 void dlgUncomp::closeEvent(QCloseEvent *e) {

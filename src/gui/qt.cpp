@@ -54,19 +54,30 @@
 #else
 #include <QtWidgets/QDesktopWidget>
 #include <QtWidgets/QMessageBox>
+#endif
 #if defined (__WIN32__)
 #include <QtCore/QtPlugin>
-#if defined (QT5_PLUGIN_QWINDOWSVISTASTYLE)
+#if defined (QT_PLUGIN_QWINDOWSVISTASTYLE)
 Q_IMPORT_PLUGIN(QWindowsVistaStylePlugin)
 #endif
-#if defined (QT5_PLUGIN_QGIF)
+#if defined (QT_PLUGIN_QGIF)
 Q_IMPORT_PLUGIN(QGifPlugin)
 #endif
-#if defined (QT5_PLUGIN_QICO)
+#if defined (QT_PLUGIN_QICO)
+#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
+Q_IMPORT_PLUGIN(qico)
+#else
 Q_IMPORT_PLUGIN(QICOPlugin)
 #endif
-#if defined (QT5_PLUGIN_QJPEG)
+#endif
+#if defined (QT_PLUGIN_QJPEG)
 Q_IMPORT_PLUGIN(QJpegPlugin)
+#endif
+#if defined (QT_PLUGIN_QSVG)
+#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
+Q_IMPORT_PLUGIN(qsvg)
+#else
+Q_IMPORT_PLUGIN(QSvgPlugin)
 #endif
 #endif
 #endif

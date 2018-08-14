@@ -35,10 +35,6 @@ dlgApuChannels::dlgApuChannels(QWidget *parent = 0) : QDialog(parent) {
 	setFont(parent->font());
 	setStyleSheet(tools_stylesheet());
 
-	QPushButton *close = new QPushButton(groupBox);
-	close->setGeometry(QRect(210, 5, 16, 16));
-	close->setText("x");
-
 	horizontalSlider_Master->setRange(0, 100);
 	horizontalSlider_Square1->setRange(0, 100);
 	horizontalSlider_Square2->setRange(0, 100);
@@ -56,19 +52,19 @@ dlgApuChannels::dlgApuChannels(QWidget *parent = 0) : QDialog(parent) {
 	horizontalSlider_Extra->setProperty("myIndex", QVariant(APU_EXTRA));
 
 	connect(horizontalSlider_Master, SIGNAL(valueChanged(int)), this,
-			SLOT(s_slider_value_changed(int)));
+		SLOT(s_slider_value_changed(int)));
 	connect(horizontalSlider_Square1, SIGNAL(valueChanged(int)), this,
-			SLOT(s_slider_value_changed(int)));
+		SLOT(s_slider_value_changed(int)));
 	connect(horizontalSlider_Square2, SIGNAL(valueChanged(int)), this,
-			SLOT(s_slider_value_changed(int)));
+		SLOT(s_slider_value_changed(int)));
 	connect(horizontalSlider_Triangle, SIGNAL(valueChanged(int)), this,
-			SLOT(s_slider_value_changed(int)));
+		SLOT(s_slider_value_changed(int)));
 	connect(horizontalSlider_Noise, SIGNAL(valueChanged(int)), this,
-			SLOT(s_slider_value_changed(int)));
+		SLOT(s_slider_value_changed(int)));
 	connect(horizontalSlider_DMC, SIGNAL(valueChanged(int)), this,
-			SLOT(s_slider_value_changed(int)));
+		SLOT(s_slider_value_changed(int)));
 	connect(horizontalSlider_Extra, SIGNAL(valueChanged(int)), this,
-			SLOT(s_slider_value_changed(int)));
+		SLOT(s_slider_value_changed(int)));
 
 	checkBox_Master->setProperty("myIndex", QVariant(APU_MASTER));
 	checkBox_Square1->setProperty("myIndex", QVariant(APU_S1));
@@ -79,19 +75,19 @@ dlgApuChannels::dlgApuChannels(QWidget *parent = 0) : QDialog(parent) {
 	checkBox_Extra->setProperty("myIndex", QVariant(APU_EXTRA));
 
 	connect(checkBox_Master, SIGNAL(stateChanged(int)), this,
-			SLOT(s_checkbox_state_changed(int)));
+		SLOT(s_checkbox_state_changed(int)));
 	connect(checkBox_Square1, SIGNAL(stateChanged(int)), this,
-			SLOT(s_checkbox_state_changed(int)));
+		SLOT(s_checkbox_state_changed(int)));
 	connect(checkBox_Square2, SIGNAL(stateChanged(int)), this,
-			SLOT(s_checkbox_state_changed(int)));
+		SLOT(s_checkbox_state_changed(int)));
 	connect(checkBox_Triangle, SIGNAL(stateChanged(int)), this,
-			SLOT(s_checkbox_state_changed(int)));
+		SLOT(s_checkbox_state_changed(int)));
 	connect(checkBox_Noise, SIGNAL(stateChanged(int)), this,
-			SLOT(s_checkbox_state_changed(int)));
+		SLOT(s_checkbox_state_changed(int)));
 	connect(checkBox_DMC, SIGNAL(stateChanged(int)), this,
-			SLOT(s_checkbox_state_changed(int)));
+		SLOT(s_checkbox_state_changed(int)));
 	connect(checkBox_Extra, SIGNAL(stateChanged(int)), this,
-			SLOT(s_checkbox_state_changed(int)));
+		SLOT(s_checkbox_state_changed(int)));
 
 	pushButton_Active_all->setProperty("myIndex", QVariant(TRUE));
 	pushButton_Disable_all->setProperty("myIndex", QVariant(FALSE));
@@ -102,14 +98,34 @@ dlgApuChannels::dlgApuChannels(QWidget *parent = 0) : QDialog(parent) {
 	connect(pushButton_Defaults, SIGNAL(clicked(bool)), this, SLOT(s_toggle_all_clicked(bool)));
 
 	connect(checkBox_Swap_Duty_Cycles, SIGNAL(stateChanged(int)), this,
-			SLOT(s_set_audio_swap_duty(int)));
-
-	connect(close, SIGNAL(clicked(bool)), this, SLOT(s_x_clicked(bool)));
+		SLOT(s_set_audio_swap_duty(int)));
 
 	setWindowFlags(Qt::Dialog | Qt::FramelessWindowHint);
 
 	setAttribute(Qt::WA_DeleteOnClose);
-	setFixedSize(width(), height());
+
+	adjustSize();
+	setFixedSize(size());
+
+	{
+		QMargins vgbm = verticalLayout_groupBox_APU_Channels->contentsMargins();
+		QMargins vdia = verticalLayout_APU_Channels->contentsMargins();
+		QPushButton *close = new QPushButton(this);
+		int x, y, w, h;
+
+		w = close->fontMetrics().size(0, "x").width() + 10;
+		h = close->fontMetrics().size(0, "x").height() + 5;
+		x = normalGeometry().width() - w -	vdia.right() - 2 - vgbm.right();
+		y = vdia.top() + 2 + 1;
+
+		close->setGeometry(x, y, w, h);
+		close->setText("x");
+
+		connect(close, SIGNAL(clicked(bool)), this, SLOT(s_x_clicked(bool)));
+
+		vgbm.setTop(close->sizeHint().height() + 2);
+		verticalLayout_groupBox_APU_Channels->setContentsMargins(vgbm);
+	}
 
 	installEventFilter(this);
 }
@@ -119,9 +135,8 @@ int dlgApuChannels::update_pos(int startY) {
 	int x = parentWidget()->pos().x() + parentWidget()->frameGeometry().width();
 	int y = parentWidget()->geometry().y() + startY;
 
-	if ((parentWidget()->pos().x() + parentWidget()->frameGeometry().width()
-			+ frameGeometry().width() - qApp->desktop()->screenGeometry(screenNumber).left())
-			> qApp->desktop()->screenGeometry(screenNumber).width()) {
+	if ((x + frameGeometry().width() - qApp->desktop()->screenGeometry(screenNumber).left()) >
+		qApp->desktop()->screenGeometry(screenNumber).width()) {
 		x = parentWidget()->pos().x() - frameGeometry().width();
 	}
 	move(QPoint(x, y));
@@ -201,11 +216,9 @@ void dlgApuChannels::s_toggle_all_clicked(bool checked) {
 		}
 		mode = TRUE;
 	}
-	/*
-	 * non devo forzare cfg->apu.channel[APU_MASTER] perche'
-	 * lo utilizzo per abilitare o disabilitare il suono
-	 * globalmente e viene impostato altrove.
-	 */
+	// non devo forzare cfg->apu.channel[APU_MASTER] perche'
+	// lo utilizzo per abilitare o disabilitare il suono
+	// globalmente e viene impostato altrove.
 	for (i = APU_S1; i <= APU_EXTRA; i++) {
 		cfg->apu.channel[i] = mode;
 	}
