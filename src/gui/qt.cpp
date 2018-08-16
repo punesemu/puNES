@@ -57,6 +57,9 @@
 #endif
 #if defined (__WIN32__)
 #include <QtCore/QtPlugin>
+#if defined (QT5_PLUGIN_QWINDOWS)
+Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin);
+#endif
 #if defined (QT_PLUGIN_QWINDOWSVISTASTYLE)
 Q_IMPORT_PLUGIN(QWindowsVistaStylePlugin)
 #endif

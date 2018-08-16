@@ -25,11 +25,6 @@
 
 double high_resolution_ms(void);
 
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)) && defined (__WIN32__)
-#include <QtCore/QtPlugin>
-Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin);
-#endif
-
 void gui_init(int *argc, char **argv) {
 	qt = {};
 
