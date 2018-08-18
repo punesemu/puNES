@@ -1998,7 +1998,7 @@ static BYTE opengl_shader_glsl_init(GLuint pass, _shader *shd, GLchar *code, con
 			char define[128];
 
 			snprintf(define, sizeof(define), "#define %s_ALIAS\n", sp->alias);
-			strncat(alias_define, define, (size_t) sizeof(define));
+			strncat(alias_define, define, (size_t) sizeof(alias_define) - 1);
 		}
 	}
 

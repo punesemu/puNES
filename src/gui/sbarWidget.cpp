@@ -105,7 +105,7 @@ bool sbarWidget::eventFilter(QObject *obj, QEvent *event) {
 
 // ---------------------------------- Info --------------------------------------------
 
-infoStatusBar::infoStatusBar(QWidget *parent = 0) : QWidget(parent) {
+infoStatusBar::infoStatusBar(QWidget *parent) : QWidget(parent) {
 	hbox = new QHBoxLayout(this);
 	hbox->setContentsMargins(QMargins(0,0,0,0));
 	hbox->setMargin(0);
@@ -162,7 +162,7 @@ void slotItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 	}
 }
 
-slotComboBox::slotComboBox(QWidget *parent = 0) : QComboBox(parent) {
+slotComboBox::slotComboBox(QWidget *parent) : QComboBox(parent) {
 	sid = new slotItemDelegate(this);
 
 	for (int i = 0; i < SAVE_SLOTS; i++) {
@@ -205,7 +205,7 @@ void slotComboBox::paintEvent(QPaintEvent *event) {
 	//painter.drawControl(QStyle::CE_ComboBoxLabel, opt);
 }
 
-stateWidget::stateWidget(Ui::mainWindow *u, QWidget *parent = 0) : QWidget(parent) {
+stateWidget::stateWidget(Ui::mainWindow *u, QWidget *parent) : QWidget(parent) {
 	ui = u;
 
 	hbox = new QHBoxLayout(this);
@@ -291,7 +291,7 @@ void stateWidget::s_load_clicked(bool checked) {
 
 // -------------------------------- Timeline -----------------------------------------
 
-timelineSlider::timelineSlider(QWidget *parent = 0) : QSlider(Qt::Horizontal, parent) {
+timelineSlider::timelineSlider(QWidget *parent) : QSlider(Qt::Horizontal, parent) {
 	setTickPosition(QSlider::TicksAbove);
 	setTickInterval(1);
 	setRange(0, TL_SNAPS - 1);
@@ -309,7 +309,7 @@ int timelineSlider::sizeHandle() {
 	return (szHandle);
 }
 
-timeLine::timeLine(QWidget *parent = 0) : QWidget(parent) {
+timeLine::timeLine(QWidget *parent) : QWidget(parent) {
 	hbox = new QHBoxLayout(this);
 	hbox->setContentsMargins(QMargins(0,0,0,0));
 	hbox->setMargin(0);

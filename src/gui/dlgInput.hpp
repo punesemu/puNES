@@ -65,7 +65,7 @@ class dlgInput : public QDialog, public Ui::Input_dialog {
 		} shcut;
 
 	public:
-		dlgInput(QWidget *parent);
+		dlgInput(QWidget *parent = 0);
 		~dlgInput();
 
 	private:

@@ -30,7 +30,7 @@
 #undef __GFX_FORCE_SCALE__
 #endif
 
-dlgOverscanBorders::dlgOverscanBorders(QWidget *parent = 0) : QDialog(parent) {
+dlgOverscanBorders::dlgOverscanBorders(QWidget *parent) : QDialog(parent) {
 	memset(&data, 0x00, sizeof(data));
 	memcpy(&data.overscan_borders, &overscan_borders, sizeof(overscan_borders));
 

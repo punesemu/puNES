@@ -33,7 +33,7 @@
 #define CHEATFILENAME uQString(info.base_folder) + QString(CHEAT_FOLDER) + "/" +\
 	QFileInfo(uQString(info.rom.file)).completeBaseName() + ".xml"
 
-cheatObject::cheatObject(QObject *parent = 0) : QObject(parent) {
+cheatObject::cheatObject(QObject *parent) : QObject(parent) {
 	clear_list();
 }
 cheatObject::~cheatObject() {}

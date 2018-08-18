@@ -50,7 +50,7 @@ class infoStatusBar: public QWidget {
 		QLabel *label;
 
 	public:
-		infoStatusBar(QWidget *parent);
+		infoStatusBar(QWidget *parent = 0);
 		~infoStatusBar();
 		void update_label();
 };
@@ -62,7 +62,7 @@ class timelineSlider: public QSlider {
 		int szHandle;
 
 	public:
-		timelineSlider(QWidget *parent);
+		timelineSlider(QWidget *parent = 0);
 		~timelineSlider();
 		int sizeHandle();
 };
@@ -77,7 +77,7 @@ class timeLine: public QWidget {
 		QFrame *vline;
 
 	public:
-		timeLine(QWidget *parent);
+		timeLine(QWidget *parent = 0);
 		~timeLine();
 		int value();
 		void setValue(int value, bool s_action);
@@ -110,7 +110,7 @@ class slotComboBox: public QComboBox {
 	Q_OBJECT
 
 	public:
-		slotComboBox(QWidget *parent);
+		slotComboBox(QWidget *parent = 0);
 		~slotComboBox();
 
 	private:
@@ -131,7 +131,7 @@ class stateWidget: public QWidget {
 		QFrame *vline;
 
 	public:
-		stateWidget(Ui::mainWindow *u, QWidget *parent);
+		stateWidget(Ui::mainWindow *u, QWidget *parent = 0);
 		~stateWidget();
 		void retranslateUi();
 

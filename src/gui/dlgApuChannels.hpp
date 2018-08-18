@@ -34,7 +34,7 @@ class dlgApuChannels : public QDialog, public Ui::APU_channels {
 		bool in_update;
 
 	public:
-		dlgApuChannels(QWidget *parent);
+		dlgApuChannels(QWidget *parent = 0);
 		~dlgApuChannels();
 		int update_pos(int startY);
 		void update_dialog();

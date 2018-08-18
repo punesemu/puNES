@@ -48,7 +48,7 @@ class pMenu: public QMenu {
 		mutable QVector<QPoint> actionPoint;
 
 	public:
-		pMenu(QWidget *parent);
+		pMenu(QWidget *parent = 0);
 		~pMenu();
 
 	public:

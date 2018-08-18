@@ -30,7 +30,7 @@
 #include "settings.h"
 #include "gui.h"
 
-dlgVsSystem::dlgVsSystem(QWidget *parent = 0) : QDialog(parent) {
+dlgVsSystem::dlgVsSystem(QWidget *parent) : QDialog(parent) {
 	in_update = false;
 
 	setupUi(this);

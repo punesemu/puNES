@@ -37,7 +37,7 @@ class cheatObject : public QObject {
 		chl_list cheats;
 
 	public:
-		cheatObject(QObject *parent);
+		cheatObject(QObject *parent = 0);
 		~cheatObject();
 		void read_game_cheats();
 		void save_game_cheats();

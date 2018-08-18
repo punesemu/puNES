@@ -34,7 +34,7 @@ class dlgPPUHacks : public QDialog, public Ui::PPU_Hacks {
 		bool in_update;
 
 	public:
-		dlgPPUHacks(QWidget *parent);
+		dlgPPUHacks(QWidget *parent = 0);
 		~dlgPPUHacks();
 
 	protected:

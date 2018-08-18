@@ -31,7 +31,7 @@
 #include "settings.h"
 #include "gui.h"
 
-dlgPPUHacks::dlgPPUHacks(QWidget *parent = 0) : QDialog(parent) {
+dlgPPUHacks::dlgPPUHacks(QWidget *parent) : QDialog(parent) {
 	in_update = false;
 
 	setupUi(this);

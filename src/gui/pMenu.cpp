@@ -32,7 +32,7 @@ class pMenuSharedInfo {
 		~pMenuSharedInfo() {};
 } pmshare;
 
-pMenu::pMenu(QWidget *parent = 0) : QMenu(parent) {
+pMenu::pMenu(QWidget *parent) : QMenu(parent) {
 	newMenagement = false;
 	hasCheckableItems = false;
 	fromMousePressed = false;

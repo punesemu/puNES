@@ -64,7 +64,7 @@ class dlgCheats : public QDialog, public Ui::Cheats {
 		hexSpinBox *hexSpinBox_Compare;
 
 	public:
-		dlgCheats(QWidget *parent, cheatObject *c);
+		dlgCheats(QWidget *parent = 0, cheatObject *c = 0);
 		~dlgCheats();
 
 	protected:

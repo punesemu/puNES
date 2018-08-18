@@ -19,15 +19,14 @@
 #include "dlgUncomp.moc"
 #include <QtGui/QStandardItemModel>
 #include <QtCore/QFileInfo>
-#include "uncompress.h"
 #if defined (__WIN32__)
 #include <libgen.h>
 #endif
 #include "gui.h"
 #include "info.h"
 
-dlgUncomp::dlgUncomp(QWidget *parent = 0, void *uncompress_archive = NULL,
-	BYTE type = UNCOMPRESS_TYPE_ALL) : QDialog(parent) {
+dlgUncomp::dlgUncomp(QWidget *parent, void *uncompress_archive,
+	BYTE type) : QDialog(parent) {
 	_uncompress_archive *archive = (_uncompress_archive *)uncompress_archive;
 	uint32_t index;
 

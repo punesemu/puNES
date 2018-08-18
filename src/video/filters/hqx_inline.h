@@ -48,9 +48,12 @@ static INLINE uint32_t rgb_to_yuv(WORD c) {
 }
 /* Test if there is difference in color */
 static INLINE int yuv_diff(uint32_t yuv1, uint32_t yuv2) {
-	return ((abs((yuv1 & Ymask) - (yuv2 & Ymask)) > trY)
-			|| (abs((yuv1 & Umask) - (yuv2 & Umask)) > trU)
-			|| (abs((yuv1 & Vmask) - (yuv2 & Vmask)) > trV));
+	//return ((abs((yuv1 & Ymask) - (yuv2 & Ymask)) > trY)
+			//|| (abs((yuv1 & Umask) - (yuv2 & Umask)) > trU)
+			//|| (abs((yuv1 & Vmask) - (yuv2 & Vmask)) > trV));
+	return ((((yuv1 & Ymask) - (yuv2 & Ymask)) > trY)
+			|| (((yuv1 & Umask) - (yuv2 & Umask)) > trU)
+			|| (((yuv1 & Vmask) - (yuv2 & Vmask)) > trV));
 }
 static INLINE int Diff(WORD c1, WORD c2) {
 	return yuv_diff(rgb_to_yuv(c1), rgb_to_yuv(c2));

@@ -44,7 +44,7 @@ class dlgOverscanBorders : public QDialog, public Ui::Set_borders {
 		} data;
 
 	public:
-		dlgOverscanBorders(QWidget *parent);
+		dlgOverscanBorders(QWidget *parent = 0);
 		~dlgOverscanBorders();
 
 	private:

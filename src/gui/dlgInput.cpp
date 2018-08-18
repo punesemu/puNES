@@ -41,7 +41,7 @@ typedef struct _cb_ports {
 
 enum dlg_input_shcut_mode { UPDATE_ALL, BUTTON_PRESSED, NO_ACTION = 255 };
 
-dlgInput::dlgInput(QWidget *parent = 0) : QDialog(parent) {
+dlgInput::dlgInput(QWidget *parent) : QDialog(parent) {
 	memset(&data, 0x00, sizeof(data));
 	memcpy(&data.settings, &cfg->input, sizeof(_config_input));
 

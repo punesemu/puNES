@@ -1716,7 +1716,7 @@ static char *nsf_print_number(unsigned int number, BYTE decimal, int color) {
 	for (i = 3 - decimal; i < 3; i++) {
 		if ((is_normal == FALSE) && (ibuff[i] > 0)) {
 			is_normal = TRUE;
-			sprintf(cbuff + strlen(cbuff), nsf_print_color(color));
+			sprintf(cbuff + strlen(cbuff), "%s", nsf_print_color(color));
 		}
 		sprintf(cbuff + strlen(cbuff), "%d", ibuff[i]);
 	}

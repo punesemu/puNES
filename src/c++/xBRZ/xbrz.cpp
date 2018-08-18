@@ -164,7 +164,7 @@ template <class T> inline
 T square(T value) { return value * value; }
 
 
-
+#if 0
 inline
 double distRGB(uint32_t pix1, uint32_t pix2)
 {
@@ -175,8 +175,10 @@ double distRGB(uint32_t pix1, uint32_t pix2)
     //euklidean RGB distance
     return std::sqrt(square(r_diff) + square(g_diff) + square(b_diff));
 }
+#endif
 
 
+#if 0
 inline
 double distYCbCr(uint32_t pix1, uint32_t pix2, double lumaWeight)
 {
@@ -202,6 +204,7 @@ double distYCbCr(uint32_t pix1, uint32_t pix2, double lumaWeight)
     //we skip division by 255 to have similar range like other distance functions
     return std::sqrt(square(lumaWeight * y) + square(c_b) + square(c_r));
 }
+#endif
 
 
 struct DistYCbCrBuffer //30% perf boost compared to distYCbCr()!
@@ -352,26 +355,26 @@ DEF_GETTER(g) DEF_GETTER(h) DEF_GETTER(i)
 #undef DEF_GETTER
 
 #define DEF_GETTER(x, y) template <> inline uint32_t get_##x<ROT_90>(const Kernel_3x3& ker) { return ker.y; }
-DEF_GETTER(a, g) DEF_GETTER(b, d) DEF_GETTER(c, a)
+//DEF_GETTER(a, g) DEF_GETTER(b, d) DEF_GETTER(c, a)
 DEF_GETTER(d, h) DEF_GETTER(e, e) DEF_GETTER(f, b)
 DEF_GETTER(g, i) DEF_GETTER(h, f) DEF_GETTER(i, c)
 #undef DEF_GETTER
 
 #define DEF_GETTER(x, y) template <> inline uint32_t get_##x<ROT_180>(const Kernel_3x3& ker) { return ker.y; }
-DEF_GETTER(a, i) DEF_GETTER(b, h) DEF_GETTER(c, g)
+//DEF_GETTER(a, i) DEF_GETTER(b, h) DEF_GETTER(c, g)
 DEF_GETTER(d, f) DEF_GETTER(e, e) DEF_GETTER(f, d)
 DEF_GETTER(g, c) DEF_GETTER(h, b) DEF_GETTER(i, a)
 #undef DEF_GETTER
 
 #define DEF_GETTER(x, y) template <> inline uint32_t get_##x<ROT_270>(const Kernel_3x3& ker) { return ker.y; }
-DEF_GETTER(a, c) DEF_GETTER(b, f) DEF_GETTER(c, i)
+//DEF_GETTER(a, c) DEF_GETTER(b, f) DEF_GETTER(c, i)
 DEF_GETTER(d, b) DEF_GETTER(e, e) DEF_GETTER(f, h)
 DEF_GETTER(g, a) DEF_GETTER(h, d) DEF_GETTER(i,	g)
 #undef DEF_GETTER
 
 
 //compress four blend types into a single byte
-inline BlendType getTopL   (unsigned char b) { return static_cast<BlendType>(0x3 & b); }
+//inline BlendType getTopL   (unsigned char b) { return static_cast<BlendType>(0x3 & b); }
 inline BlendType getTopR   (unsigned char b) { return static_cast<BlendType>(0x3 & (b >> 2)); }
 inline BlendType getBottomR(unsigned char b) { return static_cast<BlendType>(0x3 & (b >> 4)); }
 inline BlendType getBottomL(unsigned char b) { return static_cast<BlendType>(0x3 & (b >> 6)); }

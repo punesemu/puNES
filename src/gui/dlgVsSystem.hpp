@@ -34,7 +34,7 @@ class dlgVsSystem : public QDialog, public Ui::Vs_System {
 		bool in_update;
 
 	public:
-		dlgVsSystem(QWidget *parent);
+		dlgVsSystem(QWidget *parent = 0);
 		~dlgVsSystem();
 
 	protected:

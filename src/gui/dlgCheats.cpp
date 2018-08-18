@@ -44,7 +44,7 @@ enum cheat_table_rows {
 	CR_ENABLED_COMPARE
 };
 
-dlgCheats::dlgCheats(QWidget *parent = 0, cheatObject *c = 0) : QDialog(parent) {
+dlgCheats::dlgCheats(QWidget *parent, cheatObject *c) : QDialog(parent) {
 	mod = new cheatObject(this);
 	org = c;
 	new_mode = false;

@@ -27,7 +27,7 @@
 #include "conf.h"
 #include "gui.h"
 
-dlgApuChannels::dlgApuChannels(QWidget *parent = 0) : QDialog(parent) {
+dlgApuChannels::dlgApuChannels(QWidget *parent) : QDialog(parent) {
 	in_update = false;
 
 	setupUi(this);

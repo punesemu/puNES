@@ -26,6 +26,7 @@
 #include <QtWidgets/QDialog>
 #endif
 #include "common.h"
+#include "uncompress.h"
 #include "dlgUncomp.hh"
 
 class dlgUncomp : public QDialog, public Ui::Uncompress_selection {
@@ -35,7 +36,8 @@ class dlgUncomp : public QDialog, public Ui::Uncompress_selection {
 		int selected;
 
 	public:
-		dlgUncomp(QWidget *parent, void *uncompress_archive, BYTE type);
+		dlgUncomp(QWidget *parent = 0, void *uncompress_archive = NULL,
+			BYTE type = UNCOMPRESS_TYPE_ALL);
 		~dlgUncomp();
 
 	private:
