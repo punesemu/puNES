@@ -222,11 +222,6 @@ BYTE snd_playback_start(void) {
 		cbd.read = (SBYTE *) cbd.start;
 		// punto alla fine del buffer
 		cbd.end = cbd.read + snd.buffer.size;
-		// creo il lock
-		if (pthread_mutex_init(&loop.lock, NULL) != 0) {
-			fprintf(stderr, "Unable to allocate the mutex\n");
-			goto snd_playback_start_error;
-		}
 		// azzero completamente i buffers
 		memset(cbd.start, 0x00, snd.buffer.size);
 		// azzero completamente il buffer del silenzio
@@ -826,7 +821,7 @@ static void *alsa_playback_loop(void *data) {
 		snd_playback_unlock(NULL);
  	}
 
-	pthread_exit(EXIT_OK);
+	pthread_exit((void *)EXIT_OK);
 }
 static void alsa_playback_loop_in_pause(void) {
 	if (loop.action != AT_UNINITIALIZED) {
