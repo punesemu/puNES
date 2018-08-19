@@ -132,6 +132,9 @@ BYTE snd_playback_start(void) {
 	// se il thread del loop e' gia' in funzione lo metto in pausa
 	if (loop.action == AT_RUN) {
 		alsa_playback_loop_in_pause();
+	}
+
+	if (loop.action != AT_UNINITIALIZED) {
 		snd_playback_lock(NULL);
 	}
 
