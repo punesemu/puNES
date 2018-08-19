@@ -113,6 +113,9 @@ BYTE snd_playback_start(void) {
 	// se il thread del loop e' gia' in funzione lo metto in pausa
 	if (loop.action == AT_RUN) {
 		sndio_playback_loop_in_pause();
+	}
+
+	if (loop.action != AT_UNINITIALIZED) {
 		snd_playback_lock(NULL);
 	}
 
@@ -342,91 +345,91 @@ static void *sndio_playback_loop(void *data) {
 		_callback_data *cache = (_callback_data *) th->cache;
 
 		if (th->action == AT_STOP) {
-				th->in_run = FALSE;
-				break;
-			} else if (th->action == AT_PAUSE) {
-				th->in_run = FALSE;
-				gui_sleep(10);
+			th->in_run = FALSE;
+			break;
+		} else if (th->action == AT_PAUSE) {
+			th->in_run = FALSE;
+			gui_sleep(10);
+			continue;
+		}
+
+		th->in_run = TRUE;
+
+		{
+			int nfds, event;
+
+			if ((nfds = sio_pollfd(sndio.playback, sndio.pfds, POLLOUT)) <= 0) {
+				fprintf(stderr, "sio_pollfd() failed\n");
 				continue;
 			}
 
-			th->in_run = TRUE;
-
-			{
-				int nfds, event;
-
-				if ((nfds = sio_pollfd(sndio.playback, sndio.pfds, POLLOUT)) <= 0) {
-					fprintf(stderr, "sio_pollfd() failed\n");
+			if (poll(sndio.pfds, nfds, -1) < 0) {
+				if (errno == EINTR) {
 					continue;
 				}
-
-				if (poll(sndio.pfds, nfds, -1) < 0) {
-					if (errno == EINTR) {
-						continue;
-					}
-					perror("poll");
-					continue;
-				}
-
-				event = sio_revents(sndio.playback, sndio.pfds);
-
-				if (event & POLLHUP) {
-					continue;
-				}
-
-				if ((event & POLLOUT) == 0) {
-					continue;
-				}
+				perror("poll");
+				continue;
 			}
 
-			snd_playback_lock(NULL);
+			event = sio_revents(sndio.playback, sndio.pfds);
 
-			avail = sndio.psize;
-			len = avail * snd.channels * sizeof(*cache->write);
-
-			if ((info.no_rom | info.turn_off | info.pause) || (snd.buffer.start == FALSE) ||
-				(fps.fast_forward == TRUE)) {
-				sndio_wr_buf(th->sndio, (void *) cache->silence, len);
-			} else if (cache->bytes_available < len) {
-				sndio_wr_buf(th->sndio, (void *) cache->silence, len);
-				snd.out_of_sync++;
-			} else {
-				wave_write((SWORD *) cache->read, avail);
-				sndio_wr_buf(th->sndio, (void *) cache->read, len);
-
-				cache->bytes_available -= len;
-				cache->samples_available -= avail;
-
-				if ((cache->read += len) >= cache->end) {
-					cache->read = (SBYTE *) cache->start;
-				}
+			if (event & POLLHUP) {
+				continue;
 			}
+
+			if ((event & POLLOUT) == 0) {
+				continue;
+			}
+		}
+
+		snd_playback_lock(NULL);
+
+		avail = sndio.psize;
+		len = avail * snd.channels * sizeof(*cache->write);
+
+		if ((info.no_rom | info.turn_off | info.pause) || (snd.buffer.start == FALSE) ||
+			(fps.fast_forward == TRUE)) {
+			sndio_wr_buf(th->sndio, (void *) cache->silence, len);
+		} else if (cache->bytes_available < len) {
+			sndio_wr_buf(th->sndio, (void *) cache->silence, len);
+			snd.out_of_sync++;
+		} else {
+			wave_write((SWORD *) cache->read, avail);
+			sndio_wr_buf(th->sndio, (void *) cache->read, len);
+
+			cache->bytes_available -= len;
+			cache->samples_available -= avail;
+
+			if ((cache->read += len) >= cache->end) {
+				cache->read = (SBYTE *) cache->start;
+			}
+		}
 
 #if !defined (RELEASE)
-			uint32_t request = avail;
+		uint32_t request = avail;
 
-			if ((gui_get_ms() - th->tick) >= 250.0f) {
-				th->tick = gui_get_ms();
-				if (info.snd_info == TRUE)
-				fprintf(stderr, "snd : %6d %6d %d %6d %d %6d %6d %f %3d %f %4s\r",
-					request,
-					avail,
-					len,
-					fps.total_frames_skipped,
-					cache->samples_available,
-					cache->bytes_available,
-					snd.out_of_sync,
-					snd.frequency,
-					(int) framerate.value,
-					machine.ms_frame,
-					" ");
-			}
+		if ((gui_get_ms() - th->tick) >= 250.0f) {
+			th->tick = gui_get_ms();
+			if (info.snd_info == TRUE)
+			fprintf(stderr, "snd : %6d %6d %d %6d %d %6d %6d %f %3d %f %4s\r",
+				request,
+				avail,
+				len,
+				fps.total_frames_skipped,
+				cache->samples_available,
+				cache->bytes_available,
+				snd.out_of_sync,
+				snd.frequency,
+				(int) framerate.value,
+				machine.ms_frame,
+				" ");
+		}
 #endif
 
-			snd_playback_unlock(NULL);
-	 	}
+		snd_playback_unlock(NULL);
+ 	}
 
-		pthread_exit((void *)EXIT_OK);
+	pthread_exit((void *)EXIT_OK);
 }
 static void sndio_playback_loop_in_pause(void) {
 	if (loop.action != AT_UNINITIALIZED) {
