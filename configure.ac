@@ -108,14 +108,29 @@ AS_CASE(["$host_os"],
 		CUSTOMDEFINES="${CUSTOMDEFINES} -DWITH_OPENGL -DGLEW_STATIC"
 		my_CPPFLAGS="${my_CPPFLAGS} -I${TOP_SRCDIR}/src/gui/linux -I${TOP_SRCDIR}/src/video/sdl"
 		linux=yes
+		openbsd=no
 		windows=no
 		with_d3d9=no
 		with_opengl=yes
+	],
+	[openbsd*], [
+		MOCDEFINES="${MOCDEFINES} -D__OpenBSD__"
+		CUSTOMDEFINES="${CUSTOMDEFINES} -DWITH_OPENGL -DGLEW_STATIC"
+		my_CPPFLAGS="${my_CPPFLAGS} -I${TOP_SRCDIR}/src/gui/openbsd -I${TOP_SRCDIR}/src/video/sdl"
+		linux=no
+		openbsd=yes
+		windows=no
+		with_d3d9=no
+		with_opengl=yes
+		my_CXXFLAGS="-fmessage-length=0 -finline-functions"
+		export CC
+		export CXX
 	],
 	[mingw32*], [
 		MOCDEFINES="${MOCDEFINES} -D__WIN32__"
 		my_CPPFLAGS="${my_CPPFLAGS} -I${TOP_SRCDIR}/src/gui/windows"
 		linux=no
+		openbsd=no
 		windows=yes
 		AS_IF([test "x$with_opengl" = xyes], [
 			with_d3d9=no
@@ -142,6 +157,7 @@ AS_CASE(["$host_os"],
 )
 
 AM_CONDITIONAL(LINUX,[test "x$linux" = xyes])
+AM_CONDITIONAL(OPENBSD,[test "x$openbsd" = xyes])
 AM_CONDITIONAL(WINDOWS,[test "x$windows" = xyes])
 AM_CONDITIONAL(ENAB_RELEASE,[test "x$enable_release" = xyes])
 AM_CONDITIONAL(ENAB_QT5,[test "x$enable_qt5" = xyes])
@@ -864,6 +880,37 @@ void blah(){
 	my_LIBS="${my_LIBS} ${alsa_LIBS}"
 ])
 
+AM_COND_IF([OPENBSD], [
+	AM_COND_IF([WITH_OPENGL_CG], [
+		PKG_CHECK_MODULES(nvidia_cg_toolkit_pkgconfig, [nvidia-cg-toolkit-gl], [
+			CUSTOMDEFINES="${CUSTOMDEFINES} -DWITH_OPENGL_CG"
+			my_CPPFLAGS="${my_CPPFLAGS} ${nvidia_cg_toolkit_pkgconfig_CFLAGS}"
+			my_LIBS="${my_LIBS} ${nvidia_cg_toolkit_pkgconfig_LIBS}"
+		], [
+			# Check if NVIDIA CG toolkit is present without pkg-config
+			AC_MSG_CHECKING([NVIDIA CG toolkit is present])
+			AC_COMPILE_IFELSE([AC_LANG_SOURCE([
+#include "Cg/cg.h"
+#include "Cg/cgGL.h"
+void blah(){
+	CGcontext cgx = cgCreateContext();
+}])
+			], [
+				AC_MSG_RESULT([yes])
+				CUSTOMDEFINES="${CUSTOMDEFINES} -DWITH_OPENGL_CG"
+				my_LIBS="${my_LIBS} -lCg -lCgGL"
+			], [
+				AC_MSG_RESULT([no])
+			])
+		])
+	])
+	AC_CHECK_LIB(sndio, main, [
+		my_LIBS="${my_LIBS} -lsndio"
+	], [
+		AC_MSG_ERROR([libsdnio.so not found])
+	])
+])
+
 AS_CASE(["$host_os"],
 	[mingw32*], [
 		AC_CHECK_TOOL(WINDRES, windres, [no])
@@ -893,6 +940,12 @@ AC_SUBST(LIB7ZIP_SRC)
 AC_SUBST(LIB7ZIP_LIBS)
 
 # The End
+AM_COND_IF([LINUX], [
+	my_LIBS="${my_LIBS} -ldl -lpthread"
+])
+AM_COND_IF([OPENBSD], [
+	my_LIBS="${my_LIBS} -lstdc++ -lpthread"
+])
 AM_COND_IF([WINDOWS], [
 	AM_COND_IF([ENAB_RELEASE], [
 		my_LDFLAGS="${my_LDFLAGS} -Wl,-subsystem,windows"
@@ -901,9 +954,6 @@ AM_COND_IF([WINDOWS], [
 	])
 	my_LDFLAGS="${my_LDFLAGS} -static-libgcc -static-libstdc++"
 	my_LIBS="${my_LIBS} -lwinmm -luuid -lole32 -lws2_32 -ladvapi32 -lshell32 -luser32 -lkernel32 -lgdi32 -loleaut32 -lcomdlg32 -limm32 -lwinspool"
-])
-AM_COND_IF([LINUX], [
-	my_LIBS="${my_LIBS} -ldl -lpthread"
 ])
 
 AC_SUBST(CUSTOMDEFINES)

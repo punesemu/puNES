@@ -1,55 +1,55 @@
 application.cpp: designer/application.qrc
-	$(RCC) $< -name resources -o $@
+	$(RCC) $(srcdir)/designer/application.qrc -name resources -o $@
 
 cheatObject.moc: cheatObject.hpp
-	$(MOC) $< $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
+	$(MOC) $(srcdir)/cheatObject.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 dlgApuChannels.moc: dlgApuChannels.hpp
-	$(MOC) $< $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
+	$(MOC) $(srcdir)/dlgApuChannels.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 dlgCheats.moc: dlgCheats.hpp
-	$(MOC) $< $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
+	$(MOC) $(srcdir)/dlgCheats.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 dlgInput.moc: dlgInput.hpp
-	$(MOC) $< $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
+	$(MOC) $(srcdir)/dlgInput.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 dlgOverscanBorders.moc: dlgOverscanBorders.hpp
-	$(MOC) $< $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
+	$(MOC) $(srcdir)/dlgOverscanBorders.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 dlgPPUHacks.moc: dlgPPUHacks.hpp
-	$(MOC) $< $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
+	$(MOC) $(srcdir)/dlgPPUHacks.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 dlgStdPad.moc: dlgStdPad.hpp
-	$(MOC) $< $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
+	$(MOC) $(srcdir)/dlgStdPad.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 dlgUncomp.moc: dlgUncomp.hpp
-	$(MOC) $< $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
+	$(MOC) $(srcdir)/dlgUncomp.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 dlgVsSystem.moc: dlgVsSystem.hpp
-	$(MOC) $< $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
+	$(MOC) $(srcdir)/dlgVsSystem.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 mainWindow.moc: mainWindow.hpp
-	$(MOC) $< $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
+	$(MOC) $(srcdir)/mainWindow.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 pMenu.moc: pMenu.hpp
-	$(MOC) $< $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
+	$(MOC) $(srcdir)/pMenu.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 pStyle.moc: pStyle.hpp
-	$(MOC) $< $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
+	$(MOC) $(srcdir)/pStyle.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 sbarWidget.moc: sbarWidget.hpp
-	$(MOC) $< $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
+	$(MOC) $(srcdir)/sbarWidget.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 screenWidget.moc: screenWidget.hpp
-	$(MOC) $< $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
+	$(MOC) $(srcdir)/screenWidget.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 settingsObject.moc: settingsObject.hpp
-	$(MOC) $< $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
+	$(MOC) $(srcdir)/settingsObject.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 
 application.hh: designer/application.ui
-	$(UIC) $< -o $@
+	$(UIC) $(srcdir)/designer/application.ui -o $@
 dlgOverscanBorders.hh: designer/dlgOverscanBorders.ui
-	$(UIC) $< -o $@
+	$(UIC) $(srcdir)/designer/dlgOverscanBorders.ui -o $@
 dlgApuChannels.hh: designer/dlgApuChannels.ui
-	$(UIC) $< -o $@
+	$(UIC) $(srcdir)/designer/dlgApuChannels.ui -o $@
 dlgStdPad.hh: designer/dlgStdPad.ui
-	$(UIC) $< -o $@
+	$(UIC) $(srcdir)/designer/dlgStdPad.ui -o $@
 dlgCheats.hh: designer/dlgCheats.ui
-	$(UIC) $< -o $@
+	$(UIC) $(srcdir)/designer/dlgCheats.ui -o $@
 dlgUncomp.hh: designer/dlgUncomp.ui
-	$(UIC) $< -o $@
+	$(UIC) $(srcdir)/designer/dlgUncomp.ui -o $@
 dlgVsSystem.hh: designer/dlgVsSystem.ui
-	$(UIC) $< -o $@
+	$(UIC) $(srcdir)/designer/dlgVsSystem.ui -o $@
 dlgPPUHacks.hh: designer/dlgPPUHacks.ui
-	$(UIC) $< -o $@
+	$(UIC) $(srcdir)/designer/dlgPPUHacks.ui -o $@
 dlgInput.hh: designer/dlgInput.ui
-	$(UIC) $< -o $@
+	$(UIC) $(srcdir)/designer/dlgInput.ui -o $@
 
 clean-local:
 	rm -f application.cpp *.{hh,moc}
@@ -136,6 +136,18 @@ libgui_a_SOURCES += \
 	linux/jstick.c \
 	linux/jstick.h \
 	linux/os_linux.h
+
+if ENAB_QT5
+AM_CXXFLAGS = -fPIC
+endif
+
+endif
+
+if OPENBSD
+libgui_a_SOURCES += \
+	openbsd/jstick.c \
+	openbsd/jstick.h \
+	openbsd/os_openbsd.h
 
 if ENAB_QT5
 AM_CXXFLAGS = -fPIC

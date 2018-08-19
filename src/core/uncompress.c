@@ -18,11 +18,15 @@
 
 #include <stdlib.h>
 #include <string.h>
+#if defined (__OpenBSD__)
+#include <stdio.h>
+#include <libgen.h>
+#endif
 #include "uncompress.h"
 #include "info.h"
 #include "c++/l7zip/l7z.h"
 #include "gui.h"
-#if defined (__linux__)
+#if defined (__unix__)
 #define MINIZ_NO_ARCHIVE_WRITING_APIS
 #define MINIZ_NO_TIME
 #include "miniz.h"
@@ -36,7 +40,7 @@ static BYTE (*uncompress_examine_archive)(_uncompress_archive *archive);
 static BYTE (*uncompress_extract_from_archive)(_uncompress_archive *archive, uint32_t selected, BYTE type);
 static uTCHAR *(*uncompress_item_file_name)(_uncompress_archive *archive, uint32_t selected, BYTE type);
 
-#if defined (__linux__)
+#if defined (__unix__)
 // zip
 static BYTE mz_zip_examine_archive(_uncompress_archive *archive);
 static BYTE mz_zip_extract_from_archive(_uncompress_archive *archive, uint32_t selected, BYTE type);
@@ -84,7 +88,7 @@ _uncompress_archive *uncompress_archive_alloc(uTCHAR *file, BYTE *rc) {
 		uncompress_examine_archive = l7z_examine_archive;
 		uncompress_extract_from_archive = l7z_extract_from_archive;
 		uncompress_item_file_name = l7z_item_file_name;
-#if defined (__linux__)
+#if defined (__unix__)
 	} else if (!ustrcasecmp(ext, uL(".zip"))) {
 		uncompress_examine_archive = mz_zip_examine_archive;
 		uncompress_extract_from_archive = mz_zip_extract_from_archive;
@@ -280,7 +284,7 @@ static uTCHAR *uncompress_storage_index_file_name(uint32_t index) {
 	return (sitem->file);
 }
 
-#if defined (__linux__)
+#if defined (__unix__)
 static BYTE mz_zip_examine_archive(_uncompress_archive *archive) {
 	mz_zip_archive mzarchive;
 	unsigned int a;

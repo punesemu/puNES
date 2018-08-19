@@ -215,7 +215,7 @@ stateWidget::stateWidget(Ui::mainWindow *u, QWidget *parent) : QWidget(parent) {
 
 	setLayout(hbox);
 
-#if defined (__linux__)
+#if defined (__unix__)
 	vline = new QFrame(this);
 	vline->setFrameShape(QFrame::VLine);
 	vline->setFrameShadow(QFrame::Plain);
@@ -263,7 +263,7 @@ void stateWidget::retranslateUi() {
 	load->setText(tr("Load"));
 	load->setFixedWidth(QLabel(load->text()).sizeHint().width() + 12);
 
-#if defined (__linux__)
+#if defined (__unix__)
 	setFixedWidth(vline->width() + SPACING +
 			save->width() + SPACING +
 			slot->width() + SPACING +
@@ -317,7 +317,7 @@ timeLine::timeLine(QWidget *parent) : QWidget(parent) {
 
 	setLayout(hbox);
 
-#if defined (__linux__)
+#if defined (__unix__)
 	vline = new QFrame(this);
 	vline->setFrameShape(QFrame::VLine);
 	vline->setFrameShadow(QFrame::Plain);
@@ -388,7 +388,7 @@ void timeLine::retranslateUi() {
 
 	label->setFixedWidth(QLabel(tr("-00 sec")).sizeHint().width());
 
-#if defined (__linux__)
+#if defined (__unix__)
 	setFixedWidth(vline->width() + SPACING +
 			label->width() + SPACING +
 			slider->width());//+  (slider->sizeHandle() / 2));

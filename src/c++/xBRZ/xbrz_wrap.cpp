@@ -18,7 +18,7 @@
 
 #include "c++/xBRZ/xbrz_wrap.h"
 #include "c++/xBRZ/xbrz.h"
-#if defined (__linux__)
+#if defined (__unix__)
 #include <pthread.h>
 #endif
 
@@ -33,11 +33,11 @@ extern "C" void xbrz_scale(BYTE factor, const WORD *src, uint32_t *trg, uint32_t
 
 extern "C" void xbrz_scale_mt(BYTE factor, const WORD *src, uint32_t *trg, uint32_t *palette,
 		int width, int height) {
-#if defined (__WIN32__)
+#if defined (__unix__)
+	pthread_t thread[XBRZ_NUM_SLICE];
+#elif defined (__WIN32__)
 	HANDLE thread[XBRZ_NUM_SLICE];
 	DWORD id[XBRZ_NUM_SLICE];
-#elif defined (__linux__)
-	pthread_t thread[XBRZ_NUM_SLICE];
 #endif
 	_xbrz_wrap param[XBRZ_NUM_SLICE];
 	int i;
@@ -55,21 +55,21 @@ extern "C" void xbrz_scale_mt(BYTE factor, const WORD *src, uint32_t *trg, uint3
 	#elif defined (WITH_OPENGL)
 		param[i].colFmt = (int) xbrz::ColorFormat::RGB;
 	#endif
-#if defined (__WIN32__)
-		thread[i] = CreateThread(NULL, 0, xbrz::scale_mt, &param[i], 0, &id[i]);
-#elif defined (__linux__)
+#if defined (__unix__)
 		pthread_create(&thread[i], NULL, xbrz::scale_mt, &param[i]);
+#elif defined (__WIN32__)
+		thread[i] = CreateThread(NULL, 0, xbrz::scale_mt, &param[i], 0, &id[i]);
 #endif
 	}
 
-#if defined (__WIN32__)
+#if defined (__unix__)
+	for (i = 0; i < XBRZ_NUM_SLICE; i++) {
+		pthread_join(thread[i], NULL);
+	}
+#elif defined (__WIN32__)
 	WaitForMultipleObjects(XBRZ_NUM_SLICE, thread, TRUE, INFINITE);
 	for (i = 0; i < XBRZ_NUM_SLICE; i++) {
 		CloseHandle(thread[i]);
-	}
-#elif defined (__linux__)
-	for (i = 0; i < XBRZ_NUM_SLICE; i++) {
-		pthread_join(thread[i], NULL);
 	}
 #endif
 }

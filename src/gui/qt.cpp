@@ -543,8 +543,10 @@ static void gui_enable_pmenu(QWidget *parent, QAction *action, QList<pMenu*> *pm
 	}
 }
 
-#if defined (__WIN32__)
-#include "os_windows.h"
-#else
+#if defined (__linux__)
 #include "os_linux.h"
+#elif defined (__OpenBSD__)
+#include "os_openbsd.h"
+#elif defined (__WIN32__)
+#include "os_windows.h"
 #endif
