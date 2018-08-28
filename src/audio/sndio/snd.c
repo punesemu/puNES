@@ -145,8 +145,9 @@ BYTE snd_playback_start(void) {
 	}
 
 	if ((sndio.playback = sio_open(SIO_DEVANY, SIO_PLAY, TRUE)) == NULL) {
-		fprintf(stderr, "sio_open() failed\n");
-		goto snd_playback_start_error;
+		fprintf(stderr, "sio_open() failed : audio disabled\n");
+		cfg->apu.channel[APU_MASTER] = 0;
+		return (EXIT_OK);
 	}
 
 	if ((sndio.pfds = calloc(sio_nfds(sndio.playback), sizeof(struct pollfd))) == NULL) {
