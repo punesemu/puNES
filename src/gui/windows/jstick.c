@@ -402,13 +402,13 @@ void js_control(_js *joy, _port *port) {
 	_jstick_device *jdev;
 	BYTE mode = 0;
 
-#define	js_control_button(index, bts)\
+#define js_control_button(index, bts)\
 	js_update_button(joy, port, JOY_ST_CTRL, index, bts, &mode)
-#define	js_control_axis_float(index, axs)\
+#define js_control_axis_float(index, axs)\
 	js_update_axis_float(joy, port, JOY_ST_CTRL, index, axs, &mode)
-#define	js_control_axis(index, axs)\
+#define js_control_axis(index, axs)\
 	js_update_axis(joy, port, JOY_ST_CTRL, index, axs, &mode)
-#define	js_control_pov(index, pov)\
+#define js_control_pov(index, pov)\
 	js_update_pov(joy, port, JOY_ST_CTRL, index, pov, &mode)
 
 	js_lock();
@@ -624,6 +624,7 @@ BYTE js_is_null(GUID *guid) {
 void js_set_id(GUID *guid, int dev) {
 	if (dev >= jstick.jdd.count) {
 		memcpy(guid, &IID_ZeroGUID, sizeof(GUID));
+		return;
 	}
 	memcpy(guid, &jstick.jdd.devices[dev].guid, sizeof(GUID));
 }
@@ -664,12 +665,12 @@ DBWORD js_read_in_dialog(GUID *guid, int fd) {
 	float fl, x, y;
 	int i;
 
-#define	js_read_in_dialog_button(index, bts)\
+#define js_read_in_dialog_button(index, bts)\
 	if (bts) {\
 		value = index | 0x400;\
 		goto js_read_in_dialog_exit;\
 	}
-#define	js_read_in_dialog_axis_float(index, axs)\
+#define js_read_in_dialog_axis_float(index, axs)\
 	fl = axs;\
 	if (fl >= JOY_AXIS_SENSIBILITY_DIALOG) {\
 		value = (index << 1) + 1 + 1;\
@@ -678,9 +679,9 @@ DBWORD js_read_in_dialog(GUID *guid, int fd) {
 		value = (index << 1) + 1;\
 		goto js_read_in_dialog_exit;\
 	}
-#define	js_read_in_dialog_axis(index, axs)\
+#define js_read_in_dialog_axis(index, axs)\
 	js_read_in_dialog_axis_float(index, JOY_AXIS_TO_FLOAT(axs))
-#define	js_read_in_dialog_pov(index, pov)\
+#define js_read_in_dialog_pov(index, pov)\
 	if (LOWORD(pov) == 0xFFFF) {\
 		x = y = 0.0f;\
 	} else {\
@@ -858,13 +859,13 @@ BYTE js_shcut_read(_js_sch *js_sch) {
 		js_unlock();\
 		return (EXIT_OK);\
 	}
-#define	js_shcut_read_button(index, bts)\
+#define js_shcut_read_button(index, bts)\
 	_js_shcut_read_control(js_update_button, index, bts)
-#define	js_shcut_read_axis_float(index, axs)\
+#define js_shcut_read_axis_float(index, axs)\
 	_js_shcut_read_control(js_update_axis_float, index, axs)
-#define	js_shcut_read_axis(index, axs)\
+#define js_shcut_read_axis(index, axs)\
 	_js_shcut_read_control(js_update_axis, index, axs)
-#define	js_shcut_read_pov(index, pov)\
+#define js_shcut_read_pov(index, pov)\
 	_js_shcut_read_control(js_update_pov, index, pov)
 
 	js_sch->value = 0;

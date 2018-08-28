@@ -912,6 +912,135 @@ void blah(){
 ])
 
 AS_CASE(["$host_os"],
+	[*bsd*], [
+		AC_CHECK_LIB(usbhid, hid_init, have_libusbhid=yes)
+		AS_IF([test "x$have_libusbhid" = xyes], [
+			AC_CHECK_HEADER(usbhid.h, [CUSTOMDEFINES="${CUSTOMDEFINES} -DHAVE_USBHID_H"])
+			AC_CHECK_HEADER(libusbhid.h, [CUSTOMDEFINES="${CUSTOMDEFINES} -DHAVE_LIBUSBHID_H"])
+			my_LIBS="${my_LIBS} -lusbhid"
+		], [
+			AC_CHECK_HEADER(usb.h, [CUSTOMDEFINES="${CUSTOMDEFINES} -DHAVE_USB_H"])
+			AC_CHECK_HEADER(libusb.h, [CUSTOMDEFINES="${CUSTOMDEFINES} -DHAVE_LIBUSB_H"])
+			AC_CHECK_LIB(usb, hid_init, [my_LIBS="${my_LIBS} -lusb"])
+		])
+
+		save_CFLAGS="${CFLAGS}"
+		CFLAGS="${CFLAGS} ${CUSTOMDEFINES}"
+
+		have_usbhid=no
+		AC_MSG_CHECKING([for usbhid])
+		AC_TRY_COMPILE([
+			#include <sys/types.h>
+			#if defined(HAVE_USB_H)
+			#include <usb.h>
+			#endif
+			#ifdef __DragonFly__
+			# include <bus/usb/usb.h>
+			# include <bus/usb/usbhid.h>
+			#else
+			# include <dev/usb/usb.h>
+			# include <dev/usb/usbhid.h>
+			#endif
+			#if defined(HAVE_USBHID_H)
+			#include <usbhid.h>
+			#elif defined(HAVE_LIBUSB_H)
+			#include <libusb.h>
+			#elif defined(HAVE_LIBUSBHID_H)
+			#include <libusbhid.h>
+			#endif
+		], [
+			struct report_desc *repdesc;
+			struct usb_ctl_report *repbuf;
+			hid_kind_t hidkind;
+		], [
+			have_usbhid=yes
+		])
+		AC_MSG_RESULT([$have_usbhid])
+
+		AS_IF([test "x$have_usbhid" = xyes], [
+			have_usbhid_ucr_data=no
+			AC_MSG_CHECKING([for ucr_data member of usb_ctl_report])
+			AC_TRY_COMPILE([
+				#include <sys/types.h>
+				#if defined(HAVE_USB_H)
+				#include <usb.h>
+				#endif
+				#ifdef __DragonFly__
+				# include <bus/usb/usb.h>
+				# include <bus/usb/usbhid.h>
+				#else
+				# include <dev/usb/usb.h>
+				# include <dev/usb/usbhid.h>
+				#endif
+				#if defined(HAVE_USBHID_H)
+				#include <usbhid.h>
+				#elif defined(HAVE_LIBUSB_H)
+				#include <libusb.h>
+				#elif defined(HAVE_LIBUSBHID_H)
+				#include <libusbhid.h>
+				#endif
+			], [
+				struct usb_ctl_report buf;
+				if (buf.ucr_data) { }
+			], [
+				have_usbhid_ucr_data=yes
+			])
+			AS_IF([test "x$have_usbhid_ucr_data" = xyes], [
+				CUSTOMDEFINES="${CUSTOMDEFINES} -DUSBHID_UCR_DATA"
+			])
+			AC_MSG_RESULT([$have_usbhid_ucr_data])
+
+			have_usbhid_new=no
+			AC_MSG_CHECKING([for new usbhid API])
+			AC_TRY_COMPILE([
+				#include <sys/types.h>
+				#if defined(HAVE_USB_H)
+				#include <usb.h>
+				#endif
+				#ifdef __DragonFly__
+				#include <bus/usb/usb.h>
+				#include <bus/usb/usbhid.h>
+				#else
+				#include <dev/usb/usb.h>
+				#include <dev/usb/usbhid.h>
+				#endif
+				#if defined(HAVE_USBHID_H)
+				#include <usbhid.h>
+				#elif defined(HAVE_LIBUSB_H)
+				#include <libusb.h>
+				#elif defined(HAVE_LIBUSBHID_H)
+				#include <libusbhid.h>
+				#endif
+			], [
+				report_desc_t d;
+				hid_start_parse(d, 1, 1);
+			], [
+				have_usbhid_new=yes
+			])
+			AS_IF([test "x$have_usbhid_new" = xyes], [
+				CUSTOMDEFINES="${CUSTOMDEFINES} -DUSBHID_NEW"
+			])
+			AC_MSG_RESULT([$have_usbhid_new])
+
+			have_machine_joystick=no
+			AC_MSG_CHECKING([for struct joystick in machine/joystick.h])
+			AC_TRY_COMPILE([
+				#include <machine/joystick.h>
+			], [
+				struct joystick t;
+			], [
+				have_machine_joystick=yes
+			])
+			AS_IF([test "x$have_machine_joystick" = xyes], [
+				CUSTOMDEFINES="${CUSTOMDEFINES} -DUSBHID_MACHINE_JOYSTICK"
+			])
+			AC_MSG_RESULT([$have_machine_joystick])
+		])
+		CFLAGS="$save_CFLAGS"
+	]
+)
+
+AS_CASE(["$host_os"],
 	[mingw32*], [
 		AC_CHECK_TOOL(WINDRES, windres, [no])
 	], [

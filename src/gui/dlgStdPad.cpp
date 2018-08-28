@@ -335,7 +335,7 @@ void dlgStdPad::js_press_event() {
 	}
 	data.joy.value = 0;
 	data.joy.timer->start(30);
-#elif defined (__WIN32__)
+#else
 	data.joy.value = 0;
 	data.joy.timer->start(150);
 #endif

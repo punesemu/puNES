@@ -826,7 +826,7 @@ void dlgInput::s_shortcut_clicked(bool checked) {
 		}
 		shcut.joy.value = 0;
 		shcut.joy.timer->start(30);
-#elif defined (__WIN32__)
+#else
 		shcut.joy.value = 0;
 		shcut.joy.timer->start(150);
 #endif

@@ -22,34 +22,20 @@
 #include "common.h"
 #include "input.h"
 
+#define JOY_DEV_PATH "/dev/joy"
+#define UHID_DEV_PATH "/dev/uhid"
+#define USB_DEV_PATH "/dev/usb"
 #define name_to_jsv(name) js_from_name(name, jsv_list, LENGTH(jsv_list))
-#define name_to_jsn(name) js_from_name(name, jsn_list, LENGTH(jsn_list))
+#define name_to_jsn(name) js_from_joyname(name)
 #define jsv_to_name(jsvl) js_to_name(jsvl, jsv_list, LENGTH(jsv_list))
-#define jsn_to_name(jsvl) js_to_name(jsvl, jsn_list, LENGTH(jsn_list))
-
-enum {
-	CENTER,
-	PLUS = 0x7FFF
-};
+#define jsn_to_name(jsvl) js_to_joyname(jsvl)
 
 typedef struct _js {
-	uTCHAR dev[30];
-	SDBWORD fd;
-	WORD open_try;
-	SWORD last[16];
-	SWORD last_value[16];
+	BYTE inited;
+	BYTE id;
+	void *jdev;
 	BYTE (*input_decode_event)(BYTE mode, BYTE autorepeat, DBWORD event, BYTE type, _port *port);
 } _js;
-typedef struct _js_event {
-	/* event timestamp in milliseconds */
-	DBWORD time;
-	/* value */
-	SWORD value;
-	/* event type */
-	BYTE type;
-	/* axis/button number */
-	BYTE number;
-} _js_event;
 typedef struct _js_element {
 	DBWORD value;
 	uTCHAR name[20];
@@ -65,13 +51,6 @@ typedef struct _js_sch {
 #define EXTERNC
 #endif
 
-static const _js_element jsn_list[] = {
-	{ 0x0FF,  uL("NULL")        },
-	{ 0x000,  uL("JOYSTICKID1") },
-	{ 0x001,  uL("JOYSTICKID2") },
-	{ 0x002,  uL("JOYSTICKID3") },
-	{ 0x003,  uL("JOYSTICKID4") },
-};
 static const _js_element jsv_list[] = {
 	{ 0x000, uL("NULL")   },
 	{ 0x001, uL("JA0MIN") }, { 0x002, uL("JA0PLS") },
@@ -84,6 +63,12 @@ static const _js_element jsv_list[] = {
 	{ 0x00F, uL("JA7MIN") }, { 0x010, uL("JA7PLS") },
 	{ 0x011, uL("JA8MIN") }, { 0x012, uL("JA8PLS") },
 	{ 0x013, uL("JA9MIN") }, { 0x014, uL("JA9PLS") },
+	{ 0x015, uL("JAAMIN") }, { 0x016, uL("JAAPLS") },
+	{ 0x017, uL("JABMIN") }, { 0x018, uL("JABPLS") },
+	{ 0x019, uL("JACMIN") }, { 0x01A, uL("JACPLS") },
+	{ 0x01B, uL("JADMIN") }, { 0x01C, uL("JADPLS") },
+	{ 0x01D, uL("JAEMIN") }, { 0x01E, uL("JAEPLS") },
+	{ 0x01F, uL("JAFMIN") }, { 0x020, uL("JAFPLS") },
 	{ 0x400, uL("JB0")    }, { 0x401, uL("JB1")    },
 	{ 0x402, uL("JB2")    }, { 0x403, uL("JB3")    },
 	{ 0x404, uL("JB4")    }, { 0x405, uL("JB5")    },
@@ -96,6 +81,12 @@ static const _js_element jsv_list[] = {
 	{ 0x412, uL("JB18")   }, { 0x413, uL("JB19")   },
 	{ 0x414, uL("JB20")   }, { 0x415, uL("JB21")   },
 	{ 0x416, uL("JB22")   }, { 0x417, uL("JB23")   },
+	{ 0x418, uL("JB24")   }, { 0x419, uL("JB25")   },
+	{ 0x41A, uL("JB26")   }, { 0x41B, uL("JB27")   },
+	{ 0x41C, uL("JB28")   }, { 0x41D, uL("JB29")   },
+	{ 0x41E, uL("JB30")   }, { 0x41F, uL("JB31")   },
+	{ 0x420, uL("JB32")   }, { 0x421, uL("JB33")   },
+	{ 0x422, uL("JB34")   }, { 0x423, uL("JB35")   },
 };
 
 EXTERNC _js js[PORT_MAX], js_shcut;
@@ -110,8 +101,9 @@ EXTERNC BYTE js_is_this(BYTE dev, BYTE *id);
 EXTERNC BYTE js_is_null(BYTE *id);
 EXTERNC void js_set_id(BYTE *id, int dev);
 EXTERNC uTCHAR *js_name_device(int dev);
-EXTERNC BYTE js_read_event(_js_event *event, _js *joy);
+EXTERNC uTCHAR *js_to_joyname(const DBWORD val);
 EXTERNC uTCHAR *js_to_name(const DBWORD val, const _js_element *list, const DBWORD length);
+EXTERNC DBWORD js_from_joyname(const uTCHAR *name);
 EXTERNC DBWORD js_from_name(const uTCHAR *name, const _js_element *list, const DBWORD length);
 EXTERNC DBWORD js_read_in_dialog(BYTE *id, int fd);
 
