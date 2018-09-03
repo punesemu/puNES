@@ -782,6 +782,8 @@ static void usb_free_device(_usb_hid_device *udev) {
 		free(udev->serial);
 		udev->serial = NULL;
 	}
+
+	free(udev);
 }
 static void usb_free_udd(void) {
 	if (jstick.udd.devices) {
@@ -922,7 +924,6 @@ static void usb_detect_devices(void) {
 
 				usb_detect_devices_error:
 				usb_free_device(udev);
-				free(udev);
 			}
 		}
 		close(fd);
@@ -1010,6 +1011,8 @@ static void js_free_device(_js_device *jdev) {
 	}
 #endif
 	jdev->usb = NULL;
+
+	free(jdev);
 }
 static void js_free_jdd(void) {
 	if (jstick.jdd.devices) {
@@ -1237,7 +1240,6 @@ static void js_detect_devices(void) {
 
 		js_detect_devices_error:
 		js_free_device(jdev);
-		free(jdev);
 	}
 
 	js_update_jdevs();
@@ -1334,7 +1336,7 @@ static INLINE DBWORD js_update_hat(_js *joy, _port *port, enum _js_states st, in
 	js_hat_to_xy(value, &x, &y);
 
 	if (!(event = js_update_axis(joy, port, st, JS_HAT0_A + index, x, mode))) {
-		event = js_update_axis(joy, port, st, JS_HAT0_B + index, x, mode);
+		event = js_update_axis(joy, port, st, JS_HAT0_B + index, y, mode);
 	}
 	return (event);
 }
