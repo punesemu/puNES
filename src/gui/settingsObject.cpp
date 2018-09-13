@@ -24,7 +24,7 @@
 #include "conf.h"
 #include "emu.h"
 #include "jstick.h"
-#if defined (__linux__)
+#if defined (__unix__)
 #define XK_MISCELLANY
 #include <X11/keysymdef.h>
 #endif
@@ -72,7 +72,7 @@ static const struct _kvSpecials {
 	{ VK_RSHIFT,    0,                   Qt::Key_Shift,    "RShift",     277 },
 	{ VK_LCONTROL,  0,                   Qt::Key_Control,  "LCtrl",      278 },
 	{ VK_RCONTROL,  0,                   Qt::Key_Control,  "RCtrl",      279 },
-#elif defined (__linux__)
+#elif defined (__unix__)
 	/*
 	{ 0,            Qt::AltModifier,     Qt::Key_Alt,      "Alt",        273 },
 	{ 0,            Qt::NoModifier,      Qt::Key_AltGr,    "AltGr",      274 },

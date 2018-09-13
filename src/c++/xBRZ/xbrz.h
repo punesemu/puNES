@@ -68,10 +68,10 @@ void scale(BYTE factor, //valid range: 2 - 6
            const ScalerCfg& cfg = ScalerCfg(),
            int yFirst = 0, int yLast = std::numeric_limits<int>::max()); //slice of source image
 
-#if defined (__WIN32__)
-DWORD WINAPI scale_mt(void *param);
-#elif defined (__linux__)
+#if defined (__unix__)
 void *scale_mt(void *param);
+#elif defined (__WIN32__)
+DWORD WINAPI scale_mt(void *param);
 #endif
 
 void nearestNeighborScale(const uint32_t* src, int srcWidth, int srcHeight,

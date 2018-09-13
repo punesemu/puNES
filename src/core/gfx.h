@@ -181,7 +181,7 @@ EXTERNC uint32_t gfx_color(BYTE alpha, BYTE r, BYTE g, BYTE b);
 EXTERNC void gfx_cursor_init(void);
 EXTERNC void gfx_cursor_quit(void);
 EXTERNC void gfx_cursor_set(void);
-#if defined (__linux__)
+#if defined (__unix__)
 EXTERNC void gfx_cursor_hide(BYTE hide);
 #endif
 

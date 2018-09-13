@@ -29,7 +29,7 @@
 #include <QtCore/QDateTime>
 #include <QtCore/QUrl>
 #include <QtGui/QDesktopServices>
-#if defined (__linux__)
+#if defined (__unix__)
 #include <unistd.h>
 #include <fcntl.h>
 #endif
@@ -56,7 +56,7 @@
 #include "audio/wave.h"
 #include "vs_system.h"
 #if defined (WITH_OPENGL)
-#if defined (__linux__)
+#if defined (__unix__)
 #include "sdl_wid.h"
 #endif
 #include "opengl.h"
@@ -64,7 +64,7 @@
 #include "timeline.h"
 #include "c++/l7zip/l7z.h"
 #include "gui.h"
-#if defined (__linux__) || defined (WITH_D3D9)
+#if defined (__unix__) || defined (WITH_D3D9)
 #define __GFX_OTHERS_FUNC__
 #include "gfx_functions_inline.h"
 #undef __GFX_OTHERS_FUNC__
@@ -977,6 +977,10 @@ void mainWindow::update_menu_settings() {
 #endif
 	ui->action_Fullscreen_in_window->setChecked(cfg->fullscreen_in_window);
 	ui->action_Stretch_in_fullscreen->setChecked(cfg->stretch);
+#if defined (__OpenBSD__)
+	// Settings/Audio/Output Device
+	ui->menu_Output_Device->menuAction()->setVisible(false);
+#endif
 	// Settings/Audio/Buffer Size factor
 	switch (cfg->audio_buffer_factor) {
 		case 0:

@@ -24,7 +24,7 @@
 #include "gfx.h"
 #include "emu.h"
 #include "gui.h"
-#if defined (__linux__) || defined (WITH_D3D9)
+#if defined (__unix__) || defined (WITH_D3D9)
 #define __GFX_FORCE_SCALE__
 #include "gfx_functions_inline.h"
 #undef __GFX_FORCE_SCALE__

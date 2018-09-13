@@ -21,6 +21,11 @@ libaudio_a_SOURCES += \
 	alsa/snd.c
 endif
 
+if OPENBSD
+libaudio_a_SOURCES += \
+	sndio/snd.c
+endif
+
 if WINDOWS
 libaudio_a_SOURCES += \
 	xaudio/snd.c

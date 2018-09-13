@@ -759,7 +759,7 @@ void gfx_cursor_set(void) {
 	}
 #endif
 }
-#if defined (__linux__)
+#if defined (__unix__)
 void gfx_cursor_hide(BYTE hide) {
 	if (hide == TRUE) {
 		SDL_ShowCursor(SDL_DISABLE);
