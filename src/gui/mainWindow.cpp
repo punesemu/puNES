@@ -89,6 +89,9 @@ mainWindow::mainWindow(Ui::mainWindow *u, cheatObject *cho) : QMainWindow() {
 
 	connect(this, SIGNAL(fullscreen(bool)), this, SLOT(s_fullscreen(bool)));
 
+	tloop = new QTimer(this);
+	connect(tloop, SIGNAL(timeout()), this, SLOT(s_loop()));
+
 	// creo gli shortcuts
 	for (int i = 0; i < SET_MAX_NUM_SC; i++) {
 		shortcut[i] = new QShortcut(this);
@@ -416,7 +419,10 @@ bool mainWindow::nativeEvent(const QByteArray &eventType, void *message, long *r
 #endif
 bool mainWindow::eventFilter(QObject *obj, QEvent *event) {
 	if (event->type() == QEvent::Close) {
+		info.stop = TRUE;
+
 		shcjoy_stop();
+		tloop->stop();
 
 		// in linux non posso spostare tramite le qt una finestra da un monitor
 		// ad un'altro, quindi salvo la posizione solo se sono sul monitor 0;
@@ -426,8 +432,6 @@ bool mainWindow::eventFilter(QObject *obj, QEvent *event) {
 		}
 
 		settings_save_GUI();
-
-		info.stop = TRUE;
 	} else if (event->type() == QEvent::LanguageChange) {
 		ui->retranslateUi(this);
 		shortcuts();

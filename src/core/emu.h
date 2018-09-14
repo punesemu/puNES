@@ -44,7 +44,7 @@ EXTERNC WORD emu_round_WORD(WORD number, WORD round);
 EXTERNC int emu_power_of_two(int base);
 EXTERNC double emu_drand(void);
 EXTERNC uTCHAR *emu_ustrncpy(uTCHAR *dst, uTCHAR *src);
-EXTERNC void emu_quit(BYTE exit_code);
+EXTERNC void emu_quit(void);
 
 #undef EXTERNC
 

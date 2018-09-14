@@ -101,7 +101,7 @@ static struct _cl_option {
 	{ "overscan-blk-brd",      req_arg,  0 }
 };
 
-void cmd_line_parse(int argc, uTCHAR **argv) {
+BYTE cmd_line_parse(int argc, uTCHAR **argv) {
 	QStringList splitted;
 	QString arg, key, skey, value, exe = QFileInfo(uQString(argv[0])).baseName();
 	int opt = 0;
@@ -129,10 +129,10 @@ void cmd_line_parse(int argc, uTCHAR **argv) {
 							value = QString(splitted.at(1));
 						} else {
 							if ((a + 1) >= argc) {
-								QMessageBox::warning(0,
-									"Error",
+								QMessageBox::warning(0, "Error",
 									QString("%1: the option needs an arguments -- \"%2\"").arg(exe, key));
 								usage(exe);
+								return (EXIT_ERROR);
 							} else {
 								value = uQString(argv[++a]);
 							}
@@ -229,7 +229,7 @@ void cmd_line_parse(int argc, uTCHAR **argv) {
 				} else {
 					fprintf(stdout, "Portable %s %s\n", NAME, VERSION);
 				}
-				emu_quit(EXIT_SUCCESS);
+				return (EXIT_ERROR);
 				break;
 			}
 			case 'k':
@@ -282,6 +282,8 @@ void cmd_line_parse(int argc, uTCHAR **argv) {
 				break;
 		}
 	}
+
+	return (EXIT_OK);
 }
 BYTE cmd_line_check_portable(int argc, uTCHAR **argv) {
 	if (QFileInfo(uQString(argv[0])).completeBaseName().right(2) == "_p") {
@@ -418,6 +420,4 @@ static void usage(QString name) {
 	box->exec();
 
 	free(usage_string);
-
-	emu_quit(EXIT_SUCCESS);
 }

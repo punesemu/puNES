@@ -57,12 +57,12 @@ int main(int argc, char **argv) {
 
 	gui_init(&argc, (char **) argv);
 
-	/* controllo l'esistenza della directory principale */
+	// controllo l'esistenza della directory principale
 	if (emu_make_dir(uL("" uPERCENTs), info.base_folder)) {
 		fprintf(stderr, "error on create puNES folder\n");
 		return (EXIT_ERROR);
 	}
-	/* creo le sottocartelle */
+	// creo le sottocartelle
 	if (emu_make_dir(uL("" uPERCENTs SAVE_FOLDER), info.base_folder)) {
 		fprintf(stderr, "error on create save folder\n");
 		return (EXIT_ERROR);
@@ -115,12 +115,13 @@ int main(int argc, char **argv) {
 		"[font8] (by [cyan]FHorse[normal]) [font12]%s", VERSION);
 	}
 
-	/*
-	 * tratto il file di configurazione ed
-	 * i parametri passati dalla riga di comando.
-	 */
+	// tratto il file di configurazione ed
+	// i parametri passati dalla riga di comando.
 	settings_init();
-	cmd_line_parse(argc, argv);
+	if (cmd_line_parse(argc, argv) == EXIT_ERROR) {
+		emu_quit();
+		return (EXIT_SUCCESS);
+	}
 
 	ufprintf(stderr, uL("INFO: path " uPERCENTs "\n"), info.base_folder);
 
@@ -130,12 +131,12 @@ int main(int argc, char **argv) {
 	uncompress_init();
 
 	if (emu_turn_on()) {
-		emu_quit(EXIT_FAILURE);
+		emu_quit();
+		return (EXIT_FAILURE);
 	}
 
 	gui_start();
 
-	emu_quit(EXIT_SUCCESS);
-
+	emu_quit();
 	return (EXIT_SUCCESS);
 }

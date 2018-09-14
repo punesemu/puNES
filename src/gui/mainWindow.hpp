@@ -47,6 +47,7 @@ class mainWindow: public QMainWindow {
 		Q_OBJECT
 
 	public:
+		QTimer *tloop;
 		cheatObject *chobj;
 		sbarWidget *statusbar;
 		Ui::mainWindow *ui;

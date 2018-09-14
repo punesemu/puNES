@@ -69,6 +69,11 @@ static uTCHAR *emu_ctrl_rom_ext(uTCHAR *file);
 static void emu_recent_roms_add(BYTE *add);
 
 BYTE emu_frame(void) {
+	// gestione uscita
+	if (info.stop == TRUE) {
+		return (EXIT_OK);
+	}
+
 #if defined (WITH_OPENGL) && defined (__WIN32__)
 	gfx_sdlwe_tick();
 #endif
@@ -76,11 +81,6 @@ BYTE emu_frame(void) {
 	gui_control_visible_cursor();
 
 	tas.lag_frame = TRUE;
-
-	// gestione uscita
-	if (info.stop == TRUE) {
-		emu_quit(EXIT_SUCCESS);
-	}
 
 	// eseguo un frame dell'emulatore
 	if (!(info.no_rom | info.turn_off | info.pause)) {
@@ -875,7 +875,7 @@ uTCHAR *emu_ustrncpy(uTCHAR *dst, uTCHAR *src) {
 
 	return (dst);
 }
-void emu_quit(BYTE exit_code) {
+void emu_quit(void) {
 	if (cfg->save_on_exit) {
 		settings_save();
 	}
@@ -898,8 +898,6 @@ void emu_quit(BYTE exit_code) {
 	patcher_quit();
 
 	gui_quit();
-
-	exit(exit_code);
 }
 
 static BYTE emu_ctrl_if_rom_exist(void) {

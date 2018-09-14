@@ -160,10 +160,7 @@ BYTE gui_create(void) {
 	return (EXIT_OK);
 }
 void gui_start(void) {
-	QTimer *timer = new QTimer(qt.mwin);
-
-	QObject::connect(timer, SIGNAL(timeout()), qt.mwin, SLOT(s_loop()));
-	timer->start();
+	qt.mwin->tloop->start();
 
 	gui.start = TRUE;
 

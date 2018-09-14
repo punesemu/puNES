@@ -27,7 +27,7 @@
 #define EXTERNC
 #endif
 
-EXTERNC void cmd_line_parse(int argc, uTCHAR **argv);
+EXTERNC BYTE cmd_line_parse(int argc, uTCHAR **argv);
 EXTERNC BYTE cmd_line_check_portable(int argc, uTCHAR **argv);
 
 #undef EXTERNC
