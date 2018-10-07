@@ -23,7 +23,6 @@
 #include <libgen.h>
 #endif
 #include "gui.h"
-#include "info.h"
 
 dlgUncomp::dlgUncomp(QWidget *parent, void *uncompress_archive,
 	BYTE type) : QDialog(parent) {
@@ -37,8 +36,6 @@ dlgUncomp::dlgUncomp(QWidget *parent, void *uncompress_archive,
 	}
 
 	setupUi(this);
-
-	setFont(parent->font());
 
 	//tableWidget_Selection->setStyleSheet("QTreeView {selection-background-color: red;}");
 
@@ -94,15 +91,17 @@ dlgUncomp::dlgUncomp(QWidget *parent, void *uncompress_archive,
 	}
 }
 dlgUncomp::~dlgUncomp() {}
-void dlgUncomp::closeEvent(QCloseEvent *e) {
+
+void dlgUncomp::closeEvent(QCloseEvent *event) {
 	if (gui.start == TRUE) {
 		emu_pause(FALSE);
 	}
 
 	gui.dlg_rc = selected;
 
-	QDialog::closeEvent(e);
+	QDialog::closeEvent(event);
 }
+
 void dlgUncomp::s_ok_clicked(bool checked) {
 	QModelIndexList indexList = tableWidget_Selection->selectionModel()->selectedIndexes();
 

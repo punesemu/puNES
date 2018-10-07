@@ -1,0 +1,452 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>wdgSettingsAudio</class>
+ <widget class="QWidget" name="wdgSettingsAudio">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>390</width>
+    <height>344</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_wdgSettingsAudio">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <item>
+    <layout class="QGridLayout" name="gridLayout_Audio">
+     <item row="3" column="2">
+      <widget class="QComboBox" name="comboBox_Sample_Rate">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <item>
+        <property name="text">
+         <string>48000</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>44100</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>22050</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>11025</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="5" column="1">
+      <widget class="QLabel" name="label_Channels_Delay">
+       <property name="text">
+        <string>Channels Delay</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="0" colspan="3">
+      <layout class="QHBoxLayout" name="horizontalLayout_Audio_misc">
+       <item>
+        <widget class="QLabel" name="label_Audio_Misc">
+         <property name="text">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Misc&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="Line" name="line_Audio_Misc">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="4" column="0">
+      <widget class="QLabel" name="icon_Channels">
+       <property name="text">
+        <string notr="true">Channels icon</string>
+       </property>
+      </widget>
+     </item>
+     <item row="10" column="0" colspan="3">
+      <widget class="wdgAPUChannels" name="widget_APU_Channels" native="true"/>
+     </item>
+     <item row="7" column="0" colspan="3">
+      <widget class="QCheckBox" name="checkBox_Swap_Duty_Cycles">
+       <property name="text">
+        <string>Swap Duty Cycles</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="2">
+      <widget class="QComboBox" name="comboBox_Channels">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <item>
+        <property name="text">
+         <string>Mono</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Stereo Delay</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Stereo Panning</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="icon_Buffer_Size_factor">
+       <property name="text">
+        <string notr="true">Buffer Size factor icon</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="0">
+      <widget class="QLabel" name="icon_Channels_Delay">
+       <property name="text">
+        <string notr="true">Channels Delay icon</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="2">
+      <widget class="QComboBox" name="comboBox_Channels_Delay">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <item>
+        <property name="text">
+         <string>5%</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>10%</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>15%</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>20%</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>25%</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>30% (Default)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>35%</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>40%</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>45%</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>50%</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>55%</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>60%</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>65%</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>70%</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>75%</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>80%</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>85%</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>90%</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>95%</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>100%</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="icon_Sample_Rate">
+       <property name="text">
+        <string notr="true">Sample Rate icon</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="2">
+      <widget class="QComboBox" name="comboBox_Buffer_Size_factor">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <item>
+        <property name="text">
+         <string>0</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>1 (Default)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>2</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>3</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>4</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>5</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>6</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>7</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>8</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>9</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="0" column="0" colspan="3">
+      <layout class="QHBoxLayout" name="horizontalLayout_Audio_settings">
+       <item>
+        <widget class="QLabel" name="label_Audio_settings">
+         <property name="text">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Settings&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="Line" name="line_Audio_settings">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="4" column="1">
+      <widget class="QLabel" name="label_Channels">
+       <property name="text">
+        <string>Channels</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QLabel" name="label_Output_Devices">
+       <property name="text">
+        <string>Output Devices</string>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="0" colspan="3">
+      <widget class="QCheckBox" name="checkBox_Enable_Audio">
+       <property name="text">
+        <string>Enable Audio</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QComboBox" name="comboBox_Output_Devices">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="icon_Output_Devices">
+       <property name="text">
+        <string notr="true">Output Devices icon</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QLabel" name="label_Sample_Rate">
+       <property name="text">
+        <string>Sample Rate</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLabel" name="label_Buffer_Size_factor">
+       <property name="text">
+        <string>Buffer Size factor</string>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="0" colspan="3">
+      <layout class="QHBoxLayout" name="horizontalLayout_APU_Channels">
+       <item>
+        <widget class="QLabel" name="label_APU_Channels">
+         <property name="text">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;APU Channels&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="Line" name="line_APU_Channels">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="11" column="0" colspan="3">
+      <spacer name="verticalSpacer">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>wdgAPUChannels</class>
+   <extends>QWidget</extends>
+   <header>wdgAPUChannels.hpp</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

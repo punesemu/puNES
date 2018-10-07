@@ -27,7 +27,8 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QEvent>
 #include <QtGui/QPainter>
-#include "sbarWidget.moc"
+#include "wdgStatusBar.moc"
+#include "mainWindow.hpp"
 #include "info.h"
 #include "timeline.h"
 #include "gfx.h"
@@ -35,7 +36,6 @@
 #include "emu.h"
 #include "save_slot.h"
 #include "text.h"
-#include "gui.h"
 #include "conf.h"
 #include "cheat.h"
 #include "patcher.h"
@@ -45,7 +45,7 @@
 
 // -------------------------------- Statusbar -----------------------------------------
 
-sbarWidget::sbarWidget(Ui::mainWindow *u, QWidget *parent) : QStatusBar(parent) {
+wdgStatusBar::wdgStatusBar(QWidget *parent) : QStatusBar(parent) {
 	setObjectName("statusbar");
 	setSizeGripEnabled(false);
 
@@ -58,7 +58,7 @@ sbarWidget::sbarWidget(Ui::mainWindow *u, QWidget *parent) : QStatusBar(parent) 
 	infosb = new infoStatusBar(this);
 	addWidget(infosb);
 
-	state = new stateWidget(u, this);
+	state = new wdgState(this);
 	addWidget(state);
 
 	timeline = new timeLine(this);
@@ -66,8 +66,26 @@ sbarWidget::sbarWidget(Ui::mainWindow *u, QWidget *parent) : QStatusBar(parent) 
 
 	installEventFilter(this);
 }
-sbarWidget::~sbarWidget() {}
-void sbarWidget::update_statusbar() {
+wdgStatusBar::~wdgStatusBar() {}
+
+bool wdgStatusBar::eventFilter(QObject *obj, QEvent *event) {
+	if (event->type() == QEvent::MouseButtonPress) {
+		gui_set_focus();
+	}
+
+	return (QObject::eventFilter(obj, event));
+}
+void wdgStatusBar::changeEvent(QEvent *event) {
+	if (event->type() == QEvent::LanguageChange) {
+		state->retranslateUi();
+		timeline->retranslateUi();
+		update_width(gfx.w[VIDEO_MODE]);
+	} else {
+		QWidget::changeEvent(event);
+	}
+}
+
+void wdgStatusBar::update_statusbar(void) {
 	infosb->update_label();
 
 	if (info.no_rom | info.turn_off) {
@@ -80,27 +98,16 @@ void sbarWidget::update_statusbar() {
 		state->update();
 	}
 }
-void sbarWidget::update_width(int w) {
+void wdgStatusBar::update_width(int w) {
 	setFixedWidth(w);
 
 	w -= (2 + 2);
 	w -= (timeline->isVisible() ? timeline->sizeHint().width() + 2 + 2 + 2 : 0);
 	w -= (state->isVisible() ? state->sizeHint().width() + 2 + 2 + 2 : 0);
 
-	infosb->setFixedWidth(w);
-}
-bool sbarWidget::eventFilter(QObject *obj, QEvent *event) {
-	if (event->type() == QEvent::MouseButtonPress) {
-		gui_set_focus();
-	} else if (event->type() == QEvent::LanguageChange) {
-		if (obj == this) {
-			state->retranslateUi();
-			timeline->retranslateUi();
-			update_width(gfx.w[VIDEO_MODE]);
-		}
+	if (w >= 0) {
+		infosb->setFixedWidth(w);
 	}
-
-	return (QObject::eventFilter(obj, event));
 }
 
 // ---------------------------------- Info --------------------------------------------
@@ -117,7 +124,8 @@ infoStatusBar::infoStatusBar(QWidget *parent) : QWidget(parent) {
 	hbox->addWidget(label);
 }
 infoStatusBar::~infoStatusBar() {}
-void infoStatusBar::update_label() {
+
+void infoStatusBar::update_label(void) {
 	BYTE patch = FALSE;
 	uTCHAR *rom;
 
@@ -149,6 +157,7 @@ void infoStatusBar::update_label() {
 
 slotItemDelegate::slotItemDelegate(QObject *parent) : QStyledItemDelegate(parent) {}
 slotItemDelegate::~slotItemDelegate() {}
+
 void slotItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
 		const QModelIndex &index) const {
 
@@ -184,9 +193,9 @@ void slotComboBox::paintEvent(QPaintEvent *event) {
 	// disegno il testo
 	if (!save_slot.state[currentIndex()]) {
 		painter.setPen(Qt::gray);
-		((const stateWidget *)parent())->load->setEnabled(false);
+		((const wdgState *)parent())->load->setEnabled(false);
 	} else {
-		((const stateWidget *)parent())->load->setEnabled(true);
+		((const wdgState *)parent())->load->setEnabled(true);
 	}
 
 	QCommonStyle cstyle;
@@ -205,9 +214,7 @@ void slotComboBox::paintEvent(QPaintEvent *event) {
 	//painter.drawControl(QStyle::CE_ComboBoxLabel, opt);
 }
 
-stateWidget::stateWidget(Ui::mainWindow *u, QWidget *parent) : QWidget(parent) {
-	ui = u;
-
+wdgState::wdgState(QWidget *parent) : QWidget(parent) {
 	hbox = new QHBoxLayout(this);
 	hbox->setContentsMargins(QMargins(0, 0, 0, 0));
 	hbox->setMargin(0);
@@ -239,8 +246,9 @@ stateWidget::stateWidget(Ui::mainWindow *u, QWidget *parent) : QWidget(parent) {
 
 	retranslateUi();
 }
-stateWidget::~stateWidget() {}
-void stateWidget::retranslateUi() {
+wdgState::~wdgState() {}
+
+void wdgState::retranslateUi(void) {
 	setToolTip(tr("Save/Load Slot Box"));
 
 	{
@@ -274,18 +282,18 @@ void stateWidget::retranslateUi() {
 			load->width());
 #endif
 }
-void stateWidget::s_save_clicked(bool checked) {
-	ui->action_Save_state->trigger();
+void wdgState::s_save_clicked(bool checked) {
+	mainwin->action_Save_state->trigger();
 	update();
 	gui_set_focus();
 }
-void stateWidget::s_slot_activated(int index) {
+void wdgState::s_slot_activated(int index) {
 	save_slot.slot = index;
 	text_save_slot(SAVE_SLOT_INCDEC);
 	gui_set_focus();
 }
-void stateWidget::s_load_clicked(bool checked) {
-	ui->action_Load_state->trigger();
+void wdgState::s_load_clicked(bool checked) {
+	mainwin->action_Load_state->trigger();
 	gui_set_focus();
 }
 
@@ -305,7 +313,8 @@ timelineSlider::timelineSlider(QWidget *parent) : QSlider(Qt::Horizontal, parent
 			QStyle::SC_SliderHandle, NULL).width();
 }
 timelineSlider::~timelineSlider() {}
-int timelineSlider::sizeHandle() {
+
+int timelineSlider::sizeHandle(void) {
 	return (szHandle);
 }
 
@@ -338,7 +347,8 @@ timeLine::timeLine(QWidget *parent) : QWidget(parent) {
 	retranslateUi();
 }
 timeLine::~timeLine() {}
-int timeLine::value() {
+
+int timeLine::value(void) {
 	return (slider->value());
 }
 void timeLine::setValue(int value, bool s_action) {
@@ -375,7 +385,7 @@ void timeLine::timeline_released(BYTE *type) {
 	emu_pause(FALSE);
 	timeline_update_label(snap);
 }
-void timeLine::retranslateUi() {
+void timeLine::retranslateUi(void) {
 	lab_timeline = "%1 " + tr("sec");
 
 	setToolTip(tr("Timeline"));
@@ -466,9 +476,9 @@ void timeLine::s_action_triggered(int action) {
 void timeLine::s_value_changed(int value) {
 	timeline_update_label(value);
 }
-void timeLine::s_slider_pressed() {
+void timeLine::s_slider_pressed(void) {
 	timeline_pressed(&tl.button);
 }
-void timeLine::s_slider_released() {
+void timeLine::s_slider_released(void) {
 	timeline_released(&tl.button);
 }

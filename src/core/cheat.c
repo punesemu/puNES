@@ -27,6 +27,7 @@
 #include "info.h"
 #include "text.h"
 #include "patcher.h"
+#include "conf.h"
 
 #define GGFILE "gamegenie.rom"
 
@@ -63,29 +64,67 @@ void gamegenie_free_paths(void) {
 		gamegenie.patch = NULL;
 	}
 }
-void gamegenie_check_rom_present(BYTE print_message) {
-	uTCHAR gg_rom[LENGTH_FILE_NAME_LONG];
-
-	usnprintf(gg_rom, usizeof(gg_rom), uL("" uPERCENTs BIOS_FOLDER "/" GGFILE), info.base_folder);
+uTCHAR *gamegenie_check_rom_present(BYTE print_message) {
+	static uTCHAR gg_rom_file[LENGTH_FILE_NAME_LONG], *lastSlash;
 
 	gamegenie.rom_present = FALSE;
 
-	if (emu_file_exist(gg_rom) == EXIT_OK) {
-		gamegenie.rom_present = TRUE;
+	// 1) file specificato dall'utente
+	usnprintf(gg_rom_file, usizeof(gg_rom_file), uL("" uPERCENTs), cfg->gg_rom_file);
+	if (emu_file_exist(gg_rom_file) == EXIT_OK) {
+		goto gamegenie_check_rom_present_founded;
 	}
 
-	if (print_message && gamegenie.rom_present == FALSE) {
-		text_add_line_info(1, "[red]'bios/gamegenie.rom' not found");
-		fprintf(stderr, "Game Genie rom 'bios/gamegenie.rom' not found\n");
+	// 2) directory di lavoro
+	ustrncpy(gg_rom_file, uL("" GGFILE), usizeof(gg_rom_file));
+	if (emu_file_exist(gg_rom_file) == EXIT_OK) {
+		goto gamegenie_check_rom_present_founded;
 	}
+
+	// 3) directory contenente la rom nes
+	ustrncpy(gg_rom_file, info.rom.file, usizeof(gg_rom_file));
+	// rintraccio l'ultimo '.' nel nome
+#if defined (__WIN32__)
+	if ((lastSlash = ustrrchr(gg_rom_file, uL('\\')))) {
+		(*(lastSlash + 1)) = 0x00;
+	}
+#else
+	if ((lastSlash = ustrrchr(gg_rom_file, uL('/')))) {
+		(*(lastSlash + 1)) = 0x00;
+	}
+#endif
+	// aggiungo il nome del file
+	ustrcat(gg_rom_file, uL("" GGFILE));
+	if (emu_file_exist(gg_rom_file) == EXIT_OK) {
+		goto gamegenie_check_rom_present_founded;
+	}
+
+	// 4) directory puNES/bios
+	usnprintf(gg_rom_file, usizeof(gg_rom_file),
+		uL("" uPERCENTs BIOS_FOLDER "/" GGFILE), info.base_folder);
+	if (emu_file_exist(gg_rom_file) == EXIT_OK) {
+		goto gamegenie_check_rom_present_founded;
+	}
+
+	if (print_message) {
+		text_add_line_info(1, "[red]Game Genie rom not found");
+		fprintf(stderr, "Game Genie rom not found\n");
+	}
+
+	return (NULL);
+
+	gamegenie_check_rom_present_founded:
+	gamegenie.rom_present = TRUE;
+	return (gg_rom_file);
 }
 void gamegenie_load_rom(void *rom_mem) {
 	_rom_mem *rom = (_rom_mem *)rom_mem;
-	BYTE *rom_gg;
+	uTCHAR *gg_rom_file;
+	BYTE *gg_rom_mem;
 	size_t size;
 	FILE *fp;
 
-	gamegenie_check_rom_present(FALSE);
+	gg_rom_file = gamegenie_check_rom_present(FALSE);
 
 	if ((gamegenie.phase == GG_LOAD_ROM) || !gamegenie.rom_present) {
 		return;
@@ -100,8 +139,7 @@ void gamegenie_load_rom(void *rom_mem) {
 		return;
 	}
 
-	usnprintf(info.rom.file, usizeof(info.rom.file), uL("" uPERCENTs BIOS_FOLDER "/" GGFILE),
-		info.base_folder);
+	ustrncpy(info.rom.file, gg_rom_file, usizeof(info.rom.file));
 
 	if (!(fp = ufopen(info.rom.file, uL("rb")))) {
 		text_add_line_info(1, "[red]error loading Game Genie rom");
@@ -117,16 +155,16 @@ void gamegenie_load_rom(void *rom_mem) {
 	size = ftell(fp);
 	fseek(fp, 0L, SEEK_SET);
 
-	if ((rom_gg = (BYTE *) malloc(size)) == NULL) {
+	if ((gg_rom_mem = (BYTE *) malloc(size)) == NULL) {
 		fclose(fp);
 		ustrncpy(info.rom.file, gamegenie.rom, usizeof(info.rom.file));
 		gamegenie_free_paths();
 		return;
 	}
 
-	if (fread(rom_gg, 1, size, fp) != size) {
+	if (fread(gg_rom_mem, 1, size, fp) != size) {
 		fclose(fp);
-		free(rom_gg);
+		free(gg_rom_mem);
 		ustrncpy(info.rom.file, gamegenie.rom, usizeof(info.rom.file));
 		gamegenie_free_paths();
 		return;
@@ -135,20 +173,20 @@ void gamegenie_load_rom(void *rom_mem) {
 	fclose(fp);
 	free(rom->data);
 
-	rom->data = rom_gg;
+	rom->data = gg_rom_mem;
 	rom->size = size;
 }
 
 void cheatslist_init(void) {
-	gui_cheat_init();
-	memset (&cheats_list, 0x00, sizeof(cheats_list));
+	gui_objcheat_init();
+	memset(&cheats_list, 0x00, sizeof(cheats_list));
 }
 void cheatslist_read_game_cheats(void) {
 	cheatslist_blank();
-	gui_cheat_read_game_cheats();
+	gui_objcheat_read_game_cheats();
 }
 void cheatslist_save_game_cheats(void) {
-	gui_cheat_save_game_cheats();
+	gui_objcheat_save_game_cheats();
 }
 void cheatslist_blank(void) {
 	if (cheats_list.rom.counter > 0) {

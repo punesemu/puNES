@@ -42,6 +42,9 @@ enum set_element {
 	SET_BATTERY_RAM_FILE_EVEY_TOT,
 	SET_BCK_PAUSE,
 	SET_CHEAT_MODE,
+	SET_FILE_GAME_GENIE_ROM,
+	SET_FILE_FDS_BIOS,
+	SET_LAST_IMPORT_CHEAT_PATH,
 	SET_SAVE_SETTINGS_ON_EXIT,
 	SET_FPS,
 	SET_FRAMESKIP,
@@ -82,8 +85,8 @@ enum set_element {
 	SET_GUI_OPEN_PATH,
 	SET_GUI_OPEN_IPS_PATH,
 	SET_GUI_LAST_POSITION,
+	SET_GUI_LAST_POSITION_SETTINGS,
 	SET_GUI_LANGUAGE,
-	SET_GUI_DISABLE_NEW_MENU,
 	SET_APU_MASTER,
 	SET_APU_SQUARE1,
 	SET_APU_SQUARE2,
@@ -516,6 +519,24 @@ static const _settings main_cfg[] = {
 		{LENGTH(opt_cheat_mode), opt_cheat_mode}
 	},
 	{
+		uL("system"), uL("game genie rom file"), NULL,
+		uL("# possible values: [PATH/NAME]"),
+		NULL,
+		{0, NULL}
+	},
+	{
+		uL("system"), uL("fds bios file"), NULL,
+		uL("# possible values: [PATH/NAME]"),
+		NULL,
+		{0, NULL}
+	},
+	{
+		uL("system"), uL("last cheats file"), NULL,
+		uL("# possible values: [PATH/NAME]"),
+		NULL,
+		{0, NULL}
+	},
+	{
 		uL("system"), uL("save settings on exit"), uL("no"),
 		uL("# possible values: yes, no"),
 		NULL,
@@ -773,16 +794,16 @@ static const _settings main_cfg[] = {
 		{0, NULL}
 	},
 	{
+		uL("GUI"), uL("last position of settings"), uL("0,0"),
+		uL("# possible values: [X],[Y]"),
+		NULL,
+		{0, NULL}
+	},
+	{
 		uL("GUI"), uL("language"), uL("english"),
 		uL("# possible values: english,italian,russian"),
 		uL("    --language            GUI language          : english,italian,russian"),
 		{LENGTH(opt_languages), opt_languages}
-	},
-	{
-		uL("GUI"), uL("disable new menu management"), uL("no"),
-		uL("# possible values: yes, no"),
-		uL("    --disable-new-menu    disab. new menu manag.: yes, no"),
-		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 	{
 		uL("apu channels"), uL("master"), uL("on,100"),

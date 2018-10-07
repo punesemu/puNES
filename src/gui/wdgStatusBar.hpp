@@ -16,8 +16,8 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef SBARWIDGET_HPP_
-#define SBARWIDGET_HPP_
+#ifndef WDGSTATUSBAR_HPP_
+#define WDGSTATUSBAR_HPP_
 
 #include <QtCore/QtGlobal>
 #if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
@@ -42,7 +42,7 @@
 #include "application.hh"
 #include "common.h"
 
-class infoStatusBar: public QWidget {
+class infoStatusBar : public QWidget {
 	Q_OBJECT
 
 	private:
@@ -52,10 +52,12 @@ class infoStatusBar: public QWidget {
 	public:
 		infoStatusBar(QWidget *parent = 0);
 		~infoStatusBar();
-		void update_label();
+
+	public:
+		void update_label(void);
 };
 
-class timelineSlider: public QSlider {
+class timelineSlider : public QSlider {
 	Q_OBJECT
 
 	public:
@@ -64,9 +66,11 @@ class timelineSlider: public QSlider {
 	public:
 		timelineSlider(QWidget *parent = 0);
 		~timelineSlider();
-		int sizeHandle();
+
+	public:
+		int sizeHandle(void);
 };
-class timeLine: public QWidget {
+class timeLine : public QWidget {
 	Q_OBJECT
 
 	private:
@@ -79,11 +83,13 @@ class timeLine: public QWidget {
 	public:
 		timeLine(QWidget *parent = 0);
 		~timeLine();
-		int value();
+
+	public:
+		int value(void);
 		void setValue(int value, bool s_action);
 		void timeline_pressed(BYTE *type);
 		void timeline_released(BYTE *type);
-		void retranslateUi();
+		void retranslateUi(void);
 
 	private:
 		void timeline_update_label(int value);
@@ -91,11 +97,11 @@ class timeLine: public QWidget {
 	private slots:
 		void s_action_triggered(int action);
 		void s_value_changed(int value);
-		void s_slider_pressed();
-		void s_slider_released();
+		void s_slider_pressed(void);
+		void s_slider_released(void);
 };
 
-class slotItemDelegate: public QStyledItemDelegate {
+class slotItemDelegate : public QStyledItemDelegate {
 	Q_OBJECT
 
 	public:
@@ -106,24 +112,23 @@ class slotItemDelegate: public QStyledItemDelegate {
 		void paint(QPainter *painter, const QStyleOptionViewItem &option,
 				const QModelIndex &index) const;
 };
-class slotComboBox: public QComboBox {
+class slotComboBox : public QComboBox {
 	Q_OBJECT
+
+	private:
+		slotItemDelegate *sid;
 
 	public:
 		slotComboBox(QWidget *parent = 0);
 		~slotComboBox();
 
-	private:
-		slotItemDelegate *sid;
-
 	protected:
 		void paintEvent(QPaintEvent *event);
 };
-class stateWidget: public QWidget {
+class wdgState : public QWidget {
 	Q_OBJECT
 
 	public:
-		Ui::mainWindow *ui;
 		QHBoxLayout *hbox;
 		QPushButton *save;
 		slotComboBox *slot;
@@ -131,9 +136,11 @@ class stateWidget: public QWidget {
 		QFrame *vline;
 
 	public:
-		stateWidget(Ui::mainWindow *u, QWidget *parent = 0);
-		~stateWidget();
-		void retranslateUi();
+		wdgState(QWidget *parent = 0);
+		~wdgState();
+
+	public:
+		void retranslateUi(void);
 
 	private slots:
 		void s_save_clicked(bool checked);
@@ -141,22 +148,25 @@ class stateWidget: public QWidget {
 		void s_load_clicked(bool checked);
 };
 
-class sbarWidget: public QStatusBar {
+class wdgStatusBar : public QStatusBar {
 	Q_OBJECT
 
 	public:
 		infoStatusBar *infosb;
 		timeLine *timeline;
-		stateWidget *state;
+		wdgState *state;
 
 	public:
-		sbarWidget(Ui::mainWindow *u, QWidget *parent);
-		~sbarWidget();
-		void update_statusbar();
-		void update_width(int w);
+		wdgStatusBar(QWidget *parent);
+		~wdgStatusBar();
 
 	protected:
 		bool eventFilter(QObject *obj, QEvent *event);
+		void changeEvent(QEvent *event);
+
+	public:
+		void update_statusbar(void);
+		void update_width(int w);
 };
 
-#endif /* SBARWIDGET_HPP_ */
+#endif /* WDGSTATUSBAR_HPP_ */

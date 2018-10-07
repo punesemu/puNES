@@ -31,6 +31,7 @@
 #include "info.h"
 #include "gui.h"
 #include "patcher.h"
+#include "conf.h"
 
 #define BIOSFILE "disksys.rom"
 #define DIFFVERSION 1
@@ -175,14 +176,20 @@ BYTE fds_load_bios(void) {
 	FILE *bios = NULL;
 
 	// ordine di ricerca:
-	// 1) directory di lavoro
-	// 2) directory contenente il file fds
-	// 3) directory puNES/bios
-	if ((bios = ufopen(uL("" BIOSFILE), uL("rb")))) {
+
+	// 1) file specificato dall'utente
+	usnprintf(bios_file, usizeof(bios_file), uL("" uPERCENTs), cfg->fds_bios_file);
+	if ((bios = ufopen(bios_file, uL("rb")))) {
 		goto fds_load_bios_founded;
 	}
 
-	// copio il nome del file nella variabile
+	// 2) directory di lavoro
+	ustrncpy(bios_file, uL("" BIOSFILE), usizeof(bios_file));
+	if ((bios = ufopen(bios_file, uL("rb")))) {
+		goto fds_load_bios_founded;
+	}
+
+	// 3) directory contenente il file fds
 	ustrncpy(bios_file, info.rom.file, usizeof(bios_file));
 	// rintraccio l'ultimo '.' nel nome
 #if defined (__WIN32__)
@@ -196,20 +203,19 @@ BYTE fds_load_bios(void) {
 #endif
 	// aggiungo il nome del file
 	ustrcat(bios_file, uL("" BIOSFILE));
-
 	if ((bios = ufopen(bios_file, uL("rb")))) {
 		goto fds_load_bios_founded;
 	}
 
-	usnprintf(bios_file, usizeof(bios_file), uL("" uPERCENTs BIOS_FOLDER "/" BIOSFILE),
-		info.base_folder);
-
+	// 4) directory puNES/bios
+	usnprintf(bios_file, usizeof(bios_file),
+		uL("" uPERCENTs BIOS_FOLDER "/" BIOSFILE), info.base_folder);
 	if ((bios = ufopen(bios_file, uL("rb")))) {
 		goto fds_load_bios_founded;
 	}
 
-	text_add_line_info(1, "[red]'bios/disksys.rom' not found");
-	fprintf(stderr, "'bios/disksys.rom' not found\n");
+	text_add_line_info(1, "[red]FDS bios not found");
+	fprintf(stderr, "'FDS bios not found\n");
 	return (EXIT_ERROR);
 
 	fds_load_bios_founded:

@@ -16,8 +16,8 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef DLGAPUCHANNELS_HPP_
-#define DLGAPUCHANNELS_HPP_
+#ifndef DLGSETTINGS_HPP_
+#define DLGSETTINGS_HPP_
 
 #include <QtCore/QtGlobal>
 #if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
@@ -25,29 +25,42 @@
 #else
 #include <QtWidgets/QDialog>
 #endif
-#include "dlgApuChannels.hh"
+#include "dlgSettings.hh"
 
-class dlgApuChannels : public QDialog, public Ui::APU_channels {
+class dlgSettings : public QDialog, public Ui::dlgSettings {
 		Q_OBJECT
 
-	private:
-		bool in_update;
+	public:
+		QRect geom;
 
 	public:
-		dlgApuChannels(QWidget *parent = 0);
-		~dlgApuChannels();
-		int update_pos(int startY);
-		void update_dialog();
+		dlgSettings(QWidget *parent = 0);
+		~dlgSettings();
 
 	private:
 		bool eventFilter(QObject *obj, QEvent *event);
+		void changeEvent(QEvent *event);
+		void hideEvent(QHideEvent *event);
+
+	public:
+		void retranslateUi(QDialog *dlgSettings);
+		void update_dialog(void);
+		void change_rom(void);
+		void shcut_mode(int mode);
+		void shcut_scale(int scale);
+
+	private:
+		void update_tab_general(void);
+		void update_tab_video(void);
+	public:
+		void update_tab_audio(void);
+	private:
+		void update_tab_input(void);
+		void update_tab_ppu(void);
+		void update_tab_cheats(void);
 
 	private slots:
-		void s_checkbox_state_changed(int state);
-		void s_slider_value_changed(int value);
-		void s_toggle_all_clicked(bool checked);
-		void s_set_audio_swap_duty(int state);
-		void s_x_clicked(bool checked);
+		void s_save_settings(bool checked);
 };
 
-#endif /* DLGAPUCHANNELS_HPP_ */
+#endif /* DLGSETTINGS_HPP_ */

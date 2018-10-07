@@ -1,7 +1,7 @@
 /*
  *  Copyright (C) 2010-2019 Fabio Cavallo (aka FHorse)
  *
- *  This program is free software; you can redistribute it and/or modify
+ *  This program is free software; you can redistribute it and/or objchify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation; either version 2 of the License, or
  *  (at your option) any later version.
@@ -27,39 +27,38 @@
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QButtonGroup>
 #endif
-#include "dlgCheats.moc"
+#include "wdgCheatsEditor.moc"
 #include "mainWindow.hpp"
-#include "gui.h"
+#include "conf.h"
 
 #define COLOR_GG    Qt::cyan
 #define COLOR_ROCKY Qt::yellow
 
 enum cheat_table_rows {
 	CR_ACTIVE,
+	CR_DESCRIPTION,
 	CR_CODE,
 	CR_ADDRESS,
 	CR_VALUE,
 	CR_COMPARE,
-	CR_DESCRIPTION,
 	CR_ENABLED_COMPARE
 };
 
-dlgCheats::dlgCheats(QWidget *parent, cheatObject *c) : QDialog(parent) {
-	mod = new cheatObject(this);
-	org = c;
-	new_mode = false;
-
-	for (int i = 0; i < org->cheats.count(); i++) {
-		mod->cheats.insert(i, org->cheats.at(i));
-	}
+wdgCheatsEditor::wdgCheatsEditor(QWidget *parent) : QWidget(parent) {
+	objch = ((objCheat *)gui_objcheat_get_ptr());
+	new_cheat = false;
 
 	setupUi(this);
-
-	setFont(parent->font());
 
 	tableWidget_Cheats->setColumnCount(tableWidget_Cheats->columnCount() + 1);
 	tableWidget_Cheats->setColumnHidden(CR_ENABLED_COMPARE, true);
 	tableWidget_Cheats->horizontalHeaderItem(CR_DESCRIPTION)->setTextAlignment(Qt::AlignLeft);
+
+	connect(tableWidget_Cheats, SIGNAL(itemSelectionChanged()), this, SLOT(s_cheat_item()));
+	connect(pushButton_Hide_Show_Tools, SIGNAL(clicked(bool)), this, SLOT(s_hide_show_tools(bool)));
+	connect(pushButton_Import_Cheats, SIGNAL(clicked(bool)), this, SLOT(s_import(bool)));
+	connect(pushButton_Export_Cheats, SIGNAL(clicked(bool)), this, SLOT(s_export(bool)));
+	connect(pushButton_Clear_All_Cheats, SIGNAL(clicked(bool)), this, SLOT(s_clear_all(bool)));
 
 	{
 		QButtonGroup *grp = new QButtonGroup(this);
@@ -71,7 +70,7 @@ dlgCheats::dlgCheats(QWidget *parent, cheatObject *c) : QDialog(parent) {
 		grp->addButton(radioButton_ProAR);
 		grp->setId(radioButton_ProAR, 2);
 
-		connect(grp, SIGNAL(buttonClicked(int)), this, SLOT(s_grp_button_clicked(int)));
+		connect(grp, SIGNAL(buttonClicked(int)), this, SLOT(s_grp_type_cheat(int)));
 	}
 
 	lineEdit_GG->setStyleSheet("QLineEdit{background: cyan;}");
@@ -92,34 +91,23 @@ dlgCheats::dlgCheats(QWidget *parent, cheatObject *c) : QDialog(parent) {
 
 	pushButton_Cancel_Cheat->setEnabled(false);
 
-	connect(tableWidget_Cheats, SIGNAL(itemSelectionChanged()), this,
-		SLOT(s_item_selection_changed()));
-	connect(pushButton_Import_Cheats, SIGNAL(clicked(bool)), this, SLOT(s_import_clicked(bool)));
-	connect(pushButton_Export_Cheats, SIGNAL(clicked(bool)), this, SLOT(s_export_clicked(bool)));
-	connect(pushButton_Clear_All_Cheats, SIGNAL(clicked(bool)), this,
-		SLOT(s_clear_all_clicked(bool)));
+	connect(lineEdit_GG, SIGNAL(textEdited(const QString &)), SLOT(s_line_to_upper(const QString &)));
+	connect(checkBox_Compare, SIGNAL(stateChanged(int)), this, SLOT(s_compare(int)));
 
-	connect(lineEdit_GG, SIGNAL(textEdited(const QString &)),
-		SLOT(s_linedit_to_upper(const QString &)));
-	connect(checkBox_Compare, SIGNAL(stateChanged(int)), this,
-		SLOT(s_active_compare_state_changed(int)));
-	connect(pushButton_New_Cheat, SIGNAL(clicked(bool)), this, SLOT(s_new_clicked(bool)));
-	connect(pushButton_Remove_Cheat, SIGNAL(clicked(bool)), this, SLOT(s_remove_clicked(bool)));
-	connect(pushButton_Submit_Cheat, SIGNAL(clicked(bool)), this, SLOT(s_submit_clicked(bool)));
-	connect(pushButton_Cancel_Cheat, SIGNAL(clicked(bool)), this, SLOT(s_cancel_clicked(bool)));
+	connect(pushButton_New_Cheat, SIGNAL(clicked(bool)), this, SLOT(s_new(bool)));
+	connect(pushButton_Remove_Cheat, SIGNAL(clicked(bool)), this, SLOT(s_remove(bool)));
+	connect(pushButton_Submit_Cheat, SIGNAL(clicked(bool)), this, SLOT(s_submit(bool)));
+	connect(pushButton_Cancel_Cheat, SIGNAL(clicked(bool)), this, SLOT(s_cancel(bool)));
 
-	connect(pushButton_Hide_Show_Tools, SIGNAL(clicked(bool)), this,
-		SLOT(s_hide_show_tools_clicked(bool)));
-	connect(pushButton_Apply, SIGNAL(clicked(bool)), this, SLOT(s_apply_clicked(bool)));
-	connect(pushButton_Discard, SIGNAL(clicked(bool)), this, SLOT(s_discard_clicked(bool)));
+	{
+		int w;
 
-	setAttribute(Qt::WA_DeleteOnClose);
-
-	adjustSize();
+		w = lineEdit_GG->fontMetrics().size(0, "0000000000").width() + 10;
+		lineEdit_GG->setFixedWidth(w);
+		lineEdit_ProAR->setFixedWidth(w);
+	}
 
 	installEventFilter(this);
-
-	hide_tools_widgets(true);
 
 	populate_cheat_table();
 
@@ -127,22 +115,33 @@ dlgCheats::dlgCheats(QWidget *parent, cheatObject *c) : QDialog(parent) {
 		tableWidget_Cheats->selectRow(0);
 	}
 
-	s_item_selection_changed();
-
-	emu_pause(TRUE);
+	s_cheat_item();
 }
-dlgCheats::~dlgCheats() {}
-bool dlgCheats::eventFilter(QObject *obj, QEvent *event) {
-	if (event->type() == QEvent::Close) {
-		org->apply_cheats();
-		emu_pause(FALSE);
-	} else if (event->type() == QEvent::LanguageChange) {
-		Cheats::retranslateUi(this);
+wdgCheatsEditor::~wdgCheatsEditor() {}
+
+void wdgCheatsEditor::changeEvent(QEvent *event) {
+	if (event->type() == QEvent::LanguageChange) {
+		wdgCheatsEditor::retranslateUi(this);
+	} else {
+		QWidget::changeEvent(event);
+	}
+}
+
+void wdgCheatsEditor::hide_tools_widgets(bool state) {
+	if (widget_Edit->isHidden() == state) {
+		return;
 	}
 
-	return (QObject::eventFilter(obj, event));
+	if (state == true) {
+		pushButton_Hide_Show_Tools->setText(tr("Show Tools"));
+	} else {
+		pushButton_Hide_Show_Tools->setText(tr("Hide Tools"));
+	}
+
+	widget_Edit->setHidden(state);
 }
-chl_map dlgCheats::extract_cheat_from_row(int row) {
+
+chl_map wdgCheatsEditor::extract_cheat_from_row(int row) {
 	chl_map cheat;
 
 	cheat.clear();
@@ -164,15 +163,21 @@ chl_map dlgCheats::extract_cheat_from_row(int row) {
 
 	return(cheat);
 }
-void dlgCheats::populate_cheat_table() {
+void wdgCheatsEditor::populate_cheat_table(void) {
+	int i;
+
+	for (i = 1; i < tableWidget_Cheats->rowCount(); i++) {
+		tableWidget_Cheats->removeRow(i);
+	}
+
 	tableWidget_Cheats->setRowCount(0);
 
-	for (int i = 0; i < mod->cheats.count(); i++) {
+	for (i = 0; i < objch->cheats.count(); i++) {
 		insert_cheat_row(i);
 	}
 }
-void dlgCheats::insert_cheat_row(int row) {
-	chl_map cheat = mod->cheats.at(row);
+void wdgCheatsEditor::insert_cheat_row(int row) {
+	chl_map cheat = objch->cheats.at(row);
 	QTableWidgetItem *col;
 
 	tableWidget_Cheats->insertRow(row);
@@ -184,7 +189,7 @@ void dlgCheats::insert_cheat_row(int row) {
 
 		widget->setObjectName(QString("widget%1").arg(row));
 		active->setObjectName("active");
-		connect(active, SIGNAL(stateChanged(int)), this, SLOT(s_active_state_changed(int)));
+		connect(active, SIGNAL(stateChanged(int)), this, SLOT(s_cheat_item_state(int)));
 		layout->addWidget(active);
 		layout->setAlignment(Qt::AlignCenter);
 		layout->setContentsMargins(0, 0, 0, 0);
@@ -195,6 +200,10 @@ void dlgCheats::insert_cheat_row(int row) {
 		col->setTextAlignment(Qt::AlignCenter);
 		tableWidget_Cheats->setItem(row, CR_ACTIVE, col);
 	}
+
+	col = new QTableWidgetItem();
+	col->setTextAlignment(Qt::AlignLeft);
+	tableWidget_Cheats->setItem(row, CR_DESCRIPTION, col);
 
 	col = new QTableWidgetItem();
 	col->setTextAlignment(Qt::AlignCenter);
@@ -214,15 +223,11 @@ void dlgCheats::insert_cheat_row(int row) {
 
 	col = new QTableWidgetItem();
 	col->setTextAlignment(Qt::AlignLeft);
-	tableWidget_Cheats->setItem(row, CR_DESCRIPTION, col);
-
-	col = new QTableWidgetItem();
-	col->setTextAlignment(Qt::AlignLeft);
 	tableWidget_Cheats->setItem(row, CR_ENABLED_COMPARE, col);
 
 	update_cheat_row(row, &cheat);
 }
-void dlgCheats::update_cheat_row(int row, chl_map *cheat) {
+void wdgCheatsEditor::update_cheat_row(int row, chl_map *cheat) {
 	QCheckBox *active = tableWidget_Cheats->cellWidget(row, CR_ACTIVE)->findChild<QCheckBox*>("active");
 
 	if ((*cheat)["enabled"].toInt() == 1) {
@@ -259,20 +264,8 @@ void dlgCheats::update_cheat_row(int row, chl_map *cheat) {
 
 	tableWidget_Cheats->item(row, CR_ENABLED_COMPARE)->setText((*cheat)["enabled_compare"]);
 }
-void dlgCheats::hide_tools_widgets(bool state) {
-	if (groupBox_Edit->isHidden() == state) {
-		return;
-	}
 
-	if (state == true) {
-		pushButton_Hide_Show_Tools->setText(tr("Show Tools"));
-	} else {
-		pushButton_Hide_Show_Tools->setText(tr("Hide Tools"));
-	}
-
-	groupBox_Edit->setHidden(state);
-}
-void dlgCheats::populate_edit_widgets(int row) {
+void wdgCheatsEditor::populate_edit_widgets(int row) {
 	chl_map cheat;
 
 	if (row < 0) {
@@ -305,7 +298,7 @@ void dlgCheats::populate_edit_widgets(int row) {
 		}
 	}
 }
-void dlgCheats::clear_edit_widgets() {
+void wdgCheatsEditor::clear_edit_widgets(void) {
 	lineEdit_Description->setText("");
 	lineEdit_GG->setText("");
 	lineEdit_ProAR->setText("");
@@ -315,8 +308,8 @@ void dlgCheats::clear_edit_widgets() {
 
 	change_active_compare_state(false);
 }
-void dlgCheats::set_edit_widget() {
-	if ((new_mode == true) || (tableWidget_Cheats->currentRow() >= 0)) {
+void wdgCheatsEditor::set_edit_widget(void) {
+	if ((new_cheat == true) || (tableWidget_Cheats->currentRow() >= 0)) {
 		frame_Type_Cheat->setEnabled(true);
 		frame_Raw_Value->setEnabled(true);
 		frame_Buttons->setEnabled(true);
@@ -326,8 +319,8 @@ void dlgCheats::set_edit_widget() {
 		frame_Buttons->setEnabled(true);
 	}
 }
-void dlgCheats::set_type_cheat_checkbox(chl_map *cheat) {
-	if (new_mode == true) {
+void wdgCheatsEditor::set_type_cheat_checkbox(chl_map *cheat) {
+	if (new_cheat == true) {
 		radioButton_CPU_Ram->setEnabled(true);
 		radioButton_GG->setEnabled(true);
 		radioButton_ProAR->setEnabled(true);
@@ -364,8 +357,8 @@ void dlgCheats::set_type_cheat_checkbox(chl_map *cheat) {
 		lineEdit_ProAR->setText("");
 	}
 }
-void dlgCheats::set_edit_buttons() {
-	if (new_mode == true) {
+void wdgCheatsEditor::set_edit_buttons(void) {
+	if (new_cheat == true) {
 		pushButton_New_Cheat->setEnabled(false);
 		pushButton_Remove_Cheat->setEnabled(false);
 		pushButton_Cancel_Cheat->setEnabled(true);
@@ -385,28 +378,22 @@ void dlgCheats::set_edit_buttons() {
 		pushButton_Cancel_Cheat->setEnabled(false);
 	}
 }
-void dlgCheats::change_active_compare_state(bool state) {
+void wdgCheatsEditor::change_active_compare_state(bool state) {
 	checkBox_Compare->setChecked(state);
 
 	if (state == true) {
-		s_active_compare_state_changed(Qt::Checked);
+		s_compare(Qt::Checked);
 	} else {
-		s_active_compare_state_changed(Qt::Unchecked);
+		s_compare(Qt::Unchecked);
 	}
 }
-void dlgCheats::s_active_compare_state_changed(int state) {
-	if (state == Qt::Checked) {
-		hexSpinBox_Compare->setEnabled(true);
-	} else {
-		hexSpinBox_Compare->setEnabled(false);
-	}
-}
-void dlgCheats::s_item_selection_changed() {
+
+void wdgCheatsEditor::s_cheat_item(void) {
 	set_edit_widget();
 	set_edit_buttons();
 	populate_edit_widgets(tableWidget_Cheats->currentRow());
 }
-void dlgCheats::s_active_state_changed(int state) {
+void wdgCheatsEditor::s_cheat_item_state(int state) {
 	QWidget *widget;
 	int i;
 
@@ -427,13 +414,18 @@ void dlgCheats::s_active_state_changed(int state) {
 	{
 		chl_map cheat = extract_cheat_from_row(i);
 
-		if ((i = mod->find_cheat(&cheat, true)) != -1) {
+		if ((i = objch->find_cheat(&cheat, true)) != -1) {
 			cheat["enabled"] = tableWidget_Cheats->item(i, CR_ACTIVE)->text();
-			mod->cheats.replace(i, cheat);
+			objch->cheats.replace(i, cheat);
 		}
 	}
+
+	objch->apply_cheats();
 }
-void dlgCheats::s_import_clicked(bool checked) {
+void wdgCheatsEditor::s_hide_show_tools(bool checked) {
+	hide_tools_widgets(!widget_Edit->isHidden());
+}
+void wdgCheatsEditor::s_import(bool checked) {
 	QStringList filters;
 	QString file;
 
@@ -446,21 +438,23 @@ void dlgCheats::s_import_clicked(bool checked) {
 	filters[2].append(" (*.cht *.CHT)");
 
 	file = QFileDialog::getOpenFileName(this, tr("Import Cheats"),
-		parentMain->last_import_cheat_path, filters.join(";;"));
+		uQString(cfg->last_import_cheat_path), filters.join(";;"));
 
 	if (file.isNull() == false) {
 		QFileInfo fileinfo(file);
 
 		if (fileinfo.suffix().toLower() == "cht") {
-			mod->import_CHT(fileinfo.absoluteFilePath());
+			objch->import_CHT(fileinfo.absoluteFilePath());
 		} else {
-			mod->import_XML(fileinfo.absoluteFilePath());
+			objch->import_XML(fileinfo.absoluteFilePath());
 		}
 		populate_cheat_table();
-		parentMain->last_import_cheat_path = fileinfo.absolutePath();
+		umemset(cfg->last_import_cheat_path, 0x00, usizeof(cfg->last_import_cheat_path));
+		ustrncpy(cfg->last_import_cheat_path, uQStringCD(fileinfo.absolutePath()),
+			usizeof(cfg->last_import_cheat_path) - 1);
 	}
 }
-void dlgCheats::s_export_clicked(bool checked) {
+void wdgCheatsEditor::s_export(bool checked) {
 	QStringList filters;
 	QString file;
 
@@ -480,14 +474,15 @@ void dlgCheats::s_export_clicked(bool checked) {
 			fileinfo.setFile(QString(file) + ".xml");
 		}
 
-		mod->save_XML(fileinfo.absoluteFilePath());
+		objch->save_XML(fileinfo.absoluteFilePath());
 	}
 }
-void dlgCheats::s_clear_all_clicked(bool checked) {
+void wdgCheatsEditor::s_clear_all(bool checked) {
 	tableWidget_Cheats->setRowCount(0);
-	mod->cheats.clear();
+	objch->cheats.clear();
 }
-void dlgCheats::s_grp_button_clicked(int id) {
+
+void wdgCheatsEditor::s_grp_type_cheat(int id) {
 	if (id == 0) {
 		frame_Raw_Value->setEnabled(true);
 		hexSpinBox_Address->setRange(0, 0x7FFF);
@@ -512,7 +507,7 @@ void dlgCheats::s_grp_button_clicked(int id) {
 			break;
 	}
 }
-void dlgCheats::s_linedit_to_upper(const QString &text) {
+void wdgCheatsEditor::s_line_to_upper(const QString &text) {
 	QLineEdit *le = qobject_cast<QLineEdit *>(sender());
 
 	if (!le) {
@@ -520,10 +515,17 @@ void dlgCheats::s_linedit_to_upper(const QString &text) {
 	}
 	le->setText(text.toUpper());
 }
-void dlgCheats::s_new_clicked(bool checked) {
-	new_mode = true;
+void wdgCheatsEditor::s_compare(int state) {
+	if (state == Qt::Checked) {
+		hexSpinBox_Compare->setEnabled(true);
+	} else {
+		hexSpinBox_Compare->setEnabled(false);
+	}
+}
+void wdgCheatsEditor::s_new(bool checked) {
+	new_cheat = true;
 
-	groupBox_Cheats->setEnabled(false);
+	widget_Cheats_List->setEnabled(false);
 
 	clear_edit_widgets();
 
@@ -532,17 +534,17 @@ void dlgCheats::s_new_clicked(bool checked) {
 
 	set_type_cheat_checkbox(NULL);
 }
-void dlgCheats::s_remove_clicked(bool checked) {
+void wdgCheatsEditor::s_remove(bool checked) {
 	chl_map cheat = extract_cheat_from_row(tableWidget_Cheats->currentRow());
 	int i;
 
-	if ((i = mod->find_cheat(&cheat, true)) != -1) {
-		mod->cheats.removeAt(i);
+	if ((i = objch->find_cheat(&cheat, true)) != -1) {
+		objch->cheats.removeAt(i);
 	}
 
 	tableWidget_Cheats->removeRow(tableWidget_Cheats->currentRow());
 }
-void dlgCheats::s_submit_clicked(bool checked) {
+void wdgCheatsEditor::s_submit(bool checked) {
 	int i, current, submitted = true;
 	chl_map cheat;
 	int type = 0;
@@ -568,12 +570,12 @@ void dlgCheats::s_submit_clicked(bool checked) {
 	} else if (radioButton_GG->isChecked()) {
 		cheat.insert("genie", lineEdit_GG->text());
 		cheat.insert("rocky", "-");
-		mod->complete_gg(&cheat);
+		objch->complete_gg(&cheat);
 		type = 1;
 	} else if (radioButton_ProAR->isChecked()) {
 		cheat.insert("genie", "-");
 		cheat.insert("rocky", lineEdit_ProAR->text());
-		mod->complete_rocky(&cheat);
+		objch->complete_rocky(&cheat);
 		type = 3;
 	}
 
@@ -594,24 +596,24 @@ void dlgCheats::s_submit_clicked(bool checked) {
 	}
 
 
-	if (new_mode == true) {
+	if (new_cheat == true) {
 		current = tableWidget_Cheats->rowCount();
 	} else {
 		current = tableWidget_Cheats->currentRow();
 	}
 
-	if ((i = mod->find_cheat(&cheat, false)) == -1) {
-		if (new_mode == true) {
-			mod->cheats.insert(current, cheat);
+	if ((i = objch->find_cheat(&cheat, false)) == -1) {
+		if (new_cheat == true) {
+			objch->cheats.insert(current, cheat);
 			insert_cheat_row(current);
 			tableWidget_Cheats->selectRow(current);
 		} else {
-			mod->cheats.replace(current, cheat);
+			objch->cheats.replace(current, cheat);
 			update_cheat_row(current, &cheat);
 		}
 	} else {
-		if ((new_mode == false) && (i == tableWidget_Cheats->currentRow())) {
-			mod->cheats.replace(current, cheat);
+		if ((new_cheat == false) && (i == tableWidget_Cheats->currentRow())) {
+			objch->cheats.replace(current, cheat);
 			update_cheat_row(current, &cheat);
 		} else {
 			QMessageBox::warning(0, tr("Submit warning"), tr("The cheat is already in the list"));
@@ -623,33 +625,16 @@ void dlgCheats::s_submit_clicked(bool checked) {
 		return;
 	}
 
-	if (new_mode == true) {
-		s_cancel_clicked(false);
+	if (new_cheat == true) {
+		s_cancel(false);
 	}
 }
-void dlgCheats::s_cancel_clicked(bool checked) {
-	new_mode = false;
+void wdgCheatsEditor::s_cancel(bool checked) {
+	new_cheat = false;
 
-	groupBox_Cheats->setEnabled(true);
+	widget_Cheats_List->setEnabled(true);
 
-	s_item_selection_changed();
-}
-void dlgCheats::s_hide_show_tools_clicked(bool checked) {
-	hide_tools_widgets(!groupBox_Edit->isHidden());
-}
-void dlgCheats::s_apply_clicked(bool checked) {
-	chl_map cheat;
-
-	org->clear_list();
-
-	for (int i = 0; i < mod->cheats.count(); i++) {
-		org->cheats.insert(i, mod->cheats.at(i));
-	}
-
-	close();
-}
-void dlgCheats::s_discard_clicked(bool checked) {
-	close();
+	s_cheat_item();
 }
 
 hexSpinBox::hexSpinBox(QWidget *parent, int dgts = 4) : QSpinBox(parent) {
@@ -679,6 +664,7 @@ hexSpinBox::hexSpinBox(QWidget *parent, int dgts = 4) : QSpinBox(parent) {
 	installEventFilter(this);
 }
 hexSpinBox::~hexSpinBox() {}
+
 bool hexSpinBox::eventFilter(QObject *obj, QEvent *event) {
 	if (event->type() == QEvent::FocusIn) {
 		no_prefix = true;

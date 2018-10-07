@@ -16,18 +16,19 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include "dlgVsSystem.moc"
+#include <QtCore/QtGlobal>
 #if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
 #include <QtGui/QDesktopWidget>
 #else
 #include <QtWidgets/QDesktopWidget>
 #endif
+#include "dlgVsSystem.moc"
 #include "mainWindow.hpp"
-#include "info.h"
+#include "dlgSettings.hpp"
 #include "vs_system.h"
-#include "clock.h"
 #include "conf.h"
-#include "settings.h"
+#include "info.h"
+#include "clock.h"
 #include "gui.h"
 
 dlgVsSystem::dlgVsSystem(QWidget *parent) : QDialog(parent) {
@@ -35,7 +36,6 @@ dlgVsSystem::dlgVsSystem(QWidget *parent) : QDialog(parent) {
 
 	setupUi(this);
 
-	setFont(parent->font());
 	setStyleSheet(tools_stylesheet());
 
 	pushButton_Left_Coin->setProperty("myIndex", QVariant(1));
@@ -71,23 +71,23 @@ dlgVsSystem::dlgVsSystem(QWidget *parent) : QDialog(parent) {
 
 	{
 		QFont f9;
-		int w, h;
+		int h;
 
 		f9.setPointSize(9);
 		f9.setWeight(QFont::Light);
 
-		if (plainTextEdit_Coin_Counter->font().pointSize() > 9) {
-			plainTextEdit_Coin_Counter->setFont(f9);
+		if (lineEdit_Coin_Counter->font().pointSize() > 9) {
+			lineEdit_Coin_Counter->setFont(f9);
 		}
 
-		w = plainTextEdit_Coin_Counter->fontMetrics().size(0, "123456789012345678901234").width() + 10;
-		h = plainTextEdit_Coin_Counter->fontMetrics().size(0, "1234567890").height() + 10;
+		h = lineEdit_Coin_Counter->fontMetrics().size(0, "1234567890").height() + 10;
 
-		plainTextEdit_Coin_Counter->setFixedSize(w, h);
+		lineEdit_Coin_Counter->setFixedHeight(h);
 	}
 
 	adjustSize();
-	setFixedSize(size());
+	// se setto il fixed size, su windows xp non mi visualizza il dialog correttamente.
+	//setFixedSize(size());
 
 	{
 		QMargins vgbm = verticalLayout_groupBox_Vs_System->contentsMargins();
@@ -97,7 +97,7 @@ dlgVsSystem::dlgVsSystem(QWidget *parent) : QDialog(parent) {
 
 		w = close->fontMetrics().size(0, "x").width() + 10;
 		h = close->fontMetrics().size(0, "x").height() + 5;
-		x = normalGeometry().width() - w -	vdia.right() - 2 - vgbm.right();
+		x = normalGeometry().width() - w - vdia.right() - 2 - vgbm.right();
 		y = vdia.top() + 2 + 1;
 
 		close->setGeometry(x, y, w, h);
@@ -112,15 +112,27 @@ dlgVsSystem::dlgVsSystem(QWidget *parent) : QDialog(parent) {
 	installEventFilter(this);
 }
 dlgVsSystem::~dlgVsSystem() {}
-bool dlgVsSystem::eventFilter(QObject *obj, QEvent *event) {
-	if (event->type() == QEvent::LanguageChange) {
-		Vs_System::retranslateUi(this);
-	}
 
-	gui_control_pause_bck(event->type());
+bool dlgVsSystem::eventFilter(QObject *obj, QEvent *event) {
+	switch (event->type()) {
+		case QEvent::WindowActivate:
+		case QEvent::WindowDeactivate:
+			gui_control_pause_bck(event->type());
+			break;
+		default:
+			break;
+	}
 
 	return (QObject::eventFilter(obj, event));
 }
+void dlgVsSystem::changeEvent(QEvent *event) {
+	if (event->type() == QEvent::LanguageChange) {
+		Ui::dlgVsSystem::retranslateUi(this);
+	} else {
+		QWidget::changeEvent(event);
+	}
+}
+
 int dlgVsSystem::update_pos(int startY) {
 	int screenNumber = qApp->desktop()->screenNumber(parentWidget());
 	int x = parentWidget()->pos().x() + parentWidget()->frameGeometry().width();
@@ -141,7 +153,7 @@ int dlgVsSystem::update_pos(int startY) {
 void dlgVsSystem::update_dialog(void) {
 	in_update = true;
 
-	plainTextEdit_Coin_Counter->setPlainText(QString("%1").arg(vs_system.coins.counter));
+	lineEdit_Coin_Counter->setText(QString("%1").arg(vs_system.coins.counter));
 
 	checkBox_ds1->setChecked((cfg->dipswitch & 0x01) >> 0);
 	checkBox_ds2->setChecked((cfg->dipswitch & 0x02) >> 1);
@@ -171,6 +183,7 @@ void dlgVsSystem::insert_coin(int index) {
 			break;
 	}
 }
+
 void dlgVsSystem::s_coins_clicked(bool checked) {
 	int index = QVariant(((QCheckBox *)sender())->property("myIndex")).toInt();
 
@@ -224,5 +237,5 @@ void dlgVsSystem::s_defaults_clicked(bool checked) {
 	gui_set_focus();
 }
 void dlgVsSystem::s_x_clicked(bool checked) {
-	((mainWindow *) parent())->s_set_vs_window();
+	mainwin->s_set_vs_window();
 }

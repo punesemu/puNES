@@ -94,7 +94,6 @@ static struct _cl_option {
 	{ "background-pause",      req_arg,  0 },
 	{ "save-battery-ram-file", req_arg,  0 },
 	{ "language",              req_arg,  0 },
-	{ "disable-new-menu",      req_arg,  0 },
 	{ "fullscreen-window",     req_arg,  0 },
 	{ "audio-output-device",   req_arg,  0 },
 	{ "shader",                req_arg,  0 },
@@ -187,8 +186,6 @@ BYTE cmd_line_parse(int argc, uTCHAR **argv) {
 					set_int(cfg_from_file.bck_pause, SET_BCK_PAUSE);
 				} else if (key == "language") {
 					set_int(cfg_from_file.language, SET_GUI_LANGUAGE);
-				} else if (key == "disable-new-menu") {
-					set_int(cfg_from_file.disable_new_menu, SET_GUI_DISABLE_NEW_MENU);
 				} else if (key == "fullscreen-window") {
 					set_int(cfg_from_file.fullscreen_in_window, SET_FULLSCREEN_IN_WINDOW);
 				} else if (key == "audio-output-device") {
@@ -394,8 +391,7 @@ static void usage(QString name) {
 			main_cfg[SET_UNLIMITED_SPRITES].hlp,
 			main_cfg[SET_BCK_PAUSE].hlp,
 			main_cfg[SET_CHEAT_MODE].hlp,
-			main_cfg[SET_GUI_LANGUAGE].hlp,
-			main_cfg[SET_GUI_DISABLE_NEW_MENU].hlp
+			main_cfg[SET_GUI_LANGUAGE].hlp
 	);
 
 	if (box->font().pointSize() > 9) {

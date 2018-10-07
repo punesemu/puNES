@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>PPU_Hacks</class>
- <widget class="QDialog" name="PPU_Hacks">
+ <class>dlgPPUHacks</class>
+ <widget class="QDialog" name="dlgPPUHacks">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>259</width>
-    <height>367</height>
+    <width>278</width>
+    <height>320</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -36,196 +36,21 @@
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_groupBox_PPU_Hacks">
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_sprites_and_bck">
-        <item>
-         <widget class="QLabel" name="label_Sprites_and_background">
-          <property name="text">
-           <string>&lt;b&gt;Sprites and background&lt;/b&gt;</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="Line" name="line_Sprites_and_background">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="checkBox_Hide_Sprites">
-        <property name="layoutDirection">
-         <enum>Qt::LeftToRight</enum>
-        </property>
-        <property name="text">
-         <string>Hide Sprites</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="checkBox_Hide_Background">
-        <property name="layoutDirection">
-         <enum>Qt::LeftToRight</enum>
-        </property>
-        <property name="text">
-         <string>Hide Background</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="checkBox_Unlimited_Sprites">
-        <property name="layoutDirection">
-         <enum>Qt::LeftToRight</enum>
-        </property>
-        <property name="text">
-         <string>Unlimited Sprites</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_overclock">
-        <item>
-         <widget class="QLabel" name="label_PPU_Overclock">
-          <property name="text">
-           <string>&lt;b&gt;Overclock&lt;/b&gt;</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="Line" name="line_PPU_Overclock">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="checkBox_Disable_DMC_Control">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="layoutDirection">
-         <enum>Qt::LeftToRight</enum>
-        </property>
-        <property name="text">
-         <string>Disable 7bit Sample Control</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="checkBox_PPU_Overclock">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="layoutDirection">
-         <enum>Qt::LeftToRight</enum>
-        </property>
-        <property name="text">
-         <string>Enable Extra Scanlines</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <layout class="QGridLayout" name="gridLayout_lines">
-        <item row="0" column="0">
-         <widget class="QLabel" name="label_VB_Slines">
-          <property name="minimumSize">
-           <size>
-            <width>145</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>VBlank Lines</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QSpinBox" name="spinBox_VB_Slines">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QSpinBox" name="spinBox_Postrender_Slines">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="label_Postrender_Slines">
-          <property name="text">
-           <string>Postrender Lines</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <widget class="QPlainTextEdit" name="plainTextEdit_Lag_Counter">
-          <property name="focusPolicy">
-           <enum>Qt::NoFocus</enum>
-          </property>
-          <property name="verticalScrollBarPolicy">
-           <enum>Qt::ScrollBarAlwaysOff</enum>
-          </property>
-          <property name="horizontalScrollBarPolicy">
-           <enum>Qt::ScrollBarAlwaysOff</enum>
-          </property>
-          <property name="undoRedoEnabled">
-           <bool>false</bool>
-          </property>
-          <property name="readOnly">
-           <bool>true</bool>
-          </property>
-          <property name="plainText">
-           <string notr="true"/>
-          </property>
-          <property name="textInteractionFlags">
-           <set>Qt::NoTextInteraction</set>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QPushButton" name="pushButton_Reset_Lag_Counter">
-          <property name="text">
-           <string>Reset Lag Counter</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
+       <widget class="wdgSettingsPPU" name="widget_wdgSettingsPPU" native="true"/>
       </item>
      </layout>
     </widget>
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>wdgSettingsPPU</class>
+   <extends>QWidget</extends>
+   <header>wdgSettingsPPU.hpp</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

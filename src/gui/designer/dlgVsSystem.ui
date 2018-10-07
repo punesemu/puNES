@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Vs_System</class>
- <widget class="QDialog" name="Vs_System">
+ <class>dlgVsSystem</class>
+ <widget class="QDialog" name="dlgVsSystem">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>294</width>
-    <height>305</height>
+    <width>214</width>
+    <height>258</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -87,27 +87,12 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_text_coin_counter">
         <item>
-         <widget class="QPlainTextEdit" name="plainTextEdit_Coin_Counter">
+         <widget class="QLineEdit" name="lineEdit_Coin_Counter">
           <property name="focusPolicy">
            <enum>Qt::NoFocus</enum>
           </property>
-          <property name="verticalScrollBarPolicy">
-           <enum>Qt::ScrollBarAlwaysOff</enum>
-          </property>
-          <property name="horizontalScrollBarPolicy">
-           <enum>Qt::ScrollBarAlwaysOff</enum>
-          </property>
-          <property name="undoRedoEnabled">
-           <bool>false</bool>
-          </property>
           <property name="readOnly">
            <bool>true</bool>
-          </property>
-          <property name="plainText">
-           <string notr="true"/>
-          </property>
-          <property name="textInteractionFlags">
-           <set>Qt::NoTextInteraction</set>
           </property>
          </widget>
         </item>
@@ -139,107 +124,6 @@
       </item>
       <item>
        <layout class="QGridLayout" name="gridLayout_dip_switches">
-        <item row="0" column="4">
-         <widget class="QCheckBox" name="checkBox_ds5">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="2">
-         <widget class="QCheckBox" name="checkBox_ds3">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="5">
-         <widget class="QCheckBox" name="checkBox_ds6">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="0">
-         <widget class="QCheckBox" name="checkBox_ds1">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="6">
-         <widget class="QCheckBox" name="checkBox_ds7">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="7">
-         <widget class="QCheckBox" name="checkBox_ds8">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QCheckBox" name="checkBox_ds2">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="3">
-         <widget class="QCheckBox" name="checkBox_ds4">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-         </widget>
-        </item>
         <item row="1" column="3">
          <widget class="QLabel" name="label_ds5">
           <property name="text">
@@ -247,6 +131,9 @@
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="textInteractionFlags">
+           <set>Qt::NoTextInteraction</set>
           </property>
          </widget>
         </item>
@@ -258,6 +145,9 @@
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="textInteractionFlags">
+           <set>Qt::NoTextInteraction</set>
+          </property>
          </widget>
         </item>
         <item row="1" column="5">
@@ -267,6 +157,9 @@
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="textInteractionFlags">
+           <set>Qt::NoTextInteraction</set>
           </property>
          </widget>
         </item>
@@ -278,6 +171,9 @@
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="textInteractionFlags">
+           <set>Qt::NoTextInteraction</set>
+          </property>
          </widget>
         </item>
         <item row="1" column="7">
@@ -287,6 +183,9 @@
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="textInteractionFlags">
+           <set>Qt::NoTextInteraction</set>
           </property>
          </widget>
         </item>
@@ -298,6 +197,9 @@
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="textInteractionFlags">
+           <set>Qt::NoTextInteraction</set>
+          </property>
          </widget>
         </item>
         <item row="1" column="1">
@@ -307,6 +209,9 @@
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="textInteractionFlags">
+           <set>Qt::NoTextInteraction</set>
           </property>
          </widget>
         </item>
@@ -318,7 +223,34 @@
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="textInteractionFlags">
+           <set>Qt::NoTextInteraction</set>
+          </property>
          </widget>
+        </item>
+        <item row="0" column="7">
+         <widget class="QCheckBox" name="checkBox_ds8"/>
+        </item>
+        <item row="0" column="6">
+         <widget class="QCheckBox" name="checkBox_ds7"/>
+        </item>
+        <item row="0" column="5">
+         <widget class="QCheckBox" name="checkBox_ds6"/>
+        </item>
+        <item row="0" column="4">
+         <widget class="QCheckBox" name="checkBox_ds5"/>
+        </item>
+        <item row="0" column="3">
+         <widget class="QCheckBox" name="checkBox_ds4"/>
+        </item>
+        <item row="0" column="2">
+         <widget class="QCheckBox" name="checkBox_ds3"/>
+        </item>
+        <item row="0" column="1">
+         <widget class="QCheckBox" name="checkBox_ds2"/>
+        </item>
+        <item row="0" column="0">
+         <widget class="QCheckBox" name="checkBox_ds1"/>
         </item>
        </layout>
       </item>

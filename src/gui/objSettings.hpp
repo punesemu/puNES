@@ -16,8 +16,8 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef SETTINGSOBJECT_HPP_
-#define SETTINGSOBJECT_HPP_
+#ifndef OBJSETTINGS_HPP_
+#define OBJSETTINGS_HPP_
 
 #include "settings.h"
 #include <QtCore/QSettings>
@@ -25,10 +25,11 @@
 #include <QtGui/QKeySequence>
 #include <QtCore/QStringList>
 #include <QtGui/QKeyEvent>
+#include "conf.h"
 #include "overscan.h"
 #include "gui.h"
 
-class settingsObject : public QSettings {
+class objSettings : public QSettings {
 		Q_OBJECT
 
 	public:
@@ -39,19 +40,21 @@ class settingsObject : public QSettings {
 		int listEle;
 
 	public:
-		settingsObject(Format f, QString file, int list_ele);
-		~settingsObject();
-		void wr();
+		objSettings(Format f, QString file, int list_ele);
+		~objSettings();
+
+	public:
+		void wr(void);
 		void wr(QString group);
 		int val_to_int(int index, const uTCHAR *buffer);
 		void cpy_utchar_to_val(int index, uTCHAR *src);
 
 	protected:
-		virtual void setup();
+		virtual void setup(void);
 		virtual void to_cfg(QString group);
 		virtual void fr_cfg(QString group);
 		virtual void after_the_defaults(void);
-		void rd();
+		void rd(void);
 		void rd(QString group);
 		int val_to_int(int index);
 		void int_to_val(int index, int value);
@@ -62,21 +65,23 @@ class settingsObject : public QSettings {
 		void rd_key(QString group, int index);
 		void wr_key(int index);
 		void wr_key(QString group, int index);
-		void wr_all_keys();
+		void wr_all_keys(void);
 };
 
-class setObject : public settingsObject {
+class objSet : public objSettings {
 		Q_OBJECT
 
 	public:
-		setObject(Format f, QString file, int list_ele);
-		~setObject();
+		objSet(Format f, QString file, int list_ele);
+		~objSet();
+
+	public:
 		double val_to_double(WORD round, const uTCHAR *buffer);
 		void oscan_val_to_int(int index, _overscan_borders *ob, const uTCHAR *buffer);
 		void oscan_default(_overscan_borders *ob, BYTE mode);
 
 	protected:
-		virtual void setup();
+		virtual void setup(void);
 		virtual void to_cfg(QString group);
 		virtual void fr_cfg(QString group);
 		virtual void after_the_defaults(void);
@@ -89,27 +94,29 @@ class setObject : public settingsObject {
 		void channel_default(int index);
 		void channel_val_to_int(int index);
 		QString channel_val(int index);
-		void lastpos_val_to_int(int index);
-		QString lastpos_val();
+		void lastpos_val_to_int(int index, _last_pos *last_pos);
+		QString lastpos_val(_last_pos *last_pos);
 		void oscan_val_to_int(int index, _overscan_borders *ob);
 		QString oscan_val(_overscan_borders *ob);
 };
 
-class pgsObject : public settingsObject {
+class objPgs : public objSettings {
 	public:
-		pgsObject(Format f, QString file, int list_ele);
-		~pgsObject();
+		objPgs(Format f, QString file, int list_ele);
+		~objPgs();
 
 	protected:
-		void setup();
+		void setup(void);
 		void to_cfg(QString group);
 		void fr_cfg(QString group);
 };
 
-class inpObject : public settingsObject {
+class objInp : public objSettings {
 	public:
-		inpObject(Format f, QString file, int list_ele);
-		~inpObject();
+		objInp(Format f, QString file, int list_ele);
+		~objInp();
+
+	public:
 		static QString kbd_keyval_to_name(const DBWORD value);
 		static DBWORD kbd_keyval_decode(QKeyEvent *keyEvent);
 		void set_kbd_joy_default(_port *port, int index, int mode);
@@ -118,7 +125,7 @@ class inpObject : public settingsObject {
 		void sc_qstring_pntr_to_val(void *str, int index, int type);
 
 	protected:
-		void setup();
+		void setup(void);
 		void to_cfg(QString group);
 		void fr_cfg(QString group);
 
@@ -142,9 +149,9 @@ class inpObject : public settingsObject {
 
 typedef struct _emu_settings {
 	QSettings::Format cfg;
-	setObject *set;
-	pgsObject *pgs;
-	inpObject *inp;
+	objSet *set;
+	objPgs *pgs;
+	objInp *inp;
 	BYTE list;
 } _emu_settings;
 
@@ -159,4 +166,4 @@ EXTERNC bool wr_cfg_file(QIODevice &device, const QSettings::SettingsMap &map);
 
 #undef EXTERNC
 
-#endif /* SETTINGSOBJECT_HPP_ */
+#endif /* OBJSETTINGS_HPP_ */

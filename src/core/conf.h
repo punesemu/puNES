@@ -23,6 +23,10 @@
 #include "input.h"
 #include "overscan.h"
 
+typedef struct _last_pos {
+	int x;
+	int y;
+} _last_pos;
 typedef struct _config {
 	BYTE save_on_exit;
 	BYTE mode;
@@ -64,7 +68,6 @@ typedef struct _config {
 #endif
 	BYTE bck_pause;
 	WORD language;
-	BYTE disable_new_menu;
 	WORD dipswitch;
 	BYTE ppu_overclock;
 	BYTE ppu_overclock_dmc_control_disabled;
@@ -81,14 +84,15 @@ typedef struct _config {
 	uTCHAR shader_file[LENGTH_FILE_NAME_LONG];
 	uTCHAR palette_file[LENGTH_FILE_NAME_LONG];
 	uTCHAR save_file[LENGTH_FILE_NAME_LONG];
+	uTCHAR gg_rom_file[LENGTH_FILE_NAME_LONG];
+	uTCHAR fds_bios_file[LENGTH_FILE_NAME_LONG];
+	uTCHAR last_import_cheat_path[LENGTH_FILE_NAME_LONG];
 
 	uTCHAR audio_output[100];
 	uTCHAR audio_input[100];
 
-	struct _last_pos {
-		int x;
-		int y;
-	} last_pos;
+	_last_pos last_pos;
+	_last_pos last_pos_settings;
 } _config;
 
 #if defined (__cplusplus)

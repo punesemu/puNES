@@ -514,7 +514,7 @@
     </message>
 </context>
 <context>
-    <name>cheatObject</name>
+    <name>objCheat</name>
     <message>
         <source>Error on reading the file</source>
         <translation>Errore sulla lettura del file</translation>
@@ -1664,7 +1664,7 @@
     </message>
 </context>
 <context>
-    <name>stateWidget</name>
+    <name>wdgState</name>
     <message>
         <source>Save/Load Slot Box</source>
         <translation>Box Salva/Carica Slot</translation>

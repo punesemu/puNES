@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="icon">
+    <file>icons/misc.svg</file>
     <file>icons/home.svg</file>
     <file>icons/nsf_file.svg</file>
     <file>icons/mode.svg</file>
@@ -36,6 +37,7 @@
     <file>icons/samplerate.svg</file>
     <file>icons/fullscreen.svg</file>
     <file>icons/load.svg</file>
+    <file>icons/general.svg</file>
     <file>icons/shader.svg</file>
     <file>icons/save.svg</file>
     <file>icons/palette.svg</file>

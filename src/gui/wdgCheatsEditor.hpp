@@ -16,23 +16,23 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef DLGCHEATS_HPP_
-#define DLGCHEATS_HPP_
+#ifndef WDGCHEATSEDITOR_HPP_
+#define WDGCHEATSEDITOR_HPP_
 
 #include <QtCore/QtGlobal>
 #if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
 #include <QtXml/QXmlStreamReader>
-#include <QtGui/QDialog>
+#include <QtGui/QWidget>
 #include <QtGui/QSpinBox>
 #else
 #include <QtCore/QXmlStreamReader>
-#include <QtWidgets/QDialog>
+#include <QtWidgets/QWidget>
 #include <QtWidgets/QSpinBox>
 #endif
-#include "dlgCheats.hh"
-#include "cheatObject.hpp"
+#include "wdgCheatsEditor.hh"
+#include "objCheat.hpp"
 
-class hexSpinBox: public QSpinBox {
+class hexSpinBox : public QSpinBox {
 		Q_OBJECT
 
 	private:
@@ -53,52 +53,56 @@ class hexSpinBox: public QSpinBox {
 		QRegExpValidator *validator;
 };
 
-class dlgCheats : public QDialog, public Ui::Cheats {
+class wdgCheatsEditor : public QWidget, public Ui::wdgCheatEditor {
 		Q_OBJECT
 
 	private:
-		bool new_mode;
-		cheatObject *mod, *org;
+		bool new_cheat;
+		objCheat *objch;
 		hexSpinBox *hexSpinBox_Address;
 		hexSpinBox *hexSpinBox_Value;
 		hexSpinBox *hexSpinBox_Compare;
 
 	public:
-		dlgCheats(QWidget *parent = 0, cheatObject *c = 0);
-		~dlgCheats();
+		wdgCheatsEditor(QWidget *parent = 0);
+		~wdgCheatsEditor();
 
 	protected:
-		bool eventFilter(QObject *obj, QEvent *event);
+		void changeEvent(QEvent *event);
+
+	public:
+		void hide_tools_widgets(bool state);
 
 	private:
 		chl_map extract_cheat_from_row(int row);
-		void populate_cheat_table();
+		void populate_cheat_table(void);
 		void insert_cheat_row(int row);
 		void update_cheat_row(int row, chl_map *cheat);
-		void hide_tools_widgets(bool state);
+
+	private:
 		void populate_edit_widgets(int row);
-		void clear_edit_widgets();
-		void set_edit_widget();
+		void clear_edit_widgets(void);
+		void set_edit_widget(void);
 		void set_type_cheat_checkbox(chl_map *cheat);
-		void set_edit_buttons();
+		void set_edit_buttons(void);
 		void change_active_compare_state(bool state);
 
 	private slots:
-		void s_active_compare_state_changed(int state);
-		void s_item_selection_changed();
-		void s_active_state_changed(int state);
-		void s_import_clicked(bool checked);
-		void s_export_clicked(bool checked);
-		void s_clear_all_clicked(bool checked);
-		void s_grp_button_clicked(int id);
-		void s_linedit_to_upper(const QString &text);
-		void s_new_clicked(bool checked);
-		void s_remove_clicked(bool checked);
-		void s_submit_clicked(bool checked);
-		void s_cancel_clicked(bool checked);
-		void s_hide_show_tools_clicked(bool checked);
-		void s_apply_clicked(bool checked);
-		void s_discard_clicked(bool checked);
+		void s_cheat_item(void);
+		void s_cheat_item_state(int state);
+		void s_import(bool checked);
+		void s_export(bool checked);
+		void s_clear_all(bool checked);
+		void s_hide_show_tools(bool checked);
+
+	private slots:
+		void s_grp_type_cheat(int id);
+		void s_line_to_upper(const QString &text);
+		void s_compare(int state);
+		void s_new(bool checked);
+		void s_remove(bool checked);
+		void s_submit(bool checked);
+		void s_cancel(bool checked);
 };
 
-#endif /* DLGCHEATS_HPP_ */
+#endif /* WDGCHEATSEDITOR_HPP_ */

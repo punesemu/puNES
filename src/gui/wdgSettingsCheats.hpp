@@ -16,30 +16,36 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include "pStyle.moc"
-#include "conf.h"
-#include "qt.h"
+#ifndef WDGSETTINGSCHEATS_HPP_
+#define WDGSETTINGSCHEATS_HPP_
 
-pStyle::pStyle() : QProxyStyle() {
-	newMenuMenagement = false;
-	newMenuAllowActiveAndDisabled = false;
-}
-pStyle::~pStyle() {}
-int pStyle::styleHint(StyleHint hint, const QStyleOption* opt = 0, const QWidget* widget = 0,
-		QStyleHintReturn* returnData = 0) const {
-	if (hint == QStyle::SH_Menu_SloppySubMenus) {
-		return (0);
-	}
-	if (!cfg->disable_new_menu && newMenuMenagement) {
-		if (hint == QStyle::SH_Menu_FlashTriggeredItem) {
-			return (0);
-		}
-		if (hint == QStyle::SH_Menu_AllowActiveAndDisabled) {
-			if (newMenuAllowActiveAndDisabled) {
-				return (1);
-			}
-		}
-	}
-	return (QProxyStyle::styleHint(hint, opt, widget, returnData));
-}
+#include <QtCore/QtGlobal>
+#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
+#include <QtGui/QWidget>
+#else
+#include <QtWidgets/QWidget>
+#endif
+#include "wdgSettingsCheats.hh"
 
+class wdgSettingsCheats : public QWidget, public Ui::wdgSettingsCheats {
+		Q_OBJECT
+
+	public:
+		wdgSettingsCheats(QWidget *parent = 0);
+		~wdgSettingsCheats();
+
+	private:
+		void changeEvent(QEvent *event);
+
+	public:
+		void retranslateUi(QWidget *wdgSettingsInput);
+		void update_widget(void);
+
+	private:
+		void cheat_mode_set(void);
+
+	private slots:
+		void s_cheat_mode(int index);
+};
+
+#endif /* WDGSETTINGSCHEATS_HPP_ */

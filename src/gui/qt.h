@@ -41,6 +41,10 @@
 	"	padding: 0 0px;"\
 	"}"
 
+#define mainwin ((mainWindow *)gui_mainwindow_get_ptr())
+#define dlgsettings ((dlgSettings *)gui_dlgsettings_get_ptr())
+#define objcheat ((objCheat *)gui_objcheat_get_ptr())
+
 #if defined (__cplusplus)
 #define EXTERNC extern "C"
 #else
@@ -66,7 +70,7 @@ EXTERNC struct _gui {
 	uint8_t start;
 	uint8_t in_update;
 
-	/* lost focus pause */
+	// lost focus pause
 	uint8_t main_win_lfp;
 
 	int dlg_rc;
@@ -98,6 +102,7 @@ EXTERNC void gui_start(void);
 EXTERNC void gui_set_video_mode(void);
 
 EXTERNC void gui_update(void);
+EXTERNC void gui_update_gps_settings(void);
 
 EXTERNC void gui_fullscreen(void);
 EXTERNC void gui_timeline(void);
@@ -108,22 +113,26 @@ EXTERNC void gui_print_usage(char *usage);
 EXTERNC void gui_reset_video(void);
 EXTERNC int gui_uncompress_selection_dialog(_uncompress_archive *archive, BYTE type);
 
-EXTERNC void gui_control_pause_bck(WORD type);
+EXTERNC void gui_control_pause_bck(WORD event);
 
 EXTERNC void gui_after_set_video_mode(void);
 EXTERNC void gui_active_window(void);
 EXTERNC void gui_set_focus(void);
 
-EXTERNC void gui_cheat_init(void);
-EXTERNC void gui_cheat_read_game_cheats(void);
-EXTERNC void gui_cheat_save_game_cheats(void);
+EXTERNC void *gui_objcheat_get_ptr(void);
+EXTERNC void gui_objcheat_init(void);
+EXTERNC void gui_objcheat_read_game_cheats(void);
+EXTERNC void gui_objcheat_save_game_cheats(void);
 
 EXTERNC void gui_cursor_init(void);
 EXTERNC void gui_cursor_set(void);
 EXTERNC void gui_cursor_hide(BYTE hide);
 EXTERNC void gui_control_visible_cursor(void);
 
-EXTERNC void gui_mainWindow_make_reset(BYTE type);
+EXTERNC void *gui_mainwindow_get_ptr(void);
+EXTERNC void gui_mainwindow_make_reset(int type);
+
+EXTERNC void *gui_dlgsettings_get_ptr(void);
 
 EXTERNC void gui_external_control_windows_show(void);
 EXTERNC void gui_external_control_windows_update_pos(void);
@@ -131,10 +140,9 @@ EXTERNC void gui_external_control_windows_update_pos(void);
 EXTERNC void gui_vs_system_update_dialog(void);
 EXTERNC void gui_vs_system_insert_coin(void);
 
-EXTERNC void gui_apu_channels_update_dialog(void);
+EXTERNC void gui_apu_channels_widgets_update(void);
 
-EXTERNC void gui_ppu_hacks_update_dialog(void);
-EXTERNC void gui_ppu_hacks_lag_counter_update(void);
+EXTERNC void gui_ppu_hacks_widgets_update(void);
 
 EXTERNC BYTE gui_load_lut(void *l, const uTCHAR *path);
 EXTERNC void gui_save_screenshot(int w, int h, char *buffer, BYTE flip);

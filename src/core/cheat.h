@@ -75,7 +75,7 @@ EXTERNC void gamegenie_init(void);
 EXTERNC void gamegenie_quit(void);
 EXTERNC void gamegenie_reset(void);
 EXTERNC void gamegenie_free_paths(void);
-EXTERNC void gamegenie_check_rom_present(BYTE print_message);
+EXTERNC uTCHAR *gamegenie_check_rom_present(BYTE print_message);
 EXTERNC void gamegenie_load_rom(void *rom_mem);
 
 EXTERNC void cheatslist_init(void);

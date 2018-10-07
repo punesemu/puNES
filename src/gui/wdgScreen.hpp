@@ -16,48 +16,52 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef DLGOVERSCANBORDERS_HPP_
-#define DLGOVERSCANBORDERS_HPP_
+#ifndef WDGSCREEN_HPP_
+#define WDGSCREEN_HPP_
 
 #include <QtCore/QtGlobal>
 #if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-#include <QtGui/QDialog>
+#include <QtGui/QWidget>
 #else
-#include <QtWidgets/QDialog>
+#include <QtWidgets/QWidget>
 #endif
-#include "dlgOverscanBorders.hh"
-#include "overscan.h"
+#include <QtGui/QDragEnterEvent>
+#include <QtGui/QDropEvent>
+#include "gui.h"
 
-class dlgOverscanBorders : public QDialog, public Ui::Set_borders {
+class wdgScreen : public QWidget {
 		Q_OBJECT
 
 	private:
+#if defined (__WIN32__)
+#if defined (WITH_OPENGL)
 		struct _data {
-			BYTE save_overscan;
-
-			int mode;
-
-			_overscan_borders save_borders;
-			_overscan_borders preview;
-			_overscan_borders overscan_borders[2];
-			_overscan_borders *borders;
+			LONG_PTR WINAPI (*qt)(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+			LONG_PTR WINAPI (*sdl)(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+			LONG_PTR WINAPI (*tmp)(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 		} data;
+#endif
+		QCursor *target;
+#endif
 
 	public:
-		dlgOverscanBorders(QWidget *parent = 0);
-		~dlgOverscanBorders();
+		wdgScreen(QWidget *parent);
+		~wdgScreen();
 
-	private:
+	protected:
 		bool eventFilter(QObject *obj, QEvent *event);
-		void update_dialog();
+		void dragEnterEvent(QDragEnterEvent *event);
+		void dropEvent(QDropEvent *event);
 
-	private slots:
-		void s_combobox_activated(int index);
-		void s_preview_clicked(bool checked);
-		void s_default_clicked(bool checked);
-		void s_spinbox_value_changed(int i);
-		void s_apply_clicked(bool checked);
-		void s_discard_clicked(bool checked);
+	public:
+#if defined (__WIN32__)
+#if defined (WITH_OPENGL)
+		void controlEventFilter(void);
+#endif
+		void cursor_init(void);
+		void cursor_set(void);
+		void cursor_hide(BYTE hide);
+#endif
 };
 
-#endif /* DLGOVERSCANBORDERS_HPP_ */
+#endif /* WDGSCREEN_HPP_ */

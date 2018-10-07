@@ -16,8 +16,8 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef CHEATOBJECT_HPP_
-#define CHEATOBJECT_HPP_
+#ifndef OBJCHEAT_HPP_
+#define OBJCHEAT_HPP_
 
 #include <QtCore/QMap>
 #if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
@@ -30,19 +30,21 @@
 typedef QMap<QString, QString> chl_map;
 typedef QList<chl_map> chl_list;
 
-class cheatObject : public QObject {
+class objCheat : public QObject {
 		Q_OBJECT
 
 	public:
 		chl_list cheats;
 
 	public:
-		cheatObject(QObject *parent = 0);
-		~cheatObject();
-		void read_game_cheats();
-		void save_game_cheats();
-		void clear_list();
-		void apply_cheats();
+		objCheat(QObject *parent = 0);
+		~objCheat();
+
+	public:
+		void read_game_cheats(void);
+		void save_game_cheats(void);
+		void clear_list(void);
+		void apply_cheats(void);
 		bool is_equal(int index, chl_map *find, bool dscription);
 		int find_cheat(chl_map *find, bool description);
 		void import_XML(QString file_XML);
@@ -63,4 +65,4 @@ class cheatObject : public QObject {
 		void add_element_data_to_map(QXmlStreamReader &xml, chl_map &map) const;
 };
 
-#endif /* CHEATOBJECT_HPP_ */
+#endif /* OBJCHEAT_HPP_ */

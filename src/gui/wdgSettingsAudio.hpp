@@ -16,36 +16,49 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef DLGUNCOMP_HPP_
-#define DLGUNCOMP_HPP_
+#ifndef WDGSETTINGSAUDIO_HPP_
+#define WDGSETTINGSAUDIO_HPP_
 
 #include <QtCore/QtGlobal>
 #if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-#include <QtGui/QDialog>
+#include <QtGui/QWidget>
 #else
-#include <QtWidgets/QDialog>
+#include <QtWidgets/QWidget>
 #endif
-#include "dlgUncomp.hh"
-#include "common.h"
-#include "uncompress.h"
+#include "wdgSettingsAudio.hh"
 
-class dlgUncomp : public QDialog, public Ui::dlgUncomp {
+class wdgSettingsAudio : public QWidget, public Ui::wdgSettingsAudio {
 		Q_OBJECT
 
+	public:
+		wdgSettingsAudio(QWidget *parent = 0);
+		~wdgSettingsAudio();
+
 	private:
-		int selected;
+		void changeEvent(QEvent *event);
+		void showEvent(QShowEvent *event);
 
 	public:
-		dlgUncomp(QWidget *parent = 0, void *uncompress_archive = NULL,
-			BYTE type = UNCOMPRESS_TYPE_ALL);
-		~dlgUncomp();
+		void retranslateUi(QWidget *wdgSettingsInput);
+		void update_widget(void);
 
 	private:
-		void closeEvent(QCloseEvent *event);
+		void output_devices_init(void);
+
+	private:
+		void audio_buffer_factor_set(void);
+		void sample_rate_set(void);
+		void channels_set(void);
+		void channels_delay_set(void);
 
 	private slots:
-		void s_ok_clicked(bool checked);
-		void s_none_clicked(bool checked);
+		void s_output_devices(int index);
+		void s_audio_buffer_factor(int index);
+		void s_sample_rate(int index);
+		void s_channels(int index);
+		void s_channels_delay(int index);
+		void s_swap_duty_cycles(bool checked);
+		void s_enable_audio(bool checked);
 };
 
-#endif /* DLGUNCOMP_HPP_ */
+#endif /* WDGSETTINGSAUDIO_HPP_ */

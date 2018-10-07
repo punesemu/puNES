@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Uncompress_selection</class>
- <widget class="QDialog" name="Uncompress_selection">
+ <class>dlgUncomp</class>
+ <widget class="QDialog" name="dlgUncomp">
   <property name="geometry">
    <rect>
     <x>0</x>

@@ -16,8 +16,8 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include "settingsObject.hpp"
 #include <QtCore/QFileInfo>
+#include "objSettings.hpp"
 #include "conf.h"
 
 #define CFGFILENAME "/puNES.cfg"
@@ -34,9 +34,9 @@ void settings_init(void) {
 
 	s.cfg = QSettings::registerFormat("cfg", rd_cfg_file, wr_cfg_file);
 	s.list = LSET_SET;
-	s.set = new setObject(s.cfg, QString(CFGFILENAME), LSET_SET);
+	s.set = new objSet(s.cfg, QString(CFGFILENAME), LSET_SET);
 	s.list = LSET_INP;
-	s.inp = new inpObject(s.cfg, QString(INPFILENAME), LSET_INP);
+	s.inp = new objInp(s.cfg, QString(INPFILENAME), LSET_INP);
 }
 void settings_save(void) {
 	s.set->wr();
@@ -62,7 +62,7 @@ void settings_val_to_oscan(int index, _overscan_borders *ob, const uTCHAR *buffe
 }
 
 void settings_pgs_parse(void) {
-	/* game genie */
+	// game genie
 	if (info.mapper.id == GAMEGENIE_MAPPER) {
 		return;
 	}
@@ -77,7 +77,7 @@ void settings_pgs_parse(void) {
 	}
 
 	s.list = LSET_PGS;
-	s.pgs = new pgsObject(s.cfg, PGSFILENAME, LSET_PGS);
+	s.pgs = new objPgs(s.cfg, PGSFILENAME, LSET_PGS);
 
 	if (cfg->ppu_overclock) {
 		text_add_line_info(1,

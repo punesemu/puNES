@@ -22,45 +22,29 @@
 #else
 #include <QtWidgets/QDesktopWidget>
 #endif
-#include "dlgPPUHacks.moc"
+#include "dlgAPUChannels.moc"
 #include "mainWindow.hpp"
+#include "dlgSettings.hpp"
+#include "conf.h"
+#include "gui.h"
 
-dlgPPUHacks::dlgPPUHacks(QWidget *parent) : QDialog(parent) {
+dlgAPUChannels::dlgAPUChannels(QWidget *parent) : QDialog(parent) {
 	setupUi(this);
 
 	setStyleSheet(tools_stylesheet());
+
+	connect(checkBox_Swap_Duty_Cycles, SIGNAL(clicked(bool)), this, SLOT(s_swap_duty_cycles(bool)));
 
 	setWindowFlags(Qt::Dialog | Qt::FramelessWindowHint);
 
 	setAttribute(Qt::WA_DeleteOnClose);
 
-	{
-		QFont f9;
-		int w, h;
-
-		f9.setPointSize(9);
-		f9.setWeight(QFont::Light);
-
-		if (widget_wdgSettingsPPU->pushButton_Reset_Lag_Counter->font().pointSize() > 9) {
-			widget_wdgSettingsPPU->pushButton_Reset_Lag_Counter->setFont(f9);
-		}
-
-		if (widget_wdgSettingsPPU->lineEdit_Lag_Counter->font().pointSize() > 9) {
-			widget_wdgSettingsPPU->lineEdit_Lag_Counter->setFont(f9);
-		}
-
-		w = widget_wdgSettingsPPU->lineEdit_Lag_Counter->fontMetrics().size(0, "000000000").width() + 10;
-		h = widget_wdgSettingsPPU->lineEdit_Lag_Counter->fontMetrics().size(0, "1234567890").height() + 10;
-
-		widget_wdgSettingsPPU->lineEdit_Lag_Counter->setFixedSize(w, h);
-	}
-
 	adjustSize();
 	setFixedSize(size());
 
 	{
-		QMargins vgbm = verticalLayout_groupBox_PPU_Hacks->contentsMargins();
-		QMargins vdia = verticalLayout_PPU_Hacks->contentsMargins();
+		QMargins vgbm = verticalLayout_groupBox_APU_Channels->contentsMargins();
+		QMargins vdia = verticalLayout_APU_Channels->contentsMargins();
 		QPushButton *close = new QPushButton(this);
 		int x, y, w, h;
 
@@ -72,17 +56,17 @@ dlgPPUHacks::dlgPPUHacks(QWidget *parent) : QDialog(parent) {
 		close->setGeometry(x, y, w, h);
 		close->setText("x");
 
-		connect(close, SIGNAL(clicked(bool)), this, SLOT(s_x_clicked(bool)));
+		connect(close, SIGNAL(clicked(bool)), this, SLOT(s_x(bool)));
 
 		vgbm.setTop(close->sizeHint().height() + 2);
-		verticalLayout_groupBox_PPU_Hacks->setContentsMargins(vgbm);
+		verticalLayout_groupBox_APU_Channels->setContentsMargins(vgbm);
 	}
 
 	installEventFilter(this);
 }
-dlgPPUHacks::~dlgPPUHacks() {}
+dlgAPUChannels::~dlgAPUChannels() {}
 
-bool dlgPPUHacks::eventFilter(QObject *obj, QEvent *event) {
+bool dlgAPUChannels::eventFilter(QObject *obj, QEvent *event) {
 	switch (event->type()) {
 		case QEvent::WindowActivate:
 		case QEvent::WindowDeactivate:
@@ -94,15 +78,15 @@ bool dlgPPUHacks::eventFilter(QObject *obj, QEvent *event) {
 
 	return (QObject::eventFilter(obj, event));
 }
-void dlgPPUHacks::changeEvent(QEvent *event) {
+void dlgAPUChannels::changeEvent(QEvent *event) {
 	if (event->type() == QEvent::LanguageChange) {
-		Ui::dlgPPUHacks::retranslateUi(this);
+		Ui::dlgAPUChannels::retranslateUi(this);
 	} else {
 		QDialog::changeEvent(event);
 	}
 }
 
-int dlgPPUHacks::update_pos(int startY) {
+int dlgAPUChannels::update_pos(int startY) {
 	int screenNumber = qApp->desktop()->screenNumber(parentWidget());
 	int x = parentWidget()->pos().x() + parentWidget()->frameGeometry().width();
 	int y = parentWidget()->geometry().y() + startY;
@@ -119,10 +103,14 @@ int dlgPPUHacks::update_pos(int startY) {
 
 	return (frameGeometry().height());
 }
-void dlgPPUHacks::update_dialog(void) {
-	widget_wdgSettingsPPU->update_widget();
+void dlgAPUChannels::update_dialog(void) {
+	widget_wdgAPUChannels->update_widget();
+	checkBox_Swap_Duty_Cycles->setChecked(cfg->swap_duty);
 }
 
-void dlgPPUHacks::s_x_clicked(bool checked) {
-	mainwin->s_set_ppu_hacks();
+void dlgAPUChannels::s_swap_duty_cycles(bool checked) {
+	dlgsettings->widget_wdgSettingsAudio->checkBox_Swap_Duty_Cycles->click();
+}
+void dlgAPUChannels::s_x(bool checked) {
+	mainwin->s_set_apu_channels();
 }

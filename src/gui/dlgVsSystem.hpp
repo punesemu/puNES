@@ -27,7 +27,7 @@
 #endif
 #include "dlgVsSystem.hh"
 
-class dlgVsSystem : public QDialog, public Ui::Vs_System {
+class dlgVsSystem : public QDialog, public Ui::dlgVsSystem {
 		Q_OBJECT
 
 	public:
@@ -39,10 +39,11 @@ class dlgVsSystem : public QDialog, public Ui::Vs_System {
 
 	protected:
 		bool eventFilter(QObject *obj, QEvent *event);
+		void changeEvent(QEvent *event);
 
 	public:
 		int update_pos(int startY);
-		void update_dialog();
+		void update_dialog(void);
 		void insert_coin(int index);
 
 	private slots:

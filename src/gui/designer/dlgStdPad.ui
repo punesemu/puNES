@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Standard_Pad</class>
- <widget class="QDialog" name="Standard_Pad">
+ <class>dlgStdPad</class>
+ <widget class="QDialog" name="dlgStdPad">
   <property name="windowModality">
    <enum>Qt::WindowModal</enum>
   </property>
@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>457</width>
-    <height>689</height>
+    <height>642</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -551,29 +551,11 @@
            </layout>
           </item>
           <item>
-           <widget class="QPlainTextEdit" name="plainTextEdit_kbd_info">
+           <widget class="QLineEdit" name="lineEdit_kbd_info">
             <property name="focusPolicy">
              <enum>Qt::NoFocus</enum>
             </property>
-            <property name="verticalScrollBarPolicy">
-             <enum>Qt::ScrollBarAlwaysOff</enum>
-            </property>
-            <property name="horizontalScrollBarPolicy">
-             <enum>Qt::ScrollBarAlwaysOff</enum>
-            </property>
-            <property name="undoRedoEnabled">
-             <bool>false</bool>
-            </property>
             <property name="readOnly">
-             <bool>true</bool>
-            </property>
-            <property name="plainText">
-             <string notr="true"/>
-            </property>
-            <property name="textInteractionFlags">
-             <set>Qt::NoTextInteraction</set>
-            </property>
-            <property name="centerOnScroll">
              <bool>true</bool>
             </property>
            </widget>
@@ -1095,29 +1077,11 @@
            </layout>
           </item>
           <item>
-           <widget class="QPlainTextEdit" name="plainTextEdit_joy_info">
+           <widget class="QLineEdit" name="lineEdit_joy_info">
             <property name="focusPolicy">
              <enum>Qt::NoFocus</enum>
             </property>
-            <property name="verticalScrollBarPolicy">
-             <enum>Qt::ScrollBarAlwaysOff</enum>
-            </property>
-            <property name="horizontalScrollBarPolicy">
-             <enum>Qt::ScrollBarAlwaysOff</enum>
-            </property>
-            <property name="undoRedoEnabled">
-             <bool>false</bool>
-            </property>
             <property name="readOnly">
-             <bool>true</bool>
-            </property>
-            <property name="plainText">
-             <string notr="true"/>
-            </property>
-            <property name="textInteractionFlags">
-             <set>Qt::NoTextInteraction</set>
-            </property>
-            <property name="centerOnScroll">
              <bool>true</bool>
             </property>
            </widget>

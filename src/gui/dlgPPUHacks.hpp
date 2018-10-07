@@ -27,11 +27,8 @@
 #endif
 #include "dlgPPUHacks.hh"
 
-class dlgPPUHacks : public QDialog, public Ui::PPU_Hacks {
+class dlgPPUHacks : public QDialog, public Ui::dlgPPUHacks {
 		Q_OBJECT
-
-	public:
-		bool in_update;
 
 	public:
 		dlgPPUHacks(QWidget *parent = 0);
@@ -39,20 +36,13 @@ class dlgPPUHacks : public QDialog, public Ui::PPU_Hacks {
 
 	protected:
 		bool eventFilter(QObject *obj, QEvent *event);
+		void changeEvent(QEvent *event);
 
 	public:
 		int update_pos(int startY);
-		void update_dialog();
-		void lag_counter_update();
+		void update_dialog(void);
 
 	private slots:
-		void sprites_and_background_changed(int state);
-		void ppu_overclock_enabled_changed(int state);
-		void disable_dmc_control_changed(int state);
-		void ppu_overclock_vb_slines_changed(int i);
-		void ppu_overclock_pr_slines_changed(int i);
-		void ppu_overclock_slines_edit_finished();
-		void lag_counter_reset_clicked(bool checked);
 		void s_x_clicked(bool checked);
 };
 

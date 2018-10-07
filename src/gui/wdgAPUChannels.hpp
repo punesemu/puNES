@@ -16,8 +16,8 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef SCREENWIDGET_HPP_
-#define SCREENWIDGET_HPP_
+#ifndef WDGAPUCHANNELS_HPP_
+#define WDGAPUCHANNELS_HPP_
 
 #include <QtCore/QtGlobal>
 #if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
@@ -25,43 +25,25 @@
 #else
 #include <QtWidgets/QWidget>
 #endif
-#include <QtGui/QDragEnterEvent>
-#include <QtGui/QDropEvent>
-#include "mainWindow.hpp"
-#include "gui.h"
+#include "wdgAPUChannels.hh"
 
-class screenWidget: public QWidget {
+class wdgAPUChannels : public QWidget, public Ui::wdgAPUChannels {
 		Q_OBJECT
 
+	public:
+		wdgAPUChannels(QWidget *parent = 0);
+		~wdgAPUChannels();
+
 	private:
-		mainWindow *mwin;
-#if defined (__WIN32__)
-#if defined (WITH_OPENGL)
-		struct _data {
-			LONG_PTR WINAPI (*qt)(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-			LONG_PTR WINAPI (*sdl)(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-			LONG_PTR WINAPI (*tmp)(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-		} data;
-#endif
-		QCursor *target;
-#endif
+		void changeEvent(QEvent *event);
 
 	public:
-		screenWidget(QWidget *parent, mainWindow *mw);
-		~screenWidget();
-#if defined (__WIN32__)
-#if defined (WITH_OPENGL)
-		void controlEventFilter();
-#endif
-		void cursor_init();
-		void cursor_set();
-		void cursor_hide(BYTE hide);
-#endif
+		void update_widget(void);
 
-	protected:
-		void dragEnterEvent(QDragEnterEvent *event);
-		void dropEvent(QDropEvent *event);
-		bool eventFilter(QObject *obj, QEvent *event);
+	private slots:
+		void s_apu_ch_checkbox(bool checked);
+		void s_apu_ch_slider(int value);
+		void s_apu_ch_toggle_all(bool checked);
 };
 
-#endif /* SCREENWIDGET_HPP_ */
+#endif /* WDGAPUCHANNELS_HPP_ */

@@ -16,29 +16,35 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef PSTYLE_HPP_
-#define PSTYLE_HPP_
+#ifndef DLGAPUCHANNELS_HPP_
+#define DLGAPUCHANNELS_HPP_
 
 #include <QtCore/QtGlobal>
 #if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-#include <QtGui/QProxyStyle>
+#include <QtGui/QDialog>
 #else
-#include <QtWidgets/QProxyStyle>
+#include <QtWidgets/QDialog>
 #endif
+#include "dlgAPUChannels.hh"
 
-class pStyle: public QProxyStyle {
+class dlgAPUChannels : public QDialog, public Ui::dlgAPUChannels {
 		Q_OBJECT
 
 	public:
-		bool newMenuMenagement;
-		bool newMenuAllowActiveAndDisabled;
+		dlgAPUChannels(QWidget *parent = 0);
+		~dlgAPUChannels();
+
+	private:
+		bool eventFilter(QObject *obj, QEvent *event);
+		void changeEvent(QEvent *event);
 
 	public:
-		pStyle();
-		~pStyle();
+		int update_pos(int startY);
+		void update_dialog(void);
 
-		int styleHint(StyleHint hint, const QStyleOption* opt, const QWidget* widget,
-				QStyleHintReturn* returnData) const;
+	private slots:
+		void s_swap_duty_cycles(bool checked);
+		void s_x(bool checked);
 };
 
-#endif /* PSTYLE_HPP_ */
+#endif /* DLGAPUCHANNELS_HPP_ */

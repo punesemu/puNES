@@ -24,7 +24,7 @@
 #endif
 #include <QtCore/QFileInfo>
 #include <QtCore/QTextStream>
-#include "cheatObject.moc"
+#include "objCheat.moc"
 #include "info.h"
 #include "conf.h"
 #include "text.h"
@@ -33,11 +33,12 @@
 #define CHEATFILENAME uQString(info.base_folder) + QString(CHEAT_FOLDER) + "/" +\
 	QFileInfo(uQString(info.rom.file)).completeBaseName() + ".xml"
 
-cheatObject::cheatObject(QObject *parent) : QObject(parent) {
+objCheat::objCheat(QObject *parent) : QObject(parent) {
 	clear_list();
 }
-cheatObject::~cheatObject() {}
-void cheatObject::read_game_cheats() {
+objCheat::~objCheat() {}
+
+void objCheat::read_game_cheats(void) {
 	clear_list();
 
 	if (info.no_rom) {
@@ -50,7 +51,7 @@ void cheatObject::read_game_cheats() {
 		apply_cheats();
 	}
 }
-void cheatObject::save_game_cheats() {
+void objCheat::save_game_cheats(void) {
 	if (info.no_rom) {
 		return;
 	}
@@ -66,12 +67,12 @@ void cheatObject::save_game_cheats() {
 
 	clear_list();
 }
-void cheatObject::clear_list() {
+void objCheat::clear_list(void) {
 	if (cheats.count() > 0) {
 		cheats.clear();
 	}
 }
-void cheatObject::apply_cheats() {
+void objCheat::apply_cheats(void) {
 	int tot = 0;
 
 	cheatslist_blank();
@@ -115,7 +116,7 @@ void cheatObject::apply_cheats() {
 		text_add_line_info(1, "[green]%d[normal] cheats actives", tot);
 	}
 }
-bool cheatObject::is_equal(int index, chl_map *find, bool description) {
+bool objCheat::is_equal(int index, chl_map *find, bool description) {
 	if (index >= cheats.count()) {
 		return (false);
 	}
@@ -145,7 +146,7 @@ bool cheatObject::is_equal(int index, chl_map *find, bool description) {
 
 	return (false);
 }
-int cheatObject::find_cheat(chl_map *find, bool description) {
+int objCheat::find_cheat(chl_map *find, bool description) {
 	for (int i = 0; i < cheats.count(); i++) {
 		if (is_equal(i, find, description)) {
 			return (i);
@@ -154,7 +155,7 @@ int cheatObject::find_cheat(chl_map *find, bool description) {
 
 	return (-1);
 }
-void cheatObject::import_XML(QString file_XML) {
+void objCheat::import_XML(QString file_XML) {
 	QFile *file = new QFile(file_XML);
 
 	if (file->open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -189,7 +190,7 @@ void cheatObject::import_XML(QString file_XML) {
 		file->close();
 	}
 }
-void cheatObject::import_CHT(QString file_CHT) {
+void objCheat::import_CHT(QString file_CHT) {
 	QFile *file = new QFile(file_CHT);
 
 	if (file->open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -201,7 +202,7 @@ void cheatObject::import_CHT(QString file_CHT) {
 			QStringList splitted = in.readLine().split(":");
 			chl_map cheat;
 
-			/* 0 */
+			// 0
 			{
 				int index = 0;
 
@@ -227,13 +228,13 @@ void cheatObject::import_CHT(QString file_CHT) {
 				}
 			}
 
-			/* 1 */
+			// 1
 			cheat.insert("address", QString("0x" + splitted.at(1).toUpper()));
 
-			/* 2 */
+			// 2
 			cheat.insert("value", QString("0x" + splitted.at(2).toUpper()));
 
-			/* 3 */
+			// 3
 			if (cheat["enabled_compare"] == "0") {
 				cheat.insert("compare", "-");
 				splitted.insert(4, splitted.at(3));
@@ -241,7 +242,7 @@ void cheatObject::import_CHT(QString file_CHT) {
 				cheat.insert("compare", QString("0x" + splitted.at(3).toUpper()));
 			}
 
-			/* 4 */
+			// 4
 			cheat.insert("description", splitted.at(4));
 
 			{
@@ -260,7 +261,7 @@ void cheatObject::import_CHT(QString file_CHT) {
 		file->close();
 	}
 }
-void cheatObject::save_XML(QString file_XML) {
+void objCheat::save_XML(QString file_XML) {
 	if (cheats.count() == 0) {
 		return;
 	}
@@ -323,7 +324,7 @@ void cheatObject::save_XML(QString file_XML) {
 		file->close();
 	}
 }
-void cheatObject::complete_gg(chl_map *cheat) {
+void objCheat::complete_gg(chl_map *cheat) {
 	_cheat ch;
 
 	if (decode_gg((*cheat)["genie"], &ch) == EXIT_ERROR) {
@@ -334,7 +335,7 @@ void cheatObject::complete_gg(chl_map *cheat) {
 	cheat->insert("rocky", "-");
 	complete_from_code(cheat, &ch);
 }
-void cheatObject::complete_rocky(chl_map *cheat) {
+void objCheat::complete_rocky(chl_map *cheat) {
 	_cheat ch;
 
 	if (decode_rocky((*cheat)["rocky"], &ch) == EXIT_ERROR) {
@@ -345,7 +346,7 @@ void cheatObject::complete_rocky(chl_map *cheat) {
 	cheat->insert("genie", "-");
 	complete_from_code(cheat, &ch);
 }
-void cheatObject::complete_ram(chl_map *cheat) {
+void objCheat::complete_ram(chl_map *cheat) {
 	if ((*cheat)["address"].isEmpty()) {
 		cheat->clear();
 		return;
@@ -371,7 +372,7 @@ void cheatObject::complete_ram(chl_map *cheat) {
 	cheat->insert("genie", "-");
 	cheat->insert("rocky", "-");
 }
-void cheatObject::complete_from_code(chl_map *cheat, _cheat *ch) {
+void objCheat::complete_from_code(chl_map *cheat, _cheat *ch) {
 	cheat->insert("address", QString("0x" + QString("%1").arg(ch->address, 4, 16,
 			QChar('0')).toUpper()));
 	cheat->insert("value", QString( "0x" + QString("%1").arg(ch->replace, 2, 16,
@@ -384,7 +385,7 @@ void cheatObject::complete_from_code(chl_map *cheat, _cheat *ch) {
 		cheat->insert("compare", "-");
 	}
 }
-bool cheatObject::decode_gg(QString code, _cheat *cheat) {
+bool objCheat::decode_gg(QString code, _cheat *cheat) {
 	BYTE codes[8];
 	int length = code.length();
 
@@ -480,7 +481,7 @@ bool cheatObject::decode_gg(QString code, _cheat *cheat) {
 
 	return (EXIT_OK);
 }
-bool cheatObject::decode_rocky(QString code, _cheat *cheat) {
+bool objCheat::decode_rocky(QString code, _cheat *cheat) {
 	DBWORD input = 0, output = 0, key;
 	static const BYTE rocky_table[] = {
 		 3, 13, 14,  1,  6,  9,  5,  0,
@@ -526,7 +527,7 @@ bool cheatObject::decode_rocky(QString code, _cheat *cheat) {
 
 	return (EXIT_OK);
 }
-bool cheatObject::decode_ram(chl_map ch, _cheat *cheat) {
+bool objCheat::decode_ram(chl_map ch, _cheat *cheat) {
 	bool ok;
 
 	cheat->address = ch["address"].toInt(&ok, 16);
@@ -538,7 +539,7 @@ bool cheatObject::decode_ram(chl_map ch, _cheat *cheat) {
 
 	return (EXIT_OK);
 }
-QString cheatObject::encode_gg(_cheat *cheat) {
+QString objCheat::encode_gg(_cheat *cheat) {
 	QString gg;
 
 	if (cheat->address < 0x8000) {
@@ -569,7 +570,7 @@ QString cheatObject::encode_gg(_cheat *cheat) {
 
 	return (gg);
 }
-chl_map cheatObject::parse_xml_cheat(QXmlStreamReader &xml) {
+chl_map objCheat::parse_xml_cheat(QXmlStreamReader &xml) {
 	chl_map cheat;
 
 	if (xml.tokenType() != QXmlStreamReader::StartElement && xml.name() == "cheat") {
@@ -617,7 +618,7 @@ chl_map cheatObject::parse_xml_cheat(QXmlStreamReader &xml) {
 
 	return (cheat);
 }
-void cheatObject::add_element_data_to_map(QXmlStreamReader &xml, chl_map &map) const {
+void objCheat::add_element_data_to_map(QXmlStreamReader &xml, chl_map &map) const {
 	if (xml.tokenType() != QXmlStreamReader::StartElement) {
 		return;
 	}

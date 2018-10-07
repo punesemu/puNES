@@ -16,36 +16,40 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef DLGUNCOMP_HPP_
-#define DLGUNCOMP_HPP_
+#ifndef WDGSETTINGSPPU_HPP_
+#define WDGSETTINGSPPU_HPP_
 
 #include <QtCore/QtGlobal>
 #if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-#include <QtGui/QDialog>
+#include <QtGui/QWidget>
 #else
-#include <QtWidgets/QDialog>
+#include <QtWidgets/QWidget>
 #endif
-#include "dlgUncomp.hh"
-#include "common.h"
-#include "uncompress.h"
+#include "wdgSettingsPPU.hh"
 
-class dlgUncomp : public QDialog, public Ui::dlgUncomp {
+class wdgSettingsPPU : public QWidget, public Ui::wdgSettingsPPU {
 		Q_OBJECT
 
-	private:
-		int selected;
+	public:
+		wdgSettingsPPU(QWidget *parent = 0);
+		~wdgSettingsPPU();
+
+	protected:
+		void changeEvent(QEvent *event);
 
 	public:
-		dlgUncomp(QWidget *parent = 0, void *uncompress_archive = NULL,
-			BYTE type = UNCOMPRESS_TYPE_ALL);
-		~dlgUncomp();
-
-	private:
-		void closeEvent(QCloseEvent *event);
+		void update_widget(void);
+		void lag_counter_update(void);
 
 	private slots:
-		void s_ok_clicked(bool checked);
-		void s_none_clicked(bool checked);
+		void s_hide_sprites(bool checked);
+		void s_hide_background(bool checked);
+		void s_unlimited_sprites(bool checked);
+		void s_ppu_overclock(bool checked);
+		void s_disable_dmc_control(bool checked);
+		void s_overclock_vb_slines(int i);
+		void s_overclock_pr_slines(int i);
+		void s_lag_counter_reset(bool checked);
 };
 
-#endif /* DLGUNCOMP_HPP_ */
+#endif /* WDGSETTINGSPPU_HPP_ */

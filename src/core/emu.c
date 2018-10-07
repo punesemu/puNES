@@ -137,7 +137,7 @@ BYTE emu_frame(void) {
 
 		if (tas.lag_frame) {
 			tas.total_lag_frames++;
-			gui_ppu_hacks_lag_counter_update();
+			gui_ppu_hacks_widgets_update();
 		}
 
 		if (snd_end_frame) {
@@ -734,6 +734,8 @@ BYTE emu_reset(BYTE type) {
 		settings_pgs_parse();
 
 		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, TRUE);
+
+		gui_update_gps_settings();
 	}
 
 	if ((info.reset == CHANGE_MODE) && (overscan_set_mode(machine.type) == TRUE)) {

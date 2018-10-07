@@ -25,7 +25,7 @@
 
 enum tas_types { NOTAS, FM2 };
 enum tas_emulators { FCEUX, PUNES };
-/* NTSC : 960 / 60 = 16 secondi */
+// NTSC : 960 / 60 = 16 secondi
 enum tas_misc { TAS_CACHE = 960 };
 
 typedef struct _tas_input_log {

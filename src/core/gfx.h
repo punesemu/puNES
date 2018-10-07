@@ -94,8 +94,7 @@ enum shader_type {
 	SHADER_FILE,
 	SHADER_LAST = SHADER_FILE,
 };
-
-enum overcan_type { OSCAN_OFF, OSCAN_ON, OSCAN_DEFAULT, OSCAN_DEFAULT_OFF, OSCAN_DEFAULT_ON };
+enum overcan_type { OSCAN_OFF, OSCAN_ON, OSCAN_DEFAULT };
 enum gfx_info_type { CURRENT, NO_OVERSCAN, MONITOR, VIDEO_MODE, PASS0 };
 enum no_change { NO_CHANGE = 255 };
 #if defined (WITH_OPENGL) && defined (__WIN32__)

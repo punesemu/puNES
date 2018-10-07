@@ -20,20 +20,21 @@
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0))
 #include <QtCore/QMimeData>
 #endif
+#include <QtCore/QFileInfo>
 #include <QtCore/QUrl>
-#include "screenWidget.moc"
-#include "settingsObject.hpp"
+#include "mainWindow.hpp"
+#include "objSettings.hpp"
+#include "wdgScreen.moc"
 #include "conf.h"
 #include "tas.h"
 #include "timeline.h"
 #include "gui.h"
 #include "patcher.h"
-#include "recent_roms.h"
 #if defined (WITH_OPENGL)
 #include "opengl.h"
 #endif
 
-screenWidget::screenWidget(QWidget *parent, mainWindow *mw) : QWidget(parent) {
+wdgScreen::wdgScreen(QWidget *parent) : QWidget(parent) {
 #if defined (__WIN32__)
 #if defined (WITH_OPENGL)
 	memset(&data, 0x00, sizeof(data));
@@ -44,8 +45,6 @@ screenWidget::screenWidget(QWidget *parent, mainWindow *mw) : QWidget(parent) {
 #endif
 	target = nullptr;
 #endif
-
-	mwin = mw;
 
 	// se non faccio questa chiamata, la versione SDL crasha all'avvio
 	winId();
@@ -61,51 +60,113 @@ screenWidget::screenWidget(QWidget *parent, mainWindow *mw) : QWidget(parent) {
 
 	installEventFilter(this);
 }
-screenWidget::~screenWidget() {}
-#if defined (__WIN32__)
-#if defined (WITH_OPENGL)
-void screenWidget::controlEventFilter() {
-	data.tmp = (WNDPROC)GetWindowLongPtr((HWND) winId(), GWLP_WNDPROC);
+wdgScreen::~wdgScreen() {}
 
-	if ((data.tmp != data.sdl) && (data.tmp != data.qt)) {
-		data.sdl = data.tmp;
-	}
+bool wdgScreen::eventFilter(QObject *obj, QEvent *event) {
+	static QMouseEvent *mouseEvent;
+	static QKeyEvent *keyEvent;
+	static DBWORD keyval;
 
-	if (data.tmp != data.qt) {
-		SetWindowLongPtr((HWND) winId(), GWLP_WNDPROC, (LONG_PTR) data.qt);
-	}
-}
+	if (event->type() == QEvent::KeyPress) {
+		keyEvent = ((QKeyEvent *)event);
+		keyval = objInp::kbd_keyval_decode(keyEvent);
+
+		if (keyval == gui.key.tl) {
+			if (!tl.key) {
+				mainwin->statusbar->timeline->timeline_pressed(&tl.key);
+			}
+			return (true);
+#if !defined (RELEASE)
+		} else if (keyval == Qt::Key_Insert) {
+			info.snd_info = !info.snd_info;
 #endif
-void screenWidget::cursor_init() {
-	target = new QCursor(QPixmap(":/pointers/pointers/target_32x32.xpm"), -1, -1);
-}
-void screenWidget::cursor_set() {
-	if (input_draw_target() == TRUE) {
-		setCursor((*target));
-	} else {
-		unsetCursor();
-	}
-}
-void screenWidget::cursor_hide(BYTE hide) {
-	if (hide == TRUE) {
-		setCursor(Qt::BlankCursor);
-	} else {
-		cursor_set();
-	}
-}
-#endif
+		} else if (keyval == Qt::Key_Left) {
+			if (tl.key) {
+				int snap = mainwin->statusbar->timeline->value();
 
-void screenWidget::dragEnterEvent(QDragEnterEvent *e) {
+				mainwin->statusbar->timeline->setValue(snap - 1, true);
+				return (true);
+			}
+		} else if (keyval == Qt::Key_Right) {
+			if (tl.key) {
+				int snap = mainwin->statusbar->timeline->value();
+
+				mainwin->statusbar->timeline->setValue(snap + 1, true);
+				return (true);
+			}
+		}
+
+		if (!tas.type) {
+			for (BYTE i = PORT1; i < PORT_MAX; i++) {
+				if (port_funct[i].input_decode_event && (port_funct[i].input_decode_event(PRESSED,
+						keyEvent->isAutoRepeat(), keyval, KEYBOARD, &port[i]) == EXIT_OK)) {
+					return (true);
+				}
+			}
+		}
+	} else if (event->type() == QEvent::KeyRelease) {
+		keyEvent = ((QKeyEvent *)event);
+		keyval = objInp::kbd_keyval_decode(keyEvent);
+
+		if (keyval == gui.key.tl) {
+			if (tl.key) {
+				mainwin->statusbar->timeline->timeline_released(&tl.key);
+			}
+			return (true);
+		}
+
+		if (!tas.type) {
+			for (BYTE i = PORT1; i < PORT_MAX; i++) {
+				if (port_funct[i].input_decode_event && (port_funct[i].input_decode_event(RELEASED,
+						keyEvent->isAutoRepeat(), keyval, KEYBOARD, &port[i]) == EXIT_OK)) {
+					return (true);
+				}
+			}
+		}
+	} else if (event->type() == QEvent::MouseButtonPress) {
+		mouseEvent = ((QMouseEvent *)event);
+
+		if (mouseEvent->button() == Qt::LeftButton) {
+			gmouse.left = TRUE;
+		} else if (mouseEvent->button() == Qt::RightButton) {
+			gmouse.right = TRUE;
+		}
+	} else if (event->type() == QEvent::MouseButtonDblClick) {
+		mouseEvent = ((QMouseEvent *)event);
+
+		if (mouseEvent->button() == Qt::LeftButton) {
+			gmouse.left = TRUE;
+		} else if (mouseEvent->button() == Qt::RightButton) {
+			gmouse.right = TRUE;
+		}
+	} else if (event->type() == QEvent::MouseButtonRelease) {
+		mouseEvent = ((QMouseEvent *)event);
+
+		if (mouseEvent->button() == Qt::LeftButton) {
+			gmouse.left = FALSE;
+		} else if (mouseEvent->button() == Qt::RightButton) {
+			gmouse.right = FALSE;
+		}
+	} else if (event->type() == QEvent::MouseMove) {
+		mouseEvent = ((QMouseEvent *)event);
+
+		gmouse.x = mouseEvent->x();
+		gmouse.y = mouseEvent->y();
+	}
+
+	return (QObject::eventFilter(obj, event));
+}
+void wdgScreen::dragEnterEvent(QDragEnterEvent *e) {
 	if (e->mimeData()->hasUrls()) {
 		e->acceptProposedAction();
 	}
 }
-void screenWidget::dropEvent(QDropEvent *e) {
+void wdgScreen::dropEvent(QDropEvent *e) {
 	foreach (const QUrl &url, e->mimeData()->urls()){
 		QFileInfo fileinfo(url.toLocalFile());
 		_uncompress_archive *archive;
 		BYTE is_rom = FALSE, is_patch = FALSE, rc;
-		uTCHAR *rom, *patch = NULL;
+		uTCHAR *rom, *patch = nullptr;
 
 		if ((cfg->cheat_mode == GAMEGENIE_MODE) && (gamegenie.phase == GG_EXECUTE)) {
 			rom = gamegenie.rom;
@@ -163,103 +224,42 @@ void screenWidget::dropEvent(QDropEvent *e) {
 			patcher.file = emu_ustrncpy(patcher.file, patch);
 		}
 
-		mwin->change_rom(rom);
+		mainwin->change_rom(rom);
 		activateWindow();
 		gui_set_focus();
 		break;
 	}
 }
-bool screenWidget::eventFilter(QObject *obj, QEvent *event) {
-	static QMouseEvent *mouseEvent;
-	static QKeyEvent *keyEvent;
-	static DBWORD keyval;
 
-	if (event->type() == QEvent::KeyPress) {
-		keyEvent = ((QKeyEvent *)event);
-		keyval = inpObject::kbd_keyval_decode(keyEvent);
+#if defined (__WIN32__)
+#if defined (WITH_OPENGL)
+void wdgScreen::controlEventFilter(void) {
+	data.tmp = (WNDPROC)GetWindowLongPtr((HWND) winId(), GWLP_WNDPROC);
 
-		if (keyval == gui.key.tl) {
-			if (!tl.key) {
-				mwin->statusbar->timeline->timeline_pressed(&tl.key);
-			}
-			return (true);
-#if !defined (RELEASE)
-		} else if (keyval == Qt::Key_Insert) {
-			info.snd_info = !info.snd_info;
-#endif
-		} else if (keyval == Qt::Key_Left) {
-			if (tl.key) {
-				int snap = mwin->statusbar->timeline->value();
-
-				mwin->statusbar->timeline->setValue(snap - 1, true);
-				return (true);
-			}
-		} else if (keyval == Qt::Key_Right) {
-			if (tl.key) {
-				int snap = mwin->statusbar->timeline->value();
-
-				mwin->statusbar->timeline->setValue(snap + 1, true);
-				return (true);
-			}
-		}
-
-		if (!tas.type) {
-			for (BYTE i = PORT1; i < PORT_MAX; i++) {
-				if (port_funct[i].input_decode_event && (port_funct[i].input_decode_event(PRESSED,
-						keyEvent->isAutoRepeat(), keyval, KEYBOARD, &port[i]) == EXIT_OK)) {
-					return (true);
-				}
-			}
-		}
-	} else if (event->type() == QEvent::KeyRelease) {
-		keyEvent = ((QKeyEvent *)event);
-		keyval = inpObject::kbd_keyval_decode(keyEvent);
-
-		if (keyval == gui.key.tl) {
-			if (tl.key) {
-				mwin->statusbar->timeline->timeline_released(&tl.key);
-			}
-			return (true);
-		}
-
-		if (!tas.type) {
-			for (BYTE i = PORT1; i < PORT_MAX; i++) {
-				if (port_funct[i].input_decode_event && (port_funct[i].input_decode_event(RELEASED,
-						keyEvent->isAutoRepeat(), keyval, KEYBOARD, &port[i]) == EXIT_OK)) {
-					return (true);
-				}
-			}
-		}
-	} else if (event->type() == QEvent::MouseButtonPress) {
-		mouseEvent = ((QMouseEvent *)event);
-
-		if (mouseEvent->button() == Qt::LeftButton) {
-			gmouse.left = TRUE;
-		} else if (mouseEvent->button() == Qt::RightButton) {
-			gmouse.right = TRUE;
-		}
-	} else if (event->type() == QEvent::MouseButtonDblClick) {
-		mouseEvent = ((QMouseEvent *)event);
-
-		if (mouseEvent->button() == Qt::LeftButton) {
-			gmouse.left = TRUE;
-		} else if (mouseEvent->button() == Qt::RightButton) {
-			gmouse.right = TRUE;
-		}
-	} else if (event->type() == QEvent::MouseButtonRelease) {
-		mouseEvent = ((QMouseEvent *)event);
-
-		if (mouseEvent->button() == Qt::LeftButton) {
-			gmouse.left = FALSE;
-		} else if (mouseEvent->button() == Qt::RightButton) {
-			gmouse.right = FALSE;
-		}
-	} else if (event->type() == QEvent::MouseMove) {
-		mouseEvent = ((QMouseEvent *)event);
-
-		gmouse.x = mouseEvent->x();
-		gmouse.y = mouseEvent->y();
+	if ((data.tmp != data.sdl) && (data.tmp != data.qt)) {
+		data.sdl = data.tmp;
 	}
 
-	return (QObject::eventFilter(obj, event));
+	if (data.tmp != data.qt) {
+		SetWindowLongPtr((HWND) winId(), GWLP_WNDPROC, (LONG_PTR) data.qt);
+	}
 }
+#endif
+void wdgScreen::cursor_init(void) {
+	target = new QCursor(QPixmap(":/pointers/pointers/target_32x32.xpm"), -1, -1);
+}
+void wdgScreen::cursor_set(void) {
+	if (input_draw_target() == TRUE) {
+		setCursor((*target));
+	} else {
+		unsetCursor();
+	}
+}
+void wdgScreen::cursor_hide(BYTE hide) {
+	if (hide == TRUE) {
+		setCursor(Qt::BlankCursor);
+	} else {
+		cursor_set();
+	}
+}
+#endif

@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>wdgSettingsGeneral</class>
+ <widget class="QWidget" name="wdgSettingsGeneral">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>608</width>
+    <height>608</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>General Settings</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_wdgSettingsGeneral">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <item>
+    <layout class="QGridLayout" name="gridLayout_General">
+     <item row="2" column="2">
+      <widget class="QComboBox" name="comboBox_Fast_Forward_velocity">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <item>
+        <property name="text">
+         <string>2x (Default)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>3x</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>4x</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>5x</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QComboBox" name="comboBox_Mode">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <item>
+        <property name="text">
+         <string>Auto</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>NTSC</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>PAL</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Dendy</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="4" column="0" colspan="3">
+      <layout class="QHBoxLayout" name="horizontalLayout_System_Roms">
+       <item>
+        <widget class="QLabel" name="label_System_Roms">
+         <property name="text">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;System Roms&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="Line" name="line_System_Roms">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="1" column="1">
+      <widget class="QLabel" name="label_Mode">
+       <property name="text">
+        <string>Mode</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="icon_Language">
+       <property name="text">
+        <string notr="true">Language icon</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="2">
+      <widget class="QComboBox" name="comboBox_Language">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <item>
+        <property name="text">
+         <string>English</string>
+        </property>
+        <property name="icon">
+         <iconset resource="application.qrc">
+          <normaloff>:/icon/icons/flag_english.svg</normaloff>:/icon/icons/flag_english.svg</iconset>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Italian</string>
+        </property>
+        <property name="icon">
+         <iconset resource="application.qrc">
+          <normaloff>:/icon/icons/flag_italy.svg</normaloff>:/icon/icons/flag_italy.svg</iconset>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Russian</string>
+        </property>
+        <property name="icon">
+         <iconset resource="application.qrc">
+          <normaloff>:/icon/icons/flag_russia.svg</normaloff>:/icon/icons/flag_russia.svg</iconset>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="8" column="0" colspan="3">
+      <widget class="QCheckBox" name="checkBox_Pause_when_in_background">
+       <property name="text">
+        <string>Pause when in background</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QLabel" name="label_Language">
+       <property name="text">
+        <string>Language</string>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="0" colspan="3">
+      <widget class="QCheckBox" name="checkBox_Save_settings_on_exit">
+       <property name="text">
+        <string>Save settings on exit</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="icon_Mode">
+       <property name="text">
+        <string notr="true">Mode icon</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="icon_Fast_Forward_velocity">
+       <property name="text">
+        <string notr="true">Fast Forward velocity icon</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="0" colspan="3">
+      <widget class="QCheckBox" name="checkBox_Save_battery_every_tot">
+       <property name="text">
+        <string>Save battery RAM file every 3 min.</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLabel" name="label_Fast_Forward_velocity">
+       <property name="text">
+        <string>Fast Forward velocity</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="0" colspan="3">
+      <layout class="QHBoxLayout" name="horizontalLayout_General_misc">
+       <item>
+        <widget class="QLabel" name="label_General_misc">
+         <property name="text">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Misc&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="Line" name="line_General_misc">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="0" column="0" colspan="3">
+      <layout class="QHBoxLayout" name="horizontalLayout_General_settings">
+       <item>
+        <widget class="QLabel" name="label_General_settings">
+         <property name="text">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Settings&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="Line" name="line_General_settings">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="5" column="0" colspan="3">
+      <layout class="QGridLayout" name="gridLayout">
+       <item row="0" column="1">
+        <layout class="QHBoxLayout" name="horizontalLayout_Game_Genie_rom_file">
+         <item>
+          <widget class="QLineEdit" name="lineEdit_Game_Genie_rom_file">
+           <property name="focusPolicy">
+            <enum>Qt::NoFocus</enum>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pushButton_Game_Genie_rom_file_clear">
+           <property name="icon">
+            <iconset resource="application.qrc">
+             <normaloff>:/icon/icons/trash.svg</normaloff>:/icon/icons/trash.svg</iconset>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="0" column="0">
+        <widget class="QPushButton" name="pushButton_Game_Genie_rom_file">
+         <property name="text">
+          <string>Game Genie Rom file</string>
+         </property>
+         <property name="icon">
+          <iconset resource="application.qrc">
+           <normaloff>:/icon/icons/load.svg</normaloff>:/icon/icons/load.svg</iconset>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QPushButton" name="pushButton_FDS_Bios">
+         <property name="text">
+          <string>FDS Bios file</string>
+         </property>
+         <property name="icon">
+          <iconset resource="application.qrc">
+           <normaloff>:/icon/icons/load.svg</normaloff>:/icon/icons/load.svg</iconset>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <layout class="QHBoxLayout" name="horizontalLayout_FDS_Bios">
+         <item>
+          <widget class="QLineEdit" name="lineEdit_FDS_Bios">
+           <property name="focusPolicy">
+            <enum>Qt::NoFocus</enum>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pushButton_FDS_Bios_clear">
+           <property name="icon">
+            <iconset resource="application.qrc">
+             <normaloff>:/icon/icons/trash.svg</normaloff>:/icon/icons/trash.svg</iconset>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+     <item row="10" column="0" colspan="3">
+      <spacer name="verticalSpacer_page_General">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>42</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources>
+  <include location="application.qrc"/>
+ </resources>
+ <connections/>
+</ui>

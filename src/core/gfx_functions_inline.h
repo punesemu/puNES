@@ -27,43 +27,53 @@ static void INLINE gfx_FORCE_SCALE(void) {
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 }
 #endif
-
-#if defined (__GFX_OTHERS_FUNC__) || defined (__GFX_ALL_FUNC__)
+#if defined (__GFX_MAKE_RESET__) || defined (__GFX_ALL_FUNC__)
 static void INLINE gfx_MAKE_RESET(int type);
-static void INLINE gfx_CHANGE_ROM(void);
-static void INLINE gfx_SWITCH_MODE(void);
-static void INLINE gfx_SCALE(int scale);
-static void INLINE gfx_FILTER(int filter);
-static void INLINE gfx_SHADER(int shader);
-static void INLINE gfx_VSYNC(void);
-
 static void INLINE gfx_MAKE_RESET(int type) {
-	gui_mainWindow_make_reset(type);
+	gui_mainwindow_make_reset(type);
 }
+#endif
+#if defined (__GFX_CHANGE_ROM__) || defined (__GFX_ALL_FUNC__)
+static void INLINE gfx_CHANGE_ROM(void);
 static void INLINE gfx_CHANGE_ROM(void) {
-	gui_mainWindow_make_reset(CHANGE_ROM);
+	gui_mainwindow_make_reset(CHANGE_ROM);
 	gui_update();
 }
+#endif
+#if defined (__GFX_SWITCH_MODE__) || defined (__GFX_ALL_FUNC__)
+static void INLINE gfx_SWITCH_MODE(void);
 static void INLINE gfx_SWITCH_MODE(void) {
-	gui_mainWindow_make_reset(CHANGE_MODE);
+	gui_mainwindow_make_reset(CHANGE_MODE);
 	/*
 	 * per lo swap dell'emphasis del rosso e del verde in caso di PAL e DENDY
 	 * ricreo la paletta quando cambio regione.
 	 */
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, TRUE);
 }
+#endif
+#if defined (__GFX_SCALE__) || defined (__GFX_ALL_FUNC__)
+static void INLINE gfx_SCALE(int scale);
 static void INLINE gfx_SCALE(int scale) {
 	gfx_set_screen(scale, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 }
+#endif
+#if defined (__GFX_FILTER__) || defined (__GFX_ALL_FUNC__)
+static void INLINE gfx_FILTER(int filter);
 static void INLINE gfx_FILTER(int filter) {
 	gfx_set_screen(NO_CHANGE, filter, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 	if (cfg->filter == NTSC_FILTER) {
 		ntsc_set(NULL, cfg->ntsc_format, 0, 0, (BYTE *) palette_RGB, 0);
 	}
 }
+#endif
+#if defined (__GFX_SHADER__) || defined (__GFX_ALL_FUNC__)
+static void INLINE gfx_SHADER(int shader);
 static void INLINE gfx_SHADER(int shader) {
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, shader, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 }
+#endif
+#if defined (__GFX_VSYNC__) || defined (__GFX_ALL_FUNC__)
+static void INLINE gfx_VSYNC(void);
 static void INLINE gfx_VSYNC(void) {
 #if defined (WITH_OPENGL)
 	sdl_wid();
