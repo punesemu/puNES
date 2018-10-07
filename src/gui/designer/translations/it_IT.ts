@@ -514,18 +514,18 @@
     </message>
   </context>
   <context>
-    <name>cheatObject</name>
+    <name>objCheat</name>
     <message>
       <source>Error on reading the file</source>
-      <translation>Errore sulla lettura del file</translation>
+      <translation type="unfinished">Error on reading the file</translation>
     </message>
     <message>
       <source>Read only</source>
-      <translation>Sola lettura</translation>
+      <translation type="unfinished">Read only</translation>
     </message>
     <message>
       <source>The file is in read only mode</source>
-      <translation>Il file è in modalità di sola lettura</translation>
+      <translation type="unfinished">The file is in read only mode</translation>
     </message>
   </context>
   <context>
@@ -1664,10 +1664,10 @@
     </message>
   </context>
   <context>
-    <name>stateWidget</name>
+    <name>wdgState</name>
     <message>
       <source>Save/Load Slot Box</source>
-      <translation>Box Salva/Carica Slot</translation>
+      <translation type="unfinished">Save/Load Slot Box</translation>
     </message>
     <message>
       <source>Slot %1</source>
@@ -1675,11 +1675,11 @@
     </message>
     <message>
       <source>Save</source>
-      <translation>Salva</translation>
+      <translation type="unfinished">Save</translation>
     </message>
     <message>
       <source>Load</source>
-      <translation>Carica</translation>
+      <translation type="unfinished">Load</translation>
     </message>
   </context>
   <context>
