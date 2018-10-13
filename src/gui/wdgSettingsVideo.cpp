@@ -447,7 +447,7 @@ void wdgSettingsVideo::s_frameskip(int index) {
 	if (index == 0) {
 		frameskip = 255;
 	} else {
-		frameskip = index + 1;
+		frameskip = index - 1;
 	}
 
 	if (cfg->frameskip == frameskip) {
