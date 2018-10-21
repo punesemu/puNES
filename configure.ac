@@ -640,11 +640,15 @@ AS_IF([test "x$RCC" = xno], [
 
 AM_COND_IF([WINDOWS], [
 	my_LIBS="${my_LIBS} -lopengl32"
-], [
-	my_LIBS="${my_LIBS} -lGL"
 ])
 
 AM_COND_IF([LINUX], [
+	PKG_CHECK_MODULES(GL, [gl], [
+		my_CPPFLAGS="${my_CPPFLAGS} ${GL_CFLAGS}"
+		my_LIBS="${my_LIBS} ${GL_LIBS}"
+	], [
+		AC_MSG_ERROR([gl not found])
+	])
 	AM_COND_IF([WITH_OPENGL_CG], [
 		PKG_CHECK_MODULES(nvidia_cg_toolkit_pkgconfig, [nvidia-cg-toolkit-gl], [
 			CUSTOMDEFINES="${CUSTOMDEFINES} -DWITH_OPENGL_CG"
@@ -669,11 +673,16 @@ void blah(){
 		])
 	])
 	PKG_CHECK_MODULES(alsa, [alsa])
-	#my_CPPFLAGS="${my_CPPFLAGS} ${alsa_CFLAGS}"
 	my_LIBS="${my_LIBS} ${alsa_LIBS}"
 ])
 
 AM_COND_IF([OPENBSD], [
+	PKG_CHECK_MODULES(GL, [gl], [
+		my_CPPFLAGS="${my_CPPFLAGS} ${GL_CFLAGS}"
+		my_LIBS="${my_LIBS} ${GL_LIBS}"
+	], [
+		AC_MSG_ERROR([gl not found])
+	])
 	AM_COND_IF([WITH_OPENGL_CG], [
 		PKG_CHECK_MODULES(nvidia_cg_toolkit_pkgconfig, [nvidia-cg-toolkit-gl], [
 			CUSTOMDEFINES="${CUSTOMDEFINES} -DWITH_OPENGL_CG"
@@ -866,7 +875,7 @@ AM_COND_IF([LINUX], [
 	my_LIBS="${my_LIBS} -ldl -lpthread"
 ])
 AM_COND_IF([OPENBSD], [
-	my_LIBS="${my_LIBS} -lstdc++ -lpthread"
+	my_LIBS="${my_LIBS} -L/usr/local/lib -lstdc++ -lpthread"
 ])
 AM_COND_IF([WINDOWS], [
 	AM_COND_IF([ENAB_RELEASE], [

@@ -268,7 +268,6 @@ BYTE opengl_context_create(void) {
 			rc = opengl_shader_cg_init(i, &opengl.texture[i].shader, shader_effect.sp[i].code,
 				shader_effect.sp[i].path);
 #else
-			opengl_unlock();
 			return (EXIT_ERROR_SHADER);
 #endif
 		} else {
