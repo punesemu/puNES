@@ -16,14 +16,8 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <QtCore/QtGlobal>
-#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-#include <QtGui/QStylePainter>
-#include <QtGui/QCommonStyle>
-#else
 #include <QtWidgets/QStylePainter>
 #include <QtWidgets/QCommonStyle>
-#endif
 #include <QtCore/QFileInfo>
 #include <QtCore/QEvent>
 #include <QtGui/QPainter>

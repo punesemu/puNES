@@ -19,17 +19,6 @@
 #ifndef WDGSTATUSBAR_HPP_
 #define WDGSTATUSBAR_HPP_
 
-#include <QtCore/QtGlobal>
-#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-#include <QtGui/QWidget>
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QSlider>
-#include <QtGui/QLabel>
-#include <QtGui/QPushButton>
-#include <QtGui/QStyledItemDelegate>
-#include <QtGui/QComboBox>
-#include <QtGui/QStatusBar>
-#else
 #include <QtWidgets/QWidget>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QSlider>
@@ -38,7 +27,6 @@
 #include <QtWidgets/QStyledItemDelegate>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QStatusBar>
-#endif
 #include "application.hh"
 #include "common.h"
 

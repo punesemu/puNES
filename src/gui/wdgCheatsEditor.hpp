@@ -19,16 +19,9 @@
 #ifndef WDGCHEATSEDITOR_HPP_
 #define WDGCHEATSEDITOR_HPP_
 
-#include <QtCore/QtGlobal>
-#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-#include <QtXml/QXmlStreamReader>
-#include <QtGui/QWidget>
-#include <QtGui/QSpinBox>
-#else
 #include <QtCore/QXmlStreamReader>
 #include <QtWidgets/QWidget>
 #include <QtWidgets/QSpinBox>
-#endif
 #include "wdgCheatsEditor.hh"
 #include "objCheat.hpp"
 

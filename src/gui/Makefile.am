@@ -168,17 +168,26 @@ libgui_a_SOURCES = \
 	wdgScreen.hpp \
 	wdgStatusBar.cpp \
 	wdgStatusBar.hpp
-	
+
+if WITH_OPENGL
+libgui_a_SOURCES += \
+	wdgOpenGL.cpp \
+	wdgOpenGL.hpp
+endif
+
+if WITH_D3D9
+libgui_a_SOURCES += \
+	wdgD3D9.cpp \
+	wdgD3D9.hpp
+endif
+
 if LINUX
 libgui_a_SOURCES += \
 	linux/jstick.c \
 	linux/jstick.h \
 	linux/os_linux.h
 
-if ENAB_QT5
 AM_CXXFLAGS = -fPIC
-endif
-
 endif
 
 if OPENBSD
@@ -187,10 +196,7 @@ libgui_a_SOURCES += \
 	openbsd/jstick.h \
 	openbsd/os_openbsd.h
 
-if ENAB_QT5
 AM_CXXFLAGS = -fPIC
-endif
-
 endif
 
 if WINDOWS

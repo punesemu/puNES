@@ -16,14 +16,23 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef SDL_WID_H_
-#define SDL_WID_H_
+#ifndef WDGD3D9_HPP_
+#define WDGD3D9_HPP_
 
-static char SDL_windowhack[50];
+#include <QtWidgets/QWidget>
+#include <QtGui/QPaintEvent>
+#include <QtGui/QPaintEngine>
 
-#define sdl_wid()\
-	if (info.gui) {\
-		SDL_putenv(SDL_windowhack);\
-	}
+class wdgD3D9 : public QWidget {
+	public:
+		wdgD3D9(QWidget *parent);
+		~wdgD3D9();
 
-#endif /* SDL_WID_H_ */
+	protected:
+		void paintEvent(QPaintEvent *event);
+
+	protected:
+		QPaintEngine *paintEngine() const { return 0; }
+};
+
+#endif /* WDGD3D9_HPP_ */

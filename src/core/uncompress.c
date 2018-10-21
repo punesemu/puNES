@@ -18,9 +18,9 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <libgen.h>
 #if defined (__OpenBSD__)
 #include <stdio.h>
-#include <libgen.h>
 #endif
 #include "uncompress.h"
 #include "info.h"

@@ -119,7 +119,6 @@ EXTERNC struct _info {
 	WORD extra_from_db;
 	DBWORD bat_ram_frames;
 	DBWORD bat_ram_frames_snap;
-
 #if !defined (RELEASE)
 	BYTE snd_info;
 #endif

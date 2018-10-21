@@ -32,9 +32,6 @@
 #include "video/filters/hqx.h"
 #include "video/filters/ntsc.h"
 #include "video/filters/xBRZ.h"
-#if defined (WITH_OPENGL)
-#include <SDL.h>
-#endif
 
 #define FH_SHADERS_GEST
 #define change_color(plt, blck, index, color, operation)\
@@ -97,19 +94,6 @@ enum shader_type {
 enum overcan_type { OSCAN_OFF, OSCAN_ON, OSCAN_DEFAULT };
 enum gfx_info_type { CURRENT, NO_OVERSCAN, MONITOR, VIDEO_MODE, PASS0 };
 enum no_change { NO_CHANGE = 255 };
-#if defined (WITH_OPENGL) && defined (__WIN32__)
-enum sdl_win_event_type {
-	SDLWIN_NONE,
-	SDLWIN_MAKE_RESET,
-	SDLWIN_CHANGE_ROM,
-	SDLWIN_SWITCH_MODE,
-	SDLWIN_FORCE_SCALE,
-	SDLWIN_SCALE,
-	SDLWIN_FILTER,
-	SDLWIN_SHADER,
-	SDLWIN_VSYNC
-};
-#endif
 
 typedef struct _viewport {
 	int x, y;
@@ -136,6 +120,7 @@ EXTERNC struct _gfx {
 	_viewport vp;
 
 	uint32_t *palette;
+	void *palette_to_draw;
 
 	struct _gfx_filter {
 		gfx_filter_function((*func));
@@ -146,50 +131,27 @@ EXTERNC struct _gfx {
 	uTCHAR last_shader_file[LENGTH_FILE_NAME_LONG];
 } gfx;
 
-#if defined (WITH_OPENGL)
-EXTERNC SDL_Surface *surface_sdl;
-
-EXTERNC void gfx_reset_video(void);
-
-EXTERNC SDL_Surface *gfx_create_RGB_surface(SDL_Surface *src, uint32_t width, uint32_t height);
-EXTERNC double sdl_get_ms(void);
-
-#if defined (__WIN32__)
-EXTERNC struct _sdlwe {
-	int event;
-	int arg;
-} sdlwe;
-
-EXTERNC void gfx_sdlwe_set(int type, int arg);
-EXTERNC void gfx_sdlwe_tick(void);
-#endif
-#elif defined (WITH_D3D9)
-EXTERNC void gfx_control_changed_adapter(void *monitor);
-#endif
-
 EXTERNC BYTE gfx_init(void);
-
 EXTERNC void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, BYTE palette,
-		BYTE force_scale, BYTE force_palette);
-
+	BYTE force_scale, BYTE force_palette);
 EXTERNC void gfx_draw_screen(BYTE forced);
 EXTERNC void gfx_quit(void);
+
+#if defined (WITH_D3D9)
+EXTERNC void gfx_control_changed_adapter(void *monitor);
+#endif
 
 EXTERNC uint32_t gfx_color(BYTE alpha, BYTE r, BYTE g, BYTE b);
 
 EXTERNC void gfx_cursor_init(void);
-EXTERNC void gfx_cursor_quit(void);
 EXTERNC void gfx_cursor_set(void);
-#if defined (__unix__)
-EXTERNC void gfx_cursor_hide(BYTE hide);
-#endif
 
 EXTERNC void gfx_text_create_surface(_txt_element *ele);
 EXTERNC void gfx_text_release_surface(_txt_element *ele);
-EXTERNC void gfx_text_rect_fill(_txt_element *ele, _rect *rect, uint32_t color);
+EXTERNC void gfx_text_rect_fill(_txt_element *ele, _txt_rect *rect, uint32_t color);
 EXTERNC void gfx_text_reset(void);
 EXTERNC void gfx_text_clear(_txt_element *ele);
-EXTERNC void gfx_text_blit(_txt_element *ele, _rect *rect);
+EXTERNC void gfx_text_blit(_txt_element *ele, _txt_rect *rect);
 
 #undef EXTERNC
 

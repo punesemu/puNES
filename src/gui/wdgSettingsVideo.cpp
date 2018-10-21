@@ -16,33 +16,11 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <QtCore/QtGlobal>
-#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-#include <QtGui/QFileDialog>
-#else
 #include <QtWidgets/QFileDialog>
-#endif
 #include "wdgSettingsVideo.moc"
 #include "mainWindow.hpp"
 #include "conf.h"
 #include "clock.h"
-#if defined (WITH_OPENGL)
-#if defined (__unix__)
-#include "sdl_wid.h"
-#endif
-#include "opengl.h"
-#endif
-#if defined (__unix__) || defined (WITH_D3D9)
-#define __GFX_SCALE__
-#define __GFX_FILTER__
-#define __GFX_SHADER__
-#define __GFX_VSYNC__
-#include "gfx_functions_inline.h"
-#undef __GFX_SCALE__
-#undef __GFX_FILTER__
-#undef __GFX_SHADER__
-#undef __GFX_VSYNC__
-#endif
 
 wdgSettingsVideo::wdgSettingsVideo(QWidget *parent) : QWidget(parent) {
 	setupUi(this);
@@ -467,11 +445,7 @@ void wdgSettingsVideo::s_scale(int index) {
 		return;
 	}
 
-#if defined (WITH_OPENGL) && defined (__WIN32__)
-	gfx_sdlwe_set(SDLWIN_SCALE, scale);
-#else
-	gfx_SCALE(scale);
-#endif
+	gfx_set_screen(scale, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 }
 void wdgSettingsVideo::s_par(int index) {
 	int par = index;
@@ -630,11 +604,10 @@ void wdgSettingsVideo::s_sfilters(int index) {
 			break;
 	}
 
-#if defined (WITH_OPENGL) && defined (__WIN32__)
-	gfx_sdlwe_set(SDLWIN_FILTER, filter);
-#else
-	gfx_FILTER(filter);
-#endif
+	gfx_set_screen(NO_CHANGE, filter, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
+	//if (cfg->filter == NTSC_FILTER) {
+	//	ntsc_set(NULL, cfg->ntsc_format, 0, 0, (BYTE *) palette_RGB, 0);
+	//}
 }
 void wdgSettingsVideo::s_shaders(int index) {
 	int shader = index;
@@ -670,11 +643,7 @@ void wdgSettingsVideo::s_shaders(int index) {
 			break;
 	}
 
-#if defined (WITH_OPENGL) && defined (__WIN32__)
-	gfx_sdlwe_set(SDLWIN_SHADER, shader);
-#else
-	gfx_SHADER(shader);
-#endif
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, shader, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 }
 #if defined (WITH_OPENGL)
 void wdgSettingsVideo::s_disable_srgb_fbo(bool checked) {
@@ -713,11 +682,7 @@ void wdgSettingsVideo::s_shader_file(bool checked) {
 			umemset(cfg->shader_file, 0x00, usizeof(cfg->shader_file));
 			ustrncpy(cfg->shader_file, uQStringCD(fileinfo.absoluteFilePath()),
 				usizeof(cfg->shader_file) - 1);
-#if defined (WITH_OPENGL) && defined (__WIN32__)
-			gfx_sdlwe_set(SDLWIN_SHADER, SHADER_FILE);
-#else
-			gfx_SHADER(SHADER_FILE);
-#endif
+			gfx_set_screen(NO_CHANGE, NO_CHANGE, SHADER_FILE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 		} else {
 			text_add_line_info(1, "[red]error on shader file");
 		}
@@ -832,12 +797,7 @@ void wdgSettingsVideo::s_disable_emphasis_swap_pal(bool checked) {
 }
 void wdgSettingsVideo::s_vsync(bool checked) {
 	cfg->vsync = !cfg->vsync;
-
-#if defined (WITH_OPENGL) && defined (__WIN32__)
-	gfx_sdlwe_set(SDLWIN_VSYNC, SDLWIN_NONE);
-#else
-	gfx_VSYNC();
-#endif
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 }
 void wdgSettingsVideo::s_interpolation(bool checked) {
 	cfg->interpolation = !cfg->interpolation;

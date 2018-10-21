@@ -19,12 +19,7 @@
 #ifndef WDGSETTINGSGENERAL_HPP_
 #define WDGSETTINGSGENERAL_HPP_
 
-#include <QtCore/QtGlobal>
-#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-#include <QtGui/QWidget>
-#else
 #include <QtWidgets/QWidget>
-#endif
 #include "wdgSettingsGeneral.hh"
 
 class wdgSettingsGeneral : public QWidget, public Ui::wdgSettingsGeneral {

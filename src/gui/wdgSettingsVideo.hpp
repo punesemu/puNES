@@ -19,12 +19,7 @@
 #ifndef WDGSETTINGSVIDEO_HPP_
 #define WDGSETTINGSVIDEO_HPP_
 
-#include <QtCore/QtGlobal>
-#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-#include <QtGui/QWidget>
-#else
 #include <QtWidgets/QWidget>
-#endif
 #include "wdgSettingsVideo.hh"
 
 class wdgSettingsVideo : public QWidget, public Ui::wdgSettingsVideo {

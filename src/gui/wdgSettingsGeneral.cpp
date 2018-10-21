@@ -16,21 +16,11 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <QtCore/QtGlobal>
-#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-#include <QtGui/QFileDialog>
-#else
 #include <QtWidgets/QFileDialog>
-#endif
 #include "wdgSettingsGeneral.moc"
 #include "mainWindow.hpp"
 #include "conf.h"
 #include "clock.h"
-#if defined (__unix__) || defined (WITH_D3D9)
-#define __GFX_SWITCH_MODE__
-#include "gfx_functions_inline.h"
-#undef __GFX_SWITCH_MODE__
-#endif
 
 wdgSettingsGeneral::wdgSettingsGeneral(QWidget *parent) : QWidget(parent) {
 	setupUi(this);
@@ -170,11 +160,12 @@ void wdgSettingsGeneral::s_mode(int index) {
 		QString ascii = uQString(opt_mode[machine.type].lname);
 
 		text_add_line_info(1, "switched to [green]%s", ascii.toLatin1().constData());
-#if defined (WITH_OPENGL) && defined (__WIN32__)
-		gfx_sdlwe_set(SDLWIN_SWITCH_MODE, SDLWIN_NONE);
-#else
-		gfx_SWITCH_MODE();
-#endif
+
+		gui_mainwindow_make_reset(CHANGE_MODE);
+
+		// per lo swap dell'emphasis del rosso e del verde in caso di PAL e DENDY
+		// ricreo la paletta quando cambio regione.
+		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, TRUE);
 	}
 }
 void wdgSettingsGeneral::s_fast_forward_velocity(int index) {

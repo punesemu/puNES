@@ -19,12 +19,7 @@
 #ifndef WDGAPUCHANNELS_HPP_
 #define WDGAPUCHANNELS_HPP_
 
-#include <QtCore/QtGlobal>
-#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-#include <QtGui/QWidget>
-#else
 #include <QtWidgets/QWidget>
-#endif
 #include "wdgAPUChannels.hh"
 
 class wdgAPUChannels : public QWidget, public Ui::wdgAPUChannels {

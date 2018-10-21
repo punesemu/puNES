@@ -65,10 +65,8 @@ void gui_init(int *argc, char **argv) {
 				fprintf(stderr, "INFO: Path too long. Truncated.\n");
 				info.portable = FALSE;
 			} else {
-				/*
-				 * I don't know why, but the string this readlink() function
-				 * returns is appended with a '@'.
-				 */
+				// I don't know why, but the string this readlink() function
+				// returns is appended with a '@'.
 				if (path[length] == '@') {
 					path[length] = 0;
 				}
@@ -97,14 +95,13 @@ void gui_sleep(double ms) {
 	__nsleep(&req, &rem);
 }
 int gui_screen_id(void) {
-	int wid = qt.screen->winId();
+	int wid = qt.screen->wogl.actual->winId();
 
 	return (wid);
 }
 
 double high_resolution_ms(void) {
 	struct timeval time;
-
 	double elapsed_seconds;
 	double elapsed_useconds;
 

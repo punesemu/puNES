@@ -16,14 +16,8 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <QtCore/QtGlobal>
-#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-#include <QtGui/QDesktopWidget>
-#include <QtGui/QScrollBar>
-#else
 #include <QtWidgets/QDesktopWidget>
 #include <QtWidgets/QScrollBar>
-#endif
 #if defined (__linux__)
 #include <unistd.h>
 #include <fcntl.h>
@@ -524,11 +518,7 @@ void wdgSettingsInput::shortcuts_tableview_resize(void) {
 	QString text = " Ctrl+Alt+Backspace ";
 	int i, w, h;
 
-#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-	tableWidget_Shortcuts->horizontalHeader()->setResizeMode(QHeaderView::ResizeToContents);
-#else
 	tableWidget_Shortcuts->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
-#endif
 
 	// creo uno shortucut fittizio per avere una width sufficientemente grande
 	for (i = 0; i < 2; i++) {
@@ -551,13 +541,7 @@ void wdgSettingsInput::shortcuts_tableview_resize(void) {
 	}
 
 	tableWidget_Shortcuts->setMinimumSize(w, h);
-
-#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-	tableWidget_Shortcuts->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
-#else
 	tableWidget_Shortcuts->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-#endif
-
 	tableWidget_Shortcuts->removeRow(SET_MAX_NUM_SC);
 }
 void wdgSettingsInput::ports_end_misc_set_enabled(bool mode) {

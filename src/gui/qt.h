@@ -26,6 +26,7 @@
 #endif
 #include "common.h"
 #include "emu.h"
+#include "uncompress.h"
 #include "jstick.h"
 
 #define tools_stylesheet()\
@@ -108,14 +109,11 @@ EXTERNC void gui_fullscreen(void);
 EXTERNC void gui_timeline(void);
 EXTERNC void gui_save_slot(BYTE slot);
 
-EXTERNC void gui_flush(void);
 EXTERNC void gui_print_usage(char *usage);
-EXTERNC void gui_reset_video(void);
 EXTERNC int gui_uncompress_selection_dialog(_uncompress_archive *archive, BYTE type);
 
 EXTERNC void gui_control_pause_bck(WORD event);
 
-EXTERNC void gui_after_set_video_mode(void);
 EXTERNC void gui_active_window(void);
 EXTERNC void gui_set_focus(void);
 
@@ -132,6 +130,8 @@ EXTERNC void gui_control_visible_cursor(void);
 EXTERNC void *gui_mainwindow_get_ptr(void);
 EXTERNC void gui_mainwindow_make_reset(int type);
 
+EXTERNC void gui_screen_update(void);
+
 EXTERNC void *gui_dlgsettings_get_ptr(void);
 
 EXTERNC void gui_external_control_windows_show(void);
@@ -143,6 +143,15 @@ EXTERNC void gui_vs_system_insert_coin(void);
 EXTERNC void gui_apu_channels_widgets_update(void);
 
 EXTERNC void gui_ppu_hacks_widgets_update(void);
+
+#if defined (WITH_OPENGL)
+EXTERNC void gui_wdgopengl_make_current(void);
+EXTERNC unsigned int gui_wdgopengl_framebuffer_id(void);
+
+EXTERNC void gui_screen_info(void);
+
+EXTERNC uint32_t gui_color(BYTE a, BYTE r, BYTE g, BYTE b);
+#endif
 
 EXTERNC BYTE gui_load_lut(void *l, const uTCHAR *path);
 EXTERNC void gui_save_screenshot(int w, int h, char *buffer, BYTE flip);

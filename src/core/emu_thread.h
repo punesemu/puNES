@@ -16,31 +16,36 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef WDGSETTINGSCHEATS_HPP_
-#define WDGSETTINGSCHEATS_HPP_
+#ifndef EMU_THREAD_H_
+#define EMU_THREAD_H_
 
-#include <QtWidgets/QWidget>
-#include "wdgSettingsCheats.hh"
+#if defined (__unix__)
+#include <pthread.h>
+#endif
+#include "common.h"
 
-class wdgSettingsCheats : public QWidget, public Ui::wdgSettingsCheats {
-		Q_OBJECT
+#if defined (__unix__)
+#define THTYPE pthread_t
+#define THFUNCT void *
+#define LCKTYPE pthread_mutex_t
+#elif defined (__WIN32__)
+#define THFUNCT DWORD WINAPI
+#define THTYPE HANDLE
+#define LCKTYPE HANDLE
+#endif
 
-	public:
-		wdgSettingsCheats(QWidget *parent = 0);
-		~wdgSettingsCheats();
+#if defined (__cplusplus)
+#define EXTERNC extern "C"
+#else
+#define EXTERNC
+#endif
 
-	private:
-		void changeEvent(QEvent *event);
+EXTERNC void emu_thread_init(void);
+EXTERNC void emu_thread_quit(void);
+EXTERNC void emu_thread_lock(void);
+EXTERNC void emu_thread_unlock(void);
 
-	public:
-		void retranslateUi(QWidget *wdgSettingsInput);
-		void update_widget(void);
+#undef EXTERNC
 
-	private:
-		void cheat_mode_set(void);
+#endif /* EMU_THREAD_H_ */
 
-	private slots:
-		void s_cheat_mode(int index);
-};
-
-#endif /* WDGSETTINGSCHEATS_HPP_ */

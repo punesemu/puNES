@@ -108,11 +108,7 @@ void wdgSettingsAudio::output_devices_init(void) {
 		QString id_new = uQString(snd_playback_device_id(i));
 
 		if (i == 0) {
-#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-			description = QApplication::translate("Settings", "System Default", 0, QApplication::UnicodeUTF8);
-#else
 			description = QApplication::translate("Settings", "System Default", Q_NULLPTR);
-#endif
 		}
 
 		if (description.isEmpty()) {

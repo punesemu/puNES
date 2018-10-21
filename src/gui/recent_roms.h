@@ -32,7 +32,7 @@ enum recent_roms_misc {
 #endif
 
 EXTERNC void recent_roms_init(void);
-EXTERNC void recent_roms_add(void);
+EXTERNC void recent_roms_add(uTCHAR *file);
 EXTERNC void recent_roms_parse(void);
 EXTERNC void recent_roms_save(void);
 EXTERNC int recent_roms_count(void);

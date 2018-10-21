@@ -45,10 +45,10 @@ void gui_init(int *argc, char **argv) {
 	} else if (IsWindows7SP1OrGreater() || IsWindows7OrGreater()) {
 		gui.version_os = WIN_SEVEN;
 	} else if (IsWindowsVistaSP2OrGreater() || IsWindowsVistaSP1OrGreater()
-			|| IsWindowsVistaOrGreater()) {
+		|| IsWindowsVistaOrGreater()) {
 		gui.version_os = WIN_VISTA;
 	} else if (IsWindowsXPSP3OrGreater() || IsWindowsXPSP2OrGreater()
-			|| IsWindowsXPSP1OrGreater() || IsWindowsXPOrGreater()) {
+		|| IsWindowsXPSP1OrGreater() || IsWindowsXPOrGreater()) {
 		gui.version_os = WIN_XP;
 	}
 
@@ -112,7 +112,11 @@ void gui_sleep(double ms) {
 	}
 }
 HWND gui_screen_id(void) {
-	HWND wid = (HWND) qt.screen->winId();
+#if defined (WITH_OPENGL)
+	HWND wid = (HWND)qt.screen->wogl.actual->winId();
+#elif defined (WITH_D3D9)
+	HWND wid = (HWND)qt.screen->wd3d9->winId();
+#endif
 
 	return (wid);
 }
@@ -120,10 +124,10 @@ HWND gui_screen_id(void) {
 double high_resolution_ms(void) {
 	uint64_t time, diff;
 
-	QueryPerformanceCounter((LARGE_INTEGER *) &time);
+	QueryPerformanceCounter((LARGE_INTEGER *)&time);
 	diff = ((time - gui.counter_start) * 1000) / gui.frequency;
 
-	return ((double) (diff & 0xffffffff));
+	return ((double)(diff & 0xffffffff));
 }
 
 #endif /* OS_WINDOWS_H_ */

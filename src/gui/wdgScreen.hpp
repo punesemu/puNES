@@ -20,29 +20,33 @@
 #define WDGSCREEN_HPP_
 
 #include <QtCore/QtGlobal>
-#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-#include <QtGui/QWidget>
-#else
 #include <QtWidgets/QWidget>
-#endif
 #include <QtGui/QDragEnterEvent>
 #include <QtGui/QDropEvent>
+#include <QtGui/QResizeEvent>
+#if defined (WITH_OPENGL)
+#include "wdgOpenGL.hpp"
+#elif defined (WITH_D3D9)
+#include "wdgD3D9.hpp"
+#endif
 #include "gui.h"
 
 class wdgScreen : public QWidget {
 		Q_OBJECT
 
-	private:
-#if defined (__WIN32__)
+	public:
 #if defined (WITH_OPENGL)
-		struct _data {
-			LONG_PTR WINAPI (*qt)(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-			LONG_PTR WINAPI (*sdl)(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-			LONG_PTR WINAPI (*tmp)(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-		} data;
+		struct _wogl {
+			wdgOpenGL *vsync;
+			wdgOpenGL *novsync;
+			wdgOpenGL *actual;
+		} wogl;
+#elif defined (WITH_D3D9)
+		wdgD3D9 *wd3d9;
 #endif
+
+	private:
 		QCursor *target;
-#endif
 
 	public:
 		wdgScreen(QWidget *parent);
@@ -52,16 +56,20 @@ class wdgScreen : public QWidget {
 		bool eventFilter(QObject *obj, QEvent *event);
 		void dragEnterEvent(QDragEnterEvent *event);
 		void dropEvent(QDropEvent *event);
+		void resizeEvent(QResizeEvent *event);
+
+	protected:
+		QPaintEngine *paintEngine() const { return 0; }
+
+#if defined (WITH_OPENGL)
+	public:
+		void vsync(void);
+#endif
 
 	public:
-#if defined (__WIN32__)
-#if defined (WITH_OPENGL)
-		void controlEventFilter(void);
-#endif
 		void cursor_init(void);
 		void cursor_set(void);
 		void cursor_hide(BYTE hide);
-#endif
 };
 
 #endif /* WDGSCREEN_HPP_ */

@@ -19,12 +19,7 @@
 #ifndef WDGSETTINGSPPU_HPP_
 #define WDGSETTINGSPPU_HPP_
 
-#include <QtCore/QtGlobal>
-#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-#include <QtGui/QWidget>
-#else
 #include <QtWidgets/QWidget>
-#endif
 #include "wdgSettingsPPU.hh"
 
 class wdgSettingsPPU : public QWidget, public Ui::wdgSettingsPPU {

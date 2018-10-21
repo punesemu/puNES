@@ -25,7 +25,7 @@
 #include "gui.h"
 
 #define tas_set_data_port_ctrlstd(prt, dt)\
-		prt.data[dt] = tas.il[tas.index].prt[dt]
+	prt.data[dt] = tas.il[tas.index].prt[dt]
 #define tas_increment_index()\
 	if (++tas.index == tas.count) {\
 		tas_read();\
@@ -54,6 +54,9 @@ BYTE tas_file(uTCHAR *ext, uTCHAR *file) {
 			}
 		}
 
+		umemset(tas.file, 0x00, usizeof(tas.file));
+		ustrncpy(tas.file, file, usizeof(tas.file) - 1);
+
 		tas.fp = ufopen(file, uL("r"));
 		tas_header(file);
 
@@ -76,6 +79,7 @@ BYTE tas_file(uTCHAR *ext, uTCHAR *file) {
 		if (found) {
 			tas_read();
 		} else {
+			tas.file[0] = 0;
 			info.rom.file[0] = 0;
 			tas_quit();
 		}

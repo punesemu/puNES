@@ -16,6 +16,8 @@ libcore_a_SOURCES = \
 	draw_on_screen.c \
 	emu.c \
 	emu.h \
+	emu_thread.c \
+	emu_thread.h \
 	external_calls.c \
 	external_calls.h \
 	fds.c \
@@ -23,7 +25,6 @@ libcore_a_SOURCES = \
 	font.h \
 	fps.c \
 	fps.h \
-	gfx_functions_inline.h \
 	gfx.h \
 	gui.h \
 	ines.c \

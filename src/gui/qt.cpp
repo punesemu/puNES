@@ -16,16 +16,11 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <QtCore/QtGlobal>
-#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-#include <QtGui/QDesktopWidget>
-#include <QtGui/QMessageBox>
-#else
 #include <QtWidgets/QDesktopWidget>
 #include <QtWidgets/QMessageBox>
-#endif
 #include <QtGui/QImage>
 #include <QtCore/QDir>
+#include <QtGui/QScreen>
 #if defined (__WIN32__)
 #include <QtCore/QtPlugin>
 #if defined (QT5_PLUGIN_QWINDOWS)
@@ -38,26 +33,21 @@ Q_IMPORT_PLUGIN(QWindowsVistaStylePlugin)
 Q_IMPORT_PLUGIN(QGifPlugin)
 #endif
 #if defined (QT_PLUGIN_QICO)
-#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-Q_IMPORT_PLUGIN(qico)
-#else
 Q_IMPORT_PLUGIN(QICOPlugin)
-#endif
 #endif
 #if defined (QT_PLUGIN_QJPEG)
 Q_IMPORT_PLUGIN(QJpegPlugin)
 #endif
 #if defined (QT_PLUGIN_QSVG)
-#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-Q_IMPORT_PLUGIN(qsvg)
-#else
 Q_IMPORT_PLUGIN(QSvgPlugin)
-#endif
 #endif
 #endif
 #include <stdlib.h>
 #include <unistd.h>
 #include <libgen.h>
+#if defined (WITH_OPENGL)
+#include "opengl.h"
+#endif
 #include "mainWindow.hpp"
 #include "objCheat.hpp"
 #include "dlgSettings.hpp"
@@ -73,15 +63,10 @@ Q_IMPORT_PLUGIN(QSvgPlugin)
 #include "timeline.h"
 #include "save_slot.h"
 #include "vs_system.h"
-#if defined (WITH_OPENGL)
-#include "opengl.h"
-#if defined (__WIN32__)
-#include "sdl_wid.h"
-#endif
-#elif defined (WITH_D3D9)
+#include "gui.h"
+#if defined (WITH_D3D9)
 #include "d3d9.h"
 #endif
-#include "gui.h"
 
 static struct _qt {
 	QApplication *app;
@@ -207,11 +192,14 @@ void gui_set_video_mode(void) {
 	}
 
 	qt.screen->setFixedSize(QSize(gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE]));
+#if defined (WITH_OPENGL)
+	qt.screen->vsync();
+#endif
 
 	qt.mwin->setFixedSize(QSize(qt.screen->width(),
-			(qt.mwin->menubar->isHidden() ? 0 : qt.mwin->menubar->sizeHint().height()) +
-			(qt.screen->height() + 2) +
-			(qt.mwin->statusbar->isHidden() ? 0 : qt.mwin->statusbar->sizeHint().height())));
+		(qt.mwin->menubar->isHidden() ? 0 : qt.mwin->menubar->sizeHint().height()) +
+		(qt.screen->height() + 2) +
+		(qt.mwin->statusbar->isHidden() ? 0 : qt.mwin->statusbar->sizeHint().height())));
 
 	qt.mwin->menubar->setFixedWidth(gfx.w[VIDEO_MODE]);
 	qt.mwin->statusbar->update_width(gfx.w[VIDEO_MODE]);
@@ -237,9 +225,7 @@ void gui_fullscreen(void) {
 	qt.mwin->s_set_fullscreen();
 }
 void gui_timeline(void) {
-	tl.update = TRUE;
 	qt.mwin->statusbar->timeline->setValue(tl.snaps_fill - 1, false);
-	tl.update = FALSE;
 }
 void gui_save_slot(BYTE slot) {
 	if (slot >= SAVE_SLOTS) {
@@ -248,11 +234,6 @@ void gui_save_slot(BYTE slot) {
 	qt.mwin->state_save_slot_set(slot, FALSE);
 }
 
-void gui_flush(void) {
-	qApp->flush();
-	qApp->sendPostedEvents();
-	qApp->processEvents();
-}
 void gui_print_usage(char *usage) {
 	QMessageBox *box = new QMessageBox();
 
@@ -277,13 +258,7 @@ void gui_print_usage(char *usage) {
 	box->show();
 	box->exec();
 }
-void gui_reset_video(void) {
-#if defined (WITH_OPENGL) && defined (__WIN32__)
-	sdl_wid();
-	gfx_reset_video();
-	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
-#endif
-}
+
 int gui_uncompress_selection_dialog(_uncompress_archive *archive, BYTE type) {
 	dlgUncomp *dlg = new dlgUncomp(qt.mwin, (void *)archive, type);
 
@@ -321,11 +296,6 @@ void gui_control_pause_bck(WORD event) {
 	}
 }
 
-void gui_after_set_video_mode(void) {
-#if defined (WITH_OPENGL) && defined (__WIN32__)
-	qt.screen->controlEventFilter();
-#endif
-}
 void gui_active_window(void) {
 	qt.screen->activateWindow();
 }
@@ -350,22 +320,14 @@ void gui_objcheat_save_game_cheats(void) {
 }
 
 void gui_cursor_init(void) {
-#if defined (__WIN32__)
 	qt.screen->cursor_init();
-#endif
 }
 void gui_cursor_set(void) {
-#if defined (__WIN32__)
 	qt.screen->cursor_set();
-#endif
 }
 void gui_cursor_hide(BYTE hide) {
 	gmouse.hidden = hide;
-#if defined (__WIN32__)
 	qt.screen->cursor_hide(hide);
-#else
-	gfx_cursor_hide(hide);
-#endif
 }
 void gui_control_visible_cursor(void) {
 	qt.mwin->control_visible_cursor();
@@ -376,6 +338,14 @@ void *gui_mainwindow_get_ptr(void) {
 }
 void gui_mainwindow_make_reset(int type) {
 	qt.mwin->make_reset(type);
+}
+
+void gui_screen_update(void) {
+#if defined (WITH_OPENGL)
+	qt.screen->wogl.actual->update();
+#elif defined (WITH_D3D9)
+	qt.screen->wd3d9->update();
+#endif
 }
 
 void *gui_dlgsettings_get_ptr(void) {
@@ -403,7 +373,6 @@ void gui_external_control_windows_show(void) {
 	}
 
 	gui_update();
-	gui_flush();
 	gui_external_control_windows_update_pos();
 	gui_active_window();
 	gui_set_focus();
@@ -434,6 +403,23 @@ void gui_ppu_hacks_widgets_update(void) {
 	qt.dset->widget_wdgSettingsPPU->update_widget();
 	qt.ppuhacks->widget_wdgSettingsPPU->update_widget();
 }
+
+#if defined (WITH_OPENGL)
+void gui_wdgopengl_make_current(void) {
+	qt.screen->wogl.actual->makeCurrent();
+}
+unsigned int gui_wdgopengl_framebuffer_id(void) {
+	return (qt.screen->wogl.actual->framebuffer_id());
+}
+
+void gui_screen_info(void) {
+	gfx.bit_per_pixel = qApp->primaryScreen()->depth();
+}
+
+uint32_t gui_color(BYTE a, BYTE r, BYTE g, BYTE b) {
+	return (qRgba(r, g, b, a));
+}
+#endif
 
 BYTE gui_load_lut(void *l, const uTCHAR *path) {
 	QImage tmp;

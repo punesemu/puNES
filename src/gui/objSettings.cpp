@@ -490,7 +490,6 @@ static const struct _kvTable {
 	{ Qt::Key_PowerDown,              "PowerDown"  },
 	{ Qt::Key_Suspend,                "Suspend"    },
 	{ Qt::Key_ContrastAdjust,         "ContrastAd" },
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0))
 	{ Qt::Key_TouchpadToggle,         "TpadToggle" },
 	{ Qt::Key_TouchpadOn,             "TpadOn"     },
 	{ Qt::Key_TouchpadOff,            "TpadOff"    },
@@ -501,7 +500,6 @@ static const struct _kvTable {
 	{ Qt::Key_Blue,                   "Blue"       },
 	{ Qt::Key_ChannelUp,              "ChannelUp"  },
 	{ Qt::Key_ChannelDown,            "ChannelDwn" },
-#endif
 	{ Qt::Key_MediaLast,              "MediaLast"  },
 	{ Qt::Key_unknown,                "unknown"    },
 	{ Qt::Key_Call,                   "Call"       },

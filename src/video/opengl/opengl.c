@@ -16,31 +16,17 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdarg.h>
 #include <unistd.h>
-#include "info.h"
-#include "emu.h"
-#include "cpu.h"
-#include "gfx.h"
-#include "sdl_wid.h"
-#include "overscan.h"
-#include "clock.h"
-#include "input.h"
-#include "ppu.h"
-#include "version.h"
-#include "gui.h"
-#include "text.h"
-#include "palette.h"
-#include "paldef.h"
-#include "cgp.h"
 #include "opengl.h"
+#include "info.h"
 #include "conf.h"
-#include "vs_system.h"
-#include "video/effects/pause.h"
-#include "video/effects/tv_noise.h"
-#if !defined (__WIN32__)
-#include "gui/designer/pointers/target_32x32.xpm"
-//#include "gui/designer/pointers/target_48x48.xpm"
-#endif
+#include "emu.h"
+#include "ppu.h"
+#include "gui.h"
 
 #define MAT_ELEM_4X4(mat, r, c) ((mat).data[4 * (c) + (r)])
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
@@ -55,20 +41,7 @@
 #define _SCR_LINES_NOBRD\
 	(float) SCR_LINES
 
-enum _opengl_texture_format {
-	TI_INTFRM = GL_RGBA8,
-	TI_FRM = GL_BGRA,
-	TI_TYPE = GL_UNSIGNED_BYTE,
-	TI_F_INTFRM = GL_RGBA32F,
-	TI_F_TYPE = GL_FLOAT,
-	TI_S_INTFRM = GL_SRGB8_ALPHA8,
-	TI_S_TYPE = GL_UNSIGNED_BYTE
-};
-
-static BYTE opengl_init(void);
-static BYTE opengl_context_create(SDL_Surface *src);
 static void opengl_context_delete(void);
-INLINE static void opengl_draw_scene(SDL_Surface *surface);
 static void opengl_screenshot(void);
 
 static BYTE opengl_glew_init(void);
@@ -87,9 +60,9 @@ static void opengl_vertex_buffer_set(_vertex_buffer *vb, _texture_rect *rect);
 static const GLint opengl_integer_get(const GLenum penum);
 static void opengl_matrix_4x4_identity(_math_matrix_4x4 *mat);
 static void opengl_matrix_4x4_ortho(_math_matrix_4x4 *mat, GLfloat left, GLfloat right,
-		GLfloat bottom, GLfloat top, GLfloat znear, GLfloat zfar);
+	GLfloat bottom, GLfloat top, GLfloat znear, GLfloat zfar);
 INLINE void opengl_shader_filter(uint8_t linear, uint8_t mipmap, uint8_t interpolation,
-		GLuint *mag, GLuint *min);
+	GLuint *mag, GLuint *min);
 INLINE static void opengl_shader_params_text_set(_shader *shd);
 
 // glsl
@@ -103,15 +76,13 @@ INLINE static void opengl_shader_glsl_disable_attrib(void);
 static void opengl_shader_cg_error_handler(CGcontext ctx, CGerror error, void *data);
 #endif
 static BYTE opengl_shader_cg_init(GLuint pass, _shader *shd, GLchar *code, const uTCHAR *path);
-static void opengl_shader_cg_clstate_ctrl(CGparameter *dst, CGparameter *param,
-        const char *semantic);
-static void opengl_shader_cg_param2f_ctrl(CGparameter *dst, CGparameter *param,
-        const char *semantic);
+static void opengl_shader_cg_clstate_ctrl(CGparameter *dst, CGparameter *param, const char *semantic);
+static void opengl_shader_cg_param2f_ctrl(CGparameter *dst, CGparameter *param, const char *semantic);
 static void opengl_shader_cg_uni_texture_clear(_shader_uniforms_tex_cg *sut);
 static void opengl_shader_cg_uni_texture(_shader_uniforms_tex_cg *sut, _shader_prg_cg *prg,
-		char *fmt, ...);
+	char *fmt, ...);
 INLINE static void opengl_shader_cg_params_set(const _texture *texture, GLuint fcountmod,
-		GLuint fcount);
+	GLuint fcount);
 INLINE static void opengl_shader_cg_disable_stpm(void);
 #endif
 
@@ -128,806 +99,9 @@ static const _vertex_buffer vb_flipped[4] = {
 	{ 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f },
 	{ 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f },
 };
-#if !defined (__WIN32__)
-static struct _cursor {
-	SDL_Cursor *target;
-	SDL_Cursor *org;
-} cursor;
-static SDL_Cursor *init_system_cursor(char *xpm[]);
-#endif
 
-BYTE gfx_init(void) {
-	const SDL_VideoInfo *video_info;
-
-	gfx.save_screenshot = FALSE;
-
-	if (gui_create() == EXIT_ERROR) {
-		fprintf(stderr, "gui initialization failed\n");
-		return (EXIT_ERROR);
-	}
-
-#if defined (__WIN64__)
-	sprintf(SDL_windowhack, "SDL_WINDOWID=%I64u", (uint64_t) gui_screen_id());
-#else
-	sprintf(SDL_windowhack, "SDL_WINDOWID=%i", (int) gui_screen_id());
-#endif
-
-	sdl_wid();
-
-	// inizializzazione video SDL
-	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-		fprintf(stderr, "SDL initialization failed: %s\n", SDL_GetError());
-		return (EXIT_ERROR);
-	}
-
-	gui_after_set_video_mode();
-
-	video_info = SDL_GetVideoInfo();
-
-	// modalita' video con profondita' di colore
-	// inferiori a 32 bits non sono supportate.
-	if (video_info->vfmt->BitsPerPixel < 32) {
-		fprintf(stderr, "Sorry but color depth less than 32 bits are not supported\n");
-		return (EXIT_ERROR);
-	}
-
-	// per poter inizializzare il glew devo creare un contesto opengl prima
-	if (!(surface_sdl = SDL_SetVideoMode(0, 0, 0, SDL_OPENGL))) {
-		fprintf(stderr, "OpenGL not supported.\n");
-		return (EXIT_ERROR);
-	}
-
-	// casi particolari provenienti dal settings_file_parse() e cmd_line_parse()
-	if (cfg->fullscreen == FULLSCR) {
-		gfx.scale_before_fscreen = cfg->scale;
-	}
-
-	if (opengl_init() == EXIT_ERROR) {
-		fprintf(stderr, "OpenGL not supported.\n");
-		return (EXIT_ERROR);
-	}
-
-	// inizializzo l'ntsc che utilizzero' non solo
-	// come filtro ma anche nel gfx_set_screen() per
-	// generare la paletta dei colori.
-	if (ntsc_init(0, 0, 0, 0, 0) == EXIT_ERROR) {
-		return (EXIT_ERROR);
-	}
-
-	// mi alloco una zona di memoria dove conservare la
-	// paletta nel formato di visualizzazione.
-	if (!(gfx.palette = (uint32_t *) malloc(NUM_COLORS * sizeof(uint32_t)))) {
-		fprintf(stderr, "Unable to allocate the palette\n");
-		return (EXIT_ERROR);
-	}
-
-	if (pause_init() == EXIT_ERROR) {
-		fprintf(stderr, "pause initialization failed\n");
-		return (EXIT_ERROR);
-	}
-
-	if (tv_noise_init() == EXIT_ERROR) {
-		fprintf(stderr, "tv_noise initialization failed\n");
-		return (EXIT_ERROR);
-	}
-
-	if (cfg->fullscreen) {
-		gfx_set_screen(cfg->scale, cfg->filter, cfg->shader, NO_FULLSCR, cfg->palette, FALSE, FALSE);
-		cfg->fullscreen = NO_FULLSCR;
-		cfg->scale = gfx.scale_before_fscreen;
-		if (cfg->fullscreen_in_window) {
-			gui_flush();
-		}
-		gui_fullscreen();
-	} else {
-		gfx_set_screen(cfg->scale, cfg->filter, cfg->shader, NO_FULLSCR, cfg->palette, FALSE, FALSE);
-		// nella versione windows (non so in quella linux), sembra che
-		// il VSync (con alcune schede video) non venga settato correttamente
-		// al primo gfx_set_screen. E' necessario fare un gfx_reset_video
-		// e poi nuovamente un gfx_set_screen. Nella versione linux il gui_reset_video()
-		// non fa assolutamente nulla.
-		gui_reset_video();
-	}
-
-	if (!surface_sdl) {
-		fprintf(stderr, "SDL initialization failed: %s\n", SDL_GetError());
-		return (EXIT_ERROR);
-	}
-
-	return (EXIT_OK);
-}
-void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, BYTE palette,
-		BYTE force_scale, BYTE force_palette) {
-	BYTE set_mode;
-	WORD width, height;
-	DBWORD old_shader = cfg->shader;
-
-	gfx_set_screen_start:
-	set_mode = FALSE;
-	width = 0, height = 0;
-
-	// l'ordine dei vari controlli non deve essere cambiato:
-	// 0) overscan
-	// 1) filtro
-	// 2) fullscreen
-	// 3) fattore di scala
-	// 4) tipo di paletta (IMPORTANTE: dopo il SDL_SetVideoMode)
-
-	// overscan
-	{
-		overscan.enabled = cfg->oscan;
-
-		gfx.rows = SCR_ROWS;
-		gfx.lines = SCR_LINES;
-
-		if (overscan.enabled == OSCAN_DEFAULT) {
-			overscan.enabled = cfg->oscan_default;
-		}
-		if (overscan.enabled) {
-			gfx.rows -= (overscan.borders->left + overscan.borders->right);
-			gfx.lines -= (overscan.borders->up + overscan.borders->down);
-		}
-	}
-
-	/* filtro */
-	if (filter == NO_CHANGE) {
-		filter = cfg->filter;
-	}
-	if ((filter != cfg->filter) || info.on_cfg || force_scale) {
-		switch (filter) {
-			default:
-			case NO_FILTER:
-				gfx.filter.func = scale_surface;
-				gfx.filter.factor = X1;
-				break;
-			case SCALE2X:
-			case SCALE3X:
-			case SCALE4X:
-				gfx.filter.func = scaleNx;
-				gfx.filter.factor = filter + 1;
-				break;
-			case HQ2X:
-			case HQ3X:
-			case HQ4X:
-				gfx.filter.func = hqNx;
-				gfx.filter.factor = filter - 2;
-				break;
-			case XBRZ2X:
-			case XBRZ3X:
-			case XBRZ4X:
-			case XBRZ5X:
-			case XBRZ6X:
-				gfx.filter.func = xBRZ;
-				gfx.filter.factor = filter - 6;
-				break;
-			case XBRZ2XMT:
-			case XBRZ3XMT:
-			case XBRZ4XMT:
-			case XBRZ5XMT:
-			case XBRZ6XMT:
-				gfx.filter.func = xBRZ_mt;
-				gfx.filter.factor = filter - 11;
-				break;
-			case NTSC_FILTER:
-				gfx.filter.func = ntsc_surface;
-				gfx.filter.factor = X2;
-				break;
-		}
-		// forzo il controllo del fattore di scale
-		force_scale = TRUE;
-		// indico che devo cambiare il video mode
-		set_mode = TRUE;
-	}
-
-	/* shader */
-	if (shader == NO_CHANGE) {
-		shader = cfg->shader;
-	}
-
-	// fullscreen
-	if (fullscreen == NO_CHANGE) {
-		fullscreen = cfg->fullscreen;
-	}
-	if ((fullscreen != cfg->fullscreen) || info.on_cfg) {
-		// forzo il controllo del fattore di scale
-		force_scale = TRUE;
-		// indico che devo cambiare il video mode
-		set_mode = TRUE;
-	}
-
-	// fattore di scala
-	if (scale == NO_CHANGE) {
-		scale = cfg->scale;
-	}
-	if ((scale != cfg->scale) || info.on_cfg || force_scale) {
-		if (filter == NTSC_FILTER) {
-			width = gfx.w[PASS0] = gfx.w[NO_OVERSCAN] = NES_NTSC_OUT_WIDTH(SCR_ROWS);
-			gfx.filter.width_pixel = (float) nes_ntsc_out_chunk / (float) nes_ntsc_in_chunk;
-			if (overscan.enabled) {
-				width -= ((float) (overscan.borders->left + overscan.borders->right) *
-						gfx.filter.width_pixel);
-			}
-			switch (scale) {
-				case X2:
-					gfx.width_pixel = gfx.filter.width_pixel;
-					break;
-				default:
-					width = ((float) width / 2.0f) * (float) scale;
-					gfx.w[NO_OVERSCAN] = ((float) gfx.w[NO_OVERSCAN] / 2.0f) * (float) scale;
-					gfx.width_pixel = (gfx.filter.width_pixel / 2.0f) * (float) scale;
-					break;
-			}
-		} else {
-			width = gfx.rows * scale;
-			gfx.w[NO_OVERSCAN] = SCR_ROWS * scale;
-			gfx.w[PASS0] = SCR_ROWS * gfx.filter.factor;
-			gfx.filter.width_pixel = gfx.filter.factor;
-			gfx.width_pixel = scale;
-		}
-		gfx.w[CURRENT] = width;
-
-		height = gfx.lines * scale;
-		gfx.h[CURRENT] = height;
-		gfx.h[NO_OVERSCAN] = SCR_LINES * scale;
-		gfx.h[PASS0] = SCR_LINES * gfx.filter.factor;
-
-		set_mode = TRUE;
-	}
-
-	// cfg->scale e cfg->filter posso aggiornarli prima
-	// del set_mode, mentre cfg->fullscreen e cfg->palette
-	// devo farlo necessariamente dopo.
-	// salvo il nuovo fattore di scala
-	cfg->scale = scale;
-	// salvo il nuovo filtro
-	cfg->filter = filter;
-	// salvo la nuova shader
-	cfg->shader = shader;
-
-	// devo eseguire un SDL_SetVideoMode?
-	if (set_mode) {
-		if (fullscreen) {
-			gfx.w[VIDEO_MODE] = gfx.w[MONITOR];
-			gfx.h[VIDEO_MODE] = gfx.h[MONITOR];
-		} else if (cfg->oscan_black_borders) {
-			gfx.w[VIDEO_MODE] = gfx.w[NO_OVERSCAN];
-			gfx.h[VIDEO_MODE] = gfx.h[NO_OVERSCAN];
-		} else {
-			gfx.w[VIDEO_MODE] = width;
-			gfx.h[VIDEO_MODE] = height;
-		}
-
-		SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 5);
-		SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 5);
-		SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 5);
-		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
-
-		//SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
-		//SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
-		//SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
-		//SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 32);
-
-		// abilito il doublebuffering
-		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, TRUE);
-		// abilito il vsync se e' necessario
-		SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, cfg->vsync);
-
-		// Pixel Aspect Ratio
-		{
-			gfx.pixel_aspect_ratio = 1.0f;
-
-			if (cfg->filter == NTSC_FILTER) {
-				gfx.pixel_aspect_ratio = 1.0f;
-			} else {
-				switch (cfg->pixel_aspect_ratio) {
-					default:
-					case PAR11:
-						gfx.pixel_aspect_ratio = 1.0f;
-						break;
-					case PAR54:
-						gfx.pixel_aspect_ratio = 5.0f / 4.0f;
-						break;
-					case PAR87:
-						gfx.pixel_aspect_ratio = 8.0f / 7.0f;
-						break;
-					case PAR118:
-						gfx.pixel_aspect_ratio = 2950000.0f / 2128137.0f;
-						break;
-				}
-			}
-
-			if ((gfx.pixel_aspect_ratio != 1.0f) && !fullscreen) {
-				gfx.w[VIDEO_MODE] = (gfx.w[NO_OVERSCAN] * gfx.pixel_aspect_ratio);
-
-				if (overscan.enabled && !cfg->oscan_black_borders) {
-					float brd = 0;
-
-					brd = (float) gfx.w[VIDEO_MODE] / (float) SCR_ROWS;
-					brd *= (overscan.borders->right + overscan.borders->left);
-
-					gfx.w[VIDEO_MODE] -= brd;
-				}
-			}
-		}
-
-		// faccio quello che serve prima del setvideo
-		gui_set_video_mode();
-
-		// inizializzo la superfice video
-		surface_sdl = SDL_SetVideoMode(gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE], 0,
-				SDL_HWSURFACE | SDL_OPENGL);
-
-		gui_after_set_video_mode();
-
-		// in caso di errore
-		if (!surface_sdl) {
-			fprintf(stderr, "SDL_SetVideoMode failed : %s\n", SDL_GetError());
-			return;
-		}
-
-		gfx.bit_per_pixel = surface_sdl->format->BitsPerPixel;
-	}
-
-	// paletta
-	if (palette == NO_CHANGE) {
-		palette = cfg->palette;
-	}
-	if ((palette != cfg->palette) || info.on_cfg || force_palette) {
-		if (palette == PALETTE_FILE) {
-			if (ustrlen(cfg->palette_file) != 0) {
-				if (palette_load_from_file(cfg->palette_file) == EXIT_ERROR) {
-					umemset(cfg->palette_file, 0x00, usizeof(cfg->palette_file));
-					text_add_line_info(1, "[red]error on palette file");
-					if (cfg->palette != PALETTE_FILE) {
-						palette = cfg->palette;
-					} else if (machine.type == NTSC) {
-						palette = PALETTE_NTSC;
-					} else {
-						palette = PALETTE_SONY;
-					}
-				} else {
-					ntsc_set(NULL, cfg->ntsc_format, FALSE, (BYTE *) palette_base_file, 0,
-							(BYTE *) palette_RGB);
-				}
-			}
-		}
-
-		switch (palette) {
-			case PALETTE_PAL:
-				ntsc_set(NULL, cfg->ntsc_format, FALSE, (BYTE *) palette_base_pal, 0,
-						(BYTE *) palette_RGB);
-				break;
-			case PALETTE_NTSC:
-				ntsc_set(NULL, cfg->ntsc_format, FALSE, 0, 0, (BYTE *) palette_RGB);
-				break;
-			case PALETTE_FRBX_NOSTALGIA:
-				ntsc_set(NULL, cfg->ntsc_format, FALSE, (BYTE *) palette_firebrandx_nostalgia_FBX, 0,
-						(BYTE *) palette_RGB);
-				break;
-			case PALETTE_FRBX_YUV:
-				ntsc_set(NULL, cfg->ntsc_format, FALSE, (BYTE *) palette_firebrandx_YUV_v3, 0,
-						(BYTE *) palette_RGB);
-				break;
-			case PALETTE_GREEN:
-				rgb_modifier(NULL, palette_RGB, 0x00, -0x20, 0x20, -0x20);
-				break;
-			case PALETTE_FILE:
-				break;
-			default:
-				ntsc_set(NULL, cfg->ntsc_format, palette, 0, 0, (BYTE *) palette_RGB);
-				break;
-		}
-
-		if (vs_system.enabled) {
-			switch (vs_system.ppu) {
-				case RP2C03B:
-				case RP2C03G:
-					break;
-				case RP2C04:
-					ntsc_set(NULL, cfg->ntsc_format, FALSE, (BYTE *) palette_RP2C04_0001, 0,
-					        (BYTE *) palette_RGB);
-					break;
-				case RP2C04_0002:
-					ntsc_set(NULL, cfg->ntsc_format, FALSE, (BYTE *) palette_RP2C04_0002, 0,
-					        (BYTE *) palette_RGB);
-					break;
-				case RP2C04_0003:
-					ntsc_set(NULL, cfg->ntsc_format, FALSE, (BYTE *) palette_RP2C04_0003, 0,
-					        (BYTE *) palette_RGB);
-					break;
-				case RP2C04_0004:
-					ntsc_set(NULL, cfg->ntsc_format, FALSE, (BYTE *) palette_RP2C04_0004, 0,
-					        (BYTE *) palette_RGB);
-					break;
-				case RC2C03B:
-				case RC2C03C:
-				case RC2C05_01:
-				case RC2C05_02:
-				case RC2C05_03:
-				case RC2C05_04:
-				case RC2C05_05:
-				default:
-					break;
-			}
-		}
-
-		// inizializzo in ogni caso la tabella YUV dell'hqx
-		hqx_init();
-
-		//memorizzo i colori della paletta nel formato di visualizzazione
-		{
-			WORD i;
-
-			for (i = 0; i < NUM_COLORS; i++) {
-				gfx.palette[i] = gfx_color(255, palette_RGB[i].r, palette_RGB[i].g, palette_RGB[i].b);
-			}
-		}
-	}
-
-	// salvo il nuovo stato del fullscreen
-	cfg->fullscreen = fullscreen;
-	// salvo il nuovo tipo di paletta
-	cfg->palette = palette;
-
-	{
-		gfx.PSS = ((cfg->pixel_aspect_ratio != PAR11) && cfg->PAR_soft_stretch) ? TRUE : FALSE;
-
-		if (shaders_set(shader) == EXIT_ERROR) {
-			umemcpy(cfg->shader_file, gfx.last_shader_file, usizeof(cfg->shader_file));
-			if (old_shader == shader) {
-				shader = NO_SHADER;
-			} else {
-				shader = old_shader;
-			}
-			goto gfx_set_screen_start;
-		}
-
-		// creo tutto il necessario per il rendering
-		switch (opengl_context_create(surface_sdl)) {
-			case EXIT_ERROR:
-				fprintf(stderr, "OPENGL: Unable to initialize opengl context\n");
-				break;
-			case EXIT_ERROR_SHADER:
-				text_add_line_info(1, "[red]errors[normal] on shader, use [green]'No shader'");
-				fprintf(stderr, "OPENGL: Error on loading the shaders, switch to \"No shader\"\n");
-				umemcpy(cfg->shader_file, gfx.last_shader_file, usizeof(cfg->shader_file));
-				shader = NO_SHADER;
-				goto gfx_set_screen_start;
-		}
-	}
-
-	// gestione testo
-	text.surface = surface_sdl;
-	text.w = surface_sdl->w;
-	text.h = surface_sdl->h;
-
-	gfx_text_reset();
-
-	// calcolo le proporzioni tra il disegnato a video (overscan e schermo
-	// con le dimensioni per il filtro NTSC compresi) e quello che dovrebbe
-	// essere (256 x 240). Mi serve per calcolarmi la posizione del puntatore
-	// dello zapper.
-	if (cfg->fullscreen) {
-		gfx.w_pr = (float) gfx.vp.w / (float) SCR_ROWS;
-		gfx.h_pr = (float) gfx.vp.h / (float) SCR_LINES;
-	} else {
-		gfx.w_pr = (float) (gfx.w[NO_OVERSCAN] * gfx.pixel_aspect_ratio) / (float) SCR_ROWS;
-		gfx.h_pr = (float) gfx.h[NO_OVERSCAN] / (float) SCR_LINES;
-	}
-
-	// setto il titolo della finestra
-	gui_update();
-
-	if (info.on_cfg == TRUE) {
-		info.on_cfg = FALSE;
-	}
-}
-void gfx_draw_screen(BYTE forced) {
-	void *palette = NULL;
-
-	if (cfg->filter == NTSC_FILTER) {
-		palette = NULL;
-	} else {
-		palette = (void *) gfx.palette;
-	}
-
-	if (!forced) {
-		if (info.no_rom | info.turn_off) {
-			if (cfg->filter == NTSC_FILTER) {
-				palette = turn_off_effect.ntsc;
-			} else {
-				palette = (void *) turn_off_effect.palette;
-			}
-
-			if (++info.pause_frames_drawscreen == 2) {
-				tv_noise_effect();
-				info.pause_frames_drawscreen = 0;
-				forced = TRUE;
-			} else if (text.on_screen) {
-				forced = TRUE;
-			}
-		} else if (info.pause) {
-			if (!cfg->disable_sepia_color) {
-				if (cfg->filter == NTSC_FILTER) {
-					palette = pause_effect.ntsc;
-				} else {
-					palette = pause_effect.palette;
-				}
-			}
-
-			if ((++info.pause_frames_drawscreen == 15) || text.on_screen) {
-				info.pause_frames_drawscreen = 0;
-				forced = TRUE;
-			}
-		}
-	}
-
-	// se il frameskip me lo permette (o se forzato), disegno lo screen
-	if (forced || !ppu.skip_draw) {
-		// applico l'effetto desiderato
-		gfx.filter.func(palette,
-				opengl.sdl.surface->pitch,
-				opengl.sdl.surface->pixels,
-				opengl.sdl.surface->w,
-				opengl.sdl.surface->h);
-
-		text_rendering(TRUE);
-
-		opengl_draw_scene(opengl.sdl.surface);
-
-		// disegno a video
-		SDL_GL_SwapBuffers();
-
-		// screenshot
-		if (gfx.save_screenshot == TRUE) {
-			opengl_screenshot();
-			gfx.save_screenshot = FALSE;
-		}
-	}
-}
-void gfx_reset_video(void) {
-	if (surface_sdl) {
-		SDL_FreeSurface(surface_sdl);
-		surface_sdl = NULL;
-	}
-
-	//sdl_wid();
-	SDL_QuitSubSystem(SDL_INIT_VIDEO);
-	SDL_InitSubSystem(SDL_INIT_VIDEO);
-
-	gui_after_set_video_mode();
-}
-void gfx_quit(void) {
-	if (gfx.palette) {
-		free(gfx.palette);
-		gfx.palette = NULL;
-	}
-
-	if (surface_sdl) {
-		SDL_FreeSurface(surface_sdl);
-	}
-
-	pause_quit();
-	tv_noise_quit();
-
-	gfx_cursor_quit();
-
-	opengl_context_delete();
-	ntsc_quit();
-	text_quit();
-	SDL_Quit();
-}
-
-uint32_t gfx_color(BYTE a, BYTE r, BYTE g, BYTE b) {
-	return (SDL_MapRGBA(surface_sdl->format, r, g, b, a));
-}
-
-void gfx_cursor_init(void) {
-#if defined (__WIN32__)
-	gui_cursor_init();
-	gui_cursor_set();
-#else
-	memset(&cursor, 0x00, sizeof(cursor));
-
-	cursor.org = SDL_GetCursor();
-
-	if ((cursor.target = init_system_cursor(target_32x32_xpm)) == NULL) {
-	//if ((cursor = init_system_cursor(target_48x48_xpm)) == NULL) {
-		cursor.target = cursor.org;
-		printf("SDL_Init failed: %s\n", SDL_GetError());
-	}
-
-	gfx_cursor_set();
-#endif
-}
-void gfx_cursor_quit(void) {
-#if defined (__WIN32__)
-#else
-	if (cursor.target) {
-		SDL_FreeCursor(cursor.target);
-	}
-#endif
-}
-void gfx_cursor_set(void) {
-#if defined (__WIN32__)
-	gui_cursor_set();
-#else
-	if (input_draw_target() == TRUE) {
-		SDL_SetCursor(cursor.target);
-	} else {
-		SDL_SetCursor(cursor.org);
-	}
-#endif
-}
-#if defined (__unix__)
-void gfx_cursor_hide(BYTE hide) {
-	if (hide == TRUE) {
-		SDL_ShowCursor(SDL_DISABLE);
-	} else {
-		SDL_ShowCursor(SDL_ENABLE);
-	}
-}
-#endif
-
-void gfx_text_create_surface(_txt_element *ele) {
-	ele->surface = gfx_create_RGB_surface(text.surface, ele->w, ele->h);
-	ele->blank = gfx_create_RGB_surface(text.surface, ele->w, ele->h);
-}
-void gfx_text_release_surface(_txt_element *ele) {
-	if (ele->surface) {
-		SDL_FreeSurface(ele->surface);
-		ele->surface = NULL;
-	}
-	if (ele->blank) {
-		SDL_FreeSurface(ele->blank);
-		ele->blank = NULL;
-	}
-}
-void gfx_text_rect_fill(_txt_element *ele, _rect *rect, uint32_t color) {
-	SDL_FillRect(ele->surface, rect, color);
-}
-void gfx_text_reset(void) {
-	txt_table[TXT_NORMAL] = SDL_MapRGBA(text.surface->format, 0xFF, 0xFF, 0xFF, 0);
-	txt_table[TXT_RED]    = SDL_MapRGBA(text.surface->format, 0xFF, 0x4C, 0x3E, 0);
-	txt_table[TXT_YELLOW] = SDL_MapRGBA(text.surface->format, 0xFF, 0xFF, 0   , 0);
-	txt_table[TXT_GREEN]  = SDL_MapRGBA(text.surface->format, 0   , 0xFF, 0   , 0);
-	txt_table[TXT_CYAN]   = SDL_MapRGBA(text.surface->format, 0   , 0xFF, 0xFF, 0);
-	txt_table[TXT_BROWN]  = SDL_MapRGBA(text.surface->format, 0xEB, 0x89, 0x31, 0);
-	txt_table[TXT_BLUE]   = SDL_MapRGBA(text.surface->format, 0x2D, 0x8D, 0xBD, 0);
-	txt_table[TXT_GRAY]   = SDL_MapRGBA(text.surface->format, 0xA0, 0xA0, 0xA0, 0);
-	txt_table[TXT_BLACK]  = SDL_MapRGBA(text.surface->format, 0   , 0   , 0   , 0);
-}
-void gfx_text_clear(_txt_element *ele) {
-	int x, y;
-
-	if (!ele->blank) {
-		return;
-	}
-
-	text_calculate_real_x_y(ele, &x, &y);
-
-	glBindTexture(GL_TEXTURE_2D, opengl.text.id);
-	glPixelStorei(GL_UNPACK_ROW_LENGTH, ele->w);
-	glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, ele->w, ele->h, TI_FRM, TI_TYPE, ele->blank->pixels);
-	glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
-}
-void gfx_text_blit(_txt_element *ele, _rect *rect) {
-	if (!cfg->txt_on_screen) {
-		return;
-	}
-
-	glBindTexture(GL_TEXTURE_2D, opengl.text.id);
-	glPixelStorei(GL_UNPACK_ROW_LENGTH, rect->w);
-	glTexSubImage2D(GL_TEXTURE_2D, 0, rect->x, rect->y, rect->w, rect->h,
-			TI_FRM, TI_TYPE, ele->surface->pixels);
-	glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
-}
-
-#if defined (__WIN32__)
-#define __GFX_ALL_FUNC__
-#include "gfx_functions_inline.h"
-#undef __GFX_ALL_FUNC__
-
-void gfx_sdlwe_set(int type, int arg) {
-	sdlwe.event = type;
-	sdlwe.arg = arg;
-}
-void gfx_sdlwe_tick(void) {
-	if (sdlwe.event) {
-		switch (sdlwe.event) {
-			case SDLWIN_MAKE_RESET:
-				gfx_MAKE_RESET(sdlwe.arg);
-				break;
-			case SDLWIN_CHANGE_ROM:
-				gfx_CHANGE_ROM();
-				break;
-			case SDLWIN_SWITCH_MODE:
-				gfx_SWITCH_MODE();
-				break;
-			case SDLWIN_FORCE_SCALE:
-				gfx_FORCE_SCALE();
-				break;
-			case SDLWIN_SCALE:
-				gfx_SCALE(sdlwe.arg);
-				break;
-			case SDLWIN_FILTER:
-				gfx_FILTER(sdlwe.arg);
-				break;
-			case SDLWIN_VSYNC:
-				gfx_VSYNC();
-				break;
-			case SDLWIN_SHADER:
-				gfx_SHADER(sdlwe.arg);
-				break;
-		}
-		sdlwe.event = sdlwe.arg = SDLWIN_NONE;
-	}
-}
-#endif
-
-SDL_Surface *gfx_create_RGB_surface(SDL_Surface *src, uint32_t width, uint32_t height) {
-	SDL_Surface *new_surface, *tmp;
-
-	tmp = SDL_CreateRGBSurface(src->flags, width, height,
-			src->format->BitsPerPixel, src->format->Rmask, src->format->Gmask,
-			src->format->Bmask, src->format->Amask);
-
-	new_surface = SDL_DisplayFormatAlpha(tmp);
-
-	memset(new_surface->pixels, 0,
-	        new_surface->w * new_surface->h * new_surface->format->BytesPerPixel);
-
-	SDL_FreeSurface(tmp);
-
-	return (new_surface);
-}
-
-double sdl_get_ms(void) {
-	return (SDL_GetTicks());
-}
-
-#if !defined (__WIN32__)
-static SDL_Cursor *init_system_cursor(char *xpm[]) {
-	int srow, scol, ncol, none;
-	int i, row, col;
-
-	sscanf(xpm[0], "%d %d %d %d", &srow, &scol, &ncol, &none);
-
-	Uint8 data[(scol / 8) * srow];
-	Uint8 mask[(scol / 8) * srow];
-
-	i = -1;
-	for (row = 0; row < srow; ++row) {
-		for (col = 0; col < scol; ++col) {
-			if (col % 8) {
-				data[i] <<= 1;
-				mask[i] <<= 1;
-			} else {
-				++i;
-				data[i] = mask[i] = 0;
-			}
-			switch (xpm[(ncol + 1) + row][col]) {
-				case '+': // nero
-					data[i] |= 0x01;
-					mask[i] |= 0x01;
-					break;
-				case '.': // bianco
-					mask[i] |= 0x01;
-					break;
-				case ' ':
-					break;
-			}
-		}
-	}
-	//sscanf(xpm[(ncol + 1) + row], "%d,%d", &hot_x, &hot_y);
-	return (SDL_CreateCursor(data, mask, srow, scol, srow / 2, scol / 2));
-}
-#endif
-
-static BYTE opengl_init(void) {
+BYTE opengl_init(void) {
 	memset(&gfx.vp, 0x00, sizeof(gfx.vp));
-
-	opengl.sdl.surface = NULL;
 
 	memset(&opengl.attribs, 0x00, sizeof(opengl.attribs));
 	memset(&opengl.screen, 0x00, sizeof(opengl.screen));
@@ -949,8 +123,14 @@ static BYTE opengl_init(void) {
 
 	return (EXIT_OK);
 }
-static BYTE opengl_context_create(SDL_Surface *src) {
+void opengl_quit(void) {
+	gui_wdgopengl_make_current();
+	opengl_context_delete();
+}
+BYTE opengl_context_create(void) {
 	GLuint i, w, h;
+
+	gui_wdgopengl_make_current();
 
 	glGetError();
 
@@ -981,7 +161,7 @@ static BYTE opengl_context_create(SDL_Surface *src) {
 		opengl.cg.profile.f = cgGLGetLatestProfile(CG_GL_FRAGMENT);
 
 		if ((opengl.cg.profile.v == CG_PROFILE_UNKNOWN)
-				|| (opengl.cg.profile.f == CG_PROFILE_UNKNOWN)) {
+			|| (opengl.cg.profile.f == CG_PROFILE_UNKNOWN)) {
 			opengl_context_delete();
 			return (EXIT_ERROR);
 		}
@@ -999,7 +179,18 @@ static BYTE opengl_context_create(SDL_Surface *src) {
 	w = gfx.w[PASS0];
 	h = gfx.h[PASS0];
 
-	opengl.sdl.surface = gfx_create_RGB_surface(src, w, h);
+	// surface
+	{
+		opengl.surface.w = w;
+		opengl.surface.h = h;
+		opengl.surface.pitch = w * sizeof(uint32_t);
+
+		if ((opengl.surface.pixels = malloc(opengl.surface.pitch * h)) == NULL) {
+			opengl_context_delete();
+			return (EXIT_ERROR);
+		}
+		memset(opengl.surface.pixels, 0x00, opengl.surface.pitch * h);
+	}
 
 	// devo precalcolarmi il viewport finale
 	{
@@ -1007,8 +198,8 @@ static BYTE opengl_context_create(SDL_Surface *src) {
 
 		vp->x = 0;
 		vp->y = 0;
-		vp->w = src->w;
-		vp->h = src->h;
+		vp->w = gfx.w[VIDEO_MODE];
+		vp->h = gfx.h[VIDEO_MODE];
 
 		if (overscan.enabled && (!cfg->oscan_black_borders && !cfg->fullscreen)) {
 			vp->x = (-overscan.borders->left * gfx.width_pixel) * gfx.pixel_aspect_ratio;
@@ -1029,11 +220,11 @@ static BYTE opengl_context_create(SDL_Surface *src) {
 				}
 
 				if (ratio_frame > ratio_surface) {
-					vp->w = (int) ((float) src->h * ratio_surface);
-					vp->x = (int) (((float) src->w - (float) vp->w) * 0.5f);
+					vp->w = (int) ((float) gfx.h[VIDEO_MODE] * ratio_surface);
+					vp->x = (int) (((float) gfx.w[VIDEO_MODE] - (float) vp->w) * 0.5f);
 				} else {
-					vp->h = (int) ((float) src->w / ratio_surface);
-					vp->y = (int) (((float) src->h - (float) vp->h) * 0.5f);
+					vp->h = (int) ((float) gfx.w[VIDEO_MODE] / ratio_surface);
+					vp->y = (int) (((float) gfx.h[VIDEO_MODE] - (float) vp->h) * 0.5f);
 				}
 			}
 
@@ -1075,13 +266,14 @@ static BYTE opengl_context_create(SDL_Surface *src) {
 		if (opengl.texture[i].shader.type == MS_CGP) {
 #if defined (WITH_OPENGL_CG)
 			rc = opengl_shader_cg_init(i, &opengl.texture[i].shader, shader_effect.sp[i].code,
-					shader_effect.sp[i].path);
+				shader_effect.sp[i].path);
 #else
+			opengl_unlock();
 			return (EXIT_ERROR_SHADER);
 #endif
 		} else {
 			rc = opengl_shader_glsl_init(i, &opengl.texture[i].shader, shader_effect.sp[i].code,
-					shader_effect.sp[i].path);
+				shader_effect.sp[i].path);
 		}
 
 		if (rc != EXIT_OK) {
@@ -1124,9 +316,7 @@ static BYTE opengl_context_create(SDL_Surface *src) {
 	// FEEDBACK
 	if ((shader_effect.feedback_pass >= 0) && (shader_effect.feedback_pass < shader_effect.pass)) {
 		opengl.feedback.in_use = TRUE;
-
-		if (opengl_texture_create(&opengl.feedback.tex, shader_effect.feedback_pass, TRUE)
-				== EXIT_ERROR) {
+		if (opengl_texture_create(&opengl.feedback.tex, shader_effect.feedback_pass, TRUE) == EXIT_ERROR) {
 			opengl_context_delete();
 			return (EXIT_ERROR);
 		}
@@ -1136,7 +326,12 @@ static BYTE opengl_context_create(SDL_Surface *src) {
 	{
 		_shader *shd = &opengl.text.shader;
 
-		opengl_texture_simple_create(&opengl.text, src->w, src->h, TRUE);
+		opengl_texture_simple_create(&opengl.text, gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE], TRUE);
+
+		text.w = opengl.text.rect.w;
+		text.h = opengl.text.rect.h;
+
+		gfx_text_reset();
 
 		glGenBuffers(1, &shd->vbo);
 		memcpy(shd->vb, vb_flipped, sizeof(vb_flipped));
@@ -1213,8 +408,155 @@ static BYTE opengl_context_create(SDL_Surface *src) {
 
  	return (EXIT_OK);
 }
+void opengl_draw_scene(void) {
+	static GLuint prev_type = MS_MEM;
+	const _texture_simple *scrtex = &opengl.screen.tex[opengl.screen.index];
+	GLuint offset_x = 0, offset_y = 0;
+	GLuint w = opengl.surface.w, h = opengl.surface.h;
+	GLuint i;
+
+	// applico l'effetto desiderato
+	gfx.filter.func(gfx.palette_to_draw,
+		opengl.surface.pitch,
+		opengl.surface.pixels,
+		opengl.surface.w,
+		opengl.surface.h);
+
+	// screen
+	glBindTexture(GL_TEXTURE_2D, scrtex->id);
+
+	if (overscan.enabled) {
+		offset_x = overscan.borders->left * gfx.filter.width_pixel;
+		offset_y = overscan.borders->up * gfx.filter.factor;
+		w -= (overscan.borders->left + overscan.borders->right) * gfx.filter.width_pixel;
+		h -= (overscan.borders->up + overscan.borders->down) * gfx.filter.factor;
+	}
+	glPixelStorei(GL_UNPACK_ROW_LENGTH, opengl.surface.w);
+	glPixelStorei(GL_UNPACK_SKIP_PIXELS, offset_x);
+	glPixelStorei(GL_UNPACK_SKIP_ROWS, offset_y);
+	glTexSubImage2D(GL_TEXTURE_2D, 0, offset_x, offset_y, w, h, TI_FRM, TI_TYPE, opengl.surface.pixels);
+	glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
+	glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
+	glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+
+	if (opengl.supported_fbo.srgb && !cfg->disable_srgb_fbo) {
+		glEnable(GL_FRAMEBUFFER_SRGB);
+	}
+
+	// fbo e pass
+	for (i = 0; i < shader_effect.pass; i++) {
+		const _texture *texture = &opengl.texture[i];
+		const _shader_pass *sp = &shader_effect.sp[i];
+		GLuint id, fbo = texture->fbo, mag, min;
+
+		shader_effect.running_pass = i;
+
+		if (i == shader_effect.last_pass) {
+			fbo = gui_wdgopengl_framebuffer_id();
+			if (opengl.supported_fbo.srgb && !cfg->disable_srgb_fbo) {
+				glDisable(GL_FRAMEBUFFER_SRGB);
+			}
+		}
+
+		if (i == 0) {
+			id = scrtex->id;
+		} else {
+			id = opengl.texture[i - 1].id;
+		}
+
+		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+		glClear(GL_COLOR_BUFFER_BIT);
+		glViewport(texture->vp.x, texture->vp.y, texture->vp.w, texture->vp.h);
+		glBindTexture(GL_TEXTURE_2D, id);
+		if (sp->mipmap_input) {
+			glGenerateMipmap(GL_TEXTURE_2D);
+		}
+		opengl_shader_filter(sp->linear, sp->mipmap_input, (cfg->interpolation || gfx.PSS), &mag, &min);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min);
+		if (texture->shader.type == MS_CGP) {
+#if defined (WITH_OPENGL_CG)
+			if (prev_type != MS_CGP) {
+				glUseProgram(0);
+			}
+
+			if (texture->shader.cgp.prg.f && texture->shader.cgp.prg.v) {
+				cgGLBindProgram(texture->shader.cgp.prg.f);
+				cgGLBindProgram(texture->shader.cgp.prg.v);
+
+				cgGLEnableProfile(opengl.cg.profile.f);
+				cgGLEnableProfile(opengl.cg.profile.v);
+
+				opengl_shader_cg_params_set(texture, sp->frame_count_mod, ppu.frames);
+			}
+#endif
+		} else {
+			glUseProgram(texture->shader.glslp.prg);
+			opengl_shader_glsl_params_set(&texture->shader, sp->frame_count_mod, ppu.frames);
+		}
+		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+		if (texture->shader.type == MS_CGP) {
+#if defined (WITH_OPENGL_CG)
+			opengl_shader_cg_disable_stpm();
+
+			cgGLDisableProfile(opengl.cg.profile.f);
+			cgGLDisableProfile(opengl.cg.profile.v);
+
+			cgGLUnbindProgram(opengl.cg.profile.f);
+			cgGLUnbindProgram(opengl.cg.profile.v);
+#endif
+		} else {
+			opengl_shader_glsl_disable_attrib();
+		}
+		prev_type = texture->shader.type;
+	}
+
+	opengl.screen.index = ((opengl.screen.index + 1) % opengl.screen.in_use);
+
+	if (opengl.feedback.in_use) {
+		GLuint fbo = opengl.feedback.tex.fbo;
+		GLuint tex = opengl.feedback.tex.id;
+
+		opengl.feedback.tex.fbo = opengl.texture[shader_effect.feedback_pass].fbo;
+		opengl.feedback.tex.id = opengl.texture[shader_effect.feedback_pass].id;
+		opengl.texture[shader_effect.feedback_pass].fbo = fbo;
+		opengl.texture[shader_effect.feedback_pass].id = tex;
+	}
+
+	// rendering del testo
+	text_rendering(TRUE);
+
+	// testo
+	if (cfg->txt_on_screen && text.on_screen) {
+		glViewport(0, 0, opengl.text.rect.w, opengl.text.rect.h);
+		glBindTexture(GL_TEXTURE_2D, opengl.text.id);
+		glUseProgram(opengl.text.shader.glslp.prg);
+		opengl_shader_params_text_set(&opengl.text.shader);
+		glEnable(GL_BLEND);
+		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+		glDisable(GL_BLEND);
+		opengl_shader_glsl_disable_attrib();
+		prev_type = MS_MEM;
+	}
+
+	// screenshot
+	if (gfx.save_screenshot == TRUE) {
+		opengl_screenshot();
+		gfx.save_screenshot = FALSE;
+	}
+}
+
 static void opengl_context_delete(void) {
 	GLint i;
+
+	if (opengl.surface.pixels) {
+		free(opengl.surface.pixels);
+		opengl.surface.w = 0;
+		opengl.surface.h = 0;
+		opengl.surface.pitch = 0;
+		opengl.surface.pixels = NULL;
+	}
 
 	opengl_shader_glsl_disable_attrib();
 
@@ -1227,11 +569,6 @@ static void opengl_context_delete(void) {
 		cgGLUnbindProgram(opengl.cg.profile.v);
 	}
 #endif
-
-	if (opengl.sdl.surface) {
-		SDL_FreeSurface(opengl.sdl.surface);
-		opengl.sdl.surface = NULL;
-	}
 
 	opengl.screen.in_use = 0;
 	opengl.screen.index = 0;
@@ -1307,131 +644,6 @@ static void opengl_context_delete(void) {
 
 	info.sRGB_FBO_in_use = FALSE;
 }
-INLINE static void opengl_draw_scene(SDL_Surface *surface) {
-	static GLuint prev_type = MS_MEM;
-	const _texture_simple *scrtex = &opengl.screen.tex[opengl.screen.index];
-	GLuint offset_x = 0, offset_y = 0;
-	GLuint w = surface->w, h = surface->h;
-	GLuint i;
-
-	// screen
-	glBindTexture(GL_TEXTURE_2D, scrtex->id);
-
-	if (overscan.enabled) {
-		offset_x = overscan.borders->left * gfx.filter.width_pixel;
-		offset_y = overscan.borders->up * gfx.filter.factor;
-		w -= (overscan.borders->left + overscan.borders->right) * gfx.filter.width_pixel;
-		h -= (overscan.borders->up + overscan.borders->down) * gfx.filter.factor;
-	}
-	glPixelStorei(GL_UNPACK_ROW_LENGTH, surface->w);
-	glPixelStorei(GL_UNPACK_SKIP_PIXELS, offset_x);
-	glPixelStorei(GL_UNPACK_SKIP_ROWS, offset_y);
-	glTexSubImage2D(GL_TEXTURE_2D, 0, offset_x, offset_y, w, h, TI_FRM, TI_TYPE, surface->pixels);
-	glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
-	glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
-	glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
-
-	if (opengl.supported_fbo.srgb && !cfg->disable_srgb_fbo) {
-		glEnable(GL_FRAMEBUFFER_SRGB);
-	}
-
-	// fbo e pass
-	for (i = 0; i < shader_effect.pass; i++) {
-		const _texture *texture = &opengl.texture[i];
-		const _shader_pass *sp = &shader_effect.sp[i];
-		GLuint id, fbo = texture->fbo, mag, min;
-
-		shader_effect.running_pass = i;
-
-		if (i == shader_effect.last_pass) {
-			fbo = 0;
-			if (opengl.supported_fbo.srgb && !cfg->disable_srgb_fbo) {
-				glDisable(GL_FRAMEBUFFER_SRGB);
-			}
-		}
-
-		if (i == 0) {
-			id = scrtex->id;
-		} else {
-			id = opengl.texture[i - 1].id;
-		}
-
-		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-		glClear(GL_COLOR_BUFFER_BIT);
-		glViewport(texture->vp.x, texture->vp.y, texture->vp.w, texture->vp.h);
-		glBindTexture(GL_TEXTURE_2D, id);
-		if (sp->mipmap_input) {
-			glGenerateMipmap(GL_TEXTURE_2D);
-		}
-		opengl_shader_filter(sp->linear, sp->mipmap_input, (cfg->interpolation || gfx.PSS), &mag,
-		        &min);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min);
-		if (texture->shader.type == MS_CGP) {
-#if defined (WITH_OPENGL_CG)
-			if (prev_type != MS_CGP) {
-				glUseProgram(0);
-			}
-
-			if (texture->shader.cgp.prg.f && texture->shader.cgp.prg.v) {
-				cgGLBindProgram(texture->shader.cgp.prg.f);
-				cgGLBindProgram(texture->shader.cgp.prg.v);
-
-				cgGLEnableProfile(opengl.cg.profile.f);
-				cgGLEnableProfile(opengl.cg.profile.v);
-
-				opengl_shader_cg_params_set(texture, sp->frame_count_mod, ppu.frames);
-			}
-#endif
-		} else {
-			glUseProgram(texture->shader.glslp.prg);
-			opengl_shader_glsl_params_set(&texture->shader, sp->frame_count_mod, ppu.frames);
-		}
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-
-		if (texture->shader.type == MS_CGP) {
-#if defined (WITH_OPENGL_CG)
-			opengl_shader_cg_disable_stpm();
-
-			cgGLDisableProfile(opengl.cg.profile.f);
-			cgGLDisableProfile(opengl.cg.profile.v);
-
-			cgGLUnbindProgram(opengl.cg.profile.f);
-			cgGLUnbindProgram(opengl.cg.profile.v);
-#endif
-		} else {
-			opengl_shader_glsl_disable_attrib();
-		}
-		prev_type = texture->shader.type;
-	}
-
-	opengl.screen.index = ((opengl.screen.index + 1) % opengl.screen.in_use);
-
-	if (opengl.feedback.in_use) {
-		GLuint fbo = opengl.feedback.tex.fbo;
-		GLuint tex = opengl.feedback.tex.id;
-
-		opengl.feedback.tex.fbo = opengl.texture[shader_effect.feedback_pass].fbo;
-		opengl.feedback.tex.id = opengl.texture[shader_effect.feedback_pass].id;
-		opengl.texture[shader_effect.feedback_pass].fbo = fbo;
-		opengl.texture[shader_effect.feedback_pass].id = tex;
-	}
-
-	// testo
-	if (!cfg->txt_on_screen || !text.on_screen) {
-		return;
-	}
-
-	glViewport(0, 0, opengl.text.rect.w, opengl.text.rect.h);
-	glBindTexture(GL_TEXTURE_2D, opengl.text.id);
-	glUseProgram(opengl.text.shader.glslp.prg);
-	opengl_shader_params_text_set(&opengl.text.shader);
-	glEnable(GL_BLEND);
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-	glDisable(GL_BLEND);
-	opengl_shader_glsl_disable_attrib();
-	prev_type = MS_MEM;
-}
 static void opengl_screenshot(void) {
 	char *buffer;
 
@@ -1454,10 +666,10 @@ static BYTE opengl_glew_init(void) {
 		fprintf(stderr, "OPENGL: %s\n", glewGetErrorString(err));
 	} else {
 		fprintf(stderr, "OPENGL: GPU %s (%s, %s)\n", glGetString(GL_RENDERER),
-		        glGetString(GL_VENDOR), glGetString(GL_VERSION));
+			glGetString(GL_VENDOR), glGetString(GL_VERSION));
 		fprintf(stderr, "OPENGL: GL Version %d.%d %s\n", opengl_integer_get(GL_MAJOR_VERSION),
-		        opengl_integer_get(GL_MINOR_VERSION),
-		        opengl_integer_get(GL_CONTEXT_CORE_PROFILE_BIT) ? "Core" : "Compatibility");
+			opengl_integer_get(GL_MINOR_VERSION),
+			opengl_integer_get(GL_CONTEXT_CORE_PROFILE_BIT) ? "Core" : "Compatibility");
 
 		if (!GLEW_VERSION_3_0) {
 			fprintf(stderr, "OPENGL: OpenGL 3.0 not supported. Disabled.\n");
@@ -1469,7 +681,7 @@ static BYTE opengl_glew_init(void) {
 		}
 
 		if (!(glGenFramebuffers && glBindFramebuffer && glFramebufferTexture2D &&
-		glCheckFramebufferStatus && glDeleteFramebuffers)) {
+			glCheckFramebufferStatus && glDeleteFramebuffers)) {
 			return (EXIT_ERROR);
 		}
 
@@ -1623,12 +835,12 @@ static BYTE opengl_texture_create(_texture *texture, GLuint index, GLuint clean)
 
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
 		fprintf(stderr, "OPENGL: Error on create FBO.\n");
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		glBindFramebuffer(GL_FRAMEBUFFER, gui_wdgopengl_framebuffer_id());
 		glBindTexture(GL_TEXTURE_2D, 0);
 		return (EXIT_ERROR);
 	}
 
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glBindFramebuffer(GL_FRAMEBUFFER, gui_wdgopengl_framebuffer_id());
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	glGenBuffers(1, &texture->shader.vbo);
@@ -1680,7 +892,7 @@ static void opengl_texture_simple_create(_texture_simple *texture, GLuint w, GLu
 
 	// pulisco la texture
 	{
-		GLuint size = rect->w * rect->h * 4;
+		GLuint size = rect->w * rect->h * sizeof(uint32_t);
 		GLubyte *empty = malloc(size);
 
 		memset(empty, 0x00, size);
@@ -1875,7 +1087,7 @@ static void opengl_matrix_4x4_identity(_math_matrix_4x4 *mat) {
 	}
 }
 static void opengl_matrix_4x4_ortho(_math_matrix_4x4 *mat, GLfloat left, GLfloat right,
-		GLfloat bottom, GLfloat top, GLfloat znear, GLfloat zfar) {
+	GLfloat bottom, GLfloat top, GLfloat znear, GLfloat zfar) {
 	float tx, ty, tz;
 
 	opengl_matrix_4x4_identity(mat);
@@ -1931,7 +1143,7 @@ INLINE static void opengl_shader_params_text_set(_shader *shd) {
 	if (shd->glslp.uni.vertex_coord >= 0) {
 		glEnableVertexAttribArray(shd->glslp.uni.vertex_coord);
 		glVertexAttribPointer(shd->glslp.uni.vertex_coord, 2, GL_FLOAT, GL_FALSE,
-				sizeof(_vertex_buffer), BUFFER_OFFSET(sizeof(GLfloat) * buffer_index));
+			sizeof(_vertex_buffer), BUFFER_OFFSET(sizeof(GLfloat) * buffer_index));
 		opengl.attribs.attrib[opengl.attribs.count++] = shd->glslp.uni.vertex_coord;
 	}
 	buffer_index += 2;
@@ -1940,13 +1152,13 @@ INLINE static void opengl_shader_params_text_set(_shader *shd) {
 		if (shd->glslp.uni.COLOR >= 0) {
 			glEnableVertexAttribArray(shd->glslp.uni.COLOR);
 			glVertexAttribPointer(shd->glslp.uni.COLOR, 4, GL_FLOAT, GL_FALSE,
-					sizeof(_vertex_buffer), BUFFER_OFFSET(sizeof(GLfloat) * buffer_index));
+				sizeof(_vertex_buffer), BUFFER_OFFSET(sizeof(GLfloat) * buffer_index));
 			opengl.attribs.attrib[opengl.attribs.count++] = shd->glslp.uni.COLOR;
 		}
 		if (shd->glslp.uni.color >= 0) {
 			glEnableVertexAttribArray(shd->glslp.uni.color);
 			glVertexAttribPointer(shd->glslp.uni.color, 4, GL_FLOAT, GL_FALSE,
-					sizeof(_vertex_buffer), BUFFER_OFFSET(sizeof(GLfloat) * buffer_index));
+				sizeof(_vertex_buffer), BUFFER_OFFSET(sizeof(GLfloat) * buffer_index));
 			opengl.attribs.attrib[opengl.attribs.count++] = shd->glslp.uni.color;
 		}
 	}
@@ -1955,7 +1167,7 @@ INLINE static void opengl_shader_params_text_set(_shader *shd) {
 	if (shd->glslp.uni.tex_coord >= 0) {
 		glEnableVertexAttribArray(shd->glslp.uni.tex_coord);
 		glVertexAttribPointer(shd->glslp.uni.tex_coord, 2, GL_FLOAT, GL_FALSE,
-				sizeof(_vertex_buffer), BUFFER_OFFSET(sizeof(GLfloat) * buffer_index));
+			sizeof(_vertex_buffer), BUFFER_OFFSET(sizeof(GLfloat) * buffer_index));
 		opengl.attribs.attrib[opengl.attribs.count++] = shd->glslp.uni.tex_coord;
 	}
 	buffer_index += 2;
@@ -2105,11 +1317,11 @@ static BYTE opengl_shader_glsl_init(GLuint pass, _shader *shd, GLchar *code, con
 
 		opengl_shader_uni_texture(&shd->glslp.uni.passprev[i], shd->glslp.prg, "Pass%u", i + 1);
 		opengl_shader_uni_texture(&shd->glslp.uni.passprev[i], shd->glslp.prg, "PassPrev%u",
-				pass - i);
+			pass - i);
 
 		if (shader_effect.sp[i].alias[0]) {
 			opengl_shader_uni_texture(&shd->glslp.uni.passprev[i], shd->glslp.prg,
-					shader_effect.sp[i].alias);
+				shader_effect.sp[i].alias);
 		}
 	}
 
@@ -2157,7 +1369,7 @@ INLINE static void opengl_shader_glsl_params_set(const _shader *shd, GLuint fcou
 	if (shd->glslp.uni.vertex_coord >= 0) {
 		glEnableVertexAttribArray(shd->glslp.uni.vertex_coord);
 		glVertexAttribPointer(shd->glslp.uni.vertex_coord, 2, GL_FLOAT, GL_FALSE,
-				sizeof(_vertex_buffer), BUFFER_OFFSET(sizeof(GLfloat) * buffer_index));
+			sizeof(_vertex_buffer), BUFFER_OFFSET(sizeof(GLfloat) * buffer_index));
 		opengl.attribs.attrib[opengl.attribs.count++] = shd->glslp.uni.vertex_coord;
 	}
 	buffer_index += 2;
@@ -2166,13 +1378,13 @@ INLINE static void opengl_shader_glsl_params_set(const _shader *shd, GLuint fcou
 		if (shd->glslp.uni.COLOR >= 0) {
 			glEnableVertexAttribArray(shd->glslp.uni.COLOR);
 			glVertexAttribPointer(shd->glslp.uni.COLOR, 4, GL_FLOAT, GL_FALSE,
-					sizeof(_vertex_buffer), BUFFER_OFFSET(sizeof(GLfloat) * buffer_index));
+				sizeof(_vertex_buffer), BUFFER_OFFSET(sizeof(GLfloat) * buffer_index));
 			opengl.attribs.attrib[opengl.attribs.count++] = shd->glslp.uni.COLOR;
 		}
 		if (shd->glslp.uni.color >= 0) {
 			glEnableVertexAttribArray(shd->glslp.uni.color);
 			glVertexAttribPointer(shd->glslp.uni.color, 4, GL_FLOAT, GL_FALSE,
-					sizeof(_vertex_buffer), BUFFER_OFFSET(sizeof(GLfloat) * buffer_index));
+				sizeof(_vertex_buffer), BUFFER_OFFSET(sizeof(GLfloat) * buffer_index));
 			opengl.attribs.attrib[opengl.attribs.count++] = shd->glslp.uni.color;
 		}
 	}
@@ -2181,7 +1393,7 @@ INLINE static void opengl_shader_glsl_params_set(const _shader *shd, GLuint fcou
 	if (shd->glslp.uni.tex_coord >= 0) {
 		glEnableVertexAttribArray(shd->glslp.uni.tex_coord);
 		glVertexAttribPointer(shd->glslp.uni.tex_coord, 2, GL_FLOAT, GL_FALSE,
-				sizeof(_vertex_buffer), BUFFER_OFFSET(sizeof(GLfloat) * buffer_index));
+			sizeof(_vertex_buffer), BUFFER_OFFSET(sizeof(GLfloat) * buffer_index));
 		opengl.attribs.attrib[opengl.attribs.count++] = shd->glslp.uni.tex_coord;
 	}
 	buffer_index += 2;
@@ -2189,7 +1401,7 @@ INLINE static void opengl_shader_glsl_params_set(const _shader *shd, GLuint fcou
 	if (shd->glslp.uni.lut_tex_coord >= 0) {
 		glEnableVertexAttribArray(shd->glslp.uni.lut_tex_coord);
 		glVertexAttribPointer(shd->glslp.uni.lut_tex_coord, 2, GL_FLOAT, GL_FALSE,
-				sizeof(_vertex_buffer), BUFFER_OFFSET(sizeof(GLfloat) * buffer_index));
+			sizeof(_vertex_buffer), BUFFER_OFFSET(sizeof(GLfloat) * buffer_index));
 		opengl.attribs.attrib[opengl.attribs.count++] = shd->glslp.uni.lut_tex_coord;
 	}
 	buffer_index += 2;
@@ -2213,16 +1425,16 @@ INLINE static void opengl_shader_glsl_params_set(const _shader *shd, GLuint fcou
 	}
 	if (shd->glslp.uni.orig.input_size >= 0) {
 		glUniform2fv(shd->glslp.uni.orig.input_size, 1,
-				opengl.screen.tex[opengl.screen.index].shader.info.input_size);
+			opengl.screen.tex[opengl.screen.index].shader.info.input_size);
 	}
 	if (shd->glslp.uni.orig.texture_size >= 0) {
 		glUniform2fv(shd->glslp.uni.orig.texture_size, 1,
-				opengl.screen.tex[opengl.screen.index].shader.info.texture_size);
+			opengl.screen.tex[opengl.screen.index].shader.info.texture_size);
 	}
 	if (shd->glslp.uni.orig.tex_coord >= 0) {
 		glEnableVertexAttribArray(shd->glslp.uni.orig.tex_coord);
 		glVertexAttribPointer(shd->glslp.uni.orig.tex_coord, 2, GL_FLOAT, GL_FALSE,
-				sizeof(_vertex_buffer), BUFFER_OFFSET(sizeof(GLfloat) * buffer_index));
+			sizeof(_vertex_buffer), BUFFER_OFFSET(sizeof(GLfloat) * buffer_index));
 		opengl.attribs.attrib[opengl.attribs.count++] = shd->glslp.uni.orig.tex_coord;
 	}
 	// PREV (uso le stesse tex_coord di ORIG)
@@ -2242,7 +1454,7 @@ INLINE static void opengl_shader_glsl_params_set(const _shader *shd, GLuint fcou
 			if (shd->glslp.uni.prev[i].tex_coord >= 0) {
 				glEnableVertexAttribArray(shd->glslp.uni.prev[i].tex_coord);
 				glVertexAttribPointer(shd->glslp.uni.prev[i].tex_coord, 2, GL_FLOAT, GL_FALSE,
-						sizeof(_vertex_buffer), BUFFER_OFFSET(sizeof(GLfloat) * buffer_index));
+					sizeof(_vertex_buffer), BUFFER_OFFSET(sizeof(GLfloat) * buffer_index));
 				opengl.attribs.attrib[opengl.attribs.count++] = shd->glslp.uni.prev[i].tex_coord;
 			}
 			circle_index--;
@@ -2260,16 +1472,16 @@ INLINE static void opengl_shader_glsl_params_set(const _shader *shd, GLuint fcou
 		}
 		if (shd->glslp.uni.feedback.input_size >= 0) {
 			glUniform2fv(shd->glslp.uni.feedback.input_size, 1,
-					opengl.texture[shader_effect.feedback_pass].shader.info.input_size);
+				opengl.texture[shader_effect.feedback_pass].shader.info.input_size);
 		}
 		if (shd->glslp.uni.feedback.texture_size >= 0) {
 			glUniform2fv(shd->glslp.uni.feedback.texture_size, 1,
-					opengl.texture[shader_effect.feedback_pass].shader.info.texture_size);
+				opengl.texture[shader_effect.feedback_pass].shader.info.texture_size);
 		}
 		if (shd->glslp.uni.feedback.tex_coord >= 0) {
 			glEnableVertexAttribArray(shd->glslp.uni.feedback.tex_coord);
 			glVertexAttribPointer(shd->glslp.uni.feedback.tex_coord, 2, GL_FLOAT, GL_FALSE,
-					sizeof(_vertex_buffer), BUFFER_OFFSET(sizeof(GLfloat) * buffer_index));
+				sizeof(_vertex_buffer), BUFFER_OFFSET(sizeof(GLfloat) * buffer_index));
 			opengl.attribs.attrib[opengl.attribs.count++] = shd->glslp.uni.feedback.tex_coord;
 		}
 	}
@@ -2287,17 +1499,17 @@ INLINE static void opengl_shader_glsl_params_set(const _shader *shd, GLuint fcou
 		}
 		if (shd->glslp.uni.passprev[i].input_size >= 0) {
 			glUniform2fv(shd->glslp.uni.passprev[i].input_size, 1,
-					opengl.texture[next].shader.info.input_size);
+				opengl.texture[next].shader.info.input_size);
 		}
 		if (shd->glslp.uni.passprev[i].texture_size >= 0) {
 			glUniform2fv(shd->glslp.uni.passprev[i].texture_size, 1,
-					opengl.texture[next].shader.info.texture_size);
+				opengl.texture[next].shader.info.texture_size);
 		}
 		if (shd->glslp.uni.passprev[i].tex_coord >= 0) {
 			glEnableVertexAttribArray(shd->glslp.uni.passprev[i].tex_coord);
 			glVertexAttribPointer(shd->glslp.uni.passprev[i].tex_coord, 2, GL_FLOAT, GL_FALSE,
-					sizeof(_vertex_buffer),
-					BUFFER_OFFSET(sizeof(GLfloat) * (buffer_index + (next * 2))));
+				sizeof(_vertex_buffer),
+				BUFFER_OFFSET(sizeof(GLfloat) * (buffer_index + (next * 2))));
 			opengl.attribs.attrib[opengl.attribs.count++] = shd->glslp.uni.passprev[i].tex_coord;
 		}
 	}
@@ -2398,11 +1610,11 @@ static BYTE opengl_shader_cg_init(GLuint pass, _shader *shd, GLchar *code, const
 	{
 		if ((path == NULL) || !path[0]) {
 			shd->cgp.prg.f = cgCreateProgram(opengl.cg.ctx, CG_SOURCE, code, opengl.cg.profile.f,
-					"main_fragment", argv);
+				"main_fragment", argv);
 		} else {
 			if (uchdir(dname) == -1) { ; }
 			shd->cgp.prg.f = cgCreateProgramFromFile(opengl.cg.ctx, CG_SOURCE, (const char *) bname,
-					opengl.cg.profile.f, "main_fragment", argv);
+				opengl.cg.profile.f, "main_fragment", argv);
 
 			if (uchdir(base) == -1) { ; }
 		}
@@ -2415,11 +1627,11 @@ static BYTE opengl_shader_cg_init(GLuint pass, _shader *shd, GLchar *code, const
 	{
 		if ((path == NULL) || !path[0]) {
 			shd->cgp.prg.v = cgCreateProgram(opengl.cg.ctx, CG_SOURCE, code, opengl.cg.profile.v,
-					"main_vertex", argv);
+				"main_vertex", argv);
 		} else {
 			if (uchdir(dname)) { ; }
 			shd->cgp.prg.v = cgCreateProgramFromFile(opengl.cg.ctx, CG_SOURCE, (const char *) bname,
-					opengl.cg.profile.v, "main_vertex", argv);
+				opengl.cg.profile.v, "main_vertex", argv);
 			if (uchdir(base)) { ; }
 		}
 		if (!shd->cgp.prg.v && (list = cgGetLastListing(opengl.cg.ctx))) {
@@ -2468,7 +1680,7 @@ static BYTE opengl_shader_cg_init(GLuint pass, _shader *shd, GLchar *code, const
 			const char *semantic = NULL;
 
 			if (cgGetParameterDirection(param) != CG_IN
-					|| cgGetParameterVariability(param) != CG_VARYING) {
+				|| cgGetParameterVariability(param) != CG_VARYING) {
 				continue;
 			}
 
@@ -2540,11 +1752,11 @@ static BYTE opengl_shader_cg_init(GLuint pass, _shader *shd, GLchar *code, const
 
 		opengl_shader_cg_uni_texture(&shd->cgp.uni.passprev[i], &shd->cgp.prg, "PASS%u", i + 1);
 		opengl_shader_cg_uni_texture(&shd->cgp.uni.passprev[i], &shd->cgp.prg, "PASSPREV%u",
-				pass - i);
+			pass - i);
 
 		if (shader_effect.sp[i].alias[0]) {
 			opengl_shader_cg_uni_texture(&shd->cgp.uni.passprev[i], &shd->cgp.prg,
-					shader_effect.sp[i].alias);
+				shader_effect.sp[i].alias);
 		}
 	}
 
@@ -2558,8 +1770,7 @@ static BYTE opengl_shader_cg_init(GLuint pass, _shader *shd, GLchar *code, const
 
 	return (EXIT_OK);
 }
-static void opengl_shader_cg_clstate_ctrl(CGparameter *dst, CGparameter *param,
-        const char *semantic) {
+static void opengl_shader_cg_clstate_ctrl(CGparameter *dst, CGparameter *param, const char *semantic) {
 	if (!(*param)) {
 		return;
 	}
@@ -2577,8 +1788,7 @@ static void opengl_shader_cg_clstate_ctrl(CGparameter *dst, CGparameter *param,
 			break;
 	}
 }
-static void opengl_shader_cg_param2f_ctrl(CGparameter *dst, CGparameter *param,
-		const char *semantic) {
+static void opengl_shader_cg_param2f_ctrl(CGparameter *dst, CGparameter *param, const char *semantic) {
 	if (!(*param)) {
 		return;
 	}
@@ -2604,7 +1814,7 @@ static void opengl_shader_cg_uni_texture_clear(_shader_uniforms_tex_cg *sut) {
 	sut->v.tex_coord = NULL;
 }
 static void opengl_shader_cg_uni_texture(_shader_uniforms_tex_cg *sut, _shader_prg_cg *prg,
-		char *fmt, ...) {
+	char *fmt, ...) {
 	CGparameter param;
 	char type[50], buff[100];
 	va_list ap;
@@ -2642,7 +1852,7 @@ static void opengl_shader_cg_uni_texture(_shader_uniforms_tex_cg *sut, _shader_p
 	}
 }
 INLINE static void opengl_shader_cg_params_set(const _texture *texture, GLuint fcountmod,
-		GLuint fcount) {
+	GLuint fcount) {
 	GLuint i, buffer_index = 0;
 	const _shader *shd = &texture->shader;
 
@@ -2653,7 +1863,7 @@ INLINE static void opengl_shader_cg_params_set(const _texture *texture, GLuint f
 	// IN.vertex_coord
 	if (shd->cgp.uni.vertex) {
 		cgGLSetParameterPointer(shd->cgp.uni.vertex, 2, GL_FLOAT, sizeof(_vertex_buffer),
-				BUFFER_VB_OFFSET(shd->vb, sizeof(GLfloat) * buffer_index));
+			BUFFER_VB_OFFSET(shd->vb, sizeof(GLfloat) * buffer_index));
 		cgGLEnableClientState(shd->cgp.uni.vertex);
 		opengl.cg.states.state[opengl.cg.states.count++] = shd->cgp.uni.vertex;
 	}
@@ -2662,7 +1872,7 @@ INLINE static void opengl_shader_cg_params_set(const _texture *texture, GLuint f
 	// IN.color
 	if (shd->cgp.uni.color) {
 		cgGLSetParameterPointer(shd->cgp.uni.color, 4, GL_FLOAT, sizeof(_vertex_buffer),
-				BUFFER_VB_OFFSET(shd->vb, sizeof(GLfloat) * buffer_index));
+			BUFFER_VB_OFFSET(shd->vb, sizeof(GLfloat) * buffer_index));
 		cgGLEnableClientState(shd->cgp.uni.color);
 		opengl.cg.states.state[opengl.cg.states.count++] = shd->cgp.uni.color;
 	}
@@ -2671,7 +1881,7 @@ INLINE static void opengl_shader_cg_params_set(const _texture *texture, GLuint f
 	// IN.tex_coord
 	if (shd->cgp.uni.tex) {
 		cgGLSetParameterPointer(shd->cgp.uni.tex, 2, GL_FLOAT, sizeof(_vertex_buffer),
-				BUFFER_VB_OFFSET(shd->vb, sizeof(GLfloat) * buffer_index));
+			BUFFER_VB_OFFSET(shd->vb, sizeof(GLfloat) * buffer_index));
 		cgGLEnableClientState(shd->cgp.uni.tex);
 		opengl.cg.states.state[opengl.cg.states.count++] = shd->cgp.uni.tex;
 	}
@@ -2680,7 +1890,7 @@ INLINE static void opengl_shader_cg_params_set(const _texture *texture, GLuint f
 	// IN.lut_tex_coord
 	if (shd->cgp.uni.lut_tex) {
 		cgGLSetParameterPointer(shd->cgp.uni.lut_tex, 2, GL_FLOAT, sizeof(_vertex_buffer),
-				BUFFER_VB_OFFSET(shd->vb, sizeof(GLfloat) * buffer_index));
+			BUFFER_VB_OFFSET(shd->vb, sizeof(GLfloat) * buffer_index));
 		cgGLEnableClientState(shd->cgp.uni.lut_tex);
 		opengl.cg.states.state[opengl.cg.states.count++] = shd->cgp.uni.lut_tex;
 	}
@@ -2691,29 +1901,29 @@ INLINE static void opengl_shader_cg_params_set(const _texture *texture, GLuint f
 		// IN.video_size
 		if (shd->cgp.uni.v.video_size) {
 			cgGLSetParameter2f(shd->cgp.uni.v.video_size, shd->info.input_size[0],
-					shd->info.input_size[1]);
+				shd->info.input_size[1]);
 		}
 		if (shd->cgp.uni.f.video_size) {
 			cgGLSetParameter2f(shd->cgp.uni.f.video_size, shd->info.input_size[0],
-					shd->info.input_size[1]);
+				shd->info.input_size[1]);
 		}
 		// IN.texture_size
 		if (shd->cgp.uni.v.texture_size) {
 			cgGLSetParameter2f(shd->cgp.uni.v.texture_size, shd->info.texture_size[0],
-					shd->info.texture_size[1]);
+				shd->info.texture_size[1]);
 		}
 		if (shd->cgp.uni.f.texture_size) {
 			cgGLSetParameter2f(shd->cgp.uni.f.texture_size, shd->info.texture_size[0],
-					shd->info.texture_size[1]);
+				shd->info.texture_size[1]);
 		}
 		// IN.output_size
 		if (shd->cgp.uni.v.output_size) {
 			cgGLSetParameter2f(shd->cgp.uni.v.output_size, shd->info.output_size[0],
-					shd->info.output_size[1]);
+				shd->info.output_size[1]);
 		}
 		if (shd->cgp.uni.f.output_size) {
 			cgGLSetParameter2f(shd->cgp.uni.f.output_size, shd->info.output_size[0],
-					shd->info.output_size[1]);
+				shd->info.output_size[1]);
 		}
 		// IN.frame_count
 		{
@@ -2772,39 +1982,37 @@ INLINE static void opengl_shader_cg_params_set(const _texture *texture, GLuint f
 		// ORIG.texture
 		if (shd->cgp.uni.orig.f.texture) {
 			cgGLSetTextureParameter(shd->cgp.uni.orig.f.texture,
-					opengl.screen.tex[opengl.screen.index].id);
+				opengl.screen.tex[opengl.screen.index].id);
 			cgGLEnableTextureParameter(shd->cgp.uni.orig.f.texture);
 			opengl.cg.params.param[opengl.cg.params.count++] = shd->cgp.uni.orig.f.texture;
 		}
 		// ORIG.video_size
 		if (shd->cgp.uni.orig.v.video_size) {
 			cgGLSetParameter2f(shd->cgp.uni.orig.v.video_size,
-					opengl.screen.tex[opengl.screen.index].shader.info.input_size[0],
-					opengl.screen.tex[opengl.screen.index].shader.info.input_size[1]);
+				opengl.screen.tex[opengl.screen.index].shader.info.input_size[0],
+				opengl.screen.tex[opengl.screen.index].shader.info.input_size[1]);
 		}
 		if (shd->cgp.uni.orig.f.video_size) {
 			cgGLSetParameter2f(shd->cgp.uni.orig.f.video_size,
-					opengl.screen.tex[opengl.screen.index].shader.info.input_size[0],
-					opengl.screen.tex[opengl.screen.index].shader.info.input_size[1]);
+				opengl.screen.tex[opengl.screen.index].shader.info.input_size[0],
+				opengl.screen.tex[opengl.screen.index].shader.info.input_size[1]);
 		}
 		// ORIG.texture_size
 		if (shd->cgp.uni.orig.v.texture_size) {
 			cgGLSetParameter2f(shd->cgp.uni.orig.v.texture_size,
-					opengl.screen.tex[opengl.screen.index].shader.info.texture_size[0],
-					opengl.screen.tex[opengl.screen.index].shader.info.texture_size[1]);
+				opengl.screen.tex[opengl.screen.index].shader.info.texture_size[0],
+				opengl.screen.tex[opengl.screen.index].shader.info.texture_size[1]);
 		}
-		/**/
 		if (shd->cgp.uni.orig.f.texture_size) {
 			cgGLSetParameter2f(shd->cgp.uni.orig.f.texture_size,
-					opengl.screen.tex[opengl.screen.index].shader.info.texture_size[0],
-					opengl.screen.tex[opengl.screen.index].shader.info.texture_size[1]);
+				opengl.screen.tex[opengl.screen.index].shader.info.texture_size[0],
+				opengl.screen.tex[opengl.screen.index].shader.info.texture_size[1]);
 		}
-		/**/
 		// ORIG.tex_coord
 		if (shd->cgp.uni.orig.v.tex_coord) {
 			cgGLSetParameterPointer(shd->cgp.uni.orig.v.tex_coord, 2, GL_FLOAT,
-					sizeof(_vertex_buffer),
-					BUFFER_VB_OFFSET(shd->vb, sizeof(GLfloat) * buffer_index));
+				sizeof(_vertex_buffer),
+				BUFFER_VB_OFFSET(shd->vb, sizeof(GLfloat) * buffer_index));
 			cgGLEnableClientState(shd->cgp.uni.orig.v.tex_coord);
 			opengl.cg.states.state[opengl.cg.states.count++] = shd->cgp.uni.orig.v.tex_coord;
 		}
@@ -2821,37 +2029,37 @@ INLINE static void opengl_shader_cg_params_set(const _texture *texture, GLuint f
 			// PREV.texture
 			if (shd->cgp.uni.prev[i].f.texture) {
 				cgGLSetTextureParameter(shd->cgp.uni.prev[i].f.texture,
-						opengl.screen.tex[circle_index].id);
+					opengl.screen.tex[circle_index].id);
 				cgGLEnableTextureParameter(shd->cgp.uni.prev[i].f.texture);
 				opengl.cg.params.param[opengl.cg.params.count++] = shd->cgp.uni.prev[i].f.texture;
 			}
 			// PREV.video_size
 			if (shd->cgp.uni.prev[i].v.video_size) {
 				cgGLSetParameter2f(shd->cgp.uni.prev[i].v.video_size,
-						opengl.screen.tex[circle_index].shader.info.input_size[0],
-						opengl.screen.tex[circle_index].shader.info.input_size[1]);
+					opengl.screen.tex[circle_index].shader.info.input_size[0],
+					opengl.screen.tex[circle_index].shader.info.input_size[1]);
 			}
 			if (shd->cgp.uni.prev[i].f.video_size) {
 				cgGLSetParameter2f(shd->cgp.uni.prev[i].f.video_size,
-						opengl.screen.tex[circle_index].shader.info.input_size[0],
-						opengl.screen.tex[circle_index].shader.info.input_size[1]);
+					opengl.screen.tex[circle_index].shader.info.input_size[0],
+					opengl.screen.tex[circle_index].shader.info.input_size[1]);
 			}
 			// PREV.texture_size
 			if (shd->cgp.uni.prev[i].v.texture_size) {
 				cgGLSetParameter2f(shd->cgp.uni.prev[i].v.texture_size,
-						opengl.screen.tex[circle_index].shader.info.texture_size[0],
-						opengl.screen.tex[circle_index].shader.info.texture_size[1]);
+					opengl.screen.tex[circle_index].shader.info.texture_size[0],
+					opengl.screen.tex[circle_index].shader.info.texture_size[1]);
 			}
 			if (shd->cgp.uni.prev[i].f.texture_size) {
 				cgGLSetParameter2f(shd->cgp.uni.prev[i].f.texture_size,
-						opengl.screen.tex[circle_index].shader.info.texture_size[0],
-						opengl.screen.tex[circle_index].shader.info.texture_size[1]);
+					opengl.screen.tex[circle_index].shader.info.texture_size[0],
+					opengl.screen.tex[circle_index].shader.info.texture_size[1]);
 			}
 			// PREV.tex_coord
 			if (shd->cgp.uni.prev[i].v.tex_coord) {
 				cgGLSetParameterPointer(shd->cgp.uni.prev[i].v.tex_coord, 2, GL_FLOAT,
-						sizeof(_vertex_buffer),
-						BUFFER_VB_OFFSET(shd->vb, sizeof(GLfloat) * buffer_index));
+					sizeof(_vertex_buffer),
+					BUFFER_VB_OFFSET(shd->vb, sizeof(GLfloat) * buffer_index));
 				cgGLEnableClientState(shd->cgp.uni.prev[i].v.tex_coord);
 				opengl.cg.states.state[opengl.cg.states.count++] = shd->cgp.uni.prev[i].v.tex_coord;
 			}
@@ -2871,30 +2079,30 @@ INLINE static void opengl_shader_cg_params_set(const _texture *texture, GLuint f
 		// FEEDBACK.video_size
 		if (shd->cgp.uni.feedback.v.video_size) {
 			cgGLSetParameter2f(shd->cgp.uni.feedback.v.video_size,
-					opengl.texture[shader_effect.feedback_pass].shader.info.input_size[0],
-					opengl.texture[shader_effect.feedback_pass].shader.info.input_size[1]);
+				opengl.texture[shader_effect.feedback_pass].shader.info.input_size[0],
+				opengl.texture[shader_effect.feedback_pass].shader.info.input_size[1]);
 		}
 		if (shd->cgp.uni.feedback.f.video_size) {
 			cgGLSetParameter2f(shd->cgp.uni.feedback.f.video_size,
-					opengl.texture[shader_effect.feedback_pass].shader.info.input_size[0],
-					opengl.texture[shader_effect.feedback_pass].shader.info.input_size[1]);
+				opengl.texture[shader_effect.feedback_pass].shader.info.input_size[0],
+				opengl.texture[shader_effect.feedback_pass].shader.info.input_size[1]);
 		}
 		// FEEDBACK.texture_size
 		if (shd->cgp.uni.feedback.v.texture_size) {
 			cgGLSetParameter2f(shd->cgp.uni.feedback.v.texture_size,
-					opengl.texture[shader_effect.feedback_pass].shader.info.texture_size[0],
-					opengl.texture[shader_effect.feedback_pass].shader.info.texture_size[1]);
+				opengl.texture[shader_effect.feedback_pass].shader.info.texture_size[0],
+				opengl.texture[shader_effect.feedback_pass].shader.info.texture_size[1]);
 		}
 		if (shd->cgp.uni.feedback.f.texture_size) {
 			cgGLSetParameter2f(shd->cgp.uni.feedback.f.texture_size,
-					opengl.texture[shader_effect.feedback_pass].shader.info.texture_size[0],
-					opengl.texture[shader_effect.feedback_pass].shader.info.texture_size[1]);
+				opengl.texture[shader_effect.feedback_pass].shader.info.texture_size[0],
+				opengl.texture[shader_effect.feedback_pass].shader.info.texture_size[1]);
 		}
 		// FEEDBACK.tex_coord
 		if (shd->cgp.uni.feedback.v.tex_coord) {
 			cgGLSetParameterPointer(shd->cgp.uni.feedback.v.tex_coord, 2, GL_FLOAT,
-					sizeof(_vertex_buffer),
-					BUFFER_VB_OFFSET(shd->vb, sizeof(GLfloat) * buffer_index));
+				sizeof(_vertex_buffer),
+				BUFFER_VB_OFFSET(shd->vb, sizeof(GLfloat) * buffer_index));
 			cgGLEnableClientState(shd->cgp.uni.feedback.v.tex_coord);
 			opengl.cg.states.state[opengl.cg.states.count++] = shd->cgp.uni.feedback.v.tex_coord;
 		}
@@ -2914,30 +2122,30 @@ INLINE static void opengl_shader_cg_params_set(const _texture *texture, GLuint f
 		// PASSPREV[x].video_size
 		if (shd->cgp.uni.passprev[i].v.video_size) {
 			cgGLSetParameter2f(shd->cgp.uni.passprev[i].v.video_size,
-					opengl.texture[next].shader.info.input_size[0],
-					opengl.texture[next].shader.info.input_size[1]);
+				opengl.texture[next].shader.info.input_size[0],
+				opengl.texture[next].shader.info.input_size[1]);
 		}
 		if (shd->cgp.uni.passprev[i].f.video_size) {
 			cgGLSetParameter2f(shd->cgp.uni.passprev[i].f.video_size,
-					opengl.texture[next].shader.info.input_size[0],
-					opengl.texture[next].shader.info.input_size[1]);
+				opengl.texture[next].shader.info.input_size[0],
+				opengl.texture[next].shader.info.input_size[1]);
 		}
 		// PASSPREV[x].texture_size
 		if (shd->cgp.uni.passprev[i].v.texture_size) {
 			cgGLSetParameter2f(shd->cgp.uni.passprev[i].v.texture_size,
-					opengl.texture[next].shader.info.texture_size[0],
-					opengl.texture[next].shader.info.texture_size[1]);
+				opengl.texture[next].shader.info.texture_size[0],
+				opengl.texture[next].shader.info.texture_size[1]);
 		}
 		if (shd->cgp.uni.passprev[i].f.texture_size) {
 			cgGLSetParameter2f(shd->cgp.uni.passprev[i].f.texture_size,
-					opengl.texture[next].shader.info.texture_size[0],
-					opengl.texture[next].shader.info.texture_size[1]);
+				opengl.texture[next].shader.info.texture_size[0],
+				opengl.texture[next].shader.info.texture_size[1]);
 		}
 		// PASSPREV[x].tex_coord
 		if (shd->cgp.uni.passprev[i].v.tex_coord) {
 			cgGLSetParameterPointer(shd->cgp.uni.passprev[i].v.tex_coord, 2, GL_FLOAT,
-					sizeof(_vertex_buffer),
-					BUFFER_VB_OFFSET(shd->vb, sizeof(GLfloat) * (buffer_index + (next * 2))));
+				sizeof(_vertex_buffer),
+				BUFFER_VB_OFFSET(shd->vb, sizeof(GLfloat) * (buffer_index + (next * 2))));
 			cgGLEnableClientState(shd->cgp.uni.passprev[i].v.tex_coord);
 			opengl.cg.states.state[opengl.cg.states.count++] = shd->cgp.uni.passprev[i].v.tex_coord;
 		}

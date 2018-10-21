@@ -16,10 +16,8 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#if defined (WITH_D3D9)
 #include <stdio.h>
 #include <stdlib.h>
-#endif
 #include "video/filters/ntsc.h"
 #include "ppu.h"
 #include "overscan.h"

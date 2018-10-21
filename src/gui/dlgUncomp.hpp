@@ -19,12 +19,7 @@
 #ifndef DLGUNCOMP_HPP_
 #define DLGUNCOMP_HPP_
 
-#include <QtCore/QtGlobal>
-#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-#include <QtGui/QDialog>
-#else
 #include <QtWidgets/QDialog>
-#endif
 #include "dlgUncomp.hh"
 #include "common.h"
 #include "uncompress.h"

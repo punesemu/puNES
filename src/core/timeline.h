@@ -45,7 +45,6 @@ EXTERNC struct _timeline {
 	DBWORD preview;
 	DBWORD frames;
 	DBWORD frames_snap;
-	BYTE update;
 	BYTE button;
 	BYTE key;
 } tl;

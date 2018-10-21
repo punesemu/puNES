@@ -19,12 +19,7 @@
 #ifndef DLGAPUCHANNELS_HPP_
 #define DLGAPUCHANNELS_HPP_
 
-#include <QtCore/QtGlobal>
-#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-#include <QtGui/QDialog>
-#else
 #include <QtWidgets/QDialog>
-#endif
 #include "dlgAPUChannels.hh"
 
 class dlgAPUChannels : public QDialog, public Ui::dlgAPUChannels {

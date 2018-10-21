@@ -17,11 +17,12 @@
  */
 
 #include <QtCore/QtGlobal>
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0))
 #include <QtCore/QMimeData>
-#endif
 #include <QtCore/QFileInfo>
 #include <QtCore/QUrl>
+#if defined (WITH_OPENGL)
+#include "opengl.h"
+#endif
 #include "mainWindow.hpp"
 #include "objSettings.hpp"
 #include "wdgScreen.moc"
@@ -30,26 +31,20 @@
 #include "timeline.h"
 #include "gui.h"
 #include "patcher.h"
-#if defined (WITH_OPENGL)
-#include "opengl.h"
-#endif
 
 wdgScreen::wdgScreen(QWidget *parent) : QWidget(parent) {
-#if defined (__WIN32__)
+	target = NULL;
 #if defined (WITH_OPENGL)
-	memset(&data, 0x00, sizeof(data));
-	data.qt = (WNDPROC)GetWindowLongPtr((HWND) winId(), GWLP_WNDPROC);
+	wogl.vsync = new wdgOpenGL(this, 1);
+	wogl.novsync = new wdgOpenGL(this, 0);
+	vsync();
+#elif defined (WITH_D3D9)
+	wd3d9 = new wdgD3D9(this);
 
-	// applico un sfondo nero
-	parent->setStyleSheet("background-color: black");
+	setAttribute(Qt::WA_PaintOnScreen);
 #endif
-	target = nullptr;
-#endif
-
-	// se non faccio questa chiamata, la versione SDL crasha all'avvio
-	winId();
-
-	setUpdatesEnabled(false);
+    setAttribute(Qt::WA_NoSystemBackground);
+	setAttribute(Qt::WA_OpaquePaintEvent);
 
 	setAcceptDrops(true);
 
@@ -99,7 +94,7 @@ bool wdgScreen::eventFilter(QObject *obj, QEvent *event) {
 		if (!tas.type) {
 			for (BYTE i = PORT1; i < PORT_MAX; i++) {
 				if (port_funct[i].input_decode_event && (port_funct[i].input_decode_event(PRESSED,
-						keyEvent->isAutoRepeat(), keyval, KEYBOARD, &port[i]) == EXIT_OK)) {
+					keyEvent->isAutoRepeat(), keyval, KEYBOARD, &port[i]) == EXIT_OK)) {
 					return (true);
 				}
 			}
@@ -118,7 +113,7 @@ bool wdgScreen::eventFilter(QObject *obj, QEvent *event) {
 		if (!tas.type) {
 			for (BYTE i = PORT1; i < PORT_MAX; i++) {
 				if (port_funct[i].input_decode_event && (port_funct[i].input_decode_event(RELEASED,
-						keyEvent->isAutoRepeat(), keyval, KEYBOARD, &port[i]) == EXIT_OK)) {
+					keyEvent->isAutoRepeat(), keyval, KEYBOARD, &port[i]) == EXIT_OK)) {
 					return (true);
 				}
 			}
@@ -156,13 +151,13 @@ bool wdgScreen::eventFilter(QObject *obj, QEvent *event) {
 
 	return (QObject::eventFilter(obj, event));
 }
-void wdgScreen::dragEnterEvent(QDragEnterEvent *e) {
-	if (e->mimeData()->hasUrls()) {
-		e->acceptProposedAction();
+void wdgScreen::dragEnterEvent(QDragEnterEvent *event) {
+	if (event->mimeData()->hasUrls()) {
+		event->acceptProposedAction();
 	}
 }
-void wdgScreen::dropEvent(QDropEvent *e) {
-	foreach (const QUrl &url, e->mimeData()->urls()){
+void wdgScreen::dropEvent(QDropEvent *event) {
+	foreach (const QUrl &url, event->mimeData()->urls()){
 		QFileInfo fileinfo(url.toLocalFile());
 		_uncompress_archive *archive;
 		BYTE is_rom = FALSE, is_patch = FALSE, rc;
@@ -230,22 +225,31 @@ void wdgScreen::dropEvent(QDropEvent *e) {
 		break;
 	}
 }
-
-#if defined (__WIN32__)
+void wdgScreen::resizeEvent(QResizeEvent *event) {
 #if defined (WITH_OPENGL)
-void wdgScreen::controlEventFilter(void) {
-	data.tmp = (WNDPROC)GetWindowLongPtr((HWND) winId(), GWLP_WNDPROC);
+	wogl.vsync->resize(event->size());
+	wogl.novsync->resize(event->size());
+#elif defined (WITH_D3D9)
+	wd3d9->resize(event->size());
+#endif
+}
 
-	if ((data.tmp != data.sdl) && (data.tmp != data.qt)) {
-		data.sdl = data.tmp;
-	}
-
-	if (data.tmp != data.qt) {
-		SetWindowLongPtr((HWND) winId(), GWLP_WNDPROC, (LONG_PTR) data.qt);
+#if defined (WITH_OPENGL)
+void wdgScreen::vsync(void) {
+	if (cfg->vsync) {
+		wogl.actual = wogl.vsync;
+		wogl.vsync->show();
+		wogl.novsync->hide();
+	} else {
+		wogl.actual = wogl.novsync;
+		wogl.vsync->hide();
+		wogl.novsync->show();
 	}
 }
 #endif
+
 void wdgScreen::cursor_init(void) {
+	//target = new QCursor(QPixmap(":/pointers/pointers/target_48x48.xpm"), -1, -1);
 	target = new QCursor(QPixmap(":/pointers/pointers/target_32x32.xpm"), -1, -1);
 }
 void wdgScreen::cursor_set(void) {
@@ -262,4 +266,3 @@ void wdgScreen::cursor_hide(BYTE hide) {
 		cursor_set();
 	}
 }
-#endif

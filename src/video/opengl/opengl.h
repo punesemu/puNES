@@ -20,7 +20,6 @@
 #define OPENGL_H_
 
 #include "glew/glew.h"
-#include <SDL.h>
 #if defined (WITH_OPENGL_CG)
 #include <Cg/cg.h>
 #include <Cg/cgGL.h>
@@ -74,7 +73,6 @@ typedef struct _shader_uniforms_cg {
 	_shader_uniforms_tex_cg feedback;
 } _shader_uniforms_cg;
 #endif
-
 typedef struct _math_matrix_4x4 {
 	float data[16];
 } _math_matrix_4x4;
@@ -174,36 +172,33 @@ typedef struct _texture_simple {
 } _texture_simple;
 typedef struct _opengl {
 	_math_matrix_4x4 mvp;
+	_texture_simple text;
+	_texture texture[MAX_PASS + 1];
+	_lut lut[MAX_PASS];
 
 	struct _attribsarray {
 		GLuint count;
 		GLuint attrib[MAX_PASS + MAX_PREV + 1 + 1 + 4 + 4];
 	} attribs;
-
 	struct _opengl_supported_fbo {
 		BYTE flt;
 		BYTE srgb;
 	} supported_fbo;
-
-	struct _opengl_sdl {
-		SDL_Surface *surface;
-	} sdl;
-
+	struct _opengl_surface {
+		GLint w;
+		GLint h;
+		GLint pitch;
+		uint32_t *pixels;
+	} surface;
 	struct _opengl_screen {
 		GLint in_use;
 		GLuint index;
 		_texture_simple tex[MAX_PREV + 1];
 	} screen;
-
 	struct _feedback {
 		GLint in_use;
 		_texture tex;
 	} feedback;
-
-	_texture_simple text;
-	_texture texture[MAX_PASS + 1];
-	_lut lut[MAX_PASS];
-
 #if defined (WITH_OPENGL_CG)
 	struct _cg {
 		CGcontext ctx;
@@ -212,12 +207,10 @@ typedef struct _opengl {
 			GLuint count;
 			CGparameter state[MAX_PASS + MAX_PREV + 1 + 1 + 4];
 		} states;
-
 		struct _textureparameter {
 			GLuint count;
 			CGparameter param[MAX_PASS + MAX_PREV + 4];
 		} params;
-
 		struct _profile_cg {
 			CGprofile v;
 			CGprofile f;
@@ -226,6 +219,16 @@ typedef struct _opengl {
 #endif
 } _opengl;
 
+enum _opengl_texture_format {
+	TI_INTFRM = GL_RGBA8,
+	TI_FRM = GL_BGRA,
+	TI_TYPE = GL_UNSIGNED_BYTE,
+	TI_F_INTFRM = GL_RGBA32F,
+	TI_F_TYPE = GL_FLOAT,
+	TI_S_INTFRM = GL_SRGB8_ALPHA8,
+	TI_S_TYPE = GL_UNSIGNED_BYTE
+};
+
 #if defined (__cplusplus)
 #define EXTERNC extern "C"
 #else
@@ -233,6 +236,11 @@ typedef struct _opengl {
 #endif
 
 EXTERNC _opengl opengl;
+
+EXTERNC BYTE opengl_init(void);
+EXTERNC void opengl_quit(void);
+EXTERNC BYTE opengl_context_create(void);
+EXTERNC void opengl_draw_scene(void);
 
 #undef EXTERNC
 

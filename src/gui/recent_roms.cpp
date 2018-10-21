@@ -54,7 +54,7 @@ void recent_roms_init(void) {
 		recent.close();
 	}
 }
-void recent_roms_add(void) {
+void recent_roms_add(uTCHAR *file) {
 	int index = 0, rr_index = 1, count = 0;
 	_recent_roms rr_tmp;
 	QString utf;
@@ -64,12 +64,12 @@ void recent_roms_add(void) {
 		return;
 	}
 
-	if (info.rom.file[0] == 0) {
+	if (file[0] == 0) {
 		return;
 	}
 
-	if ((rom = uncompress_storage_archive_name(info.rom.file)) == NULL) {
-		rom = info.rom.file;
+	if ((rom = uncompress_storage_archive_name(file)) == NULL) {
+		rom = file;
 	}
 
 	utf = uQString(rom);

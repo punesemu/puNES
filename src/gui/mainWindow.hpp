@@ -19,16 +19,9 @@
 #ifndef MAINWINDOW_HPP_
 #define MAINWINDOW_HPP_
 
-#include <QtCore/QtGlobal>
-#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-#include <QtGui/QMainWindow>
-#include <QtGui/QApplication>
-#include <QtGui/QShortcut>
-#else
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QShortcut>
-#endif
 #include <QtCore/QObject>
 #include <QtCore/QTimer>
 #include <QtCore/QTranslator>
@@ -86,11 +79,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 
 	protected:
 #if defined (__WIN32__)
-#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-		bool winEvent(MSG *msg, long *result);
-#else
 		bool nativeEvent(const QByteArray &eventType, void *message, long *result);
-#endif
 #endif
 		bool eventFilter(QObject *obj, QEvent *event);
 		void changeEvent(QEvent *event);

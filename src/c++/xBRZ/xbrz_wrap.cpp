@@ -23,7 +23,7 @@
 #endif
 
 extern "C" void xbrz_scale(BYTE factor, const WORD *src, uint32_t *trg, uint32_t *palette,
-		int width, int height) {
+	int width, int height) {
 #if defined (WITH_D3D9)
 	xbrz::scale(factor, src, trg, palette, width, height, xbrz::ColorFormat::ARGB);
 #elif defined (WITH_OPENGL)
@@ -32,7 +32,7 @@ extern "C" void xbrz_scale(BYTE factor, const WORD *src, uint32_t *trg, uint32_t
 }
 
 extern "C" void xbrz_scale_mt(BYTE factor, const WORD *src, uint32_t *trg, uint32_t *palette,
-		int width, int height) {
+	int width, int height) {
 #if defined (__unix__)
 	pthread_t thread[XBRZ_NUM_SLICE];
 #elif defined (__WIN32__)

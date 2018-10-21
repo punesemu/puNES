@@ -27,6 +27,8 @@
 #include "shaders.h"
 #include "gfx.h"
 
+#define D3D9_ADAPTER(i) (_d3d9_adapter *) ((BYTE *) d3d9.array + (i * sizeof(_d3d9_adapter)))
+
 typedef struct _vertex_buffer {
 	// position
 	FLOAT x, y, z;
@@ -56,7 +58,7 @@ typedef struct _shader_uniforms_tex {
 		CGparameter video_size;
 		CGparameter texture_size;
 	} f;
-}  _shader_uniforms_tex;
+} _shader_uniforms_tex;
 typedef struct _shader_uniforms_prog {
 	CGparameter video_size;
 	CGparameter output_size;
@@ -79,7 +81,7 @@ typedef struct _shader_uniforms {
 	_shader_uniforms_tex passprev[MAX_PASS];
 	_shader_uniforms_tex prev[MAX_PREV];
 	_shader_uniforms_tex feedback;
-}  _shader_uniforms;
+} _shader_uniforms;
 typedef struct _shader_info {
 	D3DXVECTOR2 video_size;
 	D3DXVECTOR2 texture_size;
@@ -172,6 +174,11 @@ typedef struct _d3d9 {
 #endif
 
 EXTERNC _d3d9 d3d9;
+
+EXTERNC BYTE d3d9_init(void);
+EXTERNC BYTE d3d9_context_create(void);
+EXTERNC void d3d9_draw_scene(void);
+EXTERNC void d3d9_quit(void);
 
 #undef EXTERNC
 

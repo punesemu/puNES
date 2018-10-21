@@ -16,31 +16,20 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef WDGSETTINGSCHEATS_HPP_
-#define WDGSETTINGSCHEATS_HPP_
+#include "wdgD3D9.hpp"
+#include "gfx.h"
 
-#include <QtWidgets/QWidget>
-#include "wdgSettingsCheats.hh"
+extern "C" void d3d9_draw_scene(void);
 
-class wdgSettingsCheats : public QWidget, public Ui::wdgSettingsCheats {
-		Q_OBJECT
+wdgD3D9::wdgD3D9(QWidget *parent) : QWidget(parent) {
+        setAttribute(Qt::WA_PaintOnScreen);
+        setAttribute(Qt::WA_NoSystemBackground);
+        setAttribute(Qt::WA_OpaquePaintEvent);
+}
+wdgD3D9::~wdgD3D9() {}
 
-	public:
-		wdgSettingsCheats(QWidget *parent = 0);
-		~wdgSettingsCheats();
-
-	private:
-		void changeEvent(QEvent *event);
-
-	public:
-		void retranslateUi(QWidget *wdgSettingsInput);
-		void update_widget(void);
-
-	private:
-		void cheat_mode_set(void);
-
-	private slots:
-		void s_cheat_mode(int index);
-};
-
-#endif /* WDGSETTINGSCHEATS_HPP_ */
+void wdgD3D9::paintEvent(QPaintEvent *event) {
+	if (gfx.palette_to_draw) {
+		d3d9_draw_scene();
+	}
+}

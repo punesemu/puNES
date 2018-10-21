@@ -16,16 +16,9 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <QtCore/QtGlobal>
-#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-#include <QtGui/QFileDialog>
-#include <QtGui/QMessageBox>
-#include <QtGui/QDesktopWidget>
-#else
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QDesktopWidget>
-#endif
 #include <QtCore/QDateTime>
 #include <QtCore/QUrl>
 #include <QtGui/QDesktopServices>
@@ -43,13 +36,7 @@
 #include "timeline.h"
 #include "c++/l7zip/l7z.h"
 #include "gui.h"
-#if defined (__unix__) || defined (WITH_D3D9)
-#define __GFX_MAKE_RESET__
-#define __GFX_CHANGE_ROM__
-#include "gfx_functions_inline.h"
-#undef __GFX_MAKE_RESET__
-#undef __GFX_CHANGE_ROM__
-#endif
+#include "emu_thread.h"
 
 enum state_incdec_enum { INC, DEC };
 enum state_save_enum { SAVE, LOAD };
@@ -64,8 +51,10 @@ mainWindow::mainWindow() : QMainWindow() {
 	statusbar = new wdgStatusBar(this);
 	translator = new QTranslator();
 	qtTranslator = new QTranslator();
-	tloop = new QTimer(this);
 	shcjoy.timer = new QTimer(this);
+
+	tloop = new QTimer(this);
+	tloop->setInterval(20);
 
 	setWindowIcon(QIcon(":icon/icons/application.png"));
 	setWindowFlags(windowFlags() & ~Qt::WindowMaximizeButtonHint);
@@ -140,15 +129,8 @@ mainWindow::mainWindow() : QMainWindow() {
 mainWindow::~mainWindow() {}
 
 #if defined (__WIN32__)
-#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-bool mainWindow::winEvent(MSG *msg, long *result) {
-#else
 bool mainWindow::nativeEvent(const QByteArray &eventType, void *message, long *result) {
-#endif
-
-#if (QT_VERSION > QT_VERSION_CHECK(5, 0, 0))
 	MSG *msg = (MSG *)message;
-#endif
 
 	switch (msg->message) {
 #if defined (WITH_D3D9)
@@ -175,11 +157,7 @@ bool mainWindow::nativeEvent(const QByteArray &eventType, void *message, long *r
 		default:
 			break;
 	}
-#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-	return QWidget::winEvent(msg, result);
-#else
 	return QWidget::nativeEvent(eventType, message, result);
-#endif
 }
 #endif
 bool mainWindow::eventFilter(QObject *obj, QEvent *event) {
@@ -333,6 +311,8 @@ void mainWindow::control_visible_cursor(void) {
 	}
 }
 void mainWindow::make_reset(int type) {
+	emu_thread_lock();
+
 	if (type == HARD) {
 		if ((cfg->cheat_mode == GAMEGENIE_MODE) && gamegenie.rom_present) {
 			gamegenie_reset();
@@ -348,8 +328,11 @@ void mainWindow::make_reset(int type) {
 	}
 
 	if (emu_reset(type)) {
+		emu_thread_unlock();
 		s_quit();
 	}
+
+	emu_thread_unlock();
 
 	// dopo un reset la pause e' automaticamente disabilitata quindi faccio
 	// un aggiornamento del submenu NES per avere la voce correttamente settata.
@@ -359,11 +342,8 @@ void mainWindow::change_rom(const uTCHAR *rom) {
 	info.rom.from_load_menu = emu_ustrncpy(info.rom.from_load_menu, (uTCHAR *)rom);
 	gamegenie_reset();
 	gamegenie_free_paths();
-#if defined (WITH_OPENGL) && defined (__WIN32__)
-	gfx_sdlwe_set(SDLWIN_CHANGE_ROM, SDLWIN_NONE);
-#else
-	gfx_CHANGE_ROM();
-#endif
+	make_reset(CHANGE_ROM);
+	gui_update();
 }
 void mainWindow::state_save_slot_set(int slot, bool on_video) {
 	if (info.no_rom | info.turn_off) {
@@ -881,11 +861,7 @@ void mainWindow::s_turn_on_off(void) {
 	info.pause_frames_drawscreen = 0;
 
 	if (!info.turn_off) {
-#if defined (WITH_OPENGL) && defined (__WIN32__)
-		gfx_sdlwe_set(SDLWIN_MAKE_RESET, HARD);
-#else
-		gfx_MAKE_RESET(HARD);
-#endif
+		make_reset(HARD);
 	}
 
 	update_menu_nes();
@@ -894,11 +870,7 @@ void mainWindow::s_turn_on_off(void) {
 void mainWindow::s_make_reset(void) {
 	int type = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
-#if defined (WITH_OPENGL) && defined (__WIN32__)
-	gfx_sdlwe_set(SDLWIN_MAKE_RESET, type);
-#else
-	gfx_MAKE_RESET(type);
-#endif
+	make_reset(type);
 }
 void mainWindow::s_insert_coin(void) {
 	gui_vs_system_insert_coin();
@@ -1008,11 +980,6 @@ void mainWindow::s_set_fullscreen(void) {
 
 			gfx.w[MONITOR] = qApp->desktop()->screenGeometry(screenNumber).width();
 			gfx.h[MONITOR] = qApp->desktop()->screenGeometry(screenNumber).height();
-	#if defined (WITH_OPENGL) && defined (__WIN32__)
-			// su alcuni windows, se setto il gfx.w[MONITOR] alla dimensione
-			// del desktop, l'immagine a video ha dei glitch grafici marcati
-			gfx.w[MONITOR]--;
-	#endif
 
 			menuWidget()->setVisible(false);
 			statusbar->setVisible(false);
@@ -1250,7 +1217,18 @@ void mainWindow::s_help(void) {
 }
 
 void mainWindow::s_loop(void) {
-	emu_frame();
+	if ((cfg->cheat_mode == GAMEGENIE_MODE) && (gamegenie.phase == GG_LOAD_ROM)) {
+		make_reset(CHANGE_ROM);
+		gamegenie.phase = GG_FINISH;
+	}
+
+	if (vs_system.enabled & vs_system.watchdog.reset) {
+		vs_system.watchdog.reset = FALSE;
+		make_reset(RESET);
+	}
+
+	gui_control_visible_cursor();
+	gui_ppu_hacks_widgets_update();
 }
 void mainWindow::s_fullscreen(bool state) {
 	if (state == true) {

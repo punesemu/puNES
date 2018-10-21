@@ -166,7 +166,7 @@ BYTE snd_playback_start(void) {
 	{
 		static int factor[10] = { 90, 80, 70, 60, 50, 40, 30, 20, 10, 5 };
 		_snd_dev *dev = &snd_list.playback.devices[alsa_find_index_id(&snd_list.playback,
-				cfg->audio_output, usizeof(cfg->audio_output))];
+			cfg->audio_output, usizeof(cfg->audio_output))];
 		int tries;
 
 		// snd.samplarate / 50 = 20 ms
@@ -440,8 +440,8 @@ void snd_list_devices(void) {
 
 			alsa_device_add(&snd_list.playback, pcm_hint_name, buf);
 
-		    free(pcm_hint_name);
-        }
+			free(pcm_hint_name);
+		}
 		snd_device_name_free_hint(pcm_hints);
 	}
 
@@ -619,7 +619,7 @@ static BYTE alsa_playback_hwparams_set(void) {
 	// choose all parameters
 	if ((rc = snd_pcm_hw_params_any(alsa.playback, params)) < 0) {
 		fprintf(stderr, "Broken configuration for playback: no configurations available: %s\n",
-				snd_strerror(rc));
+			snd_strerror(rc));
 		return (EXIT_ERROR);
 	}
 
@@ -641,7 +641,7 @@ static BYTE alsa_playback_hwparams_set(void) {
 	if ((rc = snd_pcm_hw_params_set_access(alsa.playback, params, SND_PCM_ACCESS_MMAP_INTERLEAVED))
 			< 0) {
 		if ((rc = snd_pcm_hw_params_set_access(alsa.playback, params, SND_PCM_ACCESS_RW_INTERLEAVED))
-		        < 0) {
+			< 0) {
 			fprintf(stderr, "Access type not available for playback: %s\n", snd_strerror(rc));
 			return (EXIT_ERROR);
 		}
@@ -657,7 +657,7 @@ static BYTE alsa_playback_hwparams_set(void) {
 	// set the channels
 	if ((rc = snd_pcm_hw_params_set_channels(alsa.playback, params, snd.channels)) < 0) {
 		fprintf(stderr, "Channels count (%i) not available for playbacks: %s\n", snd.channels,
-				snd_strerror(rc));
+			snd_strerror(rc));
 		return (EXIT_ERROR);
 	}
 
@@ -666,7 +666,7 @@ static BYTE alsa_playback_hwparams_set(void) {
 
 	if ((rc = snd_pcm_hw_params_set_rate_near(alsa.playback, params, &rrate, 0)) < 0) {
 		fprintf(stderr, "Rate %iHz not available for playback: %s\n", snd.samplerate,
-				snd_strerror(rc));
+			snd_strerror(rc));
 		return (EXIT_ERROR);
 	}
 	if (rrate != snd.samplerate) {
@@ -783,7 +783,7 @@ static void *alsa_playback_loop(void *data) {
 		len = avail * snd.channels * sizeof(*cache->write);
 
 		if ((info.no_rom | info.turn_off | info.pause) || (snd.buffer.start == FALSE)
-				|| (fps.fast_forward == TRUE)) {
+			|| (fps.fast_forward == TRUE)) {
 			alsa_wr_buf(th->alsa, (void *) cache->silence, avail);
 		} else if (cache->bytes_available < len) {
 			alsa_wr_buf(th->alsa, (void *) cache->silence, avail);
@@ -840,7 +840,7 @@ static BYTE INLINE alsa_xrun_recovery(snd_pcm_t *handle, int err) {
 		err = snd_pcm_prepare(handle);
 		if (err < 0) {
 			fprintf(stderr, "can't recovery from underrun, prepare failed: %s\n",
-					snd_strerror(err));
+				snd_strerror(err));
 			info.stop = TRUE;
 			return (EXIT_ERROR);
 		}
@@ -852,7 +852,7 @@ static BYTE INLINE alsa_xrun_recovery(snd_pcm_t *handle, int err) {
 			err = snd_pcm_prepare(handle);
 			if (err < 0) {
 				fprintf(stderr, "can't recovery from suspend, prepare failed: %s\n",
-						snd_strerror(err));
+					snd_strerror(err));
 				info.stop = TRUE;
 				return (EXIT_ERROR);
 			}

@@ -16,31 +16,31 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef WDGSETTINGSCHEATS_HPP_
-#define WDGSETTINGSCHEATS_HPP_
+#ifndef WDGOPENGL_HPP_
+#define WDGOPENGL_HPP_
 
+// gui.h e' importante che stia in mezzo per non
+// avere problemi di compilazione legati ai vari
+// nested #include nella versione Windows
 #include <QtWidgets/QWidget>
-#include "wdgSettingsCheats.hh"
+#include "gui.h"
+#include <QtWidgets/QOpenGLWidget>
 
-class wdgSettingsCheats : public QWidget, public Ui::wdgSettingsCheats {
-		Q_OBJECT
-
-	public:
-		wdgSettingsCheats(QWidget *parent = 0);
-		~wdgSettingsCheats();
-
-	private:
-		void changeEvent(QEvent *event);
+class wdgOpenGL : public QOpenGLWidget {
 
 	public:
-		void retranslateUi(QWidget *wdgSettingsInput);
-		void update_widget(void);
+		wdgOpenGL(QWidget *parent, int vsync);
+		~wdgOpenGL();
 
-	private:
-		void cheat_mode_set(void);
+	protected:
+		void paintGL(void);
 
-	private slots:
-		void s_cheat_mode(int index);
+	public:
+		void show(void);
+		void hide(void);
+
+	public:
+		unsigned int framebuffer_id(void);
 };
 
-#endif /* WDGSETTINGSCHEATS_HPP_ */
+#endif /* WDGOPENGL_HPP_ */

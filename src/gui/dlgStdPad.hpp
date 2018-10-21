@@ -21,11 +21,7 @@
 
 #include <QtCore/QtGlobal>
 #include <QtCore/QTimer>
-#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-#include <QtGui/QDialog>
-#else
 #include <QtWidgets/QDialog>
-#endif
 #include "dlgStdPad.hh"
 #include "wdgSettingsInput.hpp"
 

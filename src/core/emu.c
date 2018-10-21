@@ -17,11 +17,15 @@
  */
 
 #include <time.h>
+#include <stdlib.h>
+#include <stdarg.h>
+#include <string.h>
 #include <unistd.h>
 #include <sys/stat.h>
 #include <libgen.h>
 #include "main.h"
 #include "emu.h"
+#include "emu_thread.h"
 #include "rom_mem.h"
 #include "info.h"
 #include "settings.h"
@@ -66,7 +70,7 @@
 
 static BYTE emu_ctrl_if_rom_exist(void);
 static uTCHAR *emu_ctrl_rom_ext(uTCHAR *file);
-static void emu_recent_roms_add(BYTE *add);
+static void emu_recent_roms_add(BYTE *add, uTCHAR *file);
 
 BYTE emu_frame(void) {
 	// gestione uscita
@@ -74,11 +78,7 @@ BYTE emu_frame(void) {
 		return (EXIT_OK);
 	}
 
-#if defined (WITH_OPENGL) && defined (__WIN32__)
-	gfx_sdlwe_tick();
-#endif
-
-	gui_control_visible_cursor();
+	emu_thread_lock();
 
 	tas.lag_frame = TRUE;
 
@@ -97,9 +97,12 @@ BYTE emu_frame(void) {
 			nsf_main_screen_event();
 			nsf_effect();
 
+			emu_thread_unlock();
+
 			gfx_draw_screen(TRUE);
 
 			fps_frameskip();
+
 			return (EXIT_OK);
 		}
 
@@ -130,25 +133,13 @@ BYTE emu_frame(void) {
 			cpu_exe_op();
 		}
 
-		if ((cfg->cheat_mode == GAMEGENIE_MODE) && (gamegenie.phase == GG_LOAD_ROM)) {
-			emu_reset(CHANGE_ROM);
-			gamegenie.phase = GG_FINISH;
-		}
-
 		if (tas.lag_frame) {
 			tas.total_lag_frames++;
-			gui_ppu_hacks_widgets_update();
 		}
 
 		if (snd_end_frame) {
 			snd_end_frame();
 		}
-
-#if defined (DEBUG)
-		gfx_draw_screen(TRUE);
-#else
-		gfx_draw_screen(FALSE);
-#endif
 
 		if (!tas.type && (++tl.frames == tl.frames_snap)) {
 			timeline_snap(TL_NORMAL);
@@ -162,11 +153,17 @@ BYTE emu_frame(void) {
 
 		r4011.frames++;
 
-		if (vs_system.enabled & vs_system.watchdog.reset) {
-			vs_system.watchdog.reset = FALSE;
-			emu_reset(RESET);
-		}
+		emu_thread_unlock();
+
+#if defined (DEBUG)
+		gfx_draw_screen(TRUE);
+#else
+		gfx_draw_screen(FALSE);
+#endif
 	} else {
+		emu_thread_unlock();
+
+		//gfx_draw_screen(TRUE);
 		gfx_draw_screen(FALSE);
 	}
 
@@ -265,7 +262,7 @@ BYTE emu_load_rom(void) {
 				info.rom.file[0] = 0;
 				goto elaborate_rom_file;
 			}
-			emu_recent_roms_add(&recent_roms_permit_add);
+			emu_recent_roms_add(&recent_roms_permit_add, info.rom.file);
 		} else if (!ustrcasecmp(ext, uL(".nsf"))) {
 			if (nsf_load_rom() == EXIT_ERROR) {;
 				info.rom.file[0] = 0;
@@ -273,7 +270,7 @@ BYTE emu_load_rom(void) {
 				fprintf(stderr, "error loading rom\n");
 				goto elaborate_rom_file;
 			}
-			emu_recent_roms_add(&recent_roms_permit_add);
+			emu_recent_roms_add(&recent_roms_permit_add, info.rom.file);
 		} else if (!ustrcasecmp(ext, uL(".nsfe"))) {
 			if (nsfe_load_rom() == EXIT_ERROR) {;
 				info.rom.file[0] = 0;
@@ -281,14 +278,14 @@ BYTE emu_load_rom(void) {
 				fprintf(stderr, "error loading rom\n");
 				goto elaborate_rom_file;
 			}
-			emu_recent_roms_add(&recent_roms_permit_add);
+			emu_recent_roms_add(&recent_roms_permit_add, info.rom.file);
 		} else if (!ustrcasecmp(ext, uL(".fm2"))) {
 			tas_file(ext, info.rom.file);
 			if (!info.rom.file[0]) {
 				text_add_line_info(1, "[red]error loading rom");
 				fprintf(stderr, "error loading rom\n");
 			}
-			emu_recent_roms_add(&recent_roms_permit_add);
+			emu_recent_roms_add(&recent_roms_permit_add, tas.file);
 			// rielaboro il nome del file
 			goto elaborate_rom_file;
 		} else {
@@ -301,7 +298,7 @@ BYTE emu_load_rom(void) {
 				fprintf(stderr, "error loading rom\n");
 				goto elaborate_rom_file;
 			}
-			emu_recent_roms_add(&recent_roms_permit_add);
+			emu_recent_roms_add(&recent_roms_permit_add, info.rom.file);
 			info.turn_off = FALSE;
 		}
 	} else if (info.gui) {
@@ -824,7 +821,11 @@ BYTE emu_reset(BYTE type) {
 	memset(&vs_system.coins, 0x00, sizeof(vs_system.coins));
 	vs_system.watchdog.next = vs_system_wd_next();
 
-	gui_external_control_windows_show();
+	// solo il CHANGE_ROM puo' interagire con la gui
+	// perche' viene gestito direttamente dall'event loop delle QT
+	if (info.reset == CHANGE_ROM) {
+		gui_external_control_windows_show();
+	}
 
 	info.bat_ram_frames = 0;
 
@@ -1008,9 +1009,9 @@ static uTCHAR *emu_ctrl_rom_ext(uTCHAR *file) {
 
 	return (ext);
 }
-static void emu_recent_roms_add(BYTE *add) {
+static void emu_recent_roms_add(BYTE *add, uTCHAR *file) {
 	if ((*add) == TRUE) {
 		(*add) = FALSE;
-		recent_roms_add();
+		recent_roms_add(file);
 	}
 }

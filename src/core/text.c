@@ -18,12 +18,11 @@
 
 #if defined (WITH_OPENGL)
 #include <time.h>
-#elif defined (WITH_D3D9)
+#endif
 #include <string.h>
 #include <stdarg.h>
 #include <stdlib.h>
 #include <stdio.h>
-#endif
 #include "text.h"
 #include "gfx.h"
 #include "font.h"
@@ -577,7 +576,7 @@ static void INLINE rendering(_txt_element *ele) {
 	unsigned int i = 0;
 	int font_x = 0, font_y = 0, ch_font = ele->font;
 	uint32_t color[3], max_pixels = (text.w - 16), pixels = 0;
-	_rect surface_rect, font;
+	_txt_rect surface_rect, font;
 
 	text.on_screen = TRUE;
 
@@ -1075,7 +1074,7 @@ static void INLINE rendering(_txt_element *ele) {
 		}
 		{
 			int x, y;
-			_rect rect;
+			_txt_rect rect;
 
 			rect.w = ele->factor;
 			rect.h = ele->factor;

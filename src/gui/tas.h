@@ -40,6 +40,7 @@ typedef struct _tas_input_log {
 #endif
 
 EXTERNC struct _tas {
+	uTCHAR file[LENGTH_FILE_NAME_LONG];
 	FILE *fp;
 	uint8_t emulator;
 	uint8_t type;

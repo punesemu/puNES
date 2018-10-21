@@ -17,9 +17,9 @@
  */
 
 #include <locale.h>
+#include <stdlib.h>
 #include <string.h>
 #include "main.h"
-
 #include "../gui/cmd_line.h"
 #include "emu.h"
 #include "info.h"
@@ -35,6 +35,7 @@
 #include "recent_roms.h"
 #include "uncompress.h"
 #include "patcher.h"
+#include "emu_thread.h"
 
 #if defined (__WIN32__)
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine, int iCmdShow) {
@@ -108,11 +109,11 @@ int main(int argc, char **argv) {
 
 	if (!info.portable) {
 		text_add_line_info(1, "[yellow]p[red]u[green]N[cyan]E[brown]S[normal]"
-		" [font8](by [cyan]FHorse[normal]) [font12]%s", VERSION);
+			" [font8](by [cyan]FHorse[normal]) [font12]%s", VERSION);
 	} else {
 		text_add_line_info(1, "[font8][cyan]Portable[normal] "
-		"[font12][yellow]p[red]u[green]N[cyan]E[brown]S[normal]"
-		"[font8] (by [cyan]FHorse[normal]) [font12]%s", VERSION);
+			"[font12][yellow]p[red]u[green]N[cyan]E[brown]S[normal]"
+			"[font8] (by [cyan]FHorse[normal]) [font12]%s", VERSION);
 	}
 
 	// tratto il file di configurazione ed
@@ -135,8 +136,11 @@ int main(int argc, char **argv) {
 		return (EXIT_FAILURE);
 	}
 
+	emu_thread_init();
 	gui_start();
+	emu_thread_quit();
 
 	emu_quit();
+
 	return (EXIT_SUCCESS);
 }

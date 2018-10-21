@@ -1,7 +1,5 @@
 /*
  *  Copyright (C) 2010-2019 Fabio Cavallo (aka FHorse)
- *  for some codes :
- *  Copyright (C) 2010-2015 The RetroArch team
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -16,15 +14,18 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- *
  */
 
-#include "d3d9.h"
-#include "gui.h"
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include "gfx.h"
 #include "info.h"
 #include "conf.h"
-#include "ppu.h"
+#include "opengl.h"
 #include "clock.h"
+#include "ppu.h"
+#include "gui.h"
 #include "palette.h"
 #include "paldef.h"
 #include "vs_system.h"
@@ -34,13 +35,15 @@
 BYTE gfx_init(void) {
 	gfx.save_screenshot = FALSE;
 
+	gui_screen_info();
+
 	if (gui_create() == EXIT_ERROR) {
-		MessageBox(NULL, "Gui initialization failed", "Error!", MB_ICONEXCLAMATION | MB_OK);
+		fprintf(stderr, "gui initialization failed\n");
 		return (EXIT_ERROR);
 	}
 
-	if (d3d9_init() == EXIT_ERROR) {
-		MessageBox(NULL, "Unable to initiliazed d3d9", "Error!", MB_ICONEXCLAMATION | MB_OK);
+	if (opengl_init() == EXIT_ERROR) {
+		fprintf(stderr, "OpenGL not supported.\n");
 		return (EXIT_ERROR);
 	}
 
@@ -48,24 +51,23 @@ BYTE gfx_init(void) {
 	// come filtro ma anche nel gfx_set_screen() per
 	// generare la paletta dei colori.
 	if (ntsc_init(0, 0, 0, 0, 0) == EXIT_ERROR) {
-		MessageBox(NULL, "Unable to initialize palette", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
 
 	// mi alloco una zona di memoria dove conservare la
 	// paletta nel formato di visualizzazione.
-	if (!(gfx.palette = malloc(NUM_COLORS * sizeof(uint32_t)))) {
-		MessageBox(NULL, "Unable to allocate the palette", "Error!", MB_ICONEXCLAMATION | MB_OK);
+	if (!(gfx.palette = (uint32_t *) malloc(NUM_COLORS * sizeof(uint32_t)))) {
+		fprintf(stderr, "Unable to allocate the palette\n");
 		return (EXIT_ERROR);
 	}
 
 	if (pause_init() == EXIT_ERROR) {
-		MessageBox(NULL, "pause initialization failed", "Error!", MB_ICONEXCLAMATION | MB_OK);
+		fprintf(stderr, "pause initialization failed\n");
 		return (EXIT_ERROR);
 	}
 
 	if (tv_noise_init() == EXIT_ERROR) {
-		MessageBox(NULL, "tv_noise initialization failed", "Error!", MB_ICONEXCLAMATION | MB_OK);
+		fprintf(stderr, "tv_noise initialization failed\n");
 		return (EXIT_ERROR);
 	}
 
@@ -112,7 +114,6 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 		if (overscan.enabled == OSCAN_DEFAULT) {
 			overscan.enabled = cfg->oscan_default;
 		}
-
 		if (overscan.enabled) {
 			gfx.rows -= (overscan.borders->left + overscan.borders->right);
 			gfx.lines -= (overscan.borders->up + overscan.borders->down);
@@ -123,11 +124,10 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 	if (filter == NO_CHANGE) {
 		filter = cfg->filter;
 	}
-
 	if ((filter != cfg->filter) || info.on_cfg || force_scale) {
 		switch (filter) {
-			case NO_FILTER:
 			default:
+			case NO_FILTER:
 				gfx.filter.func = scale_surface;
 				gfx.filter.factor = X1;
 				break;
@@ -170,7 +170,7 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 		set_mode = TRUE;
 	}
 
-	/* shader */
+	// shader
 	if (shader == NO_CHANGE) {
 		shader = cfg->shader;
 	}
@@ -316,7 +316,7 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 			WORD i;
 
 			for (i = 0; i < NUM_COLORS; i++) {
-				gfx.palette[i] = gfx_color(255, palette_RGB[i].r, palette_RGB[i].g, palette_RGB[i].b);
+				gfx.palette[i] = gfx_color(0, palette_RGB[i].r, palette_RGB[i].g, palette_RGB[i].b);
 			}
 		}
 	}
@@ -391,21 +391,25 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 					gfx.w[VIDEO_MODE] -= brd;
 				}
 			}
-
-			// faccio quello che serve prima del setvideo
-			gui_set_video_mode();
 		}
 
-		switch (d3d9_context_create()) {
+		switch (opengl_context_create()) {
 			case EXIT_ERROR:
-				fprintf(stderr, "D3D9: Unable to initialize d3d context\n");
-				return;
+				fprintf(stderr, "OPENGL: Unable to initialize opengl context\n");
+				break;
 			case EXIT_ERROR_SHADER:
 				text_add_line_info(1, "[red]errors[normal] on shader, use [green]'No shader'");
-				fprintf(stderr, "CG: Error on loading the shaders, switch to \"No shader\"\n");
+				fprintf(stderr, "OPENGL: Error on loading the shaders, switch to \"No shader\"\n");
 				umemcpy(cfg->shader_file, gfx.last_shader_file, usizeof(cfg->shader_file));
 				shader = NO_SHADER;
 				goto gfx_set_screen_start;
+		}
+
+		if (set_mode) {
+			// nel gui_set_video_mode() eseguo il resize del wdgOpenGL che esegue
+			// un paintGL (quindi un opengl_draw_scene) che puo' essere eseguito
+			// solo a contesto creato.
+			gui_set_video_mode();
 		}
 	}
 
@@ -434,7 +438,7 @@ void gfx_draw_screen(BYTE forced) {
 	if (cfg->filter == NTSC_FILTER) {
 		gfx.palette_to_draw = NULL;
 	} else {
-		gfx.palette_to_draw = (void *) gfx.palette;
+		gfx.palette_to_draw = (void *)gfx.palette;
 	}
 
 	if (!forced) {
@@ -442,7 +446,7 @@ void gfx_draw_screen(BYTE forced) {
 			if (cfg->filter == NTSC_FILTER) {
 				gfx.palette_to_draw = turn_off_effect.ntsc;
 			} else {
-				gfx.palette_to_draw = (void *) turn_off_effect.palette;
+				gfx.palette_to_draw = (void *)turn_off_effect.palette;
 			}
 
 			if (++info.pause_frames_drawscreen == 2) {
@@ -468,84 +472,64 @@ void gfx_draw_screen(BYTE forced) {
 		}
 	}
 
-	// filtro e aggiornamento texture
+	// se il frameskip me lo permette (o se forzato), disegno lo screen
 	if (forced || !ppu.skip_draw) {
 		// disegno a video
 		gui_screen_update();
 	}
 }
 void gfx_quit(void) {
-	pause_quit();
-	tv_noise_quit();
-
-	ntsc_quit();
-	text_quit();
-
 	if (gfx.palette) {
 		free(gfx.palette);
 		gfx.palette = NULL;
 	}
 
-	d3d9_quit();
-}
+	pause_quit();
+	tv_noise_quit();
 
-void gfx_control_changed_adapter(void *monitor) {
-	_d3d9_adapter *old_adapter = d3d9.adapter;
-	HMONITOR *in_use = monitor;
-	int i;
-
-	if ((*in_use) == IDirect3D9_GetAdapterMonitor(d3d9.d3d, d3d9.adapter->id)) {
-		return;
-	}
-
-	for (i = 0; i < d3d9.adapters_in_use; i++) {
-		_d3d9_adapter *adapter = D3D9_ADAPTER(i);
-
-		if ((*in_use) == IDirect3D9_GetAdapterMonitor(d3d9.d3d, adapter->id)) {
-			d3d9.adapter = adapter;
-			if (d3d9_context_create() == EXIT_OK) {
-				return;
-			}
-			fprintf(stderr, "D3D9 : Unable to initialize new d3d context\n");
-
-			d3d9.adapter = old_adapter;
-			if (d3d9_context_create() == EXIT_OK) {
-				return;
-			}
-			fprintf(stderr, "D3D9 : Unable to initialize old d3d context\n");
-			break;
-		}
-	}
+	opengl_quit();
+	ntsc_quit();
+	text_quit();
 }
 
 uint32_t gfx_color(BYTE a, BYTE r, BYTE g, BYTE b) {
-	return (D3DCOLOR_ARGB(a, r, g, b));
+	return (gui_color(a, r, g, b));
 }
 
 void gfx_cursor_init(void) {
 	gui_cursor_init();
 	gui_cursor_set();
-};
+}
 void gfx_cursor_set(void) {
 	gui_cursor_set();
-};
+}
 
 void gfx_text_create_surface(_txt_element *ele) {
-	ele->surface = malloc((ele->h * ele->w) * (gfx.bit_per_pixel / 8));
+	uint32_t size = (ele->h * ele->w) * sizeof(uint32_t);
+
+	ele->surface = malloc(size);
+	memset(ele->surface, 0x00, size);
+
+	ele->blank = malloc(size);
+	memset(ele->blank, 0x00, size);
 }
 void gfx_text_release_surface(_txt_element *ele) {
 	if (ele->surface) {
 		free(ele->surface);
 		ele->surface = NULL;
 	}
+	if (ele->blank) {
+		free(ele->blank);
+		ele->blank = NULL;
+	}
 }
 void gfx_text_rect_fill(_txt_element *ele, _txt_rect *rect, uint32_t color) {
 	uint32_t *pbits;
-	LONG pitch;
+	uint32_t pitch;
 	int w, h;
 
 	pitch = ele->w;
-	pbits = (uint32_t *) ele->surface;
+	pbits = (uint32_t *)ele->surface;
 	pbits += (rect->y * ele->w) + rect->x;
 
 	for (h = 0; h < rect->h; h++) {
@@ -556,79 +540,36 @@ void gfx_text_rect_fill(_txt_element *ele, _txt_rect *rect, uint32_t color) {
 	}
 }
 void gfx_text_reset(void) {
-	txt_table[TXT_NORMAL] = D3DCOLOR_ARGB(0, 0xFF, 0xFF, 0xFF);
-	txt_table[TXT_RED]    = D3DCOLOR_ARGB(0, 0xFF, 0x4C, 0x3E);
-	txt_table[TXT_YELLOW] = D3DCOLOR_ARGB(0, 0xFF, 0xFF, 0   );
-	txt_table[TXT_GREEN]  = D3DCOLOR_ARGB(0, 0   , 0xFF, 0   );
-	txt_table[TXT_CYAN]   = D3DCOLOR_ARGB(0, 0   , 0xFF, 0xFF);
-	txt_table[TXT_BROWN]  = D3DCOLOR_ARGB(0, 0xEB, 0x89, 0x31);
-	txt_table[TXT_BLUE]   = D3DCOLOR_ARGB(0, 0x2D, 0x8D, 0xBD);
-	txt_table[TXT_GRAY]   = D3DCOLOR_ARGB(0, 0xA0, 0xA0, 0xA0);
-	txt_table[TXT_BLACK]  = D3DCOLOR_ARGB(0, 0   , 0   , 0   );
+	txt_table[TXT_NORMAL] = gfx_color(0, 0xFF, 0xFF, 0xFF);
+	txt_table[TXT_RED]    = gfx_color(0, 0xFF, 0x4C, 0x3E);
+	txt_table[TXT_YELLOW] = gfx_color(0, 0xFF, 0xFF, 0   );
+	txt_table[TXT_GREEN]  = gfx_color(0, 0   , 0xFF, 0   );
+	txt_table[TXT_CYAN]   = gfx_color(0, 0   , 0xFF, 0xFF);
+	txt_table[TXT_BROWN]  = gfx_color(0, 0xEB, 0x89, 0x31);
+	txt_table[TXT_BLUE]   = gfx_color(0, 0x2D, 0x8D, 0xBD);
+	txt_table[TXT_GRAY]   = gfx_color(0, 0xA0, 0xA0, 0xA0);
+	txt_table[TXT_BLACK]  = gfx_color(0, 0   , 0   , 0   );
 }
 void gfx_text_clear(_txt_element *ele) {
-	D3DLOCKED_RECT lock_dst;
-	RECT dst;
-	uint32_t *pbits;
-	int w, h, x, y;
+	int x, y;
 
-	if (!d3d9.text.data) {
+	if (!ele->blank) {
 		return;
 	}
 
 	text_calculate_real_x_y(ele, &x, &y);
 
-	dst.left = x;
-	dst.top = y;
-	dst.right = x + ele->w;
-	dst.bottom = y + ele->h;
-
-	if (IDirect3DSurface9_LockRect(d3d9.text.offscreen, &lock_dst, &dst, D3DLOCK_DISCARD) != D3D_OK) {
-		printf("D3D9 : LockRect text surface error\n");
-		return;
-	}
-
-	pbits = (uint32_t *) lock_dst.pBits;
-
-	for (h = 0; h < ele->h; h++) {
-		for (w = 0; w < ele->w; w++) {
-			(*(pbits + w)) = 0;
-		}
-		pbits += lock_dst.Pitch / (gfx.bit_per_pixel / 8);
-	}
-
-	IDirect3DSurface9_UnlockRect(d3d9.text.offscreen);
+	glBindTexture(GL_TEXTURE_2D, opengl.text.id);
+	glPixelStorei(GL_UNPACK_ROW_LENGTH, ele->w);
+	glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, ele->w, ele->h, TI_FRM, TI_TYPE, ele->blank);
+	glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
 }
 void gfx_text_blit(_txt_element *ele, _txt_rect *rect) {
-	D3DLOCKED_RECT lock_dst;
-	RECT dst;
-	LONG pitch;
-	unsigned char *psrc, *pdst;
-	int h;
-
 	if (!cfg->txt_on_screen) {
 		return;
 	}
-
-	dst.left = rect->x;
-	dst.top = rect->y;
-	dst.right = rect->x + rect->w;
-	dst.bottom = rect->y + rect->h;
-
-	if (IDirect3DSurface9_LockRect(d3d9.text.offscreen, &lock_dst, &dst, D3DLOCK_DISCARD) != D3D_OK) {
-		printf("D3D9 : LockRect text surface error\n");
-		return;
-	}
-
-	pitch = rect->w * (gfx.bit_per_pixel / 8);
-	psrc = (unsigned char *) ele->surface;
-	pdst = (unsigned char *) lock_dst.pBits;
-
-	for (h = 0; h < rect->h; h++) {
-		memcpy(pdst, psrc, pitch);
-		psrc += pitch;
-		pdst += lock_dst.Pitch;
-	}
-
-	IDirect3DSurface9_UnlockRect(d3d9.text.offscreen);
+	glBindTexture(GL_TEXTURE_2D, opengl.text.id);
+	glPixelStorei(GL_UNPACK_ROW_LENGTH, rect->w);
+	glTexSubImage2D(GL_TEXTURE_2D, 0, rect->x, rect->y, rect->w, rect->h, TI_FRM, TI_TYPE, ele->surface);
+	glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
 }
