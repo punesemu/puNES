@@ -707,7 +707,9 @@ void wdgSettingsInput::s_controller_mode(int index) {
 	update_widget();
 }
 void wdgSettingsInput::s_expansion_port(int index) {
-	cfg->input.expansion = index;
+	int type = comboBox_exp->itemData(index).toInt();
+
+	cfg->input.expansion = type;
 	controller_ports_init();
 	update_widget();
 }
