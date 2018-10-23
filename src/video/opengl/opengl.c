@@ -414,6 +414,10 @@ void opengl_draw_scene(void) {
 	GLuint w = opengl.surface.w, h = opengl.surface.h;
 	GLuint i;
 
+	if (gui.start == FALSE) {
+		return;
+	}
+
 	// applico l'effetto desiderato
 	gfx.filter.func(gfx.palette_to_draw,
 		opengl.surface.pitch,

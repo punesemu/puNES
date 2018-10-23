@@ -29,7 +29,5 @@ wdgD3D9::wdgD3D9(QWidget *parent) : QWidget(parent) {
 wdgD3D9::~wdgD3D9() {}
 
 void wdgD3D9::paintEvent(QPaintEvent *event) {
-	if (gfx.palette_to_draw) {
-		d3d9_draw_scene();
-	}
+	d3d9_draw_scene();
 }

@@ -605,9 +605,9 @@ void wdgSettingsVideo::s_sfilters(int index) {
 	}
 
 	gfx_set_screen(NO_CHANGE, filter, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
-	//if (cfg->filter == NTSC_FILTER) {
-	//	ntsc_set(NULL, cfg->ntsc_format, 0, 0, (BYTE *) palette_RGB, 0);
-	//}
+	if (cfg->filter == NTSC_FILTER) {
+		ntsc_set(NULL, cfg->ntsc_format, 0, 0, (BYTE *) palette_RGB, 0);
+	}
 }
 void wdgSettingsVideo::s_shaders(int index) {
 	int shader = index;

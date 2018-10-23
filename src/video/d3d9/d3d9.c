@@ -424,6 +424,10 @@ void d3d9_draw_scene(void) {
 	LPDIRECT3DSURFACE9 back_buffer;
 	UINT i;
 
+	if (gui.start == FALSE) {
+		return;
+	}
+
 	// screen
 	{
 		D3DLOCKED_RECT lrect;

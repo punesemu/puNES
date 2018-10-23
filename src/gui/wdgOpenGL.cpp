@@ -40,9 +40,7 @@ wdgOpenGL::wdgOpenGL(QWidget *parent, int vsync) : QOpenGLWidget(parent) {
 wdgOpenGL::~wdgOpenGL() {}
 
 void wdgOpenGL::paintGL(void) {
-	if (gfx.palette_to_draw) {
-		opengl_draw_scene();
-	}
+	opengl_draw_scene();
 }
 
 void wdgOpenGL::show(void) {
