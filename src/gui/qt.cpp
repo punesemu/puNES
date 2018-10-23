@@ -50,6 +50,7 @@ Q_IMPORT_PLUGIN(QSvgPlugin)
 #endif
 #include "mainWindow.hpp"
 #include "objCheat.hpp"
+#include "objEmuFrame.hpp"
 #include "dlgSettings.hpp"
 #include "dlgUncomp.hpp"
 #include "dlgVsSystem.hpp"
@@ -83,7 +84,7 @@ static struct _qt {
 	dlgAPUChannels *apuch;
 	dlgPPUHacks *ppuhacks;
 
-	// QObject che non mandano un pause quando in background;
+	// QObject che non mandano un pause quando in background
 	QList<QWidget *> no_bck_pause;
 } qt;
 
@@ -156,25 +157,12 @@ BYTE gui_create(void) {
 	return (EXIT_OK);
 }
 void gui_start(void) {
-	qt.mwin->tloop->start();
-
 	gui.start = TRUE;
 
-	// questi settaggi prima li facevo nell'emu_loop prima di avviare
-	// il loop.
-	{
-		// ho notato che (sotto windows, per linux ho visto
-		// un lieve peggioramento) settandol'affinity di questo
-		// thread su un singolo core,le prestazioni migliorano
-		// notevolmente. In questo caso setto l'uso del core 0.
-		//#if defined (__WIN32__)
-		//	guiSetThreadAffinity(0);
-		//#endif
+	fps.second_start = gui_get_ms();
+	fps.next_frame = gui_get_ms() + machine.ms_frame;
 
-		fps.second_start = gui_get_ms();
-		fps.next_frame = gui_get_ms() + machine.ms_frame;
-	}
-
+	qt.mwin->thref.thr->start();
 	qApp->exec();
 }
 
@@ -340,6 +328,22 @@ void gui_mainwindow_make_reset(int type) {
 	qt.mwin->make_reset(type);
 }
 
+void gui_ef_lock(void) {
+	qt.mwin->thref.mutex.lock();
+}
+void gui_ef_unlock(void) {
+	qt.mwin->thref.mutex.unlock();
+}
+void gui_ef_emit_gg_reset(void) {
+	emit qt.mwin->thref.obj->gg_reset();
+}
+void gui_ef_emit_vs_reset(void) {
+	emit qt.mwin->thref.obj->vs_reset();
+}
+void gui_ef_emit_external_control_windows_show(void) {
+	emit qt.mwin->thref.obj->external_control_windows_show();
+}
+
 void gui_screen_update(void) {
 #if defined (WITH_OPENGL)
 	qt.screen->wogl.actual->update();
@@ -446,7 +450,7 @@ BYTE gui_load_lut(void *l, const uTCHAR *path) {
 }
 void gui_save_screenshot(int w, int h, char *buffer, BYTE flip) {
 	QString basename = QString(uQString(info.base_folder)) + QString(SCRSHT_FOLDER) + "/"
-			+ QFileInfo(uQString(info.rom.file)).completeBaseName();
+		+ QFileInfo(uQString(info.rom.file)).completeBaseName();
 	QImage screenshot = QImage((uchar *)buffer, w, h, QImage::Format_RGB32);
 	QFile file;
 	uint count;

@@ -23,12 +23,15 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QShortcut>
 #include <QtCore/QObject>
+#include <QtCore/QThread>
+#include <QtCore/QMutex>
 #include <QtCore/QTimer>
 #include <QtCore/QTranslator>
 #include <QtCore/QPoint>
 #include "settings.h"
 #include "jstick.h"
 #include "application.hh"
+#include "objEmuFrame.hpp"
 #include "wdgScreen.hpp"
 #include "wdgStatusBar.hpp"
 
@@ -52,17 +55,21 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 			QAction *audio_enable;
 			QAction *save_settings;
 		} qaction_shcut;
-
-	public:
-		QTimer *tloop;
-		wdgScreen *screen;
-		wdgStatusBar *statusbar;
+		struct _thread_emu_frame {
+			QMutex mutex;
+			QThread *thr;
+			objEmuFrame *obj;
+		} thref;
 		struct _shcjoy {
 			bool enabled;
 			QTimer *timer;
 			_js_sch sch;
 			DBWORD shortcut[SET_MAX_NUM_SC];
 		} shcjoy;
+
+	public:
+		wdgScreen *screen;
+		wdgStatusBar *statusbar;
 
 	private:
 		QShortcut *shortcut[SET_MAX_NUM_SC];
@@ -149,7 +156,6 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void s_help(void);
 
 	private slots:
-		void s_loop(void);
 		void s_fullscreen(bool state);
 		void s_shcjoy_read_timer(void);
 
@@ -160,6 +166,11 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void s_shcut_stretch_in_fullscreen(void);
 		void s_shcut_audio_enable(void);
 		void s_shcut_save_settings(void);
+
+	private slots:
+		void s_ef_gg_reset(void);
+		void s_ef_vs_reset(void);
+		void s_ef_external_control_windows_show(void);
 };
 
 #endif /* MAINWINDOW_HPP_ */

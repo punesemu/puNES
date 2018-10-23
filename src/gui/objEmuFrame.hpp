@@ -16,20 +16,26 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include "wdgD3D9.hpp"
-#include "gfx.h"
+#ifndef OBJEMUFRAME_HPP_
+#define OBJEMUFRAME_HPP_
 
-extern "C" void d3d9_draw_scene(void);
+#include <QtCore/QObject>
 
-wdgD3D9::wdgD3D9(QWidget *parent) : QWidget(parent) {
-	setAttribute(Qt::WA_PaintOnScreen);
-	setAttribute(Qt::WA_NoSystemBackground);
-	setAttribute(Qt::WA_OpaquePaintEvent);
-}
-wdgD3D9::~wdgD3D9() {}
+class objEmuFrame : public QObject {
+	Q_OBJECT
 
-void wdgD3D9::paintEvent(QPaintEvent *event) {
-	if (gfx.palette_to_draw) {
-		d3d9_draw_scene();
-	}
-}
+	public:
+		objEmuFrame();
+		~objEmuFrame();
+	
+	public slots:
+		void loop(void);
+
+	 signals:
+		void finished(void);
+		void gg_reset(void);
+		void vs_reset(void);
+		void external_control_windows_show(void);
+};
+
+#endif /* OBJEMUFRAME_HPP_ */

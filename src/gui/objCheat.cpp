@@ -87,17 +87,17 @@ void objCheat::apply_cheats(void) {
 
 		if (cheat["genie"] != "-") {
 			if ((cheat["enabled"].toInt() == 1) && (cheats_list.rom.counter <= CL_CHEATS)
-					&& (decode_gg(cheat["genie"], rom) == EXIT_OK)) {
+				&& (decode_gg(cheat["genie"], rom) == EXIT_OK)) {
 				cheats_list.rom.counter++;
 			}
 		} else if (cheat["rocky"] != "-") {
 			if ((cheat["enabled"].toInt() == 1) && (cheats_list.rom.counter <= CL_CHEATS)
-					&& (decode_rocky(cheat["rocky"], rom) == EXIT_OK)) {
+				&& (decode_rocky(cheat["rocky"], rom) == EXIT_OK)) {
 				cheats_list.rom.counter++;
 			}
 		} else {
 			if ((cheat["enabled"].toInt() == 1) && (cheats_list.ram.counter <= CL_CHEATS)
-					&& (decode_ram(cheat, ram) == EXIT_OK)) {
+				&& (decode_ram(cheat, ram) == EXIT_OK)) {
 				cheats_list.ram.counter++;
 			}
 		}
@@ -120,21 +120,21 @@ bool objCheat::is_equal(int index, chl_map *find, bool description) {
 
 	if (description == true) {
 		if ((src["genie"] == (*find)["genie"]) &&
-				(src["rocky"] == (*find)["rocky"]) &&
-				(src["address"] == (*find)["address"]) &&
-				(src["value"] == (*find)["value"]) &&
-				(src["compare"] == (*find)["compare"]) &&
-				(src["description"] == (*find)["description"]) &&
-				(src["enabled_compare"] == (*find)["enabled_compare"])) {
+			(src["rocky"] == (*find)["rocky"]) &&
+			(src["address"] == (*find)["address"]) &&
+			(src["value"] == (*find)["value"]) &&
+			(src["compare"] == (*find)["compare"]) &&
+			(src["description"] == (*find)["description"]) &&
+			(src["enabled_compare"] == (*find)["enabled_compare"])) {
 			return (true);
 		}
 	} else {
 		if ((src["genie"] == (*find)["genie"]) &&
-				(src["rocky"] == (*find)["rocky"]) &&
-				(src["address"] == (*find)["address"]) &&
-				(src["value"] == (*find)["value"]) &&
-				(src["compare"] == (*find)["compare"]) &&
-				(src["enabled_compare"] == (*find)["enabled_compare"])) {
+			(src["rocky"] == (*find)["rocky"]) &&
+			(src["address"] == (*find)["address"]) &&
+			(src["value"] == (*find)["value"]) &&
+			(src["compare"] == (*find)["compare"]) &&
+			(src["enabled_compare"] == (*find)["enabled_compare"])) {
 			return (true);
 		}
 	}
@@ -178,7 +178,7 @@ void objCheat::import_XML(QString file_XML) {
 		}
 		if (xmlReader.hasError()) {
 			QMessageBox::critical(0, tr("Error on reading the file"), xmlReader.errorString(),
-			        QMessageBox::Ok);
+				QMessageBox::Ok);
 		}
 		xmlReader.clear();
 
@@ -208,7 +208,7 @@ void objCheat::import_CHT(QString file_CHT) {
 				}
 
 				if ((splitted.at(0).length() > index)
-						&& (splitted.at(0).at(index) == QLatin1Char('C'))) {
+					&& (splitted.at(0).at(index) == QLatin1Char('C'))) {
 					cheat.insert("enabled_compare", "1");
 					index++;
 				} else {
@@ -369,13 +369,13 @@ void objCheat::complete_ram(chl_map *cheat) {
 }
 void objCheat::complete_from_code(chl_map *cheat, _cheat *ch) {
 	cheat->insert("address", QString("0x" + QString("%1").arg(ch->address, 4, 16,
-			QChar('0')).toUpper()));
+		QChar('0')).toUpper()));
 	cheat->insert("value", QString( "0x" + QString("%1").arg(ch->replace, 2, 16,
-			QChar('0')).toUpper()));
+		QChar('0')).toUpper()));
 	cheat->insert("enabled_compare", QString("%1").arg(ch->enabled_compare));
 	if (ch->enabled_compare) {
 		cheat->insert("compare", QString("0x" + QString("%1").arg(ch->compare, 2, 16,
-				QChar('0')).toUpper()));
+			QChar('0')).toUpper()));
 	} else {
 		cheat->insert("compare", "-");
 	}
@@ -448,24 +448,24 @@ bool objCheat::decode_gg(QString code, _cheat *cheat) {
 	}
 
 	cheat->address = 0x8000	|
-			((codes[4] & 0x01)       | (codes[4] & 0x02)       | (codes[4] & 0x04)       |
-			 (codes[3] & 0x08)       | (codes[2] & 0x01) << 4  | (codes[2] & 0x02) << 4  |
-			 (codes[2] & 0x04) << 4  | (codes[1] & 0x08) << 4  | (codes[5] & 0x01) << 8  |
-			 (codes[5] & 0x02) << 8  | (codes[5] & 0x04) << 8  | (codes[4] & 0x08) << 8  |
-			 (codes[3] & 0x01) << 12 | (codes[3] & 0x02) << 12 | (codes[3] & 0x04) << 12);
+		((codes[4] & 0x01)       | (codes[4] & 0x02)       | (codes[4] & 0x04)       |
+		 (codes[3] & 0x08)       | (codes[2] & 0x01) << 4  | (codes[2] & 0x02) << 4  |
+		 (codes[2] & 0x04) << 4  | (codes[1] & 0x08) << 4  | (codes[5] & 0x01) << 8  |
+		 (codes[5] & 0x02) << 8  | (codes[5] & 0x04) << 8  | (codes[4] & 0x08) << 8  |
+		 (codes[3] & 0x01) << 12 | (codes[3] & 0x02) << 12 | (codes[3] & 0x04) << 12);
 
 	cheat->replace = (
-			(codes[0] & 0x01)      | (codes[0] & 0x02)      | (codes[0] & 0x04)      |
-			(codes[1] & 0x01) << 4 | (codes[1] & 0x02) << 4 | (codes[1] & 0x04) << 4 |
-			(codes[0] & 0x08) << 4);
+		(codes[0] & 0x01)      | (codes[0] & 0x02)      | (codes[0] & 0x04)      |
+		(codes[1] & 0x01) << 4 | (codes[1] & 0x02) << 4 | (codes[1] & 0x04) << 4 |
+		(codes[0] & 0x08) << 4);
 
 	if (length == 8) {
 		cheat->enabled_compare = TRUE;
 		cheat->replace |= codes[7] & 0x08;
 		cheat->compare = (
-				(codes[6] & 0x01)      | (codes[6] & 0x02)      | (codes[6] & 0x04)      |
-				(codes[5] & 0x08)      | (codes[7] & 0x01) << 4 | (codes[7] & 0x02) << 4 |
-				(codes[7] & 0x04) << 4 | (codes[6] & 0x08) << 4);
+			(codes[6] & 0x01)      | (codes[6] & 0x02)      | (codes[6] & 0x04)      |
+			(codes[5] & 0x08)      | (codes[7] & 0x01) << 4 | (codes[7] & 0x02) << 4 |
+			(codes[7] & 0x04) << 4 | (codes[6] & 0x08) << 4);
 	} else {
 		cheat->enabled_compare = FALSE;
 		cheat->replace |= codes[5] & 0x08;
@@ -543,14 +543,14 @@ QString objCheat::encode_gg(_cheat *cheat) {
 
 	int i = (cheat->enabled_compare ? 8 : 6);
 	const int codes[8] = {
-			(cheat->replace       & 0x07) | (cheat->replace >> 4 & 0x08),
-			(cheat->replace >> 4  & 0x07) | (cheat->address >> 4 & 0x08),
-			(cheat->address >> 4  & 0x07) | (cheat->enabled_compare ? 0x08 : 0x00),
-			(cheat->address >> 12 & 0x07) | (cheat->address      & 0x08),
-			(cheat->address       & 0x07) | (cheat->address >> 8 & 0x08),
-			(cheat->address >> 8  & 0x07) | ((cheat->enabled_compare ? cheat->compare : cheat->replace) & 0x08),
-			(cheat->enabled_compare ? ((cheat->compare & 0x07)      | (cheat->compare >> 4 & 0x08)) : 0),
-			(cheat->enabled_compare ? ((cheat->compare >> 4 & 0x07) | (cheat->replace      & 0x08)) : 0)
+		(cheat->replace       & 0x07) | (cheat->replace >> 4 & 0x08),
+		(cheat->replace >> 4  & 0x07) | (cheat->address >> 4 & 0x08),
+		(cheat->address >> 4  & 0x07) | (cheat->enabled_compare ? 0x08 : 0x00),
+		(cheat->address >> 12 & 0x07) | (cheat->address      & 0x08),
+		(cheat->address       & 0x07) | (cheat->address >> 8 & 0x08),
+		(cheat->address >> 8  & 0x07) | ((cheat->enabled_compare ? cheat->compare : cheat->replace) & 0x08),
+		(cheat->enabled_compare ? ((cheat->compare & 0x07)      | (cheat->compare >> 4 & 0x08)) : 0),
+		(cheat->enabled_compare ? ((cheat->compare >> 4 & 0x07) | (cheat->replace      & 0x08)) : 0)
 	};
 
 	for (int a = 0; a < i; a++) {

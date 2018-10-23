@@ -130,6 +130,12 @@ EXTERNC void gui_control_visible_cursor(void);
 EXTERNC void *gui_mainwindow_get_ptr(void);
 EXTERNC void gui_mainwindow_make_reset(int type);
 
+EXTERNC void gui_ef_lock(void);
+EXTERNC void gui_ef_unlock(void);
+EXTERNC void gui_ef_emit_gg_reset(void);
+EXTERNC void gui_ef_emit_vs_reset(void);
+EXTERNC void gui_ef_emit_external_control_windows_show(void);
+
 EXTERNC void gui_screen_update(void);
 
 EXTERNC void *gui_dlgsettings_get_ptr(void);

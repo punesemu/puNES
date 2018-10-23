@@ -36,7 +36,6 @@
 #include "timeline.h"
 #include "c++/l7zip/l7z.h"
 #include "gui.h"
-#include "emu_thread.h"
 
 enum state_incdec_enum { INC, DEC };
 enum state_save_enum { SAVE, LOAD };
@@ -52,9 +51,6 @@ mainWindow::mainWindow() : QMainWindow() {
 	translator = new QTranslator();
 	qtTranslator = new QTranslator();
 	shcjoy.timer = new QTimer(this);
-
-	tloop = new QTimer(this);
-	tloop->setInterval(20);
 
 	setWindowIcon(QIcon(":icon/icons/application.png"));
 	setWindowFlags(windowFlags() & ~Qt::WindowMaximizeButtonHint);
@@ -111,8 +107,22 @@ mainWindow::mainWindow() : QMainWindow() {
 	}
 
 	connect(this, SIGNAL(fullscreen(bool)), this, SLOT(s_fullscreen(bool)));
-	connect(tloop, SIGNAL(timeout()), this, SLOT(s_loop()));
 	connect(shcjoy.timer, SIGNAL(timeout()), this, SLOT(s_shcjoy_read_timer()));
+
+	// creo il thread per la gestione dell'emu_frame().
+	{
+		thref.thr = new QThread(this);
+
+		thref.obj = new objEmuFrame();
+		thref.obj->moveToThread(thref.thr);
+
+		connect(thref.thr, SIGNAL(started()), thref.obj, SLOT(loop()));
+		connect(thref.obj, SIGNAL(finished()), thref.thr, SLOT(quit()));
+		connect(thref.obj, SIGNAL(finished()), thref.obj, SLOT(deleteLater()));
+		connect(thref.thr, SIGNAL(finished()), thref.thr, SLOT(deleteLater()));
+		connect(thref.obj, SIGNAL(gg_reset()), this, SLOT(s_ef_gg_reset()));
+		connect(thref.obj, SIGNAL(vs_reset()), this, SLOT(s_ef_vs_reset()));
+	}
 
 	shcjoy_start();
 
@@ -197,7 +207,6 @@ void mainWindow::closeEvent(QCloseEvent *event) {
 	info.stop = TRUE;
 
 	shcjoy_stop();
-	tloop->stop();
 
 	// in linux non posso spostare tramite le qt una finestra da un monitor
 	// ad un'altro, quindi salvo la posizione solo se sono sul monitor 0;
@@ -311,7 +320,7 @@ void mainWindow::control_visible_cursor(void) {
 	}
 }
 void mainWindow::make_reset(int type) {
-	emu_thread_lock();
+	thref.mutex.lock();
 
 	if (type == HARD) {
 		if ((cfg->cheat_mode == GAMEGENIE_MODE) && gamegenie.rom_present) {
@@ -328,11 +337,11 @@ void mainWindow::make_reset(int type) {
 	}
 
 	if (emu_reset(type)) {
-		emu_thread_unlock();
+		thref.mutex.unlock();
 		s_quit();
 	}
 
-	emu_thread_unlock();
+	thref.mutex.unlock();
 
 	// dopo un reset la pause e' automaticamente disabilitata quindi faccio
 	// un aggiornamento del submenu NES per avere la voce correttamente settata.
@@ -1216,20 +1225,6 @@ void mainWindow::s_help(void) {
 	emu_pause(FALSE);
 }
 
-void mainWindow::s_loop(void) {
-	if ((cfg->cheat_mode == GAMEGENIE_MODE) && (gamegenie.phase == GG_LOAD_ROM)) {
-		make_reset(CHANGE_ROM);
-		gamegenie.phase = GG_FINISH;
-	}
-
-	if (vs_system.enabled & vs_system.watchdog.reset) {
-		vs_system.watchdog.reset = FALSE;
-		make_reset(RESET);
-	}
-
-	gui_control_visible_cursor();
-	gui_ppu_hacks_widgets_update();
-}
 void mainWindow::s_fullscreen(bool state) {
 	if (state == true) {
 		showFullScreen();
@@ -1372,4 +1367,16 @@ void mainWindow::s_shcut_audio_enable(void) {
 }
 void mainWindow::s_shcut_save_settings(void) {
 	dlgsettings->pushButton_Save_Settings->click();
+}
+
+void mainWindow::s_ef_gg_reset(void) {
+	make_reset(CHANGE_ROM);
+	gamegenie.phase = GG_FINISH;
+}
+void mainWindow::s_ef_vs_reset(void) {
+	vs_system.watchdog.reset = FALSE;
+	make_reset(RESET);
+}
+void mainWindow::s_ef_external_control_windows_show(void) {
+	gui_external_control_windows_show();
 }

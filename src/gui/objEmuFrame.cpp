@@ -16,36 +16,16 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef EMU_THREAD_H_
-#define EMU_THREAD_H_
+#include "objEmuFrame.moc"
+#include "emu.h"
+#include "info.h"
 
-#if defined (__unix__)
-#include <pthread.h>
-#endif
-#include "common.h"
+objEmuFrame::objEmuFrame() {}
+objEmuFrame::~objEmuFrame() {}
 
-#if defined (__unix__)
-#define THTYPE pthread_t
-#define THFUNCT void *
-#define LCKTYPE pthread_mutex_t
-#elif defined (__WIN32__)
-#define THFUNCT DWORD WINAPI
-#define THTYPE HANDLE
-#define LCKTYPE HANDLE
-#endif
-
-#if defined (__cplusplus)
-#define EXTERNC extern "C"
-#else
-#define EXTERNC
-#endif
-
-EXTERNC void emu_thread_init(void);
-EXTERNC void emu_thread_quit(void);
-EXTERNC void emu_thread_lock(void);
-EXTERNC void emu_thread_unlock(void);
-
-#undef EXTERNC
-
-#endif /* EMU_THREAD_H_ */
-
+void objEmuFrame::loop(void) {
+	while (info.stop == FALSE) {
+		emu_frame();
+	}
+	emit finished();
+}

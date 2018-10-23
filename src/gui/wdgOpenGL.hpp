@@ -27,7 +27,6 @@
 #include <QtWidgets/QOpenGLWidget>
 
 class wdgOpenGL : public QOpenGLWidget {
-
 	public:
 		wdgOpenGL(QWidget *parent, int vsync);
 		~wdgOpenGL();

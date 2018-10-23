@@ -17,6 +17,8 @@ mainWindow.moc: mainWindow.hpp
 	$(MOC) $(srcdir)/mainWindow.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 objCheat.moc: objCheat.hpp
 	$(MOC) $(srcdir)/objCheat.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
+objEmuFrame.moc: objEmuFrame.hpp
+	$(MOC) $(srcdir)/objEmuFrame.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 objSettings.moc: objSettings.hpp
 	$(MOC) $(srcdir)/objSettings.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 wdgAPUChannels.moc: wdgAPUChannels.hpp
@@ -83,6 +85,7 @@ BUILT_SOURCES = \
 	dlgVsSystem.moc \
 	mainWindow.moc \
 	objCheat.moc \
+	objEmuFrame.moc \
 	objSettings.moc \
 	wdgAPUChannels.moc \
 	wdgCheatsEditor.moc \
@@ -138,6 +141,8 @@ libgui_a_SOURCES = \
 	mainWindow.hpp \
 	objCheat.cpp \
 	objCheat.hpp \
+	objEmuFrame.cpp \
+	objEmuFrame.hpp \
 	objSettings.cpp \
 	objSettings.hpp \
 	qt.cpp \

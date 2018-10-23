@@ -25,7 +25,6 @@
 #include <libgen.h>
 #include "main.h"
 #include "emu.h"
-#include "emu_thread.h"
 #include "rom_mem.h"
 #include "info.h"
 #include "settings.h"
@@ -78,7 +77,9 @@ BYTE emu_frame(void) {
 		return (EXIT_OK);
 	}
 
-	emu_thread_lock();
+	gui_ef_lock();
+
+	gui_control_visible_cursor();
 
 	tas.lag_frame = TRUE;
 
@@ -97,7 +98,7 @@ BYTE emu_frame(void) {
 			nsf_main_screen_event();
 			nsf_effect();
 
-			emu_thread_unlock();
+			gui_ef_unlock();
 
 			gfx_draw_screen(TRUE);
 
@@ -133,8 +134,13 @@ BYTE emu_frame(void) {
 			cpu_exe_op();
 		}
 
+		if ((cfg->cheat_mode == GAMEGENIE_MODE) && (gamegenie.phase == GG_LOAD_ROM)) {
+			gui_ef_emit_gg_reset();
+		}
+
 		if (tas.lag_frame) {
 			tas.total_lag_frames++;
+			gui_ppu_hacks_widgets_update();
 		}
 
 		if (snd_end_frame) {
@@ -151,9 +157,13 @@ BYTE emu_frame(void) {
 			map_prg_ram_battery_save();
 		}
 
+		if (vs_system.enabled & vs_system.watchdog.reset) {
+			gui_ef_emit_vs_reset();
+		}
+
 		r4011.frames++;
 
-		emu_thread_unlock();
+		gui_ef_unlock();
 
 #if defined (DEBUG)
 		gfx_draw_screen(TRUE);
@@ -161,7 +171,7 @@ BYTE emu_frame(void) {
 		gfx_draw_screen(FALSE);
 #endif
 	} else {
-		emu_thread_unlock();
+		gui_ef_unlock();
 
 		//gfx_draw_screen(TRUE);
 		gfx_draw_screen(FALSE);
@@ -821,11 +831,7 @@ BYTE emu_reset(BYTE type) {
 	memset(&vs_system.coins, 0x00, sizeof(vs_system.coins));
 	vs_system.watchdog.next = vs_system_wd_next();
 
-	// solo il CHANGE_ROM puo' interagire con la gui
-	// perche' viene gestito direttamente dall'event loop delle QT
-	if (info.reset == CHANGE_ROM) {
-		gui_external_control_windows_show();
-	}
+	gui_ef_emit_external_control_windows_show();
 
 	info.bat_ram_frames = 0;
 

@@ -43,7 +43,7 @@ wdgScreen::wdgScreen(QWidget *parent) : QWidget(parent) {
 
 	setAttribute(Qt::WA_PaintOnScreen);
 #endif
-    setAttribute(Qt::WA_NoSystemBackground);
+	setAttribute(Qt::WA_NoSystemBackground);
 	setAttribute(Qt::WA_OpaquePaintEvent);
 
 	setAcceptDrops(true);

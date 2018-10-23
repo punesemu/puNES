@@ -35,7 +35,6 @@
 #include "recent_roms.h"
 #include "uncompress.h"
 #include "patcher.h"
-#include "emu_thread.h"
 
 #if defined (__WIN32__)
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine, int iCmdShow) {
@@ -136,9 +135,7 @@ int main(int argc, char **argv) {
 		return (EXIT_FAILURE);
 	}
 
-	emu_thread_init();
 	gui_start();
-	emu_thread_quit();
 
 	emu_quit();
 
