@@ -1010,8 +1010,7 @@ void mainWindow::s_set_fullscreen(void) {
 			statusbar->setVisible(true);
 		}
 
-		gfx_set_screen(gfx.scale_before_fscreen, NO_CHANGE, NO_CHANGE, NO_FULLSCR, NO_CHANGE, FALSE,
-				FALSE);
+		gfx_set_screen(gfx.scale_before_fscreen, NO_CHANGE, NO_CHANGE, NO_FULLSCR, NO_CHANGE, FALSE, FALSE);
 		move(position);
 
 		gfx.type_of_fscreen_in_use = NO_FULLSCR;
