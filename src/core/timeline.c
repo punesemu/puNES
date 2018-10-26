@@ -134,7 +134,7 @@ void timeline_preview(BYTE snap) {
 	}
 
 	memcpy(screen.data, tl.snaps[snap_preview] + tl.preview, screen_size());
-	gfx_draw_screen(TRUE);
+	gfx_draw_screen();
 }
 void timeline_back(BYTE mode, BYTE snap) {
 	DBWORD diff;

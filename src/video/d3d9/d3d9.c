@@ -20,10 +20,13 @@
  */
 
 #include "d3d9.h"
+#include "info.h"
 #include "gui.h"
 #include "conf.h"
 #include "ppu.h"
 #include "overscan.h"
+#include "video/effects/pause.h"
+#include "video/effects/tv_noise.h"
 
 #define _SCR_ROWS_BRD\
 	((float)  (SCR_ROWS - (overscan.borders->left + overscan.borders->right)) * gfx.pixel_aspect_ratio)
@@ -421,11 +424,32 @@ BYTE d3d9_context_create(void) {
 }
 void d3d9_draw_scene(void) {
 	const _texture_simple *scrtex = &d3d9.screen.tex[d3d9.screen.index];
+	void *palette = (void *)gfx.palette;
 	LPDIRECT3DSURFACE9 back_buffer;
 	UINT i;
 
 	if (gui.start == FALSE) {
 		return;
+	}
+
+	//applico la paletta adeguata.
+	if (cfg->filter == NTSC_FILTER) {
+		palette = NULL;
+	}
+	if (info.no_rom | info.turn_off) {
+		if (cfg->filter == NTSC_FILTER) {
+			palette = turn_off_effect.ntsc;
+		} else {
+			palette = (void *)turn_off_effect.palette;
+		}
+	} else if (info.pause) {
+		if (!cfg->disable_sepia_color) {
+			if (cfg->filter == NTSC_FILTER) {
+				palette = pause_effect.ntsc;
+			} else {
+				palette = pause_effect.palette;
+			}
+		}
 	}
 
 	// screen
@@ -435,7 +459,7 @@ void d3d9_draw_scene(void) {
 		// lock della surface in memoria
 		IDirect3DSurface9_LockRect(scrtex->offscreen, &lrect, NULL, D3DLOCK_DISCARD);
 		// applico l'effetto
-		gfx.filter.func(gfx.palette_to_draw,
+		gfx.filter.func(palette,
 			lrect.Pitch,
 			lrect.pBits,
 			scrtex->rect.base.w,

@@ -120,7 +120,6 @@ EXTERNC struct _gfx {
 	_viewport vp;
 
 	uint32_t *palette;
-	void *palette_to_draw;
 
 	struct _gfx_filter {
 		gfx_filter_function((*func));
@@ -134,7 +133,7 @@ EXTERNC struct _gfx {
 EXTERNC BYTE gfx_init(void);
 EXTERNC void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, BYTE palette,
 	BYTE force_scale, BYTE force_palette);
-EXTERNC void gfx_draw_screen(BYTE forced);
+EXTERNC void gfx_draw_screen(void);
 EXTERNC void gfx_quit(void);
 
 #if defined (WITH_D3D9)

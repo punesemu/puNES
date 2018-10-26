@@ -100,7 +100,7 @@ BYTE emu_frame(void) {
 
 			gui_ef_unlock();
 
-			gfx_draw_screen(TRUE);
+			gfx_draw_screen();
 
 			fps_frameskip();
 
@@ -165,16 +165,11 @@ BYTE emu_frame(void) {
 
 		gui_ef_unlock();
 
-#if defined (DEBUG)
-		gfx_draw_screen(TRUE);
-#else
-		gfx_draw_screen(FALSE);
-#endif
+		gfx_draw_screen();
 	} else {
 		gui_ef_unlock();
 
-		//gfx_draw_screen(TRUE);
-		gfx_draw_screen(FALSE);
+		gfx_draw_screen();
 	}
 
 	// gestione frameskip e calcolo fps

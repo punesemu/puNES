@@ -176,19 +176,19 @@ void save_slot_preview(BYTE slot) {
 
 	if (!save_slot.state[slot]) {
 		memcpy(screen.data, tl.snaps[TL_SNAP_FREE] + tl.preview, screen_size());
-		gfx_draw_screen(TRUE);
+		gfx_draw_screen();
 		return;
 	}
 
 	if ((file = name_slot_file(slot)) == NULL) {
 		memcpy(screen.data, tl.snaps[TL_SNAP_FREE] + tl.preview, screen_size());
-		gfx_draw_screen(TRUE);
+		gfx_draw_screen();
 		return;
 	}
 
 	if ((fp = ufopen(file, uL("rb"))) == NULL) {
 		memcpy(screen.data, tl.snaps[TL_SNAP_FREE] + tl.preview, screen_size());
-		gfx_draw_screen(TRUE);
+		gfx_draw_screen();
 		fprintf(stderr, "error on load preview\n");
 		return;
 	}
@@ -206,7 +206,7 @@ void save_slot_preview(BYTE slot) {
 	}
 
 	fclose(fp);
-	gfx_draw_screen(TRUE);
+	gfx_draw_screen();
 }
 void save_slot_count_load(void) {
 	uTCHAR *file;

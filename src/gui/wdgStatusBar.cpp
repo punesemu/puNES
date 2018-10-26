@@ -452,7 +452,7 @@ void timeLine::s_action_triggered(int action) {
 
 			if (value == (tl.snaps_fill - 1)) {
 				memcpy(screen.data, tl.snaps[TL_SNAP_FREE] + tl.preview, screen_size());
-				gfx_draw_screen(TRUE);
+				gfx_draw_screen();
 				break;
 			}
 

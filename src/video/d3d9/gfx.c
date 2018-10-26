@@ -428,49 +428,21 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 		info.on_cfg = FALSE;
 	}
 }
-void gfx_draw_screen(BYTE forced) {
-	gfx.palette_to_draw = NULL;
-
-	if (cfg->filter == NTSC_FILTER) {
-		gfx.palette_to_draw = NULL;
-	} else {
-		gfx.palette_to_draw = (void *) gfx.palette;
-	}
-
-	if (!forced) {
-		if (info.no_rom | info.turn_off) {
-			if (cfg->filter == NTSC_FILTER) {
-				gfx.palette_to_draw = turn_off_effect.ntsc;
-			} else {
-				gfx.palette_to_draw = (void *) turn_off_effect.palette;
-			}
-
-			if (++info.pause_frames_drawscreen == 2) {
-				tv_noise_effect();
-				info.pause_frames_drawscreen = 0;
-				forced = TRUE;
-			} else if (text.on_screen) {
-				forced = TRUE;
-			}
-		} else if (info.pause) {
-			if (!cfg->disable_sepia_color) {
-				if (cfg->filter == NTSC_FILTER) {
-					gfx.palette_to_draw = pause_effect.ntsc;
-				} else {
-					gfx.palette_to_draw = pause_effect.palette;
-				}
-			}
-
-			if ((++info.pause_frames_drawscreen == 15) || text.on_screen) {
-				info.pause_frames_drawscreen = 0;
-				forced = TRUE;
-			}
+void gfx_draw_screen(void) {
+	if (info.no_rom | info.turn_off) {
+		if (++info.pause_frames_drawscreen == 2) {
+			info.pause_frames_drawscreen = 0;
+			tv_noise_effect();
+			gui_screen_update();
+		} else if (text.on_screen) {
+			gui_screen_update();
 		}
-	}
-
-	// filtro e aggiornamento texture
-	if (forced || !ppu.skip_draw) {
-		// disegno a video
+	} else if (info.pause) {
+		if ((++info.pause_frames_drawscreen == 15) || text.on_screen) {
+			info.pause_frames_drawscreen = 0;
+			gui_screen_update();
+		}
+	} else {
 		gui_screen_update();
 	}
 }
