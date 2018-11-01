@@ -19,14 +19,13 @@
 #include <QtWidgets/QFileDialog>
 #include "wdgSettingsVideo.moc"
 #include "mainWindow.hpp"
+#include "emu_thread.h"
 #include "conf.h"
 #include "clock.h"
 
 wdgSettingsVideo::wdgSettingsVideo(QWidget *parent) : QWidget(parent) {
 	setupUi(this);
 
-	connect(comboBox_FPS, SIGNAL(activated(int)), this, SLOT(s_fps(int)));
-	connect(comboBox_Frameskip, SIGNAL(activated(int)), this, SLOT(s_frameskip(int)));
 	connect(comboBox_Scale, SIGNAL(activated(int)), this, SLOT(s_scale(int)));
 	connect(comboBox_PAR, SIGNAL(activated(int)), this, SLOT(s_par(int)));
 	connect(checkBox_PAR_Soft_Stretch, SIGNAL(clicked(bool)), this, SLOT(s_par_stretch(bool)));
@@ -84,10 +83,8 @@ void wdgSettingsVideo::changeEvent(QEvent *event) {
 	}
 }
 void wdgSettingsVideo::showEvent(QShowEvent *event) {
-	int dim = label_FPS->size().height() - 10;
+	int dim = label_Scale->size().height() - 10;
 
-	icon_FPS->setPixmap(QIcon(":/icon/icons/fps.svg").pixmap(dim, dim));
-	icon_Frameskip->setPixmap(QIcon(":/icon/icons/frameskip.svg").pixmap(dim, dim));
 	icon_Scale->setPixmap(QIcon(":/icon/icons/scale.svg").pixmap(dim, dim));
 	icon_Oscan_dev_value->setPixmap(QIcon(":/icon/icons/overscan_default.svg").pixmap(dim, dim));
 	icon_Oscan_brd->setPixmap(QIcon(":/icon/icons/overscan_set_borders.svg").pixmap(dim, dim));
@@ -107,8 +104,6 @@ void wdgSettingsVideo::retranslateUi(QWidget *wdgSettingsVideo) {
 	update_widget();
 }
 void wdgSettingsVideo::update_widget(void) {
-	fps_set();
-	frameskip_set();
 	scale_set();
 
 	{
@@ -177,20 +172,6 @@ void wdgSettingsVideo::change_rom(void) {
 	update_widget();
 }
 
-void wdgSettingsVideo::fps_set(void) {
-	comboBox_FPS->setCurrentIndex(cfg->fps);
-}
-void wdgSettingsVideo::frameskip_set(void) {
-	int frameskip = cfg->frameskip;
-
-	if (frameskip == 255) {
-		frameskip = 0;
-	} else {
-		frameskip++;
-	}
-
-	comboBox_Frameskip->setCurrentIndex(frameskip);
-}
 void wdgSettingsVideo::scale_set(void) {
 	comboBox_Scale->setCurrentIndex(cfg->scale - 1);
 }
@@ -407,37 +388,6 @@ void wdgSettingsVideo::palette_set(void) {
 	comboBox_Palette->setCurrentIndex(palette);
 }
 
-void wdgSettingsVideo::s_fps(int index) {
-	int fps = index;
-
-	if (cfg->fps == fps) {
-		return;
-	}
-	cfg->fps = fps;
-	emu_pause(TRUE);
-	fps_init();
-	snd_playback_start();
-	emu_pause(FALSE);
-}
-void wdgSettingsVideo::s_frameskip(int index) {
-	int frameskip;
-
-	if (index == 0) {
-		frameskip = 255;
-	} else {
-		frameskip = index - 1;
-	}
-
-	if (cfg->frameskip == frameskip) {
-		return;
-	}
-
-	cfg->frameskip = frameskip;
-
-	if (fps.fast_forward == FALSE) {
-		fps_normalize();
-	}
-}
 void wdgSettingsVideo::s_scale(int index) {
 	int scale = index + 1;
 
@@ -445,7 +395,9 @@ void wdgSettingsVideo::s_scale(int index) {
 		return;
 	}
 
+	emu_thread_pause();
 	gfx_set_screen(scale, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
+	emu_thread_continue();
 }
 void wdgSettingsVideo::s_par(int index) {
 	int par = index;
@@ -454,14 +406,18 @@ void wdgSettingsVideo::s_par(int index) {
 		return;
 	}
 
+	emu_thread_pause();
 	cfg->pixel_aspect_ratio = par;
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
+	emu_thread_continue();
 
 	update_widget();
 }
 void wdgSettingsVideo::s_par_stretch(bool checked) {
+	emu_thread_pause();
 	cfg->PAR_soft_stretch = !cfg->PAR_soft_stretch;
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
+	emu_thread_continue();
 }
 void wdgSettingsVideo::s_oscan(int index) {
 	int oscan = index;
@@ -478,28 +434,35 @@ void wdgSettingsVideo::s_oscan(int index) {
 			break;
 	}
 
+	emu_thread_pause();
 	cfg->oscan = oscan;
 	settings_pgs_save();
-
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
+	emu_thread_continue();
 }
 void wdgSettingsVideo::s_oscan_def_value(int index) {
 	int def = index;
 
+	emu_thread_pause();
 	cfg->oscan_default = def;
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
+	emu_thread_continue();
 }
 void wdgSettingsVideo::s_oscan_brd_black_w(bool checked) {
+	emu_thread_pause();
 	cfg->oscan_black_borders = !cfg->oscan_black_borders;
 	if (overscan.enabled) {
 		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 	}
+	emu_thread_continue();
 }
 void wdgSettingsVideo::s_oscan_brd_black_f(bool checked) {
+	emu_thread_pause();
 	cfg->oscan_black_borders_fscr = !cfg->oscan_black_borders_fscr;
 	if (overscan.enabled) {
 		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 	}
+	emu_thread_continue();
 }
 void wdgSettingsVideo::s_oscan_brd_mode(int index) {
 	oscan_brd_set();
@@ -520,7 +483,9 @@ void wdgSettingsVideo::s_oscan_spinbox(int i) {
 		borders->right = i;
 	}
 
+	emu_thread_pause();
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
+	emu_thread_continue();
 }
 void wdgSettingsVideo::s_oscan_reset(bool checked) {
 	_overscan_borders *borders;
@@ -529,10 +494,11 @@ void wdgSettingsVideo::s_oscan_reset(bool checked) {
 	mode = comboBox_Oscan_brd_mode->currentIndex();
 	borders = &overscan_borders[mode];
 
+	emu_thread_pause();
 	settings_set_overscan_default(borders, mode + NTSC);
 	oscan_brd_set();
-
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
+	emu_thread_continue();
 }
 void wdgSettingsVideo::s_sfilters(int index) {
 	int filter = index;
@@ -604,10 +570,12 @@ void wdgSettingsVideo::s_sfilters(int index) {
 			break;
 	}
 
+	emu_thread_pause();
 	gfx_set_screen(NO_CHANGE, filter, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 	if (cfg->filter == NTSC_FILTER) {
 		ntsc_set(NULL, cfg->ntsc_format, 0, 0, (BYTE *) palette_RGB, 0);
 	}
+	emu_thread_continue();
 }
 void wdgSettingsVideo::s_shaders(int index) {
 	int shader = index;
@@ -643,15 +611,18 @@ void wdgSettingsVideo::s_shaders(int index) {
 			break;
 	}
 
+	emu_thread_pause();
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, shader, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
+	emu_thread_continue();
 }
 #if defined (WITH_OPENGL)
 void wdgSettingsVideo::s_disable_srgb_fbo(bool checked) {
+	emu_thread_pause();
 	cfg->disable_srgb_fbo = !cfg->disable_srgb_fbo;
-
 	if (info.sRGB_FBO_in_use == TRUE) {
 		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 	}
+	emu_thread_continue();
 }
 #endif
 void wdgSettingsVideo::s_shader_file(bool checked) {
@@ -680,9 +651,10 @@ void wdgSettingsVideo::s_shader_file(bool checked) {
 
 		if (fileinfo.exists()) {
 			umemset(cfg->shader_file, 0x00, usizeof(cfg->shader_file));
-			ustrncpy(cfg->shader_file, uQStringCD(fileinfo.absoluteFilePath()),
-				usizeof(cfg->shader_file) - 1);
+			ustrncpy(cfg->shader_file, uQStringCD(fileinfo.absoluteFilePath()), usizeof(cfg->shader_file) - 1);
+			emu_thread_pause();
 			gfx_set_screen(NO_CHANGE, NO_CHANGE, SHADER_FILE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
+			emu_thread_continue();
 		} else {
 			text_add_line_info(1, "[red]error on shader file");
 		}
@@ -727,7 +699,9 @@ void wdgSettingsVideo::s_palette(int index) {
 			break;
 	}
 
+	emu_thread_pause();
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, palette, FALSE, FALSE);
+	emu_thread_continue();
 }
 void wdgSettingsVideo::s_palette_file(bool checked) {
 	QStringList filters;
@@ -749,9 +723,10 @@ void wdgSettingsVideo::s_palette_file(bool checked) {
 
 		if (fileinfo.exists()) {
 			umemset(cfg->palette_file, 0x00, usizeof(cfg->palette_file));
-			ustrncpy(cfg->palette_file, uQStringCD(fileinfo.absoluteFilePath()),
-				usizeof(cfg->palette_file) - 1);
+			ustrncpy(cfg->palette_file, uQStringCD(fileinfo.absoluteFilePath()), usizeof(cfg->palette_file) - 1);
+			emu_thread_pause();
 			gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, PALETTE_FILE, FALSE, TRUE);
+			emu_thread_continue();
 		} else {
 			text_add_line_info(1, "[red]error on palette file");
 		}
@@ -792,16 +767,22 @@ void wdgSettingsVideo::s_palette_save(bool checked) {
 	emu_pause(FALSE);
 }
 void wdgSettingsVideo::s_disable_emphasis_swap_pal(bool checked) {
+	emu_thread_pause();
 	cfg->disable_swap_emphasis_pal = !cfg->disable_swap_emphasis_pal;
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, TRUE);
+	emu_thread_continue();
 }
 void wdgSettingsVideo::s_vsync(bool checked) {
+	emu_thread_pause();
 	cfg->vsync = !cfg->vsync;
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
+	emu_thread_continue();
 }
 void wdgSettingsVideo::s_interpolation(bool checked) {
+	emu_thread_pause();
 	cfg->interpolation = !cfg->interpolation;
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
+	emu_thread_continue();
 }
 void wdgSettingsVideo::s_text_on_screen(bool checked) {
 	cfg->txt_on_screen = !cfg->txt_on_screen;
@@ -817,7 +798,7 @@ void wdgSettingsVideo::s_input_display(bool checked) {
 
 			if (ele->surface) {
 				text_clear(ele);
-				gfx_text_release_surface (ele);
+				gfx_text_release_surface(ele);
 			}
 		}
 	}
@@ -832,9 +813,11 @@ void wdgSettingsVideo::s_fullscreen_in_window(bool checked) {
 	cfg->fullscreen_in_window = !cfg->fullscreen_in_window;
 }
 void wdgSettingsVideo::s_stretch_in_fullscreen(bool checked) {
+	emu_thread_pause();
 	cfg->stretch = !cfg->stretch;
 
 	if (cfg->fullscreen == FULLSCR) {
 		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 	}
+	emu_thread_continue();
 }

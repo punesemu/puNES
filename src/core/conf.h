@@ -35,8 +35,6 @@ typedef struct _config {
 	double stereo_delay;
 	BYTE audio_buffer_factor;
 	BYTE swap_duty;
-	BYTE fps;
-	BYTE frameskip;
 	BYTE ff_velocity;
 	BYTE hide_sprites;
 	BYTE hide_background;

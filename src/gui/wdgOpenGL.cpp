@@ -16,8 +16,9 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include "wdgOpenGL.hpp"
+#include "wdgOpenGL.moc"
 #include "gfx.h"
+#include "fps.h"
 
 extern "C" void opengl_draw_scene(void);
 
@@ -36,6 +37,12 @@ wdgOpenGL::wdgOpenGL(QWidget *parent, int vsync) : QOpenGLWidget(parent) {
 	fmt.setAlphaBufferSize(8);
 	fmt.setSwapInterval(vsync);
 	setFormat(fmt);
+
+	gfps.count = 0;
+	gfps.frequency = 60;
+	gfps.timer.start();
+
+	connect(this, SIGNAL(frameSwapped()), this, SLOT(s_fps_frame_swapped()));
 }
 wdgOpenGL::~wdgOpenGL() {}
 
@@ -53,4 +60,15 @@ void wdgOpenGL::hide(void) {
 
 unsigned int wdgOpenGL::framebuffer_id(void) {
 	return (defaultFramebufferObject());
+}
+
+void wdgOpenGL::s_fps_frame_swapped(void) {
+	if (++gfps.count > gfps.frequency) {
+		qint64 ms = gfps.timer.elapsed();
+		double sec = ms / 1000.0f;
+
+		fps.gfx = gfps.count / sec;
+		gfps.count = 0;
+		gfps.timer.start();
+	}
 }

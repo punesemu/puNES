@@ -251,8 +251,8 @@ BYTE snd_playback_start(void) {
 		// dimensione in bytes del buffer
 		snd.buffer.size = (psamples * snd.channels * sizeof(*cbd.write)) * 5;
 
-		snd.buffer.limit.low = (snd.buffer.size / 100) * 25;
-		snd.buffer.limit.high = (snd.buffer.size / 100) * 55;
+		snd.buffer.limit.low = (snd.buffer.size / 100) * 15;
+		snd.buffer.limit.high = (snd.buffer.size / 100) * 45;
 
 #if !defined (RELEASE)
 		printf("softw bsize : %-6d - %-6d\n", snd.buffer.size, snd.samples);
@@ -584,12 +584,12 @@ static void STDMETHODCALLTYPE OnBufferEnd(THIS_ void *data) {
 		if (info.snd_info == TRUE)
 		fprintf(stderr, "snd : %6d %6d %6d %6d %d %f %3d %f\r",
 			buffer->PlayLength,
-			fps.total_frames_skipped,
+			fps.frames_skipped,
 			cache->samples_available,
 			cache->bytes_available,
 			snd.out_of_sync,
 			snd.frequency,
-			(int) framerate.value,
+			(int) fps.gfx,
 			machine.ms_frame);
 	}
 #endif

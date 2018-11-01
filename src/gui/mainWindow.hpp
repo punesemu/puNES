@@ -31,7 +31,6 @@
 #include "settings.h"
 #include "jstick.h"
 #include "application.hh"
-#include "objEmuFrame.hpp"
 #include "wdgScreen.hpp"
 #include "wdgStatusBar.hpp"
 
@@ -55,11 +54,6 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 			QAction *audio_enable;
 			QAction *save_settings;
 		} qaction_shcut;
-		struct _thread_emu_frame {
-			QMutex mutex;
-			QThread *thr;
-			objEmuFrame *obj;
-		} thref;
 		struct _shcjoy {
 			bool enabled;
 			QTimer *timer;
@@ -82,6 +76,9 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		~mainWindow();
 
 	signals:
+		void et_gg_reset(void);
+		void et_vs_reset(void);
+		void et_external_control_windows_show(void);
 		void fullscreen(bool state);
 
 	protected:
@@ -168,9 +165,9 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void s_shcut_save_settings(void);
 
 	private slots:
-		void s_ef_gg_reset(void);
-		void s_ef_vs_reset(void);
-		void s_ef_external_control_windows_show(void);
+		void s_et_gg_reset(void);
+		void s_et_vs_reset(void);
+		void s_et_external_control_windows_show(void);
 };
 
 #endif /* MAINWINDOW_HPP_ */

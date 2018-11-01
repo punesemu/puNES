@@ -16,6 +16,8 @@ libcore_a_SOURCES = \
 	draw_on_screen.c \
 	emu.c \
 	emu.h \
+	emu_thread.c \
+	emu_thread.h \
 	external_calls.c \
 	external_calls.h \
 	fds.c \

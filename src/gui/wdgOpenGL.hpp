@@ -25,8 +25,19 @@
 #include <QtWidgets/QWidget>
 #include "gui.h"
 #include <QtWidgets/QOpenGLWidget>
+#include <QtCore/QTimer>
+#include <QtCore/QElapsedTimer>
 
 class wdgOpenGL : public QOpenGLWidget {
+	Q_OBJECT
+
+	private:
+		struct _gui_fps {
+			double count;
+			double frequency;
+			QElapsedTimer timer;
+		} gfps;
+
 	public:
 		wdgOpenGL(QWidget *parent, int vsync);
 		~wdgOpenGL();
@@ -40,6 +51,9 @@ class wdgOpenGL : public QOpenGLWidget {
 
 	public:
 		unsigned int framebuffer_id(void);
+
+	private slots:
+		void s_fps_frame_swapped(void);
 };
 
 #endif /* WDGOPENGL_HPP_ */

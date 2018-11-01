@@ -50,7 +50,6 @@ Q_IMPORT_PLUGIN(QSvgPlugin)
 #endif
 #include "mainWindow.hpp"
 #include "objCheat.hpp"
-#include "objEmuFrame.hpp"
 #include "dlgSettings.hpp"
 #include "dlgUncomp.hpp"
 #include "dlgVsSystem.hpp"
@@ -58,6 +57,7 @@ Q_IMPORT_PLUGIN(QSvgPlugin)
 #include "dlgPPUHacks.hpp"
 #include "wdgScreen.hpp"
 #include "wdgStatusBar.hpp"
+#include "emu_thread.h"
 #include "version.h"
 #include "conf.h"
 #include "clock.h"
@@ -158,11 +158,8 @@ BYTE gui_create(void) {
 }
 void gui_start(void) {
 	gui.start = TRUE;
-
-	fps.second_start = gui_get_ms();
-	fps.next_frame = gui_get_ms() + machine.ms_frame;
-
-	qt.mwin->thref.thr->start();
+	fps.frame.expected_end = gui_get_ms() + machine.ms_frame;
+	emu_thread_continue();
 	qApp->exec();
 }
 
@@ -324,24 +321,15 @@ void gui_control_visible_cursor(void) {
 void *gui_mainwindow_get_ptr(void) {
 	return ((void *)qt.mwin);
 }
-void gui_mainwindow_make_reset(int type) {
-	qt.mwin->make_reset(type);
-}
 
-void gui_ef_lock(void) {
-	qt.mwin->thref.mutex.lock();
+void gui_emit_et_gg_reset(void) {
+	emit qt.mwin->et_gg_reset();
 }
-void gui_ef_unlock(void) {
-	qt.mwin->thref.mutex.unlock();
+void gui_emit_et_vs_reset(void) {
+	emit qt.mwin->et_vs_reset();
 }
-void gui_ef_emit_gg_reset(void) {
-	emit qt.mwin->thref.obj->gg_reset();
-}
-void gui_ef_emit_vs_reset(void) {
-	emit qt.mwin->thref.obj->vs_reset();
-}
-void gui_ef_emit_external_control_windows_show(void) {
-	emit qt.mwin->thref.obj->external_control_windows_show();
+void gui_emit_et_external_control_windows_show(void) {
+	emit qt.mwin->et_external_control_windows_show();
 }
 
 void gui_screen_update(void) {
@@ -410,7 +398,9 @@ void gui_ppu_hacks_widgets_update(void) {
 
 #if defined (WITH_OPENGL)
 void gui_wdgopengl_make_current(void) {
-	qt.screen->wogl.actual->makeCurrent();
+	if (gui.start == TRUE) {
+		qt.screen->wogl.actual->makeCurrent();
+	}
 }
 unsigned int gui_wdgopengl_framebuffer_id(void) {
 	return (qt.screen->wogl.actual->framebuffer_id());

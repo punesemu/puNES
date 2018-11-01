@@ -117,17 +117,14 @@ EXTERNC struct _gfx {
 	SDBWORD w[5], h[5];
 	float w_pr, h_pr;
 	float pixel_aspect_ratio;
-	_viewport vp;
-
 	uint32_t *palette;
-
+	uTCHAR last_shader_file[LENGTH_FILE_NAME_LONG];
+	_viewport vp;
 	struct _gfx_filter {
 		gfx_filter_function((*func));
 		BYTE factor;
 		float width_pixel;
 	} filter;
-
-	uTCHAR last_shader_file[LENGTH_FILE_NAME_LONG];
 } gfx;
 
 EXTERNC BYTE gfx_init(void);
@@ -151,6 +148,9 @@ EXTERNC void gfx_text_rect_fill(_txt_element *ele, _txt_rect *rect, uint32_t col
 EXTERNC void gfx_text_reset(void);
 EXTERNC void gfx_text_clear(_txt_element *ele);
 EXTERNC void gfx_text_blit(_txt_element *ele, _txt_rect *rect);
+
+EXTERNC void gfx_lock(void);
+EXTERNC void gfx_unlock(void);
 
 #undef EXTERNC
 

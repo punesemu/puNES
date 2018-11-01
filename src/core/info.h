@@ -21,12 +21,6 @@
 
 #include "common.h"
 
-#if defined (__cplusplus)
-#define EXTERNC extern "C"
-#else
-#define EXTERNC
-#endif
-
 typedef struct _info_sh1sum {
 	struct _info_sha1sum_prg {
 		BYTE value[20];
@@ -37,6 +31,12 @@ typedef struct _info_sh1sum {
 		char string[41];
 	} chr;
 } _info_sh1sum;
+
+#if defined (__cplusplus)
+#define EXTERNC extern "C"
+#else
+#define EXTERNC
+#endif
 
 EXTERNC struct _info {
 	uTCHAR base_folder[LENGTH_FILE_NAME_MID];
@@ -66,7 +66,6 @@ EXTERNC struct _info {
 	WORD pause;
 	BYTE pause_from_gui;
 	BYTE on_cfg;
-	BYTE pause_frames_drawscreen;
 	BYTE first_illegal_opcode;
 	BYTE wave_in_record;
 	BYTE cpu_rw_extern;

@@ -200,8 +200,8 @@ BYTE snd_playback_start(void) {
 		// dimensione in bytes del buffer software
 		snd.buffer.size = (alsa.bsize * snd.channels * sizeof(*cbd.write)) * 10;
 
-		snd.buffer.limit.low = (snd.buffer.size / 100) * 25;
-		snd.buffer.limit.high = (snd.buffer.size / 100) * 55;
+		snd.buffer.limit.low = (snd.buffer.size / 100) * 15;
+		snd.buffer.limit.high = (snd.buffer.size / 100) * 45;
 
 #if !defined (RELEASE)
 		printf("softw bsize    : %10d - %10d\n", snd.buffer.size, snd.samples);
@@ -810,12 +810,12 @@ static void *alsa_playback_loop(void *data) {
 				request,
 				avail,
 				len,
-				fps.total_frames_skipped,
+				fps.frames_skipped,
 				cache->samples_available,
 				cache->bytes_available,
 				snd.out_of_sync,
 				snd.frequency,
-				(int) framerate.value,
+				(int) fps.gfx,
 				machine.ms_frame,
 				" ");
 		}

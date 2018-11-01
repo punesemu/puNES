@@ -50,8 +50,6 @@ static struct _cl_option {
 	QString sopt;
 } opt_long[] = {
 	{ "mode",                  req_arg, "m"},
-	{ "fps",                   req_arg, "f"},
-	{ "frameskip",             req_arg, "k"},
 	{ "size",                  req_arg, "s"},
 	{ "overscan",              req_arg, "o"},
 	{ "filter",                req_arg, "i"},
@@ -205,15 +203,13 @@ BYTE cmd_line_parse(int argc, uTCHAR **argv) {
 			case 'd':
 				cfg_from_file.stereo_delay = set_double(5);
 				break;
-			case 'f':
-				set_int(cfg_from_file.fps, SET_FPS);
-				break;
 			case 'g':
 				set_int(cfg_from_file.cheat_mode, SET_CHEAT_MODE);
 				break;
 			case 'h':
 			case '?':
 				usage(exe);
+				return (EXIT_ERROR);
 				break;
 			case 'V': {
 				if (!info.portable) {
@@ -224,9 +220,6 @@ BYTE cmd_line_parse(int argc, uTCHAR **argv) {
 				return (EXIT_ERROR);
 				break;
 			}
-			case 'k':
-				set_int(cfg_from_file.frameskip, SET_FRAMESKIP);
-				break;
 			case 'i':
 				set_int(cfg_from_file.filter, SET_FILTER);
 				break;
@@ -337,8 +330,6 @@ static void usage(QString name) {
 			uL("" uPERCENTs "\n")
 			uL("" uPERCENTs "\n")
 			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
-			uL("" uPERCENTs "\n")
 #if defined (WITH_OPENGL)
 			uL("" uPERCENTs "\n")
 #endif
@@ -347,8 +338,6 @@ static void usage(QString name) {
 	usage_string = (uTCHAR *) malloc(1024 * 8);
 	usnprintf(usage_string, 1024 * 8, istructions,
 			main_cfg[SET_MODE].hlp,
-			main_cfg[SET_FPS].hlp,
-			main_cfg[SET_FRAMESKIP].hlp,
 			main_cfg[SET_SCALE].hlp,
 			main_cfg[SET_PAR].hlp,
 			main_cfg[SET_PAR_SOFT_STRETCH].hlp,

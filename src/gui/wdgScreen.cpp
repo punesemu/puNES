@@ -227,10 +227,16 @@ void wdgScreen::dropEvent(QDropEvent *event) {
 }
 void wdgScreen::resizeEvent(QResizeEvent *event) {
 #if defined (WITH_OPENGL)
+	wogl.vsync->setUpdatesEnabled(false);
 	wogl.vsync->resize(event->size());
+	wogl.vsync->setUpdatesEnabled(true);
+	wogl.novsync->setUpdatesEnabled(false);
 	wogl.novsync->resize(event->size());
+	wogl.novsync->setUpdatesEnabled(true);
 #elif defined (WITH_D3D9)
+	wd3d9->setUpdatesEnabled(false);
 	wd3d9->resize(event->size());
+	wd3d9->setUpdatesEnabled(true);
 #endif
 }
 

@@ -26,6 +26,7 @@
 #include "mainWindow.moc"
 #include "dlgSettings.hpp"
 #include "common.h"
+#include "emu_thread.h"
 #include "recent_roms.h"
 #include "fds.h"
 #include "patcher.h"
@@ -109,20 +110,9 @@ mainWindow::mainWindow() : QMainWindow() {
 	connect(this, SIGNAL(fullscreen(bool)), this, SLOT(s_fullscreen(bool)));
 	connect(shcjoy.timer, SIGNAL(timeout()), this, SLOT(s_shcjoy_read_timer()));
 
-	// creo il thread per la gestione dell'emu_frame().
-	{
-		thref.thr = new QThread(this);
-
-		thref.obj = new objEmuFrame();
-		thref.obj->moveToThread(thref.thr);
-
-		connect(thref.thr, SIGNAL(started()), thref.obj, SLOT(loop()));
-		connect(thref.obj, SIGNAL(finished()), thref.thr, SLOT(quit()));
-		connect(thref.obj, SIGNAL(finished()), thref.obj, SLOT(deleteLater()));
-		connect(thref.thr, SIGNAL(finished()), thref.thr, SLOT(deleteLater()));
-		connect(thref.obj, SIGNAL(gg_reset()), this, SLOT(s_ef_gg_reset()));
-		connect(thref.obj, SIGNAL(vs_reset()), this, SLOT(s_ef_vs_reset()));
-	}
+	connect(this, SIGNAL(et_gg_reset()), this, SLOT(s_et_gg_reset()));
+	connect(this, SIGNAL(et_vs_reset()), this, SLOT(s_et_vs_reset()));
+	connect(this, SIGNAL(et_external_control_windows_show()), this, SLOT(s_et_external_control_windows_show()));
 
 	shcjoy_start();
 
@@ -320,7 +310,7 @@ void mainWindow::control_visible_cursor(void) {
 	}
 }
 void mainWindow::make_reset(int type) {
-	thref.mutex.lock();
+	emu_thread_pause();
 
 	if (type == HARD) {
 		if ((cfg->cheat_mode == GAMEGENIE_MODE) && gamegenie.rom_present) {
@@ -337,11 +327,10 @@ void mainWindow::make_reset(int type) {
 	}
 
 	if (emu_reset(type)) {
-		thref.mutex.unlock();
 		s_quit();
 	}
 
-	thref.mutex.unlock();
+	emu_thread_continue();
 
 	// dopo un reset la pause e' automaticamente disabilitata quindi faccio
 	// un aggiornamento del submenu NES per avere la voce correttamente settata.
@@ -542,8 +531,7 @@ void mainWindow::update_menu_file(void) {
 		menu_Recent_Roms->clear();
 
 		for (i = 0; i < RECENT_ROMS_MAX; i++) {
-			QString description = QString((const QChar *) recent_roms_item(i),
-					recent_roms_item_size(i));
+			QString description = QString((const QChar *) recent_roms_item(i), recent_roms_item_size(i));
 			QFileInfo rom(description);
 			QAction *action = new QAction(this);
 
@@ -773,8 +761,7 @@ void mainWindow::s_open(void) {
 	filters[7].append(" (*.fm2 *.FM2)");
 	filters[8].append(" (*.*)");
 
-	file = QFileDialog::getOpenFileName(this, tr("Open File"), uQString(gui.last_open_path),
-		filters.join(";;"));
+	file = QFileDialog::getOpenFileName(this, tr("Open File"), uQString(gui.last_open_path), filters.join(";;"));
 
 	if (file.isNull() == false) {
 		QFileInfo fileinfo(file);
@@ -867,7 +854,6 @@ void mainWindow::s_quit(void) {
 }
 void mainWindow::s_turn_on_off(void) {
 	info.turn_off = !info.turn_off;
-	info.pause_frames_drawscreen = 0;
 
 	if (!info.turn_off) {
 		make_reset(HARD);
@@ -886,6 +872,8 @@ void mainWindow::s_insert_coin(void) {
 }
 void mainWindow::s_disk_side(void) {
 	int side = QVariant(((QObject *)sender())->property("myValue")).toInt();
+
+	emu_thread_pause();
 
 	if (side == 0xFFF) {
 		side = fds.drive.side_inserted ^ 0x01;
@@ -908,15 +896,18 @@ void mainWindow::s_disk_side(void) {
 		fds_disk_op(FDS_DISK_EJECT, 0);
 	}
 
+	emu_thread_continue();
+
 	update_menu_nes();
 }
 void mainWindow::s_eject_disk(void) {
+	emu_thread_pause();
 	if (!fds.drive.disk_ejected) {
 		fds_disk_op(FDS_DISK_EJECT, 0);
 	} else {
 		fds_disk_op(FDS_DISK_INSERT, 0);
 	}
-
+	emu_thread_continue();
 	update_menu_nes();
 }
 void mainWindow::s_start_stop_wave(void) {
@@ -933,8 +924,8 @@ void mainWindow::s_start_stop_wave(void) {
 		filters[1].append(" (*.*)");
 
 		file = QFileDialog::getSaveFileName(this, tr("Record sound"),
-				QFileInfo(uQString(info.rom.file)).completeBaseName(),
-				filters.join(";;"));
+			QFileInfo(uQString(info.rom.file)).completeBaseName(),
+			filters.join(";;"));
 
 		if (file.isNull() == false) {
 			QFileInfo fileinfo(file);
@@ -954,11 +945,13 @@ void mainWindow::s_start_stop_wave(void) {
 }
 void mainWindow::s_fast_forward(void) {
 	if (nsf.enabled == FALSE) {
+		emu_thread_pause();
 		if (fps.fast_forward == FALSE) {
 			fps_fast_forward();
 		} else {
 			fps_normalize();
 		}
+		emu_thread_continue();
 		update_menu_nes();
 	}
 }
@@ -966,6 +959,8 @@ void mainWindow::s_set_fullscreen(void) {
 	if (gui.in_update) {
 		return;
 	}
+
+	emu_thread_pause();
 
 	if ((cfg->fullscreen == NO_FULLSCR) || (cfg->fullscreen == NO_CHANGE)) {
 		int screenNumber = qApp->desktop()->screenNumber(this);
@@ -1016,6 +1011,8 @@ void mainWindow::s_set_fullscreen(void) {
 		gfx.type_of_fscreen_in_use = NO_FULLSCR;
 	}
 
+	emu_thread_continue();
+
 	gui_external_control_windows_show();
 	gui_set_focus();
 }
@@ -1023,10 +1020,10 @@ void mainWindow::s_save_screenshot(void) {
 	gfx.save_screenshot = true;
 }
 void mainWindow::s_pause(void) {
+	emu_thread_pause();
 	info.pause_from_gui = !info.pause_from_gui;
-	info.pause_frames_drawscreen = 0;
-
 	emu_pause(info.pause_from_gui);
+	emu_thread_continue();
 	update_menu_nes();
 }
 void mainWindow::s_open_settings(void) {
@@ -1048,16 +1045,14 @@ void mainWindow::s_open_settings(void) {
 void mainWindow::s_state_save_slot_action(void) {
 	int mode = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
-	emu_pause(TRUE);
-
+	emu_thread_pause();
 	if (mode == SAVE) {
 		save_slot_save(save_slot.slot);
 		settings_pgs_save();
 	} else {
 		save_slot_load(save_slot.slot);
 	}
-
-	emu_pause(FALSE);
+	emu_thread_continue();
 }
 void mainWindow::s_state_save_slot_incdec(void) {
 	int mode = QVariant(((QObject *)sender())->property("myValue")).toInt();
@@ -1088,7 +1083,7 @@ void mainWindow::s_state_save_file(void) {
 	QString file;
 	uTCHAR *fl;
 
-	emu_pause(TRUE);
+	emu_thread_pause();
 
 	filters.append(tr("Save states"));
 	filters.append(tr("All files"));
@@ -1128,13 +1123,13 @@ void mainWindow::s_state_save_file(void) {
 		settings_pgs_save();
 	}
 
-	emu_pause(FALSE);
+	emu_thread_continue();
 }
 void mainWindow::s_state_load_file(void) {
 	QStringList filters;
 	QString file;
 
-	emu_pause(TRUE);
+	emu_thread_pause();
 
 	filters.append(tr("Save states"));
 	filters.append(tr("All files"));
@@ -1162,7 +1157,7 @@ void mainWindow::s_state_load_file(void) {
 		}
 	}
 
-	emu_pause(FALSE);
+	emu_thread_continue();
 }
 void mainWindow::s_set_vs_window(void) {
 	ext_win.vs_system = !ext_win.vs_system;
@@ -1368,14 +1363,14 @@ void mainWindow::s_shcut_save_settings(void) {
 	dlgsettings->pushButton_Save_Settings->click();
 }
 
-void mainWindow::s_ef_gg_reset(void) {
+void mainWindow::s_et_gg_reset(void) {
 	make_reset(CHANGE_ROM);
 	gamegenie.phase = GG_FINISH;
 }
-void mainWindow::s_ef_vs_reset(void) {
+void mainWindow::s_et_vs_reset(void) {
 	vs_system.watchdog.reset = FALSE;
 	make_reset(RESET);
 }
-void mainWindow::s_ef_external_control_windows_show(void) {
+void mainWindow::s_et_external_control_windows_show(void) {
 	gui_external_control_windows_show();
 }

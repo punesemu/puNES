@@ -16,16 +16,24 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include "objEmuFrame.moc"
-#include "emu.h"
-#include "info.h"
+#ifndef EMU_THREAD_H_
+#define EMU_THREAD_H_
 
-objEmuFrame::objEmuFrame() {}
-objEmuFrame::~objEmuFrame() {}
+#include "common.h"
 
-void objEmuFrame::loop(void) {
-	while (info.stop == FALSE) {
-		emu_frame();
-	}
-	emit finished();
-}
+#if defined (__cplusplus)
+#define EXTERNC extern "C"
+#else
+#define EXTERNC
+#endif
+
+EXTERNC BYTE emu_thread_init(void);
+EXTERNC void emu_thread_quit(void);
+
+EXTERNC void emu_thread_pause(void);
+EXTERNC void emu_thread_continue(void);
+
+#undef EXTERNC
+
+#endif /* EMU_THREAD_H_ */
+

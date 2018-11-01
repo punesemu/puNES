@@ -17,14 +17,16 @@ mainWindow.moc: mainWindow.hpp
 	$(MOC) $(srcdir)/mainWindow.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 objCheat.moc: objCheat.hpp
 	$(MOC) $(srcdir)/objCheat.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
-objEmuFrame.moc: objEmuFrame.hpp
-	$(MOC) $(srcdir)/objEmuFrame.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 objSettings.moc: objSettings.hpp
 	$(MOC) $(srcdir)/objSettings.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 wdgAPUChannels.moc: wdgAPUChannels.hpp
 	$(MOC) $(srcdir)/wdgAPUChannels.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 wdgCheatsEditor.moc: wdgCheatsEditor.hpp
 	$(MOC) $(srcdir)/wdgCheatsEditor.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
+if WITH_OPENGL
+wdgOpenGL.moc: wdgOpenGL.hpp
+	$(MOC) $(srcdir)/wdgOpenGL.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
+endif
 wdgSettingsAudio.moc: wdgSettingsAudio.hpp
 	$(MOC) $(srcdir)/wdgSettingsAudio.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 wdgSettingsCheats.moc: wdgSettingsCheats.hpp
@@ -85,7 +87,6 @@ BUILT_SOURCES = \
 	dlgVsSystem.moc \
 	mainWindow.moc \
 	objCheat.moc \
-	objEmuFrame.moc \
 	objSettings.moc \
 	wdgAPUChannels.moc \
 	wdgCheatsEditor.moc \
@@ -141,8 +142,6 @@ libgui_a_SOURCES = \
 	mainWindow.hpp \
 	objCheat.cpp \
 	objCheat.hpp \
-	objEmuFrame.cpp \
-	objEmuFrame.hpp \
 	objSettings.cpp \
 	objSettings.hpp \
 	qt.cpp \
@@ -175,6 +174,9 @@ libgui_a_SOURCES = \
 	wdgStatusBar.hpp
 
 if WITH_OPENGL
+BUILT_SOURCES += \
+	wdgOpenGL.moc
+
 libgui_a_SOURCES += \
 	wdgOpenGL.cpp \
 	wdgOpenGL.hpp

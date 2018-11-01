@@ -19,6 +19,8 @@
 #include <QtWidgets/QFileDialog>
 #include "wdgSettingsGeneral.moc"
 #include "mainWindow.hpp"
+#include "emu.h"
+#include "emu_thread.h"
 #include "conf.h"
 #include "clock.h"
 
@@ -126,6 +128,8 @@ void wdgSettingsGeneral::s_mode(int index) {
 		return;
 	}
 
+	emu_thread_pause();
+
 	cfg->mode = mode;
 
 	if (cfg->mode == AUTO) {
@@ -161,12 +165,13 @@ void wdgSettingsGeneral::s_mode(int index) {
 
 		text_add_line_info(1, "switched to [green]%s", ascii.toLatin1().constData());
 
-		gui_mainwindow_make_reset(CHANGE_MODE);
-
+		emu_reset(CHANGE_MODE);
 		// per lo swap dell'emphasis del rosso e del verde in caso di PAL e DENDY
 		// ricreo la paletta quando cambio regione.
 		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, TRUE);
 	}
+
+	emu_thread_continue();
 }
 void wdgSettingsGeneral::s_fast_forward_velocity(int index) {
 	int velocity = index;
@@ -195,7 +200,9 @@ void wdgSettingsGeneral::s_fast_forward_velocity(int index) {
 
 	if (nsf.enabled == FALSE) {
 		if (fps.fast_forward == TRUE) {
+			emu_thread_pause();
 			fps_fast_forward();
+			emu_thread_continue();
 		}
 	}
 }
@@ -222,8 +229,7 @@ void wdgSettingsGeneral::s_game_genie_rom_file(bool checked) {
 
 		if (fileinfo.exists()) {
 			umemset(cfg->gg_rom_file, 0x00, usizeof(cfg->gg_rom_file));
-			ustrncpy(cfg->gg_rom_file, uQStringCD(fileinfo.absoluteFilePath()),
-					usizeof(cfg->gg_rom_file) - 1);
+			ustrncpy(cfg->gg_rom_file, uQStringCD(fileinfo.absoluteFilePath()), usizeof(cfg->gg_rom_file) - 1);
 			update_widget();
 		} else {
 			text_add_line_info(1, "[red]error on game genie rom file");
@@ -254,8 +260,7 @@ void wdgSettingsGeneral::s_fds_bios_file(bool checked) {
 
 		if (fileinfo.exists()) {
 			umemset(cfg->fds_bios_file, 0x00, usizeof(cfg->fds_bios_file));
-			ustrncpy(cfg->fds_bios_file, uQStringCD(fileinfo.absoluteFilePath()),
-					usizeof(cfg->fds_bios_file) - 1);
+			ustrncpy(cfg->fds_bios_file, uQStringCD(fileinfo.absoluteFilePath()), usizeof(cfg->fds_bios_file) - 1);
 			update_widget();
 		} else {
 			text_add_line_info(1, "[red]error on FDS BIOS file");
@@ -269,11 +274,12 @@ void wdgSettingsGeneral::s_fds_bios_file_clear(bool checked) {
 	update_widget();
 }
 void wdgSettingsGeneral::s_save_battery_every_tot(bool checked) {
+	emu_thread_pause();
 	if (!cfg->save_battery_ram_file) {
 		info.bat_ram_frames = 0;
 	}
-
 	cfg->save_battery_ram_file = !cfg->save_battery_ram_file;
+	emu_thread_continue();
 }
 void wdgSettingsGeneral::s_pause_in_background(bool checked) {
 	cfg->bck_pause = !cfg->bck_pause;

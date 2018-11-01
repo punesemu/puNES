@@ -60,6 +60,8 @@
 #endif
 #include "uncompress.h"
 #include "gui.h"
+#include "video/effects/pause.h"
+#include "video/effects/tv_noise.h"
 
 #define RS_SCALE (1.0f / (1.0f + RAND_MAX))
 
@@ -67,9 +69,15 @@
 	WORD PCBREAK = 0xC425;
 #endif
 
+static void emu_frame_sleep(void);
+static void emu_frame_pause_sleep(void);
 static BYTE emu_ctrl_if_rom_exist(void);
 static uTCHAR *emu_ctrl_rom_ext(uTCHAR *file);
 static void emu_recent_roms_add(BYTE *add, uTCHAR *file);
+
+struct _fps_pause {
+	double expected_end;
+} fps_pause;
 
 BYTE emu_frame(void) {
 	// gestione uscita
@@ -77,36 +85,35 @@ BYTE emu_frame(void) {
 		return (EXIT_OK);
 	}
 
-	gui_ef_lock();
-
 	gui_control_visible_cursor();
 
 	tas.lag_frame = TRUE;
 
 	// eseguo un frame dell'emulatore
-	if (!(info.no_rom | info.turn_off | info.pause)) {
-		if (nsf.state & (NSF_PAUSE | NSF_STOP)) {
-			BYTE i;
+	if (info.no_rom | info.turn_off) {
+		tv_noise_effect();
+		gfx_draw_screen();
+		emu_frame_pause_sleep();
+		return (EXIT_OK);
+	} else if (info.pause) {
+		gfx_draw_screen();
+		emu_frame_pause_sleep();
+		return (EXIT_OK);
+	} else if (nsf.state & (NSF_PAUSE | NSF_STOP)) {
+		BYTE i;
 
-			for (i = PORT1; i < PORT_MAX; i++) {
-				if (port_funct[i].input_add_event) {
-					port_funct[i].input_add_event(i);
-				}
+		for (i = PORT1; i < PORT_MAX; i++) {
+			if (port_funct[i].input_add_event) {
+				port_funct[i].input_add_event(i);
 			}
-
-			extcl_audio_samples_mod_nsf(NULL, 0);
-			nsf_main_screen_event();
-			nsf_effect();
-
-			gui_ef_unlock();
-
-			gfx_draw_screen();
-
-			fps_frameskip();
-
-			return (EXIT_OK);
 		}
 
+		extcl_audio_samples_mod_nsf(NULL, 0);
+		nsf_main_screen_event();
+		nsf_effect();
+		emu_frame_sleep();
+		return (EXIT_OK);
+	} else {
 		// controllo se ci sono eventi di input
 		if (tas.type) {
 			tas_frame();
@@ -135,7 +142,7 @@ BYTE emu_frame(void) {
 		}
 
 		if ((cfg->cheat_mode == GAMEGENIE_MODE) && (gamegenie.phase == GG_LOAD_ROM)) {
-			gui_ef_emit_gg_reset();
+			gui_emit_et_gg_reset();
 		}
 
 		if (tas.lag_frame) {
@@ -158,22 +165,14 @@ BYTE emu_frame(void) {
 		}
 
 		if (vs_system.enabled & vs_system.watchdog.reset) {
-			gui_ef_emit_vs_reset();
+			gui_emit_et_vs_reset();
 		}
 
 		r4011.frames++;
 
-		gui_ef_unlock();
-
-		gfx_draw_screen();
-	} else {
-		gui_ef_unlock();
-
-		gfx_draw_screen();
+		emu_frame_sleep();
 	}
 
-	// gestione frameskip e calcolo fps
-	fps_frameskip();
 	return (EXIT_OK);
 }
 BYTE emu_make_dir(const uTCHAR *fmt, ...) {
@@ -687,8 +686,6 @@ void emu_pause(BYTE mode) {
 	}
 
 	if (info.pause == 0) {
-		fps.next_frame = gui_get_ms();
-
 		if (nsf.enabled) {
 			nsf_reset_timers();
 		}
@@ -826,7 +823,7 @@ BYTE emu_reset(BYTE type) {
 	memset(&vs_system.coins, 0x00, sizeof(vs_system.coins));
 	vs_system.watchdog.next = vs_system_wd_next();
 
-	gui_ef_emit_external_control_windows_show();
+	gui_emit_et_external_control_windows_show();
 
 	info.bat_ram_frames = 0;
 
@@ -902,6 +899,35 @@ void emu_quit(void) {
 	patcher_quit();
 
 	gui_quit();
+}
+
+static void emu_frame_sleep(void) {
+	double diff;
+	double now = gui_get_ms();
+
+	diff = fps.frame.expected_end - now;
+
+	if (diff > 0) {
+		gui_sleep(diff);
+	} else {
+		fps.frames_skipped++;
+		fps.frame.expected_end = gui_get_ms();
+	}
+	fps.frame.expected_end += fps.frame.estimated_ms;
+}
+static void emu_frame_pause_sleep(void) {
+	double diff;
+	double now = gui_get_ms();
+	const double estimated_ms = (1000.0f / 30.f);
+
+	diff = fps_pause.expected_end - now;
+
+	if (diff > 0) {
+		gui_sleep(diff);
+	} else {
+		fps_pause.expected_end = gui_get_ms();
+	}
+	fps_pause.expected_end += estimated_ms;
 }
 
 static BYTE emu_ctrl_if_rom_exist(void) {

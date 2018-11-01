@@ -22,6 +22,7 @@
 #include "main.h"
 #include "../gui/cmd_line.h"
 #include "emu.h"
+#include "emu_thread.h"
 #include "info.h"
 #include "settings.h"
 #include "mem_map.h"
@@ -135,8 +136,14 @@ int main(int argc, char **argv) {
 		return (EXIT_FAILURE);
 	}
 
+	if (emu_thread_init()) {
+		emu_quit();
+		return (EXIT_FAILURE);
+	}
+
 	gui_start();
 
+	emu_thread_quit();
 	emu_quit();
 
 	return (EXIT_SUCCESS);

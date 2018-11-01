@@ -46,8 +46,6 @@ enum set_element {
 	SET_FILE_FDS_BIOS,
 	SET_LAST_IMPORT_CHEAT_PATH,
 	SET_SAVE_SETTINGS_ON_EXIT,
-	SET_FPS,
-	SET_FRAMESKIP,
 	SET_SCALE,
 	SET_PAR,
 	SET_PAR_SOFT_STRETCH,
@@ -309,39 +307,6 @@ static const _opt opt_ff_velocity[] = {
 	{NULL, uL("4x"), FF_4X},
 	{NULL, uL("5x"), FF_5X}
 };
-static const _opt opt_fps[] = {
-	{NULL, uL("default"), FPS_DEFAULT},
-	{NULL, uL("60")     , FPS_60},
-	{NULL, uL("59")     , FPS_59},
-	{NULL, uL("58")     , FPS_58},
-	{NULL, uL("57")     , FPS_57},
-	{NULL, uL("56")     , FPS_56},
-	{NULL, uL("55")     , FPS_55},
-	{NULL, uL("54")     , FPS_54},
-	{NULL, uL("53")     , FPS_53},
-	{NULL, uL("52")     , FPS_52},
-	{NULL, uL("51")     , FPS_51},
-	{NULL, uL("50")     , FPS_50},
-	{NULL, uL("49")     , FPS_49},
-	{NULL, uL("48")     , FPS_48},
-	{NULL, uL("47")     , FPS_47},
-	{NULL, uL("46")     , FPS_46},
-	{NULL, uL("45")     , FPS_45},
-	{NULL, uL("44")     , FPS_44}
-};
-static const _opt opt_fsk[] = {
-	{NULL, uL("default"), 255},
-	{NULL, uL("0"),       0},
-	{NULL, uL("1")      , 1},
-	{NULL, uL("2")      , 2},
-	{NULL, uL("3")      , 3},
-	{NULL, uL("4")      , 4},
-	{NULL, uL("5")      , 5},
-	{NULL, uL("6")      , 6},
-	{NULL, uL("7")      , 7},
-	{NULL, uL("8")      , 8},
-	{NULL, uL("9")      , 9}
-};
 static const _opt opt_scale[] = {
 	{NULL, uL("1x"), X1},
 	{NULL, uL("2x"), X2},
@@ -541,18 +506,6 @@ static const _settings main_cfg[] = {
 		uL("# possible values: yes, no"),
 		NULL,
 		{LENGTH(opt_no_yes), opt_no_yes}
-	},
-	{
-		uL("video"), uL("frames per second"), uL("default"),
-		uL("# possible values: default, 58, 57. ..., 45, 44"),
-		uL("-f, --fps                 frames per second     : default, 60, ..., 44"),
-		{LENGTH(opt_fps), opt_fps}
-	},
-	{
-		uL("video"), uL("frame skip"), uL("default"),
-		uL("# possible values: default, 0, ..., 9"),
-		uL("-k, --frameskip           frames to skip        : default, 0, ..., 9"),
-		{LENGTH(opt_fsk), opt_fsk}
 	},
 	{
 		uL("video"), uL("size window"), uL("2x"),

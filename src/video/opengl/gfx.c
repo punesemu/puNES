@@ -19,7 +19,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#if defined (__unix__)
+#include <pthread.h>
+#endif
 #include "gfx.h"
+#include "fps.h"
 #include "info.h"
 #include "conf.h"
 #include "opengl.h"
@@ -32,6 +36,22 @@
 #include "video/effects/pause.h"
 #include "video/effects/tv_noise.h"
 
+#if defined (__unix__)
+static void *gfx_thread_filter(void *arg);
+#elif defined (__WIN32__)
+static DWORD WINAPI gfx_thread_filter(void *arg);
+#endif
+
+struct _gfx_thread {
+#if defined (__unix__)
+	pthread_t thread;
+	pthread_mutex_t lock;
+#elif defined (__WIN32__)
+	HANDLE thread;
+	HANDLE lock;
+#endif
+} gfx_thread;
+
 BYTE gfx_init(void) {
 	gfx.save_screenshot = FALSE;
 
@@ -41,6 +61,18 @@ BYTE gfx_init(void) {
 		fprintf(stderr, "gui initialization failed\n");
 		return (EXIT_ERROR);
 	}
+
+#if defined (__unix__)
+	if (pthread_mutex_init(&gfx_thread.lock, NULL) != 0) {
+		fprintf(stderr, "Unable to allocate the gfx mutex\n");
+		return (EXIT_ERROR);
+	}
+#elif defined (__WIN32__)
+	if ((gfx_thread.lock = CreateSemaphore(NULL, 1, 2, NULL)) == NULL) {
+		fprintf(stderr, "Unable to allocate the gfx mutex\n");
+		return (EXIT_ERROR);
+	}
+#endif
 
 	if (opengl_init() == EXIT_ERROR) {
 		fprintf(stderr, "OpenGL not supported.\n");
@@ -92,6 +124,8 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 	BYTE set_mode;
 	WORD width, height;
 	DBWORD old_shader = cfg->shader;
+
+	gfx_lock();
 
 	gfx_set_screen_start:
 	set_mode = FALSE;
@@ -391,6 +425,9 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 					gfx.w[VIDEO_MODE] -= brd;
 				}
 			}
+
+			// faccio quello che serve prima del setvideo
+			gui_set_video_mode();
 		}
 
 		switch (opengl_context_create()) {
@@ -405,12 +442,6 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 				goto gfx_set_screen_start;
 		}
 
-		if (set_mode) {
-			// nel gui_set_video_mode() eseguo il resize del wdgOpenGL che esegue
-			// un paintGL (quindi un opengl_draw_scene) che puo' essere eseguito
-			// solo a contesto creato.
-			gui_set_video_mode();
-		}
 	}
 
 	// calcolo le proporzioni tra il disegnato a video (overscan e schermo
@@ -425,6 +456,8 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 		gfx.h_pr = (float) gfx.h[NO_OVERSCAN] / (float) SCR_LINES;
 	}
 
+	gfx_unlock();
+
 	// setto il titolo della finestra
 	gui_update();
 
@@ -433,22 +466,26 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 	}
 }
 void gfx_draw_screen(void) {
-	if (info.no_rom | info.turn_off) {
-		if (++info.pause_frames_drawscreen == 2) {
-			info.pause_frames_drawscreen = 0;
-			tv_noise_effect();
-			gui_screen_update();
-		} else if (text.on_screen) {
-			gui_screen_update();
+	if (fps.fast_forward == TRUE) {
+		double now = gui_get_ms();
+		double estimated_ms = (1000.0f / machine.fps);
+		static double last;
+
+		if ((now - last) < estimated_ms) {
+			return;
+		} else {
+			last = gui_get_ms();
 		}
-	} else if (info.pause) {
-		if ((++info.pause_frames_drawscreen == 15) || text.on_screen) {
-			info.pause_frames_drawscreen = 0;
-			gui_screen_update();
-		}
-	} else {
-		gui_screen_update();
 	}
+
+#if defined (__unix__)
+	pthread_create(&gfx_thread.thread, NULL, gfx_thread_filter, NULL);
+#elif defined (__WIN32__)
+	if (gfx_thread.thread) {
+		CloseHandle(gfx_thread.thread);
+	}
+	gfx_thread.thread = CreateThread(NULL, 0, gfx_thread_filter, NULL, 0, 0);
+#endif
 }
 void gfx_quit(void) {
 	if (gfx.palette) {
@@ -462,6 +499,12 @@ void gfx_quit(void) {
 	opengl_quit();
 	ntsc_quit();
 	text_quit();
+
+#if defined (__unix__)
+	pthread_mutex_destroy(&gfx_thread.lock);
+#elif defined (__WIN32__)
+	CloseHandle(gfx_thread.lock);
+#endif
 }
 
 uint32_t gfx_color(BYTE a, BYTE r, BYTE g, BYTE b) {
@@ -544,4 +587,66 @@ void gfx_text_blit(_txt_element *ele, _txt_rect *rect) {
 	glPixelStorei(GL_UNPACK_ROW_LENGTH, rect->w);
 	glTexSubImage2D(GL_TEXTURE_2D, 0, rect->x, rect->y, rect->w, rect->h, TI_FRM, TI_TYPE, ele->surface);
 	glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+}
+
+void gfx_lock(void) {
+#if defined (__unix__)
+	pthread_mutex_lock(&gfx_thread.lock);
+#elif defined (__WIN32__)
+	WaitForSingleObject((HANDLE **)gfx_thread.lock, INFINITE);
+#endif
+}
+void gfx_unlock(void) {
+#if defined (__unix__)
+	pthread_mutex_unlock(&gfx_thread.lock);
+#elif defined (__WIN32__)
+	ReleaseSemaphore((HANDLE **)gfx_thread.lock, 1, NULL);
+#endif
+}
+
+#if defined (__unix__)
+static void *gfx_thread_filter(void *arg) {
+#elif defined (__WIN32__)
+static DWORD WINAPI gfx_thread_filter(void *arg) {
+#endif
+	void *palette = (void *)gfx.palette;
+
+	//applico la paletta adeguata.
+	if (cfg->filter == NTSC_FILTER) {
+		palette = NULL;
+	}
+	if (info.no_rom | info.turn_off) {
+		if (cfg->filter == NTSC_FILTER) {
+			palette = turn_off_effect.ntsc;
+		} else {
+			palette = (void *)turn_off_effect.palette;
+		}
+	} else if (info.pause) {
+		if (!cfg->disable_sepia_color) {
+			if (cfg->filter == NTSC_FILTER) {
+				palette = pause_effect.ntsc;
+			} else {
+				palette = pause_effect.palette;
+			}
+		}
+	}
+
+	gfx_lock();
+
+	// applico l'effetto desiderato
+	gfx.filter.func(palette,
+		opengl.surface.pitch,
+		opengl.surface.pixels,
+		opengl.surface.w,
+		opengl.surface.h);
+
+	gfx_unlock();
+
+	gui_screen_update();
+
+#if defined (__unix__)
+	return (NULL);
+#elif defined (__WIN32__)
+	return (0);
+#endif
 }

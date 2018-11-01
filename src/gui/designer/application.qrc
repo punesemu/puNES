@@ -47,8 +47,6 @@
     <file>icons/overscan.svg</file>
     <file>icons/pixel_aspect_ratio.svg</file>
     <file>icons/scale.svg</file>
-    <file>icons/frameskip.svg</file>
-    <file>icons/fps.svg</file>
     <file>icons/video.svg</file>
     <file>icons/soft_reset.svg</file>
     <file>icons/switch_sides.svg</file>

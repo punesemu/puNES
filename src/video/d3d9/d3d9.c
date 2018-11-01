@@ -20,13 +20,12 @@
  */
 
 #include "d3d9.h"
+#include "gfx.h"
 #include "info.h"
 #include "gui.h"
 #include "conf.h"
 #include "ppu.h"
 #include "overscan.h"
-#include "video/effects/pause.h"
-#include "video/effects/tv_noise.h"
 
 #define _SCR_ROWS_BRD\
 	((float)  (SCR_ROWS - (overscan.borders->left + overscan.borders->right)) * gfx.pixel_aspect_ratio)
@@ -424,68 +423,11 @@ BYTE d3d9_context_create(void) {
 }
 void d3d9_draw_scene(void) {
 	const _texture_simple *scrtex = &d3d9.screen.tex[d3d9.screen.index];
-	void *palette = (void *)gfx.palette;
 	LPDIRECT3DSURFACE9 back_buffer;
 	UINT i;
 
 	if (gui.start == FALSE) {
 		return;
-	}
-
-	//applico la paletta adeguata.
-	if (cfg->filter == NTSC_FILTER) {
-		palette = NULL;
-	}
-	if (info.no_rom | info.turn_off) {
-		if (cfg->filter == NTSC_FILTER) {
-			palette = turn_off_effect.ntsc;
-		} else {
-			palette = (void *)turn_off_effect.palette;
-		}
-	} else if (info.pause) {
-		if (!cfg->disable_sepia_color) {
-			if (cfg->filter == NTSC_FILTER) {
-				palette = pause_effect.ntsc;
-			} else {
-				palette = pause_effect.palette;
-			}
-		}
-	}
-
-	// screen
-	{
-		D3DLOCKED_RECT lrect;
-
-		// lock della surface in memoria
-		IDirect3DSurface9_LockRect(scrtex->offscreen, &lrect, NULL, D3DLOCK_DISCARD);
-		// applico l'effetto
-		gfx.filter.func(palette,
-			lrect.Pitch,
-			lrect.pBits,
-			scrtex->rect.base.w,
-			scrtex->rect.base.h);
-
-		// unlock della surface in memoria
-		IDirect3DSurface9_UnlockRect(scrtex->offscreen);
-		// aggiorno la texture dello schermo
-		if (overscan.enabled) {
-			POINT point;
-			RECT rect;
-
-			rect.left = overscan.borders->left * gfx.filter.width_pixel;
-			rect.top = overscan.borders->up * gfx.filter.factor;
-			rect.right = scrtex->rect.base.w - (overscan.borders->right * gfx.filter.width_pixel);
-			rect.bottom = scrtex->rect.base.h - (overscan.borders->down * gfx.filter.factor);
-
-			point.x = rect.left;
-			point.y = rect.top;
-
-			IDirect3DDevice9_UpdateSurface(d3d9.adapter->dev, scrtex->offscreen, &rect,
-				scrtex->map0, &point);
-		} else {
-			IDirect3DDevice9_UpdateSurface(d3d9.adapter->dev, scrtex->offscreen, NULL,
-				scrtex->map0, NULL);
-		}
 	}
 
 	IDirect3DDevice9_GetRenderTarget(d3d9.adapter->dev, 0, &back_buffer);
@@ -521,7 +463,9 @@ void d3d9_draw_scene(void) {
 		cgD3D9BindProgram(texture->shader.prg.v);
 
 		if (i == 0) {
+			gfx_lock();
 			IDirect3DDevice9_SetTexture(d3d9.adapter->dev, 0, (IDirect3DBaseTexture9 * ) scrtex->data);
+			gfx_unlock();
 		} else {
 			IDirect3DDevice9_SetTexture(d3d9.adapter->dev, 0,
 				(IDirect3DBaseTexture9 * ) d3d9.texture[i - 1].data);

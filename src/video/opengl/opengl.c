@@ -26,9 +26,8 @@
 #include "conf.h"
 #include "emu.h"
 #include "ppu.h"
+#include "gfx.h"
 #include "gui.h"
-#include "video/effects/pause.h"
-#include "video/effects/tv_noise.h"
 
 #define MAT_ELEM_4X4(mat, r, c) ((mat).data[4 * (c) + (r)])
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
@@ -412,7 +411,6 @@ BYTE opengl_context_create(void) {
 void opengl_draw_scene(void) {
 	static GLuint prev_type = MS_MEM;
 	const _texture_simple *scrtex = &opengl.screen.tex[opengl.screen.index];
-	void *palette = (void *)gfx.palette;
 	GLuint offset_x = 0, offset_y = 0;
 	GLuint w = opengl.surface.w, h = opengl.surface.h;
 	GLuint i;
@@ -420,33 +418,6 @@ void opengl_draw_scene(void) {
 	if (gui.start == FALSE) {
 		return;
 	}
-
-	//applico la paletta adeguata.
-	if (cfg->filter == NTSC_FILTER) {
-		palette = NULL;
-	}
-	if (info.no_rom | info.turn_off) {
-		if (cfg->filter == NTSC_FILTER) {
-			palette = turn_off_effect.ntsc;
-		} else {
-			palette = (void *)turn_off_effect.palette;
-		}
-	} else if (info.pause) {
-		if (!cfg->disable_sepia_color) {
-			if (cfg->filter == NTSC_FILTER) {
-				palette = pause_effect.ntsc;
-			} else {
-				palette = pause_effect.palette;
-			}
-		}
-	}
-
-	// applico l'effetto desiderato
-	gfx.filter.func(palette,
-		opengl.surface.pitch,
-		opengl.surface.pixels,
-		opengl.surface.w,
-		opengl.surface.h);
 
 	// screen
 	glBindTexture(GL_TEXTURE_2D, scrtex->id);
@@ -460,7 +431,9 @@ void opengl_draw_scene(void) {
 	glPixelStorei(GL_UNPACK_ROW_LENGTH, opengl.surface.w);
 	glPixelStorei(GL_UNPACK_SKIP_PIXELS, offset_x);
 	glPixelStorei(GL_UNPACK_SKIP_ROWS, offset_y);
+	gfx_lock();
 	glTexSubImage2D(GL_TEXTURE_2D, 0, offset_x, offset_y, w, h, TI_FRM, TI_TYPE, opengl.surface.pixels);
+	gfx_unlock();
 	glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
 	glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
 	glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);

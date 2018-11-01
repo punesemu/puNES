@@ -20,10 +20,19 @@
 #define WDGD3D9_HPP_
 
 #include <QtWidgets/QWidget>
+#include <QtCore/QElapsedTimer>
+#include <QtCore/QTimer>
 #include <QtGui/QPaintEvent>
 #include <QtGui/QPaintEngine>
 
 class wdgD3D9 : public QWidget {
+	private:
+		struct _gui_fps {
+			double count;
+			double frequency;
+			QElapsedTimer timer;
+		} gfps;
+
 	public:
 		wdgD3D9(QWidget *parent);
 		~wdgD3D9();

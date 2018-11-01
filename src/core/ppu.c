@@ -831,6 +831,9 @@ void ppu_tick(void) {
 			if (ppu.frame_y > ppu_sclines.vint) {
 				/* incremento il contatore delle scanline renderizzate */
 				ppu.screen_y++;
+				if (ppu.screen_y == SCR_LINES) {
+					gfx_draw_screen();
+				}
 				if (extcl_ppu_update_screen_y) {
 					/*
 					 * utilizzato dalle mappers :
@@ -988,9 +991,10 @@ BYTE ppu_turn_on(void) {
 			 * creo una tabella di indici che puntano
 			 * all'inizio di ogni linea dello screen.
 			 */
-			for (a = 0; a < SCR_LINES; ++a) {
-				screen.line[a] = (WORD *) (screen.data + (a * SCR_ROWS));
+			for (a = 0; a < SCR_LINES; a++) {
+				screen.line[a] = (WORD *)(screen.data + (a * SCR_ROWS));
 			}
+
 			/*
 			 * tabella di indici che puntano ad ogni
 			 * elemento dell'OAM (4 bytes ciascuno).

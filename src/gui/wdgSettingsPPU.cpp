@@ -17,10 +17,12 @@
  */
 
 #include "wdgSettingsPPU.moc"
-#include "mainWindow.hpp"
+#include "emu_thread.h"
 #include "tas.h"
 #include "ppu.h"
 #include "conf.h"
+#include "gui.h"
+#include "settings.h"
 
 wdgSettingsPPU::wdgSettingsPPU(QWidget *parent) : QWidget(parent) {
 	setupUi(this);
@@ -82,46 +84,58 @@ void wdgSettingsPPU::lag_counter_update(void) {
 }
 
 void wdgSettingsPPU::s_hide_sprites(bool checked) {
+	emu_thread_pause();
 	cfg->hide_sprites = !cfg->hide_sprites;
+	emu_thread_continue();
 	gui_ppu_hacks_widgets_update();
 }
 void wdgSettingsPPU::s_hide_background(bool checked) {
+	emu_thread_pause();
 	cfg->hide_background = !cfg->hide_background;
+	emu_thread_continue();
 	gui_ppu_hacks_widgets_update();
 }
 void wdgSettingsPPU::s_unlimited_sprites(bool checked) {
+	emu_thread_pause();
 	cfg->unlimited_sprites = !cfg->unlimited_sprites;
+	emu_thread_continue();
 	gui_ppu_hacks_widgets_update();
 }
 void wdgSettingsPPU::s_ppu_overclock(bool checked) {
-	emu_pause(TRUE);
+	emu_thread_pause();
 	cfg->ppu_overclock = !cfg->ppu_overclock;
 	ppu_overclock(TRUE);
-	emu_pause(FALSE);
+	emu_thread_continue();
 	settings_pgs_save();
 	gui_ppu_hacks_widgets_update();
 }
 void wdgSettingsPPU::s_disable_dmc_control(bool checked) {
+	emu_thread_pause();
 	cfg->ppu_overclock_dmc_control_disabled = !cfg->ppu_overclock_dmc_control_disabled;
+	emu_thread_continue();
 	settings_pgs_save();
 	gui_ppu_hacks_widgets_update();
 }
 void wdgSettingsPPU::s_overclock_vb_slines(int i) {
+	emu_thread_pause();
 	cfg->extra_vb_scanlines = i;
 	ppu_overclock(FALSE);
+	emu_thread_continue();
 	settings_pgs_save();
 	gui_ppu_hacks_widgets_update();
 }
 void wdgSettingsPPU::s_overclock_pr_slines(int i) {
+	emu_thread_pause();
 	cfg->extra_pr_scanlines = i;
 	ppu_overclock(FALSE);
+	emu_thread_continue();
 	settings_pgs_save();
 	gui_ppu_hacks_widgets_update();
 }
 void wdgSettingsPPU::s_lag_counter_reset(bool checked) {
-	emu_pause(TRUE);
+	emu_thread_pause();
 	tas.total_lag_frames = 0;
+	emu_thread_continue();
 	lag_counter_update();
-	emu_pause(FALSE);
 	gui_ppu_hacks_widgets_update();
 }

@@ -18,6 +18,7 @@
 
 #include "wdgSettingsAudio.moc"
 #include "mainWindow.hpp"
+#include "emu_thread.h"
 #include "conf.h"
 #include "audio/delay.h"
 #include "audio/wave.h"
@@ -176,11 +177,10 @@ void wdgSettingsAudio::s_output_devices(int index) {
 	QString id = uQString(cfg->audio_output);
 
 	if (id != id_new) {
-		ustrncpy(cfg->audio_output, (uTCHAR *) snd_list.playback.devices[index].id,
-			usizeof(cfg->audio_output) - 1);
-		emu_pause(TRUE);
+		ustrncpy(cfg->audio_output, (uTCHAR *) snd_list.playback.devices[index].id, usizeof(cfg->audio_output) - 1);
+		emu_thread_pause();
 		snd_playback_start();
-		emu_pause(FALSE);
+		emu_thread_continue();
 	}
 }
 void wdgSettingsAudio::s_audio_buffer_factor(int index) {
@@ -190,11 +190,11 @@ void wdgSettingsAudio::s_audio_buffer_factor(int index) {
 		return;
 	}
 
-	emu_pause(TRUE);
+	emu_thread_pause();
 	cfg->audio_buffer_factor = factor;
 	snd_playback_start();
+	emu_thread_continue();
 	gui_update();
-	emu_pause(FALSE);
 }
 void wdgSettingsAudio::s_sample_rate(int index) {
 	int samplerate = index;
@@ -218,12 +218,12 @@ void wdgSettingsAudio::s_sample_rate(int index) {
 		return;
 	}
 
-	emu_pause(TRUE);
+	emu_thread_pause();
 	wave_close();
 	cfg->samplerate = samplerate;
 	snd_playback_start();
+	emu_thread_continue();
 	gui_update();
-	emu_pause(FALSE);
 }
 void wdgSettingsAudio::s_channels(int index) {
 	int channels = index;
@@ -244,12 +244,12 @@ void wdgSettingsAudio::s_channels(int index) {
 		return;
 	}
 
-	emu_pause(TRUE);
+	emu_thread_pause();
 	wave_close();
 	cfg->channels_mode = channels;
 	snd_playback_start();
+	emu_thread_continue();
 	gui_update();
-	emu_pause(FALSE);
 }
 void wdgSettingsAudio::s_channels_delay(int index) {
 	double delay = (double)((index + 1) * 5) / 100.0f;
@@ -258,23 +258,25 @@ void wdgSettingsAudio::s_channels_delay(int index) {
 		return;
 	}
 
+	emu_thread_pause();
 	cfg->stereo_delay = delay;
 	ch_stereo_delay_set();
+	emu_thread_continue();
 	gui_update();
 }
 void wdgSettingsAudio::s_swap_duty_cycles(bool checked) {
-	emu_pause(TRUE);
+	emu_thread_pause();
 	cfg->swap_duty = !cfg->swap_duty;
-	emu_pause(FALSE);
+	emu_thread_continue();
 	gui_apu_channels_widgets_update();
 }
 void wdgSettingsAudio::s_enable_audio(bool checked) {
-	emu_pause(TRUE);
+	emu_thread_pause();
 	if ((cfg->apu.channel[APU_MASTER] = !cfg->apu.channel[APU_MASTER])) {
 		snd_playback_start();
 	} else {
 		snd_playback_stop();
 	}
-	emu_pause(FALSE);
+	emu_thread_continue();
 	gui_apu_channels_widgets_update();
 }

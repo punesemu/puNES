@@ -20,6 +20,7 @@
  */
 
 #include "d3d9.h"
+#include "fps.h"
 #include "gui.h"
 #include "info.h"
 #include "conf.h"
@@ -31,11 +32,23 @@
 #include "video/effects/pause.h"
 #include "video/effects/tv_noise.h"
 
+static DWORD WINAPI gfx_thread_filter(void *arg);
+
+struct _gfx_thread {
+	HANDLE thread;
+	HANDLE lock;
+} gfx_thread;
+
 BYTE gfx_init(void) {
 	gfx.save_screenshot = FALSE;
 
 	if (gui_create() == EXIT_ERROR) {
 		MessageBox(NULL, "Gui initialization failed", "Error!", MB_ICONEXCLAMATION | MB_OK);
+		return (EXIT_ERROR);
+	}
+
+	if ((gfx_thread.lock = CreateSemaphore(NULL, 1, 2, NULL)) == NULL) {
+		MessageBox(NULL, "Unable to allocate the gfx mutex", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
 
@@ -90,6 +103,8 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 	BYTE set_mode;
 	WORD width, height;
 	DBWORD old_shader = cfg->shader;
+
+	gfx_lock();
 
 	gfx_set_screen_start:
 	set_mode = FALSE;
@@ -399,6 +414,7 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 		switch (d3d9_context_create()) {
 			case EXIT_ERROR:
 				fprintf(stderr, "D3D9: Unable to initialize d3d context\n");
+				gfx_unlock();
 				return;
 			case EXIT_ERROR_SHADER:
 				text_add_line_info(1, "[red]errors[normal] on shader, use [green]'No shader'");
@@ -421,6 +437,8 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 		gfx.h_pr = (float) gfx.h[NO_OVERSCAN] / (float) SCR_LINES;
 	}
 
+	gfx_unlock();
+
 	// setto il titolo della finestra
 	gui_update();
 
@@ -429,22 +447,22 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 	}
 }
 void gfx_draw_screen(void) {
-	if (info.no_rom | info.turn_off) {
-		if (++info.pause_frames_drawscreen == 2) {
-			info.pause_frames_drawscreen = 0;
-			tv_noise_effect();
-			gui_screen_update();
-		} else if (text.on_screen) {
-			gui_screen_update();
+	if (fps.fast_forward == TRUE) {
+		double now = gui_get_ms();
+		double estimated_ms = (1000.0f / machine.fps);
+		static double last;
+
+		if ((now - last) < estimated_ms) {
+			return;
+		} else {
+			last = gui_get_ms();
 		}
-	} else if (info.pause) {
-		if ((++info.pause_frames_drawscreen == 15) || text.on_screen) {
-			info.pause_frames_drawscreen = 0;
-			gui_screen_update();
-		}
-	} else {
-		gui_screen_update();
 	}
+
+	if (gfx_thread.thread) {
+		CloseHandle(gfx_thread.thread);
+	}
+	gfx_thread.thread = CreateThread(NULL, 0, gfx_thread_filter, NULL, 0, 0);
 }
 void gfx_quit(void) {
 	pause_quit();
@@ -459,6 +477,13 @@ void gfx_quit(void) {
 	}
 
 	d3d9_quit();
+
+	if (gfx_thread.thread) {
+		CloseHandle(gfx_thread.thread);
+	}
+	if (gfx_thread.lock) {
+		CloseHandle(gfx_thread.lock);
+	}
 }
 
 void gfx_control_changed_adapter(void *monitor) {
@@ -603,4 +628,78 @@ void gfx_text_blit(_txt_element *ele, _txt_rect *rect) {
 	}
 
 	IDirect3DSurface9_UnlockRect(d3d9.text.offscreen);
+}
+
+void gfx_lock(void) {
+	WaitForSingleObject((HANDLE **)gfx_thread.lock, INFINITE);
+}
+void gfx_unlock(void) {
+	ReleaseSemaphore((HANDLE **)gfx_thread.lock, 1, NULL);
+}
+
+static DWORD WINAPI gfx_thread_filter(void *arg) {
+	void *palette = (void *)gfx.palette;
+
+	//applico la paletta adeguata.
+	if (cfg->filter == NTSC_FILTER) {
+		palette = NULL;
+	}
+	if (info.no_rom | info.turn_off) {
+		if (cfg->filter == NTSC_FILTER) {
+			palette = turn_off_effect.ntsc;
+		} else {
+			palette = (void *)turn_off_effect.palette;
+		}
+	} else if (info.pause) {
+		if (!cfg->disable_sepia_color) {
+			if (cfg->filter == NTSC_FILTER) {
+				palette = pause_effect.ntsc;
+			} else {
+				palette = pause_effect.palette;
+			}
+		}
+	}
+
+	gfx_lock();
+
+	{
+		const _texture_simple *scrtex = &d3d9.screen.tex[d3d9.screen.index];
+		D3DLOCKED_RECT lrect;
+
+		// lock della surface in memoria
+		IDirect3DSurface9_LockRect(scrtex->offscreen, &lrect, NULL, D3DLOCK_DISCARD);
+		// applico l'effetto
+		gfx.filter.func(palette,
+			lrect.Pitch,
+			lrect.pBits,
+			scrtex->rect.base.w,
+			scrtex->rect.base.h);
+		// unlock della surface in memoria
+		IDirect3DSurface9_UnlockRect(scrtex->offscreen);
+		// aggiorno la texture dello schermo
+		if (overscan.enabled) {
+			POINT point;
+			RECT rect;
+
+			rect.left = overscan.borders->left * gfx.filter.width_pixel;
+			rect.top = overscan.borders->up * gfx.filter.factor;
+			rect.right = scrtex->rect.base.w - (overscan.borders->right * gfx.filter.width_pixel);
+			rect.bottom = scrtex->rect.base.h - (overscan.borders->down * gfx.filter.factor);
+
+			point.x = rect.left;
+			point.y = rect.top;
+
+			IDirect3DDevice9_UpdateSurface(d3d9.adapter->dev, scrtex->offscreen, &rect,
+				scrtex->map0, &point);
+		} else {
+			IDirect3DDevice9_UpdateSurface(d3d9.adapter->dev, scrtex->offscreen, NULL,
+				scrtex->map0, NULL);
+		}
+	}
+
+	gfx_unlock();
+
+	gui_screen_update();
+
+	return (0);
 }

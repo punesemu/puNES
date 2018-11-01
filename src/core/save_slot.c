@@ -41,25 +41,21 @@
 
 #define SAVE_VERSION 22
 
-BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp);
-uTCHAR *name_slot_file(BYTE slot);
+static BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp);
+static uTCHAR *name_slot_file(BYTE slot);
 
 BYTE save_slot_save(BYTE slot) {
 	uTCHAR *file;
 	FILE *fp;
 
-	gui_ef_lock();
-
 	// game genie
 	if (info.mapper.id == GAMEGENIE_MAPPER) {
 		text_add_line_info(1, "[yellow]save is impossible in Game Genie menu");
-		gui_ef_unlock();
 		return (EXIT_ERROR);
 	}
 
 	if (slot < SAVE_SLOT_FILE) {
 		if ((file = name_slot_file(slot)) == NULL) {
-			gui_ef_unlock();
 			return (EXIT_ERROR);
 		}
 	} else {
@@ -68,7 +64,6 @@ BYTE save_slot_save(BYTE slot) {
 
 	if ((fp = ufopen(file, uL("wb"))) == NULL) {
 		fprintf(stderr, "error on write save state\n");
-		gui_ef_unlock();
 		return (EXIT_ERROR);
 	}
 
@@ -87,15 +82,11 @@ BYTE save_slot_save(BYTE slot) {
 		text_save_slot(SAVE_SLOT_SAVE);
 	}
 
-	gui_ef_unlock();
-
 	return (EXIT_OK);
 }
 BYTE save_slot_load(BYTE slot) {
 	uTCHAR *file;
 	FILE *fp;
-
-	gui_ef_lock();
 
 	if (tas.type) {
 		text_add_line_info(1, "[yellow]movie playback interrupted[normal]");
@@ -112,7 +103,6 @@ BYTE save_slot_load(BYTE slot) {
 
 	if (slot < SAVE_SLOT_FILE) {
 		if ((file = name_slot_file(slot)) == NULL) {
-			gui_ef_unlock();
 			return (EXIT_ERROR);
 		}
 	} else {
@@ -122,7 +112,6 @@ BYTE save_slot_load(BYTE slot) {
 	if ((fp = ufopen(file, uL("rb"))) == NULL) {
 		text_add_line_info(1, "[red]error[normal] loading state");
 		fprintf(stderr, "error loading state\n");
-		gui_ef_unlock();
 		return (EXIT_ERROR);
 	}
 
@@ -139,7 +128,6 @@ BYTE save_slot_load(BYTE slot) {
 			fprintf(stderr, "state file is not for this rom.\n");
 			timeline_back(TL_SAVE_SLOT, 0);
 			fclose(fp);
-			gui_ef_unlock();
 			return (EXIT_ERROR);
 		}
 	}
@@ -148,7 +136,6 @@ BYTE save_slot_load(BYTE slot) {
 		fprintf(stderr, "error loading state, corrupted file.\n");
 		timeline_back(TL_SAVE_SLOT, 0);
 		fclose(fp);
-		gui_ef_unlock();
 		return (EXIT_ERROR);
 	}
 
@@ -160,8 +147,6 @@ BYTE save_slot_load(BYTE slot) {
 
 	// riavvio il timeline
 	timeline_init();
-
-	gui_ef_unlock();
 
 	return (EXIT_OK);
 }
@@ -270,7 +255,7 @@ BYTE save_slot_element_struct(BYTE mode, BYTE slot, uintptr_t *src, DBWORD size,
 	return (EXIT_OK);
 }
 
-BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp) {
+static BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 	uint32_t tmp = 0;
 	WORD i = 0;
 
@@ -818,7 +803,7 @@ BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-uTCHAR *name_slot_file(BYTE slot) {
+static uTCHAR *name_slot_file(BYTE slot) {
 	static uTCHAR file[LENGTH_FILE_NAME_LONG];
 	uTCHAR ext[10], bname[255], *last_dot, *fl;
 

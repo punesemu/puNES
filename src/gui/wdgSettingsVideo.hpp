@@ -39,8 +39,6 @@ class wdgSettingsVideo : public QWidget, public Ui::wdgSettingsVideo {
 		void change_rom(void);
 
 	private:
-		void fps_set(void);
-		void frameskip_set(void);
 		void scale_set(void);
 		void par_set(void);
 		void oscan_set(void);
@@ -51,9 +49,6 @@ class wdgSettingsVideo : public QWidget, public Ui::wdgSettingsVideo {
 		void shaders_set(void);
 		void palette_set(void);
 
-	private slots:
-		void s_fps(int index);
-		void s_frameskip(int index);
 	public slots:
 		void s_scale(int index);
 	private slots:

@@ -137,7 +137,6 @@ typedef struct _ppu {
 	WORD bck_adr;
 	BYTE openbus;
 	BYTE odd_frame;
-	BYTE skip_draw;
 	SWORD cycles;
 	uint32_t frames;
 	struct _short_frame {
