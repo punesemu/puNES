@@ -228,10 +228,10 @@ void wdgScreen::dropEvent(QDropEvent *event) {
 void wdgScreen::resizeEvent(QResizeEvent *event) {
 #if defined (WITH_OPENGL)
 	wogl.vsync->setUpdatesEnabled(false);
-	wogl.vsync->resize(event->size());
-	wogl.vsync->setUpdatesEnabled(true);
 	wogl.novsync->setUpdatesEnabled(false);
+	wogl.vsync->resize(event->size());
 	wogl.novsync->resize(event->size());
+	wogl.vsync->setUpdatesEnabled(true);
 	wogl.novsync->setUpdatesEnabled(true);
 #elif defined (WITH_D3D9)
 	wd3d9->setUpdatesEnabled(false);
@@ -242,6 +242,8 @@ void wdgScreen::resizeEvent(QResizeEvent *event) {
 
 #if defined (WITH_OPENGL)
 void wdgScreen::vsync(void) {
+	wogl.vsync->setUpdatesEnabled(false);
+	wogl.novsync->setUpdatesEnabled(false);
 	if (cfg->vsync) {
 		wogl.actual = wogl.vsync;
 		wogl.vsync->show();
@@ -251,6 +253,8 @@ void wdgScreen::vsync(void) {
 		wogl.vsync->hide();
 		wogl.novsync->show();
 	}
+	wogl.vsync->setUpdatesEnabled(true);
+	wogl.novsync->setUpdatesEnabled(true);
 }
 #endif
 
