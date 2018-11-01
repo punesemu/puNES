@@ -660,6 +660,8 @@ void wdgSettingsInput::controller_ports_set(void) {
 			}
 		}
 	}
+
+	gui_cursor_set();
 }
 void wdgSettingsInput::shortcuts_set(void) {
 	if (comboBox_joy_ID->count() > 1) {
@@ -741,6 +743,7 @@ void wdgSettingsInput::s_controller_port_setup(bool checked) {
 			update_widget();
 			break;
 	}
+	gui_cursor_set();
 }
 void wdgSettingsInput::s_permit_updown_leftright(bool checked) {
 	cfg->input.permit_updown_leftright = !cfg->input.permit_updown_leftright;

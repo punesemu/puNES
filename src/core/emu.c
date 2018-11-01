@@ -111,6 +111,7 @@ BYTE emu_frame(void) {
 		extcl_audio_samples_mod_nsf(NULL, 0);
 		nsf_main_screen_event();
 		nsf_effect();
+		gfx_draw_screen();
 		emu_frame_sleep();
 		return (EXIT_OK);
 	} else {
@@ -686,7 +687,7 @@ void emu_pause(BYTE mode) {
 	}
 
 	if (info.pause == 0) {
-		if (nsf.enabled) {
+		if (nsf.enabled == TRUE) {
 			nsf_reset_timers();
 		}
 	}

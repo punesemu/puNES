@@ -823,7 +823,7 @@ static uTCHAR *name_slot_file(BYTE slot) {
 	gui_utf_basename(fl, bname, usizeof(bname));
 	usnprintf(file, usizeof(file), uL("" uPERCENTs SAVE_FOLDER "/" uPERCENTs), info.base_folder, bname);
 
-	if (nsf.enabled) {
+	if (nsf.enabled == TRUE) {
 		usnprintf(ext, usizeof(ext), uL(".n%02d"), slot);
 	} else {
 		usnprintf(ext, usizeof(ext), uL(".p%02d"), slot);

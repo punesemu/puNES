@@ -32,6 +32,7 @@
 #include "mappers.h"
 #include "mappers/mapper_VRC7_snd.h"
 #include "emu.h"
+#include "gfx.h"
 #include "conf.h"
 #include "clock.h"
 #include "info.h"
@@ -568,6 +569,7 @@ void nsf_tick(void) {
 
 		nsf_main_screen_event();
 		nsf_effect();
+		gfx_draw_screen();
 	}
 }
 void extcl_audio_samples_mod_nsf(SWORD *samples, int count) {

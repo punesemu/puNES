@@ -1088,7 +1088,7 @@ void mainWindow::s_state_save_file(void) {
 	filters.append(tr("Save states"));
 	filters.append(tr("All files"));
 
-	if (nsf.enabled) {
+	if (nsf.enabled == TRUE) {
 		filters[0].append(" (*.nns *.NNS)");
 	} else {
 		filters[0].append(" (*.pns *.PNS)");
@@ -1109,7 +1109,7 @@ void mainWindow::s_state_save_file(void) {
 		QFileInfo fileinfo(file);
 
 		if (fileinfo.suffix().isEmpty()) {
-			if (nsf.enabled) {
+			if (nsf.enabled == TRUE) {
 				fileinfo.setFile(QString(file) + ".nns");
 			} else {
 				fileinfo.setFile(QString(file) + ".pns");
@@ -1134,7 +1134,7 @@ void mainWindow::s_state_load_file(void) {
 	filters.append(tr("Save states"));
 	filters.append(tr("All files"));
 
-	if (nsf.enabled) {
+	if (nsf.enabled == TRUE) {
 		filters[0].append(" (*.nns *.NNS)");
 	} else {
 		filters[0].append(" (*.pns *.PNS)");

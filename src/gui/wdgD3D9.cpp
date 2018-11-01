@@ -27,6 +27,8 @@ wdgD3D9::wdgD3D9(QWidget *parent) : QWidget(parent) {
 	setAttribute(Qt::WA_NoSystemBackground);
 	setAttribute(Qt::WA_OpaquePaintEvent);
 
+	setMouseTracking(true);
+
 	gfps.count = 0;
 	gfps.frequency = 60;
 	gfps.timer.start();

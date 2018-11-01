@@ -118,7 +118,7 @@ static void INLINE tick_hw(BYTE value);
 
 BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 	if (info.cpu_rw_extern) {
-		if (nsf.enabled) {
+		if (nsf.enabled == TRUE) {
 			nsf_rd_mem(address, made_tick);
 			return (cpu.openbus);
 		} else if (fds.info.enabled) {
@@ -785,7 +785,7 @@ static BYTE INLINE fds_rd_mem(WORD address, BYTE made_tick) {
 
 void cpu_wr_mem(WORD address, BYTE value) {
 	if (info.cpu_rw_extern) {
-		if (nsf.enabled) {
+		if (nsf.enabled == TRUE) {
 			nsf_wr_mem(address, value);
 			return;
 		} else if (fds.info.enabled) {
@@ -1567,8 +1567,7 @@ static void INLINE apu_wr_reg(WORD address, BYTE value) {
 				r4011.cycles = r4011.frames = 0;
 				r4011.value = value;
 
-				if (!nsf.enabled && cfg->ppu_overclock && !cfg->ppu_overclock_dmc_control_disabled
-						&& value) {
+				if ((nsf.enabled == FALSE) && cfg->ppu_overclock && !cfg->ppu_overclock_dmc_control_disabled && value) {
 					overclock.DMC_in_use = TRUE;
 					ppu_sclines.total = machine.total_lines;
 					ppu_sclines.vint = machine.vint_lines;
@@ -1579,8 +1578,7 @@ static void INLINE apu_wr_reg(WORD address, BYTE value) {
 			if (address == 0x4012) {
 				DMC.address_start = (value << 6) | 0xC000;
 
-				if (!nsf.enabled && cfg->ppu_overclock && !cfg->ppu_overclock_dmc_control_disabled
-						&& value) {
+				if ((nsf.enabled == FALSE) && cfg->ppu_overclock && !cfg->ppu_overclock_dmc_control_disabled && value) {
 					overclock.DMC_in_use = FALSE;
 					ppu_overclock_update();
 					ppu_overclock_control()
@@ -1591,8 +1589,7 @@ static void INLINE apu_wr_reg(WORD address, BYTE value) {
 				/* sample length */
 				DMC.length = (value << 4) | 0x01;
 
-				if (!nsf.enabled && cfg->ppu_overclock && !cfg->ppu_overclock_dmc_control_disabled
-						&& value) {
+				if ((nsf.enabled == FALSE) && cfg->ppu_overclock && !cfg->ppu_overclock_dmc_control_disabled && value) {
 					overclock.DMC_in_use = FALSE;
 					ppu_overclock_update();
 					ppu_overclock_control()
@@ -2125,7 +2122,7 @@ static WORD INLINE lend_word(WORD address, BYTE indirect, BYTE make_last_tick_hw
 }
 static void INLINE tick_hw(BYTE value) {
 	tick_hw_start:
-	if (nsf.enabled) {
+	if (nsf.enabled == TRUE) {
 		if (nsf.made_tick) {
 			cpu.opcode_cycle++;
 			nmi.before = nmi.high;

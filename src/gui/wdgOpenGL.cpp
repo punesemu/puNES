@@ -28,6 +28,8 @@ wdgOpenGL::wdgOpenGL(QWidget *parent, int vsync) : QOpenGLWidget(parent) {
 	setAttribute(Qt::WA_NoSystemBackground);
 	setAttribute(Qt::WA_OpaquePaintEvent);
 
+	setMouseTracking(true);
+
 	fmt.setRenderableType(QSurfaceFormat::OpenGL);
 	fmt.setProfile(QSurfaceFormat::CompatibilityProfile);
 	fmt.setSwapBehavior(QSurfaceFormat::DoubleBuffer);
