@@ -26,6 +26,7 @@
 #include "mainWindow.hpp"
 #include "dlgSettings.hpp"
 #include "dlgStdPad.hpp"
+#include "emu_thread.h"
 #include "conf.h"
 
 typedef struct _cb_ports {
@@ -170,19 +171,19 @@ void wdgSettingsInput::controller_ports_init(void) {
 
 	switch (cfg->input.controller_mode) {
 		case CTRL_MODE_NES:
-			ctrl_port1 = (_cb_ports *) &ctrl_mode_nes;
-			ctrl_port2 = (_cb_ports *) &ctrl_mode_nes;
+			ctrl_port1 = (_cb_ports *)&ctrl_mode_nes;
+			ctrl_port2 = (_cb_ports *)&ctrl_mode_nes;
 			length1 = length2 = LENGTH(ctrl_mode_nes);
 			break;
 		case CTRL_MODE_FAMICOM:
-			ctrl_port1 = (_cb_ports *) &ctrl_mode_famicom_ports1;
-			ctrl_port2 = (_cb_ports *) &ctrl_mode_famicom_ports2;
+			ctrl_port1 = (_cb_ports *)&ctrl_mode_famicom_ports1;
+			ctrl_port2 = (_cb_ports *)&ctrl_mode_famicom_ports2;
 			length1 = LENGTH(ctrl_mode_famicom_ports1);
 			length2 = LENGTH(ctrl_mode_famicom_ports2);
 			break;
 		case CTRL_MODE_FOUR_SCORE:
-			ctrl_port1 = (_cb_ports *) &ctrl_mode_four_score;
-			ctrl_port2 = (_cb_ports *) &ctrl_mode_four_score;
+			ctrl_port1 = (_cb_ports *)&ctrl_mode_four_score;
+			ctrl_port2 = (_cb_ports *)&ctrl_mode_four_score;
 			length1 = length2 = LENGTH(ctrl_mode_four_score);
 			break;
 	}
@@ -197,10 +198,8 @@ void wdgSettingsInput::controller_ports_init(void) {
 	// Ports
 	controller_port_init(comboBox_cp1, &input.cport[0], ctrl_port1, length1);
 	controller_port_init(comboBox_cp2, &input.cport[1], ctrl_port2, length2);
-	controller_port_init(comboBox_cp3, &input.cport[2],
-		(void *) ctrl_mode_four_score, LENGTH(ctrl_mode_four_score));
-	controller_port_init(comboBox_cp4, &input.cport[3],
-		(void *) ctrl_mode_four_score, LENGTH(ctrl_mode_four_score));
+	controller_port_init(comboBox_cp3, &input.cport[2], (void *)ctrl_mode_four_score, LENGTH(ctrl_mode_four_score));
+	controller_port_init(comboBox_cp4, &input.cport[3], (void *)ctrl_mode_four_score, LENGTH(ctrl_mode_four_score));
 }
 void wdgSettingsInput::controller_port_init(QComboBox *cb, _cfg_port *cfg_port, void *list, int length) {
 	_cb_ports *cbp = (_cb_ports *) list;
@@ -660,8 +659,6 @@ void wdgSettingsInput::controller_ports_set(void) {
 			}
 		}
 	}
-
-	gui_cursor_set();
 }
 void wdgSettingsInput::shortcuts_set(void) {
 	if (comboBox_joy_ID->count() > 1) {
@@ -704,22 +701,31 @@ void wdgSettingsInput::shortcuts_set(void) {
 }
 
 void wdgSettingsInput::s_controller_mode(int index) {
+	emu_thread_pause();
 	cfg->input.controller_mode = index;
 	controller_ports_init();
+	input_init(SET_CURSOR);
+	emu_thread_continue();
 	update_widget();
 }
 void wdgSettingsInput::s_expansion_port(int index) {
 	int type = comboBox_exp->itemData(index).toInt();
 
+	emu_thread_pause();
 	cfg->input.expansion = type;
 	controller_ports_init();
+	input_init(SET_CURSOR);
+	emu_thread_continue();
 	update_widget();
 }
 void wdgSettingsInput::s_controller_port(int index) {
 	QList<QVariant> type = ((QComboBox *)sender())->itemData(index).toList();
 	_cfg_port *cfg_port = ((_cfg_port *)type.at(2).value<void *>());
 
+	emu_thread_pause();
 	cfg_port->port->type = type.at(0).toInt();
+	input_init(SET_CURSOR);
+	emu_thread_continue();
 	update_widget();
 }
 void wdgSettingsInput::s_controller_port_setup(bool checked) {
@@ -743,7 +749,6 @@ void wdgSettingsInput::s_controller_port_setup(bool checked) {
 			update_widget();
 			break;
 	}
-	gui_cursor_set();
 }
 void wdgSettingsInput::s_permit_updown_leftright(bool checked) {
 	cfg->input.permit_updown_leftright = !cfg->input.permit_updown_leftright;
