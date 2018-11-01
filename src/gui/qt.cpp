@@ -387,7 +387,7 @@ void gui_vs_system_insert_coin(void) {
 }
 
 void gui_apu_channels_widgets_update(void) {
-	qt.dset->update_dialog();
+	qt.dset->update_tab_audio();
 	qt.apuch->update_dialog();
 }
 
