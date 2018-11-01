@@ -18,6 +18,7 @@
 
 #include "wdgSettingsCheats.moc"
 #include "mainWindow.hpp"
+#include "emu_thread.h"
 #include "conf.h"
 
 wdgSettingsCheats::wdgSettingsCheats(QWidget *parent) : QWidget(parent) {
@@ -45,22 +46,6 @@ void wdgSettingsCheats::update_widget(void) {
 
 void wdgSettingsCheats::cheat_mode_set(void) {
 	comboBox_Cheats_Mode->setCurrentIndex(cfg->cheat_mode);
-
-	switch (cfg->cheat_mode) {
-		case NOCHEAT_MODE:
-			widget_wdgCheatsEditor->setEnabled(false);
-			cheatslist_blank();
-			break;
-		case GAMEGENIE_MODE:
-			widget_wdgCheatsEditor->setEnabled(false);
-			cheatslist_blank();
-			gamegenie_check_rom_present(FALSE);
-			break;
-		case CHEATSLIST_MODE:
-			widget_wdgCheatsEditor->setEnabled(true);
-			objcheat->apply_cheats();
-			break;
-	}
 }
 
 void wdgSettingsCheats::s_cheat_mode(int index) {
@@ -70,6 +55,25 @@ void wdgSettingsCheats::s_cheat_mode(int index) {
 		return;
 	}
 
+	emu_thread_pause();
+
 	cfg->cheat_mode = mode;
-	update_widget();
+
+	switch (cfg->cheat_mode) {
+		case NOCHEAT_MODE:
+			widget_wdgCheatsEditor->setEnabled(false);
+			cheatslist_blank();
+			break;
+		case GAMEGENIE_MODE:
+			widget_wdgCheatsEditor->setEnabled(false);
+			cheatslist_blank();
+			gamegenie_check_rom_present(TRUE);
+			break;
+		case CHEATSLIST_MODE:
+			widget_wdgCheatsEditor->setEnabled(true);
+			objcheat->apply_cheats();
+			break;
+	}
+
+	emu_thread_continue();
 }
