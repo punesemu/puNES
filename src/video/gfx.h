@@ -132,7 +132,6 @@ EXTERNC void gfx_quit(void);
 EXTERNC void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, BYTE palette,
 	BYTE force_scale, BYTE force_palette);
 EXTERNC void gfx_draw_screen(void);
-EXTERNC void gfx_apply_filter(void);
 
 #if defined (WITH_D3D9)
 EXTERNC void gfx_control_changed_adapter(void *monitor);
