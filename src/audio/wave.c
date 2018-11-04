@@ -19,7 +19,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "wave.h"
-#include "snd.h"
+#include "audio/snd.h"
 #include "info.h"
 #include "text.h"
 

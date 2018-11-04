@@ -21,7 +21,7 @@
 
 #include "../input.h"
 #include "gui.h"
-#include "gfx.h"
+#include "video/gfx.h"
 
 static void INLINE input_read_mouse_coords(int *x, int *y) {
 	(*x) = ((float) (gmouse.x - gfx.vp.x) / gfx.w_pr);

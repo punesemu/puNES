@@ -21,7 +21,7 @@
 #include "tv_noise.h"
 #include "ppu.h"
 #include "conf.h"
-#include "gfx.h"
+#include "video/gfx.h"
 #include "emu.h"
 #include "video/filters/ntsc.h"
 

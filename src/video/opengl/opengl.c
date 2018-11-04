@@ -26,7 +26,6 @@
 #include "conf.h"
 #include "emu.h"
 #include "ppu.h"
-#include "gfx.h"
 #include "gui.h"
 
 #define MAT_ELEM_4X4(mat, r, c) ((mat).data[4 * (c) + (r)])
@@ -431,9 +430,9 @@ void opengl_draw_scene(void) {
 	glPixelStorei(GL_UNPACK_ROW_LENGTH, opengl.surface.w);
 	glPixelStorei(GL_UNPACK_SKIP_PIXELS, offset_x);
 	glPixelStorei(GL_UNPACK_SKIP_ROWS, offset_y);
-	gfx_lock();
+	gfx_thread_lock();
 	glTexSubImage2D(GL_TEXTURE_2D, 0, offset_x, offset_y, w, h, TI_FRM, TI_TYPE, opengl.surface.pixels);
-	gfx_unlock();
+	gfx_thread_unlock();
 	glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
 	glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
 	glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);

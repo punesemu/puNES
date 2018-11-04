@@ -19,7 +19,7 @@
 #include <QtWidgets/QDesktopWidget>
 #include "wdgAPUChannels.moc"
 #include "dlgSettings.hpp"
-#include "snd.h"
+#include "audio/snd.h"
 #include "conf.h"
 #include "gui.h"
 

@@ -32,7 +32,7 @@
 #include "mappers.h"
 #include "mappers/mapper_VRC7_snd.h"
 #include "emu.h"
-#include "gfx.h"
+#include "video/gfx.h"
 #include "conf.h"
 #include "clock.h"
 #include "info.h"
@@ -44,7 +44,7 @@
 #include "conf.h"
 #include "gui.h"
 #include "audio/blipbuf.h"
-#include "snd.h"
+#include "audio/snd.h"
 #include "patcher.h"
 #include "extra/kiss_fft130/kiss_fft.h"
 

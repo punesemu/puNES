@@ -60,6 +60,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 			_js_sch sch;
 			DBWORD shortcut[SET_MAX_NUM_SC];
 		} shcjoy;
+		QTimer *ff;
 
 	public:
 		wdgScreen *screen;
@@ -153,6 +154,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void s_help(void);
 
 	private slots:
+		void s_ff_draw_screen(void);
 		void s_fullscreen(bool state);
 		void s_shcjoy_read_timer(void);
 

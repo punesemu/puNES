@@ -20,7 +20,6 @@
  */
 
 #include "d3d9.h"
-#include "gfx.h"
 #include "info.h"
 #include "gui.h"
 #include "conf.h"
@@ -463,12 +462,9 @@ void d3d9_draw_scene(void) {
 		cgD3D9BindProgram(texture->shader.prg.v);
 
 		if (i == 0) {
-			gfx_lock();
 			IDirect3DDevice9_SetTexture(d3d9.adapter->dev, 0, (IDirect3DBaseTexture9 * ) scrtex->data);
-			gfx_unlock();
 		} else {
-			IDirect3DDevice9_SetTexture(d3d9.adapter->dev, 0,
-				(IDirect3DBaseTexture9 * ) d3d9.texture[i - 1].data);
+			IDirect3DDevice9_SetTexture(d3d9.adapter->dev, 0, (IDirect3DBaseTexture9 * ) d3d9.texture[i - 1].data);
 		}
 
 		IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0, D3DSAMP_MAGFILTER, filter);

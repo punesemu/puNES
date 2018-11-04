@@ -20,7 +20,7 @@
 #include <math.h>
 #include "pause.h"
 #include "conf.h"
-#include "gfx.h"
+#include "video/gfx.h"
 #include "video/filters/ntsc.h"
 
 BYTE pause_init(void) {

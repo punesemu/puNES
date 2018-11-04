@@ -21,6 +21,8 @@
 #endif
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
+#include "emu_thread.h"
 #include "emu.h"
 #include "info.h"
 #include "gui.h"
@@ -39,11 +41,9 @@ static DWORD WINAPI emu_thread_loop(void *arg);
 
 struct _emu_thread {
 #if defined (__unix__)
-	pthread_t thread;
-	pthread_mutex_t lock;
+	pthread_t *thread;
 #elif defined (__WIN32__)
 	HANDLE thread;
-	HANDLE lock;
 #endif
 	BYTE in_run;
 	BYTE action;
@@ -52,29 +52,27 @@ struct _emu_thread {
 BYTE emu_thread_init(void) {
 	memset(&emu_thread, 0x00, sizeof(emu_thread));
 
-#if defined (__unix__)
 	emu_thread.action = ET_PAUSE;
 
-	if (pthread_mutex_init(&emu_thread.lock, NULL) != 0) {
-		fprintf(stderr, "Unable to allocate the emu mutex\n");
-		return (EXIT_ERROR);
-	}
-	pthread_create(&emu_thread.thread, NULL, emu_thread_loop, NULL);
+#if defined (__unix__)
+	emu_thread.thread = malloc(sizeof(pthread_t));
+	pthread_create(emu_thread.thread, NULL, emu_thread_loop, NULL);
 #elif defined (__WIN32__)
-	if ((emu_thread.lock = CreateSemaphore(NULL, 1, 2, NULL)) == NULL) {
-		fprintf(stderr, "Unable to allocate the emu mutex\n");
-		return (EXIT_ERROR);
-	}
 	emu_thread.thread = CreateThread(NULL, 0, emu_thread_loop, NULL, 0, 0);
 #endif
 	return (EXIT_OK);
 }
 void emu_thread_quit(void) {
 #if defined (__unix__)
-	pthread_mutex_destroy(&emu_thread.lock);
+	if (emu_thread.thread) {
+		pthread_join((*emu_thread.thread), NULL);
+		free(emu_thread.thread);
+	}
 #elif defined (__WIN32__)
-	CloseHandle(emu_thread.lock);
-	CloseHandle(emu_thread.thread);
+	if (emu_thread.thread) {
+		WaitForSingleObject(emu_thread.thread, INFINITE);
+		CloseHandle(emu_thread.thread);
+	}
 #endif
 }
 
@@ -121,4 +119,3 @@ static DWORD WINAPI emu_thread_loop(void *arg) {
 	return (0);
 #endif
 }
-

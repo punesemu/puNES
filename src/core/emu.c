@@ -28,7 +28,7 @@
 #include "rom_mem.h"
 #include "info.h"
 #include "settings.h"
-#include "snd.h"
+#include "audio/snd.h"
 #include "clock.h"
 #include "cpu.h"
 #include "mem_map.h"
@@ -36,7 +36,7 @@
 #include "fps.h"
 #include "apu.h"
 #include "ppu.h"
-#include "gfx.h"
+#include "video/gfx.h"
 #include "text.h"
 #include "sha1.h"
 #include "database.h"
@@ -114,65 +114,65 @@ BYTE emu_frame(void) {
 		gfx_draw_screen();
 		emu_frame_sleep();
 		return (EXIT_OK);
-	} else {
-		// controllo se ci sono eventi di input
-		if (tas.type) {
-			tas_frame();
-		} else {
-			BYTE i;
-
-			for (i = PORT1; i < PORT_MAX; i++) {
-				if (port_funct[i].input_add_event) {
-					port_funct[i].input_add_event(i);
-				}
-			}
-		}
-
-		// riprendo a far correre la CPU
-		info.execute_cpu = TRUE;
-
-		while (info.execute_cpu == TRUE) {
-#if defined (DEBUG)
-			if (cpu.PC == PCBREAK) {
-				BYTE pippo = 5;
-				pippo = pippo + 1;
-			}
-#endif
-			// eseguo CPU, PPU e APU
-			cpu_exe_op();
-		}
-
-		if ((cfg->cheat_mode == GAMEGENIE_MODE) && (gamegenie.phase == GG_LOAD_ROM)) {
-			gui_emit_et_gg_reset();
-		}
-
-		if (tas.lag_frame) {
-			tas.total_lag_frames++;
-			gui_ppu_hacks_widgets_update();
-		}
-
-		if (snd_end_frame) {
-			snd_end_frame();
-		}
-
-		if (!tas.type && (++tl.frames == tl.frames_snap)) {
-			timeline_snap(TL_NORMAL);
-		}
-
-		if (cfg->save_battery_ram_file && (++info.bat_ram_frames >= info.bat_ram_frames_snap)) {
-			// faccio anche un refresh del file della battery ram
-			info.bat_ram_frames = 0;
-			map_prg_ram_battery_save();
-		}
-
-		if (vs_system.enabled & vs_system.watchdog.reset) {
-			gui_emit_et_vs_reset();
-		}
-
-		r4011.frames++;
-
-		emu_frame_sleep();
 	}
+
+	// controllo se ci sono eventi di input
+	if (tas.type) {
+		tas_frame();
+	} else {
+		BYTE i;
+
+		for (i = PORT1; i < PORT_MAX; i++) {
+			if (port_funct[i].input_add_event) {
+				port_funct[i].input_add_event(i);
+			}
+		}
+	}
+
+	// riprendo a far correre la CPU
+	info.execute_cpu = TRUE;
+
+	while (info.execute_cpu == TRUE) {
+#if defined (DEBUG)
+		if (cpu.PC == PCBREAK) {
+			BYTE pippo = 5;
+			pippo = pippo + 1;
+		}
+#endif
+		// eseguo CPU, PPU e APU
+		cpu_exe_op();
+	}
+
+	if ((cfg->cheat_mode == GAMEGENIE_MODE) && (gamegenie.phase == GG_LOAD_ROM)) {
+		gui_emit_et_gg_reset();
+	}
+
+	if (tas.lag_frame) {
+		tas.total_lag_frames++;
+		gui_ppu_hacks_widgets_update();
+	}
+
+	if (snd_end_frame) {
+		snd_end_frame();
+	}
+
+	if (!tas.type && (++tl.frames == tl.frames_snap)) {
+		timeline_snap(TL_NORMAL);
+	}
+
+	if (cfg->save_battery_ram_file && (++info.bat_ram_frames >= info.bat_ram_frames_snap)) {
+		// faccio anche un refresh del file della battery ram
+		info.bat_ram_frames = 0;
+		map_prg_ram_battery_save();
+	}
+
+	if (vs_system.enabled & vs_system.watchdog.reset) {
+		gui_emit_et_vs_reset();
+	}
+
+	r4011.frames++;
+
+	emu_frame_sleep();
 
 	return (EXIT_OK);
 }
@@ -911,7 +911,7 @@ static void emu_frame_sleep(void) {
 	if (diff > 0) {
 		gui_sleep(diff);
 	} else {
-		fps.frames_skipped++;
+		fps.frames_emu_too_long++;
 		fps.frame.expected_end = gui_get_ms();
 	}
 	fps.frame.expected_end += fps.frame.estimated_ms;

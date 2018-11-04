@@ -23,7 +23,7 @@
 #include <shlobj.h>
 #include "VersionHelpers.h"
 
-double high_resolution_ms(void);
+static double high_resolution_ms(void);
 
 void gui_init(int *argc, char **argv) {
 	qt = {};
@@ -121,7 +121,7 @@ HWND gui_screen_id(void) {
 	return (wid);
 }
 
-double high_resolution_ms(void) {
+static double high_resolution_ms(void) {
 	uint64_t time, diff;
 
 	QueryPerformanceCounter((LARGE_INTEGER *)&time);

@@ -27,6 +27,7 @@
 #include "dlgSettings.hpp"
 #include "common.h"
 #include "emu_thread.h"
+#include "clock.h"
 #include "recent_roms.h"
 #include "fds.h"
 #include "patcher.h"
@@ -113,6 +114,9 @@ mainWindow::mainWindow() : QMainWindow() {
 	connect(this, SIGNAL(et_gg_reset()), this, SLOT(s_et_gg_reset()));
 	connect(this, SIGNAL(et_vs_reset()), this, SLOT(s_et_vs_reset()));
 	connect(this, SIGNAL(et_external_control_windows_show()), this, SLOT(s_et_external_control_windows_show()));
+
+	ff = new QTimer(this);
+	connect(ff, SIGNAL(timeout()), this, SLOT(s_ff_draw_screen()));
 
 	shcjoy_start();
 
@@ -947,8 +951,10 @@ void mainWindow::s_fast_forward(void) {
 	if (nsf.enabled == FALSE) {
 		emu_thread_pause();
 		if (fps.fast_forward == FALSE) {
+			ff->start(1000.0f / (double)machine.fps);
 			fps_fast_forward();
 		} else {
+			ff->stop();
 			fps_normalize();
 		}
 		emu_thread_continue();
@@ -1219,6 +1225,9 @@ void mainWindow::s_help(void) {
 	emu_pause(FALSE);
 }
 
+void mainWindow::s_ff_draw_screen(void) {
+	gfx_draw_screen();
+}
 void mainWindow::s_fullscreen(bool state) {
 	if (state == true) {
 		showFullScreen();

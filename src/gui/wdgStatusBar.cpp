@@ -25,7 +25,7 @@
 #include "mainWindow.hpp"
 #include "info.h"
 #include "timeline.h"
-#include "gfx.h"
+#include "video/gfx.h"
 #include "ppu.h"
 #include "emu.h"
 #include "save_slot.h"

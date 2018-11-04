@@ -17,7 +17,7 @@
  */
 
 #include "wdgD3D9.hpp"
-#include "gfx.h"
+#include "video/gfx.h"
 #include "fps.h"
 
 extern "C" void d3d9_draw_scene(void);

@@ -17,7 +17,7 @@
  */
 
 #include <stddef.h>
-#include "snd.h"
+#include "audio/snd.h"
 #include "audio/channels.h"
 #include "audio/mono.h"
 #include "audio/delay.h"

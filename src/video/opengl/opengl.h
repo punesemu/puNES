@@ -26,7 +26,7 @@
 #endif
 #include "shaders.h"
 #include "common.h"
-#include "gfx.h"
+#include "video/gfx.h"
 
 #if defined (WITH_OPENGL_CG)
 typedef struct _shader_prg_cg {

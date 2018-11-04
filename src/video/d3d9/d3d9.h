@@ -25,7 +25,7 @@
 #include <Cg/cg.h>
 #include <Cg/cgD3D9.h>
 #include "shaders.h"
-#include "gfx.h"
+#include "video/gfx.h"
 
 #define D3D9_ADAPTER(i) (_d3d9_adapter *) ((BYTE *) d3d9.array + (i * sizeof(_d3d9_adapter)))
 

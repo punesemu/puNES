@@ -13,6 +13,7 @@ libaudio_a_SOURCES = \
 	mono.h \
 	panning.c \
 	panning.h \
+	snd.h \
 	wave.c \
 	wave.h
 

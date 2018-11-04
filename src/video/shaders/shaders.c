@@ -19,7 +19,7 @@
 #include <string.h>
 #include "shaders.h"
 #include "shdcode.h"
-#include "gfx.h"
+#include "video/gfx.h"
 #include "conf.h"
 #include "cgp.h"
 

@@ -16,7 +16,7 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include "snd.h"
+#include "audio/snd.h"
 #include "emu.h"
 #include "info.h"
 #include "conf.h"
@@ -251,8 +251,8 @@ BYTE snd_playback_start(void) {
 		// dimensione in bytes del buffer
 		snd.buffer.size = (psamples * snd.channels * sizeof(*cbd.write)) * 5;
 
-		snd.buffer.limit.low = (snd.buffer.size / 100) * 15;
-		snd.buffer.limit.high = (snd.buffer.size / 100) * 45;
+		snd.buffer.limit.low = (snd.buffer.size / 100) * 25;
+		snd.buffer.limit.high = (snd.buffer.size / 100) * 55;
 
 #if !defined (RELEASE)
 		printf("softw bsize : %-6d - %-6d\n", snd.buffer.size, snd.samples);
@@ -557,8 +557,7 @@ static void STDMETHODCALLTYPE OnBufferEnd(THIS_ void *data) {
 
 	snd_playback_lock(cache);
 
-	if ((info.no_rom | info.turn_off | info.pause) || (snd.buffer.start == FALSE)
-			|| (fps.fast_forward == TRUE)) {
+	if ((info.no_rom | info.turn_off | info.pause) || (snd.buffer.start == FALSE) || (fps.fast_forward == TRUE)) {
 		xaudio2_wrbuf(source, buffer, (const BYTE *) cache->silence);
 	} else if (cache->bytes_available < len) {
 		xaudio2_wrbuf(source, buffer, (const BYTE *) cache->silence);
@@ -582,8 +581,9 @@ static void STDMETHODCALLTYPE OnBufferEnd(THIS_ void *data) {
 	if ((gui_get_ms() - xaudio2.tick) >= 250.0f) {
 		xaudio2.tick = gui_get_ms();
 		if (info.snd_info == TRUE)
-		fprintf(stderr, "snd : %6d %6d %6d %6d %d %f %3d %f\r",
+		fprintf(stderr, "snd : %6d %6d %6d %6d %6d %d %f %3d %f\r",
 			buffer->PlayLength,
+			fps.frames_emu_too_long,
 			fps.frames_skipped,
 			cache->samples_available,
 			cache->bytes_available,

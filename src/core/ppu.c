@@ -23,11 +23,12 @@
 #include "clock.h"
 #include "mem_map.h"
 #include "ppu_inline.h"
-#include "gfx.h"
+#include "video/gfx.h"
 #include "mappers.h"
 #include "irqA12.h"
 #include "irql2f.h"
 #include "conf.h"
+#include "fps.h"
 
 static INLINE void ppu_oam_evaluation(void);
 
@@ -831,7 +832,7 @@ void ppu_tick(void) {
 			if (ppu.frame_y > ppu_sclines.vint) {
 				/* incremento il contatore delle scanline renderizzate */
 				ppu.screen_y++;
-				if (ppu.screen_y == SCR_LINES) {
+				if ((ppu.screen_y == SCR_LINES) && (fps.fast_forward == FALSE)) {
 					gfx_draw_screen();
 				}
 				if (extcl_ppu_update_screen_y) {

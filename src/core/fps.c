@@ -31,14 +31,14 @@ void fps_init(void) {
 	memset(&fps, 0x00, sizeof(fps));
 
 	if (fps.fast_forward == FALSE) {
-		fps_machine_ms(1.0)
+		fps_machine_ms(1.0f)
 	}
 
 	fps_normalize();
 }
 void fps_fast_forward(void) {
 	fps.fast_forward = TRUE;
-	fps.frame.estimated_ms = (int) (1000 / (machine.fps * cfg->ff_velocity));
+	fps.frame.estimated_ms = (int) (1000.0f / (machine.fps * cfg->ff_velocity));
 }
 void fps_normalize(void) {
 	fps.frame.estimated_ms = machine.ms_frame;

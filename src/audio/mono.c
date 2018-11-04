@@ -17,7 +17,7 @@
  */
 
 #include <math.h>
-#include "snd.h"
+#include "audio/snd.h"
 #include "audio/mono.h"
 #include "audio/channels.h"
 

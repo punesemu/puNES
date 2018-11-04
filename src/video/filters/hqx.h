@@ -23,7 +23,7 @@
 #define __HQX_H_
 
 #include "common.h"
-#include "gfx.h"
+#include "video/gfx.h"
 #include "palette.h"
 
 #if defined (__cplusplus)

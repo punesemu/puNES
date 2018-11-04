@@ -20,7 +20,7 @@
 #define SCALE_H_
 
 #include "common.h"
-#include "gfx.h"
+#include "video/gfx.h"
 #include "palette.h"
 
 gfx_filter_function(scale_surface);

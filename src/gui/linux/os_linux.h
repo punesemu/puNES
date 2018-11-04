@@ -21,8 +21,8 @@
 
 #include <time.h>
 
-double high_resolution_ms(void);
-int __nsleep(const struct timespec *req, struct timespec *rem);
+static double high_resolution_ms(void);
+static int __nsleep(const struct timespec *req, struct timespec *rem);
 
 void gui_init(int *argc, char **argv) {
 	//setenv("QT_NO_GLIB", "1", 1);
@@ -88,8 +88,8 @@ void gui_sleep(double ms) {
 		return;
 	}
 
-	sec = (time_t) (ms / 1000.0f);
-	ms = ms - ((double) sec * 1000.0f);
+	sec = (time_t)(ms / 1000.0f);
+	ms = ms - ((double)sec * 1000.0f);
 	req.tv_sec = sec;
 	req.tv_nsec = ms * 1000000L;
 	__nsleep(&req, &rem);
@@ -100,7 +100,7 @@ int gui_screen_id(void) {
 	return (wid);
 }
 
-double high_resolution_ms(void) {
+static double high_resolution_ms(void) {
 	struct timeval time;
 	double elapsed_seconds;
 	double elapsed_useconds;
@@ -113,7 +113,7 @@ double high_resolution_ms(void) {
 	//return ((elapsed_seconds * 1000) + (elapsed_useconds / 1000.0f) + 0.5f);
 	return ((elapsed_seconds * 1000.0f) + (elapsed_useconds / 1000.0f));
 }
-int __nsleep(const struct timespec *req, struct timespec *rem) {
+static int __nsleep(const struct timespec *req, struct timespec *rem) {
 	struct timespec temp_rem;
 
 	if (nanosleep(req, rem) == -1) {

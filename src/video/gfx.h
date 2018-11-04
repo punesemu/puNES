@@ -128,10 +128,11 @@ EXTERNC struct _gfx {
 } gfx;
 
 EXTERNC BYTE gfx_init(void);
+EXTERNC void gfx_quit(void);
 EXTERNC void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, BYTE palette,
 	BYTE force_scale, BYTE force_palette);
 EXTERNC void gfx_draw_screen(void);
-EXTERNC void gfx_quit(void);
+EXTERNC void gfx_apply_filter(void);
 
 #if defined (WITH_D3D9)
 EXTERNC void gfx_control_changed_adapter(void *monitor);
@@ -149,8 +150,8 @@ EXTERNC void gfx_text_reset(void);
 EXTERNC void gfx_text_clear(_txt_element *ele);
 EXTERNC void gfx_text_blit(_txt_element *ele, _txt_rect *rect);
 
-EXTERNC void gfx_lock(void);
-EXTERNC void gfx_unlock(void);
+EXTERNC void gfx_thread_lock(void);
+EXTERNC void gfx_thread_unlock(void);
 
 #undef EXTERNC
 

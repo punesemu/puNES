@@ -24,7 +24,7 @@
 #include <pthread.h>
 #include <sndio.h>
 #include "info.h"
-#include "snd.h"
+#include "audio/snd.h"
 #include "clock.h"
 #include "conf.h"
 #include "fps.h"
@@ -202,7 +202,7 @@ BYTE snd_playback_start(void) {
 		// dimensione in bytes del buffer software
 		snd.buffer.size = (sndio.bsize * snd.channels * sizeof(*cbd.write)) * 10;
 
-		snd.buffer.limit.low = (snd.buffer.size / 100) * 15;
+		snd.buffer.limit.low = (snd.buffer.size / 100) * 20;
 		snd.buffer.limit.high = (snd.buffer.size / 100) * 45;
 
 #if !defined (RELEASE)
@@ -412,10 +412,11 @@ static void *sndio_playback_loop(void *data) {
 		if ((gui_get_ms() - th->tick) >= 250.0f) {
 			th->tick = gui_get_ms();
 			if (info.snd_info == TRUE)
-			fprintf(stderr, "snd : %6d %6d %d %6d %d %6d %6d %f %3d %f %4s\r",
+			fprintf(stderr, "snd : %6d %6d %d %6d %6d %d %6d %6d %f %3d %f %4s\r",
 				request,
 				avail,
 				len,
+				fps.frames_emu_too_long,
 				fps.frames_skipped,
 				cache->samples_available,
 				cache->bytes_available,

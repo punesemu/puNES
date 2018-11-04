@@ -17,7 +17,7 @@
  */
 
 #include "wdgOpenGL.moc"
-#include "gfx.h"
+#include "video/gfx.h"
 #include "fps.h"
 
 extern "C" void opengl_draw_scene(void);

@@ -1,5 +1,6 @@
 noinst_LIBRARIES = libvideo.a
 libvideo_a_SOURCES = \
+	gfx.h \
 	effects/pause.c \
 	effects/pause.h \
 	effects/tv_noise.c \

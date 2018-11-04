@@ -19,7 +19,7 @@
 #include <string.h>
 #include "input.h"
 #include "clock.h"
-#include "gfx.h"
+#include "video/gfx.h"
 #include "info.h"
 #include "conf.h"
 #include "vs_system.h"

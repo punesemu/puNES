@@ -21,7 +21,7 @@
 
 #include "video/filters/nes_ntsc.h"
 #include "common.h"
-#include "gfx.h"
+#include "video/gfx.h"
 #include "palette.h"
 
 enum ntsc_mode { COMPOSITE, SVIDEO, RGBMODE };

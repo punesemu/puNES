@@ -26,7 +26,7 @@
 #include "info.h"
 #include "settings.h"
 #include "mem_map.h"
-#include "gfx.h"
+#include "video/gfx.h"
 #include "text.h"
 #include "conf.h"
 #include "timeline.h"

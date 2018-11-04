@@ -24,7 +24,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "text.h"
-#include "gfx.h"
+#include "video/gfx.h"
 #include "font.h"
 #include "tas.h"
 #include "input.h"

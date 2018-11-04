@@ -20,7 +20,7 @@
 #define XBRZ_H_
 
 #include "common.h"
-#include "gfx.h"
+#include "video/gfx.h"
 
 #if defined (__cplusplus)
 #define EXTERNC extern "C"

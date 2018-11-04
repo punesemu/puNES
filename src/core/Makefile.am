@@ -25,7 +25,6 @@ libcore_a_SOURCES = \
 	font.h \
 	fps.c \
 	fps.h \
-	gfx.h \
 	gui.h \
 	ines.c \
 	ines.h \
@@ -60,7 +59,6 @@ libcore_a_SOURCES = \
 	save_slot.h \
 	sha1.c \
 	sha1.h \
-	snd.h \
 	text.c \
 	text.h \
 	timeline.c \

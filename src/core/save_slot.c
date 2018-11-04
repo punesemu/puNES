@@ -30,7 +30,7 @@
 #include "irqA12.h"
 #include "irql2f.h"
 #include "timeline.h"
-#include "gfx.h"
+#include "video/gfx.h"
 #include "gui.h"
 #include "tas.h"
 #include "text.h"

@@ -37,9 +37,12 @@ static DWORD WINAPI gfx_thread_filter(void *arg);
 struct _gfx_thread {
 	HANDLE thread;
 	HANDLE lock;
+	BYTE in_run;
 } gfx_thread;
 
 BYTE gfx_init(void) {
+	memset(&gfx_thread, 0x00, sizeof(gfx_thread));
+
 	gfx.save_screenshot = FALSE;
 
 	if (gui_create() == EXIT_ERROR) {
@@ -98,13 +101,35 @@ BYTE gfx_init(void) {
 
 	return (EXIT_OK);
 }
+void gfx_quit(void) {
+	if (gfx_thread.thread) {
+		WaitForSingleObject(gfx_thread.thread, INFINITE);
+		CloseHandle(gfx_thread.thread);
+	}
+	if (gfx_thread.lock) {
+		CloseHandle(gfx_thread.lock);
+	}
+
+	pause_quit();
+	tv_noise_quit();
+
+	ntsc_quit();
+	text_quit();
+
+	if (gfx.palette) {
+		free(gfx.palette);
+		gfx.palette = NULL;
+	}
+
+	d3d9_quit();
+}
 void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, BYTE palette,
 	BYTE force_scale, BYTE force_palette) {
 	BYTE set_mode;
 	WORD width, height;
 	DBWORD old_shader = cfg->shader;
 
-	gfx_lock();
+	gfx_thread_lock();
 
 	gfx_set_screen_start:
 	set_mode = FALSE;
@@ -414,7 +439,7 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 		switch (d3d9_context_create()) {
 			case EXIT_ERROR:
 				fprintf(stderr, "D3D9: Unable to initialize d3d context\n");
-				gfx_unlock();
+				gfx_thread_unlock();
 				return;
 			case EXIT_ERROR_SHADER:
 				text_add_line_info(1, "[red]errors[normal] on shader, use [green]'No shader'");
@@ -437,7 +462,7 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 		gfx.h_pr = (float) gfx.h[NO_OVERSCAN] / (float) SCR_LINES;
 	}
 
-	gfx_unlock();
+	gfx_thread_unlock();
 
 	// setto il titolo della finestra
 	gui_update();
@@ -447,43 +472,16 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 	}
 }
 void gfx_draw_screen(void) {
-	if (fps.fast_forward == TRUE) {
-		double now = gui_get_ms();
-		double estimated_ms = (1000.0f / machine.fps);
-		static double last;
-
-		if ((now - last) < estimated_ms) {
-			return;
-		} else {
-			last = gui_get_ms();
-		}
+	if (gfx_thread.in_run == TRUE) {
+		fps.frames_skipped++;
+		return;
 	}
 
 	if (gfx_thread.thread) {
 		CloseHandle(gfx_thread.thread);
 	}
+
 	gfx_thread.thread = CreateThread(NULL, 0, gfx_thread_filter, NULL, 0, 0);
-}
-void gfx_quit(void) {
-	pause_quit();
-	tv_noise_quit();
-
-	ntsc_quit();
-	text_quit();
-
-	if (gfx.palette) {
-		free(gfx.palette);
-		gfx.palette = NULL;
-	}
-
-	d3d9_quit();
-
-	if (gfx_thread.thread) {
-		CloseHandle(gfx_thread.thread);
-	}
-	if (gfx_thread.lock) {
-		CloseHandle(gfx_thread.lock);
-	}
 }
 
 void gfx_control_changed_adapter(void *monitor) {
@@ -630,15 +628,17 @@ void gfx_text_blit(_txt_element *ele, _txt_rect *rect) {
 	IDirect3DSurface9_UnlockRect(d3d9.text.offscreen);
 }
 
-void gfx_lock(void) {
+void gfx_thread_lock(void) {
 	WaitForSingleObject((HANDLE **)gfx_thread.lock, INFINITE);
 }
-void gfx_unlock(void) {
+void gfx_thread_unlock(void) {
 	ReleaseSemaphore((HANDLE **)gfx_thread.lock, 1, NULL);
 }
 
 static DWORD WINAPI gfx_thread_filter(void *arg) {
 	void *palette = (void *)gfx.palette;
+
+	gfx_thread.in_run = TRUE;
 
 	//applico la paletta adeguata.
 	if (cfg->filter == NTSC_FILTER) {
@@ -660,7 +660,7 @@ static DWORD WINAPI gfx_thread_filter(void *arg) {
 		}
 	}
 
-	gfx_lock();
+	gfx_thread_lock();
 
 	{
 		const _texture_simple *scrtex = &d3d9.screen.tex[d3d9.screen.index];
@@ -676,6 +676,7 @@ static DWORD WINAPI gfx_thread_filter(void *arg) {
 			scrtex->rect.base.h);
 		// unlock della surface in memoria
 		IDirect3DSurface9_UnlockRect(scrtex->offscreen);
+
 		// aggiorno la texture dello schermo
 		if (overscan.enabled) {
 			POINT point;
@@ -689,17 +690,15 @@ static DWORD WINAPI gfx_thread_filter(void *arg) {
 			point.x = rect.left;
 			point.y = rect.top;
 
-			IDirect3DDevice9_UpdateSurface(d3d9.adapter->dev, scrtex->offscreen, &rect,
-				scrtex->map0, &point);
+			IDirect3DDevice9_UpdateSurface(d3d9.adapter->dev, scrtex->offscreen, &rect, scrtex->map0, &point);
 		} else {
-			IDirect3DDevice9_UpdateSurface(d3d9.adapter->dev, scrtex->offscreen, NULL,
-				scrtex->map0, NULL);
+			IDirect3DDevice9_UpdateSurface(d3d9.adapter->dev, scrtex->offscreen, NULL, scrtex->map0, NULL);
 		}
 	}
 
-	gfx_unlock();
-
+	gfx_thread_unlock();
 	gui_screen_update();
+	gfx_thread.in_run = FALSE;
 
 	return (0);
 }

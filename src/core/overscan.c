@@ -18,7 +18,7 @@
 
 #include "common.h"
 #include "overscan.h"
-#include "gfx.h"
+#include "video/gfx.h"
 
 BYTE overscan_set_mode(BYTE mode) {
 	_overscan_borders save = (*overscan.borders);

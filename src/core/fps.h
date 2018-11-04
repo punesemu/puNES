@@ -36,6 +36,7 @@ EXTERNC struct _fps {
 	double gfx;
 	uint8_t fast_forward;
 	uint32_t frames_skipped;
+	uint32_t frames_emu_too_long;
 	struct _frame {
 		double estimated_ms;
 		double expected_end;

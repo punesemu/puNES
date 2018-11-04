@@ -21,9 +21,9 @@
 
 #include "common.h"
 #include "info.h"
-#include "gfx.h"
+#include "video/gfx.h"
 #include "fps.h"
-#include "snd.h"
+#include "audio/snd.h"
 #include "cheat.h"
 #include "audio/channels.h"
 #include "overscan.h"
