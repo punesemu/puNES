@@ -21,7 +21,6 @@
 
 #include <QtWidgets/QWidget>
 #include <QtCore/QElapsedTimer>
-#include <QtCore/QTimer>
 #include <QtGui/QPaintEvent>
 #include <QtGui/QPaintEngine>
 

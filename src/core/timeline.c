@@ -133,7 +133,7 @@ void timeline_preview(BYTE snap) {
 		snap_preview += TL_SNAPS;
 	}
 
-	memcpy(screen.data, tl.snaps[snap_preview] + tl.preview, screen_size());
+	memcpy(screen.rd->data, tl.snaps[snap_preview] + tl.preview, screen_size());
 	gfx_draw_screen();
 }
 void timeline_back(BYTE mode, BYTE snap) {
@@ -255,5 +255,5 @@ void tl_operation(BYTE mode, BYTE snap) {
 	if (mode == TL_COUNT) {
 		tl.preview = tl.snap_size;
 	}
-	tl_on_mem(mode, screen.data, screen_size());
+	tl_on_mem(mode, screen.rd->data, screen_size());
 }

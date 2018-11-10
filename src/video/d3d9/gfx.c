@@ -20,6 +20,7 @@
  */
 
 #include "d3d9.h"
+#include "video/gfx_thread.h"
 #include "fps.h"
 #include "gui.h"
 #include "info.h"
@@ -32,17 +33,7 @@
 #include "video/effects/pause.h"
 #include "video/effects/tv_noise.h"
 
-static DWORD WINAPI gfx_thread_filter(void *arg);
-
-struct _gfx_thread {
-	HANDLE thread;
-	HANDLE lock;
-	BYTE in_run;
-} gfx_thread;
-
 BYTE gfx_init(void) {
-	memset(&gfx_thread, 0x00, sizeof(gfx_thread));
-
 	gfx.save_screenshot = FALSE;
 
 	if (gui_create() == EXIT_ERROR) {
@@ -50,8 +41,8 @@ BYTE gfx_init(void) {
 		return (EXIT_ERROR);
 	}
 
-	if ((gfx_thread.lock = CreateSemaphore(NULL, 1, 2, NULL)) == NULL) {
-		MessageBox(NULL, "Unable to allocate the gfx mutex", "Error!", MB_ICONEXCLAMATION | MB_OK);
+	if (gfx_thread_init() == EXIT_ERROR) {
+		MessageBox(NULL, "Unable to allocate the gfx thread", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return (EXIT_ERROR);
 	}
 
@@ -102,13 +93,7 @@ BYTE gfx_init(void) {
 	return (EXIT_OK);
 }
 void gfx_quit(void) {
-	if (gfx_thread.thread) {
-		WaitForSingleObject(gfx_thread.thread, INFINITE);
-		CloseHandle(gfx_thread.thread);
-	}
-	if (gfx_thread.lock) {
-		CloseHandle(gfx_thread.lock);
-	}
+	gfx_thread_quit();
 
 	pause_quit();
 	tv_noise_quit();
@@ -129,7 +114,7 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 	WORD width, height;
 	DBWORD old_shader = cfg->shader;
 
-	gfx_thread_lock();
+	gfx_thread_pause();
 
 	gfx_set_screen_start:
 	set_mode = FALSE;
@@ -439,7 +424,7 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 		switch (d3d9_context_create()) {
 			case EXIT_ERROR:
 				fprintf(stderr, "D3D9: Unable to initialize d3d context\n");
-				gfx_thread_unlock();
+				gfx_thread_continue();
 				return;
 			case EXIT_ERROR_SHADER:
 				text_add_line_info(1, "[red]errors[normal] on shader, use [green]'No shader'");
@@ -462,7 +447,7 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 		gfx.h_pr = (float) gfx.h[NO_OVERSCAN] / (float) SCR_LINES;
 	}
 
-	gfx_thread_unlock();
+	gfx_thread_continue();
 
 	// setto il titolo della finestra
 	gui_update();
@@ -472,16 +457,18 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 	}
 }
 void gfx_draw_screen(void) {
-	if (gfx_thread.in_run == TRUE) {
+	if (gfx_thread_public.filtering == TRUE) {
 		fps.frames_skipped++;
 		return;
 	}
 
-	if (gfx_thread.thread) {
-		CloseHandle(gfx_thread.thread);
-	}
+	screen.rd = screen.wr;
+	screen.index = !screen.index;
+	screen.wr = &screen.buff[screen.index];
 
-	gfx_thread.thread = CreateThread(NULL, 0, gfx_thread_filter, NULL, 0, 0);
+	if (screen.rd->ready == FALSE) {
+		screen.rd->ready = TRUE;
+	}
 }
 
 void gfx_control_changed_adapter(void *monitor) {
@@ -628,17 +615,8 @@ void gfx_text_blit(_txt_element *ele, _txt_rect *rect) {
 	IDirect3DSurface9_UnlockRect(d3d9.text.offscreen);
 }
 
-void gfx_thread_lock(void) {
-	WaitForSingleObject((HANDLE **)gfx_thread.lock, INFINITE);
-}
-void gfx_thread_unlock(void) {
-	ReleaseSemaphore((HANDLE **)gfx_thread.lock, 1, NULL);
-}
-
-static DWORD WINAPI gfx_thread_filter(void *arg) {
+void gfx_apply_filter(void) {
 	void *palette = (void *)gfx.palette;
-
-	gfx_thread.in_run = TRUE;
 
 	//applico la paletta adeguata.
 	if (cfg->filter == NTSC_FILTER) {
@@ -698,7 +676,6 @@ static DWORD WINAPI gfx_thread_filter(void *arg) {
 
 	gfx_thread_unlock();
 	gui_screen_update();
-	gfx_thread.in_run = FALSE;
 
-	return (0);
+	return;
 }

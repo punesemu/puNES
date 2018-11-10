@@ -68,7 +68,7 @@ void tv_noise_effect(void) {
 	if (cfg->disable_tv_noise) {
 		for (y = 0; y < SCR_LINES; y++) {
 			for (x = 0; x < SCR_ROWS; x++) {
-				screen.line[y][x] = 0x0D;
+				screen.wr->line[y][x] = 0x0D;
 			}
 		}
 		return;
@@ -77,7 +77,7 @@ void tv_noise_effect(void) {
 	for (y = 0; y < SCR_LINES; y++) {
 		for (x = 0; x < SCR_ROWS; x++) {
 			WORD w = 7 + sin(x / 50000 + t0 / 7);
-			screen.line[y][x] = emu_irand(16) * w;
+			screen.wr->line[y][x] = emu_irand(16) * w;
 		}
 		t0 = (t0 + 1) % SCR_LINES;
 	}

@@ -202,9 +202,9 @@ void audio_apu_tick_blipbuf(void) {
 void audio_end_frame_blipbuf(void) {
 	if (!blipbuf.wave || !cfg->apu.channel[APU_MASTER] || fps.fast_forward) {
 		if (snd.cache) {
-			SNDCACHE->write = SNDCACHE->start;
-			SNDCACHE->read = (SBYTE *) SNDCACHE->start;
-			SNDCACHE->bytes_available = SNDCACHE->samples_available = 0;
+			snd.cache->write = snd.cache->start;
+			snd.cache->read = (SBYTE *) snd.cache->start;
+			snd.cache->bytes_available = snd.cache->samples_available = 0;
 		}
 		snd.buffer.start = FALSE;
 		return;
@@ -231,7 +231,7 @@ void audio_end_frame_blipbuf(void) {
 			return;
 		}
 
-		snd_playback_lock(SNDCACHE);
+		snd_thread_lock();
 
 		if (extcl_audio_samples_mod) {
 			extcl_audio_samples_mod(blipbuf.samples.data, blipbuf.samples.count);
@@ -242,16 +242,16 @@ void audio_end_frame_blipbuf(void) {
 
 			audio_channels_tick(data);
 
-			if (SNDCACHE->write == (SWORD *) SNDCACHE->end) {
-				SNDCACHE->write = SNDCACHE->start;
+			if (snd.cache->write == (SWORD *) snd.cache->end) {
+				snd.cache->write = snd.cache->start;
 			}
 		}
 
-		if ((SNDCACHE->samples_available > snd.samples)) {
+		if (snd.cache->samples_available >= (snd.samplerate / 2)) {
 			snd.buffer.start = TRUE;
 		}
 
-		snd_playback_unlock(SNDCACHE);
+		snd_thread_unlock();
 	}
 }
 int audio_buffer_blipbuf(SWORD **buffer) {

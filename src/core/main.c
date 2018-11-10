@@ -36,6 +36,7 @@
 #include "recent_roms.h"
 #include "uncompress.h"
 #include "patcher.h"
+#include "ppu.h"
 
 #if defined (__WIN32__)
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine, int iCmdShow) {
@@ -130,6 +131,8 @@ int main(int argc, char **argv) {
 	recent_roms_parse();
 
 	uncompress_init();
+
+	ppu_init();
 
 	if (emu_turn_on()) {
 		emu_quit();

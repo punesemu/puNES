@@ -21,9 +21,7 @@
 
 #include "common.h"
 
-enum samplerate_mode { S44100, S22050, S11025, S48000 };
-
-#define SNDCACHE ((_callback_data *) snd.cache)
+enum snd_samplerate_mode { S44100, S22050, S11025, S48000 };
 
 typedef struct _snd_dev {
 	uTCHAR *desc;
@@ -34,10 +32,6 @@ typedef struct _snd_list_dev {
 	_snd_dev *devices;
 } _snd_list_dev;
 typedef struct _callback_data {
-#if defined (__WIN32__)
-	void *xa2buffer;
-	void *xa2source;
-#endif
 	SWORD *silence;
 
 	SWORD *start;
@@ -48,20 +42,23 @@ typedef struct _callback_data {
 
 	int32_t bytes_available;
 	int32_t samples_available;
-
-	void *lock;
 } _callback_data;
 typedef struct _snd {
 	DBWORD samplerate;
 	BYTE channels;
 
-	WORD samples;
+	DBWORD overlap;
 	DBWORD out_of_sync;
 
 	double frequency;
 	double factor;
 
-	void *cache;
+	_callback_data *cache;
+
+	struct _period {
+		DBWORD samples;
+		uint32_t size;
+	} period;
 
 	struct _buffer {
 		BYTE start;
@@ -90,10 +87,15 @@ EXTERNC struct _snd_list {
 EXTERNC BYTE snd_init(void);
 EXTERNC void snd_quit(void);
 
+EXTERNC void snd_thread_pause(void);
+EXTERNC void snd_thread_continue(void);
+
+EXTERNC void snd_thread_lock(void);
+EXTERNC void snd_thread_unlock(void);
+
 EXTERNC BYTE snd_playback_start(void);
-EXTERNC void snd_playback_lock(_callback_data *cache);
-EXTERNC void snd_playback_unlock(_callback_data *cache);
 EXTERNC void snd_playback_stop(void);
+
 EXTERNC uTCHAR *snd_playback_device_desc(int dev);
 EXTERNC uTCHAR *snd_playback_device_id(int dev);
 

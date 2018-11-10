@@ -16,23 +16,31 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <math.h>
-#include "audio/snd.h"
-#include "audio/mono.h"
-#include "audio/channels.h"
+#ifndef GFX_THREAD_H_
+#define GFX_THREAD_H_
 
-BYTE ch_mono_init(void) {
-	audio_channels_quit = ch_mono_quit;
-	audio_channels_tick = ch_mono_tick;
+#include "common.h"
 
-	snd.channels = 1;
+#if defined (__cplusplus)
+#define EXTERNC extern "C"
+#else
+#define EXTERNC
+#endif
 
-	return (EXIT_OK);
-}
-void ch_mono_quit(void) {}
-void ch_mono_tick(SWORD value) {
-	(*snd.cache->write++) = value;
+EXTERNC struct _gfx_thread_public {
+	BYTE filtering;
+} gfx_thread_public;
 
-	snd.cache->samples_available++;
-	snd.cache->bytes_available += sizeof(*snd.cache->write);
-}
+EXTERNC BYTE gfx_thread_init(void);
+EXTERNC void gfx_thread_quit(void);
+
+EXTERNC void gfx_thread_lock(void);
+EXTERNC void gfx_thread_unlock(void);
+
+EXTERNC void gfx_thread_pause(void);
+EXTERNC void gfx_thread_continue(void);
+
+#undef EXTERNC
+
+#endif /* GFX_THREAD_H_ */
+

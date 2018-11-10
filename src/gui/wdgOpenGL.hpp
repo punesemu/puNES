@@ -25,7 +25,6 @@
 #include <QtWidgets/QWidget>
 #include "gui.h"
 #include <QtWidgets/QOpenGLWidget>
-#include <QtCore/QTimer>
 #include <QtCore/QElapsedTimer>
 
 class wdgOpenGL : public QOpenGLWidget {

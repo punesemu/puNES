@@ -55,7 +55,7 @@ void INLINE scale_surface1x(uint32_t *palette, uint32_t pitch, void *pix) {
 		scl.ox = 0;
 		/* loop per l'intera larghezza dell'immagine */
 		for (scl.sx = scl.startx; scl.sx < scl.rows; scl.sx++) {
-			pixel = palette[screen.line[scl.sy][scl.sx]];
+			pixel = palette[screen.rd->line[scl.sy][scl.sx]];
 			/*
 			 * converto il colore nel formato corretto di visualizzazione
 			 * e riempio un rettangolo delle dimensioni del fattore di scala

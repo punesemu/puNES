@@ -23,6 +23,7 @@
 #include <string.h>
 #include <unistd.h>
 #include "video/gfx.h"
+#include "video/gfx_thread.h"
 #include "fps.h"
 #include "info.h"
 #include "conf.h"
@@ -36,26 +37,7 @@
 #include "video/effects/pause.h"
 #include "video/effects/tv_noise.h"
 
-#if defined (__unix__)
-static void *gfx_thread_filter(void *arg);
-#elif defined (__WIN32__)
-static DWORD WINAPI gfx_thread_filter(void *arg);
-#endif
-
-struct _gfx_thread {
-#if defined (__unix__)
-	pthread_t *thread;
-	pthread_mutex_t lock;
-#elif defined (__WIN32__)
-	HANDLE thread;
-	HANDLE lock;
-#endif
-	BYTE in_run;
-} gfx_thread;
-
 BYTE gfx_init(void) {
-	memset(&gfx_thread, 0x00, sizeof(gfx_thread));
-
 	gfx.save_screenshot = FALSE;
 
 	gui_screen_info();
@@ -65,18 +47,10 @@ BYTE gfx_init(void) {
 		return (EXIT_ERROR);
 	}
 
-#if defined (__unix__)
-	if (pthread_mutex_init(&gfx_thread.lock, NULL) != 0) {
-		fprintf(stderr, "Unable to allocate the emu mutex\n");
+	if (gfx_thread_init() == EXIT_ERROR) {
+		fprintf(stderr, "Unable to allocate the gfx thread\n");
 		return (EXIT_ERROR);
 	}
-	gfx_thread.thread = malloc(sizeof(pthread_t));
-#elif defined (__WIN32__)
-	if ((gfx_thread.lock = CreateSemaphore(NULL, 1, 2, NULL)) == NULL) {
-		fprintf(stderr, "Unable to allocate the emu mutex\n");
-		return (EXIT_ERROR);
-	}
-#endif
 
 	if (opengl_init() == EXIT_ERROR) {
 		fprintf(stderr, "OpenGL not supported.\n");
@@ -124,21 +98,7 @@ BYTE gfx_init(void) {
 	return (EXIT_OK);
 }
 void gfx_quit(void) {
-#if defined (__unix__)
-	if (gfx_thread.thread) {
-		pthread_join((*gfx_thread.thread), NULL);
-		free(gfx_thread.thread);
-	}
-	pthread_mutex_destroy(&gfx_thread.lock);
-#elif defined (__WIN32__)
-	if (gfx_thread.thread) {
-		WaitForSingleObject(gfx_thread.thread, INFINITE);
-		CloseHandle(gfx_thread.thread);
-	}
-	if (gfx_thread.lock) {
-		CloseHandle(gfx_thread.lock);
-	}
-#endif
+	gfx_thread_quit();
 
 	if (gfx.palette) {
 		free(gfx.palette);
@@ -158,7 +118,7 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 	WORD width, height;
 	DBWORD old_shader = cfg->shader;
 
-	gfx_thread_lock();
+	gfx_thread_pause();
 
 	gfx_set_screen_start:
 	set_mode = FALSE;
@@ -489,7 +449,7 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 		gfx.h_pr = (float) gfx.h[NO_OVERSCAN] / (float) SCR_LINES;
 	}
 
-	gfx_thread_unlock();
+	gfx_thread_continue();
 
 	// setto il titolo della finestra
 	gui_update();
@@ -499,20 +459,18 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 	}
 }
 void gfx_draw_screen(void) {
-	if (gfx_thread.in_run == TRUE) {
+	if (gfx_thread_public.filtering == TRUE) {
 		fps.frames_skipped++;
 		return;
 	}
 
-#if defined (__unix__)
-	pthread_create(gfx_thread.thread, NULL, gfx_thread_filter, NULL);
-#elif defined (__WIN32__)
-	if (gfx_thread.thread) {
-		CloseHandle(gfx_thread.thread);
-	}
+	screen.rd = screen.wr;
+	screen.index = !screen.index;
+	screen.wr = &screen.buff[screen.index];
 
-	gfx_thread.thread = CreateThread(NULL, 0, gfx_thread_filter, NULL, 0, 0);
-#endif
+	if (screen.rd->ready == FALSE) {
+		screen.rd->ready = TRUE;
+	}
 }
 
 uint32_t gfx_color(BYTE a, BYTE r, BYTE g, BYTE b) {
@@ -597,29 +555,9 @@ void gfx_text_blit(_txt_element *ele, _txt_rect *rect) {
 	glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
 }
 
-void gfx_thread_lock(void) {
-#if defined (__unix__)
-	pthread_mutex_lock(&gfx_thread.lock);
-#elif defined (__WIN32__)
-	WaitForSingleObject((HANDLE **)gfx_thread.lock, INFINITE);
-#endif
-}
-void gfx_thread_unlock(void) {
-#if defined (__unix__)
-	pthread_mutex_unlock(&gfx_thread.lock);
-#elif defined (__WIN32__)
-	ReleaseSemaphore((HANDLE **)gfx_thread.lock, 1, NULL);
-#endif
-}
 
-#if defined (__unix__)
-static void *gfx_thread_filter(void *arg) {
-#elif defined (__WIN32__)
-static DWORD WINAPI gfx_thread_filter(void *arg) {
-#endif
+void gfx_apply_filter(void) {
 	void *palette = (void *)gfx.palette;
-
-	gfx_thread.in_run = TRUE;
 
 	//applico la paletta adeguata.
 	if (cfg->filter == NTSC_FILTER) {
@@ -652,11 +590,4 @@ static DWORD WINAPI gfx_thread_filter(void *arg) {
 
 	gfx_thread_unlock();
 	gui_screen_update();
-	gfx_thread.in_run = FALSE;
-
-#if defined (__unix__)
-	return (NULL);
-#elif defined (__WIN32__)
-	return (0);
-#endif
 }

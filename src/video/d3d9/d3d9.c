@@ -20,6 +20,7 @@
  */
 
 #include "d3d9.h"
+#include "video/gfx_thread.h"
 #include "info.h"
 #include "gui.h"
 #include "conf.h"

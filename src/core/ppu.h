@@ -147,9 +147,16 @@ typedef struct _ppu {
 	} sf;
 	WORD rnd_adr;
 }  _ppu;
-typedef struct _screen {
+typedef struct _screen_buffer {
+	BYTE ready;
 	WORD *data;
 	WORD *line[SCR_LINES];
+} _screen_buffer;
+typedef struct _screen {
+	BYTE index;
+	_screen_buffer *wr;
+	_screen_buffer *rd;
+	_screen_buffer buff[2];
 } _screen;
 typedef struct _ppu_openbus {
 	int32_t bit0;
@@ -286,9 +293,11 @@ EXTERNC _spr_evaluate spr_ev_unl;
 EXTERNC _spr sprite_unl[56], sprite_plus_unl[56];
 EXTERNC _tile tile_render, tile_fetch;
 
+EXTERNC void ppu_init(void);
+EXTERNC void ppu_quit(void);
+
 EXTERNC void ppu_tick(void);
 EXTERNC BYTE ppu_turn_on(void);
-EXTERNC void ppu_quit(void);
 EXTERNC void ppu_overclock(BYTE reset_dmc_in_use);
 
 #undef EXTERNC

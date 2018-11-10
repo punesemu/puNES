@@ -149,8 +149,7 @@ EXTERNC void gfx_text_reset(void);
 EXTERNC void gfx_text_clear(_txt_element *ele);
 EXTERNC void gfx_text_blit(_txt_element *ele, _txt_rect *rect);
 
-EXTERNC void gfx_thread_lock(void);
-EXTERNC void gfx_thread_unlock(void);
+EXTERNC void gfx_apply_filter(void);
 
 #undef EXTERNC
 

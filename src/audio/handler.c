@@ -21,11 +21,11 @@
 #include "fps.h"
 
 BYTE snd_handler(void) {
-	if (SNDCACHE->bytes_available >= snd.buffer.size) {
+	if (snd.cache->bytes_available >= snd.buffer.size) {
 		return (EXIT_ERROR);
 	} else if (fps.fast_forward == FALSE) {
 		double landmark = snd.buffer.limit.low;
-		double percent = ((((double)SNDCACHE->bytes_available) / landmark) * 100.0f) - 100.0f;
+		double percent = ((((double)snd.cache->bytes_available) / landmark) * 100.0f) - 100.0f;
 		double factor = 1.0f + ((((1.0f / (double)machine.fps) / 100.0f) * 1.0f) * percent);
 
 		if (snd.factor != factor) {

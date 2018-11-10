@@ -943,7 +943,7 @@ static void nsf_effect_raw(BYTE solid) {
 
 	for (y = nsf.effect_coords.y1; y <= nsf.effect_coords.y2; y++) {
 		for (x = nsf.effect_coords.x1; x <= nsf.effect_coords.x2; x++) {
-			screen.line[y][x] = doscolor(DOS_BLACK);
+			screen.wr->line[y][x] = doscolor(DOS_BLACK);
 		}
 	}
 
@@ -959,7 +959,7 @@ static void nsf_effect_raw(BYTE solid) {
 		}
 
 		if ((y >= nsf.effect_coords.y1) && (y < nsf.effect_coords.y2)) {
-			screen.line[y][x] = doscolor(DOS_GREEN);
+			screen.wr->line[y][x] = doscolor(DOS_GREEN);
 		}
 
 		if (y_last > y) {
@@ -975,8 +975,8 @@ static void nsf_effect_raw(BYTE solid) {
 
 		for (; a < b; a++) {
 			if (((a >= nsf.effect_coords.y1) && (a <= nsf.effect_coords.y2)) &&
-				(screen.line[a][x] != doscolor(DOS_GREEN))) {
-				screen.line[a][x] = doscolor(DOS_YELLOW);
+				(screen.wr->line[a][x] != doscolor(DOS_GREEN))) {
+				screen.wr->line[a][x] = doscolor(DOS_YELLOW);
 			}
 		}
 
@@ -1004,7 +1004,7 @@ static void nsf_effect_hanning_window(BYTE solid) {
 
 	for (y = nsf.effect_coords.y1; y <= nsf.effect_coords.y2; y++) {
 		for (x = nsf.effect_coords.x1; x <= nsf.effect_coords.x2; x++) {
-			screen.line[y][x] = doscolor(DOS_BLACK);
+			screen.wr->line[y][x] = doscolor(DOS_BLACK);
 		}
 	}
 
@@ -1021,7 +1021,7 @@ static void nsf_effect_hanning_window(BYTE solid) {
 		}
 
 		if ((y >= nsf.effect_coords.y1) && (y <= nsf.effect_coords.y2)) {
-			screen.line[y][x] = doscolor(DOS_GREEN);
+			screen.wr->line[y][x] = doscolor(DOS_GREEN);
 		}
 
 		if (y_last > y) {
@@ -1037,8 +1037,8 @@ static void nsf_effect_hanning_window(BYTE solid) {
 
 		for (; a < b; a++) {
 			if (((a >= nsf.effect_coords.y1) && (a <= nsf.effect_coords.y2)) &&
-				(screen.line[a][x] != doscolor(DOS_GREEN))) {
-				screen.line[a][x] = doscolor(DOS_YELLOW);
+				(screen.wr->line[a][x] != doscolor(DOS_GREEN))) {
+				screen.wr->line[a][x] = doscolor(DOS_YELLOW);
 			}
 		}
 
@@ -1067,7 +1067,7 @@ static void nsf_effect_bars(void) {
 
 	for (y = nsf.effect_coords.y1; y <= nsf.effect_coords.y2; y++) {
 		for (x = nsf.effect_coords.x1; x <= nsf.effect_coords.x2; x++) {
-			screen.line[y][x] = doscolor(DOS_BLACK);
+			screen.wr->line[y][x] = doscolor(DOS_BLACK);
 		}
 	}
 
@@ -1144,7 +1144,7 @@ static void nsf_effect_bars(void) {
 
 		for (x = x1; x < x2; x++) {
 			if ((y >= nsf.effect_bars_coords.y1) && (y <= nsf.effect_bars_coords.y2)) {
-				screen.line[y][x] = doscolor(DOS_GREEN);
+				screen.wr->line[y][x] = doscolor(DOS_GREEN);
 			}
 		}
 
@@ -1164,11 +1164,11 @@ static void nsf_effect_bars(void) {
 
 		for (; a <= b; a++) {
 			if ((a >= nsf.effect_bars_coords.y1) && (a <= nsf.effect_bars_coords.y2)) {
-				if (screen.line[a][x1] != doscolor(DOS_GREEN)) {
-					screen.line[a][x1] = doscolor(DOS_RED);
+				if (screen.wr->line[a][x1] != doscolor(DOS_GREEN)) {
+					screen.wr->line[a][x1] = doscolor(DOS_RED);
 				}
-				if (screen.line[a][x - 1] != doscolor(DOS_GREEN)) {
-					screen.line[a][x - 1] = doscolor(DOS_GRAY);
+				if (screen.wr->line[a][x - 1] != doscolor(DOS_GREEN)) {
+					screen.wr->line[a][x - 1] = doscolor(DOS_GRAY);
 				}
 			}
 		}

@@ -33,40 +33,33 @@
 #include "gui.h"
 #include "wave.h"
 
-enum sndio_thread_loop_actions {
-	AT_UNINITIALIZED,
-	AT_RUN,
-	AT_STOP,
-	AT_PAUSE
+enum snd_thread_actions {
+	ST_UNINITIALIZED,
+	ST_RUN,
+	ST_STOP,
+	ST_PAUSE
 };
 
 typedef struct _sndio {
 	struct sio_hdl *playback;
 	struct pollfd *pfds;
-
-	size_t bsize;
-	size_t psize;
 } _sndio;
-typedef struct _thread {
+typedef struct _snd_thread {
 	pthread_t thread;
 	pthread_mutex_t lock;
 
 	BYTE action;
 	BYTE in_run;
 
-	void *cache;
-	_sndio *sndio;
-
 #if !defined (RELEASE)
 	double tick;
 #endif
-} _thread;
+} _snd_thread;
 
-static void *sndio_playback_loop(void *data);
-static void sndio_playback_loop_in_pause(void);
-static void INLINE sndio_wr_buf(_sndio *sndio, void *buffer, uint32_t avail);
+static void *sndio_thread_loop(void *data);
+static void INLINE sndio_wr_buf(void *buffer, uint32_t avail);
 
-static _thread loop;
+static _snd_thread snd_thread;
 static _sndio sndio;
 static _callback_data cbd;
 
@@ -74,10 +67,27 @@ BYTE snd_init(void) {
 	memset(&snd, 0x00, sizeof(_snd));
 	memset(&sndio, 0x00, sizeof(_sndio));
 	memset(&cbd, 0x00, sizeof(_callback_data));
-	memset(&loop, 0x00, sizeof(_thread));
+	memset(&snd_thread, 0x00, sizeof(_snd_thread));
 
 	snd_apu_tick = NULL;
 	snd_end_frame = NULL;
+
+	{
+		int rc;
+
+		// creo il lock
+		if (pthread_mutex_init(&snd_thread.lock, NULL) != 0) {
+			fprintf(stderr, "Unable to allocate the mutex\n");
+			return (EXIT_ERROR);
+		}
+
+		snd_thread.action = ST_PAUSE;
+
+		if ((rc = pthread_create(&snd_thread.thread, NULL, sndio_thread_loop, NULL))) {
+			fprintf(stderr, "Error - pthread_create() return code: %d\n", rc);
+			return (EXIT_ERROR);
+		}
+	}
 
 	// apro e avvio la riproduzione
 	if (snd_playback_start()) {
@@ -90,12 +100,12 @@ void snd_quit(void) {
 	// se e' in corso una registrazione, la concludo
 	wave_close();
 
-	if (loop.action != AT_UNINITIALIZED) {
-		loop.action = AT_STOP;
+	if (snd_thread.action != ST_UNINITIALIZED) {
+		snd_thread.action = ST_STOP;
 
-		pthread_join(loop.thread, NULL);
-		pthread_mutex_destroy(&loop.lock);
-		memset(&loop, 0x00, sizeof(_thread));
+		pthread_join(snd_thread.thread, NULL);
+		pthread_mutex_destroy(&snd_thread.lock);
+		memset(&snd_thread, 0x00, sizeof(_snd_thread));
 	}
 
 	snd_playback_stop();
@@ -105,18 +115,35 @@ void snd_quit(void) {
 #endif
 }
 
+void snd_thread_pause(void) {
+	if (snd_thread.action != ST_UNINITIALIZED) {
+		snd_thread.action = ST_PAUSE;
+
+		while (snd_thread.in_run == TRUE) {
+			gui_sleep(1);
+		}
+	}
+}
+void snd_thread_continue(void) {
+	if (snd_thread.action != ST_UNINITIALIZED) {
+		snd_thread.action = ST_RUN;
+
+		while (snd_thread.in_run == FALSE) {
+			gui_sleep(1);
+		}
+	}
+}
+
+void snd_thread_lock(void) {
+	pthread_mutex_lock(&snd_thread.lock);
+}
+void snd_thread_unlock(void) {
+	pthread_mutex_unlock(&snd_thread.lock);
+}
+
 BYTE snd_playback_start(void) {
 	if (!cfg->apu.channel[APU_MASTER]) {
 		return (EXIT_OK);
-	}
-
-	// se il thread del loop e' gia' in funzione lo metto in pausa
-	if (loop.action == AT_RUN) {
-		sndio_playback_loop_in_pause();
-	}
-
-	if (loop.action != AT_UNINITIALIZED) {
-		snd_playback_lock(NULL);
 	}
 
 	// come prima cosa blocco eventuali riproduzioni
@@ -162,19 +189,18 @@ BYTE snd_playback_start(void) {
 		sio_initpar(&par);
 
 		// snd.samplarate / 50 = 20 ms
-		sndio.psize = (snd.samplerate / factor[cfg->audio_buffer_factor]);
-		sndio.bsize = sndio.psize;
+		snd.period.samples = (snd.samplerate / factor[cfg->audio_buffer_factor]);
 
 #if !defined (RELEASE)
-		fprintf(stderr, "psize and bsize : %ld %ld\n", sndio.psize, sndio.bsize);
+		fprintf(stderr, "psize and bsize : %ld %ld\n", snd.period.samples, snd.period.samples);
 #endif
 
 		par.bits = 16;
 		par.sig = 1;
 		par.pchan = snd.channels;
 		par.rate = snd.samplerate;
-		par.round = sndio.psize;
-		par.appbufsz = sndio.bsize;
+		par.round = snd.period.samples;
+		par.appbufsz = snd.period.samples;
 		par.xrun = SIO_IGNORE;
 
 		if (!sio_setpar(sndio.playback, &par)) {
@@ -187,36 +213,29 @@ BYTE snd_playback_start(void) {
 			goto snd_playback_start_error;
 		}
 
-		sndio.psize = par.round;
-		sndio.bsize = par.appbufsz;
+		snd.period.samples = par.round;
+		snd.frequency = machine.cpu_hz / (double)snd.samplerate;
 
-#if !defined (RELEASE)
-		fprintf(stderr, "new psize and bsize : %ld %ld\n", sndio.psize, sndio.bsize);
-#endif
-	}
-
-	snd.samples = sndio.bsize * 4;
-	snd.frequency = machine.cpu_hz / (double) snd.samplerate;
-
-	{
 		// dimensione in bytes del buffer software
-		snd.buffer.size = (sndio.bsize * snd.channels * sizeof(*cbd.write)) * 10;
+		snd.period.size = snd.period.samples * snd.channels * sizeof(*cbd.write);
+		snd.buffer.size = snd.period.size * ((snd.samplerate / snd.period.samples) + 1);
 
-		snd.buffer.limit.low = (snd.buffer.size / 100) * 20;
-		snd.buffer.limit.high = (snd.buffer.size / 100) * 45;
+		snd.buffer.limit.low = snd.period.size * 2;
+		snd.buffer.limit.high = snd.period.size * 7;
 
 #if !defined (RELEASE)
-		printf("softw bsize    : %10d - %10d\n", snd.buffer.size, snd.samples);
-		printf("softw limit    : %10d - %10d\n", snd.buffer.limit.high, snd.buffer.limit.low);
+		fprintf(stderr, "new psize and bsize : %ld %ld\n", snd.period.samples, par.appbufsz);
+		fprintf(stderr, "softw bsize    : %10d - %10d\n", snd.buffer.size, snd.period.samples);
+		fprintf(stderr, "softw limit    : %10d - %10d\n", snd.buffer.limit.high, snd.buffer.limit.low);
 #endif
 
 		// alloco il buffer in memoria
-		if (!(cbd.start = (SWORD *) malloc(snd.buffer.size))) {
+		if (!(cbd.start = (SWORD *)malloc(snd.buffer.size))) {
 			fprintf(stderr, "Unable to allocate audio buffers\n");
 			goto snd_playback_start_error;
 		}
 
-		if (!(cbd.silence = (SWORD *) malloc(snd.buffer.size))) {
+		if (!(cbd.silence = (SWORD *)malloc(snd.period.size))) {
 			fprintf(stderr, "Unable to allocate silence buffer\n");
 			goto snd_playback_start_error;
 		}
@@ -224,57 +243,30 @@ BYTE snd_playback_start(void) {
 		// inizializzo il frame di scrittura
 		cbd.write = cbd.start;
 		// inizializzo il frame di lettura
-		cbd.read = (SBYTE *) cbd.start;
+		cbd.read = (SBYTE *)cbd.start;
 		// punto alla fine del buffer
 		cbd.end = cbd.read + snd.buffer.size;
 		// azzero completamente i buffers
 		memset(cbd.start, 0x00, snd.buffer.size);
 		// azzero completamente il buffer del silenzio
-		memset(cbd.silence, 0x00, snd.buffer.size);
-
-		cbd.lock = (void *) &loop.lock;
+		memset(cbd.silence, 0x00, snd.period.size);
 	}
 
 	if (extcl_snd_playback_start) {
-		extcl_snd_playback_start((WORD) snd.samplerate);
+		extcl_snd_playback_start((WORD)snd.samplerate);
 	}
 
 	audio_channels_init_mode();
 
 	audio_init_blipbuf();
 
-	if (loop.action == AT_UNINITIALIZED) {
-		int rc;
-
-		loop.sndio = &sndio;
-		loop.action = AT_PAUSE;
-
-		// creo il lock
-		if (pthread_mutex_init(&loop.lock, NULL) != 0) {
-			fprintf(stderr, "Unable to allocate the thread mutex\n");
-			goto snd_playback_start_error;
-		}
-
-		snd_playback_lock(NULL);
-
-		if ((rc = pthread_create(&loop.thread, NULL, sndio_playback_loop, (void *) &loop))) {
-			fprintf(stderr, "Error - pthread_create() return code: %d\n", rc);
-			goto snd_playback_start_error;;
-		}
-	}
-
-	loop.cache = &cbd;
-
 	if (!sio_start(sndio.playback)) {
 		fprintf(stderr, "sio_start() failed\n");
 		goto snd_playback_start_error;
 	}
 
-	snd_playback_unlock(NULL);
+	snd_thread_continue();
 	gui_sleep(50);
-
-	loop.action = AT_RUN;
-
 	return (EXIT_OK);
 
 	snd_playback_start_error:
@@ -282,19 +274,19 @@ BYTE snd_playback_start(void) {
 	return (EXIT_ERROR);
 }
 void snd_playback_stop(void) {
-	sndio_playback_loop_in_pause();
+	snd_thread_pause();
 
-	if (snd.cache) {
-		if (SNDCACHE->start) {
-			free(SNDCACHE->start);
-		}
-
-		if (SNDCACHE->silence) {
-			free(SNDCACHE->silence);
-		}
-
-		snd.cache = NULL;
+	if (cbd.start) {
+		free(cbd.start);
+		cbd.start = NULL;
 	}
+
+	if (cbd.silence) {
+		free(cbd.silence);
+		cbd.silence = NULL;
+	}
+
+	snd.cache = NULL;
 
 	if (audio_channels_quit) {
 		audio_channels_quit();
@@ -312,12 +304,7 @@ void snd_playback_stop(void) {
 		sndio.pfds = NULL;
 	}
 }
-void snd_playback_lock(_callback_data *cache) {
-	pthread_mutex_lock(&loop.lock);
-}
-void snd_playback_unlock(_callback_data *cache) {
-	pthread_mutex_unlock(&loop.lock);
-}
+
 uTCHAR *snd_playback_device_desc(int dev) {
 	return (0);
 }
@@ -334,37 +321,38 @@ uTCHAR *snd_capture_device_id(int dev) {
 
 void snd_list_devices(void) {}
 
-static void *sndio_playback_loop(void *data) {
-	_thread *th = (_thread *) data;
+static void *sndio_thread_loop(void *data) {
 	uint32_t avail, len;
 
 #if !defined (RELEASE)
-	th->tick = gui_get_ms();
+	snd_thread.tick = gui_get_ms();
 #endif
 
 	while (TRUE) {
-		_callback_data *cache = (_callback_data *) th->cache;
-
-		if (th->action == AT_STOP) {
-			th->in_run = FALSE;
+		if (snd_thread.action == ST_STOP) {
+			snd_thread.in_run = FALSE;
 			break;
-		} else if (th->action == AT_PAUSE) {
-			th->in_run = FALSE;
-			gui_sleep(10);
+		} else if (snd_thread.action == ST_PAUSE) {
+			snd_thread.in_run = FALSE;
+			gui_sleep(1);
 			continue;
 		}
 
-		th->in_run = TRUE;
+		snd_thread.in_run = TRUE;
 
 		{
-			int nfds, event;
+			int nfds, event, rc;
 
 			if ((nfds = sio_pollfd(sndio.playback, sndio.pfds, POLLOUT)) <= 0) {
 				fprintf(stderr, "sio_pollfd() failed\n");
 				continue;
 			}
 
-			if (poll(sndio.pfds, nfds, -1) < 0) {
+			rc = poll(sndio.pfds, nfds, 1);
+
+			if (rc == 0) {
+				continue;
+			} else if (rc < 0) {
 				if (errno == EINTR) {
 					continue;
 				}
@@ -383,68 +371,62 @@ static void *sndio_playback_loop(void *data) {
 			}
 		}
 
-		snd_playback_lock(NULL);
+		snd_thread_lock();
 
-		avail = sndio.psize;
-		len = avail * snd.channels * sizeof(*cache->write);
+		avail = snd.period.samples;
+		len = avail * snd.channels * sizeof(*cbd.write);
 
-		if ((info.no_rom | info.turn_off | info.pause) || (snd.buffer.start == FALSE) ||
-			(fps.fast_forward == TRUE)) {
-			sndio_wr_buf(th->sndio, (void *) cache->silence, len);
-		} else if (cache->bytes_available < len) {
-			sndio_wr_buf(th->sndio, (void *) cache->silence, len);
+		if ((info.no_rom | info.turn_off | info.pause) || (snd.buffer.start == FALSE) || (fps.fast_forward == TRUE)) {
+			sndio_wr_buf((void *)cbd.silence, len);
+		} else if (cbd.bytes_available < len) {
+			sndio_wr_buf((void *)cbd.silence, len);
 			snd.out_of_sync++;
 		} else {
-			wave_write((SWORD *) cache->read, avail);
-			sndio_wr_buf(th->sndio, (void *) cache->read, len);
+			wave_write((SWORD *)cbd.read, avail);
+			sndio_wr_buf((void *)cbd.read, len);
 
-			cache->bytes_available -= len;
-			cache->samples_available -= avail;
+			cbd.bytes_available -= len;
+			cbd.samples_available -= avail;
 
-			if ((cache->read += len) >= cache->end) {
-				cache->read = (SBYTE *) cache->start;
+#if !defined (RELEASE)
+			if (((void*)cbd.write > (void*)cbd.read) && ((void*)cbd.write < (void*)(cbd.read + len))) {
+				snd.overlap++;
+			}
+#endif
+
+			if ((cbd.read += len) >= cbd.end) {
+				cbd.read = (SBYTE *)cbd.start;
 			}
 		}
 
 #if !defined (RELEASE)
-		uint32_t request = avail;
-
-		if ((gui_get_ms() - th->tick) >= 250.0f) {
-			th->tick = gui_get_ms();
+		if ((gui_get_ms() - snd_thread.tick) >= 250.0f) {
+			snd_thread.tick = gui_get_ms();
 			if (info.snd_info == TRUE)
-			fprintf(stderr, "snd : %6d %6d %d %6d %6d %d %6d %6d %f %3d %f %4s\r",
-				request,
+			fprintf(stderr, "snd : %d %d %6d %6d %4d %4d %4d %4d %3d %f %4s\r",
 				avail,
 				len,
+				cbd.samples_available,
+				cbd.bytes_available,
 				fps.frames_emu_too_long,
 				fps.frames_skipped,
-				cache->samples_available,
-				cache->bytes_available,
+				snd.overlap,
 				snd.out_of_sync,
-				snd.frequency,
-				(int) fps.gfx,
+				(int)fps.gfx,
 				machine.ms_frame,
 				" ");
 		}
 #endif
 
-		snd_playback_unlock(NULL);
+		snd_thread_unlock();
  	}
 
 	pthread_exit((void *)EXIT_OK);
 }
-static void sndio_playback_loop_in_pause(void) {
-	if (loop.action != AT_UNINITIALIZED) {
-		loop.action = AT_PAUSE;
 
-		while (loop.in_run == TRUE) {
-			gui_sleep(10);
-		}
-	}
-}
-static void INLINE sndio_wr_buf(_sndio *sndio, void *buffer, uint32_t avail) {
-	if (sio_write(sndio->playback, buffer, avail) == 0) {
-		if (sio_eof(sndio->playback)) {
+static void INLINE sndio_wr_buf(void *buffer, uint32_t avail) {
+	if (sio_write(sndio.playback, buffer, avail) == 0) {
+		if (sio_eof(sndio.playback)) {
 			fprintf(stderr, "sio_write() failed\n");
 		}
 	}

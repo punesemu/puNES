@@ -57,7 +57,7 @@ enum overflow_sprite { OVERFLOW_SPR = 3 };
 	nmi.cpu_cycles_from_last_nmi++;\
 	/* deve essere azzerato alla fine di ogni ciclo PPU */\
 	r2006.changed_from_op = 0;
-#define put_pixel(clr) screen.line[ppu.screen_y][ppu.frame_x] = r2001.emphasis | clr;
+#define put_pixel(clr) screen.wr->line[ppu.screen_y][ppu.frame_x] = r2001.emphasis | clr;
 #define put_emphasis(clr) put_pixel((palette.color[clr] & r2001.color_mode))
 #define put_bg put_emphasis(color_bg)
 #define put_sp put_emphasis(color_sp | 0x10)
@@ -169,6 +169,22 @@ static const BYTE palette_init[0x20] = {
 	0x09, 0x01, 0x34, 0x03, 0x00, 0x04, 0x00, 0x14,
 	0x08, 0x3A, 0x00, 0x02, 0x00, 0x20, 0x2C, 0x08
 };
+
+void ppu_init(void) {
+	memset(&screen, 0x00, sizeof(screen));
+}
+void ppu_quit(void) {
+	/* libero la memoria riservata */
+	BYTE a;
+
+	for (a = 0; a < 2; a++) {
+		_screen_buffer *sb = &screen.buff[a];
+
+		if (sb->data) {
+			free(sb->data);
+		}
+	}
+}
 
 void ppu_tick(void) {
 	/* aggiungo i cicli della cpu trascorsi */
@@ -979,23 +995,31 @@ BYTE ppu_turn_on(void) {
 		if ((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) {
 			BYTE a;
 
-			if (screen.data) {
-				free(screen.data);
-			}
+			screen.rd = &screen.buff[0];
+			screen.wr = &screen.buff[1];
 
-			if (!(screen.data = (WORD *) malloc(screen_size()))) {
-				fprintf(stderr, "Out of memory\n");
-				return (EXIT_ERROR);
-			}
+			for (a = 0; a < 2; a++) {
+				_screen_buffer *sb = &screen.buff[a];
+				BYTE b;
 
-			/*
-			 * creo una tabella di indici che puntano
-			 * all'inizio di ogni linea dello screen.
-			 */
-			for (a = 0; a < SCR_LINES; a++) {
-				screen.line[a] = (WORD *)(screen.data + (a * SCR_ROWS));
-			}
+				sb->ready = FALSE;
 
+				if (sb->data) {
+					free(sb->data);
+				}
+
+				if (!(sb->data = (WORD *)malloc(screen_size()))) {
+					fprintf(stderr, "Out of memory\n");
+					return (EXIT_ERROR);
+				}
+				/*
+			 	* creo una tabella di indici che puntano
+			 	* all'inizio di ogni linea dello screen.
+			 	*/
+				for (b = 0; b < SCR_LINES; b++) {
+					sb->line[b] = (WORD *)(sb->data + (b * SCR_ROWS));
+				}
+			}
 			/*
 			 * tabella di indici che puntano ad ogni
 			 * elemento dell'OAM (4 bytes ciascuno).
@@ -1012,12 +1036,16 @@ BYTE ppu_turn_on(void) {
 		}
 		/* reinizializzazione completa della PPU */
 		{
-			WORD x, y;
+			WORD a, x, y;
 
 			/* inizializzo lo screen */
-			for (y = 0; y < SCR_LINES; y++) {
-				for (x = 0; x < SCR_ROWS; x++) {
-					screen.line[y][x] = 0x000D;
+			for (a = 0; a < 2; a++) {
+				_screen_buffer *sb = &screen.buff[a];
+
+				for (y = 0; y < SCR_LINES; y++) {
+					for (x = 0; x < SCR_ROWS; x++) {
+						sb->line[y][x] = 0x000D;
+					}
 				}
 			}
 			/*
@@ -1052,12 +1080,6 @@ BYTE ppu_turn_on(void) {
 	}
 
 	return (EXIT_OK);
-}
-void ppu_quit(void) {
-	/* libero la memoria riservata */
-	if (screen.data) {
-		free(screen.data);
-	}
 }
 void ppu_overclock(BYTE reset_dmc_in_use) {
 	if (reset_dmc_in_use) {
@@ -1154,8 +1176,7 @@ static INLINE void ppu_oam_evaluation(void) {
 					 * rom "Escape_from_pong" che, a quanto sembra, e'
 					 * il reale comportamaneto su un autentico NES!!.
 					 */
-					if ((spr_ev.real = ((spr_ev.index <= 1) ? ((r2003.value & 0xF8) >> 2) : 0)
-							+ spr_ev.index) >= 64) {
+					if ((spr_ev.real = ((spr_ev.index <= 1) ? ((r2003.value & 0xF8) >> 2) : 0) + spr_ev.index) >= 64) {
 						spr_ev.real -= 64;
 					}
 #endif
@@ -1176,8 +1197,7 @@ static INLINE void ppu_oam_evaluation(void) {
 					 * posizione Y inferiore o uguale a 0xEF,
 					 * lo esamino.
 					 */
-					if ((spr_ev.count_plus < 8) && (r2004.value <= 0xEF) &&
-							(spr_ev.range < r2000.size_spr)) {
+					if ((spr_ev.count_plus < 8) && (r2004.value <= 0xEF) && (spr_ev.range < r2000.size_spr)) {
 						spr_ev.evaluate = TRUE;
 					}
 					/* incremento timing */
@@ -1246,17 +1266,17 @@ static INLINE void ppu_oam_evaluation(void) {
 								if ((t2004 <= 0xEF) && (spr_ev_unl.range < r2000.size_spr)) {
 
 									oam.ele_plus_unl[spr_ev_unl.count_plus][YC] =
-									        oam.element[spr_ev_unl.index][YC];
+										oam.element[spr_ev_unl.index][YC];
 									oam.ele_plus_unl[spr_ev_unl.count_plus][TL] =
-									        oam.element[spr_ev_unl.index][TL];
+										oam.element[spr_ev_unl.index][TL];
 									oam.ele_plus_unl[spr_ev_unl.count_plus][AT] =
-									        oam.element[spr_ev_unl.index][AT];
+										oam.element[spr_ev_unl.index][AT];
 									oam.ele_plus_unl[spr_ev_unl.count_plus][XC] =
-									        oam.element[spr_ev_unl.index][XC];
+										oam.element[spr_ev_unl.index][XC];
 									sprite_plus_unl[spr_ev_unl.count_plus].number =
-									        spr_ev_unl.index;
+										spr_ev_unl.index;
 									sprite_plus_unl[spr_ev_unl.count_plus].flip_v =
-									        spr_ev_unl.range;
+										spr_ev_unl.range;
 
 									spr_ev_unl.count_plus++;
 								}

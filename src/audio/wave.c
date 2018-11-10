@@ -42,7 +42,7 @@ BYTE wave_open(uTCHAR *filename, int samples) {
 		return (EXIT_ERROR);
 	}
 
-	snd_playback_lock(SNDCACHE);
+	snd_thread_pause();
 
 	if ((wav.outfile = ufopen(filename, uL("wb"))) == NULL) {
 		free(wav.buffer);
@@ -107,13 +107,13 @@ BYTE wave_open(uTCHAR *filename, int samples) {
 
 	text_add_line_info(1, "start wav recording");
 
-	snd_playback_unlock(SNDCACHE);
+	snd_thread_continue();
 
 	return (EXIT_OK);
 }
 void wave_close(void) {
-	if (SNDCACHE) {
-		snd_playback_lock(SNDCACHE);
+	if (snd.cache) {
+		snd_thread_pause();
 	}
 
 	if (wav.outfile) {
@@ -153,8 +153,8 @@ void wave_close(void) {
 
 	info.wave_in_record = FALSE;
 
-	if (SNDCACHE) {
-		snd_playback_unlock(SNDCACHE);
+	if (snd.cache) {
+		snd_thread_continue();
 	}
 }
 void wave_write(SWORD *data, int samples) {

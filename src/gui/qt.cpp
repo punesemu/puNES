@@ -57,6 +57,7 @@ Q_IMPORT_PLUGIN(QSvgPlugin)
 #include "dlgPPUHacks.hpp"
 #include "wdgScreen.hpp"
 #include "wdgStatusBar.hpp"
+#include "video/gfx_thread.h"
 #include "emu_thread.h"
 #include "version.h"
 #include "conf.h"
@@ -159,6 +160,7 @@ BYTE gui_create(void) {
 void gui_start(void) {
 	gui.start = TRUE;
 	fps.frame.expected_end = gui_get_ms() + machine.ms_frame;
+	gfx_thread_continue();
 	emu_thread_continue();
 	qApp->exec();
 }
@@ -336,7 +338,7 @@ void gui_screen_update(void) {
 #if defined (WITH_OPENGL)
 	qt.screen->wogl.actual->update();
 #elif defined (WITH_D3D9)
-	qt.screen->wd3d9->update();
+	qt.screen->wd3d9->repaint();
 #endif
 }
 

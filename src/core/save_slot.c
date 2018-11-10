@@ -155,24 +155,24 @@ void save_slot_preview(BYTE slot) {
 	FILE *fp;
 
 	if (!save_slot.preview_start) {
-		memcpy(tl.snaps[TL_SNAP_FREE] + tl.preview, screen.data, screen_size());
+		memcpy(tl.snaps[TL_SNAP_FREE] + tl.preview, screen.rd->data, screen_size());
 		save_slot.preview_start = TRUE;
 	}
 
 	if (!save_slot.state[slot]) {
-		memcpy(screen.data, tl.snaps[TL_SNAP_FREE] + tl.preview, screen_size());
+		memcpy(screen.rd->data, tl.snaps[TL_SNAP_FREE] + tl.preview, screen_size());
 		gfx_draw_screen();
 		return;
 	}
 
 	if ((file = name_slot_file(slot)) == NULL) {
-		memcpy(screen.data, tl.snaps[TL_SNAP_FREE] + tl.preview, screen_size());
+		memcpy(screen.rd->data, tl.snaps[TL_SNAP_FREE] + tl.preview, screen_size());
 		gfx_draw_screen();
 		return;
 	}
 
 	if ((fp = ufopen(file, uL("rb"))) == NULL) {
-		memcpy(screen.data, tl.snaps[TL_SNAP_FREE] + tl.preview, screen_size());
+		memcpy(screen.rd->data, tl.snaps[TL_SNAP_FREE] + tl.preview, screen_size());
 		gfx_draw_screen();
 		fprintf(stderr, "error on load preview\n");
 		return;
@@ -183,10 +183,10 @@ void save_slot_preview(BYTE slot) {
 	{
 		DBWORD bytes;
 
-		bytes = fread(screen.data, screen_size(), 1, fp);
+		bytes = fread(screen.rd->data, screen_size(), 1, fp);
 
 		if (bytes != 1) {
-			memcpy(screen.data, tl.snaps[TL_SNAP_FREE] + tl.preview, screen_size());
+			memcpy(screen.rd->data, tl.snaps[TL_SNAP_FREE] + tl.preview, screen_size());
 		}
 	}
 
@@ -799,7 +799,7 @@ static BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 		save_slot.preview[slot] = save_slot.tot_size[slot];
 	}
 
-	save_slot_mem(mode, slot, screen.data, screen_size(), TRUE)
+	save_slot_mem(mode, slot, screen.rd->data, screen_size(), TRUE)
 
 	return (EXIT_OK);
 }

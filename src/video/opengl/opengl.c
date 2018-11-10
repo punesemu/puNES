@@ -22,6 +22,7 @@
 #include <stdarg.h>
 #include <unistd.h>
 #include "opengl.h"
+#include "video/gfx_thread.h"
 #include "info.h"
 #include "conf.h"
 #include "emu.h"

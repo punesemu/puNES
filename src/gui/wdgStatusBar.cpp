@@ -356,7 +356,7 @@ void timeLine::timeline_pressed(BYTE *type) {
 	(*type) = TRUE;
 	if (tl.snaps_fill) {
 		// faccio lo screenshot dello screen attuale
-		memcpy(tl.snaps[TL_SNAP_FREE] + tl.preview, screen.data, screen_size());
+		memcpy(tl.snaps[TL_SNAP_FREE] + tl.preview, screen.rd->data, screen_size());
 	}
 }
 void timeLine::timeline_released(BYTE *type) {
@@ -451,7 +451,7 @@ void timeLine::s_action_triggered(int action) {
 			}
 
 			if (value == (tl.snaps_fill - 1)) {
-				memcpy(screen.data, tl.snaps[TL_SNAP_FREE] + tl.preview, screen_size());
+				memcpy(screen.rd->data, tl.snaps[TL_SNAP_FREE] + tl.preview, screen_size());
 				gfx_draw_screen();
 				break;
 			}
