@@ -109,6 +109,19 @@ class appEventFilter: public QObject {
 
 void gui_quit(void) {}
 BYTE gui_create(void) {
+#if defined (WITH_OPENGL)
+	QSurfaceFormat fmt;
+
+	fmt.setRenderableType(QSurfaceFormat::OpenGL);
+	fmt.setProfile(QSurfaceFormat::CoreProfile);
+	fmt.setSwapBehavior(QSurfaceFormat::DoubleBuffer);
+	fmt.setRedBufferSize(8);
+	fmt.setGreenBufferSize(8);
+	fmt.setBlueBufferSize(8);
+	fmt.setAlphaBufferSize(8);
+	fmt.setSwapInterval(cfg->vsync);
+	QSurfaceFormat::setDefaultFormat(fmt);
+#endif
 	qt.mwin = new mainWindow();
 	qt.screen = qt.mwin->screen;
 	qt.objch->setParent(qt.mwin);
@@ -179,9 +192,6 @@ void gui_set_video_mode(void) {
 	}
 
 	qt.screen->setFixedSize(QSize(gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE]));
-#if defined (WITH_OPENGL)
-	qt.screen->vsync();
-#endif
 
 	qt.mwin->setFixedSize(QSize(qt.screen->width(),
 		(qt.mwin->menubar->isHidden() ? 0 : qt.mwin->menubar->sizeHint().height()) +
@@ -336,7 +346,7 @@ void gui_emit_et_external_control_windows_show(void) {
 
 void gui_screen_update(void) {
 #if defined (WITH_OPENGL)
-	qt.screen->wogl.actual->update();
+	qt.screen->wogl->update();
 #elif defined (WITH_D3D9)
 	qt.screen->wd3d9->repaint();
 #endif
@@ -401,11 +411,11 @@ void gui_ppu_hacks_widgets_update(void) {
 #if defined (WITH_OPENGL)
 void gui_wdgopengl_make_current(void) {
 	if (gui.start == TRUE) {
-		qt.screen->wogl.actual->makeCurrent();
+		qt.screen->wogl->makeCurrent();
 	}
 }
 unsigned int gui_wdgopengl_framebuffer_id(void) {
-	return (qt.screen->wogl.actual->framebuffer_id());
+	return (qt.screen->wogl->framebuffer_id());
 }
 
 void gui_screen_info(void) {

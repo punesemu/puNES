@@ -24,6 +24,8 @@
 #include "clock.h"
 
 wdgSettingsVideo::wdgSettingsVideo(QWidget *parent) : QWidget(parent) {
+	vsync = cfg->vsync;
+
 	setupUi(this);
 
 	connect(comboBox_Scale, SIGNAL(activated(int)), this, SLOT(s_scale(int)));
@@ -159,6 +161,12 @@ void wdgSettingsVideo::update_widget(void) {
 	}
 
 	checkBox_Vsync->setChecked(cfg->vsync);
+	if (cfg->vsync != vsync) {
+		label_Vsync->setVisible(true);
+	} else {
+		label_Vsync->setVisible(false);
+	}
+
 	checkBox_Interpolation->setChecked(cfg->interpolation);
 	checkBox_Text_on_screen->setChecked(cfg->txt_on_screen);
 	checkBox_Input_display->setChecked(cfg->input_display);
@@ -209,7 +217,6 @@ void wdgSettingsVideo::oscan_brd_mode_set(void) {
 
 	comboBox_Oscan_brd_mode->setCurrentIndex(mode);
 }
-
 void wdgSettingsVideo::oscan_brd_set(void) {
 	_overscan_borders *borders;
 
@@ -773,10 +780,8 @@ void wdgSettingsVideo::s_disable_emphasis_swap_pal(bool checked) {
 	emu_thread_continue();
 }
 void wdgSettingsVideo::s_vsync(bool checked) {
-	emu_thread_pause();
 	cfg->vsync = !cfg->vsync;
-	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
-	emu_thread_continue();
+	update_widget();
 }
 void wdgSettingsVideo::s_interpolation(bool checked) {
 	emu_thread_pause();

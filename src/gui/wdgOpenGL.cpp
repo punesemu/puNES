@@ -22,23 +22,11 @@
 
 extern "C" void opengl_draw_scene(void);
 
-wdgOpenGL::wdgOpenGL(QWidget *parent, int vsync) : QOpenGLWidget(parent) {
-	QSurfaceFormat fmt = QSurfaceFormat::defaultFormat();
-
+wdgOpenGL::wdgOpenGL(QWidget *parent) : QOpenGLWidget(parent) {
 	setAttribute(Qt::WA_NoSystemBackground);
 	setAttribute(Qt::WA_OpaquePaintEvent);
 
 	setMouseTracking(true);
-
-	fmt.setRenderableType(QSurfaceFormat::OpenGL);
-	fmt.setProfile(QSurfaceFormat::CompatibilityProfile);
-	fmt.setSwapBehavior(QSurfaceFormat::DoubleBuffer);
-	fmt.setRedBufferSize(8);
-	fmt.setGreenBufferSize(8);
-	fmt.setBlueBufferSize(8);
-	fmt.setAlphaBufferSize(8);
-	fmt.setSwapInterval(vsync);
-	setFormat(fmt);
 
 	gfps.count = 0;
 	gfps.frequency = 60;

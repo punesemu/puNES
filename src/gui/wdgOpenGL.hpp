@@ -38,7 +38,7 @@ class wdgOpenGL : public QOpenGLWidget {
 		} gfps;
 
 	public:
-		wdgOpenGL(QWidget *parent, int vsync);
+		wdgOpenGL(QWidget *parent);
 		~wdgOpenGL();
 
 	protected:

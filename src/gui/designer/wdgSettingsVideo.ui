@@ -97,11 +97,28 @@
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_Video_Misc">
          <item>
-          <widget class="QCheckBox" name="checkBox_Vsync">
-           <property name="text">
-            <string notr="true">VSync</string>
-           </property>
-          </widget>
+          <layout class="QHBoxLayout" name="horizontalLayout_Vsync">
+           <item>
+            <widget class="QCheckBox" name="checkBox_Vsync">
+             <property name="text">
+              <string notr="true">VSync</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_Vsync">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;** &lt;span style=&quot; font-weight:600;&quot;&gt;To apply this change restart is needed&lt;/span&gt; **&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
          <item>
           <widget class="QCheckBox" name="checkBox_Interpolation">

@@ -36,11 +36,7 @@ class wdgScreen : public QWidget {
 
 	public:
 #if defined (WITH_OPENGL)
-		struct _wogl {
-			wdgOpenGL *vsync;
-			wdgOpenGL *novsync;
-			wdgOpenGL *actual;
-		} wogl;
+		wdgOpenGL *wogl;
 #elif defined (WITH_D3D9)
 		wdgD3D9 *wd3d9;
 #endif
@@ -60,11 +56,6 @@ class wdgScreen : public QWidget {
 
 	protected:
 		QPaintEngine *paintEngine() const { return 0; }
-
-#if defined (WITH_OPENGL)
-	public:
-		void vsync(void);
-#endif
 
 	public:
 		void cursor_init(void);

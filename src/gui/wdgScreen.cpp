@@ -35,9 +35,7 @@
 wdgScreen::wdgScreen(QWidget *parent) : QWidget(parent) {
 	target = NULL;
 #if defined (WITH_OPENGL)
-	wogl.vsync = new wdgOpenGL(this, 1);
-	wogl.novsync = new wdgOpenGL(this, 0);
-	vsync();
+	wogl = new wdgOpenGL(this);
 #elif defined (WITH_D3D9)
 	wd3d9 = new wdgD3D9(this);
 
@@ -227,36 +225,15 @@ void wdgScreen::dropEvent(QDropEvent *event) {
 }
 void wdgScreen::resizeEvent(QResizeEvent *event) {
 #if defined (WITH_OPENGL)
-	wogl.vsync->setUpdatesEnabled(false);
-	wogl.novsync->setUpdatesEnabled(false);
-	wogl.vsync->resize(event->size());
-	wogl.novsync->resize(event->size());
-	wogl.vsync->setUpdatesEnabled(true);
-	wogl.novsync->setUpdatesEnabled(true);
+	wogl->setUpdatesEnabled(false);
+	wogl->resize(event->size());
+	wogl->setUpdatesEnabled(true);
 #elif defined (WITH_D3D9)
 	wd3d9->setUpdatesEnabled(false);
 	wd3d9->resize(event->size());
 	wd3d9->setUpdatesEnabled(true);
 #endif
 }
-
-#if defined (WITH_OPENGL)
-void wdgScreen::vsync(void) {
-	wogl.vsync->setUpdatesEnabled(false);
-	wogl.novsync->setUpdatesEnabled(false);
-	if (cfg->vsync) {
-		wogl.actual = wogl.vsync;
-		wogl.vsync->show();
-		wogl.novsync->hide();
-	} else {
-		wogl.actual = wogl.novsync;
-		wogl.vsync->hide();
-		wogl.novsync->show();
-	}
-	wogl.vsync->setUpdatesEnabled(true);
-	wogl.novsync->setUpdatesEnabled(true);
-}
-#endif
 
 void wdgScreen::cursor_init(void) {
 	//target = new QCursor(QPixmap(":/pointers/pointers/target_48x48.xpm"), -1, -1);

@@ -113,7 +113,7 @@ void gui_sleep(double ms) {
 }
 HWND gui_screen_id(void) {
 #if defined (WITH_OPENGL)
-	HWND wid = (HWND)qt.screen->wogl.actual->winId();
+	HWND wid = (HWND)qt.screen->wogl->winId();
 #elif defined (WITH_D3D9)
 	HWND wid = (HWND)qt.screen->wd3d9->winId();
 #endif

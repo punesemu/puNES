@@ -95,7 +95,7 @@ void gui_sleep(double ms) {
 	__nsleep(&req, &rem);
 }
 int gui_screen_id(void) {
-	int wid = qt.screen->wogl.actual->winId();
+	int wid = qt.screen->wogl->winId();
 
 	return (wid);
 }

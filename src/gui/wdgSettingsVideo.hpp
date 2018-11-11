@@ -25,6 +25,9 @@
 class wdgSettingsVideo : public QWidget, public Ui::wdgSettingsVideo {
 		Q_OBJECT
 
+	private:
+		int vsync;
+
 	public:
 		wdgSettingsVideo(QWidget *parent = 0);
 		~wdgSettingsVideo();

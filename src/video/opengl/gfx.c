@@ -555,7 +555,6 @@ void gfx_text_blit(_txt_element *ele, _txt_rect *rect) {
 	glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
 }
 
-
 void gfx_apply_filter(void) {
 	void *palette = (void *)gfx.palette;
 
