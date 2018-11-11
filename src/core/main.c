@@ -49,6 +49,7 @@ int main(int argc, char **argv) {
 
 	memset(&info, 0x00, sizeof(info));
 	info.no_rom = TRUE;
+	info.doublebuffer = TRUE;
 	info.machine[HEADER] = info.machine[DATABASE] = DEFAULT;
 
 	if (cmd_line_check_portable(argc, argv) == TRUE) {

@@ -465,8 +465,11 @@ void gfx_draw_screen(void) {
 	}
 
 	screen.rd = screen.wr;
-	screen.index = !screen.index;
-	screen.wr = &screen.buff[screen.index];
+
+	if (info.doublebuffer == TRUE) {
+		screen.index = !screen.index;
+		screen.wr = &screen.buff[screen.index];
+	}
 
 	if (screen.rd->ready == FALSE) {
 		screen.rd->ready = TRUE;

@@ -863,6 +863,8 @@ void mainWindow::s_turn_on_off(void) {
 		make_reset(HARD);
 	}
 
+	emu_ctrl_doublebuffer();
+
 	update_menu_nes();
 	update_menu_state();
 }

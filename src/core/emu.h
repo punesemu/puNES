@@ -45,6 +45,7 @@ EXTERNC int emu_power_of_two(int base);
 EXTERNC double emu_drand(void);
 EXTERNC uTCHAR *emu_ustrncpy(uTCHAR *dst, uTCHAR *src);
 EXTERNC void emu_quit(void);
+EXTERNC void emu_ctrl_doublebuffer(void);
 
 #undef EXTERNC
 

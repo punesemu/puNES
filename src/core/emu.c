@@ -259,6 +259,8 @@ BYTE emu_load_rom(void) {
 	fds_quit();
 	map_quit();
 
+	info.doublebuffer = TRUE;
+
 	if (info.rom.file[0]) {
 		uTCHAR *ext = emu_ctrl_rom_ext(info.rom.file);
 
@@ -595,6 +597,7 @@ BYTE emu_turn_on(void) {
 		if (emu_load_rom()) {
 			return (EXIT_ERROR);
 		}
+		emu_ctrl_doublebuffer();
 	}
 
 	overscan_set_mode(machine.type);
@@ -691,6 +694,8 @@ void emu_pause(BYTE mode) {
 			nsf_reset_timers();
 		}
 	}
+
+	emu_ctrl_doublebuffer();
 }
 BYTE emu_reset(BYTE type) {
 	if (info.turn_off && (type <= HARD)) {
@@ -726,6 +731,7 @@ BYTE emu_reset(BYTE type) {
 		if (emu_load_rom()) {
 			return (EXIT_ERROR);
 		}
+		emu_ctrl_doublebuffer();
 
 		ext_win.vs_system = vs_system.enabled;
 
@@ -902,7 +908,28 @@ void emu_quit(void) {
 	gui_quit();
 }
 
-static void emu_frame_sleep(void) {
+void emu_ctrl_doublebuffer(void) {
+	switch (info.format) {
+		default:
+		case iNES_1_0:
+		case NES_2_0:
+		case UNIF_FORMAT:
+		case FDS_FORMAT:
+			info.doublebuffer = TRUE;
+			break;
+		case NSF_FORMAT:
+		case NSFE_FORMAT:
+			info.doublebuffer = FALSE;
+			break;
+	}
+	if (info.no_rom | info.turn_off) {
+		info.doublebuffer = TRUE;
+	} else if (info.pause) {
+		info.doublebuffer = FALSE;
+	}
+}
+
+static INLINE void emu_frame_sleep(void) {
 	double diff;
 	double now = gui_get_ms();
 
@@ -916,7 +943,7 @@ static void emu_frame_sleep(void) {
 	}
 	fps.frame.expected_end += fps.frame.estimated_ms;
 }
-static void emu_frame_pause_sleep(void) {
+static INLINE void emu_frame_pause_sleep(void) {
 	double diff;
 	double now = gui_get_ms();
 	const double estimated_ms = (1000.0f / 30.f);
