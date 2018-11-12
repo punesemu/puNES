@@ -53,8 +53,6 @@ Q_IMPORT_PLUGIN(QSvgPlugin)
 #include "dlgSettings.hpp"
 #include "dlgUncomp.hpp"
 #include "dlgVsSystem.hpp"
-#include "dlgAPUChannels.hpp"
-#include "dlgPPUHacks.hpp"
 #include "wdgScreen.hpp"
 #include "wdgStatusBar.hpp"
 #include "video/gfx_thread.h"
@@ -82,8 +80,6 @@ static struct _qt {
 
 	// controlli esterni
 	dlgVsSystem *vssystem;
-	dlgAPUChannels *apuch;
-	dlgPPUHacks *ppuhacks;
 
 	// QObject che non mandano un pause quando in background
 	QList<QWidget *> no_bck_pause;
@@ -148,14 +144,10 @@ BYTE gui_create(void) {
 
 	memset(&ext_win, 0x00, sizeof(ext_win));
 	qt.vssystem = new dlgVsSystem(qt.mwin);
-	qt.apuch = new dlgAPUChannels(qt.mwin);
-	qt.ppuhacks = new dlgPPUHacks(qt.mwin);
 
 	qt.no_bck_pause.append(qt.mwin);
 	qt.no_bck_pause.append(qt.dset);
 	qt.no_bck_pause.append(qt.vssystem);
-	qt.no_bck_pause.append(qt.apuch);
-	qt.no_bck_pause.append(qt.ppuhacks);
 
 	gmouse.hidden = FALSE;
 	gmouse.timer = gui_get_ms();
@@ -363,18 +355,6 @@ void gui_external_control_windows_show(void) {
 	} else {
 		qt.vssystem->hide();
 	}
-	if (ext_win.apu_channels && (cfg->fullscreen != FULLSCR)) {
-		qt.apuch->update_dialog();
-		qt.apuch->show();
-	} else {
-		qt.apuch->hide();
-	}
-	if (ext_win.ppu_hacks && (cfg->fullscreen != FULLSCR)) {
-		qt.ppuhacks->update_dialog();
-		qt.ppuhacks->show();
-	} else {
-		qt.ppuhacks->hide();
-	}
 
 	gui_update();
 	gui_external_control_windows_update_pos();
@@ -385,8 +365,6 @@ void gui_external_control_windows_update_pos(void) {
 	unsigned int y = 0;
 
 	y += qt.vssystem->update_pos(y);
-	y += qt.apuch->update_pos(y);
-	y += qt.ppuhacks->update_pos(y);
 }
 
 void gui_vs_system_update_dialog(void) {
@@ -400,12 +378,10 @@ void gui_vs_system_insert_coin(void) {
 
 void gui_apu_channels_widgets_update(void) {
 	qt.dset->update_tab_audio();
-	qt.apuch->update_dialog();
 }
 
 void gui_ppu_hacks_widgets_update(void) {
 	qt.dset->widget_wdgSettingsPPU->update_widget();
-	qt.ppuhacks->widget_wdgSettingsPPU->update_widget();
 }
 
 #if defined (WITH_OPENGL)

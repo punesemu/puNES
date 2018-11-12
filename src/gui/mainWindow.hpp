@@ -148,8 +148,6 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void s_state_load_file(void);
 	public slots:
 		void s_set_vs_window(void);
-		void s_set_apu_channels(void);
-		void s_set_ppu_hacks(void);
 	private slots:
 		void s_help(void);
 

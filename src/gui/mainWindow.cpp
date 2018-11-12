@@ -417,8 +417,6 @@ void mainWindow::connect_menu_signals(void) {
 
 	// tools
 	connect_action(action_Vs_System, SLOT(s_set_vs_window()));
-	connect_action(action_APU_channels, SLOT(s_set_apu_channels()));
-	connect_action(action_PPU_Hacks, SLOT(s_set_ppu_hacks()));
 
 	// external shortcuts
 	connect_action(qaction_shcut.mode_auto, AUTO, SLOT(s_shcut_mode()));
@@ -658,8 +656,6 @@ void mainWindow::update_menu_nes(void) {
 }
 void mainWindow::update_menu_tools(void) {
 	action_Vs_System->setChecked(ext_win.vs_system);
-	action_APU_channels->setChecked(ext_win.apu_channels);
-	action_PPU_Hacks->setChecked(ext_win.ppu_hacks);
 }
 void mainWindow::update_menu_state(void) {
 	bool state = false;
@@ -1169,14 +1165,6 @@ void mainWindow::s_state_load_file(void) {
 }
 void mainWindow::s_set_vs_window(void) {
 	ext_win.vs_system = !ext_win.vs_system;
-	gui_external_control_windows_show();
-}
-void mainWindow::s_set_apu_channels(void) {
-	ext_win.apu_channels = !ext_win.apu_channels;
-	gui_external_control_windows_show();
-}
-void mainWindow::s_set_ppu_hacks(void) {
-	ext_win.ppu_hacks = !ext_win.ppu_hacks;
 	gui_external_control_windows_show();
 }
 void mainWindow::s_help(void) {

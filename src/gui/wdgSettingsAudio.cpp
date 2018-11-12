@@ -268,7 +268,7 @@ void wdgSettingsAudio::s_swap_duty_cycles(bool checked) {
 	emu_thread_pause();
 	cfg->swap_duty = !cfg->swap_duty;
 	emu_thread_continue();
-	gui_apu_channels_widgets_update();
+	update_widget();
 }
 void wdgSettingsAudio::s_enable_audio(bool checked) {
 	emu_thread_pause();
@@ -278,5 +278,5 @@ void wdgSettingsAudio::s_enable_audio(bool checked) {
 		snd_playback_stop();
 	}
 	emu_thread_continue();
-	gui_apu_channels_widgets_update();
+	update_widget();
 }

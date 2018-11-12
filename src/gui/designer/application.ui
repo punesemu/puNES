@@ -136,8 +136,6 @@
      <string>Too&amp;ls</string>
     </property>
     <addaction name="action_Vs_System"/>
-    <addaction name="action_APU_channels"/>
-    <addaction name="action_PPU_Hacks"/>
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_NES"/>
@@ -274,14 +272,6 @@
    </property>
    <property name="text">
     <string>F&amp;ullscreen</string>
-   </property>
-  </action>
-  <action name="action_APU_channels">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>A&amp;PU channels</string>
    </property>
   </action>
   <action name="action_Game_Genie">
@@ -508,14 +498,6 @@
    </property>
    <property name="text">
     <string>Vs System Controls</string>
-   </property>
-  </action>
-  <action name="action_PPU_Hacks">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>PPU Hacks</string>
    </property>
   </action>
   <action name="action_Open_working_folder">

@@ -1,10 +1,6 @@
 application.cpp: designer/application.qrc
 	$(RCC) $(srcdir)/designer/application.qrc -name resources -o $@
 
-dlgAPUChannels.moc: dlgAPUChannels.hpp
-	$(MOC) $(srcdir)/dlgAPUChannels.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
-dlgPPUHacks.moc: dlgPPUHacks.hpp
-	$(MOC) $(srcdir)/dlgPPUHacks.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 dlgSettings.moc: dlgSettings.hpp
 	$(MOC) $(srcdir)/dlgSettings.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 dlgStdPad.moc: dlgStdPad.hpp
@@ -46,10 +42,6 @@ wdgStatusBar.moc: wdgStatusBar.hpp
 
 application.hh: designer/application.ui
 	$(UIC) $(srcdir)/designer/application.ui -o $@
-dlgAPUChannels.hh: designer/dlgAPUChannels.ui
-	$(UIC) $(srcdir)/designer/dlgAPUChannels.ui -o $@
-dlgPPUHacks.hh: designer/dlgPPUHacks.ui
-	$(UIC) $(srcdir)/designer/dlgPPUHacks.ui -o $@
 dlgSettings.hh: designer/dlgSettings.ui
 	$(UIC) $(srcdir)/designer/dlgSettings.ui -o $@
 dlgStdPad.hh: designer/dlgStdPad.ui
@@ -79,8 +71,6 @@ clean-local:
 	rm -f application.cpp *.{hh,moc}
 
 BUILT_SOURCES = \
-	dlgAPUChannels.moc \
-	dlgPPUHacks.moc \
 	dlgSettings.moc \
 	dlgStdPad.moc \
 	dlgUncomp.moc \
@@ -104,8 +94,6 @@ BUILT_SOURCES += \
 
 BUILT_SOURCES += \
 	application.hh \
-	dlgAPUChannels.hh \
-	dlgPPUHacks.hh \
 	dlgSettings.hh \
 	dlgStdPad.hh \
 	dlgUncomp.hh \
@@ -126,10 +114,6 @@ libgui_a_SOURCES = \
 	cgp.h \
 	cmd_line.cpp \
 	cmd_line.h \
-	dlgAPUChannels.cpp \
-	dlgAPUChannels.hpp \
-	dlgPPUHacks.cpp \
-	dlgPPUHacks.hpp \
 	dlgSettings.cpp \
 	dlgSettings.hpp \
 	dlgStdPad.cpp \

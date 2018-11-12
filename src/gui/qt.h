@@ -92,8 +92,6 @@ EXTERNC struct _gui_mouse {
 } gmouse;
 EXTERNC struct _external_windows {
 	uint8_t vs_system;
-	uint8_t apu_channels;
-	uint8_t ppu_hacks;
 } ext_win;
 
 EXTERNC void gui_quit(void);
