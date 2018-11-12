@@ -573,14 +573,14 @@ static void STDMETHODCALLTYPE OnBufferStart(THIS_ void *pBufferContext) {
 
 	snd_thread.in_run = TRUE;
 
-	snd_thread_lock();
-
 	if ((info.no_rom | info.turn_off | info.pause) || (snd.buffer.start == FALSE) || (fps.fast_forward == TRUE)) {
 		xaudio2_wrbuf(xaudio2.source, &xaudio2.buffer, (const BYTE *)cbd.silence);
 	} else if (cbd.bytes_available < len) {
 		xaudio2_wrbuf(xaudio2.source, &xaudio2.buffer, (const BYTE *)cbd.silence);
 		snd.out_of_sync++;
 	} else {
+		snd_thread_lock();
+
 		wave_write((SWORD *)cbd.read, avail);
 		xaudio2_wrbuf(xaudio2.source, &xaudio2.buffer, (const BYTE *)cbd.read);
 
@@ -599,9 +599,9 @@ static void STDMETHODCALLTYPE OnBufferStart(THIS_ void *pBufferContext) {
 		if ((cbd.read += len) >= cbd.end) {
 			cbd.read = (SBYTE *)cbd.start;
 		}
-	}
 
-	snd_thread_unlock();
+		snd_thread_unlock();
+	}
 
 #if !defined (RELEASE)
 	if ((gui_get_ms() - snd_thread.tick) >= 250.0f) {

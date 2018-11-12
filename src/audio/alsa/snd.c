@@ -673,7 +673,7 @@ static BYTE alsa_playback_hwparams_set(void) {
 	snd.period.samples = tmp;
 
 	// set the buffer size
-	tmp = snd.period.samples;
+	tmp = snd.period.samples * 3;
 
 	if ((rc = snd_pcm_hw_params_set_buffer_size_near(alsa.playback, params, &tmp)) < 0) {
 		fprintf(stderr, "Unable to set buffer size for playback: %s\n", snd_strerror(rc));
@@ -773,8 +773,6 @@ static void *alsa_thread_loop(void *data) {
 			continue;
 		}
 
-		snd_thread_lock();
-
 		avail = (avail > snd.period.samples ? snd.period.samples : avail);
 		len = avail * snd.channels * sizeof(*cbd.write);
 
@@ -784,6 +782,8 @@ static void *alsa_thread_loop(void *data) {
 			alsa_wr_buf((void *)cbd.silence, avail);
 			snd.out_of_sync++;
 		} else {
+			snd_thread_lock();
+
 			wave_write((SWORD *)cbd.read, avail);
 			alsa_wr_buf((void *)cbd.read, avail);
 
@@ -799,9 +799,9 @@ static void *alsa_thread_loop(void *data) {
 			if ((cbd.read += len) >= cbd.end) {
 				cbd.read = (SBYTE *)cbd.start;
 			}
-		}
 
-		snd_thread_unlock();
+			snd_thread_unlock();
+		}
 
 #if !defined (RELEASE)
 		if ((gui_get_ms() - snd_thread.tick) >= 250.0f) {

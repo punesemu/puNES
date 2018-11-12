@@ -371,8 +371,6 @@ static void *sndio_thread_loop(void *data) {
 			}
 		}
 
-		snd_thread_lock();
-
 		avail = snd.period.samples;
 		len = avail * snd.channels * sizeof(*cbd.write);
 
@@ -382,6 +380,8 @@ static void *sndio_thread_loop(void *data) {
 			sndio_wr_buf((void *)cbd.silence, len);
 			snd.out_of_sync++;
 		} else {
+			snd_thread_lock();
+
 			wave_write((SWORD *)cbd.read, avail);
 			sndio_wr_buf((void *)cbd.read, len);
 
@@ -397,6 +397,8 @@ static void *sndio_thread_loop(void *data) {
 			if ((cbd.read += len) >= cbd.end) {
 				cbd.read = (SBYTE *)cbd.start;
 			}
+
+			snd_thread_unlock();
 		}
 
 #if !defined (RELEASE)
@@ -417,8 +419,6 @@ static void *sndio_thread_loop(void *data) {
 				" ");
 		}
 #endif
-
-		snd_thread_unlock();
  	}
 
 	pthread_exit((void *)EXIT_OK);
