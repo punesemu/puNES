@@ -37,6 +37,26 @@ If you need the debug version then you need to replace the `./configure` command
 CFLAGS="-g -DDEBUG" CXXFLAGS="-g -DDEBUG" ./configure --disable-release [...]
 ```
 where `[...]` are the other necessary options.
+### OpenBSD
+-----------
+#### Dependencies
+* Qt5 with OpenGL support (qtbase and qtsvg)
+* sndio
+#### Compilation of puNES
+```bash
+git clone https://github.com/punesemu/punes
+cd punes
+./autogen.sh
+CC=cc CXX=c++ ./configure
+make
+```
+the executable `punes` is in the `src` directory.
+#### OpenBSD Debug version
+If you need the debug version then you need to replace the `./configure` command of the previous examples with the following:
+```bash
+CFLAGS="-g -DDEBUG" CXXFLAGS="-g -DDEBUG" CC=cc CXX=c++ ./configure --disable-release [...]
+```
+where `[...]` are the other necessary options.
 ### Windows
 -----------
 #### Dependencies
