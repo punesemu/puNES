@@ -76,9 +76,8 @@ BYTE cgp_parse(const uTCHAR *file) {
 		key.sprintf("shader%u", i);
 		if (cgp_value(set, key, value) == FALSE) {
 			value.replace('\\', '/');
-			ustrncpy(sp->path,
-					uQStringCD(QFileInfo(fi.absolutePath() + '/' + value).absoluteFilePath()),
-					usizeof(sp->path) - 1);
+			ustrncpy(sp->path,uQStringCD(QFileInfo(fi.absolutePath() + '/' + value).absoluteFilePath()),
+				usizeof(sp->path) - 1);
 		} else {
 			delete(set);
 			return (EXIT_ERROR);
@@ -275,9 +274,8 @@ BYTE cgp_parse(const uTCHAR *file) {
 			// path
 			if (cgp_value(set, ele, value) == FALSE) {
 				value.replace('\\', '/');
-				ustrncpy(lp->path,
-						uQStringCD(QFileInfo(fi.absolutePath() + '/' + value).absoluteFilePath()),
-						usizeof(lp->path) - 1);
+				ustrncpy(lp->path, uQStringCD(QFileInfo(fi.absolutePath() + '/' + value).absoluteFilePath()),
+					usizeof(lp->path) - 1);
 			}
 
 			// mipmap
@@ -374,14 +372,13 @@ void cgp_pragma_param(char *code, const uTCHAR *path) {
 		::memset(&param, 0x00, sizeof(_param_shd));
 
 		if (line.startsWith("#pragma parameter")) {
-			QRegExp rx("((-+))?((\\d?)?\\.)?\\d+");
+			QRegExp rx("[-+]?[0-9]*(\\.[0-9]+)");
 			int i, count = 0, pos = 0;
 			bool finded;
 
 			// sscanf non e' "locale indipendente" percio' lo utilizzo solo per
 			// ricavare nome e descrizione del parametro.
-			count = ::sscanf(line.toUtf8().constData(), "#pragma parameter %63s \"%63[^\"]\" ",
-					param.name, param.desc);
+			count = ::sscanf(line.toUtf8().constData(), "#pragma parameter %63s \"%63[^\"]\" ", param.name, param.desc);
 
 			if (count < 2) {
 				continue;
@@ -426,10 +423,8 @@ void cgp_pragma_param(char *code, const uTCHAR *path) {
 
 			if (finded == false) {
 				if (shader_effect.params < MAX_PARAM) {
-					::memcpy(&shader_effect.param[shader_effect.params], &param,
-							sizeof(_param_shd));
+					::memcpy(&shader_effect.param[shader_effect.params], &param, sizeof(_param_shd));
 					shader_effect.params++;
-
 					fprintf(stderr, "CGP: Findend parameter %s = %f\n", param.name, param.value);
 				}
 			}

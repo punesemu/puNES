@@ -43,42 +43,43 @@ class objSettings : public QSettings {
 		objSettings(Format f, QString file, int list_ele);
 		~objSettings();
 
+	protected:
+		virtual void setup(void);
+		virtual void to_cfg(QString group);
+		virtual void fr_cfg(QString group);
+		virtual void after_the_defaults(void);
+
+	protected:
+		virtual void rd(void);
+		virtual void rd(QString group);
+		virtual void rd_key(int index);
+	private:
+		void rd_key(QString group, int index);
+
 	public:
 		void wr(void);
 		void wr(QString group);
+	protected:
+		virtual void wr_key(int index);
+	private:
+		void wr_key(QString group, int index);
+	protected:
+		virtual void wr_all_keys(void);
+
+	public:
 		int val_to_int(int index, const uTCHAR *buffer);
 		void cpy_utchar_to_val(int index, uTCHAR *src);
 
 	protected:
-		virtual void setup(void);
-		virtual void to_cfg(QString group);
-		virtual void fr_cfg(QString group);
-		virtual void after_the_defaults(void);
-		void rd(void);
-		void rd(QString group);
 		int val_to_int(int index);
 		void int_to_val(int index, int value);
 		void cpy_val_to_utchar(int index, uTCHAR *dst, int length);
-
-	private:
-		void rd_key(int index);
-		void rd_key(QString group, int index);
-		void wr_key(int index);
-		void wr_key(QString group, int index);
-		void wr_all_keys(void);
 };
 
 class objSet : public objSettings {
-		Q_OBJECT
-
 	public:
 		objSet(Format f, QString file, int list_ele);
 		~objSet();
-
-	public:
-		double val_to_double(WORD round, const uTCHAR *buffer);
-		void oscan_val_to_int(int index, _overscan_borders *ob, const uTCHAR *buffer);
-		void oscan_default(_overscan_borders *ob, BYTE mode);
 
 	protected:
 		virtual void setup(void);
@@ -87,17 +88,27 @@ class objSet : public objSettings {
 		virtual void after_the_defaults(void);
 
 	private:
-		double val_to_double(int index, WORD round);
-		void double_to_val(int index, double value);
+		void oscan_val_to_int(int index, _overscan_borders *ob);
+	public:
+		void oscan_val_to_int(int index, _overscan_borders *ob, const uTCHAR *buffer);
+		void oscan_default(_overscan_borders *ob, BYTE mode);
+	private:
+		QString oscan_val(_overscan_borders *ob);
+
+	private:
 		int channel_convert_index(int index);
 		void channel_decode(int index, QString val);
 		void channel_default(int index);
 		void channel_val_to_int(int index);
 		QString channel_val(int index);
+
+	public:
+		double val_to_double(WORD round, const uTCHAR *buffer);
+	private:
+		double val_to_double(int index, WORD round);
+		void double_to_val(int index, double value);
 		void lastpos_val_to_int(int index, _last_pos *last_pos);
 		QString lastpos_val(_last_pos *last_pos);
-		void oscan_val_to_int(int index, _overscan_borders *ob);
-		QString oscan_val(_overscan_borders *ob);
 };
 
 class objPgs : public objSettings {
@@ -116,25 +127,28 @@ class objInp : public objSettings {
 		objInp(Format f, QString file, int list_ele);
 		~objInp();
 
-	public:
-		static QString kbd_keyval_to_name(const DBWORD value);
-		static DBWORD kbd_keyval_decode(QKeyEvent *keyEvent);
-		void set_kbd_joy_default(_port *port, int index, int mode);
-		void set_all_input_default(_config_input *config_input, _array_pointers_port *array);
-		void *sc_val_to_qstring_pntr(int index, int type);
-		void sc_qstring_pntr_to_val(void *str, int index, int type);
-
 	protected:
 		void setup(void);
 		void to_cfg(QString group);
 		void fr_cfg(QString group);
 
+	public:
+		void set_all_input_default(_config_input *config_input, _array_pointers_port *array);
+		void *sc_val_to_qstring_pntr(int index, int type);
+		void sc_qstring_pntr_to_val(void *str, int index, int type);
+
+	public:
+		static QString kbd_keyval_to_name(const DBWORD value);
+		static DBWORD kbd_keyval_decode(QKeyEvent *keyEvent);
+		void set_kbd_joy_default(_port *port, int index, int mode);
 	private:
 		int kbd_val_to_int(int index);
 		void kbd_rd(int index, int pIndex);
 		void kbd_wr(int index, int pIndex);
 		DBWORD kbd_name(QString name);
 		DBWORD kbd_keyval_from_name(int index, QString name);
+
+	private:
 		int joy_val_to_int(int index);
 		void joy_rd(int index, int pIndex);
 		void joy_wr(int index, int pIndex);
@@ -144,14 +158,41 @@ class objInp : public objSettings {
 		void joyguid_val_to_guid(int index, GUID *guid);
 		void joyguid_guid_to_val(int index, GUID guid);
 #endif
+
+	private:
 		int tb_delay_val_to_int(int index);
+};
+
+class objShp : public objSettings {
+	public:
+		objShp(Format f, QString file, int list_ele);
+		~objShp();
+
+	protected:
+		void setup(void);
+		void to_cfg(QString group);
+		void fr_cfg(QString group);
+
+	protected:
+		void rd(void);
+		void rd(QString group);
+		void rd_key(int index);
+
+	protected:
+		void wr_key(int index);
+		void wr_all_keys(void);
+
+	private:
+		double val_to_float(int index);
+		void float_to_val(int index, float value);
 };
 
 typedef struct _emu_settings {
 	QSettings::Format cfg;
 	objSet *set;
-	objPgs *pgs;
 	objInp *inp;
+	objPgs *pgs;
+	objShp *shp;
 	BYTE list;
 } _emu_settings;
 

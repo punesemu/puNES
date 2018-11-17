@@ -372,12 +372,10 @@ void wdgSettingsInput::shortcut_update_text(QAction *action, int index) {
 	}
 
 	// keyboard
-	tableWidget_Shortcuts->cellWidget(row, 1)->findChild<QPushButton *>("value")->setText(
-		shcut.text[KEYBOARD].at(row));
+	tableWidget_Shortcuts->cellWidget(row, 1)->findChild<QPushButton *>("value")->setText(shcut.text[KEYBOARD].at(row));
 
 	// joystick
-	tableWidget_Shortcuts->cellWidget(row, 2)->findChild<QPushButton *>("value")->setText(
-		shcut.text[JOYSTICK].at(row));
+	tableWidget_Shortcuts->cellWidget(row, 2)->findChild<QPushButton *>("value")->setText(shcut.text[JOYSTICK].at(row));
 }
 bool wdgSettingsInput::shortcut_keypressEvent(QKeyEvent *event) {
 	if (shcut.no_other_buttons == false) {

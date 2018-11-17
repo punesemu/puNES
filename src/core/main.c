@@ -74,6 +74,10 @@ int main(int argc, char **argv) {
 		fprintf(stderr, "error on create psg folder\n");
 		return (EXIT_ERROR);
 	}
+	if (emu_make_dir(uL("" uPERCENTs SHDPAR_FOLDER), info.base_folder)) {
+		fprintf(stderr, "error on create shp folder\n");
+		return (EXIT_ERROR);
+	}
 	if (emu_make_dir(uL("" uPERCENTs BIOS_FOLDER), info.base_folder)) {
 		fprintf(stderr, "error on create bios folder\n");
 		return (EXIT_ERROR);

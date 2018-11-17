@@ -27,6 +27,10 @@ class wdgSettingsVideo : public QWidget, public Ui::wdgSettingsVideo {
 
 	private:
 		int vsync;
+		struct _shdp_brush {
+			QBrush fg;
+			QBrush bg;
+		} shdp_brush;
 
 	public:
 		wdgSettingsVideo(QWidget *parent = 0);
@@ -48,8 +52,9 @@ class wdgSettingsVideo : public QWidget, public Ui::wdgSettingsVideo {
 		void oscan_def_value_set(void);
 		void oscan_brd_mode_set(void);
 		void oscan_brd_set(void);
-		void sfilters_set(void);
-		void shaders_set(void);
+		void sfilter_set(void);
+		void shader_set(void);
+		void shader_param_set(void);
 		void palette_set(void);
 
 	public slots:
@@ -64,10 +69,14 @@ class wdgSettingsVideo : public QWidget, public Ui::wdgSettingsVideo {
 		void s_oscan_brd_mode(int index);
 		void s_oscan_spinbox(int i);
 		void s_oscan_reset(bool checked);
-		void s_sfilters(int index);
-		void s_shaders(int index);
+		void s_sfilter(int index);
+		void s_shader(int index);
 		void s_shader_file(bool checked);
 		void s_shader_file_clear(bool checked);
+		void s_shader_param_slider(int value);
+		void s_shader_param_spin(const QString &text);
+		void s_shader_param_default(bool checked);
+		void s_shader_param_all_defaults(bool checked);
 #if defined (WITH_OPENGL)
 		void s_disable_srgb_fbo(bool checked);
 #endif

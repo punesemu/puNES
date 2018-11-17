@@ -443,8 +443,7 @@ void wdgCheatsEditor::s_import(bool checked) {
 		}
 		populate_cheat_table();
 		umemset(cfg->last_import_cheat_path, 0x00, usizeof(cfg->last_import_cheat_path));
-		ustrncpy(cfg->last_import_cheat_path, uQStringCD(fileinfo.absolutePath()),
-			usizeof(cfg->last_import_cheat_path) - 1);
+		ustrncpy(cfg->last_import_cheat_path, uQStringCD(fileinfo.absolutePath()), usizeof(cfg->last_import_cheat_path) - 1);
 	}
 }
 void wdgCheatsEditor::s_export(bool checked) {

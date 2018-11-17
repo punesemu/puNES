@@ -22,6 +22,16 @@
 #include "emu_thread.h"
 #include "conf.h"
 #include "clock.h"
+#include "shaders.h"
+#include "settings.h"
+
+enum wdgSettingsVideo_shader_parameter_colums {
+	WSV_SP_DESC,
+	WSV_SP_SLIDER,
+	WSV_SP_SPIN,
+	WSV_SP_BUTTON,
+	WSV_SP_COLUMNS
+};
 
 wdgSettingsVideo::wdgSettingsVideo(QWidget *parent) : QWidget(parent) {
 	vsync = cfg->vsync;
@@ -50,10 +60,28 @@ wdgSettingsVideo::wdgSettingsVideo(QWidget *parent) : QWidget(parent) {
 	connect(checkBox_Oscan_brd_black_window, SIGNAL(clicked(bool)), this, SLOT(s_oscan_brd_black_w(bool)));
 	connect(checkBox_Oscan_brd_black_flscreen, SIGNAL(clicked(bool)), this, SLOT(s_oscan_brd_black_f(bool)));
 
-	connect(comboBox_Software_Filters, SIGNAL(activated(int)), this, SLOT(s_sfilters(int)));
-	connect(comboBox_Shaders, SIGNAL(activated(int)), this, SLOT(s_shaders(int)));
+	connect(comboBox_Software_Filters, SIGNAL(activated(int)), this, SLOT(s_sfilter(int)));
+	connect(comboBox_Shaders, SIGNAL(activated(int)), this, SLOT(s_shader(int)));
 	connect(pushButton_Shaders_file, SIGNAL(clicked(bool)), this, SLOT(s_shader_file(bool)));
 	connect(pushButton_Shaders_file_clear, SIGNAL(clicked(bool)), this, SLOT(s_shader_file_clear(bool)));
+	{
+		int i;
+
+		tableWidget_Shader_Parameters->setColumnCount(0);
+		tableWidget_Shader_Parameters->setColumnCount(WSV_SP_COLUMNS);
+
+
+		for (i = 0; i < WSV_SP_COLUMNS; i++) {
+			QTableWidgetItem *item = new QTableWidgetItem();
+
+			tableWidget_Shader_Parameters->setHorizontalHeaderItem(i, item);
+		}
+
+		shdp_brush.fg = tableWidget_Shader_Parameters->horizontalHeaderItem(0)->foreground();
+		shdp_brush.bg = tableWidget_Shader_Parameters->horizontalHeaderItem(0)->background();
+
+		connect(pushButton_Shader_Parameters_reset_alls, SIGNAL(clicked(bool)), this, SLOT(s_shader_param_all_defaults(bool)));
+	}
 #if defined (WITH_OPENGL)
 	connect(checkBox_Disable_sRGB_FBO, SIGNAL(clicked(bool)), this, SLOT(s_disable_srgb_fbo(bool)));
 #endif
@@ -144,8 +172,8 @@ void wdgSettingsVideo::update_widget(void) {
 	}
 
 	{
-		sfilters_set();
-		shaders_set();
+		sfilter_set();
+		shader_set();
 #if defined (WITH_OPENGL)
 		checkBox_Disable_sRGB_FBO->setChecked(cfg->disable_srgb_fbo);
 #else
@@ -238,7 +266,7 @@ void wdgSettingsVideo::oscan_brd_set(void) {
 	spinBox_Oscan_brd_right->setValue(borders->right);
 	spinBox_Oscan_brd_right->blockSignals(false);
 }
-void wdgSettingsVideo::sfilters_set(void) {
+void wdgSettingsVideo::sfilter_set(void) {
 	int filter = 0;
 
 	switch (cfg->filter) {
@@ -311,7 +339,7 @@ void wdgSettingsVideo::sfilters_set(void) {
 
 	comboBox_Software_Filters->setCurrentIndex(filter);
 }
-void wdgSettingsVideo::shaders_set(void) {
+void wdgSettingsVideo::shader_set(void) {
 	int shader = 0;
 
 	if (ustrlen(cfg->shader_file) != 0) {
@@ -353,6 +381,110 @@ void wdgSettingsVideo::shaders_set(void) {
 	}
 
 	comboBox_Shaders->setCurrentIndex(shader);
+	shader_param_set();
+}
+void wdgSettingsVideo::shader_param_set(void) {
+	int i, row = 0;
+
+	tableWidget_Shader_Parameters->setRowCount(0);
+
+	for (i = 0; i < shader_effect.params; i++) {
+		_param_shd *pshd = &shader_effect.param[i];
+		QTableWidgetItem *col;
+
+		if (!pshd->desc[0]) {
+			continue;
+		}
+
+		tableWidget_Shader_Parameters->insertRow(row);
+
+		col = new QTableWidgetItem();
+		col->setTextAlignment(Qt::AlignVCenter | Qt::AlignLeft);
+		col->setText(QString(pshd->desc));
+		tableWidget_Shader_Parameters->setItem(row, 0, col);
+		tableWidget_Shader_Parameters->resizeColumnToContents(0);
+
+		if (pshd->value != pshd->initial) {
+			col->setBackgroundColor(Qt::yellow);
+		}
+
+		{
+			QWidget *widget = new QWidget(this);
+			QHBoxLayout* layout = new QHBoxLayout(widget);
+			QSlider *slider = new QSlider(widget);
+			double steps = (pshd->max -pshd->min) / pshd->step;
+
+			widget->setObjectName("widget_slider");
+			slider->setObjectName("slider");
+			slider->setOrientation(Qt::Horizontal);
+			slider->setProperty("myIndex", QVariant(i));
+			slider->setProperty("myValue", QVariant(row));
+			slider->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+			slider->setRange(0, steps);
+			slider->setSingleStep(1);
+			slider->setValue((steps / (pshd->max - pshd->min)) * (pshd->value - pshd->min));
+			connect(slider, SIGNAL(valueChanged(int)), this, SLOT(s_shader_param_slider(int)));
+			layout->addWidget(slider);
+			layout->setAlignment(Qt::AlignCenter);
+			layout->setContentsMargins(0, 0, 0, 0);
+			layout->setSpacing(0);
+			tableWidget_Shader_Parameters->setCellWidget(row, WSV_SP_SLIDER, widget);
+		}
+
+		{
+			QWidget *widget = new QWidget(this);
+			QHBoxLayout* layout = new QHBoxLayout(widget);
+			QDoubleSpinBox *spin = new QDoubleSpinBox(widget);
+
+			widget->setObjectName("widget_spin");
+			spin->setObjectName("spin");
+			spin->setButtonSymbols(QAbstractSpinBox::PlusMinus);
+			spin->setProperty("myIndex", QVariant(i));
+			spin->setProperty("myValue", QVariant(row));
+			spin->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+			spin->setAlignment(Qt::AlignRight);
+			spin->setDecimals(6);
+			spin->setRange(pshd->min, pshd->max);
+			spin->setSingleStep(pshd->step);
+			spin->setValue((double)(pshd->value));
+			connect(spin, SIGNAL(valueChanged(const QString &)), this, SLOT(s_shader_param_spin(const QString &)));
+			layout->addWidget(spin);
+			layout->setAlignment(Qt::AlignCenter);
+			layout->setContentsMargins(0, 0, 0, 0);
+			layout->setSpacing(0);
+			tableWidget_Shader_Parameters->setCellWidget(row, WSV_SP_SPIN, widget);
+			tableWidget_Shader_Parameters->resizeColumnToContents(WSV_SP_SPIN);
+		}
+
+		{
+			QWidget *widget = new QWidget(this);
+			QHBoxLayout* layout = new QHBoxLayout(widget);
+			QPushButton *def = new QPushButton(widget) ;
+
+			widget->setObjectName("widget_button");
+			def->setObjectName("default");
+			def->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+			def->setIcon(QIcon(":/icon/icons/default.svg"));
+			def->setToolTip(tr("Default"));
+			def->setProperty("myIndex", QVariant(i));
+			def->setProperty("myValue", QVariant(row));
+			connect(def, SIGNAL(clicked(bool)), this, SLOT(s_shader_param_default(bool)));
+			layout->addWidget(def);
+			layout->setAlignment(Qt::AlignCenter);
+			layout->setContentsMargins(0, 0, 0, 0);
+			layout->setSpacing(0);
+			tableWidget_Shader_Parameters->setCellWidget(row, WSV_SP_BUTTON, widget);
+			tableWidget_Shader_Parameters->resizeColumnToContents(WSV_SP_BUTTON);
+		}
+
+		row++;
+	}
+
+	if (row == 0) {
+		pushButton_Shader_Parameters_reset_alls->setEnabled(false);
+	} else {
+		pushButton_Shader_Parameters_reset_alls->setEnabled(true);
+	}
 }
 void wdgSettingsVideo::palette_set(void) {
 	int palette = 0;
@@ -507,7 +639,7 @@ void wdgSettingsVideo::s_oscan_reset(bool checked) {
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 	emu_thread_continue();
 }
-void wdgSettingsVideo::s_sfilters(int index) {
+void wdgSettingsVideo::s_sfilter(int index) {
 	int filter = index;
 
 	switch (filter) {
@@ -584,7 +716,7 @@ void wdgSettingsVideo::s_sfilters(int index) {
 	}
 	emu_thread_continue();
 }
-void wdgSettingsVideo::s_shaders(int index) {
+void wdgSettingsVideo::s_shader(int index) {
 	int shader = index;
 
 	switch (shader) {
@@ -620,6 +752,7 @@ void wdgSettingsVideo::s_shaders(int index) {
 
 	emu_thread_pause();
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, shader, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
+	shader_param_set();
 	emu_thread_continue();
 }
 #if defined (WITH_OPENGL)
@@ -673,7 +806,55 @@ void wdgSettingsVideo::s_shader_file(bool checked) {
 }
 void wdgSettingsVideo::s_shader_file_clear(bool checked) {
 	umemset(cfg->shader_file, 0x00, usizeof(cfg->shader_file));
-	shaders_set();
+	shader_set();
+}
+void wdgSettingsVideo::s_shader_param_slider(int value) {
+	int index = QVariant(((QObject *)sender())->property("myIndex")).toInt();
+	int row = QVariant(((QObject *)sender())->property("myValue")).toInt();
+	_param_shd *pshd = &shader_effect.param[index];
+	double remain = pshd->initial - (pshd->step * (double)((int)(pshd->initial / pshd->step)));
+	double fvalue = pshd->min + ((pshd->step * (double)value) + remain);
+
+	tableWidget_Shader_Parameters->cellWidget(row, WSV_SP_SPIN)->findChild<QDoubleSpinBox *>("spin")->setValue(fvalue);
+}
+void wdgSettingsVideo::s_shader_param_spin(const QString &text) {
+	int index = QVariant(((QObject *)sender())->property("myIndex")).toInt();
+	int row = QVariant(((QObject *)sender())->property("myValue")).toInt();
+	_param_shd *pshd = &shader_effect.param[index];
+	QSlider *slider = tableWidget_Shader_Parameters->cellWidget(row, WSV_SP_SLIDER)->findChild<QSlider *>("slider");
+
+	pshd->value = text.toFloat();
+	slider->blockSignals(true);
+	slider->setValue(((float)slider->maximum() / (pshd->max - pshd->min)) * (pshd->value - pshd->min));
+	slider->blockSignals(false);
+
+	if (pshd->value == pshd->initial) {
+		tableWidget_Shader_Parameters->item(row, WSV_SP_DESC)->setForeground(shdp_brush.fg);
+		tableWidget_Shader_Parameters->item(row, WSV_SP_DESC)->setBackground(shdp_brush.bg);
+	} else {
+		tableWidget_Shader_Parameters->item(row, WSV_SP_DESC)->setBackgroundColor(Qt::yellow);
+	}
+}
+void wdgSettingsVideo::s_shader_param_default(bool checked) {
+	int index = QVariant(((QObject *)sender())->property("myIndex")).toInt();
+	int row = QVariant(((QObject *)sender())->property("myValue")).toInt();
+	_param_shd *pshd = &shader_effect.param[index];
+
+	tableWidget_Shader_Parameters->cellWidget(row, WSV_SP_SPIN)->findChild<QDoubleSpinBox *>("spin")->setValue(pshd->initial);
+}
+void wdgSettingsVideo::s_shader_param_all_defaults(bool checked) {
+	int i, row = 0;
+
+	for (i = 0; i < shader_effect.params; i++) {
+		_param_shd *pshd = &shader_effect.param[i];
+
+		if (!pshd->desc[0]) {
+			continue;
+		}
+
+		tableWidget_Shader_Parameters->cellWidget(row, WSV_SP_SPIN)->findChild<QDoubleSpinBox *>("spin")->setValue(pshd->initial);
+		row++;
+	}
 }
 void wdgSettingsVideo::s_palette(int index) {
 	int palette = index;

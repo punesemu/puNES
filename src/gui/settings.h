@@ -261,7 +261,8 @@ enum set_num_shortcut { SET_MAX_NUM_SC = SET_INP_SC_JOYSTICK_ID - SET_INP_SC_OPE
 enum list_settings_element {
 	LSET_SET,
 	LSET_PGS,
-	LSET_INP
+	LSET_INP,
+	LSET_NONE
 };
 
 typedef struct _opt {
@@ -1114,7 +1115,8 @@ static const _settings inp_cfg[] = {
 static const _list_settings list_settings[] = {
 	{main_cfg, LENGTH(main_cfg)},
 	{pgs_cfg, LENGTH(pgs_cfg)},
-	{inp_cfg, LENGTH(inp_cfg)}
+	{inp_cfg, LENGTH(inp_cfg)},
+	{NULL, 0},
 };
 
 #if defined (__cplusplus)
@@ -1132,14 +1134,17 @@ EXTERNC double settings_val_to_double(WORD round, const uTCHAR *buffer);
 EXTERNC void settings_cpy_utchar_to_val(int index, uTCHAR *buffer);
 EXTERNC void settings_val_to_oscan(int index, _overscan_borders *ob, const uTCHAR *buffer);
 
-EXTERNC void settings_pgs_parse(void);
-EXTERNC void settings_pgs_save(void);
-
 EXTERNC void *settings_inp_rd_sc(int index, int type);
 EXTERNC void settings_inp_wr_sc(void *str, int index, int type);
 EXTERNC void settings_inp_all_default(_config_input *config_input, _array_pointers_port *array);
 EXTERNC void settings_inp_port_default(_port *port, int index, int mode);
 EXTERNC void settings_inp_save(void);
+
+EXTERNC void settings_pgs_parse(void);
+EXTERNC void settings_pgs_save(void);
+
+EXTERNC void settings_shp_parse(void);
+EXTERNC void settings_shp_save(void);
 
 #undef EXTERNC
 

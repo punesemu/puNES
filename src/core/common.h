@@ -32,6 +32,7 @@ typedef signed int SDBWORD;
 #define BIOS_FOLDER    "/bios"
 #define DIFF_FOLDER    "/diff"
 #define PERGAME_FOLDER "/pgs"
+#define SHDPAR_FOLDER  "/shp"
 #define SAVE_FOLDER    "/save"
 #define TMP_FOLDER     "/tmp"
 #define PRB_FOLDER     "/prb"

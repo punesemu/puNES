@@ -62,14 +62,12 @@ static const GLint opengl_integer_get(const GLenum penum);
 static void opengl_matrix_4x4_identity(_math_matrix_4x4 *mat);
 static void opengl_matrix_4x4_ortho(_math_matrix_4x4 *mat, GLfloat left, GLfloat right,
 	GLfloat bottom, GLfloat top, GLfloat znear, GLfloat zfar);
-INLINE void opengl_shader_filter(uint8_t linear, uint8_t mipmap, uint8_t interpolation,
-	GLuint *mag, GLuint *min);
+INLINE void opengl_shader_filter(uint8_t linear, uint8_t mipmap, uint8_t interpolation, GLuint *mag, GLuint *min);
 INLINE static void opengl_shader_params_text_set(_shader *shd);
 
 // glsl
 static BYTE opengl_shader_glsl_init(GLuint pass, _shader *shd, GLchar *code, const uTCHAR *path);
-INLINE static void opengl_shader_glsl_params_set(const _shader *shd, GLuint fcountmod,
-		GLuint fcount);
+INLINE static void opengl_shader_glsl_params_set(const _shader *shd, GLuint fcountmod, GLuint fcount);
 INLINE static void opengl_shader_glsl_disable_attrib(void);
 // cg
 #if defined (WITH_OPENGL_CG)
@@ -80,10 +78,8 @@ static BYTE opengl_shader_cg_init(GLuint pass, _shader *shd, GLchar *code, const
 static void opengl_shader_cg_clstate_ctrl(CGparameter *dst, CGparameter *param, const char *semantic);
 static void opengl_shader_cg_param2f_ctrl(CGparameter *dst, CGparameter *param, const char *semantic);
 static void opengl_shader_cg_uni_texture_clear(_shader_uniforms_tex_cg *sut);
-static void opengl_shader_cg_uni_texture(_shader_uniforms_tex_cg *sut, _shader_prg_cg *prg,
-	char *fmt, ...);
-INLINE static void opengl_shader_cg_params_set(const _texture *texture, GLuint fcountmod,
-	GLuint fcount);
+static void opengl_shader_cg_uni_texture(_shader_uniforms_tex_cg *sut, _shader_prg_cg *prg, char *fmt, ...);
+INLINE static void opengl_shader_cg_params_set(const _texture *texture, GLuint fcountmod, GLuint fcount);
 INLINE static void opengl_shader_cg_disable_stpm(void);
 #endif
 
@@ -266,14 +262,12 @@ BYTE opengl_context_create(void) {
 
 		if (opengl.texture[i].shader.type == MS_CGP) {
 #if defined (WITH_OPENGL_CG)
-			rc = opengl_shader_cg_init(i, &opengl.texture[i].shader, shader_effect.sp[i].code,
-				shader_effect.sp[i].path);
+			rc = opengl_shader_cg_init(i, &opengl.texture[i].shader, shader_effect.sp[i].code, shader_effect.sp[i].path);
 #else
 			return (EXIT_ERROR_SHADER);
 #endif
 		} else {
-			rc = opengl_shader_glsl_init(i, &opengl.texture[i].shader, shader_effect.sp[i].code,
-				shader_effect.sp[i].path);
+			rc = opengl_shader_glsl_init(i, &opengl.texture[i].shader, shader_effect.sp[i].code, shader_effect.sp[i].path);
 		}
 
 		if (rc != EXIT_OK) {
@@ -1102,8 +1096,7 @@ static void opengl_matrix_4x4_ortho(_math_matrix_4x4 *mat, GLfloat left, GLfloat
 	MAT_ELEM_4X4(*mat, 1, 3) = ty;
 	MAT_ELEM_4X4(*mat, 2, 3) = tz;
 }
-INLINE void opengl_shader_filter(uint8_t linear, uint8_t mipmap, uint8_t interpolation,
-		GLuint *mag, GLuint *min) {
+INLINE void opengl_shader_filter(uint8_t linear, uint8_t mipmap, uint8_t interpolation, GLuint *mag, GLuint *min) {
 	switch (linear) {
 		case TEXTURE_LINEAR_DISAB:
 			(*min) = mipmap ? GL_NEAREST_MIPMAP_NEAREST : GL_NEAREST;
@@ -1336,8 +1329,7 @@ static BYTE opengl_shader_glsl_init(GLuint pass, _shader *shd, GLchar *code, con
 
 	return (EXIT_OK);
 }
-INLINE static void opengl_shader_glsl_params_set(const _shader *shd, GLuint fcountmod,
-		GLuint fcount) {
+INLINE static void opengl_shader_glsl_params_set(const _shader *shd, GLuint fcountmod, GLuint fcount) {
 	GLuint i, buffer_index = 0, texture_index = 1;
 
 	if (shd->glslp.uni.mvp >= 0) {
@@ -1812,8 +1804,7 @@ static void opengl_shader_cg_uni_texture_clear(_shader_uniforms_tex_cg *sut) {
 	sut->f.texture_size = NULL;
 	sut->v.tex_coord = NULL;
 }
-static void opengl_shader_cg_uni_texture(_shader_uniforms_tex_cg *sut, _shader_prg_cg *prg,
-	char *fmt, ...) {
+static void opengl_shader_cg_uni_texture(_shader_uniforms_tex_cg *sut, _shader_prg_cg *prg, char *fmt, ...) {
 	CGparameter param;
 	char type[50], buff[100];
 	va_list ap;
@@ -1850,8 +1841,7 @@ static void opengl_shader_cg_uni_texture(_shader_uniforms_tex_cg *sut, _shader_p
 		opengl_shader_cg_clstate_ctrl(&sut->v.tex_coord, &param, buff);
 	}
 }
-INLINE static void opengl_shader_cg_params_set(const _texture *texture, GLuint fcountmod,
-	GLuint fcount) {
+INLINE static void opengl_shader_cg_params_set(const _texture *texture, GLuint fcountmod, GLuint fcount) {
 	GLuint i, buffer_index = 0;
 	const _shader *shd = &texture->shader;
 
