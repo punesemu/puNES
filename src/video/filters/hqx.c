@@ -27,9 +27,9 @@ void hqx_init(void) {
 	uint32_t i, r, g, b, y, u, v;
 
 	for (i = 0; i < NUM_COLORS; i++) {
-		r = palette_RGB[i].r;
-		g = palette_RGB[i].g;
-		b = palette_RGB[i].b;
+		r = palette_RGB.in_use[i].r;
+		g = palette_RGB.in_use[i].g;
+		b = palette_RGB.in_use[i].b;
 		y = (uint32_t) (0.299 * r + 0.587 * g + 0.114 * b);
 		u = (uint32_t) (-0.169 * r - 0.331 * g + 0.5 * b) + 128;
 		v = (uint32_t) (0.5 * r - 0.419 * g - 0.081 * b) + 128;

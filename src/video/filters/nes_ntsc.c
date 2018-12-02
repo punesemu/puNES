@@ -113,9 +113,7 @@ void nes_ntsc_init( nes_ntsc_t* ntsc, nes_ntsc_setup_t const* setup )
 		 */
 		int pointer = entry;
 
-		if ( (cfg->disable_swap_emphasis_pal == FALSE)
-				&& ((machine.type == PAL) || (machine.type == DENDY)) )
-		{
+		if (setup->swapped) {
 			if ((entry > 0x3F) && (entry < 0x80)) {
 				pointer = entry + 0x40;
 			} else if ((entry > 0x7F) && (entry < 0xC0)) {
@@ -202,7 +200,7 @@ void nes_ntsc_init( nes_ntsc_t* ntsc, nes_ntsc_setup_t const* setup )
 				}
 			}
 			#endif
-			
+
 			/* Optionally use palette instead */
 			if ( setup->palette )
 			{
@@ -213,7 +211,7 @@ void nes_ntsc_init( nes_ntsc_t* ntsc, nes_ntsc_setup_t const* setup )
 				float b = to_float * in [2];
 				q = RGB_TO_YIQ( r, g, b, y, i );
 			}
-			
+
 			/* Apply brightness, contrast, and gamma */
 			y *= (float) setup->contrast * 0.5f + 1;
 			/* adjustment reduces error when using input palette */

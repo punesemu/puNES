@@ -45,8 +45,14 @@
        <layout class="QHBoxLayout" name="horizontalLayout_Cheat_List_Editor">
         <item>
          <widget class="QLabel" name="label_Cheat_List_Editor">
+          <property name="font">
+           <font>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
           <property name="text">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Cheats List&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           <string>Cheats List</string>
           </property>
          </widget>
         </item>
@@ -198,8 +204,14 @@
        <layout class="QHBoxLayout" name="horizontalLayout_Editor_Tools">
         <item>
          <widget class="QLabel" name="label_Editor_Tools">
+          <property name="font">
+           <font>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
           <property name="text">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Editor Tools&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           <string>Editor Tools</string>
           </property>
          </widget>
         </item>

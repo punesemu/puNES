@@ -29,7 +29,7 @@ void palette_save_on_file(const uTCHAR *file) {
 		return;
 	}
 
-	if (!(fwrite((BYTE *) palette_RGB, 64 * 3, 1, fp))) {
+	if (!(fwrite((BYTE *)palette_RGB.noswap, 64 * 3, 1, fp))) {
 		;
 	}
 
@@ -38,7 +38,7 @@ void palette_save_on_file(const uTCHAR *file) {
 BYTE palette_load_from_file(const uTCHAR *file) {
 	FILE *fp;
 
-	memset((BYTE *) palette_base_file, 0x00, 64 * 3);
+	memset((BYTE *)palette_base_file, 0x00, 64 * 3);
 
 	if ((fp = ufopen(file, uL("rb"))) == NULL) {
 		ufprintf(stderr, uL("ERROR: open file " uPERCENTs "\n"), file);
@@ -55,7 +55,7 @@ BYTE palette_load_from_file(const uTCHAR *file) {
 
 	fseek(fp, 0L, SEEK_SET);
 
-	if (!(fread((BYTE *) palette_base_file, 64 * 3, 1, fp))) {
+	if (!(fread((BYTE *)palette_base_file, 64 * 3, 1, fp))) {
 		;
 	}
 

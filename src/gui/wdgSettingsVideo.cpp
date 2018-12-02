@@ -18,6 +18,7 @@
 
 #include <QtWidgets/QFileDialog>
 #include "wdgSettingsVideo.moc"
+#include "wdgPaletteEditor.hpp"
 #include "mainWindow.hpp"
 #include "emu_thread.h"
 #include "conf.h"
@@ -89,7 +90,6 @@ wdgSettingsVideo::wdgSettingsVideo(QWidget *parent) : QWidget(parent) {
 	connect(comboBox_Palette, SIGNAL(activated(int)), this, SLOT(s_palette(int)));
 	connect(pushButton_Palette_file, SIGNAL(clicked(bool)), this, SLOT(s_palette_file(bool)));
 	connect(pushButton_Palette_file_clear, SIGNAL(clicked(bool)), this, SLOT(s_palette_file_clear(bool)));
-	connect(pushButton_Palette_save, SIGNAL(clicked(bool)), this, SLOT(s_palette_save(bool)));
 	connect(checkBox_Disable_emphasis_swap_PAL, SIGNAL(clicked(bool)), this, SLOT(s_disable_emphasis_swap_pal(bool)));
 
 	connect(checkBox_Vsync, SIGNAL(clicked(bool)), this, SLOT(s_vsync(bool)));
@@ -712,7 +712,8 @@ void wdgSettingsVideo::s_sfilter(int index) {
 	emu_thread_pause();
 	gfx_set_screen(NO_CHANGE, filter, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 	if (cfg->filter == NTSC_FILTER) {
-		ntsc_set(NULL, cfg->ntsc_format, 0, 0, (BYTE *) palette_RGB, 0);
+		ntsc_set(NULL, cfg->ntsc_format, 0, 0, (BYTE *)palette_RGB.noswap, 0);
+		ntsc_set(NULL, cfg->ntsc_format, 0, 0, (BYTE *)palette_RGB.swapped, 0);
 	}
 	emu_thread_continue();
 }
@@ -889,6 +890,7 @@ void wdgSettingsVideo::s_palette(int index) {
 
 	emu_thread_pause();
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, palette, FALSE, FALSE);
+	widget_Palette_Editor->palette_changed();
 	emu_thread_continue();
 }
 void wdgSettingsVideo::s_palette_file(bool checked) {
@@ -914,6 +916,7 @@ void wdgSettingsVideo::s_palette_file(bool checked) {
 			ustrncpy(cfg->palette_file, uQStringCD(fileinfo.absoluteFilePath()), usizeof(cfg->palette_file) - 1);
 			emu_thread_pause();
 			gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, PALETTE_FILE, FALSE, TRUE);
+			widget_Palette_Editor->palette_changed();
 			emu_thread_continue();
 		} else {
 			text_add_line_info(1, "[red]error on palette file");
@@ -926,38 +929,10 @@ void wdgSettingsVideo::s_palette_file_clear(bool checked) {
 	umemset(cfg->palette_file, 0x00, usizeof(cfg->palette_file));
 	palette_set();
 }
-void wdgSettingsVideo::s_palette_save(bool checked) {
-	QStringList filters;
-	QString file;
-
-	emu_pause(TRUE);
-
-	filters.append(tr("Palette files"));
-	filters.append(tr("All files"));
-
-	filters[0].append(" (*.pal *.PAL)");
-	filters[1].append(" (*.*)");
-
-	file = QFileDialog::getSaveFileName(this, tr("Save palette on file"),
-		uQString(opt_palette[cfg->palette].lname).replace(" ", "_"),
-		filters.join(";;"));
-
-	if (file.isNull() == false) {
-		QFileInfo fileinfo(file);
-
-		if (fileinfo.suffix().isEmpty()) {
-			fileinfo.setFile(QString(file) + ".pal");
-		}
-
-		palette_save_on_file(uQStringCD(fileinfo.absoluteFilePath()));
-	}
-
-	emu_pause(FALSE);
-}
 void wdgSettingsVideo::s_disable_emphasis_swap_pal(bool checked) {
 	emu_thread_pause();
 	cfg->disable_swap_emphasis_pal = !cfg->disable_swap_emphasis_pal;
-	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, TRUE);
+	gfx_palette_update();
 	emu_thread_continue();
 }
 void wdgSettingsVideo::s_vsync(bool checked) {

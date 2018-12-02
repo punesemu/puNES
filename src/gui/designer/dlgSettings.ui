@@ -33,7 +33,7 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_tab_General">
        <item>
-        <widget class="wdgSettingsGeneral" name="widget_wdgSettingsGeneral" native="true"/>
+        <widget class="wdgSettingsGeneral" name="widget_Settings_General" native="true"/>
        </item>
       </layout>
      </widget>
@@ -47,7 +47,7 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_tab_Video">
        <item>
-        <widget class="wdgSettingsVideo" name="widget_wdgSettingsVideo" native="true"/>
+        <widget class="wdgSettingsVideo" name="widget_Settings_Video" native="true"/>
        </item>
       </layout>
      </widget>
@@ -61,7 +61,7 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_tab_Audio">
        <item>
-        <widget class="wdgSettingsAudio" name="widget_wdgSettingsAudio" native="true"/>
+        <widget class="wdgSettingsAudio" name="widget_Settings_Audio" native="true"/>
        </item>
       </layout>
      </widget>
@@ -75,7 +75,7 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_tab_Input">
        <item>
-        <widget class="wdgSettingsInput" name="widget_wdgSettingsInput" native="true"/>
+        <widget class="wdgSettingsInput" name="widget_Settings_Input" native="true"/>
        </item>
       </layout>
      </widget>
@@ -89,7 +89,7 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_tab_PPU">
        <item>
-        <widget class="wdgSettingsPPU" name="widget_wdgSettingsPPU" native="true"/>
+        <widget class="wdgSettingsPPU" name="widget_Settings_PPU" native="true"/>
        </item>
       </layout>
      </widget>
@@ -103,7 +103,7 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_tab_Cheats">
        <item>
-        <widget class="wdgSettingsCheats" name="widget_wdgSettingsCheats" native="true"/>
+        <widget class="wdgSettingsCheats" name="widget_Settings_Cheats" native="true"/>
        </item>
       </layout>
      </widget>

@@ -21,7 +21,7 @@
 
 #define NUM_COLORS 512
 
-enum {
+enum palettes_types {
 	PALETTE_PAL,
 	PALETTE_NTSC,
 	PALETTE_SONY,
@@ -32,7 +32,7 @@ enum {
 	PALETTE_FRBX_YUV
 };
 
-typedef struct {
+typedef struct _color_RGB {
 	BYTE r;
 	BYTE g;
 	BYTE b;
@@ -45,7 +45,11 @@ typedef struct {
 #endif
 
 EXTERNC _color_RGB palette_base_file[64];
-EXTERNC _color_RGB palette_RGB[NUM_COLORS];
+EXTERNC struct _palette_RGB {
+	_color_RGB *in_use;
+	_color_RGB noswap[NUM_COLORS];
+	_color_RGB swapped[NUM_COLORS];
+} palette_RGB;
 
 EXTERNC void palette_save_on_file(const uTCHAR *file);
 EXTERNC BYTE palette_load_from_file(const uTCHAR *file);

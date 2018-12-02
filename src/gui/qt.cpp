@@ -55,6 +55,7 @@ Q_IMPORT_PLUGIN(QSvgPlugin)
 #include "dlgVsSystem.hpp"
 #include "wdgScreen.hpp"
 #include "wdgStatusBar.hpp"
+#include "wdgSettingsVideo.hpp"
 #include "video/gfx_thread.h"
 #include "emu_thread.h"
 #include "version.h"
@@ -342,6 +343,7 @@ void gui_screen_update(void) {
 #elif defined (WITH_D3D9)
 	qt.screen->wd3d9->repaint();
 #endif
+	qt.dset->widget_Settings_Video->widget_Palette_Editor->widget_Palette_PPU->update();
 }
 
 void *gui_dlgsettings_get_ptr(void) {
@@ -381,7 +383,7 @@ void gui_apu_channels_widgets_update(void) {
 }
 
 void gui_ppu_hacks_widgets_update(void) {
-	qt.dset->widget_wdgSettingsPPU->update_widget();
+	qt.dset->widget_Settings_PPU->update_widget();
 }
 
 #if defined (WITH_OPENGL)

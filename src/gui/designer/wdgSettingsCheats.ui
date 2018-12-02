@@ -32,8 +32,14 @@
       <layout class="QHBoxLayout" name="horizontalLayout_Cheats_settings">
        <item>
         <widget class="QLabel" name="label_Cheats_settings">
+         <property name="font">
+          <font>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
          <property name="text">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Settings&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>Settings</string>
          </property>
         </widget>
        </item>
@@ -78,7 +84,7 @@
       </widget>
      </item>
      <item row="2" column="0" colspan="2">
-      <widget class="wdgCheatsEditor" name="widget_wdgCheatsEditor" native="true"/>
+      <widget class="wdgCheatsEditor" name="widget_Cheats_Editor" native="true"/>
      </item>
     </layout>
    </item>

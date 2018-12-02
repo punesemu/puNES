@@ -61,16 +61,16 @@ void wdgSettingsCheats::s_cheat_mode(int index) {
 
 	switch (cfg->cheat_mode) {
 		case NOCHEAT_MODE:
-			widget_wdgCheatsEditor->setEnabled(false);
+			widget_Cheats_Editor->setEnabled(false);
 			cheatslist_blank();
 			break;
 		case GAMEGENIE_MODE:
-			widget_wdgCheatsEditor->setEnabled(false);
+			widget_Cheats_Editor->setEnabled(false);
 			cheatslist_blank();
 			gamegenie_check_rom_present(TRUE);
 			break;
 		case CHEATSLIST_MODE:
-			widget_wdgCheatsEditor->setEnabled(true);
+			widget_Cheats_Editor->setEnabled(true);
 			objcheat->apply_cheats();
 			break;
 	}

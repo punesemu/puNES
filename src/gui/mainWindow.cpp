@@ -1350,13 +1350,13 @@ void mainWindow::s_shcut_scale(void) {
 	dlgsettings->shcut_scale(scale);
 }
 void mainWindow::s_shcut_interpolation(void) {
-	dlgsettings->widget_wdgSettingsVideo->checkBox_Interpolation->click();
+	dlgsettings->widget_Settings_Video->checkBox_Interpolation->click();
 }
 void mainWindow::s_shcut_stretch_in_fullscreen(void) {
-	dlgsettings->widget_wdgSettingsVideo->checkBox_Stretch_in_fullscreen->click();
+	dlgsettings->widget_Settings_Video->checkBox_Stretch_in_fullscreen->click();
 }
 void mainWindow::s_shcut_audio_enable(void) {
-	dlgsettings->widget_wdgSettingsAudio->checkBox_Enable_Audio->click();
+	dlgsettings->widget_Settings_Audio->checkBox_Enable_Audio->click();
 }
 void mainWindow::s_shcut_save_settings(void) {
 	dlgsettings->pushButton_Save_Settings->click();

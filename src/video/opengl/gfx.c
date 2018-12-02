@@ -225,19 +225,18 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 	if ((scale != cfg->scale) || info.on_cfg || force_scale) {
 		if (filter == NTSC_FILTER) {
 			width = gfx.w[PASS0] = gfx.w[NO_OVERSCAN] = NES_NTSC_OUT_WIDTH(SCR_ROWS);
-			gfx.filter.width_pixel = (float) nes_ntsc_out_chunk / (float) nes_ntsc_in_chunk;
+			gfx.filter.width_pixel = (float)nes_ntsc_out_chunk / (float)nes_ntsc_in_chunk;
 			if (overscan.enabled) {
-				width -= ((float) (overscan.borders->left + overscan.borders->right) *
-					gfx.filter.width_pixel);
+				width -= ((float)(overscan.borders->left + overscan.borders->right) * gfx.filter.width_pixel);
 			}
 			switch (scale) {
 				case X2:
 					gfx.width_pixel = gfx.filter.width_pixel;
 					break;
 				default:
-					width = ((float) width / 2.0f) * (float) scale;
-					gfx.w[NO_OVERSCAN] = ((float) gfx.w[NO_OVERSCAN] / 2.0f) * (float) scale;
-					gfx.width_pixel = (gfx.filter.width_pixel / 2.0f) * (float) scale;
+					width = ((float)width / 2.0f) * (float)scale;
+					gfx.w[NO_OVERSCAN] = ((float)gfx.w[NO_OVERSCAN] / 2.0f) * (float)scale;
+					gfx.width_pixel = (gfx.filter.width_pixel / 2.0f) * (float)scale;
 					break;
 			}
 		} else {
@@ -275,35 +274,31 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 						palette = PALETTE_SONY;
 					}
 				} else {
-					ntsc_set(NULL, cfg->ntsc_format, FALSE, (BYTE *) palette_base_file, 0,
-						(BYTE *) palette_RGB);
+					ntsc_set(NULL, cfg->ntsc_format, FALSE, (BYTE *)palette_base_file, 0, (BYTE *)palette_RGB.noswap);
 				}
 			}
 		}
 
 		switch (palette) {
 			case PALETTE_PAL:
-				ntsc_set(NULL, cfg->ntsc_format, FALSE, (BYTE *) palette_base_pal, 0,
-					(BYTE *) palette_RGB);
+				ntsc_set(NULL, cfg->ntsc_format, FALSE, (BYTE *)palette_base_pal, 0, (BYTE *)palette_RGB.noswap);
 				break;
 			case PALETTE_NTSC:
-				ntsc_set(NULL, cfg->ntsc_format, FALSE, 0, 0, (BYTE *) palette_RGB);
+				ntsc_set(NULL, cfg->ntsc_format, FALSE, 0, 0, (BYTE *)palette_RGB.noswap);
 				break;
 			case PALETTE_FRBX_NOSTALGIA:
-				ntsc_set(NULL, cfg->ntsc_format, FALSE, (BYTE *) palette_firebrandx_nostalgia_FBX, 0,
-					(BYTE *) palette_RGB);
+				ntsc_set(NULL, cfg->ntsc_format, FALSE, (BYTE *)palette_firebrandx_nostalgia_FBX, 0, (BYTE *)palette_RGB.noswap);
 				break;
 			case PALETTE_FRBX_YUV:
-				ntsc_set(NULL, cfg->ntsc_format, FALSE, (BYTE *) palette_firebrandx_YUV_v3, 0,
-					(BYTE *) palette_RGB);
+				ntsc_set(NULL, cfg->ntsc_format, FALSE, (BYTE *)palette_firebrandx_YUV_v3, 0, (BYTE *)palette_RGB.noswap);
 				break;
 			case PALETTE_GREEN:
-				rgb_modifier(NULL, palette_RGB, 0x00, -0x20, 0x20, -0x20);
+				rgb_modifier(NULL, palette_RGB.noswap, 0x00, -0x20, 0x20, -0x20);
 				break;
 			case PALETTE_FILE:
 				break;
 			default:
-				ntsc_set(NULL, cfg->ntsc_format, palette, 0, 0, (BYTE *) palette_RGB);
+				ntsc_set(NULL, cfg->ntsc_format, palette, 0, 0, (BYTE *)palette_RGB.noswap);
 				break;
 		}
 
@@ -313,20 +308,16 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 				case RP2C03G:
 					break;
 				case RP2C04:
-					ntsc_set(NULL, cfg->ntsc_format, FALSE, (BYTE *) palette_RP2C04_0001, 0,
-						(BYTE *) palette_RGB);
+					ntsc_set(NULL, cfg->ntsc_format, FALSE, (BYTE *)palette_RP2C04_0001, 0, (BYTE *)palette_RGB.noswap);
 					break;
 				case RP2C04_0002:
-					ntsc_set(NULL, cfg->ntsc_format, FALSE, (BYTE *) palette_RP2C04_0002, 0,
-						(BYTE *) palette_RGB);
+					ntsc_set(NULL, cfg->ntsc_format, FALSE, (BYTE *)palette_RP2C04_0002, 0, (BYTE *)palette_RGB.noswap);
 					break;
 				case RP2C04_0003:
-					ntsc_set(NULL, cfg->ntsc_format, FALSE, (BYTE *) palette_RP2C04_0003, 0,
-						(BYTE *) palette_RGB);
+					ntsc_set(NULL, cfg->ntsc_format, FALSE, (BYTE *)palette_RP2C04_0003, 0, (BYTE *)palette_RGB.noswap);
 					break;
 				case RP2C04_0004:
-					ntsc_set(NULL, cfg->ntsc_format, FALSE, (BYTE *) palette_RP2C04_0004, 0,
-						(BYTE *) palette_RGB);
+					ntsc_set(NULL, cfg->ntsc_format, FALSE, (BYTE *)palette_RP2C04_0004, 0, (BYTE *)palette_RGB.noswap);
 					break;
 				case RC2C03B:
 				case RC2C03C:
@@ -339,19 +330,9 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 					break;
 			}
 		}
-
-		// inizializzo in ogni caso la tabella YUV dell'hqx
-		hqx_init();
-
-		// memorizzo i colori della paletta nel formato di visualizzazione
-		{
-			WORD i;
-
-			for (i = 0; i < NUM_COLORS; i++) {
-				gfx.palette[i] = gfx_color(0, palette_RGB[i].r, palette_RGB[i].g, palette_RGB[i].b);
-			}
-		}
 	}
+
+	gfx_palette_update();
 
 	// salvo il nuovo fattore di scala
 	cfg->scale = scale;
@@ -421,7 +402,7 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 				if (overscan.enabled && !cfg->oscan_black_borders) {
 					float brd = 0;
 
-					brd = (float) gfx.w[VIDEO_MODE] / (float) SCR_ROWS;
+					brd = (float)gfx.w[VIDEO_MODE] / (float)SCR_ROWS;
 					brd *= (overscan.borders->right + overscan.borders->left);
 
 					gfx.w[VIDEO_MODE] -= brd;
@@ -451,11 +432,11 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 	// essere (256 x 240). Mi serve per calcolarmi la posizione del puntatore
 	// dello zapper.
 	if (cfg->fullscreen) {
-		gfx.w_pr = (float) gfx.vp.w / (float) SCR_ROWS;
-		gfx.h_pr = (float) gfx.vp.h / (float) SCR_LINES;
+		gfx.w_pr = (float)gfx.vp.w / (float)SCR_ROWS;
+		gfx.h_pr = (float)gfx.vp.h / (float)SCR_LINES;
 	} else {
-		gfx.w_pr = (float) (gfx.w[NO_OVERSCAN] * gfx.pixel_aspect_ratio) / (float) SCR_ROWS;
-		gfx.h_pr = (float) gfx.h[NO_OVERSCAN] / (float) SCR_LINES;
+		gfx.w_pr = (float)(gfx.w[NO_OVERSCAN] * gfx.pixel_aspect_ratio) / (float)SCR_ROWS;
+		gfx.h_pr = (float)gfx.h[NO_OVERSCAN] / (float)SCR_LINES;
 	}
 
 	gfx_thread_continue();
@@ -487,6 +468,23 @@ void gfx_draw_screen(void) {
 
 uint32_t gfx_color(BYTE a, BYTE r, BYTE g, BYTE b) {
 	return (gui_color(a, r, g, b));
+}
+void gfx_palette_update(void) {
+	WORD i;
+
+	if ((cfg->disable_swap_emphasis_pal == FALSE) && ((machine.type == PAL) || (machine.type == DENDY))) {
+		palette_RGB.in_use = &palette_RGB.swapped[0];
+	} else {
+		palette_RGB.in_use = &palette_RGB.noswap[0];
+	}
+
+	// inizializzo in ogni caso la tabella YUV dell'hqx
+	hqx_init();
+
+	// memorizzo i colori della paletta nel formato di visualizzazione
+	for (i = 0; i < NUM_COLORS; i++) {
+		gfx.palette[i] = gfx_os_color(palette_RGB.in_use[i].r, palette_RGB.in_use[i].g, palette_RGB.in_use[i].b);
+	}
 }
 
 void gfx_cursor_init(void) {

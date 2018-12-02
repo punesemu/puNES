@@ -34,15 +34,15 @@ BYTE tv_noise_init(void) {
 		fprintf(stderr, "Unable to allocate the palette\n");
 		return (EXIT_ERROR);
 	}
-	palette = (uint32_t *) turn_off_effect.palette;
+	palette = (uint32_t *)turn_off_effect.palette;
 
 	if (!(turn_off_effect.ntsc = malloc(sizeof(nes_ntsc_t)))) {;
 		fprintf(stderr, "Unable to allocate the palette\n");
 		return (EXIT_ERROR);
 	}
 
-	rgb_modifier((nes_ntsc_t *) turn_off_effect.ntsc, pRGB, 0x1A, -0x20, -0x30, -0x20);
-	//rgb_modifier((nes_ntsc_t *) turn_off_effect.ntsc, pRGB, 0x00, -0x20, -0x20, -0x20);
+	rgb_modifier((nes_ntsc_t *)turn_off_effect.ntsc, pRGB, 0x1A, -0x20, -0x30, -0x20);
+	//rgb_modifier((nes_ntsc_t *)turn_off_effect.ntsc, pRGB, 0x00, -0x20, -0x20, -0x20);
 
 	for (i = 0; i < NUM_COLORS; i++) {
 		palette[i] = gfx_color(255, pRGB[i].r, pRGB[i].g, pRGB[i].b);

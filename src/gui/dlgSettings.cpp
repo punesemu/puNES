@@ -27,7 +27,7 @@ dlgSettings::dlgSettings(QWidget *parent) : QDialog(parent) {
 
 	connect(pushButton_Save_Settings, SIGNAL(clicked(bool)), this, SLOT(s_save_settings(bool)));
 
-	widget_wdgSettingsCheats->widget_wdgCheatsEditor->pushButton_Hide_Show_Tools->setVisible(false);
+	widget_Settings_Cheats->widget_Cheats_Editor->pushButton_Hide_Show_Tools->setVisible(false);
 
 	adjustSize();
 	setFixedSize(size());
@@ -73,32 +73,32 @@ void dlgSettings::update_dialog(void) {
 	update_tab_cheats();
 }
 void dlgSettings::change_rom(void) {
-	widget_wdgSettingsVideo->change_rom();
+	widget_Settings_Video->change_rom();
 }
 void dlgSettings::shcut_mode(int mode) {
-	widget_wdgSettingsGeneral->s_mode(mode);
+	widget_Settings_General->s_mode(mode);
 }
 void dlgSettings::shcut_scale(int scale) {
-	widget_wdgSettingsVideo->s_scale(scale);
+	widget_Settings_Video->s_scale(scale);
 }
 
 void dlgSettings::update_tab_general(void) {
-	widget_wdgSettingsGeneral->update_widget();
+	widget_Settings_General->update_widget();
 }
 void dlgSettings::update_tab_video(void) {
-	widget_wdgSettingsVideo->update_widget();
+	widget_Settings_Video->update_widget();
 }
 void dlgSettings::update_tab_audio(void) {
-	widget_wdgSettingsAudio->update_widget();
+	widget_Settings_Audio->update_widget();
 }
 void dlgSettings::update_tab_input(void) {
-	widget_wdgSettingsInput->update_widget();
+	widget_Settings_Input->update_widget();
 }
 void dlgSettings::update_tab_ppu(void) {
-	widget_wdgSettingsPPU->update_widget();
+	widget_Settings_PPU->update_widget();
 }
 void dlgSettings::update_tab_cheats(void) {
-	widget_wdgSettingsCheats->update_widget();
+	widget_Settings_Cheats->update_widget();
 }
 
 void dlgSettings::s_save_settings(bool checked) {

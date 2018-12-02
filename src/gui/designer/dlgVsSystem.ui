@@ -64,8 +64,14 @@
        <layout class="QHBoxLayout" name="horizontalLayout_coin_counter">
         <item>
          <widget class="QLabel" name="label_Coin_Counter">
+          <property name="font">
+           <font>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
           <property name="text">
-           <string>&lt;b&gt;Coin Counter&lt;/b&gt;</string>
+           <string>Coin Counter</string>
           </property>
          </widget>
         </item>
@@ -102,8 +108,14 @@
        <layout class="QHBoxLayout" name="horizontalLayout_dip_switches">
         <item>
          <widget class="QLabel" name="label_Dip_Switches">
+          <property name="font">
+           <font>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
           <property name="text">
-           <string>&lt;b&gt;Dip Switches&lt;/b&gt;</string>
+           <string>Dip Switches</string>
           </property>
          </widget>
         </item>

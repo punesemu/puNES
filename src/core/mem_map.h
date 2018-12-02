@@ -121,9 +121,9 @@ struct _nametables {
 	BYTE data[0x1000];
 	BYTE *bank_1k[4];
 } ntbl;
-struct _palette {
+struct _mmap_palette {
 	BYTE color[0x20];
-} palette;
+} mmap_palette;
 struct _oam {
 	BYTE data[256];
 	BYTE *element[64];

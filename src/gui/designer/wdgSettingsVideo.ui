@@ -27,7 +27,7 @@
     <number>0</number>
    </property>
    <item>
-    <layout class="QGridLayout" name="gridLayout_video">
+    <layout class="QGridLayout" name="gridLayout_Video">
      <item row="1" column="0">
       <widget class="QLabel" name="icon_Scale">
        <property name="text">
@@ -82,10 +82,40 @@
        </property>
       </widget>
      </item>
+     <item row="0" column="0" colspan="3">
+      <layout class="QHBoxLayout" name="horizontalLayout_Video_settings">
+       <item>
+        <widget class="QLabel" name="label_Video_settings">
+         <property name="font">
+          <font>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Settings</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="Line" name="line_Video_settings">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
      <item row="2" column="0" colspan="3">
       <widget class="QTabWidget" name="tabWidget_Video">
        <property name="currentIndex">
-        <number>3</number>
+        <number>4</number>
        </property>
        <widget class="QWidget" name="tab_Video_Misc">
         <attribute name="icon">
@@ -113,8 +143,14 @@
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
              <property name="text">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;** &lt;span style=&quot; font-weight:600;&quot;&gt;To apply this change restart is needed&lt;/span&gt; **&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>** To apply this change restart is needed **</string>
              </property>
             </widget>
            </item>
@@ -192,13 +228,19 @@
         <attribute name="title">
          <string>Pixel Aspect Ratio</string>
         </attribute>
-        <layout class="QGridLayout" name="gridLayout">
+        <layout class="QGridLayout" name="gridLayout_Video_PAR">
          <item row="1" column="0">
           <layout class="QHBoxLayout" name="horizontalLayout_PAR_misc">
            <item>
             <widget class="QLabel" name="label_PAR_misc">
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
              <property name="text">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Misc&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>Misc</string>
              </property>
             </widget>
            </item>
@@ -277,7 +319,7 @@
         <attribute name="title">
          <string>Overscan</string>
         </attribute>
-        <layout class="QVBoxLayout" name="verticalLayout">
+        <layout class="QVBoxLayout" name="verticalLayout_Video_Oscan">
          <item>
           <widget class="QComboBox" name="comboBox_Oscan">
            <property name="sizePolicy">
@@ -431,7 +473,7 @@
            <property name="frameShadow">
             <enum>QFrame::Raised</enum>
            </property>
-           <layout class="QGridLayout" name="gridLayout_2">
+           <layout class="QGridLayout" name="gridLayout_Oscan_brd">
             <property name="leftMargin">
              <number>4</number>
             </property>
@@ -444,30 +486,7 @@
             <property name="bottomMargin">
              <number>4</number>
             </property>
-            <item row="0" column="2">
-             <layout class="QVBoxLayout" name="verticalLayout_Oscan_brd_up">
-              <item>
-               <widget class="QLabel" name="label_Oscan_brd_up">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="text">
-                 <string>Up</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignCenter</set>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QSpinBox" name="spinBox_Oscan_brd_up"/>
-              </item>
-             </layout>
-            </item>
-            <item row="1" column="3">
+            <item row="0" column="4">
              <layout class="QVBoxLayout" name="verticalLayout_Oscan_brd_right">
               <item>
                <widget class="QLabel" name="label_Oscan_brd_right">
@@ -490,30 +509,7 @@
               </item>
              </layout>
             </item>
-            <item row="1" column="0">
-             <layout class="QVBoxLayout" name="verticalLayout_Oscan_brd_left">
-              <item>
-               <widget class="QLabel" name="label_Oscan_brd_left">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="text">
-                 <string>Left</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignCenter</set>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QSpinBox" name="spinBox_Oscan_brd_left"/>
-              </item>
-             </layout>
-            </item>
-            <item row="2" column="2">
+            <item row="0" column="1">
              <layout class="QVBoxLayout" name="verticalLayout_Oscan_brd_down">
               <item>
                <widget class="QLabel" name="label_Oscan_brd_down">
@@ -536,6 +532,52 @@
               </item>
              </layout>
             </item>
+            <item row="0" column="0">
+             <layout class="QVBoxLayout" name="verticalLayout_Oscan_brd_up">
+              <item>
+               <widget class="QLabel" name="label_Oscan_brd_up">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="text">
+                 <string>Up</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSpinBox" name="spinBox_Oscan_brd_up"/>
+              </item>
+             </layout>
+            </item>
+            <item row="0" column="3">
+             <layout class="QVBoxLayout" name="verticalLayout_Oscan_brd_left">
+              <item>
+               <widget class="QLabel" name="label_Oscan_brd_left">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="text">
+                 <string>Left</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSpinBox" name="spinBox_Oscan_brd_left"/>
+              </item>
+             </layout>
+            </item>
            </layout>
           </widget>
          </item>
@@ -554,8 +596,14 @@
           <layout class="QHBoxLayout" name="horizontalLayout_Oscan_misc">
            <item>
             <widget class="QLabel" name="label_Oscan_misc">
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
              <property name="text">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Misc&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>Misc</string>
              </property>
             </widget>
            </item>
@@ -611,7 +659,7 @@
         <attribute name="title">
          <string>Filters</string>
         </attribute>
-        <layout class="QGridLayout" name="gridLayout_3">
+        <layout class="QGridLayout" name="gridLayout_Video_Filters">
          <item row="2" column="0" colspan="3">
           <widget class="QComboBox" name="comboBox_Shaders">
            <property name="sizePolicy">
@@ -856,8 +904,14 @@
           <layout class="QHBoxLayout" name="horizontalLayout_Filters_misc">
            <item>
             <widget class="QLabel" name="label_Filters_misc">
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
              <property name="text">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Misc&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>Misc</string>
              </property>
             </widget>
            </item>
@@ -891,8 +945,14 @@
           <layout class="QHBoxLayout" name="horizontalLayout_Shader_Parameters">
            <item>
             <widget class="QLabel" name="label_Shader_Parameters">
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
              <property name="text">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Shader Parameters&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>Shader Parameters</string>
              </property>
             </widget>
            </item>
@@ -952,8 +1012,74 @@
         <attribute name="title">
          <string>Palette</string>
         </attribute>
-        <layout class="QGridLayout" name="gridLayout_7">
+        <layout class="QGridLayout" name="gridLayout_Video_Palette">
          <item row="5" column="0" colspan="3">
+          <widget class="wdgPaletteEditor" name="widget_Palette_Editor" native="true"/>
+         </item>
+         <item row="1" column="0">
+          <widget class="QPushButton" name="pushButton_Palette_file">
+           <property name="text">
+            <string>Load from a file</string>
+           </property>
+           <property name="icon">
+            <iconset resource="application.qrc">
+             <normaloff>:/icon/icons/load.svg</normaloff>:/icon/icons/load.svg</iconset>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1" colspan="2">
+          <layout class="QHBoxLayout" name="horizontalLayout_Palette_file">
+           <item>
+            <widget class="QLineEdit" name="lineEdit_Palette_file">
+             <property name="focusPolicy">
+              <enum>Qt::NoFocus</enum>
+             </property>
+             <property name="readOnly">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton_Palette_file_clear">
+             <property name="icon">
+              <iconset resource="application.qrc">
+               <normaloff>:/icon/icons/trash.svg</normaloff>:/icon/icons/trash.svg</iconset>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="6" column="0" colspan="3">
+          <layout class="QHBoxLayout" name="horizontalLayout_Palette_misc">
+           <item>
+            <widget class="QLabel" name="label_Palette_misc">
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>Misc</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="Line" name="line_Palette_misc">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="7" column="0" colspan="3">
           <widget class="QCheckBox" name="checkBox_Disable_emphasis_swap_PAL">
            <property name="text">
             <string notr="true">Disable Red and Green emphasis swap for PAL/Dendy</string>
@@ -1010,39 +1136,36 @@
            </item>
           </widget>
          </item>
-         <item row="2" column="0" rowspan="2" colspan="2">
-          <widget class="QPushButton" name="pushButton_Palette_save">
-           <property name="text">
-            <string>Save to a file</string>
+         <item row="8" column="0" colspan="3">
+          <spacer name="verticalSpacer_Video_Palette">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
            </property>
-           <property name="icon">
-            <iconset resource="application.qrc">
-             <normaloff>:/icon/icons/save.svg</normaloff>:/icon/icons/save.svg</iconset>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
            </property>
-          </widget>
-         </item>
-         <item row="1" column="0" colspan="2">
-          <widget class="QPushButton" name="pushButton_Palette_file">
-           <property name="text">
-            <string>Load from a file</string>
-           </property>
-           <property name="icon">
-            <iconset resource="application.qrc">
-             <normaloff>:/icon/icons/load.svg</normaloff>:/icon/icons/load.svg</iconset>
-           </property>
-          </widget>
+          </spacer>
          </item>
          <item row="4" column="0" colspan="3">
-          <layout class="QHBoxLayout" name="horizontalLayout_Palette_misc">
+          <layout class="QHBoxLayout" name="horizontalLayout_Palette_editor">
            <item>
-            <widget class="QLabel" name="label_Palette_misc">
+            <widget class="QLabel" name="label_Palette_editor">
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
              <property name="text">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Misc&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>Editor</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="Line" name="line_Palette_misc">
+            <widget class="Line" name="line_Palette_editor">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                <horstretch>0</horstretch>
@@ -1056,73 +1179,22 @@
            </item>
           </layout>
          </item>
-         <item row="6" column="0" colspan="3">
-          <spacer name="verticalSpacer_Video_Palette">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="1" column="2">
-          <layout class="QHBoxLayout" name="horizontalLayout_Palette_file">
-           <item>
-            <widget class="QLineEdit" name="lineEdit_Palette_file">
-             <property name="focusPolicy">
-              <enum>Qt::NoFocus</enum>
-             </property>
-             <property name="readOnly">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="pushButton_Palette_file_clear">
-             <property name="icon">
-              <iconset resource="application.qrc">
-               <normaloff>:/icon/icons/trash.svg</normaloff>:/icon/icons/trash.svg</iconset>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
         </layout>
        </widget>
       </widget>
-     </item>
-     <item row="0" column="0" colspan="3">
-      <layout class="QHBoxLayout" name="horizontalLayout_Video_settings">
-       <item>
-        <widget class="QLabel" name="label_Video_settings">
-         <property name="text">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Settings&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="Line" name="line_Video_settings">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-        </widget>
-       </item>
-      </layout>
      </item>
     </layout>
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>wdgPaletteEditor</class>
+   <extends>QWidget</extends>
+   <header>wdgPaletteEditor.hpp</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="application.qrc"/>
  </resources>

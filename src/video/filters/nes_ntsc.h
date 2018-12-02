@@ -37,6 +37,8 @@ typedef struct nes_ntsc_setup_t
 	64-color generation and does standard color emphasis calculations on it. */
 	unsigned char const* palette;/* optional 512-entry RGB palette in, 3 bytes per color */
 	unsigned char const* base_palette;/* optional 64-entry RGB palette in, 3 bytes per color */
+
+	int swapped;
 } nes_ntsc_setup_t;
 
 /* Video format presets */

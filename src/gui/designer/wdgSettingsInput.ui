@@ -110,8 +110,14 @@
       <layout class="QHBoxLayout" name="horizontalLayout_Input_Misc">
        <item>
         <widget class="QLabel" name="label_Input_Misc">
+         <property name="font">
+          <font>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
          <property name="text">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Misc&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>Misc</string>
          </property>
         </widget>
        </item>
@@ -200,8 +206,14 @@
       <layout class="QHBoxLayout" name="horizontalLayout_Ports">
        <item>
         <widget class="QLabel" name="label_Ports">
+         <property name="font">
+          <font>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
          <property name="text">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Ports&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>Ports</string>
          </property>
         </widget>
        </item>
@@ -224,8 +236,14 @@
       <layout class="QHBoxLayout" name="horizontalLayout_Shortcuts">
        <item>
         <widget class="QLabel" name="label_Shortcuts">
+         <property name="font">
+          <font>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
          <property name="text">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Shortcuts&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>Shortcuts</string>
          </property>
         </widget>
        </item>

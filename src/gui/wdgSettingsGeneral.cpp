@@ -166,9 +166,10 @@ void wdgSettingsGeneral::s_mode(int index) {
 		text_add_line_info(1, "switched to [green]%s", ascii.toLatin1().constData());
 
 		emu_reset(CHANGE_MODE);
-		// per lo swap dell'emphasis del rosso e del verde in caso di PAL e DENDY
-		// ricreo la paletta quando cambio regione.
-		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, TRUE);
+
+		// controllo la paletta da utilizzare (per lo swap dell'emphasis del rosso e del verde in caso
+		// di PAL e DENDY) quando cambio regione.
+		gfx_palette_update();
 	}
 
 	emu_thread_continue();

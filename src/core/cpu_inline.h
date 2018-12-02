@@ -980,9 +980,9 @@ static void INLINE ppu_wr_mem(WORD address, BYTE value) {
 	}
 	address &= 0x1F;
 	if (!(address & 0x03)) {
-		palette.color[address] = palette.color[(address + 0x10) & 0x1F] = value & 0x3F;
+		mmap_palette.color[address] = mmap_palette.color[(address + 0x10) & 0x1F] = value & 0x3F;
 	} else {
-		palette.color[address] = value & 0x3F;
+		mmap_palette.color[address] = value & 0x3F;
 	}
 	return;
 }

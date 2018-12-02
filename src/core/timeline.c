@@ -214,7 +214,7 @@ void tl_operation(BYTE mode, BYTE snap) {
 		tl_on_mem(mode, chr.extra.data, chr.extra.size);
 	}
 	tl_on_struct(mode, ntbl);
-	tl_on_struct(mode, palette);
+	tl_on_struct(mode, mmap_palette);
 	tl_on_struct(mode, oam);
 
 	/* mapper */

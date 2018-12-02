@@ -57,7 +57,7 @@ static BYTE INLINE ppu_rd_mem(WORD address) {
 		}
 		return (ntbl.bank_1k[address >> 10][address & 0x3FF]);
 	}
-	return (palette.color[address & 0x1F]);
+	return (mmap_palette.color[address & 0x1F]);
 }
 
 #endif /* PPU_INLINE_H_ */

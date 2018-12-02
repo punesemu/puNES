@@ -23,6 +23,8 @@ if WITH_OPENGL
 wdgOpenGL.moc: wdgOpenGL.hpp
 	$(MOC) $(srcdir)/wdgOpenGL.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 endif
+wdgPaletteEditor.moc: wdgPaletteEditor.hpp
+	$(MOC) $(srcdir)/wdgPaletteEditor.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 wdgSettingsAudio.moc: wdgSettingsAudio.hpp
 	$(MOC) $(srcdir)/wdgSettingsAudio.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 wdgSettingsCheats.moc: wdgSettingsCheats.hpp
@@ -54,6 +56,8 @@ wdgAPUChannels.hh: designer/wdgAPUChannels.ui
 	$(UIC) $(srcdir)/designer/wdgAPUChannels.ui -o $@
 wdgCheatsEditor.hh: designer/wdgCheatsEditor.ui
 	$(UIC) $(srcdir)/designer/wdgCheatsEditor.ui -o $@
+wdgPaletteEditor.hh: designer/wdgPaletteEditor.ui
+	$(UIC) $(srcdir)/designer/wdgPaletteEditor.ui -o $@
 wdgSettingsAudio.hh: designer/wdgSettingsAudio.ui
 	$(UIC) $(srcdir)/designer/wdgSettingsAudio.ui -o $@
 wdgSettingsCheats.hh: designer/wdgSettingsCheats.ui
@@ -80,6 +84,7 @@ BUILT_SOURCES = \
 	objSettings.moc \
 	wdgAPUChannels.moc \
 	wdgCheatsEditor.moc \
+	wdgPaletteEditor.moc \
 	wdgSettingsAudio.moc \
 	wdgSettingsCheats.moc \
 	wdgSettingsGeneral.moc \
@@ -100,6 +105,7 @@ BUILT_SOURCES += \
 	dlgVsSystem.hh \
 	wdgAPUChannels.hh \
 	wdgCheatsEditor.hh \
+	wdgPaletteEditor.hh \
 	wdgSettingsAudio.hh \
 	wdgSettingsCheats.hh \
 	wdgSettingsGeneral.hh \
@@ -140,6 +146,8 @@ libgui_a_SOURCES = \
 	wdgAPUChannels.hpp \
 	wdgCheatsEditor.cpp \
 	wdgCheatsEditor.hpp \
+	wdgPaletteEditor.cpp \
+	wdgPaletteEditor.hpp \
 	wdgSettingsAudio.cpp \
 	wdgSettingsAudio.hpp \
 	wdgSettingsCheats.cpp \

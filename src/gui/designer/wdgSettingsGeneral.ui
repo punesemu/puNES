@@ -92,8 +92,14 @@
       <layout class="QHBoxLayout" name="horizontalLayout_System_Roms">
        <item>
         <widget class="QLabel" name="label_System_Roms">
+         <property name="font">
+          <font>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
          <property name="text">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;System Roms&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>System Roms</string>
          </property>
         </widget>
        </item>
@@ -216,8 +222,14 @@
       <layout class="QHBoxLayout" name="horizontalLayout_General_misc">
        <item>
         <widget class="QLabel" name="label_General_misc">
+         <property name="font">
+          <font>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
          <property name="text">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Misc&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>Misc</string>
          </property>
         </widget>
        </item>
@@ -240,8 +252,14 @@
       <layout class="QHBoxLayout" name="horizontalLayout_General_settings">
        <item>
         <widget class="QLabel" name="label_General_settings">
+         <property name="font">
+          <font>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
          <property name="text">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Settings&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>Settings</string>
          </property>
         </widget>
        </item>

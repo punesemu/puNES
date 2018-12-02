@@ -39,7 +39,7 @@
 	plt[index].color = (tmp < 0 ? blck : (tmp > 0xFF ? 0xFF : tmp))
 #define rgb_modifier(ntscin, plt, blck, red, green, blue)\
 	/* prima ottengo la paletta monocromatica */\
-	ntsc_set(ntscin, cfg->ntsc_format, PALETTE_MONO, 0, 0, (BYTE *) plt);\
+	ntsc_set(ntscin, cfg->ntsc_format, PALETTE_MONO, 0, 0, (BYTE *)plt);\
 	/* quindi la modifico */\
 	{\
 		WORD i;\
@@ -54,7 +54,12 @@
 		}\
 	}\
 	/* ed infine utilizzo la nuova */\
-	ntsc_set(ntscin, cfg->ntsc_format, FALSE, 0, (BYTE *) plt,(BYTE *) plt)
+	ntsc_set(ntscin, cfg->ntsc_format, FALSE, 0, (BYTE *)plt,(BYTE *)plt)
+#if defined (__unix__)
+#define	gfx_os_color(r, g, b) gfx_color(0, r, g, b);
+#else
+#define	gfx_os_color(r, g, b) gfx_color(255, r, g, b);
+#endif
 
 enum fullscreen_type { NO_FULLSCR, FULLSCR, FULLSCR_IN_WINDOW };
 enum scale_type { X1 = 1, X2, X3, X4, X5, X6 };
@@ -138,6 +143,7 @@ EXTERNC void gfx_control_changed_adapter(void *monitor);
 #endif
 
 EXTERNC uint32_t gfx_color(BYTE alpha, BYTE r, BYTE g, BYTE b);
+EXTERNC void gfx_palette_update(void);
 
 EXTERNC void gfx_cursor_init(void);
 EXTERNC void gfx_cursor_set(void);

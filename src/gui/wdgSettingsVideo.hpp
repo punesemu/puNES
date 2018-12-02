@@ -83,7 +83,6 @@ class wdgSettingsVideo : public QWidget, public Ui::wdgSettingsVideo {
 		void s_palette(int index);
 		void s_palette_file(bool checked);
 		void s_palette_file_clear(bool checked);
-		void s_palette_save(bool checked);
 		void s_disable_emphasis_swap_pal(bool checked);
 		void s_vsync(bool checked);
 		void s_interpolation(bool checked);

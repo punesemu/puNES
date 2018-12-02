@@ -36,26 +36,25 @@ gfx_filter_function(ntsc_surface) {
 	int y;
 
 	if (palette == NULL) {
-		palette = (void *) ntsc;
+		palette = (void *)ntsc;
 	}
 
-	nes_ntsc_blit((nes_ntsc_t *) palette, screen.rd->data, SCR_ROWS, burst_phase, SCR_ROWS, SCR_LINES,
-			pix, pitch);
+	nes_ntsc_blit((nes_ntsc_t *)palette, screen.rd->data, SCR_ROWS, burst_phase, SCR_ROWS, SCR_LINES, pix, pitch);
 
 	for (y = ((height / gfx.filter.factor) - 1); --y >= 0;) {
-		unsigned char const *in = ((const unsigned char *) pix) + (y * pitch);
-		unsigned char *out = ((unsigned char *) pix) + ((y * gfx.filter.factor) * pitch);
+		unsigned char const *in = ((const unsigned char *)pix) + (y * pitch);
+		unsigned char *out = ((unsigned char *)pix) + ((y * gfx.filter.factor) * pitch);
 		int n;
 
 		for (n = width; n; --n) {
-			unsigned prev = *(uint32_t *) in;
-			unsigned next = *(uint32_t *) (in + pitch);
+			unsigned prev = *(uint32_t *)in;
+			unsigned next = *(uint32_t *)(in + pitch);
 			/* mix rgb without losing low bits */
 			unsigned mixed = prev + next + ((prev ^ next) & 0x00010101);
 
 			/* darken by 12% */
-			*(uint32_t *) out = prev | 0xFF000000;
-			*(uint32_t *) (out + pitch) = ((mixed >> 1) - (mixed >> 4 & 0x00030703)) | 0xFF000000;
+			*(uint32_t *)out = prev | 0xFF000000;
+			*(uint32_t *)(out + pitch) = ((mixed >> 1) - (mixed >> 4 & 0x00030703)) | 0xFF000000;
 
 			in += NES_NTSC_OUT_DEPTH / 8;
 			out += NES_NTSC_OUT_DEPTH / 8;
@@ -68,7 +67,7 @@ BYTE ntsc_init(BYTE effect, BYTE color, BYTE *palette_base, BYTE *palette_in, BY
 	format[SVIDEO] = nes_ntsc_svideo;
 	format[RGBMODE] = nes_ntsc_rgb;
 
-	if (!(ntsc = (nes_ntsc_t *) malloc(sizeof(nes_ntsc_t)))) {
+	if (!(ntsc = (nes_ntsc_t *)malloc(sizeof(nes_ntsc_t)))) {
 		fprintf(stderr, "Out of memory\n");
 		return (EXIT_ERROR);
 	}
@@ -78,26 +77,25 @@ BYTE ntsc_init(BYTE effect, BYTE color, BYTE *palette_base, BYTE *palette_in, BY
 void ntsc_quit(void) {
 	free(ntsc);
 }
-void ntsc_set(nes_ntsc_t *ntsc_in, BYTE effect, BYTE color, BYTE *palette_base, BYTE *palette_in,
-		BYTE *palette_out) {
+void ntsc_set(nes_ntsc_t *ntsc_in, BYTE effect, BYTE color, BYTE *palette_base, BYTE *palette_in, BYTE *palette_out) {
 	if (!ntsc_in) {
 		ntsc_in = ntsc;
 	}
 
 	if (palette_base) {
-		format[effect].base_palette = (unsigned char *) palette_base;
+		format[effect].base_palette = (unsigned char *)palette_base;
 	} else {
 		format[effect].base_palette = 0;
 	}
 
 	if (palette_in) {
-		format[effect].palette = (unsigned char *) palette_in;
+		format[effect].palette = (unsigned char *)palette_in;
 	} else {
 		format[effect].palette = 0;
 	}
 
 	if (palette_out) {
-		format[effect].palette_out = (unsigned char *) palette_out;
+		format[effect].palette_out = (unsigned char *)palette_out;
 	} else {
 		format[effect].palette_out = 0;
 	}
@@ -109,6 +107,7 @@ void ntsc_set(nes_ntsc_t *ntsc_in, BYTE effect, BYTE color, BYTE *palette_base, 
 	//format[effect].merge_fields = merge_fields;
 	format[effect].decoder_matrix = 0;
 	format[effect].saturation = 0;
+	format[effect].swapped = 0;
 
 	if (color) {
 		switch (color) {
@@ -126,4 +125,11 @@ void ntsc_set(nes_ntsc_t *ntsc_in, BYTE effect, BYTE color, BYTE *palette_base, 
 	}
 
 	nes_ntsc_init(ntsc_in, &format[effect]);
+
+	// creo la paletta swappata
+	if (format[effect].palette_out) {
+		format[effect].swapped = 1;
+		format[effect].palette_out = (unsigned char *)palette_RGB.swapped;
+		nes_ntsc_init(ntsc_in, &format[effect]);
+	}
 }

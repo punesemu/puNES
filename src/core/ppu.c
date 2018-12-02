@@ -58,7 +58,7 @@ enum overflow_sprite { OVERFLOW_SPR = 3 };
 	/* deve essere azzerato alla fine di ogni ciclo PPU */\
 	r2006.changed_from_op = 0;
 #define put_pixel(clr) screen.wr->line[ppu.screen_y][ppu.frame_x] = r2001.emphasis | clr;
-#define put_emphasis(clr) put_pixel((palette.color[clr] & r2001.color_mode))
+#define put_emphasis(clr) put_pixel((mmap_palette.color[clr] & r2001.color_mode))
 #define put_bg put_emphasis(color_bg)
 #define put_sp put_emphasis(color_sp | 0x10)
 #define examine_sprites(senv, sp, vis, ty)\
@@ -482,7 +482,7 @@ void ppu_tick(void) {
 							 * utilizzo quello del background.
 							 */
 							if (cfg->hide_background) {
-								put_pixel(palette.color[0]);
+								put_pixel(mmap_palette.color[0]);
 							} else {
 								put_bg
 							}
@@ -492,7 +492,7 @@ void ppu_tick(void) {
 							 * trasparente, utilizzo quello dello sprite.
 							 */
 							if (cfg->hide_sprites) {
-								put_pixel(palette.color[0]);
+								put_pixel(mmap_palette.color[0]);
 							} else {
 								put_sp
 							}
@@ -507,7 +507,7 @@ void ppu_tick(void) {
 									 */
 									if (cfg->hide_background) {
 										if (cfg->hide_sprites) {
-											put_pixel(palette.color[0]);
+											put_pixel(mmap_palette.color[0]);
 										} else {
 											put_sp
 										}
@@ -518,7 +518,7 @@ void ppu_tick(void) {
 									/* altrimenti quello dello sprite */
 									if (cfg->hide_sprites) {
 										if (cfg->hide_background) {
-											put_pixel(palette.color[0]);
+											put_pixel(mmap_palette.color[0]);
 										} else {
 											put_bg
 										}
@@ -549,7 +549,7 @@ void ppu_tick(void) {
 								if (sprite_unl[visible_spr_unl].attrib & 0x20) {
 									if (cfg->hide_background) {
 										if (cfg->hide_sprites) {
-											put_pixel(palette.color[0]);
+											put_pixel(mmap_palette.color[0]);
 										} else {
 											put_sp
 										}
@@ -559,7 +559,7 @@ void ppu_tick(void) {
 								} else {
 									if (cfg->hide_sprites) {
 										if (cfg->hide_background) {
-											put_pixel(palette.color[0]);
+											put_pixel(mmap_palette.color[0]);
 										} else {
 											put_bg
 										}
@@ -576,7 +576,7 @@ void ppu_tick(void) {
 						 * altrimenti visualizzo un pixel del
 						 * colore 0 della paletta.
 						 */
-						put_pixel(palette.color[0])
+						put_pixel(mmap_palette.color[0])
 
 						if ((r2006.value & 0xFF00) == 0x3F00) {
 							/*
@@ -1059,7 +1059,7 @@ BYTE ppu_turn_on(void) {
 			/* inizializzo nametables */
 			memset(ntbl.data, 0x00, sizeof(ntbl.data));
 			/* e paletta dei colori */
-			memcpy(palette.color, palette_init, sizeof(palette.color));
+			memcpy(mmap_palette.color, palette_init, sizeof(mmap_palette.color));
 		}
 	} else {
 		memset(&r2000, 0x00, sizeof(r2000));

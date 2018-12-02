@@ -122,8 +122,14 @@
       <layout class="QHBoxLayout" name="horizontalLayout_PPU_Overclock">
        <item>
         <widget class="QLabel" name="label_PPU_Overclock">
+         <property name="font">
+          <font>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
          <property name="text">
-          <string>&lt;b&gt;Overclock&lt;/b&gt;</string>
+          <string>Overclock</string>
          </property>
         </widget>
        </item>
@@ -146,8 +152,14 @@
       <layout class="QHBoxLayout" name="horizontalLayout_Sprites_and_background">
        <item>
         <widget class="QLabel" name="label_Sprites_and_background">
+         <property name="font">
+          <font>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
          <property name="text">
-          <string>&lt;b&gt;Sprites and background&lt;/b&gt;</string>
+          <string>Sprites and background</string>
          </property>
         </widget>
        </item>

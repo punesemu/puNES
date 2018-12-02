@@ -572,7 +572,7 @@ BYTE emu_turn_on(void) {
 	memset(&prg, 0x00, sizeof(prg));
 	memset(&chr, 0x00, sizeof(chr));
 	memset(&ntbl, 0x00, sizeof(ntbl));
-	memset(&palette, 0x00, sizeof(palette));
+	memset(&mmap_palette, 0x00, sizeof(mmap_palette));
 	memset(&oam, 0x00, sizeof(oam));
 	memset(&screen, 0x00, sizeof(screen));
 	memset(&vs_system, 0x00, sizeof(vs_system));
@@ -739,7 +739,7 @@ BYTE emu_reset(BYTE type) {
 
 		settings_pgs_parse();
 
-		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, TRUE);
+		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 
 		gui_update_gps_settings();
 	}
