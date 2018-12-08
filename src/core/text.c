@@ -393,17 +393,26 @@ void text_rendering(BYTE render) {
 		}
 	}
 
-	if (cfg->show_fps) {
+	{
 		ele = &text.misc.fps;
 
-		sprintf(ele->text, "[normal]%2d[normal]", (int) fps.gfx);
+		if (cfg->show_fps) {
+			ele->enabled = TRUE;
 
-		if (!ele->surface) {
-			gfx_text_create_surface(ele);
-		}
+			sprintf(ele->text, "[normal]%2d[normal]", (int) fps.gfx);
 
-		if (render) {
-			rendering(ele);
+			if (!ele->surface) {
+				gfx_text_create_surface(ele);
+			}
+
+			if (render) {
+				rendering(ele);
+			}
+		} else if (ele->enabled == TRUE) {
+			ele = &text.misc.fps;
+
+			ele->enabled = FALSE;
+			text_clear(ele);
 		}
 	}
 
