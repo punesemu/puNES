@@ -116,9 +116,10 @@ EXTERNC struct _text {
 		_txt_element counter_frames;
 		_txt_element controllers[4];
 	} tas;
-	struct _txt_fds {
+	struct _txt_misc {
+		_txt_element fps;
 		_txt_element floppy;
-	} fds;
+	} misc;
 	struct _txt_save_slot {
 		BYTE operation;
 		_txt_element slot;

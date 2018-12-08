@@ -115,7 +115,7 @@
      <item row="2" column="0" colspan="3">
       <widget class="QTabWidget" name="tabWidget_Video">
        <property name="currentIndex">
-        <number>4</number>
+        <number>0</number>
        </property>
        <widget class="QWidget" name="tab_Video_Misc">
         <attribute name="icon">
@@ -167,6 +167,13 @@
           <widget class="QCheckBox" name="checkBox_Text_on_screen">
            <property name="text">
             <string notr="true">Text on screen</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="checkBox_Show_FPS">
+           <property name="text">
+            <string notr="true">Show FPS</string>
            </property>
           </widget>
          </item>

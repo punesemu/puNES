@@ -699,6 +699,7 @@ void objSet::to_cfg(QString group) {
 		int_to_val(SET_VSYNC, cfg_from_file.vsync);
 		int_to_val(SET_INTERPOLATION, cfg_from_file.interpolation);
 		int_to_val(SET_TEXT_ON_SCREEN, cfg_from_file.txt_on_screen);
+		int_to_val(SET_SHOW_FPS, cfg_from_file.show_fps);
 		int_to_val(SET_INPUT_DISPLAY, cfg_from_file.input_display);
 		int_to_val(SET_DISABLE_TV_NOISE, cfg_from_file.disable_tv_noise);
 		int_to_val(SET_DISABLE_SEPIA_PAUSE, cfg_from_file.disable_sepia_color);
@@ -782,6 +783,7 @@ void objSet::fr_cfg(QString group) {
 		cfg_from_file.vsync = val_to_int(SET_VSYNC);
 		cfg_from_file.interpolation = val_to_int(SET_INTERPOLATION);
 		cfg_from_file.txt_on_screen = val_to_int(SET_TEXT_ON_SCREEN);
+		cfg_from_file.show_fps = val_to_int(SET_SHOW_FPS);
 		cfg_from_file.input_display = val_to_int(SET_INPUT_DISPLAY);
 		cfg_from_file.disable_tv_noise = val_to_int(SET_DISABLE_TV_NOISE);
 		cfg_from_file.disable_sepia_color= val_to_int(SET_DISABLE_SEPIA_PAUSE);

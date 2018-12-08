@@ -58,6 +58,7 @@ typedef struct _config {
 	BYTE interpolation;
 	BYTE cheat_mode;
 	BYTE txt_on_screen;
+	BYTE show_fps;
 	BYTE input_display;
 	BYTE disable_tv_noise;
 	BYTE disable_sepia_color;

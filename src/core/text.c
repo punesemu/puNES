@@ -29,6 +29,7 @@
 #include "tas.h"
 #include "input.h"
 #include "fds.h"
+#include "fps.h"
 #include "conf.h"
 #include "save_slot.h"
 
@@ -103,6 +104,22 @@ void text_init(void) {
 			ele->h = font_size[ele->font][1];
 		}
 
+		// fps
+		ele = &text.misc.fps;
+		ele->bck = TRUE;
+		ele->bck_color = TXT_BLUE;
+		ele->font = FONT_12X10;
+		ele->factor = 1;
+		ele->start_x = TXT_RIGHT;
+		ele->start_y = TXT_UP;
+		ele->x = 0;
+		ele->y = 0;
+		ele->w = 2 * font_size[ele->font][0];
+		ele->h = font_size[ele->font][1];
+		ele->alpha[0] = 220;
+		ele->alpha[1] = 220;
+		ele->alpha[2] = 220;
+
 		// save slot
 		ele = &text.save_slot.slot;
 		ele->bck = TRUE;
@@ -118,7 +135,6 @@ void text_init(void) {
 		ele->y = 1 * font_size[ele->font][1];
 		ele->w = SAVE_SLOTS * font_size[ele->font][0];
 		ele->h = font_size[ele->font][1];
-
 	}
 }
 void text_add_line(int type, int factor, int font, int alpha, int start_x, int start_y, int x,
@@ -319,12 +335,10 @@ void text_rendering(BYTE render) {
 
 			int length;
 			if (tas.lag_frame) {
-				sprintf(ele->text, "%d/%d [red]%d[normal]", tas.frame, tas.total,
-					tas.total_lag_frames);
+				sprintf(ele->text, "%d/%d [red]%d[normal]", tas.frame, tas.total, tas.total_lag_frames);
 				length = strlen(ele->text) - 13;
 			} else {
-				sprintf(ele->text, "%d/%d [green]%d[normal]", tas.frame, tas.total,
-					tas.total_lag_frames);
+				sprintf(ele->text, "%d/%d [green]%d[normal]", tas.frame, tas.total, tas.total_lag_frames);
 				length = strlen(ele->text) - 15;
 			}
 
@@ -379,8 +393,22 @@ void text_rendering(BYTE render) {
 		}
 	}
 
+	if (cfg->show_fps) {
+		ele = &text.misc.fps;
+
+		sprintf(ele->text, "[normal]%2d[normal]", (int) fps.gfx);
+
+		if (!ele->surface) {
+			gfx_text_create_surface(ele);
+		}
+
+		if (render) {
+			rendering(ele);
+		}
+	}
+
 	if (fds.info.enabled) {
-		ele = &text.fds.floppy;
+		ele = &text.misc.floppy;
 
 		if ((fds.info.last_operation | fds.drive.disk_ejected)) {
 			ele->enabled = TRUE;
@@ -474,7 +502,7 @@ void text_calculate_real_x_y(_txt_element *ele, int *x, int *y) {
 		} else if (ele->start_x == TXT_LEFT) {
 			(*x) = 8 + ele->x;
 		} else if (ele->start_x == TXT_RIGHT) {
-			(*x) = ((text.w - 8) - ele->w) + ele->x;
+			(*x) = ((text.w - 8) - ele->w) - ele->x;
 		}
 		if ((*x) < 0) {
 			(*x) = 0;
@@ -486,7 +514,7 @@ void text_calculate_real_x_y(_txt_element *ele, int *x, int *y) {
 		} else if (ele->start_y == TXT_UP) {
 			(*y) = 8 + ele->y;
 		} else if (ele->start_y == TXT_DOWN) {
-			(*y) = ((text.h - 8) - font_size[ele->font][1]) + ele->y;
+			(*y) = ((text.h - 8) - font_size[ele->font][1]) - ele->y;
 		}
 		if ((*y) < 0) {
 			(*y) = 0;

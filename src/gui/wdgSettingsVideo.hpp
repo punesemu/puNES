@@ -87,6 +87,7 @@ class wdgSettingsVideo : public QWidget, public Ui::wdgSettingsVideo {
 		void s_vsync(bool checked);
 		void s_interpolation(bool checked);
 		void s_text_on_screen(bool checked);
+		void s_show_fps(bool checked);
 		void s_input_display(bool checked);
 		void s_disable_tv_noise(bool checked);
 		void s_disable_sepia(bool checked);

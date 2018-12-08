@@ -64,6 +64,7 @@ enum set_element {
 	SET_VSYNC,
 	SET_INTERPOLATION,
 	SET_TEXT_ON_SCREEN,
+	SET_SHOW_FPS,
 	SET_INPUT_DISPLAY,
 	SET_DISABLE_TV_NOISE,
 	SET_DISABLE_SEPIA_PAUSE,
@@ -631,6 +632,12 @@ static const _settings main_cfg[] = {
 		uL("video"), uL("text on screen"), uL("yes"),
 		uL("# possible values: yes, no"),
 		uL("    --txt-on-screen       enable messages       : yes, no"),
+		{LENGTH(opt_no_yes), opt_no_yes}
+	},
+	{
+		uL("video"), uL("show fps"), uL("no"),
+		uL("# possible values: yes, no"),
+		NULL,
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 	{
