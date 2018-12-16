@@ -34,13 +34,14 @@
 
 wdgPaletteWall::wdgPaletteWall(QWidget *parent) : QWidget(parent) {
 	setFocusPolicy(Qt::StrongFocus);
+	setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
 	colors.clear();
 	defaults.clear();
 	margin = 0;
 	nrows = 4;
 	ncols = 16;
-	cellw = 28;
-	cellh = 28;
+	cellw = 22;
+	cellh = 22;
 	curCol = 0;
 	curRow = 0;
 	selCol = -1;
@@ -320,7 +321,7 @@ wdgPalettePPU::wdgPalettePPU(QWidget *parent) : wdgPaletteWall(parent) {
 	margin = 1;
 	nrows = 2;
 	ncols = 16;
-	cellh = 40;
+	cellh = 32;
 }
 wdgPalettePPU::~wdgPalettePPU() {};
 
