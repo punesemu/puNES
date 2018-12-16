@@ -30,7 +30,7 @@ struct _nsf_mouse {
 void input_init_nsf_mouse(void) {
 	memset(&nsf_mouse, 0x00, sizeof(nsf_mouse));
 }
-void input_add_event_nsf_mouse(BYTE index) {
+void input_add_event_nsf_mouse(UNUSED(BYTE index)) {
 	int x, y;
 
 	if (gmouse.left) {

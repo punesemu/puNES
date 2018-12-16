@@ -176,7 +176,7 @@ slotComboBox::slotComboBox(QWidget *parent) : QComboBox(parent) {
 	setItemDelegate(sid);
 }
 slotComboBox::~slotComboBox() {}
-void slotComboBox::paintEvent(QPaintEvent *event) {
+void slotComboBox::paintEvent(UNUSED(QPaintEvent *event)) {
 	QStylePainter painter(this);
 
 	// disegno il frame del combobox
@@ -276,7 +276,7 @@ void wdgState::retranslateUi(void) {
 			load->width());
 #endif
 }
-void wdgState::s_save_clicked(bool checked) {
+void wdgState::s_save_clicked(UNUSED(bool checked)) {
 	mainwin->action_Save_state->trigger();
 	update();
 	gui_set_focus();
@@ -286,7 +286,7 @@ void wdgState::s_slot_activated(int index) {
 	text_save_slot(SAVE_SLOT_INCDEC);
 	gui_set_focus();
 }
-void wdgState::s_load_clicked(bool checked) {
+void wdgState::s_load_clicked(UNUSED(bool checked)) {
 	mainwin->action_Load_state->trigger();
 	gui_set_focus();
 }

@@ -101,6 +101,6 @@ void dlgSettings::update_tab_cheats(void) {
 	widget_Settings_Cheats->update_widget();
 }
 
-void dlgSettings::s_save_settings(bool checked) {
+void dlgSettings::s_save_settings(UNUSED(bool checked)) {
 	settings_save();
 }

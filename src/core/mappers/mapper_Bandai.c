@@ -181,7 +181,7 @@ BYTE extcl_save_mapper_Bandai_161x02x74(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-void extcl_update_r2006_Bandai_161x02x74(WORD new_r2006, WORD old_r2006) {
+void extcl_update_r2006_Bandai_161x02x74(WORD new_r2006, UNUSED(WORD old_r2006)) {
 	if ((new_r2006 >= 0x2000) && ((new_r2006 & 0x03FF) < 0x03C0)) {
 		b16x02x74_r2006(new_r2006)
 	}
@@ -289,7 +289,7 @@ void extcl_cpu_wr_mem_Bandai_FCGX(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_Bandai_FCGX(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_Bandai_FCGX(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if (!FCGX.e0.size || (address < 0x6000)) {
 		return (openbus);
 	}

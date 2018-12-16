@@ -24,8 +24,8 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-static void INLINE bmc411120c_update_prg(void);
-static void INLINE bmc411120c_update_chr(void);
+INLINE static void bmc411120c_update_prg(void);
+INLINE static void bmc411120c_update_chr(void);
 
 #define bmc411120c_chr_1k(vl) value = vl | ((bmc411120c.reg & 0x03) << 7)
 #define bmc411120c_prg_8k(vl) value = ((bmc411120c.reg & 0x03) << 4) | (vl & 0x0F)
@@ -167,7 +167,7 @@ BYTE extcl_save_mapper_BMC411120C(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-static void INLINE bmc411120c_update_prg(void) {
+INLINE static void bmc411120c_update_prg(void) {
 	BYTE value;
 
 	if (bmc411120c.reg & (0x08 | bmc411120c_reset)) {
@@ -193,7 +193,7 @@ static void INLINE bmc411120c_update_prg(void) {
 	}
 	map_prg_rom_8k_update();
 }
-static void INLINE bmc411120c_update_chr(void) {
+INLINE static void bmc411120c_update_chr(void) {
 	BYTE i;
 	WORD value;
 

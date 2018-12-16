@@ -23,8 +23,8 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-static void INLINE boy_update_prg(void);
-static void INLINE boy_update_chr(void);
+INLINE static void boy_update_prg(void);
+INLINE static void boy_update_chr(void);
 
 #define boy_swap_chr_1k(a, b)\
 	chr1k = boy.chr_map[b];\
@@ -160,7 +160,7 @@ BYTE extcl_save_mapper_BOY(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-static void INLINE boy_update_prg(void) {
+INLINE static void boy_update_prg(void) {
 	BYTE i;
 	WORD value;
 	WORD mask = ((0x3F | (boy.reg[1] & 0x40) |
@@ -210,7 +210,7 @@ static void INLINE boy_update_prg(void) {
 	}
 	map_prg_rom_8k_update();
 }
-static void INLINE boy_update_chr(void) {
+INLINE static void boy_update_chr(void) {
 	BYTE i, mask = 0xFF ^ (boy.reg[0] & 0x80);
 	WORD value;
 

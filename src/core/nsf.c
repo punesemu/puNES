@@ -1230,7 +1230,7 @@ static void nsf_change_current_song(unsigned int mode) {
 			}
 		}
 		if (nsf.playlist.count > 0) {
-			int i;
+			unsigned int i;
 
 			for (i = 0; i < nsf.playlist.count; i++) {
 				if (nsf.playlist.data[i] == nsf.songs.current) {
@@ -1347,8 +1347,7 @@ static void nsf_draw_controls(void) {
 
 		if (nsf.info_song) {
 			if (nsf.draw_mask == TRUE) {
-				dos_vline(x + (w / 2), y + ((h / NSF_GUI_INFO_SONG_LINES) * 0) + 1,
-					(h / NSF_GUI_INFO_SONG_LINES) - 1, 0x002D);
+				dos_vline(x + (w / 2), y + ((h / NSF_GUI_INFO_SONG_LINES) * 0) + 1, (h / NSF_GUI_INFO_SONG_LINES) - 1, 0x002D);
 			}
 
 			if ((cfg->nsf_player_nsfe_playlist == TRUE) && (nsf.playlist.count > 0)) {
@@ -1359,10 +1358,8 @@ static void nsf_draw_controls(void) {
 				dos_vline(x + 1, y + 2, (h / NSF_GUI_INFO_SONG_LINES) - 1, 0x002D);
 
 				sprintf(buff, "[bck][black]");
-				sprintf(buff + (strlen(buff)), "[gray]Song %s",
-					nsf_print_number(nsf.songs.current + 1, 3, DOS_GRAY));
-				sprintf(buff + (strlen(buff)), "/%s",
-					nsf_print_number(nsf.songs.total + 1, 3, DOS_GRAY));
+				sprintf(buff + (strlen(buff)), "[gray]Song %s", nsf_print_number(nsf.songs.current + 1, 3, DOS_GRAY));
+				sprintf(buff + (strlen(buff)), "/%s", nsf_print_number(nsf.songs.total + 1, 3, DOS_GRAY));
 			} else {
 				dos_box(x + 1          , y + 2, (w / 2) - 1, (dospf(1) * 2) - 2,
 					doscolor(DOS_GRAY), doscolor(DOS_GRAY), doscolor(DOS_GRAY));
@@ -1371,15 +1368,12 @@ static void nsf_draw_controls(void) {
 				dos_vline(x + w - 2, y + 2, (h / NSF_GUI_INFO_SONG_LINES) - 1, 0x002D);
 
 				sprintf(buff, "[bck][gray]");
-				sprintf(buff + (strlen(buff)), "Song [gray]%s",
-					nsf_print_number(nsf.songs.current + 1, 3, DOS_CYAN));
-				sprintf(buff + (strlen(buff)), "[normal]/[gray]%s",
-					nsf_print_number(nsf.songs.total + 1, 3, DOS_NORMAL));
+				sprintf(buff + (strlen(buff)), "Song [gray]%s", nsf_print_number(nsf.songs.current + 1, 3, DOS_CYAN));
+				sprintf(buff + (strlen(buff)), "[normal]/[gray]%s", nsf_print_number(nsf.songs.total + 1, 3, DOS_NORMAL));
 			}
 
 			dos_text(x + ((w - dospf(25)) / 2),
-				y + ((h / NSF_GUI_INFO_SONG_LINES) * 0) + (((h / NSF_GUI_INFO_SONG_LINES) - 8) / 2),
-				buff);
+				y + ((h / NSF_GUI_INFO_SONG_LINES) * 0) + (((h / NSF_GUI_INFO_SONG_LINES) - 8) / 2), buff);
 
 			memset(buff, 0x00, sizeof(buff));
 
@@ -1390,18 +1384,15 @@ static void nsf_draw_controls(void) {
 					sprintf(buff + (strlen(buff)), "[normal]/[gray]%s[gray]",
 						nsf_print_number(nsf.playlist.count, 3, DOS_NORMAL));
 				} else {
-					sprintf(buff, "[bck][black][gray]Plst %s",
-						nsf_print_number(nsf.playlist.index + 1, 3, DOS_GRAY));
-					sprintf(buff + (strlen(buff)), "/%s",
-						nsf_print_number(nsf.playlist.count, 3, DOS_GRAY));
+					sprintf(buff, "[bck][black][gray]Plst %s", nsf_print_number(nsf.playlist.index + 1, 3, DOS_GRAY));
+					sprintf(buff + (strlen(buff)), "/%s", nsf_print_number(nsf.playlist.count, 3, DOS_GRAY));
 				}
 			} else {
 				sprintf(buff, "[bck][black][gray]Plst 000:000");
 			}
 
 			dos_text(x + ((w - dospf(25)) / 2) + dospf(13),
-				y + ((h / NSF_GUI_INFO_SONG_LINES) * 0) + (((h / NSF_GUI_INFO_SONG_LINES) - 8) / 2),
-				buff);
+				y + ((h / NSF_GUI_INFO_SONG_LINES) * 0) + (((h / NSF_GUI_INFO_SONG_LINES) - 8) / 2), buff);
 		} else {
 			dos_box(x + 1    , y + 2, w - 2, (dospf(1) * 2) - 2,
 				doscolor(DOS_GRAY), doscolor(DOS_GRAY), doscolor(DOS_GRAY));
@@ -1409,14 +1400,11 @@ static void nsf_draw_controls(void) {
 				doscolor(DOS_BLACK), doscolor(DOS_BLACK), doscolor(DOS_BLACK));
 
 			sprintf(buff, "[bck][gray]");
-			sprintf(buff + (strlen(buff)), "Song [gray]%s",
-				nsf_print_number(nsf.songs.current + 1, 3, DOS_CYAN));
-			sprintf(buff + (strlen(buff)), "[normal]/[gray]%s",
-				nsf_print_number(nsf.songs.total + 1, 3, DOS_NORMAL));
+			sprintf(buff + (strlen(buff)), "Song [gray]%s", nsf_print_number(nsf.songs.current + 1, 3, DOS_CYAN));
+			sprintf(buff + (strlen(buff)), "[normal]/[gray]%s", nsf_print_number(nsf.songs.total + 1, 3, DOS_NORMAL));
 
 			dos_text(x + ((w - dospf(12)) / 2),
-				y + ((h / NSF_GUI_INFO_SONG_LINES) * 0) + (((h / NSF_GUI_INFO_SONG_LINES) - 8) / 2),
-				buff);
+				y + ((h / NSF_GUI_INFO_SONG_LINES) * 0) + (((h / NSF_GUI_INFO_SONG_LINES) - 8) / 2), buff);
 		}
 	}
 
@@ -1766,12 +1754,13 @@ static char *nsf_print_time(double timer, BYTE mode, int color) {
 	}
 
 	if (mode == 1) {
+		unsigned int i;
 		int index_zero = 0;
 
-		for (tmp = 0; tmp < strlen(buff); tmp++) {
-			if ((buff[tmp] < '1') || (buff[tmp] > '9')) {
-				if ((buff[tmp] == '0') || (buff[tmp] == ':')) {
-					index_zero = tmp;
+		for (i = 0; i < strlen(buff); i++) {
+			if ((buff[i] < '1') || (buff[i] > '9')) {
+				if ((buff[i] == '0') || (buff[i] == ':')) {
+					index_zero = i;
 					continue;
 				}
 				continue;
@@ -1964,8 +1953,8 @@ static void nsf_text_curtain(_nsf_text_curtain *curtain, BYTE mode) {
 static void nsf_text_curtain_add_line(_nsf_text_curtain *curtain, const char *fmt, ...) {
 	va_list ap;
 	char buffer[1024], *start;
-	int i = 0, count, index, tmp, tag;
-	int length = 0;
+	int length = 0, count, index, tmp, tag;
+	unsigned int i = 0;
 	_nsf_text_curtain_line *line;
 
 	va_start(ap, fmt);

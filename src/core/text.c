@@ -53,8 +53,8 @@ static char txt_tags[][10] = {
 	"[floppy]"
 };
 
-static void INLINE fade_ele(_txt_element *ele, int velocity);
-static void INLINE rendering(_txt_element *txt);
+INLINE static void fade_ele(_txt_element *ele, int velocity);
+INLINE static void rendering(_txt_element *txt);
 
 void text_init(void) {
 	uint8_t i;
@@ -465,7 +465,7 @@ void text_rendering(BYTE render) {
 	{
 		ele = &text.save_slot.slot;
 		char number[5];
-		int i;
+		unsigned int i;
 
 		if (ele->enabled == TRUE) {
 			ele->text[0] = 0;
@@ -587,7 +587,7 @@ void text_quit(void) {
 	}
 }
 
-static void INLINE fade_ele(_txt_element *ele, int velocity) {
+INLINE static void fade_ele(_txt_element *ele, int velocity) {
 	static int diff;
 
 	if (ele->alpha[0] == ele->alpha_start_fade) {
@@ -609,7 +609,7 @@ static void INLINE fade_ele(_txt_element *ele, int velocity) {
 		}
 	}
 }
-static void INLINE rendering(_txt_element *ele) {
+INLINE static void rendering(_txt_element *ele) {
 	unsigned int i = 0;
 	int font_x = 0, font_y = 0, ch_font = ele->font;
 	uint32_t color[3], max_pixels = (text.w - 16), pixels = 0;

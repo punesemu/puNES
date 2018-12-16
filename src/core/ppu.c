@@ -30,7 +30,7 @@
 #include "conf.h"
 #include "fps.h"
 
-static INLINE void ppu_oam_evaluation(void);
+INLINE static void ppu_oam_evaluation(void);
 
 enum overflow_sprite { OVERFLOW_SPR = 3 };
 
@@ -1099,7 +1099,7 @@ void ppu_overclock(BYTE reset_dmc_in_use) {
 	ppu_overclock_control();
 }
 
-static INLINE void ppu_oam_evaluation(void) {
+INLINE static void ppu_oam_evaluation(void) {
 /* ------------------------------- CONTROLLO SPRITE SCANLINE+1 ------------------------------- */
 	if (ppu.frame_x < 64) {
 		r2004.value = 0xFF;

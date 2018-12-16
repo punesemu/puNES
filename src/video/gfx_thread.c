@@ -129,9 +129,9 @@ void gfx_thread_continue(void) {
 }
 
 #if defined (__unix__)
-static void *gfx_thread_loop(void *arg) {
+static void *gfx_thread_loop(UNUSED(void *arg)) {
 #elif defined (__WIN32__)
-static DWORD WINAPI gfx_thread_loop(void *arg) {
+static DWORD WINAPI gfx_thread_loop(UNUSED(void *arg)) {
 #endif
 	while (info.stop == FALSE) {
 		if (gfx_thread.action == GT_PAUSE) {

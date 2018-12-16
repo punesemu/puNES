@@ -23,6 +23,6 @@
 #include "video/gfx.h"
 #include "palette.h"
 
-gfx_filter_function(scaleNx);
+void scaleNx(void);
 
 #endif /* SCALE2X_H_ */

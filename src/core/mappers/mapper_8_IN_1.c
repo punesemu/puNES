@@ -23,8 +23,8 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-static void INLINE m8in1_update_prg(void);
-static void INLINE m8in1_update_chr(void);
+INLINE static void m8in1_update_prg(void);
+INLINE static void m8in1_update_chr(void);
 
 #define m8in1_swap_chr_1k(a, b)\
 	chr1k = m8in1.chr_map[b];\
@@ -158,7 +158,7 @@ BYTE extcl_save_mapper_8_IN_1(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-static void INLINE m8in1_update_prg(void) {
+INLINE static void m8in1_update_prg(void) {
 	WORD value;
 
 	if (m8in1.reg & 0x10) {
@@ -176,7 +176,7 @@ static void INLINE m8in1_update_prg(void) {
 	}
 	map_prg_rom_8k_update();
 }
-static void INLINE m8in1_update_chr(void) {
+INLINE static void m8in1_update_chr(void) {
 	BYTE i;
 	WORD value;
 

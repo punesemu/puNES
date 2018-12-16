@@ -48,7 +48,7 @@ void wdgSettingsAudio::changeEvent(QEvent *event) {
 		QWidget::changeEvent(event);
 	}
 }
-void wdgSettingsAudio::showEvent(QShowEvent *event) {
+void wdgSettingsAudio::showEvent(UNUSED(QShowEvent *event)) {
 	int dim = label_Output_Devices->size().height() - 10;
 
 	output_devices_init();
@@ -264,13 +264,13 @@ void wdgSettingsAudio::s_channels_delay(int index) {
 	emu_thread_continue();
 	gui_update();
 }
-void wdgSettingsAudio::s_swap_duty_cycles(bool checked) {
+void wdgSettingsAudio::s_swap_duty_cycles(UNUSED(bool checked)) {
 	emu_thread_pause();
 	cfg->swap_duty = !cfg->swap_duty;
 	emu_thread_continue();
 	update_widget();
 }
-void wdgSettingsAudio::s_enable_audio(bool checked) {
+void wdgSettingsAudio::s_enable_audio(UNUSED(bool checked)) {
 	emu_thread_pause();
 	if ((cfg->apu.channel[APU_MASTER] = !cfg->apu.channel[APU_MASTER])) {
 		snd_playback_start();

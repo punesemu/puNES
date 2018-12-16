@@ -23,7 +23,7 @@
 #include "cpu.h"
 #include "save_slot.h"
 
-static void INLINE vrc6_update_chr_and_mirroring(void);
+INLINE static void vrc6_update_chr_and_mirroring(void);
 
 /* vecchia versione
 #define vcr6_square_tick(square)\
@@ -298,7 +298,7 @@ void extcl_apu_tick_VRC6(void) {
 	}
 }
 
-static void INLINE vrc6_update_chr_and_mirroring(void) {
+INLINE static void vrc6_update_chr_and_mirroring(void) {
 	DBWORD bank;
 	BYTE value;
 

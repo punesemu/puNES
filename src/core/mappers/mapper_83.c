@@ -23,7 +23,7 @@
 #include "cpu.h"
 #include "save_slot.h"
 
-static void INLINE sync_83(void);
+INLINE static void sync_83(void);
 
 void map_init_83(void) {
 	EXTCL_CPU_WR_MEM(83);
@@ -154,7 +154,7 @@ void extcl_cpu_every_cycle_83(void) {
 	}
 }
 
-static void INLINE sync_83(void) {
+INLINE static void sync_83(void) {
 	WORD value;
 
 	switch (m83.mode & 0x03) {

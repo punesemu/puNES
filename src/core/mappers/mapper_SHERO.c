@@ -23,7 +23,7 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-static void INLINE shero_update_chr(void);
+INLINE static void shero_update_chr(void);
 
 #define shero_swap_chr_1k(a, b)\
 	chr1k = shero.chr_map[b];\
@@ -135,7 +135,7 @@ void extcl_cpu_wr_mem_SHERO(WORD address, BYTE value) {
 		}
 	}
 }
-BYTE extcl_cpu_rd_mem_SHERO(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_SHERO(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if (address == 0x4100) {
 		return (shero_reset);
 	}
@@ -157,7 +157,7 @@ void extcl_wr_chr_SHERO(WORD address, BYTE value) {
 	chr.extra.data[address] = value;
 }
 
-static void INLINE shero_update_chr(void) {
+INLINE static void shero_update_chr(void) {
 	if (shero.reg & 0x40) {
 		chr.bank_1k[0] = &chr.extra.data[0x0000];
 		chr.bank_1k[1] = &chr.extra.data[0x0400];

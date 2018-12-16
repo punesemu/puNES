@@ -26,8 +26,8 @@
 #include "cpu.h"
 #include "save_slot.h"
 
-static void INLINE ctrl_reg_105(void);
-static void INLINE swap_prg_rom_105(void);
+INLINE static void ctrl_reg_105(void);
+INLINE static void swap_prg_rom_105(void);
 
 /*
  * IRQ Counter:
@@ -187,7 +187,7 @@ void extcl_cpu_every_cycle_105(void) {
 	}
 }
 
-static void INLINE ctrl_reg_105(void) {
+INLINE static void ctrl_reg_105(void) {
 	m105.prg.mode = (m105.ctrl & 0x0C) >> 2;
 	switch (m105.ctrl & 0x03) {
 		case 0x00:
@@ -204,7 +204,7 @@ static void INLINE ctrl_reg_105(void) {
 			break;
 	}
 }
-static void INLINE swap_prg_rom_105(void) {
+INLINE static void swap_prg_rom_105(void) {
 	BYTE value;
 
 	if (m105.prg.locked == TRUE) {

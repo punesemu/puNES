@@ -74,6 +74,7 @@ enum database_mode {
 };
 
 #define LENGTH(x) (sizeof(x)/sizeof(*(x)))
+#define UNUSED(var) var __attribute__((unused))
 
 #if defined (DEBUG)
 #define INLINE

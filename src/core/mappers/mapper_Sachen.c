@@ -184,7 +184,7 @@ void map_init_Sachen(BYTE model) {
 	type = model;
 }
 
-void extcl_cpu_wr_mem_Sachen_sa0036(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Sachen_sa0036(UNUSED(WORD address), BYTE value) {
 	DBWORD bank;
 
 	value >>= 7;
@@ -336,10 +336,8 @@ BYTE extcl_save_mapper_Sachen_sa8259x(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-void extcl_cpu_wr_mem_Sachen_tca01(WORD address, BYTE value) {
-	return;
-}
-BYTE extcl_cpu_rd_mem_Sachen_tca01(WORD address, BYTE openbus, BYTE before) {
+void extcl_cpu_wr_mem_Sachen_tca01(UNUSED(WORD address), UNUSED(BYTE value)) {}
+BYTE extcl_cpu_rd_mem_Sachen_tca01(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if ((address < 0x4100) || (address > 0x5FFF)) {
 		return (openbus);
 	}
@@ -404,7 +402,7 @@ void extcl_cpu_wr_mem_Sachen_tcu02(WORD address, BYTE value) {
 		chr.bank_1k[7] = chr_chip_byte_pnt(0, bank | 0x1C00);
 	}
 }
-BYTE extcl_cpu_rd_mem_Sachen_tcu02(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_Sachen_tcu02(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if ((address < 0x4100) || (address > 0x5FFF)) {
 		return (openbus);
 	}

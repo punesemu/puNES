@@ -24,8 +24,8 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-static void INLINE bmc830118c_update_prg(void);
-static void INLINE bmc830118c_update_chr(void);
+INLINE static void bmc830118c_update_prg(void);
+INLINE static void bmc830118c_update_chr(void);
 
 #define bmc830118c_chr_1k(vl) value = (vl & 0x7F) | ((bmc830118c.reg & 0x0C) << 5)
 #define bmc830118c_prg_8k(vl) value = (vl & 0x0F) | ((bmc830118c.reg & 0x0C) << 2)
@@ -159,7 +159,7 @@ BYTE extcl_save_mapper_BMC830118C(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-static void INLINE bmc830118c_update_prg(void) {
+INLINE static void bmc830118c_update_prg(void) {
 	BYTE value;
 
 	bmc830118c_prg_8k(bmc830118c.prg_map[0]);
@@ -189,7 +189,7 @@ static void INLINE bmc830118c_update_prg(void) {
 	}
 	map_prg_rom_8k_update();
 }
-static void INLINE bmc830118c_update_chr(void) {
+INLINE static void bmc830118c_update_chr(void) {
 	BYTE i;
 	WORD value;
 

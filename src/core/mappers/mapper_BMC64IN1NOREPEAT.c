@@ -22,7 +22,7 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
-static void INLINE bmc64in1norepeat_update_chr(void);
+INLINE static void bmc64in1norepeat_update_chr(void);
 
 #define bmc64in1norepeat_prg_8k()\
 	((bmc64in1norepeat.reg[1] & 0x1F) << 1) | ((bmc64in1norepeat.reg[1] >> 6) & 0x01);
@@ -82,7 +82,7 @@ BYTE extcl_save_mapper_BMC64IN1NOREPEAT(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-static void INLINE bmc64in1norepeat_update_chr(void) {
+INLINE static void bmc64in1norepeat_update_chr(void) {
 	WORD value = (bmc64in1norepeat.reg[2] << 2) | ((bmc64in1norepeat.reg[0] >> 1) & 0x03);
 	DBWORD bank;
 

@@ -27,7 +27,7 @@ void map_init_Magic(void) {
 		map_prg_rom_8k(4, 0, 0);
 	}
 }
-void extcl_cpu_wr_mem_Magic(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Magic(UNUSED(WORD address), BYTE value) {
 	const BYTE save = value;
 	DBWORD bank;
 

@@ -296,9 +296,9 @@ static BYTE mz_zip_examine_archive(_uncompress_archive *archive) {
 		return (UNCOMPRESS_EXIT_ERROR_ON_UNCOMP);
 	}
 
-	for (a = 0; a < (int) mz_zip_reader_get_num_files(&mzarchive); a++) {
+	for (a = 0; a < mz_zip_reader_get_num_files(&mzarchive); a++) {
 		mz_zip_archive_file_stat file_stat;
-		int b;
+		unsigned int b;
 
 		if (!mz_zip_reader_file_stat(&mzarchive, a, &file_stat)) {
 			fprintf(stderr, "mz_zip_reader_file_stat() failed!\n");

@@ -23,7 +23,7 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-static void INLINE m197_update_chr(void);
+INLINE static void m197_update_chr(void);
 
 #define m197_swap_chr_1k(a, b)\
 	chr1k = m197.chr_map[b];\
@@ -120,7 +120,7 @@ BYTE extcl_save_mapper_197(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-static void INLINE m197_update_chr(void) {
+INLINE static void m197_update_chr(void) {
 	WORD value;
 	DBWORD bank;
 

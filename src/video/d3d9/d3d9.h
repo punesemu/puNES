@@ -150,7 +150,7 @@ typedef struct _d3d9 {
 	_d3d9_adapter *array, *adapter;
 
 	struct _d3d9_screen {
-		INT in_use;
+		UINT in_use;
 		UINT index;
 		_texture_simple tex[MAX_PREV + 1];
 	} screen;

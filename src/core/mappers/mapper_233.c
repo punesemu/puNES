@@ -27,7 +27,7 @@ void map_init_233(void) {
 		map_prg_rom_8k(4, 0, 0);
 	}
 }
-void extcl_cpu_wr_mem_233(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_233(UNUSED(WORD address), BYTE value) {
 	BYTE save = value;
 
 	value &= 0x1F;

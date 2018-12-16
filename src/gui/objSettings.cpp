@@ -544,8 +544,8 @@ void objSettings::setup(void) {
 	after_the_defaults();
 	wr();
 }
-void objSettings::to_cfg(QString group) {}
-void objSettings::fr_cfg(QString group) {}
+void objSettings::to_cfg(UNUSED(QString group)) {}
+void objSettings::fr_cfg(UNUSED(QString group)) {}
 void objSettings::after_the_defaults(void) {}
 
 void objSettings::rd(void) {
@@ -860,7 +860,7 @@ void objSet::oscan_val_to_int(int index, _overscan_borders *ob) {
 
 	val.replace(index, oscan_val(ob));
 }
-void objSet::oscan_val_to_int(int index, _overscan_borders *ob, const uTCHAR *buffer) {
+void objSet::oscan_val_to_int(UNUSED(int index), _overscan_borders *ob, const uTCHAR *buffer) {
 	QStringList splitted = uQString(buffer).split(",");
 
 	if (splitted.count() >= 1) {
@@ -999,7 +999,7 @@ void objPgs::setup(void) {
 		wr();
 	}
 }
-void objPgs::to_cfg(QString group) {
+void objPgs::to_cfg(UNUSED(QString group)) {
 	int_to_val(SET_PGS_SLOT, save_slot.slot);
 	cpy_utchar_to_val(SET_PGS_FILE_SAVE, cfg_from_file.save_file);
 	int_to_val(SET_PGS_OVERSCAN, cfg_from_file.oscan);
@@ -1009,7 +1009,7 @@ void objPgs::to_cfg(QString group) {
 	int_to_val(SET_PGS_PPU_OVERCLOCK_VB_SCLINE, cfg_from_file.extra_vb_scanlines);
 	int_to_val(SET_PGS_PPU_OVERCLOCK_PR_SCLINE, cfg_from_file.extra_pr_scanlines);
 }
-void objPgs::fr_cfg(QString group) {
+void objPgs::fr_cfg(UNUSED(QString group)) {
 	save_slot.slot = val_to_int(SET_PGS_SLOT);
 	cpy_val_to_utchar(SET_PGS_FILE_SAVE, cfg_from_file.save_file, usizeof(cfg_from_file.save_file));
 	cfg_from_file.oscan = val_to_int(SET_PGS_OVERSCAN);
@@ -1481,7 +1481,7 @@ objShp::objShp(Format f, QString file, int list_ele) : objSettings(f, file, list
 	for (i = 0; i < shader_effect.params; i++) {
 		_param_shd *pshd = &shader_effect.param[i];
 
-		if (pshd->desc == NULL) {
+		if (!pshd->desc[0]) {
 			continue;
 		}
 
@@ -1496,13 +1496,13 @@ objShp::~objShp() {}
 void objShp::setup(void) {
 	rd();
 }
-void objShp::to_cfg(QString group) {
+void objShp::to_cfg(UNUSED(QString group)) {
 	int i, param = 0;
 
 	for (i = 0; i < shader_effect.params; i++) {
 		_param_shd *pshd = &shader_effect.param[i];
 
-		if (pshd->desc == NULL) {
+		if (!pshd->desc[0]) {
 			continue;
 		}
 
@@ -1510,13 +1510,13 @@ void objShp::to_cfg(QString group) {
 		param++;
 	}
 }
-void objShp::fr_cfg(QString group) {
+void objShp::fr_cfg(UNUSED(QString group)) {
 	int i, param = 0;
 
 	for (i = 0; i < shader_effect.params; i++) {
 		_param_shd *pshd = &shader_effect.param[i];
 
-		if (pshd->desc == NULL) {
+		if (!pshd->desc[0]) {
 			continue;
 		}
 
@@ -1534,7 +1534,7 @@ void objShp::rd(QString group) {
 	for (i = 0; i < shader_effect.params; i++) {
 		_param_shd *pshd = &shader_effect.param[i];
 
-		if (pshd->desc == NULL) {
+		if (!pshd->desc[0]) {
 			continue;
 		}
 

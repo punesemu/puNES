@@ -236,8 +236,8 @@ void input_init(BYTE set_cursor) {
 	}
 }
 
-void input_wr_disabled(BYTE *value, BYTE nport) {}
-void input_rd_disabled(BYTE *value, BYTE nport, BYTE shift) {}
+void input_wr_disabled(UNUSED(BYTE *value), UNUSED(BYTE nport)) {}
+void input_rd_disabled(UNUSED(BYTE *value), UNUSED(BYTE nport),	UNUSED(BYTE shift)) {}
 
 BYTE input_draw_target(void) {
 	BYTE i;

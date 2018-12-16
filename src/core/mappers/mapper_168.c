@@ -23,7 +23,7 @@
 #include "cpu.h"
 #include "save_slot.h"
 
-static void INLINE m168_update_chr(void);
+INLINE static void m168_update_chr(void);
 
 void map_init_168(void) {
 	EXTCL_CPU_WR_MEM(168);
@@ -77,7 +77,7 @@ void extcl_wr_chr_168(WORD address, BYTE value) {
 	chr.bank_1k[i][address & 0x3FF] = value;
 }
 
-static void INLINE m168_update_chr(void) {
+INLINE static void m168_update_chr(void) {
 	BYTE i;
 
 	for (i = 0; i < 8 ; i++) {

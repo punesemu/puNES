@@ -23,7 +23,7 @@
 #include "cpu.h"
 #include "save_slot.h"
 
-static void INLINE m253_update_chr(void);
+INLINE static void m253_update_chr(void);
 
 void map_init_253(void) {
 	EXTCL_CPU_WR_MEM(253);
@@ -160,7 +160,7 @@ void extcl_cpu_every_cycle_253(void) {
 	irq.high |= EXT_IRQ;
 }
 
-static void INLINE m253_update_chr(void) {
+INLINE static void m253_update_chr(void) {
 	BYTE i;
 	WORD value;
 

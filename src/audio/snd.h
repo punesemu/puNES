@@ -40,11 +40,11 @@ typedef struct _callback_data {
 	SBYTE *read;
 	SWORD *write;
 
-	int32_t bytes_available;
 	int32_t samples_available;
+	int32_t bytes_available;
 } _callback_data;
 typedef struct _snd {
-	DBWORD samplerate;
+	int32_t samplerate;
 	BYTE channels;
 
 	DBWORD overlap;
@@ -63,7 +63,7 @@ typedef struct _snd {
 	struct _buffer {
 		BYTE start;
 
-		DBWORD size;
+		int32_t size;
 
 		struct {
 			DBWORD low;

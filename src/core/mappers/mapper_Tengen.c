@@ -101,7 +101,7 @@ enum {
 	bank[bank_2k] = value << 1;\
 	bank[bank_2k + 1] = bank[bank_2k] | 0x01
 
-static void INLINE irq_clock_Tengen_Rambo(int delay);
+INLINE static void irq_clock_Tengen_Rambo(int delay);
 
 BYTE type;
 
@@ -340,7 +340,7 @@ void extcl_cpu_every_cycle_Tengen_Rambo(void) {
 	irq_clock_Tengen_Rambo(tengen_rambo_delay_CPU);
 }
 
-static void INLINE irq_clock_Tengen_Rambo(int delay) {
+INLINE static void irq_clock_Tengen_Rambo(int delay) {
 	if (irqA12.reload == TRUE) {
 		irqA12.counter = irqA12.latch + tengen_rambo.irq_plus_clock + 1;
 		irqA12.reload = FALSE;

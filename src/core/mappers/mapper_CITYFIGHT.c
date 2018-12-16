@@ -29,7 +29,7 @@
 	chr.bank_1k[slot] = chr_chip_byte_pnt(0, value << 10);\
 	cityfight.chr_map[slot] = value
 
-static void INLINE cityfight_prg_update(void);
+INLINE static void cityfight_prg_update(void);
 
 void map_init_CITYFIGHT(void) {
 	EXTCL_CPU_WR_MEM(CITYFIGHT);
@@ -158,7 +158,7 @@ void extcl_cpu_every_cycle_CITYFIGHT(void) {
 	}
 }
 
-static void INLINE cityfight_prg_update(void) {
+INLINE static void cityfight_prg_update(void) {
 	BYTE value;
 
 	value = cityfight.reg[1] >> 2;

@@ -76,7 +76,7 @@ void extcl_cpu_wr_mem_EH8813A(WORD address, BYTE value) {
 		map_prg_rom_8k_update();
 	}
 }
-BYTE extcl_cpu_rd_mem_EH8813A(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_EH8813A(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if (address < 0x8000) {
 		return (openbus);
 	}

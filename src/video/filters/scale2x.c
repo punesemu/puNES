@@ -51,11 +51,11 @@
 #define SCALE3X_B()\
 	E0 = E1 = E2 = E3 = E4 = E5 = E6 = E7 = E8 = E;
 #define put_pixel(type, pixel, p0, p1)\
-	*(type *) (dstpix + p0 + p1) = (type) palette[pixel]
+	*(type *)(dstpix + p0 + p1) = (type)palette[pixel]
 
-static void INLINE scale2x(WORD **screen_index, uint32_t *palette, uint32_t pitch, void *pix);
-static void INLINE scale3x(WORD **screen_index, uint32_t *palette, uint32_t pitch, void *pix);
-static void INLINE scale4x(WORD **screen_index, uint32_t *palette, uint32_t pitch, void *pix);
+INLINE static void scale2x(WORD **screen_index, uint32_t *palette, uint32_t pitch, void *pix);
+INLINE static void scale3x(WORD **screen_index, uint32_t *palette, uint32_t pitch, void *pix);
+INLINE static void scale4x(WORD **screen_index, uint32_t *palette, uint32_t pitch, void *pix);
 
 static struct _scl2x {
 	WORD sx;
@@ -77,7 +77,7 @@ static struct _s4x_buffer {
  * cio' che non utilizzo in questa funzione
  * e' il parametro WORD *screen.
  */
-gfx_filter_function(scaleNx) {
+void scaleNx(void) {
 	scl2x.sx = 0;
 	scl2x.sy = 0;
 	scl2x.oy = 0;
@@ -86,21 +86,22 @@ gfx_filter_function(scaleNx) {
 	scl2x.startx = 0;
 
 	if (gfx.filter.factor == 2) {
-		scale2x(screen.rd->line, (uint32_t *) palette, pitch, pix);
+		scale2x(screen.rd->line, (uint32_t *)gfx.filter.data.palette, gfx.filter.data.pitch, gfx.filter.data.pix);
 	} else if (gfx.filter.factor == 3) {
-		scale3x(screen.rd->line, (uint32_t *) palette, pitch, pix);
+		scale3x(screen.rd->line, (uint32_t *)gfx.filter.data.palette, gfx.filter.data.pitch, gfx.filter.data.pix);
 	} else if (gfx.filter.factor == 4) {
 		scl4x_buffer.w = SCR_ROWS * 2;
 		scl4x_buffer.h = SCR_LINES * 2;
 		scl4x_buffer.pitch = scl4x_buffer.w * sizeof(uint32_t);
 		scl4x_buffer.size = scl4x_buffer.pitch * scl4x_buffer.h;
-		scale4x(screen.rd->line, (uint32_t *) palette, pitch, pix);
+		scale4x(screen.rd->line, (uint32_t *)gfx.filter.data.palette, gfx.filter.data.pitch, gfx.filter.data.pix);
 	}
 }
-void INLINE scale2x(WORD **screen_index, uint32_t *palette, uint32_t pitch, void *pix) {
+
+INLINE static void scale2x(WORD **screen_index, uint32_t *palette, uint32_t pitch, void *pix) {
 	const DBWORD dstpitch = pitch;
 	WORD E0, E1, E2, E3, B, D, E, F, H;
-	uint8_t *dstpix = (uint8_t *) pix;
+	uint8_t *dstpix = (uint8_t *)pix;
 	uint32_t TH0, TH1, TH2, TH3, TH4;
 	uint32_t TW0, TW1, TW2;
 
@@ -134,11 +135,11 @@ void INLINE scale2x(WORD **screen_index, uint32_t *palette, uint32_t pitch, void
 		scl2x.oy++;
 	}
 }
-void INLINE scale3x(WORD **screen_index, uint32_t *palette, uint32_t pitch, void *pix) {
+INLINE static void scale3x(WORD **screen_index, uint32_t *palette, uint32_t pitch, void *pix) {
 	const DBWORD dstpitch = pitch;
 	WORD A, B, C, D, E, F, G, H, I;
 	WORD E0, E1, E2, E3, E4, E5, E6, E7, E8;
-	uint8_t *dstpix = (uint8_t *) pix;
+	uint8_t *dstpix = (uint8_t *)pix;
 	uint32_t TH0, TH1, TH2, TH3, TH4, TH5;
 	uint32_t TW0, TW1, TW2;
 
@@ -187,10 +188,10 @@ void INLINE scale3x(WORD **screen_index, uint32_t *palette, uint32_t pitch, void
 		scl2x.oy++;
 	}
 }
-void INLINE scale4x(WORD **screen_index, uint32_t *palette, uint32_t pitch, void *pix) {
+INLINE static void scale4x(WORD **screen_index, uint32_t *palette, uint32_t pitch, void *pix) {
 	WORD x, y, width, height;
 	DBWORD srcpitch, dstpitch = pitch;
-	uint8_t *srcpix, *dstpix = (uint8_t *) pix;
+	uint8_t *srcpix, *dstpix = (uint8_t *)pix;
 	uint32_t TH0, TH1, TH2, TH3, TH4;
 	uint32_t TW0, TW1, TW2;
 
@@ -201,7 +202,7 @@ void INLINE scale4x(WORD **screen_index, uint32_t *palette, uint32_t pitch, void
 		scale2x(screen_index, palette, scl4x_buffer.pitch, scl4x_buffer.pixels);
 	}
 
-	srcpix = (uint8_t *) scl4x_buffer.pixels;
+	srcpix = (uint8_t *)scl4x_buffer.pixels;
 	srcpitch = scl4x_buffer.pitch;
 	width = scl4x_buffer.w;
 	height = scl4x_buffer.h;
@@ -218,18 +219,18 @@ void INLINE scale4x(WORD **screen_index, uint32_t *palette, uint32_t pitch, void
 			TW0 = (MAX(0, x - 1) << 2);
 			TW1 = (x << 2);
 			TW2 = (MIN(width - 1, x + 1) << 2);
-			B = *(uint32_t *) (srcpix + TH0 + TW1);
-			D = *(uint32_t *) (srcpix + TH1 + TW0);
-			E = *(uint32_t *) (srcpix + TH1 + TW1);
-			F = *(uint32_t *) (srcpix + TH1 + TW2);
-			H = *(uint32_t *) (srcpix + TH2 + TW1);
+			B = *(uint32_t *)(srcpix + TH0 + TW1);
+			D = *(uint32_t *)(srcpix + TH1 + TW0);
+			E = *(uint32_t *)(srcpix + TH1 + TW1);
+			F = *(uint32_t *)(srcpix + TH1 + TW2);
+			H = *(uint32_t *)(srcpix + TH2 + TW1);
 			SCALE2X()
 			TW0 = (x << 3);
 			TW1 = TW0 + 4;
-			*(uint32_t *) (dstpix + TH3 + TW0) = E0;
-			*(uint32_t *) (dstpix + TH3 + TW1) = E1;
-			*(uint32_t *) (dstpix + TH4 + TW0) = E2;
-			*(uint32_t *) (dstpix + TH4 + TW1) = E3;
+			*(uint32_t *)(dstpix + TH3 + TW0) = E0;
+			*(uint32_t *)(dstpix + TH3 + TW1) = E1;
+			*(uint32_t *)(dstpix + TH4 + TW0) = E2;
+			*(uint32_t *)(dstpix + TH4 + TW1) = E3;
 		}
 	}
 

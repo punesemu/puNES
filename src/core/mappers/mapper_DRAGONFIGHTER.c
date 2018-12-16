@@ -23,8 +23,8 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-static void INLINE dragonfighter_update_prg(void);
-static void INLINE dragonfighter_update_chr(void);
+INLINE static void dragonfighter_update_prg(void);
+INLINE static void dragonfighter_update_chr(void);
 
 #define dragonfighter_swap_chr_1k(a, b)\
 	chr1k = dragonfighter.chr_map[b];\
@@ -145,7 +145,7 @@ void extcl_cpu_wr_mem_DRAGONFIGHTER(WORD address, BYTE value) {
 		dragonfighter_update_prg();
 	}
 }
-BYTE extcl_cpu_rd_mem_DRAGONFIGHTER(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_DRAGONFIGHTER(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if (((address & 0xF000) == 0x6000) && !(address & 0x0001)) {
 		if ((dragonfighter.reg[0] & 0xE0) == 0xC0) {
 			dragonfighter.reg[1] = mmcpu.ram[0x06A];
@@ -165,7 +165,7 @@ BYTE extcl_save_mapper_DRAGONFIGHTER(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-static void INLINE dragonfighter_update_prg(void) {
+INLINE static void dragonfighter_update_prg(void) {
 	BYTE value;
 
 	value = dragonfighter.reg[0] & 0x1F;
@@ -174,7 +174,7 @@ static void INLINE dragonfighter_update_prg(void) {
 
 	map_prg_rom_8k_update();
 }
-static void INLINE dragonfighter_update_chr(void) {
+INLINE static void dragonfighter_update_chr(void) {
 	BYTE value;
 	SDBWORD bank;
 

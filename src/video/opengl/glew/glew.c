@@ -30,6 +30,15 @@
 ** THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+// FHorse
+#if defined (__WIN32__)
+#if defined(__GNUC__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wcast-function-type"
+#endif
+#endif
+// FHorse mod end
+
 #ifndef GLEW_INCLUDE
 #include "glew/glew.h"
 #else
@@ -28579,3 +28588,11 @@ GLboolean eglewIsSupported (const char* name)
 }
 
 #endif /* _WIN32 */
+
+// FHorse
+#if defined(__WIN32__)
+#if defined(__GNUC__)
+#pragma GCC diagnostic pop
+#endif
+#endif
+// FHorse mod end

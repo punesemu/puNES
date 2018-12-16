@@ -203,18 +203,15 @@ static void js_close_detected_devices(void);
 static void js_update_jdev(_js *joy, BYTE enable_decode, BYTE decode_index);
 static void js_update_jdevs(void);
 
-static INLINE DBWORD js_update_axis(_js *joy, _port *port, enum _js_states st, int index,
-	float value, BYTE *mode);
-static INLINE DBWORD js_update_button(_js *joy, _port *port, enum _js_states st, int index,
-	SDBWORD value, BYTE *mode);
-static INLINE DBWORD js_update_hat(_js *joy, _port *port, enum _js_states st, int index,
-	SDBWORD value, BYTE *mode);
+INLINE static DBWORD js_update_axis(_js *joy, _port *port, enum _js_states st, int index, float value, BYTE *mode);
+INLINE static DBWORD js_update_button(_js *joy, _port *port, enum _js_states st, int index, SDBWORD value, BYTE *mode);
+INLINE static DBWORD js_update_hat(_js *joy, _port *port, enum _js_states st, int index, SDBWORD value, BYTE *mode);
 
-static INLINE void js_hat_to_xy(SDBWORD hat, float *x, float *y);
-static INLINE int js_usage_to_axis(unsigned int usage);
+INLINE static void js_hat_to_xy(SDBWORD hat, float *x, float *y);
+INLINE static int js_usage_to_axis(unsigned int usage);
 
-static INLINE void js_lock(void);
-static INLINE void js_unlock(void);
+INLINE static void js_lock(void);
+INLINE static void js_unlock(void);
 
 static const struct _js_special {
 	u_int16_t vendor;
@@ -482,7 +479,7 @@ DBWORD js_from_name(const uTCHAR *name, const _js_element *list, const DBWORD le
 
 	return (js);
 }
-DBWORD js_read_in_dialog(BYTE *id, int fd) {
+DBWORD js_read_in_dialog(BYTE *id, UNUSED(int fd)) {
 	struct hid_item hitem;
 	struct hid_data *hdata;
 	_js_device *jdev = NULL;
@@ -829,7 +826,7 @@ static void usb_detect_devices(void) {
 			for (b = 0; b < USB_MAX_DEVNAMES; b++) {
 				_usb_hid_device *udev;
 				_usb_hid_device **devices;
-				int c;
+				unsigned int c;
 
 				if (ustrncmp(udi.udi_devnames[b], uL("uhidev"), 6) != 0) {
 					continue;
@@ -1283,8 +1280,7 @@ static void js_update_jdevs(void) {
 	js_update_jdev(&js_shcut, FALSE, 0);
 }
 
-static INLINE DBWORD js_update_axis(_js *joy, _port *port, enum _js_states st, int index,
-	float value, BYTE *mode) {
+INLINE static DBWORD js_update_axis(_js *joy, _port *port, enum _js_states st, int index, float value, BYTE *mode) {
 	DBWORD event = (index << 1) + 1;
 	float last_value;
 
@@ -1315,8 +1311,7 @@ static INLINE DBWORD js_update_axis(_js *joy, _port *port, enum _js_states st, i
 	}
 	return (0);
 }
-static INLINE DBWORD js_update_button(_js *joy, _port *port, enum _js_states st, int index,
-	SDBWORD value, BYTE *mode) {
+INLINE static DBWORD js_update_button(_js *joy, _port *port, enum _js_states st, int index, SDBWORD value, UNUSED(BYTE *mode)) {
 	DBWORD event = 0;
 
 	if (value != JDEV->states[st].button[index]) {
@@ -1328,8 +1323,7 @@ static INLINE DBWORD js_update_button(_js *joy, _port *port, enum _js_states st,
 	}
 	return (event);
 }
-static INLINE DBWORD js_update_hat(_js *joy, _port *port, enum _js_states st, int index,
-	SDBWORD value, BYTE *mode) {
+INLINE static DBWORD js_update_hat(_js *joy, _port *port, enum _js_states st, int index, SDBWORD value, BYTE *mode) {
 	float x = 0.0f, y = 0.0f;
 	DBWORD event = 0;
 
@@ -1341,7 +1335,7 @@ static INLINE DBWORD js_update_hat(_js *joy, _port *port, enum _js_states st, in
 	return (event);
 }
 
-static INLINE void js_hat_to_xy(SDBWORD hat, float *x, float *y) {
+INLINE static void js_hat_to_xy(SDBWORD hat, float *x, float *y) {
 	static const int hat_map[8] = {
 		JS_HAT_UP,
 		JS_HAT_UP_RIGHT,
@@ -1392,7 +1386,7 @@ static INLINE void js_hat_to_xy(SDBWORD hat, float *x, float *y) {
 		}
 	}
 }
-static INLINE int js_usage_to_axis(unsigned int usage) {
+INLINE static int js_usage_to_axis(unsigned int usage) {
 	int axis;
 
 	switch (usage) {
@@ -1440,9 +1434,9 @@ static INLINE int js_usage_to_axis(unsigned int usage) {
 	return (axis);
 }
 
-static INLINE void js_lock(void) {
+INLINE static void js_lock(void) {
 	pthread_mutex_lock(&jstick.lock);
 }
-static INLINE void js_unlock(void) {
+INLINE static void js_unlock(void) {
 	pthread_mutex_unlock(&jstick.lock);
 }

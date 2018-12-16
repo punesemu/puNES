@@ -146,7 +146,7 @@ void extcl_cpu_wr_mem_Kaiser_ks202(WORD address, BYTE value) {
 		}
 	}
 }
-BYTE extcl_cpu_rd_mem_Kaiser_ks202(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_Kaiser_ks202(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if ((address < 0x6000) || (address > 0x7FFF)) {
 		return (openbus);
 	}
@@ -215,7 +215,7 @@ void extcl_cpu_wr_mem_Kaiser_ks7022(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_Kaiser_ks7022(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_Kaiser_ks7022(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if (address == 0xFFFC) {
 		BYTE value = ks7022.reg;
 		DBWORD bank;

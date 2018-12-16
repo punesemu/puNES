@@ -22,8 +22,8 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
-static void INLINE ks7031_init_prg(void);
-static void INLINE ks7031_update(void);
+INLINE static void ks7031_init_prg(void);
+INLINE static void ks7031_update(void);
 
 BYTE *ks7031_prg_6000;
 BYTE *ks7031_prg_6800;
@@ -66,7 +66,7 @@ void extcl_cpu_wr_mem_KS7031(WORD address, BYTE value) {
 	ks7031.reg[(address & 0x1800) >> 11] = value;
 	ks7031_update();
 }
-BYTE extcl_cpu_rd_mem_KS7031(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_KS7031(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	switch (address & 0xF800) {
 		case 0x6000:
 			return (ks7031_prg_6000[address & 0x07FF]);
@@ -121,7 +121,8 @@ BYTE extcl_save_mapper_KS7031(BYTE mode, BYTE slot, FILE *fp) {
 
 	return (EXIT_OK);
 }
-static void INLINE ks7031_init_prg(void) {
+
+INLINE static void ks7031_init_prg(void) {
 	BYTE value;
 
 	// 0x8000
@@ -196,7 +197,7 @@ static void INLINE ks7031_init_prg(void) {
 	control_bank(info.prg.rom[0].max.banks_2k)
 	ks7031_prg_F800 = prg_chip_byte_pnt(0, value << 11);
 }
-static void INLINE ks7031_update(void) {
+INLINE static void ks7031_update(void) {
 	WORD value;
 
 	// 0x6000

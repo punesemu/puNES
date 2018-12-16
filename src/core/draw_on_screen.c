@@ -47,7 +47,8 @@ static char dos_tags[][10] = {
 
 void _dos_text(int x, int y, int l, int r, int b, int t, const char *fmt, ...) {
 	va_list ap;
-	int i, length = 0, w = 0, pixels = 0;
+	unsigned int i, length = 0;
+	int w = 0, pixels = 0;
 	char text[1024];
 	WORD color = doscolor(DOS_NORMAL), background = doscolor(DOS_BLACK);
 	BYTE is_bck_color = FALSE;
@@ -696,7 +697,8 @@ void _dos_text(int x, int y, int l, int r, int b, int t, const char *fmt, ...) {
 }
 int dos_strlen(const char *fmt, ...) {
 	va_list ap;
-	int i, length = 0, tmp, tag;
+	unsigned int i, length = 0;
+	int tmp, tag;
 	char text[1024];
 
 	va_start(ap, fmt);

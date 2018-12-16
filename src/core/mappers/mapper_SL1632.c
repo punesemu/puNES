@@ -23,9 +23,9 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-static void INLINE sl1632_update_mmc3(void);
-static void INLINE sl1632_update_chr_mmc3(void);
-static void INLINE sl1632_update(void);
+INLINE static void sl1632_update_mmc3(void);
+INLINE static void sl1632_update_chr_mmc3(void);
+INLINE static void sl1632_update(void);
 
 #define sl1632_change_page_chr_1k_mmc3(ind)\
 	sl1632.mmc3.chr_map[ind] = value | (sl1632.mmc3.chr_map[ind] & 0xFF)
@@ -258,7 +258,7 @@ BYTE extcl_save_mapper_SL1632(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-static void INLINE sl1632_update_mmc3(void) {
+INLINE static void sl1632_update_mmc3(void) {
 	WORD value;
 
 	value = sl1632.mmc3.prg_map[0];
@@ -279,7 +279,7 @@ static void INLINE sl1632_update_mmc3(void) {
 
 	sl1632_mirroring(sl1632.mmc3.mirroring)
 }
-static void INLINE sl1632_update_chr_mmc3(void) {
+INLINE static void sl1632_update_chr_mmc3(void) {
 	BYTE i;
 	WORD value;
 
@@ -301,7 +301,7 @@ static void INLINE sl1632_update_chr_mmc3(void) {
 		chr.bank_1k[i] = chr_chip_byte_pnt(0, value << 10);
 	}
 }
-static void INLINE sl1632_update(void) {
+INLINE static void sl1632_update(void) {
 	BYTE i, value;
 
 	value = sl1632.prg_map[0];

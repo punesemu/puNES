@@ -470,12 +470,14 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 #define _SUB\
 	{\
 	WORD A;\
-	if (FALSE && cpu.df) {\
+	/*if (FALSE && cpu.df) {\
 		WORD AL = (cpu.AR & 0x0F) - (cpu.openbus & 0x0F) - !cpu.cf;\
 		if (AL < 0) { AL = ((AL - 0x06) & 0x0F) - 0x10; }\
 		A = (cpu.AR & 0xF0) - (cpu.openbus & 0xF0) + AL;\
 		if (A < 0) { A -= 0x60; }\
-	} else { A = cpu.AR - cpu.openbus - !cpu.cf; }\
+	} else {*/\
+		A = cpu.AR - cpu.openbus - !cpu.cf;\
+	/*}*/\
 	cpu.cf = (A < 0x100 ? 1 : 0);\
 	cpu.of = (((cpu.AR ^ cpu.openbus) & 0x80) & ((cpu.AR ^ A) & 0x80) ? 0x40 : 0);\
 	cpu.AR = (BYTE) A;\

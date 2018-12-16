@@ -104,7 +104,7 @@ void wdgAPUChannels::update_widget(void) {
 	horizontalSlider_Extra->setValue(cfg->apu.volume[APU_EXTRA] * 100);
 }
 
-void wdgAPUChannels::s_apu_ch_checkbox(bool checked) {
+void wdgAPUChannels::s_apu_ch_checkbox(UNUSED(bool checked)) {
 	int index = QVariant(((QCheckBox *)sender())->property("myIndex")).toInt();
 
 	cfg_from_file.apu.channel[index] = !cfg_from_file.apu.channel[index];
@@ -124,7 +124,7 @@ void wdgAPUChannels::s_apu_ch_slider(int value) {
 	cfg->apu.volume[index] = (double) value / 100.0f;
 	gui_apu_channels_widgets_update();
 }
-void wdgAPUChannels::s_apu_ch_toggle_all(bool checked) {
+void wdgAPUChannels::s_apu_ch_toggle_all(UNUSED(bool checked)) {
 	int mode = QVariant(((QPushButton *)sender())->property("myIndex")).toInt();
 	BYTE i;
 

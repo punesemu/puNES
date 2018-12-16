@@ -415,10 +415,10 @@ void wdgCheatsEditor::s_cheat_item_state(int state) {
 
 	objch->apply_cheats();
 }
-void wdgCheatsEditor::s_hide_show_tools(bool checked) {
+void wdgCheatsEditor::s_hide_show_tools(UNUSED(bool checked)) {
 	hide_tools_widgets(!widget_Edit->isHidden());
 }
-void wdgCheatsEditor::s_import(bool checked) {
+void wdgCheatsEditor::s_import(UNUSED(bool checked)) {
 	QStringList filters;
 	QString file;
 
@@ -446,7 +446,7 @@ void wdgCheatsEditor::s_import(bool checked) {
 		ustrncpy(cfg->last_import_cheat_path, uQStringCD(fileinfo.absolutePath()), usizeof(cfg->last_import_cheat_path) - 1);
 	}
 }
-void wdgCheatsEditor::s_export(bool checked) {
+void wdgCheatsEditor::s_export(UNUSED(bool checked)) {
 	QStringList filters;
 	QString file;
 
@@ -469,7 +469,7 @@ void wdgCheatsEditor::s_export(bool checked) {
 		objch->save_XML(fileinfo.absoluteFilePath());
 	}
 }
-void wdgCheatsEditor::s_clear_all(bool checked) {
+void wdgCheatsEditor::s_clear_all(UNUSED(bool checked)) {
 	tableWidget_Cheats->setRowCount(0);
 	objch->cheats.clear();
 }
@@ -514,7 +514,7 @@ void wdgCheatsEditor::s_compare(int state) {
 		hexSpinBox_Compare->setEnabled(false);
 	}
 }
-void wdgCheatsEditor::s_new(bool checked) {
+void wdgCheatsEditor::s_new(UNUSED(bool checked)) {
 	new_cheat = true;
 
 	widget_Cheats_List->setEnabled(false);
@@ -526,7 +526,7 @@ void wdgCheatsEditor::s_new(bool checked) {
 
 	set_type_cheat_checkbox(NULL);
 }
-void wdgCheatsEditor::s_remove(bool checked) {
+void wdgCheatsEditor::s_remove(UNUSED(bool checked)) {
 	chl_map cheat = extract_cheat_from_row(tableWidget_Cheats->currentRow());
 	int i;
 
@@ -536,7 +536,7 @@ void wdgCheatsEditor::s_remove(bool checked) {
 
 	tableWidget_Cheats->removeRow(tableWidget_Cheats->currentRow());
 }
-void wdgCheatsEditor::s_submit(bool checked) {
+void wdgCheatsEditor::s_submit(UNUSED(bool checked)) {
 	int i, current, submitted = true;
 	chl_map cheat;
 	int type = 0;
@@ -621,7 +621,7 @@ void wdgCheatsEditor::s_submit(bool checked) {
 		s_cancel(false);
 	}
 }
-void wdgCheatsEditor::s_cancel(bool checked) {
+void wdgCheatsEditor::s_cancel(UNUSED(bool checked)) {
 	new_cheat = false;
 
 	widget_Cheats_List->setEnabled(true);

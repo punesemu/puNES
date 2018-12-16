@@ -200,7 +200,7 @@ void extcl_cpu_wr_mem_Sunsoft_S1(WORD address, BYTE value) {
 	}
 }
 
-void extcl_cpu_wr_mem_Sunsoft_S2(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Sunsoft_S2(UNUSED(WORD address), BYTE value) {
 	const BYTE save = value;
 	DBWORD bank;
 
@@ -446,7 +446,7 @@ void extcl_cpu_wr_mem_Sunsoft_FM7(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_Sunsoft_FM7(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_Sunsoft_FM7(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if (fm7.prg_ram_enable) {
 		return (openbus);
 	}

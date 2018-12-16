@@ -80,7 +80,7 @@
 static void js_open(_js *joy);
 static void js_close(_js *joy);
 
-void js_init(BYTE first_time) {
+void js_init(UNUSED(BYTE first_time)) {
 	BYTE i;
 
 	for (i = PORT1; i < PORT_MAX; i++) {
@@ -95,7 +95,7 @@ void js_init(BYTE first_time) {
 		js_open(&js[i]);
 	}
 }
-void js_quit(BYTE last_time) {
+void js_quit(UNUSED(BYTE last_time)) {
 	BYTE i;
 
 	for (i = PORT1; i < PORT_MAX; i++) {
@@ -199,7 +199,7 @@ DBWORD js_from_name(const uTCHAR *name, const _js_element *list, const DBWORD le
 	}
 	return (js);
 }
-DBWORD js_read_in_dialog(BYTE *id, int fd) {
+DBWORD js_read_in_dialog(UNUSED(BYTE *id), int fd) {
 	static const WORD sensibility = (PLUS / 100) * 75;
 	_js_event jse;
 	ssize_t size = sizeof(jse);

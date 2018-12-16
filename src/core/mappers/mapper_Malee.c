@@ -27,7 +27,7 @@ void map_init_malee(void) {
 
 	mirroring_V();
 }
-BYTE extcl_cpu_rd_mem_malee(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_malee(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if ((address >= 0x6000) && (address <= 0x67FF)) {
 		return (map_prg_chip_rd_byte(1, openbus, address, 0x07FF));
 	}

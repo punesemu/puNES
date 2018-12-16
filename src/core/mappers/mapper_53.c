@@ -22,7 +22,7 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
-static void INLINE m53_update_6000(void);
+INLINE static void m53_update_6000(void);
 
 BYTE *prg_6000;
 
@@ -94,7 +94,7 @@ void extcl_cpu_wr_mem_53(WORD address, BYTE value) {
 	}
 	map_prg_rom_8k_update();
 }
-BYTE extcl_cpu_rd_mem_53(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_53(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if ((address < 0x6000) || (address > 0x7FFF)) {
 		return (openbus);
 	}
@@ -112,7 +112,7 @@ BYTE extcl_save_mapper_53(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-static void INLINE m53_update_6000(void) {
+INLINE static void m53_update_6000(void) {
 	BYTE chip;
 
 	if (info.prg.chips > 1) {

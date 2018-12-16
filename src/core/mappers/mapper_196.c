@@ -23,7 +23,7 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-static void INLINE m196_update_prg(void);
+INLINE static void m196_update_prg(void);
 
 #define m196_8000()\
 	if (mmc3.prg_rom_cfg != old_prg_rom_cfg) {\
@@ -119,7 +119,7 @@ BYTE extcl_save_mapper_196(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-static void INLINE m196_update_prg(void) {
+INLINE static void m196_update_prg(void) {
 	WORD value;
 
 	if (m196.reg[0]) {

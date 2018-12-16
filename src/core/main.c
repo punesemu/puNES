@@ -39,7 +39,7 @@
 #include "ppu.h"
 
 #if defined (__WIN32__)
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine, int iCmdShow) {
+int WINAPI WinMain(UNUSED(HINSTANCE hInstance), UNUSED(HINSTANCE hPrevInstance), UNUSED(PSTR szCmdLine), UNUSED(int iCmdShow)) {
 	int argc = 0;
 	uTCHAR **argv = CommandLineToArgvW(GetCommandLineW(), &argc);
 #else
@@ -58,7 +58,7 @@ int main(int argc, char **argv) {
 		info.portable = FALSE;
 	}
 
-	gui_init(&argc, (char **) argv);
+	gui_init(&argc, (char **)argv);
 
 	// controllo l'esistenza della directory principale
 	if (emu_make_dir(uL("" uPERCENTs), info.base_folder)) {

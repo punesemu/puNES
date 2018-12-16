@@ -135,7 +135,7 @@ void extcl_cpu_wr_mem_Txc_t22211x(WORD address, BYTE value) {
 
 	}
 }
-BYTE extcl_cpu_rd_mem_Txc_t22211x(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_Txc_t22211x(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if (address != 0x4100) {
 		return (openbus);
 	}

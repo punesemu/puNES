@@ -76,7 +76,7 @@ void extcl_cpu_wr_mem_SC_127(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_SC_127(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_SC_127(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if (address == 0x5800) {
 		return (0x20);
 	}

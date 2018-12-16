@@ -28,7 +28,7 @@ struct _oeka_kids_tablet {
 void input_init_oeka_kids_tablet(void) {
 	memset(&oeka_kids_tablet, 0x00, sizeof(oeka_kids_tablet));
 }
-void input_wr_oeka_kids_tablet(BYTE *value, BYTE nport) {
+void input_wr_oeka_kids_tablet(BYTE *value, UNUSED(BYTE nport)) {
 	if (!((*value) & 0x01)) {
 		int x, y;
 
@@ -79,7 +79,7 @@ void input_wr_oeka_kids_tablet(BYTE *value, BYTE nport) {
 		}
 	}
 }
-void input_rd_oeka_kids_tablet(BYTE *value, BYTE nport, BYTE shift) {
+void input_rd_oeka_kids_tablet(BYTE *value, UNUSED(BYTE nport), UNUSED(BYTE shift)) {
 	if (r4016.value & 0x03) {
 		(*value) |= oeka_kids_tablet.value;
 	}

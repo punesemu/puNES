@@ -22,7 +22,7 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
-static void INLINE ks7037_update(void);
+INLINE static void ks7037_update(void);
 
 BYTE *ks7037_prg_7000;
 BYTE *ks7037_prg_B000;
@@ -81,7 +81,7 @@ void extcl_cpu_wr_mem_KS7037(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_KS7037(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_KS7037(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	switch (address & 0xF000) {
 		case 0x6000:
 			return (prg.ram_plus_8k[address & 0x0FFF]);
@@ -105,7 +105,7 @@ BYTE extcl_save_mapper_KS7037(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-static void INLINE ks7037_update(void) {
+INLINE static void ks7037_update(void) {
 	WORD value;
 
 	// 0x7000

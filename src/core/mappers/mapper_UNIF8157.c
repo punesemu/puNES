@@ -22,7 +22,7 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
-static void INLINE unif8157_update(BYTE value);
+INLINE static void unif8157_update(BYTE value);
 
 BYTE unif8157_reset;
 
@@ -50,7 +50,7 @@ void extcl_cpu_wr_mem_UNIF8157(WORD address, BYTE value) {
 	unif8157.reg = address;
 	unif8157_update(value);
 }
-BYTE extcl_cpu_rd_mem_UNIF8157(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_UNIF8157(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if (address >= 0x8000) {
 		if ((unif8157.reg & 0x0100) && (prg.chip[0].size < (1024 * 1024))) {
 			address = (address & 0xFFF0) + unif8157_reset;
@@ -65,7 +65,7 @@ BYTE extcl_save_mapper_UNIF8157(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-static void INLINE unif8157_update(BYTE value) {
+INLINE static void unif8157_update(BYTE value) {
 	BYTE base = ((unif8157.reg & 0x0060) | ((unif8157.reg & 0x0100) >> 1)) >> 2;
 	BYTE bank = (unif8157.reg & 0x001C) >> 2;
 	BYTE lbank = (unif8157.reg & 0x0200) ? 7 : ((unif8157.reg & 0x80) ? bank : 0);

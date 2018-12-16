@@ -23,7 +23,7 @@
 #include "cpu.h"
 #include "save_slot.h"
 
-static void INLINE bmcghostbusters63in1_update_chr(void);
+INLINE static void bmcghostbusters63in1_update_chr(void);
 
 static const BYTE bmcghostbusters63in1_chip[4] = { 0, 0, 1, 2 };
 
@@ -97,7 +97,7 @@ void extcl_wr_chr_BMCGHOSTBUSTERS63IN1(WORD address, BYTE value) {
 	chr.extra.data[address] = value;
 }
 
-static void INLINE bmcghostbusters63in1_update_chr(void) {
+INLINE static void bmcghostbusters63in1_update_chr(void) {
 	if (!mapper.write_vram && (bmcghostbusters63in1.reg[1] & 0x02)) {
 		chr.bank_1k[0] = &chr.extra.data[0x0000];
 		chr.bank_1k[1] = &chr.extra.data[0x0400];

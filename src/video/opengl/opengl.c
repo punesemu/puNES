@@ -30,7 +30,7 @@
 #include "gui.h"
 
 #define MAT_ELEM_4X4(mat, r, c) ((mat).data[4 * (c) + (r)])
-#define BUFFER_OFFSET(i) ((char *)NULL + (i))
+#define BUFFER_OFFSET(i) ((char *)(i))
 #define BUFFER_VB_OFFSET(a, i) ((char *)&a + (i))
 
 #define _SCR_ROWS_BRD\
@@ -46,7 +46,7 @@ static void opengl_context_delete(void);
 static void opengl_screenshot(void);
 
 static BYTE opengl_glew_init(void);
-static BYTE opengl_texture_create(_texture *texture, GLuint index, GLuint clean);
+static BYTE opengl_texture_create(_texture *texture, GLuint index);
 static void opengl_texture_simple_create(_texture_simple *texture, GLuint w, GLuint h, BYTE text);
 static BYTE opengl_texture_lut_create(_lut *lut, GLuint index);
 static void opengl_shader_delete(_shader *shd);
@@ -58,7 +58,7 @@ static void opengl_shader_uni_texture(_shader_uniforms_tex *uni, GLint prg, GLch
 static GLint opengl_shader_get_uni(GLuint prog, const char *param);
 static GLint opengl_shader_get_atr(GLuint prog, const char *param);
 static void opengl_vertex_buffer_set(_vertex_buffer *vb, _texture_rect *rect);
-static const GLint opengl_integer_get(const GLenum penum);
+static GLint opengl_integer_get(const GLenum penum);
 static void opengl_matrix_4x4_identity(_math_matrix_4x4 *mat);
 static void opengl_matrix_4x4_ortho(_math_matrix_4x4 *mat, GLfloat left, GLfloat right,
 	GLfloat bottom, GLfloat top, GLfloat znear, GLfloat zfar);
@@ -85,16 +85,16 @@ INLINE static void opengl_shader_cg_disable_stpm(void);
 
 static const GLchar *uni_prefixes[] = { "", "ruby", };
 static const _vertex_buffer vb_upright[4] = {
-	{ 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f },
-	{ 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f },
-	{ 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f },
-	{ 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f },
+	{ 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+	{ 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+	{ 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+	{ 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
 };
 static const _vertex_buffer vb_flipped[4] = {
-	{ 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f },
-	{ 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f },
-	{ 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f },
-	{ 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f },
+	{ 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+	{ 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+	{ 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+	{ 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
 };
 
 BYTE opengl_init(void) {
@@ -253,7 +253,7 @@ BYTE opengl_context_create(void) {
 
 		fprintf(stderr, "OPENGL: Setting pass %d\n", i);
 
-		if (opengl_texture_create(&opengl.texture[i], i, FALSE) == EXIT_ERROR) {
+		if (opengl_texture_create(&opengl.texture[i], i) == EXIT_ERROR) {
 			opengl_context_delete();
 			return (EXIT_ERROR);
 		}
@@ -310,7 +310,7 @@ BYTE opengl_context_create(void) {
 	// FEEDBACK
 	if ((shader_effect.feedback_pass >= 0) && (shader_effect.feedback_pass < shader_effect.pass)) {
 		opengl.feedback.in_use = TRUE;
-		if (opengl_texture_create(&opengl.feedback.tex, shader_effect.feedback_pass, TRUE) == EXIT_ERROR) {
+		if (opengl_texture_create(&opengl.feedback.tex, shader_effect.feedback_pass) == EXIT_ERROR) {
 			opengl_context_delete();
 			return (EXIT_ERROR);
 		}
@@ -541,7 +541,7 @@ void opengl_draw_scene(void) {
 }
 
 static void opengl_context_delete(void) {
-	GLint i;
+	GLuint i;
 
 	if (opengl.surface.pixels) {
 		free(opengl.surface.pixels);
@@ -686,7 +686,7 @@ static BYTE opengl_glew_init(void) {
 
 	return (EXIT_ERROR);
 }
-static BYTE opengl_texture_create(_texture *texture, GLuint index, GLuint clean) {
+static BYTE opengl_texture_create(_texture *texture, GLuint index) {
 	_shader_pass *sp = &shader_effect.sp[index];
 	_shader_scale *sc = &sp->sc;
 	const _shader_pass *next = &shader_effect.sp[index + 1];
@@ -1063,7 +1063,7 @@ static void opengl_vertex_buffer_set(_vertex_buffer *vb, _texture_rect *rect) {
 	vb[1].s0 = x; vb[2].t0 = y;
 	vb[3].s0 = x; vb[3].t0 = y;
 }
-static const GLint opengl_integer_get(const GLenum penum) {
+static GLint opengl_integer_get(const GLenum penum) {
 	GLint result;
 
 	glGetIntegerv(penum, &result);
@@ -1134,8 +1134,8 @@ INLINE static void opengl_shader_params_text_set(_shader *shd) {
 
 	if (shd->glslp.uni.vertex_coord >= 0) {
 		glEnableVertexAttribArray(shd->glslp.uni.vertex_coord);
-		glVertexAttribPointer(shd->glslp.uni.vertex_coord, 2, GL_FLOAT, GL_FALSE,
-			sizeof(_vertex_buffer), BUFFER_OFFSET(sizeof(GLfloat) * buffer_index));
+		glVertexAttribPointer(shd->glslp.uni.vertex_coord, 2, GL_FLOAT, GL_FALSE, sizeof(_vertex_buffer),
+			BUFFER_OFFSET(sizeof(GLfloat) * buffer_index));
 		opengl.attribs.attrib[opengl.attribs.count++] = shd->glslp.uni.vertex_coord;
 	}
 	buffer_index += 2;
@@ -1143,14 +1143,14 @@ INLINE static void opengl_shader_params_text_set(_shader *shd) {
 	{
 		if (shd->glslp.uni.COLOR >= 0) {
 			glEnableVertexAttribArray(shd->glslp.uni.COLOR);
-			glVertexAttribPointer(shd->glslp.uni.COLOR, 4, GL_FLOAT, GL_FALSE,
-				sizeof(_vertex_buffer), BUFFER_OFFSET(sizeof(GLfloat) * buffer_index));
+			glVertexAttribPointer(shd->glslp.uni.COLOR, 4, GL_FLOAT, GL_FALSE, sizeof(_vertex_buffer),
+				BUFFER_OFFSET(sizeof(GLfloat) * buffer_index));
 			opengl.attribs.attrib[opengl.attribs.count++] = shd->glslp.uni.COLOR;
 		}
 		if (shd->glslp.uni.color >= 0) {
 			glEnableVertexAttribArray(shd->glslp.uni.color);
-			glVertexAttribPointer(shd->glslp.uni.color, 4, GL_FLOAT, GL_FALSE,
-				sizeof(_vertex_buffer), BUFFER_OFFSET(sizeof(GLfloat) * buffer_index));
+			glVertexAttribPointer(shd->glslp.uni.color, 4, GL_FLOAT, GL_FALSE, sizeof(_vertex_buffer),
+				BUFFER_OFFSET(sizeof(GLfloat) * buffer_index));
 			opengl.attribs.attrib[opengl.attribs.count++] = shd->glslp.uni.color;
 		}
 	}
@@ -1158,8 +1158,8 @@ INLINE static void opengl_shader_params_text_set(_shader *shd) {
 
 	if (shd->glslp.uni.tex_coord >= 0) {
 		glEnableVertexAttribArray(shd->glslp.uni.tex_coord);
-		glVertexAttribPointer(shd->glslp.uni.tex_coord, 2, GL_FLOAT, GL_FALSE,
-			sizeof(_vertex_buffer), BUFFER_OFFSET(sizeof(GLfloat) * buffer_index));
+		glVertexAttribPointer(shd->glslp.uni.tex_coord, 2, GL_FLOAT, GL_FALSE, sizeof(_vertex_buffer),
+			BUFFER_OFFSET(sizeof(GLfloat) * buffer_index));
 		opengl.attribs.attrib[opengl.attribs.count++] = shd->glslp.uni.tex_coord;
 	}
 	buffer_index += 2;
@@ -1359,8 +1359,8 @@ INLINE static void opengl_shader_glsl_params_set(const _shader *shd, GLuint fcou
 
 	if (shd->glslp.uni.vertex_coord >= 0) {
 		glEnableVertexAttribArray(shd->glslp.uni.vertex_coord);
-		glVertexAttribPointer(shd->glslp.uni.vertex_coord, 2, GL_FLOAT, GL_FALSE,
-			sizeof(_vertex_buffer), BUFFER_OFFSET(sizeof(GLfloat) * buffer_index));
+		glVertexAttribPointer(shd->glslp.uni.vertex_coord, 2, GL_FLOAT, GL_FALSE, sizeof(_vertex_buffer),
+			BUFFER_OFFSET(sizeof(GLfloat) * buffer_index));
 		opengl.attribs.attrib[opengl.attribs.count++] = shd->glslp.uni.vertex_coord;
 	}
 	buffer_index += 2;
@@ -1368,14 +1368,14 @@ INLINE static void opengl_shader_glsl_params_set(const _shader *shd, GLuint fcou
 	{
 		if (shd->glslp.uni.COLOR >= 0) {
 			glEnableVertexAttribArray(shd->glslp.uni.COLOR);
-			glVertexAttribPointer(shd->glslp.uni.COLOR, 4, GL_FLOAT, GL_FALSE,
-				sizeof(_vertex_buffer), BUFFER_OFFSET(sizeof(GLfloat) * buffer_index));
+			glVertexAttribPointer(shd->glslp.uni.COLOR, 4, GL_FLOAT, GL_FALSE, sizeof(_vertex_buffer),
+				BUFFER_OFFSET(sizeof(GLfloat) * buffer_index));
 			opengl.attribs.attrib[opengl.attribs.count++] = shd->glslp.uni.COLOR;
 		}
 		if (shd->glslp.uni.color >= 0) {
 			glEnableVertexAttribArray(shd->glslp.uni.color);
-			glVertexAttribPointer(shd->glslp.uni.color, 4, GL_FLOAT, GL_FALSE,
-				sizeof(_vertex_buffer), BUFFER_OFFSET(sizeof(GLfloat) * buffer_index));
+			glVertexAttribPointer(shd->glslp.uni.color, 4, GL_FLOAT, GL_FALSE, sizeof(_vertex_buffer),
+				BUFFER_OFFSET(sizeof(GLfloat) * buffer_index));
 			opengl.attribs.attrib[opengl.attribs.count++] = shd->glslp.uni.color;
 		}
 	}
@@ -1383,16 +1383,16 @@ INLINE static void opengl_shader_glsl_params_set(const _shader *shd, GLuint fcou
 
 	if (shd->glslp.uni.tex_coord >= 0) {
 		glEnableVertexAttribArray(shd->glslp.uni.tex_coord);
-		glVertexAttribPointer(shd->glslp.uni.tex_coord, 2, GL_FLOAT, GL_FALSE,
-			sizeof(_vertex_buffer), BUFFER_OFFSET(sizeof(GLfloat) * buffer_index));
+		glVertexAttribPointer(shd->glslp.uni.tex_coord, 2, GL_FLOAT, GL_FALSE, sizeof(_vertex_buffer),
+			BUFFER_OFFSET(sizeof(GLfloat) * buffer_index));
 		opengl.attribs.attrib[opengl.attribs.count++] = shd->glslp.uni.tex_coord;
 	}
 	buffer_index += 2;
 
 	if (shd->glslp.uni.lut_tex_coord >= 0) {
 		glEnableVertexAttribArray(shd->glslp.uni.lut_tex_coord);
-		glVertexAttribPointer(shd->glslp.uni.lut_tex_coord, 2, GL_FLOAT, GL_FALSE,
-			sizeof(_vertex_buffer), BUFFER_OFFSET(sizeof(GLfloat) * buffer_index));
+		glVertexAttribPointer(shd->glslp.uni.lut_tex_coord, 2, GL_FLOAT, GL_FALSE, sizeof(_vertex_buffer),
+			BUFFER_OFFSET(sizeof(GLfloat) * buffer_index));
 		opengl.attribs.attrib[opengl.attribs.count++] = shd->glslp.uni.lut_tex_coord;
 	}
 	buffer_index += 2;
@@ -1424,8 +1424,8 @@ INLINE static void opengl_shader_glsl_params_set(const _shader *shd, GLuint fcou
 	}
 	if (shd->glslp.uni.orig.tex_coord >= 0) {
 		glEnableVertexAttribArray(shd->glslp.uni.orig.tex_coord);
-		glVertexAttribPointer(shd->glslp.uni.orig.tex_coord, 2, GL_FLOAT, GL_FALSE,
-			sizeof(_vertex_buffer), BUFFER_OFFSET(sizeof(GLfloat) * buffer_index));
+		glVertexAttribPointer(shd->glslp.uni.orig.tex_coord, 2, GL_FLOAT, GL_FALSE, sizeof(_vertex_buffer),
+			BUFFER_OFFSET(sizeof(GLfloat) * buffer_index));
 		opengl.attribs.attrib[opengl.attribs.count++] = shd->glslp.uni.orig.tex_coord;
 	}
 	// PREV (uso le stesse tex_coord di ORIG)
@@ -1444,8 +1444,8 @@ INLINE static void opengl_shader_glsl_params_set(const _shader *shd, GLuint fcou
 			}
 			if (shd->glslp.uni.prev[i].tex_coord >= 0) {
 				glEnableVertexAttribArray(shd->glslp.uni.prev[i].tex_coord);
-				glVertexAttribPointer(shd->glslp.uni.prev[i].tex_coord, 2, GL_FLOAT, GL_FALSE,
-					sizeof(_vertex_buffer), BUFFER_OFFSET(sizeof(GLfloat) * buffer_index));
+				glVertexAttribPointer(shd->glslp.uni.prev[i].tex_coord, 2, GL_FLOAT, GL_FALSE, sizeof(_vertex_buffer),
+					BUFFER_OFFSET(sizeof(GLfloat) * buffer_index));
 				opengl.attribs.attrib[opengl.attribs.count++] = shd->glslp.uni.prev[i].tex_coord;
 			}
 			circle_index--;
@@ -1471,8 +1471,8 @@ INLINE static void opengl_shader_glsl_params_set(const _shader *shd, GLuint fcou
 		}
 		if (shd->glslp.uni.feedback.tex_coord >= 0) {
 			glEnableVertexAttribArray(shd->glslp.uni.feedback.tex_coord);
-			glVertexAttribPointer(shd->glslp.uni.feedback.tex_coord, 2, GL_FLOAT, GL_FALSE,
-				sizeof(_vertex_buffer), BUFFER_OFFSET(sizeof(GLfloat) * buffer_index));
+			glVertexAttribPointer(shd->glslp.uni.feedback.tex_coord, 2, GL_FLOAT, GL_FALSE, sizeof(_vertex_buffer),
+				BUFFER_OFFSET(sizeof(GLfloat) * buffer_index));
 			opengl.attribs.attrib[opengl.attribs.count++] = shd->glslp.uni.feedback.tex_coord;
 		}
 	}
@@ -1498,8 +1498,7 @@ INLINE static void opengl_shader_glsl_params_set(const _shader *shd, GLuint fcou
 		}
 		if (shd->glslp.uni.passprev[i].tex_coord >= 0) {
 			glEnableVertexAttribArray(shd->glslp.uni.passprev[i].tex_coord);
-			glVertexAttribPointer(shd->glslp.uni.passprev[i].tex_coord, 2, GL_FLOAT, GL_FALSE,
-				sizeof(_vertex_buffer),
+			glVertexAttribPointer(shd->glslp.uni.passprev[i].tex_coord, 2, GL_FLOAT, GL_FALSE, sizeof(_vertex_buffer),
 				BUFFER_OFFSET(sizeof(GLfloat) * (buffer_index + (next * 2))));
 			opengl.attribs.attrib[opengl.attribs.count++] = shd->glslp.uni.passprev[i].tex_coord;
 		}
@@ -1528,7 +1527,7 @@ INLINE static void opengl_shader_glsl_disable_attrib(void) {
 // cg
 #if defined (WITH_OPENGL_CG)
 #if !defined (RELEASE)
-static void opengl_shader_cg_error_handler(CGcontext ctx, CGerror error, void *data) {
+static void opengl_shader_cg_error_handler(UNUSED(CGcontext ctx), CGerror error, UNUSED(void *data)) {
 	switch (error) {
 		case CG_INVALID_PARAM_HANDLE_ERROR:
 			fprintf(stderr, "OPENGLCG: Invalid param handle.\n");
@@ -1999,8 +1998,7 @@ INLINE static void opengl_shader_cg_params_set(const _texture *texture, GLuint f
 		}
 		// ORIG.tex_coord
 		if (shd->cgp.uni.orig.v.tex_coord) {
-			cgGLSetParameterPointer(shd->cgp.uni.orig.v.tex_coord, 2, GL_FLOAT,
-				sizeof(_vertex_buffer),
+			cgGLSetParameterPointer(shd->cgp.uni.orig.v.tex_coord, 2, GL_FLOAT, sizeof(_vertex_buffer),
 				BUFFER_VB_OFFSET(shd->vb, sizeof(GLfloat) * buffer_index));
 			cgGLEnableClientState(shd->cgp.uni.orig.v.tex_coord);
 			opengl.cg.states.state[opengl.cg.states.count++] = shd->cgp.uni.orig.v.tex_coord;
@@ -2046,8 +2044,7 @@ INLINE static void opengl_shader_cg_params_set(const _texture *texture, GLuint f
 			}
 			// PREV.tex_coord
 			if (shd->cgp.uni.prev[i].v.tex_coord) {
-				cgGLSetParameterPointer(shd->cgp.uni.prev[i].v.tex_coord, 2, GL_FLOAT,
-					sizeof(_vertex_buffer),
+				cgGLSetParameterPointer(shd->cgp.uni.prev[i].v.tex_coord, 2, GL_FLOAT, sizeof(_vertex_buffer),
 					BUFFER_VB_OFFSET(shd->vb, sizeof(GLfloat) * buffer_index));
 				cgGLEnableClientState(shd->cgp.uni.prev[i].v.tex_coord);
 				opengl.cg.states.state[opengl.cg.states.count++] = shd->cgp.uni.prev[i].v.tex_coord;
@@ -2089,8 +2086,7 @@ INLINE static void opengl_shader_cg_params_set(const _texture *texture, GLuint f
 		}
 		// FEEDBACK.tex_coord
 		if (shd->cgp.uni.feedback.v.tex_coord) {
-			cgGLSetParameterPointer(shd->cgp.uni.feedback.v.tex_coord, 2, GL_FLOAT,
-				sizeof(_vertex_buffer),
+			cgGLSetParameterPointer(shd->cgp.uni.feedback.v.tex_coord, 2, GL_FLOAT, sizeof(_vertex_buffer),
 				BUFFER_VB_OFFSET(shd->vb, sizeof(GLfloat) * buffer_index));
 			cgGLEnableClientState(shd->cgp.uni.feedback.v.tex_coord);
 			opengl.cg.states.state[opengl.cg.states.count++] = shd->cgp.uni.feedback.v.tex_coord;
@@ -2132,8 +2128,7 @@ INLINE static void opengl_shader_cg_params_set(const _texture *texture, GLuint f
 		}
 		// PASSPREV[x].tex_coord
 		if (shd->cgp.uni.passprev[i].v.tex_coord) {
-			cgGLSetParameterPointer(shd->cgp.uni.passprev[i].v.tex_coord, 2, GL_FLOAT,
-				sizeof(_vertex_buffer),
+			cgGLSetParameterPointer(shd->cgp.uni.passprev[i].v.tex_coord, 2, GL_FLOAT, sizeof(_vertex_buffer),
 				BUFFER_VB_OFFSET(shd->vb, sizeof(GLfloat) * (buffer_index + (next * 2))));
 			cgGLEnableClientState(shd->cgp.uni.passprev[i].v.tex_coord);
 			opengl.cg.states.state[opengl.cg.states.count++] = shd->cgp.uni.passprev[i].v.tex_coord;

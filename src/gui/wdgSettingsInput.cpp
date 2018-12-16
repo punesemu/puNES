@@ -726,7 +726,7 @@ void wdgSettingsInput::s_controller_port(int index) {
 	emu_thread_continue();
 	update_widget();
 }
-void wdgSettingsInput::s_controller_port_setup(bool checked) {
+void wdgSettingsInput::s_controller_port_setup(UNUSED(bool checked)) {
 	_cfg_port *cfg_port = ((_cfg_port *)((QPushButton *)sender())->property("myPointer").value<void *>());
 
 	switch (cfg_port->port->type) {
@@ -748,10 +748,10 @@ void wdgSettingsInput::s_controller_port_setup(bool checked) {
 			break;
 	}
 }
-void wdgSettingsInput::s_permit_updown_leftright(bool checked) {
+void wdgSettingsInput::s_permit_updown_leftright(UNUSED(bool checked)) {
 	cfg->input.permit_updown_leftright = !cfg->input.permit_updown_leftright;
 }
-void wdgSettingsInput::s_hide_zapper_cursor(bool checked) {
+void wdgSettingsInput::s_hide_zapper_cursor(UNUSED(bool checked)) {
 	cfg->input.hide_zapper_cursor = !cfg->input.hide_zapper_cursor;
 }
 void wdgSettingsInput::s_joy_id(int index) {
@@ -760,7 +760,7 @@ void wdgSettingsInput::s_joy_id(int index) {
 	js_set_id(&cfg->input.shcjoy_id, id);
 	shortcuts_update(UPDATE_ALL, NO_ACTION, NO_ACTION);
 }
-void wdgSettingsInput::s_shortcut(bool checked) {
+void wdgSettingsInput::s_shortcut(UNUSED(bool checked)) {
 	if (shcut.no_other_buttons == true) {
 		return;
 	}
@@ -815,7 +815,7 @@ void wdgSettingsInput::s_shortcut(bool checked) {
 #endif
 	}
 }
-void wdgSettingsInput::s_shortcut_keyb_default(bool checked) {
+void wdgSettingsInput::s_shortcut_keyb_default(UNUSED(bool checked)) {
 	int row = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
 	shcut.text[KEYBOARD].replace(row,
@@ -823,13 +823,13 @@ void wdgSettingsInput::s_shortcut_keyb_default(bool checked) {
 	tableWidget_Shortcuts->cellWidget(row, 1)->findChild<QPushButton *>("value")->setText(
 		shcut.text[KEYBOARD].at(row));
 }
-void wdgSettingsInput::s_shortcut_joy_unset(bool checked) {
+void wdgSettingsInput::s_shortcut_joy_unset(UNUSED(bool checked)) {
 	int row = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
 	shcut.text[JOYSTICK].replace(row, "NULL");
 	tableWidget_Shortcuts->cellWidget(row, 2)->findChild<QPushButton *>("value")->setText("NULL");
 }
-void wdgSettingsInput::s_input_reset(bool checked) {
+void wdgSettingsInput::s_input_reset(UNUSED(bool checked)) {
 	_array_pointers_port array;
 
 	for (int i = PORT1; i < PORT_MAX; i++) {

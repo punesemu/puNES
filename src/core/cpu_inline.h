@@ -100,19 +100,19 @@
 		}\
 	}
 
-static BYTE INLINE ppu_rd_reg(WORD address);
-static BYTE INLINE apu_rd_reg(WORD address);
-static void INLINE nsf_rd_mem(WORD address, BYTE made_tick);
-static BYTE INLINE fds_rd_mem(WORD address, BYTE made_tick);
+INLINE static BYTE ppu_rd_reg(WORD address);
+INLINE static BYTE apu_rd_reg(WORD address);
+INLINE static void nsf_rd_mem(WORD address, BYTE made_tick);
+INLINE static BYTE fds_rd_mem(WORD address, BYTE made_tick);
 
-static void INLINE ppu_wr_mem(WORD address, BYTE value);
-static void INLINE ppu_wr_reg(WORD address, BYTE value);
-static void INLINE apu_wr_reg(WORD address, BYTE value);
-static void INLINE nsf_wr_mem(WORD address, BYTE value);
-static BYTE INLINE fds_wr_mem(WORD address, BYTE value);
+INLINE static void ppu_wr_mem(WORD address, BYTE value);
+INLINE static void ppu_wr_reg(WORD address, BYTE value);
+INLINE static void apu_wr_reg(WORD address, BYTE value);
+INLINE static void nsf_wr_mem(WORD address, BYTE value);
+INLINE static BYTE fds_wr_mem(WORD address, BYTE value);
 
-static WORD INLINE lend_word(WORD address, BYTE indirect, BYTE make_last_tick_hw);
-static void INLINE tick_hw(BYTE value);
+INLINE static WORD lend_word(WORD address, BYTE indirect, BYTE make_last_tick_hw);
+INLINE static void tick_hw(BYTE value);
 
 /* ------------------------------------ READ ROUTINE ------------------------------------------- */
 
@@ -293,7 +293,7 @@ BYTE cpu_rd_mem(WORD address, BYTE made_tick) {
 	/* qualsiasi altra cosa */
 	return (cpu.openbus);
 }
-static BYTE INLINE ppu_rd_reg(WORD address) {
+INLINE static BYTE ppu_rd_reg(WORD address) {
 	BYTE value = 0;
 
 	ppu_openbus_rd_all();
@@ -463,7 +463,7 @@ static BYTE INLINE ppu_rd_reg(WORD address) {
 	/* ppu open bus */
 	return (ppu.openbus);
 }
-static BYTE INLINE apu_rd_reg(WORD address) {
+INLINE static BYTE apu_rd_reg(WORD address) {
 	BYTE value = cpu.openbus;
 
 	if (address == 0x4015) {
@@ -513,7 +513,7 @@ static BYTE INLINE apu_rd_reg(WORD address) {
 
 	return (value);
 }
-static void INLINE nsf_rd_mem(WORD address, BYTE made_tick) {
+INLINE static void nsf_rd_mem(WORD address, BYTE made_tick) {
 	// Rom
 	if (address >= 0x8000)  {
 		if (made_tick) {
@@ -636,7 +636,7 @@ static void INLINE nsf_rd_mem(WORD address, BYTE made_tick) {
 		return;
 	}
 }
-static BYTE INLINE fds_rd_mem(WORD address, BYTE made_tick) {
+INLINE static BYTE fds_rd_mem(WORD address, BYTE made_tick) {
 	if (address >= 0xE000) {
 		/* eseguo un tick hardware */
 		if (made_tick) {
@@ -949,7 +949,7 @@ void cpu_wr_mem(WORD address, BYTE value) {
 	tick_hw(1);
 	return;
 }
-static void INLINE ppu_wr_mem(WORD address, BYTE value) {
+INLINE static void ppu_wr_mem(WORD address, BYTE value) {
 	address &= 0x3FFF;
 	if (address < 0x2000) {
 		if (extcl_wr_chr) {
@@ -986,7 +986,7 @@ static void INLINE ppu_wr_mem(WORD address, BYTE value) {
 	}
 	return;
 }
-static void INLINE ppu_wr_reg(WORD address, BYTE value) {
+INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 	if (address == 0x2000) {
 #if !defined (RELEASE)
 		BYTE old_delay = FALSE;
@@ -1399,7 +1399,7 @@ static void INLINE ppu_wr_reg(WORD address, BYTE value) {
 	ppu_openbus_wr_all();
 	return;
 }
-static void INLINE apu_wr_reg(WORD address, BYTE value) {
+INLINE static void apu_wr_reg(WORD address, BYTE value) {
 	if (!(address & 0x0010)) {
 		/* -------------------- square 1 --------------------*/
 		if (address <= 0x4003) {
@@ -1698,7 +1698,7 @@ static void INLINE apu_wr_reg(WORD address, BYTE value) {
 
 	return;
 }
-static void INLINE nsf_wr_mem(WORD address, BYTE value) {
+INLINE static void nsf_wr_mem(WORD address, BYTE value) {
 	// Ram
 	if (address >= 0x8000) {
 		tick_hw(1);
@@ -1854,7 +1854,7 @@ static void INLINE nsf_wr_mem(WORD address, BYTE value) {
 
 	tick_hw(1);
 }
-static BYTE INLINE fds_wr_mem(WORD address, BYTE value) {
+INLINE static BYTE fds_wr_mem(WORD address, BYTE value) {
 	if (address >= 0xE000) {
 		/* eseguo un tick hardware */
 		tick_hw(1);
@@ -2098,7 +2098,7 @@ static BYTE INLINE fds_wr_mem(WORD address, BYTE value) {
 }
 /* ------------------------------------ MISC ROUTINE ------------------------------------------- */
 
-static WORD INLINE lend_word(WORD address, BYTE indirect, BYTE make_last_tick_hw) {
+INLINE static WORD lend_word(WORD address, BYTE indirect, BYTE make_last_tick_hw) {
 	WORD newAdr;
 
 	newAdr = cpu_rd_mem(address++, TRUE);
@@ -2120,7 +2120,7 @@ static WORD INLINE lend_word(WORD address, BYTE indirect, BYTE make_last_tick_hw
 	newAdr |= (cpu_rd_mem(address, make_last_tick_hw) << 8);
 	return (newAdr);
 }
-static void INLINE tick_hw(BYTE value) {
+INLINE static void tick_hw(BYTE value) {
 	tick_hw_start:
 	if (nsf.enabled == TRUE) {
 		if (nsf.made_tick) {

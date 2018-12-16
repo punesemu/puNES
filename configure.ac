@@ -78,9 +78,9 @@ AS_CASE(["${TOP_BUILDDIR}"],
 	]
 )
 
-my_CFLAGS="-ffast-math -fmessage-length=0 -finline-functions -Winline"
-my_CPPFLAGS="-Wall -ffast-math -I${TOP_SRCDIR}/src -I${TOP_SRCDIR}/src/gui -I${TOP_SRCDIR}/src/core -I${TOP_SRCDIR}/src/video/shaders"
-my_CXXFLAGS="-fmessage-length=0 -finline-functions --param inline-unit-growth=200 --param large-function-growth=500"
+my_CFLAGS=""
+my_CPPFLAGS="-Wall -Wextra -ffast-math -fmessage-length=0 -finline-functions -I${TOP_SRCDIR}/src -I${TOP_SRCDIR}/src/gui -I${TOP_SRCDIR}/src/core -I${TOP_SRCDIR}/src/video/shaders"
+my_CXXFLAGS="--param inline-unit-growth=200 --param large-function-growth=500"
 my_LDFLAGS=""
 my_LIBS=""
 CUSTOMDEFINES=""
@@ -107,7 +107,7 @@ AS_CASE(["$host_os"],
 		windows=no
 		with_d3d9=no
 		with_opengl=yes
-		my_CXXFLAGS="-fmessage-length=0 -finline-functions"
+		my_CXXFLAGS=""
 		export CC
 		export CXX
 	],

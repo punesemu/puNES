@@ -113,7 +113,7 @@ void wdgSettingsVideo::changeEvent(QEvent *event) {
 		QWidget::changeEvent(event);
 	}
 }
-void wdgSettingsVideo::showEvent(QShowEvent *event) {
+void wdgSettingsVideo::showEvent(UNUSED(QShowEvent *event)) {
 	int dim = label_Scale->size().height() - 10;
 
 	icon_Scale->setPixmap(QIcon(":/icon/icons/scale.svg").pixmap(dim, dim));
@@ -554,7 +554,7 @@ void wdgSettingsVideo::s_par(int index) {
 
 	update_widget();
 }
-void wdgSettingsVideo::s_par_stretch(bool checked) {
+void wdgSettingsVideo::s_par_stretch(UNUSED(bool checked)) {
 	emu_thread_pause();
 	cfg->PAR_soft_stretch = !cfg->PAR_soft_stretch;
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
@@ -589,7 +589,7 @@ void wdgSettingsVideo::s_oscan_def_value(int index) {
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 	emu_thread_continue();
 }
-void wdgSettingsVideo::s_oscan_brd_black_w(bool checked) {
+void wdgSettingsVideo::s_oscan_brd_black_w(UNUSED(bool checked)) {
 	emu_thread_pause();
 	cfg->oscan_black_borders = !cfg->oscan_black_borders;
 	if (overscan.enabled) {
@@ -597,7 +597,7 @@ void wdgSettingsVideo::s_oscan_brd_black_w(bool checked) {
 	}
 	emu_thread_continue();
 }
-void wdgSettingsVideo::s_oscan_brd_black_f(bool checked) {
+void wdgSettingsVideo::s_oscan_brd_black_f(UNUSED(bool checked)) {
 	emu_thread_pause();
 	cfg->oscan_black_borders_fscr = !cfg->oscan_black_borders_fscr;
 	if (overscan.enabled) {
@@ -605,7 +605,7 @@ void wdgSettingsVideo::s_oscan_brd_black_f(bool checked) {
 	}
 	emu_thread_continue();
 }
-void wdgSettingsVideo::s_oscan_brd_mode(int index) {
+void wdgSettingsVideo::s_oscan_brd_mode(UNUSED(int index)) {
 	oscan_brd_set();
 }
 void wdgSettingsVideo::s_oscan_spinbox(int i) {
@@ -628,7 +628,7 @@ void wdgSettingsVideo::s_oscan_spinbox(int i) {
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 	emu_thread_continue();
 }
-void wdgSettingsVideo::s_oscan_reset(bool checked) {
+void wdgSettingsVideo::s_oscan_reset(UNUSED(bool checked)) {
 	_overscan_borders *borders;
 	int mode;
 
@@ -759,7 +759,7 @@ void wdgSettingsVideo::s_shader(int index) {
 	emu_thread_continue();
 }
 #if defined (WITH_OPENGL)
-void wdgSettingsVideo::s_disable_srgb_fbo(bool checked) {
+void wdgSettingsVideo::s_disable_srgb_fbo(UNUSED(bool checked)) {
 	emu_thread_pause();
 	cfg->disable_srgb_fbo = !cfg->disable_srgb_fbo;
 	if (info.sRGB_FBO_in_use == TRUE) {
@@ -768,7 +768,7 @@ void wdgSettingsVideo::s_disable_srgb_fbo(bool checked) {
 	emu_thread_continue();
 }
 #endif
-void wdgSettingsVideo::s_shader_file(bool checked) {
+void wdgSettingsVideo::s_shader_file(UNUSED(bool checked)) {
 	QStringList filters;
 	QString file;
 
@@ -807,7 +807,7 @@ void wdgSettingsVideo::s_shader_file(bool checked) {
 
 	emu_pause(FALSE);
 }
-void wdgSettingsVideo::s_shader_file_clear(bool checked) {
+void wdgSettingsVideo::s_shader_file_clear(UNUSED(bool checked)) {
 	umemset(cfg->shader_file, 0x00, usizeof(cfg->shader_file));
 	shader_set();
 }
@@ -838,14 +838,14 @@ void wdgSettingsVideo::s_shader_param_spin(const QString &text) {
 		tableWidget_Shader_Parameters->item(row, WSV_SP_DESC)->setBackgroundColor(Qt::yellow);
 	}
 }
-void wdgSettingsVideo::s_shader_param_default(bool checked) {
+void wdgSettingsVideo::s_shader_param_default(UNUSED(bool checked)) {
 	int index = QVariant(((QObject *)sender())->property("myIndex")).toInt();
 	int row = QVariant(((QObject *)sender())->property("myValue")).toInt();
 	_param_shd *pshd = &shader_effect.param[index];
 
 	tableWidget_Shader_Parameters->cellWidget(row, WSV_SP_SPIN)->findChild<QDoubleSpinBox *>("spin")->setValue(pshd->initial);
 }
-void wdgSettingsVideo::s_shader_param_all_defaults(bool checked) {
+void wdgSettingsVideo::s_shader_param_all_defaults(UNUSED(bool checked)) {
 	int i, row = 0;
 
 	for (i = 0; i < shader_effect.params; i++) {
@@ -895,7 +895,7 @@ void wdgSettingsVideo::s_palette(int index) {
 	widget_Palette_Editor->palette_changed();
 	emu_thread_continue();
 }
-void wdgSettingsVideo::s_palette_file(bool checked) {
+void wdgSettingsVideo::s_palette_file(UNUSED(bool checked)) {
 	QStringList filters;
 	QString file;
 
@@ -927,33 +927,33 @@ void wdgSettingsVideo::s_palette_file(bool checked) {
 
 	emu_pause(FALSE);
 }
-void wdgSettingsVideo::s_palette_file_clear(bool checked) {
+void wdgSettingsVideo::s_palette_file_clear(UNUSED(bool checked)) {
 	umemset(cfg->palette_file, 0x00, usizeof(cfg->palette_file));
 	palette_set();
 }
-void wdgSettingsVideo::s_disable_emphasis_swap_pal(bool checked) {
+void wdgSettingsVideo::s_disable_emphasis_swap_pal(UNUSED(bool checked)) {
 	emu_thread_pause();
 	cfg->disable_swap_emphasis_pal = !cfg->disable_swap_emphasis_pal;
 	gfx_palette_update();
 	emu_thread_continue();
 }
-void wdgSettingsVideo::s_vsync(bool checked) {
+void wdgSettingsVideo::s_vsync(UNUSED(bool checked)) {
 	cfg->vsync = !cfg->vsync;
 	update_widget();
 }
-void wdgSettingsVideo::s_interpolation(bool checked) {
+void wdgSettingsVideo::s_interpolation(UNUSED(bool checked)) {
 	emu_thread_pause();
 	cfg->interpolation = !cfg->interpolation;
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 	emu_thread_continue();
 }
-void wdgSettingsVideo::s_text_on_screen(bool checked) {
+void wdgSettingsVideo::s_text_on_screen(UNUSED(bool checked)) {
 	cfg->txt_on_screen = !cfg->txt_on_screen;
 }
-void wdgSettingsVideo::s_show_fps(bool checked) {
+void wdgSettingsVideo::s_show_fps(UNUSED(bool checked)) {
 	cfg->show_fps = !cfg->show_fps;
 }
-void wdgSettingsVideo::s_input_display(bool checked) {
+void wdgSettingsVideo::s_input_display(UNUSED(bool checked)) {
 	cfg->input_display = !cfg->input_display;
 
 	if (!cfg->input_display) {
@@ -969,16 +969,16 @@ void wdgSettingsVideo::s_input_display(bool checked) {
 		}
 	}
 }
-void wdgSettingsVideo::s_disable_tv_noise(bool checked) {
+void wdgSettingsVideo::s_disable_tv_noise(UNUSED(bool checked)) {
 	cfg->disable_tv_noise = !cfg->disable_tv_noise;
 }
-void wdgSettingsVideo::s_disable_sepia(bool checked) {
+void wdgSettingsVideo::s_disable_sepia(UNUSED(bool checked)) {
 	cfg->disable_sepia_color = !cfg->disable_sepia_color;
 }
-void wdgSettingsVideo::s_fullscreen_in_window(bool checked) {
+void wdgSettingsVideo::s_fullscreen_in_window(UNUSED(bool checked)) {
 	cfg->fullscreen_in_window = !cfg->fullscreen_in_window;
 }
-void wdgSettingsVideo::s_stretch_in_fullscreen(bool checked) {
+void wdgSettingsVideo::s_stretch_in_fullscreen(UNUSED(bool checked)) {
 	emu_thread_pause();
 	cfg->stretch = !cfg->stretch;
 

@@ -112,7 +112,7 @@ void wdgPaletteWall::mousePressEvent(QMouseEvent *e) {
 
 	set_current(row_at(pos.y()), column_at(pos.x()));
 }
-void wdgPaletteWall::mouseReleaseEvent(QMouseEvent *e) {
+void wdgPaletteWall::mouseReleaseEvent(UNUSED(QMouseEvent *e)) {
 	// The current cell marker is set to the cell the mouse is clicked in
 	set_selected(curRow, curCol);
 }
@@ -146,11 +146,11 @@ void wdgPaletteWall::keyPressEvent(QKeyEvent* e) {
 			return;
 	}
 }
-void wdgPaletteWall::focusInEvent(QFocusEvent *e) {
+void wdgPaletteWall::focusInEvent(UNUSED(QFocusEvent *e)) {
 	update_cell(curRow, curCol);
 	emit current_changed(curRow, curCol);
 }
-void wdgPaletteWall::focusOutEvent(QFocusEvent *e) {
+void wdgPaletteWall::focusOutEvent(UNUSED(QFocusEvent *e)) {
 	update_cell(curRow, curCol);
 }
 
@@ -353,7 +353,7 @@ void wdgColorToChange::resizeEvent(QResizeEvent *e) {
 	cellh = s.height();
 }
 
-int wdgColorToChange::palette_index(int row, int col) {
+int wdgColorToChange::palette_index(UNUSED(int row), UNUSED(int col)) {
 	return (color);
 }
 void wdgColorToChange::set_current(int row, int col) {
@@ -465,12 +465,12 @@ void wdgPaletteEditor::set_internal_color(int index, QColor qrgb) {
 void wdgPaletteEditor::s_first_paint(void) {
 	set_sliders_spins_lineedit();
 }
-void wdgPaletteEditor::s_palette_wall(int row, int col) {
+void wdgPaletteEditor::s_palette_wall(UNUSED(int row), UNUSED(int col)) {
 	widget_Color_Selected->color = widget_Palette_Wall->current_palette_index();
 	widget_Color_Selected->update_cell(0, 0);
 	set_sliders_spins_lineedit();
 }
-void wdgPaletteEditor::s_palette_ppu(int row, int col) {
+void wdgPaletteEditor::s_palette_ppu(UNUSED(int row), UNUSED(int col)) {
 	widget_Color_Selected->color = widget_Palette_PPU->current_palette_index();
 	widget_Color_Selected->update_cell(0, 0);
 	set_sliders_spins_lineedit();
@@ -519,7 +519,7 @@ void wdgPaletteEditor::s_html(void) {
 	widget_Color_Selected->update_cell_color(0, qrgb);
 	set_sliders_spins_lineedit();
 }
-void wdgPaletteEditor::s_color_reset(bool checked) {
+void wdgPaletteEditor::s_color_reset(UNUSED(bool checked)) {
 	int index = widget_Color_Selected->color;
 	QColor qrgb;
 
@@ -531,7 +531,7 @@ void wdgPaletteEditor::s_color_reset(bool checked) {
 	widget_Color_Selected->update_cell(0, 0);
 	set_sliders_spins_lineedit();
 }
-void wdgPaletteEditor::s_palette_save(bool checked) {
+void wdgPaletteEditor::s_palette_save(UNUSED(bool checked)) {
 	QStringList filters;
 	QString file;
 
@@ -559,7 +559,7 @@ void wdgPaletteEditor::s_palette_save(bool checked) {
 
 	emu_pause(FALSE);
 }
-void wdgPaletteEditor::s_palette_reset(bool checked) {
+void wdgPaletteEditor::s_palette_reset(UNUSED(bool checked)) {
 	int i;
 
 	widget_Palette_Wall->colors_reset();

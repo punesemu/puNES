@@ -69,7 +69,7 @@ void extcl_cpu_wr_mem_LH32(WORD address, BYTE value) {
 		return;
 	}
 }
-BYTE extcl_cpu_rd_mem_LH32(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_LH32(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
 		return (lh32_prg_6000[address & 0x1FFF]);
 	} else if ((address & 0xE000) == 0xC000) {

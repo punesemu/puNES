@@ -49,7 +49,7 @@ enum snd_thread_actions {
 };
 
 #define THIS IXAudio2VoiceCallback *callback
-#define THIS_ IXAudio2VoiceCallback *callback,
+#define THIS_ IXAudio2VoiceCallback *callback
 
 static int  snd_list_find_index_id(_snd_list_dev *list, uTCHAR *id, int size);
 static void snd_list_device_add(_snd_list_dev *list, uTCHAR *id, GUID *guid, uTCHAR *desc);
@@ -58,15 +58,15 @@ static void snd_list_devices_free(_snd_list_dev *list);
 
 static BOOL CALLBACK cb_enum_capture_dev(LPGUID guid, LPCWSTR desc, LPCWSTR module, LPVOID data);
 
-static void INLINE xaudio2_wrbuf(IXAudio2SourceVoice *source, XAUDIO2_BUFFER *x2buf, const BYTE *buffer);
+INLINE static void xaudio2_wrbuf(IXAudio2SourceVoice *source, XAUDIO2_BUFFER *x2buf, const BYTE *buffer);
 
-static void STDMETHODCALLTYPE OnVoiceProcessPassStart(THIS_ UINT32 b);
+static void STDMETHODCALLTYPE OnVoiceProcessPassStart(THIS_, UINT32 b);
 static void STDMETHODCALLTYPE OnVoiceProcessPassEnd(THIS);
 static void STDMETHODCALLTYPE OnStreamEnd(THIS);
-static void STDMETHODCALLTYPE OnBufferStart(THIS_ void *pBufferContext);
-static void STDMETHODCALLTYPE OnBufferEnd(THIS_ void* pBufferContext);
-static void STDMETHODCALLTYPE OnLoopEnd(THIS_ void *pBufferContext);
-static void STDMETHODCALLTYPE OnVoiceError(THIS_ void* pBufferContext, HRESULT Error);
+static void STDMETHODCALLTYPE OnBufferStart(THIS_, void *pBufferContext);
+static void STDMETHODCALLTYPE OnBufferEnd(THIS_, void* pBufferContext);
+static void STDMETHODCALLTYPE OnLoopEnd(THIS_, void *pBufferContext);
+static void STDMETHODCALLTYPE OnVoiceError(THIS_, void* pBufferContext, HRESULT Error);
 
 static struct _snd_thread {
 	HANDLE lock;
@@ -123,14 +123,22 @@ BYTE snd_init(void) {
 		ds8.available = FALSE;
 	} else {
 		ds8.available = TRUE;
-		if ((ds8.DirectSoundCreate8_proc = (HRESULT (WINAPI *)(LPGUID, LPDIRECTSOUND*,LPUNKNOWN))
-				GetProcAddress(ds8.ds8, "DirectSoundCreate8")) == NULL) {
+
+#if defined(__GNUC__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wcast-function-type"
+#endif
+		if ((ds8.DirectSoundCreate8_proc =
+			(HRESULT (WINAPI *)(LPGUID, LPDIRECTSOUND*,LPUNKNOWN))GetProcAddress(ds8.ds8, "DirectSoundCreate8")) == NULL) {
 			ds8.available = FALSE;
 		}
-		if ((ds8.DirectSoundCaptureEnumerateW_proc = (HRESULT (WINAPI *)(LPDSENUMCALLBACKW, LPVOID))
-				GetProcAddress(ds8.ds8, "DirectSoundCaptureEnumerateW")) == NULL) {
+		if ((ds8.DirectSoundCaptureEnumerateW_proc =
+			(HRESULT (WINAPI *)(LPDSENUMCALLBACKW, LPVOID))GetProcAddress(ds8.ds8, "DirectSoundCaptureEnumerateW")) == NULL) {
 			ds8.available = FALSE;
 		}
+#if defined(__GNUC__)
+#pragma GCC diagnostic pop
+#endif
 		if (ds8.available == FALSE) {
 			fprintf(stderr, "DirectSound: System doesn't appear to have DS8.");
 		}
@@ -545,14 +553,14 @@ static void snd_list_devices_free(_snd_list_dev *list) {
 	list->devices = NULL;
 }
 
-static BOOL CALLBACK cb_enum_capture_dev(LPGUID guid, LPCWSTR desc, LPCWSTR module, LPVOID data) {
+static BOOL CALLBACK cb_enum_capture_dev(LPGUID guid, LPCWSTR desc, UNUSED(LPCWSTR module), UNUSED(LPVOID data)) {
 	if ((guid != NULL) && (desc != NULL) && (ustrlen(desc) != 0)) {
 		snd_list_device_add(&snd_list.capture, NULL, guid, (uTCHAR *)desc);
 	}
 	return (TRUE);
 }
 
-static void INLINE xaudio2_wrbuf(IXAudio2SourceVoice *source, XAUDIO2_BUFFER *x2buf, const BYTE *buffer) {
+INLINE static void xaudio2_wrbuf(IXAudio2SourceVoice *source, XAUDIO2_BUFFER *x2buf, const BYTE *buffer) {
 	x2buf->pAudioData = buffer;
 
 	if(IXAudio2SourceVoice_SubmitSourceBuffer(source, x2buf, NULL) != S_OK) {
@@ -560,10 +568,10 @@ static void INLINE xaudio2_wrbuf(IXAudio2SourceVoice *source, XAUDIO2_BUFFER *x2
 	}
 }
 
-static void STDMETHODCALLTYPE OnVoiceProcessPassStart(THIS_ UINT32 b) {}
-static void STDMETHODCALLTYPE OnVoiceProcessPassEnd(THIS) {}
-static void STDMETHODCALLTYPE OnStreamEnd(THIS) {}
-static void STDMETHODCALLTYPE OnBufferStart(THIS_ void *pBufferContext) {
+static void STDMETHODCALLTYPE OnVoiceProcessPassStart(UNUSED(THIS_), UNUSED(UINT32 b)) {}
+static void STDMETHODCALLTYPE OnVoiceProcessPassEnd(UNUSED(THIS)) {}
+static void STDMETHODCALLTYPE OnStreamEnd(UNUSED(THIS)) {}
+static void STDMETHODCALLTYPE OnBufferStart(UNUSED(THIS_), UNUSED(void *pBufferContext)) {
 	WORD len = xaudio2.buffer.AudioBytes;
 	int avail = xaudio2.buffer.PlayLength;
 
@@ -623,9 +631,9 @@ static void STDMETHODCALLTYPE OnBufferStart(THIS_ void *pBufferContext) {
 
 	snd_thread.in_run = FALSE;
 }
-static void STDMETHODCALLTYPE OnBufferEnd(THIS_ void *pBufferContext) {}
-static void STDMETHODCALLTYPE OnLoopEnd(THIS_ void *pBufferContext) {}
-static void STDMETHODCALLTYPE OnVoiceError(THIS_ void* pBufferContext, HRESULT Error) {}
+static void STDMETHODCALLTYPE OnBufferEnd(UNUSED(THIS_), UNUSED(void *pBufferContext)) {}
+static void STDMETHODCALLTYPE OnLoopEnd(UNUSED(THIS_), UNUSED(void *pBufferContext)) {}
+static void STDMETHODCALLTYPE OnVoiceError(UNUSED(THIS_), UNUSED(void* pBufferContext), UNUSED(HRESULT Error)) {}
 
 #undef THIS
 #undef THIS_

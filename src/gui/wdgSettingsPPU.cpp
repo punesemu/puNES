@@ -83,25 +83,25 @@ void wdgSettingsPPU::lag_counter_update(void) {
 	lineEdit_Lag_Counter->setText(QString("%1").arg(tas.total_lag_frames));
 }
 
-void wdgSettingsPPU::s_hide_sprites(bool checked) {
+void wdgSettingsPPU::s_hide_sprites(UNUSED(bool checked)) {
 	emu_thread_pause();
 	cfg->hide_sprites = !cfg->hide_sprites;
 	emu_thread_continue();
 	update_widget();
 }
-void wdgSettingsPPU::s_hide_background(bool checked) {
+void wdgSettingsPPU::s_hide_background(UNUSED(bool checked)) {
 	emu_thread_pause();
 	cfg->hide_background = !cfg->hide_background;
 	emu_thread_continue();
 	update_widget();
 }
-void wdgSettingsPPU::s_unlimited_sprites(bool checked) {
+void wdgSettingsPPU::s_unlimited_sprites(UNUSED(bool checked)) {
 	emu_thread_pause();
 	cfg->unlimited_sprites = !cfg->unlimited_sprites;
 	emu_thread_continue();
 	update_widget();
 }
-void wdgSettingsPPU::s_ppu_overclock(bool checked) {
+void wdgSettingsPPU::s_ppu_overclock(UNUSED(bool checked)) {
 	emu_thread_pause();
 	cfg->ppu_overclock = !cfg->ppu_overclock;
 	ppu_overclock(TRUE);
@@ -109,7 +109,7 @@ void wdgSettingsPPU::s_ppu_overclock(bool checked) {
 	settings_pgs_save();
 	update_widget();
 }
-void wdgSettingsPPU::s_disable_dmc_control(bool checked) {
+void wdgSettingsPPU::s_disable_dmc_control(UNUSED(bool checked)) {
 	emu_thread_pause();
 	cfg->ppu_overclock_dmc_control_disabled = !cfg->ppu_overclock_dmc_control_disabled;
 	emu_thread_continue();
@@ -132,7 +132,7 @@ void wdgSettingsPPU::s_overclock_pr_slines(int i) {
 	settings_pgs_save();
 	update_widget();
 }
-void wdgSettingsPPU::s_lag_counter_reset(bool checked) {
+void wdgSettingsPPU::s_lag_counter_reset(UNUSED(bool checked)) {
 	emu_thread_pause();
 	tas.total_lag_frames = 0;
 	emu_thread_continue();

@@ -69,8 +69,9 @@
 	WORD PCBREAK = 0xC425;
 #endif
 
-static void emu_frame_sleep(void);
-static void emu_frame_pause_sleep(void);
+INLINE static void emu_frame_sleep(void);
+INLINE static void emu_frame_pause_sleep(void);
+
 static BYTE emu_ctrl_if_rom_exist(void);
 static uTCHAR *emu_ctrl_rom_ext(uTCHAR *file);
 static void emu_recent_roms_add(BYTE *add, uTCHAR *file);
@@ -929,7 +930,7 @@ void emu_ctrl_doublebuffer(void) {
 	}
 }
 
-static INLINE void emu_frame_sleep(void) {
+INLINE static void emu_frame_sleep(void) {
 	double diff;
 	double now = gui_get_ms();
 
@@ -943,7 +944,7 @@ static INLINE void emu_frame_sleep(void) {
 	}
 	fps.frame.expected_end += fps.frame.estimated_ms;
 }
-static INLINE void emu_frame_pause_sleep(void) {
+INLINE static void emu_frame_pause_sleep(void) {
 	double diff;
 	double now = gui_get_ms();
 	const double estimated_ms = (1000.0f / 30.f);

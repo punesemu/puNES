@@ -27,7 +27,7 @@ void map_init_203(void) {
 		extcl_cpu_wr_mem_203(0x8000, 0);
 	}
 }
-void extcl_cpu_wr_mem_203(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_203(UNUSED(WORD address), BYTE value) {
 	BYTE save = value;
 	DBWORD bank;
 

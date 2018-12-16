@@ -25,8 +25,6 @@ static double high_resolution_ms(void);
 static int __nsleep(const struct timespec *req, struct timespec *rem);
 
 void gui_init(int *argc, char **argv) {
-	//setenv("QT_NO_GLIB", "1", 1);
-
 	memset(&gui, 0, sizeof(gui));
 	qt = {};
 
@@ -81,7 +79,7 @@ void gui_init(int *argc, char **argv) {
 	gui_get_ms = high_resolution_ms;
 }
 void gui_sleep(double ms) {
-	struct timespec req = { 0 }, rem = { 0 };
+	struct timespec req = {}, rem = {};
 	time_t sec;
 
 	if (ms <= 0) {

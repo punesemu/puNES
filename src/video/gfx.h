@@ -16,12 +16,6 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-/* definizione funzione virtuale */
-#if !defined (gfx_filter_function)
-#define gfx_filter_function(name)\
-	void name(void *palette, uint32_t pitch, void *pix, WORD width, WORD height)
-#endif
-
 #ifndef GFX_H_
 #define GFX_H_
 
@@ -126,9 +120,18 @@ EXTERNC struct _gfx {
 	uTCHAR last_shader_file[LENGTH_FILE_NAME_LONG];
 	_viewport vp;
 	struct _gfx_filter {
-		gfx_filter_function((*func));
-		BYTE factor;
+		void (*func)(void);
+
 		float width_pixel;
+		BYTE factor;
+
+		struct _gfx_filter_data {
+			void *palette;
+			uint32_t pitch;
+			void *pix;
+			WORD width;
+			WORD height;
+		} data;
 	} filter;
 } gfx;
 

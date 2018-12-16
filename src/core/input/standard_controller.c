@@ -21,7 +21,7 @@
 #include "gui.h"
 #include "tas.h"
 
-static void INLINE input_turbo_buttons_standard_controller(_port *port);
+INLINE static void input_turbo_buttons_standard_controller(_port *port);
 
 void input_wr_standard_controller(BYTE *value, BYTE nport) {
 	if ((r4016.value & 0x01) || ((*value) & 0x01)) {
@@ -43,8 +43,7 @@ void input_add_event_standard_controller(BYTE index) {
 	js_control(&js[index], &port[index]);
 	input_turbo_buttons_standard_controller(&port[index]);
 }
-BYTE input_decode_event_standard_controller(BYTE mode, BYTE autorepeat, DBWORD event, BYTE type,
-		_port *port) {
+BYTE input_decode_event_standard_controller(BYTE mode, UNUSED(BYTE autorepeat), DBWORD event, BYTE type, _port *port) {
 	if (tas.type) {
 		return (EXIT_OK);
 	} else if (event == port->input[type][BUT_A]) {
@@ -121,7 +120,7 @@ BYTE input_decode_event_standard_controller(BYTE mode, BYTE autorepeat, DBWORD e
 	return (EXIT_ERROR);
 }
 
-static void INLINE input_turbo_buttons_standard_controller(_port *port) {
+INLINE static void input_turbo_buttons_standard_controller(_port *port) {
 	if (port->turbo[TURBOA].active) {
 		if (++port->turbo[TURBOA].counter == port->turbo[TURBOA].frequency) {
 			port->data[BUT_A] = PRESSED;

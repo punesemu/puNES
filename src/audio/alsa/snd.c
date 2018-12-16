@@ -69,8 +69,8 @@ static BYTE alsa_playback_hwparams_set(void);
 static BYTE alsa_playback_swparams_set(void);
 
 static void *alsa_thread_loop(void *data);
-static BYTE INLINE alsa_xrun_recovery(snd_pcm_t *handle, int err);
-static void INLINE alsa_wr_buf(void *buffer, snd_pcm_sframes_t avail);
+INLINE static BYTE alsa_xrun_recovery(snd_pcm_t *handle, int err);
+INLINE static void alsa_wr_buf(void *buffer, snd_pcm_sframes_t avail);
 
 static _snd_thread snd_thread;
 static _alsa alsa;
@@ -658,7 +658,7 @@ static BYTE alsa_playback_hwparams_set(void) {
 		fprintf(stderr, "Rate %iHz not available for playback: %s\n", snd.samplerate, snd_strerror(rc));
 		return (EXIT_ERROR);
 	}
-	if (rrate != snd.samplerate) {
+	if (rrate != (unsigned int)snd.samplerate) {
 		fprintf(stderr, "Rate doesn't match (requested %iHz, get %iHz)\n", snd.samplerate, rrate);
 		return (EXIT_ERROR);
 	}
@@ -726,9 +726,9 @@ static BYTE alsa_playback_swparams_set(void) {
 	return (EXIT_OK);
 }
 
-static void *alsa_thread_loop(void *data) {
+static void *alsa_thread_loop(UNUSED(void *data)) {
 	snd_pcm_sframes_t avail;
-	uint32_t len;
+	int32_t len;
 	int rc;
 
 #if !defined (RELEASE)
@@ -791,7 +791,7 @@ static void *alsa_thread_loop(void *data) {
 			cbd.samples_available -= avail;
 
 #if !defined (RELEASE)
-			if (((void*)cbd.write > (void*)cbd.read) && ((void*)cbd.write < (void*)(cbd.read + len))) {
+			if (((void *)cbd.write > (void *)cbd.read) && ((void *)cbd.write < (void *)(cbd.read + len))) {
 				snd.overlap++;
 			}
 #endif
@@ -825,7 +825,7 @@ static void *alsa_thread_loop(void *data) {
 
 	pthread_exit((void *)EXIT_OK);
 }
-static BYTE INLINE alsa_xrun_recovery(snd_pcm_t *handle, int err) {
+INLINE static BYTE alsa_xrun_recovery(snd_pcm_t *handle, int err) {
 	if (err == -EPIPE) {
 		err = snd_pcm_prepare(handle);
 		if (err < 0) {
@@ -848,7 +848,7 @@ static BYTE INLINE alsa_xrun_recovery(snd_pcm_t *handle, int err) {
 	}
 	return (EXIT_OK);
 }
-static void INLINE alsa_wr_buf(void *buffer, snd_pcm_sframes_t avail) {
+INLINE static void alsa_wr_buf(void *buffer, snd_pcm_sframes_t avail) {
 	int rc;
 
 	if ((rc = alsa.snd_writei(alsa.playback, buffer, avail)) < 0) {

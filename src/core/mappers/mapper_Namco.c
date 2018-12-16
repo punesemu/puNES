@@ -288,7 +288,7 @@ void extcl_cpu_wr_mem_Namco_163(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_Namco_163(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_Namco_163(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if ((address < 0x4800) || (address >= 0x6000)) {
 		return (openbus);
 	}

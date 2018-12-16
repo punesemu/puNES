@@ -1034,7 +1034,7 @@ struct Scaler6x : public ColorGradient
 
 struct ColorDistanceRGB
 {
-    static double dist(uint32_t pix1, uint32_t pix2, double luminanceWeight)
+    static double dist(uint32_t pix1, uint32_t pix2, UNUSED(double luminanceWeight))
     {
         return DistYCbCrBuffer::dist(pix1, pix2);
 
@@ -1046,7 +1046,7 @@ struct ColorDistanceRGB
 
 struct ColorDistanceARGB
 {
-    static double dist(uint32_t pix1, uint32_t pix2, double luminanceWeight)
+    static double dist(uint32_t pix1, uint32_t pix2, UNUSED(double luminanceWeight))
     {
         const double a1 = getAlpha(pix1) / 255.0 ;
         const double a2 = getAlpha(pix2) / 255.0 ;

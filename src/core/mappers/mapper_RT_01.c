@@ -25,7 +25,7 @@ void map_init_RT_01(void) {
 
 	info.mapper.extend_rd = TRUE;
 }
-BYTE extcl_cpu_rd_mem_RT_01(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_RT_01(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if(((address >= 0xCE80) && (address < 0xCF00)) || ((address >= 0xFE80) && (address < 0xFF00))) {
 		return 0xF2 | (rand() & 0x0D);
 	}

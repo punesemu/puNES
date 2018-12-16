@@ -21,7 +21,7 @@
 #include "conf.h"
 #include "vs_system.h"
 
-static void INLINE _input_rd_reg_vs(BYTE *value, BYTE nport);
+INLINE static void _input_rd_reg_vs(BYTE *value, BYTE nport);
 
 BYTE input_wr_reg_vs(BYTE value) {
 	vs_system.shared_mem = value & 0x02;
@@ -33,7 +33,7 @@ BYTE input_wr_reg_vs(BYTE value) {
 	// restituisco il nuovo valore del $4016
 	return (value);
 }
-BYTE input_rd_reg_vs_r4016(BYTE openbus, BYTE nport) {
+BYTE input_rd_reg_vs_r4016(UNUSED(BYTE openbus), BYTE nport) {
 	BYTE value = 0;
 
 	_input_rd_reg_vs(&value, !nport);
@@ -53,7 +53,7 @@ BYTE input_rd_reg_vs_r4016(BYTE openbus, BYTE nport) {
 			(vs_system.coins.service ? 0x04 : 0x00) |
 			(value & 0x01));
 }
-BYTE input_rd_reg_vs_r4017(BYTE openbus, BYTE nport) {
+BYTE input_rd_reg_vs_r4017(UNUSED(BYTE openbus), BYTE nport) {
 	BYTE value = 0;
 
 	vs_system.watchdog.timer = 0;
@@ -69,7 +69,7 @@ BYTE input_rd_reg_vs_r4017(BYTE openbus, BYTE nport) {
 	return ((cfg->dipswitch & 0xFC) | (value & 0x01));
 }
 
-static void INLINE _input_rd_reg_vs(BYTE *value, BYTE nport) {
+INLINE static void _input_rd_reg_vs(BYTE *value, BYTE nport) {
 	port_funct[nport].input_rd(value, nport, 0);
 
 	// se avviene un DMA del DMC all'inizio

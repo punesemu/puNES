@@ -22,7 +22,7 @@
 #define put_pixel(type, p0, p1)\
 	*(type *) (dstpix + p0 + p1) = (type) pixel
 
-static void INLINE scale_surface1x(uint32_t *palette, uint32_t pitch, void *pix);
+INLINE static void scale_surface1x(uint32_t *palette, uint32_t pitch, void *pix);
 
 static struct _scl {
 	WORD sx;
@@ -34,7 +34,7 @@ static struct _scl {
 	WORD lines;
 } scl;
 
-gfx_filter_function(scale_surface) {
+void scale_surface(void) {
 	scl.sx = 0;
 	scl.sy = 0;
 	scl.oy = 0;
@@ -42,9 +42,10 @@ gfx_filter_function(scale_surface) {
 	scl.rows = SCR_ROWS;
 	scl.startx = 0;
 
-	scale_surface1x((uint32_t *) palette, pitch, pix);
+	scale_surface1x((uint32_t *)gfx.filter.data.palette, gfx.filter.data.pitch, gfx.filter.data.pix);
 }
-void INLINE scale_surface1x(uint32_t *palette, uint32_t pitch, void *pix) {
+
+INLINE void scale_surface1x(uint32_t *palette, uint32_t pitch, void *pix) {
 	const uint32_t dstpitch = pitch;
 	uint8_t *dstpix = (uint8_t *) pix;
 	uint32_t TH0, TW0;

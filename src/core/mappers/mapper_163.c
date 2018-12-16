@@ -94,7 +94,7 @@ void extcl_cpu_wr_mem_163(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_163(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_163(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	switch (address & 0x7700) {
 		case 0x5000:
 		case 0x5200:

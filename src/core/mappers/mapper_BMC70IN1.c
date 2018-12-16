@@ -106,7 +106,7 @@ void extcl_cpu_wr_mem_BMC70IN1(WORD address, BYTE value) {
 	}
 	map_prg_rom_8k_update();
 }
-BYTE extcl_cpu_rd_mem_BMC70IN1(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_BMC70IN1(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if ((address >= 0x8000) && (bmc70in1.reg[0] == 0x10)) {
 		address = (address & 0xFFF0) | bmc70in1_reset;
 		return (prg_rom_rd(address));

@@ -23,7 +23,7 @@
 #include "cpu.h"
 #include "save_slot.h"
 
-static void INLINE ks7032_update(void);
+INLINE static void ks7032_update(void);
 
 BYTE *ks7032_prg_6000;
 
@@ -76,7 +76,7 @@ void extcl_cpu_wr_mem_KS7032(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_KS7032(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_KS7032(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
 		return (ks7032_prg_6000[address & 0x1FFF]);
 	}
@@ -107,7 +107,8 @@ void extcl_cpu_every_cycle_KS7032(void) {
 		irq.high |= EXT_IRQ;
 	}
 }
-static void INLINE ks7032_update(void) {
+
+INLINE static void ks7032_update(void) {
 	WORD value;
 
 	value = ks7032.reg[4];

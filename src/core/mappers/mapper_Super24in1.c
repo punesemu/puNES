@@ -23,8 +23,8 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-static void INLINE super24in1_update_prg(void);
-static void INLINE super24in1_update_chr(void);
+INLINE static void super24in1_update_prg(void);
+INLINE static void super24in1_update_chr(void);
 
 #define super24in1_prg_value(bnk)\
 	(super24in1.prg_map[bnk] & super24in1_mask[super24in1.reg[0] & 0x07]) | (super24in1.reg[1] << 1)
@@ -175,7 +175,7 @@ void extcl_wr_chr_Super24in1(WORD address, BYTE value) {
 	}
 }
 
-static void INLINE super24in1_update_prg(void) {
+INLINE static void super24in1_update_prg(void) {
 	BYTE chip;
 	WORD value;
 
@@ -205,7 +205,7 @@ static void INLINE super24in1_update_prg(void) {
 
 	map_prg_rom_8k_update();
 }
-static void INLINE super24in1_update_chr(void) {
+INLINE static void super24in1_update_chr(void) {
 	BYTE chip, i;
 	WORD value;
 

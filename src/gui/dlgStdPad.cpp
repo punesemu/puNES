@@ -443,7 +443,7 @@ void dlgStdPad::s_combobox_joy_activated(int index) {
 	js_set_id(&data.cfg.port->joy_id, id);
 	update_dialog();
 }
-void dlgStdPad::s_input_clicked(bool checked) {
+void dlgStdPad::s_input_clicked(UNUSED(bool checked)) {
 	int vbutton = QVariant(((QPushButton *)sender())->property("myVbutton")).toInt();
 	int type;
 
@@ -474,7 +474,7 @@ void dlgStdPad::s_input_clicked(bool checked) {
 		js_press_event();
 	}
 }
-void dlgStdPad::s_unset_clicked(bool checked) {
+void dlgStdPad::s_unset_clicked(UNUSED(bool checked)) {
 	int vbutton = QVariant(((QPushButton *)sender())->property("myVbutton")).toInt();
 	int type;
 
@@ -486,7 +486,7 @@ void dlgStdPad::s_unset_clicked(bool checked) {
 
 	findChild<QPushButton *>("pushButton_" + SPT(type) + "_" + SPB(vbutton))->setText("NULL");
 }
-void dlgStdPad::s_in_sequence_clicked(bool checked) {
+void dlgStdPad::s_in_sequence_clicked(UNUSED(bool checked)) {
 	data.seq.type = QVariant(((QPushButton *)sender())->property("myType")).toInt();
 
 	info_entry_print(data.seq.type, "");
@@ -494,7 +494,7 @@ void dlgStdPad::s_in_sequence_clicked(bool checked) {
 	data.seq.counter = -1;
 	data.seq.timer->start(150);
 }
-void dlgStdPad::s_unset_all_clicked(bool checked) {
+void dlgStdPad::s_unset_all_clicked(UNUSED(bool checked)) {
 	int type = QVariant(((QPushButton *)sender())->property("myType")).toInt();
 
 	info_entry_print(type, "");
@@ -503,7 +503,7 @@ void dlgStdPad::s_unset_all_clicked(bool checked) {
 		findChild<QPushButton *>("pushButton_" + SPT(type) + "_unset_" + SPB(i))->click();
 	}
 }
-void dlgStdPad::s_defaults_clicked(bool checked) {
+void dlgStdPad::s_defaults_clicked(UNUSED(bool checked)) {
 	int type = QVariant(((QPushButton *)sender())->property("myType")).toInt();
 
 	info_entry_print(type, "");
@@ -593,7 +593,7 @@ void dlgStdPad::s_pad_in_sequence_timer(void) {
 	bt->setEnabled(true);
 	bt->click();
 }
-void dlgStdPad::s_apply_clicked(bool checked) {
+void dlgStdPad::s_apply_clicked(UNUSED(bool checked)) {
 	_cfg_port *cfg_port = ((_cfg_port *)((QPushButton *)sender())->property(
 		"myPointer").value<void *>());
 
@@ -601,6 +601,6 @@ void dlgStdPad::s_apply_clicked(bool checked) {
 
 	close();
 }
-void dlgStdPad::s_discard_clicked(bool checked) {
+void dlgStdPad::s_discard_clicked(UNUSED(bool checked)) {
 	close();
 }

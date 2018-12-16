@@ -75,10 +75,19 @@ IsWindowsVersionOrGreater(WORD wMajorVersion, WORD wMinorVersion, WORD wServiceP
 
     return VerifyVersionInfoW(&osvi, VER_MAJORVERSION | VER_MINORVERSION | VER_SERVICEPACKMAJOR, dwlConditionMask) != FALSE;*/
 
-    RTL_OSVERSIONINFOEXW verInfo = { 0 };
+    RTL_OSVERSIONINFOEXW verInfo;
+
+    RtlSecureZeroMemory(&verInfo, sizeof( verInfo ));
     verInfo.dwOSVersionInfoSize = sizeof( verInfo );
 
+#if defined(__GNUC__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wcast-function-type"
+#endif
     static auto RtlGetVersion = (fnRtlGetVersion)GetProcAddress( GetModuleHandleW( L"ntdll.dll" ), "RtlGetVersion" );
+#if defined(__GNUC__)
+#pragma GCC diagnostic pop
+#endif
 
     if (RtlGetVersion != 0 && RtlGetVersion( (PRTL_OSVERSIONINFOW)&verInfo ) == 0)
     {
@@ -175,7 +184,7 @@ IsWindows10OrGreater()
 VERSIONHELPERAPI
 IsWindowsServer()
 {
-    OSVERSIONINFOEXW osvi = { sizeof( osvi ), 0, 0, 0, 0, { 0 }, 0, 0, 0, VER_NT_WORKSTATION };
+    OSVERSIONINFOEXW osvi = { sizeof( osvi ), 0, 0, 0, 0, { 0 }, 0, 0, 0, VER_NT_WORKSTATION, 0 };
     DWORDLONG        const dwlConditionMask = VerSetConditionMask( 0, VER_PRODUCT_TYPE, VER_EQUAL );
 
     return !VerifyVersionInfoW( &osvi, VER_PRODUCT_TYPE, dwlConditionMask );

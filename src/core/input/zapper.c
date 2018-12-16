@@ -32,7 +32,7 @@ struct _zapper {
 void input_init_zapper(void) {
 	memset(&zapper, 0x00, sizeof(zapper));
 }
-void input_rd_zapper(BYTE *value, BYTE nport, BYTE shift) {
+void input_rd_zapper(BYTE *value, BYTE nport, UNUSED(BYTE shift)) {
 	int x_zapper = -1, y_zapper = -1;
 	int x_rect, y_rect;
 	int count = 0;
@@ -94,7 +94,7 @@ void input_rd_zapper(BYTE *value, BYTE nport, BYTE shift) {
 	(*value) |= zapper[nport].data;
 }
 
-void input_rd_zapper_vs(BYTE *value, BYTE nport, BYTE shift) {
+void input_rd_zapper_vs(BYTE *value, BYTE nport, UNUSED(BYTE shift)) {
 	int x_zapper = -1, y_zapper = -1;
 	int x_rect, y_rect;
 	int count = 0;

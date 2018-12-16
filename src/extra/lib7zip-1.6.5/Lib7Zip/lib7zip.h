@@ -217,6 +217,6 @@ public:
 
 //set locale used by lib7zip, if NULL or not set, lib7zip will use user default locale
 const char * GetLib7ZipLocale();
-const char * SetLib7ZipLocale(const char * loc);
+const void   SetLib7ZipLocale(const char * loc);
 
 #endif

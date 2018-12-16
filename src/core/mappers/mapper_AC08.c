@@ -70,7 +70,7 @@ void extcl_cpu_wr_mem_AC08(WORD address, BYTE value) {
 		return;
 	}
 }
-BYTE extcl_cpu_rd_mem_AC08(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_AC08(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
 		return (ac08_prg_6000[address & 0x1FFF]);
 	}

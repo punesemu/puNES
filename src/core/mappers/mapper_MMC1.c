@@ -23,10 +23,10 @@
 #include "cpu.h"
 #include "save_slot.h"
 
-static void INLINE ctrl_reg_MMC1(void);
-static void INLINE swap_prg_rom_MMC1(void);
-static void INLINE swap_chr0_MMC1(void);
-static void INLINE swap_chr1_MMC1(void);
+INLINE static void ctrl_reg_MMC1(void);
+INLINE static void swap_prg_rom_MMC1(void);
+INLINE static void swap_chr0_MMC1(void);
+INLINE static void swap_chr1_MMC1(void);
 
 enum MMC1_regs { CTRL, CHR0, CHR1, PRG0 };
 
@@ -211,7 +211,7 @@ BYTE extcl_save_mapper_MMC1(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-static void INLINE ctrl_reg_MMC1(void) {
+INLINE static void ctrl_reg_MMC1(void) {
 	mmc1.prg_mode = (mmc1.ctrl & 0x0C) >> 2;
 	mmc1.chr_mode = (mmc1.ctrl & 0x10) >> 4;
 	switch (mmc1.ctrl & 0x03) {
@@ -231,7 +231,7 @@ static void INLINE ctrl_reg_MMC1(void) {
 	swap_chr0_MMC1();
 	swap_chr1_MMC1();
 }
-static void INLINE swap_prg_rom_MMC1(void) {
+INLINE static void swap_prg_rom_MMC1(void) {
 	BYTE value = mmc1.prg0;
 
 	/* SEROM, SHROM, SH1ROM use a fixed 32k PRG ROM with no banking support */
@@ -266,7 +266,7 @@ static void INLINE swap_prg_rom_MMC1(void) {
 	}
 	map_prg_rom_8k_update();
 }
-static void INLINE swap_chr0_MMC1(void) {
+INLINE static void swap_chr0_MMC1(void) {
 	DBWORD value;
 
 	chr_reg(mmc1.chr0)
@@ -303,7 +303,7 @@ static void INLINE swap_chr0_MMC1(void) {
 	chr.bank_1k[6] = chr_chip_byte_pnt(0, value | 0x1800);
 	chr.bank_1k[7] = chr_chip_byte_pnt(0, value | 0x1C00);
 }
-static void INLINE swap_chr1_MMC1(void) {
+INLINE static void swap_chr1_MMC1(void) {
 	if (mmc1.chr_mode) {
 		DBWORD value;
 

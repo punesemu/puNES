@@ -36,7 +36,7 @@ void map_init_GS_2013(void) {
 
 	extcl_cpu_wr_mem_GS_2013(0x0000, 0xFF);
 }
-void extcl_cpu_wr_mem_GS_2013(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_GS_2013(UNUSED(WORD address), BYTE value) {
 	BYTE chip = (value >> 3) & 0x01;
 
 	_control_bank(chip, info.prg.max_chips)
@@ -44,7 +44,7 @@ void extcl_cpu_wr_mem_GS_2013(WORD address, BYTE value) {
 	map_prg_rom_8k_chip(4, 0, value, chip);
 	map_prg_rom_8k_update();
 }
-BYTE extcl_cpu_rd_mem_GS_2013(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_GS_2013(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
 		return (gs_2013_prg_6000[address & 0x1FFF]);
 	}

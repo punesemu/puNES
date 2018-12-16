@@ -25,7 +25,6 @@ void input_wr_standard_controller(BYTE *value, BYTE nport);
 void input_rd_standard_controller(BYTE *value, BYTE nport, BYTE shift);
 
 void input_add_event_standard_controller(BYTE index);
-BYTE input_decode_event_standard_controller(BYTE mode, BYTE autorepeat, DBWORD event, BYTE type,
-		_port *port);
+BYTE input_decode_event_standard_controller(BYTE mode, BYTE autorepeat, DBWORD event, BYTE type, _port *port);
 
 #endif /* INPUT_STANDARD_CONTROLLER_H_ */

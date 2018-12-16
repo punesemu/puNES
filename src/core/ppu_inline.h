@@ -21,9 +21,9 @@
 
 #include "external_calls.h"
 
-static BYTE INLINE ppu_rd_mem(WORD address);
+INLINE static BYTE ppu_rd_mem(WORD address);
 
-static BYTE INLINE ppu_rd_mem(WORD address) {
+INLINE static BYTE ppu_rd_mem(WORD address) {
 	if (extcl_rd_ppu) {
 		/*
 		 * utilizzato dalle mappers :

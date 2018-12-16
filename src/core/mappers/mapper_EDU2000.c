@@ -35,7 +35,7 @@ void map_init_EDU2000(void) {
 	info.mapper.extend_rd = TRUE;
 	mirroring_SCR0();
 }
-void extcl_cpu_wr_mem_EDU2000(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_EDU2000(UNUSED(WORD address), BYTE value) {
 	BYTE save = value;
 
 	// 0x6000 - 0x7000
@@ -52,7 +52,7 @@ void extcl_cpu_wr_mem_EDU2000(WORD address, BYTE value) {
 
 	edu2000.reg = value;
 }
-BYTE extcl_cpu_rd_mem_EDU2000(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_EDU2000(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if (address < 0x6000) {
 		return (prg.ram.data[address & 0x1FFF]);
 	}

@@ -19,14 +19,12 @@
 #include "video/filters/xBRZ.h"
 #include "ppu.h"
 
-void xBRZ_init(void) {
-	;
+void xBRZ_init(void) {}
+void xBRZ(void) {
+	xbrz_scale(gfx.filter.factor, screen.rd->data, (uint32_t *)gfx.filter.data.pix, (uint32_t *)gfx.filter.data.palette,
+		SCR_ROWS, SCR_LINES);
 }
-gfx_filter_function(xBRZ) {
-	xbrz_scale(gfx.filter.factor, screen.rd->data, (uint32_t *) pix, (uint32_t *) palette, SCR_ROWS,
-			SCR_LINES);
-}
-gfx_filter_function(xBRZ_mt) {
-	xbrz_scale_mt(gfx.filter.factor, screen.rd->data, (uint32_t *) pix, (uint32_t *) palette, SCR_ROWS,
-			SCR_LINES);
+void xBRZ_mt(void) {
+	xbrz_scale_mt(gfx.filter.factor, screen.rd->data, (uint32_t *)gfx.filter.data.pix, (uint32_t *)gfx.filter.data.palette,
+		SCR_ROWS, SCR_LINES);
 }

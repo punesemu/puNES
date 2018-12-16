@@ -60,19 +60,19 @@ void extcl_cpu_wr_mem_Unl1xROM(WORD address, BYTE value) {
 	map_prg_rom_8k_update();
 }
 
-void extcl_cpu_wr_mem_UNROM_180(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_UNROM_180(UNUSED(WORD address), BYTE value) {
 	control_bank(info.prg.rom[0].max.banks_16k)
 	map_prg_rom_8k(2, 2, value);
 	map_prg_rom_8k_update();
 }
 
-void extcl_cpu_wr_mem_UnlROM(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_UnlROM(UNUSED(WORD address), BYTE value) {
 	control_bank_with_AND(0x0F, info.prg.rom[0].max.banks_16k)
 	map_prg_rom_8k(2, 0, value);
 	map_prg_rom_8k_update();
 }
 
-void extcl_cpu_wr_mem_UNROM_BK2(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_UNROM_BK2(UNUSED(WORD address), BYTE value) {
 	if (value & 0x80) {
 		mirroring_SCR1();
 	}

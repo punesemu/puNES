@@ -102,12 +102,12 @@ void dlgUncomp::closeEvent(QCloseEvent *event) {
 	QDialog::closeEvent(event);
 }
 
-void dlgUncomp::s_ok_clicked(bool checked) {
+void dlgUncomp::s_ok_clicked(UNUSED(bool checked)) {
 	QModelIndexList indexList = tableWidget_Selection->selectionModel()->selectedIndexes();
 
 	selected = indexList.first().row();
 	close();
 }
-void dlgUncomp::s_none_clicked(bool checked) {
+void dlgUncomp::s_none_clicked(UNUSED(bool checked)) {
 	close();
 }

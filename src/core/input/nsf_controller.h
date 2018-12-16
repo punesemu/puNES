@@ -22,7 +22,6 @@
 #include "../input.h"
 
 void input_add_event_nsf_controller(BYTE index);
-BYTE input_decode_event_nsf_controller(BYTE mode, BYTE autorepeat, DBWORD event, BYTE type,
-		_port *port);
+BYTE input_decode_event_nsf_controller(BYTE mode, BYTE autorepeat, DBWORD event, BYTE type, _port *port);
 
 #endif /* NSF_CONTROLLER_H_ */

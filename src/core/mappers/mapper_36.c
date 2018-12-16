@@ -83,7 +83,7 @@ void extcl_cpu_wr_mem_36(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_36(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_36(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	switch (address & 0xE103) {
 		case 0x4100:
 		case 0x4101:

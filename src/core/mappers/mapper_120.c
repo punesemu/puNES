@@ -50,7 +50,7 @@ void extcl_cpu_wr_mem_120(WORD address, BYTE value) {
 		m120.prg_ram_rd = prg_chip_byte_pnt(0, value << 13);
 	}
 }
-BYTE extcl_cpu_rd_mem_120(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_120(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if ((address < 0x6000) || (address > 0x7FFF)) {
 		return (openbus);
 	}

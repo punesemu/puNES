@@ -566,24 +566,24 @@ void gfx_text_blit(_txt_element *ele, _txt_rect *rect) {
 }
 
 void gfx_apply_filter(void) {
-	void *palette = (void *)gfx.palette;
+	gfx.filter.data.palette = (void *)gfx.palette;
 
 	//applico la paletta adeguata.
 	if (cfg->filter == NTSC_FILTER) {
-		palette = NULL;
+		gfx.filter.data.palette = NULL;
 	}
 	if (info.no_rom | info.turn_off) {
 		if (cfg->filter == NTSC_FILTER) {
-			palette = turn_off_effect.ntsc;
+			gfx.filter.data.palette = turn_off_effect.ntsc;
 		} else {
-			palette = (void *)turn_off_effect.palette;
+			gfx.filter.data.palette = (void *)turn_off_effect.palette;
 		}
 	} else if (info.pause) {
 		if (!cfg->disable_sepia_color) {
 			if (cfg->filter == NTSC_FILTER) {
-				palette = pause_effect.ntsc;
+				gfx.filter.data.palette = pause_effect.ntsc;
 			} else {
-				palette = pause_effect.palette;
+				gfx.filter.data.palette = pause_effect.palette;
 			}
 		}
 	}
@@ -591,11 +591,11 @@ void gfx_apply_filter(void) {
 	gfx_thread_lock();
 
 	// applico l'effetto desiderato
-	gfx.filter.func(palette,
-		opengl.surface.pitch,
-		opengl.surface.pixels,
-		opengl.surface.w,
-		opengl.surface.h);
+	gfx.filter.data.pitch = opengl.surface.pitch;
+	gfx.filter.data.pix = opengl.surface.pixels;
+	gfx.filter.data.width = opengl.surface.w;
+	gfx.filter.data.height = opengl.surface.h;
+	gfx.filter.func();
 
 	gfx_thread_unlock();
 	gui_screen_update();

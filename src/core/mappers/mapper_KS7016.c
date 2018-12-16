@@ -21,7 +21,7 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
-static void INLINE ks7016_6000_update(void);
+INLINE static void ks7016_6000_update(void);
 
 BYTE *ks7016_prg_6000;
 
@@ -52,7 +52,7 @@ void map_init_KS7016(void) {
 	ks7016.reg = 8;
 	ks7016_6000_update();
 }
-void extcl_cpu_wr_mem_KS7016(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_KS7016(WORD address, UNUSED(BYTE value)) {
 	WORD mask = (address & 0x30);
 
 	switch (address & 0xD943) {
@@ -74,7 +74,7 @@ void extcl_cpu_wr_mem_KS7016(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_KS7016(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_KS7016(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
 		return (ks7016_prg_6000[address & 0x1FFF]);
 	}
@@ -90,7 +90,7 @@ BYTE extcl_save_mapper_KS7016(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-static void INLINE ks7016_6000_update(void) {
+INLINE static void ks7016_6000_update(void) {
 	WORD value;
 
 	value = ks7016.reg;

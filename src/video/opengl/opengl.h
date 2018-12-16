@@ -191,7 +191,7 @@ typedef struct _opengl {
 		uint32_t *pixels;
 	} surface;
 	struct _opengl_screen {
-		GLint in_use;
+		GLuint in_use;
 		GLuint index;
 		_texture_simple tex[MAX_PREV + 1];
 	} screen;

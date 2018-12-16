@@ -32,29 +32,30 @@ int burst_phase = 0;
  * sono i parametri WORD **screen_index e
  * Uint32 *palette.
  */
-gfx_filter_function(ntsc_surface) {
+void ntsc_surface(void) {
 	int y;
 
-	if (palette == NULL) {
-		palette = (void *)ntsc;
+	if (gfx.filter.data.palette == NULL) {
+		gfx.filter.data.palette = (void *)ntsc;
 	}
 
-	nes_ntsc_blit((nes_ntsc_t *)palette, screen.rd->data, SCR_ROWS, burst_phase, SCR_ROWS, SCR_LINES, pix, pitch);
+	nes_ntsc_blit((nes_ntsc_t *)gfx.filter.data.palette, screen.rd->data, SCR_ROWS, burst_phase, SCR_ROWS, SCR_LINES,
+		gfx.filter.data.pix, gfx.filter.data.pitch);
 
-	for (y = ((height / gfx.filter.factor) - 1); --y >= 0;) {
-		unsigned char const *in = ((const unsigned char *)pix) + (y * pitch);
-		unsigned char *out = ((unsigned char *)pix) + ((y * gfx.filter.factor) * pitch);
+	for (y = ((gfx.filter.data.height / gfx.filter.factor) - 1); --y >= 0;) {
+		unsigned char const *in = ((const unsigned char *)gfx.filter.data.pix) + (y * gfx.filter.data.pitch);
+		unsigned char *out = ((unsigned char *)gfx.filter.data.pix) + ((y * gfx.filter.factor) * gfx.filter.data.pitch);
 		int n;
 
-		for (n = width; n; --n) {
+		for (n = gfx.filter.data.width; n; --n) {
 			unsigned prev = *(uint32_t *)in;
-			unsigned next = *(uint32_t *)(in + pitch);
+			unsigned next = *(uint32_t *)(in + gfx.filter.data.pitch);
 			/* mix rgb without losing low bits */
 			unsigned mixed = prev + next + ((prev ^ next) & 0x00010101);
 
 			/* darken by 12% */
 			*(uint32_t *)out = prev | 0xFF000000;
-			*(uint32_t *)(out + pitch) = ((mixed >> 1) - (mixed >> 4 & 0x00030703)) | 0xFF000000;
+			*(uint32_t *)(out + gfx.filter.data.pitch) = ((mixed >> 1) - (mixed >> 4 & 0x00030703)) | 0xFF000000;
 
 			in += NES_NTSC_OUT_DEPTH / 8;
 			out += NES_NTSC_OUT_DEPTH / 8;

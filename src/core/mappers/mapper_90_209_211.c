@@ -25,11 +25,11 @@
 #include "save_slot.h"
 #include "ppu_inline.h"
 
-static void INLINE prg_setup_90_209_211(void);
-static void INLINE chr_setup_90_209_211(void);
-static void INLINE nmt_setup_90_209_211(void);
-static void INLINE irq_clock_prescaler_90_209_211(void);
-static void INLINE irq_clock_count_90_209_211(void);
+INLINE static void prg_setup_90_209_211(void);
+INLINE static void chr_setup_90_209_211(void);
+INLINE static void nmt_setup_90_209_211(void);
+INLINE static void irq_clock_prescaler_90_209_211(void);
+INLINE static void irq_clock_count_90_209_211(void);
 
 #define chr_90_209_211(index)\
 	((m90_209_211.chr.low[index] | (m90_209_211.chr.high[index] << 8)) & mask) | base
@@ -224,7 +224,7 @@ void extcl_cpu_wr_mem_90_209_211(WORD address, BYTE value) {
 	}
 	*/
 }
-BYTE extcl_cpu_rd_mem_90_209_211(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_90_209_211(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if (address <= 0x4FFF) {
 		return (openbus);
 	}
@@ -284,7 +284,7 @@ void extcl_cpu_every_cycle_90_209_211(void) {
 		irq_clock_prescaler_90_209_211();
 	}
 }
-void extcl_rd_ppu_90_209_211(WORD address) {
+void extcl_rd_ppu_90_209_211(UNUSED(WORD address)) {
 	if ((m90_209_211.irq.mode & 0x03) == 2) {
 		/*
 		if (lastread != A) {
@@ -365,7 +365,7 @@ void extcl_update_r2006_90_209_211(WORD new_r2006, WORD old_r2006) {
 	}
 }
 
-static void INLINE prg_setup_90_209_211(void) {
+INLINE static void prg_setup_90_209_211(void) {
 	BYTE value, bankmode = ((m90_209_211.mode[3] & 0x06) << 5);
 
 	switch (m90_209_211.mode[0] & 0x07) {
@@ -459,7 +459,7 @@ static void INLINE prg_setup_90_209_211(void) {
 	m90_209_211.m6000.rom_8k = prg_chip_byte_pnt(0, m90_209_211.m6000.prg << 13);
 	map_prg_rom_8k_update();
 }
-static void INLINE chr_setup_90_209_211(void) {
+INLINE static void chr_setup_90_209_211(void) {
 	WORD value, base = 0, mask = 0xFFFF;
 	DBWORD bank;
 
@@ -572,7 +572,7 @@ static void INLINE chr_setup_90_209_211(void) {
 			break;
 	}
 }
-static void INLINE nmt_setup_90_209_211(void) {
+INLINE static void nmt_setup_90_209_211(void) {
 	if (m90_209_211.nmt.extended_mode == TRUE) {
 		WORD value;
 
@@ -609,7 +609,7 @@ static void INLINE nmt_setup_90_209_211(void) {
 		}
 	}
 }
-static void INLINE irq_clock_prescaler_90_209_211(void) {
+INLINE static void irq_clock_prescaler_90_209_211(void) {
 	if ((m90_209_211.irq.mode >> 6) == 1) {
 		if ((++m90_209_211.irq.prescaler & m90_209_211.irq.premask) == 0) {
 			irq_clock_count_90_209_211();
@@ -620,7 +620,7 @@ static void INLINE irq_clock_prescaler_90_209_211(void) {
 		}
 	}
 }
-static void INLINE irq_clock_count_90_209_211(void) {
+INLINE static void irq_clock_count_90_209_211(void) {
 	if ((m90_209_211.irq.mode >> 6) == 1) {
 		if ((++m90_209_211.irq.count == 0) && m90_209_211.irq.active) {
 			irq.high |= EXT_IRQ;

@@ -23,6 +23,6 @@
 #include "video/gfx.h"
 #include "palette.h"
 
-gfx_filter_function(scale_surface);
+void scale_surface(void);
 
 #endif /* SCALE_H_ */

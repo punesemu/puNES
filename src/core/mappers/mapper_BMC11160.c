@@ -24,7 +24,7 @@
 void map_init_BMC11160(void) {
 	EXTCL_CPU_WR_MEM(BMC11160);
 }
-void extcl_cpu_wr_mem_BMC11160(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_BMC11160(UNUSED(WORD address), BYTE value) {
 	DBWORD bank;
 	BYTE save = value;
 

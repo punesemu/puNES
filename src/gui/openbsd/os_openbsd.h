@@ -69,7 +69,7 @@ void gui_init(int *argc, char **argv) {
 	gui_get_ms = high_resolution_ms;
 }
 void gui_sleep(double ms) {
-	struct timespec req = { 0 }, rem = { 0 };
+	struct timespec req = {}, rem = {};
 	time_t sec;
 
 	if (ms <= 0) {

@@ -23,10 +23,10 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-static void INLINE unif8237_update_prg(void);
-static void INLINE unif8237_update_chr(void);
-static void INLINE unif8237a_update_prg(void);
-static void INLINE unif8237a_update_chr(void);
+INLINE static void unif8237_update_prg(void);
+INLINE static void unif8237_update_chr(void);
+INLINE static void unif8237a_update_prg(void);
+INLINE static void unif8237a_update_chr(void);
 
 #define unif8237_prg_8k_a(vl) value = ((unif8237.reg[1] & 0x03) << 5) | (vl & 0x0F) | bnk0
 #define unif8237_prg_8k_b(vl) value = ((unif8237.reg[1] & 0x03) << 5) | (vl & 0x1F)
@@ -224,7 +224,7 @@ BYTE extcl_save_mapper_UNIF8237(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-static void INLINE unif8237_update_prg(void) {
+INLINE static void unif8237_update_prg(void) {
 	BYTE value;
 
 	if (unif8237.reg[0] & 0x40) {
@@ -292,7 +292,7 @@ static void INLINE unif8237_update_prg(void) {
 	}
 	map_prg_rom_8k_update();
 }
-static void INLINE unif8237_update_chr(void) {
+INLINE static void unif8237_update_chr(void) {
 	BYTE i;
 	WORD value;
 
@@ -307,7 +307,7 @@ static void INLINE unif8237_update_chr(void) {
 		chr.bank_1k[i] = chr_chip_byte_pnt(0, value << 10);
 	}
 }
-static void INLINE unif8237a_update_prg(void) {
+INLINE static void unif8237a_update_prg(void) {
 	BYTE value;
 
 	if (unif8237.reg[0] & 0x40) {
@@ -377,7 +377,7 @@ static void INLINE unif8237a_update_prg(void) {
 	}
 	map_prg_rom_8k_update();
 }
-static void INLINE unif8237a_update_chr(void) {
+INLINE static void unif8237a_update_chr(void) {
 	BYTE i;
 	WORD value;
 

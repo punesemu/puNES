@@ -96,9 +96,9 @@ void emu_thread_continue(void) {
 }
 
 #if defined (__unix__)
-static void *emu_thread_loop(void *arg) {
+static void *emu_thread_loop(UNUSED(void *arg)) {
 #elif defined (__WIN32__)
-static DWORD WINAPI emu_thread_loop(void *arg) {
+static DWORD WINAPI emu_thread_loop(UNUSED(void *arg)) {
 #endif
 	// gestione uscita
 	while (TRUE) {

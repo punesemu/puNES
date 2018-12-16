@@ -22,7 +22,7 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
-static void INLINE lh10_update(void);
+INLINE static void lh10_update(void);
 
 BYTE *lh10_prg_6000;
 BYTE *lh10_prg_C000;
@@ -79,7 +79,7 @@ void extcl_cpu_wr_mem_LH10(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_LH10(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_LH10(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	switch (address & 0xF000) {
 		case 0x6000:
 		case 0x7000:
@@ -101,7 +101,7 @@ BYTE extcl_save_mapper_LH10(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-static void INLINE lh10_update(void) {
+INLINE static void lh10_update(void) {
 	WORD value;
 
 	// 0x6000 - 0x7000

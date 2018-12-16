@@ -50,7 +50,7 @@ void wdgSettingsGeneral::changeEvent(QEvent *event) {
 		QWidget::changeEvent(event);
 	}
 }
-void wdgSettingsGeneral::showEvent(QShowEvent *event) {
+void wdgSettingsGeneral::showEvent(UNUSED(QShowEvent *event)) {
 	int dim = label_Mode->size().height() - 10;
 
 	icon_Mode->setPixmap(QIcon(":/icon/icons/mode.svg").pixmap(dim, dim));
@@ -212,7 +212,7 @@ void wdgSettingsGeneral::s_language(int index) {
 
 	mainwin->set_language(lang);
 }
-void wdgSettingsGeneral::s_game_genie_rom_file(bool checked) {
+void wdgSettingsGeneral::s_game_genie_rom_file(UNUSED(bool checked)) {
 	QStringList filters;
 	QString file;
 
@@ -239,11 +239,11 @@ void wdgSettingsGeneral::s_game_genie_rom_file(bool checked) {
 
 	emu_pause(FALSE);
 }
-void wdgSettingsGeneral::s_game_genie_rom_file_clear(bool checked) {
+void wdgSettingsGeneral::s_game_genie_rom_file_clear(UNUSED(bool checked)) {
 	umemset(cfg->gg_rom_file, 0x00, usizeof(cfg->gg_rom_file));
 	update_widget();
 }
-void wdgSettingsGeneral::s_fds_bios_file(bool checked) {
+void wdgSettingsGeneral::s_fds_bios_file(UNUSED(bool checked)) {
 	QStringList filters;
 	QString file;
 
@@ -270,11 +270,11 @@ void wdgSettingsGeneral::s_fds_bios_file(bool checked) {
 
 	emu_pause(FALSE);
 }
-void wdgSettingsGeneral::s_fds_bios_file_clear(bool checked) {
+void wdgSettingsGeneral::s_fds_bios_file_clear(UNUSED(bool checked)) {
 	umemset(cfg->fds_bios_file, 0x00, usizeof(cfg->fds_bios_file));
 	update_widget();
 }
-void wdgSettingsGeneral::s_save_battery_every_tot(bool checked) {
+void wdgSettingsGeneral::s_save_battery_every_tot(UNUSED(bool checked)) {
 	emu_thread_pause();
 	if (!cfg->save_battery_ram_file) {
 		info.bat_ram_frames = 0;
@@ -282,9 +282,9 @@ void wdgSettingsGeneral::s_save_battery_every_tot(bool checked) {
 	cfg->save_battery_ram_file = !cfg->save_battery_ram_file;
 	emu_thread_continue();
 }
-void wdgSettingsGeneral::s_pause_in_background(bool checked) {
+void wdgSettingsGeneral::s_pause_in_background(UNUSED(bool checked)) {
 	cfg->bck_pause = !cfg->bck_pause;
 }
-void wdgSettingsGeneral::s_save_settings_on_exit(bool checked) {
+void wdgSettingsGeneral::s_save_settings_on_exit(UNUSED(bool checked)) {
 	cfg->save_on_exit = !cfg->save_on_exit;
 }

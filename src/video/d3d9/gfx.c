@@ -467,7 +467,7 @@ void gfx_draw_screen(void) {
 void gfx_control_changed_adapter(void *monitor) {
 	_d3d9_adapter *old_adapter = d3d9.adapter;
 	HMONITOR *in_use = monitor;
-	int i;
+	unsigned int i;
 
 	if ((*in_use) == IDirect3D9_GetAdapterMonitor(d3d9.d3d, d3d9.adapter->id)) {
 		return;
@@ -537,7 +537,7 @@ void gfx_text_rect_fill(_txt_element *ele, _txt_rect *rect, uint32_t color) {
 	int w, h;
 
 	pitch = ele->w;
-	pbits = (uint32_t *) ele->surface;
+	pbits = (uint32_t *)ele->surface;
 	pbits += (rect->y * ele->w) + rect->x;
 
 	for (h = 0; h < rect->h; h++) {
@@ -580,7 +580,7 @@ void gfx_text_clear(_txt_element *ele) {
 		return;
 	}
 
-	pbits = (uint32_t *) lock_dst.pBits;
+	pbits = (uint32_t *)lock_dst.pBits;
 
 	for (h = 0; h < ele->h; h++) {
 		for (w = 0; w < ele->w; w++) {
@@ -613,8 +613,8 @@ void gfx_text_blit(_txt_element *ele, _txt_rect *rect) {
 	}
 
 	pitch = rect->w * (gfx.bit_per_pixel / 8);
-	psrc = (unsigned char *) ele->surface;
-	pdst = (unsigned char *) lock_dst.pBits;
+	psrc = (unsigned char *)ele->surface;
+	pdst = (unsigned char *)lock_dst.pBits;
 
 	for (h = 0; h < rect->h; h++) {
 		memcpy(pdst, psrc, pitch);
@@ -626,24 +626,24 @@ void gfx_text_blit(_txt_element *ele, _txt_rect *rect) {
 }
 
 void gfx_apply_filter(void) {
-	void *palette = (void *)gfx.palette;
+	gfx.filter.data.palette = (void *)gfx.palette;
 
 	//applico la paletta adeguata.
 	if (cfg->filter == NTSC_FILTER) {
-		palette = NULL;
+		gfx.filter.data.palette = NULL;
 	}
 	if (info.no_rom | info.turn_off) {
 		if (cfg->filter == NTSC_FILTER) {
-			palette = turn_off_effect.ntsc;
+			gfx.filter.data.palette = turn_off_effect.ntsc;
 		} else {
-			palette = (void *)turn_off_effect.palette;
+			gfx.filter.data.palette = (void *)turn_off_effect.palette;
 		}
 	} else if (info.pause) {
 		if (!cfg->disable_sepia_color) {
 			if (cfg->filter == NTSC_FILTER) {
-				palette = pause_effect.ntsc;
+				gfx.filter.data.palette = pause_effect.ntsc;
 			} else {
-				palette = pause_effect.palette;
+				gfx.filter.data.palette = pause_effect.palette;
 			}
 		}
 	}
@@ -657,11 +657,11 @@ void gfx_apply_filter(void) {
 		// lock della surface in memoria
 		IDirect3DSurface9_LockRect(scrtex->offscreen, &lrect, NULL, D3DLOCK_DISCARD);
 		// applico l'effetto
-		gfx.filter.func(palette,
-			lrect.Pitch,
-			lrect.pBits,
-			scrtex->rect.base.w,
-			scrtex->rect.base.h);
+		gfx.filter.data.pitch = lrect.Pitch;
+		gfx.filter.data.pix = lrect.pBits;
+		gfx.filter.data.width = scrtex->rect.base.w;
+		gfx.filter.data.height = scrtex->rect.base.h;
+		gfx.filter.func();
 		// unlock della surface in memoria
 		IDirect3DSurface9_UnlockRect(scrtex->offscreen);
 

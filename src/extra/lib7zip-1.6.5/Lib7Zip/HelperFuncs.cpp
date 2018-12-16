@@ -314,7 +314,7 @@ const char * GetLib7ZipLocale()
   return g_lib7zip_loc;
 }
 
-const char * SetLib7ZipLocale(const char * loc)
+const void SetLib7ZipLocale(const char * loc)
 {
   g_lib7zip_loc = loc;
 }

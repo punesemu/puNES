@@ -24,8 +24,7 @@
 void input_add_event_nsf_controller(BYTE index) {
 	js_control(&js[index], &port[index]);
 }
-BYTE input_decode_event_nsf_controller(BYTE mode, BYTE autorepeat, DBWORD event, BYTE type,
-		_port *port) {
+BYTE input_decode_event_nsf_controller(BYTE mode, BYTE autorepeat, DBWORD event, BYTE type, _port *port) {
 
 	if (autorepeat == TRUE) {
 		return (EXIT_OK);

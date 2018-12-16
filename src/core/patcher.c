@@ -29,8 +29,8 @@
 #include "cheat.h"
 #include "conf.h"
 
-static DBWORD patcher_2byte(_rom_mem *patch);
-static DBWORD patcher_3byte(_rom_mem *patch);
+static SDBWORD patcher_2byte(_rom_mem *patch);
+static SDBWORD patcher_3byte(_rom_mem *patch);
 static BYTE patcher_ips(_rom_mem *patch, _rom_mem *rom);
 
 void patcher_init(void) {
@@ -178,7 +178,7 @@ void patcher_apply(void *rom_mem) {
 	free(patch.data);
 }
 
-static DBWORD patcher_2byte(_rom_mem *patch) {
+static SDBWORD patcher_2byte(_rom_mem *patch) {
 	DBWORD dbw = 0;
 	BYTE ch;
 
@@ -193,7 +193,7 @@ static DBWORD patcher_2byte(_rom_mem *patch) {
 
 	return (dbw);
 }
-static DBWORD patcher_3byte(_rom_mem *patch) {
+static SDBWORD patcher_3byte(_rom_mem *patch) {
 	DBWORD dbw = 0;
 	BYTE ch;
 
@@ -228,7 +228,8 @@ static BYTE patcher_ips(_rom_mem *patch, _rom_mem *rom) {
 	memcpy(blk, rom->data, size);
 
 	while (TRUE) {
-		DBWORD address, len;
+		SDBWORD len;
+		SDBWORD address;
 		BYTE rle = FALSE;
 		BYTE ch;
 
@@ -255,13 +256,13 @@ static BYTE patcher_ips(_rom_mem *patch, _rom_mem *rom) {
 			}
 		}
 
-		if ((address + len) > size) {
+		if ((size_t)(address + len) > size) {
 			size = (address + len);
 			blk = (BYTE *)realloc(blk, size);
 		}
 
 		if (rle == TRUE) {
-			DBWORD i;
+			SDBWORD i;
 
 			for (i = 0; i < len; i++) {
 				blk[address + i] = ch;

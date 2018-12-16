@@ -57,7 +57,7 @@ typedef struct _snd_thread {
 } _snd_thread;
 
 static void *sndio_thread_loop(void *data);
-static void INLINE sndio_wr_buf(void *buffer, uint32_t avail);
+INLINE static void sndio_wr_buf(void *buffer, uint32_t avail);
 
 static _snd_thread snd_thread;
 static _sndio sndio;
@@ -305,24 +305,24 @@ void snd_playback_stop(void) {
 	}
 }
 
-uTCHAR *snd_playback_device_desc(int dev) {
+uTCHAR *snd_playback_device_desc(UNUSED(int dev)) {
 	return (0);
 }
-uTCHAR *snd_playback_device_id(int dev) {
+uTCHAR *snd_playback_device_id(UNUSED(int dev)) {
 	return (0);
 }
 
-uTCHAR *snd_capture_device_desc(int dev) {
+uTCHAR *snd_capture_device_desc(UNUSED(int dev)) {
 	return (0);
 }
-uTCHAR *snd_capture_device_id(int dev) {
+uTCHAR *snd_capture_device_id(UNUSED(int dev)) {
 	return (0);
 }
 
 void snd_list_devices(void) {}
 
-static void *sndio_thread_loop(void *data) {
-	uint32_t avail, len;
+static void *sndio_thread_loop(UNUSED(void *data)) {
+	int32_t avail, len;
 
 #if !defined (RELEASE)
 	snd_thread.tick = gui_get_ms();
@@ -424,11 +424,10 @@ static void *sndio_thread_loop(void *data) {
 	pthread_exit((void *)EXIT_OK);
 }
 
-static void INLINE sndio_wr_buf(void *buffer, uint32_t avail) {
+INLINE static void sndio_wr_buf(void *buffer, uint32_t avail) {
 	if (sio_write(sndio.playback, buffer, avail) == 0) {
 		if (sio_eof(sndio.playback)) {
 			fprintf(stderr, "sio_write() failed\n");
 		}
 	}
 }
-

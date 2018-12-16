@@ -134,6 +134,6 @@ void extcl_after_rd_chr_MMC2and4(WORD address) {
 	chr.bank_1k[2 | bank] = chr_chip_byte_pnt(0, value | 0x0800);
 	chr.bank_1k[3 | bank] = chr_chip_byte_pnt(0, value | 0x0C00);
 }
-void extcl_update_r2006_MMC2and4(WORD new_r2006, WORD old_r2006) {
+void extcl_update_r2006_MMC2and4(WORD new_r2006, UNUSED(WORD old_r2006)) {
 	extcl_after_rd_chr_MMC2and4(new_r2006);
 }

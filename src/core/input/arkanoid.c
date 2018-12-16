@@ -63,7 +63,7 @@ void input_wr_arkanoid(BYTE *value, BYTE nport) {
 		arkanoid[nport].button = gmouse.left;
 	}
 }
-void input_rd_arkanoid(BYTE *value, BYTE nport, BYTE shift) {
+void input_rd_arkanoid(BYTE *value, BYTE nport, UNUSED(BYTE shift)) {
 	if (cfg->input.controller_mode == CTRL_MODE_FAMICOM) {
 		if ((nport & 0x01) == PORT1) {
 			(*value) |= (arkanoid[0].button << 1);

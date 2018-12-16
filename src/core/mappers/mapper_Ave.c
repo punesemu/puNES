@@ -152,7 +152,7 @@ void extcl_cpu_wr_mem_Ave_D1012(WORD address, BYTE value) {
 	chr.bank_1k[6] = chr_chip_byte_pnt(0, bank | 0x1800);
 	chr.bank_1k[7] = chr_chip_byte_pnt(0, bank | 0x1C00);
 }
-BYTE extcl_cpu_rd_mem_Ave_D1012(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_Ave_D1012(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if ((address < 0xFF80) || (address > 0xFFF7)) {
 		return (openbus);
 	}

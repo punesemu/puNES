@@ -179,7 +179,7 @@ void dlgVsSystem::insert_coin(int index) {
 	}
 }
 
-void dlgVsSystem::s_coins_clicked(bool checked) {
+void dlgVsSystem::s_coins_clicked(UNUSED(bool checked)) {
 	int index = QVariant(((QCheckBox *)sender())->property("myIndex")).toInt();
 
 	insert_coin(index);
@@ -223,7 +223,7 @@ void dlgVsSystem::s_ds_changed(int state) {
 	gui_active_window();
 	gui_set_focus();
 }
-void dlgVsSystem::s_defaults_clicked(bool checked) {
+void dlgVsSystem::s_defaults_clicked(UNUSED(bool checked)) {
 	cfg->dipswitch = info.default_dipswitches;
 	update_dialog();
 
@@ -231,6 +231,6 @@ void dlgVsSystem::s_defaults_clicked(bool checked) {
 	gui_active_window();
 	gui_set_focus();
 }
-void dlgVsSystem::s_x_clicked(bool checked) {
+void dlgVsSystem::s_x_clicked(UNUSED(bool checked)) {
 	mainwin->s_set_vs_window();
 }

@@ -146,7 +146,7 @@ BYTE shaders_set(int shader) {
 	return (EXIT_OK);
 }
 void shader_se_set_default(_shader_effect *se) {
-	int i;
+	unsigned int i;
 
 	se->type = MS_MEM;
 

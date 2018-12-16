@@ -22,7 +22,7 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
-static void INLINE whirlwind_6000_update(void);
+INLINE static void whirlwind_6000_update(void);
 
 BYTE *whirlwind_prg_6000;
 
@@ -52,7 +52,7 @@ void extcl_cpu_wr_mem_Whirlwind(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_Whirlwind(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_Whirlwind(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	switch (address & 0xF000) {
 		case 0x6000:
 		case 0x7000:
@@ -74,7 +74,7 @@ BYTE extcl_save_mapper_Whirlwind(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-static void INLINE whirlwind_6000_update(void) {
+INLINE static void whirlwind_6000_update(void) {
 	WORD value;
 
 	value = whirlwind.reg;

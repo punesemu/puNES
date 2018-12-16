@@ -23,7 +23,7 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-static void INLINE sa9602b_update_prg(void);
+INLINE static void sa9602b_update_prg(void);
 
 #define sa9602b_8000()\
 	if (mmc3.prg_rom_cfg != old_prg_rom_cfg) {\
@@ -118,7 +118,7 @@ BYTE extcl_save_mapper_SA_9602B(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-static void INLINE sa9602b_update_prg(void) {
+INLINE static void sa9602b_update_prg(void) {
 	WORD value;
 
 	value = sa9602b.prg_map[0];

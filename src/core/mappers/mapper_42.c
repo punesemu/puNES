@@ -74,7 +74,7 @@ void extcl_cpu_wr_mem_42(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_42(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_42(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if ((address > 0x5FFF) && (address < 0x8000)) {
 		return (m42.prg_8k_6000[address & 0x1FFF]);
 	}

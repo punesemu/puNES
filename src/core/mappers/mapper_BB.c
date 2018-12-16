@@ -66,7 +66,7 @@ void extcl_cpu_wr_mem_BB(WORD address, BYTE value) {
 	chr.bank_1k[6] = chr_chip_byte_pnt(0, bank | 0x1800);
 	chr.bank_1k[7] = chr_chip_byte_pnt(0, bank | 0x1C00);
 }
-BYTE extcl_cpu_rd_mem_BB(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_BB(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
 		return (bb_prg_6000[address & 0x1FFF]);
 	}

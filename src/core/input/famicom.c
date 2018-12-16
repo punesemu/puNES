@@ -20,7 +20,7 @@
 #include "info.h"
 #include "apu.h"
 
-static void INLINE _input_rd_reg_famicom(BYTE *value, BYTE nport);
+INLINE static void _input_rd_reg_famicom(BYTE *value, BYTE nport);
 
 BYTE input_wr_reg_famicom(BYTE value) {
 	// in caso di strobe azzero l'indice
@@ -65,7 +65,7 @@ BYTE input_rd_reg_famicom_r4017(BYTE openbus, BYTE nport) {
 	return ((openbus & 0xE0) | value);
 }
 
-static void INLINE _input_rd_reg_famicom(BYTE *value, BYTE nport) {
+INLINE static void _input_rd_reg_famicom(BYTE *value, BYTE nport) {
 	(*value) = 0;
 	port_funct[nport].input_rd(value, nport, 0);
 	port_funct[nport + 2].input_rd(value, nport + 2, 1);

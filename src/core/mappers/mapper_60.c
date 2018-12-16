@@ -57,9 +57,7 @@ void map_init_60(void) {
 		chr.bank_1k[7] = chr_chip_byte_pnt(0, bank | 0x1C00);
 	}
 }
-void extcl_cpu_wr_mem_60(WORD address, BYTE value) {
-	return;
-}
+void extcl_cpu_wr_mem_60(UNUSED(WORD address), UNUSED(BYTE value)) {}
 BYTE extcl_save_mapper_60(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m60.index);
 
@@ -120,7 +118,7 @@ void extcl_cpu_wr_mem_60_vt5201(WORD address, BYTE value) {
 		mirroring_V();
 	}
 }
-BYTE extcl_cpu_rd_mem_60_vt5201(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_60_vt5201(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if (address < 0x6000) {
 		return (openbus);
 	}

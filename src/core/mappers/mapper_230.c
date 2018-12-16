@@ -43,7 +43,7 @@ void map_init_230(void) {
 		map_prg_rom_8k(2, 2, info.prg.rom[0].max.banks_16k);
 	}
 }
-void extcl_cpu_wr_mem_230(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_230(UNUSED(WORD address), BYTE value) {
 	BYTE save = value;
 
 	if (!m230.mode) {

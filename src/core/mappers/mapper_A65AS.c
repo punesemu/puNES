@@ -23,7 +23,7 @@
 void map_init_A65AS(void) {
 	EXTCL_CPU_WR_MEM(A65AS);
 }
-void extcl_cpu_wr_mem_A65AS(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_A65AS(UNUSED(WORD address), BYTE value) {
 	if (value & 0x80) {
 		if (value & 0x20) {
 			mirroring_SCR1();

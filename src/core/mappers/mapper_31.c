@@ -23,7 +23,7 @@
 #include "cpu.h"
 #include "save_slot.h"
 
-static void INLINE sync_31(void);
+INLINE static void sync_31(void);
 
 void map_init_31(void) {
 	EXTCL_CPU_WR_MEM(31);
@@ -47,7 +47,7 @@ void extcl_cpu_wr_mem_31(WORD address, BYTE value) {
 	m31.regs[address & 0x0007] = value;
 	sync_31();
 }
-BYTE extcl_cpu_rd_mem_31(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_31(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if (address < 0x8000) {
 		return (openbus);
 	}
@@ -63,7 +63,7 @@ BYTE extcl_save_mapper_31(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-static void INLINE sync_31(void) {
+INLINE static void sync_31(void) {
 	BYTE i, value;
 
 	for (i = 0; i < 8; ++i) {

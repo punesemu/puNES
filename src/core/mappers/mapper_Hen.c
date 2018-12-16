@@ -41,7 +41,7 @@ void map_init_Hen(BYTE model) {
 	type = model;
 }
 
-void extcl_cpu_wr_mem_Hen_177(WORD address, BYTE value) {
+void extcl_cpu_wr_mem_Hen_177(UNUSED(WORD address), BYTE value) {
 	if (type != HEN_FANKONG) {
 		if (value & 0x20) {
 			mirroring_H();

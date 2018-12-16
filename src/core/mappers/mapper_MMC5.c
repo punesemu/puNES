@@ -136,9 +136,9 @@
 			break;\
 	}
 
-static void INLINE prg_swap(void);
-static void INLINE use_chr_s(void);
-static void INLINE use_chr_b(void);
+INLINE static void prg_swap(void);
+INLINE static void use_chr_s(void);
+INLINE static void use_chr_b(void);
 
 enum {
 	PRG_RAM_NONE,
@@ -455,7 +455,7 @@ void extcl_cpu_wr_mem_MMC5(WORD address, BYTE value) {
 			return;
 	}
 }
-BYTE extcl_cpu_rd_mem_MMC5(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_MMC5(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	BYTE value;
 
 	switch (address) {
@@ -623,7 +623,7 @@ void extcl_rd_r2007_MMC5(void) {
 		}
 	}
 }
-void extcl_after_rd_chr_MMC5(WORD address) {
+void extcl_after_rd_chr_MMC5(UNUSED(WORD address)) {
 	/*
 	 * dopo ogni fetch del high byte del background
 	 * azzero il flag con cui indico se il tile era
@@ -717,7 +717,7 @@ void extcl_apu_tick_MMC5(void) {
 	square_tick(mmc5.S4, 0, mmc5)
 }
 
-static void INLINE prg_swap(void) {
+INLINE static void prg_swap(void) {
 	BYTE value, i;
 
 	switch (mmc5.prg_mode) {
@@ -759,7 +759,7 @@ static void INLINE prg_swap(void) {
 		}
 	}
 }
-static void INLINE use_chr_s(void) {
+INLINE static void use_chr_s(void) {
 	DBWORD value;
 
 	switch (mmc5.chr_mode) {
@@ -788,7 +788,7 @@ static void INLINE use_chr_s(void) {
 			break;
 	}
 }
-static void INLINE use_chr_b(void) {
+INLINE static void use_chr_b(void) {
 	DBWORD value;
 
 	switch (mmc5.chr_mode) {

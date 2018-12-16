@@ -35,7 +35,7 @@ wdgD3D9::wdgD3D9(QWidget *parent) : QWidget(parent) {
 }
 wdgD3D9::~wdgD3D9() {}
 
-void wdgD3D9::paintEvent(QPaintEvent *event) {
+void wdgD3D9::paintEvent(UNUSED(QPaintEvent *event)) {
 	d3d9_draw_scene();
 
 	if (++gfps.count > gfps.frequency) {

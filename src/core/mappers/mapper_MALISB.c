@@ -23,8 +23,8 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-static void INLINE malisb_update_prg(void);
-static void INLINE malisb_update_chr(void);
+INLINE static void malisb_update_prg(void);
+INLINE static void malisb_update_chr(void);
 
 #define malisb_prg_8k(vl)\
 	(vl & 0x03) | ((vl >> 1) & 0x04) | ((vl << 1) & 0x08)
@@ -155,7 +155,7 @@ BYTE extcl_save_mapper_MALISB(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-static void INLINE malisb_update_prg(void) {
+INLINE static void malisb_update_prg(void) {
 	WORD value;
 
 	value = malisb_prg_8k(malisb.prg_map[0]);
@@ -176,7 +176,7 @@ static void INLINE malisb_update_prg(void) {
 
 	map_prg_rom_8k_update();
 }
-static void INLINE malisb_update_chr(void) {
+INLINE static void malisb_update_chr(void) {
 	BYTE i;
 	WORD value;
 

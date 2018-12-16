@@ -24,8 +24,8 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-static void INLINE h2288_update_prg(void);
-static void INLINE h2288_update_chr(void);
+INLINE static void h2288_update_prg(void);
+INLINE static void h2288_update_chr(void);
 
 #define h2288_chr_1k(vl) value = vl 
 #define h2288_prg_8k(vl) value = (vl & 0x3F)
@@ -164,7 +164,7 @@ BYTE extcl_save_mapper_H2288(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-static void INLINE h2288_update_prg(void) {
+INLINE static void h2288_update_prg(void) {
 	BYTE value;
 
 	if (h2288.reg[0] & 0x40) {
@@ -197,7 +197,7 @@ static void INLINE h2288_update_prg(void) {
 	}
 	map_prg_rom_8k_update();
 }
-static void INLINE h2288_update_chr(void) {
+INLINE static void h2288_update_chr(void) {
 	BYTE i;
 	WORD value;
 

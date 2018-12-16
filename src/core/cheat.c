@@ -40,7 +40,7 @@ void gamegenie_quit(void) {
 	gamegenie_free_paths();
 }
 void gamegenie_reset(void) {
-	int i;
+	unsigned int i;
 
 	gamegenie.counter = 0;
 	gamegenie.phase = GG_LOAD_GAMEGENIE;

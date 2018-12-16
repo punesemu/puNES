@@ -502,7 +502,7 @@ BYTE nsfe_fade(_rom_mem *rom, BYTE phase) {
 	return (EXIT_OK);
 }
 BYTE nsfe_tlbl(_rom_mem *rom, BYTE phase) {
-	int i, count;
+	unsigned int i, count;
 	char *src;
 
 	if (phase == NSFE_COUNT) {
@@ -549,7 +549,7 @@ BYTE nsfe_tlbl(_rom_mem *rom, BYTE phase) {
 	return (EXIT_OK);
 }
 BYTE nsfe_auth(_rom_mem *rom, BYTE phase) {
-	int i, count;
+	unsigned int i, count;
 	char *src = NULL, **dst = NULL;
 
 	if (phase == NSFE_COUNT) {

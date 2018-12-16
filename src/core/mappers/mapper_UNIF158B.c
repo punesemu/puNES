@@ -23,7 +23,7 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
-static void INLINE unif158b_update_prg(void);
+INLINE static void unif158b_update_prg(void);
 
 #define unif158b_8000()\
 	if (mmc3.prg_rom_cfg != old_prg_rom_cfg) {\
@@ -106,7 +106,7 @@ void extcl_cpu_wr_mem_UNIF158B(WORD address, BYTE value) {
 		unif158b_update_prg();
 	}
 }
-BYTE extcl_cpu_rd_mem_UNIF158B(WORD address, BYTE openbus, BYTE before) {
+BYTE extcl_cpu_rd_mem_UNIF158B(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if ((address < 0x5000) || (address > 0x5FFF)) {
 		return (openbus);
 	}
@@ -121,7 +121,7 @@ BYTE extcl_save_mapper_UNIF158B(BYTE mode, BYTE slot, FILE *fp) {
 	return (EXIT_OK);
 }
 
-static void INLINE unif158b_update_prg(void) {
+INLINE static void unif158b_update_prg(void) {
 	WORD value;
 
 	if (unif158b.reg[0] & 0x80) {
