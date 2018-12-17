@@ -80,13 +80,17 @@ IsWindowsVersionOrGreater(WORD wMajorVersion, WORD wMinorVersion, WORD wServiceP
     RtlSecureZeroMemory(&verInfo, sizeof( verInfo ));
     verInfo.dwOSVersionInfoSize = sizeof( verInfo );
 
-#if defined(__GNUC__)
+#if defined (__GNUC__)
+#if __GNUC__ >= 8
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wcast-function-type"
 #endif
+#endif
     static auto RtlGetVersion = (fnRtlGetVersion)GetProcAddress( GetModuleHandleW( L"ntdll.dll" ), "RtlGetVersion" );
-#if defined(__GNUC__)
+#if defined (__GNUC__)
+#if __GNUC__ >= 8
 #pragma GCC diagnostic pop
+#endif
 #endif
 
     if (RtlGetVersion != 0 && RtlGetVersion( (PRTL_OSVERSIONINFOW)&verInfo ) == 0)

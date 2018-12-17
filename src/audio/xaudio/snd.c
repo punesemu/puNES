@@ -124,9 +124,11 @@ BYTE snd_init(void) {
 	} else {
 		ds8.available = TRUE;
 
-#if defined(__GNUC__)
+#if defined (__GNUC__)
+#if __GNUC__ >= 8
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wcast-function-type"
+#endif
 #endif
 		if ((ds8.DirectSoundCreate8_proc =
 			(HRESULT (WINAPI *)(LPGUID, LPDIRECTSOUND*,LPUNKNOWN))GetProcAddress(ds8.ds8, "DirectSoundCreate8")) == NULL) {
@@ -136,8 +138,10 @@ BYTE snd_init(void) {
 			(HRESULT (WINAPI *)(LPDSENUMCALLBACKW, LPVOID))GetProcAddress(ds8.ds8, "DirectSoundCaptureEnumerateW")) == NULL) {
 			ds8.available = FALSE;
 		}
-#if defined(__GNUC__)
+#if defined (__GNUC__)
+#if __GNUC__ >= 8
 #pragma GCC diagnostic pop
+#endif
 #endif
 		if (ds8.available == FALSE) {
 			fprintf(stderr, "DirectSound: System doesn't appear to have DS8.");

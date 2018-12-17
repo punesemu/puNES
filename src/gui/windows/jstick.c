@@ -331,9 +331,11 @@ void js_init(BYTE first_time) {
 	if (first_time) {
 		memset(&jstick, 0x00, sizeof(jstick));
 
-#if defined(__GNUC__)
+#if defined (__GNUC__)
+#if __GNUC__ >= 8
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wcast-function-type"
+#endif
 #endif
 		if (((jstick.xinput = LoadLibrary("XInput1_4.dll")) == NULL) &&
 			((jstick.xinput = LoadLibrary("XInput1_3.dll")) == NULL)) {
@@ -358,10 +360,11 @@ void js_init(BYTE first_time) {
 				(HRESULT (WINAPI *)(HINSTANCE, DWORD, REFIID, LPVOID *, LPUNKNOWN))GetProcAddress(jstick.di8, "DirectInput8Create");
 			DirectInput8Create_proc(GetModuleHandle(NULL), DIRECTINPUT_VERSION, &IID_IDirectInput8W, (void **)&jstick.directInputInterface, NULL);
 		}
-#if defined(__GNUC__)
+#if defined (__GNUC__)
+#if __GNUC__ >= 8
 #pragma GCC diagnostic pop
 #endif
-
+#endif
 		jstick.lock = CreateSemaphore(NULL, 1, 2, NULL);
 	}
 
