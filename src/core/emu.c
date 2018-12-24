@@ -875,8 +875,14 @@ uTCHAR *emu_ustrncpy(uTCHAR *dst, uTCHAR *src) {
 	uint32_t size;
 
 	if (dst) {
-		free (dst);
+		free(dst);
+		dst = NULL;
 	}
+
+	if (src == NULL) {
+		return (dst);
+	}
+
 	size = ustrlen(src) + 1;
 	dst = (uTCHAR *)malloc(sizeof(uTCHAR) * size);
 	umemset(dst, 0x00, size);
@@ -967,7 +973,7 @@ static BYTE emu_ctrl_if_rom_exist(void) {
 
 	if (info.rom.from_load_menu) {
 		ustrncpy(file, info.rom.from_load_menu, usizeof(file));
-		free (info.rom.from_load_menu);
+		free(info.rom.from_load_menu);
 		info.rom.from_load_menu = NULL;
 	} else if (gamegenie.rom) {
 		ustrncpy(file, gamegenie.rom, usizeof(file));

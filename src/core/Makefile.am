@@ -48,6 +48,8 @@ libcore_a_SOURCES = \
 	overscan.h \
 	patcher.c \
 	patcher.h \
+	patcher_xdelta3_wrap.c \
+	patcher_xdelta3_wrap.h \
 	paldef.h \
 	palette.h \
 	ppu.c \
@@ -480,3 +482,5 @@ libcore_a_SOURCES += \
 	mappers/mapper_Whirlwind.h \
 	mappers/mapper_YOKO.c \
 	mappers/mapper_YOKO.h
+
+patcher_xdelta3_wrap.o: CPPFLAGS+=-w

@@ -64,7 +64,7 @@ EXTERNC struct _gui {
 #endif
 
 	uTCHAR last_open_path[LENGTH_FILE_NAME_MAX];
-	uTCHAR last_open_ips_path[LENGTH_FILE_NAME_MAX];
+	uTCHAR last_open_patch_path[LENGTH_FILE_NAME_MAX];
 
 	//int8_t cpu_cores;
 

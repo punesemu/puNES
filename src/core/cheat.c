@@ -57,11 +57,11 @@ void gamegenie_reset(void) {
 }
 void gamegenie_free_paths(void) {
 	if (gamegenie.rom) {
-		free (gamegenie.rom);
+		free(gamegenie.rom);
 		gamegenie.rom = NULL;
 	}
 	if (gamegenie.patch) {
-		free (gamegenie.patch);
+		free(gamegenie.patch);
 		gamegenie.patch = NULL;
 	}
 }

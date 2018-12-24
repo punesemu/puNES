@@ -124,7 +124,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 
 	private slots:
 		void s_open(void);
-		void s_apply_ips_patch(void);
+		void s_apply_patch(void);
 		void s_open_recent_roms(void);
 		void s_open_working_folder(void);
 		void s_quit(void);

@@ -870,6 +870,8 @@ AM_COND_IF([COMPILE_LIB7ZIP], [
 AC_SUBST(LIB7ZIP_SRC)
 AC_SUBST(LIB7ZIP_LIBS)
 
+AC_CONFIG_SUBDIRS([src/extra/xdelta-3.1.0])
+
 # The End
 AM_COND_IF([LINUX], [
 	my_LIBS="${my_LIBS} -ldl -lpthread"

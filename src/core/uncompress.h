@@ -85,7 +85,8 @@ static const _uncompress_extension uncompress_exts[] = {
 	{ UNCOMPRESS_TYPE_ROM, uL(".unif") },
 	{ UNCOMPRESS_TYPE_ROM, uL(".nsf")  },
 	{ UNCOMPRESS_TYPE_ROM, uL(".nsfe") },
-	{ UNCOMPRESS_TYPE_PATCH, uL(".ips") }
+	{ UNCOMPRESS_TYPE_PATCH, uL(".ips") },
+	{ UNCOMPRESS_TYPE_PATCH, uL(".xdelta") }
 };
 EXTERNC _uncompress_storage uncstorage;
 

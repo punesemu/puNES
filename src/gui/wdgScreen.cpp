@@ -180,7 +180,7 @@ void wdgScreen::dropEvent(QDropEvent *event) {
 				is_patch = FALSE;
 			}
 			if (is_rom) {
-				switch ((rc = uncompress_archive_extract_file(archive,UNCOMPRESS_TYPE_ROM))) {
+				switch ((rc = uncompress_archive_extract_file(archive, UNCOMPRESS_TYPE_ROM))) {
 					case UNCOMPRESS_EXIT_OK:
 						rom = uncompress_archive_extracted_file_name(archive, UNCOMPRESS_TYPE_ROM);
 						break;
@@ -191,7 +191,7 @@ void wdgScreen::dropEvent(QDropEvent *event) {
 				}
 			}
 			if (is_patch) {
-				switch ((rc = uncompress_archive_extract_file(archive,UNCOMPRESS_TYPE_PATCH))) {
+				switch ((rc = uncompress_archive_extract_file(archive, UNCOMPRESS_TYPE_PATCH))) {
 					case UNCOMPRESS_EXIT_OK:
 						patch = uncompress_archive_extracted_file_name(archive, UNCOMPRESS_TYPE_PATCH);
 						break;
@@ -204,7 +204,7 @@ void wdgScreen::dropEvent(QDropEvent *event) {
 			}
 			uncompress_archive_free(archive);
 		} else if (rc == UNCOMPRESS_EXIT_IS_NOT_COMP) {
-			 if ((fileinfo.suffix().toLower() == "ips") && info.rom.file[0]) {
+			 if (((fileinfo.suffix().toLower() == "ips") || (fileinfo.suffix().toLower() == "xdelta")) && info.rom.file[0]) {
 				is_patch = TRUE;
 				patch = uQStringCD(fileinfo.absoluteFilePath());
 			} else {

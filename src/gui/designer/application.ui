@@ -45,7 +45,7 @@
     <addaction name="action_Open"/>
     <addaction name="menu_Recent_Roms"/>
     <addaction name="separator"/>
-    <addaction name="action_Apply_IPS_Patch"/>
+    <addaction name="action_Apply_Patch"/>
     <addaction name="separator"/>
     <addaction name="action_Open_working_folder"/>
     <addaction name="separator"/>
@@ -527,13 +527,13 @@
     <string>Start/Stop &amp;WAV recording</string>
    </property>
   </action>
-  <action name="action_Apply_IPS_Patch">
+  <action name="action_Apply_Patch">
    <property name="icon">
     <iconset resource="application.qrc">
      <normaloff>:/icon/icons/patch.svg</normaloff>:/icon/icons/patch.svg</iconset>
    </property>
    <property name="text">
-    <string>&amp;Apply IPS Patch</string>
+    <string>&amp;Apply IPS/XDELTA Patch</string>
    </property>
   </action>
   <action name="action_Video">

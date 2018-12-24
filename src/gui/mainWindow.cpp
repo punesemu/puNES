@@ -360,7 +360,7 @@ void mainWindow::state_save_slot_set(int slot, bool on_video) {
 void mainWindow::connect_menu_signals(void) {
 	// File
 	connect_action(action_Open, SLOT(s_open()));
-	connect_action(action_Apply_IPS_Patch, SLOT(s_apply_ips_patch()));
+	connect_action(action_Apply_Patch, SLOT(s_apply_patch()));
 	connect_action(action_Open_working_folder, SLOT(s_open_working_folder()));
 	connect_action(action_Quit, SLOT(s_quit()));
 	// NES
@@ -521,9 +521,9 @@ void mainWindow::connect_shortcut(QAction *action, int index, const char *member
 
 void mainWindow::update_menu_file(void) {
 	if (info.no_rom) {
-		action_Apply_IPS_Patch->setEnabled(false);
+		action_Apply_Patch->setEnabled(false);
 	} else {
-		action_Apply_IPS_Patch->setEnabled(true);
+		action_Apply_Patch->setEnabled(true);
 	}
 
 	// recent roms
@@ -772,7 +772,7 @@ void mainWindow::s_open(void) {
 
 	emu_pause(FALSE);
 }
-void mainWindow::s_apply_ips_patch(void) {
+void mainWindow::s_apply_patch(void) {
 	QStringList filters;
 	QString file;
 
@@ -781,25 +781,27 @@ void mainWindow::s_apply_ips_patch(void) {
 	filters.append(tr("All supported formats"));
 	filters.append(tr("Compressed files"));
 	filters.append(tr("IPS patch files"));
+	filters.append(tr("XDELTA patch files"));
 	filters.append(tr("All files"));
 
 	if (l7z_present() == TRUE) {
 		if ((l7z_control_ext(uL("rar")) == EXIT_OK)) {
-			filters[0].append(" (*.zip *.ZIP *.7z *.7Z *.rar *.RAR *.ips *.IPS)");
+			filters[0].append(" (*.zip *.ZIP *.7z *.7Z *.rar *.RAR *.ips *.IPS *.xdelta *.XDELTA)");
 			filters[1].append(" (*.zip *.ZIP *.7z *.7Z *.rar *.RAR)");
 		} else {
-			filters[0].append(" (*.zip *.ZIP *.7z *.7Z *.ips *.IPS)");
+			filters[0].append(" (*.zip *.ZIP *.7z *.7Z *.ips *.IPS *.XDELTA)");
 			filters[1].append(" (*.zip *.ZIP *.7z *.7Z)");
 		}
 	} else {
-		filters[0].append(" (*.zip *.ZIP *.ips *.IPS)");
+		filters[0].append(" (*.zip *.ZIP *.ips *.IPS *.xdelta *.XDELTA)");
 		filters[1].append(" (*.zip *.ZIP)");
 	}
 
 	filters[2].append(" (*.ips *.IPS)");
-	filters[3].append(" (*.*)");
+	filters[3].append(" (*.xdelta *.XDELTA)");
+	filters[4].append(" (*.*)");
 
-	file = QFileDialog::getOpenFileName(this, tr("Open IPS Patch"), uQString(gui.last_open_ips_path),
+	file = QFileDialog::getOpenFileName(this, tr("Open IPS/XDELTA Patch"), uQString(gui.last_open_patch_path),
 		filters.join(";;"));
 
 	if (file.isNull() == false) {
@@ -813,8 +815,7 @@ void mainWindow::s_apply_ips_patch(void) {
 			} else {
 				change_rom(info.rom.file);
 			}
-			ustrncpy(gui.last_open_ips_path, uQStringCD(fileinfo.absolutePath()),
-				usizeof(gui.last_open_ips_path) - 1);
+			ustrncpy(gui.last_open_patch_path, uQStringCD(fileinfo.absolutePath()), usizeof(gui.last_open_patch_path) - 1);
 		}
 	}
 

@@ -20,6 +20,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "patcher.h"
+#include "patcher_xdelta3_wrap.h"
 #include "rom_mem.h"
 #include "info.h"
 #include "emu.h"
@@ -38,12 +39,15 @@ void patcher_init(void) {
 }
 void patcher_quit(void) {
 	if (patcher.file) {
-		free (patcher.file);
+		free(patcher.file);
 		patcher.file = NULL;
 	}
 }
 BYTE patcher_ctrl_if_exist(uTCHAR *patch) {
-	static const uTCHAR patch_ext[][10] = {	uL(".ips\0"), uL(".IPS\0") };
+	static const uTCHAR patch_ext[][10] = {
+		uL(".ips\0"), uL(".IPS\0"),
+		uL(".xdelta\0"), uL(".XDELTA\0")
+	};
 	uTCHAR file[LENGTH_FILE_NAME_LONG], ext[10];
 	BYTE i, found = FALSE;
 
@@ -60,6 +64,8 @@ BYTE patcher_ctrl_if_exist(uTCHAR *patch) {
 	if (file[0] == 0) {
 		return (EXIT_ERROR);
 	}
+
+	patcher_quit();
 
 	memset(&patcher, 0x00, sizeof(patcher));
 
@@ -145,7 +151,7 @@ void patcher_apply(void *rom_mem) {
 	patch.size = ftell(fp);
 	fseek(fp, 0L, SEEK_SET);
 
-	if ((patch.data = (BYTE *) malloc(patch.size)) == NULL) {
+	if ((patch.data = (BYTE *)malloc(patch.size)) == NULL) {
 		patcher_quit();
 		fclose(fp);
 		return;
@@ -171,7 +177,16 @@ void patcher_apply(void *rom_mem) {
 		} else {
 			patcher.patched = TRUE;
 		}
+	} else if (ustrcasecmp(ext, uL(".xdelta")) == 0) {
+		if (patcher_xdelta(&patch, rom) == EXIT_ERROR) {
+			text_add_line_info(1, "[red]error loading patch file");
+			fprintf(stderr, "error loading patch file\n");
+		} else {
+			patcher.patched = TRUE;
+		}
 	}
+
+	gui_utf_dirname(patcher.file, gui.last_open_patch_path, usizeof(gui.last_open_patch_path) - 1);
 
 	patcher_quit();
 
@@ -221,7 +236,7 @@ static BYTE patcher_ips(_rom_mem *patch, _rom_mem *rom) {
 	}
 	patch->position += 5;
 
-	if ((blk = (BYTE *) malloc(size)) == NULL) {
+	if ((blk = (BYTE *)malloc(size)) == NULL) {
 		return (EXIT_ERROR);
 	};
 
