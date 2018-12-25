@@ -483,4 +483,5 @@ libcore_a_SOURCES += \
 	mappers/mapper_YOKO.c \
 	mappers/mapper_YOKO.h
 
-patcher_xdelta3_wrap.o: CPPFLAGS+=-w
+patcher_xdelta3_wrap.o: patcher_xdelta3_wrap.c patcher_xdelta3_wrap.h
+	${CC} -w ${DEFS} ${DEFAULT_INCLUDES} ${CFLAGS} -c -o $@ $<
