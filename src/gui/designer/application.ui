@@ -533,7 +533,7 @@
      <normaloff>:/icon/icons/patch.svg</normaloff>:/icon/icons/patch.svg</iconset>
    </property>
    <property name="text">
-    <string>&amp;Apply IPS/XDELTA Patch</string>
+    <string>&amp;Apply IPS/BPS/XDELTA Patch</string>
    </property>
   </action>
   <action name="action_Video">

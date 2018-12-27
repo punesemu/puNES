@@ -533,7 +533,7 @@ void mainWindow::update_menu_file(void) {
 		menu_Recent_Roms->clear();
 
 		for (i = 0; i < RECENT_ROMS_MAX; i++) {
-			QString description = QString((const QChar *) recent_roms_item(i), recent_roms_item_size(i));
+			QString description = QString((const QChar *)recent_roms_item(i), recent_roms_item_size(i));
 			QFileInfo rom(description);
 			QAction *action = new QAction(this);
 
@@ -781,27 +781,29 @@ void mainWindow::s_apply_patch(void) {
 	filters.append(tr("All supported formats"));
 	filters.append(tr("Compressed files"));
 	filters.append(tr("IPS patch files"));
+	filters.append(tr("BPS patch files"));
 	filters.append(tr("XDELTA patch files"));
 	filters.append(tr("All files"));
 
 	if (l7z_present() == TRUE) {
 		if ((l7z_control_ext(uL("rar")) == EXIT_OK)) {
-			filters[0].append(" (*.zip *.ZIP *.7z *.7Z *.rar *.RAR *.ips *.IPS *.xdelta *.XDELTA)");
+			filters[0].append(" (*.zip *.ZIP *.7z *.7Z *.rar *.RAR *.ips *.IPS *.bps *.BPS *.xdelta *.XDELTA)");
 			filters[1].append(" (*.zip *.ZIP *.7z *.7Z *.rar *.RAR)");
 		} else {
-			filters[0].append(" (*.zip *.ZIP *.7z *.7Z *.ips *.IPS *.XDELTA)");
+			filters[0].append(" (*.zip *.ZIP *.7z *.7Z *.ips *.IPS *.bps *.BPS *.xdelta *.XDELTA)");
 			filters[1].append(" (*.zip *.ZIP *.7z *.7Z)");
 		}
 	} else {
-		filters[0].append(" (*.zip *.ZIP *.ips *.IPS *.xdelta *.XDELTA)");
+		filters[0].append(" (*.zip *.ZIP *.ips *.IPS *.bps *.BPS *.xdelta *.XDELTA)");
 		filters[1].append(" (*.zip *.ZIP)");
 	}
 
 	filters[2].append(" (*.ips *.IPS)");
-	filters[3].append(" (*.xdelta *.XDELTA)");
-	filters[4].append(" (*.*)");
+	filters[3].append(" (*.bps *.BPS)");
+	filters[4].append(" (*.xdelta *.XDELTA)");
+	filters[5].append(" (*.*)");
 
-	file = QFileDialog::getOpenFileName(this, tr("Open IPS/XDELTA Patch"), uQString(gui.last_open_patch_path),
+	file = QFileDialog::getOpenFileName(this, tr("Open IPS/BPS/XDELTA Patch"), uQString(gui.last_open_patch_path),
 		filters.join(";;"));
 
 	if (file.isNull() == false) {
@@ -823,8 +825,8 @@ void mainWindow::s_apply_patch(void) {
 }
 void mainWindow::s_open_recent_roms(void) {
 	int index = QVariant(((QObject *)sender())->property("myValue")).toInt();
-	QString current = QString((const QChar *) recent_roms_current(), recent_roms_current_size());
-	QString item = QString((const QChar *) recent_roms_item(index), recent_roms_item_size(index));
+	QString current = QString((const QChar *)recent_roms_current(), recent_roms_current_size());
+	QString item = QString((const QChar *)recent_roms_item(index), recent_roms_item_size(index));
 
 	emu_pause(TRUE);
 
@@ -1107,8 +1109,7 @@ void mainWindow::s_state_save_file(void) {
 		fl = info.rom.file;
 	}
 
-	file = QFileDialog::getSaveFileName(this, tr("Save state on file"),
-			QFileInfo(uQString(fl)).baseName(), filters.join(";;"));
+	file = QFileDialog::getSaveFileName(this, tr("Save state on file"), QFileInfo(uQString(fl)).baseName(), filters.join(";;"));
 
 	if (file.isNull() == false) {
 		QFileInfo fileinfo(file);
@@ -1122,8 +1123,7 @@ void mainWindow::s_state_save_file(void) {
 		}
 
 		umemset(cfg->save_file, 0x00, usizeof(cfg->save_file));
-		ustrncpy(cfg->save_file, uQStringCD(fileinfo.absoluteFilePath()),
-				usizeof(cfg->save_file) - 1);
+		ustrncpy(cfg->save_file, uQStringCD(fileinfo.absoluteFilePath()), usizeof(cfg->save_file) - 1);
 		save_slot_save(SAVE_SLOT_FILE);
 		settings_pgs_save();
 	}
@@ -1154,8 +1154,7 @@ void mainWindow::s_state_load_file(void) {
 
 		if (fileinfo.exists()) {
 			umemset(cfg->save_file, 0x00, usizeof(cfg->save_file));
-			ustrncpy(cfg->save_file, uQStringCD(fileinfo.absoluteFilePath()),
-				usizeof(cfg->save_file) - 1);
+			ustrncpy(cfg->save_file, uQStringCD(fileinfo.absoluteFilePath()), usizeof(cfg->save_file) - 1);
 			if (save_slot_load(SAVE_SLOT_FILE) == EXIT_OK) {
 				settings_pgs_save();
 			}
@@ -1192,8 +1191,7 @@ void mainWindow::s_help(void) {
 	text.append("<center><h4>[<font color='#800000'>Commit " + QString(GIT_COUNT_COMMITS) + "</font> " + "<a href=\"https://github.com/punesemu/puNES/commit/" + QString(GIT_LAST_COMMIT_HASH) + "\">" + QString(GIT_LAST_COMMIT) + "</a>]</h4></center>");
 #endif
 	text.append("<center>" + tr("Nintendo Entertainment System Emulator") + "</center>");
-	text.append("<center>" + tr("Compiled") + " " +
-			compiled.toString(Qt::DefaultLocaleShortDate) + "</center>");
+	text.append("<center>" + tr("Compiled") + " " + compiled.toString(Qt::DefaultLocaleShortDate) + "</center>");
 
 	about->setText(text);
 

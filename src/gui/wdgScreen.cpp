@@ -204,7 +204,10 @@ void wdgScreen::dropEvent(QDropEvent *event) {
 			}
 			uncompress_archive_free(archive);
 		} else if (rc == UNCOMPRESS_EXIT_IS_NOT_COMP) {
-			 if (((fileinfo.suffix().toLower() == "ips") || (fileinfo.suffix().toLower() == "xdelta")) && info.rom.file[0]) {
+			 if (((fileinfo.suffix().toLower() == "ips") ||
+				 (fileinfo.suffix().toLower() == "bps") ||
+				 (fileinfo.suffix().toLower() == "xdelta")) &&
+				 info.rom.file[0]) {
 				is_patch = TRUE;
 				patch = uQStringCD(fileinfo.absoluteFilePath());
 			} else {
