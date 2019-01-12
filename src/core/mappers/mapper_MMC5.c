@@ -227,7 +227,6 @@ void map_init_MMC5(void) {
 			prg_ram_mode = PRG_RAM_8K;
 			break;
 		case ELROM:
-		default:
 			info.prg.ram.banks_8k_plus = FALSE;
 			info.prg.ram.bat.banks = FALSE;
 			prg_ram_mode = PRG_RAM_NONE;
@@ -242,6 +241,11 @@ void map_init_MMC5(void) {
 			info.prg.ram.banks_8k_plus = 4;
 			info.prg.ram.bat.banks = 4;
 			prg_ram_mode = PRG_RAM_32K;
+			break;
+		default:
+			info.prg.ram.banks_8k_plus = 8;
+			info.prg.ram.bat.banks = FALSE;
+			prg_ram_mode = PRG_RAM_64K;
 			break;
 	}
 }
