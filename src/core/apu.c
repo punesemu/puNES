@@ -247,6 +247,11 @@ void apu_turn_on(void) {
 		DMC.empty = TRUE;
 		DMC.silence = TRUE;
 		DMC.counter_out = 8;
+		// sembra che l'address del DMC al power on dia valorizzato a 0xC000
+		// e la lunghezza del sample sia settato a 1 byte.
+		// http://forums.nesdev.com/viewtopic.php?f=3&t=18278
+		DMC.length = 1;
+		DMC.address_start = 0xC000;
 	} else {
 		S1.output = 0;
 		S2.output = 0;
