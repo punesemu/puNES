@@ -21,6 +21,12 @@
 
 #include "common.h"
 
+enum ines_flags { FL6, FL7, FL8, FL9, FL10, FL11, FL12, FL13, FL14, FL15, TOTAL_FL };
+
+struct _ines {
+	BYTE flags[TOTAL_FL];
+} ines;
+
 BYTE ines_load_rom(void);
 
 #endif /* INES_H_ */

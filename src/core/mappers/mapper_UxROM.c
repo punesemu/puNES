@@ -19,6 +19,7 @@
 #include "mappers.h"
 #include "info.h"
 #include "mem_map.h"
+#include "ines.h"
 
 void map_init_UxROM(BYTE model) {
 	switch (model) {
@@ -38,6 +39,31 @@ void map_init_UxROM(BYTE model) {
 			EXTCL_CPU_WR_MEM(UNROM_BK2);
 
 			map_chr_ram_extra_init(0x2000 * 4);
+
+			// gestione mapper mirroring mapper 30
+			if ((info.format == iNES_1_0) || (info.format == iNES_1_0)) {
+				BYTE mirroring = (ines.flags[FL6] & 0x01) | ((ines.flags[FL6] & 0x08) >> 2);
+
+				switch (mirroring) {
+					case 0:
+						mirroring_H();
+						break;
+					case 1:
+						mirroring_V();
+						break;
+					case 2:
+						mirroring_SCR0();
+						break;
+					case 3:
+						// 4-Screen, cartridge VRAM
+						ntbl.bank_1k[0] = &chr.extra.data[0x7000];
+						ntbl.bank_1k[1] = &chr.extra.data[0x7400];
+						ntbl.bank_1k[2] = &chr.extra.data[0x7800];
+						ntbl.bank_1k[3] = &chr.extra.data[0x7C00];
+						break;
+				}
+			}
+
 			break;
 	}
 }

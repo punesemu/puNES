@@ -32,14 +32,12 @@
 #include "vs_system.h"
 #include "patcher.h"
 
-enum flags { FL6, FL7, FL8, FL9, FL10, FL11, FL12, FL13, FL14, FL15, TOTAL_FL };
-
 void nes20_submapper(void);
 BYTE nes20_ram_size(BYTE mode);
 
 BYTE ines_load_rom(void) {
-	BYTE tmp, flags[TOTAL_FL];
 	_rom_mem rom;
+	BYTE tmp;
 
 	{
 		static const uTCHAR rom_ext[2][10] = { uL(".nes\0"), uL(".NES\0") };
@@ -105,12 +103,12 @@ BYTE ines_load_rom(void) {
 		info.prg.rom[0].banks_16k = rom.data[rom.position++];
 		info.chr.rom[0].banks_8k = rom.data[rom.position++];
 
-		if (rom_mem_ctrl_memcpy(&flags[0], &rom, TOTAL_FL) == EXIT_ERROR) { 
+		if (rom_mem_ctrl_memcpy(&ines.flags[0], &rom, TOTAL_FL) == EXIT_ERROR) {
 			free(rom.data);
 			return (EXIT_ERROR);
 		}
 
-		if ((flags[FL7] & 0x0C) == 0x08) {
+		if ((ines.flags[FL7] & 0x0C) == 0x08) {
 			// NES 2.0
 			info.format = NES_2_0;
 
@@ -119,8 +117,8 @@ BYTE ines_load_rom(void) {
 			info.mirroring_db = info.id = DEFAULT;
 			info.extra_from_db = 0;
 
-			info.mapper.id = ((flags[FL8] & 0x0F) << 8) | (flags[FL7] & 0xF0) | (flags[FL6] >> 4);
-			info.mapper.submapper = (flags[FL8] & 0xF0) >> 4;
+			info.mapper.id = ((ines.flags[FL8] & 0x0F) << 8) | (ines.flags[FL7] & 0xF0) | (ines.flags[FL6] >> 4);
+			info.mapper.submapper = (ines.flags[FL8] & 0xF0) >> 4;
 
 			// Submapper number. Mappers not using submappers set this to zero.
 			if (info.mapper.submapper == 0) {
@@ -129,32 +127,32 @@ BYTE ines_load_rom(void) {
 
 			nes20_submapper();
 
-			info.prg.rom[0].banks_16k |= ((flags[FL9] & 0x0F) << 8);
-			info.chr.rom[0].banks_8k |= ((flags[FL9] & 0xF0) << 4);
+			info.prg.rom[0].banks_16k |= ((ines.flags[FL9] & 0x0F) << 8);
+			info.chr.rom[0].banks_8k |= ((ines.flags[FL9] & 0xF0) << 4);
 
-			info.prg.ram.banks_8k_plus = nes20_ram_size(flags[FL10] & 0x0F);
-			info.prg.ram.bat.banks = nes20_ram_size(flags[FL10] >> 4);
+			info.prg.ram.banks_8k_plus = nes20_ram_size(ines.flags[FL10] & 0x0F);
+			info.prg.ram.bat.banks = nes20_ram_size(ines.flags[FL10] >> 4);
 
 			if (info.prg.ram.bat.banks && !info.prg.ram.banks_8k_plus) {
 				info.prg.ram.banks_8k_plus = info.prg.ram.bat.banks;
 			}
 
-			tmp = flags[FL12] & 0x01;
+			tmp = ines.flags[FL12] & 0x01;
 
-			vs_system.ppu = flags[FL13] & 0x0F;
-			vs_system.special_mode.type = (flags[FL13] >> 4) & 0x0F;
+			vs_system.ppu = ines.flags[FL13] & 0x0F;
+			vs_system.special_mode.type = (ines.flags[FL13] >> 4) & 0x0F;
 		} else {
 			// iNES 1.0
 			info.format = iNES_1_0;
 
-			info.mapper.id = (flags[FL7] & 0xF0) | (flags[FL6] >> 4);
-			info.prg.ram.bat.banks = (flags[FL6] & 0x02) >> 1;
+			info.mapper.id = (ines.flags[FL7] & 0xF0) | (ines.flags[FL6] >> 4);
+			info.prg.ram.bat.banks = (ines.flags[FL6] & 0x02) >> 1;
 
 			if (info.prg.ram.bat.banks) {
 				info.prg.ram.banks_8k_plus = 1;
 			}
 
-			tmp = flags[FL9] & 0x01;
+			tmp = ines.flags[FL9] & 0x01;
 		}
 
 		switch (tmp) {
@@ -166,12 +164,12 @@ BYTE ines_load_rom(void) {
 				break;
 		}
 
-		info.trainer = flags[FL6] & 0x04;
+		info.trainer = ines.flags[FL6] & 0x04;
 
-		if (flags[FL6] & 0x08) {
+		if (ines.flags[FL6] & 0x08) {
 			mirroring_FSCR();
 		} else {
-			if (flags[FL6] & 0x01) {
+			if (ines.flags[FL6] & 0x01) {
 				mirroring_V();
 			} else {
 				mirroring_H();
@@ -271,7 +269,7 @@ BYTE ines_load_rom(void) {
 		if (!info.chr.rom[0].banks_8k) {
 			mapper.write_vram = TRUE;
 			if (info.format == NES_2_0) {
-				info.chr.rom[0].banks_8k = nes20_ram_size(flags[FL11] & 0x0F);
+				info.chr.rom[0].banks_8k = nes20_ram_size(ines.flags[FL11] & 0x0F);
 			}
 			if (!info.chr.rom[0].banks_8k) {
 				if (info.format == iNES_1_0) {
