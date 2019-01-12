@@ -805,14 +805,16 @@ static BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 }
 static uTCHAR *name_slot_file(BYTE slot) {
 	static uTCHAR file[LENGTH_FILE_NAME_LONG];
-	uTCHAR ext[10], bname[255], *last_dot, *fl;
+	uTCHAR ext[10], bname[255], *last_dot, *fl = NULL;
 
 	umemset(file, 0x00, LENGTH_FILE_NAME_LONG);
 
 	// game genie
 	if (info.mapper.id == GAMEGENIE_MAPPER) {
 		fl = gamegenie.rom;
-	} else {
+	}
+
+	if (!fl) {
 		fl = info.rom.file;
 	}
 

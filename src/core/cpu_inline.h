@@ -1013,20 +1013,6 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 		ppu.openbus = value;
 		ppu_openbus_wr_all();
 
-		/* condizione riscontrata in "scanline.nes" */
-		if (ppu.frame_x < SCR_ROWS) {
-			if (!ppu.vblank && (ppu.screen_y < SCR_LINES)) {
-				if (ppu.frame_y > ppu_sclines.vint) {
-					if (r2001.visible) {
-						if (ppu.pixel_tile == 3) {
-							r2000.race.ctrl = TRUE;
-							r2000.race.value = r2000.bpt_adr;
-						}
-					}
-				}
-			}
-		}
-
 		/*
 		 * 76543210
 		 * ||||||||
@@ -1081,7 +1067,18 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 		 * bitsNT       %0000 00NN
 		 * tmp_vram      %---- NN-- ---- ----
 		 */
-		ppu.tmp_vram = (ppu.tmp_vram & 0xF3FF) | ((value & 0x03) << 10);
+		if (ppu.frame_x == 257) {
+			/*
+			 * gestione della condizione di race del $2000 al dot 257
+			 * https://forums.nesdev.com/viewtopic.php?f=3&t=18113
+			 * ppu_2000_glitch.nes e ppu_2100_glitch.nes
+			 */
+			r2000.race.ctrl = TRUE;
+			r2000.race.value = value;
+			ppu.tmp_vram = (ppu.tmp_vram & 0xF3FF) | ((cpu.openbus & 0x03) << 10);
+		} else {
+			ppu.tmp_vram = (ppu.tmp_vram & 0xF3FF) | ((value & 0x03) << 10);
+		}
 
 		/*
 		 * per questo registro il tick_hw e' gia' stato effettuato, quindi
@@ -1098,7 +1095,7 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 		 * piu' scura sfarfalla nello schermo).
 		 */
 		if (!ppu.vblank && r2001.visible && (ppu.screen_y < SCR_LINES)) {
-			if ((ppu.frame_x >= 253) && (ppu.frame_x <= 255)) {
+			if ((ppu.frame_x >= 253) && (ppu.frame_x <= 257)) {
 				r2006_end_scanline();
 			}
 		}
@@ -1110,9 +1107,6 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 			        cpu.opcode, cpu.base_opcode_cycles);
 		}
 #endif
-		//if ((ppu.screen_y == 188))
-		//printf("0x%X : 0x%X : 0x%X - %d - %d - %d - %d\n", address, cpu.PC, value, ppu.frames, ppu.screen_y, ppu.frame_x, ppu.sf.actual);
-
 		return;
 	}
 	if (address == 0x2001) {
@@ -1281,7 +1275,7 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 			// sembra che la seconda scrittura del $2006 avvenga con qualche
 			// ciclo ppu di ritardo.
 			r2006.second_write.value = (ppu.tmp_vram & 0x7F00) | value;
-			r2006.second_write.delay = 4;
+			r2006.second_write.delay = 3;
 		}
 
 		r2002.toggle = !r2002.toggle;
@@ -1294,8 +1288,7 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 		ppu.openbus = value;
 		ppu_openbus_wr_all();
 
-		if (!ppu.vblank && r2001.visible && (ppu.frame_y > ppu_sclines.vint)
-		        && (ppu.screen_y < SCR_LINES)) {
+		if (!ppu.vblank && r2001.visible && (ppu.frame_y > ppu_sclines.vint) && (ppu.screen_y < SCR_LINES)) {
 			ppu_wr_mem(ppu.rnd_adr, ppu.rnd_adr & 0x00FF);
 			_r2006_during_rendering()
 		} else {

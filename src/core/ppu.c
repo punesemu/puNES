@@ -193,44 +193,59 @@ void ppu_tick(void) {
 	while (ppu.cycles >= machine.ppu_divide) {
 		r2002.race.sprite_overflow = FALSE;
 
+		/* gestione della condizione di race del $2000 al dot 257 */
+		if (r2000.race.ctrl) {
+			r2000.race.ctrl = FALSE;
+			ppu.tmp_vram = (ppu.tmp_vram & 0xF3FF) | ((r2000.race.value & 0x03) << 10);
+		}
+
 		/* gestione del delay del bit del grayscale */
 		if (r2001.grayscale_bit.delay && (--r2001.grayscale_bit.delay == 0)) {
 			r2001.color_mode = PPU_CM_GRAYSCALE;
 		}
 
-		/* gestione della seconda scrittura del $2006 */
+		// gestione della seconda scrittura del $2006
 		if (r2006.second_write.delay && (--r2006.second_write.delay == 0)) {
 			WORD old_r2006 = r2006.value;
 
 			ppu.tmp_vram = r2006.second_write.value;
 
-			/*
-			 * condizione di race riscontrata in "scanline.nes" e
-			 * "Knight Rider (U) [!].nes" (i glitch grafici sotto la macchina
-			 * nell'introduzione sono presenti su hardware reale).
-			 * Anche "logo (E).nes" e "Ferrari - Grand Prix Challenge (U) [!].nes"
-			 * ne sono soggetti.
-			 */
-			if ((ppu.frame_x < SCR_ROWS) && (!ppu.vblank && r2001.visible && (ppu.screen_y < SCR_LINES))) {
-				if (ppu.frame_y > ppu_sclines.vint) {
+			if ((!ppu.vblank && r2001.visible && (ppu.screen_y < SCR_LINES)) && (ppu.frame_y > ppu_sclines.vint)) {
+				// split_scroll_test_v2.nes e split_scroll_delay.nes
+				if (ppu.frame_x == 255) {
+					ppu.tmp_vram &= r2006.value;
+				}
+
+				// condizione di race riscontrata in "scanline.nes" e
+				// "Knight Rider (U) [!].nes" (i glitch grafici sotto la macchina
+				// nell'introduzione sono presenti su hardware reale).
+				// Anche "logo (E).nes" e "Ferrari - Grand Prix Challenge (U) [!].nes"
+				// ne sono soggetti.
+				if (ppu.frame_x < SCR_ROWS) {
 					if ((ppu.pixel_tile >= 1) && (ppu.pixel_tile <= 3)) {
 						r2006.race.ctrl = TRUE;
 						r2006.race.value = (r2006.value & 0x00FF) | (ppu.tmp_vram & 0xFF00);
 					}
 				}
+
+				// aggiorno l'r2006
+				r2006.value = ppu.tmp_vram;
+
+				// split_scroll_test_v2.nes e split_scroll_delay.nes
+				if (ppu.frame_x == 254) {
+					r2006_inc()
+				}
+			} else {
+				// aggiorno l'r2006
+				r2006.value = ppu.tmp_vram;
 			}
 
-			/* aggiorno l'r2006 */
-			r2006.value = ppu.tmp_vram;
-
 			if (extcl_update_r2006) {
-				/*
-				 * utilizzato dalle mappers :
-				 * MMC3
-				 * Rex (DBZ)
-				 * Taito (TC0190FMCPAL16R4)
-				 * Tengen (Rambo)
-				 */
+				// utilizzato dalle mappers :
+				// MMC3
+				// Rex (DBZ)
+				// Taito (TC0190FMCPAL16R4)
+				// Tengen (Rambo)
 				extcl_update_r2006(r2006.value, old_r2006);
 			}
 		}
@@ -366,8 +381,7 @@ void ppu_tick(void) {
 							 * che compongono il tile (che hanno un
 							 * peso minore rispetto ai secondi).
 							 */
-							fetch_lb((r2000.race.ctrl ? r2000.race.value : r2000.bpt_adr),
-									(r2006.race.ctrl ? r2006.race.value : r2006.value))
+							fetch_lb(r2000.bpt_adr, (r2006.race.ctrl ? r2006.race.value : r2006.value))
 						} else if (ppu.pixel_tile == 5) {
 							/*
 							 * faccio il fetch dei secondi 8 bit che
@@ -541,8 +555,7 @@ void ppu_tick(void) {
 								 * posizionate le informazioni su tipo di
 								 * sistema (pal o nes e frequenza di aggiornamento).
 								 */
-								if (!r2002.sprite0_hit && !sprite[visible_spr].number
-										&& (ppu.frame_x != 255)) {
+								if (!r2002.sprite0_hit && !sprite[visible_spr].number && (ppu.frame_x != 255)) {
 									r2002.sprite0_hit = 0x40;
 								}
 							} else {
@@ -682,16 +695,14 @@ void ppu_tick(void) {
 							if (++spr_ev.tmp_spr_plus == 8) {
 								// unlimited sprites
 								if ((cfg->unlimited_sprites == TRUE)
-										&& (spr_ev_unl.evaluate == TRUE)) {
+									&& (spr_ev_unl.evaluate == TRUE)) {
 									for (spr_ev_unl.tmp_spr_plus = 0;
-											spr_ev_unl.tmp_spr_plus < spr_ev_unl.count_plus;
-											spr_ev_unl.tmp_spr_plus++) {
+										spr_ev_unl.tmp_spr_plus < spr_ev_unl.count_plus;
+										spr_ev_unl.tmp_spr_plus++) {
 										WORD spr_adr;
 
-										_ppu_spr_adr(spr_ev_unl.tmp_spr_plus, ele_plus_unl,
-												sprite_plus_unl, spr_adr)
-										get_sprites(ele_plus_unl, spr_ev_unl, sprite_plus_unl,
-												spr_adr)
+										_ppu_spr_adr(spr_ev_unl.tmp_spr_plus, ele_plus_unl, sprite_plus_unl, spr_adr)
+										get_sprites(ele_plus_unl, spr_ev_unl, sprite_plus_unl, spr_adr)
 									}
 									spr_ev_unl.evaluate = FALSE;
 								}
@@ -1264,20 +1275,12 @@ INLINE static void ppu_oam_evaluation(void) {
 								spr_ev_unl.range = ppu.screen_y - t2004;
 
 								if ((t2004 <= 0xEF) && (spr_ev_unl.range < r2000.size_spr)) {
-
-									oam.ele_plus_unl[spr_ev_unl.count_plus][YC] =
-										oam.element[spr_ev_unl.index][YC];
-									oam.ele_plus_unl[spr_ev_unl.count_plus][TL] =
-										oam.element[spr_ev_unl.index][TL];
-									oam.ele_plus_unl[spr_ev_unl.count_plus][AT] =
-										oam.element[spr_ev_unl.index][AT];
-									oam.ele_plus_unl[spr_ev_unl.count_plus][XC] =
-										oam.element[spr_ev_unl.index][XC];
-									sprite_plus_unl[spr_ev_unl.count_plus].number =
-										spr_ev_unl.index;
-									sprite_plus_unl[spr_ev_unl.count_plus].flip_v =
-										spr_ev_unl.range;
-
+									oam.ele_plus_unl[spr_ev_unl.count_plus][YC] = oam.element[spr_ev_unl.index][YC];
+									oam.ele_plus_unl[spr_ev_unl.count_plus][TL] = oam.element[spr_ev_unl.index][TL];
+									oam.ele_plus_unl[spr_ev_unl.count_plus][AT] = oam.element[spr_ev_unl.index][AT];
+									oam.ele_plus_unl[spr_ev_unl.count_plus][XC] = oam.element[spr_ev_unl.index][XC];
+									sprite_plus_unl[spr_ev_unl.count_plus].number = spr_ev_unl.index;
+									sprite_plus_unl[spr_ev_unl.count_plus].flip_v = spr_ev_unl.range;
 									spr_ev_unl.count_plus++;
 								}
 							}

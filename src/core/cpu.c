@@ -1048,6 +1048,13 @@ void cpu_turn_on(void) {
 			 */
 			memset(mmcpu.ram, 0xFF, sizeof(mmcpu.ram));
 
+			/*
+			 * questo workaround serve solo per
+			 * 2nd2006.nes e 256inc.nes
+			 */
+			if (info.mapper.id == 0) {
+				mmcpu.ram[0x000] = 0x00;
+			}
 			mmcpu.ram[0x008] = 0xF7;
 			mmcpu.ram[0x009] = 0xEF;
 			mmcpu.ram[0x00A] = 0xDF;
