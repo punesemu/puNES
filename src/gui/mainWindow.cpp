@@ -263,9 +263,9 @@ void mainWindow::set_language(int lang) {
 			file = "it_IT";
 			break;
 		case LNG_RUSSIAN:
-			lng = "ru";
-			file = "ru_RU";
-			break;
+		//	lng = "ru";
+		//	file = "ru_RU";
+		//	break;
 		case LNG_ENGLISH:
 		default:
 			break;

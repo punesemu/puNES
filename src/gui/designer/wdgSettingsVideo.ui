@@ -115,7 +115,7 @@
      <item row="2" column="0" colspan="3">
       <widget class="QTabWidget" name="tabWidget_Video">
        <property name="currentIndex">
-        <number>0</number>
+        <number>4</number>
        </property>
        <widget class="QWidget" name="tab_Video_Misc">
         <attribute name="icon">
@@ -131,7 +131,7 @@
            <item>
             <widget class="QCheckBox" name="checkBox_Vsync">
              <property name="text">
-              <string notr="true">VSync</string>
+              <string>VSync</string>
              </property>
             </widget>
            </item>
@@ -159,56 +159,56 @@
          <item>
           <widget class="QCheckBox" name="checkBox_Interpolation">
            <property name="text">
-            <string notr="true">Interpolation</string>
+            <string>Interpolation</string>
            </property>
           </widget>
          </item>
          <item>
           <widget class="QCheckBox" name="checkBox_Text_on_screen">
            <property name="text">
-            <string notr="true">Text on screen</string>
+            <string>Text on screen</string>
            </property>
           </widget>
          </item>
          <item>
           <widget class="QCheckBox" name="checkBox_Show_FPS">
            <property name="text">
-            <string notr="true">Show FPS</string>
+            <string>Show FPS</string>
            </property>
           </widget>
          </item>
          <item>
           <widget class="QCheckBox" name="checkBox_Input_display">
            <property name="text">
-            <string notr="true">Input display</string>
+            <string>Input display</string>
            </property>
           </widget>
          </item>
          <item>
           <widget class="QCheckBox" name="checkBox_Disable_TV_noise_emulation">
            <property name="text">
-            <string notr="true">Disable TV noise emulation when turned off</string>
+            <string>Disable TV noise emulation when turned off</string>
            </property>
           </widget>
          </item>
          <item>
           <widget class="QCheckBox" name="checkBox_Disable_sepia_color_on_pause">
            <property name="text">
-            <string notr="true">Disable sepia color on pause</string>
+            <string>Disable sepia color on pause</string>
            </property>
           </widget>
          </item>
          <item>
           <widget class="QCheckBox" name="checkBox_Fullscreen_in_window">
            <property name="text">
-            <string notr="true">Fullscreen in window</string>
+            <string>Fullscreen in window</string>
            </property>
           </widget>
          </item>
          <item>
           <widget class="QCheckBox" name="checkBox_Stretch_in_fullscreen">
            <property name="text">
-            <string notr="true">Stretch in fullscreen</string>
+            <string>Stretch in fullscreen</string>
            </property>
           </widget>
          </item>
@@ -312,7 +312,7 @@
          <item row="2" column="0">
           <widget class="QCheckBox" name="checkBox_PAR_Soft_Stretch">
            <property name="text">
-            <string notr="true">Soft stretch</string>
+            <string>Soft stretch</string>
            </property>
           </widget>
          </item>
@@ -792,27 +792,27 @@
            </item>
            <item>
             <property name="text">
-             <string>xBRZ 2X MT</string>
+             <string>xBRZ 2X Multithreading</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>xBRZ 3X MT</string>
+             <string>xBRZ 3X Multithreading</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>xBRZ 4X MT</string>
+             <string>xBRZ 4X Multithreading</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>xBRZ 5X MT</string>
+             <string>xBRZ 5X Multithreading</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>xBRZ 6X MT</string>
+             <string>xBRZ 6X Multithreading</string>
             </property>
            </item>
            <item>
@@ -994,7 +994,7 @@
          <item row="10" column="0">
           <widget class="QCheckBox" name="checkBox_Disable_sRGB_FBO">
            <property name="text">
-            <string notr="true">Disable sRGB FBO</string>
+            <string>Disable sRGB FBO</string>
            </property>
           </widget>
          </item>
@@ -1089,7 +1089,7 @@
          <item row="7" column="0" colspan="3">
           <widget class="QCheckBox" name="checkBox_Disable_emphasis_swap_PAL">
            <property name="text">
-            <string notr="true">Disable Red and Green emphasis swap for PAL/Dendy</string>
+            <string>Disable Red and Green emphasis swap for PAL/Dendy</string>
            </property>
           </widget>
          </item>
