@@ -1,4 +1,28 @@
 Changelog:
+0.103
+- Added support for the UNIF mapper UNIF DREAMTECH01.
+- Fixed mapper MMC5 and 213.
+- Added support for NSFe format.
+- Added OpenBSD support.
+- Added support for IPS, BPS and XDELTA patches.
+  It's possible to patch the ROM through 3 ways:
+  1) rename the patch with the same name as the ROM and copy it to the same directory where the ROM is present (example: if "Adventures of Lolo (U) [!].nes" is the name of the ROM, rename the patch in "Adventures of Lolo (U) [!].ips")
+  2) drag it to the emulator window (compressed patches are supported)
+  3) apply it via the "Apply Patch" item in the File menu (compressed patches are supported)
+  If more than one patch is present in the compressed file, it will always be possible to select which one to apply. In order to automatically apply a patch to a ROM, in addition to method 1) it is also possible to create a compressed archive that contains both the ROM and the patch. In this case the name of the ips file isn't important (example : compressed file contain "Adventures of Lolo (U) [!].nes" and "adv.ips").
+- Rewritten the UI for the settings.
+- Added the compatibility of the UI for High DPI.
+- Rewritten and uniformed GFX stack.
+- Increased performance by 20%/30%.
+- Dropped out dependencies from SDL and QT4 libraries.
+- Now it's necessary that QT5 have compiled with support for SVG (and OpenGL for OpenGL version).
+- Fixed the management of VSync (when you change this option you need to restart the emulator to apply it correctly).
+- Added the ability to change shader parameters if supported by the shader.
+- Added a palette editor.
+- Added in Video Settings an option to show FPS.
+- Eliminated a lot of unnecessary code.
+- Fixed many many bugs and increased the accuracy of emulation.
+
 0.102
 - I had forgotten in release v0.101 to add support for NSF and UNIF files in compressed archives.
 
