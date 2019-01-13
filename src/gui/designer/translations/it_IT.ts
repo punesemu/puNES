@@ -1500,7 +1500,7 @@
     </message>
     <message>
         <source>** To apply this change restart is needed **</source>
-        <translation>** Per applicare questa mnodifica è necessario un riavvio **</translation>
+        <translation>** Per applicare questa modifica è necessario un riavvio **</translation>
     </message>
     <message>
         <source>Misc</source>
