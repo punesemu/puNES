@@ -453,14 +453,14 @@ void fds_diff_op(BYTE mode, uint32_t position, WORD value) {
 		uTCHAR ext[10], basename[255], *last_dot;
 
 		gui_utf_basename(info.rom.file, basename, usizeof(basename));
-		usnprintf(file, usizeof(file), uL("" uPERCENTs DIFF_FOLDER "/" uPERCENTs),
-			info.base_folder, basename);
+		usnprintf(file, usizeof(file), uL("" uPERCENTs DIFF_FOLDER "/" uPERCENTs), info.base_folder, basename);
 		usnprintf(ext, usizeof(ext), uL("dif"));
 
 		// rintraccio l'ultimo '.' nel nome
-		last_dot = ustrrchr(file, uL('.'));
-		// elimino l'estensione
-		*last_dot = 0x00;
+		if ((last_dot = ustrrchr(file, uL('.')))) {
+			// elimino l'estensione
+			*last_dot = 0x00;
+		};
 		// aggiungo l'estensione
 		ustrcat(file, ext);
 

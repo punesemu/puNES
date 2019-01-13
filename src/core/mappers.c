@@ -1104,9 +1104,10 @@ void map_prg_ram_init(void) {
 					uL("" uPERCENTs PRB_FOLDER "/" uPERCENTs), info.base_folder, basename);
 
 			/* rintraccio l'ultimo '.' nel nome */
-			last_dot = ustrrchr(prg_ram_file, uL('.'));
-			/* elimino l'estensione */
-			*last_dot = 0x00;
+			if ((last_dot = ustrrchr(prg_ram_file, uL('.')))) {
+				/* elimino l'estensione */
+				*last_dot = 0x00;
+			}
 			/* aggiungo l'estensione prb */
 			ustrcat(prg_ram_file, uL(".prb"));
 			/* provo ad aprire il file */
@@ -1175,9 +1176,10 @@ void map_prg_ram_battery_save(void) {
 				uL("" uPERCENTs PRB_FOLDER "/" uPERCENTs), info.base_folder, basename);
 
 		/* rintraccio l'ultimo '.' nel nome */
-		last_dot = ustrrchr(prg_ram_file, uL('.'));
-		/* elimino l'estensione */
-		*last_dot = 0x00;
+		if ((last_dot = ustrrchr(prg_ram_file, uL('.')))) {
+			/* elimino l'estensione */
+			*last_dot = 0x00;
+		}
 		/* aggiungo l'estensione prb */
 		ustrcat(prg_ram_file, uL(".prb"));
 		/* apro il file */
