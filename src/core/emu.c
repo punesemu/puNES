@@ -195,7 +195,7 @@ BYTE emu_make_dir(const uTCHAR *fmt, ...) {
 			return (EXIT_ERROR);
 		}
 	} else {
-#if defined (__WIN32__)
+#if defined (_WIN32)
 		if (_wmkdir(path)) {
 			return (EXIT_ERROR);
 		}

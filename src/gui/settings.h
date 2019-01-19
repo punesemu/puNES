@@ -30,7 +30,7 @@
 #include "input.h"
 #include "nsf.h"
 
-#if defined (__WIN32__)
+#if defined (_WIN32)
 #define NEWLINE "\r\n"
 #else
 #define NEWLINE "\n"
@@ -930,7 +930,7 @@ static const _settings inp_cfg[] = {
 	{uL("shortcuts"), uL("increment state slot"),     uL("F3,NULL"),         NULL, NULL, {0, NULL}},
 	{uL("shortcuts"), uL("decrement state slot"),     uL("F2,NULL"),         NULL, NULL, {0, NULL}},
 
-#if defined (__WIN32__)
+#if defined (_WIN32)
 	{uL("shortcuts"), uL("joystick GUID"),            uL("NULL"),            NULL, NULL, {0, NULL}},
 #else
 	{uL("shortcuts"), uL("joystick Id"),              uL("NULL"),            NULL, NULL, {0, NULL}},
@@ -975,7 +975,7 @@ static const _settings inp_cfg[] = {
 	{uL("port 1"), uL("P1J Right"),   uL("JA0PLS"),      NULL, NULL, {0, NULL}},
 	{uL("port 1"), uL("P1J TurboA"),  uL("JB3"),         NULL, NULL, {0, NULL}},
 	{uL("port 1"), uL("P1J TurboB"),  uL("JB2"),         NULL, NULL, {0, NULL}},
-#if defined (__WIN32__)
+#if defined (_WIN32)
 	{uL("port 1"), uL("P1J GUID"),    uL("NULL"),        NULL, NULL, {0, NULL}},
 #else
 	{uL("port 1"), uL("P1J Id"),      uL("JOYSTICKID1"), NULL, NULL, {0, NULL}},
@@ -1014,7 +1014,7 @@ static const _settings inp_cfg[] = {
 	{uL("port 2"), uL("P2J Right"),   uL("JA0PLS"),      NULL, NULL, {0, NULL}},
 	{uL("port 2"), uL("P2J TurboA"),  uL("JB3"),         NULL, NULL, {0, NULL}},
 	{uL("port 2"), uL("P2J TurboB"),  uL("JB2"),         NULL, NULL, {0, NULL}},
-#if defined (__WIN32__)
+#if defined (_WIN32)
 	{uL("port 2"), uL("P2J GUID"),    uL("NULL"),        NULL, NULL, {0, NULL}},
 #else
 	{uL("port 2"), uL("P2J Id"),      uL("JOYSTICKID2"), NULL, NULL, {0, NULL}},
@@ -1053,7 +1053,7 @@ static const _settings inp_cfg[] = {
 	{uL("port 3"), uL("P3J Right"),   uL("JA0PLS"),      NULL, NULL, {0, NULL}},
 	{uL("port 3"), uL("P3J TurboA"),  uL("JB3"),         NULL, NULL, {0, NULL}},
 	{uL("port 3"), uL("P3J TurboB"),  uL("JB2"),         NULL, NULL, {0, NULL}},
-#if defined (__WIN32__)
+#if defined (_WIN32)
 	{uL("port 3"), uL("P3J GUID"),    uL("NULL"),        NULL, NULL, {0, NULL}},
 #else
 	{uL("port 3"), uL("P3J Id"),      uL("NULL"),        NULL, NULL, {0, NULL}},
@@ -1092,7 +1092,7 @@ static const _settings inp_cfg[] = {
 	{uL("port 4"), uL("P4J Right"),   uL("JA0PLS"),      NULL, NULL, {0, NULL}},
 	{uL("port 4"), uL("P4J TurboA"),  uL("JB3"),         NULL, NULL, {0, NULL}},
 	{uL("port 4"), uL("P4J TurboB"),  uL("JB2"),         NULL, NULL, {0, NULL}},
-#if defined (__WIN32__)
+#if defined (_WIN32)
 	{uL("port 4"), uL("P4J GUID"),    uL("NULL"),        NULL, NULL, {0, NULL}},
 #else
 	{uL("port 4"), uL("P4J Id"),      uL("NULL"),        NULL, NULL, {0, NULL}},

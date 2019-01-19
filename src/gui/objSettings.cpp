@@ -64,7 +64,7 @@ static const struct _kvSpecials {
 	{ 0,            Qt::KeypadModifier,  Qt::Key_Minus,    "NPSubtract", 270 },
 	{ 0,            Qt::KeypadModifier,  Qt::Key_Period,   "NPDecimal",  271 },
 	{ 0,            Qt::KeypadModifier,  Qt::Key_Slash,    "NPDivide",   272 },
-#if defined (__WIN32__)
+#if defined (_WIN32)
 	{ VK_LMENU,     0,                   Qt::Key_Alt,      "Alt",        273 },
 	{ VK_RMENU,     0,                   Qt::Key_Alt,      "AltGr",      274 },
 	{ 0,            Qt::NoModifier,      Qt::Key_Meta,     "Meta",       275 },
@@ -1041,7 +1041,7 @@ void objInp::to_cfg(QString group) {
 		int_to_val(SET_INP_P1_PAD_TYPE, port[PORT1].type_pad);
 		kbd_wr(SET_INP_P1K_A, PORT1);
 		joy_wr(SET_INP_P1J_A, PORT1);
-#if defined (__WIN32__)
+#if defined (_WIN32)
 		joyguid_guid_to_val(SET_INP_P1J_ID, port[PORT1].joy_id);
 #else
 		joyid_int_to_val(SET_INP_P1J_ID, port[PORT1].joy_id);
@@ -1055,7 +1055,7 @@ void objInp::to_cfg(QString group) {
 		int_to_val(SET_INP_P2_PAD_TYPE, port[PORT2].type_pad);
 		kbd_wr(SET_INP_P2K_A, PORT2);
 		joy_wr(SET_INP_P2J_A, PORT2);
-#if defined (__WIN32__)
+#if defined (_WIN32)
 		joyguid_guid_to_val(SET_INP_P2J_ID, port[PORT2].joy_id);
 #else
 		joyid_int_to_val(SET_INP_P2J_ID, port[PORT2].joy_id);
@@ -1069,7 +1069,7 @@ void objInp::to_cfg(QString group) {
 		int_to_val(SET_INP_P3_PAD_TYPE, port[PORT3].type_pad);
 		kbd_wr(SET_INP_P3K_A, PORT3);
 		joy_wr(SET_INP_P3J_A, PORT3);
-#if defined (__WIN32__)
+#if defined (_WIN32)
 		joyguid_guid_to_val(SET_INP_P3J_ID, port[PORT3].joy_id);
 #else
 		joyid_int_to_val(SET_INP_P3J_ID, port[PORT3].joy_id);
@@ -1083,7 +1083,7 @@ void objInp::to_cfg(QString group) {
 		int_to_val(SET_INP_P4_PAD_TYPE, port[PORT4].type_pad);
 		kbd_wr(SET_INP_P4K_A, PORT4);
 		joy_wr(SET_INP_P4J_A, PORT4);
-#if defined (__WIN32__)
+#if defined (_WIN32)
 		joyguid_guid_to_val(SET_INP_P4J_ID, port[PORT4].joy_id);
 #else
 		joyid_int_to_val(SET_INP_P4J_ID, port[PORT4].joy_id);
@@ -1099,7 +1099,7 @@ void objInp::to_cfg(QString group) {
 	}
 
 	if ((group == "shortcuts") || (group == "all")) {
-#if defined (__WIN32__)
+#if defined (_WIN32)
 		joyguid_guid_to_val(SET_INP_SC_JOYSTICK_ID, cfg_from_file.input.shcjoy_id);
 #else
 		joyid_int_to_val(SET_INP_SC_JOYSTICK_ID, cfg_from_file.input.shcjoy_id);
@@ -1120,7 +1120,7 @@ void objInp::fr_cfg(QString group) {
 		port[PORT1].type_pad = val_to_int(SET_INP_P1_PAD_TYPE);
 		kbd_rd(SET_INP_P1K_A, PORT1);
 		joy_rd(SET_INP_P1J_A, PORT1);
-#if defined (__WIN32__)
+#if defined (_WIN32)
 		joyguid_val_to_guid(SET_INP_P1J_ID, &port[PORT1].joy_id);
 #else
 		port[PORT1].joy_id = joyid_val_to_int(SET_INP_P1J_ID);
@@ -1134,7 +1134,7 @@ void objInp::fr_cfg(QString group) {
 		port[PORT2].type_pad = val_to_int(SET_INP_P2_PAD_TYPE);
 		kbd_rd(SET_INP_P2K_A, PORT2);
 		joy_rd(SET_INP_P2J_A, PORT2);
-#if defined (__WIN32__)
+#if defined (_WIN32)
 		joyguid_val_to_guid(SET_INP_P2J_ID, &port[PORT2].joy_id);
 #else
 		port[PORT2].joy_id = joyid_val_to_int(SET_INP_P2J_ID);
@@ -1148,7 +1148,7 @@ void objInp::fr_cfg(QString group) {
 		port[PORT3].type_pad = val_to_int(SET_INP_P3_PAD_TYPE);
 		kbd_rd(SET_INP_P3K_A, PORT3);
 		joy_rd(SET_INP_P3J_A, PORT3);
-#if defined (__WIN32__)
+#if defined (_WIN32)
 		joyguid_val_to_guid(SET_INP_P3J_ID, &port[PORT3].joy_id);
 #else
 		port[PORT3].joy_id = joyid_val_to_int(SET_INP_P3J_ID);
@@ -1162,7 +1162,7 @@ void objInp::fr_cfg(QString group) {
 		port[PORT4].type_pad = val_to_int(SET_INP_P4_PAD_TYPE);
 		kbd_rd(SET_INP_P4K_A, PORT4);
 		joy_rd(SET_INP_P4J_A, PORT4);
-#if defined (__WIN32__)
+#if defined (_WIN32)
 		joyguid_val_to_guid(SET_INP_P4J_ID, &port[PORT4].joy_id);
 #else
 		port[PORT4].joy_id = joyid_val_to_int(SET_INP_P4J_ID);
@@ -1178,7 +1178,7 @@ void objInp::fr_cfg(QString group) {
 	}
 
 	if ((group == "shortcuts") || (group == "all")) {
-#if defined (__WIN32__)
+#if defined (_WIN32)
 		joyguid_val_to_guid(SET_INP_SC_JOYSTICK_ID, &cfg_from_file.input.shcjoy_id);
 #else
 		cfg_from_file.input.shcjoy_id = joyid_val_to_int(SET_INP_SC_JOYSTICK_ID);
@@ -1210,7 +1210,7 @@ void objInp::set_all_input_default(_config_input *config_input, _array_pointers_
 		switch (i) {
 			case PORT1:
 				port->type = CTRL_STANDARD;
-#if defined (__WIN32__)
+#if defined (_WIN32)
 				js_set_id(&port->joy_id, name_to_jsn(uL("NULL")));
 #else
 				port->joy_id = name_to_jsn(uL("JOYSTICKID1"));
@@ -1218,7 +1218,7 @@ void objInp::set_all_input_default(_config_input *config_input, _array_pointers_
 				break;
 			case PORT2:
 				port->type = FALSE;
-#if defined (__WIN32__)
+#if defined (_WIN32)
 				js_set_id(&port->joy_id, name_to_jsn(uL("NULL")));
 #else
 				port->joy_id = name_to_jsn(uL("JOYSTICKID2"));
@@ -1277,7 +1277,7 @@ DBWORD objInp::kbd_keyval_decode(QKeyEvent *keyEvent) {
 	DBWORD key = keyEvent->key();
 	quint32 native = keyEvent->nativeVirtualKey();
 
-#if defined (__WIN32__)
+#if defined (_WIN32)
 #define EXTENDED_KEY_MASK 0x01000000
 #define LSHIFT_MASK       0x2A
 #define RSHIFT_MASK       0X36
@@ -1436,7 +1436,7 @@ int objInp::joyid_val_to_int(int index) {
 void objInp::joyid_int_to_val(int index, int id) {
 	val.replace(index, uQString(jsn_to_name(id)));
 }
-#if defined (__WIN32__)
+#if defined (_WIN32)
 void objInp::joyguid_val_to_guid(int index, GUID *guid) {
 	if (val.at(index).isEmpty()) {
 		val.replace(index, uQString(set->cfg[index].def));

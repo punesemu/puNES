@@ -192,7 +192,7 @@ BYTE fds_load_bios(void) {
 	// 3) directory contenente il file fds
 	ustrncpy(bios_file, info.rom.file, usizeof(bios_file));
 	// rintraccio l'ultimo '.' nel nome
-#if defined (__WIN32__)
+#if defined (_WIN32)
 	if ((lastSlash = ustrrchr(bios_file, uL('\\')))) {
 		(*(lastSlash + 1)) = 0x00;
 	}

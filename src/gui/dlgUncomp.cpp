@@ -19,7 +19,7 @@
 #include "dlgUncomp.moc"
 #include <QtGui/QStandardItemModel>
 #include <QtCore/QFileInfo>
-#if defined (__WIN32__)
+#if defined (_WIN32)
 #include <libgen.h>
 #endif
 #include "gui.h"

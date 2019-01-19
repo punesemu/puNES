@@ -35,14 +35,14 @@ enum emu_thread_states {
 
 #if defined (__unix__)
 static void *emu_thread_loop(void *arg);
-#elif defined (__WIN32__)
+#elif defined (_WIN32)
 static DWORD WINAPI emu_thread_loop(void *arg);
 #endif
 
 struct _emu_thread {
 #if defined (__unix__)
 	pthread_t *thread;
-#elif defined (__WIN32__)
+#elif defined (_WIN32)
 	HANDLE thread;
 #endif
 	BYTE in_run;
@@ -57,7 +57,7 @@ BYTE emu_thread_init(void) {
 #if defined (__unix__)
 	emu_thread.thread = malloc(sizeof(pthread_t));
 	pthread_create(emu_thread.thread, NULL, emu_thread_loop, NULL);
-#elif defined (__WIN32__)
+#elif defined (_WIN32)
 	emu_thread.thread = CreateThread(NULL, 0, emu_thread_loop, NULL, 0, 0);
 #endif
 	return (EXIT_OK);
@@ -68,7 +68,7 @@ void emu_thread_quit(void) {
 		pthread_join((*emu_thread.thread), NULL);
 		free(emu_thread.thread);
 	}
-#elif defined (__WIN32__)
+#elif defined (_WIN32)
 	if (emu_thread.thread) {
 		WaitForSingleObject(emu_thread.thread, INFINITE);
 		CloseHandle(emu_thread.thread);
@@ -97,7 +97,7 @@ void emu_thread_continue(void) {
 
 #if defined (__unix__)
 static void *emu_thread_loop(UNUSED(void *arg)) {
-#elif defined (__WIN32__)
+#elif defined (_WIN32)
 static DWORD WINAPI emu_thread_loop(UNUSED(void *arg)) {
 #endif
 	// gestione uscita
@@ -115,7 +115,7 @@ static DWORD WINAPI emu_thread_loop(UNUSED(void *arg)) {
 	}
 #if defined (__unix__)
 	return (NULL);
-#elif defined (__WIN32__)
+#elif defined (_WIN32)
 	return (0);
 #endif
 }

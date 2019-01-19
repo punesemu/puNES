@@ -34,7 +34,7 @@ static struct _l7z {
 class in_stream: public C7ZipInStream {
 	private:
 		FILE * m_pFile;
-#if defined (__WIN32__)
+#if defined (_WIN32)
 		wstring m_strFileName;
 #else
 		std::string m_strFileName;
@@ -42,7 +42,7 @@ class in_stream: public C7ZipInStream {
 		wstring m_strFileExt;
 		int m_nFileSize;
 	public:
-#if defined (__WIN32__)
+#if defined (_WIN32)
 		in_stream(wstring file) : m_strFileName(file), m_strFileExt(L"7z") {
 #else
 		in_stream(std::string file) : m_strFileName(file), m_strFileExt(L"7z") {
@@ -124,7 +124,7 @@ class in_stream: public C7ZipInStream {
 class out_stream: public C7ZipOutStream {
 	private:
 		FILE * m_pFile;
-#if defined (__WIN32__)
+#if defined (_WIN32)
 		wstring m_strFileName;
 #else
 		std::string m_strFileName;
@@ -132,7 +132,7 @@ class out_stream: public C7ZipOutStream {
 		wstring m_strFileExt;
 		int m_nFileSize;
 	public:
-#if defined (__WIN32__)
+#if defined (_WIN32)
 		out_stream(wstring file) : m_strFileName(file), m_strFileExt(L"7z") {
 #else
 		out_stream(std::string file) : m_strFileName(file), m_strFileExt(L"7z") {
@@ -218,7 +218,7 @@ BYTE l7z_control_ext(const uTCHAR *ext) {
 	for (size_t i = 0; i < exts.size(); i++) {
 		wstring l7zext = exts[i];
 
-#if defined (__WIN32__)
+#if defined (_WIN32)
 		if (ustrlen(ext + 1) != ustrlen(uPTCHAR(l7zext.c_str()))) {
 			continue;
 		}
@@ -272,7 +272,7 @@ BYTE l7z_examine_archive(_uncompress_archive *archive) {
 		//printf("%d,%ls,%d\n", item->GetArchiveIndex(), item->GetFullPath().c_str(), item->IsDir());
 
 		umemset(file, 0x00, usizeof(file));
-#if defined (__WIN32__)
+#if defined (_WIN32)
 		ustrncpy(file, item->GetFullPath().c_str(), usizeof(file) - 1);
 #else
 		wcstombs((char *)file, item->GetFullPath().c_str(), sizeof(file) - 1);
@@ -333,7 +333,7 @@ BYTE l7z_extract_from_archive(_uncompress_archive *archive, uint32_t selected, B
 		return (UNCOMPRESS_EXIT_ERROR_ON_UNCOMP);
 	}
 
-#if defined (__WIN32__)
+#if defined (_WIN32)
 	ustrncpy(file, item->GetFullPath().c_str(), usizeof(file) - 1);
 #else
 	wcstombs((char *)file, item->GetFullPath().c_str(), sizeof(file) - 1);
@@ -390,7 +390,7 @@ uTCHAR *l7z_item_file_name(_uncompress_archive *archive, uint32_t selected, BYTE
 	}
 
 	umemset(file, 0x00, usizeof(file));
-#if defined (__WIN32__)
+#if defined (_WIN32)
 	ustrncpy(file, item->GetFullPath().c_str(), usizeof(file) - 1);
 # else
 	wcstombs((char *)file, item->GetFullPath().c_str(), usizeof(file) - 1);

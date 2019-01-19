@@ -18,7 +18,7 @@
 
 #include "common.h"
 #define NDEBUG
-#if defined (__WIN32__)
+#if defined (_WIN32)
 #include "win.h"
 #endif
 
@@ -70,7 +70,7 @@ void scale(BYTE factor, //valid range: 2 - 6
 
 #if defined (__unix__)
 void *scale_mt(void *param);
-#elif defined (__WIN32__)
+#elif defined (_WIN32)
 DWORD WINAPI scale_mt(void *param);
 #endif
 

@@ -35,7 +35,7 @@ extern "C" void xbrz_scale_mt(BYTE factor, const WORD *src, uint32_t *trg, uint3
 	int width, int height) {
 #if defined (__unix__)
 	pthread_t thread[XBRZ_NUM_SLICE];
-#elif defined (__WIN32__)
+#elif defined (_WIN32)
 	HANDLE thread[XBRZ_NUM_SLICE];
 	DWORD id[XBRZ_NUM_SLICE];
 #endif
@@ -57,7 +57,7 @@ extern "C" void xbrz_scale_mt(BYTE factor, const WORD *src, uint32_t *trg, uint3
 	#endif
 #if defined (__unix__)
 		pthread_create(&thread[i], NULL, xbrz::scale_mt, &param[i]);
-#elif defined (__WIN32__)
+#elif defined (_WIN32)
 		thread[i] = CreateThread(NULL, 0, xbrz::scale_mt, &param[i], 0, &id[i]);
 #endif
 	}
@@ -66,7 +66,7 @@ extern "C" void xbrz_scale_mt(BYTE factor, const WORD *src, uint32_t *trg, uint3
 	for (i = 0; i < XBRZ_NUM_SLICE; i++) {
 		pthread_join(thread[i], NULL);
 	}
-#elif defined (__WIN32__)
+#elif defined (_WIN32)
 	WaitForMultipleObjects(XBRZ_NUM_SLICE, thread, TRUE, INFINITE);
 	for (i = 0; i < XBRZ_NUM_SLICE; i++) {
 		CloseHandle(thread[i]);

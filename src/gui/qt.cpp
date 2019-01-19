@@ -21,7 +21,7 @@
 #include <QtGui/QImage>
 #include <QtCore/QDir>
 #include <QtGui/QScreen>
-#if defined (__WIN32__)
+#if defined (_WIN32)
 #include <QtCore/QtPlugin>
 #if defined (QT5_PLUGIN_QWINDOWS)
 Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin);
@@ -487,6 +487,6 @@ int gui_utf_strcasecmp(uTCHAR *s0, uTCHAR *s1) {
 #include "os_linux.h"
 #elif defined (__OpenBSD__)
 #include "os_openbsd.h"
-#elif defined (__WIN32__)
+#elif defined (_WIN32)
 #include "os_windows.h"
 #endif

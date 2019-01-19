@@ -20,7 +20,7 @@
 #define UNICODE_DEF_H_
 
 // windows
-#if defined(__WIN32__)
+#if defined(_WIN32)
 #include <wchar.h>
 
 typedef wchar_t uTCHAR;

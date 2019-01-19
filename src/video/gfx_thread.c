@@ -38,7 +38,7 @@ enum gfx_thread_states {
 
 #if defined (__unix__)
 static void *gfx_thread_loop(void *arg);
-#elif defined (__WIN32__)
+#elif defined (_WIN32)
 static DWORD WINAPI gfx_thread_loop(void *arg);
 #endif
 
@@ -46,7 +46,7 @@ struct _gfx_thread {
 #if defined (__unix__)
 	pthread_t *thread;
 	pthread_mutex_t lock;
-#elif defined (__WIN32__)
+#elif defined (_WIN32)
 	HANDLE thread;
 	HANDLE lock;
 #endif
@@ -67,7 +67,7 @@ BYTE gfx_thread_init(void) {
 	}
 	gfx_thread.thread = malloc(sizeof(pthread_t));
 	pthread_create(gfx_thread.thread, NULL, gfx_thread_loop, NULL);
-#elif defined (__WIN32__)
+#elif defined (_WIN32)
 	if ((gfx_thread.lock = CreateSemaphore(NULL, 1, 2, NULL)) == NULL) {
 		fprintf(stderr, "Unable to allocate the emu mutex\n");
 		return (EXIT_ERROR);
@@ -83,7 +83,7 @@ void gfx_thread_quit(void) {
 		free(gfx_thread.thread);
 	}
 	pthread_mutex_destroy(&gfx_thread.lock);
-#elif defined (__WIN32__)
+#elif defined (_WIN32)
 	if (gfx_thread.thread) {
 		WaitForSingleObject(gfx_thread.thread, INFINITE);
 		CloseHandle(gfx_thread.thread);
@@ -97,14 +97,14 @@ void gfx_thread_quit(void) {
 void gfx_thread_lock(void) {
 #if defined (__unix__)
 	pthread_mutex_lock(&gfx_thread.lock);
-#elif defined (__WIN32__)
+#elif defined (_WIN32)
 	WaitForSingleObject((HANDLE **)gfx_thread.lock, INFINITE);
 #endif
 }
 void gfx_thread_unlock(void) {
 #if defined (__unix__)
 	pthread_mutex_unlock(&gfx_thread.lock);
-#elif defined (__WIN32__)
+#elif defined (_WIN32)
 	ReleaseSemaphore((HANDLE **)gfx_thread.lock, 1, NULL);
 #endif
 }
@@ -130,7 +130,7 @@ void gfx_thread_continue(void) {
 
 #if defined (__unix__)
 static void *gfx_thread_loop(UNUSED(void *arg)) {
-#elif defined (__WIN32__)
+#elif defined (_WIN32)
 static DWORD WINAPI gfx_thread_loop(UNUSED(void *arg)) {
 #endif
 	while (info.stop == FALSE) {
@@ -157,7 +157,7 @@ static DWORD WINAPI gfx_thread_loop(UNUSED(void *arg)) {
 
 #if defined (__unix__)
 	return (NULL);
-#elif defined (__WIN32__)
+#elif defined (_WIN32)
 	return (0);
 #endif
 }

@@ -1142,7 +1142,7 @@ void xbrz::scale(BYTE factor, const WORD* src, uint32_t* trg, uint32_t* palette,
 
 #if defined (__unix__)
     void *xbrz::scale_mt(void *param)
-#elif defined (__WIN32__)
+#elif defined (_WIN32)
     DWORD WINAPI xbrz::scale_mt(void *param)
 #endif
 {
@@ -1206,7 +1206,7 @@ void xbrz::scale(BYTE factor, const WORD* src, uint32_t* trg, uint32_t* palette,
 
 #if defined (__unix__)
     return (NULL);
-#elif defined (__WIN32__)
+#elif defined (_WIN32)
     return (0);
 #endif
 }

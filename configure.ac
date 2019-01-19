@@ -112,7 +112,7 @@ AS_CASE(["$host_os"],
 		export CXX
 	],
 	[mingw32*], [
-		MOCDEFINES="${MOCDEFINES} -D__WIN32__"
+		MOCDEFINES="${MOCDEFINES} -D_WIN32"
 		my_CPPFLAGS="${my_CPPFLAGS} -I${TOP_SRCDIR}/src/gui/windows"
 		linux=no
 		openbsd=no

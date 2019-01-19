@@ -19,7 +19,7 @@
 #ifndef QT_H_
 #define QT_H_
 
-#if defined (__WIN32__)
+#if defined (_WIN32)
 #include "win.h"
 #else
 #include <sys/time.h>
@@ -53,7 +53,7 @@
 #endif
 
 EXTERNC struct _gui {
-#if defined (__WIN32__)
+#if defined (_WIN32)
 	uTCHAR home[MAX_PATH];
 	DWORD version_os;
 	double frequency;
@@ -166,7 +166,7 @@ EXTERNC double (*gui_get_ms)(void);
 
 EXTERNC void gui_init(int *argc, char **argv);
 EXTERNC void gui_sleep(double ms);
-#if defined (__WIN32__)
+#if defined (_WIN32)
 EXTERNC HWND gui_screen_id(void);
 #else
 EXTERNC int gui_screen_id(void);

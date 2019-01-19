@@ -38,7 +38,7 @@
 #include "patcher.h"
 #include "ppu.h"
 
-#if defined (__WIN32__)
+#if defined (_WIN32)
 int WINAPI WinMain(UNUSED(HINSTANCE hInstance), UNUSED(HINSTANCE hPrevInstance), UNUSED(PSTR szCmdLine), UNUSED(int iCmdShow)) {
 	int argc = 0;
 	uTCHAR **argv = CommandLineToArgvW(GetCommandLineW(), &argc);

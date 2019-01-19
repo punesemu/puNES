@@ -19,7 +19,7 @@
 #ifndef INPUT_H_
 #define INPUT_H_
 
-#if defined (__WIN32__)
+#if defined (_WIN32)
 #define INITGUID
 #include <guiddef.h>
 #undef INITGUID
@@ -71,7 +71,7 @@ typedef struct _config_input {
 	BYTE hide_zapper_cursor;
 	BYTE controller_mode;
 	BYTE expansion;
-#if defined (__WIN32__)
+#if defined (_WIN32)
 	GUID shcjoy_id;
 #else
 	BYTE shcjoy_id;
@@ -87,7 +87,7 @@ typedef struct _turbo_button {
 } _turbo_button;
 typedef struct _port {
 	BYTE type;
-#if defined (__WIN32__)
+#if defined (_WIN32)
 	GUID joy_id;
 #else
 	BYTE joy_id;

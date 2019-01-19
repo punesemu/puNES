@@ -83,7 +83,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void fullscreen(bool state);
 
 	protected:
-#if defined (__WIN32__)
+#if defined (_WIN32)
 		bool nativeEvent(const QByteArray &eventType, void *message, long *result);
 #endif
 		bool eventFilter(QObject *obj, QEvent *event);

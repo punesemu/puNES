@@ -39,6 +39,21 @@
 #include "c++/l7zip/l7z.h"
 #include "gui.h"
 
+#if _WIN32 || _WIN64
+#if _WIN64
+#define ENVIRONMENT "x86_64"
+#else
+#define ENVIRONMENT "x86"
+#endif
+#endif
+#if __GNUC__
+#if __x86_64__
+#define ENVIRONMENT "x86_64"
+#else
+#define ENVIRONMENT "x86"
+#endif
+#endif
+
 enum state_incdec_enum { INC, DEC };
 enum state_save_enum { SAVE, LOAD };
 
@@ -132,7 +147,7 @@ mainWindow::mainWindow() : QMainWindow() {
 }
 mainWindow::~mainWindow() {}
 
-#if defined (__WIN32__)
+#if defined (_WIN32)
 bool mainWindow::nativeEvent(const QByteArray &eventType, void *message, long *result) {
 	MSG *msg = (MSG *)message;
 
@@ -1186,12 +1201,18 @@ void mainWindow::s_help(void) {
 	if (info.portable) {
 		text.append(tr("portable version") + " ");
 	}
-	text.append(QString(VERSION) + "</h2></center>\n");
+	text.append(QString(VERSION) + "</h2></center>");
+
 #if !defined (RELEASE)
 	text.append("<center><h4>[<font color='#800000'>Commit " + QString(GIT_COUNT_COMMITS) + "</font> " + "<a href=\"https://github.com/punesemu/puNES/commit/" + QString(GIT_LAST_COMMIT_HASH) + "\">" + QString(GIT_LAST_COMMIT) + "</a>]</h4></center>");
 #endif
 	text.append("<center>" + tr("Nintendo Entertainment System Emulator") + "</center>");
-	text.append("<center>" + tr("Compiled") + " " + compiled.toString(Qt::DefaultLocaleShortDate) + "</center>");
+	text.append("<center>" + tr("Compiled") + " " + compiled.toString(Qt::DefaultLocaleShortDate) + " (" + QString(ENVIRONMENT));
+#if defined (WITH_OPENGL)
+	text.append(", OpenGL)</center>");
+#elif defined (WITH_D3D9)
+	text.append(", D3D9)</center>");
+#endif
 
 	about->setText(text);
 

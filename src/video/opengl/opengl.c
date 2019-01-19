@@ -1549,7 +1549,7 @@ static BYTE opengl_shader_cg_init(GLuint pass, _shader *shd, GLchar *code, const
 	uTCHAR base[LENGTH_FILE_NAME_MID];
 	uTCHAR dname[LENGTH_FILE_NAME_MID];
 	GLuint i, argc;
-#if defined (__WIN32__)
+#if defined (_WIN32)
 	char bname[LENGTH_FILE_NAME_MID];
 
 	if ((path != NULL) && path[0]) {

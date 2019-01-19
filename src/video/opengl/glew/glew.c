@@ -31,7 +31,7 @@
 */
 
 // FHorse
-#if defined (__WIN32__)
+#if defined (_WIN32)
 #if defined(__GNUC__)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wcast-function-type"
@@ -28590,7 +28590,7 @@ GLboolean eglewIsSupported (const char* name)
 #endif /* _WIN32 */
 
 // FHorse
-#if defined(__WIN32__)
+#if defined(_WIN32)
 #if defined(__GNUC__)
 #pragma GCC diagnostic pop
 #endif
