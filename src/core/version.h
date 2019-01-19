@@ -24,8 +24,8 @@
 #define VER1        "0"
 #define VER1_INT    0
 
-#define VER2        "103"
-#define VER2_INT    103
+#define VER2        "104"
+#define VER2_INT    104
 
 #if defined (RELEASE)
 #define VERSION     VER1 "." VER2
