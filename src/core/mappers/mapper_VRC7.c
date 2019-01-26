@@ -39,7 +39,7 @@ void map_init_VRC7(BYTE revision) {
 	EXTCL_SAVE_MAPPER(VRC7);
 	EXTCL_CPU_EVERY_CYCLE(VRC7);
 	EXTCL_SND_PLAYBACK_START(VRC7);
-	mapper.internal_struct[0] = (BYTE *) &vrc7;
+	mapper.internal_struct[0] = (BYTE *)&vrc7;
 	mapper.internal_struct_size[0] = sizeof(vrc7);
 
 	if (info.reset >= HARD) {
@@ -210,4 +210,153 @@ void extcl_cpu_every_cycle_VRC7(void) {
 }
 void extcl_snd_playback_start_VRC7(WORD samplarate) {
 	opll_reset(3579545, samplarate);
+}
+
+void map_init_VRC7UNL(void) {
+	EXTCL_CPU_WR_MEM(VRC7UNL);
+	EXTCL_SAVE_MAPPER(VRC7UNL);
+	EXTCL_CPU_EVERY_CYCLE(VRC7UNL);
+	mapper.internal_struct[0] = (BYTE *)&vrc7;
+	mapper.internal_struct_size[0] = sizeof(vrc7);
+
+	if (info.reset >= HARD) {
+		memset(&vrc7, 0x00, sizeof(vrc7));
+	} else {
+		vrc7.enabled = 0;
+		vrc7.reload = 0;
+		vrc7.mode = 0;
+		vrc7.acknowledge = 0;
+		vrc7.count = 0;
+		vrc7.prescaler = 0;
+	}
+
+	delay = 1;
+}
+void extcl_cpu_wr_mem_VRC7UNL(WORD address, BYTE value) {
+	switch (address & 0xF008) {
+		case 0x8000:
+			control_bank(info.prg.rom[0].max.banks_8k)
+			map_prg_rom_8k(1, 0, value);
+			map_prg_rom_8k_update();
+			return;
+		case 0x8008:
+			control_bank(info.prg.rom[0].max.banks_8k)
+			map_prg_rom_8k(1, 1, value);
+			map_prg_rom_8k_update();
+			return;
+		case 0x9000:
+			control_bank(info.prg.rom[0].max.banks_8k)
+			map_prg_rom_8k(1, 2, value);
+			map_prg_rom_8k_update();
+			return;
+		case 0xA000:
+			control_bank(info.chr.rom[0].max.banks_1k)
+			chr.bank_1k[0] = chr_chip_byte_pnt(0, value << 10);
+			return;
+		case 0xA008:
+			control_bank(info.chr.rom[0].max.banks_1k)
+			chr.bank_1k[1] = chr_chip_byte_pnt(0, value << 10);
+			return;
+		case 0xB000:
+			control_bank(info.chr.rom[0].max.banks_1k)
+			chr.bank_1k[2] = chr_chip_byte_pnt(0, value << 10);
+			return;
+		case 0xB008:
+			control_bank(info.chr.rom[0].max.banks_1k)
+			chr.bank_1k[3] = chr_chip_byte_pnt(0, value << 10);
+			return;
+		case 0xC000:
+			control_bank(info.chr.rom[0].max.banks_1k)
+			chr.bank_1k[4] = chr_chip_byte_pnt(0, value << 10);
+			return;
+		case 0xC008:
+			control_bank(info.chr.rom[0].max.banks_1k)
+			chr.bank_1k[5] = chr_chip_byte_pnt(0, value << 10);
+			return;
+		case 0xD000:
+			control_bank(info.chr.rom[0].max.banks_1k)
+			chr.bank_1k[6] = chr_chip_byte_pnt(0, value << 10);
+			return;
+		case 0xD008:
+			control_bank(info.chr.rom[0].max.banks_1k)
+			chr.bank_1k[7] = chr_chip_byte_pnt(0, value << 10);
+			return;
+		case 0xE000: {
+			switch (value & 0x03) {
+				case 0:
+					mirroring_V();
+					break;
+				case 1:
+					mirroring_H();
+					break;
+				case 2:
+					mirroring_SCR0();
+					break;
+				case 3:
+					mirroring_SCR1();
+					break;
+			}
+			return;
+		}
+		case 0xE008:
+			vrc7.reload = value;
+			return;
+		case 0xF000:
+			vrc7.acknowledge = value & 0x01;
+			vrc7.enabled = value & 0x02;
+			vrc7.mode = value & 0x04;
+			if (vrc7.enabled) {
+				vrc7.prescaler = 0;
+				vrc7.count = vrc7.reload;
+			}
+			irq.high &= ~EXT_IRQ;
+			return;
+		case 0xF008:
+			if (vrc7.acknowledge) {
+				vrc7.enabled = 0x02;
+			} else {
+				vrc7.enabled = 0x00;
+			}
+			irq.high &= ~EXT_IRQ;
+			return;
+		default:
+			return;
+	}
+}
+BYTE extcl_save_mapper_VRC7UNL(BYTE mode, BYTE slot, FILE *fp) {
+	save_slot_ele(mode, slot, vrc7.reg);
+	save_slot_ele(mode, slot, vrc7.enabled);
+	save_slot_ele(mode, slot, vrc7.reload);
+	save_slot_ele(mode, slot, vrc7.mode);
+	save_slot_ele(mode, slot, vrc7.acknowledge);
+	save_slot_ele(mode, slot, vrc7.count);
+	save_slot_ele(mode, slot, vrc7.prescaler);
+	save_slot_ele(mode, slot, vrc7.delay);
+
+	return (EXIT_OK);
+}
+void extcl_cpu_every_cycle_VRC7UNL(void) {
+	if (vrc7.delay && !(--vrc7.delay)) {
+		irq.high |= EXT_IRQ;
+	}
+
+	if (!vrc7.enabled) {
+		return;
+	}
+
+	if (!vrc7.mode) {
+		if (vrc7.prescaler < 338) {
+			vrc7.prescaler += 3;
+			return;
+		}
+		vrc7.prescaler -= 338;
+	}
+
+	if (vrc7.count != 0xF7) {
+		vrc7.count++;
+		return;
+	}
+
+	vrc7.count = vrc7.reload;
+	vrc7.delay = delay;
 }

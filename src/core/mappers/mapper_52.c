@@ -24,7 +24,7 @@
 #include "save_slot.h"
 
 #define m52_chr_1k(vl)\
-	if (info.chr.rom[0].max.banks_4k == 255) {\
+	if (model == MARIO7IN1) {\
 		bank = ((((m52.reg >> 3) & 0x04) | ((m52.reg >> 1) & 0x02) |\
 			((m52.reg >> 6) & (m52.reg >> 4) & 0x01)) << 7) |\
 			(vl & (((m52.reg & 0x40) << 1) ^ 0xFF));\
@@ -166,7 +166,9 @@
 	}\
 }
 
-void map_init_52(void) {
+BYTE model;
+
+void map_init_52(BYTE type) {
 	EXTCL_CPU_WR_MEM(52);
 	EXTCL_SAVE_MAPPER(52);
 	EXTCL_CPU_EVERY_CYCLE(MMC3);
@@ -175,9 +177,9 @@ void map_init_52(void) {
 	EXTCL_PPU_256_TO_319(MMC3);
 	EXTCL_PPU_320_TO_34X(MMC3);
 	EXTCL_UPDATE_R2006(MMC3);
-	mapper.internal_struct[0] = (BYTE *) &m52;
+	mapper.internal_struct[0] = (BYTE *)&m52;
 	mapper.internal_struct_size[0] = sizeof(m52);
-	mapper.internal_struct[1] = (BYTE *) &mmc3;
+	mapper.internal_struct[1] = (BYTE *)&mmc3;
 	mapper.internal_struct_size[1] = sizeof(mmc3);
 
 	memset(&mmc3, 0x00, sizeof(mmc3));
@@ -205,6 +207,8 @@ void map_init_52(void) {
 
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
+
+	model = type;
 }
 void extcl_cpu_wr_mem_52(WORD address, BYTE value) {
 	switch (address & 0xE001) {

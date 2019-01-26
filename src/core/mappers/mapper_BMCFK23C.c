@@ -160,33 +160,36 @@ void extcl_cpu_wr_mem_BMCFK23C(WORD address, BYTE value) {
 				bmcfk23c.unromchr = value & mask;
 				chr_fix_BMCFK23CPW(mmc3.bank_to_update);
 			}
-
-
-
 		} else {
 			if ((address == 0x8001) && ((bmcfk23c.reg[3] & 0x02) && (mmc3.bank_to_update & 0x08))) {
 				bmcfk23c.reg[4 | (mmc3.bank_to_update & 0x03)] = value;
 				prg_fix_BMCFK23CPW(mmc3.bank_to_update);
 				chr_fix_BMCFK23CPW(mmc3.bank_to_update);
 			} else if (address < 0xC000) {
-				/**/
+				/*
 				if (info.format == UNIF_FORMAT) {
 				//if (info.format != UNIF_FORMAT) {
 					// hacky... strange behaviour, must be bit scramble due to pcb layot restrictions
 					// check if it not interfer with other dumps
 					if (address == 0x8000) {
 						if (value == 0x46) {
-							printf("0x%04X : 0x%02X\n", address, value);
+
+
+							fprintf(stderr, "0x%04X : 0x%02X\n", address, value);
+
 
 							value = 0x47;
 						} else if (value == 0x47) {
-							printf("0x%04X : 0x%02X\n", address, value);
+
+
+							fprintf(stderr, "0x%04X : 0x%02X\n", address, value);
+
 
 							value = 0x46;
 						}
 					}
 				}
-				/**/
+				*/
 				switch (address & 0xE001) {
 					case 0x8000:
 						if ((value & 0x40) != (mmc3.bank_to_update & 0x40)) {

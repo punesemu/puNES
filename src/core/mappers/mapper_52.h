@@ -21,6 +21,8 @@
 
 #include "common.h"
 
+enum { MARIO7IN1 };
+
 struct _m52 {
 	BYTE disabled;
 	BYTE reg;
@@ -28,7 +30,7 @@ struct _m52 {
 	WORD chr_map[8];
 } m52;
 
-void map_init_52(void);
+void map_init_52(BYTE type);
 void extcl_cpu_wr_mem_52(WORD address, BYTE value);
 BYTE extcl_save_mapper_52(BYTE mode, BYTE slot, FILE *fp);
 

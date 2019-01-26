@@ -204,7 +204,7 @@ BYTE map_init(void) {
 			map_init_51();
 			break;
 		case 52:
-			map_init_52();
+			map_init_52(info.mapper.submapper);
 			break;
 		case 53:
 			map_init_53();
@@ -294,7 +294,9 @@ BYTE map_init(void) {
 			map_init_83();
 			break;
 		case 85:
-			if (info.mapper.submapper == VRC7A) {
+			if (info.mapper.submapper == VRC7UNL) {
+				map_init_VRC7UNL();
+			} else if (info.mapper.submapper == VRC7A) {
 				map_init_VRC7(VRC7A);
 			} else {
 				map_init_VRC7(VRC7B);
@@ -512,11 +514,7 @@ BYTE map_init(void) {
 			}
 			break;
 		case 178:
-			if (info.mapper.submapper != DEFAULT) {
-				map_init_178(info.mapper.submapper);
-			} else {
-				map_init_178(MAP178);
-			}
+			map_init_178(info.mapper.submapper);
 			break;
 		case 180:
 			map_init_UxROM(UNROM180);

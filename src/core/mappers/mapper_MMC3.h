@@ -36,6 +36,7 @@ enum {
 	NAMCO3417,
 	NAMCO3451,
 	TKROM,
+	KT008,
 	SMB2EREZA,
 	SMB2JSMB1,
 	RADRACER2,
@@ -49,6 +50,9 @@ struct _mmc3 {
 	BYTE prg_rom_cfg;
 	BYTE chr_rom_cfg;
 } mmc3;
+struct _kt008 {
+	BYTE value;
+} kt008;
 
 void map_init_MMC3(void);
 void extcl_cpu_wr_mem_MMC3(WORD address, BYTE value);
@@ -60,5 +64,8 @@ void extcl_ppu_256_to_319_MMC3(void);
 void extcl_ppu_320_to_34x_MMC3(void);
 void extcl_update_r2006_MMC3(WORD new_r2006, WORD old_r2006);
 void extcl_irq_A12_clock_MMC3_alternate(void);
+
+void extcl_cpu_wr_mem_KT008(WORD address, BYTE value);
+BYTE extcl_save_mapper_KT008(BYTE mode, BYTE slot, FILE *fp);
 
 #endif /* MAPPER_MMC3_H_ */
