@@ -497,14 +497,24 @@ void d3d9_draw_scene(void) {
 
 	// text
 	if (cfg->txt_on_screen && text.on_screen) {
+		float vpx, vpy, vpw, vph;
+
 		// aggiorno la texture del testo
 		IDirect3DDevice9_UpdateSurface(d3d9.adapter->dev, d3d9.text.offscreen, NULL, d3d9.text.map0, NULL);
 
 		if (cfg->fullscreen) {
-			d3d9_viewport_set(0, 0, d3d9.text.rect.w, d3d9.text.rect.h);
+			vpx = 0;
+			vpy = 0;
+			vpw = d3d9.text.rect.w * gfx.device_pixel_ratio;
+			vph = d3d9.text.rect.h * gfx.device_pixel_ratio;
 		} else {
-			d3d9_viewport_set(-gfx.vp.x, -gfx.vp.y, d3d9.text.rect.w, d3d9.text.rect.h);
+			vpx = -gfx.vp.x * gfx.device_pixel_ratio;
+			vpy = -gfx.vp.y * gfx.device_pixel_ratio;
+			vpw = d3d9.text.rect.w * gfx.device_pixel_ratio;
+			vph = d3d9.text.rect.h * gfx.device_pixel_ratio;
 		}
+
+		d3d9_viewport_set(vpx, vpy, vpw, vph);
 
 		cgD3D9BindProgram(d3d9.text.shader.prg.f);
 		cgD3D9BindProgram(d3d9.text.shader.prg.v);
@@ -864,10 +874,10 @@ static BYTE d3d9_texture_create(_texture *texture, UINT index) {
 	}
 
 	if (index == shader_effect.last_pass) {
-		vp->x = gfx.vp.x;
-		vp->y = gfx.vp.y;
-		vp->w = gfx.vp.w;
-		vp->h = gfx.vp.h;
+		vp->x = gfx.vp.x * gfx.device_pixel_ratio;
+		vp->y = gfx.vp.y * gfx.device_pixel_ratio;
+		vp->w = gfx.vp.w * gfx.device_pixel_ratio;
+		vp->h = gfx.vp.h * gfx.device_pixel_ratio;
 	} else {
 		vp->x = 0;
 		vp->y = 0;

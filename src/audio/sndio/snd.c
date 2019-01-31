@@ -191,10 +191,6 @@ BYTE snd_playback_start(void) {
 		// snd.samplarate / 50 = 20 ms
 		snd.period.samples = (snd.samplerate / factor[cfg->audio_buffer_factor]);
 
-#if !defined (RELEASE)
-		fprintf(stderr, "psize and bsize : %ld %ld\n", snd.period.samples, snd.period.samples);
-#endif
-
 		par.bits = 16;
 		par.sig = 1;
 		par.pchan = snd.channels;
@@ -224,7 +220,7 @@ BYTE snd_playback_start(void) {
 		snd.buffer.limit.high = snd.period.size * 7;
 
 #if !defined (RELEASE)
-		fprintf(stderr, "new psize and bsize : %ld %ld\n", snd.period.samples, par.appbufsz);
+		//fprintf(stderr, "new psize and bsize : %d %d\n", snd.period.samples, par.appbufsz);
 		fprintf(stderr, "softw bsize    : %10d - %10d\n", snd.buffer.size, snd.period.samples);
 		fprintf(stderr, "softw limit    : %10d - %10d\n", snd.buffer.limit.high, snd.buffer.limit.low);
 #endif

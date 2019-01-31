@@ -116,6 +116,7 @@ EXTERNC struct _gfx {
 	SDBWORD w[5], h[5];
 	float w_pr, h_pr;
 	float pixel_aspect_ratio;
+	float device_pixel_ratio;
 	uint32_t *palette;
 	uTCHAR last_shader_file[LENGTH_FILE_NAME_LONG];
 	_viewport vp;

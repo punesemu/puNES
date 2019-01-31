@@ -125,6 +125,8 @@ BYTE gui_create(void) {
 
 	qt.app->installEventFilter(new appEventFilter());
 
+	gfx.device_pixel_ratio = qt.screen->devicePixelRatioF();
+
 	{
 		int screenNumber = qApp->desktop()->screenNumber(qt.mwin);
 

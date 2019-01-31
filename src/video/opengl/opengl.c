@@ -157,8 +157,7 @@ BYTE opengl_context_create(void) {
 		opengl.cg.profile.v = cgGLGetLatestProfile(CG_GL_VERTEX);
 		opengl.cg.profile.f = cgGLGetLatestProfile(CG_GL_FRAGMENT);
 
-		if ((opengl.cg.profile.v == CG_PROFILE_UNKNOWN)
-			|| (opengl.cg.profile.f == CG_PROFILE_UNKNOWN)) {
+		if ((opengl.cg.profile.v == CG_PROFILE_UNKNOWN) || (opengl.cg.profile.f == CG_PROFILE_UNKNOWN)) {
 			opengl_context_delete();
 			return (EXIT_ERROR);
 		}
@@ -522,7 +521,12 @@ void opengl_draw_scene(void) {
 
 	// testo
 	if (cfg->txt_on_screen && text.on_screen) {
-		glViewport(0, 0, opengl.text.rect.w, opengl.text.rect.h);
+		float vpx = 0;
+		float vpy = 0;
+		float vpw = opengl.text.rect.w * gfx.device_pixel_ratio;
+		float vph = opengl.text.rect.h * gfx.device_pixel_ratio;
+
+		glViewport(vpx, vpy, vpw, vph);
 		glBindTexture(GL_TEXTURE_2D, opengl.text.id);
 		glUseProgram(opengl.text.shader.glslp.prg);
 		opengl_shader_params_text_set(&opengl.text.shader);
@@ -775,10 +779,10 @@ static BYTE opengl_texture_create(_texture *texture, GLuint index) {
 #endif
 
 	if (index == shader_effect.last_pass) {
-		vp->x = gfx.vp.x;
-		vp->y = gfx.vp.y;
-		vp->w = gfx.vp.w;
-		vp->h = gfx.vp.h;
+		vp->x = gfx.vp.x * gfx.device_pixel_ratio;
+		vp->y = gfx.vp.y * gfx.device_pixel_ratio;
+		vp->w = gfx.vp.w * gfx.device_pixel_ratio;
+		vp->h = gfx.vp.h * gfx.device_pixel_ratio;
 	} else {
 		vp->x = 0;
 		vp->y = 0;
