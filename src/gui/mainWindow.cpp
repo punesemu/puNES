@@ -371,6 +371,52 @@ void mainWindow::state_save_slot_set(int slot, bool on_video) {
 		text_save_slot(SAVE_SLOT_INCDEC);
 	}
 }
+void mainWindow::shortcuts(void) {
+	// se non voglio che gli shortcut funzionino durante il fullscreen, basta
+	// utilizzare lo shortcut associato al QAction. In questo modo quando nascondero'
+	// la barra del menu, automaticamente questi saranno disabilitati.
+
+	// File
+	connect_shortcut(action_Open, SET_INP_SC_OPEN, SLOT(s_open()));
+	connect_shortcut(action_Quit, SET_INP_SC_QUIT, SLOT(s_quit()));
+	// NES
+	connect_shortcut(action_Turn_Off, SET_INP_SC_TURN_OFF, SLOT(s_turn_on_off()));
+	connect_shortcut(action_Hard_Reset, SET_INP_SC_HARD_RESET, SLOT(s_make_reset()));
+	connect_shortcut(action_Soft_Reset, SET_INP_SC_SOFT_RESET, SLOT(s_make_reset()));
+	connect_shortcut(action_Insert_Coin, SET_INP_SC_INSERT_COIN, SLOT(s_insert_coin()));
+	connect_shortcut(action_Switch_sides, SET_INP_SC_SWITCH_SIDES, SLOT(s_disk_side()));
+	connect_shortcut(action_Eject_Insert_Disk, SET_INP_SC_EJECT_DISK, SLOT(s_eject_disk()));
+	connect_shortcut(action_Start_Stop_WAV_recording, SET_INP_SC_WAV, SLOT(s_start_stop_wave()));
+	connect_shortcut(action_Fullscreen, SET_INP_SC_FULLSCREEN, SLOT(s_set_fullscreen()));
+	connect_shortcut(action_Pause, SET_INP_SC_PAUSE, SLOT(s_pause()));
+	connect_shortcut(action_Fast_Forward, SET_INP_SC_FAST_FORWARD, SLOT(s_fast_forward()));
+	connect_shortcut(action_Save_Screenshot, SET_INP_SC_SCREENSHOT, SLOT(s_save_screenshot()));
+	// Settings/Mode
+	connect_shortcut(qaction_shcut.mode_auto, SET_INP_SC_MODE_AUTO, SLOT(s_shcut_mode()));
+	connect_shortcut(qaction_shcut.mode_ntsc, SET_INP_SC_MODE_NTSC, SLOT(s_shcut_mode()));
+	connect_shortcut(qaction_shcut.mode_pal, SET_INP_SC_MODE_PAL, SLOT(s_shcut_mode()));
+	connect_shortcut(qaction_shcut.mode_dendy, SET_INP_SC_MODE_DENDY, SLOT(s_shcut_mode()));
+	// Settings/Video/Scale
+	connect_shortcut(qaction_shcut.scale_1x, SET_INP_SC_SCALE_1X, SLOT(s_shcut_scale()));
+	connect_shortcut(qaction_shcut.scale_2x, SET_INP_SC_SCALE_2X, SLOT(s_shcut_scale()));
+	connect_shortcut(qaction_shcut.scale_3x, SET_INP_SC_SCALE_3X, SLOT(s_shcut_scale()));
+	connect_shortcut(qaction_shcut.scale_4x, SET_INP_SC_SCALE_4X, SLOT(s_shcut_scale()));
+	connect_shortcut(qaction_shcut.scale_5x, SET_INP_SC_SCALE_5X, SLOT(s_shcut_scale()));
+	connect_shortcut(qaction_shcut.scale_6x, SET_INP_SC_SCALE_6X, SLOT(s_shcut_scale()));
+	// Settings/Video/[Interpolation, Stretch in fullscreen]
+	connect_shortcut(qaction_shcut.interpolation, SET_INP_SC_INTERPOLATION, SLOT(s_shcut_interpolation()));
+	connect_shortcut(qaction_shcut.stretch_in_fullscreen, SET_INP_SC_STRETCH_FULLSCREEN, SLOT(s_shcut_stretch_in_fullscreen()));
+	// Settings/Audio/Enable
+	connect_shortcut(qaction_shcut.audio_enable, SET_INP_SC_AUDIO_ENABLE, SLOT(s_shcut_audio_enable()));
+	// Settings/Save settings
+	connect_shortcut(qaction_shcut.save_settings, SET_INP_SC_SAVE_SETTINGS, SLOT(s_shcut_save_settings()));
+	// State/[Save state, Load state]
+	connect_shortcut(action_Save_state, SET_INP_SC_SAVE_STATE, SLOT(s_state_save_slot_action()));
+	connect_shortcut(action_Load_state, SET_INP_SC_LOAD_STATE, SLOT(s_state_save_slot_action()));
+	// State/[Incremente slot, Decrement slot]
+	connect_shortcut(action_Increment_slot, SET_INP_SC_INC_SLOT, SLOT(s_state_save_slot_incdec()));
+	connect_shortcut(action_Decrement_slot, SET_INP_SC_DEC_SLOT, SLOT(s_state_save_slot_incdec()));
+}
 
 void mainWindow::connect_menu_signals(void) {
 	// File
@@ -455,54 +501,6 @@ void mainWindow::connect_action(QAction *action, const char *member) {
 void mainWindow::connect_action(QAction *action, int value, const char *member) {
 	action->setProperty("myValue", QVariant(value));
 	connect_action(action, member);
-}
-void mainWindow::shortcuts(void) {
-	// se non voglio che gli shortcut funzionino durante il fullscreen, basta
-	// utilizzare lo shortcut associato al QAction. In questo modo quando nascondero'
-	// la barra del menu, automaticamente questi saranno disabilitati.
-
-	// File
-	connect_shortcut(action_Open, SET_INP_SC_OPEN, SLOT(s_open()));
-	connect_shortcut(action_Quit, SET_INP_SC_QUIT, SLOT(s_quit()));
-	// NES
-	connect_shortcut(action_Turn_Off, SET_INP_SC_TURN_OFF, SLOT(s_turn_on_off()));
-	connect_shortcut(action_Hard_Reset, SET_INP_SC_HARD_RESET, SLOT(s_make_reset()));
-	connect_shortcut(action_Soft_Reset, SET_INP_SC_SOFT_RESET, SLOT(s_make_reset()));
-	connect_shortcut(action_Insert_Coin, SET_INP_SC_INSERT_COIN, SLOT(s_insert_coin()));
-	connect_shortcut(action_Switch_sides, SET_INP_SC_SWITCH_SIDES, SLOT(s_disk_side()));
-	connect_shortcut(action_Eject_Insert_Disk, SET_INP_SC_EJECT_DISK, SLOT(s_eject_disk()));
-	connect_shortcut(action_Start_Stop_WAV_recording, SET_INP_SC_WAV, SLOT(s_start_stop_wave()));
-	connect_shortcut(action_Fullscreen, SET_INP_SC_FULLSCREEN, SLOT(s_set_fullscreen()));
-	connect_shortcut(action_Pause, SET_INP_SC_PAUSE, SLOT(s_pause()));
-	connect_shortcut(action_Fast_Forward, SET_INP_SC_FAST_FORWARD, SLOT(s_fast_forward()));
-	connect_shortcut(action_Save_Screenshot, SET_INP_SC_SCREENSHOT, SLOT(s_save_screenshot()));
-	// Settings/Mode
-	connect_shortcut(qaction_shcut.mode_auto, SET_INP_SC_MODE_AUTO, SLOT(s_shcut_mode()));
-	connect_shortcut(qaction_shcut.mode_ntsc, SET_INP_SC_MODE_NTSC, SLOT(s_shcut_mode()));
-	connect_shortcut(qaction_shcut.mode_pal, SET_INP_SC_MODE_PAL, SLOT(s_shcut_mode()));
-	connect_shortcut(qaction_shcut.mode_dendy, SET_INP_SC_MODE_DENDY, SLOT(s_shcut_mode()));
-	// Settings/Video/Scale
-	connect_shortcut(qaction_shcut.scale_1x, SET_INP_SC_SCALE_1X, SLOT(s_shcut_scale()));
-	connect_shortcut(qaction_shcut.scale_2x, SET_INP_SC_SCALE_2X, SLOT(s_shcut_scale()));
-	connect_shortcut(qaction_shcut.scale_3x, SET_INP_SC_SCALE_3X, SLOT(s_shcut_scale()));
-	connect_shortcut(qaction_shcut.scale_4x, SET_INP_SC_SCALE_4X, SLOT(s_shcut_scale()));
-	connect_shortcut(qaction_shcut.scale_5x, SET_INP_SC_SCALE_5X, SLOT(s_shcut_scale()));
-	connect_shortcut(qaction_shcut.scale_6x, SET_INP_SC_SCALE_6X, SLOT(s_shcut_scale()));
-	// Settings/Video/[Interpolation, Stretch in fullscreen]
-	connect_shortcut(qaction_shcut.interpolation, SET_INP_SC_INTERPOLATION,
-		SLOT(s_shcut_interpolation()));
-	connect_shortcut(qaction_shcut.stretch_in_fullscreen, SET_INP_SC_STRETCH_FULLSCREEN,
-		SLOT(s_shcut_stretch_in_fullscreen()));
-	// Settings/Audio/Enable
-	connect_shortcut(qaction_shcut.audio_enable, SET_INP_SC_AUDIO_ENABLE, SLOT(s_shcut_audio_enable()));
-	// Settings/Save settings
-	connect_shortcut(qaction_shcut.save_settings, SET_INP_SC_SAVE_SETTINGS, SLOT(s_shcut_save_settings()));
-	// State/[Save state, Load state]
-	connect_shortcut(action_Save_state, SET_INP_SC_SAVE_STATE, SLOT(s_state_save_slot_action()));
-	connect_shortcut(action_Load_state, SET_INP_SC_LOAD_STATE, SLOT(s_state_save_slot_action()));
-	// State/[Incremente slot, Decrement slot]
-	connect_shortcut(action_Increment_slot, SET_INP_SC_INC_SLOT, SLOT(s_state_save_slot_incdec()));
-	connect_shortcut(action_Decrement_slot, SET_INP_SC_DEC_SLOT, SLOT(s_state_save_slot_incdec()));
 }
 void mainWindow::connect_shortcut(QAction *action, int index) {
 	QString *sc = (QString *)settings_inp_rd_sc(index, KEYBOARD);

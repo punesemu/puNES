@@ -104,12 +104,12 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void make_reset(int type);
 		void change_rom(const uTCHAR *rom);
 		void state_save_slot_set(int slot, bool on_video);
+		void shortcuts(void);
 
 	private:
 		void connect_menu_signals(void);
 		void connect_action(QAction *action, const char *member);
 		void connect_action(QAction *action, int value, const char *member);
-		void shortcuts(void);
 		void connect_shortcut(QAction *action, int index);
 		void connect_shortcut(QAction *action, int index, const char *member);
 
