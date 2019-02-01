@@ -410,6 +410,8 @@ bool wdgSettingsInput::shortcut_keypressEvent(QKeyEvent *event) {
 					shcut.text[KEYBOARD].replace(shcut.row, QString("Meta+%1").arg(key));
 					break;
 			}
+			settings_inp_wr_sc((void *)&shcut.text[KEYBOARD].at(shcut.row), shcut.row + SET_INP_SC_OPEN, KEYBOARD);
+			mainwin->shortcuts();
 		}
 	} else {
 		// quando sto configurando il joystick, l'unico input da tastiera che accetto e' l'escape
@@ -818,16 +820,17 @@ void wdgSettingsInput::s_shortcut(UNUSED(bool checked)) {
 void wdgSettingsInput::s_shortcut_keyb_default(UNUSED(bool checked)) {
 	int row = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
-	shcut.text[KEYBOARD].replace(row,
-		uQString(inp_cfg[row + SET_INP_SC_OPEN].def).split(",").at(KEYBOARD));
-	tableWidget_Shortcuts->cellWidget(row, 1)->findChild<QPushButton *>("value")->setText(
-		shcut.text[KEYBOARD].at(row));
+	shcut.text[KEYBOARD].replace(row, uQString(inp_cfg[row + SET_INP_SC_OPEN].def).split(",").at(KEYBOARD));
+	tableWidget_Shortcuts->cellWidget(row, 1)->findChild<QPushButton *>("value")->setText(shcut.text[KEYBOARD].at(row));
+	settings_inp_wr_sc((void *)&shcut.text[KEYBOARD].at(row), row + SET_INP_SC_OPEN, KEYBOARD);
+	mainwin->shortcuts();
 }
 void wdgSettingsInput::s_shortcut_joy_unset(UNUSED(bool checked)) {
 	int row = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
 	shcut.text[JOYSTICK].replace(row, "NULL");
 	tableWidget_Shortcuts->cellWidget(row, 2)->findChild<QPushButton *>("value")->setText("NULL");
+	settings_inp_wr_sc((void *)&shcut.text[JOYSTICK].at(row), row + SET_INP_SC_OPEN, JOYSTICK);
 }
 void wdgSettingsInput::s_input_reset(UNUSED(bool checked)) {
 	_array_pointers_port array;
@@ -842,18 +845,21 @@ void wdgSettingsInput::s_input_reset(UNUSED(bool checked)) {
 
 	comboBox_joy_ID->setCurrentIndex(comboBox_joy_ID->count() - 1);
 	for (int i = 0; i < SET_MAX_NUM_SC; i++) {
-		shcut.text[KEYBOARD].replace(i,
-			uQString(inp_cfg[i + SET_INP_SC_OPEN].def).split(",").at(KEYBOARD));
-		shcut.text[JOYSTICK].replace(i,
-			uQString(inp_cfg[i + SET_INP_SC_OPEN].def).split(",").at(JOYSTICK));
+		shcut.text[KEYBOARD].replace(i, uQString(inp_cfg[i + SET_INP_SC_OPEN].def).split(",").at(KEYBOARD));
+		settings_inp_wr_sc((void *)&shcut.text[KEYBOARD].at(i), i + SET_INP_SC_OPEN, KEYBOARD);
+
+		shcut.text[JOYSTICK].replace(i, uQString(inp_cfg[i + SET_INP_SC_OPEN].def).split(",").at(JOYSTICK));
+		settings_inp_wr_sc((void *)&shcut.text[JOYSTICK].at(i), i + SET_INP_SC_OPEN, JOYSTICK);
 	}
+
+	mainwin->shortcuts();
 
 	shortcuts_update(UPDATE_ALL, NO_ACTION, NO_ACTION);
 	update_widget();
 }
 void wdgSettingsInput::s_input_timeout(void) {
-	input_info_print(tr("Press a key (ESC for the previous value \"%1\") - timeout in %2").arg(
-		shcut.text[shcut.type].at(shcut.row), QString::number(shcut.timeout.seconds--)));
+	input_info_print(tr("Press a key (ESC for the previous value \"%1\") - timeout in %2").arg(	shcut.text[shcut.type].at(shcut.row),
+		QString::number(shcut.timeout.seconds--)));
 
 	if (shcut.timeout.seconds < 0) {
 		QKeyEvent *event = new QKeyEvent(QEvent::KeyPress, Qt::Key_Escape, Qt::NoModifier);
@@ -870,6 +876,7 @@ void wdgSettingsInput::s_joy_read_timer(void) {
 		shcut.joy.fd = 0;
 #endif
 		shcut.text[JOYSTICK].replace(shcut.row, uQString(jsv_to_name(shcut.joy.value)));
+		settings_inp_wr_sc((void *)&shcut.text[JOYSTICK].at(shcut.row), shcut.row + SET_INP_SC_OPEN, JOYSTICK);
 
 		shcut.timeout.timer->stop();
 		shcut.joy.timer->stop();
