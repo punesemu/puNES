@@ -72,7 +72,7 @@ void extcl_cpu_wr_mem_UxROM(WORD address, BYTE value) {
 	/* bus conflict */
 	value &= prg_rom_rd(address);
 
-	control_bank_with_AND(0x0F, info.prg.rom[0].max.banks_16k)
+	control_bank(info.prg.rom[0].max.banks_16k)
 	map_prg_rom_8k(2, 0, value);
 	map_prg_rom_8k_update();
 }
