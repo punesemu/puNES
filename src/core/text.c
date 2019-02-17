@@ -332,13 +332,13 @@ void text_rendering(BYTE render) {
 		/* counter frames */
 		{
 			int old_w = ele->w;
-
 			int length;
-			if (tas.lag_frame) {
-				sprintf(ele->text, "%d/%d [red]%d[normal]", tas.frame, tas.total, tas.total_lag_frames);
+
+			if (tas.lag_actual_frame) {
+				sprintf(ele->text, "%d/%d [red]%d[normal]", tas.frame, tas.total - 1, tas.total_lag_frames);
 				length = strlen(ele->text) - 13;
 			} else {
-				sprintf(ele->text, "%d/%d [green]%d[normal]", tas.frame, tas.total, tas.total_lag_frames);
+				sprintf(ele->text, "%d/%d [green]%d[normal]", tas.frame, tas.total - 1, tas.total_lag_frames);
 				length = strlen(ele->text) - 15;
 			}
 
@@ -356,6 +356,13 @@ void text_rendering(BYTE render) {
 			if (render) {
 				rendering(ele);
 			}
+		}
+	} else {
+		ele = &text.tas.counter_frames;
+
+		if (ele->surface) {
+			text_clear(ele);
+			gfx_text_release_surface(ele);
 		}
 	}
 
@@ -389,6 +396,17 @@ void text_rendering(BYTE render) {
 
 			if (render) {
 				rendering(ele);
+			}
+		}
+	} else {
+		uint8_t i;
+
+		for (i = 0; i < PORT_MAX; i++) {
+			ele = &text.tas.controllers[i];
+
+			if (ele->surface) {
+				text_clear(ele);
+				gfx_text_release_surface(ele);
 			}
 		}
 	}
@@ -570,7 +588,7 @@ void text_quit(void) {
 		}
 
 		for (i = 0; i < PORT_MAX; i++) {
-			ele = text.tas.controllers;
+			ele = &text.tas.controllers[i];
 
 			if (ele->surface) {
 				gfx_text_release_surface(ele);

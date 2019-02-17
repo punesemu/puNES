@@ -21,6 +21,12 @@
 
 #include "common.h"
 
+enum frame_status_modes {
+	FRAME_FINISHED,
+	FRAME_STARTED,
+	FRAME_INTERRUPTED
+};
+
 typedef struct _info_sh1sum {
 	struct _info_sha1sum_prg {
 		BYTE value[20];
@@ -59,7 +65,7 @@ EXTERNC struct _info {
 	BYTE trainer;
 	BYTE stop;
 	BYTE reset;
-	BYTE execute_cpu;
+	BYTE frame_status;
 	BYTE gui;
 	BYTE turn_off;
 	BYTE no_rom;

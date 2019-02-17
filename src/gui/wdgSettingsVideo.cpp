@@ -955,19 +955,6 @@ void wdgSettingsVideo::s_show_fps(UNUSED(bool checked)) {
 }
 void wdgSettingsVideo::s_input_display(UNUSED(bool checked)) {
 	cfg->input_display = !cfg->input_display;
-
-	if (!cfg->input_display) {
-		BYTE i;
-
-		for (i = 0; i < PORT_MAX; i++) {
-			_txt_element *ele = &text.tas.controllers[i];
-
-			if (ele->surface) {
-				text_clear(ele);
-				gfx_text_release_surface(ele);
-			}
-		}
-	}
 }
 void wdgSettingsVideo::s_disable_tv_noise(UNUSED(bool checked)) {
 	cfg->disable_tv_noise = !cfg->disable_tv_noise;

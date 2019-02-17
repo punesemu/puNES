@@ -33,6 +33,8 @@ enum interrupt_types {
 	FDS_DISK_IRQ = 0x10
 };
 
+#define assemble_SR()\
+	cpu.SR = (cpu.sf | cpu.of | 0x20 | cpu.bf | cpu.df | cpu.im | cpu.zf | cpu.cf)
 #define disassemble_SR()\
 	cpu.cf = cpu.SR & 0x01;\
 	cpu.zf = cpu.SR & 0x02;\
@@ -100,14 +102,22 @@ typedef struct _nmi {
 	uint32_t cpu_cycles_from_last_nmi;
 } _nmi;
 
-_cpu cpu;
-_irq irq;
-_nmi nmi;
+#if defined (__cplusplus)
+#define EXTERNC extern "C"
+#else
+#define EXTERNC
+#endif
 
-void cpu_exe_op(void);
-void cpu_init_PC(void);
-void cpu_turn_on(void);
-BYTE cpu_rd_mem(WORD address, BYTE made_tick);
-void cpu_wr_mem(WORD address, BYTE value);
+EXTERNC _cpu cpu;
+EXTERNC _irq irq;
+EXTERNC _nmi nmi;
+
+EXTERNC void cpu_exe_op(void);
+EXTERNC void cpu_init_PC(void);
+EXTERNC void cpu_turn_on(void);
+EXTERNC BYTE cpu_rd_mem(WORD address, BYTE made_tick);
+EXTERNC void cpu_wr_mem(WORD address, BYTE value);
+
+#undef EXTERNC
 
 #endif /* CPU_H_ */

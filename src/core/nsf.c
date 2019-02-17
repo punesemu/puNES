@@ -561,7 +561,7 @@ void nsf_tick(void) {
 			nmi.high = TRUE;
 		}
 		ppu.odd_frame = !ppu.odd_frame;
-		info.execute_cpu = FALSE;
+		info.frame_status = FRAME_FINISHED;
 
 		if (!cfg->apu.channel[APU_MASTER]) {
 			extcl_audio_samples_mod_nsf(NULL, 0);

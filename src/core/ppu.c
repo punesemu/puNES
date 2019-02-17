@@ -937,7 +937,7 @@ void ppu_tick(void) {
 			/* azzero frame_y */
 			ppu.frame_y = 0;
 			/* setto il flag che indica che un frame e' stato completato */
-			info.execute_cpu = FALSE;
+			info.frame_status = FRAME_FINISHED;
 			/* e' un frame dispari? */
 			ppu.odd_frame = !ppu.odd_frame;
 			/* abilito il vblank */

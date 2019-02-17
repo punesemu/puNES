@@ -61,7 +61,7 @@ void extcl_cpu_wr_mem_GameGenie(WORD address, BYTE value) {
 			BYTE i;
 
 			gamegenie.phase = GG_LOAD_ROM;
-			info.execute_cpu = FALSE;
+			info.frame_status = FRAME_FINISHED;
 
 			/* la rom ne supporta solo 3 */
 			for (i = 0; i < 3; i++) {

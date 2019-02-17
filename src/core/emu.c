@@ -69,6 +69,8 @@
 	WORD PCBREAK = 0xC425;
 #endif
 
+INLINE static void emu_frame_started(void);
+INLINE static void emu_frame_finished(void);
 INLINE static void emu_frame_sleep(void);
 INLINE static void emu_frame_pause_sleep(void);
 
@@ -87,8 +89,6 @@ BYTE emu_frame(void) {
 	}
 
 	gui_control_visible_cursor();
-
-	tas.lag_frame = TRUE;
 
 	// eseguo un frame dell'emulatore
 	if (info.no_rom | info.turn_off) {
@@ -117,23 +117,15 @@ BYTE emu_frame(void) {
 		return (EXIT_OK);
 	}
 
-	// controllo se ci sono eventi di input
-	if (tas.type) {
-		tas_frame();
-	} else {
-		BYTE i;
-
-		for (i = PORT1; i < PORT_MAX; i++) {
-			if (port_funct[i].input_add_event) {
-				port_funct[i].input_add_event(i);
-			}
-		}
+	// se nel debugger passo dal DBG_STEP al DBG_GO
+	// arrivo qui che l'emu_frame_started e' stato gia' fatto
+	// e non devo ripeterlo (soprattuto per il TAS). Lo capisco
+	// dal info.frame_status che e' gia' impostato su FRAME_STARTED.
+	if (info.frame_status == FRAME_FINISHED) {
+		emu_frame_started();
 	}
 
-	// riprendo a far correre la CPU
-	info.execute_cpu = TRUE;
-
-	while (info.execute_cpu == TRUE) {
+	while (info.frame_status == FRAME_STARTED) {
 #if defined (DEBUG)
 		if (cpu.PC == PCBREAK) {
 			BYTE pippo = 5;
@@ -144,35 +136,7 @@ BYTE emu_frame(void) {
 		cpu_exe_op();
 	}
 
-	if ((cfg->cheat_mode == GAMEGENIE_MODE) && (gamegenie.phase == GG_LOAD_ROM)) {
-		gui_emit_et_gg_reset();
-	}
-
-	if (tas.lag_frame) {
-		tas.total_lag_frames++;
-		gui_ppu_hacks_widgets_update();
-	}
-
-	if (snd_end_frame) {
-		snd_end_frame();
-	}
-
-	if (!tas.type && (++tl.frames == tl.frames_snap)) {
-		timeline_snap(TL_NORMAL);
-	}
-
-	if (cfg->save_battery_ram_file && (++info.bat_ram_frames >= info.bat_ram_frames_snap)) {
-		// faccio anche un refresh del file della battery ram
-		info.bat_ram_frames = 0;
-		map_prg_ram_battery_save();
-	}
-
-	if (vs_system.enabled & vs_system.watchdog.reset) {
-		gui_emit_et_vs_reset();
-	}
-
-	r4011.frames++;
-
+	emu_frame_finished();
 	emu_frame_sleep();
 
 	return (EXIT_OK);
@@ -578,6 +542,9 @@ BYTE emu_turn_on(void) {
 	memset(&screen, 0x00, sizeof(screen));
 	memset(&vs_system, 0x00, sizeof(vs_system));
 
+	tas.lag_next_frame = TRUE;
+	tas.lag_actual_frame = TRUE;
+
 	cfg->extra_vb_scanlines = cfg->extra_pr_scanlines = 0;
 
 	vs_system.watchdog.next = vs_system_wd_next();
@@ -717,6 +684,9 @@ BYTE emu_reset(BYTE type) {
 	info.first_illegal_opcode = FALSE;
 
 	srand(time(0));
+
+	tas.lag_next_frame = TRUE;
+	tas.lag_actual_frame = TRUE;
 
 	if (info.reset == CHANGE_ROM) {
 		info.r4014_precise_timing_disabled = FALSE;
@@ -936,6 +906,59 @@ void emu_ctrl_doublebuffer(void) {
 	}
 }
 
+INLINE static void emu_frame_started(void) {
+	tas.lag_next_frame = TRUE;
+
+	// controllo se ci sono eventi di input
+	if (tas.type == NOTAS) {
+		BYTE i;
+
+		for (i = PORT1; i < PORT_MAX; i++) {
+			if (port_funct[i].input_add_event) {
+				port_funct[i].input_add_event(i);
+			}
+		}
+	}
+
+	// riprendo a far correre la CPU
+	info.frame_status = FRAME_STARTED;
+}
+INLINE static void emu_frame_finished(void) {
+	if ((cfg->cheat_mode == GAMEGENIE_MODE) && (gamegenie.phase == GG_LOAD_ROM)) {
+		gui_emit_et_gg_reset();
+	}
+
+	if (tas.type) {
+		tas_frame();
+	}
+
+	tas.lag_actual_frame = tas.lag_next_frame;
+
+	if (tas.lag_actual_frame) {
+		tas.total_lag_frames++;
+		gui_ppu_hacks_widgets_update();
+	}
+
+	if (snd_end_frame) {
+		snd_end_frame();
+	}
+
+	if (!tas.type && (++tl.frames == tl.frames_snap)) {
+		timeline_snap(TL_NORMAL);
+	}
+
+	if (cfg->save_battery_ram_file && (++info.bat_ram_frames >= info.bat_ram_frames_snap)) {
+		// faccio anche un refresh del file della battery ram
+		info.bat_ram_frames = 0;
+		map_prg_ram_battery_save();
+	}
+
+	if (vs_system.enabled & vs_system.watchdog.reset) {
+		gui_emit_et_vs_reset();
+	}
+
+	r4011.frames++;
+}
 INLINE static void emu_frame_sleep(void) {
 	double diff;
 	double now = gui_get_ms();

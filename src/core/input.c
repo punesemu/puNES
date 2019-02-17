@@ -180,8 +180,7 @@ void input_init(BYTE set_cursor) {
 		{
 			BYTE b, state = RELEASED;
 
-			if (((port[a].type_pad == CTRL_PAD_AUTO) && (machine.type != DENDY))
-					|| (port[a].type_pad == CTRL_PAD_ORIGINAL)) {
+			if (((port[a].type_pad == CTRL_PAD_AUTO) && (machine.type != DENDY)) || (port[a].type_pad == CTRL_PAD_ORIGINAL)) {
 				state = PRESSED;
 			}
 

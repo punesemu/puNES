@@ -100,8 +100,8 @@ static void *emu_thread_loop(UNUSED(void *arg)) {
 #elif defined (_WIN32)
 static DWORD WINAPI emu_thread_loop(UNUSED(void *arg)) {
 #endif
-	// gestione uscita
 	while (TRUE) {
+		// gestione uscita
 		if (info.stop == TRUE) {
 			emu_thread.in_run = FALSE;
 			break;

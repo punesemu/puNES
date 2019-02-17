@@ -83,7 +83,7 @@ static struct _qt {
 	dlgVsSystem *vssystem;
 
 	// QObject che non mandano un pause quando in background
-	QList<QWidget *> no_bck_pause;
+	QList<QWidget *>no_bck_pause;
 } qt;
 
 class appEventFilter: public QObject {

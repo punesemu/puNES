@@ -82,10 +82,16 @@ enum mirroring_type {
 
 #define chr_ram_size() info.chr.rom[0].banks_8k << 13
 
-struct _mmcpu {
+#if defined (__cplusplus)
+#define EXTERNC extern "C"
+#else
+#define EXTERNC
+#endif
+
+EXTERNC struct _mmcpu {
 	BYTE ram[0x800];   // Mirrored four times
 } mmcpu;
-struct _prg {
+EXTERNC struct _prg {
 	struct _prg_chip {
 		size_t size;
 		BYTE *rom;
@@ -103,7 +109,7 @@ struct _prg {
 	BYTE *ram_plus_8k;
 	BYTE *ram_battery; // Battery RAM
 } prg;
-struct _chr {
+EXTERNC struct _chr {
 	struct _chr_chip {
 		size_t size;
 		BYTE *rom;
@@ -117,14 +123,14 @@ struct _chr {
 		BYTE *data;
 	} extra;
 } chr;
-struct _nametables {
+EXTERNC struct _nametables {
 	BYTE data[0x1000];
 	BYTE *bank_1k[4];
 } ntbl;
-struct _mmap_palette {
+EXTERNC struct _mmap_palette {
 	BYTE color[0x20];
 } mmap_palette;
-struct _oam {
+EXTERNC struct _oam {
 	BYTE data[256];
 	BYTE *element[64];
 	BYTE plus[32];
@@ -133,5 +139,7 @@ struct _oam {
 	BYTE plus_unl[224];
 	BYTE *ele_plus_unl[56];
 } oam;
+
+#undef EXTERNC
 
 #endif /* MEM_MAP_H_ */

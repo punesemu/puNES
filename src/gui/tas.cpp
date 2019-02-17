@@ -78,6 +78,7 @@ BYTE tas_file(uTCHAR *ext, uTCHAR *file) {
 
 		if (found) {
 			tas_read();
+			tas.index = -1;
 		} else {
 			tas.file[0] = 0;
 			info.rom.file[0] = 0;
@@ -87,6 +88,10 @@ BYTE tas_file(uTCHAR *ext, uTCHAR *file) {
 	return (EXIT_OK);
 }
 void tas_quit(void) {
+	BYTE i;
+
+	tas.type = NOTAS;
+
 	if (tas.fp) {
 		fclose(tas.fp);
 		tas.fp = NULL;
@@ -94,87 +99,15 @@ void tas_quit(void) {
 
 	tas_header = NULL;
 	tas_read = NULL;
+	tas_frame = NULL;
 
-	{
-		BYTE i;
-
-		for (i = PORT1; i < PORT_MAX; i++) {
-			memcpy(&port[i], &tas_port_bck[i], sizeof(_port));
-		}
+	for (i = PORT1; i < PORT_MAX; i++) {
+		memcpy(&port[i], &tas_port_bck[i], sizeof(_port));
 	}
 
 	input_init(NO_SET_CURSOR);
-
-	tas.type = NOTAS;
 }
 
-void tas_frame_FM2(void) {
-	// il primo frame
-	if (!tas.frame) {
-		// sembra proprio che il mio reset / powerup
-		// duri un frame in meno rispetto all'fceux.
-		if ((tas.emulator == FCEUX) && !tas.index) {
-			text_add_line_info(1, "enabled FCEUX compatible mode");
-			tas.add_fake_frame = TRUE;
-		}
-		text_add_line_info(1, "[yellow]silence, the movie has begun[normal]");
-	}
-
-	if (tas.il[tas.index].state > 0) {
-		if (tas.il[tas.index].state == 1) {
-			emu_reset(RESET);
-		} else if (tas.il[tas.index].state == 2) {
-			emu_reset(HARD);
-		}
-		tas.il[tas.index].state = 0;
-		// sembra proprio che il mio reset / powerup
-		// duri un frame in meno rispetto all'fceux.
-		if (tas.emulator == FCEUX) {
-			tas.add_fake_frame = TRUE;
-		}
-	}
-
-	if (tas.add_fake_frame) {
-		tas_increment_index()
-		tas.frame++;
-		tas.total_lag_frames++;
-		tas.add_fake_frame = FALSE;
-	}
-
-	if (++tas.frame >= tas.total) {
-		if (tas.frame == tas.total) {
-			text_add_line_single(4, FONT_12X10, 200, TXT_CENTER, TXT_CENTER, 0, 0, "The End");
-		} else if (tas.frame == tas.total + 1) {
-			// finito il video l'FCEUX lascia settato il primo frame non del film
-			// ai valori dell'ultimo frame del film. Se non lo faccio,
-			// aglar-marblemadness.fm2 non finira' il gioco.
-			return;
-		} else {
-			tas_quit();
-			return;
-		}
-	}
-
-	{
-		BYTE i;
-
-		for (i = PORT1; i < PORT_MAX; i++) {
-			if (port[i].type == CTRL_STANDARD) {
-				tas_set_data_port_ctrlstd(port[i], BUT_A);
-				tas_set_data_port_ctrlstd(port[i], BUT_B);
-				tas_set_data_port_ctrlstd(port[i], SELECT);
-				tas_set_data_port_ctrlstd(port[i], START);
-				tas_set_data_port_ctrlstd(port[i], UP);
-				tas_set_data_port_ctrlstd(port[i], DOWN);
-				tas_set_data_port_ctrlstd(port[i], LEFT);
-				tas_set_data_port_ctrlstd(port[i], RIGHT);
-			}
-
-		}
-	}
-
-	tas_increment_index()
-}
 void tas_header_FM2(uTCHAR *file) {
 	QString line;
 	QTextStream in(tas.fp);
@@ -182,6 +115,9 @@ void tas_header_FM2(uTCHAR *file) {
 	in.setCodec("UTF-8");
 
 	tas.emulator = FCEUX;
+
+	tas.frame = -1;
+	tas.total = 0;
 
 	while (in.atEnd() == false) {
 		QString key, value;
@@ -276,6 +212,59 @@ void tas_read_FM2(void) {
 
 		if (++tas.count == LENGTH(tas.il)) {
 			break;
+		}
+	}
+}
+void tas_frame_FM2(void) {
+	// il primo frame
+	if (!tas.frame) {
+		text_add_line_info(1, "[yellow]silence, the movie has begun[normal]");
+	}
+
+	if (++tas.frame >= tas.total) {
+		if (tas.frame == tas.total) {
+			text_add_line_single(4, FONT_12X10, 200, TXT_CENTER, TXT_CENTER, 0, 0, "The End");
+			return;
+		} else if (tas.frame == tas.total + 10) {
+			// nel tas_quit() eseguo il ripristino delle porte e l'input_init() solo che questo
+			// cambia lo stato delle pulsanti e in alcuni film (aglar-marblemadness.fm2)
+			// questo influisce su i frames immediatamente successivi la fine del film (mentre l'input
+			// non dovrebbe subire modifiche rispetto all'ultimo frame) "sporcandoli" e non permettendo
+			// il completamento del finale. Per questo motivo ritardo di qualche frame il tas_quit().
+			tas_quit();
+			return;
+		}
+		return;
+	}
+
+	tas_increment_index()
+
+	if (tas.il[tas.index].state > 0) {
+		if (tas.il[tas.index].state == 1) {
+			emu_reset(RESET);
+			tas_increment_index()
+			tas.frame++;
+		} else if (tas.il[tas.index].state == 2) {
+			emu_reset(HARD);
+			tas_increment_index()
+			tas.frame++;
+		}
+	}
+
+	{
+		BYTE i;
+
+		for (i = PORT1; i < PORT_MAX; i++) {
+			if (port[i].type == CTRL_STANDARD) {
+				tas_set_data_port_ctrlstd(port[i], BUT_A);
+				tas_set_data_port_ctrlstd(port[i], BUT_B);
+				tas_set_data_port_ctrlstd(port[i], SELECT);
+				tas_set_data_port_ctrlstd(port[i], START);
+				tas_set_data_port_ctrlstd(port[i], UP);
+				tas_set_data_port_ctrlstd(port[i], DOWN);
+				tas_set_data_port_ctrlstd(port[i], LEFT);
+				tas_set_data_port_ctrlstd(port[i], RIGHT);
+			}
 		}
 	}
 }

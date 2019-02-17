@@ -205,7 +205,7 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 	_IRQ(cpu.SR | 0x10)
 #define PHP\
 	tick_hw(1);\
-	ASS_SR;\
+	assemble_SR();\
 	_PSH(cpu.SR | 0x10);
 /* CMP, CPX, CPY */
 #define CMP(x, reg)\
@@ -350,8 +350,6 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 	SF(x);\
 	ZF(x)
 #define ZF(x) cpu.zf = !x << 1
-#define ASS_SR cpu.SR = (cpu.sf | cpu.of | 0x20 | cpu.bf | cpu.df |\
-		cpu.im | cpu.zf | cpu.cf)
 
 /* ----------------------------------------------------------------------
  *  varie ed eventuali
@@ -492,7 +490,7 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 	if (nmi.high) {\
 		flagNMI = TRUE;\
 	}\
-	ASS_SR;\
+	assemble_SR();\
 	_PSH(flags);\
 	cpu.im = irq.inhibit = 0x04;\
 	if (flagNMI) {\
@@ -511,7 +509,7 @@ enum cpu_opcode_type { RD_OP, WR_OP };
 	nmi.high = nmi.delay = FALSE;\
 	tick_hw(1);\
 	_PSP;\
-	ASS_SR;\
+	assemble_SR();\
 	_PSH(cpu.SR & 0xEF);\
 	cpu.im = irq.inhibit = 0x04;\
 	cpu.PC = lend_word(INT_NMI, FALSE, TRUE);
@@ -857,7 +855,6 @@ void cpu_exe_op(void) {
 	case 0x98: IMP(RD_OP, _RSZ(cpu.AR = cpu.YR;, cpu.AR)) break;         // TYA
 
 	/* illegal opcodes */
-#if !defined (ILLEGAL)
 	case 0x0B:                                                           // AAC #IMM
 	case 0x2B: IMP(RD_OP, AAC) break;                                    // AAC #IMM
 
@@ -970,7 +967,6 @@ void cpu_exe_op(void) {
 	case 0x93: IDY(WR_OP, AXA(_AXAIDY(tmp))) break;                      // AXA ($IND),Y
 	case 0xBB: ABX(RD_OP, _CYW(LAS), cpu.YR) break;                      // LAS $ABS,Y
 	case 0x9B: ABX(WR_OP, XAS, cpu.YR) break;                            // XAS $ABS,Y
-#endif
 
 	case 0x02: // JAM
 	case 0x12: // JAM
@@ -991,8 +987,6 @@ void cpu_exe_op(void) {
 			info.first_illegal_opcode = TRUE;
 		}
 		cpu.cycles = 0;
-		//info.stop = TRUE;
-		//info.execute_cpu = FALSE;
 		break;
 	case 0x100: IMP(RD_OP, NMI) break;                                   // NMI
 	case 0x200: IMP(RD_OP, IRQ(cpu.SR & 0xEF)) break;                    // IRQ
