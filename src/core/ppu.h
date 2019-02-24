@@ -156,6 +156,7 @@ typedef struct _screen {
 	BYTE index;
 	_screen_buffer *wr;
 	_screen_buffer *rd;
+	_screen_buffer *last_completed_wr;
 	_screen_buffer buff[2];
 } _screen;
 typedef struct _ppu_openbus {

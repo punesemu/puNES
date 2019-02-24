@@ -347,7 +347,6 @@ void ppu_tick(void) {
 						 */
 						BYTE color_bg = 0, color_sp = 0;
 						BYTE unlimited_spr = FALSE, visible_spr = 0, visible_spr_unl = 0;
-						//BYTE flag_sp = FALSE, flag_bg = FALSE;
 
 /* -------------------------- FETCH DATI PER TILE SUCCESSIVO --------------------------------- */
 						/*
@@ -481,15 +480,6 @@ void ppu_tick(void) {
 							}
 						}
 /* ------------------------------------ MULTIPLEXER ------------------------------------------ */
-						/* tratto i pixel del background e dello sprite */
-						//if (!(flag_bg | flag_sp)) {
-							/*
-							 * se sono nella condizione in cui il BG e' invisibile
-							 * e non ho trovato nessuno sprite allora visualizzo
-							 * un pixel nero.
-							 */
-							//put_pixel(palette.color[0])
-						//} else
 						if (!color_sp) {
 							/*
 							 * se il colore dello sprite e' trasparente,
@@ -1008,6 +998,7 @@ BYTE ppu_turn_on(void) {
 
 			screen.rd = &screen.buff[0];
 			screen.wr = &screen.buff[1];
+			screen.last_completed_wr = screen.wr;
 
 			for (a = 0; a < 2; a++) {
 				_screen_buffer *sb = &screen.buff[a];
