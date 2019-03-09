@@ -886,7 +886,7 @@ AM_COND_IF([WINDOWS], [
 		my_LDFLAGS="${my_LDFLAGS} -Wl,-subsystem,console"
 	])
 	my_LDFLAGS="${my_LDFLAGS} -static-libgcc -static-libstdc++"
-	my_LIBS="${my_LIBS} -lwinmm -luuid -lole32 -lws2_32 -ladvapi32 -lshell32 -luser32 -lkernel32 -lgdi32 -loleaut32 -lcomdlg32 -limm32 -lwinspool"
+	my_LIBS="${my_LIBS} -lwinmm -luuid -lole32 -lws2_32 -ladvapi32 -lshell32 -luser32 -lkernel32 -lgdi32 -loleaut32 -lcomdlg32 -limm32 -lwinspool -lwtsapi32"
 ])
 
 AC_SUBST(CUSTOMDEFINES)
