@@ -158,6 +158,15 @@
           <normaloff>:/icon/icons/flag_italy.svg</normaloff>:/icon/icons/flag_italy.svg</iconset>
         </property>
        </item>
+       <item>
+        <property name="text">
+         <string>Russian</string>
+        </property>
+        <property name="icon">
+         <iconset resource="application.qrc">
+          <normaloff>:/icon/icons/flag_russia.svg</normaloff>:/icon/icons/flag_russia.svg</iconset>
+        </property>
+       </item>
       </widget>
      </item>
      <item row="8" column="0" colspan="3">
