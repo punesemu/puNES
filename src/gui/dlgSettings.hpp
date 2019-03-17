@@ -56,6 +56,7 @@ class dlgSettings : public QDialog, public Ui::dlgSettings {
 
 	private slots:
 		void s_save_settings(bool checked);
+		void s_close_settings(bool checked);
 };
 
 #endif /* DLGSETTINGS_HPP_ */

@@ -89,7 +89,7 @@
          <string>Russian</string>
         </property>
         <property name="icon">
-         <iconset resource="application.qrc">
+         <iconset resource="resources.qrc">
           <normaloff>:/icon/icons/flag_russia.svg</normaloff>:/icon/icons/flag_russia.svg</iconset>
         </property>
        </item>

@@ -38,7 +38,7 @@
       <string>&amp;Recent Roms</string>
      </property>
      <property name="icon">
-      <iconset resource="application.qrc">
+      <iconset resource="resources.qrc">
        <normaloff>:/icon/icons/recent_roms.svg</normaloff>:/icon/icons/recent_roms.svg</iconset>
      </property>
     </widget>
@@ -60,7 +60,7 @@
       <string>&amp;Disk Side</string>
      </property>
      <property name="icon">
-      <iconset resource="application.qrc">
+      <iconset resource="resources.qrc">
        <normaloff>:/icon/icons/disk_side.svg</normaloff>:/icon/icons/disk_side.svg</iconset>
      </property>
      <addaction name="action_Disk_1_side_A"/>
@@ -149,7 +149,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="application.qrc">
+    <iconset resource="resources.qrc">
      <normaloff>:/icon/icons/open.svg</normaloff>:/icon/icons/open.svg</iconset>
    </property>
    <property name="text">
@@ -158,7 +158,7 @@
   </action>
   <action name="action_Quit">
    <property name="icon">
-    <iconset resource="application.qrc">
+    <iconset resource="resources.qrc">
      <normaloff>:/icon/icons/exit.svg</normaloff>:/icon/icons/exit.svg</iconset>
    </property>
    <property name="text">
@@ -167,7 +167,7 @@
   </action>
   <action name="action_Hard_Reset">
    <property name="icon">
-    <iconset resource="application.qrc">
+    <iconset resource="resources.qrc">
      <normaloff>:/icon/icons/hard_reset.svg</normaloff>:/icon/icons/hard_reset.svg</iconset>
    </property>
    <property name="text">
@@ -176,7 +176,7 @@
   </action>
   <action name="action_Soft_Reset">
    <property name="icon">
-    <iconset resource="application.qrc">
+    <iconset resource="resources.qrc">
      <normaloff>:/icon/icons/soft_reset.svg</normaloff>:/icon/icons/soft_reset.svg</iconset>
    </property>
    <property name="text">
@@ -185,7 +185,7 @@
   </action>
   <action name="action_Eject_Insert_Disk">
    <property name="icon">
-    <iconset resource="application.qrc">
+    <iconset resource="resources.qrc">
      <normaloff>:/icon/icons/eject.svg</normaloff>:/icon/icons/eject.svg</iconset>
    </property>
    <property name="text">
@@ -258,7 +258,7 @@
   </action>
   <action name="action_Switch_sides">
    <property name="icon">
-    <iconset resource="application.qrc">
+    <iconset resource="resources.qrc">
      <normaloff>:/icon/icons/switch_sides.svg</normaloff>:/icon/icons/switch_sides.svg</iconset>
    </property>
    <property name="text">
@@ -267,7 +267,7 @@
   </action>
   <action name="action_Fullscreen">
    <property name="icon">
-    <iconset resource="application.qrc">
+    <iconset resource="resources.qrc">
      <normaloff>:/icon/icons/fullscreen.svg</normaloff>:/icon/icons/fullscreen.svg</iconset>
    </property>
    <property name="text">
@@ -284,7 +284,7 @@
   </action>
   <action name="action_Save_state">
    <property name="icon">
-    <iconset resource="application.qrc">
+    <iconset resource="resources.qrc">
      <normaloff>:/icon/icons/save.svg</normaloff>:/icon/icons/save.svg</iconset>
    </property>
    <property name="text">
@@ -293,7 +293,7 @@
   </action>
   <action name="action_Load_state">
    <property name="icon">
-    <iconset resource="application.qrc">
+    <iconset resource="resources.qrc">
      <normaloff>:/icon/icons/load.svg</normaloff>:/icon/icons/load.svg</iconset>
    </property>
    <property name="text">
@@ -302,7 +302,7 @@
   </action>
   <action name="action_Increment_slot">
    <property name="icon">
-    <iconset resource="application.qrc">
+    <iconset resource="resources.qrc">
      <normaloff>:/icon/icons/state_inc.svg</normaloff>:/icon/icons/state_inc.svg</iconset>
    </property>
    <property name="text">
@@ -311,7 +311,7 @@
   </action>
   <action name="action_Decrement_slot">
    <property name="icon">
-    <iconset resource="application.qrc">
+    <iconset resource="resources.qrc">
      <normaloff>:/icon/icons/state_dec.svg</normaloff>:/icon/icons/state_dec.svg</iconset>
    </property>
    <property name="text">
@@ -368,7 +368,7 @@
   </action>
   <action name="action_About">
    <property name="icon">
-    <iconset resource="application.qrc">
+    <iconset resource="resources.qrc">
      <normaloff>:/icon/icons/about.svg</normaloff>:/icon/icons/about.svg</iconset>
    </property>
    <property name="text">
@@ -377,7 +377,7 @@
   </action>
   <action name="action_State_Save_to_file">
    <property name="icon">
-    <iconset resource="application.qrc">
+    <iconset resource="resources.qrc">
      <normaloff>:/icon/icons/save.svg</normaloff>:/icon/icons/save.svg</iconset>
    </property>
    <property name="text">
@@ -386,7 +386,7 @@
   </action>
   <action name="action_State_Load_from_file">
    <property name="icon">
-    <iconset resource="application.qrc">
+    <iconset resource="resources.qrc">
      <normaloff>:/icon/icons/load.svg</normaloff>:/icon/icons/load.svg</iconset>
    </property>
    <property name="text">
@@ -435,7 +435,7 @@
   </action>
   <action name="action_Cheats_Editor">
    <property name="icon">
-    <iconset resource="application.qrc">
+    <iconset resource="resources.qrc">
      <normaloff>:/icon/icons/cheat_editor.svg</normaloff>:/icon/icons/cheat_editor.svg</iconset>
    </property>
    <property name="text">
@@ -455,7 +455,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="application.qrc">
+    <iconset resource="resources.qrc">
      <normaloff>:/icon/icons/fast_forward.svg</normaloff>:/icon/icons/fast_forward.svg</iconset>
    </property>
    <property name="text">
@@ -467,7 +467,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="application.qrc">
+    <iconset resource="resources.qrc">
      <normaloff>:/icon/icons/pause.svg</normaloff>:/icon/icons/pause.svg</iconset>
    </property>
    <property name="text">
@@ -476,7 +476,7 @@
   </action>
   <action name="action_Save_Screenshot">
    <property name="icon">
-    <iconset resource="application.qrc">
+    <iconset resource="resources.qrc">
      <normaloff>:/icon/icons/screenshot.svg</normaloff>:/icon/icons/screenshot.svg</iconset>
    </property>
    <property name="text">
@@ -485,7 +485,7 @@
   </action>
   <action name="action_Insert_Coin">
    <property name="icon">
-    <iconset resource="application.qrc">
+    <iconset resource="resources.qrc">
      <normaloff>:/icon/icons/insert_coins.svg</normaloff>:/icon/icons/insert_coins.svg</iconset>
    </property>
    <property name="text">
@@ -502,7 +502,7 @@
   </action>
   <action name="action_Open_working_folder">
    <property name="icon">
-    <iconset resource="application.qrc">
+    <iconset resource="resources.qrc">
      <normaloff>:/icon/icons/home.svg</normaloff>:/icon/icons/home.svg</iconset>
    </property>
    <property name="text">
@@ -511,7 +511,7 @@
   </action>
   <action name="action_Turn_Off">
    <property name="icon">
-    <iconset resource="application.qrc">
+    <iconset resource="resources.qrc">
      <normaloff>:/icon/icons/turn_off.svg</normaloff>:/icon/icons/turn_off.svg</iconset>
    </property>
    <property name="text">
@@ -520,7 +520,7 @@
   </action>
   <action name="action_Start_Stop_WAV_recording">
    <property name="icon">
-    <iconset resource="application.qrc">
+    <iconset resource="resources.qrc">
      <normaloff>:/icon/icons/wav_start.svg</normaloff>:/icon/icons/wav_start.svg</iconset>
    </property>
    <property name="text">
@@ -529,7 +529,7 @@
   </action>
   <action name="action_Apply_Patch">
    <property name="icon">
-    <iconset resource="application.qrc">
+    <iconset resource="resources.qrc">
      <normaloff>:/icon/icons/patch.svg</normaloff>:/icon/icons/patch.svg</iconset>
    </property>
    <property name="text">
@@ -538,7 +538,7 @@
   </action>
   <action name="action_Video">
    <property name="icon">
-    <iconset resource="application.qrc">
+    <iconset resource="resources.qrc">
      <normaloff>:/icon/icons/video.svg</normaloff>:/icon/icons/video.svg</iconset>
    </property>
    <property name="text">
@@ -547,7 +547,7 @@
   </action>
   <action name="action_Audio">
    <property name="icon">
-    <iconset resource="application.qrc">
+    <iconset resource="resources.qrc">
      <normaloff>:/icon/icons/audio.svg</normaloff>:/icon/icons/audio.svg</iconset>
    </property>
    <property name="text">
@@ -556,7 +556,7 @@
   </action>
   <action name="action_Input">
    <property name="icon">
-    <iconset resource="application.qrc">
+    <iconset resource="resources.qrc">
      <normaloff>:/icon/icons/input.svg</normaloff>:/icon/icons/input.svg</iconset>
    </property>
    <property name="text">
@@ -565,7 +565,7 @@
   </action>
   <action name="action_General">
    <property name="icon">
-    <iconset resource="application.qrc">
+    <iconset resource="resources.qrc">
      <normaloff>:/icon/icons/general.svg</normaloff>:/icon/icons/general.svg</iconset>
    </property>
    <property name="text">
@@ -574,7 +574,7 @@
   </action>
   <action name="action_PPU">
    <property name="icon">
-    <iconset resource="application.qrc">
+    <iconset resource="resources.qrc">
      <normaloff>:/icon/icons/ppu.svg</normaloff>:/icon/icons/ppu.svg</iconset>
    </property>
    <property name="text">
@@ -583,7 +583,7 @@
   </action>
   <action name="action_Cheats">
    <property name="icon">
-    <iconset resource="application.qrc">
+    <iconset resource="resources.qrc">
      <normaloff>:/icon/icons/cheat.svg</normaloff>:/icon/icons/cheat.svg</iconset>
    </property>
    <property name="text">
@@ -592,7 +592,7 @@
   </action>
  </widget>
  <resources>
-  <include location="application.qrc"/>
+  <include location="resources.qrc"/>
  </resources>
  <connections/>
 </ui>

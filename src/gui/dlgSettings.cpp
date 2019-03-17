@@ -26,6 +26,7 @@ dlgSettings::dlgSettings(QWidget *parent) : QDialog(parent) {
 	geom.setY(cfg->last_pos_settings.y);
 
 	connect(pushButton_Save_Settings, SIGNAL(clicked(bool)), this, SLOT(s_save_settings(bool)));
+	connect(pushButton_Close_Settings, SIGNAL(clicked(bool)), this, SLOT(s_close_settings(bool)));
 
 	widget_Settings_Cheats->widget_Cheats_Editor->pushButton_Hide_Show_Tools->setVisible(false);
 
@@ -103,4 +104,7 @@ void dlgSettings::update_tab_cheats(void) {
 
 void dlgSettings::s_save_settings(UNUSED(bool checked)) {
 	settings_save();
+}
+void dlgSettings::s_close_settings(UNUSED(bool checked)) {
+	hide();
 }

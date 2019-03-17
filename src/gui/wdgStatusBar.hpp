@@ -77,7 +77,6 @@ class wdgState : public QWidget {
 		QPushButton *save;
 		slotComboBox *slot;
 		QPushButton *load;
-		//QFrame *vline;
 
 	public:
 		wdgState(QWidget *parent = 0);

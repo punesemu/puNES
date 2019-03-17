@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="icon">
+    <file>icons/window_close.svg</file>
     <file>icons/rwnd_step_forward.svg</file>
     <file>icons/rwnd_step_backward.svg</file>
     <file>icons/rwnd_fast_backward.svg</file>
