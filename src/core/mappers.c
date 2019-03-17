@@ -1091,7 +1091,7 @@ void map_prg_ram_init(void) {
 		/* gli 8k iniziali */
 		prg.ram_plus_8k = &prg.ram_plus[0];
 		/* controllo se la rom ha una RAM PRG battery packed */
-		if (info.prg.ram.bat.banks && !tas.type) {
+		if (info.prg.ram.bat.banks && (tas.type == NOTAS)) {
 			uTCHAR prg_ram_file[LENGTH_FILE_NAME_LONG], basename[255], *fl, *last_dot;
 			FILE *fp;
 

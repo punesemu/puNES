@@ -27,7 +27,8 @@
 #include <QtWidgets/QStyledItemDelegate>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QStatusBar>
-#include "application.hh"
+#include "mainWindow.hh"
+#include "wdgRewind.hpp"
 #include "common.h"
 
 class infoStatusBar : public QWidget {
@@ -45,50 +46,6 @@ class infoStatusBar : public QWidget {
 		void update_label(void);
 };
 
-class timelineSlider : public QSlider {
-	Q_OBJECT
-
-	public:
-		int szHandle;
-
-	public:
-		timelineSlider(QWidget *parent = 0);
-		~timelineSlider();
-
-	public:
-		int sizeHandle(void);
-};
-class timeLine : public QWidget {
-	Q_OBJECT
-
-	private:
-		QHBoxLayout *hbox;
-		timelineSlider *slider;
-		QLabel *label;
-		QString lab_timeline;
-		QFrame *vline;
-
-	public:
-		timeLine(QWidget *parent = 0);
-		~timeLine();
-
-	public:
-		int value(void);
-		void setValue(int value, bool s_action);
-		void timeline_pressed(BYTE *type);
-		void timeline_released(BYTE *type);
-		void retranslateUi(void);
-
-	private:
-		void timeline_update_label(int value);
-
-	private slots:
-		void s_action_triggered(int action);
-		void s_value_changed(int value);
-		void s_slider_pressed(void);
-		void s_slider_released(void);
-};
-
 class slotItemDelegate : public QStyledItemDelegate {
 	Q_OBJECT
 
@@ -97,8 +54,7 @@ class slotItemDelegate : public QStyledItemDelegate {
 		~slotItemDelegate();
 
 	protected:
-		void paint(QPainter *painter, const QStyleOptionViewItem &option,
-				const QModelIndex &index) const;
+		void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 };
 class slotComboBox : public QComboBox {
 	Q_OBJECT
@@ -121,7 +77,7 @@ class wdgState : public QWidget {
 		QPushButton *save;
 		slotComboBox *slot;
 		QPushButton *load;
-		QFrame *vline;
+		//QFrame *vline;
 
 	public:
 		wdgState(QWidget *parent = 0);
@@ -141,8 +97,10 @@ class wdgStatusBar : public QStatusBar {
 
 	public:
 		infoStatusBar *infosb;
-		timeLine *timeline;
+		wdgRewind *rewind;
 		wdgState *state;
+		QFrame *vlineState;
+		QFrame *vlineRewind;
 
 	public:
 		wdgStatusBar(QWidget *parent);
@@ -155,6 +113,8 @@ class wdgStatusBar : public QStatusBar {
 	public:
 		void update_statusbar(void);
 		void update_width(int w);
+		void state_setVisible(bool visible);
+		void rewind_setVisible(bool visible);
 };
 
 #endif /* WDGSTATUSBAR_HPP_ */

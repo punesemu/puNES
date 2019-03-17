@@ -74,13 +74,13 @@ void gui_init(int *argc, char **argv) {
 				//break;
 			case WIN_XP:
 			default:
-				SHGetFolderPathW(nullptr, CSIDL_PERSONAL, nullptr, 0, (LPWSTR) gui.home);
+				SHGetFolderPathW(nullptr, CSIDL_PERSONAL, nullptr, 0, (LPWSTR)gui.home);
 				break;
 		}
 
 		if (info.portable) {
 			uTCHAR path[usizeof(info.base_folder)];
-			DWORD length = GetModuleFileNameW(nullptr, (LPWSTR) &path, usizeof(path));
+			DWORD length = GetModuleFileNameW(nullptr, (LPWSTR)&path, usizeof(path));
 
 			if (length == 0) {
 				fprintf(stderr, "INFO: Error resolving exe path.\n");
@@ -93,15 +93,29 @@ void gui_init(int *argc, char **argv) {
 		} else {
 			usnprintf(info.base_folder, usizeof(info.base_folder), uL("" uPERCENTs "/" NAME), gui.home);
 		}
+
+		// directory temporanea del sistema operativo
+		{
+			static uTCHAR tmp_path[MAX_PATH];
+			DWORD ret = 0;
+
+			ret = GetTempPathW(MAX_PATH, (LPWSTR)&tmp_path);
+
+			if ((ret > MAX_PATH) || (ret == 0)) {
+				usnprintf(tmp_path, sizeof(tmp_path), uL("" uPERCENTs TMP_FOLDER), info.base_folder);
+			}
+
+			gui.ostmp = (const uTCHAR *)&tmp_path;
+		}
 	}
 
 	// avvio il contatore dei millisecondi
 	{
 		uint64_t pf;
 
-		QueryPerformanceFrequency((LARGE_INTEGER *) &pf);
+		QueryPerformanceFrequency((LARGE_INTEGER *)&pf);
 		gui.frequency = (double) pf;
-		QueryPerformanceCounter((LARGE_INTEGER *) &pf);
+		QueryPerformanceCounter((LARGE_INTEGER *)&pf);
 		gui.counter_start = pf;
 		gui_get_ms = high_resolution_ms;
 	}

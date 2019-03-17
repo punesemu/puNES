@@ -12,7 +12,7 @@ bin_PROGRAMS = punes
 
 punes_SOURCES = \
 	core/main.c \
-	gui/application.cpp \
+	gui/resources.cpp \
 	core/palette.c \
 	$(ico_stuff)
 

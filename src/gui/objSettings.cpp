@@ -670,6 +670,7 @@ void objSet::setup(void) {
 void objSet::to_cfg(QString group) {
 	if ((group == "system") || (group == "all")) {
 		int_to_val(SET_MODE, cfg_from_file.mode);
+		int_to_val(SET_REWIND_MINUTES, cfg_from_file.rewind_minutes);
 		int_to_val(SET_FF_VELOCITY, cfg_from_file.ff_velocity);
 		int_to_val(SET_BATTERY_RAM_FILE_EVEY_TOT, cfg_from_file.save_battery_ram_file);
 		int_to_val(SET_BCK_PAUSE, cfg_from_file.bck_pause);
@@ -755,6 +756,7 @@ void objSet::fr_cfg(QString group) {
 	if ((group == "system") || (group == "all")) {
 		cfg_from_file.mode = val_to_int(SET_MODE);
 		cfg_from_file.ff_velocity = val_to_int(SET_FF_VELOCITY);
+		cfg_from_file.rewind_minutes = val_to_int(SET_REWIND_MINUTES);
 		cfg_from_file.save_battery_ram_file = val_to_int(SET_BATTERY_RAM_FILE_EVEY_TOT);
 		cfg_from_file.bck_pause = val_to_int(SET_BCK_PAUSE);
 		cfg_from_file.cheat_mode = val_to_int(SET_CHEAT_MODE);
@@ -1105,10 +1107,6 @@ void objInp::to_cfg(QString group) {
 		joyid_int_to_val(SET_INP_SC_JOYSTICK_ID, cfg_from_file.input.shcjoy_id);
 #endif
 	}
-
-	if ((group == "special keys") || (group == "all")) {
-		val.replace(SET_INP_SK_TIMELINE_KEY, kbd_keyval_to_name(gui.key.tl));
-	}
 }
 void objInp::fr_cfg(QString group) {
 	if ((group == "expansion port") || (group == "all")) {
@@ -1192,10 +1190,6 @@ void objInp::fr_cfg(QString group) {
 				val.replace(i, QString("%1,%2").arg(split.at(KEYBOARD), "NULL"));
 			}
 		}
-	}
-
-	if ((group == "special keys") || (group == "all")) {
-		gui.key.tl = kbd_val_to_int(SET_INP_SK_TIMELINE_KEY);
 	}
 }
 

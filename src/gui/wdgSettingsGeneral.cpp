@@ -29,6 +29,7 @@ wdgSettingsGeneral::wdgSettingsGeneral(QWidget *parent) : QWidget(parent) {
 
 	connect(comboBox_Mode, SIGNAL(activated(int)), this, SLOT(s_mode(int)));
 	connect(comboBox_Fast_Forward_velocity, SIGNAL(activated(int)), this, SLOT(s_fast_forward_velocity(int)));
+	connect(comboBox_Rewind_minutes, SIGNAL(activated(int)), this, SLOT(s_rewind_minutes(int)));
 	connect(comboBox_Language, SIGNAL(activated(int)), this, SLOT(s_language(int)));
 
 	connect(pushButton_Game_Genie_rom_file, SIGNAL(clicked(bool)), this, SLOT(s_game_genie_rom_file(bool)));
@@ -55,6 +56,7 @@ void wdgSettingsGeneral::showEvent(UNUSED(QShowEvent *event)) {
 
 	icon_Mode->setPixmap(QIcon(":/icon/icons/mode.svg").pixmap(dim, dim));
 	icon_Fast_Forward_velocity->setPixmap(QIcon(":/icon/icons/fast_forward.svg").pixmap(dim, dim));
+	icon_Rewind_minutes->setPixmap(QIcon(":/icon/icons/rewind.svg").pixmap(dim, dim));
 	icon_Language->setPixmap(QIcon(":/icon/icons/language.svg").pixmap(dim, dim));
 }
 
@@ -69,6 +71,7 @@ void wdgSettingsGeneral::retranslateUi(QWidget *wdgSettingsGeneral) {
 void wdgSettingsGeneral::update_widget(void) {
 	mode_set();
 	fast_forward_velocity_set();
+	rewind_minutes_set();
 	language_set();
 
 	if (ustrlen(cfg->gg_rom_file) != 0) {
@@ -115,6 +118,9 @@ void wdgSettingsGeneral::fast_forward_velocity_set(void) {
 	}
 
 	comboBox_Fast_Forward_velocity->setCurrentIndex(velocity);
+}
+void wdgSettingsGeneral::rewind_minutes_set(void) {
+	comboBox_Rewind_minutes->setCurrentIndex(cfg->rewind_minutes);
 }
 void wdgSettingsGeneral::language_set(void) {
 	comboBox_Language->setCurrentIndex(cfg->language);
@@ -167,6 +173,8 @@ void wdgSettingsGeneral::s_mode(int index) {
 
 		emu_reset(CHANGE_MODE);
 
+		emu_frame_input_and_rewind();
+
 		// controllo la paletta da utilizzare (per lo swap dell'emphasis del rosso e del verde in caso
 		// di PAL e DENDY) quando cambio regione.
 		gfx_palette_update();
@@ -206,6 +214,18 @@ void wdgSettingsGeneral::s_fast_forward_velocity(int index) {
 			emu_thread_continue();
 		}
 	}
+}
+void wdgSettingsGeneral::s_rewind_minutes(int index) {
+	int minutes = index;
+
+	if (minutes == cfg->rewind_minutes) {
+		return;
+	}
+
+	emu_thread_pause();
+	cfg->rewind_minutes = minutes;
+	rewind_init();
+	emu_thread_continue();
 }
 void wdgSettingsGeneral::s_language(int index) {
 	int lang = index;

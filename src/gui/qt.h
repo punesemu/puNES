@@ -43,6 +43,7 @@
 	"}"
 
 #define mainwin ((mainWindow *)gui_mainwindow_get_ptr())
+#define wdgrewind ((wdgRewind *)gui_wdgrewind_get_ptr())
 #define dlgsettings ((dlgSettings *)gui_dlgsettings_get_ptr())
 #define objcheat ((objCheat *)gui_objcheat_get_ptr())
 
@@ -55,11 +56,13 @@
 EXTERNC struct _gui {
 #if defined (_WIN32)
 	uTCHAR home[MAX_PATH];
+	const uTCHAR *ostmp;
 	DWORD version_os;
 	double frequency;
 	uint64_t counter_start;
 #else
 	const uTCHAR *home;
+	const uTCHAR *ostmp;
 	struct timeval counterStart;
 #endif
 
@@ -75,10 +78,6 @@ EXTERNC struct _gui {
 	uint8_t main_win_lfp;
 
 	int dlg_rc;
-
-	struct _key {
-		DBWORD tl;
-	} key;
 } gui;
 EXTERNC struct _gui_mouse {
 	int x;
@@ -104,7 +103,6 @@ EXTERNC void gui_update(void);
 EXTERNC void gui_update_gps_settings(void);
 
 EXTERNC void gui_fullscreen(void);
-EXTERNC void gui_timeline(void);
 EXTERNC void gui_save_slot(BYTE slot);
 
 EXTERNC void gui_print_usage(char *usage);
@@ -127,6 +125,9 @@ EXTERNC void gui_control_visible_cursor(void);
 
 EXTERNC void *gui_mainwindow_get_ptr(void);
 
+EXTERNC void *gui_wdgrewind_get_ptr(void);
+EXTERNC void gui_wdgrewind_play(void);
+
 EXTERNC void gui_emit_et_gg_reset(void);
 EXTERNC void gui_emit_et_vs_reset(void);
 EXTERNC void gui_emit_et_external_control_windows_show(void);
@@ -134,6 +135,9 @@ EXTERNC void gui_emit_et_external_control_windows_show(void);
 EXTERNC void gui_screen_update(void);
 
 EXTERNC void *gui_dlgsettings_get_ptr(void);
+
+EXTERNC void *gui_dlgdebugger_get_ptr(void);
+EXTERNC void gui_dlgdebugger_click_step(void);
 
 EXTERNC void gui_external_control_windows_show(void);
 EXTERNC void gui_external_control_windows_update_pos(void);

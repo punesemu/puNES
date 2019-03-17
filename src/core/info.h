@@ -69,7 +69,8 @@ EXTERNC struct _info {
 	BYTE gui;
 	BYTE turn_off;
 	BYTE no_rom;
-	WORD pause;
+	int pause;
+	int no_ppu_draw_screen;
 	BYTE pause_from_gui;
 	BYTE on_cfg;
 	BYTE first_illegal_opcode;
@@ -120,11 +121,16 @@ EXTERNC struct _info {
 	BYTE r4016_dmc_double_read_disabled;
 	BYTE r2002_race_condition_disabled;
 	BYTE r4014_precise_timing_disabled;
+	BYTE r2002_jump_first_vblank;
 	WORD default_dipswitches;
 	WORD extra_from_db;
 	DBWORD bat_ram_frames;
 	DBWORD bat_ram_frames_snap;
 	BYTE doublebuffer;
+	BYTE start_frame_0;
+	WORD CPU_PC_before;
+	BYTE zapper_is_present;
+
 #if !defined (RELEASE)
 	BYTE snd_info;
 #endif

@@ -34,7 +34,7 @@ enum fds_disk_operations {
 	 */
 	FDS_DISK_SELECT,
 	FDS_DISK_SELECT_AND_INSERT,
-	FDS_DISK_TIMELINE_SELECT
+	FDS_DISK_SELECT_FROM_REWIND
 };
 enum fds_block_type {
 	BL_DISK_INFO = 1,

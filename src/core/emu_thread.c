@@ -26,12 +26,7 @@
 #include "emu.h"
 #include "info.h"
 #include "gui.h"
-
-enum emu_thread_states {
-	ET_UNINITIALIZED,
-	ET_RUN,
-	ET_PAUSE
-};
+#include "debugger.h"
 
 #if defined (__unix__)
 static void *emu_thread_loop(void *arg);
@@ -46,13 +41,11 @@ struct _emu_thread {
 	HANDLE thread;
 #endif
 	BYTE in_run;
-	BYTE action;
+	int emu_thread_pause_calls;
 } emu_thread;
 
 BYTE emu_thread_init(void) {
 	memset(&emu_thread, 0x00, sizeof(emu_thread));
-
-	emu_thread.action = ET_PAUSE;
 
 #if defined (__unix__)
 	emu_thread.thread = malloc(sizeof(pthread_t));
@@ -77,22 +70,37 @@ void emu_thread_quit(void) {
 }
 
 void emu_thread_pause(void) {
-	if (emu_thread.action != ET_UNINITIALIZED) {
-		emu_thread.action = ET_PAUSE;
+	emu_thread.emu_thread_pause_calls++;
 
-		while (emu_thread.in_run == TRUE) {
-			gui_sleep(1);
-		}
+	while (emu_thread.in_run == TRUE) {
+		gui_sleep(1);
 	}
 }
 void emu_thread_continue(void) {
-	if (emu_thread.action != ET_UNINITIALIZED) {
-		emu_thread.action = ET_RUN;
+	if (--emu_thread.emu_thread_pause_calls < 0) {
+		emu_thread.emu_thread_pause_calls = 0;
+	}
 
+	if (emu_thread.emu_thread_pause_calls == 0) {
 		while (emu_thread.in_run == FALSE) {
 			gui_sleep(1);
 		}
 	}
+}
+
+void emu_thread_pause_with_count(int *count) {
+	emu_thread_pause();
+	(*count)++;
+}
+void emu_thread_continue_with_count(int *count) {
+	emu_thread_continue();
+	(*count)--;
+}
+void emu_thread_continue_ctrl_count(int *count) {
+	for (; (*count) > 0; (*count)--) {
+		emu_thread_continue();
+	}
+	(*count) = 0;
 }
 
 #if defined (__unix__)
@@ -100,19 +108,24 @@ static void *emu_thread_loop(UNUSED(void *arg)) {
 #elif defined (_WIN32)
 static DWORD WINAPI emu_thread_loop(UNUSED(void *arg)) {
 #endif
-	while (TRUE) {
-		// gestione uscita
-		if (info.stop == TRUE) {
-			emu_thread.in_run = FALSE;
-			break;
-		} else if (emu_thread.action == ET_PAUSE) {
+	while (info.stop == FALSE) {
+		if (emu_thread.emu_thread_pause_calls) {
 			emu_thread.in_run = FALSE;
 			gui_sleep(1);
 			continue;
 		}
+
 		emu_thread.in_run = TRUE;
-		emu_frame();
+
+		if (debugger.mode != DBG_NODBG) {
+			emu_frame_debugger();
+		} else {
+			emu_frame();
+		}
 	}
+
+	emu_thread.in_run = FALSE;
+
 #if defined (__unix__)
 	return (NULL);
 #elif defined (_WIN32)

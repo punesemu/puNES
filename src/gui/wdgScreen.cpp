@@ -28,7 +28,6 @@
 #include "wdgScreen.moc"
 #include "conf.h"
 #include "tas.h"
-#include "timeline.h"
 #include "gui.h"
 #include "patcher.h"
 
@@ -64,32 +63,12 @@ bool wdgScreen::eventFilter(QObject *obj, QEvent *event) {
 		keyEvent = ((QKeyEvent *)event);
 		keyval = objInp::kbd_keyval_decode(keyEvent);
 
-		if (keyval == gui.key.tl) {
-			if (!tl.key) {
-				mainwin->statusbar->timeline->timeline_pressed(&tl.key);
-			}
-			return (true);
 #if !defined (RELEASE)
-		} else if (keyval == Qt::Key_Insert) {
+		if (keyval == Qt::Key_Insert) {
 			info.snd_info = !info.snd_info;
-#endif
-		} else if (keyval == Qt::Key_Left) {
-			if (tl.key) {
-				int snap = mainwin->statusbar->timeline->value();
-
-				mainwin->statusbar->timeline->setValue(snap - 1, true);
-				return (true);
-			}
-		} else if (keyval == Qt::Key_Right) {
-			if (tl.key) {
-				int snap = mainwin->statusbar->timeline->value();
-
-				mainwin->statusbar->timeline->setValue(snap + 1, true);
-				return (true);
-			}
 		}
-
-		if (!tas.type) {
+#endif
+		if (tas.type == NOTAS) {
 			for (BYTE i = PORT1; i < PORT_MAX; i++) {
 				if (port_funct[i].input_decode_event && (port_funct[i].input_decode_event(PRESSED,
 					keyEvent->isAutoRepeat(), keyval, KEYBOARD, &port[i]) == EXIT_OK)) {
@@ -101,14 +80,7 @@ bool wdgScreen::eventFilter(QObject *obj, QEvent *event) {
 		keyEvent = ((QKeyEvent *)event);
 		keyval = objInp::kbd_keyval_decode(keyEvent);
 
-		if (keyval == gui.key.tl) {
-			if (tl.key) {
-				mainwin->statusbar->timeline->timeline_released(&tl.key);
-			}
-			return (true);
-		}
-
-		if (!tas.type) {
+		if (tas.type == NOTAS) {
 			for (BYTE i = PORT1; i < PORT_MAX; i++) {
 				if (port_funct[i].input_decode_event && (port_funct[i].input_decode_event(RELEASED,
 					keyEvent->isAutoRepeat(), keyval, KEYBOARD, &port[i]) == EXIT_OK)) {
@@ -116,35 +88,37 @@ bool wdgScreen::eventFilter(QObject *obj, QEvent *event) {
 				}
 			}
 		}
-	} else if (event->type() == QEvent::MouseButtonPress) {
-		mouseEvent = ((QMouseEvent *)event);
+	} else if ((tas.type == NOTAS) && (rwnd.active == FALSE)) {
+		if (event->type() == QEvent::MouseButtonPress) {
+			mouseEvent = ((QMouseEvent *)event);
 
-		if (mouseEvent->button() == Qt::LeftButton) {
-			gmouse.left = TRUE;
-		} else if (mouseEvent->button() == Qt::RightButton) {
-			gmouse.right = TRUE;
+			if (mouseEvent->button() == Qt::LeftButton) {
+				gmouse.left = TRUE;
+			} else if (mouseEvent->button() == Qt::RightButton) {
+				gmouse.right = TRUE;
+			}
+		} else if (event->type() == QEvent::MouseButtonDblClick) {
+			mouseEvent = ((QMouseEvent *)event);
+
+			if (mouseEvent->button() == Qt::LeftButton) {
+				gmouse.left = TRUE;
+			} else if (mouseEvent->button() == Qt::RightButton) {
+				gmouse.right = TRUE;
+			}
+		} else if (event->type() == QEvent::MouseButtonRelease) {
+			mouseEvent = ((QMouseEvent *)event);
+
+			if (mouseEvent->button() == Qt::LeftButton) {
+				gmouse.left = FALSE;
+			} else if (mouseEvent->button() == Qt::RightButton) {
+				gmouse.right = FALSE;
+			}
+		} else if (event->type() == QEvent::MouseMove) {
+			mouseEvent = ((QMouseEvent *)event);
+
+			gmouse.x = mouseEvent->x();
+			gmouse.y = mouseEvent->y();
 		}
-	} else if (event->type() == QEvent::MouseButtonDblClick) {
-		mouseEvent = ((QMouseEvent *)event);
-
-		if (mouseEvent->button() == Qt::LeftButton) {
-			gmouse.left = TRUE;
-		} else if (mouseEvent->button() == Qt::RightButton) {
-			gmouse.right = TRUE;
-		}
-	} else if (event->type() == QEvent::MouseButtonRelease) {
-		mouseEvent = ((QMouseEvent *)event);
-
-		if (mouseEvent->button() == Qt::LeftButton) {
-			gmouse.left = FALSE;
-		} else if (mouseEvent->button() == Qt::RightButton) {
-			gmouse.right = FALSE;
-		}
-	} else if (event->type() == QEvent::MouseMove) {
-		mouseEvent = ((QMouseEvent *)event);
-
-		gmouse.x = mouseEvent->x();
-		gmouse.y = mouseEvent->y();
 	}
 
 	return (QObject::eventFilter(obj, event));

@@ -12,6 +12,7 @@ libcore_a_SOURCES = \
 	cpu.h \
 	cpu_inline.h \
 	database.h \
+	debugger.h \
 	draw_on_screen.h \
 	draw_on_screen.c \
 	emu.c \
@@ -55,6 +56,8 @@ libcore_a_SOURCES = \
 	ppu.c \
 	ppu.h \
 	ppu_inline.h \
+	rewind.c \
+	rewind.h \
 	rom_mem.c \
 	rom_mem.h \
 	save_slot.c \
@@ -63,8 +66,6 @@ libcore_a_SOURCES = \
 	sha1.h \
 	text.c \
 	text.h \
-	timeline.c \
-	timeline.h \
 	uncompress.c \
 	uncompress.h \
 	uncompress_selection.h \

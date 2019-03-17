@@ -90,7 +90,8 @@ static struct _cl_option {
 	{ "fullscreen-window",     req_arg,  0 },
 	{ "audio-output-device",   req_arg,  0 },
 	{ "shader",                req_arg,  0 },
-	{ "overscan-blk-brd",      req_arg,  0 }
+	{ "overscan-blk-brd",      req_arg,  0 },
+	{ "rewind-minutes",        req_arg,  0 }
 };
 
 BYTE cmd_line_parse(int argc, uTCHAR **argv) {
@@ -189,6 +190,8 @@ BYTE cmd_line_parse(int argc, uTCHAR **argv) {
 					set_int(cfg_from_file.oscan_black_borders, SET_OVERSCAN_BLACK_BORDERS);
 				} else if (key == "overscan-blk-brd-f") {
 					set_int(cfg_from_file.oscan_black_borders_fscr, SET_OVERSCAN_BLACK_BORDERS_FSCR);
+				} else if (key == "rewind-minutes") {
+					set_int(cfg_from_file.rewind_minutes, SET_REWIND_MINUTES);
 				}
 				break;
 			case 'a':
@@ -335,8 +338,8 @@ static void usage(QString name) {
 #endif
 	};
 
-	usage_string = (uTCHAR *) malloc(1024 * 8);
-	usnprintf(usage_string, 1024 * 8, istructions,
+	usage_string = (uTCHAR *)malloc(1024 * 9);
+	usnprintf(usage_string, 1024 * 9, istructions,
 			main_cfg[SET_MODE].hlp,
 			main_cfg[SET_SCALE].hlp,
 			main_cfg[SET_PAR].hlp,
@@ -375,7 +378,8 @@ static void usage(QString name) {
 			main_cfg[SET_UNLIMITED_SPRITES].hlp,
 			main_cfg[SET_BCK_PAUSE].hlp,
 			main_cfg[SET_CHEAT_MODE].hlp,
-			main_cfg[SET_GUI_LANGUAGE].hlp
+			main_cfg[SET_GUI_LANGUAGE].hlp,
+			main_cfg[SET_REWIND_MINUTES].hlp
 	);
 
 	if (box->font().pointSize() > 9) {

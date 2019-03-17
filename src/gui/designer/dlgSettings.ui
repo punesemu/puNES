@@ -14,7 +14,7 @@
    <string>Settings</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="application.qrc">
+   <iconset resource="resources.qrc">
     <normaloff>:/icon/icons/application.png</normaloff>:/icon/icons/application.png</iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_dlgSettings">
@@ -25,7 +25,7 @@
      </property>
      <widget class="QWidget" name="tab_General">
       <attribute name="icon">
-       <iconset resource="application.qrc">
+       <iconset resource="resources.qrc">
         <normaloff>:/icon/icons/general.svg</normaloff>:/icon/icons/general.svg</iconset>
       </attribute>
       <attribute name="title">
@@ -39,7 +39,7 @@
      </widget>
      <widget class="QWidget" name="tab_Video">
       <attribute name="icon">
-       <iconset resource="application.qrc">
+       <iconset resource="resources.qrc">
         <normaloff>:/icon/icons/video.svg</normaloff>:/icon/icons/video.svg</iconset>
       </attribute>
       <attribute name="title">
@@ -53,7 +53,7 @@
      </widget>
      <widget class="QWidget" name="tab_Audio">
       <attribute name="icon">
-       <iconset resource="application.qrc">
+       <iconset resource="resources.qrc">
         <normaloff>:/icon/icons/audio.svg</normaloff>:/icon/icons/audio.svg</iconset>
       </attribute>
       <attribute name="title">
@@ -67,7 +67,7 @@
      </widget>
      <widget class="QWidget" name="tab_Input">
       <attribute name="icon">
-       <iconset resource="application.qrc">
+       <iconset resource="resources.qrc">
         <normaloff>:/icon/icons/input.svg</normaloff>:/icon/icons/input.svg</iconset>
       </attribute>
       <attribute name="title">
@@ -81,7 +81,7 @@
      </widget>
      <widget class="QWidget" name="tab_PPU">
       <attribute name="icon">
-       <iconset resource="application.qrc">
+       <iconset resource="resources.qrc">
         <normaloff>:/icon/icons/ppu.svg</normaloff>:/icon/icons/ppu.svg</iconset>
       </attribute>
       <attribute name="title">
@@ -95,7 +95,7 @@
      </widget>
      <widget class="QWidget" name="tab_Cheats">
       <attribute name="icon">
-       <iconset resource="application.qrc">
+       <iconset resource="resources.qrc">
         <normaloff>:/icon/icons/cheat.svg</normaloff>:/icon/icons/cheat.svg</iconset>
       </attribute>
       <attribute name="title">
@@ -115,7 +115,7 @@
       <string>Save Settings</string>
      </property>
      <property name="icon">
-      <iconset resource="application.qrc">
+      <iconset resource="resources.qrc">
        <normaloff>:/icon/icons/save.svg</normaloff>:/icon/icons/save.svg</iconset>
      </property>
     </widget>
@@ -161,7 +161,7 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="application.qrc"/>
+  <include location="resources.qrc"/>
  </resources>
  <connections/>
 </ui>

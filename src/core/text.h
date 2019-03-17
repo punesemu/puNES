@@ -21,6 +21,7 @@
 
 #include <time.h>
 #include "common.h"
+#include "input.h"
 
 enum txt_type { TXT_INFO, TXT_SINGLE };
 enum txt_fonts { FONT_8X10, FONT_12X10 };
@@ -112,11 +113,10 @@ EXTERNC struct _text {
 		uint8_t count;
 		_txt_element *lines[TXT_MAX_LINES];
 	} single;
-	struct _txt_tas {
-		_txt_element counter_frames;
-		_txt_element controllers[4];
-	} tas;
 	struct _txt_misc {
+		_txt_element counter_frames;
+		_txt_element controllers[PORT_MAX];
+		_txt_element rewind;
 		_txt_element fps;
 		_txt_element floppy;
 	} misc;
@@ -130,8 +130,7 @@ EXTERNC uint32_t txt_table[TXT_BLACK + 1];
 
 EXTERNC void text_init(void);
 EXTERNC void text_save_slot(BYTE operation);
-EXTERNC void text_add_line(int type, int factor, int font, int alpha, int start_x, int start_y,
-	int x, int y, const char *fmt, ...);
+EXTERNC void text_add_line(int type, int factor, int font, int alpha, int start_x, int start_y, int x, int y, const char *fmt, ...);
 EXTERNC void text_rendering(BYTE render);
 EXTERNC void text_calculate_real_x_y(_txt_element *ele, int *x, int *y);
 EXTERNC void text_quit(void);

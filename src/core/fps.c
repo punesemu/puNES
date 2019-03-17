@@ -20,6 +20,7 @@
 #include "fps.h"
 #include "clock.h"
 #include "conf.h"
+#include "ppu.h"
 
 void fps_init(void) {
 	if (machine.type == NTSC) {
@@ -37,10 +38,12 @@ void fps_init(void) {
 	fps_normalize();
 }
 void fps_fast_forward(void) {
+	ppu_draw_screen_pause();
 	fps.fast_forward = TRUE;
 	fps.frame.estimated_ms = (int) (1000.0f / (machine.fps * cfg->ff_velocity));
 }
 void fps_normalize(void) {
 	fps.frame.estimated_ms = machine.ms_frame;
 	fps.fast_forward = FALSE;
+	ppu_draw_screen_continue();
 }

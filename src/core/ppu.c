@@ -30,9 +30,7 @@
 #include "conf.h"
 #include "fps.h"
 
-INLINE static void ppu_oam_evaluation(void);
-
-enum overflow_sprite { OVERFLOW_SPR = 3 };
+enum ppu_misc { PPU_OVERFLOW_SPR = 3 };
 
 #define fetch_at()\
 {\
@@ -128,6 +126,8 @@ enum overflow_sprite { OVERFLOW_SPR = 3 };
 		/* salvo i secondi 8 bit del tile dello sprite */\
 		spl[spenv.tmp_spr_plus].h_byte = (inv_chr[ppu_rd_mem(sadr | 0x08)] << 1);\
 	}
+
+INLINE static void ppu_oam_evaluation(void);
 
 static const BYTE inv_chr[256] = {
 	0x00, 0x80, 0x40, 0xC0, 0x20, 0xA0, 0x60, 0xE0,
@@ -261,6 +261,10 @@ void ppu_tick(void) {
 				ppu.screen_y = 0;
 				/* setto a 0 il bit 5, 6 ed il 7 del $2002 */
 				r2002.sprite_overflow = r2002.sprite0_hit = r2002.vblank = ppu.vblank = FALSE;
+				// serve assolutamente per la corretta lettura delle coordinate del puntatore zapper
+				if ((info.zapper_is_present == TRUE) && (fps.fast_forward == FALSE)) {
+					memset((BYTE *)screen.wr->data, 0, screen_size());
+				}
 			} else if ((ppu.frame_x == (SHORT_SLINE_CYCLES - 1)) && (machine.type == NTSC)) {
 				/*
 				 * nei frame NTSC dispari, la dummy line e' lunga 340
@@ -849,7 +853,7 @@ void ppu_tick(void) {
 			if (ppu.frame_y > ppu_sclines.vint) {
 				/* incremento il contatore delle scanline renderizzate */
 				ppu.screen_y++;
-				if ((ppu.screen_y == SCR_LINES) && (fps.fast_forward == FALSE)) {
+				if ((ppu.screen_y == SCR_LINES) && (info.no_ppu_draw_screen == 0)) {
 					gfx_draw_screen();
 				}
 				if (extcl_ppu_update_screen_y) {
@@ -933,6 +937,9 @@ void ppu_tick(void) {
 			/* abilito il vblank */
 			r2002.vblank = 0x80;
 			ppu.vblank = TRUE;
+			if ((ppu.frames == 1) && info.r2002_jump_first_vblank) {
+				r2002.vblank = 0x00;
+			}
 			/*
 			 * quando il bit 7 del $2002 e il bit 7
 			 * del $2000 sono a 1 devo generare un NMI.
@@ -1099,6 +1106,29 @@ void ppu_overclock(BYTE reset_dmc_in_use) {
 	overclock.sclines.total = overclock.sclines.vb + overclock.sclines.pr;
 	ppu_overclock_update();
 	ppu_overclock_control();
+}
+
+void ppu_draw_screen_pause(void) {
+	info.no_ppu_draw_screen++;
+}
+void ppu_draw_screen_continue(void) {
+	if (--info.no_ppu_draw_screen < 0) {
+		info.no_ppu_draw_screen = 0;
+	}
+}
+void ppu_draw_screen_pause_with_count(int *count) {
+	ppu_draw_screen_pause();
+	(*count)++;
+}
+void ppu_draw_screen_continue_with_count(int *count) {
+	ppu_draw_screen_continue();
+	(*count)--;
+}
+void ppu_draw_screen_continue_ctrl_count(int *count) {
+	for (; (*count) > 0; (*count)--) {
+		ppu_draw_screen_continue();
+	}
+	(*count) = 0;
 }
 
 INLINE static void ppu_oam_evaluation(void) {
@@ -1362,7 +1392,7 @@ INLINE static void ppu_oam_evaluation(void) {
 				 * devo riprendere a esaminare le coordinate Y degli
 				 * sprites.
 				 */
-				} else if (spr_ev.evaluate == OVERFLOW_SPR) {
+				} else if (spr_ev.evaluate == PPU_OVERFLOW_SPR) {
 					/* in caso di overflow dell'indice degli sprite ... */
 					if (++spr_ev.index == 64) {
 						/* ...azzero l'indice... */
@@ -1419,7 +1449,7 @@ INLINE static void ppu_oam_evaluation(void) {
 					/* ...e sono nell'ultimo ciclo...*/
 					if (spr_ev.timing == 7) {
 						/* ...indico la nuova modalita'... */
-						spr_ev.evaluate = OVERFLOW_SPR;
+						spr_ev.evaluate = PPU_OVERFLOW_SPR;
 						/* ...passo al prossimo sprite.. */
 						spr_ev.timing = 0;
 						/*

@@ -51,6 +51,7 @@ typedef wchar_t uTCHAR;
 #define ustat _wstat
 #define ufprintf fwprintf
 #define ufopen _wfopen
+#define ufdopen _wfdopen
 #define ustrrchr wcsrchr
 #define ustrcasecmp gui_utf_strcasecmp
 #define ustrcmp wcscmp
@@ -92,6 +93,7 @@ typedef char uTCHAR;
 #define ustat stat
 #define ufprintf fprintf
 #define ufopen fopen
+#define ufdopen fdopen
 #define ustrrchr strrchr
 #define ustrcasecmp strcasecmp
 #define ustrcmp strcmp

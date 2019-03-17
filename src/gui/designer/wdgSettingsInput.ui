@@ -44,7 +44,7 @@
         <string>Setup</string>
        </property>
        <property name="icon">
-        <iconset resource="application.qrc">
+        <iconset resource="resources.qrc">
          <normaloff>:/icon/icons/input_config.svg</normaloff>:/icon/icons/input_config.svg</iconset>
        </property>
       </widget>
@@ -76,7 +76,7 @@
         <string>Setup</string>
        </property>
        <property name="icon">
-        <iconset resource="application.qrc">
+        <iconset resource="resources.qrc">
          <normaloff>:/icon/icons/input_config.svg</normaloff>:/icon/icons/input_config.svg</iconset>
        </property>
       </widget>
@@ -142,7 +142,7 @@
         <string>Setup</string>
        </property>
        <property name="icon">
-        <iconset resource="application.qrc">
+        <iconset resource="resources.qrc">
          <normaloff>:/icon/icons/input_config.svg</normaloff>:/icon/icons/input_config.svg</iconset>
        </property>
       </widget>
@@ -295,7 +295,7 @@
         <string>Setup</string>
        </property>
        <property name="icon">
-        <iconset resource="application.qrc">
+        <iconset resource="resources.qrc">
          <normaloff>:/icon/icons/input_config.svg</normaloff>:/icon/icons/input_config.svg</iconset>
        </property>
       </widget>
@@ -346,7 +346,7 @@
         <string>Reset to defaults</string>
        </property>
        <property name="icon">
-        <iconset resource="application.qrc">
+        <iconset resource="resources.qrc">
          <normaloff>:/icon/icons/overscan_default.svg</normaloff>:/icon/icons/overscan_default.svg</iconset>
        </property>
       </widget>
@@ -384,7 +384,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="application.qrc"/>
+  <include location="resources.qrc"/>
  </resources>
  <connections/>
 </ui>

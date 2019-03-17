@@ -22,8 +22,7 @@
 #include <pthread.h>
 #endif
 
-extern "C" void xbrz_scale(BYTE factor, const WORD *src, uint32_t *trg, uint32_t *palette,
-	int width, int height) {
+extern "C" void xbrz_scale(BYTE factor, const WORD *src, uint32_t *trg, uint32_t *palette, int width, int height) {
 #if defined (WITH_D3D9)
 	xbrz::scale(factor, src, trg, palette, width, height, xbrz::ColorFormat::ARGB);
 #elif defined (WITH_OPENGL)
@@ -31,8 +30,7 @@ extern "C" void xbrz_scale(BYTE factor, const WORD *src, uint32_t *trg, uint32_t
 #endif
 }
 
-extern "C" void xbrz_scale_mt(BYTE factor, const WORD *src, uint32_t *trg, uint32_t *palette,
-	int width, int height) {
+extern "C" void xbrz_scale_mt(BYTE factor, const WORD *src, uint32_t *trg, uint32_t *palette, int width, int height) {
 #if defined (__unix__)
 	pthread_t thread[XBRZ_NUM_SLICE];
 #elif defined (_WIN32)
@@ -51,9 +49,9 @@ extern "C" void xbrz_scale_mt(BYTE factor, const WORD *src, uint32_t *trg, uint3
 		param[i].srcWidth = width;
 		param[i].srcHeight = height;
 	#if defined (WITH_D3D9)
-		param[i].colFmt = (int) xbrz::ColorFormat::ARGB;
+		param[i].colFmt = (int)xbrz::ColorFormat::ARGB;
 	#elif defined (WITH_OPENGL)
-		param[i].colFmt = (int) xbrz::ColorFormat::RGB;
+		param[i].colFmt = (int)xbrz::ColorFormat::RGB;
 	#endif
 #if defined (__unix__)
 		pthread_create(&thread[i], NULL, xbrz::scale_mt, &param[i]);

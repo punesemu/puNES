@@ -1,5 +1,5 @@
-application.cpp: designer/application.qrc
-	$(RCC) $(srcdir)/designer/application.qrc -name resources -o $@
+resources.cpp: designer/resources.qrc
+	$(RCC) $(srcdir)/designer/resources.qrc -name resources -o $@
 
 dlgSettings.moc: dlgSettings.hpp
 	$(MOC) $(srcdir)/dlgSettings.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
@@ -25,6 +25,8 @@ wdgOpenGL.moc: wdgOpenGL.hpp
 endif
 wdgPaletteEditor.moc: wdgPaletteEditor.hpp
 	$(MOC) $(srcdir)/wdgPaletteEditor.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
+wdgRewind.moc: wdgRewind.hpp
+	$(MOC) $(srcdir)/wdgRewind.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 wdgSettingsAudio.moc: wdgSettingsAudio.hpp
 	$(MOC) $(srcdir)/wdgSettingsAudio.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 wdgSettingsCheats.moc: wdgSettingsCheats.hpp
@@ -42,8 +44,8 @@ wdgScreen.moc: wdgScreen.hpp
 wdgStatusBar.moc: wdgStatusBar.hpp
 	$(MOC) $(srcdir)/wdgStatusBar.hpp $(MOCDEFINES) $(CUSTOMDEFINES) -o $@
 
-application.hh: designer/application.ui
-	$(UIC) $(srcdir)/designer/application.ui -o $@
+mainWindow.hh: designer/mainWindow.ui
+	$(UIC) $(srcdir)/designer/mainWindow.ui -o $@
 dlgSettings.hh: designer/dlgSettings.ui
 	$(UIC) $(srcdir)/designer/dlgSettings.ui -o $@
 dlgStdPad.hh: designer/dlgStdPad.ui
@@ -58,6 +60,8 @@ wdgCheatsEditor.hh: designer/wdgCheatsEditor.ui
 	$(UIC) $(srcdir)/designer/wdgCheatsEditor.ui -o $@
 wdgPaletteEditor.hh: designer/wdgPaletteEditor.ui
 	$(UIC) $(srcdir)/designer/wdgPaletteEditor.ui -o $@
+wdgRewind.hh: designer/wdgRewind.ui
+	$(UIC) $(srcdir)/designer/wdgRewind.ui -o $@
 wdgSettingsAudio.hh: designer/wdgSettingsAudio.ui
 	$(UIC) $(srcdir)/designer/wdgSettingsAudio.ui -o $@
 wdgSettingsCheats.hh: designer/wdgSettingsCheats.ui
@@ -72,7 +76,7 @@ wdgSettingsVideo.hh: designer/wdgSettingsVideo.ui
 	$(UIC) $(srcdir)/designer/wdgSettingsVideo.ui -o $@
 
 clean-local:
-	rm -f application.cpp *.{hh,moc}
+	rm -f resources.cpp *.{hh,moc}
 
 BUILT_SOURCES = \
 	dlgSettings.moc \
@@ -85,6 +89,7 @@ BUILT_SOURCES = \
 	wdgAPUChannels.moc \
 	wdgCheatsEditor.moc \
 	wdgPaletteEditor.moc \
+	wdgRewind.moc \
 	wdgSettingsAudio.moc \
 	wdgSettingsCheats.moc \
 	wdgSettingsGeneral.moc \
@@ -95,10 +100,10 @@ BUILT_SOURCES = \
 	wdgStatusBar.moc
 
 BUILT_SOURCES += \
-	application.cpp
+	resources.cpp
 
 BUILT_SOURCES += \
-	application.hh \
+	mainWindow.hh \
 	dlgSettings.hh \
 	dlgStdPad.hh \
 	dlgUncomp.hh \
@@ -106,6 +111,7 @@ BUILT_SOURCES += \
 	wdgAPUChannels.hh \
 	wdgCheatsEditor.hh \
 	wdgPaletteEditor.hh \
+	wdgRewind.hh \
 	wdgSettingsAudio.hh \
 	wdgSettingsCheats.hh \
 	wdgSettingsGeneral.hh \
@@ -115,7 +121,6 @@ BUILT_SOURCES += \
 
 noinst_LIBRARIES = libgui.a
 libgui_a_SOURCES = \
-	application.hh \
 	cgp.cpp \
 	cgp.h \
 	cmd_line.cpp \
@@ -148,6 +153,8 @@ libgui_a_SOURCES = \
 	wdgCheatsEditor.hpp \
 	wdgPaletteEditor.cpp \
 	wdgPaletteEditor.hpp \
+	wdgRewind.cpp \
+	wdgRewind.hpp \
 	wdgSettingsAudio.cpp \
 	wdgSettingsAudio.hpp \
 	wdgSettingsCheats.cpp \

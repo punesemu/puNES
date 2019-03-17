@@ -16,10 +16,16 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef EMU_THREAD_H_
-#define EMU_THREAD_H_
+#ifndef DEBUGGER_H_
+#define DEBUGGER_H_
 
 #include "common.h"
+
+enum debugger_mode { DBG_NODBG, DBG_GO, DBG_STEP, DBG_BREAKPOINT, DBG_SLEEP };
+
+typedef struct _debugger_breakpoint {
+
+} _debugger_breakpoint;
 
 #if defined (__cplusplus)
 #define EXTERNC extern "C"
@@ -27,17 +33,12 @@
 #define EXTERNC
 #endif
 
-EXTERNC BYTE emu_thread_init(void);
-EXTERNC void emu_thread_quit(void);
-
-EXTERNC void emu_thread_pause(void);
-EXTERNC void emu_thread_continue(void);
-
-EXTERNC void emu_thread_pause_with_count(int *count);
-EXTERNC void emu_thread_continue_with_count(int *count);
-EXTERNC void emu_thread_continue_ctrl_count(int *count);
+EXTERNC struct _debugger {
+	BYTE mode;
+	WORD breakpoint;
+	BYTE breakframe;
+} debugger;
 
 #undef EXTERNC
 
-#endif /* EMU_THREAD_H_ */
-
+#endif /* DEBUGGER_H_ */

@@ -405,7 +405,7 @@
         <string>Reset color</string>
        </property>
        <property name="icon">
-        <iconset resource="application.qrc">
+        <iconset resource="resources.qrc">
          <normaloff>:/icon/icons/overscan_default.svg</normaloff>:/icon/icons/overscan_default.svg</iconset>
        </property>
       </widget>
@@ -432,7 +432,7 @@
         <string>Save to a file</string>
        </property>
        <property name="icon">
-        <iconset resource="application.qrc">
+        <iconset resource="resources.qrc">
          <normaloff>:/icon/icons/save.svg</normaloff>:/icon/icons/save.svg</iconset>
        </property>
       </widget>
@@ -454,7 +454,7 @@
       <string>Reset palette</string>
      </property>
      <property name="icon">
-      <iconset resource="application.qrc">
+      <iconset resource="resources.qrc">
        <normaloff>:/icon/icons/overscan_default.svg</normaloff>:/icon/icons/overscan_default.svg</iconset>
      </property>
     </widget>
@@ -487,7 +487,7 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="application.qrc"/>
+  <include location="resources.qrc"/>
  </resources>
  <connections/>
 </ui>

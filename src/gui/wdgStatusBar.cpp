@@ -24,7 +24,6 @@
 #include "wdgStatusBar.moc"
 #include "mainWindow.hpp"
 #include "info.h"
-#include "timeline.h"
 #include "video/gfx.h"
 #include "ppu.h"
 #include "emu.h"
@@ -52,11 +51,27 @@ wdgStatusBar::wdgStatusBar(QWidget *parent) : QStatusBar(parent) {
 	infosb = new infoStatusBar(this);
 	addWidget(infosb);
 
+#if defined (__unix__)
+	vlineState = new QFrame(this);
+	vlineState->setFrameShape(QFrame::VLine);
+	vlineState->setFrameShadow(QFrame::Plain);
+	vlineState->setFixedWidth(vlineState->sizeHint().width());
+	addWidget(vlineState);
+#endif
+
 	state = new wdgState(this);
 	addWidget(state);
 
-	timeline = new timeLine(this);
-	addWidget(timeline);
+#if defined (__unix__)
+	vlineRewind = new QFrame(this);
+	vlineRewind->setFrameShape(QFrame::VLine);
+	vlineRewind->setFrameShadow(QFrame::Plain);
+	vlineRewind->setFixedWidth(vlineRewind->sizeHint().width());
+	addWidget(vlineRewind);
+#endif
+
+	rewind = new wdgRewind(this);
+	addWidget(rewind);
 
 	installEventFilter(this);
 }
@@ -72,7 +87,6 @@ bool wdgStatusBar::eventFilter(QObject *obj, QEvent *event) {
 void wdgStatusBar::changeEvent(QEvent *event) {
 	if (event->type() == QEvent::LanguageChange) {
 		state->retranslateUi();
-		timeline->retranslateUi();
 		update_width(gfx.w[VIDEO_MODE]);
 	} else {
 		QWidget::changeEvent(event);
@@ -82,12 +96,26 @@ void wdgStatusBar::changeEvent(QEvent *event) {
 void wdgStatusBar::update_statusbar(void) {
 	infosb->update_label();
 
-	if (info.no_rom | info.turn_off) {
+	if (info.no_rom | info.turn_off | nsf.state) {
+#if defined (__unix__)
+		vlineState->setEnabled(false);
+#endif
 		state->setEnabled(false);
-		timeline->setEnabled(false);
+
+#if defined (__unix__)
+		vlineRewind->setEnabled(false);
+#endif
+		rewind->setEnabled(false);
 	} else {
+#if defined (__unix__)
+		vlineState->setEnabled(true);
+#endif
 		state->setEnabled(true);
-		timeline->setEnabled(true);
+
+#if defined (__unix__)
+		vlineRewind->setEnabled(true);
+#endif
+		rewind->setEnabled(true);
 		state->slot->setCurrentIndex(save_slot.slot);
 		state->update();
 	}
@@ -96,12 +124,32 @@ void wdgStatusBar::update_width(int w) {
 	setFixedWidth(w);
 
 	w -= (2 + 2);
-	w -= (timeline->isVisible() ? timeline->sizeHint().width() + 2 + 2 + 2 : 0);
+
+#if defined (__unix__)
+	w -= (state->isVisible() ? vlineState->sizeHint().width() + 2 + 2 : 0);
+#endif
 	w -= (state->isVisible() ? state->sizeHint().width() + 2 + 2 + 2 : 0);
+
+#if defined (__unix__)
+	w -= (rewind->isVisible() ? vlineRewind->sizeHint().width() + 2 + 2 : 0);
+#endif
+	w -= (rewind->isVisible() ? rewind->sizeHint().width() + 2 + 2 + 2 : 0);
 
 	if (w >= 0) {
 		infosb->setFixedWidth(w);
 	}
+}
+void wdgStatusBar::state_setVisible(bool visible) {
+#if defined (__unix__)
+	vlineState->setVisible(visible);
+#endif
+	state->setVisible(visible);
+}
+void wdgStatusBar::rewind_setVisible(bool visible) {
+#if defined (__unix__)
+	vlineRewind->setVisible(visible);
+#endif
+	rewind->setVisible(visible);
 }
 
 // ---------------------------------- Info --------------------------------------------
@@ -152,9 +200,7 @@ void infoStatusBar::update_label(void) {
 slotItemDelegate::slotItemDelegate(QObject *parent) : QStyledItemDelegate(parent) {}
 slotItemDelegate::~slotItemDelegate() {}
 
-void slotItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
-		const QModelIndex &index) const {
-
+void slotItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const {
 	if (!save_slot.state[index.row()]) {
 		QStyleOptionViewItem opt = option;
 
@@ -193,15 +239,14 @@ void slotComboBox::paintEvent(UNUSED(QPaintEvent *event)) {
 	}
 
 	QCommonStyle cstyle;
-	QRect editRect = cstyle.subControlRect(QStyle::CC_ComboBox, &opt,
-			QStyle::SC_ComboBoxEditField, this);
+	QRect editRect = cstyle.subControlRect(QStyle::CC_ComboBox, &opt, QStyle::SC_ComboBoxEditField, this);
 
 	painter.save();
 	painter.setClipRect(editRect);
 	if (!opt.currentText.isEmpty() && !opt.editable) {
 		cstyle.drawItemText(&painter, editRect.adjusted(1, 0, -1, 0),
-				cstyle.visualAlignment(opt.direction, Qt::AlignLeft | Qt::AlignVCenter),
-				opt.palette, opt.state & QStyle::State_Enabled, opt.currentText);
+			cstyle.visualAlignment(opt.direction, Qt::AlignLeft | Qt::AlignVCenter),
+			opt.palette, opt.state & QStyle::State_Enabled, opt.currentText);
 	}
 	painter.restore();
 
@@ -215,14 +260,6 @@ wdgState::wdgState(QWidget *parent) : QWidget(parent) {
 	hbox->setSpacing(SPACING);
 
 	setLayout(hbox);
-
-#if defined (__unix__)
-	vline = new QFrame(this);
-	vline->setFrameShape(QFrame::VLine);
-	vline->setFrameShadow(QFrame::Plain);
-	vline->setFixedWidth(vline->sizeHint().width());
-	hbox->addWidget(vline);
-#endif
 
 	save = new QPushButton(this);
 	save->installEventFilter(this);
@@ -254,8 +291,7 @@ void wdgState::retranslateUi(void) {
 		}
 
 		opt.initFrom(this);
-		QRect rc = pStyle->subControlRect(QStyle::CC_ComboBox, &opt, QStyle::SC_ComboBoxArrow,
-				this);
+		QRect rc = pStyle->subControlRect(QStyle::CC_ComboBox, &opt, QStyle::SC_ComboBoxArrow, this);
 		slot->setFixedWidth(QLabel(slot->itemText(0)).sizeHint().width() + 12 + rc.width());
 	}
 
@@ -265,16 +301,9 @@ void wdgState::retranslateUi(void) {
 	load->setText(tr("Load"));
 	load->setFixedWidth(QLabel(load->text()).sizeHint().width() + 12);
 
-#if defined (__unix__)
-	setFixedWidth(vline->width() + SPACING +
-			save->width() + SPACING +
-			slot->width() + SPACING +
-			load->width());
-#else
 	setFixedWidth(save->width() + SPACING +
-			slot->width() + SPACING +
-			load->width());
-#endif
+		slot->width() + SPACING +
+		load->width());
 }
 void wdgState::s_save_clicked(UNUSED(bool checked)) {
 	mainwin->action_Save_state->trigger();
@@ -289,190 +318,4 @@ void wdgState::s_slot_activated(int index) {
 void wdgState::s_load_clicked(UNUSED(bool checked)) {
 	mainwin->action_Load_state->trigger();
 	gui_set_focus();
-}
-
-// -------------------------------- Timeline -----------------------------------------
-
-timelineSlider::timelineSlider(QWidget *parent) : QSlider(Qt::Horizontal, parent) {
-	setTickPosition(QSlider::TicksAbove);
-	setTickInterval(1);
-	setRange(0, TL_SNAPS - 1);
-	setFixedWidth(155);
-	installEventFilter(parent);
-
-	QStyleOptionSlider opt;
-	initStyleOption(&opt);
-
-	szHandle = style()->subControlRect(QStyle::CC_Slider, &opt,
-			QStyle::SC_SliderHandle, NULL).width();
-}
-timelineSlider::~timelineSlider() {}
-
-int timelineSlider::sizeHandle(void) {
-	return (szHandle);
-}
-
-timeLine::timeLine(QWidget *parent) : QWidget(parent) {
-	hbox = new QHBoxLayout(this);
-	hbox->setContentsMargins(QMargins(0,0,0,0));
-	hbox->setMargin(0);
-	hbox->setSpacing(SPACING);
-
-	setLayout(hbox);
-
-#if defined (__unix__)
-	vline = new QFrame(this);
-	vline->setFrameShape(QFrame::VLine);
-	vline->setFrameShadow(QFrame::Plain);
-	vline->setFixedWidth(vline->sizeHint().width());
-	hbox->addWidget(vline);
-#endif
-
-	label = new QLabel(this);
-	hbox->addWidget(label);
-
-	slider = new timelineSlider(this);
-	connect(slider, SIGNAL(actionTriggered(int)), this, SLOT(s_action_triggered(int)));
-	connect(slider, SIGNAL(valueChanged(int)), this, SLOT(s_value_changed(int)));
-	connect(slider, SIGNAL(sliderPressed()), this, SLOT(s_slider_pressed()));
-	connect(slider, SIGNAL(sliderReleased()), this, SLOT(s_slider_released()));
-	hbox->addWidget(slider);
-
-	retranslateUi();
-}
-timeLine::~timeLine() {}
-
-int timeLine::value(void) {
-	return (slider->value());
-}
-void timeLine::setValue(int value, bool s_action) {
-	slider->setValue(value);
-	if (s_action == true) {
-		s_action_triggered(QAbstractSlider::SliderMove);
-	}
-}
-void timeLine::timeline_pressed(BYTE *type) {
-	emu_pause(TRUE);
-	(*type) = TRUE;
-	if (tl.snaps_fill) {
-		// faccio lo screenshot dello screen attuale
-		memcpy(tl.snaps[TL_SNAP_FREE] + tl.preview, screen.rd->data, screen_size());
-	}
-}
-void timeLine::timeline_released(BYTE *type) {
-	BYTE snap = slider->value();
-
-	if (snap > (tl.snaps_fill - 1)) {
-		(*type) = FALSE;
-		emu_pause(FALSE);
-		timeline_update_label(snap);
-		return;
-	}
-
-	if (tl.snaps_fill) {
-		if (snap != (tl.snaps_fill - 1)) {
-			timeline_back(TL_NORMAL, snap);
-		}
-	}
-	gui_set_focus();
-	(*type) = FALSE;
-	emu_pause(FALSE);
-	timeline_update_label(snap);
-}
-void timeLine::retranslateUi(void) {
-	lab_timeline = "%1 " + tr("sec");
-
-	setToolTip(tr("Timeline"));
-
-	if (gui.start == FALSE) {
-		label->setText(lab_timeline.arg(0, DEC_LAB_TLINE));
-	} else {
-		timeline_update_label(slider->value());
-	}
-
-	label->setFixedWidth(QLabel(tr("-00 sec")).sizeHint().width());
-
-#if defined (__unix__)
-	setFixedWidth(vline->width() + SPACING +
-			label->width() + SPACING +
-			slider->width());//+  (slider->sizeHandle() / 2));
-#else
-	setFixedWidth(label->width() + SPACING +
-			slider->width());// +  (slider->sizeHandle() / 2));
-#endif
-}
-void timeLine::timeline_update_label(int value) {
-	if (tl.button) {
-		BYTE dec = 0;
-
-		if (tl.snaps_fill) {
-			dec = ((tl.snaps_fill - 1) - value) * TL_SNAP_SEC;
-		}
-
-		if (!dec) {
-			label->setText(lab_timeline.arg(0, DEC_LAB_TLINE));
-		} else {
-			label->setText(lab_timeline.arg(-abs(((tl.snaps_fill - 1) - value) * TL_SNAP_SEC),
-					DEC_LAB_TLINE));
-		}
-	} else {
-		label->setText(lab_timeline.arg(value * TL_SNAP_SEC, DEC_LAB_TLINE));
-	}
-}
-void timeLine::s_action_triggered(int action) {
-	int value = slider->sliderPosition();
-
-	switch (action) {
-		case QAbstractSlider::SliderSingleStepAdd:
-			value += slider->singleStep();
-			break;
-		case QAbstractSlider::SliderSingleStepSub:
-			value -= slider->singleStep();
-			break;
-		case QAbstractSlider::SliderPageStepAdd:
-		case QAbstractSlider::SliderPageStepSub:
-			value = slider->value();
-			break;
-		case QAbstractSlider::SliderToMinimum:
-			value = slider->minimum();
-			break;
-		case QAbstractSlider::SliderToMaximum:
-			value = slider->maximum();
-			break;
-		case QAbstractSlider::SliderMove:
-			if (!tl.snaps_fill) {
-				value = 0;
-				break;
-			}
-
-			// value non puo' essere mai maggiore del numero di snap effettuate
-			if (value > (tl.snaps_fill - 1)) {
-				value = (tl.snaps_fill - 1);
-			}
-
-			if (value == (tl.snaps_fill - 1)) {
-				memcpy(screen.rd->data, tl.snaps[TL_SNAP_FREE] + tl.preview, screen_size());
-				gfx_draw_screen();
-				break;
-			}
-
-			timeline_preview(value);
-			break;
-		case QAbstractSlider::SliderNoAction:
-			break;
-	}
-
-	slider->setSliderPosition(value);
-	slider->setValue(slider->sliderPosition());
-	timeline_update_label(value);
-	gui_set_focus();
-}
-void timeLine::s_value_changed(int value) {
-	timeline_update_label(value);
-}
-void timeLine::s_slider_pressed(void) {
-	timeline_pressed(&tl.button);
-}
-void timeLine::s_slider_released(void) {
-	timeline_released(&tl.button);
 }

@@ -335,8 +335,7 @@ INLINE static BYTE ppu_rd_reg(WORD address) {
 		}
 		/* -------------------------- */
 
-		value = r2002.vblank | r2002.sprite0_hit
-				| (r2002.race.sprite_overflow ? 0 : r2002.sprite_overflow);
+		value = r2002.vblank | r2002.sprite0_hit | (r2002.race.sprite_overflow ? 0 : r2002.sprite_overflow);
 		/* azzero il VBlank */
 		r2002.vblank = FALSE;
 		/*

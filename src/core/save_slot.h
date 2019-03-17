@@ -112,19 +112,14 @@ EXTERNC struct _save_slot {
 	DBWORD slot;
 	BYTE state[SAVE_SLOTS_TOTAL];
 	DBWORD tot_size[SAVE_SLOTS_TOTAL];
-	DBWORD preview[SAVE_SLOTS_TOTAL];
-	BYTE preview_start;
-
 	uTCHAR rom_file[LENGTH_FILE_NAME_LONG];
 	_info_sh1sum sha1sum;
 } save_slot;
 
 EXTERNC BYTE save_slot_save(BYTE slot);
 EXTERNC BYTE save_slot_load(BYTE slot);
-EXTERNC void save_slot_preview(BYTE slot);
 EXTERNC void save_slot_count_load(void);
-EXTERNC BYTE save_slot_element_struct(BYTE mode, BYTE slot, uintptr_t *src, DBWORD size, FILE *fp,
-		BYTE preview);
+EXTERNC BYTE save_slot_element_struct(BYTE mode, BYTE slot, uintptr_t *src, DBWORD size, FILE *fp, BYTE preview);
 
 #undef EXTERNC
 

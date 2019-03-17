@@ -20,6 +20,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "main.h"
+#include "debugger.h"
 #include "../gui/cmd_line.h"
 #include "emu.h"
 #include "emu_thread.h"
@@ -29,7 +30,6 @@
 #include "video/gfx.h"
 #include "text.h"
 #include "conf.h"
-#include "timeline.h"
 #include "version.h"
 #include "gui.h"
 #include "cheat.h"
@@ -46,6 +46,8 @@ int WINAPI WinMain(UNUSED(HINSTANCE hInstance), UNUSED(HINSTANCE hPrevInstance),
 int main(int argc, char **argv) {
 #endif
 	setlocale(LC_CTYPE, "");
+
+	memset(&debugger, 0x00, sizeof(debugger));
 
 	memset(&info, 0x00, sizeof(info));
 	info.no_rom = TRUE;
@@ -103,6 +105,10 @@ int main(int argc, char **argv) {
 		return (EXIT_ERROR);
 	}
 
+#if defined (__unix__)
+	emu_find_tmp_dir();
+#endif
+
 #if defined (__NETPLAY__)
 	netplay_init();
 #endif
@@ -143,6 +149,8 @@ int main(int argc, char **argv) {
 		emu_quit();
 		return (EXIT_FAILURE);
 	}
+
+	emu_frame_input_and_rewind();
 
 	if (emu_thread_init()) {
 		emu_quit();

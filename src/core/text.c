@@ -32,8 +32,14 @@
 #include "fps.h"
 #include "conf.h"
 #include "save_slot.h"
+#include "rewind.h"
+#include "draw_on_screen.h"
 
-enum txt_fade { FADE_SPEED = 4 };
+enum txt_internal_misc {
+	TXT_MARGIN = 2,
+	TXT_SPACING = 3,
+	TXT_FADE_SPEED = 4
+};
 
 #define port_control(prt, button, ch)\
 	if (prt.data[button] == PRESSED) {\
@@ -42,6 +48,9 @@ enum txt_fade { FADE_SPEED = 4 };
 		strcat(ele->text, "[black]");\
 	}\
 	strcat(ele->text, ch)
+
+INLINE static void fade_ele(_txt_element *ele, int velocity);
+INLINE static void rendering(_txt_element *txt);
 
 static char txt_tags[][10] = {
 	"[normal]", "[red]",	"[yellow]", "[green]",
@@ -53,10 +62,8 @@ static char txt_tags[][10] = {
 	"[floppy]"
 };
 
-INLINE static void fade_ele(_txt_element *ele, int velocity);
-INLINE static void rendering(_txt_element *txt);
-
 void text_init(void) {
+	_txt_element *ele;
 	uint8_t i;
 
 	text_clear = gfx_text_clear;
@@ -69,49 +76,67 @@ void text_init(void) {
 		text.single.lines[i] = NULL;
 	}
 
-	{
-		_txt_element *ele;
+	// controllers
+	for (i = PORT1; i < PORT_MAX; i++) {
+		ele = &text.misc.controllers[i];
+		ele->bck = TRUE;
+		ele->bck_color = TXT_BLUE;
+		ele->font = FONT_8X10;
+		ele->factor = 1;
+		ele->start_x = TXT_LEFT;
+		ele->start_y = TXT_UP;
+		ele->w = 8 * font_size[ele->font][0];
+		ele->h = font_size[ele->font][1];
+		ele->x = i * (ele->w + TXT_SPACING);
+		ele->y = 0;
+		ele->alpha[0] = 255;
+		ele->alpha[1] = 170;
+		ele->alpha[2] = 150;
+	}
 
-		// tas counter frames
-		ele = &text.tas.counter_frames;
+	// floppy
+	{
+		ele = &text.misc.floppy;
+		ele->bck = FALSE;
+		ele->font = FONT_12X10;
+		ele->factor = 1;
+		ele->start_x = TXT_RIGHT;
+		ele->start_y = TXT_UP;
+		ele->x = 0;
+		ele->y = 0;
+		ele->w = font_size[ele->font][0];
+		ele->h = font_size[ele->font][1];
+		ele->alpha[0] = 180;
+		ele->alpha[2] = 0;
+	}
+
+	// counter frames
+	{
+		ele = &text.misc.counter_frames;
 		ele->bck = TRUE;
 		ele->bck_color = TXT_BLACK;
 		ele->font = FONT_8X10;
 		ele->factor = 1;
+		ele->start_x = TXT_LEFT;
+		ele->start_y = TXT_DOWN;
+		ele->x = 0;
+		ele->y = 0;
+		ele->w = 0;
+		ele->h = font_size[ele->font][1];
 		ele->alpha[0] = 255;
 		ele->alpha[1] = 170;
-		ele->alpha[2] = 70;
-		ele->start_x = TXT_LEFT;
-		ele->start_y = TXT_UP;
-		ele->x = 0;
-		ele->y = 1 * font_size[ele->font][1];
+		ele->alpha[2] = 170;
+	}
 
-		// tas controllers
-		for (i = 0; i < PORT_MAX; i++) {
-			ele = &text.tas.controllers[i];
-			ele->bck = TRUE;
-			ele->bck_color = TXT_BLUE;
-			ele->font = FONT_8X10;
-			ele->factor = 1;
-			ele->alpha[0] = 255;
-			ele->alpha[1] = 170;
-			ele->alpha[2] = 150;
-			ele->start_x = TXT_LEFT;
-			ele->start_y = TXT_UP;
-			ele->x = (i * (8 + 1)) * font_size[ele->font][0];
-			ele->y = 0;
-			ele->w = 8 * font_size[ele->font][0];
-			ele->h = font_size[ele->font][1];
-		}
-
-		// fps
+	// fps
+	{
 		ele = &text.misc.fps;
 		ele->bck = TRUE;
 		ele->bck_color = TXT_BLUE;
 		ele->font = FONT_12X10;
 		ele->factor = 1;
 		ele->start_x = TXT_RIGHT;
-		ele->start_y = TXT_UP;
+		ele->start_y = TXT_DOWN;
 		ele->x = 0;
 		ele->y = 0;
 		ele->w = 2 * font_size[ele->font][0];
@@ -119,26 +144,45 @@ void text_init(void) {
 		ele->alpha[0] = 220;
 		ele->alpha[1] = 220;
 		ele->alpha[2] = 220;
+	}
 
-		// save slot
+	// rewind
+	{
+		ele = &text.misc.rewind;
+		ele->bck = TRUE;
+		ele->bck_color = TXT_BLACK;
+		ele->font = FONT_12X10;
+		ele->factor = 1;
+		ele->start_x = TXT_RIGHT;
+		ele->start_y = TXT_DOWN;
+		ele->x = text.misc.fps.w + TXT_SPACING;
+		ele->y = 0;
+		ele->w = 0;
+		ele->h = font_size[ele->font][1];
+		ele->alpha[0] = 220;
+		ele->alpha[1] = 220;
+		ele->alpha[2] = 220;
+	}
+
+	// save slot
+	{
 		ele = &text.save_slot.slot;
 		ele->bck = TRUE;
 		ele->bck_color = TXT_BLACK;
 		ele->font = FONT_8X10;
 		ele->factor = 1;
-		ele->alpha[0] = 255;
-		ele->alpha[1] = 170;
-		ele->alpha[2] = 150;
 		ele->start_x = TXT_CENTER;
 		ele->start_y = TXT_UP;
 		ele->x = 0;
 		ele->y = 1 * font_size[ele->font][1];
 		ele->w = SAVE_SLOTS * font_size[ele->font][0];
 		ele->h = font_size[ele->font][1];
+		ele->alpha[0] = 255;
+		ele->alpha[1] = 170;
+		ele->alpha[2] = 150;
 	}
 }
-void text_add_line(int type, int factor, int font, int alpha, int start_x, int start_y, int x,
-	int y, const char *fmt, ...) {
+void text_add_line(int type, int factor, int font, int alpha, int start_x, int start_y, int x, int y, const char *fmt, ...) {
 	uint8_t i, shift_line = !text.info.index;
 	_txt_element *ele = NULL;
 	va_list ap;
@@ -266,7 +310,7 @@ void text_rendering(BYTE render) {
 	text.on_screen = FALSE;
 
 	if (text.info.count) {
-		int pos_x = 8, pos_y = text.h - 8;
+		int pos_x = TXT_MARGIN, pos_y = text.h - TXT_MARGIN - (text.misc.counter_frames.h);
 		uint8_t i;
 
 		for (i = 0; i < TXT_MAX_LINES; i++) {
@@ -314,8 +358,10 @@ void text_rendering(BYTE render) {
 						rendering(ele);
 					}
 				} else {
-					text_clear(ele);
-					gfx_text_release_surface(ele);
+					if (ele->surface) {
+						text_clear(ele);
+						gfx_text_release_surface(ele);
+					}
 
 					free(text.single.lines[i]);
 					text.single.lines[i] = NULL;
@@ -326,28 +372,34 @@ void text_rendering(BYTE render) {
 		}
 	}
 
-	if (tas.type) {
-		ele = &text.tas.counter_frames;
+	// floppy
+	if (fds.info.enabled) {
+		ele = &text.misc.floppy;
 
-		/* counter frames */
-		{
-			int old_w = ele->w;
-			int length;
+		if ((fds.info.last_operation | fds.drive.disk_ejected)) {
+			ele->enabled = TRUE;
+			ele->alpha[0] = 180;
+			ele->alpha[2] = 0;
 
-			if (tas.lag_actual_frame) {
-				sprintf(ele->text, "%d/%d [red]%d[normal]", tas.frame, tas.total - 1, tas.total_lag_frames);
-				length = strlen(ele->text) - 13;
+			ele->text[0] = 0;
+
+			if (fds.drive.disk_ejected) {
+				ele->bck = TRUE;
+				ele->bck_color = TXT_RED;
+				ele->alpha[0] = 220;
+				ele->alpha[2] = 220;
+				strcpy(ele->text, "[normal]");
 			} else {
-				sprintf(ele->text, "%d/%d [green]%d[normal]", tas.frame, tas.total - 1, tas.total_lag_frames);
-				length = strlen(ele->text) - 15;
+				if (fds.info.last_operation == FDS_OP_READ) {
+					strcpy(ele->text, "[green]");
+				} else {
+					strcpy(ele->text, "[red]");
+				}
+				if (rwnd.action != RWND_ACT_PAUSE) {
+					fds.info.last_operation = FDS_OP_NONE;
+				}
 			}
-
-			ele->w = length * font_size[ele->font][0];
-			ele->h = font_size[ele->font][1];
-
-			if ((old_w != ele->w) && ele->surface) {
-				gfx_text_release_surface(ele);
-			}
+			strcat(ele->text, "[floppy]");
 
 			if (!ele->surface) {
 				gfx_text_create_surface(ele);
@@ -356,21 +408,21 @@ void text_rendering(BYTE render) {
 			if (render) {
 				rendering(ele);
 			}
-		}
-	} else {
-		ele = &text.tas.counter_frames;
+		} else if (ele->enabled == TRUE) {
+			ele->enabled = FALSE;
 
-		if (ele->surface) {
-			text_clear(ele);
-			gfx_text_release_surface(ele);
+			if (ele->surface) {
+				text_clear(ele);
+			}
 		}
 	}
 
+	// controllers
 	if (tas.type | cfg->input_display) {
 		uint8_t i;
 
-		for (i = 0; i < PORT_MAX; i++) {
-			ele = &text.tas.controllers[i];
+		for (i = PORT1; i < PORT_MAX; i++) {
+			ele = &text.misc.controllers[i];
 
 			if (port[i].type != CTRL_STANDARD) {
 				if (ele->surface) {
@@ -401,8 +453,8 @@ void text_rendering(BYTE render) {
 	} else {
 		uint8_t i;
 
-		for (i = 0; i < PORT_MAX; i++) {
-			ele = &text.tas.controllers[i];
+		for (i = PORT1; i < PORT_MAX; i++) {
+			ele = &text.misc.controllers[i];
 
 			if (ele->surface) {
 				text_clear(ele);
@@ -411,13 +463,96 @@ void text_rendering(BYTE render) {
 		}
 	}
 
+	// counter_frames
+	if ((tas.type != NOTAS) || (rwnd.action != RWND_ACT_PLAY)) {
+		int w;
+
+		ele = &text.misc.counter_frames;
+		ele->enabled = TRUE;
+
+		if (cfg->scale > X2) {
+			if (ele->font != FONT_12X10) {
+				ele->font = FONT_12X10;
+			}
+		} else {
+			if (ele->font != FONT_8X10) {
+				ele->font = FONT_8X10;
+			}
+		}
+
+		if (tas.type != NOTAS) {
+			if (tas.lag_actual_frame) {
+				sprintf(ele->text, "[yellow]%d[normal]/[normal]%d[normal] [red]%d[normal]", tas.frame, tas.total - 1,
+					tas.total_lag_frames);
+			} else {
+				sprintf(ele->text, "[yellow]%d[normal]/[normal]%d[normal] [green]%d[normal]", tas.frame, tas.total - 1,
+					tas.total_lag_frames);
+			}
+		} else {
+			sprintf(ele->text, "[yellow]%d[normal]/[normal]%d[normal] (-%s)",
+				rewind_snap_cursor(), rewind_count_snaps(), rewind_text_time_backward());
+		}
+
+		w = dos_strlen(ele->text) * font_size[ele->font][0];
+
+		if ((w != ele->w) && ele->surface) {
+			text_clear(ele);
+			gfx_text_release_surface(ele);
+		}
+
+		ele->w = w;
+		ele->h = font_size[ele->font][1];
+
+		if (!ele->surface) {
+			gfx_text_create_surface(ele);
+		}
+
+		if (render) {
+			rendering(ele);
+		}
+	} else {
+		ele = &text.misc.counter_frames;
+
+		if (ele->enabled == TRUE) {
+			ele->enabled = FALSE;
+
+			if (ele->surface) {
+				text_clear(ele);
+				gfx_text_release_surface(ele);
+			}
+		}
+	}
+
+	// fps
 	{
 		ele = &text.misc.fps;
 
 		if (cfg->show_fps) {
+			int w;
+
 			ele->enabled = TRUE;
 
-			sprintf(ele->text, "[normal]%2d[normal]", (int) fps.gfx);
+			if (cfg->scale > X2) {
+				if (ele->font != FONT_12X10) {
+					ele->font = FONT_12X10;
+				}
+			} else {
+				if (ele->font != FONT_8X10) {
+					ele->font = FONT_8X10;
+				}
+			}
+
+			sprintf(ele->text, "%2d", (int)fps.gfx);
+
+			w = dos_strlen(ele->text) * font_size[ele->font][0];
+
+			if ((w != ele->w) && ele->surface) {
+				text_clear(ele);
+				gfx_text_release_surface(ele);
+			}
+
+			ele->w = w;
+			ele->h = font_size[ele->font][1];
 
 			if (!ele->surface) {
 				gfx_text_create_surface(ele);
@@ -427,54 +562,88 @@ void text_rendering(BYTE render) {
 				rendering(ele);
 			}
 		} else if (ele->enabled == TRUE) {
-			ele = &text.misc.fps;
-
 			ele->enabled = FALSE;
-			text_clear(ele);
+
+			if (ele->surface) {
+				text_clear(ele);
+			}
 		}
 	}
 
-	if (fds.info.enabled) {
-		ele = &text.misc.floppy;
+	// rewind
+	if (rwnd.action != RWND_ACT_PLAY) {
+		BYTE action = rwnd.action;
+		int w;
 
-		if ((fds.info.last_operation | fds.drive.disk_ejected)) {
-			ele->enabled = TRUE;
-			ele->bck = FALSE;
-			ele->font = FONT_12X10;
-			ele->factor = 1;
-			ele->start_x = TXT_RIGHT;
-			ele->start_y = TXT_DOWN;
-			ele->x = 0;
-			ele->y = 0;
-			ele->w = font_size[ele->font][0];
-			ele->h = font_size[ele->font][1];
-			ele->alpha[0] = 180;
-			ele->alpha[2] = 0;
+		ele = &text.misc.rewind;
+		ele->enabled = TRUE;
 
-			ele->text[0] = 0;
+		if (cfg->scale > X2) {
+			if (ele->font != FONT_12X10) {
+				ele->font = FONT_12X10;
+			}
+		} else {
+			if (ele->font != FONT_8X10) {
+				ele->font = FONT_8X10;
+			}
+		}
 
-			if (fds.drive.disk_ejected) {
-				ele->bck = TRUE;
-				ele->bck_color = TXT_RED;
-				ele->alpha[0] = 220;
-				ele->alpha[2] = 220;
-				strcpy(ele->text, "[normal]");
-			} else {
-				if (fds.info.last_operation == FDS_OP_READ) {
-					strcpy(ele->text, "[green]");
+		if (rwnd.action == RWND_ACT_PAUSE) {
+			action = rwnd.action_before_pause;
+		}
+
+		switch (action) {
+			case RWND_ACT_PLAY:
+				break;
+			case RWND_ACT_STEP_BACKWARD:
+				sprintf(ele->text, "[yellow] -1 [normal]");
+				break;
+			case RWND_ACT_FAST_BACKWARD:
+				if (rwnd.factor.backward < 10) {
+					sprintf(ele->text, "[yellow] -%dX[normal]", rwnd.factor.backward);
 				} else {
-					strcpy(ele->text, "[red]");
+					sprintf(ele->text, "[yellow]-%dX[normal]", rwnd.factor.backward);
 				}
-				fds.info.last_operation = FDS_OP_NONE;
-			}
-			strcat(ele->text, "[floppy]");
+				break;
+			case RWND_ACT_STEP_FORWARD:
+				sprintf(ele->text, "[yellow] +1 [normal]");
+				break;
+			case RWND_ACT_FAST_FORWARD:
+				if (rwnd.factor.backward < 10) {
+					sprintf(ele->text, "[yellow] +%dX[normal]", rwnd.factor.forward);
+				} else {
+					sprintf(ele->text, "[yellow]+%dX[normal]", rwnd.factor.forward);
+				}
+				break;
+		}
 
-			if (!ele->surface) {
-				gfx_text_create_surface(ele);
-			}
+		w = dos_strlen(ele->text) * font_size[ele->font][0];
 
-			if (render) {
-				rendering(ele);
+		if ((w != ele->w) && ele->surface) {
+			text_clear(ele);
+			gfx_text_release_surface(ele);
+		}
+
+		ele->x = text.misc.fps.w + TXT_SPACING;
+		ele->w = w;
+		ele->h = font_size[ele->font][1];
+
+		if (!ele->surface) {
+			gfx_text_create_surface(ele);
+		}
+
+		if (render) {
+			rendering(ele);
+		}
+	} else {
+		ele = &text.misc.rewind;
+
+		if (ele->enabled == TRUE) {
+			ele->enabled = FALSE;
+
+			if (ele->surface) {
+				text_clear(ele);
+				gfx_text_release_surface(ele);
 			}
 		}
 	}
@@ -527,9 +696,9 @@ void text_calculate_real_x_y(_txt_element *ele, int *x, int *y) {
 		if (ele->start_x == TXT_CENTER) {
 			(*x) = ((text.w - ele->w) >> 1) + ele->x;
 		} else if (ele->start_x == TXT_LEFT) {
-			(*x) = 8 + ele->x;
+			(*x) = TXT_MARGIN + ele->x;
 		} else if (ele->start_x == TXT_RIGHT) {
-			(*x) = ((text.w - 8) - ele->w) - ele->x;
+			(*x) = ((text.w - TXT_MARGIN) - ele->w) - ele->x;
 		}
 		if ((*x) < 0) {
 			(*x) = 0;
@@ -539,9 +708,9 @@ void text_calculate_real_x_y(_txt_element *ele, int *x, int *y) {
 		if (ele->start_y == TXT_CENTER) {
 			(*y) = ((text.h - (ele->factor * font_size[ele->font][1])) >> 1) + ele->y;
 		} else if (ele->start_y == TXT_UP) {
-			(*y) = 8 + ele->y;
+			(*y) = TXT_MARGIN + ele->y;
 		} else if (ele->start_y == TXT_DOWN) {
-			(*y) = ((text.h - 8) - font_size[ele->font][1]) - ele->y;
+			(*y) = ((text.h - TXT_MARGIN) - font_size[ele->font][1]) - ele->y;
 		}
 		if ((*y) < 0) {
 			(*y) = 0;
@@ -580,22 +749,52 @@ void text_quit(void) {
 		}
 	}
 
+	// floppy
 	{
-		ele = &text.tas.counter_frames;
+		ele = &text.misc.floppy;
 
 		if (ele->surface) {
 			gfx_text_release_surface(ele);
 		}
+	}
 
-		for (i = 0; i < PORT_MAX; i++) {
-			ele = &text.tas.controllers[i];
+	// controllers
+	for (i = PORT1; i < PORT_MAX; i++) {
+		ele = &text.misc.controllers[i];
 
-			if (ele->surface) {
-				gfx_text_release_surface(ele);
-			}
+		if (ele->surface) {
+			gfx_text_release_surface(ele);
 		}
 	}
 
+	// rewind
+	{
+		ele = &text.misc.rewind;
+
+		if (ele->surface) {
+			gfx_text_release_surface(ele);
+		}
+	}
+
+	// fps
+	{
+		ele = &text.misc.fps;
+
+		if (ele->surface) {
+			gfx_text_release_surface(ele);
+		}
+	}
+
+	// counter frames
+	{
+		ele = &text.misc.counter_frames;
+
+		if (ele->surface) {
+			gfx_text_release_surface(ele);
+		}
+	}
+
+	// save slot
 	{
 		ele = &text.save_slot.slot;
 
@@ -612,10 +811,10 @@ INLINE static void fade_ele(_txt_element *ele, int velocity) {
 		diff = time(NULL) - ele->start;
 
 		if (diff >= velocity) {
-			ele->alpha[0] -= FADE_SPEED;
+			ele->alpha[0] -= TXT_FADE_SPEED;
 		}
 	} else {
-		if ((ele->alpha[0] -= FADE_SPEED) < FADE_SPEED) {
+		if ((ele->alpha[0] -= TXT_FADE_SPEED) < TXT_FADE_SPEED) {
 			ele->enabled = FALSE;
 			ele->start = 0;
 		}

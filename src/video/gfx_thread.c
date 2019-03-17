@@ -30,12 +30,6 @@
 #include "fps.h"
 #include "gui.h"
 
-enum gfx_thread_states {
-	GT_UNINITIALIZED,
-	GT_RUN,
-	GT_PAUSE
-};
-
 #if defined (__unix__)
 static void *gfx_thread_loop(void *arg);
 #elif defined (_WIN32)
@@ -51,14 +45,12 @@ struct _gfx_thread {
 	HANDLE lock;
 #endif
 	BYTE in_run;
-	BYTE action;
+	int gfx_thread_pause_calls;
 } gfx_thread;
 
 BYTE gfx_thread_init(void) {
 	memset(&gfx_thread_public, 0x00, sizeof(gfx_thread_public));
 	memset(&gfx_thread, 0x00, sizeof(gfx_thread));
-
-	gfx_thread.action = GT_PAUSE;
 
 #if defined (__unix__)
 	if (pthread_mutex_init(&gfx_thread.lock, NULL) != 0) {
@@ -110,18 +102,18 @@ void gfx_thread_unlock(void) {
 }
 
 void gfx_thread_pause(void) {
-	if (gfx_thread.action != GT_UNINITIALIZED) {
-		gfx_thread.action = GT_PAUSE;
+	gfx_thread.gfx_thread_pause_calls++;
 
-		while (gfx_thread.in_run == TRUE) {
-			gui_sleep(1);
-		}
+	while (gfx_thread.in_run == TRUE) {
+		gui_sleep(1);
 	}
 }
 void gfx_thread_continue(void) {
-	if (gfx_thread.action != GT_UNINITIALIZED) {
-		gfx_thread.action = GT_RUN;
+	if (--gfx_thread.gfx_thread_pause_calls < 0) {
+		gfx_thread.gfx_thread_pause_calls = 0;
+	}
 
+	if (gfx_thread.gfx_thread_pause_calls == 0) {
 		while (gfx_thread.in_run == FALSE) {
 			gui_sleep(1);
 		}
@@ -134,7 +126,7 @@ static void *gfx_thread_loop(UNUSED(void *arg)) {
 static DWORD WINAPI gfx_thread_loop(UNUSED(void *arg)) {
 #endif
 	while (info.stop == FALSE) {
-		if (gfx_thread.action == GT_PAUSE) {
+		if (gfx_thread.gfx_thread_pause_calls) {
 			gfx_thread.in_run = FALSE;
 			gui_sleep(1);
 			continue;

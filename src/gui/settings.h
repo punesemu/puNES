@@ -29,6 +29,7 @@
 #include "overscan.h"
 #include "input.h"
 #include "nsf.h"
+#include "rewind.h"
 
 #if defined (_WIN32)
 #define NEWLINE "\r\n"
@@ -39,6 +40,7 @@
 enum set_element {
 	SET_MODE,
 	SET_FF_VELOCITY,
+	SET_REWIND_MINUTES,
 	SET_BATTERY_RAM_FILE_EVEY_TOT,
 	SET_BCK_PAUSE,
 	SET_CHEAT_MODE,
@@ -144,8 +146,6 @@ enum inp_element {
 	SET_INP_SC_DEC_SLOT,
 
 	SET_INP_SC_JOYSTICK_ID,
-
-	SET_INP_SK_TIMELINE_KEY,
 
 	SET_INP_EXPANSION_PORT,
 	SET_INP_P1_CONTROLLER,
@@ -408,6 +408,15 @@ static const _opt opt_cheat_mode[] = {
 	{NULL, uL("gamegenie"),  GAMEGENIE_MODE},
 	{NULL, uL("cheatslist"), CHEATSLIST_MODE}
 };
+static const _opt opt_rewind[] = {
+	{NULL, uL("disabled"), RWND_0_MINUTES},
+	{NULL, uL("2"), RWND_2_MINUTES},
+	{NULL, uL("5"), RWND_5_MINUTES},
+	{NULL, uL("15"), RWND_15_MINUTES},
+	{NULL, uL("30"), RWND_30_MINUTES},
+	{NULL, uL("60"), RWND_60_MINUTES},
+	{NULL, uL("unlimited"), RWND_UNLIMITED_MINUTES}
+};
 static const _opt opt_languages[] = {
 	{NULL, uL("english"), LNG_ENGLISH},
 	{NULL, uL("italian"), LNG_ITALIAN},
@@ -466,6 +475,12 @@ static const _settings main_cfg[] = {
 		uL("# possible values: 2x, 3x, 4x, 5x"),
 		NULL,
 		{LENGTH(opt_ff_velocity), opt_ff_velocity}
+	},
+	{
+		uL("system"), uL("rewind minutes"), uL("15"),
+		uL("# possible values: disabled, 2, 5, 15, 30, 60, unlimited"),
+		uL("    --rewind-minutes      rewind minutes        : disabled, 2, 5, 15, 30, 60, unlimited"),
+		{LENGTH(opt_rewind), opt_rewind}
 	},
 	{
 		uL("system"), uL("save battery ram file every 180 sec"), uL("no"),
@@ -567,12 +582,9 @@ static const _settings main_cfg[] = {
 		uL("# possible values: none, scale2x, scale3x, scale4x, hq2x, hq3x," NEWLINE)
 		uL("#                  hq4x, xbrz2x, xbrz3x, xbrz4x, xbrz5x, xbrz6x," NEWLINE)
 		uL("#                  xbrz2xmt, xbrz3xmt, xbrz4xmt, xbrz5xmt, xbrz6xmt, ntsc"),
-		uL("-i, --filter              filter to apply       : nofilter, scale2x," NEWLINE)
-		uL("                                                  scale3x, scale4x, hq2x," NEWLINE)
-		uL("                                                  hq3x, hq4x, xbrz2x, xbrz3x," NEWLINE)
-		uL("                                                  xbrz4x, xbrz5x, xbrz6x," NEWLINE)
-		uL("                                                  xbrz2xmt, xbrz3xmt, xbrz4xmt," NEWLINE)
-		uL("                                                  xbrz5xmt, xbrz6xmt, ntsc"),
+		uL("-i, --filter              filter to apply       : nofilter, scale2x, scale3x, scale4x, hq2x, hq3x," NEWLINE)
+		uL("                                                  hq4x, xbrz2x, xbrz3x, xbrz4x, xbrz5x, xbrz6x," NEWLINE)
+		uL("                                                  xbrz2xmt, xbrz3xmt, xbrz4xmt, xbrz5xmt, xbrz6xmt, ntsc"),
 		{LENGTH(opt_filter), opt_filter}
 	},
 	{
@@ -585,9 +597,8 @@ static const _settings main_cfg[] = {
 		uL("video"), uL("shader"), uL("none"),
 		uL("# possible values: none, crtdotmask, crtscanlines, crtcurve, emboss, noise," NEWLINE)
 		uL("#                  ntsc2phcomp, oldtv, file"),
-		uL("    --shader              shader to apply       : none, crtdotmask, crtscanlines," NEWLINE)
-		uL("                                                  crtcurve, emboss, noise," NEWLINE)
-		uL("                                                  ntsc2phcomp, oldtv, file"),
+		uL("    --shader              shader to apply       : none, crtdotmask, crtscanlines, crtcurve," NEWLINE)
+		uL("                                                  emboss, noise, ntsc2phcomp, oldtv, file"),
 		{LENGTH(opt_shader), opt_shader}
 	},
 	{
@@ -599,8 +610,7 @@ static const _settings main_cfg[] = {
 	{
 		uL("video"), uL("palette"), uL("ntsc"),
 		uL("# possible values: pal, ntsc, sony, frbyuv, frbuns, mono, green, file"),
-		uL("-p, --palette             type of palette       : pal, ntsc, sony, frbyuv," NEWLINE)
-		uL("                                                  frbuns, mono, green, file"),
+		uL("-p, --palette             type of palette       : pal, ntsc, sony, frbyuv, frbuns, mono, green, file"),
 		{LENGTH(opt_palette), opt_palette}
 	},
 	{
@@ -929,14 +939,11 @@ static const _settings inp_cfg[] = {
 	{uL("shortcuts"), uL("load state"),               uL("F4,NULL"),         NULL, NULL, {0, NULL}},
 	{uL("shortcuts"), uL("increment state slot"),     uL("F3,NULL"),         NULL, NULL, {0, NULL}},
 	{uL("shortcuts"), uL("decrement state slot"),     uL("F2,NULL"),         NULL, NULL, {0, NULL}},
-
 #if defined (_WIN32)
 	{uL("shortcuts"), uL("joystick GUID"),            uL("NULL"),            NULL, NULL, {0, NULL}},
 #else
 	{uL("shortcuts"), uL("joystick Id"),              uL("NULL"),            NULL, NULL, {0, NULL}},
 #endif
-
-	{uL("special keys"), uL("timeline key"),          uL("LCtrl"),           NULL, NULL, {0, NULL}},
 	{
 		uL("expansion port"), uL("expansion port"), uL("standard"),
 		uL("# possible values: standard, zapper, arkanoid paddle, oeka kids tablet"),

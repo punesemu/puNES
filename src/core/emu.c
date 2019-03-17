@@ -24,6 +24,7 @@
 #include <sys/stat.h>
 #include <libgen.h>
 #include "main.h"
+#include "debugger.h"
 #include "emu.h"
 #include "rom_mem.h"
 #include "info.h"
@@ -44,7 +45,7 @@
 #include "version.h"
 #include "conf.h"
 #include "save_slot.h"
-#include "timeline.h"
+#include "rewind.h"
 #include "tas.h"
 #include "ines.h"
 #include "unif.h"
@@ -77,16 +78,45 @@ INLINE static void emu_frame_pause_sleep(void);
 static BYTE emu_ctrl_if_rom_exist(void);
 static uTCHAR *emu_ctrl_rom_ext(uTCHAR *file);
 static void emu_recent_roms_add(BYTE *add, uTCHAR *file);
+#if defined (__unix__)
+static BYTE emu_test_tmp_dir(const uTCHAR *tmp_dir);
+#endif
 
 struct _fps_pause {
 	double expected_end;
 } fps_pause;
 
+void emu_quit(void) {
+	if (cfg->save_on_exit) {
+		settings_save();
+	}
+
+	map_quit();
+
+	cheatslist_quit();
+	nsf_quit();
+	fds_quit();
+	ppu_quit();
+	snd_quit();
+	gfx_quit();
+
+	rewind_quit();
+
+	js_quit(TRUE);
+
+	gamegenie_quit();
+	uncompress_quit();
+	patcher_quit();
+
+	gui_quit();
+}
 BYTE emu_frame(void) {
 	// gestione uscita
 	if (info.stop == TRUE) {
 		return (EXIT_OK);
 	}
+
+	info.start_frame_0 = FALSE;
 
 	gui_control_visible_cursor();
 
@@ -138,6 +168,86 @@ BYTE emu_frame(void) {
 
 	emu_frame_finished();
 	emu_frame_sleep();
+	emu_frame_input_and_rewind();
+
+	return (EXIT_OK);
+}
+BYTE emu_frame_debugger(void) {
+	if ((info.stop == TRUE) || (debugger.mode >= DBG_BREAKPOINT)) {
+		return (EXIT_OK);
+	}
+
+	if (info.frame_status == FRAME_FINISHED) {
+		if (debugger.mode == DBG_GO) {
+			if (info.no_rom | info.turn_off) {
+				tv_noise_effect();
+				gfx_draw_screen();
+				emu_frame_pause_sleep();
+				return (EXIT_OK);
+			} else if (info.pause) {
+				gfx_draw_screen();
+				emu_frame_pause_sleep();
+				return (EXIT_OK);
+			} else if (nsf.state & (NSF_PAUSE | NSF_STOP)) {
+				BYTE i;
+
+				for (i = PORT1; i < PORT_MAX; i++) {
+					if (port_funct[i].input_add_event) {
+						port_funct[i].input_add_event(i);
+					}
+				}
+
+				extcl_audio_samples_mod_nsf(NULL, 0);
+				nsf_main_screen_event();
+				nsf_effect();
+				gfx_draw_screen();
+				emu_frame_sleep();
+				return (EXIT_OK);
+			}
+		}
+
+		if (info.start_frame_0 == TRUE) {
+			info.start_frame_0 = FALSE;
+			goto emu_frame_debugger_start_frame_0;
+		}
+
+		emu_frame_started();
+	}
+
+	// eseguo CPU, PPU e APU
+	if (debugger.mode == DBG_GO) {
+		// posso passare dal DBG_GO al DBG_STEP durante l'esecuzione di un frame intero
+		while ((info.frame_status == FRAME_STARTED) && (debugger.mode == DBG_GO)) {
+			if (debugger.breakpoint == cpu.PC) {
+				debugger.mode = DBG_BREAKPOINT;
+				//gui_dlgdebugger_click_step();
+				break;
+			} else {
+				info.CPU_PC_before = cpu.PC;
+				cpu_exe_op();
+			}
+		}
+	} else if (debugger.mode == DBG_STEP) {
+		info.CPU_PC_before = cpu.PC;
+		cpu_exe_op();
+	}
+
+	if (info.frame_status == FRAME_FINISHED) {
+		emu_frame_finished();
+
+		if (debugger.mode == DBG_GO) {
+			emu_frame_sleep();
+		}
+
+		emu_frame_input_and_rewind();
+
+emu_frame_debugger_start_frame_0:
+		if (debugger.breakframe == TRUE) {
+			debugger.mode = DBG_BREAKPOINT;
+			debugger.breakframe = FALSE;
+			//gui_dlgdebugger_click_step();
+		}
+	}
 
 	return (EXIT_OK);
 }
@@ -549,8 +659,9 @@ BYTE emu_turn_on(void) {
 
 	vs_system.watchdog.next = vs_system_wd_next();
 
-	info.r4014_precise_timing_disabled = FALSE;
+	info.r2002_jump_first_vblank = FALSE;
 	info.r2002_race_condition_disabled = FALSE;
+	info.r4014_precise_timing_disabled = FALSE;
 	info.r4016_dmc_double_read_disabled = FALSE;
 
 	cheatslist_init();
@@ -616,7 +727,7 @@ BYTE emu_turn_on(void) {
 		return (EXIT_ERROR);
 	}
 
-	if (timeline_init()) {
+	if (rewind_init()) {
 		return (EXIT_ERROR);
 	}
 
@@ -640,10 +751,12 @@ BYTE emu_turn_on(void) {
 	}
 
 	gui_external_control_windows_show();
+	gui_wdgrewind_play();
 
 	info.bat_ram_frames_snap = machine.fps * (60 * 3);
 
 	info.reset = FALSE;
+	info.start_frame_0 = TRUE;
 
 	// The End
 	return (EXIT_OK);
@@ -652,7 +765,7 @@ void emu_pause(BYTE mode) {
 	if (mode == TRUE) {
 		info.pause++;
 	} else {
-		if (--info.pause == 0xFFFF) {
+		if (--info.pause < 0) {
 			info.pause = 0;
 		}
 	}
@@ -671,6 +784,8 @@ BYTE emu_reset(BYTE type) {
 	}
 
 	emu_pause(TRUE);
+
+	gui_wdgrewind_play();
 
 	if (type == CHANGE_ROM) {
 		if (emu_ctrl_if_rom_exist() == EXIT_ERROR) {
@@ -762,7 +877,7 @@ BYTE emu_reset(BYTE type) {
 	js_quit(FALSE);
 	js_init(FALSE);
 
-	if (timeline_init()) {
+	if (rewind_init()) {
 		return (EXIT_ERROR);
 	}
 
@@ -806,6 +921,7 @@ BYTE emu_reset(BYTE type) {
 	info.bat_ram_frames = 0;
 
 	info.reset = FALSE;
+	info.start_frame_0 = TRUE;
 
 	if (info.pause_from_gui == TRUE) {
 		info.pause_from_gui = FALSE;
@@ -860,31 +976,20 @@ uTCHAR *emu_ustrncpy(uTCHAR *dst, uTCHAR *src) {
 
 	return (dst);
 }
-void emu_quit(void) {
-	if (cfg->save_on_exit) {
-		settings_save();
+uTCHAR *emu_rand_str(void) {
+	static uTCHAR dest[10];
+	uTCHAR charset[] = uL("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
+	BYTE i;
+
+	for (i = 0; i < (usizeof(dest) - 1); i++) {
+		size_t index = (double)rand() / RAND_MAX * (usizeof(charset) - 1);
+
+		dest[i] = charset[index];
 	}
+	dest[usizeof(dest) - 1] = '\0';
 
-	map_quit();
-
-	cheatslist_quit();
-	nsf_quit();
-	fds_quit();
-	ppu_quit();
-	snd_quit();
-	gfx_quit();
-
-	timeline_quit();
-
-	js_quit(TRUE);
-
-	gamegenie_quit();
-	uncompress_quit();
-	patcher_quit();
-
-	gui_quit();
+	return((uTCHAR *)&dest);
 }
-
 void emu_ctrl_doublebuffer(void) {
 	switch (info.format) {
 		default:
@@ -899,16 +1004,30 @@ void emu_ctrl_doublebuffer(void) {
 			info.doublebuffer = FALSE;
 			break;
 	}
+
 	if (info.no_rom | info.turn_off) {
 		info.doublebuffer = TRUE;
 	} else if (info.pause) {
 		info.doublebuffer = FALSE;
 	}
+
+	if (rwnd.active) {
+		info.doublebuffer = FALSE;
+	}
+
+	switch (debugger.mode) {
+		case DBG_STEP:
+		case DBG_BREAKPOINT:
+			info.doublebuffer = FALSE;
+			break;
+		case DBG_GO:
+			if (debugger.breakframe == TRUE) {
+				info.doublebuffer = FALSE;
+			}
+			break;
+	}
 }
-
-INLINE static void emu_frame_started(void) {
-	tas.lag_next_frame = TRUE;
-
+void emu_frame_input_and_rewind(void) {
 	// controllo se ci sono eventi di input
 	if (tas.type == NOTAS) {
 		BYTE i;
@@ -918,7 +1037,59 @@ INLINE static void emu_frame_started(void) {
 				port_funct[i].input_add_event(i);
 			}
 		}
+	} else {
+		tas_frame();
 	}
+
+	rewind_snapshoot();
+}
+
+#if defined (__unix__)
+BYTE emu_find_tmp_dir(void) {
+	const uTCHAR *dirs[] = { "/tmp", "/usr/tmp", "/var/tmp" };
+	const uTCHAR *envs[] = { "TMP", "TEMP", "TMPDIR" };
+	BYTE i;
+
+	// ordine di ricerca:
+	// 	$TMP
+	// 	$TEMP
+	// 	$TMPDIR
+	//	"/tmp"
+	//	"/var/tmp"
+	//	"/usr/tmp"
+	//	P_tmpdir
+
+	for (i = 0; i < LENGTH(envs); i++) {
+		char *value = getenv(envs[i]);
+
+		if (value) {
+			if ((strlen(value) > 0) && (emu_test_tmp_dir(value) == EXIT_OK)) {
+				gui.ostmp = value;
+				return (EXIT_OK);
+			}
+		}
+	}
+
+	for (i = 0; i < LENGTH(dirs); i++) {
+		if (emu_test_tmp_dir(dirs[i]) == EXIT_OK) {
+			gui.ostmp = dirs[i];
+			return (EXIT_OK);
+		}
+	}
+
+#ifdef P_tmpdir
+	if (emu_test_tmp_dir(P_tmpdir) == EXIT_OK) {
+		gui.ostmp = P_tmpdir;
+		return (EXIT_OK);
+	}
+#endif
+
+	return (EXIT_ERROR);
+}
+#endif
+
+INLINE static void emu_frame_started(void) {
+	tas.lag_next_frame = TRUE;
 
 	// riprendo a far correre la CPU
 	info.frame_status = FRAME_STARTED;
@@ -926,10 +1097,6 @@ INLINE static void emu_frame_started(void) {
 INLINE static void emu_frame_finished(void) {
 	if ((cfg->cheat_mode == GAMEGENIE_MODE) && (gamegenie.phase == GG_LOAD_ROM)) {
 		gui_emit_et_gg_reset();
-	}
-
-	if (tas.type) {
-		tas_frame();
 	}
 
 	tas.lag_actual_frame = tas.lag_next_frame;
@@ -941,10 +1108,6 @@ INLINE static void emu_frame_finished(void) {
 
 	if (snd_end_frame) {
 		snd_end_frame();
-	}
-
-	if (!tas.type && (++tl.frames == tl.frames_snap)) {
-		timeline_snap(TL_NORMAL);
 	}
 
 	if (cfg->save_battery_ram_file && (++info.bat_ram_frames >= info.bat_ram_frames_snap)) {
@@ -1100,3 +1263,19 @@ static void emu_recent_roms_add(BYTE *add, uTCHAR *file) {
 		recent_roms_add(file);
 	}
 }
+#if defined (__unix__)
+static BYTE emu_test_tmp_dir(const uTCHAR *tmp_dir) {
+	uTCHAR tmp_file[LENGTH_FILE_NAME_LONG];
+	int fp;
+
+	usnprintf(tmp_file, usizeof(tmp_file), uL("" uPERCENTs "/" NAME "-test_tmp_dir.XXXXXX"), tmp_dir);
+
+	if ((fp = mkstemp(tmp_file)) < 0) {
+		return (EXIT_ERROR);
+	}
+	close(fp);
+	uremove(tmp_file);
+
+	return (EXIT_OK);
+}
+#endif

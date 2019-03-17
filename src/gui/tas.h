@@ -62,10 +62,12 @@ EXTERNC void tas_quit(void);
 EXTERNC void tas_header_FM2(uTCHAR *file);
 EXTERNC void tas_read_FM2(void);
 EXTERNC void tas_frame_FM2(void);
+EXTERNC void tas_rewind_FM2(int32_t frames_to_rewind);
 
 EXTERNC void (*tas_header)(uTCHAR *file);
 EXTERNC void (*tas_read)(void);
 EXTERNC void (*tas_frame)(void);
+EXTERNC void (*tas_rewind)(int32_t frames_to_rewind);
 
 #undef EXTERNC
 

@@ -1,8 +1,15 @@
 <RCC>
   <qresource prefix="icon">
+    <file>icons/rwnd_step_forward.svg</file>
+    <file>icons/rwnd_step_backward.svg</file>
+    <file>icons/rwnd_fast_backward.svg</file>
+    <file>icons/rwnd_fast_forward.svg</file>
+    <file>icons/rwnd_pause.svg</file>
+    <file>icons/rwnd_play.svg</file>
     <file>icons/misc.svg</file>
     <file>icons/home.svg</file>
     <file>icons/nsf_file.svg</file>
+    <file>icons/rewind.svg</file>
     <file>icons/mode.svg</file>
     <file>icons/trash.svg</file>
     <file>icons/open.svg</file>

@@ -16,45 +16,42 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef TIMELINE_H_
-#define TIMELINE_H_
+#ifndef WDGREWIND_HPP_
+#define WDGREWIND_HPP_
 
+#include <QtWidgets/QWidget>
+#include <QtCore/QTimer>
+#include "wdgRewind.hh"
 #include "common.h"
 
-enum timeline_misc {
-	TL_NORMAL,
-	TL_SAVE_SLOT,
-	TL_SNAP_SEC = 5,
-	TL_SNAPS_TOT = 14,
-	TL_SNAP_FREE = TL_SNAPS_TOT - 1,
-	TL_SNAPS = TL_SNAPS_TOT - 1
+class wdgRewind : public QWidget, public Ui::wdgRewind {
+	Q_OBJECT
+
+	private:
+		QTimer *loop;
+
+	public:
+		wdgRewind(QWidget *parent = 0);
+		~wdgRewind();
+
+	private:
+		void changeEvent(QEvent *event);
+
+	private:
+		void set_enable_backward(BYTE mode);
+		void set_enable_forward(BYTE mode);
+		void set_enable_play_pause_forward(BYTE mode);
+		void first_backward(void);
+		void change_factor(int *factor);
+
+	private slots:
+		void s_loop(void);
+		void s_fast_backward(bool checked);
+		void s_step_backward(bool checked);
+		void s_play(bool checked);
+		void s_pause(bool checked);
+		void s_step_forward(bool checked);
+		void s_fast_forward(bool checked);
 };
 
-#if defined (__cplusplus)
-#define EXTERNC extern "C"
-#else
-#define EXTERNC
-#endif
-
-EXTERNC struct _timeline {
-	BYTE *start;
-	BYTE *snaps[TL_SNAPS_TOT];
-	SWORD snap;
-	SWORD snaps_fill;
-	DBWORD snap_size;
-	DBWORD preview;
-	DBWORD frames;
-	DBWORD frames_snap;
-	BYTE button;
-	BYTE key;
-} tl;
-
-EXTERNC BYTE timeline_init(void);
-EXTERNC void timeline_snap(BYTE mode);
-EXTERNC void timeline_preview(BYTE snap);
-EXTERNC void timeline_back(BYTE mode, BYTE snap);
-EXTERNC void timeline_quit(void);
-
-#undef EXTERNC
-
-#endif /* TIMELINE_H_ */
+#endif /* WDGREWIND_HPP_ */

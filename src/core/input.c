@@ -50,6 +50,8 @@ void input_init(BYTE set_cursor) {
 
 	r4016.value = 0;
 
+	info.zapper_is_present = FALSE;
+
 	input_init_four_score();
 	input_init_zapper();
 	input_init_snes_mouse();
@@ -115,6 +117,7 @@ void input_init(BYTE set_cursor) {
 					case PORT2:
 						SET_WR(a, input_wr_standard_controller);
 						SET_RD(a, input_rd_zapper_vs);
+						info.zapper_is_present = TRUE;
 						break;
 					default:
 						break;
@@ -160,6 +163,7 @@ void input_init(BYTE set_cursor) {
 						break;
 					case CTRL_ZAPPER:
 						SET_RD(a, input_rd_zapper);
+						info.zapper_is_present = TRUE;
 						break;
 					case CTRL_ARKANOID_PADDLE:
 						SET_WR(a, input_wr_arkanoid);
@@ -215,6 +219,7 @@ void input_init(BYTE set_cursor) {
 				break;
 			case CTRL_ZAPPER:
 				SET_RD(PORT4, input_rd_zapper);
+				info.zapper_is_present = TRUE;
 				break;
 			case CTRL_ARKANOID_PADDLE:
 				SET_WR(PORT3, input_wr_arkanoid);

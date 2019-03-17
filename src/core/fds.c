@@ -105,7 +105,7 @@ BYTE fds_load_rom(void) {
 		rom.size = ftell(fp);
 		fseek(fp, 0L, SEEK_SET);
 
-		if ((rom.data = (BYTE *) malloc(rom.size)) == NULL) {
+		if ((rom.data = (BYTE *)malloc(rom.size)) == NULL) {
 			fclose(fp);
 			return (EXIT_ERROR);
 		}
@@ -267,7 +267,7 @@ void fds_disk_op(WORD type, BYTE side_to_insert) {
 			return;
 		case FDS_DISK_SELECT:
 		case FDS_DISK_SELECT_AND_INSERT:
-		case FDS_DISK_TIMELINE_SELECT:
+		case FDS_DISK_SELECT_FROM_REWIND:
 			if ((type == FDS_DISK_SELECT) && !fds.drive.disk_ejected) {
 				text_add_line_info(1, "you must [yellow]eject[normal] disk first");
 				return;
@@ -281,7 +281,7 @@ void fds_disk_op(WORD type, BYTE side_to_insert) {
 			fprintf(stdout, "virtual disk size : %5d\n", fds.info.sides_size[side_to_insert]);
 #endif
 
-			fds.side.data = (WORD *) malloc(fds.info.sides_size[side_to_insert] * sizeof(WORD));
+			fds.side.data = (WORD *)malloc(fds.info.sides_size[side_to_insert] * sizeof(WORD));
 			fds.side.counted_files = 0xFFFF;
 			break;
 	}

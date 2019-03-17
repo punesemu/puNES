@@ -61,7 +61,6 @@ Q_IMPORT_PLUGIN(QSvgPlugin)
 #include "version.h"
 #include "conf.h"
 #include "clock.h"
-#include "timeline.h"
 #include "save_slot.h"
 #include "vs_system.h"
 #include "gui.h"
@@ -175,14 +174,14 @@ void gui_start(void) {
 
 void gui_set_video_mode(void) {
 	if (cfg->scale == X1) {
-		qt.mwin->statusbar->state->setVisible(false);
+		qt.mwin->statusbar->state_setVisible(false);
 		if (overscan.enabled) {
 			qt.mwin->menu_Help->menuAction()->setVisible(false);
 		} else {
 			qt.mwin->menu_Help->menuAction()->setVisible(true);
 		}
 	} else {
-		qt.mwin->statusbar->state->setVisible(true);
+		qt.mwin->statusbar->state_setVisible(true);
 		qt.mwin->menu_Help->menuAction()->setVisible(true);
 	}
 
@@ -215,9 +214,6 @@ void gui_update_gps_settings(void) {
 
 void gui_fullscreen(void) {
 	qt.mwin->s_set_fullscreen();
-}
-void gui_timeline(void) {
-	qt.mwin->statusbar->timeline->setValue(tl.snaps_fill - 1, false);
 }
 void gui_save_slot(BYTE slot) {
 	if (slot >= SAVE_SLOTS) {
@@ -327,6 +323,13 @@ void gui_control_visible_cursor(void) {
 
 void *gui_mainwindow_get_ptr(void) {
 	return ((void *)qt.mwin);
+}
+
+void *gui_wdgrewind_get_ptr(void) {
+	return ((void *)qt.mwin->statusbar->rewind);
+}
+void gui_wdgrewind_play(void) {
+	wdgrewind->toolButton_Play->click();
 }
 
 void gui_emit_et_gg_reset(void) {

@@ -35,9 +35,9 @@
 #include "version.h"
 #include "audio/wave.h"
 #include "vs_system.h"
-#include "timeline.h"
 #include "c++/l7zip/l7z.h"
 #include "gui.h"
+#include "debugger.h"
 
 #if _WIN32 || _WIN64
 #if _WIN64
@@ -349,6 +349,8 @@ void mainWindow::make_reset(int type) {
 		s_quit();
 	}
 
+	emu_frame_input_and_rewind();
+
 	emu_thread_continue();
 
 	// dopo un reset la pause e' automaticamente disabilitata quindi faccio
@@ -587,13 +589,13 @@ void mainWindow::update_menu_nes(void) {
 		action_Turn_Off->setIcon(QIcon(":/icon/icons/turn_off.svg"));
 	}
 
-	if (info.no_rom) {
+	if (info.no_rom | rwnd.active) {
 		action_Turn_Off->setEnabled(false);
 	} else {
 		action_Turn_Off->setEnabled(true);
 	}
 
-	if (info.no_rom | info.turn_off) {
+	if (info.no_rom | info.turn_off | rwnd.active) {
 		action_Hard_Reset->setEnabled(false);
 		action_Soft_Reset->setEnabled(false);
 	} else {
@@ -601,7 +603,7 @@ void mainWindow::update_menu_nes(void) {
 		action_Soft_Reset->setEnabled(true);
 	}
 
-	if (vs_system.enabled == TRUE) {
+	if ((vs_system.enabled == TRUE) && (rwnd.active == FALSE)) {
 		action_Insert_Coin->setEnabled(true);
 	} else {
 		action_Insert_Coin->setEnabled(false);
@@ -609,7 +611,7 @@ void mainWindow::update_menu_nes(void) {
 
 	sc = (QString *)settings_inp_rd_sc(SET_INP_SC_EJECT_DISK, KEYBOARD);
 
-	if (fds.info.enabled) {
+	if (fds.info.enabled && (rwnd.active == FALSE)) {
 		if (fds.drive.disk_ejected) {
 			action_Eject_Insert_Disk->setText(tr("&Insert disk") + '\t' + ((QString)*sc));
 		} else {
@@ -634,7 +636,7 @@ void mainWindow::update_menu_nes(void) {
 
 	sc = (QString *)settings_inp_rd_sc(SET_INP_SC_WAV, KEYBOARD);
 
-	if (info.no_rom | info.turn_off) {
+	if (info.no_rom | info.turn_off | rwnd.active) {
 		action_Start_Stop_WAV_recording->setEnabled(false);
 		action_Start_Stop_WAV_recording->setText(tr("Start/Stop &WAV recording") + '\t' + ((QString)*sc));
 		action_Start_Stop_WAV_recording->setIcon(QIcon(":/icon/icons/wav_start.svg"));
@@ -649,13 +651,13 @@ void mainWindow::update_menu_nes(void) {
 		}
 	}
 
-	if (info.pause_from_gui == TRUE) {
+	if ((info.pause_from_gui == TRUE) && (rwnd.active == FALSE)) {
 		action_Pause->setChecked(true);
 	} else {
 		action_Pause->setChecked(false);
 	}
 
-	if (nsf.enabled == FALSE) {
+	if ((nsf.enabled == FALSE) && (rwnd.active == FALSE)) {
 		action_Fast_Forward->setEnabled(true);
 
 		if (fps.fast_forward == TRUE) {
@@ -749,9 +751,6 @@ void mainWindow::s_open(void) {
 	filters.append(tr("NSFE rom files"));
 	filters.append(tr("TAS movie files"));
 	filters.append(tr("All files"));
-
-	// potrei essere entrato con il CTRL+O
-	tl.key = FALSE;
 
 	if (l7z_present() == TRUE) {
 		if ((l7z_control_ext(uL("rar")) == EXIT_OK)) {

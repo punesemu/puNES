@@ -301,6 +301,13 @@ EXTERNC void ppu_tick(void);
 EXTERNC BYTE ppu_turn_on(void);
 EXTERNC void ppu_overclock(BYTE reset_dmc_in_use);
 
+EXTERNC void ppu_draw_screen_pause(void);
+EXTERNC void ppu_draw_screen_continue(void);
+
+EXTERNC void ppu_draw_screen_pause_with_count(int *count);
+EXTERNC void ppu_draw_screen_continue_with_count(int *count);
+EXTERNC void ppu_draw_screen_continue_ctrl_count(int *count);
+
 #undef EXTERNC
 
 #endif /* PPU_H_ */

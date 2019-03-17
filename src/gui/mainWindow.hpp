@@ -30,7 +30,7 @@
 #include <QtCore/QPoint>
 #include "settings.h"
 #include "jstick.h"
-#include "application.hh"
+#include "mainWindow.hh"
 #include "wdgScreen.hpp"
 #include "wdgStatusBar.hpp"
 

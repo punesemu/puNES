@@ -29,7 +29,7 @@
 #include "mappers.h"
 #include "irqA12.h"
 #include "irql2f.h"
-#include "timeline.h"
+#include "rewind.h"
 #include "video/gfx.h"
 #include "gui.h"
 #include "tas.h"
@@ -117,7 +117,7 @@ BYTE save_slot_load(BYTE slot) {
 
 	// mi salvo lo stato attuale da ripristinare in caso
 	// di un file di salvataggio corrotto.
-	timeline_snap(TL_SAVE_SLOT);
+	rewind_save_state_snap(REWIND_OP_SAVE);
 
 	if (slot == SAVE_SLOT_FILE) {
 		slot_operation(SAVE_SLOT_COUNT, slot, fp);
@@ -126,7 +126,7 @@ BYTE save_slot_load(BYTE slot) {
 			sizeof(info.sha1sum.prg.value)) != 0) {
 			text_add_line_info(1, "[red]state file is not for this rom[normal]");
 			fprintf(stderr, "state file is not for this rom.\n");
-			timeline_back(TL_SAVE_SLOT, 0);
+			rewind_save_state_snap(REWIND_OP_READ);
 			fclose(fp);
 			return (EXIT_ERROR);
 		}
@@ -134,7 +134,7 @@ BYTE save_slot_load(BYTE slot) {
 
 	if (slot_operation(SAVE_SLOT_READ, slot, fp)) {
 		fprintf(stderr, "error loading state, corrupted file.\n");
-		timeline_back(TL_SAVE_SLOT, 0);
+		rewind_save_state_snap(REWIND_OP_READ);
 		fclose(fp);
 		return (EXIT_ERROR);
 	}
@@ -145,60 +145,17 @@ BYTE save_slot_load(BYTE slot) {
 		text_save_slot(SAVE_SLOT_READ);
 	}
 
-	// riavvio il timeline
-	timeline_init();
+	//riavvio il rewind
+	rewind_init();
 
 	return (EXIT_OK);
-}
-void save_slot_preview(BYTE slot) {
-	uTCHAR *file;
-	FILE *fp;
-
-	if (!save_slot.preview_start) {
-		memcpy(tl.snaps[TL_SNAP_FREE] + tl.preview, screen.rd->data, screen_size());
-		save_slot.preview_start = TRUE;
-	}
-
-	if (!save_slot.state[slot]) {
-		memcpy(screen.rd->data, tl.snaps[TL_SNAP_FREE] + tl.preview, screen_size());
-		gfx_draw_screen();
-		return;
-	}
-
-	if ((file = name_slot_file(slot)) == NULL) {
-		memcpy(screen.rd->data, tl.snaps[TL_SNAP_FREE] + tl.preview, screen_size());
-		gfx_draw_screen();
-		return;
-	}
-
-	if ((fp = ufopen(file, uL("rb"))) == NULL) {
-		memcpy(screen.rd->data, tl.snaps[TL_SNAP_FREE] + tl.preview, screen_size());
-		gfx_draw_screen();
-		fprintf(stderr, "error on load preview\n");
-		return;
-	}
-
-	fseek(fp, save_slot.preview[slot], SEEK_SET);
-
-	{
-		DBWORD bytes;
-
-		bytes = fread(screen.rd->data, screen_size(), 1, fp);
-
-		if (bytes != 1) {
-			memcpy(screen.rd->data, tl.snaps[TL_SNAP_FREE] + tl.preview, screen_size());
-		}
-	}
-
-	fclose(fp);
-	gfx_draw_screen();
 }
 void save_slot_count_load(void) {
 	uTCHAR *file;
 	BYTE i;
 
 	for (i = 0; i < SAVE_SLOTS; i++) {
-		save_slot.preview[i] = save_slot.tot_size[i] = 0;
+		save_slot.tot_size[i] = 0;
 
 		save_slot.state[i] = FALSE;
 		file = name_slot_file(i);
@@ -217,8 +174,6 @@ void save_slot_count_load(void) {
 		}
 	}
 
-	save_slot.preview_start = FALSE;
-
 	if (!save_slot.state[save_slot.slot]) {
 		BYTE i;
 
@@ -233,8 +188,7 @@ void save_slot_count_load(void) {
 
 	gui_save_slot(save_slot.slot);
 }
-BYTE save_slot_element_struct(BYTE mode, BYTE slot, uintptr_t *src, DBWORD size, FILE *fp,
-		BYTE preview) {
+BYTE save_slot_element_struct(BYTE mode, BYTE slot, uintptr_t *src, DBWORD size, FILE *fp, BYTE preview) {
 	DBWORD bytes;
 
 	switch (mode) {
@@ -244,7 +198,7 @@ BYTE save_slot_element_struct(BYTE mode, BYTE slot, uintptr_t *src, DBWORD size,
 			break;
 		case SAVE_SLOT_READ:
 			bytes = fread(src, size, 1, fp);
-			if ((bytes != 1) && !preview) {
+			if ((bytes != 1) && (preview == FALSE)) {
 				return (EXIT_ERROR);
 			}
 			break;
@@ -790,13 +744,9 @@ static BYTE slot_operation(BYTE mode, BYTE slot, FILE *fp) {
 		// in caso di ripristino di una salvataggio, se era caricato
 		// un'altro side del disco, devo ricaricarlo.
 		if ((mode == SAVE_SLOT_READ) && (old_side_inserted != fds.drive.side_inserted)) {
-			fds_disk_op(FDS_DISK_TIMELINE_SELECT, fds.drive.side_inserted);
+			fds_disk_op(FDS_DISK_SELECT_FROM_REWIND, fds.drive.side_inserted);
 			gui_update();
 		}
-	}
-
-	if ((mode == SAVE_SLOT_COUNT) || (mode == SAVE_SLOT_SAVE)) {
-		save_slot.preview[slot] = save_slot.tot_size[slot];
 	}
 
 	save_slot_mem(mode, slot, screen.rd->data, screen_size(), TRUE)

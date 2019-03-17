@@ -40,12 +40,14 @@ class wdgSettingsGeneral : public QWidget, public Ui::wdgSettingsGeneral {
 	private:
 		void mode_set(void);
 		void fast_forward_velocity_set(void);
+		void rewind_minutes_set(void);
 		void language_set(void);
 
 	public slots:
 		void s_mode(int index);
 	private slots:
 		void s_fast_forward_velocity(int index);
+		void s_rewind_minutes(int index);
 		void s_language(int index);
 		void s_game_genie_rom_file(bool checked);
 		void s_game_genie_rom_file_clear(bool checked);

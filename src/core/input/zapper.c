@@ -24,6 +24,7 @@
 #include "ppu.h"
 #include "vs_system.h"
 #include "input/mouse.h"
+#include "tas.h"
 
 struct _zapper {
 	BYTE data;
@@ -43,8 +44,13 @@ void input_rd_zapper(BYTE *value, BYTE nport, UNUSED(BYTE shift)) {
 		zapper[nport].data |= 0x10;
 	}
 
-	if (!gmouse.right) {
-		input_read_mouse_coords(&x_zapper, &y_zapper);
+	if (tas.type) {
+		x_zapper = gmouse.x;
+		y_zapper = gmouse.y;
+	} else {
+		if (!gmouse.right) {
+			input_read_mouse_coords(&x_zapper, &y_zapper);
+		}
 	}
 
 	if ((x_zapper <= 0) || (x_zapper >= SCR_ROWS) || (y_zapper <= 0) || (y_zapper >= SCR_LINES)) {
@@ -53,8 +59,7 @@ void input_rd_zapper(BYTE *value, BYTE nport, UNUSED(BYTE shift)) {
 		return;
 	}
 
-	if (!ppu.vblank && r2001.visible && (ppu.frame_y > ppu_sclines.vint)
-		&& (ppu.screen_y < SCR_LINES)) {
+	if (!ppu.vblank && r2001.visible && (ppu.frame_y > ppu_sclines.vint) && (ppu.screen_y < SCR_LINES)) {
 		for (y_rect = (y_zapper - 8); y_rect < (y_zapper + 8); y_rect++) {
 			if (y_rect < 0) {
 				continue;
@@ -62,9 +67,10 @@ void input_rd_zapper(BYTE *value, BYTE nport, UNUSED(BYTE shift)) {
 			if (y_rect <= (ppu.screen_y - 18)) {
 				continue;
 			}
-			if (y_rect >= ppu.screen_y) {
+			if (y_rect > ppu.screen_y) {
 				break;
 			}
+
 			for (x_rect = (x_zapper - 8); x_rect < (x_zapper + 8); x_rect++) {
 				if (x_rect < 0) {
 					continue;
@@ -104,15 +110,19 @@ void input_rd_zapper_vs(BYTE *value, BYTE nport, UNUSED(BYTE shift)) {
 		trigger = 1;
 	}
 
-	if (!gmouse.right) {
-		input_read_mouse_coords(&x_zapper, &y_zapper);
+	if (tas.type) {
+		x_zapper = gmouse.x;
+		y_zapper = gmouse.y;
+	} else {
+		if (!gmouse.right) {
+			input_read_mouse_coords(&x_zapper, &y_zapper);
+		}
 	}
 
 	if ((x_zapper <= 0) || (x_zapper >= SCR_ROWS) || (y_zapper <= 0) || (y_zapper >= SCR_LINES)) {
 		light = 0;
 	} else {
-		if (!ppu.vblank && r2001.visible && (ppu.frame_y > ppu_sclines.vint)
-				&& (ppu.screen_y < SCR_LINES)) {
+		if (!ppu.vblank && r2001.visible && (ppu.frame_y > ppu_sclines.vint) && (ppu.screen_y < SCR_LINES)) {
 			for (y_rect = (y_zapper - 8); y_rect < (y_zapper + 8); y_rect++) {
 				if (y_rect < 0) {
 					continue;
@@ -120,7 +130,7 @@ void input_rd_zapper_vs(BYTE *value, BYTE nport, UNUSED(BYTE shift)) {
 				if (y_rect <= (ppu.screen_y - 18)) {
 					continue;
 				}
-				if (y_rect >= ppu.screen_y) {
+				if (y_rect > ppu.screen_y) {
 					break;
 				}
 				for (x_rect = (x_zapper - 8); x_rect < (x_zapper + 8); x_rect++) {

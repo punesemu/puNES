@@ -30,7 +30,9 @@
 #define EXTERNC
 #endif
 
+EXTERNC void emu_quit(void);
 EXTERNC BYTE emu_frame(void);
+EXTERNC BYTE emu_frame_debugger(void);
 EXTERNC BYTE emu_make_dir(const uTCHAR *fmt, ...);
 EXTERNC BYTE emu_file_exist(const uTCHAR *file);
 EXTERNC char *emu_file2string(const uTCHAR *path);
@@ -44,8 +46,13 @@ EXTERNC WORD emu_round_WORD(WORD number, WORD round);
 EXTERNC int emu_power_of_two(int base);
 EXTERNC double emu_drand(void);
 EXTERNC uTCHAR *emu_ustrncpy(uTCHAR *dst, uTCHAR *src);
-EXTERNC void emu_quit(void);
+EXTERNC uTCHAR *emu_rand_str(void);
 EXTERNC void emu_ctrl_doublebuffer(void);
+EXTERNC void emu_frame_input_and_rewind(void);
+
+#if defined (__unix__)
+EXTERNC BYTE emu_find_tmp_dir(void);
+#endif
 
 #undef EXTERNC
 
