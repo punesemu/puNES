@@ -4,7 +4,7 @@ AUTOMAKE_OPTIONS = subdir-objects
 bin_PROGRAMS = xdelta3
 noinst_PROGRAMS = xdelta3regtest xdelta3decode xdelta3checksum
 
-export AFL_HARDEN
+#export AFL_HARDEN
 
 common_SOURCES = \
 	  xdelta3-blkcache.h \

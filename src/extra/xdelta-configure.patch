@@ -26,3 +26,15 @@ diff -upr xdelta-3.1.0.org/xdelta3.h xdelta-3.1.0/xdelta3.h
  
  #include <errno.h>
  #include <stdarg.h>
+diff -upr xdelta-3.1.0.org/Makefile.am xdelta-3.1.0/Makefile.am
+--- xdelta-3.1.0.org/Makefile.am	2019-03-18 14:33:02.205771843 +0100
++++ xdelta-3.1.0/Makefile.am	2019-03-18 14:32:01.627336297 +0100
+@@ -4,7 +4,7 @@ AUTOMAKE_OPTIONS = subdir-objects
+ bin_PROGRAMS = xdelta3
+ noinst_PROGRAMS = xdelta3regtest xdelta3decode xdelta3checksum
+ 
+-export AFL_HARDEN
++#export AFL_HARDEN
+ 
+ common_SOURCES = \
+ 	  xdelta3-blkcache.h \
