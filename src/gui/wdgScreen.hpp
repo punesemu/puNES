@@ -61,6 +61,14 @@ class wdgScreen : public QWidget {
 		void cursor_init(void);
 		void cursor_set(void);
 		void cursor_hide(BYTE hide);
+
+	private slots:
+		void s_cursor_set(void);
+		void s_cursor_hide(int hide);
+
+	signals:
+		void et_cursor_set(void);
+		void et_cursor_hide(int hide);
 };
 
 #endif /* WDGSCREEN_HPP_ */

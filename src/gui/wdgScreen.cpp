@@ -50,6 +50,9 @@ wdgScreen::wdgScreen(QWidget *parent) : QWidget(parent) {
 
 	setMouseTracking(true);
 
+	connect (this, SIGNAL(et_cursor_set()), this, SLOT(s_cursor_set()));
+	connect (this, SIGNAL(et_cursor_hide(int)), this, SLOT(s_cursor_hide(int)));
+
 	installEventFilter(this);
 }
 wdgScreen::~wdgScreen() {}
@@ -217,13 +220,20 @@ void wdgScreen::cursor_init(void) {
 	target = new QCursor(QPixmap(":/pointers/pointers/target_32x32.xpm"), -1, -1);
 }
 void wdgScreen::cursor_set(void) {
+	emit et_cursor_set();
+}
+void wdgScreen::cursor_hide(BYTE hide) {
+	emit et_cursor_hide(hide);
+}
+
+void wdgScreen::s_cursor_set(void) {
 	if (input_draw_target() == TRUE) {
 		setCursor((*target));
 	} else {
 		unsetCursor();
 	}
 }
-void wdgScreen::cursor_hide(BYTE hide) {
+void wdgScreen::s_cursor_hide(int hide) {
 	if (hide == TRUE) {
 		setCursor(Qt::BlankCursor);
 	} else {
