@@ -895,11 +895,13 @@ void mainWindow::s_disk_side(void) {
 	if (side == 0xFFF) {
 		side = fds.drive.side_inserted ^ 0x01;
 		if (side >= fds.info.total_sides) {
+			emu_thread_continue();
 			return;
 		}
 	}
 
 	if (fds.drive.side_inserted == side) {
+		emu_thread_continue();
 		return;
 	}
 
