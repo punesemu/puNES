@@ -42,6 +42,10 @@
       <source>Save Settings</source>
       <translation type="unfinished">Save Settings</translation>
     </message>
+    <message>
+      <source>Close Settings</source>
+      <translation type="unfinished">Close Settings</translation>
+    </message>
   </context>
   <context>
     <name>dlgStdPad</name>
@@ -643,21 +647,6 @@
     </message>
   </context>
   <context>
-    <name>timeLine</name>
-    <message>
-      <source>sec</source>
-      <translation type="unfinished">sec</translation>
-    </message>
-    <message>
-      <source>Timeline</source>
-      <translation type="unfinished">Timeline</translation>
-    </message>
-    <message>
-      <source>-00 sec</source>
-      <translation type="unfinished">-00 sec</translation>
-    </message>
-  </context>
-  <context>
     <name>wdgAPUChannels</name>
     <message>
       <source>APU Channels</source>
@@ -1236,6 +1225,38 @@
     <message>
       <source>FDS Bios file</source>
       <translation type="unfinished">FDS Bios file</translation>
+    </message>
+    <message>
+      <source>Rewind minutes</source>
+      <translation type="unfinished">Rewind minutes</translation>
+    </message>
+    <message>
+      <source>Disabled</source>
+      <translation type="unfinished">Disabled</translation>
+    </message>
+    <message>
+      <source>2 minutes</source>
+      <translation type="unfinished">2 minutes</translation>
+    </message>
+    <message>
+      <source>5 minutes</source>
+      <translation type="unfinished">5 minutes</translation>
+    </message>
+    <message>
+      <source>15 minutes (Default)</source>
+      <translation type="unfinished">15 minutes (Default)</translation>
+    </message>
+    <message>
+      <source>30 minutes</source>
+      <translation type="unfinished">30 minutes</translation>
+    </message>
+    <message>
+      <source>60 minutus</source>
+      <translation type="unfinished">60 minutus</translation>
+    </message>
+    <message>
+      <source>Unlimited</source>
+      <translation type="unfinished">Unlimited</translation>
     </message>
   </context>
   <context>
