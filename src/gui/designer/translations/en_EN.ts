@@ -42,6 +42,10 @@
         <source>Save Settings</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Close Settings</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>dlgStdPad</name>
@@ -643,21 +647,6 @@
     </message>
 </context>
 <context>
-    <name>timeLine</name>
-    <message>
-        <source>sec</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Timeline</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>-00 sec</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>wdgAPUChannels</name>
     <message>
         <source>APU Channels</source>
@@ -1235,6 +1224,38 @@
     </message>
     <message>
         <source>FDS Bios file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rewind minutes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>2 minutes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>5 minutes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>15 minutes (Default)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>30 minutes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>60 minutus</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unlimited</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

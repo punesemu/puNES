@@ -42,6 +42,10 @@
         <source>Save Settings</source>
         <translation>Сохранить настройки</translation>
     </message>
+    <message>
+        <source>Close Settings</source>
+        <translation>Закрыть настройки</translation>
+    </message>
 </context>
 <context>
     <name>dlgStdPad</name>
@@ -643,21 +647,6 @@
     </message>
 </context>
 <context>
-    <name>timeLine</name>
-    <message>
-        <source>sec</source>
-        <translation>сек</translation>
-    </message>
-    <message>
-        <source>Timeline</source>
-        <translation>Хронология</translation>
-    </message>
-    <message>
-        <source>-00 sec</source>
-        <translation>-00 сек</translation>
-    </message>
-</context>
-<context>
     <name>wdgAPUChannels</name>
     <message>
         <source>APU Channels</source>
@@ -1236,6 +1225,38 @@
     <message>
         <source>FDS Bios file</source>
         <translation>Файл FDS Bios</translation>
+    </message>
+    <message>
+        <source>Rewind minutes</source>
+        <translation>Длительность перемотки</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Отключено</translation>
+    </message>
+    <message>
+        <source>2 minutes</source>
+        <translation>2 минуты</translation>
+    </message>
+    <message>
+        <source>5 minutes</source>
+        <translation>5 минут</translation>
+    </message>
+    <message>
+        <source>15 minutes (Default)</source>
+        <translation>15 минут (по умолчанию)</translation>
+    </message>
+    <message>
+        <source>30 minutes</source>
+        <translation>30 минут</translation>
+    </message>
+    <message>
+        <source>60 minutus</source>
+        <translation>60 минут</translation>
+    </message>
+    <message>
+        <source>Unlimited</source>
+        <translation>Неограниченно</translation>
     </message>
 </context>
 <context>
