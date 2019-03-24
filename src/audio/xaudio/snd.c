@@ -35,21 +35,11 @@
 #include <dsound.h>
 #undef INITGUID
 
-#if defined (THIS)
-#undef THIS
-#endif
-#if defined (THIS_)
-#undef THIS_
-#endif
-
 enum snd_thread_actions {
 	ST_UNINITIALIZED,
 	ST_RUN,
 	ST_STOP
 };
-
-#define THIS IXAudio2VoiceCallback *callback
-#define THIS_ IXAudio2VoiceCallback *callback
 
 static int  snd_list_find_index_id(_snd_list_dev *list, uTCHAR *id, int size);
 static void snd_list_device_add(_snd_list_dev *list, uTCHAR *id, GUID *guid, uTCHAR *desc);
@@ -60,13 +50,13 @@ static BOOL CALLBACK cb_enum_capture_dev(LPGUID guid, LPCWSTR desc, LPCWSTR modu
 
 INLINE static void xaudio2_wrbuf(IXAudio2SourceVoice *source, XAUDIO2_BUFFER *x2buf, const BYTE *buffer);
 
-static void STDMETHODCALLTYPE OnVoiceProcessPassStart(THIS_, UINT32 b);
-static void STDMETHODCALLTYPE OnVoiceProcessPassEnd(THIS);
-static void STDMETHODCALLTYPE OnStreamEnd(THIS);
-static void STDMETHODCALLTYPE OnBufferStart(THIS_, void *pBufferContext);
-static void STDMETHODCALLTYPE OnBufferEnd(THIS_, void* pBufferContext);
-static void STDMETHODCALLTYPE OnLoopEnd(THIS_, void *pBufferContext);
-static void STDMETHODCALLTYPE OnVoiceError(THIS_, void* pBufferContext, HRESULT Error);
+static void STDMETHODCALLTYPE OnVoiceProcessPassStart(IXAudio2VoiceCallback *callback, UINT32 b);
+static void STDMETHODCALLTYPE OnVoiceProcessPassEnd(IXAudio2VoiceCallback *callback);
+static void STDMETHODCALLTYPE OnStreamEnd(IXAudio2VoiceCallback *callback);
+static void STDMETHODCALLTYPE OnBufferStart(IXAudio2VoiceCallback *callback, void *pBufferContext);
+static void STDMETHODCALLTYPE OnBufferEnd(IXAudio2VoiceCallback *callback, void* pBufferContext);
+static void STDMETHODCALLTYPE OnLoopEnd(IXAudio2VoiceCallback *callback, void *pBufferContext);
+static void STDMETHODCALLTYPE OnVoiceError(IXAudio2VoiceCallback *callback, void* pBufferContext, HRESULT Error);
 
 static struct _snd_thread {
 	HANDLE lock;
@@ -88,7 +78,7 @@ static struct _xaudio2 {
 	IXAudio2SourceVoice *source;
 	XAUDIO2_BUFFER buffer;
 } xaudio2;
-static IXAudio2VoiceCallbackVtbl callbacks_vtable = {
+static IXAudio2VoiceCallbackVtbl voice_callbacks_vtable = {
 	OnVoiceProcessPassStart,
 	OnVoiceProcessPassEnd,
 	OnStreamEnd,
@@ -97,7 +87,7 @@ static IXAudio2VoiceCallbackVtbl callbacks_vtable = {
 	OnLoopEnd,
 	OnVoiceError
 };
-static IXAudio2VoiceCallback callbacks = { &callbacks_vtable };
+static IXAudio2VoiceCallback voice_callbacks = { &voice_callbacks_vtable };
 static _callback_data cbd;
 
 BYTE snd_init(void) {
@@ -275,7 +265,7 @@ BYTE snd_playback_start(void) {
 				&wfm,
 				XAUDIO2_VOICE_NOSRC | XAUDIO2_VOICE_NOPITCH,
 				XAUDIO2_DEFAULT_FREQ_RATIO,
-				&callbacks,
+				&voice_callbacks,
 				NULL,
 				NULL) != S_OK) {
 			MessageBox(NULL,
@@ -369,16 +359,6 @@ BYTE snd_playback_start(void) {
 	if(IXAudio2_StartEngine(xaudio2.engine) != S_OK) {
 		MessageBox(NULL,
 			"ATTENTION: Unable to start sound engine.\n",
-			"Error!",
-			MB_ICONEXCLAMATION | MB_OK);
-		goto snd_playback_start_error;
-	}
-
-	snd_thread.action = ST_RUN;
-
-	if(IXAudio2SourceVoice_Start(xaudio2.source, 0, XAUDIO2_COMMIT_NOW) != S_OK) {
-		MessageBox(NULL,
-			"ATTENTION: Unable to start source voice.\n",
 			"Error!",
 			MB_ICONEXCLAMATION | MB_OK);
 		goto snd_playback_start_error;
@@ -572,10 +552,10 @@ INLINE static void xaudio2_wrbuf(IXAudio2SourceVoice *source, XAUDIO2_BUFFER *x2
 	}
 }
 
-static void STDMETHODCALLTYPE OnVoiceProcessPassStart(UNUSED(THIS_), UNUSED(UINT32 b)) {}
-static void STDMETHODCALLTYPE OnVoiceProcessPassEnd(UNUSED(THIS)) {}
-static void STDMETHODCALLTYPE OnStreamEnd(UNUSED(THIS)) {}
-static void STDMETHODCALLTYPE OnBufferStart(UNUSED(THIS_), UNUSED(void *pBufferContext)) {
+static void STDMETHODCALLTYPE OnVoiceProcessPassStart(UNUSED(IXAudio2VoiceCallback *callback), UNUSED(UINT32 b)) {}
+static void STDMETHODCALLTYPE OnVoiceProcessPassEnd(UNUSED(IXAudio2VoiceCallback *callback)) {}
+static void STDMETHODCALLTYPE OnStreamEnd(UNUSED(IXAudio2VoiceCallback *callback)) {}
+static void STDMETHODCALLTYPE OnBufferStart(UNUSED(IXAudio2VoiceCallback *callback), UNUSED(void *pBufferContext)) {
 	WORD len = xaudio2.buffer.AudioBytes;
 	int avail = xaudio2.buffer.PlayLength;
 
@@ -635,9 +615,6 @@ static void STDMETHODCALLTYPE OnBufferStart(UNUSED(THIS_), UNUSED(void *pBufferC
 
 	snd_thread.in_run = FALSE;
 }
-static void STDMETHODCALLTYPE OnBufferEnd(UNUSED(THIS_), UNUSED(void *pBufferContext)) {}
-static void STDMETHODCALLTYPE OnLoopEnd(UNUSED(THIS_), UNUSED(void *pBufferContext)) {}
-static void STDMETHODCALLTYPE OnVoiceError(UNUSED(THIS_), UNUSED(void* pBufferContext), UNUSED(HRESULT Error)) {}
-
-#undef THIS
-#undef THIS_
+static void STDMETHODCALLTYPE OnBufferEnd(UNUSED(IXAudio2VoiceCallback *callback), UNUSED(void *pBufferContext)) {}
+static void STDMETHODCALLTYPE OnLoopEnd(UNUSED(IXAudio2VoiceCallback *callback), UNUSED(void *pBufferContext)) {}
+static void STDMETHODCALLTYPE OnVoiceError(UNUSED(IXAudio2VoiceCallback *callback), UNUSED(void* pBufferContext), UNUSED(HRESULT Error)) {}
