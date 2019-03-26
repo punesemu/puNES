@@ -28,6 +28,12 @@
 #include "gui.h"
 #include "debugger.h"
 
+enum emu_thread_states {
+	ET_UNINITIALIZED,
+	ET_FALSE,
+	ET_TRUE
+};
+
 #if defined (__unix__)
 static void *emu_thread_loop(void *arg);
 #elif defined (_WIN32)
@@ -70,19 +76,27 @@ void emu_thread_quit(void) {
 }
 
 void emu_thread_pause(void) {
+	if (emu_thread.in_run == ET_UNINITIALIZED) {
+		return;
+	}
+
 	emu_thread.emu_thread_pause_calls++;
 
-	while (emu_thread.in_run == TRUE) {
+	while (emu_thread.in_run == ET_TRUE) {
 		gui_sleep(1);
 	}
 }
 void emu_thread_continue(void) {
+	if (emu_thread.in_run == ET_UNINITIALIZED) {
+		return;
+	}
+
 	if (--emu_thread.emu_thread_pause_calls < 0) {
 		emu_thread.emu_thread_pause_calls = 0;
 	}
 
 	if (emu_thread.emu_thread_pause_calls == 0) {
-		while (emu_thread.in_run == FALSE) {
+		while (emu_thread.in_run == ET_FALSE) {
 			gui_sleep(1);
 		}
 	}
@@ -110,12 +124,12 @@ static DWORD WINAPI emu_thread_loop(UNUSED(void *arg)) {
 #endif
 	while (info.stop == FALSE) {
 		if (emu_thread.emu_thread_pause_calls) {
-			emu_thread.in_run = FALSE;
+			emu_thread.in_run = ET_FALSE;
 			gui_sleep(1);
 			continue;
 		}
 
-		emu_thread.in_run = TRUE;
+		emu_thread.in_run = ET_TRUE;
 
 		if (debugger.mode != DBG_NODBG) {
 			emu_frame_debugger();
@@ -124,7 +138,7 @@ static DWORD WINAPI emu_thread_loop(UNUSED(void *arg)) {
 		}
 	}
 
-	emu_thread.in_run = FALSE;
+	emu_thread.in_run = ET_FALSE;
 
 #if defined (__unix__)
 	return (NULL);

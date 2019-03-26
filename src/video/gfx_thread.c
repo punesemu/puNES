@@ -30,6 +30,12 @@
 #include "fps.h"
 #include "gui.h"
 
+enum gfx_thread_states {
+	GT_UNINITIALIZED,
+	GT_FALSE,
+	GT_TRUE
+};
+
 #if defined (__unix__)
 static void *gfx_thread_loop(void *arg);
 #elif defined (_WIN32)
@@ -102,19 +108,27 @@ void gfx_thread_unlock(void) {
 }
 
 void gfx_thread_pause(void) {
+	if (gfx_thread.in_run == GT_UNINITIALIZED) {
+		return;
+	}
+
 	gfx_thread.gfx_thread_pause_calls++;
 
-	while (gfx_thread.in_run == TRUE) {
+	while (gfx_thread.in_run == GT_TRUE) {
 		gui_sleep(1);
 	}
 }
 void gfx_thread_continue(void) {
+	if (gfx_thread.in_run == GT_UNINITIALIZED) {
+		return;
+	}
+
 	if (--gfx_thread.gfx_thread_pause_calls < 0) {
 		gfx_thread.gfx_thread_pause_calls = 0;
 	}
 
 	if (gfx_thread.gfx_thread_pause_calls == 0) {
-		while (gfx_thread.in_run == FALSE) {
+		while (gfx_thread.in_run == GT_FALSE) {
 			gui_sleep(1);
 		}
 	}
@@ -127,12 +141,12 @@ static DWORD WINAPI gfx_thread_loop(UNUSED(void *arg)) {
 #endif
 	while (info.stop == FALSE) {
 		if (gfx_thread.gfx_thread_pause_calls) {
-			gfx_thread.in_run = FALSE;
+			gfx_thread.in_run = GT_FALSE;
 			gui_sleep(1);
 			continue;
 		}
 
-		gfx_thread.in_run = TRUE;
+		gfx_thread.in_run = GT_TRUE;
 
 		if (screen.rd->ready == FALSE) {
 			gui_sleep(1);
@@ -145,7 +159,7 @@ static DWORD WINAPI gfx_thread_loop(UNUSED(void *arg)) {
 		gfx_thread_public.filtering = FALSE;
 	}
 
-	gfx_thread.in_run = FALSE;
+	gfx_thread.in_run = GT_FALSE;
 
 #if defined (__unix__)
 	return (NULL);
