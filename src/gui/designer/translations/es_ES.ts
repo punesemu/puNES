@@ -1414,7 +1414,7 @@
     </message>
     <message>
       <source>VBlank Lines</source>
-      <translation type="unfinished">VBlank Lines</translation>
+      <translation>Líneas VBlank</translation>
     </message>
     <message>
       <source>Postrender Lines</source>
@@ -1422,7 +1422,7 @@
     </message>
     <message>
       <source>Overclock</source>
-      <translation type="unfinished">Overclock</translation>
+      <translation>Overclock</translation>
     </message>
     <message>
       <source>Sprites and background</source>
@@ -1434,7 +1434,7 @@
     </message>
     <message>
       <source>Enable Extra Scanlines</source>
-      <translation type="unfinished">Enable Extra Scanlines</translation>
+      <translation>Habilitar líneas de escaneo adicionales</translation>
     </message>
     <message>
       <source>Hide Sprites</source>
@@ -1613,7 +1613,7 @@
     </message>
     <message>
       <source>CRT Scanlines</source>
-      <translation type="unfinished">CRT Scanlines</translation>
+      <translation>Líneas de escaneo CRT</translation>
     </message>
     <message>
       <source>CRT With Curve</source>
