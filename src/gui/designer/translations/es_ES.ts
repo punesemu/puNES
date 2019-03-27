@@ -213,23 +213,23 @@
     <name>dlgVsSystem</name>
     <message>
       <source>Vs System Controls</source>
-      <translation type="unfinished">Vs System Controls</translation>
+      <translation>Controles del sistema contra</translation>
     </message>
     <message>
       <source>Left Coin</source>
-      <translation type="unfinished">Left Coin</translation>
+      <translation>Moneda izquierda</translation>
     </message>
     <message>
       <source>Right Coin</source>
-      <translation type="unfinished">Right Coin</translation>
+      <translation>Moneda derecha</translation>
     </message>
     <message>
       <source>Service Coin</source>
-      <translation type="unfinished">Service Coin</translation>
+      <translation>Servicio de monedas</translation>
     </message>
     <message>
       <source>Coin Counter</source>
-      <translation type="unfinished">Coin Counter</translation>
+      <translation>Contador de monedas</translation>
     </message>
     <message>
       <source>Dip Switches</source>
@@ -332,7 +332,7 @@
     </message>
     <message>
       <source>Compiled</source>
-      <translation type="unfinished">Compiled</translation>
+      <translation>Compilado</translation>
     </message>
     <message>
       <source>Anyway, thank you all for the love and the help.</source>
@@ -504,7 +504,7 @@
     </message>
     <message>
       <source>Vs System Controls</source>
-      <translation type="unfinished">Vs System Controls</translation>
+      <translation>Controles del sistema contra</translation>
     </message>
     <message>
       <source>&amp;Open working folder</source>
@@ -1208,7 +1208,7 @@
     </message>
     <message>
       <source>Fast Forward velocity</source>
-      <translation type="unfinished">Fast Forward velocity</translation>
+      <translation>Velocidad de avance rápido</translation>
     </message>
     <message>
       <source>Misc</source>
@@ -1406,7 +1406,7 @@
     </message>
     <message>
       <source>Disable 7bit Sample Control</source>
-      <translation type="unfinished">Disable 7bit Sample Control</translation>
+      <translation>Deshabilitar el control de muestra de 7 bits</translation>
     </message>
     <message>
       <source>Reset Lag Counter</source>
@@ -1465,7 +1465,7 @@
     </message>
     <message>
       <source>Shaders files</source>
-      <translation type="unfinished">Shaders files</translation>
+      <translation>Archivos de sombreados</translation>
     </message>
     <message>
       <source>All files</source>
@@ -1473,7 +1473,7 @@
     </message>
     <message>
       <source>Open Shader file</source>
-      <translation type="unfinished">Open Shader file</translation>
+      <translation>Abrir archivo de sombreado</translation>
     </message>
     <message>
       <source>Palette files</source>
@@ -1605,7 +1605,7 @@
     </message>
     <message>
       <source>No Shaders</source>
-      <translation type="unfinished">No Shaders</translation>
+      <translation>Sin sombreados</translation>
     </message>
     <message>
       <source>CRT Dotmask</source>
@@ -1701,7 +1701,7 @@
     </message>
     <message>
       <source>Shaders</source>
-      <translation type="unfinished">Shaders</translation>
+      <translation>Sombreados</translation>
     </message>
     <message>
       <source>Load from a file</source>
@@ -1709,7 +1709,7 @@
     </message>
     <message>
       <source>Shader Parameters</source>
-      <translation type="unfinished">Shader Parameters</translation>
+      <translation>Parámetros del sombreado</translation>
     </message>
     <message>
       <source>Reset paramaters to defaults</source>
