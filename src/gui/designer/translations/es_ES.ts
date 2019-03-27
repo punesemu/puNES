@@ -155,7 +155,7 @@
     </message>
     <message>
       <source>Defaults</source>
-      <translation type="unfinished">Defaults</translation>
+      <translation>Predeterminados</translation>
     </message>
     <message>
       <source>Joystick</source>
@@ -198,7 +198,7 @@
     </message>
     <message>
       <source>Unpacked archive</source>
-      <translation type="unfinished">Unpacked archive</translation>
+      <translation>Archivo descomprimido</translation>
     </message>
     <message>
       <source>OK</source>
@@ -328,7 +328,7 @@
     </message>
     <message>
       <source>Nintendo Entertainment System Emulator</source>
-      <translation type="unfinished">Nintendo Entertainment System Emulator</translation>
+      <translation>Emulador de Nintendo Entertainment System</translation>
     </message>
     <message>
       <source>Compiled</source>
@@ -412,7 +412,7 @@
     </message>
     <message>
       <source>&amp;Game Genie Rom Mode</source>
-      <translation type="unfinished">&amp;Game Genie Rom Mode</translation>
+      <translation>&amp;Modo de rom Game Genie</translation>
     </message>
     <message>
       <source>S&amp;ave state</source>
@@ -528,7 +528,7 @@
     </message>
     <message>
       <source>Setti&amp;ngs</source>
-      <translation type="unfinished">Setti&amp;ngs</translation>
+      <translation>Conf&amp;iguración</translation>
     </message>
     <message>
       <source>&amp;Video</source>
@@ -1109,7 +1109,7 @@
     </message>
     <message>
       <source>Game Genie Rom Mode</source>
-      <translation type="unfinished">Game Genie Rom Mode</translation>
+      <translation>Modo de rom Game Genie</translation>
     </message>
     <message>
       <source>Cheats List Mode</source>
@@ -1128,7 +1128,7 @@
     </message>
     <message>
       <source>Select Game Genie ROM file</source>
-      <translation type="unfinished">Select Game Genie ROM file</translation>
+      <translation>Seleccionar archivo ROM Game Genie</translation>
     </message>
     <message>
       <source>Select FDS BIOS file</source>
@@ -1172,7 +1172,7 @@
     </message>
     <message>
       <source>System Roms</source>
-      <translation type="unfinished">System Roms</translation>
+      <translation>Sistema de roms</translation>
     </message>
     <message>
       <source>Mode</source>
@@ -1220,7 +1220,7 @@
     </message>
     <message>
       <source>Game Genie Rom file</source>
-      <translation type="unfinished">Game Genie Rom file</translation>
+      <translation>Archivo rom Game Genie</translation>
     </message>
     <message>
       <source>FDS Bios file</source>
@@ -1271,11 +1271,11 @@
     </message>
     <message>
       <source>Zapper</source>
-      <translation type="unfinished">Zapper</translation>
+      <translation>Zapper</translation>
     </message>
     <message>
       <source>Snes Mouse</source>
-      <translation type="unfinished">Snes Mouse</translation>
+      <translation>Ratón de snes</translation>
     </message>
     <message>
       <source>Arkanoid Paddle</source>
@@ -1347,7 +1347,7 @@
     </message>
     <message>
       <source>Hide Zapper cursor</source>
-      <translation type="unfinished">Hide Zapper cursor</translation>
+      <translation>Ocultar el cursor del zapper</translation>
     </message>
     <message>
       <source>Controller Port 1</source>
@@ -1426,11 +1426,11 @@
     </message>
     <message>
       <source>Sprites and background</source>
-      <translation type="unfinished">Sprites and background</translation>
+      <translation>Sprites y segundo plano</translation>
     </message>
     <message>
       <source>Unlimited Sprites</source>
-      <translation type="unfinished">Unlimited Sprites</translation>
+      <translation>Sprites sin límites</translation>
     </message>
     <message>
       <source>Enable Extra Scanlines</source>
@@ -1438,11 +1438,11 @@
     </message>
     <message>
       <source>Hide Sprites</source>
-      <translation type="unfinished">Hide Sprites</translation>
+      <translation>Ocultar sprites</translation>
     </message>
     <message>
       <source>Hide Background</source>
-      <translation type="unfinished">Hide Background</translation>
+      <translation>Ocultar segundo plano</translation>
     </message>
   </context>
   <context>
