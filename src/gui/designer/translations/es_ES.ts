@@ -63,7 +63,7 @@
     </message>
     <message>
       <source>3rd-party</source>
-      <translation type="unfinished">3rd-party</translation>
+      <translation>Terceras partes</translation>
     </message>
     <message>
       <source>Keyboard</source>
@@ -962,7 +962,7 @@
     </message>
     <message>
       <source>Sample Rate</source>
-      <translation type="unfinished">Sample Rate</translation>
+      <translation>Frecuencia de muestreo</translation>
     </message>
     <message>
       <source>Buffer Size factor</source>
@@ -1406,11 +1406,11 @@
     </message>
     <message>
       <source>Disable 7bit Sample Control</source>
-      <translation>Deshabilitar el control de muestra de 7 bits</translation>
+      <translation>Deshabilitar el control de muestreo de 7 bits</translation>
     </message>
     <message>
       <source>Reset Lag Counter</source>
-      <translation type="unfinished">Reset Lag Counter</translation>
+      <translation>Restablecer contador de retardo</translation>
     </message>
     <message>
       <source>VBlank Lines</source>
@@ -1593,7 +1593,7 @@
     </message>
     <message>
       <source>Black borders in window mode</source>
-      <translation type="unfinished">Black borders in window mode</translation>
+      <translation>Bordes negros en modo ventana</translation>
     </message>
     <message>
       <source>Black borders in fullscreen</source>
@@ -1609,7 +1609,7 @@
     </message>
     <message>
       <source>CRT Dotmask</source>
-      <translation type="unfinished">CRT Dotmask</translation>
+      <translation>Máscara de puntos CRT</translation>
     </message>
     <message>
       <source>CRT Scanlines</source>
@@ -1617,7 +1617,7 @@
     </message>
     <message>
       <source>CRT With Curve</source>
-      <translation type="unfinished">CRT With Curve</translation>
+      <translation>CRT con curva</translation>
     </message>
     <message>
       <source>Emboss</source>
@@ -1753,23 +1753,23 @@
     </message>
     <message>
       <source>xBRZ 2X Multithreading</source>
-      <translation type="unfinished">xBRZ 2X Multithreading</translation>
+      <translation>xBRZ 2X Multithreading</translation>
     </message>
     <message>
       <source>xBRZ 3X Multithreading</source>
-      <translation type="unfinished">xBRZ 3X Multithreading</translation>
+      <translation>xBRZ 3X Multithreading</translation>
     </message>
     <message>
       <source>xBRZ 4X Multithreading</source>
-      <translation type="unfinished">xBRZ 4X Multithreading</translation>
+      <translation>xBRZ 4X Multithreading</translation>
     </message>
     <message>
       <source>xBRZ 5X Multithreading</source>
-      <translation type="unfinished">xBRZ 5X Multithreading</translation>
+      <translation>xBRZ 5X Multithreading</translation>
     </message>
     <message>
       <source>xBRZ 6X Multithreading</source>
-      <translation type="unfinished">xBRZ 6X Multithreading</translation>
+      <translation>xBRZ 6X Multithreading</translation>
     </message>
     <message>
       <source>VSync</source>
