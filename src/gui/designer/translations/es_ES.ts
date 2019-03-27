@@ -296,15 +296,15 @@
     </message>
     <message>
       <source>Nes rom files</source>
-      <translation type="unfinished">Nes rom files</translation>
+      <translation>Archivos rom nes</translation>
     </message>
     <message>
       <source>FDS image files</source>
-      <translation type="unfinished">FDS image files</translation>
+      <translation>Archivos de imagen FDS</translation>
     </message>
     <message>
       <source>TAS movie files</source>
-      <translation type="unfinished">TAS movie files</translation>
+      <translation>Archivos de película TAS</translation>
     </message>
     <message>
       <source>All files</source>
@@ -416,11 +416,11 @@
     </message>
     <message>
       <source>S&amp;ave state</source>
-      <translation type="unfinished">S&amp;ave state</translation>
+      <translation>G&amp;uardar estado</translation>
     </message>
     <message>
       <source>L&amp;oad state</source>
-      <translation type="unfinished">L&amp;oad state</translation>
+      <translation>C&amp;argar estado</translation>
     </message>
     <message>
       <source>&amp;Increment slot</source>
@@ -480,11 +480,11 @@
     </message>
     <message>
       <source>Cheats &amp;Editor</source>
-      <translation type="unfinished">Cheats &amp;Editor</translation>
+      <translation>Editor de &amp;trucos</translation>
     </message>
     <message>
       <source>&amp;Disabled</source>
-      <translation type="unfinished">&amp;Disabled</translation>
+      <translation>&amp;Deshabilitado</translation>
     </message>
     <message>
       <source>&amp;Fast Forward</source>
@@ -500,7 +500,7 @@
     </message>
     <message>
       <source>Insert Coin</source>
-      <translation type="unfinished">Insert Coin</translation>
+      <translation>Insertar moneda</translation>
     </message>
     <message>
       <source>Vs System Controls</source>
@@ -552,11 +552,11 @@
     </message>
     <message>
       <source>S&amp;tate</source>
-      <translation type="unfinished">S&amp;tate</translation>
+      <translation>E&amp;stado</translation>
     </message>
     <message>
       <source>&amp;Help</source>
-      <translation type="unfinished">&amp;Help</translation>
+      <translation>&amp;Ayuda</translation>
     </message>
     <message>
       <source>&amp;Turn On</source>
@@ -568,15 +568,15 @@
     </message>
     <message>
       <source>Too&amp;ls</source>
-      <translation type="unfinished">Too&amp;ls</translation>
+      <translation>H&amp;erramientas</translation>
     </message>
     <message>
       <source>UNIF rom files</source>
-      <translation type="unfinished">UNIF rom files</translation>
+      <translation>Archivos rom UNIF</translation>
     </message>
     <message>
       <source>Start/Stop &amp;WAV recording</source>
-      <translation type="unfinished">Start/Stop &amp;WAV recording</translation>
+      <translation>Iniciar/detener grabación &amp;WAV</translation>
     </message>
     <message>
       <source>Stop &amp;WAV recording</source>
@@ -839,7 +839,7 @@
     </message>
     <message>
       <source>All files</source>
-      <translation type="unfinished">All files</translation>
+      <translation>Todos los archivos</translation>
     </message>
     <message>
       <source>Save palette on file</source>
@@ -851,7 +851,7 @@
     </message>
     <message>
       <source>Selected</source>
-      <translation type="unfinished">Selected</translation>
+      <translation>Seleccionado</translation>
     </message>
     <message>
       <source>PPU</source>
@@ -863,15 +863,15 @@
     </message>
     <message>
       <source>Blue</source>
-      <translation type="unfinished">Blue</translation>
+      <translation>Azul</translation>
     </message>
     <message>
       <source>Red</source>
-      <translation type="unfinished">Red</translation>
+      <translation>Rojo</translation>
     </message>
     <message>
       <source>Green</source>
-      <translation type="unfinished">Green</translation>
+      <translation>Verde</translation>
     </message>
     <message>
       <source>Sat</source>
