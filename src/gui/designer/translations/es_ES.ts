@@ -488,7 +488,7 @@
     </message>
     <message>
       <source>&amp;Fast Forward</source>
-      <translation type="unfinished">&amp;Fast Forward</translation>
+      <translation>&amp;Avance rápido</translation>
     </message>
     <message>
       <source>&amp;Pause</source>
@@ -1371,7 +1371,7 @@
     </message>
     <message>
       <source>Permit &quot;Up + Down&quot; and &quot;Left + Right&quot; at the same time</source>
-      <translation type="unfinished">Permit &quot;Up + Down&quot; and &quot;Left + Right&quot; at the same time</translation>
+      <translation>Permitir &quot;Arriba + Abajo&quot; e &quot;Izquierda + Derecha&quot; al mismo tiempo</translation>
     </message>
     <message>
       <source>Controller Mode</source>
@@ -1625,7 +1625,7 @@
     </message>
     <message>
       <source>Noise</source>
-      <translation type="unfinished">Noise</translation>
+      <translation>Ruido</translation>
     </message>
     <message>
       <source>NTSC 2Phase Composite</source>
