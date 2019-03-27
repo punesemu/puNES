@@ -316,7 +316,7 @@
     </message>
     <message>
       <source>Save states</source>
-      <translation type="unfinished">Save states</translation>
+      <translation>Estados guardados</translation>
     </message>
     <message>
       <source>Save state on file</source>
@@ -336,7 +336,7 @@
     </message>
     <message>
       <source>Anyway, thank you all for the love and the help.</source>
-      <translation type="unfinished">Anyway, thank you all for the love and the help.</translation>
+      <translation>De todos modos, gracias a todos por el cariño y la ayuda.</translation>
     </message>
     <message>
       <source>portable version</source>
@@ -424,11 +424,11 @@
     </message>
     <message>
       <source>&amp;Increment slot</source>
-      <translation type="unfinished">&amp;Increment slot</translation>
+      <translation>&amp;Incrementar ranura</translation>
     </message>
     <message>
       <source>&amp;Decrement slot</source>
-      <translation type="unfinished">&amp;Decrement slot</translation>
+      <translation>&amp;Disminuir ranura</translation>
     </message>
     <message>
       <source>Slot &amp;0</source>
@@ -508,7 +508,7 @@
     </message>
     <message>
       <source>&amp;Open working folder</source>
-      <translation type="unfinished">&amp;Open working folder</translation>
+      <translation>&amp;Abrir carpeta de trabajo</translation>
     </message>
     <message>
       <source>&amp;File</source>
@@ -524,7 +524,7 @@
     </message>
     <message>
       <source>&amp;Disk Side</source>
-      <translation type="unfinished">&amp;Disk Side</translation>
+      <translation>&amp;Lado del disco</translation>
     </message>
     <message>
       <source>Setti&amp;ngs</source>
@@ -1291,7 +1291,7 @@
     </message>
     <message>
       <source>Unset</source>
-      <translation type="unfinished">Unset</translation>
+      <translation>Deshacer</translation>
     </message>
     <message>
       <source>Start/Stop WAV</source>
