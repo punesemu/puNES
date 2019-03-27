@@ -360,7 +360,7 @@
     </message>
     <message>
       <source>&amp;Eject/Insert Disk</source>
-      <translation type="unfinished">&amp;Eject/Insert Disk</translation>
+      <translation>&amp;Expulsar/insertar disco</translation>
     </message>
     <message>
       <source>Disk 1 side A</source>
@@ -392,7 +392,7 @@
     </message>
     <message>
       <source>Disk 4 side B</source>
-      <translation type="unfinished">Disk 4 side B</translation>
+      <translation>Disco 4 lado B</translation>
     </message>
     <message>
       <source>&amp;Switch sides</source>
@@ -400,15 +400,15 @@
     </message>
     <message>
       <source>&amp;Save to file</source>
-      <translation type="unfinished">&amp;Save to file</translation>
+      <translation>&amp;Guardar en archivo</translation>
     </message>
     <message>
       <source>&amp;Load from file</source>
-      <translation type="unfinished">&amp;Load from file</translation>
+      <translation>&amp;Cargar desde archivo</translation>
     </message>
     <message>
       <source>F&amp;ullscreen</source>
-      <translation type="unfinished">F&amp;ullscreen</translation>
+      <translation>P&amp;antalla completa</translation>
     </message>
     <message>
       <source>&amp;Game Genie Rom Mode</source>
@@ -580,43 +580,43 @@
     </message>
     <message>
       <source>Stop &amp;WAV recording</source>
-      <translation type="unfinished">Stop &amp;WAV recording</translation>
+      <translation>Detener grabación &amp;WAV</translation>
     </message>
     <message>
       <source>Start &amp;WAV recording</source>
-      <translation type="unfinished">Start &amp;WAV recording</translation>
+      <translation>Iniciar grabación &amp;WAV</translation>
     </message>
     <message>
       <source>MS WAVE files</source>
-      <translation type="unfinished">MS WAVE files</translation>
+      <translation>Archivos MS WAVE</translation>
     </message>
     <message>
       <source>Record sound</source>
-      <translation type="unfinished">Record sound</translation>
+      <translation>Grabar sonido</translation>
     </message>
     <message>
       <source>NSF rom files</source>
-      <translation type="unfinished">NSF rom files</translation>
+      <translation>Archivos rom NSF</translation>
     </message>
     <message>
       <source>NSFE rom files</source>
-      <translation type="unfinished">NSFE rom files</translation>
+      <translation>Archivos rom NSFE</translation>
     </message>
     <message>
       <source>IPS patch files</source>
-      <translation type="unfinished">IPS patch files</translation>
+      <translation>Archivos de parche IPS</translation>
     </message>
     <message>
       <source>BPS patch files</source>
-      <translation type="unfinished">BPS patch files</translation>
+      <translation>Archivos de parches BPS</translation>
     </message>
     <message>
       <source>XDELTA patch files</source>
-      <translation type="unfinished">XDELTA patch files</translation>
+      <translation>Archivos de parche XDELTA</translation>
     </message>
     <message>
       <source>Open IPS/BPS/XDELTA Patch</source>
-      <translation type="unfinished">Open IPS/BPS/XDELTA Patch</translation>
+      <translation>Abrir parche IPS/BPS/XDELTA</translation>
     </message>
     <message>
       <source>If you like the emulator and you want to support it&apos;s development or would you pay for a beer at the programmer</source>
@@ -624,11 +624,11 @@
     </message>
     <message>
       <source>&amp;Apply IPS/BPS/XDELTA Patch</source>
-      <translation type="unfinished">&amp;Apply IPS/BPS/XDELTA Patch</translation>
+      <translation>&amp;Aplicar parche IPS/BPS/XDELTA</translation>
     </message>
     <message>
       <source>&amp;General</source>
-      <translation type="unfinished">&amp;General</translation>
+      <translation>&amp;General</translation>
     </message>
   </context>
   <context>
