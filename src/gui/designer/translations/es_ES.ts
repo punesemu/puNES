@@ -40,11 +40,11 @@
     </message>
     <message>
       <source>Save Settings</source>
-      <translation>Guardar ajustes</translation>
+      <translation>Guardar configuración</translation>
     </message>
     <message>
       <source>Close Settings</source>
-      <translation>Cerrar ajustes</translation>
+      <translation>Cerrar</translation>
     </message>
   </context>
   <context>
@@ -496,7 +496,7 @@
     </message>
     <message>
       <source>Save Screens&amp;hot</source>
-      <translation type="unfinished">Save Screens&amp;hot</translation>
+      <translation>Guardar captura de p&amp;antalla</translation>
     </message>
     <message>
       <source>Insert Coin</source>
@@ -990,7 +990,7 @@
     </message>
     <message>
       <source>Settings</source>
-      <translation>Ajustes</translation>
+      <translation>Configuración</translation>
     </message>
     <message>
       <source>Channels</source>
@@ -1097,11 +1097,11 @@
     <name>wdgSettingsCheats</name>
     <message>
       <source>Cheats Settings</source>
-      <translation>Ajustes de trucos</translation>
+      <translation>Configuración de trucos</translation>
     </message>
     <message>
       <source>Settings</source>
-      <translation>Ajustes</translation>
+      <translation>Configuración</translation>
     </message>
     <message>
       <source>Disabled</source>
@@ -1136,7 +1136,7 @@
     </message>
     <message>
       <source>General Settings</source>
-      <translation>Ajustes generales</translation>
+      <translation>Configuración general</translation>
     </message>
     <message>
       <source>2x (Default)</source>
@@ -1200,7 +1200,7 @@
     </message>
     <message>
       <source>Save settings on exit</source>
-      <translation>Guardar ajustes al salir</translation>
+      <translation>Guardar configuraciones al salir</translation>
     </message>
     <message>
       <source>Save battery RAM file every 3 min.</source>
@@ -1216,7 +1216,7 @@
     </message>
     <message>
       <source>Settings</source>
-      <translation>Ajustes</translation>
+      <translation>Configuración</translation>
     </message>
     <message>
       <source>Game Genie Rom file</source>
@@ -1315,7 +1315,7 @@
     </message>
     <message>
       <source>Input Settings</source>
-      <translation>Ajustes de entrada</translation>
+      <translation>Configuración de entrada</translation>
     </message>
     <message>
       <source>Setup</source>
@@ -1402,7 +1402,7 @@
     <name>wdgSettingsPPU</name>
     <message>
       <source>PPU Settings</source>
-      <translation>Ajustes de PPU</translation>
+      <translation>Configuración de PPU</translation>
     </message>
     <message>
       <source>Disable 7bit Sample Control</source>
@@ -1485,7 +1485,7 @@
     </message>
     <message>
       <source>Video Settings</source>
-      <translation>Ajustes de vídeo</translation>
+      <translation>Configuración de vídeo</translation>
     </message>
     <message>
       <source>1x</source>
@@ -1517,7 +1517,7 @@
     </message>
     <message>
       <source>Settings</source>
-      <translation>Ajustes</translation>
+      <translation>Configuración</translation>
     </message>
     <message>
       <source>** To apply this change restart is needed **</source>
@@ -1597,7 +1597,7 @@
     </message>
     <message>
       <source>Black borders in fullscreen</source>
-      <translation type="unfinished">Black borders in fullscreen</translation>
+      <translation>Bordes negros en pantalla completa</translation>
     </message>
     <message>
       <source>Overscan</source>
