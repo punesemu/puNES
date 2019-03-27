@@ -163,7 +163,7 @@
     </message>
     <message>
       <source>Misc</source>
-      <translation type="unfinished">Misc</translation>
+      <translation>Misc</translation>
     </message>
     <message>
       <source>Controller type</source>
@@ -859,7 +859,7 @@
     </message>
     <message>
       <source>Val</source>
-      <translation type="unfinished">Val</translation>
+      <translation>Val</translation>
     </message>
     <message>
       <source>Blue</source>
@@ -875,11 +875,11 @@
     </message>
     <message>
       <source>Sat</source>
-      <translation type="unfinished">Sat</translation>
+      <translation>Sat</translation>
     </message>
     <message>
       <source>Hue</source>
-      <translation type="unfinished">Hue</translation>
+      <translation>Hue</translation>
     </message>
     <message>
       <source>HTML</source>
@@ -986,7 +986,7 @@
     </message>
     <message>
       <source>Misc</source>
-      <translation type="unfinished">Misc</translation>
+      <translation>Misc</translation>
     </message>
     <message>
       <source>Settings</source>
@@ -1082,7 +1082,7 @@
     </message>
     <message>
       <source>Swap Duty Cycles</source>
-      <translation type="unfinished">Swap Duty Cycles</translation>
+      <translation>Ciclos de intercambio de trabajo</translation>
     </message>
     <message>
       <source>Enable Audio</source>
@@ -1212,7 +1212,7 @@
     </message>
     <message>
       <source>Misc</source>
-      <translation type="unfinished">Misc</translation>
+      <translation>Misc</translation>
     </message>
     <message>
       <source>Settings</source>
@@ -1339,7 +1339,7 @@
     </message>
     <message>
       <source>Misc</source>
-      <translation type="unfinished">Misc</translation>
+      <translation>Misc</translation>
     </message>
     <message>
       <source>Expansion Port</source>
@@ -1418,7 +1418,7 @@
     </message>
     <message>
       <source>Postrender Lines</source>
-      <translation type="unfinished">Postrender Lines</translation>
+      <translation>Líneas postrender</translation>
     </message>
     <message>
       <source>Overclock</source>
@@ -1449,11 +1449,11 @@
     <name>wdgSettingsVideo</name>
     <message>
       <source>GLSL &amp;soft stretch</source>
-      <translation type="unfinished">GLSL &amp;soft stretch</translation>
+      <translation>Estiramiento &amp;suave GLSL</translation>
     </message>
     <message>
       <source>HLSL &amp;soft stretch</source>
-      <translation type="unfinished">HLSL &amp;soft stretch</translation>
+      <translation>Estiramiento &amp;suave HLSL</translation>
     </message>
     <message>
       <source>[Select a file]</source>
@@ -1525,7 +1525,7 @@
     </message>
     <message>
       <source>Misc</source>
-      <translation type="unfinished">Misc</translation>
+      <translation>Misc</translation>
     </message>
     <message>
       <source>1:1</source>
