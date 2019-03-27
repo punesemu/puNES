@@ -639,7 +639,7 @@
     </message>
     <message>
       <source>Read only</source>
-      <translation type="unfinished">Read only</translation>
+      <translation>Solo lectura</translation>
     </message>
     <message>
       <source>The file is in read only mode</source>
@@ -717,35 +717,35 @@
     </message>
     <message>
       <source>Description</source>
-      <translation type="unfinished">Description</translation>
+      <translation>Descripción</translation>
     </message>
     <message>
       <source>Code</source>
-      <translation type="unfinished">Code</translation>
+      <translation>Código</translation>
     </message>
     <message>
       <source>Address</source>
-      <translation type="unfinished">Address</translation>
+      <translation>Dirección</translation>
     </message>
     <message>
       <source>Value</source>
-      <translation type="unfinished">Value</translation>
+      <translation>Valor</translation>
     </message>
     <message>
       <source>Compare</source>
-      <translation type="unfinished">Compare</translation>
+      <translation>Comparar</translation>
     </message>
     <message>
       <source>Show Tools</source>
-      <translation type="unfinished">Show Tools</translation>
+      <translation>Mostrar herramientas</translation>
     </message>
     <message>
       <source>Import</source>
-      <translation type="unfinished">Import</translation>
+      <translation>Importar</translation>
     </message>
     <message>
       <source>Export</source>
-      <translation type="unfinished">Export</translation>
+      <translation>Exportar</translation>
     </message>
     <message>
       <source>Clear All</source>
@@ -788,7 +788,7 @@
     <name>wdgCheatsEditor</name>
     <message>
       <source>Show Tools</source>
-      <translation type="unfinished">Show Tools</translation>
+      <translation>Mostrar herramientas</translation>
     </message>
     <message>
       <source>Hide Tools</source>
@@ -883,11 +883,11 @@
     </message>
     <message>
       <source>HTML</source>
-      <translation type="unfinished">HTML</translation>
+      <translation>HTML</translation>
     </message>
     <message>
       <source>Reset color</source>
-      <translation type="unfinished">Reset color</translation>
+      <translation>Restablecer color</translation>
     </message>
     <message>
       <source>Save to a file</source>
@@ -906,19 +906,19 @@
     </message>
     <message>
       <source>48000</source>
-      <translation type="unfinished">48000</translation>
+      <translation>48000</translation>
     </message>
     <message>
       <source>44100</source>
-      <translation type="unfinished">44100</translation>
+      <translation>44100</translation>
     </message>
     <message>
       <source>22050</source>
-      <translation type="unfinished">22050</translation>
+      <translation>22050</translation>
     </message>
     <message>
       <source>11025</source>
-      <translation type="unfinished">11025</translation>
+      <translation>11025</translation>
     </message>
     <message>
       <source>0</source>
@@ -926,39 +926,39 @@
     </message>
     <message>
       <source>1 (Default)</source>
-      <translation type="unfinished">1 (Default)</translation>
+      <translation>1 (predeterminado)</translation>
     </message>
     <message>
       <source>2</source>
-      <translation type="unfinished">2</translation>
+      <translation>2</translation>
     </message>
     <message>
       <source>3</source>
-      <translation type="unfinished">3</translation>
+      <translation>3</translation>
     </message>
     <message>
       <source>4</source>
-      <translation type="unfinished">4</translation>
+      <translation>4</translation>
     </message>
     <message>
       <source>5</source>
-      <translation type="unfinished">5</translation>
+      <translation>5</translation>
     </message>
     <message>
       <source>6</source>
-      <translation type="unfinished">6</translation>
+      <translation>6</translation>
     </message>
     <message>
       <source>7</source>
-      <translation type="unfinished">7</translation>
+      <translation>7</translation>
     </message>
     <message>
       <source>8</source>
-      <translation type="unfinished">8</translation>
+      <translation>8</translation>
     </message>
     <message>
       <source>9</source>
-      <translation type="unfinished">9</translation>
+      <translation>9</translation>
     </message>
     <message>
       <source>Sample Rate</source>
@@ -994,87 +994,87 @@
     </message>
     <message>
       <source>Channels</source>
-      <translation type="unfinished">Channels</translation>
+      <translation>Canales</translation>
     </message>
     <message>
       <source>5%</source>
-      <translation type="unfinished">5%</translation>
+      <translation>5 %</translation>
     </message>
     <message>
       <source>10%</source>
-      <translation type="unfinished">10%</translation>
+      <translation>10 %</translation>
     </message>
     <message>
       <source>15%</source>
-      <translation type="unfinished">15%</translation>
+      <translation>15 %</translation>
     </message>
     <message>
       <source>20%</source>
-      <translation type="unfinished">20%</translation>
+      <translation>20 %</translation>
     </message>
     <message>
       <source>25%</source>
-      <translation type="unfinished">25%</translation>
+      <translation>25 %</translation>
     </message>
     <message>
       <source>30% (Default)</source>
-      <translation type="unfinished">30% (Default)</translation>
+      <translation>30 % (predeterminado)</translation>
     </message>
     <message>
       <source>35%</source>
-      <translation type="unfinished">35%</translation>
+      <translation>35 %</translation>
     </message>
     <message>
       <source>40%</source>
-      <translation type="unfinished">40%</translation>
+      <translation>40 %</translation>
     </message>
     <message>
       <source>45%</source>
-      <translation type="unfinished">45%</translation>
+      <translation>45 %</translation>
     </message>
     <message>
       <source>50%</source>
-      <translation type="unfinished">50%</translation>
+      <translation>50 %</translation>
     </message>
     <message>
       <source>55%</source>
-      <translation type="unfinished">55%</translation>
+      <translation>55 %</translation>
     </message>
     <message>
       <source>60%</source>
-      <translation type="unfinished">60%</translation>
+      <translation>60 %</translation>
     </message>
     <message>
       <source>65%</source>
-      <translation type="unfinished">65%</translation>
+      <translation>65 %</translation>
     </message>
     <message>
       <source>70%</source>
-      <translation type="unfinished">70%</translation>
+      <translation>70 %</translation>
     </message>
     <message>
       <source>75%</source>
-      <translation type="unfinished">75%</translation>
+      <translation>75 %</translation>
     </message>
     <message>
       <source>80%</source>
-      <translation type="unfinished">80%</translation>
+      <translation>80 %</translation>
     </message>
     <message>
       <source>85%</source>
-      <translation type="unfinished">85%</translation>
+      <translation>85 %</translation>
     </message>
     <message>
       <source>90%</source>
-      <translation type="unfinished">90%</translation>
+      <translation>90 %</translation>
     </message>
     <message>
       <source>95%</source>
-      <translation type="unfinished">95%</translation>
+      <translation>95 %</translation>
     </message>
     <message>
       <source>100%</source>
-      <translation type="unfinished">100%</translation>
+      <translation>100 %</translation>
     </message>
     <message>
       <source>APU Channels</source>
