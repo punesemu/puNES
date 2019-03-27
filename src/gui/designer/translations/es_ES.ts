@@ -51,7 +51,7 @@
     <name>dlgStdPad</name>
     <message>
       <source>Controller %1 : Standard Pad</source>
-      <translation type="unfinished">Controller %1 : Standard Pad</translation>
+      <translation>Control %1 : Pad estándar</translation>
     </message>
     <message>
       <source>Auto</source>
@@ -75,11 +75,11 @@
     </message>
     <message>
       <source>No usable device</source>
-      <translation type="unfinished">No usable device</translation>
+      <translation>Dispositivo no utilizable</translation>
     </message>
     <message>
       <source>Select device first</source>
-      <translation type="unfinished">Select device first</translation>
+      <translation>Seleccionar el primer dispositivo</translation>
     </message>
     <message>
       <source>Error on open device %1</source>
@@ -95,7 +95,7 @@
     </message>
     <message>
       <source>Standard Pad</source>
-      <translation type="unfinished">Standard Pad</translation>
+      <translation>Pad estándar</translation>
     </message>
     <message>
       <source>ID</source>
@@ -396,7 +396,7 @@
     </message>
     <message>
       <source>&amp;Switch sides</source>
-      <translation type="unfinished">&amp;Switch sides</translation>
+      <translation>&amp;Cambiar de lado</translation>
     </message>
     <message>
       <source>&amp;Save to file</source>
@@ -761,7 +761,7 @@
     </message>
     <message>
       <source>Pro Action Rocky</source>
-      <translation type="unfinished">Pro Action Rocky</translation>
+      <translation>Pro Action Rocky</translation>
     </message>
     <message>
       <source>Game Genie</source>
@@ -847,7 +847,7 @@
     </message>
     <message>
       <source>wdgPaletteEditor</source>
-      <translation type="unfinished">wdgPaletteEditor</translation>
+      <translation>wdgPaletteEditor</translation>
     </message>
     <message>
       <source>Selected</source>
@@ -1090,7 +1090,7 @@
     </message>
     <message>
       <source>wdgSettingsAudio</source>
-      <translation type="unfinished">wdgSettingsAudio</translation>
+      <translation>wdgSettingsAudio</translation>
     </message>
   </context>
   <context>
@@ -1204,7 +1204,7 @@
     </message>
     <message>
       <source>Save battery RAM file every 3 min.</source>
-      <translation type="unfinished">Save battery RAM file every 3 min.</translation>
+      <translation>Guarder el archivo RAM de la batería cada 3 minutos.</translation>
     </message>
     <message>
       <source>Fast Forward velocity</source>
@@ -1267,7 +1267,7 @@
     </message>
     <message>
       <source>Standard Pad</source>
-      <translation type="unfinished">Standard Pad</translation>
+      <translation>Pad estándar</translation>
     </message>
     <message>
       <source>Zapper</source>
@@ -1279,11 +1279,11 @@
     </message>
     <message>
       <source>Arkanoid Paddle</source>
-      <translation type="unfinished">Arkanoid Paddle</translation>
+      <translation>Arkanoid Paddle</translation>
     </message>
     <message>
       <source>Oeka Kids Tablet</source>
-      <translation type="unfinished">Oeka Kids Tablet</translation>
+      <translation>Tableta Oeka Kids</translation>
     </message>
     <message>
       <source>Default</source>
@@ -1621,7 +1621,7 @@
     </message>
     <message>
       <source>Emboss</source>
-      <translation type="unfinished">Emboss</translation>
+      <translation>Realzar</translation>
     </message>
     <message>
       <source>Noise</source>
@@ -1809,7 +1809,7 @@
     </message>
     <message>
       <source>Soft stretch</source>
-      <translation type="unfinished">Soft stretch</translation>
+      <translation>Estiramiento suave</translation>
     </message>
     <message>
       <source>Disable sRGB FBO</source>
