@@ -233,7 +233,7 @@
     </message>
     <message>
       <source>Dip Switches</source>
-      <translation type="unfinished">Dip Switches</translation>
+      <translation>Interruptores Dip</translation>
     </message>
     <message>
       <source>4</source>
@@ -269,7 +269,7 @@
     </message>
     <message>
       <source>Defaults Game Dip Switches</source>
-      <translation type="unfinished">Defaults Game Dip Switches</translation>
+      <translation>Interruptores Dip del juego predeterminado</translation>
     </message>
   </context>
   <context>
@@ -352,11 +352,11 @@
     </message>
     <message>
       <source>&amp;Hard Reset</source>
-      <translation type="unfinished">&amp;Hard Reset</translation>
+      <translation>&amp;Reiniciar hardware</translation>
     </message>
     <message>
       <source>&amp;Soft Reset</source>
-      <translation type="unfinished">&amp;Soft Reset</translation>
+      <translation>&amp;Reiniciar software</translation>
     </message>
     <message>
       <source>&amp;Eject/Insert Disk</source>
@@ -1561,7 +1561,7 @@
     </message>
     <message>
       <source>Overscan borders</source>
-      <translation type="unfinished">Overscan borders</translation>
+      <translation>Superposición de bordes</translation>
     </message>
     <message>
       <source>NTSC</source>
@@ -1601,7 +1601,7 @@
     </message>
     <message>
       <source>Overscan</source>
-      <translation type="unfinished">Overscan</translation>
+      <translation>Superposición</translation>
     </message>
     <message>
       <source>No Shaders</source>
