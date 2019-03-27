@@ -280,11 +280,11 @@
     </message>
     <message>
       <source>&amp;Eject disk</source>
-      <translation type="unfinished">&amp;Eject disk</translation>
+      <translation>&amp;Expulsar disco</translation>
     </message>
     <message>
       <source>&amp;Eject/Insert disk</source>
-      <translation type="unfinished">&amp;Eject/Insert disk</translation>
+      <translation>&amp;Expulsar/insertar disco</translation>
     </message>
     <message>
       <source>All supported formats</source>
@@ -476,7 +476,7 @@
     </message>
     <message>
       <source>&amp;Cheats List Mode</source>
-      <translation type="unfinished">&amp;Cheats List Mode</translation>
+      <translation>&amp;Modos de lista de trucos</translation>
     </message>
     <message>
       <source>Cheats &amp;Editor</source>
@@ -492,7 +492,7 @@
     </message>
     <message>
       <source>&amp;Pause</source>
-      <translation type="unfinished">&amp;Pause</translation>
+      <translation>&amp;Pausar</translation>
     </message>
     <message>
       <source>Save Screens&amp;hot</source>
@@ -560,11 +560,11 @@
     </message>
     <message>
       <source>&amp;Turn On</source>
-      <translation type="unfinished">&amp;Turn On</translation>
+      <translation>&amp;Desactivar</translation>
     </message>
     <message>
       <source>&amp;Turn Off</source>
-      <translation type="unfinished">&amp;Turn Off</translation>
+      <translation>&amp;Desactivar</translation>
     </message>
     <message>
       <source>Too&amp;ls</source>
@@ -635,7 +635,7 @@
     <name>objCheat</name>
     <message>
       <source>Error on reading the file</source>
-      <translation type="unfinished">Error on reading the file</translation>
+      <translation>Error en la lectura del archivo</translation>
     </message>
     <message>
       <source>Read only</source>
@@ -643,7 +643,7 @@
     </message>
     <message>
       <source>The file is in read only mode</source>
-      <translation type="unfinished">The file is in read only mode</translation>
+      <translation>El archivo está en modo de solo lectura</translation>
     </message>
   </context>
   <context>
@@ -753,7 +753,7 @@
     </message>
     <message>
       <source>Editor Tools</source>
-      <translation type="unfinished">Editor Tools</translation>
+      <translation>Editor de herramientas</translation>
     </message>
     <message>
       <source>CPU Ram</source>
@@ -1549,11 +1549,11 @@
     </message>
     <message>
       <source>Off</source>
-      <translation type="unfinished">Off</translation>
+      <translation>Desactivado</translation>
     </message>
     <message>
       <source>On</source>
-      <translation type="unfinished">On</translation>
+      <translation>Activado</translation>
     </message>
     <message>
       <source>Default Value</source>
@@ -1693,7 +1693,7 @@
     </message>
     <message>
       <source>NTSC S-Video</source>
-      <translation type="unfinished">NTSC S-Video</translation>
+      <translation>NTSC S-Video</translation>
     </message>
     <message>
       <source>NTSC RGB</source>
@@ -1725,7 +1725,7 @@
     </message>
     <message>
       <source>Sony CXA2025AS US</source>
-      <translation type="unfinished">Sony CXA2025AS US</translation>
+      <translation>Sony CXA2025AS US</translation>
     </message>
     <message>
       <source>Firebrandx Nostalgia (FBX)</source>
@@ -1733,7 +1733,7 @@
     </message>
     <message>
       <source>Firebrandx YUV</source>
-      <translation type="unfinished">Firebrandx YUV</translation>
+      <translation>Firebrandx YUV</translation>
     </message>
     <message>
       <source>Monochrome</source>
@@ -1793,11 +1793,11 @@
     </message>
     <message>
       <source>Disable TV noise emulation when turned off</source>
-      <translation type="unfinished">Disable TV noise emulation when turned off</translation>
+      <translation>Deshabilitar la emulación de ruido del TV cuando esté desactivada</translation>
     </message>
     <message>
       <source>Disable sepia color on pause</source>
-      <translation type="unfinished">Disable sepia color on pause</translation>
+      <translation>Deshabilitar color sepia en pausa</translation>
     </message>
     <message>
       <source>Fullscreen in window</source>
