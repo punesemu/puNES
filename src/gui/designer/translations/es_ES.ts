@@ -5,14 +5,14 @@
     <name>Settings</name>
     <message>
       <source>System Default</source>
-      <translation type="unfinished">System Default</translation>
+      <translation>Sistema predeterminado</translation>
     </message>
   </context>
   <context>
     <name>dlgSettings</name>
     <message>
       <source>Settings</source>
-      <translation type="unfinished">Settings</translation>
+      <translation>Ajustes</translation>
     </message>
     <message>
       <source>General</source>
@@ -40,11 +40,11 @@
     </message>
     <message>
       <source>Save Settings</source>
-      <translation type="unfinished">Save Settings</translation>
+      <translation>Guardar ajustes</translation>
     </message>
     <message>
       <source>Close Settings</source>
-      <translation type="unfinished">Close Settings</translation>
+      <translation>Cerrar ajustes</translation>
     </message>
   </context>
   <context>
@@ -990,7 +990,7 @@
     </message>
     <message>
       <source>Settings</source>
-      <translation type="unfinished">Settings</translation>
+      <translation>Ajustes</translation>
     </message>
     <message>
       <source>Channels</source>
@@ -1078,7 +1078,7 @@
     </message>
     <message>
       <source>APU Channels</source>
-      <translation type="unfinished">APU Channels</translation>
+      <translation>Canales APU</translation>
     </message>
     <message>
       <source>Swap Duty Cycles</source>
@@ -1086,7 +1086,7 @@
     </message>
     <message>
       <source>Enable Audio</source>
-      <translation type="unfinished">Enable Audio</translation>
+      <translation>Habilitar audio</translation>
     </message>
     <message>
       <source>wdgSettingsAudio</source>
@@ -1097,11 +1097,11 @@
     <name>wdgSettingsCheats</name>
     <message>
       <source>Cheats Settings</source>
-      <translation type="unfinished">Cheats Settings</translation>
+      <translation>Ajustes de trucos</translation>
     </message>
     <message>
       <source>Settings</source>
-      <translation type="unfinished">Settings</translation>
+      <translation>Ajustes</translation>
     </message>
     <message>
       <source>Disabled</source>
@@ -1113,7 +1113,7 @@
     </message>
     <message>
       <source>Cheats List Mode</source>
-      <translation type="unfinished">Cheats List Mode</translation>
+      <translation>Modos de lista de trucos</translation>
     </message>
   </context>
   <context>
@@ -1136,7 +1136,7 @@
     </message>
     <message>
       <source>General Settings</source>
-      <translation type="unfinished">General Settings</translation>
+      <translation>Ajustes generales</translation>
     </message>
     <message>
       <source>2x (Default)</source>
@@ -1156,7 +1156,7 @@
     </message>
     <message>
       <source>Auto</source>
-      <translation type="unfinished">Auto</translation>
+      <translation>Automático</translation>
     </message>
     <message>
       <source>NTSC</source>
@@ -1168,7 +1168,7 @@
     </message>
     <message>
       <source>Dendy</source>
-      <translation type="unfinished">Dendy</translation>
+      <translation>Dendy</translation>
     </message>
     <message>
       <source>System Roms</source>
@@ -1200,7 +1200,7 @@
     </message>
     <message>
       <source>Save settings on exit</source>
-      <translation type="unfinished">Save settings on exit</translation>
+      <translation>Guardar ajustes al salir</translation>
     </message>
     <message>
       <source>Save battery RAM file every 3 min.</source>
@@ -1216,7 +1216,7 @@
     </message>
     <message>
       <source>Settings</source>
-      <translation type="unfinished">Settings</translation>
+      <translation>Ajustes</translation>
     </message>
     <message>
       <source>Game Genie Rom file</source>
@@ -1295,7 +1295,7 @@
     </message>
     <message>
       <source>Start/Stop WAV</source>
-      <translation type="unfinished">Start/Stop WAV</translation>
+      <translation>Iniciar/detener WAV</translation>
     </message>
     <message>
       <source>No usable device</source>
@@ -1315,11 +1315,11 @@
     </message>
     <message>
       <source>Input Settings</source>
-      <translation type="unfinished">Input Settings</translation>
+      <translation>Ajustes de entrada</translation>
     </message>
     <message>
       <source>Setup</source>
-      <translation type="unfinished">Setup</translation>
+      <translation>Configurar</translation>
     </message>
     <message>
       <source>Joystick ID</source>
@@ -1335,7 +1335,7 @@
     </message>
     <message>
       <source>Four Score</source>
-      <translation type="unfinished">Four Score</translation>
+      <translation>Cuatro puntos</translation>
     </message>
     <message>
       <source>Misc</source>
@@ -1351,15 +1351,15 @@
     </message>
     <message>
       <source>Controller Port 1</source>
-      <translation type="unfinished">Controller Port 1</translation>
+      <translation>Puerto del control 1</translation>
     </message>
     <message>
       <source>Controller Port 3</source>
-      <translation type="unfinished">Controller Port 3</translation>
+      <translation>Puerto del control 3</translation>
     </message>
     <message>
       <source>Controller Port 2</source>
-      <translation type="unfinished">Controller Port 2</translation>
+      <translation>Puerto del control 2</translation>
     </message>
     <message>
       <source>Ports</source>
@@ -1375,11 +1375,11 @@
     </message>
     <message>
       <source>Controller Mode</source>
-      <translation type="unfinished">Controller Mode</translation>
+      <translation>Modos del control</translation>
     </message>
     <message>
       <source>Controller Port 4</source>
-      <translation type="unfinished">Controller Port 4</translation>
+      <translation>Puerto del control 4</translation>
     </message>
     <message>
       <source>Reset to defaults</source>
@@ -1402,7 +1402,7 @@
     <name>wdgSettingsPPU</name>
     <message>
       <source>PPU Settings</source>
-      <translation type="unfinished">PPU Settings</translation>
+      <translation>Ajustes de PPU</translation>
     </message>
     <message>
       <source>Disable 7bit Sample Control</source>
@@ -1485,7 +1485,7 @@
     </message>
     <message>
       <source>Video Settings</source>
-      <translation type="unfinished">Video Settings</translation>
+      <translation>Ajustes de vídeo</translation>
     </message>
     <message>
       <source>1x</source>
@@ -1517,7 +1517,7 @@
     </message>
     <message>
       <source>Settings</source>
-      <translation type="unfinished">Settings</translation>
+      <translation>Ajustes</translation>
     </message>
     <message>
       <source>** To apply this change restart is needed **</source>
