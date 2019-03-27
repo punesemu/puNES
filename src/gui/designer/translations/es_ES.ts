@@ -24,11 +24,11 @@
     </message>
     <message>
       <source>Audio</source>
-      <translation type="unfinished">Audio</translation>
+      <translation>Audio</translation>
     </message>
     <message>
       <source>Input</source>
-      <translation type="unfinished">Input</translation>
+      <translation>Entrada</translation>
     </message>
     <message>
       <source>PPU</source>
@@ -127,7 +127,7 @@
     </message>
     <message>
       <source>Turbo B</source>
-      <translation type="unfinished">Turbo B</translation>
+      <translation>Turbo B</translation>
     </message>
     <message>
       <source>Select</source>
@@ -135,15 +135,15 @@
     </message>
     <message>
       <source>Turbo A</source>
-      <translation type="unfinished">Turbo A</translation>
+      <translation>Turbo A</translation>
     </message>
     <message>
       <source>B</source>
-      <translation type="unfinished">B</translation>
+      <translation>B</translation>
     </message>
     <message>
       <source>Right</source>
-      <translation type="unfinished">Right</translation>
+      <translation>Derecha</translation>
     </message>
     <message>
       <source>In sequence</source>
@@ -179,18 +179,18 @@
     </message>
     <message>
       <source>Apply</source>
-      <translation type="unfinished">Apply</translation>
+      <translation>Aplicar</translation>
     </message>
     <message>
       <source>Discard</source>
-      <translation type="unfinished">Discard</translation>
+      <translation>Descartar</translation>
     </message>
   </context>
   <context>
     <name>dlgUncomp</name>
     <message>
       <source>which ROM do you want to load?</source>
-      <translation type="unfinished">which ROM do you want to load?</translation>
+      <translation>¿Qué ROM quieres cargar?</translation>
     </message>
     <message>
       <source>which PATCH do you want to apply?</source>
@@ -202,11 +202,11 @@
     </message>
     <message>
       <source>OK</source>
-      <translation type="unfinished">OK</translation>
+      <translation>Aceptar</translation>
     </message>
     <message>
       <source>None</source>
-      <translation type="unfinished">None</translation>
+      <translation>Ninguno</translation>
     </message>
   </context>
   <context>
@@ -308,11 +308,11 @@
     </message>
     <message>
       <source>All files</source>
-      <translation type="unfinished">All files</translation>
+      <translation>Todos los archivos</translation>
     </message>
     <message>
       <source>Open File</source>
-      <translation type="unfinished">Open File</translation>
+      <translation>Abrir archivo</translation>
     </message>
     <message>
       <source>Save states</source>
@@ -320,11 +320,11 @@
     </message>
     <message>
       <source>Save state on file</source>
-      <translation type="unfinished">Save state on file</translation>
+      <translation>Guardar estado en un archivo</translation>
     </message>
     <message>
       <source>Open save state</source>
-      <translation type="unfinished">Open save state</translation>
+      <translation>Abrir estado de guardado</translation>
     </message>
     <message>
       <source>Nintendo Entertainment System Emulator</source>
@@ -340,15 +340,15 @@
     </message>
     <message>
       <source>portable version</source>
-      <translation type="unfinished">portable version</translation>
+      <translation>versión portable</translation>
     </message>
     <message>
       <source>&amp;Open</source>
-      <translation type="unfinished">&amp;Open</translation>
+      <translation>&amp;Abrir</translation>
     </message>
     <message>
       <source>&amp;Quit</source>
-      <translation type="unfinished">&amp;Quit</translation>
+      <translation>&amp;Salir</translation>
     </message>
     <message>
       <source>&amp;Hard Reset</source>
@@ -364,31 +364,31 @@
     </message>
     <message>
       <source>Disk 1 side A</source>
-      <translation type="unfinished">Disk 1 side A</translation>
+      <translation>Disco 1 lado A</translation>
     </message>
     <message>
       <source>Disk 1 side B</source>
-      <translation type="unfinished">Disk 1 side B</translation>
+      <translation>Disco 1 lado B</translation>
     </message>
     <message>
       <source>Disk 2 side A</source>
-      <translation type="unfinished">Disk 2 side A</translation>
+      <translation>Disco 2 lado A</translation>
     </message>
     <message>
       <source>Disk 2 side B</source>
-      <translation type="unfinished">Disk 2 side B</translation>
+      <translation>Disco 2 lado B</translation>
     </message>
     <message>
       <source>Disk 3 side A</source>
-      <translation type="unfinished">Disk 3 side A</translation>
+      <translation>Disco 3 lado A</translation>
     </message>
     <message>
       <source>Disk 3 side B</source>
-      <translation type="unfinished">Disk 3 side B</translation>
+      <translation>Disco 3 lado B</translation>
     </message>
     <message>
       <source>Disk 4 side A</source>
-      <translation type="unfinished">Disk 4 side A</translation>
+      <translation>Disco 4 lado A</translation>
     </message>
     <message>
       <source>Disk 4 side B</source>
