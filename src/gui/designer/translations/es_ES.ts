@@ -194,7 +194,7 @@
     </message>
     <message>
       <source>which PATCH do you want to apply?</source>
-      <translation type="unfinished">which PATCH do you want to apply?</translation>
+      <translation>¿Qué PARCHE quieres aplicar?</translation>
     </message>
     <message>
       <source>Unpacked archive</source>
@@ -620,7 +620,7 @@
     </message>
     <message>
       <source>If you like the emulator and you want to support it&apos;s development or would you pay for a beer at the programmer</source>
-      <translation type="unfinished">If you like the emulator and you want to support it&apos;s development or would you pay for a beer at the programmer</translation>
+      <translation>Si le gusta el emulador y quiere apoyar su desarrollo o pagaría una cerveza para el programador</translation>
     </message>
     <message>
       <source>&amp;Apply IPS/BPS/XDELTA Patch</source>
@@ -749,7 +749,7 @@
     </message>
     <message>
       <source>Clear All</source>
-      <translation type="unfinished">Clear All</translation>
+      <translation>Borrar todo</translation>
     </message>
     <message>
       <source>Editor Tools</source>
@@ -757,7 +757,7 @@
     </message>
     <message>
       <source>CPU Ram</source>
-      <translation type="unfinished">CPU Ram</translation>
+      <translation>CPU Ram</translation>
     </message>
     <message>
       <source>Pro Action Rocky</source>
@@ -777,7 +777,7 @@
     </message>
     <message>
       <source>Remove</source>
-      <translation type="unfinished">Remove</translation>
+      <translation>Borrar</translation>
     </message>
     <message>
       <source>Cancel</source>
@@ -1132,7 +1132,7 @@
     </message>
     <message>
       <source>Select FDS BIOS file</source>
-      <translation type="unfinished">Select FDS BIOS file</translation>
+      <translation>Seleccionar archivo Bios FDS</translation>
     </message>
     <message>
       <source>General Settings</source>
@@ -1224,15 +1224,15 @@
     </message>
     <message>
       <source>FDS Bios file</source>
-      <translation type="unfinished">FDS Bios file</translation>
+      <translation>Archivo Bios FDS</translation>
     </message>
     <message>
       <source>Rewind minutes</source>
-      <translation type="unfinished">Rewind minutes</translation>
+      <translation>Retroceder minutos</translation>
     </message>
     <message>
       <source>Disabled</source>
-      <translation type="unfinished">Disabled</translation>
+      <translation>Deshabilitado</translation>
     </message>
     <message>
       <source>2 minutes</source>
@@ -1457,7 +1457,7 @@
     </message>
     <message>
       <source>[Select a file]</source>
-      <translation type="unfinished">[Select a file]</translation>
+      <translation>[Seleccione un archivo]</translation>
     </message>
     <message>
       <source>Default</source>
@@ -1521,7 +1521,7 @@
     </message>
     <message>
       <source>** To apply this change restart is needed **</source>
-      <translation type="unfinished">** To apply this change restart is needed **</translation>
+      <translation>** Para aplicar este cambio es necesario reiniciar **</translation>
     </message>
     <message>
       <source>Misc</source>
@@ -1637,7 +1637,7 @@
     </message>
     <message>
       <source>From File</source>
-      <translation type="unfinished">From File</translation>
+      <translation>Desde archivo</translation>
     </message>
     <message>
       <source>No Filters</source>
@@ -1729,7 +1729,7 @@
     </message>
     <message>
       <source>Firebrandx Nostalgia (FBX)</source>
-      <translation type="unfinished">Firebrandx Nostalgia (FBX)</translation>
+      <translation>Firebrandx Nostalgia (FBX)</translation>
     </message>
     <message>
       <source>Firebrandx YUV</source>
@@ -1801,11 +1801,11 @@
     </message>
     <message>
       <source>Fullscreen in window</source>
-      <translation type="unfinished">Fullscreen in window</translation>
+      <translation>Ventana en pantalla completa</translation>
     </message>
     <message>
       <source>Stretch in fullscreen</source>
-      <translation type="unfinished">Stretch in fullscreen</translation>
+      <translation>Estirar a pantalla completa</translation>
     </message>
     <message>
       <source>Soft stretch</source>
