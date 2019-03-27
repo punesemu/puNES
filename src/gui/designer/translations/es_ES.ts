@@ -32,7 +32,7 @@
     </message>
     <message>
       <source>PPU</source>
-      <translation type="unfinished">PPU</translation>
+      <translation>PPU</translation>
     </message>
     <message>
       <source>Cheats</source>
@@ -55,11 +55,11 @@
     </message>
     <message>
       <source>Auto</source>
-      <translation type="unfinished">Auto</translation>
+      <translation>Automático</translation>
     </message>
     <message>
       <source>Original</source>
-      <translation type="unfinished">Original</translation>
+      <translation>Original</translation>
     </message>
     <message>
       <source>3rd-party</source>
@@ -91,7 +91,7 @@
     </message>
     <message>
       <source>Press a key (ESC for the previous value &quot;%1&quot;)</source>
-      <translation type="unfinished">Press a key (ESC for the previous value &quot;%1&quot;)</translation>
+      <translation>Presione una tecla (ESC para el valor anterior &quot;%1&quot;)</translation>
     </message>
     <message>
       <source>Standard Pad</source>
@@ -115,7 +115,7 @@
     </message>
     <message>
       <source>Unset</source>
-      <translation type="unfinished">Unset</translation>
+      <translation>Deshacer</translation>
     </message>
     <message>
       <source>Left</source>
@@ -123,7 +123,7 @@
     </message>
     <message>
       <source>Start</source>
-      <translation type="unfinished">Start</translation>
+      <translation>Iniciar</translation>
     </message>
     <message>
       <source>Turbo B</source>
@@ -131,7 +131,7 @@
     </message>
     <message>
       <source>Select</source>
-      <translation type="unfinished">Select</translation>
+      <translation>Seleccionar</translation>
     </message>
     <message>
       <source>Turbo A</source>
@@ -147,11 +147,11 @@
     </message>
     <message>
       <source>In sequence</source>
-      <translation type="unfinished">In sequence</translation>
+      <translation>En secuencia</translation>
     </message>
     <message>
       <source>Unset all</source>
-      <translation type="unfinished">Unset all</translation>
+      <translation>Deshacer todo</translation>
     </message>
     <message>
       <source>Defaults</source>
@@ -167,7 +167,7 @@
     </message>
     <message>
       <source>Controller type</source>
-      <translation type="unfinished">Controller type</translation>
+      <translation>Tipo de control</translation>
     </message>
     <message>
       <source>Turbo B Delay</source>
@@ -237,35 +237,35 @@
     </message>
     <message>
       <source>4</source>
-      <translation type="unfinished">4</translation>
+      <translation>4</translation>
     </message>
     <message>
       <source>5</source>
-      <translation type="unfinished">5</translation>
+      <translation>5</translation>
     </message>
     <message>
       <source>6</source>
-      <translation type="unfinished">6</translation>
+      <translation>6</translation>
     </message>
     <message>
       <source>7</source>
-      <translation type="unfinished">7</translation>
+      <translation>7</translation>
     </message>
     <message>
       <source>8</source>
-      <translation type="unfinished">8</translation>
+      <translation>8</translation>
     </message>
     <message>
       <source>3</source>
-      <translation type="unfinished">3</translation>
+      <translation>3</translation>
     </message>
     <message>
       <source>2</source>
-      <translation type="unfinished">2</translation>
+      <translation>2</translation>
     </message>
     <message>
       <source>1</source>
-      <translation type="unfinished">1</translation>
+      <translation>1</translation>
     </message>
     <message>
       <source>Defaults Game Dip Switches</source>
@@ -835,7 +835,7 @@
     <name>wdgPaletteEditor</name>
     <message>
       <source>Palette files</source>
-      <translation type="unfinished">Palette files</translation>
+      <translation>Archivos de paleta</translation>
     </message>
     <message>
       <source>All files</source>
@@ -843,7 +843,7 @@
     </message>
     <message>
       <source>Save palette on file</source>
-      <translation type="unfinished">Save palette on file</translation>
+      <translation>Guardar paleta en archivo</translation>
     </message>
     <message>
       <source>wdgPaletteEditor</source>
@@ -855,7 +855,7 @@
     </message>
     <message>
       <source>PPU</source>
-      <translation type="unfinished">PPU</translation>
+      <translation>PPU</translation>
     </message>
     <message>
       <source>Val</source>
@@ -891,11 +891,11 @@
     </message>
     <message>
       <source>Save to a file</source>
-      <translation type="unfinished">Save to a file</translation>
+      <translation>Guardar en un archivo</translation>
     </message>
     <message>
       <source>Reset palette</source>
-      <translation type="unfinished">Reset palette</translation>
+      <translation>Restablecer paleta</translation>
     </message>
   </context>
   <context>
