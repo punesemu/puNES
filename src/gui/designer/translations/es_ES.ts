@@ -1383,7 +1383,7 @@
     </message>
     <message>
       <source>Reset to defaults</source>
-      <translation type="unfinished">Reset to defaults</translation>
+      <translation>Restablecer valores predeterminados</translation>
     </message>
     <message>
       <source>Action</source>
@@ -1461,7 +1461,7 @@
     </message>
     <message>
       <source>Default</source>
-      <translation type="unfinished">Default</translation>
+      <translation>Predeterminado</translation>
     </message>
     <message>
       <source>Shaders files</source>
@@ -1545,7 +1545,7 @@
     </message>
     <message>
       <source>Pixel Aspect Ratio</source>
-      <translation type="unfinished">Pixel Aspect Ratio</translation>
+      <translation>Relación de aspecto de píxeles</translation>
     </message>
     <message>
       <source>Off</source>
@@ -1569,7 +1569,7 @@
     </message>
     <message>
       <source>PAL/Dendy</source>
-      <translation type="unfinished">PAL/Dendy</translation>
+      <translation>PAL/Dendy</translation>
     </message>
     <message>
       <source>Right</source>
@@ -1589,7 +1589,7 @@
     </message>
     <message>
       <source>Reset to defaults</source>
-      <translation type="unfinished">Reset to defaults</translation>
+      <translation>Restablecer valores predeterminados</translation>
     </message>
     <message>
       <source>Black borders in window mode</source>
@@ -1629,7 +1629,7 @@
     </message>
     <message>
       <source>NTSC 2Phase Composite</source>
-      <translation type="unfinished">NTSC 2Phase Composite</translation>
+      <translation>NTSC 2Phase compuesto</translation>
     </message>
     <message>
       <source>Old TV</source>
@@ -1689,7 +1689,7 @@
     </message>
     <message>
       <source>NTSC Composite</source>
-      <translation type="unfinished">NTSC Composite</translation>
+      <translation>NTSC compuesto</translation>
     </message>
     <message>
       <source>NTSC S-Video</source>
@@ -1713,7 +1713,7 @@
     </message>
     <message>
       <source>Reset paramaters to defaults</source>
-      <translation type="unfinished">Reset paramaters to defaults</translation>
+      <translation>Restablecer parámetros predeterminados</translation>
     </message>
     <message>
       <source>Filters</source>
