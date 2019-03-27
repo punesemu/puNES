@@ -83,7 +83,7 @@
     </message>
     <message>
       <source>Error on open device %1</source>
-      <translation type="unfinished">Error on open device %1</translation>
+      <translation>Error al abrir el dispositivo %1</translation>
     </message>
     <message>
       <source>Error on reading controllers configurations</source>
@@ -978,7 +978,7 @@
     </message>
     <message>
       <source>Stereo Panning</source>
-      <translation type="unfinished">Stereo Panning</translation>
+      <translation>Estéreo panorámico</translation>
     </message>
     <message>
       <source>Channels Delay</source>
@@ -1299,11 +1299,11 @@
     </message>
     <message>
       <source>No usable device</source>
-      <translation type="unfinished">No usable device</translation>
+      <translation>Dispositivo no utilizable</translation>
     </message>
     <message>
       <source>Error on open device %1</source>
-      <translation type="unfinished">Error on open device %1</translation>
+      <translation>Error al abrir el dispositivo %1</translation>
     </message>
     <message>
       <source>Error on reading controllers configurations</source>
