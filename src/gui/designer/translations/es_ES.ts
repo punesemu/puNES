@@ -12,7 +12,7 @@
     <name>dlgSettings</name>
     <message>
       <source>Settings</source>
-      <translation>Ajustes</translation>
+      <translation>Configuración</translation>
     </message>
     <message>
       <source>General</source>
@@ -87,7 +87,7 @@
     </message>
     <message>
       <source>Error on reading controllers configurations</source>
-      <translation type="unfinished">Error on reading controllers configurations</translation>
+      <translation>Error en la lectura de las configuraciones de los controles</translation>
     </message>
     <message>
       <source>Press a key (ESC for the previous value &quot;%1&quot;)</source>
@@ -1307,7 +1307,7 @@
     </message>
     <message>
       <source>Error on reading controllers configurations</source>
-      <translation type="unfinished">Error on reading controllers configurations</translation>
+      <translation>Error en la lectura de las configuraciones de los controles</translation>
     </message>
     <message>
       <source>Press a key (ESC for the previous value &quot;%1&quot;) - timeout in %2</source>
