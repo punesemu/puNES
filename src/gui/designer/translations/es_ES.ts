@@ -650,66 +650,66 @@
     <name>wdgAPUChannels</name>
     <message>
       <source>APU Channels</source>
-      <translation type="unfinished">APU Channels</translation>
+      <translation>Canales APU</translation>
     </message>
     <message>
       <source>Square 1</source>
-      <translation type="unfinished">Square 1</translation>
+      <translation>Cuadrado 1</translation>
     </message>
     <message>
       <source>DMC</source>
-      <translation type="unfinished">DMC</translation>
+      <translation>DMC</translation>
     </message>
     <message>
       <source>Noise</source>
-      <translation type="unfinished">Noise</translation>
+      <translation>Ruido</translation>
     </message>
     <message>
       <source>Square 2</source>
-      <translation type="unfinished">Square 2</translation>
+      <translation>Cuadrado 2</translation>
     </message>
     <message>
       <source>Extra</source>
-      <translation type="unfinished">Extra</translation>
+      <translation>Extra</translation>
     </message>
     <message>
       <source>Master</source>
-      <translation type="unfinished">Master</translation>
+      <translation>Maestro</translation>
     </message>
     <message>
       <source>Triangle</source>
-      <translation type="unfinished">Triangle</translation>
+      <translation>Triángulo</translation>
     </message>
     <message>
       <source>active</source>
-      <translation type="unfinished">active</translation>
+      <translation>activo</translation>
     </message>
     <message>
       <source>volume</source>
-      <translation type="unfinished">volume</translation>
+      <translation>volumen</translation>
     </message>
     <message>
       <source>Active all</source>
-      <translation type="unfinished">Active all</translation>
+      <translation>Habilitar todo</translation>
     </message>
     <message>
       <source>Disable all</source>
-      <translation type="unfinished">Disable all</translation>
+      <translation>Deshabilitar todo</translation>
     </message>
     <message>
       <source>Reset to defaults</source>
-      <translation type="unfinished">Reset to defaults</translation>
+      <translation>Restablecer valores predeterminados</translation>
     </message>
   </context>
   <context>
     <name>wdgCheatEditor</name>
     <message>
       <source>Cheats Editor</source>
-      <translation type="unfinished">Cheats Editor</translation>
+      <translation>Editor de trucos</translation>
     </message>
     <message>
       <source>Cheats List</source>
-      <translation type="unfinished">Cheats List</translation>
+      <translation>Lista de trucos</translation>
     </message>
     <message>
       <source>Active</source>
@@ -773,7 +773,7 @@
     </message>
     <message>
       <source>New</source>
-      <translation type="unfinished">New</translation>
+      <translation>Nuevo</translation>
     </message>
     <message>
       <source>Remove</source>
@@ -781,7 +781,7 @@
     </message>
     <message>
       <source>Cancel</source>
-      <translation type="unfinished">Cancel</translation>
+      <translation>Cancelar</translation>
     </message>
   </context>
   <context>
@@ -792,31 +792,31 @@
     </message>
     <message>
       <source>Hide Tools</source>
-      <translation type="unfinished">Hide Tools</translation>
+      <translation>Ocultar herramientas</translation>
     </message>
     <message>
       <source>All supported formats</source>
-      <translation type="unfinished">All supported formats</translation>
+      <translation>Todos los formatos soportados</translation>
     </message>
     <message>
       <source>XML files</source>
-      <translation type="unfinished">XML files</translation>
+      <translation>Archivos XML</translation>
     </message>
     <message>
       <source>CHT files</source>
-      <translation type="unfinished">CHT files</translation>
+      <translation>Archivos CHT</translation>
     </message>
     <message>
       <source>Import Cheats</source>
-      <translation type="unfinished">Import Cheats</translation>
+      <translation>Importar trucos</translation>
     </message>
     <message>
       <source>All files</source>
-      <translation type="unfinished">All files</translation>
+      <translation>Todos los archivos</translation>
     </message>
     <message>
       <source>Export cheats on file</source>
-      <translation type="unfinished">Export cheats on file</translation>
+      <translation>Exportar trucos en un archivo</translation>
     </message>
     <message>
       <source>Submit warning</source>
@@ -824,11 +824,11 @@
     </message>
     <message>
       <source>The code is invalid</source>
-      <translation type="unfinished">The code is invalid</translation>
+      <translation>El código no es válido</translation>
     </message>
     <message>
       <source>The cheat is already in the list</source>
-      <translation type="unfinished">The cheat is already in the list</translation>
+      <translation>El truco ya está en la lista</translation>
     </message>
   </context>
   <context>
