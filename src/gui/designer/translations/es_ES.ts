@@ -171,11 +171,11 @@
     </message>
     <message>
       <source>Turbo B Delay</source>
-      <translation type="unfinished">Turbo B Delay</translation>
+      <translation>Retraso de turbo B</translation>
     </message>
     <message>
       <source>Turbo A Delay</source>
-      <translation type="unfinished">Turbo A Delay</translation>
+      <translation>Retraso de turbo A</translation>
     </message>
     <message>
       <source>Apply</source>
@@ -1469,7 +1469,7 @@
     </message>
     <message>
       <source>All files</source>
-      <translation type="unfinished">All files</translation>
+      <translation>Todos los archivos</translation>
     </message>
     <message>
       <source>Open Shader file</source>
@@ -1477,11 +1477,11 @@
     </message>
     <message>
       <source>Palette files</source>
-      <translation type="unfinished">Palette files</translation>
+      <translation>Archivos de paleta</translation>
     </message>
     <message>
       <source>Open palette file</source>
-      <translation type="unfinished">Open palette file</translation>
+      <translation>Abrir archivo de paleta</translation>
     </message>
     <message>
       <source>Video Settings</source>
@@ -1749,7 +1749,7 @@
     </message>
     <message>
       <source>Palette</source>
-      <translation type="unfinished">Palette</translation>
+      <translation>Paleta</translation>
     </message>
     <message>
       <source>xBRZ 2X Multithreading</source>
@@ -1813,11 +1813,11 @@
     </message>
     <message>
       <source>Disable sRGB FBO</source>
-      <translation type="unfinished">Disable sRGB FBO</translation>
+      <translation>Deshabilitar sRGB FBO</translation>
     </message>
     <message>
       <source>Disable Red and Green emphasis swap for PAL/Dendy</source>
-      <translation type="unfinished">Disable Red and Green emphasis swap for PAL/Dendy</translation>
+      <translation>Deshabilitar el intercambio de énfasis en rojo y verde para PAL/Dendy</translation>
     </message>
   </context>
   <context>
@@ -1828,7 +1828,7 @@
     </message>
     <message>
       <source>Slot %1</source>
-      <translation type="unfinished">Slot %1</translation>
+      <translation>Ranura %1</translation>
     </message>
     <message>
       <source>Save</source>
