@@ -159,7 +159,7 @@
     </message>
     <message>
       <source>Joystick</source>
-      <translation type="unfinished">Joystick</translation>
+      <translation>Joystick</translation>
     </message>
     <message>
       <source>Misc</source>
@@ -713,7 +713,7 @@
     </message>
     <message>
       <source>Active</source>
-      <translation type="unfinished">Active</translation>
+      <translation>Activo</translation>
     </message>
     <message>
       <source>Description</source>
@@ -765,7 +765,7 @@
     </message>
     <message>
       <source>Game Genie</source>
-      <translation type="unfinished">Game Genie</translation>
+      <translation>Game Genie</translation>
     </message>
     <message>
       <source>Submit</source>
@@ -1323,7 +1323,7 @@
     </message>
     <message>
       <source>Joystick ID</source>
-      <translation type="unfinished">Joystick ID</translation>
+      <translation>ID del Joystick</translation>
     </message>
     <message>
       <source>NES</source>
@@ -1395,7 +1395,7 @@
     </message>
     <message>
       <source>Joystick</source>
-      <translation type="unfinished">Joystick</translation>
+      <translation>Joystick</translation>
     </message>
   </context>
   <context>
@@ -1824,7 +1824,7 @@
     <name>wdgState</name>
     <message>
       <source>Save/Load Slot Box</source>
-      <translation type="unfinished">Save/Load Slot Box</translation>
+      <translation>Guardar/cargar cartucho de ranura</translation>
     </message>
     <message>
       <source>Slot %1</source>
