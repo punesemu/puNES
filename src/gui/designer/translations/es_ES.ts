@@ -1240,30 +1240,30 @@
     </message>
     <message>
       <source>5 minutes</source>
-      <translation type="unfinished">5 minutes</translation>
+      <translation>5 minutos</translation>
     </message>
     <message>
       <source>15 minutes (Default)</source>
-      <translation type="unfinished">15 minutes (Default)</translation>
+      <translation>15 minutos (predeterminado)</translation>
     </message>
     <message>
       <source>30 minutes</source>
-      <translation type="unfinished">30 minutes</translation>
+      <translation>30 minutos</translation>
     </message>
     <message>
       <source>60 minutus</source>
-      <translation type="unfinished">60 minutus</translation>
+      <translation>60 minutos</translation>
     </message>
     <message>
       <source>Unlimited</source>
-      <translation type="unfinished">Unlimited</translation>
+      <translation>Sin límite</translation>
     </message>
   </context>
   <context>
     <name>wdgSettingsInput</name>
     <message>
       <source>Disabled</source>
-      <translation type="unfinished">Disabled</translation>
+      <translation>Deshabilitado</translation>
     </message>
     <message>
       <source>Standard Pad</source>
@@ -1287,7 +1287,7 @@
     </message>
     <message>
       <source>Default</source>
-      <translation type="unfinished">Default</translation>
+      <translation>Predeterminado</translation>
     </message>
     <message>
       <source>Unset</source>
@@ -1327,11 +1327,11 @@
     </message>
     <message>
       <source>NES</source>
-      <translation type="unfinished">NES</translation>
+      <translation>NES</translation>
     </message>
     <message>
       <source>Famicom</source>
-      <translation type="unfinished">Famicom</translation>
+      <translation>Famicom</translation>
     </message>
     <message>
       <source>Four Score</source>
@@ -1343,7 +1343,7 @@
     </message>
     <message>
       <source>Expansion Port</source>
-      <translation type="unfinished">Expansion Port</translation>
+      <translation>Puerto de expansión</translation>
     </message>
     <message>
       <source>Hide Zapper cursor</source>
@@ -1363,11 +1363,11 @@
     </message>
     <message>
       <source>Ports</source>
-      <translation type="unfinished">Ports</translation>
+      <translation>Puertos</translation>
     </message>
     <message>
       <source>Shortcuts</source>
-      <translation type="unfinished">Shortcuts</translation>
+      <translation>Atajos</translation>
     </message>
     <message>
       <source>Permit &quot;Up + Down&quot; and &quot;Left + Right&quot; at the same time</source>
@@ -1387,11 +1387,11 @@
     </message>
     <message>
       <source>Action</source>
-      <translation type="unfinished">Action</translation>
+      <translation>Acción</translation>
     </message>
     <message>
       <source>Keyboard</source>
-      <translation type="unfinished">Keyboard</translation>
+      <translation>Teclado</translation>
     </message>
     <message>
       <source>Joystick</source>
@@ -1777,19 +1777,19 @@
     </message>
     <message>
       <source>Interpolation</source>
-      <translation type="unfinished">Interpolation</translation>
+      <translation>Interpolación</translation>
     </message>
     <message>
       <source>Text on screen</source>
-      <translation type="unfinished">Text on screen</translation>
+      <translation>Texto en pantalla</translation>
     </message>
     <message>
       <source>Show FPS</source>
-      <translation type="unfinished">Show FPS</translation>
+      <translation>Mostrar los FPS</translation>
     </message>
     <message>
       <source>Input display</source>
-      <translation type="unfinished">Input display</translation>
+      <translation>Pantalla de entrada</translation>
     </message>
     <message>
       <source>Disable TV noise emulation when turned off</source>
@@ -1832,11 +1832,11 @@
     </message>
     <message>
       <source>Save</source>
-      <translation type="unfinished">Save</translation>
+      <translation>Guardar</translation>
     </message>
     <message>
       <source>Load</source>
-      <translation type="unfinished">Load</translation>
+      <translation>Cargar</translation>
     </message>
   </context>
 </TS>
