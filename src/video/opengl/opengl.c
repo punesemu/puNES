@@ -457,6 +457,7 @@ void opengl_draw_scene(void) {
 		}
 
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 		glViewport(texture->vp.x, texture->vp.y, texture->vp.w, texture->vp.h);
 		glBindTexture(GL_TEXTURE_2D, id);
