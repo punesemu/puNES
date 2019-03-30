@@ -51,6 +51,7 @@ typedef struct _snd_thread {
 
 	BYTE action;
 	BYTE in_run;
+	BYTE first;
 
 #if !defined (RELEASE)
 	double tick;
@@ -268,8 +269,10 @@ BYTE snd_playback_start(void) {
 		goto snd_playback_start_error;
 	}
 
+	snd_thread.first = TRUE;
+
 	snd_thread_continue();
-	gui_sleep(50);
+	gui_sleep(150);
 	return (EXIT_OK);
 
 	snd_playback_start_error:
@@ -300,6 +303,7 @@ void snd_playback_stop(void) {
 	if (alsa.playback) {
 		snd_pcm_close(alsa.playback);
 		alsa.playback = NULL;
+		gui_sleep(150);
 	}
 }
 
@@ -728,6 +732,7 @@ static BYTE alsa_playback_swparams_set(void) {
 
 static void *alsa_thread_loop(UNUSED(void *data)) {
 	snd_pcm_sframes_t avail;
+	snd_pcm_state_t state;
 	int32_t len;
 	int rc;
 
@@ -747,23 +752,32 @@ static void *alsa_thread_loop(UNUSED(void *data)) {
 
 		snd_thread.in_run = TRUE;
 
-		if (snd_pcm_state(alsa.playback) == SND_PCM_STATE_PREPARED) {
+		if (snd_thread.first == TRUE) {
 			if ((rc = snd_pcm_start(alsa.playback)) < 0) {
 				fprintf(stderr, "snd_pcm_start() failed (%s)\n", snd_strerror(rc));
-				continue;
 			}
+			snd_thread.first = FALSE;
+			continue;
 		}
 
-		{
-			rc = snd_pcm_wait(alsa.playback , 1);
+		state = snd_pcm_state(alsa.playback);
+		if (state == SND_PCM_STATE_XRUN) {
+			fprintf(stderr, "snd_pcm_state() failed (%s)\n", snd_strerror(-EPIPE));
+			alsa_xrun_recovery(alsa.playback, -EPIPE);
+			continue;
+		} else if (state == SND_PCM_STATE_SUSPENDED) {
+			fprintf(stderr, "snd_pcm_state() failed (%s)\n", snd_strerror(-ESTRPIPE));
+			alsa_xrun_recovery(alsa.playback, -ESTRPIPE);
+			continue;
+ 		}
 
-			if (rc == 0) {
-				continue;
-			} else if (rc < 0) {
-				fprintf(stderr, "snd_pcm_wait() failed (%s)\n", snd_strerror(rc));
-				alsa_xrun_recovery(alsa.playback, rc);
-				continue;
-			}
+		rc = snd_pcm_wait(alsa.playback , 1);
+		if (rc == 0) {
+			continue;
+		} else if (rc < 0) {
+			fprintf(stderr, "snd_pcm_wait() failed (%s)\n", snd_strerror(rc));
+			alsa_xrun_recovery(alsa.playback, rc);
+			continue;
 		}
 
 		// controllo quanti frames alsa sono richiesti
@@ -833,9 +847,10 @@ INLINE static BYTE alsa_xrun_recovery(snd_pcm_t *handle, int err) {
 			info.stop = TRUE;
 			return (EXIT_ERROR);
 		}
+		gui_sleep(150);
 	} else if (err == -ESTRPIPE) {
 		while ((err = snd_pcm_resume(handle)) == -EAGAIN) {
-			sleep(1);
+			gui_sleep(150);
 		}
 		if (err < 0) {
 			err = snd_pcm_prepare(handle);
@@ -845,7 +860,11 @@ INLINE static BYTE alsa_xrun_recovery(snd_pcm_t *handle, int err) {
 				return (EXIT_ERROR);
 			}
 		}
+		gui_sleep(150);
 	}
+
+	snd_thread.first = TRUE;
+
 	return (EXIT_OK);
 }
 INLINE static void alsa_wr_buf(void *buffer, snd_pcm_sframes_t avail) {
