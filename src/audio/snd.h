@@ -56,7 +56,11 @@ typedef struct _snd {
 	_callback_data *cache;
 
 	struct _period {
-		DBWORD samples;
+#if defined (_WIN32)
+		uint32_t samples;
+#else
+		int32_t samples;
+#endif
 		uint32_t size;
 	} period;
 

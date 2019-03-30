@@ -647,7 +647,9 @@ static BYTE _rewind_frames(int32_t frames_to_rewind, BYTE exec_last_frame) {
 		}
 
 		fseek(rwint.file, segment_to_load * rwint.size.total, SEEK_SET);
-		fread(rwint.segment.data, rwint.size.total, 1, rwint.file);
+		if (fread(rwint.segment.data, rwint.size.total, 1, rwint.file) < 1) {
+			return (EXIT_ERROR);
+		}
 
 		rwint.index.segment = segment;
 		rwint.range.chunk.first = segment * rwint.chunks_for_segment;
