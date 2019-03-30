@@ -533,6 +533,11 @@ static const _dbelement dblist[] = {
 	/* Iron Tank - The Invasion of Normandy (U) [!].nes */
 	{"1b8e9bab097a4345c67fc46fa13951847aabef12", 1, DEFAULT, DEFAULT, NTSC, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
+	/* Airwolf (U) [o3].nes */
+	{"7bc0296cfd36fb817a1e589fb81e0de0032f5958", 1, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Airwolf (U) [!].nes */
+	{"a9a8083a26f70f9ad4cb9095045ab1be75f6567b", 1, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+
 	/* Bard's Tale, The - Tales of the Unknown (J) [b1].nes */
 	{"2dcd37cc860793899a4ab305057af2e66e88aba1", 1, SNROM, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Bard's Tale, The - Tales of the Unknown (J) [b2].nes */
