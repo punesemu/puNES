@@ -1,5 +1,7 @@
 <RCC>
   <qresource prefix="icon">
+    <file>icons/flag_hungary.svg</file>
+    <file>icons/flag_spain.svg</file>
     <file>icons/window_close.svg</file>
     <file>icons/rwnd_step_forward.svg</file>
     <file>icons/rwnd_step_backward.svg</file>
@@ -79,6 +81,8 @@
   </qresource>
   <qresource prefix="tr">
     <file>translations/it_IT.qm</file>
+    <file>translations/qt_es.qm</file>
+    <file>translations/es_ES.qm</file>
     <file>translations/qt_it.qm</file>
     <file>translations/en_EN.qm</file>
     <file>translations/ru_RU.qm</file>

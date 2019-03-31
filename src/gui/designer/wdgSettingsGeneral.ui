@@ -93,6 +93,15 @@
           <normaloff>:/icon/icons/flag_russia.svg</normaloff>:/icon/icons/flag_russia.svg</iconset>
         </property>
        </item>
+       <item>
+        <property name="text">
+         <string>Spain</string>
+        </property>
+        <property name="icon">
+         <iconset resource="resources.qrc">
+          <normaloff>:/icon/icons/flag_spain.svg</normaloff>:/icon/icons/flag_spain.svg</iconset>
+        </property>
+       </item>
       </widget>
      </item>
      <item row="6" column="0" colspan="3">

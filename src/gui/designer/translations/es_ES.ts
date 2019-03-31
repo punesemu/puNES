@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="it_IT">
+<TS version="2.1" language="es_ES" sourcelanguage="en">
 <context>
     <name>Settings</name>
     <message>
         <source>System Default</source>
-        <translation>Predefinito del Sistema</translation>
+        <translation>Sistema predeterminado</translation>
     </message>
 </context>
 <context>
     <name>dlgSettings</name>
     <message>
         <source>Settings</source>
-        <translation>Configurazione</translation>
+        <translation>Configuración</translation>
     </message>
     <message>
         <source>General</source>
-        <translation>Generale</translation>
+        <translation>General</translation>
     </message>
     <message>
         <source>Video</source>
-        <translation>Video</translation>
+        <translation>Vídeo</translation>
     </message>
     <message>
         <source>Audio</source>
@@ -28,7 +28,7 @@
     </message>
     <message>
         <source>Input</source>
-        <translation>Input</translation>
+        <translation>Entrada</translation>
     </message>
     <message>
         <source>PPU</source>
@@ -36,66 +36,66 @@
     </message>
     <message>
         <source>Cheats</source>
-        <translation>Cheats</translation>
+        <translation>Trucos</translation>
     </message>
     <message>
         <source>Save Settings</source>
-        <translation>Salva Configurazione</translation>
+        <translation>Guardar configuración</translation>
     </message>
     <message>
         <source>Close Settings</source>
-        <translation>Chiudi Configurazione</translation>
+        <translation>Cerrar</translation>
     </message>
 </context>
 <context>
     <name>dlgStdPad</name>
     <message>
         <source>Controller %1 : Standard Pad</source>
-        <translation>Controller %1 : Pad Standard</translation>
+        <translation>Control %1 : Pad estándar</translation>
     </message>
     <message>
         <source>Auto</source>
-        <translation>Auto</translation>
+        <translation>Automático</translation>
     </message>
     <message>
         <source>Original</source>
-        <translation>Originale</translation>
+        <translation>Original</translation>
     </message>
     <message>
         <source>3rd-party</source>
-        <translation>Terze parti</translation>
+        <translation>Terceras partes</translation>
     </message>
     <message>
         <source>Keyboard</source>
-        <translation>Tastiera</translation>
+        <translation>Teclado</translation>
     </message>
     <message>
         <source>Disabled</source>
-        <translation>Disabilitato</translation>
+        <translation>Deshabilitado</translation>
     </message>
     <message>
         <source>No usable device</source>
-        <translation>Nessun dispositivo</translation>
+        <translation>Dispositivo no utilizable</translation>
     </message>
     <message>
         <source>Select device first</source>
-        <translation>Prima selezione un dispositivo</translation>
+        <translation>Seleccionar el primer dispositivo</translation>
     </message>
     <message>
         <source>Error on open device %1</source>
-        <translation>Errore sull&apos;apertura del dispositivo %1</translation>
+        <translation>Error al abrir el dispositivo %1</translation>
     </message>
     <message>
         <source>Error on reading controllers configurations</source>
-        <translation>Errore nella lettura della configurazione del controller</translation>
+        <translation>Error en la lectura de las configuraciones de los controles</translation>
     </message>
     <message>
         <source>Press a key (ESC for the previous value &quot;%1&quot;)</source>
-        <translation>Premi un tasto (ESC per il valore precedente &quot;%1&quot;)</translation>
+        <translation>Presione una tecla (ESC para el valor anterior &quot;%1&quot;)</translation>
     </message>
     <message>
         <source>Standard Pad</source>
-        <translation>Pad Standard</translation>
+        <translation>Pad estándar</translation>
     </message>
     <message>
         <source>ID</source>
@@ -103,7 +103,7 @@
     </message>
     <message>
         <source>Up</source>
-        <translation>Su</translation>
+        <translation>Arriba</translation>
     </message>
     <message>
         <source>A</source>
@@ -111,19 +111,19 @@
     </message>
     <message>
         <source>Down</source>
-        <translation>Giù</translation>
+        <translation>Abajo</translation>
     </message>
     <message>
         <source>Unset</source>
-        <translation>Azzera</translation>
+        <translation>Deshacer</translation>
     </message>
     <message>
         <source>Left</source>
-        <translation>Sinistra</translation>
+        <translation>Izquierda</translation>
     </message>
     <message>
         <source>Start</source>
-        <translation>Start</translation>
+        <translation>Iniciar</translation>
     </message>
     <message>
         <source>Turbo B</source>
@@ -131,7 +131,7 @@
     </message>
     <message>
         <source>Select</source>
-        <translation>Select</translation>
+        <translation>Seleccionar</translation>
     </message>
     <message>
         <source>Turbo A</source>
@@ -143,19 +143,19 @@
     </message>
     <message>
         <source>Right</source>
-        <translation>Destra</translation>
+        <translation>Derecha</translation>
     </message>
     <message>
         <source>In sequence</source>
-        <translation>In sequenza</translation>
+        <translation>En secuencia</translation>
     </message>
     <message>
         <source>Unset all</source>
-        <translation>Azzera tutto</translation>
+        <translation>Deshacer todo</translation>
     </message>
     <message>
         <source>Defaults</source>
-        <translation>Predefiniti</translation>
+        <translation>Predeterminados</translation>
     </message>
     <message>
         <source>Joystick</source>
@@ -163,77 +163,77 @@
     </message>
     <message>
         <source>Misc</source>
-        <translation>Altro</translation>
+        <translation>Misc</translation>
     </message>
     <message>
         <source>Controller type</source>
-        <translation>Tipo di controller</translation>
+        <translation>Tipo de control</translation>
     </message>
     <message>
         <source>Turbo B Delay</source>
-        <translation>Delay Turbo B</translation>
+        <translation>Retraso de turbo B</translation>
     </message>
     <message>
         <source>Turbo A Delay</source>
-        <translation>Delay Turbo A</translation>
+        <translation>Retraso de turbo A</translation>
     </message>
     <message>
         <source>Apply</source>
-        <translation>Applica</translation>
+        <translation>Aplicar</translation>
     </message>
     <message>
         <source>Discard</source>
-        <translation>Annulla</translation>
+        <translation>Descartar</translation>
     </message>
 </context>
 <context>
     <name>dlgUncomp</name>
     <message>
         <source>which ROM do you want to load?</source>
-        <translation>quale ROM vuoi caricare?</translation>
+        <translation>¿Qué ROM quieres cargar?</translation>
     </message>
     <message>
         <source>which PATCH do you want to apply?</source>
-        <translation>quale PATCH vuoi applicare?</translation>
+        <translation>¿Qué PARCHE quieres aplicar?</translation>
     </message>
     <message>
         <source>Unpacked archive</source>
-        <translation>Archivio decompresso</translation>
+        <translation>Archivo descomprimido</translation>
     </message>
     <message>
         <source>OK</source>
-        <translation>OK</translation>
+        <translation>Aceptar</translation>
     </message>
     <message>
         <source>None</source>
-        <translation></translation>
+        <translation>Ninguno</translation>
     </message>
 </context>
 <context>
     <name>dlgVsSystem</name>
     <message>
         <source>Vs System Controls</source>
-        <translation>Controlli Vs System</translation>
+        <translation>Controles del sistema contra</translation>
     </message>
     <message>
         <source>Left Coin</source>
-        <translation>Moneta Sinistra</translation>
+        <translation>Moneda izquierda</translation>
     </message>
     <message>
         <source>Right Coin</source>
-        <translation>Moneta Destra</translation>
+        <translation>Moneda derecha</translation>
     </message>
     <message>
         <source>Service Coin</source>
-        <translation>Moneta di Servizio</translation>
+        <translation>Servicio de monedas</translation>
     </message>
     <message>
         <source>Coin Counter</source>
-        <translation>Contatore Monete</translation>
+        <translation>Contador de monedas</translation>
     </message>
     <message>
         <source>Dip Switches</source>
-        <translation>Dip Switches</translation>
+        <translation>Interruptores Dip</translation>
     </message>
     <message>
         <source>4</source>
@@ -269,134 +269,254 @@
     </message>
     <message>
         <source>Defaults Game Dip Switches</source>
-        <translation>Defaults Dip Switches Gioco</translation>
+        <translation>Interruptores Dip del juego predeterminado</translation>
     </message>
 </context>
 <context>
     <name>mainWindow</name>
     <message>
+        <source>&amp;Insert disk</source>
+        <translation>&amp;Insertar disco</translation>
+    </message>
+    <message>
+        <source>&amp;Eject disk</source>
+        <translation>&amp;Expulsar disco</translation>
+    </message>
+    <message>
+        <source>&amp;Eject/Insert disk</source>
+        <translation>&amp;Expulsar/insertar disco</translation>
+    </message>
+    <message>
+        <source>All supported formats</source>
+        <translation>Todos los formatos soportados</translation>
+    </message>
+    <message>
+        <source>Compressed files</source>
+        <translation>Archivos comprimidos</translation>
+    </message>
+    <message>
+        <source>Nes rom files</source>
+        <translation>Archivos rom nes</translation>
+    </message>
+    <message>
+        <source>FDS image files</source>
+        <translation>Archivos de imagen FDS</translation>
+    </message>
+    <message>
+        <source>TAS movie files</source>
+        <translation>Archivos de película TAS</translation>
+    </message>
+    <message>
+        <source>All files</source>
+        <translation>Todos los archivos</translation>
+    </message>
+    <message>
+        <source>Open File</source>
+        <translation>Abrir archivo</translation>
+    </message>
+    <message>
+        <source>Save states</source>
+        <translation>Estados guardados</translation>
+    </message>
+    <message>
+        <source>Save state on file</source>
+        <translation>Guardar estado en un archivo</translation>
+    </message>
+    <message>
+        <source>Open save state</source>
+        <translation>Abrir estado de guardado</translation>
+    </message>
+    <message>
+        <source>Nintendo Entertainment System Emulator</source>
+        <translation>Emulador de Nintendo Entertainment System</translation>
+    </message>
+    <message>
+        <source>Compiled</source>
+        <translation>Compilado</translation>
+    </message>
+    <message>
+        <source>Anyway, thank you all for the love and the help.</source>
+        <translation>De todos modos, gracias a todos por el cariño y la ayuda.</translation>
+    </message>
+    <message>
+        <source>portable version</source>
+        <translation>versión portable</translation>
+    </message>
+    <message>
         <source>&amp;Open</source>
-        <translation>&amp;Apri</translation>
+        <translation>&amp;Abrir</translation>
     </message>
     <message>
         <source>&amp;Quit</source>
-        <translation>&amp;Esci</translation>
+        <translation>&amp;Salir</translation>
     </message>
     <message>
         <source>&amp;Hard Reset</source>
-        <translation>Reset &amp;Hard</translation>
+        <translation>&amp;Reiniciar hardware</translation>
     </message>
     <message>
         <source>&amp;Soft Reset</source>
-        <translation>Reset &amp;Soft</translation>
+        <translation>&amp;Reiniciar software</translation>
     </message>
     <message>
         <source>&amp;Eject/Insert Disk</source>
-        <translation>&amp;Estrai/Inserisci Disco</translation>
+        <translation>&amp;Expulsar/insertar disco</translation>
     </message>
     <message>
         <source>Disk 1 side A</source>
-        <translation>Disco 1 Lato A</translation>
+        <translation>Disco 1 lado A</translation>
     </message>
     <message>
         <source>Disk 1 side B</source>
-        <translation>Disco 1 Lato B</translation>
+        <translation>Disco 1 lado B</translation>
     </message>
     <message>
         <source>Disk 2 side A</source>
-        <translation>Disco 2 Lato A</translation>
+        <translation>Disco 2 lado A</translation>
     </message>
     <message>
         <source>Disk 2 side B</source>
-        <translation>Disco 2 Lato B</translation>
+        <translation>Disco 2 lado B</translation>
     </message>
     <message>
         <source>Disk 3 side A</source>
-        <translation>Disco 3 Lato A</translation>
+        <translation>Disco 3 lado A</translation>
     </message>
     <message>
         <source>Disk 3 side B</source>
-        <translation>Disco 3 Lato B</translation>
+        <translation>Disco 3 lado B</translation>
     </message>
     <message>
         <source>Disk 4 side A</source>
-        <translation>Disco 4 Lato A</translation>
+        <translation>Disco 4 lado A</translation>
     </message>
     <message>
         <source>Disk 4 side B</source>
-        <translation>Disco 4 Lato B</translation>
+        <translation>Disco 4 lado B</translation>
     </message>
     <message>
         <source>&amp;Switch sides</source>
-        <translation>&amp;Cambia lato</translation>
+        <translation>&amp;Cambiar de lado</translation>
     </message>
     <message>
         <source>&amp;Save to file</source>
-        <translation>&amp;Salva su file</translation>
+        <translation>&amp;Guardar en archivo</translation>
     </message>
     <message>
         <source>&amp;Load from file</source>
-        <translation>&amp;Carica da file</translation>
-    </message>
-    <message>
-        <source>S&amp;ave state</source>
-        <translation>S&amp;alva stato</translation>
-    </message>
-    <message>
-        <source>L&amp;oad state</source>
-        <translation>Ca&amp;rica stato</translation>
-    </message>
-    <message>
-        <source>Setti&amp;ngs</source>
-        <translation>&amp;Configurazione</translation>
+        <translation>&amp;Cargar desde archivo</translation>
     </message>
     <message>
         <source>F&amp;ullscreen</source>
-        <translation>Sc&amp;hermo intero</translation>
+        <translation>P&amp;antalla completa</translation>
+    </message>
+    <message>
+        <source>&amp;Game Genie Rom Mode</source>
+        <translation>&amp;Modo de rom Game Genie</translation>
+    </message>
+    <message>
+        <source>S&amp;ave state</source>
+        <translation>G&amp;uardar estado</translation>
+    </message>
+    <message>
+        <source>L&amp;oad state</source>
+        <translation>C&amp;argar estado</translation>
     </message>
     <message>
         <source>&amp;Increment slot</source>
-        <translation>&amp;Incrementa slot</translation>
+        <translation>&amp;Incrementar ranura</translation>
     </message>
     <message>
         <source>&amp;Decrement slot</source>
-        <translation>&amp;Decrementa slot</translation>
+        <translation>&amp;Disminuir ranura</translation>
     </message>
     <message>
         <source>Slot &amp;0</source>
-        <translation>Slot &amp;0</translation>
+        <translation>Ranura &amp;0</translation>
     </message>
     <message>
         <source>Slot &amp;1</source>
-        <translation>Slot &amp;1</translation>
+        <translation>Ranura &amp;1</translation>
     </message>
     <message>
         <source>Slot &amp;2</source>
-        <translation>Slot &amp;2</translation>
+        <translation>Ranura &amp;2</translation>
     </message>
     <message>
         <source>Slot &amp;3</source>
-        <translation>Slot &amp;3</translation>
+        <translation>Ranura &amp;3</translation>
     </message>
     <message>
         <source>Slot &amp;4</source>
-        <translation>Slot &amp;4</translation>
+        <translation>Ranura &amp;4</translation>
     </message>
     <message>
         <source>Slot &amp;5</source>
-        <translation>Slot &amp;5</translation>
+        <translation>Ranura &amp;5</translation>
     </message>
     <message>
         <source>&amp;About</source>
-        <translation>&amp;Informazioni</translation>
+        <translation>&amp;Acerca de</translation>
+    </message>
+    <message>
+        <source>Slot &amp;6</source>
+        <translation>Ranura &amp;6</translation>
+    </message>
+    <message>
+        <source>Slot &amp;7</source>
+        <translation>Ranura &amp;7</translation>
+    </message>
+    <message>
+        <source>Slot &amp;8</source>
+        <translation>Ranura &amp;8</translation>
+    </message>
+    <message>
+        <source>Slot &amp;9</source>
+        <translation>Ranura &amp;9</translation>
+    </message>
+    <message>
+        <source>&amp;Cheats List Mode</source>
+        <translation>&amp;Modos de lista de trucos</translation>
+    </message>
+    <message>
+        <source>Cheats &amp;Editor</source>
+        <translation>Editor de &amp;trucos</translation>
+    </message>
+    <message>
+        <source>&amp;Disabled</source>
+        <translation>&amp;Deshabilitado</translation>
+    </message>
+    <message>
+        <source>&amp;Fast Forward</source>
+        <translation>&amp;Avance rápido</translation>
+    </message>
+    <message>
+        <source>&amp;Pause</source>
+        <translation>&amp;Pausar</translation>
+    </message>
+    <message>
+        <source>Save Screens&amp;hot</source>
+        <translation>Guardar captura de p&amp;antalla</translation>
+    </message>
+    <message>
+        <source>Insert Coin</source>
+        <translation>Insertar moneda</translation>
+    </message>
+    <message>
+        <source>Vs System Controls</source>
+        <translation>Controles del sistema contra</translation>
+    </message>
+    <message>
+        <source>&amp;Open working folder</source>
+        <translation>&amp;Abrir carpeta de trabajo</translation>
     </message>
     <message>
         <source>&amp;File</source>
-        <translation>&amp;File</translation>
+        <translation>&amp;Archivo</translation>
     </message>
     <message>
         <source>&amp;Recent Roms</source>
-        <translation>&amp;Roms recenti</translation>
+        <translation>&amp;Roms recientes</translation>
     </message>
     <message>
         <source>&amp;NES</source>
@@ -404,11 +524,15 @@
     </message>
     <message>
         <source>&amp;Disk Side</source>
-        <translation>&amp;Lato del Disco</translation>
+        <translation>&amp;Lado del disco</translation>
+    </message>
+    <message>
+        <source>Setti&amp;ngs</source>
+        <translation>Conf&amp;iguración</translation>
     </message>
     <message>
         <source>&amp;Video</source>
-        <translation>&amp;Video</translation>
+        <translation>&amp;Vídeo</translation>
     </message>
     <message>
         <source>&amp;Audio</source>
@@ -416,245 +540,121 @@
     </message>
     <message>
         <source>&amp;Input</source>
-        <translation>&amp;Input</translation>
-    </message>
-    <message>
-        <source>S&amp;tate</source>
-        <translation>S&amp;alvataggi</translation>
-    </message>
-    <message>
-        <source>&amp;Help</source>
-        <translation>&amp;Aiuto</translation>
-    </message>
-    <message>
-        <source>&amp;Insert disk</source>
-        <translation>&amp;Inserisci disco</translation>
-    </message>
-    <message>
-        <source>&amp;Eject disk</source>
-        <translation>&amp;Estrai disco</translation>
-    </message>
-    <message>
-        <source>&amp;Eject/Insert disk</source>
-        <translation>&amp;Estrai/Inserisci Disco</translation>
-    </message>
-    <message>
-        <source>All supported formats</source>
-        <translation>Tutti i formati</translation>
-    </message>
-    <message>
-        <source>Compressed files</source>
-        <translation>Archivi compressi</translation>
-    </message>
-    <message>
-        <source>Nes rom files</source>
-        <translation>Rom NES</translation>
-    </message>
-    <message>
-        <source>FDS image files</source>
-        <translation>Immagini FDS</translation>
-    </message>
-    <message>
-        <source>TAS movie files</source>
-        <translation>film TAS</translation>
-    </message>
-    <message>
-        <source>All files</source>
-        <translation>Tutti i files</translation>
-    </message>
-    <message>
-        <source>Open File</source>
-        <translation>Carica File</translation>
-    </message>
-    <message>
-        <source>Save states</source>
-        <translation>File di salvataggio</translation>
-    </message>
-    <message>
-        <source>Save state on file</source>
-        <translation>Salva stato su file</translation>
-    </message>
-    <message>
-        <source>Open save state</source>
-        <translation>Carica stato da file</translation>
-    </message>
-    <message>
-        <source>Nintendo Entertainment System Emulator</source>
-        <translation>Emulatore di Nintendo Entertainment System</translation>
-    </message>
-    <message>
-        <source>Compiled</source>
-        <translation>Compilato il</translation>
-    </message>
-    <message>
-        <source>Slot &amp;6</source>
-        <translation>Slot &amp;6</translation>
-    </message>
-    <message>
-        <source>Slot &amp;7</source>
-        <translation>Slot &amp;7</translation>
-    </message>
-    <message>
-        <source>Slot &amp;8</source>
-        <translation>Slot &amp;8</translation>
-    </message>
-    <message>
-        <source>Slot &amp;9</source>
-        <translation>Slot &amp;9</translation>
-    </message>
-    <message>
-        <source>&amp;Game Genie Rom Mode</source>
-        <translation>Rom &amp;Game Genie</translation>
-    </message>
-    <message>
-        <source>&amp;Cheats List Mode</source>
-        <translation>Lista &amp;Cheats</translation>
-    </message>
-    <message>
-        <source>Cheats &amp;Editor</source>
-        <translation>&amp;Editor</translation>
-    </message>
-    <message>
-        <source>&amp;Disabled</source>
-        <translation>&amp;Disabilitati</translation>
-    </message>
-    <message>
-        <source>Anyway, thank you all for the love and the help.</source>
-        <translation>In ogni caso, grazie a tutti per l&apos;affetto e l&apos;aiuto concessomi.</translation>
-    </message>
-    <message>
-        <source>portable version</source>
-        <translation>versione portatile</translation>
-    </message>
-    <message>
-        <source>&amp;Fast Forward</source>
-        <translation>&amp;Fast Forward</translation>
+        <translation>&amp;Entrada</translation>
     </message>
     <message>
         <source>&amp;Cheats</source>
-        <translation>&amp;Cheats</translation>
-    </message>
-    <message>
-        <source>&amp;Pause</source>
-        <translation>&amp;Pausa</translation>
-    </message>
-    <message>
-        <source>Save Screens&amp;hot</source>
-        <translation>Salva Screens&amp;hot</translation>
+        <translation>&amp;Trucos</translation>
     </message>
     <message>
         <source>&amp;PPU</source>
         <translation>&amp;PPU</translation>
     </message>
     <message>
-        <source>Insert Coin</source>
-        <translation>Inserisci Moneta</translation>
+        <source>S&amp;tate</source>
+        <translation>E&amp;stado</translation>
     </message>
     <message>
-        <source>Vs System Controls</source>
-        <translation>Controlli Vs System</translation>
-    </message>
-    <message>
-        <source>&amp;Open working folder</source>
-        <translation>Apri &amp;directory di lavoro</translation>
+        <source>&amp;Help</source>
+        <translation>&amp;Ayuda</translation>
     </message>
     <message>
         <source>&amp;Turn On</source>
-        <translation>&amp;Accensione</translation>
+        <translation>&amp;Desactivar</translation>
     </message>
     <message>
         <source>&amp;Turn Off</source>
-        <translation>Spe&amp;gnimento</translation>
+        <translation>&amp;Desactivar</translation>
     </message>
     <message>
         <source>Too&amp;ls</source>
-        <translation>Str&amp;umenti</translation>
+        <translation>H&amp;erramientas</translation>
     </message>
     <message>
         <source>UNIF rom files</source>
-        <translation>Rom UNIF</translation>
+        <translation>Archivos rom UNIF</translation>
     </message>
     <message>
         <source>Start/Stop &amp;WAV recording</source>
-        <translation>Avvia/Ferma Registrazione &amp;WAV</translation>
+        <translation>Iniciar/detener grabación &amp;WAV</translation>
     </message>
     <message>
         <source>Stop &amp;WAV recording</source>
-        <translation>Ferma Registrazione &amp;WAV</translation>
+        <translation>Detener grabación &amp;WAV</translation>
     </message>
     <message>
         <source>Start &amp;WAV recording</source>
-        <translation>Avvia Registrazione &amp;WAV</translation>
+        <translation>Iniciar grabación &amp;WAV</translation>
     </message>
     <message>
         <source>MS WAVE files</source>
-        <translation>file MS WAVE</translation>
+        <translation>Archivos MS WAVE</translation>
     </message>
     <message>
         <source>Record sound</source>
-        <translation>Registra audio</translation>
+        <translation>Grabar sonido</translation>
     </message>
     <message>
         <source>NSF rom files</source>
-        <translation>Rom NSF</translation>
+        <translation>Archivos rom NSF</translation>
     </message>
     <message>
         <source>NSFE rom files</source>
-        <translation>rom NSFE</translation>
+        <translation>Archivos rom NSFE</translation>
     </message>
     <message>
         <source>IPS patch files</source>
-        <translation>patch IPS</translation>
+        <translation>Archivos de parche IPS</translation>
     </message>
     <message>
         <source>BPS patch files</source>
-        <translation>patch BPS</translation>
+        <translation>Archivos de parches BPS</translation>
     </message>
     <message>
         <source>XDELTA patch files</source>
-        <translation>patch XDELTA</translation>
+        <translation>Archivos de parche XDELTA</translation>
     </message>
     <message>
         <source>Open IPS/BPS/XDELTA Patch</source>
-        <translation>Apri IPS/BPS/XDELTA Patch</translation>
+        <translation>Abrir parche IPS/BPS/XDELTA</translation>
     </message>
     <message>
         <source>If you like the emulator and you want to support it&apos;s development or would you pay for a beer at the programmer</source>
-        <translation>Se ti piace l&apos;emulatore e hai voglia di supportarne lo sviluppo o vuoi offrire una birra al programmatore</translation>
+        <translation>Si le gusta el emulador y quiere apoyar su desarrollo o pagaría una cerveza para el programador</translation>
     </message>
     <message>
         <source>&amp;Apply IPS/BPS/XDELTA Patch</source>
-        <translation>&amp;Applica IPS/BPS/XDELTA Patch</translation>
+        <translation>&amp;Aplicar parche IPS/BPS/XDELTA</translation>
     </message>
     <message>
         <source>&amp;General</source>
-        <translation>&amp;Generale</translation>
+        <translation>&amp;General</translation>
     </message>
 </context>
 <context>
     <name>objCheat</name>
     <message>
         <source>Error on reading the file</source>
-        <translation>Errore sulla lettura del file</translation>
+        <translation>Error en la lectura del archivo</translation>
     </message>
     <message>
         <source>Read only</source>
-        <translation>Sola lettura</translation>
+        <translation>Solo lectura</translation>
     </message>
     <message>
         <source>The file is in read only mode</source>
-        <translation>Il file è in modalità di sola lettura</translation>
+        <translation>El archivo está en modo de solo lectura</translation>
     </message>
 </context>
 <context>
     <name>wdgAPUChannels</name>
     <message>
         <source>APU Channels</source>
-        <translation>Canali APU</translation>
+        <translation>Canales APU</translation>
     </message>
     <message>
         <source>Square 1</source>
-        <translation>Square 1</translation>
+        <translation>Cuadrado 1</translation>
     </message>
     <message>
         <source>DMC</source>
@@ -662,11 +662,11 @@
     </message>
     <message>
         <source>Noise</source>
-        <translation>Noise</translation>
+        <translation>Ruido</translation>
     </message>
     <message>
         <source>Square 2</source>
-        <translation>Square 2</translation>
+        <translation>Cuadrado 2</translation>
     </message>
     <message>
         <source>Extra</source>
@@ -674,90 +674,90 @@
     </message>
     <message>
         <source>Master</source>
-        <translation>Master</translation>
+        <translation>Maestro</translation>
     </message>
     <message>
         <source>Triangle</source>
-        <translation>Triangle</translation>
+        <translation>Triángulo</translation>
     </message>
     <message>
         <source>active</source>
-        <translation>attivo</translation>
+        <translation>activo</translation>
     </message>
     <message>
         <source>volume</source>
-        <translation>volume</translation>
+        <translation>volumen</translation>
     </message>
     <message>
         <source>Active all</source>
-        <translation>Attiva tutti</translation>
+        <translation>Habilitar todo</translation>
     </message>
     <message>
         <source>Disable all</source>
-        <translation>Disabilita tutti</translation>
+        <translation>Deshabilitar todo</translation>
     </message>
     <message>
         <source>Reset to defaults</source>
-        <translation>Predefiniti</translation>
+        <translation>Restablecer valores predeterminados</translation>
     </message>
 </context>
 <context>
     <name>wdgCheatEditor</name>
     <message>
         <source>Cheats Editor</source>
-        <translation>Editor dei Cheats</translation>
+        <translation>Editor de trucos</translation>
     </message>
     <message>
         <source>Cheats List</source>
-        <translation>Lista dei Cheats</translation>
+        <translation>Lista de trucos</translation>
     </message>
     <message>
         <source>Active</source>
-        <translation>Attivo</translation>
+        <translation>Activo</translation>
     </message>
     <message>
         <source>Description</source>
-        <translation>Descrizione</translation>
+        <translation>Descripción</translation>
     </message>
     <message>
         <source>Code</source>
-        <translation>Codice</translation>
+        <translation>Código</translation>
     </message>
     <message>
         <source>Address</source>
-        <translation>Indirizzo</translation>
+        <translation>Dirección</translation>
     </message>
     <message>
         <source>Value</source>
-        <translation>Valore</translation>
+        <translation>Valor</translation>
     </message>
     <message>
         <source>Compare</source>
-        <translation>Confronto</translation>
+        <translation>Comparar</translation>
     </message>
     <message>
         <source>Show Tools</source>
-        <translation>Mostra Strumenti</translation>
+        <translation>Mostrar herramientas</translation>
     </message>
     <message>
         <source>Import</source>
-        <translation>Importa</translation>
+        <translation>Importar</translation>
     </message>
     <message>
         <source>Export</source>
-        <translation>Esporta</translation>
+        <translation>Exportar</translation>
     </message>
     <message>
         <source>Clear All</source>
-        <translation>Pulisci</translation>
+        <translation>Borrar todo</translation>
     </message>
     <message>
         <source>Editor Tools</source>
-        <translation>Strumenti Editor</translation>
+        <translation>Editor de herramientas</translation>
     </message>
     <message>
         <source>CPU Ram</source>
-        <translation>Ram CPU</translation>
+        <translation>CPU Ram</translation>
     </message>
     <message>
         <source>Pro Action Rocky</source>
@@ -769,81 +769,81 @@
     </message>
     <message>
         <source>Submit</source>
-        <translation>Convalida</translation>
+        <translation>Enviar</translation>
     </message>
     <message>
         <source>New</source>
-        <translation>Nuovo</translation>
+        <translation>Nuevo</translation>
     </message>
     <message>
         <source>Remove</source>
-        <translation>Rimuovi</translation>
+        <translation>Borrar</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation>Annulla</translation>
+        <translation>Cancelar</translation>
     </message>
 </context>
 <context>
     <name>wdgCheatsEditor</name>
     <message>
         <source>Show Tools</source>
-        <translation>Mostra Strumenti</translation>
+        <translation>Mostrar herramientas</translation>
     </message>
     <message>
         <source>Hide Tools</source>
-        <translation>Nascondi Strumenti</translation>
+        <translation>Ocultar herramientas</translation>
     </message>
     <message>
         <source>All supported formats</source>
-        <translation>Tutti i formati</translation>
+        <translation>Todos los formatos soportados</translation>
     </message>
     <message>
         <source>XML files</source>
-        <translation>Files XML</translation>
+        <translation>Archivos XML</translation>
     </message>
     <message>
         <source>CHT files</source>
-        <translation>Files CHT</translation>
+        <translation>Archivos CHT</translation>
     </message>
     <message>
         <source>Import Cheats</source>
-        <translation>Importa Cheats</translation>
+        <translation>Importar trucos</translation>
     </message>
     <message>
         <source>All files</source>
-        <translation>Tutti i files</translation>
+        <translation>Todos los archivos</translation>
     </message>
     <message>
         <source>Export cheats on file</source>
-        <translation>Esporta cheats su file</translation>
+        <translation>Exportar trucos en un archivo</translation>
     </message>
     <message>
         <source>Submit warning</source>
-        <translation>Errore sulla convalida</translation>
+        <translation>Enviar advertencia</translation>
     </message>
     <message>
         <source>The code is invalid</source>
-        <translation>Il codice non è valido</translation>
+        <translation>El código no es válido</translation>
     </message>
     <message>
         <source>The cheat is already in the list</source>
-        <translation>Il cheat è già presente nella lista</translation>
+        <translation>El truco ya está en la lista</translation>
     </message>
 </context>
 <context>
     <name>wdgPaletteEditor</name>
     <message>
         <source>Palette files</source>
-        <translation>Files della Paletta</translation>
+        <translation>Archivos de paleta</translation>
     </message>
     <message>
         <source>All files</source>
-        <translation>Tutti i files</translation>
+        <translation>Todos los archivos</translation>
     </message>
     <message>
         <source>Save palette on file</source>
-        <translation>Salva Paletta su file</translation>
+        <translation>Guardar paleta en archivo</translation>
     </message>
     <message>
         <source>wdgPaletteEditor</source>
@@ -851,7 +851,7 @@
     </message>
     <message>
         <source>Selected</source>
-        <translation>Selezionato</translation>
+        <translation>Seleccionado</translation>
     </message>
     <message>
         <source>PPU</source>
@@ -863,11 +863,11 @@
     </message>
     <message>
         <source>Blue</source>
-        <translation>Blu</translation>
+        <translation>Azul</translation>
     </message>
     <message>
         <source>Red</source>
-        <translation>Rosso</translation>
+        <translation>Rojo</translation>
     </message>
     <message>
         <source>Green</source>
@@ -887,22 +887,22 @@
     </message>
     <message>
         <source>Reset color</source>
-        <translation>Resetta colore</translation>
+        <translation>Restablecer color</translation>
     </message>
     <message>
         <source>Save to a file</source>
-        <translation>Salva su file</translation>
+        <translation>Guardar en un archivo</translation>
     </message>
     <message>
         <source>Reset palette</source>
-        <translation>Resetta paletta</translation>
+        <translation>Restablecer paleta</translation>
     </message>
 </context>
 <context>
     <name>wdgSettingsAudio</name>
     <message>
         <source>Output Devices</source>
-        <translation>Dispositivi di Output</translation>
+        <translation>Dispositivos de salida</translation>
     </message>
     <message>
         <source>48000</source>
@@ -926,7 +926,7 @@
     </message>
     <message>
         <source>1 (Default)</source>
-        <translation>1 (Predefinito)</translation>
+        <translation>1 (predeterminado)</translation>
     </message>
     <message>
         <source>2</source>
@@ -962,11 +962,11 @@
     </message>
     <message>
         <source>Sample Rate</source>
-        <translation>Sample Rate</translation>
+        <translation>Frecuencia de muestreo</translation>
     </message>
     <message>
         <source>Buffer Size factor</source>
-        <translation>Fattore Lunghezza Buffer</translation>
+        <translation>Factor de tamaño del búfer</translation>
     </message>
     <message>
         <source>Mono</source>
@@ -974,119 +974,119 @@
     </message>
     <message>
         <source>Stereo Delay</source>
-        <translation>Ritardo Stereo</translation>
+        <translation>Retraso de estéreo</translation>
     </message>
     <message>
         <source>Stereo Panning</source>
-        <translation>Stereo Panning</translation>
+        <translation>Estéreo panorámico</translation>
     </message>
     <message>
         <source>Channels Delay</source>
-        <translation>Ritardo Canali</translation>
+        <translation>Retraso de canales</translation>
     </message>
     <message>
         <source>Misc</source>
-        <translation>Altro</translation>
+        <translation>Misc</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Configurazione</translation>
+        <translation>Configuración</translation>
     </message>
     <message>
         <source>Channels</source>
-        <translation>Canali</translation>
+        <translation>Canales</translation>
     </message>
     <message>
         <source>5%</source>
-        <translation>5%</translation>
+        <translation>5 %</translation>
     </message>
     <message>
         <source>10%</source>
-        <translation>10%</translation>
+        <translation>10 %</translation>
     </message>
     <message>
         <source>15%</source>
-        <translation>15%</translation>
+        <translation>15 %</translation>
     </message>
     <message>
         <source>20%</source>
-        <translation>20%</translation>
+        <translation>20 %</translation>
     </message>
     <message>
         <source>25%</source>
-        <translation>25%</translation>
+        <translation>25 %</translation>
     </message>
     <message>
         <source>30% (Default)</source>
-        <translation>30% (Predefinito)</translation>
+        <translation>30 % (predeterminado)</translation>
     </message>
     <message>
         <source>35%</source>
-        <translation>35%</translation>
+        <translation>35 %</translation>
     </message>
     <message>
         <source>40%</source>
-        <translation>40%</translation>
+        <translation>40 %</translation>
     </message>
     <message>
         <source>45%</source>
-        <translation>45%</translation>
+        <translation>45 %</translation>
     </message>
     <message>
         <source>50%</source>
-        <translation>50%</translation>
+        <translation>50 %</translation>
     </message>
     <message>
         <source>55%</source>
-        <translation>55%</translation>
+        <translation>55 %</translation>
     </message>
     <message>
         <source>60%</source>
-        <translation>60%</translation>
+        <translation>60 %</translation>
     </message>
     <message>
         <source>65%</source>
-        <translation>65%</translation>
+        <translation>65 %</translation>
     </message>
     <message>
         <source>70%</source>
-        <translation>70%</translation>
+        <translation>70 %</translation>
     </message>
     <message>
         <source>75%</source>
-        <translation>75%</translation>
+        <translation>75 %</translation>
     </message>
     <message>
         <source>80%</source>
-        <translation>80%</translation>
+        <translation>80 %</translation>
     </message>
     <message>
         <source>85%</source>
-        <translation>85%</translation>
+        <translation>85 %</translation>
     </message>
     <message>
         <source>90%</source>
-        <translation>90%</translation>
+        <translation>90 %</translation>
     </message>
     <message>
         <source>95%</source>
-        <translation>95%</translation>
+        <translation>95 %</translation>
     </message>
     <message>
         <source>100%</source>
-        <translation>100%</translation>
+        <translation>100 %</translation>
     </message>
     <message>
         <source>APU Channels</source>
-        <translation>Canali APU</translation>
+        <translation>Canales APU</translation>
     </message>
     <message>
         <source>Swap Duty Cycles</source>
-        <translation>Inverti i Duty Cycles</translation>
+        <translation>Ciclos de intercambio de trabajo</translation>
     </message>
     <message>
         <source>Enable Audio</source>
-        <translation>Abilita Audio</translation>
+        <translation>Habilitar audio</translation>
     </message>
     <message>
         <source>wdgSettingsAudio</source>
@@ -1097,50 +1097,50 @@
     <name>wdgSettingsCheats</name>
     <message>
         <source>Cheats Settings</source>
-        <translation>Configurazione Cheats</translation>
+        <translation>Configuración de trucos</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Configurazione</translation>
+        <translation>Configuración</translation>
     </message>
     <message>
         <source>Disabled</source>
-        <translation>Disabilitato</translation>
+        <translation>Deshabilitado</translation>
     </message>
     <message>
         <source>Game Genie Rom Mode</source>
-        <translation>Modalità Rom Game Genie</translation>
+        <translation>Modo de rom Game Genie</translation>
     </message>
     <message>
         <source>Cheats List Mode</source>
-        <translation>Modalità Lista Cheats</translation>
+        <translation>Modos de lista de trucos</translation>
     </message>
 </context>
 <context>
     <name>wdgSettingsGeneral</name>
     <message>
         <source>[Select a file]</source>
-        <translation>[Seleziona un file]</translation>
+        <translation>[Seleccione un archivo]</translation>
     </message>
     <message>
         <source>All files</source>
-        <translation>Tutti i files</translation>
+        <translation>Todos los archivos</translation>
     </message>
     <message>
         <source>Select Game Genie ROM file</source>
-        <translation>Seleziona file Rom Game Genie</translation>
+        <translation>Seleccionar archivo ROM Game Genie</translation>
     </message>
     <message>
         <source>Select FDS BIOS file</source>
-        <translation>Seleziona file BIOS FDS</translation>
+        <translation>Seleccionar archivo Bios FDS</translation>
     </message>
     <message>
         <source>General Settings</source>
-        <translation>Configurazione Generale</translation>
+        <translation>Configuración general</translation>
     </message>
     <message>
         <source>2x (Default)</source>
-        <translation>2x (Predefinito)</translation>
+        <translation>2x (predeterminado)</translation>
     </message>
     <message>
         <source>3x</source>
@@ -1156,7 +1156,7 @@
     </message>
     <message>
         <source>Auto</source>
-        <translation>Auto</translation>
+        <translation>Automático</translation>
     </message>
     <message>
         <source>NTSC</source>
@@ -1172,15 +1172,15 @@
     </message>
     <message>
         <source>System Roms</source>
-        <translation>Roms di Sistema</translation>
+        <translation>Sistema de roms</translation>
     </message>
     <message>
         <source>Mode</source>
-        <translation>Modalità</translation>
+        <translation>Modo</translation>
     </message>
     <message>
         <source>English</source>
-        <translation>Inglese</translation>
+        <translation>Inglés</translation>
     </message>
     <message>
         <source>Italian</source>
@@ -1188,90 +1188,90 @@
     </message>
     <message>
         <source>Russian</source>
-        <translation>Russo</translation>
+        <translation>Ruso</translation>
     </message>
     <message>
         <source>Pause when in background</source>
-        <translation>Pausa quando in background</translation>
+        <translation>Pausar cuando esté en segundo plano</translation>
     </message>
     <message>
         <source>Language</source>
-        <translation>Lingua</translation>
+        <translation>Idioma</translation>
     </message>
     <message>
         <source>Save settings on exit</source>
-        <translation>Salva configurazione in uscita</translation>
+        <translation>Guardar configuraciones al salir</translation>
     </message>
     <message>
         <source>Save battery RAM file every 3 min.</source>
-        <translation>Salva file battery RAM ogni 3 min.</translation>
+        <translation>Guarder el archivo RAM de la batería cada 3 minutos.</translation>
     </message>
     <message>
         <source>Fast Forward velocity</source>
-        <translation>Velocità avanzamento veloce</translation>
+        <translation>Velocidad de avance rápido</translation>
     </message>
     <message>
         <source>Misc</source>
-        <translation>Altro</translation>
+        <translation>Misc</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Configurazione</translation>
+        <translation>Configuración</translation>
     </message>
     <message>
         <source>Game Genie Rom file</source>
-        <translation>file Rom Game Genie</translation>
+        <translation>Archivo rom Game Genie</translation>
     </message>
     <message>
         <source>FDS Bios file</source>
-        <translation>file Bios FDS</translation>
+        <translation>Archivo Bios FDS</translation>
     </message>
     <message>
         <source>Rewind minutes</source>
-        <translation>Minuti del rewind</translation>
+        <translation>Retroceder minutos</translation>
     </message>
     <message>
         <source>Disabled</source>
-        <translation>Disabilitato</translation>
+        <translation>Deshabilitado</translation>
     </message>
     <message>
         <source>2 minutes</source>
-        <translation>2 minuti</translation>
+        <translation>2 minutos</translation>
     </message>
     <message>
         <source>5 minutes</source>
-        <translation>5 minuti</translation>
+        <translation>5 minutos</translation>
     </message>
     <message>
         <source>15 minutes (Default)</source>
-        <translation>15 minuti (Predefinito)</translation>
+        <translation>15 minutos (predeterminado)</translation>
     </message>
     <message>
         <source>30 minutes</source>
-        <translation>30 minuti</translation>
+        <translation>30 minutos</translation>
     </message>
     <message>
         <source>60 minutus</source>
-        <translation>60p minuti</translation>
+        <translation>60 minutos</translation>
     </message>
     <message>
         <source>Unlimited</source>
-        <translation>Illimitati</translation>
+        <translation>Sin límite</translation>
     </message>
     <message>
         <source>Spain</source>
-        <translation>Spagnolo</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>wdgSettingsInput</name>
     <message>
         <source>Disabled</source>
-        <translation>Disabilitato</translation>
+        <translation>Deshabilitado</translation>
     </message>
     <message>
         <source>Standard Pad</source>
-        <translation>Pad Standard</translation>
+        <translation>Pad estándar</translation>
     </message>
     <message>
         <source>Zapper</source>
@@ -1279,55 +1279,55 @@
     </message>
     <message>
         <source>Snes Mouse</source>
-        <translation>Mouse Snes</translation>
+        <translation>Ratón de snes</translation>
     </message>
     <message>
         <source>Arkanoid Paddle</source>
-        <translation>Paddle Arkanoid</translation>
+        <translation>Arkanoid Paddle</translation>
     </message>
     <message>
         <source>Oeka Kids Tablet</source>
-        <translation>Tavoletta Oeka Kids</translation>
+        <translation>Tableta Oeka Kids</translation>
     </message>
     <message>
         <source>Default</source>
-        <translation>Predefinito</translation>
+        <translation>Predeterminado</translation>
     </message>
     <message>
         <source>Unset</source>
-        <translation>Azzera</translation>
+        <translation>Deshacer</translation>
     </message>
     <message>
         <source>Start/Stop WAV</source>
-        <translation>Avvia/Ferma WAV</translation>
+        <translation>Iniciar/detener WAV</translation>
     </message>
     <message>
         <source>No usable device</source>
-        <translation>Nessun dispositivo</translation>
+        <translation>Dispositivo no utilizable</translation>
     </message>
     <message>
         <source>Error on open device %1</source>
-        <translation>Errore sull&apos;apertura del dispositivo %1</translation>
+        <translation>Error al abrir el dispositivo %1</translation>
     </message>
     <message>
         <source>Error on reading controllers configurations</source>
-        <translation>Errore nella lettura della configurazione del controller</translation>
+        <translation>Error en la lectura de las configuraciones de los controles</translation>
     </message>
     <message>
         <source>Press a key (ESC for the previous value &quot;%1&quot;) - timeout in %2</source>
-        <translation>Premi un tasto (ESC per il valore precedente &quot;%1&quot;) - timeout in %2</translation>
+        <translation>Presione una tecla (ESC para el valor anterior &quot;%1&quot;) - tiempo de espera en %2</translation>
     </message>
     <message>
         <source>Input Settings</source>
-        <translation>Configurazione Input</translation>
+        <translation>Configuración de entrada</translation>
     </message>
     <message>
         <source>Setup</source>
-        <translation>Config.</translation>
+        <translation>Configurar</translation>
     </message>
     <message>
         <source>Joystick ID</source>
-        <translation>ID Joystick</translation>
+        <translation>ID del Joystick</translation>
     </message>
     <message>
         <source>NES</source>
@@ -1339,63 +1339,63 @@
     </message>
     <message>
         <source>Four Score</source>
-        <translation>Four Score</translation>
+        <translation>Cuatro puntos</translation>
     </message>
     <message>
         <source>Misc</source>
-        <translation>Altro</translation>
+        <translation>Misc</translation>
     </message>
     <message>
         <source>Expansion Port</source>
-        <translation>Porta di Espansione</translation>
+        <translation>Puerto de expansión</translation>
     </message>
     <message>
         <source>Hide Zapper cursor</source>
-        <translation>Nascondi il cursore dello Zapper</translation>
+        <translation>Ocultar el cursor del zapper</translation>
     </message>
     <message>
         <source>Controller Port 1</source>
-        <translation>Porta Controller 1</translation>
+        <translation>Puerto del control 1</translation>
     </message>
     <message>
         <source>Controller Port 3</source>
-        <translation>Porta Controller 3</translation>
+        <translation>Puerto del control 3</translation>
     </message>
     <message>
         <source>Controller Port 2</source>
-        <translation>Porta Controller 2</translation>
+        <translation>Puerto del control 2</translation>
     </message>
     <message>
         <source>Ports</source>
-        <translation>Porte</translation>
+        <translation>Puertos</translation>
     </message>
     <message>
         <source>Shortcuts</source>
-        <translation>Scorciatoie da tastiera</translation>
+        <translation>Atajos</translation>
     </message>
     <message>
         <source>Permit &quot;Up + Down&quot; and &quot;Left + Right&quot; at the same time</source>
-        <translation>Permitti &quot;Su+Giù&quot; e &quot;Sinistra+Destra&quot; contemporaneamente</translation>
+        <translation>Permitir &quot;Arriba + Abajo&quot; e &quot;Izquierda + Derecha&quot; al mismo tiempo</translation>
     </message>
     <message>
         <source>Controller Mode</source>
-        <translation>Modalità Controller</translation>
+        <translation>Modos del control</translation>
     </message>
     <message>
         <source>Controller Port 4</source>
-        <translation>Porta Controller 4</translation>
+        <translation>Puerto del control 4</translation>
     </message>
     <message>
         <source>Reset to defaults</source>
-        <translation>Predefiniti</translation>
+        <translation>Restablecer valores predeterminados</translation>
     </message>
     <message>
         <source>Action</source>
-        <translation>Azione</translation>
+        <translation>Acción</translation>
     </message>
     <message>
         <source>Keyboard</source>
-        <translation>Tastiera</translation>
+        <translation>Teclado</translation>
     </message>
     <message>
         <source>Joystick</source>
@@ -1406,23 +1406,23 @@
     <name>wdgSettingsPPU</name>
     <message>
         <source>PPU Settings</source>
-        <translation>Configurazione PPU</translation>
+        <translation>Configuración de PPU</translation>
     </message>
     <message>
         <source>Disable 7bit Sample Control</source>
-        <translation>Disabilita Controllo del Sample 7bit</translation>
+        <translation>Deshabilitar el control de muestreo de 7 bits</translation>
     </message>
     <message>
         <source>Reset Lag Counter</source>
-        <translation>Reset Contatatore Lag</translation>
+        <translation>Restablecer contador de retardo</translation>
     </message>
     <message>
         <source>VBlank Lines</source>
-        <translation>Scanlines VBlank</translation>
+        <translation>Líneas VBlank</translation>
     </message>
     <message>
         <source>Postrender Lines</source>
-        <translation>Scanlines Postrender</translation>
+        <translation>Líneas postrender</translation>
     </message>
     <message>
         <source>Overclock</source>
@@ -1430,66 +1430,66 @@
     </message>
     <message>
         <source>Sprites and background</source>
-        <translation>Sprites e background</translation>
+        <translation>Sprites y segundo plano</translation>
     </message>
     <message>
         <source>Unlimited Sprites</source>
-        <translation>Sprites Illimitati</translation>
+        <translation>Sprites sin límites</translation>
     </message>
     <message>
         <source>Enable Extra Scanlines</source>
-        <translation>Abilita Extra Scanlines</translation>
+        <translation>Habilitar líneas de escaneo adicionales</translation>
     </message>
     <message>
         <source>Hide Sprites</source>
-        <translation>Nascondi Sprites</translation>
+        <translation>Ocultar sprites</translation>
     </message>
     <message>
         <source>Hide Background</source>
-        <translation>Nascondi Background</translation>
+        <translation>Ocultar segundo plano</translation>
     </message>
 </context>
 <context>
     <name>wdgSettingsVideo</name>
     <message>
         <source>GLSL &amp;soft stretch</source>
-        <translation>GLSL &amp;soft stretch</translation>
+        <translation>Estiramiento &amp;suave GLSL</translation>
     </message>
     <message>
         <source>HLSL &amp;soft stretch</source>
-        <translation>HLSL &amp;soft stretch</translation>
+        <translation>Estiramiento &amp;suave HLSL</translation>
     </message>
     <message>
         <source>[Select a file]</source>
-        <translation>[Seleziona un file]</translation>
+        <translation>[Seleccione un archivo]</translation>
     </message>
     <message>
         <source>Default</source>
-        <translation>Predefinito</translation>
+        <translation>Predeterminado</translation>
     </message>
     <message>
         <source>Shaders files</source>
-        <translation>Files per le shaders</translation>
+        <translation>Archivos de sombreados</translation>
     </message>
     <message>
         <source>All files</source>
-        <translation>Tutti i files</translation>
+        <translation>Todos los archivos</translation>
     </message>
     <message>
         <source>Open Shader file</source>
-        <translation>Apri file per le shaders</translation>
+        <translation>Abrir archivo de sombreado</translation>
     </message>
     <message>
         <source>Palette files</source>
-        <translation>File della Paletta</translation>
+        <translation>Archivos de paleta</translation>
     </message>
     <message>
         <source>Open palette file</source>
-        <translation>Carica Paletta da file</translation>
+        <translation>Abrir archivo de paleta</translation>
     </message>
     <message>
         <source>Video Settings</source>
-        <translation>Configurazione Video</translation>
+        <translation>Configuración de vídeo</translation>
     </message>
     <message>
         <source>1x</source>
@@ -1517,19 +1517,19 @@
     </message>
     <message>
         <source>Scale</source>
-        <translation>Fattore di Scala</translation>
+        <translation>Escala</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Configurazione</translation>
+        <translation>Configuración</translation>
     </message>
     <message>
         <source>** To apply this change restart is needed **</source>
-        <translation>** Per applicare questa modifica è necessario un riavvio **</translation>
+        <translation>** Para aplicar este cambio es necesario reiniciar **</translation>
     </message>
     <message>
         <source>Misc</source>
-        <translation>Altro</translation>
+        <translation>Misc</translation>
     </message>
     <message>
         <source>1:1</source>
@@ -1549,23 +1549,23 @@
     </message>
     <message>
         <source>Pixel Aspect Ratio</source>
-        <translation>Pixel Aspect Ratio</translation>
+        <translation>Relación de aspecto de píxeles</translation>
     </message>
     <message>
         <source>Off</source>
-        <translation>Off</translation>
+        <translation>Desactivado</translation>
     </message>
     <message>
         <source>On</source>
-        <translation>On</translation>
+        <translation>Activado</translation>
     </message>
     <message>
         <source>Default Value</source>
-        <translation>Valore Predefinito</translation>
+        <translation>Valor predeterminado</translation>
     </message>
     <message>
         <source>Overscan borders</source>
-        <translation>Bordi dell&apos;Overscan</translation>
+        <translation>Superposición de bordes</translation>
     </message>
     <message>
         <source>NTSC</source>
@@ -1577,75 +1577,75 @@
     </message>
     <message>
         <source>Right</source>
-        <translation>Destra</translation>
+        <translation>Derecha</translation>
     </message>
     <message>
         <source>Down</source>
-        <translation>Giù</translation>
+        <translation>Abajo</translation>
     </message>
     <message>
         <source>Up</source>
-        <translation>Su</translation>
+        <translation>Arriba</translation>
     </message>
     <message>
         <source>Left</source>
-        <translation>Sinistra</translation>
+        <translation>Izquierda</translation>
     </message>
     <message>
         <source>Reset to defaults</source>
-        <translation>Predefiniti</translation>
+        <translation>Restablecer valores predeterminados</translation>
     </message>
     <message>
         <source>Black borders in window mode</source>
-        <translation>Bordi neri nella modalità finestra</translation>
+        <translation>Bordes negros en modo ventana</translation>
     </message>
     <message>
         <source>Black borders in fullscreen</source>
-        <translation>Bordi neri a schermo intero</translation>
+        <translation>Bordes negros en pantalla completa</translation>
     </message>
     <message>
         <source>Overscan</source>
-        <translation>Overscan</translation>
+        <translation>Superposición</translation>
     </message>
     <message>
         <source>No Shaders</source>
-        <translation>Nessuna Shader</translation>
+        <translation>Sin sombreados</translation>
     </message>
     <message>
         <source>CRT Dotmask</source>
-        <translation>CRT Dotmask</translation>
+        <translation>Máscara de puntos CRT</translation>
     </message>
     <message>
         <source>CRT Scanlines</source>
-        <translation>CRT Scanlines</translation>
+        <translation>Líneas de escaneo CRT</translation>
     </message>
     <message>
         <source>CRT With Curve</source>
-        <translation>CRT con Curva</translation>
+        <translation>CRT con curva</translation>
     </message>
     <message>
         <source>Emboss</source>
-        <translation>Emboss</translation>
+        <translation>Realzar</translation>
     </message>
     <message>
         <source>Noise</source>
-        <translation>Noise</translation>
+        <translation>Ruido</translation>
     </message>
     <message>
         <source>NTSC 2Phase Composite</source>
-        <translation>NTSC 2Phase Composite</translation>
+        <translation>NTSC 2Phase compuesto</translation>
     </message>
     <message>
         <source>Old TV</source>
-        <translation>Vecchia TV</translation>
+        <translation>TV antigua</translation>
     </message>
     <message>
         <source>From File</source>
-        <translation>Da File</translation>
+        <translation>Desde archivo</translation>
     </message>
     <message>
         <source>No Filters</source>
-        <translation>Nessun Filtro</translation>
+        <translation>Sin filtros</translation>
     </message>
     <message>
         <source>Scale2X</source>
@@ -1693,7 +1693,7 @@
     </message>
     <message>
         <source>NTSC Composite</source>
-        <translation>NTSC Composito</translation>
+        <translation>NTSC compuesto</translation>
     </message>
     <message>
         <source>NTSC S-Video</source>
@@ -1705,23 +1705,23 @@
     </message>
     <message>
         <source>Shaders</source>
-        <translation>Shaders</translation>
+        <translation>Sombreados</translation>
     </message>
     <message>
         <source>Load from a file</source>
-        <translation>Carica da file</translation>
+        <translation>Cargar desde un archivo</translation>
     </message>
     <message>
         <source>Shader Parameters</source>
-        <translation>Parametri della Shader</translation>
+        <translation>Parámetros del sombreado</translation>
     </message>
     <message>
         <source>Reset paramaters to defaults</source>
-        <translation>Predefiniti</translation>
+        <translation>Restablecer parámetros predeterminados</translation>
     </message>
     <message>
         <source>Filters</source>
-        <translation>Filtri</translation>
+        <translation>Filtros</translation>
     </message>
     <message>
         <source>PAL</source>
@@ -1741,7 +1741,7 @@
     </message>
     <message>
         <source>Monochrome</source>
-        <translation>Monocromatico</translation>
+        <translation>Monocromo</translation>
     </message>
     <message>
         <source>Green</source>
@@ -1753,7 +1753,7 @@
     </message>
     <message>
         <source>Palette</source>
-        <translation>Paletta</translation>
+        <translation>Paleta</translation>
     </message>
     <message>
         <source>xBRZ 2X Multithreading</source>
@@ -1781,66 +1781,66 @@
     </message>
     <message>
         <source>Interpolation</source>
-        <translation>Interpolazione</translation>
+        <translation>Interpolación</translation>
     </message>
     <message>
         <source>Text on screen</source>
-        <translation>Testo a video</translation>
+        <translation>Texto en pantalla</translation>
     </message>
     <message>
         <source>Show FPS</source>
-        <translation>Mostra FPS</translation>
+        <translation>Mostrar los FPS</translation>
     </message>
     <message>
         <source>Input display</source>
-        <translation>Visualizza Input</translation>
+        <translation>Pantalla de entrada</translation>
     </message>
     <message>
         <source>Disable TV noise emulation when turned off</source>
-        <translation>Disabilita emulazione rumore TV quando spento</translation>
+        <translation>Deshabilitar la emulación de ruido del TV cuando esté desactivada</translation>
     </message>
     <message>
         <source>Disable sepia color on pause</source>
-        <translation>Disabilita colore sepia quando in pausa</translation>
+        <translation>Deshabilitar color sepia en pausa</translation>
     </message>
     <message>
         <source>Fullscreen in window</source>
-        <translation>Schermo intero in finestra</translation>
+        <translation>Ventana en pantalla completa</translation>
     </message>
     <message>
         <source>Stretch in fullscreen</source>
-        <translation>Stretch durante schermo intero</translation>
+        <translation>Estirar a pantalla completa</translation>
     </message>
     <message>
         <source>Soft stretch</source>
-        <translation>Soft stretch</translation>
+        <translation>Estiramiento suave</translation>
     </message>
     <message>
         <source>Disable sRGB FBO</source>
-        <translation>Disabilita sRGB FBO</translation>
+        <translation>Deshabilitar sRGB FBO</translation>
     </message>
     <message>
         <source>Disable Red and Green emphasis swap for PAL/Dendy</source>
-        <translation>Disabilita scambio dell&apos;emphsis tra Rosso e Verde nella modalità PAL/Dendy</translation>
+        <translation>Deshabilitar el intercambio de énfasis en rojo y verde para PAL/Dendy</translation>
     </message>
 </context>
 <context>
     <name>wdgState</name>
     <message>
         <source>Save/Load Slot Box</source>
-        <translation>Box Salva/Carica Slot</translation>
+        <translation>Guardar/cargar cartucho de ranura</translation>
     </message>
     <message>
         <source>Slot %1</source>
-        <translation>Slot %1</translation>
+        <translation>Ranura %1</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation>Salva</translation>
+        <translation>Guardar</translation>
     </message>
     <message>
         <source>Load</source>
-        <translation>Carica</translation>
+        <translation>Cargar</translation>
     </message>
 </context>
 </TS>
