@@ -145,14 +145,24 @@ BYTE ines_load_rom(void) {
 			// iNES 1.0
 			info.format = iNES_1_0;
 
-			info.mapper.id = (ines.flags[FL7] & 0xF0) | (ines.flags[FL6] >> 4);
+			// Older versions of the iNES emulator ignored bytes 7-15, and several ROM management tools
+			// wrote messages in there. Commonly, these will be filled with "DiskDude!", which results
+			// in 64 being added to the mapper number. A general rule of thumb: if the last 4 bytes are
+			// not all zero, and the header is not marked for NES 2.0 format, an emulator should either
+			// mask off the upper 4 bits of the mapper number or simply refuse to load the ROM.
+			if (ines.flags[FL12] | ines.flags[FL13] | ines.flags[FL14] | ines.flags[FL15]) {
+				info.mapper.id = ines.flags[FL6] >> 4;
+				tmp = 0;
+			} else {
+				info.mapper.id = (ines.flags[FL7] & 0xF0) | (ines.flags[FL6] >> 4);
+				tmp = ines.flags[FL9] & 0x01;
+			}
+
 			info.prg.ram.bat.banks = (ines.flags[FL6] & 0x02) >> 1;
 
 			if (info.prg.ram.bat.banks) {
 				info.prg.ram.banks_8k_plus = 1;
 			}
-
-			tmp = ines.flags[FL9] & 0x01;
 		}
 
 		switch (tmp) {
