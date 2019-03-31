@@ -142,10 +142,6 @@ BYTE rewind_init(void) {
 	// in caso di riavvio del rewind
 	rewind_quit();
 
-	if (rewind_is_disabled()) {
-		return (EXIT_OK);
-	}
-
 	memset(&rwnd, 0, sizeof(rwnd));
 	memset(&rwint, 0, sizeof(rwint));
 
@@ -155,16 +151,18 @@ BYTE rewind_init(void) {
 	{
 		size_t size = sizeof(_rewind_snapshoot) * REWIND_SNAPS_FOR_CHUNK;
 
-		if ((rwint.segment.snaps = (_rewind_snapshoot *)malloc(size)) == NULL) {
-			fprintf(stderr, "rewind : Out of memory\n");
-			return (EXIT_ERROR);
+		if (rewind_is_disabled() == FALSE) {
+			if ((rwint.segment.snaps = (_rewind_snapshoot *)malloc(size)) == NULL) {
+				fprintf(stderr, "rewind : Out of memory\n");
+				return (EXIT_ERROR);
+			}
+			memset(rwint.segment.snaps, 0, size);
 		}
+
 		if ((rwint.cbuffer.snaps = (_rewind_snapshoot *)malloc(size)) == NULL) {
 			fprintf(stderr, "rewind : Out of memory\n");
 			return (EXIT_ERROR);
 		}
-
-		memset(rwint.segment.snaps, 0, size);
 		memset(rwint.cbuffer.snaps, 0, size);
 	}
 
@@ -180,22 +178,21 @@ BYTE rewind_init(void) {
 	rwint.size.first_chunk = rwint.size.screen + rwint.size.chunk;
 	rwint.size.total = rwint.size.screen + (rwint.size.chunk * rwint.chunks_for_segment);
 
-	if ((rwint.segment.data = (BYTE *)malloc(rwint.size.total)) == NULL) {
-		fprintf(stderr, "rewind : Out of memory\n");
-		return (EXIT_ERROR);
+	if (rewind_is_disabled() == FALSE) {
+		if ((rwint.segment.data = (BYTE *)malloc(rwint.size.total)) == NULL) {
+			fprintf(stderr, "rewind : Out of memory\n");
+			return (EXIT_ERROR);
+		}
+		memset(rwint.segment.data, 0, rwint.size.chunk);
+		rwint.segment.type = REWIND_CHUNK_TYPE_SEGMENT;
+		rewind_update_chunk_snaps(&rwint.segment, 0, NULL);
 	}
 	if ((rwint.cbuffer.data = (BYTE *)malloc(rwint.size.first_chunk)) == NULL) {
 		fprintf(stderr, "rewind : Out of memory\n");
 		return (EXIT_ERROR);
 	}
-
-	memset(rwint.segment.data, 0, rwint.size.chunk);
 	memset(rwint.cbuffer.data, 0, rwint.size.first_chunk);
-
-	rwint.segment.type = REWIND_CHUNK_TYPE_SEGMENT;
 	rwint.cbuffer.type = REWIND_CHUNK_TYPE_CHUNK_BUFFER;
-
-	rewind_update_chunk_snaps(&rwint.segment, 0, NULL);
 	rewind_update_chunk_snaps(&rwint.cbuffer, 0, NULL);
 
 	// (se non ho limiti allora devo impostare rwint.max_buffered.segments a 0)
@@ -204,6 +201,9 @@ BYTE rewind_init(void) {
 	// chunk 0, snap 15, per poter fare il rewindw completo di 3 segmenti devo caricare
 	// il segmento 0, chunk 0, snap 15 percio' devo sempre bufferizzarne 3 + 1.
 	switch (cfg->rewind_minutes) {
+		case RWND_0_MINUTES:
+			rwint.max_buffered.segments = 1;
+			break;
 		case RWND_2_MINUTES:
 			rwint.max_buffered.segments = 2 + 1;
 			break;
@@ -237,7 +237,7 @@ BYTE rewind_init(void) {
 	rwint.index.snap = -1;
 
 	// creo il file temporaneo
-	{
+	if (rewind_is_disabled() == FALSE) {
 		uTCHAR basename[255], *last_dot;;
 
 		gui_utf_basename(info.rom.file, basename, usizeof(basename));
