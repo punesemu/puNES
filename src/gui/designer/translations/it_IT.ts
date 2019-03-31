@@ -1260,7 +1260,7 @@
     </message>
     <message>
       <source>Spain</source>
-      <translation type="unfinished">Spain</translation>
+      <translation>Spagnolo</translation>
     </message>
   </context>
   <context>
