@@ -1258,6 +1258,10 @@
       <source>Unlimited</source>
       <translation>Illimitati</translation>
     </message>
+    <message>
+      <source>Spain</source>
+      <translation type="unfinished">Spain</translation>
+    </message>
   </context>
   <context>
     <name>wdgSettingsInput</name>
