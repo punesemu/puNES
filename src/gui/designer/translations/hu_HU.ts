@@ -5,145 +5,145 @@
     <name>Settings</name>
     <message>
       <source>System Default</source>
-      <translation type="unfinished">System Default</translation>
+      <translation>Rendszer alapbeállítások</translation>
     </message>
   </context>
   <context>
     <name>dlgSettings</name>
     <message>
       <source>Settings</source>
-      <translation type="unfinished">Settings</translation>
+      <translation>Beállítások</translation>
     </message>
     <message>
       <source>General</source>
-      <translation type="unfinished">General</translation>
+      <translation>Általános</translation>
     </message>
     <message>
       <source>Video</source>
-      <translation type="unfinished">Video</translation>
+      <translation>Videó</translation>
     </message>
     <message>
       <source>Audio</source>
-      <translation type="unfinished">Audio</translation>
+      <translation>Hang</translation>
     </message>
     <message>
       <source>Input</source>
-      <translation type="unfinished">Input</translation>
+      <translation>Bevitel</translation>
     </message>
     <message>
       <source>PPU</source>
-      <translation type="unfinished">PPU</translation>
+      <translation>PPU</translation>
     </message>
     <message>
       <source>Cheats</source>
-      <translation type="unfinished">Cheats</translation>
+      <translation>Csalások</translation>
     </message>
     <message>
       <source>Save Settings</source>
-      <translation type="unfinished">Save Settings</translation>
+      <translation>Beállítások mentése</translation>
     </message>
     <message>
       <source>Close Settings</source>
-      <translation type="unfinished">Close Settings</translation>
+      <translation>Beállítások bezárása</translation>
     </message>
   </context>
   <context>
     <name>dlgStdPad</name>
     <message>
       <source>Controller %1 : Standard Pad</source>
-      <translation type="unfinished">Controller %1 : Standard Pad</translation>
+      <translation>%1. kontroller: szabvány gamepad</translation>
     </message>
     <message>
       <source>Auto</source>
-      <translation type="unfinished">Auto</translation>
+      <translation>Auto</translation>
     </message>
     <message>
       <source>Original</source>
-      <translation type="unfinished">Original</translation>
+      <translation>Eredeti</translation>
     </message>
     <message>
       <source>3rd-party</source>
-      <translation type="unfinished">3rd-party</translation>
+      <translation>Harmadik fél</translation>
     </message>
     <message>
       <source>Keyboard</source>
-      <translation type="unfinished">Keyboard</translation>
+      <translation>Billentyűzet</translation>
     </message>
     <message>
       <source>Disabled</source>
-      <translation type="unfinished">Disabled</translation>
+      <translation>Letiltva</translation>
     </message>
     <message>
       <source>No usable device</source>
-      <translation type="unfinished">No usable device</translation>
+      <translation>Nincs használható eszköz</translation>
     </message>
     <message>
       <source>Select device first</source>
-      <translation type="unfinished">Select device first</translation>
+      <translation>Előbb válassz eszközt</translation>
     </message>
     <message>
       <source>Error on open device %1</source>
-      <translation type="unfinished">Error on open device %1</translation>
+      <translation>Hiba %1 eszköz megnyitásakor</translation>
     </message>
     <message>
       <source>Error on reading controllers configurations</source>
-      <translation type="unfinished">Error on reading controllers configurations</translation>
+      <translation>Hiba a kontroller beállításainak olvasásakor</translation>
     </message>
     <message>
       <source>Press a key (ESC for the previous value &quot;%1&quot;)</source>
-      <translation type="unfinished">Press a key (ESC for the previous value &quot;%1&quot;)</translation>
+      <translation>Nyomj le egy gombot (ESC-et az előző értékért: &quot;%1&quot;)</translation>
     </message>
     <message>
       <source>Standard Pad</source>
-      <translation type="unfinished">Standard Pad</translation>
+      <translation>Szabvány gamepad</translation>
     </message>
     <message>
       <source>ID</source>
-      <translation type="unfinished">ID</translation>
+      <translation>Azonosító</translation>
     </message>
     <message>
       <source>Up</source>
-      <translation type="unfinished">Up</translation>
+      <translation>Fel</translation>
     </message>
     <message>
       <source>A</source>
-      <translation type="unfinished">A</translation>
+      <translation>A</translation>
     </message>
     <message>
       <source>Down</source>
-      <translation type="unfinished">Down</translation>
+      <translation>Le</translation>
     </message>
     <message>
       <source>Unset</source>
-      <translation type="unfinished">Unset</translation>
+      <translation>Beállítatlan</translation>
     </message>
     <message>
       <source>Left</source>
-      <translation type="unfinished">Left</translation>
+      <translation>Bal</translation>
     </message>
     <message>
       <source>Start</source>
-      <translation type="unfinished">Start</translation>
+      <translation>Start</translation>
     </message>
     <message>
       <source>Turbo B</source>
-      <translation type="unfinished">Turbo B</translation>
+      <translation>Turbó B</translation>
     </message>
     <message>
       <source>Select</source>
-      <translation type="unfinished">Select</translation>
+      <translation>Select</translation>
     </message>
     <message>
       <source>Turbo A</source>
-      <translation type="unfinished">Turbo A</translation>
+      <translation>Turbó A</translation>
     </message>
     <message>
       <source>B</source>
-      <translation type="unfinished">B</translation>
+      <translation>B</translation>
     </message>
     <message>
       <source>Right</source>
-      <translation type="unfinished">Right</translation>
+      <translation>Jobb</translation>
     </message>
     <message>
       <source>In sequence</source>
@@ -151,69 +151,69 @@
     </message>
     <message>
       <source>Unset all</source>
-      <translation type="unfinished">Unset all</translation>
+      <translation>Mindet beállítatlanra</translation>
     </message>
     <message>
       <source>Defaults</source>
-      <translation type="unfinished">Defaults</translation>
+      <translation>Alapértelmezések</translation>
     </message>
     <message>
       <source>Joystick</source>
-      <translation type="unfinished">Joystick</translation>
+      <translation>Joystick</translation>
     </message>
     <message>
       <source>Misc</source>
-      <translation type="unfinished">Misc</translation>
+      <translation>Egyéb</translation>
     </message>
     <message>
       <source>Controller type</source>
-      <translation type="unfinished">Controller type</translation>
+      <translation>Kontroller típus</translation>
     </message>
     <message>
       <source>Turbo B Delay</source>
-      <translation type="unfinished">Turbo B Delay</translation>
+      <translation>Turbó B késleltetés</translation>
     </message>
     <message>
       <source>Turbo A Delay</source>
-      <translation type="unfinished">Turbo A Delay</translation>
+      <translation>Turbo A késleltetés</translation>
     </message>
     <message>
       <source>Apply</source>
-      <translation type="unfinished">Apply</translation>
+      <translation>Alkalmaz</translation>
     </message>
     <message>
       <source>Discard</source>
-      <translation type="unfinished">Discard</translation>
+      <translation>Eldob</translation>
     </message>
   </context>
   <context>
     <name>dlgUncomp</name>
     <message>
       <source>which ROM do you want to load?</source>
-      <translation type="unfinished">which ROM do you want to load?</translation>
+      <translation>melyik ROM-ot akarod betölteni?</translation>
     </message>
     <message>
       <source>which PATCH do you want to apply?</source>
-      <translation type="unfinished">which PATCH do you want to apply?</translation>
+      <translation>melyik PATCH-et akarod alkalmazni?</translation>
     </message>
     <message>
       <source>Unpacked archive</source>
-      <translation type="unfinished">Unpacked archive</translation>
+      <translation>Kicsomagold archívum</translation>
     </message>
     <message>
       <source>OK</source>
-      <translation type="unfinished">OK</translation>
+      <translation>OK</translation>
     </message>
     <message>
       <source>None</source>
-      <translation type="unfinished">None</translation>
+      <translation>Semmi</translation>
     </message>
   </context>
   <context>
     <name>dlgVsSystem</name>
     <message>
       <source>Vs System Controls</source>
-      <translation type="unfinished">Vs System Controls</translation>
+      <translation>Vs rendszer vezérlése</translation>
     </message>
     <message>
       <source>Left Coin</source>
@@ -416,19 +416,19 @@
     </message>
     <message>
       <source>S&amp;ave state</source>
-      <translation type="unfinished">S&amp;ave state</translation>
+      <translation>Állás mentése (&amp;a)</translation>
     </message>
     <message>
       <source>L&amp;oad state</source>
-      <translation type="unfinished">L&amp;oad state</translation>
+      <translation>Állás töltése (&amp;o)</translation>
     </message>
     <message>
       <source>&amp;Increment slot</source>
-      <translation type="unfinished">&amp;Increment slot</translation>
+      <translation>Következő mentéshely (&amp;I)</translation>
     </message>
     <message>
       <source>&amp;Decrement slot</source>
-      <translation type="unfinished">&amp;Decrement slot</translation>
+      <translation>Előző mentéshely (&amp;D)</translation>
     </message>
     <message>
       <source>Slot &amp;0</source>
