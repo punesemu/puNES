@@ -95,7 +95,7 @@
        </item>
        <item>
         <property name="text">
-         <string>Spain</string>
+         <string>Spanish</string>
         </property>
         <property name="icon">
          <iconset resource="resources.qrc">

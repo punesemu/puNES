@@ -1259,7 +1259,7 @@
         <translation>Sin límite</translation>
     </message>
     <message>
-        <source>Spain</source>
+        <source>Spanish</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

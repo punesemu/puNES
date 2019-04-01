@@ -1259,7 +1259,7 @@
         <translation>Illimitati</translation>
     </message>
     <message>
-        <source>Spain</source>
+        <source>Spanish</source>
         <translation>Spagnolo</translation>
     </message>
 </context>
