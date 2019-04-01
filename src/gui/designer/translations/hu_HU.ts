@@ -147,7 +147,7 @@
     </message>
     <message>
       <source>In sequence</source>
-      <translation type="unfinished">In sequence</translation>
+      <translation>Összes beállítása sorban</translation>
     </message>
     <message>
       <source>Unset all</source>
@@ -966,7 +966,7 @@
     </message>
     <message>
       <source>Buffer Size factor</source>
-      <translation type="unfinished">Buffer Size factor</translation>
+      <translation>Pufferméret faktora</translation>
     </message>
     <message>
       <source>Mono</source>
@@ -1418,11 +1418,11 @@
     </message>
     <message>
       <source>VBlank Lines</source>
-      <translation type="unfinished">VBlank Lines</translation>
+      <translation>Extra scanline-ok VBlank alatt</translation>
     </message>
     <message>
       <source>Postrender Lines</source>
-      <translation type="unfinished">Postrender Lines</translation>
+      <translation>Extra scanline-ok render után</translation>
     </message>
     <message>
       <source>Overclock</source>
