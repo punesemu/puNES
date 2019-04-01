@@ -820,7 +820,7 @@
     </message>
     <message>
       <source>Submit warning</source>
-      <translation>Figyelmeztetés beküldése</translation>
+      <translation type="unfinished">Submit warning</translation>
     </message>
     <message>
       <source>The code is invalid</source>
