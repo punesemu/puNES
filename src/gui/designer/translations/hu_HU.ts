@@ -846,10 +846,6 @@
       <translation>Paletta fájlba mentése</translation>
     </message>
     <message>
-      <source>wdgPaletteEditor</source>
-      <translation type="unfinished">wdgPaletteEditor</translation>
-    </message>
-    <message>
       <source>Selected</source>
       <translation>Kiválasztva</translation>
     </message>
@@ -1088,10 +1084,6 @@
       <source>Enable Audio</source>
       <translation>Hang engedélyezése</translation>
     </message>
-    <message>
-      <source>wdgSettingsAudio</source>
-      <translation type="unfinished">wdgSettingsAudio</translation>
-    </message>
   </context>
   <context>
     <name>wdgSettingsCheats</name>
@@ -1261,6 +1253,10 @@
     <message>
       <source>Spanish</source>
       <translation>Spanyol</translation>
+    </message>
+    <message>
+      <source>Hungarian</source>
+      <translation type="unfinished">Hungarian</translation>
     </message>
   </context>
   <context>
