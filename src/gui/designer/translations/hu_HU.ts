@@ -20,7 +20,7 @@
     </message>
     <message>
       <source>Video</source>
-      <translation>Videó</translation>
+      <translation>Kép</translation>
     </message>
     <message>
       <source>Audio</source>
@@ -217,106 +217,106 @@
     </message>
     <message>
       <source>Left Coin</source>
-      <translation type="unfinished">Left Coin</translation>
+      <translation>Bal érme</translation>
     </message>
     <message>
       <source>Right Coin</source>
-      <translation type="unfinished">Right Coin</translation>
+      <translation>Jobb érme</translation>
     </message>
     <message>
       <source>Service Coin</source>
-      <translation type="unfinished">Service Coin</translation>
+      <translation>Szervízérme</translation>
     </message>
     <message>
       <source>Coin Counter</source>
-      <translation type="unfinished">Coin Counter</translation>
+      <translation>Érmeszámláló</translation>
     </message>
     <message>
       <source>Dip Switches</source>
-      <translation type="unfinished">Dip Switches</translation>
+      <translation>Dip kapcsolók</translation>
     </message>
     <message>
       <source>4</source>
-      <translation type="unfinished">4</translation>
+      <translation>4</translation>
     </message>
     <message>
       <source>5</source>
-      <translation type="unfinished">5</translation>
+      <translation>5</translation>
     </message>
     <message>
       <source>6</source>
-      <translation type="unfinished">6</translation>
+      <translation>6</translation>
     </message>
     <message>
       <source>7</source>
-      <translation type="unfinished">7</translation>
+      <translation>7</translation>
     </message>
     <message>
       <source>8</source>
-      <translation type="unfinished">8</translation>
+      <translation>8</translation>
     </message>
     <message>
       <source>3</source>
-      <translation type="unfinished">3</translation>
+      <translation>3</translation>
     </message>
     <message>
       <source>2</source>
-      <translation type="unfinished">2</translation>
+      <translation>2</translation>
     </message>
     <message>
       <source>1</source>
-      <translation type="unfinished">1</translation>
+      <translation>1</translation>
     </message>
     <message>
       <source>Defaults Game Dip Switches</source>
-      <translation type="unfinished">Defaults Game Dip Switches</translation>
+      <translation>Játék Dip kapcsolóinak alapállapotba helyezése</translation>
     </message>
   </context>
   <context>
     <name>mainWindow</name>
     <message>
       <source>&amp;Insert disk</source>
-      <translation type="unfinished">&amp;Insert disk</translation>
+      <translation>Lemez behelyezése (&amp;I)</translation>
     </message>
     <message>
       <source>&amp;Eject disk</source>
-      <translation type="unfinished">&amp;Eject disk</translation>
+      <translation>Lemez kiadása (&amp;E)</translation>
     </message>
     <message>
       <source>&amp;Eject/Insert disk</source>
-      <translation type="unfinished">&amp;Eject/Insert disk</translation>
+      <translation>Lemez kiadása és behelyezése (&amp;E)</translation>
     </message>
     <message>
       <source>All supported formats</source>
-      <translation type="unfinished">All supported formats</translation>
+      <translation>Minden támogatott formátum</translation>
     </message>
     <message>
       <source>Compressed files</source>
-      <translation type="unfinished">Compressed files</translation>
+      <translation>Tömörített fájlok</translation>
     </message>
     <message>
       <source>Nes rom files</source>
-      <translation type="unfinished">Nes rom files</translation>
+      <translation>NES ROM fájlok</translation>
     </message>
     <message>
       <source>FDS image files</source>
-      <translation type="unfinished">FDS image files</translation>
+      <translation>FDS lemezképek</translation>
     </message>
     <message>
       <source>TAS movie files</source>
-      <translation type="unfinished">TAS movie files</translation>
+      <translation>TAS filmek</translation>
     </message>
     <message>
       <source>All files</source>
-      <translation type="unfinished">All files</translation>
+      <translation>Minden fájl</translation>
     </message>
     <message>
       <source>Open File</source>
-      <translation type="unfinished">Open File</translation>
+      <translation>Fájl megnyitása</translation>
     </message>
     <message>
       <source>Save states</source>
-      <translation type="unfinished">Save states</translation>
+      <translation>Állapotmentések</translation>
     </message>
     <message>
       <source>Save state on file</source>
@@ -1426,118 +1426,118 @@
     </message>
     <message>
       <source>Overclock</source>
-      <translation type="unfinished">Overclock</translation>
+      <translation>Órajel húzása</translation>
     </message>
     <message>
       <source>Sprites and background</source>
-      <translation type="unfinished">Sprites and background</translation>
+      <translation>Sprite-ok és háttér</translation>
     </message>
     <message>
       <source>Unlimited Sprites</source>
-      <translation type="unfinished">Unlimited Sprites</translation>
+      <translation>Korlátlan spritemennyiség</translation>
     </message>
     <message>
       <source>Enable Extra Scanlines</source>
-      <translation type="unfinished">Enable Extra Scanlines</translation>
+      <translation>Extra scanline-ok engedélyezése</translation>
     </message>
     <message>
       <source>Hide Sprites</source>
-      <translation type="unfinished">Hide Sprites</translation>
+      <translation>Sprite-ok eltüntetése</translation>
     </message>
     <message>
       <source>Hide Background</source>
-      <translation type="unfinished">Hide Background</translation>
+      <translation>Háttér eltüntetése</translation>
     </message>
   </context>
   <context>
     <name>wdgSettingsVideo</name>
     <message>
       <source>GLSL &amp;soft stretch</source>
-      <translation type="unfinished">GLSL &amp;soft stretch</translation>
+      <translation>GLSL szoftveres széthúzás (&amp;s)</translation>
     </message>
     <message>
       <source>HLSL &amp;soft stretch</source>
-      <translation type="unfinished">HLSL &amp;soft stretch</translation>
+      <translation>HLSL szoftveres széthúzás (&amp;s)</translation>
     </message>
     <message>
       <source>[Select a file]</source>
-      <translation type="unfinished">[Select a file]</translation>
+      <translation>[Válassz fájlt]</translation>
     </message>
     <message>
       <source>Default</source>
-      <translation type="unfinished">Default</translation>
+      <translation>Alapértelmezés</translation>
     </message>
     <message>
       <source>Shaders files</source>
-      <translation type="unfinished">Shaders files</translation>
+      <translation>Shader fájlok</translation>
     </message>
     <message>
       <source>All files</source>
-      <translation type="unfinished">All files</translation>
+      <translation>Minden fájl</translation>
     </message>
     <message>
       <source>Open Shader file</source>
-      <translation type="unfinished">Open Shader file</translation>
+      <translation>Shader fájl megnyitása</translation>
     </message>
     <message>
       <source>Palette files</source>
-      <translation type="unfinished">Palette files</translation>
+      <translation>Palettafájlok</translation>
     </message>
     <message>
       <source>Open palette file</source>
-      <translation type="unfinished">Open palette file</translation>
+      <translation>Palettafájl megnyitása</translation>
     </message>
     <message>
       <source>Video Settings</source>
-      <translation type="unfinished">Video Settings</translation>
+      <translation>Képbeállítások</translation>
     </message>
     <message>
       <source>1x</source>
-      <translation type="unfinished">1x</translation>
+      <translation>1x</translation>
     </message>
     <message>
       <source>2x</source>
-      <translation type="unfinished">2x</translation>
+      <translation>2x</translation>
     </message>
     <message>
       <source>3x</source>
-      <translation type="unfinished">3x</translation>
+      <translation>3x</translation>
     </message>
     <message>
       <source>4x</source>
-      <translation type="unfinished">4x</translation>
+      <translation>4x</translation>
     </message>
     <message>
       <source>5x</source>
-      <translation type="unfinished">5x</translation>
+      <translation>5x</translation>
     </message>
     <message>
       <source>6x</source>
-      <translation type="unfinished">6x</translation>
+      <translation>6x</translation>
     </message>
     <message>
       <source>Scale</source>
-      <translation type="unfinished">Scale</translation>
+      <translation>Skálázás</translation>
     </message>
     <message>
       <source>Settings</source>
-      <translation type="unfinished">Settings</translation>
+      <translation>Beállítások</translation>
     </message>
     <message>
       <source>** To apply this change restart is needed **</source>
-      <translation type="unfinished">** To apply this change restart is needed **</translation>
+      <translation>** Ennek a változtatásnak az alkalmazásához az emulátor újraindítása szükséges **</translation>
     </message>
     <message>
       <source>Misc</source>
-      <translation type="unfinished">Misc</translation>
+      <translation>Egyéb</translation>
     </message>
     <message>
       <source>1:1</source>
-      <translation type="unfinished">1:1</translation>
+      <translation>1:1</translation>
     </message>
     <message>
       <source>5:4</source>
-      <translation type="unfinished">5:4</translation>
+      <translation>5:4</translation>
     </message>
     <message>
       <source>8:7 (NTSC TV)</source>
