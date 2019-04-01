@@ -1335,39 +1335,39 @@
     </message>
     <message>
       <source>Famicom</source>
-      <translation type="unfinished">Famicom</translation>
+      <translation>Famicom</translation>
     </message>
     <message>
       <source>Four Score</source>
-      <translation type="unfinished">Four Score</translation>
+      <translation>Four Score (4 kontroller)</translation>
     </message>
     <message>
       <source>Misc</source>
-      <translation type="unfinished">Misc</translation>
+      <translation>Egyéb</translation>
     </message>
     <message>
       <source>Expansion Port</source>
-      <translation type="unfinished">Expansion Port</translation>
+      <translation>Bővítőport</translation>
     </message>
     <message>
       <source>Hide Zapper cursor</source>
-      <translation type="unfinished">Hide Zapper cursor</translation>
+      <translation>Zapper kurzorának eltüntetése</translation>
     </message>
     <message>
       <source>Controller Port 1</source>
-      <translation type="unfinished">Controller Port 1</translation>
+      <translation>Kontroller port 1</translation>
     </message>
     <message>
       <source>Controller Port 3</source>
-      <translation type="unfinished">Controller Port 3</translation>
+      <translation>Kontroller port 2</translation>
     </message>
     <message>
       <source>Controller Port 2</source>
-      <translation type="unfinished">Controller Port 2</translation>
+      <translation>Kontroller port 3</translation>
     </message>
     <message>
       <source>Ports</source>
-      <translation type="unfinished">Ports</translation>
+      <translation>Portok</translation>
     </message>
     <message>
       <source>Shortcuts</source>
@@ -1375,38 +1375,38 @@
     </message>
     <message>
       <source>Permit &quot;Up + Down&quot; and &quot;Left + Right&quot; at the same time</source>
-      <translation type="unfinished">Permit &quot;Up + Down&quot; and &quot;Left + Right&quot; at the same time</translation>
+      <translation>&quot;Fel + Le&quot; és &quot;Bal + Jobb&quot; egyszerre lenyomásának engedélyezése</translation>
     </message>
     <message>
       <source>Controller Mode</source>
-      <translation type="unfinished">Controller Mode</translation>
+      <translation>Kontroller módja</translation>
     </message>
     <message>
       <source>Controller Port 4</source>
-      <translation type="unfinished">Controller Port 4</translation>
+      <translation>Kontroller port 4</translation>
     </message>
     <message>
       <source>Reset to defaults</source>
-      <translation type="unfinished">Reset to defaults</translation>
+      <translation>Alapértelmezettre visszaállítás</translation>
     </message>
     <message>
       <source>Action</source>
-      <translation type="unfinished">Action</translation>
+      <translation>Művelet</translation>
     </message>
     <message>
       <source>Keyboard</source>
-      <translation type="unfinished">Keyboard</translation>
+      <translation>Billentyűzet</translation>
     </message>
     <message>
       <source>Joystick</source>
-      <translation type="unfinished">Joystick</translation>
+      <translation>Joystick</translation>
     </message>
   </context>
   <context>
     <name>wdgSettingsPPU</name>
     <message>
       <source>PPU Settings</source>
-      <translation type="unfinished">PPU Settings</translation>
+      <translation>PPU beállítások</translation>
     </message>
     <message>
       <source>Disable 7bit Sample Control</source>
@@ -1414,7 +1414,7 @@
     </message>
     <message>
       <source>Reset Lag Counter</source>
-      <translation type="unfinished">Reset Lag Counter</translation>
+      <translation>Lag-számláló nullázása</translation>
     </message>
     <message>
       <source>VBlank Lines</source>
@@ -1549,195 +1549,195 @@
     </message>
     <message>
       <source>Pixel Aspect Ratio</source>
-      <translation type="unfinished">Pixel Aspect Ratio</translation>
+      <translation>Pixel méretarány</translation>
     </message>
     <message>
       <source>Off</source>
-      <translation type="unfinished">Off</translation>
+      <translation>Ki</translation>
     </message>
     <message>
       <source>On</source>
-      <translation type="unfinished">On</translation>
+      <translation>Be</translation>
     </message>
     <message>
       <source>Default Value</source>
-      <translation type="unfinished">Default Value</translation>
+      <translation>Alapérték</translation>
     </message>
     <message>
       <source>Overscan borders</source>
-      <translation type="unfinished">Overscan borders</translation>
+      <translation>Overscan keretek</translation>
     </message>
     <message>
       <source>NTSC</source>
-      <translation type="unfinished">NTSC</translation>
+      <translation>NTSC</translation>
     </message>
     <message>
       <source>PAL/Dendy</source>
-      <translation type="unfinished">PAL/Dendy</translation>
+      <translation>PAL/Dendy</translation>
     </message>
     <message>
       <source>Right</source>
-      <translation type="unfinished">Right</translation>
+      <translation>Jobb</translation>
     </message>
     <message>
       <source>Down</source>
-      <translation type="unfinished">Down</translation>
+      <translation>Le</translation>
     </message>
     <message>
       <source>Up</source>
-      <translation type="unfinished">Up</translation>
+      <translation>Fel</translation>
     </message>
     <message>
       <source>Left</source>
-      <translation type="unfinished">Left</translation>
+      <translation>Bal</translation>
     </message>
     <message>
       <source>Reset to defaults</source>
-      <translation type="unfinished">Reset to defaults</translation>
+      <translation>Alapértelmezés visszaállítása</translation>
     </message>
     <message>
       <source>Black borders in window mode</source>
-      <translation type="unfinished">Black borders in window mode</translation>
+      <translation>Fekete keretek ablakos módban</translation>
     </message>
     <message>
       <source>Black borders in fullscreen</source>
-      <translation type="unfinished">Black borders in fullscreen</translation>
+      <translation>Fekete keretek teljes képernyős módban</translation>
     </message>
     <message>
       <source>Overscan</source>
-      <translation type="unfinished">Overscan</translation>
+      <translation>Overscan</translation>
     </message>
     <message>
       <source>No Shaders</source>
-      <translation type="unfinished">No Shaders</translation>
+      <translation>Shaderek kikapcsolása</translation>
     </message>
     <message>
       <source>CRT Dotmask</source>
-      <translation type="unfinished">CRT Dotmask</translation>
+      <translation>CRT pontmaszk</translation>
     </message>
     <message>
       <source>CRT Scanlines</source>
-      <translation type="unfinished">CRT Scanlines</translation>
+      <translation>CRT scanline-ok</translation>
     </message>
     <message>
       <source>CRT With Curve</source>
-      <translation type="unfinished">CRT With Curve</translation>
+      <translation>CRT, ívekkel</translation>
     </message>
     <message>
       <source>Emboss</source>
-      <translation type="unfinished">Emboss</translation>
+      <translation>Domborítás</translation>
     </message>
     <message>
       <source>Noise</source>
-      <translation type="unfinished">Noise</translation>
+      <translation>Zaj</translation>
     </message>
     <message>
       <source>NTSC 2Phase Composite</source>
-      <translation type="unfinished">NTSC 2Phase Composite</translation>
+      <translation>Kétfázisos kompozit NTSC</translation>
     </message>
     <message>
       <source>Old TV</source>
-      <translation type="unfinished">Old TV</translation>
+      <translation>Régi TV</translation>
     </message>
     <message>
       <source>From File</source>
-      <translation type="unfinished">From File</translation>
+      <translation>Fájlból</translation>
     </message>
     <message>
       <source>No Filters</source>
-      <translation type="unfinished">No Filters</translation>
+      <translation>Nincs szűrő</translation>
     </message>
     <message>
       <source>Scale2X</source>
-      <translation type="unfinished">Scale2X</translation>
+      <translation>2x-es skálázás</translation>
     </message>
     <message>
       <source>Scale3X</source>
-      <translation type="unfinished">Scale3X</translation>
+      <translation>3x-os skálázás</translation>
     </message>
     <message>
       <source>Scale4X</source>
-      <translation type="unfinished">Scale4X</translation>
+      <translation>4x-es skálázás</translation>
     </message>
     <message>
       <source>Hq2X</source>
-      <translation type="unfinished">Hq2X</translation>
+      <translation>Hq2X</translation>
     </message>
     <message>
       <source>Hq3X</source>
-      <translation type="unfinished">Hq3X</translation>
+      <translation>Hq3X</translation>
     </message>
     <message>
       <source>Hq4X</source>
-      <translation type="unfinished">Hq4X</translation>
+      <translation>Hq4X</translation>
     </message>
     <message>
       <source>xBRZ 2X</source>
-      <translation type="unfinished">xBRZ 2X</translation>
+      <translation>2x-es xBRZ</translation>
     </message>
     <message>
       <source>xBRZ 3X</source>
-      <translation type="unfinished">xBRZ 3X</translation>
+      <translation>3x-os xBRZ</translation>
     </message>
     <message>
       <source>xBRZ 4X</source>
-      <translation type="unfinished">xBRZ 4X</translation>
+      <translation>4x-es xBRZ</translation>
     </message>
     <message>
       <source>xBRZ 5X</source>
-      <translation type="unfinished">xBRZ 5X</translation>
+      <translation>5x-ös xBRZ</translation>
     </message>
     <message>
       <source>xBRZ 6X</source>
-      <translation type="unfinished">xBRZ 6X</translation>
+      <translation>6x-os xBRZ</translation>
     </message>
     <message>
       <source>NTSC Composite</source>
-      <translation type="unfinished">NTSC Composite</translation>
+      <translation>Kompozit NTSC</translation>
     </message>
     <message>
       <source>NTSC S-Video</source>
-      <translation type="unfinished">NTSC S-Video</translation>
+      <translation>NTSC S-Video</translation>
     </message>
     <message>
       <source>NTSC RGB</source>
-      <translation type="unfinished">NTSC RGB</translation>
+      <translation>NTSC RGB</translation>
     </message>
     <message>
       <source>Shaders</source>
-      <translation type="unfinished">Shaders</translation>
+      <translation>Shaderek</translation>
     </message>
     <message>
       <source>Load from a file</source>
-      <translation type="unfinished">Load from a file</translation>
+      <translation>Betöltés fájlból</translation>
     </message>
     <message>
       <source>Shader Parameters</source>
-      <translation type="unfinished">Shader Parameters</translation>
+      <translation>Shader paraméterei</translation>
     </message>
     <message>
       <source>Reset paramaters to defaults</source>
-      <translation type="unfinished">Reset paramaters to defaults</translation>
+      <translation>Paraméterek alapértelmezettre visszaállítása</translation>
     </message>
     <message>
       <source>Filters</source>
-      <translation type="unfinished">Filters</translation>
+      <translation>Szűrők</translation>
     </message>
     <message>
       <source>PAL</source>
-      <translation type="unfinished">PAL</translation>
+      <translation>PAL</translation>
     </message>
     <message>
       <source>Sony CXA2025AS US</source>
-      <translation type="unfinished">Sony CXA2025AS US</translation>
+      <translation>Sony CXA2025AS US</translation>
     </message>
     <message>
       <source>Firebrandx Nostalgia (FBX)</source>
-      <translation type="unfinished">Firebrandx Nostalgia (FBX)</translation>
+      <translation>Firebrandx Nostalgia (FBX)</translation>
     </message>
     <message>
       <source>Firebrandx YUV</source>
-      <translation type="unfinished">Firebrandx YUV</translation>
+      <translation>Firebrandx YUV</translation>
     </message>
     <message>
       <source>Monochrome</source>
