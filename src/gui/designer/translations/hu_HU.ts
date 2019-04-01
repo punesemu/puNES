@@ -332,7 +332,7 @@
     </message>
     <message>
       <source>Compiled</source>
-      <translation>Fordított</translation>
+      <translation>Forgatva</translation>
     </message>
     <message>
       <source>Anyway, thank you all for the love and the help.</source>
@@ -1256,7 +1256,7 @@
     </message>
     <message>
       <source>Hungarian</source>
-      <translation type="unfinished">Hungarian</translation>
+      <translation>Magyar</translation>
     </message>
   </context>
   <context>
