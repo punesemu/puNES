@@ -576,140 +576,140 @@
     </message>
     <message>
       <source>Start/Stop &amp;WAV recording</source>
-      <translation type="unfinished">Start/Stop &amp;WAV recording</translation>
+      <translation>WAV felvétel elindítása/megállítása (&amp;W)</translation>
     </message>
     <message>
       <source>Stop &amp;WAV recording</source>
-      <translation type="unfinished">Stop &amp;WAV recording</translation>
+      <translation>WAV felvétel megállítása (&amp;W)</translation>
     </message>
     <message>
       <source>Start &amp;WAV recording</source>
-      <translation type="unfinished">Start &amp;WAV recording</translation>
+      <translation>WAV felvétel elindítása (&amp;W)</translation>
     </message>
     <message>
       <source>MS WAVE files</source>
-      <translation type="unfinished">MS WAVE files</translation>
+      <translation>MS WAVE fájlok</translation>
     </message>
     <message>
       <source>Record sound</source>
-      <translation type="unfinished">Record sound</translation>
+      <translation>Hangfelvétel</translation>
     </message>
     <message>
       <source>NSF rom files</source>
-      <translation type="unfinished">NSF rom files</translation>
+      <translation>NSF ROM fájlok</translation>
     </message>
     <message>
       <source>NSFE rom files</source>
-      <translation type="unfinished">NSFE rom files</translation>
+      <translation>NSFE ROM fájlok</translation>
     </message>
     <message>
       <source>IPS patch files</source>
-      <translation type="unfinished">IPS patch files</translation>
+      <translation>IPS patch fájlok</translation>
     </message>
     <message>
       <source>BPS patch files</source>
-      <translation type="unfinished">BPS patch files</translation>
+      <translation>BPS patch fájlok</translation>
     </message>
     <message>
       <source>XDELTA patch files</source>
-      <translation type="unfinished">XDELTA patch files</translation>
+      <translation>XDELTA patch fájlok</translation>
     </message>
     <message>
       <source>Open IPS/BPS/XDELTA Patch</source>
-      <translation type="unfinished">Open IPS/BPS/XDELTA Patch</translation>
+      <translation>IPS/BPS/XDELTA patch megnyitása</translation>
     </message>
     <message>
       <source>If you like the emulator and you want to support it&apos;s development or would you pay for a beer at the programmer</source>
-      <translation type="unfinished">If you like the emulator and you want to support it&apos;s development or would you pay for a beer at the programmer</translation>
+      <translation>Ha tetszik az emulátor és szeretnéd támogatni a fejlesztését, vagy fizetnél egy sört a programozónak</translation>
     </message>
     <message>
       <source>&amp;Apply IPS/BPS/XDELTA Patch</source>
-      <translation type="unfinished">&amp;Apply IPS/BPS/XDELTA Patch</translation>
+      <translation>IPS/BPS/XDELTA patch alkalmazása (&amp;A)</translation>
     </message>
     <message>
       <source>&amp;General</source>
-      <translation type="unfinished">&amp;General</translation>
+      <translation>Általános (&amp;G)</translation>
     </message>
   </context>
   <context>
     <name>objCheat</name>
     <message>
       <source>Error on reading the file</source>
-      <translation type="unfinished">Error on reading the file</translation>
+      <translation>Fájlolvasási hiba</translation>
     </message>
     <message>
       <source>Read only</source>
-      <translation type="unfinished">Read only</translation>
+      <translation>Csak olvasható</translation>
     </message>
     <message>
       <source>The file is in read only mode</source>
-      <translation type="unfinished">The file is in read only mode</translation>
+      <translation>A fájl csak olvasható módban van</translation>
     </message>
   </context>
   <context>
     <name>wdgAPUChannels</name>
     <message>
       <source>APU Channels</source>
-      <translation type="unfinished">APU Channels</translation>
+      <translation>APU csatornák</translation>
     </message>
     <message>
       <source>Square 1</source>
-      <translation type="unfinished">Square 1</translation>
+      <translation>1. négyszög</translation>
     </message>
     <message>
       <source>DMC</source>
-      <translation type="unfinished">DMC</translation>
+      <translation>DMC</translation>
     </message>
     <message>
       <source>Noise</source>
-      <translation type="unfinished">Noise</translation>
+      <translation>Fehérzaj</translation>
     </message>
     <message>
       <source>Square 2</source>
-      <translation type="unfinished">Square 2</translation>
+      <translation>2. négyszög</translation>
     </message>
     <message>
       <source>Extra</source>
-      <translation type="unfinished">Extra</translation>
+      <translation>Extra</translation>
     </message>
     <message>
       <source>Master</source>
-      <translation type="unfinished">Master</translation>
+      <translation>Fő</translation>
     </message>
     <message>
       <source>Triangle</source>
-      <translation type="unfinished">Triangle</translation>
+      <translation>Háromszög</translation>
     </message>
     <message>
       <source>active</source>
-      <translation type="unfinished">active</translation>
+      <translation>aktív</translation>
     </message>
     <message>
       <source>volume</source>
-      <translation type="unfinished">volume</translation>
+      <translation>hangerő</translation>
     </message>
     <message>
       <source>Active all</source>
-      <translation type="unfinished">Active all</translation>
+      <translation>Mindegyik aktiválása</translation>
     </message>
     <message>
       <source>Disable all</source>
-      <translation type="unfinished">Disable all</translation>
+      <translation>Mindegyik letiltása</translation>
     </message>
     <message>
       <source>Reset to defaults</source>
-      <translation type="unfinished">Reset to defaults</translation>
+      <translation>Alapértelmezések visszaállítása</translation>
     </message>
   </context>
   <context>
     <name>wdgCheatEditor</name>
     <message>
       <source>Cheats Editor</source>
-      <translation type="unfinished">Cheats Editor</translation>
+      <translation>Csalásszerkesztő</translation>
     </message>
     <message>
       <source>Cheats List</source>
-      <translation type="unfinished">Cheats List</translation>
+      <translation>Csaláslista</translation>
     </message>
     <message>
       <source>Active</source>
@@ -926,43 +926,43 @@
     </message>
     <message>
       <source>1 (Default)</source>
-      <translation type="unfinished">1 (Default)</translation>
+      <translation>1 (Alap)</translation>
     </message>
     <message>
       <source>2</source>
-      <translation type="unfinished">2</translation>
+      <translation>2</translation>
     </message>
     <message>
       <source>3</source>
-      <translation type="unfinished">3</translation>
+      <translation>3</translation>
     </message>
     <message>
       <source>4</source>
-      <translation type="unfinished">4</translation>
+      <translation>4</translation>
     </message>
     <message>
       <source>5</source>
-      <translation type="unfinished">5</translation>
+      <translation>5</translation>
     </message>
     <message>
       <source>6</source>
-      <translation type="unfinished">6</translation>
+      <translation>6</translation>
     </message>
     <message>
       <source>7</source>
-      <translation type="unfinished">7</translation>
+      <translation>7</translation>
     </message>
     <message>
       <source>8</source>
-      <translation type="unfinished">8</translation>
+      <translation>8</translation>
     </message>
     <message>
       <source>9</source>
-      <translation type="unfinished">9</translation>
+      <translation>9</translation>
     </message>
     <message>
       <source>Sample Rate</source>
-      <translation type="unfinished">Sample Rate</translation>
+      <translation>Mintavételezési ráta</translation>
     </message>
     <message>
       <source>Buffer Size factor</source>
@@ -970,11 +970,11 @@
     </message>
     <message>
       <source>Mono</source>
-      <translation type="unfinished">Mono</translation>
+      <translation>Monó</translation>
     </message>
     <message>
       <source>Stereo Delay</source>
-      <translation type="unfinished">Stereo Delay</translation>
+      <translation>Sztereó késleltetés</translation>
     </message>
     <message>
       <source>Stereo Panning</source>
@@ -982,103 +982,103 @@
     </message>
     <message>
       <source>Channels Delay</source>
-      <translation type="unfinished">Channels Delay</translation>
+      <translation>Csatornák késleltetése</translation>
     </message>
     <message>
       <source>Misc</source>
-      <translation type="unfinished">Misc</translation>
+      <translation>Egyéb</translation>
     </message>
     <message>
       <source>Settings</source>
-      <translation type="unfinished">Settings</translation>
+      <translation>Beállítás</translation>
     </message>
     <message>
       <source>Channels</source>
-      <translation type="unfinished">Channels</translation>
+      <translation>Csatornák</translation>
     </message>
     <message>
       <source>5%</source>
-      <translation type="unfinished">5%</translation>
+      <translation>5%</translation>
     </message>
     <message>
       <source>10%</source>
-      <translation type="unfinished">10%</translation>
+      <translation>10%</translation>
     </message>
     <message>
       <source>15%</source>
-      <translation type="unfinished">15%</translation>
+      <translation>15%</translation>
     </message>
     <message>
       <source>20%</source>
-      <translation type="unfinished">20%</translation>
+      <translation>20%</translation>
     </message>
     <message>
       <source>25%</source>
-      <translation type="unfinished">25%</translation>
+      <translation>25%</translation>
     </message>
     <message>
       <source>30% (Default)</source>
-      <translation type="unfinished">30% (Default)</translation>
+      <translation>30% (Alap)</translation>
     </message>
     <message>
       <source>35%</source>
-      <translation type="unfinished">35%</translation>
+      <translation>35%</translation>
     </message>
     <message>
       <source>40%</source>
-      <translation type="unfinished">40%</translation>
+      <translation>40%</translation>
     </message>
     <message>
       <source>45%</source>
-      <translation type="unfinished">45%</translation>
+      <translation>45%</translation>
     </message>
     <message>
       <source>50%</source>
-      <translation type="unfinished">50%</translation>
+      <translation>50%</translation>
     </message>
     <message>
       <source>55%</source>
-      <translation type="unfinished">55%</translation>
+      <translation>55%</translation>
     </message>
     <message>
       <source>60%</source>
-      <translation type="unfinished">60%</translation>
+      <translation>60%</translation>
     </message>
     <message>
       <source>65%</source>
-      <translation type="unfinished">65%</translation>
+      <translation>65%</translation>
     </message>
     <message>
       <source>70%</source>
-      <translation type="unfinished">70%</translation>
+      <translation>70%</translation>
     </message>
     <message>
       <source>75%</source>
-      <translation type="unfinished">75%</translation>
+      <translation>75%</translation>
     </message>
     <message>
       <source>80%</source>
-      <translation type="unfinished">80%</translation>
+      <translation>80%</translation>
     </message>
     <message>
       <source>85%</source>
-      <translation type="unfinished">85%</translation>
+      <translation>85%</translation>
     </message>
     <message>
       <source>90%</source>
-      <translation type="unfinished">90%</translation>
+      <translation>90%</translation>
     </message>
     <message>
       <source>95%</source>
-      <translation type="unfinished">95%</translation>
+      <translation>95%</translation>
     </message>
     <message>
       <source>100%</source>
-      <translation type="unfinished">100%</translation>
+      <translation>100%</translation>
     </message>
     <message>
       <source>APU Channels</source>
-      <translation type="unfinished">APU Channels</translation>
+      <translation>APU Csatornák</translation>
     </message>
     <message>
       <source>Swap Duty Cycles</source>
@@ -1086,7 +1086,7 @@
     </message>
     <message>
       <source>Enable Audio</source>
-      <translation type="unfinished">Enable Audio</translation>
+      <translation>Hang engedélyezése</translation>
     </message>
     <message>
       <source>wdgSettingsAudio</source>
@@ -1097,30 +1097,30 @@
     <name>wdgSettingsCheats</name>
     <message>
       <source>Cheats Settings</source>
-      <translation type="unfinished">Cheats Settings</translation>
+      <translation>Csalások beállításai</translation>
     </message>
     <message>
       <source>Settings</source>
-      <translation type="unfinished">Settings</translation>
+      <translation>Beállítások</translation>
     </message>
     <message>
       <source>Disabled</source>
-      <translation type="unfinished">Disabled</translation>
+      <translation>Letiltva</translation>
     </message>
     <message>
       <source>Game Genie Rom Mode</source>
-      <translation type="unfinished">Game Genie Rom Mode</translation>
+      <translation>Game Genie ROM mód</translation>
     </message>
     <message>
       <source>Cheats List Mode</source>
-      <translation type="unfinished">Cheats List Mode</translation>
+      <translation>Csaláslista mód</translation>
     </message>
   </context>
   <context>
     <name>wdgSettingsGeneral</name>
     <message>
       <source>[Select a file]</source>
-      <translation type="unfinished">[Select a file]</translation>
+      <translation>[Válassz fájlt]</translation>
     </message>
     <message>
       <source>All files</source>
