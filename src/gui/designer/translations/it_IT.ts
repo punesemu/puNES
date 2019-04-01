@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="it_IT">
+<TS version="2.1" language="it" sourcelanguage="en">
 <context>
     <name>Settings</name>
     <message>
@@ -206,7 +206,7 @@
     </message>
     <message>
         <source>None</source>
-        <translation></translation>
+        <translation>None</translation>
     </message>
 </context>
 <context>
@@ -275,6 +275,74 @@
 <context>
     <name>mainWindow</name>
     <message>
+        <source>&amp;Insert disk</source>
+        <translation>&amp;Inserisci disco</translation>
+    </message>
+    <message>
+        <source>&amp;Eject disk</source>
+        <translation>&amp;Estrai disco</translation>
+    </message>
+    <message>
+        <source>&amp;Eject/Insert disk</source>
+        <translation>&amp;Estrai/Inserisci Disco</translation>
+    </message>
+    <message>
+        <source>All supported formats</source>
+        <translation>Tutti i formati</translation>
+    </message>
+    <message>
+        <source>Compressed files</source>
+        <translation>Archivi compressi</translation>
+    </message>
+    <message>
+        <source>Nes rom files</source>
+        <translation>Rom NES</translation>
+    </message>
+    <message>
+        <source>FDS image files</source>
+        <translation>Immagini FDS</translation>
+    </message>
+    <message>
+        <source>TAS movie files</source>
+        <translation>film TAS</translation>
+    </message>
+    <message>
+        <source>All files</source>
+        <translation>Tutti i files</translation>
+    </message>
+    <message>
+        <source>Open File</source>
+        <translation>Carica File</translation>
+    </message>
+    <message>
+        <source>Save states</source>
+        <translation>File di salvataggio</translation>
+    </message>
+    <message>
+        <source>Save state on file</source>
+        <translation>Salva stato su file</translation>
+    </message>
+    <message>
+        <source>Open save state</source>
+        <translation>Carica stato da file</translation>
+    </message>
+    <message>
+        <source>Nintendo Entertainment System Emulator</source>
+        <translation>Emulatore di Nintendo Entertainment System</translation>
+    </message>
+    <message>
+        <source>Compiled</source>
+        <translation>Compilato il</translation>
+    </message>
+    <message>
+        <source>Anyway, thank you all for the love and the help.</source>
+        <translation>In ogni caso, grazie a tutti per l&apos;affetto e l&apos;aiuto concessomi.</translation>
+    </message>
+    <message>
+        <source>portable version</source>
+        <translation>versione portatile</translation>
+    </message>
+    <message>
         <source>&amp;Open</source>
         <translation>&amp;Apri</translation>
     </message>
@@ -339,20 +407,20 @@
         <translation>&amp;Carica da file</translation>
     </message>
     <message>
+        <source>F&amp;ullscreen</source>
+        <translation>Sc&amp;hermo intero</translation>
+    </message>
+    <message>
+        <source>&amp;Game Genie Rom Mode</source>
+        <translation>Rom &amp;Game Genie</translation>
+    </message>
+    <message>
         <source>S&amp;ave state</source>
         <translation>S&amp;alva stato</translation>
     </message>
     <message>
         <source>L&amp;oad state</source>
         <translation>Ca&amp;rica stato</translation>
-    </message>
-    <message>
-        <source>Setti&amp;ngs</source>
-        <translation>&amp;Configurazione</translation>
-    </message>
-    <message>
-        <source>F&amp;ullscreen</source>
-        <translation>Sc&amp;hermo intero</translation>
     </message>
     <message>
         <source>&amp;Increment slot</source>
@@ -391,102 +459,6 @@
         <translation>&amp;Informazioni</translation>
     </message>
     <message>
-        <source>&amp;File</source>
-        <translation>&amp;File</translation>
-    </message>
-    <message>
-        <source>&amp;Recent Roms</source>
-        <translation>&amp;Roms recenti</translation>
-    </message>
-    <message>
-        <source>&amp;NES</source>
-        <translation>&amp;NES</translation>
-    </message>
-    <message>
-        <source>&amp;Disk Side</source>
-        <translation>&amp;Lato del Disco</translation>
-    </message>
-    <message>
-        <source>&amp;Video</source>
-        <translation>&amp;Video</translation>
-    </message>
-    <message>
-        <source>&amp;Audio</source>
-        <translation>&amp;Audio</translation>
-    </message>
-    <message>
-        <source>&amp;Input</source>
-        <translation>&amp;Input</translation>
-    </message>
-    <message>
-        <source>S&amp;tate</source>
-        <translation>S&amp;alvataggi</translation>
-    </message>
-    <message>
-        <source>&amp;Help</source>
-        <translation>&amp;Aiuto</translation>
-    </message>
-    <message>
-        <source>&amp;Insert disk</source>
-        <translation>&amp;Inserisci disco</translation>
-    </message>
-    <message>
-        <source>&amp;Eject disk</source>
-        <translation>&amp;Estrai disco</translation>
-    </message>
-    <message>
-        <source>&amp;Eject/Insert disk</source>
-        <translation>&amp;Estrai/Inserisci Disco</translation>
-    </message>
-    <message>
-        <source>All supported formats</source>
-        <translation>Tutti i formati</translation>
-    </message>
-    <message>
-        <source>Compressed files</source>
-        <translation>Archivi compressi</translation>
-    </message>
-    <message>
-        <source>Nes rom files</source>
-        <translation>Rom NES</translation>
-    </message>
-    <message>
-        <source>FDS image files</source>
-        <translation>Immagini FDS</translation>
-    </message>
-    <message>
-        <source>TAS movie files</source>
-        <translation>film TAS</translation>
-    </message>
-    <message>
-        <source>All files</source>
-        <translation>Tutti i files</translation>
-    </message>
-    <message>
-        <source>Open File</source>
-        <translation>Carica File</translation>
-    </message>
-    <message>
-        <source>Save states</source>
-        <translation>File di salvataggio</translation>
-    </message>
-    <message>
-        <source>Save state on file</source>
-        <translation>Salva stato su file</translation>
-    </message>
-    <message>
-        <source>Open save state</source>
-        <translation>Carica stato da file</translation>
-    </message>
-    <message>
-        <source>Nintendo Entertainment System Emulator</source>
-        <translation>Emulatore di Nintendo Entertainment System</translation>
-    </message>
-    <message>
-        <source>Compiled</source>
-        <translation>Compilato il</translation>
-    </message>
-    <message>
         <source>Slot &amp;6</source>
         <translation>Slot &amp;6</translation>
     </message>
@@ -503,10 +475,6 @@
         <translation>Slot &amp;9</translation>
     </message>
     <message>
-        <source>&amp;Game Genie Rom Mode</source>
-        <translation>Rom &amp;Game Genie</translation>
-    </message>
-    <message>
         <source>&amp;Cheats List Mode</source>
         <translation>Lista &amp;Cheats</translation>
     </message>
@@ -519,20 +487,8 @@
         <translation>&amp;Disabilitati</translation>
     </message>
     <message>
-        <source>Anyway, thank you all for the love and the help.</source>
-        <translation>In ogni caso, grazie a tutti per l&apos;affetto e l&apos;aiuto concessomi.</translation>
-    </message>
-    <message>
-        <source>portable version</source>
-        <translation>versione portatile</translation>
-    </message>
-    <message>
         <source>&amp;Fast Forward</source>
         <translation>&amp;Fast Forward</translation>
-    </message>
-    <message>
-        <source>&amp;Cheats</source>
-        <translation>&amp;Cheats</translation>
     </message>
     <message>
         <source>&amp;Pause</source>
@@ -541,10 +497,6 @@
     <message>
         <source>Save Screens&amp;hot</source>
         <translation>Salva Screens&amp;hot</translation>
-    </message>
-    <message>
-        <source>&amp;PPU</source>
-        <translation>&amp;PPU</translation>
     </message>
     <message>
         <source>Insert Coin</source>
@@ -557,6 +509,54 @@
     <message>
         <source>&amp;Open working folder</source>
         <translation>Apri &amp;directory di lavoro</translation>
+    </message>
+    <message>
+        <source>&amp;File</source>
+        <translation>&amp;File</translation>
+    </message>
+    <message>
+        <source>&amp;Recent Roms</source>
+        <translation>&amp;Roms recenti</translation>
+    </message>
+    <message>
+        <source>&amp;NES</source>
+        <translation>&amp;NES</translation>
+    </message>
+    <message>
+        <source>&amp;Disk Side</source>
+        <translation>&amp;Lato del Disco</translation>
+    </message>
+    <message>
+        <source>Setti&amp;ngs</source>
+        <translation>&amp;Configurazione</translation>
+    </message>
+    <message>
+        <source>&amp;Video</source>
+        <translation>&amp;Video</translation>
+    </message>
+    <message>
+        <source>&amp;Audio</source>
+        <translation>&amp;Audio</translation>
+    </message>
+    <message>
+        <source>&amp;Input</source>
+        <translation>&amp;Input</translation>
+    </message>
+    <message>
+        <source>&amp;Cheats</source>
+        <translation>&amp;Cheats</translation>
+    </message>
+    <message>
+        <source>&amp;PPU</source>
+        <translation>&amp;PPU</translation>
+    </message>
+    <message>
+        <source>S&amp;tate</source>
+        <translation>S&amp;alvataggi</translation>
+    </message>
+    <message>
+        <source>&amp;Help</source>
+        <translation>&amp;Aiuto</translation>
     </message>
     <message>
         <source>&amp;Turn On</source>
@@ -846,10 +846,6 @@
         <translation>Salva Paletta su file</translation>
     </message>
     <message>
-        <source>wdgPaletteEditor</source>
-        <translation>wdgPaletteEditor</translation>
-    </message>
-    <message>
         <source>Selected</source>
         <translation>Selezionato</translation>
     </message>
@@ -922,7 +918,7 @@
     </message>
     <message>
         <source>0</source>
-        <translation>0</translation>
+        <translation type="unfinished">0</translation>
     </message>
     <message>
         <source>1 (Default)</source>
@@ -1087,10 +1083,6 @@
     <message>
         <source>Enable Audio</source>
         <translation>Abilita Audio</translation>
-    </message>
-    <message>
-        <source>wdgSettingsAudio</source>
-        <translation>wdgSettingsAudio</translation>
     </message>
 </context>
 <context>
@@ -1261,6 +1253,10 @@
     <message>
         <source>Spanish</source>
         <translation>Spagnolo</translation>
+    </message>
+    <message>
+        <source>Hungarian</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

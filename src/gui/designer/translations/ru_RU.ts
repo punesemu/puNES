@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="ru_RU">
+<TS version="2.1" language="ru" sourcelanguage="en">
 <context>
     <name>Settings</name>
     <message>
@@ -275,6 +275,74 @@
 <context>
     <name>mainWindow</name>
     <message>
+        <source>&amp;Insert disk</source>
+        <translation>&amp;Вставить дискету</translation>
+    </message>
+    <message>
+        <source>&amp;Eject disk</source>
+        <translation>В&amp;ынуть дискету</translation>
+    </message>
+    <message>
+        <source>&amp;Eject/Insert disk</source>
+        <translation>&amp;Вставить/Вынуть дискету</translation>
+    </message>
+    <message>
+        <source>All supported formats</source>
+        <translation>Все поддерживаемые форматы</translation>
+    </message>
+    <message>
+        <source>Compressed files</source>
+        <translation>Сжатые файлы</translation>
+    </message>
+    <message>
+        <source>Nes rom files</source>
+        <translation>ROM&apos;ы NES</translation>
+    </message>
+    <message>
+        <source>FDS image files</source>
+        <translation>Образы дискет FDS</translation>
+    </message>
+    <message>
+        <source>TAS movie files</source>
+        <translation>Видео TAS</translation>
+    </message>
+    <message>
+        <source>All files</source>
+        <translation>Все файлы</translation>
+    </message>
+    <message>
+        <source>Open File</source>
+        <translation>Открыть файл</translation>
+    </message>
+    <message>
+        <source>Save states</source>
+        <translation>Сохранения puNES</translation>
+    </message>
+    <message>
+        <source>Save state on file</source>
+        <translation>Сохранить в файл</translation>
+    </message>
+    <message>
+        <source>Open save state</source>
+        <translation>Открыть сохранение</translation>
+    </message>
+    <message>
+        <source>Nintendo Entertainment System Emulator</source>
+        <translation>Эмулятор Nintendo Entertainment System</translation>
+    </message>
+    <message>
+        <source>Compiled</source>
+        <translation>Скомпилирован</translation>
+    </message>
+    <message>
+        <source>Anyway, thank you all for the love and the help.</source>
+        <translation>Спасибо всем за отзывы и поддержку.</translation>
+    </message>
+    <message>
+        <source>portable version</source>
+        <translation>портативная версия</translation>
+    </message>
+    <message>
         <source>&amp;Open</source>
         <translation>&amp;Открыть</translation>
     </message>
@@ -339,20 +407,20 @@
         <translation>&amp;Загрузить из файла</translation>
     </message>
     <message>
+        <source>F&amp;ullscreen</source>
+        <translation>&amp;Полноэкранный режим</translation>
+    </message>
+    <message>
+        <source>&amp;Game Genie Rom Mode</source>
+        <translation>&amp;Game Genie ROM</translation>
+    </message>
+    <message>
         <source>S&amp;ave state</source>
         <translation>С&amp;охранить</translation>
     </message>
     <message>
         <source>L&amp;oad state</source>
         <translation>З&amp;агрузить</translation>
-    </message>
-    <message>
-        <source>Setti&amp;ngs</source>
-        <translation>&amp;Настройки</translation>
-    </message>
-    <message>
-        <source>F&amp;ullscreen</source>
-        <translation>&amp;Полноэкранный режим</translation>
     </message>
     <message>
         <source>&amp;Increment slot</source>
@@ -391,102 +459,6 @@
         <translation>&amp;О программе</translation>
     </message>
     <message>
-        <source>&amp;File</source>
-        <translation>&amp;Файл</translation>
-    </message>
-    <message>
-        <source>&amp;Recent Roms</source>
-        <translation>&amp;Последние ROM&apos;ы</translation>
-    </message>
-    <message>
-        <source>&amp;NES</source>
-        <translation>&amp;NES</translation>
-    </message>
-    <message>
-        <source>&amp;Disk Side</source>
-        <translation>&amp;Сторона дискеты</translation>
-    </message>
-    <message>
-        <source>&amp;Video</source>
-        <translation>&amp;Видео</translation>
-    </message>
-    <message>
-        <source>&amp;Audio</source>
-        <translation>&amp;Звук</translation>
-    </message>
-    <message>
-        <source>&amp;Input</source>
-        <translation>&amp;Управление</translation>
-    </message>
-    <message>
-        <source>S&amp;tate</source>
-        <translation>&amp;Сохранение</translation>
-    </message>
-    <message>
-        <source>&amp;Help</source>
-        <translation>&amp;Помощь</translation>
-    </message>
-    <message>
-        <source>&amp;Insert disk</source>
-        <translation>&amp;Вставить дискету</translation>
-    </message>
-    <message>
-        <source>&amp;Eject disk</source>
-        <translation>В&amp;ынуть дискету</translation>
-    </message>
-    <message>
-        <source>&amp;Eject/Insert disk</source>
-        <translation>&amp;Вставить/Вынуть дискету</translation>
-    </message>
-    <message>
-        <source>All supported formats</source>
-        <translation>Все поддерживаемые форматы</translation>
-    </message>
-    <message>
-        <source>Compressed files</source>
-        <translation>Сжатые файлы</translation>
-    </message>
-    <message>
-        <source>Nes rom files</source>
-        <translation>ROM&apos;ы NES</translation>
-    </message>
-    <message>
-        <source>FDS image files</source>
-        <translation>Образы дискет FDS</translation>
-    </message>
-    <message>
-        <source>TAS movie files</source>
-        <translation>Видео TAS</translation>
-    </message>
-    <message>
-        <source>All files</source>
-        <translation>Все файлы</translation>
-    </message>
-    <message>
-        <source>Open File</source>
-        <translation>Открыть файл</translation>
-    </message>
-    <message>
-        <source>Save states</source>
-        <translation>Сохранения puNES</translation>
-    </message>
-    <message>
-        <source>Save state on file</source>
-        <translation>Сохранить в файл</translation>
-    </message>
-    <message>
-        <source>Open save state</source>
-        <translation>Открыть сохранение</translation>
-    </message>
-    <message>
-        <source>Nintendo Entertainment System Emulator</source>
-        <translation>Эмулятор Nintendo Entertainment System</translation>
-    </message>
-    <message>
-        <source>Compiled</source>
-        <translation>Скомпилирован</translation>
-    </message>
-    <message>
         <source>Slot &amp;6</source>
         <translation>Слот &amp;6</translation>
     </message>
@@ -503,10 +475,6 @@
         <translation>Слот &amp;9</translation>
     </message>
     <message>
-        <source>&amp;Game Genie Rom Mode</source>
-        <translation>&amp;Game Genie ROM</translation>
-    </message>
-    <message>
         <source>&amp;Cheats List Mode</source>
         <translation>&amp;Список читов</translation>
     </message>
@@ -519,20 +487,8 @@
         <translation>&amp;Отключено</translation>
     </message>
     <message>
-        <source>Anyway, thank you all for the love and the help.</source>
-        <translation>Спасибо всем за отзывы и поддержку.</translation>
-    </message>
-    <message>
-        <source>portable version</source>
-        <translation>портативная версия</translation>
-    </message>
-    <message>
         <source>&amp;Fast Forward</source>
         <translation>&amp;Перемотка</translation>
-    </message>
-    <message>
-        <source>&amp;Cheats</source>
-        <translation>&amp;Читы</translation>
     </message>
     <message>
         <source>&amp;Pause</source>
@@ -541,10 +497,6 @@
     <message>
         <source>Save Screens&amp;hot</source>
         <translation>Сделать скрин&amp;шот</translation>
-    </message>
-    <message>
-        <source>&amp;PPU</source>
-        <translation>&amp;PPU</translation>
     </message>
     <message>
         <source>Insert Coin</source>
@@ -557,6 +509,54 @@
     <message>
         <source>&amp;Open working folder</source>
         <translation>Открыть &amp;рабочую папку</translation>
+    </message>
+    <message>
+        <source>&amp;File</source>
+        <translation>&amp;Файл</translation>
+    </message>
+    <message>
+        <source>&amp;Recent Roms</source>
+        <translation>&amp;Последние ROM&apos;ы</translation>
+    </message>
+    <message>
+        <source>&amp;NES</source>
+        <translation>&amp;NES</translation>
+    </message>
+    <message>
+        <source>&amp;Disk Side</source>
+        <translation>&amp;Сторона дискеты</translation>
+    </message>
+    <message>
+        <source>Setti&amp;ngs</source>
+        <translation>&amp;Настройки</translation>
+    </message>
+    <message>
+        <source>&amp;Video</source>
+        <translation>&amp;Видео</translation>
+    </message>
+    <message>
+        <source>&amp;Audio</source>
+        <translation>&amp;Звук</translation>
+    </message>
+    <message>
+        <source>&amp;Input</source>
+        <translation>&amp;Управление</translation>
+    </message>
+    <message>
+        <source>&amp;Cheats</source>
+        <translation>&amp;Читы</translation>
+    </message>
+    <message>
+        <source>&amp;PPU</source>
+        <translation>&amp;PPU</translation>
+    </message>
+    <message>
+        <source>S&amp;tate</source>
+        <translation>&amp;Сохранение</translation>
+    </message>
+    <message>
+        <source>&amp;Help</source>
+        <translation>&amp;Помощь</translation>
     </message>
     <message>
         <source>&amp;Turn On</source>
@@ -846,10 +846,6 @@
         <translation>Сохранить палитру в файл</translation>
     </message>
     <message>
-        <source>wdgPaletteEditor</source>
-        <translation>Редактор палитр</translation>
-    </message>
-    <message>
         <source>Selected</source>
         <translation>Выбранная</translation>
     </message>
@@ -922,7 +918,7 @@
     </message>
     <message>
         <source>0</source>
-        <translation>0</translation>
+        <translation type="unfinished">0</translation>
     </message>
     <message>
         <source>1 (Default)</source>
@@ -1087,10 +1083,6 @@
     <message>
         <source>Enable Audio</source>
         <translation>Включить звук</translation>
-    </message>
-    <message>
-        <source>wdgSettingsAudio</source>
-        <translation>Настройки звука</translation>
     </message>
 </context>
 <context>
@@ -1260,6 +1252,10 @@
     </message>
     <message>
         <source>Spanish</source>
+        <translation type="unfinished">Spanish</translation>
+    </message>
+    <message>
+        <source>Hungarian</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

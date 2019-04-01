@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="es_ES" sourcelanguage="en">
+<TS version="2.1" language="es-ES" sourcelanguage="en">
 <context>
     <name>Settings</name>
     <message>
@@ -846,10 +846,6 @@
         <translation>Guardar paleta en archivo</translation>
     </message>
     <message>
-        <source>wdgPaletteEditor</source>
-        <translation>wdgPaletteEditor</translation>
-    </message>
-    <message>
         <source>Selected</source>
         <translation>Seleccionado</translation>
     </message>
@@ -922,7 +918,7 @@
     </message>
     <message>
         <source>0</source>
-        <translation>0</translation>
+        <translation type="unfinished">0</translation>
     </message>
     <message>
         <source>1 (Default)</source>
@@ -1087,10 +1083,6 @@
     <message>
         <source>Enable Audio</source>
         <translation>Habilitar audio</translation>
-    </message>
-    <message>
-        <source>wdgSettingsAudio</source>
-        <translation>wdgSettingsAudio</translation>
     </message>
 </context>
 <context>
@@ -1260,6 +1252,10 @@
     </message>
     <message>
         <source>Spanish</source>
+        <translation type="unfinished">Spanish</translation>
+    </message>
+    <message>
+        <source>Hungarian</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

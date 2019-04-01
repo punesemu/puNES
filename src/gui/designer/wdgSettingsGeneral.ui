@@ -77,6 +77,15 @@
        </item>
        <item>
         <property name="text">
+         <string>Hungarian</string>
+        </property>
+        <property name="icon">
+         <iconset resource="resources.qrc">
+          <normaloff>:/icon/icons/flag_hungary.svg</normaloff>:/icon/icons/flag_hungary.svg</iconset>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>Italian</string>
         </property>
         <property name="icon">

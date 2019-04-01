@@ -421,7 +421,8 @@ static const _opt opt_languages[] = {
 	{NULL, uL("english"), LNG_ENGLISH},
 	{NULL, uL("italian"), LNG_ITALIAN},
 	{NULL, uL("russian"), LNG_RUSSIAN},
-	{NULL, uL("spanish"), LNG_SPANISH}
+	{NULL, uL("spanish"), LNG_SPANISH},
+	{NULL, uL("hungarian"), LNG_HUNGARIAN}
 };
 static const _opt opt_nsf_player_effect[] = {
 	{NULL, uL("bars"),     NSF_EFFECT_BARS},

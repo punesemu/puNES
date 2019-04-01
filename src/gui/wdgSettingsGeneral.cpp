@@ -123,7 +123,28 @@ void wdgSettingsGeneral::rewind_minutes_set(void) {
 	comboBox_Rewind_minutes->setCurrentIndex(cfg->rewind_minutes);
 }
 void wdgSettingsGeneral::language_set(void) {
-	comboBox_Language->setCurrentIndex(cfg->language);
+	int lang = 0;
+
+	switch (cfg->language) {
+		default:
+		case LNG_ENGLISH:
+			lang = 0;
+			break;
+		case LNG_HUNGARIAN:
+			lang = 1;
+			break;
+		case LNG_ITALIAN:
+			lang = 2;
+			break;
+		case LNG_RUSSIAN:
+			lang = 3;
+			break;
+		case LNG_SPANISH:
+			lang = 4;
+			break;
+	}
+
+	comboBox_Language->setCurrentIndex(lang);
 }
 
 void wdgSettingsGeneral::s_mode(int index) {
@@ -229,6 +250,25 @@ void wdgSettingsGeneral::s_rewind_minutes(int index) {
 }
 void wdgSettingsGeneral::s_language(int index) {
 	int lang = index;
+
+	switch (index) {
+		default:
+		case 0:
+			lang = LNG_ENGLISH;
+			break;
+		case 1:
+			lang = LNG_HUNGARIAN;
+			break;
+		case 2:
+			lang = LNG_ITALIAN;
+			break;
+		case 3:
+			lang = LNG_RUSSIAN;
+			break;
+		case 4:
+			lang = LNG_SPANISH;
+			break;
+	}
 
 	mainwin->set_language(lang);
 }
