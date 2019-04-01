@@ -432,79 +432,79 @@
     </message>
     <message>
       <source>Slot &amp;0</source>
-      <translation type="unfinished">Slot &amp;0</translation>
+      <translation>Mentéshely &amp;0</translation>
     </message>
     <message>
       <source>Slot &amp;1</source>
-      <translation type="unfinished">Slot &amp;1</translation>
+      <translation>Mentéshely &amp;1</translation>
     </message>
     <message>
       <source>Slot &amp;2</source>
-      <translation type="unfinished">Slot &amp;2</translation>
+      <translation>Mentéshely &amp;2</translation>
     </message>
     <message>
       <source>Slot &amp;3</source>
-      <translation type="unfinished">Slot &amp;3</translation>
+      <translation>Mentéshely &amp;3</translation>
     </message>
     <message>
       <source>Slot &amp;4</source>
-      <translation type="unfinished">Slot &amp;4</translation>
+      <translation>Mentéshely &amp;4</translation>
     </message>
     <message>
       <source>Slot &amp;5</source>
-      <translation type="unfinished">Slot &amp;5</translation>
+      <translation>Mentéshely &amp;5</translation>
     </message>
     <message>
       <source>&amp;About</source>
-      <translation type="unfinished">&amp;About</translation>
+      <translation>&amp;A programról</translation>
     </message>
     <message>
       <source>Slot &amp;6</source>
-      <translation type="unfinished">Slot &amp;6</translation>
+      <translation>Mentéshely &amp;6</translation>
     </message>
     <message>
       <source>Slot &amp;7</source>
-      <translation type="unfinished">Slot &amp;7</translation>
+      <translation>Mentéshely &amp;7</translation>
     </message>
     <message>
       <source>Slot &amp;8</source>
-      <translation type="unfinished">Slot &amp;8</translation>
+      <translation>Mentéshely &amp;8</translation>
     </message>
     <message>
       <source>Slot &amp;9</source>
-      <translation type="unfinished">Slot &amp;9</translation>
+      <translation>Mentéshely &amp;9</translation>
     </message>
     <message>
       <source>&amp;Cheats List Mode</source>
-      <translation type="unfinished">&amp;Cheats List Mode</translation>
+      <translation>Csalások - Lista mód (&amp;C)</translation>
     </message>
     <message>
       <source>Cheats &amp;Editor</source>
-      <translation type="unfinished">Cheats &amp;Editor</translation>
+      <translation>Csalásszerkesztő (&amp;E)</translation>
     </message>
     <message>
       <source>&amp;Disabled</source>
-      <translation type="unfinished">&amp;Disabled</translation>
+      <translation>Letiltva (&amp;D)</translation>
     </message>
     <message>
       <source>&amp;Fast Forward</source>
-      <translation type="unfinished">&amp;Fast Forward</translation>
+      <translation>Gyorsítás (&amp;F)</translation>
     </message>
     <message>
       <source>&amp;Pause</source>
-      <translation type="unfinished">&amp;Pause</translation>
+      <translation>&amp;Pause</translation>
     </message>
     <message>
       <source>Save Screens&amp;hot</source>
-      <translation type="unfinished">Save Screens&amp;hot</translation>
+      <translation>Képernyőfotó (&amp;h)</translation>
     </message>
     <message>
       <source>Insert Coin</source>
-      <translation type="unfinished">Insert Coin</translation>
+      <translation>Érme bedobása</translation>
     </message>
     <message>
       <source>Vs System Controls</source>
-      <translation type="unfinished">Vs System Controls</translation>
+      <translation>Vs rendszer vezérlése</translation>
     </message>
     <message>
       <source>&amp;Open working folder</source>
@@ -1541,11 +1541,11 @@
     </message>
     <message>
       <source>8:7 (NTSC TV)</source>
-      <translation type="unfinished">8:7 (NTSC TV)</translation>
+      <translation>8:7 (NTSC TV)</translation>
     </message>
     <message>
       <source>11:8 (PAL TV)</source>
-      <translation type="unfinished">11:8 (PAL TV)</translation>
+      <translation>11:8 (PAL TV)</translation>
     </message>
     <message>
       <source>Pixel Aspect Ratio</source>
@@ -1741,106 +1741,106 @@
     </message>
     <message>
       <source>Monochrome</source>
-      <translation type="unfinished">Monochrome</translation>
+      <translation>Monokróm</translation>
     </message>
     <message>
       <source>Green</source>
-      <translation type="unfinished">Green</translation>
+      <translation>Zöld</translation>
     </message>
     <message>
       <source>Editor</source>
-      <translation type="unfinished">Editor</translation>
+      <translation>Szerkesztő</translation>
     </message>
     <message>
       <source>Palette</source>
-      <translation type="unfinished">Palette</translation>
+      <translation>Paletta</translation>
     </message>
     <message>
       <source>xBRZ 2X Multithreading</source>
-      <translation type="unfinished">xBRZ 2X Multithreading</translation>
+      <translation>2 szálú xBRZ</translation>
     </message>
     <message>
       <source>xBRZ 3X Multithreading</source>
-      <translation type="unfinished">xBRZ 3X Multithreading</translation>
+      <translation>3 szálú xBRZ</translation>
     </message>
     <message>
       <source>xBRZ 4X Multithreading</source>
-      <translation type="unfinished">xBRZ 4X Multithreading</translation>
+      <translation>4 szálú xBRZ</translation>
     </message>
     <message>
       <source>xBRZ 5X Multithreading</source>
-      <translation type="unfinished">xBRZ 5X Multithreading</translation>
+      <translation>5 szálú xBRZ</translation>
     </message>
     <message>
       <source>xBRZ 6X Multithreading</source>
-      <translation type="unfinished">xBRZ 6X Multithreading</translation>
+      <translation>6 szálú xBRZ</translation>
     </message>
     <message>
       <source>VSync</source>
-      <translation type="unfinished">VSync</translation>
+      <translation>Vertikális szinkron (VSync)</translation>
     </message>
     <message>
       <source>Interpolation</source>
-      <translation type="unfinished">Interpolation</translation>
+      <translation>Interpoláció</translation>
     </message>
     <message>
       <source>Text on screen</source>
-      <translation type="unfinished">Text on screen</translation>
+      <translation>Szöveg a képernyőn</translation>
     </message>
     <message>
       <source>Show FPS</source>
-      <translation type="unfinished">Show FPS</translation>
+      <translation>FPS mutatása</translation>
     </message>
     <message>
       <source>Input display</source>
-      <translation type="unfinished">Input display</translation>
+      <translation>Beviteli kijelző</translation>
     </message>
     <message>
       <source>Disable TV noise emulation when turned off</source>
-      <translation type="unfinished">Disable TV noise emulation when turned off</translation>
+      <translation>TV-zaj emuláció tiltása kikapcsolt állapotban</translation>
     </message>
     <message>
       <source>Disable sepia color on pause</source>
-      <translation type="unfinished">Disable sepia color on pause</translation>
+      <translation>Szépia tiltása pause alatt</translation>
     </message>
     <message>
       <source>Fullscreen in window</source>
-      <translation type="unfinished">Fullscreen in window</translation>
+      <translation>Ablakban teljes képernyős</translation>
     </message>
     <message>
       <source>Stretch in fullscreen</source>
-      <translation type="unfinished">Stretch in fullscreen</translation>
+      <translation>Széthúzás teljes képernyőn</translation>
     </message>
     <message>
       <source>Soft stretch</source>
-      <translation type="unfinished">Soft stretch</translation>
+      <translation>Szoftveres széthúzás</translation>
     </message>
     <message>
       <source>Disable sRGB FBO</source>
-      <translation type="unfinished">Disable sRGB FBO</translation>
+      <translation>sRGB FBO tiltása</translation>
     </message>
     <message>
       <source>Disable Red and Green emphasis swap for PAL/Dendy</source>
-      <translation type="unfinished">Disable Red and Green emphasis swap for PAL/Dendy</translation>
+      <translation>Vörös és zöld hangsúly cseréjének tiltása PAL/Dendy esetén</translation>
     </message>
   </context>
   <context>
     <name>wdgState</name>
     <message>
       <source>Save/Load Slot Box</source>
-      <translation type="unfinished">Save/Load Slot Box</translation>
+      <translation>Mentés/Töltés doboz</translation>
     </message>
     <message>
       <source>Slot %1</source>
-      <translation type="unfinished">Slot %1</translation>
+      <translation>Mentéshely %1</translation>
     </message>
     <message>
       <source>Save</source>
-      <translation type="unfinished">Save</translation>
+      <translation>Mentés</translation>
     </message>
     <message>
       <source>Load</source>
-      <translation type="unfinished">Load</translation>
+      <translation>Töltés</translation>
     </message>
   </context>
 </TS>
