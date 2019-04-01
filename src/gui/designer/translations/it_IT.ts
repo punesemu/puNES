@@ -20,23 +20,23 @@
     </message>
     <message>
       <source>Video</source>
-      <translation type="unfinished">Video</translation>
+      <translation>Video</translation>
     </message>
     <message>
       <source>Audio</source>
-      <translation type="unfinished">Audio</translation>
+      <translation>Audio</translation>
     </message>
     <message>
       <source>Input</source>
-      <translation type="unfinished">Input</translation>
+      <translation>Input</translation>
     </message>
     <message>
       <source>PPU</source>
-      <translation type="unfinished">PPU</translation>
+      <translation>PPU</translation>
     </message>
     <message>
       <source>Cheats</source>
-      <translation type="unfinished">Cheats</translation>
+      <translation>Cheats</translation>
     </message>
     <message>
       <source>Save Settings</source>
@@ -55,7 +55,7 @@
     </message>
     <message>
       <source>Auto</source>
-      <translation type="unfinished">Auto</translation>
+      <translation>Auto</translation>
     </message>
     <message>
       <source>Original</source>
@@ -99,7 +99,7 @@
     </message>
     <message>
       <source>ID</source>
-      <translation type="unfinished">ID</translation>
+      <translation>ID</translation>
     </message>
     <message>
       <source>Up</source>
@@ -107,7 +107,7 @@
     </message>
     <message>
       <source>A</source>
-      <translation type="unfinished">A</translation>
+      <translation>A</translation>
     </message>
     <message>
       <source>Down</source>
@@ -123,23 +123,23 @@
     </message>
     <message>
       <source>Start</source>
-      <translation type="unfinished">Start</translation>
+      <translation>Start</translation>
     </message>
     <message>
       <source>Turbo B</source>
-      <translation type="unfinished">Turbo B</translation>
+      <translation>Turbo B</translation>
     </message>
     <message>
       <source>Select</source>
-      <translation type="unfinished">Select</translation>
+      <translation>Select</translation>
     </message>
     <message>
       <source>Turbo A</source>
-      <translation type="unfinished">Turbo A</translation>
+      <translation>Turbo A</translation>
     </message>
     <message>
       <source>B</source>
-      <translation type="unfinished">B</translation>
+      <translation>B</translation>
     </message>
     <message>
       <source>Right</source>
@@ -159,7 +159,7 @@
     </message>
     <message>
       <source>Joystick</source>
-      <translation type="unfinished">Joystick</translation>
+      <translation>Joystick</translation>
     </message>
     <message>
       <source>Misc</source>
@@ -202,11 +202,11 @@
     </message>
     <message>
       <source>OK</source>
-      <translation type="unfinished">OK</translation>
+      <translation>OK</translation>
     </message>
     <message>
       <source>None</source>
-      <translation type="unfinished">None</translation>
+      <translation>None</translation>
     </message>
   </context>
   <context>
@@ -233,39 +233,39 @@
     </message>
     <message>
       <source>Dip Switches</source>
-      <translation type="unfinished">Dip Switches</translation>
+      <translation>Dip Switches</translation>
     </message>
     <message>
       <source>4</source>
-      <translation type="unfinished">4</translation>
+      <translation>4</translation>
     </message>
     <message>
       <source>5</source>
-      <translation type="unfinished">5</translation>
+      <translation>5</translation>
     </message>
     <message>
       <source>6</source>
-      <translation type="unfinished">6</translation>
+      <translation>6</translation>
     </message>
     <message>
       <source>7</source>
-      <translation type="unfinished">7</translation>
+      <translation>7</translation>
     </message>
     <message>
       <source>8</source>
-      <translation type="unfinished">8</translation>
+      <translation>8</translation>
     </message>
     <message>
       <source>3</source>
-      <translation type="unfinished">3</translation>
+      <translation>3</translation>
     </message>
     <message>
       <source>2</source>
-      <translation type="unfinished">2</translation>
+      <translation>2</translation>
     </message>
     <message>
       <source>1</source>
-      <translation type="unfinished">1</translation>
+      <translation>1</translation>
     </message>
     <message>
       <source>Defaults Game Dip Switches</source>
@@ -432,27 +432,27 @@
     </message>
     <message>
       <source>Slot &amp;0</source>
-      <translation type="unfinished">Slot &amp;0</translation>
+      <translation>Slot &amp;0</translation>
     </message>
     <message>
       <source>Slot &amp;1</source>
-      <translation type="unfinished">Slot &amp;1</translation>
+      <translation>Slot &amp;1</translation>
     </message>
     <message>
       <source>Slot &amp;2</source>
-      <translation type="unfinished">Slot &amp;2</translation>
+      <translation>Slot &amp;2</translation>
     </message>
     <message>
       <source>Slot &amp;3</source>
-      <translation type="unfinished">Slot &amp;3</translation>
+      <translation>Slot &amp;3</translation>
     </message>
     <message>
       <source>Slot &amp;4</source>
-      <translation type="unfinished">Slot &amp;4</translation>
+      <translation>Slot &amp;4</translation>
     </message>
     <message>
       <source>Slot &amp;5</source>
-      <translation type="unfinished">Slot &amp;5</translation>
+      <translation>Slot &amp;5</translation>
     </message>
     <message>
       <source>&amp;About</source>
@@ -460,19 +460,19 @@
     </message>
     <message>
       <source>Slot &amp;6</source>
-      <translation type="unfinished">Slot &amp;6</translation>
+      <translation>Slot &amp;6</translation>
     </message>
     <message>
       <source>Slot &amp;7</source>
-      <translation type="unfinished">Slot &amp;7</translation>
+      <translation>Slot &amp;7</translation>
     </message>
     <message>
       <source>Slot &amp;8</source>
-      <translation type="unfinished">Slot &amp;8</translation>
+      <translation>Slot &amp;8</translation>
     </message>
     <message>
       <source>Slot &amp;9</source>
-      <translation type="unfinished">Slot &amp;9</translation>
+      <translation>Slot &amp;9</translation>
     </message>
     <message>
       <source>&amp;Cheats List Mode</source>
@@ -488,7 +488,7 @@
     </message>
     <message>
       <source>&amp;Fast Forward</source>
-      <translation type="unfinished">&amp;Fast Forward</translation>
+      <translation>&amp;Fast Forward</translation>
     </message>
     <message>
       <source>&amp;Pause</source>
@@ -512,7 +512,7 @@
     </message>
     <message>
       <source>&amp;File</source>
-      <translation type="unfinished">&amp;File</translation>
+      <translation>&amp;File</translation>
     </message>
     <message>
       <source>&amp;Recent Roms</source>
@@ -520,7 +520,7 @@
     </message>
     <message>
       <source>&amp;NES</source>
-      <translation type="unfinished">&amp;NES</translation>
+      <translation>&amp;NES</translation>
     </message>
     <message>
       <source>&amp;Disk Side</source>
@@ -532,23 +532,23 @@
     </message>
     <message>
       <source>&amp;Video</source>
-      <translation type="unfinished">&amp;Video</translation>
+      <translation>&amp;Video</translation>
     </message>
     <message>
       <source>&amp;Audio</source>
-      <translation type="unfinished">&amp;Audio</translation>
+      <translation>&amp;Audio</translation>
     </message>
     <message>
       <source>&amp;Input</source>
-      <translation type="unfinished">&amp;Input</translation>
+      <translation>&amp;Input</translation>
     </message>
     <message>
       <source>&amp;Cheats</source>
-      <translation type="unfinished">&amp;Cheats</translation>
+      <translation>&amp;Cheats</translation>
     </message>
     <message>
       <source>&amp;PPU</source>
-      <translation type="unfinished">&amp;PPU</translation>
+      <translation>&amp;PPU</translation>
     </message>
     <message>
       <source>S&amp;tate</source>
@@ -654,31 +654,31 @@
     </message>
     <message>
       <source>Square 1</source>
-      <translation type="unfinished">Square 1</translation>
+      <translation>Square 1</translation>
     </message>
     <message>
       <source>DMC</source>
-      <translation type="unfinished">DMC</translation>
+      <translation>DMC</translation>
     </message>
     <message>
       <source>Noise</source>
-      <translation type="unfinished">Noise</translation>
+      <translation>Noise</translation>
     </message>
     <message>
       <source>Square 2</source>
-      <translation type="unfinished">Square 2</translation>
+      <translation>Square 2</translation>
     </message>
     <message>
       <source>Extra</source>
-      <translation type="unfinished">Extra</translation>
+      <translation>Extra</translation>
     </message>
     <message>
       <source>Master</source>
-      <translation type="unfinished">Master</translation>
+      <translation>Master</translation>
     </message>
     <message>
       <source>Triangle</source>
-      <translation type="unfinished">Triangle</translation>
+      <translation>Triangle</translation>
     </message>
     <message>
       <source>active</source>
@@ -686,7 +686,7 @@
     </message>
     <message>
       <source>volume</source>
-      <translation type="unfinished">volume</translation>
+      <translation>volume</translation>
     </message>
     <message>
       <source>Active all</source>
@@ -761,11 +761,11 @@
     </message>
     <message>
       <source>Pro Action Rocky</source>
-      <translation type="unfinished">Pro Action Rocky</translation>
+      <translation>Pro Action Rocky</translation>
     </message>
     <message>
       <source>Game Genie</source>
-      <translation type="unfinished">Game Genie</translation>
+      <translation>Game Genie</translation>
     </message>
     <message>
       <source>Submit</source>
@@ -847,7 +847,7 @@
     </message>
     <message>
       <source>wdgPaletteEditor</source>
-      <translation type="unfinished">wdgPaletteEditor</translation>
+      <translation>wdgPaletteEditor</translation>
     </message>
     <message>
       <source>Selected</source>
@@ -855,11 +855,11 @@
     </message>
     <message>
       <source>PPU</source>
-      <translation type="unfinished">PPU</translation>
+      <translation>PPU</translation>
     </message>
     <message>
       <source>Val</source>
-      <translation type="unfinished">Val</translation>
+      <translation>Val</translation>
     </message>
     <message>
       <source>Blue</source>
@@ -875,15 +875,15 @@
     </message>
     <message>
       <source>Sat</source>
-      <translation type="unfinished">Sat</translation>
+      <translation>Sat</translation>
     </message>
     <message>
       <source>Hue</source>
-      <translation type="unfinished">Hue</translation>
+      <translation>Hue</translation>
     </message>
     <message>
       <source>HTML</source>
-      <translation type="unfinished">HTML</translation>
+      <translation>HTML</translation>
     </message>
     <message>
       <source>Reset color</source>
@@ -906,19 +906,19 @@
     </message>
     <message>
       <source>48000</source>
-      <translation type="unfinished">48000</translation>
+      <translation>48000</translation>
     </message>
     <message>
       <source>44100</source>
-      <translation type="unfinished">44100</translation>
+      <translation>44100</translation>
     </message>
     <message>
       <source>22050</source>
-      <translation type="unfinished">22050</translation>
+      <translation>22050</translation>
     </message>
     <message>
       <source>11025</source>
-      <translation type="unfinished">11025</translation>
+      <translation>11025</translation>
     </message>
     <message>
       <source>0</source>
@@ -930,39 +930,39 @@
     </message>
     <message>
       <source>2</source>
-      <translation type="unfinished">2</translation>
+      <translation>2</translation>
     </message>
     <message>
       <source>3</source>
-      <translation type="unfinished">3</translation>
+      <translation>3</translation>
     </message>
     <message>
       <source>4</source>
-      <translation type="unfinished">4</translation>
+      <translation>4</translation>
     </message>
     <message>
       <source>5</source>
-      <translation type="unfinished">5</translation>
+      <translation>5</translation>
     </message>
     <message>
       <source>6</source>
-      <translation type="unfinished">6</translation>
+      <translation>6</translation>
     </message>
     <message>
       <source>7</source>
-      <translation type="unfinished">7</translation>
+      <translation>7</translation>
     </message>
     <message>
       <source>8</source>
-      <translation type="unfinished">8</translation>
+      <translation>8</translation>
     </message>
     <message>
       <source>9</source>
-      <translation type="unfinished">9</translation>
+      <translation>9</translation>
     </message>
     <message>
       <source>Sample Rate</source>
-      <translation type="unfinished">Sample Rate</translation>
+      <translation>Sample Rate</translation>
     </message>
     <message>
       <source>Buffer Size factor</source>
@@ -970,7 +970,7 @@
     </message>
     <message>
       <source>Mono</source>
-      <translation type="unfinished">Mono</translation>
+      <translation>Mono</translation>
     </message>
     <message>
       <source>Stereo Delay</source>
@@ -978,7 +978,7 @@
     </message>
     <message>
       <source>Stereo Panning</source>
-      <translation type="unfinished">Stereo Panning</translation>
+      <translation>Stereo Panning</translation>
     </message>
     <message>
       <source>Channels Delay</source>
@@ -998,23 +998,23 @@
     </message>
     <message>
       <source>5%</source>
-      <translation type="unfinished">5%</translation>
+      <translation>5%</translation>
     </message>
     <message>
       <source>10%</source>
-      <translation type="unfinished">10%</translation>
+      <translation>10%</translation>
     </message>
     <message>
       <source>15%</source>
-      <translation type="unfinished">15%</translation>
+      <translation>15%</translation>
     </message>
     <message>
       <source>20%</source>
-      <translation type="unfinished">20%</translation>
+      <translation>20%</translation>
     </message>
     <message>
       <source>25%</source>
-      <translation type="unfinished">25%</translation>
+      <translation>25%</translation>
     </message>
     <message>
       <source>30% (Default)</source>
@@ -1022,59 +1022,59 @@
     </message>
     <message>
       <source>35%</source>
-      <translation type="unfinished">35%</translation>
+      <translation>35%</translation>
     </message>
     <message>
       <source>40%</source>
-      <translation type="unfinished">40%</translation>
+      <translation>40%</translation>
     </message>
     <message>
       <source>45%</source>
-      <translation type="unfinished">45%</translation>
+      <translation>45%</translation>
     </message>
     <message>
       <source>50%</source>
-      <translation type="unfinished">50%</translation>
+      <translation>50%</translation>
     </message>
     <message>
       <source>55%</source>
-      <translation type="unfinished">55%</translation>
+      <translation>55%</translation>
     </message>
     <message>
       <source>60%</source>
-      <translation type="unfinished">60%</translation>
+      <translation>60%</translation>
     </message>
     <message>
       <source>65%</source>
-      <translation type="unfinished">65%</translation>
+      <translation>65%</translation>
     </message>
     <message>
       <source>70%</source>
-      <translation type="unfinished">70%</translation>
+      <translation>70%</translation>
     </message>
     <message>
       <source>75%</source>
-      <translation type="unfinished">75%</translation>
+      <translation>75%</translation>
     </message>
     <message>
       <source>80%</source>
-      <translation type="unfinished">80%</translation>
+      <translation>80%</translation>
     </message>
     <message>
       <source>85%</source>
-      <translation type="unfinished">85%</translation>
+      <translation>85%</translation>
     </message>
     <message>
       <source>90%</source>
-      <translation type="unfinished">90%</translation>
+      <translation>90%</translation>
     </message>
     <message>
       <source>95%</source>
-      <translation type="unfinished">95%</translation>
+      <translation>95%</translation>
     </message>
     <message>
       <source>100%</source>
-      <translation type="unfinished">100%</translation>
+      <translation>100%</translation>
     </message>
     <message>
       <source>APU Channels</source>
@@ -1090,7 +1090,7 @@
     </message>
     <message>
       <source>wdgSettingsAudio</source>
-      <translation type="unfinished">wdgSettingsAudio</translation>
+      <translation>wdgSettingsAudio</translation>
     </message>
   </context>
   <context>
@@ -1144,31 +1144,31 @@
     </message>
     <message>
       <source>3x</source>
-      <translation type="unfinished">3x</translation>
+      <translation>3x</translation>
     </message>
     <message>
       <source>4x</source>
-      <translation type="unfinished">4x</translation>
+      <translation>4x</translation>
     </message>
     <message>
       <source>5x</source>
-      <translation type="unfinished">5x</translation>
+      <translation>5x</translation>
     </message>
     <message>
       <source>Auto</source>
-      <translation type="unfinished">Auto</translation>
+      <translation>Auto</translation>
     </message>
     <message>
       <source>NTSC</source>
-      <translation type="unfinished">NTSC</translation>
+      <translation>NTSC</translation>
     </message>
     <message>
       <source>PAL</source>
-      <translation type="unfinished">PAL</translation>
+      <translation>PAL</translation>
     </message>
     <message>
       <source>Dendy</source>
-      <translation type="unfinished">Dendy</translation>
+      <translation>Dendy</translation>
     </message>
     <message>
       <source>System Roms</source>
@@ -1275,7 +1275,7 @@
     </message>
     <message>
       <source>Zapper</source>
-      <translation type="unfinished">Zapper</translation>
+      <translation>Zapper</translation>
     </message>
     <message>
       <source>Snes Mouse</source>
@@ -1331,15 +1331,15 @@
     </message>
     <message>
       <source>NES</source>
-      <translation type="unfinished">NES</translation>
+      <translation>NES</translation>
     </message>
     <message>
       <source>Famicom</source>
-      <translation type="unfinished">Famicom</translation>
+      <translation>Famicom</translation>
     </message>
     <message>
       <source>Four Score</source>
-      <translation type="unfinished">Four Score</translation>
+      <translation>Four Score</translation>
     </message>
     <message>
       <source>Misc</source>
@@ -1399,7 +1399,7 @@
     </message>
     <message>
       <source>Joystick</source>
-      <translation type="unfinished">Joystick</translation>
+      <translation>Joystick</translation>
     </message>
   </context>
   <context>
@@ -1426,7 +1426,7 @@
     </message>
     <message>
       <source>Overclock</source>
-      <translation type="unfinished">Overclock</translation>
+      <translation>Overclock</translation>
     </message>
     <message>
       <source>Sprites and background</source>
@@ -1453,11 +1453,11 @@
     <name>wdgSettingsVideo</name>
     <message>
       <source>GLSL &amp;soft stretch</source>
-      <translation type="unfinished">GLSL &amp;soft stretch</translation>
+      <translation>GLSL &amp;soft stretch</translation>
     </message>
     <message>
       <source>HLSL &amp;soft stretch</source>
-      <translation type="unfinished">HLSL &amp;soft stretch</translation>
+      <translation>HLSL &amp;soft stretch</translation>
     </message>
     <message>
       <source>[Select a file]</source>
@@ -1493,27 +1493,27 @@
     </message>
     <message>
       <source>1x</source>
-      <translation type="unfinished">1x</translation>
+      <translation>1x</translation>
     </message>
     <message>
       <source>2x</source>
-      <translation type="unfinished">2x</translation>
+      <translation>2x</translation>
     </message>
     <message>
       <source>3x</source>
-      <translation type="unfinished">3x</translation>
+      <translation>3x</translation>
     </message>
     <message>
       <source>4x</source>
-      <translation type="unfinished">4x</translation>
+      <translation>4x</translation>
     </message>
     <message>
       <source>5x</source>
-      <translation type="unfinished">5x</translation>
+      <translation>5x</translation>
     </message>
     <message>
       <source>6x</source>
-      <translation type="unfinished">6x</translation>
+      <translation>6x</translation>
     </message>
     <message>
       <source>Scale</source>
@@ -1533,11 +1533,11 @@
     </message>
     <message>
       <source>1:1</source>
-      <translation type="unfinished">1:1</translation>
+      <translation>1:1</translation>
     </message>
     <message>
       <source>5:4</source>
-      <translation type="unfinished">5:4</translation>
+      <translation>5:4</translation>
     </message>
     <message>
       <source>8:7 (NTSC TV)</source>
@@ -1549,15 +1549,15 @@
     </message>
     <message>
       <source>Pixel Aspect Ratio</source>
-      <translation type="unfinished">Pixel Aspect Ratio</translation>
+      <translation>Pixel Aspect Ratio</translation>
     </message>
     <message>
       <source>Off</source>
-      <translation type="unfinished">Off</translation>
+      <translation>Off</translation>
     </message>
     <message>
       <source>On</source>
-      <translation type="unfinished">On</translation>
+      <translation>On</translation>
     </message>
     <message>
       <source>Default Value</source>
@@ -1569,11 +1569,11 @@
     </message>
     <message>
       <source>NTSC</source>
-      <translation type="unfinished">NTSC</translation>
+      <translation>NTSC</translation>
     </message>
     <message>
       <source>PAL/Dendy</source>
-      <translation type="unfinished">PAL/Dendy</translation>
+      <translation>PAL/Dendy</translation>
     </message>
     <message>
       <source>Right</source>
@@ -1605,7 +1605,7 @@
     </message>
     <message>
       <source>Overscan</source>
-      <translation type="unfinished">Overscan</translation>
+      <translation>Overscan</translation>
     </message>
     <message>
       <source>No Shaders</source>
@@ -1613,11 +1613,11 @@
     </message>
     <message>
       <source>CRT Dotmask</source>
-      <translation type="unfinished">CRT Dotmask</translation>
+      <translation>CRT Dotmask</translation>
     </message>
     <message>
       <source>CRT Scanlines</source>
-      <translation type="unfinished">CRT Scanlines</translation>
+      <translation>CRT Scanlines</translation>
     </message>
     <message>
       <source>CRT With Curve</source>
@@ -1625,15 +1625,15 @@
     </message>
     <message>
       <source>Emboss</source>
-      <translation type="unfinished">Emboss</translation>
+      <translation>Emboss</translation>
     </message>
     <message>
       <source>Noise</source>
-      <translation type="unfinished">Noise</translation>
+      <translation>Noise</translation>
     </message>
     <message>
       <source>NTSC 2Phase Composite</source>
-      <translation type="unfinished">NTSC 2Phase Composite</translation>
+      <translation>NTSC 2Phase Composite</translation>
     </message>
     <message>
       <source>Old TV</source>
@@ -1649,47 +1649,47 @@
     </message>
     <message>
       <source>Scale2X</source>
-      <translation type="unfinished">Scale2X</translation>
+      <translation>Scale2X</translation>
     </message>
     <message>
       <source>Scale3X</source>
-      <translation type="unfinished">Scale3X</translation>
+      <translation>Scale3X</translation>
     </message>
     <message>
       <source>Scale4X</source>
-      <translation type="unfinished">Scale4X</translation>
+      <translation>Scale4X</translation>
     </message>
     <message>
       <source>Hq2X</source>
-      <translation type="unfinished">Hq2X</translation>
+      <translation>Hq2X</translation>
     </message>
     <message>
       <source>Hq3X</source>
-      <translation type="unfinished">Hq3X</translation>
+      <translation>Hq3X</translation>
     </message>
     <message>
       <source>Hq4X</source>
-      <translation type="unfinished">Hq4X</translation>
+      <translation>Hq4X</translation>
     </message>
     <message>
       <source>xBRZ 2X</source>
-      <translation type="unfinished">xBRZ 2X</translation>
+      <translation>xBRZ 2X</translation>
     </message>
     <message>
       <source>xBRZ 3X</source>
-      <translation type="unfinished">xBRZ 3X</translation>
+      <translation>xBRZ 3X</translation>
     </message>
     <message>
       <source>xBRZ 4X</source>
-      <translation type="unfinished">xBRZ 4X</translation>
+      <translation>xBRZ 4X</translation>
     </message>
     <message>
       <source>xBRZ 5X</source>
-      <translation type="unfinished">xBRZ 5X</translation>
+      <translation>xBRZ 5X</translation>
     </message>
     <message>
       <source>xBRZ 6X</source>
-      <translation type="unfinished">xBRZ 6X</translation>
+      <translation>xBRZ 6X</translation>
     </message>
     <message>
       <source>NTSC Composite</source>
@@ -1697,15 +1697,15 @@
     </message>
     <message>
       <source>NTSC S-Video</source>
-      <translation type="unfinished">NTSC S-Video</translation>
+      <translation>NTSC S-Video</translation>
     </message>
     <message>
       <source>NTSC RGB</source>
-      <translation type="unfinished">NTSC RGB</translation>
+      <translation>NTSC RGB</translation>
     </message>
     <message>
       <source>Shaders</source>
-      <translation type="unfinished">Shaders</translation>
+      <translation>Shaders</translation>
     </message>
     <message>
       <source>Load from a file</source>
@@ -1725,19 +1725,19 @@
     </message>
     <message>
       <source>PAL</source>
-      <translation type="unfinished">PAL</translation>
+      <translation>PAL</translation>
     </message>
     <message>
       <source>Sony CXA2025AS US</source>
-      <translation type="unfinished">Sony CXA2025AS US</translation>
+      <translation>Sony CXA2025AS US</translation>
     </message>
     <message>
       <source>Firebrandx Nostalgia (FBX)</source>
-      <translation type="unfinished">Firebrandx Nostalgia (FBX)</translation>
+      <translation>Firebrandx Nostalgia (FBX)</translation>
     </message>
     <message>
       <source>Firebrandx YUV</source>
-      <translation type="unfinished">Firebrandx YUV</translation>
+      <translation>Firebrandx YUV</translation>
     </message>
     <message>
       <source>Monochrome</source>
@@ -1749,7 +1749,7 @@
     </message>
     <message>
       <source>Editor</source>
-      <translation type="unfinished">Editor</translation>
+      <translation>Editor</translation>
     </message>
     <message>
       <source>Palette</source>
@@ -1757,27 +1757,27 @@
     </message>
     <message>
       <source>xBRZ 2X Multithreading</source>
-      <translation type="unfinished">xBRZ 2X Multithreading</translation>
+      <translation>xBRZ 2X Multithreading</translation>
     </message>
     <message>
       <source>xBRZ 3X Multithreading</source>
-      <translation type="unfinished">xBRZ 3X Multithreading</translation>
+      <translation>xBRZ 3X Multithreading</translation>
     </message>
     <message>
       <source>xBRZ 4X Multithreading</source>
-      <translation type="unfinished">xBRZ 4X Multithreading</translation>
+      <translation>xBRZ 4X Multithreading</translation>
     </message>
     <message>
       <source>xBRZ 5X Multithreading</source>
-      <translation type="unfinished">xBRZ 5X Multithreading</translation>
+      <translation>xBRZ 5X Multithreading</translation>
     </message>
     <message>
       <source>xBRZ 6X Multithreading</source>
-      <translation type="unfinished">xBRZ 6X Multithreading</translation>
+      <translation>xBRZ 6X Multithreading</translation>
     </message>
     <message>
       <source>VSync</source>
-      <translation type="unfinished">VSync</translation>
+      <translation>VSync</translation>
     </message>
     <message>
       <source>Interpolation</source>
@@ -1813,7 +1813,7 @@
     </message>
     <message>
       <source>Soft stretch</source>
-      <translation type="unfinished">Soft stretch</translation>
+      <translation>Soft stretch</translation>
     </message>
     <message>
       <source>Disable sRGB FBO</source>
@@ -1832,7 +1832,7 @@
     </message>
     <message>
       <source>Slot %1</source>
-      <translation type="unfinished">Slot %1</translation>
+      <translation>Slot %1</translation>
     </message>
     <message>
       <source>Save</source>
