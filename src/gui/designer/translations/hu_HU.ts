@@ -320,99 +320,99 @@
     </message>
     <message>
       <source>Save state on file</source>
-      <translation type="unfinished">Save state on file</translation>
+      <translation>Állapotmentés fájlba</translation>
     </message>
     <message>
       <source>Open save state</source>
-      <translation type="unfinished">Open save state</translation>
+      <translation>Állapotmentés megnyitása</translation>
     </message>
     <message>
       <source>Nintendo Entertainment System Emulator</source>
-      <translation type="unfinished">Nintendo Entertainment System Emulator</translation>
+      <translation>Nintendo Entertainment System Emulator</translation>
     </message>
     <message>
       <source>Compiled</source>
-      <translation type="unfinished">Compiled</translation>
+      <translation>Fordított</translation>
     </message>
     <message>
       <source>Anyway, thank you all for the love and the help.</source>
-      <translation type="unfinished">Anyway, thank you all for the love and the help.</translation>
+      <translation>Mindenesetre köszi a szeretetért és a segítségért.</translation>
     </message>
     <message>
       <source>portable version</source>
-      <translation type="unfinished">portable version</translation>
+      <translation>hordozható verzió</translation>
     </message>
     <message>
       <source>&amp;Open</source>
-      <translation type="unfinished">&amp;Open</translation>
+      <translation>Megnyitás (&amp;O)</translation>
     </message>
     <message>
       <source>&amp;Quit</source>
-      <translation type="unfinished">&amp;Quit</translation>
+      <translation>Kilépés (&amp;Q)</translation>
     </message>
     <message>
       <source>&amp;Hard Reset</source>
-      <translation type="unfinished">&amp;Hard Reset</translation>
+      <translation>Hardveres reset (&amp;H)</translation>
     </message>
     <message>
       <source>&amp;Soft Reset</source>
-      <translation type="unfinished">&amp;Soft Reset</translation>
+      <translation>Szoftveres reset (&amp;S)</translation>
     </message>
     <message>
       <source>&amp;Eject/Insert Disk</source>
-      <translation type="unfinished">&amp;Eject/Insert Disk</translation>
+      <translation>Lemez kiadása és behelyezése (&amp;E)</translation>
     </message>
     <message>
       <source>Disk 1 side A</source>
-      <translation type="unfinished">Disk 1 side A</translation>
+      <translation>1. Lemez, A oldal</translation>
     </message>
     <message>
       <source>Disk 1 side B</source>
-      <translation type="unfinished">Disk 1 side B</translation>
+      <translation>1. Lemez, B oldal</translation>
     </message>
     <message>
       <source>Disk 2 side A</source>
-      <translation type="unfinished">Disk 2 side A</translation>
+      <translation>2. Lemez, A oldal</translation>
     </message>
     <message>
       <source>Disk 2 side B</source>
-      <translation type="unfinished">Disk 2 side B</translation>
+      <translation>2. Lemez, B oldal</translation>
     </message>
     <message>
       <source>Disk 3 side A</source>
-      <translation type="unfinished">Disk 3 side A</translation>
+      <translation>3. Lemez, A oldal</translation>
     </message>
     <message>
       <source>Disk 3 side B</source>
-      <translation type="unfinished">Disk 3 side B</translation>
+      <translation>3. Lemez, B oldal</translation>
     </message>
     <message>
       <source>Disk 4 side A</source>
-      <translation type="unfinished">Disk 4 side A</translation>
+      <translation>4. Lemez, A oldal</translation>
     </message>
     <message>
       <source>Disk 4 side B</source>
-      <translation type="unfinished">Disk 4 side B</translation>
+      <translation>4. Lemez, B oldal</translation>
     </message>
     <message>
       <source>&amp;Switch sides</source>
-      <translation type="unfinished">&amp;Switch sides</translation>
+      <translation>Lemez megfordítása (&amp;S)</translation>
     </message>
     <message>
       <source>&amp;Save to file</source>
-      <translation type="unfinished">&amp;Save to file</translation>
+      <translation>Mentés fájlba (&amp;S)</translation>
     </message>
     <message>
       <source>&amp;Load from file</source>
-      <translation type="unfinished">&amp;Load from file</translation>
+      <translation>Töltés fájlból (&amp;L)</translation>
     </message>
     <message>
       <source>F&amp;ullscreen</source>
-      <translation type="unfinished">F&amp;ullscreen</translation>
+      <translation>Teljes képernyő (&amp;F)</translation>
     </message>
     <message>
       <source>&amp;Game Genie Rom Mode</source>
-      <translation type="unfinished">&amp;Game Genie Rom Mode</translation>
+      <translation>Game Genie ROM mód (&amp;G)</translation>
     </message>
     <message>
       <source>S&amp;ave state</source>
@@ -713,137 +713,137 @@
     </message>
     <message>
       <source>Active</source>
-      <translation type="unfinished">Active</translation>
+      <translation>Aktív</translation>
     </message>
     <message>
       <source>Description</source>
-      <translation type="unfinished">Description</translation>
+      <translation>Leírás</translation>
     </message>
     <message>
       <source>Code</source>
-      <translation type="unfinished">Code</translation>
+      <translation>Kód</translation>
     </message>
     <message>
       <source>Address</source>
-      <translation type="unfinished">Address</translation>
+      <translation>Cím</translation>
     </message>
     <message>
       <source>Value</source>
-      <translation type="unfinished">Value</translation>
+      <translation>Érték</translation>
     </message>
     <message>
       <source>Compare</source>
-      <translation type="unfinished">Compare</translation>
+      <translation>Összehasonlít</translation>
     </message>
     <message>
       <source>Show Tools</source>
-      <translation type="unfinished">Show Tools</translation>
+      <translation>Eszközök megjelenítése</translation>
     </message>
     <message>
       <source>Import</source>
-      <translation type="unfinished">Import</translation>
+      <translation>Importálás</translation>
     </message>
     <message>
       <source>Export</source>
-      <translation type="unfinished">Export</translation>
+      <translation>Exportálás</translation>
     </message>
     <message>
       <source>Clear All</source>
-      <translation type="unfinished">Clear All</translation>
+      <translation>Minden törlése</translation>
     </message>
     <message>
       <source>Editor Tools</source>
-      <translation type="unfinished">Editor Tools</translation>
+      <translation>Szerkesztőeszközök</translation>
     </message>
     <message>
       <source>CPU Ram</source>
-      <translation type="unfinished">CPU Ram</translation>
+      <translation>CPU RAM</translation>
     </message>
     <message>
       <source>Pro Action Rocky</source>
-      <translation type="unfinished">Pro Action Rocky</translation>
+      <translation>Pro Action Rocky</translation>
     </message>
     <message>
       <source>Game Genie</source>
-      <translation type="unfinished">Game Genie</translation>
+      <translation>Game Genie</translation>
     </message>
     <message>
       <source>Submit</source>
-      <translation type="unfinished">Submit</translation>
+      <translation>Beküld</translation>
     </message>
     <message>
       <source>New</source>
-      <translation type="unfinished">New</translation>
+      <translation>Új</translation>
     </message>
     <message>
       <source>Remove</source>
-      <translation type="unfinished">Remove</translation>
+      <translation>Eltávolít</translation>
     </message>
     <message>
       <source>Cancel</source>
-      <translation type="unfinished">Cancel</translation>
+      <translation>Mégse</translation>
     </message>
   </context>
   <context>
     <name>wdgCheatsEditor</name>
     <message>
       <source>Show Tools</source>
-      <translation type="unfinished">Show Tools</translation>
+      <translation>Eszközök mutatása</translation>
     </message>
     <message>
       <source>Hide Tools</source>
-      <translation type="unfinished">Hide Tools</translation>
+      <translation>Eszközök eltüntetése</translation>
     </message>
     <message>
       <source>All supported formats</source>
-      <translation type="unfinished">All supported formats</translation>
+      <translation>Minden támogatott formátum</translation>
     </message>
     <message>
       <source>XML files</source>
-      <translation type="unfinished">XML files</translation>
+      <translation>XML fájlok</translation>
     </message>
     <message>
       <source>CHT files</source>
-      <translation type="unfinished">CHT files</translation>
+      <translation>CHT fájlok</translation>
     </message>
     <message>
       <source>Import Cheats</source>
-      <translation type="unfinished">Import Cheats</translation>
+      <translation>Csalások importálása</translation>
     </message>
     <message>
       <source>All files</source>
-      <translation type="unfinished">All files</translation>
+      <translation>Minden fájl</translation>
     </message>
     <message>
       <source>Export cheats on file</source>
-      <translation type="unfinished">Export cheats on file</translation>
+      <translation>Csalások fájlba exportálása</translation>
     </message>
     <message>
       <source>Submit warning</source>
-      <translation type="unfinished">Submit warning</translation>
+      <translation>Figyelmeztetés beküldése</translation>
     </message>
     <message>
       <source>The code is invalid</source>
-      <translation type="unfinished">The code is invalid</translation>
+      <translation>A kód érvénytelen</translation>
     </message>
     <message>
       <source>The cheat is already in the list</source>
-      <translation type="unfinished">The cheat is already in the list</translation>
+      <translation>A csalás már a listában van</translation>
     </message>
   </context>
   <context>
     <name>wdgPaletteEditor</name>
     <message>
       <source>Palette files</source>
-      <translation type="unfinished">Palette files</translation>
+      <translation>Palettafájlok</translation>
     </message>
     <message>
       <source>All files</source>
-      <translation type="unfinished">All files</translation>
+      <translation>Minden fájl</translation>
     </message>
     <message>
       <source>Save palette on file</source>
-      <translation type="unfinished">Save palette on file</translation>
+      <translation>Paletta fájlba mentése</translation>
     </message>
     <message>
       <source>wdgPaletteEditor</source>
@@ -851,11 +851,11 @@
     </message>
     <message>
       <source>Selected</source>
-      <translation type="unfinished">Selected</translation>
+      <translation>Kiválasztva</translation>
     </message>
     <message>
       <source>PPU</source>
-      <translation type="unfinished">PPU</translation>
+      <translation>PPU</translation>
     </message>
     <message>
       <source>Val</source>
@@ -863,15 +863,15 @@
     </message>
     <message>
       <source>Blue</source>
-      <translation type="unfinished">Blue</translation>
+      <translation>Kék</translation>
     </message>
     <message>
       <source>Red</source>
-      <translation type="unfinished">Red</translation>
+      <translation>Vörös</translation>
     </message>
     <message>
       <source>Green</source>
-      <translation type="unfinished">Green</translation>
+      <translation>Zöld</translation>
     </message>
     <message>
       <source>Sat</source>
