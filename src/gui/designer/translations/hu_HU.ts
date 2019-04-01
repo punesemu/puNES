@@ -1259,8 +1259,8 @@
       <translation type="unfinished">Unlimited</translation>
     </message>
     <message>
-      <source>Spain</source>
-      <translation type="unfinished">Spain</translation>
+      <source>Spanish</source>
+      <translation type="unfinished">Spanish</translation>
     </message>
   </context>
   <context>
