@@ -859,7 +859,7 @@
     </message>
     <message>
       <source>Val</source>
-      <translation type="unfinished">Val</translation>
+      <translation>Fényerő</translation>
     </message>
     <message>
       <source>Blue</source>
@@ -875,50 +875,50 @@
     </message>
     <message>
       <source>Sat</source>
-      <translation type="unfinished">Sat</translation>
+      <translation>Szaturáció</translation>
     </message>
     <message>
       <source>Hue</source>
-      <translation type="unfinished">Hue</translation>
+      <translation>Árnyalat</translation>
     </message>
     <message>
       <source>HTML</source>
-      <translation type="unfinished">HTML</translation>
+      <translation>HTML</translation>
     </message>
     <message>
       <source>Reset color</source>
-      <translation type="unfinished">Reset color</translation>
+      <translation>Szín visszaállítása</translation>
     </message>
     <message>
       <source>Save to a file</source>
-      <translation type="unfinished">Save to a file</translation>
+      <translation>Fájlba mentés</translation>
     </message>
     <message>
       <source>Reset palette</source>
-      <translation type="unfinished">Reset palette</translation>
+      <translation>Paletta visszaállítása</translation>
     </message>
   </context>
   <context>
     <name>wdgSettingsAudio</name>
     <message>
       <source>Output Devices</source>
-      <translation type="unfinished">Output Devices</translation>
+      <translation>Kimeneti eszközök</translation>
     </message>
     <message>
       <source>48000</source>
-      <translation type="unfinished">48000</translation>
+      <translation>48000 Hz</translation>
     </message>
     <message>
       <source>44100</source>
-      <translation type="unfinished">44100</translation>
+      <translation>44100 Hz</translation>
     </message>
     <message>
       <source>22050</source>
-      <translation type="unfinished">22050</translation>
+      <translation>22050 Hz</translation>
     </message>
     <message>
       <source>11025</source>
-      <translation type="unfinished">11025</translation>
+      <translation>11025 Hz</translation>
     </message>
     <message>
       <source>0</source>
@@ -1124,186 +1124,186 @@
     </message>
     <message>
       <source>All files</source>
-      <translation type="unfinished">All files</translation>
+      <translation>Minden fájl</translation>
     </message>
     <message>
       <source>Select Game Genie ROM file</source>
-      <translation type="unfinished">Select Game Genie ROM file</translation>
+      <translation>Game Genie ROM fájl kiválasztása</translation>
     </message>
     <message>
       <source>Select FDS BIOS file</source>
-      <translation type="unfinished">Select FDS BIOS file</translation>
+      <translation>FDS BIOS fájl kiválasztása</translation>
     </message>
     <message>
       <source>General Settings</source>
-      <translation type="unfinished">General Settings</translation>
+      <translation>Általános beállítások</translation>
     </message>
     <message>
       <source>2x (Default)</source>
-      <translation type="unfinished">2x (Default)</translation>
+      <translation>2x (Alap)</translation>
     </message>
     <message>
       <source>3x</source>
-      <translation type="unfinished">3x</translation>
+      <translation>3x</translation>
     </message>
     <message>
       <source>4x</source>
-      <translation type="unfinished">4x</translation>
+      <translation>4x</translation>
     </message>
     <message>
       <source>5x</source>
-      <translation type="unfinished">5x</translation>
+      <translation>5x</translation>
     </message>
     <message>
       <source>Auto</source>
-      <translation type="unfinished">Auto</translation>
+      <translation>Auto</translation>
     </message>
     <message>
       <source>NTSC</source>
-      <translation type="unfinished">NTSC</translation>
+      <translation>NTSC</translation>
     </message>
     <message>
       <source>PAL</source>
-      <translation type="unfinished">PAL</translation>
+      <translation>PAL</translation>
     </message>
     <message>
       <source>Dendy</source>
-      <translation type="unfinished">Dendy</translation>
+      <translation>Dendy</translation>
     </message>
     <message>
       <source>System Roms</source>
-      <translation type="unfinished">System Roms</translation>
+      <translation>Rendszer ROM-ok</translation>
     </message>
     <message>
       <source>Mode</source>
-      <translation type="unfinished">Mode</translation>
+      <translation>Mód</translation>
     </message>
     <message>
       <source>English</source>
-      <translation type="unfinished">English</translation>
+      <translation>Angol</translation>
     </message>
     <message>
       <source>Italian</source>
-      <translation type="unfinished">Italian</translation>
+      <translation>Olasz</translation>
     </message>
     <message>
       <source>Russian</source>
-      <translation type="unfinished">Russian</translation>
+      <translation>Orosz</translation>
     </message>
     <message>
       <source>Pause when in background</source>
-      <translation type="unfinished">Pause when in background</translation>
+      <translation>Pause, amikor háttérben van</translation>
     </message>
     <message>
       <source>Language</source>
-      <translation type="unfinished">Language</translation>
+      <translation>Nyelv</translation>
     </message>
     <message>
       <source>Save settings on exit</source>
-      <translation type="unfinished">Save settings on exit</translation>
+      <translation>Beállítások mentése kilépéskor</translation>
     </message>
     <message>
       <source>Save battery RAM file every 3 min.</source>
-      <translation type="unfinished">Save battery RAM file every 3 min.</translation>
+      <translation>Szünetmentes RAM mentése 3 percenként</translation>
     </message>
     <message>
       <source>Fast Forward velocity</source>
-      <translation type="unfinished">Fast Forward velocity</translation>
+      <translation>Gyorsítás sebessége</translation>
     </message>
     <message>
       <source>Misc</source>
-      <translation type="unfinished">Misc</translation>
+      <translation>Egyéb</translation>
     </message>
     <message>
       <source>Settings</source>
-      <translation type="unfinished">Settings</translation>
+      <translation>Beállítások</translation>
     </message>
     <message>
       <source>Game Genie Rom file</source>
-      <translation type="unfinished">Game Genie Rom file</translation>
+      <translation>Game Genie ROM fájl</translation>
     </message>
     <message>
       <source>FDS Bios file</source>
-      <translation type="unfinished">FDS Bios file</translation>
+      <translation>FDS BIOS fájl</translation>
     </message>
     <message>
       <source>Rewind minutes</source>
-      <translation type="unfinished">Rewind minutes</translation>
+      <translation>Visszatekerhető percek</translation>
     </message>
     <message>
       <source>Disabled</source>
-      <translation type="unfinished">Disabled</translation>
+      <translation>Letiltva</translation>
     </message>
     <message>
       <source>2 minutes</source>
-      <translation type="unfinished">2 minutes</translation>
+      <translation>2 perc</translation>
     </message>
     <message>
       <source>5 minutes</source>
-      <translation type="unfinished">5 minutes</translation>
+      <translation>5 perc</translation>
     </message>
     <message>
       <source>15 minutes (Default)</source>
-      <translation type="unfinished">15 minutes (Default)</translation>
+      <translation>15 perc (Alap)</translation>
     </message>
     <message>
       <source>30 minutes</source>
-      <translation type="unfinished">30 minutes</translation>
+      <translation>30 perc</translation>
     </message>
     <message>
       <source>60 minutus</source>
-      <translation type="unfinished">60 minutus</translation>
+      <translation>60 perc</translation>
     </message>
     <message>
       <source>Unlimited</source>
-      <translation type="unfinished">Unlimited</translation>
+      <translation>Korlátlan</translation>
     </message>
     <message>
       <source>Spanish</source>
-      <translation type="unfinished">Spanish</translation>
+      <translation>Spanyol</translation>
     </message>
   </context>
   <context>
     <name>wdgSettingsInput</name>
     <message>
       <source>Disabled</source>
-      <translation type="unfinished">Disabled</translation>
+      <translation>Letiltva</translation>
     </message>
     <message>
       <source>Standard Pad</source>
-      <translation type="unfinished">Standard Pad</translation>
+      <translation>Szabvány pad</translation>
     </message>
     <message>
       <source>Zapper</source>
-      <translation type="unfinished">Zapper</translation>
+      <translation>Zapper</translation>
     </message>
     <message>
       <source>Snes Mouse</source>
-      <translation type="unfinished">Snes Mouse</translation>
+      <translation>SNES egér</translation>
     </message>
     <message>
       <source>Arkanoid Paddle</source>
-      <translation type="unfinished">Arkanoid Paddle</translation>
+      <translation>Arkanoid Paddle</translation>
     </message>
     <message>
       <source>Oeka Kids Tablet</source>
-      <translation type="unfinished">Oeka Kids Tablet</translation>
+      <translation>Oeka Kids Tablet</translation>
     </message>
     <message>
       <source>Default</source>
-      <translation type="unfinished">Default</translation>
+      <translation>Alapértelmezés</translation>
     </message>
     <message>
       <source>Unset</source>
-      <translation type="unfinished">Unset</translation>
+      <translation>Beállítatlan</translation>
     </message>
     <message>
       <source>Start/Stop WAV</source>
-      <translation type="unfinished">Start/Stop WAV</translation>
+      <translation>WAV felvétel indítása/megállítása</translation>
     </message>
     <message>
       <source>No usable device</source>
-      <translation type="unfinished">No usable device</translation>
+      <translation>Nincs használható eszköz</translation>
     </message>
     <message>
       <source>Error on open device %1</source>
