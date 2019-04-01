@@ -978,7 +978,7 @@
     </message>
     <message>
       <source>Stereo Panning</source>
-      <translation type="unfinished">Stereo Panning</translation>
+      <translation>Sztereó panning</translation>
     </message>
     <message>
       <source>Channels Delay</source>
