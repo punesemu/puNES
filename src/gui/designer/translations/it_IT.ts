@@ -1259,8 +1259,8 @@
       <translation>Illimitati</translation>
     </message>
     <message>
-      <source>Spain</source>
-      <translation>Spagnolo</translation>
+      <source>Spanish</source>
+      <translation type="unfinished">Spanish</translation>
     </message>
   </context>
   <context>
