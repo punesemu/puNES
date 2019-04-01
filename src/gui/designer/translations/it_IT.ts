@@ -846,10 +846,6 @@
       <translation>Salva Paletta su file</translation>
     </message>
     <message>
-      <source>wdgPaletteEditor</source>
-      <translation>wdgPaletteEditor</translation>
-    </message>
-    <message>
       <source>Selected</source>
       <translation>Selezionato</translation>
     </message>
@@ -1088,10 +1084,6 @@
       <source>Enable Audio</source>
       <translation>Abilita Audio</translation>
     </message>
-    <message>
-      <source>wdgSettingsAudio</source>
-      <translation>wdgSettingsAudio</translation>
-    </message>
   </context>
   <context>
     <name>wdgSettingsCheats</name>
@@ -1261,6 +1253,10 @@
     <message>
       <source>Spanish</source>
       <translation>Spagnolo</translation>
+    </message>
+    <message>
+      <source>Hungarian</source>
+      <translation type="unfinished">Hungarian</translation>
     </message>
   </context>
   <context>
