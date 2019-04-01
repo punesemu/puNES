@@ -1252,11 +1252,11 @@
     </message>
     <message>
       <source>Spanish</source>
-      <translation type="unfinished">Spanish</translation>
+      <translation>Español</translation>
     </message>
     <message>
       <source>Hungarian</source>
-      <translation type="unfinished">Hungarian</translation>
+      <translation>Húngaro</translation>
     </message>
   </context>
   <context>
