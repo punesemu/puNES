@@ -1410,7 +1410,7 @@
     </message>
     <message>
       <source>Disable 7bit Sample Control</source>
-      <translation type="unfinished">Disable 7bit Sample Control</translation>
+      <translation>DPCM tiltása VBlank alatt</translation>
     </message>
     <message>
       <source>Reset Lag Counter</source>
