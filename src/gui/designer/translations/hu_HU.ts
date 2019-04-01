@@ -508,71 +508,71 @@
     </message>
     <message>
       <source>&amp;Open working folder</source>
-      <translation type="unfinished">&amp;Open working folder</translation>
+      <translation>Munkakönyvtár megnyitása (&amp;O)</translation>
     </message>
     <message>
       <source>&amp;File</source>
-      <translation type="unfinished">&amp;File</translation>
+      <translation>Fájl (&amp;F)</translation>
     </message>
     <message>
       <source>&amp;Recent Roms</source>
-      <translation type="unfinished">&amp;Recent Roms</translation>
+      <translation>Nemrég megnyitott ROM-ok (&amp;R)</translation>
     </message>
     <message>
       <source>&amp;NES</source>
-      <translation type="unfinished">&amp;NES</translation>
+      <translation>&amp;NES</translation>
     </message>
     <message>
       <source>&amp;Disk Side</source>
-      <translation type="unfinished">&amp;Disk Side</translation>
+      <translation>Lemezoldal (&amp;D)</translation>
     </message>
     <message>
       <source>Setti&amp;ngs</source>
-      <translation type="unfinished">Setti&amp;ngs</translation>
+      <translation>Beállítások (&amp;n)</translation>
     </message>
     <message>
       <source>&amp;Video</source>
-      <translation type="unfinished">&amp;Video</translation>
+      <translation>Kép (&amp;V)</translation>
     </message>
     <message>
       <source>&amp;Audio</source>
-      <translation type="unfinished">&amp;Audio</translation>
+      <translation>Hang (&amp;A)</translation>
     </message>
     <message>
       <source>&amp;Input</source>
-      <translation type="unfinished">&amp;Input</translation>
+      <translation>Bevitel (&amp;I)</translation>
     </message>
     <message>
       <source>&amp;Cheats</source>
-      <translation type="unfinished">&amp;Cheats</translation>
+      <translation>Csalások (&amp;C)</translation>
     </message>
     <message>
       <source>&amp;PPU</source>
-      <translation type="unfinished">&amp;PPU</translation>
+      <translation>&amp;PPU</translation>
     </message>
     <message>
       <source>S&amp;tate</source>
-      <translation type="unfinished">S&amp;tate</translation>
+      <translation>Állapot (&amp;t)</translation>
     </message>
     <message>
       <source>&amp;Help</source>
-      <translation type="unfinished">&amp;Help</translation>
+      <translation>Súgó (&amp;H)</translation>
     </message>
     <message>
       <source>&amp;Turn On</source>
-      <translation type="unfinished">&amp;Turn On</translation>
+      <translation>Bekapcsolás (&amp;T)</translation>
     </message>
     <message>
       <source>&amp;Turn Off</source>
-      <translation type="unfinished">&amp;Turn Off</translation>
+      <translation>Kikapcsolás (&amp;T)</translation>
     </message>
     <message>
       <source>Too&amp;ls</source>
-      <translation type="unfinished">Too&amp;ls</translation>
+      <translation>Eszközök (&amp;l)</translation>
     </message>
     <message>
       <source>UNIF rom files</source>
-      <translation type="unfinished">UNIF rom files</translation>
+      <translation>UNIF ROM fájlok</translation>
     </message>
     <message>
       <source>Start/Stop &amp;WAV recording</source>
@@ -1307,31 +1307,31 @@
     </message>
     <message>
       <source>Error on open device %1</source>
-      <translation type="unfinished">Error on open device %1</translation>
+      <translation>Hiba %1 eszköz megnyitásakor</translation>
     </message>
     <message>
       <source>Error on reading controllers configurations</source>
-      <translation type="unfinished">Error on reading controllers configurations</translation>
+      <translation>Hiba a kontrollerek beállításának olvasásakor</translation>
     </message>
     <message>
       <source>Press a key (ESC for the previous value &quot;%1&quot;) - timeout in %2</source>
-      <translation type="unfinished">Press a key (ESC for the previous value &quot;%1&quot;) - timeout in %2</translation>
+      <translation>Nyomj egy gombot (ESC-et az előző értékhez: &quot;%1&quot;) - kihagyás %2 mp múlva</translation>
     </message>
     <message>
       <source>Input Settings</source>
-      <translation type="unfinished">Input Settings</translation>
+      <translation>Beviteli beállítások</translation>
     </message>
     <message>
       <source>Setup</source>
-      <translation type="unfinished">Setup</translation>
+      <translation>Beállítás</translation>
     </message>
     <message>
       <source>Joystick ID</source>
-      <translation type="unfinished">Joystick ID</translation>
+      <translation>Joystick azonosító</translation>
     </message>
     <message>
       <source>NES</source>
-      <translation type="unfinished">NES</translation>
+      <translation>NES</translation>
     </message>
     <message>
       <source>Famicom</source>
