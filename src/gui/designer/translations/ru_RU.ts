@@ -846,10 +846,6 @@
       <translation>Сохранить палитру в файл</translation>
     </message>
     <message>
-      <source>wdgPaletteEditor</source>
-      <translation>Редактор палитр</translation>
-    </message>
-    <message>
       <source>Selected</source>
       <translation>Выбранная</translation>
     </message>
@@ -1088,10 +1084,6 @@
       <source>Enable Audio</source>
       <translation>Включить звук</translation>
     </message>
-    <message>
-      <source>wdgSettingsAudio</source>
-      <translation>Настройки звука</translation>
-    </message>
   </context>
   <context>
     <name>wdgSettingsCheats</name>
@@ -1261,6 +1253,10 @@
     <message>
       <source>Spanish</source>
       <translation type="unfinished">Spanish</translation>
+    </message>
+    <message>
+      <source>Hungarian</source>
+      <translation type="unfinished">Hungarian</translation>
     </message>
   </context>
   <context>
