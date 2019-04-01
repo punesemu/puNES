@@ -1256,7 +1256,7 @@
     </message>
     <message>
       <source>Hungarian</source>
-      <translation type="unfinished">Hungarian</translation>
+      <translation>Ungherese</translation>
     </message>
   </context>
   <context>
