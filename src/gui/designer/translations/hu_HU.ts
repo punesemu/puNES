@@ -820,7 +820,7 @@
     </message>
     <message>
       <source>Submit warning</source>
-      <translation type="unfinished">Submit warning</translation>
+      <translation>Probléma a beküldésnél</translation>
     </message>
     <message>
       <source>The code is invalid</source>
@@ -1082,7 +1082,7 @@
     </message>
     <message>
       <source>Swap Duty Cycles</source>
-      <translation type="unfinished">Swap Duty Cycles</translation>
+      <translation>Aktív ciklusidők felcserélése</translation>
     </message>
     <message>
       <source>Enable Audio</source>
@@ -1371,7 +1371,7 @@
     </message>
     <message>
       <source>Shortcuts</source>
-      <translation type="unfinished">Shortcuts</translation>
+      <translation>Gyorsbillentyűk</translation>
     </message>
     <message>
       <source>Permit &quot;Up + Down&quot; and &quot;Left + Right&quot; at the same time</source>
