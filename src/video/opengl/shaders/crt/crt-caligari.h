@@ -234,7 +234,7 @@
 "    _TMP5 = vec4(_TMP6, _TMP7, _TMP8, _TMP9);\n"
 "    _TMP10 = min(vec4( 1.00000000E+00, 1.00000000E+00, 1.00000000E+00, 1.00000000E+00), _TMP5);\n"
 "    _TMP73 = max(vec4( 0.00000000E+00, 0.00000000E+00, 0.00000000E+00, 0.00000000E+00), _TMP10);\n"
-"    FragColor = _TMP73;\n"
+"    FragColor = vec4(_TMP73.x, _TMP73.y, _TMP73.z, 1.00000000E+00);\n"
 "    return;\n"
 "} \n"
 "#endif\n"

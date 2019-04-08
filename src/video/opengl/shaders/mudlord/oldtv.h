@@ -165,7 +165,7 @@
 "    _TMP7 = COMPAT_TEXTURE(Texture, _c0042);\n"
 "    _distortion2 = vec4(_TMP5.x, _TMP6.y, _TMP7.z, 1.00000000E+00);\n"
 "    _OUT._color = _TMP13*(_distortion2*_TMP29);\n"
-"    FragColor = _OUT._color;\n"
+"    FragColor = vec4(_OUT._color.x, _OUT._color.y, _OUT._color.z, 1.00000000E+00);\n"
 "    return;\n"
 "} \n"
 "#endif\n"

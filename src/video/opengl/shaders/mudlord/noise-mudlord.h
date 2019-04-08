@@ -122,7 +122,7 @@
 "    _color = COMPAT_TEXTURE(Texture, TEX0.xy);\n"
 "    _color = (_color - 6.27451017E-02)*1.16438353E+00;\n"
 "    _ret_0 = _color*_TMP18;\n"
-"    FragColor = _ret_0;\n"
+"    FragColor = vec4(_ret_0.x, _ret_0.y, _ret_0.z, 1.00000000E+00);\n"
 "    return;\n"
 "} \n"
 "#endif\n"
