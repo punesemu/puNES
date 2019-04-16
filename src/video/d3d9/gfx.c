@@ -526,7 +526,10 @@ void gfx_cursor_set(void) {
 };
 
 void gfx_text_create_surface(_txt_element *ele) {
-	ele->surface = malloc((ele->h * ele->w) * (gfx.bit_per_pixel / 8));
+	size_t size = (ele->h * ele->w) * (gfx.bit_per_pixel / 8);
+
+	ele->surface = malloc(size);
+	memset(ele->surface, 0x00, size);
 }
 void gfx_text_release_surface(_txt_element *ele) {
 	if (ele->surface) {
