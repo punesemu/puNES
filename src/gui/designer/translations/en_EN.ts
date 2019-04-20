@@ -830,6 +830,10 @@
         <source>The cheat is already in the list</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>A description must be entered</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>wdgPaletteEditor</name>
