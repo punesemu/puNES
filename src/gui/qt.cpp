@@ -303,9 +303,6 @@ void gui_objcheat_init(void) {
 void gui_objcheat_read_game_cheats(void) {
 	qt.objch->read_game_cheats();
 }
-void gui_objcheat_save_game_cheats(void) {
-	qt.objch->save_game_cheats();
-}
 
 void gui_cursor_init(void) {
 	qt.screen->cursor_init();

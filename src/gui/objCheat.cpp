@@ -51,16 +51,14 @@ void objCheat::save_game_cheats(void) {
 		return;
 	}
 
-	if ((cheats.count() == 0) && QFile(CHEATFILENAME).exists()) {
-		 QFile::remove(CHEATFILENAME);
-		 return;
+	if (cheats.count() == 0) {
+		if (QFile(CHEATFILENAME).exists()) {
+			 QFile::remove(CHEATFILENAME);
+		}
+		return;
 	}
 
-	if (cfg->cheat_mode == CHEATSLIST_MODE) {
-		save_XML(CHEATFILENAME);
-	}
-
-	clear_list();
+	save_XML(CHEATFILENAME);
 }
 void objCheat::clear_list(void) {
 	if (cheats.count() > 0) {
@@ -177,8 +175,7 @@ void objCheat::import_XML(QString file_XML) {
 			}
 		}
 		if (xmlReader.hasError()) {
-			QMessageBox::critical(0, tr("Error on reading the file"), xmlReader.errorString(),
-				QMessageBox::Ok);
+			QMessageBox::critical(0, tr("Error on reading the file"), xmlReader.errorString(), QMessageBox::Ok);
 		}
 		xmlReader.clear();
 
@@ -368,14 +365,11 @@ void objCheat::complete_ram(chl_map *cheat) {
 	cheat->insert("rocky", "-");
 }
 void objCheat::complete_from_code(chl_map *cheat, _cheat *ch) {
-	cheat->insert("address", QString("0x" + QString("%1").arg(ch->address, 4, 16,
-		QChar('0')).toUpper()));
-	cheat->insert("value", QString( "0x" + QString("%1").arg(ch->replace, 2, 16,
-		QChar('0')).toUpper()));
+	cheat->insert("address", QString("0x" + QString("%1").arg(ch->address, 4, 16, QChar('0')).toUpper()));
+	cheat->insert("value", QString( "0x" + QString("%1").arg(ch->replace, 2, 16, QChar('0')).toUpper()));
 	cheat->insert("enabled_compare", QString("%1").arg(ch->enabled_compare));
 	if (ch->enabled_compare) {
-		cheat->insert("compare", QString("0x" + QString("%1").arg(ch->compare, 2, 16,
-			QChar('0')).toUpper()));
+		cheat->insert("compare", QString("0x" + QString("%1").arg(ch->compare, 2, 16, QChar('0')).toUpper()));
 	} else {
 		cheat->insert("compare", "-");
 	}

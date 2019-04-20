@@ -65,10 +65,10 @@ class wdgCheatsEditor : public QWidget, public Ui::wdgCheatEditor {
 
 	public:
 		void hide_tools_widgets(bool state);
+		void populate_cheat_table(void);
 
 	private:
 		chl_map extract_cheat_from_row(int row);
-		void populate_cheat_table(void);
 		void insert_cheat_row(int row);
 		void update_cheat_row(int row, chl_map *cheat);
 

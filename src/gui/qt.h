@@ -116,7 +116,6 @@ EXTERNC void gui_set_focus(void);
 EXTERNC void *gui_objcheat_get_ptr(void);
 EXTERNC void gui_objcheat_init(void);
 EXTERNC void gui_objcheat_read_game_cheats(void);
-EXTERNC void gui_objcheat_save_game_cheats(void);
 
 EXTERNC void gui_cursor_init(void);
 EXTERNC void gui_cursor_set(void);

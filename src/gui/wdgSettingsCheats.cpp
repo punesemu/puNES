@@ -46,6 +46,19 @@ void wdgSettingsCheats::update_widget(void) {
 
 void wdgSettingsCheats::cheat_mode_set(void) {
 	comboBox_Cheats_Mode->setCurrentIndex(cfg->cheat_mode);
+	widget_Cheats_Editor->populate_cheat_table();
+	cheat_editor_control();
+}
+void wdgSettingsCheats::cheat_editor_control(void) {
+	switch (cfg->cheat_mode) {
+		case NOCHEAT_MODE:
+		case GAMEGENIE_MODE:
+			widget_Cheats_Editor->setEnabled(false);
+			break;
+		case CHEATSLIST_MODE:
+			widget_Cheats_Editor->setEnabled(true);
+			break;
+	}
 }
 
 void wdgSettingsCheats::s_cheat_mode(int index) {
@@ -59,18 +72,17 @@ void wdgSettingsCheats::s_cheat_mode(int index) {
 
 	cfg->cheat_mode = mode;
 
+	cheat_editor_control();
+
 	switch (cfg->cheat_mode) {
 		case NOCHEAT_MODE:
-			widget_Cheats_Editor->setEnabled(false);
 			cheatslist_blank();
 			break;
 		case GAMEGENIE_MODE:
-			widget_Cheats_Editor->setEnabled(false);
 			cheatslist_blank();
 			gamegenie_check_rom_present(TRUE);
 			break;
 		case CHEATSLIST_MODE:
-			widget_Cheats_Editor->setEnabled(true);
 			objcheat->apply_cheats();
 			break;
 	}

@@ -80,7 +80,6 @@ EXTERNC void gamegenie_load_rom(void *rom_mem);
 
 EXTERNC void cheatslist_init(void);
 EXTERNC void cheatslist_read_game_cheats(void);
-EXTERNC void cheatslist_save_game_cheats(void);
 EXTERNC void cheatslist_blank(void);
 EXTERNC void cheatslist_quit(void);
 

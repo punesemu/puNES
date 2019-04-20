@@ -38,6 +38,7 @@ class wdgSettingsCheats : public QWidget, public Ui::wdgSettingsCheats {
 
 	private:
 		void cheat_mode_set(void);
+		void cheat_editor_control(void);
 
 	private slots:
 		void s_cheat_mode(int index);

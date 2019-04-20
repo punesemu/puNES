@@ -186,9 +186,6 @@ void cheatslist_read_game_cheats(void) {
 	cheatslist_blank();
 	gui_objcheat_read_game_cheats();
 }
-void cheatslist_save_game_cheats(void) {
-	gui_objcheat_save_game_cheats();
-}
 void cheatslist_blank(void) {
 	if (cheats_list.rom.counter > 0) {
 		memset(&cheats_list.rom, 0x00, sizeof(_type_cheat));
@@ -198,6 +195,5 @@ void cheatslist_blank(void) {
 	}
 }
 void cheatslist_quit(void) {
-	cheatslist_save_game_cheats();
 	cheatslist_blank();
 }

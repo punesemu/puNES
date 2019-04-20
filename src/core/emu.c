@@ -328,8 +328,6 @@ BYTE emu_load_rom(void) {
 	info.no_rom = FALSE;
 	info.cpu_rw_extern = FALSE;
 
-	cheatslist_save_game_cheats();
-
 	nsf_quit();
 	fds_quit();
 	map_quit();

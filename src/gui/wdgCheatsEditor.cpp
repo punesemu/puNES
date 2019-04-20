@@ -133,6 +133,19 @@ void wdgCheatsEditor::hide_tools_widgets(bool state) {
 
 	widget_Edit->setHidden(state);
 }
+void wdgCheatsEditor::populate_cheat_table(void) {
+	int i;
+
+	for (i = 1; i < tableWidget_Cheats->rowCount(); i++) {
+		tableWidget_Cheats->removeRow(i);
+	}
+
+	tableWidget_Cheats->setRowCount(0);
+
+	for (i = 0; i < objch->cheats.count(); i++) {
+		insert_cheat_row(i);
+	}
+}
 
 chl_map wdgCheatsEditor::extract_cheat_from_row(int row) {
 	chl_map cheat;
@@ -155,19 +168,6 @@ chl_map wdgCheatsEditor::extract_cheat_from_row(int row) {
 	}
 
 	return(cheat);
-}
-void wdgCheatsEditor::populate_cheat_table(void) {
-	int i;
-
-	for (i = 1; i < tableWidget_Cheats->rowCount(); i++) {
-		tableWidget_Cheats->removeRow(i);
-	}
-
-	tableWidget_Cheats->setRowCount(0);
-
-	for (i = 0; i < objch->cheats.count(); i++) {
-		insert_cheat_row(i);
-	}
 }
 void wdgCheatsEditor::insert_cheat_row(int row) {
 	chl_map cheat = objch->cheats.at(row);
@@ -223,6 +223,7 @@ void wdgCheatsEditor::insert_cheat_row(int row) {
 void wdgCheatsEditor::update_cheat_row(int row, chl_map *cheat) {
 	QCheckBox *active = tableWidget_Cheats->cellWidget(row, CR_ACTIVE)->findChild<QCheckBox*>("active");
 
+	active->blockSignals(true);
 	if ((*cheat)["enabled"].toInt() == 1) {
 		active->setChecked(true);
 		tableWidget_Cheats->item(row, CR_ACTIVE)->setText("1");
@@ -231,6 +232,7 @@ void wdgCheatsEditor::update_cheat_row(int row, chl_map *cheat) {
 		tableWidget_Cheats->item(row, CR_ACTIVE)->setText("0");
 	}
 	tableWidget_Cheats->resizeColumnToContents(CR_ACTIVE);
+	active->blockSignals(false);
 
 	if ((*cheat)["genie"] != "-") {
 		tableWidget_Cheats->item(row, CR_CODE)->setText((*cheat)["genie"]);
@@ -303,10 +305,14 @@ void wdgCheatsEditor::clear_edit_widgets(void) {
 }
 void wdgCheatsEditor::set_edit_widget(void) {
 	if ((new_cheat == true) || (tableWidget_Cheats->currentRow() >= 0)) {
+		label_Description->setEnabled(true);
+		lineEdit_Description->setEnabled(true);
 		frame_Type_Cheat->setEnabled(true);
 		frame_Raw_Value->setEnabled(true);
 		frame_Buttons->setEnabled(true);
 	} else {
+		label_Description->setEnabled(false);
+		lineEdit_Description->setEnabled(false);
 		frame_Type_Cheat->setEnabled(false);
 		frame_Raw_Value->setEnabled(false);
 		frame_Buttons->setEnabled(true);
@@ -410,6 +416,7 @@ void wdgCheatsEditor::s_cheat_item_state(int state) {
 		if ((i = objch->find_cheat(&cheat, true)) != -1) {
 			cheat["enabled"] = tableWidget_Cheats->item(i, CR_ACTIVE)->text();
 			objch->cheats.replace(i, cheat);
+			objch->save_game_cheats();
 		}
 	}
 
@@ -430,8 +437,7 @@ void wdgCheatsEditor::s_import(UNUSED(bool checked)) {
 	filters[1].append(" (*.xml *.XML)");
 	filters[2].append(" (*.cht *.CHT)");
 
-	file = QFileDialog::getOpenFileName(this, tr("Import Cheats"),
-		uQString(cfg->last_import_cheat_path), filters.join(";;"));
+	file = QFileDialog::getOpenFileName(this, tr("Import Cheats"), uQString(cfg->last_import_cheat_path), filters.join(";;"));
 
 	if (file.isNull() == false) {
 		QFileInfo fileinfo(file);
@@ -442,6 +448,7 @@ void wdgCheatsEditor::s_import(UNUSED(bool checked)) {
 			objch->import_XML(fileinfo.absoluteFilePath());
 		}
 		populate_cheat_table();
+		objch->save_game_cheats();
 		umemset(cfg->last_import_cheat_path, 0x00, usizeof(cfg->last_import_cheat_path));
 		ustrncpy(cfg->last_import_cheat_path, uQStringCD(fileinfo.absolutePath()), usizeof(cfg->last_import_cheat_path) - 1);
 	}
@@ -472,6 +479,7 @@ void wdgCheatsEditor::s_export(UNUSED(bool checked)) {
 void wdgCheatsEditor::s_clear_all(UNUSED(bool checked)) {
 	tableWidget_Cheats->setRowCount(0);
 	objch->cheats.clear();
+	objch->save_game_cheats();
 }
 
 void wdgCheatsEditor::s_grp_type_cheat(int id) {
@@ -535,25 +543,28 @@ void wdgCheatsEditor::s_remove(UNUSED(bool checked)) {
 	}
 
 	tableWidget_Cheats->removeRow(tableWidget_Cheats->currentRow());
+	objch->save_game_cheats();
 }
 void wdgCheatsEditor::s_submit(UNUSED(bool checked)) {
 	int i, current, submitted = true;
 	chl_map cheat;
 	int type = 0;
 
+	if (lineEdit_Description->text().isEmpty()) {
+		QMessageBox::warning(0, tr("Submit warning"), tr("A description must be entered"));
+		return;
+	}
+
 	cheat.insert("description", lineEdit_Description->text());
 
 	if (radioButton_CPU_Ram->isChecked()) {
 		cheat.insert("genie", "-");
 		cheat.insert("rocky", "-");
-		cheat.insert("address", "0x" + QString("%1").arg(hexSpinBox_Address->value(), 4, 16,
-			QChar('0')).toUpper());
-		cheat.insert("value", "0x" + QString("%1").arg(hexSpinBox_Value->value(), 2, 16,
-			QChar('0')).toUpper());
+		cheat.insert("address", "0x" + QString("%1").arg(hexSpinBox_Address->value(), 4, 16, QChar('0')).toUpper());
+		cheat.insert("value", "0x" + QString("%1").arg(hexSpinBox_Value->value(), 2, 16, QChar('0')).toUpper());
 		if (checkBox_Compare->isChecked()) {
 			cheat.insert("enabled_compare", "1");
-			cheat.insert("compare", "0x" + QString("%1").arg(hexSpinBox_Compare->value(), 2, 16,
-				QChar('0')).toUpper());
+			cheat.insert("compare", "0x" + QString("%1").arg(hexSpinBox_Compare->value(), 2, 16, QChar('0')).toUpper());
 		} else {
 			cheat.insert("enabled_compare", "0");
 			cheat.insert("compare", "-");
@@ -620,6 +631,8 @@ void wdgCheatsEditor::s_submit(UNUSED(bool checked)) {
 	if (new_cheat == true) {
 		s_cancel(false);
 	}
+
+	objch->save_game_cheats();
 }
 void wdgCheatsEditor::s_cancel(UNUSED(bool checked)) {
 	new_cheat = false;
