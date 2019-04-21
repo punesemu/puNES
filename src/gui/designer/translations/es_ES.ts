@@ -832,7 +832,7 @@
     </message>
     <message>
       <source>A description must be entered</source>
-      <translation type="unfinished">A description must be entered</translation>
+      <translation>Debe ingresar una descripción</translation>
     </message>
   </context>
   <context>
