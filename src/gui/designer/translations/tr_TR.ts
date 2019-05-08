@@ -1705,19 +1705,19 @@
     </message>
     <message>
       <source>Shaders</source>
-      <translation type="unfinished">Shaders</translation>
+      <translation>Gölgelendiriciler</translation>
     </message>
     <message>
       <source>Load from a file</source>
-      <translation type="unfinished">Load from a file</translation>
+      <translation>Dosyadan yükle</translation>
     </message>
     <message>
       <source>Shader Parameters</source>
-      <translation type="unfinished">Shader Parameters</translation>
+      <translation>Gölgelendirici Parametreleri</translation>
     </message>
     <message>
       <source>Reset paramaters to defaults</source>
-      <translation type="unfinished">Reset paramaters to defaults</translation>
+      <translation>Parametreleri varsayılana sıfırla</translation>
     </message>
     <message>
       <source>Filters</source>
