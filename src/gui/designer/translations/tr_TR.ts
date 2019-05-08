@@ -978,63 +978,63 @@
     </message>
     <message>
       <source>Stereo Panning</source>
-      <translation type="unfinished">Stereo Panning</translation>
+      <translation>Stereo Kayması</translation>
     </message>
     <message>
       <source>Channels Delay</source>
-      <translation type="unfinished">Channels Delay</translation>
+      <translation>Kanalların Gecikmesi</translation>
     </message>
     <message>
       <source>Misc</source>
-      <translation type="unfinished">Misc</translation>
+      <translation>Diğer</translation>
     </message>
     <message>
       <source>Settings</source>
-      <translation type="unfinished">Settings</translation>
+      <translation>Ayarlar</translation>
     </message>
     <message>
       <source>Channels</source>
-      <translation type="unfinished">Channels</translation>
+      <translation>Kanallar</translation>
     </message>
     <message>
       <source>5%</source>
-      <translation type="unfinished">5%</translation>
+      <translation>5%</translation>
     </message>
     <message>
       <source>10%</source>
-      <translation type="unfinished">10%</translation>
+      <translation>10%</translation>
     </message>
     <message>
       <source>15%</source>
-      <translation type="unfinished">15%</translation>
+      <translation>15%</translation>
     </message>
     <message>
       <source>20%</source>
-      <translation type="unfinished">20%</translation>
+      <translation>20%</translation>
     </message>
     <message>
       <source>25%</source>
-      <translation type="unfinished">25%</translation>
+      <translation>25%</translation>
     </message>
     <message>
       <source>30% (Default)</source>
-      <translation type="unfinished">30% (Default)</translation>
+      <translation>30% (Varsayılan)</translation>
     </message>
     <message>
       <source>35%</source>
-      <translation type="unfinished">35%</translation>
+      <translation>35%</translation>
     </message>
     <message>
       <source>40%</source>
-      <translation type="unfinished">40%</translation>
+      <translation>40%</translation>
     </message>
     <message>
       <source>45%</source>
-      <translation type="unfinished">45%</translation>
+      <translation>45%</translation>
     </message>
     <message>
       <source>50%</source>
-      <translation type="unfinished">50%</translation>
+      <translation>50%</translation>
     </message>
     <message>
       <source>55%</source>
@@ -1240,138 +1240,138 @@
     </message>
     <message>
       <source>15 minutes (Default)</source>
-      <translation type="unfinished">15 minutes (Default)</translation>
+      <translation>15 dakika (Varsayılan)</translation>
     </message>
     <message>
       <source>30 minutes</source>
-      <translation type="unfinished">30 minutes</translation>
+      <translation>30 dakika</translation>
     </message>
     <message>
       <source>60 minutus</source>
-      <translation type="unfinished">60 minutus</translation>
+      <translation>60 dakika</translation>
     </message>
     <message>
       <source>Unlimited</source>
-      <translation type="unfinished">Unlimited</translation>
+      <translation>Sınırsız</translation>
     </message>
     <message>
       <source>Spanish</source>
-      <translation type="unfinished">Spanish</translation>
+      <translation>İspanyolca</translation>
     </message>
     <message>
       <source>Hungarian</source>
-      <translation type="unfinished">Hungarian</translation>
+      <translation>Macarca</translation>
     </message>
   </context>
   <context>
     <name>wdgSettingsInput</name>
     <message>
       <source>Disabled</source>
-      <translation type="unfinished">Disabled</translation>
+      <translation>Devre Dışı</translation>
     </message>
     <message>
       <source>Standard Pad</source>
-      <translation type="unfinished">Standard Pad</translation>
+      <translation>Standard Pad</translation>
     </message>
     <message>
       <source>Zapper</source>
-      <translation type="unfinished">Zapper</translation>
+      <translation>Zapper</translation>
     </message>
     <message>
       <source>Snes Mouse</source>
-      <translation type="unfinished">Snes Mouse</translation>
+      <translation>Snes Faresi</translation>
     </message>
     <message>
       <source>Arkanoid Paddle</source>
-      <translation type="unfinished">Arkanoid Paddle</translation>
+      <translation>Arkanoid Paddle</translation>
     </message>
     <message>
       <source>Oeka Kids Tablet</source>
-      <translation type="unfinished">Oeka Kids Tablet</translation>
+      <translation>Oeka Kids Tablet</translation>
     </message>
     <message>
       <source>Default</source>
-      <translation type="unfinished">Default</translation>
+      <translation>Varsayılan</translation>
     </message>
     <message>
       <source>Unset</source>
-      <translation type="unfinished">Unset</translation>
+      <translation>Tanımlamayı kaldır</translation>
     </message>
     <message>
       <source>Start/Stop WAV</source>
-      <translation type="unfinished">Start/Stop WAV</translation>
+      <translation>Çalıştır/Durdur WAV</translation>
     </message>
     <message>
       <source>No usable device</source>
-      <translation type="unfinished">No usable device</translation>
+      <translation>Kullanılabilir aygıt yok</translation>
     </message>
     <message>
       <source>Error on open device %1</source>
-      <translation type="unfinished">Error on open device %1</translation>
+      <translation>%1 aygıtını açarken hata oluştu</translation>
     </message>
     <message>
       <source>Error on reading controllers configurations</source>
-      <translation type="unfinished">Error on reading controllers configurations</translation>
+      <translation>Denetleyici yapılandırmalarını okuma hatası</translation>
     </message>
     <message>
       <source>Press a key (ESC for the previous value &quot;%1&quot;) - timeout in %2</source>
-      <translation type="unfinished">Press a key (ESC for the previous value &quot;%1&quot;) - timeout in %2</translation>
+      <translation>Bir tuşa basın (&quot;%1&quot; önceki değere dönmek için ESC basın) - %2 içinde zamanaşımı</translation>
     </message>
     <message>
       <source>Input Settings</source>
-      <translation type="unfinished">Input Settings</translation>
+      <translation>Giriş ayarları</translation>
     </message>
     <message>
       <source>Setup</source>
-      <translation type="unfinished">Setup</translation>
+      <translation>Kurulum</translation>
     </message>
     <message>
       <source>Joystick ID</source>
-      <translation type="unfinished">Joystick ID</translation>
+      <translation>Joystick ID</translation>
     </message>
     <message>
       <source>NES</source>
-      <translation type="unfinished">NES</translation>
+      <translation>NES</translation>
     </message>
     <message>
       <source>Famicom</source>
-      <translation type="unfinished">Famicom</translation>
+      <translation>Famicom</translation>
     </message>
     <message>
       <source>Four Score</source>
-      <translation type="unfinished">Four Score</translation>
+      <translation>Four Score</translation>
     </message>
     <message>
       <source>Misc</source>
-      <translation type="unfinished">Misc</translation>
+      <translation>Diğer</translation>
     </message>
     <message>
       <source>Expansion Port</source>
-      <translation type="unfinished">Expansion Port</translation>
+      <translation>Genişleme Portu</translation>
     </message>
     <message>
       <source>Hide Zapper cursor</source>
-      <translation type="unfinished">Hide Zapper cursor</translation>
+      <translation>Zapper İmlecini gizle</translation>
     </message>
     <message>
       <source>Controller Port 1</source>
-      <translation type="unfinished">Controller Port 1</translation>
+      <translation>Kontrolör Port 1</translation>
     </message>
     <message>
       <source>Controller Port 3</source>
-      <translation type="unfinished">Controller Port 3</translation>
+      <translation>Kontrolör Port 3</translation>
     </message>
     <message>
       <source>Controller Port 2</source>
-      <translation type="unfinished">Controller Port 2</translation>
+      <translation>Kontrolör Port 2</translation>
     </message>
     <message>
       <source>Ports</source>
-      <translation type="unfinished">Ports</translation>
+      <translation>Bağlantı noktaları</translation>
     </message>
     <message>
       <source>Shortcuts</source>
-      <translation type="unfinished">Shortcuts</translation>
+      <translation>Kısayollar</translation>
     </message>
     <message>
       <source>Permit &quot;Up + Down&quot; and &quot;Left + Right&quot; at the same time</source>
@@ -1379,70 +1379,70 @@
     </message>
     <message>
       <source>Controller Mode</source>
-      <translation type="unfinished">Controller Mode</translation>
+      <translation>Kontrol tipi</translation>
     </message>
     <message>
       <source>Controller Port 4</source>
-      <translation type="unfinished">Controller Port 4</translation>
+      <translation>Kontrolör Port 4</translation>
     </message>
     <message>
       <source>Reset to defaults</source>
-      <translation type="unfinished">Reset to defaults</translation>
+      <translation>Varsayılanlara dön</translation>
     </message>
     <message>
       <source>Action</source>
-      <translation type="unfinished">Action</translation>
+      <translation>Aksiyon</translation>
     </message>
     <message>
       <source>Keyboard</source>
-      <translation type="unfinished">Keyboard</translation>
+      <translation>Klavye</translation>
     </message>
     <message>
       <source>Joystick</source>
-      <translation type="unfinished">Joystick</translation>
+      <translation>Joystick</translation>
     </message>
   </context>
   <context>
     <name>wdgSettingsPPU</name>
     <message>
       <source>PPU Settings</source>
-      <translation type="unfinished">PPU Settings</translation>
+      <translation>PPU Ayarları</translation>
     </message>
     <message>
       <source>Disable 7bit Sample Control</source>
-      <translation type="unfinished">Disable 7bit Sample Control</translation>
+      <translation>7bit Örnek Kontrolünü Devre Dışı Bırak</translation>
     </message>
     <message>
       <source>Reset Lag Counter</source>
-      <translation type="unfinished">Reset Lag Counter</translation>
+      <translation>Lag Sayacını Sıfırla</translation>
     </message>
     <message>
       <source>VBlank Lines</source>
-      <translation type="unfinished">VBlank Lines</translation>
+      <translation>VBlank Çizgileri</translation>
     </message>
     <message>
       <source>Postrender Lines</source>
-      <translation type="unfinished">Postrender Lines</translation>
+      <translation>Render Sonrası Çizgileri</translation>
     </message>
     <message>
       <source>Overclock</source>
-      <translation type="unfinished">Overclock</translation>
+      <translation>Hız aşırtma</translation>
     </message>
     <message>
       <source>Sprites and background</source>
-      <translation type="unfinished">Sprites and background</translation>
+      <translation>Spritelar ve arka plan</translation>
     </message>
     <message>
       <source>Unlimited Sprites</source>
-      <translation type="unfinished">Unlimited Sprites</translation>
+      <translation>Sınırsız Spritelar</translation>
     </message>
     <message>
       <source>Enable Extra Scanlines</source>
-      <translation type="unfinished">Enable Extra Scanlines</translation>
+      <translation>Ekstra Tarama Satırlarını Etkinleştir</translation>
     </message>
     <message>
       <source>Hide Sprites</source>
-      <translation type="unfinished">Hide Sprites</translation>
+      <translation>Spriteları gizle</translation>
     </message>
     <message>
       <source>Hide Background</source>
@@ -1645,63 +1645,63 @@
     </message>
     <message>
       <source>No Filters</source>
-      <translation type="unfinished">No Filters</translation>
+      <translation>Filtre yok</translation>
     </message>
     <message>
       <source>Scale2X</source>
-      <translation type="unfinished">Scale2X</translation>
+      <translation>Scale2X</translation>
     </message>
     <message>
       <source>Scale3X</source>
-      <translation type="unfinished">Scale3X</translation>
+      <translation>Scale3X</translation>
     </message>
     <message>
       <source>Scale4X</source>
-      <translation type="unfinished">Scale4X</translation>
+      <translation>Scale4X</translation>
     </message>
     <message>
       <source>Hq2X</source>
-      <translation type="unfinished">Hq2X</translation>
+      <translation>Hq2X</translation>
     </message>
     <message>
       <source>Hq3X</source>
-      <translation type="unfinished">Hq3X</translation>
+      <translation>Hq3X</translation>
     </message>
     <message>
       <source>Hq4X</source>
-      <translation type="unfinished">Hq4X</translation>
+      <translation>Hq4X</translation>
     </message>
     <message>
       <source>xBRZ 2X</source>
-      <translation type="unfinished">xBRZ 2X</translation>
+      <translation>xBRZ 2X</translation>
     </message>
     <message>
       <source>xBRZ 3X</source>
-      <translation type="unfinished">xBRZ 3X</translation>
+      <translation>xBRZ 3X</translation>
     </message>
     <message>
       <source>xBRZ 4X</source>
-      <translation type="unfinished">xBRZ 4X</translation>
+      <translation>xBRZ 4X</translation>
     </message>
     <message>
       <source>xBRZ 5X</source>
-      <translation type="unfinished">xBRZ 5X</translation>
+      <translation>xBRZ 5X</translation>
     </message>
     <message>
       <source>xBRZ 6X</source>
-      <translation type="unfinished">xBRZ 6X</translation>
+      <translation>xBRZ 6X</translation>
     </message>
     <message>
       <source>NTSC Composite</source>
-      <translation type="unfinished">NTSC Composite</translation>
+      <translation>NTSC Composite</translation>
     </message>
     <message>
       <source>NTSC S-Video</source>
-      <translation type="unfinished">NTSC S-Video</translation>
+      <translation>NTSC S-Video</translation>
     </message>
     <message>
       <source>NTSC RGB</source>
-      <translation type="unfinished">NTSC RGB</translation>
+      <translation>NTSC RGB</translation>
     </message>
     <message>
       <source>Shaders</source>
