@@ -5,7 +5,7 @@
     <name>Settings</name>
     <message>
       <source>System Default</source>
-      <translation type="unfinished">System Default</translation>
+      <translation>Sistem varsayılanı</translation>
     </message>
   </context>
   <context>
@@ -59,161 +59,161 @@
     </message>
     <message>
       <source>Original</source>
-      <translation type="unfinished">Original</translation>
+      <translation>Orijinal</translation>
     </message>
     <message>
       <source>3rd-party</source>
-      <translation type="unfinished">3rd-party</translation>
+      <translation>Üçüncü şahıs</translation>
     </message>
     <message>
       <source>Keyboard</source>
-      <translation type="unfinished">Keyboard</translation>
+      <translation>Klavye</translation>
     </message>
     <message>
       <source>Disabled</source>
-      <translation type="unfinished">Disabled</translation>
+      <translation>Devre Dışı</translation>
     </message>
     <message>
       <source>No usable device</source>
-      <translation type="unfinished">No usable device</translation>
+      <translation>Kullanılabilir aygıt yok</translation>
     </message>
     <message>
       <source>Select device first</source>
-      <translation type="unfinished">Select device first</translation>
+      <translation>Önce bir aygıt seçin</translation>
     </message>
     <message>
       <source>Error on open device %1</source>
-      <translation type="unfinished">Error on open device %1</translation>
+      <translation>%1 aygıtını açarken hata oluştu</translation>
     </message>
     <message>
       <source>Error on reading controllers configurations</source>
-      <translation type="unfinished">Error on reading controllers configurations</translation>
+      <translation>Denetleyici yapılandırmalarını okuma hatası</translation>
     </message>
     <message>
       <source>Press a key (ESC for the previous value &quot;%1&quot;)</source>
-      <translation type="unfinished">Press a key (ESC for the previous value &quot;%1&quot;)</translation>
+      <translation>Bir tuşa basın (&quot;%1&quot; önceki değere dönmek için ESC basın)</translation>
     </message>
     <message>
       <source>Standard Pad</source>
-      <translation type="unfinished">Standard Pad</translation>
+      <translation>Standard Pad</translation>
     </message>
     <message>
       <source>ID</source>
-      <translation type="unfinished">ID</translation>
+      <translation>ID</translation>
     </message>
     <message>
       <source>Up</source>
-      <translation type="unfinished">Up</translation>
+      <translation>Up</translation>
     </message>
     <message>
       <source>A</source>
-      <translation type="unfinished">A</translation>
+      <translation>A</translation>
     </message>
     <message>
       <source>Down</source>
-      <translation type="unfinished">Down</translation>
+      <translation>Down</translation>
     </message>
     <message>
       <source>Unset</source>
-      <translation type="unfinished">Unset</translation>
+      <translation>Tanımlamayı kaldır</translation>
     </message>
     <message>
       <source>Left</source>
-      <translation type="unfinished">Left</translation>
+      <translation>Left</translation>
     </message>
     <message>
       <source>Start</source>
-      <translation type="unfinished">Start</translation>
+      <translation>Start</translation>
     </message>
     <message>
       <source>Turbo B</source>
-      <translation type="unfinished">Turbo B</translation>
+      <translation>Turbo B</translation>
     </message>
     <message>
       <source>Select</source>
-      <translation type="unfinished">Select</translation>
+      <translation>Select</translation>
     </message>
     <message>
       <source>Turbo A</source>
-      <translation type="unfinished">Turbo A</translation>
+      <translation>Turbo A</translation>
     </message>
     <message>
       <source>B</source>
-      <translation type="unfinished">B</translation>
+      <translation>B</translation>
     </message>
     <message>
       <source>Right</source>
-      <translation type="unfinished">Right</translation>
+      <translation>Right</translation>
     </message>
     <message>
       <source>In sequence</source>
-      <translation type="unfinished">In sequence</translation>
+      <translation>Sırayla</translation>
     </message>
     <message>
       <source>Unset all</source>
-      <translation type="unfinished">Unset all</translation>
+      <translation>Tüm Tanımlamaları Kaldır</translation>
     </message>
     <message>
       <source>Defaults</source>
-      <translation type="unfinished">Defaults</translation>
+      <translation>Varsayılanlar</translation>
     </message>
     <message>
       <source>Joystick</source>
-      <translation type="unfinished">Joystick</translation>
+      <translation>Joystick</translation>
     </message>
     <message>
       <source>Misc</source>
-      <translation type="unfinished">Misc</translation>
+      <translation>Diğer</translation>
     </message>
     <message>
       <source>Controller type</source>
-      <translation type="unfinished">Controller type</translation>
+      <translation>Kontrol tipi</translation>
     </message>
     <message>
       <source>Turbo B Delay</source>
-      <translation type="unfinished">Turbo B Delay</translation>
+      <translation>Turbo B Delay</translation>
     </message>
     <message>
       <source>Turbo A Delay</source>
-      <translation type="unfinished">Turbo A Delay</translation>
+      <translation>Turbo A Delay</translation>
     </message>
     <message>
       <source>Apply</source>
-      <translation type="unfinished">Apply</translation>
+      <translation>Uygula</translation>
     </message>
     <message>
       <source>Discard</source>
-      <translation type="unfinished">Discard</translation>
+      <translation>Vazgeç</translation>
     </message>
   </context>
   <context>
     <name>dlgUncomp</name>
     <message>
       <source>which ROM do you want to load?</source>
-      <translation type="unfinished">which ROM do you want to load?</translation>
+      <translation>hangi ROM'u yüklemek istersiniz?</translation>
     </message>
     <message>
       <source>which PATCH do you want to apply?</source>
-      <translation type="unfinished">which PATCH do you want to apply?</translation>
+      <translation>hangi YAMA'yı uygulamak istersiniz?</translation>
     </message>
     <message>
       <source>Unpacked archive</source>
-      <translation type="unfinished">Unpacked archive</translation>
+      <translation>Arşiv paketi açıldı</translation>
     </message>
     <message>
       <source>OK</source>
-      <translation type="unfinished">OK</translation>
+      <translation>Tamam</translation>
     </message>
     <message>
       <source>None</source>
-      <translation type="unfinished">None</translation>
+      <translation>Hiç biri</translation>
     </message>
   </context>
   <context>
     <name>dlgVsSystem</name>
     <message>
       <source>Vs System Controls</source>
-      <translation type="unfinished">Vs System Controls</translation>
+      <translation>Vs Sistem Kontrolleri</translation>
     </message>
     <message>
       <source>Left Coin</source>
@@ -420,43 +420,43 @@
     </message>
     <message>
       <source>L&amp;oad state</source>
-      <translation type="unfinished">L&amp;oad state</translation>
+      <translation>K&amp;onum yükle</translation>
     </message>
     <message>
       <source>&amp;Increment slot</source>
-      <translation type="unfinished">&amp;Increment slot</translation>
+      <translation>&amp;Slotu arttır</translation>
     </message>
     <message>
       <source>&amp;Decrement slot</source>
-      <translation type="unfinished">&amp;Decrement slot</translation>
+      <translation>&amp;Slotu düşür</translation>
     </message>
     <message>
       <source>Slot &amp;0</source>
-      <translation type="unfinished">Slot &amp;0</translation>
+      <translation>Slot &amp;0</translation>
     </message>
     <message>
       <source>Slot &amp;1</source>
-      <translation type="unfinished">Slot &amp;1</translation>
+      <translation>Slot &amp;1</translation>
     </message>
     <message>
       <source>Slot &amp;2</source>
-      <translation type="unfinished">Slot &amp;2</translation>
+      <translation>Slot &amp;2</translation>
     </message>
     <message>
       <source>Slot &amp;3</source>
-      <translation type="unfinished">Slot &amp;3</translation>
+      <translation>Slot &amp;3</translation>
     </message>
     <message>
       <source>Slot &amp;4</source>
-      <translation type="unfinished">Slot &amp;4</translation>
+      <translation>Slot &amp;4</translation>
     </message>
     <message>
       <source>Slot &amp;5</source>
-      <translation type="unfinished">Slot &amp;5</translation>
+      <translation>Slot &amp;5</translation>
     </message>
     <message>
       <source>&amp;About</source>
-      <translation type="unfinished">&amp;About</translation>
+      <translation>&amp;Hakkında</translation>
     </message>
     <message>
       <source>Slot &amp;6</source>
