@@ -460,163 +460,163 @@
     </message>
     <message>
       <source>Slot &amp;6</source>
-      <translation type="unfinished">Slot &amp;6</translation>
+      <translation>Slot &amp;6</translation>
     </message>
     <message>
       <source>Slot &amp;7</source>
-      <translation type="unfinished">Slot &amp;7</translation>
+      <translation>Slot &amp;7</translation>
     </message>
     <message>
       <source>Slot &amp;8</source>
-      <translation type="unfinished">Slot &amp;8</translation>
+      <translation>Slot &amp;8</translation>
     </message>
     <message>
       <source>Slot &amp;9</source>
-      <translation type="unfinished">Slot &amp;9</translation>
+      <translation>Slot &amp;9</translation>
     </message>
     <message>
       <source>&amp;Cheats List Mode</source>
-      <translation type="unfinished">&amp;Cheats List Mode</translation>
+      <translation>&amp;Hile Listesi Modu</translation>
     </message>
     <message>
       <source>Cheats &amp;Editor</source>
-      <translation type="unfinished">Cheats &amp;Editor</translation>
+      <translation>Hile &amp;Düzenleyici</translation>
     </message>
     <message>
       <source>&amp;Disabled</source>
-      <translation type="unfinished">&amp;Disabled</translation>
+      <translation>&amp;Devre Dışı</translation>
     </message>
     <message>
       <source>&amp;Fast Forward</source>
-      <translation type="unfinished">&amp;Fast Forward</translation>
+      <translation>&amp;İleri Sar</translation>
     </message>
     <message>
       <source>&amp;Pause</source>
-      <translation type="unfinished">&amp;Pause</translation>
+      <translation>&amp;Duraklat</translation>
     </message>
     <message>
       <source>Save Screens&amp;hot</source>
-      <translation type="unfinished">Save Screens&amp;hot</translation>
+      <translation>Ekran Görüntüsünü Kayd&amp;et</translation>
     </message>
     <message>
       <source>Insert Coin</source>
-      <translation type="unfinished">Insert Coin</translation>
+      <translation>Coin Ekle</translation>
     </message>
     <message>
       <source>Vs System Controls</source>
-      <translation type="unfinished">Vs System Controls</translation>
+      <translation>Vs Sistem Kontrolleri</translation>
     </message>
     <message>
       <source>&amp;Open working folder</source>
-      <translation type="unfinished">&amp;Open working folder</translation>
+      <translation>&amp;Çalışan klasörü aç</translation>
     </message>
     <message>
       <source>&amp;File</source>
-      <translation type="unfinished">&amp;File</translation>
+      <translation>&amp;Dosya</translation>
     </message>
     <message>
       <source>&amp;Recent Roms</source>
-      <translation type="unfinished">&amp;Recent Roms</translation>
+      <translation>&amp;Son Romlar</translation>
     </message>
     <message>
       <source>&amp;NES</source>
-      <translation type="unfinished">&amp;NES</translation>
+      <translation>&amp;NES</translation>
     </message>
     <message>
       <source>&amp;Disk Side</source>
-      <translation type="unfinished">&amp;Disk Side</translation>
+      <translation>&amp;Disk Yüzü</translation>
     </message>
     <message>
       <source>Setti&amp;ngs</source>
-      <translation type="unfinished">Setti&amp;ngs</translation>
+      <translation>Ayar&amp;lar</translation>
     </message>
     <message>
       <source>&amp;Video</source>
-      <translation type="unfinished">&amp;Video</translation>
+      <translation>&amp;Video</translation>
     </message>
     <message>
       <source>&amp;Audio</source>
-      <translation type="unfinished">&amp;Audio</translation>
+      <translation>&amp;Ses</translation>
     </message>
     <message>
       <source>&amp;Input</source>
-      <translation type="unfinished">&amp;Input</translation>
+      <translation>&amp;Girdi</translation>
     </message>
     <message>
       <source>&amp;Cheats</source>
-      <translation type="unfinished">&amp;Cheats</translation>
+      <translation>&amp;Hileler</translation>
     </message>
     <message>
       <source>&amp;PPU</source>
-      <translation type="unfinished">&amp;PPU</translation>
+      <translation>&amp;PPU</translation>
     </message>
     <message>
       <source>S&amp;tate</source>
-      <translation type="unfinished">S&amp;tate</translation>
+      <translation>K&amp;onum</translation>
     </message>
     <message>
       <source>&amp;Help</source>
-      <translation type="unfinished">&amp;Help</translation>
+      <translation>&amp;Yardım</translation>
     </message>
     <message>
       <source>&amp;Turn On</source>
-      <translation type="unfinished">&amp;Turn On</translation>
+      <translation>&amp;Çalıştır</translation>
     </message>
     <message>
       <source>&amp;Turn Off</source>
-      <translation type="unfinished">&amp;Turn Off</translation>
+      <translation>&amp;Kapat</translation>
     </message>
     <message>
       <source>Too&amp;ls</source>
-      <translation type="unfinished">Too&amp;ls</translation>
+      <translation>Araçl&amp;ar</translation>
     </message>
     <message>
       <source>UNIF rom files</source>
-      <translation type="unfinished">UNIF rom files</translation>
+      <translation>UNIF rom dosyaları</translation>
     </message>
     <message>
       <source>Start/Stop &amp;WAV recording</source>
-      <translation type="unfinished">Start/Stop &amp;WAV recording</translation>
+      <translation>&amp;WAV kaydını başlat/durdur</translation>
     </message>
     <message>
       <source>Stop &amp;WAV recording</source>
-      <translation type="unfinished">Stop &amp;WAV recording</translation>
+      <translation>&amp;WAV kaydını durdur</translation>
     </message>
     <message>
       <source>Start &amp;WAV recording</source>
-      <translation type="unfinished">Start &amp;WAV recording</translation>
+      <translation>&amp;WAV kaydını başlat</translation>
     </message>
     <message>
       <source>MS WAVE files</source>
-      <translation type="unfinished">MS WAVE files</translation>
+      <translation>MS WAVE dosyaları</translation>
     </message>
     <message>
       <source>Record sound</source>
-      <translation type="unfinished">Record sound</translation>
+      <translation>Sesi kaydet</translation>
     </message>
     <message>
       <source>NSF rom files</source>
-      <translation type="unfinished">NSF rom files</translation>
+      <translation>NSF rom dosyaları</translation>
     </message>
     <message>
       <source>NSFE rom files</source>
-      <translation type="unfinished">NSFE rom files</translation>
+      <translation>NSFE rom dosyaları</translation>
     </message>
     <message>
       <source>IPS patch files</source>
-      <translation type="unfinished">IPS patch files</translation>
+      <translation>IPS yama dosyaları</translation>
     </message>
     <message>
       <source>BPS patch files</source>
-      <translation type="unfinished">BPS patch files</translation>
+      <translation>BPS yama dosyaları</translation>
     </message>
     <message>
       <source>XDELTA patch files</source>
-      <translation type="unfinished">XDELTA patch files</translation>
+      <translation>XDELTA yama dosyaları</translation>
     </message>
     <message>
       <source>Open IPS/BPS/XDELTA Patch</source>
-      <translation type="unfinished">Open IPS/BPS/XDELTA Patch</translation>
+      <translation>IPS/BPS/XDELTA Yamasını aç</translation>
     </message>
     <message>
       <source>If you like the emulator and you want to support it&apos;s development or would you pay for a beer at the programmer</source>
@@ -832,93 +832,93 @@
     </message>
     <message>
       <source>A description must be entered</source>
-      <translation type="unfinished">A description must be entered</translation>
+      <translation>Bir açıklama girilmelidir</translation>
     </message>
   </context>
   <context>
     <name>wdgPaletteEditor</name>
     <message>
       <source>Palette files</source>
-      <translation type="unfinished">Palette files</translation>
+      <translation>Palet dosyaları</translation>
     </message>
     <message>
       <source>All files</source>
-      <translation type="unfinished">All files</translation>
+      <translation>Tüm dosyalar</translation>
     </message>
     <message>
       <source>Save palette on file</source>
-      <translation type="unfinished">Save palette on file</translation>
+      <translation>Paleti dosyaya kaydet</translation>
     </message>
     <message>
       <source>Selected</source>
-      <translation type="unfinished">Selected</translation>
+      <translation>Seçili</translation>
     </message>
     <message>
       <source>PPU</source>
-      <translation type="unfinished">PPU</translation>
+      <translation>PPU</translation>
     </message>
     <message>
       <source>Val</source>
-      <translation type="unfinished">Val</translation>
+      <translation>Val</translation>
     </message>
     <message>
       <source>Blue</source>
-      <translation type="unfinished">Blue</translation>
+      <translation>Mavi</translation>
     </message>
     <message>
       <source>Red</source>
-      <translation type="unfinished">Red</translation>
+      <translation>Kırmızı</translation>
     </message>
     <message>
       <source>Green</source>
-      <translation type="unfinished">Green</translation>
+      <translation>Yeşil</translation>
     </message>
     <message>
       <source>Sat</source>
-      <translation type="unfinished">Sat</translation>
+      <translation>Sat</translation>
     </message>
     <message>
       <source>Hue</source>
-      <translation type="unfinished">Hue</translation>
+      <translation>Hue</translation>
     </message>
     <message>
       <source>HTML</source>
-      <translation type="unfinished">HTML</translation>
+      <translation>HTML</translation>
     </message>
     <message>
       <source>Reset color</source>
-      <translation type="unfinished">Reset color</translation>
+      <translation>Rengi sıfırla</translation>
     </message>
     <message>
       <source>Save to a file</source>
-      <translation type="unfinished">Save to a file</translation>
+      <translation>Dosyaya Kaydet</translation>
     </message>
     <message>
       <source>Reset palette</source>
-      <translation type="unfinished">Reset palette</translation>
+      <translation>Paleti sıfırla</translation>
     </message>
   </context>
   <context>
     <name>wdgSettingsAudio</name>
     <message>
       <source>Output Devices</source>
-      <translation type="unfinished">Output Devices</translation>
+      <translation>Çıktı cihazları</translation>
     </message>
     <message>
       <source>48000</source>
-      <translation type="unfinished">48000</translation>
+      <translation>48000</translation>
     </message>
     <message>
       <source>44100</source>
-      <translation type="unfinished">44100</translation>
+      <translation>44100</translation>
     </message>
     <message>
       <source>22050</source>
-      <translation type="unfinished">22050</translation>
+      <translation>22050</translation>
     </message>
     <message>
       <source>11025</source>
-      <translation type="unfinished">11025</translation>
+      <translation>11025</translation>
     </message>
     <message>
       <source>0</source>
@@ -926,43 +926,43 @@
     </message>
     <message>
       <source>1 (Default)</source>
-      <translation type="unfinished">1 (Default)</translation>
+      <translation>%1 (Varsayılan)</translation>
     </message>
     <message>
       <source>2</source>
-      <translation type="unfinished">2</translation>
+      <translation>2</translation>
     </message>
     <message>
       <source>3</source>
-      <translation type="unfinished">3</translation>
+      <translation>3</translation>
     </message>
     <message>
       <source>4</source>
-      <translation type="unfinished">4</translation>
+      <translation>4</translation>
     </message>
     <message>
       <source>5</source>
-      <translation type="unfinished">5</translation>
+      <translation>5</translation>
     </message>
     <message>
       <source>6</source>
-      <translation type="unfinished">6</translation>
+      <translation>6</translation>
     </message>
     <message>
       <source>7</source>
-      <translation type="unfinished">7</translation>
+      <translation>7</translation>
     </message>
     <message>
       <source>8</source>
-      <translation type="unfinished">8</translation>
+      <translation>8</translation>
     </message>
     <message>
       <source>9</source>
-      <translation type="unfinished">9</translation>
+      <translation>9</translation>
     </message>
     <message>
       <source>Sample Rate</source>
-      <translation type="unfinished">Sample Rate</translation>
+      <translation>Örnek Oranı</translation>
     </message>
     <message>
       <source>Buffer Size factor</source>
@@ -970,11 +970,11 @@
     </message>
     <message>
       <source>Mono</source>
-      <translation type="unfinished">Mono</translation>
+      <translation>Mono</translation>
     </message>
     <message>
       <source>Stereo Delay</source>
-      <translation type="unfinished">Stereo Delay</translation>
+      <translation>Stereo Gecikmesi</translation>
     </message>
     <message>
       <source>Stereo Panning</source>
