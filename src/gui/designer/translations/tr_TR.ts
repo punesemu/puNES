@@ -288,15 +288,15 @@
     </message>
     <message>
       <source>All supported formats</source>
-      <translation type="unfinished">All supported formats</translation>
+      <translation>Tüm Desteklenen Formatlar</translation>
     </message>
     <message>
       <source>Compressed files</source>
-      <translation type="unfinished">Compressed files</translation>
+      <translation>Sıkıştırılmış dosyalar</translation>
     </message>
     <message>
       <source>Nes rom files</source>
-      <translation type="unfinished">Nes rom files</translation>
+      <translation>Nes rom dosyaları</translation>
     </message>
     <message>
       <source>FDS image files</source>
@@ -308,15 +308,15 @@
     </message>
     <message>
       <source>All files</source>
-      <translation type="unfinished">All files</translation>
+      <translation>Tüm dosyalar</translation>
     </message>
     <message>
       <source>Open File</source>
-      <translation type="unfinished">Open File</translation>
+      <translation>Dosyayı Aç</translation>
     </message>
     <message>
       <source>Save states</source>
-      <translation type="unfinished">Save states</translation>
+      <translation>Konum Kayıtları</translation>
     </message>
     <message>
       <source>Save state on file</source>
