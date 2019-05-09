@@ -217,7 +217,7 @@
     </message>
     <message>
       <source>Left Coin</source>
-      <translation type="unfinished">Left Coin</translation>
+      <translation>Left Coin</translation>
     </message>
     <message>
       <source>Right Coin</source>
@@ -229,7 +229,7 @@
     </message>
     <message>
       <source>Coin Counter</source>
-      <translation type="unfinished">Coin Counter</translation>
+      <translation>Coin Sayacı</translation>
     </message>
     <message>
       <source>Dip Switches</source>
@@ -237,35 +237,35 @@
     </message>
     <message>
       <source>4</source>
-      <translation type="unfinished">4</translation>
+      <translation>4</translation>
     </message>
     <message>
       <source>5</source>
-      <translation type="unfinished">5</translation>
+      <translation>5</translation>
     </message>
     <message>
       <source>6</source>
-      <translation type="unfinished">6</translation>
+      <translation>6</translation>
     </message>
     <message>
       <source>7</source>
-      <translation type="unfinished">7</translation>
+      <translation>7</translation>
     </message>
     <message>
       <source>8</source>
-      <translation type="unfinished">8</translation>
+      <translation>8</translation>
     </message>
     <message>
       <source>3</source>
-      <translation type="unfinished">3</translation>
+      <translation>3</translation>
     </message>
     <message>
       <source>2</source>
-      <translation type="unfinished">2</translation>
+      <translation>2</translation>
     </message>
     <message>
       <source>1</source>
-      <translation type="unfinished">1</translation>
+      <translation>1</translation>
     </message>
     <message>
       <source>Defaults Game Dip Switches</source>
@@ -276,15 +276,15 @@
     <name>mainWindow</name>
     <message>
       <source>&amp;Insert disk</source>
-      <translation type="unfinished">&amp;Insert disk</translation>
+      <translation>&amp;Diski Tak</translation>
     </message>
     <message>
       <source>&amp;Eject disk</source>
-      <translation type="unfinished">&amp;Eject disk</translation>
+      <translation>&amp;Diski Çıkar</translation>
     </message>
     <message>
       <source>&amp;Eject/Insert disk</source>
-      <translation type="unfinished">&amp;Eject/Insert disk</translation>
+      <translation>&amp;Disk Çıkar/Tak</translation>
     </message>
     <message>
       <source>All supported formats</source>
