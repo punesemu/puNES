@@ -320,7 +320,7 @@
     </message>
     <message>
       <source>Save state on file</source>
-      <translation type="unfinished">Save state on file</translation>
+      <translation>Konumu dosyaya kaydet</translation>
     </message>
     <message>
       <source>Open save state</source>
@@ -344,11 +344,11 @@
     </message>
     <message>
       <source>&amp;Open</source>
-      <translation type="unfinished">&amp;Open</translation>
+      <translation>&amp;Aç</translation>
     </message>
     <message>
       <source>&amp;Quit</source>
-      <translation type="unfinished">&amp;Quit</translation>
+      <translation>&amp;Çıkış</translation>
     </message>
     <message>
       <source>&amp;Hard Reset</source>
@@ -360,7 +360,7 @@
     </message>
     <message>
       <source>&amp;Eject/Insert Disk</source>
-      <translation type="unfinished">&amp;Eject/Insert Disk</translation>
+      <translation>&amp;Disk Çıkar/Tak</translation>
     </message>
     <message>
       <source>Disk 1 side A</source>
@@ -404,11 +404,11 @@
     </message>
     <message>
       <source>&amp;Load from file</source>
-      <translation type="unfinished">&amp;Load from file</translation>
+      <translation>&amp;Dosyadan yükle</translation>
     </message>
     <message>
       <source>F&amp;ullscreen</source>
-      <translation type="unfinished">F&amp;ullscreen</translation>
+      <translation>T&amp;am Ekran</translation>
     </message>
     <message>
       <source>&amp;Game Genie Rom Mode</source>
