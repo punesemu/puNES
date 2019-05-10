@@ -221,11 +221,11 @@
     </message>
     <message>
       <source>Right Coin</source>
-      <translation type="unfinished">Right Coin</translation>
+      <translation>Right Coin</translation>
     </message>
     <message>
       <source>Service Coin</source>
-      <translation type="unfinished">Service Coin</translation>
+      <translation>Servis Coin</translation>
     </message>
     <message>
       <source>Coin Counter</source>
@@ -233,7 +233,7 @@
     </message>
     <message>
       <source>Dip Switches</source>
-      <translation type="unfinished">Dip Switches</translation>
+      <translation>Dip Anahtarları</translation>
     </message>
     <message>
       <source>4</source>
@@ -269,7 +269,7 @@
     </message>
     <message>
       <source>Defaults Game Dip Switches</source>
-      <translation type="unfinished">Defaults Game Dip Switches</translation>
+      <translation>Oyunun Varsayılan Dip Anahtarları</translation>
     </message>
   </context>
   <context>
@@ -400,7 +400,7 @@
     </message>
     <message>
       <source>&amp;Save to file</source>
-      <translation type="unfinished">&amp;Save to file</translation>
+      <translation>&amp;Dosyaya kaydet</translation>
     </message>
     <message>
       <source>&amp;Load from file</source>
@@ -416,7 +416,7 @@
     </message>
     <message>
       <source>S&amp;ave state</source>
-      <translation type="unfinished">S&amp;ave state</translation>
+      <translation>K&amp;onumu kaydet</translation>
     </message>
     <message>
       <source>L&amp;oad state</source>
@@ -628,7 +628,7 @@
     </message>
     <message>
       <source>&amp;General</source>
-      <translation type="unfinished">&amp;General</translation>
+      <translation>&amp;Genel</translation>
     </message>
   </context>
   <context>
@@ -705,7 +705,7 @@
     <name>wdgCheatEditor</name>
     <message>
       <source>Cheats Editor</source>
-      <translation type="unfinished">Cheats Editor</translation>
+      <translation>Hile &amp;Düzenleyici</translation>
     </message>
     <message>
       <source>Cheats List</source>
@@ -713,19 +713,19 @@
     </message>
     <message>
       <source>Active</source>
-      <translation type="unfinished">Active</translation>
+      <translation>Etkin</translation>
     </message>
     <message>
       <source>Description</source>
-      <translation type="unfinished">Description</translation>
+      <translation>Açıklama</translation>
     </message>
     <message>
       <source>Code</source>
-      <translation type="unfinished">Code</translation>
+      <translation>Kod</translation>
     </message>
     <message>
       <source>Address</source>
-      <translation type="unfinished">Address</translation>
+      <translation>Adres</translation>
     </message>
     <message>
       <source>Value</source>
@@ -812,7 +812,7 @@
     </message>
     <message>
       <source>All files</source>
-      <translation type="unfinished">All files</translation>
+      <translation>Tüm dosyalar</translation>
     </message>
     <message>
       <source>Export cheats on file</source>
@@ -1038,19 +1038,19 @@
     </message>
     <message>
       <source>55%</source>
-      <translation type="unfinished">55%</translation>
+      <translation>55%</translation>
     </message>
     <message>
       <source>60%</source>
-      <translation type="unfinished">60%</translation>
+      <translation>60%</translation>
     </message>
     <message>
       <source>65%</source>
-      <translation type="unfinished">65%</translation>
+      <translation>65%</translation>
     </message>
     <message>
       <source>70%</source>
-      <translation type="unfinished">70%</translation>
+      <translation>70%</translation>
     </message>
     <message>
       <source>75%</source>
