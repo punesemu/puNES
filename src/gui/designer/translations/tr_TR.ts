@@ -1054,31 +1054,31 @@
     </message>
     <message>
       <source>75%</source>
-      <translation type="unfinished">75%</translation>
+      <translation>75%</translation>
     </message>
     <message>
       <source>80%</source>
-      <translation type="unfinished">80%</translation>
+      <translation>80%</translation>
     </message>
     <message>
       <source>85%</source>
-      <translation type="unfinished">85%</translation>
+      <translation>85%</translation>
     </message>
     <message>
       <source>90%</source>
-      <translation type="unfinished">90%</translation>
+      <translation>90%</translation>
     </message>
     <message>
       <source>95%</source>
-      <translation type="unfinished">95%</translation>
+      <translation>95%</translation>
     </message>
     <message>
       <source>100%</source>
-      <translation type="unfinished">100%</translation>
+      <translation>100%</translation>
     </message>
     <message>
       <source>APU Channels</source>
-      <translation type="unfinished">APU Channels</translation>
+      <translation>APU Kanalları</translation>
     </message>
     <message>
       <source>Swap Duty Cycles</source>
