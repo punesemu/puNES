@@ -324,7 +324,7 @@
     </message>
     <message>
       <source>Open save state</source>
-      <translation type="unfinished">Open save state</translation>
+      <translation>Konum kaydını aç</translation>
     </message>
     <message>
       <source>Nintendo Entertainment System Emulator</source>
@@ -352,11 +352,11 @@
     </message>
     <message>
       <source>&amp;Hard Reset</source>
-      <translation type="unfinished">&amp;Hard Reset</translation>
+      <translation>&amp;Hard Reset</translation>
     </message>
     <message>
       <source>&amp;Soft Reset</source>
-      <translation type="unfinished">&amp;Soft Reset</translation>
+      <translation>&amp;Soft Reset</translation>
     </message>
     <message>
       <source>&amp;Eject/Insert Disk</source>
@@ -635,42 +635,42 @@
     <name>objCheat</name>
     <message>
       <source>Error on reading the file</source>
-      <translation type="unfinished">Error on reading the file</translation>
+      <translation>Dosya okunurken hata oluştu</translation>
     </message>
     <message>
       <source>Read only</source>
-      <translation type="unfinished">Read only</translation>
+      <translation>Salt okunur</translation>
     </message>
     <message>
       <source>The file is in read only mode</source>
-      <translation type="unfinished">The file is in read only mode</translation>
+      <translation>Dosya salt okunur modunda</translation>
     </message>
   </context>
   <context>
     <name>wdgAPUChannels</name>
     <message>
       <source>APU Channels</source>
-      <translation type="unfinished">APU Channels</translation>
+      <translation>APU Kanalları</translation>
     </message>
     <message>
       <source>Square 1</source>
-      <translation type="unfinished">Square 1</translation>
+      <translation>Square 1</translation>
     </message>
     <message>
       <source>DMC</source>
-      <translation type="unfinished">DMC</translation>
+      <translation>DMC</translation>
     </message>
     <message>
       <source>Noise</source>
-      <translation type="unfinished">Noise</translation>
+      <translation>Noise</translation>
     </message>
     <message>
       <source>Square 2</source>
-      <translation type="unfinished">Square 2</translation>
+      <translation>Square 2</translation>
     </message>
     <message>
       <source>Extra</source>
-      <translation type="unfinished">Extra</translation>
+      <translation>Extra</translation>
     </message>
     <message>
       <source>Master</source>
@@ -682,7 +682,7 @@
     </message>
     <message>
       <source>active</source>
-      <translation type="unfinished">active</translation>
+      <translation>etkin</translation>
     </message>
     <message>
       <source>volume</source>
@@ -690,15 +690,15 @@
     </message>
     <message>
       <source>Active all</source>
-      <translation type="unfinished">Active all</translation>
+      <translation>Tümünü Etkinleştir</translation>
     </message>
     <message>
       <source>Disable all</source>
-      <translation type="unfinished">Disable all</translation>
+      <translation>Tümünü devre dışı bırak</translation>
     </message>
     <message>
       <source>Reset to defaults</source>
-      <translation type="unfinished">Reset to defaults</translation>
+      <translation>Varsayılanlara dön</translation>
     </message>
   </context>
   <context>
@@ -709,7 +709,7 @@
     </message>
     <message>
       <source>Cheats List</source>
-      <translation type="unfinished">Cheats List</translation>
+      <translation>Hile Listesi</translation>
     </message>
     <message>
       <source>Active</source>
