@@ -328,7 +328,7 @@
     </message>
     <message>
       <source>Nintendo Entertainment System Emulator</source>
-      <translation type="unfinished">Nintendo Entertainment System Emulator</translation>
+      <translation>Nintendo Entertainment System Emülatörü</translation>
     </message>
     <message>
       <source>Compiled</source>
@@ -396,7 +396,7 @@
     </message>
     <message>
       <source>&amp;Switch sides</source>
-      <translation type="unfinished">&amp;Switch sides</translation>
+      <translation>&amp;Yüzeyi değiştir</translation>
     </message>
     <message>
       <source>&amp;Save to file</source>
@@ -412,7 +412,7 @@
     </message>
     <message>
       <source>&amp;Game Genie Rom Mode</source>
-      <translation type="unfinished">&amp;Game Genie Rom Mode</translation>
+      <translation>&amp;Game Genie Rom Modu</translation>
     </message>
     <message>
       <source>S&amp;ave state</source>
@@ -757,7 +757,7 @@
     </message>
     <message>
       <source>CPU Ram</source>
-      <translation type="unfinished">CPU Ram</translation>
+      <translation>CPU Ram</translation>
     </message>
     <message>
       <source>Pro Action Rocky</source>
@@ -796,19 +796,19 @@
     </message>
     <message>
       <source>All supported formats</source>
-      <translation type="unfinished">All supported formats</translation>
+      <translation>Tüm Desteklenen Formatlar</translation>
     </message>
     <message>
       <source>XML files</source>
-      <translation type="unfinished">XML files</translation>
+      <translation>XML dosyaları</translation>
     </message>
     <message>
       <source>CHT files</source>
-      <translation type="unfinished">CHT files</translation>
+      <translation>CHT dosyaları</translation>
     </message>
     <message>
       <source>Import Cheats</source>
-      <translation type="unfinished">Import Cheats</translation>
+      <translation>Hileleri İçeri Aktar</translation>
     </message>
     <message>
       <source>All files</source>
@@ -816,7 +816,7 @@
     </message>
     <message>
       <source>Export cheats on file</source>
-      <translation type="unfinished">Export cheats on file</translation>
+      <translation>Hileleri dosyaya çıkar</translation>
     </message>
     <message>
       <source>Submit warning</source>
@@ -824,11 +824,11 @@
     </message>
     <message>
       <source>The code is invalid</source>
-      <translation type="unfinished">The code is invalid</translation>
+      <translation>Kod geçerli değil</translation>
     </message>
     <message>
       <source>The cheat is already in the list</source>
-      <translation type="unfinished">The cheat is already in the list</translation>
+      <translation>Listede zaten bu hile var</translation>
     </message>
     <message>
       <source>A description must be entered</source>
@@ -1097,19 +1097,19 @@
     </message>
     <message>
       <source>Settings</source>
-      <translation type="unfinished">Settings</translation>
+      <translation>Ayarlar</translation>
     </message>
     <message>
       <source>Disabled</source>
-      <translation type="unfinished">Disabled</translation>
+      <translation>Devre Dışı</translation>
     </message>
     <message>
       <source>Game Genie Rom Mode</source>
-      <translation type="unfinished">Game Genie Rom Mode</translation>
+      <translation>Game Genie Rom Modu</translation>
     </message>
     <message>
       <source>Cheats List Mode</source>
-      <translation type="unfinished">Cheats List Mode</translation>
+      <translation>Hile Listesi Modu</translation>
     </message>
   </context>
   <context>
@@ -1120,7 +1120,7 @@
     </message>
     <message>
       <source>All files</source>
-      <translation type="unfinished">All files</translation>
+      <translation>Tüm dosyalar</translation>
     </message>
     <message>
       <source>Select Game Genie ROM file</source>
@@ -1132,27 +1132,27 @@
     </message>
     <message>
       <source>General Settings</source>
-      <translation type="unfinished">General Settings</translation>
+      <translation>Genel Ayarlar</translation>
     </message>
     <message>
       <source>2x (Default)</source>
-      <translation type="unfinished">2x (Default)</translation>
+      <translation>2x (Varsayılan)</translation>
     </message>
     <message>
       <source>3x</source>
-      <translation type="unfinished">3x</translation>
+      <translation>3x</translation>
     </message>
     <message>
       <source>4x</source>
-      <translation type="unfinished">4x</translation>
+      <translation>4x</translation>
     </message>
     <message>
       <source>5x</source>
-      <translation type="unfinished">5x</translation>
+      <translation>5x</translation>
     </message>
     <message>
       <source>Auto</source>
-      <translation type="unfinished">Auto</translation>
+      <translation>Otomatik</translation>
     </message>
     <message>
       <source>NTSC</source>
@@ -1465,7 +1465,7 @@
     </message>
     <message>
       <source>Default</source>
-      <translation type="unfinished">Default</translation>
+      <translation>Varsayılan</translation>
     </message>
     <message>
       <source>Shaders files</source>
@@ -1473,7 +1473,7 @@
     </message>
     <message>
       <source>All files</source>
-      <translation type="unfinished">All files</translation>
+      <translation>Tüm dosyalar</translation>
     </message>
     <message>
       <source>Open Shader file</source>
@@ -1489,39 +1489,39 @@
     </message>
     <message>
       <source>Video Settings</source>
-      <translation type="unfinished">Video Settings</translation>
+      <translation>Video Ayarları</translation>
     </message>
     <message>
       <source>1x</source>
-      <translation type="unfinished">1x</translation>
+      <translation>1x</translation>
     </message>
     <message>
       <source>2x</source>
-      <translation type="unfinished">2x</translation>
+      <translation>2x</translation>
     </message>
     <message>
       <source>3x</source>
-      <translation type="unfinished">3x</translation>
+      <translation>3x</translation>
     </message>
     <message>
       <source>4x</source>
-      <translation type="unfinished">4x</translation>
+      <translation>4x</translation>
     </message>
     <message>
       <source>5x</source>
-      <translation type="unfinished">5x</translation>
+      <translation>5x</translation>
     </message>
     <message>
       <source>6x</source>
-      <translation type="unfinished">6x</translation>
+      <translation>6x</translation>
     </message>
     <message>
       <source>Scale</source>
-      <translation type="unfinished">Scale</translation>
+      <translation>Ölçek</translation>
     </message>
     <message>
       <source>Settings</source>
-      <translation type="unfinished">Settings</translation>
+      <translation>Ayarlar</translation>
     </message>
     <message>
       <source>** To apply this change restart is needed **</source>
@@ -1529,39 +1529,39 @@
     </message>
     <message>
       <source>Misc</source>
-      <translation type="unfinished">Misc</translation>
+      <translation>Diğer</translation>
     </message>
     <message>
       <source>1:1</source>
-      <translation type="unfinished">1:1</translation>
+      <translation>1:1</translation>
     </message>
     <message>
       <source>5:4</source>
-      <translation type="unfinished">5:4</translation>
+      <translation>5:4</translation>
     </message>
     <message>
       <source>8:7 (NTSC TV)</source>
-      <translation type="unfinished">8:7 (NTSC TV)</translation>
+      <translation>8:7 (NTSC TV)</translation>
     </message>
     <message>
       <source>11:8 (PAL TV)</source>
-      <translation type="unfinished">11:8 (PAL TV)</translation>
+      <translation>11:8 (PAL TV)</translation>
     </message>
     <message>
       <source>Pixel Aspect Ratio</source>
-      <translation type="unfinished">Pixel Aspect Ratio</translation>
+      <translation>Piksel En Boy Oranı</translation>
     </message>
     <message>
       <source>Off</source>
-      <translation type="unfinished">Off</translation>
+      <translation>Kapat</translation>
     </message>
     <message>
       <source>On</source>
-      <translation type="unfinished">On</translation>
+      <translation>Aç</translation>
     </message>
     <message>
       <source>Default Value</source>
-      <translation type="unfinished">Default Value</translation>
+      <translation>Varsayılan Değer</translation>
     </message>
     <message>
       <source>Overscan borders</source>
@@ -1569,11 +1569,11 @@
     </message>
     <message>
       <source>NTSC</source>
-      <translation type="unfinished">NTSC</translation>
+      <translation>NTSC</translation>
     </message>
     <message>
       <source>PAL/Dendy</source>
-      <translation type="unfinished">PAL/Dendy</translation>
+      <translation>PAL/Dendy</translation>
     </message>
     <message>
       <source>Right</source>
@@ -1593,7 +1593,7 @@
     </message>
     <message>
       <source>Reset to defaults</source>
-      <translation type="unfinished">Reset to defaults</translation>
+      <translation>Varsayılanlara Sıfırla</translation>
     </message>
     <message>
       <source>Black borders in window mode</source>
@@ -1641,7 +1641,7 @@
     </message>
     <message>
       <source>From File</source>
-      <translation type="unfinished">From File</translation>
+      <translation>Dosyadan</translation>
     </message>
     <message>
       <source>No Filters</source>
@@ -1721,7 +1721,7 @@
     </message>
     <message>
       <source>Filters</source>
-      <translation type="unfinished">Filters</translation>
+      <translation>Filtreler</translation>
     </message>
     <message>
       <source>PAL</source>
