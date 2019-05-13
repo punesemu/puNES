@@ -1832,15 +1832,15 @@
     </message>
     <message>
       <source>Slot %1</source>
-      <translation type="unfinished">Slot %1</translation>
+      <translation>Yuva %1</translation>
     </message>
     <message>
       <source>Save</source>
-      <translation type="unfinished">Save</translation>
+      <translation>Kaydet</translation>
     </message>
     <message>
       <source>Load</source>
-      <translation type="unfinished">Load</translation>
+      <translation>Yükle</translation>
     </message>
   </context>
 </TS>
