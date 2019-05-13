@@ -753,7 +753,7 @@
     </message>
     <message>
       <source>Editor Tools</source>
-      <translation type="unfinished">Editor Tools</translation>
+      <translation>Düzenleme Araçları</translation>
     </message>
     <message>
       <source>CPU Ram</source>
@@ -792,7 +792,7 @@
     </message>
     <message>
       <source>Hide Tools</source>
-      <translation type="unfinished">Hide Tools</translation>
+      <translation>Araçları Gizle</translation>
     </message>
     <message>
       <source>All supported formats</source>
@@ -1086,14 +1086,14 @@
     </message>
     <message>
       <source>Enable Audio</source>
-      <translation type="unfinished">Enable Audio</translation>
+      <translation>Sesi Etkinleştir</translation>
     </message>
   </context>
   <context>
     <name>wdgSettingsCheats</name>
     <message>
       <source>Cheats Settings</source>
-      <translation type="unfinished">Cheats Settings</translation>
+      <translation>Hile Ayarları</translation>
     </message>
     <message>
       <source>Settings</source>
@@ -1116,7 +1116,7 @@
     <name>wdgSettingsGeneral</name>
     <message>
       <source>[Select a file]</source>
-      <translation type="unfinished">[Select a file]</translation>
+      <translation>[Bir dosya seçin]</translation>
     </message>
     <message>
       <source>All files</source>
