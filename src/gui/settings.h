@@ -115,6 +115,7 @@ enum pgs_element {
 enum inp_element {
 	SET_INP_SC_OPEN,
 	SET_INP_SC_QUIT,
+	SET_INP_SC_TOGGLE_GUI,
 	SET_INP_SC_TURN_OFF,
 	SET_INP_SC_HARD_RESET,
 	SET_INP_SC_SOFT_RESET,
@@ -912,6 +913,7 @@ static const _settings pgs_cfg[] = {
 static const _settings inp_cfg[] = {
 	{uL("shortcuts"), uL("open"),                        uL("Alt+O,NULL"),      NULL, NULL, {0, NULL}},
 	{uL("shortcuts"), uL("quit"),                        uL("Alt+Q,NULL"),      NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("toggle gui"),                  uL("F10,NULL"),        NULL, NULL, {0, NULL}},
 	{uL("shortcuts"), uL("turn off"),                    uL("Alt+R,NULL"),      NULL, NULL, {0, NULL}},
 	{uL("shortcuts"), uL("hard reset"),                  uL("F11,NULL"),        NULL, NULL, {0, NULL}},
 	{uL("shortcuts"), uL("soft reset"),                  uL("F12,NULL"),        NULL, NULL, {0, NULL}},

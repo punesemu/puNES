@@ -128,6 +128,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void s_open_recent_roms(void);
 		void s_open_working_folder(void);
 		void s_quit(void);
+		void s_toggle_gui(void);
 		void s_turn_on_off(void);
 		void s_make_reset(void);
 		void s_insert_coin(void);

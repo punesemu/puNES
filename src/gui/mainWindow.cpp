@@ -389,6 +389,7 @@ void mainWindow::shortcuts(void) {
 	// File
 	connect_shortcut(action_Open, SET_INP_SC_OPEN, SLOT(s_open()));
 	connect_shortcut(action_Quit, SET_INP_SC_QUIT, SLOT(s_quit()));
+	connect_shortcut(action_Toggle_GUI, SET_INP_SC_TOGGLE_GUI, SLOT(s_toggle_gui()));
 	// NES
 	connect_shortcut(action_Turn_Off, SET_INP_SC_TURN_OFF, SLOT(s_turn_on_off()));
 	connect_shortcut(action_Hard_Reset, SET_INP_SC_HARD_RESET, SLOT(s_make_reset()));
@@ -434,6 +435,7 @@ void mainWindow::connect_menu_signals(void) {
 	connect_action(action_Apply_Patch, SLOT(s_apply_patch()));
 	connect_action(action_Open_working_folder, SLOT(s_open_working_folder()));
 	connect_action(action_Quit, SLOT(s_quit()));
+	connect_action(action_Toggle_GUI, SLOT(s_toggle_gui()));
 	// NES
 	connect_action(action_Turn_Off, SLOT(s_turn_on_off()));
 	connect_action(action_Hard_Reset, HARD, SLOT(s_make_reset()));
@@ -875,6 +877,20 @@ void mainWindow::s_open_working_folder(void) {
 void mainWindow::s_quit(void) {
 	close();
 }
+void mainWindow::s_toggle_gui(void) {
+	if(gfx.type_of_fscreen_in_use == FULLSCR || gfx.type_of_fscreen_in_use == FULLSCR_IN_WINDOW) {
+		return;
+	}
+
+	emu_thread_pause();
+
+	menuWidget()->setVisible(!menuWidget()->isVisible());
+	statusbar->setVisible(!statusbar->isVisible());
+
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
+
+	emu_thread_continue();
+}
 void mainWindow::s_turn_on_off(void) {
 	info.turn_off = !info.turn_off;
 
@@ -1273,6 +1289,9 @@ void mainWindow::s_shcjoy_read_timer(void) {
 					break;
 				case SET_INP_SC_QUIT:
 					action_Quit->trigger();
+					break;
+				case SET_INP_SC_TOGGLE_GUI:
+					action_Toggle_GUI->trigger();
 					break;
 				case SET_INP_SC_TURN_OFF:
 					action_Turn_Off->trigger();

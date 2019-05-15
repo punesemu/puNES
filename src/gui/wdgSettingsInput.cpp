@@ -698,6 +698,7 @@ void wdgSettingsInput::shortcuts_set(void) {
 	shortcut_update_text(mainwin->action_Load_state, SET_INP_SC_LOAD_STATE);
 	shortcut_update_text(mainwin->action_Increment_slot, SET_INP_SC_INC_SLOT);
 	shortcut_update_text(mainwin->action_Decrement_slot, SET_INP_SC_DEC_SLOT);
+	shortcut_update_text(mainwin->action_Toggle_GUI, SET_INP_SC_TOGGLE_GUI);
 }
 
 void wdgSettingsInput::s_controller_mode(int index) {
