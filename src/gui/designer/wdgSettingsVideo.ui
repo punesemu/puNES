@@ -115,7 +115,7 @@
      <item row="2" column="0" colspan="3">
       <widget class="QTabWidget" name="tabWidget_Video">
        <property name="currentIndex">
-        <number>4</number>
+        <number>0</number>
        </property>
        <widget class="QWidget" name="tab_Video_Misc">
         <attribute name="icon">

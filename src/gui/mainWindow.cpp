@@ -68,6 +68,7 @@ mainWindow::mainWindow() : QMainWindow() {
 	translator = new QTranslator();
 	qtTranslator = new QTranslator();
 	shcjoy.timer = new QTimer(this);
+	toggle_gui_in_window = true;
 
 	setWindowIcon(QIcon(":icon/icons/application.png"));
 	setWindowFlags(windowFlags() & ~Qt::WindowMaximizeButtonHint);
@@ -398,9 +399,10 @@ void mainWindow::shortcuts(void) {
 	connect_shortcut(action_Eject_Insert_Disk, SET_INP_SC_EJECT_DISK, SLOT(s_eject_disk()));
 	connect_shortcut(action_Start_Stop_WAV_recording, SET_INP_SC_WAV, SLOT(s_start_stop_wave()));
 	connect_shortcut(action_Fullscreen, SET_INP_SC_FULLSCREEN, SLOT(s_set_fullscreen()));
+	connect_shortcut(action_Save_Screenshot, SET_INP_SC_SCREENSHOT, SLOT(s_save_screenshot()));
 	connect_shortcut(action_Pause, SET_INP_SC_PAUSE, SLOT(s_pause()));
 	connect_shortcut(action_Fast_Forward, SET_INP_SC_FAST_FORWARD, SLOT(s_fast_forward()));
-	connect_shortcut(action_Save_Screenshot, SET_INP_SC_SCREENSHOT, SLOT(s_save_screenshot()));
+	connect_shortcut(action_Toggle_GUI_in_window, SET_INP_SC_TOGGLE_GUI_IN_WINDOW, SLOT(s_toggle_gui_in_window()));
 	// Settings/Mode
 	connect_shortcut(qaction_shcut.mode_auto, SET_INP_SC_MODE_AUTO, SLOT(s_shcut_mode()));
 	connect_shortcut(qaction_shcut.mode_ntsc, SET_INP_SC_MODE_NTSC, SLOT(s_shcut_mode()));
@@ -451,9 +453,10 @@ void mainWindow::connect_menu_signals(void) {
 	connect_action(action_Eject_Insert_Disk, SLOT(s_eject_disk()));
 	connect_action(action_Start_Stop_WAV_recording, SLOT(s_start_stop_wave()));
 	connect_action(action_Fullscreen, SLOT(s_set_fullscreen()));
+	connect_action(action_Save_Screenshot, SLOT(s_save_screenshot()));
 	connect_action(action_Pause, SLOT(s_pause()));
 	connect_action(action_Fast_Forward, SLOT(s_fast_forward()));
-	connect_action(action_Save_Screenshot, SLOT(s_save_screenshot()));
+	connect_action(action_Toggle_GUI_in_window, SLOT(s_toggle_gui_in_window()));
 
 	// Settings
 	connect_action(action_General, 0, SLOT(s_open_settings()));
@@ -743,6 +746,21 @@ void mainWindow::ctrl_disk_side(QAction *action) {
 		action->setChecked(true);
 	}
 }
+void mainWindow::update_gfx_monitor_dimension(void) {
+	int screenNumber = qApp->desktop()->screenNumber(this);
+
+	if (gfx.type_of_fscreen_in_use == FULLSCR_IN_WINDOW) {
+		gfx.w[MONITOR] = qApp->desktop()->availableGeometry(screenNumber).width() -
+			(frameGeometry().width() - geometry().width());
+		gfx.h[MONITOR] = qApp->desktop()->availableGeometry(screenNumber).height() -
+			(frameGeometry().height() - geometry().height()) -
+			(menubar->isHidden() ? 0 : menubar->sizeHint().height()) -
+			(statusbar->isHidden() ? 0 : statusbar->sizeHint().height());
+	} else if (gfx.type_of_fscreen_in_use == FULLSCR) {
+		gfx.w[MONITOR] = qApp->desktop()->screenGeometry(screenNumber).width();
+		gfx.h[MONITOR] = qApp->desktop()->screenGeometry(screenNumber).height();
+	}
+}
 
 void mainWindow::s_open(void) {
 	QStringList filters;
@@ -970,20 +988,6 @@ void mainWindow::s_start_stop_wave(void) {
 	}
 	update_menu_nes();
 }
-void mainWindow::s_fast_forward(void) {
-	if (nsf.enabled == FALSE) {
-		emu_thread_pause();
-		if (fps.fast_forward == FALSE) {
-			ff->start(1000.0f / (double)machine.fps);
-			fps_fast_forward();
-		} else {
-			ff->stop();
-			fps_normalize();
-		}
-		emu_thread_continue();
-		update_menu_nes();
-	}
-}
 void mainWindow::s_set_fullscreen(void) {
 	if (gui.in_update) {
 		return;
@@ -992,28 +996,19 @@ void mainWindow::s_set_fullscreen(void) {
 	emu_thread_pause();
 
 	if ((cfg->fullscreen == NO_FULLSCR) || (cfg->fullscreen == NO_CHANGE)) {
-		int screenNumber = qApp->desktop()->screenNumber(this);
-
 		gfx.scale_before_fscreen = cfg->scale;
 		position = pos();
 
 		if (cfg->fullscreen_in_window == TRUE) {
 			gfx.type_of_fscreen_in_use = FULLSCR_IN_WINDOW;
 
-			gfx.w[MONITOR] = qApp->desktop()->availableGeometry(screenNumber).width()
-				- (frameGeometry().width() - geometry().width());
-			gfx.h[MONITOR] = qApp->desktop()->availableGeometry(screenNumber).height()
-				- (frameGeometry().height() - geometry().height())
-				- menubar->sizeHint().height() - 2 - statusbar->sizeHint().height();
-
+			update_gfx_monitor_dimension();
 			gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, FULLSCR, NO_CHANGE, FALSE, FALSE);
 			move(QPoint(0, 0));
 		} else {
 			gfx.type_of_fscreen_in_use = FULLSCR;
 
-			gfx.w[MONITOR] = qApp->desktop()->screenGeometry(screenNumber).width();
-			gfx.h[MONITOR] = qApp->desktop()->screenGeometry(screenNumber).height();
-
+			update_gfx_monitor_dimension();
 			menuWidget()->setVisible(false);
 			statusbar->setVisible(false);
 			gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, FULLSCR, NO_CHANGE, FALSE, FALSE);
@@ -1030,8 +1025,8 @@ void mainWindow::s_set_fullscreen(void) {
 		if (gfx.type_of_fscreen_in_use == FULLSCR) {
 			emit fullscreen(false);
 
-			menuWidget()->setVisible(true);
-			statusbar->setVisible(true);
+			menuWidget()->setVisible(toggle_gui_in_window);
+			statusbar->setVisible(toggle_gui_in_window);
 		}
 
 		gfx_set_screen(gfx.scale_before_fscreen, NO_CHANGE, NO_CHANGE, NO_FULLSCR, NO_CHANGE, FALSE, FALSE);
@@ -1054,6 +1049,32 @@ void mainWindow::s_pause(void) {
 	emu_pause(info.pause_from_gui);
 	emu_thread_continue();
 	update_menu_nes();
+}
+void mainWindow::s_fast_forward(void) {
+	if (nsf.enabled == FALSE) {
+		emu_thread_pause();
+		if (fps.fast_forward == FALSE) {
+			ff->start(1000.0f / (double)machine.fps);
+			fps_fast_forward();
+		} else {
+			ff->stop();
+			fps_normalize();
+		}
+		emu_thread_continue();
+		update_menu_nes();
+	}
+}
+void mainWindow::s_toggle_gui_in_window(void) {
+	if(gfx.type_of_fscreen_in_use == FULLSCR) {
+		return;
+	}
+	emu_thread_pause();
+	toggle_gui_in_window = !toggle_gui_in_window;
+	menuWidget()->setVisible(toggle_gui_in_window);
+	statusbar->setVisible(toggle_gui_in_window);
+	update_gfx_monitor_dimension();
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
+	emu_thread_continue();
 }
 void mainWindow::s_open_settings(void) {
 	int index = QVariant(((QObject *)sender())->property("myValue")).toInt();
@@ -1298,14 +1319,17 @@ void mainWindow::s_shcjoy_read_timer(void) {
 				case SET_INP_SC_FULLSCREEN:
 					action_Fullscreen->trigger();
 					break;
+				case SET_INP_SC_SCREENSHOT:
+					action_Save_Screenshot->trigger();
+					break;
 				case SET_INP_SC_PAUSE:
 					action_Pause->trigger();
 					break;
 				case SET_INP_SC_FAST_FORWARD:
 					action_Fast_Forward->trigger();
 					break;
-				case SET_INP_SC_SCREENSHOT:
-					action_Save_Screenshot->trigger();
+				case SET_INP_SC_TOGGLE_GUI_IN_WINDOW:
+					action_Toggle_GUI_in_window->trigger();
 					break;
 				case SET_INP_SC_MODE_PAL:
 					qaction_shcut.mode_pal->trigger();

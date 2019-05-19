@@ -89,6 +89,7 @@
     <addaction name="action_Save_Screenshot"/>
     <addaction name="action_Pause"/>
     <addaction name="action_Fast_Forward"/>
+    <addaction name="action_Toggle_GUI_in_window"/>
    </widget>
    <widget class="QMenu" name="menu_Settings">
     <property name="title">
@@ -163,6 +164,15 @@
    </property>
    <property name="text">
     <string>&amp;Quit</string>
+   </property>
+  </action>
+  <action name="action_Toggle_GUI_in_window">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icon/icons/toggle_gui.svg</normaloff>:/icon/icons/toggle_gui.svg</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Toggle GUI in window</string>
    </property>
   </action>
   <action name="action_Hard_Reset">

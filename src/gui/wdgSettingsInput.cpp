@@ -677,9 +677,10 @@ void wdgSettingsInput::shortcuts_set(void) {
 	shortcut_update_text(mainwin->action_Eject_Insert_Disk, SET_INP_SC_EJECT_DISK);
 	shortcut_update_text(mainwin->action_Start_Stop_WAV_recording, SET_INP_SC_WAV);
 	shortcut_update_text(mainwin->action_Fullscreen, SET_INP_SC_FULLSCREEN);
+	shortcut_update_text(mainwin->action_Save_Screenshot, SET_INP_SC_SCREENSHOT);
 	shortcut_update_text(mainwin->action_Pause, SET_INP_SC_PAUSE);
 	shortcut_update_text(mainwin->action_Fast_Forward, SET_INP_SC_FAST_FORWARD);
-	shortcut_update_text(mainwin->action_Save_Screenshot, SET_INP_SC_SCREENSHOT);
+	shortcut_update_text(mainwin->action_Toggle_GUI_in_window, SET_INP_SC_TOGGLE_GUI_IN_WINDOW);
 	shortcut_update_text(mainwin->qaction_shcut.mode_auto, SET_INP_SC_MODE_AUTO);
 	shortcut_update_text(mainwin->qaction_shcut.mode_ntsc, SET_INP_SC_MODE_NTSC);
 	shortcut_update_text(mainwin->qaction_shcut.mode_pal, SET_INP_SC_MODE_PAL);

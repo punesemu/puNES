@@ -188,8 +188,7 @@ void gui_set_video_mode(void) {
 	qt.screen->setFixedSize(QSize(gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE]));
 
 	qt.mwin->setFixedSize(QSize(qt.screen->width(),
-		(qt.mwin->menubar->isHidden() ? 0 : qt.mwin->menubar->sizeHint().height()) +
-		(qt.screen->height() + 2) +
+		(qt.mwin->menubar->isHidden() ? 0 : qt.mwin->menubar->sizeHint().height()) + qt.screen->height() +
 		(qt.mwin->statusbar->isHidden() ? 0 : qt.mwin->statusbar->sizeHint().height())));
 
 	qt.mwin->menubar->setFixedWidth(gfx.w[VIDEO_MODE]);
@@ -213,7 +212,11 @@ void gui_update_gps_settings(void) {
 }
 
 void gui_fullscreen(void) {
-	qt.mwin->s_set_fullscreen();
+	// se l'emulatore si avvia in fullscreen modalita' finestra, senza questo ritardo
+	// e' possibile che le QT mi passino informazioni non corrette sulle dimensioni dello
+	// desktop e che le decorazioni della finestra non appaiano correttamente (problema
+	// riscontrato sotto Linux).
+    QTimer::singleShot(250, qt.mwin, SLOT(s_set_fullscreen()));
 }
 void gui_save_slot(BYTE slot) {
 	if (slot >= SAVE_SLOTS) {

@@ -71,6 +71,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		QPoint position;
 		QTranslator *translator;
 		QTranslator *qtTranslator;
+		bool toggle_gui_in_window;
 
 	public:
 		mainWindow();
@@ -121,6 +122,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 
 	private:
 		void ctrl_disk_side(QAction *action);
+		void update_gfx_monitor_dimension(void);
 
 	private slots:
 		void s_open(void);
@@ -134,12 +136,13 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void s_disk_side(void);
 		void s_eject_disk(void);
 		void s_start_stop_wave(void);
-		void s_fast_forward(void);
 	public slots:
 		void s_set_fullscreen(void);
 	private slots:
 		void s_save_screenshot(void);
 		void s_pause(void);
+		void s_fast_forward(void);
+		void s_toggle_gui_in_window(void);
 		void s_open_settings(void);
 		void s_state_save_slot_action(void);
 		void s_state_save_slot_incdec(void);
