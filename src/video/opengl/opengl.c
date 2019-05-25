@@ -34,13 +34,13 @@
 #define BUFFER_VB_OFFSET(a, i) ((char *)&a + (i))
 
 #define _SCR_ROWS_BRD\
-	((float)  (SCR_ROWS - (overscan.borders->left + overscan.borders->right)) * gfx.pixel_aspect_ratio)
+	((float)(SCR_ROWS - (overscan.borders->left + overscan.borders->right)) * gfx.pixel_aspect_ratio)
 #define _SCR_LINES_BRD\
-	(float) (SCR_LINES - (overscan.borders->up + overscan.borders->down))
+	(float)(SCR_LINES - (overscan.borders->up + overscan.borders->down))
 #define _SCR_ROWS_NOBRD\
-	((float) SCR_ROWS * gfx.pixel_aspect_ratio)
+	((float)SCR_ROWS * gfx.pixel_aspect_ratio)
 #define _SCR_LINES_NOBRD\
-	(float) SCR_LINES
+	(float)SCR_LINES
 
 static void opengl_context_delete(void);
 static void opengl_screenshot(void);
@@ -206,34 +206,26 @@ BYTE opengl_context_create(void) {
 
 		if (cfg->fullscreen) {
 			if (!cfg->stretch) {
-				float ratio_frame = (float) gfx.w[VIDEO_MODE] / (float) gfx.h[VIDEO_MODE];
-				float ratio_surface;
+				int mul = gfx.w[VIDEO_MODE] > gfx.h[VIDEO_MODE] ?
+					(gfx.h[VIDEO_MODE] - (gfx.h[VIDEO_MODE] % gfx.h[PASS0])) / gfx.h[PASS0] :
+					(gfx.w[VIDEO_MODE] - (gfx.w[VIDEO_MODE] % gfx.w[PASS0])) / gfx.w[PASS0];
 
-				if (overscan.enabled && (cfg->oscan_black_borders_fscr == FALSE)) {
-					ratio_surface = _SCR_ROWS_BRD / _SCR_LINES_BRD;
-				} else {
-					ratio_surface = _SCR_ROWS_NOBRD / _SCR_LINES_NOBRD;
-				}
-
-				if (ratio_frame > ratio_surface) {
-					vp->w = (int) ((float) gfx.h[VIDEO_MODE] * ratio_surface);
-					vp->x = (int) (((float) gfx.w[VIDEO_MODE] - (float) vp->w) * 0.5f);
-				} else {
-					vp->h = (int) ((float) gfx.w[VIDEO_MODE] / ratio_surface);
-					vp->y = (int) (((float) gfx.h[VIDEO_MODE] - (float) vp->h) * 0.5f);
-				}
+				vp->w = gfx.w[PASS0] * mul;
+				vp->h = gfx.h[PASS0] * mul;
+				vp->x = (gfx.w[VIDEO_MODE] - vp->w) >> 1;
+				vp->y = (gfx.h[VIDEO_MODE] - vp->h) >> 1;
 			}
 
 			if (overscan.enabled && (cfg->oscan_black_borders_fscr == FALSE)) {
 				float brd_l_x, brd_r_x, brd_u_y, brd_d_y;
 				float ratio_x, ratio_y;
 
-				ratio_x = (float) vp->w / _SCR_ROWS_NOBRD;
-				ratio_y = (float) vp->h / _SCR_LINES_NOBRD;
-				brd_l_x = (float) overscan.borders->left * ratio_x;
-				brd_r_x = (float) overscan.borders->right * ratio_x;
-				brd_u_y = (float) overscan.borders->up * ratio_y;
-				brd_d_y = (float) overscan.borders->down * ratio_y;
+				ratio_x = (float)vp->w / _SCR_ROWS_NOBRD;
+				ratio_y = (float)vp->h / _SCR_LINES_NOBRD;
+				brd_l_x = (float)overscan.borders->left * ratio_x;
+				brd_r_x = (float)overscan.borders->right * ratio_x;
+				brd_u_y = (float)overscan.borders->up * ratio_y;
+				brd_d_y = (float)overscan.borders->down * ratio_y;
 
 				vp->x -= brd_l_x;
 				vp->y -= brd_d_y;
@@ -1111,8 +1103,8 @@ INLINE void opengl_shader_filter(uint8_t linear, uint8_t mipmap, uint8_t interpo
 			break;
 		default:
 			(*min) = mipmap ?
-					(interpolation ? GL_LINEAR_MIPMAP_LINEAR : GL_NEAREST_MIPMAP_NEAREST) :
-					(interpolation ? GL_LINEAR : GL_NEAREST);
+				(interpolation ? GL_LINEAR_MIPMAP_LINEAR : GL_NEAREST_MIPMAP_NEAREST) :
+				(interpolation ? GL_LINEAR : GL_NEAREST);
 			break;
 	}
 

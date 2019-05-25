@@ -28,13 +28,13 @@
 #include "overscan.h"
 
 #define _SCR_ROWS_BRD\
-	((float)  (SCR_ROWS - (overscan.borders->left + overscan.borders->right)) * gfx.pixel_aspect_ratio)
+	((float)(SCR_ROWS - (overscan.borders->left + overscan.borders->right)) * gfx.pixel_aspect_ratio)
 #define _SCR_LINES_BRD\
-	(float) (SCR_LINES - (overscan.borders->up + overscan.borders->down))
+	(float)(SCR_LINES - (overscan.borders->up + overscan.borders->down))
 #define _SCR_ROWS_NOBRD\
-	((float) SCR_ROWS * gfx.pixel_aspect_ratio)
+	((float)SCR_ROWS * gfx.pixel_aspect_ratio)
 #define _SCR_LINES_NOBRD\
-	(float) SCR_LINES
+	(float)SCR_LINES
 
 static void d3d9_shader_cg_error_handler(void);
 static BYTE d3d9_device_create(UINT width, UINT height);
@@ -278,22 +278,14 @@ BYTE d3d9_context_create(void) {
 		// configuro l'aspect ratio del fullscreen
 		if (cfg->fullscreen) {
 			if (!cfg->stretch) {
-				float ratio_frame = (float)gfx.w[VIDEO_MODE] / (float)gfx.h[VIDEO_MODE];
-				float ratio_surface;
+				int mul = gfx.w[VIDEO_MODE] > gfx.h[VIDEO_MODE] ?
+					(gfx.h[VIDEO_MODE] - (gfx.h[VIDEO_MODE] % gfx.h[PASS0])) / gfx.h[PASS0] :
+					(gfx.w[VIDEO_MODE] - (gfx.w[VIDEO_MODE] % gfx.w[PASS0])) / gfx.w[PASS0];
 
-				if (overscan.enabled && (cfg->oscan_black_borders_fscr == FALSE)) {
-					ratio_surface = _SCR_ROWS_BRD / _SCR_LINES_BRD;
-				} else {
-					ratio_surface = _SCR_ROWS_NOBRD / _SCR_LINES_NOBRD;
-				}
-
-				if (ratio_frame > ratio_surface) {
-					vp->w = (int)((float)gfx.h[VIDEO_MODE] * ratio_surface);
-					vp->x = (int)(((float)gfx.w[VIDEO_MODE] - (float)vp->w) * 0.5f);
-				} else {
-					vp->h = (int)((float)gfx.w[VIDEO_MODE] / ratio_surface);
-					vp->y = (int)(((float)gfx.h[VIDEO_MODE] - (float)vp->h) * 0.5f);
-				}
+				vp->w = gfx.w[PASS0] * mul;
+				vp->h = gfx.h[PASS0] * mul;
+				vp->x = (gfx.w[VIDEO_MODE] - vp->w) >> 1;
+				vp->y = (gfx.h[VIDEO_MODE] - vp->h) >> 1;
 			}
 
 			if (overscan.enabled && (cfg->oscan_black_borders_fscr == FALSE)) {
@@ -405,12 +397,12 @@ BYTE d3d9_context_create(void) {
 			prev = &d3d9.texture[i - 1].rect;
 		}
 
-		shd->info.video_size.x = (FLOAT) prev->base.w;
-		shd->info.video_size.y = (FLOAT) prev->base.h;
+		shd->info.video_size.x = (FLOAT)prev->base.w;
+		shd->info.video_size.y = (FLOAT)prev->base.h;
 		shd->info.texture_size.x = prev->w,
 		shd->info.texture_size.y = prev->h;
-		shd->info.output_size.x = (FLOAT) texture->vp.w;
-		shd->info.output_size.y = (FLOAT) texture->vp.h;
+		shd->info.output_size.x = (FLOAT)texture->vp.w;
+		shd->info.output_size.y = (FLOAT)texture->vp.h;
 
 		d3d9_vertex_buffer_set(shd, &texture->vp, prev);
 	}
@@ -892,7 +884,7 @@ static BYTE d3d9_texture_create(_texture *texture, UINT index) {
 	}
 
 	if (IDirect3DDevice9_CreateTexture(d3d9.adapter->dev,
-		(UINT) rect->w, (UINT) rect->h, 1,
+		(UINT)rect->w, (UINT)rect->h, 1,
 		D3DUSAGE_RENDERTARGET,
 		sp->fbo_flt ? D3DFMT_A32B32G32R32F : D3DFMT_A8R8G8B8,
 		D3DPOOL_DEFAULT,
@@ -952,8 +944,8 @@ static BYTE d3d9_texture_simple_create(_texture_simple *texture, UINT w, UINT h,
 		}
 	}
 
-	shd->info.video_size.x = (FLOAT) rect->base.w;
-	shd->info.video_size.y = (FLOAT) rect->base.h;
+	shd->info.video_size.x = (FLOAT)rect->base.w;
+	shd->info.video_size.y = (FLOAT)rect->base.h;
 	shd->info.texture_size.x = rect->w;
 	shd->info.texture_size.y = rect->h;
 
