@@ -23,7 +23,7 @@
 #include "conf.h"
 #include "cgp.h"
 
-#define SHDCODE(index) (char *) shader_code[index].code
+#define SHDCODE(index) (char *)shader_code[index].code
 #define LUTCODE(index) lut_resource[index].code
 #define SPALIAS(a) strncpy(sp->alias, a, sizeof(sp->alias))
 #define LPPATH(a) strncpy(lp->path, LUTCODE(a), sizeof(lp->path))

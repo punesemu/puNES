@@ -115,7 +115,7 @@ void text_init(void) {
 		ele = &text.misc.counter_frames;
 		ele->bck = TRUE;
 		ele->bck_color = TXT_BLACK;
-		ele->font = FONT_8X10;
+		ele->font = FONT_12X10;
 		ele->factor = 1;
 		ele->start_x = TXT_LEFT;
 		ele->start_y = TXT_DOWN;
@@ -168,8 +168,8 @@ void text_init(void) {
 	{
 		ele = &text.save_slot.slot;
 		ele->bck = TRUE;
-		ele->bck_color = TXT_BLACK;
-		ele->font = FONT_8X10;
+		ele->bck_color = TXT_BLUE;
+		ele->font = FONT_12X10;
 		ele->factor = 1;
 		ele->start_x = TXT_CENTER;
 		ele->start_y = TXT_UP;
@@ -470,16 +470,6 @@ void text_rendering(BYTE render) {
 		ele = &text.misc.counter_frames;
 		ele->enabled = TRUE;
 
-		if (cfg->scale > X2) {
-			if (ele->font != FONT_12X10) {
-				ele->font = FONT_12X10;
-			}
-		} else {
-			if (ele->font != FONT_8X10) {
-				ele->font = FONT_8X10;
-			}
-		}
-
 		if (tas.type != NOTAS) {
 			if (tas.lag_actual_frame) {
 				sprintf(ele->text, "[yellow]%d[normal]/[normal]%d[normal] [red]%d[normal]", tas.frame, tas.total - 1,
@@ -531,16 +521,6 @@ void text_rendering(BYTE render) {
 			int w;
 
 			ele->enabled = TRUE;
-
-			if (cfg->scale > X2) {
-				if (ele->font != FONT_12X10) {
-					ele->font = FONT_12X10;
-				}
-			} else {
-				if (ele->font != FONT_8X10) {
-					ele->font = FONT_8X10;
-				}
-			}
 
 			sprintf(ele->text, "%2d", (int)fps.gfx);
 

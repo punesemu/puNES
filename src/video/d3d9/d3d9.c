@@ -365,12 +365,31 @@ BYTE d3d9_context_create(void) {
 
 	// testo
 	{
+		int tw, th;
+
 		// setto il necessario per il blending
 		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_BLENDOP, D3DBLENDOP_ADD);
 		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 		IDirect3DDevice9_SetRenderState(d3d9.adapter->dev, D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 
-		d3d9_texture_simple_create(&d3d9.text, gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE], TRUE);
+		if (cfg->fullscreen) {
+			float div = (float)gfx.w[VIDEO_MODE] / 1024.0f;
+
+			if (div < 1.0f) {
+				div = 1.0f;
+			}
+
+			tw = gfx.w[VIDEO_MODE] / div;
+			th = gfx.h[VIDEO_MODE] / div;
+		} else if (cfg->scale == 1) {
+			tw = gfx.w[VIDEO_MODE];
+			th = gfx.h[VIDEO_MODE];
+		} else {
+			tw = gfx.w[PASS0] * 2;
+			th = gfx.h[PASS0] * 2;
+		}
+
+		d3d9_texture_simple_create(&d3d9.text, tw, th, TRUE);
 
 		text.w = d3d9.text.rect.w;
 		text.h = d3d9.text.rect.h;
@@ -494,17 +513,10 @@ void d3d9_draw_scene(void) {
 		// aggiorno la texture del testo
 		IDirect3DDevice9_UpdateSurface(d3d9.adapter->dev, d3d9.text.offscreen, NULL, d3d9.text.map0, NULL);
 
-		if (cfg->fullscreen) {
-			vpx = 0;
-			vpy = 0;
-			vpw = d3d9.text.rect.w * gfx.device_pixel_ratio;
-			vph = d3d9.text.rect.h * gfx.device_pixel_ratio;
-		} else {
-			vpx = -gfx.vp.x * gfx.device_pixel_ratio;
-			vpy = -gfx.vp.y * gfx.device_pixel_ratio;
-			vpw = d3d9.text.rect.w * gfx.device_pixel_ratio;
-			vph = d3d9.text.rect.h * gfx.device_pixel_ratio;
-		}
+		vpx = 0;
+		vpy = 0;
+		vpw = gfx.w[VIDEO_MODE] * gfx.device_pixel_ratio;
+		vph = gfx.h[VIDEO_MODE] * gfx.device_pixel_ratio;
 
 		d3d9_viewport_set(vpx, vpy, vpw, vph);
 
@@ -513,8 +525,8 @@ void d3d9_draw_scene(void) {
 
 		IDirect3DDevice9_SetTexture(d3d9.adapter->dev, 0, (IDirect3DBaseTexture9 *)d3d9.text.data);
 
-		IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
-		IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0, D3DSAMP_MINFILTER, D3DTEXF_POINT);
+		IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
+		IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
 
 		IDirect3DDevice9_SetVertexDeclaration(d3d9.adapter->dev, d3d9.text.shader.vd);
 

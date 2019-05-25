@@ -310,8 +310,26 @@ BYTE opengl_context_create(void) {
 	// testo
 	{
 		_shader *shd = &opengl.text.shader;
+		int tw, th;
 
-		opengl_texture_simple_create(&opengl.text, gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE], TRUE);
+		if (cfg->fullscreen) {
+			float div = (float)gfx.w[VIDEO_MODE] / 1024.0f;
+
+			if (div < 1.0f) {
+				div = 1.0f;
+			}
+
+			tw = gfx.w[VIDEO_MODE] / div;
+			th = gfx.h[VIDEO_MODE] / div;
+		} else if (cfg->scale == 1) {
+			tw = gfx.w[VIDEO_MODE];
+			th = gfx.h[VIDEO_MODE];
+		} else {
+			tw = gfx.w[PASS0] * 2;
+			th = gfx.h[PASS0] * 2;
+		}
+
+		opengl_texture_simple_create(&opengl.text, tw, th, TRUE);
 
 		text.w = opengl.text.rect.w;
 		text.h = opengl.text.rect.h;
@@ -516,13 +534,18 @@ void opengl_draw_scene(void) {
 	if (cfg->txt_on_screen && text.on_screen) {
 		float vpx = 0;
 		float vpy = 0;
-		float vpw = opengl.text.rect.w * gfx.device_pixel_ratio;
-		float vph = opengl.text.rect.h * gfx.device_pixel_ratio;
+		float vpw = gfx.w[VIDEO_MODE] * gfx.device_pixel_ratio;
+		float vph = gfx.h[VIDEO_MODE] * gfx.device_pixel_ratio;
+		GLuint mag, min;
 
 		glViewport(vpx, vpy, vpw, vph);
 		glBindTexture(GL_TEXTURE_2D, opengl.text.id);
 		glUseProgram(opengl.text.shader.glslp.prg);
 		opengl_shader_params_text_set(&opengl.text.shader);
+		glGenerateMipmap(GL_TEXTURE_2D);
+		opengl_shader_filter(TEXTURE_LINEAR_ENAB, TRUE, FALSE, &mag, &min);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min);
 		glEnable(GL_BLEND);
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 		glDisable(GL_BLEND);
