@@ -278,12 +278,13 @@ BYTE d3d9_context_create(void) {
 		// configuro l'aspect ratio del fullscreen
 		if (cfg->fullscreen) {
 			if (!cfg->stretch) {
+				int mw = _SCR_ROWS_NOBRD, mh = _SCR_LINES_NOBRD;
 				int mul = gfx.w[VIDEO_MODE] > gfx.h[VIDEO_MODE] ?
-					(gfx.h[VIDEO_MODE] - (gfx.h[VIDEO_MODE] % gfx.h[PASS0])) / gfx.h[PASS0] :
-					(gfx.w[VIDEO_MODE] - (gfx.w[VIDEO_MODE] % gfx.w[PASS0])) / gfx.w[PASS0];
+					(gfx.h[VIDEO_MODE] - (gfx.h[VIDEO_MODE] % mh)) / mh :
+					(gfx.w[VIDEO_MODE] - (gfx.w[VIDEO_MODE] % mw)) / mw;
 
-				vp->w = gfx.w[PASS0] * mul;
-				vp->h = gfx.h[PASS0] * mul;
+				vp->w = mw * mul;
+				vp->h = mh * mul;
 				vp->x = (gfx.w[VIDEO_MODE] - vp->w) >> 1;
 				vp->y = (gfx.h[VIDEO_MODE] - vp->h) >> 1;
 			}
@@ -385,8 +386,8 @@ BYTE d3d9_context_create(void) {
 			tw = gfx.w[VIDEO_MODE];
 			th = gfx.h[VIDEO_MODE];
 		} else {
-			tw = gfx.w[PASS0] * 2;
-			th = gfx.h[PASS0] * 2;
+			tw = _SCR_ROWS_NOBRD * 2;
+			th = _SCR_LINES_NOBRD * 2;
 		}
 
 		d3d9_texture_simple_create(&d3d9.text, tw, th, TRUE);
@@ -513,10 +514,10 @@ void d3d9_draw_scene(void) {
 		// aggiorno la texture del testo
 		IDirect3DDevice9_UpdateSurface(d3d9.adapter->dev, d3d9.text.offscreen, NULL, d3d9.text.map0, NULL);
 
-		vpx = 0;
-		vpy = 0;
-		vpw = gfx.w[VIDEO_MODE] * gfx.device_pixel_ratio;
-		vph = gfx.h[VIDEO_MODE] * gfx.device_pixel_ratio;
+		vpx = d3d9.viewp.left * gfx.device_pixel_ratio;
+		vpy = d3d9.viewp.top * gfx.device_pixel_ratio;
+		vpw = (d3d9.viewp.right - d3d9.viewp.left) * gfx.device_pixel_ratio;
+		vph = (d3d9.viewp.bottom - d3d9.viewp.top) * gfx.device_pixel_ratio;
 
 		d3d9_viewport_set(vpx, vpy, vpw, vph);
 

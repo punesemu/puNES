@@ -206,12 +206,13 @@ BYTE opengl_context_create(void) {
 
 		if (cfg->fullscreen) {
 			if (!cfg->stretch) {
+				int mw = _SCR_ROWS_NOBRD, mh = _SCR_LINES_NOBRD;
 				int mul = gfx.w[VIDEO_MODE] > gfx.h[VIDEO_MODE] ?
-					(gfx.h[VIDEO_MODE] - (gfx.h[VIDEO_MODE] % gfx.h[PASS0])) / gfx.h[PASS0] :
-					(gfx.w[VIDEO_MODE] - (gfx.w[VIDEO_MODE] % gfx.w[PASS0])) / gfx.w[PASS0];
+					(gfx.h[VIDEO_MODE] - (gfx.h[VIDEO_MODE] % mh)) / mh :
+					(gfx.w[VIDEO_MODE] - (gfx.w[VIDEO_MODE] % mw)) / mw;
 
-				vp->w = gfx.w[PASS0] * mul;
-				vp->h = gfx.h[PASS0] * mul;
+				vp->w = mw * mul;
+				vp->h = mh * mul;
 				vp->x = (gfx.w[VIDEO_MODE] - vp->w) >> 1;
 				vp->y = (gfx.h[VIDEO_MODE] - vp->h) >> 1;
 			}
@@ -325,8 +326,8 @@ BYTE opengl_context_create(void) {
 			tw = gfx.w[VIDEO_MODE];
 			th = gfx.h[VIDEO_MODE];
 		} else {
-			tw = gfx.w[PASS0] * 2;
-			th = gfx.h[PASS0] * 2;
+			tw = _SCR_ROWS_NOBRD * 2;
+			th = _SCR_LINES_NOBRD * 2;
 		}
 
 		opengl_texture_simple_create(&opengl.text, tw, th, TRUE);
