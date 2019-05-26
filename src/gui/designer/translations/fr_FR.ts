@@ -630,6 +630,10 @@
       <source>&amp;General</source>
       <translation type="unfinished">&amp;General</translation>
     </message>
+    <message>
+      <source>&amp;Toggle GUI in window</source>
+      <translation type="unfinished">&amp;Toggle GUI in window</translation>
+    </message>
   </context>
   <context>
     <name>objCheat</name>
@@ -1247,10 +1251,6 @@
       <translation type="unfinished">30 minutes</translation>
     </message>
     <message>
-      <source>60 minutus</source>
-      <translation type="unfinished">60 minutus</translation>
-    </message>
-    <message>
       <source>Unlimited</source>
       <translation type="unfinished">Unlimited</translation>
     </message>
@@ -1261,6 +1261,10 @@
     <message>
       <source>Hungarian</source>
       <translation type="unfinished">Hungarian</translation>
+    </message>
+    <message>
+      <source>60 minutes</source>
+      <translation type="unfinished">60 minutes</translation>
     </message>
   </context>
   <context>
