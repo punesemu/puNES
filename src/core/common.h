@@ -64,7 +64,7 @@ enum length_file_name_type {
 };
 enum forced_mirroring { UNK_HORIZONTAL, UNK_VERTICAL };
 enum max_chips_rom { MAX_CHIPS = 8 };
-enum languages { LNG_ENGLISH, LNG_ITALIAN, LNG_RUSSIAN, LNG_SPANISH, LNG_HUNGARIAN };
+enum languages { LNG_ENGLISH, LNG_ITALIAN, LNG_RUSSIAN, LNG_SPANISH, LNG_HUNGARIAN, LNG_TURKISH };
 enum database_mode {
 	NODIPSWITCH = 0xFF00,
 	NOEXTRA = 0x0000,

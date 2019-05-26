@@ -282,13 +282,17 @@ void mainWindow::set_language(int lang) {
 			lng = "hu";
 			file = "hu_HU";
 			break;
+		case LNG_RUSSIAN:
+			lng = "ru";
+			file = "ru_RU";
+			break;
 		case LNG_SPANISH:
 			lng = "es";
 			file = "es_ES";
 			break;
-		case LNG_RUSSIAN:
-			lng = "ru";
-			file = "ru_RU";
+		case LNG_TURKISH:
+			lng = "en";
+			file = "tr_TR";
 			break;
 		case LNG_ENGLISH:
 		default:

@@ -630,6 +630,10 @@
         <source>&amp;General</source>
         <translation>&amp;Основные</translation>
     </message>
+    <message>
+        <source>&amp;Toggle GUI in window</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>objCheat</name>
@@ -832,7 +836,7 @@
     </message>
     <message>
         <source>A description must be entered</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">A description must be entered</translation>
     </message>
 </context>
 <context>
@@ -1247,10 +1251,6 @@
         <translation>30 минут</translation>
     </message>
     <message>
-        <source>60 minutus</source>
-        <translation>60 минут</translation>
-    </message>
-    <message>
         <source>Unlimited</source>
         <translation>Неограниченно</translation>
     </message>
@@ -1260,7 +1260,11 @@
     </message>
     <message>
         <source>Hungarian</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Hungarian</translation>
+    </message>
+    <message>
+        <source>60 minutes</source>
+        <translation type="unfinished">60 минут</translation>
     </message>
 </context>
 <context>

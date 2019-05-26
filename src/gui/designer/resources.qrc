@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="icon">
+    <file>icons/flag_turkey.svg</file>
     <file>icons/toggle_gui.svg</file>
     <file>icons/flag_hungary.svg</file>
     <file>icons/flag_spain.svg</file>
@@ -81,6 +82,7 @@
     <file>pointers/target_48x48.xpm</file>
   </qresource>
   <qresource prefix="tr">
+    <file>translations/tr_TR.qm</file>
     <file>translations/it_IT.qm</file>
     <file>translations/qt_es.qm</file>
     <file>translations/es_ES.qm</file>

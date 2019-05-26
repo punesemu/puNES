@@ -630,6 +630,10 @@
         <source>&amp;General</source>
         <translation>&amp;General</translation>
     </message>
+    <message>
+        <source>&amp;Toggle GUI in window</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>objCheat</name>
@@ -832,7 +836,7 @@
     </message>
     <message>
         <source>A description must be entered</source>
-        <translation type="unfinished"></translation>
+        <translation>Debe ingresar una descripción</translation>
     </message>
 </context>
 <context>
@@ -1247,20 +1251,20 @@
         <translation>30 minutos</translation>
     </message>
     <message>
-        <source>60 minutus</source>
-        <translation>60 minutos</translation>
-    </message>
-    <message>
         <source>Unlimited</source>
         <translation>Sin límite</translation>
     </message>
     <message>
         <source>Spanish</source>
-        <translation type="unfinished">Spanish</translation>
+        <translation>Español</translation>
     </message>
     <message>
         <source>Hungarian</source>
-        <translation type="unfinished"></translation>
+        <translation>Húngaro</translation>
+    </message>
+    <message>
+        <source>60 minutes</source>
+        <translation type="unfinished">60 minutos</translation>
     </message>
 </context>
 <context>

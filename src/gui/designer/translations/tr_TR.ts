@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="it" sourcelanguage="en">
+<TS version="2.1" language="tr" sourcelanguage="en">
 <context>
     <name>Settings</name>
     <message>
         <source>System Default</source>
-        <translation>Predefinito del Sistema</translation>
+        <translation>Sistem varsayılanı</translation>
     </message>
 </context>
 <context>
     <name>dlgSettings</name>
     <message>
         <source>Settings</source>
-        <translation>Configurazione</translation>
+        <translation>Ayarlar</translation>
     </message>
     <message>
         <source>General</source>
-        <translation>Generale</translation>
+        <translation>Genel</translation>
     </message>
     <message>
         <source>Video</source>
@@ -24,11 +24,11 @@
     </message>
     <message>
         <source>Audio</source>
-        <translation>Audio</translation>
+        <translation>Ses</translation>
     </message>
     <message>
         <source>Input</source>
-        <translation>Input</translation>
+        <translation>Girdi</translation>
     </message>
     <message>
         <source>PPU</source>
@@ -36,66 +36,66 @@
     </message>
     <message>
         <source>Cheats</source>
-        <translation>Cheats</translation>
+        <translation>Hileler</translation>
     </message>
     <message>
         <source>Save Settings</source>
-        <translation>Salva Configurazione</translation>
+        <translation>Ayarları Kaydet</translation>
     </message>
     <message>
         <source>Close Settings</source>
-        <translation>Chiudi Configurazione</translation>
+        <translation>Ayarlarını kapat</translation>
     </message>
 </context>
 <context>
     <name>dlgStdPad</name>
     <message>
         <source>Controller %1 : Standard Pad</source>
-        <translation>Controller %1 : Pad Standard</translation>
+        <translation>Kontrolör %1 : Standard Pad</translation>
     </message>
     <message>
         <source>Auto</source>
-        <translation>Auto</translation>
+        <translation>Otomatik</translation>
     </message>
     <message>
         <source>Original</source>
-        <translation>Originale</translation>
+        <translation>Orijinal</translation>
     </message>
     <message>
         <source>3rd-party</source>
-        <translation>Terze parti</translation>
+        <translation>Üçüncü şahıs</translation>
     </message>
     <message>
         <source>Keyboard</source>
-        <translation>Tastiera</translation>
+        <translation>Klavye</translation>
     </message>
     <message>
         <source>Disabled</source>
-        <translation>Disabilitato</translation>
+        <translation>Devre Dışı</translation>
     </message>
     <message>
         <source>No usable device</source>
-        <translation>Nessun dispositivo</translation>
+        <translation>Kullanılabilir aygıt yok</translation>
     </message>
     <message>
         <source>Select device first</source>
-        <translation>Prima selezione un dispositivo</translation>
+        <translation>Önce bir aygıt seçin</translation>
     </message>
     <message>
         <source>Error on open device %1</source>
-        <translation>Errore sull&apos;apertura del dispositivo %1</translation>
+        <translation>%1 aygıtını açarken hata oluştu</translation>
     </message>
     <message>
         <source>Error on reading controllers configurations</source>
-        <translation>Errore nella lettura della configurazione del controller</translation>
+        <translation>Denetleyici yapılandırmalarını okuma hatası</translation>
     </message>
     <message>
         <source>Press a key (ESC for the previous value &quot;%1&quot;)</source>
-        <translation>Premi un tasto (ESC per il valore precedente &quot;%1&quot;)</translation>
+        <translation>Bir tuşa basın (&quot;%1&quot; önceki değere dönmek için ESC basın)</translation>
     </message>
     <message>
         <source>Standard Pad</source>
-        <translation>Pad Standard</translation>
+        <translation>Standard Pad</translation>
     </message>
     <message>
         <source>ID</source>
@@ -103,7 +103,7 @@
     </message>
     <message>
         <source>Up</source>
-        <translation>Su</translation>
+        <translation>Up</translation>
     </message>
     <message>
         <source>A</source>
@@ -111,15 +111,15 @@
     </message>
     <message>
         <source>Down</source>
-        <translation>Giù</translation>
+        <translation>Down</translation>
     </message>
     <message>
         <source>Unset</source>
-        <translation>Azzera</translation>
+        <translation>Tanımlamayı kaldır</translation>
     </message>
     <message>
         <source>Left</source>
-        <translation>Sinistra</translation>
+        <translation>Left</translation>
     </message>
     <message>
         <source>Start</source>
@@ -143,19 +143,19 @@
     </message>
     <message>
         <source>Right</source>
-        <translation>Destra</translation>
+        <translation>Right</translation>
     </message>
     <message>
         <source>In sequence</source>
-        <translation>In sequenza</translation>
+        <translation>Sırayla</translation>
     </message>
     <message>
         <source>Unset all</source>
-        <translation>Azzera tutto</translation>
+        <translation>Tüm Tanımlamaları Kaldır</translation>
     </message>
     <message>
         <source>Defaults</source>
-        <translation>Predefiniti</translation>
+        <translation>Varsayılanlar</translation>
     </message>
     <message>
         <source>Joystick</source>
@@ -163,77 +163,77 @@
     </message>
     <message>
         <source>Misc</source>
-        <translation>Altro</translation>
+        <translation>Diğer</translation>
     </message>
     <message>
         <source>Controller type</source>
-        <translation>Tipo di controller</translation>
+        <translation>Kontrol tipi</translation>
     </message>
     <message>
         <source>Turbo B Delay</source>
-        <translation>Delay Turbo B</translation>
+        <translation>Turbo B Delay</translation>
     </message>
     <message>
         <source>Turbo A Delay</source>
-        <translation>Delay Turbo A</translation>
+        <translation>Turbo A Delay</translation>
     </message>
     <message>
         <source>Apply</source>
-        <translation>Applica</translation>
+        <translation>Uygula</translation>
     </message>
     <message>
         <source>Discard</source>
-        <translation>Annulla</translation>
+        <translation>Vazgeç</translation>
     </message>
 </context>
 <context>
     <name>dlgUncomp</name>
     <message>
         <source>which ROM do you want to load?</source>
-        <translation>quale ROM vuoi caricare?</translation>
+        <translation>hangi ROM&apos;u yüklemek istersiniz?</translation>
     </message>
     <message>
         <source>which PATCH do you want to apply?</source>
-        <translation>quale PATCH vuoi applicare?</translation>
+        <translation>hangi YAMA&apos;yı uygulamak istersiniz?</translation>
     </message>
     <message>
         <source>Unpacked archive</source>
-        <translation>Archivio decompresso</translation>
+        <translation>Arşiv paketi açıldı</translation>
     </message>
     <message>
         <source>OK</source>
-        <translation>OK</translation>
+        <translation>Tamam</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>None</translation>
+        <translation>Hiç biri</translation>
     </message>
 </context>
 <context>
     <name>dlgVsSystem</name>
     <message>
         <source>Vs System Controls</source>
-        <translation>Controlli Vs System</translation>
+        <translation>Vs Sistem Kontrolleri</translation>
     </message>
     <message>
         <source>Left Coin</source>
-        <translation>Moneta Sinistra</translation>
+        <translation>Left Coin</translation>
     </message>
     <message>
         <source>Right Coin</source>
-        <translation>Moneta Destra</translation>
+        <translation>Right Coin</translation>
     </message>
     <message>
         <source>Service Coin</source>
-        <translation>Moneta di Servizio</translation>
+        <translation>Servis Coin</translation>
     </message>
     <message>
         <source>Coin Counter</source>
-        <translation>Contatore Monete</translation>
+        <translation>Coin Sayacı</translation>
     </message>
     <message>
         <source>Dip Switches</source>
-        <translation>Dip Switches</translation>
+        <translation>Dip Anahtarları</translation>
     </message>
     <message>
         <source>4</source>
@@ -269,166 +269,166 @@
     </message>
     <message>
         <source>Defaults Game Dip Switches</source>
-        <translation>Defaults Dip Switches Gioco</translation>
+        <translation>Oyunun Varsayılan Dip Anahtarları</translation>
     </message>
 </context>
 <context>
     <name>mainWindow</name>
     <message>
         <source>&amp;Insert disk</source>
-        <translation>&amp;Inserisci disco</translation>
+        <translation>&amp;Diski Tak</translation>
     </message>
     <message>
         <source>&amp;Eject disk</source>
-        <translation>&amp;Estrai disco</translation>
+        <translation>&amp;Diski Çıkar</translation>
     </message>
     <message>
         <source>&amp;Eject/Insert disk</source>
-        <translation>&amp;Estrai/Inserisci Disco</translation>
+        <translation>&amp;Disk Çıkar/Tak</translation>
     </message>
     <message>
         <source>All supported formats</source>
-        <translation>Tutti i formati</translation>
+        <translation>Tüm Desteklenen Formatlar</translation>
     </message>
     <message>
         <source>Compressed files</source>
-        <translation>Archivi compressi</translation>
+        <translation>Sıkıştırılmış dosyalar</translation>
     </message>
     <message>
         <source>Nes rom files</source>
-        <translation>Rom NES</translation>
+        <translation>Nes rom dosyaları</translation>
     </message>
     <message>
         <source>FDS image files</source>
-        <translation>Immagini FDS</translation>
+        <translation type="unfinished">FDS image files</translation>
     </message>
     <message>
         <source>TAS movie files</source>
-        <translation>film TAS</translation>
+        <translation type="unfinished">TAS movie files</translation>
     </message>
     <message>
         <source>All files</source>
-        <translation>Tutti i files</translation>
+        <translation>Tüm dosyalar</translation>
     </message>
     <message>
         <source>Open File</source>
-        <translation>Carica File</translation>
+        <translation>Dosyayı Aç</translation>
     </message>
     <message>
         <source>Save states</source>
-        <translation>File di salvataggio</translation>
+        <translation>Konum Kayıtları</translation>
     </message>
     <message>
         <source>Save state on file</source>
-        <translation>Salva stato su file</translation>
+        <translation>Konumu dosyaya kaydet</translation>
     </message>
     <message>
         <source>Open save state</source>
-        <translation>Carica stato da file</translation>
+        <translation>Konum kaydını aç</translation>
     </message>
     <message>
         <source>Nintendo Entertainment System Emulator</source>
-        <translation>Emulatore di Nintendo Entertainment System</translation>
+        <translation>Nintendo Entertainment System Emülatörü</translation>
     </message>
     <message>
         <source>Compiled</source>
-        <translation>Compilato il</translation>
+        <translation>Derlenmiş</translation>
     </message>
     <message>
         <source>Anyway, thank you all for the love and the help.</source>
-        <translation>In ogni caso, grazie a tutti per l&apos;affetto e l&apos;aiuto concessomi.</translation>
+        <translation type="unfinished">Anyway, thank you all for the love and the help.</translation>
     </message>
     <message>
         <source>portable version</source>
-        <translation>versione portatile</translation>
+        <translation type="unfinished">portable version</translation>
     </message>
     <message>
         <source>&amp;Open</source>
-        <translation>&amp;Apri</translation>
+        <translation>&amp;Aç</translation>
     </message>
     <message>
         <source>&amp;Quit</source>
-        <translation>&amp;Esci</translation>
+        <translation>&amp;Çıkış</translation>
     </message>
     <message>
         <source>&amp;Hard Reset</source>
-        <translation>Reset &amp;Hard</translation>
+        <translation>&amp;Hard Reset</translation>
     </message>
     <message>
         <source>&amp;Soft Reset</source>
-        <translation>Reset &amp;Soft</translation>
+        <translation>&amp;Soft Reset</translation>
     </message>
     <message>
         <source>&amp;Eject/Insert Disk</source>
-        <translation>&amp;Estrai/Inserisci Disco</translation>
+        <translation>&amp;Disk Çıkar/Tak</translation>
     </message>
     <message>
         <source>Disk 1 side A</source>
-        <translation>Disco 1 Lato A</translation>
+        <translation type="unfinished">Disk 1 side A</translation>
     </message>
     <message>
         <source>Disk 1 side B</source>
-        <translation>Disco 1 Lato B</translation>
+        <translation type="unfinished">Disk 1 side B</translation>
     </message>
     <message>
         <source>Disk 2 side A</source>
-        <translation>Disco 2 Lato A</translation>
+        <translation type="unfinished">Disk 2 side A</translation>
     </message>
     <message>
         <source>Disk 2 side B</source>
-        <translation>Disco 2 Lato B</translation>
+        <translation type="unfinished">Disk 2 side B</translation>
     </message>
     <message>
         <source>Disk 3 side A</source>
-        <translation>Disco 3 Lato A</translation>
+        <translation type="unfinished">Disk 3 side A</translation>
     </message>
     <message>
         <source>Disk 3 side B</source>
-        <translation>Disco 3 Lato B</translation>
+        <translation type="unfinished">Disk 3 side B</translation>
     </message>
     <message>
         <source>Disk 4 side A</source>
-        <translation>Disco 4 Lato A</translation>
+        <translation type="unfinished">Disk 4 side A</translation>
     </message>
     <message>
         <source>Disk 4 side B</source>
-        <translation>Disco 4 Lato B</translation>
+        <translation type="unfinished">Disk 4 side B</translation>
     </message>
     <message>
         <source>&amp;Switch sides</source>
-        <translation>&amp;Cambia lato</translation>
+        <translation>&amp;Yüzeyi değiştir</translation>
     </message>
     <message>
         <source>&amp;Save to file</source>
-        <translation>&amp;Salva su file</translation>
+        <translation>&amp;Dosyaya kaydet</translation>
     </message>
     <message>
         <source>&amp;Load from file</source>
-        <translation>&amp;Carica da file</translation>
+        <translation>&amp;Dosyadan yükle</translation>
     </message>
     <message>
         <source>F&amp;ullscreen</source>
-        <translation>Sc&amp;hermo intero</translation>
+        <translation>T&amp;am Ekran</translation>
     </message>
     <message>
         <source>&amp;Game Genie Rom Mode</source>
-        <translation>Rom &amp;Game Genie</translation>
+        <translation>&amp;Game Genie Rom Modu</translation>
     </message>
     <message>
         <source>S&amp;ave state</source>
-        <translation>S&amp;alva stato</translation>
+        <translation>K&amp;onumu kaydet</translation>
     </message>
     <message>
         <source>L&amp;oad state</source>
-        <translation>Ca&amp;rica stato</translation>
+        <translation>K&amp;onum yükle</translation>
     </message>
     <message>
         <source>&amp;Increment slot</source>
-        <translation>&amp;Incrementa slot</translation>
+        <translation>&amp;Slotu arttır</translation>
     </message>
     <message>
         <source>&amp;Decrement slot</source>
-        <translation>&amp;Decrementa slot</translation>
+        <translation>&amp;Slotu düşür</translation>
     </message>
     <message>
         <source>Slot &amp;0</source>
@@ -456,7 +456,7 @@
     </message>
     <message>
         <source>&amp;About</source>
-        <translation>&amp;Informazioni</translation>
+        <translation>&amp;Hakkında</translation>
     </message>
     <message>
         <source>Slot &amp;6</source>
@@ -476,47 +476,47 @@
     </message>
     <message>
         <source>&amp;Cheats List Mode</source>
-        <translation>Lista &amp;Cheats</translation>
+        <translation>&amp;Hile Listesi Modu</translation>
     </message>
     <message>
         <source>Cheats &amp;Editor</source>
-        <translation>&amp;Editor</translation>
+        <translation>Hile &amp;Düzenleyici</translation>
     </message>
     <message>
         <source>&amp;Disabled</source>
-        <translation>&amp;Disabilitati</translation>
+        <translation>&amp;Devre Dışı</translation>
     </message>
     <message>
         <source>&amp;Fast Forward</source>
-        <translation>&amp;Fast Forward</translation>
+        <translation>&amp;İleri Sar</translation>
     </message>
     <message>
         <source>&amp;Pause</source>
-        <translation>&amp;Pausa</translation>
+        <translation>&amp;Duraklat</translation>
     </message>
     <message>
         <source>Save Screens&amp;hot</source>
-        <translation>Salva Screens&amp;hot</translation>
+        <translation>Ekran Görüntüsünü Kayd&amp;et</translation>
     </message>
     <message>
         <source>Insert Coin</source>
-        <translation>Inserisci Moneta</translation>
+        <translation>Coin Ekle</translation>
     </message>
     <message>
         <source>Vs System Controls</source>
-        <translation>Controlli Vs System</translation>
+        <translation>Vs Sistem Kontrolleri</translation>
     </message>
     <message>
         <source>&amp;Open working folder</source>
-        <translation>Apri &amp;directory di lavoro</translation>
+        <translation>&amp;Çalışan klasörü aç</translation>
     </message>
     <message>
         <source>&amp;File</source>
-        <translation>&amp;File</translation>
+        <translation>&amp;Dosya</translation>
     </message>
     <message>
         <source>&amp;Recent Roms</source>
-        <translation>&amp;Roms recenti</translation>
+        <translation>&amp;Son Romlar</translation>
     </message>
     <message>
         <source>&amp;NES</source>
@@ -524,11 +524,11 @@
     </message>
     <message>
         <source>&amp;Disk Side</source>
-        <translation>&amp;Lato del Disco</translation>
+        <translation>&amp;Disk Yüzü</translation>
     </message>
     <message>
         <source>Setti&amp;ngs</source>
-        <translation>&amp;Configurazione</translation>
+        <translation>Ayar&amp;lar</translation>
     </message>
     <message>
         <source>&amp;Video</source>
@@ -536,15 +536,15 @@
     </message>
     <message>
         <source>&amp;Audio</source>
-        <translation>&amp;Audio</translation>
+        <translation>&amp;Ses</translation>
     </message>
     <message>
         <source>&amp;Input</source>
-        <translation>&amp;Input</translation>
+        <translation>&amp;Girdi</translation>
     </message>
     <message>
         <source>&amp;Cheats</source>
-        <translation>&amp;Cheats</translation>
+        <translation>&amp;Hileler</translation>
     </message>
     <message>
         <source>&amp;PPU</source>
@@ -552,83 +552,83 @@
     </message>
     <message>
         <source>S&amp;tate</source>
-        <translation>S&amp;alvataggi</translation>
+        <translation>K&amp;onum</translation>
     </message>
     <message>
         <source>&amp;Help</source>
-        <translation>&amp;Aiuto</translation>
+        <translation>&amp;Yardım</translation>
     </message>
     <message>
         <source>&amp;Turn On</source>
-        <translation>&amp;Accensione</translation>
+        <translation>&amp;Çalıştır</translation>
     </message>
     <message>
         <source>&amp;Turn Off</source>
-        <translation>Spe&amp;gnimento</translation>
+        <translation>&amp;Kapat</translation>
     </message>
     <message>
         <source>Too&amp;ls</source>
-        <translation>Str&amp;umenti</translation>
+        <translation>Araçl&amp;ar</translation>
     </message>
     <message>
         <source>UNIF rom files</source>
-        <translation>Rom UNIF</translation>
+        <translation>UNIF rom dosyaları</translation>
     </message>
     <message>
         <source>Start/Stop &amp;WAV recording</source>
-        <translation>Avvia/Ferma Registrazione &amp;WAV</translation>
+        <translation>&amp;WAV kaydını başlat/durdur</translation>
     </message>
     <message>
         <source>Stop &amp;WAV recording</source>
-        <translation>Ferma Registrazione &amp;WAV</translation>
+        <translation>&amp;WAV kaydını durdur</translation>
     </message>
     <message>
         <source>Start &amp;WAV recording</source>
-        <translation>Avvia Registrazione &amp;WAV</translation>
+        <translation>&amp;WAV kaydını başlat</translation>
     </message>
     <message>
         <source>MS WAVE files</source>
-        <translation>file MS WAVE</translation>
+        <translation>MS WAVE dosyaları</translation>
     </message>
     <message>
         <source>Record sound</source>
-        <translation>Registra audio</translation>
+        <translation>Sesi kaydet</translation>
     </message>
     <message>
         <source>NSF rom files</source>
-        <translation>Rom NSF</translation>
+        <translation>NSF rom dosyaları</translation>
     </message>
     <message>
         <source>NSFE rom files</source>
-        <translation>rom NSFE</translation>
+        <translation>NSFE rom dosyaları</translation>
     </message>
     <message>
         <source>IPS patch files</source>
-        <translation>patch IPS</translation>
+        <translation>IPS yama dosyaları</translation>
     </message>
     <message>
         <source>BPS patch files</source>
-        <translation>patch BPS</translation>
+        <translation>BPS yama dosyaları</translation>
     </message>
     <message>
         <source>XDELTA patch files</source>
-        <translation>patch XDELTA</translation>
+        <translation>XDELTA yama dosyaları</translation>
     </message>
     <message>
         <source>Open IPS/BPS/XDELTA Patch</source>
-        <translation>Apri IPS/BPS/XDELTA Patch</translation>
+        <translation>IPS/BPS/XDELTA Yamasını aç</translation>
     </message>
     <message>
         <source>If you like the emulator and you want to support it&apos;s development or would you pay for a beer at the programmer</source>
-        <translation>Se ti piace l&apos;emulatore e hai voglia di supportarne lo sviluppo o vuoi offrire una birra al programmatore</translation>
+        <translation type="unfinished">If you like the emulator and you want to support it&apos;s development or would you pay for a beer at the programmer</translation>
     </message>
     <message>
         <source>&amp;Apply IPS/BPS/XDELTA Patch</source>
-        <translation>&amp;Applica IPS/BPS/XDELTA Patch</translation>
+        <translation type="unfinished">&amp;Apply IPS/BPS/XDELTA Patch</translation>
     </message>
     <message>
         <source>&amp;General</source>
-        <translation>&amp;Generale</translation>
+        <translation>&amp;Genel</translation>
     </message>
     <message>
         <source>&amp;Toggle GUI in window</source>
@@ -639,22 +639,22 @@
     <name>objCheat</name>
     <message>
         <source>Error on reading the file</source>
-        <translation>Errore sulla lettura del file</translation>
+        <translation>Dosya okunurken hata oluştu</translation>
     </message>
     <message>
         <source>Read only</source>
-        <translation>Sola lettura</translation>
+        <translation>Salt okunur</translation>
     </message>
     <message>
         <source>The file is in read only mode</source>
-        <translation>Il file è in modalità di sola lettura</translation>
+        <translation>Dosya salt okunur modunda</translation>
     </message>
 </context>
 <context>
     <name>wdgAPUChannels</name>
     <message>
         <source>APU Channels</source>
-        <translation>Canali APU</translation>
+        <translation>APU Kanalları</translation>
     </message>
     <message>
         <source>Square 1</source>
@@ -678,94 +678,94 @@
     </message>
     <message>
         <source>Master</source>
-        <translation>Master</translation>
+        <translation type="unfinished">Master</translation>
     </message>
     <message>
         <source>Triangle</source>
-        <translation>Triangle</translation>
+        <translation type="unfinished">Triangle</translation>
     </message>
     <message>
         <source>active</source>
-        <translation>attivo</translation>
+        <translation>etkin</translation>
     </message>
     <message>
         <source>volume</source>
-        <translation>volume</translation>
+        <translation type="unfinished">volume</translation>
     </message>
     <message>
         <source>Active all</source>
-        <translation>Attiva tutti</translation>
+        <translation>Tümünü Etkinleştir</translation>
     </message>
     <message>
         <source>Disable all</source>
-        <translation>Disabilita tutti</translation>
+        <translation>Tümünü devre dışı bırak</translation>
     </message>
     <message>
         <source>Reset to defaults</source>
-        <translation>Predefiniti</translation>
+        <translation>Varsayılanlara dön</translation>
     </message>
 </context>
 <context>
     <name>wdgCheatEditor</name>
     <message>
         <source>Cheats Editor</source>
-        <translation>Editor dei Cheats</translation>
+        <translation>Hile &amp;Düzenleyici</translation>
     </message>
     <message>
         <source>Cheats List</source>
-        <translation>Lista dei Cheats</translation>
+        <translation>Hile Listesi</translation>
     </message>
     <message>
         <source>Active</source>
-        <translation>Attivo</translation>
+        <translation>Etkin</translation>
     </message>
     <message>
         <source>Description</source>
-        <translation>Descrizione</translation>
+        <translation>Açıklama</translation>
     </message>
     <message>
         <source>Code</source>
-        <translation>Codice</translation>
+        <translation>Kod</translation>
     </message>
     <message>
         <source>Address</source>
-        <translation>Indirizzo</translation>
+        <translation>Adres</translation>
     </message>
     <message>
         <source>Value</source>
-        <translation>Valore</translation>
+        <translation>Değer</translation>
     </message>
     <message>
         <source>Compare</source>
-        <translation>Confronto</translation>
+        <translation>Karşılaştır</translation>
     </message>
     <message>
         <source>Show Tools</source>
-        <translation>Mostra Strumenti</translation>
+        <translation>Araçları Göster</translation>
     </message>
     <message>
         <source>Import</source>
-        <translation>Importa</translation>
+        <translation>İçe aktar</translation>
     </message>
     <message>
         <source>Export</source>
-        <translation>Esporta</translation>
+        <translation>Dışa aktar</translation>
     </message>
     <message>
         <source>Clear All</source>
-        <translation>Pulisci</translation>
+        <translation>Tümünü Temizle</translation>
     </message>
     <message>
         <source>Editor Tools</source>
-        <translation>Strumenti Editor</translation>
+        <translation>Düzenleme Araçları</translation>
     </message>
     <message>
         <source>CPU Ram</source>
-        <translation>Ram CPU</translation>
+        <translation>CPU Ram</translation>
     </message>
     <message>
         <source>Pro Action Rocky</source>
-        <translation>Pro Action Rocky</translation>
+        <translation type="unfinished">Pro Action Rocky</translation>
     </message>
     <message>
         <source>Game Genie</source>
@@ -773,89 +773,89 @@
     </message>
     <message>
         <source>Submit</source>
-        <translation>Convalida</translation>
+        <translation>Gönder</translation>
     </message>
     <message>
         <source>New</source>
-        <translation>Nuovo</translation>
+        <translation>Yeni</translation>
     </message>
     <message>
         <source>Remove</source>
-        <translation>Rimuovi</translation>
+        <translation>Kaldır</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation>Annulla</translation>
+        <translation>İptal</translation>
     </message>
 </context>
 <context>
     <name>wdgCheatsEditor</name>
     <message>
         <source>Show Tools</source>
-        <translation>Mostra Strumenti</translation>
+        <translation>Araçları Göster</translation>
     </message>
     <message>
         <source>Hide Tools</source>
-        <translation>Nascondi Strumenti</translation>
+        <translation>Araçları Gizle</translation>
     </message>
     <message>
         <source>All supported formats</source>
-        <translation>Tutti i formati</translation>
+        <translation>Tüm Desteklenen Formatlar</translation>
     </message>
     <message>
         <source>XML files</source>
-        <translation>Files XML</translation>
+        <translation>XML dosyaları</translation>
     </message>
     <message>
         <source>CHT files</source>
-        <translation>Files CHT</translation>
+        <translation>CHT dosyaları</translation>
     </message>
     <message>
         <source>Import Cheats</source>
-        <translation>Importa Cheats</translation>
+        <translation>Hileleri İçeri Aktar</translation>
     </message>
     <message>
         <source>All files</source>
-        <translation>Tutti i files</translation>
+        <translation>Tüm dosyalar</translation>
     </message>
     <message>
         <source>Export cheats on file</source>
-        <translation>Esporta cheats su file</translation>
+        <translation>Hileleri dosyaya çıkar</translation>
     </message>
     <message>
         <source>Submit warning</source>
-        <translation>Errore sulla convalida</translation>
+        <translation type="unfinished">Submit warning</translation>
     </message>
     <message>
         <source>The code is invalid</source>
-        <translation>Il codice non è valido</translation>
+        <translation>Kod geçerli değil</translation>
     </message>
     <message>
         <source>The cheat is already in the list</source>
-        <translation>Il cheat è già presente nella lista</translation>
+        <translation>Listede zaten bu hile var</translation>
     </message>
     <message>
         <source>A description must be entered</source>
-        <translation>Una descrizione deve essere inserita</translation>
+        <translation>Bir açıklama girilmelidir</translation>
     </message>
 </context>
 <context>
     <name>wdgPaletteEditor</name>
     <message>
         <source>Palette files</source>
-        <translation>Files della Paletta</translation>
+        <translation>Palet dosyaları</translation>
     </message>
     <message>
         <source>All files</source>
-        <translation>Tutti i files</translation>
+        <translation>Tüm dosyalar</translation>
     </message>
     <message>
         <source>Save palette on file</source>
-        <translation>Salva Paletta su file</translation>
+        <translation>Paleti dosyaya kaydet</translation>
     </message>
     <message>
         <source>Selected</source>
-        <translation>Selezionato</translation>
+        <translation>Seçili</translation>
     </message>
     <message>
         <source>PPU</source>
@@ -867,15 +867,15 @@
     </message>
     <message>
         <source>Blue</source>
-        <translation>Blu</translation>
+        <translation>Mavi</translation>
     </message>
     <message>
         <source>Red</source>
-        <translation>Rosso</translation>
+        <translation>Kırmızı</translation>
     </message>
     <message>
         <source>Green</source>
-        <translation>Verde</translation>
+        <translation>Yeşil</translation>
     </message>
     <message>
         <source>Sat</source>
@@ -891,22 +891,22 @@
     </message>
     <message>
         <source>Reset color</source>
-        <translation>Resetta colore</translation>
+        <translation>Rengi sıfırla</translation>
     </message>
     <message>
         <source>Save to a file</source>
-        <translation>Salva su file</translation>
+        <translation>Dosyaya Kaydet</translation>
     </message>
     <message>
         <source>Reset palette</source>
-        <translation>Resetta paletta</translation>
+        <translation>Paleti sıfırla</translation>
     </message>
 </context>
 <context>
     <name>wdgSettingsAudio</name>
     <message>
         <source>Output Devices</source>
-        <translation>Dispositivi di Output</translation>
+        <translation>Çıktı cihazları</translation>
     </message>
     <message>
         <source>48000</source>
@@ -930,7 +930,7 @@
     </message>
     <message>
         <source>1 (Default)</source>
-        <translation>1 (Predefinito)</translation>
+        <translation>%1 (Varsayılan)</translation>
     </message>
     <message>
         <source>2</source>
@@ -966,11 +966,11 @@
     </message>
     <message>
         <source>Sample Rate</source>
-        <translation>Sample Rate</translation>
+        <translation>Örnek Oranı</translation>
     </message>
     <message>
         <source>Buffer Size factor</source>
-        <translation>Fattore Lunghezza Buffer</translation>
+        <translation type="unfinished">Buffer Size factor</translation>
     </message>
     <message>
         <source>Mono</source>
@@ -978,27 +978,27 @@
     </message>
     <message>
         <source>Stereo Delay</source>
-        <translation>Ritardo Stereo</translation>
+        <translation>Stereo Gecikmesi</translation>
     </message>
     <message>
         <source>Stereo Panning</source>
-        <translation>Stereo Panning</translation>
+        <translation>Stereo Kayması</translation>
     </message>
     <message>
         <source>Channels Delay</source>
-        <translation>Ritardo Canali</translation>
+        <translation>Kanalların Gecikmesi</translation>
     </message>
     <message>
         <source>Misc</source>
-        <translation>Altro</translation>
+        <translation>Diğer</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Configurazione</translation>
+        <translation>Ayarlar</translation>
     </message>
     <message>
         <source>Channels</source>
-        <translation>Canali</translation>
+        <translation>Kanallar</translation>
     </message>
     <message>
         <source>5%</source>
@@ -1022,7 +1022,7 @@
     </message>
     <message>
         <source>30% (Default)</source>
-        <translation>30% (Predefinito)</translation>
+        <translation>30% (Varsayılan)</translation>
     </message>
     <message>
         <source>35%</source>
@@ -1082,65 +1082,65 @@
     </message>
     <message>
         <source>APU Channels</source>
-        <translation>Canali APU</translation>
+        <translation>APU Kanalları</translation>
     </message>
     <message>
         <source>Swap Duty Cycles</source>
-        <translation>Inverti i Duty Cycles</translation>
+        <translation type="unfinished">Swap Duty Cycles</translation>
     </message>
     <message>
         <source>Enable Audio</source>
-        <translation>Abilita Audio</translation>
+        <translation>Sesi Etkinleştir</translation>
     </message>
 </context>
 <context>
     <name>wdgSettingsCheats</name>
     <message>
         <source>Cheats Settings</source>
-        <translation>Configurazione Cheats</translation>
+        <translation>Hile Ayarları</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Configurazione</translation>
+        <translation>Ayarlar</translation>
     </message>
     <message>
         <source>Disabled</source>
-        <translation>Disabilitato</translation>
+        <translation>Devre Dışı</translation>
     </message>
     <message>
         <source>Game Genie Rom Mode</source>
-        <translation>Modalità Rom Game Genie</translation>
+        <translation>Game Genie Rom Modu</translation>
     </message>
     <message>
         <source>Cheats List Mode</source>
-        <translation>Modalità Lista Cheats</translation>
+        <translation>Hile Listesi Modu</translation>
     </message>
 </context>
 <context>
     <name>wdgSettingsGeneral</name>
     <message>
         <source>[Select a file]</source>
-        <translation>[Seleziona un file]</translation>
+        <translation>[Bir dosya seçin]</translation>
     </message>
     <message>
         <source>All files</source>
-        <translation>Tutti i files</translation>
+        <translation>Tüm dosyalar</translation>
     </message>
     <message>
         <source>Select Game Genie ROM file</source>
-        <translation>Seleziona file Rom Game Genie</translation>
+        <translation type="unfinished">Select Game Genie ROM file</translation>
     </message>
     <message>
         <source>Select FDS BIOS file</source>
-        <translation>Seleziona file BIOS FDS</translation>
+        <translation type="unfinished">Select FDS BIOS file</translation>
     </message>
     <message>
         <source>General Settings</source>
-        <translation>Configurazione Generale</translation>
+        <translation>Genel Ayarlar</translation>
     </message>
     <message>
         <source>2x (Default)</source>
-        <translation>2x (Predefinito)</translation>
+        <translation>2x (Varsayılan)</translation>
     </message>
     <message>
         <source>3x</source>
@@ -1156,126 +1156,126 @@
     </message>
     <message>
         <source>Auto</source>
-        <translation>Auto</translation>
+        <translation>Otomatik</translation>
     </message>
     <message>
         <source>NTSC</source>
-        <translation>NTSC</translation>
+        <translation type="unfinished">NTSC</translation>
     </message>
     <message>
         <source>PAL</source>
-        <translation>PAL</translation>
+        <translation type="unfinished">PAL</translation>
     </message>
     <message>
         <source>Dendy</source>
-        <translation>Dendy</translation>
+        <translation type="unfinished">Dendy</translation>
     </message>
     <message>
         <source>System Roms</source>
-        <translation>Roms di Sistema</translation>
+        <translation type="unfinished">System Roms</translation>
     </message>
     <message>
         <source>Mode</source>
-        <translation>Modalità</translation>
+        <translation type="unfinished">Mode</translation>
     </message>
     <message>
         <source>English</source>
-        <translation>Inglese</translation>
+        <translation type="unfinished">English</translation>
     </message>
     <message>
         <source>Italian</source>
-        <translation>Italiano</translation>
+        <translation type="unfinished">Italian</translation>
     </message>
     <message>
         <source>Russian</source>
-        <translation>Russo</translation>
+        <translation type="unfinished">Russian</translation>
     </message>
     <message>
         <source>Pause when in background</source>
-        <translation>Pausa quando in background</translation>
+        <translation type="unfinished">Pause when in background</translation>
     </message>
     <message>
         <source>Language</source>
-        <translation>Lingua</translation>
+        <translation type="unfinished">Language</translation>
     </message>
     <message>
         <source>Save settings on exit</source>
-        <translation>Salva configurazione in uscita</translation>
+        <translation type="unfinished">Save settings on exit</translation>
     </message>
     <message>
         <source>Save battery RAM file every 3 min.</source>
-        <translation>Salva file battery RAM ogni 3 min.</translation>
+        <translation type="unfinished">Save battery RAM file every 3 min.</translation>
     </message>
     <message>
         <source>Fast Forward velocity</source>
-        <translation>Velocità avanzamento veloce</translation>
+        <translation type="unfinished">Fast Forward velocity</translation>
     </message>
     <message>
         <source>Misc</source>
-        <translation>Altro</translation>
+        <translation type="unfinished">Misc</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Configurazione</translation>
+        <translation type="unfinished">Settings</translation>
     </message>
     <message>
         <source>Game Genie Rom file</source>
-        <translation>file Rom Game Genie</translation>
+        <translation type="unfinished">Game Genie Rom file</translation>
     </message>
     <message>
         <source>FDS Bios file</source>
-        <translation>file Bios FDS</translation>
+        <translation type="unfinished">FDS Bios file</translation>
     </message>
     <message>
         <source>Rewind minutes</source>
-        <translation>Minuti del rewind</translation>
+        <translation type="unfinished">Rewind minutes</translation>
     </message>
     <message>
         <source>Disabled</source>
-        <translation>Disabilitato</translation>
+        <translation type="unfinished">Disabled</translation>
     </message>
     <message>
         <source>2 minutes</source>
-        <translation>2 minuti</translation>
+        <translation type="unfinished">2 minutes</translation>
     </message>
     <message>
         <source>5 minutes</source>
-        <translation>5 minuti</translation>
+        <translation type="unfinished">5 minutes</translation>
     </message>
     <message>
         <source>15 minutes (Default)</source>
-        <translation>15 minuti (Predefinito)</translation>
+        <translation>15 dakika (Varsayılan)</translation>
     </message>
     <message>
         <source>30 minutes</source>
-        <translation>30 minuti</translation>
+        <translation>30 dakika</translation>
     </message>
     <message>
         <source>Unlimited</source>
-        <translation>Illimitati</translation>
+        <translation>Sınırsız</translation>
     </message>
     <message>
         <source>Spanish</source>
-        <translation>Spagnolo</translation>
+        <translation>İspanyolca</translation>
     </message>
     <message>
         <source>Hungarian</source>
-        <translation>Ungherese</translation>
+        <translation>Macarca</translation>
     </message>
     <message>
         <source>60 minutes</source>
-        <translation type="unfinished">60 minuti</translation>
+        <translation type="unfinished">60 dakika</translation>
     </message>
 </context>
 <context>
     <name>wdgSettingsInput</name>
     <message>
         <source>Disabled</source>
-        <translation>Disabilitato</translation>
+        <translation>Devre Dışı</translation>
     </message>
     <message>
         <source>Standard Pad</source>
-        <translation>Pad Standard</translation>
+        <translation>Standard Pad</translation>
     </message>
     <message>
         <source>Zapper</source>
@@ -1283,55 +1283,55 @@
     </message>
     <message>
         <source>Snes Mouse</source>
-        <translation>Mouse Snes</translation>
+        <translation>Snes Faresi</translation>
     </message>
     <message>
         <source>Arkanoid Paddle</source>
-        <translation>Paddle Arkanoid</translation>
+        <translation>Arkanoid Paddle</translation>
     </message>
     <message>
         <source>Oeka Kids Tablet</source>
-        <translation>Tavoletta Oeka Kids</translation>
+        <translation>Oeka Kids Tablet</translation>
     </message>
     <message>
         <source>Default</source>
-        <translation>Predefinito</translation>
+        <translation>Varsayılan</translation>
     </message>
     <message>
         <source>Unset</source>
-        <translation>Azzera</translation>
+        <translation>Tanımlamayı kaldır</translation>
     </message>
     <message>
         <source>Start/Stop WAV</source>
-        <translation>Avvia/Ferma WAV</translation>
+        <translation>Çalıştır/Durdur WAV</translation>
     </message>
     <message>
         <source>No usable device</source>
-        <translation>Nessun dispositivo</translation>
+        <translation>Kullanılabilir aygıt yok</translation>
     </message>
     <message>
         <source>Error on open device %1</source>
-        <translation>Errore sull&apos;apertura del dispositivo %1</translation>
+        <translation>%1 aygıtını açarken hata oluştu</translation>
     </message>
     <message>
         <source>Error on reading controllers configurations</source>
-        <translation>Errore nella lettura della configurazione del controller</translation>
+        <translation>Denetleyici yapılandırmalarını okuma hatası</translation>
     </message>
     <message>
         <source>Press a key (ESC for the previous value &quot;%1&quot;) - timeout in %2</source>
-        <translation>Premi un tasto (ESC per il valore precedente &quot;%1&quot;) - timeout in %2</translation>
+        <translation>Bir tuşa basın (&quot;%1&quot; önceki değere dönmek için ESC basın) - %2 içinde zamanaşımı</translation>
     </message>
     <message>
         <source>Input Settings</source>
-        <translation>Configurazione Input</translation>
+        <translation>Giriş ayarları</translation>
     </message>
     <message>
         <source>Setup</source>
-        <translation>Config.</translation>
+        <translation>Kurulum</translation>
     </message>
     <message>
         <source>Joystick ID</source>
-        <translation>ID Joystick</translation>
+        <translation>Joystick ID</translation>
     </message>
     <message>
         <source>NES</source>
@@ -1347,59 +1347,59 @@
     </message>
     <message>
         <source>Misc</source>
-        <translation>Altro</translation>
+        <translation>Diğer</translation>
     </message>
     <message>
         <source>Expansion Port</source>
-        <translation>Porta di Espansione</translation>
+        <translation>Genişleme Portu</translation>
     </message>
     <message>
         <source>Hide Zapper cursor</source>
-        <translation>Nascondi il cursore dello Zapper</translation>
+        <translation>Zapper İmlecini gizle</translation>
     </message>
     <message>
         <source>Controller Port 1</source>
-        <translation>Porta Controller 1</translation>
+        <translation>Kontrolör Port 1</translation>
     </message>
     <message>
         <source>Controller Port 3</source>
-        <translation>Porta Controller 3</translation>
+        <translation>Kontrolör Port 3</translation>
     </message>
     <message>
         <source>Controller Port 2</source>
-        <translation>Porta Controller 2</translation>
+        <translation>Kontrolör Port 2</translation>
     </message>
     <message>
         <source>Ports</source>
-        <translation>Porte</translation>
+        <translation>Bağlantı noktaları</translation>
     </message>
     <message>
         <source>Shortcuts</source>
-        <translation>Scorciatoie da tastiera</translation>
+        <translation>Kısayollar</translation>
     </message>
     <message>
         <source>Permit &quot;Up + Down&quot; and &quot;Left + Right&quot; at the same time</source>
-        <translation>Permitti &quot;Su+Giù&quot; e &quot;Sinistra+Destra&quot; contemporaneamente</translation>
+        <translation type="unfinished">Permit &quot;Up + Down&quot; and &quot;Left + Right&quot; at the same time</translation>
     </message>
     <message>
         <source>Controller Mode</source>
-        <translation>Modalità Controller</translation>
+        <translation>Kontrol tipi</translation>
     </message>
     <message>
         <source>Controller Port 4</source>
-        <translation>Porta Controller 4</translation>
+        <translation>Kontrolör Port 4</translation>
     </message>
     <message>
         <source>Reset to defaults</source>
-        <translation>Predefiniti</translation>
+        <translation>Varsayılanlara dön</translation>
     </message>
     <message>
         <source>Action</source>
-        <translation>Azione</translation>
+        <translation>Aksiyon</translation>
     </message>
     <message>
         <source>Keyboard</source>
-        <translation>Tastiera</translation>
+        <translation>Klavye</translation>
     </message>
     <message>
         <source>Joystick</source>
@@ -1410,90 +1410,90 @@
     <name>wdgSettingsPPU</name>
     <message>
         <source>PPU Settings</source>
-        <translation>Configurazione PPU</translation>
+        <translation>PPU Ayarları</translation>
     </message>
     <message>
         <source>Disable 7bit Sample Control</source>
-        <translation>Disabilita Controllo del Sample 7bit</translation>
+        <translation>7bit Örnek Kontrolünü Devre Dışı Bırak</translation>
     </message>
     <message>
         <source>Reset Lag Counter</source>
-        <translation>Reset Contatatore Lag</translation>
+        <translation>Lag Sayacını Sıfırla</translation>
     </message>
     <message>
         <source>VBlank Lines</source>
-        <translation>Scanlines VBlank</translation>
+        <translation>VBlank Çizgileri</translation>
     </message>
     <message>
         <source>Postrender Lines</source>
-        <translation>Scanlines Postrender</translation>
+        <translation>Render Sonrası Çizgileri</translation>
     </message>
     <message>
         <source>Overclock</source>
-        <translation>Overclock</translation>
+        <translation>Hız aşırtma</translation>
     </message>
     <message>
         <source>Sprites and background</source>
-        <translation>Sprites e background</translation>
+        <translation>Spritelar ve arka plan</translation>
     </message>
     <message>
         <source>Unlimited Sprites</source>
-        <translation>Sprites Illimitati</translation>
+        <translation>Sınırsız Spritelar</translation>
     </message>
     <message>
         <source>Enable Extra Scanlines</source>
-        <translation>Abilita Extra Scanlines</translation>
+        <translation>Ekstra Tarama Satırlarını Etkinleştir</translation>
     </message>
     <message>
         <source>Hide Sprites</source>
-        <translation>Nascondi Sprites</translation>
+        <translation>Spriteları gizle</translation>
     </message>
     <message>
         <source>Hide Background</source>
-        <translation>Nascondi Background</translation>
+        <translation type="unfinished">Hide Background</translation>
     </message>
 </context>
 <context>
     <name>wdgSettingsVideo</name>
     <message>
         <source>GLSL &amp;soft stretch</source>
-        <translation>GLSL &amp;soft stretch</translation>
+        <translation type="unfinished">GLSL &amp;soft stretch</translation>
     </message>
     <message>
         <source>HLSL &amp;soft stretch</source>
-        <translation>HLSL &amp;soft stretch</translation>
+        <translation type="unfinished">HLSL &amp;soft stretch</translation>
     </message>
     <message>
         <source>[Select a file]</source>
-        <translation>[Seleziona un file]</translation>
+        <translation type="unfinished">[Select a file]</translation>
     </message>
     <message>
         <source>Default</source>
-        <translation>Predefinito</translation>
+        <translation>Varsayılan</translation>
     </message>
     <message>
         <source>Shaders files</source>
-        <translation>Files per le shaders</translation>
+        <translation type="unfinished">Shaders files</translation>
     </message>
     <message>
         <source>All files</source>
-        <translation>Tutti i files</translation>
+        <translation>Tüm dosyalar</translation>
     </message>
     <message>
         <source>Open Shader file</source>
-        <translation>Apri file per le shaders</translation>
+        <translation type="unfinished">Open Shader file</translation>
     </message>
     <message>
         <source>Palette files</source>
-        <translation>File della Paletta</translation>
+        <translation type="unfinished">Palette files</translation>
     </message>
     <message>
         <source>Open palette file</source>
-        <translation>Carica Paletta da file</translation>
+        <translation type="unfinished">Open palette file</translation>
     </message>
     <message>
         <source>Video Settings</source>
-        <translation>Configurazione Video</translation>
+        <translation>Video Ayarları</translation>
     </message>
     <message>
         <source>1x</source>
@@ -1521,19 +1521,19 @@
     </message>
     <message>
         <source>Scale</source>
-        <translation>Fattore di Scala</translation>
+        <translation>Ölçek</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Configurazione</translation>
+        <translation>Ayarlar</translation>
     </message>
     <message>
         <source>** To apply this change restart is needed **</source>
-        <translation>** Per applicare questa modifica è necessario un riavvio **</translation>
+        <translation type="unfinished">** To apply this change restart is needed **</translation>
     </message>
     <message>
         <source>Misc</source>
-        <translation>Altro</translation>
+        <translation>Diğer</translation>
     </message>
     <message>
         <source>1:1</source>
@@ -1545,31 +1545,31 @@
     </message>
     <message>
         <source>8:7 (NTSC TV)</source>
-        <translation>8:7 (TV NTSC)</translation>
+        <translation>8:7 (NTSC TV)</translation>
     </message>
     <message>
         <source>11:8 (PAL TV)</source>
-        <translation>11:8 (TV PAL)</translation>
+        <translation>11:8 (PAL TV)</translation>
     </message>
     <message>
         <source>Pixel Aspect Ratio</source>
-        <translation>Pixel Aspect Ratio</translation>
+        <translation>Piksel En Boy Oranı</translation>
     </message>
     <message>
         <source>Off</source>
-        <translation>Off</translation>
+        <translation>Kapat</translation>
     </message>
     <message>
         <source>On</source>
-        <translation>On</translation>
+        <translation>Aç</translation>
     </message>
     <message>
         <source>Default Value</source>
-        <translation>Valore Predefinito</translation>
+        <translation>Varsayılan Değer</translation>
     </message>
     <message>
         <source>Overscan borders</source>
-        <translation>Bordi dell&apos;Overscan</translation>
+        <translation type="unfinished">Overscan borders</translation>
     </message>
     <message>
         <source>NTSC</source>
@@ -1581,75 +1581,75 @@
     </message>
     <message>
         <source>Right</source>
-        <translation>Destra</translation>
+        <translation type="unfinished">Right</translation>
     </message>
     <message>
         <source>Down</source>
-        <translation>Giù</translation>
+        <translation type="unfinished">Down</translation>
     </message>
     <message>
         <source>Up</source>
-        <translation>Su</translation>
+        <translation type="unfinished">Up</translation>
     </message>
     <message>
         <source>Left</source>
-        <translation>Sinistra</translation>
+        <translation type="unfinished">Left</translation>
     </message>
     <message>
         <source>Reset to defaults</source>
-        <translation>Predefiniti</translation>
+        <translation>Varsayılanlara Sıfırla</translation>
     </message>
     <message>
         <source>Black borders in window mode</source>
-        <translation>Bordi neri nella modalità finestra</translation>
+        <translation type="unfinished">Black borders in window mode</translation>
     </message>
     <message>
         <source>Black borders in fullscreen</source>
-        <translation>Bordi neri a schermo intero</translation>
+        <translation type="unfinished">Black borders in fullscreen</translation>
     </message>
     <message>
         <source>Overscan</source>
-        <translation>Overscan</translation>
+        <translation type="unfinished">Overscan</translation>
     </message>
     <message>
         <source>No Shaders</source>
-        <translation>Nessuna Shader</translation>
+        <translation type="unfinished">No Shaders</translation>
     </message>
     <message>
         <source>CRT Dotmask</source>
-        <translation>CRT Dotmask</translation>
+        <translation type="unfinished">CRT Dotmask</translation>
     </message>
     <message>
         <source>CRT Scanlines</source>
-        <translation>CRT Scanlines</translation>
+        <translation type="unfinished">CRT Scanlines</translation>
     </message>
     <message>
         <source>CRT With Curve</source>
-        <translation>CRT con Curva</translation>
+        <translation type="unfinished">CRT With Curve</translation>
     </message>
     <message>
         <source>Emboss</source>
-        <translation>Emboss</translation>
+        <translation type="unfinished">Emboss</translation>
     </message>
     <message>
         <source>Noise</source>
-        <translation>Noise</translation>
+        <translation type="unfinished">Noise</translation>
     </message>
     <message>
         <source>NTSC 2Phase Composite</source>
-        <translation>NTSC 2Phase Composite</translation>
+        <translation type="unfinished">NTSC 2Phase Composite</translation>
     </message>
     <message>
         <source>Old TV</source>
-        <translation>Vecchia TV</translation>
+        <translation type="unfinished">Old TV</translation>
     </message>
     <message>
         <source>From File</source>
-        <translation>Da File</translation>
+        <translation>Dosyadan</translation>
     </message>
     <message>
         <source>No Filters</source>
-        <translation>Nessun Filtro</translation>
+        <translation>Filtre yok</translation>
     </message>
     <message>
         <source>Scale2X</source>
@@ -1697,7 +1697,7 @@
     </message>
     <message>
         <source>NTSC Composite</source>
-        <translation>NTSC Composito</translation>
+        <translation>NTSC Composite</translation>
     </message>
     <message>
         <source>NTSC S-Video</source>
@@ -1709,142 +1709,142 @@
     </message>
     <message>
         <source>Shaders</source>
-        <translation>Shaders</translation>
+        <translation>Gölgelendiriciler</translation>
     </message>
     <message>
         <source>Load from a file</source>
-        <translation>Carica da file</translation>
+        <translation>Dosyadan yükle</translation>
     </message>
     <message>
         <source>Shader Parameters</source>
-        <translation>Parametri della Shader</translation>
+        <translation>Gölgelendirici Parametreleri</translation>
     </message>
     <message>
         <source>Reset paramaters to defaults</source>
-        <translation>Predefiniti</translation>
+        <translation>Parametreleri varsayılana sıfırla</translation>
     </message>
     <message>
         <source>Filters</source>
-        <translation>Filtri</translation>
+        <translation>Filtreler</translation>
     </message>
     <message>
         <source>PAL</source>
-        <translation>PAL</translation>
+        <translation type="unfinished">PAL</translation>
     </message>
     <message>
         <source>Sony CXA2025AS US</source>
-        <translation>Sony CXA2025AS US</translation>
+        <translation type="unfinished">Sony CXA2025AS US</translation>
     </message>
     <message>
         <source>Firebrandx Nostalgia (FBX)</source>
-        <translation>Firebrandx Nostalgia (FBX)</translation>
+        <translation type="unfinished">Firebrandx Nostalgia (FBX)</translation>
     </message>
     <message>
         <source>Firebrandx YUV</source>
-        <translation>Firebrandx YUV</translation>
+        <translation type="unfinished">Firebrandx YUV</translation>
     </message>
     <message>
         <source>Monochrome</source>
-        <translation>Monocromatico</translation>
+        <translation type="unfinished">Monochrome</translation>
     </message>
     <message>
         <source>Green</source>
-        <translation>Verde</translation>
+        <translation type="unfinished">Green</translation>
     </message>
     <message>
         <source>Editor</source>
-        <translation>Editor</translation>
+        <translation type="unfinished">Editor</translation>
     </message>
     <message>
         <source>Palette</source>
-        <translation>Paletta</translation>
+        <translation type="unfinished">Palette</translation>
     </message>
     <message>
         <source>xBRZ 2X Multithreading</source>
-        <translation>xBRZ 2X Multithreading</translation>
+        <translation type="unfinished">xBRZ 2X Multithreading</translation>
     </message>
     <message>
         <source>xBRZ 3X Multithreading</source>
-        <translation>xBRZ 3X Multithreading</translation>
+        <translation type="unfinished">xBRZ 3X Multithreading</translation>
     </message>
     <message>
         <source>xBRZ 4X Multithreading</source>
-        <translation>xBRZ 4X Multithreading</translation>
+        <translation type="unfinished">xBRZ 4X Multithreading</translation>
     </message>
     <message>
         <source>xBRZ 5X Multithreading</source>
-        <translation>xBRZ 5X Multithreading</translation>
+        <translation type="unfinished">xBRZ 5X Multithreading</translation>
     </message>
     <message>
         <source>xBRZ 6X Multithreading</source>
-        <translation>xBRZ 6X Multithreading</translation>
+        <translation type="unfinished">xBRZ 6X Multithreading</translation>
     </message>
     <message>
         <source>VSync</source>
-        <translation>VSync</translation>
+        <translation type="unfinished">VSync</translation>
     </message>
     <message>
         <source>Interpolation</source>
-        <translation>Interpolazione</translation>
+        <translation type="unfinished">Interpolation</translation>
     </message>
     <message>
         <source>Text on screen</source>
-        <translation>Testo a video</translation>
+        <translation type="unfinished">Text on screen</translation>
     </message>
     <message>
         <source>Show FPS</source>
-        <translation>Mostra FPS</translation>
+        <translation type="unfinished">Show FPS</translation>
     </message>
     <message>
         <source>Input display</source>
-        <translation>Visualizza Input</translation>
+        <translation type="unfinished">Input display</translation>
     </message>
     <message>
         <source>Disable TV noise emulation when turned off</source>
-        <translation>Disabilita emulazione rumore TV quando spento</translation>
+        <translation type="unfinished">Disable TV noise emulation when turned off</translation>
     </message>
     <message>
         <source>Disable sepia color on pause</source>
-        <translation>Disabilita colore sepia quando in pausa</translation>
+        <translation type="unfinished">Disable sepia color on pause</translation>
     </message>
     <message>
         <source>Fullscreen in window</source>
-        <translation>Schermo intero in finestra</translation>
+        <translation type="unfinished">Fullscreen in window</translation>
     </message>
     <message>
         <source>Stretch in fullscreen</source>
-        <translation>Stretch durante schermo intero</translation>
+        <translation type="unfinished">Stretch in fullscreen</translation>
     </message>
     <message>
         <source>Soft stretch</source>
-        <translation>Soft stretch</translation>
+        <translation type="unfinished">Soft stretch</translation>
     </message>
     <message>
         <source>Disable sRGB FBO</source>
-        <translation>Disabilita sRGB FBO</translation>
+        <translation type="unfinished">Disable sRGB FBO</translation>
     </message>
     <message>
         <source>Disable Red and Green emphasis swap for PAL/Dendy</source>
-        <translation>Disabilita scambio dell&apos;emphsis tra Rosso e Verde nella modalità PAL/Dendy</translation>
+        <translation type="unfinished">Disable Red and Green emphasis swap for PAL/Dendy</translation>
     </message>
 </context>
 <context>
     <name>wdgState</name>
     <message>
         <source>Save/Load Slot Box</source>
-        <translation>Box Salva/Carica Slot</translation>
+        <translation type="unfinished">Save/Load Slot Box</translation>
     </message>
     <message>
         <source>Slot %1</source>
-        <translation>Slot %1</translation>
+        <translation>Yuva %1</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation>Salva</translation>
+        <translation>Kaydet</translation>
     </message>
     <message>
         <source>Load</source>
-        <translation>Carica</translation>
+        <translation>Yükle</translation>
     </message>
 </context>
 </TS>

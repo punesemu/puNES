@@ -142,6 +142,9 @@ void wdgSettingsGeneral::language_set(void) {
 		case LNG_SPANISH:
 			lang = 4;
 			break;
+		case LNG_TURKISH:
+			lang = 5;
+			break;
 	}
 
 	comboBox_Language->setCurrentIndex(lang);
@@ -267,6 +270,9 @@ void wdgSettingsGeneral::s_language(int index) {
 			break;
 		case 4:
 			lang = LNG_SPANISH;
+			break;
+		case 5:
+			lang = LNG_TURKISH;
 			break;
 	}
 

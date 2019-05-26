@@ -111,6 +111,15 @@
           <normaloff>:/icon/icons/flag_spain.svg</normaloff>:/icon/icons/flag_spain.svg</iconset>
         </property>
        </item>
+       <item>
+        <property name="text">
+         <string>Turkish</string>
+        </property>
+        <property name="icon">
+         <iconset resource="resources.qrc">
+          <normaloff>:/icon/icons/flag_turkey.svg</normaloff>:/icon/icons/flag_turkey.svg</iconset>
+        </property>
+       </item>
       </widget>
      </item>
      <item row="6" column="0" colspan="3">

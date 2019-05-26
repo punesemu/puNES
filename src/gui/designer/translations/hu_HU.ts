@@ -332,7 +332,7 @@
     </message>
     <message>
         <source>Compiled</source>
-        <translation>Fordított</translation>
+        <translation>Forgatva</translation>
     </message>
     <message>
         <source>Anyway, thank you all for the love and the help.</source>
@@ -630,6 +630,10 @@
         <source>&amp;General</source>
         <translation>Általános (&amp;G)</translation>
     </message>
+    <message>
+        <source>&amp;Toggle GUI in window</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>objCheat</name>
@@ -832,7 +836,7 @@
     </message>
     <message>
         <source>A description must be entered</source>
-        <translation type="unfinished"></translation>
+        <translation>A leírás kötelező</translation>
     </message>
 </context>
 <context>
@@ -1247,10 +1251,6 @@
         <translation>30 perc</translation>
     </message>
     <message>
-        <source>60 minutus</source>
-        <translation>60 perc</translation>
-    </message>
-    <message>
         <source>Unlimited</source>
         <translation>Korlátlan</translation>
     </message>
@@ -1260,7 +1260,11 @@
     </message>
     <message>
         <source>Hungarian</source>
-        <translation type="unfinished"></translation>
+        <translation>Magyar</translation>
+    </message>
+    <message>
+        <source>60 minutes</source>
+        <translation type="unfinished">60 perc</translation>
     </message>
 </context>
 <context>
