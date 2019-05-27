@@ -632,7 +632,7 @@
     </message>
     <message>
       <source>&amp;Toggle GUI in window</source>
-      <translation type="unfinished">&amp;Toggle GUI in window</translation>
+      <translation>&amp;Attiva o disattiva la GUI nella finestra</translation>
     </message>
   </context>
   <context>
@@ -836,7 +836,7 @@
     </message>
     <message>
       <source>A description must be entered</source>
-      <translation>Una descrizione deve essere inserita</translation>
+      <translation>Inserisci una descrizione</translation>
     </message>
   </context>
   <context>
@@ -1264,7 +1264,7 @@
     </message>
     <message>
       <source>60 minutes</source>
-      <translation type="unfinished">60 minutes</translation>
+      <translation>60 minuti</translation>
     </message>
   </context>
   <context>
