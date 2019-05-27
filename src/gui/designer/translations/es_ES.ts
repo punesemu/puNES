@@ -632,7 +632,7 @@
     </message>
     <message>
       <source>&amp;Toggle GUI in window</source>
-      <translation type="unfinished">&amp;Toggle GUI in window</translation>
+      <translation>&amp;Cambiar interfaz de la ventana</translation>
     </message>
   </context>
   <context>
@@ -1264,7 +1264,7 @@
     </message>
     <message>
       <source>60 minutes</source>
-      <translation type="unfinished">60 minutes</translation>
+      <translation>60 minutos</translation>
     </message>
   </context>
   <context>
