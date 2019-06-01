@@ -137,7 +137,7 @@ BYTE opengl_context_create(void) {
 	glDisable(GL_DITHER);
 	glDisable(GL_BLEND);
 
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
 	glEnable(GL_TEXTURE_2D);
 
@@ -895,10 +895,10 @@ static void opengl_texture_simple_create(_texture_simple *texture, GLuint w, GLu
 		rect->h = rect->base.h;
 	}
 
-	shd->info.input_size[0] = (GLfloat) rect->base.w;
-	shd->info.input_size[1] = (GLfloat) rect->base.h;
-	shd->info.texture_size[0] = (GLfloat) rect->w;
-	shd->info.texture_size[1] = (GLfloat) rect->h;
+	shd->info.input_size[0] = (GLfloat)rect->base.w;
+	shd->info.input_size[1] = (GLfloat)rect->base.h;
+	shd->info.texture_size[0] = (GLfloat)rect->w;
+	shd->info.texture_size[1] = (GLfloat)rect->h;
 
 	memcpy(shd->vb, vb_flipped, sizeof(vb_flipped));
 
