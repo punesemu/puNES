@@ -1264,7 +1264,7 @@
     </message>
     <message>
       <source>60 minutes</source>
-      <translation type="unfinished">60 minutes</translation>
+      <translation>60 perc</translation>
     </message>
   </context>
   <context>
