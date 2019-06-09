@@ -190,11 +190,11 @@
     <name>dlgUncomp</name>
     <message>
       <source>which ROM do you want to load?</source>
-      <translation>hangi ROM'u yüklemek istersiniz?</translation>
+      <translation>hangi ROM&apos;u yüklemek istersiniz?</translation>
     </message>
     <message>
       <source>which PATCH do you want to apply?</source>
-      <translation>hangi YAMA'yı uygulamak istersiniz?</translation>
+      <translation>hangi YAMA&apos;yı uygulamak istersiniz?</translation>
     </message>
     <message>
       <source>Unpacked archive</source>
@@ -620,7 +620,7 @@
     </message>
     <message>
       <source>If you like the emulator and you want to support it&apos;s development or would you pay for a beer at the programmer</source>
-      <translation type="unfinished">If you like the emulator and you want to support it&apos;s development or would you pay for a beer at the programmer</translation>
+      <translation>If you like the emulator and you want to support it&apos;s development or would you pay for a beer at the programmer</translation>
     </message>
     <message>
       <source>&amp;Apply IPS/BPS/XDELTA Patch</source>
@@ -1264,7 +1264,7 @@
     </message>
     <message>
       <source>60 minutes</source>
-      <translation type="unfinished">60 minutes</translation>
+      <translation>60 dakika</translation>
     </message>
   </context>
   <context>
@@ -1379,7 +1379,7 @@
     </message>
     <message>
       <source>Permit &quot;Up + Down&quot; and &quot;Left + Right&quot; at the same time</source>
-      <translation type="unfinished">Permit &quot;Up + Down&quot; and &quot;Left + Right&quot; at the same time</translation>
+      <translation>Permit &quot;Up + Down&quot; and &quot;Left + Right&quot; at the same time</translation>
     </message>
     <message>
       <source>Controller Mode</source>
