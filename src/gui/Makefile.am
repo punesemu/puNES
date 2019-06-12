@@ -75,10 +75,43 @@ wdgSettingsPPU.hh: designer/wdgSettingsPPU.ui
 wdgSettingsVideo.hh: designer/wdgSettingsVideo.ui
 	$(UIC) $(srcdir)/designer/wdgSettingsVideo.ui -o $@
 
+$(srcdir)/designer/translations/en_EN.qm: designer/translations/en_EN.ts
+	$(LRELEASE) -silent $(srcdir)/designer/translations/en_EN.ts -qm $@
+$(srcdir)/designer/translations/tr_TR.qm: designer/translations/tr_TR.ts
+	$(LRELEASE) -silent $(srcdir)/designer/translations/tr_TR.ts -qm $@
+$(srcdir)/designer/translations/it_IT.qm: designer/translations/it_IT.ts
+	$(LRELEASE) -silent $(srcdir)/designer/translations/it_IT.ts -qm $@
+$(srcdir)/designer/translations/qt_it.qm: designer/translations/qt_it.ts
+	$(LRELEASE) -silent $(srcdir)/designer/translations/qt_it.ts -qm $@
+$(srcdir)/designer/translations/es_ES.qm: designer/translations/es_ES.ts
+	$(LRELEASE) -silent $(srcdir)/designer/translations/es_ES.ts -qm $@
+$(srcdir)/designer/translations/qt_es.qm: designer/translations/qt_es.ts
+	$(LRELEASE) -silent $(srcdir)/designer/translations/qt_es.ts -qm $@
+$(srcdir)/designer/translations/hu_HU.qm: designer/translations/hu_HU.ts
+	$(LRELEASE) -silent $(srcdir)/designer/translations/hu_HU.ts -qm $@
+$(srcdir)/designer/translations/qt_hu.qm: designer/translations/qt_hu.ts
+	$(LRELEASE) -silent $(srcdir)/designer/translations/qt_hu.ts -qm $@
+$(srcdir)/designer/translations/ru_RU.qm: designer/translations/ru_RU.ts
+	$(LRELEASE) -silent $(srcdir)/designer/translations/ru_RU.ts -qm $@
+$(srcdir)/designer/translations/qt_ru.qm: designer/translations/qt_ru.ts
+	$(LRELEASE) -silent $(srcdir)/designer/translations/qt_ru.ts -qm $@
+
 clean-local:
-	rm -f resources.cpp *.{hh,moc}
+	rm -f resources.cpp *.{hh,moc} $(srcdir)/designer/translations/*.qm
 
 BUILT_SOURCES = \
+	$(srcdir)/designer/translations/en_EN.qm \
+	$(srcdir)/designer/translations/tr_TR.qm \
+	$(srcdir)/designer/translations/it_IT.qm \
+	$(srcdir)/designer/translations/qt_it.qm \
+	$(srcdir)/designer/translations/es_ES.qm \
+	$(srcdir)/designer/translations/qt_es.qm \
+	$(srcdir)/designer/translations/hu_HU.qm \
+	$(srcdir)/designer/translations/qt_hu.qm \
+	$(srcdir)/designer/translations/ru_RU.qm \
+	$(srcdir)/designer/translations/qt_ru.qm
+ 
+BUILT_SOURCES += \
 	dlgSettings.moc \
 	dlgStdPad.moc \
 	dlgUncomp.moc \

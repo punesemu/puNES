@@ -485,6 +485,7 @@ AM_COND_IF([PRECOMP_QT], [
 	AC_CHECK_TOOLS(MOC, [moc-qt5 moc], [no], [$path_qt_bin])
 	AC_CHECK_TOOLS(UIC, [uic-qt5 uic], [no], [$path_qt_bin])
 	AC_CHECK_TOOLS(RCC, [rcc-qt5 rcc], [no], [$path_qt_bin])
+	AC_CHECK_TOOLS(LRELEASE, [lrelease-qt5 lrelease], [no], [$path_qt_bin])
 
 	AS_IF([test "x$MOC" != xno], [
 		MOC=$path_qt_bin/$MOC
@@ -498,6 +499,10 @@ AM_COND_IF([PRECOMP_QT], [
 		RCC=$path_qt_bin/$RCC
 		AC_SUBST([RCC])
 	])
+	AS_IF([test "x$LRELEASE" != xno], [
+		LRELEASE=$path_qt_bin/$LRELEASE
+		AC_SUBST([LRELEASE])
+	])
 
 	my_CPPFLAGS="${my_CPPFLAGS} ${QT_CFLAGS}"
 	my_LIBS="${my_LIBS} ${QT_LIBS}"
@@ -509,6 +514,7 @@ AM_COND_IF([PRECOMP_QT], [
 			MOC="`$PKG_CONFIG --variable=host_bins Qt5Core`/moc"
 			RCC="`$PKG_CONFIG --variable=host_bins Qt5Core`/rcc"
 			UIC="`$PKG_CONFIG --variable=host_bins Qt5Core`/uic"
+			LRELEASE="`$PKG_CONFIG --variable=host_bins Qt5Core`/lrelease"
 		], [
 			AC_MSG_ERROR([Qt5 library not found])
 		])
@@ -620,6 +626,7 @@ AM_COND_IF([PRECOMP_QT], [
 			MOC="`$PKG_CONFIG --variable=host_bins Qt5Core`/moc"
 			RCC="`$PKG_CONFIG --variable=host_bins Qt5Core`/rcc"
 			UIC="`$PKG_CONFIG --variable=host_bins Qt5Core`/uic"
+			LRELEASE="`$PKG_CONFIG --variable=host_bins Qt5Core`/lrelease"
 		], [
 			AC_MSG_ERROR([Qt5 library not found])
 		])
@@ -636,6 +643,9 @@ AS_IF([test "x$UIC" = xno], [
 ])
 AS_IF([test "x$RCC" = xno], [
 	AC_MSG_ERROR([Could not find rcc binaries])
+])
+AS_IF([test "x$LRELEASE" = xno], [
+	AC_MSG_ERROR([Could not find lrelease binaries])
 ])
 
 AM_COND_IF([WINDOWS], [

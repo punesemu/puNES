@@ -82,12 +82,12 @@
     <file>pointers/target_48x48.xpm</file>
   </qresource>
   <qresource prefix="tr">
+    <file>translations/en_EN.qm</file>
     <file>translations/tr_TR.qm</file>
     <file>translations/it_IT.qm</file>
-    <file>translations/qt_es.qm</file>
-    <file>translations/es_ES.qm</file>
     <file>translations/qt_it.qm</file>
-    <file>translations/en_EN.qm</file>
+    <file>translations/es_ES.qm</file>
+    <file>translations/qt_es.qm</file>
     <file>translations/hu_HU.qm</file>
     <file>translations/qt_hu.qm</file>
     <file>translations/ru_RU.qm</file>

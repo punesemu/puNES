@@ -19,7 +19,7 @@ How to Compile
 ### Linux
 -----------
 #### Dependencies
-* Qt5 with OpenGL support (qtbase and qtsvg)
+* Qt5 with OpenGL support (qtbase, qtsvg and qttools)
 * nvidia-cg
 * alsa
 #### Compilation of puNES
@@ -40,7 +40,7 @@ where `[...]` are the other necessary options.
 ### OpenBSD
 -----------
 #### Dependencies
-* Qt5 with OpenGL support (qtbase and qtsvg)
+* Qt5 with OpenGL support (qtbase, qtsvg and qttools)
 * sndio
 #### Compilation of puNES
 ```bash
@@ -78,13 +78,13 @@ exit
 #### Compilation of the Qt5 libraries
 5. download and unzip the sources
 ```bash
-wget http://download.qt.io/archive/qt/5.11/5.11.2/submodules/qtbase-everywhere-src-5.11.2.zip
-unzip qtbase-everywhere-src-5.11.2.zip
-mv qtbase-everywhere-src-5.11.2 qt5
+wget http://download.qt.io/archive/qt/5.12/5.12.3/submodules/qtbase-everywhere-src-5.12.3.zip
+unzip qtbase-everywhere-src-5.12.3.zip
+mv qtbase-everywhere-src-5.12.3 qt5
 ```
 the renaming of the directory is necessary to not generate a compile-time error caused by the 255 characters maximum path length limitation on Windows, This is the typical error message you might encounter:
 ```code
-"../../../../include/QtEventDispatcherSupport/5.11.2/QtEventDispatcherSupport/private/qwindowsguieventdispatcher_p.h:1:10: fatal error: ../../../../../src/platformsupport/eventdispatchers/qwindowsguieventdispatcher_p.h: No such file or directory"
+"../../../../include/QtEventDispatcherSupport/5.12.3/QtEventDispatcherSupport/private/qwindowsguieventdispatcher_p.h:1:10: fatal error: ../../../../../src/platformsupport/eventdispatchers/qwindowsguieventdispatcher_p.h: No such file or directory"
 ```
 6. compile the libraries
 ```bash
@@ -100,11 +100,11 @@ sed -i -e s,Qt5OpenGLd,Qt5OpenGL,g -e s,Qt5OpenGLExtensionsd,Qt5OpenGLExtensions
 cp -v $MINGW_PREFIX/lib/qt5/pkgconfig/* $MINGW_PREFIX/lib/pkgconfig/.
 cd ..
 ```
-8. now it's time for the SVG module
+8. now it's time for the SVG module...
 ```bash
-wget http://download.qt.io/archive/qt/5.11/5.11.2/submodules/qtsvg-everywhere-src-5.11.2.zip
-unzip qtsvg-everywhere-src-5.11.2.zip
-mv qtsvg-everywhere-src-5.11.2 qt5svg
+wget http://download.qt.io/archive/qt/5.12/5.12.3/submodules/qtsvg-everywhere-src-5.12.3.zip
+unzip qtsvg-everywhere-src-5.12.3.zip
+mv qtsvg-everywhere-src-5.12.3 qt5svg
 cd qt5svg
 $MINGW_PREFIX/lib/qt5/bin/qmake
 make
@@ -113,8 +113,19 @@ sed -i -e s,Qt5Svgd,Qt5Svg,g -e s,Qt5Cored,Qt5Core,g -e s,Qt5Guid,Qt5Gui,g -e s,
 cp -v $MINGW_PREFIX/lib/qt5/pkgconfig/* $MINGW_PREFIX/lib/pkgconfig/.
 cd ..
 ```
+9. ...and for the tools
+```bash
+wget http://download.qt.io/archive/qt/5.12/5.12.3/submodules/qttools-everywhere-src-5.12.3.zip
+unzip qttools-everywhere-src-5.12.3.zip
+mv qttools-everywhere-src-5.12.3 qt5tools
+cd qt5tools
+$MINGW_PREFIX/lib/qt5/bin/qmake
+make
+make install
+cd ..
+```
 #### Compilation of puNES
-9. Now you have everything you need to compile correctly puNES
+10. Now you have everything you need to compile correctly puNES
 ```bash
 git clone https://github.com/punesemu/punes
 cd punes
