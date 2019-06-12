@@ -368,12 +368,12 @@ BYTE opengl_context_create(void) {
 			prev = &opengl.texture[i - 1].rect;
 		}
 
-		shd->info.input_size[0] = (GLfloat) prev->base.w;
-		shd->info.input_size[1] = (GLfloat) prev->base.h;
-		shd->info.texture_size[0] = (GLfloat) prev->w,
-		shd->info.texture_size[1] = (GLfloat) prev->h;
-		shd->info.output_size[0] = (GLfloat) texture->vp.w;
-		shd->info.output_size[1] = (GLfloat) texture->vp.h;
+		shd->info.input_size[0] = (GLfloat)prev->base.w;
+		shd->info.input_size[1] = (GLfloat)prev->base.h;
+		shd->info.texture_size[0] = (GLfloat)prev->w,
+		shd->info.texture_size[1] = (GLfloat)prev->h;
+		shd->info.output_size[0] = (GLfloat)texture->vp.w;
+		shd->info.output_size[1] = (GLfloat)texture->vp.h;
 
 		opengl_vertex_buffer_set(&shd->vb[0], prev);
 
@@ -739,25 +739,25 @@ static BYTE opengl_texture_create(_texture *texture, GLuint index) {
 	switch (sc->type.x) {
 		case SHADER_SCALE_DEFAULT:
 		case SHADER_SCALE_INPUT:
-			rect->base.w = (GLfloat) prev->base.w * sc->scale.x;
+			rect->base.w = (GLfloat)prev->base.w * sc->scale.x;
 			break;
 		case SHADER_SCALE_ABSOLUTE:
 			rect->base.w = sc->abs.x;
 			break;
 		case SHADER_SCALE_VIEWPORT:
-			rect->base.w = (GLfloat) gfx.vp.w * sc->scale.x;
+			rect->base.w = (GLfloat)gfx.vp.w * sc->scale.x;
 			break;
 	}
 	switch (sc->type.y) {
 		case SHADER_SCALE_DEFAULT:
 		case SHADER_SCALE_INPUT:
-			rect->base.h = (GLfloat) prev->base.h * sc->scale.y;
+			rect->base.h = (GLfloat)prev->base.h * sc->scale.y;
 			break;
 		case SHADER_SCALE_ABSOLUTE:
 			rect->base.h = sc->abs.y;
 			break;
 		case SHADER_SCALE_VIEWPORT:
-			rect->base.h = (GLfloat) gfx.vp.h * sc->scale.y;
+			rect->base.h = (GLfloat)gfx.vp.h * sc->scale.y;
 			break;
 	}
 
@@ -767,27 +767,27 @@ static BYTE opengl_texture_create(_texture *texture, GLuint index) {
 	switch (sc->type.x) {
 		case SHADER_SCALE_DEFAULT:
 		case SHADER_SCALE_INPUT:
-			rect->w = (GLfloat) prev->w * sc->scale.x;
-			rect->base.w = (GLfloat) prev->base.w * sc->scale.x;
+			rect->w = (GLfloat)prev->w * sc->scale.x;
+			rect->base.w = (GLfloat)prev->base.w * sc->scale.x;
 			break;
 		case SHADER_SCALE_ABSOLUTE:
 			rect->w = rect->base.w = sc->abs.x;
 			break;
 		case SHADER_SCALE_VIEWPORT:
-			rect->w = rect->base.w = (GLfloat) gfx.vp.w * sc->scale.x;
+			rect->w = rect->base.w = (GLfloat)gfx.vp.w * sc->scale.x;
 			break;
 	}
 	switch (sc->type.y) {
 		case SHADER_SCALE_DEFAULT:
 		case SHADER_SCALE_INPUT:
-			rect->h = (GLfloat) prev->h * sc->scale.y;
-			rect->base.h = (GLfloat) prev->base.h * sc->scale.y;
+			rect->h = (GLfloat)prev->h * sc->scale.y;
+			rect->base.h = (GLfloat)prev->base.h * sc->scale.y;
 			break;
 		case SHADER_SCALE_ABSOLUTE:
 			rect->h = rect->base.h = sc->abs.y;
 			break;
 		case SHADER_SCALE_VIEWPORT:
-			rect->h = rect->base.h = (GLfloat) gfx.vp.h * sc->scale.y;
+			rect->h = rect->base.h = (GLfloat)gfx.vp.h * sc->scale.y;
 			break;
 	}
 
@@ -1078,14 +1078,14 @@ static GLint opengl_shader_get_atr(GLuint prog, const char *param) {
 	return (-1);
 }
 static void opengl_vertex_buffer_set(_vertex_buffer *vb, _texture_rect *rect) {
-	GLfloat x = (GLfloat) rect->base.w / rect->w;
-	GLfloat y = (GLfloat) rect->base.h / rect->h;
+	GLfloat x = (GLfloat)rect->base.w / rect->w;
+	GLfloat y = (GLfloat)rect->base.h / rect->h;
 
 	vb[1].s0 = x; vb[2].t0 = y;
 	vb[3].s0 = x; vb[3].t0 = y;
 }
 static GLint opengl_integer_get(const GLenum penum) {
-	GLint result;
+	GLint result = 0;
 
 	glGetIntegerv(penum, &result);
 
@@ -1223,7 +1223,7 @@ static BYTE opengl_shader_glsl_init(GLuint pass, _shader *shd, GLchar *code, con
 			char define[128];
 
 			snprintf(define, sizeof(define), "#define %s_ALIAS\n", sp->alias);
-			strncat(alias_define, define, (size_t) sizeof(alias_define) - 1);
+			strncat(alias_define, define, (size_t)sizeof(alias_define) - 1);
 		}
 	}
 
@@ -1329,12 +1329,10 @@ static BYTE opengl_shader_glsl_init(GLuint pass, _shader *shd, GLchar *code, con
 		opengl_shader_uni_texture_clear(&shd->glslp.uni.passprev[i]);
 
 		opengl_shader_uni_texture(&shd->glslp.uni.passprev[i], shd->glslp.prg, "Pass%u", i + 1);
-		opengl_shader_uni_texture(&shd->glslp.uni.passprev[i], shd->glslp.prg, "PassPrev%u",
-			pass - i);
+		opengl_shader_uni_texture(&shd->glslp.uni.passprev[i], shd->glslp.prg, "PassPrev%u", pass - i);
 
 		if (shader_effect.sp[i].alias[0]) {
-			opengl_shader_uni_texture(&shd->glslp.uni.passprev[i], shd->glslp.prg,
-				shader_effect.sp[i].alias);
+			opengl_shader_uni_texture(&shd->glslp.uni.passprev[i], shd->glslp.prg, shader_effect.sp[i].alias);
 		}
 	}
 
@@ -1436,12 +1434,10 @@ INLINE static void opengl_shader_glsl_params_set(const _shader *shd, GLuint fcou
 		texture_index++;
 	}
 	if (shd->glslp.uni.orig.input_size >= 0) {
-		glUniform2fv(shd->glslp.uni.orig.input_size, 1,
-			opengl.screen.tex[opengl.screen.index].shader.info.input_size);
+		glUniform2fv(shd->glslp.uni.orig.input_size, 1, opengl.screen.tex[opengl.screen.index].shader.info.input_size);
 	}
 	if (shd->glslp.uni.orig.texture_size >= 0) {
-		glUniform2fv(shd->glslp.uni.orig.texture_size, 1,
-			opengl.screen.tex[opengl.screen.index].shader.info.texture_size);
+		glUniform2fv(shd->glslp.uni.orig.texture_size, 1, opengl.screen.tex[opengl.screen.index].shader.info.texture_size);
 	}
 	if (shd->glslp.uni.orig.tex_coord >= 0) {
 		glEnableVertexAttribArray(shd->glslp.uni.orig.tex_coord);
@@ -1510,12 +1506,10 @@ INLINE static void opengl_shader_glsl_params_set(const _shader *shd, GLuint fcou
 			texture_index++;
 		}
 		if (shd->glslp.uni.passprev[i].input_size >= 0) {
-			glUniform2fv(shd->glslp.uni.passprev[i].input_size, 1,
-				opengl.texture[next].shader.info.input_size);
+			glUniform2fv(shd->glslp.uni.passprev[i].input_size, 1, opengl.texture[next].shader.info.input_size);
 		}
 		if (shd->glslp.uni.passprev[i].texture_size >= 0) {
-			glUniform2fv(shd->glslp.uni.passprev[i].texture_size, 1,
-				opengl.texture[next].shader.info.texture_size);
+			glUniform2fv(shd->glslp.uni.passprev[i].texture_size, 1, opengl.texture[next].shader.info.texture_size);
 		}
 		if (shd->glslp.uni.passprev[i].tex_coord >= 0) {
 			glEnableVertexAttribArray(shd->glslp.uni.passprev[i].tex_coord);
@@ -1580,10 +1574,10 @@ static BYTE opengl_shader_cg_init(GLuint pass, _shader *shd, GLchar *code, const
 		if (ugetcwd(base, usizeof(base)) == NULL) { ; };
 
 		umemset(dname, 0x00, usizeof(dname));
-		gui_utf_dirname((uTCHAR *) path, dname, usizeof(dname) - 1);
+		gui_utf_dirname((uTCHAR *)path, dname, usizeof(dname) - 1);
 
 		umemset(ubname, 0x00, usizeof(ubname));
-		gui_utf_basename((uTCHAR *) path, ubname, usizeof(ubname) - 1);
+		gui_utf_basename((uTCHAR *)path, ubname, usizeof(ubname) - 1);
 
 		memset(bname, 0x00, sizeof(bname));
 		wcstombs(bname, ubname, sizeof(bname) - 1);
@@ -1596,10 +1590,10 @@ static BYTE opengl_shader_cg_init(GLuint pass, _shader *shd, GLchar *code, const
 		if (ugetcwd(base, usizeof(base)) == NULL) { ; };
 
 		umemset(dname, 0x00, usizeof(dname));
-		gui_utf_dirname((uTCHAR *) path, dname, usizeof(dname) - 1);
+		gui_utf_dirname((uTCHAR *)path, dname, usizeof(dname) - 1);
 
 		umemset(bname, 0x00, usizeof(bname));
-		gui_utf_basename((uTCHAR *) path, bname, usizeof(bname) - 1);
+		gui_utf_basename((uTCHAR *)path, bname, usizeof(bname) - 1);
 	}
 #endif
 
@@ -1620,11 +1614,10 @@ static BYTE opengl_shader_cg_init(GLuint pass, _shader *shd, GLchar *code, const
 	// fragment
 	{
 		if ((path == NULL) || !path[0]) {
-			shd->cgp.prg.f = cgCreateProgram(opengl.cg.ctx, CG_SOURCE, code, opengl.cg.profile.f,
-				"main_fragment", argv);
+			shd->cgp.prg.f = cgCreateProgram(opengl.cg.ctx, CG_SOURCE, code, opengl.cg.profile.f, "main_fragment", argv);
 		} else {
 			if (uchdir(dname) == -1) { ; }
-			shd->cgp.prg.f = cgCreateProgramFromFile(opengl.cg.ctx, CG_SOURCE, (const char *) bname,
+			shd->cgp.prg.f = cgCreateProgramFromFile(opengl.cg.ctx, CG_SOURCE, (const char *)bname,
 				opengl.cg.profile.f, "main_fragment", argv);
 
 			if (uchdir(base) == -1) { ; }
@@ -1637,11 +1630,10 @@ static BYTE opengl_shader_cg_init(GLuint pass, _shader *shd, GLchar *code, const
 	// vertex
 	{
 		if ((path == NULL) || !path[0]) {
-			shd->cgp.prg.v = cgCreateProgram(opengl.cg.ctx, CG_SOURCE, code, opengl.cg.profile.v,
-				"main_vertex", argv);
+			shd->cgp.prg.v = cgCreateProgram(opengl.cg.ctx, CG_SOURCE, code, opengl.cg.profile.v, "main_vertex", argv);
 		} else {
 			if (uchdir(dname)) { ; }
-			shd->cgp.prg.v = cgCreateProgramFromFile(opengl.cg.ctx, CG_SOURCE, (const char *) bname,
+			shd->cgp.prg.v = cgCreateProgramFromFile(opengl.cg.ctx, CG_SOURCE, (const char *)bname,
 				opengl.cg.profile.v, "main_vertex", argv);
 			if (uchdir(base)) { ; }
 		}
@@ -1690,8 +1682,7 @@ static BYTE opengl_shader_cg_init(GLuint pass, _shader *shd, GLchar *code, const
 		for (; param; param = cgGetNextParameter(param)) {
 			const char *semantic = NULL;
 
-			if (cgGetParameterDirection(param) != CG_IN
-				|| cgGetParameterVariability(param) != CG_VARYING) {
+			if ((cgGetParameterDirection(param) != CG_IN) || (cgGetParameterVariability(param) != CG_VARYING)) {
 				continue;
 			}
 
@@ -1762,12 +1753,10 @@ static BYTE opengl_shader_cg_init(GLuint pass, _shader *shd, GLchar *code, const
 		opengl_shader_cg_uni_texture_clear(&shd->cgp.uni.passprev[i]);
 
 		opengl_shader_cg_uni_texture(&shd->cgp.uni.passprev[i], &shd->cgp.prg, "PASS%u", i + 1);
-		opengl_shader_cg_uni_texture(&shd->cgp.uni.passprev[i], &shd->cgp.prg, "PASSPREV%u",
-			pass - i);
+		opengl_shader_cg_uni_texture(&shd->cgp.uni.passprev[i], &shd->cgp.prg, "PASSPREV%u", pass - i);
 
 		if (shader_effect.sp[i].alias[0]) {
-			opengl_shader_cg_uni_texture(&shd->cgp.uni.passprev[i], &shd->cgp.prg,
-				shader_effect.sp[i].alias);
+			opengl_shader_cg_uni_texture(&shd->cgp.uni.passprev[i], &shd->cgp.prg, shader_effect.sp[i].alias);
 		}
 	}
 
@@ -1909,30 +1898,24 @@ INLINE static void opengl_shader_cg_params_set(const _texture *texture, GLuint f
 	{
 		// IN.video_size
 		if (shd->cgp.uni.v.video_size) {
-			cgGLSetParameter2f(shd->cgp.uni.v.video_size, shd->info.input_size[0],
-				shd->info.input_size[1]);
+			cgGLSetParameter2f(shd->cgp.uni.v.video_size, shd->info.input_size[0], shd->info.input_size[1]);
 		}
 		if (shd->cgp.uni.f.video_size) {
-			cgGLSetParameter2f(shd->cgp.uni.f.video_size, shd->info.input_size[0],
-				shd->info.input_size[1]);
+			cgGLSetParameter2f(shd->cgp.uni.f.video_size, shd->info.input_size[0], shd->info.input_size[1]);
 		}
 		// IN.texture_size
 		if (shd->cgp.uni.v.texture_size) {
-			cgGLSetParameter2f(shd->cgp.uni.v.texture_size, shd->info.texture_size[0],
-				shd->info.texture_size[1]);
+			cgGLSetParameter2f(shd->cgp.uni.v.texture_size, shd->info.texture_size[0], shd->info.texture_size[1]);
 		}
 		if (shd->cgp.uni.f.texture_size) {
-			cgGLSetParameter2f(shd->cgp.uni.f.texture_size, shd->info.texture_size[0],
-				shd->info.texture_size[1]);
+			cgGLSetParameter2f(shd->cgp.uni.f.texture_size, shd->info.texture_size[0], shd->info.texture_size[1]);
 		}
 		// IN.output_size
 		if (shd->cgp.uni.v.output_size) {
-			cgGLSetParameter2f(shd->cgp.uni.v.output_size, shd->info.output_size[0],
-				shd->info.output_size[1]);
+			cgGLSetParameter2f(shd->cgp.uni.v.output_size, shd->info.output_size[0], shd->info.output_size[1]);
 		}
 		if (shd->cgp.uni.f.output_size) {
-			cgGLSetParameter2f(shd->cgp.uni.f.output_size, shd->info.output_size[0],
-				shd->info.output_size[1]);
+			cgGLSetParameter2f(shd->cgp.uni.f.output_size, shd->info.output_size[0], shd->info.output_size[1]);
 		}
 		// IN.frame_count
 		{
@@ -1990,8 +1973,7 @@ INLINE static void opengl_shader_cg_params_set(const _texture *texture, GLuint f
 	{
 		// ORIG.texture
 		if (shd->cgp.uni.orig.f.texture) {
-			cgGLSetTextureParameter(shd->cgp.uni.orig.f.texture,
-				opengl.screen.tex[opengl.screen.index].id);
+			cgGLSetTextureParameter(shd->cgp.uni.orig.f.texture, opengl.screen.tex[opengl.screen.index].id);
 			cgGLEnableTextureParameter(shd->cgp.uni.orig.f.texture);
 			opengl.cg.params.param[opengl.cg.params.count++] = shd->cgp.uni.orig.f.texture;
 		}
@@ -2036,8 +2018,7 @@ INLINE static void opengl_shader_cg_params_set(const _texture *texture, GLuint f
 
 			// PREV.texture
 			if (shd->cgp.uni.prev[i].f.texture) {
-				cgGLSetTextureParameter(shd->cgp.uni.prev[i].f.texture,
-					opengl.screen.tex[circle_index].id);
+				cgGLSetTextureParameter(shd->cgp.uni.prev[i].f.texture, opengl.screen.tex[circle_index].id);
 				cgGLEnableTextureParameter(shd->cgp.uni.prev[i].f.texture);
 				opengl.cg.params.param[opengl.cg.params.count++] = shd->cgp.uni.prev[i].f.texture;
 			}

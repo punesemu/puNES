@@ -1066,7 +1066,7 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 		 * bitsNT       %0000 00NN
 		 * tmp_vram      %---- NN-- ---- ----
 		 */
-		if (ppu.frame_x == 257) {
+		if ((ppu.frame_x == 257) && (!ppu.vblank && (!r2001.spr_visible && r2001.bck_visible) && (ppu.screen_y < SCR_LINES))) {
 			/*
 			 * gestione della condizione di race del $2000 al dot 257
 			 * https://forums.nesdev.com/viewtopic.php?f=3&t=18113
@@ -1075,6 +1075,7 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 			r2000.race.ctrl = TRUE;
 			r2000.race.value = value;
 			ppu.tmp_vram = (ppu.tmp_vram & 0xF3FF) | ((cpu.openbus & 0x03) << 10);
+			r2006_end_scanline();
 		} else {
 			ppu.tmp_vram = (ppu.tmp_vram & 0xF3FF) | ((value & 0x03) << 10);
 		}
@@ -1093,10 +1094,8 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 		 * (premuto il tasto start due volte ed avviato il gioco, una riga
 		 * piu' scura sfarfalla nello schermo).
 		 */
-		if (!ppu.vblank && r2001.visible && (ppu.screen_y < SCR_LINES)) {
-			if ((ppu.frame_x >= 253) && (ppu.frame_x <= 257)) {
-				r2006_end_scanline();
-			}
+		if (((ppu.frame_x >= 253) && (ppu.frame_x <= 255)) && (!ppu.vblank && r2001.visible && (ppu.screen_y < SCR_LINES))) {
+			r2006_end_scanline();
 		}
 
 #if !defined (RELEASE)
