@@ -206,6 +206,13 @@
           </widget>
          </item>
          <item>
+          <widget class="QCheckBox" name="checkBox_Use_integer_scaling_in_fullscreen">
+           <property name="text">
+            <string>Use integer scaling in fullscreen</string>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="QCheckBox" name="checkBox_Stretch_in_fullscreen">
            <property name="text">
             <string>Stretch in fullscreen</string>
@@ -226,6 +233,15 @@
           </spacer>
          </item>
         </layout>
+        <zorder>checkBox_Interpolation</zorder>
+        <zorder>checkBox_Text_on_screen</zorder>
+        <zorder>checkBox_Show_FPS</zorder>
+        <zorder>checkBox_Input_display</zorder>
+        <zorder>checkBox_Disable_TV_noise_emulation</zorder>
+        <zorder>checkBox_Disable_sepia_color_on_pause</zorder>
+        <zorder>checkBox_Fullscreen_in_window</zorder>
+        <zorder>checkBox_Stretch_in_fullscreen</zorder>
+        <zorder>checkBox_Use_integer_scaling_in_fullscreen</zorder>
        </widget>
        <widget class="QWidget" name="tab_PAR">
         <attribute name="icon">

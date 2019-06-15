@@ -92,6 +92,7 @@ class wdgSettingsVideo : public QWidget, public Ui::wdgSettingsVideo {
 		void s_disable_tv_noise(bool checked);
 		void s_disable_sepia(bool checked);
 		void s_fullscreen_in_window(bool checked);
+		void s_integer_in_fullscreen(bool checked);
 		void s_stretch_in_fullscreen(bool checked);
 };
 

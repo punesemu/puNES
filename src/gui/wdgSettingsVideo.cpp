@@ -100,6 +100,7 @@ wdgSettingsVideo::wdgSettingsVideo(QWidget *parent) : QWidget(parent) {
 	connect(checkBox_Disable_TV_noise_emulation, SIGNAL(clicked(bool)), this, SLOT(s_disable_tv_noise(bool)));
 	connect(checkBox_Disable_sepia_color_on_pause, SIGNAL(clicked(bool)), this, SLOT(s_disable_sepia(bool)));
 	connect(checkBox_Fullscreen_in_window, SIGNAL(clicked(bool)), this, SLOT(s_fullscreen_in_window(bool)));
+	connect(checkBox_Use_integer_scaling_in_fullscreen, SIGNAL(clicked(bool)), this, SLOT(s_integer_in_fullscreen(bool)));
 	connect(checkBox_Stretch_in_fullscreen, SIGNAL(clicked(bool)), this, SLOT(s_stretch_in_fullscreen(bool)));
 
 	tabWidget_Video->setCurrentIndex(0);
@@ -131,6 +132,7 @@ void wdgSettingsVideo::retranslateUi(QWidget *wdgSettingsVideo) {
 	mainwin->qaction_shcut.scale_5x->setText(comboBox_Scale->itemText(4));
 	mainwin->qaction_shcut.scale_6x->setText(comboBox_Scale->itemText(5));
 	mainwin->qaction_shcut.interpolation->setText(checkBox_Interpolation->text());
+	mainwin->qaction_shcut.integer_in_fullscreen->setText(checkBox_Use_integer_scaling_in_fullscreen->text());
 	mainwin->qaction_shcut.stretch_in_fullscreen->setText(checkBox_Stretch_in_fullscreen->text());
 	update_widget();
 }
@@ -203,6 +205,7 @@ void wdgSettingsVideo::update_widget(void) {
 	checkBox_Disable_TV_noise_emulation->setChecked(cfg->disable_tv_noise);
 	checkBox_Disable_sepia_color_on_pause->setChecked(cfg->disable_sepia_color);
 	checkBox_Fullscreen_in_window->setChecked(cfg->fullscreen_in_window);
+	checkBox_Use_integer_scaling_in_fullscreen->setChecked(cfg->integer_scaling);
 	checkBox_Stretch_in_fullscreen->setChecked(cfg->stretch);
 }
 void wdgSettingsVideo::change_rom(void) {
@@ -964,6 +967,15 @@ void wdgSettingsVideo::s_disable_sepia(UNUSED(bool checked)) {
 }
 void wdgSettingsVideo::s_fullscreen_in_window(UNUSED(bool checked)) {
 	cfg->fullscreen_in_window = !cfg->fullscreen_in_window;
+}
+void wdgSettingsVideo::s_integer_in_fullscreen(UNUSED(bool checked)) {
+	emu_thread_pause();
+	cfg->integer_scaling = !cfg->integer_scaling;
+
+	if (cfg->fullscreen == FULLSCR) {
+		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
+	}
+	emu_thread_continue();
 }
 void wdgSettingsVideo::s_stretch_in_fullscreen(UNUSED(bool checked)) {
 	emu_thread_pause();

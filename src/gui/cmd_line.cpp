@@ -59,6 +59,7 @@ static struct _cl_option {
 	{ "pixel-aspect-ratio",    req_arg, "e"},
 	{ "interpolation",         req_arg, "j"},
 	{ "fullscreen",            req_arg, "u"},
+	{ "int-scl-fullscreen",    req_arg, "r"},
 	{ "stretch-fullscreen",    req_arg, "t"},
 	{ "audio",                 req_arg, "a"},
 	{ "audio-buffer-factor",   req_arg, "b"},
@@ -245,6 +246,9 @@ BYTE cmd_line_parse(int argc, uTCHAR **argv) {
 				set_int(cfg_from_file.scale, SET_SCALE);
 				gfx.scale_before_fscreen = cfg_from_file.scale;
 				break;
+			case 'r':
+				set_int(cfg_from_file.integer_scaling, SET_INTEGER_FULLSCREEN);
+				break;
 			case 't':
 				{
 					int rc = settings_val_to_int(SET_STRETCH_FULLSCREEN, oarg);
@@ -333,6 +337,7 @@ static void usage(QString name) {
 			uL("" uPERCENTs "\n")
 			uL("" uPERCENTs "\n")
 			uL("" uPERCENTs "\n")
+			uL("" uPERCENTs "\n")
 #if defined (WITH_OPENGL)
 			uL("" uPERCENTs "\n")
 #endif
@@ -365,6 +370,7 @@ static void usage(QString name) {
 			main_cfg[SET_OVERSCAN_BRD_PAL].hlp,
 			main_cfg[SET_FULLSCREEN].hlp,
 			main_cfg[SET_FULLSCREEN_IN_WINDOW].hlp,
+			main_cfg[SET_INTEGER_FULLSCREEN].hlp,
 			main_cfg[SET_STRETCH_FULLSCREEN].hlp,
 			main_cfg[SET_AUDIO_OUTPUT_DEVICE].hlp,
 			main_cfg[SET_AUDIO].hlp,

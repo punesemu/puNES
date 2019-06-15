@@ -49,6 +49,7 @@ typedef struct _config {
 	BYTE palette;
 	BYTE disable_swap_emphasis_pal;
 	BYTE vsync;
+	BYTE integer_scaling;
 	BYTE stretch;
 	BYTE oscan;
 	BYTE oscan_black_borders;

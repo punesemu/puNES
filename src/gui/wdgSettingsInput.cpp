@@ -692,6 +692,7 @@ void wdgSettingsInput::shortcuts_set(void) {
 	shortcut_update_text(mainwin->qaction_shcut.scale_5x, SET_INP_SC_SCALE_5X);
 	shortcut_update_text(mainwin->qaction_shcut.scale_6x, SET_INP_SC_SCALE_6X);
 	shortcut_update_text(mainwin->qaction_shcut.interpolation, SET_INP_SC_INTERPOLATION);
+	shortcut_update_text(mainwin->qaction_shcut.integer_in_fullscreen, SET_INP_SC_INTEGER_FULLSCREEN);
 	shortcut_update_text(mainwin->qaction_shcut.stretch_in_fullscreen, SET_INP_SC_STRETCH_FULLSCREEN);
 	shortcut_update_text(mainwin->qaction_shcut.audio_enable, SET_INP_SC_AUDIO_ENABLE);
 	shortcut_update_text(mainwin->qaction_shcut.save_settings, SET_INP_SC_SAVE_SETTINGS);

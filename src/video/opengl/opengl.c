@@ -206,13 +206,26 @@ BYTE opengl_context_create(void) {
 
 		if (cfg->fullscreen) {
 			if (!cfg->stretch) {
-				int mw = _SCR_ROWS_NOBRD, mh = _SCR_LINES_NOBRD;
-				int mul = gfx.w[VIDEO_MODE] > gfx.h[VIDEO_MODE] ?
-					(gfx.h[VIDEO_MODE] - (gfx.h[VIDEO_MODE] % mh)) / mh :
-					(gfx.w[VIDEO_MODE] - (gfx.w[VIDEO_MODE] % mw)) / mw;
+				if (cfg->integer_scaling) {
+					int mw = _SCR_ROWS_NOBRD;
+					int mh = _SCR_LINES_NOBRD;
+					int mul = gfx.w[VIDEO_MODE] > gfx.h[VIDEO_MODE] ?
+						(gfx.h[VIDEO_MODE] - (gfx.h[VIDEO_MODE] % mh)) / mh :
+						(gfx.w[VIDEO_MODE] - (gfx.w[VIDEO_MODE] % mw)) / mw;
 
-				vp->w = mw * mul;
-				vp->h = mh * mul;
+					vp->w = mw * mul;
+					vp->h = mh * mul;
+				} else {
+					float mw = _SCR_ROWS_NOBRD;
+					float mh = _SCR_LINES_NOBRD;
+					float mul = mw / mh ;
+
+					if (gfx.w[VIDEO_MODE] > gfx.h[VIDEO_MODE]) {
+						vp->w = (int)((float)gfx.h[VIDEO_MODE] * mul);
+					} else {
+						vp->h = (int)((float)gfx.w[VIDEO_MODE] / mul);
+					}
+				}
 				vp->x = (gfx.w[VIDEO_MODE] - vp->w) >> 1;
 				vp->y = (gfx.h[VIDEO_MODE] - vp->h) >> 1;
 			}

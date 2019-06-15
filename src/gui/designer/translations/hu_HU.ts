@@ -1266,6 +1266,10 @@
         <source>60 minutes</source>
         <translation type="unfinished">60 perc</translation>
     </message>
+    <message>
+        <source>Turkish</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>wdgSettingsInput</name>
@@ -1826,6 +1830,10 @@
     <message>
         <source>Disable Red and Green emphasis swap for PAL/Dendy</source>
         <translation>Vörös és zöld hangsúly cseréjének tiltása PAL/Dendy esetén</translation>
+    </message>
+    <message>
+        <source>Use integer scaling in fullscreen</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

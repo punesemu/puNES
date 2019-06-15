@@ -50,6 +50,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 			QAction *scale_5x;
 			QAction *scale_6x;
 			QAction *interpolation;
+			QAction *integer_in_fullscreen;
 			QAction *stretch_in_fullscreen;
 			QAction *audio_enable;
 			QAction *save_settings;
@@ -163,6 +164,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void s_shcut_mode(void);
 		void s_shcut_scale(void);
 		void s_shcut_interpolation(void);
+		void s_shcut_integer_in_fullscreen(void);
 		void s_shcut_stretch_in_fullscreen(void);
 		void s_shcut_audio_enable(void);
 		void s_shcut_save_settings(void);

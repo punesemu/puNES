@@ -35,7 +35,7 @@ typedef wchar_t uTCHAR;
 
 #define uPERCENTs "%ls"
 #define uL(string) L##string
-#define uPTCHAR(string) (wchar_t *) string
+#define uPTCHAR(string) (wchar_t *)string
 
 #define usizeof(string) LENGTH(string)
 #define uQString QString::fromWCharArray
@@ -77,7 +77,7 @@ typedef char uTCHAR;
 
 #define uPERCENTs "%s"
 #define uL(string) string
-#define uPTCHAR(string) (char *) string
+#define uPTCHAR(string) (char *)string
 
 #define usizeof(string) sizeof(string)
 #define uQString QString::fromUtf8

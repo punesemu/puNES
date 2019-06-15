@@ -90,6 +90,7 @@ mainWindow::mainWindow() : QMainWindow() {
 	qaction_shcut.scale_5x = new QAction(this);
 	qaction_shcut.scale_6x = new QAction(this);
 	qaction_shcut.interpolation = new QAction(this);
+	qaction_shcut.integer_in_fullscreen = new QAction(this);
 	qaction_shcut.stretch_in_fullscreen = new QAction(this);
 	qaction_shcut.audio_enable = new QAction(this);
 	qaction_shcut.save_settings = new QAction(this);
@@ -419,8 +420,9 @@ void mainWindow::shortcuts(void) {
 	connect_shortcut(qaction_shcut.scale_4x, SET_INP_SC_SCALE_4X, SLOT(s_shcut_scale()));
 	connect_shortcut(qaction_shcut.scale_5x, SET_INP_SC_SCALE_5X, SLOT(s_shcut_scale()));
 	connect_shortcut(qaction_shcut.scale_6x, SET_INP_SC_SCALE_6X, SLOT(s_shcut_scale()));
-	// Settings/Video/[Interpolation, Stretch in fullscreen]
+	// Settings/Video/[Interpolation, Use integer scaling in fullscreen, Stretch in fullscreen]
 	connect_shortcut(qaction_shcut.interpolation, SET_INP_SC_INTERPOLATION, SLOT(s_shcut_interpolation()));
+	connect_shortcut(qaction_shcut.integer_in_fullscreen, SET_INP_SC_INTEGER_FULLSCREEN, SLOT(s_shcut_integer_in_fullscreen()));
 	connect_shortcut(qaction_shcut.stretch_in_fullscreen, SET_INP_SC_STRETCH_FULLSCREEN, SLOT(s_shcut_stretch_in_fullscreen()));
 	// Settings/Audio/Enable
 	connect_shortcut(qaction_shcut.audio_enable, SET_INP_SC_AUDIO_ENABLE, SLOT(s_shcut_audio_enable()));
@@ -508,6 +510,7 @@ void mainWindow::connect_menu_signals(void) {
 	connect_action(qaction_shcut.scale_5x, 4, SLOT(s_shcut_scale()));
 	connect_action(qaction_shcut.scale_6x, 5, SLOT(s_shcut_scale()));
 	connect_action(qaction_shcut.interpolation, SLOT(s_shcut_interpolation()));
+	connect_action(qaction_shcut.integer_in_fullscreen, SLOT(s_shcut_integer_in_fullscreen()));
 	connect_action(qaction_shcut.stretch_in_fullscreen, SLOT(s_shcut_stretch_in_fullscreen()));
 	connect_action(qaction_shcut.audio_enable, SLOT(s_shcut_audio_enable()));
 	connect_action(qaction_shcut.save_settings, SLOT(s_shcut_save_settings()));
@@ -1368,6 +1371,9 @@ void mainWindow::s_shcjoy_read_timer(void) {
 				case SET_INP_SC_INTERPOLATION:
 					qaction_shcut.interpolation->trigger();
 					break;
+				case SET_INP_SC_INTEGER_FULLSCREEN:
+					qaction_shcut.integer_in_fullscreen->trigger();
+					break;
 				case SET_INP_SC_STRETCH_FULLSCREEN:
 					qaction_shcut.stretch_in_fullscreen->trigger();
 					break;
@@ -1406,6 +1412,9 @@ void mainWindow::s_shcut_scale(void) {
 }
 void mainWindow::s_shcut_interpolation(void) {
 	dlgsettings->widget_Settings_Video->checkBox_Interpolation->click();
+}
+void mainWindow::s_shcut_integer_in_fullscreen(void) {
+	dlgsettings->widget_Settings_Video->checkBox_Use_integer_scaling_in_fullscreen->click();
 }
 void mainWindow::s_shcut_stretch_in_fullscreen(void) {
 	dlgsettings->widget_Settings_Video->checkBox_Stretch_in_fullscreen->click();

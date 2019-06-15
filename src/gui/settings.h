@@ -75,6 +75,7 @@ enum set_element {
 #endif
 	SET_FULLSCREEN,
 	SET_FULLSCREEN_IN_WINDOW,
+	SET_INTEGER_FULLSCREEN,
 	SET_STRETCH_FULLSCREEN,
 	SET_AUDIO_OUTPUT_DEVICE,
 	SET_AUDIO_BUFFER_FACTOR,
@@ -138,6 +139,7 @@ enum inp_element {
 	SET_INP_SC_SCALE_5X,
 	SET_INP_SC_SCALE_6X,
 	SET_INP_SC_INTERPOLATION,
+	SET_INP_SC_INTEGER_FULLSCREEN,
 	SET_INP_SC_STRETCH_FULLSCREEN,
 	SET_INP_SC_AUDIO_ENABLE,
 	SET_INP_SC_SAVE_SETTINGS,
@@ -698,6 +700,12 @@ static const _settings main_cfg[] = {
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 	{
+		uL("video"), uL("use integer scaliung in fullscreen"), uL("no"),
+		uL("# possible values: yes, no"),
+		uL("-r, --int-scl-fullscreen  use integer scaling   : yes, no"),
+		{LENGTH(opt_no_yes), opt_no_yes}
+	},
+	{
 		uL("video"), uL("stretch in fullscreen"), uL("no"),
 		uL("# possible values: yes, no"),
 		uL("-t, --stretch-fullscreen  stretch image         : yes, no"),
@@ -938,7 +946,8 @@ static const _settings inp_cfg[] = {
 	{uL("shortcuts"), uL("scale 5x"),                    uL("Alt+5,NULL"),      NULL, NULL, {0, NULL}},
 	{uL("shortcuts"), uL("scale 6x"),                    uL("Alt+6,NULL"),      NULL, NULL, {0, NULL}},
 	{uL("shortcuts"), uL("video interpolation"),         uL("0,NULL"),          NULL, NULL, {0, NULL}},
-	{uL("shortcuts"), uL("video stretch fullscreen"),    uL("Alt+P,NULL"),      NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("integer scaling fullscreen"),  uL("Alt+L,NULL"),      NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("stretch fullscreen"),          uL("Alt+P,NULL"),      NULL, NULL, {0, NULL}},
 	{uL("shortcuts"), uL("audio enable"),                uL("Alt+A,NULL"),      NULL, NULL, {0, NULL}},
 	{uL("shortcuts"), uL("save settings"),               uL("Alt+W,NULL"),      NULL, NULL, {0, NULL}},
 	{uL("shortcuts"), uL("save state"),                  uL("F1,NULL"),         NULL, NULL, {0, NULL}},
