@@ -1266,6 +1266,10 @@
       <source>60 minutes</source>
       <translation>60 minuti</translation>
     </message>
+    <message>
+      <source>Turkish</source>
+      <translation type="unfinished">Turkish</translation>
+    </message>
   </context>
   <context>
     <name>wdgSettingsInput</name>
@@ -1826,6 +1830,10 @@
     <message>
       <source>Disable Red and Green emphasis swap for PAL/Dendy</source>
       <translation>Disabilita scambio dell&apos;emphsis tra Rosso e Verde nella modalità PAL/Dendy</translation>
+    </message>
+    <message>
+      <source>Use integer scaling in fullscreen</source>
+      <translation type="unfinished">Use integer scaling in fullscreen</translation>
     </message>
   </context>
   <context>
