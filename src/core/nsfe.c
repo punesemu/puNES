@@ -107,7 +107,7 @@ BYTE nsfe_load_rom(void) {
 		rom.size = ftell(fp);
 		fseek(fp, 0L, SEEK_SET);
 
-		if ((rom.data = (BYTE *) malloc(rom.size)) == NULL) {
+		if ((rom.data = (BYTE *)malloc(rom.size)) == NULL) {
 			fclose(fp);
 			return (EXIT_ERROR);
 		}
@@ -229,8 +229,7 @@ BYTE nsfe_load_rom(void) {
 		}
 #endif
 
-		if ((nsf.songs.total == 0) || (nsf.adr.load < 0x6000) || (nsf.adr.init < 0x6000)
-			|| (nsf.adr.play < 0x6000)) {
+		if ((nsf.songs.total == 0) || (nsf.adr.load < 0x6000) || (nsf.adr.init < 0x6000) || (nsf.adr.play < 0x6000)) {
 			free(rom.data);
 			return (EXIT_ERROR);
 		}
@@ -432,7 +431,7 @@ BYTE nsfe_plst(_rom_mem *rom, BYTE phase) {
 		return (EXIT_OK);
 	}
 
-	if (!(nsf.playlist.data = (BYTE *) malloc(nsfe.chunk.length))) {
+	if (!(nsf.playlist.data = (BYTE *)malloc(nsfe.chunk.length))) {
 		fprintf(stderr, "Out of memory\n");
 		return (EXIT_ERROR);
 	}
@@ -513,7 +512,7 @@ BYTE nsfe_tlbl(_rom_mem *rom, BYTE phase) {
 		return (EXIT_OK);
 	}
 
-	if (!(nsf.info.track_label = (char *) malloc(nsfe.chunk.length))) {
+	if (!(nsf.info.track_label = (char *)malloc(nsfe.chunk.length))) {
 		fprintf(stderr, "Out of memory\n");
 		return (EXIT_ERROR);
 	}
@@ -560,7 +559,7 @@ BYTE nsfe_auth(_rom_mem *rom, BYTE phase) {
 		return (EXIT_OK);
 	}
 
-	if (!(nsf.info.auth = (char *) malloc(nsfe.chunk.length))) {
+	if (!(nsf.info.auth = (char *)malloc(nsfe.chunk.length))) {
 		fprintf(stderr, "Out of memory\n");
 		return (EXIT_ERROR);
 	}
@@ -608,7 +607,7 @@ BYTE nsfe_text(_rom_mem *rom, BYTE phase) {
 		return (EXIT_OK);
 	}
 
-	if (!(nsf.text.data = (BYTE *) malloc(nsfe.chunk.length))) {
+	if (!(nsf.text.data = (BYTE *)malloc(nsfe.chunk.length))) {
 		fprintf(stderr, "Out of memory\n");
 		return (EXIT_ERROR);
 	}

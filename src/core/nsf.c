@@ -155,8 +155,7 @@ static _nsf_option_data nsf_options_data[] = {
 void nsf_init(void) {
 	memset(&nsf, 0x00, sizeof(nsf));
 
-	nsf_effect_set_coords(&nsf.effect_coords, NSF_GUI_EFFECT_X, NSF_GUI_EFFECT_Y,
-		NSF_GUI_EFFECT_W, NSF_GUI_EFFECT_H);
+	nsf_effect_set_coords(&nsf.effect_coords, NSF_GUI_EFFECT_X, NSF_GUI_EFFECT_Y, NSF_GUI_EFFECT_W, NSF_GUI_EFFECT_H);
 	nsf_effect_set_coords(&nsf.effect_bars_coords, NSF_GUI_EFFECT_BARS_X, NSF_GUI_EFFECT_BARS_Y,
 		NSF_GUI_EFFECT_BARS_W, NSF_GUI_EFFECT_BARS_H);
 }
@@ -218,7 +217,7 @@ BYTE nsf_load_rom(void) {
 		rom.size = ftell(fp);
 		fseek(fp, 0L, SEEK_SET);
 
-		if ((rom.data = (BYTE *) malloc(rom.size)) == NULL) {
+		if ((rom.data = (BYTE *)malloc(rom.size)) == NULL) {
 			fclose(fp);
 			return (EXIT_ERROR);
 		}
@@ -294,7 +293,7 @@ BYTE nsf_load_rom(void) {
 			char buffer[33];
 			char *auth, **dst;
 
-			if (!(nsf.info.auth = (char *) malloc((32 + 1) * 4))) {
+			if (!(nsf.info.auth = (char *)malloc((32 + 1) * 4))) {
 				fprintf(stderr, "Out of memory\n");
 				free(rom.data);
 				return (EXIT_ERROR);
@@ -325,7 +324,7 @@ BYTE nsf_load_rom(void) {
 				}
 
 				(*dst) = auth;
-				strncpy((*dst), buffer, (int) sizeof(buffer));
+				strncpy((*dst), buffer, (int)sizeof(buffer));
 				if ((*dst[0]) == 0) {
 					(*dst) = &nsf_default_label[0];
 				}
@@ -455,6 +454,9 @@ BYTE nsf_load_rom(void) {
 		info.cpu_rw_extern = TRUE;
 
 		free(rom.data);
+	} else {
+		free(rom.data);
+		return (nsfe_load_rom());
 	}
 
 	nsf_after_load_rom();
@@ -597,8 +599,8 @@ void extcl_audio_samples_mod_nsf(SWORD *samples, int count) {
 					double divider;
 
 					divider = 1.0f - ((1.0f / 100.f) *
-						(100.0f - ((100.0f / (double) nsf.current_song.fade) *
-						((double) nsf.current_song.fade - nsf.timers.fadeout))));
+						(100.0f - ((100.0f / (double)nsf.current_song.fade) *
+						((double)nsf.current_song.fade - nsf.timers.fadeout))));
 					for (i = 0; i < count; i++) {
 						samples[i] *= divider;
 					}
@@ -670,8 +672,7 @@ void nsf_reset_song_title(void) {
 		memcpy(&nsf.current_song, &nsf.info_song[nsf.songs.current], sizeof(_nsf_info_song));
 
 		memset(nsf.scroll_title_song.buffer, 0x00, sizeof(nsf.scroll_title_song.buffer));
-		snprintf(nsf.scroll_title_song.buffer, sizeof(nsf.scroll_title_song.buffer), "%s",
-				nsf.current_song.track_label);
+		snprintf(nsf.scroll_title_song.buffer, sizeof(nsf.scroll_title_song.buffer), "%s", nsf.current_song.track_label);
 
 		nsf_text_curtain(&nsf.curtain_title_song, NSF_TEXT_CURTAIN_INIT);
 		nsf_text_curtain_add_line(&nsf.curtain_title_song, "%s", nsf.current_song.track_label);
@@ -807,8 +808,7 @@ void nsf_controls_mouse_in_gui(int x_mouse, int y_mouse) {
 	w = NSF_GUI_EFFECT_W;
 	h = NSF_GUI_EFFECT_H;
 
-	if (((x_mouse >= nsf_c_x1()) && (x_mouse <= nsf_c_x2())) &&
-		((y_mouse >= nsf_c_y1()) && (y_mouse <= nsf_c_y2()))) {
+	if (((x_mouse >= nsf_c_x1()) && (x_mouse <= nsf_c_x2())) && ((y_mouse >= nsf_c_y1()) && (y_mouse <= nsf_c_y2()))) {
 		port->data[SELECT] = PRESSED;
 		nsf.timers.button[SELECT] = 0;
 		return;
@@ -833,8 +833,7 @@ void nsf_controls_mouse_in_gui(int x_mouse, int y_mouse) {
 	w = NSF_GUI_INFO_SONG_W;
 	h = NSF_GUI_INFO_SONG_H;
 
-	if (((x_mouse >= nsf_c_x1()) && (x_mouse <= nsf_c_x2())) &&
-		((y_mouse >= nsf_c_y1()) && (y_mouse <= nsf_c_y2()))) {
+	if (((x_mouse >= nsf_c_x1()) && (x_mouse <= nsf_c_x2())) && ((y_mouse >= nsf_c_y1()) && (y_mouse <= nsf_c_y2()))) {
 		nsf.options.visual_duration = !nsf.options.visual_duration;
 		return;
 	}
@@ -854,8 +853,7 @@ void nsf_controls_mouse_in_gui(int x_mouse, int y_mouse) {
 	w = nsf_options_data[NSF_OPTION_PLAYLIST].x2 - nsf_options_data[NSF_OPTION_PLAYLIST].x1;
 	h = NSF_GUI_OPTIONS_BOX_SIDE;
 
-	if (((x_mouse >= nsf_c_x1()) && (x_mouse <= nsf_c_x2())) &&
-		((y_mouse >= nsf_c_y1()) && (y_mouse <= nsf_c_y2()))) {
+	if (((x_mouse >= nsf_c_x1()) && (x_mouse <= nsf_c_x2())) && ((y_mouse >= nsf_c_y1()) && (y_mouse <= nsf_c_y2()))) {
 		BYTE current = nsf.songs.current;
 
 		cfg->nsf_player_nsfe_playlist = !cfg->nsf_player_nsfe_playlist;
@@ -872,8 +870,7 @@ void nsf_controls_mouse_in_gui(int x_mouse, int y_mouse) {
 	w = nsf_options_data[NSF_OPTION_FADEOUT].x2 - nsf_options_data[NSF_OPTION_FADEOUT].x1;
 	h = NSF_GUI_OPTIONS_BOX_SIDE;
 
-	if (((x_mouse >= nsf_c_x1()) && (x_mouse <= nsf_c_x2())) &&
-		((y_mouse >= nsf_c_y1()) && (y_mouse <= nsf_c_y2()))) {
+	if (((x_mouse >= nsf_c_x1()) && (x_mouse <= nsf_c_x2())) && ((y_mouse >= nsf_c_y1()) && (y_mouse <= nsf_c_y2()))) {
 		cfg->nsf_player_nsfe_fadeout = !cfg->nsf_player_nsfe_fadeout;
 		return;
 	}
@@ -974,8 +971,7 @@ static void nsf_effect_raw(BYTE solid) {
 		}
 
 		for (; a < b; a++) {
-			if (((a >= nsf.effect_coords.y1) && (a <= nsf.effect_coords.y2)) &&
-				(screen.wr->line[a][x] != doscolor(DOS_GREEN))) {
+			if (((a >= nsf.effect_coords.y1) && (a <= nsf.effect_coords.y2)) && (screen.wr->line[a][x] != doscolor(DOS_GREEN))) {
 				screen.wr->line[a][x] = doscolor(DOS_YELLOW);
 			}
 		}
@@ -1036,8 +1032,7 @@ static void nsf_effect_hanning_window(BYTE solid) {
 		}
 
 		for (; a < b; a++) {
-			if (((a >= nsf.effect_coords.y1) && (a <= nsf.effect_coords.y2)) &&
-				(screen.wr->line[a][x] != doscolor(DOS_GREEN))) {
+			if (((a >= nsf.effect_coords.y1) && (a <= nsf.effect_coords.y2)) && (screen.wr->line[a][x] != doscolor(DOS_GREEN))) {
 				screen.wr->line[a][x] = doscolor(DOS_YELLOW);
 			}
 		}
@@ -1080,8 +1075,7 @@ static void nsf_effect_bars(void) {
 		kiss_fft_cfg fft_cfg;
 
 		for (count = 0; count < len; count++) {
-			fft_in[count].r = 0.5f * (1.0f - cos((2.0f * M_PI * count) / (len - 1))) *
-				((float) buffer[count] / 16384.0f);
+			fft_in[count].r = 0.5f * (1.0f - cos((2.0f * M_PI * count) / (len - 1))) * ((float)buffer[count] / 16384.0f);
 			fft_in[count].i = 0;
 		}
 
@@ -1111,8 +1105,7 @@ static void nsf_effect_bars(void) {
 				}
 
 				if ((count > 0) && (count < len / 2)) {
-					magnitude = sqrt(fft_out[count].r * fft_out[count].r +
-						fft_out[count].i * fft_out[count].i);
+					magnitude = sqrt(fft_out[count].r * fft_out[count].r + fft_out[count].i * fft_out[count].i);
 				} else {
 					magnitude = sqrt(fft_out[count].r * fft_out[count].r);
 				}
@@ -1136,11 +1129,10 @@ static void nsf_effect_bars(void) {
 	for (count = 0; count < bars; count++) {
 		int a, b, x1, x2;
 		float value = (bar[count] * 16383.0f) / (16384.0f / (nsf.effect_bars_coords.h - 5));
-		BYTE y = (nsf.effect_bars_coords.y2 - 5) -
-			(value * (cfg->apu.channel[APU_MASTER] * cfg->apu.volume[APU_MASTER]));
+		BYTE y = (nsf.effect_bars_coords.y2 - 5) - (value * (cfg->apu.channel[APU_MASTER] * cfg->apu.volume[APU_MASTER]));
 
-		x1 = (float) (nsf.effect_bars_coords.x1 + ((nsf.effect_bars_coords.w / bars) * count));
-		x2 = (float) (x1 + (nsf.effect_bars_coords.w / bars));
+		x1 = (float)(nsf.effect_bars_coords.x1 + ((nsf.effect_bars_coords.w / bars) * count));
+		x2 = (float)(x1 + (nsf.effect_bars_coords.w / bars));
 
 		for (x = x1; x < x2; x++) {
 			if ((y >= nsf.effect_bars_coords.y1) && (y <= nsf.effect_bars_coords.y2)) {
@@ -1379,10 +1371,8 @@ static void nsf_draw_controls(void) {
 
 			if (nsf.playlist.count > 0) {
 				if (cfg->nsf_player_nsfe_playlist == TRUE) {
-					sprintf(buff, "[bck][gray][normal]Plst [gray]%s",
-						nsf_print_number(nsf.playlist.index + 1, 3, DOS_CYAN));
-					sprintf(buff + (strlen(buff)), "[normal]/[gray]%s[gray]",
-						nsf_print_number(nsf.playlist.count, 3, DOS_NORMAL));
+					sprintf(buff, "[bck][gray][normal]Plst [gray]%s", nsf_print_number(nsf.playlist.index + 1, 3, DOS_CYAN));
+					sprintf(buff + (strlen(buff)), "[normal]/[gray]%s[gray]", nsf_print_number(nsf.playlist.count, 3, DOS_NORMAL));
 				} else {
 					sprintf(buff, "[bck][black][gray]Plst %s", nsf_print_number(nsf.playlist.index + 1, 3, DOS_GRAY));
 					sprintf(buff + (strlen(buff)), "/%s", nsf_print_number(nsf.playlist.count, 3, DOS_GRAY));
@@ -1418,8 +1408,7 @@ static void nsf_draw_controls(void) {
 
 		if (nsf.info_song) {
 			if (nsf.draw_mask == TRUE) {
-				dos_vline(x + (w / 2), y + ((h / NSF_GUI_INFO_SONG_LINES) * 1) + 1,
-					(h / NSF_GUI_INFO_SONG_LINES) - 1, 0x002D);
+				dos_vline(x + (w / 2), y + ((h / NSF_GUI_INFO_SONG_LINES) * 1) + 1, (h / NSF_GUI_INFO_SONG_LINES) - 1, 0x002D);
 			}
 
 			dos_box(x + 1, y + ((h / NSF_GUI_INFO_SONG_LINES) * 1) + 1, (w / 2) - 1,
@@ -1427,14 +1416,11 @@ static void nsf_draw_controls(void) {
 
 			if (nsf.current_song.time > 0) {
 				dos_box(x + (w / 2) + 1, y + ((h / NSF_GUI_INFO_SONG_LINES) * 1) + 1, (w / 2) - 2,
-					(dospf(1) * 2) - 1, doscolor(DOS_GRAY),
-					doscolor(DOS_GRAY), doscolor(DOS_GRAY));
+					(dospf(1) * 2) - 1, doscolor(DOS_GRAY), doscolor(DOS_GRAY), doscolor(DOS_GRAY));
 			} else {
 				dos_box(x + (w / 2) + 1, y + ((h / NSF_GUI_INFO_SONG_LINES) * 1) + 1, (w / 2) - 2,
-					(dospf(1) * 2) - 1, doscolor(DOS_BLACK),
-					doscolor(DOS_BLACK), doscolor(DOS_BLACK));
-				dos_vline(x + w - 2,   y + ((h / NSF_GUI_INFO_SONG_LINES) * 1) + 1,
-					(h / NSF_GUI_INFO_SONG_LINES) - 1, 0x002D);
+					(dospf(1) * 2) - 1, doscolor(DOS_BLACK), doscolor(DOS_BLACK), doscolor(DOS_BLACK));
+				dos_vline(x + w - 2,   y + ((h / NSF_GUI_INFO_SONG_LINES) * 1) + 1, (h / NSF_GUI_INFO_SONG_LINES) - 1, 0x002D);
 			}
 
 			dos_text(x + ((w - dospf(24)) / 2),
@@ -1453,8 +1439,7 @@ static void nsf_draw_controls(void) {
 
 			if (nsf.options.visual_duration == TRUE) {
 				if (nsf.current_song.time < 0) {
-					dos_box(x + w - 6, y + ((h / NSF_GUI_INFO_SONG_LINES) * 1) + 5, 2, 2,
-						0x002D, 0x002D, 0x002D);
+					dos_box(x + w - 6, y + ((h / NSF_GUI_INFO_SONG_LINES) * 1) + 5, 2, 2, 0x002D, 0x002D, 0x002D);
 					dos_box(x + w - 6,
 						y + ((h / NSF_GUI_INFO_SONG_LINES) * 1) + (h / NSF_GUI_INFO_SONG_LINES) - 7,
 						2, 2, doscolor(DOS_GRAY), doscolor(DOS_GRAY), doscolor(DOS_GRAY));
@@ -1466,16 +1451,14 @@ static void nsf_draw_controls(void) {
 						2, 2, doscolor(DOS_GREEN), doscolor(DOS_GREEN), doscolor(DOS_GREEN));
 				}
 				dos_text(x + ((w - dospf(24)) / 2) + dospf(13),
-					y + ((h / NSF_GUI_INFO_SONG_LINES) * 1) +
-					(((h / NSF_GUI_INFO_SONG_LINES) - 8) / 2), "%s",
+					y + ((h / NSF_GUI_INFO_SONG_LINES) * 1) + (((h / NSF_GUI_INFO_SONG_LINES) - 8) / 2), "%s",
 					nsf_print_time(timer, 0, DOS_NORMAL));
 			} else {
 				if (nsf.current_song.time < 0) {
 					dos_box(x + w - 6, y + ((h / NSF_GUI_INFO_SONG_LINES) * 1) + 5, 2, 2,
 						doscolor(DOS_GRAY), doscolor(DOS_GRAY), doscolor(DOS_GRAY));
 					dos_box(x + w - 6,
-						y + ((h / NSF_GUI_INFO_SONG_LINES) * 1) + (h / NSF_GUI_INFO_SONG_LINES) - 7,
-						2, 2, 0x002D, 0x002D, 0x002D);
+						y + ((h / NSF_GUI_INFO_SONG_LINES) * 1) + (h / NSF_GUI_INFO_SONG_LINES) - 7, 2, 2, 0x002D, 0x002D, 0x002D);
 				} else {
 					dos_box(x + w - 6, y + ((h / NSF_GUI_INFO_SONG_LINES) * 1) + 5, 2, 2,
 						doscolor(DOS_GREEN), doscolor(DOS_GREEN), doscolor(DOS_GREEN));
@@ -1484,8 +1467,7 @@ static void nsf_draw_controls(void) {
 						2, 2, doscolor(DOS_BLACK), doscolor(DOS_BLACK), doscolor(DOS_BLACK));
 				}
 				dos_text(x + ((w - dospf(24)) / 2) + dospf(13),
-					y + ((h / NSF_GUI_INFO_SONG_LINES) * 1) +
-					(((h / NSF_GUI_INFO_SONG_LINES) - 8) / 2), "%s",
+					y + ((h / NSF_GUI_INFO_SONG_LINES) * 1) + (((h / NSF_GUI_INFO_SONG_LINES) - 8) / 2), "%s",
 					nsf_print_time(timer, 1, DOS_YELLOW));
 			}
 		} else {
@@ -1494,12 +1476,10 @@ static void nsf_draw_controls(void) {
 
 			if (nsf.current_song.time > 0) {
 				dos_box(x + w + 1, y + ((h / NSF_GUI_INFO_SONG_LINES) * 1) + 1, w - 2,
-					(dospf(1) * 2) - 1, doscolor(DOS_GRAY),
-					doscolor(DOS_GRAY), doscolor(DOS_GRAY));
+					(dospf(1) * 2) - 1, doscolor(DOS_GRAY), doscolor(DOS_GRAY), doscolor(DOS_GRAY));
 			} else {
 				dos_box(x + w + 1, y + ((h / NSF_GUI_INFO_SONG_LINES) * 1) + 1, w - 2,
-					(dospf(1) * 2) - 1, doscolor(DOS_BLACK),
-					doscolor(DOS_BLACK), doscolor(DOS_BLACK));
+					(dospf(1) * 2) - 1, doscolor(DOS_BLACK), doscolor(DOS_BLACK), doscolor(DOS_BLACK));
 			}
 
 			dos_text(x + ((w - dospf(11)) / 2),
@@ -1515,12 +1495,9 @@ static void nsf_draw_controls(void) {
 	if (nsf.info_song) {
 		if (nsf.draw_mask == TRUE) {
 			dos_box(x + 2, y + ((h / NSF_GUI_INFO_SONG_LINES) * 2) + 1, w - 4,
-				(dospf(1) * 2) - 3, doscolor(DOS_BLACK), doscolor(DOS_BLACK),
-				doscolor(DOS_BLACK));
-			dos_vline(x + 1, y + ((h / NSF_GUI_INFO_SONG_LINES) * 2) + 1,
-				(h / NSF_GUI_INFO_SONG_LINES) - 1, 0x002D);
-			dos_vline(x + w - 2, y + ((h / NSF_GUI_INFO_SONG_LINES) * 2) + 1,
-				(h / NSF_GUI_INFO_SONG_LINES) - 1, 0x002D);
+				(dospf(1) * 2) - 3, doscolor(DOS_BLACK), doscolor(DOS_BLACK), doscolor(DOS_BLACK));
+			dos_vline(x + 1, y + ((h / NSF_GUI_INFO_SONG_LINES) * 2) + 1, (h / NSF_GUI_INFO_SONG_LINES) - 1, 0x002D);
+			dos_vline(x + w - 2, y + ((h / NSF_GUI_INFO_SONG_LINES) * 2) + 1, (h / NSF_GUI_INFO_SONG_LINES) - 1, 0x002D);
 		}
 
 		if (nsf.current_song.track_label) {
@@ -1536,8 +1513,7 @@ static void nsf_draw_controls(void) {
 				}
 			} else {
 				dos_box(x + 2, y + ((h / NSF_GUI_INFO_SONG_LINES) * 2) + 1, w - 4,
-					(dospf(1) * 2) - 3, doscolor(DOS_BLACK), doscolor(DOS_BLACK),
-					doscolor(DOS_BLACK));
+					(dospf(1) * 2) - 3, doscolor(DOS_BLACK), doscolor(DOS_BLACK), doscolor(DOS_BLACK));
 			}
 		}
 	}
@@ -1614,10 +1590,8 @@ static void nsf_draw_controls(void) {
 			}
 		}
 
-		nsf_print_option(&nsf_options_data[NSF_OPTION_PLAYLIST], (info.format == NSFE_FORMAT),
-			cfg->nsf_player_nsfe_playlist);
-		nsf_print_option(&nsf_options_data[NSF_OPTION_FADEOUT], (info.format == NSFE_FORMAT),
-			cfg->nsf_player_nsfe_fadeout);
+		nsf_print_option(&nsf_options_data[NSF_OPTION_PLAYLIST], (info.format == NSFE_FORMAT), cfg->nsf_player_nsfe_playlist);
+		nsf_print_option(&nsf_options_data[NSF_OPTION_FADEOUT], (info.format == NSFE_FORMAT), cfg->nsf_player_nsfe_fadeout);
 	}
 
 	// info
@@ -1636,8 +1610,7 @@ static void nsf_draw_controls(void) {
 
 		if (nsf.draw_mask == TRUE) {
 			dos_hline(0, NSF_GUI_EFFECT_Y - 1, w - 1, doscolor(DOS_BROWN));
-			dos_hline(w + (NSF_EFFECTS * (NSF_GUI_EFFECT_BOOKMARK_W + 2)) + 1, NSF_GUI_EFFECT_Y - 1,
-				w, doscolor(DOS_BROWN));
+			dos_hline(w + (NSF_EFFECTS * (NSF_GUI_EFFECT_BOOKMARK_W + 2)) + 1, NSF_GUI_EFFECT_Y - 1, w, doscolor(DOS_BROWN));
 		}
 
 		for (i = 0; i < NSF_EFFECTS; i++) {
@@ -1723,20 +1696,20 @@ static char *nsf_print_time(double timer, BYTE mode, int color) {
 
 		switch (i) {
 			case 0:
-				tmp = ((int) timer / (1000 * 60 * 60)) % 24;
+				tmp = ((int)timer / (1000 * 60 * 60)) % 24;
 				if (tmp > 0) {
 					is_normal = TRUE;
 				}
 				sprintf(buff, "[bck][black][gray]%s[gray]:", nsf_print_number(tmp, 2, color));
 				continue;
 			case 1:
-				tmp = ((int) timer / (1000 * 60)) % 60;
+				tmp = ((int)timer / (1000 * 60)) % 60;
 				break;
 			case 2:
-				tmp = (int) (timer / 1000) % 60 ;
+				tmp = (int)(timer / 1000) % 60 ;
 				break;
 			case 3:
-				tmp = ((int) timer / 10) % 100;
+				tmp = ((int)timer / 10) % 100;
 				is_last = TRUE;
 				break;
 		}
@@ -1779,13 +1752,11 @@ static void nsf_print_option(_nsf_option_data *option, BYTE active, BYTE mode) {
 
 	if (option->x1 < 0) {
 		if (option->direction) {
-			option->x1 = option->x - NSF_GUI_OPTIONS_BOX_SPACE - NSF_GUI_OPTIONS_BOX_SIDE -
-				dospf(dos_strlen(option->txt));
+			option->x1 = option->x - NSF_GUI_OPTIONS_BOX_SPACE - NSF_GUI_OPTIONS_BOX_SIDE - dospf(dos_strlen(option->txt));
 			option->x2 = option->x;
 		} else {
 			option->x1 = option->x;
-			option->x2 = option->x + NSF_GUI_OPTIONS_BOX_SIDE + NSF_GUI_OPTIONS_BOX_SPACE +
-				dospf(dos_strlen(option->txt));
+			option->x2 = option->x + NSF_GUI_OPTIONS_BOX_SIDE + NSF_GUI_OPTIONS_BOX_SPACE + dospf(dos_strlen(option->txt));
 		}
 	}
 
@@ -1847,8 +1818,7 @@ static char *nsf_text_scroll_tick(_nsf_text_scroll *scroll) {
 				scroll->string[i] = ' ';
 				i++;
 			} else {
-				if ((scroll->buffer[now] == '[') &&
-					((tmp = dos_is_tag(scroll->buffer + now, &tag)) > 0)) {
+				if ((scroll->buffer[now] == '[') && ((tmp = dos_is_tag(scroll->buffer + now, &tag)) > 0)) {
 					strncat(scroll->string, scroll->buffer + now, tmp);
 					now += tmp;
 					i += tmp;
@@ -1906,16 +1876,13 @@ static void nsf_text_curtain(_nsf_text_curtain *curtain, BYTE mode) {
 			dos_box(curtain->x, curtain->y, curtain->rows * dospf(1), dospf(1),
 				doscolor(DOS_BLACK), doscolor(DOS_BLACK), doscolor(DOS_BLACK));
 
-			_dos_text(curtain->x, curtain->y, -1, -1, curtain->redraw.bottom, -1,
-				curtain->line[curtain->index].text);
+			_dos_text(curtain->x, curtain->y, -1, -1, curtain->redraw.bottom, -1, curtain->line[curtain->index].text);
 		}
 		if (curtain->timer <= 0) {
 			if (curtain->pause == FALSE) {
-				dos_hline(curtain->x, curtain->y + curtain->borders.bottom, curtain->rows * dospf(1),
-					doscolor(DOS_BLACK));
+				dos_hline(curtain->x, curtain->y + curtain->borders.bottom, curtain->rows * dospf(1), doscolor(DOS_BLACK));
 
-				_dos_text(curtain->x, curtain->y, -1, -1, curtain->borders.bottom, -1,
-					curtain->line[curtain->index].text);
+				_dos_text(curtain->x, curtain->y, -1, -1, curtain->borders.bottom, -1, curtain->line[curtain->index].text);
 
 				curtain->borders.bottom++;
 
@@ -2009,8 +1976,7 @@ static void nsf_reset_song_variables(void) {
 		nsf.curtain_title_song.reload.r1 = 50;
 		nsf.curtain_title_song.reload.r2 = 3000;
 		nsf.curtain_title_song.x = DOS_CENTER;
-		nsf.curtain_title_song.y = y +
-			((h / NSF_GUI_INFO_SONG_LINES) * 2) + (((h / NSF_GUI_INFO_SONG_LINES) - 8) / 2);
+		nsf.curtain_title_song.y = y + ((h / NSF_GUI_INFO_SONG_LINES) * 2) + (((h / NSF_GUI_INFO_SONG_LINES) - 8) / 2);
 		nsf.curtain_title_song.borders.left = -1;
 		nsf.curtain_title_song.borders.right = -1;
 		nsf.curtain_title_song.borders.bottom = 0;
