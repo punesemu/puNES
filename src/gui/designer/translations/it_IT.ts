@@ -1268,7 +1268,7 @@
     </message>
     <message>
       <source>Turkish</source>
-      <translation type="unfinished">Turkish</translation>
+      <translation>Turco</translation>
     </message>
   </context>
   <context>
