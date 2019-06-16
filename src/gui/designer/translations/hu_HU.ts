@@ -632,7 +632,7 @@
     </message>
     <message>
       <source>&amp;Toggle GUI in window</source>
-      <translation type="unfinished">&amp;Toggle GUI in window</translation>
+      <translation>GUI ki/be kapcsolása ablakos módban</translation>
     </message>
   </context>
   <context>
@@ -1268,7 +1268,7 @@
     </message>
     <message>
       <source>Turkish</source>
-      <translation type="unfinished">Turkish</translation>
+      <translation>Török</translation>
     </message>
   </context>
   <context>
@@ -1833,7 +1833,7 @@
     </message>
     <message>
       <source>Use integer scaling in fullscreen</source>
-      <translation type="unfinished">Use integer scaling in fullscreen</translation>
+      <translation>Egész alapú skálázás teljes képernyőn</translation>
     </message>
   </context>
   <context>
