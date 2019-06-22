@@ -1833,7 +1833,7 @@
     </message>
     <message>
       <source>Use integer scaling in fullscreen</source>
-      <translation type="unfinished">Use integer scaling in fullscreen</translation>
+      <translation>Usar escalado en pantalla completa</translation>
     </message>
   </context>
   <context>
