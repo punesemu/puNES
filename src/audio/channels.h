@@ -33,6 +33,7 @@ EXTERNC void audio_channels(BYTE channels);
 EXTERNC void audio_channels_init_mode(void);
 EXTERNC BYTE (*audio_channels_init)(void);
 EXTERNC void (*audio_channels_quit)(void);
+EXTERNC void (*audio_channels_reset)(void);
 EXTERNC void (*audio_channels_tick)(SWORD value);
 
 #undef EXTERNC

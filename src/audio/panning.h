@@ -23,6 +23,7 @@
 
 BYTE ch_stereo_panning_init(void);
 void ch_stereo_panning_quit(void);
+void ch_stereo_panning_reset(void);
 void ch_stereo_panning_tick(SWORD value);
 
 #endif /* CHANNELS_STEREO_PANNING_H_ */

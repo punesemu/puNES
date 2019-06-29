@@ -34,9 +34,9 @@
 
 enum blbuf_misc { master_vol = 65536 / 15 };
 
-#define _ch_gain(index, f) ((double) (f * cfg->apu.volume[index]))
+#define _ch_gain(index, f) ((double)(f * cfg->apu.volume[index]))
 #define ch_gain_ptnd(index) _ch_gain(index, 1.0f)
-#define _ch_gain_ext(f) (master_vol * ((double) (f * cfg->apu.volume[APU_EXTRA])) / 100)
+#define _ch_gain_ext(f) (master_vol * ((double)(f * cfg->apu.volume[APU_EXTRA])) / 100)
 #define ch_gain_ext(out, f) (extra_out(out) * _ch_gain_ext(f))
 
 #define _update_tick_blbuf(type, restart)\
@@ -102,7 +102,7 @@ BYTE audio_init_blipbuf(void) {
 
 	init_nla_table(500, 500)
 
-	if (!(blipbuf.samples.data = (SWORD *) malloc(snd.samplerate))) {
+	if (!(blipbuf.samples.data = (SWORD *)malloc(snd.samplerate))) {
 		return (EXIT_ERROR);
 	}
 
@@ -178,7 +178,11 @@ void audio_quit_blipbuf(void) {
 		blip_delete(blipbuf.wave);
 		blipbuf.wave = NULL;
 	}
-
+}
+void audio_reset_blipbuf(void) {
+	blip_clear(blipbuf.wave);
+	memset(blipbuf.samples.data, 0x00, snd.samplerate);
+	blipbuf.samples.count = 0;
 }
 void audio_apu_tick_blipbuf(void) {
 	if (!blipbuf.wave || !cfg->apu.channel[APU_MASTER] || fps.fast_forward) {
@@ -203,7 +207,7 @@ void audio_end_frame_blipbuf(void) {
 	if (!blipbuf.wave || !cfg->apu.channel[APU_MASTER] || fps.fast_forward) {
 		if (snd.cache) {
 			snd.cache->write = snd.cache->start;
-			snd.cache->read = (SBYTE *) snd.cache->start;
+			snd.cache->read = (SBYTE *)snd.cache->start;
 			snd.cache->bytes_available = snd.cache->samples_available = 0;
 		}
 		snd.buffer.start = FALSE;
@@ -225,7 +229,7 @@ void audio_end_frame_blipbuf(void) {
 
 		blipbuf.samples.count = blip_samples_avail(blipbuf.wave);
 
-		blip_read_samples(blipbuf.wave, (SWORD *) blipbuf.samples.data, blipbuf.samples.count, 0);
+		blip_read_samples(blipbuf.wave, (SWORD *)blipbuf.samples.data, blipbuf.samples.count, 0);
 
 		if (snd_handler() == EXIT_ERROR) {
 			return;
@@ -242,12 +246,12 @@ void audio_end_frame_blipbuf(void) {
 
 			audio_channels_tick(data);
 
-			if (snd.cache->write == (SWORD *) snd.cache->end) {
+			if (snd.cache->write == (SWORD *)snd.cache->end) {
 				snd.cache->write = snd.cache->start;
 			}
 		}
 
-		if (snd.cache->samples_available >= (snd.samplerate / 2)) {
+		if (snd.cache->samples_available >= (snd.samplerate / 10)) {
 			snd.buffer.start = TRUE;
 		}
 
@@ -295,7 +299,7 @@ static void apu_tick_blipbuf_MMC5(void) {
 	if (mmc5.clocked) {
 		mmc5.clocked = FALSE;
 		blipbuf.output = ch_gain_ext(mmc5.S3.output, 10.0f) + ch_gain_ext(mmc5.S4.output, 10.0f) +
-				ch_gain_ext(mmc5.pcm.output, 2.0f);
+			ch_gain_ext(mmc5.pcm.output, 2.0f);
 		update_tick_extra_blbuf(mmc5, 1);
 	} else {
 		blipbuf.mmc5.period++;
@@ -322,7 +326,7 @@ static void apu_tick_blipbuf_Sunsoft_FM7(void) {
 	if (fm7.clocked) {
 		fm7.clocked = FALSE;
 		blipbuf.output = ch_gain_ext(fm7.square[0].output, 5.0f) +
-				ch_gain_ext(fm7.square[1].output, 5.0f) + ch_gain_ext(fm7.square[2].output, 5.0f);
+			ch_gain_ext(fm7.square[1].output, 5.0f) + ch_gain_ext(fm7.square[2].output, 5.0f);
 		update_tick_extra_blbuf(fm7, 1);
 	} else {
 		blipbuf.fm7.period++;
@@ -331,8 +335,7 @@ static void apu_tick_blipbuf_Sunsoft_FM7(void) {
 static void apu_tick_blipbuf_VRC6(void) {
 	if (vrc6.clocked) {
 		vrc6.clocked = FALSE;
-		blipbuf.output = ch_gain_ext(vrc6.S3.output, 5.0f) + ch_gain_ext(vrc6.S4.output, 5.0f) +
-				ch_gain_ext(vrc6.saw.output, 0.7f);
+		blipbuf.output = ch_gain_ext(vrc6.S3.output, 5.0f) + ch_gain_ext(vrc6.S4.output, 5.0f) + ch_gain_ext(vrc6.saw.output, 0.7f);
 		update_tick_extra_blbuf(vrc6, 1);
 	} else {
 		blipbuf.vrc6.period++;

@@ -44,6 +44,8 @@ typedef struct _callback_data {
 	int32_t bytes_available;
 } _callback_data;
 typedef struct _snd {
+	BYTE initialized;
+
 	int32_t samplerate;
 	BYTE channels;
 
@@ -54,6 +56,8 @@ typedef struct _snd {
 	double factor;
 
 	_callback_data *cache;
+
+	int32_t pause_calls;
 
 	struct _period {
 #if defined (_WIN32)
@@ -91,6 +95,8 @@ EXTERNC struct _snd_list {
 EXTERNC BYTE snd_init(void);
 EXTERNC void snd_quit(void);
 
+EXTERNC void snd_reset_buffers(void);
+
 EXTERNC void snd_thread_pause(void);
 EXTERNC void snd_thread_continue(void);
 
@@ -99,6 +105,9 @@ EXTERNC void snd_thread_unlock(void);
 
 EXTERNC BYTE snd_playback_start(void);
 EXTERNC void snd_playback_stop(void);
+
+EXTERNC void snd_playback_pause(void);
+EXTERNC void snd_playback_continue(void);
 
 EXTERNC uTCHAR *snd_playback_device_desc(int dev);
 EXTERNC uTCHAR *snd_playback_device_id(int dev);

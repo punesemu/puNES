@@ -23,6 +23,7 @@
 
 BYTE ch_mono_init(void) {
 	audio_channels_quit = ch_mono_quit;
+	audio_channels_reset = ch_mono_reset;
 	audio_channels_tick = ch_mono_tick;
 
 	snd.channels = 1;
@@ -30,6 +31,7 @@ BYTE ch_mono_init(void) {
 	return (EXIT_OK);
 }
 void ch_mono_quit(void) {}
+void ch_mono_reset(void) {}
 void ch_mono_tick(SWORD value) {
 	(*snd.cache->write++) = value;
 

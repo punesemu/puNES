@@ -23,6 +23,7 @@
 
 BYTE ch_mono_init(void);
 void ch_mono_quit(void);
+void ch_mono_reset(void);
 void ch_mono_tick(SWORD value);
 
 #endif /* CHANNELS_MONO_H_ */

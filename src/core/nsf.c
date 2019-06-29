@@ -179,6 +179,9 @@ void nsf_quit(void) {
 	nsf_text_curtain(&nsf.curtain_title_song, NSF_TEXT_CURTAIN_QUIT);
 	nsf_init();
 }
+void nsf_reset(void) {
+	nsf.timers.effect = 0;
+}
 BYTE nsf_load_rom(void) {
 	_rom_mem rom;
 
@@ -261,7 +264,7 @@ BYTE nsf_load_rom(void) {
 
 		len -= NSF_HEADER_LENGTH;
 
-		if (rom_mem_ctrl_memcpy(&flags[0], &rom, sizeof(flags)) == EXIT_ERROR) { 
+		if (rom_mem_ctrl_memcpy(&flags[0], &rom, sizeof(flags)) == EXIT_ERROR) {
 			free(rom.data);
 			return (EXIT_ERROR);
 		}
@@ -273,8 +276,7 @@ BYTE nsf_load_rom(void) {
 		nsf.adr.init = (flags[INIT_ADR_HI] << 8) | flags[INIT_ADR_LO];
 		nsf.adr.play = (flags[PLAY_ADR_HI] << 8) | flags[PLAY_ADR_LO];
 
-		if ((nsf.songs.total == 0) || (nsf.adr.load < 0x6000) || (nsf.adr.init < 0x6000)
-			|| (nsf.adr.play < 0x6000)) {
+		if ((nsf.songs.total == 0) || (nsf.adr.load < 0x6000) || (nsf.adr.init < 0x6000) || (nsf.adr.play < 0x6000)) {
 			free(rom.data);
 			return (EXIT_ERROR);
 		}
@@ -318,7 +320,7 @@ BYTE nsf_load_rom(void) {
 
 				memset(&buffer, 0x00, sizeof(buffer));
 
-				if (rom_mem_ctrl_memcpy(&buffer, &rom, 32) == EXIT_ERROR) { 
+				if (rom_mem_ctrl_memcpy(&buffer, &rom, 32) == EXIT_ERROR) {
 					free(rom.data);
 					return (EXIT_ERROR);
 				}
@@ -335,7 +337,7 @@ BYTE nsf_load_rom(void) {
 		nsf.play_speed.ntsc = rom.data[rom.position++];
 		nsf.play_speed.ntsc |= (rom.data[rom.position++] << 8);
 
-		if (rom_mem_ctrl_memcpy(&nsf.bankswitch.banks, &rom, sizeof(nsf.bankswitch.banks)) == EXIT_ERROR) { 
+		if (rom_mem_ctrl_memcpy(&nsf.bankswitch.banks, &rom, sizeof(nsf.bankswitch.banks)) == EXIT_ERROR) {
 			free(rom.data);
 			return (EXIT_ERROR);
 		}
@@ -392,7 +394,7 @@ BYTE nsf_load_rom(void) {
 					info.machine[DATABASE] = NTSC;
 					break;
 			}
-	
+
 			if (!nsf.play_speed.ntsc) {
 				nsf.play_speed.ntsc = 0x40FF;
 			}
@@ -464,7 +466,7 @@ BYTE nsf_load_rom(void) {
 	return (EXIT_OK);
 }
 void nsf_after_load_rom(void) {
-	nsf.draw_mask = TRUE;
+	nsf.draw_mask_frames = 2;
 
 	nsf.scroll_info_nsf.rows = SCR_ROWS / dospf(1);
 	nsf.scroll_info_nsf.reload = 150;
@@ -686,6 +688,8 @@ void nsf_main_screen(void) {
 	nsf_main_screen_event();
 }
 void nsf_main_screen_event(void) {
+	int reset = FALSE;
+
 	if (!(nsf.state & NSF_CHANGE_SONG) &&
 		((nsf.timers.silence > NFS_TIME_AUTO_NEXT_SONG) ||
 		((nsf.current_song.time > 0) && (nsf.timers.song >= nsf.current_song.time)))) {
@@ -702,6 +706,7 @@ void nsf_main_screen_event(void) {
 				nsf.state = NSF_PLAY | NSF_CHANGE_SONG;
 				nsf.timers.update_only_diff = FALSE;
 				nsf.routine.INT_NMI = 2;
+				reset = TRUE;
 				break;
 			case NSF_PAUSE:
 				nsf.state = (nsf.state & NSF_CHANGE_SONG) | NSF_PLAY;
@@ -725,6 +730,7 @@ void nsf_main_screen_event(void) {
 		nsf.timers.update_only_diff = TRUE;
 		nsf.timers.song = 0;
 		port[PORT1].data[BUT_A] = RELEASED;
+		reset = TRUE;
 	} else if (port[PORT1].data[LEFT] == PRESSED) {
 		if (nsf.state & NSF_PAUSE) {
 			nsf.state = NSF_STOP;
@@ -734,11 +740,18 @@ void nsf_main_screen_event(void) {
 		} else {
 			nsf_change_song(LEFT, NSF_RESTART_SONG);
 		}
+		reset = TRUE;
 	} else if (port[PORT1].data[RIGHT] == PRESSED) {
 		if (nsf.state & NSF_PAUSE) {
 			nsf.state = NSF_STOP;
 		}
 		nsf_change_song(RIGHT, NSF_NEXT);
+		reset = TRUE;
+	}
+
+	if (reset) {
+		snd_reset_buffers();
+		nsf_reset();
 	}
 
 	// ridisegno i controlli
@@ -951,8 +964,7 @@ static void nsf_effect_raw(BYTE solid) {
 			y = nsf.effect_coords.y_center;
 		} else {
 			y = nsf.effect_coords.y_center + (((((buffer[(count * len) / nsf.effect_coords.w]))) /
-				(16384 / nsf.effect_coords.h)) *
-				(cfg->apu.channel[APU_MASTER] * cfg->apu.volume[APU_MASTER]));
+				(16384 / nsf.effect_coords.h)) * (cfg->apu.channel[APU_MASTER] * cfg->apu.volume[APU_MASTER]));
 		}
 
 		if ((y >= nsf.effect_coords.y1) && (y < nsf.effect_coords.y2)) {
@@ -1242,7 +1254,7 @@ static void nsf_draw_controls(void) {
 
 	// titolo nsf - artista - copyright
 	{
-		if (nsf.draw_mask == TRUE) {
+		if (nsf.draw_mask_frames) {
 			dos_hline(0, dospf(2), SCR_ROWS, doscolor(DOS_BROWN));
 			if (info.format == NSFE_FORMAT) {
 				dos_text(DOS_CENTER, dospf(2) - 4, " [yellow]p[red]u[green]N[cyan]E[brown]S[normal]"
@@ -1263,7 +1275,7 @@ static void nsf_draw_controls(void) {
 		h = NSF_GUI_COMMANDS_H;
 		wc = NSF_GUI_WC;
 
-		if (nsf.draw_mask == TRUE) {
+		if (nsf.draw_mask_frames) {
 			dos_hline(0, dospf(5), SCR_ROWS, doscolor(DOS_BROWN));
 			dos_text(DOS_CENTER, dospf(5) - 4, " [red]Controls ");
 
@@ -1318,14 +1330,14 @@ static void nsf_draw_controls(void) {
 	y = NSF_GUI_INFO_SONG_Y;
 
 	if (nsf.info_song) {
-		if (nsf.draw_mask == TRUE) {
+		if (nsf.draw_mask_frames) {
 			dos_hline(x + 1, y + ((h / NSF_GUI_INFO_SONG_LINES) * 0) + 1, w - 2, 0x002D);
 			for (i = 1; i < NSF_GUI_INFO_SONG_LINES + 1; i++) {
 				dos_hline(x + 1, y + ((h / NSF_GUI_INFO_SONG_LINES) * i) + 0, w - 2, 0x002D);
 			}
 		}
 	} else {
-		if (nsf.draw_mask == TRUE) {
+		if (nsf.draw_mask_frames) {
 			dos_hline(x + 1, y + ((h / NSF_GUI_INFO_SONG_LINES) * 0) + 1, w - 2, 0x002D);
 			dos_hline(x + 1, y + ((h / NSF_GUI_INFO_SONG_LINES) * 1) + 0, w - 2, 0x002D);
 		}
@@ -1338,7 +1350,7 @@ static void nsf_draw_controls(void) {
 		memset(buff, 0x00, sizeof(buff));
 
 		if (nsf.info_song) {
-			if (nsf.draw_mask == TRUE) {
+			if (nsf.draw_mask_frames) {
 				dos_vline(x + (w / 2), y + ((h / NSF_GUI_INFO_SONG_LINES) * 0) + 1, (h / NSF_GUI_INFO_SONG_LINES) - 1, 0x002D);
 			}
 
@@ -1407,7 +1419,7 @@ static void nsf_draw_controls(void) {
 		}
 
 		if (nsf.info_song) {
-			if (nsf.draw_mask == TRUE) {
+			if (nsf.draw_mask_frames) {
 				dos_vline(x + (w / 2), y + ((h / NSF_GUI_INFO_SONG_LINES) * 1) + 1, (h / NSF_GUI_INFO_SONG_LINES) - 1, 0x002D);
 			}
 
@@ -1493,7 +1505,7 @@ static void nsf_draw_controls(void) {
 
 	// titolo canzone
 	if (nsf.info_song) {
-		if (nsf.draw_mask == TRUE) {
+		if (nsf.draw_mask_frames) {
 			dos_box(x + 2, y + ((h / NSF_GUI_INFO_SONG_LINES) * 2) + 1, w - 4,
 				(dospf(1) * 2) - 3, doscolor(DOS_BLACK), doscolor(DOS_BLACK), doscolor(DOS_BLACK));
 			dos_vline(x + 1, y + ((h / NSF_GUI_INFO_SONG_LINES) * 2) + 1, (h / NSF_GUI_INFO_SONG_LINES) - 1, 0x002D);
@@ -1519,7 +1531,7 @@ static void nsf_draw_controls(void) {
 	}
 
 	// chips
-	if (nsf.draw_mask == TRUE) {
+	if (nsf.draw_mask_frames) {
 		int d = ((w - (6 * dospf(2))) / 7);
 
 		if (nsf.sound_chips.vrc6) {
@@ -1580,7 +1592,7 @@ static void nsf_draw_controls(void) {
 
 	// nsfe opzioni
 	{
-		if (nsf.draw_mask == TRUE) {
+		if (nsf.draw_mask_frames) {
 			if (info.format == NSFE_FORMAT) {
 				dos_hline(0, NSF_GUI_EFFECT_Y - dospf(6), SCR_ROWS, doscolor(DOS_BROWN));
 				dos_text(DOS_CENTER, NSF_GUI_EFFECT_Y - dospf(6) - 4, " [red]NSFE Options ");
@@ -1596,7 +1608,7 @@ static void nsf_draw_controls(void) {
 
 	// info
 	{
-		if (nsf.draw_mask == TRUE) {
+		if (nsf.draw_mask_frames) {
 			dos_hline(0, NSF_GUI_EFFECT_Y - dospf(3), SCR_ROWS, doscolor(DOS_BROWN));
 			dos_text(DOS_CENTER, NSF_GUI_EFFECT_Y - dospf(3) - 4, " [red]Info ");
 		}
@@ -1608,7 +1620,7 @@ static void nsf_draw_controls(void) {
 	{
 		int w = (SCR_ROWS - (NSF_EFFECTS * (NSF_GUI_EFFECT_BOOKMARK_W + 2))) / 2;
 
-		if (nsf.draw_mask == TRUE) {
+		if (nsf.draw_mask_frames) {
 			dos_hline(0, NSF_GUI_EFFECT_Y - 1, w - 1, doscolor(DOS_BROWN));
 			dos_hline(w + (NSF_EFFECTS * (NSF_GUI_EFFECT_BOOKMARK_W + 2)) + 1, NSF_GUI_EFFECT_Y - 1, w, doscolor(DOS_BROWN));
 		}
@@ -1624,7 +1636,9 @@ static void nsf_draw_controls(void) {
 		}
 	}
 
-	nsf.draw_mask = FALSE;
+	if (nsf.draw_mask_frames) {
+		nsf.draw_mask_frames--;
+	}
 }
 static char *nsf_print_color(int color) {
 	static char cbuff[10];
@@ -1953,7 +1967,7 @@ static void nsf_text_curtain_add_line(_nsf_text_curtain *curtain, const char *fm
 				curtain->line[index].length++;
 			}
 			curtain->line[index].text = malloc(curtain->line[index].length + 1);
-			memset(curtain->line[index].text, 0x00, curtain->line[index].length + 1); 
+			memset(curtain->line[index].text, 0x00, curtain->line[index].length + 1);
 			strncpy(curtain->line[index].text, start, curtain->line[index].length);
 			start += curtain->line[index].length;
 		}

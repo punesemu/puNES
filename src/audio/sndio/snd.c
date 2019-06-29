@@ -50,11 +50,14 @@ typedef struct _snd_thread {
 
 	BYTE action;
 	BYTE in_run;
+	int pause_calls;
 
 #if !defined (RELEASE)
 	double tick;
 #endif
 } _snd_thread;
+
+static void _snd_playback_stop(void);
 
 static void *sndio_thread_loop(void *data);
 INLINE static void sndio_wr_buf(void *buffer, uint32_t avail);
@@ -115,8 +118,33 @@ void snd_quit(void) {
 #endif
 }
 
+void snd_reset_buffers(void) {
+	snd_thread_pause();
+
+	if (snd.initialized == TRUE) {
+		cbd.samples_available = 0;
+		cbd.bytes_available = 0;
+		cbd.write = cbd.start;
+		cbd.read = (SBYTE *)cbd.start;
+		memset(cbd.start, 0x00, snd.buffer.size);
+
+		audio_channels_reset();
+		audio_reset_blipbuf();
+
+		snd.buffer.start = FALSE;
+	}
+
+	snd_thread_continue();
+}
+
 void snd_thread_pause(void) {
-	if (snd_thread.action != ST_UNINITIALIZED) {
+	if (snd_thread.action == ST_UNINITIALIZED) {
+		return;
+	}
+
+	snd_thread.pause_calls++;
+
+	if (snd_thread.pause_calls == 1) {
 		snd_thread.action = ST_PAUSE;
 
 		while (snd_thread.in_run == TRUE) {
@@ -125,11 +153,21 @@ void snd_thread_pause(void) {
 	}
 }
 void snd_thread_continue(void) {
-	if (snd_thread.action != ST_UNINITIALIZED) {
+	if (snd_thread.action == ST_UNINITIALIZED) {
+		return;
+	}
+
+	if (--snd_thread.pause_calls < 0) {
+		snd_thread.pause_calls = 0;
+	}
+
+	if (snd_thread.pause_calls == 0) {
 		snd_thread.action = ST_RUN;
 
-		while (snd_thread.in_run == FALSE) {
-			gui_sleep(1);
+		if (snd.initialized == TRUE) {
+			while (snd_thread.in_run == FALSE) {
+				gui_sleep(1);
+			}
 		}
 	}
 }
@@ -146,8 +184,10 @@ BYTE snd_playback_start(void) {
 		return (EXIT_OK);
 	}
 
+	snd_thread_pause();
+
 	// come prima cosa blocco eventuali riproduzioni
-	snd_playback_stop();
+	_snd_playback_stop();
 
 	memset(&snd, 0x00, sizeof(_snd));
 	memset(&sndio, 0x00, sizeof(_sndio));
@@ -261,16 +301,51 @@ BYTE snd_playback_start(void) {
 		goto snd_playback_start_error;
 	}
 
+	snd.initialized = TRUE;
+
 	snd_thread_continue();
 	gui_sleep(50);
 	return (EXIT_OK);
 
 	snd_playback_start_error:
-	snd_playback_stop();
+	_snd_playback_stop();
+	snd_thread_continue();
+	gui_sleep(50);
 	return (EXIT_ERROR);
 }
 void snd_playback_stop(void) {
 	snd_thread_pause();
+	_snd_playback_stop();
+	snd_thread_continue();
+}
+
+void snd_playback_pause(void) {
+	snd.pause_calls++;
+}
+void snd_playback_continue(void) {
+	if (--snd.pause_calls < 0) {
+		snd.pause_calls = 0;
+	}
+}
+
+uTCHAR *snd_playback_device_desc(UNUSED(int dev)) {
+	return (0);
+}
+uTCHAR *snd_playback_device_id(UNUSED(int dev)) {
+	return (0);
+}
+
+uTCHAR *snd_capture_device_desc(UNUSED(int dev)) {
+	return (0);
+}
+uTCHAR *snd_capture_device_id(UNUSED(int dev)) {
+	return (0);
+}
+
+void snd_list_devices(void) {}
+
+static void _snd_playback_stop(void) {
+	snd.initialized = FALSE;
 
 	if (cbd.start) {
 		free(cbd.start);
@@ -301,22 +376,6 @@ void snd_playback_stop(void) {
 	}
 }
 
-uTCHAR *snd_playback_device_desc(UNUSED(int dev)) {
-	return (0);
-}
-uTCHAR *snd_playback_device_id(UNUSED(int dev)) {
-	return (0);
-}
-
-uTCHAR *snd_capture_device_desc(UNUSED(int dev)) {
-	return (0);
-}
-uTCHAR *snd_capture_device_id(UNUSED(int dev)) {
-	return (0);
-}
-
-void snd_list_devices(void) {}
-
 static void *sndio_thread_loop(UNUSED(void *data)) {
 	int32_t avail, len;
 
@@ -328,7 +387,7 @@ static void *sndio_thread_loop(UNUSED(void *data)) {
 		if (snd_thread.action == ST_STOP) {
 			snd_thread.in_run = FALSE;
 			break;
-		} else if (snd_thread.action == ST_PAUSE) {
+		} else if ((snd_thread.action == ST_PAUSE) || (snd.initialized == FALSE)) {
 			snd_thread.in_run = FALSE;
 			gui_sleep(1);
 			continue;
@@ -376,10 +435,16 @@ static void *sndio_thread_loop(UNUSED(void *data)) {
 			sndio_wr_buf((void *)cbd.silence, len);
 			snd.out_of_sync++;
 		} else {
+			void *read = (void *)cbd.read;
+
 			snd_thread_lock();
 
-			wave_write((SWORD *)cbd.read, avail);
-			sndio_wr_buf((void *)cbd.read, len);
+			if (snd.pause_calls) {
+				read = (void *)cbd.silence;
+			}
+
+			wave_write((SWORD *)read, avail);
+			sndio_wr_buf(read, len);
 
 			cbd.bytes_available -= len;
 			cbd.samples_available -= avail;

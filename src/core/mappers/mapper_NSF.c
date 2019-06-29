@@ -85,7 +85,7 @@ void map_init_NSF(void) {
 	nsf.routine.INT_NMI = 2;
 	nsf.routine.INT_RESET = 2;
 
-	nsf.draw_mask = TRUE;
+	nsf.draw_mask_frames = 2;
 
 	if (machine.type == NTSC) {
 		nsf.rate.reload = machine.cpu_hz / (1000000.0f / (double) nsf.play_speed.ntsc);

@@ -124,7 +124,7 @@ typedef struct _nsf_effect_coords {
 EXTERNC struct _nsf {
 	BYTE enabled;
 	BYTE version;
-	BYTE draw_mask;
+	BYTE draw_mask_frames;
 	BYTE type;
 	BYTE state;
 	BYTE made_tick;
@@ -237,6 +237,7 @@ EXTERNC static const BYTE nsf_routine[17] = {
 
 EXTERNC void nsf_init(void);
 EXTERNC void nsf_quit(void);
+EXTERNC void nsf_reset(void);
 EXTERNC BYTE nsf_load_rom(void);
 EXTERNC void nsf_after_load_rom(void);
 EXTERNC void nsf_init_tune(void);

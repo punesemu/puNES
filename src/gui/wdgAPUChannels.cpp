@@ -121,7 +121,7 @@ void wdgAPUChannels::s_apu_ch_checkbox(UNUSED(bool checked)) {
 void wdgAPUChannels::s_apu_ch_slider(int value) {
 	int index = QVariant(((QSlider *)sender())->property("myIndex")).toInt();
 
-	cfg->apu.volume[index] = (double) value / 100.0f;
+	cfg->apu.volume[index] = (double)value / 100.0f;
 	gui_apu_channels_widgets_update();
 }
 void wdgAPUChannels::s_apu_ch_toggle_all(UNUSED(bool checked)) {

@@ -24,7 +24,7 @@
 enum ff_velocity_values { FF_2X = 2, FF_3X, FF_4X, FF_5X };
 
 #define fps_machine_ms(factor)\
-	machine.ms_frame = fps.frame.estimated_ms = (1000.0f / (double) machine.fps) * factor;
+	machine.ms_frame = fps.frame.estimated_ms = (1000.0f / (double)machine.fps) * factor;
 
 #if defined (__cplusplus)
 #define EXTERNC extern "C"

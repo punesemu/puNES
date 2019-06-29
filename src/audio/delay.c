@@ -29,6 +29,7 @@ static struct _delay {
 	DBWORD samples;
 	DBWORD max_pos;
 	DBWORD pos;
+	DBWORD size;
 	SWORD *ptr[2];
 	SWORD *buf[2];
 
@@ -44,6 +45,7 @@ BYTE ch_stereo_delay_init(void) {
 	BYTE i;
 
 	audio_channels_quit = ch_stereo_delay_quit;
+	audio_channels_reset = ch_stereo_delay_reset;
 	audio_channels_tick = ch_stereo_delay_tick;
 
 	switch (snd.samplerate) {
@@ -63,20 +65,19 @@ BYTE ch_stereo_delay_init(void) {
 
 	delay.max_pos = delay.samples * cfg->stereo_delay;
 	delay.pos = 0;
+	delay.size = delay.samples * sizeof(*snd.cache->write);
 
 	for (i = 0; i < 2; i++) {
-		DBWORD size = delay.samples * sizeof(*snd.cache->write);
-
-		delay.buf[i] = (SWORD *)malloc(size);
-		memset(delay.buf[i], 0x00, size);
+		delay.buf[i] = (SWORD *)malloc(delay.size);
+		memset(delay.buf[i], 0x00, delay.size);
 		delay.ptr[i] = delay.buf[i];
-
-		delay.bck.start = (SWORD *)malloc(size * 2);
-		memset(delay.bck.start, 0x00, size * 2);
-		delay.bck.write = delay.bck.start;
-		delay.bck.middle = delay.bck.start + delay.samples;
-		delay.bck.end = (SBYTE *)delay.bck.start + (size * 2);
 	}
+
+	delay.bck.start = (SWORD *)malloc(delay.size * 2);
+	memset(delay.bck.start, 0x00, delay.size * 2);
+	delay.bck.write = delay.bck.start;
+	delay.bck.middle = delay.bck.start + delay.samples;
+	delay.bck.end = (SBYTE *)delay.bck.start + (delay.size * 2);
 
 	return (EXIT_OK);
 }
@@ -97,6 +98,19 @@ void ch_stereo_delay_quit(void) {
 		// azzero i puntatori
 		delay.ptr[i] = delay.buf[i] = NULL;
 	}
+}
+void ch_stereo_delay_reset(void) {
+	BYTE i;
+
+	delay.pos = 0;
+
+	for (i = 0; i < 2; i++) {
+		memset(delay.buf[i], 0x00, delay.size);
+		delay.ptr[i] = delay.buf[i];
+	}
+
+	memset(delay.bck.start, 0x00, delay.size * 2);
+	delay.bck.write = delay.bck.start;
 }
 void ch_stereo_delay_tick(SWORD value) {
 	// sinistro

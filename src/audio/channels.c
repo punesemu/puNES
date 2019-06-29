@@ -30,6 +30,7 @@ void audio_channels(BYTE channels) {
 
 	audio_channels_init = NULL;
 	audio_channels_quit = NULL;
+	audio_channels_reset = NULL;
 	audio_channels_tick = NULL;
 
 	switch (channels) {

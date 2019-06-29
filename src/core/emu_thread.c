@@ -47,7 +47,7 @@ struct _emu_thread {
 	HANDLE thread;
 #endif
 	BYTE in_run;
-	int emu_thread_pause_calls;
+	int pause_calls;
 } emu_thread;
 
 BYTE emu_thread_init(void) {
@@ -80,7 +80,7 @@ void emu_thread_pause(void) {
 		return;
 	}
 
-	emu_thread.emu_thread_pause_calls++;
+	emu_thread.pause_calls++;
 
 	while (emu_thread.in_run == ET_TRUE) {
 		gui_sleep(1);
@@ -91,11 +91,11 @@ void emu_thread_continue(void) {
 		return;
 	}
 
-	if (--emu_thread.emu_thread_pause_calls < 0) {
-		emu_thread.emu_thread_pause_calls = 0;
+	if (--emu_thread.pause_calls < 0) {
+		emu_thread.pause_calls = 0;
 	}
 
-	if (emu_thread.emu_thread_pause_calls == 0) {
+	if (emu_thread.pause_calls == 0) {
 		while (emu_thread.in_run == ET_FALSE) {
 			gui_sleep(1);
 		}
@@ -123,7 +123,7 @@ static void *emu_thread_loop(UNUSED(void *arg)) {
 static DWORD WINAPI emu_thread_loop(UNUSED(void *arg)) {
 #endif
 	while (info.stop == FALSE) {
-		if (emu_thread.emu_thread_pause_calls) {
+		if (emu_thread.pause_calls) {
 			emu_thread.in_run = ET_FALSE;
 			gui_sleep(1);
 			continue;

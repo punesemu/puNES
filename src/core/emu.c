@@ -921,6 +921,10 @@ BYTE emu_reset(BYTE type) {
 	info.reset = FALSE;
 	info.start_frame_0 = TRUE;
 
+	if ((info.format == NSF_FORMAT) || (info.format == NSFE_FORMAT)) {
+		nsf.draw_mask_frames = 2;
+	}
+
 	if (info.pause_from_gui == TRUE) {
 		info.pause_from_gui = FALSE;
 		emu_pause(FALSE);

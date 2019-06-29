@@ -23,6 +23,7 @@
 
 BYTE audio_init_blipbuf(void);
 void audio_quit_blipbuf(void);
+void audio_reset_blipbuf(void);
 void audio_apu_tick_blipbuf(void);
 void audio_end_frame_blipbuf(void);
 int audio_buffer_blipbuf(SWORD **buffer);

@@ -60,8 +60,11 @@ static void STDMETHODCALLTYPE OnVoiceError(IXAudio2VoiceCallback *callback, void
 
 static struct _snd_thread {
 	HANDLE lock;
+
 	BYTE action;
 	BYTE in_run;
+	int pause_calls;
+
 #if !defined (RELEASE)
 	double tick;
 #endif
@@ -163,23 +166,43 @@ void snd_quit(void) {
 	}
 }
 
-void snd_thread_pause(void) {
-	snd_thread.action = ST_STOP;
+void snd_reset_buffers(void) {
+	snd_thread_pause();
 
-	if (xaudio2.source) {
-		IXAudio2SourceVoice_Stop(xaudio2.source, 0, XAUDIO2_COMMIT_NOW);
-		IXAudio2SourceVoice_FlushSourceBuffers(xaudio2.source);
+	if (snd.initialized == TRUE) {
+		cbd.samples_available = 0;
+		cbd.bytes_available = 0;
+		cbd.write = cbd.start;
+		cbd.read = (SBYTE *)cbd.start;
+		memset(cbd.start, 0x00, snd.buffer.size);
+
+		audio_channels_reset();
+		audio_reset_blipbuf();
+
+		snd.buffer.start = FALSE;
 	}
 
-	while (snd_thread.in_run == TRUE) {
-		;
+	snd_thread_continue();
+}
+
+void snd_thread_pause(void) {
+	snd_thread.pause_calls++;
+
+	if (snd_thread.pause_calls == 1) {
+		snd_thread.action = ST_STOP;
+
+		while (snd_thread.in_run == TRUE) {
+			;
+		}
 	}
 }
 void snd_thread_continue(void) {
-	snd_thread.action = ST_RUN;
+	if (--snd_thread.pause_calls < 0) {
+		snd_thread.pause_calls = 0;
+	}
 
-	if (xaudio2.source) {
-		IXAudio2SourceVoice_Start(xaudio2.source, 0, XAUDIO2_COMMIT_NOW);
+	if (snd_thread.pause_calls == 0) {
+		snd_thread.action = ST_RUN;
 	}
 }
 
@@ -356,7 +379,7 @@ BYTE snd_playback_start(void) {
 	snd_thread.tick = gui_get_ms();
 #endif
 
-	if(IXAudio2_StartEngine(xaudio2.engine) != S_OK) {
+	if (IXAudio2_StartEngine(xaudio2.engine) != S_OK) {
 		MessageBox(NULL,
 			"ATTENTION: Unable to start sound engine.\n",
 			"Error!",
@@ -364,7 +387,16 @@ BYTE snd_playback_start(void) {
 		goto snd_playback_start_error;
 	}
 
-	snd_thread_continue();
+	if (IXAudio2SourceVoice_Start(xaudio2.source, 0, XAUDIO2_COMMIT_NOW) != S_OK) {
+		MessageBox(NULL,
+			"ATTENTION: Unable to start source voice.\n",
+			"Error!",
+			MB_ICONEXCLAMATION | MB_OK);
+		goto snd_playback_start_error;
+	}
+
+	snd.initialized = TRUE;
+
 	return (EXIT_OK);
 
 	snd_playback_start_error:
@@ -372,7 +404,7 @@ BYTE snd_playback_start(void) {
 	return (EXIT_ERROR);
 }
 void snd_playback_stop(void) {
-	snd_thread_pause();
+	snd.initialized = FALSE;
 
 	if (xaudio2.source) {
 		IXAudio2SourceVoice_Stop(xaudio2.source, 0, XAUDIO2_COMMIT_NOW);
@@ -395,6 +427,8 @@ void snd_playback_stop(void) {
 		xaudio2.engine = NULL;
 	}
 
+	gui_sleep(150);
+
 	if (cbd.start) {
 		free(snd.cache->start);
 		cbd.start = NULL;
@@ -412,6 +446,15 @@ void snd_playback_stop(void) {
 	}
 
 	audio_quit_blipbuf();
+}
+
+void snd_playback_pause(void) {
+	snd.pause_calls++;
+}
+void snd_playback_continue(void) {
+	if (--snd.pause_calls < 0) {
+		snd.pause_calls = 0;
+	}
 }
 
 uTCHAR *snd_playback_device_desc(int dev) {
@@ -473,7 +516,6 @@ void snd_list_devices(void) {
 	// Capture devices
 	if (ds8.available) {
 		snd_list_device_add(&snd_list.capture, uL("default"), NULL, uL("System Default"));
-
 		ds8.DirectSoundCaptureEnumerateW_proc(cb_enum_capture_dev, NULL);
 	}
 }
@@ -547,7 +589,7 @@ static BOOL CALLBACK cb_enum_capture_dev(LPGUID guid, LPCWSTR desc, UNUSED(LPCWS
 INLINE static void xaudio2_wrbuf(IXAudio2SourceVoice *source, XAUDIO2_BUFFER *x2buf, const BYTE *buffer) {
 	x2buf->pAudioData = buffer;
 
-	if(IXAudio2SourceVoice_SubmitSourceBuffer(source, x2buf, NULL) != S_OK) {
+	if (IXAudio2SourceVoice_SubmitSourceBuffer(source, x2buf, NULL) != S_OK) {
 		fprintf(stderr, "Unable to submit source buffer\n");
 	}
 }
@@ -571,10 +613,16 @@ static void STDMETHODCALLTYPE OnBufferStart(UNUSED(IXAudio2VoiceCallback *callba
 		xaudio2_wrbuf(xaudio2.source, &xaudio2.buffer, (const BYTE *)cbd.silence);
 		snd.out_of_sync++;
 	} else {
+		void *read = (void *)cbd.read;
+
 		snd_thread_lock();
 
-		wave_write((SWORD *)cbd.read, avail);
-		xaudio2_wrbuf(xaudio2.source, &xaudio2.buffer, (const BYTE *)cbd.read);
+		if (snd.pause_calls) {
+			read = (void *)cbd.silence;
+		}
+
+		wave_write((SWORD *)read, avail);
+		xaudio2_wrbuf(xaudio2.source, &xaudio2.buffer, (const BYTE *)read);
 
 		cbd.bytes_available -= len;
 		cbd.samples_available -= avail;
@@ -608,7 +656,7 @@ static void STDMETHODCALLTYPE OnBufferStart(UNUSED(IXAudio2VoiceCallback *callba
 			fps.frames_skipped,
 			snd.overlap,
 			snd.out_of_sync,
-			(int) fps.gfx,
+			(int)fps.gfx,
 			machine.ms_frame);
 	}
 #endif

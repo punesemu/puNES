@@ -36,6 +36,7 @@
 #include "conf.h"
 #include "vs_system.h"
 #include "qt.h"
+#include "audio/snd.h"
 
 #define mod_cycles_op(op, vl) cpu.cycles op vl
 #define r2006_during_rendering()\
@@ -524,6 +525,8 @@ INLINE static void nsf_rd_mem(WORD address, BYTE made_tick) {
 					nsf.routine.INT_NMI--;
 					if (nsf.state & NSF_CHANGE_SONG) {
 						cpu.openbus = 0x00;
+						snd_reset_buffers();
+						nsf_reset();
 					} else {
 						cpu.openbus = 0x0E;
 					}
@@ -534,6 +537,8 @@ INLINE static void nsf_rd_mem(WORD address, BYTE made_tick) {
 				if (nsf.routine.INT_NMI) {
 					nsf.routine.INT_NMI--;
 					cpu.openbus = 0x25;
+					snd_reset_buffers();
+					nsf_reset();
 					return;
 				}
 				break;
@@ -541,6 +546,8 @@ INLINE static void nsf_rd_mem(WORD address, BYTE made_tick) {
 				if (nsf.routine.INT_RESET) {
 					nsf.routine.INT_RESET--;
 					cpu.openbus = 0x08;
+					snd_reset_buffers();
+					nsf_reset();
 					return;
 				}
 				break;
@@ -548,6 +555,8 @@ INLINE static void nsf_rd_mem(WORD address, BYTE made_tick) {
 				if (nsf.routine.INT_RESET) {
 					nsf.routine.INT_RESET--;
 					cpu.openbus = 0x25;
+					snd_reset_buffers();
+					nsf_reset();
 					return;
 				}
 				break;

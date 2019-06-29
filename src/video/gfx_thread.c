@@ -51,7 +51,7 @@ struct _gfx_thread {
 	HANDLE lock;
 #endif
 	BYTE in_run;
-	int gfx_thread_pause_calls;
+	int pause_calls;
 } gfx_thread;
 
 BYTE gfx_thread_init(void) {
@@ -112,7 +112,7 @@ void gfx_thread_pause(void) {
 		return;
 	}
 
-	gfx_thread.gfx_thread_pause_calls++;
+	gfx_thread.pause_calls++;
 
 	while (gfx_thread.in_run == GT_TRUE) {
 		gui_sleep(1);
@@ -123,11 +123,11 @@ void gfx_thread_continue(void) {
 		return;
 	}
 
-	if (--gfx_thread.gfx_thread_pause_calls < 0) {
-		gfx_thread.gfx_thread_pause_calls = 0;
+	if (--gfx_thread.pause_calls < 0) {
+		gfx_thread.pause_calls = 0;
 	}
 
-	if (gfx_thread.gfx_thread_pause_calls == 0) {
+	if (gfx_thread.pause_calls == 0) {
 		while (gfx_thread.in_run == GT_FALSE) {
 			gui_sleep(1);
 		}
@@ -140,7 +140,7 @@ static void *gfx_thread_loop(UNUSED(void *arg)) {
 static DWORD WINAPI gfx_thread_loop(UNUSED(void *arg)) {
 #endif
 	while (info.stop == FALSE) {
-		if (gfx_thread.gfx_thread_pause_calls) {
+		if (gfx_thread.pause_calls) {
 			gfx_thread.in_run = GT_FALSE;
 			gui_sleep(1);
 			continue;

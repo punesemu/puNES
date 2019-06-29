@@ -40,23 +40,27 @@ enum snd_thread_actions {
 
 typedef struct _alsa {
 	snd_pcm_t *playback;
-	snd_pcm_sframes_t (*snd_writei) (snd_pcm_t *pcm, const void *buffer, snd_pcm_uframes_t size);
+	snd_pcm_sframes_t (*snd_writei)(snd_pcm_t *pcm, const void *buffer, snd_pcm_uframes_t size);
 
 	snd_pcm_t *capture;
-	snd_pcm_sframes_t (*snd_readi) (snd_pcm_t *pcm, const void *buffer, snd_pcm_uframes_t size);
+	snd_pcm_sframes_t (*snd_readi)(snd_pcm_t *pcm, const void *buffer, snd_pcm_uframes_t size);
 } _alsa;
 typedef struct _snd_thread {
 	pthread_t thread;
 	pthread_mutex_t lock;
 
+	BYTE first;
+
 	BYTE action;
 	BYTE in_run;
-	BYTE first;
+	int pause_calls;
 
 #if !defined (RELEASE)
 	double tick;
 #endif
 } _snd_thread;
+
+static void _snd_playback_stop(void);
 
 static int alsa_find_index_id(_snd_list_dev *list, uTCHAR *id, int size);
 static void alsa_enum_cards(_snd_list_dev *list, snd_pcm_stream_t stream);
@@ -133,8 +137,33 @@ void snd_quit(void) {
 #endif
 }
 
+void snd_reset_buffers(void) {
+	snd_thread_pause();
+
+	if (snd.initialized == TRUE) {
+		cbd.samples_available = 0;
+		cbd.bytes_available = 0;
+		cbd.write = cbd.start;
+		cbd.read = (SBYTE *)cbd.start;
+		memset(cbd.start, 0x00, snd.buffer.size);
+
+		audio_channels_reset();
+		audio_reset_blipbuf();
+
+		snd.buffer.start = FALSE;
+	}
+
+	snd_thread_continue();
+}
+
 void snd_thread_pause(void) {
-	if (snd_thread.action != ST_UNINITIALIZED) {
+	if (snd_thread.action == ST_UNINITIALIZED) {
+		return;
+	}
+
+	snd_thread.pause_calls++;
+
+	if (snd_thread.pause_calls == 1) {
 		snd_thread.action = ST_PAUSE;
 
 		while (snd_thread.in_run == TRUE) {
@@ -143,11 +172,21 @@ void snd_thread_pause(void) {
 	}
 }
 void snd_thread_continue(void) {
-	if (snd_thread.action != ST_UNINITIALIZED) {
+	if (snd_thread.action == ST_UNINITIALIZED) {
+		return;
+	}
+
+	if (--snd_thread.pause_calls < 0) {
+		snd_thread.pause_calls = 0;
+	}
+
+	if (snd_thread.pause_calls == 0) {
 		snd_thread.action = ST_RUN;
 
-		while (snd_thread.in_run == FALSE) {
-			gui_sleep(1);
+		if (snd.initialized == TRUE) {
+			while (snd_thread.in_run == FALSE) {
+				gui_sleep(1);
+			}
 		}
 	}
 }
@@ -166,8 +205,10 @@ BYTE snd_playback_start(void) {
 		return (EXIT_OK);
 	}
 
+	snd_thread_pause();
+
 	// come prima cosa blocco eventuali riproduzioni
-	snd_playback_stop();
+	_snd_playback_stop();
 
 	memset(&snd, 0x00, sizeof(_snd));
 	memset(&alsa, 0x00, sizeof(_alsa));
@@ -270,40 +311,30 @@ BYTE snd_playback_start(void) {
 	}
 
 	snd_thread.first = TRUE;
+	snd.initialized = TRUE;
 
 	snd_thread_continue();
 	gui_sleep(150);
 	return (EXIT_OK);
 
 	snd_playback_start_error:
-	snd_playback_stop();
+	_snd_playback_stop();
+	snd_thread_continue();
+	gui_sleep(150);
 	return (EXIT_ERROR);
 }
 void snd_playback_stop(void) {
 	snd_thread_pause();
+	_snd_playback_stop();
+	snd_thread_continue();
+}
 
-	if (cbd.start) {
-		free(cbd.start);
-		cbd.start = NULL;
-	}
-
-	if (cbd.silence) {
-		free(cbd.silence);
-		cbd.silence = NULL;
-	}
-
-	snd.cache = NULL;
-
-	if (audio_channels_quit) {
-		audio_channels_quit();
-	}
-
-	audio_quit_blipbuf();
-
-	if (alsa.playback) {
-		snd_pcm_close(alsa.playback);
-		alsa.playback = NULL;
-		gui_sleep(150);
+void snd_playback_pause(void) {
+	snd.pause_calls++;
+}
+void snd_playback_continue(void) {
+	if (--snd.pause_calls < 0) {
+		snd.pause_calls = 0;
 	}
 }
 
@@ -464,6 +495,34 @@ void snd_list_devices(void) {
 #endif
 }
 #endif
+
+static void _snd_playback_stop(void) {
+	snd.initialized = FALSE;
+
+	if (cbd.start) {
+		free(cbd.start);
+		cbd.start = NULL;
+	}
+
+	if (cbd.silence) {
+		free(cbd.silence);
+		cbd.silence = NULL;
+	}
+
+	snd.cache = NULL;
+
+	if (audio_channels_quit) {
+		audio_channels_quit();
+	}
+
+	audio_quit_blipbuf();
+
+	if (alsa.playback) {
+		snd_pcm_close(alsa.playback);
+		alsa.playback = NULL;
+		gui_sleep(150);
+	}
+}
 
 static int alsa_find_index_id(_snd_list_dev *list, uTCHAR *id, int size) {
 	int i, index = -1;
@@ -744,7 +803,7 @@ static void *alsa_thread_loop(UNUSED(void *data)) {
 		if (snd_thread.action == ST_STOP) {
 			snd_thread.in_run = FALSE;
 			break;
-		} else if (snd_thread.action == ST_PAUSE) {
+		} else if ((snd_thread.action == ST_PAUSE) || (snd.initialized == FALSE)) {
 			snd_thread.in_run = FALSE;
 			gui_sleep(1);
 			continue;
@@ -796,10 +855,16 @@ static void *alsa_thread_loop(UNUSED(void *data)) {
 			alsa_wr_buf((void *)cbd.silence, avail);
 			snd.out_of_sync++;
 		} else {
+			void *read = (void *)cbd.read;
+
 			snd_thread_lock();
 
-			wave_write((SWORD *)cbd.read, avail);
-			alsa_wr_buf((void *)cbd.read, avail);
+			if (snd.pause_calls) {
+				read = (void *)cbd.silence;
+			}
+
+			wave_write((SWORD *)read, avail);
+			alsa_wr_buf(read, avail);
 
 			cbd.bytes_available -= len;
 			cbd.samples_available -= avail;
@@ -830,7 +895,7 @@ static void *alsa_thread_loop(UNUSED(void *data)) {
 				fps.frames_skipped,
 				snd.overlap,
 				snd.out_of_sync,
-				(int) fps.gfx,
+				(int)fps.gfx,
 				machine.ms_frame,
 				" ");
 		}

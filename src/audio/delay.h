@@ -31,6 +31,7 @@
 
 EXTERNC BYTE ch_stereo_delay_init(void);
 EXTERNC void ch_stereo_delay_quit(void);
+EXTERNC void ch_stereo_delay_reset(void);
 EXTERNC void ch_stereo_delay_tick(SWORD value);
 EXTERNC void ch_stereo_delay_set(void);
 
