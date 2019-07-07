@@ -735,7 +735,9 @@ BYTE emu_turn_on(void) {
 	{
 		BYTE i;
 		for (i = 0; i < 8; i++) {
-			ppu_tick();
+			if (info.mapper.id != NSF_MAPPER) {
+				ppu_tick();
+			}
 			apu_tick(NULL);
 			cpu.odd_cycle = !cpu.odd_cycle;
 		}
