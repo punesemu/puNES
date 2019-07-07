@@ -128,12 +128,13 @@ BYTE gui_create(void) {
 
 	{
 		int screenNumber = qApp->desktop()->screenNumber(qt.mwin);
+		QRect geometry = QGuiApplication::screens().at(screenNumber)->geometry();
 
-		if (cfg->last_pos.x > qApp->desktop()->screenGeometry(screenNumber).width()) {
+		if (cfg->last_pos.x > geometry.width()) {
 			cfg->last_pos.x = 0;
 			cfg->last_pos_settings.x = 0;
 		}
-		if (cfg->last_pos.y > qApp->desktop()->screenGeometry(screenNumber).height()) {
+		if (cfg->last_pos.y > geometry.height()) {
 			cfg->last_pos.x = 0;
 			cfg->last_pos_settings.y = 0;
 		}

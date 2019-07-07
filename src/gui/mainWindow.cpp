@@ -22,6 +22,7 @@
 #include <QtCore/QDateTime>
 #include <QtCore/QUrl>
 #include <QtGui/QDesktopServices>
+#include <QtGui/QScreen>
 #include <libgen.h>
 #include "mainWindow.moc"
 #include "dlgSettings.hpp"
@@ -39,15 +40,15 @@
 #include "gui.h"
 #include "debugger.h"
 
-#if _WIN32 || _WIN64
-#if _WIN64
+#if defined (_WIN32) || defined (_WIN64)
+#if defined (_WIN64)
 #define ENVIRONMENT "x86_64"
 #else
 #define ENVIRONMENT "x86"
 #endif
 #endif
-#if __GNUC__
-#if __x86_64__
+#if defined (__GNUC__)
+#if defined (__x86_64__)
 #define ENVIRONMENT "x86_64"
 #else
 #define ENVIRONMENT "x86"
@@ -755,17 +756,18 @@ void mainWindow::ctrl_disk_side(QAction *action) {
 }
 void mainWindow::update_gfx_monitor_dimension(void) {
 	int screenNumber = qApp->desktop()->screenNumber(this);
+	QRect g;
 
 	if (gfx.type_of_fscreen_in_use == FULLSCR_IN_WINDOW) {
-		gfx.w[MONITOR] = qApp->desktop()->availableGeometry(screenNumber).width() -
-			(frameGeometry().width() - geometry().width());
-		gfx.h[MONITOR] = qApp->desktop()->availableGeometry(screenNumber).height() -
-			(frameGeometry().height() - geometry().height()) -
+		g = QGuiApplication::screens().at(screenNumber)->availableGeometry();
+		gfx.w[MONITOR] = g.width() - (frameGeometry().width() - geometry().width());
+		gfx.h[MONITOR] = g.height() - (frameGeometry().height() - geometry().height()) -
 			(menubar->isHidden() ? 0 : menubar->sizeHint().height()) -
 			(statusbar->isHidden() ? 0 : statusbar->sizeHint().height());
 	} else if (gfx.type_of_fscreen_in_use == FULLSCR) {
-		gfx.w[MONITOR] = qApp->desktop()->screenGeometry(screenNumber).width();
-		gfx.h[MONITOR] = qApp->desktop()->screenGeometry(screenNumber).height();
+		g = QGuiApplication::screens().at(screenNumber)->geometry();
+		gfx.w[MONITOR] = g.width();
+		gfx.h[MONITOR] = g.height();
 	}
 }
 

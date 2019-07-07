@@ -20,12 +20,12 @@
 #define UNICODE_DEF_H_
 
 // windows
-#if defined(_WIN32)
+#if defined (_WIN32)
 #include <wchar.h>
 
 typedef wchar_t uTCHAR;
 
-#if defined(_WIN64) || defined(__MINGW64__)
+#if defined (_WIN64) || defined (__MINGW64__)
 #define ustructstat _stat64i32
 #else
 #define ustructstat _stat32

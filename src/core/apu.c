@@ -42,18 +42,11 @@ void apu_tick(BYTE *hwtick) {
 	 * questo il ciclo successivo, valorizzo il
 	 * registro.
 	 */
-#if defined (VECCHIA_GESTIONE_JITTER)
-	if (r4017.jitter.delay) {
-		r4017.jitter.delay = FALSE;
-		r4017_jitter();
-	}
-#else
 	if (r4017.jitter.delay) {
 		r4017.jitter.delay = FALSE;
 		r4017_jitter(0)
 	}
 	r4017_reset_frame()
-#endif
 
 	/* quando apu.cycles e' a 0 devo eseguire uno step */
 	if (!apu.cycles) {
@@ -260,12 +253,8 @@ void apu_turn_on(void) {
 		DMC.output = 0;
 		r4017.jitter.delay = FALSE;
 		r4017.reset_frame_delay = 0;
-#if defined (VECCHIA_GESTIONE_JITTER)
-		r4017_jitter();
-#else
 		r4017_jitter(9999)
 		r4017_reset_frame()
-#endif
 		r4015.value = 0;
 		S1.length.enabled = 0;
 		S1.length.value = 0;

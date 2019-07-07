@@ -1653,25 +1653,6 @@ INLINE static void apu_wr_reg(WORD address, BYTE value) {
 			}
 			return;
 		}
-
-#if defined (VECCHIA_GESTIONE_JITTER)
-		if (address == 0x4017) {
-			/* APU frame counter */
-			r4017.jitter.value = value;
-			/*
-			 * nell'2A03 se la scrittura del $4017 avviene
-			 * in un ciclo pari, allora l'effettiva modifica
-			 * avverra' nel ciclo successivo.
-			 */
-			if (cpu.odd_cycle) {
-				r4017.jitter.delay = TRUE;
-			} else {
-				r4017.jitter.delay = FALSE;
-				r4017_jitter();
-			}
-			return;
-		}
-#else
 		if (address == 0x4017) {
 			/* APU frame counter */
 			r4017.jitter.value = value;
@@ -1689,7 +1670,6 @@ INLINE static void apu_wr_reg(WORD address, BYTE value) {
 			}
 			return;
 		}
-#endif
 	}
 
 #if defined (DEBUG)

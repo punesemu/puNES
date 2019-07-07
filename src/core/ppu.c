@@ -1174,7 +1174,6 @@ INLINE static void ppu_oam_evaluation(void) {
 					spr_ev.timing = 1;
 					/* leggo la coordinata Y dello sprite 0 */
 					r2004.value = oam.element[0][YC];
-#if !defined (VECCHIA_GESTIONE_SPRITE0_1)
 					/*
 					 * We've since discovered that not only are
 					 * sprites 0 and 1 temporarily replaced with
@@ -1192,26 +1191,8 @@ INLINE static void ppu_oam_evaluation(void) {
 							oam.data[i] = oam.data[(r2003.value & 0xF8) + i];
 						}
 					}
-#endif
 				} else {
-#if !defined (VECCHIA_GESTIONE_SPRITE0_1)
 					spr_ev.real = spr_ev.index;
-#else
-					/*
-					 * http://forums.nesdev.com/viewtopic.php?f=3&t=465
-					 * The Wiki says something about sprite 0 and 1 being
-					 * fetched from the high 5 bits of the sprite address,
-					 * instead of address locations 0 and 4. The Sachen
-					 * game "Huge Insect (Sachen) [!].nes" relies on
-					 * this same behavior.
-					 * Questo, inoltre ha fatto sparire la pallina nella
-					 * rom "Escape_from_pong" che, a quanto sembra, e'
-					 * il reale comportamaneto su un autentico NES!!.
-					 */
-					if ((spr_ev.real = ((spr_ev.index <= 1) ? ((r2003.value & 0xF8) >> 2) : 0) + spr_ev.index) >= 64) {
-						spr_ev.real -= 64;
-					}
-#endif
 					/* leggo dall'OAM il byte 0 dell'elemento in esame */
 					r2004.value = oam.element[spr_ev.real][YC];
 					/*

@@ -161,9 +161,9 @@ chl_map wdgCheatsEditor::extract_cheat_from_row(int row) {
 	cheat.insert("description", tableWidget_Cheats->item(row, CR_DESCRIPTION)->text());
 	cheat.insert("enabled_compare", tableWidget_Cheats->item(row, CR_ENABLED_COMPARE)->text());
 
-	if (tableWidget_Cheats->item(row, CR_CODE)->backgroundColor() == COLOR_GG) {
+	if (tableWidget_Cheats->item(row, CR_CODE)->background() == COLOR_GG) {
 		cheat["genie"] = tableWidget_Cheats->item(row, CR_CODE)->text();
-	} else if (tableWidget_Cheats->item(row, CR_CODE)->backgroundColor() == COLOR_ROCKY) {
+	} else if (tableWidget_Cheats->item(row, CR_CODE)->background() == COLOR_ROCKY) {
 		cheat["rocky"] = tableWidget_Cheats->item(row, CR_CODE)->text();
 	}
 
@@ -236,10 +236,10 @@ void wdgCheatsEditor::update_cheat_row(int row, chl_map *cheat) {
 
 	if ((*cheat)["genie"] != "-") {
 		tableWidget_Cheats->item(row, CR_CODE)->setText((*cheat)["genie"]);
-		tableWidget_Cheats->item(row, CR_CODE)->setBackgroundColor(COLOR_GG);
+		tableWidget_Cheats->item(row, CR_CODE)->setBackground(COLOR_GG);
 	} else if ((*cheat)["rocky"] != "-") {
 		tableWidget_Cheats->item(row, CR_CODE)->setText((*cheat)["rocky"]);
-		tableWidget_Cheats->item(row, CR_CODE)->setBackgroundColor(COLOR_ROCKY);
+		tableWidget_Cheats->item(row, CR_CODE)->setBackground(COLOR_ROCKY);
 	} else {
 		tableWidget_Cheats->item(row, CR_CODE)->setText("-");
 	}
