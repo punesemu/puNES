@@ -51,13 +51,9 @@ void map_init_NSF(void) {
 			nsf.songs.current = nsf.playlist.starting;
 			nsf.playlist.index = 0;
 
-			nsf.scroll_info_nsf.index.count = 0;
-			nsf.scroll_info_nsf.index.start = 0;
-			memset(nsf.scroll_info_nsf.tags, 0x00, sizeof(nsf.scroll_info_nsf.tags));
+			nsf.scroll_info_nsf.pixel = 0;
 
-			nsf.scroll_title_song.index.count = 0;
-			nsf.scroll_title_song.index.start = 0;
-			memset(nsf.scroll_title_song.tags, 0x00, sizeof(nsf.scroll_title_song.tags));
+			nsf.scroll_title_song.pixel = 0;
 
 			nsf.curtain_title_song.index = 0;
 			nsf.curtain_title_song.pause = FALSE;

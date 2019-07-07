@@ -77,7 +77,7 @@ enum dos_tgs {
 #define dos_text(x, y, ...) _dos_text(x, y, -1, -1, -1, -1, __VA_ARGS__);
 #define dospf(a) (a * 8)
 
-#if defined _DOS_STATIC_
+#if defined (_DOS_STATIC_)
 #define doscolor(clr) dos_table[clr]
 
 static WORD dos_table[] = {

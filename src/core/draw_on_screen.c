@@ -47,18 +47,26 @@ static char dos_tags[][10] = {
 
 void _dos_text(int x, int y, int l, int r, int b, int t, const char *fmt, ...) {
 	va_list ap;
-	unsigned int i, length = 0;
+	unsigned int i, dlength = 0, tlength = 0;
 	int w = 0, pixels = 0;
 	char text[1024];
 	WORD color = doscolor(DOS_NORMAL), background = doscolor(DOS_BLACK);
-	BYTE is_bck_color = FALSE;
+	BYTE first_char = TRUE, last_char = FALSE, is_bck_color = FALSE;
 
 	va_start(ap, fmt);
 	vsnprintf(text, sizeof(text), fmt, ap);
 	va_end(ap);
 
-	length = dos_strlen(text);
-	w = length * 8;
+	if (l < 0) {
+		l = 0;
+	}
+	if (r < 0) {
+		r = 0;
+	}
+
+	tlength = strlen(text);
+	dlength = dos_strlen(text);
+	w = dlength * 8 - l - r;
 
 	if (x >= DOS_CENTER) {
 		if (x == DOS_CENTER) {
@@ -89,9 +97,10 @@ void _dos_text(int x, int y, int l, int r, int b, int t, const char *fmt, ...) {
 
 	for (pixels = x; pixels < SCR_ROWS;) {
 		unsigned int font_x = 0, font_y = 0;
+		int xl = 0, xr = 0;
 		char ch = ' ';
 
-		if (i < strlen(text)) {
+		if (i < tlength) {
 			ch = text[i];
 		} else {
 			break;
@@ -131,7 +140,16 @@ void _dos_text(int x, int y, int l, int r, int b, int t, const char *fmt, ...) {
 			}
 		}
 
-		if ((pixels += 8) > SCR_ROWS) {
+		if (i == (tlength - 1)) {
+			last_char = TRUE;
+		}
+		if (first_char) {
+			xl = l;
+		}
+		if (last_char) {
+			xr = r;
+		}
+		if ((pixels += (8 - xl - xr)) > SCR_ROWS) {
 			break;
 		}
 
@@ -657,7 +675,7 @@ void _dos_text(int x, int y, int l, int r, int b, int t, const char *fmt, ...) {
 			int x1, y1;
 
 			for (y1 = 0; y1 < 8; y1++) {
-				char *list = font_8x8[font_y] + font_x;
+				char *list = font_8x8[font_y] + font_x + xl;
 
 				if ((y + y1) >= SCR_LINES) {
 					break;
@@ -669,13 +687,9 @@ void _dos_text(int x, int y, int l, int r, int b, int t, const char *fmt, ...) {
 					continue;
 				}
 
-				for (x1 = 0; x1 < 8; x1++) {
+				for (x1 = 0; x1 < (8 - xl - xr); x1++) {
 					if ((x + x1) >= SCR_ROWS) {
 						break;
-					} else if ((l >= 0) && ((x + x1) < (x + l))) {
-						continue;
-					} else if ((r >= 0) && ((x + x1) > (x + r))) {
-						continue;
 					}
 
 					if (list[x1] == '@') {
@@ -691,8 +705,9 @@ void _dos_text(int x, int y, int l, int r, int b, int t, const char *fmt, ...) {
 				font_y++;
 			}
 		}
-		x += 8;
+		x += (8 - xl - xr);
 		i++;
+		first_char = FALSE;
 	}
 }
 int dos_strlen(const char *fmt, ...) {
@@ -855,4 +870,3 @@ void dos_box(int x, int y, int w, int h, WORD color1, WORD color2, WORD bck) {
 		dos_hline(x + 1, y + y1, w - 2, bck);
 	}
 }
-

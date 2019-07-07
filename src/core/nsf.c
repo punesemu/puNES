@@ -66,11 +66,6 @@ enum nsf_timining {
 	NSF_TIME_FADEOUT = 3000,
 	NSF_TIME_EFFECT_UPDATE = 1000 / 25
 };
-enum nsf_text_scroll {
-	NSF_TEXT_SCROLL_INC_NONE,
-	NSF_TEXT_SCROLL_INC_START,
-	NSF_TEXT_SCROLL_INC_COUNT
-};
 enum nsf_text_curtain {
 	NSF_TEXT_CURTAIN_INIT,
 	NSF_TEXT_CURTAIN_TICK,
@@ -142,7 +137,8 @@ static char *nsf_print_color(int color);
 static char *nsf_print_number(unsigned int song, BYTE decimal, int color);
 static char *nsf_print_time(double timer, BYTE mode, int color);
 static void nsf_print_option(_nsf_option_data *option, BYTE active, BYTE mode);
-static char *nsf_text_scroll_tick(_nsf_text_scroll *scroll);
+static void nsf_text_scroll_set_buffer(_nsf_text_scroll *scroll, const char *fmt, ...);
+static void nsf_text_scroll_tick(_nsf_text_scroll *scroll);
 static void nsf_text_curtain(_nsf_text_curtain *curtain, BYTE mode);
 static void nsf_text_curtain_add_line(_nsf_text_curtain *curtain, const char *fmt, ...);
 static void nsf_reset_song_variables(void);
@@ -468,15 +464,17 @@ BYTE nsf_load_rom(void) {
 void nsf_after_load_rom(void) {
 	nsf.draw_mask_frames = 2;
 
+	nsf.scroll_info_nsf.x = 0;
+	nsf.scroll_info_nsf.y = dospf(3);
 	nsf.scroll_info_nsf.rows = SCR_ROWS / dospf(1);
 	nsf.scroll_info_nsf.reload = 150;
-	memset(nsf.scroll_info_nsf.buffer, 0x00, sizeof(nsf.scroll_info_nsf.buffer));
-	snprintf(nsf.scroll_info_nsf.buffer, sizeof(nsf.scroll_info_nsf.buffer),
-		"[cyan]%s[normal] - [yellow]%s[normal] - %s",
+	nsf.scroll_info_nsf.velocity = 4;
+	nsf_text_scroll_set_buffer(&nsf.scroll_info_nsf, "[cyan]%s[normal] - [yellow]%s[normal] - %s",
 		nsf.info.name, nsf.info.artist, nsf.info.copyright);
 
 	nsf.scroll_title_song.rows = NSF_GUI_INFO_SONG_TITLE_ROW;
-	nsf.scroll_title_song.reload = 250;
+	nsf.scroll_title_song.reload = 200;
+	nsf.scroll_title_song.velocity = 5;
 
 	nsf.curtain_info.reload.r1 = 50;
 	nsf.curtain_info.reload.r2 = 3000;
@@ -673,8 +671,7 @@ void nsf_reset_song_title(void) {
 	if (nsf.info_song) {
 		memcpy(&nsf.current_song, &nsf.info_song[nsf.songs.current], sizeof(_nsf_info_song));
 
-		memset(nsf.scroll_title_song.buffer, 0x00, sizeof(nsf.scroll_title_song.buffer));
-		snprintf(nsf.scroll_title_song.buffer, sizeof(nsf.scroll_title_song.buffer), "%s", nsf.current_song.track_label);
+		nsf_text_scroll_set_buffer(&nsf.scroll_title_song, "%s", nsf.current_song.track_label);
 
 		nsf_text_curtain(&nsf.curtain_title_song, NSF_TEXT_CURTAIN_INIT);
 		nsf_text_curtain_add_line(&nsf.curtain_title_song, "%s", nsf.current_song.track_label);
@@ -1264,7 +1261,7 @@ static void nsf_draw_controls(void) {
 					" [bck][yellow][blue]NSF[normal][bck][black] Player ");
 			}
 		}
-		dos_text(0, dospf(3), nsf_text_scroll_tick(&nsf.scroll_info_nsf));
+		nsf_text_scroll_tick(&nsf.scroll_info_nsf);
 	}
 
 	// comandi
@@ -1515,9 +1512,9 @@ static void nsf_draw_controls(void) {
 		if (nsf.current_song.track_label) {
 			if (nsf.timers.song > 100) {
 				if (strlen(nsf.current_song.track_label) > NSF_GUI_INFO_SONG_TITLE_ROW) {
-					dos_text(x + ((w - dospf(nsf.scroll_title_song.rows)) / 2),
-						y + ((h / NSF_GUI_INFO_SONG_LINES) * 2) + (((h / NSF_GUI_INFO_SONG_LINES) - 8) / 2),
-						nsf_text_scroll_tick(&nsf.scroll_title_song));
+					nsf.scroll_title_song.x = x + ((w - dospf(nsf.scroll_title_song.rows)) / 2);
+					nsf.scroll_title_song.y = y + ((h / NSF_GUI_INFO_SONG_LINES) * 2) + (((h / NSF_GUI_INFO_SONG_LINES) - 8) / 2);
+					nsf_text_scroll_tick(&nsf.scroll_title_song);
 				} else {
 					if (nsf.curtain_title_song.count > 0) {
 						nsf_text_curtain(&nsf.curtain_title_song, NSF_TEXT_CURTAIN_TICK);
@@ -1801,79 +1798,60 @@ static void nsf_print_option(_nsf_option_data *option, BYTE active, BYTE mode) {
 		dos_text(option->x1 + xtext, option->y + 1, "[gray]%s", option->txt);
 	}
 }
-static char *nsf_text_scroll_tick(_nsf_text_scroll *scroll) {
+static void nsf_text_scroll_set_buffer(_nsf_text_scroll *scroll, const char *fmt, ...) {
+	va_list ap;
+	size_t len;
+
+	memset(scroll->buffer, 0x20, sizeof(scroll->buffer));
+	scroll->buffer[sizeof(scroll->buffer) - 1] = 0x00;
+
+	va_start(ap, fmt);
+	vsnprintf(scroll->buffer + scroll->rows, sizeof(scroll->buffer) - scroll->rows, fmt, ap);
+	va_end(ap);
+
+	scroll->pixel_len = dos_strlen(scroll->buffer) * 8;
+	len = strlen(scroll->buffer);
+	scroll->buffer[len] = 0x20;
+	scroll->buffer[len + scroll->rows - 1] = 0x00;
+}
+static void nsf_text_scroll_tick(_nsf_text_scroll *scroll) {
 	if ((dos_strlen(scroll->buffer) > 0) && (scroll->timer <= 0)) {
-		int i, count, now, tmp, tag, end = strlen(scroll->buffer);
-		BYTE action = NSF_TEXT_SCROLL_INC_NONE;
+		int margin, start, row, tmp, tag;
+		int count = 0, bindex = 0, sindex = 0;
 
 		scroll->timer = scroll->reload;
 
 		memset(scroll->string, 0x00, sizeof(scroll->string));
-		strcpy(scroll->string, scroll->tags);
+		scroll->pixel = scroll->pixel + scroll->velocity;
 
-		i = strlen(scroll->string);
-		now = scroll->index.start;
-
-		for (count = 0; count < scroll->rows;) {
-			if (scroll->index.count < scroll->rows) {
-				action = NSF_TEXT_SCROLL_INC_COUNT;
-
-				if (((scroll->rows - count) > scroll->index.count) && (now < end)) {
-					scroll->string[i] = ' ';
-					i++;
-					count++;
-					continue;
-				}
-			} else {
-				action = NSF_TEXT_SCROLL_INC_START;
-			}
-
-			if (now >= end) {
-				scroll->string[i] = ' ';
-				i++;
-			} else {
-				if ((scroll->buffer[now] == '[') && ((tmp = dos_is_tag(scroll->buffer + now, &tag)) > 0)) {
-					strncat(scroll->string, scroll->buffer + now, tmp);
-					now += tmp;
-					i += tmp;
-					continue;
-				}
-				scroll->string[i] = scroll->buffer[now];
-				now++;
-				i++;
-			}
-
-			count++;
+		if (scroll->pixel >= scroll->pixel_len) {
+			scroll->pixel -= scroll->pixel_len;
 		}
 
-		switch (action) {
-			case NSF_TEXT_SCROLL_INC_NONE:
-				break;
-			case NSF_TEXT_SCROLL_INC_COUNT:
-				scroll->index.count++;
-				break;
-			case NSF_TEXT_SCROLL_INC_START:
-				if (scroll->index.start < end) {
-					while (scroll->buffer[scroll->index.start] == '[') {
-						if ((tmp = dos_is_tag(scroll->buffer + scroll->index.start, &tag)) > 0) {
-							if (tag <= DOS_BACKGROUND_COLOR) {
-								strncat(scroll->tags, scroll->buffer + scroll->index.start, tmp);
-							}
-							scroll->index.start += tmp;
-						}
-					}
-					scroll->index.start++;
-				} else {
-					scroll->index.count = 0;
-					scroll->index.start = 0;
-					memset(scroll->tags, 0x00, sizeof(scroll->tags));
-				}
-				break;
+		start = scroll->pixel / 8;
+		margin = scroll->pixel % 8;
+
+		for (row = 0; row < (scroll->rows + (margin > 0));) {
+			if ((scroll->buffer[bindex] == '[') && ((tmp = dos_is_tag(scroll->buffer + bindex, &tag)) > 0)) {
+				strncat(scroll->string, scroll->buffer + bindex, tmp);
+				bindex += tmp;
+				sindex += tmp;
+				continue;
+			}
+			if (++count <= start) {
+				bindex++;
+				continue;
+			}
+			scroll->string[sindex] = scroll->buffer[bindex];
+			bindex++;
+			sindex++;
+			row++;
 		}
+
+		_dos_text(scroll->x, scroll->y, margin, (margin ? 8 - margin : -1), -1, -1, scroll->string);
 	} else {
 		scroll->timer -= nsf.timers.diff;
 	}
-	return (scroll->string);
 }
 static void nsf_text_curtain(_nsf_text_curtain *curtain, BYTE mode) {
 	if (mode == NSF_TEXT_CURTAIN_INIT) {
@@ -1984,8 +1962,7 @@ static void nsf_reset_song_variables(void) {
 		int y = NSF_GUI_INFO_SONG_Y;
 
 		nsf.scroll_title_song.timer = 0;
-		nsf.scroll_title_song.index.count = 0;
-		nsf.scroll_title_song.index.start = 0;
+		nsf.scroll_title_song.pixel = 0;
 
 		nsf.curtain_title_song.reload.r1 = 50;
 		nsf.curtain_title_song.reload.r2 = 3000;

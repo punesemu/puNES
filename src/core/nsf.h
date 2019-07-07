@@ -67,16 +67,15 @@ typedef struct _nsf_info_song {
 	char *track_label;
 } _nsf_info_song;
 typedef struct _nsf_text_scroll {
+	int x, y;
+	int rows;
 	char buffer[2048];
 	char string[1024];
-	char tags[1024];
-	int rows;
 	double timer;
 	double reload;
-	struct _nsf_text_scroll_index {
-		int count;
-		int start;
-	} index;
+	int velocity;
+	int pixel_len;
+	int pixel;
 } _nsf_text_scroll;
 typedef struct _nsf_text_curtain_line {
 	char *text;
@@ -215,7 +214,7 @@ EXTERNC struct _nsf {
 	_nsf_text_curtain curtain_info;
 } nsf;
 
-#if defined _NSF_STATIC_
+#if defined (_NSF_STATIC_)
 EXTERNC static char nsf_default_label[4] = {"<?>"};
 EXTERNC static const BYTE nsf_routine[17] = {
 //	0     1
