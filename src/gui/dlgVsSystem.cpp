@@ -17,6 +17,7 @@
  */
 
 #include <QtWidgets/QDesktopWidget>
+#include <QtGui/QScreen>
 #include "dlgVsSystem.moc"
 #include "mainWindow.hpp"
 #include "dlgSettings.hpp"
@@ -132,9 +133,9 @@ int dlgVsSystem::update_pos(int startY) {
 	int screenNumber = qApp->desktop()->screenNumber(parentWidget());
 	int x = parentWidget()->pos().x() + parentWidget()->frameGeometry().width();
 	int y = parentWidget()->geometry().y() + startY;
+	QRect g = QGuiApplication::screens().at(screenNumber)->geometry();
 
-	if ((x + frameGeometry().width() - qApp->desktop()->screenGeometry(screenNumber).left()) >
-		qApp->desktop()->screenGeometry(screenNumber).width()) {
+	if ((x + frameGeometry().width() - g.left()) > g.width()) {
 		x = parentWidget()->pos().x() - frameGeometry().width();
 	}
 	move(QPoint(x, y));

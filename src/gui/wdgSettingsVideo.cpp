@@ -410,7 +410,7 @@ void wdgSettingsVideo::shader_param_set(void) {
 		tableWidget_Shader_Parameters->resizeColumnToContents(0);
 
 		if (pshd->value != pshd->initial) {
-			col->setBackgroundColor(Qt::yellow);
+			col->setBackground(Qt::yellow);
 		}
 
 		{
@@ -838,7 +838,7 @@ void wdgSettingsVideo::s_shader_param_spin(const QString &text) {
 		tableWidget_Shader_Parameters->item(row, WSV_SP_DESC)->setForeground(shdp_brush.fg);
 		tableWidget_Shader_Parameters->item(row, WSV_SP_DESC)->setBackground(shdp_brush.bg);
 	} else {
-		tableWidget_Shader_Parameters->item(row, WSV_SP_DESC)->setBackgroundColor(Qt::yellow);
+		tableWidget_Shader_Parameters->item(row, WSV_SP_DESC)->setBackground(Qt::yellow);
 	}
 }
 void wdgSettingsVideo::s_shader_param_default(UNUSED(bool checked)) {
