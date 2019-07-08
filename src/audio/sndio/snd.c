@@ -304,13 +304,13 @@ BYTE snd_playback_start(void) {
 	snd.initialized = TRUE;
 
 	snd_thread_continue();
-	gui_sleep(50);
+	gui_sleep(150);
 	return (EXIT_OK);
 
 	snd_playback_start_error:
 	_snd_playback_stop();
 	snd_thread_continue();
-	gui_sleep(50);
+	gui_sleep(150);
 	return (EXIT_ERROR);
 }
 void snd_playback_stop(void) {
@@ -368,6 +368,7 @@ static void _snd_playback_stop(void) {
 	if (sndio.playback) {
 		sio_close(sndio.playback);
 		sndio.playback = NULL;
+		gui_sleep(150);
 	}
 
 	if (sndio.pfds) {
