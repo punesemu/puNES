@@ -111,7 +111,7 @@ AS_CASE(["$host_os"],
 		export CC
 		export CXX
 	],
-	[mingw32*], [
+	[mingw32*|msys], [
 		MOCDEFINES="${MOCDEFINES} -D_WIN32"
 		my_CPPFLAGS="${my_CPPFLAGS} -I${TOP_SRCDIR}/src/gui/windows"
 		linux=no
@@ -853,7 +853,7 @@ AS_CASE(["$host_os"],
 )
 
 AS_CASE(["$host_os"],
-	[mingw32*], [
+	[mingw32*|msys], [
 		AC_CHECK_TOOL(WINDRES, windres, [no])
 	], [
 		WINDRES=no
