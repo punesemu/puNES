@@ -700,6 +700,13 @@ void wdgSettingsInput::shortcuts_set(void) {
 	shortcut_update_text(mainwin->action_Load_state, SET_INP_SC_LOAD_STATE);
 	shortcut_update_text(mainwin->action_Increment_slot, SET_INP_SC_INC_SLOT);
 	shortcut_update_text(mainwin->action_Decrement_slot, SET_INP_SC_DEC_SLOT);
+	shortcut_update_text(mainwin->qaction_shcut.rwnd.active, SET_INP_SC_RWND_ACTIVE_MODE);
+	shortcut_update_text(mainwin->qaction_shcut.rwnd.step_backward, SET_INP_SC_RWND_STEP_BACKWARD);
+	shortcut_update_text(mainwin->qaction_shcut.rwnd.step_forward, SET_INP_SC_RWND_STEP_FORWARD);
+	shortcut_update_text(mainwin->qaction_shcut.rwnd.fast_backward, SET_INP_SC_RWND_FAST_BACKWARD);
+	shortcut_update_text(mainwin->qaction_shcut.rwnd.fast_forward, SET_INP_SC_RWND_FAST_FORWARD);
+	shortcut_update_text(mainwin->qaction_shcut.rwnd.play, SET_INP_SC_RWND_PLAY);
+	shortcut_update_text(mainwin->qaction_shcut.rwnd.pause, SET_INP_SC_RWND_PAUSE);
 }
 
 void wdgSettingsInput::s_controller_mode(int index) {

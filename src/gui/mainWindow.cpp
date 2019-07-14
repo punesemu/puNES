@@ -95,6 +95,13 @@ mainWindow::mainWindow() : QMainWindow() {
 	qaction_shcut.stretch_in_fullscreen = new QAction(this);
 	qaction_shcut.audio_enable = new QAction(this);
 	qaction_shcut.save_settings = new QAction(this);
+	qaction_shcut.rwnd.active = new QAction(this);
+	qaction_shcut.rwnd.step_backward = new QAction(this);
+	qaction_shcut.rwnd.step_forward = new QAction(this);
+	qaction_shcut.rwnd.fast_backward = new QAction(this);
+	qaction_shcut.rwnd.fast_forward = new QAction(this);
+	qaction_shcut.rwnd.play = new QAction(this);
+	qaction_shcut.rwnd.pause = new QAction(this);
 
 	{
 		QActionGroup *grp;
@@ -435,6 +442,14 @@ void mainWindow::shortcuts(void) {
 	// State/[Incremente slot, Decrement slot]
 	connect_shortcut(action_Increment_slot, SET_INP_SC_INC_SLOT, SLOT(s_state_save_slot_incdec()));
 	connect_shortcut(action_Decrement_slot, SET_INP_SC_DEC_SLOT, SLOT(s_state_save_slot_incdec()));
+	// Rewind operations
+	connect_shortcut(qaction_shcut.rwnd.active, SET_INP_SC_RWND_ACTIVE_MODE, SLOT(s_shcut_rwnd_active_deactive_mode()));
+	connect_shortcut(qaction_shcut.rwnd.step_backward, SET_INP_SC_RWND_STEP_BACKWARD, SLOT(s_shcut_rwnd_step_backward()));
+	connect_shortcut(qaction_shcut.rwnd.step_forward, SET_INP_SC_RWND_STEP_FORWARD, SLOT(s_shcut_rwnd_step_forward()));
+	connect_shortcut(qaction_shcut.rwnd.fast_backward, SET_INP_SC_RWND_FAST_BACKWARD, SLOT(s_shcut_rwnd_fast_backward()));
+	connect_shortcut(qaction_shcut.rwnd.fast_forward, SET_INP_SC_RWND_FAST_FORWARD, SLOT(s_shcut_rwnd_fast_forward()));
+	connect_shortcut(qaction_shcut.rwnd.play, SET_INP_SC_RWND_PLAY, SLOT(s_shcut_rwnd_play()));
+	connect_shortcut(qaction_shcut.rwnd.pause, SET_INP_SC_RWND_PAUSE, SLOT(s_shcut_rwnd_pause()));
 }
 
 void mainWindow::connect_menu_signals(void) {
@@ -515,6 +530,13 @@ void mainWindow::connect_menu_signals(void) {
 	connect_action(qaction_shcut.stretch_in_fullscreen, SLOT(s_shcut_stretch_in_fullscreen()));
 	connect_action(qaction_shcut.audio_enable, SLOT(s_shcut_audio_enable()));
 	connect_action(qaction_shcut.save_settings, SLOT(s_shcut_save_settings()));
+	connect_action(qaction_shcut.rwnd.active, SLOT(s_shcut_rwnd_active_deactive_mode()));
+	connect_action(qaction_shcut.rwnd.step_backward, SLOT(s_shcut_rwnd_step_backward()));
+	connect_action(qaction_shcut.rwnd.step_forward, SLOT(s_shcut_rwnd_step_forward()));
+	connect_action(qaction_shcut.rwnd.fast_backward, SLOT(s_shcut_rwnd_fast_backward()));
+	connect_action(qaction_shcut.rwnd.fast_forward, SLOT(s_shcut_rwnd_fast_forward()));
+	connect_action(qaction_shcut.rwnd.play, SLOT(s_shcut_rwnd_play()));
+	connect_action(qaction_shcut.rwnd.pause, SLOT(s_shcut_rwnd_pause()));
 }
 void mainWindow::connect_action(QAction *action, const char *member) {
 	connect(action, SIGNAL(triggered()), this, member);
@@ -1292,113 +1314,133 @@ void mainWindow::s_shcjoy_read_timer(void) {
 
 		for (index = 0; index < SET_MAX_NUM_SC; index++) {
 			if (shcjoy.sch.value == shcjoy.shortcut[index]) {
+				if (shcjoy.sch.mode == RELEASED) {
+					switch (index + SET_INP_SC_OPEN) {
+						case SET_INP_SC_OPEN:
+							action_Open->trigger();
+							break;
+						case SET_INP_SC_QUIT:
+							action_Quit->trigger();
+							break;
+						case SET_INP_SC_TURN_OFF:
+							action_Turn_Off->trigger();
+							break;
+						case SET_INP_SC_HARD_RESET:
+							action_Hard_Reset->trigger();
+							break;
+						case SET_INP_SC_SOFT_RESET:
+							action_Soft_Reset->trigger();
+							break;
+						case SET_INP_SC_INSERT_COIN:
+							action_Insert_Coin->trigger();
+							break;
+						case SET_INP_SC_SWITCH_SIDES:
+							action_Switch_sides->trigger();
+							break;
+						case SET_INP_SC_EJECT_DISK:
+							action_Eject_Insert_Disk->trigger();
+							break;
+						case SET_INP_SC_WAV:
+							action_Start_Stop_WAV_recording->trigger();
+							break;
+						case SET_INP_SC_FULLSCREEN:
+							action_Fullscreen->trigger();
+							break;
+						case SET_INP_SC_SCREENSHOT:
+							action_Save_Screenshot->trigger();
+							break;
+						case SET_INP_SC_PAUSE:
+							action_Pause->trigger();
+							break;
+						case SET_INP_SC_FAST_FORWARD:
+							action_Fast_Forward->trigger();
+							break;
+						case SET_INP_SC_TOGGLE_GUI_IN_WINDOW:
+							action_Toggle_GUI_in_window->trigger();
+							break;
+						case SET_INP_SC_MODE_PAL:
+							qaction_shcut.mode_pal->trigger();
+							break;
+						case SET_INP_SC_MODE_NTSC:
+							qaction_shcut.mode_ntsc->trigger();
+							break;
+						case SET_INP_SC_MODE_DENDY:
+							qaction_shcut.mode_dendy->trigger();
+							break;
+						case SET_INP_SC_MODE_AUTO:
+							qaction_shcut.mode_auto->trigger();
+							break;
+						case SET_INP_SC_SCALE_1X:
+							qaction_shcut.scale_1x->trigger();
+							break;
+						case SET_INP_SC_SCALE_2X:
+							qaction_shcut.scale_2x->trigger();
+							break;
+						case SET_INP_SC_SCALE_3X:
+							qaction_shcut.scale_3x->trigger();
+							break;
+						case SET_INP_SC_SCALE_4X:
+							qaction_shcut.scale_4x->trigger();
+							break;
+						case SET_INP_SC_SCALE_5X:
+							qaction_shcut.scale_5x->trigger();
+							break;
+						case SET_INP_SC_SCALE_6X:
+							qaction_shcut.scale_6x->trigger();
+							break;
+						case SET_INP_SC_INTERPOLATION:
+							qaction_shcut.interpolation->trigger();
+							break;
+						case SET_INP_SC_INTEGER_FULLSCREEN:
+							qaction_shcut.integer_in_fullscreen->trigger();
+							break;
+						case SET_INP_SC_STRETCH_FULLSCREEN:
+							qaction_shcut.stretch_in_fullscreen->trigger();
+							break;
+						case SET_INP_SC_AUDIO_ENABLE:
+							qaction_shcut.audio_enable->trigger();
+							break;
+						case SET_INP_SC_SAVE_SETTINGS:
+							qaction_shcut.save_settings->trigger();
+							break;
+						case SET_INP_SC_SAVE_STATE:
+							action_Save_state->trigger();
+							break;
+						case SET_INP_SC_LOAD_STATE:
+							action_Load_state->trigger();
+							break;
+						case SET_INP_SC_INC_SLOT:
+							action_Increment_slot->trigger();
+							break;
+						case SET_INP_SC_DEC_SLOT:
+							action_Decrement_slot->trigger();
+							break;
+						case SET_INP_SC_RWND_ACTIVE_MODE:
+							qaction_shcut.rwnd.active->trigger();
+							break;
+						case SET_INP_SC_RWND_STEP_BACKWARD:
+							qaction_shcut.rwnd.step_backward->trigger();
+							break;
+						case SET_INP_SC_RWND_STEP_FORWARD:
+							qaction_shcut.rwnd.step_forward->trigger();
+							break;
+						case SET_INP_SC_RWND_FAST_BACKWARD:
+							qaction_shcut.rwnd.fast_backward->trigger();
+							break;
+						case SET_INP_SC_RWND_FAST_FORWARD:
+							qaction_shcut.rwnd.fast_forward->trigger();
+							break;
+						case SET_INP_SC_RWND_PLAY:
+							qaction_shcut.rwnd.play->trigger();
+							break;
+						case SET_INP_SC_RWND_PAUSE:
+							qaction_shcut.rwnd.pause->trigger();
+							break;
+					}
+				}
 				break;
 			}
 		}
-
-		if (shcjoy.sch.mode == RELEASED) {
-			switch (index + SET_INP_SC_OPEN) {
-				case SET_INP_SC_OPEN:
-					action_Open->trigger();
-					break;
-				case SET_INP_SC_QUIT:
-					action_Quit->trigger();
-					break;
-				case SET_INP_SC_TURN_OFF:
-					action_Turn_Off->trigger();
-					break;
-				case SET_INP_SC_HARD_RESET:
-					action_Hard_Reset->trigger();
-					break;
-				case SET_INP_SC_SOFT_RESET:
-					action_Soft_Reset->trigger();
-					break;
-				case SET_INP_SC_INSERT_COIN:
-					action_Insert_Coin->trigger();
-					break;
-				case SET_INP_SC_SWITCH_SIDES:
-					action_Switch_sides->trigger();
-					break;
-				case SET_INP_SC_EJECT_DISK:
-					action_Eject_Insert_Disk->trigger();
-					break;
-				case SET_INP_SC_WAV:
-					action_Start_Stop_WAV_recording->trigger();
-					break;
-				case SET_INP_SC_FULLSCREEN:
-					action_Fullscreen->trigger();
-					break;
-				case SET_INP_SC_SCREENSHOT:
-					action_Save_Screenshot->trigger();
-					break;
-				case SET_INP_SC_PAUSE:
-					action_Pause->trigger();
-					break;
-				case SET_INP_SC_FAST_FORWARD:
-					action_Fast_Forward->trigger();
-					break;
-				case SET_INP_SC_TOGGLE_GUI_IN_WINDOW:
-					action_Toggle_GUI_in_window->trigger();
-					break;
-				case SET_INP_SC_MODE_PAL:
-					qaction_shcut.mode_pal->trigger();
-					break;
-				case SET_INP_SC_MODE_NTSC:
-					qaction_shcut.mode_ntsc->trigger();
-					break;
-				case SET_INP_SC_MODE_DENDY:
-					qaction_shcut.mode_dendy->trigger();
-					break;
-				case SET_INP_SC_MODE_AUTO:
-					qaction_shcut.mode_auto->trigger();
-					break;
-				case SET_INP_SC_SCALE_1X:
-					qaction_shcut.scale_1x->trigger();
-					break;
-				case SET_INP_SC_SCALE_2X:
-					qaction_shcut.scale_2x->trigger();
-					break;
-				case SET_INP_SC_SCALE_3X:
-					qaction_shcut.scale_3x->trigger();
-					break;
-				case SET_INP_SC_SCALE_4X:
-					qaction_shcut.scale_4x->trigger();
-					break;
-				case SET_INP_SC_SCALE_5X:
-					qaction_shcut.scale_5x->trigger();
-					break;
-				case SET_INP_SC_SCALE_6X:
-					qaction_shcut.scale_6x->trigger();
-					break;
-				case SET_INP_SC_INTERPOLATION:
-					qaction_shcut.interpolation->trigger();
-					break;
-				case SET_INP_SC_INTEGER_FULLSCREEN:
-					qaction_shcut.integer_in_fullscreen->trigger();
-					break;
-				case SET_INP_SC_STRETCH_FULLSCREEN:
-					qaction_shcut.stretch_in_fullscreen->trigger();
-					break;
-				case SET_INP_SC_AUDIO_ENABLE:
-					qaction_shcut.audio_enable->trigger();
-					break;
-				case SET_INP_SC_SAVE_SETTINGS:
-					qaction_shcut.save_settings->trigger();
-					break;
-				case SET_INP_SC_SAVE_STATE:
-					action_Save_state->trigger();
-					break;
-				case SET_INP_SC_LOAD_STATE:
-					action_Load_state->trigger();
-					break;
-				case SET_INP_SC_INC_SLOT:
-					action_Increment_slot->trigger();
-					break;
-				case SET_INP_SC_DEC_SLOT:
-					action_Decrement_slot->trigger();
-					break;
-			}
-		} else if (shcjoy.sch.mode == PRESSED) {}
 	}
 }
 
@@ -1426,6 +1468,49 @@ void mainWindow::s_shcut_audio_enable(void) {
 }
 void mainWindow::s_shcut_save_settings(void) {
 	dlgsettings->pushButton_Save_Settings->click();
+}
+void mainWindow::s_shcut_rwnd_active_deactive_mode(void) {
+	if (rwnd.active == FALSE) {
+		statusbar->rewind->toolButton_Pause->click();
+	} else {
+		statusbar->rewind->toolButton_Play->click();
+	}
+}
+void mainWindow::s_shcut_rwnd_step_backward(void) {
+	if (rwnd.active == FALSE) {
+		return;
+	}
+	statusbar->rewind->toolButton_Step_Backward->click();
+}
+void mainWindow::s_shcut_rwnd_step_forward(void) {
+	if (rwnd.active == FALSE) {
+		return;
+	}
+	statusbar->rewind->toolButton_Step_Forward->click();
+}
+void mainWindow::s_shcut_rwnd_fast_backward(void) {
+	if (rwnd.active == FALSE) {
+		return;
+	}
+	statusbar->rewind->toolButton_Fast_Backward->click();
+}
+void mainWindow::s_shcut_rwnd_fast_forward(void) {
+	if (rwnd.active == FALSE) {
+		return;
+	}
+	statusbar->rewind->toolButton_Fast_Forward->click();
+}
+void mainWindow::s_shcut_rwnd_play(void) {
+	if (rwnd.active == FALSE) {
+		return;
+	}
+	statusbar->rewind->toolButton_Play->click();
+}
+void mainWindow::s_shcut_rwnd_pause(void) {
+	if (rwnd.active == FALSE) {
+		return;
+	}
+	statusbar->rewind->toolButton_Pause->click();
 }
 
 void mainWindow::s_et_gg_reset(void) {

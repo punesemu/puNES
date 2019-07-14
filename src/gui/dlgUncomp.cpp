@@ -24,8 +24,7 @@
 #endif
 #include "gui.h"
 
-dlgUncomp::dlgUncomp(QWidget *parent, void *uncompress_archive,
-	BYTE type) : QDialog(parent) {
+dlgUncomp::dlgUncomp(QWidget *parent, void *uncompress_archive, BYTE type) : QDialog(parent) {
 	_uncompress_archive *archive = (_uncompress_archive *)uncompress_archive;
 	uint32_t index;
 

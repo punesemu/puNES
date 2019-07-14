@@ -54,6 +54,15 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 			QAction *stretch_in_fullscreen;
 			QAction *audio_enable;
 			QAction *save_settings;
+			struct _qaction_shcut_extern_rwnd {
+				QAction *active;
+				QAction *step_backward;
+				QAction *fast_backward;
+				QAction *play;
+				QAction *pause;
+				QAction *fast_forward;
+				QAction *step_forward;
+			} rwnd;
 		} qaction_shcut;
 		struct _shcjoy {
 			bool enabled;
@@ -168,6 +177,13 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void s_shcut_stretch_in_fullscreen(void);
 		void s_shcut_audio_enable(void);
 		void s_shcut_save_settings(void);
+		void s_shcut_rwnd_active_deactive_mode(void);
+		void s_shcut_rwnd_step_backward(void);
+		void s_shcut_rwnd_fast_backward(void);
+		void s_shcut_rwnd_play(void);
+		void s_shcut_rwnd_pause(void);
+		void s_shcut_rwnd_fast_forward(void);
+		void s_shcut_rwnd_step_forward(void);
 
 	private slots:
 		void s_et_gg_reset(void);

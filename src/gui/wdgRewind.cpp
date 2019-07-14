@@ -70,7 +70,7 @@ void wdgRewind::set_enable_forward(BYTE mode) {
 }
 void wdgRewind::set_enable_play_pause_forward(BYTE mode) {
 	toolButton_Play->setEnabled(mode);
-	toolButton_Pause->setEnabled(mode);
+	toolButton_Pause->setEnabled(TRUE);
 	set_enable_forward(mode);
 }
 void wdgRewind::first_backward(void) {

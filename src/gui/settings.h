@@ -147,6 +147,13 @@ enum inp_element {
 	SET_INP_SC_LOAD_STATE,
 	SET_INP_SC_INC_SLOT,
 	SET_INP_SC_DEC_SLOT,
+	SET_INP_SC_RWND_ACTIVE_MODE,
+	SET_INP_SC_RWND_STEP_BACKWARD,
+	SET_INP_SC_RWND_STEP_FORWARD,
+	SET_INP_SC_RWND_FAST_BACKWARD,
+	SET_INP_SC_RWND_FAST_FORWARD,
+	SET_INP_SC_RWND_PLAY,
+	SET_INP_SC_RWND_PAUSE,
 
 	SET_INP_SC_JOYSTICK_ID,
 
@@ -954,6 +961,13 @@ static const _settings inp_cfg[] = {
 	{uL("shortcuts"), uL("load state"),                  uL("F4,NULL"),         NULL, NULL, {0, NULL}},
 	{uL("shortcuts"), uL("increment state slot"),        uL("F3,NULL"),         NULL, NULL, {0, NULL}},
 	{uL("shortcuts"), uL("decrement state slot"),        uL("F2,NULL"),         NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("start or stop rewind mode"),   uL("Ctrl+Left,NULL"),  NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("rewind step backward"),        uL("Left,NULL"),       NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("rewind step forward"),         uL("Right,NULL"),      NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("rewind fast backward"),        uL("Down,NULL"),       NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("rewind fast forward"),         uL("Up,NULL"),         NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("rewind play"),                 uL("Del,NULL"),        NULL, NULL, {0, NULL}},
+	{uL("shortcuts"), uL("rewind pause"),                uL("PgDown,NULL"),     NULL, NULL, {0, NULL}},
 #if defined (_WIN32)
 	{uL("shortcuts"), uL("joystick GUID"),               uL("NULL"),            NULL, NULL, {0, NULL}},
 #else

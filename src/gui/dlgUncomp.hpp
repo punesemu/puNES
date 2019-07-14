@@ -31,8 +31,7 @@ class dlgUncomp : public QDialog, public Ui::dlgUncomp {
 		int selected;
 
 	public:
-		dlgUncomp(QWidget *parent = 0, void *uncompress_archive = NULL,
-			BYTE type = UNCOMPRESS_TYPE_ALL);
+		dlgUncomp(QWidget *parent = 0, void *uncompress_archive = NULL, BYTE type = UNCOMPRESS_TYPE_ALL);
 		~dlgUncomp();
 
 	private:

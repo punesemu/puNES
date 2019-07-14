@@ -573,7 +573,9 @@ void text_rendering(BYTE render) {
 		}
 
 		switch (action) {
+			case RWND_ACT_PAUSE:
 			case RWND_ACT_PLAY:
+				sprintf(ele->text, "[yellow]stop[normal]");
 				break;
 			case RWND_ACT_STEP_BACKWARD:
 				sprintf(ele->text, "[yellow] -1 [normal]");
