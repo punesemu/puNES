@@ -1322,6 +1322,23 @@ DBWORD objInp::kbd_keyval_decode(QKeyEvent *keyEvent) {
 		}
 	}
 
+	if ((key >= 257) && (key <= 279)) {
+		return (key);
+	}
+
+	switch(keyEvent->modifiers()) {
+		case Qt::NoModifier:
+		case Qt::ShiftModifier:
+		case Qt::MetaModifier:
+		case Qt::KeypadModifier:
+		case Qt::GroupSwitchModifier:
+			break;
+		case Qt::ControlModifier:
+		case Qt::AltModifier:
+			key = 0;
+			break;
+	}
+
 	return (key);
 }
 void objInp::set_kbd_joy_default(_port *port, int index, int mode) {

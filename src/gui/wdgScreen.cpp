@@ -62,7 +62,7 @@ bool wdgScreen::eventFilter(QObject *obj, QEvent *event) {
 	static QKeyEvent *keyEvent;
 	static DBWORD keyval;
 
-	if (event->type() == QEvent::KeyPress) {
+	if (event->type() == QEvent::ShortcutOverride) {
 		keyEvent = ((QKeyEvent *)event);
 		keyval = objInp::kbd_keyval_decode(keyEvent);
 
