@@ -347,7 +347,7 @@ void gui_screen_update(void) {
 #if defined (WITH_OPENGL)
 	qt.screen->wogl->update();
 #elif defined (WITH_D3D9)
-	qt.screen->wd3d9->repaint();
+	qt.screen->wd3d9->update();
 #endif
 	qt.dset->widget_Settings_Video->widget_Palette_Editor->widget_Palette_PPU->update();
 }
