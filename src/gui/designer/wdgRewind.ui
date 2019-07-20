@@ -52,6 +52,12 @@
       <iconset resource="resources.qrc">
        <normaloff>:/icon/icons/rwnd_step_backward.svg</normaloff>:/icon/icons/rwnd_step_backward.svg</iconset>
      </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="autoRepeat">
+      <bool>true</bool>
+     </property>
     </widget>
    </item>
    <item>
@@ -62,6 +68,9 @@
      <property name="icon">
       <iconset resource="resources.qrc">
        <normaloff>:/icon/icons/rwnd_play.svg</normaloff>:/icon/icons/rwnd_play.svg</iconset>
+     </property>
+     <property name="checkable">
+      <bool>false</bool>
      </property>
     </widget>
    </item>
@@ -87,6 +96,12 @@
      <property name="icon">
       <iconset resource="resources.qrc">
        <normaloff>:/icon/icons/rwnd_step_forward.svg</normaloff>:/icon/icons/rwnd_step_forward.svg</iconset>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="autoRepeat">
+      <bool>true</bool>
      </property>
     </widget>
    </item>

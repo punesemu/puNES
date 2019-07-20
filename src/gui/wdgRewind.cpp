@@ -20,10 +20,18 @@
 #include "rewind.h"
 #include "video/gfx.h"
 #include "info.h"
+#include "gui.h"
+
+enum wdgrewind_misc {
+	WDGRWND_AUTOREPEAT_TIMER_STEP = 60,
+	WDGRWND_AUTOREPEAT_MOUSE_TIMER_STEP = WDGRWND_AUTOREPEAT_TIMER_STEP + 20,
+};
 
 wdgRewind::wdgRewind(QWidget *parent) : QWidget(parent) {
 	loop = new QTimer(this);
 	loop->setInterval(1000 / 6);
+
+	step_timer = gui_get_ms();
 
 	setupUi(this);
 
@@ -35,6 +43,14 @@ wdgRewind::wdgRewind(QWidget *parent) : QWidget(parent) {
 	connect(toolButton_Pause, SIGNAL(clicked(bool)), this, SLOT(s_pause(bool)));
 	connect(toolButton_Step_Forward, SIGNAL(clicked(bool)), this, SLOT(s_step_forward(bool)));
 	connect(toolButton_Fast_Forward, SIGNAL(clicked(bool)), this, SLOT(s_fast_forward(bool)));
+
+	connect(toolButton_Step_Backward, SIGNAL(released()), this, SLOT(s_step_released()));
+	connect(toolButton_Step_Forward, SIGNAL(released()), this, SLOT(s_step_released()));
+
+	toolButton_Step_Backward->setAutoRepeatDelay(WDGRWND_AUTOREPEAT_MOUSE_TIMER_STEP);
+	toolButton_Step_Backward->setAutoRepeatInterval(WDGRWND_AUTOREPEAT_MOUSE_TIMER_STEP);
+	toolButton_Step_Forward->setAutoRepeatDelay(WDGRWND_AUTOREPEAT_MOUSE_TIMER_STEP);
+	toolButton_Step_Forward->setAutoRepeatInterval(WDGRWND_AUTOREPEAT_MOUSE_TIMER_STEP);
 
 	set_enable_play_pause_forward(FALSE);
 
@@ -58,6 +74,13 @@ void wdgRewind::changeEvent(QEvent *event) {
 	} else {
 		QWidget::changeEvent(event);
 	}
+}
+
+bool wdgRewind::step_timer_control(void) {
+	if ((gui_get_ms() - step_timer) < WDGRWND_AUTOREPEAT_TIMER_STEP) {
+		return (false);
+	}
+	return (true);
 }
 
 void wdgRewind::set_enable_backward(BYTE mode) {
@@ -118,21 +141,24 @@ void wdgRewind::s_loop(void) {
 			rewind_frames(rewind_calculate_snap_cursor(factor, rwnd.direction));
 			set_enable_backward(!rewind_is_first_snap());
 			if (rewind_is_first_snap()) {
-				toolButton_Fast_Backward->setChecked(false);
+				rwnd.action = RWND_ACT_PAUSE;
 				toolButton_Pause->click();
 			}
 			set_enable_forward(!rewind_is_last_snap());
 			if (rewind_is_last_snap()) {
-				toolButton_Fast_Forward->setChecked(false);
+				rwnd.action = RWND_ACT_PAUSE;
 				toolButton_Pause->click();
 			}
 		}
 		gfx_draw_screen();
 	}
 }
+
 void wdgRewind::s_fast_backward(UNUSED(bool checked)) {
 	first_backward();
 	rwnd.action = RWND_ACT_FAST_BACKWARD;
+	toolButton_Step_Backward->setChecked(false);
+	toolButton_Step_Forward->setChecked(false);
 	toolButton_Fast_Backward->setChecked(true);
 	toolButton_Fast_Forward->setChecked(false);
 	toolButton_Pause->setChecked(false);
@@ -142,13 +168,24 @@ void wdgRewind::s_fast_backward(UNUSED(bool checked)) {
 	loop->start();
 }
 void wdgRewind::s_step_backward(UNUSED(bool checked)) {
+	if (step_timer_control() == false) {
+		return;
+	}
 	first_backward();
 	rwnd.action = RWND_ACT_STEP_BACKWARD;
-	toolButton_Pause->setChecked(false);
 	rewind_frames(-1);
 	rwnd.factor.backward = 0;
 	rwnd.factor.forward = 0;
 	toolButton_Pause->click();
+	set_enable_backward(!rewind_is_first_snap());
+	if (rewind_is_first_snap()) {
+		toolButton_Step_Backward->setChecked(false);
+		rwnd.action_before_pause = RWND_ACT_PAUSE;
+	} else {
+		toolButton_Step_Backward->setChecked(true);
+		toolButton_Pause->setChecked(false);
+	}
+	step_timer = gui_get_ms();
 }
 void wdgRewind::s_play(UNUSED(bool checked)) {
 	rwnd.action = RWND_ACT_PLAY;
@@ -158,6 +195,8 @@ void wdgRewind::s_play(UNUSED(bool checked)) {
 	loop->stop();
 	set_enable_backward(true);
 	set_enable_forward(false);
+	toolButton_Step_Backward->setChecked(false);
+	toolButton_Step_Forward->setChecked(false);
 	toolButton_Fast_Backward->setChecked(false);
 	toolButton_Fast_Forward->setChecked(false);
 	toolButton_Pause->setChecked(false);
@@ -170,6 +209,8 @@ void wdgRewind::s_pause(UNUSED(bool checked)) {
 	first_backward();
 	rwnd.action_before_pause = rwnd.action;
 	rwnd.action = RWND_ACT_PAUSE;
+	toolButton_Step_Backward->setChecked(false);
+	toolButton_Step_Forward->setChecked(false);
 	toolButton_Fast_Backward->setChecked(false);
 	toolButton_Fast_Forward->setChecked(false);
 	set_enable_backward(!rewind_is_first_snap());
@@ -179,18 +220,26 @@ void wdgRewind::s_pause(UNUSED(bool checked)) {
 	loop->start();
 }
 void wdgRewind::s_step_forward(UNUSED(bool checked)) {
-	if (rwnd.active == FALSE) {
+	if ((rwnd.active == FALSE) || (step_timer_control() == false)) {
 		// il forward funziona solo dopo che si
 		// e' fatto un po' di backward.
 		return;
 	}
 	loop->stop();
 	rwnd.action = RWND_ACT_STEP_FORWARD;
-	toolButton_Pause->setChecked(false);
 	rewind_frames(1);
 	rwnd.factor.backward = 0;
 	rwnd.factor.forward = 0;
 	toolButton_Pause->click();
+	set_enable_forward(!rewind_is_last_snap());
+	if (rewind_is_last_snap()) {
+		toolButton_Step_Forward->setChecked(false);
+		rwnd.action_before_pause = RWND_ACT_PAUSE;
+	} else {
+		toolButton_Step_Forward->setChecked(true);
+		toolButton_Pause->setChecked(false);
+	}
+	step_timer = gui_get_ms();
 }
 void wdgRewind::s_fast_forward(UNUSED(bool checked)) {
 	if (rwnd.active == FALSE) {
@@ -200,6 +249,8 @@ void wdgRewind::s_fast_forward(UNUSED(bool checked)) {
 	}
   	loop->stop();
 	rwnd.action = RWND_ACT_FAST_FORWARD;
+	toolButton_Step_Backward->setChecked(false);
+	toolButton_Step_Forward->setChecked(false);
 	toolButton_Fast_Backward->setChecked(false);
 	toolButton_Fast_Forward->setChecked(true);
 	toolButton_Pause->setChecked(false);
@@ -207,4 +258,7 @@ void wdgRewind::s_fast_forward(UNUSED(bool checked)) {
 	rwnd.direction = RWND_FORWARD;
 	rwnd.factor.backward = 0;
 	loop->start();
+}
+void wdgRewind::s_step_released(void) {
+	((QToolButton *)sender())->setChecked(true);
 }

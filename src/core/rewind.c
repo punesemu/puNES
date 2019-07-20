@@ -303,7 +303,6 @@ void rewind_snapshoot(void) {
 			rwint.first_valid_snap = first_valid_snap;
 		}
 	}
-
 }
 void rewind_frames(int32_t frames_to_rewind) {
 	if (_rewind_frames(frames_to_rewind, FALSE) == EXIT_OK) {

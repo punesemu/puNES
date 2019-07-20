@@ -1480,13 +1480,17 @@ void mainWindow::s_shcut_rwnd_step_backward(void) {
 	if (rwnd.active == FALSE) {
 		return;
 	}
-	statusbar->rewind->toolButton_Step_Backward->click();
+	if (statusbar->rewind->step_timer_control()) {
+		statusbar->rewind->toolButton_Step_Backward->click();
+	}
 }
 void mainWindow::s_shcut_rwnd_step_forward(void) {
 	if (rwnd.active == FALSE) {
 		return;
 	}
-	statusbar->rewind->toolButton_Step_Forward->click();
+	if (statusbar->rewind->step_timer_control()) {
+		statusbar->rewind->toolButton_Step_Forward->click();
+	}
 }
 void mainWindow::s_shcut_rwnd_fast_backward(void) {
 	if (rwnd.active == FALSE) {

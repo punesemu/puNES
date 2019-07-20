@@ -29,13 +29,17 @@ class wdgRewind : public QWidget, public Ui::wdgRewind {
 
 	private:
 		QTimer *loop;
+		double step_timer;
 
 	public:
 		wdgRewind(QWidget *parent = 0);
 		~wdgRewind();
 
-	private:
+	protected:
 		void changeEvent(QEvent *event);
+
+	public:
+		bool step_timer_control(void);
 
 	private:
 		void set_enable_backward(BYTE mode);
@@ -52,6 +56,7 @@ class wdgRewind : public QWidget, public Ui::wdgRewind {
 		void s_pause(bool checked);
 		void s_step_forward(bool checked);
 		void s_fast_forward(bool checked);
+		void s_step_released(void);
 };
 
 #endif /* WDGREWIND_HPP_ */
