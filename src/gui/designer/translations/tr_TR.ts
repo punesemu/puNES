@@ -46,6 +46,34 @@
       <source>Close Settings</source>
       <translation>Ayarlarını kapat</translation>
     </message>
+    <message>
+      <source>Rewind Mode On/Off</source>
+      <translation type="unfinished">Rewind Mode On/Off</translation>
+    </message>
+    <message>
+      <source>Rewind Step Backward</source>
+      <translation type="unfinished">Rewind Step Backward</translation>
+    </message>
+    <message>
+      <source>Rewind Step Forward</source>
+      <translation type="unfinished">Rewind Step Forward</translation>
+    </message>
+    <message>
+      <source>Rewind Fast Backard</source>
+      <translation type="unfinished">Rewind Fast Backard</translation>
+    </message>
+    <message>
+      <source>Rewind Fast Forward</source>
+      <translation type="unfinished">Rewind Fast Forward</translation>
+    </message>
+    <message>
+      <source>Rewind Play</source>
+      <translation type="unfinished">Rewind Play</translation>
+    </message>
+    <message>
+      <source>Rewind Pause</source>
+      <translation type="unfinished">Rewind Pause</translation>
+    </message>
   </context>
   <context>
     <name>dlgStdPad</name>
