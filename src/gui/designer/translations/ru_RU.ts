@@ -46,6 +46,34 @@
         <source>Close Settings</source>
         <translation>Закрыть настройки</translation>
     </message>
+    <message>
+        <source>Rewind Mode On/Off</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rewind Step Backward</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rewind Step Forward</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rewind Fast Backard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rewind Fast Forward</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rewind Play</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rewind Pause</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>dlgStdPad</name>
