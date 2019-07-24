@@ -60,11 +60,11 @@
     </message>
     <message>
       <source>Rewind Fast Backard</source>
-      <translation type="unfinished">Rewind Fast Backard</translation>
+      <translation>Rebobinar hacia atrás rápido</translation>
     </message>
     <message>
       <source>Rewind Fast Forward</source>
-      <translation type="unfinished">Rewind Fast Forward</translation>
+      <translation>Rebobinar hacia delante rápido</translation>
     </message>
     <message>
       <source>Rewind Play</source>
