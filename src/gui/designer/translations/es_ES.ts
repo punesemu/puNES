@@ -48,15 +48,15 @@
     </message>
     <message>
       <source>Rewind Mode On/Off</source>
-      <translation type="unfinished">Rewind Mode On/Off</translation>
+      <translation>Modo de rebobinado encendido/apagado</translation>
     </message>
     <message>
       <source>Rewind Step Backward</source>
-      <translation type="unfinished">Rewind Step Backward</translation>
+      <translation>Rebobinar paso atrás</translation>
     </message>
     <message>
       <source>Rewind Step Forward</source>
-      <translation type="unfinished">Rewind Step Forward</translation>
+      <translation>Rebobinar paso adelante</translation>
     </message>
     <message>
       <source>Rewind Fast Backard</source>
@@ -68,11 +68,11 @@
     </message>
     <message>
       <source>Rewind Play</source>
-      <translation type="unfinished">Rewind Play</translation>
+      <translation>Reproducir rebobinado</translation>
     </message>
     <message>
       <source>Rewind Pause</source>
-      <translation type="unfinished">Rewind Pause</translation>
+      <translation>Pausar rebobinado</translation>
     </message>
   </context>
   <context>
