@@ -48,31 +48,31 @@
     </message>
     <message>
       <source>Rewind Mode On/Off</source>
-      <translation type="unfinished">Rewind Mode On/Off</translation>
+      <translation>Rewind Attiva/Disattiva</translation>
     </message>
     <message>
       <source>Rewind Step Backward</source>
-      <translation type="unfinished">Rewind Step Backward</translation>
+      <translation>Rewind Frame Indietro</translation>
     </message>
     <message>
       <source>Rewind Step Forward</source>
-      <translation type="unfinished">Rewind Step Forward</translation>
+      <translation>Rewind Frame Avanti</translation>
     </message>
     <message>
       <source>Rewind Fast Backard</source>
-      <translation type="unfinished">Rewind Fast Backard</translation>
+      <translation>Rewind Indietro Veloce</translation>
     </message>
     <message>
       <source>Rewind Fast Forward</source>
-      <translation type="unfinished">Rewind Fast Forward</translation>
+      <translation>Rewind Avanti Veloce</translation>
     </message>
     <message>
       <source>Rewind Play</source>
-      <translation type="unfinished">Rewind Play</translation>
+      <translation>Rewind Play</translation>
     </message>
     <message>
       <source>Rewind Pause</source>
-      <translation type="unfinished">Rewind Pause</translation>
+      <translation>Rewind Pausa</translation>
     </message>
   </context>
   <context>
@@ -1861,7 +1861,7 @@
     </message>
     <message>
       <source>Use integer scaling in fullscreen</source>
-      <translation type="unfinished">Use integer scaling in fullscreen</translation>
+      <translation>Usa ridimensionamento non frazionato a schermo intero</translation>
     </message>
   </context>
   <context>
