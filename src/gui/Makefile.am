@@ -1,4 +1,4 @@
-resources.cpp: designer/resources.qrc
+resources.cpp: designer/resources.qrc $(TRADUCTION_QM)
 	$(RCC) $(srcdir)/designer/resources.qrc -name resources -o $@
 
 dlgSettings.moc: dlgSettings.hpp
@@ -99,7 +99,7 @@ $(srcdir)/designer/translations/qt_ru.qm: designer/translations/qt_ru.ts
 clean-local:
 	rm -f resources.cpp *.{hh,moc} $(srcdir)/designer/translations/*.qm
 
-BUILT_SOURCES = \
+TRADUCTION_QM = \
 	$(srcdir)/designer/translations/en_EN.qm \
 	$(srcdir)/designer/translations/tr_TR.qm \
 	$(srcdir)/designer/translations/it_IT.qm \
@@ -110,7 +110,10 @@ BUILT_SOURCES = \
 	$(srcdir)/designer/translations/qt_hu.qm \
 	$(srcdir)/designer/translations/ru_RU.qm \
 	$(srcdir)/designer/translations/qt_ru.qm
- 
+
+BUILT_SOURCES = \
+	resources.cpp
+
 BUILT_SOURCES += \
 	dlgSettings.moc \
 	dlgStdPad.moc \
@@ -131,9 +134,6 @@ BUILT_SOURCES += \
 	wdgSettingsVideo.moc \
 	wdgScreen.moc \
 	wdgStatusBar.moc
-
-BUILT_SOURCES += \
-	resources.cpp
 
 BUILT_SOURCES += \
 	mainWindow.hh \
