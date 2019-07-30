@@ -48,31 +48,31 @@
     </message>
     <message>
       <source>Rewind Mode On/Off</source>
-      <translation type="unfinished">Rewind Mode On/Off</translation>
+      <translation>Visszatekerő mód Be/Ki</translation>
     </message>
     <message>
       <source>Rewind Step Backward</source>
-      <translation type="unfinished">Rewind Step Backward</translation>
+      <translation>Visszatekerés Hátraléptetés</translation>
     </message>
     <message>
       <source>Rewind Step Forward</source>
-      <translation type="unfinished">Rewind Step Forward</translation>
+      <translation>Visszatekerés Előreléptetés</translation>
     </message>
     <message>
       <source>Rewind Fast Backard</source>
-      <translation type="unfinished">Rewind Fast Backard</translation>
+      <translation>Visszatekerés Gyorsan hátra</translation>
     </message>
     <message>
       <source>Rewind Fast Forward</source>
-      <translation type="unfinished">Rewind Fast Forward</translation>
+      <translation>Visszatekerés Gyorsan előre</translation>
     </message>
     <message>
       <source>Rewind Play</source>
-      <translation type="unfinished">Rewind Play</translation>
+      <translation>Visszatekerés Lejátszás</translation>
     </message>
     <message>
       <source>Rewind Pause</source>
-      <translation type="unfinished">Rewind Pause</translation>
+      <translation>Visszatekerés Megállj</translation>
     </message>
   </context>
   <context>
