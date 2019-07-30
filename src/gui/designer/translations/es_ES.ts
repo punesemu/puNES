@@ -59,10 +59,6 @@
       <translation>Rebobinar paso adelante</translation>
     </message>
     <message>
-      <source>Rewind Fast Backard</source>
-      <translation>Rebobinar hacia atrás rápido</translation>
-    </message>
-    <message>
       <source>Rewind Fast Forward</source>
       <translation>Rebobinar hacia delante rápido</translation>
     </message>
@@ -73,6 +69,10 @@
     <message>
       <source>Rewind Pause</source>
       <translation>Pausar rebobinado</translation>
+    </message>
+    <message>
+      <source>Rewind Fast Backward</source>
+      <translation type="unfinished">Rewind Fast Backward</translation>
     </message>
   </context>
   <context>
