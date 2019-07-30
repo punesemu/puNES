@@ -59,10 +59,6 @@
       <translation>Visszatekerés Előreléptetés</translation>
     </message>
     <message>
-      <source>Rewind Fast Backard</source>
-      <translation>Visszatekerés Gyorsan hátra</translation>
-    </message>
-    <message>
       <source>Rewind Fast Forward</source>
       <translation>Visszatekerés Gyorsan előre</translation>
     </message>
@@ -73,6 +69,10 @@
     <message>
       <source>Rewind Pause</source>
       <translation>Visszatekerés Megállj</translation>
+    </message>
+    <message>
+      <source>Rewind Fast Backward</source>
+      <translation type="unfinished">Rewind Fast Backward</translation>
     </message>
   </context>
   <context>
