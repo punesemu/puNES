@@ -1,4 +1,37 @@
 Changelog:
+0.105
+- Added Spanish translation (thx to MS-PC on Crowdin).
+- Added Hungarian translation (thx to tch_oscomp on Crowdin).
+- Added Turkish translation (thx to Ömercan Kömür on Crowdin).
+- Added "Toggle GUI" option to toggle on/off the Menu+Status bars (many thx Sembiance for the contribution).
+- Added the option "Use integer scale in fullscreen" which toggle the vertical stretch in the fullscreen.
+- Added in database "Airwolf" roms and 2 hacked roms of "Kid Dracula" (mlla1i.nes and ikt73k.nes).
+- Added keyboard/controller shortcuts for the rewind functions :
+  I introduced the shortcut to activate and deactivate the "rewind mode" and the shortcuts for play,
+  pause, step backward, step forward, fast backward and fast forward, all programmable.
+  For the keyboard the defaults are :
+  CTRL+Left : Active/Deactive Rewind Mode
+  Left : Single step backward
+  Right : Single step forward
+  Down : Switch velocity for fast backward
+  Up : Switch velocity dor fast forward
+  Del : Play
+  Page Down : Pause
+- Changed the management of the text on the screen which is now clearly legible at any resolution.
+- Possible infringing on the patent, replaced controller image (thx RokkumanX).
+- Fixed the freeze when start the emulator with fullscreen already enabled.
+- Fixed some glitches with some compositors (Compton for examples).
+- Fixed management of audio devices in alsa backend.
+- Fixed segfault when load a savestates with rewind functions disabled.
+- Fixed loading of the rom with header containing "DiskDude!".
+- Fixed text surface cleaning.
+- Fixed saving and loading of cheats.
+- Fixed audio pops when NSF/NSFE song start and improved audio/video sync.
+- Fixed possible crash in OpenBSD version.
+- Fixed keyboard shortcuts management.
+- Fixed compilation with QT 5.13.
+- Many others fixes.
+
 0.104
 - Fixed graphical problem with xBRZ filter.
 - Fixed mappers 50, 90, 156, 178, UNL-KOF97, UNL-VRC7, MMC3 KT-008 PCB.
