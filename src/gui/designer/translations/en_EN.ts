@@ -59,10 +59,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Rewind Fast Backard</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Rewind Fast Forward</source>
         <translation type="unfinished"></translation>
     </message>
@@ -72,6 +68,10 @@
     </message>
     <message>
         <source>Rewind Pause</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rewind Fast Backward</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
