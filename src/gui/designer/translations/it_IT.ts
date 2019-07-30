@@ -59,10 +59,6 @@
       <translation>Rewind Frame Avanti</translation>
     </message>
     <message>
-      <source>Rewind Fast Backard</source>
-      <translation>Rewind Indietro Veloce</translation>
-    </message>
-    <message>
       <source>Rewind Fast Forward</source>
       <translation>Rewind Avanti Veloce</translation>
     </message>
@@ -73,6 +69,10 @@
     <message>
       <source>Rewind Pause</source>
       <translation>Rewind Pausa</translation>
+    </message>
+    <message>
+      <source>Rewind Fast Backward</source>
+      <translation type="unfinished">Rewind Fast Backward</translation>
     </message>
   </context>
   <context>
