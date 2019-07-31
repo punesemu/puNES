@@ -48,31 +48,31 @@
     </message>
     <message>
       <source>Rewind Mode On/Off</source>
-      <translation type="unfinished">Rewind Mode On/Off</translation>
+      <translation>Переключить режим перемотки</translation>
     </message>
     <message>
       <source>Rewind Step Backward</source>
-      <translation type="unfinished">Rewind Step Backward</translation>
+      <translation>Перемотка на шаг назад</translation>
     </message>
     <message>
       <source>Rewind Step Forward</source>
-      <translation type="unfinished">Rewind Step Forward</translation>
+      <translation>Перемотка на шаг вперед</translation>
     </message>
     <message>
       <source>Rewind Fast Forward</source>
-      <translation type="unfinished">Rewind Fast Forward</translation>
+      <translation>Перемотка вперед</translation>
     </message>
     <message>
       <source>Rewind Play</source>
-      <translation type="unfinished">Rewind Play</translation>
+      <translation>Воспроизвести</translation>
     </message>
     <message>
       <source>Rewind Pause</source>
-      <translation type="unfinished">Rewind Pause</translation>
+      <translation>Пауза</translation>
     </message>
     <message>
       <source>Rewind Fast Backward</source>
-      <translation type="unfinished">Rewind Fast Backward</translation>
+      <translation>Перемотка назад</translation>
     </message>
   </context>
   <context>
@@ -660,7 +660,7 @@
     </message>
     <message>
       <source>&amp;Toggle GUI in window</source>
-      <translation type="unfinished">&amp;Toggle GUI in window</translation>
+      <translation>Скрыт&amp;ь GUI в оконном режиме</translation>
     </message>
   </context>
   <context>
@@ -864,7 +864,7 @@
     </message>
     <message>
       <source>A description must be entered</source>
-      <translation type="unfinished">A description must be entered</translation>
+      <translation>Описание должно быть введено</translation>
     </message>
   </context>
   <context>
@@ -1284,11 +1284,11 @@
     </message>
     <message>
       <source>Spanish</source>
-      <translation type="unfinished">Spanish</translation>
+      <translation>Español</translation>
     </message>
     <message>
       <source>Hungarian</source>
-      <translation type="unfinished">Hungarian</translation>
+      <translation>Magyar</translation>
     </message>
     <message>
       <source>60 minutes</source>
@@ -1296,7 +1296,7 @@
     </message>
     <message>
       <source>Turkish</source>
-      <translation type="unfinished">Turkish</translation>
+      <translation>Türkçe</translation>
     </message>
   </context>
   <context>
@@ -1861,7 +1861,7 @@
     </message>
     <message>
       <source>Use integer scaling in fullscreen</source>
-      <translation type="unfinished">Use integer scaling in fullscreen</translation>
+      <translation>Использовать целочисленное масштабирование в полноэкранном режиме</translation>
     </message>
   </context>
   <context>
