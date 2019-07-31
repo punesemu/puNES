@@ -230,6 +230,7 @@ void wdgScreen::s_cursor_set(void) {
 	if (input_draw_target() == TRUE) {
 		setCursor((*target));
 	} else {
+		gmouse.hidden = FALSE;
 		unsetCursor();
 	}
 }

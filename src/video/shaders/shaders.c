@@ -200,8 +200,7 @@ static void ps_set_default(_param_shd *ps) {
 	memset(ps, 0x00, sizeof(_param_shd));
 }
 static void se_soft_stretch(void) {
-	if ((shader_effect.sp[shader_effect.pass - 1].linear == TEXTURE_LINEAR_ENAB) ||
-			!(cfg->interpolation || gfx.PSS)) {
+	if ((shader_effect.sp[shader_effect.pass - 1].linear == TEXTURE_LINEAR_ENAB) || !(cfg->interpolation || gfx.PSS)) {
 		return;
 	}
 
@@ -210,8 +209,8 @@ static void se_soft_stretch(void) {
 
 		shader_effect.sp[shader_effect.pass - 1].code = SHDCODE(shc_no_filter);
 		shader_effect.sp[shader_effect.pass - 1].linear = TEXTURE_LINEAR_DISAB;
-		shader_effect.sp[shader_effect.pass - 1].sc.scale.x = (float) cfg->scale;
-		shader_effect.sp[shader_effect.pass - 1].sc.scale.y = (float) cfg->scale;
+		shader_effect.sp[shader_effect.pass - 1].sc.scale.x = (float)cfg->scale;
+		shader_effect.sp[shader_effect.pass - 1].sc.scale.y = (float)cfg->scale;
 		shader_effect.sp[shader_effect.pass - 1].sc.type.x = SHADER_SCALE_INPUT;
 		shader_effect.sp[shader_effect.pass - 1].sc.type.y = SHADER_SCALE_INPUT;
 	}
