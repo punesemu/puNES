@@ -72,7 +72,7 @@
     </message>
     <message>
       <source>Rewind Fast Backward</source>
-      <translation type="unfinished">Rewind Fast Backward</translation>
+      <translation>Rewind Indietro Veloce</translation>
     </message>
   </context>
   <context>
