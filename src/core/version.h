@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2019 Fabio Cavallo (aka FHorse)
+ *  Copyright (C) 2010-2020 Fabio Cavallo (aka FHorse)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,8 +24,8 @@
 #define VER1        "0"
 #define VER1_INT    0
 
-#define VER2        "105"
-#define VER2_INT    105
+#define VER2        "106"
+#define VER2_INT    106
 
 #if defined (RELEASE)
 #define VERSION     VER1 "." VER2
@@ -39,7 +39,7 @@
 #define GITHUB      "https://github.com/punesemu/puNES"
 #define DONATE      "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=QPPXNRL5NAHDC"
 
-#define COPYRIGTH   " 2019 by " AUTHOR
+#define COPYRIGTH   " 2020 by " AUTHOR
 #define COPYRANSI   "(C)" COPYRIGTH
 #define COPYRUTF8   "&#169;" COPYRIGTH
 
