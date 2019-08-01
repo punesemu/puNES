@@ -864,7 +864,7 @@
     </message>
     <message>
       <source>A description must be entered</source>
-      <translation>Описание должно быть введено</translation>
+      <translation>Необходимо ввести описание</translation>
     </message>
   </context>
   <context>
