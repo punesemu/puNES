@@ -7,11 +7,11 @@ Description
 
 Nintendo Entertaiment System emulator
 
-WIP
+WIP  [![Build status](https://ci.appveyor.com/api/projects/status/t820vxmvtvbfbll7?svg=true)](https://ci.appveyor.com/project/punesemu/punes)
 -----------
 always updated to the last commit:
-* Windows 32 bit : [`OpenGL`](https://www.dropbox.com/s/3b15hk5ad2mbepr/punes32.wip.opengl.zip?dl=0) - [`D3D9`](https://www.dropbox.com/s/avvmels3hi060zw/punes32.wip.d3d9.zip?dl=0)
-* Windows 64 bit : [`OpenGL`](https://www.dropbox.com/s/jki4udcrwwq3hym/punes64.wip.opengl.zip?dl=0) - [`D3D9`](https://www.dropbox.com/s/29bzoqvru983ix6/punes64.wip.d3d9.zip?dl=0)
+* Windows 32 bit : [`OpenGL`](https://ci.appveyor.com/api/projects/punesemu/puNES/artifacts/punes32.wip.opengl.zip) - [`D3D9`](https://ci.appveyor.com/api/projects/punesemu/puNES/artifacts/punes32.wip.d3d9.zip)
+* Windows 64 bit : [`OpenGL`](https://ci.appveyor.com/api/projects/punesemu/puNES/artifacts/punes64.wip.opengl.zip) - [`D3D9`](https://ci.appveyor.com/api/projects/punesemu/puNES/artifacts/punes64.wip.d3d9.zip)
 
 How to Compile
 -----------
@@ -153,7 +153,7 @@ The executable `punes.exe` is in the `src` directory but in order to run it you 
 * cgGL.dll
 * libwinpthread-1.dll
 
-that you can download here : [`64bit`](https://www.dropbox.com/s/yt5bgacnwexdghs/puNES_x86_64_dlls.zip?dl=0) version or [`32bit`](https://www.dropbox.com/s/7afebuhjy06n9uh/puNES_i686_dlls.zip?dl=0) version.
+that you can download here : [`64bit`](https://www.dropbox.com/s/yt5bgacnwexdghs/puNES_x86_64_dlls.zip?dl=1) version or [`32bit`](https://www.dropbox.com/s/7afebuhjy06n9uh/puNES_i686_dlls.zip?dl=1) version.
 #### Windows Debug version
 If you need the debug version then you need to replace the `./configure` command of the previous examples with the following:
 ```bash
