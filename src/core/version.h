@@ -27,7 +27,7 @@
 #define VER2        "106"
 #define VER2_INT    106
 
-#if defined (RELEASE) && !defined (PUNES_WIPS)
+#if defined (RELEASE) && !defined (WITH_GIT_INFO)
 #define VERSION     VER1 "." VER2
 #else
 #define VERSION     VER1 "." VER2 " WIP"

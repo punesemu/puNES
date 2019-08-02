@@ -1262,7 +1262,7 @@ void mainWindow::s_help(void) {
 	}
 	text.append(QString(VERSION) + "</h2></center>");
 
-#if defined (PUNES_WIPS) || !defined (RELEASE)
+#if defined (WITH_GIT_INFO)
 	text.append("<center><h4>[<font color='#800000'>Commit " + QString(GIT_COUNT_COMMITS) + "</font> " + "<a href=\"https://github.com/punesemu/puNES/commit/" + QString(GIT_LAST_COMMIT_HASH) + "\">" + QString(GIT_LAST_COMMIT) + "</a>]</h4></center>");
 #endif
 	text.append("<center>" + tr("Nintendo Entertainment System Emulator") + "</center>");
