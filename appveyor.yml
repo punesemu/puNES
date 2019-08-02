@@ -64,7 +64,7 @@ build_script:
 
     cd build\x64\d3d9
 
-    bash -lc "CPPFLAGS='-DPUNES_WIPS -O3 -mmmx -msse -msse2 -msse3 -mfpmath=sse' CFLAGS='' CXXFLAGS='' ../../../configure --with-d3d9"
+    bash -lc "WIPS_VERSION=true CPPFLAGS='-O3 -mmmx -msse -msse2 -msse3 -mfpmath=sse' CFLAGS='' CXXFLAGS='' ../../../configure --with-d3d9"
 
     bash -lc "make"
 
@@ -74,7 +74,7 @@ build_script:
 
     cd opengl
 
-    bash -lc "CPPFLAGS='-DPUNES_WIPS -O3 -mmmx -msse -msse2 -msse3 -mfpmath=sse' CFLAGS='' CXXFLAGS='' ../../../configure --with-opengl"
+    bash -lc "WIPS_VERSION=true CPPFLAGS='-O3 -mmmx -msse -msse2 -msse3 -mfpmath=sse' CFLAGS='' CXXFLAGS='' ../../../configure --with-opengl"
 
     bash -lc "make"
 
@@ -107,7 +107,7 @@ build_script:
 
     cd build\x32\d3d9
 
-    bash -lc "CPPFLAGS='-DPUNES_WIPS -O3 -mmmx -msse -msse2 -mfpmath=sse' CFLAGS='' CXXFLAGS='-Wno-deprecated-copy' ../../../configure --with-d3d9"
+    bash -lc "WIPS_VERSION=true CPPFLAGS='-O3 -mmmx -msse -msse2 -mfpmath=sse' CFLAGS='' CXXFLAGS='-Wno-deprecated-copy' ../../../configure --with-d3d9"
 
     bash -lc "make"
 
@@ -117,7 +117,7 @@ build_script:
 
     cd opengl
 
-    bash -lc "CPPFLAGS='-DPUNES_WIPS -O3 -mmmx -msse -msse2 -mfpmath=sse' CFLAGS='' CXXFLAGS='-Wno-deprecated-copy' ../../../configure --with-opengl"
+    bash -lc "WIPS_VERSION=true CPPFLAGS='-O3 -mmmx -msse -msse2 -mfpmath=sse' CFLAGS='' CXXFLAGS='-Wno-deprecated-copy' ../../../configure --with-opengl"
 
     bash -lc "make"
 
