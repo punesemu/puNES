@@ -61,8 +61,9 @@ static const struct _kvSpecials {
 	{ 0,            Qt::KeypadModifier,  Qt::Key_Asterisk, "NPMultiply", 267 },
 	{ 0,            Qt::KeypadModifier,  Qt::Key_Plus,     "NPAdd",      268 },
 	{ 0,            Qt::KeypadModifier,  Qt::Key_Delete,   "NPDecimal",  269 },
+	{ 0,            Qt::KeypadModifier,  Qt::Key_Period,   "NPDecimal",  269 },
 	{ 0,            Qt::KeypadModifier,  Qt::Key_Minus,    "NPSubtract", 270 },
-	{ 0,            Qt::KeypadModifier,  Qt::Key_Period,   "NPDecimal",  271 },
+//	{ 0,            Qt::KeypadModifier,  Qt::Key_Period,   "NPDecimal",  271 },
 	{ 0,            Qt::KeypadModifier,  Qt::Key_Slash,    "NPDivide",   272 },
 #if defined (_WIN32)
 	{ VK_LMENU,     0,                   Qt::Key_Alt,      "Alt",        273 },
