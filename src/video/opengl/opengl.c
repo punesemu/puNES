@@ -672,15 +672,19 @@ static void opengl_context_delete(void) {
 	info.sRGB_FBO_in_use = FALSE;
 }
 static void opengl_screenshot(void) {
+	float w, h;
 	char *buffer;
 
+	w = gfx.w[VIDEO_MODE] * gfx.device_pixel_ratio;
+	h = gfx.h[VIDEO_MODE] * gfx.device_pixel_ratio;
+
 	glReadBuffer(GL_FRONT);
-	if ((buffer = malloc(opengl.text.rect.w * opengl.text.rect.h * 4)) == NULL) {
+	if ((buffer = malloc(w * h * 4)) == NULL) {
 		return;
 	}
 	glPixelStorei(GL_PACK_ALIGNMENT, 1);
-	glReadPixels(0, 0, opengl.text.rect.w, opengl.text.rect.h, GL_BGRA, GL_UNSIGNED_BYTE, buffer);
-	gui_save_screenshot(opengl.text.rect.w, opengl.text.rect.h, buffer, TRUE);
+	glReadPixels(0, 0, w, h, GL_BGRA, GL_UNSIGNED_BYTE, buffer);
+	gui_save_screenshot(w, h, buffer, TRUE);
 	free(buffer);
 }
 
