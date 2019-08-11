@@ -64,6 +64,11 @@ bool wdgScreen::eventFilter(QObject *obj, QEvent *event) {
 
 	if (event->type() == QEvent::ShortcutOverride) {
 		keyEvent = ((QKeyEvent *)event);
+
+		if ((rwnd.active == TRUE) || (mainwin->is_rwnd_shortcut_or_not_shcut(keyEvent) == false)) {
+			return (true);
+		}
+
 		keyval = objInp::kbd_keyval_decode(keyEvent);
 
 #if !defined (RELEASE)
@@ -81,6 +86,11 @@ bool wdgScreen::eventFilter(QObject *obj, QEvent *event) {
 		}
 	} else if (event->type() == QEvent::KeyRelease) {
 		keyEvent = ((QKeyEvent *)event);
+
+		if ((rwnd.active == TRUE) || (mainwin->is_rwnd_shortcut_or_not_shcut(keyEvent) == false)) {
+			return (true);
+		}
+
 		keyval = objInp::kbd_keyval_decode(keyEvent);
 
 		if (tas.type == NOTAS) {

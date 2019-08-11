@@ -451,6 +451,15 @@ void mainWindow::shortcuts(void) {
 	connect_shortcut(qaction_shcut.rwnd.play, SET_INP_SC_RWND_PLAY, SLOT(s_shcut_rwnd_play()));
 	connect_shortcut(qaction_shcut.rwnd.pause, SET_INP_SC_RWND_PAUSE, SLOT(s_shcut_rwnd_pause()));
 }
+bool mainWindow::is_rwnd_shortcut_or_not_shcut(const QKeyEvent *event) {
+	int shcut = is_shortcut(event);
+
+	if ((shcut >= 0) && ((shcut < SET_INP_SC_RWND_STEP_BACKWARD) || (shcut > SET_INP_SC_RWND_PAUSE))) {
+		return (false);
+	}
+
+	return (true);
+}
 
 void mainWindow::connect_menu_signals(void) {
 	// File
@@ -791,6 +800,17 @@ void mainWindow::update_gfx_monitor_dimension(void) {
 		gfx.w[MONITOR] = g.width();
 		gfx.h[MONITOR] = g.height();
 	}
+}
+int mainWindow::is_shortcut(const QKeyEvent *event) {
+	int i;
+
+	for (i = 0; i < SET_MAX_NUM_SC; i++) {
+		if ((unsigned int)shortcut[i]->key()[0] == (event->key() | event->modifiers())) {
+			return (i);
+		}
+	}
+
+	return (-1);
 }
 
 void mainWindow::s_open(void) {

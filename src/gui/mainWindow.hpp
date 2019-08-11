@@ -116,6 +116,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void change_rom(const uTCHAR *rom);
 		void state_save_slot_set(int slot, bool on_video);
 		void shortcuts(void);
+		bool is_rwnd_shortcut_or_not_shcut(const QKeyEvent *event);
 
 	private:
 		void connect_menu_signals(void);
@@ -133,6 +134,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 	private:
 		void ctrl_disk_side(QAction *action);
 		void update_gfx_monitor_dimension(void);
+		int is_shortcut(const QKeyEvent *event);
 
 	private slots:
 		void s_open(void);
