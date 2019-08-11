@@ -561,7 +561,11 @@ void mainWindow::connect_shortcut(QAction *action, int index) {
 		QStringList text = action->text().split('\t');
 
 		action->setShortcut(QKeySequence((QString)(*sc)));
-		action->setText(text.at(0) + '\t' + (QString)(*sc));
+		if((*sc) == "NULL") {
+			action->setText(text.at(0));
+		} else {
+			action->setText(text.at(0) + '\t' + (QString)(*sc));
+		}
 	}
 }
 void mainWindow::connect_shortcut(QAction *action, int index, const char *member) {
@@ -580,7 +584,11 @@ void mainWindow::connect_shortcut(QAction *action, int index, const char *member
 		// connetto il nuovo
 		connect(shortcut[index], SIGNAL(activated()), this, member);
 
-		action->setText(text.at(0) + '\t' + (QString)(*sc));
+		if((*sc) == "NULL") {
+			action->setText(text.at(0));
+		} else {
+			action->setText(text.at(0) + '\t' + (QString)(*sc));
+		}
 	}
 }
 

@@ -64,7 +64,11 @@ wdgSettingsInput::wdgSettingsInput(QWidget *parent) : QWidget(parent) {
 
 	shortcuts_init();
 
+	connect(pushButton_Shortcut_unset_all, SIGNAL(clicked(bool)), this, SLOT(s_shortcut_unset_all(bool)));
+	connect(pushButton_Shortcut_reset, SIGNAL(clicked(bool)), this, SLOT(s_shortcut_reset(bool)));
+
 	connect(pushButton_Input_reset, SIGNAL(clicked(bool)), this, SLOT(s_input_reset(bool)));
+
 
 	shcut.timeout.timer = new QTimer(this);
 	connect(shcut.timeout.timer, SIGNAL(timeout(void)), this, SLOT(s_input_timeout(void)));
@@ -266,20 +270,28 @@ void wdgSettingsInput::shortcut_init(int index, QString *string) {
 	widget = new QWidget(this);
 	layout = new QHBoxLayout(widget);
 	btext = new QPushButton(this);
-	bicon = new QPushButton(this);
 	btext->setObjectName(QString::fromUtf8("value"));
 	btext->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
 	btext->setProperty("myValue", QVariant(row));
 	btext->setProperty("myType", QVariant(KEYBOARD));
 	btext->installEventFilter(this);
+	layout->addWidget(btext);
 	connect(btext, SIGNAL(clicked(bool)), this, SLOT(s_shortcut(bool)));
+	bicon = new QPushButton(this);
 	bicon->setObjectName(QString::fromUtf8("default"));
 	bicon->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 	bicon->setIcon(QIcon(":/icon/icons/default.svg"));
 	bicon->setToolTip(tr("Default"));
 	bicon->setProperty("myValue", QVariant(row));
 	connect(bicon, SIGNAL(clicked(bool)), this, SLOT(s_shortcut_keyb_default(bool)));
-	layout->addWidget(btext);
+	layout->addWidget(bicon);
+	bicon = new QPushButton(this);
+	bicon->setObjectName(QString::fromUtf8("unset"));
+	bicon->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+	bicon->setIcon(QIcon(":/icon/icons/trash.svg"));
+	bicon->setToolTip(tr("Unset"));
+	bicon->setProperty("myValue", QVariant(row));
+	connect(bicon, SIGNAL(clicked(bool)), this, SLOT(s_shortcut_keyb_unset(bool)));
 	layout->addWidget(bicon);
 	layout->setContentsMargins(0,0,0,0);
 	layout->setSpacing(0);
@@ -294,20 +306,20 @@ void wdgSettingsInput::shortcut_init(int index, QString *string) {
 	widget = new QWidget(this);
 	layout = new QHBoxLayout(widget);
 	btext = new QPushButton(this);
-	bicon = new QPushButton(this);
 	btext->setObjectName(QString::fromUtf8("value"));
 	btext->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
 	btext->setProperty("myValue", QVariant(row));
 	btext->setProperty("myType", QVariant(JOYSTICK));
 	btext->installEventFilter(this);
 	connect(btext, SIGNAL(clicked(bool)), this, SLOT(s_shortcut(bool)));
+	layout->addWidget(btext);
+	bicon = new QPushButton(this);
 	bicon->setObjectName(QString::fromUtf8("unset"));
 	bicon->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 	bicon->setIcon(QIcon(":/icon/icons/trash.svg"));
 	bicon->setToolTip(tr("Unset"));
 	bicon->setProperty("myValue", QVariant(row));
 	connect(bicon, SIGNAL(clicked(bool)), this, SLOT(s_shortcut_joy_unset(bool)));
-	layout->addWidget(btext);
 	layout->addWidget(bicon);
 	layout->setContentsMargins(0,0,0,0);
 	layout->setSpacing(0);
@@ -367,8 +379,10 @@ void wdgSettingsInput::shortcut_update_text(QAction *action, int index) {
 	// action
 	if (index == SET_INP_SC_WAV) {
 		tableWidget_Shortcuts->item(row, 0)->setText(tr("Start/Stop WAV"));
+		tableWidget_Shortcuts->item(row, 0)->setToolTip(tr("Start/Stop WAV"));
 	} else {
 		tableWidget_Shortcuts->item(row, 0)->setText(text.at(0));
+		tableWidget_Shortcuts->item(row, 0)->setToolTip(text.at(0));
 	}
 
 	// keyboard
@@ -826,11 +840,45 @@ void wdgSettingsInput::s_shortcut(UNUSED(bool checked)) {
 #endif
 	}
 }
+void wdgSettingsInput::s_shortcut_unset_all(UNUSED(bool checked)) {
+	for (int i = 0; i < SET_MAX_NUM_SC; i++) {
+		shcut.text[KEYBOARD].replace(i, "NULL");
+		settings_inp_wr_sc((void *)&shcut.text[KEYBOARD].at(i), i + SET_INP_SC_OPEN, KEYBOARD);
+		tableWidget_Shortcuts->cellWidget(i, 1)->findChild<QPushButton *>("value")->setText(shcut.text[KEYBOARD].at(i));
+
+		shcut.text[JOYSTICK].replace(i, "NULL");
+		settings_inp_wr_sc((void *)&shcut.text[JOYSTICK].at(i), i + SET_INP_SC_OPEN, JOYSTICK);
+		tableWidget_Shortcuts->cellWidget(i, 2)->findChild<QPushButton *>("value")->setText(shcut.text[JOYSTICK].at(i));
+	}
+	mainwin->shortcuts();
+	shortcuts_update(UPDATE_ALL, NO_ACTION, NO_ACTION);
+}
+void wdgSettingsInput::s_shortcut_reset(UNUSED(bool checked)) {
+	for (int i = 0; i < SET_MAX_NUM_SC; i++) {
+		shcut.text[KEYBOARD].replace(i, uQString(inp_cfg[i + SET_INP_SC_OPEN].def).split(",").at(KEYBOARD));
+		settings_inp_wr_sc((void *)&shcut.text[KEYBOARD].at(i), i + SET_INP_SC_OPEN, KEYBOARD);
+		tableWidget_Shortcuts->cellWidget(i, 1)->findChild<QPushButton *>("value")->setText(shcut.text[KEYBOARD].at(i));
+
+		shcut.text[JOYSTICK].replace(i, uQString(inp_cfg[i + SET_INP_SC_OPEN].def).split(",").at(JOYSTICK));
+		settings_inp_wr_sc((void *)&shcut.text[JOYSTICK].at(i), i + SET_INP_SC_OPEN, JOYSTICK);
+		tableWidget_Shortcuts->cellWidget(i, 2)->findChild<QPushButton *>("value")->setText(shcut.text[JOYSTICK].at(i));
+	}
+	mainwin->shortcuts();
+	shortcuts_update(UPDATE_ALL, NO_ACTION, NO_ACTION);
+}
 void wdgSettingsInput::s_shortcut_keyb_default(UNUSED(bool checked)) {
 	int row = QVariant(((QObject *)sender())->property("myValue")).toInt();
 
 	shcut.text[KEYBOARD].replace(row, uQString(inp_cfg[row + SET_INP_SC_OPEN].def).split(",").at(KEYBOARD));
 	tableWidget_Shortcuts->cellWidget(row, 1)->findChild<QPushButton *>("value")->setText(shcut.text[KEYBOARD].at(row));
+	settings_inp_wr_sc((void *)&shcut.text[KEYBOARD].at(row), row + SET_INP_SC_OPEN, KEYBOARD);
+	mainwin->shortcuts();
+}
+void wdgSettingsInput::s_shortcut_keyb_unset(UNUSED(bool checked)) {
+	int row = QVariant(((QObject *)sender())->property("myValue")).toInt();
+
+	shcut.text[KEYBOARD].replace(row, "NULL");
+	tableWidget_Shortcuts->cellWidget(row, 1)->findChild<QPushButton *>("value")->setText("NULL");
 	settings_inp_wr_sc((void *)&shcut.text[KEYBOARD].at(row), row + SET_INP_SC_OPEN, KEYBOARD);
 	mainwin->shortcuts();
 }
@@ -862,7 +910,6 @@ void wdgSettingsInput::s_input_reset(UNUSED(bool checked)) {
 	}
 
 	mainwin->shortcuts();
-
 	shortcuts_update(UPDATE_ALL, NO_ACTION, NO_ACTION);
 	update_widget();
 }

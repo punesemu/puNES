@@ -97,7 +97,10 @@ class wdgSettingsInput : public QWidget, public Ui::wdgSettingsInput {
 		void s_hide_zapper_cursor(bool checked);
 		void s_joy_id(int index);
 		void s_shortcut(bool checked);
+		void s_shortcut_unset_all(bool checked);
+		void s_shortcut_reset(bool checked);
 		void s_shortcut_keyb_default(bool checked);
+		void s_shortcut_keyb_unset(bool checked);
 		void s_shortcut_joy_unset(bool checked);
 		void s_input_reset(bool checked);
 		void s_input_timeout(void);

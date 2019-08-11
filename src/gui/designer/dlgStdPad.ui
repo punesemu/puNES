@@ -57,6 +57,10 @@
          <number>0</number>
         </property>
         <widget class="QWidget" name="tab_kbd">
+         <attribute name="icon">
+          <iconset resource="resources.qrc">
+           <normaloff>:/icon/icons/keyboard.svg</normaloff>:/icon/icons/keyboard.svg</iconset>
+         </attribute>
          <attribute name="title">
           <string>Keyboard</string>
          </attribute>
@@ -574,12 +578,20 @@
               <property name="text">
                <string>In sequence</string>
               </property>
+              <property name="icon">
+               <iconset resource="resources.qrc">
+                <normaloff>:/icon/icons/state_inc.svg</normaloff>:/icon/icons/state_inc.svg</iconset>
+              </property>
              </widget>
             </item>
             <item>
              <widget class="QPushButton" name="pushButton_kbd_Unset_all">
               <property name="text">
                <string>Unset all</string>
+              </property>
+              <property name="icon">
+               <iconset resource="resources.qrc">
+                <normaloff>:/icon/icons/trash.svg</normaloff>:/icon/icons/trash.svg</iconset>
               </property>
              </widget>
             </item>
@@ -588,6 +600,10 @@
               <property name="text">
                <string>Defaults</string>
               </property>
+              <property name="icon">
+               <iconset resource="resources.qrc">
+                <normaloff>:/icon/icons/overscan_default.svg</normaloff>:/icon/icons/overscan_default.svg</iconset>
+              </property>
              </widget>
             </item>
            </layout>
@@ -595,6 +611,10 @@
          </layout>
         </widget>
         <widget class="QWidget" name="tab_joy">
+         <attribute name="icon">
+          <iconset resource="resources.qrc">
+           <normaloff>:/icon/icons/input_config.svg</normaloff>:/icon/icons/input_config.svg</iconset>
+         </attribute>
          <attribute name="title">
           <string>Joystick</string>
          </attribute>
@@ -1100,6 +1120,10 @@
               <property name="text">
                <string>In sequence</string>
               </property>
+              <property name="icon">
+               <iconset resource="resources.qrc">
+                <normaloff>:/icon/icons/state_inc.svg</normaloff>:/icon/icons/state_inc.svg</iconset>
+              </property>
              </widget>
             </item>
             <item>
@@ -1107,12 +1131,20 @@
               <property name="text">
                <string>Unset all</string>
               </property>
+              <property name="icon">
+               <iconset resource="resources.qrc">
+                <normaloff>:/icon/icons/trash.svg</normaloff>:/icon/icons/trash.svg</iconset>
+              </property>
              </widget>
             </item>
             <item>
              <widget class="QPushButton" name="pushButton_joy_Defaults">
               <property name="text">
                <string>Defaults</string>
+              </property>
+              <property name="icon">
+               <iconset resource="resources.qrc">
+                <normaloff>:/icon/icons/overscan_default.svg</normaloff>:/icon/icons/overscan_default.svg</iconset>
               </property>
              </widget>
             </item>

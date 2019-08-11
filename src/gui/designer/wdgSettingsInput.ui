@@ -28,13 +28,20 @@
    </property>
    <item>
     <layout class="QGridLayout" name="gridLayout_Input">
-     <item row="5" column="1">
-      <widget class="QComboBox" name="comboBox_cp3">
+     <item row="3" column="1">
+      <widget class="QComboBox" name="comboBox_cp1">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="label_cp1">
+       <property name="text">
+        <string>Controller Port 1</string>
        </property>
       </widget>
      </item>
@@ -49,125 +56,6 @@
        </property>
       </widget>
      </item>
-     <item row="11" column="0" colspan="3">
-      <layout class="QHBoxLayout" name="horizontalLayout_joy_ID">
-       <item>
-        <widget class="QLabel" name="label_joy_ID">
-         <property name="text">
-          <string>Joystick ID</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QComboBox" name="comboBox_joy_ID">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item row="6" column="2">
-      <widget class="QPushButton" name="pushButton_cp4">
-       <property name="text">
-        <string>Setup</string>
-       </property>
-       <property name="icon">
-        <iconset resource="resources.qrc">
-         <normaloff>:/icon/icons/input_config.svg</normaloff>:/icon/icons/input_config.svg</iconset>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QComboBox" name="comboBox_cm">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <item>
-        <property name="text">
-         <string>NES</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Famicom</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Four Score</string>
-        </property>
-       </item>
-      </widget>
-     </item>
-     <item row="7" column="0" colspan="3">
-      <layout class="QHBoxLayout" name="horizontalLayout_Input_Misc">
-       <item>
-        <widget class="QLabel" name="label_Input_Misc">
-         <property name="font">
-          <font>
-           <weight>75</weight>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="text">
-          <string>Misc</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="Line" name="line_Input_Misc">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item row="4" column="2">
-      <widget class="QPushButton" name="pushButton_cp2">
-       <property name="text">
-        <string>Setup</string>
-       </property>
-       <property name="icon">
-        <iconset resource="resources.qrc">
-         <normaloff>:/icon/icons/input_config.svg</normaloff>:/icon/icons/input_config.svg</iconset>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="label_exp">
-       <property name="text">
-        <string>Expansion Port</string>
-       </property>
-      </widget>
-     </item>
-     <item row="9" column="0" colspan="3">
-      <widget class="QCheckBox" name="checkBox_Hide_Zapper_cursor">
-       <property name="text">
-        <string>Hide Zapper cursor</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="0">
-      <widget class="QLabel" name="label_cp1">
-       <property name="text">
-        <string>Controller Port 1</string>
-       </property>
-      </widget>
-     </item>
      <item row="2" column="1">
       <widget class="QComboBox" name="comboBox_exp">
        <property name="sizePolicy">
@@ -178,27 +66,14 @@
        </property>
       </widget>
      </item>
-     <item row="5" column="0">
-      <widget class="QLabel" name="label_cp3">
+     <item row="6" column="2">
+      <widget class="QPushButton" name="pushButton_cp4">
        <property name="text">
-        <string>Controller Port 3</string>
+        <string>Setup</string>
        </property>
-      </widget>
-     </item>
-     <item row="3" column="1">
-      <widget class="QComboBox" name="comboBox_cp1">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="0">
-      <widget class="QLabel" name="label_cp2">
-       <property name="text">
-        <string>Controller Port 2</string>
+       <property name="icon">
+        <iconset resource="resources.qrc">
+         <normaloff>:/icon/icons/input_config.svg</normaloff>:/icon/icons/input_config.svg</iconset>
        </property>
       </widget>
      </item>
@@ -232,6 +107,240 @@
        </item>
       </layout>
      </item>
+     <item row="15" column="0" colspan="3">
+      <widget class="QLineEdit" name="lineEdit_Input_info">
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
+       </property>
+       <property name="acceptDrops">
+        <bool>false</bool>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="0" colspan="3">
+      <widget class="QCheckBox" name="checkBox_Hide_Zapper_cursor">
+       <property name="text">
+        <string>Hide Zapper cursor</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="1">
+      <widget class="QComboBox" name="comboBox_cp4">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
+     </item>
+     <item row="12" column="0" colspan="3">
+      <layout class="QHBoxLayout" name="horizontalLayout_Shortcut">
+       <item>
+        <widget class="QPushButton" name="pushButton_Shortcut_unset_all">
+         <property name="text">
+          <string>Unset all</string>
+         </property>
+         <property name="icon">
+          <iconset resource="resources.qrc">
+           <normaloff>:/icon/icons/trash.svg</normaloff>:/icon/icons/trash.svg</iconset>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_Shortcut_reset">
+         <property name="text">
+          <string>Reset to defaults</string>
+         </property>
+         <property name="icon">
+          <iconset resource="resources.qrc">
+           <normaloff>:/icon/icons/overscan_default.svg</normaloff>:/icon/icons/overscan_default.svg</iconset>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="5" column="2">
+      <widget class="QPushButton" name="pushButton_cp3">
+       <property name="text">
+        <string>Setup</string>
+       </property>
+       <property name="icon">
+        <iconset resource="resources.qrc">
+         <normaloff>:/icon/icons/input_config.svg</normaloff>:/icon/icons/input_config.svg</iconset>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="QComboBox" name="comboBox_cp2">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="0">
+      <widget class="QLabel" name="label_cp4">
+       <property name="text">
+        <string>Controller Port 4</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_cm">
+       <property name="text">
+        <string>Controller Mode</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="2">
+      <widget class="QPushButton" name="pushButton_cp2">
+       <property name="text">
+        <string>Setup</string>
+       </property>
+       <property name="icon">
+        <iconset resource="resources.qrc">
+         <normaloff>:/icon/icons/input_config.svg</normaloff>:/icon/icons/input_config.svg</iconset>
+       </property>
+      </widget>
+     </item>
+     <item row="11" column="0" colspan="3">
+      <layout class="QHBoxLayout" name="horizontalLayout_joy_ID">
+       <item>
+        <widget class="QLabel" name="label_joy_ID">
+         <property name="text">
+          <string>Joystick ID</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="comboBox_joy_ID">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="8" column="0" colspan="3">
+      <widget class="QCheckBox" name="checkBox_Permit_updown">
+       <property name="text">
+        <string>Permit &quot;Up + Down&quot; and &quot;Left + Right&quot; at the same time</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="0">
+      <widget class="QLabel" name="label_cp3">
+       <property name="text">
+        <string>Controller Port 3</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QComboBox" name="comboBox_cm">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <item>
+        <property name="text">
+         <string>NES</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Famicom</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Four Score</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="13" column="0" colspan="3">
+      <widget class="QTableWidget" name="tableWidget_Shortcuts">
+       <property name="editTriggers">
+        <set>QAbstractItemView::NoEditTriggers</set>
+       </property>
+       <property name="selectionMode">
+        <enum>QAbstractItemView::NoSelection</enum>
+       </property>
+       <attribute name="verticalHeaderVisible">
+        <bool>false</bool>
+       </attribute>
+       <column>
+        <property name="text">
+         <string>Action</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Keyboard</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Joystick</string>
+        </property>
+       </column>
+      </widget>
+     </item>
+     <item row="4" column="0">
+      <widget class="QLabel" name="label_cp2">
+       <property name="text">
+        <string>Controller Port 2</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="0" colspan="3">
+      <layout class="QHBoxLayout" name="horizontalLayout_Input_Misc">
+       <item>
+        <widget class="QLabel" name="label_Input_Misc">
+         <property name="font">
+          <font>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Misc</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="Line" name="line_Input_Misc">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="label_exp">
+       <property name="text">
+        <string>Expansion Port</string>
+       </property>
+      </widget>
+     </item>
      <item row="10" column="0" colspan="3">
       <layout class="QHBoxLayout" name="horizontalLayout_Shortcuts">
        <item>
@@ -262,14 +371,17 @@
        </item>
       </layout>
      </item>
-     <item row="8" column="0" colspan="3">
-      <widget class="QCheckBox" name="checkBox_Permit_updown">
-       <property name="text">
-        <string>Permit &quot;Up + Down&quot; and &quot;Left + Right&quot; at the same time</string>
+     <item row="5" column="1">
+      <widget class="QComboBox" name="comboBox_cp3">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
        </property>
       </widget>
      </item>
-     <item row="14" column="0" colspan="3">
+     <item row="16" column="0" colspan="3">
       <widget class="Line" name="line_Shortcuts_2">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -282,65 +394,7 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="label_cm">
-       <property name="text">
-        <string>Controller Mode</string>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="2">
-      <widget class="QPushButton" name="pushButton_cp3">
-       <property name="text">
-        <string>Setup</string>
-       </property>
-       <property name="icon">
-        <iconset resource="resources.qrc">
-         <normaloff>:/icon/icons/input_config.svg</normaloff>:/icon/icons/input_config.svg</iconset>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="1">
-      <widget class="QComboBox" name="comboBox_cp2">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-      </widget>
-     </item>
-     <item row="6" column="1">
-      <widget class="QComboBox" name="comboBox_cp4">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-      </widget>
-     </item>
-     <item row="13" column="0" colspan="3">
-      <widget class="QLineEdit" name="lineEdit_Input_info">
-       <property name="focusPolicy">
-        <enum>Qt::NoFocus</enum>
-       </property>
-       <property name="acceptDrops">
-        <bool>false</bool>
-       </property>
-       <property name="readOnly">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="6" column="0">
-      <widget class="QLabel" name="label_cp4">
-       <property name="text">
-        <string>Controller Port 4</string>
-       </property>
-      </widget>
-     </item>
-     <item row="15" column="0" colspan="3">
+     <item row="18" column="0" colspan="3">
       <widget class="QPushButton" name="pushButton_Input_reset">
        <property name="text">
         <string>Reset to defaults</string>
@@ -349,34 +403,6 @@
         <iconset resource="resources.qrc">
          <normaloff>:/icon/icons/overscan_default.svg</normaloff>:/icon/icons/overscan_default.svg</iconset>
        </property>
-      </widget>
-     </item>
-     <item row="12" column="0" colspan="3">
-      <widget class="QTableWidget" name="tableWidget_Shortcuts">
-       <property name="editTriggers">
-        <set>QAbstractItemView::NoEditTriggers</set>
-       </property>
-       <property name="selectionMode">
-        <enum>QAbstractItemView::NoSelection</enum>
-       </property>
-       <attribute name="verticalHeaderVisible">
-        <bool>false</bool>
-       </attribute>
-       <column>
-        <property name="text">
-         <string>Action</string>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>Keyboard</string>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>Joystick</string>
-        </property>
-       </column>
       </widget>
      </item>
     </layout>
