@@ -84,6 +84,8 @@ bool wdgScreen::eventFilter(QObject *obj, QEvent *event) {
 				}
 			}
 		}
+	} else if (event->type() == QEvent::KeyPress) {
+		return (true);
 	} else if (event->type() == QEvent::KeyRelease) {
 		keyEvent = ((QKeyEvent *)event);
 
