@@ -1437,6 +1437,10 @@
       <source>Joystick</source>
       <translation>Joystick</translation>
     </message>
+    <message>
+      <source>Unset all</source>
+      <translation>Azzera tutto</translation>
+    </message>
   </context>
   <context>
     <name>wdgSettingsPPU</name>
