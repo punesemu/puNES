@@ -1439,7 +1439,7 @@
     </message>
     <message>
       <source>Unset all</source>
-      <translation type="unfinished">Unset all</translation>
+      <translation>Deshacer todo</translation>
     </message>
   </context>
   <context>
