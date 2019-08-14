@@ -568,9 +568,9 @@ void opengl_draw_scene(void) {
 	}
 
 	// screenshot
-	if (gfx.save_screenshot == TRUE) {
+	if (gfx.screenshot.save == TRUE) {
 		opengl_screenshot();
-		gfx.save_screenshot = FALSE;
+		gfx.screenshot.save = FALSE;
 	}
 }
 
@@ -673,19 +673,29 @@ static void opengl_context_delete(void) {
 }
 static void opengl_screenshot(void) {
 	float w, h;
-	char *buffer;
+	void *buffer;
 
-	w = gfx.w[VIDEO_MODE] * gfx.device_pixel_ratio;
-	h = gfx.h[VIDEO_MODE] * gfx.device_pixel_ratio;
-
-	glReadBuffer(GL_FRONT);
-	if ((buffer = malloc(w * h * 4)) == NULL) {
-		return;
+	if (gfx.screenshot.type == SCRSH_STANDARD) {
+		w = gfx.w[VIDEO_MODE] * gfx.device_pixel_ratio;
+		h = gfx.h[VIDEO_MODE] * gfx.device_pixel_ratio;
+		glReadBuffer(GL_FRONT);
+		if ((buffer = malloc(w * h * 4)) == NULL) {
+			return;
+		}
+		glPixelStorei(GL_PACK_ALIGNMENT, 1);
+		glReadPixels(0, 0, w, h, GL_BGRA, GL_UNSIGNED_BYTE, buffer);
+		gui_save_screenshot(w, h, buffer, TRUE);
+		free(buffer);
+	} else {
+		w = SCR_ROWS;
+		h = SCR_LINES;
+		if ((buffer = malloc(w * h * sizeof(uint32_t))) == NULL) {
+			return;
+		}
+		scale_surface_screenshoot_1x(w * sizeof(uint32_t), buffer);
+		gui_save_screenshot(w, h, buffer, FALSE);
+		free(buffer);
 	}
-	glPixelStorei(GL_PACK_ALIGNMENT, 1);
-	glReadPixels(0, 0, w, h, GL_BGRA, GL_UNSIGNED_BYTE, buffer);
-	gui_save_screenshot(w, h, buffer, TRUE);
-	free(buffer);
 }
 
 static BYTE opengl_glew_init(void) {

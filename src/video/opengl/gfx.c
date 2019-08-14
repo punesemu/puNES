@@ -39,7 +39,7 @@
 #include "video/effects/tv_noise.h"
 
 BYTE gfx_init(void) {
-	gfx.save_screenshot = FALSE;
+	gfx.screenshot.save = FALSE;
 
 	gui_screen_info();
 

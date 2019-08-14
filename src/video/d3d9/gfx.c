@@ -35,7 +35,7 @@
 #include "video/effects/tv_noise.h"
 
 BYTE gfx_init(void) {
-	gfx.save_screenshot = FALSE;
+	gfx.screenshot.save = FALSE;
 
 	if (gui_create() == EXIT_ERROR) {
 		MessageBox(NULL, "Gui initialization failed", "Error!", MB_ICONEXCLAMATION | MB_OK);

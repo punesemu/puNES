@@ -48,7 +48,7 @@
 		}\
 	}\
 	/* ed infine utilizzo la nuova */\
-	ntsc_set(ntscin, cfg->ntsc_format, FALSE, 0, (BYTE *)plt,(BYTE *)plt)
+	ntsc_set(ntscin, cfg->ntsc_format, FALSE, 0, (BYTE *)plt, (BYTE *)plt)
 #if defined (__unix__)
 #define	gfx_os_color(r, g, b) gfx_color(0, r, g, b);
 #else
@@ -58,6 +58,7 @@
 enum fullscreen_type { NO_FULLSCR, FULLSCR, FULLSCR_IN_WINDOW };
 enum scale_type { X1 = 1, X2, X3, X4, X5, X6 };
 enum par_type { PAR11, PAR54, PAR87, PAR118 };
+enum screenshot_type { SCRSH_STANDARD, SCRSH_ORIGINAL_SIZE };
 enum filters_type {
 	NO_FILTER,
 	SCALE2X,
@@ -107,7 +108,6 @@ typedef struct _viewport {
 
 EXTERNC struct _gfx {
 	BYTE PSS;
-	BYTE save_screenshot;
 	BYTE scale_before_fscreen;
 	BYTE type_of_fscreen_in_use;
 	BYTE bit_per_pixel;
@@ -120,6 +120,10 @@ EXTERNC struct _gfx {
 	uint32_t *palette;
 	uTCHAR last_shader_file[LENGTH_FILE_NAME_LONG];
 	_viewport vp;
+	struct _gfx_screenshot {
+		BYTE save;
+		BYTE type;
+	} screenshot;
 	struct _gfx_filter {
 		void (*func)(void);
 

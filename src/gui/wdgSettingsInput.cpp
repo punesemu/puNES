@@ -692,6 +692,7 @@ void wdgSettingsInput::shortcuts_set(void) {
 	shortcut_update_text(mainwin->action_Start_Stop_WAV_recording, SET_INP_SC_WAV);
 	shortcut_update_text(mainwin->action_Fullscreen, SET_INP_SC_FULLSCREEN);
 	shortcut_update_text(mainwin->action_Save_Screenshot, SET_INP_SC_SCREENSHOT);
+	shortcut_update_text(mainwin->action_Save_Unaltered_NES_screen, SET_INP_SC_SCREENSHOT_1X);
 	shortcut_update_text(mainwin->action_Pause, SET_INP_SC_PAUSE);
 	shortcut_update_text(mainwin->action_Fast_Forward, SET_INP_SC_FAST_FORWARD);
 	shortcut_update_text(mainwin->action_Toggle_GUI_in_window, SET_INP_SC_TOGGLE_GUI_IN_WINDOW);

@@ -152,6 +152,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void s_set_fullscreen(void);
 	private slots:
 		void s_save_screenshot(void);
+		void s_save_screenshot_1x(void);
 		void s_pause(void);
 		void s_fast_forward(void);
 		void s_toggle_gui_in_window(void);

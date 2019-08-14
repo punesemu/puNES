@@ -413,6 +413,7 @@ void mainWindow::shortcuts(void) {
 	connect_shortcut(action_Start_Stop_WAV_recording, SET_INP_SC_WAV, SLOT(s_start_stop_wave()));
 	connect_shortcut(action_Fullscreen, SET_INP_SC_FULLSCREEN, SLOT(s_set_fullscreen()));
 	connect_shortcut(action_Save_Screenshot, SET_INP_SC_SCREENSHOT, SLOT(s_save_screenshot()));
+	connect_shortcut(action_Save_Unaltered_NES_screen, SET_INP_SC_SCREENSHOT_1X, SLOT(s_save_screenshot_1x()));
 	connect_shortcut(action_Pause, SET_INP_SC_PAUSE, SLOT(s_pause()));
 	connect_shortcut(action_Fast_Forward, SET_INP_SC_FAST_FORWARD, SLOT(s_fast_forward()));
 	connect_shortcut(action_Toggle_GUI_in_window, SET_INP_SC_TOGGLE_GUI_IN_WINDOW, SLOT(s_toggle_gui_in_window()));
@@ -485,6 +486,7 @@ void mainWindow::connect_menu_signals(void) {
 	connect_action(action_Start_Stop_WAV_recording, SLOT(s_start_stop_wave()));
 	connect_action(action_Fullscreen, SLOT(s_set_fullscreen()));
 	connect_action(action_Save_Screenshot, SLOT(s_save_screenshot()));
+	connect_action(action_Save_Unaltered_NES_screen, SLOT(s_save_screenshot_1x()));
 	connect_action(action_Pause, SLOT(s_pause()));
 	connect_action(action_Fast_Forward, SLOT(s_fast_forward()));
 	connect_action(action_Toggle_GUI_in_window, SLOT(s_toggle_gui_in_window()));
@@ -1100,7 +1102,12 @@ void mainWindow::s_set_fullscreen(void) {
 	gui_set_focus();
 }
 void mainWindow::s_save_screenshot(void) {
-	gfx.save_screenshot = true;
+	gfx.screenshot.save = TRUE;
+	gfx.screenshot.type = SCRSH_STANDARD;
+}
+void mainWindow::s_save_screenshot_1x(void) {
+	gfx.screenshot.save = TRUE;
+	gfx.screenshot.type = SCRSH_ORIGINAL_SIZE;
 }
 void mainWindow::s_pause(void) {
 	emu_thread_pause();
@@ -1376,6 +1383,9 @@ void mainWindow::s_shcjoy_read_timer(void) {
 							break;
 						case SET_INP_SC_SCREENSHOT:
 							action_Save_Screenshot->trigger();
+							break;
+						case SET_INP_SC_SCREENSHOT_1X:
+							action_Save_Unaltered_NES_screen->trigger();
 							break;
 						case SET_INP_SC_PAUSE:
 							action_Pause->trigger();

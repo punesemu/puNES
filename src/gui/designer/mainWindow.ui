@@ -87,6 +87,7 @@
     <addaction name="separator"/>
     <addaction name="action_Fullscreen"/>
     <addaction name="action_Save_Screenshot"/>
+    <addaction name="action_Save_Unaltered_NES_screen"/>
     <addaction name="action_Pause"/>
     <addaction name="action_Fast_Forward"/>
     <addaction name="action_Toggle_GUI_in_window"/>
@@ -598,6 +599,15 @@
    </property>
    <property name="text">
     <string>&amp;Cheats</string>
+   </property>
+  </action>
+  <action name="action_Save_Unaltered_NES_screen">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icon/icons/screenshot_unaltered.svg</normaloff>:/icon/icons/screenshot_unaltered.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Save Unalte&amp;red NES screen</string>
    </property>
   </action>
  </widget>

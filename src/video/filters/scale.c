@@ -20,7 +20,7 @@
 #include "ppu.h"
 
 #define put_pixel(type, p0, p1)\
-	*(type *) (dstpix + p0 + p1) = (type) pixel
+	*(type *)(dstpix + p0 + p1) = (type)pixel
 
 INLINE static void scale_surface1x(uint32_t *palette, uint32_t pitch, void *pix);
 
@@ -44,10 +44,20 @@ void scale_surface(void) {
 
 	scale_surface1x((uint32_t *)gfx.filter.data.palette, gfx.filter.data.pitch, gfx.filter.data.pix);
 }
+void scale_surface_screenshoot_1x(uint32_t pitch, void *pix) {
+	scl.sx = 0;
+	scl.sy = 0;
+	scl.oy = 0;
+	scl.lines = SCR_LINES;
+	scl.rows = SCR_ROWS;
+	scl.startx = 0;
+
+	scale_surface1x((uint32_t *)gfx.filter.data.palette, pitch, pix);
+}
 
 INLINE void scale_surface1x(uint32_t *palette, uint32_t pitch, void *pix) {
 	const uint32_t dstpitch = pitch;
-	uint8_t *dstpix = (uint8_t *) pix;
+	uint8_t *dstpix = (uint8_t *)pix;
 	uint32_t TH0, TW0;
 	uint32_t pixel;
 

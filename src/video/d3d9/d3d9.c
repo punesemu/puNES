@@ -39,6 +39,7 @@
 static void d3d9_shader_cg_error_handler(void);
 static BYTE d3d9_device_create(UINT width, UINT height);
 static void d3d9_context_delete(void);
+static void d3d9_screenshot(void);
 static BYTE d3d9_texture_create(_texture *texture, UINT index);
 static BYTE d3d9_texture_simple_create(_texture_simple *texture, UINT w, UINT h, BOOL text);
 static BYTE d3d9_texture_lut_create(_lut *lut, UINT index);
@@ -570,45 +571,9 @@ void d3d9_draw_scene(void) {
 		}
 
 		// screenshot
-		if (gfx.save_screenshot == TRUE) {
-			IDirect3DSurface9 *back_buffer, *surface;
-
-			if (IDirect3DDevice9_GetBackBuffer(d3d9.adapter->dev, 0, 0, D3DBACKBUFFER_TYPE_MONO, &back_buffer) == D3D_OK) {
-				D3DSURFACE_DESC sd;
-
-				IDirect3DSurface9_GetDesc(back_buffer, &sd);
-
-				if (IDirect3DDevice9_CreateOffscreenPlainSurface(d3d9.adapter->dev, sd.Width,
-					sd.Height, sd.Format, D3DPOOL_SYSTEMMEM, &surface, NULL) == D3D_OK) {
-					if (IDirect3DDevice9_GetRenderTargetData(d3d9.adapter->dev, back_buffer, surface) == D3D_OK) {
-						D3DLOCKED_RECT lrect;
-
-						if (overscan.enabled && ((!cfg->fullscreen && !cfg->oscan_black_borders) ||
-							(cfg->fullscreen && !cfg->oscan_black_borders_fscr))) {
-							int w = d3d9.viewp.right - d3d9.viewp.left;
-							int h = d3d9.viewp.bottom - d3d9.viewp.top;
-							IDirect3DSurface9 *zone;
-
-							if (IDirect3DDevice9_CreateOffscreenPlainSurface(d3d9.adapter->dev,
-								w, h, sd.Format, D3DPOOL_DEFAULT, &zone, NULL) == D3D_OK) {
-								if (IDirect3DDevice9_UpdateSurface(d3d9.adapter->dev, surface, &d3d9.viewp, zone, NULL) == D3D_OK) {
-									IDirect3DSurface9_LockRect(zone, &lrect, NULL, 0);
-									gui_save_screenshot(w, h, lrect.pBits, FALSE);
-									IDirect3DSurface9_UnlockRect(zone);
-								}
-								IDirect3DSurface9_Release(zone);
-							}
-						} else {
-							IDirect3DSurface9_LockRect(surface, &lrect, NULL, 0);
-							gui_save_screenshot(sd.Width, sd.Height, lrect.pBits, FALSE);
-							IDirect3DSurface9_UnlockRect(surface);
-						}
-					}
-					IDirect3DSurface9_Release(surface);
-				}
-				IDirect3DSurface9_Release(back_buffer);
-			}
-			gfx.save_screenshot = FALSE;
+		if (gfx.screenshot.save == TRUE) {
+			d3d9_screenshot();
+			gfx.screenshot.save = FALSE;
 		}
 	}
 }
@@ -625,7 +590,6 @@ void d3d9_quit(void) {
 				IDirect3DDevice9_Release(dev->dev);
 				dev->dev = NULL;
 			}
-
 		}
 	}
 
@@ -800,6 +764,56 @@ static void d3d9_context_delete(void) {
 	if (d3d9.adapter && d3d9.adapter->dev) {
 		IDirect3DDevice9_Release(d3d9.adapter->dev);
 		d3d9.adapter->dev = NULL;
+	}
+}
+static void d3d9_screenshot(void) {
+	if (gfx.screenshot.type == SCRSH_STANDARD) {
+		IDirect3DSurface9 *back_buffer, *surface;
+
+		if (IDirect3DDevice9_GetBackBuffer(d3d9.adapter->dev, 0, 0, D3DBACKBUFFER_TYPE_MONO, &back_buffer) == D3D_OK) {
+			D3DSURFACE_DESC sd;
+
+			IDirect3DSurface9_GetDesc(back_buffer, &sd);
+
+			if (IDirect3DDevice9_CreateOffscreenPlainSurface(d3d9.adapter->dev, sd.Width,
+				sd.Height, sd.Format, D3DPOOL_SYSTEMMEM, &surface, NULL) == D3D_OK) {
+				if (IDirect3DDevice9_GetRenderTargetData(d3d9.adapter->dev, back_buffer, surface) == D3D_OK) {
+					D3DLOCKED_RECT lrect;
+
+					if (overscan.enabled && ((!cfg->fullscreen && !cfg->oscan_black_borders) ||
+						(cfg->fullscreen && !cfg->oscan_black_borders_fscr))) {
+						int w = d3d9.viewp.right - d3d9.viewp.left;
+						int h = d3d9.viewp.bottom - d3d9.viewp.top;
+						IDirect3DSurface9 *zone;
+
+						if (IDirect3DDevice9_CreateOffscreenPlainSurface(d3d9.adapter->dev,
+							w, h, sd.Format, D3DPOOL_DEFAULT, &zone, NULL) == D3D_OK) {
+							if (IDirect3DDevice9_UpdateSurface(d3d9.adapter->dev, surface, &d3d9.viewp, zone, NULL) == D3D_OK) {
+								IDirect3DSurface9_LockRect(zone, &lrect, NULL, 0);
+								gui_save_screenshot(w, h, lrect.pBits, FALSE);
+								IDirect3DSurface9_UnlockRect(zone);
+							}
+							IDirect3DSurface9_Release(zone);
+						}
+					} else {
+						IDirect3DSurface9_LockRect(surface, &lrect, NULL, 0);
+						gui_save_screenshot(sd.Width, sd.Height, lrect.pBits, FALSE);
+						IDirect3DSurface9_UnlockRect(surface);
+					}
+				}
+				IDirect3DSurface9_Release(surface);
+			}
+			IDirect3DSurface9_Release(back_buffer);
+		}
+	} else {
+		void *buffer;
+
+		if ((buffer = malloc(SCR_ROWS * SCR_LINES * sizeof(uint32_t))) == NULL) {
+			return;
+		}
+		scale_surface_screenshoot_1x(SCR_ROWS * sizeof(uint32_t), buffer);
+		gui_save_screenshot(SCR_ROWS, SCR_LINES, buffer, FALSE);
+		free(buffer);
 	}
 }
 static BYTE d3d9_texture_create(_texture *texture, UINT index) {

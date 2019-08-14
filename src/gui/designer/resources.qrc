@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="icon">
+    <file>icons/screenshot_unaltered.svg</file>
     <file>icons/keyboard.svg</file>
     <file>icons/flag_turkey.svg</file>
     <file>icons/toggle_gui.svg</file>
