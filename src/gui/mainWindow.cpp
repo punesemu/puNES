@@ -949,7 +949,7 @@ void mainWindow::s_open_recent_roms(void) {
 	emu_pause(FALSE);
 }
 void mainWindow::s_open_working_folder(void) {
-	QDesktopServices::openUrl(QUrl(uQString(info.base_folder)));
+	QDesktopServices::openUrl(QUrl(QDir(uQString(info.base_folder)).absolutePath()));
 }
 void mainWindow::s_quit(void) {
 	close();
