@@ -214,10 +214,10 @@ void gui_update_gps_settings(void) {
 
 void gui_fullscreen(void) {
 	// se l'emulatore si avvia in fullscreen modalita' finestra, senza questo ritardo
-	// e' possibile che le QT mi passino informazioni non corrette sulle dimensioni dello
+	// e' possibile che le QT mi passino informazioni non corrette sulle dimensioni del
 	// desktop e che le decorazioni della finestra non appaiano correttamente (problema
 	// riscontrato sotto Linux).
-    QTimer::singleShot(250, qt.mwin, SLOT(s_set_fullscreen()));
+	QTimer::singleShot(250, qt.mwin, SLOT(s_set_fullscreen()));
 }
 void gui_save_slot(BYTE slot) {
 	if (slot >= SAVE_SLOTS) {

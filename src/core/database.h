@@ -2813,6 +2813,10 @@ static const _dbelement dblist[] = {
 	{"b911fde519b8f62ebda1a4528f586ef8215ebfdd", 21, VRC4C, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Ganbare Goemon Gaiden 2 - Tenka no Zaihou (J) [o1].nes */
 	{"711929b7621a9a80743f0542c89877c8b862c32e", 21, VRC4C, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Ganbare Goemon Gaiden 2 - Tenka no Zaihou (J) [o1].nes Traduction v101 */
+	{"16c6c4fb02e9ee1eee286b21ef35d09f4eadb408", 21, VRC4C, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
+	/* Ganbare Goemon Gaiden 2 - Tenka no Zaihou (J) [b2].nes Traduction v101 */
+	{"e8a7c35c793288bf9c0161c3edd49c825c8f7981", 21, VRC4C, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 	/* 2-in-1 - Yuu Yuu + Dragonball Z [p1][!].nes */
 	{"4097d5a814308e39d592466b60b64862699cc22a", 23, VRC4BMC, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
