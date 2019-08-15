@@ -662,6 +662,10 @@
       <source>&amp;Toggle GUI in window</source>
       <translation>GUI ki/be kapcsolása ablakos módban</translation>
     </message>
+    <message>
+      <source>Save Unalte&amp;red NES screen</source>
+      <translation type="unfinished">Save Unalte&amp;red NES screen</translation>
+    </message>
   </context>
   <context>
     <name>objCheat</name>
