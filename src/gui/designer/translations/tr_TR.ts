@@ -662,6 +662,10 @@
       <source>&amp;Toggle GUI in window</source>
       <translation type="unfinished">&amp;Toggle GUI in window</translation>
     </message>
+    <message>
+      <source>Save Unalte&amp;red NES screen</source>
+      <translation type="unfinished">Save Unalte&amp;red NES screen</translation>
+    </message>
   </context>
   <context>
     <name>objCheat</name>
