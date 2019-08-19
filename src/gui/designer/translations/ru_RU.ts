@@ -1443,7 +1443,7 @@
     </message>
     <message>
       <source>Unset all</source>
-      <translation type="unfinished">Unset all</translation>
+      <translation>Сбросить все</translation>
     </message>
   </context>
   <context>
