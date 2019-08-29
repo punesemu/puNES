@@ -3088,6 +3088,8 @@ static const _dbelement dblist[] = {
 	{"5ab195bbbd35cdecc9c00dd7de7a315234fe7300", 70, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 
 /* ------------------------------------- Camerica ----------------------------------------- */
+	/* Fire Hawk (PAL)[!].nes */
+	{"7b23cacd3a6864450561c546c052b6f7f348cf04", 71, BF9097, DEFAULT, PAL, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Fire Hawk (Camerica) [b1].nes */
 	{"1b22f43bf366ebb4fda452ddf2fc9e980f9dd2f1", 71, BF9097, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, NODIPSWITCH, NOEXTRA},
 	/* Fire Hawk (Camerica) [b2].nes */
