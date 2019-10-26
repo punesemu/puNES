@@ -4,7 +4,6 @@
 [![AUR package](https://repology.org/badge/version-for-repo/aur/punes.svg)](https://repology.org/project/punes/versions)
 [![SlackBuilds package](https://repology.org/badge/version-for-repo/slackbuilds/punes.svg)](https://repology.org/project/punes/versions)
 [![Funtoo 1.3 package](https://repology.org/badge/version-for-repo/funtoo_1.3/punes.svg)](https://repology.org/project/punes/versions)
-[![Rosa 2014.1 package](https://repology.org/badge/version-for-repo/rosa_2014_1/punes.svg)](https://repology.org/project/punes/versions)
 [![Rosa 2016.1 package](https://repology.org/badge/version-for-repo/rosa_2016_1/punes.svg)](https://repology.org/project/punes/versions)
 [![Wikidata package](https://repology.org/badge/version-for-repo/wikidata/punes.svg)](https://repology.org/project/punes/versions)
 

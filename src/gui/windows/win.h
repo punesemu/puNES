@@ -26,9 +26,7 @@
 #if defined (__cplusplus)
 #undef NULL
 #endif
-#define INITGUID
 #include <windows.h>
-#undef INITGUID
 
 #define	WIN_TEN     64
 #define	WIN_EIGHTP1 63
