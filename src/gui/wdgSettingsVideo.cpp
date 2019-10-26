@@ -71,7 +71,6 @@ wdgSettingsVideo::wdgSettingsVideo(QWidget *parent) : QWidget(parent) {
 		tableWidget_Shader_Parameters->setColumnCount(0);
 		tableWidget_Shader_Parameters->setColumnCount(WSV_SP_COLUMNS);
 
-
 		for (i = 0; i < WSV_SP_COLUMNS; i++) {
 			QTableWidgetItem *item = new QTableWidgetItem();
 

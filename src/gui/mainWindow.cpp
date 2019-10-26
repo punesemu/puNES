@@ -1218,7 +1218,9 @@ void mainWindow::s_state_save_file(void) {
 		fl = info.rom.file;
 	}
 
-	file = QFileDialog::getSaveFileName(this, tr("Save state on file"), QFileInfo(uQString(fl)).baseName(), filters.join(";;"));
+	file = QFileDialog::getSaveFileName(this, tr("Save state on file"),
+		QFileInfo(uQString(cfg->save_file)).dir().absolutePath() + "/" + QFileInfo(uQString(fl)).baseName(),
+		filters.join(";;"));
 
 	if (file.isNull() == false) {
 		QFileInfo fileinfo(file);

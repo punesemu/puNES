@@ -69,7 +69,6 @@ wdgSettingsInput::wdgSettingsInput(QWidget *parent) : QWidget(parent) {
 
 	connect(pushButton_Input_reset, SIGNAL(clicked(bool)), this, SLOT(s_input_reset(bool)));
 
-
 	shcut.timeout.timer = new QTimer(this);
 	connect(shcut.timeout.timer, SIGNAL(timeout(void)), this, SLOT(s_input_timeout(void)));
 
