@@ -525,8 +525,7 @@ void dlgStdPad::s_combobox_controller_type_activated(int index) {
 
 	data.cfg.port->type_pad = index;
 
-	if (((data.cfg.port->type_pad == CTRL_PAD_AUTO) && (machine.type != DENDY))
-			|| (data.cfg.port->type_pad == CTRL_PAD_ORIGINAL)) {
+	if (((data.cfg.port->type_pad == CTRL_PAD_AUTO) && (machine.type != DENDY)) || (data.cfg.port->type_pad == CTRL_PAD_ORIGINAL)) {
 		state = PRESSED;
 	}
 

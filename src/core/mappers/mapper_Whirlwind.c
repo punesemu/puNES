@@ -64,11 +64,11 @@ BYTE extcl_cpu_rd_mem_Whirlwind(WORD address, BYTE openbus, UNUSED(BYTE before))
 BYTE extcl_save_mapper_Whirlwind(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, whirlwind.reg);
 
-    if (mode == SAVE_SLOT_READ) {
-    	if (save_slot.version < 15) {
-    		whirlwind.reg >>= 13;
-    	}
-    	whirlwind_6000_update();
+	if (mode == SAVE_SLOT_READ) {
+		if (save_slot.version < 15) {
+			whirlwind.reg >>= 13;
+		}
+		whirlwind_6000_update();
 	}
 
 	return (EXIT_OK);

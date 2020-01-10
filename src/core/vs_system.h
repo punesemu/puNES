@@ -58,8 +58,8 @@ enum vs_system_special_mode {
 #define vs_system_r4020_timer(type)\
 	++vs_system.r4020.type.actual.timer;\
 	if (vs_system.r4020.type.old.value && !vs_system.r4020.type.actual.value) {\
-		if ((vs_system.r4020.type.old.timer > VSONTIME)\
-	        && (vs_system.r4020.type.actual.timer > VSOFFTIME)) {\
+		if ((vs_system.r4020.type.old.timer > VSONTIME) && \
+			(vs_system.r4020.type.actual.timer > VSOFFTIME)) {\
 			vs_system.coins.counter++;\
 			gui_vs_system_update_dialog();\
 			vs_system.r4020.type.old.value = 0;\

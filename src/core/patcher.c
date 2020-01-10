@@ -271,21 +271,21 @@ static int64_t patcher_4byte_reverse(_rom_mem *patch) {
 	return (dbw);
 }
 static uint32_t patcher_crc32(unsigned char *message, unsigned int len) {
-   unsigned int byte, crc, mask, i;
-   int j;
+	unsigned int byte, crc, mask, i;
+	int j;
 
-   crc = 0xFFFFFFFF;
+	crc = 0xFFFFFFFF;
 
-   for (i = 0; i < len; i++) {
-      byte = message[i];            // Get next byte.
-      crc = crc ^ byte;
+	for (i = 0; i < len; i++) {
+		byte = message[i]; // Get next byte.
+		crc = crc ^ byte;
 
-      for (j = 7; j >= 0; j--) {    // Do eight times.
-         mask = -(crc & 1);
-         crc = (crc >> 1) ^ (0xEDB88320 & mask);
-      }
-   }
-   return (~crc);
+		for (j = 7; j >= 0; j--) { // Do eight times
+			mask = -(crc & 1);
+			crc = (crc >> 1) ^ (0xEDB88320 & mask);
+		}
+	}
+	return (~crc);
 }
 static BYTE patcher_ips(_rom_mem *patch, _rom_mem *rom) {
 	size_t size = rom->size;

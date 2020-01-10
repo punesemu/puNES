@@ -515,7 +515,7 @@ INLINE static BYTE apu_rd_reg(WORD address) {
 }
 INLINE static void nsf_rd_mem(WORD address, BYTE made_tick) {
 	// Rom
-	if (address >= 0x8000)  {
+	if (address >= 0x8000) {
 		if (made_tick) {
 			tick_hw(1);
 		}
@@ -684,7 +684,7 @@ INLINE static BYTE fds_rd_mem(WORD address, BYTE made_tick) {
 			 */
 			/* azzero */
 			cpu.openbus = 0;
-			/* bit 0  (timer irq) */
+			/* bit 0 (timer irq) */
 			cpu.openbus |= fds.drive.irq_timer_high;
 			/* bit 1 (trasfer flag) */
 			cpu.openbus |= fds.drive.irq_disk_high;
@@ -694,7 +694,7 @@ INLINE static BYTE fds_rd_mem(WORD address, BYTE made_tick) {
 			/* TODO : bit 6 (end of head) */
 			cpu.openbus |= fds.drive.end_of_head;
 			//fds.drive.end_of_head = FALSE;
-			/* TODO : bit 7  (disk data read/write enable (1 when disk is readable/writable) */
+			/* TODO : bit 7 (disk data read/write enable (1 when disk is readable/writable) */
 			/* devo disabilitare sia il timer IRQ ... */
 			fds.drive.irq_timer_high = FALSE;
 			irq.high &= ~FDS_TIMER_IRQ;
@@ -726,7 +726,7 @@ INLINE static BYTE fds_rd_mem(WORD address, BYTE made_tick) {
 			 * ---------
 			 * xxxx xPRS
 			 *       |||
-			 *       ||+- Disk flag  (0: Disk inserted; 1: Disk not inserted)
+			 *       ||+- Disk flag (0: Disk inserted; 1: Disk not inserted)
 			 *       |+-- Ready flag (0: Disk read; 1: Disk not ready)
 			 *       +--- Protect flag (0: Not write protected; 1: Write protected or disk ejected)
 			 */
@@ -1110,8 +1110,8 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 #if !defined (RELEASE)
 		if (old_delay && nmi.high) {
 			fprintf(stderr, "r2000 nmi high, set delay nmi.before, %d %d %d - %d %d - 0x%02X %d\n",
-			        ppu.frames, ppu.frame_y, ppu.frame_x, nmi.frame_x, nmi.cpu_cycles_from_last_nmi,
-			        cpu.opcode, cpu.base_opcode_cycles);
+				ppu.frames, ppu.frame_y, ppu.frame_x, nmi.frame_x, nmi.cpu_cycles_from_last_nmi,
+				cpu.opcode, cpu.base_opcode_cycles);
 		}
 #endif
 		return;
@@ -1218,7 +1218,7 @@ INLINE static void ppu_wr_reg(WORD address, BYTE value) {
 
 		/*
 		 * Bit totali manipolati con $2005:
-		 * tmpAdrVRAM  %0yyy --YY YYYX XXXX
+		 * tmpAdrVRAM %0yyy --YY YYYX XXXX
 		 */
 		if (!r2002.toggle) {
 			/*
@@ -1893,10 +1893,10 @@ INLINE static BYTE fds_wr_mem(WORD address, BYTE value) {
 			 * 7  bit  0
 			 * ---------
 			 * xxxx xxER
-             *        ||
-             *        |+- IRQ Reload Flag
-             *        +-- IRQ Enabled
-             */
+			 *        ||
+			 *        |+- IRQ Reload Flag
+			 *        +-- IRQ Enabled
+			 */
 			if (fds.drive.enabled_dsk_reg) {
 				fds.drive.irq_timer_reload_enabled = value & 0x01;
 				fds.drive.irq_timer_enabled = value & 0x02;
@@ -2035,8 +2035,8 @@ INLINE static BYTE fds_wr_mem(WORD address, BYTE value) {
 				return (TRUE);
 			}
 			if (address == 0x4087) {
-				fds.snd.modulation.frequency = ((value & 0x0F) << 8)
-			        		| (fds.snd.modulation.frequency & 0x00FF);
+				fds.snd.modulation.frequency = ((value & 0x0F) << 8) |
+					(fds.snd.modulation.frequency & 0x00FF);
 				fds.snd.modulation.disabled = value & 0x80;
 				return (TRUE);
 			}

@@ -60,7 +60,7 @@ enum length_file_name_type {
 	LENGTH_FILE_NAME      = 512,
 	LENGTH_FILE_NAME_MID  = 1024,
 	LENGTH_FILE_NAME_LONG = 2048,
-	LENGTH_FILE_NAME_MAX = 4096
+	LENGTH_FILE_NAME_MAX  = 4096
 };
 enum forced_mirroring { UNK_HORIZONTAL, UNK_VERTICAL };
 enum max_chips_rom { MAX_CHIPS = 8 };

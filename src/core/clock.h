@@ -33,7 +33,7 @@ typedef struct {
 	BYTE ppu_divide;                /* il divisore del master clock per ottenere il PPU clock */
 	BYTE ppu_for_1_cycle_cpu;       /* numero di cicli PPU che servono per avere un ciclo CPU */
 	SDBWORD ppu_cyles_permit_write; /* i cicli CPU dall'avvio/reset prima di
-                                     * poter scrivere nei registri della PPU */
+	                                 * poter scrivere nei registri della PPU */
 	BYTE ppu_openbus_frames;        /* frames per il decadimento di un bit openbus del PPU */
 	BYTE cpu_divide;                /* CPU clock e' 12 volte piu' lento del master clock */
 	double cpu_hz;                  /* CPU clock (master_hz / cpu_divide) */
