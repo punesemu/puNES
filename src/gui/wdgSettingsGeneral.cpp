@@ -249,6 +249,7 @@ void wdgSettingsGeneral::s_rewind_minutes(int index) {
 	emu_thread_pause();
 	cfg->rewind_minutes = minutes;
 	rewind_init();
+	gui_update();
 	emu_thread_continue();
 }
 void wdgSettingsGeneral::s_language(int index) {

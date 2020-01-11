@@ -94,6 +94,8 @@ void wdgStatusBar::changeEvent(QEvent *event) {
 }
 
 void wdgStatusBar::update_statusbar(void) {
+	bool rwnd = true;
+
 	infosb->update_label();
 
 	if (info.no_rom | info.turn_off | nsf.state) {
@@ -102,23 +104,25 @@ void wdgStatusBar::update_statusbar(void) {
 #endif
 		state->setEnabled(false);
 
-#if defined (__unix__)
-		vlineRewind->setEnabled(false);
-#endif
-		rewind->setEnabled(false);
+		rwnd = false;
 	} else {
 #if defined (__unix__)
 		vlineState->setEnabled(true);
 #endif
 		state->setEnabled(true);
 
-#if defined (__unix__)
-		vlineRewind->setEnabled(true);
-#endif
-		rewind->setEnabled(true);
+		if (cfg->rewind_minutes == RWND_0_MINUTES) {
+			rwnd = false;
+		}
+
 		state->slot->setCurrentIndex(save_slot.slot);
 		state->update();
 	}
+
+#if defined (__unix__)
+	vlineRewind->setEnabled(rwnd);
+#endif
+	rewind->setEnabled(rwnd);
 }
 void wdgStatusBar::update_width(int w) {
 	setFixedWidth(w);
