@@ -117,9 +117,7 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 
 	gfx_thread_pause();
 
-	if (shader_effect.params > 0) {
-		settings_shp_save();
-	}
+	settings_shp_save();
 
 	gfx_set_screen_start:
 	set_mode = FALSE;
@@ -377,9 +375,7 @@ void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, B
 			goto gfx_set_screen_start;
 		}
 
-		if (shader_effect.params > 0) {
-			settings_shp_parse();
-		}
+		settings_shp_parse();
 
 		if (set_mode) {
 			if (fullscreen == TRUE) {

@@ -18,6 +18,11 @@
 
 #include <QtCore/QFileInfo>
 #include "objSettings.hpp"
+#if defined (WITH_OPENGL)
+#include "opengl.h"
+#elif defined (WITH_D3D9)
+#include "d3d9.h"
+#endif
 #include "conf.h"
 
 #define CFGFILENAME "/puNES.cfg"
@@ -44,6 +49,7 @@ void settings_save(void) {
 	s.list = LSET_SET;
 	s.set->wr();
 	settings_inp_save();
+	settings_shp_save();
 }
 void settings_save_GUI(void) {
 	s.list = LSET_SET;
@@ -121,6 +127,10 @@ void settings_shp_parse(void) {
 		s.shp = NULL;
 	}
 
+	if (shader_effect.params == 0) {
+		return;
+	}
+
 	switch (cfg->shader) {
 		case NO_SHADER:
 			return;
@@ -154,6 +164,9 @@ void settings_shp_parse(void) {
 	s.shp = new objShp(s.cfg, file, LSET_NONE);
 }
 void settings_shp_save(void) {
+	if (shader_effect.params == 0) {
+		return;
+	}
 	if (s.shp) {
 		s.list = LSET_NONE;
 		s.shp->wr();
