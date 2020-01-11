@@ -44,11 +44,9 @@ void gui_init(int *argc, char **argv) {
 		gui.version_os = WIN_EIGHT;
 	} else if (IsWindows7SP1OrGreater() || IsWindows7OrGreater()) {
 		gui.version_os = WIN_SEVEN;
-	} else if (IsWindowsVistaSP2OrGreater() || IsWindowsVistaSP1OrGreater()
-		|| IsWindowsVistaOrGreater()) {
+	} else if (IsWindowsVistaSP2OrGreater() || IsWindowsVistaSP1OrGreater() || IsWindowsVistaOrGreater()) {
 		gui.version_os = WIN_VISTA;
-	} else if (IsWindowsXPSP3OrGreater() || IsWindowsXPSP2OrGreater()
-		|| IsWindowsXPSP1OrGreater() || IsWindowsXPOrGreater()) {
+	} else if (IsWindowsXPSP3OrGreater() || IsWindowsXPSP2OrGreater() || IsWindowsXPSP1OrGreater() || IsWindowsXPOrGreater()) {
 		gui.version_os = WIN_XP;
 	}
 
@@ -114,14 +112,14 @@ void gui_init(int *argc, char **argv) {
 		uint64_t pf;
 
 		QueryPerformanceFrequency((LARGE_INTEGER *)&pf);
-		gui.frequency = (double) pf;
+		gui.frequency = (double)pf;
 		QueryPerformanceCounter((LARGE_INTEGER *)&pf);
 		gui.counter_start = pf;
 		gui_get_ms = high_resolution_ms;
 	}
 }
 void gui_sleep(double ms) {
-	if (ms > 0) {
+	if (ms >= 0) {
 		Sleep(ms);
 	}
 }
