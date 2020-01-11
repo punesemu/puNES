@@ -74,7 +74,7 @@ class wdgSettingsVideo : public QWidget, public Ui::wdgSettingsVideo {
 		void s_shader_file(bool checked);
 		void s_shader_file_clear(bool checked);
 		void s_shader_param_slider(int value);
-		void s_shader_param_spin(const QString &text);
+		void s_shader_param_spin(double d);
 		void s_shader_param_default(bool checked);
 		void s_shader_param_all_defaults(bool checked);
 #if defined (WITH_OPENGL)

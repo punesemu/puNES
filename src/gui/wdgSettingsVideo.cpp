@@ -451,7 +451,7 @@ void wdgSettingsVideo::shader_param_set(void) {
 			spin->setRange(pshd->min, pshd->max);
 			spin->setSingleStep(pshd->step);
 			spin->setValue((double)(pshd->value));
-			connect(spin, SIGNAL(valueChanged(const QString &)), this, SLOT(s_shader_param_spin(const QString &)));
+			connect(spin, SIGNAL(valueChanged(double)), this, SLOT(s_shader_param_spin(double)));
 			layout->addWidget(spin);
 			layout->setAlignment(Qt::AlignCenter);
 			layout->setContentsMargins(0, 0, 0, 0);
@@ -817,18 +817,18 @@ void wdgSettingsVideo::s_shader_param_slider(int value) {
 	int index = QVariant(((QObject *)sender())->property("myIndex")).toInt();
 	int row = QVariant(((QObject *)sender())->property("myValue")).toInt();
 	_param_shd *pshd = &shader_effect.param[index];
-	double remain = pshd->initial - (pshd->step * (double)((int)(pshd->initial / pshd->step)));
-	double fvalue = pshd->min + ((pshd->step * (double)value) + remain);
+	float remain = pshd->initial - (pshd->step * (float)((int)(pshd->initial / pshd->step)));
+	float fvalue = pshd->min + ((pshd->step * (float)value) + remain);
 
-	tableWidget_Shader_Parameters->cellWidget(row, WSV_SP_SPIN)->findChild<QDoubleSpinBox *>("spin")->setValue(fvalue);
+	tableWidget_Shader_Parameters->cellWidget(row, WSV_SP_SPIN)->findChild<QDoubleSpinBox *>("spin")->setValue((double)fvalue);
 }
-void wdgSettingsVideo::s_shader_param_spin(const QString &text) {
+void wdgSettingsVideo::s_shader_param_spin(double d) {
 	int index = QVariant(((QObject *)sender())->property("myIndex")).toInt();
 	int row = QVariant(((QObject *)sender())->property("myValue")).toInt();
 	_param_shd *pshd = &shader_effect.param[index];
 	QSlider *slider = tableWidget_Shader_Parameters->cellWidget(row, WSV_SP_SLIDER)->findChild<QSlider *>("slider");
 
-	pshd->value = text.toFloat();
+	pshd->value = (float)d;
 	slider->blockSignals(true);
 	slider->setValue(((float)slider->maximum() / (pshd->max - pshd->min)) * (pshd->value - pshd->min));
 	slider->blockSignals(false);
