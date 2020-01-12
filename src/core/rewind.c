@@ -138,7 +138,7 @@ BYTE rewind_init(void) {
 	}
 
 	{
-		_rewind_snapshoot snap;
+		_rewind_snapshoot snap = {};
 
 		snap.index.chunk = 0;
 		snap.index.snap = 0;
