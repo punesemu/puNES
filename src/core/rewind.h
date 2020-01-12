@@ -21,11 +21,6 @@
 
 #include "common.h"
 
-enum rewind_operations_mode {
-	REWIND_OP_SAVE,
-	REWIND_OP_READ,
-	REWIND_OP_COUNT
-};
 enum rewind_options {
 	RWND_0_MINUTES,
 	RWND_2_MINUTES,

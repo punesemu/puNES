@@ -2,6 +2,8 @@ noinst_LIBRARIES = libcore.a
 libcore_a_SOURCES = \
 	apu.c \
 	apu.h \
+	bck_states.c \
+	bck_states.h \
 	build.h \
 	cheat.c \
 	cheat.h \

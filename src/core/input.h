@@ -93,11 +93,13 @@ typedef struct _port {
 	BYTE joy_id;
 #endif
 
+	// decodifica tastiera e joystick
+	DBWORD input[2][24];
+
 	// standard controller
 	BYTE type_pad;
 	BYTE index;
 	BYTE data[24];
-	DBWORD input[2][24];
 	// turbo buttons
 	_turbo_button turbo[2];
 } _port;

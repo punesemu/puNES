@@ -120,6 +120,7 @@ EXTERNC BYTE save_slot_save(BYTE slot);
 EXTERNC BYTE save_slot_load(BYTE slot);
 EXTERNC void save_slot_count_load(void);
 EXTERNC BYTE save_slot_element_struct(BYTE mode, BYTE slot, uintptr_t *src, DBWORD size, FILE *fp, BYTE preview);
+EXTERNC BYTE save_slot_operation(BYTE mode, BYTE slot, FILE *fp);
 
 #undef EXTERNC
 
