@@ -17,13 +17,14 @@
  */
 
 #include <QtCore/QFileInfo>
-#include "objSettings.hpp"
 #if defined (WITH_OPENGL)
 #include "opengl.h"
-#elif defined (WITH_D3D9)
+#endif
+#include "objSettings.hpp"
+#include "conf.h"
+#if defined (WITH_D3D9)
 #include "d3d9.h"
 #endif
-#include "conf.h"
 
 #define CFGFILENAME "/puNES.cfg"
 #define INPFILENAME "/input.cfg"
