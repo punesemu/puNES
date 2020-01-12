@@ -131,6 +131,8 @@ EXTERNC void gui_emit_et_gg_reset(void);
 EXTERNC void gui_emit_et_vs_reset(void);
 EXTERNC void gui_emit_et_external_control_windows_show(void);
 
+EXTERNC void gui_decode_all_input_events(void);
+
 EXTERNC void gui_screen_update(void);
 
 EXTERNC void *gui_dlgsettings_get_ptr(void);
@@ -174,9 +176,6 @@ EXTERNC HWND gui_screen_id(void);
 #else
 EXTERNC int gui_screen_id(void);
 #endif
-
-//EXTERNC void gui_add_event(void *funct, void *args);
-//EXTERNC void gui_set_thread_affinity(uint8_t core);
 
 #undef EXTERNC
 

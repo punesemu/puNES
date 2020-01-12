@@ -343,6 +343,46 @@ void gui_emit_et_external_control_windows_show(void) {
 	emit qt.mwin->et_external_control_windows_show();
 }
 
+void gui_decode_all_input_events(void) {
+	// keyboard
+	for (QList<_wdgScreen_input_event>::iterator e = qt.screen->input_event.begin(); e != qt.screen->input_event.end(); ++e)
+	{
+		_wdgScreen_input_event &event = *e;
+
+		for (BYTE i = PORT1; i < PORT_MAX; i++) {
+			if (port_funct[i].input_decode_event && (port_funct[i].input_decode_event(event.mode,
+				event.autorepeat, event.event, event.type, &port[i]) == EXIT_OK)) {
+				break;
+			}
+		}
+	}
+	qt.screen->input_event.clear();
+
+	// mouse
+	for (QList<_wdgScreen_mouse_event>::iterator e = qt.screen->mouse_event.begin(); e != qt.screen->mouse_event.end(); ++e)
+	{
+		_wdgScreen_mouse_event &event = *e;
+
+		if ((event.type == QEvent::MouseButtonPress) || (event.type == QEvent::MouseButtonDblClick)) {
+			if (event.button == Qt::LeftButton) {
+				gmouse.left = TRUE;
+			} else if (event.button == Qt::RightButton) {
+				gmouse.right = TRUE;
+			}
+		} else if (event.type == QEvent::MouseButtonRelease) {
+			if (event.button == Qt::LeftButton) {
+				gmouse.left = FALSE;
+			} else if (event.button == Qt::RightButton) {
+				gmouse.right = FALSE;
+			}
+		} else if (event.type == QEvent::MouseMove) {
+			gmouse.x = event.x;
+			gmouse.y = event.y;
+		}
+	}
+	qt.screen->mouse_event.clear();
+}
+
 void gui_screen_update(void) {
 #if defined (WITH_OPENGL)
 	qt.screen->wogl->update();
@@ -413,7 +453,7 @@ uint32_t gui_color(BYTE a, BYTE r, BYTE g, BYTE b) {
 
 BYTE gui_load_lut(void *l, const uTCHAR *path) {
 	QImage tmp;
-	_lut *lut = (_lut*) l;
+	_lut *lut = (_lut *)l;
 
 	if (path && (ustrlen(path) > 0)) {
 		tmp = QImage(uQString(path));

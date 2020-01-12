@@ -77,12 +77,7 @@ bool wdgScreen::eventFilter(QObject *obj, QEvent *event) {
 		}
 #endif
 		if (tas.type == NOTAS) {
-			for (BYTE i = PORT1; i < PORT_MAX; i++) {
-				if (port_funct[i].input_decode_event && (port_funct[i].input_decode_event(PRESSED,
-					keyEvent->isAutoRepeat(), keyval, KEYBOARD, &port[i]) == EXIT_OK)) {
-					return (true);
-				}
-			}
+			input_event << _wdgScreen_input_event(PRESSED, keyEvent->isAutoRepeat(), keyval, KEYBOARD);
 		}
 	} else if (event->type() == QEvent::KeyPress) {
 		return (true);
@@ -96,43 +91,16 @@ bool wdgScreen::eventFilter(QObject *obj, QEvent *event) {
 		keyval = objInp::kbd_keyval_decode(keyEvent);
 
 		if (tas.type == NOTAS) {
-			for (BYTE i = PORT1; i < PORT_MAX; i++) {
-				if (port_funct[i].input_decode_event && (port_funct[i].input_decode_event(RELEASED,
-					keyEvent->isAutoRepeat(), keyval, KEYBOARD, &port[i]) == EXIT_OK)) {
-					return (true);
-				}
-			}
+			input_event << _wdgScreen_input_event(RELEASED, keyEvent->isAutoRepeat(), keyval, KEYBOARD);
 		}
 	} else if ((tas.type == NOTAS) && (rwnd.active == FALSE)) {
-		if (event->type() == QEvent::MouseButtonPress) {
+		if ((event->type() == QEvent::MouseButtonPress) || (event->type() == QEvent::MouseButtonRelease) ||
+				(event->type() == QEvent::MouseButtonDblClick)) {
 			mouseEvent = ((QMouseEvent *)event);
-
-			if (mouseEvent->button() == Qt::LeftButton) {
-				gmouse.left = TRUE;
-			} else if (mouseEvent->button() == Qt::RightButton) {
-				gmouse.right = TRUE;
-			}
-		} else if (event->type() == QEvent::MouseButtonDblClick) {
-			mouseEvent = ((QMouseEvent *)event);
-
-			if (mouseEvent->button() == Qt::LeftButton) {
-				gmouse.left = TRUE;
-			} else if (mouseEvent->button() == Qt::RightButton) {
-				gmouse.right = TRUE;
-			}
-		} else if (event->type() == QEvent::MouseButtonRelease) {
-			mouseEvent = ((QMouseEvent *)event);
-
-			if (mouseEvent->button() == Qt::LeftButton) {
-				gmouse.left = FALSE;
-			} else if (mouseEvent->button() == Qt::RightButton) {
-				gmouse.right = FALSE;
-			}
+			mouse_event << _wdgScreen_mouse_event(event->type(), mouseEvent->button(), 0, 0);
 		} else if (event->type() == QEvent::MouseMove) {
 			mouseEvent = ((QMouseEvent *)event);
-
-			gmouse.x = mouseEvent->x();
-			gmouse.y = mouseEvent->y();
+			mouse_event << _wdgScreen_mouse_event(event->type(), Qt::NoButton, mouseEvent->x(), mouseEvent->y());
 		}
 	}
 

@@ -133,6 +133,8 @@ BYTE emu_frame(void) {
 	} else if (nsf.state & (NSF_PAUSE | NSF_STOP)) {
 		BYTE i;
 
+		gui_decode_all_input_events();
+
 		for (i = PORT1; i < PORT_MAX; i++) {
 			if (port_funct[i].input_add_event) {
 				port_funct[i].input_add_event(i);
@@ -190,6 +192,8 @@ BYTE emu_frame_debugger(void) {
 				return (EXIT_OK);
 			} else if (nsf.state & (NSF_PAUSE | NSF_STOP)) {
 				BYTE i;
+
+				gui_decode_all_input_events();
 
 				for (i = PORT1; i < PORT_MAX; i++) {
 					if (port_funct[i].input_add_event) {
@@ -460,8 +464,7 @@ BYTE emu_search_in_database(void *rom_mem) {
 	}
 
 	// calcolo l'sha1 della PRG Rom
-	sha1_csum(rom->data + position, 0x4000 * info.prg.rom[0].banks_16k, info.sha1sum.prg.value,
-		info.sha1sum.prg.string, LOWER);
+	sha1_csum(rom->data + position, 0x4000 * info.prg.rom[0].banks_16k, info.sha1sum.prg.value, info.sha1sum.prg.string, LOWER);
 	position += (info.prg.rom[0].banks_16k * 0x4000);
 
 	if (info.chr.rom[0].banks_8k) {
@@ -471,8 +474,7 @@ BYTE emu_search_in_database(void *rom_mem) {
 		}
 
 		// calcolo anche l'sha1 della CHR rom
-		sha1_csum(rom->data + position, 0x2000 * info.chr.rom[0].banks_8k, info.sha1sum.chr.value,
-			info.sha1sum.chr.string, LOWER);
+		sha1_csum(rom->data + position, 0x2000 * info.chr.rom[0].banks_8k, info.sha1sum.chr.value, info.sha1sum.chr.string, LOWER);
 		position += (info.chr.rom[0].banks_8k * 0x2000);
 	}
 
@@ -1038,6 +1040,8 @@ void emu_frame_input_and_rewind(void) {
 	// controllo se ci sono eventi di input
 	if (tas.type == NOTAS) {
 		BYTE i;
+
+		gui_decode_all_input_events();
 
 		for (i = PORT1; i < PORT_MAX; i++) {
 			if (port_funct[i].input_add_event) {
