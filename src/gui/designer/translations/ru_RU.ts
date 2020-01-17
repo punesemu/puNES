@@ -664,7 +664,7 @@
     </message>
     <message>
       <source>Save Unalte&amp;red NES screen</source>
-      <translation type="unfinished">Save Unalte&amp;red NES screen</translation>
+      <translation>Сохранить экран NES без изменени&amp;й</translation>
     </message>
   </context>
   <context>
