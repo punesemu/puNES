@@ -41,7 +41,7 @@ enum snd_thread_actions {
 	ST_STOP
 };
 
-static int  snd_list_find_index_id(_snd_list_dev *list, uTCHAR *id, int size);
+static int snd_list_find_index_id(_snd_list_dev *list, uTCHAR *id, int size);
 static void snd_list_device_add(_snd_list_dev *list, uTCHAR *id, GUID *guid, uTCHAR *desc);
 static void snd_list_devices_quit(void);
 static void snd_list_devices_free(_snd_list_dev *list);

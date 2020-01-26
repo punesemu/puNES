@@ -459,7 +459,7 @@ void fds_diff_op(BYTE mode, uint32_t position, WORD value) {
 		// rintraccio l'ultimo '.' nel nome
 		if ((last_dot = ustrrchr(file, uL('.')))) {
 			// elimino l'estensione
-			*last_dot = 0x00;
+			(*last_dot) = 0x00;
 		};
 		// aggiungo l'estensione
 		ustrcat(file, ext);

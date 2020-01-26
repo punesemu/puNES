@@ -123,7 +123,7 @@ BYTE patcher_ctrl_if_exist(uTCHAR *patch) {
 		// rintraccio l'ultimo '.' nel nome
 		if ((last_dot = ustrrchr(file, uL('.')))) {
 			// elimino l'estensione
-			*last_dot = 0x00;
+			(*last_dot) = 0x00;
 		};
 		// aggiungo l'estensione
 		ustrcat(file, patch_ext[i]);

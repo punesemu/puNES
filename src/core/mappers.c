@@ -1031,7 +1031,7 @@ BYTE map_prg_chip_malloc(BYTE index, size_t size, BYTE set_value) {
 	prg_chip_size(index) = size;
 	info.prg.chips++;
 
-	if ((prg_chip(index) = (BYTE *) malloc(size))) {
+	if ((prg_chip(index) = (BYTE *)malloc(size))) {
 		memset(prg_chip(index), set_value, size);
 	} else {
 		fprintf(stderr, "Out of memory\n");
@@ -1082,10 +1082,9 @@ void map_prg_ram_init(void) {
 	 * se non ci sono stati settaggi particolari della mapper
 	 * e devono esserci banchi di PRG Ram extra allora li assegno.
 	 */
-	if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) && info.prg.ram.banks_8k_plus
-			&& !prg.ram_plus) {
+	if (((info.reset == CHANGE_ROM) || (info.reset == POWER_UP)) && info.prg.ram.banks_8k_plus && !prg.ram_plus) {
 		/* alloco la memoria necessaria */
-		prg.ram_plus = (BYTE *) malloc(prg_ram_plus_size());
+		prg.ram_plus = (BYTE *)malloc(prg_ram_plus_size());
 		/* inizializzo */
 		memset(prg.ram_plus, 0x00, prg_ram_plus_size());
 		/* gli 8k iniziali */
@@ -1098,13 +1097,12 @@ void map_prg_ram_init(void) {
 			fl = info.rom.file;
 
 			gui_utf_basename(fl, basename, usizeof(basename));
-			usnprintf(prg_ram_file, usizeof(prg_ram_file),
-					uL("" uPERCENTs PRB_FOLDER "/" uPERCENTs), info.base_folder, basename);
+			usnprintf(prg_ram_file, usizeof(prg_ram_file), uL("" uPERCENTs PRB_FOLDER "/" uPERCENTs), info.base_folder, basename);
 
 			/* rintraccio l'ultimo '.' nel nome */
 			if ((last_dot = ustrrchr(prg_ram_file, uL('.')))) {
 				/* elimino l'estensione */
-				*last_dot = 0x00;
+				(*last_dot) = 0x00;
 			}
 			/* aggiungo l'estensione prb */
 			ustrcat(prg_ram_file, uL(".prb"));
@@ -1124,8 +1122,8 @@ void map_prg_ram_init(void) {
 		int i;
 
 		for (i = 0; i < info.prg.ram.banks_8k_plus; i++) {
-			if (info.prg.ram.bat.banks && (i >= info.prg.ram.bat.start)
-					&& (i < (info.prg.ram.bat.start + info.prg.ram.bat.banks))) {
+			if (info.prg.ram.bat.banks && (i >= info.prg.ram.bat.start) &&
+				(i < (info.prg.ram.bat.start + info.prg.ram.bat.banks))) {
 				continue;
 			}
 			memset(prg.ram_plus + (i * 0x2000), 0x00, 0x2000);
@@ -1145,7 +1143,7 @@ void map_prg_ram_init(void) {
 BYTE map_prg_ram_malloc(WORD size) {
 	prg.ram.size = size;
 
-	if (!(prg.ram.data = (BYTE *) malloc(prg.ram.size))) {
+	if (!(prg.ram.data = (BYTE *)malloc(prg.ram.size))) {
 		fprintf(stderr, "Out of memory\n");
 		return (EXIT_ERROR);
 	}
@@ -1170,13 +1168,12 @@ void map_prg_ram_battery_save(void) {
 		fl = info.rom.file;
 
 		gui_utf_basename(fl, basename, usizeof(basename));
-		usnprintf(prg_ram_file, usizeof(prg_ram_file),
-				uL("" uPERCENTs PRB_FOLDER "/" uPERCENTs), info.base_folder, basename);
+		usnprintf(prg_ram_file, usizeof(prg_ram_file), uL("" uPERCENTs PRB_FOLDER "/" uPERCENTs), info.base_folder, basename);
 
 		/* rintraccio l'ultimo '.' nel nome */
 		if ((last_dot = ustrrchr(prg_ram_file, uL('.')))) {
 			/* elimino l'estensione */
-			*last_dot = 0x00;
+			(*last_dot) = 0x00;
 		}
 		/* aggiungo l'estensione prb */
 		ustrcat(prg_ram_file, uL(".prb"));
@@ -1206,7 +1203,7 @@ BYTE map_chr_chip_malloc(BYTE index, size_t size, BYTE set_value) {
 	chr_chip_size(index) = size;
 	info.chr.chips++;
 
-	if ((chr_chip(index) = (BYTE *) malloc(size))) {
+	if ((chr_chip(index) = (BYTE *)malloc(size))) {
 		memset(chr_chip(index), set_value, size);
 	} else {
 		fprintf(stderr, "Out of memory\n");
@@ -1249,7 +1246,7 @@ BYTE map_chr_ram_extra_init(uint32_t size) {
 			chr.extra.size = 0;
 		}
 		/* alloco la CHR Ram extra */
-		if (!(chr.extra.data = (BYTE *) malloc(size))) {
+		if (!(chr.extra.data = (BYTE *)malloc(size))) {
 			fprintf(stderr, "Out of memory\n");
 			return (EXIT_ERROR);
 		}
@@ -1266,25 +1263,25 @@ void map_chr_ram_extra_reset(void) {
 }
 void map_set_banks_max_prg(BYTE chip) {
 	info.prg.rom[chip].max.banks_32k = (info.prg.rom[chip].banks_16k == 1) ? 0 :
-			((info.prg.rom[chip].banks_16k >> 1) ? (info.prg.rom[chip].banks_16k >> 1) - 1 : 0);
+		((info.prg.rom[chip].banks_16k >> 1) ? (info.prg.rom[chip].banks_16k >> 1) - 1 : 0);
 	info.prg.rom[chip].max.banks_16k =
-			info.prg.rom[chip].banks_16k ? info.prg.rom[chip].banks_16k - 1 : 0;
+		info.prg.rom[chip].banks_16k ? info.prg.rom[chip].banks_16k - 1 : 0;
 	info.prg.rom[chip].max.banks_8k =
-			info.prg.rom[chip].banks_8k ?  info.prg.rom[chip].banks_8k - 1 : 0;
-	info.prg.rom[chip].max.banks_8k_before_last =\
-			(info.prg.rom[chip].banks_8k > 1) ? info.prg.rom[chip].banks_8k - 2 : 0;
+		info.prg.rom[chip].banks_8k ? info.prg.rom[chip].banks_8k - 1 : 0;
+	info.prg.rom[chip].max.banks_8k_before_last =
+		(info.prg.rom[chip].banks_8k > 1) ? info.prg.rom[chip].banks_8k - 2 : 0;
 	info.prg.rom[chip].max.banks_4k =
-			((info.prg.rom[chip].banks_8k << 1) != 0) ? (info.prg.rom[chip].banks_8k << 1) - 1 : 0;
+		((info.prg.rom[chip].banks_8k << 1) != 0) ? (info.prg.rom[chip].banks_8k << 1) - 1 : 0;
 	info.prg.rom[chip].max.banks_2k =
-			((info.prg.rom[chip].banks_8k << 2) != 0) ? (info.prg.rom[chip].banks_8k << 2) - 1 : 0;
+		((info.prg.rom[chip].banks_8k << 2) != 0) ? (info.prg.rom[chip].banks_8k << 2) - 1 : 0;
 }
 void map_set_banks_max_chr(BYTE chip) {
 	info.chr.rom[chip].max.banks_8k =
-			info.chr.rom[chip].banks_8k ? info.chr.rom[chip].banks_8k - 1 : 0;
+		info.chr.rom[chip].banks_8k ? info.chr.rom[chip].banks_8k - 1 : 0;
 	info.chr.rom[chip].max.banks_4k =
-			info.chr.rom[chip].banks_4k ? info.chr.rom[chip].banks_4k - 1 : 0;
+		info.chr.rom[chip].banks_4k ? info.chr.rom[chip].banks_4k - 1 : 0;
 	info.chr.rom[chip].max.banks_2k =
-			((info.chr.rom[chip].banks_1k >> 1) != 0) ? (info.chr.rom[chip].banks_1k >> 1) - 1 : 0;
+		((info.chr.rom[chip].banks_1k >> 1) != 0) ? (info.chr.rom[chip].banks_1k >> 1) - 1 : 0;
 	info.chr.rom[chip].max.banks_1k =
-			info.chr.rom[chip].banks_1k ? info.chr.rom[chip].banks_1k - 1 : 0;
+		info.chr.rom[chip].banks_1k ? info.chr.rom[chip].banks_1k - 1 : 0;
 }
