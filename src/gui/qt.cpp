@@ -138,7 +138,7 @@ BYTE gui_create(void) {
 			cfg->last_pos.x = 0;
 			cfg->last_pos_settings.y = 0;
 		}
-		qt.mwin->move(QPoint(cfg->last_pos.x, cfg->last_pos.y));
+		qt.mwin->setGeometry(cfg->last_pos.x, cfg->last_pos.y, 0, 0);
 	}
 
 	qt.mwin->show();
