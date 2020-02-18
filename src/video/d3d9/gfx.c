@@ -654,35 +654,38 @@ void gfx_apply_filter(void) {
 
 	{
 		const _texture_simple *scrtex = &d3d9.screen.tex[d3d9.screen.index];
-		D3DLOCKED_RECT lrect;
 
-		// lock della surface in memoria
-		IDirect3DSurface9_LockRect(scrtex->offscreen, &lrect, NULL, D3DLOCK_DISCARD);
-		// applico l'effetto
-		gfx.filter.data.pitch = lrect.Pitch;
-		gfx.filter.data.pix = lrect.pBits;
-		gfx.filter.data.width = scrtex->rect.base.w;
-		gfx.filter.data.height = scrtex->rect.base.h;
-		gfx.filter.func();
-		// unlock della surface in memoria
-		IDirect3DSurface9_UnlockRect(scrtex->offscreen);
+		if (scrtex->offscreen) {
+			D3DLOCKED_RECT lrect;
 
-		// aggiorno la texture dello schermo
-		if (overscan.enabled) {
-			POINT point;
-			RECT rect;
+			// lock della surface in memoria
+			IDirect3DSurface9_LockRect(scrtex->offscreen, &lrect, NULL, D3DLOCK_DISCARD);
+			// applico l'effetto
+			gfx.filter.data.pitch = lrect.Pitch;
+			gfx.filter.data.pix = lrect.pBits;
+			gfx.filter.data.width = scrtex->rect.base.w;
+			gfx.filter.data.height = scrtex->rect.base.h;
+			gfx.filter.func();
+			// unlock della surface in memoria
+			IDirect3DSurface9_UnlockRect(scrtex->offscreen);
 
-			rect.left = overscan.borders->left * gfx.filter.width_pixel;
-			rect.top = overscan.borders->up * gfx.filter.factor;
-			rect.right = scrtex->rect.base.w - (overscan.borders->right * gfx.filter.width_pixel);
-			rect.bottom = scrtex->rect.base.h - (overscan.borders->down * gfx.filter.factor);
+			// aggiorno la texture dello schermo
+			if (overscan.enabled) {
+				POINT point;
+				RECT rect;
 
-			point.x = rect.left;
-			point.y = rect.top;
+				rect.left = overscan.borders->left * gfx.filter.width_pixel;
+				rect.top = overscan.borders->up * gfx.filter.factor;
+				rect.right = scrtex->rect.base.w - (overscan.borders->right * gfx.filter.width_pixel);
+				rect.bottom = scrtex->rect.base.h - (overscan.borders->down * gfx.filter.factor);
 
-			IDirect3DDevice9_UpdateSurface(d3d9.adapter->dev, scrtex->offscreen, &rect, scrtex->map0, &point);
-		} else {
-			IDirect3DDevice9_UpdateSurface(d3d9.adapter->dev, scrtex->offscreen, NULL, scrtex->map0, NULL);
+				point.x = rect.left;
+				point.y = rect.top;
+
+				IDirect3DDevice9_UpdateSurface(d3d9.adapter->dev, scrtex->offscreen, &rect, scrtex->map0, &point);
+			} else {
+				IDirect3DDevice9_UpdateSurface(d3d9.adapter->dev, scrtex->offscreen, NULL, scrtex->map0, NULL);
+			}
 		}
 	}
 
