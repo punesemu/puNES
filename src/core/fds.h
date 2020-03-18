@@ -50,13 +50,7 @@ enum fds_misc {
 	FDS_DISK_CRC_CHAR2 = 0x01AA
 };
 
-#if defined (__cplusplus)
-#define EXTERNC extern "C"
-#else
-#define EXTERNC
-#endif
-
-EXTERNC struct _fds {
+typedef struct _fds {
 	// generali
 	struct _fds_info {
 		BYTE enabled;
@@ -185,7 +179,15 @@ EXTERNC struct _fds {
 			SWORD mod;
 		} modulation;
 	} snd;
-} fds;
+} _fds;
+
+extern _fds fds;
+
+#if defined (__cplusplus)
+#define EXTERNC extern "C"
+#else
+#define EXTERNC
+#endif
 
 EXTERNC void fds_init(void);
 EXTERNC void fds_quit(void);

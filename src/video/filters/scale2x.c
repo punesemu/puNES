@@ -18,7 +18,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "video/filters/scale2x.h"
+#include "video/gfx.h"
 #include "ppu.h"
 
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))

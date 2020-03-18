@@ -23,6 +23,11 @@
 #include "audio/delay.h"
 #include "audio/panning.h"
 
+BYTE (*audio_channels_init)(void);
+void (*audio_channels_quit)(void);
+void (*audio_channels_reset)(void);
+void (*audio_channels_tick)(SWORD value);
+
 void audio_channels(BYTE channels) {
 	if (audio_channels_quit) {
 		audio_channels_quit();

@@ -21,10 +21,6 @@
 
 #include "common.h"
 
-struct _unif8157 {
-	WORD reg;
-} unif8157;
-
 void map_init_UNIF8157(void);
 void extcl_cpu_wr_mem_UNIF8157(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_UNIF8157(WORD address, BYTE openbus, BYTE before);

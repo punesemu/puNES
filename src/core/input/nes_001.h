@@ -19,7 +19,7 @@
 #ifndef INPUT_NES_001_H
 #define INPUT_NES_001_H
 
-#include "../input.h"
+#include "input.h"
 
 BYTE input_wr_reg_nes_001(BYTE value);
 BYTE input_rd_reg_nes_001(BYTE openbus, BYTE nport);

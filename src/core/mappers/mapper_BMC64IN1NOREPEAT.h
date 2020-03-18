@@ -21,10 +21,6 @@
 
 #include "common.h"
 
-struct _bmc64in1norepeat {
-	BYTE reg[4];
-} bmc64in1norepeat;
-
 void map_init_BMC64IN1NOREPEAT(void);
 void extcl_cpu_wr_mem_BMC64IN1NOREPEAT(WORD address, BYTE value);
 BYTE extcl_save_mapper_BMC64IN1NOREPEAT(BYTE mode, BYTE slot, FILE *fp);

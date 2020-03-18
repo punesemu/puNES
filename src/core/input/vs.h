@@ -19,7 +19,7 @@
 #ifndef INPUT_VS_H
 #define INPUT_VS_H
 
-#include "../input.h"
+#include "input.h"
 
 BYTE input_wr_reg_vs(BYTE value);
 BYTE input_rd_reg_vs_r4016(BYTE openbus, BYTE nport);

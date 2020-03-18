@@ -20,7 +20,6 @@
 #include "input/nsf_mouse.h"
 #include "input/mouse.h"
 #include "conf.h"
-#include "gui.h"
 #include "nsf.h"
 
 struct _nsf_mouse {

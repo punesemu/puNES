@@ -19,7 +19,7 @@
 #ifndef INPUT_STANDARD_CONTROLLER_H_
 #define INPUT_STANDARD_CONTROLLER_H_
 
-#include "../input.h"
+#include "input.h"
 
 void input_wr_standard_controller(BYTE *value, BYTE nport);
 void input_rd_standard_controller(BYTE *value, BYTE nport, BYTE shift);

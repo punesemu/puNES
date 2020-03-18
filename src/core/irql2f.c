@@ -18,6 +18,8 @@
 
 #include "irql2f.h"
 
+_irql2f irql2f;
+
 void irql2f_tick(void) {
 	if (irql2f.frame_x != ppu.frame_x) {
 		return;

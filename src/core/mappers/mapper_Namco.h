@@ -45,7 +45,7 @@ typedef struct _n163_snd_ch {
 	WORD volume;
 	SWORD output;
 } _n163_snd_ch;
-struct _n163 {
+typedef struct _n163 {
 	uint32_t nmt_bank[4][2];
 	BYTE irq_delay;
 	DBWORD irq_count;
@@ -55,14 +55,9 @@ struct _n163 {
 	BYTE snd_ch_start;
 	BYTE snd_wave[0x100];
 	_n163_snd_ch ch[8];
-} n163;
-struct _n3425 {
-	BYTE bank_to_update;
-} n3425;
-struct _n3446 {
-	BYTE bank_to_update;
-	BYTE prg_rom_mode;
-} n3446;
+} _n163;
+
+extern _n163 n163;
 
 void map_init_Namco(BYTE model);
 void map_init_NSF_Namco(BYTE model);

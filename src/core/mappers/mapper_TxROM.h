@@ -23,11 +23,6 @@
 
 enum { TKSROM, TLSROM, TQROM };
 
-struct _txrom {
-	BYTE delay;
-	uint32_t chr[8][2];
-} txrom;
-
 void map_init_TxROM(BYTE model);
 
 void extcl_cpu_wr_mem_TKSROM(WORD address, BYTE value);

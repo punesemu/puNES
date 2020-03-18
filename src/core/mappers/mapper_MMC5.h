@@ -23,7 +23,7 @@
 
 enum { EKROM, ELROM, ETROM, EWROM };
 
-struct _mmc5 {
+typedef struct _mmc5 {
 	BYTE prg_mode;
 	BYTE chr_mode;
 	BYTE ext_mode;
@@ -63,7 +63,9 @@ struct _mmc5 {
 	/* ------------------------------------------------------- */
 	/* */ BYTE clocked;                                     /* */
 	/* ------------------------------------------------------- */
-} mmc5;
+} _mmc5;
+
+extern _mmc5 mmc5;
 
 void map_init_MMC5(void);
 void map_init_NSF_MMC5(void);

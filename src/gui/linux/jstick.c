@@ -24,8 +24,6 @@
 #include <string.h>
 #include <stdio.h>
 #include <errno.h>
-#include "jstick.h"
-#include "input.h"
 #include "gui.h"
 #include "conf.h"
 
@@ -79,6 +77,8 @@
 
 static void js_open(_js *joy);
 static void js_close(_js *joy);
+
+_js js[PORT_MAX], js_shcut;
 
 void js_init(UNUSED(BYTE first_time)) {
 	BYTE i;

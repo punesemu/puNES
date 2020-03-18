@@ -20,17 +20,16 @@
 #define XBRZ_H_
 
 #include "common.h"
-#include "video/gfx.h"
+
+void xBRZ_init(void);
+void xBRZ(void);
+void xBRZ_mt(void);
 
 #if defined (__cplusplus)
 #define EXTERNC extern "C"
 #else
 #define EXTERNC
 #endif
-
-void xBRZ_init(void);
-void xBRZ(void);
-void xBRZ_mt(void);
 
 EXTERNC void xbrz_scale(BYTE factor, const WORD *src, uint32_t *trg, uint32_t *palette, int width, int height);
 EXTERNC void xbrz_scale_mt(BYTE factor, const WORD *src, uint32_t *trg, uint32_t *palette, int width, int height);

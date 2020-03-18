@@ -21,11 +21,6 @@
 
 #include "common.h"
 
-struct _tf1201 {
-	BYTE chr_rom_bank[8];
-	BYTE swap_mode;
-} tf1201;
-
 void map_init_TF1201(void);
 void extcl_cpu_wr_mem_TF1201(WORD address, BYTE value);
 BYTE extcl_save_mapper_TF1201(BYTE mode, BYTE slot, FILE *fp);

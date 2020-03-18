@@ -63,7 +63,13 @@ INLINE static void shero_update_chr(void);
 			break;\
 	}
 
-BYTE shero_reset;
+struct _shero {
+	BYTE reg;
+	WORD chr_map[8];
+} shero;
+struct _sherotmp {
+	BYTE reset;
+} sherotmp;
 
 void map_init_SHERO(void) {
 	EXTCL_CPU_WR_MEM(SHERO);
@@ -86,9 +92,9 @@ void map_init_SHERO(void) {
 	memset(&irqA12, 0x00, sizeof(irqA12));
 
 	if (info.reset >= HARD) {
-		shero_reset = 0;
+		sherotmp.reset = 0;
 	} else if (info.reset == RESET) {
-		shero_reset ^= 0xFF;
+		sherotmp.reset ^= 0xFF;
 	}
 
 	map_chr_ram_extra_init(0x2000);
@@ -137,7 +143,7 @@ void extcl_cpu_wr_mem_SHERO(WORD address, BYTE value) {
 }
 BYTE extcl_cpu_rd_mem_SHERO(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if (address == 0x4100) {
-		return (shero_reset);
+		return (sherotmp.reset);
 	}
 	return (openbus);
 }

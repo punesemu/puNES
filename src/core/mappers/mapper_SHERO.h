@@ -21,11 +21,6 @@
 
 #include "common.h"
 
-struct _shero {
-	BYTE reg;
-	WORD chr_map[8];
-} shero;
-
 void map_init_SHERO(void);
 void extcl_cpu_wr_mem_SHERO(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_SHERO(WORD address, BYTE openbus, BYTE before);

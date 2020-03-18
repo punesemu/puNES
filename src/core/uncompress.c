@@ -22,7 +22,6 @@
 #if defined (__OpenBSD__)
 #include <stdio.h>
 #endif
-#include "uncompress.h"
 #include "info.h"
 #include "c++/l7zip/l7z.h"
 #include "gui.h"
@@ -46,6 +45,8 @@ static BYTE mz_zip_examine_archive(_uncompress_archive *archive);
 static BYTE mz_zip_extract_from_archive(_uncompress_archive *archive, uint32_t selected, BYTE type);
 static uTCHAR *mz_zip_item_file_name(_uncompress_archive *archive, uint32_t selected, BYTE type);
 #endif
+
+_uncompress_storage uncstorage;
 
 BYTE uncompress_init(void) {
 	l7z_init();
@@ -183,8 +184,7 @@ BYTE uncompress_archive_extract_file(_uncompress_archive *archive, BYTE type) {
 
 	return (rc);
 }
-_uncompress_archive_item *uncompress_archive_find_item(_uncompress_archive *archive,
-	uint32_t selected, BYTE type) {
+_uncompress_archive_item *uncompress_archive_find_item(_uncompress_archive *archive, uint32_t selected, BYTE type) {
 	uint32_t i, index = 0;
 
 	for (i = 0; i < archive->list.count; i++) {
@@ -240,8 +240,7 @@ uTCHAR *uncompress_storage_archive_name(uTCHAR *file) {
 
 	return (NULL);
 }
-uint32_t uncompress_storage_add_to_list(_uncompress_archive *archive,
-	_uncompress_archive_item *aitem, uTCHAR *file) {
+uint32_t uncompress_storage_add_to_list(_uncompress_archive *archive, _uncompress_archive_item *aitem, uTCHAR *file) {
 	_uncompress_storage_item *sitem, *si = NULL;
 	BYTE found = FALSE;
 	uint32_t i;

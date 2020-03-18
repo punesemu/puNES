@@ -25,6 +25,18 @@
 
 INLINE static void m253_update_chr(void);
 
+struct _m253 {
+	BYTE disabled_vram;
+	WORD chr_map_high[8];
+	BYTE chr_map[8];
+	struct _m253_irq {
+		BYTE active;
+		WORD prescaler;
+		WORD count;
+		WORD reload;
+	} irq;
+} m253;
+
 void map_init_253(void) {
 	EXTCL_CPU_WR_MEM(253);
 	EXTCL_SAVE_MAPPER(253);

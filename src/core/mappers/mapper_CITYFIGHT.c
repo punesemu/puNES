@@ -31,6 +31,15 @@
 
 INLINE static void cityfight_prg_update(void);
 
+struct _cityfight {
+	BYTE reg[2];
+	WORD chr_map[8];
+	struct _cityfight_irq {
+		BYTE enable;
+		WORD count;
+	} irq;
+} cityfight;
+
 void map_init_CITYFIGHT(void) {
 	EXTCL_CPU_WR_MEM(CITYFIGHT);
 	EXTCL_SAVE_MAPPER(CITYFIGHT);

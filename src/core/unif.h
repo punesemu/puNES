@@ -23,7 +23,7 @@
 
 enum { UNIF_MAPPER = 0x1002 };
 
-struct _unif {
+typedef struct _unif {
 	BYTE finded;
 	WORD internal_mapper;
 	char board[64];
@@ -46,7 +46,9 @@ struct _unif {
 		char id[4];
 		uint32_t length;
 	} chunk;
-} unif;
+} _unif;
+
+extern _unif unif;
 
 BYTE unif_load_rom(void);
 

@@ -79,6 +79,8 @@ INLINE static void m205_update_chr(void);
 			break;\
 	}
 
+_m205 m205;
+
 void map_init_205(void) {
 	EXTCL_CPU_WR_MEM(205);
 	EXTCL_SAVE_MAPPER(205);

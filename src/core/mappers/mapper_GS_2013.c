@@ -20,7 +20,9 @@
 #include "mem_map.h"
 #include "info.h"
 
-BYTE *gs_2013_prg_6000;
+struct _gs2013tmp {
+	BYTE *prg_6000;
+} gs2013tmp;
 
 void map_init_GS_2013(void) {
 	EXTCL_CPU_WR_MEM(GS_2013);
@@ -31,7 +33,7 @@ void map_init_GS_2013(void) {
 
 		value = 0xFF;
 		control_bank(info.prg.rom[0].max.banks_8k)
-		gs_2013_prg_6000 = prg_chip_byte_pnt(0, value << 13);
+		gs2013tmp.prg_6000 = prg_chip_byte_pnt(0, value << 13);
 	}
 
 	extcl_cpu_wr_mem_GS_2013(0x0000, 0xFF);
@@ -46,7 +48,7 @@ void extcl_cpu_wr_mem_GS_2013(UNUSED(WORD address), BYTE value) {
 }
 BYTE extcl_cpu_rd_mem_GS_2013(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		return (gs_2013_prg_6000[address & 0x1FFF]);
+		return (gs2013tmp.prg_6000[address & 0x1FFF]);
 	}
 	return (openbus);
 }

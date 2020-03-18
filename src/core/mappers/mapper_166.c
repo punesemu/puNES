@@ -21,6 +21,10 @@
 #include "info.h"
 #include "save_slot.h"
 
+struct _m166 {
+	BYTE reg[4];
+} m166;
+
 void map_init_166(void) {
 	EXTCL_CPU_WR_MEM(166);
 	EXTCL_SAVE_MAPPER(166);

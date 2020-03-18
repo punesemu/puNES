@@ -560,6 +560,10 @@ static const BYTE table_opcode_cycles[256] = {
 /*    0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F     */
 };
 
+_cpu cpu;
+_irq irq;
+_nmi nmi;
+
 void cpu_exe_op(void) {
 	cpu.opcode = FALSE;
 	DMC.tick_type = DMC_NORMAL;

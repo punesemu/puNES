@@ -22,6 +22,12 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
+struct _mmc2and4 {
+	BYTE regs[4];
+	BYTE latch0;
+	BYTE latch1;
+} mmc2and4;
+
 void map_init_MMC2and4(void) {
 	EXTCL_CPU_WR_MEM(MMC2and4);
 	EXTCL_SAVE_MAPPER(MMC2and4);

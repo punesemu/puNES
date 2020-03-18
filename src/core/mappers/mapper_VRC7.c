@@ -31,8 +31,12 @@ const WORD table_VRC7[2][4] = {
 	{0x0000, 0x0001, 0x0002, 0x0003},
 };
 
-WORD mask;
-BYTE type, delay;
+_vrc7 vrc7;
+struct _vrc7tmp {
+	WORD mask;
+	BYTE type;
+	BYTE delay;
+} vrc7tmp;
 
 void map_init_VRC7(BYTE revision) {
 	EXTCL_CPU_WR_MEM(VRC7);
@@ -53,27 +57,27 @@ void map_init_VRC7(BYTE revision) {
 		vrc7.prescaler = 0;
 	}
 
-	mask = 0xF000;
+	vrc7tmp.mask = 0xF000;
 	if (revision == VRC7A) {
-		mask = 0xF020;
+		vrc7tmp.mask = 0xF020;
 	}
 
-	delay = 1;
+	vrc7tmp.delay = 1;
 
-	type = revision;
+	vrc7tmp.type = revision;
 }
 void map_init_NSF_VRC7(BYTE revision) {
 	memset(&vrc7, 0x00, sizeof(vrc7));
 
-	mask = 0xF000;
+	vrc7tmp.mask = 0xF000;
 	if (revision == VRC7A) {
-		mask = 0xF020;
+		vrc7tmp.mask = 0xF020;
 	}
 
-	type = revision;
+	vrc7tmp.type = revision;
 }
 void extcl_cpu_wr_mem_VRC7(WORD address, BYTE value) {
-	address = (address & mask) | table_VRC7[type][(address & 0x0018) >> 3];
+	address = (address & vrc7tmp.mask) | table_VRC7[vrc7tmp.type][(address & 0x0018) >> 3];
 
 	switch (address) {
 		case 0x8000:
@@ -206,7 +210,7 @@ void extcl_cpu_every_cycle_VRC7(void) {
 	}
 
 	vrc7.count = vrc7.reload;
-	vrc7.delay = delay;
+	vrc7.delay = vrc7tmp.delay;
 }
 void extcl_snd_playback_start_VRC7(WORD samplarate) {
 	opll_reset(3579545, samplarate);
@@ -230,7 +234,7 @@ void map_init_VRC7UNL(void) {
 		vrc7.prescaler = 0;
 	}
 
-	delay = 1;
+	vrc7tmp.delay = 1;
 }
 void extcl_cpu_wr_mem_VRC7UNL(WORD address, BYTE value) {
 	switch (address & 0xF008) {
@@ -358,5 +362,5 @@ void extcl_cpu_every_cycle_VRC7UNL(void) {
 	}
 
 	vrc7.count = vrc7.reload;
-	vrc7.delay = delay;
+	vrc7.delay = vrc7tmp.delay;
 }

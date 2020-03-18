@@ -31,6 +31,11 @@
 	chr.bank_1k[slot] = chr_chip_byte_pnt(0, value << 10);\
 	tf1201.chr_rom_bank[slot] = value
 
+struct _tf1201 {
+	BYTE chr_rom_bank[8];
+	BYTE swap_mode;
+} tf1201;
+
 void map_init_TF1201(void) {
 	EXTCL_CPU_WR_MEM(TF1201);
 	EXTCL_SAVE_MAPPER(TF1201);

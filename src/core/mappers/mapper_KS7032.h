@@ -21,17 +21,6 @@
 
 #include "common.h"
 
-struct _ks7032 {
-	BYTE ind;
-	BYTE reg[8];
-	struct _ks7032_irq {
-		BYTE used;
-		BYTE active;
-		WORD count;
-		WORD reload;
-	} irq;
-} ks7032;
-
 void map_init_KS7032(void);
 void extcl_cpu_wr_mem_KS7032(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_KS7032(WORD address, BYTE openbus, BYTE before);

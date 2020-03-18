@@ -28,6 +28,11 @@ INLINE static void nmt_setup_28(void);
 INLINE static void prg_setup_28(void);
 INLINE static BYTE calc_prg_bank_28(WORD address);
 
+struct _m28 {
+	BYTE index;
+	BYTE mirroring;
+	BYTE prg[3];
+} m28;
 static BYTE const inner_and[4] = { 0x01, 0x03, 0x07, 0x0F };
 
 void map_init_28(void) {

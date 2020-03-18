@@ -23,23 +23,23 @@
 #define __HQX_H_
 
 #include "common.h"
-#include "video/gfx.h"
-#include "palette.h"
 
-#if defined (__cplusplus)
-#define EXTERNC extern "C"
-#else
-#define EXTERNC
-#endif
-
-EXTERNC struct _hqx {
+typedef struct _hqnx {
 	WORD sx;
 	WORD sy;
 	WORD startx;
 	WORD rows;
 	WORD lines;
 	WORD dst_rows;
-} hqnx;
+} _hqnx;
+
+extern _hqnx hqnx;
+
+#if defined (__cplusplus)
+#define EXTERNC extern "C"
+#else
+#define EXTERNC
+#endif
 
 EXTERNC void hqx_init(void);
 EXTERNC void hqNx(void);

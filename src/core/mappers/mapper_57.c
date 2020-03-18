@@ -22,6 +22,10 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
+struct _m57 {
+	BYTE reg[2];
+} m57;
+
 void map_init_57(void) {
 	EXTCL_CPU_WR_MEM(57);
 	EXTCL_SAVE_MAPPER(57);

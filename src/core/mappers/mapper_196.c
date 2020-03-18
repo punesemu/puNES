@@ -43,6 +43,11 @@ INLINE static void m196_update_prg(void);
 			break;\
 	}
 
+struct _m196 {
+	BYTE reg[2];
+	WORD prg_map[4];
+} m196;
+
 void map_init_196(void) {
 	EXTCL_CPU_WR_MEM(196);
 	EXTCL_SAVE_MAPPER(196);

@@ -21,6 +21,10 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
+struct _caltron {
+	BYTE reg;
+} caltron;
+
 void map_init_Caltron(void) {
 	EXTCL_CPU_WR_MEM(Caltron);
 	mapper.internal_struct[0] = (BYTE *) &caltron;

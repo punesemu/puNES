@@ -21,10 +21,6 @@
 
 #include "common.h"
 
-struct _m120 {
-	BYTE *prg_ram_rd;
-} m120;
-
 void map_init_120(void);
 void extcl_cpu_wr_mem_120(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_120(WORD address, BYTE openbus, BYTE before);

@@ -19,7 +19,7 @@
 #ifndef INPUT_SNES_MOUSE_H_
 #define INPUT_SNES_MOUSE_H_
 
-#include "../input.h"
+#include "input.h"
 
 void input_init_snes_mouse(void);
 void input_wr_snes_mouse(BYTE *value, BYTE nport);

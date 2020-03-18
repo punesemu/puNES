@@ -42,8 +42,7 @@ typedef struct _vrc6_saw {
 	WORD frequency;
 	SWORD output;
 } _vrc6_saw;
-
-struct _vrc6 {
+typedef struct _vrc6 {
 	BYTE enabled;
 	BYTE reload;
 	BYTE mode;
@@ -61,7 +60,9 @@ struct _vrc6 {
 	/* ------------------------------------------------------- */
 	/* */ BYTE clocked;                                     /* */
 	/* ------------------------------------------------------- */
-} vrc6;
+} _vrc6;
+
+extern _vrc6 vrc6;
 
 void map_init_VRC6(BYTE revision);
 void map_init_NSF_VRC6(BYTE revision);

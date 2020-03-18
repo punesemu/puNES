@@ -22,12 +22,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include "video/gfx.h"
+#include "opengl.h"
 #include "video/gfx_thread.h"
-#include "fps.h"
 #include "info.h"
 #include "conf.h"
-#include "opengl.h"
 #include "clock.h"
 #include "ppu.h"
 #include "gui.h"
@@ -37,6 +35,8 @@
 #include "settings.h"
 #include "video/effects/pause.h"
 #include "video/effects/tv_noise.h"
+
+_gfx gfx;
 
 BYTE gfx_init(void) {
 	gfx.screenshot.save = FALSE;
@@ -113,8 +113,7 @@ void gfx_quit(void) {
 	ntsc_quit();
 	text_quit();
 }
-void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, BYTE palette,
-	BYTE force_scale, BYTE force_palette) {
+void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, BYTE palette, BYTE force_scale, BYTE force_palette) {
 	BYTE set_mode;
 	WORD width, height;
 	DBWORD old_shader = cfg->shader;

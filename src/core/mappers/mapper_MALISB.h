@@ -21,11 +21,6 @@
 
 #include "common.h"
 
-struct _malisb {
-	WORD prg_map[4];
-	WORD chr_map[8];
-} malisb;
-
 void map_init_MALISB(void);
 void extcl_cpu_wr_mem_MALISB(WORD address, BYTE value);
 BYTE extcl_save_mapper_MALISB(BYTE mode, BYTE slot, FILE *fp);

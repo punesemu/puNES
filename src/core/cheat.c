@@ -32,6 +32,9 @@
 
 #define GGFILE "gamegenie.rom"
 
+_gamegenie gamegenie;
+_cheats_list cheats_list;
+
 void gamegenie_init(void) {
 	memset(&gamegenie, 0x00, sizeof(gamegenie));
 	gamegenie_reset();

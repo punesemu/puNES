@@ -20,6 +20,9 @@
 #include "ppu_inline.h"
 #include "irqA12.h"
 
+_irqA12 irqA12;
+BYTE irqA12_delay;
+
 void irqA12_IO(WORD value, WORD value_old) {
 	if (!(value_old & 0x1000) && (value & 0x1000)) {
 		if (irqA12.cycles > irqA12_min_cpu_cycles_prev_rising_edge) {

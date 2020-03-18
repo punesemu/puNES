@@ -263,12 +263,12 @@ typedef struct _mapper {
 	BYTE *internal_struct[10];
 	WORD internal_struct_size[10];
 } _mapper;
-
-struct _trainer {
+typedef struct _trainer {
 	BYTE data[512];
-} trainer;
+} _trainer;
 
-_mapper mapper;
+extern _trainer trainer;
+extern _mapper mapper;
 
 BYTE map_init(void);
 void map_quit(void);

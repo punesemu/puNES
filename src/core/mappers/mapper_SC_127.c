@@ -24,6 +24,13 @@
 #include "ppu.h"
 #include "save_slot.h"
 
+struct _sc127 {
+	struct _sc127_irq {
+		BYTE active;
+		WORD count;
+	} irq;
+} sc127;
+
 void map_init_SC_127(void) {
 	EXTCL_CPU_WR_MEM(SC_127);
 	EXTCL_CPU_RD_MEM(SC_127);

@@ -22,6 +22,12 @@
 #include "save_slot.h"
 #include "cpu.h"
 
+struct _m60 {
+	BYTE index;
+	// per la variante vt5201
+	WORD address;
+} m60;
+
 void map_init_60(void) {
 	EXTCL_CPU_WR_MEM(60);
 	EXTCL_SAVE_MAPPER(60);

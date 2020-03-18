@@ -82,16 +82,10 @@ enum mirroring_type {
 
 #define chr_ram_size() info.chr.rom[0].banks_8k << 13
 
-#if defined (__cplusplus)
-#define EXTERNC extern "C"
-#else
-#define EXTERNC
-#endif
-
-EXTERNC struct _mmcpu {
+typedef struct _mmcpu {
 	BYTE ram[0x800];   // Mirrored four times
-} mmcpu;
-EXTERNC struct _prg {
+} _mmcpu;
+typedef struct _prg {
 	struct _prg_chip {
 		size_t size;
 		BYTE *rom;
@@ -108,8 +102,8 @@ EXTERNC struct _prg {
 	BYTE *ram_plus;    // PRG Ram extra
 	BYTE *ram_plus_8k;
 	BYTE *ram_battery; // Battery RAM
-} prg;
-EXTERNC struct _chr {
+} _prg;
+typedef struct _chr {
 	struct _chr_chip {
 		size_t size;
 		BYTE *rom;
@@ -122,15 +116,15 @@ EXTERNC struct _chr {
 		size_t size;
 		BYTE *data;
 	} extra;
-} chr;
-EXTERNC struct _nametables {
+} _chr;
+typedef struct _nametables {
 	BYTE data[0x1000];
 	BYTE *bank_1k[4];
-} ntbl;
-EXTERNC struct _mmap_palette {
+} _nametables;
+typedef struct _mmap_palette {
 	BYTE color[0x20];
-} mmap_palette;
-EXTERNC struct _oam {
+} _mmap_palette;
+typedef struct _oam {
 	BYTE data[256];
 	BYTE *element[64];
 	BYTE plus[32];
@@ -138,8 +132,13 @@ EXTERNC struct _oam {
 	// unlimited sprites
 	BYTE plus_unl[224];
 	BYTE *ele_plus_unl[56];
-} oam;
+} _oam;
 
-#undef EXTERNC
+extern _mmcpu mmcpu;
+extern _prg prg;
+extern _chr chr;
+extern _nametables ntbl;
+extern _mmap_palette mmap_palette;
+extern _oam oam;
 
 #endif /* MEM_MAP_H_ */

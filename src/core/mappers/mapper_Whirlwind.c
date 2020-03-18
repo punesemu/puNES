@@ -24,7 +24,12 @@
 
 INLINE static void whirlwind_6000_update(void);
 
-BYTE *whirlwind_prg_6000;
+struct _whirlwind {
+	uint32_t reg;
+} whirlwind;
+struct _whirlwindtmp {
+	BYTE *prg_6000;
+} whirlwindtmp;
 
 void map_init_Whirlwind(void) {
 	EXTCL_CPU_WR_MEM(Whirlwind);
@@ -56,7 +61,7 @@ BYTE extcl_cpu_rd_mem_Whirlwind(WORD address, BYTE openbus, UNUSED(BYTE before))
 	switch (address & 0xF000) {
 		case 0x6000:
 		case 0x7000:
-			return (whirlwind_prg_6000[address & 0x1FFF]);
+			return (whirlwindtmp.prg_6000[address & 0x1FFF]);
 	}
 	return (openbus);
 
@@ -79,5 +84,5 @@ INLINE static void whirlwind_6000_update(void) {
 
 	value = whirlwind.reg;
 	control_bank(info.prg.rom[0].max.banks_8k)
-	whirlwind_prg_6000 = prg_chip_byte_pnt(0, value << 13);
+	whirlwindtmp.prg_6000 = prg_chip_byte_pnt(0, value << 13);
 }

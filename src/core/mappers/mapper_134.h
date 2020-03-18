@@ -21,12 +21,6 @@
 
 #include "common.h"
 
-struct _m134 {
-	BYTE reg;
-	WORD prg_map[4];
-	WORD chr_map[8];
-} m134;
-
 void map_init_134(void);
 void extcl_cpu_wr_mem_134(WORD address, BYTE value);
 BYTE extcl_save_mapper_134(BYTE mode, BYTE slot, FILE *fp);

@@ -81,6 +81,11 @@ INLINE static void malisb_update_chr(void);
 			break;\
 	}
 
+struct _malisb {
+	WORD prg_map[4];
+	WORD chr_map[8];
+} malisb;
+
 void map_init_MALISB(void) {
 	EXTCL_CPU_WR_MEM(MALISB);
 	EXTCL_SAVE_MAPPER(MALISB);

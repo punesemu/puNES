@@ -36,15 +36,6 @@ enum {
 	MEZASETOPPRO,
 };
 
-struct _ss8806 {
-	BYTE chr_rom_bank[8];
-	BYTE enabled;
-	WORD mask;
-	WORD reload;
-	WORD count;
-	BYTE delay;
-} ss8806;
-
 void map_init_Jaleco(BYTE model);
 
 void extcl_cpu_wr_mem_Jaleco_JF05(WORD address, BYTE value);

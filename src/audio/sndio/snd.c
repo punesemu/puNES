@@ -66,6 +66,12 @@ static _snd_thread snd_thread;
 static _sndio sndio;
 static _callback_data cbd;
 
+_snd snd;
+_snd_list snd_list;
+
+void (*snd_apu_tick)(void);
+void (*snd_end_frame)(void);
+
 BYTE snd_init(void) {
 	memset(&snd, 0x00, sizeof(_snd));
 	memset(&sndio, 0x00, sizeof(_sndio));

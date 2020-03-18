@@ -40,6 +40,8 @@ static void lp_set_default(_lut_pass *lp);
 static void ps_set_default(_param_shd *ps);
 static void se_soft_stretch(void);
 
+_shader_effect shader_effect;
+
 BYTE shaders_set(int shader) {
 	_shader_effect *se = &shader_effect;
 	_shader_pass *sp = NULL;

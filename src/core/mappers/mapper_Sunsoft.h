@@ -41,19 +41,7 @@ typedef struct _square_fm7 {
 	WORD volume;
 	SWORD output;
 } _square_fm7;
-
-struct _sunsoft3 {
-	BYTE enable;
-	BYTE toggle;
-	WORD count;
-	BYTE delay;
-} s3;
-struct _sunsoft4 {
-	uint32_t chr_nmt[2];
-	BYTE mode;
-	BYTE mirroring;
-} s4;
-struct _sunsoft_fm7 {
+typedef struct _sunsoft_fm7 {
 	BYTE address;
 	BYTE prg_ram_enable;
 	BYTE prg_ram_mode;
@@ -70,7 +58,9 @@ struct _sunsoft_fm7 {
 	/* ------------------------------------------------------- */
 	/* */ BYTE clocked;                                     /* */
 	/* ------------------------------------------------------- */
-} fm7;
+} _sunsoft_fm7;
+
+extern _sunsoft_fm7 fm7;
 
 void map_init_Sunsoft(BYTE model);
 void map_init_NSF_Sunsoft(BYTE model);

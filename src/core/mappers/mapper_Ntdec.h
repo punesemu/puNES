@@ -23,11 +23,6 @@
 
 enum { ASDER, FHERO };
 
-struct _asder {
-	BYTE address;
-	BYTE reg[8];
-} asder;
-
 void map_init_Ntdec(BYTE model);
 
 void extcl_cpu_wr_mem_Ntdec_asder(WORD address, BYTE value);

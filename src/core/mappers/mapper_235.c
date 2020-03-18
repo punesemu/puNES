@@ -28,27 +28,32 @@ static const BYTE slots[4][4][2] = {
 	{ { 0x00, 0 }, { 0x20, 0 }, { 0x40, 0 }, { 0x60, 0 } }
 };
 
-BYTE type;
+struct _m235 {
+	BYTE openbus;
+} m235;
+struct _m235tmp {
+	BYTE type;
+} m235tmp;
 
 void map_init_235(void) {
 	switch (info.prg.rom[0].banks_16k) {
 		case 64:
-			type = 0;
+			m235tmp.type = 0;
 			break;
 		case 128:
-			type = 1;
+			m235tmp.type = 1;
 			break;
 		case 192:
-			type = 2;
+			m235tmp.type = 2;
 			break;
 		case 256:
 		default:
-			type = 3;
+			m235tmp.type = 3;
 			break;
 	}
 
 	EXTCL_CPU_WR_MEM(235);
-	if (type != 3) {
+	if (m235tmp.type != 3) {
 		EXTCL_CPU_RD_MEM(235);
 		EXTCL_SAVE_MAPPER(235);
 		mapper.internal_struct[0] = (BYTE *) &m235;
@@ -63,8 +68,8 @@ void map_init_235(void) {
 	}
 }
 void extcl_cpu_wr_mem_235(WORD address, BYTE value) {
-	BYTE bank = slots[type][(address >> 8) & 0x03][0] | (address & 0x1F);
-	m235.openbus = slots[type][(address >> 8) & 0x03][1];
+	BYTE bank = slots[m235tmp.type][(address >> 8) & 0x03][0] | (address & 0x1F);
+	m235.openbus = slots[m235tmp.type][(address >> 8) & 0x03][1];
 
 	if (address & 0x0800) {
 		value = (bank << 1) | ((address >> 12) & 0x01);

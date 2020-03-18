@@ -21,15 +21,6 @@
 
 #include "common.h"
 
-struct _m42 {
-	WORD rom_map_to;
-	BYTE *prg_8k_6000;
-	struct _m42_irq {
-		BYTE active;
-		uint32_t count;
-	} irq;
-} m42;
-
 void map_init_42(void);
 void extcl_cpu_wr_mem_42(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_42(WORD address, BYTE openbus, BYTE before);

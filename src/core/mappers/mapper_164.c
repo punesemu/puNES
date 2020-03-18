@@ -23,6 +23,10 @@
 #include "ppu.h"
 #include "save_slot.h"
 
+struct _m164 {
+	BYTE prg;
+} m164;
+
 void map_init_164(void) {
 	EXTCL_CPU_WR_MEM(164);
 	EXTCL_CPU_RD_MEM(164);

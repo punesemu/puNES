@@ -19,6 +19,8 @@
 #ifndef CLOCK_H_
 #define CLOCK_H_
 
+#include "common.h"
+
 typedef struct {
 	WORD type;                      /* il tipo di formato */
 	BYTE fps;                       /* il framerate */
@@ -104,14 +106,6 @@ static const _machine machinedb[] = {
 	}
 };
 
-#if defined (__cplusplus)
-#define EXTERNC extern "C"
-#else
-#define EXTERNC
-#endif
-
-EXTERNC _machine machine;
-
-#undef EXTERNC
+extern _machine machine;
 
 #endif /* CLOCK_H_ */

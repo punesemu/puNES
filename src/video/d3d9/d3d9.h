@@ -167,13 +167,13 @@ typedef struct _d3d9 {
 	_lut lut[MAX_PASS];
 } _d3d9;
 
+extern _d3d9 d3d9;
+
 #if defined (__cplusplus)
 #define EXTERNC extern "C"
 #else
 #define EXTERNC
 #endif
-
-EXTERNC _d3d9 d3d9;
 
 EXTERNC BYTE d3d9_init(void);
 EXTERNC BYTE d3d9_context_create(void);

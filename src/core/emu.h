@@ -20,7 +20,6 @@
 #define EMU_H_
 
 #include "common.h"
-#include "uncompress.h"
 
 #define emu_irand(x) ((unsigned int)((x) * emu_drand()))
 

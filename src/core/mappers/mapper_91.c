@@ -24,6 +24,13 @@
 #include "cpu.h"
 #include "ppu.h"
 
+struct _m91 {
+	struct _m91_irq {
+		BYTE active;
+		BYTE count;
+	} irq;
+} m91;
+
 void map_init_91(void) {
 	EXTCL_CPU_WR_MEM(91);
 	EXTCL_SAVE_MAPPER(91);

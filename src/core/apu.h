@@ -362,6 +362,10 @@ typedef struct _config_apu {
 	BYTE channel[APU_MASTER + 1];
 	double volume[APU_MASTER + 1];
 } _config_apu;
+typedef struct _nla_table {
+	SWORD pulse[32];
+	SWORD tnd[203];
+} _nla_table;
 typedef struct _apu {
 	BYTE mode;
 	BYTE type;
@@ -503,26 +507,6 @@ typedef struct _apuDMC {
 	BYTE tick_type;
 }  _apuDMC;
 
-#if defined (__cplusplus)
-#define EXTERNC extern "C"
-#else
-#define EXTERNC
-#endif
-
-EXTERNC struct _nla_table {
-	SWORD pulse[32];
-	SWORD tnd[203];
-} nla_table;
-
-EXTERNC _apu apu;
-EXTERNC _r4011 r4011;
-EXTERNC _r4015 r4015;
-EXTERNC _r4017 r4017;
-EXTERNC _apuSquare S1, S2;
-EXTERNC _apuTriangle TR;
-EXTERNC _apuNoise NS;
-EXTERNC _apuDMC DMC;
-
 /* apuPeriod[mode][type][cycles] */
 static const WORD apuPeriod[2][3][7] = {
 	/*
@@ -624,6 +608,22 @@ static const WORD dmc_rate[3][16] = {
 		0x00BE, 0x00A0, 0x008E, 0x0080, 0x006A, 0x0054, 0x0048, 0x0036
 	}
 };
+
+extern _nla_table nla_table;
+extern _apu apu;
+extern _r4011 r4011;
+extern _r4015 r4015;
+extern _r4017 r4017;
+extern _apuSquare S1, S2;
+extern _apuTriangle TR;
+extern _apuNoise NS;
+extern _apuDMC DMC;
+
+#if defined (__cplusplus)
+#define EXTERNC extern "C"
+#else
+#define EXTERNC
+#endif
 
 EXTERNC void apu_tick(BYTE *hwtick);
 EXTERNC void apu_turn_on(void);

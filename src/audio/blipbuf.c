@@ -18,7 +18,6 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include "apu.h"
 #include "audio/snd.h"
 #include "mappers.h"
 #include "mappers/mapper_VRC7_snd.h"

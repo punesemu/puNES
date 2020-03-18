@@ -17,7 +17,6 @@
  */
 
 #include "bck_states.h"
-#include "input.h"
 #include "info.h"
 #include "mem_map.h"
 #include "cpu.h"

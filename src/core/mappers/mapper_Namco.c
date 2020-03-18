@@ -21,7 +21,6 @@
 #include "info.h"
 #include "mem_map.h"
 #include "cpu.h"
-#include "apu.h"
 #include "save_slot.h"
 
 #define n163_prg_rom_8k_update(slot)\
@@ -31,7 +30,7 @@
 #define _n163_nmt_update(slot)\
 	ntbl.bank_1k[slot] = chr_chip_byte_pnt(0, n163.nmt_bank[slot][1])
 #define n163_nmt_update(slot)\
-	if (hardwired) {\
+	if (namcotmp.hardwired) {\
 		return;\
 	}\
 	if (value >= 0xE0) {\
@@ -63,11 +62,22 @@
 	_n163_ch_freq((n163.ch[channel].freq & 0x3FF00) | value, channel)
 
 #define n3425_nmt_update()\
-	if (type == N3425) {\
+	if (namcotmp.type == N3425) {\
 		ntbl.bank_1k[n3425.bank_to_update >> 1] = &ntbl.data[((value >> 5) & 0x01) << 10];\
 	}
 
-BYTE hardwired, type;
+struct _n3425 {
+	BYTE bank_to_update;
+} n3425;
+struct _n3446 {
+	BYTE bank_to_update;
+	BYTE prg_rom_mode;
+} n3446;
+_n163 n163;
+struct _namcotmp {
+	BYTE hardwired;
+	BYTE type;
+} namcotmp;
 
 void map_init_Namco(BYTE model) {
 	switch (model) {
@@ -95,15 +105,15 @@ void map_init_Namco(BYTE model) {
 			}
 
 			info.mapper.extend_wr = TRUE;
-			hardwired = FALSE;
+			namcotmp.hardwired = FALSE;
 
 			switch (info.id) {
 				case NAMCO_HARD_WIRED_V:
-					hardwired = TRUE;
+					namcotmp.hardwired = TRUE;
 					mirroring_V();
 					break;
 				case NAMCO_HARD_WIRED_H:
-					hardwired = TRUE;
+					namcotmp.hardwired = TRUE;
 					mirroring_H();
 					break;
 				case MINDSEEKER:
@@ -143,7 +153,7 @@ void map_init_Namco(BYTE model) {
 			break;
 	}
 
-	type = model;
+	namcotmp.type = model;
 }
 void map_init_NSF_Namco(BYTE model) {
 	memset(&n163, 0x00, sizeof(n163));
@@ -151,7 +161,7 @@ void map_init_NSF_Namco(BYTE model) {
 	n163.snd_ch_start = 7;
 	n163.snd_auto_inc = 1;
 
-	type = model;
+	namcotmp.type = model;
 }
 
 void extcl_cpu_wr_mem_Namco_163(WORD address, BYTE value) {
@@ -365,7 +375,7 @@ void extcl_cpu_wr_mem_Namco_3425(WORD address, BYTE value) {
 	switch (address & 0xA001) {
 		case 0x8000:
 			n3425.bank_to_update = value & 0x07;
-			if (type == N3453) {
+			if (namcotmp.type == N3453) {
 				if (value & 0x40) {
 					mirroring_SCR1();
 				} else {

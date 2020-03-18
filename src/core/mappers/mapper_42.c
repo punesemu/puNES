@@ -22,6 +22,15 @@
 #include "save_slot.h"
 #include "cpu.h"
 
+struct _m42 {
+	WORD rom_map_to;
+	BYTE *prg_8k_6000;
+	struct _m42_irq {
+		BYTE active;
+		uint32_t count;
+	} irq;
+} m42;
+
 void map_init_42(void) {
 	EXTCL_CPU_WR_MEM(42);
 	EXTCL_CPU_RD_MEM(42);

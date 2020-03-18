@@ -34,13 +34,6 @@ enum {
 	BAD_SUGOROQUEST
 };
 
-struct _waixing {
-	WORD prg_map[4];
-	WORD chr_map[8];
-	BYTE reg;
-	WORD ctrl[8];
-} waixing;
-
 void map_init_Waixing(BYTE model);
 
 void extcl_cpu_wr_mem_Waixing_PSx(WORD address, BYTE value);

@@ -158,6 +158,11 @@
 	}\
 }
 
+struct _m215 {
+	BYTE reg[4];
+	WORD prg_8k_bank[4];
+} m215;
+
 void map_init_215(void) {
 	EXTCL_CPU_WR_MEM(215);
 	EXTCL_SAVE_MAPPER(215);

@@ -77,6 +77,12 @@ INLINE static void boy_update_chr(void);
 			break;\
 	}
 
+struct _boy {
+	BYTE reg[4];
+	WORD prg_map[4];
+	WORD chr_map[8];
+} boy;
+
 void map_init_BOY(void) {
 	EXTCL_CPU_WR_MEM(BOY);
 	EXTCL_SAVE_MAPPER(BOY);

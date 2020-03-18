@@ -24,13 +24,11 @@
 #include "mem_map.h"
 #include "cpu.h"
 #include "ppu.h"
-#include "apu.h"
 #include "mappers.h"
 #include "irqA12.h"
 #include "irql2f.h"
 #include "fds.h"
 #include "gui.h"
-#include "input.h"
 #include "clock.h"
 #include "tas.h"
 #include "emu_thread.h"
@@ -108,6 +106,8 @@ struct _rewind_internal {
 		size_t total;
 	} size;
 } rwint;
+
+_rewind rwnd;
 
 BYTE rewind_init(void) {
 	// in caso di riavvio del rewind

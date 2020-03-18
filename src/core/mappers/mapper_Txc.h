@@ -23,10 +23,6 @@
 
 enum { TXCTW, T22211A, T22211B, T22211C };
 
-struct _t22211x {
-	BYTE reg[4];
-} t22211x;
-
 void map_init_Txc(BYTE model);
 
 void extcl_cpu_wr_mem_Txc_tw(WORD address, BYTE value);

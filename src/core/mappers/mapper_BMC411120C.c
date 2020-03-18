@@ -80,7 +80,14 @@ INLINE static void bmc411120c_update_chr(void);
 			break;\
 	}
 
-BYTE bmc411120c_reset;
+struct _bmc411120c {
+	BYTE reg;
+	WORD prg_map[4];
+	WORD chr_map[8];
+} bmc411120c;
+struct _bmc411120ctmp {
+	BYTE reset;
+} bmc411120ctmp;
 
 void map_init_BMC411120C(void) {
 	EXTCL_CPU_WR_MEM(BMC411120C);
@@ -115,9 +122,9 @@ void map_init_BMC411120C(void) {
 	}
 
 	if (info.reset >= HARD) {
-		bmc411120c_reset = 0;
+		bmc411120ctmp.reset = 0;
 	} else if (info.reset == RESET) {
-		bmc411120c_reset ^= 0x04;
+		bmc411120ctmp.reset ^= 0x04;
 	}
 
 	bmc411120c_update_prg();
@@ -170,7 +177,7 @@ BYTE extcl_save_mapper_BMC411120C(BYTE mode, BYTE slot, FILE *fp) {
 INLINE static void bmc411120c_update_prg(void) {
 	BYTE value;
 
-	if (bmc411120c.reg & (0x08 | bmc411120c_reset)) {
+	if (bmc411120c.reg & (0x08 | bmc411120ctmp.reset)) {
 		value = 0x0C | ((bmc411120c.reg >> 4) & 0x03);
 		control_bank(info.prg.rom[0].max.banks_32k)
 		map_prg_rom_8k(4, 0, value);

@@ -22,7 +22,13 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
-BYTE bmc70in1_reset, bmc70in1_type;
+struct _bmc70in1 {
+	WORD reg[3];
+} bmc70in1;
+struct _bmc70in1tmp {
+	BYTE type;
+	BYTE reset;
+} bmc70in1tmp;
 
 void map_init_BMC70IN1(BYTE type) {
 	EXTCL_CPU_WR_MEM(BMC70IN1);
@@ -37,16 +43,16 @@ void map_init_BMC70IN1(BYTE type) {
 
 	if (info.reset >= HARD) {
 		if (type == BMC70IN1) {
-			bmc70in1_reset = 0x0D;
+			bmc70in1tmp.reset = 0x0D;
 		} else {
-			bmc70in1_reset = 0x06;
+			bmc70in1tmp.reset = 0x06;
 		}
 	} else if (info.reset == RESET) {
-		bmc70in1_reset++;
-		bmc70in1_reset = bmc70in1_reset & 0x0F;
+		bmc70in1tmp.reset++;
+		bmc70in1tmp.reset = bmc70in1tmp.reset & 0x0F;
 	}
 
-	bmc70in1_type = type;
+	bmc70in1tmp.type = type;
 	info.mapper.extend_rd = TRUE;
 
 	extcl_cpu_wr_mem_BMC70IN1(0x0000, 0);
@@ -62,7 +68,7 @@ void extcl_cpu_wr_mem_BMC70IN1(WORD address, BYTE value) {
 			mirroring_V();
 		}
 
-		if (bmc70in1_type == BMC70IN1B) {
+		if (bmc70in1tmp.type == BMC70IN1B) {
 			bmc70in1.reg[2] = (address & 0x03) << 3;
 		} else {
 			DBWORD bank;
@@ -108,7 +114,7 @@ void extcl_cpu_wr_mem_BMC70IN1(WORD address, BYTE value) {
 }
 BYTE extcl_cpu_rd_mem_BMC70IN1(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if ((address >= 0x8000) && (bmc70in1.reg[0] == 0x10)) {
-		address = (address & 0xFFF0) | bmc70in1_reset;
+		address = (address & 0xFFF0) | bmc70in1tmp.reset;
 		return (prg_rom_rd(address));
 	}
 	return (openbus);

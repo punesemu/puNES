@@ -22,6 +22,10 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
+struct _bmc12in1 {
+	BYTE reg[3];
+} bmc12in1;
+
 void map_init_BMC12IN1(void) {
 	EXTCL_CPU_WR_MEM(BMC12IN1);
 	EXTCL_SAVE_MAPPER(BMC12IN1);

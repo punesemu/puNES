@@ -325,6 +325,8 @@ struct _jstick {
 	DWORD (WINAPI *XInputGetCapabilities_proc)(DWORD dwUserIndex, DWORD dwFlags, XINPUT_CAPABILITIES *pCapabilities);
 } jstick;
 
+_js js[PORT_MAX], js_shcut;
+
 void js_init(BYTE first_time) {
 	int i;
 

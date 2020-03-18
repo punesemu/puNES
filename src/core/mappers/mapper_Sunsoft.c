@@ -94,7 +94,21 @@
 		fm7.square[sq].output = fm7.square[sq].volume * ((fm7.square[sq].step & 0x10) ? 1 : 0);\
 	}
 
-BYTE type;
+struct _sunsoft3 {
+	BYTE enable;
+	BYTE toggle;
+	WORD count;
+	BYTE delay;
+} s3;
+struct _sunsoft4 {
+	uint32_t chr_nmt[2];
+	BYTE mode;
+	BYTE mirroring;
+} s4;
+_sunsoft_fm7 fm7;
+struct _sunsofttmp {
+	BYTE type;
+} sunsofttmp;
 
 void map_init_Sunsoft(BYTE model) {
 	switch (model) {
@@ -161,7 +175,7 @@ void map_init_Sunsoft(BYTE model) {
 			break;
 	}
 
-	type = model;
+	sunsofttmp.type = model;
 }
 void map_init_NSF_Sunsoft(BYTE model) {
 	memset(&fm7, 0x00, sizeof(fm7));
@@ -170,7 +184,7 @@ void map_init_NSF_Sunsoft(BYTE model) {
 	fm7.square[1].timer = 1;
 	fm7.square[2].timer = 1;
 
-	type = model;
+	sunsofttmp.type = model;
 }
 
 void extcl_cpu_wr_mem_Sunsoft_S1(WORD address, BYTE value) {
@@ -204,7 +218,7 @@ void extcl_cpu_wr_mem_Sunsoft_S2(UNUSED(WORD address), BYTE value) {
 	const BYTE save = value;
 	DBWORD bank;
 
-	if (type == SUN2B) {
+	if (sunsofttmp.type == SUN2B) {
 		if (value & 0x08) {
 			mirroring_SCR1();
 		} else {

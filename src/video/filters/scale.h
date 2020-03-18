@@ -20,8 +20,6 @@
 #define SCALE_H_
 
 #include "common.h"
-#include "video/gfx.h"
-#include "palette.h"
 
 void scale_surface(void);
 void scale_surface_screenshoot_1x(uint32_t pitch, void *pix);

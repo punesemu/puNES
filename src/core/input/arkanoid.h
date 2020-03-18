@@ -19,7 +19,7 @@
 #ifndef INPUT_ARKANOID_H
 #define INPUT_ARKANOID_H
 
-#include "../input.h"
+#include "input.h"
 
 void input_init_arkanoid(void);
 void input_wr_arkanoid(BYTE *value, BYTE nport);

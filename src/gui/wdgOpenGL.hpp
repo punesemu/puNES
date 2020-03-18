@@ -19,11 +19,13 @@
 #ifndef WDGOPENGL_HPP_
 #define WDGOPENGL_HPP_
 
+#include <QtWidgets/QWidget>
+#if defined (_WIN32)
 // gui.h e' importante che stia in mezzo per non
 // avere problemi di compilazione legati ai vari
 // nested #include nella versione Windows
-#include <QtWidgets/QWidget>
-#include "gui.h"
+#include "win.h"
+#endif
 #include <QtWidgets/QOpenGLWidget>
 #include <QtCore/QElapsedTimer>
 

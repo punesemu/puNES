@@ -21,12 +21,6 @@
 
 #include "common.h"
 
-struct _dragonfighter {
-	BYTE reg[3];
-	WORD prg_map[4];
-	WORD chr_map[8];
-} dragonfighter;
-
 void map_init_DRAGONFIGHTER(void);
 void extcl_cpu_wr_mem_DRAGONFIGHTER(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_DRAGONFIGHTER(WORD address, BYTE openbus, BYTE before);

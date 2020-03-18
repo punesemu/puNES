@@ -22,8 +22,6 @@
 #include "mainWindow.hpp"
 #include "dlgSettings.hpp"
 #include "vs_system.h"
-#include "conf.h"
-#include "info.h"
 #include "clock.h"
 #include "gui.h"
 

@@ -22,6 +22,8 @@
 #include "conf.h"
 #include "ppu.h"
 
+_fps fps;
+
 void fps_init(void) {
 	if (machine.type == NTSC) {
 		machine.fps = 60;

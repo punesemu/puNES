@@ -21,10 +21,6 @@
 
 #include "common.h"
 
-struct _m186 {
-	BYTE *prg_ram_bank2;
-} m186;
-
 void map_init_186(void);
 void extcl_cpu_wr_mem_186(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_186(WORD address, BYTE openbus, BYTE before);

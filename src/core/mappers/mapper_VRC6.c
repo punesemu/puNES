@@ -54,7 +54,6 @@ INLINE static void vrc6_update_chr_and_mirroring(void);
 	if (!vrc6.square.enabled) {\
 		vrc6.square.output = 0;\
 	}
-
 #define vrc6_square_saveslot(square)\
 	save_slot_ele(mode, slot, square.enabled);\
 	save_slot_ele(mode, slot, square.duty);\
@@ -65,7 +64,11 @@ INLINE static void vrc6_update_chr_and_mirroring(void);
 	save_slot_ele(mode, slot, square.frequency);\
 	save_slot_ele(mode, slot, square.output)
 
-BYTE type, delay;
+_vrc6 vrc6;
+struct _vrc6tmp {
+	BYTE type;
+	BYTE delay;
+} vrc6tmp;
 
 const WORD table_VRC6[2][4] = {
 	{0x0000, 0x0001, 0x0002, 0x0003},
@@ -96,10 +99,11 @@ void map_init_VRC6(BYTE revision) {
 	vrc6.S4.timer = 1;
 	vrc6.S4.duty = 1;
 	vrc6.saw.timer = 1;
-	delay = 1;
+	vrc6tmp.delay = 1;
 
-	type = revision;
+	vrc6tmp.type = revision;
 }
+
 void map_init_NSF_VRC6(BYTE revision) {
 	memset(&vrc6, 0x00, sizeof(vrc6));
 
@@ -109,10 +113,10 @@ void map_init_NSF_VRC6(BYTE revision) {
 	vrc6.S4.duty = 1;
 	vrc6.saw.timer = 1;
 
-	type = revision;
+	vrc6tmp.type = revision;
 }
 void extcl_cpu_wr_mem_VRC6(WORD address, BYTE value) {
-	address = (address & 0xF000) | table_VRC6[type][(address & 0x0003)];
+	address = (address & 0xF000) | table_VRC6[vrc6tmp.type][(address & 0x0003)];
 
 	switch (address) {
 		case 0x8000:
@@ -276,7 +280,7 @@ void extcl_cpu_every_cycle_VRC6(void) {
 	}
 
 	vrc6.count = vrc6.reload;
-	vrc6.delay = delay;
+	vrc6.delay = vrc6tmp.delay;
 }
 void extcl_apu_tick_VRC6(void) {
 	vcr6_square_tick(S3)

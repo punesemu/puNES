@@ -85,13 +85,13 @@ INLINE static void unif8237a_update_chr(void);
 			break;\
 	}
 #define unif8237_updt_prg()\
-	if (unif8237_model == U8237) {\
+	if (unif8237tmp.model == U8237) {\
 		unif8237_update_prg();\
 	} else {\
 		unif8237a_update_prg();\
 	}
 #define unif8237_updt_prg_and_chr()\
-	if (unif8237_model == U8237) {\
+	if (unif8237tmp.model == U8237) {\
 		unif8237_update_prg();\
 		unif8237_update_chr();\
 	} else {\
@@ -119,7 +119,14 @@ static const BYTE unif8237_adr[8][8] = {
 	{ 0, 1, 2, 3, 4, 5, 6, 7 },
 	{ 0, 1, 2, 3, 4, 5, 6, 7 },
 };
-BYTE unif8237_model;
+struct _unif8237 {
+	BYTE reg[4];
+	WORD prg_map[4];
+	WORD chr_map[8];
+} unif8237;
+struct _unif8237tmp {
+	BYTE model;
+} unif8237tmp;
 
 void map_init_UNIF8237(BYTE model) {
 	EXTCL_CPU_WR_MEM(UNIF8237);
@@ -139,7 +146,7 @@ void map_init_UNIF8237(BYTE model) {
 	memset(&irqA12, 0x00, sizeof(irqA12));
 	memset(&unif8237, 0x00, sizeof(unif8237));
 
-	unif8237_model = model;
+	unif8237tmp.model = model;
 
 	{
 		BYTE i;

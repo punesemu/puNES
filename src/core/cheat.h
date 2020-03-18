@@ -50,14 +50,7 @@ typedef struct _type_cheat {
 	int counter;
 	_cheat cheat[CL_CHEATS];
 } _type_cheat;
-
-#if defined (__cplusplus)
-#define EXTERNC extern "C"
-#else
-#define EXTERNC
-#endif
-
-EXTERNC struct _gamegenie {
+typedef struct _gamegenie {
 	uTCHAR *rom;
 	uTCHAR *patch;
 	BYTE phase;
@@ -65,11 +58,20 @@ EXTERNC struct _gamegenie {
 	BYTE value;
 	BYTE counter;
 	_cheat cheat[GG_CHEATS];
-} gamegenie;
-EXTERNC struct _cheats_list {
+} _gamegenie;
+typedef struct _cheats_list {
 	_type_cheat rom;
 	_type_cheat ram;
-} cheats_list;
+} _cheats_list;
+
+extern _gamegenie gamegenie;
+extern _cheats_list cheats_list;
+
+#if defined (__cplusplus)
+#define EXTERNC extern "C"
+#else
+#define EXTERNC
+#endif
 
 EXTERNC void gamegenie_init(void);
 EXTERNC void gamegenie_quit(void);

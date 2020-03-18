@@ -20,8 +20,6 @@
 #define SCALE2X_H_
 
 #include "common.h"
-#include "video/gfx.h"
-#include "palette.h"
 
 void scaleNx(void);
 

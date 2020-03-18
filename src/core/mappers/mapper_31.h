@@ -21,11 +21,6 @@
 
 #include "common.h"
 
-struct _m31 {
-	WORD regs[8];
-	BYTE *rom_4k[8];
-} m31;
-
 void map_init_31(void);
 void extcl_cpu_wr_mem_31(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_31(WORD address, BYTE openbus, BYTE before);

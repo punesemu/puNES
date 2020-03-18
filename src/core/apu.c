@@ -29,6 +29,16 @@
 #include "mappers.h"
 #include "info.h"
 
+_nla_table nla_table;
+_apu apu;
+_r4011 r4011;
+_r4015 r4015;
+_r4017 r4017;
+_apuSquare S1, S2;
+_apuTriangle TR;
+_apuNoise NS;
+_apuDMC DMC;
+
 void apu_tick(BYTE *hwtick) {
 	/* sottraggo il numero di cicli eseguiti */
 	apu.cycles--;

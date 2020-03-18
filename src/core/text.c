@@ -16,18 +16,12 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#if defined (WITH_OPENGL)
-#include <time.h>
-#endif
 #include <string.h>
 #include <stdarg.h>
 #include <stdlib.h>
-#include <stdio.h>
-#include "text.h"
 #include "video/gfx.h"
 #include "font.h"
 #include "tas.h"
-#include "input.h"
 #include "fds.h"
 #include "fps.h"
 #include "conf.h"
@@ -61,6 +55,12 @@ static char txt_tags[][10] = {
 	"[select]", "[start]",	"[a]",      "[b]",
 	"[floppy]"
 };
+
+_text text;
+uint32_t txt_table[TXT_BLACK + 1];
+
+void (*text_clear)(_txt_element *ele);
+void (*text_blit)(_txt_element *ele, _txt_rect *rect);
 
 void text_init(void) {
 	_txt_element *ele;

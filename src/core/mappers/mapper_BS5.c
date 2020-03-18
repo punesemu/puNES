@@ -21,7 +21,9 @@
 #include "info.h"
 #include "mem_map.h"
 
-BYTE bs5_reset;
+struct _bs5mp {
+	BYTE reset;
+} bs5tmp;
 
 void map_init_BS5(void) {
 	EXTCL_CPU_WR_MEM(BS5);
@@ -35,10 +37,10 @@ void map_init_BS5(void) {
 	}
 
 	if (info.reset >= HARD) {
-		bs5_reset = 0;
+		bs5tmp.reset = 0;
 	} else if (info.reset == RESET) {
-		bs5_reset++;
-		bs5_reset = bs5_reset & 0x03;
+		bs5tmp.reset++;
+		bs5tmp.reset = bs5tmp.reset & 0x03;
 	}
 
 	mirroring_V();
@@ -59,7 +61,7 @@ void extcl_cpu_wr_mem_BS5(WORD address, BYTE value) {
 			return;
 		}
 		case 0xA000:
-			if (address & (1 << (bs5_reset + 4))) {
+			if (address & (1 << (bs5tmp.reset + 4))) {
 				value = address & 0x0F;
 				control_bank(info.prg.rom[0].max.banks_8k)
 				map_prg_rom_8k(1, base, value);

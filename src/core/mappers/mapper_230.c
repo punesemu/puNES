@@ -21,6 +21,10 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
+struct _m230 {
+	BYTE mode;
+} m230;
+
 void map_init_230(void) {
 	EXTCL_CPU_WR_MEM(230);
 	EXTCL_SAVE_MAPPER(230);

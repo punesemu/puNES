@@ -21,10 +21,6 @@
 
 #include "common.h"
 
-struct _unif43272 {
-	WORD address;
-} unif43272;
-
 void map_init_UNIF43272(void);
 void extcl_cpu_wr_mem_UNIF43272(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_UNIF43272(WORD address, BYTE openbus, BYTE before);

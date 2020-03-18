@@ -21,10 +21,6 @@
 
 #include "common.h"
 
-struct _unif603_5052 {
-	BYTE reg;
-} unif603_5052;
-
 void map_init_UNIF603_5052(void);
 void extcl_cpu_wr_mem_UNIF603_5052(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_UNIF603_5052(WORD address, BYTE openbus, BYTE before);

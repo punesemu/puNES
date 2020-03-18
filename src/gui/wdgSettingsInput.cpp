@@ -27,7 +27,6 @@
 #include "dlgSettings.hpp"
 #include "dlgStdPad.hpp"
 #include "emu_thread.h"
-#include "conf.h"
 
 typedef struct _cb_ports {
 	QString desc;

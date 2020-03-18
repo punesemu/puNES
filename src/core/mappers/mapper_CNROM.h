@@ -30,10 +30,6 @@ enum {
 	BAD_INES_TETRIS_BPS = 20
 };
 
-struct _cnrom_2627 {
-	BYTE chr_rd_enable;
-} cnrom_2627;
-
 void map_init_CNROM();
 void extcl_cpu_wr_mem_CNROM(WORD address, BYTE value);
 BYTE extcl_save_mapper_CNROM(BYTE mode, BYTE slot, FILE *fp);

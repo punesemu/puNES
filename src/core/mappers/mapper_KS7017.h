@@ -21,14 +21,6 @@
 
 #include "common.h"
 
-struct _ks7017 {
-	BYTE reg;
-	struct _ks7017_irq {
-		BYTE active;
-		WORD count;
-	} irq;
-} ks7017;
-
 void map_init_KS7017(void);
 void extcl_cpu_wr_mem_KS7017(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_KS7017(WORD address, BYTE openbus, BYTE before);

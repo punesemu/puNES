@@ -23,7 +23,6 @@
 #include "cmd_line.h"
 #include "conf.h"
 #include "version.h"
-#include "video/gfx.h"
 #include "gui.h"
 
 #define req_arg true

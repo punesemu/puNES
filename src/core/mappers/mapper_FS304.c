@@ -20,6 +20,10 @@
 #include "info.h"
 #include "save_slot.h"
 
+struct _fs304 {
+	BYTE reg[4];
+} fs304;
+
 void map_init_FS304(void) {
 	EXTCL_CPU_WR_MEM(FS304);
 	EXTCL_SAVE_MAPPER(FS304);

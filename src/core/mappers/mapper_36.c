@@ -23,6 +23,10 @@
 #include "cpu.h"
 #include "save_slot.h"
 
+struct _m36 {
+	BYTE regs[5];
+} m36;
+
 void map_init_36(void) {
 	EXTCL_CPU_WR_MEM(36);
 	EXTCL_CPU_RD_MEM(36);

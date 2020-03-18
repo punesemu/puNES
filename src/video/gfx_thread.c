@@ -54,6 +54,8 @@ struct _gfx_thread {
 	int pause_calls;
 } gfx_thread;
 
+_gfx_thread_public gfx_thread_public;
+
 BYTE gfx_thread_init(void) {
 	memset(&gfx_thread_public, 0x00, sizeof(gfx_thread_public));
 	memset(&gfx_thread, 0x00, sizeof(gfx_thread));

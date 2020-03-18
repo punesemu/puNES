@@ -16,7 +16,6 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <time.h>
 #include <stdlib.h>
 #include <stdarg.h>
 #include <string.h>
@@ -27,39 +26,28 @@
 #include "debugger.h"
 #include "emu.h"
 #include "rom_mem.h"
-#include "info.h"
 #include "settings.h"
 #include "audio/snd.h"
 #include "clock.h"
 #include "cpu.h"
 #include "mem_map.h"
-#include "mappers.h"
-#include "fps.h"
-#include "apu.h"
 #include "ppu.h"
 #include "video/gfx.h"
-#include "text.h"
 #include "sha1.h"
 #include "database.h"
-#include "input.h"
 #include "version.h"
 #include "conf.h"
 #include "save_slot.h"
-#include "rewind.h"
 #include "tas.h"
 #include "ines.h"
 #include "unif.h"
 #include "fds.h"
-#include "nsf.h"
 #include "nsfe.h"
 #include "patcher.h"
-#include "cheat.h"
-#include "overscan.h"
 #include "recent_roms.h"
 #if defined (WITH_OPENGL)
 #include "opengl.h"
 #endif
-#include "uncompress.h"
 #include "gui.h"
 #include "video/effects/pause.h"
 #include "video/effects/tv_noise.h"

@@ -31,15 +31,6 @@ enum {
 	X1005_NO_BAT = 101
 };
 
-struct _taito_X1005 {
-	BYTE ram[0x80];
-	BYTE enable;
-} taito_X1005;
-struct _taito_X1017 {
-	BYTE chr[6];
-	BYTE control;
-} taito_X1017;
-
 void map_init_Taito(BYTE model);
 
 void extcl_cpu_wr_mem_Taito_TC0190FMC(WORD address, BYTE value);

@@ -77,6 +77,12 @@ INLINE static void dragonfighter_update_chr(void);
 			break;\
 	}
 
+struct _dragonfighter {
+	BYTE reg[3];
+	WORD prg_map[4];
+	WORD chr_map[8];
+} dragonfighter;
+
 void map_init_DRAGONFIGHTER(void) {
 	EXTCL_CPU_WR_MEM(DRAGONFIGHTER);
 	EXTCL_CPU_RD_MEM(DRAGONFIGHTER);

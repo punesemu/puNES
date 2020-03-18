@@ -21,12 +21,6 @@
 
 #include "common.h"
 
-struct _m40 {
-	BYTE enabled;
-	WORD count;
-	BYTE delay;
-} m40;
-
 void map_init_40(void);
 void extcl_cpu_wr_mem_40(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_40(WORD address, BYTE openbus, BYTE before);

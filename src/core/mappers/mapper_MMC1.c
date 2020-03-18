@@ -69,6 +69,19 @@ enum MMC1_regs { CTRL, CHR0, CHR1, PRG0 };
 			break;\
 	}
 
+struct _mmc1 {
+	BYTE reg;
+	BYTE pos;
+	BYTE prg_mode;
+	BYTE chr_mode;
+	BYTE ctrl;
+	BYTE chr0;
+	BYTE chr1;
+	BYTE prg0;
+	BYTE reset;
+	BYTE prg_upper;
+} mmc1;
+
 void map_init_MMC1(void) {
 	EXTCL_CPU_WR_MEM(MMC1);
 	EXTCL_SAVE_MAPPER(MMC1);

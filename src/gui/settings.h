@@ -30,6 +30,7 @@
 #include "input.h"
 #include "nsf.h"
 #include "rewind.h"
+#include "palette.h"
 
 #if defined (_WIN32)
 #define NEWLINE "\r\n"

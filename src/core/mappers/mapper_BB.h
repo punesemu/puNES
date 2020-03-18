@@ -21,10 +21,6 @@
 
 #include "common.h"
 
-struct _bb {
-	BYTE reg;
-} bb;
-
 void map_init_BB(void);
 void extcl_cpu_wr_mem_BB(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_BB(WORD address, BYTE openbus, BYTE before);

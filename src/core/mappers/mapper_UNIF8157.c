@@ -24,7 +24,12 @@
 
 INLINE static void unif8157_update(BYTE value);
 
-BYTE unif8157_reset;
+struct _unif8157 {
+	WORD reg;
+} unif8157;
+struct _unif8157tmp {
+	BYTE reset;
+} unif8157tmp;
 
 void map_init_UNIF8157(void) {
 	EXTCL_CPU_WR_MEM(UNIF8157);
@@ -36,10 +41,10 @@ void map_init_UNIF8157(void) {
 	memset(&unif8157, 0x00, sizeof(unif8157));
 
 	if (info.reset >= HARD) {
-		unif8157_reset = 0;
+		unif8157tmp.reset = 0;
 	} else if (info.reset == RESET) {
-		unif8157_reset++;
-		unif8157_reset = unif8157_reset & 0x01F;
+		unif8157tmp.reset++;
+		unif8157tmp.reset = unif8157tmp.reset & 0x01F;
 	}
 
 	info.mapper.extend_rd = TRUE;
@@ -53,7 +58,7 @@ void extcl_cpu_wr_mem_UNIF8157(WORD address, BYTE value) {
 BYTE extcl_cpu_rd_mem_UNIF8157(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if (address >= 0x8000) {
 		if ((unif8157.reg & 0x0100) && (prg.chip[0].size < (1024 * 1024))) {
-			address = (address & 0xFFF0) + unif8157_reset;
+			address = (address & 0xFFF0) + unif8157tmp.reset;
 			return (prg_rom_rd(address));
 		}
 	}

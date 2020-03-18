@@ -21,10 +21,6 @@
 
 #include "common.h"
 
-struct _ac08 {
-	BYTE reg;
-} ac08;
-
 void map_init_AC08(void);
 void extcl_cpu_wr_mem_AC08(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_AC08(WORD address, BYTE openbus, BYTE before);

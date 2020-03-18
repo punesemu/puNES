@@ -18,8 +18,10 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "common.h"
 #include "palette.h"
+
+_color_RGB palette_base_file[64];
+_palette_RGB palette_RGB;
 
 void palette_save_on_file(const uTCHAR *file) {
 	FILE *fp;

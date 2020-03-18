@@ -19,7 +19,6 @@
 #ifndef INPUT_MOUSE_H_
 #define INPUT_MOUSE_H_
 
-#include "../input.h"
 #include "gui.h"
 #include "video/gfx.h"
 

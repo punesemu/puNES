@@ -19,7 +19,7 @@
 #ifndef INPUT_OEKA_KIDS_TABLET_H_
 #define INPUT_OEKA_KIDS_TABLET_H_
 
-#include "../input.h"
+#include "input.h"
 
 void input_init_oeka_kids_tablet(void);
 void input_wr_oeka_kids_tablet(BYTE *value, BYTE nport);

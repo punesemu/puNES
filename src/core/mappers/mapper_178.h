@@ -23,11 +23,6 @@
 
 enum { M178EC32IN1 };
 
-struct _m178 {
-	BYTE reg[3];
-	BYTE prg_mode;
-} m178;
-
 void map_init_178(BYTE type);
 void extcl_cpu_wr_mem_178(WORD address, BYTE value);
 BYTE extcl_save_mapper_178(BYTE mode, BYTE slot, FILE *fp);

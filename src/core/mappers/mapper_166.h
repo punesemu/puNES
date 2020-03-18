@@ -21,10 +21,6 @@
 
 #include "common.h"
 
-struct _m166 {
-	BYTE reg[4];
-} m166;
-
 void map_init_166(void);
 void extcl_cpu_wr_mem_166(WORD address, BYTE value);
 BYTE extcl_save_mapper_166(BYTE mode, BYTE slot, FILE *fp);

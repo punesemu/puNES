@@ -23,6 +23,10 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
+struct _m254 {
+	BYTE reg[2];
+} m254;
+
 void map_init_254(void) {
 	EXTCL_CPU_WR_MEM(254);
 	EXTCL_CPU_RD_MEM(254);

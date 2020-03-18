@@ -30,6 +30,9 @@
 #include "unif.h"
 #include "gui.h"
 
+_trainer trainer;
+_mapper mapper;
+
 BYTE map_init(void) {
 	BYTE i;
 	/*

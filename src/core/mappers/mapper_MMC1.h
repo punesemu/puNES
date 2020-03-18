@@ -23,19 +23,6 @@
 
 enum MMC1_types { SNROM, SOROM, SUROM, SXROM, SEROM = 5, SKROM = 6, SJROM = 7, BAD_YOSHI_U = 20, MOWPC10 };
 
-struct _mmc1 {
-	BYTE reg;
-	BYTE pos;
-	BYTE prg_mode;
-	BYTE chr_mode;
-	BYTE ctrl;
-	BYTE chr0;
-	BYTE chr1;
-	BYTE prg0;
-	BYTE reset;
-	BYTE prg_upper;
-} mmc1;
-
 void map_init_MMC1(void);
 void extcl_cpu_wr_mem_MMC1(WORD address, BYTE value);
 BYTE extcl_save_mapper_MMC1(BYTE mode, BYTE slot, FILE *fp);

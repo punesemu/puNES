@@ -80,6 +80,12 @@ INLINE static void bmc830118c_update_chr(void);
 			break;\
 	}
 
+struct _bmc830118c {
+	BYTE reg;
+	WORD prg_map[4];
+	WORD chr_map[8];
+} bmc830118c;
+
 void map_init_BMC830118C(void) {
 	EXTCL_CPU_WR_MEM(BMC830118C);
 	EXTCL_SAVE_MAPPER(BMC830118C);

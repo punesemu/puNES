@@ -43,13 +43,7 @@ enum rewind_action {
 	RWND_ACT_FAST_FORWARD
 };
 
-#if defined (__cplusplus)
-#define EXTERNC extern "C"
-#else
-#define EXTERNC
-#endif
-
-EXTERNC struct _rewind {
+typedef struct _rewind {
 	BYTE active;
 	BYTE direction;
 	BYTE action;
@@ -59,7 +53,15 @@ EXTERNC struct _rewind {
 		int backward;
 		int forward;
 	} factor;
-} rwnd;
+} _rewind;
+
+extern _rewind rwnd;
+
+#if defined (__cplusplus)
+#define EXTERNC extern "C"
+#else
+#define EXTERNC
+#endif
 
 EXTERNC BYTE rewind_init(void);
 EXTERNC void rewind_quit(void);

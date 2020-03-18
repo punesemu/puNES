@@ -21,14 +21,6 @@
 
 #include "common.h"
 
-struct _m43 {
-	BYTE swap;
-	struct _m43_irq {
-		BYTE active;
-		WORD count;
-	} irq;
-} m43;
-
 void map_init_43(void);
 void extcl_cpu_wr_mem_43(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_43(WORD address, BYTE openbus, BYTE before);

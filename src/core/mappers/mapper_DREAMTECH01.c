@@ -29,7 +29,6 @@ void map_init_DREAMTECH01(void) {
 		map_prg_rom_8k(2, 0, 8);
 	//}
 }
-
 void extcl_cpu_wr_mem_DREAMTECH01(WORD address, BYTE value) {
 	if (address != 0x5020) {
 		return;

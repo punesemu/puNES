@@ -79,18 +79,22 @@ typedef struct _snd {
 		} limit;
 	} buffer;
 } _snd;
+typedef struct _snd_list {
+	_snd_list_dev playback;
+	_snd_list_dev capture;
+} _snd_list;
+
+extern _snd snd;
+extern _snd_list snd_list;
+
+extern void (*snd_apu_tick)(void);
+extern void (*snd_end_frame)(void);
 
 #if defined (__cplusplus)
 #define EXTERNC extern "C"
 #else
 #define EXTERNC
 #endif
-
-EXTERNC _snd snd;
-EXTERNC struct _snd_list {
-	_snd_list_dev playback;
-	_snd_list_dev capture;
-} snd_list;
 
 EXTERNC BYTE snd_init(void);
 EXTERNC void snd_quit(void);
@@ -118,9 +122,6 @@ EXTERNC uTCHAR *snd_capture_device_id(int dev);
 EXTERNC void snd_list_devices(void);
 
 EXTERNC BYTE snd_handler(void);
-
-EXTERNC void (*snd_apu_tick)(void);
-EXTERNC void (*snd_end_frame)(void);
 
 #undef EXTERNC
 

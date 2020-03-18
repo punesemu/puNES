@@ -25,25 +25,25 @@ enum overscan_limit {
 	OVERSCAN_BORDERS_MIN = 0, OVERSCAN_BORDERS_MAX = 17
 };
 
-typedef struct {
+typedef struct _overscan_borders {
 	BYTE up;
 	BYTE down;
 	BYTE left;
 	BYTE right;
 } _overscan_borders;
+typedef struct _overscan {
+	BYTE enabled;
+	_overscan_borders *borders;
+} _overscan;
+
+extern _overscan_borders overscan_borders[2];
+extern _overscan overscan;
 
 #if defined (__cplusplus)
 #define EXTERNC extern "C"
 #else
 #define EXTERNC
 #endif
-
-EXTERNC struct overscan {
-	BYTE enabled;
-	_overscan_borders *borders;
-} overscan;
-
-EXTERNC _overscan_borders overscan_borders[2];
 
 EXTERNC BYTE overscan_set_mode(BYTE mode);
 

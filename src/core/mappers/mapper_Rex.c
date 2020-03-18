@@ -48,6 +48,11 @@
 	}\
 }
 
+struct _rex_dbz {
+	WORD chr_rom_bank[8];
+	BYTE chr_high;
+} rex_dbz;
+
 void map_init_Rex(BYTE model) {
 	if (model == DBZ) {
 		EXTCL_CPU_WR_MEM(Rex_dbz);

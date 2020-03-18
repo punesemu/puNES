@@ -28,6 +28,16 @@
 
 INLINE static void m252_update_chr_extra(void);
 
+struct _m252 {
+	WORD chr_map[8];
+	struct _m252_irq {
+		BYTE active;
+		WORD prescaler;
+		WORD count;
+		WORD reload;
+	} irq;
+} m252;
+
 void map_init_252(void) {
 	EXTCL_CPU_WR_MEM(252);
 	EXTCL_SAVE_MAPPER(252);

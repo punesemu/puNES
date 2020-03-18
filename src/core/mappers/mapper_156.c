@@ -24,6 +24,13 @@
 
 INLINE static void chr_setup_156(void);
 
+struct _m156 {
+	struct _m156_chr {
+		BYTE low[8];
+		BYTE high[8];
+	} chr;
+} m156;
+
 void map_init_156(void) {
 	EXTCL_CPU_WR_MEM(156);
 	EXTCL_SAVE_MAPPER(156);

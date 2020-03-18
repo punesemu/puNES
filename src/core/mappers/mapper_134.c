@@ -155,6 +155,12 @@
 	}\
 }
 
+struct _m134 {
+	BYTE reg;
+	WORD prg_map[4];
+	WORD chr_map[8];
+} m134;
+
 void map_init_134(void) {
 	EXTCL_CPU_WR_MEM(134);
 	EXTCL_SAVE_MAPPER(134);

@@ -33,6 +33,10 @@
 	value = (ax5705.chr_map[slot] & 0xF0) | (value & 0x0F);\
 	_ax5705_chr_rom_1k_update(slot)
 
+struct _ax5705 {
+	WORD chr_map[8];
+} ax5705;
+
 void map_init_AX5705(void) {
 	EXTCL_CPU_WR_MEM(AX5705);
 	EXTCL_SAVE_MAPPER(AX5705);

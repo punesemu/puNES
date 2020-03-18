@@ -20,21 +20,15 @@
 #include <stdlib.h>
 #include <string.h>
 #include "main.h"
-#include "debugger.h"
+#include "compilation_unit_orphan.h"
 #include "../gui/cmd_line.h"
 #include "emu.h"
 #include "emu_thread.h"
-#include "info.h"
 #include "settings.h"
-#include "mem_map.h"
 #include "video/gfx.h"
-#include "text.h"
-#include "conf.h"
 #include "version.h"
-#include "gui.h"
 #include "cheat.h"
 #include "recent_roms.h"
-#include "uncompress.h"
 #include "patcher.h"
 #include "ppu.h"
 

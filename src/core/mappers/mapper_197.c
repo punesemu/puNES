@@ -63,6 +63,10 @@ INLINE static void m197_update_chr(void);
 			break;\
 	}
 
+struct _m197 {
+	WORD chr_map[8];
+} m197;
+
 void map_init_197(void) {
 	EXTCL_CPU_WR_MEM(197);
 	EXTCL_SAVE_MAPPER(197);

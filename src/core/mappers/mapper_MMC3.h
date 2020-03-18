@@ -44,15 +44,18 @@ enum {
 	MMC6
 };
 
-struct _mmc3 {
+typedef struct _mmc3 {
 	BYTE prg_ram_protect;
 	BYTE bank_to_update;
 	BYTE prg_rom_cfg;
 	BYTE chr_rom_cfg;
-} mmc3;
-struct _kt008 {
+} _mmc3;
+typedef struct _kt008 {
 	BYTE value;
-} kt008;
+} _kt008;
+
+extern _mmc3 mmc3;
+extern _kt008 kt008;
 
 void map_init_MMC3(void);
 void extcl_cpu_wr_mem_MMC3(WORD address, BYTE value);

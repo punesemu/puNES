@@ -20,7 +20,9 @@
 #include "info.h"
 #include "mem_map.h"
 
-BYTE type;
+struct _hentmp {
+	BYTE type;
+} hentmp;
 
 void map_init_Hen(BYTE model) {
 	switch (model) {
@@ -38,11 +40,11 @@ void map_init_Hen(BYTE model) {
 		map_prg_rom_8k(4, 0, 0);
 	}
 
-	type = model;
+	hentmp.type = model;
 }
 
 void extcl_cpu_wr_mem_Hen_177(UNUSED(WORD address), BYTE value) {
-	if (type != HEN_FANKONG) {
+	if (hentmp.type != HEN_FANKONG) {
 		if (value & 0x20) {
 			mirroring_H();
 		} else {

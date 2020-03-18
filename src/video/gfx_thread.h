@@ -21,15 +21,17 @@
 
 #include "common.h"
 
+typedef struct _gfx_thread_public {
+	BYTE filtering;
+} _gfx_thread_public;
+
+extern _gfx_thread_public gfx_thread_public;
+
 #if defined (__cplusplus)
 #define EXTERNC extern "C"
 #else
 #define EXTERNC
 #endif
-
-EXTERNC struct _gfx_thread_public {
-	BYTE filtering;
-} gfx_thread_public;
 
 EXTERNC BYTE gfx_thread_init(void);
 EXTERNC void gfx_thread_quit(void);

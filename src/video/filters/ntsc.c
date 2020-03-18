@@ -18,9 +18,10 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "video/filters/ntsc.h"
+#include "video/gfx.h"
 #include "ppu.h"
 #include "overscan.h"
+#include "palette.h"
 
 nes_ntsc_t *ntsc;
 nes_ntsc_setup_t format[3];

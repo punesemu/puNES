@@ -35,6 +35,8 @@
 void nes20_submapper(void);
 BYTE nes20_ram_size(BYTE mode);
 
+_ines ines;
+
 BYTE ines_load_rom(void) {
 	_rom_mem rom;
 	BYTE tmp;

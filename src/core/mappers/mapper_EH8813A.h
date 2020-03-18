@@ -21,11 +21,6 @@
 
 #include "common.h"
 
-struct _eh8813a {
-	WORD address;
-	BYTE hwmode;
-} eh88131a;
-
 void map_init_EH8813A(void);
 void extcl_cpu_wr_mem_EH8813A(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_EH8813A(WORD address, BYTE openbus, BYTE before);

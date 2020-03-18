@@ -19,7 +19,7 @@
 #ifndef INPUT_ZAPPER_H_
 #define INPUT_ZAPPER_H_
 
-#include "../input.h"
+#include "input.h"
 
 void input_init_zapper(void);
 void input_rd_zapper(BYTE *value, BYTE nport, BYTE shift);

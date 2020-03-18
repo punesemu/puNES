@@ -21,15 +21,6 @@
 
 #include "common.h"
 
-struct _cityfight {
-	BYTE reg[2];
-	WORD chr_map[8];
-	struct _cityfight_irq {
-		BYTE enable;
-		WORD count;
-	} irq;
-} cityfight;
-
 void map_init_CITYFIGHT(void);
 void extcl_cpu_wr_mem_CITYFIGHT(WORD address, BYTE value);
 BYTE extcl_save_mapper_CITYFIGHT(BYTE mode, BYTE slot, FILE *fp);

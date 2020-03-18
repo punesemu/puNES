@@ -21,10 +21,6 @@
 
 #include "common.h"
 
-struct _bmc12in1 {
-	BYTE reg[3];
-} bmc12in1;
-
 void map_init_BMC12IN1(void);
 void extcl_cpu_wr_mem_BMC12IN1(WORD address, BYTE value);
 BYTE extcl_save_mapper_BMC12IN1(BYTE mode, BYTE slot, FILE *fp);

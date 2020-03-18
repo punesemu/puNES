@@ -25,6 +25,19 @@
 
 INLINE static void yoko_update(void);
 
+struct _yoko {
+	BYTE mode;
+	BYTE bank;
+	BYTE dip;
+	BYTE low[4];
+	BYTE reg[7];
+
+	struct _yoko_irq {
+		BYTE active;
+		WORD count;
+	} irq;
+} yoko;
+
 void map_init_YOKO(void) {
 	EXTCL_CPU_WR_MEM(YOKO);
 	EXTCL_CPU_RD_MEM(YOKO);

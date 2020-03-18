@@ -21,11 +21,6 @@
 
 #include "common.h"
 
-struct _bmcghostbusters63in1 {
-	BYTE reg[2];
-	BYTE index;
-} bmcghostbusters63in1;
-
 void map_init_BMCGHOSTBUSTERS63IN1(void);
 void extcl_cpu_wr_mem_BMCGHOSTBUSTERS63IN1(WORD address, BYTE value);
 //BYTE extcl_cpu_rd_mem_BMCGHOSTBUSTERS63IN1(WORD address, BYTE openbus, BYTE before);

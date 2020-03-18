@@ -17,7 +17,6 @@
  */
 
 #include <string.h>
-#include "input.h"
 #include "clock.h"
 #include "video/gfx.h"
 #include "info.h"
@@ -44,6 +43,13 @@
 
 #define SET_DECODE_EVENT(id, funct) port_funct[id].input_decode_event = funct
 #define SET_ADD_EVENT(id, funct) port_funct[id].input_add_event = funct
+
+_r4016 r4016;
+_port port[PORT_MAX];
+_port_funct port_funct[PORT_MAX];
+
+BYTE (*input_wr_reg)(BYTE value);
+BYTE (*input_rd_reg[2])(BYTE openbus, BYTE nport);
 
 void input_init(BYTE set_cursor) {
 	BYTE a;

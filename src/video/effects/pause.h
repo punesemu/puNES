@@ -21,16 +21,18 @@
 
 #include "common.h"
 
+typedef struct _pause_effect {
+	void *palette;
+	void *ntsc;
+} _pause_effect;
+
+extern _pause_effect pause_effect;
+
 #if defined (__cplusplus)
 #define EXTERNC extern "C"
 #else
 #define EXTERNC
 #endif
-
-EXTERNC struct _pause_effect {
-	void *palette;
-	void *ntsc;
-} pause_effect;
 
 EXTERNC BYTE pause_init(void);
 EXTERNC void pause_quit(void);

@@ -19,7 +19,7 @@
 #ifndef NSF_CONTROLLER_H_
 #define NSF_CONTROLLER_H_
 
-#include "../input.h"
+#include "input.h"
 
 void input_add_event_nsf_controller(BYTE index);
 BYTE input_decode_event_nsf_controller(BYTE mode, BYTE autorepeat, DBWORD event, BYTE type, _port *port);

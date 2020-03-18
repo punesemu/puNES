@@ -21,10 +21,6 @@
 
 #include "common.h"
 
-struct _whirlwind {
-	uint32_t reg;
-} whirlwind;
-
 void map_init_Whirlwind(void);
 void extcl_cpu_wr_mem_Whirlwind(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_Whirlwind(WORD address, BYTE openbus, BYTE before);

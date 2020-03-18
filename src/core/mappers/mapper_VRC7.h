@@ -23,7 +23,7 @@
 
 enum { VRC7A, VRC7B, VRC7UNL };
 
-struct _vrc7 {
+typedef struct _vrc7 {
 	BYTE reg;
 	BYTE enabled;
 	BYTE reload;
@@ -32,7 +32,9 @@ struct _vrc7 {
 	BYTE count;
 	BYTE delay;
 	WORD prescaler;
-} vrc7;
+} _vrc7;
+
+extern _vrc7 vrc7;
 
 void map_init_VRC7(BYTE revision);
 void map_init_NSF_VRC7(BYTE revision);

@@ -21,10 +21,6 @@
 
 #include "common.h"
 
-struct _lh32 {
-	BYTE reg;
-} lh32;
-
 void map_init_LH32(void);
 void extcl_cpu_wr_mem_LH32(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_LH32(WORD address, BYTE openbus, BYTE before);

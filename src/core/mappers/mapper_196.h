@@ -21,11 +21,6 @@
 
 #include "common.h"
 
-struct _m196 {
-	BYTE reg[2];
-	WORD prg_map[4];
-} m196;
-
 void map_init_196(void);
 void extcl_cpu_wr_mem_196(WORD address, BYTE value);
 BYTE extcl_save_mapper_196(BYTE mode, BYTE slot, FILE *fp);

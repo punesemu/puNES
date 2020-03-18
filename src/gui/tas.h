@@ -32,14 +32,7 @@ typedef struct _tas_input_log {
 	BYTE state;
 	BYTE port[PORT_MAX][8];
 } _tas_input_log;
-
-#if defined (__cplusplus)
-#define EXTERNC extern "C"
-#else
-#define EXTERNC
-#endif
-
-EXTERNC struct _tas {
+typedef struct _tas {
 	uTCHAR file[LENGTH_FILE_NAME_LONG];
 	FILE *fp;
 	uint8_t emulator;
@@ -54,7 +47,20 @@ EXTERNC struct _tas {
 	int32_t frame;
 	uint32_t total_lag_frames;
 	_tas_input_log il[TAS_CACHE];
-} tas;
+} _tas;
+
+extern _tas tas;
+
+extern void (*tas_header)(uTCHAR *file);
+extern void (*tas_read)(void);
+extern void (*tas_frame)(void);
+extern void (*tas_rewind)(int32_t frames_to_rewind);
+
+#if defined (__cplusplus)
+#define EXTERNC extern "C"
+#else
+#define EXTERNC
+#endif
 
 EXTERNC BYTE tas_file(uTCHAR *ext, uTCHAR *file);
 EXTERNC void tas_quit(void);
@@ -63,11 +69,6 @@ EXTERNC void tas_header_FM2(uTCHAR *file);
 EXTERNC void tas_read_FM2(void);
 EXTERNC void tas_frame_FM2(void);
 EXTERNC void tas_rewind_FM2(int32_t frames_to_rewind);
-
-EXTERNC void (*tas_header)(uTCHAR *file);
-EXTERNC void (*tas_read)(void);
-EXTERNC void (*tas_frame)(void);
-EXTERNC void (*tas_rewind)(int32_t frames_to_rewind);
 
 #undef EXTERNC
 

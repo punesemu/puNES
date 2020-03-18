@@ -19,14 +19,13 @@
 #ifndef OBJSETTINGS_HPP_
 #define OBJSETTINGS_HPP_
 
-#include "settings.h"
 #include <QtCore/QSettings>
 #include <QtCore/QFile>
 #include <QtGui/QKeySequence>
 #include <QtCore/QStringList>
 #include <QtGui/QKeyEvent>
+#include "settings.h"
 #include "conf.h"
-#include "overscan.h"
 #include "gui.h"
 
 class objSettings : public QSettings {

@@ -23,6 +23,15 @@
 #include "ppu.h"
 #include "save_slot.h"
 
+struct _m163 {
+	BYTE prg;
+	BYTE chr;
+	BYTE reg;
+	BYTE security;
+	BYTE trigger;
+	BYTE chr_mode;
+} m163;
+
 void map_init_163(void) {
 	EXTCL_CPU_WR_MEM(163);
 	EXTCL_CPU_RD_MEM(163);

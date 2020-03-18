@@ -21,11 +21,6 @@
 
 #include "common.h"
 
-struct _m222 {
-	BYTE count;
-	BYTE delay;
-} m222;
-
 void map_init_222(void);
 void extcl_cpu_wr_mem_222(WORD address, BYTE value);
 BYTE extcl_save_mapper_222(BYTE mode, BYTE slot, FILE *fp);

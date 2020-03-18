@@ -155,6 +155,12 @@
 	}\
 }
 
+struct _m44 {
+	BYTE reg;
+	WORD prg_map[4];
+	WORD chr_map[8];
+} m44;
+
 void map_init_44(void) {
 	EXTCL_CPU_WR_MEM(44);
 	EXTCL_SAVE_MAPPER(44);

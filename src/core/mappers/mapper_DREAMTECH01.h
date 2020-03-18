@@ -22,7 +22,6 @@
 #include "common.h"
 
 void map_init_DREAMTECH01(void);
-
 void extcl_cpu_wr_mem_DREAMTECH01(WORD address, BYTE value);
 
 #endif /* MAPPER_DREAMTECH01_H_ */

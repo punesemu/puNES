@@ -23,6 +23,10 @@
 #include "cpu.h"
 #include "save_slot.h"
 
+struct _m186 {
+	BYTE *prg_ram_bank2;
+} m186;
+
 void map_init_186(void) {
 	EXTCL_CPU_WR_MEM(186);
 	EXTCL_CPU_RD_MEM(186);

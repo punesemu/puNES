@@ -22,7 +22,6 @@
 #include "clock.h"
 #include "save_slot.h"
 #include "emu.h"
-#include "jstick.h"
 #include "shaders.h"
 #if defined (__unix__)
 #define XK_MISCELLANY

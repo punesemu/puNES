@@ -21,13 +21,6 @@
 
 #include "common.h"
 
-struct _m156 {
-	struct _m156_chr {
-		BYTE low[8];
-		BYTE high[8];
-	} chr;
-} m156;
-
 void map_init_156(void);
 void extcl_cpu_wr_mem_156(WORD address, BYTE value);
 BYTE extcl_save_mapper_156(BYTE mode, BYTE slot, FILE *fp);

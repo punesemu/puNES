@@ -25,6 +25,11 @@
 
 INLINE static void sync_31(void);
 
+struct _m31 {
+	WORD regs[8];
+	BYTE *rom_4k[8];
+} m31;
+
 void map_init_31(void) {
 	EXTCL_CPU_WR_MEM(31);
 	EXTCL_CPU_RD_MEM(31);
@@ -39,7 +44,6 @@ void map_init_31(void) {
 	info.mapper.extend_wr = TRUE;
 	info.mapper.extend_rd = TRUE;
 }
-
 void extcl_cpu_wr_mem_31(WORD address, BYTE value) {
 	if ((address < 0x5000) && (address > 0x5FFF)) {
 		return;

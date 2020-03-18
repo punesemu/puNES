@@ -21,10 +21,6 @@
 
 #include "common.h"
 
-struct _ks7057 {
-	BYTE reg[8];
-} ks7057;
-
 void map_init_KS7057(void);
 void extcl_cpu_wr_mem_KS7057(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_KS7057(WORD address, BYTE openbus, BYTE before);

@@ -37,14 +37,7 @@ typedef struct _info_sh1sum {
 		char string[41];
 	} chr;
 } _info_sh1sum;
-
-#if defined (__cplusplus)
-#define EXTERNC extern "C"
-#else
-#define EXTERNC
-#endif
-
-EXTERNC struct _info {
+typedef struct _info {
 	uTCHAR base_folder[LENGTH_FILE_NAME_MID];
 	struct _info_rom {
 		uTCHAR file[LENGTH_FILE_NAME_LONG];
@@ -134,8 +127,8 @@ EXTERNC struct _info {
 #if !defined (RELEASE)
 	BYTE snd_info;
 #endif
-} info;
+} _info;
 
-#undef EXTERNC
+extern _info info;
 
 #endif /* INFO_H_ */

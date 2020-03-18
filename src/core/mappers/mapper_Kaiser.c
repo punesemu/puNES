@@ -23,6 +23,18 @@
 #include "cpu.h"
 #include "save_slot.h"
 
+struct _ks202 {
+	BYTE enabled;
+	WORD count;
+	WORD reload;
+	BYTE delay;
+	BYTE reg;
+	BYTE *prg_ram_rd;
+} ks202;
+struct _ks7022 {
+	BYTE reg;
+} ks7022;
+
 void map_init_Kaiser(BYTE model) {
 	switch (model) {
 		case KS202:

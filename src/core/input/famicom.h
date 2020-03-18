@@ -19,7 +19,7 @@
 #ifndef INPUT_FAMICON_H_
 #define INPUT_FAMICON_H_
 
-#include "../input.h"
+#include "input.h"
 
 BYTE input_wr_reg_famicom(BYTE value);
 BYTE input_rd_reg_famicom_r4016(BYTE openbus, BYTE nport);

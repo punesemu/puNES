@@ -21,6 +21,11 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
+struct _eh8813a {
+	WORD address;
+	BYTE hwmode;
+} eh88131a;
+
 void map_init_EH8813A(void) {
 	EXTCL_CPU_WR_MEM(EH8813A);
 	EXTCL_CPU_RD_MEM(EH8813A);

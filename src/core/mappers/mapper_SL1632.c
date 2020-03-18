@@ -96,6 +96,18 @@ INLINE static void sl1632_update(void);
 		mirroring_V();\
 	}
 
+struct _sl1632 {
+	BYTE mode;
+	BYTE mirroring;
+	WORD prg_map[2];
+	WORD chr_map[8];
+	struct _sl1632_mmc3 {
+		BYTE mirroring;
+		WORD prg_map[4];
+		WORD chr_map[8];
+	} mmc3;
+} sl1632;
+
 void map_init_SL1632(void) {
 	EXTCL_CPU_WR_MEM(SL1632);
 	EXTCL_SAVE_MAPPER(SL1632);

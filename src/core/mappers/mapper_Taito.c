@@ -20,10 +20,22 @@
 #include "mappers.h"
 #include "info.h"
 #include "mem_map.h"
+#include "cpu.h"
+#include "ppu.h"
 #include "irqA12.h"
 #include "save_slot.h"
 
-BYTE type;
+struct _taito_X1005 {
+	BYTE ram[0x80];
+	BYTE enable;
+} taito_X1005;
+struct _taito_X1017 {
+	BYTE chr[6];
+	BYTE control;
+} taito_X1017;
+struct _taitotmp {
+	BYTE type;
+} taitotmp;
 
 void map_init_Taito(BYTE model) {
 	switch (model) {
@@ -96,7 +108,7 @@ void map_init_Taito(BYTE model) {
 			break;
 	}
 
-	type = model;
+	taitotmp.type = model;
 }
 
 void extcl_cpu_wr_mem_Taito_TC0190FMC(WORD address, BYTE value) {
@@ -247,7 +259,7 @@ void extcl_cpu_wr_mem_Taito_X1005(WORD address, BYTE value) {
 			const BYTE slot = (address & 0x0001) << 1;
 			DBWORD bank;
 
-			if (type == X1005B) {
+			if (taitotmp.type == X1005B) {
 				if (value & 0x80) {
 					mirroring_SCR1();
 				} else {
@@ -263,7 +275,7 @@ void extcl_cpu_wr_mem_Taito_X1005(WORD address, BYTE value) {
 		}
 		case 0x7EF2:
 		case 0x7EF4:
-			if (type == X1005B) {
+			if (taitotmp.type == X1005B) {
 				if (value & 0x80) {
 					mirroring_SCR1();
 				} else {
@@ -274,7 +286,7 @@ void extcl_cpu_wr_mem_Taito_X1005(WORD address, BYTE value) {
 			chr.bank_1k[(address & 0x0007) + 2] = chr_chip_byte_pnt(0, value << 10);
 			return;
 		case 0x7EF6:
-			if (type == X1005A) {
+			if (taitotmp.type == X1005A) {
 				if (value & 0x01) {
 					mirroring_V();
 				} else {

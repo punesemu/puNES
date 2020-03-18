@@ -31,13 +31,13 @@ enum save_slot_misc {
 enum save_slot_mode { SAVE_SLOT_SAVE, SAVE_SLOT_READ, SAVE_SLOT_COUNT, SAVE_SLOT_INCDEC };
 
 #define _save_slot_ele(mode, slot, src, size)\
-	if (save_slot_element_struct(mode, slot, (uintptr_t *) &src, size, fp, FALSE)) {\
+	if (save_slot_element_struct(mode, slot, (uintptr_t *)&src, size, fp, FALSE)) {\
 		return (EXIT_ERROR);\
 	}
 #define save_slot_ele(mode, slot, src)\
 	_save_slot_ele(mode, slot, src, sizeof(src))
 #define save_slot_mem(mode, slot, src, size, preview)\
-	if (save_slot_element_struct(mode, slot, (uintptr_t *) src, size, fp, preview)) {\
+	if (save_slot_element_struct(mode, slot, (uintptr_t *)src, size, fp, preview)) {\
 		return (EXIT_ERROR);\
 	}
 #define save_slot_int(mode, slot, value)\
@@ -101,20 +101,22 @@ enum save_slot_mode { SAVE_SLOT_SAVE, SAVE_SLOT_READ, SAVE_SLOT_COUNT, SAVE_SLOT
 	save_slot_ele(mode, slot, square.length.halt);\
 	save_slot_ele(mode, slot, square.output)
 
-#if defined (__cplusplus)
-#define EXTERNC extern "C"
-#else
-#define EXTERNC
-#endif
-
-EXTERNC struct _save_slot {
+typedef struct _save_slot {
 	uint32_t version;
 	DBWORD slot;
 	BYTE state[SAVE_SLOTS_TOTAL];
 	DBWORD tot_size[SAVE_SLOTS_TOTAL];
 	uTCHAR rom_file[LENGTH_FILE_NAME_LONG];
 	_info_sh1sum sha1sum;
-} save_slot;
+} _save_slot;
+
+extern _save_slot save_slot;
+
+#if defined (__cplusplus)
+#define EXTERNC extern "C"
+#else
+#define EXTERNC
+#endif
 
 EXTERNC BYTE save_slot_save(BYTE slot);
 EXTERNC BYTE save_slot_load(BYTE slot);

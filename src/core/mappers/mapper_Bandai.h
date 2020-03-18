@@ -30,32 +30,6 @@ enum {
 	FAMICOMJUMPII = 100
 };
 
-typedef struct {
-	BYTE eeprom[256];
-	WORD size;
-	BYTE mode;
-	BYTE next;
-	BYTE bit;
-	BYTE address;
-	BYTE data;
-	BYTE scl;
-	BYTE sda;
-	BYTE rw;
-	BYTE output;
-} _FCGXeeprom;
-struct _b161x02x74 {
-	BYTE chr_rom_bank;
-} b161x02x74;
-struct _FCGX {
-	BYTE reg[8];
-	BYTE enabled;
-	WORD count;
-	WORD reload;
-	BYTE delay;
-	_FCGXeeprom e0;
-	_FCGXeeprom e1;
-} FCGX;
-
 void map_init_Bandai(BYTE model);
 
 void extcl_cpu_wr_mem_Bandai_161x02x74(WORD address, BYTE value);

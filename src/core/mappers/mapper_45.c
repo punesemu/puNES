@@ -160,6 +160,14 @@
 	}\
 }
 
+struct _m45 {
+	BYTE reg[4];
+	BYTE index;
+	BYTE read;
+	WORD prg_map[4];
+	WORD chr_map[8];
+} m45;
+
 void map_init_45(void) {
 	EXTCL_CPU_WR_MEM(45);
 	EXTCL_CPU_RD_MEM(45);

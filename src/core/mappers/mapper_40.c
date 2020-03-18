@@ -23,7 +23,14 @@
 #include "cpu.h"
 #include "save_slot.h"
 
-BYTE *prg_6000;
+struct _m40 {
+	BYTE enabled;
+	WORD count;
+	BYTE delay;
+} m40;
+struct _m40tmp {
+	BYTE *prg_6000;
+} m40tmp;
 
 void map_init_40(void) {
 	EXTCL_CPU_WR_MEM(40);
@@ -39,7 +46,7 @@ void map_init_40(void) {
 		mapper.rom_map_to[2] = 0;
 	}
 
-	prg_6000 = prg_chip_byte_pnt(0, 6 << 13);
+	m40tmp.prg_6000 = prg_chip_byte_pnt(0, 6 << 13);
 
 	mapper.rom_map_to[0] = 4;
 	mapper.rom_map_to[1] = 5;
@@ -73,7 +80,7 @@ BYTE extcl_cpu_rd_mem_40(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 		return (openbus);
 	}
 
-	return (prg_6000[address & 0x1FFF]);
+	return (m40tmp.prg_6000[address & 0x1FFF]);
 }
 BYTE extcl_save_mapper_40(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, m40.enabled);

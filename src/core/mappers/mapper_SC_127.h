@@ -21,13 +21,6 @@
 
 #include "common.h"
 
-struct _sc127 {
-	struct _sc127_irq {
-		BYTE active;
-		WORD count;
-	} irq;
-} sc127;
-
 void map_init_SC_127(void);
 void extcl_cpu_wr_mem_SC_127(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_SC_127(WORD address, BYTE openbus, BYTE before);

@@ -24,6 +24,11 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
+struct _m222 {
+	BYTE count;
+	BYTE delay;
+} m222;
+
 void map_init_222(void) {
 	EXTCL_CPU_WR_MEM(222);
 	EXTCL_SAVE_MAPPER(222);

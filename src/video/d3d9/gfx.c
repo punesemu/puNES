@@ -21,9 +21,7 @@
 
 #include "d3d9.h"
 #include "video/gfx_thread.h"
-#include "fps.h"
 #include "gui.h"
-#include "info.h"
 #include "conf.h"
 #include "ppu.h"
 #include "clock.h"
@@ -33,6 +31,8 @@
 #include "settings.h"
 #include "video/effects/pause.h"
 #include "video/effects/tv_noise.h"
+
+_gfx gfx;
 
 BYTE gfx_init(void) {
 	gfx.screenshot.save = FALSE;
@@ -109,8 +109,7 @@ void gfx_quit(void) {
 
 	d3d9_quit();
 }
-void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, BYTE palette,
-	BYTE force_scale, BYTE force_palette) {
+void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, BYTE palette, BYTE force_scale, BYTE force_palette) {
 	BYTE set_mode;
 	WORD width, height;
 	DBWORD old_shader = cfg->shader;

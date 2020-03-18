@@ -21,7 +21,6 @@
 
 #include "apu.h"
 #include "input.h"
-#include "overscan.h"
 
 typedef struct _last_pos {
 	int x;
@@ -96,14 +95,7 @@ typedef struct _config {
 	_last_pos last_pos_settings;
 } _config;
 
-#if defined (__cplusplus)
-#define EXTERNC extern "C"
-#else
-#define EXTERNC
-#endif
-
-EXTERNC _config cfg_from_file, *cfg;
-
-#undef EXTERNC
+extern _config *cfg;
+extern _config cfg_from_file;
 
 #endif /* CONF_H_ */

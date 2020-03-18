@@ -16,11 +16,14 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include "video/filters/hqx.h"
+#include "video/gfx.h"
+#include "palette.h"
 #include "ppu.h"
 
 uint32_t RGBtoYUV[NUM_COLORS];
 uint32_t YUV1, YUV2;
+
+_hqnx hqnx;
 
 void hqx_init(void) {
 	/* Initalize RGB to YUV lookup table */

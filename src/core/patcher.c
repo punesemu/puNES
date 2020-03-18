@@ -26,7 +26,6 @@
 #include "emu.h"
 #include "gui.h"
 #include "text.h"
-#include "uncompress.h"
 #include "cheat.h"
 #include "conf.h"
 
@@ -44,6 +43,8 @@ static uint32_t patcher_crc32(unsigned char *message, unsigned int len);
 static BYTE patcher_ips(_rom_mem *patch, _rom_mem *rom);
 static BYTE patcher_bps_decode(_rom_mem *patch, size_t *size);
 static BYTE patcher_bps(_rom_mem *patch, _rom_mem *rom);
+
+_patcher patcher;
 
 void patcher_init(void) {
 	memset(&patcher, 0x00, sizeof(patcher));

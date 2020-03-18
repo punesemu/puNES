@@ -25,7 +25,6 @@
 #include "gui.h"
 #include "fps.h"
 #include "clock.h"
-#include "apu.h"
 #include "wave.h"
 #if defined (DEBUG)
 #define __inline
@@ -92,6 +91,12 @@ static IXAudio2VoiceCallbackVtbl voice_callbacks_vtable = {
 };
 static IXAudio2VoiceCallback voice_callbacks = { &voice_callbacks_vtable };
 static _callback_data cbd;
+
+_snd snd;
+_snd_list snd_list;
+
+void (*snd_apu_tick)(void);
+void (*snd_end_frame)(void);
 
 BYTE snd_init(void) {
 	memset(&snd, 0x00, sizeof(_snd));

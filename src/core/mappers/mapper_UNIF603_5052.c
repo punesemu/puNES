@@ -24,6 +24,10 @@
 
 static const BYTE unif603_5052_vlu[4] = { 0x00, 0x02, 0x02, 0x03 };
 
+struct _unif603_5052 {
+	BYTE reg;
+} unif603_5052;
+
 void map_init_UNIF603_5052(void) {
 	EXTCL_CPU_WR_MEM(UNIF603_5052);
 	EXTCL_CPU_RD_MEM(UNIF603_5052);

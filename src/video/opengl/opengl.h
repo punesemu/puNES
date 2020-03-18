@@ -28,6 +28,16 @@
 #include "common.h"
 #include "video/gfx.h"
 
+enum _opengl_texture_format {
+	TI_INTFRM = GL_RGBA8,
+	TI_FRM = GL_BGRA,
+	TI_TYPE = GL_UNSIGNED_BYTE,
+	TI_F_INTFRM = GL_RGBA32F,
+	TI_F_TYPE = GL_FLOAT,
+	TI_S_INTFRM = GL_SRGB8_ALPHA8,
+	TI_S_TYPE = GL_UNSIGNED_BYTE
+};
+
 #if defined (WITH_OPENGL_CG)
 typedef struct _shader_prg_cg {
 	CGprogram v, f;
@@ -219,23 +229,13 @@ typedef struct _opengl {
 #endif
 } _opengl;
 
-enum _opengl_texture_format {
-	TI_INTFRM = GL_RGBA8,
-	TI_FRM = GL_BGRA,
-	TI_TYPE = GL_UNSIGNED_BYTE,
-	TI_F_INTFRM = GL_RGBA32F,
-	TI_F_TYPE = GL_FLOAT,
-	TI_S_INTFRM = GL_SRGB8_ALPHA8,
-	TI_S_TYPE = GL_UNSIGNED_BYTE
-};
+extern _opengl opengl;
 
 #if defined (__cplusplus)
 #define EXTERNC extern "C"
 #else
 #define EXTERNC
 #endif
-
-EXTERNC _opengl opengl;
 
 EXTERNC BYTE opengl_init(void);
 EXTERNC void opengl_quit(void);

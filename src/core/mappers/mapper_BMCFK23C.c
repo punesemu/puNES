@@ -28,6 +28,18 @@ static void prg_swap_BMCFK23CPW(WORD address, WORD value);
 static void chr_fix_BMCFK23CPW(BYTE value);
 static void chr_swap_BMCFK23CCW(WORD address, WORD value);
 
+struct _bmcfk23c {
+	uint32_t dipswitch;
+	BYTE unromchr;
+	BYTE A000;
+	BYTE A001;
+	BYTE reg[8];
+	BYTE mmc3[8];
+	WORD chr_map[8];
+	/* questo posso tranquillamente non salvarlo */
+	BYTE prg_mask;
+} bmcfk23c;
+
 void map_init_BMCFK23C(void) {
 	EXTCL_CPU_WR_MEM(BMCFK23C);
 	EXTCL_SAVE_MAPPER(BMCFK23C);

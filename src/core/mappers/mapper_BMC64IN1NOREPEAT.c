@@ -27,6 +27,10 @@ INLINE static void bmc64in1norepeat_update_chr(void);
 #define bmc64in1norepeat_prg_8k()\
 	((bmc64in1norepeat.reg[1] & 0x1F) << 1) | ((bmc64in1norepeat.reg[1] >> 6) & 0x01);
 
+struct _bmc64in1norepeat {
+	BYTE reg[4];
+} bmc64in1norepeat;
+
 void map_init_BMC64IN1NOREPEAT(void) {
 	EXTCL_CPU_WR_MEM(BMC64IN1NOREPEAT);
 	EXTCL_SAVE_MAPPER(BMC64IN1NOREPEAT);

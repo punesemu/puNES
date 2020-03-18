@@ -103,7 +103,20 @@ enum {
 
 INLINE static void irq_clock_Tengen_Rambo(int delay);
 
-BYTE type;
+struct _tengen_rambo {
+	BYTE prg_mode;
+	BYTE chr_mode;
+	BYTE reg_index;
+	BYTE chr[8];
+	BYTE prg[4];
+	BYTE irq_mode;
+	BYTE irq_delay;
+	BYTE irq_prescaler;
+	BYTE irq_plus_clock;
+} tengen_rambo;
+struct _tengentmp {
+	BYTE type;
+} tengentmp;
 
 void map_init_Tengen(BYTE model) {
 	switch (model) {
@@ -151,7 +164,7 @@ void map_init_Tengen(BYTE model) {
 			break;
 	}
 
-	type = model;
+	tengentmp.type = model;
 }
 
 void extcl_cpu_wr_mem_Tengen_Rambo(WORD address, BYTE value) {
@@ -171,7 +184,7 @@ void extcl_cpu_wr_mem_Tengen_Rambo(WORD address, BYTE value) {
 			switch (tengen_rambo.reg_index) {
 				case 0x00:
 				case 0x01:
-					if ((type == T800037) && !(tengen_rambo.chr_mode & 0x80)) {
+					if ((tengentmp.type == T800037) && !(tengen_rambo.chr_mode & 0x80)) {
 						const BYTE slot = tengen_rambo.reg_index << 1;
 
 						ntbl.bank_1k[slot] = &ntbl.data[((value >> 7) ^ 0x01) << 10];
@@ -186,7 +199,7 @@ void extcl_cpu_wr_mem_Tengen_Rambo(WORD address, BYTE value) {
 				case 0x03:
 				case 0x04:
 				case 0x05:
-					if ((type == T800037) && (tengen_rambo.chr_mode & 0x80)) {
+					if ((tengentmp.type == T800037) && (tengen_rambo.chr_mode & 0x80)) {
 						ntbl.bank_1k[tengen_rambo.reg_index - 2] = &ntbl.data[((value >> 7) ^ 0x01)
 							<< 10];
 					}
@@ -229,7 +242,7 @@ void extcl_cpu_wr_mem_Tengen_Rambo(WORD address, BYTE value) {
 			return;
 		}
 		case 0xA000:
-			if (type == T800037) {
+			if (tengentmp.type == T800037) {
 				return;
 			}
 			if (value & 0x01) {

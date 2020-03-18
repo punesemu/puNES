@@ -23,6 +23,14 @@
 #include "cpu.h"
 #include "save_slot.h"
 
+struct _m183 {
+	BYTE enabled;
+	BYTE prescaler;
+	BYTE count;
+	BYTE delay;
+	BYTE chr_rom_bank[8];
+} m183;
+
 void map_init_183(void) {
 	EXTCL_CPU_WR_MEM(183);
 	EXTCL_CPU_RD_MEM(183);

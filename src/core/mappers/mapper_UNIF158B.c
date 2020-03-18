@@ -45,6 +45,11 @@ INLINE static void unif158b_update_prg(void);
 
 static const BYTE unif158b_vlu[8] = { 0x00, 0x00, 0x00, 0x01, 0x02, 0x04, 0x0F, 0x00 };
 
+struct _unif158b {
+	BYTE reg[8];
+	WORD prg_map[4];
+} unif158b;
+
 void map_init_UNIF158B(void) {
 	EXTCL_CPU_WR_MEM(UNIF158B);
 	EXTCL_CPU_RD_MEM(UNIF158B);

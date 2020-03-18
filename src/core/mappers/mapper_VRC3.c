@@ -23,6 +23,15 @@
 #include "cpu.h"
 #include "save_slot.h"
 
+struct _vrc3 {
+	BYTE enabled;
+	WORD reload;
+	BYTE mode;
+	BYTE acknowledge;
+	WORD mask;
+	WORD count;
+} vrc3;
+
 void map_init_VRC3(void) {
 	EXTCL_CPU_WR_MEM(VRC3);
 	EXTCL_SAVE_MAPPER(VRC3);

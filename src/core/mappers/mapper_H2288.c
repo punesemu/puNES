@@ -80,6 +80,12 @@ INLINE static void h2288_update_chr(void);
 			break;\
 	}
 
+struct _h2288 {
+	BYTE reg[2];
+	WORD prg_map[4];
+	WORD chr_map[8];
+} h2288;
+
 void map_init_H2288(void) {
 	EXTCL_CPU_WR_MEM(H2288);
 	EXTCL_SAVE_MAPPER(H2288);

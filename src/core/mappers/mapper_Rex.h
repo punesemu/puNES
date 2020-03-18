@@ -23,11 +23,6 @@
 
 enum { DBZ };
 
-struct _rex_dbz {
-	WORD chr_rom_bank[8];
-	BYTE chr_high;
-} rex_dbz;
-
 void map_init_Rex(BYTE model);
 void extcl_cpu_wr_mem_Rex_dbz(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_Rex_dbz(WORD address, BYTE openbus, BYTE before);

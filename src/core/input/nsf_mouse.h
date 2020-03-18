@@ -19,7 +19,7 @@
 #ifndef NSF_MOUSE_H_
 #define NSF_MOUSE_H_
 
-#include "../input.h"
+#include "input.h"
 
 void input_init_nsf_mouse(void);
 void input_add_event_nsf_mouse(BYTE index);

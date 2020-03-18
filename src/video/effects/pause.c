@@ -21,7 +21,9 @@
 #include "pause.h"
 #include "conf.h"
 #include "video/gfx.h"
-#include "video/filters/ntsc.h"
+#include "palette.h"
+
+_pause_effect pause_effect;
 
 BYTE pause_init(void) {
 	uint32_t *palette;

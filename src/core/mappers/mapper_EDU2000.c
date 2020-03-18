@@ -22,6 +22,11 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
+struct _edu2000 {
+	BYTE reg;
+	uint32_t prg_ram_address;
+} edu2000;
+
 void map_init_EDU2000(void) {
 	EXTCL_CPU_WR_MEM(EDU2000);
 	EXTCL_CPU_RD_MEM(EDU2000);

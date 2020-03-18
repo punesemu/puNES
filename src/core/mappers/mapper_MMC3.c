@@ -33,6 +33,9 @@
 	mmc3.irq_reload = FALSE;\
 }
 
+_mmc3 mmc3;
+_kt008 kt008;
+
 void map_init_MMC3(void) {
 	EXTCL_CPU_WR_MEM(MMC3);
 	EXTCL_SAVE_MAPPER(MMC3);

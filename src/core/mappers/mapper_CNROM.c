@@ -22,12 +22,18 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
-BYTE mask, state;
+struct _cnrom_2627 {
+	BYTE chr_rd_enable;
+} cnrom_2627;
+struct _cnromtmp {
+	BYTE mask;
+	BYTE state;
+} cnromtmp;
 
 void map_init_CNROM() {
 	EXTCL_CPU_WR_MEM(CNROM);
 
-	mask = state = 0x00;
+	cnromtmp.mask = cnromtmp.state = 0x00;
 
 	/*
 	 * "Cybernoid - The Fighting Machine (U) [!].nes" vuole
@@ -41,20 +47,20 @@ void map_init_CNROM() {
 		mapper.internal_struct_size[0] = sizeof(cnrom_2627);
 
 		memset(&cnrom_2627, 0x00, sizeof(cnrom_2627));
-		mask = 0x03;
+		cnromtmp.mask = 0x03;
 
 		switch (info.id) {
 			case CNROM_26CE27CE:
-				state = 0x03;
+				cnromtmp.state = 0x03;
 				break;
 			case CNROM_26CE27NCE:
-				state = 0x01;
+				cnromtmp.state = 0x01;
 				break;
 			case CNROM_26NCE27CE:
-				state = 0x02;
+				cnromtmp.state = 0x02;
 				break;
 			case CNROM_26NCE27NCE:
-				state = 0x00;
+				cnromtmp.state = 0x00;
 				break;
 		}
 	}
@@ -67,13 +73,13 @@ void extcl_cpu_wr_mem_CNROM(WORD address, BYTE value) {
 		value &= prg_rom_rd(address);
 	}
 
-	if (mask) {
-		if ((value & mask) == state) {
+	if (cnromtmp.mask) {
+		if ((value & cnromtmp.mask) == cnromtmp.state) {
 			cnrom_2627.chr_rd_enable = FALSE;
 		} else {
 			cnrom_2627.chr_rd_enable = TRUE;
 		}
-		value &= ~mask;
+		value &= ~cnromtmp.mask;
 	}
 
 	control_bank(info.chr.rom[0].max.banks_8k)

@@ -23,10 +23,8 @@
 #include "recent_roms.h"
 #include "info.h"
 #include "conf.h"
-#include "cheat.h"
 #include "settings.h"
 #include "gui.h"
-#include "uncompress.h"
 
 #define RECENT_ROMS_FILE "recent.cfg"
 

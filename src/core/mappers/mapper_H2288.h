@@ -21,12 +21,6 @@
 
 #include "common.h"
 
-struct _h2288 {
-	BYTE reg[2];
-	WORD prg_map[4];
-	WORD chr_map[8];
-} h2288;
-
 void map_init_H2288(void);
 void extcl_cpu_wr_mem_H2288(WORD address, BYTE value);
 BYTE extcl_save_mapper_H2288(BYTE mode, BYTE slot, FILE *fp);

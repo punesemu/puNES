@@ -257,20 +257,13 @@ typedef struct _tile {
 	WORD l_byte;
 	DBWORD h_byte;
 } _tile;
-
-#if defined (__cplusplus)
-#define EXTERNC extern "C"
-#else
-#define EXTERNC
-#endif
-
-EXTERNC struct _ppu_sclines {
+typedef struct _ppu_sclines {
 	WORD total;
 	WORD frame;
 	WORD vint;
 	WORD vint_extra;
-} ppu_sclines;
-EXTERNC struct _overclock {
+} _ppu_sclines;
+typedef struct _overclock {
 	BYTE in_extra_sclines;
 	BYTE DMC_in_use;
 	struct _extra_sclines {
@@ -278,21 +271,29 @@ EXTERNC struct _overclock {
 		WORD pr;
 		WORD total;
 	} sclines;
-} overclock;
+} _overclock;
 
-EXTERNC _ppu ppu;
-EXTERNC _screen screen;
-EXTERNC _ppu_openbus ppu_openbus;
-EXTERNC _r2000 r2000;
-EXTERNC _r2001 r2001;
-EXTERNC _r2002 r2002;
-EXTERNC _r2006 r2006;
-EXTERNC _r2xxx r2003, r2004, r2007;
-EXTERNC _spr_evaluate spr_ev;
-EXTERNC _spr sprite[8], sprite_plus[8];
-EXTERNC _spr_evaluate spr_ev_unl;
-EXTERNC _spr sprite_unl[56], sprite_plus_unl[56];
-EXTERNC _tile tile_render, tile_fetch;
+extern _ppu ppu;
+extern _screen screen;
+extern _ppu_openbus ppu_openbus;
+extern _r2000 r2000;
+extern _r2001 r2001;
+extern _r2002 r2002;
+extern _r2006 r2006;
+extern _r2xxx r2003, r2004, r2007;
+extern _spr_evaluate spr_ev;
+extern _spr sprite[8], sprite_plus[8];
+extern _spr_evaluate spr_ev_unl;
+extern _spr sprite_unl[56], sprite_plus_unl[56];
+extern _tile tile_render, tile_fetch;
+extern _ppu_sclines ppu_sclines;
+extern _overclock overclock;
+
+#if defined (__cplusplus)
+#define EXTERNC extern "C"
+#else
+#define EXTERNC
+#endif
 
 EXTERNC void ppu_init(void);
 EXTERNC void ppu_quit(void);

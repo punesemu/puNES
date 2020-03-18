@@ -28,18 +28,6 @@ enum {
 	KS7022
 };
 
-struct _ks202 {
-	BYTE enabled;
-	WORD count;
-	WORD reload;
-	BYTE delay;
-	BYTE reg;
-	BYTE *prg_ram_rd;
-} ks202;
-struct _ks7022 {
-	BYTE reg;
-} ks7022;
-
 void map_init_Kaiser(BYTE model);
 
 void extcl_cpu_wr_mem_Kaiser_ks202(WORD address, BYTE value);

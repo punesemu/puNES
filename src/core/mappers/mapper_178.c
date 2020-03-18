@@ -24,7 +24,13 @@
 
 INLINE static void prg_setup_178(void);
 
-BYTE model;
+struct _m178 {
+	BYTE reg[3];
+	BYTE prg_mode;
+} m178;
+struct _m178tmp {
+	BYTE model;
+} m178tmp;
 
 void map_init_178(BYTE type) {
 	EXTCL_CPU_WR_MEM(178);
@@ -41,7 +47,7 @@ void map_init_178(BYTE type) {
 
 	info.mapper.extend_wr = TRUE;
 
-	model = type;
+	m178tmp.model = type;
 }
 void extcl_cpu_wr_mem_178(WORD address, BYTE value) {
 	switch (address) {
@@ -55,7 +61,7 @@ void extcl_cpu_wr_mem_178(WORD address, BYTE value) {
 			prg_setup_178();
 			return;
 		case 0x4801:
-			if (model == M178EC32IN1) {
+			if (m178tmp.model == M178EC32IN1) {
 				m178.reg[1] = value;
 			} else {
 				m178.reg[0] = value;
@@ -63,7 +69,7 @@ void extcl_cpu_wr_mem_178(WORD address, BYTE value) {
 			prg_setup_178();
 			return;
 		case 0x4802:
-			if (model == M178EC32IN1) {
+			if (m178tmp.model == M178EC32IN1) {
 				m178.reg[0] = value;
 			} else {
 				m178.reg[1] = value;
@@ -86,7 +92,7 @@ BYTE extcl_save_mapper_178(BYTE mode, BYTE slot, FILE *fp) {
 INLINE static void prg_setup_178(void) {
 	DBWORD value;
 
-	if (model == M178EC32IN1) {
+	if (m178tmp.model == M178EC32IN1) {
 		value = (m178.reg[1] << 3) | ((m178.reg[0] & 0x07) << 1);
 	} else {
 		value = (m178.reg[1] << 3) | (m178.reg[0] & 0x07);
@@ -101,7 +107,7 @@ INLINE static void prg_setup_178(void) {
 		case 1:
 			control_bank(info.prg.rom[0].max.banks_16k)
 			map_prg_rom_8k(2, 0, value);
-			if (model == M178EC32IN1) {
+			if (m178tmp.model == M178EC32IN1) {
 				value = (m178.reg[1] << 3) | 0x07;
 			} else {
 				value = (m178.reg[1] << 3) | 0x07;
@@ -117,7 +123,7 @@ INLINE static void prg_setup_178(void) {
 		case 3:
 			control_bank(info.prg.rom[0].max.banks_16k)
 			map_prg_rom_8k(2, 0, value);
-			if (model == M178EC32IN1) {
+			if (m178tmp.model == M178EC32IN1) {
 				value = (m178.reg[1] << 3) | 0x06 | ((m178.reg[0] & 0x01) << 1);
 			} else {
 				value = (m178.reg[1] << 3) | 0x06 | (m178.reg[0] & 0x01);

@@ -21,12 +21,6 @@
 
 #include "common.h"
 
-struct _m249 {
-	BYTE reg;
-	WORD prg_map[4];
-	WORD chr_map[8];
-} m249;
-
 void map_init_249(void);
 void extcl_cpu_wr_mem_249(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_249(WORD address, BYTE openbus, BYTE before);

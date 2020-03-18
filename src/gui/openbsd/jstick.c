@@ -24,10 +24,8 @@
 #include <errno.h>
 #include <pthread.h>
 #include <sys/stat.h>
-#include "jstick.h"
-#include "input.h"
-#include "conf.h"
 #include "gui.h"
+#include "conf.h"
 
 #ifndef __FreeBSD_kernel_version
 #define __FreeBSD_kernel_version __FreeBSD_version
@@ -235,6 +233,8 @@ static struct _jstick {
 		_js_device **devices;
 	} jdd;
 } jstick;
+
+_js js[PORT_MAX], js_shcut;
 
 void js_init(BYTE first_time) {
 	int i;

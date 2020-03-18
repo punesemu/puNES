@@ -21,11 +21,6 @@
 
 #include "common.h"
 
-struct _lh10 {
-	BYTE ind;
-	BYTE reg[8];
-} lh10;
-
 void map_init_LH10(void);
 void extcl_after_mapper_init_LH10(void);
 void extcl_cpu_wr_mem_LH10(WORD address, BYTE value);

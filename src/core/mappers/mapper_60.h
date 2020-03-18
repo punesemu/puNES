@@ -23,12 +23,6 @@
 
 enum { MAP60, MAP60_VT5201 };
 
-struct _m60 {
-	BYTE index;
-	// per la variante vt5201
-	WORD address;
-} m60;
-
 void map_init_60(void);
 void extcl_cpu_wr_mem_60(WORD address, BYTE value);
 BYTE extcl_save_mapper_60(BYTE mode, BYTE slot, FILE *fp);

@@ -31,20 +31,6 @@ enum {
 	MAJORLEAGUE
 };
 
-struct _irem_G101 {
-	BYTE prg_mode;
-	BYTE prg_reg;
-} irem_G101;
-struct _irem_H3000 {
-	BYTE enable;
-	WORD count;
-	WORD reload;
-	BYTE delay;
-} irem_H3000;
-struct _irem_LROG017 {
-	BYTE filler;
-} irem_LROG017;
-
 void map_init_Irem(BYTE model);
 
 void extcl_cpu_wr_mem_Irem_G101(WORD address, BYTE value);

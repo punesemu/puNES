@@ -25,7 +25,6 @@
 #include "mem_map.h"
 #include "cpu.h"
 #include "ppu.h"
-#include "apu.h"
 #include "mappers.h"
 #include "irqA12.h"
 #include "irql2f.h"
@@ -38,11 +37,12 @@
 #include "fds.h"
 #include "nsf.h"
 #include "cheat.h"
-#include "info.h"
 
 #define SAVE_VERSION 23
 
 static uTCHAR *name_slot_file(BYTE slot);
+
+_save_slot save_slot;
 
 BYTE save_slot_save(BYTE slot) {
 	uTCHAR *file;

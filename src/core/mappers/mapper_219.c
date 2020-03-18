@@ -28,6 +28,10 @@
 	control_bank(info.chr.rom[0].max.banks_1k)\
 	chr.bank_1k[b] = chr_chip_byte_pnt(0, value << 10)
 
+struct _m219 {
+	BYTE reg[3];
+} m219;
+
 void map_init_219(void) {
 	EXTCL_CPU_WR_MEM(219);
 	EXTCL_SAVE_MAPPER(219);

@@ -24,6 +24,10 @@
 
 INLINE static void t262_update(BYTE value);
 
+struct _t262 {
+	BYTE reg[5];
+} t262;
+
 void map_init_T262(void) {
 	EXTCL_CPU_WR_MEM(T262);
 	EXTCL_SAVE_MAPPER(T262);

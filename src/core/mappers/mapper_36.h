@@ -21,10 +21,6 @@
 
 #include "common.h"
 
-struct _m36 {
-	BYTE regs[5];
-} m36;
-
 void map_init_36(void);
 void extcl_cpu_wr_mem_36(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_36(WORD address, BYTE openbus, BYTE before);

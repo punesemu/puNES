@@ -16,14 +16,46 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef MAPPER_RCM_H_
-#define MAPPER_RCM_H_
+#ifndef COMPILATION_UNIT_ORPHAN_H_
+#define COMPILATION_UNIT_ORPHAN_H_
 
-#include "common.h"
+#include "conf.h"
+_config *cfg;
+_config cfg_from_file;
 
-enum { GS2015 };
+#include "tas.h"
+_tas tas;
 
-void map_init_Rcm(BYTE type);
-void extcl_cpu_wr_mem_GS2015(WORD address, BYTE value);
+void (*tas_header)(uTCHAR *file);
+void (*tas_read)(void);
+void (*tas_frame)(void);
+void (*tas_rewind)(int32_t frames_to_rewind);
 
-#endif /* MAPPER_RCM_H_ */
+#include "gui.h"
+_gui gui;
+_gui_mouse gmouse;
+_external_windows ext_win;
+
+double (*gui_get_ms)(void);
+
+#include "info.h"
+_info info;
+
+#include "clock.h"
+_machine machine;
+
+#include "vs_system.h"
+_vs_system vs_system;
+
+#include "mem_map.h"
+_mmcpu mmcpu;
+_prg prg;
+_chr chr;
+_nametables ntbl;
+_mmap_palette mmap_palette;
+_oam oam;
+
+#include "debugger.h"
+_debugger debugger;
+
+#endif /* COMPILATION_UNIT_ORPHAN_H_ */

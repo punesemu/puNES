@@ -21,10 +21,6 @@
 
 #include "common.h"
 
-struct _futuremedia {
-	BYTE delay;
-} futuremedia;
-
 void map_init_Futuremedia(void);
 void extcl_cpu_wr_mem_Futuremedia(WORD address, BYTE value);
 BYTE extcl_save_mapper_Futuremedia(BYTE mode, BYTE slot, FILE *fp);

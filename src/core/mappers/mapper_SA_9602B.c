@@ -59,6 +59,11 @@ INLINE static void sa9602b_update_prg(void);
 			break;\
 	}
 
+struct _sa9602b {
+	WORD prg_chip[4];
+	WORD prg_map[4];
+} sa9602b;
+
 void map_init_SA_9602B(void) {
 	EXTCL_CPU_WR_MEM(SA_9602B);
 	EXTCL_SAVE_MAPPER(SA_9602B);

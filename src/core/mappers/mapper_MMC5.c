@@ -20,7 +20,6 @@
 #include "mappers.h"
 #include "info.h"
 #include "mem_map.h"
-#include "apu.h"
 #include "ppu.h"
 #include "cpu.h"
 #include "irql2f.h"
@@ -36,7 +35,7 @@
 		map_prg_rom_8k(1, slot, value);\
 	} else {\
 		/* modalita' ram */\
-		BYTE bank = prg_ram_access[prg_ram_mode][value & 0x07];\
+		BYTE bank = prg_ram_access[mmc5tmp.prg_ram_mode][value & 0x07];\
 		if (bank != INVALID) {\
 			mmc5.prg_ram_bank[slot][0] = TRUE;\
 			mmc5.prg_ram_bank[slot][1] = bank << 13;\
@@ -52,12 +51,12 @@
 		map_prg_rom_8k(2, 0, value);\
 	} else {\
 		/* modalita' ram */\
-		BYTE bank = prg_ram_access[prg_ram_mode][value & 0x07];\
+		BYTE bank = prg_ram_access[mmc5tmp.prg_ram_mode][value & 0x07];\
 		if (bank != INVALID) {\
 			mmc5.prg_ram_bank[0][0] = TRUE;\
 			mmc5.prg_ram_bank[0][1] = (value & 0x06) << 13;\
 		}\
-		bank = prg_ram_access[prg_ram_mode][(value + 1) & 0x07];\
+		bank = prg_ram_access[mmc5tmp.prg_ram_mode][(value + 1) & 0x07];\
 		if (bank != INVALID) {\
 			mmc5.prg_ram_bank[1][0] = TRUE;\
 			mmc5.prg_ram_bank[1][1] = (value & 0x07) << 13;\
@@ -163,7 +162,10 @@ static const BYTE prg_ram_access[6][8] = {
 	{0,1,2,3,4,4,4,4},
 	{0,1,2,3,4,5,6,7}
 };
-BYTE prg_ram_mode;
+_mmc5 mmc5;
+struct _mmc5tmp {
+	BYTE prg_ram_mode;
+} mmc5tmp;
 
 void map_init_MMC5(void) {
 	EXTCL_CPU_WR_MEM(MMC5);
@@ -224,28 +226,28 @@ void map_init_MMC5(void) {
 		case EKROM:
 			info.prg.ram.banks_8k_plus = 1;
 			info.prg.ram.bat.banks = 1;
-			prg_ram_mode = PRG_RAM_8K;
+			mmc5tmp.prg_ram_mode = PRG_RAM_8K;
 			break;
 		case ELROM:
 			info.prg.ram.banks_8k_plus = FALSE;
 			info.prg.ram.bat.banks = FALSE;
-			prg_ram_mode = PRG_RAM_NONE;
+			mmc5tmp.prg_ram_mode = PRG_RAM_NONE;
 			break;
 		case ETROM:
 			info.prg.ram.banks_8k_plus = 2;
 			info.prg.ram.bat.banks = 1;
 			info.prg.ram.bat.start = 0;
-			prg_ram_mode = PRG_RAM_16K;
+			mmc5tmp.prg_ram_mode = PRG_RAM_16K;
 			break;
 		case EWROM:
 			info.prg.ram.banks_8k_plus = 4;
 			info.prg.ram.bat.banks = 4;
-			prg_ram_mode = PRG_RAM_32K;
+			mmc5tmp.prg_ram_mode = PRG_RAM_32K;
 			break;
 		default:
 			info.prg.ram.banks_8k_plus = 8;
 			info.prg.ram.bat.banks = FALSE;
-			prg_ram_mode = PRG_RAM_64K;
+			mmc5tmp.prg_ram_mode = PRG_RAM_64K;
 			break;
 	}
 }
@@ -353,7 +355,7 @@ void extcl_cpu_wr_mem_MMC5(WORD address, BYTE value) {
 			memset(&mmc5.fill_table[0x3C0], filler_attrib[mmc5.fill_attr], 0x40);
 			return;
 		case 0x5113: {
-			BYTE bank = prg_ram_access[prg_ram_mode][value & 0x07];
+			BYTE bank = prg_ram_access[mmc5tmp.prg_ram_mode][value & 0x07];
 
 			if (bank != INVALID) {
 				prg.ram_plus_8k = &prg.ram_plus[bank * 0x2000];

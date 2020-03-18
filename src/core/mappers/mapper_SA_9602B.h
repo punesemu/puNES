@@ -21,11 +21,6 @@
 
 #include "common.h"
 
-struct _sa9602b {
-	WORD prg_chip[4];
-	WORD prg_map[4];
-} sa9602b;
-
 void map_init_SA_9602B(void);
 void extcl_cpu_wr_mem_SA_9602B(WORD address, BYTE value);
 BYTE extcl_save_mapper_SA_9602B(BYTE mode, BYTE slot, FILE *fp);

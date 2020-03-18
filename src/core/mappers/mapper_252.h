@@ -21,16 +21,6 @@
 
 #include "common.h"
 
-struct _m252 {
-	WORD chr_map[8];
-	struct _m252_irq {
-		BYTE active;
-		WORD prescaler;
-		WORD count;
-		WORD reload;
-	} irq;
-} m252;
-
 void map_init_252(void);
 void extcl_cpu_wr_mem_252(WORD address, BYTE value);
 BYTE extcl_save_mapper_252(BYTE mode, BYTE slot, FILE *fp);

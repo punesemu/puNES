@@ -42,6 +42,8 @@ typedef struct _fds_diff_ele {
 	uint32_t position;
 } _fds_diff_ele;
 
+_fds fds;
+
 void fds_init(void) {
 	memset(&fds, 0x00, sizeof(fds));
 

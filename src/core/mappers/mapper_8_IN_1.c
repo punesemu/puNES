@@ -77,6 +77,12 @@ INLINE static void m8in1_update_chr(void);
 			break;\
 	}
 
+struct _m8in1 {
+	BYTE reg;
+	WORD prg_map[4];
+	WORD chr_map[8];
+} m8in1;
+
 void map_init_8_IN_1(void) {
 	EXTCL_CPU_WR_MEM(8_IN_1);
 	EXTCL_SAVE_MAPPER(8_IN_1);

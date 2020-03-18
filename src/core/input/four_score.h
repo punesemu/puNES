@@ -19,7 +19,7 @@
 #ifndef INPUT_FOUR_SCORE_H
 #define INPUT_FOUR_SCORE_H
 
-#include "../input.h"
+#include "input.h"
 
 void input_init_four_score(void);
 BYTE input_wr_reg_four_score(BYTE value);

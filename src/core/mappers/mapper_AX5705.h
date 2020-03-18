@@ -21,10 +21,6 @@
 
 #include "common.h"
 
-struct _ax5705 {
-	WORD chr_map[8];
-} ax5705;
-
 void map_init_AX5705(void);
 void extcl_cpu_wr_mem_AX5705(WORD address, BYTE value);
 BYTE extcl_save_mapper_AX5705(BYTE mode, BYTE slot, FILE *fp);

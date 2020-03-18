@@ -51,6 +51,8 @@ typedef struct _unif_board {
 	WORD extra;
 } _unif_board;
 
+_unif unif;
+
 static const _unif_board unif_boards[] = {
 	{"NROM", 0 , NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
 	{"NROM-128", 0, NO_UNIF, DEFAULT, DEFAULT, NOEXTRA},
@@ -379,6 +381,7 @@ BYTE unif_load_rom(void) {
 	free(rom.data);
 	return (EXIT_OK);
 }
+
 BYTE unif_NONE(_rom_mem *rom, BYTE phase) {
 	if (phase == UNIF_COUNT) {
 		if ((rom->position + unif.chunk.length) > rom->size) {

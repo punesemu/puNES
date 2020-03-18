@@ -21,12 +21,6 @@
 
 #include "common.h"
 
-struct _bmc830118c {
-	BYTE reg;
-	WORD prg_map[4];
-	WORD chr_map[8];
-} bmc830118c;
-
 void map_init_BMC830118C(void);
 void extcl_cpu_wr_mem_BMC830118C(WORD address, BYTE value);
 BYTE extcl_save_mapper_BMC830118C(BYTE mode, BYTE slot, FILE *fp);

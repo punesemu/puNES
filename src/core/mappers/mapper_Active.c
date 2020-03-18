@@ -22,6 +22,11 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
+struct _active {
+	BYTE openbus;
+	BYTE prg_ram[4];
+} active;
+
 void map_init_Active(void) {
 	EXTCL_CPU_WR_MEM(Active);
 	EXTCL_CPU_RD_MEM(Active);

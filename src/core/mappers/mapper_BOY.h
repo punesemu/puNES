@@ -21,12 +21,6 @@
 
 #include "common.h"
 
-struct _boy {
-	BYTE reg[4];
-	WORD prg_map[4];
-	WORD chr_map[8];
-} boy;
-
 void map_init_BOY(void);
 void extcl_cpu_wr_mem_BOY(WORD address, BYTE value);
 BYTE extcl_save_mapper_BOY(BYTE mode, BYTE slot, FILE *fp);

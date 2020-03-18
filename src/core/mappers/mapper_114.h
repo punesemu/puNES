@@ -21,12 +21,6 @@
 
 #include "common.h"
 
-struct _m114 {
-	BYTE prg_rom_switch;
-	BYTE mmc3_ctrl_change;
-	WORD prg_rom_bank[4];
-} m114;
-
 static const BYTE vlu114[8] = {0, 3, 1, 5, 6, 7, 2, 4};
 
 void map_init_114(void);

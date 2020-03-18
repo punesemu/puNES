@@ -16,9 +16,11 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include "common.h"
 #include "overscan.h"
 #include "video/gfx.h"
+
+_overscan_borders overscan_borders[2];
+_overscan overscan;
 
 BYTE overscan_set_mode(BYTE mode) {
 	_overscan_borders save = (*overscan.borders);

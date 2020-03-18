@@ -28,7 +28,6 @@
 #include "gui.h"
 #include "audio/blipbuf.h"
 #include "patcher.h"
-#include "external_calls.h"
 
 enum nsfe_phase_type { NSFE_COUNT, NSFE_READ };
 enum nsfe_flags {

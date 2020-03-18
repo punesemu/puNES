@@ -20,7 +20,6 @@
  */
 
 #include "d3d9.h"
-#include "video/gfx_thread.h"
 #include "info.h"
 #include "gui.h"
 #include "conf.h"
@@ -56,6 +55,8 @@ INLINE static void d3d9_viewport_set(DWORD x, DWORD y, DWORD w, DWORD h);
 INLINE D3DTEXTUREFILTERTYPE d3d9_shader_filter(UINT type);
 INLINE static void d3d9_shader_params_text_set(_shader *shd);
 INLINE static void d3d9_shader_param_set(const _texture *texture, UINT fcountmod, UINT fcount);
+
+_d3d9 d3d9;
 
 BYTE d3d9_init(void) {
 	memset(&d3d9, 0x00, sizeof(d3d9));

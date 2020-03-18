@@ -170,6 +170,22 @@ static const BYTE palette_init[0x20] = {
 	0x08, 0x3A, 0x00, 0x02, 0x00, 0x20, 0x2C, 0x08
 };
 
+_ppu ppu;
+_screen screen;
+_ppu_openbus ppu_openbus;
+_r2000 r2000;
+_r2001 r2001;
+_r2002 r2002;
+_r2006 r2006;
+_r2xxx r2003, r2004, r2007;
+_spr_evaluate spr_ev;
+_spr sprite[8], sprite_plus[8];
+_spr_evaluate spr_ev_unl;
+_spr sprite_unl[56], sprite_plus_unl[56];
+_tile tile_render, tile_fetch;
+_ppu_sclines ppu_sclines;
+_overclock overclock;
+
 void ppu_init(void) {
 	memset(&screen, 0x00, sizeof(screen));
 }

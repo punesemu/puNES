@@ -21,12 +21,6 @@
 
 #include "common.h"
 
-struct _m51 {
-	BYTE mode;
-	WORD bank;
-	BYTE prg_6000;
-} m51;
-
 void map_init_51(void);
 void extcl_cpu_wr_mem_51(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_51(WORD address, BYTE openbus, BYTE before);

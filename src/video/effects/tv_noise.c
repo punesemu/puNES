@@ -23,7 +23,9 @@
 #include "conf.h"
 #include "video/gfx.h"
 #include "emu.h"
-#include "video/filters/ntsc.h"
+#include "palette.h"
+
+_turn_off_effect turn_off_effect;
 
 BYTE tv_noise_init(void) {
 	uint32_t *palette;

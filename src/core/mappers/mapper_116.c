@@ -384,6 +384,31 @@
 	}\
 }
 
+struct _m116 {
+	BYTE mode;
+
+	struct {
+		WORD chr[8];
+		WORD prg[4];
+		BYTE nmt;
+		BYTE padding;
+	} mode0;
+	struct {
+		WORD banks[10];
+		BYTE ctrl;
+		BYTE nmt;
+	} mode1;
+	struct {
+		BYTE reg[4];
+		BYTE buffer;
+		BYTE shifter;
+		BYTE padding[2];
+	} mode2;
+
+	WORD prg_map[4];
+	WORD chr_map[8];
+} m116;
+
 void map_init_116(void) {
 	switch (info.mapper.submapper) {
 		default:

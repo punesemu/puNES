@@ -21,13 +21,6 @@
 
 #include "common.h"
 
-struct _m91 {
-	struct _m91_irq {
-		BYTE active;
-		BYTE count;
-	} irq;
-} m91;
-
 void map_init_91(void);
 void extcl_cpu_wr_mem_91(WORD address, BYTE value);
 BYTE extcl_save_mapper_91(BYTE mode, BYTE slot, FILE *fp);

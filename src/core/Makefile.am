@@ -9,6 +9,7 @@ libcore_a_SOURCES = \
 	cheat.h \
 	clock.h \
 	common.h \
+	compilation_unit_orphan.h \
 	conf.h \
 	cpu.c \
 	cpu.h \

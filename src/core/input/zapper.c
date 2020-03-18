@@ -25,6 +25,7 @@
 #include "vs_system.h"
 #include "input/mouse.h"
 #include "tas.h"
+#include "palette.h"
 
 struct _zapper {
 	BYTE data;

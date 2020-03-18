@@ -21,15 +21,6 @@
 
 #include "common.h"
 
-struct _vrc3 {
-	BYTE enabled;
-	WORD reload;
-	BYTE mode;
-	BYTE acknowledge;
-	WORD mask;
-	WORD count;
-} vrc3;
-
 void map_init_VRC3(void);
 void extcl_cpu_wr_mem_VRC3(WORD address, BYTE value);
 BYTE extcl_save_mapper_VRC3(BYTE mode, BYTE slot, FILE *fp);

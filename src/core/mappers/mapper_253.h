@@ -21,18 +21,6 @@
 
 #include "common.h"
 
-struct _m253 {
-	BYTE disabled_vram;
-	WORD chr_map_high[8];
-	BYTE chr_map[8];
-	struct _m253_irq {
-		BYTE active;
-		WORD prescaler;
-		WORD count;
-		WORD reload;
-	} irq;
-} m253;
-
 void map_init_253(void);
 void extcl_cpu_wr_mem_253(WORD address, BYTE value);
 BYTE extcl_save_mapper_253(BYTE mode, BYTE slot, FILE *fp);

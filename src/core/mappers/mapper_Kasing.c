@@ -60,6 +60,14 @@
 	}\
 }
 
+struct _kasing {
+	BYTE prg_mode;
+	BYTE prg_high;
+	WORD prg_rom_bank[4];
+	BYTE chr_high;
+	WORD chr_rom_bank[8];
+} kasing;
+
 void map_init_Kasing(void) {
 	EXTCL_CPU_WR_MEM(Kasing);
 	EXTCL_SAVE_MAPPER(Kasing);

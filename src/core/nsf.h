@@ -113,14 +113,7 @@ typedef struct _nsf_effect_coords {
 	int w, h;
 	int y_center;
 } _nsf_effect_coords;
-
-#if defined (__cplusplus)
-#define EXTERNC extern "C"
-#else
-#define EXTERNC
-#endif
-
-EXTERNC struct _nsf {
+typedef struct _nsf {
 	BYTE enabled;
 	BYTE version;
 	BYTE draw_mask_frames;
@@ -212,11 +205,11 @@ EXTERNC struct _nsf {
 	_nsf_text_scroll scroll_title_song;
 	_nsf_text_curtain curtain_title_song;
 	_nsf_text_curtain curtain_info;
-} nsf;
+} _nsf;
 
 #if defined (_NSF_STATIC_)
-EXTERNC static char nsf_default_label[4] = {"<?>"};
-EXTERNC static const BYTE nsf_routine[17] = {
+static char nsf_default_label[4] = {"<?>"};
+static const BYTE nsf_routine[17] = {
 //	0     1
 	0xA9, 0x00,       // 0x2500 : LDA [current song]
 //	2     3
@@ -232,6 +225,14 @@ EXTERNC static const BYTE nsf_routine[17] = {
 //	14    15    16
 	0x4C, 0x00, 0x25  // 0x250E : JMP [0x250B / 0x250E]
 };
+#endif
+
+extern _nsf nsf;
+
+#if defined (__cplusplus)
+#define EXTERNC extern "C"
+#else
+#define EXTERNC
 #endif
 
 EXTERNC void nsf_init(void);

@@ -159,6 +159,12 @@
 	}\
 }
 
+struct _m49 {
+	BYTE reg;
+	WORD prg_map[4];
+	WORD chr_map[8];
+} m49;
+
 void map_init_49(void) {
 	EXTCL_CPU_WR_MEM(49);
 	EXTCL_SAVE_MAPPER(49);

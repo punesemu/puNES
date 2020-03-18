@@ -25,6 +25,10 @@
 
 INLINE static void bmcghostbusters63in1_update_chr(void);
 
+struct _bmcghostbusters63in1 {
+	BYTE reg[2];
+	BYTE index;
+} bmcghostbusters63in1;
 static const BYTE bmcghostbusters63in1_chip[4] = { 0, 0, 1, 2 };
 
 void map_init_BMCGHOSTBUSTERS63IN1(void) {

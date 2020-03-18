@@ -33,12 +33,10 @@
 #include "mappers/mapper_VRC7_snd.h"
 #include "emu.h"
 #include "video/gfx.h"
-#include "conf.h"
 #include "clock.h"
 #include "info.h"
 #include "vs_system.h"
 #include "ppu.h"
-#include "apu.h"
 #include "cpu.h"
 #include "fds.h"
 #include "conf.h"
@@ -124,6 +122,8 @@ typedef struct _nsf_option_data {
 	BYTE direction;
 	int x1, x2;
 } _nsf_option_data;
+
+_nsf nsf;
 
 extern void cpu_wr_mem(WORD address, BYTE value);
 static void nsf_effect_set_coords(_nsf_effect_coords *coords, int x, int y, int w, int h);

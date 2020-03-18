@@ -23,6 +23,7 @@
 #include <unistd.h>
 #include "opengl.h"
 #include "video/gfx_thread.h"
+#include "overscan.h"
 #include "info.h"
 #include "conf.h"
 #include "emu.h"
@@ -41,6 +42,8 @@
 	((float)SCR_ROWS * gfx.pixel_aspect_ratio)
 #define _SCR_LINES_NOBRD\
 	(float)SCR_LINES
+
+_opengl opengl;
 
 static void opengl_context_delete(void);
 static void opengl_screenshot(void);

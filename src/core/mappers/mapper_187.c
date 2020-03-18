@@ -77,6 +77,11 @@ INLINE static void m187_update_chr(void);
 			break;\
 	}
 
+struct _m187 {
+	BYTE reg[8];
+	WORD prg_map[4];
+	WORD chr_map[8];
+} m187;
 static const BYTE vlu187[4] = { 0x83, 0x83, 0x42, 0x00 };
 
 void map_init_187(void) {

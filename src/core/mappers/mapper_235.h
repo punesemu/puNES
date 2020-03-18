@@ -21,10 +21,6 @@
 
 #include "common.h"
 
-struct _m235 {
-	BYTE openbus;
-} m235;
-
 void map_init_235(void);
 void extcl_cpu_wr_mem_235(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_235(WORD address, BYTE openbus, BYTE before);

@@ -21,16 +21,18 @@
 
 #include "common.h"
 
+typedef struct _turn_off_effect {
+	void *palette;
+	void *ntsc;
+} _turn_off_effect;
+
+extern _turn_off_effect turn_off_effect;
+
 #if defined (__cplusplus)
 #define EXTERNC extern "C"
 #else
 #define EXTERNC
 #endif
-
-EXTERNC struct _turn_off_effect {
-	void *palette;
-	void *ntsc;
-} turn_off_effect;
 
 EXTERNC BYTE tv_noise_init(void);
 EXTERNC void tv_noise_quit(void);

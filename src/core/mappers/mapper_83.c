@@ -25,6 +25,21 @@
 
 INLINE static void sync_83(void);
 
+struct _m83 {
+	BYTE is2kbank;
+	BYTE isnot2kbank;
+	BYTE mode;
+	BYTE bank;
+	BYTE dip;
+	BYTE low[4];
+	BYTE reg[11];
+
+	struct _m83_irq {
+		BYTE active;
+		WORD count;
+	} irq;
+} m83;
+
 void map_init_83(void) {
 	EXTCL_CPU_WR_MEM(83);
 	EXTCL_CPU_RD_MEM(83);

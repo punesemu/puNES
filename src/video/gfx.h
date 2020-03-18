@@ -99,14 +99,7 @@ typedef struct _viewport {
 	int x, y;
 	int w, h;
 } _viewport;
-
-#if defined (__cplusplus)
-#define EXTERNC extern "C"
-#else
-#define EXTERNC
-#endif
-
-EXTERNC struct _gfx {
+typedef struct _gfx {
 	BYTE PSS;
 	BYTE scale_before_fscreen;
 	BYTE type_of_fscreen_in_use;
@@ -138,12 +131,19 @@ EXTERNC struct _gfx {
 			WORD height;
 		} data;
 	} filter;
-} gfx;
+} _gfx;
+
+extern _gfx gfx;
+
+#if defined (__cplusplus)
+#define EXTERNC extern "C"
+#else
+#define EXTERNC
+#endif
 
 EXTERNC BYTE gfx_init(void);
 EXTERNC void gfx_quit(void);
-EXTERNC void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, BYTE palette,
-	BYTE force_scale, BYTE force_palette);
+EXTERNC void gfx_set_screen(BYTE scale, DBWORD filter, DBWORD shader, BYTE fullscreen, BYTE palette, BYTE force_scale, BYTE force_palette);
 EXTERNC void gfx_draw_screen(void);
 
 #if defined (WITH_D3D9)

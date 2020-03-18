@@ -21,14 +21,6 @@
 
 #include "common.h"
 
-struct _unifsmb2j {
-	BYTE reg;
-	struct _unifsmb2j_irq {
-		BYTE active;
-		WORD count;
-	} irq;
-} unifsmb2j;
-
 void map_init_UNIFSMB2J(void);
 void extcl_cpu_wr_mem_UNIFSMB2J(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_UNIFSMB2J(WORD address, BYTE openbus, BYTE before);

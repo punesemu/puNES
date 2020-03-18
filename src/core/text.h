@@ -91,14 +91,7 @@ typedef struct _txt_element {
 	void *blank;
 #endif
 } _txt_element;
-
-#if defined (__cplusplus)
-#define EXTERNC extern "C"
-#else
-#define EXTERNC
-#endif
-
-EXTERNC struct _text {
+typedef struct _text {
 	BYTE on_screen;
 	uint32_t w;
 	uint32_t h;
@@ -124,9 +117,19 @@ EXTERNC struct _text {
 		BYTE operation;
 		_txt_element slot;
 	} save_slot;
-} text;
+} _text;
 
-EXTERNC uint32_t txt_table[TXT_BLACK + 1];
+extern _text text;
+extern uint32_t txt_table[TXT_BLACK + 1];
+
+extern void (*text_clear)(_txt_element *ele);
+extern void (*text_blit)(_txt_element *ele, _txt_rect *rect);
+
+#if defined (__cplusplus)
+#define EXTERNC extern "C"
+#else
+#define EXTERNC
+#endif
 
 EXTERNC void text_init(void);
 EXTERNC void text_save_slot(BYTE operation);
@@ -134,9 +137,6 @@ EXTERNC void text_add_line(int type, int factor, int font, int alpha, int start_
 EXTERNC void text_rendering(BYTE render);
 EXTERNC void text_calculate_real_x_y(_txt_element *ele, int *x, int *y);
 EXTERNC void text_quit(void);
-
-EXTERNC void (*text_clear)(_txt_element *ele);
-EXTERNC void (*text_blit)(_txt_element *ele, _txt_rect *rect);
 
 #undef EXTERNC
 

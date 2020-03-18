@@ -21,7 +21,12 @@
 #include "info.h"
 #include "save_slot.h"
 
-BYTE *bb_prg_6000;
+struct _bb {
+	BYTE reg;
+} bb;
+struct _bbtmp {
+	BYTE *prg_6000;
+} bbtmp;
 
 void map_init_BB(void) {
 	EXTCL_CPU_WR_MEM(BB);
@@ -39,7 +44,7 @@ void map_init_BB(void) {
 
 	bb.reg = 0xFF;
 	_control_bank(bb.reg, info.prg.rom[0].max.banks_8k)
-	bb_prg_6000 = prg_chip_byte_pnt(0, bb.reg << 13);
+	bbtmp.prg_6000 = prg_chip_byte_pnt(0, bb.reg << 13);
 }
 void extcl_cpu_wr_mem_BB(WORD address, BYTE value) {
 	BYTE save = value;
@@ -48,7 +53,7 @@ void extcl_cpu_wr_mem_BB(WORD address, BYTE value) {
 	if ((address & 0x9000) == 0x8000) {
 		value = value & 0x03;
 		control_bank(info.prg.rom[0].max.banks_8k)
-		bb_prg_6000 = prg_chip_byte_pnt(0, value << 13);
+		bbtmp.prg_6000 = prg_chip_byte_pnt(0, value << 13);
 		bb.reg = value;
 		value = save;
 	} else {
@@ -68,7 +73,7 @@ void extcl_cpu_wr_mem_BB(WORD address, BYTE value) {
 }
 BYTE extcl_cpu_rd_mem_BB(WORD address, BYTE openbus, UNUSED(BYTE before)) {
 	if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		return (bb_prg_6000[address & 0x1FFF]);
+		return (bbtmp.prg_6000[address & 0x1FFF]);
 	}
 	return (openbus);
 }
@@ -76,7 +81,7 @@ BYTE extcl_save_mapper_BB(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, bb.reg);
 
 	if (mode == SAVE_SLOT_READ) {
-		bb_prg_6000 = prg_chip_byte_pnt(0, bb.reg << 13);
+		bbtmp.prg_6000 = prg_chip_byte_pnt(0, bb.reg << 13);
 	}
 
 	return (EXIT_OK);

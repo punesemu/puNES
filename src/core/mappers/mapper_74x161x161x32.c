@@ -20,19 +20,21 @@
 #include "info.h"
 #include "mem_map.h"
 
-BYTE type;
+struct _m74x161x161x32tmp {
+	BYTE type;
+} m74x161x161x32tmp;
 
 void map_init_74x161x161x32(BYTE model) {
 	EXTCL_CPU_WR_MEM(74x161x161x32);
 
-	type = model;
+	m74x161x161x32tmp.type = model;
 }
 void extcl_cpu_wr_mem_74x161x161x32(WORD address, BYTE value) {
 	/* bus conflict */
 	const BYTE save = value &= prg_rom_rd(address);
 	DBWORD bank;
 
-	if (type == IC74X161X161X32B) {
+	if (m74x161x161x32tmp.type == IC74X161X161X32B) {
 		if (value & 0x80) {
 			mirroring_SCR1();
 		} else {

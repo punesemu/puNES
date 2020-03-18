@@ -23,22 +23,15 @@
 
 enum debugger_mode { DBG_NODBG, DBG_GO, DBG_STEP, DBG_BREAKPOINT, DBG_SLEEP };
 
+typedef struct _debugger {
+	BYTE mode;
+	WORD breakpoint;
+	BYTE breakframe;
+} _debugger;
 typedef struct _debugger_breakpoint {
 
 } _debugger_breakpoint;
 
-#if defined (__cplusplus)
-#define EXTERNC extern "C"
-#else
-#define EXTERNC
-#endif
-
-EXTERNC struct _debugger {
-	BYTE mode;
-	WORD breakpoint;
-	BYTE breakframe;
-} debugger;
-
-#undef EXTERNC
+extern _debugger debugger;
 
 #endif /* DEBUGGER_H_ */

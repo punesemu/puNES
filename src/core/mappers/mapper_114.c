@@ -34,6 +34,12 @@
 	mapper.rom_map_to[2] = m114.prg_rom_bank[2];\
 	mapper.rom_map_to[3] = m114.prg_rom_bank[3]
 
+struct _m114 {
+	BYTE prg_rom_switch;
+	BYTE mmc3_ctrl_change;
+	WORD prg_rom_bank[4];
+} m114;
+
 void map_init_114(void) {
 	EXTCL_CPU_WR_MEM(114);
 	EXTCL_SAVE_MAPPER(114);

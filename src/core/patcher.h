@@ -21,16 +21,18 @@
 
 #include "common.h"
 
+typedef struct _patcher {
+	uTCHAR *file;
+	BYTE patched;
+} _patcher;
+
+extern _patcher patcher;
+
 #if defined (__cplusplus)
 #define EXTERNC extern "C"
 #else
 #define EXTERNC
 #endif
-
-EXTERNC struct _patcher {
-	uTCHAR *file;
-	BYTE patched;
-} patcher;
 
 EXTERNC void patcher_init(void);
 EXTERNC void patcher_quit(void);

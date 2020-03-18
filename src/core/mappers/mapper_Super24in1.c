@@ -81,6 +81,12 @@ INLINE static void super24in1_update_chr(void);
 
 static const BYTE super24in1_mask[8] = { 0x3F, 0x1F, 0x0F, 0x01, 0x03, 0x00, 0x00, 0x00 };
 
+struct _super24in1 {
+	BYTE reg[3];
+	WORD prg_map[4];
+	WORD chr_map[8];
+} super24in1;
+
 void map_init_Super24in1(void) {
 	EXTCL_CPU_WR_MEM(Super24in1);
 	EXTCL_SAVE_MAPPER(Super24in1);

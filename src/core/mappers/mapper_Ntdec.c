@@ -38,6 +38,11 @@
 	bank = new_value << 10;\
 	chr.bank_1k[slot] = chr_chip_byte_pnt(0, bank)
 
+struct _asder {
+	BYTE address;
+	BYTE reg[8];
+} asder;
+
 void map_init_Ntdec(BYTE model) {
 	switch (model) {
 		case ASDER:

@@ -72,12 +72,6 @@ typedef struct _uncompress_storage {
 	_uncompress_storage_item *item;
 } _uncompress_storage;
 
-#if defined (__cplusplus)
-#define EXTERNC extern "C"
-#else
-#define EXTERNC
-#endif
-
 static const _uncompress_extension uncompress_exts[] = {
 	{ UNCOMPRESS_TYPE_ROM, uL(".nes")  },
 	{ UNCOMPRESS_TYPE_ROM, uL(".fds")  },
@@ -89,7 +83,14 @@ static const _uncompress_extension uncompress_exts[] = {
 	{ UNCOMPRESS_TYPE_PATCH, uL(".bps") },
 	{ UNCOMPRESS_TYPE_PATCH, uL(".xdelta") }
 };
-EXTERNC _uncompress_storage uncstorage;
+
+extern _uncompress_storage uncstorage;
+
+#if defined (__cplusplus)
+#define EXTERNC extern "C"
+#else
+#define EXTERNC
+#endif
 
 EXTERNC BYTE uncompress_init(void);
 EXTERNC void uncompress_quit(void);
@@ -98,14 +99,12 @@ EXTERNC _uncompress_archive *uncompress_archive_alloc(uTCHAR *file, BYTE *rc);
 EXTERNC void uncompress_archive_free(_uncompress_archive *archive) ;
 EXTERNC uint32_t uncompress_archive_counter(_uncompress_archive *archive, BYTE type);
 EXTERNC BYTE uncompress_archive_extract_file(_uncompress_archive *archive, BYTE type);
-EXTERNC _uncompress_archive_item *uncompress_archive_find_item(_uncompress_archive *archive,
-	uint32_t selected, BYTE type);
+EXTERNC _uncompress_archive_item *uncompress_archive_find_item(_uncompress_archive *archive, uint32_t selected, BYTE type);
 EXTERNC uTCHAR *uncompress_archive_extracted_file_name(_uncompress_archive *archive, BYTE type);
 EXTERNC uTCHAR *uncompress_archive_file_name(_uncompress_archive *archive, uint32_t selected, BYTE type);
 
 EXTERNC uTCHAR *uncompress_storage_archive_name(uTCHAR *file);
-EXTERNC uint32_t uncompress_storage_add_to_list(_uncompress_archive *archive,
-	_uncompress_archive_item *aitem, uTCHAR *file);
+EXTERNC uint32_t uncompress_storage_add_to_list(_uncompress_archive *archive, _uncompress_archive_item *aitem, uTCHAR *file);
 
 #undef EXTERNC
 

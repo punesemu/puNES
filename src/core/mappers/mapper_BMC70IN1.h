@@ -23,10 +23,6 @@
 
 enum _bmc70in1_type { BMC70IN1, BMC70IN1B };
 
-struct _bmc70in1 {
-	WORD reg[3];
-} bmc70in1;
-
 void map_init_BMC70IN1(BYTE type);
 void extcl_cpu_wr_mem_BMC70IN1(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_BMC70IN1(WORD address, BYTE openbus, BYTE before);

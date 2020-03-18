@@ -23,7 +23,16 @@
 #include "cpu.h"
 #include "save_slot.h"
 
-BYTE *unifsmb2j_prg_6000;
+struct _unifsmb2j {
+	BYTE reg;
+	struct _unifsmb2j_irq {
+		BYTE active;
+		WORD count;
+	} irq;
+} unifsmb2j;
+struct _unifsmb2jtmp {
+	BYTE *prg_6000;
+} unifsmb2jtmp;
 
 void map_init_UNIFSMB2J(void) {
 	EXTCL_CPU_WR_MEM(UNIFSMB2J);
@@ -36,7 +45,7 @@ void map_init_UNIFSMB2J(void) {
 	memset(&unifsmb2j, 0x00, sizeof(unifsmb2j));
 
 	map_prg_rom_8k(4, 0, 0);
-	unifsmb2j_prg_6000 = prg_chip_byte_pnt(1, unifsmb2j.reg << 13);
+	unifsmb2jtmp.prg_6000 = prg_chip_byte_pnt(1, unifsmb2j.reg << 13);
 
 	info.mapper.extend_wr = TRUE;
 }
@@ -44,7 +53,7 @@ void extcl_cpu_wr_mem_UNIFSMB2J(WORD address, BYTE value) {
 	if (address == 0x4027) {
 		unifsmb2j.reg = value & 0x01;
 		_control_bank(unifsmb2j.reg, info.prg.rom[1].max.banks_8k)
-		unifsmb2j_prg_6000 = prg_chip_byte_pnt(1, unifsmb2j.reg << 13);
+		unifsmb2jtmp.prg_6000 = prg_chip_byte_pnt(1, unifsmb2j.reg << 13);
 	} else if (address == 0x4068) {
 		unifsmb2j.irq.active = value & 0x01;
 		unifsmb2j.irq.count = 0;
@@ -55,7 +64,7 @@ BYTE extcl_cpu_rd_mem_UNIFSMB2J(WORD address, BYTE openbus, UNUSED(BYTE before))
 	if ((address >= 0x4042) && (address <= 0x4055)) {
 		return (0xFF);
 	} else if ((address >= 0x6000) && (address <= 0x7FFF)) {
-		return (unifsmb2j_prg_6000[address & 0x1FFF]);
+		return (unifsmb2jtmp.prg_6000[address & 0x1FFF]);
 	}
 	return (openbus);
 }
@@ -65,7 +74,7 @@ BYTE extcl_save_mapper_UNIFSMB2J(BYTE mode, BYTE slot, FILE *fp) {
 	save_slot_ele(mode, slot, unifsmb2j.irq.count);
 
 	if (mode == SAVE_SLOT_READ) {
-		unifsmb2j_prg_6000 = prg_chip_byte_pnt(1, unifsmb2j.reg << 13);
+		unifsmb2jtmp.prg_6000 = prg_chip_byte_pnt(1, unifsmb2j.reg << 13);
 	}
 
 	return (EXIT_OK);

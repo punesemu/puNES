@@ -23,9 +23,11 @@
 
 enum ines_flags { FL6, FL7, FL8, FL9, FL10, FL11, FL12, FL13, FL14, FL15, TOTAL_FL };
 
-struct _ines {
+typedef struct _ines {
 	BYTE flags[TOTAL_FL];
-} ines;
+} _ines;
+
+extern _ines ines;
 
 BYTE ines_load_rom(void);
 

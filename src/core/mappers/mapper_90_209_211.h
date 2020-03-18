@@ -27,47 +27,6 @@ enum {
 	MAP211
 };
 
-struct _m90_209_211 {
-	BYTE mul[2];
-	BYTE single_byte_ram;
-	BYTE tekker;
-
-	BYTE mode[4];
-
-	BYTE prg[4];
-
-	struct _m90_209_211_chr {
-		BYTE latch[2];
-		BYTE low[8];
-		BYTE high[8];
-	} chr;
-
-	struct _m90_209_211_nmt {
-		BYTE extended_mode;
-		WORD reg[4];
-		BYTE write[4];
-	} nmt;
-
-	struct _m90_209_211_irq {
-		BYTE active;
-		BYTE mode;
-		BYTE prescaler;
-		BYTE count;
-		BYTE xor_value;
-		BYTE pre_size;
-		BYTE premask;
-	} irq;
-
-/*  questi non serve salvarli  */
-	BYTE model;
-
-	struct _m90_209_211_m6000 {
-		WORD prg;
-		BYTE *rom_8k;
-	} m6000;
-/*                             */
-} m90_209_211;
-
 void map_init_90_209_211(BYTE model);
 void extcl_cpu_wr_mem_90_209_211(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_90_209_211(WORD address, BYTE openbus, BYTE before);

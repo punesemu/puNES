@@ -21,18 +21,6 @@
 
 #include "common.h"
 
-struct _sl1632 {
-	BYTE mode;
-	BYTE mirroring;
-	WORD prg_map[2];
-	WORD chr_map[8];
-	struct _sl1632_mmc3 {
-		BYTE mirroring;
-		WORD prg_map[4];
-		WORD chr_map[8];
-	} mmc3;
-} sl1632;
-
 void map_init_SL1632(void);
 void extcl_cpu_wr_mem_SL1632(WORD address, BYTE value);
 BYTE extcl_save_mapper_SL1632(BYTE mode, BYTE slot, FILE *fp);

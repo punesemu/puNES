@@ -23,6 +23,10 @@
 #include "irqA12.h"
 #include "save_slot.h"
 
+struct _futuremedia {
+	BYTE delay;
+} futuremedia;
+
 void map_init_Futuremedia(void) {
 	EXTCL_CPU_WR_MEM(Futuremedia);
 	EXTCL_SAVE_MAPPER(Futuremedia);

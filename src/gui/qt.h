@@ -47,13 +47,7 @@
 #define dlgsettings ((dlgSettings *)gui_dlgsettings_get_ptr())
 #define objcheat ((objCheat *)gui_objcheat_get_ptr())
 
-#if defined (__cplusplus)
-#define EXTERNC extern "C"
-#else
-#define EXTERNC
-#endif
-
-EXTERNC struct _gui {
+typedef struct _gui {
 #if defined (_WIN32)
 	uTCHAR home[MAX_PATH];
 	const uTCHAR *ostmp;
@@ -78,8 +72,8 @@ EXTERNC struct _gui {
 	uint8_t main_win_lfp;
 
 	int dlg_rc;
-} gui;
-EXTERNC struct _gui_mouse {
+} _gui;
+typedef struct _gui_mouse {
 	int x;
 	int y;
 	uint8_t left;
@@ -88,10 +82,22 @@ EXTERNC struct _gui_mouse {
 	uint8_t hidden;
 
 	double timer;
-} gmouse;
-EXTERNC struct _external_windows {
+} _gui_mouse;
+typedef struct _external_windows {
 	uint8_t vs_system;
-} ext_win;
+} _external_windows;
+
+extern _gui gui;
+extern _gui_mouse gmouse;
+extern _external_windows ext_win;
+
+extern double (*gui_get_ms)(void);
+
+#if defined (__cplusplus)
+#define EXTERNC extern "C"
+#else
+#define EXTERNC
+#endif
 
 EXTERNC void gui_quit(void);
 EXTERNC BYTE gui_create(void);
@@ -166,8 +172,6 @@ EXTERNC void gui_utf_printf(const uTCHAR *fmt, ...);
 EXTERNC void gui_utf_dirname(uTCHAR *path, uTCHAR *dst, size_t len);
 EXTERNC void gui_utf_basename(uTCHAR *path, uTCHAR *dst, size_t len);
 EXTERNC int gui_utf_strcasecmp(uTCHAR *s0, uTCHAR *s1);
-
-EXTERNC double (*gui_get_ms)(void);
 
 EXTERNC void gui_init(int *argc, char **argv);
 EXTERNC void gui_sleep(double ms);

@@ -79,6 +79,11 @@ INLINE static void m121_update_chr(void);
 			break;\
 	}
 
+struct _m121 {
+	BYTE reg[8];
+	WORD prg_map[4];
+	WORD chr_map[8];
+} m121;
 static const BYTE vlu121[4] = { 0x83, 0x83, 0x42, 0x00 };
 
 void map_init_121(void) {

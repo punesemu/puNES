@@ -24,7 +24,7 @@
 #include "save_slot.h"
 
 #define m52_chr_1k(vl)\
-	if (model == MARIO7IN1) {\
+	if (m52tmp.model == MARIO7IN1) {\
 		bank = ((((m52.reg >> 3) & 0x04) | ((m52.reg >> 1) & 0x02) |\
 			((m52.reg >> 6) & (m52.reg >> 4) & 0x01)) << 7) |\
 			(vl & (((m52.reg & 0x40) << 1) ^ 0xFF));\
@@ -34,8 +34,7 @@
 			(vl & (((m52.reg << 1) & 0x80) ^ 0xFF));\
 	}
 #define m52_prg_8k(vl)\
-	value = (((m52.reg & 0x06) | ((m52.reg >> 3) & m52.reg & 0x01)) << 4) |\
-		(vl & (((m52.reg << 1) & 0x10) ^ 0x1F))
+	value = (((m52.reg & 0x06) | ((m52.reg >> 3) & m52.reg & 0x01)) << 4) | (vl & (((m52.reg << 1) & 0x10) ^ 0x1F))
 #define m52_chr_1k_update()\
 {\
 	BYTE i;\
@@ -166,7 +165,15 @@
 	}\
 }
 
-BYTE model;
+struct _m52 {
+	BYTE disabled;
+	BYTE reg;
+	WORD prg_map[4];
+	WORD chr_map[8];
+} m52;
+struct _m52tmp {
+	BYTE model;
+} m52tmp;
 
 void map_init_52(BYTE type) {
 	EXTCL_CPU_WR_MEM(52);
@@ -208,7 +215,7 @@ void map_init_52(BYTE type) {
 	irqA12.present = TRUE;
 	irqA12_delay = 1;
 
-	model = type;
+	m52tmp.model = type;
 }
 void extcl_cpu_wr_mem_52(WORD address, BYTE value) {
 	switch (address & 0xE001) {

@@ -23,18 +23,6 @@
 
 enum { TRAMBO, T800037, NOCNTPLUS };
 
-struct _tengen_rambo {
-	BYTE prg_mode;
-	BYTE chr_mode;
-	BYTE reg_index;
-	BYTE chr[8];
-	BYTE prg[4];
-	BYTE irq_mode;
-	BYTE irq_delay;
-	BYTE irq_prescaler;
-	BYTE irq_plus_clock;
-} tengen_rambo;
-
 void map_init_Tengen(BYTE model);
 
 void extcl_cpu_wr_mem_Tengen_Rambo(WORD address, BYTE value);

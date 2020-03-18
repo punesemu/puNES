@@ -26,13 +26,7 @@ enum ff_velocity_values { FF_2X = 2, FF_3X, FF_4X, FF_5X };
 #define fps_machine_ms(factor)\
 	machine.ms_frame = fps.frame.estimated_ms = (1000.0f / (double)machine.fps) * factor;
 
-#if defined (__cplusplus)
-#define EXTERNC extern "C"
-#else
-#define EXTERNC
-#endif
-
-EXTERNC struct _fps {
+typedef struct _fps {
 	double gfx;
 	uint8_t fast_forward;
 	uint32_t frames_skipped;
@@ -41,7 +35,15 @@ EXTERNC struct _fps {
 		double estimated_ms;
 		double expected_end;
 	} frame;
-} fps;
+} _fps;
+
+extern _fps fps;
+
+#if defined (__cplusplus)
+#define EXTERNC extern "C"
+#else
+#define EXTERNC
+#endif
 
 EXTERNC void fps_init(void);
 EXTERNC void fps_fast_forward(void);

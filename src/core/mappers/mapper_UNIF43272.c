@@ -21,6 +21,10 @@
 #include "mem_map.h"
 #include "save_slot.h"
 
+struct _unif43272 {
+	WORD address;
+} unif43272;
+
 void map_init_UNIF43272(void) {
 	EXTCL_CPU_WR_MEM(UNIF43272);
 	EXTCL_CPU_RD_MEM(UNIF43272);

@@ -25,6 +25,10 @@
 
 INLINE static void m168_update_chr(void);
 
+struct _m168 {
+	WORD chr_map[8];
+} m168;
+
 void map_init_168(void) {
 	EXTCL_CPU_WR_MEM(168);
 	EXTCL_SAVE_MAPPER(168);

@@ -45,6 +45,10 @@
 	chr.bank_1k[7] = chr_chip_byte_pnt(0, bank | 0x1C00);\
 }
 
+struct _ave_d1012 {
+	BYTE reg[3];
+} ave_d1012;
+
 void map_init_Ave(BYTE model) {
 	switch (model) {
 		case NINA06:

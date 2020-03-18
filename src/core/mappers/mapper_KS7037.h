@@ -21,11 +21,6 @@
 
 #include "common.h"
 
-struct _ks7037 {
-	BYTE ind;
-	BYTE reg[8];
-} ks7037;
-
 void map_init_KS7037(void);
 void extcl_after_mapper_init_KS7037(void);
 void extcl_cpu_wr_mem_KS7037(WORD address, BYTE value);

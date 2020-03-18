@@ -21,10 +21,6 @@
 
 #include "common.h"
 
-struct _fs304 {
-	BYTE reg[4];
-} fs304;
-
 void map_init_FS304(void);
 void extcl_cpu_wr_mem_FS304(WORD address, BYTE value);
 BYTE extcl_save_mapper_FS304(BYTE mode, BYTE slot, FILE *fp);

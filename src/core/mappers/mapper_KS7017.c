@@ -23,6 +23,14 @@
 #include "cpu.h"
 #include "save_slot.h"
 
+struct _ks7017 {
+	BYTE reg;
+	struct _ks7017_irq {
+		BYTE active;
+		WORD count;
+	} irq;
+} ks7017;
+
 void map_init_KS7017(void) {
 	EXTCL_CPU_WR_MEM(KS7017);
 	EXTCL_CPU_RD_MEM(KS7017);

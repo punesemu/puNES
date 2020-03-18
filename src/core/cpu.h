@@ -102,15 +102,15 @@ typedef struct _nmi {
 	uint32_t cpu_cycles_from_last_nmi;
 } _nmi;
 
+extern _cpu cpu;
+extern _irq irq;
+extern _nmi nmi;
+
 #if defined (__cplusplus)
 #define EXTERNC extern "C"
 #else
 #define EXTERNC
 #endif
-
-EXTERNC _cpu cpu;
-EXTERNC _irq irq;
-EXTERNC _nmi nmi;
 
 EXTERNC void cpu_exe_op(void);
 EXTERNC void cpu_init_PC(void);

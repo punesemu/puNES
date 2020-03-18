@@ -109,13 +109,13 @@ typedef struct _shader_effect {
 	int8_t feedback_pass;
 } _shader_effect;
 
+extern _shader_effect shader_effect;
+
 #if defined (__cplusplus)
 #define EXTERNC extern "C"
 #else
 #define EXTERNC
 #endif
-
-EXTERNC _shader_effect shader_effect;
 
 EXTERNC BYTE shaders_set(int shader);
 EXTERNC void shader_se_set_default(_shader_effect *se);

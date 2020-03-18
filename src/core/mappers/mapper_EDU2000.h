@@ -21,11 +21,6 @@
 
 #include "common.h"
 
-struct _edu2000 {
-	BYTE reg;
-	uint32_t prg_ram_address;
-} edu2000;
-
 void map_init_EDU2000(void);
 void extcl_cpu_wr_mem_EDU2000(WORD address, BYTE value);
 BYTE extcl_cpu_rd_mem_EDU2000(WORD address, BYTE openbus, BYTE before);

@@ -61,12 +61,6 @@ typedef struct _js_sch {
 	BYTE mode;
 } _js_sch;
 
-#if defined (__cplusplus)
-#define EXTERNC extern "C"
-#else
-#define EXTERNC
-#endif
-
 static const _js_element jsn_list[] = {
 	{ 0x0FF,  uL("NULL")        },
 	{ 0x000,  uL("JOYSTICKID1") },
@@ -100,7 +94,13 @@ static const _js_element jsv_list[] = {
 	{ 0x416, uL("JB22")   }, { 0x417, uL("JB23")   },
 };
 
-EXTERNC _js js[PORT_MAX], js_shcut;
+extern _js js[PORT_MAX], js_shcut;
+
+#if defined (__cplusplus)
+#define EXTERNC extern "C"
+#else
+#define EXTERNC
+#endif
 
 EXTERNC void js_init(BYTE first_time);
 EXTERNC void js_quit(BYTE last_time);
