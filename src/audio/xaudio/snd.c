@@ -28,6 +28,8 @@
 #include "wave.h"
 #if defined (DEBUG)
 #define __inline
+#else
+#define __inline inline __attribute__((always_inline))
 #endif
 #define INITGUID
 #include <XAudio2.h>
