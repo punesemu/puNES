@@ -267,22 +267,23 @@ INLINE static void calc_envelope(_slot *slot, int32_t lfo);
 INLINE static int32_t calc_slot_car(_slot *slot, int32_t fm);
 INLINE static int32_t calc_slot_mod(_slot *slot);
 
+// VRC7 instruments, March 15, 2019 dumped by Nuke.YKT
 static const unsigned char default_inst[15][8] = {
-	{0x03, 0x21, 0x04, 0x06, 0x8D, 0xF2, 0x42, 0x17}, // Violin
-	{0x13, 0x41, 0x05, 0x0E, 0x99, 0x96, 0x63, 0x12}, // Guitar
-	{0x31, 0x11, 0x10, 0x0A, 0xF0, 0x9C, 0x32, 0x02}, // Piano
-	{0x21, 0x61, 0x1D, 0x07, 0x9F, 0x64, 0x20, 0x27}, // Flute
-	{0x22, 0x21, 0x1E, 0x06, 0xF0, 0x76, 0x08, 0x28}, // Clarinet
-	{0x02, 0x01, 0x06, 0x00, 0xF0, 0xF2, 0x03, 0x95}, // Oboe
-	{0x21, 0x61, 0x1C, 0x07, 0x82, 0x81, 0x16, 0x07}, // Trumpet
-	{0x23, 0x21, 0x1A, 0x17, 0xEF, 0x82, 0x25, 0x15}, // Organ
-	{0x25, 0x11, 0x1F, 0x00, 0x86, 0x41, 0x20, 0x11}, // Horn
-	{0x85, 0x01, 0x1F, 0x0F, 0xE4, 0xA2, 0x11, 0x12}, // Synthesizer
-	{0x07, 0xC1, 0x2B, 0x45, 0xB4, 0xF1, 0x24, 0xF4}, // Harpsichord
-	{0x61, 0x23, 0x11, 0x06, 0x96, 0x96, 0x13, 0x16}, // Vibraphone
-	{0x01, 0x02, 0xD3, 0x05, 0x82, 0xA2, 0x31, 0x51}, // Synthesizer Bass
-	{0x61, 0x22, 0x0D, 0x02, 0xC3, 0x7F, 0x24, 0x05}, // Acoustic Bass
-	{0x21, 0x62, 0x0E, 0x00, 0xA1, 0xA0, 0x44, 0x17}  // Electric Guitar
+	{0x03, 0x21, 0x05, 0x06, 0xE8, 0x81, 0x42, 0x27}, // Violin
+	{0x13, 0x41, 0x14, 0x0D, 0xD8, 0xF6, 0x23, 0x12}, // Guitar
+	{0x11, 0x11, 0x08, 0x08, 0xFA, 0xB2, 0x20, 0x12}, // Piano
+	{0x31, 0x61, 0x0C, 0x07, 0xA8, 0x64, 0x61, 0x27}, // Flute
+	{0x32, 0x21, 0x1E, 0x06, 0xE1, 0x76, 0x01, 0x28}, // Clarinet
+	{0x02, 0x01, 0x06, 0x00, 0xA3, 0xE2, 0xF4, 0xF4}, // Oboe
+	{0x21, 0x61, 0x1D, 0x07, 0x82, 0x81, 0x11, 0x07}, // Trumpet
+	{0x23, 0x21, 0x22, 0x17, 0xA2, 0x72, 0x01, 0x17}, // Organ
+	{0x35, 0x11, 0x25, 0x00, 0x40, 0x73, 0x72, 0x01}, // Horn
+	{0xB5, 0x01, 0x0F, 0x0F, 0xA8, 0xA5, 0x51, 0x02}, // Synthesizer
+	{0x17, 0xC1, 0x24, 0x07, 0xF8, 0xF8, 0x22, 0x12}, // Harpsichord
+	{0x71, 0x23, 0x11, 0x06, 0x65, 0x74, 0x18, 0x16}, // Vibraphone
+	{0x01, 0x02, 0xD3, 0x05, 0xC9, 0x95, 0x03, 0x02}, // Synthesizer Bass
+	{0x61, 0x63, 0x0C, 0x00, 0x94, 0xC0, 0x33, 0xF6}, // Acoustic Bass
+	{0x21, 0x72, 0x0D, 0x00, 0xC1, 0xD5, 0x56, 0x06}  // Electric Guitar
 };
 /* Input clock */
 static uint32_t clk = 844451141;
@@ -352,8 +353,8 @@ void opll_reset(uint32_t clk, uint32_t rate) {
 		initialized = TRUE;
 	}
 
-	opll.real_step = (uint32_t) ((1 << 31) / rate);
-	opll.opll_step = (uint32_t) ((1 << 31) / (clk / 72));
+	opll.real_step = (uint32_t)((1 << 31) / rate);
+	opll.opll_step = (uint32_t)((1 << 31) / (clk / 72));
 	opll.opll_time = 0;
 }
 void opll_write_reg(uint32_t reg, uint8_t value) {
@@ -558,9 +559,9 @@ SWORD opll_calc(void) {
 	}
 
 	opll.opll_time -= opll.real_step;
-	opll.out = ((double) opll.next * (opll.opll_step - opll.opll_time) + (double) opll.prev * opll.opll_time) / opll.opll_step;
+	opll.out = ((double)opll.next * (opll.opll_step - opll.opll_time) + (double)opll.prev * opll.opll_time) / opll.opll_step;
 
-	return ((int16_t) opll.out);
+	return ((int16_t)opll.out);
 }
 
 INLINE static void slot_reset(_slot *slot, int type) {
@@ -591,15 +592,15 @@ INLINE static void make_tables(uint32_t c, uint32_t r) {
 
 		/* Table for Pitch Modulator */
 		for (i = 0; i < PM_PG_WIDTH; i++) {
-			pmtable[i] = (int32_t)((double) PM_AMP * pow(2.0, (double) PM_DEPTH * sin(2.0 * PI * i / PM_PG_WIDTH) / 1200));
+			pmtable[i] = (int32_t)((double)PM_AMP * pow(2.0, (double)PM_DEPTH * sin(2.0 * PI * i / PM_PG_WIDTH) / 1200));
 		}
 		/* Table for Amp Modulator */
 		for (i = 0; i < AM_PG_WIDTH; i++) {
-			amtable[i] = (int32_t)((double) AM_DEPTH / 2 / DB_STEP * (1.0 + sin(2.0 * PI * i / PM_PG_WIDTH)));
+			amtable[i] = (int32_t)((double)AM_DEPTH / 2 / DB_STEP * (1.0 + sin(2.0 * PI * i / PM_PG_WIDTH)));
 		}
 		/* Table for dB(0 -- (1<<DB_BITS)-1) to Liner(0 -- DB2LIN_AMP_WIDTH) */
 		for (i = 0; i < DB_MUTE + DB_MUTE; i++) {
-			DB2LIN_TABLE[i] = (int16_t)((double) ((1 << DB2LIN_AMP_BITS) - 1) * pow(10.0, -(double) i * DB_STEP / 20));
+			DB2LIN_TABLE[i] = (int16_t)((double)((1 << DB2LIN_AMP_BITS) - 1) * pow(10.0, -(double)i * DB_STEP / 20));
 			if (i >= DB_MUTE) {
 				DB2LIN_TABLE[i] = 0;
 			}
@@ -608,7 +609,7 @@ INLINE static void make_tables(uint32_t c, uint32_t r) {
 		/* Table for AR to LogCurve. */
 		AR_ADJUST_TABLE[0] = (1 << EG_BITS);
 		for (i = 1; i < 128; i++) {
-			AR_ADJUST_TABLE[i] = (uint16_t)((double) (1 << EG_BITS) - 1 - (1 << EG_BITS) * log((double) i) / log(128.0));
+			AR_ADJUST_TABLE[i] = (uint16_t)((double)(1 << EG_BITS) - 1 - (1 << EG_BITS) * log((double)i) / log(128.0));
 		}
 		/* Table of Ttl */
 		{
@@ -662,13 +663,13 @@ INLINE static void make_tables(uint32_t c, uint32_t r) {
 		}
 		/* Sin Table */
 		for (i = 0; i < PG_WIDTH / 4; i++) {
-			waveform[fullsintable][i] = (uint16_t) lin2db(sin(2.0 * PI * i / PG_WIDTH));
+			waveform[fullsintable][i] = (uint16_t)lin2db(sin(2.0 * PI * i / PG_WIDTH));
 		}
 		for (i = 0; i < PG_WIDTH / 4; i++) {
 			waveform[fullsintable][PG_WIDTH / 2 - 1 - i] = waveform[fullsintable][i];
 		}
 		for (i = 0; i < PG_WIDTH / 2; i++) {
-			waveform[fullsintable][PG_WIDTH / 2 + i] = (uint16_t) (DB_MUTE + DB_MUTE + waveform[fullsintable][i]);
+			waveform[fullsintable][PG_WIDTH / 2 + i] = (uint16_t)(DB_MUTE + DB_MUTE + waveform[fullsintable][i]);
 		}
 		for (i = 0; i < PG_WIDTH / 2; i++) {
 			waveform[halfsintable][i] = waveform[fullsintable][i];
@@ -717,7 +718,7 @@ INLINE static void internal_refresh(void) {
 				} else if (RM == 15) {
 					attacktable[RM][RL] = EG_DP_WIDTH;
 				} else {
-					attacktable[RM][RL] = (uint32_t) ((double) (1 << EG_DP_BITS) / (attacktime[RM][RL] * 3579545 / 72000));
+					attacktable[RM][RL] = (uint32_t)((double)(1 << EG_DP_BITS) / (attacktime[RM][RL] * 3579545 / 72000));
 				}
 
 			}
@@ -760,7 +761,7 @@ INLINE static void internal_refresh(void) {
 				if (RM == 0) {
 					decaytable[RM][RL] = 0;
 				} else {
-					decaytable[RM][RL] = (uint32_t) ((double) (1 << EG_DP_BITS) / (decaytime[RM][RL] * 3579545 / 72000));
+					decaytable[RM][RL] = (uint32_t)((double)(1 << EG_DP_BITS) / (decaytime[RM][RL] * 3579545 / 72000));
 				}
 			}
 		}
@@ -789,8 +790,8 @@ INLINE static void internal_refresh(void) {
 		}
 	}
 
-	pm_dphase = (uint32_t) rate_adjust(PM_SPEED * PM_DP_WIDTH / (clk / 72));
-	am_dphase = (uint32_t) rate_adjust(AM_SPEED * AM_DP_WIDTH / (clk / 72));
+	pm_dphase = (uint32_t)rate_adjust(PM_SPEED * PM_DP_WIDTH / (clk / 72));
+	am_dphase = (uint32_t)rate_adjust(AM_SPEED * AM_DP_WIDTH / (clk / 72));
 }
 INLINE static void set_instrument(uint8_t i, uint8_t inst) {
 	const uint8_t *src;
@@ -860,7 +861,7 @@ INLINE static int32_t lin2db(double d) {
 	if (d == 0) {
 		return (DB_MUTE - 1);
 	} else {
-		return min(-(int32_t) (20.0 * log10(d) / DB_STEP), DB_MUTE - 1); /* 0 -- 127 */
+		return min(-(int32_t)(20.0 * log10(d) / DB_STEP), DB_MUTE - 1); /* 0 -- 127 */
 	}
 }
 INLINE static uint32_t calc_eg_dphase(_slot * slot) {
@@ -1071,8 +1072,7 @@ INLINE static int32_t calc_slot_mod(_slot *slot) {
 		slot->output[0] = 0;
 	} else if (slot->patch.FB != 0) {
 		fm = wave2_4pi(slot->feedback) >> (7 - slot->patch.FB);
-		slot->output[0] = DB2LIN_TABLE[slot->sintbl[(slot->pgout + fm) & (PG_WIDTH - 1)]
-			+ slot->egout];
+		slot->output[0] = DB2LIN_TABLE[slot->sintbl[(slot->pgout + fm) & (PG_WIDTH - 1)] + slot->egout];
 	} else {
 		slot->output[0] = DB2LIN_TABLE[slot->sintbl[slot->pgout] + slot->egout];
 	}
