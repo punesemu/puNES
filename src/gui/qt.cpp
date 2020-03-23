@@ -344,43 +344,55 @@ void gui_emit_et_external_control_windows_show(void) {
 }
 
 void gui_decode_all_input_events(void) {
-	// keyboard
-	for (QList<_wdgScreen_input_event>::iterator e = qt.screen->input_event.begin(); e != qt.screen->input_event.end(); ++e)
-	{
-		_wdgScreen_input_event &event = *e;
+	if (!qt.screen->events.keyb.count() && !qt.screen->events.mouse.count()) {
+		return;
+	}
 
-		for (BYTE i = PORT1; i < PORT_MAX; i++) {
-			if (port_funct[i].input_decode_event && (port_funct[i].input_decode_event(event.mode,
-				event.autorepeat, event.event, event.type, &port[i]) == EXIT_OK)) {
-				break;
+	qt.screen->events.mutex.lock();
+
+	// keyboard
+	if (qt.screen->events.keyb.count()) {
+		for (QList<_wdgScreen_keyboard_event>::iterator e = qt.screen->events.keyb.begin(); e != qt.screen->events.keyb.end(); ++e)
+		{
+			_wdgScreen_keyboard_event &event = *e;
+
+			for (BYTE i = PORT1; i < PORT_MAX; i++) {
+				if (port_funct[i].input_decode_event && (port_funct[i].input_decode_event(event.mode,
+					event.autorepeat, event.event, event.type, &port[i]) == EXIT_OK)) {
+					break;
+				}
 			}
 		}
+		qt.screen->events.keyb.clear();
 	}
-	qt.screen->input_event.clear();
 
 	// mouse
-	for (QList<_wdgScreen_mouse_event>::iterator e = qt.screen->mouse_event.begin(); e != qt.screen->mouse_event.end(); ++e)
-	{
-		_wdgScreen_mouse_event &event = *e;
+	if (qt.screen->events.mouse.count()) {
+		for (QList<_wdgScreen_mouse_event>::iterator e = qt.screen->events.mouse.begin(); e != qt.screen->events.mouse.end(); ++e)
+		{
+			_wdgScreen_mouse_event &event = *e;
 
-		if ((event.type == QEvent::MouseButtonPress) || (event.type == QEvent::MouseButtonDblClick)) {
-			if (event.button == Qt::LeftButton) {
-				gmouse.left = TRUE;
-			} else if (event.button == Qt::RightButton) {
-				gmouse.right = TRUE;
+			if ((event.type == QEvent::MouseButtonPress) || (event.type == QEvent::MouseButtonDblClick)) {
+				if (event.button == Qt::LeftButton) {
+					gmouse.left = TRUE;
+				} else if (event.button == Qt::RightButton) {
+					gmouse.right = TRUE;
+				}
+			} else if (event.type == QEvent::MouseButtonRelease) {
+				if (event.button == Qt::LeftButton) {
+					gmouse.left = FALSE;
+				} else if (event.button == Qt::RightButton) {
+					gmouse.right = FALSE;
+				}
+			} else if (event.type == QEvent::MouseMove) {
+				gmouse.x = event.x;
+				gmouse.y = event.y;
 			}
-		} else if (event.type == QEvent::MouseButtonRelease) {
-			if (event.button == Qt::LeftButton) {
-				gmouse.left = FALSE;
-			} else if (event.button == Qt::RightButton) {
-				gmouse.right = FALSE;
-			}
-		} else if (event.type == QEvent::MouseMove) {
-			gmouse.x = event.x;
-			gmouse.y = event.y;
 		}
+		qt.screen->events.mouse.clear();
 	}
-	qt.screen->mouse_event.clear();
+
+	qt.screen->events.mutex.unlock();
 }
 
 void gui_screen_update(void) {

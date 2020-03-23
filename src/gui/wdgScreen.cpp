@@ -77,7 +77,9 @@ bool wdgScreen::eventFilter(QObject *obj, QEvent *event) {
 		}
 #endif
 		if (tas.type == NOTAS) {
-			input_event << _wdgScreen_input_event(PRESSED, keyEvent->isAutoRepeat(), keyval, KEYBOARD);
+			events.mutex.lock();
+			events.keyb << _wdgScreen_keyboard_event(PRESSED, keyEvent->isAutoRepeat(), keyval, KEYBOARD);
+			events.mutex.unlock();
 		}
 	} else if (event->type() == QEvent::KeyPress) {
 		return (true);
@@ -91,16 +93,22 @@ bool wdgScreen::eventFilter(QObject *obj, QEvent *event) {
 		keyval = objInp::kbd_keyval_decode(keyEvent);
 
 		if (tas.type == NOTAS) {
-			input_event << _wdgScreen_input_event(RELEASED, keyEvent->isAutoRepeat(), keyval, KEYBOARD);
+			events.mutex.lock();
+			events.keyb << _wdgScreen_keyboard_event(RELEASED, keyEvent->isAutoRepeat(), keyval, KEYBOARD);
+			events.mutex.unlock();
 		}
 	} else if ((tas.type == NOTAS) && (rwnd.active == FALSE)) {
 		if ((event->type() == QEvent::MouseButtonPress) || (event->type() == QEvent::MouseButtonRelease) ||
 				(event->type() == QEvent::MouseButtonDblClick)) {
 			mouseEvent = ((QMouseEvent *)event);
-			mouse_event << _wdgScreen_mouse_event(event->type(), mouseEvent->button(), 0, 0);
+			events.mutex.lock();
+			events.mouse << _wdgScreen_mouse_event(event->type(), mouseEvent->button(), 0, 0);
+			events.mutex.unlock();
 		} else if (event->type() == QEvent::MouseMove) {
 			mouseEvent = ((QMouseEvent *)event);
-			mouse_event << _wdgScreen_mouse_event(event->type(), Qt::NoButton, mouseEvent->x(), mouseEvent->y());
+			events.mutex.lock();
+			events.mouse << _wdgScreen_mouse_event(event->type(), Qt::NoButton, mouseEvent->x(), mouseEvent->y());
+			events.mutex.unlock();
 		}
 	}
 
