@@ -709,8 +709,7 @@ static BYTE opengl_glew_init(void) {
 	if ((err = glewInit()) != GLEW_OK) {
 		fprintf(stderr, "OPENGL: %s\n", glewGetErrorString(err));
 	} else {
-		fprintf(stderr, "OPENGL: GPU %s (%s, %s)\n", glGetString(GL_RENDERER),
-			glGetString(GL_VENDOR), glGetString(GL_VERSION));
+		fprintf(stderr, "OPENGL: GPU %s (%s, %s)\n", glGetString(GL_RENDERER), glGetString(GL_VENDOR), glGetString(GL_VERSION));
 		fprintf(stderr, "OPENGL: GL Version %d.%d %s\n", opengl_integer_get(GL_MAJOR_VERSION),
 			opengl_integer_get(GL_MINOR_VERSION),
 			opengl_integer_get(GL_CONTEXT_CORE_PROFILE_BIT) ? "Core" : "Compatibility");
@@ -1885,7 +1884,7 @@ INLINE static void opengl_shader_cg_params_set(const _texture *texture, GLuint f
 	const _shader *shd = &texture->shader;
 
 	if (shd->cgp.uni.mvp) {
-		cgGLSetMatrixParameterfc(shd->cgp.uni.mvp, (const float *) &opengl.mvp.data);
+		cgGLSetMatrixParameterfc(shd->cgp.uni.mvp, (const float *)&opengl.mvp.data);
 	}
 
 	// IN.vertex_coord

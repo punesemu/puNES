@@ -128,7 +128,7 @@ BYTE shaders_set(int shader) {
 		int index = se->pass - 1;
 
 		_shdpass(index);
-		if 	((type->x != SHADER_SCALE_DEFAULT) || (type->y != SHADER_SCALE_DEFAULT)) {
+		if ((type->x != SHADER_SCALE_DEFAULT) || (type->y != SHADER_SCALE_DEFAULT)) {
 			se->pass++;
 			_shdpass(index + 1);
 			sp_set_default(sp);
