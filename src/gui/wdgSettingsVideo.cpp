@@ -102,6 +102,9 @@ wdgSettingsVideo::wdgSettingsVideo(QWidget *parent) : QWidget(parent) {
 	connect(checkBox_Use_integer_scaling_in_fullscreen, SIGNAL(clicked(bool)), this, SLOT(s_integer_in_fullscreen(bool)));
 	connect(checkBox_Stretch_in_fullscreen, SIGNAL(clicked(bool)), this, SLOT(s_stretch_in_fullscreen(bool)));
 
+	connect(comboBox_Screen_Rotation, SIGNAL(activated(int)), this, SLOT(s_screen_rotation(int)));
+	connect(checkBox_Text_Rotation, SIGNAL(clicked(bool)), this, SLOT(s_text_rotation(bool)));
+
 	tabWidget_Video->setCurrentIndex(0);
 }
 wdgSettingsVideo::~wdgSettingsVideo() {}
@@ -206,6 +209,12 @@ void wdgSettingsVideo::update_widget(void) {
 	checkBox_Fullscreen_in_window->setChecked(cfg->fullscreen_in_window);
 	checkBox_Use_integer_scaling_in_fullscreen->setChecked(cfg->integer_scaling);
 	checkBox_Stretch_in_fullscreen->setChecked(cfg->stretch);
+
+	{
+		srotation_set();
+		checkBox_Text_Rotation->setChecked(cfg->text_rotation);
+	}
+
 }
 void wdgSettingsVideo::change_rom(void) {
 	oscan_brd_mode_set();
@@ -214,6 +223,9 @@ void wdgSettingsVideo::change_rom(void) {
 
 void wdgSettingsVideo::scale_set(void) {
 	comboBox_Scale->setCurrentIndex(cfg->scale - 1);
+}
+void wdgSettingsVideo::srotation_set(void) {
+	comboBox_Screen_Rotation->setCurrentIndex(cfg->screen_rotation);
 }
 void wdgSettingsVideo::par_set(void) {
 	comboBox_PAR->setCurrentIndex(cfg->pixel_aspect_ratio);
@@ -983,5 +995,23 @@ void wdgSettingsVideo::s_stretch_in_fullscreen(UNUSED(bool checked)) {
 	if (cfg->fullscreen == FULLSCR) {
 		gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 	}
+	emu_thread_continue();
+}
+void wdgSettingsVideo::s_screen_rotation(int index) {
+	int rotation = index;
+
+	if (rotation == cfg->screen_rotation) {
+		return;
+	}
+
+	emu_thread_pause();
+	cfg->screen_rotation = rotation;
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
+	emu_thread_continue();
+}
+void wdgSettingsVideo::s_text_rotation(UNUSED(bool checked)) {
+	emu_thread_pause();
+	cfg->text_rotation = !cfg->text_rotation;
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 	emu_thread_continue();
 }

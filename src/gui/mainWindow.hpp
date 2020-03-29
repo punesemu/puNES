@@ -166,6 +166,8 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void s_set_vs_window(void);
 	private slots:
 		void s_help(void);
+		void s_rotate_to_left(bool checked);
+		void s_rotate_to_right(bool checked);
 
 	private slots:
 		void s_ff_draw_screen(void);

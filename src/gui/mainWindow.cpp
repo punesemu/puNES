@@ -148,6 +148,37 @@ mainWindow::mainWindow() : QMainWindow() {
 	connect_menu_signals();
 	shortcuts();
 
+	// pulsanti per il rotate
+	{
+		QWidget *wdgRotateScreen = new QWidget(menubar);
+		QHBoxLayout *hbox = new QHBoxLayout(wdgRotateScreen);
+		QPushButton *btn;
+
+		hbox->setContentsMargins(QMargins(0,0,0,0));
+		hbox->setMargin(0);
+		//hbox->setSpacing(SPACING);
+
+		wdgRotateScreen->setLayout(hbox);
+
+		btn = new QPushButton(wdgRotateScreen);
+		btn->setObjectName(QString::fromUtf8("rotateLeft"));
+		btn->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+		btn->setIcon(QIcon(":/icon/icons/rotate_left.svg"));
+		btn->setToolTip(tr("Rotate the screen 90 degrees to the left"));
+		connect(btn, SIGNAL(clicked(bool)), this, SLOT(s_rotate_to_left(bool)));
+		hbox->addWidget(btn);
+
+		btn = new QPushButton(wdgRotateScreen);
+		btn->setObjectName(QString::fromUtf8("rotateRight"));
+		btn->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+		btn->setIcon(QIcon(":/icon/icons/rotate_right.svg"));
+		btn->setToolTip(tr("Rotate the screen 90 degrees to the Right"));
+		connect(btn, SIGNAL(clicked(bool)), this, SLOT(s_rotate_to_right(bool)));
+		hbox->addWidget(btn);
+
+		menubar->setCornerWidget(wdgRotateScreen, Qt::TopRightCorner);
+	}
+
 	adjustSize();
 	setFixedSize(size());
 
@@ -1329,6 +1360,22 @@ void mainWindow::s_help(void) {
 	about->exec();
 
 	emu_pause(FALSE);
+}
+void mainWindow::s_rotate_to_left(UNUSED(bool checked)) {
+	if (--cfg->screen_rotation >= ROTATE_MAX) {
+		cfg->screen_rotation = ROTATE_270;
+	}
+	emu_thread_pause();
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
+	emu_thread_continue();
+}
+void mainWindow::s_rotate_to_right(UNUSED(bool checked)) {
+	if (++cfg->screen_rotation >= ROTATE_MAX) {
+		cfg->screen_rotation = ROTATE_0;
+	}
+	emu_thread_pause();
+	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
+	emu_thread_continue();
 }
 
 void mainWindow::s_ff_draw_screen(void) {

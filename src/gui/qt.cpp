@@ -186,14 +186,23 @@ void gui_set_video_mode(void) {
 		qt.mwin->menu_Help->menuAction()->setVisible(true);
 	}
 
-	qt.screen->setFixedSize(QSize(gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE]));
+	{
+		SDBWORD w = gfx.w[VIDEO_MODE], h = gfx.h[VIDEO_MODE];
 
-	qt.mwin->setFixedSize(QSize(qt.screen->width(),
-		(qt.mwin->menubar->isHidden() ? 0 : qt.mwin->menubar->sizeHint().height()) + qt.screen->height() +
-		(qt.mwin->statusbar->isHidden() ? 0 : qt.mwin->statusbar->sizeHint().height())));
+		if (!cfg->fullscreen && ((cfg->screen_rotation == ROTATE_90) || (cfg->screen_rotation == ROTATE_270))) {
+			w = gfx.h[VIDEO_MODE];
+			h = gfx.w[VIDEO_MODE];
+		}
 
-	qt.mwin->menubar->setFixedWidth(gfx.w[VIDEO_MODE]);
-	qt.mwin->statusbar->update_width(gfx.w[VIDEO_MODE]);
+		qt.screen->setFixedSize(QSize(w, h));
+
+		qt.mwin->setFixedSize(QSize(qt.screen->width(),
+			(qt.mwin->menubar->isHidden() ? 0 : qt.mwin->menubar->sizeHint().height()) + qt.screen->height() +
+			(qt.mwin->statusbar->isHidden() ? 0 : qt.mwin->statusbar->sizeHint().height())));
+
+		qt.mwin->menubar->setFixedWidth(w);
+		qt.mwin->statusbar->update_width(w);
+	}
 }
 
 void gui_update(void) {

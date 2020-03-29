@@ -50,7 +50,7 @@ static void d3d9_shader_uni_texture_clear(_shader_uniforms_tex *sut);
 static void d3d9_shader_uni_texture(_shader_uniforms_tex *sut, _shader_prg_cg *prg, char *fmt, ...);
 static CGparameter d3d9_cg_find_param(CGparameter prm, const char *name);
 static BYTE d3d9_vertex_declaration_create(_shader *shd);
-static void d3d9_vertex_buffer_set(_shader *shd,  _viewport *vp, _texture_rect *prev);
+static void d3d9_vertex_buffer_set(_shader *shd,  _viewport *vp, _texture_rect *prev, BYTE last_pass);
 INLINE static void d3d9_viewport_set(DWORD x, DWORD y, DWORD w, DWORD h);
 INLINE D3DTEXTUREFILTERTYPE d3d9_shader_filter(UINT type);
 INLINE static void d3d9_shader_params_text_set(_shader *shd);
@@ -219,14 +219,22 @@ BYTE d3d9_context_create(void) {
 
 	d3d9_context_delete();
 
+	if (!cfg->fullscreen && ((cfg->screen_rotation == ROTATE_90) || (cfg->screen_rotation == ROTATE_270))) {
+		d3d9.video_mode.w = gfx.h[VIDEO_MODE];
+		d3d9.video_mode.h = gfx.w[VIDEO_MODE];
+	} else {
+		d3d9.video_mode.w = gfx.w[VIDEO_MODE];
+		d3d9.video_mode.h = gfx.h[VIDEO_MODE];
+	}
+
 	if (overscan.enabled && (!cfg->oscan_black_borders && !cfg->fullscreen)) {
 		// visto che lavorero' con texture piu' grandi del video mode
 		// setto un backbuffer piu' grande.
-		w = gfx.w[VIDEO_MODE] * 2;
-		h = gfx.h[VIDEO_MODE] * 2;
+		w = d3d9.video_mode.w * 2;
+		h = d3d9.video_mode.h * 2;
 	} else {
-		w = gfx.w[VIDEO_MODE];
-		h = gfx.h[VIDEO_MODE];
+		w = d3d9.video_mode.w;
+		h = d3d9.video_mode.h;
 	}
 
 	if (d3d9_device_create(w, h) == EXIT_ERROR) {
@@ -271,65 +279,104 @@ BYTE d3d9_context_create(void) {
 		vp->h = gfx.h[VIDEO_MODE];
 
 		if (overscan.enabled && (!cfg->oscan_black_borders && !cfg->fullscreen)) {
-			vp->x = (-overscan.borders->left * gfx.width_pixel) * gfx.pixel_aspect_ratio;
-			vp->y = (-overscan.borders->up * cfg->scale);
+			BYTE h = (cfg->screen_rotation == ROTATE_180) || (cfg->screen_rotation == ROTATE_270) ?
+				overscan.borders->right : overscan.borders->left;
+			BYTE v = (cfg->screen_rotation == ROTATE_90) || (cfg->screen_rotation == ROTATE_180) ?
+				overscan.borders->down : overscan.borders->up;
+
+			vp->x = (-h * gfx.width_pixel) * gfx.pixel_aspect_ratio;
+			vp->y = (-v * cfg->scale);
 			vp->w = gfx.w[NO_OVERSCAN] * gfx.pixel_aspect_ratio;
 			vp->h = gfx.h[NO_OVERSCAN];
 		}
 
 		// configuro l'aspect ratio del fullscreen
 		if (cfg->fullscreen) {
+			int mw = (cfg->screen_rotation == ROTATE_90) || (cfg->screen_rotation == ROTATE_270) ?
+				_SCR_LINES_NOBRD : _SCR_ROWS_NOBRD;
+			int mh = (cfg->screen_rotation == ROTATE_90) || (cfg->screen_rotation == ROTATE_270) ?
+				_SCR_ROWS_NOBRD : _SCR_LINES_NOBRD;
+
 			if (!cfg->stretch) {
 				if (cfg->integer_scaling) {
-					int mw = _SCR_ROWS_NOBRD;
-					int mh = _SCR_LINES_NOBRD;
-					int mul = gfx.w[VIDEO_MODE] > gfx.h[VIDEO_MODE] ?
-						(gfx.h[VIDEO_MODE] - (gfx.h[VIDEO_MODE] % mh)) / mh :
-						(gfx.w[VIDEO_MODE] - (gfx.w[VIDEO_MODE] % mw)) / mw;
+					int mul = d3d9.video_mode.w > d3d9.video_mode.h ?
+						(d3d9.video_mode.h - (d3d9.video_mode.h % mh)) / mh :
+						(d3d9.video_mode.w - (d3d9.video_mode.w % mw)) / mw;
 
 					vp->w = mw * mul;
 					vp->h = mh * mul;
 				} else {
-					float mw = _SCR_ROWS_NOBRD;
-					float mh = _SCR_LINES_NOBRD;
-					float mul = mw / mh ;
+					float mul = (float)mw / (float)mh ;
 
-					if (gfx.w[VIDEO_MODE] > gfx.h[VIDEO_MODE]) {
-						vp->w = (int)((float)gfx.h[VIDEO_MODE] * mul);
+					if (d3d9.video_mode.w > d3d9.video_mode.h) {
+						vp->w = (int)((float)d3d9.video_mode.h * mul);
 					} else {
-						vp->h = (int)((float)gfx.w[VIDEO_MODE] / mul);
+						vp->h = (int)((float)d3d9.video_mode.w / mul);
 					}
 				}
-				vp->x = (gfx.w[VIDEO_MODE] - vp->w) >> 1;
-				vp->y = (gfx.h[VIDEO_MODE] - vp->h) >> 1;
+				vp->x = (d3d9.video_mode.w - vp->w) >> 1;
+				vp->y = (d3d9.video_mode.h - vp->h) >> 1;
 			}
 
 			if (overscan.enabled && (cfg->oscan_black_borders_fscr == FALSE)) {
 				float brd_l_x, brd_r_x, brd_u_y, brd_d_y;
 				float ratio_x, ratio_y;
 
-				ratio_x = (float)vp->w / _SCR_ROWS_NOBRD;
-				ratio_y = (float)vp->h / _SCR_LINES_NOBRD;
-				brd_l_x = (float)overscan.borders->left * ratio_x;
-				brd_r_x = (float)overscan.borders->right * ratio_x;
-				brd_u_y = (float)overscan.borders->up * ratio_y;
-				brd_d_y = (float)overscan.borders->down * ratio_y;
+				ratio_x = (float)vp->w / (float)_SCR_ROWS_NOBRD;
+				ratio_y = (float)vp->h / (float)_SCR_LINES_NOBRD;
+
+				switch (cfg->screen_rotation) {
+					default:
+					case ROTATE_0:
+						brd_l_x = (float)overscan.borders->left * ratio_x;
+						brd_r_x = (float)overscan.borders->right * ratio_x;
+						brd_u_y = (float)overscan.borders->up * ratio_y;
+						brd_d_y = (float)overscan.borders->down * ratio_y;
+						break;
+					case ROTATE_90:
+						brd_l_x = (float)overscan.borders->down * ratio_y;
+						brd_r_x = (float)overscan.borders->up * ratio_y;
+						brd_u_y = (float)overscan.borders->left * ratio_x;
+						brd_d_y = (float)overscan.borders->right * ratio_x;
+						break;
+					case ROTATE_180:
+						brd_l_x = (float)overscan.borders->right * ratio_x;
+						brd_r_x = (float)overscan.borders->left * ratio_x;
+						brd_u_y = (float)overscan.borders->down * ratio_y;
+						brd_d_y = (float)overscan.borders->up * ratio_y;
+						break;
+					case ROTATE_270:
+						brd_l_x = (float)overscan.borders->up * ratio_y;
+						brd_r_x = (float)overscan.borders->down * ratio_y;
+						brd_u_y = (float)overscan.borders->right * ratio_x;
+						brd_d_y = (float)overscan.borders->left * ratio_x;
+						break;
+				}
 
 				d3d9.viewp.left = brd_l_x;
 				d3d9.viewp.top = brd_u_y;
-				d3d9.viewp.right = gfx.w[VIDEO_MODE] - brd_r_x;
-				d3d9.viewp.bottom = gfx.h[VIDEO_MODE] - brd_d_y;
+				d3d9.viewp.right = d3d9.video_mode.w - brd_r_x;
+				d3d9.viewp.bottom = d3d9.video_mode.h - brd_d_y;
 			} else {
 				d3d9.viewp.left = 0;
 				d3d9.viewp.top = 0;
-				d3d9.viewp.right = gfx.w[VIDEO_MODE];
-				d3d9.viewp.bottom = gfx.h[VIDEO_MODE];
+				d3d9.viewp.right = d3d9.video_mode.w;
+				d3d9.viewp.bottom = d3d9.video_mode.h;
 			}
 		} else {
+			if ((cfg->screen_rotation == ROTATE_90) || (cfg->screen_rotation == ROTATE_270)) {
+				int x = vp->x, w = vp->w;
+
+				vp->x = vp->y;
+				vp->y = x;
+				vp->w = vp->h;
+				vp->h = w;
+			}
+
 			d3d9.viewp.left = -vp->x;
 			d3d9.viewp.top = -vp->y;
-			d3d9.viewp.right = gfx.w[VIDEO_MODE] + d3d9.viewp.left;
-			d3d9.viewp.bottom = gfx.h[VIDEO_MODE] + d3d9.viewp.top;
+			d3d9.viewp.right = d3d9.video_mode.w + d3d9.viewp.left;
+			d3d9.viewp.bottom = d3d9.video_mode.h + d3d9.viewp.top;
 		}
 	}
 
@@ -381,6 +428,7 @@ BYTE d3d9_context_create(void) {
 
 	// testo
 	{
+		BYTE rotate = FALSE;
 		int tw, th;
 
 		// setto il necessario per il blending
@@ -397,12 +445,33 @@ BYTE d3d9_context_create(void) {
 
 			tw = gfx.w[VIDEO_MODE] / div;
 			th = gfx.h[VIDEO_MODE] / div;
-		} else if (cfg->scale == 1) {
-			tw = gfx.w[VIDEO_MODE];
-			th = gfx.h[VIDEO_MODE];
 		} else {
 			tw = _SCR_ROWS_NOBRD * 2;
 			th = _SCR_LINES_NOBRD * 2;
+		}
+
+		if (gfx.w[VIDEO_MODE] < tw) {
+			tw = gfx.w[VIDEO_MODE];
+		}
+		if (gfx.h[VIDEO_MODE] < th) {
+			th = gfx.h[VIDEO_MODE];
+		}
+
+		if ((cfg->screen_rotation == ROTATE_90) || (cfg->screen_rotation == ROTATE_270)) {
+			if (cfg->text_rotation == TRUE) {
+				if (cfg->fullscreen) {
+					rotate = TRUE;
+				}
+			} else if (!cfg->fullscreen) {
+				rotate = TRUE;
+			}
+		}
+
+		if (rotate == TRUE) {
+			int tmp = tw;
+
+			tw = th;
+			th = tmp;
 		}
 
 		d3d9_texture_simple_create(&d3d9.text, tw, th, TRUE);
@@ -439,7 +508,7 @@ BYTE d3d9_context_create(void) {
 		shd->info.output_size.x = (FLOAT)texture->vp.w;
 		shd->info.output_size.y = (FLOAT)texture->vp.h;
 
-		d3d9_vertex_buffer_set(shd, &texture->vp, prev);
+		d3d9_vertex_buffer_set(shd, &texture->vp, prev, i == shader_effect.last_pass);
 	}
 
 	umemcpy(gfx.last_shader_file, cfg->shader_file, usizeof(gfx.last_shader_file));
@@ -468,14 +537,13 @@ void d3d9_draw_scene(void) {
 		if (i == shader_effect.last_pass) {
 			IDirect3DDevice9_SetRenderTarget(d3d9.adapter->dev, 0, back_buffer);
 			// pulisco l'intero schermo
-			d3d9_viewport_set(0, 0, gfx.w[VIDEO_MODE], gfx.h[VIDEO_MODE]);
+			d3d9_viewport_set(0, 0, d3d9.video_mode.w, d3d9.video_mode.h);
 		} else {
 			IDirect3DDevice9_SetRenderTarget(d3d9.adapter->dev, 0, texture->map0);
 			// pulisco l'fbo
 			d3d9_viewport_set(0, 0, texture->rect.w, texture->rect.h);
 		}
-		IDirect3DDevice9_Clear(d3d9.adapter->dev, 0, NULL, D3DCLEAR_TARGET,
-			D3DCOLOR_ARGB(255, 0, 0, 0), 1.0f, 0);
+		IDirect3DDevice9_Clear(d3d9.adapter->dev, 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_ARGB(255, 0, 0, 0), 1.0f, 0);
 
 		// ora setto il viewport corretto
 		if (cfg->fullscreen) {
@@ -488,9 +556,9 @@ void d3d9_draw_scene(void) {
 		cgD3D9BindProgram(texture->shader.prg.v);
 
 		if (i == 0) {
-			IDirect3DDevice9_SetTexture(d3d9.adapter->dev, 0, (IDirect3DBaseTexture9 * )scrtex->data);
+			IDirect3DDevice9_SetTexture(d3d9.adapter->dev, 0, (IDirect3DBaseTexture9 *)scrtex->data);
 		} else {
-			IDirect3DDevice9_SetTexture(d3d9.adapter->dev, 0, (IDirect3DBaseTexture9 * )d3d9.texture[i - 1].data);
+			IDirect3DDevice9_SetTexture(d3d9.adapter->dev, 0, (IDirect3DBaseTexture9 *)d3d9.texture[i - 1].data);
 		}
 
 		IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0, D3DSAMP_MAGFILTER, filter);
@@ -522,7 +590,7 @@ void d3d9_draw_scene(void) {
 	// rendering del testo
 	text_rendering(TRUE);
 
-	// text
+	// testo
 	if (cfg->txt_on_screen && text.on_screen) {
 		float vpx, vpy, vpw, vph;
 
@@ -812,9 +880,11 @@ static void d3d9_screenshot(void) {
 		if ((buffer = malloc(SCR_ROWS * SCR_LINES * sizeof(uint32_t))) == NULL) {
 			return;
 		}
+		emu_pause(TRUE);
 		scale_surface_screenshoot_1x(SCR_ROWS * sizeof(uint32_t), buffer);
 		gui_save_screenshot(SCR_ROWS, SCR_LINES, buffer, FALSE);
 		free(buffer);
+		emu_pause(FALSE);
 	}
 }
 static BYTE d3d9_texture_create(_texture *texture, UINT index) {
@@ -1039,7 +1109,11 @@ static BYTE d3d9_texture_simple_create(_texture_simple *texture, UINT w, UINT h,
 	IDirect3DDevice9_SetSamplerState(d3d9.adapter->dev, 0, D3DSAMP_MAGFILTER, flt);
 	IDirect3DDevice9_SetTexture(d3d9.adapter->dev, 0, NULL);
 
-	d3d9_vertex_buffer_set(shd, &vp, rect);
+	if ((text == TRUE) && (cfg->text_rotation == TRUE)) {
+		d3d9_vertex_buffer_set(shd, &vp, rect, TRUE);
+	} else {
+		d3d9_vertex_buffer_set(shd, &vp, rect, FALSE);
+	}
 
 	return (EXIT_OK);
 }
@@ -1523,13 +1597,27 @@ static BYTE d3d9_vertex_declaration_create(_shader *shd) {
 
 	return (EXIT_OK);
 }
-static void d3d9_vertex_buffer_set(_shader *shd, _viewport *vp, _texture_rect *prev) {
+static void d3d9_vertex_buffer_set(_shader *shd, _viewport *vp, _texture_rect *prev, BYTE last_pass) {
 	D3DXMATRIX proj, ortho, rot;
 	FLOAT u = (FLOAT)prev->base.w / prev->w;
 	FLOAT v = (FLOAT)prev->base.h / prev->h;
 	void *buffer;
-	const UINT rotation = 0;
+	float rotation = 0;
 	UINT i;
+
+	if (last_pass == TRUE) {
+		switch (cfg->screen_rotation) {
+			case ROTATE_90:
+				rotation = 270.0f;
+				break;
+			case ROTATE_180:
+				rotation = 180.0f;
+				break;
+			case ROTATE_270:
+				rotation = 90.0f;
+				break;
+		}
+	}
 
 	shd->vb[0].x = 0.0f;
 	shd->vb[0].y = vp->h;
@@ -1592,7 +1680,7 @@ static void d3d9_vertex_buffer_set(_shader *shd, _viewport *vp, _texture_rect *p
 
 	D3DXMatrixOrthoOffCenterLH(&ortho, 0, vp->w, 0, vp->h, 0, 1);
 	D3DXMatrixIdentity(&rot);
-	D3DXMatrixRotationZ(&rot, rotation * (M_PI / 2.0));
+	D3DXMatrixRotationZ(&rot, rotation * (M_PI / 180.0f));
 
 	D3DXMatrixMultiply(&proj, &ortho, &rot);
 	D3DXMatrixTranspose(&shd->mvp, &proj);

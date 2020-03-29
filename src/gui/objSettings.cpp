@@ -711,6 +711,8 @@ void objSet::to_cfg(QString group) {
 		int_to_val(SET_FULLSCREEN_IN_WINDOW, cfg_from_file.fullscreen_in_window);
 		int_to_val(SET_INTEGER_FULLSCREEN, cfg_from_file.integer_scaling);
 		int_to_val(SET_STRETCH_FULLSCREEN, cfg_from_file.stretch);
+		int_to_val(SET_SCREEN_ROTATION, cfg_from_file.screen_rotation);
+		int_to_val(SET_TEXT_ROTATION, cfg_from_file.text_rotation);
 	}
 
 	if ((group == "audio") || (group == "all")) {
@@ -797,6 +799,8 @@ void objSet::fr_cfg(QString group) {
 		cfg_from_file.fullscreen_in_window = val_to_int(SET_FULLSCREEN_IN_WINDOW);
 		cfg_from_file.integer_scaling = val_to_int(SET_INTEGER_FULLSCREEN);
 		cfg_from_file.stretch = val_to_int(SET_STRETCH_FULLSCREEN);
+		cfg_from_file.screen_rotation = val_to_int(SET_SCREEN_ROTATION);
+		cfg_from_file.text_rotation = val_to_int(SET_TEXT_ROTATION);
 	}
 
 	if ((group == "audio") || (group == "all")) {

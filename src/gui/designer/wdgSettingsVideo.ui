@@ -127,6 +127,36 @@
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_Video_Misc">
          <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_Misc">
+           <item>
+            <widget class="QLabel" name="label_Misc">
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>Misc</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="Line" name="line_Misc">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
           <layout class="QHBoxLayout" name="horizontalLayout_Vsync">
            <item>
             <widget class="QCheckBox" name="checkBox_Vsync">
@@ -220,14 +250,81 @@
           </widget>
          </item>
          <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_Screen_Rotation">
+           <property name="topMargin">
+            <number>1</number>
+           </property>
+           <property name="rightMargin">
+            <number>9</number>
+           </property>
+           <item>
+            <widget class="QLabel" name="label_Screen_Rotation">
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>Screen rotation</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="Line" name="line_Screen_Rotation">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="QComboBox" name="comboBox_Screen_Rotation">
+           <item>
+            <property name="text">
+             <string>0 degrees</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>90 degrees</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>180 degrees</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>270 degrees</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="checkBox_Text_Rotation">
+           <property name="text">
+            <string>Also rotate the text on screen</string>
+           </property>
+          </widget>
+         </item>
+         <item>
           <spacer name="verticalSpacer_Video_Misc">
            <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>
            <property name="sizeHint" stdset="0">
             <size>
-             <width>20</width>
-             <height>40</height>
+             <width>487</width>
+             <height>173</height>
             </size>
            </property>
           </spacer>
@@ -242,6 +339,8 @@
         <zorder>checkBox_Fullscreen_in_window</zorder>
         <zorder>checkBox_Stretch_in_fullscreen</zorder>
         <zorder>checkBox_Use_integer_scaling_in_fullscreen</zorder>
+        <zorder>comboBox_Screen_Rotation</zorder>
+        <zorder>checkBox_Text_Rotation</zorder>
        </widget>
        <widget class="QWidget" name="tab_PAR">
         <attribute name="icon">
@@ -268,7 +367,7 @@
             </widget>
            </item>
            <item>
-            <widget class="Line" name="line_PAR_misc_2">
+            <widget class="Line" name="line_PAR_misc">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                <horstretch>0</horstretch>

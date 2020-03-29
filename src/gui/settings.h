@@ -78,6 +78,8 @@ enum set_element {
 	SET_FULLSCREEN_IN_WINDOW,
 	SET_INTEGER_FULLSCREEN,
 	SET_STRETCH_FULLSCREEN,
+	SET_SCREEN_ROTATION,
+	SET_TEXT_ROTATION,
 	SET_AUDIO_OUTPUT_DEVICE,
 	SET_AUDIO_BUFFER_FACTOR,
 	SET_SAMPLERATE,
@@ -320,6 +322,12 @@ static const _opt opt_ff_velocity[] = {
 	{NULL, uL("3x"), FF_3X},
 	{NULL, uL("4x"), FF_4X},
 	{NULL, uL("5x"), FF_5X}
+};
+static const _opt opt_screen_rotation[] = {
+	{NULL, uL("0"), ROTATE_0},
+	{NULL, uL("90"), ROTATE_90},
+	{NULL, uL("180"), ROTATE_180},
+	{NULL, uL("270"), ROTATE_270}
 };
 static const _opt opt_scale[] = {
 	{NULL, uL("1x"), X1},
@@ -718,6 +726,18 @@ static const _settings main_cfg[] = {
 		uL("video"), uL("stretch in fullscreen"), uL("no"),
 		uL("# possible values: yes, no"),
 		uL("-t, --stretch-fullscreen  stretch image         : yes, no"),
+		{LENGTH(opt_no_yes), opt_no_yes}
+	},
+	{
+		uL("video"), uL("screen rotation"), uL("0"),
+		uL("# possible values: 0, 90, 180, 270"),
+		uL("    --screen-rotation     degree scrn rotation  : 0, 90, 180, 270"),
+		{LENGTH(opt_screen_rotation), opt_screen_rotation}
+	},
+	{
+		uL("video"), uL("text rotation"), uL("no"),
+		uL("# possible values: yes, no"),
+		NULL,
 		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 	{

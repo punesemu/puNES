@@ -47,6 +47,7 @@ class wdgSettingsVideo : public QWidget, public Ui::wdgSettingsVideo {
 
 	private:
 		void scale_set(void);
+		void srotation_set(void);
 		void par_set(void);
 		void oscan_set(void);
 		void oscan_def_value_set(void);
@@ -94,6 +95,8 @@ class wdgSettingsVideo : public QWidget, public Ui::wdgSettingsVideo {
 		void s_fullscreen_in_window(bool checked);
 		void s_integer_in_fullscreen(bool checked);
 		void s_stretch_in_fullscreen(bool checked);
+		void s_screen_rotation(int index);
+		void s_text_rotation(bool checked);
 };
 
 #endif /* WDGSETTINGSVIDEO_HPP_ */

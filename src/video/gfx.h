@@ -94,6 +94,7 @@ enum shader_type {
 enum overcan_type { OSCAN_OFF, OSCAN_ON, OSCAN_DEFAULT };
 enum gfx_info_type { CURRENT, NO_OVERSCAN, MONITOR, VIDEO_MODE, PASS0 };
 enum no_change { NO_CHANGE = 255 };
+enum gfx_rotate_type { ROTATE_0, ROTATE_90, ROTATE_180, ROTATE_270, ROTATE_MAX };
 
 typedef struct _viewport {
 	int x, y;

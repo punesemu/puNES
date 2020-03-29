@@ -155,6 +155,11 @@ typedef struct _d3d9 {
 		_texture_simple tex[MAX_PREV + 1];
 	} screen;
 
+	struct _d3d9_video_mode {
+		UINT w;
+		UINT h;
+	} video_mode;
+
 	struct _feedback {
 		uint8_t in_use;
 		_texture tex;

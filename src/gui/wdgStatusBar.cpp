@@ -87,7 +87,8 @@ bool wdgStatusBar::eventFilter(QObject *obj, QEvent *event) {
 void wdgStatusBar::changeEvent(QEvent *event) {
 	if (event->type() == QEvent::LanguageChange) {
 		state->retranslateUi();
-		update_width(gfx.w[VIDEO_MODE]);
+		update_width((cfg->screen_rotation == ROTATE_90) || (cfg->screen_rotation == ROTATE_270)
+			? gfx.h[VIDEO_MODE] : gfx.w[VIDEO_MODE]);
 	} else {
 		QWidget::changeEvent(event);
 	}

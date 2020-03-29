@@ -43,8 +43,6 @@
 #define _SCR_LINES_NOBRD\
 	(float)SCR_LINES
 
-_opengl opengl;
-
 static void opengl_context_delete(void);
 static void opengl_screenshot(void);
 
@@ -93,12 +91,38 @@ static const _vertex_buffer vb_upright[4] = {
 	{ 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
 	{ 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
 };
-static const _vertex_buffer vb_flipped[4] = {
-	{ 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
-	{ 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
-	{ 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
-	{ 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+static const _vertex_buffer vb_flipped[ROTATE_MAX][4] = {
+	// 0
+	{
+		{ 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+		{ 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+		{ 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+		{ 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } }
+	},
+	// 90
+	{
+		{ 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+		{ 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+		{ 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+		{ 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+	},
+	// 180
+	{
+		{ 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+		{ 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+		{ 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+		{ 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+	},
+	// 270
+	{
+		{ 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+		{ 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+		{ 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+		{ 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, { 0.0f }, { 0.0f }, { 0.0f }, { 0.0f } },
+	},
 };
+
+_opengl opengl;
 
 BYTE opengl_init(void) {
 	memset(&gfx.vp, 0x00, sizeof(gfx.vp));
@@ -145,6 +169,14 @@ BYTE opengl_context_create(void) {
 	glEnable(GL_TEXTURE_2D);
 
 	opengl_context_delete();
+
+	if (!cfg->fullscreen && ((cfg->screen_rotation == ROTATE_90) || (cfg->screen_rotation == ROTATE_270))) {
+		opengl.video_mode.w = gfx.h[VIDEO_MODE];
+		opengl.video_mode.h = gfx.w[VIDEO_MODE];
+	} else {
+		opengl.video_mode.w = gfx.w[VIDEO_MODE];
+		opengl.video_mode.h = gfx.h[VIDEO_MODE];
+	}
 
 #if defined (WITH_OPENGL_CG)
 	if (shader_effect.type == MS_CGP) {
@@ -201,54 +233,91 @@ BYTE opengl_context_create(void) {
 		vp->h = gfx.h[VIDEO_MODE];
 
 		if (overscan.enabled && (!cfg->oscan_black_borders && !cfg->fullscreen)) {
-			vp->x = (-overscan.borders->left * gfx.width_pixel) * gfx.pixel_aspect_ratio;
-			vp->y = -overscan.borders->down * cfg->scale;
+			BYTE h = (cfg->screen_rotation == ROTATE_90) || (cfg->screen_rotation == ROTATE_180) ?
+				overscan.borders->right : overscan.borders->left;
+			BYTE v = (cfg->screen_rotation == ROTATE_180) || (cfg->screen_rotation == ROTATE_270) ?
+				overscan.borders->up : overscan.borders->down;
+
+			vp->x = (-h * gfx.width_pixel) * gfx.pixel_aspect_ratio;
+			vp->y = -v * cfg->scale;
 			vp->w = gfx.w[NO_OVERSCAN] * gfx.pixel_aspect_ratio;
 			vp->h = gfx.h[NO_OVERSCAN];
 		}
 
 		if (cfg->fullscreen) {
+			int mw = (cfg->screen_rotation == ROTATE_90) || (cfg->screen_rotation == ROTATE_270) ?
+				_SCR_LINES_NOBRD : _SCR_ROWS_NOBRD;
+			int mh = (cfg->screen_rotation == ROTATE_90) || (cfg->screen_rotation == ROTATE_270) ?
+				_SCR_ROWS_NOBRD : _SCR_LINES_NOBRD;
+
 			if (!cfg->stretch) {
 				if (cfg->integer_scaling) {
-					int mw = _SCR_ROWS_NOBRD;
-					int mh = _SCR_LINES_NOBRD;
-					int mul = gfx.w[VIDEO_MODE] > gfx.h[VIDEO_MODE] ?
-						(gfx.h[VIDEO_MODE] - (gfx.h[VIDEO_MODE] % mh)) / mh :
-						(gfx.w[VIDEO_MODE] - (gfx.w[VIDEO_MODE] % mw)) / mw;
+					int mul = opengl.video_mode.w > opengl.video_mode.h ?
+						(opengl.video_mode.h - (opengl.video_mode.h % mh)) / mh :
+						(opengl.video_mode.w - (opengl.video_mode.w % mw)) / mw;
 
 					vp->w = mw * mul;
 					vp->h = mh * mul;
 				} else {
-					float mw = _SCR_ROWS_NOBRD;
-					float mh = _SCR_LINES_NOBRD;
-					float mul = mw / mh ;
+					float mul = (float)mw / (float)mh ;
 
-					if (gfx.w[VIDEO_MODE] > gfx.h[VIDEO_MODE]) {
-						vp->w = (int)((float)gfx.h[VIDEO_MODE] * mul);
+					if (opengl.video_mode.w > opengl.video_mode.h) {
+						vp->w = (int)((float)opengl.video_mode.h * mul);
 					} else {
-						vp->h = (int)((float)gfx.w[VIDEO_MODE] / mul);
+						vp->h = (int)((float)opengl.video_mode.w / mul);
 					}
 				}
-				vp->x = (gfx.w[VIDEO_MODE] - vp->w) >> 1;
-				vp->y = (gfx.h[VIDEO_MODE] - vp->h) >> 1;
+				vp->x = (opengl.video_mode.w - vp->w) >> 1;
+				vp->y = (opengl.video_mode.h - vp->h) >> 1;
 			}
 
 			if (overscan.enabled && (cfg->oscan_black_borders_fscr == FALSE)) {
 				float brd_l_x, brd_r_x, brd_u_y, brd_d_y;
 				float ratio_x, ratio_y;
 
-				ratio_x = (float)vp->w / _SCR_ROWS_NOBRD;
-				ratio_y = (float)vp->h / _SCR_LINES_NOBRD;
-				brd_l_x = (float)overscan.borders->left * ratio_x;
-				brd_r_x = (float)overscan.borders->right * ratio_x;
-				brd_u_y = (float)overscan.borders->up * ratio_y;
-				brd_d_y = (float)overscan.borders->down * ratio_y;
+				ratio_x = (float)vp->w / (float)mw;
+				ratio_y = (float)vp->h / (float)mh;
+
+				switch (cfg->screen_rotation) {
+					default:
+					case ROTATE_0:
+						brd_l_x = (float)overscan.borders->left * ratio_x;
+						brd_r_x = (float)overscan.borders->right * ratio_x;
+						brd_u_y = (float)overscan.borders->up * ratio_y;
+						brd_d_y = (float)overscan.borders->down * ratio_y;
+						break;
+					case ROTATE_90:
+						brd_l_x = (float)overscan.borders->down * ratio_y;
+						brd_r_x = (float)overscan.borders->up * ratio_y;
+						brd_u_y = (float)overscan.borders->left * ratio_x;
+						brd_d_y = (float)overscan.borders->right * ratio_x;
+						break;
+					case ROTATE_180:
+						brd_l_x = (float)overscan.borders->right * ratio_x;
+						brd_r_x = (float)overscan.borders->left * ratio_x;
+						brd_u_y = (float)overscan.borders->down * ratio_y;
+						brd_d_y = (float)overscan.borders->up * ratio_y;
+						break;
+					case ROTATE_270:
+						brd_l_x = (float)overscan.borders->up * ratio_y;
+						brd_r_x = (float)overscan.borders->down * ratio_y;
+						brd_u_y = (float)overscan.borders->right * ratio_x;
+						brd_d_y = (float)overscan.borders->left * ratio_x;
+						break;
+				}
 
 				vp->x -= brd_l_x;
 				vp->y -= brd_d_y;
 				vp->w += brd_l_x + brd_r_x;
 				vp->h += brd_u_y + brd_d_y;
 			}
+		} else if ((cfg->screen_rotation == ROTATE_90) || (cfg->screen_rotation == ROTATE_270)) {
+			int x = vp->x, w = vp->w;
+
+			vp->x = vp->y;
+			vp->y = x;
+			vp->w = vp->h;
+			vp->h = w;
 		}
 	}
 
@@ -327,6 +396,7 @@ BYTE opengl_context_create(void) {
 	// testo
 	{
 		_shader *shd = &opengl.text.shader;
+		BYTE rotate = FALSE;
 		int tw, th;
 
 		if (cfg->fullscreen) {
@@ -338,12 +408,33 @@ BYTE opengl_context_create(void) {
 
 			tw = gfx.w[VIDEO_MODE] / div;
 			th = gfx.h[VIDEO_MODE] / div;
-		} else if (cfg->scale == 1) {
-			tw = gfx.w[VIDEO_MODE];
-			th = gfx.h[VIDEO_MODE];
 		} else {
 			tw = _SCR_ROWS_NOBRD * 2;
 			th = _SCR_LINES_NOBRD * 2;
+		}
+
+		if (gfx.w[VIDEO_MODE] < tw) {
+			tw = gfx.w[VIDEO_MODE];
+		}
+		if (gfx.h[VIDEO_MODE] < th) {
+			th = gfx.h[VIDEO_MODE];
+		}
+
+		if ((cfg->screen_rotation == ROTATE_90) || (cfg->screen_rotation == ROTATE_270)) {
+			if (cfg->text_rotation == TRUE) {
+				if (cfg->fullscreen) {
+					rotate = TRUE;
+				}
+			} else if (!cfg->fullscreen) {
+				rotate = TRUE;
+			}
+		}
+
+		if (rotate == TRUE) {
+			int tmp = tw;
+
+			tw = th;
+			th = tmp;
 		}
 
 		opengl_texture_simple_create(&opengl.text, tw, th, TRUE);
@@ -354,7 +445,12 @@ BYTE opengl_context_create(void) {
 		gfx_text_reset();
 
 		glGenBuffers(1, &shd->vbo);
-		memcpy(shd->vb, vb_flipped, sizeof(vb_flipped));
+
+		if (cfg->text_rotation == FALSE) {
+			memcpy(shd->vb, vb_flipped[ROTATE_0], sizeof(vb_upright));
+		} else {
+			memcpy(shd->vb, vb_flipped[cfg->screen_rotation], sizeof(vb_upright));
+		}
 
 		glBindBuffer(GL_ARRAY_BUFFER, shd->vbo);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(shd->vb), shd->vb, GL_STATIC_DRAW);
@@ -551,8 +647,8 @@ void opengl_draw_scene(void) {
 	if (cfg->txt_on_screen && text.on_screen) {
 		float vpx = 0;
 		float vpy = 0;
-		float vpw = gfx.w[VIDEO_MODE] * gfx.device_pixel_ratio;
-		float vph = gfx.h[VIDEO_MODE] * gfx.device_pixel_ratio;
+		float vpw = opengl.video_mode.w * gfx.device_pixel_ratio;
+		float vph = opengl.video_mode.h * gfx.device_pixel_ratio;
 		GLuint mag, min;
 
 		glViewport(vpx, vpy, vpw, vph);
@@ -679,8 +775,8 @@ static void opengl_screenshot(void) {
 	void *buffer;
 
 	if (gfx.screenshot.type == SCRSH_STANDARD) {
-		w = gfx.w[VIDEO_MODE] * gfx.device_pixel_ratio;
-		h = gfx.h[VIDEO_MODE] * gfx.device_pixel_ratio;
+		w = opengl.video_mode.w * gfx.device_pixel_ratio;
+		h = opengl.video_mode.h * gfx.device_pixel_ratio;
 		glReadBuffer(GL_FRONT);
 		if ((buffer = malloc(w * h * 4)) == NULL) {
 			return;
@@ -695,9 +791,11 @@ static void opengl_screenshot(void) {
 		if ((buffer = malloc(w * h * sizeof(uint32_t))) == NULL) {
 			return;
 		}
+		emu_pause(TRUE);
 		scale_surface_screenshoot_1x(w * sizeof(uint32_t), buffer);
 		gui_save_screenshot(w, h, buffer, FALSE);
 		free(buffer);
+		emu_pause(FALSE);
 	}
 }
 
@@ -753,7 +851,7 @@ static BYTE opengl_texture_create(_texture *texture, GLuint index) {
 	}
 
 	if (index == shader_effect.last_pass) {
-		vb = vb_flipped;
+		vb = vb_flipped[cfg->screen_rotation];
 		sc->scale.x = 1.0f;
 		sc->scale.y = 1.0f;
 		sc->type.x = SHADER_SCALE_VIEWPORT;
@@ -887,7 +985,7 @@ static BYTE opengl_texture_create(_texture *texture, GLuint index) {
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	glGenBuffers(1, &texture->shader.vbo);
-	memcpy(texture->shader.vb, vb, sizeof(vb_flipped));
+	memcpy(texture->shader.vb, vb, sizeof(vb_upright));
 
 	return (EXIT_OK);
 }
@@ -929,7 +1027,7 @@ static void opengl_texture_simple_create(_texture_simple *texture, GLuint w, GLu
 	shd->info.texture_size[0] = (GLfloat)rect->w;
 	shd->info.texture_size[1] = (GLfloat)rect->h;
 
-	memcpy(shd->vb, vb_flipped, sizeof(vb_flipped));
+	memcpy(shd->vb, vb_flipped[ROTATE_0], sizeof(vb_upright));
 
 	opengl_vertex_buffer_set(&shd->vb[0], rect);
 

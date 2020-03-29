@@ -186,7 +186,11 @@ typedef struct _opengl {
 	_texture texture[MAX_PASS + 1];
 	_lut lut[MAX_PASS];
 
-	struct _attribsarray {
+	struct _opengl_video_mode {
+		GLuint w;
+		GLuint h;
+	} video_mode;
+	struct _attribs_array {
 		GLuint count;
 		GLuint attrib[MAX_PASS + MAX_PREV + 1 + 1 + 4 + 4];
 	} attribs;
