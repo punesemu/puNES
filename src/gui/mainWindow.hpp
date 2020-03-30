@@ -78,7 +78,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 
 	private:
 		QShortcut *shortcut[SET_MAX_NUM_SC];
-		QPoint position;
+		QRect geom;
 		QTranslator *translator;
 		QTranslator *qtTranslator;
 		bool toggle_gui_in_window;

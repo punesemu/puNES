@@ -61,8 +61,8 @@ enum state_save_enum { SAVE, LOAD };
 mainWindow::mainWindow() : QMainWindow() {
 	setupUi(this);
 
-	position.setX(100);
-	position.setY(100);
+	geom.setX(100);
+	geom.setY(100);
 
 	screen = new wdgScreen(centralwidget);
 	statusbar = new wdgStatusBar(this);
@@ -1089,7 +1089,7 @@ void mainWindow::s_set_fullscreen(void) {
 
 	if ((cfg->fullscreen == NO_FULLSCR) || (cfg->fullscreen == NO_CHANGE)) {
 		gfx.scale_before_fscreen = cfg->scale;
-		position = pos();
+		geom = geometry();
 
 		if (cfg->fullscreen_in_window == TRUE) {
 			gfx.type_of_fscreen_in_use = FULLSCR_IN_WINDOW;
@@ -1121,8 +1121,8 @@ void mainWindow::s_set_fullscreen(void) {
 			statusbar->setVisible(toggle_gui_in_window);
 		}
 
+		setGeometry(geom);
 		gfx_set_screen(gfx.scale_before_fscreen, NO_CHANGE, NO_CHANGE, NO_FULLSCR, NO_CHANGE, FALSE, FALSE);
-		move(position);
 
 		gfx.type_of_fscreen_in_use = NO_FULLSCR;
 	}
