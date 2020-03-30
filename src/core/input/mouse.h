@@ -21,10 +21,33 @@
 
 #include "gui.h"
 #include "video/gfx.h"
+#include "conf.h"
 
 INLINE static void input_read_mouse_coords(int *x, int *y) {
-	(*x) = ((float)(gmouse.x - gfx.vp.x) / gfx.w_pr);
-	(*y) = ((float)(gmouse.y - gfx.vp.y) / gfx.h_pr);
+	int mx, my;
+
+	mx = ((float)(gmouse.x - gfx.vp.x) / gfx.w_pr);
+	my = ((float)(gmouse.y - gfx.vp.y) / gfx.h_pr);
+
+	switch (cfg->screen_rotation) {
+		default:
+		case ROTATE_0:
+			(*x) = mx;
+			(*y) = my;
+			break;
+		case ROTATE_90:
+			(*x) = my;
+			(*y) = SCR_LINES - mx;
+			break;
+		case ROTATE_180:
+			(*x) = SCR_ROWS - mx;
+			(*y) = SCR_LINES - my;
+			break;
+		case ROTATE_270:
+			(*x) = SCR_ROWS - my;
+			(*y) = mx;
+			break;
+	}
 }
 
 #endif /* INPUT_MOUSE_H_ */
