@@ -232,18 +232,6 @@ BYTE opengl_context_create(void) {
 		vp->w = gfx.w[VIDEO_MODE];
 		vp->h = gfx.h[VIDEO_MODE];
 
-		if (overscan.enabled && (!cfg->oscan_black_borders && !cfg->fullscreen)) {
-			BYTE h = (cfg->screen_rotation == ROTATE_90) || (cfg->screen_rotation == ROTATE_180) ?
-				overscan.borders->right : overscan.borders->left;
-			BYTE v = (cfg->screen_rotation == ROTATE_180) || (cfg->screen_rotation == ROTATE_270) ?
-				overscan.borders->up : overscan.borders->down;
-
-			vp->x = (-h * gfx.width_pixel) * gfx.pixel_aspect_ratio;
-			vp->y = -v * cfg->scale;
-			vp->w = gfx.w[NO_OVERSCAN] * gfx.pixel_aspect_ratio;
-			vp->h = gfx.h[NO_OVERSCAN];
-		}
-
 		if (cfg->fullscreen) {
 			int mw = (cfg->screen_rotation == ROTATE_90) || (cfg->screen_rotation == ROTATE_270) ?
 				_SCR_LINES_NOBRD : _SCR_ROWS_NOBRD;
@@ -311,13 +299,27 @@ BYTE opengl_context_create(void) {
 				vp->w += brd_l_x + brd_r_x;
 				vp->h += brd_u_y + brd_d_y;
 			}
-		} else if ((cfg->screen_rotation == ROTATE_90) || (cfg->screen_rotation == ROTATE_270)) {
-			int x = vp->x, w = vp->w;
+		} else {
+			if (overscan.enabled && !cfg->oscan_black_borders) {
+				BYTE h = (cfg->screen_rotation == ROTATE_90) || (cfg->screen_rotation == ROTATE_180) ?
+					overscan.borders->right : overscan.borders->left;
+				BYTE v = (cfg->screen_rotation == ROTATE_180) || (cfg->screen_rotation == ROTATE_270) ?
+					overscan.borders->up : overscan.borders->down;
 
-			vp->x = vp->y;
-			vp->y = x;
-			vp->w = vp->h;
-			vp->h = w;
+				vp->x = (-h * gfx.width_pixel) * gfx.pixel_aspect_ratio;
+				vp->y = -v * cfg->scale;
+				vp->w = gfx.w[NO_OVERSCAN] * gfx.pixel_aspect_ratio;
+				vp->h = gfx.h[NO_OVERSCAN];
+			}
+
+			if ((cfg->screen_rotation == ROTATE_90) || (cfg->screen_rotation == ROTATE_270)) {
+				int x = vp->x, w = vp->w;
+
+				vp->x = vp->y;
+				vp->y = x;
+				vp->w = vp->h;
+				vp->h = w;
+			}
 		}
 	}
 

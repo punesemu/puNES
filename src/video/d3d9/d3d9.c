@@ -278,18 +278,6 @@ BYTE d3d9_context_create(void) {
 		vp->w = gfx.w[VIDEO_MODE];
 		vp->h = gfx.h[VIDEO_MODE];
 
-		if (overscan.enabled && (!cfg->oscan_black_borders && !cfg->fullscreen)) {
-			BYTE h = (cfg->screen_rotation == ROTATE_180) || (cfg->screen_rotation == ROTATE_270) ?
-				overscan.borders->right : overscan.borders->left;
-			BYTE v = (cfg->screen_rotation == ROTATE_90) || (cfg->screen_rotation == ROTATE_180) ?
-				overscan.borders->down : overscan.borders->up;
-
-			vp->x = (-h * gfx.width_pixel) * gfx.pixel_aspect_ratio;
-			vp->y = (-v * cfg->scale);
-			vp->w = gfx.w[NO_OVERSCAN] * gfx.pixel_aspect_ratio;
-			vp->h = gfx.h[NO_OVERSCAN];
-		}
-
 		// configuro l'aspect ratio del fullscreen
 		if (cfg->fullscreen) {
 			int mw = (cfg->screen_rotation == ROTATE_90) || (cfg->screen_rotation == ROTATE_270) ?
@@ -322,8 +310,8 @@ BYTE d3d9_context_create(void) {
 				float brd_l_x, brd_r_x, brd_u_y, brd_d_y;
 				float ratio_x, ratio_y;
 
-				ratio_x = (float)vp->w / (float)_SCR_ROWS_NOBRD;
-				ratio_y = (float)vp->h / (float)_SCR_LINES_NOBRD;
+				ratio_x = (float)vp->w / (float)mw;
+				ratio_y = (float)vp->h / (float)mh;
 
 				switch (cfg->screen_rotation) {
 					default:
@@ -364,6 +352,18 @@ BYTE d3d9_context_create(void) {
 				d3d9.viewp.bottom = d3d9.video_mode.h;
 			}
 		} else {
+			if (overscan.enabled && !cfg->oscan_black_borders) {
+				BYTE h = (cfg->screen_rotation == ROTATE_180) || (cfg->screen_rotation == ROTATE_270) ?
+					overscan.borders->right : overscan.borders->left;
+				BYTE v = (cfg->screen_rotation == ROTATE_90) || (cfg->screen_rotation == ROTATE_180) ?
+					overscan.borders->down : overscan.borders->up;
+
+				vp->x = (-h * gfx.width_pixel) * gfx.pixel_aspect_ratio;
+				vp->y = (-v * cfg->scale);
+				vp->w = gfx.w[NO_OVERSCAN] * gfx.pixel_aspect_ratio;
+				vp->h = gfx.h[NO_OVERSCAN];
+			}
+
 			if ((cfg->screen_rotation == ROTATE_90) || (cfg->screen_rotation == ROTATE_270)) {
 				int x = vp->x, w = vp->w;
 
