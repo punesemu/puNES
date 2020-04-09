@@ -33,6 +33,7 @@
 #include "mainWindow.hh"
 #include "wdgScreen.hpp"
 #include "wdgStatusBar.hpp"
+#include "wdgToolBar.hpp"
 
 class mainWindow : public QMainWindow, public Ui::mainWindow {
 		Q_OBJECT
@@ -71,10 +72,9 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 			DBWORD shortcut[SET_MAX_NUM_SC];
 		} shcjoy;
 		QTimer *ff;
-
-	public:
 		wdgScreen *screen;
 		wdgStatusBar *statusbar;
+		wdgToolBar *toolbar;
 
 	private:
 		QShortcut *shortcut[SET_MAX_NUM_SC];
@@ -117,6 +117,7 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void state_save_slot_set(int slot, bool on_video);
 		void shortcuts(void);
 		bool is_rwnd_shortcut_or_not_shcut(const QKeyEvent *event);
+		void update_gfx_monitor_dimension(void);
 
 	private:
 		void connect_menu_signals(void);
@@ -133,7 +134,6 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 
 	private:
 		void ctrl_disk_side(QAction *action);
-		void update_gfx_monitor_dimension(void);
 		int is_shortcut(const QKeyEvent *event);
 
 	private slots:
@@ -166,8 +166,6 @@ class mainWindow : public QMainWindow, public Ui::mainWindow {
 		void s_set_vs_window(void);
 	private slots:
 		void s_help(void);
-		void s_rotate_to_left(bool checked);
-		void s_rotate_to_right(bool checked);
 
 	private slots:
 		void s_ff_draw_screen(void);

@@ -72,6 +72,7 @@ enum database_mode {
 	CHRRAM32K = 0x0002,
 	CHRRAM256K = 0x0004
 };
+enum toolbar { TLB_TOP, TLB_RIGHT, TLB_BOTTOM, TLB_LEFT };
 
 #define LENGTH(x) (sizeof(x)/sizeof(*(x)))
 #define UNUSED(var) var __attribute__((unused))

@@ -175,14 +175,16 @@ void gui_start(void) {
 
 void gui_set_video_mode(void) {
 	if (cfg->scale == X1) {
-		qt.mwin->statusbar->state_setVisible(false);
+		qt.mwin->toolbar->rotate_setVisible(false);
+		qt.mwin->toolbar->state_setVisible(false);
 		if (overscan.enabled) {
 			qt.mwin->menu_Help->menuAction()->setVisible(false);
 		} else {
 			qt.mwin->menu_Help->menuAction()->setVisible(true);
 		}
 	} else {
-		qt.mwin->statusbar->state_setVisible(true);
+		qt.mwin->toolbar->rotate_setVisible(true);
+		qt.mwin->toolbar->state_setVisible(true);
 		qt.mwin->menu_Help->menuAction()->setVisible(true);
 	}
 
@@ -196,13 +198,28 @@ void gui_set_video_mode(void) {
 
 		qt.screen->setFixedSize(QSize(w, h));
 
-		qt.mwin->setFixedSize(QSize(qt.screen->width(),
-			(qt.mwin->menubar->isHidden() ? 0 : qt.mwin->menubar->sizeHint().height()) + qt.screen->height() +
-			(qt.mwin->statusbar->isHidden() ? 0 : qt.mwin->statusbar->sizeHint().height())));
-
-		qt.mwin->menubar->setFixedWidth(w);
-		qt.mwin->statusbar->update_width(w);
+		gui_set_window_size();
 	}
+}
+void gui_set_window_size(void) {
+	int w = qt.screen->width(), h = qt.screen->height();
+	bool toolbar = qt.mwin->toolbar->isHidden() | qt.mwin->toolbar->isFloating();
+
+	w = qt.screen->width();
+
+	if (qt.mwin->toolbar->orientation() == Qt::Vertical) {
+		w += (toolbar ? 0 : qt.mwin->toolbar->sizeHint().width());
+	} else {
+		h += (toolbar ? 0 : qt.mwin->toolbar->sizeHint().height());
+	}
+
+	h += (qt.mwin->menubar->isHidden() ? 0 : qt.mwin->menubar->sizeHint().height());
+	h += (qt.mwin->statusbar->isHidden() ? 0 : qt.mwin->statusbar->sizeHint().height());
+
+	qt.mwin->setFixedSize(QSize(w, h));
+
+	qt.mwin->menubar->setFixedWidth(w);
+	qt.mwin->statusbar->update_width(w);
 }
 
 void gui_update(void) {
@@ -336,7 +353,7 @@ void *gui_mainwindow_get_ptr(void) {
 }
 
 void *gui_wdgrewind_get_ptr(void) {
-	return ((void *)qt.mwin->statusbar->rewind);
+	return ((void *)qt.mwin->toolbar->rewind);
 }
 void gui_wdgrewind_play(void) {
 	wdgrewind->toolButton_Play->click();

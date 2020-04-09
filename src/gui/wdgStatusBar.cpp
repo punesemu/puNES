@@ -16,25 +16,13 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <QtWidgets/QStylePainter>
-#include <QtWidgets/QCommonStyle>
 #include <QtCore/QFileInfo>
 #include <QtCore/QEvent>
-#include <QtGui/QPainter>
+#include <QtWidgets/QLabel>
 #include "wdgStatusBar.moc"
 #include "mainWindow.hpp"
-#include "info.h"
-#include "video/gfx.h"
-#include "ppu.h"
-#include "emu.h"
-#include "save_slot.h"
-#include "text.h"
 #include "conf.h"
-#include "cheat.h"
 #include "patcher.h"
-
-#define SPACING 2
-#define DEC_LAB_TLINE 3
 
 // -------------------------------- Statusbar -----------------------------------------
 
@@ -51,28 +39,6 @@ wdgStatusBar::wdgStatusBar(QWidget *parent) : QStatusBar(parent) {
 	infosb = new infoStatusBar(this);
 	addWidget(infosb);
 
-#if defined (__unix__)
-	vlineState = new QFrame(this);
-	vlineState->setFrameShape(QFrame::VLine);
-	vlineState->setFrameShadow(QFrame::Plain);
-	vlineState->setFixedWidth(vlineState->sizeHint().width());
-	addWidget(vlineState);
-#endif
-
-	state = new wdgState(this);
-	addWidget(state);
-
-#if defined (__unix__)
-	vlineRewind = new QFrame(this);
-	vlineRewind->setFrameShape(QFrame::VLine);
-	vlineRewind->setFrameShadow(QFrame::Plain);
-	vlineRewind->setFixedWidth(vlineRewind->sizeHint().width());
-	addWidget(vlineRewind);
-#endif
-
-	rewind = new wdgRewind(this);
-	addWidget(rewind);
-
 	installEventFilter(this);
 }
 wdgStatusBar::~wdgStatusBar() {}
@@ -84,77 +50,13 @@ bool wdgStatusBar::eventFilter(QObject *obj, QEvent *event) {
 
 	return (QObject::eventFilter(obj, event));
 }
-void wdgStatusBar::changeEvent(QEvent *event) {
-	if (event->type() == QEvent::LanguageChange) {
-		state->retranslateUi();
-		update_width((cfg->screen_rotation == ROTATE_90) || (cfg->screen_rotation == ROTATE_270)
-			? gfx.h[VIDEO_MODE] : gfx.w[VIDEO_MODE]);
-	} else {
-		QWidget::changeEvent(event);
-	}
-}
 
 void wdgStatusBar::update_statusbar(void) {
-	bool rwnd = true;
-
 	infosb->update_label();
-
-	if (info.no_rom | info.turn_off | nsf.state) {
-#if defined (__unix__)
-		vlineState->setEnabled(false);
-#endif
-		state->setEnabled(false);
-
-		rwnd = false;
-	} else {
-#if defined (__unix__)
-		vlineState->setEnabled(true);
-#endif
-		state->setEnabled(true);
-
-		if (cfg->rewind_minutes == RWND_0_MINUTES) {
-			rwnd = false;
-		}
-
-		state->slot->setCurrentIndex(save_slot.slot);
-		state->update();
-	}
-
-#if defined (__unix__)
-	vlineRewind->setEnabled(rwnd);
-#endif
-	rewind->setEnabled(rwnd);
 }
 void wdgStatusBar::update_width(int w) {
 	setFixedWidth(w);
-
-	w -= (2 + 2);
-
-#if defined (__unix__)
-	w -= (state->isVisible() ? vlineState->sizeHint().width() + 2 + 2 : 0);
-#endif
-	w -= (state->isVisible() ? state->sizeHint().width() + 2 + 2 + 2 : 0);
-
-#if defined (__unix__)
-	w -= (rewind->isVisible() ? vlineRewind->sizeHint().width() + 2 + 2 : 0);
-#endif
-	w -= (rewind->isVisible() ? rewind->sizeHint().width() + 2 + 2 + 2 : 0);
-
-	if (w >= 0) {
-		infosb->setFixedWidth(w);
-	}
-}
-void wdgStatusBar::state_setVisible(bool visible) {
-#if defined (__unix__)
-	vlineState->setVisible(visible);
-#endif
-	state->setVisible(visible);
-}
-void wdgStatusBar::rewind_setVisible(bool visible) {
-#if defined (__unix__)
-	vlineRewind->setVisible(visible);
-#endif
-	rewind->setVisible(visible);
+	infosb->setFixedWidth(w);
 }
 
 // ---------------------------------- Info --------------------------------------------
@@ -191,136 +93,15 @@ void infoStatusBar::update_label(void) {
 
 	if (info.no_rom | info.turn_off) {
 		label->setText("");
+		label->setToolTip("");
 	} else {
+		QFileInfo fileinfo = QFileInfo(uQString(rom));
+
 		if (patch == TRUE) {
-			label->setText("*" + QFileInfo(uQString(rom)).fileName());
+			label->setText("*" + fileinfo.fileName());
 		} else {
-			label->setText(QFileInfo(uQString(rom)).fileName());
+			label->setText(fileinfo.fileName());
 		}
+		label->setToolTip(fileinfo.filePath());
 	}
-}
-
-// -------------------------------- Slot Box ------------------------------------------
-
-slotItemDelegate::slotItemDelegate(QObject *parent) : QStyledItemDelegate(parent) {}
-slotItemDelegate::~slotItemDelegate() {}
-
-void slotItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const {
-	if (!save_slot.state[index.row()]) {
-		QStyleOptionViewItem opt = option;
-
-		opt.palette.setColor(QPalette::Text, Qt::gray);
-		QStyledItemDelegate::paint(painter, opt, index);
-	} else {
-		QStyledItemDelegate::paint(painter, option, index);
-	}
-}
-
-slotComboBox::slotComboBox(QWidget *parent) : QComboBox(parent) {
-	sid = new slotItemDelegate(this);
-
-	for (int i = 0; i < SAVE_SLOTS; i++) {
-		addItem(QString("Slot %1").arg(i));
-	}
-
-	installEventFilter(parent);
-	setItemDelegate(sid);
-}
-slotComboBox::~slotComboBox() {}
-void slotComboBox::paintEvent(UNUSED(QPaintEvent *event)) {
-	QStylePainter painter(this);
-
-	// disegno il frame del combobox
-	QStyleOptionComboBox opt;
-	initStyleOption(&opt);
-	painter.drawComplexControl(QStyle::CC_ComboBox, opt);
-
-	// disegno il testo
-	if (!save_slot.state[currentIndex()]) {
-		painter.setPen(Qt::gray);
-		((const wdgState *)parent())->load->setEnabled(false);
-	} else {
-		((const wdgState *)parent())->load->setEnabled(true);
-	}
-
-	QCommonStyle cstyle;
-	QRect editRect = cstyle.subControlRect(QStyle::CC_ComboBox, &opt, QStyle::SC_ComboBoxEditField, this);
-
-	painter.save();
-	painter.setClipRect(editRect);
-	if (!opt.currentText.isEmpty() && !opt.editable) {
-		cstyle.drawItemText(&painter, editRect.adjusted(1, 0, -1, 0),
-			cstyle.visualAlignment(opt.direction, Qt::AlignLeft | Qt::AlignVCenter),
-			opt.palette, opt.state & QStyle::State_Enabled, opt.currentText);
-	}
-	painter.restore();
-
-	//painter.drawControl(QStyle::CE_ComboBoxLabel, opt);
-}
-
-wdgState::wdgState(QWidget *parent) : QWidget(parent) {
-	hbox = new QHBoxLayout(this);
-	hbox->setContentsMargins(QMargins(0, 0, 0, 0));
-	hbox->setMargin(0);
-	hbox->setSpacing(SPACING);
-
-	setLayout(hbox);
-
-	save = new QPushButton(this);
-	save->installEventFilter(this);
-	connect(save, SIGNAL(clicked(bool)), this, SLOT(s_save_clicked(bool)));
-	hbox->addWidget(save);
-
-	slot = new slotComboBox(this);
-	connect(slot, SIGNAL(activated(int)), this, SLOT(s_slot_activated(int)));
-	hbox->addWidget(slot);
-
-	load = new QPushButton(this);
-	load->installEventFilter(this);
-	connect(load, SIGNAL(clicked(bool)), this, SLOT(s_load_clicked(bool)));
-	hbox->addWidget(load);
-
-	retranslateUi();
-}
-wdgState::~wdgState() {}
-
-void wdgState::retranslateUi(void) {
-	setToolTip(tr("Save/Load Slot Box"));
-
-	{
-		QStyle *pStyle = style();
-		QStyleOptionComboBox opt;
-
-		for (int i = 0; i < SAVE_SLOTS; i++) {
-			slot->setItemText(i, tr("Slot %1").arg(i));
-		}
-
-		opt.initFrom(this);
-		QRect rc = pStyle->subControlRect(QStyle::CC_ComboBox, &opt, QStyle::SC_ComboBoxArrow, this);
-		slot->setFixedWidth(QLabel(slot->itemText(0)).sizeHint().width() + 12 + rc.width());
-	}
-
-	save->setText(tr("Save"));
-	save->setFixedWidth(QLabel(save->text()).sizeHint().width() + 12);
-
-	load->setText(tr("Load"));
-	load->setFixedWidth(QLabel(load->text()).sizeHint().width() + 12);
-
-	setFixedWidth(save->width() + SPACING +
-		slot->width() + SPACING +
-		load->width());
-}
-void wdgState::s_save_clicked(UNUSED(bool checked)) {
-	mainwin->action_Save_state->trigger();
-	update();
-	gui_set_focus();
-}
-void wdgState::s_slot_activated(int index) {
-	save_slot.slot = index;
-	text_save_slot(SAVE_SLOT_INCDEC);
-	gui_set_focus();
-}
-void wdgState::s_load_clicked(UNUSED(bool checked)) {
-	mainwin->action_Load_state->trigger();
-	gui_set_focus();
 }

@@ -66,6 +66,7 @@ mainWindow::mainWindow() : QMainWindow() {
 
 	screen = new wdgScreen(centralwidget);
 	statusbar = new wdgStatusBar(this);
+	toolbar = new wdgToolBar(this);
 	translator = new QTranslator();
 	qtTranslator = new QTranslator();
 	shcjoy.timer = new QTimer(this);
@@ -74,6 +75,10 @@ mainWindow::mainWindow() : QMainWindow() {
 	setWindowIcon(QIcon(":icon/icons/application.png"));
 	setWindowFlags(windowFlags() & ~Qt::WindowMaximizeButtonHint);
 	setStatusBar(statusbar);
+
+	toolbar->setObjectName(QString::fromUtf8("toolbar"));
+	toolbar->setWindowTitle(tr("Widgets"));
+	addToolBar(toolbar->area, toolbar);
 
 	// creo gli shortcuts
 	for (int i = 0; i < SET_MAX_NUM_SC; i++) {
@@ -147,37 +152,6 @@ mainWindow::mainWindow() : QMainWindow() {
 
 	connect_menu_signals();
 	shortcuts();
-
-	// pulsanti per il rotate
-	{
-		QWidget *wdgRotateScreen = new QWidget(menubar);
-		QHBoxLayout *hbox = new QHBoxLayout(wdgRotateScreen);
-		QPushButton *btn;
-
-		hbox->setContentsMargins(QMargins(0,0,0,0));
-		hbox->setMargin(0);
-		//hbox->setSpacing(SPACING);
-
-		wdgRotateScreen->setLayout(hbox);
-
-		btn = new QPushButton(wdgRotateScreen);
-		btn->setObjectName(QString::fromUtf8("rotateLeft"));
-		btn->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-		btn->setIcon(QIcon(":/icon/icons/rotate_left.svg"));
-		btn->setToolTip(tr("Rotate the screen 90 degrees to the left"));
-		connect(btn, SIGNAL(clicked(bool)), this, SLOT(s_rotate_to_left(bool)));
-		hbox->addWidget(btn);
-
-		btn = new QPushButton(wdgRotateScreen);
-		btn->setObjectName(QString::fromUtf8("rotateRight"));
-		btn->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-		btn->setIcon(QIcon(":/icon/icons/rotate_right.svg"));
-		btn->setToolTip(tr("Rotate the screen 90 degrees to the Right"));
-		connect(btn, SIGNAL(clicked(bool)), this, SLOT(s_rotate_to_right(bool)));
-		hbox->addWidget(btn);
-
-		menubar->setCornerWidget(wdgRotateScreen, Qt::TopRightCorner);
-	}
 
 	adjustSize();
 	setFixedSize(size());
@@ -290,6 +264,7 @@ void mainWindow::update_window(void) {
 	// State
 	update_menu_state();
 
+	toolbar->update_toolbar();
 	statusbar->update_statusbar();
 }
 void mainWindow::set_language(int lang) {
@@ -491,6 +466,31 @@ bool mainWindow::is_rwnd_shortcut_or_not_shcut(const QKeyEvent *event) {
 	}
 
 	return (true);
+}
+void mainWindow::update_gfx_monitor_dimension(void) {
+	int screenNumber = qApp->desktop()->screenNumber(this);
+	QRect g;
+
+	if (gfx.type_of_fscreen_in_use == FULLSCR_IN_WINDOW) {
+		bool toolbar_is_hidden = toolbar->isHidden() | toolbar->isFloating();
+
+		g = QGuiApplication::screens().at(screenNumber)->availableGeometry();
+		gfx.w[MONITOR] = g.width() - (frameGeometry().width() - geometry().width());
+		gfx.h[MONITOR] = g.height() - (frameGeometry().height() - geometry().height());
+
+		if (toolbar->orientation() == Qt::Vertical) {
+			gfx.w[MONITOR] -= (toolbar_is_hidden ? 0 : toolbar->sizeHint().width());
+		} else {
+			gfx.h[MONITOR] -= (toolbar_is_hidden ? 0 : toolbar->sizeHint().height());
+		}
+
+		gfx.h[MONITOR] -= (menubar->isHidden() ? 0 : menubar->sizeHint().height());
+		gfx.h[MONITOR] -= (statusbar->isHidden() ? 0 : statusbar->sizeHint().height());
+	} else if (gfx.type_of_fscreen_in_use == FULLSCR) {
+		g = QGuiApplication::screens().at(screenNumber)->geometry();
+		gfx.w[MONITOR] = g.width();
+		gfx.h[MONITOR] = g.height();
+	}
 }
 
 void mainWindow::connect_menu_signals(void) {
@@ -826,22 +826,6 @@ void mainWindow::ctrl_disk_side(QAction *action) {
 		action->setChecked(true);
 	}
 }
-void mainWindow::update_gfx_monitor_dimension(void) {
-	int screenNumber = qApp->desktop()->screenNumber(this);
-	QRect g;
-
-	if (gfx.type_of_fscreen_in_use == FULLSCR_IN_WINDOW) {
-		g = QGuiApplication::screens().at(screenNumber)->availableGeometry();
-		gfx.w[MONITOR] = g.width() - (frameGeometry().width() - geometry().width());
-		gfx.h[MONITOR] = g.height() - (frameGeometry().height() - geometry().height()) -
-			(menubar->isHidden() ? 0 : menubar->sizeHint().height()) -
-			(statusbar->isHidden() ? 0 : statusbar->sizeHint().height());
-	} else if (gfx.type_of_fscreen_in_use == FULLSCR) {
-		g = QGuiApplication::screens().at(screenNumber)->geometry();
-		gfx.w[MONITOR] = g.width();
-		gfx.h[MONITOR] = g.height();
-	}
-}
 int mainWindow::is_shortcut(const QKeyEvent *event) {
 	int i;
 
@@ -1103,6 +1087,7 @@ void mainWindow::s_set_fullscreen(void) {
 			update_gfx_monitor_dimension();
 			menuWidget()->setVisible(false);
 			statusbar->setVisible(false);
+			toolbar->set_hide_without_signal(false);
 			gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, FULLSCR, NO_CHANGE, FALSE, FALSE);
 
 			// su alcune macchine, il fullscreen non avviene perche'
@@ -1119,6 +1104,7 @@ void mainWindow::s_set_fullscreen(void) {
 
 			menuWidget()->setVisible(toggle_gui_in_window);
 			statusbar->setVisible(toggle_gui_in_window);
+			toolbar->set_hide_without_signal(toggle_gui_in_window);
 		}
 
 		setGeometry(geom);
@@ -1162,13 +1148,14 @@ void mainWindow::s_fast_forward(void) {
 	}
 }
 void mainWindow::s_toggle_gui_in_window(void) {
-	if(gfx.type_of_fscreen_in_use == FULLSCR) {
+	if (gfx.type_of_fscreen_in_use == FULLSCR) {
 		return;
 	}
 	emu_thread_pause();
 	toggle_gui_in_window = !toggle_gui_in_window;
 	menuWidget()->setVisible(toggle_gui_in_window);
 	statusbar->setVisible(toggle_gui_in_window);
+	toolbar->set_hide_without_signal(toggle_gui_in_window);
 	update_gfx_monitor_dimension();
 	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
 	emu_thread_continue();
@@ -1361,22 +1348,6 @@ void mainWindow::s_help(void) {
 
 	emu_pause(FALSE);
 }
-void mainWindow::s_rotate_to_left(UNUSED(bool checked)) {
-	if (--cfg->screen_rotation >= ROTATE_MAX) {
-		cfg->screen_rotation = ROTATE_270;
-	}
-	emu_thread_pause();
-	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
-	emu_thread_continue();
-}
-void mainWindow::s_rotate_to_right(UNUSED(bool checked)) {
-	if (++cfg->screen_rotation >= ROTATE_MAX) {
-		cfg->screen_rotation = ROTATE_0;
-	}
-	emu_thread_pause();
-	gfx_set_screen(NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, NO_CHANGE, TRUE, FALSE);
-	emu_thread_continue();
-}
 
 void mainWindow::s_ff_draw_screen(void) {
 	gfx_draw_screen();
@@ -1558,50 +1529,50 @@ void mainWindow::s_shcut_save_settings(void) {
 }
 void mainWindow::s_shcut_rwnd_active_deactive_mode(void) {
 	if (rwnd.active == FALSE) {
-		statusbar->rewind->toolButton_Pause->click();
+		toolbar->rewind->toolButton_Pause->click();
 	} else {
-		statusbar->rewind->toolButton_Play->click();
+		toolbar->rewind->toolButton_Play->click();
 	}
 }
 void mainWindow::s_shcut_rwnd_step_backward(void) {
 	if (rwnd.active == FALSE) {
 		return;
 	}
-	if (statusbar->rewind->step_timer_control()) {
-		statusbar->rewind->toolButton_Step_Backward->click();
+	if (toolbar->rewind->step_timer_control()) {
+		toolbar->rewind->toolButton_Step_Backward->click();
 	}
 }
 void mainWindow::s_shcut_rwnd_step_forward(void) {
 	if (rwnd.active == FALSE) {
 		return;
 	}
-	if (statusbar->rewind->step_timer_control()) {
-		statusbar->rewind->toolButton_Step_Forward->click();
+	if (toolbar->rewind->step_timer_control()) {
+		toolbar->rewind->toolButton_Step_Forward->click();
 	}
 }
 void mainWindow::s_shcut_rwnd_fast_backward(void) {
 	if (rwnd.active == FALSE) {
 		return;
 	}
-	statusbar->rewind->toolButton_Fast_Backward->click();
+	toolbar->rewind->toolButton_Fast_Backward->click();
 }
 void mainWindow::s_shcut_rwnd_fast_forward(void) {
 	if (rwnd.active == FALSE) {
 		return;
 	}
-	statusbar->rewind->toolButton_Fast_Forward->click();
+	toolbar->rewind->toolButton_Fast_Forward->click();
 }
 void mainWindow::s_shcut_rwnd_play(void) {
 	if (rwnd.active == FALSE) {
 		return;
 	}
-	statusbar->rewind->toolButton_Play->click();
+	toolbar->rewind->toolButton_Play->click();
 }
 void mainWindow::s_shcut_rwnd_pause(void) {
 	if (rwnd.active == FALSE) {
 		return;
 	}
-	statusbar->rewind->toolButton_Pause->click();
+	toolbar->rewind->toolButton_Pause->click();
 }
 
 void mainWindow::s_et_gg_reset(void) {

@@ -16,48 +16,29 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef WDGREWIND_HPP_
-#define WDGREWIND_HPP_
+#ifndef WDGROTATESCREEN_HPP_
+#define WDGROTATESCREEN_HPP_
 
 #include <QtWidgets/QWidget>
-#include <QtCore/QTimer>
-#include "wdgRewind.hh"
-#include "common.h"
+#include "wdgRotateScreen.hh"
 
-class wdgRewind : public QWidget, public Ui::wdgRewind {
+class wdgRotateScreen : public QWidget, public Ui::wdgRotateScreen {
 	Q_OBJECT
 
-	private:
-		QTimer *loop;
-		double step_timer;
-
 	public:
-		wdgRewind(QWidget *parent = 0);
-		~wdgRewind();
+		wdgRotateScreen(QWidget *parent = 0);
+		~wdgRotateScreen();
 
 	protected:
 		void changeEvent(QEvent *event);
 		void paintEvent(QPaintEvent *event);
 
 	public:
-		bool step_timer_control(void);
-
-	private:
-		void set_enable_backward(BYTE mode);
-		void set_enable_forward(BYTE mode);
-		void set_enable_play_pause_forward(BYTE mode);
-		void first_backward(void);
-		void change_factor(int *factor);
+		void update_widget(void);
 
 	private slots:
-		void s_loop(void);
-		void s_fast_backward(bool checked);
-		void s_step_backward(bool checked);
-		void s_play(bool checked);
-		void s_pause(bool checked);
-		void s_step_forward(bool checked);
-		void s_fast_forward(bool checked);
-		void s_step_released(void);
+		void s_rotate_to_left(bool checked);
+		void s_rotate_to_right(bool checked);
 };
 
-#endif /* WDGREWIND_HPP_ */
+#endif /* WDGROTATESCREEN_HPP_ */

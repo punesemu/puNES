@@ -16,7 +16,9 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include <QtGui/QPainter>
 #include "wdgRewind.moc"
+#include "wdgToolBar.hpp"
 #include "rewind.h"
 #include "video/gfx.h"
 #include "info.h"
@@ -34,6 +36,8 @@ wdgRewind::wdgRewind(QWidget *parent) : QWidget(parent) {
 	step_timer = gui_get_ms();
 
 	setupUi(this);
+
+	gridLayout->setHorizontalSpacing(SPACING);
 
 	connect(loop, SIGNAL(timeout()), this, SLOT(s_loop()));
 
@@ -55,8 +59,8 @@ wdgRewind::wdgRewind(QWidget *parent) : QWidget(parent) {
 	set_enable_play_pause_forward(FALSE);
 
 	{
-		QString style = ":enabled { background-color: #99ff99 } :disabled { background-color: #ff9999 }"\
-			" :pressed { background-color:#00e68a } :checked { background-color:#00e68a }";
+		QString style = "QToolButton:enabled { background-color: #99ff99 } QToolButton:disabled { background-color: #ff9999 } "\
+			"QToolButton:pressed { background-color: #00e68a } QToolButton:checked { background-color: #00e68a }";
 
 		toolButton_Fast_Backward->setStyleSheet(style);
 		toolButton_Step_Backward->setStyleSheet(style);
@@ -65,6 +69,8 @@ wdgRewind::wdgRewind(QWidget *parent) : QWidget(parent) {
 		toolButton_Step_Forward->setStyleSheet(style);
 		toolButton_Fast_Forward->setStyleSheet(style);
 	}
+
+	setFixedWidth(sizeHint().width());
 }
 wdgRewind::~wdgRewind() {}
 
@@ -74,6 +80,13 @@ void wdgRewind::changeEvent(QEvent *event) {
 	} else {
 		QWidget::changeEvent(event);
 	}
+}
+void wdgRewind::paintEvent(UNUSED(QPaintEvent *event)) {
+    QStyleOption opt;
+    QPainter p(this);
+
+    opt.init(this);
+    style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
 bool wdgRewind::step_timer_control(void) {

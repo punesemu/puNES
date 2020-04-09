@@ -26,6 +26,10 @@ typedef struct _last_pos {
 	int x;
 	int y;
 } _last_pos;
+typedef struct _toolbar {
+	BYTE area;
+	BYTE hidden;
+} _toolbar;
 typedef struct _config {
 	BYTE save_on_exit;
 	BYTE mode;
@@ -95,6 +99,7 @@ typedef struct _config {
 
 	_last_pos last_pos;
 	_last_pos last_pos_settings;
+	_toolbar toolbar;
 } _config;
 
 extern _config *cfg;

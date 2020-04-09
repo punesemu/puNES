@@ -92,6 +92,8 @@ enum set_element {
 	SET_GUI_LAST_POSITION,
 	SET_GUI_LAST_POSITION_SETTINGS,
 	SET_GUI_LANGUAGE,
+	SET_GUI_TOOLBAR_AREA,
+	SET_GUI_TOOLBAR_HIDDEN,
 	SET_APU_MASTER,
 	SET_APU_SQUARE1,
 	SET_APU_SQUARE2,
@@ -451,6 +453,12 @@ static const _opt opt_nsf_player_effect[] = {
 	{NULL, uL("raw full"), NSF_EFFECT_RAW_FULL},
 	{NULL, uL("hanning"), NSF_EFFECT_HANNING},
 	{NULL, uL("hannig full"), NSF_EFFECT_HANNING_FULL}
+};
+static const _opt opt_toolbar_area[] = {
+	{NULL, uL("top"), TLB_TOP},
+	{NULL, uL("left"), TLB_LEFT},
+	{NULL, uL("bottom"), TLB_BOTTOM},
+	{NULL, uL("right"), TLB_RIGHT}
 };
 
 static const _opt opt_slot_pgs[] = {
@@ -817,6 +825,18 @@ static const _settings main_cfg[] = {
 		uL("    --language            GUI language          : english, italian, russian, spanish," NEWLINE)
 		uL("                                                  hungarian, turkish"),
 		{LENGTH(opt_languages), opt_languages}
+	},
+	{
+		uL("GUI"), uL("toolbar area"), uL("top"),
+		uL("# possible values: top, bottom, left, right"),
+		NULL,
+		{LENGTH(opt_toolbar_area), opt_toolbar_area}
+	},
+	{
+		uL("GUI"), uL("toolbar hidden"), uL("no"),
+		uL("# possible values: yes, no"),
+		NULL,
+		{LENGTH(opt_no_yes), opt_no_yes}
 	},
 	{
 		uL("apu channels"), uL("master"), uL("on,100"),

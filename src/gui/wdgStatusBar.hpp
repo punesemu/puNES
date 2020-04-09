@@ -21,14 +21,9 @@
 
 #include <QtWidgets/QWidget>
 #include <QtWidgets/QHBoxLayout>
-#include <QtWidgets/QSlider>
 #include <QtWidgets/QLabel>
-#include <QtWidgets/QPushButton>
-#include <QtWidgets/QStyledItemDelegate>
-#include <QtWidgets/QComboBox>
 #include <QtWidgets/QStatusBar>
 #include "mainWindow.hh"
-#include "wdgRewind.hpp"
 #include "common.h"
 
 class infoStatusBar : public QWidget {
@@ -45,61 +40,11 @@ class infoStatusBar : public QWidget {
 	public:
 		void update_label(void);
 };
-
-class slotItemDelegate : public QStyledItemDelegate {
-	Q_OBJECT
-
-	public:
-		slotItemDelegate(QObject *parent);
-		~slotItemDelegate();
-
-	protected:
-		void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
-};
-class slotComboBox : public QComboBox {
-	Q_OBJECT
-
-	private:
-		slotItemDelegate *sid;
-
-	public:
-		slotComboBox(QWidget *parent = 0);
-		~slotComboBox();
-
-	protected:
-		void paintEvent(QPaintEvent *event);
-};
-class wdgState : public QWidget {
-	Q_OBJECT
-
-	public:
-		QHBoxLayout *hbox;
-		QPushButton *save;
-		slotComboBox *slot;
-		QPushButton *load;
-
-	public:
-		wdgState(QWidget *parent = 0);
-		~wdgState();
-
-	public:
-		void retranslateUi(void);
-
-	private slots:
-		void s_save_clicked(bool checked);
-		void s_slot_activated(int index);
-		void s_load_clicked(bool checked);
-};
-
 class wdgStatusBar : public QStatusBar {
 	Q_OBJECT
 
 	public:
 		infoStatusBar *infosb;
-		wdgRewind *rewind;
-		wdgState *state;
-		QFrame *vlineState;
-		QFrame *vlineRewind;
 
 	public:
 		wdgStatusBar(QWidget *parent);
@@ -107,13 +52,10 @@ class wdgStatusBar : public QStatusBar {
 
 	protected:
 		bool eventFilter(QObject *obj, QEvent *event);
-		void changeEvent(QEvent *event);
 
 	public:
 		void update_statusbar(void);
 		void update_width(int w);
-		void state_setVisible(bool visible);
-		void rewind_setVisible(bool visible);
 };
 
 #endif /* WDGSTATUSBAR_HPP_ */
