@@ -25,7 +25,6 @@
 #include "cpu.h"
 #include "mappers.h"
 #include "mem_map.h"
-#include "text.h"
 #include "emu.h"
 #include "clock.h"
 #include "info.h"
@@ -98,7 +97,7 @@ BYTE fds_load_rom(void) {
 		}
 
 		if (!found) {
-			text_add_line_info(1, "[red]error loading rom");
+			gui_overlay_info_append_msg_precompiled(5, NULL);
 			fprintf(stderr, "error loading rom\n");
 			return (EXIT_ERROR);
 		}
@@ -210,13 +209,12 @@ BYTE fds_load_bios(void) {
 	}
 
 	// 4) directory puNES/bios
-	usnprintf(bios_file, usizeof(bios_file),
-		uL("" uPERCENTs BIOS_FOLDER "/" BIOSFILE), info.base_folder);
+	usnprintf(bios_file, usizeof(bios_file), uL("" uPERCENTs BIOS_FOLDER "/" BIOSFILE), info.base_folder);
 	if ((bios = ufopen(bios_file, uL("rb")))) {
 		goto fds_load_bios_founded;
 	}
 
-	text_add_line_info(1, "[red]FDS bios not found");
+	gui_overlay_info_append_msg_precompiled(6, NULL);
 	fprintf(stderr, "'FDS bios not found\n");
 	return (EXIT_ERROR);
 
@@ -249,13 +247,12 @@ void fds_disk_op(WORD type, BYTE side_to_insert) {
 			break;
 		case FDS_DISK_EJECT:
 			fds.drive.disk_ejected = TRUE;
-			text_add_line_info(1, "Disk [cyan]%d [normal]side [cyan]%c[normal]"
-				" [yellow]ejected", (fds.drive.side_inserted / 2) + 1,
-				(fds.drive.side_inserted & 0x01) + 'A');
+			gui_overlay_info_append_msg_precompiled(7, NULL);
+
 			return;
 		case FDS_DISK_INSERT:
 			if (!fds.drive.disk_ejected) {
-				text_add_line_info(1, "you must [yellow]eject[normal] disk first");
+				gui_overlay_info_append_msg_precompiled(8, NULL);
 				return;
 			}
 
@@ -264,14 +261,13 @@ void fds_disk_op(WORD type, BYTE side_to_insert) {
 
 			fds.drive.disk_ejected = FALSE;
 
-			text_add_line_info(1, "Disk [cyan]%d [normal]side [cyan]%c [green]inserted",
-				(fds.drive.side_inserted / 2) + 1, (fds.drive.side_inserted & 0x01) + 'A');
+			gui_overlay_info_append_msg_precompiled(9, NULL);
 			return;
 		case FDS_DISK_SELECT:
 		case FDS_DISK_SELECT_AND_INSERT:
 		case FDS_DISK_SELECT_FROM_REWIND:
 			if ((type == FDS_DISK_SELECT) && !fds.drive.disk_ejected) {
-				text_add_line_info(1, "you must [yellow]eject[normal] disk first");
+				gui_overlay_info_append_msg_precompiled(8, NULL);
 				return;
 			}
 			if (fds.side.data) {
@@ -443,8 +439,7 @@ void fds_disk_op(WORD type, BYTE side_to_insert) {
 		case FDS_DISK_SELECT:
 			fds.side.change.new_side = 0xFF;
 			fds.drive.side_inserted = side_to_insert;
-			text_add_line_info(1, "Disk [cyan]%d [normal]side [cyan]%c [brown]selected",
-				(fds.drive.side_inserted / 2) + 1, (fds.drive.side_inserted & 0x01) + 'A');
+			gui_overlay_info_append_msg_precompiled(10, NULL);
 			fds_diff_op(FDS_OP_READ, 0, 0);
 			break;
 	}

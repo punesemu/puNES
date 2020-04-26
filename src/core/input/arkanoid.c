@@ -27,20 +27,18 @@ enum _arkanoid_enum {
 	ark_rows = ark_stop_x - ark_start_x
 };
 
-struct _arkanoid {
-	int x, button;
-} arkanoid[PORT_BASE];
+_arkanoid arkanoid[PORT_BASE];
 
 void input_init_arkanoid(void) {
 	BYTE i;
 
 	for (i = 0; i <= PORT2; i++) {
-		arkanoid[i].x = 98;
+		arkanoid[i].x = arkanoid[i].rdx = 98;
 		arkanoid[i].button = 0;
 	}
 }
 void input_wr_arkanoid(BYTE *value, BYTE nport) {
-	static const float ratio = (float) ark_rows / (float) ark_stop_x;
+	static const float ratio = (float)ark_rows / (float)ark_stop_x;
 
 	nport &= 0x01;
 
@@ -49,7 +47,7 @@ void input_wr_arkanoid(BYTE *value, BYTE nport) {
 
 		input_read_mouse_coords(&x, &y);
 
-		arkanoid[nport].x = ark_start_x + ((float) x * ratio);
+		arkanoid[nport].x = ark_start_x + ((float)x * ratio);
 
 		if (arkanoid[nport].x < ark_start_x) {
 			arkanoid[nport].x = ark_start_x;
@@ -59,7 +57,7 @@ void input_wr_arkanoid(BYTE *value, BYTE nport) {
 			arkanoid[nport].x = ark_stop_x;
 		}
 
-		arkanoid[nport].x = ~arkanoid[nport].x;
+		arkanoid[nport].rdx = ~arkanoid[nport].x;
 		arkanoid[nport].button = gmouse.left;
 	}
 }
@@ -71,13 +69,13 @@ void input_rd_arkanoid(BYTE *value, BYTE nport, UNUSED(BYTE shift)) {
 		}
 
 		if ((nport & 0x01) == PORT2) {
-			(*value) |= (arkanoid[0].x & 0x80) >> 6;
-			arkanoid[0].x = (arkanoid[0].x << 1) & 0xFF;
+			(*value) |= (arkanoid[0].rdx & 0x80) >> 6;
+			arkanoid[0].rdx = (arkanoid[0].rdx << 1) & 0xFF;
 			return;
 		}
 	}
 
-	(*value) |= (arkanoid[nport].x & 0x80) >> 3;
-	arkanoid[nport].x = (arkanoid[nport].x << 1) & 0xFF;
+	(*value) |= (arkanoid[nport].rdx & 0x80) >> 3;
+	arkanoid[nport].rdx = (arkanoid[nport].rdx << 1) & 0xFF;
 	(*value) |= (arkanoid[nport].button << 3);
 }

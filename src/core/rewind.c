@@ -65,7 +65,6 @@ INLINE static void rewind_update_chunk_snaps( _rewind_chunk *chunk, int32_t chun
 INLINE static void rewind_operation(BYTE mode, BYTE save_input, _rewind_snapshoot *snap);
 INLINE static void rewind_free_chunk(_rewind_chunk *chunk);
 INLINE static void rewind_execute_frame(void);
-INLINE static char *rewind_convert_time_in_text(char *txt, size_t size, char *color, int32_t counter);
 
 static BYTE _rewind_frames(int32_t frames_to_rewind, BYTE exec_last_frame);
 
@@ -334,6 +333,9 @@ BYTE rewind_is_last_snap(void) {
 	return ((rwint.snap_cursor + 1) > rwint.count.snaps);
 }
 
+int32_t rewind_max_buffered_snaps(void) {
+	return (rwint.max_buffered.snaps);
+}
 int32_t rewind_count_snaps(void) {
 	return (rwint.count.snaps);
 }
@@ -356,22 +358,6 @@ int32_t rewind_calculate_snap_cursor(int factor, BYTE direction) {
 	}
 
 	return (snaps);
-}
-
-char *rewind_text_time_count_snaps(void) {
-	static char txt[100];
-
-	return (rewind_convert_time_in_text((char *)&txt, sizeof(txt), "[normal]", rwint.count.snaps));
-}
-char *rewind_text_time_snap_cursor(void) {
-	static char txt[100];
-
-	return (rewind_convert_time_in_text((char *)&txt, sizeof(txt), "[yellow]", rwint.snap_cursor));
-}
-char *rewind_text_time_backward(void) {
-	static char txt[100];
-
-	return (rewind_convert_time_in_text((char *)&txt, sizeof(txt), "[cyan]", rwint.count.snaps - rwint.snap_cursor));
 }
 
 INLINE static BYTE rewind_is_disabled(void) {
@@ -454,20 +440,6 @@ INLINE static void rewind_execute_frame(void) {
 	while (info.frame_status == FRAME_STARTED) {
 		cpu_exe_op();
 	}
-}
-INLINE static char *rewind_convert_time_in_text(char *txt, size_t size, char *color, int32_t counter) {
-	int32_t seconds, ms, s, m, h;
-
-	seconds = counter / machine.fps;
-	h = (seconds / 3600);
-	m = (seconds -(3600 * h)) / 60;
-	s = (seconds -(3600 * h) - (m * 60));
-	ms = (counter % machine.fps) * (1000 / machine.fps);
-
-	memset(txt, 0, size);
-	snprintf(txt, size, "%s%d[normal]:%s%02d[normal]:%s%02d[normal].%s%03d[normal]", color, h, color, m, color, s, color, ms);
-
-	return (txt);
 }
 
 static BYTE _rewind_frames(int32_t frames_to_rewind, BYTE exec_last_frame) {

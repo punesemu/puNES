@@ -46,7 +46,7 @@ void input_wr_oeka_kids_tablet(BYTE *value, UNUSED(BYTE nport)) {
 			oeka_kids_tablet.latch |= 0x01;
 		}
 
-		x = ((float) x * (240.0f / 256.0f)) + 8;
+		x = ((float)x * (240.0f / 256.0f)) + 8;
 		if (x < 0) {
 			x = 0;
 		}
@@ -54,7 +54,7 @@ void input_wr_oeka_kids_tablet(BYTE *value, UNUSED(BYTE nport)) {
 			x = 255;
 		}
 
-		y = ((float) y * (256.0f / 240.0f)) - 14;
+		y = ((float)y * (256.0f / 240.0f)) - 14;
 		if (y < 0) {
 			y = 0;
 		}

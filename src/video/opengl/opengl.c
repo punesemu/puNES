@@ -48,7 +48,7 @@ static void opengl_screenshot(void);
 
 static BYTE opengl_glew_init(void);
 static BYTE opengl_texture_create(_texture *texture, GLuint index);
-static void opengl_texture_simple_create(_texture_simple *texture, GLuint w, GLuint h, BYTE text);
+static void opengl_texture_simple_create(_texture_simple *texture, GLuint w, GLuint h, BYTE overlay);
 static BYTE opengl_texture_lut_create(_lut *lut, GLuint index);
 static void opengl_shader_delete(_shader *shd);
 #if !defined (RELEASE)
@@ -64,7 +64,7 @@ static void opengl_matrix_4x4_identity(_math_matrix_4x4 *mat);
 static void opengl_matrix_4x4_ortho(_math_matrix_4x4 *mat, GLfloat left, GLfloat right,
 	GLfloat bottom, GLfloat top, GLfloat znear, GLfloat zfar);
 INLINE void opengl_shader_filter(uint8_t linear, uint8_t mipmap, uint8_t interpolation, GLuint *mag, GLuint *min);
-INLINE static void opengl_shader_params_text_set(_shader *shd);
+INLINE static void opengl_shader_params_overlay_set(_shader *shd);
 
 // glsl
 static BYTE opengl_shader_glsl_init(GLuint pass, _shader *shd, GLchar *code, const uTCHAR *path);
@@ -130,7 +130,7 @@ BYTE opengl_init(void) {
 	memset(&opengl.attribs, 0x00, sizeof(opengl.attribs));
 	memset(&opengl.screen, 0x00, sizeof(opengl.screen));
 	memset(&opengl.feedback, 0x00, sizeof(opengl.feedback));
-	memset(&opengl.text, 0x00, sizeof(_texture_simple));
+	memset(&opengl.overlay, 0x00, sizeof(_texture_simple));
 	memset(&opengl.texture, 0x00, LENGTH(opengl.texture) * sizeof(_texture));
 	memset(&opengl.lut, 0x00, LENGTH(opengl.lut) * sizeof(_lut));
 
@@ -177,6 +177,9 @@ BYTE opengl_context_create(void) {
 		opengl.video_mode.w = gfx.w[VIDEO_MODE];
 		opengl.video_mode.h = gfx.h[VIDEO_MODE];
 	}
+
+	opengl.video_mode.w *= gfx.device_pixel_ratio;
+	opengl.video_mode.h *= gfx.device_pixel_ratio;
 
 #if defined (WITH_OPENGL_CG)
 	if (shader_effect.type == MS_CGP) {
@@ -229,8 +232,8 @@ BYTE opengl_context_create(void) {
 
 		vp->x = 0;
 		vp->y = 0;
-		vp->w = gfx.w[VIDEO_MODE];
-		vp->h = gfx.h[VIDEO_MODE];
+		vp->w = gfx.w[VIDEO_MODE] * gfx.device_pixel_ratio;
+		vp->h = gfx.h[VIDEO_MODE] * gfx.device_pixel_ratio;
 
 		if (cfg->fullscreen) {
 			int mw = (cfg->screen_rotation == ROTATE_90) || (cfg->screen_rotation == ROTATE_270) ?
@@ -306,10 +309,10 @@ BYTE opengl_context_create(void) {
 				BYTE v = (cfg->screen_rotation == ROTATE_180) || (cfg->screen_rotation == ROTATE_270) ?
 					overscan.borders->up : overscan.borders->down;
 
-				vp->x = (-h * gfx.width_pixel) * gfx.pixel_aspect_ratio;
-				vp->y = -v * cfg->scale;
-				vp->w = gfx.w[NO_OVERSCAN] * gfx.pixel_aspect_ratio;
-				vp->h = gfx.h[NO_OVERSCAN];
+				vp->x = ((-h * gfx.width_pixel) * gfx.pixel_aspect_ratio) * gfx.device_pixel_ratio;
+				vp->y = (-v * cfg->scale) * gfx.device_pixel_ratio;
+				vp->w = (gfx.w[NO_OVERSCAN] * gfx.pixel_aspect_ratio) * gfx.device_pixel_ratio;
+				vp->h = gfx.h[NO_OVERSCAN] * gfx.device_pixel_ratio;
 			}
 
 			if ((cfg->screen_rotation == ROTATE_90) || (cfg->screen_rotation == ROTATE_270)) {
@@ -395,11 +398,11 @@ BYTE opengl_context_create(void) {
 		}
 	}
 
-	// testo
+	// overlay
 	{
-		_shader *shd = &opengl.text.shader;
+		_shader *shd = &opengl.overlay.shader;
 		BYTE rotate = FALSE;
-		int tw, th;
+		int ow, oh;
 
 		if (cfg->fullscreen) {
 			float div = (float)gfx.w[VIDEO_MODE] / 1024.0f;
@@ -408,18 +411,18 @@ BYTE opengl_context_create(void) {
 				div = 1.0f;
 			}
 
-			tw = gfx.w[VIDEO_MODE] / div;
-			th = gfx.h[VIDEO_MODE] / div;
+			ow = gfx.w[VIDEO_MODE] / div;
+			oh = gfx.h[VIDEO_MODE] / div;
 		} else {
-			tw = _SCR_ROWS_NOBRD * 2;
-			th = _SCR_LINES_NOBRD * 2;
+			ow = _SCR_ROWS_NOBRD * 2;
+			oh = _SCR_LINES_NOBRD * 2;
 		}
 
-		if (gfx.w[VIDEO_MODE] < tw) {
-			tw = gfx.w[VIDEO_MODE];
+		if (gfx.w[VIDEO_MODE] < ow) {
+			ow = gfx.w[VIDEO_MODE];
 		}
-		if (gfx.h[VIDEO_MODE] < th) {
-			th = gfx.h[VIDEO_MODE];
+		if (gfx.h[VIDEO_MODE] < oh) {
+			oh = gfx.h[VIDEO_MODE];
 		}
 
 		if ((cfg->screen_rotation == ROTATE_90) || (cfg->screen_rotation == ROTATE_270)) {
@@ -433,18 +436,15 @@ BYTE opengl_context_create(void) {
 		}
 
 		if (rotate == TRUE) {
-			int tmp = tw;
+			int tmp = ow;
 
-			tw = th;
-			th = tmp;
+			ow = oh;
+			oh = tmp;
 		}
 
-		opengl_texture_simple_create(&opengl.text, tw, th, TRUE);
+		opengl_texture_simple_create(&opengl.overlay, ow * gfx.device_pixel_ratio, oh * gfx.device_pixel_ratio, TRUE);
 
-		text.w = opengl.text.rect.w;
-		text.h = opengl.text.rect.h;
-
-		gfx_text_reset();
+		gui_overlay_set_size(ow, oh);
 
 		glGenBuffers(1, &shd->vbo);
 
@@ -642,21 +642,21 @@ void opengl_draw_scene(void) {
 		opengl.texture[shader_effect.feedback_pass].id = tex;
 	}
 
-	// rendering del testo
-	text_rendering(TRUE);
+	// rendering dell'overlay
+	gui_overlay_blit();
 
-	// testo
-	if (cfg->txt_on_screen && text.on_screen) {
+	// overlay
+	if (cfg->txt_on_screen && (gui_overlay_is_updated() == TRUE)) {
 		float vpx = 0;
 		float vpy = 0;
-		float vpw = opengl.video_mode.w * gfx.device_pixel_ratio;
-		float vph = opengl.video_mode.h * gfx.device_pixel_ratio;
+		float vpw = opengl.video_mode.w;
+		float vph = opengl.video_mode.h;
 		GLuint mag, min;
 
 		glViewport(vpx, vpy, vpw, vph);
-		glBindTexture(GL_TEXTURE_2D, opengl.text.id);
-		glUseProgram(opengl.text.shader.glslp.prg);
-		opengl_shader_params_text_set(&opengl.text.shader);
+		glBindTexture(GL_TEXTURE_2D, opengl.overlay.id);
+		glUseProgram(opengl.overlay.shader.glslp.prg);
+		opengl_shader_params_overlay_set(&opengl.overlay.shader);
 		glGenerateMipmap(GL_TEXTURE_2D);
 		opengl_shader_filter(TEXTURE_LINEAR_ENAB, TRUE, FALSE, &mag, &min);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag);
@@ -709,17 +709,17 @@ static void opengl_context_delete(void) {
 	}
 
 	{
-		if (opengl.text.id) {
-			glDeleteTextures(1, &opengl.text.id);
-			opengl.text.id = 0;
+		if (opengl.overlay.id) {
+			glDeleteTextures(1, &opengl.overlay.id);
+			opengl.overlay.id = 0;
 		}
 
-		if (opengl.text.shader.vbo) {
-			glDeleteBuffers(1, &opengl.text.shader.vbo);
-			opengl.text.shader.vbo = 0;
+		if (opengl.overlay.shader.vbo) {
+			glDeleteBuffers(1, &opengl.overlay.shader.vbo);
+			opengl.overlay.shader.vbo = 0;
 		}
 
-		opengl_shader_delete(&opengl.text.shader);
+		opengl_shader_delete(&opengl.overlay.shader);
 	}
 
 	{
@@ -925,10 +925,10 @@ static BYTE opengl_texture_create(_texture *texture, GLuint index) {
 #endif
 
 	if (index == shader_effect.last_pass) {
-		vp->x = gfx.vp.x * gfx.device_pixel_ratio;
-		vp->y = gfx.vp.y * gfx.device_pixel_ratio;
-		vp->w = gfx.vp.w * gfx.device_pixel_ratio;
-		vp->h = gfx.vp.h * gfx.device_pixel_ratio;
+		vp->x = gfx.vp.x;
+		vp->y = gfx.vp.y;
+		vp->w = gfx.vp.w;
+		vp->h = gfx.vp.h;
 	} else {
 		vp->x = 0;
 		vp->y = 0;
@@ -991,7 +991,7 @@ static BYTE opengl_texture_create(_texture *texture, GLuint index) {
 
 	return (EXIT_OK);
 }
-static void opengl_texture_simple_create(_texture_simple *texture, GLuint w, GLuint h, BYTE text) {
+static void opengl_texture_simple_create(_texture_simple *texture, GLuint w, GLuint h, BYTE overlay) {
 	_texture_rect *rect = &texture->rect;
 	_shader *shd = &texture->shader;
 
@@ -1006,7 +1006,7 @@ static void opengl_texture_simple_create(_texture_simple *texture, GLuint w, GLu
 	rect->base.w = w;
 	rect->base.h = h;
 
-	if (!text) {
+	if (!overlay) {
 #if defined (FH_SHADERS_GEST)
 		rect->w = emu_power_of_two(rect->base.w);
 		rect->h = emu_power_of_two(rect->base.h);
@@ -1273,7 +1273,7 @@ INLINE void opengl_shader_filter(uint8_t linear, uint8_t mipmap, uint8_t interpo
 			break;
 	}
 }
-INLINE static void opengl_shader_params_text_set(_shader *shd) {
+INLINE static void opengl_shader_params_overlay_set(_shader *shd) {
 	GLuint buffer_index = 0;
 
 	if (shd->glslp.uni.mvp >= 0) {

@@ -18,7 +18,6 @@
 
 #include <QtCore/QFileInfo>
 #include "tas.h"
-#include "text.h"
 #include "emu.h"
 #include "info.h"
 #include "gui.h"
@@ -268,13 +267,13 @@ void tas_read_FM2(void) {
 void tas_frame_FM2(void) {
 	// il primo frame
 	if (!tas.frame) {
-		text_add_line_info(1, "[yellow]silence, the movie has begun[normal]");
+		gui_overlay_info_append_msg_precompiled(20, NULL);
 		//tas_increment_index()
 	}
 
 	if (++tas.frame >= tas.total) {
 		if (tas.frame == tas.total) {
-			text_add_line_single(4, FONT_12X10, 200, TXT_CENTER, TXT_CENTER, 0, 0, "The End");
+			gui_overlay_info_append_msg_precompiled(21, NULL);
 		} else if (tas.frame == tas.total + 10) {
 			// nel tas_quit() eseguo il ripristino delle porte e l'input_init() solo che questo
 			// cambia lo stato delle pulsanti e in alcuni film (aglar-marblemadness.fm2)

@@ -1221,7 +1221,7 @@ void objInp::set_all_input_default(_config_input *config_input, _array_pointers_
 #endif
 				break;
 			case PORT2:
-				port->type = FALSE;
+				port->type = CTRL_DISABLED;
 #if defined (_WIN32)
 				js_set_id(&port->joy_id, name_to_jsn(uL("NULL")));
 #else
@@ -1229,7 +1229,7 @@ void objInp::set_all_input_default(_config_input *config_input, _array_pointers_
 #endif
 				break;
 			default:
-				port->type = FALSE;
+				port->type = CTRL_DISABLED;
 				js_set_id(&port->joy_id, name_to_jsn(uL("NULL")));
 				break;
 		}

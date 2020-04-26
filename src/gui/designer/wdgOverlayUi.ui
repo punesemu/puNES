@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>wdgOverlayUi</class>
+ <widget class="QWidget" name="wdgOverlayUi">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>687</width>
+    <height>563</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string notr="true">wdgOverlayUi</string>
+  </property>
+  <property name="windowOpacity">
+   <double>0.500000000000000</double>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="leftMargin">
+    <number>1</number>
+   </property>
+   <property name="topMargin">
+    <number>1</number>
+   </property>
+   <property name="rightMargin">
+    <number>1</number>
+   </property>
+   <property name="bottomMargin">
+    <number>1</number>
+   </property>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_input_ports">
+     <property name="spacing">
+      <number>3</number>
+     </property>
+     <item>
+      <widget class="overlayWidgetInputPort" name="overlayInputPort1" native="true">
+       <property name="minimumSize">
+        <size>
+         <width>97</width>
+         <height>28</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="overlayWidgetInputPort" name="overlayInputPort2" native="true">
+       <property name="minimumSize">
+        <size>
+         <width>97</width>
+         <height>28</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="overlayWidgetInputPort" name="overlayInputPort3" native="true">
+       <property name="minimumSize">
+        <size>
+         <width>97</width>
+         <height>28</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="overlayWidgetInputPort" name="overlayInputPort4" native="true">
+       <property name="minimumSize">
+        <size>
+         <width>97</width>
+         <height>28</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QWidget" name="widgetFakeTopRight" native="true">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_slot_state">
+     <item>
+      <spacer name="horizontalSpacer_slot_state_0">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="overlayWidgetSaveSlot" name="overlaySaveSlot" native="true">
+       <property name="minimumSize">
+        <size>
+         <width>100</width>
+         <height>15</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_slot_state_1">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item>
+    <widget class="overlayWidgetInfo" name="overlayInfo" native="true">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>20</height>
+      </size>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_bottom">
+     <property name="spacing">
+      <number>3</number>
+     </property>
+     <item>
+      <widget class="overlayWidgetRewind" name="overlayRewind" native="true">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>100</width>
+         <height>0</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="overlayWidgetTAS" name="overlayTAS" native="true">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QWidget" name="widgetFakeButtomRight" native="true">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="overlayWidgetFloppy" name="overlayFloppy" native="true">
+       <property name="minimumSize">
+        <size>
+         <width>16</width>
+         <height>16</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="overlayWidgetFPS" name="overlayFPS" native="true">
+       <property name="minimumSize">
+        <size>
+         <width>20</width>
+         <height>0</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>overlayWidgetFloppy</class>
+   <extends>QWidget</extends>
+   <header>wdgOverlayUi.hpp</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>overlayWidgetRewind</class>
+   <extends>QWidget</extends>
+   <header>wdgOverlayUi.hpp</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>overlayWidgetFPS</class>
+   <extends>QWidget</extends>
+   <header>wdgOverlayUi.hpp</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>overlayWidgetSaveSlot</class>
+   <extends>QWidget</extends>
+   <header>wdgOverlayUi.hpp</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>overlayWidgetInputPort</class>
+   <extends>QWidget</extends>
+   <header>wdgOverlayUi.hpp</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>overlayWidgetTAS</class>
+   <extends>QWidget</extends>
+   <header>wdgOverlayUi.hpp</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>overlayWidgetInfo</class>
+   <extends>QWidget</extends>
+   <header>wdgOverlayUi.hpp</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
+ <connections/>
+</ui>

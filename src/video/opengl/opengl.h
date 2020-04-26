@@ -182,7 +182,7 @@ typedef struct _texture_simple {
 } _texture_simple;
 typedef struct _opengl {
 	_math_matrix_4x4 mvp;
-	_texture_simple text;
+	_texture_simple overlay;
 	_texture texture[MAX_PASS + 1];
 	_lut lut[MAX_PASS];
 

@@ -79,11 +79,44 @@
     <file>pics/btn_donate_SM.gif</file>
     <file>pics/Nes_controller.svg</file>
     <file>pics/btn_donateCC_LG.gif</file>
+    <file>pics/overlay_controller.png</file>
     <file>pics/pushpin.png</file>
+    <file>pics/overlay_controller_left.png</file>
+    <file>pics/overlay_controller_exp_port.png</file>
+    <file>pics/overlay_controller_b.png</file>
+    <file>pics/overlay_controller_port1.png</file>
+    <file>pics/overlay_oeka_kids_tablet.png</file>
+    <file>pics/overlay_controller_port2.png</file>
+    <file>pics/overlay_controller_port3.png</file>
+    <file>pics/overlay_controller_port4.png</file>
+    <file>pics/overlay_controller_port5.png</file>
+    <file>pics/overlay_arkanoid_paddle_button.png</file>
+    <file>pics/overlay_controller_port6.png</file>
+    <file>pics/overlay_arkanoid_paddle.png</file>
+    <file>pics/overlay_zapper.png</file>
+    <file>pics/overlay_floppy_gray.png</file>
+    <file>pics/overlay_floppy_green.png</file>
+    <file>pics/overlay_floppy_red.png</file>
+    <file>pics/overlay_mouse.png</file>
+    <file>pics/overlay_mouse_button.png</file>
+    <file>pics/overlay_controller_port7.png</file>
+    <file>pics/overlay_controller_port8.png</file>
+    <file>pics/overlay_controller_a.png</file>
+    <file>pics/overlay_controller_port0.png</file>
+    <file>pics/overlay_controller_select.png</file>
+    <file>pics/overlay_zapper_bang.png</file>
+    <file>pics/overlay_controller_start.png</file>
+    <file>pics/overlay_controller_up.png</file>
   </qresource>
   <qresource prefix="pointers">
     <file>pointers/target_32x32.xpm</file>
     <file>pointers/target_48x48.xpm</file>
+  </qresource>
+  <qresource prefix="fonts">
+    <file>fonts/Blocktopia.ttf</file>
+    <file>fonts/ChronoType.ttf</file>
+    <file>fonts/Rygarde.ttf</file>
+    <file>fonts/DigitalCounter7-AqDg.ttf</file>
   </qresource>
   <qresource prefix="tr">
     <file>translations/en_EN.qm</file>

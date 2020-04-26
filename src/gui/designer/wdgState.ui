@@ -17,7 +17,7 @@
    </sizepolicy>
   </property>
   <property name="windowTitle">
-   <string>wdgState</string>
+   <string notr="true">wdgState</string>
   </property>
   <property name="toolTip">
    <string>Save/Load Slot Box</string>

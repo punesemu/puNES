@@ -398,7 +398,7 @@ void mainWindow::state_save_slot_set(int slot, bool on_video) {
 	}
 	save_slot.slot = slot;
 	if (on_video == true) {
-		text_save_slot(SAVE_SLOT_INCDEC);
+		gui_overlay_enable_save_slot(SAVE_SLOT_INCDEC);
 	}
 }
 void mainWindow::shortcuts(void) {

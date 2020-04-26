@@ -111,16 +111,8 @@ int main(int argc, char **argv) {
 
 	gamegenie_init();
 
-	text_init();
-
-	if (!info.portable) {
-		text_add_line_info(1, "[yellow]p[red]u[green]N[cyan]E[brown]S[normal]"
-			" [font8](by [cyan]FHorse[normal]) [font12]%s", VERSION);
-	} else {
-		text_add_line_info(1, "[font8][cyan]Portable[normal] "
-			"[font12][yellow]p[red]u[green]N[cyan]E[brown]S[normal]"
-			"[font8] (by [cyan]FHorse[normal]) [font12]%s", VERSION);
-	}
+	gui_overlay_info_init();
+	gui_overlay_info_emulator();
 
 	// tratto il file di configurazione ed
 	// i parametri passati dalla riga di comando.

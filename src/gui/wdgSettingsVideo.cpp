@@ -813,7 +813,7 @@ void wdgSettingsVideo::s_shader_file(UNUSED(bool checked)) {
 			gfx_set_screen(NO_CHANGE, NO_CHANGE, SHADER_FILE, NO_CHANGE, NO_CHANGE, FALSE, FALSE);
 			emu_thread_continue();
 		} else {
-			text_add_line_info(1, "[red]error on shader file");
+			gui_overlay_info_append_msg_precompiled(25, NULL);
 		}
 	}
 
@@ -935,7 +935,7 @@ void wdgSettingsVideo::s_palette_file(UNUSED(bool checked)) {
 			widget_Palette_Editor->palette_changed();
 			emu_thread_continue();
 		} else {
-			text_add_line_info(1, "[red]error on palette file");
+			gui_overlay_info_append_msg_precompiled(26, NULL);
 		}
 	}
 
@@ -963,12 +963,15 @@ void wdgSettingsVideo::s_interpolation(UNUSED(bool checked)) {
 }
 void wdgSettingsVideo::s_text_on_screen(UNUSED(bool checked)) {
 	cfg->txt_on_screen = !cfg->txt_on_screen;
+	gui_overlay_update();
 }
 void wdgSettingsVideo::s_show_fps(UNUSED(bool checked)) {
 	cfg->show_fps = !cfg->show_fps;
+	gui_overlay_update();
 }
 void wdgSettingsVideo::s_input_display(UNUSED(bool checked)) {
 	cfg->input_display = !cfg->input_display;
+	gui_overlay_update();
 }
 void wdgSettingsVideo::s_disable_tv_noise(UNUSED(bool checked)) {
 	cfg->disable_tv_noise = !cfg->disable_tv_noise;

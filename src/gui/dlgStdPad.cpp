@@ -115,8 +115,7 @@ dlgStdPad::dlgStdPad(_cfg_port *cfg_port, QWidget *parent = 0) : QDialog(parent)
 		comboBox_Controller_type->addItem(tr("Original"));
 		comboBox_Controller_type->addItem(tr("3rd-party"));
 		comboBox_Controller_type->setCurrentIndex(data.cfg.port->type_pad);
-		connect(comboBox_Controller_type, SIGNAL(activated(int)), this,
-			SLOT(s_combobox_controller_type_activated(int)));
+		connect(comboBox_Controller_type, SIGNAL(activated(int)), this, SLOT(s_combobox_controller_type_activated(int)));
 	}
 
 	for (int i = TURBOA; i <= TURBOB; i++) {

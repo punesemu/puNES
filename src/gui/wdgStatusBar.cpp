@@ -70,6 +70,7 @@ infoStatusBar::infoStatusBar(QWidget *parent) : QWidget(parent) {
 	setLayout(hbox);
 
 	label = new QLabel(this);
+	label->setText("[no rom]");
 	hbox->addWidget(label);
 }
 infoStatusBar::~infoStatusBar() {}

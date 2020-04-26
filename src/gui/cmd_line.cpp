@@ -132,7 +132,7 @@ BYTE cmd_line_parse(int argc, uTCHAR **argv) {
 							}
 						}
 					}
-					opt = (*((char *) skey.toLatin1().constData()));
+					opt = (*((char *)skey.toLatin1().constData()));
 					break;
 				}
 			}

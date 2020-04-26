@@ -24,7 +24,6 @@
 #include "ppu_inline.h"
 #include "clock.h"
 #include "cpu_inline.h"
-#include "text.h"
 
 enum cpu_opcode_type { RD_OP, WR_OP };
 
@@ -987,7 +986,7 @@ void cpu_exe_op(void) {
 	default:
 		if (!info.no_rom && !info.first_illegal_opcode) {
 			fprintf(stderr, "Alert: PC = 0x%04X, CODEOP = 0x%02X \n", (cpu.PC - 1), cpu.opcode);
-			text_add_line_info(1, "[red]Illegal Opcode 0x%02X at 0x%04X", cpu.opcode, (cpu.PC - 1));
+			gui_overlay_info_append_msg_precompiled(4, NULL);
 			info.first_illegal_opcode = TRUE;
 		}
 		cpu.cycles = 0;

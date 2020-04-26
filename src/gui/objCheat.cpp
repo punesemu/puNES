@@ -22,7 +22,7 @@
 #include "objCheat.moc"
 #include "info.h"
 #include "conf.h"
-#include "text.h"
+#include "gui.h"
 
 #define CHEAT_XML_VERSION "1.0"
 #define CHEATFILENAME uQString(info.base_folder) + QString(CHEAT_FOLDER) + "/" +\
@@ -104,9 +104,9 @@ void objCheat::apply_cheats(void) {
 	tot = cheats_list.rom.counter + cheats_list.ram.counter;
 
 	if (tot == 1) {
-		text_add_line_info(1, "[green]%d[normal] cheat active", tot);
+		gui_overlay_info_append_msg_precompiled(17, &tot);
 	} else if (tot > 1) {
-		text_add_line_info(1, "[green]%d[normal] cheats actives", tot);
+		gui_overlay_info_append_msg_precompiled(18, &tot);
 	}
 }
 bool objCheat::is_equal(int index, chl_map *find, bool description) {

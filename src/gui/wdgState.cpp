@@ -74,7 +74,7 @@ void wdgState::s_save_clicked(UNUSED(bool checked)) {
 }
 void wdgState::s_slot_activated(int index) {
 	save_slot.slot = index;
-	text_save_slot(SAVE_SLOT_INCDEC);
+	gui_overlay_enable_save_slot(SAVE_SLOT_INCDEC);
 	gui_set_focus();
 }
 void wdgState::s_load_clicked(UNUSED(bool checked)) {

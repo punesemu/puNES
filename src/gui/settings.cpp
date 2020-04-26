@@ -108,9 +108,7 @@ void settings_pgs_parse(void) {
 	s.pgs = new objPgs(s.cfg, PGSFILENAME, LSET_PGS);
 
 	if (cfg->ppu_overclock) {
-		text_add_line_info(1,
-				"overclock enabled [font8]([green]VB[normal] [cyan]%d,[green]PR[normal] [cyan]%d[normal])",
-				cfg->extra_vb_scanlines, cfg->extra_pr_scanlines);
+		gui_overlay_info_append_msg_precompiled(19, NULL);
 	}
 }
 void settings_pgs_save(void) {

@@ -25,7 +25,6 @@
 #include "info.h"
 #include "emu.h"
 #include "gui.h"
-#include "text.h"
 #include "cheat.h"
 #include "conf.h"
 
@@ -186,21 +185,21 @@ void patcher_apply(void *rom_mem) {
 
 	if (ustrcasecmp(ext, uL(".ips")) == 0) {
 		if (patcher_ips(&patch, rom) == EXIT_ERROR) {
-			text_add_line_info(1, "[red]error loading patch file");
+			gui_overlay_info_append_msg_precompiled(12, NULL);
 			fprintf(stderr, "error loading patch file\n");
 		} else {
 			patcher.patched = TRUE;
 		}
 	} else if (ustrcasecmp(ext, uL(".bps")) == 0) {
 		if (patcher_bps(&patch, rom) == EXIT_ERROR) {
-			text_add_line_info(1, "[red]error loading patch file");
+			gui_overlay_info_append_msg_precompiled(12, NULL);
 			fprintf(stderr, "error loading patch file\n");
 		} else {
 			patcher.patched = TRUE;
 		}
 	} else if (ustrcasecmp(ext, uL(".xdelta")) == 0) {
 		if (patcher_xdelta(&patch, rom) == EXIT_ERROR) {
-			text_add_line_info(1, "[red]error loading patch file");
+			gui_overlay_info_append_msg_precompiled(12, NULL);
 			fprintf(stderr, "error loading patch file\n");
 		} else {
 			patcher.patched = TRUE;

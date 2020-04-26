@@ -30,25 +30,20 @@ class dlgStdPad : public QDialog, public Ui::dlgStdPad {
 
 	private:
 		struct _data {
-			QPushButton *bp;
-
 			struct _joy {
 				int fd;
 				WORD value;
 				QTimer *timer;
 			} joy;
-
 			struct _seq {
 				bool active;
 				int type;
 				int counter;
 				QTimer *timer;
 			} seq;
-
 			bool no_other_buttons;
-
+			QPushButton *bp;
 			BYTE vbutton;
-
 			_cfg_port cfg;
 		} data;
 

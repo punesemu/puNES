@@ -193,7 +193,7 @@ void wdgSettingsGeneral::s_mode(int index) {
 	if (reset) {
 		QString ascii = uQString(opt_mode[machine.type].lname);
 
-		text_add_line_info(1, "switched to [green]%s", ascii.toLatin1().constData());
+		gui_overlay_info_append_msg_precompiled(22, (void *)&ascii);
 
 		emu_reset(CHANGE_MODE);
 
@@ -300,7 +300,7 @@ void wdgSettingsGeneral::s_game_genie_rom_file(UNUSED(bool checked)) {
 			ustrncpy(cfg->gg_rom_file, uQStringCD(fileinfo.absoluteFilePath()), usizeof(cfg->gg_rom_file) - 1);
 			update_widget();
 		} else {
-			text_add_line_info(1, "[red]error on game genie rom file");
+			gui_overlay_info_append_msg_precompiled(23, NULL);
 		}
 	}
 
@@ -331,7 +331,7 @@ void wdgSettingsGeneral::s_fds_bios_file(UNUSED(bool checked)) {
 			ustrncpy(cfg->fds_bios_file, uQStringCD(fileinfo.absoluteFilePath()), usizeof(cfg->fds_bios_file) - 1);
 			update_widget();
 		} else {
-			text_add_line_info(1, "[red]error on FDS BIOS file");
+			gui_overlay_info_append_msg_precompiled(24, NULL);
 		}
 	}
 

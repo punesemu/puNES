@@ -25,7 +25,6 @@
 #include "irqA12.h"
 #include "irql2f.h"
 #include "tas.h"
-#include "text.h"
 #include "uncompress.h"
 #include "unif.h"
 #include "gui.h"
@@ -703,7 +702,7 @@ BYTE map_init(void) {
 			map_init_254();
 			break;
 		default:
-			text_add_line_info(1, "[yellow]Mapper %d not supported", info.mapper.id);
+			gui_overlay_info_append_msg_precompiled(11, NULL);
 			fprintf(stderr, "Mapper not supported\n");
 			EXTCL_CPU_WR_MEM(0);
 			break;

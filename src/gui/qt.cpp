@@ -21,6 +21,7 @@
 #include <QtGui/QImage>
 #include <QtCore/QDir>
 #include <QtGui/QScreen>
+#include <QtGui/QFontDatabase>
 #if defined (_WIN32)
 #include <QtCore/QtPlugin>
 #if defined (QT5_PLUGIN_QWINDOWS)
@@ -56,6 +57,7 @@ Q_IMPORT_PLUGIN(QSvgPlugin)
 #include "wdgScreen.hpp"
 #include "wdgStatusBar.hpp"
 #include "wdgSettingsVideo.hpp"
+#include "wdgOverlayUi.hpp"
 #include "video/gfx_thread.h"
 #include "emu_thread.h"
 #include "version.h"
@@ -118,6 +120,12 @@ BYTE gui_create(void) {
 	fmt.setSwapInterval(cfg->vsync);
 	QSurfaceFormat::setDefaultFormat(fmt);
 #endif
+
+	QFontDatabase::addApplicationFont(":/fonts/fonts/Blocktopia.ttf");
+	QFontDatabase::addApplicationFont(":/fonts/fonts/ChronoType.ttf");
+	QFontDatabase::addApplicationFont(":/fonts/fonts/DigitalCounter7-AqDg.ttf");
+	QFontDatabase::addApplicationFont(":/fonts/fonts/Rygarde.ttf");
+
 	qt.mwin = new mainWindow();
 	qt.screen = qt.mwin->screen;
 	qt.objch->setParent(qt.mwin);
@@ -144,6 +152,7 @@ BYTE gui_create(void) {
 	qt.mwin->show();
 
 	qt.dset = new dlgSettings();
+	overlay.widget = new wdgOverlayUi();
 
 	memset(&ext_win, 0x00, sizeof(ext_win));
 	qt.vssystem = new dlgVsSystem(qt.mwin);
@@ -162,6 +171,7 @@ BYTE gui_create(void) {
 	QEvent event(QEvent::LanguageChange);
 	QApplication::sendEvent(qt.mwin, &event);
 	QApplication::sendEvent(qt.dset, &event);
+	QApplication::sendEvent(overlay.widget, &event);
 
 	return (EXIT_OK);
 }
@@ -231,6 +241,7 @@ void gui_update(void) {
 	qt.mwin->setWindowTitle(uQString(title));
 	qt.mwin->update_window();
 	qt.dset->update_dialog();
+	overlay.widget->update_widget();
 
 	gui.in_update = FALSE;
 }

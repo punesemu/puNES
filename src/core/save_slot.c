@@ -33,7 +33,6 @@
 #include "video/gfx.h"
 #include "gui.h"
 #include "tas.h"
-#include "text.h"
 #include "fds.h"
 #include "nsf.h"
 #include "cheat.h"
@@ -50,7 +49,7 @@ BYTE save_slot_save(BYTE slot) {
 
 	// game genie
 	if (info.mapper.id == GAMEGENIE_MAPPER) {
-		text_add_line_info(1, "[yellow]save is impossible in Game Genie menu");
+		gui_overlay_info_append_msg_precompiled(13, NULL);
 		return (EXIT_ERROR);
 	}
 
@@ -79,7 +78,7 @@ BYTE save_slot_save(BYTE slot) {
 	fclose(fp);
 
 	if (slot < SAVE_SLOT_FILE) {
-		text_save_slot(SAVE_SLOT_SAVE);
+		gui_overlay_enable_save_slot(SAVE_SLOT_SAVE);
 	}
 
 	return (EXIT_OK);
@@ -89,7 +88,7 @@ BYTE save_slot_load(BYTE slot) {
 	FILE *fp;
 
 	if (tas.type) {
-		text_add_line_info(1, "[yellow]movie playback interrupted[normal]");
+		gui_overlay_info_append_msg_precompiled(14, NULL);
 		tas_quit();
 	}
 
@@ -110,7 +109,7 @@ BYTE save_slot_load(BYTE slot) {
 	}
 
 	if ((fp = ufopen(file, uL("rb"))) == NULL) {
-		text_add_line_info(1, "[red]error[normal] loading state");
+		gui_overlay_info_append_msg_precompiled(15, NULL);
 		fprintf(stderr, "error loading state\n");
 		return (EXIT_ERROR);
 	}
@@ -124,7 +123,7 @@ BYTE save_slot_load(BYTE slot) {
 
 		if (memcmp(info.sha1sum.prg.value, save_slot.sha1sum.prg.value,
 			sizeof(info.sha1sum.prg.value)) != 0) {
-			text_add_line_info(1, "[red]state file is not for this rom[normal]");
+			gui_overlay_info_append_msg_precompiled(16, NULL);
 			fprintf(stderr, "state file is not for this rom.\n");
 			rewind_save_state_snap(BCK_STATES_OP_READ_FROM_MEM);
 			fclose(fp);
@@ -142,7 +141,7 @@ BYTE save_slot_load(BYTE slot) {
 	fclose(fp);
 
 	if (slot < SAVE_SLOT_FILE) {
-		text_save_slot(SAVE_SLOT_READ);
+		gui_overlay_enable_save_slot(SAVE_SLOT_READ);
 	}
 
 	//riavvio il rewind

@@ -666,6 +666,10 @@
         <source>Save Unalte&amp;red NES screen</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Widgets</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>objCheat</name>
@@ -679,6 +683,149 @@
     </message>
     <message>
         <source>The file is in read only mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>overlayWidgetInfo</name>
+    <message>
+        <source>start wav recording</source>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>stop wav recording</source>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>[red]Game Genie rom not found[normal]</source>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>[red]error loading Game Genie rom[normal]</source>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>[red]Illegal Opcode[normal] [yellow]0x%1[normal] at [yellow]0x%2[normal]</source>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>[red]error loading rom[normal]</source>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>[red]FDS bios not found[normal]</source>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>disk [cyan]%1[normal] side [cyan]%2[normal] [yellow]ejected[normal]</source>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>you must [yellow]eject[normal] disk first</source>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>disk [cyan]%1[normal] side [cyan]%2[normal] [green]inserted[normal]</source>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>disk [cyan]%1[normal] side [cyan]%2[normal] [brown]selected[normal]</source>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>[yellow]mapper[normal] [brown]%1[normal] [yellow]not supported[normal]</source>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>[red]error loading patch file[normal]</source>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>[yellow]save is impossible in Game Genie menu[normal]</source>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>[yellow]movie playback interrupted[normal]</source>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>[red]error[normal] loading state</source>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>[red]state file is not for this rom[normal]</source>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>[green]%1[normal] cheat active</source>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>[green]%1[normal] cheats active</source>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>overclock enabled [green]VB[normal] [cyan]%1[normal], [green]PR[normal] [cyan]%2[normal]</source>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>[yellow]silence, the movie has begun[normal]</source>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The End</source>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>switched to [green]%1[normal]</source>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>[red]error on game genie rom file[normal]</source>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>[red]error on FDS bios file[normal]</source>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>[red]error on shader file[normal]</source>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>[red]error on palette file[normal]</source>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>[red]errors[normal] on shader, use [green]&apos;No shader&apos;[normal]</source>
+        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -931,6 +1078,56 @@
     </message>
     <message>
         <source>Reset palette</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>wdgRewind</name>
+    <message>
+        <source>Forward (single frame)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rewind (single frame)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pause</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fast forward (from 1x to 8x)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fast rewind (from 1x to 8x)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Play</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rewind</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>wdgRotateScreen</name>
+    <message>
+        <source>Rotate the screen 90 degrees to the Right</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rotate the screen 90 degrees to the left</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Current degree of rotation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rotate Screen</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1871,6 +2068,30 @@
         <source>Use integer scaling in fullscreen</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Screen rotation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>0 degrees</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>90 degrees</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>180 degrees</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>270 degrees</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Also rotate the text on screen</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>wdgState</name>
@@ -1883,11 +2104,19 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Save</source>
+        <source>Save state</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Load</source>
+        <source>Save/Load State</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Slot state</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Load state</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

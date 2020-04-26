@@ -19,6 +19,7 @@
 #include <string.h>
 #include "clock.h"
 #include "video/gfx.h"
+#include "gui.h"
 #include "info.h"
 #include "conf.h"
 #include "vs_system.h"
@@ -100,7 +101,7 @@ void input_init(BYTE set_cursor) {
 		SET_DECODE_EVENT(a, NULL);
 		SET_ADD_EVENT(a, NULL);
 
-		// VS SYSTEM
+		// NSF
 		if (nsf.enabled == TRUE) {
 			switch (a) {
 				case PORT1:
@@ -111,6 +112,7 @@ void input_init(BYTE set_cursor) {
 					SET_ADD_EVENT(a, input_add_event_nsf_mouse);
 					break;
 			}
+		// VS SYSTEM
 		} else if (vs_system.enabled == TRUE) {
 			if (info.extra_from_db & VSZAPPER) {
 				switch (a) {
@@ -244,6 +246,8 @@ void input_init(BYTE set_cursor) {
 	if (set_cursor == TRUE) {
 		gfx_cursor_set();
 	}
+
+	gui_overlay_update();
 }
 
 void input_wr_disabled(UNUSED(BYTE *value), UNUSED(BYTE nport)) {}

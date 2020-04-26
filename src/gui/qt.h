@@ -29,6 +29,10 @@
 #include "uncompress.h"
 #include "jstick.h"
 
+enum _overlay_info_messages {
+	PROVA
+};
+
 #define tools_stylesheet()\
 	"QGroupBox {"\
 	"	border-radius: 10px;"\
@@ -141,6 +145,15 @@ EXTERNC void gui_emit_et_external_control_windows_show(void);
 EXTERNC void gui_decode_all_input_events(void);
 
 EXTERNC void gui_screen_update(void);
+
+EXTERNC void gui_overlay_update(void);
+EXTERNC BYTE gui_overlay_is_updated(void);
+EXTERNC void gui_overlay_enable_save_slot(BYTE mode);
+EXTERNC void gui_overlay_set_size(int w, int h);
+EXTERNC void gui_overlay_info_init(void);
+EXTERNC void gui_overlay_info_emulator(void);
+EXTERNC void gui_overlay_info_append_msg_precompiled(int index, void *arg1);
+EXTERNC void gui_overlay_blit(void);
 
 EXTERNC void *gui_dlgsettings_get_ptr(void);
 

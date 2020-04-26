@@ -77,13 +77,10 @@ EXTERNC void rewind_close_operation(void);
 EXTERNC BYTE rewind_is_first_snap(void);
 EXTERNC BYTE rewind_is_last_snap(void);
 
+EXTERNC int32_t rewind_max_buffered_snaps(void);
 EXTERNC int32_t rewind_count_snaps(void);
 EXTERNC int32_t rewind_snap_cursor(void);
 EXTERNC int32_t rewind_calculate_snap_cursor(int factor, BYTE direction);
-
-EXTERNC char *rewind_text_time_count_snaps(void);
-EXTERNC char *rewind_text_time_snap_cursor(void);
-EXTERNC char *rewind_text_time_backward(void);
 
 #undef EXTERNC
 

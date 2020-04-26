@@ -103,6 +103,9 @@ typedef struct _port {
 	// turbo buttons
 	_turbo_button turbo[2];
 } _port;
+typedef struct _arkanoid {
+	int x, rdx, button;
+} _arkanoid;
 typedef struct _array_pointers_port {
 	_port *port[PORT_MAX];
 } _array_pointers_port;
@@ -116,6 +119,7 @@ typedef struct _port_funct {
 extern _r4016 r4016;
 extern _port port[PORT_MAX];
 extern _port_funct port_funct[PORT_MAX];
+extern _arkanoid arkanoid[PORT_BASE];
 
 extern BYTE (*input_wr_reg)(BYTE value);
 extern BYTE (*input_rd_reg[2])(BYTE openbus, BYTE nport);

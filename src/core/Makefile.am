@@ -67,8 +67,6 @@ libcore_a_SOURCES = \
 	save_slot.h \
 	sha1.c \
 	sha1.h \
-	text.c \
-	text.h \
 	uncompress.c \
 	uncompress.h \
 	uncompress_selection.h \

@@ -21,7 +21,7 @@
 #include "wave.h"
 #include "audio/snd.h"
 #include "info.h"
-#include "text.h"
+#include "gui.h"
 
 struct _wav {
 	FILE *outfile;
@@ -105,7 +105,7 @@ BYTE wave_open(uTCHAR *filename, int samples) {
 
 	info.wave_in_record = TRUE;
 
-	text_add_line_info(1, "start wav recording");
+	gui_overlay_info_append_msg_precompiled(0, NULL);
 
 	snd_thread_continue();
 
@@ -143,7 +143,8 @@ void wave_close(void) {
 		fclose(wav.outfile);
 		wav.outfile = NULL;
 
-		text_add_line_info(1, "stop wav recording");
+		gui_overlay_info_append_msg_precompiled(1, NULL);
+
 	}
 
 	if (wav.buffer) {

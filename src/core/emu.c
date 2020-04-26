@@ -22,6 +22,7 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <libgen.h>
+#include <time.h>
 #include "main.h"
 #include "debugger.h"
 #include "emu.h"
@@ -338,7 +339,7 @@ BYTE emu_load_rom(void) {
 		} else if (!ustrcasecmp(ext, uL(".nsf"))) {
 			if (nsf_load_rom() == EXIT_ERROR) {;
 				info.rom.file[0] = 0;
-				text_add_line_info(1, "[red]error loading rom");
+				gui_overlay_info_append_msg_precompiled(5, NULL);
 				fprintf(stderr, "error loading rom\n");
 				goto elaborate_rom_file;
 			}
@@ -346,7 +347,7 @@ BYTE emu_load_rom(void) {
 		} else if (!ustrcasecmp(ext, uL(".nsfe"))) {
 			if (nsfe_load_rom() == EXIT_ERROR) {;
 				info.rom.file[0] = 0;
-				text_add_line_info(1, "[red]error loading rom");
+				gui_overlay_info_append_msg_precompiled(5, NULL);
 				fprintf(stderr, "error loading rom\n");
 				goto elaborate_rom_file;
 			}
@@ -354,7 +355,7 @@ BYTE emu_load_rom(void) {
 		} else if (!ustrcasecmp(ext, uL(".fm2"))) {
 			tas_file(ext, info.rom.file);
 			if (!info.rom.file[0]) {
-				text_add_line_info(1, "[red]error loading rom");
+				gui_overlay_info_append_msg_precompiled(5, NULL);
 				fprintf(stderr, "error loading rom\n");
 			}
 			emu_recent_roms_add(&recent_roms_permit_add, tas.file);
@@ -366,7 +367,7 @@ BYTE emu_load_rom(void) {
 				;
 			} else if (unif_load_rom() == EXIT_ERROR) {
 				info.rom.file[0] = 0;
-				text_add_line_info(1, "[red]error loading rom");
+				gui_overlay_info_append_msg_precompiled(5, NULL);
 				fprintf(stderr, "error loading rom\n");
 				goto elaborate_rom_file;
 			}

@@ -167,7 +167,7 @@ typedef struct _d3d9 {
 
 	RECT viewp;
 
-	_texture_simple text;
+	_texture_simple overlay;
 	_texture texture[MAX_PASS + 1];
 	_lut lut[MAX_PASS];
 } _d3d9;
