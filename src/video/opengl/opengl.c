@@ -527,7 +527,9 @@ BYTE opengl_context_create(void) {
  	return (EXIT_OK);
 }
 void opengl_draw_scene(void) {
+#if defined (WITH_OPENGL_CG)
 	static GLuint prev_type = MS_MEM;
+#endif
 	const _texture_simple *scrtex = &opengl.screen.tex[opengl.screen.index];
 	GLuint offset_x = 0, offset_y = 0;
 	GLuint w = opengl.surface.w, h = opengl.surface.h;
@@ -627,7 +629,9 @@ void opengl_draw_scene(void) {
 		} else {
 			opengl_shader_glsl_disable_attrib();
 		}
+#if defined (WITH_OPENGL_CG)
 		prev_type = texture->shader.type;
+#endif
 	}
 
 	opengl.screen.index = ((opengl.screen.index + 1) % opengl.screen.in_use);
@@ -665,7 +669,9 @@ void opengl_draw_scene(void) {
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 		glDisable(GL_BLEND);
 		opengl_shader_glsl_disable_attrib();
+#if defined (WITH_OPENGL_CG)
 		prev_type = MS_MEM;
+#endif
 	}
 
 	// screenshot

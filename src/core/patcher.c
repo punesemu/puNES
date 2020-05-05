@@ -64,11 +64,11 @@ BYTE patcher_ctrl_if_exist(uTCHAR *patch) {
 	BYTE i, found = FALSE;
 
 	if (patch) {
-		ustrncpy(file, patch, usizeof(file));
+		ustrncpy(file, patch, usizeof(file) - 1);
 	} else if (patcher.file) {
-		ustrncpy(file, patcher.file, usizeof(file));
+		ustrncpy(file, patcher.file, usizeof(file) - 1);
 	} else if (gamegenie.patch) {
-		ustrncpy(file, gamegenie.patch, usizeof(file));
+		ustrncpy(file, gamegenie.patch, usizeof(file) - 1);
 	} else {
 		ustrncpy(file, info.rom.file, usizeof(file));
 	}
@@ -83,7 +83,6 @@ BYTE patcher_ctrl_if_exist(uTCHAR *patch) {
 
 	{
 		_uncompress_archive *archive;
-		uTCHAR *upatch = NULL;
 		BYTE rc;
 
 		archive = uncompress_archive_alloc(file, &rc);
@@ -92,16 +91,13 @@ BYTE patcher_ctrl_if_exist(uTCHAR *patch) {
 			if (archive->patch.count > 0) {
 				switch ((rc = uncompress_archive_extract_file(archive,UNCOMPRESS_TYPE_PATCH))) {
 					case UNCOMPRESS_EXIT_OK:
-						upatch = uncompress_archive_extracted_file_name(archive, UNCOMPRESS_TYPE_PATCH);
+						ustrncpy(file, uncompress_archive_extracted_file_name(archive, UNCOMPRESS_TYPE_PATCH), usizeof(file) - 1);
 						found = TRUE;
 						break;
 					case UNCOMPRESS_EXIT_ERROR_ON_UNCOMP:
 						break;
 					default:
 						break;
-				}
-				if (upatch) {
-					ustrncpy(file, upatch, usizeof(file));
 				}
 			}
 			uncompress_archive_free(archive);

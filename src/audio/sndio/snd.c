@@ -238,11 +238,9 @@ BYTE snd_playback_start(void) {
 		snd.period.samples = (snd.samplerate / factor[cfg->audio_buffer_factor]);
 
 		par.bits = 16;
-		par.sig = 1;
 		par.pchan = snd.channels;
 		par.rate = snd.samplerate;
 		par.round = snd.period.samples;
-		par.appbufsz = snd.period.samples;
 		par.xrun = SIO_IGNORE;
 
 		if (!sio_setpar(sndio.playback, &par)) {

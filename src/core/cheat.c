@@ -141,12 +141,12 @@ void gamegenie_load_rom(void *rom_mem) {
 		return;
 	}
 
-	ustrncpy(info.rom.file, gg_rom_file, usizeof(info.rom.file));
+	ustrncpy(info.rom.file, gg_rom_file, usizeof(info.rom.file) - 1);
 
 	if (!(fp = ufopen(info.rom.file, uL("rb")))) {
 		gui_overlay_info_append_msg_precompiled(3, NULL);
 		fprintf(stderr, "error loading Game Genie rom\n");
-		ustrncpy(info.rom.file, gamegenie.rom, usizeof(info.rom.file));
+		ustrncpy(info.rom.file, gamegenie.rom, usizeof(info.rom.file) - 1);
 		gamegenie_free_paths();
 		return;
 	}
@@ -159,7 +159,7 @@ void gamegenie_load_rom(void *rom_mem) {
 
 	if ((gg_rom_mem = (BYTE *) malloc(size)) == NULL) {
 		fclose(fp);
-		ustrncpy(info.rom.file, gamegenie.rom, usizeof(info.rom.file));
+		ustrncpy(info.rom.file, gamegenie.rom, usizeof(info.rom.file) - 1);
 		gamegenie_free_paths();
 		return;
 	}
@@ -167,7 +167,7 @@ void gamegenie_load_rom(void *rom_mem) {
 	if (fread(gg_rom_mem, 1, size, fp) != size) {
 		fclose(fp);
 		free(gg_rom_mem);
-		ustrncpy(info.rom.file, gamegenie.rom, usizeof(info.rom.file));
+		ustrncpy(info.rom.file, gamegenie.rom, usizeof(info.rom.file) - 1);
 		gamegenie_free_paths();
 		return;
 	}

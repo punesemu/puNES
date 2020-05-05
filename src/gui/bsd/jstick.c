@@ -24,12 +24,9 @@
 #include <errno.h>
 #include <pthread.h>
 #include <sys/stat.h>
+#include <sys/param.h>
 #include "gui.h"
 #include "conf.h"
-
-#ifndef __FreeBSD_kernel_version
-#define __FreeBSD_kernel_version __FreeBSD_version
-#endif
 
 #if defined (HAVE_USB_H)
 #include <usb.h>
@@ -50,26 +47,18 @@
 #include <libusbhid.h>
 #endif
 
-#if defined (__FREEBSD__) || defined (__FreeBSD_kernel__)
-#if !defned (__DragonFly__)
+#if defined (__FreeBSD__) || defined (__FreeBSD_kernel__)
+#if !defined (__DragonFly__)
 #include <osreldate.h>
 #endif
-#if __FreeBSD_kernel_version > 800063
 #include <dev/usb/usb_ioctl.h>
-#endif
 #include <sys/joystick.h>
 #endif
 
-#if defined (USBHID_MACHINE_JOYSTICK)
-#include <machine/joystick.h>
-#endif
-
-#if defined (USBHID_UCR_DATA) || (defined (__FreeBSD_kernel__) && __FreeBSD_kernel_version <= 800063)
+#if defined (USBHID_UCR_DATA)
 #define REP_BUF_DATA(rep) (rep.buf->ucr_data)
-#elif (defined (__FREEBSD__) && (__FreeBSD_kernel_version > 900000))
+#elif defined (__FreeBSD__)
 #define REP_BUF_DATA(rep) (rep.buf)
-#elif (defined (__FREEBSD__) && (__FreeBSD_kernel_version > 800063))
-#define REP_BUF_DATA(rep) (rep.buf->ugd_data)
 #else
 #define REP_BUF_DATA(rep) (rep.buf->data)
 #endif
@@ -77,8 +66,7 @@
 #define JDEV ((_js_device *)joy->jdev)
 #define JS_AXIS_SENSIBILITY 0.45f
 #define JS_AXIS_SENSIBILITY_DIALOG 0.45f
-#define JS_AXIS_TO_FLOAT(vl)\
-	(float)(vl - jdev->axis[index].min) / (float)(jdev->axis[index].max - jdev->axis[index].min) * 2.0f - 1.0f
+#define JS_AXIS_TO_FLOAT(vl) (float)(vl - jdev->axis[index].min) / (float)(jdev->axis[index].max - jdev->axis[index].min) * 2.0f - 1.0f
 
 enum _js_types {
 	JS_TYPE_JOY,
@@ -86,11 +74,7 @@ enum _js_types {
 	JS_TYPE_UNKNOW
 };
 enum _js_limit_devs {
-#if defined (__FREEBSD__) || defined (USBHID_MACHINE_JOYSTICK) || defined (__FreeBSD_kernel__)
-	JS_MAX_JOY_DEV = 2,
-#else
 	JS_MAX_JOY_DEV = 0,
-#endif
 	JS_MAX_UHID_DEV = MAX_JOYSTICK - JS_MAX_JOY_DEV,
 	JS_MAX_DEV = JS_MAX_UHID_DEV + JS_MAX_JOY_DEV
 };
@@ -101,6 +85,10 @@ enum _js_states {
 };
 enum _js_misc {
 	JS_MS_UPDATE_DETECT_DEVICES = 5000,
+};
+enum _js_sc_flags {
+	JS_SC_NONE,
+	JS_SC_MS_XBOX_360_GAMEPD = (1 << 0),
 };
 enum _js_hat {
 	JS_HAT_UP,
@@ -134,7 +122,7 @@ enum _js_axes {
 	JS_DPAD_RIGHT = JS_HAT1_B
 };
 
-typedef struct _udb_hid_device {
+typedef struct _usb_hid_device {
 	uTCHAR *desc;
 	uTCHAR *serial;
 	unsigned int flags;
@@ -152,10 +140,8 @@ typedef struct _js_device {
 	struct report_desc *repdesc;
 	struct _js_report {
 		int id;
-#if defined (__FREEBSD__) && (__FreeBSD_kernel_version > 900000)
+#if defined (__FreeBSD__)
 		void *buf;
-#elif defined (__FREEBSD__) && (__FreeBSD_kernel_version > 800063)
-		struct usb_gen_descriptor *buf;
 #else
 		struct usb_ctl_report *buf;
 #endif
@@ -172,17 +158,13 @@ typedef struct _js_device {
 		float min;
 		float max;
 		float center;
-	} axis [JS_AXES];
+	} axis[JS_AXES];
 	struct js_hat_info {
 		BYTE used;
 		float min;
 		float max;
-	} hat [JS_HATS];
+	} hat[JS_HATS];
 	_js_last_states states[JS_ST_MAX];
-#if defined (__FREEBSD__) || defined (USBHID_MACHINE_JOYSTICK) || defined (__FreeBSD_kernel__)
-	// only with gameport joystick
-	uTCHAR *desc;
-#endif
 	// uhidev
 	_usb_hid_device *usb;
 } _js_device;
@@ -211,16 +193,15 @@ INLINE static int js_usage_to_axis(unsigned int usage);
 INLINE static void js_lock(void);
 INLINE static void js_unlock(void);
 
+#if !defined (__FreeBSD__)
 static const struct _js_special {
 	u_int16_t vendor;
 	u_int16_t product;
-	enum _js_sc_flags {
-		JS_SC_NONE,
-		JS_SC_MS_XBOX_360_GAMEPD = (1 << 0),
-	} flags;
+	enum _js_sc_flags flags;
 } js_special_case[] = {
 	{ 0x045E, 0x028E, JS_SC_MS_XBOX_360_GAMEPD },
 };
+#endif
 static struct _jstick {
 	double ts_update_devices;
 	pthread_mutex_t lock;
@@ -276,7 +257,7 @@ void js_update_detected_devices(void) {
 void js_control(_js *joy, _port *port) {
 	struct hid_item hitem;
 	struct hid_data *hdata;
-	_js_device *jdev = joy->jdev;
+	_js_device *jdev = NULL;
 	_js_last_states *states = NULL;
 	BYTE mode = 0;
 
@@ -299,14 +280,6 @@ void js_control(_js *joy, _port *port) {
 
 	states = &jdev->states[JS_ST_CTRL];
 
-#if defined (__FREEBSD__) || defined (USBHID_MACHINE_JOYSTICK) || defined (__FreeBSD_kernel__)
-	if (jdev->type == JS_TYPE_JOY) {
-		// FIXME : to implement
-		js_unlock();
-		return;
-	}
-#endif
-
 #define js_control_axis(index)\
 	dvl = hid_get_data(REP_BUF_DATA(jdev->report), &hitem);\
 	fvl = JS_AXIS_TO_FLOAT(dvl);\
@@ -321,7 +294,7 @@ void js_control(_js *joy, _port *port) {
 	while (read(jdev->fd, REP_BUF_DATA(jdev->report), jdev->report.size) == jdev->report.size) {
 		int hat = 0;
 
-#if defined (USBHID_NEW) || (defined (__FREEBSD__) && __FreeBSD_kernel_version >= 500111) || defined (__FreeBSD_kernel__)
+#if defined (USBHID_NEW) || defined (__FreeBSD__)
 		if ((hdata = hid_start_parse(jdev->repdesc, 1 << hid_input, jdev->report.id)) == NULL) {
 #else
 		if ((hdata = hid_start_parse(jdev->repdesc, 1 << hid_input)) == NULL) {
@@ -357,6 +330,9 @@ void js_control(_js *joy, _port *port) {
 					case JS_DPAD_DOWN:
 					case JS_DPAD_LEFT:
 					case JS_DPAD_RIGHT:
+						if (index >= jdev->info.buttons) {
+							break;
+						}
 						js_control_button((index - JS_DPAD_UP + jdev->info.buttons))
 						break;
 					case JS_AXE_X:
@@ -365,6 +341,9 @@ void js_control(_js *joy, _port *port) {
 					case JS_AXE_RY:
 					case JS_AXE_Z:
 					case JS_AXE_RZ:
+						if (index >= jdev->info.axes) {
+							break;
+						}
 						js_control_axis(index)
 						break;
 					case JS_AXE_SLIDER:
@@ -418,13 +397,6 @@ uTCHAR *js_name_device(int dev) {
 	if (dev >= jstick.jdd.count) {
 		return (NULL);
 	}
-
-#if defined (__FREEBSD__) || defined (USBHID_MACHINE_JOYSTICK) || defined (__FreeBSD_kernel__)
-	// only with gameport joystick
-	if (jstick.jdd.devices[dev]->desc) {
-		return (jstick.jdd.devices[dev]->desc);
-	}
-#endif
 
 	// uhidev
 	return (jstick.jdd.devices[dev]->usb->desc);
@@ -502,14 +474,6 @@ DBWORD js_read_in_dialog(BYTE *id, UNUSED(int fd)) {
 
 	states = &jdev->states[JS_ST_SCH];
 
-#if defined (__FREEBSD__) || defined (USBHID_MACHINE_JOYSTICK) || defined (__FreeBSD_kernel__)
-	if (jdev->type == JS_TYPE_JOY) {
-		// FIXME : to implement
-		js_unlock();
-		return (value);
-	}
-#endif
-
 	for (i = 0; i < jdev->info.axes; i++) {
 		states->axis[i] = 0.0f;
 	}
@@ -535,7 +499,7 @@ DBWORD js_read_in_dialog(BYTE *id, UNUSED(int fd)) {
 	while (read(jdev->fd, REP_BUF_DATA(jdev->report), jdev->report.size) == jdev->report.size) {
 		int hat = 0;
 
-#if defined (USBHID_NEW) || (defined (__FREEBSD__) && __FreeBSD_kernel_version >= 500111) || defined (__FreeBSD_kernel__)
+#if defined (USBHID_NEW) || defined (__FreeBSD__)
 		if ((hdata = hid_start_parse(jdev->repdesc, 1 << hid_input, jdev->report.id)) == NULL) {
 #else
 		if ((hdata = hid_start_parse(jdev->repdesc, 1 << hid_input)) == NULL) {
@@ -584,6 +548,9 @@ DBWORD js_read_in_dialog(BYTE *id, UNUSED(int fd)) {
 					case JS_DPAD_DOWN:
 					case JS_DPAD_LEFT:
 					case JS_DPAD_RIGHT:
+						if (index >= jdev->info.buttons) {
+							break;
+						}
 						js_read_in_dialog_button((index - JS_DPAD_UP + jdev->info.buttons))
 						break;
 					case JS_AXE_X:
@@ -592,6 +559,9 @@ DBWORD js_read_in_dialog(BYTE *id, UNUSED(int fd)) {
 					case JS_AXE_RY:
 					case JS_AXE_Z:
 					case JS_AXE_RZ:
+						if (index >= jdev->info.axes) {
+							break;
+						}
 						dvl = hid_get_data(REP_BUF_DATA(jdev->report), &hitem);
 						fvl = JS_AXIS_TO_FLOAT(dvl);
 
@@ -660,14 +630,6 @@ BYTE js_shcut_read(_js_sch *js_sch) {
 
 	states = &jdev->states[JS_ST_CTRL];
 
-#if defined (__FREEBSD__) || defined (USBHID_MACHINE_JOYSTICK) || defined (__FreeBSD_kernel__)
-	if (jdev->type == JS_TYPE_JOY) {
-		// FIXME : to implement
-		js_unlock();
-		return (value);
-	}
-#endif
-
 #define _js_shcut_read_control(funct, index, val)\
 	if ((value = funct(joy, NULL, JS_ST_SCH, index, val, &mode))) {\
 		js_sch->value = value;\
@@ -689,7 +651,7 @@ BYTE js_shcut_read(_js_sch *js_sch) {
 	while (read(jdev->fd, REP_BUF_DATA(jdev->report), jdev->report.size) == jdev->report.size) {
 		int hat = 0;
 
-#if defined (USBHID_NEW) || (defined (__FREEBSD__) && __FreeBSD_kernel_version >= 500111) || defined (__FreeBSD_kernel__)
+#if defined (USBHID_NEW) || defined (__FreeBSD__) || defined (__FreeBSD_kernel__)
 		if ((hdata = hid_start_parse(jdev->repdesc, 1 << hid_input, jdev->report.id)) == NULL) {
 #else
 		if ((hdata = hid_start_parse(jdev->repdesc, 1 << hid_input)) == NULL) {
@@ -725,6 +687,9 @@ BYTE js_shcut_read(_js_sch *js_sch) {
 					case JS_DPAD_DOWN:
 					case JS_DPAD_LEFT:
 					case JS_DPAD_RIGHT:
+						if (index >= jdev->info.buttons) {
+							break;
+						}
 						js_shcut_read_button((index - JS_DPAD_UP + jdev->info.buttons))
 						break;
 					case JS_AXE_X:
@@ -733,6 +698,9 @@ BYTE js_shcut_read(_js_sch *js_sch) {
 					case JS_AXE_RY:
 					case JS_AXE_Z:
 					case JS_AXE_RZ:
+						if (index >= jdev->info.axes) {
+							break;
+						}
 						js_shcut_read_axis(index)
 						break;
 					case JS_AXE_SLIDER:
@@ -798,6 +766,51 @@ static void usb_free_udd(void) {
 
 	jstick.udd.count = 0;
 }
+#if defined (__FreeBSD__)
+static void usb_detect_devices(void) {
+	uTCHAR dev[30];
+	int i, fd, size;
+
+	usb_free_udd();
+
+	for (i = 0; i < JS_MAX_DEV; i++) {
+		_usb_hid_device *udev;
+		_usb_hid_device **devices;
+
+		usnprintf(dev, usizeof(dev), uL("" UHID_DEV_PATH "%d"), i);
+
+		if ((fd = uopen(dev, O_RDONLY | O_NONBLOCK)) < 0) {
+			continue;
+		}
+		close(fd);
+
+		udev = usb_alloc_device();
+
+		size = ustrlen(dev) + 1;
+
+		if ((udev->desc = (uTCHAR *)malloc(size * sizeof(uTCHAR))) == NULL) {
+			fprintf(stderr, "%s: out of memory\n", dev);
+			goto usb_detect_devices_error;
+		}
+
+		umemset(udev->desc, 0x00, size);
+		usnprintf(udev->desc, size, uL("" uPERCENTs), dev);
+
+		if ((devices = (_usb_hid_device **)realloc(jstick.udd.devices, (jstick.udd.count + 1) * sizeof(_usb_hid_device *))) == NULL) {
+			fprintf(stderr, "%s: out of memory\n", dev);
+			goto usb_detect_devices_error;
+		}
+
+		jstick.udd.devices = devices;
+		jstick.udd.devices[jstick.udd.count] = udev;
+		jstick.udd.count++;
+		continue;
+
+		usb_detect_devices_error:
+		usb_free_device(udev);
+	}
+}
+#else
 static void usb_detect_devices(void) {
 	int i;
 
@@ -926,6 +939,7 @@ static void usb_detect_devices(void) {
 		close(fd);
 	}
 }
+#endif
 
 static _js_device *js_alloc_device(void) {
 	_js_device *jdev;
@@ -965,9 +979,6 @@ static _js_device *js_alloc_device(void) {
 		jdev->states[i].button = NULL;
 	};
 
-#if defined (__FREEBSD__) || defined (USBHID_MACHINE_JOYSTICK) || defined (__FreeBSD_kernel__)
-	jdev->desc = NULL;
-#endif
 	jdev->usb = NULL;
 
 	return (jdev);
@@ -1001,12 +1012,6 @@ static void js_free_device(_js_device *jdev) {
 			jdev->states[i].button = NULL;
 		}
 	}
-#if defined (__FREEBSD__) || defined (USBHID_MACHINE_JOYSTICK) || defined (__FreeBSD_kernel__)
-	if (jdev->desc) {
-		free(jdev->desc);
-		jdev->desc = NULL;
-	}
-#endif
 	jdev->usb = NULL;
 
 	free(jdev);
@@ -1030,9 +1035,8 @@ static void js_free_jdd(void) {
 static void js_detect_devices(void) {
 	int i, hid_connected = 0;
 
-	usb_detect_devices();
-
 	js_free_jdd();
+	usb_detect_devices();
 
 	for (i = 0; i < JS_MAX_DEV; i++) {
 		static _js_device *jdev;
@@ -1043,45 +1047,19 @@ static void js_detect_devices(void) {
 
 		jdev->id = i;
 
-#if defined (__FREEBSD__) || defined (USBHID_MACHINE_JOYSTICK) || defined (__FreeBSD_kernel__)
-		if (jdev->id < JS_MAX_JOY_DEV) {
-			usnprintf(jdev->dev, usizeof(jdev->dev), uL("" JOY_DEV_PATH "%d"), jdev->id);
-			jdev->type = JS_TYPE_JOY;
-		} else {
-			usnprintf(jdev->dev, usizeof(jdev->dev), uL("" UHID_DEV_PATH "%d"), jdev->id - JS_MAX_JOY_DEV);
-			jdev->type = JS_TYPE_UHID;
-		}
-#else
 		usnprintf(jdev->dev, usizeof(jdev->dev), uL("" UHID_DEV_PATH "%d"), jdev->id);
 		jdev->type = JS_TYPE_UHID;
-#endif
 
 		if ((jdev->fd = uopen(jdev->dev, O_RDONLY | O_NONBLOCK)) < 0) {
 			goto js_detect_devices_error;
 		}
-
-#if defined (__FREEBSD__) || defined (USBHID_MACHINE_JOYSTICK) || defined (__FreeBSD_kernel__)
-		if (jdev->type == JS_TYPE_JOY) {
-			uTCHAR joystick_desc[] = uL("Gameport Joystick");
-
-			jdev->desc = malloc(ustrlen(joystick_desc) + 1);
-			umemcpy(jdev->desc, joystick_desc, ustrlen(joystick_desc));
-
-			jdev->info.axes = 2;
-			jdev->info.buttons = 2;
-			jdev->info.hats = 0;
-			jdev->info.balls = 0;
-
-			goto js_detect_devices_ok;
-		}
-#endif
 
 		if ((jdev->repdesc = hid_get_report_desc(jdev->fd)) == NULL) {
 			fprintf(stderr, "%s: hid_get_report_desc: %s\n", jdev->dev, strerror(errno));
 			goto js_detect_devices_error;
 		}
 
-#if defined (__FREEBSD__) && (__FreeBSD_kernel_version > 800063) || defined (__FreeBSD_kernel__)
+#if defined (__FreeBSD__)
 		if ((jdev->report.id = hid_get_report_id(jdev->fd)) < 0) {
 #else
 		if (ioctl(jdev->fd, USB_GET_REPORT_ID, &jdev->report.id) < 0) {
@@ -1091,28 +1069,18 @@ static void js_detect_devices(void) {
 
 #if defined (__DragonFly__)
 		if ((jdev->report.size = hid_report_size(jdev->repdesc, jdev->report.id, hid_input)) <= 0) {
-#elif defined (__FREEBSD__)
-#if (__FreeBSD_kernel_version >= 460000) || defined (__FreeBSD_kernel__)
-#if (__FreeBSD_kernel_version <= 500111)
-		if ((jdev->report.size = hid_report_size(jdev->repdesc, jdev->report.id, hid_input)) <= 0) {
-#else
+#elif defined (__FreeBSD__)
 		if ((jdev->report.size = hid_report_size(jdev->repdesc, hid_input, jdev->report.id)) <= 0) {
-#endif
-#else
-		if ((jdev->report.size = hid_report_size(jdev->repdesc, hid_input, &jdev->report.id)) <= 0) {
-#endif
-#else
-#if defined (USBHID_NEW)
+#elif defined (USBHID_NEW)
 		if ((jdev->report.size = hid_report_size(jdev->repdesc, hid_input, jdev->report.id)) <= 0) {
 #else
 		if ((jdev->report.size = hid_report_size(jdev->repdesc, hid_input, &jdev->report.id)) <= 0) {
-#endif
 #endif
 			fprintf(stderr, "%s: hid_report_size() return invalid size\n", jdev->dev);
 			goto js_detect_devices_error;
 		}
 
-#if defined (__FREEBSD__) && (__FreeBSD_kernel_version > 900000)
+#if defined (__FreeBSD__)
 		if ((jdev->report.buf = malloc(jdev->report.size)) == NULL) {
 #else
 		if ((jdev->report.buf = malloc(sizeof(*jdev->report.buf) - sizeof(REP_BUF_DATA(jdev->report)) + jdev->report.size)) == NULL) {
@@ -1121,7 +1089,7 @@ static void js_detect_devices(void) {
 			goto js_detect_devices_error;
 		}
 
-#if defined (USBHID_NEW) || (defined (__FREEBSD__) && __FreeBSD_kernel_version >= 500111) || defined (__FreeBSD_kernel__)
+#if defined (USBHID_NEW) || defined (__FreeBSD__)
 		if ((hdata = hid_start_parse(jdev->repdesc, 1 << hid_input, jdev->report.id)) == NULL) {
 #else
 		if ((hdata = hid_start_parse(jdev->repdesc, 1 << hid_input)) == NULL) {
@@ -1136,8 +1104,7 @@ static void js_detect_devices(void) {
 
 			switch (hitem.kind) {
 				case hid_collection:
-					if ((page == HUP_GENERIC_DESKTOP) &&
-						((usage == HUG_JOYSTICK) || (usage == HUG_GAME_PAD))) {
+					if ((page == HUP_GENERIC_DESKTOP) && ((usage == HUG_JOYSTICK) || (usage == HUG_GAME_PAD))) {
 						jdev->usb = jstick.udd.devices[hid_connected];
 					}
 					break;
@@ -1149,8 +1116,7 @@ static void js_detect_devices(void) {
 							jdev->axis[index].used = TRUE;
 							jdev->axis[index].min = hitem.logical_minimum;
 							jdev->axis[index].max = hitem.logical_maximum;
-							if ((jdev->usb->flags & JS_SC_MS_XBOX_360_GAMEPD) &&
-								((index == JS_AXE_Z) || (index == JS_AXE_RZ))) {
+							if ((jdev->usb->flags & JS_SC_MS_XBOX_360_GAMEPD) && ((index == JS_AXE_Z) || (index == JS_AXE_RZ))) {
 								jdev->axis[index].min = -hitem.logical_maximum;
 							}
 							jdev->axis[index].center = (jdev->axis[index].min / jdev->axis[index].max) * 0.5f;
@@ -1175,8 +1141,7 @@ static void js_detect_devices(void) {
 
 		hid_connected++;
 
-		if ((jdev->info.axes == 0) && (jdev->info.buttons == 0) &&
-			(jdev->info.hats == 0) && (jdev->info.balls == 0)) {
+		if ((jdev->info.axes == 0) && (jdev->info.buttons == 0) && (jdev->info.hats == 0) && (jdev->info.balls == 0)) {
 			fprintf(stderr, "%s: is not a joystick\n", jdev->dev);
 			goto js_detect_devices_error;
 		}
@@ -1186,9 +1151,6 @@ static void js_detect_devices(void) {
 			;
 		}
 
-#if defined (__FREEBSD__) || defined (USBHID_MACHINE_JOYSTICK) || defined (__FreeBSD_kernel__)
-		js_detect_devices_ok:
-#endif
 		{
 			_js_device **devices;
 			int a;
@@ -1213,8 +1175,7 @@ static void js_detect_devices(void) {
 				memset(st->button, 0x00, jdev->info.buttons * sizeof(SDBWORD));
 			}
 
-			if ((devices = (_js_device **)realloc(jstick.jdd.devices,
-				(jstick.jdd.count + 1) * sizeof(_js_device))) == NULL) {
+			if ((devices = (_js_device **)realloc(jstick.jdd.devices, (jstick.jdd.count + 1) * sizeof(_js_device))) == NULL) {
 				fprintf(stderr, "%s: out of memory\n", jdev->dev);
 				goto js_detect_devices_error;
 			}
@@ -1224,14 +1185,6 @@ static void js_detect_devices(void) {
 			jstick.jdd.count++;
 
 			jdev = jstick.jdd.devices[jstick.jdd.count - 1];
-
-#if !defined (RELEASE)
-			fprintf(stderr, "%d : %s @ %s\n",
-				jstick.jdd.count,
-				jdev->dev,
-				jdev->usb->desc);
-#endif
-
 			continue;
 		}
 
@@ -1244,8 +1197,8 @@ static void js_detect_devices(void) {
 	jstick.ts_update_devices = gui_get_ms();
 }
 static void js_close_detected_devices(void) {
-	usb_free_udd();
 	js_free_jdd();
+	usb_free_udd();
 }
 
 static void js_update_jdev(_js *joy, BYTE enable_decode, BYTE decode_index) {

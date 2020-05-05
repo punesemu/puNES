@@ -22,7 +22,7 @@ libaudio_a_SOURCES += \
 	alsa/snd.c
 endif
 
-if OPENBSD
+if BSD
 libaudio_a_SOURCES += \
 	sndio/snd.c
 endif

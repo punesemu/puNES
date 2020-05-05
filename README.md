@@ -29,6 +29,7 @@ How to Compile
 -----------
 
 * [Linux](#linux)
+* [FreeBSD](#freebsd)
 * [OpenBSD](#openbsd)
 * [Windows](#windows)
 
@@ -51,6 +52,26 @@ the executable `punes` is in the `src` directory.
 If you need the debug version then you need to replace the `./configure` command of the previous examples with the following:
 ```bash
 CFLAGS="-g -DDEBUG" CXXFLAGS="-g -DDEBUG" ./configure --disable-release [...]
+```
+where `[...]` are the other necessary options.
+### FreeBSD
+-----------
+#### Dependencies
+* [Qt5](https://www.qt.io) with OpenGL support (qtbase, qtsvg and qttools)
+* [sndio](http://www.sndio.org)
+#### Compilation of puNES
+```bash
+git clone https://github.com/punesemu/punes
+cd punes
+./autogen.sh
+CC=cc CXX=c++ ./configure
+make
+```
+the executable `punes` is in the `src` directory.
+#### FreeBSD Debug version
+If you need the debug version then you need to replace the `./configure` command of the previous examples with the following:
+```bash
+CFLAGS="-g -DDEBUG" CXXFLAGS="-g -DDEBUG" CC=cc CXX=c++ ./configure --disable-release [...]
 ```
 where `[...]` are the other necessary options.
 ### OpenBSD

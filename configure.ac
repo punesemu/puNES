@@ -93,17 +93,32 @@ AS_CASE(["$host_os"],
 		CUSTOMDEFINES="${CUSTOMDEFINES} -DWITH_OPENGL -DGLEW_STATIC"
 		my_CPPFLAGS="${my_CPPFLAGS} -I${TOP_SRCDIR}/src/gui/linux -I${TOP_SRCDIR}/src/video/opengl"
 		linux=yes
-		openbsd=no
+		bsd=no
 		windows=no
 		with_d3d9=no
 		with_opengl=yes
 	],
+	[freebsd*], [
+		LDFLAGS="${LDFLAGS} -L/usr/local/lib"
+		MOCDEFINES="${MOCDEFINES} -D__FreeBSD__"
+		CUSTOMDEFINES="${CUSTOMDEFINES} -DWITH_OPENGL -DGLEW_STATIC"
+		my_CPPFLAGS="${my_CPPFLAGS} -I${TOP_SRCDIR}/src/gui/bsd -I${TOP_SRCDIR}/src/video/opengl"
+		linux=no
+		bsd=yes
+		windows=no
+		with_d3d9=no
+		with_opengl=yes
+		my_CXXFLAGS=""
+		export CC
+		export CXX
+	],
 	[openbsd*], [
+		LDFLAGS="${LDFLAGS} -L/usr/local/lib"
 		MOCDEFINES="${MOCDEFINES} -D__OpenBSD__"
 		CUSTOMDEFINES="${CUSTOMDEFINES} -DWITH_OPENGL -DGLEW_STATIC"
-		my_CPPFLAGS="${my_CPPFLAGS} -I${TOP_SRCDIR}/src/gui/openbsd -I${TOP_SRCDIR}/src/video/opengl"
+		my_CPPFLAGS="${my_CPPFLAGS} -I${TOP_SRCDIR}/src/gui/bsd -I${TOP_SRCDIR}/src/video/opengl"
 		linux=no
-		openbsd=yes
+		bsd=yes
 		windows=no
 		with_d3d9=no
 		with_opengl=yes
@@ -115,7 +130,7 @@ AS_CASE(["$host_os"],
 		MOCDEFINES="${MOCDEFINES} -D_WIN32"
 		my_CPPFLAGS="${my_CPPFLAGS} -I${TOP_SRCDIR}/src/gui/windows"
 		linux=no
-		openbsd=no
+		bsd=no
 		windows=yes
 		AS_IF([test "x$with_opengl" = xyes], [
 			with_d3d9=no
@@ -142,7 +157,7 @@ AS_CASE(["$host_os"],
 )
 
 AM_CONDITIONAL(LINUX,[test "x$linux" = xyes])
-AM_CONDITIONAL(OPENBSD,[test "x$openbsd" = xyes])
+AM_CONDITIONAL(BSD,[test "x$bsd" = xyes])
 AM_CONDITIONAL(WINDOWS,[test "x$windows" = xyes])
 AM_CONDITIONAL(ENAB_RELEASE,[test "x$enable_release" = xyes])
 AM_CONDITIONAL(WITH_D3D9,[test "x$with_d3d9" = xyes])
@@ -694,7 +709,7 @@ void blah(){
 	my_LIBS="${my_LIBS} ${alsa_LIBS}"
 ])
 
-AM_COND_IF([OPENBSD], [
+AM_COND_IF([BSD], [
 	PKG_CHECK_MODULES(GL, [gl], [
 		my_CPPFLAGS="${my_CPPFLAGS} ${GL_CFLAGS}"
 		my_LIBS="${my_LIBS} ${GL_LIBS}"
@@ -894,8 +909,8 @@ AC_CONFIG_SUBDIRS([src/extra/xdelta-3.1.0])
 AM_COND_IF([LINUX], [
 	my_LIBS="${my_LIBS} -ldl -lpthread"
 ])
-AM_COND_IF([OPENBSD], [
-	my_LIBS="${my_LIBS} -L/usr/local/lib -lstdc++ -lpthread"
+AM_COND_IF([BSD], [
+	my_LIBS="${my_LIBS} -lc++ -lpthread"
 ])
 AM_COND_IF([WINDOWS], [
 	AM_COND_IF([ENAB_RELEASE], [

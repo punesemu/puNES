@@ -114,7 +114,7 @@ _uncompress_archive *uncompress_archive_alloc(uTCHAR *file, BYTE *rc) {
 		return (NULL);
 	}
 	umemset(archive->file, 0x00, size);
-	ustrncpy(archive->file, file, size);
+	ustrcpy(archive->file, file);
 
 	archive->rom.count = 0;
 	archive->rom.storage_index = UNCOMPRESS_NO_FILE_SELECTED;

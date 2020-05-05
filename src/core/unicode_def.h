@@ -43,6 +43,7 @@ typedef wchar_t uTCHAR;
 
 #define uvsnprintf vswprintf
 #define umemset wmemset
+#define ustrcpy wcscpy
 #define ustrncpy wcsncpy
 #define usnprintf swprintf
 #define uprintf wprintf
@@ -66,7 +67,7 @@ typedef wchar_t uTCHAR;
 #define ustrchr wcschr
 #define ustrdup _wcsdup
 
-// linux
+// linux, bsd
 #else
 
 typedef char uTCHAR;
@@ -85,6 +86,7 @@ typedef char uTCHAR;
 
 #define uvsnprintf vsnprintf
 #define umemset memset
+#define ustrcpy strcpy
 #define ustrncpy strncpy
 #define usnprintf snprintf
 #define uprintf printf

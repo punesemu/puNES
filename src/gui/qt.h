@@ -29,10 +29,6 @@
 #include "uncompress.h"
 #include "jstick.h"
 
-enum _overlay_info_messages {
-	PROVA
-};
-
 #define tools_stylesheet()\
 	"QGroupBox {"\
 	"	border-radius: 10px;"\

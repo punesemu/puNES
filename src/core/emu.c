@@ -970,7 +970,7 @@ uTCHAR *emu_ustrncpy(uTCHAR *dst, uTCHAR *src) {
 	size = ustrlen(src) + 1;
 	dst = (uTCHAR *)malloc(sizeof(uTCHAR) * size);
 	umemset(dst, 0x00, size);
-	ustrncpy(dst, src, size);
+	ustrcpy(dst, src);
 
 	return (dst);
 }
@@ -1158,11 +1158,11 @@ static BYTE emu_ctrl_if_rom_exist(void) {
 	umemset(file, 0x00, usizeof(file));
 
 	if (info.rom.from_load_menu) {
-		ustrncpy(file, info.rom.from_load_menu, usizeof(file));
+		ustrncpy(file, info.rom.from_load_menu, usizeof(file) - 1);
 		free(info.rom.from_load_menu);
 		info.rom.from_load_menu = NULL;
 	} else if (gamegenie.rom) {
-		ustrncpy(file, gamegenie.rom, usizeof(file));
+		ustrncpy(file, gamegenie.rom, usizeof(file) - 1);
 	} else {
 		ustrncpy(file, info.rom.file, usizeof(file));
 	}
@@ -1175,7 +1175,7 @@ static BYTE emu_ctrl_if_rom_exist(void) {
 
 		if (rc == UNCOMPRESS_EXIT_OK) {
 			BYTE is_rom = FALSE, is_patch = FALSE;
-			uTCHAR *rom = NULL, *patch = NULL;
+			uTCHAR *patch = NULL;
 
 			if (archive->rom.count > 0) {
 				is_rom = TRUE;
@@ -1189,20 +1189,17 @@ static BYTE emu_ctrl_if_rom_exist(void) {
 			if (is_rom) {
 				switch ((rc = uncompress_archive_extract_file(archive,UNCOMPRESS_TYPE_ROM))) {
 					case UNCOMPRESS_EXIT_OK:
-						rom = uncompress_archive_extracted_file_name(archive, UNCOMPRESS_TYPE_ROM);
+						ustrncpy(file, uncompress_archive_extracted_file_name(archive, UNCOMPRESS_TYPE_ROM), usizeof(file) - 1);
 						found = TRUE;
 						break;
 					case UNCOMPRESS_EXIT_ERROR_ON_UNCOMP:
 						break;
 					case UNCOMPRESS_EXIT_IS_COMP_BUT_NOT_SELECTED:
 					case UNCOMPRESS_EXIT_IS_COMP_BUT_NO_ITEMS:
-						rom = info.rom.file;
+						ustrncpy(file, info.rom.file, usizeof(file));
 						break;
 					default:
 						break;
-				}
-				if (rom) {
-					ustrncpy(file, rom, usizeof(file));
 				}
 			}
 			if (is_patch) {

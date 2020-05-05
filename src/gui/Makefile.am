@@ -258,11 +258,11 @@ libgui_a_SOURCES += \
 AM_CXXFLAGS = -fPIC
 endif
 
-if OPENBSD
+if BSD
 libgui_a_SOURCES += \
-	openbsd/jstick.c \
-	openbsd/jstick.h \
-	openbsd/os_openbsd.h
+	bsd/jstick.c \
+	bsd/jstick.h \
+	bsd/os_bsd.h
 
 AM_CXXFLAGS = -fPIC
 endif

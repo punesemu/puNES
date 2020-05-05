@@ -580,8 +580,8 @@ int gui_utf_strcasecmp(uTCHAR *s0, uTCHAR *s1) {
 
 #if defined (__linux__)
 #include "os_linux.h"
-#elif defined (__OpenBSD__)
-#include "os_openbsd.h"
+#elif defined (__OpenBSD__) || defined (__FreeBSD__)
+#include "os_bsd.h"
 #elif defined (_WIN32)
 #include "os_windows.h"
 #endif

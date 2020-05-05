@@ -16,8 +16,8 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef OS_OPENBSD_H_
-#define OS_OPENBSD_H_
+#ifndef OS_BSD_H_
+#define OS_BSD_H_
 
 #include <sys/types.h>
 #include <sys/sysctl.h>
@@ -112,4 +112,4 @@ static int __nsleep(const struct timespec *req, struct timespec *rem) {
 	return (EXIT_OK);
 }
 
-#endif /* OS_OPENBSD_H_ */
+#endif /* OS_BSD_H_ */
