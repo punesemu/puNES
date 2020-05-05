@@ -204,6 +204,9 @@ void dlgStdPad::closeEvent(QCloseEvent *event) {
 	}
 #endif
 
+	js_quit(FALSE);
+	js_init(FALSE);
+
 	mainwin->shcjoy_start();
 
 	data.no_other_buttons = false;
@@ -352,8 +355,7 @@ void dlgStdPad::setEnable_tab_buttons(int type, bool mode) {
 		findChild<QLabel *>("label_" + SPT(type) + "_" + SPB(a))->setEnabled(mode);
 		findChild<QLabel *>("label_" + SPT(type) + "_" + SPB(a))->setStyleSheet("");
 		findChild<QPushButton *>("pushButton_" + SPT(type) + "_" + SPB(a))->setEnabled(mode);
-		findChild<QPushButton *>("pushButton_" + SPT(type) +
-				"_unset_" + SPB(a))->setEnabled(mode);
+		findChild<QPushButton *>("pushButton_" + SPT(type) + "_unset_" + SPB(a))->setEnabled(mode);
 	}
 }
 void dlgStdPad::disable_tab_and_other(int type, int vbutton) {
@@ -586,14 +588,12 @@ void dlgStdPad::s_pad_in_sequence_timer(void) {
 		return;
 	}
 
-	bt = findChild<QPushButton *>(
-			"pushButton_" + SPT(data.seq.type) + "_" + SPB(order[data.seq.counter]));
+	bt = findChild<QPushButton *>("pushButton_" + SPT(data.seq.type) + "_" + SPB(order[data.seq.counter]));
 	bt->setEnabled(true);
 	bt->click();
 }
 void dlgStdPad::s_apply_clicked(UNUSED(bool checked)) {
-	_cfg_port *cfg_port = ((_cfg_port *)((QPushButton *)sender())->property(
-		"myPointer").value<void *>());
+	_cfg_port *cfg_port = ((_cfg_port *)((QPushButton *)sender())->property("myPointer").value<void *>());
 
 	memcpy(cfg_port, &data.cfg, sizeof(_cfg_port));
 
