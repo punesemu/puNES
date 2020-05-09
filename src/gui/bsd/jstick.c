@@ -258,7 +258,6 @@ void js_control(_js *joy, _port *port) {
 	struct hid_item hitem;
 	struct hid_data *hdata;
 	_js_device *jdev = NULL;
-	_js_last_states *states = NULL;
 	BYTE mode = 0;
 
 	js_lock();
@@ -277,8 +276,6 @@ void js_control(_js *joy, _port *port) {
 		js_unlock();
 		return;
 	}
-
-	states = &jdev->states[JS_ST_CTRL];
 
 #define js_control_axis(index)\
 	dvl = hid_get_data(REP_BUF_DATA(jdev->report), &hitem);\
@@ -604,7 +601,6 @@ BYTE js_shcut_read(_js_sch *js_sch) {
 	struct hid_data *hdata;
 	_js *joy= &js_shcut;
 	_js_device *jdev;
-	_js_last_states *states = NULL;
 	SDBWORD value = 0;
 	BYTE mode = 0;
 
@@ -627,8 +623,6 @@ BYTE js_shcut_read(_js_sch *js_sch) {
 		js_unlock();
 		return (value);
 	}
-
-	states = &jdev->states[JS_ST_CTRL];
 
 #define _js_shcut_read_control(funct, index, val)\
 	if ((value = funct(joy, NULL, JS_ST_SCH, index, val, &mode))) {\
