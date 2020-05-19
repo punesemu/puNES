@@ -855,7 +855,7 @@ void mainWindow::s_open(void) {
 	filters.append(tr("All files"));
 
 	if (l7z_present() == TRUE) {
-		if ((l7z_control_ext(uL("rar")) == EXIT_OK)) {
+		if ((l7z_control_ext(uL(".rar")) == EXIT_OK)) {
 			filters[0].append(" (*.zip *.ZIP *.7z *.7Z *.rar *.RAR *.nes *.NES *.unf *.UNF *.unif *.UNIF *.nsf *.NSF *.nsfe *.NSFE *.fds *.FDS *.fm2 *.FM2)");
 			filters[1].append(" (*.zip *.ZIP *.7z *.7Z *.rar *.RAR)");
 		} else {
@@ -900,7 +900,7 @@ void mainWindow::s_apply_patch(void) {
 	filters.append(tr("All files"));
 
 	if (l7z_present() == TRUE) {
-		if ((l7z_control_ext(uL("rar")) == EXIT_OK)) {
+		if ((l7z_control_ext(uL(".rar")) == EXIT_OK)) {
 			filters[0].append(" (*.zip *.ZIP *.7z *.7Z *.rar *.RAR *.ips *.IPS *.bps *.BPS *.xdelta *.XDELTA)");
 			filters[1].append(" (*.zip *.ZIP *.7z *.7Z *.rar *.RAR)");
 		} else {
