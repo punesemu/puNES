@@ -25,6 +25,8 @@ build_script:
     PATH %MINGW_HOME%\bin;%MSYS_HOME%\usr\bin;%ORIGPATH%
 
 
+    bash -lc "pacman -Sy pacman"
+
     bash -lc "pacman -Syu --noconfirm"
 
     bash -lc "pacman -Syu --noconfirm"
