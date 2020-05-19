@@ -1187,7 +1187,7 @@ static BYTE emu_ctrl_if_rom_exist(void) {
 				is_patch = FALSE;
 			}
 			if (is_rom) {
-				switch ((rc = uncompress_archive_extract_file(archive,UNCOMPRESS_TYPE_ROM))) {
+				switch ((rc = uncompress_archive_extract_file(archive, UNCOMPRESS_TYPE_ROM))) {
 					case UNCOMPRESS_EXIT_OK:
 						ustrncpy(file, uncompress_archive_extracted_file_name(archive, UNCOMPRESS_TYPE_ROM), usizeof(file) - 1);
 						found = TRUE;
@@ -1203,7 +1203,7 @@ static BYTE emu_ctrl_if_rom_exist(void) {
 				}
 			}
 			if (is_patch) {
-				switch ((rc = uncompress_archive_extract_file(archive,UNCOMPRESS_TYPE_PATCH))) {
+				switch ((rc = uncompress_archive_extract_file(archive, UNCOMPRESS_TYPE_PATCH))) {
 					case UNCOMPRESS_EXIT_OK:
 						patch = uncompress_archive_extracted_file_name(archive, UNCOMPRESS_TYPE_PATCH);
 						found = TRUE;
