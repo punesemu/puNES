@@ -608,13 +608,11 @@ static void STDMETHODCALLTYPE OnBufferStart(UNUSED(IXAudio2VoiceCallback *callba
 	WORD len = xaudio2.buffer.AudioBytes;
 	int avail = xaudio2.buffer.PlayLength;
 
-	if (snd_thread.action == ST_STOP) {
-		return;
-	}
-
 	snd_thread.in_run = TRUE;
 
-	if ((info.no_rom | info.turn_off | info.pause) || (snd.buffer.start == FALSE) || (fps.fast_forward == TRUE)) {
+	if (snd_thread.action == ST_STOP) {
+		xaudio2_wrbuf(xaudio2.source, &xaudio2.buffer, (const BYTE *)cbd.silence);
+	} else if ((info.no_rom | info.turn_off | info.pause) || (snd.buffer.start == FALSE) ||(fps.fast_forward == TRUE)) {
 		xaudio2_wrbuf(xaudio2.source, &xaudio2.buffer, (const BYTE *)cbd.silence);
 	} else if (cbd.bytes_available < len) {
 		xaudio2_wrbuf(xaudio2.source, &xaudio2.buffer, (const BYTE *)cbd.silence);
