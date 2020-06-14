@@ -43,9 +43,9 @@ build_script:
 
     cd %APPVEYOR_BUILD_FOLDER%
 
-    bash -lc "wget --no-check-cert -O /c/tmp/qt5_5.13.0_x86_64.7z 'https://www.dropbox.com/s/zrb7fj50op3bqoh/qt5_5.13.0_x86_64.7z?dl=1' 1>/dev/null 2>&1"
+    bash -lc "wget --no-check-cert -O /c/tmp/qt5_5.15.0_x86_64.7z 'https://www.dropbox.com/s/xd9dq7dr713ao95/qt5_5.15.0_x86_64.7z?dl=1' 1>/dev/null 2>&1"
 
-    7z x c:\tmp\qt5_5.13.0_x86_64.7z -oC:\msys64\mingw64 > NUL
+    7z x c:\tmp\qt5_5.15.0_x86_64.7z -oC:\msys64\mingw64 > NUL
 
     bash -lc "wget --no-check-cert -O /c/tmp/puNES_x86_64_dlls.zip 'https://www.dropbox.com/s/yt5bgacnwexdghs/puNES_x86_64_dlls.zip?dl=1' 1>/dev/null 2>&1"
 

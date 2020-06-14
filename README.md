@@ -115,13 +115,13 @@ exit
 #### Compilation of the Qt5 libraries
 5. download and unzip the sources
 ```bash
-wget http://download.qt.io/archive/qt/5.13/5.13.0/submodules/qtbase-everywhere-src-5.13.0.zip
-unzip qtbase-everywhere-src-5.13.0.zip
-mv qtbase-everywhere-src-5.13.0 qt5
+wget http://download.qt.io/archive/qt/5.15/5.15.0/submodules/qtbase-everywhere-src-5.15.0.zip
+unzip qtbase-everywhere-src-5.15.0.zip
+mv qtbase-everywhere-src-5.15.0 qt5
 ```
 the renaming of the directory is necessary to not generate a compile-time error caused by the 255 characters maximum path length limitation on Windows, This is the typical error message you might encounter:
 ```code
-"../../../../include/QtEventDispatcherSupport/5.13.0/QtEventDispatcherSupport/private/qwindowsguieventdispatcher_p.h:1:10: fatal error: ../../../../../src/platformsupport/eventdispatchers/qwindowsguieventdispatcher_p.h: No such file or directory"
+"../../../../include/QtEventDispatcherSupport/5.15.0/QtEventDispatcherSupport/private/qwindowsguieventdispatcher_p.h:1:10: fatal error: ../../../../../src/platformsupport/eventdispatchers/qwindowsguieventdispatcher_p.h: No such file or directory"
 ```
 6. compile the libraries
 ```bash
@@ -139,9 +139,9 @@ cd ..
 ```
 8. now it's time for the SVG module...
 ```bash
-wget http://download.qt.io/archive/qt/5.13/5.13.0/submodules/qtsvg-everywhere-src-5.13.0.zip
-unzip qtsvg-everywhere-src-5.13.0.zip
-mv qtsvg-everywhere-src-5.13.0 qt5svg
+wget http://download.qt.io/archive/qt/5.15/5.15.0/submodules/qtsvg-everywhere-src-5.15.0.zip
+unzip qtsvg-everywhere-src-5.15.0.zip
+mv qtsvg-everywhere-src-5.15.0 qt5svg
 cd qt5svg
 $MINGW_PREFIX/lib/qt5/bin/qmake
 make
@@ -152,9 +152,9 @@ cd ..
 ```
 9. ...and for the tools
 ```bash
-wget http://download.qt.io/archive/qt/5.13/5.13.0/submodules/qttools-everywhere-src-5.13.0.zip
-unzip qttools-everywhere-src-5.13.0.zip
-mv qttools-everywhere-src-5.13.0 qt5tools
+wget http://download.qt.io/archive/qt/5.15/5.15.0/submodules/qttools-everywhere-src-5.15.0.zip
+unzip qttools-everywhere-src-5.15.0.zip
+mv qttools-everywhere-src-5.15.0 qt5tools
 cd qt5tools
 $MINGW_PREFIX/lib/qt5/bin/qmake
 make
