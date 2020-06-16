@@ -668,7 +668,7 @@
     </message>
     <message>
       <source>Widgets</source>
-      <translation type="unfinished">Widgets</translation>
+      <translation>Виджеты</translation>
     </message>
   </context>
   <context>
@@ -691,12 +691,12 @@
     <message>
       <source>start wav recording</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">start wav recording</translation>
+      <translation>Начать запись wav</translation>
     </message>
     <message>
       <source>stop wav recording</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">stop wav recording</translation>
+      <translation>Остановить запись wav</translation>
     </message>
     <message>
       <source>[red]Game Genie rom not found[normal]</source>
@@ -761,7 +761,7 @@
     <message>
       <source>[yellow]movie playback interrupted[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[yellow]movie playback interrupted[normal]</translation>
+      <translation>[yellow]воспроизведение фильма прервано[normal]</translation>
     </message>
     <message>
       <source>[red]error[normal] loading state</source>
@@ -776,12 +776,12 @@
     <message>
       <source>[green]%1[normal] cheat active</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[green]%1[normal] cheat active</translation>
+      <translation>[green]%1[normal] чит активирован</translation>
     </message>
     <message>
       <source>[green]%1[normal] cheats active</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[green]%1[normal] cheats active</translation>
+      <translation>[green]%1[normal] читов активировано</translation>
     </message>
     <message>
       <source>overclock enabled [green]VB[normal] [cyan]%1[normal], [green]PR[normal] [cyan]%2[normal]</source>
@@ -796,7 +796,7 @@
     <message>
       <source>The End</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">The End</translation>
+      <translation>Конец</translation>
     </message>
     <message>
       <source>switched to [green]%1[normal]</source>
@@ -816,12 +816,12 @@
     <message>
       <source>[red]error on shader file[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]error on shader file[normal]</translation>
+      <translation>[red]ошибка в файле шейдеров[normal]</translation>
     </message>
     <message>
       <source>[red]error on palette file[normal]</source>
       <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-      <translation type="unfinished">[red]error on palette file[normal]</translation>
+      <translation>[red]ошибка в файле палитры[normal]</translation>
     </message>
     <message>
       <source>[red]errors[normal] on shader, use [green]&apos;No shader&apos;[normal]</source>
@@ -1093,7 +1093,7 @@
     </message>
     <message>
       <source>Pause</source>
-      <translation type="unfinished">Pause</translation>
+      <translation>Пауза</translation>
     </message>
     <message>
       <source>Fast forward (from 1x to 8x)</source>
@@ -1116,19 +1116,19 @@
     <name>wdgRotateScreen</name>
     <message>
       <source>Rotate the screen 90 degrees to the Right</source>
-      <translation type="unfinished">Rotate the screen 90 degrees to the Right</translation>
+      <translation>Повернуть экран на 90 градусов вправо</translation>
     </message>
     <message>
       <source>Rotate the screen 90 degrees to the left</source>
-      <translation type="unfinished">Rotate the screen 90 degrees to the left</translation>
+      <translation>Повернуть экран на 90 градусов влево</translation>
     </message>
     <message>
       <source>Current degree of rotation</source>
-      <translation type="unfinished">Current degree of rotation</translation>
+      <translation>Текущий угол поворота</translation>
     </message>
     <message>
       <source>Rotate Screen</source>
-      <translation type="unfinished">Rotate Screen</translation>
+      <translation>Повернуть экран</translation>
     </message>
   </context>
   <context>
@@ -2070,27 +2070,27 @@
     </message>
     <message>
       <source>Screen rotation</source>
-      <translation type="unfinished">Screen rotation</translation>
+      <translation>Поворот экрана</translation>
     </message>
     <message>
       <source>0 degrees</source>
-      <translation type="unfinished">0 degrees</translation>
+      <translation>0 градусов</translation>
     </message>
     <message>
       <source>90 degrees</source>
-      <translation type="unfinished">90 degrees</translation>
+      <translation>90 градусов</translation>
     </message>
     <message>
       <source>180 degrees</source>
-      <translation type="unfinished">180 degrees</translation>
+      <translation>180 градусов</translation>
     </message>
     <message>
       <source>270 degrees</source>
-      <translation type="unfinished">270 degrees</translation>
+      <translation>270 градусов</translation>
     </message>
     <message>
       <source>Also rotate the text on screen</source>
-      <translation type="unfinished">Also rotate the text on screen</translation>
+      <translation>Также повернуть текст на экране</translation>
     </message>
   </context>
   <context>
