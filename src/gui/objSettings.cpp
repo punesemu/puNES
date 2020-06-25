@@ -65,13 +65,13 @@ static const struct _kvSpecials {
 //	{ 0,            Qt::KeypadModifier,  Qt::Key_Period,   "NPDecimal",  271 },
 	{ 0,            Qt::KeypadModifier,  Qt::Key_Slash,    "NPDivide",   272 },
 #if defined (_WIN32)
-	{ VK_LMENU,     {},                  Qt::Key_Alt,      "Alt",        273 },
-	{ VK_RMENU,     {},                  Qt::Key_Alt,      "AltGr",      274 },
+	{ VK_LMENU,     0,                   Qt::Key_Alt,      "Alt",        273 },
+	{ VK_RMENU,     0,                   Qt::Key_Alt,      "AltGr",      274 },
 	{ 0,            Qt::NoModifier,      Qt::Key_Meta,     "Meta",       275 },
-	{ VK_LSHIFT,    {},                  Qt::Key_Shift,    "LShift",     276 },
-	{ VK_RSHIFT,    {},                  Qt::Key_Shift,    "RShift",     277 },
-	{ VK_LCONTROL,  {},                  Qt::Key_Control,  "LCtrl",      278 },
-	{ VK_RCONTROL,  {},                  Qt::Key_Control,  "RCtrl",      279 },
+	{ VK_LSHIFT,    0,                   Qt::Key_Shift,    "LShift",     276 },
+	{ VK_RSHIFT,    0,                   Qt::Key_Shift,    "RShift",     277 },
+	{ VK_LCONTROL,  0,                   Qt::Key_Control,  "LCtrl",      278 },
+	{ VK_RCONTROL,  0,                   Qt::Key_Control,  "RCtrl",      279 },
 #elif defined (__unix__)
 	/*
 	{ 0,            Qt::AltModifier,     Qt::Key_Alt,      "Alt",        273 },
@@ -85,10 +85,10 @@ static const struct _kvSpecials {
 	{ 0,            Qt::NoModifier,      Qt::Key_Alt,      "Alt",        273 },
 	{ 0,            Qt::NoModifier,      Qt::Key_AltGr,    "AltGr",      274 },
 	{ 0,            Qt::NoModifier,      Qt::Key_Meta,     "Meta",       275 },
-	{ XK_Shift_L,   {},                  Qt::Key_Shift,    "LShift",     276 },
-	{ XK_Shift_R,   {},                  Qt::Key_Shift,    "RShift",     277 },
-	{ XK_Control_L, {},                  Qt::Key_Control,  "LCtrl",      278 },
-	{ XK_Control_R, {},                  Qt::Key_Control,  "RCtrl",      279 },
+	{ XK_Shift_L,   0,                   Qt::Key_Shift,    "LShift",     276 },
+	{ XK_Shift_R,   0,                   Qt::Key_Shift,    "RShift",     277 },
+	{ XK_Control_L, 0,                   Qt::Key_Control,  "LCtrl",      278 },
+	{ XK_Control_R, 0,                   Qt::Key_Control,  "RCtrl",      279 },
 #endif
 };
 /*

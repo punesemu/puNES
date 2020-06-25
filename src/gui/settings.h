@@ -442,6 +442,7 @@ static const _opt opt_rewind[] = {
 static const _opt opt_languages[] = {
 	{NULL, uL("english"), LNG_ENGLISH},
 	{NULL, uL("italian"), LNG_ITALIAN},
+	{NULL, uL("portuguese"), LNG_PORTUGUESEBR},
 	{NULL, uL("russian"), LNG_RUSSIAN},
 	{NULL, uL("spanish"), LNG_SPANISH},
 	{NULL, uL("hungarian"), LNG_HUNGARIAN},
@@ -821,7 +822,7 @@ static const _settings main_cfg[] = {
 	},
 	{
 		uL("GUI"), uL("language"), uL("english"),
-		uL("# possible values: english, italian, russian, spanish, hungarian, turkish"),
+		uL("# possible values: english, italian, portuguese, russian, spanish, portuguese, hungarian, turkish"),
 		uL("    --language            GUI language          : english, italian, russian, spanish," NEWLINE)
 		uL("                                                  hungarian, turkish"),
 		{LENGTH(opt_languages), opt_languages}

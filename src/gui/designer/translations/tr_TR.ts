@@ -1291,6 +1291,10 @@
       <translation>Macarca</translation>
     </message>
     <message>
+        <source>Portuguese (Brazil)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
       <source>60 minutes</source>
       <translation>60 dakika</translation>
     </message>

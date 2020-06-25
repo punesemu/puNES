@@ -1416,6 +1416,10 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Portuguese (Brazil)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Russian</source>
         <translation type="unfinished"></translation>
     </message>
