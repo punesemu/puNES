@@ -822,9 +822,9 @@ static const _settings main_cfg[] = {
 	},
 	{
 		uL("GUI"), uL("language"), uL("english"),
-		uL("# possible values: english, italian, portuguese, russian, spanish, portuguese, hungarian, turkish"),
+		uL("# possible values: english, italian, russian, spanish, portuguese, hungarian, turkish"),
 		uL("    --language            GUI language          : english, italian, russian, spanish," NEWLINE)
-		uL("                                                  hungarian, turkish"),
+		uL("                                                  portuguese, hungarian, turkish"),
 		{LENGTH(opt_languages), opt_languages}
 	},
 	{
