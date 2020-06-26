@@ -136,9 +136,9 @@ void wdgSettingsGeneral::language_set(void) {
 		case LNG_ITALIAN:
 			lang = 2;
 			break;
-        case LNG_PORTUGUESEBR:
-            lang = 3;
-            break;
+		case LNG_PORTUGUESEBR:
+			lang = 3;
+			break;
 		case LNG_RUSSIAN:
 			lang = 4;
 			break;
