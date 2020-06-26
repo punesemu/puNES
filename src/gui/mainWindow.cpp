@@ -297,7 +297,7 @@ void mainWindow::set_language(int lang) {
 			lng = "hu";
 			file = "hu_HU";
 			break;
-        case LNG_PORTUGUESEBR:
+		case LNG_PORTUGUESEBR:
 			lng = "pt";
 			file = "pt_BR";
 			break;
