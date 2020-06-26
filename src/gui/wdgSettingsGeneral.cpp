@@ -272,7 +272,7 @@ void wdgSettingsGeneral::s_language(int index) {
 		case 3:
 			lang = LNG_PORTUGUESEBR;
 			break;
-        case 4:
+		case 4:
 			lang = LNG_RUSSIAN;
 			break;
 		case 5:
