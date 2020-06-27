@@ -670,10 +670,6 @@
         <source>Widgets</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Apply &amp;HDPack</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>objCheat</name>
@@ -1501,6 +1497,10 @@
     </message>
     <message>
         <source>Turkish</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Portuguese (Brazil)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
