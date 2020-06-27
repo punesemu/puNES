@@ -1499,6 +1499,10 @@
       <source>Turkish</source>
       <translation>Türkçe</translation>
     </message>
+    <message>
+      <source>Portuguese (Brazil)</source>
+      <translation type="unfinished">Portuguese (Brazil)</translation>
+    </message>
   </context>
   <context>
     <name>wdgSettingsInput</name>
