@@ -1,2127 +1,2127 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
 <TS version="2.1" language="hu" sourcelanguage="en">
-<context>
+  <context>
     <name>Settings</name>
     <message>
-        <source>System Default</source>
-        <translation>Rendszer alapbeállítások</translation>
+      <source>System Default</source>
+      <translation>Rendszer alapbeállítások</translation>
     </message>
-</context>
-<context>
+  </context>
+  <context>
     <name>dlgSettings</name>
     <message>
-        <source>Settings</source>
-        <translation>Beállítások</translation>
+      <source>Settings</source>
+      <translation>Beállítások</translation>
     </message>
     <message>
-        <source>General</source>
-        <translation>Általános</translation>
+      <source>General</source>
+      <translation>Általános</translation>
     </message>
     <message>
-        <source>Video</source>
-        <translation>Kép</translation>
+      <source>Video</source>
+      <translation>Kép</translation>
     </message>
     <message>
-        <source>Audio</source>
-        <translation>Hang</translation>
+      <source>Audio</source>
+      <translation>Hang</translation>
     </message>
     <message>
-        <source>Input</source>
-        <translation>Bevitel</translation>
+      <source>Input</source>
+      <translation>Bevitel</translation>
     </message>
     <message>
-        <source>PPU</source>
-        <translation>PPU</translation>
+      <source>PPU</source>
+      <translation>PPU</translation>
     </message>
     <message>
-        <source>Cheats</source>
-        <translation>Csalások</translation>
+      <source>Cheats</source>
+      <translation>Csalások</translation>
     </message>
     <message>
-        <source>Save Settings</source>
-        <translation>Beállítások mentése</translation>
+      <source>Save Settings</source>
+      <translation>Beállítások mentése</translation>
     </message>
     <message>
-        <source>Close Settings</source>
-        <translation>Beállítások bezárása</translation>
+      <source>Close Settings</source>
+      <translation>Beállítások bezárása</translation>
     </message>
     <message>
-        <source>Rewind Mode On/Off</source>
-        <translation>Visszatekerő mód Be/Ki</translation>
+      <source>Rewind Mode On/Off</source>
+      <translation>Visszatekerő mód Be/Ki</translation>
     </message>
     <message>
-        <source>Rewind Step Backward</source>
-        <translation>Visszatekerés Hátraléptetés</translation>
+      <source>Rewind Step Backward</source>
+      <translation>Visszatekerés Hátraléptetés</translation>
     </message>
     <message>
-        <source>Rewind Step Forward</source>
-        <translation>Visszatekerés Előreléptetés</translation>
+      <source>Rewind Step Forward</source>
+      <translation>Visszatekerés Előreléptetés</translation>
     </message>
     <message>
-        <source>Rewind Fast Forward</source>
-        <translation>Visszatekerés Gyorsan előre</translation>
+      <source>Rewind Fast Forward</source>
+      <translation>Visszatekerés Gyorsan előre</translation>
     </message>
     <message>
-        <source>Rewind Play</source>
-        <translation>Visszatekerés Lejátszás</translation>
+      <source>Rewind Play</source>
+      <translation>Visszatekerés Lejátszás</translation>
     </message>
     <message>
-        <source>Rewind Pause</source>
-        <translation>Visszatekerés Megállj</translation>
+      <source>Rewind Pause</source>
+      <translation>Visszatekerés Megállj</translation>
     </message>
     <message>
-        <source>Rewind Fast Backward</source>
-        <translation>Visszatekerés Gyorsan hátra</translation>
+      <source>Rewind Fast Backward</source>
+      <translation>Visszatekerés Gyorsan hátra</translation>
     </message>
-</context>
-<context>
+  </context>
+  <context>
     <name>dlgStdPad</name>
     <message>
-        <source>Controller %1 : Standard Pad</source>
-        <translation>%1. kontroller: szabvány gamepad</translation>
+      <source>Controller %1 : Standard Pad</source>
+      <translation>%1. kontroller: szabvány gamepad</translation>
     </message>
     <message>
-        <source>Auto</source>
-        <translation>Auto</translation>
+      <source>Auto</source>
+      <translation>Auto</translation>
     </message>
     <message>
-        <source>Original</source>
-        <translation>Eredeti</translation>
+      <source>Original</source>
+      <translation>Eredeti</translation>
     </message>
     <message>
-        <source>3rd-party</source>
-        <translation>Harmadik fél</translation>
+      <source>3rd-party</source>
+      <translation>Harmadik fél</translation>
     </message>
     <message>
-        <source>Keyboard</source>
-        <translation>Billentyűzet</translation>
+      <source>Keyboard</source>
+      <translation>Billentyűzet</translation>
     </message>
     <message>
-        <source>Disabled</source>
-        <translation>Letiltva</translation>
+      <source>Disabled</source>
+      <translation>Letiltva</translation>
     </message>
     <message>
-        <source>No usable device</source>
-        <translation>Nincs használható eszköz</translation>
+      <source>No usable device</source>
+      <translation>Nincs használható eszköz</translation>
     </message>
     <message>
-        <source>Select device first</source>
-        <translation>Előbb válassz eszközt</translation>
+      <source>Select device first</source>
+      <translation>Előbb válassz eszközt</translation>
     </message>
     <message>
-        <source>Error on open device %1</source>
-        <translation>Hiba %1 eszköz megnyitásakor</translation>
+      <source>Error on open device %1</source>
+      <translation>Hiba %1 eszköz megnyitásakor</translation>
     </message>
     <message>
-        <source>Error on reading controllers configurations</source>
-        <translation>Hiba a kontroller beállításainak olvasásakor</translation>
+      <source>Error on reading controllers configurations</source>
+      <translation>Hiba a kontroller beállításainak olvasásakor</translation>
     </message>
     <message>
-        <source>Press a key (ESC for the previous value &quot;%1&quot;)</source>
-        <translation>Nyomj le egy gombot (ESC-et az előző értékért: &quot;%1&quot;)</translation>
+      <source>Press a key (ESC for the previous value &quot;%1&quot;)</source>
+      <translation>Nyomj le egy gombot (ESC-et az előző értékért: &quot;%1&quot;)</translation>
     </message>
     <message>
-        <source>Standard Pad</source>
-        <translation>Szabvány gamepad</translation>
+      <source>Standard Pad</source>
+      <translation>Szabvány gamepad</translation>
     </message>
     <message>
-        <source>ID</source>
-        <translation>Azonosító</translation>
+      <source>ID</source>
+      <translation>Azonosító</translation>
     </message>
     <message>
-        <source>Up</source>
-        <translation>Fel</translation>
+      <source>Up</source>
+      <translation>Fel</translation>
     </message>
     <message>
-        <source>A</source>
-        <translation>A</translation>
+      <source>A</source>
+      <translation>A</translation>
     </message>
     <message>
-        <source>Down</source>
-        <translation>Le</translation>
+      <source>Down</source>
+      <translation>Le</translation>
     </message>
     <message>
-        <source>Unset</source>
-        <translation>Beállítatlan</translation>
+      <source>Unset</source>
+      <translation>Beállítatlan</translation>
     </message>
     <message>
-        <source>Left</source>
-        <translation>Bal</translation>
+      <source>Left</source>
+      <translation>Bal</translation>
     </message>
     <message>
-        <source>Start</source>
-        <translation>Start</translation>
+      <source>Start</source>
+      <translation>Start</translation>
     </message>
     <message>
-        <source>Turbo B</source>
-        <translation>Turbó B</translation>
+      <source>Turbo B</source>
+      <translation>Turbó B</translation>
     </message>
     <message>
-        <source>Select</source>
-        <translation>Select</translation>
+      <source>Select</source>
+      <translation>Select</translation>
     </message>
     <message>
-        <source>Turbo A</source>
-        <translation>Turbó A</translation>
+      <source>Turbo A</source>
+      <translation>Turbó A</translation>
     </message>
     <message>
-        <source>B</source>
-        <translation>B</translation>
+      <source>B</source>
+      <translation>B</translation>
     </message>
     <message>
-        <source>Right</source>
-        <translation>Jobb</translation>
+      <source>Right</source>
+      <translation>Jobb</translation>
     </message>
     <message>
-        <source>In sequence</source>
-        <translation>Összes beállítása sorban</translation>
+      <source>In sequence</source>
+      <translation>Összes beállítása sorban</translation>
     </message>
     <message>
-        <source>Unset all</source>
-        <translation>Mindet beállítatlanra</translation>
+      <source>Unset all</source>
+      <translation>Mindet beállítatlanra</translation>
     </message>
     <message>
-        <source>Defaults</source>
-        <translation>Alapértelmezések</translation>
+      <source>Defaults</source>
+      <translation>Alapértelmezések</translation>
     </message>
     <message>
-        <source>Joystick</source>
-        <translation>Joystick</translation>
+      <source>Joystick</source>
+      <translation>Joystick</translation>
     </message>
     <message>
-        <source>Misc</source>
-        <translation>Egyéb</translation>
+      <source>Misc</source>
+      <translation>Egyéb</translation>
     </message>
     <message>
-        <source>Controller type</source>
-        <translation>Kontroller típus</translation>
+      <source>Controller type</source>
+      <translation>Kontroller típus</translation>
     </message>
     <message>
-        <source>Turbo B Delay</source>
-        <translation>Turbó B késleltetés</translation>
+      <source>Turbo B Delay</source>
+      <translation>Turbó B késleltetés</translation>
     </message>
     <message>
-        <source>Turbo A Delay</source>
-        <translation>Turbo A késleltetés</translation>
+      <source>Turbo A Delay</source>
+      <translation>Turbo A késleltetés</translation>
     </message>
     <message>
-        <source>Apply</source>
-        <translation>Alkalmaz</translation>
+      <source>Apply</source>
+      <translation>Alkalmaz</translation>
     </message>
     <message>
-        <source>Discard</source>
-        <translation>Eldob</translation>
+      <source>Discard</source>
+      <translation>Eldob</translation>
     </message>
-</context>
-<context>
+  </context>
+  <context>
     <name>dlgUncomp</name>
     <message>
-        <source>which ROM do you want to load?</source>
-        <translation>melyik ROM-ot akarod betölteni?</translation>
+      <source>which ROM do you want to load?</source>
+      <translation>melyik ROM-ot akarod betölteni?</translation>
     </message>
     <message>
-        <source>which PATCH do you want to apply?</source>
-        <translation>melyik PATCH-et akarod alkalmazni?</translation>
+      <source>which PATCH do you want to apply?</source>
+      <translation>melyik PATCH-et akarod alkalmazni?</translation>
     </message>
     <message>
-        <source>Unpacked archive</source>
-        <translation>Kicsomagold archívum</translation>
+      <source>Unpacked archive</source>
+      <translation>Kicsomagold archívum</translation>
     </message>
     <message>
-        <source>OK</source>
-        <translation>OK</translation>
+      <source>OK</source>
+      <translation>OK</translation>
     </message>
     <message>
-        <source>None</source>
-        <translation>Semmi</translation>
+      <source>None</source>
+      <translation>Semmi</translation>
     </message>
-</context>
-<context>
+  </context>
+  <context>
     <name>dlgVsSystem</name>
     <message>
-        <source>Vs System Controls</source>
-        <translation>Vs rendszer vezérlése</translation>
+      <source>Vs System Controls</source>
+      <translation>Vs rendszer vezérlése</translation>
     </message>
     <message>
-        <source>Left Coin</source>
-        <translation>Bal érme</translation>
+      <source>Left Coin</source>
+      <translation>Bal érme</translation>
     </message>
     <message>
-        <source>Right Coin</source>
-        <translation>Jobb érme</translation>
+      <source>Right Coin</source>
+      <translation>Jobb érme</translation>
     </message>
     <message>
-        <source>Service Coin</source>
-        <translation>Szervízérme</translation>
+      <source>Service Coin</source>
+      <translation>Szervízérme</translation>
     </message>
     <message>
-        <source>Coin Counter</source>
-        <translation>Érmeszámláló</translation>
+      <source>Coin Counter</source>
+      <translation>Érmeszámláló</translation>
     </message>
     <message>
-        <source>Dip Switches</source>
-        <translation>Dip kapcsolók</translation>
+      <source>Dip Switches</source>
+      <translation>Dip kapcsolók</translation>
     </message>
     <message>
-        <source>4</source>
-        <translation>4</translation>
+      <source>4</source>
+      <translation>4</translation>
     </message>
     <message>
-        <source>5</source>
-        <translation>5</translation>
+      <source>5</source>
+      <translation>5</translation>
     </message>
     <message>
-        <source>6</source>
-        <translation>6</translation>
+      <source>6</source>
+      <translation>6</translation>
     </message>
     <message>
-        <source>7</source>
-        <translation>7</translation>
+      <source>7</source>
+      <translation>7</translation>
     </message>
     <message>
-        <source>8</source>
-        <translation>8</translation>
+      <source>8</source>
+      <translation>8</translation>
     </message>
     <message>
-        <source>3</source>
-        <translation>3</translation>
+      <source>3</source>
+      <translation>3</translation>
     </message>
     <message>
-        <source>2</source>
-        <translation>2</translation>
+      <source>2</source>
+      <translation>2</translation>
     </message>
     <message>
-        <source>1</source>
-        <translation>1</translation>
+      <source>1</source>
+      <translation>1</translation>
     </message>
     <message>
-        <source>Defaults Game Dip Switches</source>
-        <translation>Játék Dip kapcsolóinak alapállapotba helyezése</translation>
+      <source>Defaults Game Dip Switches</source>
+      <translation>Játék Dip kapcsolóinak alapállapotba helyezése</translation>
     </message>
-</context>
-<context>
+  </context>
+  <context>
     <name>mainWindow</name>
     <message>
-        <source>&amp;Insert disk</source>
-        <translation>Lemez behelyezése (&amp;I)</translation>
+      <source>&amp;Insert disk</source>
+      <translation>Lemez behelyezése (&amp;I)</translation>
     </message>
     <message>
-        <source>&amp;Eject disk</source>
-        <translation>Lemez kiadása (&amp;E)</translation>
+      <source>&amp;Eject disk</source>
+      <translation>Lemez kiadása (&amp;E)</translation>
     </message>
     <message>
-        <source>&amp;Eject/Insert disk</source>
-        <translation>Lemez kiadása és behelyezése (&amp;E)</translation>
+      <source>&amp;Eject/Insert disk</source>
+      <translation>Lemez kiadása és behelyezése (&amp;E)</translation>
     </message>
     <message>
-        <source>All supported formats</source>
-        <translation>Minden támogatott formátum</translation>
+      <source>All supported formats</source>
+      <translation>Minden támogatott formátum</translation>
     </message>
     <message>
-        <source>Compressed files</source>
-        <translation>Tömörített fájlok</translation>
+      <source>Compressed files</source>
+      <translation>Tömörített fájlok</translation>
     </message>
     <message>
-        <source>Nes rom files</source>
-        <translation>NES ROM fájlok</translation>
+      <source>Nes rom files</source>
+      <translation>NES ROM fájlok</translation>
     </message>
     <message>
-        <source>FDS image files</source>
-        <translation>FDS lemezképek</translation>
+      <source>FDS image files</source>
+      <translation>FDS lemezképek</translation>
     </message>
     <message>
-        <source>TAS movie files</source>
-        <translation>TAS filmek</translation>
+      <source>TAS movie files</source>
+      <translation>TAS filmek</translation>
     </message>
     <message>
-        <source>All files</source>
-        <translation>Minden fájl</translation>
+      <source>All files</source>
+      <translation>Minden fájl</translation>
     </message>
     <message>
-        <source>Open File</source>
-        <translation>Fájl megnyitása</translation>
+      <source>Open File</source>
+      <translation>Fájl megnyitása</translation>
     </message>
     <message>
-        <source>Save states</source>
-        <translation>Állapotmentések</translation>
+      <source>Save states</source>
+      <translation>Állapotmentések</translation>
     </message>
     <message>
-        <source>Save state on file</source>
-        <translation>Állapotmentés fájlba</translation>
+      <source>Save state on file</source>
+      <translation>Állapotmentés fájlba</translation>
     </message>
     <message>
-        <source>Open save state</source>
-        <translation>Állapotmentés megnyitása</translation>
+      <source>Open save state</source>
+      <translation>Állapotmentés megnyitása</translation>
     </message>
     <message>
-        <source>Nintendo Entertainment System Emulator</source>
-        <translation>Nintendo Entertainment System Emulator</translation>
+      <source>Nintendo Entertainment System Emulator</source>
+      <translation>Nintendo Entertainment System Emulator</translation>
     </message>
     <message>
-        <source>Compiled</source>
-        <translation>Forgatva</translation>
+      <source>Compiled</source>
+      <translation>Forgatva</translation>
     </message>
     <message>
-        <source>Anyway, thank you all for the love and the help.</source>
-        <translation>Mindenesetre köszi a szeretetért és a segítségért.</translation>
+      <source>Anyway, thank you all for the love and the help.</source>
+      <translation>Mindenesetre köszi a szeretetért és a segítségért.</translation>
     </message>
     <message>
-        <source>portable version</source>
-        <translation>hordozható verzió</translation>
+      <source>portable version</source>
+      <translation>hordozható verzió</translation>
     </message>
     <message>
-        <source>&amp;Open</source>
-        <translation>Megnyitás (&amp;O)</translation>
+      <source>&amp;Open</source>
+      <translation>Megnyitás (&amp;O)</translation>
     </message>
     <message>
-        <source>&amp;Quit</source>
-        <translation>Kilépés (&amp;Q)</translation>
+      <source>&amp;Quit</source>
+      <translation>Kilépés (&amp;Q)</translation>
     </message>
     <message>
-        <source>&amp;Hard Reset</source>
-        <translation>Hardveres reset (&amp;H)</translation>
+      <source>&amp;Hard Reset</source>
+      <translation>Hardveres reset (&amp;H)</translation>
     </message>
     <message>
-        <source>&amp;Soft Reset</source>
-        <translation>Szoftveres reset (&amp;S)</translation>
+      <source>&amp;Soft Reset</source>
+      <translation>Szoftveres reset (&amp;S)</translation>
     </message>
     <message>
-        <source>&amp;Eject/Insert Disk</source>
-        <translation>Lemez kiadása és behelyezése (&amp;E)</translation>
+      <source>&amp;Eject/Insert Disk</source>
+      <translation>Lemez kiadása és behelyezése (&amp;E)</translation>
     </message>
     <message>
-        <source>Disk 1 side A</source>
-        <translation>1. Lemez, A oldal</translation>
+      <source>Disk 1 side A</source>
+      <translation>1. Lemez, A oldal</translation>
     </message>
     <message>
-        <source>Disk 1 side B</source>
-        <translation>1. Lemez, B oldal</translation>
+      <source>Disk 1 side B</source>
+      <translation>1. Lemez, B oldal</translation>
     </message>
     <message>
-        <source>Disk 2 side A</source>
-        <translation>2. Lemez, A oldal</translation>
+      <source>Disk 2 side A</source>
+      <translation>2. Lemez, A oldal</translation>
     </message>
     <message>
-        <source>Disk 2 side B</source>
-        <translation>2. Lemez, B oldal</translation>
+      <source>Disk 2 side B</source>
+      <translation>2. Lemez, B oldal</translation>
     </message>
     <message>
-        <source>Disk 3 side A</source>
-        <translation>3. Lemez, A oldal</translation>
+      <source>Disk 3 side A</source>
+      <translation>3. Lemez, A oldal</translation>
     </message>
     <message>
-        <source>Disk 3 side B</source>
-        <translation>3. Lemez, B oldal</translation>
+      <source>Disk 3 side B</source>
+      <translation>3. Lemez, B oldal</translation>
     </message>
     <message>
-        <source>Disk 4 side A</source>
-        <translation>4. Lemez, A oldal</translation>
+      <source>Disk 4 side A</source>
+      <translation>4. Lemez, A oldal</translation>
     </message>
     <message>
-        <source>Disk 4 side B</source>
-        <translation>4. Lemez, B oldal</translation>
+      <source>Disk 4 side B</source>
+      <translation>4. Lemez, B oldal</translation>
     </message>
     <message>
-        <source>&amp;Switch sides</source>
-        <translation>Lemez megfordítása (&amp;S)</translation>
+      <source>&amp;Switch sides</source>
+      <translation>Lemez megfordítása (&amp;S)</translation>
     </message>
     <message>
-        <source>&amp;Save to file</source>
-        <translation>Mentés fájlba (&amp;S)</translation>
+      <source>&amp;Save to file</source>
+      <translation>Mentés fájlba (&amp;S)</translation>
     </message>
     <message>
-        <source>&amp;Load from file</source>
-        <translation>Töltés fájlból (&amp;L)</translation>
+      <source>&amp;Load from file</source>
+      <translation>Töltés fájlból (&amp;L)</translation>
     </message>
     <message>
-        <source>F&amp;ullscreen</source>
-        <translation>Teljes képernyő (&amp;F)</translation>
+      <source>F&amp;ullscreen</source>
+      <translation>Teljes képernyő (&amp;F)</translation>
     </message>
     <message>
-        <source>&amp;Game Genie Rom Mode</source>
-        <translation>Game Genie ROM mód (&amp;G)</translation>
+      <source>&amp;Game Genie Rom Mode</source>
+      <translation>Game Genie ROM mód (&amp;G)</translation>
     </message>
     <message>
-        <source>S&amp;ave state</source>
-        <translation>Állás mentése (&amp;a)</translation>
+      <source>S&amp;ave state</source>
+      <translation>Állás mentése (&amp;a)</translation>
     </message>
     <message>
-        <source>L&amp;oad state</source>
-        <translation>Állás töltése (&amp;o)</translation>
+      <source>L&amp;oad state</source>
+      <translation>Állás töltése (&amp;o)</translation>
     </message>
     <message>
-        <source>&amp;Increment slot</source>
-        <translation>Következő mentéshely (&amp;I)</translation>
+      <source>&amp;Increment slot</source>
+      <translation>Következő mentéshely (&amp;I)</translation>
     </message>
     <message>
-        <source>&amp;Decrement slot</source>
-        <translation>Előző mentéshely (&amp;D)</translation>
+      <source>&amp;Decrement slot</source>
+      <translation>Előző mentéshely (&amp;D)</translation>
     </message>
     <message>
-        <source>Slot &amp;0</source>
-        <translation>Mentéshely &amp;0</translation>
+      <source>Slot &amp;0</source>
+      <translation>Mentéshely &amp;0</translation>
     </message>
     <message>
-        <source>Slot &amp;1</source>
-        <translation>Mentéshely &amp;1</translation>
+      <source>Slot &amp;1</source>
+      <translation>Mentéshely &amp;1</translation>
     </message>
     <message>
-        <source>Slot &amp;2</source>
-        <translation>Mentéshely &amp;2</translation>
+      <source>Slot &amp;2</source>
+      <translation>Mentéshely &amp;2</translation>
     </message>
     <message>
-        <source>Slot &amp;3</source>
-        <translation>Mentéshely &amp;3</translation>
+      <source>Slot &amp;3</source>
+      <translation>Mentéshely &amp;3</translation>
     </message>
     <message>
-        <source>Slot &amp;4</source>
-        <translation>Mentéshely &amp;4</translation>
+      <source>Slot &amp;4</source>
+      <translation>Mentéshely &amp;4</translation>
     </message>
     <message>
-        <source>Slot &amp;5</source>
-        <translation>Mentéshely &amp;5</translation>
+      <source>Slot &amp;5</source>
+      <translation>Mentéshely &amp;5</translation>
     </message>
     <message>
-        <source>&amp;About</source>
-        <translation>&amp;A programról</translation>
+      <source>&amp;About</source>
+      <translation>&amp;A programról</translation>
     </message>
     <message>
-        <source>Slot &amp;6</source>
-        <translation>Mentéshely &amp;6</translation>
+      <source>Slot &amp;6</source>
+      <translation>Mentéshely &amp;6</translation>
     </message>
     <message>
-        <source>Slot &amp;7</source>
-        <translation>Mentéshely &amp;7</translation>
+      <source>Slot &amp;7</source>
+      <translation>Mentéshely &amp;7</translation>
     </message>
     <message>
-        <source>Slot &amp;8</source>
-        <translation>Mentéshely &amp;8</translation>
+      <source>Slot &amp;8</source>
+      <translation>Mentéshely &amp;8</translation>
     </message>
     <message>
-        <source>Slot &amp;9</source>
-        <translation>Mentéshely &amp;9</translation>
+      <source>Slot &amp;9</source>
+      <translation>Mentéshely &amp;9</translation>
     </message>
     <message>
-        <source>&amp;Cheats List Mode</source>
-        <translation>Csalások - Lista mód (&amp;C)</translation>
+      <source>&amp;Cheats List Mode</source>
+      <translation>Csalások - Lista mód (&amp;C)</translation>
     </message>
     <message>
-        <source>Cheats &amp;Editor</source>
-        <translation>Csalásszerkesztő (&amp;E)</translation>
+      <source>Cheats &amp;Editor</source>
+      <translation>Csalásszerkesztő (&amp;E)</translation>
     </message>
     <message>
-        <source>&amp;Disabled</source>
-        <translation>Letiltva (&amp;D)</translation>
+      <source>&amp;Disabled</source>
+      <translation>Letiltva (&amp;D)</translation>
     </message>
     <message>
-        <source>&amp;Fast Forward</source>
-        <translation>Gyorsítás (&amp;F)</translation>
+      <source>&amp;Fast Forward</source>
+      <translation>Gyorsítás (&amp;F)</translation>
     </message>
     <message>
-        <source>&amp;Pause</source>
-        <translation>&amp;Pause</translation>
+      <source>&amp;Pause</source>
+      <translation>&amp;Pause</translation>
     </message>
     <message>
-        <source>Save Screens&amp;hot</source>
-        <translation>Képernyőfotó (&amp;h)</translation>
+      <source>Save Screens&amp;hot</source>
+      <translation>Képernyőfotó (&amp;h)</translation>
     </message>
     <message>
-        <source>Insert Coin</source>
-        <translation>Érme bedobása</translation>
+      <source>Insert Coin</source>
+      <translation>Érme bedobása</translation>
     </message>
     <message>
-        <source>Vs System Controls</source>
-        <translation>Vs rendszer vezérlése</translation>
+      <source>Vs System Controls</source>
+      <translation>Vs rendszer vezérlése</translation>
     </message>
     <message>
-        <source>&amp;Open working folder</source>
-        <translation>Munkakönyvtár megnyitása (&amp;O)</translation>
+      <source>&amp;Open working folder</source>
+      <translation>Munkakönyvtár megnyitása (&amp;O)</translation>
     </message>
     <message>
-        <source>&amp;File</source>
-        <translation>Fájl (&amp;F)</translation>
+      <source>&amp;File</source>
+      <translation>Fájl (&amp;F)</translation>
     </message>
     <message>
-        <source>&amp;Recent Roms</source>
-        <translation>Nemrég megnyitott ROM-ok (&amp;R)</translation>
+      <source>&amp;Recent Roms</source>
+      <translation>Nemrég megnyitott ROM-ok (&amp;R)</translation>
     </message>
     <message>
-        <source>&amp;NES</source>
-        <translation>&amp;NES</translation>
+      <source>&amp;NES</source>
+      <translation>&amp;NES</translation>
     </message>
     <message>
-        <source>&amp;Disk Side</source>
-        <translation>Lemezoldal (&amp;D)</translation>
+      <source>&amp;Disk Side</source>
+      <translation>Lemezoldal (&amp;D)</translation>
     </message>
     <message>
-        <source>Setti&amp;ngs</source>
-        <translation>Beállítások (&amp;n)</translation>
+      <source>Setti&amp;ngs</source>
+      <translation>Beállítások (&amp;n)</translation>
     </message>
     <message>
-        <source>&amp;Video</source>
-        <translation>Kép (&amp;V)</translation>
+      <source>&amp;Video</source>
+      <translation>Kép (&amp;V)</translation>
     </message>
     <message>
-        <source>&amp;Audio</source>
-        <translation>Hang (&amp;A)</translation>
+      <source>&amp;Audio</source>
+      <translation>Hang (&amp;A)</translation>
     </message>
     <message>
-        <source>&amp;Input</source>
-        <translation>Bevitel (&amp;I)</translation>
+      <source>&amp;Input</source>
+      <translation>Bevitel (&amp;I)</translation>
     </message>
     <message>
-        <source>&amp;Cheats</source>
-        <translation>Csalások (&amp;C)</translation>
+      <source>&amp;Cheats</source>
+      <translation>Csalások (&amp;C)</translation>
     </message>
     <message>
-        <source>&amp;PPU</source>
-        <translation>&amp;PPU</translation>
+      <source>&amp;PPU</source>
+      <translation>&amp;PPU</translation>
     </message>
     <message>
-        <source>S&amp;tate</source>
-        <translation>Állapot (&amp;t)</translation>
+      <source>S&amp;tate</source>
+      <translation>Állapot (&amp;t)</translation>
     </message>
     <message>
-        <source>&amp;Help</source>
-        <translation>Súgó (&amp;H)</translation>
+      <source>&amp;Help</source>
+      <translation>Súgó (&amp;H)</translation>
     </message>
     <message>
-        <source>&amp;Turn On</source>
-        <translation>Bekapcsolás (&amp;T)</translation>
+      <source>&amp;Turn On</source>
+      <translation>Bekapcsolás (&amp;T)</translation>
     </message>
     <message>
-        <source>&amp;Turn Off</source>
-        <translation>Kikapcsolás (&amp;T)</translation>
+      <source>&amp;Turn Off</source>
+      <translation>Kikapcsolás (&amp;T)</translation>
     </message>
     <message>
-        <source>Too&amp;ls</source>
-        <translation>Eszközök (&amp;l)</translation>
+      <source>Too&amp;ls</source>
+      <translation>Eszközök (&amp;l)</translation>
     </message>
     <message>
-        <source>UNIF rom files</source>
-        <translation>UNIF ROM fájlok</translation>
+      <source>UNIF rom files</source>
+      <translation>UNIF ROM fájlok</translation>
     </message>
     <message>
-        <source>Start/Stop &amp;WAV recording</source>
-        <translation>WAV felvétel elindítása/megállítása (&amp;W)</translation>
+      <source>Start/Stop &amp;WAV recording</source>
+      <translation>WAV felvétel elindítása/megállítása (&amp;W)</translation>
     </message>
     <message>
-        <source>Stop &amp;WAV recording</source>
-        <translation>WAV felvétel megállítása (&amp;W)</translation>
+      <source>Stop &amp;WAV recording</source>
+      <translation>WAV felvétel megállítása (&amp;W)</translation>
     </message>
     <message>
-        <source>Start &amp;WAV recording</source>
-        <translation>WAV felvétel elindítása (&amp;W)</translation>
+      <source>Start &amp;WAV recording</source>
+      <translation>WAV felvétel elindítása (&amp;W)</translation>
     </message>
     <message>
-        <source>MS WAVE files</source>
-        <translation>MS WAVE fájlok</translation>
+      <source>MS WAVE files</source>
+      <translation>MS WAVE fájlok</translation>
     </message>
     <message>
-        <source>Record sound</source>
-        <translation>Hangfelvétel</translation>
+      <source>Record sound</source>
+      <translation>Hangfelvétel</translation>
     </message>
     <message>
-        <source>NSF rom files</source>
-        <translation>NSF ROM fájlok</translation>
+      <source>NSF rom files</source>
+      <translation>NSF ROM fájlok</translation>
     </message>
     <message>
-        <source>NSFE rom files</source>
-        <translation>NSFE ROM fájlok</translation>
+      <source>NSFE rom files</source>
+      <translation>NSFE ROM fájlok</translation>
     </message>
     <message>
-        <source>IPS patch files</source>
-        <translation>IPS patch fájlok</translation>
+      <source>IPS patch files</source>
+      <translation>IPS patch fájlok</translation>
     </message>
     <message>
-        <source>BPS patch files</source>
-        <translation>BPS patch fájlok</translation>
+      <source>BPS patch files</source>
+      <translation>BPS patch fájlok</translation>
     </message>
     <message>
-        <source>XDELTA patch files</source>
-        <translation>XDELTA patch fájlok</translation>
+      <source>XDELTA patch files</source>
+      <translation>XDELTA patch fájlok</translation>
     </message>
     <message>
-        <source>Open IPS/BPS/XDELTA Patch</source>
-        <translation>IPS/BPS/XDELTA patch megnyitása</translation>
+      <source>Open IPS/BPS/XDELTA Patch</source>
+      <translation>IPS/BPS/XDELTA patch megnyitása</translation>
     </message>
     <message>
-        <source>If you like the emulator and you want to support it&apos;s development or would you pay for a beer at the programmer</source>
-        <translation>Ha tetszik az emulátor és szeretnéd támogatni a fejlesztését, vagy fizetnél egy sört a programozónak</translation>
+      <source>If you like the emulator and you want to support it&apos;s development or would you pay for a beer at the programmer</source>
+      <translation>Ha tetszik az emulátor és szeretnéd támogatni a fejlesztését, vagy fizetnél egy sört a programozónak</translation>
     </message>
     <message>
-        <source>&amp;Apply IPS/BPS/XDELTA Patch</source>
-        <translation>IPS/BPS/XDELTA patch alkalmazása (&amp;A)</translation>
+      <source>&amp;Apply IPS/BPS/XDELTA Patch</source>
+      <translation>IPS/BPS/XDELTA patch alkalmazása (&amp;A)</translation>
     </message>
     <message>
-        <source>&amp;General</source>
-        <translation>Általános (&amp;G)</translation>
+      <source>&amp;General</source>
+      <translation>Általános (&amp;G)</translation>
     </message>
     <message>
-        <source>&amp;Toggle GUI in window</source>
-        <translation>GUI ki/be kapcsolása ablakos módban</translation>
+      <source>&amp;Toggle GUI in window</source>
+      <translation>GUI ki/be kapcsolása ablakos módban</translation>
     </message>
     <message>
-        <source>Widgets</source>
-        <translation type="unfinished"></translation>
+      <source>Save Unalte&amp;red NES screen</source>
+      <translation type="unfinished">Save Unalte&amp;red NES screen</translation>
     </message>
     <message>
-        <source>Save Unalte&amp;red NES screen</source>
-        <translation type="unfinished"></translation>
+      <source>Widgets</source>
+      <translation type="unfinished">Widgets</translation>
     </message>
-    <message>
-        <source>Apply &amp;HDPack</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
+  </context>
+  <context>
     <name>objCheat</name>
     <message>
-        <source>Error on reading the file</source>
-        <translation>Fájlolvasási hiba</translation>
+      <source>Error on reading the file</source>
+      <translation>Fájlolvasási hiba</translation>
     </message>
     <message>
-        <source>Read only</source>
-        <translation>Csak olvasható</translation>
+      <source>Read only</source>
+      <translation>Csak olvasható</translation>
     </message>
     <message>
-        <source>The file is in read only mode</source>
-        <translation>A fájl csak olvasható módban van</translation>
+      <source>The file is in read only mode</source>
+      <translation>A fájl csak olvasható módban van</translation>
     </message>
-</context>
-<context>
+  </context>
+  <context>
     <name>overlayWidgetInfo</name>
     <message>
-        <source>start wav recording</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-        <translation type="unfinished"></translation>
+      <source>start wav recording</source>
+      <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+      <translation type="unfinished">start wav recording</translation>
     </message>
     <message>
-        <source>stop wav recording</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-        <translation type="unfinished"></translation>
+      <source>stop wav recording</source>
+      <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+      <translation type="unfinished">stop wav recording</translation>
     </message>
     <message>
-        <source>[red]Game Genie rom not found[normal]</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-        <translation type="unfinished"></translation>
+      <source>[red]Game Genie rom not found[normal]</source>
+      <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+      <translation type="unfinished">[red]Game Genie rom not found[normal]</translation>
     </message>
     <message>
-        <source>[red]error loading Game Genie rom[normal]</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-        <translation type="unfinished"></translation>
+      <source>[red]error loading Game Genie rom[normal]</source>
+      <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+      <translation type="unfinished">[red]error loading Game Genie rom[normal]</translation>
     </message>
     <message>
-        <source>[red]Illegal Opcode[normal] [yellow]0x%1[normal] at [yellow]0x%2[normal]</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-        <translation type="unfinished"></translation>
+      <source>[red]Illegal Opcode[normal] [yellow]0x%1[normal] at [yellow]0x%2[normal]</source>
+      <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+      <translation type="unfinished">[red]Illegal Opcode[normal] [yellow]0x%1[normal] at [yellow]0x%2[normal]</translation>
     </message>
     <message>
-        <source>[red]error loading rom[normal]</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-        <translation type="unfinished"></translation>
+      <source>[red]error loading rom[normal]</source>
+      <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+      <translation type="unfinished">[red]error loading rom[normal]</translation>
     </message>
     <message>
-        <source>[red]FDS bios not found[normal]</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-        <translation type="unfinished"></translation>
+      <source>[red]FDS bios not found[normal]</source>
+      <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+      <translation type="unfinished">[red]FDS bios not found[normal]</translation>
     </message>
     <message>
-        <source>disk [cyan]%1[normal] side [cyan]%2[normal] [yellow]ejected[normal]</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-        <translation type="unfinished"></translation>
+      <source>disk [cyan]%1[normal] side [cyan]%2[normal] [yellow]ejected[normal]</source>
+      <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+      <translation type="unfinished">disk [cyan]%1[normal] side [cyan]%2[normal] [yellow]ejected[normal]</translation>
     </message>
     <message>
-        <source>you must [yellow]eject[normal] disk first</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-        <translation type="unfinished"></translation>
+      <source>you must [yellow]eject[normal] disk first</source>
+      <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+      <translation type="unfinished">you must [yellow]eject[normal] disk first</translation>
     </message>
     <message>
-        <source>disk [cyan]%1[normal] side [cyan]%2[normal] [green]inserted[normal]</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-        <translation type="unfinished"></translation>
+      <source>disk [cyan]%1[normal] side [cyan]%2[normal] [green]inserted[normal]</source>
+      <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+      <translation type="unfinished">disk [cyan]%1[normal] side [cyan]%2[normal] [green]inserted[normal]</translation>
     </message>
     <message>
-        <source>disk [cyan]%1[normal] side [cyan]%2[normal] [brown]selected[normal]</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-        <translation type="unfinished"></translation>
+      <source>disk [cyan]%1[normal] side [cyan]%2[normal] [brown]selected[normal]</source>
+      <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+      <translation type="unfinished">disk [cyan]%1[normal] side [cyan]%2[normal] [brown]selected[normal]</translation>
     </message>
     <message>
-        <source>[yellow]mapper[normal] [brown]%1[normal] [yellow]not supported[normal]</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-        <translation type="unfinished"></translation>
+      <source>[yellow]mapper[normal] [brown]%1[normal] [yellow]not supported[normal]</source>
+      <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+      <translation type="unfinished">[yellow]mapper[normal] [brown]%1[normal] [yellow]not supported[normal]</translation>
     </message>
     <message>
-        <source>[red]error loading patch file[normal]</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-        <translation type="unfinished"></translation>
+      <source>[red]error loading patch file[normal]</source>
+      <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+      <translation type="unfinished">[red]error loading patch file[normal]</translation>
     </message>
     <message>
-        <source>[yellow]save is impossible in Game Genie menu[normal]</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-        <translation type="unfinished"></translation>
+      <source>[yellow]save is impossible in Game Genie menu[normal]</source>
+      <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+      <translation type="unfinished">[yellow]save is impossible in Game Genie menu[normal]</translation>
     </message>
     <message>
-        <source>[yellow]movie playback interrupted[normal]</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-        <translation type="unfinished"></translation>
+      <source>[yellow]movie playback interrupted[normal]</source>
+      <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+      <translation type="unfinished">[yellow]movie playback interrupted[normal]</translation>
     </message>
     <message>
-        <source>[red]error[normal] loading state</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-        <translation type="unfinished"></translation>
+      <source>[red]error[normal] loading state</source>
+      <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+      <translation type="unfinished">[red]error[normal] loading state</translation>
     </message>
     <message>
-        <source>[red]state file is not for this rom[normal]</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-        <translation type="unfinished"></translation>
+      <source>[red]state file is not for this rom[normal]</source>
+      <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+      <translation type="unfinished">[red]state file is not for this rom[normal]</translation>
     </message>
     <message>
-        <source>[green]%1[normal] cheat active</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-        <translation type="unfinished"></translation>
+      <source>[green]%1[normal] cheat active</source>
+      <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+      <translation type="unfinished">[green]%1[normal] cheat active</translation>
     </message>
     <message>
-        <source>[green]%1[normal] cheats active</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-        <translation type="unfinished"></translation>
+      <source>[green]%1[normal] cheats active</source>
+      <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+      <translation type="unfinished">[green]%1[normal] cheats active</translation>
     </message>
     <message>
-        <source>overclock enabled [green]VB[normal] [cyan]%1[normal], [green]PR[normal] [cyan]%2[normal]</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-        <translation type="unfinished"></translation>
+      <source>overclock enabled [green]VB[normal] [cyan]%1[normal], [green]PR[normal] [cyan]%2[normal]</source>
+      <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+      <translation type="unfinished">overclock enabled [green]VB[normal] [cyan]%1[normal], [green]PR[normal] [cyan]%2[normal]</translation>
     </message>
     <message>
-        <source>[yellow]silence, the movie has begun[normal]</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-        <translation type="unfinished"></translation>
+      <source>[yellow]silence, the movie has begun[normal]</source>
+      <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+      <translation type="unfinished">[yellow]silence, the movie has begun[normal]</translation>
     </message>
     <message>
-        <source>The End</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-        <translation type="unfinished"></translation>
+      <source>The End</source>
+      <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+      <translation type="unfinished">The End</translation>
     </message>
     <message>
-        <source>switched to [green]%1[normal]</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-        <translation type="unfinished"></translation>
+      <source>switched to [green]%1[normal]</source>
+      <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+      <translation type="unfinished">switched to [green]%1[normal]</translation>
     </message>
     <message>
-        <source>[red]error on game genie rom file[normal]</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-        <translation type="unfinished"></translation>
+      <source>[red]error on game genie rom file[normal]</source>
+      <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+      <translation type="unfinished">[red]error on game genie rom file[normal]</translation>
     </message>
     <message>
-        <source>[red]error on FDS bios file[normal]</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-        <translation type="unfinished"></translation>
+      <source>[red]error on FDS bios file[normal]</source>
+      <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+      <translation type="unfinished">[red]error on FDS bios file[normal]</translation>
     </message>
     <message>
-        <source>[red]error on shader file[normal]</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-        <translation type="unfinished"></translation>
+      <source>[red]error on shader file[normal]</source>
+      <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+      <translation type="unfinished">[red]error on shader file[normal]</translation>
     </message>
     <message>
-        <source>[red]error on palette file[normal]</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-        <translation type="unfinished"></translation>
+      <source>[red]error on palette file[normal]</source>
+      <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+      <translation type="unfinished">[red]error on palette file[normal]</translation>
     </message>
     <message>
-        <source>[red]errors[normal] on shader, use [green]&apos;No shader&apos;[normal]</source>
-        <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
-        <translation type="unfinished"></translation>
+      <source>[red]errors[normal] on shader, use [green]&apos;No shader&apos;[normal]</source>
+      <extracomment>Do not translate the words contained between parentheses (example: [red] or [normal]) are tags that have a specific meaning and do not traslate %1 and %2</extracomment>
+      <translation type="unfinished">[red]errors[normal] on shader, use [green]&apos;No shader&apos;[normal]</translation>
     </message>
-</context>
-<context>
+  </context>
+  <context>
     <name>wdgAPUChannels</name>
     <message>
-        <source>APU Channels</source>
-        <translation>APU csatornák</translation>
+      <source>APU Channels</source>
+      <translation>APU csatornák</translation>
     </message>
     <message>
-        <source>Square 1</source>
-        <translation>1. négyszög</translation>
+      <source>Square 1</source>
+      <translation>1. négyszög</translation>
     </message>
     <message>
-        <source>DMC</source>
-        <translation>DMC</translation>
+      <source>DMC</source>
+      <translation>DMC</translation>
     </message>
     <message>
-        <source>Noise</source>
-        <translation>Fehérzaj</translation>
+      <source>Noise</source>
+      <translation>Fehérzaj</translation>
     </message>
     <message>
-        <source>Square 2</source>
-        <translation>2. négyszög</translation>
+      <source>Square 2</source>
+      <translation>2. négyszög</translation>
     </message>
     <message>
-        <source>Extra</source>
-        <translation>Extra</translation>
+      <source>Extra</source>
+      <translation>Extra</translation>
     </message>
     <message>
-        <source>Master</source>
-        <translation>Fő</translation>
+      <source>Master</source>
+      <translation>Fő</translation>
     </message>
     <message>
-        <source>Triangle</source>
-        <translation>Háromszög</translation>
+      <source>Triangle</source>
+      <translation>Háromszög</translation>
     </message>
     <message>
-        <source>active</source>
-        <translation>aktív</translation>
+      <source>active</source>
+      <translation>aktív</translation>
     </message>
     <message>
-        <source>volume</source>
-        <translation>hangerő</translation>
+      <source>volume</source>
+      <translation>hangerő</translation>
     </message>
     <message>
-        <source>Active all</source>
-        <translation>Mindegyik aktiválása</translation>
+      <source>Active all</source>
+      <translation>Mindegyik aktiválása</translation>
     </message>
     <message>
-        <source>Disable all</source>
-        <translation>Mindegyik letiltása</translation>
+      <source>Disable all</source>
+      <translation>Mindegyik letiltása</translation>
     </message>
     <message>
-        <source>Reset to defaults</source>
-        <translation>Alapértelmezések visszaállítása</translation>
+      <source>Reset to defaults</source>
+      <translation>Alapértelmezések visszaállítása</translation>
     </message>
-</context>
-<context>
+  </context>
+  <context>
     <name>wdgCheatEditor</name>
     <message>
-        <source>Cheats Editor</source>
-        <translation>Csalásszerkesztő</translation>
+      <source>Cheats Editor</source>
+      <translation>Csalásszerkesztő</translation>
     </message>
     <message>
-        <source>Cheats List</source>
-        <translation>Csaláslista</translation>
+      <source>Cheats List</source>
+      <translation>Csaláslista</translation>
     </message>
     <message>
-        <source>Active</source>
-        <translation>Aktív</translation>
+      <source>Active</source>
+      <translation>Aktív</translation>
     </message>
     <message>
-        <source>Description</source>
-        <translation>Leírás</translation>
+      <source>Description</source>
+      <translation>Leírás</translation>
     </message>
     <message>
-        <source>Code</source>
-        <translation>Kód</translation>
+      <source>Code</source>
+      <translation>Kód</translation>
     </message>
     <message>
-        <source>Address</source>
-        <translation>Cím</translation>
+      <source>Address</source>
+      <translation>Cím</translation>
     </message>
     <message>
-        <source>Value</source>
-        <translation>Érték</translation>
+      <source>Value</source>
+      <translation>Érték</translation>
     </message>
     <message>
-        <source>Compare</source>
-        <translation>Összehasonlít</translation>
+      <source>Compare</source>
+      <translation>Összehasonlít</translation>
     </message>
     <message>
-        <source>Show Tools</source>
-        <translation>Eszközök megjelenítése</translation>
+      <source>Show Tools</source>
+      <translation>Eszközök megjelenítése</translation>
     </message>
     <message>
-        <source>Import</source>
-        <translation>Importálás</translation>
+      <source>Import</source>
+      <translation>Importálás</translation>
     </message>
     <message>
-        <source>Export</source>
-        <translation>Exportálás</translation>
+      <source>Export</source>
+      <translation>Exportálás</translation>
     </message>
     <message>
-        <source>Clear All</source>
-        <translation>Minden törlése</translation>
+      <source>Clear All</source>
+      <translation>Minden törlése</translation>
     </message>
     <message>
-        <source>Editor Tools</source>
-        <translation>Szerkesztőeszközök</translation>
+      <source>Editor Tools</source>
+      <translation>Szerkesztőeszközök</translation>
     </message>
     <message>
-        <source>CPU Ram</source>
-        <translation>CPU RAM</translation>
+      <source>CPU Ram</source>
+      <translation>CPU RAM</translation>
     </message>
     <message>
-        <source>Pro Action Rocky</source>
-        <translation>Pro Action Rocky</translation>
+      <source>Pro Action Rocky</source>
+      <translation>Pro Action Rocky</translation>
     </message>
     <message>
-        <source>Game Genie</source>
-        <translation>Game Genie</translation>
+      <source>Game Genie</source>
+      <translation>Game Genie</translation>
     </message>
     <message>
-        <source>Submit</source>
-        <translation>Beküld</translation>
+      <source>Submit</source>
+      <translation>Beküld</translation>
     </message>
     <message>
-        <source>New</source>
-        <translation>Új</translation>
+      <source>New</source>
+      <translation>Új</translation>
     </message>
     <message>
-        <source>Remove</source>
-        <translation>Eltávolít</translation>
+      <source>Remove</source>
+      <translation>Eltávolít</translation>
     </message>
     <message>
-        <source>Cancel</source>
-        <translation>Mégse</translation>
+      <source>Cancel</source>
+      <translation>Mégse</translation>
     </message>
-</context>
-<context>
+  </context>
+  <context>
     <name>wdgCheatsEditor</name>
     <message>
-        <source>Show Tools</source>
-        <translation>Eszközök mutatása</translation>
+      <source>Show Tools</source>
+      <translation>Eszközök mutatása</translation>
     </message>
     <message>
-        <source>Hide Tools</source>
-        <translation>Eszközök eltüntetése</translation>
+      <source>Hide Tools</source>
+      <translation>Eszközök eltüntetése</translation>
     </message>
     <message>
-        <source>All supported formats</source>
-        <translation>Minden támogatott formátum</translation>
+      <source>All supported formats</source>
+      <translation>Minden támogatott formátum</translation>
     </message>
     <message>
-        <source>XML files</source>
-        <translation>XML fájlok</translation>
+      <source>XML files</source>
+      <translation>XML fájlok</translation>
     </message>
     <message>
-        <source>CHT files</source>
-        <translation>CHT fájlok</translation>
+      <source>CHT files</source>
+      <translation>CHT fájlok</translation>
     </message>
     <message>
-        <source>Import Cheats</source>
-        <translation>Csalások importálása</translation>
+      <source>Import Cheats</source>
+      <translation>Csalások importálása</translation>
     </message>
     <message>
-        <source>All files</source>
-        <translation>Minden fájl</translation>
+      <source>All files</source>
+      <translation>Minden fájl</translation>
     </message>
     <message>
-        <source>Export cheats on file</source>
-        <translation>Csalások fájlba exportálása</translation>
+      <source>Export cheats on file</source>
+      <translation>Csalások fájlba exportálása</translation>
     </message>
     <message>
-        <source>Submit warning</source>
-        <translation>Probléma a beküldésnél</translation>
+      <source>Submit warning</source>
+      <translation>Probléma a beküldésnél</translation>
     </message>
     <message>
-        <source>The code is invalid</source>
-        <translation>A kód érvénytelen</translation>
+      <source>The code is invalid</source>
+      <translation>A kód érvénytelen</translation>
     </message>
     <message>
-        <source>The cheat is already in the list</source>
-        <translation>A csalás már a listában van</translation>
+      <source>The cheat is already in the list</source>
+      <translation>A csalás már a listában van</translation>
     </message>
     <message>
-        <source>A description must be entered</source>
-        <translation>A leírás kötelező</translation>
+      <source>A description must be entered</source>
+      <translation>A leírás kötelező</translation>
     </message>
-</context>
-<context>
+  </context>
+  <context>
     <name>wdgPaletteEditor</name>
     <message>
-        <source>Palette files</source>
-        <translation>Palettafájlok</translation>
+      <source>Palette files</source>
+      <translation>Palettafájlok</translation>
     </message>
     <message>
-        <source>All files</source>
-        <translation>Minden fájl</translation>
+      <source>All files</source>
+      <translation>Minden fájl</translation>
     </message>
     <message>
-        <source>Save palette on file</source>
-        <translation>Paletta fájlba mentése</translation>
+      <source>Save palette on file</source>
+      <translation>Paletta fájlba mentése</translation>
     </message>
     <message>
-        <source>Selected</source>
-        <translation>Kiválasztva</translation>
+      <source>Selected</source>
+      <translation>Kiválasztva</translation>
     </message>
     <message>
-        <source>PPU</source>
-        <translation>PPU</translation>
+      <source>PPU</source>
+      <translation>PPU</translation>
     </message>
     <message>
-        <source>Val</source>
-        <translation>Fényerő</translation>
+      <source>Val</source>
+      <translation>Fényerő</translation>
     </message>
     <message>
-        <source>Blue</source>
-        <translation>Kék</translation>
+      <source>Blue</source>
+      <translation>Kék</translation>
     </message>
     <message>
-        <source>Red</source>
-        <translation>Vörös</translation>
+      <source>Red</source>
+      <translation>Vörös</translation>
     </message>
     <message>
-        <source>Green</source>
-        <translation>Zöld</translation>
+      <source>Green</source>
+      <translation>Zöld</translation>
     </message>
     <message>
-        <source>Sat</source>
-        <translation>Szaturáció</translation>
+      <source>Sat</source>
+      <translation>Szaturáció</translation>
     </message>
     <message>
-        <source>Hue</source>
-        <translation>Árnyalat</translation>
+      <source>Hue</source>
+      <translation>Árnyalat</translation>
     </message>
     <message>
-        <source>HTML</source>
-        <translation>HTML</translation>
+      <source>HTML</source>
+      <translation>HTML</translation>
     </message>
     <message>
-        <source>Reset color</source>
-        <translation>Szín visszaállítása</translation>
+      <source>Reset color</source>
+      <translation>Szín visszaállítása</translation>
     </message>
     <message>
-        <source>Save to a file</source>
-        <translation>Fájlba mentés</translation>
+      <source>Save to a file</source>
+      <translation>Fájlba mentés</translation>
     </message>
     <message>
-        <source>Reset palette</source>
-        <translation>Paletta visszaállítása</translation>
+      <source>Reset palette</source>
+      <translation>Paletta visszaállítása</translation>
     </message>
-</context>
-<context>
+  </context>
+  <context>
     <name>wdgRewind</name>
     <message>
-        <source>Forward (single frame)</source>
-        <translation type="unfinished"></translation>
+      <source>Forward (single frame)</source>
+      <translation type="unfinished">Forward (single frame)</translation>
     </message>
     <message>
-        <source>Rewind (single frame)</source>
-        <translation type="unfinished"></translation>
+      <source>Rewind (single frame)</source>
+      <translation type="unfinished">Rewind (single frame)</translation>
     </message>
     <message>
-        <source>Pause</source>
-        <translation type="unfinished"></translation>
+      <source>Pause</source>
+      <translation type="unfinished">Pause</translation>
     </message>
     <message>
-        <source>Fast forward (from 1x to 8x)</source>
-        <translation type="unfinished"></translation>
+      <source>Fast forward (from 1x to 8x)</source>
+      <translation type="unfinished">Fast forward (from 1x to 8x)</translation>
     </message>
     <message>
-        <source>Fast rewind (from 1x to 8x)</source>
-        <translation type="unfinished"></translation>
+      <source>Fast rewind (from 1x to 8x)</source>
+      <translation type="unfinished">Fast rewind (from 1x to 8x)</translation>
     </message>
     <message>
-        <source>Play</source>
-        <translation type="unfinished"></translation>
+      <source>Play</source>
+      <translation type="unfinished">Play</translation>
     </message>
     <message>
-        <source>Rewind</source>
-        <translation type="unfinished"></translation>
+      <source>Rewind</source>
+      <translation type="unfinished">Rewind</translation>
     </message>
-</context>
-<context>
+  </context>
+  <context>
     <name>wdgRotateScreen</name>
     <message>
-        <source>Rotate the screen 90 degrees to the Right</source>
-        <translation type="unfinished"></translation>
+      <source>Rotate the screen 90 degrees to the Right</source>
+      <translation type="unfinished">Rotate the screen 90 degrees to the Right</translation>
     </message>
     <message>
-        <source>Rotate the screen 90 degrees to the left</source>
-        <translation type="unfinished"></translation>
+      <source>Rotate the screen 90 degrees to the left</source>
+      <translation type="unfinished">Rotate the screen 90 degrees to the left</translation>
     </message>
     <message>
-        <source>Current degree of rotation</source>
-        <translation type="unfinished"></translation>
+      <source>Current degree of rotation</source>
+      <translation type="unfinished">Current degree of rotation</translation>
     </message>
     <message>
-        <source>Rotate Screen</source>
-        <translation type="unfinished"></translation>
+      <source>Rotate Screen</source>
+      <translation type="unfinished">Rotate Screen</translation>
     </message>
-</context>
-<context>
+  </context>
+  <context>
     <name>wdgSettingsAudio</name>
     <message>
-        <source>Output Devices</source>
-        <translation>Kimeneti eszközök</translation>
+      <source>Output Devices</source>
+      <translation>Kimeneti eszközök</translation>
     </message>
     <message>
-        <source>48000</source>
-        <translation>48000 Hz</translation>
+      <source>48000</source>
+      <translation>48000 Hz</translation>
     </message>
     <message>
-        <source>44100</source>
-        <translation>44100 Hz</translation>
+      <source>44100</source>
+      <translation>44100 Hz</translation>
     </message>
     <message>
-        <source>22050</source>
-        <translation>22050 Hz</translation>
+      <source>22050</source>
+      <translation>22050 Hz</translation>
     </message>
     <message>
-        <source>11025</source>
-        <translation>11025 Hz</translation>
+      <source>11025</source>
+      <translation>11025 Hz</translation>
     </message>
     <message>
-        <source>0</source>
-        <translation type="unfinished">0</translation>
+      <source>0</source>
+      <translation>0</translation>
     </message>
     <message>
-        <source>1 (Default)</source>
-        <translation>1 (Alap)</translation>
+      <source>1 (Default)</source>
+      <translation>1 (Alap)</translation>
     </message>
     <message>
-        <source>2</source>
-        <translation>2</translation>
+      <source>2</source>
+      <translation>2</translation>
     </message>
     <message>
-        <source>3</source>
-        <translation>3</translation>
+      <source>3</source>
+      <translation>3</translation>
     </message>
     <message>
-        <source>4</source>
-        <translation>4</translation>
+      <source>4</source>
+      <translation>4</translation>
     </message>
     <message>
-        <source>5</source>
-        <translation>5</translation>
+      <source>5</source>
+      <translation>5</translation>
     </message>
     <message>
-        <source>6</source>
-        <translation>6</translation>
+      <source>6</source>
+      <translation>6</translation>
     </message>
     <message>
-        <source>7</source>
-        <translation>7</translation>
+      <source>7</source>
+      <translation>7</translation>
     </message>
     <message>
-        <source>8</source>
-        <translation>8</translation>
+      <source>8</source>
+      <translation>8</translation>
     </message>
     <message>
-        <source>9</source>
-        <translation>9</translation>
+      <source>9</source>
+      <translation>9</translation>
     </message>
     <message>
-        <source>Sample Rate</source>
-        <translation>Mintavételezési ráta</translation>
+      <source>Sample Rate</source>
+      <translation>Mintavételezési ráta</translation>
     </message>
     <message>
-        <source>Buffer Size factor</source>
-        <translation>Pufferméret faktora</translation>
+      <source>Buffer Size factor</source>
+      <translation>Pufferméret faktora</translation>
     </message>
     <message>
-        <source>Mono</source>
-        <translation>Monó</translation>
+      <source>Mono</source>
+      <translation>Monó</translation>
     </message>
     <message>
-        <source>Stereo Delay</source>
-        <translation>Sztereó késleltetés</translation>
+      <source>Stereo Delay</source>
+      <translation>Sztereó késleltetés</translation>
     </message>
     <message>
-        <source>Stereo Panning</source>
-        <translation>Sztereó panning</translation>
+      <source>Stereo Panning</source>
+      <translation>Sztereó panning</translation>
     </message>
     <message>
-        <source>Channels Delay</source>
-        <translation>Csatornák késleltetése</translation>
+      <source>Channels Delay</source>
+      <translation>Csatornák késleltetése</translation>
     </message>
     <message>
-        <source>Misc</source>
-        <translation>Egyéb</translation>
+      <source>Misc</source>
+      <translation>Egyéb</translation>
     </message>
     <message>
-        <source>Settings</source>
-        <translation>Beállítás</translation>
+      <source>Settings</source>
+      <translation>Beállítás</translation>
     </message>
     <message>
-        <source>Channels</source>
-        <translation>Csatornák</translation>
+      <source>Channels</source>
+      <translation>Csatornák</translation>
     </message>
     <message>
-        <source>5%</source>
-        <translation>5%</translation>
+      <source>5%</source>
+      <translation>5%</translation>
     </message>
     <message>
-        <source>10%</source>
-        <translation>10%</translation>
+      <source>10%</source>
+      <translation>10%</translation>
     </message>
     <message>
-        <source>15%</source>
-        <translation>15%</translation>
+      <source>15%</source>
+      <translation>15%</translation>
     </message>
     <message>
-        <source>20%</source>
-        <translation>20%</translation>
+      <source>20%</source>
+      <translation>20%</translation>
     </message>
     <message>
-        <source>25%</source>
-        <translation>25%</translation>
+      <source>25%</source>
+      <translation>25%</translation>
     </message>
     <message>
-        <source>30% (Default)</source>
-        <translation>30% (Alap)</translation>
+      <source>30% (Default)</source>
+      <translation>30% (Alap)</translation>
     </message>
     <message>
-        <source>35%</source>
-        <translation>35%</translation>
+      <source>35%</source>
+      <translation>35%</translation>
     </message>
     <message>
-        <source>40%</source>
-        <translation>40%</translation>
+      <source>40%</source>
+      <translation>40%</translation>
     </message>
     <message>
-        <source>45%</source>
-        <translation>45%</translation>
+      <source>45%</source>
+      <translation>45%</translation>
     </message>
     <message>
-        <source>50%</source>
-        <translation>50%</translation>
+      <source>50%</source>
+      <translation>50%</translation>
     </message>
     <message>
-        <source>55%</source>
-        <translation>55%</translation>
+      <source>55%</source>
+      <translation>55%</translation>
     </message>
     <message>
-        <source>60%</source>
-        <translation>60%</translation>
+      <source>60%</source>
+      <translation>60%</translation>
     </message>
     <message>
-        <source>65%</source>
-        <translation>65%</translation>
+      <source>65%</source>
+      <translation>65%</translation>
     </message>
     <message>
-        <source>70%</source>
-        <translation>70%</translation>
+      <source>70%</source>
+      <translation>70%</translation>
     </message>
     <message>
-        <source>75%</source>
-        <translation>75%</translation>
+      <source>75%</source>
+      <translation>75%</translation>
     </message>
     <message>
-        <source>80%</source>
-        <translation>80%</translation>
+      <source>80%</source>
+      <translation>80%</translation>
     </message>
     <message>
-        <source>85%</source>
-        <translation>85%</translation>
+      <source>85%</source>
+      <translation>85%</translation>
     </message>
     <message>
-        <source>90%</source>
-        <translation>90%</translation>
+      <source>90%</source>
+      <translation>90%</translation>
     </message>
     <message>
-        <source>95%</source>
-        <translation>95%</translation>
+      <source>95%</source>
+      <translation>95%</translation>
     </message>
     <message>
-        <source>100%</source>
-        <translation>100%</translation>
+      <source>100%</source>
+      <translation>100%</translation>
     </message>
     <message>
-        <source>APU Channels</source>
-        <translation>APU Csatornák</translation>
+      <source>APU Channels</source>
+      <translation>APU Csatornák</translation>
     </message>
     <message>
-        <source>Swap Duty Cycles</source>
-        <translation>Aktív ciklusidők felcserélése</translation>
+      <source>Swap Duty Cycles</source>
+      <translation>Aktív ciklusidők felcserélése</translation>
     </message>
     <message>
-        <source>Enable Audio</source>
-        <translation>Hang engedélyezése</translation>
+      <source>Enable Audio</source>
+      <translation>Hang engedélyezése</translation>
     </message>
-</context>
-<context>
+  </context>
+  <context>
     <name>wdgSettingsCheats</name>
     <message>
-        <source>Cheats Settings</source>
-        <translation>Csalások beállításai</translation>
+      <source>Cheats Settings</source>
+      <translation>Csalások beállításai</translation>
     </message>
     <message>
-        <source>Settings</source>
-        <translation>Beállítások</translation>
+      <source>Settings</source>
+      <translation>Beállítások</translation>
     </message>
     <message>
-        <source>Disabled</source>
-        <translation>Letiltva</translation>
+      <source>Disabled</source>
+      <translation>Letiltva</translation>
     </message>
     <message>
-        <source>Game Genie Rom Mode</source>
-        <translation>Game Genie ROM mód</translation>
+      <source>Game Genie Rom Mode</source>
+      <translation>Game Genie ROM mód</translation>
     </message>
     <message>
-        <source>Cheats List Mode</source>
-        <translation>Csaláslista mód</translation>
+      <source>Cheats List Mode</source>
+      <translation>Csaláslista mód</translation>
     </message>
-</context>
-<context>
+  </context>
+  <context>
     <name>wdgSettingsGeneral</name>
     <message>
-        <source>[Select a file]</source>
-        <translation>[Válassz fájlt]</translation>
+      <source>[Select a file]</source>
+      <translation>[Válassz fájlt]</translation>
     </message>
     <message>
-        <source>All files</source>
-        <translation>Minden fájl</translation>
+      <source>All files</source>
+      <translation>Minden fájl</translation>
     </message>
     <message>
-        <source>Select Game Genie ROM file</source>
-        <translation>Game Genie ROM fájl kiválasztása</translation>
+      <source>Select Game Genie ROM file</source>
+      <translation>Game Genie ROM fájl kiválasztása</translation>
     </message>
     <message>
-        <source>Select FDS BIOS file</source>
-        <translation>FDS BIOS fájl kiválasztása</translation>
+      <source>Select FDS BIOS file</source>
+      <translation>FDS BIOS fájl kiválasztása</translation>
     </message>
     <message>
-        <source>General Settings</source>
-        <translation>Általános beállítások</translation>
+      <source>General Settings</source>
+      <translation>Általános beállítások</translation>
     </message>
     <message>
-        <source>2x (Default)</source>
-        <translation>2x (Alap)</translation>
+      <source>2x (Default)</source>
+      <translation>2x (Alap)</translation>
     </message>
     <message>
-        <source>3x</source>
-        <translation>3x</translation>
+      <source>3x</source>
+      <translation>3x</translation>
     </message>
     <message>
-        <source>4x</source>
-        <translation>4x</translation>
+      <source>4x</source>
+      <translation>4x</translation>
     </message>
     <message>
-        <source>5x</source>
-        <translation>5x</translation>
+      <source>5x</source>
+      <translation>5x</translation>
     </message>
     <message>
-        <source>Auto</source>
-        <translation>Auto</translation>
+      <source>Auto</source>
+      <translation>Auto</translation>
     </message>
     <message>
-        <source>NTSC</source>
-        <translation>NTSC</translation>
+      <source>NTSC</source>
+      <translation>NTSC</translation>
     </message>
     <message>
-        <source>PAL</source>
-        <translation>PAL</translation>
+      <source>PAL</source>
+      <translation>PAL</translation>
     </message>
     <message>
-        <source>Dendy</source>
-        <translation>Dendy</translation>
+      <source>Dendy</source>
+      <translation>Dendy</translation>
     </message>
     <message>
-        <source>System Roms</source>
-        <translation>Rendszer ROM-ok</translation>
+      <source>System Roms</source>
+      <translation>Rendszer ROM-ok</translation>
     </message>
     <message>
-        <source>Mode</source>
-        <translation>Mód</translation>
+      <source>Mode</source>
+      <translation>Mód</translation>
     </message>
     <message>
-        <source>English</source>
-        <translation>Angol</translation>
+      <source>English</source>
+      <translation>Angol</translation>
     </message>
     <message>
-        <source>Italian</source>
-        <translation>Olasz</translation>
+      <source>Italian</source>
+      <translation>Olasz</translation>
     </message>
     <message>
-        <source>Russian</source>
-        <translation>Orosz</translation>
+      <source>Russian</source>
+      <translation>Orosz</translation>
     </message>
     <message>
-        <source>Pause when in background</source>
-        <translation>Pause, amikor háttérben van</translation>
+      <source>Pause when in background</source>
+      <translation>Pause, amikor háttérben van</translation>
     </message>
     <message>
-        <source>Language</source>
-        <translation>Nyelv</translation>
+      <source>Language</source>
+      <translation>Nyelv</translation>
     </message>
     <message>
-        <source>Save settings on exit</source>
-        <translation>Beállítások mentése kilépéskor</translation>
+      <source>Save settings on exit</source>
+      <translation>Beállítások mentése kilépéskor</translation>
     </message>
     <message>
-        <source>Save battery RAM file every 3 min.</source>
-        <translation>Szünetmentes RAM mentése 3 percenként</translation>
+      <source>Save battery RAM file every 3 min.</source>
+      <translation>Szünetmentes RAM mentése 3 percenként</translation>
     </message>
     <message>
-        <source>Fast Forward velocity</source>
-        <translation>Gyorsítás sebessége</translation>
+      <source>Fast Forward velocity</source>
+      <translation>Gyorsítás sebessége</translation>
     </message>
     <message>
-        <source>Misc</source>
-        <translation>Egyéb</translation>
+      <source>Misc</source>
+      <translation>Egyéb</translation>
     </message>
     <message>
-        <source>Settings</source>
-        <translation>Beállítások</translation>
+      <source>Settings</source>
+      <translation>Beállítások</translation>
     </message>
     <message>
-        <source>Game Genie Rom file</source>
-        <translation>Game Genie ROM fájl</translation>
+      <source>Game Genie Rom file</source>
+      <translation>Game Genie ROM fájl</translation>
     </message>
     <message>
-        <source>FDS Bios file</source>
-        <translation>FDS BIOS fájl</translation>
+      <source>FDS Bios file</source>
+      <translation>FDS BIOS fájl</translation>
     </message>
     <message>
-        <source>Rewind minutes</source>
-        <translation>Visszatekerhető percek</translation>
+      <source>Rewind minutes</source>
+      <translation>Visszatekerhető percek</translation>
     </message>
     <message>
-        <source>Disabled</source>
-        <translation>Letiltva</translation>
+      <source>Disabled</source>
+      <translation>Letiltva</translation>
     </message>
     <message>
-        <source>2 minutes</source>
-        <translation>2 perc</translation>
+      <source>2 minutes</source>
+      <translation>2 perc</translation>
     </message>
     <message>
-        <source>5 minutes</source>
-        <translation>5 perc</translation>
+      <source>5 minutes</source>
+      <translation>5 perc</translation>
     </message>
     <message>
-        <source>15 minutes (Default)</source>
-        <translation>15 perc (Alap)</translation>
+      <source>15 minutes (Default)</source>
+      <translation>15 perc (Alap)</translation>
     </message>
     <message>
-        <source>30 minutes</source>
-        <translation>30 perc</translation>
+      <source>30 minutes</source>
+      <translation>30 perc</translation>
     </message>
     <message>
-        <source>Unlimited</source>
-        <translation>Korlátlan</translation>
+      <source>Unlimited</source>
+      <translation>Korlátlan</translation>
     </message>
     <message>
-        <source>Spanish</source>
-        <translation>Spanyol</translation>
+      <source>Spanish</source>
+      <translation>Spanyol</translation>
     </message>
     <message>
-        <source>Hungarian</source>
-        <translation>Magyar</translation>
+      <source>Hungarian</source>
+      <translation>Magyar</translation>
     </message>
     <message>
-        <source>60 minutes</source>
-        <translation>60 perc</translation>
+      <source>60 minutes</source>
+      <translation>60 perc</translation>
     </message>
     <message>
-        <source>Turkish</source>
-        <translation>Török</translation>
+      <source>Turkish</source>
+      <translation>Török</translation>
     </message>
-</context>
-<context>
+    <message>
+      <source>Portuguese (Brazil)</source>
+      <translation type="unfinished">Portuguese (Brazil)</translation>
+    </message>
+  </context>
+  <context>
     <name>wdgSettingsInput</name>
     <message>
-        <source>Disabled</source>
-        <translation>Letiltva</translation>
+      <source>Disabled</source>
+      <translation>Letiltva</translation>
     </message>
     <message>
-        <source>Standard Pad</source>
-        <translation>Szabvány pad</translation>
+      <source>Standard Pad</source>
+      <translation>Szabvány pad</translation>
     </message>
     <message>
-        <source>Zapper</source>
-        <translation>Zapper</translation>
+      <source>Zapper</source>
+      <translation>Zapper</translation>
     </message>
     <message>
-        <source>Snes Mouse</source>
-        <translation>SNES egér</translation>
+      <source>Snes Mouse</source>
+      <translation>SNES egér</translation>
     </message>
     <message>
-        <source>Arkanoid Paddle</source>
-        <translation>Arkanoid Paddle</translation>
+      <source>Arkanoid Paddle</source>
+      <translation>Arkanoid Paddle</translation>
     </message>
     <message>
-        <source>Oeka Kids Tablet</source>
-        <translation>Oeka Kids Tablet</translation>
+      <source>Oeka Kids Tablet</source>
+      <translation>Oeka Kids Tablet</translation>
     </message>
     <message>
-        <source>Default</source>
-        <translation>Alapértelmezés</translation>
+      <source>Default</source>
+      <translation>Alapértelmezés</translation>
     </message>
     <message>
-        <source>Unset</source>
-        <translation>Beállítatlan</translation>
+      <source>Unset</source>
+      <translation>Beállítatlan</translation>
     </message>
     <message>
-        <source>Start/Stop WAV</source>
-        <translation>WAV felvétel indítása/megállítása</translation>
+      <source>Start/Stop WAV</source>
+      <translation>WAV felvétel indítása/megállítása</translation>
     </message>
     <message>
-        <source>No usable device</source>
-        <translation>Nincs használható eszköz</translation>
+      <source>No usable device</source>
+      <translation>Nincs használható eszköz</translation>
     </message>
     <message>
-        <source>Error on open device %1</source>
-        <translation>Hiba %1 eszköz megnyitásakor</translation>
+      <source>Error on open device %1</source>
+      <translation>Hiba %1 eszköz megnyitásakor</translation>
     </message>
     <message>
-        <source>Error on reading controllers configurations</source>
-        <translation>Hiba a kontrollerek beállításának olvasásakor</translation>
+      <source>Error on reading controllers configurations</source>
+      <translation>Hiba a kontrollerek beállításának olvasásakor</translation>
     </message>
     <message>
-        <source>Press a key (ESC for the previous value &quot;%1&quot;) - timeout in %2</source>
-        <translation>Nyomj egy gombot (ESC-et az előző értékhez: &quot;%1&quot;) - kihagyás %2 mp múlva</translation>
+      <source>Press a key (ESC for the previous value &quot;%1&quot;) - timeout in %2</source>
+      <translation>Nyomj egy gombot (ESC-et az előző értékhez: &quot;%1&quot;) - kihagyás %2 mp múlva</translation>
     </message>
     <message>
-        <source>Input Settings</source>
-        <translation>Beviteli beállítások</translation>
+      <source>Input Settings</source>
+      <translation>Beviteli beállítások</translation>
     </message>
     <message>
-        <source>Setup</source>
-        <translation>Beállítás</translation>
+      <source>Setup</source>
+      <translation>Beállítás</translation>
     </message>
     <message>
-        <source>Joystick ID</source>
-        <translation>Joystick azonosító</translation>
+      <source>Joystick ID</source>
+      <translation>Joystick azonosító</translation>
     </message>
     <message>
-        <source>NES</source>
-        <translation>NES</translation>
+      <source>NES</source>
+      <translation>NES</translation>
     </message>
     <message>
-        <source>Famicom</source>
-        <translation>Famicom</translation>
+      <source>Famicom</source>
+      <translation>Famicom</translation>
     </message>
     <message>
-        <source>Four Score</source>
-        <translation>Four Score (4 kontroller)</translation>
+      <source>Four Score</source>
+      <translation>Four Score (4 kontroller)</translation>
     </message>
     <message>
-        <source>Misc</source>
-        <translation>Egyéb</translation>
+      <source>Misc</source>
+      <translation>Egyéb</translation>
     </message>
     <message>
-        <source>Expansion Port</source>
-        <translation>Bővítőport</translation>
+      <source>Expansion Port</source>
+      <translation>Bővítőport</translation>
     </message>
     <message>
-        <source>Hide Zapper cursor</source>
-        <translation>Zapper kurzorának eltüntetése</translation>
+      <source>Hide Zapper cursor</source>
+      <translation>Zapper kurzorának eltüntetése</translation>
     </message>
     <message>
-        <source>Controller Port 1</source>
-        <translation>Kontroller port 1</translation>
+      <source>Controller Port 1</source>
+      <translation>Kontroller port 1</translation>
     </message>
     <message>
-        <source>Controller Port 3</source>
-        <translation>Kontroller port 2</translation>
+      <source>Controller Port 3</source>
+      <translation>Kontroller port 2</translation>
     </message>
     <message>
-        <source>Controller Port 2</source>
-        <translation>Kontroller port 3</translation>
+      <source>Controller Port 2</source>
+      <translation>Kontroller port 3</translation>
     </message>
     <message>
-        <source>Ports</source>
-        <translation>Portok</translation>
+      <source>Ports</source>
+      <translation>Portok</translation>
     </message>
     <message>
-        <source>Shortcuts</source>
-        <translation>Gyorsbillentyűk</translation>
+      <source>Shortcuts</source>
+      <translation>Gyorsbillentyűk</translation>
     </message>
     <message>
-        <source>Permit &quot;Up + Down&quot; and &quot;Left + Right&quot; at the same time</source>
-        <translation>&quot;Fel + Le&quot; és &quot;Bal + Jobb&quot; egyszerre lenyomásának engedélyezése</translation>
+      <source>Permit &quot;Up + Down&quot; and &quot;Left + Right&quot; at the same time</source>
+      <translation>&quot;Fel + Le&quot; és &quot;Bal + Jobb&quot; egyszerre lenyomásának engedélyezése</translation>
     </message>
     <message>
-        <source>Controller Mode</source>
-        <translation>Kontroller módja</translation>
+      <source>Controller Mode</source>
+      <translation>Kontroller módja</translation>
     </message>
     <message>
-        <source>Controller Port 4</source>
-        <translation>Kontroller port 4</translation>
+      <source>Controller Port 4</source>
+      <translation>Kontroller port 4</translation>
     </message>
     <message>
-        <source>Reset to defaults</source>
-        <translation>Alapértelmezettre visszaállítás</translation>
+      <source>Reset to defaults</source>
+      <translation>Alapértelmezettre visszaállítás</translation>
     </message>
     <message>
-        <source>Action</source>
-        <translation>Művelet</translation>
+      <source>Action</source>
+      <translation>Művelet</translation>
     </message>
     <message>
-        <source>Keyboard</source>
-        <translation>Billentyűzet</translation>
+      <source>Keyboard</source>
+      <translation>Billentyűzet</translation>
     </message>
     <message>
-        <source>Joystick</source>
-        <translation>Joystick</translation>
+      <source>Joystick</source>
+      <translation>Joystick</translation>
     </message>
     <message>
-        <source>Unset all</source>
-        <translation type="unfinished">Mindet beállítatlanra</translation>
+      <source>Unset all</source>
+      <translation type="unfinished">Unset all</translation>
     </message>
-</context>
-<context>
+  </context>
+  <context>
     <name>wdgSettingsPPU</name>
     <message>
-        <source>PPU Settings</source>
-        <translation>PPU beállítások</translation>
+      <source>PPU Settings</source>
+      <translation>PPU beállítások</translation>
     </message>
     <message>
-        <source>Disable 7bit Sample Control</source>
-        <translation>DPCM tiltása VBlank alatt</translation>
+      <source>Disable 7bit Sample Control</source>
+      <translation>DPCM tiltása VBlank alatt</translation>
     </message>
     <message>
-        <source>Reset Lag Counter</source>
-        <translation>Lag-számláló nullázása</translation>
+      <source>Reset Lag Counter</source>
+      <translation>Lag-számláló nullázása</translation>
     </message>
     <message>
-        <source>VBlank Lines</source>
-        <translation>Extra scanline-ok VBlank alatt</translation>
+      <source>VBlank Lines</source>
+      <translation>Extra scanline-ok VBlank alatt</translation>
     </message>
     <message>
-        <source>Postrender Lines</source>
-        <translation>Extra scanline-ok render után</translation>
+      <source>Postrender Lines</source>
+      <translation>Extra scanline-ok render után</translation>
     </message>
     <message>
-        <source>Overclock</source>
-        <translation>Órajel húzása</translation>
+      <source>Overclock</source>
+      <translation>Órajel húzása</translation>
     </message>
     <message>
-        <source>Sprites and background</source>
-        <translation>Sprite-ok és háttér</translation>
+      <source>Sprites and background</source>
+      <translation>Sprite-ok és háttér</translation>
     </message>
     <message>
-        <source>Unlimited Sprites</source>
-        <translation>Korlátlan spritemennyiség</translation>
+      <source>Unlimited Sprites</source>
+      <translation>Korlátlan spritemennyiség</translation>
     </message>
     <message>
-        <source>Enable Extra Scanlines</source>
-        <translation>Extra scanline-ok engedélyezése</translation>
+      <source>Enable Extra Scanlines</source>
+      <translation>Extra scanline-ok engedélyezése</translation>
     </message>
     <message>
-        <source>Hide Sprites</source>
-        <translation>Sprite-ok eltüntetése</translation>
+      <source>Hide Sprites</source>
+      <translation>Sprite-ok eltüntetése</translation>
     </message>
     <message>
-        <source>Hide Background</source>
-        <translation>Háttér eltüntetése</translation>
+      <source>Hide Background</source>
+      <translation>Háttér eltüntetése</translation>
     </message>
-</context>
-<context>
+  </context>
+  <context>
     <name>wdgSettingsVideo</name>
     <message>
-        <source>GLSL &amp;soft stretch</source>
-        <translation>GLSL szoftveres széthúzás (&amp;s)</translation>
+      <source>GLSL &amp;soft stretch</source>
+      <translation>GLSL szoftveres széthúzás (&amp;s)</translation>
     </message>
     <message>
-        <source>HLSL &amp;soft stretch</source>
-        <translation>HLSL szoftveres széthúzás (&amp;s)</translation>
+      <source>HLSL &amp;soft stretch</source>
+      <translation>HLSL szoftveres széthúzás (&amp;s)</translation>
     </message>
     <message>
-        <source>[Select a file]</source>
-        <translation>[Válassz fájlt]</translation>
+      <source>[Select a file]</source>
+      <translation>[Válassz fájlt]</translation>
     </message>
     <message>
-        <source>Default</source>
-        <translation>Alapértelmezés</translation>
+      <source>Default</source>
+      <translation>Alapértelmezés</translation>
     </message>
     <message>
-        <source>Shaders files</source>
-        <translation>Shader fájlok</translation>
+      <source>Shaders files</source>
+      <translation>Shader fájlok</translation>
     </message>
     <message>
-        <source>All files</source>
-        <translation>Minden fájl</translation>
+      <source>All files</source>
+      <translation>Minden fájl</translation>
     </message>
     <message>
-        <source>Open Shader file</source>
-        <translation>Shader fájl megnyitása</translation>
+      <source>Open Shader file</source>
+      <translation>Shader fájl megnyitása</translation>
     </message>
     <message>
-        <source>Palette files</source>
-        <translation>Palettafájlok</translation>
+      <source>Palette files</source>
+      <translation>Palettafájlok</translation>
     </message>
     <message>
-        <source>Open palette file</source>
-        <translation>Palettafájl megnyitása</translation>
+      <source>Open palette file</source>
+      <translation>Palettafájl megnyitása</translation>
     </message>
     <message>
-        <source>Video Settings</source>
-        <translation>Képbeállítások</translation>
+      <source>Video Settings</source>
+      <translation>Képbeállítások</translation>
     </message>
     <message>
-        <source>1x</source>
-        <translation>1x</translation>
+      <source>1x</source>
+      <translation>1x</translation>
     </message>
     <message>
-        <source>2x</source>
-        <translation>2x</translation>
+      <source>2x</source>
+      <translation>2x</translation>
     </message>
     <message>
-        <source>3x</source>
-        <translation>3x</translation>
+      <source>3x</source>
+      <translation>3x</translation>
     </message>
     <message>
-        <source>4x</source>
-        <translation>4x</translation>
+      <source>4x</source>
+      <translation>4x</translation>
     </message>
     <message>
-        <source>5x</source>
-        <translation>5x</translation>
+      <source>5x</source>
+      <translation>5x</translation>
     </message>
     <message>
-        <source>6x</source>
-        <translation>6x</translation>
+      <source>6x</source>
+      <translation>6x</translation>
     </message>
     <message>
-        <source>Scale</source>
-        <translation>Skálázás</translation>
+      <source>Scale</source>
+      <translation>Skálázás</translation>
     </message>
     <message>
-        <source>Settings</source>
-        <translation>Beállítások</translation>
+      <source>Settings</source>
+      <translation>Beállítások</translation>
     </message>
     <message>
-        <source>** To apply this change restart is needed **</source>
-        <translation>** Ennek a változtatásnak az alkalmazásához az emulátor újraindítása szükséges **</translation>
+      <source>** To apply this change restart is needed **</source>
+      <translation>** Ennek a változtatásnak az alkalmazásához az emulátor újraindítása szükséges **</translation>
     </message>
     <message>
-        <source>Misc</source>
-        <translation>Egyéb</translation>
+      <source>Misc</source>
+      <translation>Egyéb</translation>
     </message>
     <message>
-        <source>1:1</source>
-        <translation>1:1</translation>
+      <source>1:1</source>
+      <translation>1:1</translation>
     </message>
     <message>
-        <source>5:4</source>
-        <translation>5:4</translation>
+      <source>5:4</source>
+      <translation>5:4</translation>
     </message>
     <message>
-        <source>8:7 (NTSC TV)</source>
-        <translation>8:7 (NTSC TV)</translation>
+      <source>8:7 (NTSC TV)</source>
+      <translation>8:7 (NTSC TV)</translation>
     </message>
     <message>
-        <source>11:8 (PAL TV)</source>
-        <translation>11:8 (PAL TV)</translation>
+      <source>11:8 (PAL TV)</source>
+      <translation>11:8 (PAL TV)</translation>
     </message>
     <message>
-        <source>Pixel Aspect Ratio</source>
-        <translation>Pixel méretarány</translation>
+      <source>Pixel Aspect Ratio</source>
+      <translation>Pixel méretarány</translation>
     </message>
     <message>
-        <source>Off</source>
-        <translation>Ki</translation>
+      <source>Off</source>
+      <translation>Ki</translation>
     </message>
     <message>
-        <source>On</source>
-        <translation>Be</translation>
+      <source>On</source>
+      <translation>Be</translation>
     </message>
     <message>
-        <source>Default Value</source>
-        <translation>Alapérték</translation>
+      <source>Default Value</source>
+      <translation>Alapérték</translation>
     </message>
     <message>
-        <source>Overscan borders</source>
-        <translation>Overscan keretek</translation>
+      <source>Overscan borders</source>
+      <translation>Overscan keretek</translation>
     </message>
     <message>
-        <source>NTSC</source>
-        <translation>NTSC</translation>
+      <source>NTSC</source>
+      <translation>NTSC</translation>
     </message>
     <message>
-        <source>PAL/Dendy</source>
-        <translation>PAL/Dendy</translation>
+      <source>PAL/Dendy</source>
+      <translation>PAL/Dendy</translation>
     </message>
     <message>
-        <source>Right</source>
-        <translation>Jobb</translation>
+      <source>Right</source>
+      <translation>Jobb</translation>
     </message>
     <message>
-        <source>Down</source>
-        <translation>Le</translation>
+      <source>Down</source>
+      <translation>Le</translation>
     </message>
     <message>
-        <source>Up</source>
-        <translation>Fel</translation>
+      <source>Up</source>
+      <translation>Fel</translation>
     </message>
     <message>
-        <source>Left</source>
-        <translation>Bal</translation>
+      <source>Left</source>
+      <translation>Bal</translation>
     </message>
     <message>
-        <source>Reset to defaults</source>
-        <translation>Alapértelmezés visszaállítása</translation>
+      <source>Reset to defaults</source>
+      <translation>Alapértelmezés visszaállítása</translation>
     </message>
     <message>
-        <source>Black borders in window mode</source>
-        <translation>Fekete keretek ablakos módban</translation>
+      <source>Black borders in window mode</source>
+      <translation>Fekete keretek ablakos módban</translation>
     </message>
     <message>
-        <source>Black borders in fullscreen</source>
-        <translation>Fekete keretek teljes képernyős módban</translation>
+      <source>Black borders in fullscreen</source>
+      <translation>Fekete keretek teljes képernyős módban</translation>
     </message>
     <message>
-        <source>Overscan</source>
-        <translation>Overscan</translation>
+      <source>Overscan</source>
+      <translation>Overscan</translation>
     </message>
     <message>
-        <source>No Shaders</source>
-        <translation>Shaderek kikapcsolása</translation>
+      <source>No Shaders</source>
+      <translation>Shaderek kikapcsolása</translation>
     </message>
     <message>
-        <source>CRT Dotmask</source>
-        <translation>CRT pontmaszk</translation>
+      <source>CRT Dotmask</source>
+      <translation>CRT pontmaszk</translation>
     </message>
     <message>
-        <source>CRT Scanlines</source>
-        <translation>CRT scanline-ok</translation>
+      <source>CRT Scanlines</source>
+      <translation>CRT scanline-ok</translation>
     </message>
     <message>
-        <source>CRT With Curve</source>
-        <translation>CRT, ívekkel</translation>
+      <source>CRT With Curve</source>
+      <translation>CRT, ívekkel</translation>
     </message>
     <message>
-        <source>Emboss</source>
-        <translation>Domborítás</translation>
+      <source>Emboss</source>
+      <translation>Domborítás</translation>
     </message>
     <message>
-        <source>Noise</source>
-        <translation>Zaj</translation>
+      <source>Noise</source>
+      <translation>Zaj</translation>
     </message>
     <message>
-        <source>NTSC 2Phase Composite</source>
-        <translation>Kétfázisos kompozit NTSC</translation>
+      <source>NTSC 2Phase Composite</source>
+      <translation>Kétfázisos kompozit NTSC</translation>
     </message>
     <message>
-        <source>Old TV</source>
-        <translation>Régi TV</translation>
+      <source>Old TV</source>
+      <translation>Régi TV</translation>
     </message>
     <message>
-        <source>From File</source>
-        <translation>Fájlból</translation>
+      <source>From File</source>
+      <translation>Fájlból</translation>
     </message>
     <message>
-        <source>No Filters</source>
-        <translation>Nincs szűrő</translation>
+      <source>No Filters</source>
+      <translation>Nincs szűrő</translation>
     </message>
     <message>
-        <source>Scale2X</source>
-        <translation>2x-es skálázás</translation>
+      <source>Scale2X</source>
+      <translation>2x-es skálázás</translation>
     </message>
     <message>
-        <source>Scale3X</source>
-        <translation>3x-os skálázás</translation>
+      <source>Scale3X</source>
+      <translation>3x-os skálázás</translation>
     </message>
     <message>
-        <source>Scale4X</source>
-        <translation>4x-es skálázás</translation>
+      <source>Scale4X</source>
+      <translation>4x-es skálázás</translation>
     </message>
     <message>
-        <source>Hq2X</source>
-        <translation>Hq2X</translation>
+      <source>Hq2X</source>
+      <translation>Hq2X</translation>
     </message>
     <message>
-        <source>Hq3X</source>
-        <translation>Hq3X</translation>
+      <source>Hq3X</source>
+      <translation>Hq3X</translation>
     </message>
     <message>
-        <source>Hq4X</source>
-        <translation>Hq4X</translation>
+      <source>Hq4X</source>
+      <translation>Hq4X</translation>
     </message>
     <message>
-        <source>xBRZ 2X</source>
-        <translation>2x-es xBRZ</translation>
+      <source>xBRZ 2X</source>
+      <translation>2x-es xBRZ</translation>
     </message>
     <message>
-        <source>xBRZ 3X</source>
-        <translation>3x-os xBRZ</translation>
+      <source>xBRZ 3X</source>
+      <translation>3x-os xBRZ</translation>
     </message>
     <message>
-        <source>xBRZ 4X</source>
-        <translation>4x-es xBRZ</translation>
+      <source>xBRZ 4X</source>
+      <translation>4x-es xBRZ</translation>
     </message>
     <message>
-        <source>xBRZ 5X</source>
-        <translation>5x-ös xBRZ</translation>
+      <source>xBRZ 5X</source>
+      <translation>5x-ös xBRZ</translation>
     </message>
     <message>
-        <source>xBRZ 6X</source>
-        <translation>6x-os xBRZ</translation>
+      <source>xBRZ 6X</source>
+      <translation>6x-os xBRZ</translation>
     </message>
     <message>
-        <source>NTSC Composite</source>
-        <translation>Kompozit NTSC</translation>
+      <source>NTSC Composite</source>
+      <translation>Kompozit NTSC</translation>
     </message>
     <message>
-        <source>NTSC S-Video</source>
-        <translation>NTSC S-Video</translation>
+      <source>NTSC S-Video</source>
+      <translation>NTSC S-Video</translation>
     </message>
     <message>
-        <source>NTSC RGB</source>
-        <translation>NTSC RGB</translation>
+      <source>NTSC RGB</source>
+      <translation>NTSC RGB</translation>
     </message>
     <message>
-        <source>Shaders</source>
-        <translation>Shaderek</translation>
+      <source>Shaders</source>
+      <translation>Shaderek</translation>
     </message>
     <message>
-        <source>Load from a file</source>
-        <translation>Betöltés fájlból</translation>
+      <source>Load from a file</source>
+      <translation>Betöltés fájlból</translation>
     </message>
     <message>
-        <source>Shader Parameters</source>
-        <translation>Shader paraméterei</translation>
+      <source>Shader Parameters</source>
+      <translation>Shader paraméterei</translation>
     </message>
     <message>
-        <source>Reset paramaters to defaults</source>
-        <translation>Paraméterek alapértelmezettre visszaállítása</translation>
+      <source>Reset paramaters to defaults</source>
+      <translation>Paraméterek alapértelmezettre visszaállítása</translation>
     </message>
     <message>
-        <source>Filters</source>
-        <translation>Szűrők</translation>
+      <source>Filters</source>
+      <translation>Szűrők</translation>
     </message>
     <message>
-        <source>PAL</source>
-        <translation>PAL</translation>
+      <source>PAL</source>
+      <translation>PAL</translation>
     </message>
     <message>
-        <source>Sony CXA2025AS US</source>
-        <translation>Sony CXA2025AS US</translation>
+      <source>Sony CXA2025AS US</source>
+      <translation>Sony CXA2025AS US</translation>
     </message>
     <message>
-        <source>Firebrandx Nostalgia (FBX)</source>
-        <translation>Firebrandx Nostalgia (FBX)</translation>
+      <source>Firebrandx Nostalgia (FBX)</source>
+      <translation>Firebrandx Nostalgia (FBX)</translation>
     </message>
     <message>
-        <source>Firebrandx YUV</source>
-        <translation>Firebrandx YUV</translation>
+      <source>Firebrandx YUV</source>
+      <translation>Firebrandx YUV</translation>
     </message>
     <message>
-        <source>Monochrome</source>
-        <translation>Monokróm</translation>
+      <source>Monochrome</source>
+      <translation>Monokróm</translation>
     </message>
     <message>
-        <source>Green</source>
-        <translation>Zöld</translation>
+      <source>Green</source>
+      <translation>Zöld</translation>
     </message>
     <message>
-        <source>Editor</source>
-        <translation>Szerkesztő</translation>
+      <source>Editor</source>
+      <translation>Szerkesztő</translation>
     </message>
     <message>
-        <source>Palette</source>
-        <translation>Paletta</translation>
+      <source>Palette</source>
+      <translation>Paletta</translation>
     </message>
     <message>
-        <source>xBRZ 2X Multithreading</source>
-        <translation>2 szálú xBRZ</translation>
+      <source>xBRZ 2X Multithreading</source>
+      <translation>2 szálú xBRZ</translation>
     </message>
     <message>
-        <source>xBRZ 3X Multithreading</source>
-        <translation>3 szálú xBRZ</translation>
+      <source>xBRZ 3X Multithreading</source>
+      <translation>3 szálú xBRZ</translation>
     </message>
     <message>
-        <source>xBRZ 4X Multithreading</source>
-        <translation>4 szálú xBRZ</translation>
+      <source>xBRZ 4X Multithreading</source>
+      <translation>4 szálú xBRZ</translation>
     </message>
     <message>
-        <source>xBRZ 5X Multithreading</source>
-        <translation>5 szálú xBRZ</translation>
+      <source>xBRZ 5X Multithreading</source>
+      <translation>5 szálú xBRZ</translation>
     </message>
     <message>
-        <source>xBRZ 6X Multithreading</source>
-        <translation>6 szálú xBRZ</translation>
+      <source>xBRZ 6X Multithreading</source>
+      <translation>6 szálú xBRZ</translation>
     </message>
     <message>
-        <source>VSync</source>
-        <translation>Vertikális szinkron (VSync)</translation>
+      <source>VSync</source>
+      <translation>Vertikális szinkron (VSync)</translation>
     </message>
     <message>
-        <source>Interpolation</source>
-        <translation>Interpoláció</translation>
+      <source>Interpolation</source>
+      <translation>Interpoláció</translation>
     </message>
     <message>
-        <source>Text on screen</source>
-        <translation>Szöveg a képernyőn</translation>
+      <source>Text on screen</source>
+      <translation>Szöveg a képernyőn</translation>
     </message>
     <message>
-        <source>Show FPS</source>
-        <translation>FPS mutatása</translation>
+      <source>Show FPS</source>
+      <translation>FPS mutatása</translation>
     </message>
     <message>
-        <source>Input display</source>
-        <translation>Beviteli kijelző</translation>
+      <source>Input display</source>
+      <translation>Beviteli kijelző</translation>
     </message>
     <message>
-        <source>Disable TV noise emulation when turned off</source>
-        <translation>TV-zaj emuláció tiltása kikapcsolt állapotban</translation>
+      <source>Disable TV noise emulation when turned off</source>
+      <translation>TV-zaj emuláció tiltása kikapcsolt állapotban</translation>
     </message>
     <message>
-        <source>Disable sepia color on pause</source>
-        <translation>Szépia tiltása pause alatt</translation>
+      <source>Disable sepia color on pause</source>
+      <translation>Szépia tiltása pause alatt</translation>
     </message>
     <message>
-        <source>Fullscreen in window</source>
-        <translation>Ablakban teljes képernyős</translation>
+      <source>Fullscreen in window</source>
+      <translation>Ablakban teljes képernyős</translation>
     </message>
     <message>
-        <source>Stretch in fullscreen</source>
-        <translation>Széthúzás teljes képernyőn</translation>
+      <source>Stretch in fullscreen</source>
+      <translation>Széthúzás teljes képernyőn</translation>
     </message>
     <message>
-        <source>Soft stretch</source>
-        <translation>Szoftveres széthúzás</translation>
+      <source>Soft stretch</source>
+      <translation>Szoftveres széthúzás</translation>
     </message>
     <message>
-        <source>Disable sRGB FBO</source>
-        <translation>sRGB FBO tiltása</translation>
+      <source>Disable sRGB FBO</source>
+      <translation>sRGB FBO tiltása</translation>
     </message>
     <message>
-        <source>Disable Red and Green emphasis swap for PAL/Dendy</source>
-        <translation>Vörös és zöld hangsúly cseréjének tiltása PAL/Dendy esetén</translation>
+      <source>Disable Red and Green emphasis swap for PAL/Dendy</source>
+      <translation>Vörös és zöld hangsúly cseréjének tiltása PAL/Dendy esetén</translation>
     </message>
     <message>
-        <source>Use integer scaling in fullscreen</source>
-        <translation>Egész alapú skálázás teljes képernyőn</translation>
+      <source>Use integer scaling in fullscreen</source>
+      <translation>Egész alapú skálázás teljes képernyőn</translation>
     </message>
     <message>
-        <source>Screen rotation</source>
-        <translation type="unfinished"></translation>
+      <source>Screen rotation</source>
+      <translation type="unfinished">Screen rotation</translation>
     </message>
     <message>
-        <source>0 degrees</source>
-        <translation type="unfinished"></translation>
+      <source>0 degrees</source>
+      <translation type="unfinished">0 degrees</translation>
     </message>
     <message>
-        <source>90 degrees</source>
-        <translation type="unfinished"></translation>
+      <source>90 degrees</source>
+      <translation type="unfinished">90 degrees</translation>
     </message>
     <message>
-        <source>180 degrees</source>
-        <translation type="unfinished"></translation>
+      <source>180 degrees</source>
+      <translation type="unfinished">180 degrees</translation>
     </message>
     <message>
-        <source>270 degrees</source>
-        <translation type="unfinished"></translation>
+      <source>270 degrees</source>
+      <translation type="unfinished">270 degrees</translation>
     </message>
     <message>
-        <source>Also rotate the text on screen</source>
-        <translation type="unfinished"></translation>
+      <source>Also rotate the text on screen</source>
+      <translation type="unfinished">Also rotate the text on screen</translation>
     </message>
-</context>
-<context>
+  </context>
+  <context>
     <name>wdgState</name>
     <message>
-        <source>Save/Load Slot Box</source>
-        <translation>Mentés/Töltés doboz</translation>
+      <source>Save/Load Slot Box</source>
+      <translation>Mentés/Töltés doboz</translation>
     </message>
     <message>
-        <source>Slot %1</source>
-        <translation>Mentéshely %1</translation>
+      <source>Slot %1</source>
+      <translation>Mentéshely %1</translation>
     </message>
     <message>
-        <source>Save state</source>
-        <translation type="unfinished"></translation>
+      <source>Save state</source>
+      <translation type="unfinished">Save state</translation>
     </message>
     <message>
-        <source>Save/Load State</source>
-        <translation type="unfinished"></translation>
+      <source>Save/Load State</source>
+      <translation type="unfinished">Save/Load State</translation>
     </message>
     <message>
-        <source>Slot state</source>
-        <translation type="unfinished"></translation>
+      <source>Slot state</source>
+      <translation type="unfinished">Slot state</translation>
     </message>
     <message>
-        <source>Load state</source>
-        <translation type="unfinished"></translation>
+      <source>Load state</source>
+      <translation type="unfinished">Load state</translation>
     </message>
-</context>
+  </context>
 </TS>
