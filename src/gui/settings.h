@@ -445,7 +445,8 @@ static const _opt opt_languages[] = {
 	{NULL, uL("russian"), LNG_RUSSIAN},
 	{NULL, uL("spanish"), LNG_SPANISH},
 	{NULL, uL("hungarian"), LNG_HUNGARIAN},
-	{NULL, uL("turkish"), LNG_TURKISH}
+	{NULL, uL("turkish"), LNG_TURKISH},
+	{NULL, uL("portuguese"), LNG_PORTUGUESEBR}
 };
 static const _opt opt_nsf_player_effect[] = {
 	{NULL, uL("bars"),     NSF_EFFECT_BARS},
@@ -821,9 +822,9 @@ static const _settings main_cfg[] = {
 	},
 	{
 		uL("GUI"), uL("language"), uL("english"),
-		uL("# possible values: english, italian, russian, spanish, hungarian, turkish"),
+		uL("# possible values: english, italian, russian, spanish, hungarian, turkish, portuguese"),
 		uL("    --language            GUI language          : english, italian, russian, spanish," NEWLINE)
-		uL("                                                  hungarian, turkish"),
+		uL("                                                  hungarian, turkish, portuguese"),
 		{LENGTH(opt_languages), opt_languages}
 	},
 	{

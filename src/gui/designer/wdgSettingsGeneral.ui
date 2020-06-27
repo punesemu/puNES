@@ -95,6 +95,15 @@
        </item>
        <item>
         <property name="text">
+         <string>Portuguese (Brazil)</string>
+        </property>
+        <property name="icon">
+         <iconset resource="resources.qrc">
+          <normaloff>:/icon/icons/flag_brazil.svg</normaloff>:/icon/icons/flag_brazil.svg</iconset>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>Russian</string>
         </property>
         <property name="icon">

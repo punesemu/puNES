@@ -109,6 +109,10 @@ $(srcdir)/designer/translations/ru_RU.qm: designer/translations/ru_RU.ts
 	$(LRELEASE) -silent $(srcdir)/designer/translations/ru_RU.ts -qm $@
 $(srcdir)/designer/translations/qt_ru.qm: designer/translations/qt_ru.ts
 	$(LRELEASE) -silent $(srcdir)/designer/translations/qt_ru.ts -qm $@
+$(srcdir)/designer/translations/pt_BR.qm: designer/translations/pt_BR.ts
+	$(LRELEASE) -silent $(srcdir)/designer/translations/pt_BR.ts -qm $@
+$(srcdir)/designer/translations/qt_pt.qm: designer/translations/qt_pt.ts
+	$(LRELEASE) -silent $(srcdir)/designer/translations/qt_pt.ts -qm $@
 
 clean-local:
 	rm -f resources.cpp *.{hh,moc} $(srcdir)/designer/translations/*.qm
@@ -123,7 +127,9 @@ TRADUCTION_QM = \
 	$(srcdir)/designer/translations/hu_HU.qm \
 	$(srcdir)/designer/translations/qt_hu.qm \
 	$(srcdir)/designer/translations/ru_RU.qm \
-	$(srcdir)/designer/translations/qt_ru.qm
+	$(srcdir)/designer/translations/qt_ru.qm \
+	$(srcdir)/designer/translations/pt_BR.qm \
+	$(srcdir)/designer/translations/qt_pt.qm
 
 BUILT_SOURCES = \
 	resources.cpp

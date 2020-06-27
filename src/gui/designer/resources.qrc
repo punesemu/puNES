@@ -37,6 +37,7 @@
     <file>icons/fast_forward.svg</file>
     <file>icons/application.png</file>
     <file>icons/flag_italy.svg</file>
+    <file>icons/flag_brazil.svg</file>
     <file>icons/flag_russia.svg</file>
     <file>icons/flag_english.svg</file>
     <file>icons/language.svg</file>
@@ -129,5 +130,7 @@
     <file>translations/qt_hu.qm</file>
     <file>translations/ru_RU.qm</file>
     <file>translations/qt_ru.qm</file>
+    <file>translations/pt_BR.qm</file>
+    <file>translations/qt_pt.qm</file>
   </qresource>
 </RCC>

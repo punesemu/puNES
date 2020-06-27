@@ -1291,6 +1291,10 @@
       <translation>Húngaro</translation>
     </message>
     <message>
+      <source>Portuguese (Brazil)</source>
+      <translation>Portugués (Brasil)</translation>
+    </message>
+    <message>
       <source>60 minutes</source>
       <translation>60 minutos</translation>
     </message>
